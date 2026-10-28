@@ -1,0 +1,139 @@
+SMC Bayesian variable selection literature: downloaded open versions
+Numbering matches the 31-paper chat bibliography. Publication year in filenames may differ from preprint year.
+PDFs are original source files. SHA-256 hashes, URLs, timestamps, and page counts are in download_manifest.json.
+An arXiv draft can have a different title and content from the final journal version.
+Downloaded: 29 of 31 papers; arXiv: 24.
+
+01. Adaptive random neighbourhood informed Markov chain Monte Carlo for high-dimensional Bayesian variable selection (2022)
+    Status: downloaded
+    Source: https://arxiv.org/abs/2110.11747
+    File: 01_2022_Liang_Livingstone_Griffin_Adaptive_random_neighbourhood_informed_Markov_chain_Monte_Carlo_for_high_dimensional_Bayesian_variable_selection.pdf
+02. Optimized annealed sequential Monte Carlo samplers (2026)
+    Status: downloaded
+    Source: https://arxiv.org/abs/2408.12057
+    File: 02_2026_Syed_et_al_Optimized_annealed_sequential_Monte_Carlo_samplers.pdf
+03. Bayesian variable selection using an adaptive powered correlation prior (2009)
+    Status: download_failed
+    Source: https://pmc.ncbi.nlm.nih.gov/articles/PMC2772159/
+    File: Not downloaded
+    Note: No arXiv version located. The PMC PDF endpoint returned a browser-check HTML page instead of a PDF; no invalid PDF was saved.
+04. Bayes and empirical-Bayes multiplicity adjustment in the variable-selection problem (2010)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1011.2333
+    File: 04_2010_Scott_Berger_Bayes_and_empirical_Bayes_multiplicity_adjustment_in_the_variable_selection_problem.pdf
+05. Controlled Discovery and Localization of Signals via Bayesian Linear Programming (2025)
+    Status: downloaded
+    Source: https://arxiv.org/abs/2203.17208
+    File: 05_2025_Spector_Janson_Controlled_Discovery_and_Localization_of_Signals_via_Bayesian_Linear_Programming.pdf
+06. Expressing and Visualizing Model Uncertainty in Bayesian Variable Selection Using Cartesian Credible Sets (2025)
+    Status: downloaded
+    Source: https://arxiv.org/abs/2402.12323
+    File: 06_2025_Griffin_Expressing_and_Visualizing_Model_Uncertainty_in_Bayesian_Variable_Selection_Using_Cartesian_Credible_Sets.pdf
+07. Sequential Monte Carlo on large binary sampling spaces (2013)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1101.6037
+    File: 07_2013_Schafer_Chopin_Sequential_Monte_Carlo_on_large_binary_sampling_spaces.pdf
+08. A Metropolized Adaptive Subspace Algorithm for High-Dimensional Bayesian Variable Selection (2024)
+    Status: downloaded
+    Source: https://arxiv.org/abs/2105.01039
+    File: 08_2024_Staerk_Kateri_Ntzoufras_A_Metropolized_Adaptive_Subspace_Algorithm_for_High_Dimensional_Bayesian_Variable_Selection.pdf
+09. Informed Proposals for Local MCMC in Discrete Spaces (2020)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1711.07424
+    File: 09_2020_Zanella_Informed_Proposals_for_Local_MCMC_in_Discrete_Spaces.pdf
+10. Dimension-Free Mixing for High-Dimensional Bayesian Variable Selection (2022)
+    Status: downloaded
+    Source: https://arxiv.org/abs/2105.05719
+    File: 10_2022_Zhou_et_al_Dimension_Free_Mixing_for_High_Dimensional_Bayesian_Variable_Selection.pdf
+11. The Hamming Ball Sampler (2017)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1504.08133
+    File: 11_2017_Titsias_Yau_The_Hamming_Ball_Sampler.pdf
+12. Bayesian block-diagonal variable selection and model averaging (2017)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1606.03749
+    File: 12_2017_Papaspiliopoulos_Rossell_Bayesian_block_diagonal_variable_selection_and_model_averaging.pdf
+13. Scalable Bayesian Model Averaging Through Local Information Propagation (2015)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1403.2397
+    File: 13_2015_Ma_Scalable_Bayesian_Model_Averaging_Through_Local_Information_Propagation.pdf
+14. Scalable Importance Tempering and Bayesian Variable Selection (2019)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1805.00541
+    File: 14_2019_Zanella_Roberts_Scalable_Importance_Tempering_and_Bayesian_Variable_Selection.pdf
+15. Mixtures of g Priors for Bayesian Variable Selection (2008)
+    Status: downloaded
+    Source: https://www2.stat.duke.edu/courses/Fall19/sta721/lectures/BMA/Liang-etal.pdf
+    File: 15_2008_Liang_et_al_Mixtures_of_g_Priors_for_Bayesian_Variable_Selection.pdf
+    Note: No arXiv version located; university-hosted copy.
+16. Criteria for Bayesian model choice with application to variable selection (2012)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1209.5240
+    File: 16_2012_Bayarri_et_al_Criteria_for_Bayesian_model_choice_with_application_to_variable_selection.pdf
+17. Bayesian Model Selection in High-Dimensional Settings (2012)
+    Status: downloaded
+    Source: https://hannig.cloudapps.unc.edu/STOR757Bayes/handouts/JohnsonRussell2012.pdf
+    File: 17_2012_Johnson_Rossell_Bayesian_Model_Selection_in_High_Dimensional_Settings.pdf
+    Note: No arXiv version located; university-hosted copy.
+18. Scalable Bayesian Variable Selection Using Nonlocal Prior Densities in Ultrahigh-dimensional Settings (2018)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1507.07106
+    File: 18_2018_Shin_Bhattacharya_Johnson_Scalable_Bayesian_Variable_Selection_Using_Nonlocal_Prior_Densities_in_Ultrahigh_dimensional_Settings.pdf
+19. Block Hyper-g Priors in Bayesian Regression (2014)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1406.6419
+    File: 19_2014_Som_Hans_MacEachern_Block_Hyper_g_Priors_in_Bayesian_Regression.pdf
+20. Power-Expected-Posterior Priors as Mixtures of g-Priors in Normal Linear Models (2022)
+    Status: downloaded
+    Source: https://arxiv.org/abs/2002.05782
+    File: 20_2022_Fouskakis_Ntzoufras_Power_Expected_Posterior_Priors_as_Mixtures_of_g_Priors_in_Normal_Linear_Models.pdf
+21. PEPBVS: An R package for Bayesian variable selection using the power-expected-posterior prior (2026)
+    Status: no_arxiv_version_located
+    Source: https://doi.org/10.1016/j.jocs.2026.102810
+    File: Not downloaded
+    Note: No arXiv paper or downloadable open paper located. Package documentation is a different document and was not substituted.
+22. The Median Probability Model and Correlated Variables (2021)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1807.08336
+    File: 22_2021_Barbieri_et_al_The_Median_Probability_Model_and_Correlated_Variables.pdf
+23. Waste-Free Sequential Monte Carlo (2022)
+    Status: downloaded
+    Source: https://arxiv.org/abs/2011.02328
+    File: 23_2022_Dau_Chopin_Waste_Free_Sequential_Monte_Carlo.pdf
+24. On the complexity of standard and waste-free SMC samplers (2026)
+    Status: downloaded
+    Source: https://arxiv.org/abs/2604.03352
+    File: 24_2026_Le_Fay_Chopin_Vihola_On_the_complexity_of_standard_and_waste_free_SMC_samplers.pdf
+25. Toward Automatic Model Comparison: An Adaptive Sequential Monte Carlo Approach (2016)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1303.3123
+    File: 25_2016_Zhou_Johansen_Aston_Toward_Automatic_Model_Comparison_An_Adaptive_Sequential_Monte_Carlo_Approach.pdf
+26. Variance estimation in the particle filter (2018)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1509.00394
+    File: 26_2018_Lee_Whiteley_Variance_estimation_in_the_particle_filter.pdf
+27. Bayesian Adaptive Sampling for Variable Selection and Model Averaging (2011)
+    Status: downloaded
+    Source: https://homepage.divms.uiowa.edu/~jghsh/clyde_ghosh_littman_2010_jcgs.pdf
+    File: 27_2011_Clyde_Ghosh_Littman_Bayesian_Adaptive_Sampling_for_Variable_Selection_and_Model_Averaging.pdf
+    Note: No arXiv version located; author-hosted manuscript.
+28. On Sampling Strategies in Bayesian Variable Selection Problems With Large Model Spaces (2013)
+    Status: downloaded
+    Source: https://arxiv.org/abs/1101.4368
+    File: 28_2013_Garcia_Donato_Martinez_Beneito_On_Sampling_Strategies_in_Bayesian_Variable_Selection_Problems_With_Large_Model_Spaces.pdf
+    Note: The arXiv draft is titled Inferences in Bayesian variable selection problems with large model spaces.
+29. A Simple New Approach to Variable Selection in Regression, with Application to Genetic Fine Mapping (2020)
+    Status: downloaded
+    Source: https://ibg.colorado.edu/cdrom2025/4.4.FinemappingColocalization_RanCui/refs/JRSS_Wang_2020_susie.pdf
+    File: 29_2020_Wang_et_al_A_Simple_New_Approach_to_Variable_Selection_in_Regression_with_Application_to_Genetic_Fine_Mapping.pdf
+    Note: No arXiv version located. bioRxiv preprint DOI: 10.1101/501114; university-hosted journal copy used.
+30. SuSiE 2.0: improved methods and implementations for genetic fine-mapping and phenotype prediction (2025)
+    Status: downloaded
+    Source: https://www.biorxiv.org/content/10.1101/2025.11.25.690514v1
+    File: 30_2025_McCreight_et_al_SuSiE_2_0_improved_methods_and_implementations_for_genetic_fine_mapping_and_phenotype_prediction.pdf
+    Note: Hosted on bioRxiv, not arXiv.
+31. Laplace approximation for Bayesian variable selection via Le Cam's one-step procedure (2026)
+    Status: downloaded
+    Source: https://arxiv.org/abs/2407.20580
+    File: 31_2026_Hou_Atchade_Laplace_approximation_for_Bayesian_variable_selection_via_Le_Cam_s_one_step_procedure.pdf
+    Note: arXiv preprint authors include Tianrui Hou, Liwei Wang, and Yves Atchade; the cited 2026 proceedings version lists Hou and Atchade.

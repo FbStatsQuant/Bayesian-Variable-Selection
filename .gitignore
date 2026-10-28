@@ -1,0 +1,30 @@
+# R
+.Rhistory
+.RData
+.Rproj.user/
+*.rds
+
+# compiled code
+.cpp_cache/
+*.o
+*.so
+*.dll
+
+# Python
+__pycache__/
+*.pyc
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+!scenario_check.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# simulation outputs and data (kept on the PC and on NOTS)
+*.tar
+*.tar.gz
+*.zip

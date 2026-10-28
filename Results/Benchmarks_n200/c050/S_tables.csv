@@ -1,0 +1,561 @@
+"run_id","method_id","rule_id","role","label","p","scenario","exact_all","exact_passing","n_expected","n_success","exact_among_success","n_fail_total","n_flagged"
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",500,"1",54,50,100,100,0.54000000000000004,0,4
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",500,"2",60,60,100,100,0.59999999999999998,0,2
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",500,"3",34,34,100,100,0.34000000000000002,0,3
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",500,"4",9,9,100,100,0.089999999999999997,0,4
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",500,"5",3,3,100,100,0.029999999999999999,0,0
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",500,"6",35,34,100,100,0.34999999999999998,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",500,"pooled",195,190,600,600,0.32500000000000001,0,14
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",1000,"1",45,44,100,100,0.45000000000000001,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",1000,"2",47,46,100,100,0.46999999999999997,0,2
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",1000,"3",46,45,100,100,0.46000000000000002,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",1000,"4",22,21,100,100,0.22,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",1000,"6",27,27,100,100,0.27000000000000002,0,3
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","cslead","S0","pre-declared",1000,"pooled",187,183,600,600,0.31166666666666665,0,8
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",500,"1",14,14,100,100,0.14000000000000001,0,4
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",500,"2",13,12,100,100,0.13,0,2
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",500,"3",5,5,100,100,0.050000000000000003,0,3
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",500,"4",4,4,100,100,0.040000000000000001,0,4
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",500,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",500,"6",10,10,100,100,0.10000000000000001,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",500,"pooled",46,45,600,600,0.076666666666666661,0,14
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",1000,"1",20,20,100,100,0.20000000000000001,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",1000,"2",11,10,100,100,0.11,0,2
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",1000,"3",3,3,100,100,0.029999999999999999,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",1000,"4",4,4,100,100,0.040000000000000001,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",1000,"6",2,2,100,100,0.02,0,3
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","A1","bfdr10","S0","pre-declared",1000,"pooled",40,39,600,600,0.066666666666666666,0,8
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",500,"1",65,64,100,100,0.65000000000000002,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",500,"2",71,70,100,100,0.70999999999999996,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",500,"3",34,33,100,100,0.34000000000000002,0,2
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",500,"4",9,9,100,100,0.089999999999999997,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",500,"5",3,3,100,100,0.029999999999999999,0,0
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",500,"6",39,39,100,100,0.39000000000000001,0,0
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",500,"pooled",221,218,600,600,0.36833333333333335,0,5
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",1000,"1",49,48,100,100,0.48999999999999999,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",1000,"2",57,56,100,100,0.56999999999999995,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",1000,"3",47,46,100,100,0.46999999999999997,0,1
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",1000,"4",21,21,100,100,0.20999999999999999,0,0
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",1000,"6",31,31,100,100,0.31,0,2
+"20261021T1540Z_bench20261019_prodc050_A1_SuSiE","SuSiE-L100","pip05","S1","pre-declared",1000,"pooled",205,202,600,600,0.34166666666666667,0,5
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",500,"1",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",500,"2",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",500,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",500,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",500,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",500,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",500,"pooled",0,0,600,600,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",1000,"1",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",1000,"2",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",1000,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",1000,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","cv_1se","S0","pre-declared",1000,"pooled",0,0,600,600,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",500,"1",11,11,100,100,0.11,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",500,"2",3,3,100,100,0.029999999999999999,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",500,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",500,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",500,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",500,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",500,"pooled",14,14,600,600,0.023333333333333334,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",1000,"1",8,8,100,100,0.080000000000000002,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",1000,"2",2,2,100,100,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",1000,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",1000,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1","S0","pre-declared",1000,"pooled",10,10,600,600,0.016666666666666666,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",500,"1",7,7,100,100,0.070000000000000007,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",500,"2",2,2,100,100,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",500,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",500,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",500,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",500,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",500,"pooled",9,9,600,600,0.014999999999999999,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",1000,"1",8,8,100,100,0.080000000000000002,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",1000,"2",2,2,100,100,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",1000,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",1000,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05","S0","pre-declared",1000,"pooled",10,10,600,600,0.016666666666666666,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"1",11,11,100,100,0.11,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"2",3,3,100,100,0.029999999999999999,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"pooled",14,14,600,600,0.023333333333333334,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"1",8,8,100,100,0.080000000000000002,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"2",2,2,100,100,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"pooled",10,10,600,600,0.016666666666666666,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"1",7,7,100,100,0.070000000000000007,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"2",2,2,100,100,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"pooled",9,9,600,600,0.014999999999999999,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"1",8,8,100,100,0.080000000000000002,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"2",2,2,100,100,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F2_ElasticNet","F2","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"pooled",10,10,600,600,0.016666666666666666,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",500,"1",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",500,"2",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",500,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",500,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",500,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",500,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",500,"pooled",0,0,600,600,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",1000,"1",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",1000,"2",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",1000,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",1000,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","cv_1se","S0","pre-declared",1000,"pooled",0,0,600,600,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",500,"1",10,10,100,100,0.10000000000000001,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",500,"2",17,17,100,100,0.17000000000000001,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",500,"3",1,1,100,100,0.01,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",500,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",500,"5",2,2,100,100,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",500,"6",6,6,100,100,0.059999999999999998,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",500,"pooled",36,36,600,600,0.059999999999999998,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",1000,"1",10,10,100,100,0.10000000000000001,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",1000,"2",2,2,100,100,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",1000,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",1000,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1","S0","pre-declared",1000,"pooled",12,12,600,600,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",500,"1",5,5,100,100,0.050000000000000003,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",500,"2",14,14,100,100,0.14000000000000001,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",500,"3",1,1,100,100,0.01,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",500,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",500,"5",1,1,100,100,0.01,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",500,"6",5,5,100,100,0.050000000000000003,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",500,"pooled",26,26,600,600,0.043333333333333335,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",1000,"1",10,10,100,100,0.10000000000000001,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",1000,"2",2,2,100,100,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",1000,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",1000,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05","S0","pre-declared",1000,"pooled",12,12,600,600,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"1",10,10,100,100,0.10000000000000001,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"2",17,17,100,100,0.17000000000000001,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"3",1,1,100,100,0.01,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"5",2,2,100,100,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"6",6,6,100,100,0.059999999999999998,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"pooled",36,36,600,600,0.059999999999999998,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"1",10,10,100,100,0.10000000000000001,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"2",2,2,100,100,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"pooled",12,12,600,600,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"1",5,5,100,100,0.050000000000000003,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"2",14,14,100,100,0.14000000000000001,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"3",1,1,100,100,0.01,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"5",1,1,100,100,0.01,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"6",5,5,100,100,0.050000000000000003,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"pooled",26,26,600,600,0.043333333333333335,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"1",10,10,100,100,0.10000000000000001,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"2",2,2,100,100,0.02,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"3",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"5",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"6",0,0,100,100,0,0,0
+"20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso","F3","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"pooled",12,12,600,600,0.02,0,0
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",500,"1",10,10,100,100,0.10000000000000001,0,0
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",500,"2",7,7,100,100,0.070000000000000007,0,0
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",500,"3",5,5,100,100,0.050000000000000003,0,1
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",500,"4",4,4,100,100,0.040000000000000001,0,0
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",500,"5",1,1,100,100,0.01,0,0
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",500,"6",5,5,100,100,0.050000000000000003,0,0
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",500,"pooled",32,32,600,600,0.053333333333333337,0,1
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",1000,"1",10,10,100,100,0.10000000000000001,0,0
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",1000,"2",13,13,100,100,0.13,0,0
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",1000,"3",4,4,100,100,0.040000000000000001,0,0
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",1000,"4",1,1,100,100,0.01,0,0
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",1000,"5",3,3,100,100,0.029999999999999999,0,0
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",1000,"6",1,1,100,100,0.01,0,0
+"20261021T1552Z_bench20261019_prodc050_A2_SSL","SSL-RS","ssl_final","S1","pre-declared",1000,"pooled",32,32,600,600,0.053333333333333337,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",500,"1",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",500,"2",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",500,"3",7,7,100,100,0.070000000000000007,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",500,"4",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",500,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",500,"6",3,3,100,100,0.029999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",500,"pooled",13,13,600,600,0.021666666666666667,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",1000,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",1000,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",1000,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",1000,"6",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05","S0","pre-declared",1000,"pooled",0,0,600,600,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",500,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",500,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",500,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",500,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",500,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",500,"6",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",500,"pooled",0,0,600,600,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",1000,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",1000,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",1000,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",1000,"6",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic","S0","pre-declared",1000,"pooled",0,0,600,600,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"1",17,17,100,100,0.17000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"2",25,25,100,100,0.25,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"3",18,18,100,100,0.17999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"4",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"5",20,20,100,100,0.20000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"6",8,8,100,100,0.080000000000000002,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"pooled",89,89,600,600,0.14833333333333334,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"1",6,6,100,100,0.059999999999999998,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"2",6,6,100,100,0.059999999999999998,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"3",14,14,100,100,0.14000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"5",2,2,100,100,0.02,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"6",6,6,100,100,0.059999999999999998,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"pooled",34,34,600,600,0.056666666666666664,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"6",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"pooled",0,0,600,600,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"6",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"pooled",0,0,600,600,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",500,"1",62,62,100,100,0.62,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",500,"2",71,71,100,100,0.70999999999999996,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",500,"3",42,42,100,100,0.41999999999999998,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",500,"4",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",500,"5",45,45,100,100,0.45000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",500,"6",19,19,100,100,0.19,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",500,"pooled",240,240,600,600,0.40000000000000002,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",1000,"1",49,49,100,100,0.48999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",1000,"2",59,59,100,100,0.58999999999999997,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",1000,"3",45,45,100,100,0.45000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",1000,"4",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",1000,"5",20,20,100,100,0.20000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",1000,"6",18,18,100,100,0.17999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4","ebic1_lam005","S0","pre-registered (PREREG_c050 R1)",1000,"pooled",192,192,600,600,0.32000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",500,"1",28,28,100,100,0.28000000000000003,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",500,"2",24,24,100,100,0.23999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",500,"3",9,9,100,100,0.089999999999999997,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",500,"4",2,2,100,100,0.02,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",500,"5",15,15,100,100,0.14999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",500,"6",17,17,100,100,0.17000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",500,"pooled",95,95,600,600,0.15833333333333333,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",1000,"1",22,22,100,100,0.22,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",1000,"2",18,18,100,100,0.17999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",1000,"3",2,2,100,100,0.02,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",1000,"5",6,6,100,100,0.059999999999999998,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",1000,"6",7,7,100,100,0.070000000000000007,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1","S1","pre-declared",1000,"pooled",55,55,600,600,0.09166666666666666,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",500,"1",4,4,100,100,0.040000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",500,"2",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",500,"3",3,3,100,100,0.029999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",500,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",500,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",500,"6",6,6,100,100,0.059999999999999998,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",500,"pooled",14,14,600,600,0.023333333333333334,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",1000,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",1000,"2",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",1000,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",1000,"6",2,2,100,100,0.02,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05","S1","pre-declared",1000,"pooled",3,3,600,600,0.0050000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",500,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",500,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",500,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",500,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",500,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",500,"6",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",500,"pooled",0,0,600,600,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",1000,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",1000,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",1000,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",1000,"6",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic","S1","pre-declared",1000,"pooled",0,0,600,600,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",500,"1",29,29,100,100,0.28999999999999998,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",500,"2",24,24,100,100,0.23999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",500,"3",9,9,100,100,0.089999999999999997,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",500,"4",2,2,100,100,0.02,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",500,"5",15,15,100,100,0.14999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",500,"6",17,17,100,100,0.17000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",500,"pooled",96,96,600,600,0.16,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",1000,"1",25,25,100,100,0.25,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",1000,"2",19,19,100,100,0.19,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",1000,"3",2,2,100,100,0.02,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",1000,"5",6,6,100,100,0.059999999999999998,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",1000,"6",7,7,100,100,0.070000000000000007,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_K37","S1","pre-registered (PREREG_c050 R1)",1000,"pooled",59,59,600,600,0.098333333333333328,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",500,"1",19,19,100,100,0.19,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",500,"2",14,14,100,100,0.14000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",500,"3",6,6,100,100,0.059999999999999998,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",500,"4",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",500,"5",11,11,100,100,0.11,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",500,"6",11,11,100,100,0.11,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",500,"pooled",62,62,600,600,0.10333333333333333,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",1000,"1",17,17,100,100,0.17000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",1000,"2",8,8,100,100,0.080000000000000002,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",1000,"3",2,2,100,100,0.02,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",1000,"5",2,2,100,100,0.02,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",1000,"6",5,5,100,100,0.050000000000000003,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic05_K37","S1","pre-registered (PREREG_c050 R1)",1000,"pooled",34,34,600,600,0.056666666666666664,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",500,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",500,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",500,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",500,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",500,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",500,"6",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",500,"pooled",0,0,600,600,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",1000,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",1000,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",1000,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",1000,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",1000,"6",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","bic_K37","S1","pre-registered (PREREG_c050 R1)",1000,"pooled",0,0,600,600,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",500,"1",29,29,100,100,0.28999999999999998,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",500,"2",24,24,100,100,0.23999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",500,"3",9,9,100,100,0.089999999999999997,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",500,"4",2,2,100,100,0.02,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",500,"5",15,15,100,100,0.14999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",500,"6",17,17,100,100,0.17000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",500,"pooled",96,96,600,600,0.16,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",1000,"1",25,25,100,100,0.25,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",1000,"2",19,19,100,100,0.19,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",1000,"3",2,2,100,100,0.02,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",1000,"5",6,6,100,100,0.059999999999999998,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",1000,"6",7,7,100,100,0.070000000000000007,0,0
+"20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD","F4_SCAD","ebic1_lam005","S1","pre-registered (PREREG_c050 R1)",1000,"pooled",59,59,600,600,0.098333333333333328,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",500,"1",3,3,100,100,0.029999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",500,"2",3,3,100,100,0.029999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",500,"3",10,10,100,100,0.10000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",500,"4",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",500,"5",5,5,100,100,0.050000000000000003,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",500,"6",7,7,100,100,0.070000000000000007,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",500,"pooled",29,29,600,600,0.048333333333333332,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",1000,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",1000,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",1000,"3",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",1000,"6",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05","S0","pre-declared",1000,"pooled",2,2,600,600,0.0033333333333333335,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",500,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",500,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",500,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",500,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",500,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",500,"6",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",500,"pooled",0,0,600,600,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",1000,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",1000,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",1000,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",1000,"6",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic","S0","pre-declared",1000,"pooled",0,0,600,600,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"1",10,10,100,100,0.10000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"2",12,12,100,100,0.12,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"3",12,12,100,100,0.12,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"4",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"5",15,15,100,100,0.14999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"6",7,7,100,100,0.070000000000000007,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"pooled",57,57,600,600,0.095000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"1",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"2",3,3,100,100,0.029999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"3",6,6,100,100,0.059999999999999998,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"5",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"6",3,3,100,100,0.029999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"pooled",14,14,600,600,0.023333333333333334,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"6",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",500,"pooled",0,0,600,600,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"1",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"2",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"3",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"5",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"6",0,0,100,100,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","bic_K37","S0","pre-registered (PREREG_c050 R1)",1000,"pooled",0,0,600,600,0,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",500,"1",37,37,100,100,0.37,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",500,"2",50,50,100,100,0.5,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",500,"3",23,23,100,100,0.23000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",500,"4",3,3,100,100,0.029999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",500,"5",35,35,100,100,0.34999999999999998,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",500,"6",19,19,100,100,0.19,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",500,"pooled",167,167,600,600,0.27833333333333332,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",1000,"1",27,27,100,100,0.27000000000000002,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",1000,"2",36,36,100,100,0.35999999999999999,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",1000,"3",27,27,100,100,0.27000000000000002,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",1000,"4",1,1,100,100,0.01,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",1000,"5",16,16,100,100,0.16,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",1000,"6",20,20,100,100,0.20000000000000001,0,0
+"20261021T1604Z_bench20261019_prodc050_F5_ABESS","F5","sic_smax","S0","pre-registered (PREREG_c050 R1)",1000,"pooled",127,127,600,600,0.21166666666666667,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",500,"1",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",500,"2",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",500,"3",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",500,"4",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",500,"5",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",500,"6",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",500,"pooled",0,0,600,600,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",1000,"1",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",1000,"2",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",1000,"3",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",1000,"6",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","cv_1se","S0","pre-declared",1000,"pooled",0,0,600,600,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",500,"1",17,17,100,100,0.17000000000000001,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",500,"2",5,5,100,100,0.050000000000000003,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",500,"3",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",500,"4",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",500,"5",1,1,100,100,0.01,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",500,"6",1,1,100,100,0.01,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",500,"pooled",24,24,600,600,0.040000000000000001,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",1000,"1",11,11,100,100,0.11,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",1000,"2",3,3,100,100,0.029999999999999999,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",1000,"3",1,1,100,100,0.01,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",1000,"6",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1","S0","pre-declared",1000,"pooled",15,15,600,600,0.025000000000000001,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",500,"1",13,13,100,100,0.13,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",500,"2",4,4,100,100,0.040000000000000001,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",500,"3",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",500,"4",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",500,"5",1,1,100,100,0.01,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",500,"6",1,1,100,100,0.01,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",500,"pooled",19,19,600,600,0.031666666666666669,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",1000,"1",10,10,100,100,0.10000000000000001,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",1000,"2",3,3,100,100,0.029999999999999999,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",1000,"3",1,1,100,100,0.01,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",1000,"4",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",1000,"5",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",1000,"6",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05","S0","pre-declared",1000,"pooled",14,14,600,600,0.023333333333333334,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"1",17,17,100,100,0.17000000000000001,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"2",5,5,100,100,0.050000000000000003,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"3",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"4",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"5",1,1,100,100,0.01,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"6",1,1,100,100,0.01,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",500,"pooled",24,24,600,600,0.040000000000000001,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"1",11,11,100,100,0.11,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"2",3,3,100,100,0.029999999999999999,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"3",1,1,100,100,0.01,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"5",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"6",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic1_K37","S0","pre-registered (PREREG_c050 R1)",1000,"pooled",15,15,600,600,0.025000000000000001,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"1",13,13,100,100,0.13,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"2",4,4,100,100,0.040000000000000001,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"3",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"4",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"5",1,1,100,100,0.01,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"6",1,1,100,100,0.01,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",500,"pooled",19,19,600,600,0.031666666666666669,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"1",10,10,100,100,0.10000000000000001,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"2",3,3,100,100,0.029999999999999999,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"3",1,1,100,100,0.01,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"4",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"5",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"6",0,0,100,100,0,0,0
+"20261021T1615Z_bench20261019_prodc050_F1_Lasso","F1","ebic05_K37","S0","pre-registered (PREREG_c050 R1)",1000,"pooled",14,14,600,600,0.023333333333333334,0,0
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",500,"1",45,45,100,100,0.45000000000000001,0,0
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",500,"2",44,44,100,100,0.44,0,0
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",500,"3",17,17,100,100,0.17000000000000001,0,0
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",500,"4",5,5,100,100,0.050000000000000003,0,0
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",500,"5",11,11,100,100,0.11,0,0
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",500,"6",17,17,100,100,0.17000000000000001,0,0
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",500,"pooled",139,139,600,600,0.23166666666666666,0,0
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",1000,"1",43,31,100,100,0.42999999999999999,0,30
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",1000,"2",36,36,100,100,0.35999999999999999,0,6
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",1000,"3",20,20,100,100,0.20000000000000001,0,1
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",1000,"4",4,4,100,100,0.040000000000000001,0,0
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",1000,"5",13,13,100,100,0.13,0,0
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",1000,"6",12,12,100,100,0.12,0,1
+"20261021T1818Z_bench20261019_prodc050_A3_Horseshoe","A3","km2","S0","pre-declared",1000,"pooled",128,116,600,600,0.21333333333333335,0,38
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"1",66,62,100,100,0.66000000000000003,0,4
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"2",71,71,100,100,0.70999999999999996,0,2
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"3",43,42,100,100,0.42999999999999999,0,4
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"4",17,17,100,100,0.17000000000000001,0,2
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"5",6,6,100,100,0.059999999999999998,0,0
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"6",46,45,100,100,0.46000000000000002,0,1
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"pooled",249,243,600,600,0.41499999999999998,0,13
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"1",49,48,100,100,0.48999999999999999,0,1
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"2",57,56,100,100,0.56999999999999995,0,2
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"3",49,48,100,100,0.48999999999999999,0,1
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"4",22,21,100,100,0.22,0,1
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"5",3,3,100,100,0.029999999999999999,0,0
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"6",32,32,100,100,0.32000000000000001,0,3
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","pip05","S1","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"pooled",212,208,600,600,0.35333333333333333,0,8
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"1",55,51,100,100,0.55000000000000004,0,4
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"2",61,61,100,100,0.60999999999999999,0,2
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"3",42,42,100,100,0.41999999999999998,0,4
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"4",16,16,100,100,0.16,0,2
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"5",6,6,100,100,0.059999999999999998,0,0
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"6",42,41,100,100,0.41999999999999998,0,1
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"pooled",222,217,600,600,0.37,0,13
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"1",45,44,100,100,0.45000000000000001,0,1
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"2",47,46,100,100,0.46999999999999997,0,2
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"3",48,47,100,100,0.47999999999999998,0,1
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"4",23,22,100,100,0.23000000000000001,0,1
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"5",3,3,100,100,0.029999999999999999,0,0
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"6",28,28,100,100,0.28000000000000003,0,3
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","cslead","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"pooled",194,190,600,600,0.32333333333333331,0,8
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"1",13,13,100,100,0.13,0,4
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"2",14,13,100,100,0.14000000000000001,0,2
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"3",5,5,100,100,0.050000000000000003,0,4
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"4",8,8,100,100,0.080000000000000002,0,2
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"5",1,1,100,100,0.01,0,0
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"6",8,8,100,100,0.080000000000000002,0,1
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",500,"pooled",49,48,600,600,0.081666666666666665,0,13
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"1",20,20,100,100,0.20000000000000001,0,1
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"2",11,10,100,100,0.11,0,2
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"3",1,1,100,100,0.01,0,1
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"4",4,4,100,100,0.040000000000000001,0,1
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"5",0,0,100,100,0,0,0
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"6",2,2,100,100,0.02,0,3
+"20261021T1818Z_bench20261019_prodc050_SuSiErefine","SuSiE-refine","bfdr10","S0","pre-registered arm (PREREG_c050 R4); fit selection by ELBO",1000,"pooled",38,37,600,600,0.063333333333333339,0,8

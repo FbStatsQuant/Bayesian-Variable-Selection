@@ -1,0 +1,24 @@
+# LEDGER_ENTRY: scoring and aggregate tables (thread S, Claude Opus 5.5, 2026-10-19)
+
+For the lead to merge into `CODE_LEDGER.md`. Code on NOTS: `/projects/ml75/fb31/BVS/bench20261019/scoring/code/` (identical by SHA-256 to `scoring/code/` here). Order of execution: `score.R` (per run) → `aggregate.R` (per run) → `combine.R` (once, across runs).
+
+| Path | Implements | Author | Status | Date | SHA-256 |
+|---|---|---|---|---|---|
+| `scoring/code/registry.R` | closed lists of master §III.3.0, §III.3.1–§III.3.8 item f, §IV.1.2 (method ids, rule ids, roles, status, flag and info codes, columns) | AI (Opus 5.5, thread S) | unreviewed | 2026-10-19/21 | `cc19602b2780b3706c505d7b0d6984053c58bf68df96a001d4e3ad88106be1e0` |
+| `scoring/code/score.R` | scoring step §IV.1.2: coverage, sidecar hashes, provenance (x/y/fold/inputs hashes, seeds, run_id), truth join with truth-manifest verification, tp/fp/fn/exact/error_type, sel_a*, pip_a*, max_pip_null; A3 `crn_mismatch` (§III.3.8 e) | AI (Opus 5.5, thread S) | unreviewed | 2026-10-19/21 | `ec3ac2e03748ac7f360a76bc8d6300d1f35ef2fdcd00f87c04c32ab2d1ecbc6b` |
+| `scoring/code/aggregate.R` | aggregate tables §IV.1.3: T1 (+ `ebic1` companion F1–F3), T2, T3, T4, T5, T6, S-tables, caps, code counts; denominators | AI (Opus 5.5, thread S) | unreviewed | 2026-10-19/21 | `031d845dd8981a636881378893aa6ce2d782a87ebc6fe97d175af1c08a4e244f` |
+| `scoring/code/combine.R` | combined tables and SUMMARY.md across the eight production runs | AI (Opus 5.5, thread S) | unreviewed | 2026-10-19/21 | `a79bec52141cf01d4ec3cc69fa939adcea395a48b232612c74e5a075aa98a1b2` |
+| `scoring/code/pair.R` | paired exact recovery c = 1 vs c = 0.5 on the same datasets, every pre-declared and derived rule | AI (Opus 5.5, thread S) | unreviewed | 2026-10-21 | `cfc8d0ac122c39125111e339825cdab6e1a4cadd26578f7dc338110780a1659a` |
+| `scoring/code/a3_flags.R` | A3 ESS-flag case listing and all vs passing recovery per scale × p × scenario (PREREG_c050 R6) | AI (Opus 5.5, thread S) | unreviewed | 2026-10-21 | `3b6c867fdce3c7f434f3246b8eac758fe3696256183b4111cb6197225654190e` |
+| `scoring/code/a3_longchain.R` | A3 8× long-chain sensitivity of the ESS-flagged fits, beside A3 (PREREG_c050 R6) | AI (Opus 5.5, thread S) | unreviewed (outputs cross-checked 70/70 with the engineers' per-fit file) | 2026-10-21 | `6ec59d7e6735f05c70dc6b24a112a7f57d9f3b2ab499505b52c599cbb43231af` |
+| `scoring/code/compare_versions.R`, `slurm/v7_job.slurm` | cell-by-cell diff of table versions (classifies allowed vs other changes); v7 re-aggregation job | AI (Opus 5.5, thread S) | check code / infrastructure | 2026-10-22 | `a56c2d9063b098643674486830dae440342f9997549c4c98cbb75e5ab45fa077`, `bc6460ed32276470a7920a969f61706bcc5393a4ee0b41e474a88153a94197df` |
+| `scoring/code/score_derived.R` | scoring of the post-hoc derived rule `ebic1_K37` (F5, F4, F4_SCAD): provenance vs production rows, separate labelled S-table | AI (Opus 5.5, thread S) | unreviewed | 2026-10-19/21 | `39c7ea7682bcd2725fde9fd4134fdd87e9398925ff7498b81df15032b3952405` |
+| `scoring/derived_rules/derive_rules.R` | derived-rule unit, PREREG_c050 R1: `*_K37` (K = 37) for every EBIC/BIC rule, F4 `ebic1_lam005`, F5 `sic_smax`, `k_gt_K`; from saved fits only | AI (Opus 5.5, thread S) | unreviewed (independent output check vs the existing K37 rows: identical) | 2026-10-21 | `672d2c406be46040c4a22e7ca0a27e10e5ff7ecab2ea67c09e871e5a6aeb9d10` |
+| `scoring/derived_rules/compare_k37.R`, `test_derive.R` | comparison with the existing K37 rows; unit tests (20) | AI (Opus 5.5, thread S) | check / test code | 2026-10-21 | `963dbb2026a0eda9005a1840918389718966c429baad66eeb0bd21926e31888e`, `d4d9d2cc1989149578bd1ac71d6d470eae3fb78423d46499f7a059df74cf8768` |
+| `scoring/code/tests/test_scoring.R` | unit tests on hand-made fixtures (67 checks) | AI (Opus 5.5, thread S) | unreviewed (test code) | 2026-10-19/21 | `fa007ad8a040c0c3ad0846349de21912935927f5953fc73a931d9d6de38aeed8` |
+| `scoring/code/slurm/score_job.slurm` | SLURM wrapper (infrastructure) | AI (Opus 5.5, thread S) | infrastructure | 2026-10-19/21 | `e2baf975b4215272de37819df28cced7e4455a274481f5edb21165b0741b11b4` |
+
+Verification so far (not yet "verified" under `research-code.md`):
+- Unit tests: 50/50 locally (R 4.4.1); 44/44 on NOTS (R 4.5.2) before the post-hoc tests were added (job ids in `records/RECORD.md`).
+- Independent code review: one Opus agent, `review_opus/REVIEW.md` (reviewed v1). No definitional error found for on-spec inputs; four off-spec defects and several risks, fixed in v2 (`records/RECORD.md`, review resolution). v3 adds full-precision output and canary labels; v2 and v3 tables are numerically identical on F5.
+- Independent reference check: G9 recount (thread R, Python): recovery identical (120,000/120,000 case/rule outcomes, 700/700 paired rows); one publication defect (k_gt_K NA on F1–F3 CV rules) fixed in v7, 168/168 values equal to the recount.

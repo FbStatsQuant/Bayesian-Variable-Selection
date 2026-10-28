@@ -1,0 +1,1801 @@
+method_id,scale_key,scenario,variable,denominator,selected
+Original BB+HPM,c100,1,3,100,100
+Original BB+HPM,c100,1,97,100,100
+Original BB+HPM,c100,1,194,100,100
+Original BB+HPM,c100,1,286,100,100
+Original BB+HPM,c100,1,385,100,100
+Original BB+HPM,c100,1,478,100,100
+Original BB+HPM,c100,2,3,100,100
+Original BB+HPM,c100,2,97,100,100
+Original BB+HPM,c100,2,194,100,100
+Original BB+HPM,c100,2,286,100,100
+Original BB+HPM,c100,2,385,100,100
+Original BB+HPM,c100,2,478,100,100
+Original BB+HPM,c100,3,3,100,100
+Original BB+HPM,c100,3,97,100,100
+Original BB+HPM,c100,3,194,100,100
+Original BB+HPM,c100,3,286,100,100
+Original BB+HPM,c100,3,385,100,100
+Original BB+HPM,c100,3,478,100,100
+Original BB+HPM,c100,4,3,100,100
+Original BB+HPM,c100,4,97,100,100
+Original BB+HPM,c100,4,194,100,100
+Original BB+HPM,c100,4,286,100,100
+Original BB+HPM,c100,4,385,100,100
+Original BB+HPM,c100,4,478,100,100
+Original BB+HPM,c100,5,3,100,100
+Original BB+HPM,c100,5,97,100,100
+Original BB+HPM,c100,5,194,100,100
+Original BB+HPM,c100,5,286,100,100
+Original BB+HPM,c100,5,385,100,100
+Original BB+HPM,c100,5,478,100,100
+Original BB+HPM,c100,6,3,100,100
+Original BB+HPM,c100,6,97,100,100
+Original BB+HPM,c100,6,194,100,100
+Original BB+HPM,c100,6,286,100,100
+Original BB+HPM,c100,6,385,100,100
+Original BB+HPM,c100,6,478,100,100
+Original BB+HPM,c075,1,3,100,100
+Original BB+HPM,c075,1,97,100,100
+Original BB+HPM,c075,1,194,100,100
+Original BB+HPM,c075,1,286,100,100
+Original BB+HPM,c075,1,385,100,100
+Original BB+HPM,c075,1,478,100,100
+Original BB+HPM,c075,2,3,100,100
+Original BB+HPM,c075,2,97,100,100
+Original BB+HPM,c075,2,194,100,100
+Original BB+HPM,c075,2,286,100,100
+Original BB+HPM,c075,2,385,100,100
+Original BB+HPM,c075,2,478,100,100
+Original BB+HPM,c075,3,3,100,100
+Original BB+HPM,c075,3,97,100,100
+Original BB+HPM,c075,3,194,100,100
+Original BB+HPM,c075,3,286,100,100
+Original BB+HPM,c075,3,385,100,100
+Original BB+HPM,c075,3,478,100,100
+Original BB+HPM,c075,4,3,100,100
+Original BB+HPM,c075,4,97,100,100
+Original BB+HPM,c075,4,194,100,100
+Original BB+HPM,c075,4,286,100,100
+Original BB+HPM,c075,4,385,100,95
+Original BB+HPM,c075,4,478,100,100
+Original BB+HPM,c075,5,3,100,100
+Original BB+HPM,c075,5,97,100,100
+Original BB+HPM,c075,5,194,100,100
+Original BB+HPM,c075,5,286,100,100
+Original BB+HPM,c075,5,385,100,100
+Original BB+HPM,c075,5,478,100,100
+Original BB+HPM,c075,6,3,100,100
+Original BB+HPM,c075,6,97,100,100
+Original BB+HPM,c075,6,194,100,100
+Original BB+HPM,c075,6,286,100,100
+Original BB+HPM,c075,6,385,100,99
+Original BB+HPM,c075,6,478,100,100
+Original BB+HPM,c050,1,3,100,100
+Original BB+HPM,c050,1,97,100,100
+Original BB+HPM,c050,1,194,100,100
+Original BB+HPM,c050,1,286,100,100
+Original BB+HPM,c050,1,385,100,96
+Original BB+HPM,c050,1,478,100,100
+Original BB+HPM,c050,2,3,100,100
+Original BB+HPM,c050,2,97,100,100
+Original BB+HPM,c050,2,194,100,100
+Original BB+HPM,c050,2,286,100,100
+Original BB+HPM,c050,2,385,100,95
+Original BB+HPM,c050,2,478,100,100
+Original BB+HPM,c050,3,3,100,100
+Original BB+HPM,c050,3,97,100,99
+Original BB+HPM,c050,3,194,100,100
+Original BB+HPM,c050,3,286,100,99
+Original BB+HPM,c050,3,385,100,96
+Original BB+HPM,c050,3,478,100,100
+Original BB+HPM,c050,4,3,100,98
+Original BB+HPM,c050,4,97,100,89
+Original BB+HPM,c050,4,194,100,100
+Original BB+HPM,c050,4,286,100,98
+Original BB+HPM,c050,4,385,100,80
+Original BB+HPM,c050,4,478,100,100
+Original BB+HPM,c050,5,3,100,100
+Original BB+HPM,c050,5,97,100,93
+Original BB+HPM,c050,5,194,100,100
+Original BB+HPM,c050,5,286,100,100
+Original BB+HPM,c050,5,385,100,77
+Original BB+HPM,c050,5,478,100,100
+Original BB+HPM,c050,6,3,100,100
+Original BB+HPM,c050,6,97,100,99
+Original BB+HPM,c050,6,194,100,100
+Original BB+HPM,c050,6,286,100,99
+Original BB+HPM,c050,6,385,100,84
+Original BB+HPM,c050,6,478,100,97
+Original BB+HPM,c035,1,3,100,99
+Original BB+HPM,c035,1,97,100,73
+Original BB+HPM,c035,1,194,100,100
+Original BB+HPM,c035,1,286,100,91
+Original BB+HPM,c035,1,385,100,47
+Original BB+HPM,c035,1,478,100,100
+Original BB+HPM,c035,2,3,100,100
+Original BB+HPM,c035,2,97,100,83
+Original BB+HPM,c035,2,194,100,100
+Original BB+HPM,c035,2,286,100,93
+Original BB+HPM,c035,2,385,100,50
+Original BB+HPM,c035,2,478,100,100
+Original BB+HPM,c035,3,3,100,97
+Original BB+HPM,c035,3,97,100,76
+Original BB+HPM,c035,3,194,100,99
+Original BB+HPM,c035,3,286,100,85
+Original BB+HPM,c035,3,385,100,39
+Original BB+HPM,c035,3,478,100,99
+Original BB+HPM,c035,4,3,100,88
+Original BB+HPM,c035,4,97,100,54
+Original BB+HPM,c035,4,194,100,85
+Original BB+HPM,c035,4,286,100,81
+Original BB+HPM,c035,4,385,100,34
+Original BB+HPM,c035,4,478,100,93
+Original BB+HPM,c035,5,3,100,91
+Original BB+HPM,c035,5,97,100,55
+Original BB+HPM,c035,5,194,100,100
+Original BB+HPM,c035,5,286,100,83
+Original BB+HPM,c035,5,385,100,19
+Original BB+HPM,c035,5,478,100,99
+Original BB+HPM,c035,6,3,100,98
+Original BB+HPM,c035,6,97,100,71
+Original BB+HPM,c035,6,194,100,100
+Original BB+HPM,c035,6,286,100,89
+Original BB+HPM,c035,6,385,100,42
+Original BB+HPM,c035,6,478,100,89
+Original BB+HPM,c025,1,3,100,65
+Original BB+HPM,c025,1,97,100,26
+Original BB+HPM,c025,1,194,100,92
+Original BB+HPM,c025,1,286,100,41
+Original BB+HPM,c025,1,385,100,9
+Original BB+HPM,c025,1,478,100,81
+Original BB+HPM,c025,2,3,100,65
+Original BB+HPM,c025,2,97,100,26
+Original BB+HPM,c025,2,194,100,91
+Original BB+HPM,c025,2,286,100,42
+Original BB+HPM,c025,2,385,100,10
+Original BB+HPM,c025,2,478,100,85
+Original BB+HPM,c025,3,3,100,59
+Original BB+HPM,c025,3,97,100,20
+Original BB+HPM,c025,3,194,100,89
+Original BB+HPM,c025,3,286,100,42
+Original BB+HPM,c025,3,385,100,7
+Original BB+HPM,c025,3,478,100,80
+Original BB+HPM,c025,4,3,100,59
+Original BB+HPM,c025,4,97,100,13
+Original BB+HPM,c025,4,194,100,76
+Original BB+HPM,c025,4,286,100,32
+Original BB+HPM,c025,4,385,100,9
+Original BB+HPM,c025,4,478,100,71
+Original BB+HPM,c025,5,3,100,36
+Original BB+HPM,c025,5,97,100,8
+Original BB+HPM,c025,5,194,100,73
+Original BB+HPM,c025,5,286,100,27
+Original BB+HPM,c025,5,385,100,2
+Original BB+HPM,c025,5,478,100,60
+Original BB+HPM,c025,6,3,100,70
+Original BB+HPM,c025,6,97,100,15
+Original BB+HPM,c025,6,194,100,94
+Original BB+HPM,c025,6,286,100,30
+Original BB+HPM,c025,6,385,100,7
+Original BB+HPM,c025,6,478,100,53
+Mixture BB+HPM,c100,1,3,100,100
+Mixture BB+HPM,c100,1,97,100,100
+Mixture BB+HPM,c100,1,194,100,100
+Mixture BB+HPM,c100,1,286,100,100
+Mixture BB+HPM,c100,1,385,100,100
+Mixture BB+HPM,c100,1,478,100,100
+Mixture BB+HPM,c100,2,3,100,100
+Mixture BB+HPM,c100,2,97,100,100
+Mixture BB+HPM,c100,2,194,100,100
+Mixture BB+HPM,c100,2,286,100,100
+Mixture BB+HPM,c100,2,385,100,100
+Mixture BB+HPM,c100,2,478,100,100
+Mixture BB+HPM,c100,3,3,100,100
+Mixture BB+HPM,c100,3,97,100,100
+Mixture BB+HPM,c100,3,194,100,100
+Mixture BB+HPM,c100,3,286,100,100
+Mixture BB+HPM,c100,3,385,100,100
+Mixture BB+HPM,c100,3,478,100,100
+Mixture BB+HPM,c100,4,3,100,100
+Mixture BB+HPM,c100,4,97,100,100
+Mixture BB+HPM,c100,4,194,100,100
+Mixture BB+HPM,c100,4,286,100,100
+Mixture BB+HPM,c100,4,385,100,100
+Mixture BB+HPM,c100,4,478,100,100
+Mixture BB+HPM,c100,5,3,100,100
+Mixture BB+HPM,c100,5,97,100,100
+Mixture BB+HPM,c100,5,194,100,100
+Mixture BB+HPM,c100,5,286,100,100
+Mixture BB+HPM,c100,5,385,100,100
+Mixture BB+HPM,c100,5,478,100,100
+Mixture BB+HPM,c100,6,3,100,100
+Mixture BB+HPM,c100,6,97,100,100
+Mixture BB+HPM,c100,6,194,100,100
+Mixture BB+HPM,c100,6,286,100,100
+Mixture BB+HPM,c100,6,385,100,100
+Mixture BB+HPM,c100,6,478,100,100
+Mixture BB+HPM,c075,1,3,100,100
+Mixture BB+HPM,c075,1,97,100,100
+Mixture BB+HPM,c075,1,194,100,100
+Mixture BB+HPM,c075,1,286,100,100
+Mixture BB+HPM,c075,1,385,100,100
+Mixture BB+HPM,c075,1,478,100,100
+Mixture BB+HPM,c075,2,3,100,100
+Mixture BB+HPM,c075,2,97,100,100
+Mixture BB+HPM,c075,2,194,100,100
+Mixture BB+HPM,c075,2,286,100,100
+Mixture BB+HPM,c075,2,385,100,100
+Mixture BB+HPM,c075,2,478,100,100
+Mixture BB+HPM,c075,3,3,100,100
+Mixture BB+HPM,c075,3,97,100,100
+Mixture BB+HPM,c075,3,194,100,100
+Mixture BB+HPM,c075,3,286,100,100
+Mixture BB+HPM,c075,3,385,100,100
+Mixture BB+HPM,c075,3,478,100,100
+Mixture BB+HPM,c075,4,3,100,100
+Mixture BB+HPM,c075,4,97,100,100
+Mixture BB+HPM,c075,4,194,100,100
+Mixture BB+HPM,c075,4,286,100,100
+Mixture BB+HPM,c075,4,385,100,95
+Mixture BB+HPM,c075,4,478,100,100
+Mixture BB+HPM,c075,5,3,100,100
+Mixture BB+HPM,c075,5,97,100,100
+Mixture BB+HPM,c075,5,194,100,100
+Mixture BB+HPM,c075,5,286,100,100
+Mixture BB+HPM,c075,5,385,100,100
+Mixture BB+HPM,c075,5,478,100,100
+Mixture BB+HPM,c075,6,3,100,100
+Mixture BB+HPM,c075,6,97,100,100
+Mixture BB+HPM,c075,6,194,100,100
+Mixture BB+HPM,c075,6,286,100,100
+Mixture BB+HPM,c075,6,385,100,99
+Mixture BB+HPM,c075,6,478,100,100
+Mixture BB+HPM,c050,1,3,100,100
+Mixture BB+HPM,c050,1,97,100,100
+Mixture BB+HPM,c050,1,194,100,100
+Mixture BB+HPM,c050,1,286,100,100
+Mixture BB+HPM,c050,1,385,100,96
+Mixture BB+HPM,c050,1,478,100,100
+Mixture BB+HPM,c050,2,3,100,100
+Mixture BB+HPM,c050,2,97,100,100
+Mixture BB+HPM,c050,2,194,100,100
+Mixture BB+HPM,c050,2,286,100,100
+Mixture BB+HPM,c050,2,385,100,95
+Mixture BB+HPM,c050,2,478,100,100
+Mixture BB+HPM,c050,3,3,100,100
+Mixture BB+HPM,c050,3,97,100,99
+Mixture BB+HPM,c050,3,194,100,100
+Mixture BB+HPM,c050,3,286,100,99
+Mixture BB+HPM,c050,3,385,100,96
+Mixture BB+HPM,c050,3,478,100,100
+Mixture BB+HPM,c050,4,3,100,98
+Mixture BB+HPM,c050,4,97,100,89
+Mixture BB+HPM,c050,4,194,100,100
+Mixture BB+HPM,c050,4,286,100,98
+Mixture BB+HPM,c050,4,385,100,80
+Mixture BB+HPM,c050,4,478,100,100
+Mixture BB+HPM,c050,5,3,100,100
+Mixture BB+HPM,c050,5,97,100,93
+Mixture BB+HPM,c050,5,194,100,100
+Mixture BB+HPM,c050,5,286,100,100
+Mixture BB+HPM,c050,5,385,100,77
+Mixture BB+HPM,c050,5,478,100,100
+Mixture BB+HPM,c050,6,3,100,100
+Mixture BB+HPM,c050,6,97,100,99
+Mixture BB+HPM,c050,6,194,100,100
+Mixture BB+HPM,c050,6,286,100,99
+Mixture BB+HPM,c050,6,385,100,84
+Mixture BB+HPM,c050,6,478,100,97
+Mixture BB+HPM,c035,1,3,100,99
+Mixture BB+HPM,c035,1,97,100,73
+Mixture BB+HPM,c035,1,194,100,100
+Mixture BB+HPM,c035,1,286,100,94
+Mixture BB+HPM,c035,1,385,100,50
+Mixture BB+HPM,c035,1,478,100,100
+Mixture BB+HPM,c035,2,3,100,100
+Mixture BB+HPM,c035,2,97,100,88
+Mixture BB+HPM,c035,2,194,100,100
+Mixture BB+HPM,c035,2,286,100,93
+Mixture BB+HPM,c035,2,385,100,53
+Mixture BB+HPM,c035,2,478,100,100
+Mixture BB+HPM,c035,3,3,100,98
+Mixture BB+HPM,c035,3,97,100,79
+Mixture BB+HPM,c035,3,194,100,99
+Mixture BB+HPM,c035,3,286,100,88
+Mixture BB+HPM,c035,3,385,100,43
+Mixture BB+HPM,c035,3,478,100,99
+Mixture BB+HPM,c035,4,3,100,88
+Mixture BB+HPM,c035,4,97,100,55
+Mixture BB+HPM,c035,4,194,100,85
+Mixture BB+HPM,c035,4,286,100,81
+Mixture BB+HPM,c035,4,385,100,37
+Mixture BB+HPM,c035,4,478,100,93
+Mixture BB+HPM,c035,5,3,100,94
+Mixture BB+HPM,c035,5,97,100,56
+Mixture BB+HPM,c035,5,194,100,100
+Mixture BB+HPM,c035,5,286,100,87
+Mixture BB+HPM,c035,5,385,100,23
+Mixture BB+HPM,c035,5,478,100,99
+Mixture BB+HPM,c035,6,3,100,98
+Mixture BB+HPM,c035,6,97,100,72
+Mixture BB+HPM,c035,6,194,100,100
+Mixture BB+HPM,c035,6,286,100,91
+Mixture BB+HPM,c035,6,385,100,43
+Mixture BB+HPM,c035,6,478,100,88
+Mixture BB+HPM,c025,1,3,100,73
+Mixture BB+HPM,c025,1,97,100,32
+Mixture BB+HPM,c025,1,194,100,98
+Mixture BB+HPM,c025,1,286,100,51
+Mixture BB+HPM,c025,1,385,100,13
+Mixture BB+HPM,c025,1,478,100,89
+Mixture BB+HPM,c025,2,3,100,75
+Mixture BB+HPM,c025,2,97,100,33
+Mixture BB+HPM,c025,2,194,100,95
+Mixture BB+HPM,c025,2,286,100,50
+Mixture BB+HPM,c025,2,385,100,13
+Mixture BB+HPM,c025,2,478,100,88
+Mixture BB+HPM,c025,3,3,100,65
+Mixture BB+HPM,c025,3,97,100,26
+Mixture BB+HPM,c025,3,194,100,92
+Mixture BB+HPM,c025,3,286,100,48
+Mixture BB+HPM,c025,3,385,100,13
+Mixture BB+HPM,c025,3,478,100,85
+Mixture BB+HPM,c025,4,3,100,63
+Mixture BB+HPM,c025,4,97,100,16
+Mixture BB+HPM,c025,4,194,100,77
+Mixture BB+HPM,c025,4,286,100,39
+Mixture BB+HPM,c025,4,385,100,11
+Mixture BB+HPM,c025,4,478,100,72
+Mixture BB+HPM,c025,5,3,100,43
+Mixture BB+HPM,c025,5,97,100,11
+Mixture BB+HPM,c025,5,194,100,78
+Mixture BB+HPM,c025,5,286,100,29
+Mixture BB+HPM,c025,5,385,100,3
+Mixture BB+HPM,c025,5,478,100,66
+Mixture BB+HPM,c025,6,3,100,75
+Mixture BB+HPM,c025,6,97,100,25
+Mixture BB+HPM,c025,6,194,100,94
+Mixture BB+HPM,c025,6,286,100,38
+Mixture BB+HPM,c025,6,385,100,8
+Mixture BB+HPM,c025,6,478,100,55
+Lasso EBIC gamma=0.5,c100,1,3,100,100
+Lasso EBIC gamma=0.5,c100,1,97,100,100
+Lasso EBIC gamma=0.5,c100,1,194,100,100
+Lasso EBIC gamma=0.5,c100,1,286,100,100
+Lasso EBIC gamma=0.5,c100,1,385,100,100
+Lasso EBIC gamma=0.5,c100,1,478,100,100
+Lasso EBIC gamma=0.5,c100,2,3,100,100
+Lasso EBIC gamma=0.5,c100,2,97,100,100
+Lasso EBIC gamma=0.5,c100,2,194,100,100
+Lasso EBIC gamma=0.5,c100,2,286,100,100
+Lasso EBIC gamma=0.5,c100,2,385,100,100
+Lasso EBIC gamma=0.5,c100,2,478,100,100
+Lasso EBIC gamma=0.5,c100,3,3,100,100
+Lasso EBIC gamma=0.5,c100,3,97,100,100
+Lasso EBIC gamma=0.5,c100,3,194,100,100
+Lasso EBIC gamma=0.5,c100,3,286,100,100
+Lasso EBIC gamma=0.5,c100,3,385,100,100
+Lasso EBIC gamma=0.5,c100,3,478,100,100
+Lasso EBIC gamma=0.5,c100,4,3,100,100
+Lasso EBIC gamma=0.5,c100,4,97,100,100
+Lasso EBIC gamma=0.5,c100,4,194,100,100
+Lasso EBIC gamma=0.5,c100,4,286,100,100
+Lasso EBIC gamma=0.5,c100,4,385,100,99
+Lasso EBIC gamma=0.5,c100,4,478,100,100
+Lasso EBIC gamma=0.5,c100,5,3,100,100
+Lasso EBIC gamma=0.5,c100,5,97,100,100
+Lasso EBIC gamma=0.5,c100,5,194,100,100
+Lasso EBIC gamma=0.5,c100,5,286,100,100
+Lasso EBIC gamma=0.5,c100,5,385,100,100
+Lasso EBIC gamma=0.5,c100,5,478,100,100
+Lasso EBIC gamma=0.5,c100,6,3,100,100
+Lasso EBIC gamma=0.5,c100,6,97,100,100
+Lasso EBIC gamma=0.5,c100,6,194,100,100
+Lasso EBIC gamma=0.5,c100,6,286,100,100
+Lasso EBIC gamma=0.5,c100,6,385,100,100
+Lasso EBIC gamma=0.5,c100,6,478,100,100
+Lasso EBIC gamma=0.5,c075,1,3,100,100
+Lasso EBIC gamma=0.5,c075,1,97,100,100
+Lasso EBIC gamma=0.5,c075,1,194,100,100
+Lasso EBIC gamma=0.5,c075,1,286,100,100
+Lasso EBIC gamma=0.5,c075,1,385,100,100
+Lasso EBIC gamma=0.5,c075,1,478,100,100
+Lasso EBIC gamma=0.5,c075,2,3,100,100
+Lasso EBIC gamma=0.5,c075,2,97,100,100
+Lasso EBIC gamma=0.5,c075,2,194,100,100
+Lasso EBIC gamma=0.5,c075,2,286,100,100
+Lasso EBIC gamma=0.5,c075,2,385,100,100
+Lasso EBIC gamma=0.5,c075,2,478,100,100
+Lasso EBIC gamma=0.5,c075,3,3,100,100
+Lasso EBIC gamma=0.5,c075,3,97,100,100
+Lasso EBIC gamma=0.5,c075,3,194,100,100
+Lasso EBIC gamma=0.5,c075,3,286,100,100
+Lasso EBIC gamma=0.5,c075,3,385,100,100
+Lasso EBIC gamma=0.5,c075,3,478,100,100
+Lasso EBIC gamma=0.5,c075,4,3,100,100
+Lasso EBIC gamma=0.5,c075,4,97,100,96
+Lasso EBIC gamma=0.5,c075,4,194,100,100
+Lasso EBIC gamma=0.5,c075,4,286,100,100
+Lasso EBIC gamma=0.5,c075,4,385,100,93
+Lasso EBIC gamma=0.5,c075,4,478,100,100
+Lasso EBIC gamma=0.5,c075,5,3,100,100
+Lasso EBIC gamma=0.5,c075,5,97,100,100
+Lasso EBIC gamma=0.5,c075,5,194,100,100
+Lasso EBIC gamma=0.5,c075,5,286,100,100
+Lasso EBIC gamma=0.5,c075,5,385,100,98
+Lasso EBIC gamma=0.5,c075,5,478,100,100
+Lasso EBIC gamma=0.5,c075,6,3,100,100
+Lasso EBIC gamma=0.5,c075,6,97,100,100
+Lasso EBIC gamma=0.5,c075,6,194,100,100
+Lasso EBIC gamma=0.5,c075,6,286,100,100
+Lasso EBIC gamma=0.5,c075,6,385,100,97
+Lasso EBIC gamma=0.5,c075,6,478,100,100
+Lasso EBIC gamma=0.5,c050,1,3,100,100
+Lasso EBIC gamma=0.5,c050,1,97,100,100
+Lasso EBIC gamma=0.5,c050,1,194,100,100
+Lasso EBIC gamma=0.5,c050,1,286,100,100
+Lasso EBIC gamma=0.5,c050,1,385,100,100
+Lasso EBIC gamma=0.5,c050,1,478,100,100
+Lasso EBIC gamma=0.5,c050,2,3,100,100
+Lasso EBIC gamma=0.5,c050,2,97,100,100
+Lasso EBIC gamma=0.5,c050,2,194,100,100
+Lasso EBIC gamma=0.5,c050,2,286,100,100
+Lasso EBIC gamma=0.5,c050,2,385,100,96
+Lasso EBIC gamma=0.5,c050,2,478,100,100
+Lasso EBIC gamma=0.5,c050,3,3,100,100
+Lasso EBIC gamma=0.5,c050,3,97,100,97
+Lasso EBIC gamma=0.5,c050,3,194,100,100
+Lasso EBIC gamma=0.5,c050,3,286,100,99
+Lasso EBIC gamma=0.5,c050,3,385,100,87
+Lasso EBIC gamma=0.5,c050,3,478,100,100
+Lasso EBIC gamma=0.5,c050,4,3,100,96
+Lasso EBIC gamma=0.5,c050,4,97,100,83
+Lasso EBIC gamma=0.5,c050,4,194,100,99
+Lasso EBIC gamma=0.5,c050,4,286,100,98
+Lasso EBIC gamma=0.5,c050,4,385,100,64
+Lasso EBIC gamma=0.5,c050,4,478,100,98
+Lasso EBIC gamma=0.5,c050,5,3,100,100
+Lasso EBIC gamma=0.5,c050,5,97,100,94
+Lasso EBIC gamma=0.5,c050,5,194,100,100
+Lasso EBIC gamma=0.5,c050,5,286,100,100
+Lasso EBIC gamma=0.5,c050,5,385,100,76
+Lasso EBIC gamma=0.5,c050,5,478,100,100
+Lasso EBIC gamma=0.5,c050,6,3,100,100
+Lasso EBIC gamma=0.5,c050,6,97,100,98
+Lasso EBIC gamma=0.5,c050,6,194,100,100
+Lasso EBIC gamma=0.5,c050,6,286,100,99
+Lasso EBIC gamma=0.5,c050,6,385,100,84
+Lasso EBIC gamma=0.5,c050,6,478,100,98
+Lasso EBIC gamma=0.5,c035,1,3,100,100
+Lasso EBIC gamma=0.5,c035,1,97,100,89
+Lasso EBIC gamma=0.5,c035,1,194,100,100
+Lasso EBIC gamma=0.5,c035,1,286,100,97
+Lasso EBIC gamma=0.5,c035,1,385,100,69
+Lasso EBIC gamma=0.5,c035,1,478,100,100
+Lasso EBIC gamma=0.5,c035,2,3,100,100
+Lasso EBIC gamma=0.5,c035,2,97,100,90
+Lasso EBIC gamma=0.5,c035,2,194,100,100
+Lasso EBIC gamma=0.5,c035,2,286,100,97
+Lasso EBIC gamma=0.5,c035,2,385,100,59
+Lasso EBIC gamma=0.5,c035,2,478,100,100
+Lasso EBIC gamma=0.5,c035,3,3,100,100
+Lasso EBIC gamma=0.5,c035,3,97,100,77
+Lasso EBIC gamma=0.5,c035,3,194,100,99
+Lasso EBIC gamma=0.5,c035,3,286,100,95
+Lasso EBIC gamma=0.5,c035,3,385,100,49
+Lasso EBIC gamma=0.5,c035,3,478,100,99
+Lasso EBIC gamma=0.5,c035,4,3,100,85
+Lasso EBIC gamma=0.5,c035,4,97,100,55
+Lasso EBIC gamma=0.5,c035,4,194,100,96
+Lasso EBIC gamma=0.5,c035,4,286,100,83
+Lasso EBIC gamma=0.5,c035,4,385,100,29
+Lasso EBIC gamma=0.5,c035,4,478,100,94
+Lasso EBIC gamma=0.5,c035,5,3,100,94
+Lasso EBIC gamma=0.5,c035,5,97,100,61
+Lasso EBIC gamma=0.5,c035,5,194,100,100
+Lasso EBIC gamma=0.5,c035,5,286,100,86
+Lasso EBIC gamma=0.5,c035,5,385,100,30
+Lasso EBIC gamma=0.5,c035,5,478,100,100
+Lasso EBIC gamma=0.5,c035,6,3,100,99
+Lasso EBIC gamma=0.5,c035,6,97,100,79
+Lasso EBIC gamma=0.5,c035,6,194,100,100
+Lasso EBIC gamma=0.5,c035,6,286,100,89
+Lasso EBIC gamma=0.5,c035,6,385,100,45
+Lasso EBIC gamma=0.5,c035,6,478,100,85
+Lasso EBIC gamma=0.5,c025,1,3,100,92
+Lasso EBIC gamma=0.5,c025,1,97,100,54
+Lasso EBIC gamma=0.5,c025,1,194,100,99
+Lasso EBIC gamma=0.5,c025,1,286,100,72
+Lasso EBIC gamma=0.5,c025,1,385,100,31
+Lasso EBIC gamma=0.5,c025,1,478,100,98
+Lasso EBIC gamma=0.5,c025,2,3,100,87
+Lasso EBIC gamma=0.5,c025,2,97,100,55
+Lasso EBIC gamma=0.5,c025,2,194,100,99
+Lasso EBIC gamma=0.5,c025,2,286,100,69
+Lasso EBIC gamma=0.5,c025,2,385,100,32
+Lasso EBIC gamma=0.5,c025,2,478,100,97
+Lasso EBIC gamma=0.5,c025,3,3,100,75
+Lasso EBIC gamma=0.5,c025,3,97,100,36
+Lasso EBIC gamma=0.5,c025,3,194,100,96
+Lasso EBIC gamma=0.5,c025,3,286,100,57
+Lasso EBIC gamma=0.5,c025,3,385,100,20
+Lasso EBIC gamma=0.5,c025,3,478,100,89
+Lasso EBIC gamma=0.5,c025,4,3,100,63
+Lasso EBIC gamma=0.5,c025,4,97,100,24
+Lasso EBIC gamma=0.5,c025,4,194,100,78
+Lasso EBIC gamma=0.5,c025,4,286,100,50
+Lasso EBIC gamma=0.5,c025,4,385,100,12
+Lasso EBIC gamma=0.5,c025,4,478,100,71
+Lasso EBIC gamma=0.5,c025,5,3,100,58
+Lasso EBIC gamma=0.5,c025,5,97,100,22
+Lasso EBIC gamma=0.5,c025,5,194,100,94
+Lasso EBIC gamma=0.5,c025,5,286,100,44
+Lasso EBIC gamma=0.5,c025,5,385,100,6
+Lasso EBIC gamma=0.5,c025,5,478,100,84
+Lasso EBIC gamma=0.5,c025,6,3,100,84
+Lasso EBIC gamma=0.5,c025,6,97,100,31
+Lasso EBIC gamma=0.5,c025,6,194,100,97
+Lasso EBIC gamma=0.5,c025,6,286,100,51
+Lasso EBIC gamma=0.5,c025,6,385,100,18
+Lasso EBIC gamma=0.5,c025,6,478,100,67
+Lasso EBIC gamma=1,c100,1,3,100,100
+Lasso EBIC gamma=1,c100,1,97,100,100
+Lasso EBIC gamma=1,c100,1,194,100,100
+Lasso EBIC gamma=1,c100,1,286,100,100
+Lasso EBIC gamma=1,c100,1,385,100,100
+Lasso EBIC gamma=1,c100,1,478,100,100
+Lasso EBIC gamma=1,c100,2,3,100,100
+Lasso EBIC gamma=1,c100,2,97,100,100
+Lasso EBIC gamma=1,c100,2,194,100,100
+Lasso EBIC gamma=1,c100,2,286,100,100
+Lasso EBIC gamma=1,c100,2,385,100,100
+Lasso EBIC gamma=1,c100,2,478,100,100
+Lasso EBIC gamma=1,c100,3,3,100,100
+Lasso EBIC gamma=1,c100,3,97,100,100
+Lasso EBIC gamma=1,c100,3,194,100,100
+Lasso EBIC gamma=1,c100,3,286,100,100
+Lasso EBIC gamma=1,c100,3,385,100,100
+Lasso EBIC gamma=1,c100,3,478,100,100
+Lasso EBIC gamma=1,c100,4,3,100,100
+Lasso EBIC gamma=1,c100,4,97,100,100
+Lasso EBIC gamma=1,c100,4,194,100,100
+Lasso EBIC gamma=1,c100,4,286,100,100
+Lasso EBIC gamma=1,c100,4,385,100,97
+Lasso EBIC gamma=1,c100,4,478,100,100
+Lasso EBIC gamma=1,c100,5,3,100,100
+Lasso EBIC gamma=1,c100,5,97,100,100
+Lasso EBIC gamma=1,c100,5,194,100,100
+Lasso EBIC gamma=1,c100,5,286,100,100
+Lasso EBIC gamma=1,c100,5,385,100,100
+Lasso EBIC gamma=1,c100,5,478,100,100
+Lasso EBIC gamma=1,c100,6,3,100,100
+Lasso EBIC gamma=1,c100,6,97,100,100
+Lasso EBIC gamma=1,c100,6,194,100,100
+Lasso EBIC gamma=1,c100,6,286,100,100
+Lasso EBIC gamma=1,c100,6,385,100,100
+Lasso EBIC gamma=1,c100,6,478,100,100
+Lasso EBIC gamma=1,c075,1,3,100,100
+Lasso EBIC gamma=1,c075,1,97,100,100
+Lasso EBIC gamma=1,c075,1,194,100,100
+Lasso EBIC gamma=1,c075,1,286,100,100
+Lasso EBIC gamma=1,c075,1,385,100,100
+Lasso EBIC gamma=1,c075,1,478,100,100
+Lasso EBIC gamma=1,c075,2,3,100,100
+Lasso EBIC gamma=1,c075,2,97,100,100
+Lasso EBIC gamma=1,c075,2,194,100,100
+Lasso EBIC gamma=1,c075,2,286,100,100
+Lasso EBIC gamma=1,c075,2,385,100,100
+Lasso EBIC gamma=1,c075,2,478,100,100
+Lasso EBIC gamma=1,c075,3,3,100,100
+Lasso EBIC gamma=1,c075,3,97,100,100
+Lasso EBIC gamma=1,c075,3,194,100,100
+Lasso EBIC gamma=1,c075,3,286,100,100
+Lasso EBIC gamma=1,c075,3,385,100,99
+Lasso EBIC gamma=1,c075,3,478,100,100
+Lasso EBIC gamma=1,c075,4,3,100,100
+Lasso EBIC gamma=1,c075,4,97,100,95
+Lasso EBIC gamma=1,c075,4,194,100,100
+Lasso EBIC gamma=1,c075,4,286,100,100
+Lasso EBIC gamma=1,c075,4,385,100,89
+Lasso EBIC gamma=1,c075,4,478,100,100
+Lasso EBIC gamma=1,c075,5,3,100,100
+Lasso EBIC gamma=1,c075,5,97,100,100
+Lasso EBIC gamma=1,c075,5,194,100,100
+Lasso EBIC gamma=1,c075,5,286,100,100
+Lasso EBIC gamma=1,c075,5,385,100,96
+Lasso EBIC gamma=1,c075,5,478,100,100
+Lasso EBIC gamma=1,c075,6,3,100,100
+Lasso EBIC gamma=1,c075,6,97,100,100
+Lasso EBIC gamma=1,c075,6,194,100,100
+Lasso EBIC gamma=1,c075,6,286,100,100
+Lasso EBIC gamma=1,c075,6,385,100,94
+Lasso EBIC gamma=1,c075,6,478,100,100
+Lasso EBIC gamma=1,c050,1,3,100,100
+Lasso EBIC gamma=1,c050,1,97,100,100
+Lasso EBIC gamma=1,c050,1,194,100,100
+Lasso EBIC gamma=1,c050,1,286,100,100
+Lasso EBIC gamma=1,c050,1,385,100,95
+Lasso EBIC gamma=1,c050,1,478,100,100
+Lasso EBIC gamma=1,c050,2,3,100,100
+Lasso EBIC gamma=1,c050,2,97,100,100
+Lasso EBIC gamma=1,c050,2,194,100,100
+Lasso EBIC gamma=1,c050,2,286,100,100
+Lasso EBIC gamma=1,c050,2,385,100,91
+Lasso EBIC gamma=1,c050,2,478,100,100
+Lasso EBIC gamma=1,c050,3,3,100,100
+Lasso EBIC gamma=1,c050,3,97,100,93
+Lasso EBIC gamma=1,c050,3,194,100,100
+Lasso EBIC gamma=1,c050,3,286,100,98
+Lasso EBIC gamma=1,c050,3,385,100,71
+Lasso EBIC gamma=1,c050,3,478,100,100
+Lasso EBIC gamma=1,c050,4,3,100,95
+Lasso EBIC gamma=1,c050,4,97,100,78
+Lasso EBIC gamma=1,c050,4,194,100,99
+Lasso EBIC gamma=1,c050,4,286,100,95
+Lasso EBIC gamma=1,c050,4,385,100,53
+Lasso EBIC gamma=1,c050,4,478,100,98
+Lasso EBIC gamma=1,c050,5,3,100,99
+Lasso EBIC gamma=1,c050,5,97,100,86
+Lasso EBIC gamma=1,c050,5,194,100,100
+Lasso EBIC gamma=1,c050,5,286,100,100
+Lasso EBIC gamma=1,c050,5,385,100,64
+Lasso EBIC gamma=1,c050,5,478,100,100
+Lasso EBIC gamma=1,c050,6,3,100,100
+Lasso EBIC gamma=1,c050,6,97,100,94
+Lasso EBIC gamma=1,c050,6,194,100,100
+Lasso EBIC gamma=1,c050,6,286,100,97
+Lasso EBIC gamma=1,c050,6,385,100,71
+Lasso EBIC gamma=1,c050,6,478,100,96
+Lasso EBIC gamma=1,c035,1,3,100,99
+Lasso EBIC gamma=1,c035,1,97,100,71
+Lasso EBIC gamma=1,c035,1,194,100,100
+Lasso EBIC gamma=1,c035,1,286,100,91
+Lasso EBIC gamma=1,c035,1,385,100,42
+Lasso EBIC gamma=1,c035,1,478,100,100
+Lasso EBIC gamma=1,c035,2,3,100,97
+Lasso EBIC gamma=1,c035,2,97,100,82
+Lasso EBIC gamma=1,c035,2,194,100,100
+Lasso EBIC gamma=1,c035,2,286,100,89
+Lasso EBIC gamma=1,c035,2,385,100,47
+Lasso EBIC gamma=1,c035,2,478,100,100
+Lasso EBIC gamma=1,c035,3,3,100,95
+Lasso EBIC gamma=1,c035,3,97,100,59
+Lasso EBIC gamma=1,c035,3,194,100,99
+Lasso EBIC gamma=1,c035,3,286,100,83
+Lasso EBIC gamma=1,c035,3,385,100,28
+Lasso EBIC gamma=1,c035,3,478,100,98
+Lasso EBIC gamma=1,c035,4,3,100,81
+Lasso EBIC gamma=1,c035,4,97,100,42
+Lasso EBIC gamma=1,c035,4,194,100,94
+Lasso EBIC gamma=1,c035,4,286,100,72
+Lasso EBIC gamma=1,c035,4,385,100,20
+Lasso EBIC gamma=1,c035,4,478,100,88
+Lasso EBIC gamma=1,c035,5,3,100,86
+Lasso EBIC gamma=1,c035,5,97,100,40
+Lasso EBIC gamma=1,c035,5,194,100,100
+Lasso EBIC gamma=1,c035,5,286,100,70
+Lasso EBIC gamma=1,c035,5,385,100,11
+Lasso EBIC gamma=1,c035,5,478,100,99
+Lasso EBIC gamma=1,c035,6,3,100,95
+Lasso EBIC gamma=1,c035,6,97,100,59
+Lasso EBIC gamma=1,c035,6,194,100,100
+Lasso EBIC gamma=1,c035,6,286,100,81
+Lasso EBIC gamma=1,c035,6,385,100,34
+Lasso EBIC gamma=1,c035,6,478,100,80
+Lasso EBIC gamma=1,c025,1,3,100,71
+Lasso EBIC gamma=1,c025,1,97,100,29
+Lasso EBIC gamma=1,c025,1,194,100,95
+Lasso EBIC gamma=1,c025,1,286,100,47
+Lasso EBIC gamma=1,c025,1,385,100,12
+Lasso EBIC gamma=1,c025,1,478,100,86
+Lasso EBIC gamma=1,c025,2,3,100,70
+Lasso EBIC gamma=1,c025,2,97,100,28
+Lasso EBIC gamma=1,c025,2,194,100,93
+Lasso EBIC gamma=1,c025,2,286,100,44
+Lasso EBIC gamma=1,c025,2,385,100,14
+Lasso EBIC gamma=1,c025,2,478,100,88
+Lasso EBIC gamma=1,c025,3,3,100,55
+Lasso EBIC gamma=1,c025,3,97,100,18
+Lasso EBIC gamma=1,c025,3,194,100,90
+Lasso EBIC gamma=1,c025,3,286,100,39
+Lasso EBIC gamma=1,c025,3,385,100,5
+Lasso EBIC gamma=1,c025,3,478,100,77
+Lasso EBIC gamma=1,c025,4,3,100,43
+Lasso EBIC gamma=1,c025,4,97,100,11
+Lasso EBIC gamma=1,c025,4,194,100,66
+Lasso EBIC gamma=1,c025,4,286,100,24
+Lasso EBIC gamma=1,c025,4,385,100,6
+Lasso EBIC gamma=1,c025,4,478,100,56
+Lasso EBIC gamma=1,c025,5,3,100,39
+Lasso EBIC gamma=1,c025,5,97,100,8
+Lasso EBIC gamma=1,c025,5,194,100,77
+Lasso EBIC gamma=1,c025,5,286,100,25
+Lasso EBIC gamma=1,c025,5,385,100,1
+Lasso EBIC gamma=1,c025,5,478,100,66
+Lasso EBIC gamma=1,c025,6,3,100,69
+Lasso EBIC gamma=1,c025,6,97,100,15
+Lasso EBIC gamma=1,c025,6,194,100,91
+Lasso EBIC gamma=1,c025,6,286,100,34
+Lasso EBIC gamma=1,c025,6,385,100,6
+Lasso EBIC gamma=1,c025,6,478,100,55
+Lasso CV minimum,c100,1,3,100,100
+Lasso CV minimum,c100,1,97,100,100
+Lasso CV minimum,c100,1,194,100,100
+Lasso CV minimum,c100,1,286,100,100
+Lasso CV minimum,c100,1,385,100,100
+Lasso CV minimum,c100,1,478,100,100
+Lasso CV minimum,c100,2,3,100,100
+Lasso CV minimum,c100,2,97,100,100
+Lasso CV minimum,c100,2,194,100,100
+Lasso CV minimum,c100,2,286,100,100
+Lasso CV minimum,c100,2,385,100,100
+Lasso CV minimum,c100,2,478,100,100
+Lasso CV minimum,c100,3,3,100,100
+Lasso CV minimum,c100,3,97,100,100
+Lasso CV minimum,c100,3,194,100,100
+Lasso CV minimum,c100,3,286,100,100
+Lasso CV minimum,c100,3,385,100,100
+Lasso CV minimum,c100,3,478,100,100
+Lasso CV minimum,c100,4,3,100,100
+Lasso CV minimum,c100,4,97,100,100
+Lasso CV minimum,c100,4,194,100,100
+Lasso CV minimum,c100,4,286,100,100
+Lasso CV minimum,c100,4,385,100,100
+Lasso CV minimum,c100,4,478,100,100
+Lasso CV minimum,c100,5,3,100,100
+Lasso CV minimum,c100,5,97,100,100
+Lasso CV minimum,c100,5,194,100,100
+Lasso CV minimum,c100,5,286,100,100
+Lasso CV minimum,c100,5,385,100,100
+Lasso CV minimum,c100,5,478,100,100
+Lasso CV minimum,c100,6,3,100,100
+Lasso CV minimum,c100,6,97,100,100
+Lasso CV minimum,c100,6,194,100,100
+Lasso CV minimum,c100,6,286,100,100
+Lasso CV minimum,c100,6,385,100,100
+Lasso CV minimum,c100,6,478,100,100
+Lasso CV minimum,c075,1,3,100,100
+Lasso CV minimum,c075,1,97,100,100
+Lasso CV minimum,c075,1,194,100,100
+Lasso CV minimum,c075,1,286,100,100
+Lasso CV minimum,c075,1,385,100,100
+Lasso CV minimum,c075,1,478,100,100
+Lasso CV minimum,c075,2,3,100,100
+Lasso CV minimum,c075,2,97,100,100
+Lasso CV minimum,c075,2,194,100,100
+Lasso CV minimum,c075,2,286,100,100
+Lasso CV minimum,c075,2,385,100,100
+Lasso CV minimum,c075,2,478,100,100
+Lasso CV minimum,c075,3,3,100,100
+Lasso CV minimum,c075,3,97,100,100
+Lasso CV minimum,c075,3,194,100,100
+Lasso CV minimum,c075,3,286,100,100
+Lasso CV minimum,c075,3,385,100,100
+Lasso CV minimum,c075,3,478,100,100
+Lasso CV minimum,c075,4,3,100,100
+Lasso CV minimum,c075,4,97,100,100
+Lasso CV minimum,c075,4,194,100,100
+Lasso CV minimum,c075,4,286,100,100
+Lasso CV minimum,c075,4,385,100,99
+Lasso CV minimum,c075,4,478,100,100
+Lasso CV minimum,c075,5,3,100,100
+Lasso CV minimum,c075,5,97,100,100
+Lasso CV minimum,c075,5,194,100,100
+Lasso CV minimum,c075,5,286,100,100
+Lasso CV minimum,c075,5,385,100,100
+Lasso CV minimum,c075,5,478,100,100
+Lasso CV minimum,c075,6,3,100,100
+Lasso CV minimum,c075,6,97,100,100
+Lasso CV minimum,c075,6,194,100,100
+Lasso CV minimum,c075,6,286,100,100
+Lasso CV minimum,c075,6,385,100,100
+Lasso CV minimum,c075,6,478,100,100
+Lasso CV minimum,c050,1,3,100,100
+Lasso CV minimum,c050,1,97,100,100
+Lasso CV minimum,c050,1,194,100,100
+Lasso CV minimum,c050,1,286,100,100
+Lasso CV minimum,c050,1,385,100,100
+Lasso CV minimum,c050,1,478,100,100
+Lasso CV minimum,c050,2,3,100,100
+Lasso CV minimum,c050,2,97,100,100
+Lasso CV minimum,c050,2,194,100,100
+Lasso CV minimum,c050,2,286,100,100
+Lasso CV minimum,c050,2,385,100,100
+Lasso CV minimum,c050,2,478,100,100
+Lasso CV minimum,c050,3,3,100,100
+Lasso CV minimum,c050,3,97,100,100
+Lasso CV minimum,c050,3,194,100,100
+Lasso CV minimum,c050,3,286,100,100
+Lasso CV minimum,c050,3,385,100,100
+Lasso CV minimum,c050,3,478,100,100
+Lasso CV minimum,c050,4,3,100,100
+Lasso CV minimum,c050,4,97,100,98
+Lasso CV minimum,c050,4,194,100,100
+Lasso CV minimum,c050,4,286,100,100
+Lasso CV minimum,c050,4,385,100,95
+Lasso CV minimum,c050,4,478,100,100
+Lasso CV minimum,c050,5,3,100,100
+Lasso CV minimum,c050,5,97,100,100
+Lasso CV minimum,c050,5,194,100,100
+Lasso CV minimum,c050,5,286,100,100
+Lasso CV minimum,c050,5,385,100,98
+Lasso CV minimum,c050,5,478,100,100
+Lasso CV minimum,c050,6,3,100,100
+Lasso CV minimum,c050,6,97,100,100
+Lasso CV minimum,c050,6,194,100,100
+Lasso CV minimum,c050,6,286,100,100
+Lasso CV minimum,c050,6,385,100,99
+Lasso CV minimum,c050,6,478,100,100
+Lasso CV minimum,c035,1,3,100,100
+Lasso CV minimum,c035,1,97,100,100
+Lasso CV minimum,c035,1,194,100,100
+Lasso CV minimum,c035,1,286,100,100
+Lasso CV minimum,c035,1,385,100,99
+Lasso CV minimum,c035,1,478,100,100
+Lasso CV minimum,c035,2,3,100,100
+Lasso CV minimum,c035,2,97,100,100
+Lasso CV minimum,c035,2,194,100,100
+Lasso CV minimum,c035,2,286,100,100
+Lasso CV minimum,c035,2,385,100,96
+Lasso CV minimum,c035,2,478,100,100
+Lasso CV minimum,c035,3,3,100,100
+Lasso CV minimum,c035,3,97,100,98
+Lasso CV minimum,c035,3,194,100,100
+Lasso CV minimum,c035,3,286,100,98
+Lasso CV minimum,c035,3,385,100,92
+Lasso CV minimum,c035,3,478,100,100
+Lasso CV minimum,c035,4,3,100,98
+Lasso CV minimum,c035,4,97,100,89
+Lasso CV minimum,c035,4,194,100,100
+Lasso CV minimum,c035,4,286,100,98
+Lasso CV minimum,c035,4,385,100,82
+Lasso CV minimum,c035,4,478,100,100
+Lasso CV minimum,c035,5,3,100,100
+Lasso CV minimum,c035,5,97,100,95
+Lasso CV minimum,c035,5,194,100,100
+Lasso CV minimum,c035,5,286,100,100
+Lasso CV minimum,c035,5,385,100,76
+Lasso CV minimum,c035,5,478,100,100
+Lasso CV minimum,c035,6,3,100,99
+Lasso CV minimum,c035,6,97,100,98
+Lasso CV minimum,c035,6,194,100,100
+Lasso CV minimum,c035,6,286,100,99
+Lasso CV minimum,c035,6,385,100,82
+Lasso CV minimum,c035,6,478,100,99
+Lasso CV minimum,c025,1,3,100,99
+Lasso CV minimum,c025,1,97,100,87
+Lasso CV minimum,c025,1,194,100,100
+Lasso CV minimum,c025,1,286,100,94
+Lasso CV minimum,c025,1,385,100,77
+Lasso CV minimum,c025,1,478,100,100
+Lasso CV minimum,c025,2,3,100,98
+Lasso CV minimum,c025,2,97,100,90
+Lasso CV minimum,c025,2,194,100,100
+Lasso CV minimum,c025,2,286,100,91
+Lasso CV minimum,c025,2,385,100,71
+Lasso CV minimum,c025,2,478,100,100
+Lasso CV minimum,c025,3,3,100,97
+Lasso CV minimum,c025,3,97,100,87
+Lasso CV minimum,c025,3,194,100,99
+Lasso CV minimum,c025,3,286,100,91
+Lasso CV minimum,c025,3,385,100,68
+Lasso CV minimum,c025,3,478,100,99
+Lasso CV minimum,c025,4,3,100,88
+Lasso CV minimum,c025,4,97,100,68
+Lasso CV minimum,c025,4,194,100,96
+Lasso CV minimum,c025,4,286,100,89
+Lasso CV minimum,c025,4,385,100,56
+Lasso CV minimum,c025,4,478,100,93
+Lasso CV minimum,c025,5,3,100,91
+Lasso CV minimum,c025,5,97,100,71
+Lasso CV minimum,c025,5,194,100,100
+Lasso CV minimum,c025,5,286,100,90
+Lasso CV minimum,c025,5,385,100,42
+Lasso CV minimum,c025,5,478,100,98
+Lasso CV minimum,c025,6,3,100,98
+Lasso CV minimum,c025,6,97,100,88
+Lasso CV minimum,c025,6,194,100,100
+Lasso CV minimum,c025,6,286,100,90
+Lasso CV minimum,c025,6,385,100,62
+Lasso CV minimum,c025,6,478,100,86
+Lasso CV 1SE,c100,1,3,100,100
+Lasso CV 1SE,c100,1,97,100,100
+Lasso CV 1SE,c100,1,194,100,100
+Lasso CV 1SE,c100,1,286,100,100
+Lasso CV 1SE,c100,1,385,100,100
+Lasso CV 1SE,c100,1,478,100,100
+Lasso CV 1SE,c100,2,3,100,100
+Lasso CV 1SE,c100,2,97,100,100
+Lasso CV 1SE,c100,2,194,100,100
+Lasso CV 1SE,c100,2,286,100,100
+Lasso CV 1SE,c100,2,385,100,100
+Lasso CV 1SE,c100,2,478,100,100
+Lasso CV 1SE,c100,3,3,100,100
+Lasso CV 1SE,c100,3,97,100,100
+Lasso CV 1SE,c100,3,194,100,100
+Lasso CV 1SE,c100,3,286,100,100
+Lasso CV 1SE,c100,3,385,100,100
+Lasso CV 1SE,c100,3,478,100,100
+Lasso CV 1SE,c100,4,3,100,100
+Lasso CV 1SE,c100,4,97,100,100
+Lasso CV 1SE,c100,4,194,100,100
+Lasso CV 1SE,c100,4,286,100,100
+Lasso CV 1SE,c100,4,385,100,100
+Lasso CV 1SE,c100,4,478,100,100
+Lasso CV 1SE,c100,5,3,100,100
+Lasso CV 1SE,c100,5,97,100,100
+Lasso CV 1SE,c100,5,194,100,100
+Lasso CV 1SE,c100,5,286,100,100
+Lasso CV 1SE,c100,5,385,100,100
+Lasso CV 1SE,c100,5,478,100,100
+Lasso CV 1SE,c100,6,3,100,100
+Lasso CV 1SE,c100,6,97,100,100
+Lasso CV 1SE,c100,6,194,100,100
+Lasso CV 1SE,c100,6,286,100,100
+Lasso CV 1SE,c100,6,385,100,100
+Lasso CV 1SE,c100,6,478,100,100
+Lasso CV 1SE,c075,1,3,100,100
+Lasso CV 1SE,c075,1,97,100,100
+Lasso CV 1SE,c075,1,194,100,100
+Lasso CV 1SE,c075,1,286,100,100
+Lasso CV 1SE,c075,1,385,100,100
+Lasso CV 1SE,c075,1,478,100,100
+Lasso CV 1SE,c075,2,3,100,100
+Lasso CV 1SE,c075,2,97,100,100
+Lasso CV 1SE,c075,2,194,100,100
+Lasso CV 1SE,c075,2,286,100,100
+Lasso CV 1SE,c075,2,385,100,100
+Lasso CV 1SE,c075,2,478,100,100
+Lasso CV 1SE,c075,3,3,100,100
+Lasso CV 1SE,c075,3,97,100,100
+Lasso CV 1SE,c075,3,194,100,100
+Lasso CV 1SE,c075,3,286,100,100
+Lasso CV 1SE,c075,3,385,100,100
+Lasso CV 1SE,c075,3,478,100,100
+Lasso CV 1SE,c075,4,3,100,100
+Lasso CV 1SE,c075,4,97,100,100
+Lasso CV 1SE,c075,4,194,100,100
+Lasso CV 1SE,c075,4,286,100,100
+Lasso CV 1SE,c075,4,385,100,99
+Lasso CV 1SE,c075,4,478,100,100
+Lasso CV 1SE,c075,5,3,100,100
+Lasso CV 1SE,c075,5,97,100,100
+Lasso CV 1SE,c075,5,194,100,100
+Lasso CV 1SE,c075,5,286,100,100
+Lasso CV 1SE,c075,5,385,100,100
+Lasso CV 1SE,c075,5,478,100,100
+Lasso CV 1SE,c075,6,3,100,100
+Lasso CV 1SE,c075,6,97,100,100
+Lasso CV 1SE,c075,6,194,100,100
+Lasso CV 1SE,c075,6,286,100,100
+Lasso CV 1SE,c075,6,385,100,100
+Lasso CV 1SE,c075,6,478,100,100
+Lasso CV 1SE,c050,1,3,100,100
+Lasso CV 1SE,c050,1,97,100,100
+Lasso CV 1SE,c050,1,194,100,100
+Lasso CV 1SE,c050,1,286,100,100
+Lasso CV 1SE,c050,1,385,100,100
+Lasso CV 1SE,c050,1,478,100,100
+Lasso CV 1SE,c050,2,3,100,100
+Lasso CV 1SE,c050,2,97,100,100
+Lasso CV 1SE,c050,2,194,100,100
+Lasso CV 1SE,c050,2,286,100,100
+Lasso CV 1SE,c050,2,385,100,98
+Lasso CV 1SE,c050,2,478,100,100
+Lasso CV 1SE,c050,3,3,100,100
+Lasso CV 1SE,c050,3,97,100,100
+Lasso CV 1SE,c050,3,194,100,100
+Lasso CV 1SE,c050,3,286,100,100
+Lasso CV 1SE,c050,3,385,100,98
+Lasso CV 1SE,c050,3,478,100,100
+Lasso CV 1SE,c050,4,3,100,100
+Lasso CV 1SE,c050,4,97,100,96
+Lasso CV 1SE,c050,4,194,100,100
+Lasso CV 1SE,c050,4,286,100,100
+Lasso CV 1SE,c050,4,385,100,95
+Lasso CV 1SE,c050,4,478,100,100
+Lasso CV 1SE,c050,5,3,100,100
+Lasso CV 1SE,c050,5,97,100,98
+Lasso CV 1SE,c050,5,194,100,100
+Lasso CV 1SE,c050,5,286,100,100
+Lasso CV 1SE,c050,5,385,100,91
+Lasso CV 1SE,c050,5,478,100,100
+Lasso CV 1SE,c050,6,3,100,100
+Lasso CV 1SE,c050,6,97,100,100
+Lasso CV 1SE,c050,6,194,100,100
+Lasso CV 1SE,c050,6,286,100,100
+Lasso CV 1SE,c050,6,385,100,95
+Lasso CV 1SE,c050,6,478,100,100
+Lasso CV 1SE,c035,1,3,100,99
+Lasso CV 1SE,c035,1,97,100,91
+Lasso CV 1SE,c035,1,194,100,100
+Lasso CV 1SE,c035,1,286,100,99
+Lasso CV 1SE,c035,1,385,100,82
+Lasso CV 1SE,c035,1,478,100,100
+Lasso CV 1SE,c035,2,3,100,100
+Lasso CV 1SE,c035,2,97,100,98
+Lasso CV 1SE,c035,2,194,100,100
+Lasso CV 1SE,c035,2,286,100,100
+Lasso CV 1SE,c035,2,385,100,78
+Lasso CV 1SE,c035,2,478,100,100
+Lasso CV 1SE,c035,3,3,100,100
+Lasso CV 1SE,c035,3,97,100,95
+Lasso CV 1SE,c035,3,194,100,100
+Lasso CV 1SE,c035,3,286,100,98
+Lasso CV 1SE,c035,3,385,100,73
+Lasso CV 1SE,c035,3,478,100,100
+Lasso CV 1SE,c035,4,3,100,96
+Lasso CV 1SE,c035,4,97,100,79
+Lasso CV 1SE,c035,4,194,100,99
+Lasso CV 1SE,c035,4,286,100,98
+Lasso CV 1SE,c035,4,385,100,63
+Lasso CV 1SE,c035,4,478,100,100
+Lasso CV 1SE,c035,5,3,100,96
+Lasso CV 1SE,c035,5,97,100,79
+Lasso CV 1SE,c035,5,194,100,100
+Lasso CV 1SE,c035,5,286,100,96
+Lasso CV 1SE,c035,5,385,100,50
+Lasso CV 1SE,c035,5,478,100,100
+Lasso CV 1SE,c035,6,3,100,99
+Lasso CV 1SE,c035,6,97,100,92
+Lasso CV 1SE,c035,6,194,100,100
+Lasso CV 1SE,c035,6,286,100,97
+Lasso CV 1SE,c035,6,385,100,70
+Lasso CV 1SE,c035,6,478,100,98
+Lasso CV 1SE,c025,1,3,100,89
+Lasso CV 1SE,c025,1,97,100,56
+Lasso CV 1SE,c025,1,194,100,98
+Lasso CV 1SE,c025,1,286,100,76
+Lasso CV 1SE,c025,1,385,100,38
+Lasso CV 1SE,c025,1,478,100,94
+Lasso CV 1SE,c025,2,3,100,91
+Lasso CV 1SE,c025,2,97,100,65
+Lasso CV 1SE,c025,2,194,100,99
+Lasso CV 1SE,c025,2,286,100,77
+Lasso CV 1SE,c025,2,385,100,43
+Lasso CV 1SE,c025,2,478,100,98
+Lasso CV 1SE,c025,3,3,100,91
+Lasso CV 1SE,c025,3,97,100,55
+Lasso CV 1SE,c025,3,194,100,99
+Lasso CV 1SE,c025,3,286,100,80
+Lasso CV 1SE,c025,3,385,100,39
+Lasso CV 1SE,c025,3,478,100,95
+Lasso CV 1SE,c025,4,3,100,80
+Lasso CV 1SE,c025,4,97,100,45
+Lasso CV 1SE,c025,4,194,100,89
+Lasso CV 1SE,c025,4,286,100,70
+Lasso CV 1SE,c025,4,385,100,23
+Lasso CV 1SE,c025,4,478,100,86
+Lasso CV 1SE,c025,5,3,100,64
+Lasso CV 1SE,c025,5,97,100,35
+Lasso CV 1SE,c025,5,194,100,89
+Lasso CV 1SE,c025,5,286,100,51
+Lasso CV 1SE,c025,5,385,100,18
+Lasso CV 1SE,c025,5,478,100,84
+Lasso CV 1SE,c025,6,3,100,84
+Lasso CV 1SE,c025,6,97,100,51
+Lasso CV 1SE,c025,6,194,100,100
+Lasso CV 1SE,c025,6,286,100,64
+Lasso CV 1SE,c025,6,385,100,31
+Lasso CV 1SE,c025,6,478,100,72
+MCP EBIC gamma=0.5,c100,1,3,100,100
+MCP EBIC gamma=0.5,c100,1,97,100,100
+MCP EBIC gamma=0.5,c100,1,194,100,100
+MCP EBIC gamma=0.5,c100,1,286,100,100
+MCP EBIC gamma=0.5,c100,1,385,100,100
+MCP EBIC gamma=0.5,c100,1,478,100,100
+MCP EBIC gamma=0.5,c100,2,3,100,100
+MCP EBIC gamma=0.5,c100,2,97,100,100
+MCP EBIC gamma=0.5,c100,2,194,100,100
+MCP EBIC gamma=0.5,c100,2,286,100,100
+MCP EBIC gamma=0.5,c100,2,385,100,100
+MCP EBIC gamma=0.5,c100,2,478,100,100
+MCP EBIC gamma=0.5,c100,3,3,100,100
+MCP EBIC gamma=0.5,c100,3,97,100,100
+MCP EBIC gamma=0.5,c100,3,194,100,100
+MCP EBIC gamma=0.5,c100,3,286,100,100
+MCP EBIC gamma=0.5,c100,3,385,100,100
+MCP EBIC gamma=0.5,c100,3,478,100,100
+MCP EBIC gamma=0.5,c100,4,3,100,100
+MCP EBIC gamma=0.5,c100,4,97,100,99
+MCP EBIC gamma=0.5,c100,4,194,100,100
+MCP EBIC gamma=0.5,c100,4,286,100,100
+MCP EBIC gamma=0.5,c100,4,385,100,97
+MCP EBIC gamma=0.5,c100,4,478,100,100
+MCP EBIC gamma=0.5,c100,5,3,100,100
+MCP EBIC gamma=0.5,c100,5,97,100,100
+MCP EBIC gamma=0.5,c100,5,194,100,100
+MCP EBIC gamma=0.5,c100,5,286,100,100
+MCP EBIC gamma=0.5,c100,5,385,100,100
+MCP EBIC gamma=0.5,c100,5,478,100,100
+MCP EBIC gamma=0.5,c100,6,3,100,100
+MCP EBIC gamma=0.5,c100,6,97,100,100
+MCP EBIC gamma=0.5,c100,6,194,100,100
+MCP EBIC gamma=0.5,c100,6,286,100,100
+MCP EBIC gamma=0.5,c100,6,385,100,99
+MCP EBIC gamma=0.5,c100,6,478,100,99
+MCP EBIC gamma=0.5,c075,1,3,100,100
+MCP EBIC gamma=0.5,c075,1,97,100,100
+MCP EBIC gamma=0.5,c075,1,194,100,100
+MCP EBIC gamma=0.5,c075,1,286,100,100
+MCP EBIC gamma=0.5,c075,1,385,100,100
+MCP EBIC gamma=0.5,c075,1,478,100,100
+MCP EBIC gamma=0.5,c075,2,3,100,100
+MCP EBIC gamma=0.5,c075,2,97,100,100
+MCP EBIC gamma=0.5,c075,2,194,100,100
+MCP EBIC gamma=0.5,c075,2,286,100,100
+MCP EBIC gamma=0.5,c075,2,385,100,100
+MCP EBIC gamma=0.5,c075,2,478,100,100
+MCP EBIC gamma=0.5,c075,3,3,100,100
+MCP EBIC gamma=0.5,c075,3,97,100,100
+MCP EBIC gamma=0.5,c075,3,194,100,100
+MCP EBIC gamma=0.5,c075,3,286,100,100
+MCP EBIC gamma=0.5,c075,3,385,100,100
+MCP EBIC gamma=0.5,c075,3,478,100,100
+MCP EBIC gamma=0.5,c075,4,3,100,99
+MCP EBIC gamma=0.5,c075,4,97,100,93
+MCP EBIC gamma=0.5,c075,4,194,100,100
+MCP EBIC gamma=0.5,c075,4,286,100,99
+MCP EBIC gamma=0.5,c075,4,385,100,86
+MCP EBIC gamma=0.5,c075,4,478,100,100
+MCP EBIC gamma=0.5,c075,5,3,100,100
+MCP EBIC gamma=0.5,c075,5,97,100,100
+MCP EBIC gamma=0.5,c075,5,194,100,100
+MCP EBIC gamma=0.5,c075,5,286,100,100
+MCP EBIC gamma=0.5,c075,5,385,100,98
+MCP EBIC gamma=0.5,c075,5,478,100,100
+MCP EBIC gamma=0.5,c075,6,3,100,100
+MCP EBIC gamma=0.5,c075,6,97,100,100
+MCP EBIC gamma=0.5,c075,6,194,100,100
+MCP EBIC gamma=0.5,c075,6,286,100,100
+MCP EBIC gamma=0.5,c075,6,385,100,98
+MCP EBIC gamma=0.5,c075,6,478,100,96
+MCP EBIC gamma=0.5,c050,1,3,100,100
+MCP EBIC gamma=0.5,c050,1,97,100,100
+MCP EBIC gamma=0.5,c050,1,194,100,100
+MCP EBIC gamma=0.5,c050,1,286,100,99
+MCP EBIC gamma=0.5,c050,1,385,100,97
+MCP EBIC gamma=0.5,c050,1,478,100,100
+MCP EBIC gamma=0.5,c050,2,3,100,100
+MCP EBIC gamma=0.5,c050,2,97,100,100
+MCP EBIC gamma=0.5,c050,2,194,100,100
+MCP EBIC gamma=0.5,c050,2,286,100,100
+MCP EBIC gamma=0.5,c050,2,385,100,97
+MCP EBIC gamma=0.5,c050,2,478,100,100
+MCP EBIC gamma=0.5,c050,3,3,100,100
+MCP EBIC gamma=0.5,c050,3,97,100,97
+MCP EBIC gamma=0.5,c050,3,194,100,100
+MCP EBIC gamma=0.5,c050,3,286,100,99
+MCP EBIC gamma=0.5,c050,3,385,100,93
+MCP EBIC gamma=0.5,c050,3,478,100,100
+MCP EBIC gamma=0.5,c050,4,3,100,89
+MCP EBIC gamma=0.5,c050,4,97,100,76
+MCP EBIC gamma=0.5,c050,4,194,100,99
+MCP EBIC gamma=0.5,c050,4,286,100,94
+MCP EBIC gamma=0.5,c050,4,385,100,72
+MCP EBIC gamma=0.5,c050,4,478,100,97
+MCP EBIC gamma=0.5,c050,5,3,100,100
+MCP EBIC gamma=0.5,c050,5,97,100,94
+MCP EBIC gamma=0.5,c050,5,194,100,100
+MCP EBIC gamma=0.5,c050,5,286,100,100
+MCP EBIC gamma=0.5,c050,5,385,100,85
+MCP EBIC gamma=0.5,c050,5,478,100,100
+MCP EBIC gamma=0.5,c050,6,3,100,100
+MCP EBIC gamma=0.5,c050,6,97,100,100
+MCP EBIC gamma=0.5,c050,6,194,100,100
+MCP EBIC gamma=0.5,c050,6,286,100,99
+MCP EBIC gamma=0.5,c050,6,385,100,85
+MCP EBIC gamma=0.5,c050,6,478,100,82
+MCP EBIC gamma=0.5,c035,1,3,100,100
+MCP EBIC gamma=0.5,c035,1,97,100,95
+MCP EBIC gamma=0.5,c035,1,194,100,100
+MCP EBIC gamma=0.5,c035,1,286,100,96
+MCP EBIC gamma=0.5,c035,1,385,100,86
+MCP EBIC gamma=0.5,c035,1,478,100,100
+MCP EBIC gamma=0.5,c035,2,3,100,98
+MCP EBIC gamma=0.5,c035,2,97,100,94
+MCP EBIC gamma=0.5,c035,2,194,100,100
+MCP EBIC gamma=0.5,c035,2,286,100,98
+MCP EBIC gamma=0.5,c035,2,385,100,85
+MCP EBIC gamma=0.5,c035,2,478,100,100
+MCP EBIC gamma=0.5,c035,3,3,100,97
+MCP EBIC gamma=0.5,c035,3,97,100,85
+MCP EBIC gamma=0.5,c035,3,194,100,98
+MCP EBIC gamma=0.5,c035,3,286,100,95
+MCP EBIC gamma=0.5,c035,3,385,100,73
+MCP EBIC gamma=0.5,c035,3,478,100,99
+MCP EBIC gamma=0.5,c035,4,3,100,77
+MCP EBIC gamma=0.5,c035,4,97,100,62
+MCP EBIC gamma=0.5,c035,4,194,100,78
+MCP EBIC gamma=0.5,c035,4,286,100,81
+MCP EBIC gamma=0.5,c035,4,385,100,46
+MCP EBIC gamma=0.5,c035,4,478,100,82
+MCP EBIC gamma=0.5,c035,5,3,100,97
+MCP EBIC gamma=0.5,c035,5,97,100,78
+MCP EBIC gamma=0.5,c035,5,194,100,100
+MCP EBIC gamma=0.5,c035,5,286,100,93
+MCP EBIC gamma=0.5,c035,5,385,100,54
+MCP EBIC gamma=0.5,c035,5,478,100,100
+MCP EBIC gamma=0.5,c035,6,3,100,98
+MCP EBIC gamma=0.5,c035,6,97,100,92
+MCP EBIC gamma=0.5,c035,6,194,100,99
+MCP EBIC gamma=0.5,c035,6,286,100,92
+MCP EBIC gamma=0.5,c035,6,385,100,53
+MCP EBIC gamma=0.5,c035,6,478,100,73
+MCP EBIC gamma=0.5,c025,1,3,100,92
+MCP EBIC gamma=0.5,c025,1,97,100,68
+MCP EBIC gamma=0.5,c025,1,194,100,100
+MCP EBIC gamma=0.5,c025,1,286,100,85
+MCP EBIC gamma=0.5,c025,1,385,100,67
+MCP EBIC gamma=0.5,c025,1,478,100,96
+MCP EBIC gamma=0.5,c025,2,3,100,89
+MCP EBIC gamma=0.5,c025,2,97,100,74
+MCP EBIC gamma=0.5,c025,2,194,100,98
+MCP EBIC gamma=0.5,c025,2,286,100,82
+MCP EBIC gamma=0.5,c025,2,385,100,61
+MCP EBIC gamma=0.5,c025,2,478,100,96
+MCP EBIC gamma=0.5,c025,3,3,100,85
+MCP EBIC gamma=0.5,c025,3,97,100,59
+MCP EBIC gamma=0.5,c025,3,194,100,92
+MCP EBIC gamma=0.5,c025,3,286,100,72
+MCP EBIC gamma=0.5,c025,3,385,100,45
+MCP EBIC gamma=0.5,c025,3,478,100,90
+MCP EBIC gamma=0.5,c025,4,3,100,68
+MCP EBIC gamma=0.5,c025,4,97,100,40
+MCP EBIC gamma=0.5,c025,4,194,100,66
+MCP EBIC gamma=0.5,c025,4,286,100,61
+MCP EBIC gamma=0.5,c025,4,385,100,24
+MCP EBIC gamma=0.5,c025,4,478,100,68
+MCP EBIC gamma=0.5,c025,5,3,100,75
+MCP EBIC gamma=0.5,c025,5,97,100,49
+MCP EBIC gamma=0.5,c025,5,194,100,96
+MCP EBIC gamma=0.5,c025,5,286,100,66
+MCP EBIC gamma=0.5,c025,5,385,100,39
+MCP EBIC gamma=0.5,c025,5,478,100,88
+MCP EBIC gamma=0.5,c025,6,3,100,91
+MCP EBIC gamma=0.5,c025,6,97,100,61
+MCP EBIC gamma=0.5,c025,6,194,100,96
+MCP EBIC gamma=0.5,c025,6,286,100,66
+MCP EBIC gamma=0.5,c025,6,385,100,34
+MCP EBIC gamma=0.5,c025,6,478,100,64
+MCP EBIC gamma=1,c100,1,3,100,100
+MCP EBIC gamma=1,c100,1,97,100,100
+MCP EBIC gamma=1,c100,1,194,100,100
+MCP EBIC gamma=1,c100,1,286,100,100
+MCP EBIC gamma=1,c100,1,385,100,100
+MCP EBIC gamma=1,c100,1,478,100,100
+MCP EBIC gamma=1,c100,2,3,100,100
+MCP EBIC gamma=1,c100,2,97,100,100
+MCP EBIC gamma=1,c100,2,194,100,100
+MCP EBIC gamma=1,c100,2,286,100,100
+MCP EBIC gamma=1,c100,2,385,100,100
+MCP EBIC gamma=1,c100,2,478,100,100
+MCP EBIC gamma=1,c100,3,3,100,100
+MCP EBIC gamma=1,c100,3,97,100,100
+MCP EBIC gamma=1,c100,3,194,100,100
+MCP EBIC gamma=1,c100,3,286,100,100
+MCP EBIC gamma=1,c100,3,385,100,100
+MCP EBIC gamma=1,c100,3,478,100,100
+MCP EBIC gamma=1,c100,4,3,100,100
+MCP EBIC gamma=1,c100,4,97,100,98
+MCP EBIC gamma=1,c100,4,194,100,100
+MCP EBIC gamma=1,c100,4,286,100,100
+MCP EBIC gamma=1,c100,4,385,100,95
+MCP EBIC gamma=1,c100,4,478,100,100
+MCP EBIC gamma=1,c100,5,3,100,100
+MCP EBIC gamma=1,c100,5,97,100,100
+MCP EBIC gamma=1,c100,5,194,100,100
+MCP EBIC gamma=1,c100,5,286,100,100
+MCP EBIC gamma=1,c100,5,385,100,100
+MCP EBIC gamma=1,c100,5,478,100,100
+MCP EBIC gamma=1,c100,6,3,100,100
+MCP EBIC gamma=1,c100,6,97,100,100
+MCP EBIC gamma=1,c100,6,194,100,100
+MCP EBIC gamma=1,c100,6,286,100,100
+MCP EBIC gamma=1,c100,6,385,100,99
+MCP EBIC gamma=1,c100,6,478,100,99
+MCP EBIC gamma=1,c075,1,3,100,100
+MCP EBIC gamma=1,c075,1,97,100,100
+MCP EBIC gamma=1,c075,1,194,100,100
+MCP EBIC gamma=1,c075,1,286,100,100
+MCP EBIC gamma=1,c075,1,385,100,100
+MCP EBIC gamma=1,c075,1,478,100,100
+MCP EBIC gamma=1,c075,2,3,100,100
+MCP EBIC gamma=1,c075,2,97,100,100
+MCP EBIC gamma=1,c075,2,194,100,100
+MCP EBIC gamma=1,c075,2,286,100,100
+MCP EBIC gamma=1,c075,2,385,100,100
+MCP EBIC gamma=1,c075,2,478,100,100
+MCP EBIC gamma=1,c075,3,3,100,100
+MCP EBIC gamma=1,c075,3,97,100,100
+MCP EBIC gamma=1,c075,3,194,100,100
+MCP EBIC gamma=1,c075,3,286,100,100
+MCP EBIC gamma=1,c075,3,385,100,100
+MCP EBIC gamma=1,c075,3,478,100,100
+MCP EBIC gamma=1,c075,4,3,100,98
+MCP EBIC gamma=1,c075,4,97,100,90
+MCP EBIC gamma=1,c075,4,194,100,100
+MCP EBIC gamma=1,c075,4,286,100,100
+MCP EBIC gamma=1,c075,4,385,100,86
+MCP EBIC gamma=1,c075,4,478,100,100
+MCP EBIC gamma=1,c075,5,3,100,100
+MCP EBIC gamma=1,c075,5,97,100,100
+MCP EBIC gamma=1,c075,5,194,100,100
+MCP EBIC gamma=1,c075,5,286,100,100
+MCP EBIC gamma=1,c075,5,385,100,100
+MCP EBIC gamma=1,c075,5,478,100,100
+MCP EBIC gamma=1,c075,6,3,100,100
+MCP EBIC gamma=1,c075,6,97,100,100
+MCP EBIC gamma=1,c075,6,194,100,100
+MCP EBIC gamma=1,c075,6,286,100,100
+MCP EBIC gamma=1,c075,6,385,100,95
+MCP EBIC gamma=1,c075,6,478,100,94
+MCP EBIC gamma=1,c050,1,3,100,100
+MCP EBIC gamma=1,c050,1,97,100,100
+MCP EBIC gamma=1,c050,1,194,100,100
+MCP EBIC gamma=1,c050,1,286,100,100
+MCP EBIC gamma=1,c050,1,385,100,98
+MCP EBIC gamma=1,c050,1,478,100,100
+MCP EBIC gamma=1,c050,2,3,100,100
+MCP EBIC gamma=1,c050,2,97,100,100
+MCP EBIC gamma=1,c050,2,194,100,100
+MCP EBIC gamma=1,c050,2,286,100,100
+MCP EBIC gamma=1,c050,2,385,100,95
+MCP EBIC gamma=1,c050,2,478,100,100
+MCP EBIC gamma=1,c050,3,3,100,100
+MCP EBIC gamma=1,c050,3,97,100,99
+MCP EBIC gamma=1,c050,3,194,100,100
+MCP EBIC gamma=1,c050,3,286,100,99
+MCP EBIC gamma=1,c050,3,385,100,95
+MCP EBIC gamma=1,c050,3,478,100,100
+MCP EBIC gamma=1,c050,4,3,100,86
+MCP EBIC gamma=1,c050,4,97,100,76
+MCP EBIC gamma=1,c050,4,194,100,94
+MCP EBIC gamma=1,c050,4,286,100,93
+MCP EBIC gamma=1,c050,4,385,100,70
+MCP EBIC gamma=1,c050,4,478,100,96
+MCP EBIC gamma=1,c050,5,3,100,100
+MCP EBIC gamma=1,c050,5,97,100,95
+MCP EBIC gamma=1,c050,5,194,100,100
+MCP EBIC gamma=1,c050,5,286,100,100
+MCP EBIC gamma=1,c050,5,385,100,80
+MCP EBIC gamma=1,c050,5,478,100,100
+MCP EBIC gamma=1,c050,6,3,100,100
+MCP EBIC gamma=1,c050,6,97,100,99
+MCP EBIC gamma=1,c050,6,194,100,100
+MCP EBIC gamma=1,c050,6,286,100,98
+MCP EBIC gamma=1,c050,6,385,100,83
+MCP EBIC gamma=1,c050,6,478,100,77
+MCP EBIC gamma=1,c035,1,3,100,100
+MCP EBIC gamma=1,c035,1,97,100,78
+MCP EBIC gamma=1,c035,1,194,100,100
+MCP EBIC gamma=1,c035,1,286,100,95
+MCP EBIC gamma=1,c035,1,385,100,56
+MCP EBIC gamma=1,c035,1,478,100,100
+MCP EBIC gamma=1,c035,2,3,100,99
+MCP EBIC gamma=1,c035,2,97,100,87
+MCP EBIC gamma=1,c035,2,194,100,100
+MCP EBIC gamma=1,c035,2,286,100,94
+MCP EBIC gamma=1,c035,2,385,100,56
+MCP EBIC gamma=1,c035,2,478,100,100
+MCP EBIC gamma=1,c035,3,3,100,97
+MCP EBIC gamma=1,c035,3,97,100,79
+MCP EBIC gamma=1,c035,3,194,100,99
+MCP EBIC gamma=1,c035,3,286,100,92
+MCP EBIC gamma=1,c035,3,385,100,50
+MCP EBIC gamma=1,c035,3,478,100,99
+MCP EBIC gamma=1,c035,4,3,100,77
+MCP EBIC gamma=1,c035,4,97,100,53
+MCP EBIC gamma=1,c035,4,194,100,76
+MCP EBIC gamma=1,c035,4,286,100,78
+MCP EBIC gamma=1,c035,4,385,100,33
+MCP EBIC gamma=1,c035,4,478,100,79
+MCP EBIC gamma=1,c035,5,3,100,91
+MCP EBIC gamma=1,c035,5,97,100,59
+MCP EBIC gamma=1,c035,5,194,100,100
+MCP EBIC gamma=1,c035,5,286,100,81
+MCP EBIC gamma=1,c035,5,385,100,23
+MCP EBIC gamma=1,c035,5,478,100,99
+MCP EBIC gamma=1,c035,6,3,100,98
+MCP EBIC gamma=1,c035,6,97,100,75
+MCP EBIC gamma=1,c035,6,194,100,100
+MCP EBIC gamma=1,c035,6,286,100,91
+MCP EBIC gamma=1,c035,6,385,100,42
+MCP EBIC gamma=1,c035,6,478,100,73
+MCP EBIC gamma=1,c025,1,3,100,75
+MCP EBIC gamma=1,c025,1,97,100,36
+MCP EBIC gamma=1,c025,1,194,100,97
+MCP EBIC gamma=1,c025,1,286,100,54
+MCP EBIC gamma=1,c025,1,385,100,21
+MCP EBIC gamma=1,c025,1,478,100,88
+MCP EBIC gamma=1,c025,2,3,100,74
+MCP EBIC gamma=1,c025,2,97,100,35
+MCP EBIC gamma=1,c025,2,194,100,96
+MCP EBIC gamma=1,c025,2,286,100,51
+MCP EBIC gamma=1,c025,2,385,100,17
+MCP EBIC gamma=1,c025,2,478,100,90
+MCP EBIC gamma=1,c025,3,3,100,65
+MCP EBIC gamma=1,c025,3,97,100,22
+MCP EBIC gamma=1,c025,3,194,100,91
+MCP EBIC gamma=1,c025,3,286,100,47
+MCP EBIC gamma=1,c025,3,385,100,9
+MCP EBIC gamma=1,c025,3,478,100,84
+MCP EBIC gamma=1,c025,4,3,100,58
+MCP EBIC gamma=1,c025,4,97,100,18
+MCP EBIC gamma=1,c025,4,194,100,65
+MCP EBIC gamma=1,c025,4,286,100,35
+MCP EBIC gamma=1,c025,4,385,100,11
+MCP EBIC gamma=1,c025,4,478,100,63
+MCP EBIC gamma=1,c025,5,3,100,43
+MCP EBIC gamma=1,c025,5,97,100,11
+MCP EBIC gamma=1,c025,5,194,100,83
+MCP EBIC gamma=1,c025,5,286,100,29
+MCP EBIC gamma=1,c025,5,385,100,3
+MCP EBIC gamma=1,c025,5,478,100,70
+MCP EBIC gamma=1,c025,6,3,100,74
+MCP EBIC gamma=1,c025,6,97,100,21
+MCP EBIC gamma=1,c025,6,194,100,96
+MCP EBIC gamma=1,c025,6,286,100,37
+MCP EBIC gamma=1,c025,6,385,100,8
+MCP EBIC gamma=1,c025,6,478,100,59
+ABESS EBIC gamma=0.5,c100,1,3,100,100
+ABESS EBIC gamma=0.5,c100,1,97,100,100
+ABESS EBIC gamma=0.5,c100,1,194,100,100
+ABESS EBIC gamma=0.5,c100,1,286,100,100
+ABESS EBIC gamma=0.5,c100,1,385,100,100
+ABESS EBIC gamma=0.5,c100,1,478,100,100
+ABESS EBIC gamma=0.5,c100,2,3,100,100
+ABESS EBIC gamma=0.5,c100,2,97,100,100
+ABESS EBIC gamma=0.5,c100,2,194,100,100
+ABESS EBIC gamma=0.5,c100,2,286,100,100
+ABESS EBIC gamma=0.5,c100,2,385,100,100
+ABESS EBIC gamma=0.5,c100,2,478,100,100
+ABESS EBIC gamma=0.5,c100,3,3,100,100
+ABESS EBIC gamma=0.5,c100,3,97,100,100
+ABESS EBIC gamma=0.5,c100,3,194,100,100
+ABESS EBIC gamma=0.5,c100,3,286,100,100
+ABESS EBIC gamma=0.5,c100,3,385,100,100
+ABESS EBIC gamma=0.5,c100,3,478,100,100
+ABESS EBIC gamma=0.5,c100,4,3,100,100
+ABESS EBIC gamma=0.5,c100,4,97,100,100
+ABESS EBIC gamma=0.5,c100,4,194,100,100
+ABESS EBIC gamma=0.5,c100,4,286,100,100
+ABESS EBIC gamma=0.5,c100,4,385,100,100
+ABESS EBIC gamma=0.5,c100,4,478,100,100
+ABESS EBIC gamma=0.5,c100,5,3,100,100
+ABESS EBIC gamma=0.5,c100,5,97,100,100
+ABESS EBIC gamma=0.5,c100,5,194,100,100
+ABESS EBIC gamma=0.5,c100,5,286,100,100
+ABESS EBIC gamma=0.5,c100,5,385,100,100
+ABESS EBIC gamma=0.5,c100,5,478,100,100
+ABESS EBIC gamma=0.5,c100,6,3,100,100
+ABESS EBIC gamma=0.5,c100,6,97,100,100
+ABESS EBIC gamma=0.5,c100,6,194,100,100
+ABESS EBIC gamma=0.5,c100,6,286,100,100
+ABESS EBIC gamma=0.5,c100,6,385,100,99
+ABESS EBIC gamma=0.5,c100,6,478,100,98
+ABESS EBIC gamma=0.5,c075,1,3,100,100
+ABESS EBIC gamma=0.5,c075,1,97,100,100
+ABESS EBIC gamma=0.5,c075,1,194,100,100
+ABESS EBIC gamma=0.5,c075,1,286,100,100
+ABESS EBIC gamma=0.5,c075,1,385,100,100
+ABESS EBIC gamma=0.5,c075,1,478,100,100
+ABESS EBIC gamma=0.5,c075,2,3,100,100
+ABESS EBIC gamma=0.5,c075,2,97,100,100
+ABESS EBIC gamma=0.5,c075,2,194,100,100
+ABESS EBIC gamma=0.5,c075,2,286,100,100
+ABESS EBIC gamma=0.5,c075,2,385,100,100
+ABESS EBIC gamma=0.5,c075,2,478,100,100
+ABESS EBIC gamma=0.5,c075,3,3,100,100
+ABESS EBIC gamma=0.5,c075,3,97,100,100
+ABESS EBIC gamma=0.5,c075,3,194,100,100
+ABESS EBIC gamma=0.5,c075,3,286,100,100
+ABESS EBIC gamma=0.5,c075,3,385,100,100
+ABESS EBIC gamma=0.5,c075,3,478,100,100
+ABESS EBIC gamma=0.5,c075,4,3,100,100
+ABESS EBIC gamma=0.5,c075,4,97,100,97
+ABESS EBIC gamma=0.5,c075,4,194,100,100
+ABESS EBIC gamma=0.5,c075,4,286,100,100
+ABESS EBIC gamma=0.5,c075,4,385,100,94
+ABESS EBIC gamma=0.5,c075,4,478,100,100
+ABESS EBIC gamma=0.5,c075,5,3,100,100
+ABESS EBIC gamma=0.5,c075,5,97,100,100
+ABESS EBIC gamma=0.5,c075,5,194,100,100
+ABESS EBIC gamma=0.5,c075,5,286,100,100
+ABESS EBIC gamma=0.5,c075,5,385,100,99
+ABESS EBIC gamma=0.5,c075,5,478,100,100
+ABESS EBIC gamma=0.5,c075,6,3,100,100
+ABESS EBIC gamma=0.5,c075,6,97,100,100
+ABESS EBIC gamma=0.5,c075,6,194,100,100
+ABESS EBIC gamma=0.5,c075,6,286,100,100
+ABESS EBIC gamma=0.5,c075,6,385,100,99
+ABESS EBIC gamma=0.5,c075,6,478,100,94
+ABESS EBIC gamma=0.5,c050,1,3,100,100
+ABESS EBIC gamma=0.5,c050,1,97,100,100
+ABESS EBIC gamma=0.5,c050,1,194,100,100
+ABESS EBIC gamma=0.5,c050,1,286,100,100
+ABESS EBIC gamma=0.5,c050,1,385,100,100
+ABESS EBIC gamma=0.5,c050,1,478,100,100
+ABESS EBIC gamma=0.5,c050,2,3,100,100
+ABESS EBIC gamma=0.5,c050,2,97,100,100
+ABESS EBIC gamma=0.5,c050,2,194,100,100
+ABESS EBIC gamma=0.5,c050,2,286,100,100
+ABESS EBIC gamma=0.5,c050,2,385,100,99
+ABESS EBIC gamma=0.5,c050,2,478,100,100
+ABESS EBIC gamma=0.5,c050,3,3,100,100
+ABESS EBIC gamma=0.5,c050,3,97,100,99
+ABESS EBIC gamma=0.5,c050,3,194,100,100
+ABESS EBIC gamma=0.5,c050,3,286,100,99
+ABESS EBIC gamma=0.5,c050,3,385,100,96
+ABESS EBIC gamma=0.5,c050,3,478,100,100
+ABESS EBIC gamma=0.5,c050,4,3,100,91
+ABESS EBIC gamma=0.5,c050,4,97,100,85
+ABESS EBIC gamma=0.5,c050,4,194,100,97
+ABESS EBIC gamma=0.5,c050,4,286,100,96
+ABESS EBIC gamma=0.5,c050,4,385,100,84
+ABESS EBIC gamma=0.5,c050,4,478,100,93
+ABESS EBIC gamma=0.5,c050,5,3,100,100
+ABESS EBIC gamma=0.5,c050,5,97,100,95
+ABESS EBIC gamma=0.5,c050,5,194,100,100
+ABESS EBIC gamma=0.5,c050,5,286,100,100
+ABESS EBIC gamma=0.5,c050,5,385,100,91
+ABESS EBIC gamma=0.5,c050,5,478,100,100
+ABESS EBIC gamma=0.5,c050,6,3,100,100
+ABESS EBIC gamma=0.5,c050,6,97,100,99
+ABESS EBIC gamma=0.5,c050,6,194,100,100
+ABESS EBIC gamma=0.5,c050,6,286,100,98
+ABESS EBIC gamma=0.5,c050,6,385,100,86
+ABESS EBIC gamma=0.5,c050,6,478,100,85
+ABESS EBIC gamma=0.5,c035,1,3,100,100
+ABESS EBIC gamma=0.5,c035,1,97,100,95
+ABESS EBIC gamma=0.5,c035,1,194,100,100
+ABESS EBIC gamma=0.5,c035,1,286,100,100
+ABESS EBIC gamma=0.5,c035,1,385,100,88
+ABESS EBIC gamma=0.5,c035,1,478,100,100
+ABESS EBIC gamma=0.5,c035,2,3,100,100
+ABESS EBIC gamma=0.5,c035,2,97,100,95
+ABESS EBIC gamma=0.5,c035,2,194,100,100
+ABESS EBIC gamma=0.5,c035,2,286,100,99
+ABESS EBIC gamma=0.5,c035,2,385,100,85
+ABESS EBIC gamma=0.5,c035,2,478,100,100
+ABESS EBIC gamma=0.5,c035,3,3,100,95
+ABESS EBIC gamma=0.5,c035,3,97,100,88
+ABESS EBIC gamma=0.5,c035,3,194,100,98
+ABESS EBIC gamma=0.5,c035,3,286,100,94
+ABESS EBIC gamma=0.5,c035,3,385,100,72
+ABESS EBIC gamma=0.5,c035,3,478,100,97
+ABESS EBIC gamma=0.5,c035,4,3,100,83
+ABESS EBIC gamma=0.5,c035,4,97,100,66
+ABESS EBIC gamma=0.5,c035,4,194,100,82
+ABESS EBIC gamma=0.5,c035,4,286,100,86
+ABESS EBIC gamma=0.5,c035,4,385,100,53
+ABESS EBIC gamma=0.5,c035,4,478,100,85
+ABESS EBIC gamma=0.5,c035,5,3,100,97
+ABESS EBIC gamma=0.5,c035,5,97,100,82
+ABESS EBIC gamma=0.5,c035,5,194,100,100
+ABESS EBIC gamma=0.5,c035,5,286,100,92
+ABESS EBIC gamma=0.5,c035,5,385,100,52
+ABESS EBIC gamma=0.5,c035,5,478,100,100
+ABESS EBIC gamma=0.5,c035,6,3,100,99
+ABESS EBIC gamma=0.5,c035,6,97,100,93
+ABESS EBIC gamma=0.5,c035,6,194,100,100
+ABESS EBIC gamma=0.5,c035,6,286,100,93
+ABESS EBIC gamma=0.5,c035,6,385,100,62
+ABESS EBIC gamma=0.5,c035,6,478,100,76
+ABESS EBIC gamma=0.5,c025,1,3,100,98
+ABESS EBIC gamma=0.5,c025,1,97,100,75
+ABESS EBIC gamma=0.5,c025,1,194,100,100
+ABESS EBIC gamma=0.5,c025,1,286,100,85
+ABESS EBIC gamma=0.5,c025,1,385,100,66
+ABESS EBIC gamma=0.5,c025,1,478,100,98
+ABESS EBIC gamma=0.5,c025,2,3,100,88
+ABESS EBIC gamma=0.5,c025,2,97,100,72
+ABESS EBIC gamma=0.5,c025,2,194,100,98
+ABESS EBIC gamma=0.5,c025,2,286,100,78
+ABESS EBIC gamma=0.5,c025,2,385,100,58
+ABESS EBIC gamma=0.5,c025,2,478,100,100
+ABESS EBIC gamma=0.5,c025,3,3,100,87
+ABESS EBIC gamma=0.5,c025,3,97,100,52
+ABESS EBIC gamma=0.5,c025,3,194,100,94
+ABESS EBIC gamma=0.5,c025,3,286,100,70
+ABESS EBIC gamma=0.5,c025,3,385,100,33
+ABESS EBIC gamma=0.5,c025,3,478,100,91
+ABESS EBIC gamma=0.5,c025,4,3,100,75
+ABESS EBIC gamma=0.5,c025,4,97,100,37
+ABESS EBIC gamma=0.5,c025,4,194,100,73
+ABESS EBIC gamma=0.5,c025,4,286,100,65
+ABESS EBIC gamma=0.5,c025,4,385,100,22
+ABESS EBIC gamma=0.5,c025,4,478,100,74
+ABESS EBIC gamma=0.5,c025,5,3,100,72
+ABESS EBIC gamma=0.5,c025,5,97,100,45
+ABESS EBIC gamma=0.5,c025,5,194,100,98
+ABESS EBIC gamma=0.5,c025,5,286,100,64
+ABESS EBIC gamma=0.5,c025,5,385,100,22
+ABESS EBIC gamma=0.5,c025,5,478,100,90
+ABESS EBIC gamma=0.5,c025,6,3,100,94
+ABESS EBIC gamma=0.5,c025,6,97,100,56
+ABESS EBIC gamma=0.5,c025,6,194,100,100
+ABESS EBIC gamma=0.5,c025,6,286,100,71
+ABESS EBIC gamma=0.5,c025,6,385,100,32
+ABESS EBIC gamma=0.5,c025,6,478,100,61
+ABESS EBIC gamma=1,c100,1,3,100,100
+ABESS EBIC gamma=1,c100,1,97,100,100
+ABESS EBIC gamma=1,c100,1,194,100,100
+ABESS EBIC gamma=1,c100,1,286,100,100
+ABESS EBIC gamma=1,c100,1,385,100,100
+ABESS EBIC gamma=1,c100,1,478,100,100
+ABESS EBIC gamma=1,c100,2,3,100,100
+ABESS EBIC gamma=1,c100,2,97,100,100
+ABESS EBIC gamma=1,c100,2,194,100,100
+ABESS EBIC gamma=1,c100,2,286,100,100
+ABESS EBIC gamma=1,c100,2,385,100,100
+ABESS EBIC gamma=1,c100,2,478,100,100
+ABESS EBIC gamma=1,c100,3,3,100,100
+ABESS EBIC gamma=1,c100,3,97,100,100
+ABESS EBIC gamma=1,c100,3,194,100,100
+ABESS EBIC gamma=1,c100,3,286,100,100
+ABESS EBIC gamma=1,c100,3,385,100,100
+ABESS EBIC gamma=1,c100,3,478,100,100
+ABESS EBIC gamma=1,c100,4,3,100,100
+ABESS EBIC gamma=1,c100,4,97,100,100
+ABESS EBIC gamma=1,c100,4,194,100,100
+ABESS EBIC gamma=1,c100,4,286,100,100
+ABESS EBIC gamma=1,c100,4,385,100,100
+ABESS EBIC gamma=1,c100,4,478,100,100
+ABESS EBIC gamma=1,c100,5,3,100,100
+ABESS EBIC gamma=1,c100,5,97,100,100
+ABESS EBIC gamma=1,c100,5,194,100,100
+ABESS EBIC gamma=1,c100,5,286,100,100
+ABESS EBIC gamma=1,c100,5,385,100,100
+ABESS EBIC gamma=1,c100,5,478,100,100
+ABESS EBIC gamma=1,c100,6,3,100,100
+ABESS EBIC gamma=1,c100,6,97,100,100
+ABESS EBIC gamma=1,c100,6,194,100,100
+ABESS EBIC gamma=1,c100,6,286,100,100
+ABESS EBIC gamma=1,c100,6,385,100,99
+ABESS EBIC gamma=1,c100,6,478,100,98
+ABESS EBIC gamma=1,c075,1,3,100,100
+ABESS EBIC gamma=1,c075,1,97,100,100
+ABESS EBIC gamma=1,c075,1,194,100,100
+ABESS EBIC gamma=1,c075,1,286,100,100
+ABESS EBIC gamma=1,c075,1,385,100,100
+ABESS EBIC gamma=1,c075,1,478,100,100
+ABESS EBIC gamma=1,c075,2,3,100,100
+ABESS EBIC gamma=1,c075,2,97,100,100
+ABESS EBIC gamma=1,c075,2,194,100,100
+ABESS EBIC gamma=1,c075,2,286,100,100
+ABESS EBIC gamma=1,c075,2,385,100,100
+ABESS EBIC gamma=1,c075,2,478,100,100
+ABESS EBIC gamma=1,c075,3,3,100,100
+ABESS EBIC gamma=1,c075,3,97,100,100
+ABESS EBIC gamma=1,c075,3,194,100,100
+ABESS EBIC gamma=1,c075,3,286,100,100
+ABESS EBIC gamma=1,c075,3,385,100,100
+ABESS EBIC gamma=1,c075,3,478,100,100
+ABESS EBIC gamma=1,c075,4,3,100,99
+ABESS EBIC gamma=1,c075,4,97,100,97
+ABESS EBIC gamma=1,c075,4,194,100,100
+ABESS EBIC gamma=1,c075,4,286,100,99
+ABESS EBIC gamma=1,c075,4,385,100,94
+ABESS EBIC gamma=1,c075,4,478,100,100
+ABESS EBIC gamma=1,c075,5,3,100,100
+ABESS EBIC gamma=1,c075,5,97,100,100
+ABESS EBIC gamma=1,c075,5,194,100,100
+ABESS EBIC gamma=1,c075,5,286,100,100
+ABESS EBIC gamma=1,c075,5,385,100,99
+ABESS EBIC gamma=1,c075,5,478,100,100
+ABESS EBIC gamma=1,c075,6,3,100,100
+ABESS EBIC gamma=1,c075,6,97,100,100
+ABESS EBIC gamma=1,c075,6,194,100,100
+ABESS EBIC gamma=1,c075,6,286,100,100
+ABESS EBIC gamma=1,c075,6,385,100,98
+ABESS EBIC gamma=1,c075,6,478,100,93
+ABESS EBIC gamma=1,c050,1,3,100,100
+ABESS EBIC gamma=1,c050,1,97,100,100
+ABESS EBIC gamma=1,c050,1,194,100,100
+ABESS EBIC gamma=1,c050,1,286,100,100
+ABESS EBIC gamma=1,c050,1,385,100,98
+ABESS EBIC gamma=1,c050,1,478,100,100
+ABESS EBIC gamma=1,c050,2,3,100,100
+ABESS EBIC gamma=1,c050,2,97,100,100
+ABESS EBIC gamma=1,c050,2,194,100,100
+ABESS EBIC gamma=1,c050,2,286,100,100
+ABESS EBIC gamma=1,c050,2,385,100,95
+ABESS EBIC gamma=1,c050,2,478,100,100
+ABESS EBIC gamma=1,c050,3,3,100,100
+ABESS EBIC gamma=1,c050,3,97,100,99
+ABESS EBIC gamma=1,c050,3,194,100,100
+ABESS EBIC gamma=1,c050,3,286,100,99
+ABESS EBIC gamma=1,c050,3,385,100,96
+ABESS EBIC gamma=1,c050,3,478,100,100
+ABESS EBIC gamma=1,c050,4,3,100,90
+ABESS EBIC gamma=1,c050,4,97,100,85
+ABESS EBIC gamma=1,c050,4,194,100,95
+ABESS EBIC gamma=1,c050,4,286,100,96
+ABESS EBIC gamma=1,c050,4,385,100,82
+ABESS EBIC gamma=1,c050,4,478,100,92
+ABESS EBIC gamma=1,c050,5,3,100,100
+ABESS EBIC gamma=1,c050,5,97,100,96
+ABESS EBIC gamma=1,c050,5,194,100,100
+ABESS EBIC gamma=1,c050,5,286,100,100
+ABESS EBIC gamma=1,c050,5,385,100,79
+ABESS EBIC gamma=1,c050,5,478,100,100
+ABESS EBIC gamma=1,c050,6,3,100,100
+ABESS EBIC gamma=1,c050,6,97,100,99
+ABESS EBIC gamma=1,c050,6,194,100,100
+ABESS EBIC gamma=1,c050,6,286,100,97
+ABESS EBIC gamma=1,c050,6,385,100,86
+ABESS EBIC gamma=1,c050,6,478,100,85
+ABESS EBIC gamma=1,c035,1,3,100,100
+ABESS EBIC gamma=1,c035,1,97,100,78
+ABESS EBIC gamma=1,c035,1,194,100,100
+ABESS EBIC gamma=1,c035,1,286,100,96
+ABESS EBIC gamma=1,c035,1,385,100,57
+ABESS EBIC gamma=1,c035,1,478,100,100
+ABESS EBIC gamma=1,c035,2,3,100,100
+ABESS EBIC gamma=1,c035,2,97,100,88
+ABESS EBIC gamma=1,c035,2,194,100,100
+ABESS EBIC gamma=1,c035,2,286,100,94
+ABESS EBIC gamma=1,c035,2,385,100,56
+ABESS EBIC gamma=1,c035,2,478,100,100
+ABESS EBIC gamma=1,c035,3,3,100,95
+ABESS EBIC gamma=1,c035,3,97,100,80
+ABESS EBIC gamma=1,c035,3,194,100,99
+ABESS EBIC gamma=1,c035,3,286,100,91
+ABESS EBIC gamma=1,c035,3,385,100,49
+ABESS EBIC gamma=1,c035,3,478,100,97
+ABESS EBIC gamma=1,c035,4,3,100,83
+ABESS EBIC gamma=1,c035,4,97,100,56
+ABESS EBIC gamma=1,c035,4,194,100,82
+ABESS EBIC gamma=1,c035,4,286,100,83
+ABESS EBIC gamma=1,c035,4,385,100,40
+ABESS EBIC gamma=1,c035,4,478,100,85
+ABESS EBIC gamma=1,c035,5,3,100,93
+ABESS EBIC gamma=1,c035,5,97,100,59
+ABESS EBIC gamma=1,c035,5,194,100,100
+ABESS EBIC gamma=1,c035,5,286,100,87
+ABESS EBIC gamma=1,c035,5,385,100,25
+ABESS EBIC gamma=1,c035,5,478,100,99
+ABESS EBIC gamma=1,c035,6,3,100,98
+ABESS EBIC gamma=1,c035,6,97,100,73
+ABESS EBIC gamma=1,c035,6,194,100,100
+ABESS EBIC gamma=1,c035,6,286,100,90
+ABESS EBIC gamma=1,c035,6,385,100,44
+ABESS EBIC gamma=1,c035,6,478,100,76
+ABESS EBIC gamma=1,c025,1,3,100,75
+ABESS EBIC gamma=1,c025,1,97,100,38
+ABESS EBIC gamma=1,c025,1,194,100,97
+ABESS EBIC gamma=1,c025,1,286,100,52
+ABESS EBIC gamma=1,c025,1,385,100,17
+ABESS EBIC gamma=1,c025,1,478,100,89
+ABESS EBIC gamma=1,c025,2,3,100,75
+ABESS EBIC gamma=1,c025,2,97,100,36
+ABESS EBIC gamma=1,c025,2,194,100,96
+ABESS EBIC gamma=1,c025,2,286,100,52
+ABESS EBIC gamma=1,c025,2,385,100,17
+ABESS EBIC gamma=1,c025,2,478,100,91
+ABESS EBIC gamma=1,c025,3,3,100,69
+ABESS EBIC gamma=1,c025,3,97,100,25
+ABESS EBIC gamma=1,c025,3,194,100,91
+ABESS EBIC gamma=1,c025,3,286,100,51
+ABESS EBIC gamma=1,c025,3,385,100,12
+ABESS EBIC gamma=1,c025,3,478,100,85
+ABESS EBIC gamma=1,c025,4,3,100,65
+ABESS EBIC gamma=1,c025,4,97,100,17
+ABESS EBIC gamma=1,c025,4,194,100,72
+ABESS EBIC gamma=1,c025,4,286,100,40
+ABESS EBIC gamma=1,c025,4,385,100,11
+ABESS EBIC gamma=1,c025,4,478,100,69
+ABESS EBIC gamma=1,c025,5,3,100,43
+ABESS EBIC gamma=1,c025,5,97,100,12
+ABESS EBIC gamma=1,c025,5,194,100,83
+ABESS EBIC gamma=1,c025,5,286,100,32
+ABESS EBIC gamma=1,c025,5,385,100,3
+ABESS EBIC gamma=1,c025,5,478,100,69
+ABESS EBIC gamma=1,c025,6,3,100,76
+ABESS EBIC gamma=1,c025,6,97,100,25
+ABESS EBIC gamma=1,c025,6,194,100,96
+ABESS EBIC gamma=1,c025,6,286,100,38
+ABESS EBIC gamma=1,c025,6,385,100,9
+ABESS EBIC gamma=1,c025,6,478,100,56

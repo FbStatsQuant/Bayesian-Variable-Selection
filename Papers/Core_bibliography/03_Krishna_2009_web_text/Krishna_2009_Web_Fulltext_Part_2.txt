@@ -1,0 +1,172 @@
+Bayesian variable selection using an adaptive powered correlation prior - PMC (https://pmc.ncbi.nlm.nih.gov/articles/PMC2772159/)
+citeturn22view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://pmc.ncbi.nlm.nih.gov/articles/PMC2772159/","lineno":170}); Total lines: 427
+L142: $$P(\mathit{\delta }|\lambda ,\pi )\phantom{\rule{thinmathspace}{0ex}}\mathrm{\propto }\phantom{\rule{thinmathspace}{0ex}}{\pi }^{{p}_{\delta }}{(1-\pi )}^{p-{p}_{\delta }}{|{\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }}|}^{-\lambda /2}.$$  | (3.5)
+L143: So for large values of λ, the prior puts more of its mass on models with highly collinear predictors; while for λ < 0, penalizing models with collinear predictors. Hence coupled with the powered correlation prior, positive (negative) λ encourages (discourages) highly collinear predictors to enter the model simultaneously. Note that λ = −1 gives us Zellner's prior on the coefficients coupled with the prior of Yuan and Lin on the models.
+L144: ### 3.1. Choice of g
+L145: The parameter g defines the strength of the powered correlation prior. The choice of g is complicated in that large values of g will result in the prior dominating the likelihood, and small values of g would favor the null model (cite27†George and Foster, 2000 ). Various choices of g have been proposed over the years. For example, cite28†Smith and Kohn (1996) performed variable selection involving splines with a fixed value of g = 0.01.
+L146: However, the choice of g may also depend on the sample size n, or the number of predictors p. cite27†George and Foster (2000) propose an empirical Bayes method for estimating g from its marginal likelihood. cite36†Foster and George (1994) recommended using g = 1/p^{2} based on a risk inflation criterion (RIC). cite37†Kass and Wasserman (1995) suggests the unit information prior, where the amount of information in the prior corresponds to the amount of information in one observation, leading to g = 1/n.
+L147: This leads to the Bayes factor as an approximation of the BIC. cite29†Fernandez et al. (2001) suggest g = 1/max(n, p^{2}) called the benchmark prior (BRIC), which is a combination of RIC and BIC. More recently cite38†Liang et al. (2008) suggest a mixture of g-priors as an alternative to the default g-priors.
+L148: Since the scale of ${({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }$ will depend on λ, we first standardize so that we may separate out the scale of g from that of ${({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }$ . To do so we modify (cite39†3.3 ) as
+L149: $${\mathit{\beta }}_{\mathit{\delta }}|\mathit{\delta },{\sigma }^{2},\mathit{X}~\mathrm{N}\phantom{\rule{thinmathspace}{0ex}}\left(0,\frac{{\sigma }^{2}}{g}k{({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }\right)\text{\hspace{1em}with}\phantom{\rule{thinmathspace}{0ex}}k\equiv k(\lambda ,\mathit{\delta },\mathit{X})=\frac{\text{Tr}[{({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{-1}]}{\text{Tr}[{({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }]}.$$  | (3.6)
+L150: This has an effect of setting the trace of ${({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }$ to be equal to that of using λ = −1 regardless of the choice of λ. We then choose g = 1/n, as in the unit information prior (cite37†Kass and Wasserman, 1995 ).
+L151: For ${({\mathit{X}\prime }_{\delta }{\mathit{X}}_{\delta })}^{\lambda }={\mathbf{\Gamma }}_{\delta }{\mathit{D}}_{\delta }^{\lambda }{\mathbf{\Gamma }}_{\delta }$ , k can be considered as the ratio of the average eigenvalues with those of $\lambda =-1,({\sum }_{j}{\mathit{D}}_{{\delta }_{j}}^{-1}/n)/{\sum }_{j}{\mathit{D}}_{{\delta }_{j}}^{\lambda }/n$. Instead of the trace one could have opted to choose the determinant, i.e. the ratio of the product of the eigenvalues.
+L152: An advantage of using the average of the eigenvalues is that it provides more stability and in turn helps prevent the prior from dominating the likelihood. We note that other choices of standardization and choice of g are possible and are left for future investigations.
+L153: ## 4. Model selection using posterior probabilities
+L154: 
+L155: In the Bayesian framework, a set of prior distributions is specified on the parameters θ_{δ} = (β_{δ}, σ^{2}) for each model, along with a meaningful set of prior model probabilities P(δ|λ, π) over the class of all models. Model selection is then done based on the posterior probabilities. Using the set of priors defined in the previous section, we can now construct a hierarchical Bayesian model to perform variable selection
+L156: $$\begin{array}{c}\mathit{y}|\mathit{\beta },\mathit{\delta },{\sigma }^{2},\mathit{X}\phantom{\rule{thinmathspace}{0ex}}\mathit{~}\phantom{\rule{thinmathspace}{0ex}}\mathrm{N}({\mathit{X}}_{\mathit{\delta }}{\mathit{\beta }}_{\mathit{\delta }},{\sigma }^{2}I),\hfill \\ {\mathit{\beta }}_{\mathit{\delta }}|\mathit{\delta },{\sigma }^{2},\mathit{X}~\mathrm{N}\phantom{\rule{thinmathspace}{0ex}}\left(0,\frac{{\sigma }^{2}}{g}k{({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }\right)\phantom{\rule{thinmathspace}{0ex}},\hfill \\ {\sigma }^{2}~\mathit{\text{IG}}\phantom{\rule{thinmathspace}{0ex}}\left(\frac{{\gamma }_{0}}{2}\phantom{\rule{thinmathspace}{0ex}},\frac{{\gamma }_{0}}{2}\right)\phantom{\rule{thinmathspace}{0ex}},\hfill \\ P(\mathit{\delta }|\lambda ,\pi )\phantom{\rule{thinmathspace}{0ex}}\mathrm{\propto }\phantom{\rule{thinmathspace}{0ex}}{\pi }^{{p}_{\delta }}{(1-\pi )}^{p-{p}_{\delta }}{|{\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }}|}^{-\lambda /2},\hfill \end{array}$$  | (4.1)
+L157: where k is as defined in (cite40†3.6 ) The key idea in computing the posterior model probabilities is to obtain the marginal likelihood of the data under model δ by integrating out the model parameters
+L158: 
+L159: $$P(\mathit{y}|\mathit{\delta },\mathit{X})={\displaystyle \int P(\mathit{y}|{\mathit{\theta }}_{\mathit{\delta }},\mathit{\delta },\mathit{X})}P({\mathit{\theta }}_{\delta }|\mathit{\delta },\mathit{X})\mathrm{d}{\mathit{\theta }}_{\mathit{\delta }}.$$  | (4.2)
+L160: The choice of conjugate priors allows us to analytically compute the above integral. Using the hierarchical model and integrating out θ_{δ} we obtain the conditional distribution of y given δ and X,
+L161: 
+L162: $$\mathit{y}|\mathit{\delta },\mathit{X}~{\mathit{t}}_{({\gamma }_{0}+n)}\left\{0,\left({\mathit{I}}_{n}+\frac{k}{g}{\mathit{X}}_{\mathit{\delta }}{({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }{\mathit{X}\prime }_{\mathit{\delta }}\right)\right\}.$$  | (4.3)
+L163: Then model comparison is done via the posterior probabilities,
+L164: 
+L165: $$P(\mathit{\delta }|\mathit{y},\mathit{X})\phantom{\rule{thinmathspace}{0ex}}\mathrm{\propto }\phantom{\rule{thinmathspace}{0ex}}P(\mathit{y}|\mathit{\delta },\mathit{X})P(\mathit{\delta }|\lambda ,\pi ).$$  | (4.4)
+L166: In order to fully specify our prior distribution we need to specify g, γ_{0}, π and λ.We choose g = 1/n the unit information prior proposed by cite37†Kass and Wasserman (1995) . For γ_{0}, after trying various choices, we saw that the model selected was not sensitive to the value of γ_{0} chosen, and since there is little or no information about this hyperparameter we decided to set γ_{0} to a constant, which has led to reasonable results as pointed out by cite21†George and McCulloch (1997) .
+L167: Following these lines, we set γ_{0} = 0.01 for the rest of the article, which corresponds to placing a non-informative prior on σ^{2}.
+L168: The parameters (λ, π) are very influential and informative with respect to the model selected and it is of utmost importance that we choose them carefully. Thus, we propose an empirical Bayes approach to select π ∈ (0, 1) and λ ∈ ℝ by marginalizing over δ and maximizing the marginal likelihood function given by
+L169: 
+L170: $$m(\mathit{y}|\mathit{X},\pi ,\lambda )={\displaystyle \sum _{\mathit{\delta }}P(\mathit{y}|\mathit{\delta },\mathit{X})P(\mathit{\delta }|\lambda ,\pi ).}$$  | (4.5)
+L171: When the number of predictors, p is of moderate size (e.g., p≤20) the above sum can be computed by evaluating (cite41†4.2 ) for each model via complete enumeration for a given (π, λ). Numerical optimization is then used to maximize m(y|X, π, λ) defined in (cite42†4.5 ) to obtain the pair (π̂, λ̂). Specifically, we fix λ on a fine grid and for each λ, we maximize over π ∈ (0, 1), and obtain π̂ (λ) and obtain λ̂ = argmax m(y|X, π̂ (λ), λ).
+L172: ## 5. Simulations and real data
+L173: 
+L174: We shall now compare our proposed method to the standard use of Zellner's prior with a uniform prior over model space, i.e. the common approach
+L175: $$\begin{array}{l}{\mathit{\beta }}_{\mathit{\delta }}|{\mathit{\sigma }}^{2},\mathit{\delta },\mathit{X}~\mathrm{N}\left(0,{\sigma }^{2}{({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{-1}/g\right)\text{\hspace{1em}where}\phantom{\rule{thinmathspace}{0ex}}g=1/n,\\ {\sigma }^{2}~\mathit{\text{IG}}\left(\frac{{\gamma }_{0}}{2}\phantom{\rule{thinmathspace}{0ex}},\frac{{\gamma }_{0}}{2}\right),  {\gamma }_{0}=0.01,\\ P(\mathit{\delta })={(1/2)}^{p}.\end{array}$$  | (5.1)
+L176: We also compared our method to the fully automatic Bayesian variable selection procedure proposed by cite25†Casella and Moreno (2006) where posterior probabilities are computed using intrinsic priors cite43†(Berger and Pericchi, 1996) which eliminates the need for tuning parameters. However, we note that this procedure was not specifically designed to handle correlated predictors.
+L177: In this section we evaluate the performance of using our proposed method in selecting the correct subset of predictors as compared to the two abovementioned methods, based on a simulated data involving highly collinear predictors. Comparisons are also presented for one real dataset.
+L178: ### 5.1. Simulation study
+L179: 
+L180: For the simulated example, we consider the true model
+L181: 
+L182: $$y={x}_{1}+{x}_{2}+\epsilon \text{\hspace{1em}where}\phantom{\rule{thinmathspace}{0ex}}\epsilon ~\mathrm{N}(0,1).$$  | (5.2)
+L183: We generate p predictors from a multivariate normal with Cov(x_{j}, x_{k}) = ρ^{|j−k|}, for ρ = 0.9. For Case 1, we fixed p = 4, while for Case 2 we used p = 12, so that in the first case there were two unimportant predictors, while in Case 2, there were 10. For both cases, we generated 1000 datasets each with n = 30 observations.
+L184: #### 5.1.1. Case 1: p = 4
+L185: 
+L186: Using the empirical Bayes approach mentioned earlier we compute the optimal pair λ̂ = 1.6 and π̂ = 0.15 which maximizes the marginal likelihood obtained under complete enumeration of all possible 2^{4} − 1 models. The estimates (λ̂, π̂) are the values obtained after averaging over the 1000 replications (cite44†Fig. 1 ).
+L187: ##### Fig. 1.
+L188: 
+L189: cite45†Open in a new tab L190: 
+L191: Plot of λ vs. Log[m(y|X, π, λ)], maximized over π ∈ (0, 1), corresponding to case 1: p = 4. Averaged over 1000 simulations. The vertical line represents the location of the global maximum.
+L192: From cite46†Table 1 , the performance of our proposed method appears quite good compared to the other two methods. We see that Zellner's as well as the intrinsic prior's chooses single variable models with over half of its posterior probability.
+L193: In contrast, using the powered correlation prior smoothes the regression parameters of the correlated variables towards each other, by giving more prior information in the direction that are less determined by the data, and selects the correct model, (x_{1}, x_{2}) with an overwhelming 0.622 posterior probability.
+L194: ##### Table 1.
+L195: 
+L196: For Case 1, comparing average posterior probabilities, corresponding to the case 1: p = 4, averaged across 1000 simulations.
+L197: 
+L198: Zellner's  | PoCor  | Intrinsic Prior
+L199: --- | --- | ---
+L200: 
+L201: * * *
+L202: 
+L203:  |
+L204: 
+L205: * * *
+L206: 
+L207:  |
+L208: 
+L209: * * *
+L210: --- | --- | ---
+L211: Subset  | Avg Post Prob  | % Selected  | Subset  | Avg Post Prob  | % Selected  | Subset  | Avg Post Prob  | % Selected
+L212: --- | --- | --- | --- | --- | --- | --- | --- | ---
+L213: x_{2}  | 0.321  | 37.6  | x_{1}, x_{2}  | 0.622  | 68.7  | x_{1}  | 0.468  | 51.9
+L214: x_{1}  | 0.221  | 20.4  | x_{2}  | 0.116  | 10.4  | x_{2}  | 0.410  | 44.2
+L215: x_{1}, x_{2}  | 0.105  | 11.2  | x_{1}, x_{2}, x_{3}  | 0.089  | 3.4  | x_{1}, x_{2}  | 0.039  | 0.62
+L216: x_{1}, x_{2}, x_{4}  | 0.074  | 5.9  | x_{1}, x_{2}, x_{4}  | 0.040  | 3.1  | x_{1}, x_{3}  | 0.020  | 0.36
+L217: x_{1}, x_{2}, x_{3}  | 0.055  | 4.4  | x_{1}, x_{2}, x_{3}, x_{4}  | 0.039  | 2.5  | x_{3}  | 0.020  | 0.24
+L218: x_{2}, x_{4}  | 0.052  | 2.8  | x_{1}  | 0.030  | 2.3  | x_{1}, x_{4}  | 0.017  | 1.07
+L219: x_{2}, x_{3}  | 0.045  | 2.6  | x_{1}, x_{3}  | 0.009  | 1.4  | x_{2}, x_{3}  | 0.010  | 0.26
+L220: x_{1}, x_{3}  | 0.035  | 2.1  | x_{2}, x_{3}  | 0.003  | 1.0  | x_{2}, x_{4}  | 0.008  | 0.20
+L221: x_{1}, x_{3}, x_{4}  | 0.024  | 1.4  | x_{2}, x_{3}, x_{4}  | 0.002  | 0.9  | x_{4}  | 0.002  | 0.12
+L222: x_{1}, x_{2}, x_{3}, x_{4}  | 0.019  | 1.1  | x_{1}, x_{3}, x_{4}  | 0.002  | 0.6  | x_{1}, x_{2}, x_{4}  | 0.003  | 0.08
+L223: cite47†Open in a new tab L224: 
+L225: % Selected is the number of times (in %) each model was selected as the highest posterior model out of 1000 replications. Zellner's represents use of Zellner's prior as in (cite48†5.1 ). PoCor represents our proposed modification as in (cite49†4.1 ). Intrinsic Prior represents the fully automatic procedure proposed by cite25†Casella and Moreno (2006) .
+L226: cite46†Table 1 also lists the number of times (in %) each model was selected as the model with highest posterior probability out of 1000 replications by the three methods. We see that the powered correlation prior based method picks the correct model, (x_{1}, x_{2}), 68.7% of the time.
+L227: #### 5.1.2. Case 2: p = 12
+L228: 
+L229: Similar to the previous case, the optimal values (λ̂ = 1.7, π̂ = 0.12) were obtained by averaging over 1000 replications (cite50†Fig. 2 ) which maximizes the marginal likelihood function. The performance of the powered correlation priors in terms of selecting correlated predictors is also similar to the previous case.
+L230: ##### Fig. 2.
+L231: 
+L232: cite51†Open in a new tab L233: 
+L234: Plot of λ vs. Log[m(y|X, π, λ)], maximized over π ∈ (0, 1), corresponding to case 2: p = 12, averaged over 1000 simulations. The vertical line represents the location of the global maximum.
+L235: From cite52†Table 2 it is clear that Zellner's prior penalizes models with high collinearity, thereby putting more posterior mass on single variable models. In contrast, the powered correlation prior method favors the true model (x_{1}, x_{2}) with maximum average posterior probability of 0.145 and the correct model was selected 46.1% of the time. For the intrinsic prior, the maximum posterior model is the model including only x_{1} and the correct model is selected only 9.8% of the time.
+L236: ##### Table 2.
+L237: 
+L238: Case 2, comparing average posterior probabilities, corresponding to the case 2: p = 12, averaged over 1000 simulations.
+L239: 
+L240: Zellner's  | PoCor  | Intrinsic Prior
+L241: --- | --- | ---
+L242: 
+L243: * * *
+L244: 
+L245:  |
+L246: 
+L247: * * *
+L248: 
+L249:  |
+L250: 
+L251: * * *
+L252: --- | --- | ---
+L253: Subset  | Avg Post Prob  | % Selected  | Subset  | Avg Post Prob  | % Selected  | Subset  | Avg Post Prob  | % Selected
+L254: --- | --- | --- | --- | --- | --- | --- | --- | ---
+L255: x_{1}  | 0.068  | 28.9  | x_{1}, x_{2}  | 0.145  | 46.1  | x_{1}  | 0.039  | 33.2
+L256: x_{1}, x_{2}  | 0.051  | 10.6  | x_{1}, x_{2}, x_{3}  | 0.109  | 12.4  | x_{2}  | 0.016  | 14.5
+L257: x_{1}, x_{3}  | 0.025  | 10  | x_{1}, x_{3}  | 0.090  | 7.8  | x_{1}, x_{2}  | 0.013  | 9.8
+L258: x_{1}, x_{4}  | 0.016  | 5.9  | x_{2}, x_{3}  | 0.078  | 5.5  | x_{1}, x_{2}, x_{3}  | 0.011  | 5.4
+L259: x_{1}, x_{5}  | 0.0133  | 5.4  | x_{1}  | 0.056  | 5.1  | x_{1}, x_{3}  | 0.009  | 2.3
+L260: x_{1}, x_{2}, x_{5}  | 0.013  | 4.4  | x_{1}, x_{2},x4  | 0.020  | 4.7  | x_{1}, x_{2}, x_{4}  | 0.008  | 0.89
+L261: x_{1}, x_{2}, x_{6}  | 0.012  | 3.5  | x_{1}, x_{2}, x_{3}, x_{4}  | 0.016  | 3.6  | x_{1}, x_{3}, x_{4}  | 0.008  | 0.76
+L262: x_{2}, x_{2}, x_{8}  | 0.011  | 3.5  | x_{1}, x_{2}, x_{5}  | 0.010  | 3.4  | x_{1}, x_{2}, x_{5}  | 0.007  | 0.54
+L263: cite53†Open in a new tab L264: 
+L265: % Selected is the number of times (in %) each model was selected as the highest posterior model out of 1000 replications. Zellner's represents use of Zellner's prior as in (cite48†5.1 ). PoCor represents our proposed modification as in (cite49†4.1 ). Intrinsic Prior represents the fully automatic procedure proposed by cite25†Casella and Moreno (2006) .
+L266: In this simulation study the true model contains two highly correlated predictors x_{1} and x_{2}. Given that we know the true data-generating mechanism, an objective comparison criterion is the ability of the methods to correctly identify the underlying true model. We see from cite46†Table 1 and cite52†Table 2 that the posterior probability for the true model using our proposed method is much larger than for any other model.
+L267: Hence our method is able to correctly identify the true set of predictors even when they are highly correlated. Alternatively, the two other approaches choose a single predictor model and give very little posterior probability to the true model.
+L268: Model performance could be further evaluated based on prediction accuracy, but we have not explored that aspect in this simulation study, as the main goal was to examine whether the methods identify the entire correct set of variables that contribute to the explanation of the response y.
+L269: ### 5.2. Real data example
+L270: We consider a real dataset to demonstrate the performance of our method. For our real data example we use the data on NCAA graduation rates (cite54†Mangold et al., 2003 ) where there are 97 observations and 19 predictors. The response variable is the average graduation rates for each of the 97 colleges (see cite55†Appendix for a description of the dataset). Mangold, Bean and Adams used this dataset with the goal of showing that successful sports programs raise graduation rates.
+L271: This dataset is of specific interest to us, due to the presence of high correlation among the variables. We fit a main effects only model with the 19 possible predictors.
+L272: For this dataset we obtain the optimal values of λ̂ = 1.9 and π̂ = 0.19 (cite56†Fig. 3 ). Posterior probabilities are computed using these optimal values by complete enumeration of all 2^{19} − 1 possible models.
+L273: #### Fig. 3.
+L274: 
+L275: cite57†Open in a new tab L276: 
+L277: Plot of λ vs. Log[m(y|X, π, λ)], maximized over π ∈ (0, 1), corresponding to the NCAA Dataset. The vertical line represents the location of the global maximum.
+L278: In cite58†Table 3 we compare the posterior model probabilities by using our proposed method to those obtained using the standard Zellner's g-prior and the fully automatic intrinsic priors. The highest posterior model selected using the powered correlation prior to predict the average graduation rates is a 6 variable model, as compared to Zellner's which selects a 5 variable model by dropping x_{17} (acceptance rate) from the model chosen by our approach.
+L279: This could be attributed to the high correlation between x_{2} and x_{17} (ρ = 0.81). The intrinsic prior approach picks out a simpler (fewer predictors) model as its highest posterior probability model.
+L280: #### Table 3.
+L281: 
+L282: Comparing posterior probabilities and average prediction errors for the models of the NCAA data.
+L283: 
+L284: Zellner's  | PoCor  | Intrinsic Prior
+L285: --- | --- | ---
+L286: 
+L287: * * *
+L288: 
+L289:  |
+L290: 
+L291: * * *
+L292: 
+L293:  |
+L294: 
+L295: * * *
+L296: --- | --- | ---
+L297: Subset  | Post Prob  | C.V. Pred Err  | Subset  | Post Prob  | C.V. Pred Err  | Subset  | Post Prob  | C.V. Pred Err
+L298: --- | --- | --- | --- | --- | --- | --- | --- | ---
+L299: x_{2}, x_{3}, x_{4}, x_{5}, x_{7}  | 0.042  | 54.38 (0.615)  | x_{2}, x_{3}, x_{4}, x_{5}, x_{7}, x_{17}  | 0.036  | 51.53 (0.561)  | x_{2}, x_{4}, x_{7}  | 0.066  | 53.97 (0.530)
+L300: x_{2}, x_{3}, x_{4}, x_{7}  | 0.041  | 55.57 (0.646)  | x_{2}, x_{3}, x_{4}, x_{5}, x_{7}, x_{17}, x_{18}  | 0.030  | 52.38 (0.619)  | x_{2}, x_{3}, x_{4}, x_{5}, x_{7}  | 0.040  | 52.94 (0.541)
+L301: x_{2}, x_{3}, x_{4}, x_{5}  | 0.028  | 56.74 (0.599)  | x_{1},x_{2}, x_{3}, x_{4,} x_{5,} x_{7}  | 0.028  | 53.46 (0.608)  | x_{2}, x_{3}, x_{4}, x_{5}  | 0.028  | 54.09 (0.602)
+L302: x_{2}, x_{3}, x_{4}, x_{5}, x_{7}, x_{1}_{8}  | 0.017  | 55.17 (0.609)  | x_{2}, x_{3},x_{4}, x_{5}, x_{7}, x_{18}  | 0.021  | 54.08 (0.572)  | x_{2}, x_{4}, x_{5}, x_{7}  | 0.022  | 54.82 (0.576)
+L303: x_{2}, x_{3}, x_{4}, x_{5}, x_{7}, x_{17}  | 0.015  | 54.89 (0.623)  | x_{2}, x_{3}, x_{4}, x_{5}, x_{7}  | 0.018  | 54.51 (0.568)  | x_{2}, x_{3}, x_{4}  | 0.016  | 58.71 (0.617)
+L304: x_{1}, x_{2}, x_{3}, x_{4}, x_{5}, x_{7}  | 0.013  | 55.64 (0.611)  | x_{1}, x_{2}, x_{3}, x_{4}, x_{5}  | 0.015  | 56.13 (0.601)  | x_{2}, x_{4}, x_{7}, x_{11}  | 0.011  | 58.67 (0.594)
+L305: x_{2}, x_{3},x_{4}, x_{7}, x_{8}, x_{9}  | 0.011  | 56.54 (0.628)  | x_{2}, x_{3},x_{4}, x_{5}, x_{7}, x_{10}  | 0.009  | 54.75 (0.554)  | x_{2}, x_{4}, x_{11}  | 0.010  | 60.08 (0.581)
+L306: cite59†Open in a new tab L307: 
+L308: The entries in parenthesis are the standard errors obtained by 1000 replications.
+L309: Model comparison and validation are now made based on the average predicted error, where the parameter estimates are obtained by computing the posterior mean of β_{δ} for each given configuration of δ and y for each of the three methods. cite58†Table 3 reports the average mean square predictive error along with their standard errors obtained using 5-fold cross-validation (CV), whose estimates are first averaged across 10 CV splits to reduce variability, and then replicated 1000 times.
+L310: We see that the top two models picked out by the powered correlation prior's posterior probabilities has a significantly lower prediction error than that of the models selected using the two other methods. Hence, both the simulation and the real data example show strong support for the use of our proposed powered correlation prior.
+L311: ## 6. Discussion
+L312: In this paper we have demonstrated that within a linear model framework the powered correlation prior helps to resolve the problem of selecting subsets using a suitable modification of Zellner's g-prior when the predictors are highly correlated. By using simulated and the real data examples we have illustrated that the powered correlation prior tends to perform better in terms of choosing the correct model than the standard Zellner's prior and the intrinsic prior for correlated predictors.
+L313: The choice of hyperparameter λ obtained using a empirical Bayes method controls the degree of smoothing of correlated predictors towards or away from each other.
+L314: For a large number of predictors (e.g. p > 30), a attractive feature of this prior is that all the parameters can be integrated out analytically to obtain a closed form for the unnormalized posterior model probabilities. Hence a simple Gibbs sampler over model space (cite21†George and McCulloch, 1997 ) can be implemented to approximate the marginal for each pair (λ, π). This can be implemented on a two-dimensional grid, and although it may take significant computation time, it remains feasible.
+L315: Model averaging for linear regression models has received considerable attention (cite60†Raftery et al., 1997 ). This method accounts for model uncertainty by averaging over all possible models. It is possible to extend the use of our proposed prior to perform model averaging via the use of posterior probabilities.
+L316: There has also been considerable interest in Bayesian variable selection for generalized linear models. The selection criteria are based on extensions of Bayesian methods used in linear regression framework. While beyond the scope of this paper, one can extend the powered correlation prior used here to generalized linear models.
+

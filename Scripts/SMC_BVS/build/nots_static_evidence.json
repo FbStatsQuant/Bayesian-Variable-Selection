@@ -1,0 +1,98 @@
+{
+  "status": "PASS",
+  "numerical_runs": 0,
+  "actual_network_calls": 0,
+  "utc": "2026-10-22T20:53:13.254985+00:00",
+  "python_syntax": [
+    "nots_launch.py",
+    "nots_remote.py",
+    "nots_static.py"
+  ],
+  "embedded_python_syntax": [
+    "nots_job.sh:14",
+    "nots_job.sh:33",
+    "nots_job.sh:56",
+    "nots_job.sh:81",
+    "nots_job.sh:88",
+    "nots_job.sh:134",
+    "nots_regression.sh:37"
+  ],
+  "gate_checks": [
+    {
+      "case": "empty",
+      "pass_": true,
+      "network_calls": 0,
+      "mocked_ssh_calls": 0
+    },
+    {
+      "case": "current_negative",
+      "pass_": true,
+      "network_calls": 0,
+      "mocked_ssh_calls": 0
+    },
+    {
+      "case": "quoted",
+      "pass_": true,
+      "network_calls": 0,
+      "mocked_ssh_calls": 0
+    },
+    {
+      "case": "inline",
+      "pass_": true,
+      "network_calls": 0,
+      "mocked_ssh_calls": 0
+    },
+    {
+      "case": "suffix",
+      "pass_": true,
+      "network_calls": 0,
+      "mocked_ssh_calls": 0
+    },
+    {
+      "case": "trailing_space",
+      "pass_": true,
+      "network_calls": 0,
+      "mocked_ssh_calls": 0
+    },
+    {
+      "case": "lowercase",
+      "pass_": true,
+      "network_calls": 0,
+      "mocked_ssh_calls": 0
+    },
+    {
+      "case": "leading_space",
+      "pass_": true,
+      "network_calls": 0,
+      "mocked_ssh_calls": 0
+    },
+    {
+      "case": "frozen_launcher_uses_lead_gate",
+      "pass_": true,
+      "network_calls": 0,
+      "mocked_ssh_calls": 0
+    },
+    {
+      "case": "gate_reclosed_before_ssh",
+      "pass_": true,
+      "network_calls": 0,
+      "mocked_ssh_calls": 0
+    },
+    {
+      "case": "exact_affirmative_CRLF",
+      "pass_": true,
+      "network_calls": 0,
+      "mocked_ssh_calls": 1
+    }
+  ],
+  "shell_syntax": "NOT RUN; parent to check on Owls",
+  "R_syntax": "NOT RUN; parent to check on Owls",
+  "source_sha256": {
+    "nots_build.R": "feaa1f1ea1c8e97d23f4a97439f951e8b7cfc423e2be00f76bd2ada42e8643b5",
+    "nots_job.sh": "be9c3d1bfb72eeedb69beb4f1e9010a8994bdd37c97810d59ea4d02f04503e81",
+    "nots_launch.py": "2209066895bb5baac6452431e176515d96fc90cbf780a2035c360c076a54a111",
+    "nots_regression.sh": "94558a7ed34afe160941e800ef3dac382639a7f26de2a7634336b26f5652624c",
+    "nots_remote.py": "dd948d6e0e8c67846bd0c6c7a1bbfebb61949491588705a9c64caca3ac1f7500",
+    "nots_static.py": "ec3cdda61d786fdbff5fcc8ebbce88444a612189c3131482746d333047f08d97"
+  }
+}

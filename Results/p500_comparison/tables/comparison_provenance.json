@@ -1,0 +1,195 @@
+{
+  "status": "PASS",
+  "job": "2219840",
+  "utc": "2026-10-15T19:33:24.772824+00:00",
+  "inputs": {
+    "inputs": {
+      "benchmark": {
+        "file": "inputs/benchmark.csv",
+        "sha256": "bc0845f15bc1b9f818f9220e81f726a786f344c41c54035d40d2367e9ab75b43",
+        "original_local_path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\Experiment\\Experiments_October_14_Benchmarks\\summary\\validated_rows.csv"
+      },
+      "benchmark_scenario": {
+        "file": "inputs/benchmark_scenario.csv",
+        "sha256": "33c62cc4bd7277715c2bea4ff9e78d5edb4f777c6d3eefeed686626caaba7b24",
+        "original_local_path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\Experiment\\Experiments_October_14_Benchmarks\\summary\\scenario_summary.csv"
+      },
+      "original": {
+        "file": "inputs/original.csv",
+        "sha256": "664e4115d13f9d2592a7511ae3688974bc78dcf10151ae3eb0de654ebf7c5d53",
+        "original_local_path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\Experiment\\Experiments_October_14_Mixture\\reference\\original_bb_verified.csv"
+      },
+      "pairing": {
+        "file": "inputs/pairing.csv",
+        "sha256": "8974b527b2f01bedd364bcd08820edd074b3d3abc8de294a2c76ea0ae101b651",
+        "original_local_path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\Experiment\\Experiments_October_14_Mixture\\reference\\benchmark_pairing_verified.csv"
+      },
+      "original_provenance": {
+        "file": "inputs/original_provenance.json",
+        "sha256": "b378293d09e6b3e375ef35870817fa448c06922dde1aeef03c361703891731cd",
+        "original_local_path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\Experiment\\Experiments_October_14_Mixture\\reference\\original_comparison_provenance.json"
+      },
+      "mixture": {
+        "file": "inputs/mixture.csv",
+        "sha256": "76e54a2b6a950d4ee426422b3bdfb7cdbc011b60f083f37cbce3b710caad184b",
+        "original_local_path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\Experiment\\Experiments_October_14_Mixture\\metadata\\audit_snapshots\\final_2208411\\summary\\completed_rows_latest.csv"
+      },
+      "mixture_inventory": {
+        "file": "inputs/mixture_inventory.csv",
+        "sha256": "f18342fc39d89a61bdc257931538bad861ff6eb0ec08c0a2b4c5de36d4c992e4",
+        "original_local_path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\Experiment\\Experiments_October_14_Mixture\\metadata\\audit_snapshots\\final_2208411\\summary\\inventory_latest.csv"
+      },
+      "final_bb_scenario": {
+        "file": "inputs/final_bb_scenario.csv",
+        "sha256": "dcdc314a486c0bb12f9a2bca3483967365164db3800bab19f951ea5884e833a3",
+        "original_local_path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\Experiment\\Experiments_October_14_Mixture\\metadata\\audit_snapshots\\final_2208411\\summary\\comparison_errors.csv"
+      },
+      "final_provenance": {
+        "file": "inputs/final_provenance.json",
+        "sha256": "193078bbb4db69b925b8d28d5dd8b33001c3b92fb1b33068f7dd0de50b4168ce",
+        "original_local_path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\Experiment\\Experiments_October_14_Mixture\\metadata\\audit_snapshots\\final_2208411\\summary\\comparison_provenance.json"
+      },
+      "final_snapshot_manifest": {
+        "file": "inputs/final_snapshot_manifest.json",
+        "sha256": "d2af756114317ea8ff1c3fae9f9013ca2ccbc1ff7687507861754d942f2e6eab",
+        "original_local_path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\Experiment\\Experiments_October_14_Mixture\\metadata\\audit_snapshots\\final_2208411\\snapshot_manifest.json"
+      },
+      "final_receipt": {
+        "file": "inputs/final_receipt.json",
+        "sha256": "6058187437456c93aef11f194cea1c7d76255d1cd97c01ddbcc0edda19228368",
+        "original_local_path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\Experiment\\Experiments_October_14_Mixture\\metadata\\final_completion_receipt.json"
+      },
+      "benchmark_archive_receipt": {
+        "file": "inputs/benchmark_archive_receipt.json",
+        "sha256": "3395e848800e4c42f87eac58a187b08fbacefa479248d5df69b345ea72be2f0e",
+        "original_local_path": "C:\\Users\\felip\\Documents\\NOTS_Archives\\2026-10-14\\Experiments_October_14_Benchmarks\\final20261015T0140ZportableV3.verified.json"
+      },
+      "mixture_archive_receipt": {
+        "file": "inputs/mixture_archive_receipt.json",
+        "sha256": "211706077d54e109c96c05a77503953882553ee1daa696b9cb5b56bb4f90429c",
+        "original_local_path": "C:\\Users\\felip\\Documents\\NOTS_Archives\\2026-10-14\\Experiments_October_14_Mixture\\mixture20261015T1830Zv1.verified.json"
+      },
+      "benchmark_archive_manifest": {
+        "file": "inputs/benchmark_archive_manifest.json",
+        "sha256": "3784805edec118808edf9fc0c63522c1f678917cbe646eabb79988082c6dd4be",
+        "original_local_path": "C:\\Users\\felip\\Documents\\NOTS_Archives\\2026-10-14\\Experiments_October_14_Benchmarks\\final20261015T0140ZportableV3.manifest.json"
+      },
+      "mixture_archive_manifest": {
+        "file": "inputs/mixture_archive_manifest.json",
+        "sha256": "feea4a257b4c78db7cbe1a86fb4aa758162685f3b3fe74a35ac970b5275e7bd7",
+        "original_local_path": "C:\\Users\\felip\\Documents\\NOTS_Archives\\2026-10-14\\Experiments_October_14_Mixture\\mixture20261015T1830Zv1.manifest.json"
+      },
+      "baseline_gate": {
+        "file": "inputs/baseline_gate.json",
+        "sha256": "ffa8a7788ed162a4e7432e78af0551aef200a29df76fb2efe1c9e530567ac28d",
+        "original_local_path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\Experiment\\Experiments_October_14\\metadata\\VALIDATION_PASSED.json"
+      }
+    },
+    "json_roles": [
+      "original_provenance",
+      "final_provenance",
+      "final_snapshot_manifest",
+      "final_receipt",
+      "benchmark_archive_receipt",
+      "mixture_archive_receipt",
+      "benchmark_archive_manifest",
+      "mixture_archive_manifest",
+      "baseline_gate"
+    ],
+    "archive_bindings": {
+      "benchmark": {
+        "manifest_role": "benchmark_archive_manifest",
+        "member": "Experiments_October_14_Benchmarks/home/summary/validated_rows.csv"
+      },
+      "benchmark_scenario": {
+        "manifest_role": "benchmark_archive_manifest",
+        "member": "Experiments_October_14_Benchmarks/home/summary/scenario_summary.csv"
+      },
+      "original": {
+        "manifest_role": "mixture_archive_manifest",
+        "member": "Experiments_October_14_Mixture/home/reference/original_bb_verified.csv"
+      },
+      "pairing": {
+        "manifest_role": "mixture_archive_manifest",
+        "member": "Experiments_October_14_Mixture/home/reference/benchmark_pairing_verified.csv"
+      },
+      "mixture": {
+        "manifest_role": "mixture_archive_manifest",
+        "member": "Experiments_October_14_Mixture/home/summary/completed_rows_20261015T175348Z.csv"
+      },
+      "mixture_inventory": {
+        "manifest_role": "mixture_archive_manifest",
+        "member": "Experiments_October_14_Mixture/home/summary/inventory_20261015T175348Z.csv"
+      },
+      "final_bb_scenario": {
+        "manifest_role": "mixture_archive_manifest",
+        "member": "Experiments_October_14_Mixture/home/summary/comparison_errors.csv"
+      },
+      "final_provenance": {
+        "manifest_role": "mixture_archive_manifest",
+        "member": "Experiments_October_14_Mixture/home/summary/comparison_provenance.json"
+      },
+      "final_receipt": {
+        "manifest_role": "mixture_archive_manifest",
+        "member": "Experiments_October_14_Mixture/home/metadata/final_completion_receipt.json"
+      }
+    },
+    "source_seals": {
+      "benchmark": "31af767aa5ae7c52c2455dbe3034968582e39888570f39f02194845953108fde",
+      "mixture": "ebff4ae31aba4fe7675186df9f0ab1d30d3a68a77c52bec31e680c89fb4e5aea",
+      "original": {
+        "c100": "b30205ae4f6cda6538870c2af3b65d64d5045119b147ab3d8014546decc58d44",
+        "c075": "e0e2332dc79239443a6a3a43a094828ff78d6e12ede53fff2e015a400082af32",
+        "c050": "e0e2332dc79239443a6a3a43a094828ff78d6e12ede53fff2e015a400082af32",
+        "c035": "e0e2332dc79239443a6a3a43a094828ff78d6e12ede53fff2e015a400082af32",
+        "c025": "e0e2332dc79239443a6a3a43a094828ff78d6e12ede53fff2e015a400082af32"
+      }
+    },
+    "authoritative_mixture": "final_2208411 current completed rows and inventory; historical paired_subset files excluded",
+    "strict_jobs": [
+      "2204382",
+      "2204775",
+      "2204776",
+      "2204782",
+      "2208411"
+    ]
+  },
+  "expected_case_method_rows": 30000,
+  "actual_rows": 30000,
+  "all_keys_and_support_metrics_verified": true,
+  "output_sha256": {
+    "active_selection_counts.csv": "ed08e21ace71a0bf66b7e494542103cc895e4f576b6ce15acfb8295735b70411",
+    "active_selection_totals.csv": "cf9cee6f5ef144530a5b6a10ff387fa268d6a0ed271ac12c543bd6b1c61f585f",
+    "comparison_case_rows.csv": "59dfba2f6a4fbcf634659ea8da27a9aa42412779477693fb97767f5ad70450f1",
+    "failure_and_warning_status.csv": "084f5c359296061f50a4077df2459cac138c1b0876570061a4d789b19bb5944e",
+    "independent_scenario_reconciliation.csv": "3b73aa595ad1b3c4ec163e67f3b1c9242509501b66ec68785b67d4c50ad35554",
+    "overall_comparison.csv": "f35087eed62b85a462db878adb0aefbab6934a2d49cc3236e36d6ad3e8286a7f",
+    "paired_active_change_summary.csv": "20dd16db155e755dd6bd672fb90b3ced9f866373301cad2296f1e198f47f07af",
+    "paired_active_changes.csv": "30cdfb29100da5c330cb855b7f8f7771cf38fddea45c023b5f5f837cbc9981a2",
+    "paired_discordance.csv": "d4e3b0eae4437f0bce79037d1d5aa6e7d46b40f1935a6e5930b2776f1e60483e",
+    "paired_support_change_summary.csv": "1934a5104ef0ac7f458365edc7020963fe1a93818b748d894647ebb0dade61f0",
+    "paired_support_changes.csv": "7e035656619813a93fc4fac0b4db02ac77d603932d1baf0cd11c16b62212070f",
+    "recovery_10methods_5scales.csv": "b63318c364a5e4e8f2319ce8d96964cc09f6d56e05d54dc17f950fb4cf2f6ebb",
+    "recovery_c025_10methods_6scenarios.csv": "ff533bb266d45fd5fb928366624a86417cecfc55774a4fa86ec742b396337da1",
+    "recovery_c035_10methods_6scenarios.csv": "c7fd17327fedbe5c2e2c2871b08d61fddd86ed75b56cf785637f23b12d717870",
+    "recovery_c050_10methods_6scenarios.csv": "f18119b93440e5114cc055787c62bc4f4afd95a76f45c256ea56e25ce7b47ecc",
+    "recovery_c075_10methods_6scenarios.csv": "56812ba20d13e0b3eab12d4a2bcf0629fb1f331b082988e8c2a3c5b8bf456551",
+    "recovery_c100_10methods_6scenarios.csv": "6323987af410dabe1a2433ba2afe7a8cdd5499d493ff282e57d63ce005600a30",
+    "recovery_tables.md": "0b3f62c86f8c1ca43a8fd466cd2b2828d5f2ad79a97dc3f72f799df155fddc30",
+    "runtime_by_family.csv": "9737bb2fc5a8e31c6133e119aaa69c9c77fd2dc18ae21676ae32fceb64633bc9",
+    "scale_comparison.csv": "a6277d095df18714910f725d2158a5dd8f2c23826dbcde6768a592fffe877a7f",
+    "scenario_comparison.csv": "4a32cddfd77975f44b5a71b2842a528eb10f07e23f5eab018f6175f7585a1431"
+  },
+  "script_sha256": "e31eb1576d20f8fab7a8cdd6272ee32f691a4ad236efc37c07b5821e0c7491fc",
+  "python": "3.9.18",
+  "command": [
+    "compare_all.py"
+  ],
+  "original_response_binding": "Original import response/component identities assigned through sealed case/base-input pairing reference and prior3000response verification; not independently invented.",
+  "timing_caveat": "Benchmark selector rows share family cost; runtime_by_family deduplicates. BB includes compilation/setup. No isolated selector/kernel timings.",
+  "limitations": [
+    "All five scales reuse600paired datasets; descriptive counts are not independent significance tests.",
+    "Approximate HPM and ABESS have no global optimum certificate.",
+    "Detailed benchmark warning text not present in validated import; status counts retained and diagnostic extraction extension is separate."
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "frozen_utc": "2026-10-22T20:49:18.599299+00:00",
+  "evidence": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\pipeline\\validation\\local_20261022T204616_272585Z",
+  "checks_passed": 241,
+  "r1_branch_checks_passed": 26,
+  "output_hashes_verified": 2564,
+  "source_manifest_sha256": "6aae25e0e44a940550d656680f420ba025f89a78b16b5cca63a12e91f4ff946f",
+  "verification_manifest_sha256": "52afdd01e9997a425ccb618b534418d65eea5858e2d91c0341c04b40185be414",
+  "verification_checks_sha256": "4025fddb5728893f99244a4ac542eddd9b78c7d54e5342e9ca8621470dcc4bc3",
+  "launch_sha256": "ed4ed0e712549096fd7d8fbe52340448408fbc5070d247c5148bf37f8c54da67",
+  "ruling_sha256": "3bf2e514065ff4ccdaf5f2dd9ec82375df147f3bd6f308f75c965f5975bbe88a",
+  "benchmark_pins": {
+    "registry.R": "cc19602b2780b3706c505d7b0d6984053c58bf68df96a001d4e3ad88106be1e0",
+    "score.R": "ec3ac2e03748ac7f360a76bc8d6300d1f35ef2fdcd00f87c04c32ab2d1ecbc6b",
+    "aggregate.R": "031d845dd8981a636881378893aa6ce2d782a87ebc6fe97d175af1c08a4e244f",
+    "combine.R": "a79bec52141cf01d4ec3cc69fa939adcea395a48b232612c74e5a075aa98a1b2"
+  },
+  "independent_review": "pending NEW final-source review",
+  "final_A_integration": "PENDING formal R-1 A handoff and rerun; current passing fixture is D-owned schema-level mock",
+  "review_r2_sha256": "e92eebbfd97241f06ca223bbd99bdf1afb6890f5935b0dcc1c24c89d812ca813",
+  "finding_regressions": {
+    "F1": [
+      "hpm_disagrees",
+      "pip_disagrees",
+      "bad_preprocessing_map",
+      "wrong_native_pip_names"
+    ],
+    "F2": [
+      "native_status_disagrees",
+      "reverse_failure_status",
+      "degenerate_status_disagrees"
+    ],
+    "F3": [
+      "missing_native_payload",
+      "missing_native_pip",
+      "missing_native_stage",
+      "missing_island_evidence",
+      "missing_native_streams",
+      "missing_bound_label",
+      "native_json_disagrees",
+      "json_cut_group_count",
+      "json_cut_group_components",
+      "json_local_limit",
+      "json_local_certified",
+      "json_global_certified",
+      "json_near_tie_truncated"
+    ],
+    "F4": [
+      "missing_failure_audit",
+      "changed_failure_audit",
+      "null_failure_as_NA",
+      "unavailable_failure_as_empty"
+    ]
+  },
+  "actual_smoke_report_sha256": "e22c4926b9b139c94c8a12973fbe3abffc2be2521679c43b6a98e21977c02b20",
+  "actual_smoke_originals_unchanged": 8,
+  "native_control_checks_passed": 13,
+  "historical_reproduction": "owned by separate task; mock equality is not historical reproduction"
+}

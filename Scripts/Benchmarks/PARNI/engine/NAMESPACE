@@ -1,0 +1,5 @@
+useDynLib(bvsparni, .registration=TRUE)
+importFrom(Rcpp, evalCpp)
+export(parni_path_cpp)
+export(parni_scores_cpp)
+export(parni_run_cpp)

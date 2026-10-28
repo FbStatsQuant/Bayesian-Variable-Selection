@@ -1,0 +1,327 @@
+{
+  "mode": "assessment",
+  "out": "C:\\Users\\felip\\Documents\\NOTS_BVS\\smcbvs_v3_deploy_20261022\\F_analysis\\score_p1000_20261028T1404Z\\analysis",
+  "output_root": "C:\\Users\\felip\\Documents\\NOTS_BVS\\smcbvs_v3_deploy_20261022\\F_analysis\\score_p1000_20261028T1404Z",
+  "rscript": "C:/Program Files/R/R-4.4.1/bin/Rscript.exe",
+  "assessment_selector": {
+    "p": [
+      500,
+      1000
+    ],
+    "scenario": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "replicate": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100
+    ],
+    "scale_key": [
+      "c100",
+      "c050"
+    ]
+  },
+  "benchmark_sources": [
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_v3_v7\\runs\\20261019T2140Z_bench20261019_prod_A2_SSL",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c100"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_v3_v7\\runs\\20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c100"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_v3_v7\\runs\\20261019T2157Z_bench20261019_prod_F5_ABESS",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c100"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_v3_v7\\runs\\20261019T2209Z_bench20261019_prod_A3_Horseshoe",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c100"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_v3_v7\\runs\\20261019T2219Z_bench20261019_prod_A1_SuSiE",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c100"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_v3_v7\\runs\\20261019T2219Z_bench20261019_prod_F4_MCP_SCAD",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c100"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_v3_v7\\runs\\20261019T2232Z_bench20261019_prod_F2_ElasticNet",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c100"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_v3_v7\\runs\\20261019T2308Z_bench20261019_prod_F1_Lasso",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c100"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_v3_v7\\runs\\20261021T1819Z_bench20261019_prodc100_SuSiErefine",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c100"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_c050_v7\\runs\\20261021T1540Z_bench20261019_prodc050_A1_SuSiE",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c050"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_c050_v7\\runs\\20261021T1540Z_bench20261019_prodc050_F2_ElasticNet",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c050"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_c050_v7\\runs\\20261021T1540Z_bench20261019_prodc050_F3_AdaptiveLasso",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c050"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_c050_v7\\runs\\20261021T1552Z_bench20261019_prodc050_A2_SSL",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c050"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_c050_v7\\runs\\20261021T1604Z_bench20261019_prodc050_F4_MCP_SCAD",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c050"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_c050_v7\\runs\\20261021T1604Z_bench20261019_prodc050_F5_ABESS",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c050"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_c050_v7\\runs\\20261021T1615Z_bench20261019_prodc050_F1_Lasso",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c050"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_c050_v7\\runs\\20261021T1818Z_bench20261019_prodc050_A3_Horseshoe",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c050"
+    },
+    {
+      "scored_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\executions\\20261022T193656366878Z\\local_outputs\\combined_c050_v7\\runs\\20261021T1818Z_bench20261019_prodc050_SuSiErefine",
+      "version": "Phase1 unchanged-v7 raw rescoring; full benchmark design",
+      "scale_key": "c050"
+    }
+  ],
+  "combined_references": {
+    "c100": {
+      "version": "combined_v3_v7",
+      "tables": {
+        "rules_long": {
+          "path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\F_2026-10-19_benchmark_study_n200\\Benchmark_Study_20261019\\scoring\\out\\combined_v3_v7\\rules_long.csv",
+          "keys": [
+            "run_id",
+            "method_id",
+            "rule_id",
+            "p",
+            "scenario"
+          ]
+        },
+        "T1": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "T2": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "T3": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "T4_by_variable": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "T4_by_group": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "T5": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "T6": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "S_tables": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "caps": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "codes_by_rule": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        }
+      }
+    },
+    "c050": {
+      "version": "combined_c050_v7",
+      "tables": {
+        "rules_long": {
+          "path": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\F_2026-10-19_benchmark_study_n200\\Benchmark_Study_20261019\\scoring\\out\\combined_c050_v7\\rules_long.csv",
+          "keys": [
+            "run_id",
+            "method_id",
+            "rule_id",
+            "p",
+            "scenario"
+          ]
+        },
+        "T1": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "T2": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "T3": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "T4_by_variable": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "T4_by_group": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "T5": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "T6": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "S_tables": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "caps": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        },
+        "codes_by_rule": {
+          "unavailable": "Original canonical v7 CSV not supplied; regenerated output cannot establish exact reproduction of an absent original."
+        }
+      }
+    }
+  },
+  "smc_sources": [
+    {
+      "scale_key": "c100",
+      "results_dir": "C:\\Users\\felip\\Documents\\NOTS_BVS\\smcbvs_v3_deploy_20261022\\claude\\prod_p1000_20261023T1227Z"
+    },
+    {
+      "scale_key": "c050",
+      "results_dir": "C:\\Users\\felip\\Documents\\NOTS_BVS\\smcbvs_v3_deploy_20261022\\claude\\prod_p1000_20261023T1227Z"
+    }
+  ],
+  "source_inventory": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\D_analysis\\reproduction\\runs.tsv",
+  "benchmark_scoring": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\F_2026-10-19_benchmark_study_n200\\Benchmark_Study_20261019\\scoring",
+  "inputs_manifest": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\F_2026-10-19_benchmark_study_n200\\Benchmark_Study_20261019\\verify\\recount\\c050\\inputs\\manifests\\inputs_manifest.csv",
+  "truth_manifest": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\F_2026-10-19_benchmark_study_n200\\Benchmark_Study_20261019\\verify\\recount\\c050\\inputs\\truth_scoring\\truth_manifest.csv",
+  "truth_dir": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\F_2026-10-19_benchmark_study_n200\\Benchmark_Study_20261019\\verify\\recount\\c050\\inputs\\truth_scoring",
+  "mapping_ruling": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\F_analysis_claude\\pipeline\\vendor\\RULINGS_LEAD.md",
+  "ops_outputs": "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\H_2026-10-22_smcbvs_v3_deploy\\E_ops_claude\\OUTPUTS.md"
+}

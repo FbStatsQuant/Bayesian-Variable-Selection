@@ -1,0 +1,141 @@
+"run_id","method_id","rule_id","label","p","scenario","n_success","sum_fp","sum_fn","mean_fp","mean_fn","err_exact","err_extra_only","err_missed_only","err_mixed","err_failed","n_missing"
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"1",100,1,0,0.01,0,99,1,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"2",100,1,0,0.01,0,99,1,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"3",100,3,0,0.029999999999999999,0,97,3,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"4",100,18,7,0.17999999999999999,0.070000000000000007,84,9,0,7,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"5",100,9,0,0.089999999999999997,0,93,7,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"6",100,3,0,0.029999999999999999,0,97,3,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"pooled",600,35,7,0.058333333333333334,0.011666666666666667,569,24,0,7,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"1",100,0,0,0,0,100,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"2",100,4,0,0.040000000000000001,0,96,4,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"3",100,2,0,0.02,0,98,2,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"4",100,10,7,0.10000000000000001,0.070000000000000007,92,3,0,5,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"5",100,3,0,0.029999999999999999,0,97,3,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"6",100,1,0,0.01,0,99,1,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"pooled",600,20,7,0.033333333333333333,0.011666666666666667,582,13,0,5,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"1",100,2706,0,27.059999999999999,0,0,100,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"2",100,2878,1,28.780000000000001,0.01,0,99,0,1,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"3",100,3303,1,33.030000000000001,0.01,0,99,0,1,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"4",100,3051,9,30.510000000000002,0.089999999999999997,0,91,0,9,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"5",100,3410,2,34.100000000000001,0.02,0,98,0,2,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"6",100,2848,4,28.48,0.040000000000000001,0,96,0,4,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"pooled",600,18196,17,30.326666666666668,0.028333333333333332,0,583,0,17,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"1",100,4685,1,46.850000000000001,0.01,0,99,0,1,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"2",100,4914,6,49.140000000000001,0.059999999999999998,0,94,0,6,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"3",100,3995,5,39.950000000000003,0.050000000000000003,0,95,0,5,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"4",100,4136,6,41.359999999999999,0.059999999999999998,0,94,0,6,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"5",100,5133,6,51.329999999999998,0.059999999999999998,0,94,0,6,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"6",100,4677,5,46.770000000000003,0.050000000000000003,0,95,0,5,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"pooled",600,27540,29,45.899999999999999,0.048333333333333332,0,571,0,29,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"1",100,385,0,3.8500000000000001,0,66,34,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"2",100,36,0,0.35999999999999999,0,77,23,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"3",100,37,0,0.37,0,71,29,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"4",100,155,24,1.55,0.23999999999999999,26,54,0,20,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"5",100,30,0,0.29999999999999999,0,76,24,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"6",100,86,3,0.85999999999999999,0.029999999999999999,49,48,0,3,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"pooled",600,729,27,1.2150000000000001,0.044999999999999998,365,212,0,23,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"1",100,3976,0,39.759999999999998,0,40,60,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"2",100,1244,0,12.44,0,63,37,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"3",100,30,0,0.29999999999999999,0,76,24,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"4",100,142,36,1.4199999999999999,0.35999999999999999,24,49,0,27,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"5",100,215,0,2.1499999999999999,0,66,34,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"6",100,100,18,1,0.17999999999999999,54,33,0,13,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"pooled",600,5707,54,9.5116666666666667,0.089999999999999997,323,237,0,40,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"1",100,47,0,0.46999999999999997,0,68,32,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"2",100,36,0,0.35999999999999999,0,77,23,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"3",100,37,0,0.37,0,71,29,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"4",100,155,24,1.55,0.23999999999999999,26,54,0,20,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"5",100,30,0,0.29999999999999999,0,76,24,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"6",100,86,3,0.85999999999999999,0.029999999999999999,49,48,0,3,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"pooled",600,391,27,0.65166666666666662,0.044999999999999998,367,210,0,23,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"1",100,57,0,0.56999999999999995,0,63,37,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"2",100,45,0,0.45000000000000001,0,72,28,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"3",100,30,0,0.29999999999999999,0,76,24,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"4",100,142,36,1.4199999999999999,0.35999999999999999,24,49,0,27,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"5",100,45,0,0.45000000000000001,0,67,33,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"6",100,100,18,1,0.17999999999999999,54,33,0,13,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"pooled",600,419,54,0.69833333333333336,0.089999999999999997,356,204,0,40,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"1",100,10,0,0.10000000000000001,0,92,8,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"2",100,2,0,0.02,0,98,2,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"3",100,0,0,0,0,100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"4",100,3,13,0.029999999999999999,0.13,87,0,10,3,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"5",100,2,0,0.02,0,98,2,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"6",100,1,0,0.01,0,99,1,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"pooled",600,18,13,0.029999999999999999,0.021666666666666667,574,13,10,3,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"1",100,13,0,0.13,0,91,9,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"2",100,5,0,0.050000000000000003,0,95,5,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"3",100,0,0,0,0,100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"4",100,0,11,0,0.11,91,0,9,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"5",100,2,0,0.02,0,98,2,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"6",100,0,0,0,0,100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"pooled",600,20,11,0.033333333333333333,0.018333333333333333,575,16,9,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"1",100,1,0,0.01,0,99,1,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"2",100,1,7,0.01,0.070000000000000007,98,1,1,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"3",100,3,0,0.029999999999999999,0,97,3,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"4",100,5,4,0.050000000000000003,0.040000000000000001,95,1,0,4,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"5",100,1,2,0.01,0.02,98,1,1,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"6",100,2,0,0.02,0,98,2,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"pooled",600,13,13,0.021666666666666667,0.021666666666666667,585,9,2,4,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"1",100,0,0,0,0,100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"2",100,4,0,0.040000000000000001,0,96,4,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"3",100,2,0,0.02,0,98,2,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"4",100,5,3,0.050000000000000003,0.029999999999999999,95,2,0,3,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"5",100,3,29,0.029999999999999999,0.28999999999999998,94,3,3,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"6",100,1,0,0.01,0,99,1,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"pooled",600,15,32,0.025000000000000001,0.053333333333333337,582,12,3,3,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"1",100,3689,0,36.890000000000001,0,39,61,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"2",100,1303,0,13.029999999999999,0,69,31,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"3",100,28,0,0.28000000000000003,0,77,23,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"4",100,117,26,1.1699999999999999,0.26000000000000001,44,33,0,23,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"5",100,28,0,0.28000000000000003,0,78,22,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"6",100,46,2,0.46000000000000002,0.02,70,28,0,2,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"pooled",600,5211,28,8.6850000000000005,0.046666666666666669,377,198,0,25,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"1",100,6303,0,63.030000000000001,0,18,82,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"2",100,5226,0,52.259999999999998,0,28,72,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"3",100,2405,0,24.050000000000001,0,60,40,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"4",100,163,43,1.6299999999999999,0.42999999999999999,32,32,0,36,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"5",100,2917,0,29.170000000000002,0,49,51,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"6",100,2605,4,26.050000000000001,0.040000000000000001,48,48,0,4,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"pooled",600,19619,47,32.698333333333331,0.078333333333333338,235,325,0,40,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"1",100,42,0,0.41999999999999998,0,69,31,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"2",100,30,0,0.29999999999999999,0,79,21,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"3",100,28,0,0.28000000000000003,0,77,23,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"4",100,117,26,1.1699999999999999,0.26000000000000001,44,33,0,23,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"5",100,28,0,0.28000000000000003,0,78,22,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"6",100,46,2,0.46000000000000002,0.02,70,28,0,2,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"pooled",600,291,28,0.48499999999999999,0.046666666666666669,417,158,0,25,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"1",100,41,0,0.40999999999999998,0,66,34,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"2",100,33,0,0.33000000000000002,0,74,26,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"3",100,24,0,0.23999999999999999,0,80,20,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"4",100,163,43,1.6299999999999999,0.42999999999999999,32,32,0,36,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"5",100,45,0,0.45000000000000001,0,69,31,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"6",100,87,7,0.87,0.070000000000000007,65,28,0,7,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"pooled",600,393,50,0.65500000000000003,0.083333333333333329,386,171,0,43,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"1",100,6651,0,66.510000000000005,0,0,100,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"2",100,6334,0,63.340000000000003,0,0,100,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"3",100,6374,0,63.740000000000002,0,0,100,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"4",100,6106,1,61.060000000000002,0.01,0,99,0,1,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"5",100,6364,0,63.640000000000001,0,0,100,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"6",100,6000,0,60,0,0,100,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"pooled",600,37829,1,63.048333333333332,0.0016666666666666668,0,599,0,1,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"1",100,8285,0,82.849999999999994,0,0,100,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"2",100,8208,0,82.079999999999998,0,0,100,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"3",100,7700,0,77,0,0,100,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"4",100,7478,0,74.780000000000001,0,0,100,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"5",100,8119,0,81.189999999999998,0,0,100,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"6",100,7906,0,79.060000000000002,0,0,100,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"pooled",600,47696,0,79.493333333333339,0,0,600,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"1",100,5604,0,56.039999999999999,0,0,100,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"2",100,5337,0,53.369999999999997,0,0,100,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"3",100,5380,0,53.799999999999997,0,0,100,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"4",100,5051,1,50.509999999999998,0.01,0,99,0,1,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"5",100,5479,0,54.789999999999999,0,0,100,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"6",100,5029,0,50.289999999999999,0,0,100,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"pooled",600,31880,1,53.133333333333333,0.0016666666666666668,0,599,0,1,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"1",100,7134,0,71.340000000000003,0,0,100,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"2",100,6868,0,68.680000000000007,0,0,100,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"3",100,6372,0,63.719999999999999,0,0,100,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"4",100,5980,0,59.799999999999997,0,0,100,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"5",100,6912,0,69.120000000000005,0,0,100,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"6",100,6570,0,65.700000000000003,0,0,100,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"pooled",600,39836,0,66.393333333333331,0,0,600,0,0,0,0

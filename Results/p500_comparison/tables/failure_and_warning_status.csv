@@ -1,0 +1,41 @@
+method_id,status,cases,expected,diagnostic_text
+Original BB+HPM,ok,3000,3000,truth score exceeds discovered HPM is separate from execution failure
+Original BB+HPM,warning,0,3000,truth score exceeds discovered HPM is separate from execution failure
+Original BB+HPM,failed,0,3000,truth score exceeds discovered HPM is separate from execution failure
+Original BB+HPM,pending,0,3000,truth score exceeds discovered HPM is separate from execution failure
+Mixture BB+HPM,ok,3000,3000,truth score exceeds discovered HPM is separate from execution failure
+Mixture BB+HPM,warning,0,3000,truth score exceeds discovered HPM is separate from execution failure
+Mixture BB+HPM,failed,0,3000,truth score exceeds discovered HPM is separate from execution failure
+Mixture BB+HPM,pending,0,3000,truth score exceeds discovered HPM is separate from execution failure
+Lasso EBIC gamma=0.5,ok,3000,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso EBIC gamma=0.5,warning,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso EBIC gamma=0.5,failed,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso EBIC gamma=0.5,pending,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso EBIC gamma=1,ok,3000,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso EBIC gamma=1,warning,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso EBIC gamma=1,failed,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso EBIC gamma=1,pending,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso CV minimum,ok,3000,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso CV minimum,warning,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso CV minimum,failed,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso CV minimum,pending,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso CV 1SE,ok,3000,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso CV 1SE,warning,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso CV 1SE,failed,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+Lasso CV 1SE,pending,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+MCP EBIC gamma=0.5,ok,3000,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+MCP EBIC gamma=0.5,warning,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+MCP EBIC gamma=0.5,failed,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+MCP EBIC gamma=0.5,pending,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+MCP EBIC gamma=1,ok,3000,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+MCP EBIC gamma=1,warning,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+MCP EBIC gamma=1,failed,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+MCP EBIC gamma=1,pending,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+ABESS EBIC gamma=0.5,ok,3000,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+ABESS EBIC gamma=0.5,warning,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+ABESS EBIC gamma=0.5,failed,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+ABESS EBIC gamma=0.5,pending,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+ABESS EBIC gamma=1,ok,3000,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+ABESS EBIC gamma=1,warning,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+ABESS EBIC gamma=1,failed,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.
+ABESS EBIC gamma=1,pending,0,3000,Benchmark detailed warning/error text unavailable in validated import; retained status counts. Search flag not applicable to penalized selectors.

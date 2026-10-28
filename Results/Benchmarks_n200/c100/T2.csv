@@ -1,0 +1,141 @@
+"run_id","method_id","rule_id","label","p","scenario","n_expected","n_failed","n_timeout","n_not_run","n_missing","n_fail_total"
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"1",100,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"2",100,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"3",100,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"4",100,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"5",100,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"6",100,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",500,"pooled",600,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"1",100,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"2",100,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"3",100,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"4",100,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"5",100,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"6",100,0,0,0,0,0
+"20261019T2140Z_bench20261019_prod_A2_SSL","A2","ssl_final","pre-declared",1000,"pooled",600,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"1",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"2",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"3",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"4",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"5",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"6",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",500,"pooled",600,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"1",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"2",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"3",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"4",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"5",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"6",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F3_AdaptiveLasso","F3","cv_min","pre-declared",1000,"pooled",600,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"1",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"2",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"3",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"4",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"5",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"6",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",500,"pooled",600,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"1",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"2",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"3",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"4",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"5",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"6",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1","pre-declared",1000,"pooled",600,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"1",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"2",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"3",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"4",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"5",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"6",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"pooled",600,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"1",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"2",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"3",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"4",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"5",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"6",100,0,0,0,0,0
+"20261019T2157Z_bench20261019_prod_F5_ABESS","F5","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"pooled",600,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"1",100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"2",100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"3",100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"4",100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"5",100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"6",100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",500,"pooled",600,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"1",100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"2",100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"3",100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"4",100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"5",100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"6",100,0,0,0,0,0
+"20261019T2209Z_bench20261019_prod_A3_Horseshoe","A3","ci95","pre-declared",1000,"pooled",600,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"1",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"2",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"3",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"4",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"5",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"6",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",500,"pooled",600,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"1",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"2",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"3",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"4",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"5",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"6",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_A1_SuSiE","A1","pip05","pre-declared",1000,"pooled",600,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"1",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"2",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"3",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"4",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"5",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"6",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",500,"pooled",600,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"1",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"2",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"3",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"4",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"5",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"6",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1","pre-declared",1000,"pooled",600,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"1",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"2",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"3",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"4",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"5",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"6",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",500,"pooled",600,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"1",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"2",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"3",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"4",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"5",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"6",100,0,0,0,0,0
+"20261019T2219Z_bench20261019_prod_F4_MCP_SCAD","F4","ebic1_K37","post hoc (chosen from size diagnostics after the c = 1 run)",1000,"pooled",600,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"1",100,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"2",100,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"3",100,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"4",100,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"5",100,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"6",100,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",500,"pooled",600,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"1",100,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"2",100,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"3",100,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"4",100,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"5",100,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"6",100,0,0,0,0,0
+"20261019T2232Z_bench20261019_prod_F2_ElasticNet","F2","cv_min","pre-declared",1000,"pooled",600,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"1",100,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"2",100,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"3",100,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"4",100,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"5",100,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"6",100,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",500,"pooled",600,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"1",100,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"2",100,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"3",100,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"4",100,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"5",100,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"6",100,0,0,0,0,0
+"20261019T2308Z_bench20261019_prod_F1_Lasso","F1","cv_min","pre-declared",1000,"pooled",600,0,0,0,0,0

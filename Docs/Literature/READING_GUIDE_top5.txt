@@ -1,0 +1,157 @@
+FIVE PRIORITY PAPERS FOR YOUR CURRENT SMC PROJECT
+
+Scope of this selection
+
+These are my five priority readings for developing, validating, and positioning
+your existing collapsed subset-space SMC. They are selected for their direct
+architectural fit and the questions raised by your experiments, not simply by
+publication date or citation count. The numbering below is a suggested reading
+order. Original bibliography numbers are retained in selection_manifest.json.
+
+Your latest experiments show accurate evidence and especially accurate
+Rao-Blackwellized PIPs for the control posterior at p=30. Strong correlation
+still increases computational difficulty, while earlier experiments show that
+accurately estimating a posterior need not imply exact recovery of the true
+support. The five papers address complementary questions: what to benchmark
+against, how to move through model space, how to estimate evidence, and how to
+express discoveries and uncertainty from the joint posterior.
+
+1. THE ESSENTIAL SMC REFERENCE AND BENCHMARK
+
+Christian Schafer and Nicolas Chopin (2013).
+Sequential Monte Carlo on large binary sampling spaces.
+Statistics and Computing 23, 163-184.
+DOI: https://doi.org/10.1007/s11222-011-9299-z
+Open version: https://arxiv.org/abs/1101.6037
+File: 01_Schafer_Chopin_2013_Binary_SMC.pdf
+Original bibliography number: 7
+
+Why it is essential: This is the closest foundational computational reference
+for your method: SMC on binary model indicators, with proposals that learn
+dependence through conditional logistic models. It helps establish both a
+credible benchmark and the distinction between established binary SMC and your
+composite initialization and global correction approach.
+
+Connection to your architecture: Its dependence-aware whole-model proposals
+can inform rejuvenation using your collapsed scores. A Metropolis correction
+must target the current annealed distribution. Learning proposals from the
+population also requires appropriate treatment of adaptation.
+
+Main question to take from it: Does your composite start improve efficiency
+relative to a strong binary SMC baseline when both use the same posterior and
+comparable computational budgets?
+
+2. THE FIRST MUTATION-KERNEL UPGRADE TO INVESTIGATE
+
+Xitong Liang, Samuel Livingstone, and Jim Griffin (2022).
+Adaptive random neighbourhood informed Markov chain Monte Carlo for
+high-dimensional Bayesian variable selection.
+Statistics and Computing 32, Article 84.
+DOI: https://doi.org/10.1007/s11222-022-10137-8
+Open version: https://arxiv.org/abs/2110.11747
+File: 02_Liang_et_al_2022_PARNI.pdf
+Original bibliography number: 1
+
+Why it is essential: PARNI combines adaptive random neighborhoods with locally
+informed proposals. It is a strong candidate for improving movement among
+models when coordinate-at-a-time updates become inefficient.
+
+Connection to your architecture: It can use the current annealed subset score
+and your score cache. It does not require restoring coefficient sampling or
+changing the final statistical target. Retain a final coordinate Gibbs sweep
+if preserving your present Rao-Blackwellized PIP construction.
+
+Main question: Can it reduce PIP and evidence error per unit computation in
+the difficult correlated designs? Improvement at your p=30 is a hypothesis to
+test, not a consequence of its high-dimensional results.
+
+3. THE MOST RELEVANT RECENT PAPER FOR ANNEALING AND EVIDENCE
+
+Saifuddin Syed, Alexandre Bouchard-Cote, Kevin Chern, and Arnaud Doucet (2026).
+Optimized annealed sequential Monte Carlo samplers.
+Journal of the Royal Statistical Society, Series B, advance article qkag082.
+DOI: https://doi.org/10.1093/jrsssb/qkag082
+Open version: https://arxiv.org/abs/2408.12057
+File: 03_Syed_et_al_2026_Optimized_Annealed_SMC.pdf
+Original bibliography number: 2
+
+Why it is essential: Your project estimates the normalizing constant as well
+as PIPs. This paper tunes annealing across rounds with a criterion related to
+normalizing-constant variance. That addresses an important part of your method
+which posterior-only selection algorithms do not address.
+
+Connection to your architecture: Your normalized composite distribution is a
+tractable reference. An independently learned schedule, frozen during a fresh
+production run, is a useful comparison with your current online adaptation.
+
+Main question: How should particles, temperatures, and mutation effort be
+allocated for reliable evidence at a fixed budget? Its performance assumptions
+do not automatically hold for your correlated binary target, and freezing the
+schedule alone does not fix poor exploration.
+
+4. THE FIRST PAPER FOR TURNING PARTICLES INTO CONTROLLED DISCOVERIES
+
+Asher Spector and Lucas Janson (2025).
+Controlled Discovery and Localization of Signals via Bayesian Linear Programming.
+Journal of the American Statistical Association 120(549), 460-471.
+DOI: https://doi.org/10.1080/01621459.2024.2347667
+Open version: https://arxiv.org/abs/2203.17208
+File: 04_Spector_Janson_2025_BLIP.pdf
+Original bibliography number: 5
+
+Why it is essential: With correlated predictors, evidence can support a group
+containing a signal while being insufficient to identify its exact member.
+BLiP optimizes discoveries at different resolutions using posterior group
+probabilities and Bayesian error-control constraints.
+
+Connection to your architecture: Compute group events from your joint subset
+particles. This is a postprocessing step and leaves the sampler and target
+unchanged. Marginal PIPs alone do not determine these group probabilities.
+
+Main question: Can your posterior produce more useful, appropriately qualified
+discoveries than a fixed PIP threshold? A group containing at least one signal
+does not establish that every active member has been identified. Bayesian error
+control is not automatically uniform frequentist error control.
+
+5. THE FIRST PAPER FOR EXPRESSING JOINT MODEL UNCERTAINTY
+
+J. E. Griffin (2025).
+Expressing and Visualizing Model Uncertainty in Bayesian Variable Selection
+Using Cartesian Credible Sets.
+Bayesian Analysis 20(4), 1371-1397.
+DOI: https://doi.org/10.1214/25-BA1568
+Open version: https://arxiv.org/abs/2402.12323
+File: 05_Griffin_2025_Cartesian_Credible_Sets.pdf
+Original bibliography number: 6
+
+Why it is essential: Accurate individual PIPs can hide which variables enter
+together or compete as alternatives. Cartesian credible sets organize model
+configurations into interpretable collections. This makes the joint output of
+your SMC useful beyond marginal inclusion summaries.
+
+Connection to your architecture: Use the joint particles and evaluate proposed
+sets against exhaustive posterior probabilities at p=30. Interpretation blocks
+need not match the random blocks used to initialize the sampler.
+
+Main question: Which competing configurations does the posterior actually
+support? The general construction uses approximation and search, so verify
+joint posterior coverage rather than assuming that separate block-level
+coverage statements combine automatically.
+
+Why this shortlist differs from a prior-selection shortlist
+
+This set prioritizes the existing SMC architecture, its benchmark, its evidence
+estimator, and the use of its joint posterior output. It is not a claim that a
+sampler upgrade alone will increase exact support recovery under the same
+posterior. If the sole objective is to change support-recovery behavior through
+the prior, the powered-correlation paper remains a high-priority additional
+reading; its PDF was unavailable in the downloaded collection. The mixtures of
+g-priors and multiplicity-adjustment papers also remain in the main folder.
+
+File provenance
+
+These five PDFs are unmodified copies of the downloaded arXiv files in the
+parent Papers folder. Preprints can differ from the cited journal versions.
+The selection manifest records the original filenames, source URLs, SHA-256
+hashes, and copy timestamps. No simulations or benchmarks were run for this
+folder organization task.

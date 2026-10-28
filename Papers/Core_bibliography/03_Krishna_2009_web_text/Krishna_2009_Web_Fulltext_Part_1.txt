@@ -1,0 +1,152 @@
+Bayesian variable selection using an adaptive powered correlation prior - PMC (https://pmc.ncbi.nlm.nih.gov/articles/PMC2772159/)
+citeturn23view0 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://pmc.ncbi.nlm.nih.gov/articles/PMC2772159/","lineno":76}); Total lines: 427
+L0: cite0†Skip to main content L1: 
+L2: cite1†Image†cdn.ncbi.nlm.nih.gov Search
+L3: 
+L4: cite2†Image†cdn.ncbi.nlm.nih.gov Log in cite3†Image†cdn.ncbi.nlm.nih.gov cite4†Image†cdn.ncbi.nlm.nih.gov L5: 
+L6:   * cite5†Dashboard†www.ncbi.nlm.nih.gov L7:   * cite6†Publications†www.ncbi.nlm.nih.gov L8:   * cite7†Account settings†www.ncbi.nlm.nih.gov L9:   * [Button: Log out ]
+L10: 
+L11: Search… [Input: Search NCBI] Search NCBI
+L12: 
+L13: Primary site navigation
+L14: 
+L15: cite8†Image: Close†cdn.ncbi.nlm.nih.gov L16: 
+L17: Search [Input: Search NCBI]
+L18: 
+L19: Logged in as:
+L20:   * cite5†Dashboard†www.ncbi.nlm.nih.gov L21:   * cite6†Publications†www.ncbi.nlm.nih.gov L22:   * cite7†Account settings†www.ncbi.nlm.nih.gov L23: 
+L24: [Button: Log in ]
+L25: 
+L26: cite1†Image: PMC search open icon†cdn.ncbi.nlm.nih.gov cite8†Image: PMC search close ison†cdn.ncbi.nlm.nih.gov L27: 
+L28: Search PMC Full-Text Archive [Input: Search PMC Full-Text Archive] Search in PMC cite9†Image: Search†cdn.ncbi.nlm.nih.gov L29: 
+L30:   * cite10†Journal List L31:   * cite11†User Guide L32: 
+L33: [Button: J Stat Plan Inference]
+L34: 
+L35: . Author manuscript; available in PMC: 2009 Nov 3.
+L36: Published in final edited form as: J Stat Plan Inference. 2009 Aug 1;139(8):2665–2674. doi: cite12†10.1016/j.jspi.2008.12.004†doi.org L37: # Bayesian variable selection using an adaptive powered correlation prior
+L38: 
+L39: cite13†Arun Krishna†pubmed.ncbi.nlm.nih.gov L40: 
+L41: ### Arun Krishna
+L42: 
+L43: ^{1}Department of Statistics, North Carolina State University, Raleigh, NC 27695-8203, USA
+L44: 
+L45: Find articles by cite13†Arun Krishna†pubmed.ncbi.nlm.nih.gov L46: 
+L47: ^{1}, cite14†Howard D Bondell†pubmed.ncbi.nlm.nih.gov L48: ### Howard D Bondell
+L49: 
+L50: ^{1}Department of Statistics, North Carolina State University, Raleigh, NC 27695-8203, USA
+L51: 
+L52: Find articles by cite14†Howard D Bondell†pubmed.ncbi.nlm.nih.gov L53: 
+L54: ^{1,}^{*}, cite15†Sujit K Ghosh†pubmed.ncbi.nlm.nih.gov L55: ### Sujit K Ghosh
+L56: 
+L57: ^{1}Department of Statistics, North Carolina State University, Raleigh, NC 27695-8203, USA
+L58: 
+L59: Find articles by cite15†Sujit K Ghosh†pubmed.ncbi.nlm.nih.gov L60: 
+L61: ^{1}
+L62: 
+L63:   * [Button: Author information]
+L64:   * [Button: Copyright and License information]
+L65: 
+L66: ^{1}Department of Statistics, North Carolina State University, Raleigh, NC 27695-8203, USA
+L67: 
+L68: ^{*}
+L69: 
+L70: Corresponding author. Tel.: +1 919 515 1914; fax: +1 919 515 1169. bondell@stat.ncsu.edu (H.D. Bondell)
+L71: 
+L72: © 2009 Elsevier B.V. All rights reserved.
+L73: cite16†PMC Copyright notice L74: 
+L75: PMCID: PMC2772159  NIHMSID: NIHMS145488  PMID: cite17†19890453†pubmed.ncbi.nlm.nih.gov L76: ## Abstract
+L77: The problem of selecting the correct subset of predictors within a linear model has received much attention in recent literature. Within the Bayesian framework, a popular choice of prior has been Zellner's g-prior which is based on the inverse of empirical covariance matrix of the predictors. An extension of the Zellner's prior is proposed in this article which allow for a power parameter on the empirical covariance of the predictors.
+L78: The power parameter helps control the degree to which correlated predictors are smoothed towards or away from one another. In addition, the empirical covariance of the predictors is used to obtain suitable priors over model space. In this manner, the power parameter also helps to determine whether models containing highly collinear predictors are preferred or avoided. The proposed power parameter can be chosen via an empirical Bayes method which leads to a data adaptive choice of prior.
+L79: Simulation studies and a real data example are presented to show how the power parameter is well determined from the degree of cross-correlation within predictors. The proposed modification compares favorably to the standard use of Zellner's prior and an intrinsic prior in these examples.
+L80: ## 1. Introduction
+L81: 
+L82: Consider the linear regression model with n independent observations and let y = (y_{1},…,y_{n})′ be the vector of response variables. The canonical linear model can be written as
+L83: 
+L84: $$\mathit{y}=\mathit{X}\mathit{\beta }+\mathbf{ϵ},$$  | (1.1)
+L85: where X = (x_{1},…,x_{p}) is an n × p matrix of explanatory variables with x_{j} = (x_{1j},…,x_{nj})′ for j = 1,…, p. Let β = (β_{1},…, β_{p})′ be the corresponding vector of unknown regression parameters, and ϵ ~ N(0, σ^{2}I). Throughout the paper, we assume y to be empirically centered to have mean zero, while the columns of X have been standardized to have mean zero and norm one, so X′X will be the empirical correlation matrix.
+L86: Under the above regression model, it is assumed that only an unknown subset of the coefficients are non-zero, so that the variable selection problem is to identify this unknown subset. Bayesian approaches to the problem of selecting variables/predictors within a linear regression framework has received considerable attention over the years, for example see, cite18†Mitchell and Beauchamp (1988) , cite19†Geweke (1996) , cite20†George and McCulloch (1993 , cite21†1997 ), cite22†Brown et al.
+L87: (1998) , cite23†George (2000) , cite24†Chipman et al. (2001) and cite25†Casella and Moreno (2006) .
+L88: For the linear model, cite26†Zellner (1986) suggested a particular form of a conjugate normal-Gamma family called the g-prior which can be expressed as
+L89: 
+L90: $$\begin{array}{c}\mathit{\beta }|{\sigma }^{2},\mathit{X}~\mathrm{N}\phantom{\rule{thinmathspace}{0ex}}\left(0,\frac{{\sigma }^{2}}{g}{(\mathit{X}\prime \mathit{X})}^{-1}\right)\phantom{\rule{thinmathspace}{0ex}},\hfill \\ {\sigma }^{2}~\mathit{\text{IG}}({a}_{0},{b}_{0}),\hfill \end{array}$$  | (1.2)
+L91: where g > 0 is a known scaling factor and a_{0} > 0, b_{0} > 0 are known parameters of the inverse Gamma distribution with mean a_{0}/(b_{0}−1). The prior covariance matrix of β is the scalar multiple σ^{2}/g of the inverse Fisher information matrix, which concurrently depends on the observed data through the design matrix X.
+L92: This particular prior has been widely adopted in the context of Bayesian variable selection due to its closed form calculations of all marginal likelihoods which is suitable for rapid computations over a large number of submodels, and its simple interpretation that it can be derived from the idea of a likelihood for a pseudo-dataset with the same design matrix X as the observed sample (see, cite26†Zellner, 1986 ; cite27†George and Foster, 2000 ; cite28†Smith and Kohn, 1996 ; cite29†Fernandez et al., 2001 ).
+L93: In this paper, we point out a drawback of using Zellner's prior on β particularly when the predictors (x_{j}) are highly correlated. The conditional variance of β given σ^{2} and X is based on the inverse of the empirical correlation of predictors and puts most of its prior mass in the direction that causes the regression coefficients of correlated predictors to be smoothed away from each other.
+L94: So when coupled with model selection, Zellner's prior discourages highly collinear predictors to enter the models simultaneously by inducing a negative correlation between the coefficients.
+L95: We propose a modification of Zellner's g-prior by replacing (X′X)^{−1} by (X′X)^{λ} where the power λ ∈ ℝ, controls the amount of smoothing of collinear predictors towards or away from each other accordingly as λ > 0 or λ < 0, respectively. For λ > 0, the new conditional prior variance of β puts more prior mass in the direction that corresponds to a strong prior smoothing of regression coefficients of highly collinear predictors towards each other.
+L96: Therefore, by choosing λ > 0 our proposed modification in contrast, forces highly collinear predictors entering or exiting the model simultaneously (see Section 2). Hence, the use of the power hyperparameter λ to the empirical correlation matrix helps us to determine whether models with high collinear predictors are preferred or not.
+L97: The hyperparameter λ is further incorporated into the prior probabilities over model space with the same intentions of encouraging or discouraging the inclusion of groups of correlated predictors. The choice of hyperparameter is obtained via an empirical Bayes approach and the inference regarding model selection is then made based on the posterior probabilities. By allowing the power parameter λ to be chosen by the data, we let the data decide whether to include collinear predictors or not.
+L98: The remainder of the paper is structured as follows. In Section 2, we describe in detail the powered correlation prior and provide a simple motivating example, when p = 2. Section 3, describes the choice of new prior specifications for model selection. The Bayesian hierarchical model and the calculation of posterior probabilities are presented in Section 4.
+L99: The superior performance of using the powered correlation prior over Zellner's g-priors is illustrated with the help of simulation studies and real data examples in Section 5. Finally, in Section 6 we conclude with a discussion.
+L100: ## 2. The adaptive powered correlated prior
+L101: 
+L102: Consider again a normal regression model as in (cite30†1.1 ), where X′X represents the correlation matrix. Let X′X = ΓDΓ′ be the spectral decomposition, where the columns of Γ are the p orthonormal eigenvectors and D is the diagonal matrix with eigenvalues d_{1} ≥ … ≥ d_{p} ≥ 0 as the diagonal entries. The powered correlation prior for β conditioned on σ^{2} and X is defined as
+L103: $$\mathit{\beta }|{\sigma }^{2},\mathit{X}~\mathrm{N}\phantom{\rule{thinmathspace}{0ex}}\left(0,\frac{{\sigma }^{2}}{g}{(\mathit{X}\prime \mathit{X})}^{\lambda }\right)\phantom{\rule{thinmathspace}{0ex}},$$  | (2.1)
+L104: 
+L105: where (X′X)^{λ} = ΓD^{λ}Γ′, with g > 0 and λ ∈ ℝ controlling the strength and the shape, respectively, of the prior covariance matrix, for a given σ^{2} > 0.
+L106: There are several priors which are special cases of the powered correlation prior. For instance, λ = −1 produces the Zellner's g-prior (cite31†1.2 ). By setting λ =0 we have (X′X)^{0} = I which gives us the ridge regression model of cite32†Hoerl and Kennard (1970) , under this model β_{j} are given independent N(0, σ^{2}/g) priors. Next we illustrate how λ controls the model's response to collinearity which is the main motivation for using the powered correlation prior.
+L107: Let T = XΓ and θ = Γ′β. The linear model can be written in terms of the principal components as
+L108: 
+L109: $$\mathit{y}~\mathrm{N}(\mathit{T}\mathit{\theta },{\sigma }^{2})\text{\hspace{1em}with}\phantom{\rule{thinmathspace}{0ex}}\mathit{\theta }~\mathrm{N}\phantom{\rule{thinmathspace}{0ex}}\left(0,\frac{{\sigma }^{2}}{g}{\mathit{D}}^{\lambda }\right)\phantom{\rule{thinmathspace}{0ex}}.$$  | (2.2)
+L110: The columns of the new design matrix T are the principal components, and so the original prior on β can be viewed as independent mean zero normal priors on the principal component regression coefficients, with prior variance proportional to the power of the corresponding eigenvalues, ${d}_{1}^{\lambda },\dots ,{d}_{p}^{\lambda }$.
+L111: Principal components with d_{i} near zero indicate a presence of a near-linear relationship between the predictors, and the direction determined by the corresponding eigenvectors are those which are uninformative from the data. A classical frequentist approach to handle collinearity is to use principal component regression, and eliminate those dimensions with very small eigenvalues. Then transform back to the original scale, so that no predictors are actually removed.
+L112: Along the same lines, we shall illustrate on how changing the value of λ would affect the prior correlation and demonstrate the intuition behind our proposed modification. For a simple illustration consider the case with p = 2 with a positive correlation ρ between them so that
+L113: $${(\mathit{X}\prime \mathit{X})}^{\lambda }={\left[\begin{array}{cc}1\hfill & \rho \hfill \\ \rho \hfill & 1\hfill \end{array}\right]}^{\lambda }.$$  | (2.3)
+L114: 
+L115: It easily follows that in this case,
+L116: $$\mathbf{\Gamma }=\frac{1}{\sqrt{2}}\left[\begin{array}{cc}1\hfill & 1\hfill \\ 1\hfill & -1\hfill \end{array}\right]\text{   and   }{\mathit{D}}^{\lambda }=\left[\begin{array}{cc}{(1+\rho )}^{\lambda }\hfill & \hfill 0\hfill \\ \hfill 0\hfill & {(1-\rho )}^{\lambda }\hfill \end{array}\right]\phantom{\rule{thinmathspace}{0ex}}.$$  | (2.4)
+L117: 
+L118: The first principal component of our new design matrix T can be written as the sum of the predictors and the second as the difference
+L119: $$\mathit{T}=\frac{1}{\sqrt{2}}{\left[\begin{array}{c}{\mathit{x}}_{1}+{\mathit{x}}_{2}\hfill \\ {\mathit{x}}_{1}-{\mathit{x}}_{2}\hfill \end{array}\right]}^{\prime }\text{\hspace{1em}with}\phantom{\rule{thinmathspace}{0ex}}\mathit{\theta }~\mathrm{N}\phantom{\rule{thinmathspace}{0ex}}\left(\left[\begin{array}{c}0\hfill \\ 0\hfill \end{array}\right]\phantom{\rule{thinmathspace}{0ex}},\frac{{\sigma }^{2}}{g}\left[\begin{array}{cc}{(1+\rho )}^{\lambda }\hfill & \hfill 0\hfill \\ \hfill 0\hfill & {(1-\rho )}^{\lambda }\end{array}\right]\right)\phantom{\rule{thinmathspace}{0ex}},$$  | (2.5)
+L120: for λ > 0 the prior on the coefficient for the sum has mean zero and variance (1 + ρ)^{λ}, while the prior on the coefficient for the difference has mean zero and variance (1 − ρ)^{λ}.
+L121: As ρ in (cite33†2.5 ) increases, a smaller prior variance is given to the coefficient for the difference of the two predictors, and hence introduces more shrinkage to the principal component directions that are associated with small eigenvalues. So that larger λ forces the difference to be more likely closer to the prior mean (zero). On the original β scale this corresponds to strong prior smoothing of regression parameters corresponding to highly collinear predictors.
+L122: On the other hand λ < 0 places a large prior variance on the coefficient for the difference, and a smaller variance on the coefficient of the sum, thereby shrinking those directions which correspond to large eigenvalues. This has an effect of smoothing the regression parameters corresponding to highly collinear predictors away from each other, forcing the two predictors to be negatively correlated.
+L123: Hence in dimensions greater than two, in the presence of collinear predictors, λ has the flexibility to introduce more shrinkage in the directions that correspond to the small eigenvalues. This behavior motivates us to allow for the possibility of choosing alternative values for λ. In particular, we allow the data to determine the choice of λ using an empirical Bayes approach.
+L124: We note that in the context of principal components regression, cite34†West (2003) allows for different prior variances on the principal component coefficients. However, our interest lies in the collinearity on the original scale.
+L125: ## 3. Model specification
+L126: The main focus of this paper is to use this powered correlation prior in a model selection problem. For the linear regression model in (cite30†1.1 ), it is typically the case that only an unknown subset of the coefficients β_{j} are non-zero, so in the context of variable selection we begin by indexing each candidate model with one binary vector δ = (δ_{1},…,δ_{p})′ where each element δ_{j} takes the value 1 or 0 depending on whether it is included or excluded from the model. More specifically, let
+L127: $${\delta }_{j}=\{\begin{array}{cc}1\hfill & \text{if}\phantom{\rule{thinmathspace}{0ex}}{\mathit{x}}_{j}\phantom{\rule{thinmathspace}{0ex}}\text{is included in the model},\hfill \\ 0\hfill & \text{if}\phantom{\rule{thinmathspace}{0ex}}{\mathit{x}}_{j}\phantom{\rule{thinmathspace}{0ex}}\text{is excluded from the model}.\hfill \end{array}$$  | (3.1)
+L128: 
+L129: We now rewrite the linear regression model, given δ as
+L130: $$\mathit{y}={\mathit{X}}_{\mathit{\delta }}{\mathit{\beta }}_{\mathit{\delta }}+\mathbf{ϵ},$$  | (3.2)
+L131: 
+L132: where ϵ ~ N(0, σ^{2}I), and X_{δ} and β_{δ} are the design matrix and the regression parameters of the model only including the predictors with δ_{j} = 1. In the context of variable selection we can write the powered correlation prior as
+L133: $${\mathit{\beta }}_{\mathit{\delta }}|\mathit{\delta },{\sigma }^{2},\mathit{X}~\mathrm{N}\phantom{\rule{thinmathspace}{0ex}}\left(0,\frac{{\sigma }^{2}}{g}{({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }\right)\text{\hspace{1em}with}\phantom{\rule{thinmathspace}{0ex}}{({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }={\mathbf{\Gamma }}_{\mathit{\delta }}{\mathit{D}}_{\mathit{\delta }}^{\lambda }{\mathbf{\Gamma }\prime }_{\mathit{\delta }},$$  | (3.3)
+L134: where Γ_{δ} is the matrix of eigenvectors and ${\mathit{D}}_{\mathit{\delta }}^{\lambda }$ is a diagonal matrix with diagonal entries as the eigenvalues of ${({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }$ .
+L135: Now that we have defined the prior for the coefficients given the model we now incorporate the same idea into the choice of prior for the inclusion indicators.
+L136: With respect to Bayesian variable selection, a common prior for the inclusion indicators is p(δ) ∝ π^{p_{δ}} (1 − π)^{p−p_{δ}} (cite20†George and McCulloch, 1993 , cite21†1997 ; cite27†George and Foster, 2000 ) where ${p}_{\delta }={\displaystyle {\sum }_{j=1}^{p}{\delta }_{j}}$ is the number of predictors in the model defined by δ, and π is the prior inclusion probability for each covariate.
+L137: We can see this being equivalent to placing Bernoulli (π) priors on δ_{j} and thereby giving equal weight to any pair of equally sized models. Setting $\pi =\frac{1}{2}$ yields the popular uniform prior over model space formed by considering all subsets of predictors and under this prior the posterior model probability is proportional to the marginal likelihood.
+L138: A drawback of using this prior is that it puts most of its mass on models of size ≃ p/2 and it does not take into account the correlation between the predictors. cite35†Yuan and Lin (2005) proposed an alternative prior over model space:
+L139: $$P(\mathit{\delta }|\pi )\phantom{\rule{thinmathspace}{0ex}}\mathrm{\propto }\phantom{\rule{thinmathspace}{0ex}}{\pi }^{{p}_{\delta }}{(1-\pi )}^{p-{p}_{\delta }}{|{\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }}|}^{1/2},$$  | (3.4)
+L140: where | · | denotes the determinant, and $|{\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }}|\phantom{\rule{thinmathspace}{0ex}}=\phantom{\rule{thinmathspace}{0ex}}1$ if p_{δ} = 0. Since $|{\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }}|$ is small for models with highly collinear predictors, this prior discourages these models. We follow Yuan and Lin in that we use the information from the design matrix to build a prior for the model space.
+L141: However, we do not necessarily want to penalize models with collinear predictors. We propose to incorporate the power parameter λ into a prior for δ that could encourage or discourage inclusion of groups of correlated predictors. So we propose the following prior on model space:
+L142: $$P(\mathit{\delta }|\lambda ,\pi )\phantom{\rule{thinmathspace}{0ex}}\mathrm{\propto }\phantom{\rule{thinmathspace}{0ex}}{\pi }^{{p}_{\delta }}{(1-\pi )}^{p-{p}_{\delta }}{|{\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }}|}^{-\lambda /2}.$$  | (3.5)
+L143: So for large values of λ, the prior puts more of its mass on models with highly collinear predictors; while for λ < 0, penalizing models with collinear predictors. Hence coupled with the powered correlation prior, positive (negative) λ encourages (discourages) highly collinear predictors to enter the model simultaneously. Note that λ = −1 gives us Zellner's prior on the coefficients coupled with the prior of Yuan and Lin on the models.
+L144: ### 3.1. Choice of g
+L145: The parameter g defines the strength of the powered correlation prior. The choice of g is complicated in that large values of g will result in the prior dominating the likelihood, and small values of g would favor the null model (cite27†George and Foster, 2000 ). Various choices of g have been proposed over the years. For example, cite28†Smith and Kohn (1996) performed variable selection involving splines with a fixed value of g = 0.01.
+L146: However, the choice of g may also depend on the sample size n, or the number of predictors p. cite27†George and Foster (2000) propose an empirical Bayes method for estimating g from its marginal likelihood. cite36†Foster and George (1994) recommended using g = 1/p^{2} based on a risk inflation criterion (RIC). cite37†Kass and Wasserman (1995) suggests the unit information prior, where the amount of information in the prior corresponds to the amount of information in one observation, leading to g = 1/n.
+L147: This leads to the Bayes factor as an approximation of the BIC. cite29†Fernandez et al. (2001) suggest g = 1/max(n, p^{2}) called the benchmark prior (BRIC), which is a combination of RIC and BIC. More recently cite38†Liang et al. (2008) suggest a mixture of g-priors as an alternative to the default g-priors.
+L148: Since the scale of ${({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }$ will depend on λ, we first standardize so that we may separate out the scale of g from that of ${({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }$ . To do so we modify (cite39†3.3 ) as
+L149: $${\mathit{\beta }}_{\mathit{\delta }}|\mathit{\delta },{\sigma }^{2},\mathit{X}~\mathrm{N}\phantom{\rule{thinmathspace}{0ex}}\left(0,\frac{{\sigma }^{2}}{g}k{({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }\right)\text{\hspace{1em}with}\phantom{\rule{thinmathspace}{0ex}}k\equiv k(\lambda ,\mathit{\delta },\mathit{X})=\frac{\text{Tr}[{({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{-1}]}{\text{Tr}[{({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }]}.$$  | (3.6)
+L150: This has an effect of setting the trace of ${({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }$ to be equal to that of using λ = −1 regardless of the choice of λ. We then choose g = 1/n, as in the unit information prior (cite37†Kass and Wasserman, 1995 ).
+L151: For ${({\mathit{X}\prime }_{\delta }{\mathit{X}}_{\delta })}^{\lambda }={\mathbf{\Gamma }}_{\delta }{\mathit{D}}_{\delta }^{\lambda }{\mathbf{\Gamma }}_{\delta }$ , k can be considered as the ratio of the average eigenvalues with those of $\lambda =-1,({\sum }_{j}{\mathit{D}}_{{\delta }_{j}}^{-1}/n)/{\sum }_{j}{\mathit{D}}_{{\delta }_{j}}^{\lambda }/n$. Instead of the trace one could have opted to choose the determinant, i.e. the ratio of the product of the eigenvalues.
+L152: An advantage of using the average of the eigenvalues is that it provides more stability and in turn helps prevent the prior from dominating the likelihood. We note that other choices of standardization and choice of g are possible and are left for future investigations.
+L153: ## 4. Model selection using posterior probabilities
+L154: 
+L155: In the Bayesian framework, a set of prior distributions is specified on the parameters θ_{δ} = (β_{δ}, σ^{2}) for each model, along with a meaningful set of prior model probabilities P(δ|λ, π) over the class of all models. Model selection is then done based on the posterior probabilities. Using the set of priors defined in the previous section, we can now construct a hierarchical Bayesian model to perform variable selection
+L156: $$\begin{array}{c}\mathit{y}|\mathit{\beta },\mathit{\delta },{\sigma }^{2},\mathit{X}\phantom{\rule{thinmathspace}{0ex}}\mathit{~}\phantom{\rule{thinmathspace}{0ex}}\mathrm{N}({\mathit{X}}_{\mathit{\delta }}{\mathit{\beta }}_{\mathit{\delta }},{\sigma }^{2}I),\hfill \\ {\mathit{\beta }}_{\mathit{\delta }}|\mathit{\delta },{\sigma }^{2},\mathit{X}~\mathrm{N}\phantom{\rule{thinmathspace}{0ex}}\left(0,\frac{{\sigma }^{2}}{g}k{({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }\right)\phantom{\rule{thinmathspace}{0ex}},\hfill \\ {\sigma }^{2}~\mathit{\text{IG}}\phantom{\rule{thinmathspace}{0ex}}\left(\frac{{\gamma }_{0}}{2}\phantom{\rule{thinmathspace}{0ex}},\frac{{\gamma }_{0}}{2}\right)\phantom{\rule{thinmathspace}{0ex}},\hfill \\ P(\mathit{\delta }|\lambda ,\pi )\phantom{\rule{thinmathspace}{0ex}}\mathrm{\propto }\phantom{\rule{thinmathspace}{0ex}}{\pi }^{{p}_{\delta }}{(1-\pi )}^{p-{p}_{\delta }}{|{\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }}|}^{-\lambda /2},\hfill \end{array}$$  | (4.1)
+L157: where k is as defined in (cite40†3.6 ) The key idea in computing the posterior model probabilities is to obtain the marginal likelihood of the data under model δ by integrating out the model parameters
+L158: 
+L159: $$P(\mathit{y}|\mathit{\delta },\mathit{X})={\displaystyle \int P(\mathit{y}|{\mathit{\theta }}_{\mathit{\delta }},\mathit{\delta },\mathit{X})}P({\mathit{\theta }}_{\delta }|\mathit{\delta },\mathit{X})\mathrm{d}{\mathit{\theta }}_{\mathit{\delta }}.$$  | (4.2)
+L160: The choice of conjugate priors allows us to analytically compute the above integral. Using the hierarchical model and integrating out θ_{δ} we obtain the conditional distribution of y given δ and X,
+L161: 
+L162: $$\mathit{y}|\mathit{\delta },\mathit{X}~{\mathit{t}}_{({\gamma }_{0}+n)}\left\{0,\left({\mathit{I}}_{n}+\frac{k}{g}{\mathit{X}}_{\mathit{\delta }}{({\mathit{X}\prime }_{\mathit{\delta }}{\mathit{X}}_{\mathit{\delta }})}^{\lambda }{\mathit{X}\prime }_{\mathit{\delta }}\right)\right\}.$$  | (4.3)
+L163: Then model comparison is done via the posterior probabilities,
+L164: 
+L165: $$P(\mathit{\delta }|\mathit{y},\mathit{X})\phantom{\rule{thinmathspace}{0ex}}\mathrm{\propto }\phantom{\rule{thinmathspace}{0ex}}P(\mathit{y}|\mathit{\delta },\mathit{X})P(\mathit{\delta }|\lambda ,\pi ).$$  | (4.4)
+L166: In order to fully specify our prior distribution we need to specify g, γ_{0}, π and λ.We choose g = 1/n the unit information prior proposed by cite37†Kass and Wasserman (1995) . For γ_{0}, after trying various choices, we saw that the model selected was not sensitive to the value of γ_{0} chosen, and since there is little or no information about this hyperparameter we decided to set γ_{0} to a constant, which has led to reasonable results as pointed out by cite21†George and McCulloch (1997) .
+L167: Following these lines, we set γ_{0} = 0.01 for the rest of the article, which corresponds to placing a non-informative prior on σ^{2}.
+L168: The parameters (λ, π) are very influential and informative with respect to the model selected and it is of utmost importance that we choose them carefully. Thus, we propose an empirical Bayes approach to select π ∈ (0, 1) and λ ∈ ℝ by marginalizing over δ and maximizing the marginal likelihood function given by
+L169: 
+L170: $$m(\mathit{y}|\mathit{X},\pi ,\lambda )={\displaystyle \sum _{\mathit{\delta }}P(\mathit{y}|\mathit{\delta },\mathit{X})P(\mathit{\delta }|\lambda ,\pi ).}$$  | (4.5)
+

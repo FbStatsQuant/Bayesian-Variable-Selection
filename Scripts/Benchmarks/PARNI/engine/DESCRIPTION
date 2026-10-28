@@ -1,0 +1,12 @@
+Package: bvsparni
+Type: Package
+Title: Frozen PARNI Engine for the Seven-Method BVS Campaign
+Version: 0.1.0
+Authors@R: person("BVS", "Benchmark Campaign", role=c("aut", "cre"), email="noreply@example.invalid")
+Description: Auditable pointwise adaptive random neighbourhood informed Metropolis-Hastings for the campaign's Gaussian variable selection posterior. Compiled once before scheduler tasks execute.
+License: GPL-3
+Encoding: UTF-8
+Imports: Rcpp
+LinkingTo: Rcpp
+SystemRequirements: C++11
+NeedsCompilation: yes
