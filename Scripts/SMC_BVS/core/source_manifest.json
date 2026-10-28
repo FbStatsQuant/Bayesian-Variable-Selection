@@ -1,0 +1,122 @@
+{
+  "created_utc": "2026-10-22T21:09:29.007366+00:00",
+  "authority_master_sha256": "7d77dddb968135d86a6b6431a7a3e04e122eb0c09f5ec9a6a8329e9a20757b6e",
+  "prototype_source_sha256": {
+    ".cpp_cache/8f8eb7cf5c21a204/sourceCpp-x86_64-pc-linux-gnu-1.1.2/sourcecpp_20538828d202ec/v3_core.cpp": "11e72008fd757e50eb0a39ba22f8daba733de5fb7abfcbd4f507fb008008597f",
+    ".cpp_cache/8f8eb7cf5c21a204/sourceCpp-x86_64-pc-linux-gnu-1.1.2/sourcecpp_20538828d202ec/v3_core.cpp.R": "5f20350082b70c180b7b18b169297a04e29a3270de67372e80c82aa4d4ed1d50",
+    "cpp/Makevars.v3": "61984bf960fd53481d14bb35182910eef72b54ab243759fcc84fe1f075c12894",
+    "cpp/v3_blocks.h": "ca8aeb341b6031fe9f3e80f49697efb2d8a1a1ed79fdc6023c0bc5df1ed7abc0",
+    "cpp/v3_calib.h": "e9ad470bfe82548bdcdef11c57ec4bbff48401ba57d82468ca294c41c4ec2c7e",
+    "cpp/v3_core.cpp": "7ad69daae3a8f273740032dc19a6ff8767c0be827cf3cfeb7037439b49947ca0",
+    "cpp/v3_engine.h": "7852fad6529e5c5df1e9c792e1de2780abb6b5b7a36c903fb9668397c0c562f1",
+    "cpp/v3_ledger.h": "6353f3e19b22d7b4692b5f3bf25a7128f24e554101bbc9a8cd809120ca6a0c41",
+    "cpp/v3_observer.h": "09c18da76cd89b973ebdf3f8c3f49118a19862d800798d22c0d619805f5c30ad",
+    "cpp/v3_score.h": "b7707f56b54465dfe6fb7b6536c4bb2b8ebf3d6e474944b12f77dfeb8ff77758",
+    "cpp/v3_start.h": "19e0a0bd0e47949025ead4c7d7df0a521980454f010ec0b0d7a2176e64b701a7",
+    "cpp/v3_util.h": "1841122ef2ad6d963b1e0f1d622e1bc154f23fd9e5d347e2b7e02890334d2e15",
+    "v3.R": "33916601a8cde838914c9352122fca6465a3884015d46496b82e041706dff1a5",
+    "v3_calib.R": "48a1bb4ea6867481ee78fde3e9b33a8a7ec767df73b020dc8e1e22e7aa6a1054",
+    "v3_exact.R": "f4716866619254b6153cbf4ade24f4d89cb69e9c784b0782d9db7c3658debb4e",
+    "v3_fit.R": "aebc87bc0a6c52d5f9de97fdfb99f6e885302739053df3212136fb37ce9e91e8",
+    "v3_observer.R": "c6ff61081b8ba5c8b88e719fd08cf2e5b6c790e1051cb76da34ae2ed80a08934",
+    "v3_preprocess.R": "efd23b2bef3c5eada3d486e3d93d6d93037f62217e9ced6630b78a4f8aa6ee66",
+    "v3_run.R": "7518306dab4a2a55fa888ded8fff5105939bde2a9852c1f2f6ce119c00fad207",
+    "v3_setup.R": "1df48c2639c8768566cacaefbd44d56fdf9703769324d35ae7e2f2567c4c646a"
+  },
+  "production_source": {
+    "cpp/Makevars.v3": {
+      "sha256": "61984bf960fd53481d14bb35182910eef72b54ab243759fcc84fe1f075c12894",
+      "bytes": 670
+    },
+    "cpp/v3_blocks.h": {
+      "sha256": "ca8aeb341b6031fe9f3e80f49697efb2d8a1a1ed79fdc6023c0bc5df1ed7abc0",
+      "bytes": 8057
+    },
+    "cpp/v3_calib.h": {
+      "sha256": "e9ad470bfe82548bdcdef11c57ec4bbff48401ba57d82468ca294c41c4ec2c7e",
+      "bytes": 5258
+    },
+    "cpp/v3_core.cpp": {
+      "sha256": "64c0a38c569f0abc673111896ca084bac45b26530f2e50a041e4e986d75324e4",
+      "bytes": 44768
+    },
+    "cpp/v3_engine.h": {
+      "sha256": "0a0b95ab126bc23b96cb48589fee979e7b03d238c55ee476b1d62785e9bda462",
+      "bytes": 19865
+    },
+    "cpp/v3_holder.h": {
+      "sha256": "1f83b80e2203a102b175713a3d1c4834da298997b3a1e187a4d7376e138d4f27",
+      "bytes": 400
+    },
+    "cpp/v3_ledger.h": {
+      "sha256": "7641811d73e635bf7176ec76be1c6655b60b2b2fb560453c4d7dc328d7b319a7",
+      "bytes": 6008
+    },
+    "cpp/v3_runtime.h": {
+      "sha256": "f28e73c129bab7349b165a6d648cdbadd094bd08bf05416df377cf52f57c4a8c",
+      "bytes": 1262
+    },
+    "cpp/v3_score.h": {
+      "sha256": "41173ac1460e180e7a30da98260e1e338efb4a685a5052a6cd815aa7cbe26df7",
+      "bytes": 14615
+    },
+    "cpp/v3_start.h": {
+      "sha256": "19e0a0bd0e47949025ead4c7d7df0a521980454f010ec0b0d7a2176e64b701a7",
+      "bytes": 11996
+    },
+    "cpp/v3_util.h": {
+      "sha256": "1841122ef2ad6d963b1e0f1d622e1bc154f23fd9e5d347e2b7e02890334d2e15",
+      "bytes": 6463
+    },
+    "v3.R": {
+      "sha256": "951ffb3476c38e24de8b532827e83590a40d02fe0d0525beb1d025fb33b4eaed",
+      "bytes": 4516
+    },
+    "v3_calib.R": {
+      "sha256": "268aa414e811af96c470758994773bf598560d14728b5526cd5e2ae5cbf2de06",
+      "bytes": 11184
+    },
+    "v3_exact.R": {
+      "sha256": "18e29edea8d0df176a878d0f28a8662a50c80bfb4e567fb7a4bfde9648ff8ec8",
+      "bytes": 1207
+    },
+    "v3_fit.R": {
+      "sha256": "656f11d704e566c87c4cb3861bffe126a43320e6888809ef91e0ced21cdb5217",
+      "bytes": 8158
+    },
+    "v3_preprocess.R": {
+      "sha256": "758d97e0f02c01e6b4f6ca824805ee1e9fda55a8214f668d8947b9e1a0e929be",
+      "bytes": 7258
+    },
+    "v3_run.R": {
+      "sha256": "330b9f8347c1e4f373830901b3d402a9147b31775645df6cfa90c665641afbfe",
+      "bytes": 11080
+    },
+    "v3_setup.R": {
+      "sha256": "1f8425e77f59c73eca9e67d6294ca3a0d52828d3f079420bf916eab55396215a",
+      "bytes": 4561
+    }
+  },
+  "byte_identical_to_prototype": [
+    "cpp/Makevars.v3",
+    "cpp/v3_blocks.h",
+    "cpp/v3_calib.h",
+    "cpp/v3_start.h",
+    "cpp/v3_util.h"
+  ],
+  "static_checks": [
+    "Source hashes refreshed from live v2; actual execution evidence is in HANDOFF_v2.md and per-job records."
+  ],
+  "numerical_validation": "Pending frozen v2 execution; no pass inferred from source hash or historical v1.",
+  "documentation": {
+    "README.md": {
+      "sha256": "2d1e768ff2dfabd20cddfdf8ace400cd5adb8fa1214dc67b95ecf1a154cce085",
+      "bytes": 6137
+    }
+  },
+  "production_tree_sha256": "2af1243ef57584bdbc22923778fcf0c956da47f71b882b428e2a5cef6cc1a0fd",
+  "production_tree_hash_recipe": "SHA-256 of UTF-8 lines: relative POSIX path + space + source SHA-256 + LF, sorted by path; production_source files only",
+  "execution_authority": "BRIEF Amendments1/2, RULINGS_LEAD R3/R4/R5; Owls capped development; NOTS separately gated.",
+  "revision": "v2 R-5 repairs of rejected v1",
+  "lead_rulings_sha256": "692317d28bb06bbeb2ec368f1e1c0c30f5ec3740f0d1561d7edcf97b72e0063f"
+}
