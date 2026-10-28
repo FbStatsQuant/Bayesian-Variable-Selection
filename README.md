@@ -1,1 +1,3 @@
 # Bayesian Variable Selection
+
+SMC
