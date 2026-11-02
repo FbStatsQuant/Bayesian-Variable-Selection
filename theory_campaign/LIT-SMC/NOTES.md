@@ -21,3 +21,37 @@ Read: local PDF 24_2026_Le_Fay_Chopin_Vihola_...pdf
 => Premises are (i) bounded successive χ² (our ESS ≥ 0.9 rule gives 1+χ² ≤ 10/9 on the *candidate set V*, i.e. a
    COVER-type statement) and (ii) mixing times of the move kernels. (ii) is exactly what fails/is unknown in the masked
    regime; on LH masking is a property of the start (API-POS) so rapid-mixing results might feed (ii).
+
+## [SVV] Štefankovič, Vempala, Vigoda. Adaptive simulated annealing: a near-optimal connection between sampling and
+counting. arXiv:cs/0612058 (Dec 2006); J. ACM 56(3) 2009 (journal version not read). Read: https://arxiv.org/pdf/cs/0612058
+- Def 2.3: schedule is **B-Chebyshev** if Z(2β_{i+1} − β_i)Z(β_i)/Z(β_{i+1})² ≤ B for all i.
+  ==> identical to O-STAGES' step rule ρ(u,v)^{-1} = exp Φ(u,v) = Z_u Z_{2v−u}/Z_v² ≤ 10/9, i.e. B = 10/9 (w = 2v − u is
+  their 2β_{i+1} − β_i). O-STAGES Lemma 0 (reference-state identity) is a one-line consequence of log-affinity.
+- Cor 2.4: with a B-Chebyshev schedule of length ℓ, 16Bℓ²/ε² samples give (1±ε)Z w.p. ≥ 3/4 (product estimator, PERFECT
+  independent samples at each temperature).
+- Thm 4.1: for a partition function of degree n with A = Z(0), Z(∞) ≥ 1, there is an e²-Chebyshev schedule of length
+  ≤ 4√(ln A)·ln n·ln ln A (sic: "at most √(4(ln ln A)(ln A) ln n)" in the text layout, read with care).
+- Lemma 4.2: f = ln Z convex. Text after Thm 4.1 proof (p.~13): "The optimal Chebyshev cooling schedule can be obtained in a
+  greedy manner ... starting with β0 = 0, and then from βi, choosing the maximum βi+1 for which (26) is satisfied. The
+  reason why the greedy strategy works is that if we can step from β to β′, then for any γ ∈ [β, β′] we can step from γ to
+  β′ ... follows from the convexity of f."
+  ==> **O-STAGES Theorem G(i) (greedy grid is shortest valid grid) and Lemma 1(b),(c) are already stated, with the same
+  convexity argument, in SVV.** THREAT: Theorem G(i) is not new. G(ii) (target-constrained refinement of pilot points,
+  max(T*_V,T_P) ≤ T_grid ≤ T*_V+T_P) and the COVER transfer G(iii) are specific to v3 and are routine extensions.
+- Lemma 4.7: Z(β) = (1+e^{−β})^n needs ≥ √(n/(20 ln B)) steps (adaptive lower bound). Section 3: non-adaptive schedules
+  need Ω(ln A) in the worst case.
+  ==> O-STAGES Theorem M (two-state masked crossing T* = log₂A₀ + O(1) with fixed B = 10/9) is a different, sharper,
+  instance-specific count; its *form* (log of depth for a two-level partition function) is not stated in SVV as read.
+  The halving mechanism is the B-Chebyshev condition applied to a two-atom f. Treat Theorem M as plausibly new as a
+  statement but elementary given SVV's framework.
+
+## [SC13] Schäfer & Chopin (2013) Stat Comput 23:163–184, "SMC on large binary sampling spaces". Local PDF 07_...
+- Adaptive geometric bridge; §4.3: "We pick a step length α such that the effective sample size η(α) equals a fixed value η*
+  ... Since η is continuous and monotonously increasing in α, we solve η(α,X)=η* using bi-sectional search"; experiments
+  use η = 0.9 and n = 1.5×10⁴ particles; applied to BVS. No theorem on consistency, stage count, HPM, or discovery.
+  ==> v3's ESS-0.9 bisection grid is Schäfer–Chopin's rule (on a candidate set). Monotonicity is asserted there, not proved.
+
+## [DMDJ06] Del Moral, Doucet, Jasra (2006) JRSSB 68:411–436. Local PDF Papers/SMC/...
+- ESS (Liu–Chen) resampling rule; Prop 1 optimal backward kernels; Prop 2 CLT under integrability conditions of Chopin
+  (2004)/Del Moral (2004) for no-resampling and resample-every-step. Unbiasedness of Ẑ is classical (Del Moral 2004,
+  Feynman–Kac book; UNVERIFIED here, not read).
