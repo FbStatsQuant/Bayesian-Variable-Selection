@@ -31,7 +31,8 @@ class NbrEngine:
         self.lam = float(lam)
         self.dG = np.diag(self.G) + self.lam
 
-    def eval(self, idx, want=('add', 'del', 'swap')):
+    def eval(self, idx, want=('add', 'del', 'swap'), ld=True):
+        """Layout: per-state arrays are (Bt, s, c) contiguous (Wt = K G[idx]); ld=False skips log-dets."""
         idx = np.asarray(idx, int)
         Bt, s = idx.shape
         c, r = self.c, self.B.shape[1]
@@ -43,36 +44,42 @@ class NbrEngine:
             out['add_ld'] = np.log(self.dG)[None, :].repeat(Bt, 0)
             out['inS'] = np.zeros((Bt, c), bool)
             return out
-        Gs = self.G[idx[:, :, None], idx[:, None, :]] + self.lam * np.eye(s)[None]
+        Gsc = self.G[idx]                                     # (Bt, s, c) contiguous
+        Gs = np.take_along_axis(Gsc, idx[:, None, :].repeat(s, 1), axis=2) + self.lam * np.eye(s)[None]
         K = np.linalg.inv(Gs)
-        sign, ld = np.linalg.slogdet(Gs)
-        GcS = np.transpose(self.G[idx], (0, 2, 1))           # (Bt, c, s)
-        W = GcS @ K                                          # (Bt, c, s)
-        dg = self.dG[None, :] - np.einsum('bcs,bcs->bc', W, GcS)
-        bS = self.B[idx]                                     # (Bt, s, r)
-        beta = K @ bS                                        # (Bt, s, r)
-        rc = self.B[None] - W @ bS                           # (Bt, c, r)
+        Wt = K @ Gsc                                          # (Bt, s, c): Wt[b,i,x] = W[b,x,i]
+        dg = self.dG[None, :] - np.einsum('bsc,bsc->bc', Wt, Gsc)
+        bS = self.B[idx]                                      # (Bt, s, r)
+        beta = K @ bS                                         # (Bt, s, r)
+        rc = self.B.T[None] - np.einsum('bsc,bsr->brc', Wt, bS)   # (Bt, r, c)
         vS = self.v[None, :] - np.einsum('bsr,bsr->br', bS, beta)
         inS = np.zeros((Bt, c), bool)
         np.put_along_axis(inS, idx, True, axis=1)
-        out.update(v=vS, ld=ld, inS=inS)
+        dgm = np.where(inS, np.nan, dg)
+        out.update(v=vS, inS=inS)
+        if ld:
+            out['ld'] = np.linalg.slogdet(Gs)[1]
         if 'add' in want:
-            dgm = np.where(inS, np.nan, dg)
-            out['add_v'] = vS[:, None, :] - rc ** 2 / dgm[..., None]
-            out['add_ld'] = ld[:, None] + np.log(dgm)
+            out['add_v'] = np.transpose(vS[:, :, None] - rc ** 2 / dgm[:, None, :], (0, 2, 1))   # (Bt, c, r)
+            if ld:
+                out['add_ld'] = out['ld'][:, None] + np.log(dgm)
         Kii = np.einsum('bss->bs', K)
-        vdel = vS[:, None, :] + beta ** 2 / Kii[..., None]
-        lddel = ld[:, None] + np.log(Kii)
+        vdel = vS[:, None, :] + beta ** 2 / Kii[..., None]   # (Bt, s, r)
         if 'del' in want:
             out['del_v'] = vdel
-            out['del_ld'] = lddel
+            if ld:
+                out['del_ld'] = out['ld'][:, None] + np.log(Kii)
         if 'swap' in want:
-            Wt = np.transpose(W, (0, 2, 1))                  # (Bt, s, c)
-            dgi = dg[:, None, :] + Wt ** 2 / Kii[..., None]  # (Bt, s, c)
-            dgi = np.where(inS[:, None, :], np.nan, dgi)
-            rci = rc[:, None, :, :] + Wt[..., None] * (beta / Kii[..., None])[:, :, None, :]
-            out['swap_v'] = vdel[:, :, None, :] - rci ** 2 / dgi[..., None]
-            out['swap_ld'] = lddel[:, :, None] + np.log(dgi)
+            iK = 1.0 / Kii
+            dgi = dgm[:, None, :] + Wt ** 2 * iK[..., None]   # (Bt, s, c)
+            coef = beta * iK[..., None]                      # (Bt, s, r)
+            sv = np.empty((Bt, s, c, r))
+            for k in range(r):
+                rci = rc[:, k, None, :] + Wt * coef[:, :, k, None]
+                sv[..., k] = vdel[:, :, k, None] - rci ** 2 / dgi
+            out['swap_v'] = sv
+            if ld:
+                out['swap_ld'] = (out['ld'][:, None] + np.log(Kii))[:, :, None] + np.log(dgi)
         return out
 
 

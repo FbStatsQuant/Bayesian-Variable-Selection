@@ -1,0 +1,18 @@
+rhos=[0.85, 0.85, 0.85, 0] theta=[1.4, -1.0, 1.8] a=1 d=1: eta brute=0.085648 scan=0.085648 (B1-B3)=0.085648 formula=0.085648 | TRC brute=0.085648 scan=0.085648 | binding N5 swap truth->truth
+rhos=[0.85, 0.85, 0.85, 0] theta=[1.4, -1.0, 1.8] a=2 d=1: eta brute=0.085648 scan=0.085648 (B1-B3)=0.085648 formula=0.085648 | TRC brute=0.085648 scan=0.085648 | binding N5 swap truth->truth
+rhos=[0.85, 0.85, 0.85, 0] theta=[1.4, -1.0, 1.8] a=1 d=2: eta brute=0.067568 scan=0.067568 (B1-B3)=0.067568 formula=0.067568 | TRC brute=0.067568 scan=0.067568 | binding N5 swap truth->truth
+rhos=[0.85, 0.85, 0.85, 0] theta=[1.4, -1.0, 1.8] a=2 d=2: eta brute=0.067568 scan=0.067568 (B1-B3)=0.067568 formula=0.067568 | TRC brute=0.067568 scan=0.067568 | binding N5 swap truth->truth
+rhos=[0.4, 0.7, 0.9, 0.3] theta=[0.8, -1.6, 1.4] a=1 d=1: eta brute=0.145469 scan=0.145469 (B1-B3)=0.145469 formula=0.145469 | TRC brute=0.145469 scan=0.145469 | binding N5 swap truth->truth
+rhos=[0.4, 0.7, 0.9, 0.3] theta=[0.8, -1.6, 1.4] a=2 d=1: eta brute=0.145469 scan=0.145469 (B1-B3)=0.145469 formula=0.145469 | TRC brute=0.145469 scan=0.145469 | binding N5 swap truth->truth
+rhos=[0.4, 0.7, 0.9, 0.3] theta=[0.8, -1.6, 1.4] a=1 d=2: eta brute=0.112829 scan=0.112829 (B1-B3)=0.112829 formula=0.112829 | TRC brute=0.112829 scan=0.112829 | binding N5 swap truth->truth
+rhos=[0.4, 0.7, 0.9, 0.3] theta=[0.8, -1.6, 1.4] a=2 d=2: eta brute=0.112829 scan=0.112829 (B1-B3)=0.112829 formula=0.112829 | TRC brute=0.112829 scan=0.112829 | binding N5 swap truth->truth
+rhos=[0.6, 0.0, 0.8, 0.5] theta=[1.0, 1.0, -1.2] a=1 d=1: eta brute=0.360000 scan=0.360000 (B1-B3)=0.360000 formula=0.360000 | TRC brute=0.444444 scan=0.444444 | binding N1 add null
+rhos=[0.6, 0.0, 0.8, 0.5] theta=[1.0, 1.0, -1.2] a=2 d=1: eta brute=0.360000 scan=0.360000 (B1-B3)=0.360000 formula=0.360000 | TRC brute=0.444444 scan=0.444444 | binding N1 add null
+rhos=[0.6, 0.0, 0.8, 0.5] theta=[1.0, 1.0, -1.2] a=1 d=2: eta brute=0.360000 scan=0.360000 (B1-B3)=0.360000 formula=0.360000 | TRC brute=0.381944 scan=0.381944 | binding N1 add null
+rhos=[0.6, 0.0, 0.8, 0.5] theta=[1.0, 1.0, -1.2] a=2 d=2: eta brute=0.360000 scan=0.360000 (B1-B3)=0.360000 formula=0.360000 | TRC brute=0.381944 scan=0.381944 | binding N1 add null
+random rep 0: eta brute=0.075296 scan=0.075296 | TRC brute=0.075296 scan=0.075296
+random rep 1: eta brute=0.067450 scan=0.067450 | TRC brute=0.000011 scan=0.000011
+random rep 2: eta brute=0.037269 scan=0.037269 | TRC brute=0.037269 scan=0.037269
+GERC rep 0: max |erc_batch - direct| = 7.77e-16
+GERC rep 1: max |erc_batch - direct| = 1.11e-16
+GERC rep 2: max |erc_batch - direct| = 5.55e-16
