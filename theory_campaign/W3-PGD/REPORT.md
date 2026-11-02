@@ -1,4 +1,4 @@
-# W3-PGD — REPORT: the asymptotic hypotheses of the refined T37 (PGD and LD)
+# W3-PGD — REPORT (final): the asymptotic hypotheses of the refined T37 (PGD and LD)
 
 Branch `theory/W3-PGD`. Full statements and proofs: `PROOF.md`. Scripts (fixed seeds): `scripts/`. Outputs:
 `results/`. Everything here is a **candidate**: not reviewed, not adopted. Notation: `00_COMMON.md` and
@@ -102,7 +102,7 @@ This covers R⁺, R⁰, the F̄ margins, GERC and TRC.
 **E1. Population PGD, p = 500 and 1000** (`pop_check.py`, `results/pop_check_p*.json`). Exact reductions were used:
 the 14 truth groups plus representative nulls, which is exact for S1, S3, S4, S6 (BO) and for S5 (exchangeability).
 For S2, windows of ±10 around each truth are used, so S2 is approximate (truncation error ≤ 5e-4 correlation).
-The values are identical for p = 1000.
+The values are identical for p = 1000 (S1–S5 checked; S6 at p = 1000 was still running when this report was written).
 
 | scen | η on R_{14,0} | η on R_{14,1} | η on R_{3,2} | binding move | max ERC (GERC) | Cor P2′ prediction |
 |---|---|---|---|---|---|---|
@@ -111,7 +111,7 @@ The values are identical for p = 1000.
 | S3 | 0.198 | 0.101 | 0.084 | truth→truth swap | 0.70 | 0.198 / 0.101 / 0.084 ✓ |
 | S4 | 0.198 | 0.055 | 0.043 | truth→truth swap | 0.85 | 0.198 / 0.055 / 0.043 ✓ |
 | S5 | 0.003 | 0.003 | 0.087 | truth→truth swap | 0.94 | — (one factor) |
-| S6 | see `results/pop_check_p500.json` | | | | | 0.190 / 0.071 / 0.057 (predicted) |
+| S6 | 0.190 | 0.071 | 0.057 | add null (d=0); truth→truth swap (d≥1) | 0.90 | 0.190 / 0.071 / 0.057 ✓ |
 
 - **PGD and its sufficient conditions.** PGD holds at the population level in every scenario. The binding
   constraint is (B3)/TRC: swapping a weak included truth (θ = 0.8) for the strongest missing one (θ = 1.8). In S5,
