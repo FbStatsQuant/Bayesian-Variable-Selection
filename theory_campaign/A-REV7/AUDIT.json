@@ -1,0 +1,45 @@
+{
+  "artifact_transfer_verification": [
+    {
+      "file": "results.json",
+      "remote_sha256": "22c9992015bc66bb60b0380e32da3f2fca85ce2dea0b632eeb63ade959477494",
+      "local_sha256": "22c9992015bc66bb60b0380e32da3f2fca85ce2dea0b632eeb63ade959477494",
+      "match": true
+    },
+    {
+      "file": "run.log",
+      "remote_sha256": "5e03bb25793d4c82824952e1a7652f45d61d20a471b1f4d5529008900fb862ff",
+      "local_sha256": "5e03bb25793d4c82824952e1a7652f45d61d20a471b1f4d5529008900fb862ff",
+      "match": true
+    },
+    {
+      "file": "bg3-c2.log",
+      "remote_sha256": "d8596c5f024c83b813052d25079783d0f854a77c125c0bfcadee2473824e4c69",
+      "local_sha256": "d8596c5f024c83b813052d25079783d0f854a77c125c0bfcadee2473824e4c69",
+      "match": true
+    }
+  ],
+  "workspace_head_at_launch": "2d672a08a32b570aabedef01527bf047fffc1f77",
+  "method_files": [
+    {
+      "path": "Docs/Methodology/METHODOLOGY_v3.md",
+      "sha256": "b4253987e3c43c2d703e0157eaf3e3a81d0fff7821ef890b735b167f4344090e"
+    },
+    {
+      "path": "Docs/Theory/proofs/LOCKED_PROOFS.md",
+      "sha256": "ea898e44183e2d5a73998916918527020583af1737c804fff96f4f147ef36147"
+    },
+    {
+      "path": "Scripts/SMC_BVS/core/cpp/v3_engine.h",
+      "sha256": "9c47d604d8ad359a942d64a339f6cadaa5633e14eb722b9548fa1d1189033201"
+    },
+    {
+      "path": "Scripts/SMC_BVS/core/cpp/v3_core.cpp",
+      "sha256": "fbe4773775d57eec41112d2acb3be80e5ac0cc7261f60b89cb0eed0bd13a3c0d"
+    },
+    {
+      "path": "Scripts/SMC_BVS/core/cpp/v3_ledger.h",
+      "sha256": "7641811d73e635bf7176ec76be1c6655b60b2b2fb560453c4d7dc328d7b319a7"
+    }
+  ]
+}
