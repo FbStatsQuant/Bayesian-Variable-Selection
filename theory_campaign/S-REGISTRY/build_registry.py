@@ -84,15 +84,22 @@ SECTIONS = [
     ("LemmaA-T38E", "Theorem 5 — delivery and eligibility (W1-T38E; verifier W3-VT38E; cross-family A-REV1)"),
     ("LemmaRO", "Theorem 4, Proposition 1, Proposition 2 — bookkeeping (W2-BOOK)"),
     ("T26-Lemma1", "Theorem 6 — evidence and PIP consistency (W2-T26)"),
-    ("PXN-P1", "Theorems 2(v)/5(b1-LH-iid) — p ≫ n family (W3-PXN; no verifier yet)"),
-    ("PGD-L1.1", "Theorem 3 asymptotic clause — PGD / LD♭ (W3-PGD PROOF.md; REPORT.md is a stub; no verifier yet)"),
+    ("PXN-P1", "Theorems 2(v)/5(b1-LH-iid) — p ≫ n family (W3-PXN; same-family referee W5-VMASK; no cross-family review)"),
+    ("PGD-L1.1", "Theorem 3 asymptotic clause — PGD / LD♭ (W3-PGD PROOF.md, REPORT.md a stub; same-family referee W5-VPGD; no cross-family review)"),
     ("T38-(0)", "Theorem 5 assembled (W4-T38FULL)"),
-    ("SHARE-D4", "Theorem 5 route (b2) — envelope delivery (W4-SHARE; no verifier yet)"),
+    ("SHARE-D4", "Theorem 5 route (b2) — envelope delivery (W4-SHARE; same-family referee W5-B2ENV; A-REV3 not landed)"),
     ("AREV1-LemmaS-sharp", "Referee-supplied repairs (A-REV1)"),
     ("Lemma-STREAM", "Late-landing: implementation lemmas (W5-LOCKBOOK audit)"),
-    ("ADRAFT-ThmA", "Original-draft track (A-DRAFT, F-DRAFT; unverified)"),
+    ("ADRAFT-ThmA", "Original-draft track (A-DRAFT, F-DRAFT; checked by A-REV4 where noted)"),
     ("OCERT-LemmaM", "New results: a-posteriori certificates (O-CERT; unverified)"),
     ("OSWAP-L0", "New results: finite-n theory of posterior misses (O-SWAP; unverified)"),
+    ("PXN-LemmaTr", "Theorem 5(b1-LH-iid) lemmas verified by W5-VMASK (W3-PXN Lemmas Tr, Λ, U; added at the fifth fetch)"),
+    ("VMASK-R1-NB", "New results: W5-VMASK (NB proof on LH-iid c = 1; numerically checked remarks)"),
+    ("VPGD-R0", "New results: W5-VPGD REPAIRS.md (R0–R4, tie proposition, lattice form W_Lat, LH-PGD)"),
+    ("OBG-LemmaR", "New results: bridge-Gibbs discovery, T38(b) without LS0 (O-BGIBBS; unreviewed)"),
+    ("FAV-LemmaX", "New results: 2^B-free favourable rate on iid block-diagonal designs (W5-FAVIID REPORT.md / PROOF.md; author only)"),
+    ("OWS-WS1", "New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)"),
+    ("B2E-LemmaOF", "New results: no-method-change masked theorems on LH (W5-B2ENV PROOF.md; author only)"),
     ("W6F1-PropU′", "Repair drafts (W6-FIXREV1 CONSOLIDATED.md, W6-FIXREV2 STATEMENTS.md; not reviewed)"),
 ]
 sec_at = dict(SECTIONS)
@@ -145,6 +152,8 @@ CONFLICTS = [
     (["Lemma0(a,c)"], "A-REV2's table calls the case 'initial centre already is the truth' trivial success; W6-FIXREV2 §3.1 disputes the wording (CEX-2 design: a search started at S₀ moves to S₀+x₃). A-REV2's §4.2 text is consistent with W6's correct statement."),
     (["Version: W1-T37R"], "W3-VT37R reviewed W1-T37R at d492f22 (REPORT.md an unfinished draft; exp1 json files 0 bytes). A-REV2 pinned 3bcc429 (complete REPORT, results present) and says the earlier referee's description does not apply. `git diff d492f22 3bcc429` touches only REPORT.md, exp1/exp1b results and a README: PROOF.md is identical, so the mathematical verdicts apply to the head; the W1 REPORT-level numbers (Exp 1/1b) were never adversarially re-run."),
     (["Legend: ARCHITECTURE"], "F-REFINE ARCHITECTURE.md marks nodes [P] = 'campaign PROVED, same-family VERIFIED' (e.g. Thm 4 T21 composition, Thm 2(ii)); the source reports show same-family verification for T21 only via W2-VT24G (route e′) and W3-VT38E (composition). Both F-REFINE files were written before A-REV1/A-REV2 landed (CARDS: 'had pushed nothing'): read their VERIFIED as same-family only, against the cross-family column here."),
+    (["ThmW", "VPGD-PropT"], "W3-PGD Theorem W and F-REFINE ARCHITECTURE/CARDS ('the general sufficient condition for (M2)') vs W5-VPGD REPAIRS.md R6.1 Prop. T: in its REGION form R_{a,d}(𝒟), a ≥ 2, PGD fails with an exact tie on the masked linked-hub family with c ≥ 2 (20/20 population cases, D_S fails in 200/200 fits), so Theorem W does not cover the masked families; it holds in the lattice form W_Lat (VPGD-WLat), which W5-VPGD proves. W3 never claimed LH; the gap is in F-REFINE's description. Same-family only."),
+    (["LH-LAT", "LH-LAT-sharp"], "W4-T38FULL Prop. LH-LAT 'm₀ is sharp' (its own same-family subagent: 20 brute-force cases) vs W5-VMASK: validity VERIFIED in 202/202 settings, but m₀ is sharp only on homogeneous pairs (108/108) and not on 32/94 heterogeneous settings (down to ×0.002); repair R5 gives the exact formula."),
 ]
 flagged = {r["id"] for r in ROWS if r["flags"] == "CONFLICT"}
 listed = {i for ids_, _ in CONFLICTS for i in ids_}
@@ -183,7 +192,7 @@ def repair_exists(r):
 # ----------------------------------------------------------------------------------------------------------------
 branches = [b.strip().replace("origin/", "", 1) for b in git("branch", "-r").splitlines() if "origin/theory/" in b]
 branches = sorted(b for b in branches if b.startswith("theory/"))
-rx = re.compile(r"^theory_campaign/[^/]+/(REPORT|REVIEW|REPAIRS|CARDS|STATEMENTS|ARCHITECTURE|REFEREE|CONSOLIDATED|NEW_TARGETS|T38_STATEMENT)[^/]*$", re.I)
+rx = re.compile(r"^theory_campaign/[^/]+/(REPORT|REVIEW|REPAIRS|CARDS|STATEMENTS|ARCHITECTURE|REFEREE|CONSOLIDATED|NEW_TARGETS|T38_STATEMENT|BOOK_CHECK|DRAFTS_CHECK)[^/]*$", re.I)
 SKIP = {"theory/campaign", "theory/smoke-test", "theory/S-REGISTRY"}
 cov = []
 for b in branches:
@@ -197,16 +206,17 @@ NOTES = {
     "theory/A-DRAFT": "full REPORT.md read (Astra; original-draft track).",
     "theory/F-DRAFT": "no REPORT.md; CROSSWALK.md and NEW_TARGETS.md (summary table of statuses) read as its statements file.",
     "theory/F-SHARE": "BRIEF.md only (no results).",
-    "theory/O-BGIBBS": "branch exists; no report files yet.",
+    "theory/A-REV4": "BOOK_CHECK.md and DRAFTS_CHECK.md read (cross-family; scope per LEDGER: W2-T26, W2-BOOK/Lemma RO, F-DRAFT, A-DRAFT §2; the W2-T26 verdict file had not landed).",
+    "theory/O-BGIBBS": "REPORT.md read (new at the fifth fetch; §4.1 simulation results still to be filled).",
     "theory/O-LS0": "scripts only; no REPORT.md yet (LS0 post hoc run on Owls).",
-    "theory/O-WSTAB": "PROOF.md and partial sweep results; no REPORT.md (PROOF.md not read; not a task file).",
+    "theory/O-WSTAB": "no REPORT.md; PROOF.md read as its statements file (theorem headers and status words only).",
     "theory/S-PAPER": "LaTeX skeleton + README (not a results branch).",
     "theory/W3-PGD": "REPORT.md is a 340-byte stub; claims read from PROOF.md (statement headers only); referee = W5-VPGD.",
-    "theory/W5-B2ENV": "REFEREE.md read (same-family verdicts on W4-SHARE); PROOF.md (incl. Prop. M-LH upgrade) not read.",
-    "theory/W5-FAVIID": "PLAN.md, PROOF.md and scripts; no REPORT.md (PROOF.md not read).",
+    "theory/W5-B2ENV": "REFEREE.md (same-family verdicts on W4-SHARE) and PROOF.md (headers, status words, Prop. M-LH, Thm B2-LH) read.",
+    "theory/W5-FAVIID": "REPORT.md (statement table; body sections still placeholders) and PROOF.md headers/status words read, incl. Prop. B1.",
     "theory/W5-LOCKBOOK": "REPORT.md + STATEMENTS.tex read (same-family referee of W2-BOOK/W2-T26; proves T32(i)). AUDIT.md/PROOF.md not read.",
-    "theory/W5-VMASK": "draft REPAIRS.md read (no REPORT.md yet); verdicts on W3-PXN / W4-T38FULL steps not yet written.",
-    "theory/W5-VPGD": "REFEREE.md read (verdicts on W3-PGD). REPAIRS.md / STAR.md referenced but not read.",
+    "theory/W5-VMASK": "REPORT.md read (26-row verdict table on W3-PXN and W4-T38FULL, statements, confidence card); REPAIRS.md R1–R7 via the report.",
+    "theory/W5-VPGD": "REFEREE.md, REPAIRS.md (R0–R6) and REPORT.md (verdict table, statements) read. STAR.md referenced, not read.",
     "theory/W6-FIXREV1": "REPORT.md read (change-log table); CONSOLIDATED.md and T38 files: section headings only, statements not individually extracted.",
     "theory/W6-FIXREV2": "REPORT.md read (change-log table §2.1 + §3); STATEMENTS.md headings only.",
 }
@@ -225,7 +235,7 @@ w("Built by S-REGISTRY (branch `theory/S-REGISTRY`) on %s from `origin/theory/*`
   "Reproduce with `python3 -I theory_campaign/S-REGISTRY/build_registry.py` (rows live in `registry_data.py`).\n\n" % today)
 w("**How to read the columns.** *Author status* is the status word the author wrote (PROVED / PROVED-UNDER = \"PROVED given/under named inputs\" / PROOF SKETCH / "
   "COUNTEREXAMPLE / CONJECTURE / OPEN / REFEREE = a repair or counterexample supplied by a cross-family referee without a PROVED label). "
-  "*Same-family* = a campaign verifier run (Opus checking Opus). *Cross-family* = A-REV1 / A-REV2 (GPT-6 Astra) only. "
+  "*Same-family* = a campaign verifier run (Opus checking Opus). *Cross-family* = A-REV1 / A-REV2 / A-REV4 (Astra reviewers) only; A-REV4 covers W2-BOOK (Lemma RO, Prop. 1–2) and F-DRAFT, and checks A-DRAFT §2 as Astra-on-Astra (recorded in the same-family column of those rows). "
   "Verdict tags: **VERIFIED**, **VERIFIED*** (verified after a repair or with a stated qualification), **GAP**, **ERROR**, none. "
   "*Repairs*: `[APPLIED]` = a campaign run has already written the fix; `[PENDING]` = no repair written yet. **W6-FIXREV1 and W6-FIXREV2 REPORT.md have landed** and apply every A-REV finding (they agree with all of them; FIXREV2 adds two wording qualifications), so most former pending items are now `[APPLIED]`; but those repairs are same-family (Opus) and **no second model family has reviewed them** Paper targets follow F-REFINE `CARDS.md` / `ARCHITECTURE.md`; \"supplement\" and \"none\" as in `ARCHITECTURE.md` §5.\n\n")
 w("**Standing caveat.** F-REFINE's CARDS/ARCHITECTURE were written before A-REV1/A-REV2 existed, so their \"VERIFIED\" is same-family only. "
@@ -267,7 +277,7 @@ w("\nGAP verdicts (no ERROR) are marked in §B/§C; they are: " + ", ".join("`%s
 n_app = sum(1 for r in err_rows if r["rs"] == "applied")
 n_pen = sum(1 for r in err_rows if r["rs"] == "pending")
 n_no = len(err_rows) - n_app - n_pen
-w("ERROR items: %d with a repair already applied, %d with a repair pending W6, %d with no repair.\n\n" % (n_app, n_pen, n_no))
+w("ERROR items: %d with a repair already applied, %d with a repair only proposed by the referee (not yet written by any run), %d with no repair.\n\n" % (n_app, n_pen, n_no))
 
 w("### A4. Lockable candidates\n\nSee `LOCKABLE.md` (author PROVED + same-family VERIFIED + cross-family VERIFIED or repaired). "
   "Strict-list size: see that file; it is a list of candidates, not a recommendation to adopt.\n\n")
@@ -308,7 +318,7 @@ w("| Branch | Head | Files read | Note |\n|---|---|---|---|\n")
 for b, h, f in cov:
     w("| %s | `%s` | %s | %s |\n" % (b, h, ", ".join(esc(x) for x in f) or "—", esc(NOTES.get(b, ""))))
 have = {b.split("/", 1)[1] for b, _, _ in cov}
-expected = ["F-PXN", "O-DILUTE", "O-BGIBBS"]
+expected = ["F-PXN", "O-DILUTE"]
 missing = [x for x in expected if x not in have]
 w("\nNamed in the LEDGER but with no branch on origin at the last fetch: " + ", ".join("`theory/%s`" % x for x in missing)
   + " (F-PXN was cancelled). `theory/campaign` and smoke branches skipped. Re-run the builder after they land.\n")
@@ -380,7 +390,7 @@ w("\n### 3e. Headline items with NO verification at all (author only)\n\n")
 unv = [r for r in results if level(r) == LEVELS[5] and r["st"] in ("PROVED", "PROVED-UNDER")]
 w(", ".join("`%s`" % r["id"] for r in unv) + "\n\n")
 w("Largest holes: Thm 6 (`T26-*`), Prop 1 and Prop 2 (`Prop1-T07`, `Prop2*`, `LemmaRO`), `ThmW` and the W3-PGD lemma family, the W3-PXN family "
-  "(`PXN-*`, carries the p ≫ n masked instance), W4-SHARE (`SHARE-*`).\n")
+  "(`PXN-*`, carries the p ≫ n masked instance), W4-SHARE (`SHARE-*`). Since the fifth fetch the PXN, LS-score, Lemma M, Thm b1 and LH-LAT rows have a second same-family verdict (W5-VMASK) and the PGD family one (W5-VPGD), but NO cross-family review of any of them. W5-VMASK R1, the W5-VPGD repairs R0–R6, O-BGIBBS (Lemma R, BG1), W5-FAVIID and O-WSTAB are single-author candidates with no verifier.\n")
 open(os.path.join(HERE, "LOCKABLE.md"), "w", encoding="utf-8").write("".join(lk))
 
 print("results", len(results), "claims", len(claims), "errors", len(err_rows), "gaps", len(gap_rows))

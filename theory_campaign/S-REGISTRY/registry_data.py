@@ -768,3 +768,304 @@ for _row in ROWS:
     if "PENDING" in _row["rep"] and _row["rs"] == "applied":
         _row["rep"] = _re.sub(r"\s*—?\s*PENDING", " — now written in the W6-FIXREV REPORT.md (same-family, not yet reviewed)", _row["rep"])
         _row["rep"] = _row["rep"].replace("to be adopted by W6-FIXREV1 now written", "adopted").replace("fix = W6-FIXREV2 now written", "fix")
+
+
+# ===============================================================================================================
+# FIFTH FETCH: W5-VMASK REPORT.md (4e41b97), W5-VPGD REPAIRS.md (157a049), O-BGIBBS REPORT.md (432fb12), plus
+# PROOF.md of W5-FAVIID (3b1e812) and O-WSTAB (e309e14), which have no REPORT.  All same-family (Opus) runs;
+# nothing here is cross-family reviewed: every cf cell stays "none".  Nothing upgraded.
+# ===============================================================================================================
+VMR = "W5-VMASK · REPORT.md verdict table"
+
+# ---- W5-VMASK verified W3-PXN and W4-T38FULL (same-family, independent code) -----------------------------------
+upd("PXN-LemmaB", sf="V|" + VMR + " rows 1–3′: Lemma B(i),(ii),(iii) VERIFIED (re-derived; 16 KS tests pass, negative controls rejected at p ≈ 0); also needs only the LH population identities, not |ψ|<ρ")
+upd("PXN-P1", sf="V*|" + VMR + " rows 8, 8′: VERIFIED given cited C1; margin condition is sufficient not necessary; partition = groups in 213/216 in-family replicates (misses at n ≤ 400 or ψ = 0.69)")
+upd("PXN-P2", sf="V*|" + VMR + " row 9: VERIFIED given C1")
+upd("PXN-P3", sf="V|" + VMR + " row 7: VERIFIED (T22(i) bound ≤ π₀(S°) in 236/236 replicates)")
+upd("PXN-P4", sf="V|" + VMR + " row 10: VERIFIED (Mstat medians approach the limit from below; lag = log π₀(S°))")
+upd("PXN-P5", sf="V|" + VMR + " row 11: VERIFIED (mode = S° in 195/216; misses at n ≤ 400)")
+upd("PXN-P6", sf="V|" + VMR + " rows 14, 15: VERIFIED (D_S > 0 at all lattice states in 105/110; 5 failures at n ≤ 400); (L) failure formula VERIFIED, 4%/1.2% quoted are for s₀ = 5 (R4)")
+upd("PXN-P7", sf="V*|" + VMR + " rows 16, 17: D2-a, D2-b, D2-c VERIFIED; D2-d (NB) GAP (fixable) → proof written in W5-VMASK REPAIRS R1 (single run, unverified)",
+    rep="[APPLIED] W5-VMASK R1 (proof of D2-d / NB on LH-iid c = 1; PROVED candidate, single run, unreviewed); R3 NB constant 1.925 → r*",
+    prem="D2-d (NB): closed by W5-VMASK R1, unverified (single run); c ≥ 2 stays OPEN")
+upd("PXN-P8", sf="V|" + VMR + " row 18: VERIFIED")
+upd("PXN-Cor", sf="V*|" + VMR + " row 19: composition via LS0 VERIFIED for every c; the no-LS0 branch (c = 1) rests on R1 (unverified)")
+upd("LS-score", sf="V|" + VMR + " row 20: VERIFIED by an independent run (code facts confirmed in v3_engine.h); IMPL caveat: LS0 must pass emit_centre = true (row 25)")
+upd("LemmaM", sf="V|" + VMR + " row 21: VERIFIED (every inequality; Lemma M needs λ_min only on A)")
+upd("Thm-b1", sf="V|" + VMR + " row 22: VERIFIED under (M1)–(M3)")
+upd("LH-LAT", sf="V*|" + VMR + " rows 23, 23″, 24: validity VERIFIED (m₀ ≤ brute-force margin in 202/202 settings; algebra needs only |ψ|<1); 'm₀ is sharp' GAP (overstatement): sharp in 108/108 homogeneous, not sharp in 32/94 heterogeneous, down to ×0.002",
+    rep="[APPLIED] W5-VMASK R5 (exact margin formula; drop or qualify 'sharp')", flags="CONFLICT")
+upd("T38-b1-LH", sf="V*|" + VMR + " rows 20–24 and §9: LS-score, Lemma M, Thm b1, LH-LAT assembly VERIFIED by W5-VMASK (independent run)")
+upd("T38-b1′", prem="D2 hypotheses; NB′; W5-VMASK R1 now proves NB on LH-iid c = 1 (single run, unreviewed); c ≥ 2 OPEN")
+
+# new W3-PXN lemmas verified by W5-VMASK
+for pid, lab, sfv, prem, mean in [
+    ("PXN-LemmaTr", "Lemma Tr (truncated moment, (a)–(c))", "V|" + VMR + " rows 4, 5: VERIFIED", "—", "Truncated moments of (1−X)^{−ν} for Beta statistics, with a union over n^{A+1}2^{17} sets that still vanishes."),
+    ("PXN-LemmaLambda", "Lemma Λ (population residuals)", "V|" + VMR + " row 13: VERIFIED (brute-force Δ agrees)", "—", "Explicit population residual components of the linked-hub family, giving the margin table used by P6."),
+    ("PXN-LemmaU", "Lemma U (U1)–(U3)", "V*|" + VMR + " row 12: VERIFIED; ERROR (cosmetic) in (U1), see PXN-LemmaU-U1", "—", "Superset/neutral-addition comparison used in P6; only κ₂ = O(1) is needed."),
+]:
+    r(pid, "Thm 5 (b1-LH-iid)", "W3-PXN · PROOF.md (statuses inherited from REPORT §2 P3/P6; PROOF.md lemma list not read) · " + lab, "PROVED", sfv, N, "none", prem, mean)
+upd("PXN-LemmaU-U1", src="W3-PXN · PROOF Lemma U (U1): ν log(1 + a_A/RSS) ≤ 1",
+    sf="E|" + VMR + " row 12 ERROR (cosmetic): 'ν log(1+a/RSS^y) ≤ 1' is false (≈ 0.51/c_* ≥ 8); only κ₂ = O(1) is used; repair R2",
+    rep="W5-VMASK R2 (argument unaffected)")
+upd("PXN-Lfail-numbers", sf="E|" + VMR + " row 15 / REPAIRS R4: the quoted 4%/1.2% are for s₀ = 5 (config B), unlabelled; cosmetic numerical/labelling ERROR",
+    rep="W5-VMASK R4 (label s₀ = 5; formula verified)")
+upd("PXN-P7-NB", sf="G|" + VMR + " row 17 GAP (fixable), repaired by W5-VMASK R1 (PROVED candidate, single author); R3 inherited 1.925 constant (cosmetic)",
+    rep="R1 full proof of D2-d on LH-iid c = 1 (single run, not independently verified)")
+upd("LH-LAT-sharp", sf="G|" + VMR + " row 23′ GAP (overstatement); R5 gives the exact formula", rep="restated in W5-VMASK R5")
+upd("LS0-cost-+1", sf="G|" + VMR + " row 25(ii) / R7: cost is 1 + (ℓ+1)·max_k[p+k(p−k)], the +1 is the emitted centre", rep="corrected in W5-VMASK R7")
+
+# new W5-VMASK results
+r("VMASK-R1-NB", "Thm 5 (b1′) on LH-iid, c = 1", "W5-VMASK · REPAIRS.md R1 (statement in REPORT.md §3: 'Thm 5(b1′) on LH-iid, c = 1')", "PROVED",
+  "N|none: single author (W5-VMASK); REPORT.md §7 asks for cross-family review of R1, esp. Step 1's E1 bound across the size cap K", N,
+  "none", "EX-A, EX-S, SR; no LS0; c = 1 only (c ≥ 2 OPEN); NB′ with r*",
+  "With the original method (no LS0) on LH-iid with one linked pair, the first pilot round scores S₀ w.p. → 1: the 1/p prior price of touching the masked group exactly pays for H₀ ≍ p draws.")
+r("VMASK-LemmaB-psi", "Thm 5 (b1-LH-iid) remark", VMR + " row 3′ · Lemma B needs only LH population identities, not |ψ|<ρ", "CONJECTURE",
+  "N|authored by W5-VMASK; numerical only (KS tests at ψ = 0.9 > ρ pass, controls rejected at p ≤ 1e-65)", N, "none", "—",
+  "The exact Beta laws of Lemma B hold whenever the LH identities hold, even past the |ψ| < ρ cliff; recorded 'VERIFIED (new)' by the author, no separate proof.")
+r("VMASK-psi-lt-1", "Prop. LH-LAT (remark)", VMR + " row 23″ · algebra needs only |ψ|<1", "PROOF SKETCH",
+  "N|authored by W5-VMASK (one-line positive-definiteness argument plus brute-force margins)", N, "none", "—",
+  "The pair unit is positive definite iff ψ² < 1, so the lattice algebra is valid beyond |ψ| < ρ; |ψ| < ρ is only needed for the partition and (M1).")
+r("VMASK-hetero-rho", "Thm 5 (b1-LH-iid) extension", "W5-VMASK · REPORT.md §3 'Extension' (heterogeneous ρ_h)", "CONJECTURE",
+  "N|authored by W5-VMASK; 'VERIFIED numerically, not separately proved' (three null groups at ρ = 0.95 behaved like the base design)", N, "none", "min_h ρ_h > max_i |ψ_i| (P1's margin)",
+  "The proofs nowhere use a common within-group correlation, so groups may have their own ρ_h; stated as an extension, not proved.")
+r("VMASK-beyond-cliff", "supplement (disclosure)", "W5-VMASK · REPORT.md §5.5, §8 (ψ > ρ)", "CONJECTURE",
+  "N|authored by W5-VMASK; 10 replicates at n = 200, 400 only", N, "none", "outside LH-iid",
+  "For ψ > ρ the partition co-blocks the hubs and the masking disappears (π₀(S₀) ≈ 0.07–0.7): (M1) failing is a transition to the favourable regime, not a failure of the method. A favourable-regime theorem there is unchecked.")
+
+# ---- W5-VPGD REPAIRS.md (author = the referee of W3-PGD; same-family; not verified) ----------------------------
+VR = "W5-VPGD · REPAIRS.md"
+r("VPGD-R0", "Thm 3 (asymptotic clause)", VR + " · R0 vanishing margin", "PROVED",
+  "N|authored by W5-VPGD (re-reading of constants); no second check", N, "none", "η_n² nθ²_min / log n → ∞ (η_n²M_n → ∞ under BM-∞)",
+  "Theorem W stays true with a margin η_n → 0 at the stated rate; the band between Theorem W and Prop. P4 is ratio 1 − O(√(log n/(nθ²_min))).")
+r("VPGD-R1", "Thm 3 (asymptotic clause)", VR + " · R1 (H1) ⊂ (H2)", "PROVED",
+  "N|authored by W5-VPGD (presentational)", N, "none", "—", "The d ≤ 1 hypothesis (H1) is the case d = 1 of (H2); keep it only as a named case.")
+r("VPGD-R2", "Thm 3 (asymptotic clause)", VR + " · R2 uniform Theorem W; Cor P6 repaired composition", "PROVED",
+  "N|authored by W5-VPGD ('by inspection', closes REFEREE G2)", N, "none", "X independent of ε; E_X event on the realised design",
+  "Theorem W's o(1) is uniform over all fixed designs satisfying the hypotheses with the same constants, so the random-design corollary P(TD′_P fails) ≤ P(E_Xᶜ) + δ_n → 0 composes correctly.")
+r("VPGD-R3", "Thm 3 (asymptotic clause)", VR + " · R3 stability of LD♭ under Gram perturbations", "PROVED",
+  "N|authored by W5-VPGD (closes REFEREE G3)", N, "none", "ε ≤ φ₀²/2 on the sets I = S₀ ∪ J, |J| ≤ d+1",
+  "Partial-correlation quantities move by at most 8ε/φ₀⁸ under a Gram perturbation of size ε (W3 wrote O(ε/φ₀⁴); the power is immaterial).")
+r("VPGD-R4", "Thm 3 (asymptotic clause)", VR + " · R4 C-LD at p ≍ n^A, A > 1 (downgraded)", "CONJECTURE",
+  "N|authored by W5-VPGD (downgrade of W3-PGD's remark; closes REFEREE G4)", N, "none", "needs a random-design version, unwritten",
+  "The claim that p ≍ n^A needs r > 1/(2A) cannot use the exact orthonormal construction; only A = 1 counterexamples are proved (C-LD r > ½, Prop. G r > ⅓).")
+r("VPGD-PropT", "Thm 3 (negative result → supplement)", VR + " · R6.1 Proposition T (tie) and LH consequence", "PROVED",
+  "N|authored by W5-VPGD; numerics 20/20 (η = 0 on LH, c ≥ 2) and 200/200 (D_S fails at S₀∖{a₁,a₂}) at n = 200, 2000, 20000", N, "none",
+  "a truth u worthless at S+j given the others; c ≥ 2 on LH",
+  "In its REGION form R_{a,d}(𝒟), a ≥ 2, PGD fails with an exact tie whenever a truth can be worthless, so Theorem W does not apply to the masked families on which Thm 5(b1) is proved; the greedy path is not stuck (TD′_∞ can hold).", flags="CONFLICT")
+r("VPGD-WLat", "Thm 3 (asymptotic clause) / Thm 5 (b1-LH)", VR + " · R6.2 Theorem W_Lat (lattice form)", "PROVED",
+  "N|authored by W5-VPGD (labelled PROVED, candidate); no verifier", N, "none", "EX-A, G, R, SE_λ(d+1), BM-∞, PGD(η) on Lat(S°), S° deterministic X-measurable, |P°| ≤ d; no LD condition",
+  "On the repair lattice of a reference S°, (L) and D_S at every lattice state hold w.p. → 1, so the production search from any centre in the lattice returns S₀ certified, up to ties.")
+r("VPGD-equiv", "Thm 3 / Thm 5 (b1)", VR + " · R6.3 general equivalence PGD ⇔ POP-LAT on a lattice", "PROVED",
+  "N|authored by W5-VPGD (labelled PROVED, candidate)", N, "none", "any design; (b) only on Lat ∩ {Φ ≥ 2}",
+  "PGD(η) on Lat(S°) implies POP-LAT(S°, ηR⁺_min), and POP-LAT(S°, m) implies PGD(m/R⁺_max): the relative and absolute margin conditions are equivalent up to constants on a fixed-θ family.")
+r("VPGD-LH-PGD", "Thm 5 (b1-LH)", VR + " · R6.3 Proposition LH-PGD", "PROVED",
+  "N|authored by W5-VPGD; brute-force PGD constant equals η_LH in 20/20 LH cases; sharpness analytic only in part", N, "none", "LH exact Gram, S° = S₀∖M",
+  "On the linked-hub family PGD(η_LH) holds on Lat(S°)∖{S₀} with η_LH = min{1, 1−κ_max, D_min/R_max}; Theorem W_Lat therefore re-derives T38's (M2) on LH and adds certification and (L).")
+for cid, rp in [("PGD-G2-uniformity", "W5-VPGD REPAIRS.md R2 (read: PROVED by inspection, same-family, unreviewed)"),
+                ("PGD-G3-LDstab", "W5-VPGD REPAIRS.md R3 (read: PROVED, 8ε/φ₀⁸, same-family, unreviewed)"),
+                ("PGD-G4-pgtn", "W5-VPGD REPAIRS.md R4 (read: downgraded to CONJECTURE)"),
+                ("PGD-star-misleading", "W5-VPGD REPAIRS.md R5 (read: sentence replaced by STAR.md summary: (★) certifies r < 0.111, (★′) r < 0.143, failure proved for r > ⅓)")]:
+    upd(cid, rep=rp)
+upd("C-LD", rep="W5-VPGD R4: the p ≍ n^A extension is downgraded to CONJECTURE (VPGD-R4)")
+upd("ThmW", prem="EX-A, G, R, SE_λ(d+1), BM-∞, PGD(η) on R_{a,d}(𝒟), and one of (H1) d≤1, (H2), (H3) LD♭. REGION form fails on masked LH with c ≥ 2 (VPGD-PropT); use W_Lat (VPGD-WLat) there",
+    flags="CONFLICT")
+
+# ---- O-BGIBBS REPORT.md (new; bridge-Gibbs discovery, T38(b) without LS0; unreviewed) ------------------------------
+OB = "O-BGIBBS · REPORT.md"
+r("OBG-LemmaR", "Thm 5 (b1′/b2 alternative; new)", OB + " §2 · Lemma R (multi-flip round lemma)", "PROVED",
+  "N|none: author's own confidence card 0.97; REPORT.md §6 asks for an independent check of Lemma R and BG1", N, "none", "EX-S, SR; deterministic",
+  "From x, one round at any φ scores a target z = x Δ Λ with probability ≥ P(O)(1 − Dep_φ)₊ α_φ^{|Λ|−1}; D2's one-round step is |Λ| = 1.")
+r("OBG-BG1", "Thm 5 (b1′/b2 alternative; new)", OB + " §2 · Theorem BG1 (pilot first-stage bridge-Gibbs discovery)", "PROVED-UNDER",
+  "N|none", N, "none", "(B) per-round scoring probability ≥ β on the basin; (O) light-outsider mass; EX-A, EX-S, SR; pilot floor φ₁ ≥ min(1, 1/T_e) (code fact F); stated for the PILOT, not the no-floor final run",
+  "P(z ∉ 𝒮_cal) ≤ Hπ₀(𝒜) + e^{−Hπ₀(x°)/8} + 1/K + exp{−Hβ/(1+2Kρ_𝒩)}: discovery in one round, no ESS share, no NB, no SHARE/LT, no survival; selection controlled uniformly in φ.")
+r("OBG-CorBG1inf", "Thm 5 (new)", OB + " §2 · Corollary BG1-∞", "PROVED-UNDER",
+  "N|none", N, "none", "π₀(x°) ≥ b > 0; Hπ₀(𝒜) → 0 and ρ_𝒩 = O_P(1); β ≥ β₀ > 0 w.p. → 1",
+  "Under those premises P(z ∉ 𝒮) → 0 along R1/R4.")
+r("OBG-LH-P1", "Thm 5 (new)", OB + " §3.3 · Prop. LH (P1) projection algebra, and (i)", "PROVED",
+  "N|none ((i) is W1-EXP Thm 5(a): VERIFIED by W3-VEXP)", N, "none", "LH exact Gram, p ≤ n−1, |ψ_i| < min(ρ_a, ρ_b), g ≤ B < 2g",
+  "On LH exact Gram the response splits into a part supported on S° and an orthogonal remainder r; masked-group columns have zero partial covariance with μ in the stated configurations, and π₀(S°) → 1.")
+r("OBG-LH-ii-iv", "Thm 5 (new)", OB + " §3.3 · Prop. LH (ii)–(iv): H·π₀(𝒜) → 0, ρ_𝒩 = O_P(2^B n^{−1/2}), β ≥ g^{−c}(1−o(1))", "PROOF SKETCH",
+  "N|none: REPORT.md §6 lists the T03-with-common-shift reduction, null leakage next to S₀ and the size-prior coupling as unchecked", N, "none", "n/(T_e log(p√n)) → ∞ (roughly n ≳ 10⁴–10⁵); R1",
+  "The three score estimates that discharge BG1's premises on the linked-hub family are routine but unchecked.")
+r("OBG-T38b-noLS0", "Thm 5 (b1′) for every fixed c ≥ 1 on LH exact Gram (new)", OB + " §1 headline 3 and §8 confidence card", "PROOF SKETCH",
+  "N|none", N, "none", "BG1 + Prop. LH (ii)–(iv) sketch + T38(0); asymptotic only (n ≫ T_e log n); pilot only",
+  "P(S₀ ∉ 𝒮) → 0 on LH exact Gram for every fixed c ≥ 1, hence the original method (no LS0) selects S₀ w.h.p.; covers c ≥ 2 where D2 does not apply. Author's P(true) 0.85, P(provable) 0.7.")
+r("OBG-LHiid", "Thm 5 (b1′) on LH-iid, p ≫ n (new)", OB + " §7", "CONJECTURE",
+  "N|none", N, "none", "event 'blocks = groups'; approximate orthogonality O_P(√(log p/n))", "The BG1 argument should go through on LH-iid (cf. W3-PXN, W5-VMASK R1).")
+r("OBG-final-run", "Thm 5 (b2) (new)", OB + " §5, §8 · final-run (no-floor) discovery / finite-n version", "OPEN",
+  "N|none", N, "none", "delivery to φ ≥ φ_hub (W4-SHARE D4/D5)",
+  "The final run's grid has no floor, stage 1 is typically below the crossing temperature φ_hub, and BG1 does not cover it; at n = 200, T_e = 1000 ≫ n the theorem says nothing about the study. The §4.1 simulation RESULTS were still 'to be filled' at this head.")
+
+# ---- W5-FAVIID PROOF.md (no REPORT; candidates; 2^B-free favourable rate on iid block-diagonal designs) ---------------
+FV = "W5-FAVIID · PROOF.md"
+FVT = "Thm 2 (iii) 2^B-free rate (candidate; post-dates F-REFINE)"
+for pid, lab, st, prem, mean in [
+    ("FAV-LemmaX", "§1 Lemma X⁺/X⁻ (chain-free table bound)", "PROVED", "λ_min(G_A) ≥ φ²(n−1), (n+1)φ² ≥ 50", "The EXP′ remainder is ≤ O(1/n) from above (with a matching lower bound for a null addition), without a chain."),
+    ("FAV-LemmaBp", "§2 Lemma B′ (exact Beta law for any group-union)", "PROVED", "FAV (F1); y = f(X_{S₀}, ε)", "Exact Beta laws for X_{U,V} for any fixed group-union and outside conditioning set, independent of (X_U, y)."),
+    ("FAV-LemmaTrp", "§3 Lemma Tr′ (truncated moment, sharper constant)", "PROVED", "—", "Re-derives W3-PXN Lemma Tr with a sharper constant."),
+    ("FAV-LemmaM", "§4 Lemma M (B-free bound for the aggregation statistic D)", "PROVED", "E[j! a_j] ≤ C₀(Nξ)^j/Γ(j/2+1)", "E D ≤ c_ML C₀ Nξ with c_ML = 3.8311: removes the 2^B factor."),
+    ("FAV-LemmaS", "§5 Lemma S (projection onto nearly orthogonal subspaces)", "PROVED", "—", "Projection onto a sum of nearly orthogonal subspaces."),
+    ("FAV-LemmaG", "§6 Lemma G (partition-free good events)", "PROVED-UNDER", "given [C1]", "The good events do not depend on the realised partition."),
+]:
+    r(pid, FVT, FV + " " + lab, st, "N|none", N, "none", prem, mean)
+r("FAV-ThmA", FVT, FV + " §7 · Theorem A (fixed partition)", "PROVED-UNDER",
+  "N|none", N, "none", "[C1] correlation concentration; [T22i]; W1-L1.1–1.2 (EXP′ pieces, VERIFIED elsewhere); FAV; s₀ ≤ K",
+  "On iid block-diagonal designs with a deterministic partition, 1 − π₀(S₀) ≤ (s₀+1)q/(1−q) + s₀e with a 2^B-free rate (constant ≈ 3.83(s₀+1)√((1+ε₀)A)).")
+r("FAV-LemmaP1p", FVT, FV + " §8 · Lemma P1′ (blocks are unions of groups w.p. → 1)", "PROVED-UNDER", "N|none", N, "none", "given [C1]; ρ₋ > 0", "The v3 partition is a union of whole groups w.p. → 1.")
+r("FAV-PropN", FVT, FV + " §8 · Proposition N (no deterministic limit partition for S3/S4)", "PROOF SKETCH", "N|none", N, "none", "—", "The packing of groups into blocks has no deterministic limit for the study's S3/S4 designs, so Theorem A (fixed partition) is not enough.")
+r("FAV-ThmB", FVT, FV + " §9 · Theorem B (actual noise-dependent packing)", "PROVED-UNDER", "N|none", N, "none", "[C1], [T22i], W1-L1.1–1.2; FAV; s₀ ≤ K; constant carries the set-count |𝒲(m)|",
+  "Uniform over packings, the same 2^B-free start rate holds on the actual (data-dependent) partition.")
+r("FAV-ConjBp", FVT, FV + " §9 · Conjecture B′", "CONJECTURE", "N|none", N, "none", "numerics (REPORT §4.1, not on branch) support it", "Theorem B holds with Theorem A's constant 3.83(s₀+1)√((1+ε₀)A).")
+r("FAV-sharp", FVT, FV + " §10 · sharp first-order constant", "PROOF SKETCH", "N|none", N, "none", "Lemma X⁻", "The bound is within a factor ≈ 7 of the truth; the sharp constant itself is a CONJECTURE supported by S1/S3 data to within 30%.")
+
+# ---- O-WSTAB PROOF.md (no REPORT; candidates; weight stability and the regime dichotomy) -----------------------------
+WS = "O-WSTAB · PROOF.md"
+WST = "supplement (weight stability / n = 200 disclosure; new)"
+for pid, lab, st, prem, mean in [
+    ("OWS-WS1", "§1 Theorem WS1 (exponential-family identities)", "PROVED", "—", "1 + χ²(q_v‖q_u) = exp{Λ(w) − 2Λ(v) + Λ(u)} = q_v(S)²/(q_u(S)q_w(S)) for every S: the bridge's divergences are cumulant-function identities."),
+    ("OWS-WS2", "§2 Theorem WS2 (one importance step; ESS, evidence variance, PW2 at the first stage)", "PROVED", "iid q_u draws", "ESS_∞ = 1/(1+χ²) = q_u(S)q_w(S)/q_v(S)² ≤ q_u(A)/q_v(A)²; PW2 holds at the first stage of a final island."),
+    ("OWS-WS3", "§3 Theorem WS3 (block-orthogonal case)", "PROVED", "BO", "Under BO the start-vs-posterior discrepancy d is pure noise-variance sharing, 0 ≤ d ≤ νΣ x_b x_c/(1−x̄), zero iff at most one block has signal."),
+    ("OWS-WS4", "§4 Theorem WS4 (perturbation in the standardised cross-block Gram)", "PROVED", "ε_S < 1", "Cross-block dependence ε perturbs SE, t_S and d by explicit factors ε/(1−ε)."),
+    ("OWS-WS52", "§5 Proposition WS5.2 (leakage formulas)", "PROVED", "SE-blk(φ₀)", "Explicit leakage and cancellation formulas for block additions."),
+    ("OWS-WS53F", "§5 Theorem WS5.3(F) (weak leakage ⇒ favourable start)", "PROVED-UNDER", "G, R, SE-blk, EBM(M_n), CBL(η), η < η_A; conclusion is a composition with locked T22(iii) and inherits the candidate status of W1-EXP Thm 1 (that theorem has since been VERIFIED by W3-VEXP and A-REV2)", "Under cross-block leakage bounds the start is favourable: 1 − π₀(S₀) = O_P(2^B √log n · n^{−κ}); the reduction is PROVED."),
+    ("OWS-WS53M", "§5 Theorem WS5.3(M) (masking needs order-one cross-block cancellation)", "PROVED", "deterministic", "The chain-leakage condition CL(L) forces |θ*_l + α_{b,l}| ≤ Lσ*/(φ₀√(n−1)): no T27-type masking under BO; masking needs a cross-block correlation bounded away from 0."),
+    ("OWS-WS53N", "§5 Theorem WS5.3(N) (necessity form of (F))", "PROVED", "contrapositive of (F); same status as (F)", "If π₀(S₀) ↛ 1 then infinitely often either coefficients cancel or leakage is large; both vanish under BO."),
+    ("OWS-WS6abc", "§6 Theorem WS6(a)–(c) (weights in the favourable regime)", "PROVED", "deterministic", "1 + χ²(π‖π₀) = π(S)²/(π₀(S)q₂(S)); stable weights follow from the start seeing the truth plus tilt control; KL needs less tilt control."),
+    ("OWS-WS6d", "§6 Theorem WS6(d) (noise-chasing obstruction under ORTH)", "PROVED", "ORTH, s₀ ≥ 1, |N₀| → ∞; cites locked T03 and W1-EXP Thm 6 / WS5.3(F)", "Even in the favourable regime χ²(π‖π₀) → ∞ and the population ESS fraction → 0 while TV → 0 when |N₀| p^{(α−1)R̄²}/√n is large (every R̄² > ½ at p = n−1)."),
+    ("OWS-WS6e", "§6 Theorem WS6(e) (threshold)", "CONJECTURE", "ORTH or BO + SE-blk + favourable; p = n^A", "D_α(π‖π₀) → 0 if A(α−1)ω* < ½ and → ∞ if > ½; critical Rényi order α* = 1 + 1/(2Aω*)."),
+    ("OWS-WS7", "§7 Theorem WS7 (weights in the masked regime; why the sampler must move)", "PROVED", "T27(i) and locked T03 for (b)", "ESS_∞ ≤ π₀(S₀)/π(S₀)²; reweighting and resampling cannot create the truth: S₀ is held w.p. ≤ Nπ₀(S₀)."),
+    ("OWS-WS8abc", "§8 Proposition WS8(a)–(c) (whole bridge and T25(iv)/PW2)", "PROVED", "(b) under the idealisation IID", "T = 1: Var(Ẑ/Z) = χ²/(4N_e); the idealised T-stage product bound; exact telescoping accounting of Σ log(1+χ²)."),
+    ("OWS-WS8d", "§8 Proposition WS8(d)", "OPEN", "—", "PW2 for the actual hybrid particle system at t ≥ 2 (the IID idealisation is not the method)."),
+]:
+    r(pid, WST, WS + " " + lab, st, "N|none", N, "none", prem, mean)
+
+# implementation fact / retired statements introduced by this fetch
+IMPL.append(("pilot floor F", "pilot_next_phi returns φ₁ ≥ min(1, 1/T_e); 'pilot scored models enter 𝒮 / the HPM store' (SR_AUDIT item 5)", "O-BGIBBS · REPORT.md §2, §6 item 3",
+             "IMPLEMENTATION FACT — author's own code reading; independent code check requested"))
+RETIRED.append(("'Theorem W (region form R_{a,d}) covers the masked families' (F-REFINE's description of Theorem W as the general sufficient condition for (M2))",
+                "false on LH with c ≥ 2: exact tie, PGD(η) fails for every η > 0 (VPGD-PropT)", "Theorem W_Lat (lattice form, VPGD-WLat) and Prop. LH-PGD"))
+RETIRED.append(("'LH-LAT margin m₀ is sharp'", "not sharp on 32/94 heterogeneous settings, down to ×0.002 (W5-VMASK row 23′)", "exact margin formula of W5-VMASK R5"))
+
+
+# ---- W5-FAVIID REPORT.md (landed after the first read; statement table, status words as written) ------------------
+FR = "W5-FAVIID · REPORT.md §2 (statement table)"
+upd("FAV-ThmA", st="PROVED", src=FR + " · A (PROOF §7)",
+    prem="[C1] (cited Gaussian covariance concentration), locked T22(i), W1-EXP L1.1–1.2; FAV; s₀ ≤ K. PROOF.md header reads 'PROVED (given …)'; REPORT table reads 'PROVED'")
+upd("FAV-ThmB", st="PROVED", src=FR + " · B (PROOF §9)",
+    mean="On the actual noise-dependent packing, on Q_n(m) (blocks are unions of groups, ≤ m−1 other truth-carrying groups per block) 1−π₀(S₀) = O_P(|𝒲(m)|(s₀+1)√(log n/n)); for S3/S4/S6 P(Q_n(3)) → 1, so the rate holds unconditionally (constant ×≤106, ×15 while B = 14).")
+upd("FAV-sharp", st="CONJECTURE", src=FR + " · §10 sharp first order (PROOF §10)",
+    mean="1 − π₀(S₀) ≈ 1 − exp(−N_add), independent of B, g and θ; numerics agree to ±15% at n = 3200. PROOF SKETCH of the mechanism; REPORT labels the statement CONJECTURE (weaker label kept).")
+upd("FAV-ConjBp", src=FR + " · B′-conj")
+r("FAV-LemmaXminus", FVT, FR + " · X⁻ (PROOF §1)", "PROVED", "N|none", N, "none", "none (deterministic)", "Matching lower bound for the EXP′ table ratio with κ⁻ = O(1), for deletions.")
+r("FAV-PropF", "supplement (finite-n; sharpens W3-VEXP Prop D)", FR + " · F / PROOF §11 Prop. F (one-change ceiling)", "PROVED", "N|none", N, "none", "none (exact odds, any data)",
+  "π₀(S₀) ≤ [1 + N_add + ΣO^del + ΣO^swp]^{−1}: the start mass of the truth is capped by the odds of single-change competitors.")
+r("FAV-plugin", "supplement (n = 200 disclosure)", FR + " · §11 population plug-in thresholds n*_null, n*_del, n*_swp, n*_half, n*_hit", "CONJECTURE", "N|none", N, "none", "median-level formulas; each limit a PROOF SKETCH; checked numerically (§4.4)",
+  "Explicit population thresholds (in θ, v, p, s₀, ρ) for when the start sees the truth; median-level formulas, not proved.")
+r("FAV-C1", "Thm 1 / Thm 6 premise", FR + " · C1 (PROOF §12 Cor. C1)", "PROVED", "N|none", N, "none", "locked T03, W3-PXN de-randomisation lemma (P8: VERIFIED by W5-VMASK), [C1]; BM-∞", "δ₁ = 1 − π(S₀) = O_P(√(log n/n)) on FAV (composition).")
+r("FAV-C2", "Thm 6 (P1) on study-like designs S3/S4/S6", FR + " · C2 (PROOF §12 Cor. C2)", "PROVED", "N|none", N, "none", "W2-T26 Thm A + Lemma 1 (Lemma 1/Thm A: VERIFIED by W5-LOCKBOOK, same-family); FAV-ThmB; idealisations EX-A, EX-S, CAL, START, OUT",
+  "On the study-like family Δ_n = O_P(√(log n/n)) and (T^max+1)Δ_n = O_P(log^{5/2}n/√n) → 0, so T26(i)–(ii) hold with the actual partition and budgets, without EXP′/VIS/NL (composition).")
+r("FAV-C3", "Thm 5 (a) on S3/S4/S6", FR + " · C3 (PROOF §12 Cor. C3)", "PROVED", "N|none", N, "none", "locked T21 route (a), FAV-C1, EX-S; (composition of unreviewed FAV-ThmB)", "liminf P(Ŝ = S₀) ≥ 1 − limsup P(U) on the study-like family (composition).")
+
+
+# ===============================================================================================================
+# SIXTH FETCH: A-REV4 (BOOK_CHECK.md, DRAFTS_CHECK.md; Astra high, cross-family relative to the Opus campaign),
+# W5-VPGD REPORT.md, W5-B2ENV PROOF.md, W5-FAVIID PROOF.md update.  Statuses are copied, never upgraded.
+# A-REV3 (W3-PXN, W4-SHARE, Prop M) and the W2-T26 part of A-REV4 had not landed at this fetch.
+# ===============================================================================================================
+AR4B = "A-REV4 · BOOK_CHECK.md"
+AR4D = "A-REV4 · DRAFTS_CHECK.md"
+
+# ---- A-REV4 on W2-BOOK (cross-family) ---------------------------------------------------------------------------
+upd("LemmaRO", cf="V*|" + AR4B + " 'RO: VERIFIED' for statistics extended by zero off their availability events; the potential statistic must be nonnegative (and bounded) on all of Ō, and RO gives no equality conditional on completion")
+upd("CEX-guard", cf="V*|" + AR4B + ": 'path-dependent stopping can invalidate conditional unbiasedness' VERIFIED qualitatively by an analytic example; BOOK's cost example is stylised and does not establish the size or direction of production bias")
+upd("Prop2(a,b,d,e)", cf="G|" + AR4B + ": Markov/Jensen VERIFIED for the potential run at fixed data; GAP B3 (probability convention: E[1_O Ẑ] ≤ Z·P(A) is a fixed-data formula; jointly it is E[1_A Z(data)]) and GAP B4 (exact branch: the calibration event A is undefined)",
+    rep="none written (A-REV4 proposes: fixed-data convention for all Prop. 2 expectations; A := whole space on the exact branch, or a separate exact-branch statement)", rs="pending")
+upd("Prop2(c)", cf="V|" + AR4B + ": island identity VERIFIED, E_C[Z̄P̄] − Z·PIP = −¾Cov_C(Z₁,P₁); strict bound −0.1275Z follows from the locked < −0.17 primary bias")
+upd("Prop2(f)", cf="V*|" + AR4B + ": VAL-FP VERIFIED as an ASSUMED contract, not a measured guarantee; neither η nor ε is supplied; NUM score error alone is insufficient")
+upd("Prop1-T07", cf="V*|" + AR4B + ": the sharp size-prior construction and its strict same-size certificate are sound; but see ERROR B5 on the data paragraph (claim Prop1-wrongHPM)")
+claim("Prop1-wrongHPM", "Prop 1 (data paragraph)", "W2-BOOK · REPORT.md Prop. 1 data paragraph / PROOF §3: 'every completed wrong HPM is a posterior miss'", "N|none",
+      "E|" + AR4B + " ERROR B5: a wrong HPM does not imply a posterior miss (scored set {S₁} omitting S₀ returns a lower-scoring wrong HPM); only a strict same-size miss established by audit scores certifies the ceiling",
+      "none written (A-REV4: relabel as the empirical observation of zero search misses in the campaign fits, with its audit source)", "pending",
+      "Completion of a fit does not make a wrong HPM a posterior miss; that needs an audit-score certificate.")
+claim("BOOK-B1-GUARD", "GUARD / Lemma RO", "W2-BOOK · PROOF §0.1, REPORT §2 · 'every reported output equals a component of R̄'", "N|none",
+      "G|" + AR4B + " GAP B1: literally too broad (allocation, peak_memory_kb, timings, runtime_guard depend on hardware/load); restrict to statistical outputs and discrete algorithm records; same-seed replay not inspected",
+      "none written", "pending", "The stop-only guard implies equality only for statistical outputs, not the whole returned object.")
+claim("BOOK-B2-arith", "GUARD / VAL-FP", "W2-BOOK · code finding", "N|none",
+      "G|" + AR4B + " GAP B2: ideal arithmetic (EX-A) and implementation arithmetic must be kept separate; static inspection does not validate EX-A or VAL-FP", "none written", "pending",
+      "GUARD follows from deleting checks in the same arithmetic algorithm; floating-point equality to an EX-A run is a separate contract.")
+claim("BOOK-B6-provenance", "W2-BOOK numerics", "W2-BOOK · results/frozen_run_exact.txt", "N|none",
+      "G|" + AR4B + " GAP B6: 50-digit numerical enumeration is not interval-certified exact arithmetic; no job provenance (SHA manifest, launch command, job ID); not rerun", "none written", "pending",
+      "The saved residuals are recorded numbers, not an independently reproduced certified calculation; the algebraic identities do not depend on them.")
+for i, row in enumerate(IMPL):
+    if row[0].startswith("GUARD"):
+        IMPL[i] = (row[0], row[1], row[2],
+                   "IMPLEMENTATION FACT — A-REV4 (cross-family): VERIFIED by static inspection for statistical quantities in the ideal stop-only reading; GAP B1 (literal 'every reported output' too broad), GAP B2 (ideal vs floating-point arithmetic), replay validation not done")
+
+# ---- A-REV4 on F-DRAFT (author Opus: cross-family) and A-DRAFT §2 (author Astra: Astra checking Astra) -----------------
+upd("FD-W1", cf="V|" + AR4D + " 'F-DRAFT W1: VERIFIED' (block-diagonal G, H; d = 0 iff at most one block has signal; with known common variance the globally prior-coupled start equals the posterior, including the cap; not a product of local posteriors)")
+upd("FD-W2", cf="E|" + AR4D + " W2: ERROR in the purported exact identity (x uses OLS RSS; the v3 score uses Q and 2b₀: false even for orthogonal singleton columns); GAP in the uniform conclusion (O_P(1) additive expansion does not give uniform relative o_P(1))",
+    rep="A-REV4's repair: h_{T,l} := (t_{T+l} − t_T)/(2b₀ + Q_T), plus an additive uniform error with rate; not applied by any run", rs="pending")
+upd("FD-W4", cf="G|" + AR4D + " W4: TV bound VERIFIED; GAP for the KL rate (positive multi-extra terms not controlled) and for the χ² assertion (remains W(c), CONJECTURE); source's PROOF SKETCH kept",
+    rep="exact KL bound supplied by A-REV4 (KL(π‖π₀) ≤ −log π₀(S₀) + Σπ(S)[d(S) − d(S₀)]); rate not proved", rs="pending")
+upd("FD-NM", cf="E|" + AR4D + " NM: ERROR/GAP as a general proposition (log BF expansion nc/2 − ½log n + O_P(1) false for fixed proxy correlation, fluctuation O_P(√n); π₀({j}) → 0 does not give π₀(j,l ∈ S) → 1; part (v) needs occupancy; O(1) ideal-grid conclusion not established); a valid fixed-p repair is A-DRAFT Prop. M",
+    rep="A-REV4's repair: use the identifiable p = 2 family of A-DRAFT Prop. M; not applied to F-DRAFT's text", rs="pending")
+ADN = "A-REV4 DRAFTS_CHECK §A-DRAFT §2 (Astra checking Astra's A-DRAFT: independent of the author's run, NOT cross-family relative to it): "
+upd("ADRAFT-ThmA", sf="V*|" + ADN + "VERIFIED under the potential-run and premise qualifications (finite-state induction; LLN/MSE only, no CLT or growing-dimension rate)")
+upd("ADRAFT-CorA1", sf="V*|" + ADN + "Corollary A1 follows from locked T12 §3(i.a–c); pooled product bias −¾Cov(Ẑ₁, μ̂₁) checked")
+upd("ADRAFT-uniPIP", sf="V*|" + ADN + "D7 checked (elementary detailed balance; no p-union-bound loss); does not prove output availability → 1")
+upd("ADRAFT-ThmD", sf="V*|" + ADN + "Theorem D checks conditional on (P1), OUT and successful calibration; (P1) itself not proved for masked starts")
+upd("ADRAFT-CorD1", sf="V*|" + ADN + "Corollary D1's boundedness/continuity/contraction argument valid")
+upd("ADRAFT-CEXh", sf="V*|" + ADN + "equality-indicator counterexample correctly refutes convergence to truth for every bounded measurable h")
+upd("ADRAFT-PropM", cf="N|A-REV4 DRAFTS_CHECK uses it as the valid fixed-p repair of F-DRAFT NM ('four-state direct comparison supplies all missing normalisation arguments') but gives no verdict row")
+
+# ---- W5-VPGD REPORT.md (landed) -------------------------------------------------------------------------------------
+VPR = "W5-VPGD · REPORT.md §3"
+r("VPGD-PropS′", "Thm 3 (asymptotic clause)", VPR + " · Prop. S′ (STAR.md §2: sharper alternative to (★))", "PROVED",
+  "N|authored by W5-VPGD (labelled PROVED, candidate); STAR.md not read here", N, "none", "(★′a) (τ²_{d−1} − 1)A < ½ and (★′b) (τ²_{d−1} + τ²_d − 2)A < 1 or (|𝒟|+1)^d ≤ p n^{1−ε}",
+  "In Lemma S, (H3)'s (★) may be replaced by the weaker (★′); at A = 1, d = 2 the gap between proved and known-failing r goes from 4.5× to 2.3× ((★) certifies r < 0.111, (★′) r < 0.143).")
+r("VPGD-PropG", "Thm 3 (negative result → supplement)", VPR + " · Prop. G (STAR.md §3)", "COUNTEREXAMPLE",
+  "N|authored by W5-VPGD; d = 2 construction + proof, d ≥ 3 PROOF SKETCH", N, "none", "A = 1, s₀ = 1, nulls in ≍ N^{1−β} orthogonal groups of size N^β with within-group correlation r; r > ⅓ with β = (1+r)²/(1+3r)",
+  "Grouped equicorrelated nulls already break TD′_P(R_{0,2}) at r > ⅓ although G, R, SE, BM-∞, PGD(1) and GERC hold: C-LD (r > ½) is not the worst family.")
+upd("PGD-P6", prem="a cited concentration bound (Bickel–Levina); W5-VPGD REPORT §5.3: the sufficient condition of Cor P6 is vacuous at every feasible n (needs n ≈ 10¹⁵–10²²)")
+upd("ThmW", sf="V|" + VP + " §4 and W5-VPGD REPORT.md §2: Theorem W VERIFIED (no ERROR in any step); four minor GAPs repaired in REPAIRS R1–R4, status after repair PROVED (candidate), one same-family referee pass; region form does not cover masked families (R6.1)")
+
+# ---- W5-B2ENV PROOF.md (landed; no-method-change masked theorems on LH; candidates, author only) --------------------
+B2P = "W5-B2ENV · PROOF.md"
+B2T = "Thm 5 (b1′)/(b2) on LH exact Gram, no method change (new)"
+for pid, lab, st, prem, mean in [
+    ("B2E-LemmaOF", "§1 Lemma OF (orthogonal factorisation of the discrepancy)", "PROVED", "—", "The start-vs-posterior discrepancy factorises orthogonally across the masked group and the rest on LH."),
+    ("B2E-L2.1", "§2.1 Lemma 2.1 (aggregation rates)", "PROVED-UNDER", "W1-EXP Thm 1 (VERIFIED by W3-VEXP, A-REV2), [E-T6]", "Start-side aggregation quantities relative to S° have explicit rates on LH exact Gram, any c."),
+    ("B2E-L2.2", "§2.1 Lemma 2.2 (start tails)", "PROVED", "p ≥ 2(s + k), eq ≤ ½", "Tail bounds for the start law on LH exact Gram, any c."),
+    ("B2E-NBLH", "§2.2 Theorem NB′-LH", "PROVED-UNDER", "W1-EXP Thm 1, [E-T6], [E-L4]; LH exact Gram, c = 1", "The no-blow-up event NB′ of D2 holds w.p. → 1 on LH exact Gram with c = 1."),
+    ("B2E-D2LH", "§2.3 Corollary D2-LH (route (b1′), c = 1)", "PROVED-UNDER", "D2 with r* (VERIFIED by W3-VT38E, A-REV1), [E-T1], [E-L4], [E-T5d]", "On LH exact Gram with one linked pair, the original method scores S₀ in the first pilot round (no LS0)."),
+    ("B2E-MLH", "§3 Proposition M-LH (Prop. M(b) on LH)", "PROVED-UNDER", "W1-EXP Thm 1", "On LH the lattice path from S° to S₀ is uphill in γ_φ for φ ≥ φ_n → 0 (upgrades W4-SHARE's Prop. M(b), a PROOF SKETCH there)."),
+    ("B2E-LemmaJ", "§4.2 Lemma J (junk and proxy inclusion odds)", "PROVED-UNDER", "(U1)–(U3)", "Uniform one-step inclusion odds of junk and proxies on the good event."),
+    ("B2E-LemmaT", "§4.2 Lemma T (truth retention)", "PROVED-UNDER", "STAB-LH; (U1)–(U3)", "Truths of S° are retained in every confinement step."),
+    ("B2E-CONF", "§4.3 Proposition CONF and Cor. CONF-run (one-round confinement)", "PROVED-UNDER", "STAB-LH", "One round confines the particle system to the near-S° region 𝒩′, uniformly in φ and in the state, for any frozen grid with T ≤ T_e."),
+    ("B2E-LemmaR1", "§4.4 Lemma R1 (one-round repair at φ = 1 from every state of 𝒩)", "PROVED-UNDER", "deletion part of STAB-LH", "From any state of 𝒩, one round at φ = 1 repairs to S₀."),
+    ("B2E-B2LH", "§4.5 Theorem B2-LH (route (b2), every c, no method change)", "PROVED-UNDER", "STAB-LH (a numerical/analytic premise: instance computed for c = 1; for c ≥ 2 configuration B FAILS it; a small-ψ instance expected, OPEN)", "Route (b2) closes on LH for every c without LS0 whenever STAB-LH holds."),
+]:
+    r(pid, B2T, B2P + " " + lab, st, "N|none", N, "none", prem, mean)
+r("B2E-latpot", "Thm 5 (b2) (negative result)", B2P + " §4.6(b) lattice-indicator potential", "PROOF SKETCH", "N|none", N, "none", "visit claims are first-moment",
+  "The lattice-indicator potential of the task brief cannot certify delivery at any budget (Γ ≳ log(N/T_e) at the v3 budgets); cf. claim B2ENV-finding.")
+r("B2E-open47", "Thm 5 (b2)", B2P + " §4.7 (what is open when STAB-LH fails)", "OPEN", "N|none", N, "none", "two plausible repairs: (1) enlarge 𝒩 to allow one missing S°-truth, …", "Confinement as stated fails when STAB-LH fails (e.g. c ≥ 2, configuration B).")
+r("B2E-LHiid", "Thm 5 (b1′)/(b2) on LH-iid (new)", B2P + " §5", "CONJECTURE", "N|none", N, "none", "not written", "The LH exact-Gram arguments transfer to LH-iid (P(NB′ᶜ) = O(g n^{−1/2})); remarks only.")
+upd("SHARE-M(b)", sf="V*|" + BV + ": Prop. M(b) PROOF SKETCH as labelled, argument correct; W5-B2ENV PROOF.md §3 now proves it on LH as Prop. M-LH (PROVED given EXP′, candidate, author only; see B2E-MLH)")
+upd("B2ENV-finding", src="W5-B2ENV · REFEREE.md closing finding; PROOF.md §4.6 (see B2E-latpot)")
+
+# ---- W5-FAVIID PROOF.md addition ------------------------------------------------------------------------------------
+r("FAV-PropB1", FVT, FV + " §9 · Proposition B1 (S1: context-free bound, unconditional in the packing)", "PROVED-UNDER", "N|none", N, "none",
+  "[C1], [T22i]; singleton groups (S1); asymptotic only (at s₀ = 14 the constant (t_n/2)^{7.5}/Γ(8.5) is astronomically large)",
+  "For S1 (singleton groups) 1 − π₀(S₀) = O_P(n^{−1/2}(log n)^{(s₀+1)/2}) with no event on the packing, so for S1 the rate is √(log n/n)·min{|𝒲(m)|, (log n)^{s₀/2}}.")
+
+
+# ---- regroup the rows added at the fifth/sixth fetch so each family sits under its own section heading -------------
+_i0 = next(i for i, _r in enumerate(ROWS) if _r["id"] == "PXN-LemmaTr")
+_head, _tail = ROWS[:_i0], ROWS[_i0:]
+_order = ["PXN-", "VMASK-", "VPGD-", "OBG-", "FAV-", "OWS-", "B2E-"]
+_out = []
+for _p in _order:
+    _out += [_r for _r in _tail if _r["id"].startswith(_p)]
+_rest = [_r for _r in _tail if not any(_r["id"].startswith(_p) for _p in _order)]
+ROWS[:] = _head + _out + _rest

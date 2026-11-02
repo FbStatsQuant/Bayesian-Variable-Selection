@@ -2,7 +2,7 @@
 
 Built by S-REGISTRY on 2026-11-02 from `REGISTRY.md`. **Rule** (strict): author status **PROVED** (not PROVED-UNDER) **and** same-family verdict VERIFIED (or VERIFIED after repair) **and** cross-family verdict VERIFIED (or VERIFIED with qualification). Items whose cross-family verdict is GAP/ERROR qualify only through a written repair (§2: W6-FIXREV1/2, same-family, not re-reviewed). This file lists candidates; it does not adopt, lock or upgrade anything, and VERIFIED here is a referee verdict on the stated hypotheses (the table's *Qualification* column must travel with the statement).
 
-**Counts:** 29 strict candidates · 1 repaired by W6 but not re-reviewed · 53 same-family-only · 8 cross-family-only · 5 counterexamples confirmed by both · 1 conditional implications verified by both.
+**Counts:** 32 strict candidates · 1 repaired by W6 but not re-reviewed · 67 same-family-only · 9 cross-family-only · 6 counterexamples confirmed by both · 1 conditional implications verified by both.
 
 ## 1. Strict candidates
 
@@ -36,6 +36,9 @@ Built by S-REGISTRY on 2026-11-02 from `REGISTRY.md`. **Rule** (strict): author 
 | `LemmaS-ineq` | Thm 5 (b1′) | W1-T38E · REPORT.md · Lemma S (ESS share inequality) | W3-VT38E · REPORT.md verdict table Lemma S VERIFIED (300,000 cases) | A-REV1 · REVIEW.md §2 Lemma S ESS share inequality VERIFIED | ESS ≥ eH |
 | `D2` | Thm 5 (b1′) | W1-T38E · REPORT.md · Theorem D2 | W3-VT38E · REPORT.md verdict table Theorem D2 VERIFIED after the r* repair (NB′ weaker event) | A-REV1 · REVIEW.md §2 Theorem D2 with r*=(11+2√10)/9 VERIFIED as a finite uninterrupted-pilot bound | SR; x°ΔS₀={j}; π₀(x°) ≥ b > 1/10; Dep; NB′ (statistical instance unproved for any masked family) |
 | `E3-core` | Thm 5 (b1) | W1-T38E · REPORT.md · Theorem E3 (i),(iii) and cost | W3-VT38E · REPORT.md verdict table Theorem E3 VERIFIED | A-REV1 · REVIEW.md §2 Theorem E3 core deterministic implication VERIFIED with centre scoring, completed scans, +1 centre evaluation in the score count | TD′ on the greedy region; T27-H3 constant > ½; LS0 emits its centre |
+| `LemmaRO` | Thm 4 / Prop 2 (run/output split) | W2-BOOK · REPORT.md §2 · Lemma RO | W5-LOCKBOOK · REPORT.md verdict tables (W2-BOOK): CORRECT; 𝒪 = 𝒢ᶜ ∩ 𝒪̄ verified in code | A-REV4 · BOOK_CHECK.md 'RO: VERIFIED' for statistics extended by zero off their availability events; the potential statistic must be nonnegative (and bounded) on all of Ō, and RO gives no equality conditional on completion | GUARD (implementation fact: stop-only coupling) |
+| `Prop2(c)` | Prop 2 | W2-BOOK · REPORT.md §2 · Prop. 2 (c) | W5-LOCKBOOK · REPORT.md verdict tables: CORRECT; ¾Cov/Z = 0.130481, relative bias −0.131716 reproduced to 10⁻⁵⁸ | A-REV4 · BOOK_CHECK.md: island identity VERIFIED, E_C[Z̄P̄] − Z·PIP = −¾Cov_C(Z₁,P₁); strict bound −0.1275Z follows from the locked < −0.17 primary bias | — |
+| `Prop1-T07` | Prop 1 | W2-BOOK · REPORT.md §2 · Prop. 1 (T07 + T06(i); (i′),(iii′) new) | W5-LOCKBOOK · REPORT.md verdict tables: (i′) sharpness CORRECT; (iii′) certificate CORRECT with amendment 'strict beyond numerical error' | A-REV4 · BOOK_CHECK.md: the sharp size-prior construction and its strict same-size certificate are sound; but see ERROR B5 on the data paragraph (claim Prop1-wrongHPM) | locked parts (T07(i)–(iii), T06(i)(a)); size-prior retuning can still move different-size errors |
 | `T38-(0)` | Thm 5 (0) / Thm 4 | W4-T38FULL · REPORT.md §2 · Theorem 5 (0) (= W1-T38E T38(b)-R composition) | W3-VT38E T38(b)-R composition VERIFIED; W4-T38FULL re-derives the strict-maximiser step | A-REV1 §7.4 repaired composition proof VERIFIED (same set argument as locked T21(C1)). Scope: A-REV1 reviewed W1-T38E's T38(b)-R, not W4-T38FULL (W6-FIXREV1 §3.1); the printed T38(b)-R as a whole is GAP; fixed by W6-FIXREV1's T38 files | GUARD, EX-A, EX-S, CAL, SR; (P): δ₁ → 0 (T03) |
 
 ### Strict candidates grouped by paper target
@@ -53,6 +56,9 @@ Built by S-REGISTRY on 2026-11-02 from `REGISTRY.md`. **Rule** (strict): author 
 - **supplement; Thm 4 route (e-M)**: `CorB-M`
 - **Thm 5 (b1′)**: `LemmaS-ineq`, `D2`
 - **Thm 5 (b1)**: `E3-core`
+- **Thm 4 / Prop 2 (run/output split)**: `LemmaRO`
+- **Prop 2**: `Prop2(c)`
+- **Prop 1**: `Prop1-T07`
 - **Thm 5 (0) / Thm 4**: `T38-(0)`
 
 Caveats that apply to the whole list: every proof is asymptotic or conditional on its stated hypotheses; none speaks to the n = 200 numbers (F-REFINE ARCHITECTURE §6–§7); implementation facts (GUARD, SR, emit_centre) are not audited theorems.
@@ -85,16 +91,22 @@ These satisfy the rule through its "or repaired" clause, but the repair has **no
 | `LemmaB-T38E` | Thm 5 (supplement) | W3-VT38E · REPORT.md verdict table Lemma B VERIFIED (deterministic; 3,255 cases) | cross-family review pending |
 | `D1` | Thm 5 (supplement) | W3-VT38E · REPORT.md verdict table Theorem D1 VERIFIED | cross-family review pending |
 | `E1-T38E` | Thm 5 (supplement) | W3-VT38E · REPORT.md verdict table Prop. E1 VERIFIED (deterministic); margin = PROOF SKETCH | cross-family review pending |
-| `LemmaRO` | Thm 4 / Prop 2 (run/output split) | W5-LOCKBOOK · REPORT.md verdict tables (W2-BOOK): CORRECT; 𝒪 = 𝒢ᶜ ∩ 𝒪̄ verified in code | cross-family review pending |
-| `Prop2(a,b,d,e)` | Prop 2 | W5-LOCKBOOK · REPORT.md verdict tables: CORRECT (T12(iii); output level; exact branch contributes 0) | cross-family review pending |
-| `Prop2(c)` | Prop 2 | W5-LOCKBOOK · REPORT.md verdict tables: CORRECT; ¾Cov/Z = 0.130481, relative bias −0.131716 reproduced to 10⁻⁵⁸ | cross-family review pending |
-| `Prop1-T07` | Prop 1 | W5-LOCKBOOK · REPORT.md verdict tables: (i′) sharpness CORRECT; (iii′) certificate CORRECT with amendment 'strict beyond numerical error' | cross-family review pending |
 | `Thm4-C1` | Thm 4 | W5-LOCKBOOK · REPORT.md verdict tables: (C1′), routes (a), (d) CORRECT, needs the convention 𝒢 ⊆ U (stopped fits return an incomplete HPM, G1) | cross-family review pending |
 | `RO-splits` | supplement | W5-LOCKBOOK · REPORT.md verdict tables: T11(iii), T14(i), T15, T25(iv), T31, T34 edits CORRECT; T23(ii-d) output corollary GAP (false on the exact branch; restrict to SMC branch) | cross-family review pending |
 | `T34-(v)` | supplement | W5-LOCKBOOK · REPORT.md verdict tables: split edit for T34 CORRECT | cross-family review pending |
 | `T26-Lemma1` | Thm 6 | W5-LOCKBOOK · REPORT.md verdict tables (W2-T26): CORRECT (grid check 66/66) | cross-family review pending |
 | `T26-Lemmas2-3` | Thm 6 | W5-LOCKBOOK · REPORT.md verdict tables: CORRECT, including the flagged Lemma 3 step (T15 at a terminal-round prefix = T12(i.b)) | cross-family review pending |
 | `T26-ThmA` | Thm 6 | W5-LOCKBOOK · REPORT.md verdict tables: CORRECT; (A-0) constants 3x/27x/108x checked; OUT verified in code | cross-family review pending |
+| `PXN-P1` | Thm 2 (v) / Thm 5 (b1-LH-iid) | W5-VMASK · REPORT.md verdict table rows 8, 8′: VERIFIED given cited C1; margin condition is sufficient not necessary; partition = groups in 213/216 in-family replicates (misses at n ≤ 400 or ψ = 0.69) | cross-family review pending |
+| `PXN-P2` | Thm 2 (v) / Thm 5 (b1-LH-iid) | W5-VMASK · REPORT.md verdict table row 9: VERIFIED given C1 | cross-family review pending |
+| `PXN-LemmaB` | Thm 2 (v) / Thm 5 (b1-LH-iid) | W5-VMASK · REPORT.md verdict table rows 1–3′: Lemma B(i),(ii),(iii) VERIFIED (re-derived; 16 KS tests pass, negative controls rejected at p ≈ 0); also needs only the LH population identities, not \|ψ\|<ρ | cross-family review pending |
+| `PXN-P3` | Thm 2 (v) / Thm 5 (b1-LH-iid) | W5-VMASK · REPORT.md verdict table row 7: VERIFIED (T22(i) bound ≤ π₀(S°) in 236/236 replicates) | cross-family review pending |
+| `PXN-P4` | Thm 2 (v) / Thm 5 (b1-LH-iid) | W5-VMASK · REPORT.md verdict table row 10: VERIFIED (Mstat medians approach the limit from below; lag = log π₀(S°)) | cross-family review pending |
+| `PXN-P5` | Thm 2 (v) / Thm 5 (b1-LH-iid) | W5-VMASK · REPORT.md verdict table row 11: VERIFIED (mode = S° in 195/216; misses at n ≤ 400) | cross-family review pending |
+| `PXN-P6` | Thm 2 (v) / Thm 5 (b1-LH-iid) | W5-VMASK · REPORT.md verdict table rows 14, 15: VERIFIED (D_S > 0 at all lattice states in 105/110; 5 failures at n ≤ 400); (L) failure formula VERIFIED, 4%/1.2% quoted are for s₀ = 5 (R4) | cross-family review pending |
+| `PXN-P8` | Thm 2 (v) / Thm 5 (b1-LH-iid) | W5-VMASK · REPORT.md verdict table row 18: VERIFIED | cross-family review pending |
+| `PXN-Cor` | Thm 2 (v) / Thm 5 (b1-LH-iid) | W5-VMASK · REPORT.md verdict table row 19: composition via LS0 VERIFIED for every c; the no-LS0 branch (c = 1) rests on R1 (unverified) | cross-family review pending |
+| `PXN-P7` | Thm 5 (b1′) | W5-VMASK · REPORT.md verdict table rows 16, 17: D2-a, D2-b, D2-c VERIFIED; D2-d (NB) GAP (fixable) → proof written in W5-VMASK REPAIRS R1 (single run, unverified) | cross-family review pending |
 | `PGD-L1.1` | Thm 3 (asymptotic clause) | W5-VPGD · REFEREE.md §1 Lemma 1.1 VERIFIED | cross-family review pending |
 | `PGD-L1.2` | Thm 3 (asymptotic clause) | W5-VPGD · REFEREE.md §1 Lemma 1.2 VERIFIED | cross-family review pending |
 | `PGD-L1.3` | Thm 3 (asymptotic clause) | W5-VPGD · REFEREE.md §1 Lemma 1.3 VERIFIED | cross-family review pending |
@@ -112,11 +124,11 @@ These satisfy the rule through its "or repaired" clause, but the repair has **no
 | `PGD-LS` | Thm 3 (asymptotic clause) | W5-VPGD · REFEREE.md §3 Lemma S VERIFIED (constant not sharp; W5-VPGD STAR.md proves a sharpening ★′) | cross-family review pending |
 | `PGD-LA′` | Thm 3 (asymptotic clause) | W5-VPGD · REFEREE.md §4 Lemma A′ VERIFIED | cross-family review pending |
 | `PGD-CorW′` | Thm 3 (asymptotic clause) | W5-VPGD · REFEREE.md §4 Cor. W′(i),(ii) VERIFIED; random designs under (H3) GAP (G2/G3) | cross-family review pending |
-| `ThmW` | Thm 3 (asymptotic clause) | W5-VPGD · REFEREE.md §4: Theorem W VERIFIED (m ≥ 1 part, m = 0 part and (L), data-dependent centres); 'up to exact ties' inherited from W1-T37R Lemma 0(c) | cross-family review pending |
-| `LS-score` | Thm 3 / Thm 5 (b1) | W4-T38FULL · REPORT.md §6a: fresh same-family subagent VERIFIED (not an independent run) | cross-family review pending |
-| `LemmaM` | Thm 5 (b1) | W4-T38FULL · REPORT.md §6a: same-family subagent VERIFIED | cross-family review pending |
-| `LH-LAT` | Thm 3 (part C) / Thm 5 (b1-LH) | W4-T38FULL · REPORT.md §6a: same-family subagent VERIFIED (20 brute-force cases, m₀ sharp) | cross-family review pending |
-| `T38-b1-LH` | Thm 5 (b1-LH) | inputs VERIFIED by W3-VEXP; assembly by W4's same-family subagent; no independent assembly review | cross-family review pending |
+| `ThmW` | Thm 3 (asymptotic clause) | W5-VPGD · REFEREE.md §4 and W5-VPGD REPORT.md §2: Theorem W VERIFIED (no ERROR in any step); four minor GAPs repaired in REPAIRS R1–R4, status after repair PROVED (candidate), one same-family referee pass; region form does not cover masked families (R6.1) | cross-family review pending |
+| `LS-score` | Thm 3 / Thm 5 (b1) | W5-VMASK · REPORT.md verdict table row 20: VERIFIED by an independent run (code facts confirmed in v3_engine.h); IMPL caveat: LS0 must pass emit_centre = true (row 25) | cross-family review pending |
+| `LemmaM` | Thm 5 (b1) | W5-VMASK · REPORT.md verdict table row 21: VERIFIED (every inequality; Lemma M needs λ_min only on A) | cross-family review pending |
+| `LH-LAT` | Thm 3 (part C) / Thm 5 (b1-LH) | W5-VMASK · REPORT.md verdict table rows 23, 23″, 24: validity VERIFIED (m₀ ≤ brute-force margin in 202/202 settings; algebra needs only \|ψ\|<1); 'm₀ is sharp' GAP (overstatement): sharp in 108/108 homogeneous, not sharp in 32/94 heterogeneous, down to ×0.002 | cross-family review pending |
+| `T38-b1-LH` | Thm 5 (b1-LH) | W5-VMASK · REPORT.md verdict table rows 20–24 and §9: LS-score, Lemma M, Thm b1, LH-LAT assembly VERIFIED by W5-VMASK (independent run) | cross-family review pending |
 | `SHARE-D4` | Thm 5 (b2) | W5-B2ENV · REFEREE.md verdict table: D4 Steps 1–5 VERIFIED; citation GAP only (conditional-iid step should cite IND-T/Lemma S of W2-PREM) | cross-family review pending |
 | `SHARE-D5` | Thm 5 (b2) | W5-B2ENV · REFEREE.md verdict table: D5 bound (2.1), consequence and Remarks 2–3 VERIFIED | cross-family review pending |
 | `SHARE-G` | Thm 5 (b2) | W5-B2ENV · REFEREE.md verdict table: Prop. G VERIFIED as an upper bound; wording GAP: it is not 'grid independence' of Γ | cross-family review pending |
@@ -124,6 +136,14 @@ These satisfy the rule through its "or repaired" clause, but the repair has **no
 | `SHARE-X` | Thm 5 (b2) | W5-B2ENV · REFEREE.md verdict table: Prop. X main inequality VERIFIED; 'Moreover' clause GAP (needs a visit-form rate and an independence-proposal term N(T+L+4)π₀(S₀)); 'Use' clause GAP (calibration and final search not bounded) | cross-family review pending |
 | `SHARE-M(a)` | Thm 5 (b2) | W5-B2ENV · REFEREE.md verdict table: Prop. M(a) VERIFIED (20,000 random instances, 0 violations) | cross-family review pending |
 | `SHARE-PD` | Thm 5 (b2) | W5-B2ENV · REFEREE.md verdict table: Lemma PD identity VERIFIED; 'a takeover needs these two premises' is a mean-field heuristic | cross-family review pending |
+| `ADRAFT-ThmA` | none (original-draft track) | A-REV4 DRAFTS_CHECK §A-DRAFT §2 (Astra checking Astra's A-DRAFT: independent of the author's run, NOT cross-family relative to it): VERIFIED under the potential-run and premise qualifications (finite-state induction; LLN/MSE only, no CLT or growing-dimension rate) | cross-family review pending |
+| `ADRAFT-CorA1` | none (original-draft track) | A-REV4 DRAFTS_CHECK §A-DRAFT §2 (Astra checking Astra's A-DRAFT: independent of the author's run, NOT cross-family relative to it): Corollary A1 follows from locked T12 §3(i.a–c); pooled product bias −¾Cov(Ẑ₁, μ̂₁) checked | cross-family review pending |
+| `ADRAFT-uniPIP` | none (original-draft track) | A-REV4 DRAFTS_CHECK §A-DRAFT §2 (Astra checking Astra's A-DRAFT: independent of the author's run, NOT cross-family relative to it): D7 checked (elementary detailed balance; no p-union-bound loss); does not prove output availability → 1 | cross-family review pending |
+| `ADRAFT-ThmD` | none (original-draft track) | A-REV4 DRAFTS_CHECK §A-DRAFT §2 (Astra checking Astra's A-DRAFT: independent of the author's run, NOT cross-family relative to it): Theorem D checks conditional on (P1), OUT and successful calibration; (P1) itself not proved for masked starts | cross-family review pending |
+| `ADRAFT-CorD1` | none (original-draft track) | A-REV4 DRAFTS_CHECK §A-DRAFT §2 (Astra checking Astra's A-DRAFT: independent of the author's run, NOT cross-family relative to it): Corollary D1's boundedness/continuity/contraction argument valid | cross-family review pending |
+| `PXN-LemmaTr` | Thm 5 (b1-LH-iid) | W5-VMASK · REPORT.md verdict table rows 4, 5: VERIFIED | cross-family review pending |
+| `PXN-LemmaLambda` | Thm 5 (b1-LH-iid) | W5-VMASK · REPORT.md verdict table row 13: VERIFIED (brute-force Δ agrees) | cross-family review pending |
+| `PXN-LemmaU` | Thm 5 (b1-LH-iid) | W5-VMASK · REPORT.md verdict table row 12: VERIFIED; ERROR (cosmetic) in (U1), see PXN-LemmaU-U1 | cross-family review pending |
 
 ### 3b. Cross-family VERIFIED but no independent same-family check (author = verifier, or no verifier run)
 
@@ -137,6 +157,7 @@ These satisfy the rule through its "or repaired" clause, but the repair has **no
 | `LemmaF′` | supplement | A-REV1 · REVIEW.md §2 Lemma F′ VERIFIED | authored by W2-VT24G (the verifier) |
 | `B1′/B2′-VT24G` | supplement | A-REV1 · REVIEW.md §2 B1′/B2′ scoring refinements VERIFIED with empty-supremum convention | authored by W2-VT24G (the verifier) |
 | `LemmaE` | supplement | A-REV1 · REVIEW.md §2 W2's Lemma E correct | authored by W2-VT24G (the verifier) |
+| `FD-W1` | none (original-draft track) | A-REV4 · DRAFTS_CHECK.md 'F-DRAFT W1: VERIFIED' (block-diagonal G, H; d = 0 iff at most one block has signal; with known common variance the globally prior-coupled start equals the posterior, including the cap; not a product of local posteriors) | none |
 
 ### 3c. Counterexamples confirmed by a same-family verifier and by A-REV1/A-REV2 (candidates for locking as negative results)
 
@@ -147,6 +168,7 @@ These satisfy the rule through its "or repaired" clause, but the repair has **no
 | `CEX1` | At d = 0 literal strict TD can hold while the best addition from ∅ has negative gain: positivity is missing, so the original T37(i) is false even at d = 0. | authored by W3-VT37R; reproduced in-run | A-REV2 · REVIEW.md §2 §4.1 independently reproduced (gain −2.2977998984) |
 | `CEX2` | A search can start below S₀, climb to a superset and certify it: a final-search failure does not imply the initial centre already beat S₀. | authored by W3-VT37R; production rerun 233/234 | A-REV2 · REVIEW.md §2 §4.2 independently reproduced (−2.2862503005, +7.2109846558) |
 | `CE1` | At boundary states a look-alike of a missing truth exits with probability ≥ (1−o(1))/(B+d+4), so H24's uniform exit input cannot be discharged. | W2-VT24G · REPORT.md verdict table CONFIRMED (MC 0.62–0.98 in S2–S6; exact lower bound ≥ 0.39); wording GAP: 'H24's asymptotic input (L+4)η_n → 0 is false' | A-REV1 · REVIEW.md §2 deterministic exit lower bound and finite obstruction VERIFIED; broad asymptotic wording GAP |
+| `CEX-guard` | A guard that stops 0.22% of runs makes E[Ẑ \| output] = 0.974Z: unbiasedness does not survive conditioning on completion. | W5-LOCKBOOK · REPORT.md verdict tables: CONFIRMED, reproduced exactly; also under the engine-faithful cost rule (bias can be upward) | A-REV4 · BOOK_CHECK.md: 'path-dependent stopping can invalidate conditional unbiasedness' VERIFIED qualitatively by an analytic example; BOOK's cost example is stylised and does not establish the size or direction of production bias |
 
 ### 3d. Conditional theorems (PROVED-UNDER) whose implication is verified by both families
 
@@ -156,6 +178,6 @@ These satisfy the rule through its "or repaired" clause, but the repair has **no
 
 ### 3e. Headline items with NO verification at all (author only)
 
-`PropD′-T03`, `LemmaA1`, `V1-TDfails`, `PropD-dilution`, `PropT2-PREM`, `NL0(0)/UDEL(1)`, `NL0(a)/UDEL(a≥2)`, `B1′-PREM+PA`, `TS`, `FS/TL♯/ULR`, `ThmB♯`, `IND-M`, `CorA-PREM`, `T32(i)`, `PXN-P1`, `PXN-P2`, `PXN-LemmaB`, `PXN-P3`, `PXN-P4`, `PXN-P5`, `PXN-P6`, `PXN-P8`, `PXN-Cor`, `PXN-P7`, `Lemma-STREAM`, `Impl-lemmas`, `ADRAFT-ThmA`, `ADRAFT-CorA1`, `ADRAFT-uniPIP`, `ADRAFT-ThmD`, `ADRAFT-CorD1`, `ADRAFT-v3exact`, `ADRAFT-SMCcomp`, `FD-W0`, `FD-W1`, `FD-W2`, `FD-W(a)`, `FD-W″-two`, `FD-NM`, `FD-P`, `FD-H`, `OCERT-LemmaM`, `OCERT-C1`, `OCERT-C2`, `OCERT-C3`, `OCERT-C4`, `OCERT-C5`, `OCERT-C6`, `OSWAP-L0`, `OSWAP-P1`, `OSWAP-P2`, `OSWAP-P3`, `OSWAP-T4`, `OSWAP-P5`, `W6F1-PropU′`, `W6F1-ThmB-conv`, `W6F1-LemmaP`, `W6F1-LemmaS′`, `W6F1-D2inf`, `W6F1-E3′`, `W6F1-LemmaU′`, `W6F1-NL0′`, `W6F1-CE1′`, `W6F1-T38`, `W6F2-LemmaT`, `W6F2-LemmaNT`, `W6F2-Lemma0′`, `W6F2-PropF`, `W6F2-ThmA′`, `W6F2-rest`
+`PropD′-T03`, `LemmaA1`, `V1-TDfails`, `PropD-dilution`, `PropT2-PREM`, `NL0(0)/UDEL(1)`, `NL0(a)/UDEL(a≥2)`, `B1′-PREM+PA`, `TS`, `FS/TL♯/ULR`, `ThmB♯`, `IND-M`, `CorA-PREM`, `T32(i)`, `Lemma-STREAM`, `Impl-lemmas`, `ADRAFT-v3exact`, `ADRAFT-SMCcomp`, `FD-W0`, `FD-W(a)`, `FD-W″-two`, `FD-P`, `FD-H`, `OCERT-LemmaM`, `OCERT-C1`, `OCERT-C2`, `OCERT-C3`, `OCERT-C4`, `OCERT-C5`, `OCERT-C6`, `OSWAP-L0`, `OSWAP-P1`, `OSWAP-P2`, `OSWAP-P3`, `OSWAP-T4`, `OSWAP-P5`, `W6F1-PropU′`, `W6F1-ThmB-conv`, `W6F1-LemmaP`, `W6F1-LemmaS′`, `W6F1-D2inf`, `W6F1-E3′`, `W6F1-LemmaU′`, `W6F1-NL0′`, `W6F1-CE1′`, `W6F1-T38`, `W6F2-LemmaT`, `W6F2-LemmaNT`, `W6F2-Lemma0′`, `W6F2-PropF`, `W6F2-ThmA′`, `W6F2-rest`, `VMASK-R1-NB`, `VPGD-R0`, `VPGD-R1`, `VPGD-R2`, `VPGD-R3`, `VPGD-PropT`, `VPGD-WLat`, `VPGD-equiv`, `VPGD-LH-PGD`, `VPGD-PropS′`, `OBG-LemmaR`, `OBG-BG1`, `OBG-CorBG1inf`, `OBG-LH-P1`, `FAV-LemmaX`, `FAV-LemmaBp`, `FAV-LemmaTrp`, `FAV-LemmaM`, `FAV-LemmaS`, `FAV-LemmaG`, `FAV-ThmA`, `FAV-LemmaP1p`, `FAV-ThmB`, `FAV-LemmaXminus`, `FAV-PropF`, `FAV-C1`, `FAV-C2`, `FAV-C3`, `FAV-PropB1`, `OWS-WS1`, `OWS-WS2`, `OWS-WS3`, `OWS-WS4`, `OWS-WS52`, `OWS-WS53F`, `OWS-WS53M`, `OWS-WS53N`, `OWS-WS6abc`, `OWS-WS6d`, `OWS-WS7`, `OWS-WS8abc`, `B2E-LemmaOF`, `B2E-L2.1`, `B2E-L2.2`, `B2E-NBLH`, `B2E-D2LH`, `B2E-MLH`, `B2E-LemmaJ`, `B2E-LemmaT`, `B2E-CONF`, `B2E-LemmaR1`, `B2E-B2LH`
 
-Largest holes: Thm 6 (`T26-*`), Prop 1 and Prop 2 (`Prop1-T07`, `Prop2*`, `LemmaRO`), `ThmW` and the W3-PGD lemma family, the W3-PXN family (`PXN-*`, carries the p ≫ n masked instance), W4-SHARE (`SHARE-*`).
+Largest holes: Thm 6 (`T26-*`), Prop 1 and Prop 2 (`Prop1-T07`, `Prop2*`, `LemmaRO`), `ThmW` and the W3-PGD lemma family, the W3-PXN family (`PXN-*`, carries the p ≫ n masked instance), W4-SHARE (`SHARE-*`). Since the fifth fetch the PXN, LS-score, Lemma M, Thm b1 and LH-LAT rows have a second same-family verdict (W5-VMASK) and the PGD family one (W5-VPGD), but NO cross-family review of any of them. W5-VMASK R1, the W5-VPGD repairs R0–R6, O-BGIBBS (Lemma R, BG1), W5-FAVIID and O-WSTAB are single-author candidates with no verifier.
