@@ -326,6 +326,26 @@ the realised q is within the fixed-partition range.
 with its own group's truth's *absence* leaks that truth's signal and the Beta law fails (this is the masked-regime mechanism
 of W3-PXN §13). Union-of-groups is therefore the right event, not a technical convenience.
 
+### Proposition B1 (S1: a context-free bound, unconditional in the packing) — PROVED (given [C1], [T22i])
+**Statement.** Assume FAV with **singleton groups** (Σ = I on the null columns; S1). Then, with no event on the packing,
+  1 − π₀(S₀) = O_P((s₀+1)·n^{−1/2}·(t_n/2)^{(s₀+1)/2}/Γ((s₀+3)/2)) = O_P(n^{−1/2}(log n)^{(s₀+1)/2}).
+Together with Theorem B on Q_n(m): for S1 the rate is √(log n/n)·min{|𝒲(m)|, (log n)^{s₀/2}} up to constants — 2^B-free
+either way, but with an s₀-dependent price that Theorem A does not pay.
+**Proof.** Let 𝒮 := span(X_{S₀}, Y) ⊆ range C (dimension ≤ s₀ + 1). For a null column l and any W ⊆ S₀, with
+x̃ := (C − P_W)x_l and r_W := (C − P_W)Y ∈ 𝒮: ⟨x̃, r_W⟩ = ⟨x_l, r_W⟩ = ⟨P_𝒮x_l, r_W⟩ ≤ ‖P_𝒮x_l‖‖r_W‖ and
+‖x̃‖² ≥ ‖x_l‖² − ‖P_𝒮x_l‖² (span X_W ⊆ 𝒮). Hence, **simultaneously for all W**, X′_{l,W} := X_{W,{l}} ≤ β_l/(1 − β_l) with
+β_l := ‖P_𝒮x_l‖²/‖x_l‖². Since x^r_l is independent of (X^r_{S₀}, ε) and spherical after centring, β_l ~ Beta((s₀+1)/2,
+(n − s₀ − 2)/2) exactly (Lemma B′'s argument with E = range C and the fixed (s₀+1)-plane 𝒮). In S1 every group is a single
+column, so in the factorisation of Theorem B's proof D′_{l,W} = (n+1)^{−1/2}(1 − X′_{l,W})^{−ν} ≤ D″_l :=
+(n+1)^{−1/2}(1 − β_l/(1−β_l))^{−ν} for every W, and the factorisation (which needs only Q_n, automatic for singletons,
+and (G3) for singletons) gives q ≤ e^{κ̄_n+ζ_n}(p − s₀)^{−1}Σ_{l∉S₀}D″_l. On {β_l ≤ τ_n ∀l} (Lemma Tr′(b), j = s₀+1),
+(1 − β/(1−β))^{−ν} ≤ exp(νβ(1 + 4β)) ≤ e^{o(1)}(1 − β)^{−ν}, and Lemma Tr′(a) with j = s₀ + 1 gives
+E[D″_l1] ≤ (1+o(1))(n+1)^{−1/2}(t_n/2)^{(s₀+1)/2}/Γ((s₀+3)/2). The truth contexts no longer appear; Markov and [T22i] as in
+Theorem A (the deletion term is unchanged). ∎
+*Remark.* At s₀ = 14 the constant (t_n/2)^{7.5}/Γ(8.5) is astronomically large at any practical n; the statement is
+asymptotic only. The realised truth contexts in S1 are small (REPORT §4.2: at most 2–3 truths share a block), where
+Theorem B's |𝒲(m)| ≤ 106 is the relevant constant.
+
 ---------------------------------------------------------------------------------------------------------
 
 ## 10. Sharp first-order constant (why the bound is within a factor ≈ 7 of the truth) — PROOF SKETCH
