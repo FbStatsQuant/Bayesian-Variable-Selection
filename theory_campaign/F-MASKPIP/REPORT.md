@@ -29,8 +29,10 @@ helper run are in `scripts/` and `results/` (see §4 and `results/SIM_NOTES.md`)
    underestimates Z there by a factor ≥ δ₁^{−1/2} → ∞ (≥ (n/log n)^{1/4} under T03's rate), while T31(i)'s 95% lower
    bound stays valid and becomes uninformative. (b) On an omission-masked (LH-type) family with the one-stage grid
    T = 1, Ẑ_r/Z ≤ e^{−Θ(n)} with probability → 1, and the terminal Gibbs path still repairs the population, so the
-   PIPs are consistent: **evidence and PIPs separate completely.** Independent corroboration: W4-SHARE's PB design
-   (delivery 200/200 islands, median log Ẑ/Z = −67).
+   PIPs are consistent: **evidence and PIPs separate completely.** Confirmed numerically at p = 18 (§4.1, 3,840
+   island-runs): with a one-stage or a blind restricted-ESS grid, median log Ẑ_r/Z = −4 to −12 while the island PIP
+   error equals the exact posterior's to four digits and the MPM is right in 100% of runs; (I2) and (I3) = (M1-c)
+   hold in every run. Independent corroboration: W4-SHARE's PB design (delivery 200/200 islands, median log Ẑ/Z = −67).
 5. **Why they separate (Proposition W4, F-DRAFT).** Ẑ is an L²/χ² object along the bridge (one-step ESS
    1/(1+χ²(π‖π₀)) ≥ … ≥ π₀(S₀)/π(S₀)², i.e. ≈ 10⁻¹² at the study scale), the PIPs are an L¹/occupancy object (the
    fraction of particles at S₀ in the measured rounds, a TV-type quantity the terminal kernel can fix). W4 shows the
@@ -231,9 +233,53 @@ Already on record from other branches (not produced here):
 - THEORY_PRIORITIES §5 (n = 200, p ∈ {500, 1000}, 2,400 fits): median π₀(S₀) ≲ 10⁻¹², median π₀(𝓡₂) ≈ 0.8; all
   misses posterior misses.
 
-### 4.1 Helper simulation (filled in from `results/SIM_NOTES.md`)
+### 4.1 Helper simulation (Opus 5.5 helper; `results/SIM_NOTES.md`, `results/masked_sim.jsonl`, `scripts/masked_sim.py`)
 
-(see end of file; appended when the helper reported)
+Exact scores at p = 18 (B = 4, s₀ = 3), data seed 0, two masked designs (`masked`: corr(x₃,x₀) = 0.6, β₃ = −0.6;
+`masked8`: corr 0.8, β₃ = −0.8, zero population covariance of x₃ with μ), n ∈ {640, 5120}, N ∈ {2500 (20 reps),
+50 (40 reps)}, 4 islands per rep, three frozen grids: G1 one stage φ = (0,1); G2 the ideal full-space ESS grid
+(T = 10 at n = 640, 20–21 at n = 5120); G3 a "blind" grid bisecting the ESS restricted to the states V of one pilot of
+N π₀ draws (S₀ ∉ V in every setting). 24 settings, 3,840 island-runs. All seeds fixed.
+
+**Inequalities.** (I2) = T23(ii-a,b) pathwise: max over all island-runs of err_r − (B̄_r + u_π) is −0.047 (never
+positive). (I3) = (M1-c): E[W_r err_r] ≤ δ₁ + ρ̄ + u_π holds in all 24 settings; the closest is 0.069 against 0.372
+(masked, n = 640, N = 50, G1). (I1) = (M2-e): the left side was identically 0, because **no island ever had f_r > ½**
+(max 0.44): at p = 18 the stage-T round, which is at φ = 1, already puts 56–80% of the particles on S₀ even when
+π₀(S₀) ≈ 10⁻³⁶ or 10⁻⁴⁸. So (M2-a) was not tested; it needs a design where the φ = 1 round fails to deliver.
+
+**The split.** Selected rows (medians of log W_r; island PIP error vs exact-posterior PIP error; "split islands" :=
+W_r < 0.05 and err_r < 0.10):
+
+| design | n | N | grid | T | median log W_r | q05–q95 | mean f_r (end T) | island PIP err | exact PIP err | MPM correct | split islands |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| masked | 640 | 2500 | G1 | 1 | −4.32 | −4.37, +1.19 | 0.204 | 0.0391 | 0.0391 | 100% | 56/80 |
+| masked | 5120 | 2500 | G1 | 1 | −5.88 | −11.7, −4.78 | 0.217 | 0.0067 | 0.0067 | 100% | 80/80 |
+| masked | 5120 | 50 | G1 | 1 | −11.7 | −11.7, −11.6 | 0.257 | 0.0067 | 0.0067 | 100% | 158/160 |
+| masked8 | 5120 | 2500 | G1 | 1 | −10.8 | −10.8, −10.8 | 0.256 | 0.0094 | 0.0094 | 100% | 79/80 |
+| masked | 5120 | 2500 | G2 | 20 | −0.007 | −0.052, +0.039 | 0.037 | 0.0067 | 0.0067 | 100% | 0/80 |
+| masked8 | 5120 | 2500 | G2 | 21 | −0.002 | −0.032, +0.048 | 0.049 | 0.0094 | 0.0094 | 100% | 0/80 |
+| masked | 5120 | 2500 | G3 | 10 | −5.13 | −5.29, −4.56 | 0.142 | 0.0067 | 0.0067 | 100% | 76/80 |
+| masked8 | 5120 | 2500 | G3 | 1 | −10.8 | −10.8, −10.8 | 0.256 | 0.0094 | 0.0094 | 100% | 80/80 |
+| masked8 | 5120 | 50 | G3 | 1 | −10.8 | −10.8, −10.7 | 0.262 | 0.0094 | 0.0094 | 100% | 160/160 |
+
+Readings.
+- **One-stage grid (G1):** the evidence collapses by e^{4}–e^{12} (N-c's mechanism: W_r = q̂₀(e^d)/E_{π₀}e^d with no
+  S₀-basin draw), while the island PIP error equals the exact posterior's to four digits and the MPM is always right.
+  The repair is done by the single stage-T round at φ = 1 plus the L terminal rounds (Theorem R with 𝔛 = the start
+  basin, β small; W1-T24G's measured per-round progress).
+- **Blind restricted-ESS grid (G3):** at n = 5120 the pilot set V (3–29 states, never containing S₀) makes the
+  restricted ESS rule either jump straight to φ = 1 (T = 1, masked8) or stop at T = 10 instead of 20 (masked), and
+  the evidence collapses as under G1 (median log W_r −5.1 to −10.8) with exact PIPs. This is the T13(iii) blindness
+  that (N-c)'s caveat asked about, realised at p = 18 with a one-pilot proxy of the method's candidate set. At
+  n = 640, G3 ≈ G2 (log W_r ≈ 0).
+- **Full-space grid (G2):** no collapse (|median log W_r| < 0.03 at N = 2500), as in W2-T26 §7.
+- **Unbiasedness is carried by rare islands:** in collapsed settings the top 5% of islands hold 99–100% of ΣW_r; in
+  masked8 n = 5120 N = 50 none of 160 islands carried it (mean W_r = 2·10⁻⁵). This is M3 in action: E W_r = 1 while
+  the typical W_r is e^{−11}.
+- The 95% lower bound 0.05Ẑ_r is valid in every run and off by a factor ≈ 20·e^{5…11} in the collapsed settings.
+
+What the simulation does **not** show: a non-crossing population at the end of stage T (hence no test of (M2-a)),
+and nothing about p ≫ n or about the method's actual calibration (G3 is a proxy with one pilot of size N).
 
 ## 5. What fails and why
 
