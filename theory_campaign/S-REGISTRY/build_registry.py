@@ -45,7 +45,7 @@ LEVELS = [
 
 
 def is_referee_authored(row):
-    return row["st"] == "REFEREE" or row["id"].endswith("(A2)")
+    return row["st"] == "REFEREE" or row["id"].endswith("(A2)") or row["id"].endswith("(A4)")
 
 
 def level(row):
@@ -99,6 +99,7 @@ SECTIONS = [
     ("OBG-LemmaR", "New results: bridge-Gibbs discovery, T38(b) without LS0 (O-BGIBBS; unreviewed)"),
     ("FAV-LemmaX", "New results: 2^B-free favourable rate on iid block-diagonal designs (W5-FAVIID REPORT.md / PROOF.md; author only)"),
     ("OWS-WS1", "New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)"),
+    ("CEX-W2frac(A4)", "Referee-supplied items (A-REV4)"),
     ("B2E-LemmaOF", "New results: no-method-change masked theorems on LH (W5-B2ENV PROOF.md; author only)"),
     ("W6F1-PropU′", "Repair drafts (W6-FIXREV1 CONSOLIDATED.md, W6-FIXREV2 STATEMENTS.md; not reviewed)"),
 ]
@@ -206,7 +207,8 @@ NOTES = {
     "theory/A-DRAFT": "full REPORT.md read (Astra; original-draft track).",
     "theory/F-DRAFT": "no REPORT.md; CROSSWALK.md and NEW_TARGETS.md (summary table of statuses) read as its statements file.",
     "theory/F-SHARE": "BRIEF.md only (no results).",
-    "theory/A-REV4": "BOOK_CHECK.md and DRAFTS_CHECK.md read (cross-family; scope per LEDGER: W2-T26, W2-BOOK/Lemma RO, F-DRAFT, A-DRAFT §2; the W2-T26 verdict file had not landed).",
+    "theory/A-REV4": "REVIEW.md (verdict table, §§1–7), BOOK_CHECK.md, DRAFTS_CHECK.md and NUMERICS.md read (GPT-6 Astra; Owls numerics reported; covers W2-T26, W2-BOOK, F-DRAFT, A-DRAFT §2).",
+    "theory/O-PW2": "scripts only (exact small-p PW2 script); no report yet.",
     "theory/O-BGIBBS": "REPORT.md read (new at the fifth fetch; §4.1 simulation results still to be filled).",
     "theory/O-LS0": "scripts only; no REPORT.md yet (LS0 post hoc run on Owls).",
     "theory/O-WSTAB": "no REPORT.md; PROOF.md read as its statements file (theorem headers and status words only).",
@@ -389,8 +391,7 @@ for r in cond:
 w("\n### 3e. Headline items with NO verification at all (author only)\n\n")
 unv = [r for r in results if level(r) == LEVELS[5] and r["st"] in ("PROVED", "PROVED-UNDER")]
 w(", ".join("`%s`" % r["id"] for r in unv) + "\n\n")
-w("Largest holes: Thm 6 (`T26-*`), Prop 1 and Prop 2 (`Prop1-T07`, `Prop2*`, `LemmaRO`), `ThmW` and the W3-PGD lemma family, the W3-PXN family "
-  "(`PXN-*`, carries the p ≫ n masked instance), W4-SHARE (`SHARE-*`). Since the fifth fetch the PXN, LS-score, Lemma M, Thm b1 and LH-LAT rows have a second same-family verdict (W5-VMASK) and the PGD family one (W5-VPGD), but NO cross-family review of any of them. W5-VMASK R1, the W5-VPGD repairs R0–R6, O-BGIBBS (Lemma R, BG1), W5-FAVIID and O-WSTAB are single-author candidates with no verifier.\n")
+w("Largest holes (no cross-family review at the last fetch): Prop 1 and Prop 2 beyond the A-REV4 items (`Prop1-T07`, `Prop2*`: A-REV4 reviewed Lemma RO, the island identity and the Markov bound, and found GAP/ERROR items that are NOT yet repaired); `Thm4-C1`, `T21-e′`; the W3-PGD / W5-VPGD family (`ThmW`, `PGD-*`, `VPGD-*`: same-family only); the W3-PXN family and W4-T38FULL lemmas (`PXN-*`, `LS-score`, `LemmaM`, `LH-LAT`: second same-family verdict from W5-VMASK; A-REV3 had not landed); W4-SHARE (`SHARE-*`: same-family W5-B2ENV; A-REV3 not landed); and everything marked author-only in 3e: W5-VMASK R1, the W5-VPGD repairs, O-BGIBBS (Lemma R, BG1), W5-FAVIID, W5-B2ENV PROOF.md, O-WSTAB, O-CERT, O-SWAP.\n")
 open(os.path.join(HERE, "LOCKABLE.md"), "w", encoding="utf-8").write("".join(lk))
 
 print("results", len(results), "claims", len(claims), "errors", len(err_rows), "gaps", len(gap_rows))

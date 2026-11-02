@@ -1069,3 +1069,56 @@ for _p in _order:
     _out += [_r for _r in _tail if _r["id"].startswith(_p)]
 _rest = [_r for _r in _tail if not any(_r["id"].startswith(_p) for _p in _order)]
 ROWS[:] = _head + _out + _rest
+
+
+# ===============================================================================================================
+# SEVENTH FETCH: A-REV4 REVIEW.md + NUMERICS.md landed (head 34e4f48).  Reviewer: GPT-6 Astra (cross-family relative
+# to the Opus campaign; for A-DRAFT it is Astra checking Astra).  Overall verdict GAP.  Where REVIEW.md's table is
+# weaker than BOOK_CHECK/DRAFTS_CHECK (Sol helpers), the weaker verdict is used.
+# ===============================================================================================================
+AR4 = "A-REV4 · REVIEW.md verdict table"
+
+# ---- W2-T26 (cross-family) ---------------------------------------------------------------------------------------
+upd("T26-Lemma1", cf="V|" + AR4 + ": W2-T26 Lemma 1 VERIFIED (endpoint identity, positive finite bridge, S₀ feasible)")
+upd("T26-Lemmas2-3", cf="V|" + AR4 + ": W2-T26 Lemmas 2 and 3 VERIFIED (first departure and refreshed occupancy remove the L factor)")
+upd("T26-ThmA", cf="V*|" + AR4 + ": Theorem A, actual written statement, VERIFIED (EX-A/EX-S/CAL/START/OUT, feasibility, P1 and P1-ex; output-intersected conclusion only); the advertised single-premise shorthand is GAP (P1 restricted to successful SMC says nothing on the exact branch)")
+upd("T26-ThmB", cf="V*|" + AR4 + ": Theorem B VERIFIED as a conditional composition of locked T03 and T22(iii); EXP′/VIS/NL remain assumptions")
+upd("T26-PropC", cf="G|" + AR4 + ": Proposition C GAP; retain PROOF SKETCH; A-REV4 §1 writes a proposed repair for the missing uniform probability details (see AREV4-PropC-repair)",
+    rep="proposed by A-REV4 (not written into the source), status stays PROOF SKETCH", rs="pending")
+claim("T26-shorthand", "Thm 6 (statement wording)", "W2-T26 · REPORT.md / PROOF.md 'advertised single-premise shorthand' (P1 on successful SMC)", "N|none",
+      "G|" + AR4 + ": GAP; keep P1-ex (or the global deterministic-budget Δ premise); the written theorem already does", "restore P1-ex in the shorthand", "pending",
+      "Posterior-concentration premise restricted to successful SMC is vacuous on the exact branch.")
+claim("T26-exact-branch-paren", "Thm 6 (exact-branch remark)", "W2-T26 · repeated parenthetical 'the exact branch fails whenever p ≥ 18 and n ≥ 22'", "N|none",
+      "E|" + AR4 + " §7 ERROR: false under the actual budgets (p = 18, n = 2¹⁸: K = p, 2¹⁸ states, threshold (5H₀+4N₀)p exceeds the state count, so the exact branch IS taken); fixed p eventually enumerates (regime R2)",
+      "none written (A-REV4: replace by the exact combinatorial inequality or a genuinely sufficient growth condition); Theorem A (P1-ex retained) and Theorem B (T03 supplies it) unaffected", "pending",
+      "The stated condition for when the exact branch is NOT used is wrong.")
+
+# ---- W2-BOOK: REVIEW.md table supersedes the helper-level verdicts where weaker ------------------------------------------
+upd("Prop2(a,b,d,e)", cf="G|" + AR4 + ": island identity and output Markov bound VERIFIED (event bound, not conditional unbiasedness); package GAP (probability convention B3: E[1_O Ẑ] ≤ Z·P(A) is fixed-data, jointly E[1_A Z(data)]; exact-branch extension B4: A undefined)")
+upd("Prop2(c)", cf="V|" + AR4 + ": island identity and covariance VERIFIED (fixed data, frozen calibration, four conditionally iid potential islands; bias −¾Cov_C(PIP̂₁ⱼ, Ẑ₁)); A-REV4 Owls 50-digit finite-law reproduction (mpmath 1.3.0, PID 2508546, exit 0) matched −0.1739741778 (primary PIP bias) and −0.1317163950 (pooled relative bias), residuals ~10⁻⁵⁰ (numerical check, not an interval certificate)")
+upd("Prop2(f)", cf="G|" + AR4 + ": VAL-FP GAP: the implication (Ẑ_fp ≤ e^η Z̄ ⇒ α e^η P(A) + ε) is VERIFIED but no validated η or ε for production is supplied; no replay against exact arithmetic performed")
+upd("BOOK-B1-GUARD", cf="E|" + AR4 + ": 'W2-BOOK GUARD literal full-output claim' ERROR (timing, allocation and peak-memory metadata differ on successful same-seed executions); the statistical stop-only reading checks by static inspection (v3_runtime.h:13–27, v3_engine.h:335–336, v3_core.cpp:435–450)",
+    rep="none written (A-REV4: project records onto statistical estimates, scores, discrete records and statuses; exclude resource/timing metadata from equality and replay tests)", rs="pending")
+upd("BOOK-B6-provenance", cf="G|" + AR4 + " / NUMERICS.md: A-REV4 re-ran BOOK's finite-law script on Owls (all checks passed; provenance recorded) but numbers are 50-digit numerical enumeration, not interval certificates; BOOK's own run still has no job provenance")
+
+# ---- F-DRAFT (explicit counterexamples) and A-DRAFT ---------------------------------------------------------------------
+upd("FD-W2", cf="E|" + AR4 + ": F-DRAFT W2 ERROR with an explicit feasible counterexample (n = 20, p = 4, G = 19I, blocks {1,3},{2,4}, S° = {1}, l = 2, ‖y‖² = 19, z² = (100,30,0,0): actual v3 log-odds difference 0.310405538698 vs 0.353784569589 from ordinary RSS partial R², discrepancy 0.0434; reproduced on Owls); uniform asymptotic claim also a GAP")
+upd("FD-NM", cf="E|" + AR4 + ": F-DRAFT NM ERROR: even the identifiable fixed-p two-column family (b = σ = 1, proxy correlation r = ½) contradicts the stated O_P(1) remainder (nondegenerate √n fluctuation of log BF about n·log(8/7)/2; checked on Owls, 768 replicates saved); π₀({j}) → 0 does not control other states or the mode; O(1) ideal-grid conclusion unproved")
+upd("ADRAFT-ThmA", sf="V*|" + ADN.replace("DRAFTS_CHECK §A-DRAFT §2", "REVIEW.md table + §4") + "Theorem A and A1 VERIFIED (fixed-data bounded-functional LLN/MSE, unnormalised identities; no CLT, T16 conjecture not upgraded)")
+upd("ADRAFT-CorA1", sf="V*|" + ADN.replace("DRAFTS_CHECK §A-DRAFT §2", "REVIEW.md table + §4") + "A1 VERIFIED (pre-resampling identity; pooled product bias −¾Cov)")
+upd("ADRAFT-ThmD", sf="V*|" + ADN.replace("DRAFTS_CHECK §A-DRAFT §2", "REVIEW.md table + §4") + "Theorem D and D1 VERIFIED with the explicit favourable-start premise (P1) and bounded-function/continuity qualifications; no masked-start or completion guarantee")
+upd("ADRAFT-CorD1", sf="V*|" + ADN.replace("DRAFTS_CHECK §A-DRAFT §2", "REVIEW.md table + §4") + "D1 VERIFIED (uniform local continuity and posterior contraction needed)")
+
+# ---- referee-authored items of A-REV4 --------------------------------------------------------------------------------
+r("CEX-W2frac(A4)", "supplement (negative result; original-draft track)", "A-REV4 · REVIEW.md §3 (F-DRAFT W2 counterexample)", "COUNTEREXAMPLE", "N|n/a", "N|referee-authored",
+  "none applied: repair h_{T,l} := (t_{T+l} − t_T)/(.02 + Q_T) proposed, not applied by any run", "|S°| < K (feasibility)",
+  "The ordinary-RSS partial R² x_{T,l} is not the v3 score fraction: the displayed 'exact identities' using x are false even for orthogonal columns (0.3104 vs 0.3538 at n = 20, p = 4).", rs="pending")
+r("CEX-NMremainder(A4)", "supplement (negative result; original-draft track)", "A-REV4 · REVIEW.md §3 (F-DRAFT NM)", "COUNTEREXAMPLE", "N|n/a", "N|referee-authored",
+  "repair proposed: n⁻¹log BF → log(8/7)/2 or O_P(√n) remainder; use A-REV4/A-DRAFT Prop. M p = 2 family", "fixed-p two columns, b = σ = 1, r = ½",
+  "The O_P(1) remainder in log BF({l}) = nc/2 − ½log n + O_P(1) is false for a fixed nonzero proxy correlation (√n fluctuation).", rs="pending")
+r("AREV4-PropC-repair", "Thm 6 / Thm 5(a) (ORTH family)", "A-REV4 · REVIEW.md §1 'Proposition C repair'", "REFEREE", "N|n/a", "N|referee-authored",
+  "proposed repair of W2-T26 Prop. C, sketch status preserved (not written into the source)", "ORTH (p ≤ n−1); centred Y",
+  "On ORTH every block residual projection has rank n−1−|C_b| with χ²(d_b)-dominated norm, P(χ²_d < d/2) ≤ e^{−cd}, so ρ_min/n is bounded away from 0 and the EXP′ remainder is O_P(1); VIS and NL_avg follow.")
+r("AREV4-KLexact", "supplement (original-draft track)", "A-REV4 · REVIEW.md §3 W4 / DRAFTS_CHECK.md", "REFEREE", "N|n/a", "N|referee-authored",
+  "exact bound supplied; F-DRAFT W4's KL rate not proved", "—",
+  "KL(π‖π₀) ≤ −log π₀(S₀) + Σ_{S≠S₀} π(S)[d(S) − d(S₀)] (exact, from E_{π₀}e^d ≥ π₀(S₀)e^{d(S₀)}); and TV, KL → 0 with χ² → ∞ is possible in the abstract (π = (1−1/k, 1/k), π₀ = (1−1/k³, 1/k³)).")
