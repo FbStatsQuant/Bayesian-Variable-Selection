@@ -1,0 +1,4 @@
+config ADV_PSI; Mstat limit law quantiles q05/med/q95 = 0.41/0.63/2.33
+n | p | reps | b=g | P1-margin(minin>maxout) | SE-blk med | med log10 pi0(S0) | Mstat q05/med/q95 | sqrt(n/logn)(1-pi0(S°)) med | med pi0(S°) | mode=S° | med q | T22 ok | LS0 scored | LS0 cert@S0 | med F(S0)-F(S°) | #F(S0)<F(S°) | (L) holds | med (L) margin | DS_all>0 | DS_phi2>0 | med Dep
+200 | 750 | 20 | 20 | 0 | 0.158 | -4.29 | -4.42/-0.61/0.63 | 4.19 | 0.317 | 10 | 0.225 | 20 | 18 | 18 | 11.5 | 0 | 20 | 3.17 | 20 | - | 0.873
+400 | 1790 | 16 | 16 | 1 | 0.190 | -4.40 | 0.15/0.36/1.86 | 1.58 | 0.806 | 16 | 0.153 | 16 | 16 | 16 | 35.1 | 0 | 16 | 3.60 | 16 | - | 0.323

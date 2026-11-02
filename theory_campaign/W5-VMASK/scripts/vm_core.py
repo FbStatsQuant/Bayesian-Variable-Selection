@@ -378,6 +378,7 @@ def local_search(sc, centre, ell, target=None, emit_centre=True):
     target = sorted(target) if target is not None else None
     scored = emit_centre and target is not None and C == target
     moves, path, nscan, ties = 0, [list(C)], 0, 0
+    best_seen = (FC, list(C)) if emit_centre else (-np.inf, None)
     while True:
         nscan += 1
         inC = np.zeros(p, bool)
@@ -415,16 +416,18 @@ def local_search(sc, centre, ell, target=None, emit_centre=True):
                     ties += 1
             if best is None or Fv > best[0] or (Fv == best[0] and _lex_less(S, best[1])):
                 best = (Fv, S)
+        if best[0] > best_seen[0]:
+            best_seen = (best[0], list(best[1]))
         if best[0] > FC:
             if moves >= ell:
                 return dict(path=path, term='move_limit', returned=best[1], scored=scored, nscan=nscan,
-                            moves=moves, ties=ties, certified=False)
+                            moves=moves, ties=ties, certified=False, best_seen=best_seen)
             C, FC = best[1], best[0]
             moves += 1
             path.append(list(C))
         else:
             return dict(path=path, term='no_improvement', returned=C, scored=scored, nscan=nscan,
-                        moves=moves, ties=ties, certified=True)
+                        moves=moves, ties=ties, certified=True, best_seen=best_seen)
 
 
 # ----------------------------------------------------------------------------------------------- LH designs
