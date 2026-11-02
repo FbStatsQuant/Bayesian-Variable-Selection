@@ -1,0 +1,5 @@
+1. max |batch - single| = 0.0
+   blocks: [[0, 1, 4], [6, 9], [7, 10, 11], [2, 3, 5], [8]]
+2. log Zbar0 (without W_K): brute 3.032976584552  convolution 3.032976584552
+3. max |merge heights mine - scipy| = 0.0
+4. max |R| / (Lemma 1.3 deterministic bound) over 300 random small designs = 0.7710467894599636
