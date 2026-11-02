@@ -62,3 +62,7 @@ F-PXN cancelled (superseded by W3-PXN). F-SHARE, F-REFINE relaunched at Fable xh
 | F-DRAFT | Fable 5.1 high (CP) | map the draft's theory targets onto the current list; new target statements | theory/F-DRAFT |
 | O-WSTAB | Opus 5.5 xhigh (CP) | prove the draft's weight-stability theorem (chi²/KL(pi‖pi0) vs cross-block dependence; ESS; regime dichotomy) | theory/O-WSTAB |
 | A-DRAFT | GPT-6 Astra high | novelty audit vs the literature; E[h] consistency theorem; naive-merge-fails proposition | theory/A-DRAFT |
+
+## Wave 5 (2026-11-02 18:40 UTC, `claude --cloud`, credit-billed; specs from F-REFINE NEXT_TASKS)
+W5-VMASK, W5-VPGD, W5-B2ENV, W5-FAVIID, W5-LOCKBOOK (session URLs in ~/.config/bvs-hq/cloud_sessions.log).
+F-REFINE DONE: theory/F-REFINE @ db708ca (CARDS.md, ARCHITECTURE.md, NEXT_TASKS.md).
