@@ -250,14 +250,81 @@ theorem riskH_eq (a : Finset (Fin p)) :
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun j _ => hj j
 
+theorem mem_Jplus {q : Fin p → ℝ} {j : Fin p} : j ∈ Jplus q ↔ 1 / 2 < q j := by
+  simp [Jplus]
+
+theorem coef_nonneg_of_notMem_Jplus {q : Fin p → ℝ} {j : Fin p} (hj : j ∉ Jplus q) :
+    0 ≤ 1 - 2 * q j := by
+  have : q j ≤ 1 / 2 := not_lt.mp fun h => hj (mem_Jplus.mpr h)
+  linarith
+
+theorem coef_neg_of_mem_Jplus {q : Fin p → ℝ} {j : Fin p} (hj : j ∈ Jplus q) :
+    1 - 2 * q j < 0 := by
+  have := mem_Jplus.mp hj
+  linarith
+
+/-- `ψ_q(a) = ψ_q(a ∩ J₊) + ψ_q(a ∖ J₊)`. -/
+theorem psi_split (q : Fin p → ℝ) (a : Finset (Fin p)) :
+    psi q a = psi q (a ∩ Jplus q) + psi q (a \ Jplus q) :=
+  (sum_inter_add_sum_sdiff a (Jplus q) (fun j => 1 - 2 * q j)).symm
+
+theorem psi_sdiff_Jplus_nonneg (q : Fin p → ℝ) (a : Finset (Fin p)) :
+    0 ≤ psi q (a \ Jplus q) :=
+  sum_nonneg fun _ hj => coef_nonneg_of_notMem_Jplus (mem_sdiff.mp hj).2
+
+/-- On subsets of `J₊`, `ψ_q` is antitone. -/
+theorem psi_anti_Jplus (q : Fin p → ℝ) {b c : Finset (Fin p)} (hbc : b ⊆ c)
+    (hc : c ⊆ Jplus q) : psi q c ≤ psi q b := by
+  have h := sum_sdiff (f := fun j => 1 - 2 * q j) hbc
+  have hn : ∑ j ∈ c \ b, (1 - 2 * q j) ≤ 0 :=
+    sum_nonpos fun _ hj => (coef_neg_of_mem_Jplus (hc (mem_sdiff.mp hj).1)).le
+  unfold psi
+  linarith
+
 /-- **Lemma psi (a)**: `J₊(q)` minimises `ψ_q` over all subsets. -/
 theorem psi_Jplus_le (q : Fin p → ℝ) (a : Finset (Fin p)) : psi q (Jplus q) ≤ psi q a := by
-  sorry
+  have h1 := psi_anti_Jplus q (inter_subset_right : a ∩ Jplus q ⊆ Jplus q) subset_rfl
+  have h2 := psi_split q a
+  have h3 := psi_sdiff_Jplus_nonneg q a
+  linarith
 
 /-- **Lemma psi (a)**, uniqueness: `J₊(q)` is the unique minimiser iff no `q_j = 1/2`. -/
 theorem psi_Jplus_unique_iff (q : Fin p → ℝ) :
     (∀ a, (∀ b, psi q a ≤ psi q b) → a = Jplus q) ↔ ∀ j, q j ≠ 1 / 2 := by
-  sorry
+  constructor
+  · intro h j hj
+    have hjn : j ∉ Jplus q := fun hm => by have := mem_Jplus.mp hm; linarith
+    have heq : psi q (insert j (Jplus q)) = psi q (Jplus q) := by
+      unfold psi
+      rw [sum_insert hjn, hj]
+      ring
+    have hmin := h (insert j (Jplus q)) fun b => heq ▸ psi_Jplus_le q b
+    exact hjn (hmin ▸ mem_insert_self j (Jplus q))
+  · intro h a ha
+    have hle := ha (Jplus q)
+    have hsplit := psi_split q a
+    have hdiff := psi_sdiff_Jplus_nonneg q a
+    have hinter := psi_anti_Jplus q (inter_subset_right : a ∩ Jplus q ⊆ Jplus q) subset_rfl
+    refine Subset.antisymm (fun j hj => ?_) (fun j hj => ?_)
+    · by_contra hjJ
+      have hqj : q j < 1 / 2 := lt_of_le_of_ne (not_lt.mp fun h' => hjJ (mem_Jplus.mpr h')) (h j)
+      have hsingle : 1 - 2 * q j ≤ psi q (a \ Jplus q) :=
+        single_le_sum (f := fun i => 1 - 2 * q i)
+          (fun _ hi => coef_nonneg_of_notMem_Jplus (mem_sdiff.mp hi).2)
+          (mem_sdiff.mpr ⟨hj, hjJ⟩)
+      linarith
+    · by_contra hja
+      have hjd : j ∈ Jplus q \ (a ∩ Jplus q) :=
+        mem_sdiff.mpr ⟨hj, fun hm => hja (mem_inter.mp hm).1⟩
+      have hsd := sum_sdiff (f := fun i => 1 - 2 * q i)
+        (inter_subset_right : a ∩ Jplus q ⊆ Jplus q)
+      have hera := add_sum_erase (Jplus q \ (a ∩ Jplus q)) (fun i => 1 - 2 * q i) hjd
+      have hrest : ∑ i ∈ (Jplus q \ (a ∩ Jplus q)).erase j, (1 - 2 * q i) ≤ 0 :=
+        sum_nonpos fun _ hi =>
+          (coef_neg_of_mem_Jplus (mem_sdiff.mp (mem_of_mem_erase hi)).1).le
+      have hcj := coef_neg_of_mem_Jplus hj
+      unfold psi at hle hsplit hdiff
+      linarith
 
 /-- **T07(ii)(b)**: the MPM minimises the posterior Hamming risk over all subsets. -/
 theorem mpm_min_riskH (a : Finset (Fin p)) :
@@ -279,13 +346,75 @@ theorem psi_capped_le (q : Fin p → ℝ) (K' : ℕ) (astar : Finset (Fin p))
     (hsub : astar ⊆ Jplus q) (hcard : astar.card = min K' (Jplus q).card)
     (htop : ∀ j ∈ astar, ∀ k ∈ Jplus q \ astar, q k ≤ q j) :
     ∀ a : Finset (Fin p), a.card ≤ K' → psi q astar ≤ psi q a := by
-  sorry
+  intro a ha
+  have hpa : psi q (a ∩ Jplus q) ≤ psi q a := by
+    have := psi_split q a
+    have := psi_sdiff_Jplus_nonneg q a
+    linarith
+  have ha'J : a ∩ Jplus q ⊆ Jplus q := inter_subset_right
+  have hca' : (a ∩ Jplus q).card ≤ astar.card := by
+    rw [hcard]
+    exact le_min ((card_le_card inter_subset_left).trans ha) (card_le_card ha'J)
+  have e1 : psi q astar = psi q (astar ∩ (a ∩ Jplus q)) + psi q (astar \ (a ∩ Jplus q)) :=
+    (sum_inter_add_sum_sdiff astar (a ∩ Jplus q) (fun j => 1 - 2 * q j)).symm
+  have e2 : psi q (a ∩ Jplus q) =
+      psi q ((a ∩ Jplus q) ∩ astar) + psi q ((a ∩ Jplus q) \ astar) :=
+    (sum_inter_add_sum_sdiff (a ∩ Jplus q) astar (fun j => 1 - 2 * q j)).symm
+  rw [inter_comm (a ∩ Jplus q) astar] at e2
+  have hc1 := card_sdiff_add_card_inter astar (a ∩ Jplus q)
+  have hc2 := card_sdiff_add_card_inter (a ∩ Jplus q) astar
+  rw [inter_comm (a ∩ Jplus q) astar] at hc2
+  have hD : ((a ∩ Jplus q) \ astar).card ≤ (astar \ (a ∩ Jplus q)).card := by omega
+  have key : psi q (astar \ (a ∩ Jplus q)) ≤ psi q ((a ∩ Jplus q) \ astar) := by
+    obtain ⟨t, ht, h1, h2⟩ : ∃ t : ℝ, 1 / 2 ≤ t ∧ (∀ j ∈ astar \ (a ∩ Jplus q), t ≤ q j) ∧
+        ∀ k ∈ (a ∩ Jplus q) \ astar, q k ≤ t := by
+      rcases ((a ∩ Jplus q) \ astar).eq_empty_or_nonempty with he | hne
+      · refine ⟨1 / 2, le_rfl, fun j hj => (mem_Jplus.mp (hsub (mem_sdiff.mp hj).1)).le, ?_⟩
+        intro k hk
+        rw [he] at hk
+        exact absurd hk (notMem_empty k)
+      · obtain ⟨k0, hk0, hmax⟩ := exists_max_image _ q hne
+        have hk0J : k0 ∈ Jplus q \ astar :=
+          mem_sdiff.mpr ⟨ha'J (mem_sdiff.mp hk0).1, (mem_sdiff.mp hk0).2⟩
+        exact ⟨q k0, (mem_Jplus.mp (mem_sdiff.mp hk0J).1).le,
+          fun j hj => htop j (mem_sdiff.mp hj).1 k0 hk0J, hmax⟩
+    have s1 : psi q (astar \ (a ∩ Jplus q)) ≤ (astar \ (a ∩ Jplus q)).card • (1 - 2 * t) :=
+      sum_le_card_nsmul (astar \ (a ∩ Jplus q)) (fun j => 1 - 2 * q j) (1 - 2 * t)
+        fun j hj => by have := h1 j hj; linarith
+    have s2 : ((a ∩ Jplus q) \ astar).card • (1 - 2 * t) ≤ psi q ((a ∩ Jplus q) \ astar) :=
+      card_nsmul_le_sum ((a ∩ Jplus q) \ astar) (fun j => 1 - 2 * q j) (1 - 2 * t)
+        fun k hk => by have := h2 k hk; linarith
+    rw [nsmul_eq_mul] at s1 s2
+    have hDr : (((a ∩ Jplus q) \ astar).card : ℝ) ≤ (astar \ (a ∩ Jplus q)).card := by
+      exact_mod_cast hD
+    have hmul : ((astar \ (a ∩ Jplus q)).card : ℝ) * (1 - 2 * t) ≤
+        (((a ∩ Jplus q) \ astar).card : ℝ) * (1 - 2 * t) :=
+      mul_le_mul_of_nonpos_right hDr (by linarith)
+    linarith
+  linarith
 
 /-- Existence of the capped action `a*` (any deterministic tie rule selects one). -/
 theorem exists_capped (q : Fin p → ℝ) (K' : ℕ) :
     ∃ astar : Finset (Fin p), astar ⊆ Jplus q ∧ astar.card = min K' (Jplus q).card ∧
       ∀ j ∈ astar, ∀ k ∈ Jplus q \ astar, q k ≤ q j := by
-  sorry
+  obtain ⟨astar, hmem, hmax⟩ :=
+    exists_max_image ((Jplus q).powersetCard (min K' (Jplus q).card)) (fun b => ∑ j ∈ b, q j)
+      (powersetCard_nonempty.mpr (min_le_right _ _))
+  rw [mem_powersetCard] at hmem
+  refine ⟨astar, hmem.1, hmem.2, fun j hj k hk => ?_⟩
+  by_contra hlt
+  have hlt' : q j < q k := not_le.mp hlt
+  have hk' := mem_sdiff.mp hk
+  have hkn : k ∉ astar.erase j := fun h => hk'.2 (mem_of_mem_erase h)
+  have hb : insert k (astar.erase j) ∈ (Jplus q).powersetCard (min K' (Jplus q).card) := by
+    rw [mem_powersetCard]
+    refine ⟨insert_subset hk'.1 ((erase_subset j astar).trans hmem.1), ?_⟩
+    rw [card_insert_of_notMem hkn, card_erase_of_mem hj, ← hmem.2]
+    have := card_pos.mpr ⟨j, hj⟩
+    omega
+  have h' : ∑ x ∈ insert k (astar.erase j), q x ≤ ∑ x ∈ astar, q x := hmax _ hb
+  rw [sum_insert hkn, ← add_sum_erase astar q hj] at h'
+  linarith
 
 /-- **T07(ii)(c)**: the capped MPM `a*` (with `K' = K`, `q = PIP`) minimises `ρ_H` over `Ω`. -/
 theorem capped_mpm_min_riskH (astar : Finset (Fin p))
