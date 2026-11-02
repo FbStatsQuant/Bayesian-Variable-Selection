@@ -1,0 +1,24 @@
+## B2 (gram), p = 20, c = 2
+n | reps | med log10 pi0(S0) | Mstat q05/med/q95 | med pi(S0) | med pi0(S°) | mode=S° | med P(hit|Q_f) | med P(hit|Q=n) | med P(hit|Q=n^2) | med log10(1+chi2) | med KL | med log10 relvar/draw | LS0 scores S0 | med pi0(basin) | min pi0(basin) | all C⊆R scored (reps) | min frac C⊆R | med frac all centres | max moves C⊆R | ell | reps with other local maxima
+100 | 10 | -4.07 | 1.15/1.22/1.71 | 0.581 | 0.835 | 10/10 | 1 | 0.00846 | 0.572 | 4.16 | 9.22 | 4.07 | 10/10 | 1.000000 | 1.000000 | 0/10 | 0.8252 | 0.5977 | 7 | 7 | 1/10
+400 | 4 | -4.62 | 1.24/1.34/1.52 | 0.805 | 0.921 | 4/4 | 0.971 | 0.00954 | 0.977 | 4.69 | 10.59 | 4.62 | 4/4 | 1.000000 | 1.000000 | 0/4 | 0.9968 | 0.8944 | 9 | 9 | 0/4
+
+## B2 (iid), p = 20, c = 2
+n | reps | med log10 pi0(S0) | Mstat q05/med/q95 | med pi(S0) | med pi0(S°) | mode=S° | med P(hit|Q_f) | med P(hit|Q=n) | med P(hit|Q=n^2) | med log10(1+chi2) | med KL | med log10 relvar/draw | LS0 scores S0 | med pi0(basin) | min pi0(basin) | all C⊆R scored (reps) | min frac C⊆R | med frac all centres | max moves C⊆R | ell | reps with other local maxima
+100 | 6 | -3.81 | 0.55/1.81/3.75 | 0.609 | 0.452 | 6/6 | 1 | 0.0194 | 0.74 | 3.78 | 8.16 | 3.92 | 6/6 | 1.000000 | 1.000000 | 0/6 | 0.8398 | 0.5862 | 7 | 7 | 0/6
+400 | 6 | -4.53 | 1.30/1.56/2.08 | 0.787 | 0.899 | 6/6 | 0.989 | 0.0119 | 0.992 | 4.58 | 10.29 | 4.53 | 6/6 | 1.000000 | 1.000000 | 0/6 | 0.9968 | 0.8949 | 9 | 9 | 0/6
+1600 | 2 | -5.06 | 1.64/1.71/1.79 | 0.906 | 0.941 | 2/2 | 0.771 | 0.0138 | 1 | 5.04 | 11.58 | 5.06 | 2/2 | 1.000000 | 1.000000 | 2/2 | 1.0000 | 0.9894 | 11 | 11 | 0/2
+
+## C3 (gram), p = 18, c = 3
+n | reps | med log10 pi0(S0) | Mstat q05/med/q95 | med pi(S0) | med pi0(S°) | mode=S° | med P(hit|Q_f) | med P(hit|Q=n) | med P(hit|Q=n^2) | med log10(1+chi2) | med KL | med log10 relvar/draw | LS0 scores S0 | med pi0(basin) | min pi0(basin) | all C⊆R scored (reps) | min frac C⊆R | med frac all centres | max moves C⊆R | ell | reps with other local maxima
+100 | 20 | -5.42 | 2.96/3.09/3.53 | 0.554 | 0.761 | 20/20 | 0.388 | 0.000377 | 0.037 | 5.59 | 12.33 | 5.42 | 20/20 | 1.000000 | 1.000000 | 0/20 | 0.8839 | 0.9239 | 7 | 7 | 2/20
+400 | 20 | -6.28 | 3.09/3.21/3.57 | 0.706 | 0.902 | 20/20 | 0.0765 | 0.000212 | 0.0814 | 6.43 | 14.44 | 6.28 | 20/20 | 1.000000 | 1.000000 | 0/20 | 0.9934 | 0.9968 | 9 | 9 | 2/20
+1600 | 19 | -7.17 | 3.13/3.22/3.72 | 0.842 | 0.950 | 19/19 | 0.0113 | 0.000107 | 0.158 | 7.22 | 16.52 | 7.17 | 19/19 | 1.000000 | 1.000000 | 19/19 | 1.0000 | 1.0000 | 11 | 11 | 0/19
+
+## V2 (gram), p = 18, c = 2
+n | reps | med log10 pi0(S0) | Mstat q05/med/q95 | med pi(S0) | med pi0(S°) | mode=S° | med P(hit|Q_f) | med P(hit|Q=n) | med P(hit|Q=n^2) | med log10(1+chi2) | med KL | med log10 relvar/draw | LS0 scores S0 | med pi0(basin) | min pi0(basin) | all C⊆R scored (reps) | min frac C⊆R | med frac all centres | max moves C⊆R | ell | reps with other local maxima
+100 | 20 | -3.75 | 1.57/1.75/2.29 | 0.625 | 0.772 | 20/20 | 1 | 0.0176 | 0.831 | 3.88 | 8.44 | 3.75 | 20/20 | 1.000000 | 1.000000 | 0/20 | 0.9656 | 0.8615 | 7 | 7 | 3/20
+400 | 20 | -4.29 | 1.79/1.89/2.17 | 0.767 | 0.900 | 20/20 | 1 | 0.0203 | 1 | 4.35 | 9.83 | 4.29 | 20/20 | 1.000000 | 1.000000 | 20/20 | 1.0000 | 0.9888 | 9 | 9 | 1/20
+1600 | 20 | -4.86 | 1.86/1.96/2.17 | 0.896 | 0.950 | 20/20 | 0.902 | 0.0217 | 1 | 4.87 | 11.15 | 4.86 | 20/20 | 1.000000 | 1.000000 | 20/20 | 1.0000 | 0.9999 | 10 | 11 | 0/20
+6400 | 1 | -5.45 | 1.99/1.99/1.99 | 0.954 | 0.975 | 1/1 | 0.819 | 0.0222 | 1 | 5.44 | 12.53 | 5.45 | 1/1 | 1.000000 | 1.000000 | 1/1 | 1.0000 | 1.0000 | 10 | 13 | 0/1
+
