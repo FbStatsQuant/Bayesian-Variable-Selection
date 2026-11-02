@@ -21,3 +21,7 @@
 {"scen": 4, "n": 200, "seed": 3, "B": 4, "L": 8, "Y": [4, 6, 15], "pstar_exit": 0.725401550433647, "exit_mc": 0.8643, "Lplus4_times_exit": 10.371599999999999}
 {"scen": 4, "n": 800, "seed": 1, "B": 4, "L": 10, "Y": [13, 19], "pstar_exit": 0.6762032936976767, "exit_mc": 0.9723, "Lplus4_times_exit": 13.612200000000001}
 {"scen": 4, "n": 800, "seed": 2, "B": 4, "L": 10, "Y": [13, 19], "pstar_exit": 0.6787384246797976, "exit_mc": 0.9714, "Lplus4_times_exit": 13.5996}
+{"scen": 4, "n": 800, "seed": 3, "B": 4, "L": 10, "Y": [2, 19], "pstar_exit": 0.6917496084173681, "exit_mc": 0.9651, "Lplus4_times_exit": 13.5114}
+{"scen": 4, "n": 3200, "seed": 1, "B": 4, "L": 12, "Y": [2, 13, 19], "pstar_exit": 0.7500811658925516, "exit_mc": 0.9319, "Lplus4_times_exit": 14.9104}
+{"scen": 4, "n": 3200, "seed": 2, "B": 4, "L": 12, "Y": [6, 19], "pstar_exit": 0.7160979790243188, "exit_mc": 0.9837, "Lplus4_times_exit": 15.7392}
+{"scen": 4, "n": 3200, "seed": 3, "B": 4, "L": 12, "Y": [2, 19], "pstar_exit": 0.7422830284183325, "exit_mc": 0.9858, "Lplus4_times_exit": 15.7728}
