@@ -41,7 +41,7 @@ start with the production `v3_start`/`cpp_ls0_*` engine from each alternative ta
 |---|---|---|
 | `v3re` | v3 tables rebuilt from (log D_U, t_U): the method | yes |
 | `C_mode` | common σ̂² = σ̃²_{S̃₀} = (2b₀ + Q_{S̃₀})/(2ν), with S̃₀ the v3 start mode | yes |
-| `C_fix` | C-fix: σ̂² ← σ̃²(mode of π₀^C[σ̂²]) from σ̃²_{S̃₀}, until the mode repeats (≤ 20 its; 2–6 used) | yes |
+| `C_fix` | C-fix: σ̂² ← σ̃²(mode of π₀^C[σ̂²]) from σ̃²_{S̃₀}, until the mode repeats (≤ 20 iterations; 1–10 used, median 3) | yes |
 | `C_sy2` | common σ̂² = (2b₀ + yᵀy)/(2ν) (null plug-in s_y²) | yes |
 | `C_S0` | common σ̂² = σ̃²_{S₀} | no (uses S₀); extra |
 | `C_orc` | common σ̂² = sample var(ε) on the standardised scale | no (oracle); extra |
@@ -100,4 +100,61 @@ The plug-in values explain the three behaviours (`tables.md`, "Plug-in values"; 
   changes no theorem status (F-SIGMA S6 stays PROVED as before; O-MIX's block-orthogonal-toy evidence is not
   contradicted, it just does not transfer).
 
-*(Sections 3–5 follow.)*
+## 3. Residualised (backfit) tables: Step 0 / Step 2 result
+
+### 3.1 Pooled
+
+| variant | med log₁₀π₀(S₀) [IQR] | med π₀(R₂) | med start mode: truths + extras | mode = S₀ | π₀(S₀) > 0.1 | favourable (≥ 10⁻⁴) | mode ≥ 10 extras | mode at K |
+|---|---|---|---|---|---|---|---|---|
+| v3 (method) | −15.65 [−18.5, −13.4] | 0.813 | 4 + 0 | 0 | 0 | 0 | 1 | 0 |
+| resid, 1 sweep | −8.22 [−12.2, −5.3] | 0.589 | 9 + 1 | 27 | 12 | 351 | 156 | 0 |
+| resid, 3 sweeps | −1.07 [−3.2, −0.7] | 0.713 | 14 + 0 | 1,245 | 1,142 | 1,888 | 52 | 0 |
+| O-DILUTE pilot, resid (480 regenerated fits) | −1.0 | 0.71 | "14/14 in most cells" | — | — | 378/480 | — | — |
+
+Compared fit by fit with v3, resid3 is more than 1 decade higher in 2,289 fits and more than 1 decade lower in 75
+(median +13.2 decades).
+
+**The O-DILUTE pilot replicates on the study's own fits.** The median, π₀(R₂) and the favourable share (78.7% vs 78.8%)
+agree to the reported precision. This is the first time the backfit start has been evaluated on the PROD-H data rather
+than on regenerated data that is equal in law.
+
+### 3.2 Per cell (resid3; `tables.md` "Per cell", `extra_tables.md` (a))
+
+| cell (p, S, c) | med log₁₀π₀(S₀) [IQR] | med π₀(R₂) (v3) | mode = S₀ | π₀(S₀) > 0.1 | favourable |
+|---|---|---|---|---|---|
+| 500 S1 0.5 / 1 | −0.87 / −0.66 | 0.77 / 0.79 (0.96 / 0.95) | 69 / 89 | 62 / 85 | 100 / 100 |
+| 500 S2 0.5 / 1 | −0.89 / −0.66 | 0.77 / 0.79 (0.89 / 0.84) | 62 / 89 | 57 / 85 | 97 / 100 |
+| 500 S3 0.5 / 1 | −1.46 / −0.63 | 0.65 / 0.81 (0.74 / 0.69) | 36 / 90 | 32 / 90 | 94 / 100 |
+| 500 S4 0.5 / 1 | −2.76 / −0.68 | 0.28 / 0.79 (0.28 / 0.25) | 9 / 83 | 3 / 73 | 74 / 100 |
+| 500 S5 0.5 / 1 | **−16.27 / −5.39** | **0.027 / 0.33** (0.93 / 0.88) | 0 / 23 | 0 / 18 | **4 / 44** |
+| 500 S6 0.5 / 1 | −1.53 / −0.66 | 0.66 / 0.80 (0.70 / 0.65) | 40 / 89 | 32 / 83 | 95 / 100 |
+| 1000 S1 0.5 / 1 | −1.42 / −0.74 | 0.78 / 0.74 (0.97 / 0.95) | 35 / 91 | 31 / 86 | 78 / 100 |
+| 1000 S2 0.5 / 1 | −1.75 / −0.74 | 0.74 / 0.74 (0.92 / 0.89) | 37 / 79 | 30 / 79 | 83 / 96 |
+| 1000 S3 0.5 / 1 | −2.18 / −0.70 | 0.65 / 0.77 (0.80 / 0.76) | 22 / 90 | 18 / 87 | 77 / 99 |
+| 1000 S4 0.5 / 1 | −4.12 / −0.70 | 0.18 / 0.77 (0.40 / 0.30) | 7 / 81 | 1 / 77 | 47 / 100 |
+| 1000 S5 0.5 / 1 | **−23.03 / −9.60** | **0.00014 / 0.054** (0.95 / 0.86) | 0 / 14 | 0 / 15 | **1 / 30** |
+| 1000 S6 0.5 / 1 | −2.54 / −0.68 | 0.58 / 0.78 (0.77 / 0.70) | 22 / 88 | 14 / 84 | 70 / 99 |
+
+Each cell has 100 fits; entries are c = 0.5 / c = 1.
+
+- **At c = 1, outside S5,** the backfit start is favourable in 96–100 of 100 fits per cell. Its mode is S₀ in 79–91, and
+  the median π₀(S₀) is 10^{−0.6}–10^{−0.75}: the start essentially lands on S₀.
+- **At c = 0.5 the picture is graded.** p = 500 S1/S2/S3/S6 are 94–100 favourable. p = 1,000 is 70–83. S4 is 74 and 47,
+  with mode = S₀ in only 9 and 7.
+- **S5 (global equicorrelation 0.3) is where backfit does not work.** It is favourable in 1–44 of 100, with mode = S₀
+  in 0–23. It is also the only scenario where the backfit mode carries ≥ 10 extras (6–19 per 100). This matches O-DILUTE §9
+  ("weak in S5 … 10^{−4.6} to 10^{−19}").
+
+### 3.3 What backfit costs: π₀(R₂)
+
+Pooled π₀(R₂) falls only modestly (0.81 → 0.71), but the loss is concentrated where it matters:
+- In S5, π₀(R₂) collapses from 0.86–0.95 under v3 to 0.0001–0.33. The backfit start in S5 is neither on S₀ nor near
+  it: the median mode has 7–12 truths plus 0–3 extras.
+- In S4 at p = 1,000, c = 0.5, it falls from 0.40 to 0.18.
+- In the 565 fits the study got wrong (posterior misses), median π₀(R₂) falls from 0.77 to 0.47 (`extra_tables.md` (c)).
+
+T38(b)'s eligibility premise is π₀(R_d) ≥ b_n, which O-DILUTE showed holds for v3 at the study size. For backfit tables
+it would hold in most cells but **fail visibly in S5**. So backfit is not a pure improvement of the start law. It trades
+near-truth mass for exact-truth mass, and the trade goes badly in S5.
+
+*(Sections 3.4–5 follow.)*
