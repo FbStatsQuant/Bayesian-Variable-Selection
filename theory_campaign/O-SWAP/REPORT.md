@@ -79,8 +79,8 @@ Under the same PA, the union over nulls is exactly {max_l B_l²/τ_l > E + Ω₀
 
 *Consequences.*
 - (i) P_add(l) depends on the design only through κ⁺_l. For every l, κ⁺_l ≈ ½ log(n+1) + log((2p−1−s₀)/(s₀+1)), which is 6.83 at p = 500 and 7.54 at p = 1000. It depends on the signal only through ω₀ ≈ ‖μ‖²/((n+1)σ²).
-- (ii) **The superset rate is essentially scenario-free.** For nearly orthogonal u_l, P(superset) ≈ 1 − (1 − q)^{p−s₀}, where q = P_add, roughly 1.5–3 × 10⁻⁴. Correlated nulls (S3–S6 groups) lower the effective count.
-- (iii) Lowering the SNR from c = 1 to c = 0.5 lowers ω₀ from ≈ 24 to ≈ 6. That lowers the effective χ²₁ threshold by about 9 % and raises q by about 1.6×.
+- (ii) **The superset rate is essentially scenario-free.** For nearly orthogonal u_l, P(superset) ≈ 1 − (1 − q)^{p−s₀}, where q = P_add: 1.5–3.0 × 10⁻⁴ at p = 500 and 0.7–1.5 × 10⁻⁴ at p = 1000 (Cor. 2.1). Correlated nulls (S2–S6) lower the effective count.
+- (iii) Lowering the SNR from c = 1 to c = 0.5 lowers ω₀ from ≈ 24 to ≈ 6. That lowers the effective χ²₁ threshold by about 9 % and raises q by about 2× (Cor. 2.1).
 
 ### Proposition 3 (subset: a truth dropped). PROVED under PA.
 
