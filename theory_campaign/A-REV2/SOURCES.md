@@ -21,8 +21,10 @@ The independent checks do not import those snapshots or their numerical implemen
 Run the small numerical audit from the repository root, one job at a time:
 
 ```sh
-/home/fb31/.config/bvs-hq/owls/owls_run -j 2 -- python3 theory_campaign/A-REV2/scripts/check_review.py
+/home/fb31/.config/bvs-hq/owls/owls_run -j 2 -- theory_campaign/A-REV2/.venv/bin/python theory_campaign/A-REV2/scripts/check_review.py
 ```
 
 The script writes `results/checks.json`. Its assertions test finite identities and concrete
 counterexamples; they do not establish asymptotic theorems. The report supplies the proof audit.
+The local Python environment needs NumPy and SciPy; the system Python has neither. Its exact package
+versions are recorded in `results/python_packages.txt` after the run.

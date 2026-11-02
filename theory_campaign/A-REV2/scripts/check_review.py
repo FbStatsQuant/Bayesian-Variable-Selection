@@ -198,10 +198,67 @@ def counterexamples():
     r3=np.ones((2,2)); th3=np.array([.5,0.])
     d3=Score(n,r3,(n-1)*r3@th3,(n-1)*(th3@r3@th3+1))
     assert d3.f((0,))==d3.f((1,)) and d3.move(())==(0,) and d3.move((0,)) is None
+    # Suppressor compatible with production tables and the SMC branch.
+    # Two groups of four form first (.99 within > .95 between); B=4 separates them.
+    p4=20; r4=np.eye(p4)
+    for b in (range(4),range(4,8)):
+        r4[np.ix_(b,b)]=.99*np.ones((4,4))+.01*np.eye(4)
+    r4[:4,4:8]=.95*np.outer(r4[:4,0],r4[4,4:8]);r4[4:8,:4]=r4[:4,4:8].T
+    th4=np.zeros(p4);th4[[0,4]]=[3.,-2.8]
+    d4=Score(n,r4,(n-1)*r4@th4,(n-1)*(th4@r4@th4+1))
+    table_sets=[]
+    for b in (tuple(range(4)),tuple(range(4,8)),tuple(range(8,12)),tuple(range(12,16)),tuple(range(16,20))):
+        table_sets += [tuple(b[j] for j in s) for s in subsets(4) if s]
+    table_gap=max(d4.f(t)-d4.f(()) for t in table_sets)
+    assert table_gap<0 and d4.move(()) is None and d4.f((0,4))>d4.f(())
+    assert 2**20 > (5*512+4*2500)*20
+    # The combination proxy gives TD_inf without TD_P under positive sparse eigenvalues.
+    nc=3000; rc=np.eye(8);rc[0,2]=rc[2,0]=rc[1,2]=rc[2,1]=.85/math.sqrt(2)
+    thc=np.r_[.3,.3,np.zeros(6)]
+    dc=Score(nc,rc,(nc-1)*rc@thc,(nc-1)*(thc@rc@thc+1))
+    regc=[s for s in subsets(8) if len(set(s)-{0,1})<=1]; regset=set(regc)
+    pathc,_,_=dc.path(())
+    infc=all(dc.path(s)[0][-1]==(0,1) and all(t in regset for t in dc.path(s)[0]) for s in regc)
+    assert infc and dc.move(())==(2,)
     return dict(suppressor=dict(literal_TD_strict=bool(literal),gain_best_at_empty=d.f((0,))-d.f(()),truth_gain=d.f(s0)-d.f(()),posterior_truth=prob,path=path,certified=cert,
                                refutes_W3_R2_dichotomy=True),
                 posterior_miss=dict(initial_gap=d2.f((0,2))-d2.f(s0),final_gap=d2.f(path2[-1])-d2.f(s0),path=path2),
-                exact_tie=dict(singleton_gain=d3.f((0,))-d3.f(()),duplicate_add_gain=d3.f((0,1))-d3.f((0,)),TDP=True,D_empty=False))
+                exact_tie=dict(singleton_gain=d3.f((0,))-d3.f(()),duplicate_add_gain=d3.f((0,1))-d3.f((0,)),TDP=True,D_empty=False),
+                table_compatible_suppressor=dict(n=n,p=p4,B=4,max_nonempty_table_gain=table_gap,
+                                                truth_gain=d4.f((0,4))-d4.f(()),empty_locally_certified=True,SMC_branch=True),
+                combination_proxy=dict(n=nc,p=8,min_eigenvalue=float(np.linalg.eigvalsh(rc).min()),
+                                       population_best_truth_gain=.3**2,population_proxy_gain=2*.85**2*.3**2,
+                                       states=len(regc),TDinf=bool(infc),TDP=False,path_from_empty=pathc))
+
+
+def t03_deterministic():
+    rng=np.random.default_rng(734); counts=0; max_violation=-math.inf
+    for rep in range(6):
+        n=24;p=6;N=n-1
+        X=rng.normal(size=(n,p));X-=X.mean(axis=0)
+        if rep>=3: X[:,5]=X[:,4]+.03*rng.normal(size=n);X[:,5]-=X[:,5].mean()
+        X*=math.sqrt(N)/np.linalg.norm(X,axis=0)
+        y=rng.normal(size=n)+X[:,0]-.7*X[:,1];y-=y.mean();y*=math.sqrt(N)/np.linalg.norm(y)
+        G=X.T@X;d=Score(n,G/N,X.T@y,y@y);truth=(0,1)
+        phi2=float(np.linalg.eigvalsh(G[:2,:2]/N).min())
+        eta=1/((n+1)*N*phi2);g0=float(np.linalg.eigvalsh(G).min())
+        proj={};sm={}
+        for s in subsets(p):
+            xs=X[:,list(s)]
+            proj[s]=xs@np.linalg.pinv(xs) if s else np.zeros((n,n))
+            sm[s]=n*xs@np.linalg.solve((n+1)*xs.T@xs+np.eye(len(s)),xs.T) if s else np.zeros((n,n))
+        for s in subsets(p):
+            union=tuple(sorted(set(s)|set(truth)))
+            missing=len(set(truth)-set(s));j=len(set(union)-set(truth))
+            upper=n/(n+1)*(proj[union]-proj[truth]+eta*proj[truth])
+            violation=float(np.linalg.eigvalsh(sm[union]-sm[truth]-upper).max())
+            assert violation<1e-9;max_violation=max(max_violation,violation)
+            detdiff=d.parts(union)[0]-d.parts(truth)[0]
+            assert detdiff>=j*(math.log(n+1)-math.log1p(1/g0))-1e-9
+            if missing:
+                assert d.f(s)-d.f(union)<=missing*(math.log(2*p)+.5*math.log(n+1))+1e-9
+            counts+=1
+    return dict(designs=6,model_comparisons=counts,largest_B3_eigenvalue_violation=max_violation,failures=0)
 
 
 def greedy_checks():
@@ -308,7 +365,7 @@ def lemma_u_lower_counterexample():
 def main():
     result={}
     for name,fn in [('prior',prior_checks),('thresholds',thresholds),('duplicates',duplicate_checks),
-                    ('counterexamples',counterexamples),('greedy',greedy_checks),
+                    ('counterexamples',counterexamples),('T03_deterministic',t03_deterministic),('greedy',greedy_checks),
                     ('expansion_and_U',expansion_checks),('chain',masked_chain),
                     ('U_C3_counterexample',lemma_u_lower_counterexample)]:
         result[name]=fn()
