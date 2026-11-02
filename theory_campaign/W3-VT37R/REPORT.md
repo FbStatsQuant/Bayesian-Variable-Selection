@@ -104,7 +104,7 @@ TD′_P fails only at ∅, where M(∅) = None.
 **4.3 EXP3-R** (`exp3_recheck.py` → `results/exp3_recheck.txt`). Population values: λ_min(R₁₂₃) = 0.15; R⁺(∅) = 0.090 and
 R⁰(∅) = 0.130, so PGD fails exactly. Over 200 draws per n:
 
-| n | first move "add x₃" | TD′_P(R_{2,1}) | TD′_∞(R_{2,1}) (all 2⁰…2² × 7-null states) |
+| n | first move "add x₃" | TD′_P(R_{2,1}) | TD′_∞(R_{2,1}) (all 4 × 7 = 28 states) |
 |---|---|---|---|
 | 200 | 139 | 36 | 40 |
 | 1000 | 195 | 5 | 166 |
