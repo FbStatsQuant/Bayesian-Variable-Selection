@@ -1,0 +1,18 @@
+C-LD: exact equicorrelated-null design, s0=1, theta=1, sigma=1, p = n-2, S = S0+{argmax G, argmin G}
+cols: n r reps | frac D_S fails (TD'_P(R_{0,2}) fails) | frac spurious local max (of those checked) | frac d=1 OK | median F(S)-max F(S-e)
+n=    200 r=0.30 reps=200 | fail2=0.000 | locmax=nan (k=0) | d1_ok=0.985 | median margin=-3.40
+n=   2000 r=0.30 reps=200 | fail2=0.000 | locmax=nan (k=0) | d1_ok=0.995 | median margin=-4.63
+n=  20000 r=0.30 reps=200 | fail2=0.000 | locmax=nan (k=0) | d1_ok=1.000 | median margin=-5.24
+n= 200000 r=0.30 reps= 60 | fail2=0.000 | locmax=nan (k=0) | d1_ok=1.000 | median margin=-5.85
+n=    200 r=0.55 reps=200 | fail2=0.030 | locmax=1.000 (k=1) | d1_ok=0.995 | median margin=-2.40
+n=   2000 r=0.55 reps=200 | fail2=0.030 | locmax=nan (k=0) | d1_ok=0.990 | median margin=-3.11
+n=  20000 r=0.55 reps=200 | fail2=0.035 | locmax=1.000 (k=1) | d1_ok=1.000 | median margin=-3.40
+n= 200000 r=0.55 reps= 60 | fail2=0.017 | locmax=nan (k=0) | d1_ok=1.000 | median margin=-3.83
+n=    200 r=0.70 reps=200 | fail2=0.080 | locmax=1.000 (k=1) | d1_ok=0.995 | median margin=-1.90
+n=   2000 r=0.70 reps=200 | fail2=0.095 | locmax=1.000 (k=8) | d1_ok=1.000 | median margin=-2.39
+n=  20000 r=0.70 reps=200 | fail2=0.120 | locmax=1.000 (k=5) | d1_ok=1.000 | median margin=-2.11
+n= 200000 r=0.70 reps= 60 | fail2=0.167 | locmax=nan (k=0) | d1_ok=1.000 | median margin=-1.55
+n=    200 r=0.90 reps=200 | fail2=0.280 | locmax=1.000 (k=12) | d1_ok=0.990 | median margin=-0.88
+n=   2000 r=0.90 reps=200 | fail2=0.325 | locmax=1.000 (k=15) | d1_ok=0.995 | median margin=-0.55
+n=  20000 r=0.90 reps=200 | fail2=0.485 | locmax=1.000 (k=23) | d1_ok=1.000 | median margin=-0.06
+n= 200000 r=0.90 reps= 60 | fail2=0.683 | locmax=nan (k=0) | d1_ok=1.000 | median margin=+0.67
