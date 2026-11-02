@@ -187,4 +187,4 @@ Smallest experiment that would decide whether the variant keeps the empirical re
 5. Random designs: each null's exponent is (v_∅/σ̂²)χ²₁/2, inflation 1/(1 − R²) ≈ 26 at c = 1: the common-σ̂² start floods to the cap (Theorem S6; exact IID500 cell: 10^{−1303} vs v3's 10^{−12.4}, which matches the study's median).
 6. The exact BO cell confirms the cure where BO holds: v3 10^{−7.5} → common σ̂² 10^{−0.5} = π(S₀); C-fix converges to S₀ in 2 steps there and runs away to |S| = K in the iid design (C-E4).
 7. Recommendation: do not deploy "common σ̂², everything else unchanged"; the dilution is the right null scale in non-orthogonal designs. Residualised tables (y minus other blocks' fit) are the candidate that keeps the protection (outside scope). Pilot Step 0 (free, post hoc from saved tables) decides before any SMC run.
-8. Head SHA: <!--SHA-->.
+8. Head SHA: 025b8d6 (content commit; this line stamped in the follow-up commit).
