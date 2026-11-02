@@ -103,7 +103,22 @@ joint laws 0.0035 (MC scale 0.006).
 **NL0 / UDEL: partner graph vs equicorrelated nulls** (`nl0_equicorr.py`; s₀ = 2, r = 0.8, p = n^0.9; medians).
 EQ = every null pair partnered (PG fails); BLK = groups of 5 (D = 4).
 
-NL0_TABLE_PLACEHOLDER
+| p | n | EQ: Λ₂(0) | EQ: Λ₂(1) | EQ: ε_del(2) | BLK: Λ₂(0) | BLK: Λ₂(1) | BLK: ε_del(2) |
+|---|---|---|---|---|---|---|---|
+| 60 | 97 | 0.186 | 4.40 | 0.61 | 0.303 | 1.58 | 0.34 |
+| 120 | 207 | 0.221 | 6.88 | 0.78 | 0.352 | 1.09 | 0.36 |
+| 250 | 464 | 0.126 | 7.74 | 0.65 | 0.197 | 0.69 | 0.14 |
+| 500 | 1000 | 0.091 | 3.81 | 0.30 | 0.121 | 0.62 | 0.12 |
+| 1000 | 2157 | 0.074 | 14.63 | 0.87 | 0.091 | 0.37 | 0.051 |
+
+(Medians of 6 replicates, 3 at p = 1000; Λ₂(0) = Σ_l o_l(S₀).)
+
+Reading:
+- Leakage at S₀ itself decays in both designs, as proved.
+- BLK: the sum-of-sups Λ₂(1) decays (1.58 → 0.37) and ε_del(2) → 0 (0.34 → 0.05), consistent with PG.
+- EQ: Λ₂(1) does not decay (4.4 → 14.6, noisy, heavy-tailed) and ε_del(2) stays at 0.3–0.87.
+- The proved single-pair divergence of the EQ odds needs n ≳ 10¹¹ (log factors, PROOF §3.4). What is visible here is
+  the non-decaying sum.
 
 **TS counterexample** (`ts_cancel.py`; r = 0.5, θ = (1, −2), 20 reps): P(G₁ deletes truth 1 at {1}) = 0.996, 0.998,
 0.9992, 0.9997, 0.99984, 0.99993 at n = 200 … 6.25·10⁵, while P(G₂ adds truth 2 at {1}) = 1.000. Repair is not
