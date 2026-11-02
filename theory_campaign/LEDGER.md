@@ -55,3 +55,10 @@ Credit readings: $245 (16:00), $244 (17:19, after 7 s test), $239 (~17:22, right
 
 ### 18:20 UTC relaunch (after T3 restarts and the Owls overload)
 F-PXN cancelled (superseded by W3-PXN). F-SHARE, F-REFINE relaunched at Fable xhigh (CP). O-LS0 relaunched light (≤2 cores via owls_run; NOTS if > ~6 core-hours). A-REV1, A-REV2 (Astra high) relaunched. OWLS-STEWARD (Sonnet 5.5, Claude Work) is building the guardrails in ~/.config/bvs-hq/owls/.
+
+### 18:35 UTC: original-draft track (Felipe's first draft "Local-to-Global Bayesian Computation", copy in ~/.config/bvs-hq/inputs/)
+| ID | Model | Task | Branch |
+|---|---|---|---|
+| F-DRAFT | Fable 5.1 high (CP) | map the draft's theory targets onto the current list; new target statements | theory/F-DRAFT |
+| O-WSTAB | Opus 5.5 xhigh (CP) | prove the draft's weight-stability theorem (chi²/KL(pi‖pi0) vs cross-block dependence; ESS; regime dichotomy) | theory/O-WSTAB |
+| A-DRAFT | GPT-6 Astra high | novelty audit vs the literature; E[h] consistency theorem; naive-merge-fails proposition | theory/A-DRAFT |
