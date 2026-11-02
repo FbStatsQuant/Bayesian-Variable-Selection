@@ -1,0 +1,22 @@
+O-MIX numerics: exact small-p comparison of three start fixes for masked-regime discovery.
+
+  base  : v3 start (v3 partition, tables r_b(U) = BF(U), sigma^2 integrated per block)
+  (B)   : mixture start 1/2 pi0[base] + 1/2 pi0[P+], P+ = v3 partition with every *linked* block pair merged
+          (linked: max cross-block |r_jl| > tau_n = 3 sqrt(log p / n); merge only if merged size <= 16)
+  (C)   : common plug-in sigma^2 tables r^C_b(U) = D_U^{-1/2} exp(t_U / (2 s2)), on the v3 partition, for
+          s2 in {oracle  = (2b0+Q_S0)/(2nu),  fixpoint = iterate s2 <- (2b0+Q_{mode})/(2nu) from the v3 start mode,
+                 null    = (2b0+Q_empty)/(2nu)}
+  (C-grid): uniform mixture of (C) over the log-grid s2_k = (2b0+Q_empty)/(2nu) * exp(-k*eta/sqrt(nu)), k = 0..m-1,
+          covering down to (2b0 + y'y/(n+1))/(2nu); eta = 1.
+Exact pi0 masses via block size-profile convolution (exact normaliser); start modes via max-plus convolution;
+exact posterior pi by full enumeration.  Also checks Theorem C1's deterministic bound on the BO family.
+Sufficient statistics only (exact-Gram realisation X'X = (n-1) Sigma).  Seeds fixed below.
+
+
+=== LH-B(c=2,p=20): S0=[0, 4, 8, 12], masked M=[4, 12], S°=[0, 8]
+n | med log10 pi0: base, P+, mix(B), C-oracle, C-fix, C-null, C-grid | med pi(S0) | share(mode_base=S°) | share(mode_C-fix ⊇ S0) | C1 bound held | m_grid | linked pairs found
+200 | -4.33, -0.14, -0.44, -4.09, -4.22, -4.33, -4.32 | 0.706 | 1.00 | 0.00 | 1.00 | 54 | 2.0
+800 | -4.92, -0.04, -0.34, -4.72, -4.84, -4.92, -5.23 | 0.814 | 1.00 | 0.00 | 1.00 | 135 | 2.0
+C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-O-MIX\theory_campaign\O-MIX\scripts\mixnum.py:212: RuntimeWarning: invalid value encountered in reduce
+  lgrid = np.logaddexp.reduce(np.array(lg)) - math.log(m)
+3200 | -5.53, -0.02, -0.32, -5.41, -5.48, -5.53, nan | 0.936 | 1.00 | 0.00 | 1.00 | 324 | 2.0
