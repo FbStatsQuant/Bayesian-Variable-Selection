@@ -111,6 +111,8 @@ For the four final islands the bound is multiplied by 4. Moreover the probabilit
 
 **Proof.** Resampling only copies existing states, so a particle can be in U at some time only if an initial draw is in U or some round starts outside U and ends in U. The expected number of initial draws in U is Nπ₀(U). In round k, at most N particles start outside U, and each enters U with conditional probability ≤ a_k (fresh randomness). A union bound over the first entry gives the claim. ∎
 
+**Numerical sharpness (s3).** In the posterior-barrier design PB(n = 16000) the measured gate rate from the occupied state {12} at φ = 1 is ≈ 5·10⁻⁶ per particle-round (6 entries in 1.2·10⁶ particle-rounds; `s3`/diagnostic), so the bound is ≈ 2500 × 38 × 5·10⁻⁶ ≈ 0.48 per island; the observed frequency of islands in which S₀ was scored is 0.51 (100 islands). The union bound is essentially attained.
+
 **Use.** Lemma A (W1-T38E) bounds a_k by endpoint odds for Gibbs gates. If U = the set of repairable states and U is separated from the start region by a posterior-level barrier (every path needs ≥ 2 individually unfavourable flips at every φ), then a_k ≤ (odds of the first unfavourable step) × (number of gate labels), and route (b2) fails with probability ≥ 1 − Nπ₀(U) − N(T+L+4)·max_k a_k. This is the obstruction for **posterior-level masking**. §6 shows that it cannot occur among truth-subsets under R (and among 𝓡_d under SE) — so it is an obstruction outside T03's regime only.
 
 ---
@@ -135,6 +137,17 @@ So: under R (λ_min(R_{S₀}) ≥ φ₀²) every truth-subset T ⊊ S₀ has a m
 **(b) Score gain (PROOF SKETCH).** Using the gain expansion of 00_COMMON (EXP / E_{T,l} quantities: log[BF(T+j)/BF(T)] = −½log(n+1) + (δ_{T,j} + σ*Z_{T,j})²/(2v_T) + R_n), (a) and BM-∞ give, w.p. → 1 (a finite union over the ≤ 2^{s₀}·poly(n) relevant (T, j) pairs, with v_T ≤ σ*² + ‖μ‖²/(n−1) bounded under R):
   min_{T} max_{j∈M(T)} [F(T+j) − F(T)] ≥ c M_n log n − (A + ½)log n − O(√log n) → ∞.
 Combined with the start-side bound log κ₀(T, j) ≥ −log(2p) − ½log(n+1) =: −λ_n (W1-T38E E1 applied to a table), Lemma A's identity gives, for φ ≥ φ_n := λ_n/(λ_n + g_n) with g_n the gain above, γ_φ(T+j)/γ_φ(T) ≥ 1 for that j. **Thus under T03's hypotheses the within-𝓡_d path to S₀ is downhill for all φ ≥ φ_n → 0**: there is no posterior-level barrier, Proposition X cannot bite, and the only remaining obstruction to delivery is outsider competition (D5's Γ) plus exits.
+
+---
+
+## 6b. Lemma PD (start mass × fitness = posterior) — PROVED; consequence for C1-type takeover
+
+**Identity.** For every S ∈ Ω, log γ₀(S) + d(S) = log ϖ(S) + Σ_b log r_b(S∩C_b) + log BF(S) − Σ_b log r_b(S∩C_b) = log ϖ(S) + log BF(S) = F(S) − log m(∅) (00_COMMON §2). Hence for an outsider y and an occupied W-state x,
+  [log π₀(y) − log π₀(x)] + [d(y) − d(x)] = F(y) − F(x).
+
+**Consequence (PROVED, elementary).** In the pure-selection two-class picture of §3/§5, the outsider y's expected share relative to x after the whole bridge is (π₀(y)/π₀(x))e^{d(y)−d(x)} = e^{F(y)−F(x)}. A C1-type takeover needs an initial copy, Nπ₀(y) ≥ 1, **and** an advantage d(y) − d(x) ≥ log N + ω. Then F(y) − F(x) = log(π₀(y)/π₀(x)) + d(y) − d(x) ≥ −log(Nπ₀(x)) + log N + ω = log(1/π₀(x)) + ω ≥ ω. In words: **the outsider must beat the occupied W-states in the posterior itself, by at least ω nats**. If the W-particles track the posterior upward (reach states with F ≥ F(y) − δ for every reachable outsider y), no outsider can take over in mean field and only the drift/fluctuation terms of D4 remain.
+
+**Reading for BVS (PROOF SKETCH).** A start-visible outsider extra (marginally correlated with y) is over-counted by its table relative to its joint contribution, so its d-increment is ≤ 0; a synergistic (suppressor-type) extra has d-increment ≈ its gain + ½log n but start factor ≈ 1/(2p√n). So an outsider with Nπ₀(y) ≳ 1 can carry at most ≈ log N/log(2p√n) ≈ 1 invisible synergistic extra (N = max(2500, n, p)). C1's structure in BVS therefore needs W-particles that lag *in the posterior* (they cannot reach better W-states, i.e. a posterior-level barrier, §4/§6) together with an outsider class that is posterior-better than the lagging states. Under T03's hypotheses Proposition M removes the lag, and the right repair set W contains such outsiders anyway (terminal repair from S° ∪ {l} adds the missing truths downhill and deletes l). A BVS design realising C1 with REPAIR still valid on the occupied region was not found and is not expected (CONJECTURE).
 
 ---
 

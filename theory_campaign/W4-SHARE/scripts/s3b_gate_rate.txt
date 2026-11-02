@@ -1,0 +1,4 @@
+{12} S0 evals in 3 rounds x 400000: {'gibbs': 6} occupying S0 at end: 6
+pi0 S0 evals in 3 rounds x 400000: {'gibbs': 5} occupying S0 at end: 5
+pi0 pairs [np.float64(7.502409330082959e-07), np.float64(7.796310842257239e-07), np.float64(4.437528818543794e-07)] pi(pairs) [np.float64(7.822274199027623e-36), np.float64(1.154765577805922e-35), np.float64(3.2933718902984235e-36)]
+d diffs [np.float64(0.34455856421845965), np.float64(0.6956392471765867), np.float64(0.004621728119673207)] d(S0)-d 87.89541586342966
