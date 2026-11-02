@@ -16,3 +16,5 @@ Locked proofs: [P1] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex,
 ## step 3 — scripts/propD_independent.py: Prop D reproduced (brute-force m(S) == closed form to 1e-13; bound holds on E_n
    108/108 small-n incl. adversarial y; P(E_n)=1, bound 100% at n up to 2e5; cutoffs 4/6/8/9). Constant 0.25157>=1/4 (margin 0.0016).
 ## Idea to check: SE_lambda(j0) normalised is needed ONLY in lem:signal; cor:diff lower half and ongood(c) work with g0 (rho_n -> O(1) const).
+## step 4 — scripts/check_deterministic.py: B3, C6a (crude, no eigen), B1, eq:score identity, proposed OGc'/CDl' variants,
+   den' and the T02(i#) pointwise chain on B_n: all hold on 60 random small designs (iid/equi/near-collinear), exhaustive over models.

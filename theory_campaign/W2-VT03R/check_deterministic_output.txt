@@ -1,0 +1,8 @@
+[B3   ] checks:   9000   worst slack (<= 0 means the inequality holds; log or relative scale): -4.758e-10
+[C6a  ] checks:  15240   worst slack (<= 0 means the inequality holds; log or relative scale): -9.602e-02
+[B1   ] checks:   1474   worst slack (<= 0 means the inequality holds; log or relative scale): -8.568e-06
+[ID   ] checks:   1474   worst slack (<= 0 means the inequality holds; log or relative scale):  2.398e-14
+[OGc' ] checks:   5284   worst slack (<= 0 means the inequality holds; log or relative scale): -5.023e-11
+[CDl' ] checks:   9000   worst slack (<= 0 means the inequality holds; log or relative scale): -1.007e-11
+[den' ] checks:     60   worst slack (<= 0 means the inequality holds; log or relative scale): -2.900e+00
+[main ] checks:    350   worst slack (<= 0 means the inequality holds; log or relative scale): -4.699e+00
