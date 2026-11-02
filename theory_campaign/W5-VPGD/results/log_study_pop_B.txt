@@ -8,3 +8,5 @@ S5 (p=500, R_{2,2}(D), 71 cols): eta_hat=0.1079 binding N5 swap truth->truth at 
   size 12 done; states so far 91 max ratio 0.8024691358944517
   size 13 done; states so far 5201 max ratio 0.8518518519208388
   size 14 done; states so far 146125 max ratio 0.8518518519208388
+  size 15 done; states so far 167685 max ratio 0.8518518519208388
+S2 (p=500, R_{2,2}(D), 500 cols): eta_hat=0.1481 binding N5 swap truth->truth at [2, 36, 105, 143, 144, 212, 246, 283, 315, 354, 387, 422, 456]; TRC_min=0.1481; GERC_max(R_{3,2})=0.5000 => GERC eta1=0.7500

@@ -87,11 +87,11 @@ if __name__ == '__main__':
     p = 500
     act, beta = truth(p)
     D = mates(act, p)
-    for scen in scens:
-        Sig = scenario_covariance(scen, p)
-        L = np.linalg.cholesky(Sig)
+    Ls = {scen: np.linalg.cholesky(scenario_covariance(scen, p)) for scen in scens}
+    for rep in range(reps):
         for n in ns:
-            for rep in range(reps):
+            for scen in scens:
+                L = Ls[scen]
                 seed = seed0 + 1000 * scen + n + rep
                 rng = np.random.default_rng(seed)
                 X, eps = gen(scen, p, n, rng, L)
