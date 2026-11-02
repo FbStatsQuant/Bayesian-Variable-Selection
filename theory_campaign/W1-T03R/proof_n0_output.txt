@@ -1,0 +1,4 @@
+A = 1.1729  m =   old: deterministic steps of the T03 proof hold from n = 127,302
+A = 1.1729  m = sharp: deterministic steps of the T03 proof hold from n = 115,150
+A = 1.3038  m =   old: deterministic steps of the T03 proof hold from n = 142,990
+A = 1.3038  m = sharp: deterministic steps of the T03 proof hold from n = 130,328
