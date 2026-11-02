@@ -1,0 +1,24 @@
+{
+  "refs": {
+    "origin/theory/W2-T26": "0e4f1e7f5efd1e67330affa4168b69750eaff2f1",
+    "origin/theory/W2-BOOK": "57eb3d0f6699d76c0796e8b389415dacb182c231",
+    "origin/theory/F-DRAFT": "4de6e4c7fab641f11f1ba8bb9f306beae5103b74",
+    "origin/theory/A-DRAFT": "dbf47f7abfe9940ec7914f89bbe5f28071ad9871"
+  },
+  "base": "816ec72ed40a35a0bff620ccb3170d947008cebe",
+  "sha256": {
+    "theory_campaign\\A-REV4\\snapshots\\00_COMMON.md": "db0b16d6856ffd606b88f71ee9f0b2904ebd25cd643befa5e97966ce16350079",
+    "theory_campaign\\A-REV4\\snapshots\\A-DRAFT_REPORT.md": "b572a25a7fd6039f8771581d3f1db5c945188a3f8b32072471f34b6793787eee",
+    "theory_campaign\\A-REV4\\snapshots\\COLLECTED_PROOFS_v2.tex": "acb3e266461964a4ee6f63d542f63184801f357527651a76db9f8f1233194eea",
+    "theory_campaign\\A-REV4\\snapshots\\F-DRAFT_NEW_TARGETS.md": "dc061805989103d852e501d34df7a2f449fb84193fad9709c3811d9965857d72",
+    "theory_campaign\\A-REV4\\snapshots\\LOCKED_PROOFS.md": "ea898e44183e2d5a73998916918527020583af1737c804fff96f4f147ef36147",
+    "theory_campaign\\A-REV4\\snapshots\\METHODOLOGY_v3.md": "b4253987e3c43c2d703e0157eaf3e3a81d0fff7821ef890b735b167f4344090e",
+    "theory_campaign\\A-REV4\\snapshots\\v3_core.cpp": "fbe4773775d57eec41112d2acb3be80e5ac0cc7261f60b89cb0eed0bd13a3c0d",
+    "theory_campaign\\A-REV4\\snapshots\\v3_runtime.h": "2e164ce34c61e5611e829208e99f6c5c0c6cce19145ab453e1beeb8e5a35900e",
+    "theory_campaign\\A-REV4\\snapshots\\W2-BOOK_NOTES.md": "f447a8f2306f90d64b5b7bdfc43e1d7e5559d13cc02f3aeea9b5e55ad9d9c68e",
+    "theory_campaign\\A-REV4\\snapshots\\W2-BOOK_PROOF.md": "9c58bfc11b9dfa6e1676e9125eb6812bd17ae7b26236abdab885fcb4db1ed73f",
+    "theory_campaign\\A-REV4\\snapshots\\W2-BOOK_REPORT.md": "0fb72d466768e6d16d3b03005b8572e3d2959f907686031f7680582a5936fcbe",
+    "theory_campaign\\A-REV4\\snapshots\\W2-T26_PROOF.md": "9fbfcf669d1c58932e2f0a182c2e2ef02e309f049df6f4a5c97673893b9d2264",
+    "theory_campaign\\A-REV4\\snapshots\\W2-T26_REPORT.md": "992a3c68d12a163c458f20b390d672acff62e36a73723b7008bb7da7c73d02a3"
+  }
+}
