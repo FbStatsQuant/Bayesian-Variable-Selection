@@ -117,3 +117,6 @@ In flight now: laptop 18 (14 CP/Codex + 2 CW + 2 new CW), cloud 10, Owls O-LS0.
 ### 20:16 UTC: wrap-up
 27/28 agents done. O-LS0 delegate was cancelled by a T3 restart after its Owls jobs finished → O-LS0-WRAP (Opus high, CW, Owls, aggregation only) writes the report. W8-SYNTH (credits) writes SYNTHESIS.md + BRIEF.md. L-LEAN still building.
 Key landings: O-BGIBBS Theorem BG3 (no-LS0 masked discovery on LH, p fixed, PROVED); F-SHARE closure theorem; S-ELS: 0 search misses, local search 0 moves in 2,394/2,394; F-SIGMA: common-σ² catastrophic in random designs; O-VCERT: O-CERT verified; F-REFEREE: major revision.
+
+### 20:33 UTC: O-LS0 data check DONE (theory/O-LS0 @ 02348e2; coverage complete, 2,400 fits)
+LS0 changes the reported HPM in 0 / 2,394 completed fits; exact recovery unchanged (1,119/1,200 at c=1; 710/1,200 at c=0.5); cost 0.2–0.4 s per fit (<0.1%). Safety half of the investment rule PASSES on the full study. Felipe's conditional approval of LS0 is therefore effective. Caveat: most T38 premises fail at n=200 (π₀(S̃₀)>½ in 18/2,400; move cap in 1,968/2,400) — the theory value is asymptotic, as disclosed.
