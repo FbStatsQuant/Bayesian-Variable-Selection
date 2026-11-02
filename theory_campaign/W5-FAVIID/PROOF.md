@@ -341,3 +341,72 @@ within a block. If they were independent, (1/p)Σ_l e^{χ²_l/2} would be p^{−
 run's S1/S3 data at large n (REPORT §4.3) agree with the prediction to within 30%. CONJECTURE (sharp constant).
 In exactly orthogonal designs (W2-T26's ORTH) the null columns are orthogonal to the signal, X ≈ (σ²/v)χ²₁/n, the
 moment E e^{(σ²/v)χ²/2} is finite, and the rate is n^{−1/2} without √log n — consistent with W2-T26 §4.2 and W1-EXP Thm 6.
+
+---------------------------------------------------------------------------------------------------------
+
+## 11. Finite n: a one-change ceiling, and the threshold n*(design)
+
+### Proposition F (one-change ceiling; sharpens W3-VEXP Prop D) — PROVED (deterministic)
+For any data, any partition with positive tables, and S₀ ∈ Ω with s₀ + 1 ≤ K:
+  π₀(S₀) ≤ [1 + N_add + Σ_{j∈S₀} O^del_j + Σ_{j∈S₀, l∉S₀} O^swp_{j,l}]^{−1},
+  N_add := Σ_{l∉S₀} γ₀(S₀+l)/γ₀(S₀) = [(s₀+1)/(2p−s₀−1)] Σ_{l∉S₀} r_{b(l)}(U*_{b(l)}+l)/r_{b(l)}(U*_{b(l)}),
+  O^del_j := γ₀(S₀−j)/γ₀(S₀) = [(2p−s₀)/s₀]·r_{b(j)}(U*_{b(j)}−j)/r_{b(j)}(U*_{b(j)}),
+  O^swp_{j,l} := γ₀(S₀−j+l)/γ₀(S₀) (a ratio of at most two table entries per block; no prior factor).
+*Proof.* 1/π₀(S₀) = Σ_{S∈Ω}γ₀(S)/γ₀(S₀) ≥ 1 + (the sum over the one-change neighbours, all in Ω), and γ₀ factorises
+over blocks with the prior ratios w(s₀±1)/w(s₀) = (s₀+1)/(2p−s₀−1), (2p−s₀)/s₀. ∎
+Combined with T22(i) this brackets π₀(S₀) between two data-computable quantities. The **product refinement** used for
+prediction (not a bound): summing the null additions over all subsets with the BB(1,p) prior gives the negative-binomial
+factor (1 − N_add/(s₀+1))^{−(s₀+1)} ≈ e^{N_add} when the null odds are small and nearly independent, so
+  log π₀(S₀) ≈ (s₀+1)log(1 − N_add/(s₀+1)) − Σ_j log(1 + O^del_j + Σ_l O^swp_{j,l}).          (11.1)
+REPORT §4.1 ("decomposition" column) shows (11.1) evaluated at the *exact* odds reproduces the exact log₁₀π₀(S₀) to within
+≈ 0.1 decades whenever π₀(S₀) ≥ 10⁻³, and to within a few decades in the deeply masked cells (n = 200).
+
+### Population plug-in (the dilution threshold) — PROOF SKETCH for each limit; CONJECTURE for the median-level formula
+For FAV with one truth per group, unit-variance groups, σ² = 1 and truths not co-blocked (the typical case), each term of
+(11.1) has an explicit population counterpart (Lemma B′ for nulls, W3-PXN Prop W for truths):
+- **Dilution:** v := σ² + Σ_k θ_k² (the block view of a truth sees all other truths' signal as noise);
+  V_j := −(n/2)log(1 − θ_j²/v) (median of the block keep statistic −ν log(1 − X_j), nX_j ≈ (√(nθ_j²/v) + Z)²);
+- **deletion odds** O^del_j ≈ [(2p−s₀)/s₀]√(n+1)e^{−V_j};
+- **proxy-swap odds** (equicorrelated group, ρ_j, g − 1 mates) O^swp_j ≈ (g−1)exp(−(n/2)log((v − ρ_j²θ_j²)/(v − θ_j²)));
+- **null-addition mass** N_add ≈ [(s₀+1)(p−s₀)/(2p−s₀−1)]·M(p,n)/√(n+1), M(p,n) := median of the average of p − s₀ iid
+  (1 − B)^{−ν}, B ~ Beta(½, (n−3)/2) (≈ 1 + (2/√π)√(log p), the index-1 stable scale of §10).
+The thresholds are then explicit functions of (θ, v, p, s₀, ρ):
+- **n*_del(j)**: the smallest n with V_j ≥ log((2p−s₀)/s₀) + ½log(n+1) + log(2s₀) — scale-free in θ (θ_j²/v depends only
+  on the *shares* θ_j²/Σθ², up to σ²), which is W3-VEXP/PXN's dilution observation;
+- **n*_swp(j)**: (n/2)log((v − ρ_j²θ_j²)/(v − θ_j²)) ≥ log(2(g−1)s₀) — the only place the within-group correlation enters;
+- **n*_null**: N_add ≤ log 2 (π₀(S₀) cannot exceed ½ before), ≈ ((s₀+1)M(p,n)/(2 log 2))² — **independent of θ and v**;
+- **n*_half(design)** := first n at which (11.1)'s population version reaches log ½; **n*_hit** := first n at which
+  Q_f^min·π₀(S₀) ≥ 3, Q_f^min = 4N₀(L + 6) the minimum number of iid π₀ draws scored by the final run (T ≥ 1), so that
+  P(S₀ not drawn) ≤ e^{−3}.
+REPORT §4.4 tabulates these thresholds and checks them against exact π₀ at n ∈ {200, …, 3200}.
+
+---------------------------------------------------------------------------------------------------------
+
+## 12. Consequences for Thm 5(a) (T38(a)) and Thm 6 (T26(i)–(ii)'s premise (P1))
+
+**Corollary C1 (posterior concentration on FAV) — PROVED given locked T03 and [C1].** On FAV (S1, S3, S4, S6 included),
+δ₁ = 1 − π(S₀) = O_P(√(log n/n)).
+*Proof.* W3-PXN Lemma P2's argument applies verbatim to any Σ with λ_min(Σ) ≥ λ₀ and fixed nonzero coefficients: SE for
+|T| ≤ m_n + s₀ = O(log n) (|T|ε_n → 0), R (‖μ‖²/n → β'Σ_{S₀}β a.s.; under the generator convention θ* = β exactly),
+BM-∞ (fixed θ*), G given X. W3-PXN's design de-randomisation lemma (P8, PROVED there) transfers locked T03(i). ∎
+
+**Corollary C2 (Thm 6's (P1) on the study-like family) — PROVED as a composition** (inputs: Theorem B here, Corollary C1,
+W2-T26 Lemma 1 and Theorem A (candidates, PROVED there), locked T03; idealisations EX-A, EX-S, CAL, START, OUT).
+On FAV with P(Q_n(m)) → 1 for a fixed m — in particular S3, S4, S6 (m = 3), and S1 on the event of at most m truths per
+block —
+  Δ_n = max{1 − π₀(S₀), δ₁} = O_P(√(log n/n)),  (T_n + 1)Δ_n ≤ (T^max_n + 1)Δ_n = O_P(log^{5/2}n/√n) → 0,
+so (P1) holds in its deterministic-budget form, (P1-ex) holds by C1, and **T26(i)–(ii) (evidence and PIP consistency) hold on
+S3/S4/S6-type designs with the actual partition and budgets**, with no EXP′, VIS, NL_η or NL_avg hypothesis.
+*Proof.* T^max = 4max(1000, ℓ²) = O(log²n). W2-T26 Lemma 1 gives Δ_n; Theorem B and C1 bound both terms; W2-T26 Theorem A. ∎
+This replaces W2-T26 Theorem B's CONDITIONAL route (through the locked T22(iii)) for these designs.
+
+**Corollary C3 (Thm 5(a), favourable regime of T38) — PROVED as a composition** (inputs: Theorem B, C1, locked T21 route (a),
+EX-S). On the same families, P(Uᶜ ∩ {S₀ never scored}) ≤ E[(1 − π₀(S₀))^{Q_f}] → 0, because Q_f ≥ 4N_e(L+6) → ∞ and
+π₀(S₀) → 1 in probability; with C1 and T21, liminf P(Ŝ = S₀) ≥ 1 − limsup P(U).
+*Remark (what is really needed).* Route (a) needs only Q_f·π₀(S₀) → ∞, far weaker than π₀(S₀) → 1: at the study budgets
+Q_f ≥ 1.4·10⁵, so π₀(S₀) ≥ 2·10⁻⁵ already gives P(S₀ never drawn) ≤ e^{−3}. The thresholds n*_hit (≈ 330–440) and
+n*_half (≈ 1,050–1,450) differ by a factor ≈ 3 (REPORT §4.4).
+
+**Finite n.** With the deterministic budget T^max = 4,000, (T^max + 1)Δ_n < 1 needs Δ_n < 2.5·10⁻⁴, i.e. (by §10's sharp
+constant) n of order ((s₀+1)·4001·M_p/2)² ≈ 10¹⁰ at s₀ = 14. With the **realised** pilot/grid stage count T_n (simulated in
+REPORT §4.5) the first n with (T_n + 1)Δ_n < 1 is reported there.
