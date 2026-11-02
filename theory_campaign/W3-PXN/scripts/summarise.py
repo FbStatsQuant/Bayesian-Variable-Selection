@@ -57,6 +57,11 @@ def lh(name):
         print(" | ".join(line))
 
 
+def tau(n, p, s0=14):
+    """dilution threshold: LO0(j) ~ V0(j) - [log((2p - s0)/s0) + (1/2) log(n+1)]"""
+    return math.log((2 * p - s0) / s0) + 0.5 * math.log(n + 1)
+
+
 def study(fname, title):
     R = load(fname)
     if not R:
@@ -67,7 +72,8 @@ def study(fname, title):
         by[(r["scen"], r.get("n", 200), r["p"], r["cc"])].append(r)
     print("scen n p scale reps | med log10 pi0(S0) | med pi0(R2) | med pi0(R0) | mean #mode-missing truths |"
           " mean #start-masked (LO0<0) | frac start-masked with LO1>0 | masked: med V0 / med V0pop / med V1 |"
-          " masked: med delta2_pop (=L^2) | med v_T | med [log10 pi0(S0)-log10 pi0(mode)] | CL(0) pred -#miss*log10(p sqrt n)")
+          " masked: med delta2_pop (=L^2) | med v_T | med [log10 pi0(S0)-log10 pi0(mode)] | CL(0) pred -#miss*log10(p sqrt n) |"
+          " dilution-predicted #masked (V0pop < tau) | per-truth agreement pred vs LO0<0")
     for key, rs in sorted(by.items()):
         s, n, p, cc = key
         masked = [t for r in rs for t in r["per_truth"] if t["LO0"] < 0]
@@ -83,7 +89,9 @@ def study(fname, title):
                 ("%.0f" % np.median([t["delta2"] for t in masked])) if masked else "-",
                 "%.2f" % np.median([t["vT"] for r in rs for t in r["per_truth"]]),
                 "%.1f" % np.median([(r["log_pi0_S0"] - r["log_pi0_mode"]) / L10 for r in rs]),
-                "%.1f" % np.median([-len(r["mode_missing"]) * math.log10(p * math.sqrt(n)) for r in rs])]
+                "%.1f" % np.median([-len(r["mode_missing"]) * math.log10(p * math.sqrt(n)) for r in rs]),
+                "%.1f" % np.mean([sum(t["V0pop"] < tau(n, p) for t in r["per_truth"]) for r in rs]),
+                "%.2f" % np.mean([(t["V0pop"] < tau(n, p)) == (t["LO0"] < 0) for r in rs for t in r["per_truth"]])]
         print(" | ".join(line))
     allt = [t for r in R for t in r["per_truth"]]
     v0 = np.array([t["V0"] for t in allt]); vp = np.array([t["V0pop"] for t in allt])
@@ -96,3 +104,29 @@ if __name__ == "__main__":
         lh(nm)
     study("../results/study_n200.jsonl", "Study design, n = 200 (S1/S3/S4/S6)")
     study("../results/study_nsweep.jsonl", "Study design, n sweep at p = 1000, scale 0.5")
+
+
+def ls0_study():
+    R = load("../results/study_ls0.jsonl")
+    if not R:
+        return
+    print("\n=== LS0 (local search from the exact start mode) on the study design, n = 200 ===")
+    by = collections.defaultdict(list)
+    for r in R:
+        by[(r["scen"], r["p"], r["cc"])].append(r)
+    print("scen p scale reps | ell | med |S~0 Delta S0| | frac dist <= ell+1 | LS0 ends at S0 (certified) | LS0 scores S0 |"
+          " end F >= F(S0) | frac S0-reached among dist<=ell+1 | frac S0-reached among dist>ell+1")
+    for key, rs in sorted(by.items()):
+        s, p, cc = key
+        ell = rs[0]["ell"]
+        near = [r for r in rs if r["start_dist"] <= ell + 1]
+        far = [r for r in rs if r["start_dist"] > ell + 1]
+        f = lambda xs: ("%d/%d" % (sum(r["scored_S0"] for r in xs), len(xs))) if xs else "-"
+        print(" | ".join([f"S{s} {p} {cc} {len(rs)}", str(ell), "%.0f" % np.median([r["start_dist"] for r in rs]),
+                          "%.2f" % np.mean([r["start_dist"] <= ell + 1 for r in rs]),
+                          "%d/%d" % (sum(r["end_is_S0"] and r["certified"] for r in rs), len(rs)),
+                          "%d/%d" % (sum(r["scored_S0"] for r in rs), len(rs)),
+                          "%d/%d" % (sum(r["end_minus_S0_F"] >= -1e-9 for r in rs), len(rs)), f(near), f(far)]))
+
+
+ls0_study()

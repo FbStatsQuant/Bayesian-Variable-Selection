@@ -1,0 +1,12 @@
+Lemma B: KS tests vs exact Beta laws (400 reps each)
+  a-group neutral  Beta(0.5, 98.0): KS p-value = 0.622
+  visible neutral  Beta(0.5, 98.0): KS p-value = 0.369
+  null             Beta(0.5, 98.0): KS p-value = 0.520
+  nullV2           Beta(1.0, 98.5): KS p-value = 0.171
+  bgroupV2         Beta(1.0, 98.5): KS p-value = 0.610
+  hub_b            Beta(0.5, 99.0): KS p-value = 0.252
+
+Theorem P6 population margins (exhaustive over neighbours inside the signal components + one null column)
+  smallest D_S margin over the grid: 0.002743 (c=3 rho=0.85 psi=0.20 beta=0.5)
+  smallest (L) deletion/swap margin over the grid: 0.002743
+  all margins positive: True  (grid size 81)
