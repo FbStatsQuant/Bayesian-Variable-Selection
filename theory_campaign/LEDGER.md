@@ -38,3 +38,7 @@ Wave 1 billed weekly PLAN usage (routines), not credits.
 | W3-PGD PGD/LD for refined T37 | session_01PQxfqzyBxybg1PmiQ8ArGV |
 
 Credit readings: $245 (16:00), $244 (17:19, after 7 s test), $239 (~17:22, right after Wave 2 launch).
+
+## Wave 4 (2026-11-02 ~17:55 UTC)
+| W4-T38FULL assemble T38 | see cloud_sessions.log |
+| W4-SHARE route b2 delivery | see cloud_sessions.log |
