@@ -1,0 +1,11 @@
+ORTH runs: p, n, B, s0, R2pop | ell(0) ell(1) ell(2) | SEP bound at w=2 | T_ideal [T_lo, T_hi] | multi-extra LB at w=2
+p=14 n=200 B=4 s0=2 R2=0.621 | ell0=0.133 ell1=0.211 ell2=0.4136 | SEP2=1.079 | T=2 [1,None] (3l*<c: False) | LB5=0.2061
+p=14 n=800 B=4 s0=2 R2=0.621 | ell0=0.0611 ell1=0.0731 ell2=0.08927 | SEP2=0.179 | T=1 [1,None] (3l*<c: False) | LB5=0.008895
+p=16 n=3200 B=4 s0=3 R2=0.519 | ell0=0.0459 ell1=0.0664 ell2=0.1052 | SEP2=0.208 | T=1 [1,None] (3l*<c: False) | LB5=0.01588
+p=16 n=400 B=4 s0=2 R2=0.153 | ell0=0.204 ell1=0.255 ell2=0.326 | SEP2=0.8215 | T=1 [1,None] (3l*<c: False) | LB5=0.0851
+p=16 n=20000 B=4 s0=3 R2=0.750 | ell0=0.0146 ell1=0.0209 ell2=0.03688 | SEP2=0.06582 | T=1 [1,1] (3l*<c: True) | LB5=0.01728
+p=12 n=100 B=3 s0=1 R2=0.692 | ell0=0.133 ell1=0.189 ell2=0.2993 | SEP2=0.8201 | T=1 [1,None] (3l*<c: False) | LB5=0.05777
+p=16 n=1000 B=4 s0=2 R2=0.889 | ell0=0.0492 ell1=0.081 ell2=0.1674 | SEP2=0.3276 | T=1 [1,None] (3l*<c: False) | LB5=0.05726
+(1) max |log(1+chi2) - [ell(u)+ell(w)-2ell(v)]| = 3.64e-12; sandwich held in all 1400 draws
+(3) SEP lemma: max over 147 (design, w) of ell(w) - bound = -0.0158 (must be <= 0)
+(2) W2 sandwich kappa*G <= LR <= kappa*G/(1-y): held in 246 comparisons (BO, correlated blocks)
