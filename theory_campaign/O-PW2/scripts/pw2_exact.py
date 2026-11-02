@@ -211,6 +211,16 @@ def main():
             Fm = g[t][:, None] * g[t][None, :] * ((1 - 1 / N) * KF + (1 / N) * 0.5 * (Kd[None, :] + Kd[:, None]))
         return (1 - 1 / N) * q[0] @ Fm @ q[0] + (1 / N) * q[0] @ np.diag(Fm)
 
+    def pairfun(Fm, top, N):  # E[W_top^2 qhat_top^{(x)2}(Fm)], Fm a pair function at level top
+        for t in range(top, 0, -1):
+            KF = K[t] @ Fm @ K[t].T; Kd = K[t] @ np.diag(Fm)
+            Fm = g[t][:, None] * g[t][None, :] * ((1 - 1 / N) * KF + (1 / N) * 0.5 * (Kd[None, :] + Kd[:, None]))
+        return (1 - 1 / N) * q[0] @ Fm @ q[0] + (1 / N) * q[0] @ np.diag(Fm)
+    def e_exact(s, Tp, N):  # e_s = E[W_s^2 mu_s(h_{s,T}^2)]
+        h2 = hfun(s, Tp) ** 2
+        if s == 0: return q[0] @ h2
+        return pairfun(np.outer(g[s], g[s] * (K[s] @ h2)), s - 1, N)
+
     Ns = [10, 30, 100, 300, 1000, 2500]
     allstats = {Tp: stats(Tp) for Tp in range(1, T + 1)}
     res = dict(p=p, rho=rho, kind=kind, seed=seed, thr=thr, T=T, grid=grid,
@@ -232,22 +242,30 @@ def main():
             Fb = [0.0] * (Tp + 1); Hb = [1.0] * (Tp + 1)
             for t in range(Tp, 0, -1):
                 Fb[t - 1] = chi2s[t] + 2 * math.sqrt(del2[t]) * lam[t] * math.sqrt(Fb[t]) + gbar[t] * lam[t] ** 2 * Fb[t]
-                Hb[t - 1] = gbar[t] * (eps[t] + (1 - eps[t]) * Hb[t])
+                Hb[t - 1] = gbar[t] * (Krow_min[t] + (1 - Krow_min[t]) * Hb[t])  # valid minorisation of the kernel used
             return Fb[:Tp], Hb[:Tp]
         Uc = [0.0]
         for Tp in range(1, T + 1):
             Fb, Hb = primF(Tp)
             Uc.append((sum(Fb) + sum(Hb[s] ** 2 * math.sqrt(Uc[s] * (1 + Uc[s])) for s in range(1, Tp))) / N)
+        es = [e_exact(s, T, N) for s in range(T)]
+        ident = sum((1 - 1 / N) ** (T - 1 - s) * (es[s] - 1) for s in range(T)) / N
+        Fl, Hl = allstats[T]
+        lowA = sum((1 - 1 / N) ** (T - 1 - s) * (Fl[s] - (Hl[s] ** 2 * math.sqrt(V[s] * (1 + V[s])) if s else 0)) for s in range(T)) / N
+        Ush = [0.0]
+        for Tp in range(1, T + 1):
+            Fp, Hp = allstats[Tp]
+            Ush.append(sum((1 - 1 / N) ** (Tp - 1 - s) * (Fp[s] + (Hp[s] ** 2 * math.sqrt(Ush[s] * (1 + Ush[s])) if s else 0)) for s in range(Tp)) / N)
         refresh = np.prod([1 + chi2s[t] / N for t in range(1, T + 1)]) - 1
         # OPTIONAL_PW2 (B)-(C) with beta = eps_T09 of K_{t-1} (t >= 2), a_1 = chi2_1
         a_opt = [chi2s[1]]
         for t in range(2, T + 1):
-            be = eps[t - 1]; h = gbar[t]
+            be = Krow_min[t - 1]; h = gbar[t]
             e_t = (1 - be) * (h - 1); b_t = be * chi2s[t] + (1 - be) * (h ** 2 - 1)
             a_opt.append(b_t + (N - 1) * (2 * e_t + e_t ** 2))
         B_opt = np.prod([1 + a / N for a in a_opt]) - 1
         a_star = [N * (v[t] - v[t - 1]) / v[t - 1] for t in range(1, T + 1)]
-        rows.append(dict(N=N, VarW_T=V[T], sigma2_over_N=F.sum() / N, ThmB=U[T], ThmC=Uc[T],
+        rows.append(dict(N=N, VarW_T=V[T], identity_rhs=ident, ThmB_lower=lowA, ThmB_sharp=Ush[T], sigma2_over_N=F.sum() / N, ThmB=U[T], ThmC=Uc[T],
                          refresh=refresh, T25iv_with_OPTIONAL=B_opt, a_star=a_star,
                          B_ok=bool(V[T] <= U[T] * (1 + 1e-9)), C_ok=bool(V[T] <= Uc[T] * (1 + 1e-9)),
                          allB_ok=bool(all(V[t] <= U[t] * (1 + 1e-9) for t in range(1, T + 1)))))
