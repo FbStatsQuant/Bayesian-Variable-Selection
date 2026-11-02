@@ -260,8 +260,10 @@ The column headings are:
 - w_{BB(1,p)}(k)/w_{BB(1,1)}(k) = (p+1)C(p,k)/(2C(2p−1,k)). This equals ((p+1)/2)·2^{−k}·(1 + o(1)) for k ≪ √p. The bracketed
   correction is 1.000 at k = 0 and 0.96 at k = 14 (p = 1000), and only 0.0045 at k = 100 (p = 500), where BB(1,p) is even lighter.
 
-**PROVED** (elementary): BB(1,p) is BB(1,1) multiplied by a size-only factor that is at most ((p+1)/2)·2^{−k}. The inequality
-C(p,k)/C(2p−1,k) ≤ 2^{−k} holds because (p−i)/(2p−1−i) ≤ ½ for every i ≥ 0.
+**PROVED** (elementary): BB(1,p) is BB(1,1) multiplied by a size-only factor that is at most ((p+1)/2)·(2p/(2p−1))·2^{−k} for k ≥ 1.
+The reason is that C(p,k)/C(2p−1,k) = ∏_{i<k}(p−i)/(2p−1−i). The i = 0 factor is p/(2p−1) = ½·2p/(2p−1), and every factor with i ≥ 1
+is ≤ ½. This also explains the 1.0010 = 1000/999 entry at k = 1, p = 500. A first draft of this line said "≤ ½ for every i ≥ 0", which
+is false at i = 0; corrected here.
 
 Consequences for this audit:
 - **Spurious models.** Rossell's (2022) §5.2 accounting of spurious models (per-model prior ratio times a Bayes-factor bound) transfers to
