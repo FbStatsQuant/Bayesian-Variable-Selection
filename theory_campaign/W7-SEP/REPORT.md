@@ -82,7 +82,7 @@ All exact (no Monte Carlo inside a replicate): full enumeration of the 2^p model
 (the v3 partition equals the groups w.p. → 1 on LH; at these p the method itself would take the exact branch, so π₀
 is the analytically defined component law, as in W1-EXP), production local search from **every** centre via a
 vectorised successor map. Scorer checked against the dense formula to 6·10⁻¹³ and the successor map against a direct
-scan (`results/sanity.txt`).
+scan (`scripts/sanity.txt`).
 
 **4.1 LH at p ≤ 20 (`scripts/sep_exact.py`, `results/summary.txt`).** Configurations: B2 = W1-EXP config B (c = 2,
 p = 20, one null group), V2 (c = 2, one visible and one null group, p = 18), C3 (c = 3, p = 18). n from 100 to 409,600.
