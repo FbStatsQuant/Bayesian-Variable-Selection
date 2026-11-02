@@ -11,7 +11,7 @@ group C_b.
 | R1 | PXN P7 (D2-d, NB) on LH-iid, c = 1 | GAP (fixable): the step was a PROOF SKETCH | PROVED (candidate, this run) |
 | R2 | PXN Lemma U (U1): "ν log(1 + a_A/RSS^y_A) ≤ 1" | ERROR (cosmetic): the number is wrong, the argument is not affected | repaired |
 | R3 | PXN P7 statement: NB with the constant 1.925 | GAP (cosmetic, inherited from W1-T38E) | repaired (NB′ or r*) |
-| R4 | PXN §9.3 remark and REPORT §6: "(L) fails ≈ 4% at n = 200, 1.2% at n = 1600" | ERROR (numerical, cosmetic) | corrected numbers |
+| R4 | PXN §9.3 remark and REPORT §6: "(L) fails ≈ 4% at n = 200, 1.2% at n = 1600" | labelling (numbers are for s₀ = 5); formula confirmed by simulation | VERIFIED; label added |
 | R5 | T38FULL Prop. LH-LAT: "m₀ … which is sharp" | GAP (overstatement) | restated |
 | R6 | PXN Lemma B, extension used by R1 and PXN §10 (2) | GAP (cosmetic: the extension is stated only implicitly) | stated |
 | R7 | LS0 cost (W1-T38E E3, quoted in T38 (c)) | GAP (cosmetic, +1) | corrected |
@@ -119,20 +119,25 @@ PXN's D2-d is written with T_e log 1.925, but W3-VT38E showed that 1.925 does no
 **Repair:** use r* = (11+2√10)/9, or W3-VT38E's NB′ directly. R1 is written with r*. The change has no effect here,
 because the d-range is O(log n) against a threshold of order log²n.
 
-## R4. The (L)-failure numbers
+## R4. The (L)-failure numbers (labelling only; no error)
 
-PXN's formula is P((L) fails) ≈ (s₀+1)/√(2π(n+1)t_n), with t_n = 2log((2p−s₀−1)/(s₀+1)) + log(n+1). For config A
-this formula gives 2.7% at (200, 750), 1.8% at (400, 1790), 1.2% at (800, 4260) and 0.8% at (1600, 10120).
+PXN quotes "≈ 4% at (n, p) = (200, 750) and ≈ 1.2% at (1600, 10120)" next to the generic formula
+(s₀+1)/√(2π(n+1)t_n), t_n = 2log((2p−s₀−1)/(s₀+1)) + log(n+1). Its script (`check_L_failure.py`) evaluates the
+formula at **s₀ = 5 (config B)**. For config A (s₀ = 3) the same formula gives 2.7%, 1.8%, 1.2%, 0.8%. Exact
+simulation with this run's own scorer (`scripts/L_failure.py`, results `L_failure_A.txt`, `L_failure_B.txt`):
 
-PXN quotes ≈ 4% at n = 200 and 1.2% at n = 1600. Those figures come from a threshold computed differently in its
-script (16.3 instead of 17.15 at n = 200; 23.6 instead of 24.4 at n = 1600). Exact simulation with this run's own
-scorer (`scripts/L_failure.py`) gives:
-- 2.47% (74/3000) at n = 200;
-- 1.47% (22/1500) at n = 400;
-- 0.8% (4/500) at n = 800.
+| config | n, p | simulated P((L) addition part fails) | formula |
+|---|---|---|---|
+| A (s₀ = 3) | 200, 750 | 2.47% (74/3000) | 2.72% |
+| A | 400, 1790 | 1.47% (22/1500) | 1.80% |
+| A | 800, 4260 | 0.80% (4/500) | 1.20% |
+| A | 1600, 10120 | 0.67% (1/150) | 0.81% |
+| B (s₀ = 5) | 200, 750 | 3.60% (108/3000) | 4.18% |
+| B | 400, 1790 | 2.93% (44/1500) | 2.76% |
 
-These agree with the formula as written. **Repair:** quote 2.7% and 0.8% (the formula), or the simulated rates.
-The qualitative statement (an n^{−1/2}(log n)^{−1/2} rate, certification slower than scoring) is unaffected.
+The formula is accurate to first order; PXN's numbers are right for config B. **Repair:** say "s₀ = 5" next to the
+quoted percentages. The n = 1600 event PXN reports is the config-B replicate that was not certified (B, n = 1600,
+5/6), consistent with this.
 
 ## R5. LH-LAT: "sharp"
 
