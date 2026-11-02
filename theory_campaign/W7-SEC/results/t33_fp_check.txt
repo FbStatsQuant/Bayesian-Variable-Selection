@@ -1,0 +1,65 @@
+T33 fp check: production scorer vs exact (60 digits) on the stored doubles; seed 20261103; u = 2^-53; cL = 2.0
+
+## D1 iid Gaussian: n=200, p=60, models=62
+  constants: |logCn_hat - logCn| = 7.21e-14; max_k |logprior_hat - logprior| = 1.03e-13
+  routes used = [0] (0 = chol); Q recomputations = 0; failures = 0; min_S Q_S (n+1)/y'y = 80.771814 (Lemma T33-Q says >= 1)
+  max observed |logm_hat - logm| / eta_m(S) [rigorous, must be <= 1] = 7.630e-03
+  max observed |logm_hat - logm| / engine error_bound [heuristic] = 5.930e-03
+  sample rows: k, |dlogm|, |dF|, eta_m (rigorous), engine bound, kappa(H_S), y'y/Q, |dlogdetH|, rel|dQ|
+    12  1.293e-13  1.122e-13  7.773e-11  3.171e-11  2.028e+00  1.050e+00  1.421e-14  5.996e-16
+    33  1.195e-13  6.317e-14  6.309e-10  1.133e-10  4.590e+00  1.755e+00  5.684e-14  8.774e-16
+    28  1.132e-13  6.969e-14  4.068e-10  8.484e-11  4.296e+00  1.356e+00  0.000e+00  7.745e-16
+     8  1.111e-13  1.291e-13  5.727e-11  2.496e-11  2.251e+00  1.018e+00  0.000e+00  5.816e-16
+    35  1.062e-13  1.185e-13  7.945e-10  1.334e-10  5.174e+00  1.815e+00  1.137e-13  7.776e-16
+    21  9.662e-14  1.166e-13  1.993e-10  5.103e-11  3.369e+00  1.118e+00  0.000e+00  6.386e-16
+
+## D2 near-collinear pairs (rho ~ 1 - 1e-14): n=100, p=20, models=40
+  constants: |logCn_hat - logCn| = 8.93e-15; max_k |logprior_hat - logprior| = 2.19e-14
+  routes used = [0] (0 = chol); Q recomputations = 0; failures = 0; min_S Q_S (n+1)/y'y = 9.106463 (Lemma T33-Q says >= 1)
+  max observed |logm_hat - logm| / eta_m(S) [rigorous, must be <= 1] = 7.321e-03
+  max observed |logm_hat - logm| / engine error_bound [heuristic] = 6.329e-03
+  sample rows: k, |dlogm|, |dF|, eta_m (rigorous), engine bound, kappa(H_S), y'y/Q, |dlogdetH|, rel|dQ|
+    13  1.023e-11  1.023e-11  1.168e-06  5.102e-07  2.516e+04  1.102e+01  2.122e-11  5.934e-15
+    12  7.237e-12  7.228e-12  2.239e-07  9.730e-08  2.473e+04  2.261e+00  1.462e-11  4.869e-16
+    13  6.567e-12  6.569e-12  1.175e-06  5.132e-07  2.439e+04  1.109e+01  1.286e-11  3.780e-15
+    14  6.539e-12  6.546e-12  1.241e-06  5.306e-07  2.733e+04  1.065e+01  1.363e-11  4.011e-15
+    12  6.368e-12  6.373e-12  1.017e-06  4.537e-07  2.732e+04  1.062e+01  1.317e-11  3.239e-15
+     9  5.898e-12  5.904e-12  1.242e-07  5.782e-08  2.484e+04  1.788e+00  1.190e-11  1.283e-16
+
+## D3 exact duplicate columns: n=80, p=12, models=8
+  constants: |logCn_hat - logCn| = 8.64e-16; max_k |logprior_hat - logprior| = 8.31e-15
+  routes used = [0] (0 = chol); Q recomputations = 0; failures = 0; min_S Q_S (n+1)/y'y = 7.927421 (Lemma T33-Q says >= 1)
+  max observed |logm_hat - logm| / eta_m(S) [rigorous, must be <= 1] = 9.347e-06
+  max observed |logm_hat - logm| / engine error_bound [heuristic] = 1.346e-05
+  sample rows: k, |dlogm|, |dF|, eta_m (rigorous), engine bound, kappa(H_S), y'y/Q, |dlogdetH|, rel|dQ|
+     2  4.854e-13  4.820e-13  5.193e-08  3.607e-08  1.280e+04  9.884e+00  8.367e-13  1.889e-15
+     2  4.854e-13  4.820e-13  5.193e-08  3.607e-08  1.280e+04  9.884e+00  8.367e-13  1.889e-15
+     4  3.404e-13  3.417e-13  1.106e-07  7.215e-08  1.347e+04  9.887e+00  6.075e-13  1.334e-15
+    10  2.793e-13  2.911e-13  3.344e-07  1.833e-07  1.620e+04  1.005e+01  4.690e-13  1.130e-15
+     8  2.588e-13  2.664e-13  2.530e-07  1.466e-07  1.380e+04  1.004e+01  3.695e-13  1.694e-15
+     6  2.318e-13  2.367e-13  1.772e-07  1.088e-07  1.347e+04  9.942e+00  3.375e-13  1.788e-15
+
+## D4 y almost in span(X_{1:3}): n=100, p=10, models=5
+  constants: |logCn_hat - logCn| = 8.93e-15; max_k |logprior_hat - logprior| = 5.94e-15
+  routes used = [0] (0 = chol); Q recomputations = 0; failures = 0; min_S Q_S (n+1)/y'y = 1.009909 (Lemma T33-Q says >= 1)
+  max observed |logm_hat - logm| / eta_m(S) [rigorous, must be <= 1] = 8.389e-03
+  max observed |logm_hat - logm| / engine error_bound [heuristic] = 3.938e-03
+  sample rows: k, |dlogm|, |dF|, eta_m (rigorous), engine bound, kappa(H_S), y'y/Q, |dlogdetH|, rel|dQ|
+     3  7.262e-13  7.230e-13  4.604e-10  2.864e-10  1.138e+00  1.000e+02  3.553e-15  1.447e-14
+     4  7.240e-13  7.245e-13  6.066e-10  3.617e-10  1.327e+00  1.000e+02  0.000e+00  1.447e-14
+    10  6.474e-13  6.427e-13  1.670e-09  8.795e-10  2.279e+00  1.000e+02  0.000e+00  1.301e-14
+     2  1.174e-13  1.161e-13  6.089e-11  4.034e-11  1.044e+00  1.776e+01  3.553e-15  2.390e-15
+     1  2.369e-14  3.424e-14  2.824e-12  6.016e-12  1.000e+00  1.164e+00  0.000e+00  1.671e-16
+
+## D5 n = 4000, equicorrelated: n=4000, p=40, models=6
+  constants: |logCn_hat - logCn| = 1.83e-12; max_k |logprior_hat - logprior| = 7.35e-14
+  routes used = [0] (0 = chol); Q recomputations = 0; failures = 0; min_S Q_S (n+1)/y'y = 232.742770 (Lemma T33-Q says >= 1)
+  max observed |logm_hat - logm| / eta_m(S) [rigorous, must be <= 1] = 2.620e-03
+  max observed |logm_hat - logm| / engine error_bound [heuristic] = 4.166e-02
+  sample rows: k, |dlogm|, |dF|, eta_m (rigorous), engine bound, kappa(H_S), y'y/Q, |dlogdetH|, rel|dQ|
+    40  1.291e-10  1.292e-10  1.693e-06  3.613e-08  3.953e+01  1.719e+01  2.274e-13  6.353e-14
+    10  1.276e-10  1.277e-10  4.580e-07  8.818e-09  9.790e+00  1.712e+01  0.000e+00  6.302e-14
+     5  1.268e-10  1.268e-10  2.532e-07  4.419e-09  5.141e+00  1.711e+01  0.000e+00  6.300e-14
+    20  1.217e-10  1.217e-10  8.527e-07  1.764e-08  1.911e+01  1.715e+01  0.000e+00  6.082e-14
+    15  5.443e-11  5.439e-11  3.329e-07  6.910e-09  1.465e+01  8.583e+00  5.684e-14  2.623e-14
+     1  2.054e-11  2.069e-11  7.838e-09  4.929e-10  1.000e+00  2.189e+00  0.000e+00  9.086e-15

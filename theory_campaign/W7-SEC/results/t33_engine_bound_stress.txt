@@ -1,0 +1,2 @@
+Engine heuristic error_bound stress test; seed 20261104
+      case         n  k      yty/Q    |dlogm| engine eta    ratio rigorous eta
