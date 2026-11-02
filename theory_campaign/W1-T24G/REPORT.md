@@ -30,7 +30,10 @@ outputs in `results/`.
    conditionally independent.
 4. **The brief's target form (1−c′)^{⌊H/(s₀+d)⌋} is not a valid conclusion (CE2).** The one-step-per-round
    argument needs the factor v: the correct bound is P(Bin(H,c′) < v) ≤ v(1−c′)^{⌊H/v⌋}.
-5. **Usefulness is asymptotic only, and slow.**
+5. **Usefulness is asymptotic only, and slow, with one exception.** The exception is Corollary P1: a
+   particle at Hamming distance one scores S₀ in the next round with probability ≥ a₁(x), rigorously, and
+   a₁ ≥ 0.14 in all designs at n = 200. With conditional independence, N₁ such particles fail together with
+   probability ≤ 0.86^{N₁}. Otherwise:
    - Under G, R, SE, BM-∞ the phase-2 premises hold automatically for a ≤ 1.
    - For a ≥ 2 and for incomplete starts, five extra named conditions are needed: NL0, UDEL, TS, TL, BTP/IND.
    - With c_* ≈ 1/(B+3), the single-particle bound decays like n^{−c_*/ln 2}, about n^{−0.07}.
@@ -82,6 +85,11 @@ inf c_*, sup v, sup η.
 **Corollary B-M (many particles). PROVED** given (R5): no resampling during the L+4 terminal rounds, and
 per-particle fresh randomness (METHODOLOGY §§6.5, 6.6, 6.8). Then
 P(S₀ unscored | terminal-start population) ≤ ∏_{particles i in 𝓧} min{1, bound(x_i)}.
+
+**Corollary P1 (distance-one scoring). PROVED.** If x △ S₀ = {j}, then
+P_x(S₀ scored during the next round) ≥ a₁(x) = ∫₀¹∏_{e≠G_j}(1 − t q_e(x))dt, where q_e is the probability that
+label e changes the state at x. With (R5), N₁ distance-one particles give P(no score in the round) ≤
+∏(1 − a₁(x_i)). Numerically a₁ ≥ 0.14 in every design at n = 200 (Table T4c).
 
 **Lemma P (exact first-change progress). PROVED.**
 P*(x) = Σ_e s_e ∫₀¹∏_{j≠e}(1−t q_j)dt ≥ s_g[1 − Q_D/(|D|+2)]/(|D|+1) for every label g and set D. With
@@ -257,6 +265,31 @@ actual P(progress or bad) ≥ c₂.
 
 Every cell satisfies actual ≥ proven constant (a numerical consistency check of Props. B1/B2). S4 at
 c = 0.5 is the one design where uniform addability is not ≈ 1 (c₁ = 0.50, actual 0.87).
+
+
+**Table T4c — Cor. P1 (rigorous one-round scoring bound at distance one, n = 200).** a₁ is the min over
+the 20 distance-one states (S₀ minus a truth, or S₀ plus a null); "sim" is the actual one-round scoring
+frequency at the same state (10000 reps).
+
+| design | min a₁ (state) | its sim | mean a₁ | min sim |
+|---|---|---|---|---|
+| S1 c=1.0 | 0.375 (extra 17) | 0.893 | 0.476 | 0.889 |
+| S1 c=0.5 | 0.439 (extra 17) | 0.823 | 0.533 | 0.811 |
+| S2 c=1.0 | 0.162 (del-truth 2) | 0.394 | 0.516 | 0.394 |
+| S2 c=0.5 | 0.175 (del-truth 2) | 0.418 | 0.552 | 0.418 |
+| S3 c=1.0 | 0.159 (del-truth 13) | 0.284 | 0.497 | 0.273 |
+| S3 c=0.5 | 0.184 (del-truth 13) | 0.299 | 0.501 | 0.288 |
+| S4 c=1.0 | 0.184 (del-truth 13) | 0.277 | 0.503 | 0.275 |
+| S4 c=0.5 | 0.183 (del-truth 13) | 0.304 | 0.500 | 0.304 |
+| S5 c=1.0 | 0.161 (del-truth 13) | 0.246 | 0.500 | 0.246 |
+| S5 c=0.5 | 0.165 (del-truth 13) | 0.276 | 0.506 | 0.276 |
+| S6 c=1.0 | 0.139 (del-truth 6) | 0.267 | 0.491 | 0.267 |
+| S6 c=0.5 | 0.183 (del-truth 13) | 0.287 | 0.502 | 0.287 |
+
+With (R5), N₁ particles at distance one give P(no score in that round) ≤ ∏(1 − a₁(x_i)) ≤ 0.86^{N₁}
+in every design (e.g. ≤ 0.011 for N₁ = 30). This is the one rigorous bound in this report that is
+non-vacuous at n = 200. The worst distance-one state is S₀ minus a truth: look-alike additions there
+compete with the scoring Gibbs label.
 
 **Bad-event rates.** η₂(a=1) = 0.37–0.64 and η₁ = 1.2–3.3 per round at n = 200. This makes Theorem B
 vacuous at this size for a single particle; see Headline 5. The cause is the sup over a family together with

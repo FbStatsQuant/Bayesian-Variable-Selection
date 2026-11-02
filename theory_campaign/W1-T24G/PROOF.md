@@ -127,6 +127,13 @@ Y_j null ∀ j ≺ e}; by Lemma O(iii) its probability is Σ_e s_e ∫∏_{j≠e
 only e = g; use ∏_{j∈D}(1−tq_j) ≥ (1−t)^{|D|} and the Weierstrass inequality ∏_{j∉D∪g}(1−tq_j) ≥ 1 − tQ_D;
 ∫₀¹(1−t)^k dt = 1/(k+1), ∫₀¹ t(1−t)^k dt = 1/((k+1)(k+2)). ∎
 
+**Corollary P1 (distance-one scoring in one round). PROVED.** If x △ S₀ = {j}, then
+  P_x(S₀ scored during the next round) ≥ a₁(x) := ∫₀¹ ∏_{e≠G_j} (1 − t q_e(x)) dt ≥ [1 − Q_D/(|D|+2)]/(|D|+1)
+for every D ⊆ Λ∖{G_j}, where q_e(x) = P_x(e changes the state). *Proof.* Lemma P with Good = {the G_j step}
+(s = 1 by R4) and all other labels' changes as b. ∎ With (R5): if N₁ particles sit at distance-one states
+x₁,…,x_{N₁} at a terminal round boundary, P(no particle scores S₀ in that round | population) ≤ ∏_i (1 − a₁(x_i)).
+This is a rigorous, finite-n, non-vacuous bound (numbers: `results/distance_one.json`).
+
 Remarks. (a) This is Fable's c′ ~ 1/(B+3), made exact: the factor is the probability that the target precedes
 all B+2 non-Gibbs labels, times a leakage correction; no factorial appears. (b) P* is a lower bound for the
 probability that the round *contains* a progress step only through its first change; at incomplete states in
