@@ -10,7 +10,7 @@ stat=-.5*math.log(D)+nu*(-math.log1p(-inc/(.02+Q0)))+.5*math.log(n+1)
 r['C3']={'actual':stat,'old_lower':z2/2-kappa-theta2,'repaired_weak_lower':-kappa+z2/12,'kappa':kappa,'theta_prime':theta2,'limit':.51/c}
 n=20; g=19; H=21*g+1; D=H/20; nu=10.01
 r1=math.exp(-.5*math.log(D)); r2=math.exp(-.5*math.log(D)-nu*math.log((.02+g-20*g*g/H)/(.02+g)))
-r['E3']={'q':r2,'old_bound':(1-r2)**2/(1+4/r1),'actual_reference_mass':r1/(6+r1+r2)}
+r['E3']={'q':r2,'old_bound':(1-r2)**2/(1+4/r1),'actual_reference_mass':r1/(3+r1+r2+r1*r2)}
 r['PXN']={'minimum_limit':.51*16,'unit_M_sigma_phi_limit':.51*24}
 n=262144;p=18; N=max(2500,n,p); H0=math.ceil(512*N/2500)
 r['T26']={'n':n,'p':p,'feasible_models':2**18,'exact_threshold':(5*H0+4*N)*p,'exact':2**18<=(5*H0+4*N)*p}

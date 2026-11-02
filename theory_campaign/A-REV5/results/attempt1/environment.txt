@@ -1,0 +1,7 @@
+Mon Nov  2 09:11:07 PM UTC 2026
+owls.stat.rice.edu
+Linux owls.stat.rice.edu 5.14.0-687.56.1.el9_8.x86_64 #1 SMP PREEMPT_DYNAMIC Tue Oct 6 21:51:31 EDT 2026 x86_64 x86_64 x86_64 GNU/Linux
+/usr/bin/python3
+Python 3.9.25
+231b50c0dcc22376a3fb837c9a3bf5e68f898ce9ac2089df930b5a064771ba44  independent.py
+49d4b868a2f36050c3394865663d338a198d0bb0dcd30c2e60d1f469310ebc73  t03_thresholds.py

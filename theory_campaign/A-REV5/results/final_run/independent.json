@@ -1,0 +1,37 @@
+{
+  "utc": "2026-11-02T21:11:53.325906+00:00",
+  "host": "owls.stat.rice.edu",
+  "python": "3.9.25",
+  "pid": 2567201,
+  "seed": null,
+  "kind": "deterministic scalar sufficient statistics; independent formulas",
+  "ESS": {
+    "unclipped": -0.02264831572567791,
+    "low_weight": -0.45296631451355807,
+    "r_star": 1.924950591148529
+  },
+  "C3": {
+    "actual": 16.250264568215638,
+    "old_lower": 19.557155418284562,
+    "repaired_weak_lower": -6.823346578134573,
+    "kappa": 12.24001324480124,
+    "theta_prime": 0.7028313369141969,
+    "limit": 12.24
+  },
+  "E3": {
+    "q": 1935517816213.2673,
+    "old_bound": 1.983334052945241e+23,
+    "actual_reference_mass": 9.441607620478354e-14
+  },
+  "PXN": {
+    "minimum_limit": 8.16,
+    "unit_M_sigma_phi_limit": 12.24
+  },
+  "T26": {
+    "n": 262144,
+    "p": 18,
+    "feasible_models": 262144,
+    "exact_threshold": 23706288,
+    "exact": true
+  }
+}
