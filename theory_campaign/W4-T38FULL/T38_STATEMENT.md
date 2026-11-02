@@ -98,7 +98,7 @@ The first form is the stronger one: it says P(𝒪 ∩ {Ŝ⁺ = S₀}) = P(𝒪)
 - Any statement given completion, or for fits selected on diagnostics.
 - Comparative superiority over other methods.
 - Any finite-n error rate at n = 200.
-- A masked p ≫ n family; that is CONJECTURE.
+- A masked p ≫ n family on the strength of this run. W3-PXN claims one (LH-iid, PROVED as a single unverified run); until it is verified, the p ≫ n instance is a candidate input, not part of the theorem.
 - Masked-regime consistency **without LS0** on any explicit family; that is OPEN.
 
 ### Remarks for the paper text
@@ -165,7 +165,7 @@ Status words used in this table:
 | b1.6 | (M1) from Thm 6 at S° | [W1-EXP Thm 6] | PROVED | VERIFIED (W3-VEXP) |
 | b1.7 | LH, exact Gram: (M1) S̃₀ = S° w.p. → 1; masking; π(S₀) → 1 | [W1-EXP Thm 5(a)(b)(d), Lemmas 4.1, 4.2] | PROVED ((d) by locked T03; limit law PROOF SKETCH) | VERIFIED (W3-VEXP); the |ψ| < ρ boundary is sharp in effect (W3-VEXP row 17) |
 | b1.8 | **Prop. LH-LAT**: POP-LAT(S°, m₀) holds on LH with an explicit m₀ > 0 | T38_PROOF §3.4 (new; population algebra from Lemma 4.1) | PROVED | new here, unreviewed; numerics `scripts/lh_ls0_check.txt` |
-| b1.9 | LH-iid realisation (p > n allowed) | [W3-VEXP R3] for the start; POP-LAT in sample not done | PROOF SKETCH (start); CONJECTURE (POP-LAT, p ≫ n) | W3-PXN in progress (interim scripts only) |
+| b1.9 | LH-iid realisation (n^a ≤ p ≤ n^A, p ≫ n allowed): partition = groups, SE family, 1 − π₀(S°) = O_P(√(log n/n)), T27 limit law, S̃₀ = S°, TD′ lattice condition at S°, π(S₀) → 1 | [W3-PXN P1–P8] (arrived during this run, commit 30011cf); the start part supersedes the [W3-VEXP R3] sketch | PROVED (W3-PXN's claim) | **single run, unverified**; not checked line by line here |
 | b1.10 | general sufficient condition for (M2): TD′_P(R_{a,d}) w.p. → 1 under PGD + LD* | [W1-T37R Thm C] with repairs [W3-VT37R R4, R5] | PROOF SKETCH | VERIFIED as a sketch after repair; PGD fails under SE + BM-∞ (COUNTEREXAMPLE C3) |
 | b1.11 | literal TD(d,0) is false for d ≥ 1 on {π(S₀) > ½} | [W1-T37R Prop 1]; [W3-VT38E Prop. V1] | PROVED (negative) | VERIFIED |
 | b1.12 | eligibility without LS0: the brief's sufficient condition fails | [W1-T38E Prop. E1] | PROVED (deterministic); margin PROOF SKETCH | VERIFIED (W3-VT38E) |
@@ -178,7 +178,7 @@ Status words used in this table:
 | d1 | Lemma S (ESS share, tight); ESS non-increasing in φ | [W1-T38E §3] | PROVED | VERIFIED (W3-VT38E) |
 | d2 | Lemma A (Gibbs change probability ≤ max endpoint odds) | [W1-T38E §1] | PROVED | VERIFIED (2,048,000 cases) |
 | d3 | Theorem D2 with NB′ and r* = (11+2√10)/9 | [W1-T38E §4] + repair [W3-VT38E §3.1] | PROVED | VERIFIED after the constant repair |
-| d4 | D2's statistical instance (Dep < 1 − c₁, NB′, π₀(x°) > 1/10 w.p. → 1) on a masked family | T38_PROOF §4.2 (sketch on LH, c = 1) | PROOF SKETCH (LH exact Gram, c = 1, p/(√n log²n) → ∞); otherwise CONJECTURE | — |
+| d4 | D2's statistical instance (Dep < 1 − c₁, NB′, π₀(x°) > 1/10 w.p. → 1) on a masked family | T38_PROOF §4.2 (sketch on LH exact Gram, c = 1); [W3-PXN P7] on LH-iid, c = 1 | D2-a, b, c PROVED (W3-PXN's claim); NB: PROOF SKETCH (both runs); c ≥ 2: OPEN | W3-PXN unverified |
 | d5 | pilot engine facts (pilot_next_phi, order, resampling) | [W3-VT38E §4] | IMPL | faithful |
 
 ### II.5 Part (b2): Gibbs-path route
@@ -189,7 +189,7 @@ Status words used in this table:
 | g2 | IND-T: terminal trajectories are conditionally independent; H′ = L+5 | [W2-PREM Thm IND-T]; [W2-VT24G (R5)] | PROVED (under EX-S) | W2-VT24G verified (R5); the W2-PREM write-up itself is unverified |
 | g3 | Cor. B-M (product bound); Cor. P1 (distance-one) | [W1-T24G] | PROVED | VERIFIED (W2-VT24G); P1's "a₁ ≥ 0.14" is shown only at B = 4 |
 | g4 | **DELIV** (a particle in 𝔛_n at terminal start) | via [W1-T38E Prop. D3] under SHARE + EXIT-end, or D1 under LT | **OPEN** (SHARE/LT). C1 COUNTEREXAMPLE: start mass + bridge mass + zero exits do not imply DELIV | C1 VERIFIED after the kernel repair (W3-VT38E §3.2) |
-| g5 | **REP**: c′_* ≥ c > 0, v bounded, (L+5)η → 0 | premises NL0, UDEL, TS, TL(𝒵,A), BTP, IND-M [W1-T24G §4]; NL0/UDEL PROVED UNDER PG [W2-PREM §3]; NL0 threshold fix [W2-VT24G §4] | phase 2: PROVED UNDER PG (unverified); phase 1: PROOF SKETCH / OPEN; COUNTEREXAMPLE for equicorrelated nulls | partial; W2-PREM has no REPORT |
+| g5 | **REP**: c′_* ≥ c > 0, v bounded, (L+5)η → 0 | [W2-PREM REPORT, final]: NL0(a)/UDEL(a≥2) PROVED UNDER PG; BTP unnecessary (Prop. B1′); TS, TL♯, ULR, IND-M PROVED UNDER named conditions; Theorem B's repair family is defective on LH (COUNTEREXAMPLE), so use **Theorem B♯**; on LH every premise is discharged (Theorem L) | PROVED UNDER named conditions; on LH: PROOF SKETCH (two population inequalities only numerical); COUNTEREXAMPLE for equicorrelated nulls | W2-PREM single run, unverified |
 | g6 | H24 is retired: its asymptotic input fails | [W1-T24G CE1], [W2-VT24G Lemma E] | COUNTEREXAMPLE | VERIFIED |
 | g7 | v > H makes Theorem B vacuous; Hη > 1 at n = 200 | [W2-VT24G §5] | PROVED (observation) | — |
 | g8 | SHARE work | W4-SHARE | not available when this run started | — |
@@ -216,7 +216,7 @@ Status words used in this table:
   a6 ORTH family [new comp.]    M1 ← Thm 6 [VERIFIED]                                            C1 cex blocks bridge-mass route
                                 M2 ← Prop LH-LAT [new] | Thm C [SKETCH]
                                 b1-LH: LH exact Gram, p<n — all premises PROVED
-                                p ≫ n (LH-iid) ........ CONJECTURE (W3-PXN)
+                                p ≫ n (LH-iid) ........ PROVED by W3-PXN (unverified)
                                          │
                                (c) cost: T32(i) [CONJECTURE] + LS0 term [PROVED]
 ```

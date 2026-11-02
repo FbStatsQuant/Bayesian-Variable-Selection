@@ -274,7 +274,7 @@ These are all the flip and swap neighbours, since S has no extras. ∎
 - VIS fails at S₀ [W1-EXP Thm 5(c)], so (F1)–(F3) fail too. The two regimes are never combined on one sequence.
 
 **Scope and boundaries of b1-LH.**
-- **p < n.** The p ≫ n analogue is CONJECTURE. Its start-side part, LH-iid, is a PROOF SKETCH [W3-VEXP R3]. Its lattice part needs in-sample margins: in iid designs, Δ(·) on sets of size ≤ s₀ + 1 concentrates around the population value at rate O_P(√(log p/n)), which is far below m₀. So Lemma M should transfer. This is plausible, but not written. W3-PXN is working on it; only interim scripts exist.
+- **p < n.** Corollary b1-LH as proved here needs p ≤ n − 1. During this run W3-PXN pushed a REPORT (branch `theory/W3-PXN`, commit 30011cf). It claims the p ≫ n analogue on LH-iid, PROVED as a single unverified run: the partition, the SE family, 1 − π₀(S°) = O_P(√(log n/n)) via exact Beta laws, S̃₀ = S°, the TD′ lattice condition at S° (P6), and π(S₀) → 1. Its P6 uses a margin table of the same kind as Proposition LH-LAT, but it was obtained independently. I have not checked W3-PXN line by line. Until a verifier does, the p ≫ n instance is a candidate input, not part of the theorem.
 - **The ψ < ρ cliff.** At ψ ≥ ρ the hubs pair up into one block, π₀(S°) → 0 exponentially [W3-VEXP row 17], and (M1) fails.
 - **The study's B = 14 with g = 5.** Packing then merges two groups. If a linked pair is packed together, the masking disappears.
 
@@ -357,7 +357,7 @@ Take x° = S° = S₀ ∖ {b}, with j = b and 𝒟 := C_b ∖ {b} (the g − 1 �
    - Draws that delete a truth have π₀-odds e^{−Θ(n)}.
    - The remaining non-S° draws (null additions) change d by O(Z²) = O(log n) (§3.4: x_l is orthogonal to S° and δ = 0 both globally and in its block). Their share of the draws tends to 0, and their weights e^{O(log n)/T_e} keep the ESS ≥ 0.9H. For n + p ≥ 2^{32}, T_e ≥ ℓ² ≍ log² n.
    - The crux, not written: a uniform bound on d over the non-S° draws, which is a two-sided version of the EXP′ expansion for global versus block Bayes factors.
-4. **Conclusion (sketch).** Corollary D2-∞ applies. This would give masked-regime consistency on LH with c = 1 **without a method change**, but only for c = 1 and p ≫ √n log² n. Masking there is weak at practical n: Q_fπ₀(S₀) ≍ 64000·√n/p.
+4. **Conclusion (sketch).** Corollary D2-∞ applies. W3-PXN (P7, unverified) independently claims D2-a, D2-b and D2-c as PROVED on LH-iid with c = 1, with Dep = O_P(√(log n/n)); its NB is a PROOF SKETCH with the same crux as step 3 here. This would give masked-regime consistency on LH with c = 1 **without a method change**, but only for c = 1 and p ≫ √n log² n. Masking there is weak at practical n: Q_fπ₀(S₀) ≍ 64000·√n/p.
 
 ---
 
@@ -406,7 +406,7 @@ There is no reweighting and no resampling in it ([W2-BOOK §4] code reading; [W2
   - W4-SHARE had not been pushed when this run started.
 - **REP** is partial (g5).
   - Phase 2 (supersets): truth deletion is PROVED under BM-∞. NL0(a) and UDEL(a ≥ 2) are PROVED UNDER the partner-graph condition PG [W2-PREM §3]; this is unverified, and W2-PREM has no REPORT. COUNTEREXAMPLE: equicorrelated nulls with rβ > ½ break NL0(1) and UDEL(2). The NL0 threshold correction of [W2-VT24G §4] applies.
-  - Phase 1 (incomplete starts): BTP, TS, TL(𝒵,A) and IND-M are PROOF SKETCH or OPEN. Under cancellation, BTP and TS fail.
+  - Phase 1 (incomplete starts): the final W2-PREM REPORT (pushed during this run, unverified) shows that BTP is unnecessary (Prop. B1′). It proves TS, TL♯, ULR and IND-M UNDER named conditions. It finds that W1-T24G's repair family is defective on LH (COUNTEREXAMPLE: useless look-alikes make η₁ of order one), and replaces it by Theorem B♯. On LH it discharges every premise (Theorem L, PROOF SKETCH). Under cancellation, TS fails without its coefficient condition. With this, REP on LH is a PROOF SKETCH, and DELIV is the only fully open input of (b2) there.
   - Structurally, v(x) > H makes the bound vacuous [W2-VT24G §5]. So 𝔛_n must have bounded potential.
 
 ---
