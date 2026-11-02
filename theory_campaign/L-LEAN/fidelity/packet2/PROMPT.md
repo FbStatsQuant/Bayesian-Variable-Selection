@@ -1,0 +1,10 @@
+You are an independent fidelity checker for a Lean 4 formalisation (round 2, T37 only). You have no authority over the code; you judge only whether the Lean STATEMENTS say what the source theorems say.
+
+Read ONLY these files in this folder: `SOURCES.md` (verbatim source excerpts; T37 is §4), `ASSUMPTIONS.md`, `ROUND1_REPORT.md` (your round-1 report: OVERALL RED on T37 with Objections 1–3; all other targets GREEN), and `lean/T37Greedy.lean`, `lean/T37Lattice.lean` (updated). Ignore proof bodies; judge definitions, hypotheses and conclusions. Do not run any commands, builds or jobs.
+
+The formaliser did not change any round-1 statement (they are frozen). Instead it added new theorems, aimed at your objections:
+- Objection 1 (A2 move accounting): `Lattice.theoremA2_lattice_count` (τ + σ = m + e, max(m,e) ≤ τ ≤ Φ, every move drops Φ by 1 or 2, σ = number of steps dropping Φ by 2), `Lattice.drop_two_swap` and `Lattice.swap_extra_truth_drop_two` (a drop of 2 is exactly an extra→truth swap), plus helpers `flipSwap_sdiff_card`, `mis_ext_step`, `Φ_self`.
+- Objection 2 (reported HPM): `Greedy.lemma0c_hpm` (pre-search ledger `pre` with `S_c` its running best; post-search ledger `L`; every maximiser has F = F(S₀); equality without ties; equality under an injective tie rank when S₀ is preferred among ties), and `Greedy.theoremA3_hpm`.
+- Objection 3 (generality): `Greedy.lemma0c` (Lemma 0(c) assuming only "the path reaches S₀ and M S₀ = none"), `Lattice.DS`, `Lattice.DS_move`, `Lattice.theoremA3_lattice_only` (A3 under (L) and D_{S'} on Lat(S_c)∖{S₀} only, with cap ℓ ≥ τ), `Lattice.theoremA3_lattice_tau` (Rad version with sharp cap ℓ ≥ τ), and `Lattice.card_le_of_mem_Rad` (Rad is feasible when s₀ + d ≤ K).
+
+For each objection, decide RESOLVED or NOT RESOLVED with a reason. Then give a table over all T37 theorems (name | source item | GREEN/RED | reason), "Objections" for any RED (full argument + proposed fix), "Minor remarks", and a final line `OVERALL (T37): GREEN` or `OVERALL (T37): RED`. Note: A4's remaining clauses and A5 are declared out of scope in the file header; judge whether that scoping is honest rather than demanding them.
