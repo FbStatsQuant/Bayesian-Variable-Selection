@@ -37,8 +37,13 @@ Results
   from `S_c` returns `S₀` certified, and every model scored by the search has `F ≤ F(S₀)`
   (score-bound part of Lemma 0(c)); `theoremA3_hpm` adds the pre-search scored set, giving
   "`Ŝ = S₀` up to exact ties".
-* Not formalised: the exact count `τ = m + e − σ ≥ max(m, e)`, the lattice-condition variant of
-  (A3) via the one-state events `D_S`, the other clauses of (A4), and (A5).
+* `lemma0c`, `lemma0c_hpm` (Lemma 0(c), general form: only "reaches `S₀` and stops certified"
+  is assumed; reported-HPM clause with the pre-search ledger and the tie rank).
+* On the model lattice (`SmcBvs.T37Lattice`): the move count `τ + σ = m + e`,
+  `max(m, e) ≤ τ ≤ Φ` (`theoremA2_lattice_count`, `drop_two_swap`), the lattice-condition (A3)
+  via the one-state events `D_S` (`theoremA3_lattice_only`), the sharp cap `ℓ ≥ τ`
+  (`theoremA3_lattice_tau`).
+* Not formalised: the other clauses of (A4), and (A5).
 * `pd_of_reach`         (A4, PD part): reaching `S₀` from `S ≠ S₀` forces `F S < F S₀`.
 -/
 
@@ -336,6 +341,60 @@ theorem theoremA3_hpm (hM : IsBestImprovement N F M) {Φ : α → ℕ} {R : Fins
     exact (hpre T hT).trans h0
   · exact (hbound k hk).1
   · exact (hbound k hk).2 T hT
+
+/-- **Lemma 0(c)** (general form: only reaching `S₀` and stopping there certified is assumed; no
+region condition). If the greedy path from `S_c` is at `S₀` after `τ` steps and `S₀` has no
+strictly improving neighbour, then every centre `path k` (`k ≤ τ`) and every neighbour it scans
+has score `≤ F(S₀)`. -/
+theorem lemma0c (hM : IsBestImprovement N F M) {Sc S₀ : α} {τ : ℕ} (hτ : path M Sc τ = S₀)
+    (hL : M S₀ = none) :
+    ∀ k ≤ τ, F (path M Sc k) ≤ F S₀ ∧ ∀ T ∈ N (path M Sc k), F T ≤ F S₀ := by
+  intro k hk
+  have hFk : F (path M Sc k) ≤ F S₀ := by rw [← hτ]; exact path_F_mono hM Sc hk
+  refine ⟨hFk, fun T hT => ?_⟩
+  cases hmk : M (path M Sc k) with
+  | none => exact ((hM.none_iff _).mp hmk T hT).trans hFk
+  | some T' =>
+    have h1 := hM.some_max _ _ hmk T hT
+    have hk1 : k + 1 ≤ τ := by
+      by_contra h
+      have hkτ : k = τ := by omega
+      rw [hkτ, hτ, hL] at hmk
+      exact absurd hmk (by simp)
+    have h2 : F (path M Sc (k + 1)) ≤ F S₀ := by rw [← hτ]; exact path_F_mono hM Sc hk1
+    rw [path_succ, step_of_some hmk] at h2
+    linarith
+
+/-- **Lemma 0(c), reported-HPM clause** (general form). In addition to the hypotheses of
+`lemma0c`, let `pre` be the pre-search scored set with `S_c` its running best (`F ≤ F(S_c)` on
+`pre`; in production `S_c` is the HPM of `pre`). Let `L` be the post-search scored set:
+`S₀ ∈ L`, and every element of `L` is in `pre`, is a centre `path k` (`k ≤ τ`), or is a neighbour
+scanned at one. Then every maximiser `Ŝ` of `F` over `L` has `F Ŝ = F S₀` ("`Ŝ = S₀` up to
+exact ties"), and `Ŝ = S₀` if no other model of `L` ties with `S₀`. With an injective tie rank
+`rk`, if `Ŝ` is the `rk`-least maximiser and `S₀` precedes every model of `L` tying with it, then
+`Ŝ = S₀`. -/
+theorem lemma0c_hpm (hM : IsBestImprovement N F M) {Sc S₀ : α} {τ : ℕ}
+    (hτ : path M Sc τ = S₀) (hL : M S₀ = none) (pre : Set α) (hpre : ∀ S ∈ pre, F S ≤ F Sc)
+    (L : Finset α) (hS₀L : S₀ ∈ L)
+    (hLsub : ∀ T ∈ L, T ∈ pre ∨ ∃ k ≤ τ, T = path M Sc k ∨ T ∈ N (path M Sc k))
+    {Ŝ : α} (hŜL : Ŝ ∈ L) (hŜmax : ∀ T ∈ L, F T ≤ F Ŝ) :
+    F Ŝ = F S₀ ∧ ((∀ T ∈ L, T ≠ S₀ → F T ≠ F S₀) → Ŝ = S₀) ∧
+      (∀ rk : α → ℕ, Function.Injective rk →
+        (∀ T ∈ L, (∀ U ∈ L, F U ≤ F T) → rk Ŝ ≤ rk T) →
+        (∀ T ∈ L, F T = F S₀ → rk S₀ ≤ rk T) → Ŝ = S₀) := by
+  have hb := lemma0c hM hτ hL
+  have hall : ∀ T ∈ L, F T ≤ F S₀ := by
+    intro T hT
+    rcases hLsub T hT with hp | ⟨k, hk, rfl | hN⟩
+    · have h0 := (hb 0 (Nat.zero_le _)).1
+      rw [path_zero] at h0
+      exact (hpre T hp).trans h0
+    · exact (hb k hk).1
+    · exact (hb k hk).2 T hN
+  have heq : F Ŝ = F S₀ := le_antisymm (hall Ŝ hŜL) (hŜmax S₀ hS₀L)
+  refine ⟨heq, fun hnt => ?_, fun rk hrk hleast hpref => ?_⟩
+  · by_contra hne; exact hnt Ŝ hŜL hne heq
+  · exact hrk (le_antisymm (hleast S₀ hS₀L hall) (hpref Ŝ hŜL heq))
 
 /-- **Theorem A (A4), PD part**: if the greedy path from `S ≠ S₀` reaches `S₀`, then
 `F S < F S₀`. -/

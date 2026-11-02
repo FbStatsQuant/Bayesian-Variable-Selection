@@ -50,6 +50,8 @@ import SmcBvs.T12Core
 #print axioms SmcBvs.Greedy.theoremA2
 #print axioms SmcBvs.Greedy.theoremA3
 #print axioms SmcBvs.Greedy.theoremA3_hpm
+#print axioms SmcBvs.Greedy.lemma0c
+#print axioms SmcBvs.Greedy.lemma0c_hpm
 #print axioms SmcBvs.Greedy.pd_of_reach
 #print axioms SmcBvs.Lattice.progress_mem_Lat
 #print axioms SmcBvs.Lattice.lemma2a
@@ -57,6 +59,12 @@ import SmcBvs.T12Core
 #print axioms SmcBvs.Lattice.theoremA3_lattice
 #print axioms SmcBvs.Lattice.Φ_le_of_mem_Rad
 #print axioms SmcBvs.Lattice.card_le_of_mem_Rad
+#print axioms SmcBvs.Lattice.theoremA2_lattice_count
+#print axioms SmcBvs.Lattice.drop_two_swap
+#print axioms SmcBvs.Lattice.swap_extra_truth_drop_two
+#print axioms SmcBvs.Lattice.DS_move
+#print axioms SmcBvs.Lattice.theoremA3_lattice_only
+#print axioms SmcBvs.Lattice.theoremA3_lattice_tau
 -- T12(i.a) partial
 #print axioms SmcBvs.T12.invariance_step
 #print axioms SmcBvs.T12.resample_move_step

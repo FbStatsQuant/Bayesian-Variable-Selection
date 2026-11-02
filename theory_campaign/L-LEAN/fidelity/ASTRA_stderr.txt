@@ -38,3 +38,156 @@ codex
 I found a substantive coverage gap in T37: the A2 statements omit the exact move-count identity and lower bound. The A3 statements establish return and certification, but omit the source’s conclusion about the reported HPM. T12, by contrast, explicitly labels the recursion hypothesis as unformalised work.
 mcp: node_repl/js started
 mcp: node_repl/js (completed)
+codex
+The independent reviews agree on the T37 omissions. I’m making the final table distinguish statements that are correct as abstract helpers from statements that leave out part of their named source target. I found no hidden conclusion assumption in T07; T11’s fixed-calibration scope and T12’s `hstep` reduction are both disclosed.
+codex
+The fidelity failures are in **T37’s coverage of A2, A3, and Lemma 0(c)**. The corresponding Lean statements contain useful correct cores, but omit substantive parts of the requested source conclusions. T21, T07, T11’s recorded fixed-calibration version, and T12’s explicitly partial reduction pass.
+
+This review concerns definitions and statements only. No commands, builds, jobs, or proof checks were run.
+
+References: `S` denotes [SOURCES.md](C:/Users/felip/.t3/worktrees/Bayesian-Variable-Selection/theory-L-LEAN/theory_campaign/L-LEAN/fidelity/packet/SOURCES.md); `A` denotes [ASSUMPTIONS.md](C:/Users/felip/.t3/worktrees/Bayesian-Variable-Selection/theory-L-LEAN/theory_campaign/L-LEAN/fidelity/packet/ASSUMPTIONS.md). Lean references use filename stems and packet line numbers. **RED denotes incomplete fidelity to the named source target, not necessarily a false Lean proposition.**
+
+| Lean theorem — file:line | Source item | GREEN/RED | One-line reason |
+|---|---|---|---|
+| `IsLeastArgmax.unique` — Basic:41 | Tie rule; S:6,60 | GREEN | Injective rank gives uniqueness of the preferred maximiser. |
+| `exists_isLeastArgmax` — Basic:46 | Tie rule; S:6,60–64 | GREEN | A nonempty finite scored set has a preferred maximiser. |
+| `IsArgmax.eq_of_strict` — Basic:59 | C1 deterministic step; S:32–37 | GREEN | A scored strict maximum must be returned by any maximiser. |
+| `post_of_mem` — Basic:70 | Posterior; S:6 | GREEN | Correct exponential normalisation on the model space. |
+| `post_of_not_mem` — Basic:74 | Posterior extension; S:70 | GREEN | Correct zero extension outside the model space. |
+| `sum_exp_pos` — Basic:79 | Posterior normaliser; S:6 | GREEN | Nonemptiness guarantees a positive denominator. |
+| `post_nonneg` — Basic:83 | Posterior; S:6 | GREEN | Correct nonnegativity property. |
+| `post_sum` — Basic:89 | Posterior; S:6 | GREEN | Normalisation to one includes the necessary nonemptiness assumption. |
+| `post_le_one` — Basic:94 | Posterior; S:6 | GREEN | Correct probability-mass bound. |
+| `strict_max_of_post_gt_half` — Basic:103 | C1 core; S:32–37 | GREEN | Preserves strict score dominance and rules out ties. |
+| `hpm_eq_truth` — T21HPM:42 | C1 core; S:32–40 | GREEN | Uses precisely discovery, posterior majority, and scored-set maximisation. |
+| `t21_event_subset` — T21HPM:52 | C1 decomposition; S:39–40,57 | GREEN | Correctly separates no output, nondiscovery, and insufficient posterior mass. |
+| `t21_decomposition` — T21HPM:67 | Decomposition; S:57 | GREEN | Valid sharper form retaining `Uᶜ` in the discovery term. |
+| `t21_decomposition'` — T21HPM:83 | Requested decomposition; S:57 | GREEN | Matches the brief’s three probability terms. |
+| `markov_half` — T21HPM:93 | Markov step; S:43 | GREEN | Nonnegativity and integrability justify the factor-two bound. |
+| `measurable_post` — T21HPM:101 | C1 measurability; A:14 | GREEN | Score measurability gives posterior measurability. |
+| `t21_C1` — T21HPM:113 | C1; S:12–14,23–24 | GREEN | Exact finite bound; replacing `E₀` by joint-law expectation is recorded in A:11. |
+| `integral_le_eps_add_prob` — T21HPM:145 | Mean-convergence ingredient; S:46–52 | GREEN | Matches the finite bounded-variable inequality, without claiming the full asymptotic result. |
+| `normW_pos` — T07Bayes:43 | Positive size prior; S:64 | GREEN | Positive weights imply a positive normaliser. |
+| `empty_mem_Ωf` — T07Bayes:52 | Feasible action class; S:74 | GREEN | The empty support is feasible for every natural cap. |
+| `Ωf_nonempty` — T07Bayes:54 | Feasible action class; S:64,74 | GREEN | Correct nonemptiness consequence. |
+| `ceiling` — T07Bayes:60 | T07(i); S:66 | GREEN | Preserves within-size ranking and ties, and explicitly obtains truth feasibility. |
+| `no_size_prior_repairs` — T07Bayes:90 | T07(i), contrapositive; S:66 | GREEN | Covers both strict likelihood defeat and defeat by the tie order. |
+| `ceiling_sharp` — T07Bayes:107 | T07(i′); S:98–99 | GREEN | Supplies attainability; `ceiling` supplies the reverse implication. |
+| `risk01_eq` — T07Bayes:180 | T07(ii)(a); S:70 | GREEN | Correct risk identity for every support, including actions outside Ω. |
+| `risk01_min_iff` — T07Bayes:185 | T07(ii)(a); S:70 | GREEN | Exactly characterises all Bayes actions as global score maximisers. |
+| `hpm_min_risk01` — T07Bayes:190 | T07(ii)(a); S:70 | GREEN | The tie-selected HPM is one of those minimisers. |
+| `riskH_eq` — T07Bayes:195 | Hamming-risk algebra; S:68,72,82 | GREEN | Correct constant-plus-`psi` decomposition for the defined Hamming loss. |
+| `psi_Jplus_le` — T07Bayes:200 | Lemma ψ(a); S:93 | GREEN | Strict-threshold selection minimises `psi`. |
+| `psi_Jplus_unique_iff` — T07Bayes:204 | Lemma ψ(a); S:93 | GREEN | Preserves both directions of the uniqueness criterion. |
+| `mpm_min_riskH` — T07Bayes:209 | T07(ii)(b); S:72 | GREEN | MPM minimises over all supports. |
+| `mpm_unique_iff` — T07Bayes:216 | T07(ii)(b); S:72 | GREEN | Uniqueness holds exactly when no PIP equals one half. |
+| `psi_capped_le` — T07Bayes:224 | Lemma ψ(b); S:94 | GREEN | Subset, cardinality, and pairwise ordering faithfully express the capped rule. |
+| `exists_capped` — T07Bayes:231 | Lemma ψ(b), existence; S:94 | GREEN | Supplies existence, including empty and boundary-tie cases. |
+| `capped_mpm_min_riskH` — T07Bayes:237 | T07(ii)(c); S:74 | GREEN | Establishes both feasibility and Hamming-risk optimality. |
+| `reported_eq_hpm_iff` — T07Bayes:249 | T07(iii)(a); S:78 | GREEN | Exact equivalence; common injective rank preserves the shared tie rule. |
+| `reported_min_risk01_iff` — T07Bayes:256 | T07(iii)(a); S:78 | GREEN | Correctly distinguishes containing any global maximiser from containing the preferred one. |
+| `reported_truth_needs_unscored` — T07Bayes:264 | T07(iii)(b); S:80 | GREEN | Correct event implication, including within-size ties. |
+| `excess_riskH_le` — T07Bayes:275 | T07(iii)(c); S:82–84 | GREEN | Includes nonnegativity, the symmetric-difference bound, and the full ℓ₁ bound. |
+| `mpm_hat_eq_iff` — T07Bayes:284 | T07(iii)(c); S:86 | GREEN | Exactly matches coordinatewise agreement of strict threshold decisions. |
+| `t11_pow_le_exp` — T11Miss:29 | T11 exponential bound; S:156 | GREEN | Correct scalar inequality, with a harmless broader domain. |
+| `t11_miss_pi` — T11Miss:38 | T11(iii); S:156; A:23 | GREEN | Exact product-space identity for the recorded fixed-calibration abstraction. |
+| `t11_miss_pi_real` — T11Miss:46 | T11(iii); S:156; A:23 | GREEN | Includes both the real-valued identity and exponential bound. |
+| `t11_miss_iid` — T11Miss:58 | T11(iii); S:127–150,156; A:23 | GREEN | Independence and common law are explicit, justified inputs to the abstract identity. |
+| `path_zero` — T37Greedy:59 | Greedy iteration; S:173–175 | GREEN | Correct starting state. |
+| `path_succ` — T37Greedy:61 | Greedy iteration; S:173–175 | GREEN | Correct one-step recurrence. |
+| `step_of_some` — T37Greedy:65 | Best-improvement map; S:173 | GREEN | A selected move becomes the next centre. |
+| `step_of_none` — T37Greedy:68 | Stopping convention; S:173 | GREEN | Terminal states remain fixed. |
+| `path_stays` — T37Greedy:72 | Termination; S:236–237 | GREEN | Correct stationary continuation after termination. |
+| `exists_bestImprovement` — T37Greedy:80 | Best-improvement map; S:173; A:26 | GREEN | Establishes existence of an admissible map; rank-specific wording needs correction below. |
+| `path_F_le` — T37Greedy:128 | Lemma 0(a); S:188 | GREEN | Correct nondecrease for the path padded after termination. |
+| `path_F_mono` — T37Greedy:135 | Lemma 0(a); S:188 | GREEN | Correct global monotonicity of that padded path. |
+| `path_F_strictMono` — T37Greedy:140 | Lemma 0(a); S:188 | GREEN | Strict increase is correctly conditioned on an actual move. |
+| `path_mem_of_TDinf` — T37Greedy:159 | TD′∞ closure; S:199–203 | GREEN | Correct closure consequence; truth membership matches the source setting. |
+| `theoremA1` — T37Greedy:173 | A1 forward; S:236–237 | GREEN | Includes closure, termination, and the precise rank-above bound. |
+| `theoremA1_converse` — T37Greedy:217 | A1 reverse; S:236–237 | GREEN | Reach plus terminality faithfully expresses termination at the truth. |
+| `theoremA2` — T37Greedy:244 | A2; S:238–240 | **RED** | Correct abstract potential core, but full A2’s exact move accounting remains uncovered; objection 1. |
+| `theoremA3` — T37Greedy:298 | A3 and Lemma 0(c); S:193–195,241–244 | **RED** | Omits reported-HPM recovery and restricts Lemma 0(c) to full `TDP`; objections 2–3. |
+| `pd_of_reach` — T37Greedy:319 | A4-PD; S:245–246 | GREEN | Reaching the truth from a distinct start forces strict score dominance. |
+| `Φ_eq` — T37Lattice:59 | Potential; S:176 | GREEN | Exactly identifies symmetric-difference size with missing truths plus extras. |
+| `progress_mem_Lat` — T37Lattice:64 | Move classes/Lemma 2(a); S:181,219 | GREEN | A decreasing-potential flip or swap remains in the start’s lattice. |
+| `mis_ext_le_of_mem_Lat` — T37Lattice:69 | Lemma 2(a); S:219 | GREEN | Together with `Φ_eq`, supplies the source’s potential bound on a lattice. |
+| `Lat_subset` — T37Lattice:74 | Lattice closure; S:210,219 | GREEN | Nesting supplies closure inside an ancestor’s lattice. |
+| `lemma2a` — T37Lattice:78 | Lemma 2(a); S:219 | GREEN | Progress closure is faithful when combined with the preceding lattice statements. |
+| `theoremA2_lattice` — T37Lattice:91 | Concrete A2; S:238–240 | **RED** | Restores lattice containment but still omits swap accounting and the lower move bound; objection 1. |
+| `theoremA3_lattice` — T37Lattice:102 | Concrete A3; S:241–244 | **RED** | States certified return under a sufficient cap, leaving the full production and lattice-only claims incomplete; objections 2–3. |
+| `Φ_le_of_mem_Rad` — T37Lattice:109 | Sufficient cap; S:241,266–267 | GREEN | Correctly supports sufficiency of `ℓ ≥ a+d`, without asserting necessity. |
+| `invariance_step` — T12Core:45 | T12(i.a), partial algebra; S:272–273 | GREEN | Accurately states the disclosed finite invariance identity. |
+| `resample_move_step` — T12Core:58 | T12(i.a), partial algebra; S:272–273 | GREEN | Correct fixed-population algebra; positive total weight also excludes zero population size. |
+| `unbiased_of_step` — T12Core:78 | T12(i.a), partial reduction; S:272–273 | GREEN | Initialisation, invariance, and the remaining recursion are explicit hypotheses. |
+
+## Objections
+
+**1. A2’s quantitative conclusion is missing from both representations.**
+
+The source states more than arrival within the initial potential:
+
+\[
+\tau(S)=m(S)+e(S)-\sigma(S),
+\qquad
+\max\{m(S),e(S)\}\le\tau(S)\le\Phi(S),
+\]
+
+where `σ` counts extra-to-truth swaps (`S:238–240`).
+
+`Greedy.theoremA2` (`T37Greedy:244–250`) supplies decreasing potential, closure, arrival, and an upper bound. `Lattice.theoremA2_lattice` (`T37Lattice:91–96`) additionally supplies lattice containment. Neither defines or counts `σ`, states the exact identity, or states the lower bound.
+
+This loses the source’s accounting of how swaps shorten the repair path. It is a coverage failure rather than an objection to the existing abstract potential argument. A-T37-1 explains the abstraction but does not record omission of this part of A2.
+
+**Proposed fix:** retain the abstract result as a core lemma and strengthen the concrete theorem. Define `σ` over the actual moves before termination and conclude, preferably without natural-number subtraction,
+
+\[
+\tau+\sigma=\operatorname{mis}(S)+\operatorname{ext}(S),
+\qquad
+\max(\operatorname{mis}(S),\operatorname{ext}(S))\le\tau.
+\]
+
+The existing upper bound and lattice conclusion should remain.
+
+**2. A3 and Lemma 0(c) never connect certified repair to the reported HPM.**
+
+The source concludes that the post-search reported HPM is the truth, subject to exact score ties (`S:193–195,241–243`). That conclusion uses the production context: the initial centre is the global best previously scored model (`S:175,189`).
+
+`Greedy.theoremA3` (`T37Greedy:298–301`) establishes certified return and bounds scores of centres and scanned neighbours. `Lattice.theoremA3_lattice` (`T37Lattice:102–105`) establishes only return and certification. Neither statement contains the pre-search scored set, its relationship to the initial centre, the accumulated post-search scored set, or the reported maximiser.
+
+Those missing objects matter. An abstract instance may satisfy every present hypothesis while some separately previously scored model has score greater than `F(S₀)`. Certified repair and the search-only score bound still hold, but that model remains the reported HPM. The source rules this situation out through its initial-centre condition; Lean has no corresponding connection.
+
+**Proposed fix:** introduce the pre-search ledger and the source-justified hypothesis that `Sc` maximises it. Define the accumulated ledger using the centres and scanned neighbourhoods, then conclude that `S₀` maximises this ledger. Connect that result to the reported `IsLeastArgmax`: obtain the appropriate exact-tie qualification, and equality when the tie rule selects `S₀`.
+
+**3. The generality of Lemma 0(c), and A3’s alternative lattice hypothesis, remain uncovered.**
+
+Lemma 0(c) requires that the path reaches the truth and stops there certified (`S:193–195`). It does **not** require progress from every state in a region.
+
+Its nearest Lean representation, `Greedy.theoremA3`, assumes full `TDP M Φ R S₀`. This excludes successful certified paths that contain neutral moves, or whose surrounding region contains unsuccessful starts. The source expressly distinguishes reaching within a potential bound from decreasing potential at every move (`S:255–264`). Consequently, the restricted result cannot stand in for the general Lemma 0(c).
+
+Similarly, the concrete A3 theorem assumes `TDP'` throughout `Rad` (`T37Lattice:84–85,103`), whereas the source also permits the condition solely on `Lat(Sc)` (`S:243–244`). No statement in the packet expresses that alternative using the source’s `D_S` condition. The arbitrary-region abstract framework is suitable for deriving it, but the source-specific application is absent.
+
+The concrete theorem also assumes `ℓ ≥ Φ(Sc)`, rather than expressing the source’s weaker sufficient condition `ℓ ≥ τ(Sc)`. Sharp-cap ingredients exist in the abstract path results; this is an incomplete concrete statement, not an off-by-one error.
+
+**Proposed fix:** separate a general certified-reach lemma from the `TDP` corollary. Add a concrete lattice-only corollary under `(L)` and the source’s one-state progress conditions on `Lat(Sc)`, with the actual move count determining the cap. This would preserve the source’s weaker hypotheses without requiring progress elsewhere in `Rad`.
+
+## Minor remarks
+
+- **Posterior, prior, decisions, and ties:** `Basic:27–36` and `T07Bayes:28–41,162–178` faithfully encode the relevant notions. `sizePrior` is used on Ω; its unrestricted off-Ω formula causes no problem here. The missing prior normaliser in `reported_truth_needs_unscored` changes feasible log scores by a common constant, preserving rankings and ties.
+
+- **T07’s generalisations are harmless.** Arbitrary real estimates, arbitrary finite action classes, and relational statements allowing noninjective ranks strengthen the relevant results. Source applications use an injective rank. Scored-set nonemptiness follows from the maximiser hypothesis. The capped pairwise ordering handles empty sets and boundary ties correctly.
+
+- **T21’s abstractions are disclosed.** Arbitrary scores, unrestricted tie selection among maximisers, outer-measure decomposition, and joint-law expectation are covered by `A:11–15`. No conclusion is smuggled into the assumptions.
+
+- **T11’s GREEN is scope-qualified.** As expressly recorded in `A:23`, these are fixed-calibration iid identities. The conditional-law construction, launch event, and derivation of the final draw family from separated streams are not formalised. The file discloses this abstraction; it does not establish the full algorithm-to-conditional-law connection.
+
+- **T37 definitions are sound with a feasibility qualification.** `IsBestImprovement` correctly encodes maximal strict improvement. `mis`, `ext`, `Φ`, and `Lat` match the source. `Rad` does not enforce feasibility; the header acknowledges that `|S₀|+d ≤ K` makes it feasible (`T37Lattice:16`; compare `S:224`). A production instantiation should supply that connection.
+
+- **Capped-search semantics are consistent with the recorded reading.** Stationary padding and certification via `M(returned)=none` implement the final scan under `A:27`. I do not identify an off-by-one defect. A separate `local_limit` flag is absent, but that is not an independent blocker under this abstraction.
+
+- **One docstring overclaims rank-specific existence.** `exists_bestImprovement` (`T37Greedy:80–81`) establishes existence of some admissible map. It has no rank parameter or conclusion enforcing a supplied tie rank, despite the wording at lines 22–23 and 79.
+
+- **T12 labels its remaining work honestly.** `T12Core:15–28` explicitly identifies the probabilistic derivation of `hstep` as unfinished. Its arbitrary real kernels and weights support algebraic identities; they do not themselves construct stochastic kernels or expectation functionals. `unbiased_of_step` is appropriately presented as a reduction, not a completed SMC unbiasedness theorem.
+
+OVERALL: RED
+tokens used
+80,793

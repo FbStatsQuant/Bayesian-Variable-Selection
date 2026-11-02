@@ -268,4 +268,172 @@ theorem card_le_of_mem_Rad {K a d : ℕ} (hKd : S₀.card + d ≤ K) {S : Finset
   have h2 : (S ∩ S₀).card ≤ S₀.card := Finset.card_le_card Finset.inter_subset_right
   omega
 
+/-- A flip or swap adds at most one index and removes at most one index. -/
+theorem flipSwap_sdiff_card {S T : Finset (Fin p)} (hT : IsFlipSwap S T) :
+    (T \ S).card ≤ 1 ∧ (S \ T).card ≤ 1 := by
+  have key : ∀ (A : Finset (Fin p)) (z : Fin p), A ⊆ {z} → A.card ≤ 1 :=
+    fun A z h => (Finset.card_le_card h).trans (Finset.card_singleton z).le
+  rcases hT with ⟨j, hj, rfl⟩ | ⟨i, hi, rfl⟩ | ⟨i, hi, j, hj, rfl⟩
+  · refine ⟨key _ j ?_, key _ j ?_⟩ <;> intro x hx <;>
+      simp only [Finset.mem_sdiff, Finset.mem_insert, Finset.mem_singleton] at hx ⊢ <;> tauto
+  · refine ⟨key _ i ?_, key _ i ?_⟩ <;> intro x hx <;>
+      simp only [Finset.mem_sdiff, Finset.mem_erase, Finset.mem_singleton] at hx ⊢ <;> tauto
+  · refine ⟨key _ j ?_, key _ i ?_⟩ <;> intro x hx <;>
+      simp only [Finset.mem_sdiff, Finset.mem_insert, Finset.mem_erase, Finset.mem_singleton]
+        at hx ⊢ <;> tauto
+
+/-- One flip or swap lowers `m` and `e` by at most one each. -/
+theorem mis_ext_step {S T : Finset (Fin p)} (hT : IsFlipSwap S T) :
+    mis S₀ S ≤ mis S₀ T + 1 ∧ ext S₀ S ≤ ext S₀ T + 1 := by
+  obtain ⟨h1, h2⟩ := flipSwap_sdiff_card hT
+  constructor
+  · have hsub : S₀ \ S ⊆ (S₀ \ T) ∪ (T \ S) := by
+      intro x hx; simp only [Finset.mem_sdiff, Finset.mem_union] at hx ⊢; tauto
+    have := (Finset.card_le_card hsub).trans (Finset.card_union_le _ _)
+    unfold mis; omega
+  · have hsub : S \ S₀ ⊆ (T \ S₀) ∪ (S \ T) := by
+      intro x hx; simp only [Finset.mem_sdiff, Finset.mem_union] at hx ⊢; tauto
+    have := (Finset.card_le_card hsub).trans (Finset.card_union_le _ _)
+    unfold ext; omega
+
+theorem Φ_self : Φ S₀ S₀ = 0 := by simp [Φ]
+
+/-- **Theorem A (A2), move count.** Under the hypotheses of `theoremA2_lattice`, the number `τ` of
+moves from `S ∈ R_{a,d}` to `S₀` satisfies `max(m(S), e(S)) ≤ τ ≤ Φ(S)`. Each move lowers `Φ`
+by 1 or 2, and `τ + σ = m(S) + e(S)`, where `σ` is the number of moves that lower `Φ` by 2
+(by the move-class table these are the extra→truth swaps). That is, `τ = m + e − σ`. -/
+theorem theoremA2_lattice_count {K : ℕ} {F : Finset (Fin p) → ℝ}
+    {M : Finset (Fin p) → Option (Finset (Fin p))}
+    (hM : Greedy.IsBestImprovement (nbhd K) F M) {a d : ℕ} (hTD : TDP' S₀ M a d)
+    {S : Finset (Fin p)} (hS : S ∈ Rad S₀ a d) :
+    ∃ τ ≤ Φ S₀ S, Greedy.path M S τ = S₀ ∧ max (mis S₀ S) (ext S₀ S) ≤ τ ∧
+      (∀ k < τ, Φ S₀ (Greedy.path M S (k + 1)) + 1 ≤ Φ S₀ (Greedy.path M S k) ∧
+        Φ S₀ (Greedy.path M S k) ≤ Φ S₀ (Greedy.path M S (k + 1)) + 2) ∧
+      τ + ((Finset.range τ).filter fun k =>
+          Φ S₀ (Greedy.path M S k) = Φ S₀ (Greedy.path M S (k + 1)) + 2).card =
+        mis S₀ S + ext S₀ S := by
+  obtain ⟨τ, hτ, hp, -, hmoves, -⟩ :=
+    Greedy.theoremA2 (TDP_of_TDP' S₀ hM hTD) (S₀_mem_Rad S₀ a d) hS
+  set P := Greedy.path M S with hP
+  have hfs : ∀ k < τ, IsFlipSwap (P k) (P (k + 1)) := fun k hk =>
+    (mem_nbhd.mp (hM.some_mem _ _ (hmoves k hk).1)).2
+  have hstep : ∀ k < τ, mis S₀ (P k) ≤ mis S₀ (P (k + 1)) + 1 ∧
+      ext S₀ (P k) ≤ ext S₀ (P (k + 1)) + 1 := fun k hk => mis_ext_step S₀ (hfs k hk)
+  have hdrop : ∀ k < τ, Φ S₀ (P (k + 1)) + 1 ≤ Φ S₀ (P k) ∧
+      Φ S₀ (P k) ≤ Φ S₀ (P (k + 1)) + 2 := by
+    intro k hk
+    have h1 := (hmoves k hk).2
+    have h2 := hstep k hk
+    rw [Φ_eq, Φ_eq] at h1 ⊢
+    omega
+  -- telescoping and the m, e bounds, by induction up to τ
+  have hind : ∀ k ≤ τ, mis S₀ S ≤ mis S₀ (P k) + k ∧ ext S₀ S ≤ ext S₀ (P k) + k ∧
+      Φ S₀ S = Φ S₀ (P k) + k + ((Finset.range k).filter fun i =>
+        Φ S₀ (P i) = Φ S₀ (P (i + 1)) + 2).card := by
+    intro k hk
+    induction k with
+    | zero => simp [hP, Greedy.path_zero]
+    | succ k ih =>
+      obtain ⟨i1, i2, i3⟩ := ih (by omega)
+      have hs := hstep k (by omega)
+      have hd := hdrop k (by omega)
+      refine ⟨by omega, by omega, ?_⟩
+      rw [Finset.range_add_one, Finset.filter_insert]
+      by_cases h2 : Φ S₀ (P k) = Φ S₀ (P (k + 1)) + 2
+      · rw [ite_eq_left_of_eq_true _ _ (eq_true h2), Finset.card_insert_of_notMem (by simp)]; omega
+      · rw [ite_eq_right_of_eq_false _ _ (eq_false h2)]; omega
+  obtain ⟨hm, he, hΦ⟩ := hind τ le_rfl
+  rw [hp, Φ_self] at hΦ
+  have hm0 : mis S₀ S₀ = 0 := by simp [mis]
+  have he0 : ext S₀ S₀ = 0 := by simp [ext]
+  rw [hp, hm0] at hm
+  rw [hp, he0] at he
+  refine ⟨τ, hτ, hp, max_le (by omega) (by omega), hdrop, ?_⟩
+  rw [← Φ_eq]; omega
+
+/-- **Move-class table, a Φ drop of 2.** A flip or swap that lowers `Φ` by exactly 2 is an
+extra→truth swap: an extra `i ∈ S ∖ S₀` goes out and a missing truth `j ∈ S₀ ∖ S` comes in. -/
+theorem drop_two_swap {S T : Finset (Fin p)} (hT : IsFlipSwap S T)
+    (h2 : Φ S₀ S = Φ S₀ T + 2) :
+    ∃ i ∈ S, i ∉ S₀ ∧ ∃ j ∉ S, j ∈ S₀ ∧ T = insert j (S.erase i) := by
+  rcases hT with ⟨j, hj, rfl⟩ | ⟨i, hi, rfl⟩ | ⟨i, hi, j, hj, rfl⟩
+  · by_cases h0 : j ∈ S₀
+    · have := Φ_insert_of_mem S₀ hj h0; omega
+    · have := Φ_insert_of_notMem S₀ hj h0; omega
+  · by_cases h0 : i ∈ S₀
+    · have := Φ_erase_of_mem S₀ hi h0; omega
+    · have := Φ_erase_of_notMem S₀ hi h0; omega
+  · have hj' : j ∉ S.erase i := fun h => hj (Finset.mem_of_mem_erase h)
+    by_cases hi0 : i ∈ S₀ <;> by_cases hj0 : j ∈ S₀
+    · have := Φ_erase_of_mem S₀ hi hi0; have := Φ_insert_of_mem S₀ hj' hj0; omega
+    · have := Φ_erase_of_mem S₀ hi hi0; have := Φ_insert_of_notMem S₀ hj' hj0; omega
+    · exact ⟨i, hi, hi0, j, hj, hj0, rfl⟩
+    · have := Φ_erase_of_notMem S₀ hi hi0; have := Φ_insert_of_notMem S₀ hj' hj0; omega
+
+/-- Converse: an extra→truth swap lowers `Φ` by exactly 2. With `drop_two_swap`, the count `σ`
+in `theoremA2_lattice_count` is the number of extra→truth swaps on the path. -/
+theorem swap_extra_truth_drop_two {S : Finset (Fin p)} {i j : Fin p} (hi : i ∈ S) (hi0 : i ∉ S₀)
+    (hj : j ∉ S) (hj0 : j ∈ S₀) : Φ S₀ S = Φ S₀ (insert j (S.erase i)) + 2 := by
+  have hj' : j ∉ S.erase i := fun h => hj (Finset.mem_of_mem_erase h)
+  have := Φ_erase_of_notMem S₀ hi hi0
+  have := Φ_insert_of_mem S₀ hj' hj0
+  omega
+
+/-- The one-state progress event `D_S` (W1 PROOF.md, Definitions): the best feasible progress
+neighbour (`Φ` decreases) strictly improves on `S` and strictly beats every non-progress
+neighbour. It is stated with a witness `T` for the best progress move. -/
+def DS (K : ℕ) (F : Finset (Fin p) → ℝ) (S : Finset (Fin p)) : Prop :=
+  ∃ T ∈ nbhd K S, Φ S₀ T < Φ S₀ S ∧ F S < F T ∧
+    ∀ T' ∈ nbhd K S, ¬ Φ S₀ T' < Φ S₀ S → F T' < F T
+
+/-- Under `D_S`, every best-improvement map makes a progress move at `S`, whatever its tie
+rule. -/
+theorem DS_move {K : ℕ} {F : Finset (Fin p) → ℝ} {M : Finset (Fin p) → Option (Finset (Fin p))}
+    (hM : Greedy.IsBestImprovement (nbhd K) F M) {S : Finset (Fin p)} (hD : DS S₀ K F S) :
+    ∃ T, M S = some T ∧ Φ S₀ T < Φ S₀ S := by
+  obtain ⟨T, hTN, -, hFT, hbeat⟩ := hD
+  cases hMS : M S with
+  | none =>
+    have := (hM.none_iff S).mp hMS T hTN
+    linarith
+  | some T₁ =>
+    refine ⟨T₁, rfl, ?_⟩
+    by_contra hnp
+    have h1 := hbeat T₁ (hM.some_mem _ _ hMS) hnp
+    have h2 := hM.some_max _ _ hMS T hTN
+    linarith
+
+/-- **Theorem A (A3), lattice-condition version** (W1 PROOF.md A3, last sentence; the cap as in
+W3-VT37R R3). Assume (L) `M S₀ = none` and `D_{S'}` at every `S' ∈ Lat(S_c) ∖ {S₀}`: only
+`2^{Φ(S_c)}` states, with no condition elsewhere in `R_{a,d}`. Then the greedy path from `S_c`
+stays in `Lat(S_c)` and reaches `S₀` after `τ ≤ Φ(S_c)` moves. For every cap `ℓ ≥ τ`, the capped
+search returns `S₀` certified. -/
+theorem theoremA3_lattice_only {K : ℕ} {F : Finset (Fin p) → ℝ}
+    {M : Finset (Fin p) → Option (Finset (Fin p))}
+    (hM : Greedy.IsBestImprovement (nbhd K) F M) {Sc : Finset (Fin p)} (hL0 : M S₀ = none)
+    (hD : ∀ S ∈ Lat S₀ Sc, S ≠ S₀ → DS S₀ K F S) :
+    ∃ τ ≤ Φ S₀ Sc, Greedy.path M Sc τ = S₀ ∧ (∀ k, Greedy.path M Sc k ∈ Lat S₀ Sc) ∧
+      ∀ ℓ, τ ≤ ℓ → Greedy.path M Sc ℓ = S₀ ∧ M (Greedy.path M Sc ℓ) = none := by
+  have hTDP : Greedy.TDP M (Φ S₀) (Lat S₀ Sc) S₀ := by
+    refine ⟨hL0, fun S hS hne => ?_⟩
+    obtain ⟨T, hT, hΦ⟩ := DS_move S₀ hM (hD S hS hne)
+    have hfs := (mem_nbhd.mp (hM.some_mem _ _ hT)).2
+    exact ⟨T, hT, Lat_subset S₀ hS (progress_mem_Lat S₀ hfs hΦ), hΦ⟩
+  obtain ⟨τ, hτ, hp, hmem, -, hstay⟩ :=
+    Greedy.theoremA2 hTDP (S₀_mem_Lat S₀ Sc) (self_mem_Lat S₀ Sc)
+  exact ⟨τ, hτ, hp, hmem, fun ℓ hℓ => ⟨hstay ℓ hℓ, by rw [hstay ℓ hℓ]; exact hL0⟩⟩
+
+/-- **Theorem A (A3), concrete form with the sharp cap** (W3-VT37R R3: `ℓ ≥ τ(S_c)` suffices).
+Under TD′_P(R_{a,d}), from `S_c ∈ R_{a,d}` there is `τ ≤ Φ(S_c)` such that for every cap `ℓ ≥ τ`
+the capped search returns `S₀` certified, and every model scored by the search up to `τ` has
+score `≤ F(S₀)`. -/
+theorem theoremA3_lattice_tau {K : ℕ} {F : Finset (Fin p) → ℝ}
+    {M : Finset (Fin p) → Option (Finset (Fin p))}
+    (hM : Greedy.IsBestImprovement (nbhd K) F M) {a d : ℕ} (hTD : TDP' S₀ M a d)
+    {Sc : Finset (Fin p)} (hSc : Sc ∈ Rad S₀ a d) :
+    ∃ τ ≤ Φ S₀ Sc, (∀ ℓ, τ ≤ ℓ → Greedy.path M Sc ℓ = S₀ ∧ M (Greedy.path M Sc ℓ) = none) ∧
+      (∀ k ≤ τ, F (Greedy.path M Sc k) ≤ F S₀ ∧
+        ∀ T ∈ nbhd K (Greedy.path M Sc k), F T ≤ F S₀) :=
+  Greedy.theoremA3 hM (TDP_of_TDP' S₀ hM hTD) (S₀_mem_Rad S₀ a d) hSc
+
 end SmcBvs.Lattice
