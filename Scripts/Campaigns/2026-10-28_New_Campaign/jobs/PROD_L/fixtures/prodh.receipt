@@ -1,0 +1,15 @@
+plan pre s0_build billed=2 tasks=1 peak=2
+plan pre s0_verify billed=2 tasks=1 peak=2
+plan fit s1_enum20 billed=4 tasks=1 peak=4
+plan fit s1_enum30 billed=16 tasks=4 peak=64
+plan fit s2_smc billed=2 tasks=32 peak=64
+plan fit s3_smcrep billed=2 tasks=32 peak=64
+plan post s8_unlock billed=2 tasks=1 peak=2
+plan post s9_collect billed=2 tasks=1 peak=2
+phase pre peak=4
+phase fit peak=132
+phase post peak=4
+other 101_[0-49%50] state=PENDING cpus=1 billed=2 tasks=50 peak=100
+other 102_[0-49%50] state=PENDING cpus=1 billed=2 tasks=50 peak=100
+profile=alone prod_h_present=True prod_l_peak=132 profile_limit=132 others_peak=200 combined=332 global_limit=192
+REFUSED: PROD-H present with alone profile; global ceiling exceeded

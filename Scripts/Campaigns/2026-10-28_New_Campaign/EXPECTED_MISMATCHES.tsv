@@ -1,0 +1,49 @@
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/ADAPTATIONS.md
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/R/SOURCES_SHA256.txt
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/R/common.R
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/R/config_lowp.R
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/R/methods/fit_F1_lasso.R
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/R/methods/fit_F2_enet.R
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/R/methods/fit_F3_alasso.R
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/R/methods/fit_F4_mcp.R
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/R/production_helpers/common_F1.R
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/R/production_helpers/common_F2.R
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/R/production_helpers/common_F3.R
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/README.md
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/run_bench_case.R
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/smoke/check_determinism.R
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/smoke/derived_checks.R
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/smoke/smoke3.R
+CODE_LEDGER LOWP block (2026-10-29)	bench_lowp/smoke/validate_smoke.R
+CODE_LEDGER LOWP block (2026-10-29)	lowp/INTERFACES.md
+CODE_LEDGER LOWP block (2026-10-29)	lowp/R/lowp_verify_nots.R
+CODE_LEDGER LOWP block (2026-10-29)	lowp/RUN_DESIGN.md
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/JOB.md
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/LOCAL_TEST.md
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/R/pilot_build.R
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/cleanup_pilot.sh
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/pilot.env
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/slurm/common.sh
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/slurm/s0_build.sbatch
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/slurm/s0_verify.sbatch
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/slurm/s2_smc.sbatch
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/stage_local.sh
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/submit_pilot.sh
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/summarize_pilot.R
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/tests/make_fabricated_pilot.R
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/tests/run_negative_tests.R
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/tests/test_shell.sh
+CODE_LEDGER LOWP block (2026-10-29)	lowp/pilot/truth_wave.sh
+CODE_LEDGER LOWP block (2026-10-29)	lowp/smc/CHANGES_vs_v2_2_adapter.md
+CODE_LEDGER LOWP block (2026-10-29)	lowp/smc/README.md
+CODE_LEDGER LOWP block (2026-10-29)	lowp/smc/adapter_lowp.R
+CODE_LEDGER LOWP block (2026-10-29)	lowp/smc/adapter_vs_v2_2.diff
+CODE_LEDGER LOWP block (2026-10-29)	lowp/smc/run_smc_case.R
+lowp_port/BENCH_LOWP_MANIFEST_SHA256.txt (first)	ADAPTATIONS.md
+bench_lowp/R/SOURCES_SHA256.txt	R/methods/fit_F1_lasso.R
+bench_lowp/R/SOURCES_SHA256.txt	R/methods/fit_F2_enet.R
+bench_lowp/R/SOURCES_SHA256.txt	R/methods/fit_F3_alasso.R
+bench_lowp/R/SOURCES_SHA256.txt	R/methods/fit_F4_mcp.R
+bench_lowp/R/SOURCES_SHA256.txt	R/production_helpers/common_F1.R
+bench_lowp/R/SOURCES_SHA256.txt	R/production_helpers/common_F2.R
+bench_lowp/R/SOURCES_SHA256.txt	R/production_helpers/common_F3.R

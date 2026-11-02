@@ -1,0 +1,34 @@
+PASS full run: status exact, scope full, complete, global_certified from the comparison 
+PASS task_subset = 0 (the reviewer's case): status partial, 512 of 4096 models, warning lowp_exact: only 512 of 4096 feasible models were scored; results are restricted to the scored models (status 'partial', global_certified = FALSE)
+PASS   scale records: scope restricted, global_certified FALSE, status partial, bound kind kept certified_over_scored_models = TRUE
+PASS prefix_fraction = 0.25: partial, not globally certified 
+PASS task_subset covering every task is complete and equals the full run 
+PASS prefix_fraction = 1 is complete 
+PASS K < p (n = 12, p = 10, K = 6): complete with sum_{k<=6} choose(10,k) = 848 models 
+PASS task_bits = -1 rejected 
+PASS task_bits = 21 rejected 
+PASS task_bits = 2.5 / NA rejected 
+PASS threads = 0 / negative / NA rejected 
+PASS top = 1 rejected 
+PASS task_subset out of range / negative rejected 
+PASS prefix_fraction 0 / 1.5 rejected 
+PASS C++ also rejects task_bits = -3 and threads = 0 when called directly 
+PASS p = 41 rejected (supported domain p <= 30 for the campaign, <= 40 for tests) 
+PASS dropped constant column: original-index map kept (names of pip skip the dropped one) 
+PASS d = -1 with max_scores = 1000 rejected before counting 
+PASS d = 1.5 / NA / Inf / vector rejected 
+PASS duplicated truth {2,2,4} rejected 
+PASS duplicated null_pool rejected 
+PASS null_pool intersecting the truth rejected 
+PASS truth / pool outside the columns, NA, non-integer rejected 
+PASS empty truth rejected; truth larger than K = 5 rejected 
+PASS negative margin (-1, -1e-9) rejected in R and in C++ 
+PASS margin NaN / Inf / NA / vector rejected 
+PASS threads = 0 / max_scores = -1 / NA / keep_all NA rejected 
+PASS C++ rejects d = -1, duplicate truth, non-finite margin when called directly 
+PASS valid call still works: scores used = closed form 
+PASS huge d with a small max_scores: dry-run record, count flagged inexact (>= 2^53) scores_needed = 7.683e+20
+PASS huge d with max_scores = Inf: run refused 
+PASS C++ guard on the number of pool subsets (d = 30, npool = 57) 
+
+32 of 32 checks passed

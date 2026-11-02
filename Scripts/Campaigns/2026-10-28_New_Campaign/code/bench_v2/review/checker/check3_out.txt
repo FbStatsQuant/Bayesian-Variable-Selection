@@ -1,0 +1,182 @@
+
+====  p0500_S1_r001_c100  ====
+[PASS] p0500_S1_r001_c100 input sha matches RDS record                         ee045bfb113fee6cb3dd9451a77bf3067e0cada77b056317baf1b94035955f6f
+[PASS] p0500_S1_r001_c100 (a) F3 pilot$beta identical() F1 v2 beta             nonzeros=78
+[PASS] p0500_S1_r001_c100 (a) F3 diagnostics$pilot_beta identical F1 beta      
+[PASS] p0500_S1_r001_c100 (a) pilot_index/lambda/k == F1 cv_min row            idx=73 k=78
+[PASS] p0500_S1_r001_c100 (a) F3 pilot$cvm/cvsd identical F1 path cvm/cvsd     
+[PASS] p0500_S1_r001_c100 (b) F1 support==nonzeros(beta_pen) 6 rules           ids=cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37 statuses=ok,ok,ok,ok,ok,ok
+[PASS] p0500_S1_r001_c100 (b) F1 rule ids/roles                                primary,S0,S0,S0,S0,S0
+[PASS] p0500_S1_r001_c100 (b) F2 support==nonzeros(beta_pen) 6 rules           ids=cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37 statuses=ok,ok,ok,ok,ok,ok
+[PASS] p0500_S1_r001_c100 (b) F2 rule ids/roles                                primary,S0,S0,S0,S0,S0
+[PASS] p0500_S1_r001_c100 (b) F3 support==nonzeros(beta_pen) 6 rules           ids=cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37 statuses=ok,ok,ok,ok,ok,ok
+[PASS] p0500_S1_r001_c100 (b) F3 rule ids/roles                                primary,S0,S0,S0,S0,S0
+[PASS] p0500_S1_r001_c100 (c) candidate key set == saved (null+distinct, k<=100) n_cand=57 (mine) / 57 (saved); path max k=64
+[PASS] p0500_S1_r001_c100 (c) candidate rss/ebic1/ebic05 vs saved (rel 1e-9)   rel rss=0.00e+00 rel ebic1=0.00e+00; n_invalid=0
+[PASS] p0500_S1_r001_c100 (c) re-pick ebic1 (order crit,k,key)                 mine key_k=15 crit=195.165779 | saved k=15 crit=195.165779 | index 88/88 | vmax 64/64 | status=ok
+[PASS] p0500_S1_r001_c100 (c) re-pick ebic05 (order crit,k,key)                mine key_k=15 crit=130.057989 | saved k=15 crit=130.057989 | index 88/88 | vmax 64/64 | status=ok
+[PASS] p0500_S1_r001_c100 (c) re-pick ebic1_K37 (order crit,k,key)             mine key_k=15 crit=195.165779 | saved k=15 crit=195.165779 | index 88/88 | vmax 37/37 | status=ok
+[PASS] p0500_S1_r001_c100 (c) re-pick ebic05_K37 (order crit,k,key)            mine key_k=15 crit=130.057989 | saved k=15 crit=130.057989 | index 88/88 | vmax 37/37 | status=ok
+   info: ebic1_K37 pick with p=ncol(X) k=15 ; with screened m=78 instead of p: k=20  (differs: p-vs-m matters here)
+[PASS] p0500_S1_r001_c100 (d) F1 beta_ols == own OLS slopes (rel 1e-8)         max rel=0.00e+00 over 4 ebic rules; CV beta_ols all-NA=TRUE; off-support zeros=TRUE
+[PASS] p0500_S1_r001_c100 (d) F2 beta_ols == own OLS slopes (rel 1e-8)         max rel=0.00e+00 over 4 ebic rules; CV beta_ols all-NA=TRUE; off-support zeros=TRUE
+[PASS] p0500_S1_r001_c100 (d) F3 beta_ols == own OLS slopes (rel 1e-8)         max rel=0.00e+00 over 4 ebic rules; CV beta_ols all-NA=TRUE; off-support zeros=TRUE
+[PASS] p0500_S1_r001_c100 (d) alpha field: F1/F3 NA, F2 non-NA                 
+[PASS] p0500_S1_r001_c100 (e) F1 4 original rule rows identical (every old col) old cols=18 new cols=18 new-only cols=
+[PASS] p0500_S1_r001_c100 (e) F1 beta/converged identical                      
+[PASS] p0500_S1_r001_c100 (e) F1 diagnostics identical (path/folds/candidates...) 
+[PASS] p0500_S1_r001_c100 (e) F1 old run has no coefficients; v2 has           
+[PASS] p0500_S1_r001_c100 (e) F1 K37 roles S0, k<=37                           15,15
+[PASS] p0500_S1_r001_c100 (e) F2 4 original rule rows identical (every old col) old cols=20 new cols=20 new-only cols=
+[PASS] p0500_S1_r001_c100 (e) F2 beta/converged identical                      
+[PASS] p0500_S1_r001_c100 (e) F2 diagnostics identical (path/folds/candidates...) 
+[PASS] p0500_S1_r001_c100 (e) F2 old run has no coefficients; v2 has           
+[PASS] p0500_S1_r001_c100 (e) F2 K37 roles S0, k<=37                           16,16
+[PASS] p0500_S1_r001_c100 (f) keep == which(pilot b != 0); m == pilot_k        m=78
+[PASS] p0500_S1_r001_c100 (f) sum(v)==m (1e-10 rel)                            sum(v)-m=1.421e-14
+[PASS] p0500_S1_r001_c100 (f) v>0 finite; v*|b_keep| constant (rel 1e-12)      spread=4.60e-16
+[PASS] p0500_S1_r001_c100 (f) w == 1/|b_keep| (gamma=1)                        rel=0.00e+00
+[PASS] p0500_S1_r001_c100 (f) v == own stable normalisation m*r/sum(r)         rel=5.18e-17
+[PASS] p0500_S1_r001_c100 (x) lambda grid == own (rel 1e-12)                   rel=0.00e+00
+[PASS] p0500_S1_r001_c100 (x) own CV cvm/cvsd vs saved path (rel 1e-8)         rel cvm=0.00e+00 cvsd=0.00e+00
+[PASS] p0500_S1_r001_c100 (x) own cv_min/cv_1se index == saved                 own 200/169 saved 200/169
+[PASS] p0500_S1_r001_c100 (x) own glmnet beta at index == saved beta_pen (6 rules) max rel=0.00e+00 supports match=TRUE
+[PASS] p0500_S1_r001_c100 (x) own KKT (weighted, screened) <=1e-5 at selected idx max=4.50e-09
+[PASS] p0500_S1_r001_c100 (x) own path supports == saved path$key (all 200)    mismatches=0
+
+====  p1000_S4_r001_c050  ====
+[PASS] p1000_S4_r001_c050 input sha matches RDS record                         85c4921f8bdddc6dd9d4578ff50e6f0de613e0f1a4f56e73bf9c1f72dc3d16c7
+[PASS] p1000_S4_r001_c050 (a) F3 pilot$beta identical() F1 v2 beta             nonzeros=70
+[PASS] p1000_S4_r001_c050 (a) F3 diagnostics$pilot_beta identical F1 beta      
+[PASS] p1000_S4_r001_c050 (a) pilot_index/lambda/k == F1 cv_min row            idx=59 k=70
+[PASS] p1000_S4_r001_c050 (a) F3 pilot$cvm/cvsd identical F1 path cvm/cvsd     
+[PASS] p1000_S4_r001_c050 (b) F1 support==nonzeros(beta_pen) 6 rules           ids=cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37 statuses=ok,ok,ok,ok,ok,ok
+[PASS] p1000_S4_r001_c050 (b) F1 rule ids/roles                                primary,S0,S0,S0,S0,S0
+[PASS] p1000_S4_r001_c050 (b) F2 support==nonzeros(beta_pen) 6 rules           ids=cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37 statuses=ok,ok,ok,ok,ok,ok
+[PASS] p1000_S4_r001_c050 (b) F2 rule ids/roles                                primary,S0,S0,S0,S0,S0
+[PASS] p1000_S4_r001_c050 (b) F3 support==nonzeros(beta_pen) 6 rules           ids=cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37 statuses=ok,ok,ok,ok,ok,ok
+[PASS] p1000_S4_r001_c050 (b) F3 rule ids/roles                                primary,S0,S0,S0,S0,S0
+[PASS] p1000_S4_r001_c050 (c) candidate key set == saved (null+distinct, k<=100) n_cand=53 (mine) / 53 (saved); path max k=63
+[PASS] p1000_S4_r001_c050 (c) candidate rss/ebic1/ebic05 vs saved (rel 1e-9)   rel rss=0.00e+00 rel ebic1=0.00e+00; n_invalid=0
+[PASS] p1000_S4_r001_c050 (c) re-pick ebic1 (order crit,k,key)                 mine key_k=14 crit=204.235696 | saved k=14 crit=204.235696 | index 60/60 | vmax 63/63 | status=ok
+[PASS] p1000_S4_r001_c050 (c) re-pick ebic05 (order crit,k,key)                mine key_k=20 crit=126.671899 | saved k=20 crit=126.671899 | index 93/93 | vmax 63/63 | status=ok
+[PASS] p1000_S4_r001_c050 (c) re-pick ebic1_K37 (order crit,k,key)             mine key_k=14 crit=204.235696 | saved k=14 crit=204.235696 | index 60/60 | vmax 36/36 | status=ok
+[PASS] p1000_S4_r001_c050 (c) re-pick ebic05_K37 (order crit,k,key)            mine key_k=20 crit=126.671899 | saved k=20 crit=126.671899 | index 93/93 | vmax 36/36 | status=ok
+   info: ebic1_K37 pick with p=ncol(X) k=14 ; with screened m=70 instead of p: k=23  (differs: p-vs-m matters here)
+[PASS] p1000_S4_r001_c050 (d) F1 beta_ols == own OLS slopes (rel 1e-8)         max rel=0.00e+00 over 4 ebic rules; CV beta_ols all-NA=TRUE; off-support zeros=TRUE
+[PASS] p1000_S4_r001_c050 (d) F2 beta_ols == own OLS slopes (rel 1e-8)         max rel=0.00e+00 over 4 ebic rules; CV beta_ols all-NA=TRUE; off-support zeros=TRUE
+[PASS] p1000_S4_r001_c050 (d) F3 beta_ols == own OLS slopes (rel 1e-8)         max rel=0.00e+00 over 4 ebic rules; CV beta_ols all-NA=TRUE; off-support zeros=TRUE
+[PASS] p1000_S4_r001_c050 (d) alpha field: F1/F3 NA, F2 non-NA                 
+[PASS] p1000_S4_r001_c050 (e) F1 4 original rule rows identical (every old col) old cols=18 new cols=18 new-only cols=
+[PASS] p1000_S4_r001_c050 (e) F1 beta/converged identical                      
+[PASS] p1000_S4_r001_c050 (e) F1 diagnostics identical (path/folds/candidates...) 
+[PASS] p1000_S4_r001_c050 (e) F1 old run has no coefficients; v2 has           
+[PASS] p1000_S4_r001_c050 (e) F1 K37 roles S0, k<=37                           18,29
+[PASS] p1000_S4_r001_c050 (e) F2 4 original rule rows identical (every old col) old cols=20 new cols=20 new-only cols=
+[PASS] p1000_S4_r001_c050 (e) F2 beta/converged identical                      
+[PASS] p1000_S4_r001_c050 (e) F2 diagnostics identical (path/folds/candidates...) 
+[PASS] p1000_S4_r001_c050 (e) F2 old run has no coefficients; v2 has           
+[PASS] p1000_S4_r001_c050 (e) F2 K37 roles S0, k<=37                           17,32
+[PASS] p1000_S4_r001_c050 (f) keep == which(pilot b != 0); m == pilot_k        m=70
+[PASS] p1000_S4_r001_c050 (f) sum(v)==m (1e-10 rel)                            sum(v)-m=0.000e+00
+[PASS] p1000_S4_r001_c050 (f) v>0 finite; v*|b_keep| constant (rel 1e-12)      spread=5.23e-16
+[PASS] p1000_S4_r001_c050 (f) w == 1/|b_keep| (gamma=1)                        rel=0.00e+00
+[PASS] p1000_S4_r001_c050 (f) v == own stable normalisation m*r/sum(r)         rel=2.85e-17
+[PASS] p1000_S4_r001_c050 (x) lambda grid == own (rel 1e-12)                   rel=0.00e+00
+[PASS] p1000_S4_r001_c050 (x) own CV cvm/cvsd vs saved path (rel 1e-8)         rel cvm=0.00e+00 cvsd=0.00e+00
+[PASS] p1000_S4_r001_c050 (x) own cv_min/cv_1se index == saved                 own 154/128 saved 154/128
+[PASS] p1000_S4_r001_c050 (x) own glmnet beta at index == saved beta_pen (6 rules) max rel=0.00e+00 supports match=TRUE
+[PASS] p1000_S4_r001_c050 (x) own KKT (weighted, screened) <=1e-5 at selected idx max=1.41e-08
+[PASS] p1000_S4_r001_c050 (x) own path supports == saved path$key (all 200)    mismatches=0
+
+====  p0500_S5_r001_c050  ====
+[PASS] p0500_S5_r001_c050 input sha matches RDS record                         f82c50993d31be2637b794865fcf162dd97b4eb0bde68b45e4dca24aad86bebd
+[PASS] p0500_S5_r001_c050 (a) F3 pilot$beta identical() F1 v2 beta             nonzeros=56
+[PASS] p0500_S5_r001_c050 (a) F3 diagnostics$pilot_beta identical F1 beta      
+[PASS] p0500_S5_r001_c050 (a) pilot_index/lambda/k == F1 cv_min row            idx=52 k=56
+[PASS] p0500_S5_r001_c050 (a) F3 pilot$cvm/cvsd identical F1 path cvm/cvsd     
+[PASS] p0500_S5_r001_c050 (b) F1 support==nonzeros(beta_pen) 6 rules           ids=cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37 statuses=ok,ok,ok,ok,ok,ok
+[PASS] p0500_S5_r001_c050 (b) F1 rule ids/roles                                primary,S0,S0,S0,S0,S0
+[PASS] p0500_S5_r001_c050 (b) F2 support==nonzeros(beta_pen) 6 rules           ids=cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37 statuses=ok,ok,ok,ok,ok,ok
+[PASS] p0500_S5_r001_c050 (b) F2 rule ids/roles                                primary,S0,S0,S0,S0,S0
+[PASS] p0500_S5_r001_c050 (b) F3 support==nonzeros(beta_pen) 6 rules           ids=cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37 statuses=ok,ok,ok,ok,ok,ok
+[PASS] p0500_S5_r001_c050 (b) F3 rule ids/roles                                primary,S0,S0,S0,S0,S0
+[PASS] p0500_S5_r001_c050 (c) candidate key set == saved (null+distinct, k<=100) n_cand=45 (mine) / 45 (saved); path max k=52
+[PASS] p0500_S5_r001_c050 (c) candidate rss/ebic1/ebic05 vs saved (rel 1e-9)   rel rss=0.00e+00 rel ebic1=0.00e+00; n_invalid=0
+[PASS] p0500_S5_r001_c050 (c) re-pick ebic1 (order crit,k,key)                 mine key_k=14 crit=195.205326 | saved k=14 crit=195.205326 | index 62/62 | vmax 52/52 | status=ok
+[PASS] p0500_S5_r001_c050 (c) re-pick ebic05 (order crit,k,key)                mine key_k=14 crit=133.575694 | saved k=14 crit=133.575694 | index 62/62 | vmax 52/52 | status=ok
+[PASS] p0500_S5_r001_c050 (c) re-pick ebic1_K37 (order crit,k,key)             mine key_k=14 crit=195.205326 | saved k=14 crit=195.205326 | index 62/62 | vmax 37/37 | status=ok
+[PASS] p0500_S5_r001_c050 (c) re-pick ebic05_K37 (order crit,k,key)            mine key_k=14 crit=133.575694 | saved k=14 crit=133.575694 | index 62/62 | vmax 37/37 | status=ok
+   info: ebic1_K37 pick with p=ncol(X) k=14 ; with screened m=56 instead of p: k=14  (same)
+[PASS] p0500_S5_r001_c050 (d) F1 beta_ols == own OLS slopes (rel 1e-8)         max rel=0.00e+00 over 4 ebic rules; CV beta_ols all-NA=TRUE; off-support zeros=TRUE
+[PASS] p0500_S5_r001_c050 (d) F2 beta_ols == own OLS slopes (rel 1e-8)         max rel=0.00e+00 over 4 ebic rules; CV beta_ols all-NA=TRUE; off-support zeros=TRUE
+[PASS] p0500_S5_r001_c050 (d) F3 beta_ols == own OLS slopes (rel 1e-8)         max rel=0.00e+00 over 4 ebic rules; CV beta_ols all-NA=TRUE; off-support zeros=TRUE
+[PASS] p0500_S5_r001_c050 (d) alpha field: F1/F3 NA, F2 non-NA                 
+[PASS] p0500_S5_r001_c050 (e) F1 4 original rule rows identical (every old col) old cols=18 new cols=18 new-only cols=
+[PASS] p0500_S5_r001_c050 (e) F1 beta/converged identical                      
+[PASS] p0500_S5_r001_c050 (e) F1 diagnostics identical (path/folds/candidates...) 
+[PASS] p0500_S5_r001_c050 (e) F1 old run has no coefficients; v2 has           
+[PASS] p0500_S5_r001_c050 (e) F1 K37 roles S0, k<=37                           12,12
+[PASS] p0500_S5_r001_c050 (e) F2 4 original rule rows identical (every old col) old cols=20 new cols=20 new-only cols=
+[PASS] p0500_S5_r001_c050 (e) F2 beta/converged identical                      
+[PASS] p0500_S5_r001_c050 (e) F2 diagnostics identical (path/folds/candidates...) 
+[PASS] p0500_S5_r001_c050 (e) F2 old run has no coefficients; v2 has           
+[PASS] p0500_S5_r001_c050 (e) F2 K37 roles S0, k<=37                           12,12
+[PASS] p0500_S5_r001_c050 (f) keep == which(pilot b != 0); m == pilot_k        m=56
+[PASS] p0500_S5_r001_c050 (f) sum(v)==m (1e-10 rel)                            sum(v)-m=0.000e+00
+[PASS] p0500_S5_r001_c050 (f) v>0 finite; v*|b_keep| constant (rel 1e-12)      spread=4.71e-16
+[PASS] p0500_S5_r001_c050 (f) w == 1/|b_keep| (gamma=1)                        rel=0.00e+00
+[PASS] p0500_S5_r001_c050 (f) v == own stable normalisation m*r/sum(r)         rel=1.33e-16
+[PASS] p0500_S5_r001_c050 (x) lambda grid == own (rel 1e-12)                   rel=0.00e+00
+[PASS] p0500_S5_r001_c050 (x) own CV cvm/cvsd vs saved path (rel 1e-8)         rel cvm=0.00e+00 cvsd=0.00e+00
+[PASS] p0500_S5_r001_c050 (x) own cv_min/cv_1se index == saved                 own 162/128 saved 162/128
+[PASS] p0500_S5_r001_c050 (x) own glmnet beta at index == saved beta_pen (6 rules) max rel=0.00e+00 supports match=TRUE
+[PASS] p0500_S5_r001_c050 (x) own KKT (weighted, screened) <=1e-5 at selected idx max=1.49e-08
+[PASS] p0500_S5_r001_c050 (x) own path supports == saved path$key (all 200)    mismatches=0
+
+====  p1000_S6_r001_c100  ====
+[PASS] p1000_S6_r001_c100 input sha matches RDS record                         30b0c46136096c1ff124d59eddb6c20c29a869607c37df9c619cbd1e589a3457
+[PASS] p1000_S6_r001_c100 (a) F3 pilot$beta identical() F1 v2 beta             nonzeros=81
+[PASS] p1000_S6_r001_c100 (a) F3 diagnostics$pilot_beta identical F1 beta      
+[PASS] p1000_S6_r001_c100 (a) pilot_index/lambda/k == F1 cv_min row            idx=73 k=81
+[PASS] p1000_S6_r001_c100 (a) F3 pilot$cvm/cvsd identical F1 path cvm/cvsd     
+[PASS] p1000_S6_r001_c100 (b) F1 support==nonzeros(beta_pen) 6 rules           ids=cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37 statuses=ok,ok,ok,ok,ok,ok
+[PASS] p1000_S6_r001_c100 (b) F1 rule ids/roles                                primary,S0,S0,S0,S0,S0
+[PASS] p1000_S6_r001_c100 (b) F2 support==nonzeros(beta_pen) 6 rules           ids=cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37 statuses=ok,ok,ok,ok,ok,ok
+[PASS] p1000_S6_r001_c100 (b) F2 rule ids/roles                                primary,S0,S0,S0,S0,S0
+[PASS] p1000_S6_r001_c100 (b) F3 support==nonzeros(beta_pen) 6 rules           ids=cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37 statuses=ok,ok,ok,ok,ok,ok
+[PASS] p1000_S6_r001_c100 (b) F3 rule ids/roles                                primary,S0,S0,S0,S0,S0
+[PASS] p1000_S6_r001_c100 (c) candidate key set == saved (null+distinct, k<=100) n_cand=56 (mine) / 56 (saved); path max k=72
+[PASS] p1000_S6_r001_c100 (c) candidate rss/ebic1/ebic05 vs saved (rel 1e-9)   rel rss=0.00e+00 rel ebic1=0.00e+00; n_invalid=0
+[PASS] p1000_S6_r001_c100 (c) re-pick ebic1 (order crit,k,key)                 mine key_k=14 crit=206.597808 | saved k=14 crit=206.597808 | index 56/56 | vmax 72/72 | status=ok
+[PASS] p1000_S6_r001_c100 (c) re-pick ebic05 (order crit,k,key)                mine key_k=16 crit=131.730219 | saved k=16 crit=131.730219 | index 111/111 | vmax 72/72 | status=ok
+[PASS] p1000_S6_r001_c100 (c) re-pick ebic1_K37 (order crit,k,key)             mine key_k=14 crit=206.597808 | saved k=14 crit=206.597808 | index 56/56 | vmax 36/36 | status=ok
+[PASS] p1000_S6_r001_c100 (c) re-pick ebic05_K37 (order crit,k,key)            mine key_k=16 crit=131.730219 | saved k=16 crit=131.730219 | index 111/111 | vmax 36/36 | status=ok
+   info: ebic1_K37 pick with p=ncol(X) k=14 ; with screened m=81 instead of p: k=19  (differs: p-vs-m matters here)
+[PASS] p1000_S6_r001_c100 (d) F1 beta_ols == own OLS slopes (rel 1e-8)         max rel=0.00e+00 over 4 ebic rules; CV beta_ols all-NA=TRUE; off-support zeros=TRUE
+[PASS] p1000_S6_r001_c100 (d) F2 beta_ols == own OLS slopes (rel 1e-8)         max rel=0.00e+00 over 4 ebic rules; CV beta_ols all-NA=TRUE; off-support zeros=TRUE
+[PASS] p1000_S6_r001_c100 (d) F3 beta_ols == own OLS slopes (rel 1e-8)         max rel=0.00e+00 over 4 ebic rules; CV beta_ols all-NA=TRUE; off-support zeros=TRUE
+[PASS] p1000_S6_r001_c100 (d) alpha field: F1/F3 NA, F2 non-NA                 
+[PASS] p1000_S6_r001_c100 (e) F1 4 original rule rows identical (every old col) old cols=18 new cols=18 new-only cols=
+[PASS] p1000_S6_r001_c100 (e) F1 beta/converged identical                      
+[PASS] p1000_S6_r001_c100 (e) F1 diagnostics identical (path/folds/candidates...) 
+[PASS] p1000_S6_r001_c100 (e) F1 old run has no coefficients; v2 has           
+[PASS] p1000_S6_r001_c100 (e) F1 K37 roles S0, k<=37                           16,16
+[PASS] p1000_S6_r001_c100 (e) F2 4 original rule rows identical (every old col) old cols=20 new cols=20 new-only cols=
+[PASS] p1000_S6_r001_c100 (e) F2 beta/converged identical                      
+[PASS] p1000_S6_r001_c100 (e) F2 diagnostics identical (path/folds/candidates...) 
+[PASS] p1000_S6_r001_c100 (e) F2 old run has no coefficients; v2 has           
+[PASS] p1000_S6_r001_c100 (e) F2 K37 roles S0, k<=37                           22,22
+[PASS] p1000_S6_r001_c100 (f) keep == which(pilot b != 0); m == pilot_k        m=81
+[PASS] p1000_S6_r001_c100 (f) sum(v)==m (1e-10 rel)                            sum(v)-m=0.000e+00
+[PASS] p1000_S6_r001_c100 (f) v>0 finite; v*|b_keep| constant (rel 1e-12)      spread=4.36e-16
+[PASS] p1000_S6_r001_c100 (f) w == 1/|b_keep| (gamma=1)                        rel=0.00e+00
+[PASS] p1000_S6_r001_c100 (f) v == own stable normalisation m*r/sum(r)         rel=3.31e-17
+[PASS] p1000_S6_r001_c100 (x) lambda grid == own (rel 1e-12)                   rel=0.00e+00
+[PASS] p1000_S6_r001_c100 (x) own CV cvm/cvsd vs saved path (rel 1e-8)         rel cvm=0.00e+00 cvsd=0.00e+00
+[PASS] p1000_S6_r001_c100 (x) own cv_min/cv_1se index == saved                 own 200/165 saved 200/165
+[PASS] p1000_S6_r001_c100 (x) own glmnet beta at index == saved beta_pen (6 rules) max rel=0.00e+00 supports match=TRUE
+[PASS] p1000_S6_r001_c100 (x) own KKT (weighted, screened) <=1e-5 at selected idx max=1.21e-08
+[PASS] p1000_S6_r001_c100 (x) own path supports == saved path$key (all 200)    mismatches=0
+
+SUMMARY:  168  PASS /  0  FAIL of  168 

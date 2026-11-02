@@ -1,0 +1,70 @@
+p0500_S3_r044_c100 
+  ok   new unit files present (rds, csv, sha256, done)
+  ok   new unit sha256 file: exactly SMCBVS.rds + SMCBVS.csv, both verify
+  ok   historical v2.1 files match pinned sha256
+  ok   historical record is v2.1 (pinned source hashes)
+  ok   new record is the frozen v2.2 tree (pinned source hashes)
+  ok   adapter_version 2.2-R1
+  ok   R version exactly 4.5.2 (2025-10-31), as historical
+  ok   loaded modules identical to historical (incl. GCC/14.3.0, R/4.5.2)
+  ok   session: platform, OS, BLAS/LAPACK, Rcpp 1.1.0 identical to historical
+  ok   all recorded numerical thread variables = 1, as historical
+  ok   RNGkind identical to historical
+  ok   same input file (pinned sha256)
+  ok   same seeds
+  ok   same allocation (2 GB, 1.75 h)
+  ok   status completed, SMC branch
+  ok   escalation state and frozen tier as expected
+  ok   tier-0 triggers fired = expected (new and historical)
+  ok   instrumentation$escalation (reasons, escalated, not blocked)
+  ok   fit plain PIPs: 500 retained, names, [0,1], island mean, MPM
+  ok   record plain summaries (original-index pip_plain, mpm_plain)
+  ok   instrumentation: all required fields, version v2.2
+  ok   record instrumentation present and = fit instrumentation
+  ok   best before/after final local search populated and = fit fields
+  ok   scored report populated (HLL mode, after-calibration <= final)
+  ok   stages populated and = retained calibration schedules/grids (final, pilot and diag per tier, tier_final)
+  ok   cut_group_large and escalation fields populated and consistent
+  ok   instrumentation sane (hll mode, stages, no stop)
+  FAIL cmp2: 175927 paths compared, 1 differing, 0 non-allowlisted additions
+record$environment$command [exempt value: length differs]
+  ok   CSV: same columns; all non-provenance cells identical
+p0500_S5_r059_c100 
+  ok   new unit files present (rds, csv, sha256, done)
+  ok   new unit sha256 file: exactly SMCBVS.rds + SMCBVS.csv, both verify
+  ok   historical v2.1 files match pinned sha256
+  ok   historical record is v2.1 (pinned source hashes)
+  ok   new record is the frozen v2.2 tree (pinned source hashes)
+  ok   adapter_version 2.2-R1
+  ok   R version exactly 4.5.2 (2025-10-31), as historical
+  ok   loaded modules identical to historical (incl. GCC/14.3.0, R/4.5.2)
+  ok   session: platform, OS, BLAS/LAPACK, Rcpp 1.1.0 identical to historical
+  ok   all recorded numerical thread variables = 1, as historical
+  ok   RNGkind identical to historical
+  ok   same input file (pinned sha256)
+  ok   same seeds
+  ok   same allocation (2 GB, 1.75 h)
+  ok   status completed, SMC branch
+  ok   escalation state and frozen tier as expected
+  ok   tier-0 triggers fired = expected (new and historical)
+  ok   instrumentation$escalation (reasons, escalated, not blocked)
+  ok   fit plain PIPs: 500 retained, names, [0,1], island mean, MPM
+  ok   record plain summaries (original-index pip_plain, mpm_plain)
+  ok   instrumentation: all required fields, version v2.2
+  ok   record instrumentation present and = fit instrumentation
+  ok   best before/after final local search populated and = fit fields
+  ok   scored report populated (HLL mode, after-calibration <= final)
+  ok   stages populated and = retained calibration schedules/grids (final, pilot and diag per tier, tier_final)
+  ok   cut_group_large and escalation fields populated and consistent
+  ok   instrumentation sane (hll mode, stages, no stop)
+  FAIL cmp2: 221287 paths compared, 1 differing, 0 non-allowlisted additions
+record$environment$command [exempt value: length differs]
+  ok   CSV: same columns; all non-provenance cells identical
+job environment
+  ok   CPU is Sapphire Rapids (lscpu flags contain amx_tile)
+  ok   job recorded GCC 14.3.0, R 4.5.2, Rcpp 1.1.0
+  ok   job record: one header, one end, exactly one final_status 0, no failed case
+  ok   job record: one launch command and one exit-0 line per unit
+  ok   job record: fresh compile recorded (cache key and shared-object hash)
+FAIL: 2 criteria
+exit_status 1

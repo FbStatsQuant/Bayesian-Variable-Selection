@@ -1,0 +1,164 @@
+\documentclass[11pt]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}[lemma]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[lemma]{Remark}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\best}{\operatorname{best}}
+\newcommand{\NOIMP}{\textsf{NOIMP}}
+\newcommand{\LIMIT}{\textsf{LIMIT}}
+\newcommand{\cert}{\texttt{local\_certified}}
+\newcommand{\llim}{\texttt{local\_limit}}
+\title{T20 (T15), clauses (i)--(ii): local-search semantics\\ \large Proof, version 3}
+\date{2026-10-22}
+\begin{document}
+\maketitle
+
+All notation, the procedure and the claims are those of \texttt{STATEMENT.md}; section numbers \S1--\S4 below refer to it. We recall what is used.
+
+\section{Setting and conventions}
+
+$\Omega=\{S\subseteq[p]:|S|\le K\}$ with $p\ge1$, $n\ge3$, $K=\min(p,\lfloor n/2\rfloor)\ge1$. A score is a function $F:\Omega\to\mathbb{R}$. All comparisons are exact (EX-A).
+
+\paragraph{Orders.} The HPM order $\succ$: $S\succ T$ iff $F(S)>F(T)$, or $F(S)=F(T)$ and $|S|<|T|$, or $F(S)=F(T)$, $|S|=|T|$ and the increasingly sorted index list of $S$ is lexicographically smaller than that of $T$. Distinct sets of equal size have distinct sorted lists, and lexicographic order on lists of equal length is a strict total order; hence $\succ$ is a strict total order on $\Omega$ (irreflexive, transitive, and any two distinct elements are comparable). We write $S\succeq T$ for ($S\succ T$ or $S=T$). For finite nonempty $\mathcal A\subseteq\Omega$, $\best(\mathcal A)$ is the $\succ$-maximum. Since $F(S)>F(T)\Rightarrow S\succ T$,
+\begin{equation}\label{eq:bestmax}
+F(\best(\mathcal A))=\max_{\mathcal A}F .
+\end{equation}
+
+The move order: fix a strict total order $\tau$ on $\Omega$ (the tie-break rule; it does not depend on $F$). Put $S\rhd_F T$ iff $F(S)>F(T)$, or $F(S)=F(T)$ and $S\,\tau\,T$. This is a strict total order with $F(S)>F(T)\Rightarrow S\rhd_F T$. Every strict total order $\rhd$ on $\Omega$ with $F(S)>F(T)\Rightarrow S\rhd T$ (the move order of \S1) equals $\rhd_F$ for $\tau:=\rhd$; so nothing is lost by writing the move order as $\rhd_F$. Again, for finite nonempty $\mathcal A$ the $\rhd_F$-maximum of $\mathcal A$ has score $\max_{\mathcal A}F$.
+
+\paragraph{Neighbourhoods.} For $c\in\Omega$,
+$\cN(c)=\{c\cup\{j\}:j\notin c,\ |c|<K\}\cup\{c\setminus\{i\}:i\in c\}\cup\{(c\setminus\{i\})\cup\{j\}:i\in c,\ j\notin c\}$.
+Every element of $\cN(c)$ has size at most $K$, so $\cN(c)\subseteq\Omega$; and $c\notin\cN(c)$ (a flip changes the size, a swap removes $i\in c$ and inserts $j\notin c$, $j\ne i$). Moreover $\cN(c)\ne\emptyset$: if $c=\emptyset$ the addition $\{1\}$ is feasible ($K\ge1$), and if $c\ne\emptyset$ any deletion is in $\cN(c)$. So maxima of $F$ over $\cN(c)$ are maxima over finite nonempty sets.
+
+\begin{lemma}[symmetry]\label{lem:sym}
+For $c,S\in\Omega$: $S\in\cN(c)\iff c\in\cN(S)$.
+\end{lemma}
+\begin{proof}
+By the symmetry of the roles it suffices to prove $\Rightarrow$. (a) $S=c\cup\{j\}$, $j\notin c$: then $j\in S$ and $c=S\setminus\{j\}$ is a deletion from $S$. (b) $S=c\setminus\{i\}$, $i\in c$: then $i\notin S$, $|S|=|c|-1<|c|\le K$, so the addition $S\cup\{i\}=c$ is feasible and lies in $\cN(S)$. (c) $S=(c\setminus\{i\})\cup\{j\}$ with $i\in c$, $j\notin c$: then $j\ne i$, $j\in S$, $i\notin S$, and $c=(S\setminus\{j\})\cup\{i\}$ is a swap of $S$.
+\end{proof}
+
+\paragraph{The procedure (\S2).} Input: finite nonempty $\cS^-\subseteq\Omega$ (all models scored in the run before the search) and $\ell\ge0$. Put $c_0=\best(\cS^-)$, $\cS_{<0}=\cS^-$. For $k=0,1,\dots$: scan $k$ scores $\cN(c_k)$, so the scored set becomes $\cS_{<k+1}:=\cS_{<k}\cup\cN(c_k)$; let $I_k=\{N\in\cN(c_k):F(N)>F(c_k)\}$. If $I_k=\emptyset$, stop with outcome \NOIMP\ and $m=k$. Else, if $k<\ell$, let $c_{k+1}$ be the $\rhd_F$-maximum of $I_k$ and continue with $k+1$. Else ($k=\ell$) stop with outcome \LIMIT\ and $m=\ell$. Nothing else is scored during the search. Outputs: $\cC=\{c_0,\dots,c_m\}$, $\cS_{\rm end}=\cS_{<m+1}$, $R=\best(\cS_{\rm end})$, $\llim=1$ iff \LIMIT, and $\cert=1$ iff $R\in\cC$ and no $N\in\cN(R)$ has $F(N)>F(R)$. (EXEC: each scan scores all of $\cN(c_k)$.)
+
+\section{The basic invariant}
+
+\begin{lemma}\label{lem:inv}
+The procedure stops with $m\le\ell$. For every $k\le m$:
+\begin{enumerate}[label=(\alph*)]
+\item $c_k\in\cS_{<k}$ (each centre has been scored before its scan);
+\item $F(c_k)=\max_{\cS_{<k}}F$;
+\item if $k<m$ then $F(c_{k+1})=\max_{\cN(c_k)}F>F(c_k)$; in particular $F(c_0)<F(c_1)<\dots<F(c_m)$ and the centres are distinct.
+\end{enumerate}
+Moreover:
+\begin{enumerate}[label=(\alph*),resume]
+\item on \NOIMP, $\max_{\cS_{\rm end}}F=F(c_m)$;
+\item on \LIMIT, $\max_{\cS_{\rm end}}F=\max_{\cN(c_\ell)}F>F(c_\ell)=\max_{\cS_{<\ell}}F$, so every maximiser of $F$ on $\cS_{\rm end}$ lies in $\cN(c_\ell)\setminus\cS_{<\ell}$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+A move happens only from a scan with index $k<\ell$, and each move raises the index by one; so at most $\ell$ moves occur and the procedure stops at some $m\le\ell$ (each scan is a finite computation).
+
+(a) $c_0=\best(\cS^-)\in\cS^-=\cS_{<0}$; and for $k<m$, $c_{k+1}\in I_k\subseteq\cN(c_k)\subseteq\cS_{<k+1}$.
+
+(b), (c) by induction. For $k=0$, (b) is \eqref{eq:bestmax}. Assume (b) for some $k<m$. Since $k<m$, scan $k$ led to a move, so $I_k\ne\emptyset$. Let $M=\max_{I_k}F$. Elements of $\cN(c_k)\setminus I_k$ have $F\le F(c_k)<M$, so $M=\max_{\cN(c_k)}F$. The $\rhd_F$-maximum $c_{k+1}$ of $I_k$ has $F(c_{k+1})=M$. Hence $F(c_{k+1})=\max_{\cN(c_k)}F>F(c_k)$, which is (c), and
+$\max_{\cS_{<k+1}}F=\max\{\max_{\cS_{<k}}F,\max_{\cN(c_k)}F\}=\max\{F(c_k),M\}=M=F(c_{k+1})$, which is (b) for $k+1$.
+
+(d) On \NOIMP, $I_m=\emptyset$, i.e.\ $F(N)\le F(c_m)$ for all $N\in\cN(c_m)$; with (b), $\max_{\cS_{\rm end}}F=\max\{\max_{\cS_{<m}}F,\max_{\cN(c_m)}F\}=F(c_m)$.
+
+(e) On \LIMIT, $m=\ell$ and $I_\ell\ne\emptyset$, so $\max_{\cN(c_\ell)}F>F(c_\ell)=\max_{\cS_{<\ell}}F$ by (b); hence $\max_{\cS_{\rm end}}F=\max_{\cN(c_\ell)}F$, and any maximiser $T$ on $\cS_{\rm end}$ has $F(T)>\max_{\cS_{<\ell}}F$, so $T\notin\cS_{<\ell}$ and $T\in\cN(c_\ell)$.
+\end{proof}
+
+\begin{lemma}[earlier scores]\label{lem:earlier}
+If $R\in\cS^-$ then $R=c_0$.
+\end{lemma}
+\begin{proof}
+$c_0=\best(\cS^-)$ and $R\in\cS^-$ give $c_0\succeq R$. $R=\best(\cS_{\rm end})$ and $c_0\in\cS^-\subseteq\cS_{\rm end}$ give $R\succeq c_0$. If $R\ne c_0$ we would have $c_0\succ R\succ c_0$, hence $c_0\succ c_0$ by transitivity, contradicting irreflexivity.
+\end{proof}
+
+\section{Clause (i)}
+
+\paragraph{(i-a).}
+Suppose $\cert=1$. Then $R=c_j$ for some $j\le m$, and $\cN(c_j)$ contains no $N$ with $F(N)>F(c_j)$, i.e.\ $I_j=\emptyset$. If $j<m$ the procedure moved after scan $j$, which requires $I_j\ne\emptyset$; so $j=m$. On \LIMIT, $I_m=I_\ell\ne\emptyset$; so the outcome is \NOIMP. Conversely, if the outcome is \NOIMP\ and $R=c_m$, then $R\in\cC$ and $I_m=\emptyset$ says that no $N\in\cN(R)$ has $F(N)>F(R)$, so $\cert=1$.
+
+In that case $F(R)=F(c_m)=\max_{\cS_{\rm end}}F$ by Lemma~\ref{lem:inv}(d), and $F(R)\ge F(N)$ for all $N\in\cN(R)$ because $I_m=\emptyset$. Equality $F(N)=F(R)$ is not excluded by the definition (only strict improvements are), so equal-score neighbours are compatible with $\cert=1$; for such $N$, since $N\in\cS_{\rm end}$ and $R=\best(\cS_{\rm end})$, the tie rule gives $R\succ N$.
+
+Finally, $R\in\cC$ trivially implies that $R$ was a scan centre in some local search of the run up to this one. Conversely, suppose $R$ was a scan centre of an earlier local search. By Lemma~\ref{lem:inv}(a) applied to that search, $R$ was scored then, so $R\in\cS^-$; by Lemma~\ref{lem:earlier}, $R=c_0\in\cC$.
+
+\paragraph{(i-b).}
+Let $F':\Omega\to\mathbb{R}$ with $F'=F$ on $\cS_{\rm end}$, and run the procedure with $F'$ in place of $F$ (same $\cS^-$, $\ell$, tie rules $\succ$ via sizes and indices, and $\tau$). Write primes for the $F'$-run. We show by induction on $k$ that the two runs coincide step by step. The restriction of $\succ$ to a set $\mathcal A$ depends on $F$ only through $F|_{\mathcal A}$ (and on sizes and indices); since $\cS^-\subseteq\cS_{\rm end}$, $c_0'=\best'(\cS^-)=\best(\cS^-)=c_0$ and $\cS'_{<0}=\cS_{<0}$. Suppose $c_j'=c_j$ and $\cS'_{<j}=\cS_{<j}$ for all $j\le k$, where $k\le m$. Scan $k$ scores the same set $\cN(c_k)$ (it depends only on $c_k$ and $K$), so $\cS'_{<k+1}=\cS_{<k+1}$. Since $\{c_k\}\cup\cN(c_k)\subseteq\cS_{\rm end}$, $F'$ and $F$ agree on it, so $I_k'=I_k$; hence the stop/move decision at scan $k$ is the same (it depends on whether $I_k$ is empty and on $k$ versus $\ell$). If a move occurs, $\rhd_{F'}$ and $\rhd_F$ agree on $I_k\subseteq\cS_{\rm end}$ (they are defined by the values of $F'$, resp.\ $F$, there and the fixed $\tau$), so $c'_{k+1}=c_{k+1}$. Hence $m'=m$, the outcomes coincide, $\cC'=\cC$, $\cS'_{\rm end}=\cS_{\rm end}$, and $R'=\best'(\cS_{\rm end})=R$ because $\succ'$ and $\succ$ agree on $\cS_{\rm end}$. The flag $\llim$ coincides. For $\cert$: if $R\notin\cC$ both flags are $0$; if $R\in\cC$ then $\cN(R)\subseteq\cS_{\rm end}$ (it was scanned), so the condition ``no $N\in\cN(R)$ with $F'(N)>F'(R)$'' coincides with the one for $F$.
+
+Consequently the value of $\cert$ is the same for every assignment of scores to the models of $\Omega\setminus\cS_{\rm end}$. In particular, if $\Omega\setminus\cS_{\rm end}\ne\emptyset$, the choice $F'=F$ on $\cS_{\rm end}$ and $F'=F(R)+1$ elsewhere leaves $\cert$ unchanged while $R$ is not a global maximiser of $F'$. So, as a property of the procedure, $\cert=1$ certifies nothing beyond the facts in (i-a) about scored models; when some model is unscored it is not a certificate of global maximality. (If $\cS_{\rm end}=\Omega$, then $R=\best(\Omega)$ is a global maximiser of $F$ by \eqref{eq:bestmax}, whatever the flag.) (No claim is made here about which score functions arise from data.)
+
+\paragraph{(i-c).}
+Every model scored by scan $k$ is in $\cN(c_k)\subseteq\cS_{\rm end}$, whether or not it is $c_{k+1}$. As $R=\best(\cS_{\rm end})$, $R\succeq N$ and, by \eqref{eq:bestmax}, $F(R)\ge F(N)$ for each such $N$. In the method the reported HPM $\hat S$ is the running best over every model scored in the run, and nothing is scored after the final local search (STATEMENT.md \S2); so for the final search $\hat S=\best(\cS_{\rm end})=R$.
+
+\paragraph{(i-d).}
+On \LIMIT, $R$ maximises $F$ on $\cS_{\rm end}$ by \eqref{eq:bestmax}; Lemma~\ref{lem:inv}(e) gives $R\in\cN(c_\ell)\setminus\cS_{<\ell}$ and $F(R)>F(c_\ell)$. Thus $R$ was first scored by scan $\ell$. Every centre $c_k$ of this search lies in $\cS_{<k}\subseteq\cS_{<\ell}$ (Lemma~\ref{lem:inv}(a)), and every centre of an earlier local search was scored in that search, hence lies in $\cS^-\subseteq\cS_{<\ell}$ (the scored set is cumulative: it records every model ever scored in the run). So $R$ was never a scan centre of any local search of the run up to this one; in particular $R\notin\cC$ and $\cert=0$. For the final search, $\hat S=R$ by (i-c).
+
+\paragraph{(i-e).}
+Assume exactly one model of $\cS_{\rm end}$ attains $\max_{\cS_{\rm end}}F$. On \NOIMP, $c_m\in\cS_{\rm end}$ attains it (Lemma~\ref{lem:inv}(d)) and so does $R$ by \eqref{eq:bestmax}; by uniqueness $R=c_m$, and (i-a) gives $\cert=1$. On \LIMIT, $\cert=0$ by (i-d). Since $\llim=1$ exactly on \LIMIT, $\cert=1\iff\NOIMP\iff\llim=0$. \qed
+
+\section{Clause (ii), deterministic part (ii-A)}
+
+Assume $E_n$: $S_0\in\Omega$ and $F(S_0)>F(S)$ for all $S\in\Omega\setminus\{S_0\}$. Consider any local search of the run and any scan $k$ of it with $c_k\in\cN(S_0)$.
+
+\emph{1.} By Lemma~\ref{lem:sym}, $S_0\in\cN(c_k)$, and by EXEC scan $k$ scores it.
+
+\emph{2.} $c_k\ne S_0$ (as $S_0\notin\cN(S_0)$), so $F(S_0)>F(c_k)$ and $S_0\in I_k$. For $N\in I_k\setminus\{S_0\}$, $F(S_0)>F(N)$, hence $S_0\rhd_F N$. So $S_0$ is the $\rhd_F$-maximum of $I_k$, and if $k<\ell$ the procedure sets $c_{k+1}=S_0$.
+
+\emph{3.} If $k<\ell$, the procedure continues to scan $k+1$ with centre $S_0$ (after any move the loop performs another scan: a regular one if $k+1<\ell$, the one further scan if $k+1=\ell$). Every $N\in\cN(S_0)$ differs from $S_0$, so $F(N)<F(S_0)$ and $I_{k+1}=\emptyset$: the search stops with \NOIMP, $m=k+1$, $c_m=S_0$. Since $S_0\in\cS_{\rm end}$ and $F(S_0)>F(T)$ for every other $T$, $R=\best(\cS_{\rm end})=S_0=c_m$, and (i-a) gives $\cert=1$.
+
+\emph{4.} If $k=\ell$, then $I_\ell\ni S_0$ is nonempty and the search stops with \LIMIT; $R=S_0$ as in 3; $\cert=0$ by (i-d) (and $\llim=1$).
+
+From the moment scan $k$ scores $S_0$, it is in the scored set and strictly beats every other model, so the running HPM, being the $\succ$-maximum of a scored set containing $S_0$, equals $S_0$ for the rest of the run; for the final search, $\hat S=S_0$. \qed
+
+\begin{corollary}\label{cor:already}
+On $E_n$, if $S_0\in\cS^-$ at the start of some local search, that search has $c_0=S_0$, stops after scan $0$ with \NOIMP, and returns $R=S_0$ with $\cert=1$.
+\end{corollary}
+\begin{proof}
+$c_0=\best(\cS^-)=S_0$ since $S_0$ has the strictly largest score; $I_0=\emptyset$ as in step 3; $R=S_0=c_0$ and (i-a) applies.
+\end{proof}
+
+\section{Clause (ii), margin and statistical parts}
+
+From here on $F(S)=\log\varpi(S)+\log m(S)$ is the method's score, with $\varpi$, $m$, $G_S$, $z_S$, $H_S$, $D_S$ and $Q_S=y^\top y-n\,z_S^\top H_S^{-1}z_S$ exactly as defined in STATEMENT.md \S1, $\pi(S)=e^{F(S)}/\sum_{T\in\Omega}e^{F(T)}$ for $S\in\Omega$ and $\pi(S):=0$ for $S\notin\Omega$.
+
+\begin{lemma}\label{lem:finite}
+For every $S\in\Omega$, $0<\varpi(S)m(S)<\infty$. Hence $F$ is real-valued on $\Omega$ and $0<\pi(S)<1$ for every $S\in\Omega$.
+\end{lemma}
+\begin{proof}
+$\varpi(S)=w(|S|)/W_K$ with $w(k)=\tfrac12/\binom{2p-1}{k}>0$ for $0\le k\le K\le p\le 2p-1$, and $W_K$ a finite positive sum. In $m(S)=\frac{(2b_0)^{a_0}\Gamma(\nu)}{\pi^{n/2}\Gamma(a_0)}D_S^{-1/2}(2b_0+Q_S)^{-\nu}$ the constant is positive and finite ($a_0=b_0=0.01$, $\nu=a_0+n/2$). For $S=\emptyset$ the conventions are $D_\emptyset=1$ and $Q_\emptyset=y^\top y$. For $k=|S|\ge1$: $G_S=X_S^\top X_S\succeq0$, so $G_S+I$ and $H_S=(n+1)G_S+I$ are positive definite and $D_S=\det H_S/\det(G_S+I)\in(0,\infty)$. Since $k\le K\le n$, take a thin SVD $X_S=U\Sigma V^\top$ with $U\in\mathbb{R}^{n\times k}$, $U^\top U=I_k$, $V$ orthogonal and $\Sigma=\mathrm{diag}(\sigma_1,\dots,\sigma_k)\ge0$. Then $H_S^{-1}=V((n+1)\Sigma^2+I)^{-1}V^\top$ and
+$X_SH_S^{-1}X_S^\top=U\,\mathrm{diag}\big(\sigma_i^2/((n+1)\sigma_i^2+1)\big)U^\top\preceq\tfrac1{n+1}UU^\top\preceq\tfrac1{n+1}I_n$.
+With $z_S=X_S^\top y$, $n z_S^\top H_S^{-1}z_S=n\,y^\top X_SH_S^{-1}X_S^\top y\le\frac{n}{n+1}y^\top y$, so, by the definition $Q_S=y^\top y-n z_S^\top H_S^{-1}z_S$, $Q_S\ge y^\top y/(n+1)\ge0$ and $2b_0+Q_S>0$. Hence $m(S)\in(0,\infty)$. Finally $\emptyset$ and $\{1\}$ belong to $\Omega$ ($K\ge1$), so $|\Omega|\ge2$, and each $\pi(S)$ is a positive term of a sum of at least two positive terms divided by that sum: $0<\pi(S)<1$.
+\end{proof}
+
+\paragraph{(ii-B).}
+Let $S_0\in\Omega$. By Lemma~\ref{lem:finite}, $\lambda_n=\log[\pi(S_0)/(1-\pi(S_0))]$ is a real number and $\Omega\setminus\{S_0\}$ is nonempty and finite; choose $S^*\in\Omega\setminus\{S_0\}$ with $F(S^*)=\max_{S\ne S_0}F(S)$, so $\Delta_n=F(S_0)-F(S^*)$. Then
+\[
+1-\pi(S_0)=\sum_{S\in\Omega\setminus\{S_0\}}\pi(S)\ \ge\ \pi(S^*),\qquad\text{so}\qquad
+\frac{\pi(S_0)}{1-\pi(S_0)}\le\frac{\pi(S_0)}{\pi(S^*)}=e^{F(S_0)-F(S^*)}=e^{\Delta_n}.
+\]
+Taking logarithms, $\lambda_n\le\Delta_n$. If $\pi(S_0)>\frac12$ then $S_0\in\Omega$ (by the convention $\pi=0$ off $\Omega$) and $\lambda_n>0$, so $\Delta_n>0$, i.e.\ $F(S_0)>F(S)$ for every $S\in\Omega\setminus\{S_0\}$: $E_n$ holds. \qed
+
+\paragraph{(ii-C).}
+We use the standard definitions: real random variables $Y_n$ are $O_{P_0}(1)$ if for every $\varepsilon>0$ there are $M<\infty$ and $N$ with $P_0(|Y_n|>M)<\varepsilon$ for all $n\ge N$; and $X_n=O_{P_0}(a_n)$ means $X_n/a_n=O_{P_0}(1)$. (If one prefers ``for all $n$'' in place of ``for all $n\ge N$'', the two agree for a.s.\ finite variables, by enlarging $M$ to cover the finitely many $n<N$.) Note $r_n=\sqrt{\log n/n}\to0$ and, for $n\ge3$, $\log\log n$ is defined and $\log r_n=\tfrac12\log\log n-\tfrac12\log n$.
+
+Assume H03 and fix $\varepsilon>0$. There are $C\in(0,\infty)$ and $N_1$ (enlarging $C$ if necessary, we may take $C\ge1$, so $\log(2C)>0$) with $P_0(1-\pi(S_0)>Cr_n)<\varepsilon$ for $n\ge N_1$. Let $N_2\ge\max(n_0,N_1,3)$ be such that $Cr_n<\frac12$ for $n\ge N_2$. Fix $n\ge N_2$ and work on the event $B_n=\{1-\pi(S_0)\le Cr_n\}$, which has $P_0(B_n)>1-\varepsilon$. On $B_n$, $\pi(S_0)>\frac12$; we also know $1-\pi(S_0)>0$ (Lemma~\ref{lem:finite}, $S_0\in\Omega$ as $n\ge n_0$).
+
+\emph{1.} On $B_n$, $\pi(S_0)>\frac12$, so $E_n$ holds by (ii-B). Hence $P_0(E_n^c)\le P_0(B_n^c)<\varepsilon$ for all $n\ge N_2$. As $\varepsilon$ was arbitrary, $P_0(E_n)\to1$.
+
+\emph{2.} On $B_n$ (with $\pi(S_0)>\frac12$),
+\[
+\lambda_n=\log\pi(S_0)-\log(1-\pi(S_0))\ \ge\ -\log2-\log C-\log r_n=\tfrac12\log n-\tfrac12\log\log n-\log(2C).
+\]
+Let $Y_n=(\tfrac12\log n-\tfrac12\log\log n-\lambda_n)^+$, a finite random variable for $n\ge n_0$. On $B_n$, $Y_n\le\log(2C)=:M$. Hence $P_0(Y_n>M)<\varepsilon$ for all $n\ge N_2$, i.e.\ $Y_n=O_{P_0}(1)$. Together with (ii-B), for $n\ge n_0$,
+$\Delta_n\ge\lambda_n\ge\tfrac12\log n-\tfrac12\log\log n-Y_n$ with $Y_n=O_{P_0}(1)$.
+
+\emph{3.} Assume EX-A and EXEC, as in (ii-A). The conclusions (ii-A)1--4 were derived on $E_n$ for every local search, every scan with a centre in $\cN(S_0)$, every input $\cS^-$ and every $\ell$; they use no property of the algorithm's randomness. Hence, for any joint law of data and algorithm randomness whose data marginal is $P_0$, the set $A_n$ of outcomes on which these conclusions hold for every scan of every local search of the run contains the event $E_n$, which depends on the data only. Therefore $P(A_n)\ge P_0(E_n)\to1$ (read $P(A_n)$ as an inner probability if the measurability of $A_n$ is not established; $E_n$ is measurable, being defined by finitely many strict inequalities between continuous functions of $y$). \qed
+
+\end{document}

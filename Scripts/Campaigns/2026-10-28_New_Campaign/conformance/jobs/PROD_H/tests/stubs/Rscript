@@ -1,0 +1,54 @@
+#!/bin/bash
+# stub Rscript for the PROD-H dry-run tests (no R, no fit). Behaviour by script name:
+#   -e ... getRversion / R.version.string : prints the NOTS versions (env.sh and precompile.sbatch checks)
+#   precompile.R CORE_DIR                 : creates CORE_DIR/.cpp_cache/<key16>/READY (+ a fake .so) and prints "compiled_key <key>"
+#   p5_scan.R --run-dir D --out F         : copies $STUB_DIR/p5_scan_fixture.tsv to F and prints the scanner's summary line (P5SCAN_RC=n: fails)
+#   run_case.R --case C --scale S ...     : writes SMCBVS.{rds,csv,sha256,done} (or P5_retry/SMCBVS_p5retry.* with --p5-retry) under
+#                                           OUTROOT/results/RUN/pPPPP/C_S/ ; the mode is the content of $STUB_DIR/mode_<case_id> (default: mode_default, else ok):
+#                                           ok | resource_limit | fail1 (no output, exit 1) | fail2 (saved failure, exit 2) | killlock (a dead owner's lock + a temp file, exit 137)
+D=${STUB_DIR:?}
+all="$*"
+case "$all" in *getRversion*) printf '4.5.2'; exit 0;; *R.version.string*) echo "R version 4.5.2 (stub)"; echo "Rcpp 1.1.0"; exit 0;; esac
+script=""; for a in "$@"; do case "$a" in *.R) script=$a; break;; esac; done
+case "$script" in
+  *precompile.R)
+    core=""; seen=0; for a in "$@"; do if [ $seen = 1 ]; then core=$a; break; fi; [ "$a" = "$script" ] && seen=1; done
+    key=${STUB_KEY:-ab12cd34ef56ab12cd34ef56ab12cd34ef56ab12cd34ef56ab12cd34ef56ab12}
+    mkdir -p "$core/.cpp_cache/${key:0:16}"; echo fake > "$core/.cpp_cache/${key:0:16}/v3_core.so"; echo "$key" > "$core/.cpp_cache/${key:0:16}/READY"
+    echo "g++ -O2 (stub compile output)"; echo "compiled_key $key"; exit 0;;
+  *p5_scan.R)
+    out=""; while [ $# -gt 0 ]; do [ "$1" = "--out" ] && out=$2; shift; done
+    [ "${P5SCAN_RC:-0}" = 0 ] || { echo "FATAL: stub scan failure" >&2; exit "$P5SCAN_RC"; }
+    cp "$D/p5_scan_fixture.tsv" "$out"
+    # the summary line of the frozen scanner, computed from the fixture table (first fields keep the v2.2.1 order)
+    awk -F'\t' 'NR == 1 { for (i = 1; i <= NF; i++) c[$i] = i; next }
+      { n++; if ($c["primary_v3_status"] == "resource_limit") rl++; if ($c["eligible"] == "TRUE") el++; if ($c["launchable"] == "TRUE") la++; st[$c["retry_state"]]++ }
+      END { printf "p5_scan units=%d primary_resource_limit=%d eligible=%d retried=%d retry_outcomes=none incomplete=%d launchable=%d locked=%d invalid_inspect=%d\n", n, rl, el, st["done"], st["incomplete"], la, st["locked"], st["invalid_inspect"] }' "$out"
+    exit 0;;
+  *run_case.R)
+    case_=""; scale=""; outroot=""; run=""; retry=0; hours=""
+    while [ $# -gt 0 ]; do case "$1" in
+      --case) case_=$2; shift 2;; --scale) scale=$2; shift 2;; --outroot) outroot=$2; shift 2;; --run-id) run=$2; shift 2;;
+      --hours) hours=$2; shift 2;; --p5-retry) retry=1; shift;; *) shift;; esac; done
+    { printf '%q ' Rscript "$script" --case "$case_" --scale "$scale" --outroot "$outroot" --run-id "$run" --hours "$hours" "$([ $retry = 1 ] && echo --p5-retry)"; echo; } >> "$D/runcase_calls.txt"
+    cid=${case_}_${scale}; mode=ok
+    if [ -f "$D/mode_$cid" ]; then mode=$(cat "$D/mode_$cid"); elif [ -f "$D/mode_default" ]; then mode=$(cat "$D/mode_default"); fi
+    [ $retry = 1 ] && [ -f "$D/pmode_$cid" ] && mode=$(cat "$D/pmode_$cid")
+    p4=${case_:1:4}; dir="$outroot/results/$run/p$p4/$cid"; base=SMCBVS
+    if [ $retry = 1 ]; then
+      [ -f "$dir/SMCBVS.done" ] || { echo "FATAL: P5: no valid primary record" >&2; exit 1; }
+      dir="$dir/P5_retry"; base=SMCBVS_p5retry; fi
+    case "$mode" in fail1) echo "FATAL: stub infrastructure error" >&2; exit 1;; esac
+    # killlock: the child is hard-killed (SIGKILL / OOM-kill emulation, exit 137) after it took its lock and began an atomic write
+    case "$mode" in killlock) mkdir -p "$dir/$base.lock"; printf 'pid 999999999\nhost deadnode\nutc x\n' > "$dir/$base.lock/owner.txt"
+                              echo partial > "$dir/$base.rds.tmp.4242"; exit 137;; esac
+    mkdir -p "$dir"; v3=completed; st=ok; rc=0
+    case "$mode" in resource_limit) v3=resource_limit; st=failed; rc=2;; fail2) v3=numerical_failure; st=failed; rc=2;; esac
+    echo fakerds > "$dir/$base.rds"
+    printf 'rule_id,status,v3_status,runtime_s,diag_codes\nhpm,%s,%s,10,\npip05,%s,%s,10,\n' "$st" "$v3" "$st" "$v3" > "$dir/$base.csv"
+    ( cd "$dir" && sha256sum $base.rds $base.csv | sed 's/ \*/  /' > $base.sha256 ) ; echo done > "$dir/$base.done"
+    printf '%s\tstatus=%s skipped= FALSE\n' "$dir/$base" "$st"
+    printf 'prefix=%s\tskipped=FALSE\tp5_retry=%s\tv3_status=%s\tstop=NA/NA/NA/NA/NA/NA\n' "$dir/$base" "$([ $retry = 1 ] && echo TRUE || echo FALSE)" "$v3"
+    exit $rc;;
+esac
+echo "stub Rscript: unhandled call: $all" >&2; exit 99

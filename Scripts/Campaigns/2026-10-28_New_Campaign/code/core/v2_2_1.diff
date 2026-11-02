@@ -1,0 +1,527 @@
+diff -ruN --strip-trailing-cr -x .cpp_cache v2_2/CHANGES_v2_2_1.md v2_2_1/CHANGES_v2_2_1.md
+--- v2_2/CHANGES_v2_2_1.md	1969-12-31 18:00:00.000000000 -0600
++++ v2_2_1/CHANGES_v2_2_1.md	2026-10-29 18:54:20.555814800 -0500
+@@ -0,0 +1,33 @@
++# v2.2.1 versus v2.2 (CONF, 2026-10-29)
++
++v2.2.1 = v2.2 core, byte-identical, plus one merged study layer. Diff: `../v2_2_1.diff`; manifest: `../v2_2_1.SHA256SUMS`; ledger: `code/CODE_LEDGER.md`.
++
++| File | Change | Authority |
++|---|---|---|
++| `core/**` | none (byte-identical to `v2_2.SHA256SUMS`) | D19 |
++| `study/adapter.R` | (1) regime table `smcbvs_regimes()`: H = v2.2's bases, manifest names, strict input record; L = the LOWP runner's (`code/lowp/smc/adapter_lowp.R`, changes A3-A10) bases, I1 manifest, relaxed extras, `fold_sha256` column. (2) `smcbvs_case_spec(..., repeat_m)`: accepts p0020/p0030/p0500/p1000; repeat m = 1..5 for regime L only; `record$case` keeps v2.2's layout in H and the LOWP runner's in L. (3) `study`/`regime` columns from the regime. (4) `smcbvs_study_fit(..., repeat_m, p5_retry)`: `SMCBVS_rep{m}` prefix; P5 rerun (`smcbvs_p5_primary`, `P5_retry/` subfolder, doubled allocation, `record$p5`). (5) `adapter_version = "2.2.1-R1"`. (6) return value adds `stop`. | D11, D14, D16, D19; LOWP_SPEC L.3; master sec. II.7 |
++| `study/run_case.R` | `--repeat m`, `--p5-retry`; a last stdout line of key=value fields with the stop phase | D11, P2 |
++| `study/SCHEMA.md`, `study/README.md` | v2.2.1 section / paragraph | |
++| `tools/p5_scan.R` (new, outside `study/`, so not in `source_sha256`) | P5 table per run: primary and rerun status and stop phase, eligibility | D11 |
++
++Unchanged on purpose: CSV schema (88 columns), R-1 policy and status map, diagnostics, hashes, lock, `.done` last, resume and identity rules, path guards, the core call `v3_fit(X, y, method_seed, allocation)`. `code/lowp/smc/` (the LOWP fork) is retired in favour of this tree; see its README.
++
++## Review fixes (Sol, `conformance/review/CONF2B_REVIEW1_sol.md`; CONF-2b, 2026-10-29)
++
++| Finding | File | Fix |
++|---|---|---|
++| F1 (blocking) | `study/adapter.R` | All checks are repeated **under the unit lock**: identity (refuses a new mismatch), completion (a unit that another caller committed in the meantime is returned as skipped, never refit or overwritten) and, for a P5 rerun, the primary binding (same, still valid `resource_limit` primary, same `.sha256` lines). This applies to the primary and the rerun path alike. |
++| F2 | `study/adapter.R` | In regime H, `n`, `kind` and `scales` are always checked, so a named NULL is refused as in v2.2. Regime L keeps "checked when present". The lookups use `[[ ]]` (no partial matching). |
++| F3 | `tools/p5_scan.R` | A rerun counts as done only if it is **bound** to its primary: the same run, case, seed, source, policy and input hashes; allocation exactly ×2 with a consistent hash; `record$p5` naming this primary's `.sha256` lines. Otherwise the state is `invalid_inspect`, with `retry_problem`. Every unit's RDS is read, and its `record$native_status` (the field the rerun itself checks; no fallback to `fit$status`, Sol review 2 R2-3; absent means invalid) must equal the CSV `v3_status` in both directions: for a rerun the state is `invalid_inspect`; for a primary the scan refuses (exit 1). |
++| F4 | `study/adapter.R` | A skipped (already valid) unit returns its saved `native_status` and `fit$instrumentation$stop`, so `run_case.R` prints the stop phase on resume too. |
++| F7 | `tools/p5_scan.R` | Any rerun artefact (rds, csv, sha256, done, lock, temporary files) counts as present (`retry_artefacts`). New states `locked` and `invalid_inspect`; a new column `launchable` = eligible and no artefact at all (only these may be launched). The summary line appends `launchable=`, `locked=`, `invalid_inspect=` after its first six fields, which keep their order. |
++
++No numerical path changed. The core and the CSV schema are unchanged.
++
++## FROZEN (2026-10-29, CONF-2b)
++
++**v2.2.1 is FROZEN.** It is the single SMC-BVS code tree for PILOT, PROD-L and PROD-H (D19).
++
++- Authority: Sol review 3, Part A, "YES, ready to FREEZE" (`conformance/review/CONF2B_REVIEW3_sol.md`). That review verified all 27 manifest hashes (manifest sha256 df4e7cf0e20981ef9fe4632fe2280355cbdb9e15d2dd724f1615b2c232054c41) and a core byte-identical to v2.2.
++- This FROZEN section is the only change since that review. It changes the hash of this file alone; the final manifest is recorded in `code/CODE_LEDGER.md`.
++- Any later change needs a new version number, a regression and a review.
+diff -ruN --strip-trailing-cr -x .cpp_cache v2_2/study/README.md v2_2_1/study/README.md
+--- v2_2/study/README.md	2026-10-28 19:41:15.319527300 -0500
++++ v2_2_1/study/README.md	2026-10-29 01:16:43.774197800 -0500
+@@ -1,3 +1,5 @@
++**v2.2.1 (New Campaign, 2026-10-29).** One study layer for every SMC-BVS run of the campaign: regime H (p = 500/1000) and regime L (p = 20/30, LOWP_SPEC), `--repeat m` (regime L only) and `--p5-retry` (DECISIONS D11). The core under `../core` is byte-identical to v2.2. Regime rules, the repeat seeds and the P5 rerun contract are in [SCHEMA.md](SCHEMA.md), section "v2.2.1". `../tools/p5_scan.R --run-dir OUTROOT/results/RUN_ID --out FILE.tsv` lists P5-eligible units and logs stop phases. The text below is v2.2's and still applies.
++
+ The R entry point is `smcbvs_study_fit(case, scale, study, outroot, run_id)`, after sourcing `adapter.R`. It runs exactly one dataset/scale, loads `../core/v3.R`, and calls only `v3_fit(X, y, method_seed, allocation=...)`. Production `case` accepts `p0500_S1_r001` or `p0500_S1_r001_c100`; `scale` accepts `c100`/1 or `c050`/0.5. The CLI uses scale keys:
+ 
+ ```sh
+diff -ruN --strip-trailing-cr -x .cpp_cache v2_2/study/SCHEMA.md v2_2_1/study/SCHEMA.md
+--- v2_2/study/SCHEMA.md	2026-10-28 19:47:10.089695700 -0500
++++ v2_2_1/study/SCHEMA.md	2026-10-29 01:16:30.718112800 -0500
+@@ -1,6 +1,30 @@
+ # Study adapter schema: binding R-1
+ 
+-Authority: deployment `RULINGS_LEAD.md`, R-1 (2026-10-22 19:25Z), and `BRIEF.md` with amendments. This describes live adapter `schema_version=2L`, `adapter_version="2.2-R1"`. Historical v1 snapshots and outputs retain their original unresolved mapping and are not rewritten. No production-core field or statistical setting is changed by this adapter.
++Authority: deployment `RULINGS_LEAD.md`, R-1 (2026-10-22 19:25Z), and `BRIEF.md` with amendments. This describes live adapter `schema_version=2L`, `adapter_version="2.2.1-R1"` (v2.2.1: both regimes and the P5 rerun; see the next section). Historical v1 snapshots and outputs retain their original unresolved mapping and are not rewritten. No production-core field or statistical setting is changed by this adapter.
++
++## v2.2.1: regimes, repeats and the P5 rerun
++
++Everything below the "Unit and file contract" is unchanged from v2.2 except where this section says so. The core is byte-identical to v2.2.
++
++| Item | Regime H (p = 500, 1000) | Regime L (p = 20, 30) |
++|---|---|---|
++| Case IDs | `[dev_]p0500_S{s}_r{rrr}`, `p1000_...` | `[dev_]p0020_S{s}_r{rrr}`, `p0030_...` |
++| `study`, `regime` columns | `bench20261019`, `H` | `newcampaign_lowp`, `L` |
++| Data seed base (prod / dev) | 1,410,000 and 1,510,000 / 2,410,000 and 2,510,000 (master sec. II.7) | 1,210,000 and 1,310,000 / 2,210,000 and 2,310,000 (LOWP_SPEC L.3) |
++| Fold seed base (prod / dev) | 3,410,000 and 3,510,000 / 4,410,000 and 4,510,000 | 3,210,000 and 3,310,000 / 4,210,000 and 4,310,000 |
++| Seeds | data = base + 10000*s + r; method = data + 4,000,000 | same; repeat m = 1..5: method + 1,000*m |
++| Inputs manifest | `inputs_manifest.csv` (dev: `dev_inputs_manifest.csv`) | `inputs_manifest_lowp.csv` in both trees (dev: `--study STUDY/dev`) |
++| Input record | `n`, `kind`, `scales` required; fold hash column `foldid_sha256` | INTERFACES I1: `n`, `kind`, `scales` checked when present; fold hash column `fold_sha256` |
++| Repeats | refused (no committed rule) | `SMCBVS_rep{m}.*`; `record$case$repeat_m`, `method_seed_base` |
++| `record$case` layout | v2.2's, unchanged | the LOWP runner's (v2.2 plus `repeat_m`, `method_seed_base`), unchanged |
++
++The `method_seed` column is always the seed handed to the core (with the repeat offset). Inputs and manifests carry the primary method seed.
++
++**P5 rerun (DECISIONS D11).** Run with `--p5-retry` and the PRIMARY allocation (`--mem-gb`, `--hours`); the adapter doubles both (hours, and `mem_gb`, which sets the core's memory preflight). It requires a valid primary unit with the same run ID, seed, source, policy and inputs whose rows have `v3_status = resource_limit`, and refuses anything else. Same seed. Output: `results/RUN_ID/pPPPP/CASE_ID/P5_retry/{SMCBVS|SMCBVS_rep{m}}_p5retry.{rds,csv,sha256,done}` (lock `..._p5retry.lock`), the same two-row CSV schema (its `allocation_sha256` is the doubled allocation's). The primary files are never touched and stay the primary result; the subfolder keeps the rerun out of the non-recursive case-folder scan of `code/scoring`. The rerun's RDS appends one element after `instrumentation`:
++
++`p5 = list(rule, role = "p5_retry", factor = 2, method_seed, primary = list(prefix, files_sha256 (the primary .sha256 lines), native_status, allocation, allocation_sha256, stop (primary fit$instrumentation$stop), runtime_s, started_utc, finished_utc), retry_allocation, retry_allocation_sha256)`.
++
++There is no second rerun: a rerun that stops again stays `resource_limit`, its own category. The rerun's own stop phase is in its `fit$instrumentation$stop`. `run_case.R` prints the stop phase (`where/phase/checkpoint/tier/iter/stage`) on its last stdout line; `tools/p5_scan.R` tabulates primary and rerun status and stop phase per unit and marks eligible units.
+ 
+ ## Unit and file contract
+ 
+diff -ruN --strip-trailing-cr -x .cpp_cache v2_2/study/adapter.R v2_2_1/study/adapter.R
+--- v2_2/study/adapter.R	2026-10-28 19:45:47.031119100 -0500
++++ v2_2_1/study/adapter.R	2026-10-29 09:02:53.911752200 -0500
+@@ -1,4 +1,6 @@
+ # One (dataset, scale) study adapter. No truth/holdout/fold use by the fit.
++# v2.2.1: one study layer for both regimes (H: p in {500, 1000}, master sec. II.7; L: p in {20, 30}, LOWP_SPEC L.3),
++# regime-L repeat seeds, and the P5 retry (D11). The core is byte-identical to v2.2.
+ # Source this file without compiling or fitting; smcbvs_study_fit loads the core.
+ .smcbvs_adapter_dir <- local({
+   frames <- rev(sys.frames())
+@@ -73,10 +75,30 @@
+   if (is.character(scale) && length(scale) == 1L && scale %in% c("c100", "c050")) return(scale)
+   stop("scale must be c100/1 or c050/0.5")
+ }
+-smcbvs_case_spec <- function(case, scale, development = FALSE) {
++# Committed study design per regime (provenance, not tuning). H: master sec. II.7 (bench20261019 inputs).
++# L: LOWP_SPEC L.3 and INTERFACES I1 (one manifest name for the production and the dev tree; n, kind and
++# scales are checked when present). Seeds: data base + 10000*scenario + replicate; method = data + 4,000,000.
++smcbvs_regimes <- function() list(
++  H = list(p = c(500L, 1000L), study = "bench20261019",
++    data_base = c(`500` = 1410000L, `1000` = 1510000L), dev_data_base = c(`500` = 2410000L, `1000` = 2510000L),
++    fold_base = c(`500` = 3410000L, `1000` = 3510000L), dev_fold_base = c(`500` = 4410000L, `1000` = 4510000L),
++    manifest = c(prod = "inputs_manifest.csv", dev = "dev_inputs_manifest.csv"),
++    fold_column = "foldid_sha256", extras_required = TRUE, repeats = FALSE, design_label = "n200 benchmark design"),
++  L = list(p = c(20L, 30L), study = "newcampaign_lowp",
++    data_base = c(`20` = 1210000L, `30` = 1310000L), dev_data_base = c(`20` = 2210000L, `30` = 2310000L),
++    fold_base = c(`20` = 3210000L, `30` = 3310000L), dev_fold_base = c(`20` = 4210000L, `30` = 4310000L),
++    manifest = c(prod = "inputs_manifest_lowp.csv", dev = "inputs_manifest_lowp.csv"),
++    fold_column = "fold_sha256", extras_required = FALSE, repeats = TRUE, design_label = "n = 200 LOWP design"))
++smcbvs_regime_of <- function(p) {
++  for (nm in names(smcbvs_regimes())) if (p %in% smcbvs_regimes()[[nm]]$p) return(nm)
++  stop("p outside both regimes: ", p)
++}
++# The spec lists keep the exact v2.2 (regime H) and LOWP runner (regime L) element order, so the saved
++# record$case is unchanged in both regimes. Repeat seeds are committed for regime L only (LOWP_SPEC L.3, D16).
++smcbvs_case_spec <- function(case, scale, development = FALSE, repeat_m = NULL) {
+   scale <- smcbvs_scale_key(scale)
+   if (!is.character(case) || length(case) != 1L || is.na(case)) stop("case must be one dataset/case ID")
+-  pat <- "^(dev_)?p(0500|1000)_S([1-6])_r([0-9]{3})(_c100|_c050)?$"
++  pat <- "^(dev_)?p(0020|0030|0500|1000)_S([1-6])_r([0-9]{3})(_c100|_c050)?$"
+   g <- regmatches(case, regexec(pat, case))[[1L]]
+   if (!length(g)) stop("invalid dataset/case ID: ", case)
+   dev <- identical(g[2L], "dev_")
+@@ -84,15 +106,28 @@
+   if (nzchar(g[6L]) && !identical(sub("^_", "", g[6L]), scale)) stop("case ID/scale mismatch")
+   p <- as.integer(g[3L]); scenario <- as.integer(g[4L]); replicate <- as.integer(g[5L])
+   if (!replicate %in% 1:100) stop("replicate outside 1..100")
++  regime <- smcbvs_regime_of(p); rg <- smcbvs_regimes()[[regime]]
++  if (!is.null(repeat_m) && !rg$repeats) stop("repeat seeds are committed for regime L only (LOWP_SPEC L.3)")
++  # LOWP_SPEC L.3: repeat m = 1..5 uses method seed + 1000*m; NULL = the primary run
++  if (!is.null(repeat_m) && !(is.numeric(repeat_m) && length(repeat_m) == 1L && !is.na(repeat_m) &&
++      repeat_m == as.integer(repeat_m) && repeat_m %in% 1:5)) stop("repeat must be an integer in 1..5")
++  if (!is.null(repeat_m)) repeat_m <- as.integer(repeat_m)
+   dataset_id <- sprintf("%sp%04d_S%d_r%03d", if (dev) "dev_" else "", p, scenario, replicate)
+-  data_base <- if (dev) c(`500` = 2410000L, `1000` = 2510000L) else c(`500` = 1410000L, `1000` = 1510000L)
+-  fold_base <- if (dev) c(`500` = 4410000L, `1000` = 4510000L) else c(`500` = 3410000L, `1000` = 3510000L)
++  data_base <- if (dev) rg$dev_data_base else rg$data_base
++  fold_base <- if (dev) rg$dev_fold_base else rg$fold_base
+   ds <- unname(data_base[[as.character(p)]] + 10000L * scenario + replicate)
+-  list(dataset_id = dataset_id, case_id = paste0(dataset_id, "_", scale), p = p,
++  fs <- unname(fold_base[[as.character(p)]] + 10000L * scenario + replicate)
++  base_method <- ds + 4000000L
++  if (regime == "H") return(list(dataset_id = dataset_id, case_id = paste0(dataset_id, "_", scale), p = p,
+     scenario = scenario, replicate = replicate, scale_key = scale,
+     scale = if (scale == "c100") 1 else 0.5, development = dev,
+-    data_seed = ds, fold_seed = unname(fold_base[[as.character(p)]] + 10000L * scenario + replicate),
+-    method_seed = ds + 4000000L)
++    data_seed = ds, fold_seed = fs, method_seed = base_method))
++  list(dataset_id = dataset_id, case_id = paste0(dataset_id, "_", scale), p = p,
++    scenario = scenario, replicate = replicate, scale_key = scale,
++    scale = if (scale == "c100") 1 else 0.5, development = dev, repeat_m = repeat_m,
++    data_seed = ds, fold_seed = fs,
++    method_seed_base = base_method,
++    method_seed = if (is.null(repeat_m)) base_method else base_method + 1000L * repeat_m)
+ }
+ # Binding study mapping, RULINGS_LEAD.md R-1 (2026-10-22 19:25Z).
+ # This is provenance data, not a configurable method or mapping policy.
+@@ -126,8 +161,8 @@
+   input_root <- smcbvs_safe_path(file.path(study, "inputs"))
+   input <- smcbvs_contained(file.path(input_root, sprintf("p%04d", spec$p), paste0(spec$dataset_id, ".rds")), input_root)
+   manifest_root <- smcbvs_safe_path(file.path(study, "manifests"))
+-  if (is.null(manifest)) manifest <- file.path(manifest_root,
+-    if (spec$development) "dev_inputs_manifest.csv" else "inputs_manifest.csv")
++  rg <- smcbvs_regimes()[[smcbvs_regime_of(spec$p)]]
++  if (is.null(manifest)) manifest <- file.path(manifest_root, rg$manifest[[if (spec$development) "dev" else "prod"]])
+   manifest <- smcbvs_contained(manifest, manifest_root)
+   if (!grepl("inputs", basename(manifest), fixed = TRUE)) stop("only an inputs manifest is accepted")
+   man <- utils::read.csv(manifest, stringsAsFactors = FALSE, colClasses = "character")
+@@ -137,24 +172,30 @@
+   file_hash <- smcbvs_file_hash(input)
+   if (!identical(file_hash, m$file_sha256)) stop("input file hash differs from manifest")
+   d <- readRDS(input)
+-  required <- c("X", "Y", "foldid", "dataset_id", "p", "n", "scenario", "replicate", "kind", "data_seed", "fold_seed", "method_seed", "scales")
+-  if (!is.list(d) || !all(required %in% names(d))) stop("input record missing benchmark fields")
++  # Regime H requires the benchmark record's n, kind and scales; regime L (I1) checks them when present.
++  extras <- c("n", "kind", "scales")
++  required <- c("X", "Y", "foldid", "dataset_id", "p", "scenario", "replicate", "data_seed", "fold_seed", "method_seed",
++    if (rg$extras_required) extras)
++  if (!is.list(d) || !all(required %in% names(d))) stop("input record missing required fields")
++  # CONF-2b (Sol F2): in regime H the extras are always checked (a named NULL is refused, as in v2.2); in L only when present.
++  check_extra <- function(f) rg$extras_required || !is.null(d[[f]])
+   if (!identical(as.character(d$dataset_id), spec$dataset_id) ||
+-      !identical(as.character(d$kind), if (spec$development) "dev" else "prod")) stop("input identity/kind mismatch")
++      (check_extra("kind") && !identical(as.character(d[["kind"]]), if (spec$development) "dev" else "prod"))) stop("input identity/kind mismatch")
++  # The stored and manifest method_seed is the primary one; a repeat only shifts the seed handed to the core.
+   for (nm in c("p", "scenario", "replicate", "data_seed", "fold_seed", "method_seed")) {
+-    expected <- as.character(spec[[nm]])
++    expected <- as.character(if (nm == "method_seed" && !is.null(spec$method_seed_base)) spec$method_seed_base else spec[[nm]])
+     if (!identical(as.character(d[[nm]]), expected) || !identical(m[[nm]], expected)) stop("input/manifest seed or design mismatch: ", nm)
+   }
+-  if (!identical(as.integer(d$n), 200L) || !is.matrix(d$X) || !is.numeric(d$X) ||
++  if ((check_extra("n") && !identical(as.integer(d[["n"]]), 200L)) || !is.matrix(d$X) || !is.numeric(d$X) ||
+       !identical(dim(d$X), c(200L, spec$p)) || !is.matrix(d$Y) || !is.numeric(d$Y) ||
+       nrow(d$Y) != 200L || !spec$scale_key %in% colnames(d$Y) || length(d$foldid) != 200L)
+-    stop("input dimensions differ from n200 benchmark design")
+-  if (!identical(unname(as.numeric(d$scales[spec$scale_key])), spec$scale)) stop("input scale value mismatch")
++    stop("input dimensions differ from the ", rg$design_label)
++  if (check_extra("scales") && !identical(unname(as.numeric(d[["scales"]][spec$scale_key])), spec$scale)) stop("input scale value mismatch")
+   y <- unname(d$Y[, spec$scale_key])
+   hashes <- list(inputs_sha256 = file_hash, x_sha256 = smcbvs_f64_hash(d$X),
+     y_sha256 = smcbvs_f64_hash(y), fold_sha256 = smcbvs_f64_hash(d$foldid))
+   for (pair in list(c("x_sha256", "x_sha256"), c("y_sha256", paste0("y_", spec$scale_key, "_sha256")),
+-                   c("fold_sha256", "foldid_sha256")))
++                   c("fold_sha256", rg$fold_column)))
+     if (!identical(hashes[[pair[1L]]], m[[pair[2L]]])) stop("stored-array hash mismatch: ", pair[1L])
+   list(X = d$X, y = y, hashes = hashes, input_path = input, manifest_path = manifest,
+     manifest_sha256 = smcbvs_file_hash(manifest), manifest_row = m)
+@@ -325,12 +366,32 @@
+     paste("status", paste(record$rows$status, collapse = ",")), paste("finished_utc", record$finished_utc)), f))
+ }
+ 
++# P5 (DECISIONS D11): a fit whose native status is resource_limit gets exactly one rerun with the same seed
++# and double the allocation (hours, and mem_gb, which sets the core's memory preflight). The caller passes the
++# PRIMARY allocation; the doubling happens here. The primary record stays primary and is never modified. The
++# rerun is written beside it, in the case folder's P5_retry/ subfolder (outside the scoring scan of the case
++# folder), as {SMCBVS|SMCBVS_rep{m}}_p5retry.*, and its record carries `p5` (primary identity and stop phase).
++smcbvs_p5_factor <- function() 2
++smcbvs_p5_primary <- function(prefix, expect) {
++  if (!smcbvs_done_valid(prefix, expect)) stop("P5: no valid primary record with this identity at ", prefix)
++  rows <- utils::read.csv(paste0(prefix, ".csv"), colClasses = "character", stringsAsFactors = FALSE)
++  if (!all(rows$v3_status == "resource_limit"))
++    stop("P5: primary native status is ", paste(unique(rows$v3_status), collapse = ","), ", not resource_limit; no retry")
++  rec <- readRDS(paste0(prefix, ".rds"))
++  if (!identical(rec$native_status, "resource_limit")) stop("P5: primary record native status is not resource_limit")
++  list(prefix = basename(prefix), files_sha256 = readLines(paste0(prefix, ".sha256"), warn = FALSE),
++    native_status = rec$native_status, allocation = rec$allocation, allocation_sha256 = rec$allocation_sha256,
++    stop = if (is.list(rec$fit) && is.list(rec$fit$instrumentation)) rec$fit$instrumentation$stop else NULL,
++    runtime_s = rec$runtime_s, started_utc = rec$started_utc, finished_utc = rec$finished_utc)
++}
+ smcbvs_study_fit <- function(case, scale, study, outroot, run_id, policy = smcbvs_r1_policy(),
+                              allocation = list(mem_gb = 8, hours = 24),
+                              core_dir = file.path(.smcbvs_adapter_dir, "..", "core"),
+-                             manifest = NULL, development = FALSE) {
++                             manifest = NULL, development = FALSE, repeat_m = NULL, p5_retry = FALSE) {
+   for (pk in c("digest", "jsonlite")) if (!requireNamespace(pk, quietly = TRUE)) stop("missing package: ", pk)
+-  spec <- smcbvs_case_spec(case, scale, development)
++  if (!is.logical(p5_retry) || length(p5_retry) != 1L || is.na(p5_retry)) stop("p5_retry must be TRUE or FALSE")
++  spec <- smcbvs_case_spec(case, scale, development, repeat_m)
++  rg <- smcbvs_regimes()[[smcbvs_regime_of(spec$p)]]
+   if (!is.character(run_id) || length(run_id) != 1L || !grepl("^[A-Za-z0-9][A-Za-z0-9_.-]*$", run_id)) stop("invalid run_id")
+   smcbvs_validate_policy(policy, development)
+   if (!is.list(allocation) || !all(c("mem_gb", "hours") %in% names(allocation)) ||
+@@ -349,25 +410,60 @@
+   if (!startsWith(future_outdir, paste0(outroot, "/"))) stop("output directory symlink escapes outroot")
+   dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
+   outdir <- smcbvs_contained(outdir, outroot)
+-  prefix <- file.path(outdir, "SMCBVS")
++  base <- if (is.null(spec$repeat_m)) "SMCBVS" else sprintf("SMCBVS_rep%d", spec$repeat_m)
++  prefix <- file.path(outdir, base)
+   expect <- c(list(run_id = run_id, method_id = "SMCBVS", case_id = spec$case_id, source_sha256 = source_record$source_sha256,
+     method_seed = spec$method_seed, adapter_policy_sha256 = policy_hash, allocation_sha256 = allocation_hash,
+     input_manifest_sha256 = input$manifest_sha256), input$hashes[setdiff(names(input$hashes), "fold_sha256")])
+   # A valid saved unit has immutable run identity. Require a new run ID when any
+   # allocation/source/policy/input identity changes; retain the historical output.
+-  if (smcbvs_done_valid(prefix, list()) && !smcbvs_done_valid(prefix, expect)) {
++  check_identity <- function(prefix, expect) if (smcbvs_done_valid(prefix, list()) && !smcbvs_done_valid(prefix, expect)) {
+     saved <- utils::read.csv(paste0(prefix, ".csv"), colClasses = "character", stringsAsFactors = FALSE)
+     mismatch <- names(expect)[!vapply(names(expect), function(nm) !is.null(saved[[nm]]) &&
+       all(!is.na(saved[[nm]]) & saved[[nm]] == as.character(expect[[nm]])), TRUE)]
+     stop("saved unit identity mismatch (", paste(mismatch, collapse = ", "), "); use a new run_id")
+   }
+-  if (smcbvs_done_valid(prefix, expect)) return(invisible(list(prefix = prefix, skipped = TRUE,
+-    rows = utils::read.csv(paste0(prefix, ".csv"), stringsAsFactors = FALSE))))
++  check_identity(prefix, expect)
++  p5 <- NULL
++  if (p5_retry) {
++    # Same run ID, seed, source, policy and inputs as the primary; only the allocation (and so the prefix) differs.
++    primary_prefix <- prefix; primary_expect <- expect
++    primary <- smcbvs_p5_primary(primary_prefix, primary_expect)
++    allocation <- list(mem_gb = smcbvs_p5_factor() * allocation$mem_gb, hours = smcbvs_p5_factor() * allocation$hours)
++    allocation_hash <- digest::digest(serialize(allocation, NULL, version = 3), algo = "sha256", serialize = FALSE)
++    expect$allocation_sha256 <- allocation_hash
++    retry_dir <- file.path(outdir, "P5_retry")
++    if (!startsWith(smcbvs_resolve_future(retry_dir), paste0(outdir, "/"))) stop("P5 retry directory symlink escapes the case folder")
++    dir.create(retry_dir, showWarnings = FALSE)
++    retry_dir <- smcbvs_contained(retry_dir, outdir)
++    prefix <- file.path(retry_dir, paste0(base, "_p5retry"))
++    p5 <- list(rule = "P5, DECISIONS D11: one rerun of a resource_limit fit, same seed, allocation x2",
++      role = "p5_retry", factor = smcbvs_p5_factor(), method_seed = spec$method_seed, primary = primary,
++      retry_allocation = allocation, retry_allocation_sha256 = allocation_hash)
++    check_identity(prefix, expect)
++  }
++  # CONF-2b (Sol F4): a skipped (already valid) unit returns its saved native status and stop phase, as a fresh fit does.
++  skipped_unit <- function(prefix) {
++    rec <- tryCatch(readRDS(paste0(prefix, ".rds")), error = function(e) NULL)
++    invisible(list(prefix = prefix, skipped = TRUE, rows = utils::read.csv(paste0(prefix, ".csv"), stringsAsFactors = FALSE),
++      native_status = if (is.list(rec)) rec$native_status else NULL,
++      stop = if (is.list(rec) && is.list(rec$fit) && is.list(rec$fit$instrumentation)) rec$fit$instrumentation$stop else NULL))
++  }
++  if (smcbvs_done_valid(prefix, expect)) return(skipped_unit(prefix))
+   # Do not permit concurrent writers to the same unit. Stale locks require operator inspection.
+   lock <- paste0(prefix, ".lock")
+   if (!dir.create(lock, showWarnings = FALSE)) stop("unit lock exists: ", lock)
+   on.exit(unlink(lock, recursive = TRUE), add = TRUE)
+   writeLines(c(paste("pid", Sys.getpid()), paste("host", Sys.info()[["nodename"]]), paste("utc", smcbvs_utc())), file.path(lock, "owner.txt"))
++  # CONF-2b (Sol F1): repeat every check UNDER the lock. A unit (primary or P5 rerun) that another caller completed between
++  # the first check and the lock is returned as skipped, never refit or overwritten; a new identity mismatch is refused; a
++  # P5 rerun re-binds to the same, still valid, resource_limit primary.
++  check_identity(prefix, expect)
++  if (smcbvs_done_valid(prefix, expect)) return(skipped_unit(prefix))
++  if (p5_retry) {
++    primary_now <- smcbvs_p5_primary(primary_prefix, primary_expect)
++    if (!identical(primary_now$files_sha256, p5$primary$files_sha256)) stop("P5: the primary record changed while acquiring the lock")
++  }
+   unlink(paste0(prefix, ".done"))
+   # Compilation/loading is outside runtime_s. Only X/y/seed/allocation reach the core.
+   source(file.path(source_record$core_dir, "v3.R"), local = FALSE)
+@@ -396,7 +492,7 @@
+     outputs$mpm <- tryCatch(smcbvs_check_support(fit$mpm, spec$p, "audit MPM"), error = function(e) outputs$mpm)
+   }
+   host <- Sys.info()[["nodename"]]
+-  design <- c(list(study = "bench20261019", run_id = run_id, source_sha256 = source_record$source_sha256, regime = "H"),
++  design <- c(list(study = rg$study, run_id = run_id, source_sha256 = source_record$source_sha256, regime = smcbvs_regime_of(spec$p)),
+     spec[c("p", "scenario", "replicate", "scale_key", "scale", "dataset_id", "case_id", "data_seed", "fold_seed", "method_seed")],
+     input$hashes, list(method_id = "SMCBVS", method_label = "SMC-BVS v3", package = "SMCBVS-v3", package_version = "3",
+       runtime_s = runtime, host = host, slurm_job_id = Sys.getenv("SLURM_JOB_ID", NA_character_),
+@@ -409,7 +505,7 @@
+   design$fold_seed <- NA_integer_; design$fold_sha256 <- NA_character_
+   rows <- smcbvs_rule_rows(fit, outputs, design, policy, warnings, messages, error, native)
+   thread_vars <- c("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "NUMEXPR_NUM_THREADS")
+-  record <- list(schema_version = 2L, adapter_version = "2.2-R1", rows = rows, fit = fit,
++  record <- list(schema_version = 2L, adapter_version = "2.2.1-R1", rows = rows, fit = fit,
+     pip = outputs$pip, pip_primary_original = outputs$pip, hpm = outputs$hpm, mpm = outputs$mpm,
+     native_status = native, estimates_available = outputs$estimates_available,
+     warnings = warnings, messages = messages, error = error, runtime_s = runtime,
+@@ -428,6 +524,10 @@
+   if (is.list(fit) && !is.null(fit$pip_plain)) { plain[] <- 0; plain[names(fit$pip_plain)] <- fit$pip_plain }
+   record$pip_plain <- plain; record["mpm_plain"] <- list(if (is.list(fit)) fit$mpm_plain else NULL)
+   record["instrumentation"] <- list(if (is.list(fit)) fit$instrumentation else NULL)
++  # v2.2.1: only a P5 rerun record gains `p5` (appended last); primary records keep the v2.2 layout.
++  if (!is.null(p5)) record$p5 <- p5
+   smcbvs_write_record(prefix, record)
+-  invisible(list(prefix = prefix, skipped = FALSE, rows = rows, native_status = native))
++  # The stop phase (P2 instrumentation) is returned so the runner can log it.
++  invisible(list(prefix = prefix, skipped = FALSE, rows = rows, native_status = native,
++    stop = if (is.list(fit) && is.list(fit$instrumentation)) fit$instrumentation$stop else NULL))
+ }
+diff -ruN --strip-trailing-cr -x .cpp_cache v2_2/study/run_case.R v2_2_1/study/run_case.R
+--- v2_2/study/run_case.R	2026-10-28 19:41:15.318528100 -0500
++++ v2_2_1/study/run_case.R	2026-10-29 01:14:09.912311100 -0500
+@@ -1,12 +1,21 @@
+ #!/usr/bin/env Rscript
+ # One-call CLI; binding R-1 mapping. --policy accepts only its identical archived copy.
++# v2.2.1: both regimes (ids p0500/p1000 = H, p0020/p0030 = L); --repeat m (m = 1..5, regime L only): method seed
++# = data seed + 4,000,000 + 1,000*m, output basename SMCBVS_rep{m}. --p5-retry (DECISIONS D11): rerun a unit whose
++# primary record ended resource_limit, same seed, with double the allocation given by --mem-gb/--hours (pass the
++# PRIMARY allocation); written to <case>/P5_retry/{SMCBVS|SMCBVS_rep{m}}_p5retry.*. The last stdout line is
++# tab-separated key=value fields, including the stop phase of a resource_limit fit (P2 instrumentation).
+ smcbvs_cli_args <- function(args) {
+   out <- list(); i <- 1L
+   while (i <= length(args)) {
+-    if (args[i] == "--development") { out$development <- TRUE; i <- i + 1L; next }
++    if (args[i] %in% c("--development", "--p5-retry")) {
++      key <- gsub("-", "_", substring(args[i], 3L))
++      if (!is.null(out[[key]])) stop("duplicate CLI argument: ", key)
++      out[[key]] <- TRUE; i <- i + 1L; next
++    }
+     if (!startsWith(args[i], "--") || i == length(args)) stop("bad CLI argument: ", args[i])
+     key <- gsub("-", "_", substring(args[i], 3L))
+-    if (!key %in% c("case", "scale", "study", "outroot", "run_id", "policy", "manifest", "core_dir", "mem_gb", "hours")) stop("unknown CLI argument: ", key)
++    if (!key %in% c("case", "scale", "study", "outroot", "run_id", "policy", "manifest", "core_dir", "mem_gb", "hours", "repeat")) stop("unknown CLI argument: ", key)
+     if (!is.null(out[[key]])) stop("duplicate CLI argument: ", key)
+     out[[key]] <- args[i + 1L]; i <- i + 2L
+   }
+@@ -14,6 +23,12 @@
+     if (is.null(out[[nm]])) stop("missing --", gsub("_", "-", nm))
+   out
+ }
++smcbvs_cli_stop_text <- function(stop) {
++  if (!is.list(stop)) return("NA")
++  v <- vapply(c("where", "phase", "checkpoint", "tier", "iter", "stage"), function(nm)
++    if (is.null(stop[[nm]]) || length(stop[[nm]]) != 1L || is.na(stop[[nm]])) "NA" else as.character(stop[[nm]]), "")
++  paste(v, collapse = "/")
++}
+ smcbvs_cli_main <- function(args) {
+   a <- smcbvs_cli_args(args)
+   path <- sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1L])
+@@ -23,12 +38,21 @@
+     hours = if (is.null(a$hours)) 24 else as.numeric(a$hours))
+   if (any(!is.finite(unlist(allocation))) || any(unlist(allocation) <= 0)) stop("allocation must be positive finite numbers")
+   call <- list(case = a$case, scale = a$scale, study = a$study, outroot = a$outroot,
+-    run_id = a$run_id, policy = policy, allocation = allocation, development = isTRUE(a$development))
++    run_id = a$run_id, policy = policy, allocation = allocation, development = isTRUE(a$development),
++    p5_retry = isTRUE(a$p5_retry))
++  if (!is.null(a[["repeat"]])) {
++    m <- suppressWarnings(as.numeric(a[["repeat"]]))
++    if (is.na(m) || m != as.integer(m) || !m %in% 1:5) stop("--repeat must be an integer in 1..5")
++    call$repeat_m <- as.integer(m)
++  }
+   if (!is.null(a$manifest)) call$manifest <- a$manifest
+   if (!is.null(a$core_dir)) call$core_dir <- a$core_dir
+   result <- do.call(smcbvs_study_fit, call)
++  v3 <- if (is.null(result$native_status)) paste(unique(result$rows$v3_status), collapse = ",") else result$native_status
+   cat(result$prefix, "status=", paste(result$rows$status, collapse = ","),
+     "skipped=", result$skipped, "\n")
++  cat(paste0(c("prefix", "skipped", "p5_retry", "v3_status", "stop"), "=",
++    c(result$prefix, result$skipped, isTRUE(a$p5_retry), v3, smcbvs_cli_stop_text(result$stop)), collapse = "\t"), "\n", sep = "")
+   if (any(result$rows$status %in% c("failed", "timeout", "not_run"))) 2L else 0L
+ }
+ if (sys.nframe() == 0L) {
+diff -ruN --strip-trailing-cr -x .cpp_cache v2_2/tools/p5_scan.R v2_2_1/tools/p5_scan.R
+--- v2_2/tools/p5_scan.R	1969-12-31 18:00:00.000000000 -0600
++++ v2_2_1/tools/p5_scan.R	2026-10-29 10:38:41.809012000 -0500
+@@ -0,0 +1,122 @@
++#!/usr/bin/env Rscript
++# P5 scan (DECISIONS D11), array logic of v2.2.1: lists every SMC-BVS unit of one run and its P5 state.
++# Usage: Rscript p5_scan.R --run-dir <OUTROOT>/results/<RUN_ID> --out <file.tsv>
++# One row per primary unit with a valid .done (SMCBVS or SMCBVS_rep{m}). A unit is `eligible` for the one P5 rerun
++# when its primary ended native resource_limit and its P5_retry/ record is not yet valid. The stop phase (P2
++# instrumentation, fit$instrumentation$stop) of the primary and of the rerun is logged. Reads results only (no truth).
++# Exit 0 = table written; 1 = error. Prints one summary line (units, resource_limit, eligible, retried, retry outcomes).
++p5_args <- function(args) {
++  out <- list(); i <- 1L
++  while (i <= length(args)) {
++    if (!startsWith(args[i], "--") || i == length(args)) stop("bad argument: ", args[i])
++    key <- gsub("-", "_", substring(args[i], 3L))
++    if (!key %in% c("run_dir", "out")) stop("unknown argument: ", key)
++    out[[key]] <- args[i + 1L]; i <- i + 2L
++  }
++  for (nm in c("run_dir", "out")) if (is.null(out[[nm]])) stop("missing --", gsub("_", "-", nm))
++  out
++}
++p5_main <- function(args) {
++  a <- p5_args(args)
++  here <- dirname(normalizePath(sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1L])))
++  source(file.path(here, "..", "study", "adapter.R"), local = FALSE)   # smcbvs_done_valid, smcbvs_safe_path
++  run_dir <- smcbvs_safe_path(a$run_dir)
++  stop_text <- function(s) {
++    if (!is.list(s)) return(c(where = NA, phase = NA, checkpoint = NA, tier = NA, iter = NA, stage = NA,
++      elapsed_seconds = NA, allocation_seconds = NA))
++    nm <- c("where", "phase", "checkpoint", "tier", "iter", "stage", "elapsed_seconds", "allocation_seconds")
++    setNames(vapply(nm, function(k) { v <- s[[k]]; if (is.null(v) || length(v) != 1L || is.na(v)) NA_character_ else as.character(v) }, ""), nm)
++  }
++  status_of <- function(prefix, is_retry = FALSE) {
++    if (!smcbvs_done_valid(prefix, list())) return(list(valid = FALSE))
++    rows <- utils::read.csv(paste0(prefix, ".csv"), colClasses = "character", stringsAsFactors = FALSE)
++    v3 <- paste(unique(rows$v3_status), collapse = ",")
++    # CONF-2b (Sol F3, both directions; Sol review 2 R2-3): EVERY unit's RDS is read and its record$native_status, the field the
++    # P5 rerun itself checks (smcbvs_p5_primary), must be present and equal the CSV v3_status. No fallback to fit$status (an
++    # adapter_error record legitimately differs from it): a record without native_status is refused / invalid_inspect.
++    rec <- readRDS(paste0(prefix, ".rds"))
++    native <- rec$native_status
++    if (!identical(v3, as.character(native))) return(list(valid = FALSE, why = sprintf("CSV v3_status (%s) differs from the RDS native status (%s)",
++      v3, if (is.null(native)) "absent" else paste(native, collapse = ","))))
++    stp <- if (is.list(rec$fit) && is.list(rec$fit$instrumentation)) rec$fit$instrumentation$stop else NULL
++    alloc <- rec$allocation
++    list(valid = TRUE, v3 = v3, rows = rows, stop = stp, allocation = alloc, rec = rec)
++  }
++  # CONF-2b (Sol F3): a rerun counts as THIS primary's P5 rerun only if it is bound to it: same run/case/seed/source/policy/
++  # inputs as the primary's rows, allocation exactly x2 (and its hash), and record$p5 naming this primary's .sha256 lines.
++  id_cols <- c("run_id", "method_id", "case_id", "source_sha256", "method_seed", "adapter_policy_sha256", "input_manifest_sha256",
++    "inputs_sha256", "x_sha256", "y_sha256")
++  bound_why <- function(prim, ret, primary_prefix) {
++    for (nm in id_cols) if (is.null(ret$rows[[nm]]) || is.null(prim$rows[[nm]]) || !identical(ret$rows[[nm]], prim$rows[[nm]]))
++      return(paste("identity column differs from the primary:", nm))
++    rec <- ret$rec; p5 <- rec$p5; pa <- prim$allocation
++    if (is.null(pa)) pa <- readRDS(paste0(primary_prefix, ".rds"))$allocation
++    if (!is.list(p5) || !identical(p5$role, "p5_retry") || !identical(p5$factor, 2)) return("record$p5 missing or not a P5 rerun")
++    if (!identical(p5$primary$files_sha256, readLines(paste0(primary_prefix, ".sha256"), warn = FALSE))) return("record$p5 names another primary")
++    if (!identical(as.character(p5$method_seed), prim$rows$method_seed[1L])) return("record$p5 method seed differs from the primary")
++    if (!is.list(rec$allocation) || !identical(rec$allocation$mem_gb, 2 * pa$mem_gb) || !identical(rec$allocation$hours, 2 * pa$hours))
++      return("rerun allocation is not exactly twice the primary's")
++    if (!identical(rec$allocation_sha256, p5$retry_allocation_sha256) || !all(ret$rows$allocation_sha256 == rec$allocation_sha256))
++      return("rerun allocation hash inconsistent")
++    ""
++  }
++  out <- list()
++  for (pd in sort(list.dirs(run_dir, recursive = FALSE, full.names = TRUE))) {
++    if (!grepl("^p[0-9]{4}$", basename(pd))) next
++    for (cd in sort(list.dirs(pd, recursive = FALSE, full.names = TRUE))) {
++      for (f in sort(list.files(cd, pattern = "^SMCBVS(_rep[1-5])?\\.done$"))) {
++        base <- sub("\\.done$", "", f)
++        prim <- status_of(file.path(cd, base))
++        if (!prim$valid && !is.null(prim$why)) stop("primary ", file.path(basename(cd), base), ": ", prim$why, " (inspect; scan refused)")
++        if (!prim$valid) next
++        rp <- file.path(cd, "P5_retry", paste0(base, "_p5retry"))
++        # CONF-2b (Sol F7): any artefact of the rerun (rds, csv, sha256, done, lock, temporary files) counts as present
++        artefacts <- if (dir.exists(dirname(rp))) list.files(dirname(rp), all.files = TRUE, no.. = TRUE) else character()
++        artefacts <- artefacts[startsWith(artefacts, paste0(base, "_p5retry."))]
++        retry_present <- length(artefacts) > 0L
++        locked <- dir.exists(paste0(rp, ".lock"))
++        ret <- if (retry_present) status_of(rp, TRUE) else list(valid = FALSE)
++        why <- if (isTRUE(ret$valid)) bound_why(prim, ret, file.path(cd, base)) else if (!is.null(ret$why)) ret$why else ""
++        bound <- isTRUE(ret$valid) && !nzchar(why)
++        state <- if (bound) "done" else if (isTRUE(ret$valid) || !is.null(ret$why)) "invalid_inspect" else if (locked) "locked" else if (retry_present) "incomplete" else "none"
++        ps <- stop_text(prim$stop); rs <- stop_text(ret$stop)
++        out[[length(out) + 1L]] <- data.frame(
++          case_id = basename(cd), base = base, repeat_m = if (base == "SMCBVS") 0L else as.integer(sub("^SMCBVS_rep", "", base)),
++          primary_v3_status = prim$v3, primary_status = paste(prim$rows$status, collapse = ","),
++          primary_mem_gb = if (is.null(prim$allocation)) NA_character_ else format(prim$allocation$mem_gb, digits = 17),
++          primary_hours = if (is.null(prim$allocation)) NA_character_ else format(prim$allocation$hours, digits = 17),
++          primary_stop_where = ps[["where"]], primary_stop_phase = ps[["phase"]], primary_stop_checkpoint = ps[["checkpoint"]],
++          primary_stop_tier = ps[["tier"]], primary_stop_iter = ps[["iter"]], primary_stop_stage = ps[["stage"]],
++          primary_stop_elapsed_s = ps[["elapsed_seconds"]], primary_stop_allocation_s = ps[["allocation_seconds"]],
++          retry_state = state, retry_problem = if (nzchar(why)) why else NA_character_,
++          retry_artefacts = if (retry_present) paste(artefacts, collapse = ";") else NA_character_,
++          retry_v3_status = if (bound) ret$v3 else NA_character_,
++          retry_status = if (bound) paste(ret$rows$status, collapse = ",") else NA_character_,
++          retry_stop_where = rs[["where"]], retry_stop_phase = rs[["phase"]], retry_stop_checkpoint = rs[["checkpoint"]],
++          # eligible = entitled to its one P5 rerun (resource_limit primary, no bound valid rerun). launchable = eligible AND no rerun
++          # artefact at all (state none): only these may be launched now; locked / incomplete / invalid_inspect need an operator.
++          eligible = prim$v3 == "resource_limit" && !bound,
++          launchable = prim$v3 == "resource_limit" && state == "none",
++          stringsAsFactors = FALSE)
++      }
++    }
++  }
++  tab <- if (length(out)) do.call(rbind, out) else data.frame()
++  tmp <- paste0(a$out, ".tmp.", Sys.getpid())
++  utils::write.table(tab, tmp, sep = "\t", quote = FALSE, row.names = FALSE, na = "NA")
++  if (!file.rename(tmp, a$out)) stop("could not write ", a$out)
++  n <- nrow(tab)
++  rl <- if (n) sum(tab$primary_v3_status == "resource_limit") else 0L
++  el <- if (n) sum(tab$eligible) else 0L
++  done <- if (n) tab[tab$retry_state == "done", , drop = FALSE] else tab
++  outcomes <- if (nrow(done)) paste(names(table(done$retry_v3_status)), table(done$retry_v3_status), sep = ":", collapse = ",") else "none"
++  cnt <- function(st) if (n) sum(tab$retry_state %in% st) else 0L
++  # the first six fields keep their v2.2.1 order (parsed by the pilot); launchable/locked/invalid_inspect are appended
++  cat(sprintf("p5_scan units=%d primary_resource_limit=%d eligible=%d retried=%d retry_outcomes=%s incomplete=%d launchable=%d locked=%d invalid_inspect=%d\n",
++    n, rl, el, nrow(done), outcomes, cnt("incomplete"), if (n) sum(tab$launchable) else 0L, cnt("locked"), cnt("invalid_inspect")))
++  0L
++}
++if (sys.nframe() == 0L) {
++  code <- tryCatch(p5_main(commandArgs(trailingOnly = TRUE)), error = function(e) { message("FATAL: ", conditionMessage(e)); 1L })
++  quit(save = "no", status = code)
++}

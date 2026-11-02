@@ -1,0 +1,14 @@
+# BENCH-FIX Sol review 1 — implementation response
+
+Scope: R1-1, R1-3, R1-4 and cost wording in the job bundles. The frozen `code/bench_v2` tree was not modified. No SSH or benchmark fitting was performed.
+
+| Finding | Change | Check and result |
+|---|---|---|
+| R1-1 blocking | Shared `runner/validate.R` calls the frozen F3 `validate_one` and `validate_payload`, then binds the explicit expected unit, RDS/CSV, input bytes and component hashes, seeds and manifest; verifies coefficient copies, pilot/screen/weights, selected-point KKT, OLS slopes and RSS. Task, retry and reconciliation pass the same case/input/manifest information to it. | Complete saved real runner fixture plus its real input and manifest: PASS. Sol's ten altered payloads rejected with individually asserted reason strings; four earlier and three further OLS/weight/both-copy controls rejected. A single-real-case end-to-end reconciliation invokes the actual validator against the frozen tree: PASS. |
+| R1-3 stage membership | `prepare.py` includes the runner manifest copy before the upload checksum; stage compares copies and does not add members. Python entrypoints disable local bytecode so their execution does not add upload files. Pilot resource JSON is outside upload in scratch config. JOB.md explains resume and makes the OPS transfer receipt authoritative for upload verification. | Real-freeze prepare, simulated installed-code check, repeated upload verification, and copied-upload verification: PASS. This does not execute NOTS stage or the OPS transfer helper. |
+| R1-4 retry durability | Exclusive retry claim flushes and fsyncs before sbatch; accepted-ID append flushes and fsyncs. | Scheduler mock checks fsync ordering and accepted-ID fsync, plus retained intent when sbatch client fails: PASS. |
+| Costs | Both JOB.md files distinguish physical/billed forecasts, requested DEV wall ceiling, and require production resources from the inspected NOTS pilot. | Documentation reviewed against R1. |
+
+Follow-up: frozen-runner saved records now cover pilot-null, pilot-singleton and whole-fit-failure: **3/3 positives** and **6/6 rehashed saved-record corruptions** pass their expected validator checks. Windows' original failure runtime rounded to zero, which the frozen validator rejects; a second genuine runner-written failure uses a 50-ms test-wrapper delay before the unchanged assertion. The wrapper also normalizes the all-NA CSV `k` column's inferred logical type to the frozen registry's integer type before invoking the unchanged frozen payload check. Details are in `BENCH_F3_PROD/tests/fixtures/README.md`.
+
+Limits before release: actual NOTS task execution, full 26/2,400-unit reconciliation and the OPS transfer round trip require OPS and real remote outputs. The local real integration is **one case**, not a completed campaign. Independent review of these fixes remains required. No release or submission should be inferred from these local checks.

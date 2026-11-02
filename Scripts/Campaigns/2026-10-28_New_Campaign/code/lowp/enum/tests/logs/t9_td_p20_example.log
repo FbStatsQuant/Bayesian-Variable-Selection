@@ -1,0 +1,48 @@
+dataset p0020_S1_r001  truth 3 7 14 16 
+
+== d = 1: centres 272, scores 19072 (formula 19072), 0.04 s
+literal:
+                   a       b      c
+centres     255.0000 16.0000 1.0000
+viol        240.0000  0.0000 0.0000
+viol_strict 240.0000  0.0000 0.0000
+min_margin   -5.5884  3.0716 3.0716
+  TD holds: FALSE  strict: FALSE 
+toward:
+                   a       b      c
+centres     255.0000 16.0000 1.0000
+viol          0.0000  0.0000 0.0000
+viol_strict   0.0000  0.0000 0.0000
+min_margin   10.7527  3.0716 3.0716
+  TD holds: TRUE  strict: TRUE 
+literal violators: best move that beats the best target move (counts)
+      best_other_move
+clause swap_null_out_truth_in
+     a                    240
+worst literal violator: centre 10 clause a margin -5.588 | target add 14 45.94 | beaten by swap 10->14 ( swap_null_out_truth_in ) 51.529 
+
+== d = 2: centres 2192, scores 180352 (formula 180352), 0.06 s
+literal:
+                    a        b      c
+centres     2055.0000 136.0000 1.0000
+viol        2040.0000   0.0000 0.0000
+viol_strict 2040.0000   0.0000 0.0000
+min_margin    -5.5884   0.0003 3.0716
+  TD holds: FALSE  strict: FALSE 
+toward:
+                    a        b      c
+centres     2055.0000 136.0000 1.0000
+viol           0.0000   0.0000 0.0000
+viol_strict    0.0000   0.0000 0.0000
+min_margin    10.7527   2.6811 3.0716
+  TD holds: TRUE  strict: TRUE 
+literal violators: best move that beats the best target move (counts)
+      best_other_move
+clause swap_null_out_truth_in
+     a                   2040
+worst literal violator: centre 10 clause a margin -5.588 | target add 14 45.94 | beaten by swap 10->14 ( swap_null_out_truth_in ) 51.529 
+
+Dry-run counts for p = 1000, K = 100, s0 = 14:
+  d=0: centres 16384, scores 130228224
+  d=1: centres 16171008, scores 144447561728
+  d=2: centres 7972323328, scores 79041632043008

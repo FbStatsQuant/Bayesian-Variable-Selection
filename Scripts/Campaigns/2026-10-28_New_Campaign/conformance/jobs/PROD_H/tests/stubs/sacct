@@ -1,0 +1,19 @@
+#!/bin/bash
+# stub sacct: serves $STUB_DIR/sacct.psv (header JobID|JobName|State|ExitCode|Elapsed|MaxRSS|NodeList|End|AllocCPUS|CPUTimeRAW).
+# Honours -j ids, -o/--format fields (width suffixes %N stripped), -n (no header), -X (job-level rows only). SACCT_FAIL=1 fails.
+[ "${SACCT_FAIL:-0}" = 1 ] && { echo "fabricated sacct outage" >&2; exit 18; }
+# STUB_SACCT_DELAY=s: accounting answers after s seconds (Sol review 5, R5-1: a retirement whose terminal-state query is slow)
+if [ -n "${STUB_SACCT_DELAY:-}" ]; then sleep "$STUB_SACCT_DELAY"; fi
+fields=JobID; ids=""; noh=0; xflag=0
+while [ $# -gt 0 ]; do case "$1" in
+  -o|--format) fields=$2; shift 2;; --format=*) fields=${1#--format=}; shift;;
+  -j) ids=$2; shift 2;; -S) shift 2;; -n) noh=1; shift;; -X) xflag=1; shift;; *) shift;; esac; done
+[ -f "$STUB_DIR/sacct.psv" ] || exit 0
+awk -F'|' -v fields="$fields" -v ids="$ids" -v noh=$noh -v xf=$xflag '
+  BEGIN { nf = split(fields, f, ","); for (i = 1; i <= nf; i++) sub(/%.*/, "", f[i]); ni = split(ids, idl, ","); for (i = 1; i <= ni; i++) want[idl[i]] = 1 }
+  NR == 1 { for (i = 1; i <= NF; i++) col[$i] = i
+            if (!noh) { line = ""; for (i = 1; i <= nf; i++) line = line (i > 1 ? "|" : "") f[i]; print line }
+            next }
+  { split($1, a, /[_.]/); if (ids != "" && !(a[1] in want)) next
+    if (xf && $1 ~ /\./) next
+    line = ""; for (i = 1; i <= nf; i++) line = line (i > 1 ? "|" : "") (f[i] in col ? $(col[f[i]]) : ""); print line }' "$STUB_DIR/sacct.psv"

@@ -1,0 +1,22 @@
+P1	A	elementary_I	Proposition P1 (exact composite start)	Sections 0, 1, 2 and 9
+T1	A	elementary_I	Theorem T1 (discrepancy identity)	Sections 0, 1, 3 and 9
+L1	A	elementary_I	Lemma L1 (the determinant term: sign and size), including Theorem 4.4 (Delta_det >= 0)	Sections 0, 1, 4 and 9
+L2	A	elementary_I	Lemma L2 (the off-block term)	Sections 0, 1, 5 and 9
+L3	A	elementary_I	Lemma L3 (concentration propagates along the bridge), including its interval form	Sections 0, 6 and 9
+L5	A	elementary_I	Lemma L5 (stage count under local sub-Gaussianity)	Sections 0, 8 and 9
+L7	A	elementary_I	Lemma L7 (single-model identity for chi-square), including the endpoint form (Corollary 7.3)	Sections 0, 6 (interval form, used by 7.3), 7 and 9
+T3	B	T3_T11	Theorem T3 (the start's limit and the switch gap), including Claim (R-suff)	Sections 0 to 5 and 8
+T11	B	T3_T11	Theorem T11 (what the start screens, and which switches occur), parts (i)-(iii) and the corrected (iv) with its counterexample	Sections 0, 1, 2, 6, 7 and 8 (and Sections 3-4 only where T11 uses them)
+T4	B	T4	Theorem T4 (two-state switch: the schedule is cheap)	the whole file
+T5	B	T5	Theorem T5 (mode loss: the particles are the risk), parts (i)-(vi) including the adaptive part	the whole file
+L4	B	foundations	Lemma L4 (monotonicity and optimality of the greedy schedule, with the termination bound)	Sections 0, 2 and 6
+L6	B	foundations	Lemma L6 (the BB(1,p) prior)	Sections 0, 3 and 6
+P6	B	foundations	Proposition P6 (kernel correctness)	Sections 0, 4 and 6
+P7	B	foundations	Proposition P7 (frozen schedules: unbiasedness and free lower bounds)	Sections 0, 5 and 6
+F4	B	foundations	Fact F4 (fixed-design Kullback-Leibler projection)	Sections 0, 1 and 6
+T6	C	T6	Theorem T6 (posterior dimension), in its nonasymptotic form, and Corollary T9a(i)	the whole file
+T7	C	T7_T8	Theorem T7 (no supersets)	Sections 0 to 4 and 6
+T8	C	T7_T8	Theorem T8 (selection consistency and the HPM)	Sections 0 to 3, 5.1 to 5.4, and 6
+T10	C	T7_T8	Theorem T10 (per-variable sure screening)	Sections 0 to 3, 5 (in particular 5.5) and 6
+T9	C	T9_C9	Theorem T9 (prediction and variance contraction), including Corollary 5.1 and Corollary T9a(iii) with the sharp dimension bound of Section 9	Sections 0 to 6, 8 and 9
+C9	C	T9_C9	Corollary C9 (random design: Hellinger contraction), including the counterexample of Remark 7.3	Sections 0 to 4 (as used), 7 and 8

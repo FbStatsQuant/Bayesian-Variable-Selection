@@ -1,0 +1,12 @@
+#!/bin/bash
+# fake OPS guard with the D7 limits written exactly like guard.sh; usage numbers from FAKE_HOME_GB / FAKE_CAMP_KB
+set -uo pipefail
+ADD_MB=${1:-0}
+CAMP_LIMIT_KB=$((7 * 1024 * 1024))
+HOME_LIMIT_KB=$((9 * 1024 * 1024))
+HOME_KB=$(awk -v g="${FAKE_HOME_GB:-8.73}" 'BEGIN{printf "%d", g*1048576}'); CAMP_KB=${FAKE_CAMP_KB:-20000}
+S=OK; RC=0; W=""
+if [ $((CAMP_KB + ADD_MB * 1024)) -gt $CAMP_LIMIT_KB ]; then S=REFUSE; RC=1; W=" campaign+add>limit"; fi
+if [ $((HOME_KB + ADD_MB * 1024)) -gt $HOME_LIMIT_KB ]; then S=REFUSE; RC=1; W="$W home+add>limit"; fi
+echo "2026 | home $(awk -v k=$HOME_KB 'BEGIN{printf "%.2f", k/1048576}') GB of 10.00 GB | campaign_home 0.02 GB | campaign_scratch 0.00 GB (info) | planned_add ${ADD_MB} MB | $S${W:+ (${W# })}"
+exit $RC

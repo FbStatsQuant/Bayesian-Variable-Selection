@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-30T16:30:54.403751+00:00",
+  "python": "3.12.7 | packaged by Anaconda, Inc. | (main, Oct  4 2024, 13:17:27) [MSC v.1929 64 bit (AMD64)]",
+  "executable": "C:\\Users\\felip\\anaconda3\\python.exe",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "pid": 1268,
+  "R": "C:/Program Files/R/R-4.4.1/bin/Rscript.exe --vanilla",
+  "threads": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "remote_connections": 0,
+  "fits": 0,
+  "workload_process_limit": 2,
+  "delegation": false,
+  "frozen_command": [
+    "C:\\Users\\felip\\anaconda3\\python.exe",
+    "-B",
+    "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\I_2026-10-28_New_Campaign\\bench_audit\\jobs\\BENCH_F3_PROD\\runner\\frozen.py",
+    "check",
+    "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\I_2026-10-28_New_Campaign\\code\\bench_v2\\F3_AdaptiveLasso",
+    "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\I_2026-10-28_New_Campaign\\code\\bench_v2\\MANIFEST_SHA256.txt",
+    "C:\\Users\\felip\\OneDrive\\Documents\\Local_to_global_Bayesian\\02_Experiments\\I_2026-10-28_New_Campaign\\bench_audit\\jobs\\BENCH_F3_PROD\\runner\\freeze.json"
+  ]
+}

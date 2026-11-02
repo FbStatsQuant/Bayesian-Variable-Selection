@@ -1,0 +1,268 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\Zh}{\widehat Z}
+\newcommand{\Pc}{\mathbb{P}_c}
+\newcommand{\Ec}{\mathbb{E}_c}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\Etwo}{\mathrm{E2}_{\mathrm{final}}}
+\title{T31 (T22), part (i): Markov coverage of $0.05\,\Zh$, the log bias, and what the coverage does not give}
+\author{Proof v3 (v1 with exposition revisions after two review rounds)}
+\date{2026-10-22}
+\begin{document}
+\maketitle
+
+All notation is that of STATEMENT.md. Throughout, $c$ is a fixed successful calibration value; $\Pc,\Ec$ are the probability
+and expectation over the final streams 10--13 with the calibration fixed at $c$.
+
+\section{Positivity and finiteness}
+
+\begin{lemma}\label{lem:pos}
+Under EX-A and EX-S:
+\begin{enumerate}[label=(\roman*)]
+\item $m(S)\in(0,\infty)$ for every $S\in\Omega$; hence $Z\in(0,\infty)$.
+\item $\bar Z_0\in(0,\infty)$ and $d(S)\in\mathbb{R}$ for every $S\in\Omega$.
+\item For each $r$, $\Zh_r$ is a random variable under $\Pc$ taking finitely many values, all in $(0,\infty)$. Hence
+$\Zh=\frac14\sum_r\Zh_r$ and $\log\Zh$ are random variables taking finitely many values, $\Zh>0$, and $\log\Zh$ is
+bounded, in particular integrable.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) For $S=\emptyset$, $D_\emptyset=1$ and $Q_\emptyset=y^\top y=n-1>0$. Let $S\neq\emptyset$, $k=|S|$, and take a full
+singular value decomposition $X_S=U\Sigma V^\top$ with $U\in\mathbb{R}^{n\times n}$, $V\in\mathbb{R}^{k\times k}$ orthogonal
+and $\Sigma\in\mathbb{R}^{n\times k}$ with diagonal entries $\sigma_1,\dots,\sigma_{\min(n,k)}\ge0$ and zeros elsewhere.
+Since $G_S=X_S^\top X_S\succeq0$, both $H_S=(n+1)G_S+I$ and $G_S+I$ are positive definite, so $D_S=\det H_S/\det(G_S+I)>0$.
+Further $H_S=V\{(n+1)\Sigma^\top\Sigma+I\}V^\top$, so
+\[
+nX_SH_S^{-1}X_S^\top=U\,\bigl[n\Sigma\{(n+1)\Sigma^\top\Sigma+I\}^{-1}\Sigma^\top\bigr]\,U^\top,
+\]
+and the bracket is diagonal with entries $n\sigma_j^2/\{(n+1)\sigma_j^2+1\}\in[0,n/(n+1))$ and zeros. Hence
+$I_n-nX_SH_S^{-1}X_S^\top$ has all eigenvalues at least $1/(n+1)$, and
+\[
+Q_S=y^\top y-nz_S^\top H_S^{-1}z_S=y^\top\bigl(I_n-nX_SH_S^{-1}X_S^\top\bigr)y\ \ge\ \frac{y^\top y}{n+1}>0 .
+\]
+With $a_0=b_0=0.01$ and $\nu=0.01+n/2$, the constants $(2b_0)^{a_0}$, $\Gamma(\nu)$, $\Gamma(a_0)$, $\pi^{n/2}$ are finite and
+positive, $D_S^{-1/2}\in(0,\infty)$ and $(2b_0+Q_S)^{-\nu}\in(0,\infty)$; so $m(S)\in(0,\infty)$. Since $1\le p$ and
+$K\le p\le 2p-1$, each $\binom{2p-1}{k}$ with $k\le K$ is a positive integer, so $w(k)>0$, $W_K\in(0,\infty)$ and
+$\varpi(S)>0$. As $\Omega$ is finite, $Z=\sum_\Omega\varpi(S)m(S)\in(0,\infty)$.
+
+(ii) By (i), $\mathrm{BF}(S)=m(S)/m(\emptyset)\in(0,\infty)$ for $S\in\Omega$. The table entries that enter $\gamma_0$
+and $d$ are $r_b(S\cap C_b)$ with $S\in\Omega$; since $|S\cap C_b|\le|S|\le K$, $S\cap C_b\in\Omega$ and so
+$r_b(S\cap C_b)=\mathrm{BF}(S\cap C_b)\in(0,\infty)$. Hence $\gamma_0(S)\in(0,\infty)$, $\bar Z_0=\sum_\Omega\gamma_0(S)\in(0,\infty)$ ($\Omega$ finite and
+nonempty), and $d(S)=\log\mathrm{BF}(S)-\sum_b\log r_b(S\cap C_b)$ is a finite real number.
+
+(iii) Given $c$, the number of stages $T$ and the particle count $N_e$ are fixed positive integers ($T\ge1$ because
+$\phi_0=0<\phi_T=1$; $N_e\ge1$ as a particle count) and the grid $\phi_0,\dots,\phi_T$ is fixed. By STATEMENT.md \S1 every
+particle state $S_{r,i}^{(t-1)}$ lies in the finite set $\Omega$, so the array
+$A_r=(S_{r,i}^{(t-1)})_{1\le i\le N_e,\,1\le t\le T}$ takes values in the finite set $\Omega^{N_eT}$. By the formula of
+STATEMENT.md \S1, $\Zh_r=g(A_r)$ with the deterministic map
+\[
+g(a)=m(\emptyset)\,\bar Z_0\prod_{t=1}^T\frac1{N_e}\sum_{i=1}^{N_e}\exp\{(\phi_t-\phi_{t-1})\,d(a_{i,t})\}.
+\]
+By (i)--(ii) every factor is finite and positive (an average of finitely many finite positive numbers), so $g$ maps the
+finite set $\Omega^{N_eT}$ into $(0,\infty)$; under EX-A this value is computed exactly. Hence, pointwise on the sample
+space, $\Zh_r\in g(\Omega^{N_eT})$, a finite subset of $(0,\infty)$. Each $\Zh_r$ is an output of the algorithm, hence a
+random variable under $\Pc$ by EX-S. The same then holds for $\Zh=\frac14\sum_r\Zh_r$, and $\log\Zh$ is a random
+variable taking finitely many real values, so it is bounded.
+\end{proof}
+
+\section{Coverage and log bias: conclusions (a) and (b)}
+
+The next lemma isolates the only properties of $\Zh$ that (a) and (b) use.
+
+\begin{lemma}\label{lem:core}
+Let $W$ be a random variable on some probability space, taking finitely many values, all in $(0,\infty)$, with
+$\mathbb{E}W=Z\in(0,\infty)$. Then for every $\alpha\in(0,1)$, $\mathbb{P}(Z\ge\alpha W)\ge1-\alpha$, and
+$\mathbb{E}\log W\le\log Z$.
+\end{lemma}
+
+\begin{proof}
+Since $W\ge0$, pointwise $W\ge (Z/\alpha)\mathbf 1\{W>Z/\alpha\}$; taking expectations,
+$Z=\mathbb{E}W\ge(Z/\alpha)\,\mathbb{P}(W>Z/\alpha)$, so $\mathbb{P}(\alpha W>Z)\le\alpha$ (Markov's inequality), and
+$\mathbb{P}(Z\ge\alpha W)=1-\mathbb{P}(\alpha W>Z)\ge1-\alpha$.
+
+Let $v_1,\dots,v_m\in(0,\infty)$ be the distinct values of $W$ and $p_i=\mathbb{P}(W=v_i)$, so $\sum_ip_i=1$ and
+$\sum_ip_iv_i=Z$. By concavity of $\log$ on $(0,\infty)$ (finite Jensen inequality),
+$\mathbb{E}\log W=\sum_ip_i\log v_i\le\log\sum_ip_iv_i=\log Z$.
+\end{proof}
+
+\begin{theorem}[Conclusions (a) and (b)]\label{thm:ab}
+Under EX-A, EX-S, CAL and (H-T12), for every successful calibration value $c$:
+\begin{enumerate}[label=(\alph*)]
+\item $\Pc(Z\ge\alpha\Zh)\ge1-\alpha$ for every $\alpha\in(0,1)$; in particular $\Pc(Z\ge0.05\,\Zh)\ge0.95$.
+\item $\log\Zh$ is a bounded (hence integrable) random variable under $\Pc$ and $\Ec\log\Zh\le\log Z$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:pos}, under $\Pc$ the variable $W=\Zh$ takes finitely many values, all in $(0,\infty)$, $\log\Zh$ is
+bounded, and $Z\in(0,\infty)$. By (H-T12), $\Ec\Zh=Z$. Lemma~\ref{lem:core} gives (a) and the inequality in (b); the case
+$\alpha=0.05$ gives $\Pc(Z\ge0.05\,\Zh)\ge0.95$.
+\end{proof}
+
+\begin{remark}[$\Pc$ and conditioning on $\mathcal C$]\label{rem:cond}
+STATEMENT.md defines $\Pc,\Ec$ as the law of the final run with the calibration frozen at $c$, and all conclusions are
+proved for $\Pc$ for every successful $c$. Under CAL and EX-S the final outputs are a function $F(c,U)$ of the
+calibration and the final streams $U$, which are independent of $\mathcal C$; by the standard substitution (freezing)
+property of conditional expectation, on the event of a successful calibration,
+$\mathbb{P}(\,\cdot\mid\mathcal C)=\mathbb{P}_{\mathcal C}$ almost surely (for jointly measurable $F$). This is how the
+source's $\mathbb{P}_{\mathcal C},\mathbb{E}_{\mathcal C}$ are read; CAL is used only here.
+\end{remark}
+
+\begin{remark}\label{rem:class}
+Let $\cL(Z)$ be as in STATEMENT.md \S3: joint laws of $(\Zh_1,\dots,\Zh_4)$ with i.i.d.\ coordinates, each taking finitely
+many values in $(0,\infty)$, with $\mathbb{E}\Zh_r=Z$. For every law in $\cL(Z)$, $\Zh=\frac14\sum_r\Zh_r$ takes finitely
+many values in $(0,\infty)$ and $\mathbb{E}\Zh=Z$; so Lemma~\ref{lem:core} applies and (a), (b) hold for it. The proof of
+Theorem~\ref{thm:ab} uses only these properties of $\Zh$ (positivity, finitely many values, mean $Z$). The extra
+properties in the definition of $\cL(Z)$ (i.i.d.\ islands, islandwise mean $Z$) are not hypotheses about the actual final
+run; adding them to the class only makes the non-implications (c) and (d) stronger.
+\end{remark}
+
+\section{The bound is one-sided: conclusion (c)}
+
+\begin{lemma}[rare-tail law]\label{lem:rare}
+Let $c_0>0$ and $\eta\in(0,1)$. Put $c'=\min(c_0,1)/2\in(0,\tfrac12]$, $\varepsilon=\eta/4\in(0,\tfrac14)$ and
+$B=\{1-(1-\varepsilon)c'\}/\varepsilon$. Let $\Zh_1,\dots,\Zh_4$ be i.i.d.\ with $\mathbb{P}(\Zh_r=c'Z)=1-\varepsilon$ and
+$\mathbb{P}(\Zh_r=BZ)=\varepsilon$. This law belongs to $\cL(Z)$ and $\mathbb{P}(\Zh<c_0Z)\ge1-\eta$.
+\end{lemma}
+
+\begin{proof}
+$(1-\varepsilon)c'<1$, so $B>0$; and $B-c'=(1-c')/\varepsilon>0$, so the two values are distinct and positive.
+$\mathbb{E}\Zh_r=Z\{(1-\varepsilon)c'+\varepsilon B\}=Z$. So the law is in $\cL(Z)$. On the event
+$A=\{\Zh_1=\dots=\Zh_4=c'Z\}$ we have $\Zh=c'Z<c_0Z$ (as $c'\le c_0/2$), and by independence and Bernoulli's inequality
+$\mathbb{P}(A)=(1-\varepsilon)^4\ge1-4\varepsilon=1-\eta$.
+\end{proof}
+
+\begin{corollary}[Conclusion (c)]\label{cor:c}
+For every $c_0>0$ and $\eta\in(0,1)$ some law in $\cL(Z)$ has $\mathbb{P}(\Zh<c_0Z)\ge1-\eta$. Consequently, for no
+constants $0<c_1\le1\le c_2<\infty$ and $\gamma>0$ does $\mathbb{P}(c_1Z\le\Zh\le c_2Z)\ge\gamma$ hold for every law in
+$\cL(Z)$, although every law in $\cL(Z)$ satisfies (a).
+\end{corollary}
+
+\begin{proof}
+The first sentence is Lemma~\ref{lem:rare}. For the second, given $c_1,c_2,\gamma$ we may take $\gamma\le1$ (otherwise the
+bound fails trivially). Apply Lemma~\ref{lem:rare} with $c_0=c_1$ and $\eta=\gamma/2\in(0,\tfrac12]$: then
+$\mathbb{P}(c_1Z\le\Zh\le c_2Z)\le\mathbb{P}(\Zh\ge c_1Z)\le\eta<\gamma$. The last clause is Remark~\ref{rem:class}.
+\end{proof}
+
+\begin{remark}
+On the event $A$ of Lemma~\ref{lem:rare}, $Z/\Zh=1/c'$, which is arbitrarily large as $c_0\downarrow0$, while the coverage
+event $\{Z\ge\alpha\Zh\}$ holds on $A$ for every $\alpha\in(0,1)$. So the reported $0.05\,\Zh$ is a one-sided lower
+confidence bound for $Z$: the coverage event places no upper limit on $Z/\Zh$, and $[0.05\,\Zh,\infty)$ is not a
+relative-error interval.
+\end{remark}
+
+\section{Conditioning on the final E2 flag: conclusion (d)}
+
+\begin{lemma}[SD and range]\label{lem:sd}
+Let $x\in\mathbb{R}^4$ with range $R=\max_ix_i-\min_ix_i$ and $SS=\sum_i(x_i-\bar x)^2$. Then $SS\ge R^2/2$, so the
+population SD $\sqrt{SS/4}$ and the sample SD $\sqrt{SS/3}$ are both at least $R/(2\sqrt2)$. In particular, if $R\ge3$
+both exceed $1$, and if $R=0$ both equal $0$.
+\end{lemma}
+
+\begin{proof}
+If $R=0$ all coordinates are equal and $SS=0$. Otherwise let $u=\max_ix_i$, $v=\min_ix_i$, attained at distinct indices.
+For any real $m$, $(u-m)^2+(v-m)^2=\tfrac12(u-v)^2+2\{\tfrac12(u+v)-m\}^2\ge\tfrac12R^2$; with $m=\bar x$ this gives
+$SS\ge R^2/2$. Then $SS/4\ge R^2/8$ and $SS/3\ge R^2/6\ge R^2/8$. If $R\ge3$, both SDs are at least
+$3/(2\sqrt2)=\sqrt{9/8}>1$.
+\end{proof}
+
+\begin{corollary}\label{cor:flag}
+Suppose each $\Zh_r/Z$ takes values in a finite set $\mathcal A\subset(0,\infty)$ such that $|\log a-\log a'|\ge3$ for all
+distinct $a,a'\in\mathcal A$. Then, for either SD divisor, $\Etwo$ is not raised if and only if
+$\Zh_1=\Zh_2=\Zh_3=\Zh_4$.
+\end{corollary}
+
+\begin{proof}
+$\log\Zh_r=\log Z+\log(\Zh_r/Z)$, and adding a constant does not change the SD. If all four are equal, the SD is
+$0\le1$. If not, two of them take distinct values in $\mathcal A$, so the range of $(\log\Zh_r)_r$ is at least $3$ and, by
+Lemma~\ref{lem:sd}, the SD exceeds $1$.
+\end{proof}
+
+\begin{theorem}[Conclusion (d1)]\label{thm:d1}
+Let $\alpha\in(0,1)$, $a=\tfrac14$, $b=8/\alpha$, $\varepsilon=3\alpha/(32-\alpha)$, and let $\Zh_1,\dots,\Zh_4$ be
+i.i.d.\ with $\mathbb{P}(\Zh_r=aZ)=1-\varepsilon$, $\mathbb{P}(\Zh_r=bZ)=\varepsilon$. This law is in $\cL(Z)$,
+$\mathbb{P}(\Etwo\text{ raised})>0$, and $\mathbb{P}(Z\ge\alpha\Zh\mid\Etwo\text{ raised})=0$, for either SD divisor.
+\end{theorem}
+
+\begin{proof}
+$0<3\alpha<32-\alpha$, so $\varepsilon\in(0,1)$. $\mathbb{E}\Zh_r/Z=a+\varepsilon(b-a)=\tfrac14+\frac{3}{4b-1}\cdot
+\frac{4b-1}{4}=1$. So the law is in $\cL(Z)$. Further $\log(b/a)=\log(32/\alpha)>\log32>3$ (as $e^3<20.1$), so
+Corollary~\ref{cor:flag} applies with $\mathcal A=\{a,b\}$: $\Etwo$ is raised iff the four values are not all equal.
+Hence $\mathbb{P}(\Etwo\text{ raised})=1-(1-\varepsilon)^4-\varepsilon^4$, which is positive because it is at least
+the probability $\varepsilon(1-\varepsilon)^3>0$ of the outcome $(bZ,aZ,aZ,aZ)$. On the event $\{\Etwo\text{ raised}\}$ at
+least one $\Zh_r$ equals $bZ$ and the others are at least $aZ>0$, so $\Zh\ge(b+3a)Z/4>bZ/4=2Z/\alpha$, i.e.\
+$\alpha\Zh>2Z>Z$. Thus the coverage event fails everywhere on $\{\Etwo\text{ raised}\}$.
+\end{proof}
+
+\begin{theorem}[Conclusion (d2)]\label{thm:d2}
+Let $\alpha\in(0,1)$ and $\gamma>0$. Put $h=2/\alpha$ and let $M$ be an integer with $M\ge h$ and
+$M^3\ge81/(\alpha^4\gamma)$. Let $\ell_k=he^{-3k}$ for $k=1,\dots,M$, $\bar\ell=M^{-1}\sum_{k=1}^M\ell_k$,
+$q=(1-\bar\ell)/(h-\bar\ell)$, and let $\Zh_1,\dots,\Zh_4$ be i.i.d.\ with $\mathbb{P}(\Zh_r=hZ)=q$ and
+$\mathbb{P}(\Zh_r=\ell_kZ)=(1-q)/M$ for each $k$. Then this law is in $\cL(Z)$, $\mathbb{P}(\Etwo\text{ not raised})>0$,
+and $\mathbb{P}(Z\ge\alpha\Zh\mid\Etwo\text{ not raised})<\gamma$, for either SD divisor. Taking $\gamma=1-\alpha$, the
+conditional coverage given that the flag is not raised is below $1-\alpha$.
+\end{theorem}
+
+\begin{proof}
+\emph{The law is well defined and in $\cL(Z)$.} Using $M\ge h$,
+\[
+0<\bar\ell=\frac hM\sum_{k=1}^Me^{-3k}<\frac hM\cdot\frac{e^{-3}}{1-e^{-3}}=\frac hM\cdot\frac1{e^3-1}\le\frac1{e^3-1}<\frac1{19},
+\]
+since $e^3-1>19$ (as $e>2.718$ gives $e^3>2.718^3>20.07$). As $h=2/\alpha>2$, we have $0<\bar\ell<1<h$; so $0<1-\bar\ell<h-\bar\ell$ and $q\in(0,1)$. Moreover
+$q>(1-\tfrac1{19})/h=\tfrac{9}{19}\alpha>\alpha/3$. The values $h>\ell_1>\dots>\ell_M>0$ are distinct and the
+probabilities $q,(1-q)/M,\dots$ are positive and sum to $1$. Finally
+$\mathbb{E}\Zh_r/Z=qh+(1-q)\bar\ell=q(h-\bar\ell)+\bar\ell=1$. So the law is in $\cL(Z)$.
+
+\emph{The flag.} Consecutive values in $\mathcal A=\{h,\ell_1,\dots,\ell_M\}$ have log-differences exactly $3$, so any two
+distinct values differ in log by at least $3$, and Corollary~\ref{cor:flag} gives
+$\{\Etwo\text{ not raised}\}=\{\Zh_1=\dots=\Zh_4\}$. This event is the disjoint union of $H=\{\text{all four equal }hZ\}$,
+with $\mathbb{P}(H)=q^4>0$, and $L=\bigcup_k\{\text{all four equal }\ell_kZ\}$, with
+$\mathbb{P}(L)=M\{(1-q)/M\}^4=(1-q)^4M^{-3}$.
+
+\emph{Coverage on each part.} On $H$, $\Zh=hZ$ and $\alpha\Zh=2Z>Z$: coverage fails. On $\{\text{all four equal }
+\ell_kZ\}$, $\alpha\Zh=2e^{-3k}Z<Z$: coverage holds. Hence, with $x=(1-q)^4M^{-3}>0$,
+\[
+\mathbb{P}(Z\ge\alpha\Zh\mid\Etwo\text{ not raised})=\frac{x}{q^4+x}<\frac{x}{q^4}\le\frac{M^{-3}}{q^4}
+<\frac{81}{\alpha^4M^3}\le\gamma,
+\]
+using $(1-q)^4\le1$, $q>\alpha/3$ and $M^3\ge81/(\alpha^4\gamma)$.
+\end{proof}
+
+\begin{remark}[What (c) and (d) do and do not say]
+By Remark~\ref{rem:class}, every law used in Lemma~\ref{lem:rare} and Theorems~\ref{thm:d1}--\ref{thm:d2} satisfies (a) and
+(b), has i.i.d.\ islands with islandwise mean $Z$, and has $\Zh$ positive with finitely many values. So none of these
+properties --- in particular, none of the properties of the final-run evidence used to prove (a) and (b) --- implies a
+two-sided relative-error bound, or coverage conditional on either value of the final E2 flag. These are non-implication
+statements about the properties used; they do not assert that a particular data set and calibration realise the laws
+exhibited.
+
+This reading is the one intended, and the per-data-set reading about the actual estimator is false, as follows. For
+fixed data, put $d_{\min}=\min_\Omega d$, $d_{\max}=\max_\Omega d$ and $\Delta=d_{\max}-d_{\min}$, and let
+$A=m(\emptyset)\bar Z_0>0$. The grid is strictly increasing, so $\phi_t-\phi_{t-1}>0$ and each term
+$\exp\{(\phi_t-\phi_{t-1})d(S)\}$, hence each stage average, lies in
+$[e^{(\phi_t-\phi_{t-1})d_{\min}},e^{(\phi_t-\phi_{t-1})d_{\max}}]$. Since $\sum_t(\phi_t-\phi_{t-1})=\phi_T-\phi_0=1$, every
+$\Zh_r$, and hence their average $\Zh$, lies in $[Ae^{d_{\min}},Ae^{d_{\max}}]$. By the definitions of $\gamma_0$ and $d$,
+$\varpi(S)\mathrm{BF}(S)=\gamma_0(S)e^{d(S)}$, so $Z/A=\sum_\Omega\gamma_0(S)e^{d(S)}/\bar Z_0$ is a $\gamma_0$-weighted average
+of the numbers $e^{d(S)}$ and $Z$ lies in the same interval. Hence, surely, $e^{-\Delta}Z\le\Zh\le e^{\Delta}Z$. So, for
+fixed data, the actual estimator does satisfy a two-sided relative-error bound, but with a data-dependent constant
+$e^{\Delta}$ that is not among the reported quantities listed in STATEMENT.md (the $\Zh_r$, $\Zh$ and $0.05\,\Zh$) and that
+no property of $\cL(Z)$ supplies. Similarly, the four numbers $\log\Zh_r$ lie in an interval of length at most $\Delta$, so
+their sum of squared deviations is at most $\Delta^2$ (as $\sum_i(x_i-\bar x)^2\le\sum_i(x_i-m)^2$ for the midpoint $m$ of
+the interval, and each of the four terms is at most $(\Delta/2)^2$), so
+the population SD is at most $\Delta/2$ and the sample SD at most $\Delta/\sqrt3$; thus, if $\Delta\le\sqrt3$, $\Etwo$ is
+never raised, and if $e^{\Delta}\le1/\alpha$, coverage holds surely. For such data, conditioning on the flag would
+preserve coverage; (d) says only that coverage is not preserved \emph{automatically}, that is, as a consequence of the
+properties used in (a)--(b). One witness flag (E2) suffices for this; a flag of positive probability independent of
+$\Zh$ would preserve coverage. Whether laws like those of (c)--(d) are realised by the actual final run for some data
+set is not addressed here.
+\end{remark}
+
+\end{document}

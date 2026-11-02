@@ -1,0 +1,255 @@
+\documentclass[11pt]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,columns=fullflexible,frame=single}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}[lemma]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[lemma]{Remark}
+
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\Zh}{\widehat Z}
+\newcommand{\qh}{\widehat q}
+\newcommand{\PIPh}{\widehat{\mathrm{PIP}}}
+\newcommand{\PIP}{\mathrm{PIP}}
+\newcommand{\Zb}{\bar Z}
+\newcommand{\ind}{\mathbf 1}
+\newcommand{\Om}{\Omega}
+
+\title{T12 (T8): frozen-run evidence and recorded Rao--Blackwell identities\\[2pt] \large Proof, version 5}
+\author{SMC-BVS v3 theory programme}
+\date{2026-10-22}
+
+\begin{document}
+\maketitle
+
+\noindent We prove every conclusion of \texttt{STATEMENT.md}, with its definitions, notation and hypotheses (EX-A, START, EX-S, CAL, the randomness model (R1)--(R3), the success event $\cA$). Section numbers refer to this document. All functions on $\Om$ are bounded because $\Om$ is finite, and every random quantity below is bounded, so all expectations exist. For a function $h$ on $\Om$ and a Markov kernel $P$ on $\Om$, $Ph(x)=\sum_y P(x,y)h(y)$; for a measure $\mu$ on $\Om$, $\mu(h)=\sum_x\mu(x)h(x)$ and $\mu P(y)=\sum_x\mu(x)P(x,y)$. We write $J_j=\{S\in\Om: j\in S\}$, so $\PIP_j=\pi(J_j)=\pi(\ind_{J_j})$. Parts (i), (ii) and (iv.a)--(iv.b) are proved for the frozen run $I(c)$ with arbitrary integer parameters. The method's final island is the case $N=N_e$, $M=4$, $L'=L$ with the stage-0 flag unset; other values are generalisations. START is an imported dependency (T09(i)): it is what makes the stage-0 draws and the independence proposals exact $\pi_0$ draws and $\Zb_0$ exact, as the definition of $I(c)$ requires.
+
+\section{Deterministic facts}
+
+\begin{lemma}[bridge identities]\label{lem:bridge}
+For every real $\varphi$, $\Zb_\varphi\in(0,\infty)$ and $q_\varphi(S)>0$ for every $S\in\Om$. For $t=1,\dots,T$ and every $h:\Om\to\R$,
+\[ Z_{t-1}\,q_{t-1}(G_t h)=Z_t\,q_t(h). \]
+Moreover $m(\emptyset)\Zb_1=Z$, so $Z_T=Z$; and $Z_0=m(\emptyset)\Zb_0$.
+\end{lemma}
+\begin{proof}
+$\gamma_\varphi(S)=\gamma_0(S)e^{\varphi d(S)}>0$ because $\varpi>0$ and $r_b>0$; $\Om$ is finite, so $\Zb_\varphi\in(0,\infty)$. Since $\varphi_{t-1}+\Delta_t=\varphi_t$,
+$q_{t-1}(x)G_t(x)=\gamma_0(x)e^{\varphi_{t-1}d(x)}e^{\Delta_t d(x)}/\Zb_{\varphi_{t-1}}=\gamma_{\varphi_t}(x)/\Zb_{\varphi_{t-1}}$. Hence
+$Z_{t-1}q_{t-1}(G_th)=m(\emptyset)\Zb_{\varphi_{t-1}}\sum_x \gamma_{\varphi_t}(x)h(x)/\Zb_{\varphi_{t-1}}=m(\emptyset)\Zb_{\varphi_t}q_t(h)=Z_tq_t(h)$.
+Finally $\gamma_0(S)e^{d(S)}=\varpi(S)\prod_b r_b(S\cap C_b)\cdot \mathrm{BF}(S)/\prod_b r_b(S\cap C_b)=\varpi(S)m(S)/m(\emptyset)$, so $m(\emptyset)\Zb_1=\sum_S\varpi(S)m(S)=Z$.
+\end{proof}
+
+\begin{lemma}[elementary steps are $q_\varphi$-reversible]\label{lem:rev}
+Fix a real $\varphi$. Each elementary step of STATEMENT \S1 (Gibbs coordinate $j$, uniform swap, neighbour swap, independence proposal) defines a Markov kernel $K_e$ on $\Om$ that satisfies detailed balance with respect to $q_\varphi$: $q_\varphi(S)K_e(S,S')=q_\varphi(S')K_e(S',S)$ for all $S,S'\in\Om$. Consequently $q_\varphi K_e=q_\varphi$.
+\end{lemma}
+\begin{proof}
+Write $q=q_\varphi$, $\gamma=\gamma_\varphi$, $\Zb=\Zb_\varphi$. Detailed balance for $S=S'$ is trivial. Summing it over $S$ gives $q K_e(S')=q(S')\sum_SK_e(S',S)=q(S')$. So it suffices to check $S\ne S'$, after checking that each step stays in $\Om$ with total probability one.
+
+\emph{Gibbs coordinate $j$.} At $S$ the step moves to $S^+=S\cup\{j\}$ (only if $|S^+|\le K$) or to $S^-=S\setminus\{j\}$, with probabilities $o_j(S,\varphi)$ and $1-o_j(S,\varphi)$. Both targets are in $\Om$ whenever they are used, since $|S^-|\le |S|\le K$. The only transitions between distinct states are between some pair $\{U,U\cup\{j\}\}$ with $j\notin U$ and $|U|+1\le K$. From either member of such a pair, $S^+=U\cup\{j\}$ and $S^-=U$, so $K_e(U,U\cup\{j\})=\gamma(U\cup\{j\})/(\gamma(U\cup\{j\})+\gamma(U))$ and $K_e(U\cup\{j\},U)=\gamma(U)/(\gamma(U\cup\{j\})+\gamma(U))$. Then
+$q(U)K_e(U,U\cup\{j\})=\gamma(U)\gamma(U\cup\{j\})/(\Zb(\gamma(U\cup\{j\})+\gamma(U)))=q(U\cup\{j\})K_e(U\cup\{j\},U)$. No other pair of distinct states communicates, and every other $K_e(S,S')$ with $S\ne S'$ is $0$ in both directions.
+
+\emph{Uniform swap.} If $|S|\in\{0,p\}$ the step stays at $S$. Otherwise, with $k=|S|\in(0,p)$, the pair $(j,l)\in S\times([p]\setminus S)$ has probability $1/(k(p-k))$. It proposes $S'=S\setminus\{j\}\cup\{l\}$, with $|S'|=k\le K$, so $S'\in\Om$ and $S'\neq S$. The map $(j,l)\mapsto S'$ is injective (its inverse is $S'\mapsto(S\setminus S',\,S'\setminus S)$). Hence for $S'\ne S$, $K_e(S,S')=\frac{1}{k(p-k)}\min\{1,\gamma(S')/\gamma(S)\}$ if $|S\triangle S'|=2$ and $|S'|=|S|$, and $K_e(S,S')=0$ otherwise. This condition is symmetric in $(S,S')$ and $|S'|=k$, so
+$q(S)K_e(S,S')=\frac{1}{\Zb\,k(p-k)}\min\{\gamma(S),\gamma(S')\}=q(S')K_e(S',S)$.
+
+\emph{Neighbour swap.} At $S=\emptyset$ the step stays. Otherwise, with $k=|S|\ge1$, choose $j\in S$ with probability $1/k$. Let $A=N(j)\setminus S$. If $A=\emptyset$, stay. Else choose $l\in A$ with probability $1/|A|$ and propose $S'=S\setminus\{j\}\cup\{l\}$; then $|S'|=k$, $S'\in\Om$, $S'\ne S$. Put $A'=N(l)\setminus S'$. Since $l\in N(j)$, the symmetry of the graph gives $j\in N(l)$, and $j\notin S'$, so $j\in A'$ and $|A'|\ge1$; the acceptance probability $\min\{1,\gamma(S')|A|/(\gamma(S)|A'|)\}$ is well defined. The map $(j,l)\mapsto S'$ is injective as before. Hence for $S'\neq S$, $K_e(S,S')=\frac1{k|A|}\min\{1,\frac{\gamma(S')|A|}{\gamma(S)|A'|}\}$ when $S'=S\setminus\{j\}\cup\{l\}$ with $j\in S$ and $l\in N(j)\setminus S$, and $0$ otherwise. If $S'$ arises from $S$ through $(j,l)$, then $S$ arises from $S'$ through $(l,j)$: $l\in S'$, $j\in N(l)\setminus S'=A'$, and the sets used in the reverse move are $N(l)\setminus S'=A'$ and $N(j)\setminus S=A$. Hence $K_e(S',S)=\frac1{k|A'|}\min\{1,\frac{\gamma(S)|A'|}{\gamma(S')|A|}\}$, and
+\[ q(S)K_e(S,S')=\frac{1}{\Zb k}\min\Big\{\frac{\gamma(S)}{|A|},\frac{\gamma(S')}{|A'|}\Big\}=q(S')K_e(S',S). \]
+If $S'$ does not arise from $S$, then $S$ does not arise from $S'$ (by the same reversal), and both sides are $0$.
+
+\emph{Independence proposal.} $\pi_0$ is supported on $\Om$. For $S'\ne S$, $K_e(S,S')=\pi_0(S')\min\{1,e^{\varphi(d(S')-d(S))}\}$. Since $q(S)=\pi_0(S)e^{\varphi d(S)}\Zb_0/\Zb$,
+$q(S)K_e(S,S')=\frac{\Zb_0}{\Zb}\pi_0(S)\pi_0(S')\min\{e^{\varphi d(S)},e^{\varphi d(S')}\}$, which is symmetric.
+\end{proof}
+
+\begin{lemma}[state-independent prefixes; recordings]\label{lem:prefix}
+Fix a real $\varphi$, let $\Sigma$ be the set of orders (bijections from positions $\{1,\dots,m\}$ to labels), and let $\kappa:\Sigma\to\{0,\dots,m\}$. Define
+\[ P_\kappa=\frac1{m!}\sum_{\sigma\in\Sigma}K_{\sigma(1)}K_{\sigma(2)}\cdots K_{\sigma(\kappa(\sigma))}\qquad(\text{empty product}=\text{identity}). \]
+Then $q_\varphi P_\kappa=q_\varphi$. In particular the round kernel $K_\varphi=P_m$ is $q_\varphi$-invariant. Moreover, if $K_{g_j}$ is the Gibbs-$j$ kernel, then $K_{g_j}\ind_{J_j}=o_j(\cdot,\varphi)$ and $q_\varphi(o_j(\cdot,\varphi))=q_\varphi(J_j)$.
+\end{lemma}
+\begin{proof}
+By Lemma~\ref{lem:rev}, every $K_e$ preserves $q_\varphi$, so every finite product does, and so does every average of products. For the second claim, at $S$ the Gibbs-$j$ step ends in a state containing $j$ exactly when it moves to $S^+$, which happens with probability $o_j(S,\varphi)$ (this is $0$ when $|S^+|>K$, where the step moves to $S^-$). Hence $K_{g_j}\ind_{J_j}=o_j(\cdot,\varphi)$, and $q_\varphi(o_j)=(q_\varphi K_{g_j})(\ind_{J_j})=q_\varphi(J_j)$.
+\end{proof}
+
+\begin{lemma}[positivity]\label{lem:pos}
+Fix a real $\varphi$ and let $R_d=\max_\Om d-\min_\Om d$.
+\begin{enumerate}[label=(\alph*)]
+\item For every order $\sigma$ in which the independence label is last, and all $x,S\in\Om$, $K_{\sigma(1)}\cdots K_{\sigma(m)}(x,\{S\})\ge \pi_0(S)e^{-|\varphi|R_d}$. Hence $K_\varphi(x,\{S\})\ge \pi_0(S)e^{-|\varphi|R_d}/m$. In particular, for every $\varphi\in[0,1]$ (all temperatures used by the run), $K_\varphi(x,\{S\})\ge\varepsilon_S/m$ with the temperature-free constant $\varepsilon_S:=\pi_0(S)e^{-R_d}>0$.
+\item For every order $\sigma$ with $\sigma(1)=$ Gibbs coordinate $1$, $K_{\sigma(1)}\cdots K_{\sigma(m)}(\emptyset,\Om\setminus\{\emptyset\})\ge \delta>0$ for a constant $\delta$ that depends only on $\varphi$ and the input. Hence $K_\varphi(\emptyset,\Om\setminus\{\emptyset\})\ge \delta/m>0$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) Whatever the state $y$ before the last step, the independence step proposes $S$ with probability $\pi_0(S)$. If $S\ne y$ it accepts with probability $\min\{1,e^{\varphi(d(S)-d(y))}\}\ge e^{-|\varphi|R_d}$; if $S=y$ the state stays $S$ whether or not it accepts. Hence $K_{\rm ind}(y,\{S\})\ge\pi_0(S)e^{-|\varphi|R_d}$ for every $y$, and the earlier steps are stochastic. For $\varphi\in[0,1]$, $e^{-|\varphi|R_d}\ge e^{-R_d}$. Exactly $(m-1)!$ of the $m!$ orders have the independence label last.
+
+(b) At $\emptyset$, Gibbs coordinate $1$ moves to $\{1\}$, which is in $\Om$ since $K\ge1$, with probability $o_1(\emptyset,\varphi)=\gamma_\varphi(\{1\})/(\gamma_\varphi(\{1\})+\gamma_\varphi(\emptyset))>0$. For every elementary step $e$ and every non-empty $y$, $c_e(y):=K_e(y,\Om\setminus\{\emptyset\})>0$. Gibbs $j$ with $j\notin y$ ends in $y$ or $y\cup\{j\}$, so $c_e(y)=1$. Gibbs $j$ with $j\in y$ stays at $y$ with probability $o_j(y,\varphi)>0$, because $y^+=y\in\Om$. Swaps preserve $|y|$ or stay, so $c_e(y)=1$. The independence step stays at $y$ with probability at least $\pi_0(y)>0$. Let $c=\min_e\min_{y\ne\emptyset}c_e(y)>0$ (a minimum over finitely many positive numbers). By the Markov property along the fixed order, the probability of being non-empty after step 1 and of remaining non-empty after each later step is at least $\delta:=o_1(\emptyset,\varphi)\,c^{m-1}$. Exactly $(m-1)!$ orders have Gibbs coordinate $1$ first.
+\end{proof}
+
+\section{Conditional means of the island operations}
+
+All random variables of one island live on one probability space. For a population $(X^1,\dots,X^N)$ entering an operation, $\cF$ denotes the $\sigma$-field of everything generated before the operation.
+
+\begin{lemma}[resampling]\label{lem:res}
+Let the population $(X^1,\dots,X^N)$ and weights $w^k=G(X^k)>0$ be $\cF$-measurable, and let the ancestors $A^1,\dots,A^N$ be conditionally iid given $\cF$ with $\P(A^i=k\mid\cF)=w^k/\sum_lw^l$ (R2). Then for every $h:\Om\to\R$,
+\[ \E\Big[\Big(\tfrac1N\textstyle\sum_lw^l\Big)\tfrac1N\textstyle\sum_i h(X^{A^i})\,\Big|\,\cF\Big]=\tfrac1N\textstyle\sum_k G(X^k)h(X^k). \]
+\end{lemma}
+\begin{proof}
+$\E[h(X^{A^i})\mid\cF]=\sum_kh(X^k)w^k/\sum_lw^l$ for each $i$. Multiply by the $\cF$-measurable factor $\frac1N\sum_lw^l$ and average over $i$.
+\end{proof}
+
+\begin{lemma}[one round, state-independent prefix]\label{lem:round}
+Let a population $(\tilde X^1,\dots,\tilde X^N)$ enter a round at temperature $\varphi$, let $\cH$ be the $\sigma$-field of everything before the round, and let $X^i_{[k]}$ be particle $i$'s within-round path. For $\kappa:\Sigma\to\{0,\dots,m\}$ and every $f:\Om\to\R$, under (R3), $\E[f(X^i_{[\kappa(\sigma_i)]})\mid\cH]=(P_\kappa f)(\tilde X^i)$.
+\end{lemma}
+\begin{proof}
+By (R3), given $\cH$ and $\sigma_i=\sigma$, the path is a Markov chain started at $X^i_{[0]}=\tilde X^i$ with kernels $K_{\sigma(1)},\dots,K_{\sigma(m)}$. Hence $\E[f(X^i_{[k]})\mid\cH,\sigma_i=\sigma]=(K_{\sigma(1)}\cdots K_{\sigma(k)}f)(\tilde X^i)$ for each fixed $k$, and in particular for $k=\kappa(\sigma)$. Since $\sigma_i$ is uniform on the finite set $\Sigma$ and independent of $\cH$, averaging over $\sigma$ gives the claim.
+\end{proof}
+
+\section{Proof of (i.a)--(i.c)}
+
+Write $X^{(t-1),A^i}=:\tilde X^{(t),i}$ for the resampled particles of stage $t\ge1$, and $\tilde X^{(0),i}:=X_0^i$.
+
+\paragraph{Claim $\mathsf C_t$ ($t=0,\dots,T$).} For every $h:\Om\to\R$: (a) $\E[\Zh_t\frac1N\sum_ih(\tilde X^{(t),i})]=Z_tq_t(h)$, and (b) $\E[\Zh_t\frac1N\sum_ih(X^{(t),i})]=Z_tq_t(h)$. Moreover (c), for every round of stage $t$ (the stage-$t$ round, or the stage-0 round if the flag is set) and every $\kappa$, $\E[\Zh_t\frac1N\sum_i f(X^i_{[\kappa(\sigma_i)]})]=Z_tq_t(f)$.
+
+\emph{$t=0$.} $\Zh_0=Z_0$ is deterministic and the $X_0^i$ are iid $\pi_0=q_0$ by (R1) and START, so (a) holds. If no stage-0 round is applied, $X^{(0)}=X_0$ and (b) is (a). If a round at $\varphi_0=0$ is applied, then for its prefix with $\kappa$, Lemma~\ref{lem:round} and (a) give $\E[Z_0\frac1N\sum_if(X^i_{[\kappa]})]=\E[Z_0\frac1N\sum_i(P_\kappa f)(X_0^i)]=Z_0q_0(P_\kappa f)=Z_0q_0(f)$ by Lemma~\ref{lem:prefix}. This is (c), and $\kappa\equiv m$ gives (b).
+
+\emph{$t-1\to t$.} Let $\cF$ be everything before the stage-$t$ resampling. $\Zh_t=\Zh_{t-1}\frac1N\sum_lw^l$ with $w^l=G_t(X^{(t-1),l})$, and $\Zh_{t-1}$ is $\cF$-measurable. By Lemma~\ref{lem:res},
+$\E[\Zh_t\frac1N\sum_ih(\tilde X^{(t),i})\mid\cF]=\Zh_{t-1}\frac1N\sum_k(G_th)(X^{(t-1),k})$.
+Taking expectations and applying $\mathsf C_{t-1}$(b) to the function $G_th$ gives $Z_{t-1}q_{t-1}(G_th)=Z_tq_t(h)$ by Lemma~\ref{lem:bridge}. This is (a). For the stage-$t$ round with prefix $\kappa$, $\Zh_t$ is measurable with respect to $\cH$ (everything before the round), so Lemma~\ref{lem:round} gives
+$\E[\Zh_t\frac1N\sum_if(X^i_{[\kappa(\sigma_i)]})\mid\cH]=\Zh_t\frac1N\sum_i(P_\kappa f)(\tilde X^{(t),i})$.
+By (a) with $h=P_\kappa f$ and Lemma~\ref{lem:prefix} (at $\varphi_t$), its expectation is $Z_tq_t(P_\kappa f)=Z_tq_t(f)$. This is (c), and $\kappa\equiv m$ gives (b). \qed
+
+Claim $\mathsf C_t$(b) is (i.a). With $t=T$ and $h\equiv1$, $\E\Zh=Z_Tq_T(1)=Z$ by Lemma~\ref{lem:bridge}. Claim $\mathsf C_t$(c) is (i.c) for the rounds of stages $0,\dots,T$.
+
+\paragraph{Post-terminal operations: (i.b) and (i.c).} Let $\mathcal O_1,\dots,\mathcal O_k$ be the fixed sequence of operations after stage $T$. Each is a round at $\varphi=1$ or a multinomial resampling with unit weights. Write $\qh^{(s)}$ for the population after $\mathcal O_s$ and $\qh^{(0)}=\qh_T$. We show by induction on $s$ that $\E[\Zh\,\qh^{(s)}(h)]=Z\pi(h)$ for all $h$; for $s=0$ this is (i.a) at $t=T$, since $q_T=\pi$. A unit-weight resampling leaves $\Zh$ unchanged (its factor is $\frac1N\sum_l1=1$), and by Lemma~\ref{lem:res} with $G\equiv1$, $\E[\qh^{(s)}(h)\mid\cF]=\qh^{(s-1)}(h)$, with $\Zh$ $\cF$-measurable. A round at $\varphi=1$ with prefix $\kappa$ gives, by Lemma~\ref{lem:round}, $\E[\Zh\frac1N\sum_if(X^i_{[\kappa(\sigma_i)]})\mid\cH]=\Zh\,\qh^{(s-1)}(P_\kappa f)$. By the induction hypothesis and Lemma~\ref{lem:prefix} at $\varphi=1$, its expectation is $Z\pi(P_\kappa f)=Z\pi(f)$. This is (i.c) for that round, and $\kappa\equiv m$ gives the step of the induction. This proves (i.b), and (i.c) for every post-terminal round. In particular it covers the $L'$ rounds and the $M$ measured rounds of $I(c)$, which are post-terminal rounds at $\varphi=1$. \qed
+
+\section{Proof of (i.d): state-dependent stopping times}
+
+Fix $c$ and a round $\rho$ of the run, with prefactor $\Zh_\rho$ (that is, $\Zh_t$ for a stage-$t$ round and $\Zh_T$ for a post-terminal round) and target $q_\rho$ (that is, $q_t$ or $\pi$). Let $\cH$ be everything before $\rho$, $\tilde X^i$ the entering states, and $\tau_i=\min\{k\in\{0,\dots,m\}: X^i_{[k]}=\emptyset\}\wedge m$ (with $\min\emptyset=\infty$, so $\tau_i=m$ when the path never visits $\emptyset$). Then $\tau_i$ is a stopping time for $\cF^i_k=\sigma(\cH,\sigma_i,X^i_{[0]},\dots,X^i_{[k]})$. Let $f=\ind\{\emptyset\}$.
+
+\emph{Step 1: $D_i:=f(X^i_{[\tau_i]})-f(X^i_{[m]})\ge \ind_{E_i}\ge 0$, where $E_i=\{X^i_{[0]}=\emptyset,\,X^i_{[m]}\ne\emptyset\}$.} If the path visits $\emptyset$, then $f(X^i_{[\tau_i]})=1\ge f(X^i_{[m]})$. If it does not, $\tau_i=m$ and $D_i=0$. On $E_i$, $\tau_i=0$, $f(X^i_{[0]})=1$ and $f(X^i_{[m]})=0$.
+
+\emph{Step 2: $\P(\tilde X^1=\emptyset)>0$.} Let $V$ be the event that every particle is at $\emptyset$ after every operation of the run before $\rho$, and at stage 0. $\P(X_0^i=\emptyset\ \forall i)=\pi_0(\emptyset)^N>0$ by (R1). If all particles are at $\emptyset$, every resampled particle is at $\emptyset$. Given $\cH'$ (everything before a round) on the event that all entering particles are at $\emptyset$, the particles end the round at $\emptyset$ with conditional probability $K_\varphi(\emptyset,\{\emptyset\})^N\ge(\varepsilon_\emptyset/m)^N>0$, by the conditional independence in (R3) and Lemma~\ref{lem:pos}(a). Finitely many operations precede $\rho$, so $\P(V)>0$, and $V\subseteq\{\tilde X^1=\emptyset\}$.
+
+\emph{Step 3.} By (R3) and Lemma~\ref{lem:pos}(b) at the temperature of $\rho$, $\P(E_1\mid\cH)=\ind\{\tilde X^1=\emptyset\}K_\varphi(\emptyset,\Om\setminus\{\emptyset\})\ge\ind\{\tilde X^1=\emptyset\}\delta/m$. Since $\Zh_\rho>0$ surely (it is a product of positive factors) and is $\cH$-measurable,
+\[ \E\Big[\Zh_\rho\tfrac1N\textstyle\sum_iD_i\Big]\ \ge\ \tfrac1N\E\big[\Zh_\rho\,\ind\{\tilde X^1=\emptyset\}\big]\,\delta/m\ >\ 0 . \]
+By (i.c) with $\kappa\equiv m$, $\E[\Zh_\rho\frac1N\sum_if(X^i_{[m]})]=Z_\rho q_\rho(f)$, where $Z_\rho$ is $Z_t$ or $Z$. Hence $\E[\Zh_\rho\frac1N\sum_if(X^i_{[\tau_i]})]>Z_\rho q_\rho(f)$. \qed
+
+\section{Proof of (ii)}
+
+Measured round $u\in\{1,\dots,M\}$ is a post-terminal round at $\varphi=1$. Let $\kappa_j(\sigma)=\sigma^{-1}(g_j)-1$, where $g_j$ is the Gibbs-$j$ label. Then $Y^i_{u,j}=X^i_{[\kappa_j(\sigma_i)]}$ in that round. By (i.c) with $f=o_j(\cdot,1)$, and then Lemma~\ref{lem:prefix} at $\varphi=1$ (where $q_1=\pi$),
+\[ \E\Big[\Zh\,\tfrac1N\textstyle\sum_io_j(Y^i_{u,j},1)\Big]=Z\,\pi(o_j(\cdot,1))=Z\,\pi(J_j)=Z\,\PIP_j . \]
+Averaging over $u=1,\dots,M$ gives $\E_c[\Zh\,\PIPh_j]=Z\,\PIP_j$. \qed
+
+\begin{remark}
+Lemma~\ref{lem:prefix} is used only through $\pi(o_j)=\pi(J_j)$. The recorded value is a conditional probability at a state-independent prefix. So the identity holds whatever the position of the Gibbs-$j$ label in the order, because that position is a function of $\sigma_i$ alone.
+\end{remark}
+
+\section{Embedding in the method: conditioning on $\cC$}
+
+\begin{lemma}[freezing]\label{lem:freeze}
+Let $\cC$ be a random element of a measurable space $(E,\mathcal E)$, and let $U=(U_1,\dots,U_4)$ be a random element of $(\Upsilon,\mathcal U)$ independent of $\cC$. For every bounded measurable $g:E\times\Upsilon\to\R$, $\E[g(\cC,U)\mid\cC]=\bar g(\cC)$ a.s., where $\bar g(c)=\E[g(c,U)]$ is measurable.
+\end{lemma}
+\begin{proof}
+For $g=\ind_{A\times B}$ and $C\in\mathcal E$: $\E[g(\cC,U)\ind_C(\cC)]=\P(\cC\in A\cap C)\P(U\in B)=\E[\bar g(\cC)\ind_C(\cC)]$, by independence, with $\bar g(c)=\ind_A(c)\P(U\in B)$. The class of bounded measurable $g$ for which $\bar g$ is measurable and the identity holds for all $C$ contains the indicators of the $\pi$-system of measurable rectangles. It is closed under linear combinations and bounded monotone limits (monotone convergence). By the monotone class theorem it contains every bounded $\mathcal E\otimes\mathcal U$-measurable $g$.
+\end{proof}
+
+By CAL and EX-S, $\cC$ (with the event $\cA\in\sigma(\cC)$ that the final run executes) is a function of the data and streams 0--9. The final streams $U_r$ (stream $9+r$) are independent of each other and of streams 0--9, and are identically distributed. On $\cA$, island $r$'s record is $O_r=\Phi(\cC,U_r)$. Here $\Phi(c,\cdot)$ realises $I(c)$ with the method's parameters ($N=N_e$, $M=4$, $L'=L$, flag unset), and $\Phi$ is jointly measurable with values in a Polish space (part of EX-S in STATEMENT.md). Applying Lemma~\ref{lem:freeze} to $g\,\ind_\cA(\cC)$, for every bounded measurable function $g$ of $(O_1,\dots,O_4)$,
+\begin{equation}\label{eq:freeze}
+\E[g(O_1,\dots,O_4)\mid\cC]=\E_c\big[g(O_1,\dots,O_4)\big]\big|_{c=\cC}\quad\text{a.s. on }\cA,
+\end{equation}
+where on the right the four islands are independent copies of $I(c)$. Every conclusion stated for fixed $c$ and for the four independent islands of $I(c)$ therefore holds given $\cC$ on $\cA$. This includes the identities of (i) and (ii), which hold for every $c$, and so hold almost surely given $\cC$.
+
+\section{Proof of (iii)}
+
+Fix $c$ and four independent islands of $I(c)$. By (i.a) and (ii) for each island, $\E_c[\Zh_{r,t}\qh_{r,t}(f)]=Z_tq_t(f)$ and $\E_c[\Zh_r\PIPh_{rj}]=Z\PIP_j$. Hence $\E_c\Zh=\frac14\sum_r\E_c\Zh_r=Z$. Each $\Zh_r$ and $\Zh$ takes values in the compact interval $[Z_0e^{\min d},Z_0e^{\max d}]\subset(0,\infty)$, because each factor $\frac1N\sum_ie^{\Delta_td(\cdot)}$ lies between $e^{\Delta_t\min d}$ and $e^{\Delta_t\max d}$ and $\sum_t\Delta_t=1$. So $\log\Zh$ and $\log\Zh_r$ are bounded, and Jensen's inequality for the concave $\log$ gives $\E_c\log\Zh\le\log\E_c\Zh=\log Z$, and likewise for $\Zh_r$. For $0<\alpha<1$, Markov's inequality for the non-negative $\Zh$ gives $\P_c(\alpha\Zh>Z)\le\alpha\E_c\Zh/Z=\alpha$, that is $\P_c(Z\ge\alpha\Zh)\ge1-\alpha$; likewise for $\Zh_r$. By \eqref{eq:freeze} applied to the bounded functions involved (indicators, $\Zh_{r,t}\qh_{r,t}(f)$, $\Zh_r\PIPh_{rj}$, $\Zh$, $\log\Zh$, $\log\Zh_r$), all of these hold given $\cC$ on $\cA$. For the stage identities, fix $t$ and apply \eqref{eq:freeze} on $\cA\cap\{T(\cC)\ge t\}$ (an event in $\sigma(\cC)$). This gives $\E[\Zh_{r,t}\qh_{r,t}(f)\mid\cC]=Z_tq_t(f)$, with $Z_t,q_t$ computed on $\cC$'s grid; the right side is a $\sigma(\cC)$-measurable random variable. \qed
+
+\section{Proof of (iv)}
+
+\subsection{(iv.a) $\log\Zh$}
+If $d\equiv0$ on $\Om$, then $G_t\equiv1$, every factor of $\Zh$ is $1$, and $\Zh=Z_0=m(\emptyset)\Zb_0=m(\emptyset)\Zb_1=Z$ (Lemma~\ref{lem:bridge}, since $\gamma_1=\gamma_0$).
+
+Suppose $d\not\equiv0$; since $d(\emptyset)=0$, pick $S$ with $d(S)\ne0$. For $U\in\{\emptyset,S\}$, let $E_U$ be the event that all stage-0 draws equal $U$, and that after every round preceding the stage-$T$ resampling (the stage-0 round if the flag is set, and the stage-$t$ rounds for $t\le T-1$) every particle is at $U$. As in Step 2 of \S4 (using Lemma~\ref{lem:pos}(a) for $U$ and the fact that a population entirely at $U$ resamples to $U$), $\P_c(E_U)\ge \pi_0(U)^N(\varepsilon_U/m)^{NT}>0$, with at most $T$ rounds involved. On $E_U$, every weight at stage $t$ equals $e^{\Delta_td(U)}$, so $\Zh=Z_0e^{d(U)\sum_t\Delta_t}=Z_0e^{d(U)}$. Thus $\Zh$ takes the two distinct values $Z_0$ and $Z_0e^{d(S)}$ with positive probability, so $\P_c(\Zh\ne Z)>0$. For the bounded positive $W=\Zh$ with $\E_cW=Z$, the inequality $\log w\le\log Z+(w-Z)/Z$ holds for all $w>0$, with equality only at $w=Z$. Taking expectations, with strict inequality on an event of positive probability, gives $\E_c\log\Zh<\log Z$. For the method's four islands given $\cC$: by \eqref{eq:freeze} the islands are independent copies of $I(\cC)$. On the event that all four islands are in their copy of $E_U$ (conditional probability $\P_\cC(E_U)^4>0$), $\Zh=\frac14\sum_r\Zh_r=Z_0e^{d(U)}$. So the same argument gives $\E[\log\Zh\mid\cC]<\log Z$, and also $\E[\log\Zh_r\mid\cC]<\log Z$. \qed
+
+\subsection{(iv.b) normalised PIPs}
+Given $\cC$, the islands are identically distributed (by \eqref{eq:freeze}), so $\E[\bar P_j\mid\cC]=\E[\PIPh_{1j}\mid\cC]$. By (ii) and (i.a), $\E[\Zh_1\PIPh_{1j}\mid\cC]=Z\PIP_j$ and $\E[\Zh_1\mid\cC]=Z$. Hence
+$\mathrm{Cov}(\PIPh_{1j},\Zh_1\mid\cC)=Z\PIP_j-Z\,\E[\PIPh_{1j}\mid\cC]$, which is the stated formula.
+
+\emph{The instance.} Take the appendix data of STATEMENT.md: $n=20$, $p=2$. As recorded there, $K=\min(2,10)=2$, so $\Om$ is all four subsets. Further $B=\min(4,1,16)=1$, so the blocks are $\{1\},\{2\}$ and $r_b=\mathrm{BF}$ on singletons. The neighbour graph has $N(1)=\{2\}$ and $N(2)=\{1\}$, and $m=5$, $L=\max(4,\lceil\log_2 21\rceil)=5$. The prior of STATEMENT \S0 gives $w(k)=\tfrac12/\binom{3}{k}$, that is $w(0)=\frac12$ and $w(1)=w(2)=\frac16$, and $W_K=\binom20\frac12+\binom21\frac16+\binom22\frac16=1$.
+
+\emph{The scores.} By STATEMENT \S0, $C_n$ cancels in $\mathrm{BF}(S)=D_S^{-1/2}\big[(2b_0+Q_S)/(2b_0+y^\top y)\big]^{-\nu}$, with $\nu=a_0+n/2=10.01$ and $a_0=b_0=0.01$.
+\begin{itemize}
+\item For $S=\{j\}$: $G=x_j^\top x_j$, $H=(n+1)G+1$, $D_S=H/(G+1)$, $Q_S=y^\top y-n(x_j^\top y)^2/H$.
+\item For $S=\{1,2\}$: write $g_{ab}$ for the entries of $G_S$, $z=(z_1,z_2)=X_S^\top y$ and $h_{ab}=(n+1)g_{ab}+\ind\{a=b\}$. Then $\det H_S=h_{11}h_{22}-h_{12}^2$, $\det(G_S+I)=(g_{11}+1)(g_{22}+1)-g_{12}^2$, and $z^\top H_S^{-1}z=(h_{22}z_1^2-2h_{12}z_1z_2+h_{11}z_2^2)/\det H_S$ (the $2\times2$ inverse).
+\end{itemize}
+These are exactly the expressions in \texttt{log\_bf} of Appendix~\ref{app:code}. The function \texttt{standardise} centres each raw column and $y$ and divides by the sample standard deviation with denominator $n-1$, as in STATEMENT \S0. So $\gamma_0=(\frac12,\frac{b_1}6,\frac{b_2}6,\frac{b_1b_2}6)$ and $\gamma_1=(\frac12,\frac{b_1}6,\frac{b_2}6,\frac{b_{12}}6)$ on $(\emptyset,\{1\},\{2\},\{1,2\})$, with $b_S=\mathrm{BF}(S)$. Moreover $d$ vanishes except at $\{1,2\}$, where $d(\{1,2\})=D:=\log(b_{12}/(b_1b_2))$. With $T=1$ and $N=1$, $\Zh=Z_0e^{D\,B}$ with $B=\ind\{X^{(0)}=\{1,2\}\}$. Resampling of a single particle is trivial. The particle then performs $1+L'$ rounds at $\varphi=1$ before the $M=4$ measured rounds. The recording $o_1(Y,1)$ equals $c_0=\gamma_1(\{1\})/(\gamma_1(\{1\})+\gamma_1(\emptyset))$ if $2\notin Y$, and $c_1=\gamma_1(\{1,2\})/(\gamma_1(\{1,2\})+\gamma_1(\{2\}))$ if $2\in Y$. Hence $\PIPh_1=c_0+(c_1-c_0)k/4$, where $k$ is the number of measured rounds whose pre-Gibbs-1 state contains $2$.
+
+Under the stage-0 flag, $X^{(0)}=X_0K_0$ has law $\pi_0K_0=\pi_0$ (Lemma~\ref{lem:prefix}). Everything after stage 0 depends on the past only through $X^{(0)}$. Hence the joint law of $(B,k)$, and so of $(\Zh,\PIPh_1)$, is the same under both stage-0 readings. It is computed by propagating a law on triples (bit $b$, state $x$, count $\kappa$):
+\begin{enumerate}[label=(\arabic*)]
+\item start from $\mu_0(b,x,0)=\pi_0(x)\ind\{b=\ind\{x=\{1,2\}\}\}$;
+\item apply the round kernel $K_1$ to the state coordinate $1+L'$ times;
+\item apply four measured rounds, each mapping $(b,x,\kappa)$ to $(b,z,\kappa+\ind\{2\in y\})$ with weight
+$\mathsf J(x,y,z)=\frac1{120}\sum_\sigma[K_{\sigma(1)}\cdots K_{\sigma(\kappa_1(\sigma))}](x,y)\,[K_{\sigma(\kappa_1(\sigma)+1)}\cdots K_{\sigma(5)}](y,z)$,
+where $y$ is the pre-Gibbs-1 state;
+\item marginalise over the final state.
+\end{enumerate}
+This is the law of $(B,k)$ by (R3) and Lemma~\ref{lem:round}. Within a round, the path splits at the pre-Gibbs-1 position into the prefix product and the suffix product of the same order. The $4\times4$ elementary kernels at $\varphi=1$ are given by STATEMENT \S1. At $p=2$, $B=1$ the uniform and neighbour swaps coincide: both are the Metropolis swap $\{1\}\leftrightarrow\{2\}$ with acceptance $\min\{1,b_2/b_1\}$ (resp.\ $\min\{1,b_1/b_2\}$), and they stay at $\emptyset$ and $\{1,2\}$. The expectations then are finite sums: $\E[\bar P_1]=\E[\PIPh_1]$, and
+$\E[\tilde P_1]=\sum\prod_{r=1}^4\P(B_r,k_r)\cdot\frac{\sum_re^{DB_r}\PIPh(k_r)}{\sum_re^{DB_r}}$ over the $10^4$ joint values of four independent islands.
+
+We evaluated every quantity in 60-digit interval arithmetic (mpmath \texttt{iv}). Every input ($n$, the data, $a_0=b_0=0.01$) enters as an enclosing interval, every operation is rigorous interval arithmetic, and $\min\{1,x\}$ is enclosed by $[\min(1,\underline x),\min(1,\overline x)]$. The listing is in Appendix~\ref{app:code}. Every enclosure has width below $10^{-52}$: the last \texttt{CHECK} line of each block of the log (Appendix~\ref{app:log}) subtracts the two exact endpoints of each enclosure in ordinary \texttt{mpf} arithmetic and compares the largest difference with the floating-point constant \texttt{1e-52}; that subtraction rounds by at most one part in $2^{53}$, against a margin of a factor five, and no conclusion of the proof uses this width. The five decisive \texttt{CHECK} lines compare an exact interval endpoint with a floating-point constant whose rounding cannot cross the threshold it stands for. Rounded to 12 digits, they are:
+\begin{center}
+\begin{tabular}{lcc}
+ & $L'=L$ (method; $1+L'=6$) & $L'=L-1$ (generalisation; $1+L'=5$)\\\hline
+$D$ & \multicolumn{2}{c}{$8.14676240634$}\\
+$a=\pi_0(\{1,2\})$ & \multicolumn{2}{c}{$0.0279141173179$}\\
+$c_0,\ c_1$ & \multicolumn{2}{c}{$0.0694711126908,\ 0.998708337452$}\\
+$\PIP_1$ & \multicolumn{2}{c}{$0.990618012243$}\\
+$(\E\Zh-Z)/Z_0$ & interval $\ni0$ & interval $\ni0$\\
+$(\E[\Zh\PIPh_1]-Z\PIP_1)/Z_0$ & interval $\ni0$ & interval $\ni0$\\
+$\E[\bar P_1]-\PIP_1$ & $-0.173974177850$ & $-0.212065526919$\\
+$\E[\tilde P_1]-\PIP_1$ & $-0.159677356166$ & $-0.194638440548$\\
+\end{tabular}
+\end{center}
+The first two difference rows check (i.a) and (ii) on the instance; they are not used in the argument. In both columns and under both stage-0 readings, the biases are certified to be below $-0.17$ (primary) and $-0.15$ (secondary). \emph{Scope.} This is a component example. At $p=2$ the full method would take the exact branch, and $N=1$ is not the production budget. It shows that the frozen SMC component's normalised PIP estimators are biased, not that the full method's output on this input is. \qed
+
+\subsection{(iv.c) island independence}
+By \eqref{eq:freeze} with $g=\prod_rh_r(O_r)$, $\E[\prod_rh_r(O_r)\mid\cC]=\prod_r\psi_{h_r}(\cC)$ on $\cA$, where $\psi_h(c)=\E_c[h(O)]$ is the same function for every island. This is conditional independence with conditional law that of $I(\cC)$. Assume $\P(\cA)>0$, so that $\P(\cdot\mid\cA)$ is defined. Under $\P(\cdot\mid\cA)$ and for bounded $h$: $\E[h(O_1)h(O_2)]=\E[\psi_h(\cC)^2]$ and $\E h(O_r)=\E\psi_h(\cC)$, so $\mathrm{Cov}(h(O_1),h(O_2))=\mathrm{Var}(\psi_h(\cC))$.
+
+\emph{Characterisation.} The record $O_r$ is a finite collection of real and finite-valued variables, so it takes values in a Polish space $\mathsf O$. Choose a countable $\pi$-system $\{B_k\}$ generating its Borel $\sigma$-field. If $O_1,O_2$ are independent under $\P(\cdot\mid\cA)$, then $\mathrm{Var}(\psi_{\ind_{B_k}}(\cC))=\mathrm{Cov}(\ind_{B_k}(O_1),\ind_{B_k}(O_2))=0$ for every $k$. So, outside one null set, $\P(O_1\in B_k\mid\cC)=\mu(B_k)$ for all $k$, where $\mu$ is the law of $O_1$ under $\P(\cdot\mid\cA)$. Two probability measures that agree on a generating $\pi$-system are equal, so the conditional law is a.s.\ $\mu$. Conversely, if the conditional law is a.s.\ a fixed $\mu$, then $\E[h_1(O_1)h_2(O_2)]=\E[\psi_{h_1}\psi_{h_2}(\cC)]=\mu(h_1)\mu(h_2)=\E h_1(O_1)\E h_2(O_2)$; so the islands are independent, and the same holds for all four by the same computation. None of the hypotheses restricts the law of $\cC$ beyond its measurability in streams 0--9. So they do not exclude, for example, a calibration law that puts positive mass on two values $c\ne c'$ with different island laws, and then the islands are dependent under $\P(\cdot\mid\cA)$. The next paragraph shows such pairs exist: $(\text{grid},N)$ and $(\text{grid},4N)$ on any input where $d$ has a unique maximiser. The instance of (iv.b) is one, since there $d=(0,0,0,D)$ with $D>0$. Whether the method's actual calibration procedure produces such a law on some input is not claimed.
+
+\emph{The island law depends on $c$.} Suppose $d$ has a unique maximiser $S^*$ on $\Om$, and let $d^*=d(S^*)$. Then $\Zh/Z_0=\prod_{t=1}^T\frac1N\sum_ie^{\Delta_td(X^{(t-1),i})}\le e^{d^*}$, with equality iff $X^{(t-1),i}=S^*$ for all $i$ and all $t=1,\dots,T$. This event has probability $a^N$, where $a=\pi_0(S^*)\prod_{t=1}^{T-1}K_{\varphi_t}(S^*,\{S^*\})$ does not depend on $N$. Here we used (R1)--(R3): $X^{(0),i}$ has law $\pi_0$ under either stage-0 reading (by Lemma~\ref{lem:prefix}), independently across $i$; a population at $S^*$ resamples to $S^*$; and the rounds act independently across particles. Now $0<a\le\pi_0(S^*)<1$ by Lemma~\ref{lem:pos}(a) and $|\Om|\ge2$. So $\P_{(\text{grid},N)}(\Zh=Z_0e^{d^*})=a^N\ne a^{4N}=\P_{(\text{grid},4N)}(\Zh=Z_0e^{d^*})$. \qed
+
+\subsection{(iv.d) launch events}
+Let $A\in\sigma(\cC)$, $A\subseteq\cA$, $\P(A)>0$. By the tower property, $\E[Y\ind_A]=\E[\E[Y\mid\cC]\ind_A]$ for every bounded $Y$. For the conclusions of (iii) whose right side $v$ is a constant (fixed by the data), this gives $\E[Y\mid A]=v$ for $Y=\Zh$, $Y=\Zh_r$ and $Y=\Zh_r\PIPh_{rj}$ (with $v=Z$, $Z$, $Z\PIP_j$). Likewise $\E[\log\Zh\mid A]\le\log Z$ and $\E[\log\Zh_r\mid A]\le\log Z$. With $Y=\ind\{Z\ge\alpha\Zh\}$ (resp.\ $\Zh_r$), $\P(Z\ge\alpha\Zh\mid A)=\E[\P(Z\ge\alpha\Zh\mid\cC)\ind_A]/\P(A)\ge1-\alpha$. For an intermediate stage $t$ and $A\subseteq\{T(\cC)\ge t\}$, the right side $Z_tq_t(f)$ of (iii) is a $\sigma(\cC)$-measurable random variable. The same computation then gives only $\E[\Zh_{r,t}\qh_{r,t}(f)\ind_A]=\E[Z_tq_t(f)\ind_A]$, which is the averaged form. The left side divided by $\P(A)$ is a number. The right side's integrand $Z_tq_t(f)$ is non-constant when, for example, $\varphi_t$ takes two values $u\ne u'$ with positive probability under $\P(\cdot\mid A)$ and $f=\ind\{S\}$ with $d(S)\ne0$. Indeed $Z_tq_t(\ind\{S\})=m(\emptyset)\gamma_0(S)e^{\varphi_td(S)}$ by the definitions, and this takes different values at $u$ and $u'$. \qed
+
+\subsection{(iv.e) favourable final diagnostics}
+In the instance of (iv.b), $\log\Zh_r=\log Z_0+DB_r$ with $B_r$ iid Bernoulli($a$) across the four independent islands. If exactly $k\in\{1,2,3\}$ of the $B_r$ equal $1$, the four values $DB_r$ have standard deviation $D\sqrt{k(4-k)}/4\ge D\sqrt3/4$ (normalisation $1/4$) or $D\sqrt{k(4-k)/12}\ge D/2$ (normalisation $1/3$). Both exceed $1$ because $D>8>4/\sqrt3$. If $k\in\{0,4\}$ the standard deviation is $0$. Hence $F=\{B_1=B_2=B_3=B_4\}$ under either convention, and $\P(F)=(1-a)^4+a^4>0$. The four islands are iid and $F$ is invariant under permuting them, so the pairs $(\Zh_r,\PIPh_{r1})$ have the same law under $\P(\cdot\mid F)$ for every $r$. Hence $\E[\Zh_r\mid F]=\E[\Zh\mid F]=\E[\Zh_1\mid F]$ and $\E[\Zh_r\PIPh_{r1}\mid F]=\E[\Zh_1\PIPh_{11}\mid F]$ for every $r$. Moreover
+\[ \E[\Zh_1\mid F]=Z_0\,\frac{(1-a)^4+a^4e^D}{(1-a)^4+a^4}=Z_0\big(1+(e^D-1)\theta\big),\qquad \theta=\frac{a^4}{(1-a)^4+a^4}. \]
+Since $a<\frac12$, $\theta<a$ (because $a^4<a(1-a)^4+a^5\iff a^3<(1-a)^3$). Also $e^D>1$ and $Z=\E\Zh_1=Z_0(1+(e^D-1)a)$. Hence $\E[\Zh_1\mid F]<Z$ and $\E[\Zh\mid F]<Z$. So the identity $\E\Zh_r=Z$ of (i) and the identity $\E\Zh=Z$ of (iii) fail under $\P(\cdot\mid F)$. For (ii),
+\[ \E[\Zh_1\PIPh_1\mid F]=\frac{\sum_{b,k}\P(B=b,k)\,Z_0e^{Db}\,\PIPh(k)\,\P(B=b)^3}{(1-a)^4+a^4}, \]
+which the same interval computation evaluates as $(\E[\Zh_1\PIPh_1\mid F]-Z\PIP_1)/Z_0=-95.609622724\ldots$ ($L'=L$) and $-95.648818292\ldots$ ($L'=L-1$), under either stage-0 reading; both are certified non-zero. This is a component calculation (scope as in (iv.b)). It breaks an identity in each of (i), (ii) and (iii). It does not break the Jensen or Markov inequalities of (iii): since $\E[\Zh\mid F]<Z$, they still hold under $\P(\cdot\mid F)$. \qed
+
+\subsection{(iv.f) NUM alone}
+Fix $\eta>0$ and the NUM-compatible perturbed-score model in which every evaluated $\log m(S)$ is replaced by $\log m(S)+\eta$. (This is a model NUM does not exclude, not a claim about a particular floating-point implementation.) It satisfies the NUM bound with equality. Every quantity the run uses other than the prefactor $m(\emptyset)$ depends on scores only through ratios $m(S)/m(\emptyset)$ or $m(S)/m(S')$: the tables $r_b$, $\mathrm{BF}$, $d$, $\gamma_\varphi$ up to the common factor $\varpi$, $\pi_0$, $\Zb_0$, all acceptance and Gibbs probabilities, and the weights. These are unchanged, so the run has the same law, and $\Zh^{\rm impl}=e^\eta m(\emptyset)\Zb_0\prod_t(\cdots)=e^\eta\Zh$. By (i.a), $\E_c\Zh^{\rm impl}=e^\eta Z\neq Z$. If $d\equiv0$ (for example $p=1$: a single block $\{1\}$, so $d(S)=\log\mathrm{BF}(S)-\log r_1(S)=0$), then $\Zh=Z$ surely by (iv.a), so $\Zh^{\rm impl}=e^\eta Z$, and $\P(Z\ge\alpha\Zh^{\rm impl})=\ind\{\alpha e^\eta\le1\}=0$ for $\alpha\in(e^{-\eta},1)$. So NUM alone gives neither unbiasedness nor the Markov bound. \qed
+
+\appendix
+\section{Listing of the interval computation}\label{app:code}
+The certified values of \S8.2 and \S8.5 are produced by \texttt{certify\_instance.py iv}, which calls \texttt{p2\_exact.py} with \texttt{IvArith(60)} (mpmath 1.3.0 interval arithmetic at 60 digits). The listings follow.
+
+\subsection*{p2\_exact.py}
+\lstinputlisting[language=Python]{../helpers/p2_exact.py}
+\subsection*{certify\_instance.py}
+\lstinputlisting[language=Python]{../helpers/certify_instance.py}
+
+\section{Output of the certified run}\label{app:log}
+The output of \texttt{python -I certify\_instance.py iv} (file \texttt{helpers/certify\_iv.log}) follows. Each enclosure is printed as its two exact endpoints, rounded to 25 digits for display. The \texttt{CHECK} lines compare exact endpoints. The thresholds $-0.1701$ and $-0.1501$ lie below $-0.17$ and $-0.15$ whatever their binary rounding, and $2.31>4/\sqrt3$. Rows \texttt{identity\_Z} and \texttt{identity\_ZP} are $(\E\Zh-Z)/Z_0$ and $(\E[\Zh\PIPh_1]-Z\PIP_1)/Z_0$. Rows \texttt{condF\_Z\_minus\_Z} and \texttt{condF\_ZP\_minus\_ZPIP} are $(\E[\Zh_1\mid F]-Z)/Z_0$ and $(\E[\Zh_1\PIPh_{11}\mid F]-Z\PIP_1)/Z_0$. Row \texttt{condF\_Elog\_minus\_logZ} is the unscaled difference $\E[\log\Zh_1\mid F]-\log Z$ (not used in the proof). The last \texttt{CHECK} line of each block computes, for every enclosure in that block, the difference of its two exact endpoints in ordinary \texttt{mpf} arithmetic and compares the largest with the floating-point constant \texttt{1e-52}; this is a display check and is not used by the proof. \texttt{rounds\_before\_measured}$=1+L'$.
+\lstinputlisting{../helpers/certify_iv.log}
+
+\end{document}

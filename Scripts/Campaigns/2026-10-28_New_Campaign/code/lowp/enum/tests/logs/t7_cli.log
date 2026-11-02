@@ -1,0 +1,22 @@
+                                                        v3_score.h 
+"41173ac1460e180e7a30da98260e1e338efb4a685a5052a6cd815aa7cbe26df7" 
+                                                         v3_util.h 
+"1841122ef2ad6d963b1e0f1d622e1bc154f23fd9e5d347e2b7e02890334d2e15" 
+OK p0020_S3_r007: 1.04858e+06 models, 0.7 s elapsed, 4 threads, input_mode sealed; C:/Users/felip/AppData/Local/Temp/lowp_work/enum/fake_out/results/T1/p0020/p0020_S3_r007
+[1] "EXACT.done"   "EXACT.rds"    "EXACT.sha256"
+sha file matches: TRUE 
+schema: lowp_exact_v1  scales: c100 c050  fields: schema,dataset_id,p,n,K,source_sha256,v3_score_sha256,runtime_s,host,started_utc,finished_utc,models_scored,models_expected,complete,threads,scales,extra 
+identical to direct lowp_exact (threads 1 vs 4): c100 TRUE  c050 TRUE 
+rerun:
+                                                        v3_score.h 
+"41173ac1460e180e7a30da98260e1e338efb4a685a5052a6cd815aa7cbe26df7" 
+                                                         v3_util.h 
+"1841122ef2ad6d963b1e0f1d622e1bc154f23fd9e5d347e2b7e02890334d2e15" 
+EXACT.done verified (hashes, dataset, input bytes, source fingerprint, requested scales, complete/exact, required fields), nothing to do: C:/Users/felip/AppData/Local/Temp/lowp_work/enum/fake_out/results/T1/p0020/p0020_S3_r007 
+Warning message:
+In system2(rs, c(shQuote(script), "--dataset", "p0020_S3_r007",  :
+  running command '"C:/Program Files/R/R-4.4.1/bin/Rscript.exe" "C:/Users/felip/OneDrive/Documents/Local_to_global_Bayesian/02_Experiments/I_2026-10-28_New_Campaign/code/lowp/enum/run_enum_dataset.R" --dataset p0020_S3_r007 --study "C:/Users/felip/AppData/Local/Temp/lowp_work/enum/fake_study" --outroot "C:/Users/felip/AppData/Local/Temp/lowp_work/enum/fake_out" --run-id T2 --threads 2' had status 1
+bad manifest hash ->
+Error: input file SHA-256 differs from the manifest for p0020_S3_r007: 82fef4d88dd84398cff1f2f7ef0f963fc43408b3434c0364673ed2951adb1506 vs 0000000000000000000000000000000000000000000000000000000000000000
+Execution halted
+T2 dir exists: FALSE 

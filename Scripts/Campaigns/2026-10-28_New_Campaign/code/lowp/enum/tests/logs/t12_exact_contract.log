@@ -1,0 +1,82 @@
+PASS valid sealed CLI record passes (with and without input) 
+PASS signature: (record, requested_scales = c('c100','c050'), input = NULL, mode = c('sealed','unsealed_test')) 
+PASS wrong schema schema is not lowp_exact_v1
+PASS malformed dataset_id dataset_id malformed | dataset_id differs from the input's
+PASS dataset_id differs from the input's dataset_id differs from the input's
+PASS missing top-level models_expected and complete (FC5) missing top-level fields: models_expected,complete
+PASS top-level complete FALSE (FC5) complete is not TRUE in both the top level and extra
+PASS extra$complete FALSE complete is not TRUE in both the top level and extra
+PASS extra$status partial (FC5) extra$status is not exact
+PASS models_scored != models_expected models_scored (1048575) != models_expected (1048576) or not positive
+PASS re-signed zero counts (equal 0/0, FC4) models_expected = 0 but sum_{k<=K} choose(p_retained, k) = 1048576 | models_scored (0) != models_expected (0) 
+PASS re-signed p = K = 1 / counts 2 on the unchanged p20 input (FC1) p = 1 but the input has 20 columns | retained_columns differ from the non-constant columns of the input | scal
+PASS K inconsistent with min(p_retained, floor(n/2)) K = 5 but min(p_retained = 20, floor(n/2)) = 20
+PASS models_expected not derived from retained p and K models_expected = 1048575 but sum_{k<=K} choose(p_retained, k) = 1048576
+PASS n differs from the input K = 99 but min(p_retained = 20, floor(n/2)) = 20 | n = 199 but the input has 200 rows
+PASS p differs from the input p = 21 but the input has 20 columns
+PASS retained map differs from the input's non-constant columns K = 20 but min(p_retained = 19, floor(n/2)) = 19 | models_expected = 1048576 but sum_{k<=K} choose(p_retained,
+PASS source_sha256 not a 64-hex source_sha256 is not a 64-hex SHA-256
+PASS record sealed but unsealed_test requested (FC1) input_mode is 'sealed' but 'unsealed_test' was requested | unsealed_test record claims manifest_checked
+PASS unsealed_test record where sealed is requested (FC1) input_mode is 'unsealed_test' but 'sealed' was requested | sealed record without manifest_checked = TRUE | sea
+PASS unsealed_test record accepted when unsealed_test is requested 
+PASS unsealed record claiming manifest_checked unsealed_test record claims manifest_checked | manifest SHA-256 differs from the record's
+PASS sealed record without manifest identity sealed record without a 64-hex manifest_sha256 | manifest SHA-256 differs from the record's
+PASS sealed record with manifest_checked FALSE sealed record without manifest_checked = TRUE
+PASS manifest sha differs from the current manifest manifest SHA-256 differs from the record's
+PASS input file sha differs input file SHA-256 differs from the record's
+PASS requested scale c050 absent (FC4) scale c050 is absent
+PASS scale status partial scale c100: status is not exact
+PASS scale scope restricted scale c100: scope is not full
+PASS scale scope 'all_models' (old baseline fixture) scale c050: scope is not full
+PASS scale status/scope absent (FC5) scale c100: missing fields: status,scope
+PASS heuristic label missing scale c100: missing fields: certificate_bound_kind
+PASS heuristic label altered scale c050: heuristic bound labels missing or altered
+PASS joint-valued size_logmass (FC5) scale c100: size_logmass is not normalised: |log-sum-exp| = 110 > 1e-10 | scale c100: size_logjoint[k] != size
+PASS size_logmass not normalised (shifted by 1e-6) scale c100: size_logmass is not normalised: |log-sum-exp| = 1e-06 > 1e-10 | scale c100: size_logjoint[k] != si
+PASS size_logmass of wrong length scale c100: size_logmass must be numeric of length K+1 without NA or log-probabilities > 0
+PASS log_Z not finite scale c050: log_Z is not finite
+PASS pip of the original length p = 20 when p_retained = 19 (constant column map) K = 20 but min(p_retained = 19, floor(n/2)) = 19 | models_expected = 1048576 but sum_{k<=K} choose(p_retained,
+PASS pip out of [0, 1] scale c100: pip must be numeric, length p_retained = 20, within [0, 1] | scale c100: PIP_j above the share of 
+PASS pip names do not match the map scale c100: names(pip) do not match the retained-column map
+PASS hpm not a subset of the retained columns scale c100: hpm is not a sorted subset of the retained columns | scale c100: hpm differs from the support of t
+PASS mpm inconsistent with pip > 0.5 scale c100: mpm != {pip > 0.5}
+PASS score re-check reported mismatches scale c100: the score re-check reported mismatches
+PASS top shorter than min(1000, models_expected) scale c100: top has 10 rows, expected 1000
+PASS negative margin scale c100: margin is negative
+PASS genuine empty-model HPM record (noise data, produced by the CLI) is valid: hpm integer(0), hpm_size 0, top[1] = empty model 
+PASS empty hpm while top[1] is still the non-empty model (hpm only edited) scale c100: hpm differs from the support of the best entry of top | scale c100: hpm_size differs from top$size
+PASS RC3-1: size_logjoint reversed (per-k identity broken, both log-sum-exp unchanged) scale c100: size_logjoint[k] != size_logmass[k] + log_Z (max abs error 136)
+PASS RC3-2: HPM set to {1} while top[1] is {3} scale c100: hpm differs from the support of the best entry of top | scale c100: hpm_size differs from top$size
+PASS RC3-3: log_Z = hpm_F - 10 (size_logjoint and log_Z_rel_m0 updated consistently) scale c100: log_Z (-120.16015) is below the mass of one contained model, hpm_F (-110.16015) | scale c100: log_
+PASS genuine p20 record (control) passes the PIP moment and listed-mass feasibility checks 
+PASS N2: all PIPs = 1 and MPM = all retained columns scale c100: PIP_j above the share of the listed models plus the unlisted mass 1 - sum(listed) = 0.0004805 (j =
+PASS N2: PIPs permuted between a signal and a null column (sum unchanged, mpm kept consistent) scale c100: PIP_j below the posterior share of the listed top models containing j (j = 14) | scale c100: PIP_j
+PASS N2: a signal PIP set to 0 (below the share of the listed top models) scale c100: PIP_j below the posterior share of the listed top models containing j (j = 14) | scale c100: sum(P
+PASS N2: PIPs scaled by 0.9 (sum(PIP) != sum_k k exp(size_logmass[k])) scale c050: PIP_j below the posterior share of the listed top models containing j (j = 1,2,3,4,5,6,7,8,9,10,11
+PASS size_logmass/size_logjoint with different -Inf patterns scale c100: size_logjoint and size_logmass have different -Inf patterns
+PASS log_Z_rel_m0 != log_Z - log_m0 scale c050: log_Z_rel_m0 != log_Z - log_m0
+PASS hpm_size differs from top$size[1] scale c100: top$size != number of variables in top$model | scale c100: hpm_size differs from top$size[1]
+PASS top$mask of row 1 differs from the model text scale c100: top$mask does not match top$model | scale c100: top contains duplicated models | scale c100: hpm d
+PASS duplicated model in top scale c100: top contains duplicated models | scale c100: PIP_j below the posterior share of the listed top mod
+PASS top not sorted by F (rows 2 and 3 swapped) scale c100: top F missing or not in decreasing order | scale c100: top is not in the section I.6 order (F decr
+PASS second_F != top$F[2] scale c050: second_F != top$F[2]
+PASS log_Z below the total mass of the listed top models (log_Z = hpm_F, joint updated) scale c100: log_Z is below the total mass of the listed top models | scale c100: PIP_j below the posterior sha
+PASS tie order: equal F, smaller size first then lexicographic is accepted; the reverse is rejected 
+PASS a superset of the requested scales is accepted unless exact_scale_set = TRUE 
+PASS one-scale request on a two-scale record is accepted by the validator (consumer view) 
+[1] TRUE
+PASS CLI unsealed_test run recorded as such 
+PASS FC1: after a manifest is added the unsealed_test record is NOT reused; recomputed as sealed 
+PASS   --unsealed-test-input with a manifest present stays a sealed run (verified skip) 
+PASS FC1: a changed manifest (new SHA-256, same file hash) -> recomputed with the new manifest identity 
+PASS FC1: re-signed p = K = 1 / counts 2 record on the unchanged p20 input -> recomputed 
+PASS FC1: a record whose top-level complete is FALSE (extra TRUE) -> recomputed 
+PASS FC1/FC5: a record without the top-level completeness fields -> recomputed 
+PASS FC2: CLI completes on a p = 20 input with one constant column (19 retained), writes .done OK p0020_S3_r008: 524288 models, 0.6 s elapsed, 2 threads, input_mode sealed; C:/Users/felip/AppData/Local/Temp/lowp_work/enum/fake_out12/results/C/p0020/p0020_S3_r008
+PASS   record: p = 20 (original), K = 19, retained map of 19 columns without column 5, models 2^19 = 524288 scored = expected (top level and extra) 
+PASS   names(pip) = the 19 retained columns, size_logmass of length 20, normalised; validator (with the input) accepts it 
+PASS   rerun: verified skip (the post-commit check and the resume agree on retained-p coverage) 
+PASS   API agrees with the CLI: 524288 models, status exact, complete 
+PASS   same record with the original-p coverage (2^20 - 1) is rejected by the validator 
+
+79 of 79 checks passed

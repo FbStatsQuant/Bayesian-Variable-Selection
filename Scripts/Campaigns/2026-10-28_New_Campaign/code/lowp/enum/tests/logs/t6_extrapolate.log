@@ -1,0 +1,6 @@
+subset: 31 of 1024 tasks, 1 thread, default recheck_stride 1009 (the production re-checks are INCLUDED in these times); elapsed 29.97 s, process CPU 23.98 s; per-task elapsed range 636-1467 ms; R2 of the popcount fit 0.00
+single-thread ELAPSED projection for all 1024 tasks: popcount regression 976 s +- 42 s (conditional 1 se, machine state not included); naive mean x 1024: 976 s
+single-thread CPU projection (subset process CPU x 1024/31): 792 s
+subset, sum of task elapsed times: threads 1 29.6, 8 47.1, 14 62.3 s (elapsed inflation x1.59 for 8 and x2.11 for 14); process CPU 24.0 / 26.8 / 26.2 s
+MEASURED full run, 14 threads: elapsed 139.8 s, process CPU 885.7 s (1.12 x the single-thread CPU projection), sum of task elapsed times 1925 s (1.97 x the single-thread elapsed projection); cpu load before the run 100%
+greedy dynamic-schedule simulation on the predicted task times, 14 threads: no slowdown 70 s; with the slowdown factor x1.97 taken from the full run itself 139 s (a retrospective calibration, not an independent prediction)

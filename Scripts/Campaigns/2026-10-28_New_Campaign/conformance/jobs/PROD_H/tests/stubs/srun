@@ -1,0 +1,4 @@
+#!/bin/bash
+# stub srun: drops its own options and runs the command
+while [[ ${1:-} == --* ]]; do shift; done
+exec "$@"

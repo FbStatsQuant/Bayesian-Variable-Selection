@@ -1,0 +1,11 @@
+-- pivot-failure hook: variables 3 and 6 (1-based) forced to fail
+scale c100: fallback=3072 (expected models containing var 3 or 6: 3072), slow_subtree=3072, nonidentical F vs Scorer=0, logZ diff vs no-hook=0, hpm same=TRUE
+scale c050: fallback=3072 (expected models containing var 3 or 6: 3072), slow_subtree=3072, nonidentical F vs Scorer=0, logZ diff vs no-hook=0, hpm same=TRUE
+-- Q-threshold hook: qthr = 0.2 (every model with Q/y'y < 0.2 is rescored by Scorer::score)
+scale c100: fallback=900, of which Q-rule=900, slow=0, nonidentical F vs Scorer=0
+scale c050: fallback=0, of which Q-rule=0, slow=0, nonidentical F vs Scorer=0
+cpp_dfs_F with failing vars: fallback flag set exactly for models containing var 3 or 6:  TRUE ; nonidentical F vs Scorer: 0 
+-- ties: column 10 = column 3 (exact duplicate), column 6 constant (dropped), p_raw = 12
+c100: p_ret=11 models=2048==2048; logZ diff=0; max dPIP=0; hpm=8;10;11 same=TRUE; top(441) models same=TRUE F bits=TRUE (tied-F entries in compared top: 118); names(pip)=1,2,3,4,5,7,8,9,10,11,12
+c050: p_ret=11 models=2048==2048; logZ diff=0; max dPIP=0; hpm=3;8;11 same=TRUE; top(441) models same=TRUE F bits=TRUE (tied-F entries in compared top: 238); names(pip)=1,2,3,4,5,7,8,9,10,11,12
+bitmask order vs v3::hpm_better mismatches (3e6 random pairs, ties in F forced): 0 

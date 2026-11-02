@@ -1,0 +1,69 @@
+                        check design scale       n nonidentical max_abs_diff
+1 p20_all_models_enumerator_F  block  c100 1048576            0            0
+  fallback recheck recheck_mismatch
+1        0    1024                0
+                        check design scale       n nonidentical max_abs_diff
+1 p20_all_models_enumerator_F  block  c050 1048576            0            0
+  fallback recheck recheck_mismatch
+1        0    1024                0
+                        check design scale       n nonidentical max_abs_diff
+1 p20_all_models_enumerator_F    ar1  c100 1048576            0            0
+  fallback recheck recheck_mismatch
+1        0    1024                0
+                        check design scale       n nonidentical max_abs_diff
+1 p20_all_models_enumerator_F    ar1  c050 1048576            0            0
+  fallback recheck recheck_mismatch
+1        0    1024                0
+                          check design scale  p     n nonidentical max_abs_diff
+1 random_1e5_models_rowappend_F  block  c100 20 1e+05            0            0
+  eta_nonidentical fallback
+1                0        0
+                          check design scale  p     n nonidentical max_abs_diff
+1 random_1e5_models_rowappend_F  block  c050 20 1e+05            0            0
+  eta_nonidentical fallback
+1                0        0
+                          check design scale  p     n nonidentical max_abs_diff
+1 random_1e5_models_rowappend_F    ar1  c100 20 1e+05            0            0
+  eta_nonidentical fallback
+1                0        0
+                          check design scale  p     n nonidentical max_abs_diff
+1 random_1e5_models_rowappend_F    ar1  c050 20 1e+05            0            0
+  eta_nonidentical fallback
+1                0        0
+                          check design scale  p     n nonidentical max_abs_diff
+1 random_1e5_models_rowappend_F  block  c100 30 1e+05            0            0
+  eta_nonidentical fallback
+1                0        0
+                          check design scale  p     n nonidentical max_abs_diff
+1 random_1e5_models_rowappend_F  block  c050 30 1e+05            0            0
+  eta_nonidentical fallback
+1                0        0
+                          check design scale  p     n nonidentical max_abs_diff
+1 random_1e5_models_rowappend_F    ar1  c100 30 1e+05            0            0
+  eta_nonidentical fallback
+1                0        0
+                          check design scale  p     n nonidentical max_abs_diff
+1 random_1e5_models_rowappend_F    ar1  c050 30 1e+05            0            0
+  eta_nonidentical fallback
+1                0        0
+                         check design scale      n nonidentical max_abs_diff
+1 p30_enumerator_nodes_recheck  block  c100 360969            0            0
+  eta_nonidentical fallback   models
+1                0        0 22020096
+                         check design scale      n nonidentical max_abs_diff
+1 p30_enumerator_nodes_recheck  block  c050 360969            0            0
+  eta_nonidentical fallback   models
+1                0        0 22020096
+                         check design scale      n nonidentical max_abs_diff
+1 p30_enumerator_nodes_recheck    ar1  c100 360969            0            0
+  eta_nonidentical fallback   models
+1                0        0 22020096
+                         check design scale      n nonidentical max_abs_diff
+1 p30_enumerator_nodes_recheck    ar1  c050 360969            0            0
+  eta_nonidentical fallback   models
+1                0        0 22020096
+Warning messages:
+1: In lowp_exact(X, list(c100 = Y[, 1], c050 = Y[, 2]), threads = 8,  :
+  lowp_exact: only 22020096 of 1073741824 feasible models were scored; results are restricted to the scored models (status 'partial', global_certified = FALSE)
+2: In lowp_exact(X, list(c100 = Y[, 1], c050 = Y[, 2]), threads = 8,  :
+  lowp_exact: only 22020096 of 1073741824 feasible models were scored; results are restricted to the scored models (status 'partial', global_certified = FALSE)

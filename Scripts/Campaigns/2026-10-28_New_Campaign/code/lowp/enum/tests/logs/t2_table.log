@@ -1,0 +1,17 @@
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         check design scale  p       n nonidentical max_abs_diff eta_nonid fallback
+   p20_all_models_enumerator_F  block  c100 20 1048576            0            0        NA        0
+   p20_all_models_enumerator_F  block  c050 20 1048576            0            0        NA        0
+   p20_all_models_enumerator_F    ar1  c100 20 1048576            0            0        NA        0
+   p20_all_models_enumerator_F    ar1  c050 20 1048576            0            0        NA        0
+ random_1e5_models_rowappend_F  block  c100 20  100000            0            0         0        0
+ random_1e5_models_rowappend_F  block  c050 20  100000            0            0         0        0
+ random_1e5_models_rowappend_F    ar1  c100 20  100000            0            0         0        0
+ random_1e5_models_rowappend_F    ar1  c050 20  100000            0            0         0        0
+ random_1e5_models_rowappend_F  block  c100 30  100000            0            0         0        0
+ random_1e5_models_rowappend_F  block  c050 30  100000            0            0         0        0
+ random_1e5_models_rowappend_F    ar1  c100 30  100000            0            0         0        0
+ random_1e5_models_rowappend_F    ar1  c050 30  100000            0            0         0        0
+  p30_enumerator_nodes_recheck  block  c100 30  360969            0            0         0        0
+  p30_enumerator_nodes_recheck  block  c050 30  360969            0            0         0        0
+  p30_enumerator_nodes_recheck    ar1  c100 30  360969            0            0         0        0
+  p30_enumerator_nodes_recheck    ar1  c050 30  360969            0            0         0        0

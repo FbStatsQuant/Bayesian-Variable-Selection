@@ -1,0 +1,14 @@
+# Response to Sol R2 (manager; HQ D53 routing)
+
+Plan: `R2_FIX_PLAN.md`. Implementation notes: `R2_FIX_NOTES.md` (Terra fixer) + one manager fix (EX12 exit code). Evidence: `tests/SUMMARY_r3_final.txt` (clean sequential run, no edits during it): **14 suites, 1,438 passed, 0 failed**.
+
+| Item | D53 class | Fix | Regression tests |
+|---|---|---|---|
+| I1 late eligible P5 unit escapes the list | (i) | `make_p5_list.sh --from-scan <any successful phase>`: creates or APPENDS to `p5/expected.tsv` (never removes rows), `p5/expected_history.tsv`; reconcile flags `p5_unlisted_eligible` from the newest successful scan phase (by job id); closure of smc/smcrep needs a successful `final*` scan newer than EVERY fitting job of the run, covering exactly the piece's done units, with every resource_limit row listed and no unsafe retry state (exit 6 otherwise), also for zero-expected runs | `test_p5.sh` (152): Sol's empty-initial → late resource_limit primary → final-eligible path (reconcile nonzero, closure 6), nonempty initial + later eligible, append-once + history, closure after retry + newer final scan, zero-eligible needs a final scan, stale final scan, coverage gaps, unsafe states, `--from-scan r1` after a failed initial scan |
+| I2 closure erases a piece's exception | (i) | reconcile writes `exceptions.tsv` (`piece kind item detail`) and a STATUS line: exit 0 CLEAN / 4 COMPLETE WITH n HQ-ACKNOWLEDGED EXCEPTIONS / 1 INCOMPLETE OR UNRESOLVED / 2 input or tamper error; closure refuses (6) any exception of the selected piece unless `--allow-incomplete`; `<piece>.exceptions.tsv` saved and hash-bound in CLOSED, reloaded after the pull as acknowledged (never exit 0) | `test_manifests.sh` (124), `test_reconcile.py` (34): unexpected output blocks closure, unrelated unfinished piece does not, close → pull → exit 4 with the acknowledged exception, tamper → 2 |
+| I3 closed pieces lose native counts | (i) | native status per unit rebuilt from the hash-verified closed inventory rows and aggregated with live pieces | `test_manifests.sh`: counts invariant across closing/pulling one piece and all pieces (committed failure, two native categories, nonempty P5 inventory) |
+| II1 failed initial scan | (ii) | removed by code (`--from-scan` any phase); JOB.md §14 note | `test_p5.sh` |
+| II2 receipt after truth recovery | (ii) | JOB.md §14: Sol's procedure verbatim | `test_jobmd.sh` static check |
+| M1 retune ignores live plain enum20 | minor | live non-array own jobs are in the admission plan | `test_retune.sh` (37): 60 admitted, 62/64 refused, enum20 row in the record |
+| M2 documentation drift | minor | REUSE.md, DESIGN.md, TESTS.md refreshed | `test_jobmd.sh` (48) static checks |
+| EX12 (tester) | minor | `make_p5_list.sh`: a different initial receipt against an existing inventory exits 2 (was 1) | `test_p5.sh` EX12 |

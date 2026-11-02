@@ -1,0 +1,59 @@
+# Scoring metrics (LOWP thread, New Campaign)
+
+Entry point: `run_scoring.R` (one call scores a study). All definitions below are implemented in `R/` and asserted in `tests/test_scoring.R`.
+Truth is read only by `R/truth.R`. Exact reference = `EXACT.rds` of the enumerator (INTERFACES I2). "Main fit" = `SMCBVS.rds` (rep 0); repeat seeds are `SMCBVS_rep{m}.rds`.
+
+## Per SMC fit (`case_smc_accuracy.csv`, `R/metrics_smc.R`; one row per fit, `rep` = 0 for the main fit)
+
+| Column(s) | Definition |
+|---|---|
+| `ok`, `evidence_ok`, `hpm_ok`, `rb_ok`, `plain_ok` | `ok` = native status completed/exact and estimates available; the others say which field groups are usable (see the validity rules below); unusable groups give NA metrics and the fit still counts in the expected-case denominators |
+| `log_Z_hat`, `log_Z_exact`, `e` | pooled log Z-hat, exact log Z (same standardised working scale), error `e = log Z-hat - log Z` |
+| `abs_e`, `rel_err` | `|e|`; relative error `Z-hat/Z - 1 = exp(e) - 1` |
+| `e_isl1..4` | island errors `log Z-hat_r - log Z` |
+| `lb_cover`, `lb_violated` | `lb_cover = 1{log Z-hat + log 0.05 <= log Z}`; `lb_native_diff` = native `log_Z_lower95` minus `log Z-hat + log 0.05` (must be 0) |
+| `isl_sd`, `se` | sd of the four island log Z-hat_r; `se = isl_sd / 2` |
+| `e_over_se`, `within2se`, `e_gt_2se` | `|e| / se`; `1{|e| <= 2 se}`; `1{|e| > 2 se}`. Spearman(`|e|`, `se`) across cases is in `se_calibration.csv` |
+| `rb_*`, `plain_*` | PIP errors `|PIP-hat_j - PIP_j|` against the exact PIPs: `_max`, `_mean` over all j; `_mean_true`, `_max_true` over S0; `_mean_null`, `_max_null` over the other variables. `rb` = `pip_primary` (equal-island Rao-Blackwellised), `plain` = plain particle-count PIP |
+| `rb_isl{r}_max`, `rb_isl_max_mean`, `rb_isl_mean_mean` (and `plain_`) | per island r the max error of that island's PIP vector; mean over islands of the max / of the mean error |
+| `hpm_eq_exact`, `hpm_ne_exact` | SMC HPM equals exact HPM as sets |
+| `exact_hpm_eq_truth`, `hpm_eq_truth` | exact HPM = S0; SMC HPM = S0 |
+| `F_exact_hpm`, `F_smc_hpm`, `F_gap` | F of the exact HPM (enumerator); F of the SMC HPM (core scorer); `F_gap = F_exact_hpm - F_smc_hpm` (>= 0) |
+| `hpm_F_mismatch` | `|native hpm_F - scorer F(HPM)|` (consistency; ~0) |
+| `F_truth`, `log_truth_mass`, `truth_mass` | F(S0); `F(S0) - log Z`; `exp(F(S0) - log Z)` = exact posterior mass of the truth |
+| `truth_minus_smc_hpm`, `truth_minus_exact_hpm` | `F(S0) - F(SMC HPM)`; `F(S0) - F(exact HPM)` (<= 0) |
+| `miss_class` | `hit` (SMC HPM = S0); `search_miss` (HPM != S0 and F(S0) > F(HPM)); `posterior_miss` (HPM != S0 and F(S0) <= F(HPM)) |
+| `mpm_rb_eq_exact`, `mpm_plain_eq_exact`, `mpm_ne_exact` | SMC MPM ({PIP-hat > 1/2}, RB or plain) equals the exact MPM |
+| `exact_mpm_eq_truth`, `mpm_rb_eq_truth`, `mpm_plain_eq_truth` | exact MPM = S0; SMC MPM = S0 |
+| `escalated`, `checks_failed_final`, `E1`, `E2`, `E3`, `low_ess`, `cut_group`, `local_limit`, `grid_unconverged`, `near_tie_truncated`, `local_certified` | native flags (`checks_failed_final = !checks_passed_final`) |
+| `runtime_s`, `score_fresh`, `score_logical`, `n_stages_final`, `min_ess`, `tier`, `n_distinct_scored` | cost: wall seconds; fresh / logical scores of the final ledger; final bridge stages; minimum final-stage ESS; final tier; distinct models scored in the whole fit (v2.2 registry) |
+| `log_mass_scored`, `log_scored_coverage`, `scored_coverage` | registry `log sum_{distinct scored S} exp F(S)`; minus log Z; `exp` of that (fraction of exact posterior mass inside the scored set) |
+
+## Across seeds (`case_stability.csv`)
+`sd_log_Z` sd of log Z-hat across seeds; `hpm_agreement` = share of seed pairs with the same HPM; `n_distinct_hpm`; `max_pip_sd_rb`, `max_pip_sd_plain` = max over j of the sd of PIP-hat_j across seeds; eligibility and counts as in the previous section.
+
+## Flags against errors (`flag_error_2x2.csv`)
+For each flag (`escalated`, `checks_failed_final`, `E1`, `E2`, `E3`, `low_ess`, `cut_group`, `local_limit`, `grid_unconverged`) and each event (`hpm_ne_exact`, `mpm_ne_exact`, `lb_violated`, `e_gt_2se`): the 2x2 counts over completed fits that have an exact reference (all seeds), `sensitivity = P(flag | event)`, `specificity = P(no flag | no event)`, `ppv = P(event | flag)`. NA when a denominator is 0; fits with NA flag or event are dropped for that pair.
+
+## Roster, registry and denominators (review findings 1, 4, 5, 6, 10)
+- **Expected cases** = `STUDY/manifests/inputs_manifest_lowp.csv` x `--scales` (never the observed files). A rostered dataset without a truth file, an unknown id in `--cases`, a missing manifest, or (production mode) a (p, scenario) without replicates 1..100 is a scoring-completeness ERROR. `--partial 1` (tests, partial studies) lists `inputs/` when the manifest is absent, skips the 6 x 100 check, and HEADLINE.md says "PARTIAL STUDY".
+- **Expected (method, rule, role) rows** = the registry, DERIVED at run time from the benchmark code (`R/registry.R`): `bench_lowp/R/config_lowp.R` (rule ids and roles of the primary-tier arm of F1-F5, A1-A3) with `lowp_derive` (the LA-4 / PREREG R1 overlay) called on a synthetic fit, plus SMCBVS (`hpm` primary, `pip05` S0) and EXACT (`hpm`, `mpm`). Result: 42 rows; **primary** = F1-F3 `cv_min`, F4/F5 `ebic1_K37`, A1 `pip05`, A2 `ssl_final`, A3 `ci95`; **S0** = F1-F3 `cv_1se`, `ebic1_K37`, `ebic05_K37`; F4 `ebic05_K37`, `bic_K37`, `ebic1_lam005`; F5 `ebic05_K37`, `bic_K37`, `sic_smax`; A1 `cslead`, `bfdr10`; A3 `km2`; **secondary** = the cap rows (F1-F3 `ebic1`, `ebic05`; F4/F5 `ebic1`, `ebic05`, `bic`). All are required (a missing one is `not_run`); H4 uses role `primary` (+ SMC `pip05`, EXACT). An observed role that disagrees with the registry is an error. `make_registry.R` writes the derived registry as a CSV; every scoring run saves `registry_used.csv`; a test compares the derived (method, rule, role) set with the rows of a real benchmark smoke output. `--registry FILE` overrides it (tests only). A method with no result anywhere reports 0/n and 0/6n. Results outside the registry are kept in `case_selection.csv` (`in_registry` FALSE) and never enter H4.
+- **Duplicates** (same unit in several result roots) are resolved before scoring: identical copies are merged; conflicting copies (different bytes for SMC / EXACT; for benchmark rows any difference in the full row: status, support, role, `diag_flag`, `diag_codes`, runtime ...) are an error unless `--on-conflict first_root` (precedence = order of the roots); every duplicate is listed in `duplicates.csv`. Repeat fits of a case must have distinct method seeds.
+- **EXACT readiness**: used only if `EXACT.done` and `EXACT.sha256` exist and agree with the SHA-256 of the RDS AND the record passes the shared strict validator `lowp/enum/exact_contract.R::lowp_validate_exact(record, requested_scales = the run's scales, input = list(X, dataset_id, input-file SHA-256, manifest SHA-256), mode = "sealed")`: full I2 field set, counts derived from the retained p and K (missing counts, 0/0, wrong K or a truncated top list are refused), `complete` TRUE at both levels, every requested scale present with status `exact` / scope `full`, and the record bound to this input and manifest (a changed manifest invalidates sealed records). All validator reasons are logged in `exact_diagnostics.csv` (`reason`, `detail`). Exact PIPs are expanded to the input p through the retained-column map; names that disagree with it make the scale unavailable.
+- **Validity of SMC fields**: `ok` = completed + estimates available. Evidence: `evidence_ok` needs a finite pooled log Z and, for a completed SMC fit, FOUR finite island values; the native `exact` branch has no islands and keeps its pooled evidence (e, relative error and lower-bound comparison are retained). `islands_ok` (four finite islands) alone gates the island errors and the SE. Without evidence the HPM stays usable. PIPs: a full-length vector is reordered to the canonical original-index order (duplicate / unknown names rejected) and its confirmed dropped columns must be 0; retained vectors and island matrices need names covering exactly the retained columns, values in [0, 1] and four island columns (`rb_ok`, `plain_ok`). Exact PIPs are held to the same finite-probability rule. Final-stage quantities use only phase `final_bridge` rows; absent or all-NA costs stay NA.
+- **Unique keys**: `case_base()` stops on a duplicate main-fit row or a duplicate roster case id.
+- **H1-H3 denominators**: every row of the tables is over the EXPECTED cases (`n_cases`), with `miss` (no main SMC fit), `fail` (failed fit) and `no_exact` shown. Rates (H2, % MPM = exact MPM) divide by `n_cases`: missing/failed/no-reference count as "not equal". Error statistics are conditional on the fits that supply the field and the number is shown: `n_evid` (bias, RMSE, median/90th |e|, lower-bound coverage), `n_rb`, `n_plain`. Lower-bound coverage is therefore the CONDITIONAL rate over the n_evid fits.
+- **H4**: each cell shows `all-saved (passing-only)` exact recoveries over the same fixed denominator (the expected cases of the cell). Passing-only removes fits whose `diag_flag` is TRUE (NA = not flagged), per master IV.1.3; failed / timed-out / not-run results are non-recoveries in both. CSV columns `n_exact`, `n_exact_passing`, `n_flagged`, `n_failed`, `recovery`, `recovery_passing`.
+- **Repeat seeds** (`case_stability.csv`): `n_attempted` fits found, `n_completed`, and per-statistic counts `n_evidence` (sd of log Z), `n_hpm` (agreement), `n_rb`, `n_plain` (PIP SD). A statistic needs >= 2 eligible distinct seeds for its own field, otherwise NA. A fit whose `method_seed` is unknown cannot be shown to be a distinct seed: it is excluded and counted in `n_unknown_seed`.
+
+## Selection (`case_selection.csv`, `R/metrics_selection.R`; one row per case x method x rule)
+`k`, `tp = |S n S0|`, `fp = |S \ S0|`, `fn = |S0 \ S|`, `exact = (fp = fn = 0)`, `error_type` in `none`, `extra_only` (fn = 0), `missed_only` (fp = 0), `mixed`, `failed`; `runtime_s`, `status`, `diag_flag`. Failed, timeout and not_run rows (and every registry row of an expected case with no result: synthesised `not_run`) stay in the denominator as non-recovery (`exact = FALSE`, `error_type = failed`, tp/fp/fn NA), per master IV.1.3. SMC rows: `hpm` and `pip05` (read from the adapter rows of the main fit); reference rows: `EXACT` / `hpm` and `EXACT` / `mpm`. `in_expected` marks rows of expected cases (the only ones that enter H4).
+
+## Headline tables (charter 1; `R/tables.R`)
+Unit = the main SMC fit of each EXPECTED case (see the denominator rules above); `HEADLINE.md` shows exactly these four sections.
+- **H1 Z-hat** (`H1_logZ.csv`; by p x scenario x scale, plus pooled "all"): `n_cases`, `n_smc_missing`, `n_smc_failed`, `n_exact_missing`, `n_evidence`; bias = mean e, RMSE, median `|e|`, 90th percentile of `|e|` (type 7), lower-bound coverage = mean `lb_cover`, all over the `n_evidence` cases.
+- **H2 HPM** (`H2_hpm.csv`): availability counts as in H1; % SMC HPM = exact HPM; % exact HPM = truth; % SMC HPM = truth (denominator `n_cases`).
+- **H3 PIP** (`H3_pip.csv`): availability counts plus `n_rb`, `n_plain`; for RB and plain: mean and 90th percentile of the per-fit max error, mean error over true and over null variables (over the contributing fits); % MPM = exact MPM (RB and plain; denominator `n_cases`).
+- **H4 recovery** (`H4_recovery.csv`): exact-recovery counts per p x scale x registry row with `in_h4`, per scenario and pooled (the primary rule of every method, SMC `hpm` and `pip05`, `EXACT` `hpm` / `mpm`); companion rules (`role = S0`, e.g. `ebic1`) stay in `case_selection.csv` only.
+
+## Theory measures (`case_theory.csv`, `run_theory_H.R`): see `THEORY_MEASURES.md` (pi_0 masses, coverage, truth trace, miss class, and the TD audit with its literal and `toward` variants).

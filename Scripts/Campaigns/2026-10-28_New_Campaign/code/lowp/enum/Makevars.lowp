@@ -1,0 +1,9 @@
+# Makevars.lowp -- compiler flags of the exact enumerator: the SMC core's flags (cpp/Makevars.v3 of the core) plus OpenMP
+# (the Rcpp openmp plugin adds -fopenmp to PKG_CXXFLAGS / PKG_LIBS).
+# -ffp-contract=off : no fused multiply-add contraction (bit-for-bit replication of v3::Scorer::score arithmetic)
+# -march=x86-64-v2  : portable instruction set, as the core
+CXXFLAGS = -O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2
+CXX11FLAGS = $(CXXFLAGS)
+CXX14FLAGS = $(CXXFLAGS)
+CXX17FLAGS = $(CXXFLAGS)
+CXX20FLAGS = $(CXXFLAGS)

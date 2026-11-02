@@ -28,3 +28,19 @@ __pycache__/
 *.tar
 *.tar.gz
 *.zip
+
+# --- added 2026-11-02 (GH-PACK) ---
+# bulk data on Owls; never in Git
+/_data/
+/_staging/
+/_runtime/
+.env
+.env.*
+**/.venv/
+**/.lake/
+*.tgz
+*.7z
+# frozen New Campaign trees: ledgered test logs and .out evidence are part of their manifests
+!Scripts/Campaigns/2026-10-28_New_Campaign/**/*.log
+!Scripts/Campaigns/2026-10-28_New_Campaign/**/*.out
+!Scripts/Campaigns/2026-10-28_New_Campaign/bench_audit/jobs/BENCH_F3_PROD/tests/fixtures/**/*.rds

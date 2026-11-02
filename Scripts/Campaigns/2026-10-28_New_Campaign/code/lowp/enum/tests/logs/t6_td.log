@@ -1,0 +1,9 @@
+TD p=30 s0=5 d=1 threads=14: centres 832, scores 101152 (formula 101152), 0.10 s, 1.1e+06 scores/s; violating a/b/c = 511/0/0, min margin a/b/c = -5.767/2.9593/2.9593; TD(d,0) holds: FALSE
+TD p=30 s0=5 d=2 threads=14: centres 10432, scores 1.48835e+06 (formula 1.48835e+06), 0.29 s, 5.1e+06 scores/s; violating a/b/c = 8943/0/0, min margin a/b/c = -5.842/0.00053962/2.9593; TD(d,0) holds: FALSE
+dry-run counts p=1000, K=100, s0=14, pool=986:
+> for (d in 0:1) { x <- lowp_td_count(1000, 100, 14, 986, d); cat(sprintf("TDCOUNT d=%d: centres %.0f, scores %.0f (%.4g)\n", d, x[["centres"]], x[["scores"]], x[["scores"]])) }
+TDCOUNT d=0: centres 16384, scores 130228224 (1.302e+08)
+TDCOUNT d=1: centres 16171008, scores 144447561728 (1.444e+11)
+dry run p=1000 d=0 returns: TRUE 130,228,224 scores
+TD p=1000 s0=14 d=0 threads=14: centres 16384, scores 1.30228e+08 (formula 1.30228e+08), 32.7 s, 3.98e+06 scores/s; violating a/b/c = 13256/0/0, min margin a/b/c = -8.8622/NA/1.983
+PEAK_WORKING_SET_MB=274.0 PROCESS_WALL_S=35.7

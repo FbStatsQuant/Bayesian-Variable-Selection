@@ -1,0 +1,404 @@
+diff -ruN --strip-trailing-cr '--exclude=.cpp_cache' v2_1_baseline/core/README.md v2_2/core/README.md
+--- v2_1_baseline/core/README.md	2026-10-28 19:41:15.256903100 -0500
++++ v2_2/core/README.md	2026-10-28 19:45:47.031119100 -0500
+@@ -33,3 +33,5 @@
+ Execution follows BRIEF Amendments 1/2 and RULINGS_LEAD R-3/R-4: development validation on Owls R4.6.0/GCC11.5.0, nice19, A at most4cores (2 during C batch), within deployment caps. Root is the sole SSH funnel. NOTS GCC14.3.0/R4.5.2 build and full regression are separately required before any NOTS fit; no NOTS use until the lead opens runs. A's prepared validation scripts do not grant production GO.
+ 
+ Validation evidence belongs to HANDOFF_v2.md and the saved per-job manifests. Source_manifest.json pins source/prototype identity; it is not a numerical-equivalence certificate. B independently re-verifies the frozen v2 before G1 may open.
++
++SMC fits append plain PIPs and scored-model/stage instrumentation; plain PIPs are unavailable (NA) for exact fits.
+diff -ruN --strip-trailing-cr '--exclude=.cpp_cache' v2_1_baseline/core/cpp/v3_core.cpp v2_2/core/cpp/v3_core.cpp
+--- v2_1_baseline/core/cpp/v3_core.cpp	2026-10-28 19:41:15.245904300 -0500
++++ v2_2/core/cpp/v3_core.cpp	2026-10-28 22:10:01.323669200 -0500
+@@ -62,6 +62,34 @@
+   return M;
+ }
+ 
++
++// [[Rcpp::export]]
++SEXP cpp_registry_new(SEXP setup) { HPtr h = get_holder(setup); return XPtr<Registry>(new Registry(*h->D), true); }
++// [[Rcpp::export]]
++void cpp_registry_snapshot(SEXP registry) { XPtr<Registry>(registry)->snapshot(); }
++// [[Rcpp::export]]
++List cpp_registry_report(SEXP registry) {
++  XPtr<Registry> r(registry);
++  double n = r->exact ? (double)r->seen.size() : NA_REAL, lse = r->exact ? r->lse() : NA_REAL;
++  double bytes = sizeof(Registry) + r->zob.capacity() * sizeof(uint64_t) + r->hll.capacity() +
++    r->seen.bucket_count() * sizeof(void*) + r->seen.size() * (sizeof(std::pair<const uint64_t, RegFirst>) + sizeof(void*));
++  return List::create(_["mode"] = r->exact ? "exact" : "hll", _["n_distinct"] = n,
++    _["n_distinct_hll"] = r->estimate(), _["log_sum_exp_F"] = lse,
++    _["after_calibration"] = List::create(_["n_distinct"] = r->n_cal, _["n_distinct_hll"] = r->hll_cal, _["log_sum_exp_F"] = r->lse_cal),
++    _["first_scored"] = r->exact ? (SEXP)counter_matrix(r->first_by) : R_NilValue, _["memory_bytes_estimate"] = bytes);
++}
++// [[Rcpp::export]]
++DataFrame cpp_registry_scored_set(SEXP registry) {
++  XPtr<Registry> r(registry); if (!r->exact || r->p > 32) stop("scored set requires p <= 32");
++  std::vector<uint64_t> keys; keys.reserve(r->seen.size()); for (const auto& x : r->seen) keys.push_back(x.first);
++  std::sort(keys.begin(), keys.end()); int n = (int)keys.size();
++  NumericVector key(n); IntegerVector size(n), tier(n), iter(n), island(n), stage(n); CharacterVector phase(n), mech(n);
++  for (int i = 0; i < n; ++i) { auto f = r->seen.at(keys[i]); key[i] = (double)keys[i]; size[i] = __builtin_popcountll(keys[i]);
++    phase[i] = phase_name(f.phase); mech[i] = mech_name(f.mech); tier[i] = f.tier; iter[i] = f.iter; island[i] = f.island; stage[i] = f.stage; }
++  return DataFrame::create(_["key"] = key, _["size"] = size, _["first_phase"] = phase, _["first_mech"] = mech,
++    _["first_tier"] = tier, _["first_iter"] = iter, _["first_island"] = island, _["first_stage"] = stage);
++}
++
+ // ---------------------------------------------------------------------------------------------
+ // Budgets (M §3, §6.2): exact-branch count with saturating 128-bit arithmetic.
+ // ---------------------------------------------------------------------------------------------
+@@ -321,7 +349,7 @@
+   for (int i = 0; i < l.size(); ++i) out.push_back(to_internal(D, l[i]));
+   return out;
+ }
+-static List island_to_list(const IslandResult& r, const Data& D) {
++static List island_to_list(const IslandResult& r, const Data& D, SEXP stream = R_NilValue) {
+   auto msdf = [](const std::vector<MoveStats>& v) {
+     int n = (int)v.size();
+     NumericVector g(n), gf(n), ue(n), ua(n), us(n), ne(n), na(n), nn(n), ns(n), ie(n), ia(n);
+@@ -335,7 +363,9 @@
+   };
+   NumericMatrix rbr(r.rb_round.size(), D.p);
+   for (size_t h = 0; h < r.rb_round.size(); ++h) for (int j = 0; j < D.p; ++j) rbr(h, j) = r.rb_round[h][j];
+-  return List::create(_["phase"] = phase_name(r.phase), _["tier"] = r.tier, _["iter"] = r.iter, _["island"] = r.island,
++  NumericMatrix plain(r.plain_round.size(), D.p);
++  for (size_t h = 0; h < r.plain_round.size(); ++h) for (int j = 0; j < D.p; ++j) plain(h, j) = r.plain_round[h][j];
++  List out = List::create(_["phase"] = phase_name(r.phase), _["tier"] = r.tier, _["iter"] = r.iter, _["island"] = r.island,
+                       _["log_Z"] = r.logZ, _["phi"] = r.phi, _["log_increment"] = r.inc, _["ess"] = r.ess, _["cum_log_Z"] = r.cum,
+                       _["distinct_resampled"] = r.distinct_resampled, _["distinct_moved"] = r.distinct_moved,
+                       _["stage_moves"] = msdf(r.stage_moves), _["terminal_moves"] = msdf(r.terminal_moves),
+@@ -343,6 +373,9 @@
+                       _["partial"] = r.partial, _["init_draws_hash"] = hex64(r.init_hash),
+                       _["seconds"] = NumericVector::create(_["init"] = r.seconds_init, _["bridge"] = r.seconds_bridge,
+                                                            _["burn_in"] = r.seconds_burn, _["measured"] = r.seconds_measured));
++  if (!Rf_isNull(stream)) out.push_back(stream, "stream");
++  out.push_back(r.pip_plain, "pip_plain"); out.push_back(r.plain_acc, "plain_acc"); out.push_back(plain, "plain_round");
++  return out;
+ }
+ static List local_to_list(const LocalArchive& A, const Data& D) {
+   return List::create(_["centre"] = to_orig(D, A.centre), _["centre_F"] = A.centre_F, _["path"] = models_to_list(D, A.path),
+@@ -385,7 +418,7 @@
+ 
+ // The final run on a frozen grid. Returns raw results; R assembles the reported outputs.
+ // [[Rcpp::export]]
+-List cpp_final_run(SEXP setup, NumericVector grid, List ro, double seed, SEXP inherited, SEXP runtime) {
++List cpp_final_run(SEXP setup, NumericVector grid, List ro, double seed, SEXP inherited, SEXP runtime, SEXP registry = R_NilValue) {
+   HPtr h = get_holder(setup); const Data& D = *h->D; const Start& st = *h->st;
+   if (!h->has_graph) stop("setup required");
+   struct RunOpts { int N, L, Hm, islands, tier, ell; double cache_capacity; };
+@@ -396,6 +429,7 @@
+   std::vector<double> g(grid.begin(), grid.end());
+   auto t_all = Clock::now();
+   Ledger led(&D, o.islands);
++  if (!Rf_isNull(registry)) led.reg = XPtr<Registry>(registry).get();
+   ingest_tables(led, *h);
+   ScoreCache cache; cache.init(D.W, (size_t)o.cache_capacity);
+   Engine E(D, st, h->Nb, h->B);
+@@ -435,9 +469,9 @@
+       RngSource rng; rng.g.seed_stream((uint64_t)seed, (uint64_t)(9 + r));  // final islands: streams 10..13 (M §6.1)
+       E.vs = &rng;
+       res.push_back(E.run_island(r, o.N, g, o.L, o.Hm, o.tier, nullptr));
+-      List island = island_to_list(res.back(), D);
+-      island["stream"] = List::create(_["stream"] = 9 + r, _["position_start"] = 0.0,
++      List stream = List::create(_["stream"] = 9 + r, _["position_start"] = 0.0,
+         _["position_end"] = (double)rng.g.count, _["init_draws_hash"] = hex64(res.back().init_hash));
++      List island = island_to_list(res.back(), D, stream);
+       islands[r - 1] = island;
+       if (res.back().partial) { status = "resource_limit"; break; }
+     }
+@@ -551,7 +585,7 @@
+ }
+ 
+ struct CalState {
+-  RObject setup_keep, runtime_keep;
++  RObject setup_keep, runtime_keep, registry_keep;  // keep the registry's R owner alive with the state
+   Holder* h = nullptr;
+   std::unique_ptr<Ledger> led;
+   ScoreCache cache;
+@@ -568,12 +602,13 @@
+ typedef XPtr<CalState> CPtr;
+ 
+ // [[Rcpp::export]]
+-SEXP cpp_cal_new(SEXP setup, double seed, List ro, SEXP runtime) {
++SEXP cpp_cal_new(SEXP setup, double seed, List ro, SEXP runtime, SEXP registry = R_NilValue) {
+   HPtr h = get_holder(setup);
+   CalState* c = new CalState();
+   c->setup_keep = setup; c->h = h.get(); c->seed = (uint64_t)seed;
+   const Data& D = *h->D;
+   c->led.reset(new Ledger(&D, 4));
++  if (!Rf_isNull(registry)) { c->registry_keep = registry; c->led->reg = XPtr<Registry>(registry).get(); }
+   c->guard = runtime_ptr(runtime); c->runtime_keep = runtime;
+   c->cache.init(D.W, (size_t)as<double>(ro["cache_capacity"]));
+   c->E.reset(new Engine(D, *h->st, h->Nb, h->B));
+diff -ruN --strip-trailing-cr '--exclude=.cpp_cache' v2_1_baseline/core/cpp/v3_engine.h v2_2/core/cpp/v3_engine.h
+--- v2_1_baseline/core/cpp/v3_engine.h	2026-10-28 19:41:15.255898000 -0500
++++ v2_2/core/cpp/v3_engine.h	2026-10-28 19:45:46.755463100 -0500
+@@ -36,7 +36,8 @@
+   std::vector<MoveStats> stage_moves;        // bridge stages 1..T
+   std::vector<MoveStats> terminal_moves;     // burn-in rounds then measured rounds
+   std::vector<int> terminal_distinct;
+-  std::vector<double> pip, rb_acc;
++  std::vector<double> pip, rb_acc, pip_plain, plain_acc;
++  std::vector<std::vector<double>> plain_round;
+   std::vector<std::vector<double>> rb_round; // per measured round accumulator (sum of o_j)
+   int forced = 0;                            // pilot: forced (floor) steps
+   uint64_t init_hash = 0;                    // hash of the initial draws (particle order; R6 instrumentation)
+@@ -348,12 +349,16 @@
+     res.seconds_burn = secs_since(t0); t0 = Clock::now();
+     ev.phase = PH(PH_MEASURED);
+     rb_acc.assign(p, 0.0);
++    res.plain_acc.assign(p, 0.0);
+     for (int h = 1; h <= Hm; ++h) {
+       ev.round = phase_override >= 0 ? L + h : h; ms = MoveStats();
+       std::vector<double> before = rb_acc;
+       rb_on = true;
+       population_round(P, 1.0);
+       rb_on = false;
++      std::vector<double> plain(p, 0.0);
++      for (const auto& q : P) for (int j : q.S) { plain[j]++; res.plain_acc[j]++; }
++      res.plain_round.push_back(plain);
+       std::vector<double> diff(p); for (int j = 0; j < p; ++j) diff[j] = rb_acc[j] - before[j];
+       res.rb_round.push_back(diff);
+       res.terminal_moves.push_back(ms); res.terminal_distinct.push_back(distinct(P));
+@@ -362,6 +367,8 @@
+     res.rb_acc = rb_acc;
+     res.pip.assign(p, 0.0);
+     for (int j = 0; j < p; ++j) res.pip[j] = rb_acc[j] / ((double)N * Hm);  // PIP_rj = mean over particles and rounds
++    res.pip_plain.resize(p);
++    for (int j = 0; j < p; ++j) res.pip_plain[j] = res.plain_acc[j] / ((double)N * Hm);
+     res.logZ = logZ;
+     ev = EventCtx();
+     return res;
+diff -ruN --strip-trailing-cr '--exclude=.cpp_cache' v2_1_baseline/core/cpp/v3_ledger.h v2_2/core/cpp/v3_ledger.h
+--- v2_1_baseline/core/cpp/v3_ledger.h	2026-10-28 19:41:15.248525600 -0500
++++ v2_2/core/cpp/v3_ledger.h	2026-10-28 19:45:46.710033000 -0500
+@@ -27,6 +27,8 @@
+ // rebuild iteration k); -1 = tables, final run, testing interfaces.
+ struct EventCtx { int phase = 0, tier = 0, island = 0, stage = 0, round = 0, particle = 0, position = 0, iter = -1; double phi = 0; };
+ 
++#include "v3_registry.h"
++
+ // Top-k store of distinct models by a value, with a strict total tie order (so the std::set also finds a model by
+ // (value, S): a model's value is a deterministic function of the model).
+ struct TopEntry { double v; std::vector<int> S; };
+@@ -64,6 +66,7 @@
+ class Ledger {
+  public:
+   const Data* D;
++  Registry* reg = nullptr;
+   int islands = 4;
+   bool has_hpm = false;
+   std::vector<int> hpmS; double hpmF = NEG_INF, hpm_logm = 0; EventCtx hpm_ev; int hpm_mech = 0;
+@@ -101,6 +104,7 @@
+ // Aggregate bookkeeping, with no watch sets or per-event archive.
+ inline void Ledger::event(const std::vector<int>& S, double F, double lg0, double logm, bool is_fresh, bool is_held,
+                           const EventCtx& ev, int mech) {
++  if (is_fresh && reg) reg->insert(S, F, ev, mech);
+   logical[ev.phase][mech]++;
+   if (is_fresh) fresh[ev.phase][mech]++;
+   bool own = ev.island >= 1 && ev.island <= islands &&
+diff -ruN --strip-trailing-cr '--exclude=.cpp_cache' v2_1_baseline/core/cpp/v3_registry.h v2_2/core/cpp/v3_registry.h
+--- v2_1_baseline/core/cpp/v3_registry.h	1969-12-31 18:00:00.000000000 -0600
++++ v2_2/core/cpp/v3_registry.h	2026-10-28 19:45:46.680668100 -0500
+@@ -0,0 +1,33 @@
++// Distinct scored models; this observer never affects sampling.
++#pragma once
++struct RegFirst { int8_t phase, mech, tier; int16_t iter, island; int32_t stage; };
++struct Registry {
++  int p; bool exact; std::vector<uint64_t> zob;
++  std::unordered_map<uint64_t, RegFirst> seen;
++  double mx = NEG_INF; long double total = 0;
++  std::vector<uint8_t> hll;
++  uint64_t first_by[N_PHASE][N_MECH] = {};
++  double n_cal = NA_REAL, lse_cal = NA_REAL, hll_cal = NA_REAL;
++  explicit Registry(const Data& d) : p(d.p), exact(d.p <= 64), zob(d.zob.key), hll(1 << 14, 0) {}
++  void insert(const std::vector<int>& S, double F, const EventCtx& ev, int mech) {
++    uint64_t key = 0, x = 0;
++    for (int j : S) { if (exact) key |= (1ULL << j); x ^= zob[j]; }
++    uint64_t h = splitmix64(x); unsigned idx = h >> 50; uint64_t tail = h << 14;
++    int rank = tail ? __builtin_clzll(tail) + 1 : 51;
++    hll[idx] = std::max(hll[idx], (uint8_t)rank);
++    if (!exact) return;
++    RegFirst first{(int8_t)ev.phase, (int8_t)mech, (int8_t)ev.tier, (int16_t)ev.iter, (int16_t)ev.island, (int32_t)ev.stage};
++    if (!seen.emplace(key, first).second) return;
++    first_by[ev.phase][mech]++;
++    if (F > mx) { total = total * std::exp((long double)mx - F) + 1; mx = F; }
++    else total += std::exp((long double)F - mx);
++  }
++  double lse() const { return seen.empty() ? NEG_INF : mx + std::log(total); }
++  double estimate() const {
++    const double m = (double)hll.size(); double sum = 0; int zero = 0;
++    for (uint8_t r : hll) { sum += std::ldexp(1.0, -(int)r); if (!r) ++zero; }
++    double e = (0.7213 / (1 + 1.079 / m)) * m * m / sum;
++    return e <= 2.5 * m && zero ? m * std::log(m / zero) : e;
++  }
++  void snapshot() { n_cal = exact ? (double)seen.size() : NA_REAL; lse_cal = exact ? lse() : NA_REAL; hll_cal = estimate(); }
++};
+diff -ruN --strip-trailing-cr '--exclude=.cpp_cache' v2_1_baseline/core/v3_calib.R v2_2/core/v3_calib.R
+--- v2_1_baseline/core/v3_calib.R	2026-10-28 19:41:15.259904600 -0500
++++ v2_2/core/v3_calib.R	2026-10-28 19:45:46.867511200 -0500
+@@ -132,11 +132,11 @@
+ 
+ # Production calibration: at most one escalation; persistent stores and independent streams.
+ # preflight (internal) = function(tier) returning TRUE if the allocation would be exceeded before that tier.
+-v3_calibrate <- function(setup, seed, tier = 0, preflight = NULL, runtime = NULL) {
++v3_calibrate <- function(setup, seed, tier = 0, preflight = NULL, runtime = NULL, registry = NULL) {
+   t0 <- proc.time()[["elapsed"]]
+   cseed <- seed; v3_check_seed(seed)
+   ro <- list(cache_capacity = as.numeric(500 * setup$ctx$p))
+-  state <- .v3cpp$cpp_cal_new(setup$ptr, as.numeric(cseed), ro, runtime)
++  state <- .v3cpp$cpp_cal_new(setup$ptr, as.numeric(cseed), ro, runtime, registry)
+   tiers <- list(); status <- "ok"; e <- tier; blocked <- NULL
+   repeat {
+     a <- v3_cal_tier(state, setup, e, runtime)
+diff -ruN --strip-trailing-cr '--exclude=.cpp_cache' v2_1_baseline/core/v3_fit.R v2_2/core/v3_fit.R
+--- v2_1_baseline/core/v3_fit.R	2026-10-28 19:41:15.239134500 -0500
++++ v2_2/core/v3_fit.R	2026-10-28 22:10:03.875262000 -0500
+@@ -46,9 +46,9 @@
+ }
+ 
+ # Public production interface. Callers own persistence and the study adapter.
+-v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24)) {
++v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), keep_scored_set = NULL) {
+   t_start <- proc.time()[["elapsed"]]
+-  runtime <- ctx <- NULL
++  runtime <- ctx <- registry <- NULL
+   fit <- list(seed = seed, allocation = allocation, local_certified = FALSE, global_certified = FALSE,
+               cut_group = NA, cut_group_count = NA_integer_, cut_group_components = list(),
+               partial_results = FALSE, estimates_available = FALSE)
+@@ -58,6 +58,38 @@
+     if (!is.null(runtime)) fit$runtime_guard <- .v3cpp$cpp_runtime_report(runtime)
+     if (!is.null(ctx)) fit$numerical_routes <- .v3cpp$cpp_numerical_routes(ctx)
+     if (identical(fit$status, "resource_limit")) fit$partial_results <- TRUE
++    # v2.2 fields go after every v2.1 field (plain PIPs are assembled earlier, in v3_assemble_final)
++    for (nm in c("pip_plain_r", "pip_plain", "mpm_plain")) if (!is.null(fit[[nm]])) { v <- fit[[nm]]; fit[[nm]] <- NULL; fit[[nm]] <- v }
++    cal <- fit$calibration
++    tiers <- cal$tiers %||% list()
++    intervals <- function(x) if (is.null(x)) NA_integer_ else as.integer(length(x) - 1L)
++    stages <- list(final = if (is.null(fit$settings)) NA_integer_ else intervals(fit$grid),
++      pilot = vapply(tiers, function(x) intervals(x$pilot$schedule), 0L),
++      diag_grid_intervals = lapply(tiers, function(x) vapply(x$iterations %||% list(), function(it) intervals(it$grid), 0L)),
++      tier_final = cal$tier_final %||% NA_integer_)
++    inst <- list(stages = stages)
++    if (identical(fit$status, "completed") && identical(fit$branch_run, "smc")) {
++      inst$best_before_local <- fit$hpm_before_local
++      inst$best_after_local <- list(model = fit$hpm, F = fit$hpm_F, changed = !identical(fit$hpm_before_local$model, fit$hpm))
++    }
++    stop_info <- NULL
++    if (identical(fit$status, "resource_limit")) {
++      where <- if (isTRUE(fit$preflight$exceeds)) "preflight" else if (identical(cal$escalation_blocked, "resource_limit")) "escalation_preflight" else "runtime_guard"
++      checks <- fit$runtime_guard$checkpoints %||% list(); hits <- Filter(function(x) isTRUE(x$exceeded), checks)
++      fields <- c("checkpoint", "phase", "tier", "iter", "island", "stage", "elapsed_seconds", "projected_seconds", "allocation_seconds")
++      stop_info <- c(list(where = where), setNames(lapply(fields, function(nm) if (length(hits)) hits[[1]][[nm]] %||% NA else NA), fields))
++    }
++    inst["stop"] <- list(stop_info)
++    tr <- cal$flags$triggers_by_tier
++    first <- if (length(tr)) tr[[1]] else NULL
++    inst$escalation <- list(escalated = cal$escalated %||% FALSE, reasons = names(first)[which(as.logical(unlist(first)))], blocked = cal$escalation_blocked)
++    large <- if (is.null(fit$B)) 0L else sum(vapply(fit$cut_group_components, function(x) x$size > fit$B, FALSE))
++    inst$cut_group_large <- large; inst$cut_group_large_any <- large > 0L; inst$version <- "v2.2"
++    if (!is.null(registry)) {
++      inst$scored <- .v3cpp$cpp_registry_report(registry)
++      if (isTRUE(keep_scored_set %||% (fit$p <= 32)) && fit$p <= 32) inst$scored_set <- .v3cpp$cpp_registry_scored_set(registry)
++    }
++    fit$instrumentation <- inst
+     fit
+   }
+   valid_seed <- tryCatch({ if (length(seed) != 1) stop("seed must be a single integer"); v3_check_seed(seed); TRUE }, error = function(e) conditionMessage(e))
+@@ -109,6 +141,7 @@
+     fit$hpm <- setup$hpm; fit$hpm_F <- setup$hpm_F; fit$hpm_provenance <- setup$hpm_provenance
+     fit$hpm_incomplete <- TRUE; return(finish(fit))
+   }
++  registry <- .v3cpp$cpp_registry_new(setup$ptr)
+   fit$timings$setup <- setup$seconds; fit$timings$setup_total <- proc.time()[["elapsed"]] - t0
+   fit$blocks <- setup$blocks; fit$neighbours <- setup$neighbours; fit$log_Zbar0 <- setup$start$log_Zbar0
+   cg <- .v3cpp$cpp_cut_group(setup$ptr)
+@@ -120,7 +153,8 @@
+     pf$exceeds
+   }
+   t0 <- proc.time()[["elapsed"]]
+-  cal <- v3_calibrate(setup, seed, preflight = pf_fun, runtime = runtime)
++  cal <- v3_calibrate(setup, seed, preflight = pf_fun, runtime = runtime, registry = registry)
++  .v3cpp$cpp_registry_snapshot(registry)
+   fit$timings$calibration <- proc.time()[["elapsed"]] - t0; fit$calibration <- cal
+   fit$stage_table <- cal$stage_table
+   if (cal$status != "ok") {
+@@ -131,7 +165,7 @@
+     return(finish(fit))
+   }
+   frozen <- cal$frozen; fit$frozen <- frozen
+-  t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime)
++  t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, registry)
+   fr$stage_table <- v3_bind_records(list(cal$stage_table, fr$stage_table))
+   fit$timings$final <- proc.time()[["elapsed"]] - t0; fit$timings$final_detail <- fr$timings; fr$timings <- NULL
+   cf <- cal$flags
+diff -ruN --strip-trailing-cr '--exclude=.cpp_cache' v2_1_baseline/core/v3_run.R v2_2/core/v3_run.R
+--- v2_1_baseline/core/v3_run.R	2026-10-28 19:41:15.240132700 -0500
++++ v2_2/core/v3_run.R	2026-10-28 19:45:46.908555800 -0500
+@@ -164,14 +164,17 @@
+                       final_total = raw$seconds_total)
+   out$log_m0 <- raw$log_m0; out$log_Zbar0 <- raw$log_Zbar0
+   out$estimates_available <- TRUE
++  out$pip_plain_r <- do.call(cbind, lapply(isl, function(r) r$pip_plain)); rownames(out$pip_plain_r) <- orig
++  out$pip_plain <- setNames(rowMeans(out$pip_plain_r), orig)
++  out$mpm_plain <- as.integer(orig[out$pip_plain > 0.5])
+   out
+ }
+ 
+ # Fresh production final run. The runtime pointer shares the complete-fit clock with calibration.
+-v3_final_run <- function(setup, frozen, seed, runtime = NULL) {
++v3_final_run <- function(setup, frozen, seed, runtime = NULL, registry = NULL) {
+   stopifnot(inherits(setup, "v3_setup"), inherits(frozen, "v3_frozen"))
+   v3_check_grid(frozen[["grid"]]); v3_check_seed(seed)
+   ro <- v3_run_settings(setup, frozen)
+-  raw <- .v3cpp$cpp_final_run(setup$ptr, frozen[["grid"]], ro, as.numeric(seed), frozen[["inherited"]], runtime)
++  raw <- .v3cpp$cpp_final_run(setup$ptr, frozen[["grid"]], ro, as.numeric(seed), frozen[["inherited"]], runtime, registry)
+   v3_assemble_final(raw, setup, frozen, ro, seed)
+ }
+diff -ruN --strip-trailing-cr '--exclude=.cpp_cache' v2_1_baseline/study/SCHEMA.md v2_2/study/SCHEMA.md
+--- v2_1_baseline/study/SCHEMA.md	2026-10-28 19:41:15.267429500 -0500
++++ v2_2/study/SCHEMA.md	2026-10-28 19:47:10.089695700 -0500
+@@ -1,6 +1,6 @@
+ # Study adapter schema: binding R-1
+ 
+-Authority: deployment `RULINGS_LEAD.md`, R-1 (2026-10-22 19:25Z), and `BRIEF.md` with amendments. This describes live adapter `schema_version=2L`, `adapter_version="2-R1"`. Historical v1 snapshots and outputs retain their original unresolved mapping and are not rewritten. No production-core field or statistical setting is changed by this adapter.
++Authority: deployment `RULINGS_LEAD.md`, R-1 (2026-10-22 19:25Z), and `BRIEF.md` with amendments. This describes live adapter `schema_version=2L`, `adapter_version="2.2-R1"`. Historical v1 snapshots and outputs retain their original unresolved mapping and are not rewritten. No production-core field or statistical setting is changed by this adapter.
+ 
+ ## Unit and file contract
+ 
+@@ -91,7 +91,7 @@
+ 
+ | Key | Type / contents |
+ |---|---|
+-| `schema_version`, `adapter_version` | Integer `2L`, character `2-R1`. |
++| `schema_version`, `adapter_version` | Integer `2L`, character `2.2-R1`. |
+ | `rows` | Two-row data.frame with exact ordered CSV schema above. |
+ | `fit` | Entire native core return unchanged; NULL if call threw before returning; even malformed raw returns survive. Native `message` is not a captured R message. |
+ | `pip`, `pip_primary_original` | Identical numeric vectors of input p, names `"1"`..`"p"`. Valid supplied retained primary PIPs are expanded with zero for dropped predictors, including on failed fits. If unavailable, all NA. Raw retained primary vector also survives unchanged in `fit$pip_primary`. |
+@@ -160,3 +160,5 @@
+ ## Validation handoff
+ 
+ The editable smoke contract is `A_build/smoke/test_adapter_contract.R`; it reuses `smoke/fixtures/core/v3.R` and mutates only copied fixtures in its evidence directory. It covers all native statuses and adapter errors, exact informational handling, individual numerical/informational diagnostics, zero/positive numeric forced counts, nested failed searches/calibration triggers, verbatim warning/message CSV/RDS persistence, failed full primary PIP/support audit, mapping provenance and immutable resume. Root runs it on Owls under the resource policy and inspects saved `adapter_test_evidence.{rds,txt}`. No numerical execution or SSH was performed while implementing this mapping. Root owns external HANDOFF/ledger/run updates and verification evidence.
++
++RDS records append `pip_plain`, `mpm_plain`, and `instrumentation`; exact fits have unavailable plain PIPs. Adapter version is `2.2-R1`; CSV is unchanged.
+diff -ruN --strip-trailing-cr '--exclude=.cpp_cache' v2_1_baseline/study/adapter.R v2_2/study/adapter.R
+--- v2_1_baseline/study/adapter.R	2026-10-28 19:41:15.265428700 -0500
++++ v2_2/study/adapter.R	2026-10-28 19:45:47.031119100 -0500
+@@ -409,7 +409,7 @@
+   design$fold_seed <- NA_integer_; design$fold_sha256 <- NA_character_
+   rows <- smcbvs_rule_rows(fit, outputs, design, policy, warnings, messages, error, native)
+   thread_vars <- c("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "NUMEXPR_NUM_THREADS")
+-  record <- list(schema_version = 2L, adapter_version = "2.1-R1", rows = rows, fit = fit,
++  record <- list(schema_version = 2L, adapter_version = "2.2-R1", rows = rows, fit = fit,
+     pip = outputs$pip, pip_primary_original = outputs$pip, hpm = outputs$hpm, mpm = outputs$mpm,
+     native_status = native, estimates_available = outputs$estimates_available,
+     warnings = warnings, messages = messages, error = error, runtime_s = runtime,
+@@ -424,6 +424,10 @@
+         "SLURM_MEM_PER_NODE", "SLURM_MEM_PER_CPU", "SLURM_TIMELIMIT"), unset = NA_character_)),
+       compiler = Sys.getenv(c("CC", "CXX", "CXX17", "LOADEDMODULES"), unset = NA_character_)),
+     started_utc = started, finished_utc = finished)
++  plain <- setNames(rep(NA_real_, spec$p), as.character(seq_len(spec$p)))
++  if (is.list(fit) && !is.null(fit$pip_plain)) { plain[] <- 0; plain[names(fit$pip_plain)] <- fit$pip_plain }
++  record$pip_plain <- plain; record["mpm_plain"] <- list(if (is.list(fit)) fit$mpm_plain else NULL)
++  record["instrumentation"] <- list(if (is.list(fit)) fit$instrumentation else NULL)
+   smcbvs_write_record(prefix, record)
+   invisible(list(prefix = prefix, skipped = FALSE, rows = rows, native_status = native))
+ }

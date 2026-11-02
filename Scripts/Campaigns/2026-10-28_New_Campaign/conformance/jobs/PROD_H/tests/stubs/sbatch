@@ -1,0 +1,32 @@
+#!/bin/bash
+# stub sbatch: records the exact argument vector (one argument per line, calls separated by '---'); returns 7001, 7002, ...
+# FAIL_AT=n  : the n-th call fails (exit 42).   BAD_ID_AT=n : the n-th call prints an unparsable answer.
+n=$(( $(cat "$STUB_DIR/n" 2>/dev/null || echo 0) + 1 )); echo $n > "$STUB_DIR/n"
+{ for a in "$@"; do printf '%s\n' "$a"; done; echo '---'; } >> "$STUB_DIR/sbatch_argv.txt"
+printf '%s\n' "$*" >> "$STUB_DIR/sbatch_calls.txt"
+# STUB_SBATCH_DELAY=s: the scheduler answers after s seconds (lets a second, overlapping caller run into the submission window; Sol review 4, R4-1)
+if [ -n "${STUB_SBATCH_DELAY:-}" ]; then sleep "$STUB_SBATCH_DELAY"; fi
+if [ "${FAIL_AT:-0}" = "$n" ]; then echo 'fabricated sbatch rejection' >&2; exit 42; fi
+if [ "${BAD_ID_AT:-0}" = "$n" ]; then echo 'Submitted batch job (not parsable)'; exit 0; fi
+# BREAK_JOURNAL=path BREAK_AT=n: at the n-th call (an ACCEPTED submission) the journal file is replaced by a directory, so the caller's next append fails
+if [ -n "${BREAK_JOURNAL:-}" ] && [ "${BREAK_AT:-1}" = "$n" ]; then rm -f "$BREAK_JOURNAL"; mkdir -p "$BREAK_JOURNAL"; fi
+id=$(( ${ID_BASE:-7000} + n ))
+# STUB_SBATCH_ACCEPT_THEN_DIE=status (Sol review 6, R6-1): the scheduler ACCEPTS job $id (recorded in accepted_dead) but the client dies before
+# printing the id and exits with that status (143 = TERM, 137 = KILL), exactly as a client killed after the acceptance would
+# STUB_BREAK_INFLIGHT=path (Sol review 7, R7-1): before dying, replace that file by a directory (its content saved) so the caller's append fails
+if [ -n "${STUB_SBATCH_ACCEPT_THEN_DIE:-}" ]; then
+  echo "$id" >> "$STUB_DIR/accepted_dead"
+  if [ -n "${STUB_BREAK_INFLIGHT:-}" ] && [ -f "$STUB_BREAK_INFLIGHT" ]; then cp "$STUB_BREAK_INFLIGHT" "$STUB_DIR/inflight.saved"; rm -f "$STUB_BREAK_INFLIGHT"; mkdir -p "$STUB_BREAK_INFLIGHT"; fi
+  exit "$STUB_SBATCH_ACCEPT_THEN_DIE"
+fi
+# STUB_RUN_SCAN=1: a p5_scan.sbatch submission is executed synchronously as a 1-CPU job (the scan job), and sacct.psv gets its terminal row
+if [ "${STUB_RUN_SCAN:-0}" = 1 ]; then
+  case "$*" in *p5_scan.sbatch*)
+    args=("$@"); k=$(( ${#args[@]} - 3 ))
+    SLURM_JOB_ID=$id SLURM_CPUS_PER_TASK=1 bash "${args[$k]}" "${args[$((k + 1))]}" "${args[$((k + 2))]}" > "$STUB_DIR/scan_$id.log" 2>&1; rc=$?
+    st=COMPLETED; [ $rc = 0 ] || st=FAILED
+    [ -f "$STUB_DIR/sacct.psv" ] && echo "$id|p5scan|$st|0:0|00:05:00||n1|2026-10-29T17:00:00|1|300" >> "$STUB_DIR/sacct.psv";; esac
+fi
+# STUB_ARM_SQUEUE_FAIL=1: after ACCEPTING a scan job, the next squeue call fails once (a transient scheduler outage right after the acceptance)
+[ "${STUB_ARM_SQUEUE_FAIL:-0}" = 1 ] && case "$*" in *p5_scan.sbatch*) : > "$STUB_DIR/squeue_fail_once";; esac
+echo $id

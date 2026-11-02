@@ -1,0 +1,31 @@
+# Deployed baseline and current v2 byte identities
+
+The 15 deployed source SHA-256 hashes were compared with the audit's deployed rows: 15/15 matched before modification. The deployed test hashes below were not in the audit list.
+
+Unchanged F2 methods/glmnet_helpers.R and tests/diag_accuracy.R were restored with Copy-Item and are byte-identical. The changed F2 run_case.R is LF-normalized, as explicitly directed by the manager; the subsequently restored and edited test_F2_enet.R has CRLF line endings. Reversing the runner's three intended changes (schema 2, outer failure coefficient evidence, and RDS coefficient element), then comparing after CRLF-to-LF normalization, gave exact equality with deployed. DIFF_vs_deployed.patch uses --ignore-cr-at-eol.
+
+A zero-context CR-insensitive diff check compared all regions outside its hunks: F2 run_case.R, 3 hunks, all unchanged regions identical; F2 tests/test_F2_enet.R, 24 hunks, all unchanged regions identical. Test hunks cover local compatibility, the manager-approved canary split and paired historical tolerance checks.
+
+# file | deployed SHA-256 | v2 SHA-256 | identical
+F1_Lasso/common.R | c1c9c46dba0aef3825749237a1b89d827546fd8be821843930826feb5c1d3246 | 4d4e6f65c50b0b0a3f762f9878eb1264f00a7f1d85800c3d3f8e63a3f3904a49 | False
+F1_Lasso/config.R | 693f8eab5950e2cb610e7759c79ef166e09203d3e0851b82139f8b5817b8ca2c | 3905d433cc4398b4b23a7c3da1adadaa213358b113738ce3c387b15d06f1ba12 | False
+F1_Lasso/run_case.R | efea5949f7544c540139eadc7cc5eb0fb4306c343e64c86bf62f823d88d6f9d9 | e262979226b14398dc5a838be980fef105017c18b17b0d90ae164eb9e977b9fa | False
+F1_Lasso/methods/fit_F1_lasso.R | 734d6fcc778d7fbadcaa0e3ecdf554dd84f48b00e0569687d14516eb894314bb | 0aa6d65baa7cb8983f70de1e1dab36b80b6f3cfa5e655e9abd4d680b798b77f3 | False
+F1_Lasso/methods/glmnet_helpers.R | cd544cb7c3518eb20b6c28ca903812c26392a45ebd35ae367d200db697bc05da | cd544cb7c3518eb20b6c28ca903812c26392a45ebd35ae367d200db697bc05da | True
+F1_Lasso/tests/test_common.R | f174cd294b4720383b37ab84f917f20db222f7ada252f92800225ba1306685dc | 1a7e41726bd637b476ec3a1fb773a6cb06fff7e7a66721a7622e9dbbb6e383c9 | False
+F1_Lasso/tests/test_F1_lasso.R | 57ff8b2012076ce66ccf32adce62674c5da2e8ec6292c11058dd7a5a34007a1a | c3aa7271876e2f798ad4603f843507f7218f104efbc1c85c3f72f40d0304eae3 | False
+F2_ElasticNet/common.R | 666bc488c69168f878d811e2061b22d46c5dd8dec86a67b31cc3a3a8b9c7cb26 | 89d83b3eeb0242e469751a228cc3ffbfcfbf5e57b3725bf287c985cd3b92bf2f | False
+F2_ElasticNet/config.R | afa073e41968cae2b8cc7c76eb25df4eb653c130303c6fd516376361c46441a2 | a801b936cce7f58aae6b107790e59bb4fd744f2e0676be55013d65cc66a19719 | False
+F2_ElasticNet/run_case.R | 137f6dd99b97ad67210bf52ff3684579bca5912920371abf0ea6088e1b137f73 | 1b9a9cb1a8529cbb98d8603b7d1a59f4c62879107b56ebbef25f6aa6efda0603 | False
+F2_ElasticNet/methods/fit_F2_enet.R | f038f80b65451a19d2fe5507b8d5e866867c983cd98c568505aaa79bfc2a93b5 | 04ba82821ac5987087237f217578370f51e8140c31872e8e6dc939703d1bf803 | False
+F2_ElasticNet/methods/glmnet_helpers.R | d2ffc988506171c745e0642041102ab4393b267a085d355bad1998d21db0f3a4 | d2ffc988506171c745e0642041102ab4393b267a085d355bad1998d21db0f3a4 | True
+F2_ElasticNet/tests/diag_accuracy.R | c3149a09e2c0e07941a80eb2f6d7b4f5e986fd57b1985961b11ae347335f71fc | c3149a09e2c0e07941a80eb2f6d7b4f5e986fd57b1985961b11ae347335f71fc | True
+F2_ElasticNet/tests/diag_maxit.R | 35bc14f0c56269a2d09e84ef42d03e962280ae3c91f933a4eb9396c0eba20bbf | 35bc14f0c56269a2d09e84ef42d03e962280ae3c91f933a4eb9396c0eba20bbf | True
+F2_ElasticNet/tests/test_F2_enet.R | 8cd0b05013d9df4331c9c51e6e20103124f95c8453f000ebbf3eb66d4a674762 | 3552e31ab8c4e774368a0885121d653acb12ff22fda60ee63bc074bcd49dd4fa | False
+F3_AdaptiveLasso/common.R | fe8e4a372fa7927e5ccd9494fa79c31b251423bf58f6d3df832b332d84042fb1 | 1ff848871f850ce51c8e14883c900866d691d7159fef697f3fe0c637c2c34efe | False
+F3_AdaptiveLasso/config.R | 37f6177a7494f16648a0e3dd05b9b4459d72df82d7d0ebd9717f462c4003e1b4 | d2c4d0b4826cd46396042ef39fab65b026ee7ed3619c31dd8365522d8c7a5337 | False
+F3_AdaptiveLasso/run_case.R | 6b1186e0ccd7062ff62a62bf5255832690dd9aff2fa8f595ce4df4ecad9d88d6 | 7c5f641fb2212ccac25a9a29b810f947a9779f54e9af62fc1ffd1aae3405e3c2 | False
+F3_AdaptiveLasso/methods/fit_F3_alasso.R | eded713d97a406f13f0be29628d7b35c9ff6d57863ca818e134d003f0f98a7f8 | e12afd04ea6be5468cba1317f08216f6eb484174db192e27defa4ed9e37ef233 | False
+F3_AdaptiveLasso/methods/glmnet_helpers.R | 0d6cd4a894bb1daefeb67b8ad725be24d205ad297b65aef99d285cd3e1e4f4de | 0d6cd4a894bb1daefeb67b8ad725be24d205ad297b65aef99d285cd3e1e4f4de | True
+F3_AdaptiveLasso/tests/test_F3_alasso.R | 563ede8518721e6ec1d556c5c3c5523f00e8298cf7b7a77b337f1f6bd0d0cbb9 | 7e868b41822ba15335137e6b8ddb416a442615bba93dcf00077e69649a6442d6 | False
+F3_AdaptiveLasso/tests/validate_outputs.R | f776b32bd1112dc16ebd4493704c334c77a73553a532924c16c266c6efb0b2cd | 7082d48b93a0c4211b12d4eba851d286a6a45767d68de020eec1c26bc478e358 | False

@@ -1,0 +1,217 @@
+# Frozen production constants, isolated by method because upstream helper contracts differ.
+LOWP_PRODUCTION <- 
+list(F1 = list(COMMON = list(n = 200L, intercept = FALSE, standardize = FALSE, 
+    nfolds = 10L, min_fold_rows = 3L, kmax_ebic = 100L, ebic_gamma = c(ebic1 = 1, 
+    ebic05 = 0.5, bic = 0), ols_tol = 1e-10, design_tol = 1e-10, 
+    support_zero_tol = 0, flag_codes = c("kkt_path", "path_truncated", 
+    "L_saturated", "elbo_drop", "sigma2_floor", "tail_unstable", 
+    "fixed_point", "ess_tau", "ess_ci95", "crn_mismatch"), info_codes = c("lambda_first", 
+    "lambda_last", "alpha_edge", "kappa_edge", "floored_selected", 
+    "ebic_at_largest", "capped_intermediate"), study = "bench20261019", 
+    regime = "H", scale_keys = c(c100 = 1, c075 = 0.75, c050 = 0.5, 
+    c035 = 0.35, c025 = 0.25)), F1 = list(alpha = 1), GLMNET = list(
+    type_gaussian = "naive", thresh = 1e-16, maxit = 1e+07, fdev = 0, 
+    devmax = 1, lambda_rel_tol = 1e-12, kkt_rel_tol = 1e-05, 
+    pkg_version = "5.1"), GRID = list(nlambda = 200L, min_ratio = 1e-04, 
+    max_mult = 1.01), METHODS = structure(list(method_id = "F1", 
+    fn = "fit_F1_lasso", variant = "primary", method_label = "Lasso", 
+    package = "glmnet", pkg_version = "5.1", tier = "primary", 
+    rule_ids = list(c("cv_min", "cv_1se", "ebic1", "ebic05", "ebic1_K37", "ebic05_K37")), 
+    roles = list(c("primary", "S0", "S0", "S0", "S0", "S0")), extra_cols = list(
+        c("lambda", "cv_mean", "cv_se", "rss", "ebic1_value", 
+        "crit_value", "index", "k_valid_max", "k_path_max")), 
+    converged_on_failure = FALSE), row.names = c(NA, -1L), class = "data.frame"), 
+    METHOD_SEED_OFFSET = 4000000L, PIP_THRESHOLD = 0.5, TEST_SEED = 20261019L), 
+    F2 = list(COMMON = list(study = "bench20261019", study_root = "/projects/ml75/fb31/BVS/bench20261019", 
+        study_lib = "/projects/ml75/fb31/BVS/bench20261019/lib/R452", 
+        n = 200L, intercept = FALSE, standardize = FALSE, nfolds = 10L, 
+        min_fold_size = 3L, kmax_ebic = 100L, ebic_gamma = c(ebic1 = 1, 
+        ebic05 = 0.5, bic = 0), ols_tol = 1e-10, design_tol = 1e-10, 
+        support_zero_tol = 0, scale_keys = c(c100 = 1, c075 = 0.75, 
+        c050 = 0.5, c035 = 0.35, c025 = 0.25)), F2 = list(alphas = c(0.1, 
+    0.25, 0.5, 0.75, 0.9), ties = "alpha_desc_lambda_desc"), 
+        GLMNET = list(type_gaussian = "naive", thresh = 1e-16, 
+            maxit = 1e+07, fdev = 0, devmax = 1, lambda_rel_tol = 1e-12, 
+            kkt_rel_tol = 1e-05, pkg_version = "5.1"), GRID = list(
+            nlambda = 200L, min_ratio = 1e-04, max_mult = 1.01), 
+        METHODS = structure(list(method_id = "F2", fn = "fit_F2_enet", 
+            variant = "primary", method_label = "Elastic net", 
+            package = "glmnet", pkg_version = "5.1", tier = "primary", 
+            rule_ids = list(c("cv_min", "cv_1se", "ebic1", "ebic05", "ebic1_K37", "ebic05_K37"
+            )), roles = list(c("primary", "S0", "S0", "S0", "S0", "S0"))), row.names = c(NA, 
+        -1L), class = "data.frame"), METHOD_SEED_OFFSET = 4000000L, 
+        PIP_THRESHOLD = 0.5, TEST_SEED = 20261019L), F3 = list(
+        COMMON = list(n = 200L, nfolds = 10L, min_fold_rows = 3L, 
+            intercept = FALSE, standardize = FALSE, kmax_ebic = 100L, 
+            ebic_gamma = c(ebic1 = 1, ebic05 = 0.5, bic = 0), 
+            ols_tol = 1e-10, design_tol = 1e-10, support_zero_tol = 0), 
+        DIAG_FLAG_CODES = c("kkt_path", "path_truncated", "L_saturated", 
+        "elbo_drop", "sigma2_floor", "capped_intermediate", "tail_unstable", 
+        "fixed_point", "ess_tau", "ess_ci95", "crn_mismatch"), 
+        DIAG_INFO_CODES = c("lambda_first", "lambda_last", "alpha_edge", 
+        "ebic_at_largest", "pilot_null", "pilot_single"), 
+        F3 = list(pilot = "lasso_cv_min", gamma = 1, K_size_bound = 37L), GLMNET = list(type_gaussian = "naive", 
+            thresh = 1e-16, maxit = 1e+07, fdev = 0, devmax = 1, 
+            lambda_rel_tol = 1e-12, kkt_rel_tol = 1e-05, pkg_version = "5.1"), 
+        GRID = list(nlambda = 200L, min_ratio = 1e-04, max_mult = 1.01), 
+        METHODS = structure(list(method_id = "F3", fn = "fit_F3_alasso", 
+            variant = "primary", method_label = "Adaptive lasso", 
+            package = "glmnet", pkg_version = "5.1", tier = "primary", 
+            rule_ids = list(c("cv_min", "cv_1se", "ebic1", "ebic05", "ebic1_K37", "ebic05_K37"
+            )), roles = list(c("primary", "S0", "S0", "S0", "S0", "S0")), 
+            extra_cols = list(c("lambda", "cv_mean", "cv_se", 
+            "rss", "ebic1_value", "crit_value", "index", "k_valid_max", 
+            "k_path_max", "pilot_k", "pilot_index", "pilot_lambda"))), row.names = c(NA, -1L), class = "data.frame"), 
+        METHOD_SEED_OFFSET = 4000000L, PIP_THRESHOLD = 0.5, STUDY_LIB = "/projects/ml75/fb31/BVS/bench20261019/lib/R452", 
+        TEST_SEED = 20261019L), F4 = list(COMMON = list(n = 200L, 
+        intercept = FALSE, standardize = FALSE, nfolds = 10L, 
+        min_fold_size = 3L, kmax_ebic = 100L, ebic_gamma = c(ebic1 = 1, 
+        ebic05 = 0.5, bic = 0), ols_tol = 1e-10, design_tol = 1e-10), 
+        CONFIG = list(METHOD_SEED_OFFSET = 4000000L, PIP_THRESHOLD = 0.5, 
+            TEST_SEED = 20261019L, SUPPORT_ZERO_TOL = 0, STUDY_LIB = "/projects/ml75/fb31/BVS/bench20261019/lib/R452", 
+            R_VERSION = "4.5.2", COMMON = list(n = 200L, intercept = FALSE, 
+                standardize = FALSE, nfolds = 10L, min_fold_size = 3L, 
+                kmax_ebic = 100L, ebic_gamma = c(ebic1 = 1, ebic05 = 0.5, 
+                bic = 0), ols_tol = 1e-10, design_tol = 1e-10), 
+            GRID = list(nlambda = 200L, min_ratio = 1e-04, max_mult = 1.01), 
+            F4 = list(mcp_gamma = 3, scad_gamma = 3.7, alpha = 1, 
+                eps = 1e-08, maxit = 1e+06, convex = TRUE, warn = TRUE, 
+                returnX = FALSE, kkt_abs_tol = 1e-04, loss_abs_tol = 1e-10, 
+                loss_rel_tol = 1e-08, lambda_rel_tol = 1e-12, 
+                pkg_version = "3.16.0"), METHODS = structure(list(
+                method_id = c("F4", "F4_SCAD"), fn = c("fit_F4_mcp", 
+                "fit_F4_scad"), variant = c("primary", "scad"
+                ), method_label = c("MCP", "SCAD on X/s"), package = c("ncvreg", 
+                "ncvreg"), pkg_version = c("3.16.0", "3.16.0"
+                ), tier = c("primary", "S1"), rule_ids = list(
+                  c("ebic1", "ebic05", "bic"), c("ebic1", "ebic05", 
+                  "bic")), roles = list(c("primary", "S0", "S0"
+                ), c("S1", "S1", "S1"))), row.names = c(NA, -2L
+            ), class = "data.frame"), F4_EXTRA_COLS = list(lambda = NA_real_, 
+                rss = NA_real_, crit_value = NA_real_, path_index = NA_integer_, 
+                k_valid_max = NA_integer_, k_path_max = NA_integer_)), 
+        F4 = list(mcp_gamma = 3, scad_gamma = 3.7, alpha = 1, 
+            eps = 1e-08, maxit = 1e+06, convex = TRUE, warn = TRUE, 
+            returnX = FALSE, kkt_abs_tol = 1e-04, loss_abs_tol = 1e-10, 
+            loss_rel_tol = 1e-08, lambda_rel_tol = 1e-12, pkg_version = "3.16.0"), 
+        F4_EXTRA_COLS = list(lambda = NA_real_, rss = NA_real_, 
+            crit_value = NA_real_, path_index = NA_integer_, 
+            k_valid_max = NA_integer_, k_path_max = NA_integer_), 
+        GRID = list(nlambda = 200L, min_ratio = 1e-04, max_mult = 1.01), 
+        METHODS = structure(list(method_id = c("F4", "F4_SCAD"
+        ), fn = c("fit_F4_mcp", "fit_F4_scad"), variant = c("primary", 
+        "scad"), method_label = c("MCP", "SCAD on X/s"), package = c("ncvreg", 
+        "ncvreg"), pkg_version = c("3.16.0", "3.16.0"), tier = c("primary", 
+        "S1"), rule_ids = list(c("ebic1", "ebic05", "bic"), c("ebic1", 
+        "ebic05", "bic")), roles = list(c("primary", "S0", "S0"
+        ), c("S1", "S1", "S1"))), row.names = c(NA, -2L), class = "data.frame"), 
+        METHOD_SEED_OFFSET = 4000000L, PIP_THRESHOLD = 0.5, R_VERSION = "4.5.2", 
+        STUDY_LIB = "/projects/ml75/fb31/BVS/bench20261019/lib/R452", 
+        SUPPORT_ZERO_TOL = 0, TEST_SEED = 20261019L), F5 = list(
+        COMMON = list(n = 200L, intercept = FALSE, standardize = FALSE, 
+            nfolds = 10L, min_fold_rows = 3L, kmax_ebic = 100L, 
+            ebic_gamma = c(ebic1 = 1, ebic05 = 0.5, bic = 0), 
+            ols_tol = 1e-10, design_tol = 1e-10, support_zero_tol = 0), 
+        F5 = list(tune_path = "sequence", tune_type = "bic", 
+            sizes = 0:100, normalize = 0, fit_intercept = FALSE, 
+            lambda = 0, screening_num = NULL, c_max = 2L, max_splicing_iter = 100L, 
+            splicing_type = 2L, warm_start = TRUE, early_stop = FALSE, 
+            threads = 1L, seed = 1L, rss_rel_tol = 1e-07, stat_rel_tol = 1e-06, 
+            intercept_tol = 1e-12, pkg_version = "0.4.11"), METHODS = structure(list(
+            method_id = "F5", fn = "fit_F5_abess", variant = "primary", 
+            method_label = "Best subset (ABESS)", package = "abess", 
+            pkg_version = "0.4.11", tier = "primary", converged_na = TRUE, 
+            rule_ids = list(c("ebic1", "ebic05", "bic")), roles = list(
+                c("primary", "S0", "S0")), extra_cols = list(
+                c("rss", "crit_value", "k_valid_max", "k_path_max"
+                ))), row.names = c(NA, -1L), class = "data.frame"), 
+        METHOD_SEED_OFFSET = 4000000L, PIP_THRESHOLD = 0.5, STUDY_ID = "bench20261019", 
+        STUDY_LIB = "/projects/ml75/fb31/BVS/bench20261019/lib/R452", 
+        TEST_SEED = 20261019L), A1 = list(A1 = list(PKG = "susieR", 
+        PKG_VERSION = "0.14.2", L = 50L, L_S1 = 100L, SCALED_PRIOR_VAR = 0.2, 
+        RESID_VAR_INIT = NULL, PRIOR_WEIGHTS = NULL, NULL_WEIGHT = 0, 
+        STANDARDIZE = FALSE, INTERCEPT = FALSE, EST_RESID_VAR = TRUE, 
+        EST_PRIOR_VAR = TRUE, EST_PRIOR_METHOD = "optim", CHECK_NULL_THRESHOLD = 0, 
+        PRIOR_TOL = 1e-09, RESID_LB_DIVISOR = 10000, RESID_UB = Inf, 
+        S_INIT = NULL, COVERAGE = 0.95, MIN_ABS_CORR = 0.5, N_PURITY = 100L, 
+        UNIV_Z = FALSE, NA_RM = FALSE, MAX_ITER = 1000L, TOL = 0.001, 
+        VERBOSE = FALSE, TRACK_FIT = FALSE, REFINE = FALSE, CS_V_THRESHOLD = 1e-09, 
+        ELBO_DROP_TOL = 1e-06, BFDR_Q = 0.1, BFDR_EPS_MULT = 64, 
+        ALPHA_TOP = 20L, ALPHA_CS_MAX = 100L, AUTO_L_INIT = 1, 
+        AUTO_L_MAX = 512, AUTO_INIT_TOL = 1, AUTO_MAX_ITER = 100, 
+        AUTO_TOL = 0.01, S2_RULE_IDS = "pip05", S2_ROLES = "S2"), 
+        COMMON = list(STUDY = "bench20261019", STUDY_ROOT = "/projects/ml75/fb31/BVS/bench20261019", 
+            LIB = "/projects/ml75/fb31/BVS/bench20261019/lib/R452", 
+            N = 200L, N_FOLDS = 10L, REGIME = "H", SCALES = c(c100 = 1, 
+            c075 = 0.75, c050 = 0.5, c035 = 0.35, c025 = 0.25
+            ), DESIGN_TOL = 1e-10, S0_MAX = 14L), METHODS = structure(list(
+            method_id = c("A1", "SuSiE-L100"), fn = c("fit_A1_susie", 
+            "fit_A1_susie"), variant = c("primary", "L100"), 
+            method_label = c("SuSiE (L = 50)", "SuSiE (L = 100)"
+            ), package = c("susieR", "susieR"), pkg_version = c("0.14.2", 
+            "0.14.2"), tier = c("primary", "S1"), rule_ids = list(
+                c("pip05", "cslead", "bfdr10"), "pip05"), roles = list(
+                c("primary", "S0", "S0"), "S1")), row.names = c(NA, 
+        -2L), class = "data.frame"), METHOD_SEED_OFFSET = 4000000L, 
+        PIP_THRESHOLD = 0.5, TEST_SEED = 20261019L), A2 = list(
+        A2 = list(PKG_VERSION = "1.2.3.9001", N_PARAMS = 15L, 
+            PENALTY = "adaptive", VARIANCE = "unknown", LAMBDA1 = 1, 
+            NLAMBDA = 100L, LAMBDA0_MAX = "n", THETA_INIT = 0.5, 
+            SIGMA_DF = 3, SIGMA_QUANT = 0.9, A = 1, B = "p", 
+            EPS = 0.001, MAX_ITER = 500L, COUNTER = 10L, STABLE_TAIL = 5L, 
+            FP_TOL_MULT = 10), A2RS = list(LAMBDA1 = 0.01, NLAMBDA = 200L, 
+            LAMBDA0_MAX = "p"), COMMON = list(study = "bench20261019", 
+            regime = "H", n = 200L, n_folds = 10L, min_fold_n = 3L, 
+            design_tol = 1e-10), FLAG_CODES = c("kkt_path", "path_truncated", 
+        "L_saturated", "elbo_drop", "sigma2_floor", "tail_unstable", 
+        "fixed_point", "ess_tau", "ess_ci95", "crn_mismatch"), 
+        INFO_CODES = c("lambda_first", "lambda_last", "alpha_edge", 
+        "kappa_edge", "capped_intermediate", "floored_selected", 
+        "ebic_at_largest"), METHODS = structure(list(method_id = c("A2", 
+        "SSL-RS"), fn = c("fit_A2_ssl", "fit_A2_ssl"), variant = c("primary", 
+        "RS"), method_label = c("Spike-and-slab lasso", "Spike-and-slab lasso (Ray-Szabo ladder)"
+        ), package = c("SSLASSO", "SSLASSO"), pkg_version = c("1.2.3.9001", 
+        "1.2.3.9001"), tier = c("primary", "S1"), rule_ids = structure(list(
+            "ssl_final", "ssl_final"), class = "AsIs"), roles = structure(list(
+            "primary", "S1"), class = "AsIs")), row.names = c(NA, 
+        -2L), class = "data.frame"), METHOD_SEED_OFFSET = 4000000L, 
+        PIP_THRESHOLD = 0.5, RULE_ID_VALUES = c("cv_min", "cv_1se", 
+        "ebic1", "ebic05", "bic", "pip05", "cslead", "bfdr10", 
+        "ssl_final", "ci95", "km2"), STATUS_VALUES = c("ok", 
+        "warning", "failed", "timeout", "not_run"), TEST_SEED = 20261019L), 
+    A3 = list(A3 = list(MODEL = "normal", PRIOR = "hs", N_SAMPLES = 15000L, 
+        BURNIN = 10000L, THIN = 5L, T_DOF = 5, N_CORES = 1L, 
+        CI_PROBS = c(0.025, 0.975), QTYPE = 7L, ESS_MIN = 100, 
+        KM_NSTART = 10L, KM_ITER_MAX = 10L, KM_ALGORITHM = "Hartigan-Wong", 
+        MU_TOL = 1e-10, PKG_VERSIONS = c(bayesreg = "1.3", pgdraw = "1.1", 
+        doParallel = "1.0.17"), EXTRA_COLS = c("rng_after", "diag_s"
+        )), COMMON = list(STUDY = "bench20261019", REGIME = "H", 
+        N = 200L, NFOLDS = 10L, SCALES = c(c100 = 1, c075 = 0.75, 
+        c050 = 0.5, c035 = 0.35, c025 = 0.25), RNG_KIND = c("Mersenne-Twister", 
+        "Inversion", "Rejection"), LIB = "/projects/ml75/fb31/BVS/bench20261019/lib/R452", 
+        R_VERSION = "4.5.2", X_TOL = 1e-10, THREAD_VARS = c("OMP_NUM_THREADS", 
+        "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"), STATUS_VALUES = c("ok", 
+        "warning", "failed", "timeout", "not_run"), FLAG_CODES = c("kkt_path", 
+        "path_truncated", "L_saturated", "elbo_drop", "sigma2_floor", 
+        "tail_unstable", "fixed_point", "ess_tau", "ess_ci95", 
+        "crn_mismatch"), INFO_CODES = c("capped_intermediate", 
+        "lambda_first", "lambda_last", "alpha_edge", "kappa_edge", 
+        "floored_selected", "ebic_at_largest"), RULE_IDS = c("cv_min", 
+        "cv_1se", "ebic1", "ebic05", "bic", "pip05", "cslead", 
+        "bfdr10", "ssl_final", "ci95", "km2"), ROLES = c("primary", 
+        "S0", "S1", "S2"), N_ACTIVE_COLS = 14L), METHODS = structure(list(
+        method_id = "A3", fn = "fit_A3_horseshoe", variant = "primary", 
+        method_label = "Horseshoe (bayesreg)", package = "bayesreg", 
+        pkg_version = "1.3", tier = "primary", converged_na = TRUE, 
+        rule_ids = list(c("ci95", "km2")), roles = list(c("primary", 
+        "S0"))), row.names = c(NA, -1L), class = "data.frame"), 
+        METHOD_SEED_OFFSET = 4000000L, PIP_THRESHOLD = 0.5, TEST_SEED = 20261019L))
+
+# Master blocks; per-method COMMON objects retain the upstream helper contracts.
+COMMON <- lapply(LOWP_PRODUCTION, `[[`, 'COMMON')
+GRID <- LOWP_PRODUCTION$F1$GRID
+GLMNET <- LOWP_PRODUCTION$F1$GLMNET
+F1 <- LOWP_PRODUCTION$F1$F1; F2 <- LOWP_PRODUCTION$F2$F2
+F3 <- LOWP_PRODUCTION$F3$F3; F4 <- LOWP_PRODUCTION$F4$F4
+F5 <- LOWP_PRODUCTION$F5$F5; A1 <- LOWP_PRODUCTION$A1$A1
+A2 <- LOWP_PRODUCTION$A2$A2; A3 <- LOWP_PRODUCTION$A3$A3

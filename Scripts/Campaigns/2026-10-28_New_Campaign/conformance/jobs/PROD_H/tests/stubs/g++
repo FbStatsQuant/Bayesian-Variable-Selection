@@ -1,0 +1,2 @@
+#!/bin/bash
+case "$1" in -dumpfullversion) echo 14.3.0;; *) echo "gcc stub";; esac

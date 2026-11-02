@@ -1,0 +1,6 @@
+{
+  "p0500_c100": {"minutes": 30, "mem_gib": 2},
+  "p0500_c050": {"minutes": 30, "mem_gib": 2},
+  "p1000_c100": {"minutes": 30, "mem_gib": 2},
+  "p1000_c050": {"minutes": 30, "mem_gib": 2}
+}

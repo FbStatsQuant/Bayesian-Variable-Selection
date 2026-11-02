@@ -1,0 +1,208 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\BF}{\mathrm{BF}}
+\newcommand{\Om}{\Omega}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\Zb}{\bar Z}
+\newcommand{\gs}{\mathrm{gap}^*}
+\newcommand{\TV}{\mathrm{TV}}
+\title{T09 (T7): exact start, invariant kernels and whole-round minorisation\\ \large Proof, version 3}
+\author{SMC-BVS v3 theory programme}
+\date{2026-10-22}
+\begin{document}
+\maketitle
+
+All notation is that of STATEMENT.md, which is the statement proved here. Throughout, EX-A (exact arithmetic) and EX-S (ideal independent uniform streams) are in force. Kernels on the finite set $\Om$ are identified with nonnegative $\Om\times\Om$ matrices; a measure is a row vector; $Pf(x)=\sum_y P(x,y)f(y)$ and $\mu P(y)=\sum_x\mu(x)P(x,y)$; $\mathbf 1$ is the constant function~$1$. For $P$ stochastic and $q$ a probability on $\Om$, $P$ is $q$-invariant if $qP=q$.
+
+\section{Preliminaries}
+
+\begin{lemma}[Positivity]\label{lem:pos}
+For every $S\subseteq[p]$: $Q_S\ge \|y\|^2/(n+1)>0$, $D_S\in[1,\infty)$ is finite, $A_S=2b_0+Q_S>0$ and $\BF(S)\in(0,\infty)$. Consequently $\gamma_\phi(S)\in(0,\infty)$ for all $S\in\Om$ and all real $\phi$, $\Zb_\phi\in(0,\infty)$, and $q_\phi(S)>0$ for every $S\in\Om$.
+\end{lemma}
+\begin{proof}
+Let $k=|S|$. If $k=0$, $Q_\emptyset=\|y\|^2$ and $D_\emptyset=1$. Let $k\ge1$ and write the spectral decomposition $G_S=\sum_{i=1}^k s_i b_ib_i^\top$ with $s_i\ge0$ and $(b_i)$ an orthonormal basis of $\mathbb R^k$. Then $H_S=\sum_i((n+1)s_i+1)b_ib_i^\top\succ0$ and $G_S+I=\sum_i(s_i+1)b_ib_i^\top\succ0$, so $D_S=\prod_i\frac{(n+1)s_i+1}{s_i+1}\in[1,\infty)$. For $s_i>0$ put $a_i=X_Sb_i/\sqrt{s_i}$; the $a_i$ are orthonormal, $X_Sb_i=0$ when $s_i=0$, and
+$X_SH_S^{-1}X_S^\top=\sum_{i:s_i>0}\frac{s_i}{(n+1)s_i+1}\,a_ia_i^\top$, whose eigenvalues are $<1/(n+1)$. Hence $n z_S^\top H_S^{-1}z_S=n\,y^\top X_SH_S^{-1}X_S^\top y\le \frac{n}{n+1}\|y\|^2$ and $Q_S\ge\|y\|^2/(n+1)=(n-1)/(n+1)>0$. The remaining claims follow from $b_0>0$, the definitions, $\varpi(S)>0$ on $\Om$, and $|\Om|<\infty$.
+\end{proof}
+
+\begin{lemma}[Metropolis--Hastings form]\label{lem:mh}
+Let $q>0$ be a probability on $\Om$, $\mathcal Q$ a proposal kernel on $\Om$, and $P(x,y)=\mathcal Q(x,y)\alpha(x,y)$ for $y\ne x$, $P(x,x)=1-\sum_{y\ne x}P(x,y)$, with $\alpha(x,y)\in[0,1]$. If, for all $x\neq y$ with $\mathcal Q(x,y)>0$,
+$\alpha(x,y)=1\wedge r(x,y)$ with $r(x,y)=\dfrac{q(y)\mathcal Q(y,x)}{q(x)\mathcal Q(x,y)}$, then $P$ is a Markov kernel and $q(x)P(x,y)=q(y)P(y,x)$ for all $x,y$.
+\end{lemma}
+\begin{proof}
+$P\ge0$ and rows sum to one since $\sum_{y\ne x}\mathcal Q(x,y)\alpha(x,y)\le1$. For $x\ne y$: if $\mathcal Q(x,y)>0$ and $\mathcal Q(y,x)>0$ then $q(x)P(x,y)=\min\{q(x)\mathcal Q(x,y),q(y)\mathcal Q(y,x)\}$, which is symmetric. If exactly one of them is $0$, say $\mathcal Q(y,x)=0<\mathcal Q(x,y)$, then $r(x,y)=0$, so $P(x,y)=0=P(y,x)$. If both are $0$, both sides are $0$. The case $x=y$ is trivial.
+\end{proof}
+
+\begin{lemma}[Adjoints]\label{lem:adj}
+Let $q>0$ be a probability on $\Om$. For a kernel $P$ define $P^*(x,y)=q(y)P(y,x)/q(x)$. Then $\langle Pf,g\rangle_{q}=\langle f,P^*g\rangle_q$ for all $f,g$; $(PR)^*=R^*P^*$; $P$ is self-adjoint on $L^2(q)$ iff $P=P^*$ iff $P$ is $q$-reversible. If $P$ is $q$-reversible and stochastic, then $qP=q$.
+\end{lemma}
+\begin{proof}
+$\langle Pf,g\rangle_q=\sum_{x,y}q(x)P(x,y)f(y)g(x)=\sum_{y}q(y)f(y)\sum_x P^*(y,x)g(x)$. The adjoint is unique (the form is nondegenerate because $q>0$), which gives the product rule and the equivalences; $P=P^*$ is the detailed-balance identity. Finally $\sum_xq(x)P(x,y)=\sum_x q(y)P(y,x)=q(y)$.
+\end{proof}
+
+\begin{lemma}[Doeblin contraction]\label{lem:doeb}
+Let $P$ be a stochastic kernel on $\Om$ with $qP=q$, $q>0$ a probability, and suppose $P(x,\cdot)\ge c\,\nu(\cdot)$ for every $x$, for a probability $\nu$ and a constant $c\in(0,1]$. Then:
+(a) $\|\mu P\|_1\le(1-c)\|\mu\|_1$ for every signed measure $\mu$ with $\mu(\Om)=0$;
+(b) $\sup_x\|P^h(x,\cdot)-q\|_{\TV}\le(1-c)^h$ for every integer $h\ge0$;
+(c) if moreover $P$ is self-adjoint on $L^2(q)$, then $\gs(P):=1-\|P-\Pi\|_{L^2(q)\to L^2(q)}\ge c$, where $\Pi(x,\cdot)=q(\cdot)$.
+\end{lemma}
+\begin{proof}
+(a) If $c=1$ then $P=\mathbf 1\nu$ and $\mu P=\mu(\Om)\nu=0$. If $c<1$, $R:=(P-c\mathbf 1\nu)/(1-c)$ is nonnegative with unit row sums, and $\mu P=c\mu(\Om)\nu+(1-c)\mu R=(1-c)\mu R$; also $\|\mu R\|_1\le\sum_{x,y}|\mu(x)|R(x,y)=\|\mu\|_1$.
+(b) Since $qP^h=q$, $P^h(x,\cdot)-q=(\delta_x-q)P^h$, and $(\delta_x-q)(\Om)=0$. By (a) iterated, $\|P^h(x,\cdot)-q\|_\TV=\tfrac12\|(\delta_x-q)P^h\|_1\le(1-c)^h\tfrac12\|\delta_x-q\|_1=(1-c)^h(1-q(x))\le(1-c)^h$.
+(c) Let $L^2_0=\{f:\sum_xq(x)f(x)=0\}$. Since $\sum_x q(x)(Pf)(x)=(qP)f=qf$, $P$ maps $L^2_0$ into itself, and the restriction is self-adjoint; by the spectral theorem (finite dimension) $\|P|_{L^2_0}\|=\max|\lambda|$ over its eigenvalues. Let $Pf=\lambda f$ with $0\ne f\in L^2_0$ and $\mu(x):=q(x)f(x)$. Then $\mu\ne0$, $\mu(\Om)=0$, and by reversibility (Lemma~\ref{lem:adj}) $\mu P(y)=\sum_x q(y)P(y,x)f(x)=q(y)\lambda f(y)=\lambda\mu(y)$. By (a), $|\lambda|\le1-c$. Every $f\in L^2(q)$ splits orthogonally as $f=a\mathbf 1+g$ with $g\in L^2_0$, and $(P-\Pi)f=Pg$ because $P\mathbf 1=\Pi\mathbf 1=\mathbf 1$ and $\Pi g=0$. Hence $\|(P-\Pi)f\|\le(1-c)\|g\|\le(1-c)\|f\|$.
+\end{proof}
+
+\section{Part (i): exact normaliser and exact sampler}
+
+Put $e_b(j)=0$ for $j\notin\{0,\dots,|C_b|\}$, $c^{(b)}(t)=0$ for $t<0$, and $P_b=\sum_{i\le b}|C_i|$. These are the conventions under which the recursion $c^{(b)}(t)=\sum_je_b(j)c^{(b-1)}(t-j)$ and the draw of $j_b$ in STATEMENT.md are read: $j$ ranges over all integers, and only $0\le j\le|C_b|$ with $t-j\ge0$ contribute.
+
+\begin{lemma}\label{lem:conv}
+For $b=0,\dots,J$ and every integer $t$, $c^{(b)}(t)=\sum\prod_{i\le b}r_i(U_i)$, the sum running over tuples $(U_1,\dots,U_b)$ with $U_i\subseteq C_i$ and $\sum_i|U_i|=t$. In particular $c^{(b)}(t)>0$ iff $0\le t\le P_b$.
+\end{lemma}
+\begin{proof}
+Induction on $b$. For $b=0$ the only tuple is the empty one, with $t=0$ and product $1$. For the step, group the tuples by $j=|U_b|$: $\sum_{j}\big(\sum_{|U_b|=j}r_b(U_b)\big)c^{(b-1)}(t-j)=\sum_je_b(j)c^{(b-1)}(t-j)$. Positivity: all $r_i>0$ (Lemma~\ref{lem:pos}) and a tuple with $\sum|U_i|=t$ exists iff $0\le t\le P_b$.
+\end{proof}
+
+\begin{proposition}[Part (i)]
+$\sum_{k\le K}\frac{w(k)}{W_K}c(k)=\Zb_0$. The backward sampler is well defined and returns $S$ with probability $\pi_0(S)$ for every $S\in\Om$; draws with fresh streams are iid $\pi_0$.
+\end{proposition}
+\begin{proof}
+Because $C_1,\dots,C_J$ partition $[p]$, the map $S\mapsto(S\cap C_1,\dots,S\cap C_J)$ is a bijection from subsets of $[p]$ onto tuples with $U_b\subseteq C_b$, and $|S|=\sum_b|S\cap C_b|$. Since $\varpi(S)=w(|S|)/W_K$ depends on $S$ only through $|S|$,
+\[\Zb_0=\sum_{k=0}^{K}\frac{w(k)}{W_K}\sum_{|S|=k}\prod_br_b(S\cap C_b)=\sum_{k=0}^K\frac{w(k)}{W_K}c(k)\]
+by Lemma~\ref{lem:conv} with $b=J$. (The values $c^{(b)}(t)$, $t\le K$, depend only on $c^{(b-1)}(t')$ with $t'\le t$, so computing every convolution only up to degree $K$ is exact.)
+
+Well-definedness. Step (1): the denominator $\sum_{k'\le K}w(k')c(k')\ge w(0)c(0)=\tfrac12\prod_br_b(\emptyset)=\tfrac12>0$, so the law of $k$ is a probability, and $k$ is drawn only where $c(k)>0$. Step (2): we show by downward induction that $c^{(b)}(t_b)>0$ whenever $t_b$ is reached with positive probability. This holds for $b=J$. If $c^{(b)}(t_b)>0$, the numbers $e_b(j)c^{(b-1)}(t_b-j)/c^{(b)}(t_b)$ are nonnegative and sum to $1$ over $j$ by the recursion, and $j_b$ has positive probability only if $c^{(b-1)}(t_b-j_b)>0$, i.e.\ $c^{(b-1)}(t_{b-1})>0$; also $e_b(j_b)>0$, so $0\le j_b\le|C_b|$. At the end $c^{(0)}(t_0)>0$ forces $t_0=0$, so $\sum_bj_b=k$. Step (3): $e_b(j_b)>0$ and $\{U\subseteq C_b:|U|=j_b\}$ has total weight $e_b(j_b)$, so the law of $U_b$ is a probability. The output $S=\bigcup_bU_b$ has $|S|=k\le K$, so $S\in\Om$.
+
+Exactness. Fix $S\in\Om$. The only run producing $S$ is $k=|S|$, $j_b=|S\cap C_b|$, $t_b=\sum_{i\le b}j_i$, $U_b=S\cap C_b$; along it all quantities in the denominators are positive (Lemma~\ref{lem:conv}, since $0\le t_b\le P_b$). Its probability is
+\[\frac{w(k)c(k)}{\sum_{k'}w(k')c(k')}\prod_{b=1}^J\frac{e_b(j_b)c^{(b-1)}(t_{b-1})}{c^{(b)}(t_b)}\prod_{b=1}^J\frac{r_b(U_b)}{e_b(j_b)}
+=\frac{w(k)c(k)}{\sum_{k'}w(k')c(k')}\cdot\frac{c^{(0)}(0)}{c^{(J)}(k)}\prod_br_b(U_b)=\frac{\gamma_0(S)W_K}{W_K\Zb_0}=\pi_0(S),\]
+the middle product telescoping. Under EX-A each categorical draw from a finite law with an ideal uniform is exact; under EX-S the uniforms of different draws are independent, and each output is a fixed measurable function of its own uniforms with law $\pi_0$; hence the draws are iid $\pi_0$.
+\end{proof}
+
+\section{Part (ii): reversibility of every elementary kernel}
+
+Fix $\phi$ and write $\gamma=\gamma_\phi$, $q=q_\phi$; recall $\gamma(S)=0$ for $S\notin\Om$ and $\gamma>0$ on $\Om$ (Lemma~\ref{lem:pos}). For $S\ne S'$ of equal size with $|S\triangle S'|=2$ write $j=j(S,S')$ for the element of $S\setminus S'$ and $l=l(S,S')$ for the element of $S'\setminus S$; the pair $(j,l)$ determines $S'=S\setminus\{j\}\cup\{l\}$ and conversely.
+
+\paragraph{Gibbs $j$.} For $S\in\Om$, $S^-=S\setminus\{j\}\in\Om$, so the denominator $\gamma(S^+)+\gamma(S^-)\ge\gamma(S^-)>0$ and $K_{G,j}(S,\cdot)$ is a probability on $\{S^+,S^-\}\cap\Om$ (if $S^+\notin\Om$ its probability is $\gamma(S^+)/(\cdot)=0$). This is the boundary case: $S^+\notin\Om$ iff $j\notin S$ and $|S|=K$, and then the addition has probability $0$. Reversibility: let $T\ne S$ with $K_{G,j}(S,T)>0$. Then $T$ is the element of $\{S^+,S^-\}$ other than $S$, so $T\in\Om$ and $\{T^+,T^-\}=\{S^+,S^-\}$, and
+$q(S)K_{G,j}(S,T)=\gamma(S)\gamma(T)/(\Zb_\phi(\gamma(S^+)+\gamma(S^-)))$ is symmetric in $(S,T)$; in particular $K_{G,j}(T,S)>0$ too. If $K_{G,j}(S,T)=0$ and $T\neq S$ then either $T\notin\{S^+,S^-\}$ (so $S\notin\{T^+,T^-\}$ and $K_{G,j}(T,S)=0$) or $T=S^+\notin\Om$, which is not a state. Hence detailed balance holds.
+
+\paragraph{Uniform swap.} If $|S|\in\{0,p\}$ the kernel is $\delta_S$ (boundary self-loop). If $1\le|S|\le p-1$, the proposal is $\mathcal Q(S,S')=1/(|S|(p-|S|))$ for each $S'$ with $|S'|=|S|$, $|S\triangle S'|=2$ (distinct pairs $(j,l)$ give distinct $S'$), and $S'\in\Om$. All proposals preserve size, so states of size $0$ or $p$ (each the unique set of its size) are never proposed from other states. For $S'$ proposed from $S$, $S$ is proposed from $S'$ (delete $l$, add $j$) and $\mathcal Q(S',S)=1/(|S'|(p-|S'|))=\mathcal Q(S,S')$, so the Hastings ratio $\gamma(S')\mathcal Q(S',S)/(\gamma(S)\mathcal Q(S,S'))$ equals the stated $\gamma(S')/\gamma(S)$. Lemma~\ref{lem:mh} applies (with $\mathcal Q(S,\cdot)=\delta_S$ on the boundary states).
+
+\paragraph{Neighbour swap (arbitrary $N(j)\subseteq[p]\setminus\{j\}$).} If $S=\emptyset$ the kernel is $\delta_\emptyset$; all moves preserve size, so $\emptyset$ is never proposed from another state. For $S\ne\emptyset$ and $S'\ne S$, the move $S\to S'$ is proposed only by the pair $(j,l)=(j(S,S'),l(S,S'))$, so
+\[\mathcal Q(S,S')=\begin{cases}\dfrac{1}{|S|\,|N(j)\setminus S|}&\text{if } l\in N(j),\\[1ex] 0&\text{otherwise,}\end{cases}\qquad
+\mathcal Q(S',S)=\begin{cases}\dfrac{1}{|S'|\,|N(l)\setminus S'|}&\text{if } j\in N(l),\\[1ex] 0&\text{otherwise,}\end{cases}\]
+(here $j\in S$, $l\notin S$ by definition of $j(S,S')$, $l(S,S')$). The second formula holds because the reverse move deletes $l\in S'$ and must insert $j\notin S'$ from $N(l)\setminus S'$; when $j\in N(l)$ the set $N(l)\setminus S'$ contains $j$ and is nonempty, and when $l\in N(j)$ the set $N(j)\setminus S$ contains $l$, so no denominator vanishes. (Proposals with $N(j)\setminus S=\emptyset$ are self-loops and do not affect Lemma~\ref{lem:mh}.) Let $\mathcal Q(S,S')>0$, so $|S'|=|S|$. If $j\in N(l)$, the Hastings ratio is
+\[\frac{\gamma(S')\mathcal Q(S',S)}{\gamma(S)\mathcal Q(S,S')}=\frac{\gamma(S')}{\gamma(S)}\cdot\frac{|S|\,|N(j)\setminus S|}{|S'|\,|N(l)\setminus S'|}=\frac{\gamma(S')}{\gamma(S)}\cdot\frac{|N(j)\setminus S|}{|N(l)\setminus S'|},\]
+the stated ratio. If $j\notin N(l)$, the Hastings ratio is $0$, which is the stated ratio under the reading convention. So the stated acceptance is $1\wedge r$ with the true Hastings ratio $r$ in every case, and Lemma~\ref{lem:mh} gives reversibility. For the method's graph, $l\in N(j)\Rightarrow j\in N(l)$, so the convention never applies.
+
+\paragraph{Independence.} $\mathcal Q(S,S')=\pi_0(S')>0$ for all $S,S'\in\Om$. Since $q(S)/\pi_0(S)=(\Zb_0/\Zb_\phi)e^{\phi d(S)}$,
+$\dfrac{q(S')\pi_0(S)}{q(S)\pi_0(S')}=e^{\phi[d(S')-d(S)]}$, the stated ratio; Lemma~\ref{lem:mh} applies (a proposal $S'=S$ is a self-loop).
+
+In each case the stated Hastings ratio equals $\gamma(S')\mathcal Q(S',S)/(\gamma(S)\mathcal Q(S,S'))$ with the actual proposal probabilities, i.e.\ it supplies the reverse proposal probability. This proves (ii).
+
+\section{Part (iii): the averaged round}
+
+By (ii) and Lemma~\ref{lem:adj}, each $K_e$ is stochastic, $q$-invariant and self-adjoint, $K_e^*=K_e$. Hence every $K_\sigma$ is stochastic and $qK_\sigma=q$, and so is the average $K_\phi$. By the product rule, $K_\sigma^*=K_{\sigma(m)}^*\cdots K_{\sigma(1)}^*=K_{\sigma(m)}\cdots K_{\sigma(1)}=K_{\bar\sigma}$, $\bar\sigma(i)=\sigma(m+1-i)$. Since $\sigma\mapsto\bar\sigma$ is a bijection of the symmetric group,
+$K_\phi^*=\frac1{m!}\sum_\sigma K_{\bar\sigma}=K_\phi$: $K_\phi$ is self-adjoint on $L^2(q_\phi)$, equivalently $q_\phi$-reversible (Lemma~\ref{lem:adj}). Also $K_\sigma$ is $q$-reversible iff $K_\sigma=K_\sigma^*=K_{\bar\sigma}$.
+
+That some realised order is not reversible is shown in Proposition~\ref{prop:nonrev} below, on the family of Section~\ref{sec:family}.
+
+\section{Part (iv): minorisation}
+
+\begin{lemma}\label{lem:eps}
+$\pi_0(S)/q_\phi(S)=(\Zb_\phi/\Zb_0)e^{-\phi d(S)}$, so for $\phi\ge0$, $\eps_\phi=\min_\Om\pi_0/q_\phi=(\Zb_\phi/\Zb_0)e^{-\phi\max_\Om d}$, and $0<\eps_\phi\le1$.
+\end{lemma}
+\begin{proof}
+The identity is $\pi_0=\gamma_0/\Zb_0$ and $q_\phi=\gamma_0e^{\phi d}/\Zb_\phi$; for $\phi\ge0$, $e^{-\phi d}$ is minimal where $d$ is maximal. Positivity by Lemma~\ref{lem:pos}. If $\pi_0(S)>q_\phi(S)$ for all $S$, summing gives $1>1$; so $\eps_\phi\le1$.
+\end{proof}
+
+\begin{proposition}[Part (iv)]
+For every $\sigma$ and $x\in\Om$, $K_\sigma(x,\cdot)\ge\eps_\phi q_\phi(\cdot)$. Hence $K_\phi(x,\cdot)\ge\eps_\phi q_\phi(\cdot)$, $\sup_x\|K_\phi^h(x,\cdot)-q_\phi\|_\TV\le(1-\eps_\phi)^h$ for all $h\ge0$, and $\gs(K_\phi)\ge\eps_\phi$.
+\end{proposition}
+\begin{proof}
+Write $\eps=\eps_\phi$, $q=q_\phi$, $K_{\rm ind}$ for the independence kernel. For $u\ne v$,
+$K_{\rm ind}(u,v)=\min\{\pi_0(v),\ \pi_0(v)e^{\phi[d(v)-d(u)]}\}$. Here $\pi_0(v)\ge\eps q(v)$, and by Lemma~\ref{lem:eps} $\pi_0(v)e^{\phi[d(v)-d(u)]}=q(v)\,\pi_0(u)/q(u)\ge\eps q(v)$. For $v=u$, $K_{\rm ind}(u,u)\ge\pi_0(u)\ge\eps q(u)$ (the proposal $u$ is a self-loop). So $K_{\rm ind}(u,\cdot)\ge\eps q(\cdot)$ for every $u$.
+
+Let the independence step be at position $i$ of $\sigma$, $A=K_{\sigma(1)}\cdots K_{\sigma(i-1)}$ (identity if $i=1$) and $C=K_{\sigma(i+1)}\cdots K_{\sigma(m)}$ (identity if $i=m$). $A$ is stochastic, $C\ge0$ and $qC=q$ (part (iii)). Then
+\[K_\sigma(x,y)=\sum_{u,v}A(x,u)K_{\rm ind}(u,v)C(v,y)\ge\eps\sum_uA(x,u)\sum_vq(v)C(v,y)=\eps q(y).\]
+Averaging over $\sigma$ gives $K_\phi(x,\cdot)\ge\eps q$. Since $K_\phi$ is stochastic, $q$-invariant and self-adjoint (part (iii)), Lemma~\ref{lem:doeb} with $\nu=q$, $c=\eps\in(0,1]$ gives the TV bound and $\gs(K_\phi)\ge\eps$.
+\end{proof}
+
+\begin{remark}
+The same argument gives the TV bound for any product of $h$ realised orders (each factor is $q$-invariant and $\ge\eps q$), not only for the averaged kernel.
+\end{remark}
+
+\section{Part (v), and the non-reversible order of part (iii)}\label{sec:family}
+
+The first sentence of (v) is the definition of $\eps_\phi$ as a minimum. For the second, the asymptotic parameter is the sample size $n$ (with $p=2$ fixed): ``exponentially small'' and ``large range'' refer to $n$; nothing is claimed about growth in $p$.
+
+\paragraph{Notation for this section.} The family has two predictors, and its states are written $\emptyset,\{1\},\{2\},\{1,2\}$; subscripts $1$, $2$, $12$ on $Q$, $D$, $A$, $t$, $R$, $\kappa$ refer to these states. The correlation parameter of the family is $\tau$ and the signal parameter $\rho$; the rate constant of the statement is $\kappa$. Throughout, $q_1=\pi$ is the target at $\phi=1$.
+
+\paragraph{The family.} Fix $\tau\in(0,1)$ and $\rho\in(0,1)$ (for instance $\tau=\tfrac12$, $\rho=\tfrac35$). For $n\ge4$ the space $\mathbf 1^\perp\subset\mathbb R^n$ has dimension $n-1\ge3$; fix orthonormal $h_1,h_2,h_3\in\mathbf 1^\perp$ and put $s=\sqrt{n-1}$,
+\[x_1=s h_1,\qquad x_2=s(\tau h_1+\sqrt{1-\tau^2}\,h_2),\qquad y=s(\rho h_1+\sqrt{1-\rho^2}\,h_3).\]
+Columns and $y$ are centred with squared norm $n-1$, so this is standardised data in the sense of STATEMENT.md, Section~1. Here $p=2$, $K=\min(2,\lfloor n/2\rfloor)=2$, $\Om=\{\emptyset,\{1\},\{2\},\{1,2\}\}$, and $B=\min(\lfloor\sqrt n\rfloor,1,16)=1$. Since every block has $|C_b|\le B=1$ and the blocks partition $\{1,2\}$, the blocks are $\{1\}$ and $\{2\}$ (in some order; $\gamma_0$ depends only on the partition). $m=p+B+2=5$. The neighbour graph has $N(j)\subseteq\{1,2\}\setminus\{j\}$; no property of it beyond this is used. The prior: $w(0)=\tfrac12$, $w(1)=w(2)=\tfrac16$, so $w(1)/w(0)=\tfrac13$ and $w(2)/w(1)=1$.
+
+\paragraph{Scores.} $x_1^\top x_2=(n-1)\tau$, $z_1=x_1^\top y=(n-1)\rho$, $z_2=(n-1)\tau\rho$. For a singleton, $G=n-1$, $H=(n+1)(n-1)+1=n^2$, $D=n$, $Q=(n-1)-z^2/n$. So
+\[Q_\emptyset=n-1,\quad Q_1=(n-1)\Big(1-\rho^2\tfrac{n-1}{n}\Big),\quad Q_2=(n-1)\Big(1-\tau^2\rho^2\tfrac{n-1}{n}\Big),\quad D_1=D_2=n.\]
+For $\{1,2\}$, $G=(n-1)R$, $R=\begin{pmatrix}1&\tau\\\tau&1\end{pmatrix}$, with eigenvectors $g_\pm=(1,\pm1)/\sqrt2$ and eigenvalues $1\pm\tau$. Then $H$ has eigenvalues $\alpha_\pm=(n^2-1)(1\pm\tau)+1$ and $G+I$ has $\beta_\pm=(n-1)(1\pm\tau)+1$; since $\alpha_\pm=(n+1)\beta_\pm-n$, $D_{12}=f(1+\tau)f(1-\tau)$ with $f(x)=n+1-\frac{n}{(n-1)x+1}$, increasing in $x>0$ with $f\le n+1$. With $z=(n-1)\rho(1,\tau)^\top$, $z^\top g_\pm=(n-1)\rho(1\pm\tau)/\sqrt2$ and, using $(1\pm\tau)^2/\alpha_\pm=\frac{1\pm\tau}{n^2-1}(1-1/\alpha_\pm)$,
+\[t_{12}:=n z^\top H^{-1}z=\frac{n(n-1)^2\rho^2}{2}\sum_\pm\frac{(1\pm\tau)^2}{\alpha_\pm}=\frac{n(n-1)\rho^2}{n+1}\Big(1-\frac\delta2\Big),\qquad \delta=\sum_\pm\frac{1\pm\tau}{\alpha_\pm}\in\Big(0,\frac2{n^2-1}\Big),\]
+and $Q_{12}=(n-1)-t_{12}$.
+
+\begin{lemma}\label{lem:bounds}
+(B1) $|Q_{12}-Q_1|<1/n$. (B2) $Q_{12}>(n-1)/(n+1)\ge\tfrac12$. (B3) If $(n-1)(1-\tau)\ge1$ then $n^2/4\le D_{12}\le(n+1)^2$.
+\end{lemma}
+\begin{proof}
+(B1) $t_{12}-\frac{(n-1)^2\rho^2}{n}=(n-1)\rho^2\big[\frac n{n+1}-\frac{n-1}n\big]-\frac{n(n-1)\rho^2\delta}{2(n+1)}$. The first term equals $\frac{(n-1)\rho^2}{n(n+1)}\in[0,1/n)$; the second lies in $[0,\frac{n(n-1)\rho^2}{(n+1)(n^2-1)})=[0,\frac{n\rho^2}{(n+1)^2})\subset[0,1/n)$. A difference of two numbers in $[0,1/n)$ has absolute value $<1/n$. (B2) $t_{12}<\frac{n(n-1)}{n+1}$, so $Q_{12}>\frac{n-1}{n+1}$, which is $\ge\frac12$ for $n\ge3$. (B3) $f\le n+1$ gives the upper bound. If $(n-1)x\ge1$ then $f(x)\ge n+1-n/2\ge n/2$; $f$ increasing and $(n-1)(1-\tau)\ge1$ give $f(1\pm\tau)\ge n/2$.
+\end{proof}
+
+\paragraph{Ratios at $\phi=1$.} $\gamma_1=\varpi\BF$ and $\BF(S)=D_S^{-1/2}(A_\emptyset/A_S)^\nu$, $A_S=0.02+Q_S$, $\nu=0.01+n/2$. Define
+\[R_1=\frac{\gamma_1(\{1\})}{\gamma_1(\emptyset)}=\frac{\BF(\{1\})}3,\quad R_2=\frac{\gamma_1(\{2\})}{\gamma_1(\emptyset)}=\frac{\BF(\{2\})}3,\]
+\[R_{12|1}=\frac{\gamma_1(\{1,2\})}{\gamma_1(\{1\})}=\Big(\frac{D_1}{D_{12}}\Big)^{1/2}\Big(\frac{A_1}{A_{12}}\Big)^\nu,\qquad R_{12|2}=\frac{\gamma_1(\{1,2\})}{\gamma_1(\{2\})}=\Big(\frac{D_2}{D_{12}}\Big)^{1/2}\Big(\frac{A_2}{A_{12}}\Big)^\nu,\]
+using $w(2)/w(1)=1$. Let $\kappa_1=\tfrac12\log\frac1{1-\rho^2}$ and $\kappa_2=\tfrac12\log\frac1{1-\tau^2\rho^2}$; then $\kappa_1>\kappa_2>0$ because $0<\tau<1$, $\rho>0$.
+
+\begin{lemma}\label{lem:asym}
+As $n\to\infty$: $\frac1n\log R_1\to\kappa_1$, $\frac1n\log R_2\to\kappa_2$, $\frac1n\log R_{12|2}\to\kappa_1-\kappa_2>0$, $\frac1n\log\frac{\gamma_1(\{2\})}{\gamma_1(\{1\})}\to-(\kappa_1-\kappa_2)<0$, $\frac1n\log R_{12|1}\to0$, and $R_{12|1}\le 2e^{1.01}n^{-1/2}$ once $(n-1)(1-\tau)\ge1$.
+\end{lemma}
+\begin{proof}
+$A_\emptyset/A_1\to1/(1-\rho^2)$, $A_\emptyset/A_2\to1/(1-\tau^2\rho^2)$ and, by (B1), $A_2/A_{12}\to(1-\tau^2\rho^2)/(1-\rho^2)$ and $A_1/A_2\to(1-\rho^2)/(1-\tau^2\rho^2)$, all limits in $(0,\infty)$. Since $\nu/n\to\frac12$, $\frac1n\log(\cdot)^\nu\to\frac12\log(\lim)$. The remaining factors are: $\frac13 D_1^{-1/2}=\frac13n^{-1/2}$ in $R_1$; $\frac13D_2^{-1/2}=\frac13n^{-1/2}$ in $R_2$; and, once $(n-1)(1-\tau)\ge1$, $(D_2/D_{12})^{1/2}\in[n^{1/2}/(n+1),\,2n^{-1/2}]$ in $R_{12|2}$ by (B3). Each lies in $[\frac1{3(n+1)},\,n^{1/2}]$, so contributes $O(\log n)=o(n)$ to the logarithm. This gives the first three limits. Next, $\gamma_1(\{2\})/\gamma_1(\{1\})=(A_1/A_2)^\nu$ since $D_1=D_2$ and $w(1)=w(1)$, which gives the fourth. Since $R_{12|1}=R_{12|2}\cdot\gamma_1(\{2\})/\gamma_1(\{1\})$, the fifth limit is $(\kappa_1-\kappa_2)-(\kappa_1-\kappa_2)=0$. Finally, by (B1)--(B2), $A_1/A_{12}\le1+(1/n)/A_{12}\le1+2/n$, so $(A_1/A_{12})^\nu\le e^{2\nu/n}=e^{1+0.02/n}\le e^{1.01}$; with (B3), $(D_1/D_{12})^{1/2}\le(4/n)^{1/2}$.
+\end{proof}
+
+\begin{lemma}[Start, target, discrepancy]\label{lem:fam}
+(a) $\pi_0(\{1,2\})\to1$, and for all large $n$, $\arg\max_\Om\pi_0=\{1,2\}$. (b) $q_1(\{1\})\to1$, and for all large $n$, $\arg\max_\Om q_1=\{1\}$. (c) $d(\emptyset)=d(\{1\})=d(\{2\})=0$ and $d(\{1,2\})=\log R_{12|1}-\log(3R_2)$, so $\frac1n d(\{1,2\})\to-\kappa_2$; moreover $-d(\{1,2\})\ge\log(3R_2)-\log(2e^{1.01}n^{-1/2})$ once $(n-1)(1-\tau)\ge1$. (d) $\eps_1\le 1/(3R_2\,q_1(\{1\}))$, so $\limsup\frac1n\log\eps_1\le-\kappa_2$.
+\end{lemma}
+\begin{proof}
+(a) With blocks $\{1\},\{2\}$, $\gamma_0(S)=\varpi(S)\BF(\{1\})^{\mathbf 1[1\in S]}\BF(\{2\})^{\mathbf 1[2\in S]}$. So $\gamma_0(\{1\})/\gamma_0(\{1,2\})=1/\BF(\{2\})=1/(3R_2)$, $\gamma_0(\{2\})/\gamma_0(\{1,2\})=1/(3R_1)$, $\gamma_0(\emptyset)/\gamma_0(\{1,2\})=3/(\BF(\{1\})\BF(\{2\}))=1/(3R_1R_2)$; all $\to0$ by Lemma~\ref{lem:asym}. (b) $\gamma_1(\emptyset)/\gamma_1(\{1\})=1/R_1$, $\gamma_1(\{1,2\})/\gamma_1(\{1\})=R_{12|1}$, and $\gamma_1(\{2\})/\gamma_1(\{1\})$; all $\to0$. (c) Each singleton or the empty set lies in one block, where the table is the exact $\BF$, so $d=0$ there; and $\BF(\{1,2\})/\BF(\{1\})=R_{12|1}\,w(1)/w(2)=R_{12|1}$, $\BF(\{2\})=3R_2$. The limit and the bound follow from Lemma~\ref{lem:asym}. (d) $\eps_1\le\pi_0(\{1\})/q_1(\{1\})$ and $\pi_0(\{1\})\le\gamma_0(\{1\})/\gamma_0(\{1,2\})=1/(3R_2)$; then use (b) and Lemma~\ref{lem:asym}.
+\end{proof}
+
+\begin{proposition}[Part (iii), second sentence]\label{prop:nonrev}
+In the family, at $\phi=1$ and for all large $n$, the realised order $\sigma=(\text{Gibbs }2,\ \text{Gibbs }1,\ \text{uniform swap},\ \text{neighbour swap},\ \text{independence})$ (Gibbs 2 applied first) gives a kernel $K_\sigma$ that is not $q_1$-reversible.
+\end{proposition}
+\begin{proof}
+By part (iii) it suffices to show $K_\sigma\ne K_{\bar\sigma}$. Lower bound along one path:
+$K_\sigma(\emptyset,\{1,2\})\ge K_{G,2}(\emptyset,\{2\})\,K_{G,1}(\{2\},\{1,2\})\,K_{\rm us}(\{1,2\},\{1,2\})\,K_{\rm ns}(\{1,2\},\{1,2\})\,K_{\rm ind}(\{1,2\},\{1,2\})$.
+Here $K_{G,2}(\emptyset,\{2\})=R_2/(1+R_2)\to1$; $K_{G,1}(\{2\},\{1,2\})=R_{12|2}/(1+R_{12|2})\to1$; $K_{\rm us}(\{1,2\},\{1,2\})=1$ ($|\{1,2\}|=p$); $K_{\rm ns}(\{1,2\},\{1,2\})=1$ (for $j\in\{1,2\}$, $N(j)\setminus\{1,2\}=\emptyset$); $K_{\rm ind}(\{1,2\},\{1,2\})\ge\pi_0(\{1,2\})\to1$. So $K_\sigma(\emptyset,\{1,2\})\to1$.
+For $\bar\sigma=(\text{independence},\text{neighbour swap},\text{uniform swap},\text{Gibbs }1,\text{Gibbs }2)$:
+$K_{\bar\sigma}(\emptyset,\{1\})\ge K_{\rm ind}(\emptyset,\emptyset)K_{\rm ns}(\emptyset,\emptyset)K_{\rm us}(\emptyset,\emptyset)K_{G,1}(\emptyset,\{1\})K_{G,2}(\{1\},\{1\})$. From $\emptyset$ the independence step moves only if it proposes some $S'\ne\emptyset$ and accepts, with acceptance $1\wedge e^{d(S')}$; so $K_{\rm ind}(\emptyset,\emptyset)\ge1-\pi_0(\{1\})-\pi_0(\{2\})-\pi_0(\{1,2\})e^{d(\{1,2\})}\to1$ by Lemma~\ref{lem:fam}(a),(c). $K_{\rm ns}(\emptyset,\emptyset)=K_{\rm us}(\emptyset,\emptyset)=1$; $K_{G,1}(\emptyset,\{1\})=R_1/(1+R_1)\to1$; $K_{G,2}(\{1\},\{1\})=1/(1+R_{12|1})\to1$. Hence $K_{\bar\sigma}(\emptyset,\{1\})\to1$ and $K_{\bar\sigma}(\emptyset,\{1,2\})\le1-K_{\bar\sigma}(\emptyset,\{1\})\to0$. For large $n$, $K_\sigma(\emptyset,\{1,2\})>\tfrac12>K_{\bar\sigma}(\emptyset,\{1,2\})$.
+\end{proof}
+
+\begin{proposition}[Part (v), second sentence]\label{prop:v}
+Let $\kappa=\kappa_2/2$. There is $n_0$ (depending on $\tau,\rho$) such that for every $n\ge n_0$ the family's input satisfies, at $\phi=1$: $\eps_1\le e^{-\kappa n}$; $\max_\Om d-\min_\Om d\ge\kappa n$; a switch ($\arg\max q_0=\{1,2\}\neq\{1\}=\arg\max q_1$); $K_1(x,\{1\})\ge\frac1{40}$ for every $x\in\Om$; hence $\sup_x\|K_1^h(x,\cdot)-q_1\|_\TV\le(39/40)^h$ for all $h\ge0$, $\gs(K_1)\ge\frac1{40}$, and $t_{\rm mix}(K_1)\le55$, where $t_{\rm mix}(K)=\min\{h\ge0:\sup_x\|K^h(x,\cdot)-q_1\|_\TV\le\frac14\}$.
+\end{proposition}
+\begin{proof}
+The first three properties hold for large $n$ by Lemma~\ref{lem:fam}: (d) gives $\frac1n\log\eps_1\le-\kappa_2+o(1)$; (c) gives $\max d-\min d\ge0-d(\{1,2\})\ge\log(3R_2)-\log(2e^{1.01}n^{-1/2})=\kappa_2n+o(n)$; (a),(b) give the switch.
+
+Mixing. Consider the $3!=6$ orders whose last two steps are Gibbs 1 then Gibbs 2 (a fraction $6/120=1/20$ of all orders). For such $\sigma$ and any $x$, let $x'$ be the state before Gibbs 1. Gibbs 1 puts $1$ in with probability $R_1/(1+R_1)$ if $2\notin x'$ and $R_{12|2}/(1+R_{12|2})$ if $2\in x'$ (the conditional depends only on $x'\setminus\{1\}$); then, from a state containing $1$, Gibbs 2 removes or keeps $2$ out with probability $\gamma_1(\{1\})/(\gamma_1(\{1\})+\gamma_1(\{1,2\}))=1/(1+R_{12|1})$, ending at $\{1\}$. So $K_\sigma(x,\{1\})\ge\theta_n:=\min\{\frac{R_1}{1+R_1},\frac{R_{12|2}}{1+R_{12|2}}\}\cdot\frac1{1+R_{12|1}}$, and $K_1(x,\{1\})\ge\theta_n/20$, all other orders contributing $\ge0$. By Lemma~\ref{lem:asym}, $\theta_n\to1$, so $\theta_n\ge\frac12$ for large $n$ and $K_1(x,\cdot)\ge\frac1{40}\delta_{\{1\}}(\cdot)$. $K_1$ is stochastic, $q_1$-invariant and self-adjoint (part (iii)); Lemma~\ref{lem:doeb} with $\nu=\delta_{\{1\}}$ and constant $\frac1{40}$ gives the TV bound and $\gs(K_1)\ge\frac1{40}$. Since $(39/40)^{55}=\exp(-55\log(40/39))<\exp(-1.39)<\frac14$ (as $\log(40/39)>0.0253$ and $55\cdot0.0253>1.39>\log4$), $t_{\rm mix}(K_1)\le55$. Take $n_0$ as the largest of the finitely many thresholds used.
+\end{proof}
+
+\begin{remark}[Any prescribed exponential rate]\label{rem:rate}
+Every argument of this section holds for every fixed $\tau,\rho\in(0,1)$, and $\kappa_2=\frac12\log\frac1{1-\tau^2\rho^2}\to\infty$ as $\tau\rho\uparrow1$. So for any prescribed $K_0>0$, choosing $\tau,\rho$ with $\kappa_2\ge2K_0$ gives a family with $\eps_1\le e^{-K_0n}$ and discrepancy range $\ge K_0n$ for all $n\ge n_0(\tau,\rho)$, a switch, and still $\gs(K_1)\ge\frac1{40}$ and $t_{\rm mix}(K_1)\le55$. Hence even a hypothesis that fixes the exponential rate (``$\eps_\phi\le e^{-K_0n}$'' or ``range $\ge K_0n$'' for a given $K_0$) does not imply slow mixing.
+\end{remark}
+
+Thus, for the hybrid kernel, an exponentially small minorisation constant $\eps_\phi$, a switch and a discrepancy range linear in $n$ can all hold, at any prescribed exponential rate (Remark~\ref{rem:rate}), while the absolute gap stays $\ge1/40$ and the mixing time stays $\le55$, for every $n\ge n_0$. Hence none of them, alone or together, implies an upper bound on $\gs(K_\phi)$ tending to $0$ or a lower bound on $t_{\rm mix}(K_\phi)$ tending to infinity (in particular none exponentially large in $n$): any such implication would fail on this family. This proves the reading of (v). Together with Sections 2--5 all claims of STATEMENT.md are proved. \qed
+
+\end{document}

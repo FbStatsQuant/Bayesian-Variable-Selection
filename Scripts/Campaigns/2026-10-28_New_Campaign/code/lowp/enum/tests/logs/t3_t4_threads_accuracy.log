@@ -1,0 +1,12 @@
+[block] thread invariance (identical() of all outputs, threads 1 vs 4 vs 8): 1==4 TRUE, 1==8 TRUE, models_scored 1.04858e+06 1.04858e+06 1.04858e+06
+[block] other task split (6 bits vs 10): same HPM TRUE, |dlogZ|=0.00e+00, max|dPIP|=3.47e-18, top identical TRUE
+[block c100] logZ stream=-101.543903062973158 R(sorted)=-101.543903062973158 R(compensated)=-101.543903062973158 |diff|=0.00e+00 / 0.00e+00; max|dPIP|=1.11e-16; max|d size_logmass|=0.00e+00; hpm F rel R max: TRUE; top1 matches R max: TRUE
+   posterior size masses: log sum exp(size_logmass) = 3.33e-15 (R: 3.33e-15); max|d size_logjoint| = 0.00e+00; all p_k in [0,1]: TRUE
+[block c050] logZ stream=-201.600967525967803 R(sorted)=-201.600967525967803 R(compensated)=-201.600967525967803 |diff|=0.00e+00 / 0.00e+00; max|dPIP|=8.88e-16; max|d size_logmass|=0.00e+00; hpm F rel R max: TRUE; top1 matches R max: TRUE
+   posterior size masses: log sum exp(size_logmass) = -3.89e-15 (R: -3.89e-15); max|d size_logjoint| = 0.00e+00; all p_k in [0,1]: TRUE
+[ar1] thread invariance (identical() of all outputs, threads 1 vs 4 vs 8): 1==4 TRUE, 1==8 TRUE, models_scored 1.04858e+06 1.04858e+06 1.04858e+06
+[ar1] other task split (6 bits vs 10): same HPM TRUE, |dlogZ|=0.00e+00, max|dPIP|=1.73e-18, top identical TRUE
+[ar1 c100] logZ stream=-173.100106751873625 R(sorted)=-173.100106751873625 R(compensated)=-173.100106751873625 |diff|=0.00e+00 / 0.00e+00; max|dPIP|=1.11e-16; max|d size_logmass|=0.00e+00; hpm F rel R max: TRUE; top1 matches R max: TRUE
+   posterior size masses: log sum exp(size_logmass) = -4.88e-15 (R: -4.88e-15); max|d size_logjoint| = 0.00e+00; all p_k in [0,1]: TRUE
+[ar1 c050] logZ stream=-252.750764718343135 R(sorted)=-252.750764718343135 R(compensated)=-252.750764718343135 |diff|=0.00e+00 / 0.00e+00; max|dPIP|=5.55e-16; max|d size_logmass|=0.00e+00; hpm F rel R max: TRUE; top1 matches R max: TRUE
+   posterior size masses: log sum exp(size_logmass) = 1.80e-14 (R: 1.80e-14); max|d size_logjoint| = 0.00e+00; all p_k in [0,1]: TRUE

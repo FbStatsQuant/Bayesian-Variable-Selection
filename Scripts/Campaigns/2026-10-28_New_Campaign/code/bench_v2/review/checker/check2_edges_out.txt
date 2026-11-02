@@ -1,0 +1,40 @@
+search: m0 seed = 1  m1 seed = 7 
+[PASS] found a genuine m = 0 fixture (pure noise, p = 30)                     
+[PASS] found a genuine m = 1 fixture (p = 30)                                 
+[PASS] m0: all 6 rows status ok, support '', k 0                              ok,ok,ok,ok,ok,ok
+[PASS] m0: diag_codes == pilot_null on every row                              pilot_null
+[PASS] m0: rss == sum(y^2) on every row                                       207.027522
+[PASS] m0: lambda/index/cv_mean/cv_se NA                                      
+[PASS] m0: pilot_k 0, pilot_index/lambda finite                               
+[PASS] m0: beta_pen zero p-vectors, ebic beta_ols zero, cv beta_ols NA        
+[PASS] m0: candidate table = null model only; path = one null row             
+[PASS] m0: null ebic1 == n log(RSS/n)                                         6.906875 vs 6.906875
+[PASS] m0: crit_value ebic rows = null EBIC, CV rows NA                       
+[PASS] m0: converged TRUE; fit$beta zeros                                     
+[PASS] m1: status ok on all 6 rows; pilot_single on every row                 pilot_single|lambda_first;pilot_single|ebic_at_largest;pilot_single
+[PASS] m1: keep == the single pilot nonzero; v == 1                           j=1
+[PASS] m1: lambda grid == own (rel 1e-12)                                     
+[PASS] m1: own scalar CV cvm/cvsd == saved path (rel 1e-12)                   rel cvm 2.2e-16 cvsd 4.0e-16
+[PASS] m1: cv_min and cv_1se indices == own scalar solution                   own 133/1 saved 133/1
+[PASS] m1: cv supports/beta_pen at those indices == own                       beta_min=0.298253 beta_1se=0.000000
+[PASS] m1: ebic1/ebic05 (+K37) picks == own (full p)                          own '1','1'
+[PASS] m1: path supports == own (sign(bfull))                                 
+[PASS] baseline fixture fits ok (m >= 2)                                      pilot_k=10
+[PASS] pilot KKT failure -> whole fit failed (6 rows failed, support NA, never null) lasso pilot failed selected-point KKT or finiteness check
+[PASS] pilot failure: coefficients all-NA vectors with failed status          
+[PASS] engine error in pilot -> whole fit failed                              full-data fit: injected engine failure
+[PASS] 2nd-stage KKT failure: CV rules failed, support NA, support_audit set  failed,failed,failed,failed,failed,failed
+[PASS] 2nd-stage KKT failure: beta_pen provenance == support_audit for failed rules 
+[PASS] 2nd-stage KKT failure: EBIC rules fail iff chosen support non-null     failed,failed,failed,failed
+[PASS] weights: b=(1e-308,1e-308) handled (no overflow), v=(1,1)              ok
+[PASS] weights: |b| ~ 1e-12 -> v>0, sum(v)=3                                  v=3,3e-12,1e-12
+[PASS] weights: b=1e-320 (1/b = Inf) fails cleanly                            unrepresentable adaptive weights
+[PASS] weights: underflowed factor (v=0) fails cleanly                        unrepresentable normalised adaptive weights
+[PASS] weights: zero coefficient in keep rejected                             invalid pilot coefficients or gamma
+[PASS] weights: non-finite coefficient rejected                               invalid pilot coefficients or gamma
+[PASS] weights: gamma != 1 rejected                                           invalid pilot coefficients or gamma
+   permuted-column support match per rule: cv_min TRUE  cv_1se TRUE  ebic1 TRUE  ebic05 TRUE  ebic1_K37 TRUE  ebic05_K37 TRUE 
+[PASS] permuted columns: all 6 rules' supports map back to original indices   
+[PASS] permuted columns: pilot keep maps back                                 
+
+SUMMARY:  36  PASS /  0  FAIL of  36 

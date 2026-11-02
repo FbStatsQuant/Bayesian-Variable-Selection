@@ -1,0 +1,18 @@
+--- n = 200, p = 10, K = 10
+d=1 pool=all m=0: centres 64 (slow 64, set&clauses same TRUE); literal max|dm|=0.0e+00 infs same TRUE, viol 50/0/0 vs slow 50/0/0; toward max|dm|=0.0e+00 infs same TRUE, viol 4/0/0 vs slow 4/0/0; scores C++ 1808 = formula 1808 = slow calls 1808 (dry run 1808, dry_run=TRUE)
+   min margin literal a/b/c: -4.83421/2.99509/2.99509  toward: -3.66122/2.99509/2.99509 ; sizes of centres up to 4 
+d=2 pool=all m=1: centres 232 (slow 232, set&clauses same TRUE); literal max|dm|=0.0e+00 infs same TRUE, viol 197/20/0 vs slow 197/20/0; toward max|dm|=0.0e+00 infs same TRUE, viol 14/0/0 vs slow 14/0/0; scores C++ 7352 = formula 7352 = slow calls 7352 (dry run 7352, dry_run=TRUE)
+   min margin literal a/b/c: -4.83421/0.0127163/2.99509  toward: -3.66122/2.5308/2.99509 ; sizes of centres up to 5 
+d=2 pool=1,3,8 m=2: centres 56 (slow 56, set&clauses same TRUE); literal max|dm|=0.0e+00 infs same TRUE, viol 43/3/0 vs slow 43/3/0; toward max|dm|=0.0e+00 infs same TRUE, viol 7/0/0 vs slow 7/0/0; scores C++ 1672 = formula 1672 = slow calls 1672 (dry run 1672, dry_run=TRUE)
+   min margin literal a/b/c: -4.41536/0.393741/2.99509  toward: -3.66122/2.82483/2.99509 ; sizes of centres up to 5 
+d=0 pool=all m=0: centres 8 (slow 8, set&clauses same TRUE); literal max|dm|=0.0e+00 infs same TRUE, viol 1/0/0 vs slow 1/0/0; toward max|dm|=0.0e+00 infs same TRUE, viol 1/0/0 vs slow 1/0/0; scores C++ 184 = formula 184 = slow calls 184 (dry run 184, dry_run=TRUE)
+   min margin literal a/b/c: -3.66122/NA/2.99509  toward: -3.66122/NA/2.99509 ; sizes of centres up to 3 
+--- n = 12, p = 10, K = 6
+d=3 pool=all m=0: centres 512 (slow 512, set&clauses same TRUE); literal max|dm|=0.0e+00 infs same TRUE, viol 448/56/1 vs slow 448/56/1; toward max|dm|=0.0e+00 infs same TRUE, viol 390/56/1 vs slow 390/56/1; scores C++ 17012 = formula 17012 = slow calls 17012 (dry run 17012, dry_run=TRUE)
+   min margin literal a/b/c: -9.17299/-3.77104/-2.00379  toward: -6.34603/-3.77104/-2.00379 ; sizes of centres up to 6 
+d=3 pool=all m=1: centres 512 (slow 512, set&clauses same TRUE); literal max|dm|=0.0e+00 infs same TRUE, viol 448/63/1 vs slow 448/63/1; toward max|dm|=0.0e+00 infs same TRUE, viol 440/63/1 vs slow 440/63/1; scores C++ 17012 = formula 17012 = slow calls 17012 (dry run 17012, dry_run=TRUE)
+   min margin literal a/b/c: -9.17299/-3.77104/-2.00379  toward: -6.34603/-3.77104/-2.00379 ; sizes of centres up to 6 
+Dry-run counts, p = 1000, K = 100, s0 = 14 (swaps at |S| = K counted):
+  d=0: centres 16384, scores 130228224
+  d=1: centres 16171008, scores 144447561728
+  d=2: centres 7972323328, scores 79041632043008

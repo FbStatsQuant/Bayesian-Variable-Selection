@@ -1,0 +1,13 @@
+#!/bin/bash
+# stub squeue: prints the queue table $STUB_DIR/queue.psv (id|name|state|reason; unexpanded array rows such as 7002_[1-600%50]) or, with -r,
+# $STUB_DIR/queue_r.psv (one row per task). -o FORMAT uses %i %j %T %r separated by '|'. SQUEUE_FAIL=1 makes it fail (exit 17); a file $STUB_DIR/squeue_fail_once makes only the next call fail.
+[ "${SQUEUE_FAIL:-0}" = 1 ] && { echo "fabricated squeue outage" >&2; exit 17; }
+# one-shot outage (R3-1 tests): the file is armed by the stub sbatch (STUB_ARM_SQUEUE_FAIL=1, right after it ACCEPTS a scan job); the NEXT squeue call fails, later ones work
+[ -f "$STUB_DIR/squeue_fail_once" ] && { rm -f "$STUB_DIR/squeue_fail_once"; echo "fabricated transient squeue outage" >&2; exit 17; }
+fmt='%i'; rflag=0
+while [ $# -gt 0 ]; do case "$1" in -o) fmt=$2; shift 2;; -r) rflag=1; shift;; -u|-j) shift 2;; *) shift;; esac; done
+f="$STUB_DIR/queue.psv"; [ $rflag = 1 ] && f="$STUB_DIR/queue_r.psv"
+[ -f "$f" ] || exit 0
+awk -F'|' -v fmt="$fmt" 'BEGIN { n = split(fmt, t, "|") }
+  NF { line = ""; for (i = 1; i <= n; i++) { v = ""; if (t[i] == "%i") v = $1; else if (t[i] == "%j") v = $2; else if (t[i] == "%T") v = $3; else if (t[i] == "%r") v = $4
+                                              line = line (i > 1 ? "|" : "") v } print line }' "$f"

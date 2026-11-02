@@ -1,80 +1,80 @@
-# Bayesian Variable Selection
+# Bayesian Variable Selection (SMC-BVS)
 
-Local-to-global Bayesian variable selection (SMC-BVS): a sequential Monte Carlo sampler over models with a Beta-Binomial BB(1, p) size prior, reporting the highest posterior model (HPM). The current method is SMC-BVS v3, code version v2.1 (the code of the 2,400-fit production run, 2026-10-23).
+Local-to-global Bayesian variable selection: a sequential Monte Carlo sampler over models, with a g-prior slab and a Beta-Binomial BB(1, p) size prior. It reports the highest-posterior model among all models it scored (HPM), Rao-Blackwellised and plain PIPs, and an evidence estimate.
 
-This repository holds the code, the current documents, the small final result tables, and the reference papers. Data and per-seed simulation outputs are not stored here (they stay on the PC and on NOTS). Code is written here and deployed to NOTS for large runs.
+| Item | Version |
+|---|---|
+| Method | SMC-BVS v3 |
+| Code (frozen, used for every New Campaign run) | **v2.2.1** |
+| Code (2026-10-23 production run) | v2.1, kept |
+
+**Start here:**
+
+| If you want… | Read |
+|---|---|
+| the plan from here to the paper | [`Docs/PLAN.md`](Docs/PLAN.md) |
+| the theory targets we will pursue | [`Docs/THEORY_PRIORITIES.md`](Docs/THEORY_PRIORITIES.md) |
+| every theorem and its status | [`Docs/THEORY.md`](Docs/THEORY.md), one-pagers in `Docs/Theory/one_pagers/` |
+| how the HQ agent runs this project | [`Docs/HQ/BOOTSTRAP.md`](Docs/HQ/BOOTSTRAP.md), [`Docs/HQ/RULES.md`](Docs/HQ/RULES.md) |
+| what must be refreshed after the experiments | [`Docs/SYNC_LATER.md`](Docs/SYNC_LATER.md) |
+
+Data and per-seed outputs are **not** in Git. Bulk data lives in the git-ignored `_data/` on the always-on host, and earlier archives are off-repo. Heavy compute runs on the NOTS cluster from the bundles in `Scripts/`.
 
 ## Layout
 
 ```
-BVS_GH/
-├── Scripts/            code
-│   ├── SMC_BVS/        the method (v3, version v2.1) and its tooling
-│   ├── Benchmarks/     the competing methods and their scoring
-│   ├── Data_generators/
-│   └── Exact/          exact-posterior references for small p
-├── Results/            final summary tables and figures (no per-seed outputs)
-├── Docs/               methodology, theory, run records, history, literature notes
-├── Papers/             reference papers
-└── Others/             miscellaneous
+README.md
+Docs/
+  PLAN.md  THEORY.md  THEORY_PRIORITIES.md  SYNC_LATER.md  PUSH_CHECKLIST.md
+  HQ/            BOOTSTRAP, RULES, OPS_FACTS, DECISIONS (log D1–D70), STATUS
+  Campaigns/2026-10-28_New_Campaign/   charter, status, decisions, campaign plan, theory-extraction strategy (snapshot)
+  Theory/        THEORY.tex/pdf, THEOREM_MAP, RULINGS, DROPPED; theorems/ (T01–T36);
+                 proofs/ (locked register, statements, proofs, reviews); PAPER_SELECTION_20261028/
+                 (frozen paper list, consultant reviews, new conjectures T37–T39);
+                 INVENTORY_20261028/; one_pagers/ (T01–T39); legacy_pre_v3/
+  Methodology/   METHODOLOGY_v3, master methodology and plan
+  Records/       run records, handoff plans (GH_HANDOFF/), status briefing 2026-10-28, LEVERS
+  History/       earlier campaigns, HQ tracker history
+  Literature/
+Scripts/
+  Campaigns/2026-10-28_New_Campaign/   the vetted New Campaign code, bundles and review records (see its README)
+  SMC_BVS/       v2.1 method code and its tooling (2026-10-23 production)
+  Benchmarks/    the 8 benchmark methods of the n = 200 study + scoring (produced the reused p ≫ n benchmark results)
+  Data_generators/  Exact/
+Results/         final summary tables (2026-10-23 production; benchmark study; New Campaign results after SYNC_LATER)
+Papers/          reference papers
+Others/          legacy holding area (no new material)
 ```
 
-### Scripts/
+Folder-by-folder detail for the v2.1 code, the benchmark study, Results and Papers (the previous README) is kept in `Docs/Records/README_v2_1_layout.md`.
 
-| Folder | Contents |
-|---|---|
-| `SMC_BVS/core/` | Method core: R driver files (`v3.R` entry, `v3_fit.R`, preprocessing, setup, calibration, final run, exact branch) and the C++ engine in `cpp/` |
-| `SMC_BVS/study/` | `adapter.R` and `run_case.R`: run one dataset through the method |
-| `SMC_BVS/tests/` | v2.1 regression suite (32-seed comparison against the prototype core) |
-| `SMC_BVS/smoke/` | Smoke test and adapter contract test |
-| `SMC_BVS/build/` | Build, freeze and NOTS launch scripts |
-| `SMC_BVS/reference/` | `prototype_core/` used by the regression suite, `CHANGES.md` (v2 to v2.1), rulings |
-| `SMC_BVS/nots_runner/` | NOTS production runner (`submit.sh`, `task.sh`, `poll.py`, `reconcile.py`, `rerun.sh`), sha256-verified transfer tools, and the 2,400-unit production table |
-| `SMC_BVS/analysis/` | Scoring and analysis pipeline that produced `Results/SMC_BVS_v3_production` (`run_pipeline.py`, `score_campaign2.py`, `make_results.py`, contracts, fixtures and tests) |
-| `Benchmarks/<method>/` | Code of each benchmark's final production run in the n = 200 study: Lasso, ElasticNet, AdaptiveLasso, MCP_SCAD, ABESS, SuSiE, SSL, Horseshoe |
-| `Benchmarks/scoring/` | Benchmark scoring, aggregation and pairing code (`registry.R`, `score.R`, `aggregate.R`, `combine.R`, `pair.R`) and derived rules |
-| `Benchmarks/PARNI/` | PARNI implementation (p = 30 study; not in the final eight) |
-| `Data_generators/` | Generators and verifiers of the n = 200 dev, production and holdout datasets |
-| `Exact/stratified_enumerator/` | Stratified exact enumeration of all 2^30 models (p <= 30) |
-| `Exact/exact_reference_p30/` | Exact posterior reference of the p = 30 study |
-| `Exact/best_subset_bic/` | Exact BIC best-subset method |
-| `Exact/oracle_p20/` | Independent Python oracle (exact, p <= 20) used to verify the v3 engine |
-| `Exact/tinyp_check/` | Tiny-p check of SMC against exact enumeration |
+## The New Campaign code (`Scripts/Campaigns/2026-10-28_New_Campaign/`)
 
-Usage of the core:
+Relative paths are preserved from the campaign folder, so bundles still find each other.
 
-```r
-source("Scripts/SMC_BVS/core/v3.R")
-fit <- v3_fit(X, y, seed, allocation = list(mem_gb = 8, hours = 24))
+| Path | What | Frozen manifest |
+|---|---|---|
+| `code/core/v2_2_1/` | SMC-BVS v2.2.1: one tree for both regimes (H: p ≫ n; L: p ≤ 30), P5 retry, plain PIPs, scored-model registry | `code/core/v2_2_1.SHA256SUMS` (27 files) |
+| `code/core/v2_2/` | v2.2 (used by the NOTS identity gate) | `code/core/v2_2.SHA256SUMS` |
+| `code/lowp/` | low-p generator and sealing, exact 2^p enumerator, pilot bundle rev 7d | `code/CODE_LEDGER.md` |
+| `code/bench_v2/` | p ≫ n benchmark adapters F1–F3 with the adaptive-lasso lasso-pilot fix | `MANIFEST_SHA256.txt` |
+| `code/bench_lowp/` | the 8 benchmarks adapted to p ≤ 30 (r2) | `bench_v2/lowp_port/BENCH_LOWP_MANIFEST_SHA256_r2.txt` |
+| `code/scoring/` | metrics, theory measures, headline tables | `code/CODE_LEDGER.md` |
+| `conformance/jobs/PROD_H/` | p ≫ n production bundle (2,400 fits) | `BUNDLE_SHA256SUMS` |
+| `conformance/jobs/CONF_NOTS_IDENTITY/` | v2.2 identity gate on NOTS | — |
+| `jobs/PROD_L/`, `jobs/PROD_L_BENCH/` | low-p production: enumeration + SMC + repeats; the benchmark wave | bundle ledgers |
+| `bench_audit/jobs/BENCH_F3_{DEV,PROD}/` | adaptive-lasso dev pilot and production rerun | `BUNDLE_SHA256SUMS_FINAL` |
+| `ops/` | NOTS guard, ssh lock shim, sha256-verified pull and verified delete | — |
+| `*/review/` | Sol reviews and fix records: the vetting evidence | — |
+
+Re-check every manifest from the repo root:
+
+```sh
+sh Scripts/Campaigns/2026-10-28_New_Campaign/verify_manifests.sh
 ```
 
-The scripts are copies of the frozen production code. Some of them still contain the paths of the machine they ran on (NOTS or the PC), so set paths before rerunning.
+Frozen scripts are byte-identical copies of what ran, so they still contain the NOTS paths they ran with. Never "fix" a frozen file in place; a change needs a new version, a regression, a review and a ledger entry.
 
-### Results/
+## Results so far
 
-| Folder | Contents |
-|---|---|
-| `SMC_BVS_v3_production/` | SMC-BVS v3 on the n = 200 study, p = 500 and p = 1000 (2,400 fits), scored 2026-10-28: `HEADLINE_TABLES.md` (exact recovery against all benchmarks), per-p results tables, figures, runtime, scoring config, independent recount scripts |
-| `Benchmarks_n200/c100/`, `c050/` | Final benchmark tables of the n = 200 study at signal scale c = 1 and c = 0.5 (`SUMMARY.md`, `T1`-`T6`, `S_tables.csv`, `rules_long.csv` and the corrected `rules_long_v7.csv`; c050 also has the c100-vs-c050 pairing and the horseshoe long-chain sensitivity) |
-| `p500_comparison/` | Earlier ten-method comparison at p = 500 (BB+HPM, the mixture challenger and eight benchmark rules on 3,000 datasets): summary tables and the comparison scripts |
-
-Headline (exact recovery of the true model, out of 600 datasets, c = 1, p500 / p1000): SMC-BVS v3 (HPM) 559 / 560, SuSiE 585 / 582, spike-and-slab LASSO 569 / 582, horseshoe 574 / 575, SCAD 454 / 417, MCP 377 / 235, ABESS 365 / 323, Lasso, elastic net and adaptive Lasso 0. At c = 0.5, SMC-BVS v3 (HPM) is best: 370 / 340, against 303 / 255 for spike-and-slab LASSO and 220 / 205 for SuSiE. See `Results/SMC_BVS_v3_production/HEADLINE_TABLES.md`.
-
-### Docs/
-
-| Folder | Contents |
-|---|---|
-| `Methodology/` | `METHODOLOGY_v3.md` (the method spec the code implements), `SPEC_anyXY_v2.md`, and the master methodology and plan (`MASTER_Methodology_and_Plan.{md,tex,pdf}` with its evidence notes) |
-| `Theory/` | v3 theory writeup (`THEORY.pdf`, `THEORY.tex`), `THEOREM_MAP.md`, rulings, status; `theorems/` (36 conjecture statements); `proofs/` (`COLLECTED_PROOFS_v2.pdf`, `LOCKED_PROOFS.md`, `PROOFS_STATUS.md`, each theorem's statement, and the final proof of the 9 theorems not in the collected document) |
-| `Records/` | Run records worth consulting: `LEVERS.md`; the n = 200 benchmark study run ledger, c = 0.5 pre-registration and plan, verification reports; the SMC-BVS v3 deployment outputs, handoff, go decision, NOTS readiness, rulings and audit summary |
-| `History/` | Earlier campaigns that led to the method: the selection campaign behind BB(1, p) + HPM (2026-10-13) and the p = 30 benchmark study against the exact posterior (2026-10-07) |
-| `Literature/` | Literature conclusions: final recommendations of the method brainstorm, benchmark choice reports, the benchmark selection note, the five-candidates report |
-
-### Papers/
-
-| Folder | Contents |
-|---|---|
-| `SMC/` | Del Moral, Doucet and Jasra (2006), Sequential Monte Carlo samplers |
-| `Core_bibliography/` | The numbered core bibliography (29 PDFs, `INDEX.txt`; #03 Krishna 2009 only as web text, #21 not available) |
-| `Priors_and_decision_rules/` | Size priors, posterior contraction and decision rules behind BB(1, p) + HPM (Wilson et al. 2010, Castillo and van der Vaart 2012, Castillo, Schmidt-Hieber and van der Vaart 2015, Barbieri and Berger 2004, Müller, Parmigiani and Rice 2007, and others) |
-| `Benchmark_methods/` | Primary papers of the benchmarks: Lasso, elastic net, adaptive Lasso, glmnet, spike-and-slab LASSO, ABESS, horseshoe (SuSiE is #29 in the core bibliography) |
+The p ≫ n headline of the 2026-10-23 fits is in `Results/SMC_BVS_v3_production/HEADLINE_TABLES.md`. The v2.2.1 rerun reproduces those 2,400 fits exactly. New Campaign results (low-p exact comparisons, plain PIPs, adaptive-lasso v2 rows, low-p benchmarks) are added at the end of the experimental phase (`Docs/SYNC_LATER.md`).

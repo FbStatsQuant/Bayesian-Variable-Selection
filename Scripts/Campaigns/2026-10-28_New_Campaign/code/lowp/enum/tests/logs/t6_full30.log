@@ -1,0 +1,4 @@
+FULL p=30 threads=14 models=1073741824 status=exact elapsed_s=139.8 cpu_s=885.7 models_per_elapsed_s=7.68e+06 sum_task_elapsed_s=1925.2 cpu_load_before=100%
+  c100 logZ=-107.267258309430 hpm=3;7;14;16;25 F=-107.614491 certified=TRUE bound=2.9593 margin=2.9593 recheck=1.06394e+06 mismatches=0,0 rescales=28611 fallbacks=0 log_sum_exp_size_logmass=-1.11e-15
+  c050 logZ=-207.303512908592 hpm=3;7;14;16;25 F=-208.113955 certified=TRUE bound=1.2329 margin=1.2329 recheck=1.06394e+06 mismatches=0,0 rescales=20096 fallbacks=0 log_sum_exp_size_logmass=-1.37e-14
+PEAK_WORKING_SET_MB=82.9 PROCESS_WALL_S=148.4

@@ -1,0 +1,4 @@
+# Byte-preserve frozen, hash-manifested trees: no CRLF/LF conversion on any clone (Windows PCs included),
+# so `verify_manifests.sh` gives the same answer everywhere. Added 2026-11-02 (GH-PACK).
+Scripts/Campaigns/** -text
+Docs/Theory/proofs/** -text

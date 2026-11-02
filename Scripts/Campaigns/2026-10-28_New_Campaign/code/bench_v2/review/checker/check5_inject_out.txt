@@ -1,0 +1,40 @@
+
+===== F1 =====
+   baseline: i_min = 59  i_1se = 42  ebic1 support = 3;7;14;16;25 
+[PASS] F1 S0 no injection: deployed vs v2 original 4 rule rows identical (all cols)   deployed status=ok,ok,ok,ok | v2 status=ok,ok,ok,ok,ok,ok
+[PASS] F1 S0 no injection: beta / converged / diagnostics identical                   
+[PASS] F1 S0 no injection: v2 beta_pen provenance == support / support_audit, all 6 rules 
+[PASS] F1 S1 full-data KKT at i_min: deployed vs v2 original 4 rule rows identical (all cols) deployed status=failed,ok,ok,ok | v2 status=failed,ok,ok,ok,ok,ok
+[PASS] F1 S1 full-data KKT at i_min: beta / converged / diagnostics identical         
+[PASS] F1 S1 full-data KKT at i_min: v2 beta_pen provenance == support / support_audit, all 6 rules 
+[PASS] F1 S1: cv_min failed (support NA, audit set), others unaffected unless same column failed,ok,ok,ok,ok,ok
+[PASS] F1 S2 full-data KKT at every ebic1-support column: deployed vs v2 original 4 rule rows identical (all cols) deployed status=ok,failed,failed,failed | v2 status=ok,failed,failed,failed,failed,failed
+[PASS] F1 S2 full-data KKT at every ebic1-support column: beta / converged / diagnostics identical 
+[PASS] F1 S2 full-data KKT at every ebic1-support column: v2 beta_pen provenance == support / support_audit, all 6 rules 
+[PASS] F1 S2: every EBIC-type rule that picked the violated support failed; others ok ebic1 failed ebic05 failed ebic1_K37 failed ebic05_K37 failed
+[PASS] F1 S3 fold-fit KKT at i_min (all folds): deployed vs v2 original 4 rule rows identical (all cols) deployed status=failed,failed,ok,ok | v2 status=failed,failed,ok,ok,ok,ok
+[PASS] F1 S3 fold-fit KKT at i_min (all folds): beta / converged / diagnostics identical 
+[PASS] F1 S3 fold-fit KKT at i_min (all folds): v2 beta_pen provenance == support / support_audit, all 6 rules 
+[PASS] F1 S3: cv_min and cv_1se failed by fold violation; EBIC rules unaffected       failed,failed,ok,ok,ok,ok
+[PASS] F1 baseline: K37 rows roles S0, k <= 37, ok                                    
+
+===== F2 =====
+   baseline: i_min = 59  i_1se = 43  ebic1 support = 3;7;14;16;25 
+[PASS] F2 S0 no injection: deployed vs v2 original 4 rule rows identical (all cols)   deployed status=ok,ok,ok,ok | v2 status=ok,ok,ok,ok,ok,ok
+[PASS] F2 S0 no injection: beta / converged / diagnostics identical                   
+[PASS] F2 S0 no injection: v2 beta_pen provenance == support / support_audit, all 6 rules 
+[PASS] F2 S1 full-data KKT at i_min: deployed vs v2 original 4 rule rows identical (all cols) deployed status=failed,ok,ok,ok | v2 status=failed,ok,ok,ok,ok,ok
+[PASS] F2 S1 full-data KKT at i_min: beta / converged / diagnostics identical         
+[PASS] F2 S1 full-data KKT at i_min: v2 beta_pen provenance == support / support_audit, all 6 rules 
+[PASS] F2 S1: cv_min failed (support NA, audit set), others unaffected unless same column failed,ok,ok,ok,ok,ok
+[PASS] F2 S2 full-data KKT at every ebic1-support column: deployed vs v2 original 4 rule rows identical (all cols) deployed status=ok,failed,failed,failed | v2 status=ok,failed,failed,failed,failed,failed
+[PASS] F2 S2 full-data KKT at every ebic1-support column: beta / converged / diagnostics identical 
+[PASS] F2 S2 full-data KKT at every ebic1-support column: v2 beta_pen provenance == support / support_audit, all 6 rules 
+[PASS] F2 S2: every EBIC-type rule that picked the violated support failed; others ok ebic1 failed ebic05 failed ebic1_K37 failed ebic05_K37 failed
+[PASS] F2 S3 fold-fit KKT at i_min (all folds): deployed vs v2 original 4 rule rows identical (all cols) deployed status=failed,failed,ok,ok | v2 status=failed,failed,ok,ok,ok,ok
+[PASS] F2 S3 fold-fit KKT at i_min (all folds): beta / converged / diagnostics identical 
+[PASS] F2 S3 fold-fit KKT at i_min (all folds): v2 beta_pen provenance == support / support_audit, all 6 rules 
+[PASS] F2 S3: cv_min and cv_1se failed by fold violation; EBIC rules unaffected       failed,failed,ok,ok,ok,ok
+[PASS] F2 baseline: K37 rows roles S0, k <= 37, ok                                    
+
+SUMMARY:  32  PASS /  0  FAIL of  32 

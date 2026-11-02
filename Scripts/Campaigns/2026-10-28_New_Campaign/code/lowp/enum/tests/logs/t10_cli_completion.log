@@ -1,0 +1,40 @@
+PASS fresh run completes 
+PASS record has input_mode sealed, status exact, labels, normalised size masses 
+PASS rerun verifies marker/sidecar/RDS and skips 
+PASS corrupted RDS + stale .done: detected, recomputed, valid 
+PASS tampered sidecar + .done: detected, recomputed, valid 
+PASS forced rewrite failing at before_rds_rename: exit != 0, no .done, no lock, no temp files status 1
+PASS   recovery after before_rds_rename: plain rerun recomputes and publishes a consistent result 
+PASS forced rewrite failing at after_rds_rename: exit != 0, no .done, no lock, no temp files status 1
+PASS   recovery after after_rds_rename: plain rerun recomputes and publishes a consistent result 
+PASS forced rewrite failing at after_sha_rename: exit != 0, no .done, no lock, no temp files status 1
+PASS   recovery after after_sha_rename: plain rerun recomputes and publishes a consistent result 
+PASS forced rewrite failing at before_done: exit != 0, no .done, no lock, no temp files status 1
+PASS   recovery after before_done: plain rerun recomputes and publishes a consistent result 
+PASS obstructed sidecar rename: forced rewrite fails, no .done left 
+PASS   rerun with the obstruction still present does not report completion 
+PASS   rerun after removing the obstruction recovers 
+PASS fresh lock held by another writer: forced job exits with status 3; the existing verified result is untouched status 3
+PASS stale lock (1 h old) is removed and the forced job completes 
+PASS two simultaneous jobs: one valid consistent result, no lock or temp files left 
+   concurrent job logs: OK p0020_S3_r007: 1.04858e+06 models, 1.0 s elapsed, 2 threads, input_ | OK p0020_S3_r007: 1.04858e+06 models, 1.1 s elapsed, 2 threads, input_ 
+PASS production run, manifest without the dataset row: refused, no output Execution halted
+PASS production run, duplicate manifest rows: refused, no output 
+[1] TRUE
+PASS production run, manifest absent: refused, no output Execution halted
+PASS explicit --unsealed-test-input without manifest: runs and records input_mode 
+PASS restored manifest: sealed run 
+PASS N2: models_expected and complete are at the top level (and in extra) 
+PASS N1: stale source fingerprint (self-consistent hashes) -> recomputed 
+PASS   the recomputed record is accepted on the next run 
+PASS record written with --scales c100 holds only c100 
+PASS N1: two-scale request over a c100-only record -> recomputed, now c100 and c050 
+PASS N1: c100-only request over a two-scale record -> recomputed (exact scale set) 
+PASS N1: prior-version record (other source, joint size_logmass, no labels/new fields) -> recomputed 
+PASS N1: same fingerprint but old-contract fields (no new fields) -> recomputed 
+PASS N1: all fields present but joint-valued size_logmass -> recomputed 
+PASS N1: incomplete model coverage -> recomputed 
+PASS N1: status partial / complete FALSE -> recomputed 
+PASS N1: a scale with scope restricted -> recomputed 
+
+36 of 36 checks passed

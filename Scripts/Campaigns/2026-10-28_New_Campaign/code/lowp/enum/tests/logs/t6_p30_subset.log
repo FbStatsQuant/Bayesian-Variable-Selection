@@ -1,0 +1,9 @@
+== p30 subset threads 1
+TIMING p=30 design=block threads=1 tasks=31/1024 models=3.25059e+07 elapsed_s=29.97 cpu_s=23.98 sum_task_elapsed_s=29.55 models_per_elapsed_s=1.08e+06 cpu_ns_per_model=738 cpu_load_before=100%
+PEAK_WORKING_SET_MB=82.4 PROCESS_WALL_S=36.4
+== p30 subset threads 8
+TIMING p=30 design=block threads=8 tasks=31/1024 models=3.25059e+07 elapsed_s=7.56 cpu_s=26.81 sum_task_elapsed_s=47.07 models_per_elapsed_s=4.3e+06 cpu_ns_per_model=825 cpu_load_before=100%
+PEAK_WORKING_SET_MB=82.3 PROCESS_WALL_S=14.4
+== p30 subset threads 14
+TIMING p=30 design=block threads=14 tasks=31/1024 models=3.25059e+07 elapsed_s=5.47 cpu_s=26.18 sum_task_elapsed_s=62.30 models_per_elapsed_s=5.94e+06 cpu_ns_per_model=805 cpu_load_before=100%
+PEAK_WORKING_SET_MB=82.8 PROCESS_WALL_S=13.4

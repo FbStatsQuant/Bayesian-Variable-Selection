@@ -1,0 +1,14 @@
+== p20 threads 0
+PEAK_WORKING_SET_MB=81.3 PROCESS_WALL_S=1.0
+== p20 threads 1
+TIMING p=20 design=block threads=1 elapsed_s=1.290 cpu_s=1.010 models=1.04858e+06 models_per_elapsed_s=8.13e+05 (both scales, one pass) logZ_c100=-101.543903062973
+TIMING p=20 design=ar1 threads=1 elapsed_s=1.000 cpu_s=0.760 models=1.04858e+06 models_per_elapsed_s=1.05e+06 (both scales, one pass) logZ_c100=-173.100106751874
+PEAK_WORKING_SET_MB=82.3 PROCESS_WALL_S=14.2
+== p20 threads 4
+TIMING p=20 design=block threads=4 elapsed_s=1.220 cpu_s=1.440 models=1.04858e+06 models_per_elapsed_s=8.59e+05 (both scales, one pass) logZ_c100=-101.543903062973
+TIMING p=20 design=ar1 threads=4 elapsed_s=0.630 cpu_s=1.360 models=1.04858e+06 models_per_elapsed_s=1.66e+06 (both scales, one pass) logZ_c100=-173.100106751874
+PEAK_WORKING_SET_MB=87.4 PROCESS_WALL_S=16.5
+== p20 threads 8
+TIMING p=20 design=block threads=8 elapsed_s=0.860 cpu_s=1.350 models=1.04858e+06 models_per_elapsed_s=1.22e+06 (both scales, one pass) logZ_c100=-101.543903062973
+TIMING p=20 design=ar1 threads=8 elapsed_s=0.460 cpu_s=1.330 models=1.04858e+06 models_per_elapsed_s=2.28e+06 (both scales, one pass) logZ_c100=-173.100106751874
+PEAK_WORKING_SET_MB=97.5 PROCESS_WALL_S=14.8

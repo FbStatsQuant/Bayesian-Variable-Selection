@@ -1,0 +1,224 @@
+
+==== p0020_S1_r001_c100 (designated) ====
+   input file accessible: TRUE 
+[PASS] p0020_S1_r001_c100         F1 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0020_S1_r001_c100         F1 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0020_S1_r001_c100         F1 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4)
+[PASS] p0020_S1_r001_c100         F1 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0020_S1_r001_c100         F1 exactly one primary row                                   cv_min
+[PASS] p0020_S1_r001_c100         F1 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0020_S1_r001_c100         F2 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0020_S1_r001_c100         F2 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0020_S1_r001_c100         F2 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4)
+[PASS] p0020_S1_r001_c100         F2 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0020_S1_r001_c100         F2 exactly one primary row                                   cv_min
+[PASS] p0020_S1_r001_c100         F2 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0020_S1_r001_c100         F3 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0020_S1_r001_c100         F3 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0020_S1_r001_c100         F3 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4)
+[PASS] p0020_S1_r001_c100         F3 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0020_S1_r001_c100         F3 exactly one primary row                                   cv_min
+[PASS] p0020_S1_r001_c100         F3 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0020_S1_r001_c100         F4 unique rule ids / coef ids match rows                     ebic1,ebic05,bic,ebic1_K37,ebic05_K37,bic_K37,ebic1_lam005
+[PASS] p0020_S1_r001_c100         F4 support==nonzeros(beta_pen), all 7 rules                  status: ok
+[PASS] p0020_S1_r001_c100         F4 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4) bic_K37=TRUE(k=4)
+[PASS] p0020_S1_r001_c100         F4 roles per LA-4                                            ebic1:secondary ebic05:secondary bic:secondary ebic1_K37:primary ebic05_K37:S0 bic_K37:S0 ebic1_lam005:S0
+[PASS] p0020_S1_r001_c100         F4 exactly one primary row                                   ebic1_K37
+[PASS] p0020_S1_r001_c100         F4 beta_ols == own OLS (rel 1e-8), 7 rules                   max rel=0.00e+00
+[PASS] p0020_S1_r001_c100         F5 unique rule ids / coef ids match rows                     ebic1,ebic05,bic,ebic1_K37,ebic05_K37,bic_K37,sic_smax
+[PASS] p0020_S1_r001_c100         F5 support==nonzeros(beta_pen), all 7 rules                  status: ok
+[PASS] p0020_S1_r001_c100         F5 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4) bic_K37=TRUE(k=4)
+[PASS] p0020_S1_r001_c100         F5 roles per LA-4                                            ebic1:secondary ebic05:secondary bic:secondary ebic1_K37:primary ebic05_K37:S0 bic_K37:S0 sic_smax:S0
+[PASS] p0020_S1_r001_c100         F5 exactly one primary row                                   ebic1_K37
+[PASS] p0020_S1_r001_c100         F5 beta_ols == own OLS (rel 1e-8), 6 rules                   max rel=0.00e+00
+[PASS] p0020_S1_r001_c100         F3 pilot$beta identical to F1 fit$beta (low-p)               m=6
+[PASS] p0020_S1_r001_c100         F3 sum(v)==m; v>0                                            m=6
+[PASS] p0020_S1_r001_c100         F3 rows: retired ridge fields absent; pilot_* present        
+[PASS] p0020_S1_r001_c100         schema_version == 2 on all five                              
+
+==== p0030_S4_r050_c050 (designated) ====
+   input file accessible: TRUE 
+[PASS] p0030_S4_r050_c050         F1 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0030_S4_r050_c050         F1 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0030_S4_r050_c050         F1 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=7) ebic05_K37=TRUE(k=7)
+[PASS] p0030_S4_r050_c050         F1 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0030_S4_r050_c050         F1 exactly one primary row                                   cv_min
+[PASS] p0030_S4_r050_c050         F1 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0030_S4_r050_c050         F2 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0030_S4_r050_c050         F2 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0030_S4_r050_c050         F2 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=8) ebic05_K37=TRUE(k=8)
+[PASS] p0030_S4_r050_c050         F2 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0030_S4_r050_c050         F2 exactly one primary row                                   cv_min
+[PASS] p0030_S4_r050_c050         F2 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0030_S4_r050_c050         F3 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0030_S4_r050_c050         F3 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0030_S4_r050_c050         F3 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=5) ebic05_K37=TRUE(k=5)
+[PASS] p0030_S4_r050_c050         F3 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0030_S4_r050_c050         F3 exactly one primary row                                   cv_min
+[PASS] p0030_S4_r050_c050         F3 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0030_S4_r050_c050         F4 unique rule ids / coef ids match rows                     ebic1,ebic05,bic,ebic1_K37,ebic05_K37,bic_K37,ebic1_lam005
+[PASS] p0030_S4_r050_c050         F4 support==nonzeros(beta_pen), all 7 rules                  status: ok
+[PASS] p0030_S4_r050_c050         F4 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=5) ebic05_K37=TRUE(k=5) bic_K37=TRUE(k=5)
+[PASS] p0030_S4_r050_c050         F4 roles per LA-4                                            ebic1:secondary ebic05:secondary bic:secondary ebic1_K37:primary ebic05_K37:S0 bic_K37:S0 ebic1_lam005:S0
+[PASS] p0030_S4_r050_c050         F4 exactly one primary row                                   ebic1_K37
+[PASS] p0030_S4_r050_c050         F4 beta_ols == own OLS (rel 1e-8), 7 rules                   max rel=0.00e+00
+[PASS] p0030_S4_r050_c050         F5 unique rule ids / coef ids match rows                     ebic1,ebic05,bic,ebic1_K37,ebic05_K37,bic_K37,sic_smax
+[PASS] p0030_S4_r050_c050         F5 support==nonzeros(beta_pen), all 7 rules                  status: ok
+[PASS] p0030_S4_r050_c050         F5 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=5) ebic05_K37=TRUE(k=5) bic_K37=TRUE(k=5)
+[PASS] p0030_S4_r050_c050         F5 roles per LA-4                                            ebic1:secondary ebic05:secondary bic:secondary ebic1_K37:primary ebic05_K37:S0 bic_K37:S0 sic_smax:S0
+[PASS] p0030_S4_r050_c050         F5 exactly one primary row                                   ebic1_K37
+[PASS] p0030_S4_r050_c050         F5 beta_ols == own OLS (rel 1e-8), 6 rules                   max rel=0.00e+00
+[PASS] p0030_S4_r050_c050         F3 pilot$beta identical to F1 fit$beta (low-p)               m=15
+[PASS] p0030_S4_r050_c050         F3 sum(v)==m; v>0                                            m=15
+[PASS] p0030_S4_r050_c050         F3 rows: retired ridge fields absent; pilot_* present        
+[PASS] p0030_S4_r050_c050         schema_version == 2 on all five                              
+
+==== p0020_S1_r001_c050 (extra) ====
+   input file accessible: TRUE 
+[PASS] p0020_S1_r001_c050         F1 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0020_S1_r001_c050         F1 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0020_S1_r001_c050         F1 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4)
+[PASS] p0020_S1_r001_c050         F1 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0020_S1_r001_c050         F1 exactly one primary row                                   cv_min
+[PASS] p0020_S1_r001_c050         F1 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0020_S1_r001_c050         F2 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0020_S1_r001_c050         F2 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0020_S1_r001_c050         F2 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4)
+[PASS] p0020_S1_r001_c050         F2 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0020_S1_r001_c050         F2 exactly one primary row                                   cv_min
+[PASS] p0020_S1_r001_c050         F2 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0020_S1_r001_c050         F3 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0020_S1_r001_c050         F3 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0020_S1_r001_c050         F3 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4)
+[PASS] p0020_S1_r001_c050         F3 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0020_S1_r001_c050         F3 exactly one primary row                                   cv_min
+[PASS] p0020_S1_r001_c050         F3 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0020_S1_r001_c050         F4 unique rule ids / coef ids match rows                     ebic1,ebic05,bic,ebic1_K37,ebic05_K37,bic_K37,ebic1_lam005
+[PASS] p0020_S1_r001_c050         F4 support==nonzeros(beta_pen), all 7 rules                  status: ok
+[PASS] p0020_S1_r001_c050         F4 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4) bic_K37=TRUE(k=4)
+[PASS] p0020_S1_r001_c050         F4 roles per LA-4                                            ebic1:secondary ebic05:secondary bic:secondary ebic1_K37:primary ebic05_K37:S0 bic_K37:S0 ebic1_lam005:S0
+[PASS] p0020_S1_r001_c050         F4 exactly one primary row                                   ebic1_K37
+[PASS] p0020_S1_r001_c050         F4 beta_ols == own OLS (rel 1e-8), 7 rules                   max rel=0.00e+00
+[PASS] p0020_S1_r001_c050         F5 unique rule ids / coef ids match rows                     ebic1,ebic05,bic,ebic1_K37,ebic05_K37,bic_K37,sic_smax
+[PASS] p0020_S1_r001_c050         F5 support==nonzeros(beta_pen), all 7 rules                  status: ok
+[PASS] p0020_S1_r001_c050         F5 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4) bic_K37=TRUE(k=4)
+[PASS] p0020_S1_r001_c050         F5 roles per LA-4                                            ebic1:secondary ebic05:secondary bic:secondary ebic1_K37:primary ebic05_K37:S0 bic_K37:S0 sic_smax:S0
+[PASS] p0020_S1_r001_c050         F5 exactly one primary row                                   ebic1_K37
+[PASS] p0020_S1_r001_c050         F5 beta_ols == own OLS (rel 1e-8), 6 rules                   max rel=0.00e+00
+[PASS] p0020_S1_r001_c050         F3 pilot$beta identical to F1 fit$beta (low-p)               m=7
+[PASS] p0020_S1_r001_c050         F3 sum(v)==m; v>0                                            m=7
+[PASS] p0020_S1_r001_c050         F3 rows: retired ridge fields absent; pilot_* present        
+[PASS] p0020_S1_r001_c050         schema_version == 2 on all five                              
+
+==== p0030_S4_r050_c100 (extra) ====
+   input file accessible: TRUE 
+[PASS] p0030_S4_r050_c100         F1 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0030_S4_r050_c100         F1 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0030_S4_r050_c100         F1 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=5) ebic05_K37=TRUE(k=5)
+[PASS] p0030_S4_r050_c100         F1 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0030_S4_r050_c100         F1 exactly one primary row                                   cv_min
+[PASS] p0030_S4_r050_c100         F1 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0030_S4_r050_c100         F2 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0030_S4_r050_c100         F2 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0030_S4_r050_c100         F2 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=5) ebic05_K37=TRUE(k=5)
+[PASS] p0030_S4_r050_c100         F2 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0030_S4_r050_c100         F2 exactly one primary row                                   cv_min
+[PASS] p0030_S4_r050_c100         F2 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0030_S4_r050_c100         F3 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0030_S4_r050_c100         F3 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0030_S4_r050_c100         F3 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=5) ebic05_K37=TRUE(k=5)
+[PASS] p0030_S4_r050_c100         F3 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0030_S4_r050_c100         F3 exactly one primary row                                   cv_min
+[PASS] p0030_S4_r050_c100         F3 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0030_S4_r050_c100         F4 unique rule ids / coef ids match rows                     ebic1,ebic05,bic,ebic1_K37,ebic05_K37,bic_K37,ebic1_lam005
+[PASS] p0030_S4_r050_c100         F4 support==nonzeros(beta_pen), all 7 rules                  status: ok
+[PASS] p0030_S4_r050_c100         F4 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=5) ebic05_K37=TRUE(k=5) bic_K37=TRUE(k=5)
+[PASS] p0030_S4_r050_c100         F4 roles per LA-4                                            ebic1:secondary ebic05:secondary bic:secondary ebic1_K37:primary ebic05_K37:S0 bic_K37:S0 ebic1_lam005:S0
+[PASS] p0030_S4_r050_c100         F4 exactly one primary row                                   ebic1_K37
+[PASS] p0030_S4_r050_c100         F4 beta_ols == own OLS (rel 1e-8), 7 rules                   max rel=0.00e+00
+[PASS] p0030_S4_r050_c100         F5 unique rule ids / coef ids match rows                     ebic1,ebic05,bic,ebic1_K37,ebic05_K37,bic_K37,sic_smax
+[PASS] p0030_S4_r050_c100         F5 support==nonzeros(beta_pen), all 7 rules                  status: ok
+[PASS] p0030_S4_r050_c100         F5 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=5) ebic05_K37=TRUE(k=5) bic_K37=TRUE(k=5)
+[PASS] p0030_S4_r050_c100         F5 roles per LA-4                                            ebic1:secondary ebic05:secondary bic:secondary ebic1_K37:primary ebic05_K37:S0 bic_K37:S0 sic_smax:S0
+[PASS] p0030_S4_r050_c100         F5 exactly one primary row                                   ebic1_K37
+[PASS] p0030_S4_r050_c100         F5 beta_ols == own OLS (rel 1e-8), 6 rules                   max rel=0.00e+00
+[PASS] p0030_S4_r050_c100         F3 pilot$beta identical to F1 fit$beta (low-p)               m=15
+[PASS] p0030_S4_r050_c100         F3 sum(v)==m; v>0                                            m=15
+[PASS] p0030_S4_r050_c100         F3 rows: retired ridge fields absent; pilot_* present        
+[PASS] p0030_S4_r050_c100         schema_version == 2 on all five                              
+
+==== p0030_S6_r100_c050 (extra) ====
+   input file accessible: TRUE 
+[PASS] p0030_S6_r100_c050         F1 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0030_S6_r100_c050         F1 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0030_S6_r100_c050         F1 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4)
+[PASS] p0030_S6_r100_c050         F1 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0030_S6_r100_c050         F1 exactly one primary row                                   cv_min
+[PASS] p0030_S6_r100_c050         F1 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0030_S6_r100_c050         F2 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0030_S6_r100_c050         F2 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0030_S6_r100_c050         F2 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4)
+[PASS] p0030_S6_r100_c050         F2 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0030_S6_r100_c050         F2 exactly one primary row                                   cv_min
+[PASS] p0030_S6_r100_c050         F2 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0030_S6_r100_c050         F3 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0030_S6_r100_c050         F3 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0030_S6_r100_c050         F3 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4)
+[PASS] p0030_S6_r100_c050         F3 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0030_S6_r100_c050         F3 exactly one primary row                                   cv_min
+[PASS] p0030_S6_r100_c050         F3 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0030_S6_r100_c050         F4 unique rule ids / coef ids match rows                     ebic1,ebic05,bic,ebic1_K37,ebic05_K37,bic_K37,ebic1_lam005
+[PASS] p0030_S6_r100_c050         F4 support==nonzeros(beta_pen), all 7 rules                  status: ok
+[PASS] p0030_S6_r100_c050         F4 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4) bic_K37=TRUE(k=4)
+[PASS] p0030_S6_r100_c050         F4 roles per LA-4                                            ebic1:secondary ebic05:secondary bic:secondary ebic1_K37:primary ebic05_K37:S0 bic_K37:S0 ebic1_lam005:S0
+[PASS] p0030_S6_r100_c050         F4 exactly one primary row                                   ebic1_K37
+[PASS] p0030_S6_r100_c050         F4 beta_ols == own OLS (rel 1e-8), 7 rules                   max rel=0.00e+00
+[PASS] p0030_S6_r100_c050         F5 unique rule ids / coef ids match rows                     ebic1,ebic05,bic,ebic1_K37,ebic05_K37,bic_K37,sic_smax
+[PASS] p0030_S6_r100_c050         F5 support==nonzeros(beta_pen), all 7 rules                  status: ok
+[PASS] p0030_S6_r100_c050         F5 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=4) ebic05_K37=TRUE(k=4) bic_K37=TRUE(k=4)
+[PASS] p0030_S6_r100_c050         F5 roles per LA-4                                            ebic1:secondary ebic05:secondary bic:secondary ebic1_K37:primary ebic05_K37:S0 bic_K37:S0 sic_smax:S0
+[PASS] p0030_S6_r100_c050         F5 exactly one primary row                                   ebic1_K37
+[PASS] p0030_S6_r100_c050         F5 beta_ols == own OLS (rel 1e-8), 6 rules                   max rel=0.00e+00
+[PASS] p0030_S6_r100_c050         F3 pilot$beta identical to F1 fit$beta (low-p)               m=15
+[PASS] p0030_S6_r100_c050         F3 sum(v)==m; v>0                                            m=15
+[PASS] p0030_S6_r100_c050         F3 rows: retired ridge fields absent; pilot_* present        
+[PASS] p0030_S6_r100_c050         schema_version == 2 on all five                              
+
+==== p0030_S6_r100_c100 (extra) ====
+   input file accessible: TRUE 
+[PASS] p0030_S6_r100_c100         F1 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0030_S6_r100_c100         F1 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0030_S6_r100_c100         F1 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=5) ebic05_K37=TRUE(k=5)
+[PASS] p0030_S6_r100_c100         F1 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0030_S6_r100_c100         F1 exactly one primary row                                   cv_min
+[PASS] p0030_S6_r100_c100         F1 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0030_S6_r100_c100         F2 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0030_S6_r100_c100         F2 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0030_S6_r100_c100         F2 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=5) ebic05_K37=TRUE(k=5)
+[PASS] p0030_S6_r100_c100         F2 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0030_S6_r100_c100         F2 exactly one primary row                                   cv_min
+[PASS] p0030_S6_r100_c100         F2 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0030_S6_r100_c100         F3 unique rule ids / coef ids match rows                     cv_min,cv_1se,ebic1,ebic05,ebic1_K37,ebic05_K37
+[PASS] p0030_S6_r100_c100         F3 support==nonzeros(beta_pen), all 6 rules                  status: ok
+[PASS] p0030_S6_r100_c100         F3 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=5) ebic05_K37=TRUE(k=5)
+[PASS] p0030_S6_r100_c100         F3 roles per LA-4                                            cv_min:primary cv_1se:S0 ebic1:secondary ebic05:secondary ebic1_K37:S0 ebic05_K37:S0
+[PASS] p0030_S6_r100_c100         F3 exactly one primary row                                   cv_min
+[PASS] p0030_S6_r100_c100         F3 beta_ols == own OLS (rel 1e-8), 4 rules                   max rel=0.00e+00
+[PASS] p0030_S6_r100_c100         F4 unique rule ids / coef ids match rows                     ebic1,ebic05,bic,ebic1_K37,ebic05_K37,bic_K37,ebic1_lam005
+[PASS] p0030_S6_r100_c100         F4 support==nonzeros(beta_pen), all 7 rules                  status: ok
+[PASS] p0030_S6_r100_c100         F4 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=5) ebic05_K37=TRUE(k=5) bic_K37=TRUE(k=5)
+[PASS] p0030_S6_r100_c100         F4 roles per LA-4                                            ebic1:secondary ebic05:secondary bic:secondary ebic1_K37:primary ebic05_K37:S0 bic_K37:S0 ebic1_lam005:S0
+[PASS] p0030_S6_r100_c100         F4 exactly one primary row                                   ebic1_K37
+[PASS] p0030_S6_r100_c100         F4 beta_ols == own OLS (rel 1e-8), 7 rules                   max rel=0.00e+00
+[PASS] p0030_S6_r100_c100         F5 unique rule ids / coef ids match rows                     ebic1,ebic05,bic,ebic1_K37,ebic05_K37,bic_K37,sic_smax
+[PASS] p0030_S6_r100_c100         F5 support==nonzeros(beta_pen), all 7 rules                  status: ok
+[PASS] p0030_S6_r100_c100         F5 K37 rows == cap rows (rows+beta_pen+beta_ols)             ebic1_K37=TRUE(k=5) ebic05_K37=TRUE(k=5) bic_K37=TRUE(k=5)
+[PASS] p0030_S6_r100_c100         F5 roles per LA-4                                            ebic1:secondary ebic05:secondary bic:secondary ebic1_K37:primary ebic05_K37:S0 bic_K37:S0 sic_smax:S0
+[PASS] p0030_S6_r100_c100         F5 exactly one primary row                                   ebic1_K37
+[PASS] p0030_S6_r100_c100         F5 beta_ols == own OLS (rel 1e-8), 6 rules                   max rel=0.00e+00
+[PASS] p0030_S6_r100_c100         F3 pilot$beta identical to F1 fit$beta (low-p)               m=15
+[PASS] p0030_S6_r100_c100         F3 sum(v)==m; v>0                                            m=15
+[PASS] p0030_S6_r100_c100         F3 rows: retired ridge fields absent; pilot_* present        
+[PASS] p0030_S6_r100_c100         schema_version == 2 on all five                              
+
+SUMMARY:  204  PASS /  0  FAIL of  204 

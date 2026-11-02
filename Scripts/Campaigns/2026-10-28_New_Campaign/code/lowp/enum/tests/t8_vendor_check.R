@@ -1,0 +1,7 @@
+source("C:/Users/felip/OneDrive/Documents/Local_to_global_Bayesian/02_Experiments/I_2026-10-28_New_Campaign/code/lowp/enum/tests/helpers.R")
+bad <- file.path(TMP, "core_bad"); unlink(bad, recursive = TRUE); dir.create(file.path(bad, "cpp"), recursive = TRUE)
+file.copy(file.path(CORE_SRC, "v3_preprocess.R"), bad); file.copy(file.path(CORE_SRC, "cpp", c("v3_score.h", "v3_util.h")), file.path(bad, "cpp"))
+cat("\n// edited\n", file = file.path(bad, "cpp", "v3_score.h"), append = TRUE)
+cat("modified core header ->", tryCatch(lowp_load(bad), error = function(e) conditionMessage(e)), "\n")
+cat("core absent          ->", tryCatch(lowp_load(file.path(TMP, "nonexistent")), error = function(e) conditionMessage(e)), "\n")
+cat("core present (default) ->", lowp_load(), "\n")

@@ -1,0 +1,5 @@
+[1] TRUE
+[1] TRUE TRUE
+modified core header -> lowp_enum: vendored v3_score.h differs from the core's cpp/v3_score.h (core sha256 1ce9b6a4b09215ade344c6f31bfaa045804b1619ff38663f39f288039cef6b7e, vendored 41173ac1460e180e7a30da98260e1e338efb4a685a5052a6cd815aa7cbe26df7). The exact reference must use the SMC core's scorer; re-vendor and re-validate before use. 
+core absent          -> lowp_enum: SMC core not found at 'C:/Users/felip/AppData/Local/Temp/lowp_work/enum/nonexistent'. Pass core_dir= or set LOWP_CORE_DIR to the core/ folder (the one containing v3_preprocess.R and cpp/v3_score.h). 
+core present (default) -> 4fe9bf39319650b4a56e2bbf1a343ff12c52c4cc68fee23bbb0b2754bf0dbd7a 

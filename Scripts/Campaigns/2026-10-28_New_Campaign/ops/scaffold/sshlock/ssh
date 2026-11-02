@@ -1,0 +1,11 @@
+#!/bin/bash
+# ssh shim (first in PATH for OPS pollers/waiters/scripts): take the global NOTS ssh lock, run the real ssh with a stall bound
+# (ServerAliveInterval 30 s x 4 = a stalled session ends after about 2 min; HQ D55), release the lock, return ssh's exit status.
+# Lock wait > NOTS_SSH_LOCK_WAIT_S -> exit 255 (callers treat it as an ssh failure and back off).
+# shellcheck disable=SC1091
+source "$(dirname "$0")/lock_lib.sh"
+REAL_SSH=${REAL_SSH:-/usr/bin/ssh}
+nots_lock_acquire || { echo "ssh-shim: could not get the NOTS ssh lock within ${NOTS_SSH_LOCK_WAIT_S}s" >&2; exit 255; }
+"$REAL_SSH" -o ServerAliveInterval=30 -o ServerAliveCountMax=4 "$@"; rc=$?
+nots_lock_release
+exit $rc

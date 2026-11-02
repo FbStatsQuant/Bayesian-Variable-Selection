@@ -1,0 +1,92 @@
+LOWP seed collision check (LOWP_SPEC L.3). Each set = {base + 10000*s + r, s=1..6, r=1..100} (+ method offset 4,000,000 / repeat step 1,000*m).
+
+80 role sets (p x kind x {data, fold, method, repeat m=1..5} for p = 20, 30, 500, 1000, plus held-out data/fold/method/repeat families):
+  p20 prod data                          [1220001, 1270100]  n=600  owner: lowp (new)
+  p20 prod fold                          [3220001, 3270100]  n=600  owner: lowp (new)
+  p20 prod method                        [5220001, 5270100]  n=600  owner: lowp (new)
+  p20 prod repeat m=1                    [5221001, 5271100]  n=600  owner: lowp (new)
+  p20 prod repeat m=2                    [5222001, 5272100]  n=600  owner: lowp (new)
+  p20 prod repeat m=3                    [5223001, 5273100]  n=600  owner: lowp (new)
+  p20 prod repeat m=4                    [5224001, 5274100]  n=600  owner: lowp (new)
+  p20 prod repeat m=5                    [5225001, 5275100]  n=600  owner: lowp (new)
+  p20 dev data                           [2220001, 2270100]  n=600  owner: lowp (new)
+  p20 dev fold                           [4220001, 4270100]  n=600  owner: lowp (new)
+  p20 dev method                         [6220001, 6270100]  n=600  owner: lowp (new)
+  p20 dev repeat m=1                     [6221001, 6271100]  n=600  owner: lowp (new)
+  p20 dev repeat m=2                     [6222001, 6272100]  n=600  owner: lowp (new)
+  p20 dev repeat m=3                     [6223001, 6273100]  n=600  owner: lowp (new)
+  p20 dev repeat m=4                     [6224001, 6274100]  n=600  owner: lowp (new)
+  p20 dev repeat m=5                     [6225001, 6275100]  n=600  owner: lowp (new)
+  p30 prod data                          [1320001, 1370100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 prod fold                          [3320001, 3370100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 prod method                        [5320001, 5370100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 prod repeat m=1                    [5321001, 5371100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 prod repeat m=2                    [5322001, 5372100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 prod repeat m=3                    [5323001, 5373100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 prod repeat m=4                    [5324001, 5374100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 prod repeat m=5                    [5325001, 5375100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 dev data                           [2320001, 2370100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 dev fold                           [4320001, 4370100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 dev method                         [6320001, 6370100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 dev repeat m=1                     [6321001, 6371100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 dev repeat m=2                     [6322001, 6372100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 dev repeat m=3                     [6323001, 6373100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 dev repeat m=4                     [6324001, 6374100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p30 dev repeat m=5                     [6325001, 6375100]  n=600  owner: master II.7 = LOWP L.3 (shared)
+  p500 prod data                         [1420001, 1470100]  n=600  owner: master II.7
+  p500 prod fold                         [3420001, 3470100]  n=600  owner: master II.7
+  p500 prod method                       [5420001, 5470100]  n=600  owner: master II.7
+  p500 prod repeat m=1                   [5421001, 5471100]  n=600  owner: master II.7
+  p500 prod repeat m=2                   [5422001, 5472100]  n=600  owner: master II.7
+  p500 prod repeat m=3                   [5423001, 5473100]  n=600  owner: master II.7
+  p500 prod repeat m=4                   [5424001, 5474100]  n=600  owner: master II.7
+  p500 prod repeat m=5                   [5425001, 5475100]  n=600  owner: master II.7
+  p500 dev data                          [2420001, 2470100]  n=600  owner: master II.7
+  p500 dev fold                          [4420001, 4470100]  n=600  owner: master II.7
+  p500 dev method                        [6420001, 6470100]  n=600  owner: master II.7
+  p500 dev repeat m=1                    [6421001, 6471100]  n=600  owner: master II.7
+  p500 dev repeat m=2                    [6422001, 6472100]  n=600  owner: master II.7
+  p500 dev repeat m=3                    [6423001, 6473100]  n=600  owner: master II.7
+  p500 dev repeat m=4                    [6424001, 6474100]  n=600  owner: master II.7
+  p500 dev repeat m=5                    [6425001, 6475100]  n=600  owner: master II.7
+  p1000 prod data                        [1520001, 1570100]  n=600  owner: master II.7
+  p1000 prod fold                        [3520001, 3570100]  n=600  owner: master II.7
+  p1000 prod method                      [5520001, 5570100]  n=600  owner: master II.7
+  p1000 prod repeat m=1                  [5521001, 5571100]  n=600  owner: master II.7
+  p1000 prod repeat m=2                  [5522001, 5572100]  n=600  owner: master II.7
+  p1000 prod repeat m=3                  [5523001, 5573100]  n=600  owner: master II.7
+  p1000 prod repeat m=4                  [5524001, 5574100]  n=600  owner: master II.7
+  p1000 prod repeat m=5                  [5525001, 5575100]  n=600  owner: master II.7
+  p1000 dev data                         [2520001, 2570100]  n=600  owner: master II.7
+  p1000 dev fold                         [4520001, 4570100]  n=600  owner: master II.7
+  p1000 dev method                       [6520001, 6570100]  n=600  owner: master II.7
+  p1000 dev repeat m=1                   [6521001, 6571100]  n=600  owner: master II.7
+  p1000 dev repeat m=2                   [6522001, 6572100]  n=600  owner: master II.7
+  p1000 dev repeat m=3                   [6523001, 6573100]  n=600  owner: master II.7
+  p1000 dev repeat m=4                   [6524001, 6574100]  n=600  owner: master II.7
+  p1000 dev repeat m=5                   [6525001, 6575100]  n=600  owner: master II.7
+  held-out data 7,610,000                [7620001, 7670100]  n=600  owner: F_2026-10-19 RUNS.md
+  held-out method 7,610,000              [11620001, 11670100]  n=600  owner: derived (data + 4e6)
+  held-out repeat m=1 7,610,000          [11621001, 11671100]  n=600  owner: derived
+  held-out repeat m=2 7,610,000          [11622001, 11672100]  n=600  owner: derived
+  held-out repeat m=3 7,610,000          [11623001, 11673100]  n=600  owner: derived
+  held-out repeat m=4 7,610,000          [11624001, 11674100]  n=600  owner: derived
+  held-out repeat m=5 7,610,000          [11625001, 11675100]  n=600  owner: derived
+  held-out data 7,710,000                [7720001, 7770100]  n=600  owner: F_2026-10-19 RUNS.md
+  held-out method 7,710,000              [11720001, 11770100]  n=600  owner: derived (data + 4e6)
+  held-out repeat m=1 7,710,000          [11721001, 11771100]  n=600  owner: derived
+  held-out repeat m=2 7,710,000          [11722001, 11772100]  n=600  owner: derived
+  held-out repeat m=3 7,710,000          [11723001, 11773100]  n=600  owner: derived
+  held-out repeat m=4 7,710,000          [11724001, 11774100]  n=600  owner: derived
+  held-out repeat m=5 7,710,000          [11725001, 11775100]  n=600  owner: derived
+  held-out fold 8,610,000                [8620001, 8670100]  n=600  owner: F_2026-10-19 RUNS.md
+  held-out fold 8,710,000                [8720001, 8770100]  n=600  owner: F_2026-10-19 RUNS.md
+
+Pairwise comparison of all 3160 pairs of distinct sets: 0 collisions.
+The p = 30, 500 and 1000 ranges are master II.7's own; they are listed once (shared by design) and compared with everything else.
+
+Repeat offsets: the increment relative to the method seed is 1,000 m = 1,000..5,000 (m = 1..5); including r (<= 100) the offset inside the
+10000-slot of the dataset is 1,001..5,100, which no base + 10000*s + r (offset r in 1..100) can reach. All 50 repeat sets above are in the pairwise check.
+Fixed internal seeds that are intentionally reused and disjoint from these sets: abess F5 seed 1 (master II.7).
+
+OVERALL: PASS (no overlap) (80 sets, 3160 pairs, 0 collisions)
