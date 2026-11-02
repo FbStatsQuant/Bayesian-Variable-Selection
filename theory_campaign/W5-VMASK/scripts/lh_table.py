@@ -22,6 +22,8 @@ CONFIGS = {
     # adversarial: three null groups with within-group correlation 0.95 > rho = 0.7
     "ADV_NULL": dict(g=10, rho=0.7, psis=[0.5], betas=[1.0], vis=[1.0], rho_null=0.95, nullg=[5, 6, 7]),
     # outside the family: psi > rho (the cliff; expect hubs to pair up across groups)
+    # near the cliff: psi = 0.69, rho = 0.7 (P1 margin (rho-psi)/3 = 0.0033)
+    "EDGE_PSI": dict(g=10, rho=0.7, psis=[0.69], betas=[1.0], vis=[1.0]),
     "OUT_PSI": dict(g=10, rho=0.7, psis=[0.8], betas=[1.0], vis=[1.0]),
 }
 CIDX = {k: i for i, k in enumerate(CONFIGS)}

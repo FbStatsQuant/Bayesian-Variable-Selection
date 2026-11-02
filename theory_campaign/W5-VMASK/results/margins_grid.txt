@@ -206,3 +206,7 @@ c rho psis betas vis | c2(PXN) brute_all brute_L | m0(T38) brute_phi2 | flags
 3 0.4 [0.22, 0.18, -0.57] [-0.69, -1.37, 1.56] [1.75] | 0.01852 0.01856 0.01856 | 0.01852 0.02193 | m0 not sharp (ratio 0.844); outside |psi|<rho
 3 0.4 [0.45, -0.92, -0.61] [-1.93, -2.09, -2.44] [0.63] | 0.10306 0.10306 0.33340 | 0.10306 0.10306 | outside |psi|<rho
 g-sensitivity (c=2, rho=.7, psi=(.5,.3), beta=(1,-1.4)): g=3 (np.float64(0.08564414687728839), np.float64(0.10897435897435903), np.float64(0.08564414687728839)), g=9 (np.float64(0.08564414687728794), np.float64(0.10897435897435903), np.float64(0.08564414687728794))
+
+Tightness summary
+c2/brute_all: min 0.107, median 1.000, max 1.000 (all rows); inside |psi|<rho: min 0.252 median 1.000
+m0/brute_phi2 (c>=2): min 0.002, median 1.000, max 1.000; inside: min 0.002 median 1.000

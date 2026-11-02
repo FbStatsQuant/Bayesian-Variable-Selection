@@ -2,3 +2,4 @@ config B; Mstat limit law quantiles q05/med/q95 = 1.66/2.30/4.61
 n | p | reps | b=g | P1-margin(minin>maxout) | SE-blk med | med log10 pi0(S0) | Mstat q05/med/q95 | sqrt(n/logn)(1-pi0(S°)) med | med pi0(S°) | mode=S° | med q | T22 ok | LS0 scored | LS0 cert@S0 | med F(S0)-F(S°) | #F(S0)<F(S°) | (L) holds | med (L) margin | DS_all>0 | DS_phi2>0 | med Dep
 200 | 750 | 20 | 20 | 15 | 0.156 | -7.32 | -0.30/1.69/3.74 | 2.83 | 0.540 | 18 | 0.238 | 20 | 19 | 17 | 13.5 | 1 | 19 | 2.68 | 17 | 18 | -
 400 | 1790 | 20 | 20 | 20 | 0.189 | -8.32 | 1.21/1.82/3.20 | 2.28 | 0.721 | 19 | 0.163 | 20 | 20 | 18 | 45.6 | 0 | 19 | 3.29 | 19 | 20 | -
+800 | 4260 | 12 | 12 | 12 | 0.215 | -9.23 | 1.53/2.15/4.35 | 2.41 | 0.780 | 12 | 0.135 | 12 | 12 | 12 | 103.6 | 0 | 12 | 3.78 | 12 | 12 | -
