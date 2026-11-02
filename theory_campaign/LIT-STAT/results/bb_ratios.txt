@@ -1,0 +1,19 @@
+p=20: identity (a) holds for k<=min(p,60): True
+  s=  1: dim ratio=0.5128  implied A4=0.2229  per-model w(s)/w(s-1)=2.564e-02
+  s=  2: dim ratio=0.5000  implied A4=0.2314  per-model w(s)/w(s-1)=5.263e-02
+  s=  5: dim ratio=0.4571  implied A4=0.2613  per-model w(s)/w(s-1)=1.429e-01
+  s= 14: dim ratio=0.2692  implied A4=0.4380  per-model w(s)/w(s-1)=5.385e-01
+p=500: identity (a) holds for k<=min(p,60): True
+  s=  1: dim ratio=0.5005  implied A4=0.1114  per-model w(s)/w(s-1)=1.001e-03
+  s=  2: dim ratio=0.5000  implied A4=0.1115  per-model w(s)/w(s-1)=2.004e-03
+  s=  5: dim ratio=0.4985  implied A4=0.1120  per-model w(s)/w(s-1)=5.025e-03
+  s= 14: dim ratio=0.4939  implied A4=0.1135  per-model w(s)/w(s-1)=1.420e-02
+  s= 50: dim ratio=0.4747  implied A4=0.1199  per-model w(s)/w(s-1)=5.263e-02
+  s=100: dim ratio=0.4456  implied A4=0.1301  per-model w(s)/w(s-1)=1.111e-01
+p=1000: identity (a) holds for k<=min(p,60): True
+  s=  1: dim ratio=0.5003  implied A4=0.1003  per-model w(s)/w(s-1)=5.003e-04
+  s=  2: dim ratio=0.5000  implied A4=0.1003  per-model w(s)/w(s-1)=1.001e-03
+  s=  5: dim ratio=0.4992  implied A4=0.1006  per-model w(s)/w(s-1)=2.506e-03
+  s= 14: dim ratio=0.4970  implied A4=0.1012  per-model w(s)/w(s-1)=7.049e-03
+  s= 50: dim ratio=0.4877  implied A4=0.1040  per-model w(s)/w(s-1)=2.564e-02
+  s=100: dim ratio=0.4742  implied A4=0.1080  per-model w(s)/w(s-1)=5.263e-02
