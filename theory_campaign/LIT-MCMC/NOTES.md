@@ -106,3 +106,46 @@ from arXiv PDFs downloaded to /tmp (not committed) or from `Papers/Core_bibliogr
 - Prop 2.8 (Gibbs convergence rate) under event E_s with a warm start "made possible by frequentist estimators"; Thm 3.7:
   stochastic-localization sampler guarantee. Quotes YWJ's slow-mixing example as the reason for the size cap.
   Venue UNVERIFIED.
+
+## N10. ZYVR (2022) re-check of Condition 1 / Thm 1 (local copy Papers/Core_bibliography/10_..., arXiv:2105.05719v3)
+- Condition 1 (1a) overfitted: B(γ, γ∪{j}) ≤ p^{−c0}; (1b) underfitted: ∃ j ∈ γ*∖γ with B(γ, γ∪{j}) ≥ p^{c1};
+  (1c) underfitted with |γ| = s0: ∃ swap with B ≥ p^{c1}.
+- Thm 1 (verbatim): "Suppose that n = O(p), s0 log p = O(n) and κ = O(s0). If Condition 1 holds for c0 = 2 and
+  4 ≤ c1 ≤ nκ1 − κ, then, for sufficiently large n, we have Tmix ≤ 800 max{nκ1/c1, 3s0}."
+- API-POS measured on LH at n = 200 (paper's target): c1(1b) = 2.81 (c = 1), −0.34 (c = 2); c0 = −0.30 / 0.22. So the
+  numerical requirements c0 = 2, c1 ≥ 4 fail at n = 200 even at p ≤ 20.
+
+## N11. Pozza & Zanella, "On the fundamental limitations of multiproposal MCMC", arXiv:2410.23174v1; Biometrika 2025
+## (doi 10.1093/biomet/asaf019 per search snippet, UNVERIFIED). Read: abstract, Thm 1/Cor 1 statements.
+- Cor 1: Gap(P^(K)) ≤ K·Gap(P̃) for ANY multiproposal scheme with K candidates (arbitrary targets, incl. discrete).
+
+## N12. Others read briefly (local PDFs)
+- Liang, Livingstone, Griffin (2022, Stat. Comput.; local 01 = arXiv:2110.11747): ARN/PARNI samplers. Thm 2 (verbatim):
+  "ergodicity (44) and a strong law of large numbers (45) hold for both the PARNI-KW and PARNI-RM samplers". No rate.
+- Staerk, Kateri, Ntzoufras (2024, Bayesian Analysis per INDEX; local 08 = arXiv:2105.01039v2): MAdaSub. Thm 1 (verbatim):
+  "The MAdaSub algorithm (Algorithm 1) is ergodic ... and fulfils the weak law of large numbers." No rate.
+- Griffin, Łatuszyński, Steel (2021, Biometrika 108(1)): ergodicity + SLLN, no rate (via API-POS §2, which read arXiv:1708.05678v3;
+  I re-downloaded it but did not re-read the proofs).
+- Zanella (2020, JASA; local 09 = arXiv:1711.07424): Thm 2/3 Peskun-type comparison: for any g, the balanced g̃(t) =
+  min{g(t), t g(1/t)} gives P_g̃(x,y) ≥ (c_g c_g̃)^{-1} P_g(x,y) ∀ x ≠ y; Thm 4: weak limit of the first k coordinates under
+  informed proposals as n → ∞ (product-type targets). No BVS mixing-time theorem.
+- Zanella & Roberts (2019, JRSS-B 81(3); local 14): Thm 1 (verbatim): "For every h ∈ L2(X, f) we have
+  var(h, TGS) ≤ b² var(h, GS) + b² var_f(h)." §3.3: TGS overcomes strong pairwise and k-wise negative correlations, "does not
+  help significantly in overcoming strong k-wise positive correlations". §4.5 quantitative results only for diagonal and
+  fully collinear X (API-POS §1.4).
+- Schäfer & Chopin (2013, Stat. Comput.; local 07 = arXiv:1101.6037v4): SMC on binary spaces for BVS with adaptive
+  logistic-conditional proposals; claims (§1.2, empirical): "global methods ... are often more robust than local methods
+  based on Markov chain Monte Carlo. The latter are more prone to get trapped in the neighbourhood of local modes." No theorem
+  on discovery or complexity.
+- Le Fay, Chopin, Vihola (2026, arXiv:2604.03352v2; local 24): finite-sample bounds for standard and waste-free SMC.
+  Thm 2.3 / 3.2 assume each kernel K_t has spectral gap γ_t > 0 and use γ = min_t γ_t (Assumption 2.4) and a χ²-bound
+  1 + χ²(π_t | π_{t−1}) ≤ χ̄² between successive targets (Assumption 2.2). Recalls Marion, Mathews, Schmidler (2023, 2025).
+  i.e. the bound is only as good as the GLOBAL gap of the mutation kernels.
+- Zhou & Chang (2023, AoS 51(3):1058–1085; arXiv:2101.04084): general finite-state mixing bound (Thm 1–2) under a
+  Condition 1 of the same unimodal-ratio type; applied to DAG equivalence classes. Not BVS-specific.
+- Kim & Ročková, "On mixing rates for Bayesian CART", arXiv:2306.00126 (EJS 19 (2025) 3041–3067 per search snippet,
+  UNVERIFIED): abstract only: grow/prune Bayesian CART "cannot reach deep isolated signals" faster than exponential mixing time.
+  (A lower bound in a neighbouring discrete model; I read only the abstract.)
+
+## N13. Own numerical check (scripts/rz_lh.py → results/rz_lh.md)
+See REPORT §4.
