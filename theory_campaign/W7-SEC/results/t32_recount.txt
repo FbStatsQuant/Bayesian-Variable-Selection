@@ -1,0 +1,4 @@
+n=200, p=500: m=516 Mp=40500 ell=10 L=8  (T32-a) both tiers = 267610872968  tier 0 only = 16189996622  conjectured = 535236539242  ratio = 2.000055  fp variant = 267612193928 (+1320960)
+n=200, p=1000: m=1016 Mp=91000 ell=11 L=8  (T32-a) both tiers = 562428743935  tier 0 only = 33987423031  conjectured = 1124898854285  ratio = 2.000074  fp variant = 562431344895 (+2600960)
+n=800, p=1000: m=1018 Mp=241000 ell=11 L=10  (T32-a) both tiers = 563899741650  tier 0 only = 34147891146  conjectured = 1127911724000  ratio = 2.000199  fp variant = 563902347730 (+2606080)
+min over grid of conjectured - (T32-a, fp variant) = 1094942374 at n = 3, p = 1 (must be > 0)
