@@ -1,0 +1,286 @@
+import SmcBvs.Basic
+
+/-!
+# T07: size-only ranking ceiling and Bayes decisions (finite, exact)
+
+Source: `Docs/Theory/proofs/T06_T07_identifiability_size_prior/STATEMENT.md` §2 and `PROOF_v2.tex`
+§"T07" (Theorems ceiling / bayes / reported, Lemma psi); the sharpness clause (i′) and the
+certificate (iii′) are from branch `theory/W2-BOOK`, `theory_campaign/W2-BOOK/PROOF.md` §3.
+
+Setting. Models are `Finset (Fin p)`; `Ωf p K = {S : |S| ≤ K}`. The tie order `≺` is an injective
+rank `rk` (smaller = preferred); the paper notes (PROOF_v2 Remark "the tie order") that any fixed
+total order works. `m` is the marginal likelihood (only `m > 0` is used, and only where stated).
+A positive size-only prior is `w̃ : ℕ → ℝ` with `w̃ k > 0` for `k ≤ K`, normalised by
+`W̃ = Σ_{k ≤ K} C(p,k) w̃(k)`.
+
+For the decision results `F` is any real score on models, `π = post F (Ωf p K)` (so `π = 0` off
+`Ω`), `PIP_j = Σ_{S ∈ Ω, j ∈ S} π(S)`, `ρ₀₁(a) = Σ_{S∈Ω} π(S) 1{a ≠ S}`,
+`ρ_H(a) = Σ_{S∈Ω} π(S) |a △ S|`, `ψ_q(a) = Σ_{j∈a} (1 - 2 q_j)`, `J₊(q) = {j : q_j > 1/2}`.
+-/
+
+open Finset
+
+namespace SmcBvs.T07
+
+variable {p : ℕ}
+
+/-- The feasible model space `Ω = {S ⊆ [p] : |S| ≤ K}`. -/
+def Ωf (p K : ℕ) : Finset (Finset (Fin p)) := univ.filter fun S => S.card ≤ K
+
+/-- The size class `{S : |S| = k}`. -/
+def sizeClass (p k : ℕ) : Finset (Finset (Fin p)) := univ.filter fun S => S.card = k
+
+/-- Normaliser `W̃ = Σ_{k ≤ K} C(p,k) w̃(k)` of a size-only prior. -/
+noncomputable def normW (p K : ℕ) (w : ℕ → ℝ) : ℝ := ∑ k ∈ range (K + 1), (p.choose k : ℝ) * w k
+
+/-- The size-only prior `ϖ_w̃(S) = w̃(|S|)/W̃`. -/
+noncomputable def sizePrior (p K : ℕ) (w : ℕ → ℝ) (S : Finset (Fin p)) : ℝ :=
+  w S.card / normW p K w
+
+/-- Positivity of a size-only prior on `0..K`. -/
+def PosSizePrior (K : ℕ) (w : ℕ → ℝ) : Prop := ∀ k ≤ K, 0 < w k
+
+theorem normW_pos {K : ℕ} {w : ℕ → ℝ} (hw : PosSizePrior K w) : 0 < normW p K w := by
+  unfold normW
+  rw [sum_range_succ']
+  have h0 : (0 : ℝ) < (p.choose 0 : ℝ) * w 0 := by simpa using hw 0 (Nat.zero_le _)
+  have hrest : 0 ≤ ∑ k ∈ range K, (p.choose (k + 1) : ℝ) * w (k + 1) :=
+    sum_nonneg fun k hk => mul_nonneg (Nat.cast_nonneg _)
+      (hw (k + 1) (by simp at hk; omega)).le
+  linarith
+
+theorem empty_mem_Ωf (K : ℕ) : (∅ : Finset (Fin p)) ∈ Ωf p K := by simp [Ωf]
+
+theorem Ωf_nonempty (K : ℕ) : (Ωf p K).Nonempty := ⟨∅, empty_mem_Ωf K⟩
+
+/-! ## T07(i): the size-only ceiling -/
+
+/-- **T07(i), ceiling.** If `S₀` is the global HPM `S†_w̃` under a positive size-only prior, then
+`s₀ ≤ K` and `S₀ = S*_{s₀}`, the `≺`-least maximiser of `m` within its size class. -/
+theorem ceiling {K : ℕ} (rk : Finset (Fin p) → ℕ) (m : Finset (Fin p) → ℝ) {w : ℕ → ℝ}
+    (hw : PosSizePrior K w) {S₀ : Finset (Fin p)}
+    (h : IsLeastArgmax rk (fun S => sizePrior p K w S * m S) (Ωf p K) S₀) :
+    S₀.card ≤ K ∧ IsLeastArgmax rk m (sizeClass p S₀.card) S₀ := by
+  have hS₀K : S₀.card ≤ K := (mem_filter.mp h.1.1).2
+  have hγ : 0 < w S₀.card / normW p K w := div_pos (hw _ hS₀K) (normW_pos hw)
+  have hclassΩ : ∀ T ∈ sizeClass p S₀.card, T ∈ Ωf p K := fun T hT => by
+    simp only [sizeClass, mem_filter, mem_univ, true_and] at hT
+    simp [Ωf, hT, hS₀K]
+  have hg : ∀ T ∈ sizeClass p S₀.card, sizePrior p K w T * m T = (w S₀.card / normW p K w) * m T :=
+    fun T hT => by
+      simp only [sizeClass, mem_filter, mem_univ, true_and] at hT
+      simp [sizePrior, hT]
+  have hS₀class : S₀ ∈ sizeClass p S₀.card := by simp [sizeClass]
+  have hargmax : IsArgmax m (sizeClass p S₀.card) S₀ := by
+    refine ⟨hS₀class, fun T hT => ?_⟩
+    have := h.1.2 T (hclassΩ T hT)
+    rw [hg T hT, hg S₀ hS₀class] at this
+    exact le_of_mul_le_mul_left this hγ
+  refine ⟨hS₀K, hargmax, fun T hT => h.2 T ⟨hclassΩ T hT.1, fun U hU => ?_⟩⟩
+  have hmT : m T = m S₀ := le_antisymm (hargmax.2 T hT.1) (hT.2 S₀ hS₀class)
+  have := h.1.2 U hU
+  rwa [hg S₀ hS₀class, ← hmT, ← hg T hT.1] at this
+
+/-- **T07(i), "no size-only prior can repair a within-size ranking error"** (contrapositive of
+the ceiling). If some model `S'` of the same size as `S₀` beats `S₀` in `m`, or ties it and
+precedes it in `≺`, then for *every* positive size-only prior `S₀` is not the global HPM.
+(This is also W2-BOOK (iii′), stated in terms of `m`.) -/
+theorem no_size_prior_repairs {K : ℕ} (rk : Finset (Fin p) → ℕ) (m : Finset (Fin p) → ℝ)
+    {S₀ S' : Finset (Fin p)} (hcard : S'.card = S₀.card)
+    (hbeat : m S₀ < m S' ∨ (m S' = m S₀ ∧ rk S' < rk S₀)) :
+    ∀ w : ℕ → ℝ, PosSizePrior K w →
+      ¬ IsLeastArgmax rk (fun S => sizePrior p K w S * m S) (Ωf p K) S₀ := by
+  intro w hw h
+  obtain ⟨-, hstar⟩ := ceiling rk m hw h
+  have hS' : S' ∈ sizeClass p S₀.card := by simp [sizeClass, hcard]
+  rcases hbeat with hlt | ⟨heq, hrk⟩
+  · linarith [hstar.1.2 S' hS']
+  · have : IsArgmax m (sizeClass p S₀.card) S' :=
+      ⟨hS', fun T hT => by rw [heq]; exact hstar.1.2 T hT⟩
+    have := hstar.2 S' this
+    omega
+
+/-- **T07(i′), sharpness of the ceiling** (W2-BOOK PROOF.md §3 (i′)). If `s₀ ≤ K`, `m > 0` and
+`S₀ = S*_{s₀}`, then some positive size-only prior makes `S₀` the global HPM. -/
+theorem ceiling_sharp {K : ℕ} (rk : Finset (Fin p) → ℕ) (m : Finset (Fin p) → ℝ)
+    (hm : ∀ S, 0 < m S) {S₀ : Finset (Fin p)} (hS₀K : S₀.card ≤ K)
+    (hstar : IsLeastArgmax rk m (sizeClass p S₀.card) S₀) :
+    ∃ w : ℕ → ℝ, PosSizePrior K w ∧
+      IsLeastArgmax rk (fun S => sizePrior p K w S * m S) (Ωf p K) S₀ := by
+  classical
+  set Σm := ∑ S ∈ Ωf p K, m S with hΣm
+  have hS₀Ω : S₀ ∈ Ωf p K := by simp [Ωf, hS₀K]
+  have hle : ∀ S ∈ Ωf p K, m S ≤ Σm := fun S hS =>
+    single_le_sum (fun T _ => (hm T).le) hS
+  have hΣpos : 0 < Σm := lt_of_lt_of_le (hm S₀) (hle S₀ hS₀Ω)
+  set ε := m S₀ / (2 * Σm) with hε
+  have hεpos : 0 < ε := div_pos (hm S₀) (by linarith)
+  -- ε * m S < m S₀ on Ω
+  have hεm : ∀ S ∈ Ωf p K, ε * m S < m S₀ := by
+    intro S hS
+    have h1 : ε * m S ≤ ε * Σm := mul_le_mul_of_nonneg_left (hle S hS) hεpos.le
+    have h2 : ε * Σm = m S₀ / 2 := by rw [hε]; field_simp
+    linarith [hm S₀]
+  let w : ℕ → ℝ := fun k => if k = S₀.card then 1 else ε
+  have hw : PosSizePrior K w := fun k _ => by
+    simp only [w]; split_ifs <;> [exact one_pos; exact hεpos]
+  have hW := normW_pos (p := p) hw
+  refine ⟨w, hw, ?_⟩
+  set g : Finset (Fin p) → ℝ := fun S => sizePrior p K w S * m S with hgdef
+  have hgS₀ : g S₀ = m S₀ / normW p K w := by simp [hgdef, sizePrior, w]; ring
+  -- models of another size score strictly less than S₀
+  have hother : ∀ S ∈ Ωf p K, S.card ≠ S₀.card → g S < g S₀ := by
+    intro S hS hc
+    have : g S = ε * m S / normW p K w := by simp [hgdef, sizePrior, w, hc]; ring
+    rw [this, hgS₀]
+    exact div_lt_div_of_pos_right (hεm S hS) hW
+  have hsame : ∀ S, S.card = S₀.card → g S = m S / normW p K w := by
+    intro S hc; simp [hgdef, sizePrior, w, hc]; ring
+  have hargmax : IsArgmax g (Ωf p K) S₀ := by
+    refine ⟨hS₀Ω, fun S hS => ?_⟩
+    by_cases hc : S.card = S₀.card
+    · rw [hsame S hc, hgS₀]
+      exact div_le_div_of_nonneg_right (hstar.1.2 S (by simp [sizeClass, hc])) hW.le
+    · exact (hother S hS hc).le
+  refine ⟨hargmax, fun T hT => ?_⟩
+  have hTeq : g T = g S₀ := le_antisymm (hargmax.2 T hT.1) (hT.2 S₀ hS₀Ω)
+  have hc : T.card = S₀.card := by
+    by_contra hc; exact absurd hTeq (hother T hT.1 hc).ne
+  have hmT : m T = m S₀ := by
+    rw [hsame T hc, hgS₀] at hTeq
+    exact (div_left_inj' hW.ne').mp hTeq
+  refine hstar.2 T ⟨by simp [sizeClass, hc], fun U hU => ?_⟩
+  rw [hmT]; exact hstar.1.2 U hU
+
+/-! ## T07(ii): Bayes decisions -/
+
+variable (K : ℕ) (F : Finset (Fin p) → ℝ)
+
+/-- Posterior `π` on `Ω = Ωf p K` from the log-score `F` (and `0` off `Ω`). -/
+noncomputable abbrev π := post F (Ωf p K)
+
+/-- Posterior inclusion probability `PIP_j = π({S : j ∈ S})`. -/
+noncomputable def PIP (j : Fin p) : ℝ := ∑ S ∈ Ωf p K, if j ∈ S then π K F S else 0
+
+/-- Posterior 0–1 risk `ρ(a) = Σ_{S∈Ω} π(S) 1{a ≠ S}`. -/
+noncomputable def risk01 (a : Finset (Fin p)) : ℝ := ∑ S ∈ Ωf p K, π K F S * if a = S then 0 else 1
+
+/-- Posterior Hamming risk `ρ_H(a) = Σ_{S∈Ω} π(S) |a △ S|`. -/
+noncomputable def riskH (a : Finset (Fin p)) : ℝ :=
+  ∑ S ∈ Ωf p K, π K F S * ((symmDiff a S).card : ℝ)
+
+/-- `ψ_q(a) = Σ_{j∈a} (1 - 2 q_j)`. -/
+def psi (q : Fin p → ℝ) (a : Finset (Fin p)) : ℝ := ∑ j ∈ a, (1 - 2 * q j)
+
+/-- `J₊(q) = {j : q_j > 1/2}`; `MPM = J₊(PIP)`. -/
+noncomputable def Jplus (q : Fin p → ℝ) : Finset (Fin p) := univ.filter fun j => 1 / 2 < q j
+
+theorem risk01_eq (a : Finset (Fin p)) : risk01 K F a = 1 - π K F a := by
+  sorry
+
+/-- **T07(ii)(a)**: `a` minimises the posterior 0–1 risk over all subsets of `[p]` iff
+`a ∈ argmax_Ω F`. -/
+theorem risk01_min_iff (a : Finset (Fin p)) :
+    (∀ b, risk01 K F a ≤ risk01 K F b) ↔ IsArgmax F (Ωf p K) a := by
+  sorry
+
+/-- **T07(ii)(a)**: the HPM `S†` minimises the posterior 0–1 risk. -/
+theorem hpm_min_risk01 (rk : Finset (Fin p) → ℕ) {Sd : Finset (Fin p)}
+    (hd : IsLeastArgmax rk F (Ωf p K) Sd) : ∀ b, risk01 K F Sd ≤ risk01 K F b :=
+  (risk01_min_iff K F Sd).mpr hd.1
+
+/-- `ρ_H(a) = Σ_j PIP_j + ψ_PIP(a)` (PROOF_v2, proof of Theorem bayes (b)). -/
+theorem riskH_eq (a : Finset (Fin p)) :
+    riskH K F a = ∑ j, PIP K F j + psi (PIP K F) a := by
+  sorry
+
+/-- **Lemma psi (a)**: `J₊(q)` minimises `ψ_q` over all subsets. -/
+theorem psi_Jplus_le (q : Fin p → ℝ) (a : Finset (Fin p)) : psi q (Jplus q) ≤ psi q a := by
+  sorry
+
+/-- **Lemma psi (a)**, uniqueness: `J₊(q)` is the unique minimiser iff no `q_j = 1/2`. -/
+theorem psi_Jplus_unique_iff (q : Fin p → ℝ) :
+    (∀ a, (∀ b, psi q a ≤ psi q b) → a = Jplus q) ↔ ∀ j, q j ≠ 1 / 2 := by
+  sorry
+
+/-- **T07(ii)(b)**: the MPM minimises the posterior Hamming risk over all subsets. -/
+theorem mpm_min_riskH (a : Finset (Fin p)) :
+    riskH K F (Jplus (PIP K F)) ≤ riskH K F a := by
+  rw [riskH_eq, riskH_eq]
+  linarith [psi_Jplus_le (PIP K F) a]
+
+/-- **T07(ii)(b)**, uniqueness: the MPM is the unique Hamming-risk minimiser iff no
+`PIP_j = 1/2`. -/
+theorem mpm_unique_iff :
+    (∀ a, (∀ b, riskH K F a ≤ riskH K F b) → a = Jplus (PIP K F)) ↔
+      ∀ j, PIP K F j ≠ 1 / 2 := by
+  rw [← psi_Jplus_unique_iff]
+  simp only [riskH_eq, add_le_add_iff_left]
+
+/-- **Lemma psi (b)**, capped. If `a* ⊆ J₊(q)`, `|a*| = min(K', |J₊(q)|)` and every `q_j` on `a*`
+is at least every `q_k` on `J₊(q) ∖ a*`, then `a*` minimises `ψ_q` over `{a : |a| ≤ K'}`. -/
+theorem psi_capped_le (q : Fin p → ℝ) (K' : ℕ) (astar : Finset (Fin p))
+    (hsub : astar ⊆ Jplus q) (hcard : astar.card = min K' (Jplus q).card)
+    (htop : ∀ j ∈ astar, ∀ k ∈ Jplus q \ astar, q k ≤ q j) :
+    ∀ a : Finset (Fin p), a.card ≤ K' → psi q astar ≤ psi q a := by
+  sorry
+
+/-- Existence of the capped action `a*` (any deterministic tie rule selects one). -/
+theorem exists_capped (q : Fin p → ℝ) (K' : ℕ) :
+    ∃ astar : Finset (Fin p), astar ⊆ Jplus q ∧ astar.card = min K' (Jplus q).card ∧
+      ∀ j ∈ astar, ∀ k ∈ Jplus q \ astar, q k ≤ q j := by
+  sorry
+
+/-- **T07(ii)(c)**: the capped MPM `a*` (with `K' = K`, `q = PIP`) minimises `ρ_H` over `Ω`. -/
+theorem capped_mpm_min_riskH (astar : Finset (Fin p))
+    (hsub : astar ⊆ Jplus (PIP K F)) (hcard : astar.card = min K (Jplus (PIP K F)).card)
+    (htop : ∀ j ∈ astar, ∀ k ∈ Jplus (PIP K F) \ astar, PIP K F k ≤ PIP K F j) :
+    astar ∈ Ωf p K ∧ ∀ a ∈ Ωf p K, riskH K F astar ≤ riskH K F a := by
+  refine ⟨by simp [Ωf, hcard], fun a ha => ?_⟩
+  rw [riskH_eq, riskH_eq]
+  have := psi_capped_le (PIP K F) K astar hsub hcard htop a (mem_filter.mp ha).2
+  linarith
+
+/-! ## T07(iii): target versus reported decisions -/
+
+/-- **T07(iii)(a)**: for a nonempty scored set `𝒮 ⊆ Ω`, `Ŝ = S†` iff `S† ∈ 𝒮`. -/
+theorem reported_eq_hpm_iff (rk : Finset (Fin p) → ℕ) (hrk : Function.Injective rk)
+    {𝒮 : Finset (Finset (Fin p))} (h𝒮 : 𝒮 ⊆ Ωf p K) {Sd Sh : Finset (Fin p)}
+    (hd : IsLeastArgmax rk F (Ωf p K) Sd) (hh : IsLeastArgmax rk F 𝒮 Sh) :
+    Sh = Sd ↔ Sd ∈ 𝒮 := by
+  sorry
+
+/-- **T07(iii)(a)**: `Ŝ` minimises the posterior 0–1 risk iff `𝒮 ∩ argmax_Ω F ≠ ∅`. -/
+theorem reported_min_risk01_iff (rk : Finset (Fin p) → ℕ)
+    {𝒮 : Finset (Finset (Fin p))} (h𝒮 : 𝒮 ⊆ Ωf p K) {Sh : Finset (Fin p)}
+    (hh : IsLeastArgmax rk F 𝒮 Sh) :
+    (∀ b, risk01 K F Sh ≤ risk01 K F b) ↔ ∃ T ∈ 𝒮, IsArgmax F (Ωf p K) T := by
+  sorry
+
+/-- **T07(iii)(b)**: with `F = log(ϖ m)` for a positive size-only weight and `m > 0`:
+`{Ŝ = S₀} ∩ {S*_{s₀} ≠ S₀} ⊆ {S*_{s₀} ∉ 𝒮}`. -/
+theorem reported_truth_needs_unscored (rk : Finset (Fin p) → ℕ) (hrk : Function.Injective rk)
+    (m : Finset (Fin p) → ℝ) (hm : ∀ S, 0 < m S) (pw : ℕ → ℝ) (hpw : PosSizePrior K pw)
+    {𝒮 : Finset (Finset (Fin p))} (h𝒮 : 𝒮 ⊆ Ωf p K) {S₀ Sstar : Finset (Fin p)}
+    (hh : IsLeastArgmax rk (fun S => Real.log (pw S.card * m S)) 𝒮 S₀)
+    (hstar : IsLeastArgmax rk m (sizeClass p S₀.card) Sstar) (hne : Sstar ≠ S₀) :
+    Sstar ∉ 𝒮 := by
+  sorry
+
+/-- **T07(iii)(c)**: PIP error bounds the excess Hamming risk. For any PIP estimate `q̂`, action
+class `𝒜`, `â ∈ 𝒜` minimising `ψ_q̂` over `𝒜`, and `a_opt ∈ 𝒜` minimising `ρ_H` over `𝒜`:
+`0 ≤ ρ_H(â) - ρ_H(a_opt) ≤ 2 Σ_{j ∈ â △ a_opt} |q̂_j - PIP_j| ≤ 2 Σ_j |q̂_j - PIP_j|`. -/
+theorem excess_riskH_le (qhat : Fin p → ℝ) (𝒜 : Finset (Finset (Fin p)))
+    {ahat aopt : Finset (Fin p)} (hahat : ahat ∈ 𝒜) (hahat_min : ∀ a ∈ 𝒜, psi qhat ahat ≤ psi qhat a)
+    (haopt : aopt ∈ 𝒜) (haopt_min : ∀ a ∈ 𝒜, riskH K F aopt ≤ riskH K F a) :
+    0 ≤ riskH K F ahat - riskH K F aopt ∧
+      riskH K F ahat - riskH K F aopt ≤ 2 * ∑ j ∈ symmDiff ahat aopt, |qhat j - PIP K F j| ∧
+      2 * ∑ j ∈ symmDiff ahat aopt, |qhat j - PIP K F j| ≤ 2 * ∑ j, |qhat j - PIP K F j| := by
+  sorry
+
+/-- **T07(iii)(c)**, last clause: `MPM̂ = MPM` iff `q̂_j > 1/2 ⇔ PIP_j > 1/2` for every `j`. -/
+theorem mpm_hat_eq_iff (qhat : Fin p → ℝ) :
+    Jplus qhat = Jplus (PIP K F) ↔ ∀ j, (1 / 2 < qhat j ↔ 1 / 2 < PIP K F j) := by
+  sorry
+
+end SmcBvs.T07
