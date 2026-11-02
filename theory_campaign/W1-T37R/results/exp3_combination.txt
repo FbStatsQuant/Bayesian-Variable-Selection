@@ -1,0 +1,6 @@
+a=0.85 (a^2=0.722 > 1/2), phi0^2 = 1-a = 0.15, theta=0.3, q=5 pure nulls
+n=  100 first-move freq={'none': 57, 'add_null': 80, 'add_truth': 63} uncapped reach S0: 13/200, moves (median, max) = 2.0, 2
+n=  200 first-move freq={'add_truth': 54, 'add_null': 145, 'none': 1} uncapped reach S0: 36/200, moves (median, max) = 2.0, 2
+n=  400 first-move freq={'add_null': 160, 'add_truth': 40} uncapped reach S0: 66/200, moves (median, max) = 2.0, 3
+n= 1000 first-move freq={'add_null': 198, 'add_truth': 2} uncapped reach S0: 168/200, moves (median, max) = 3.0, 3
+n= 3000 first-move freq={'add_null': 200} uncapped reach S0: 200/200, moves (median, max) = 3.0, 3
