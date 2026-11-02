@@ -359,3 +359,14 @@ and nothing about p ≫ n or about the method's actual calibration (G3 is a prox
 | N-a (evidence collapse on non-crossing) | factor ≥ δ₁^{−1/2} underestimation on non-crossing, w.p. → κ | high | PROVED here | none | no |
 | N-c (explicit split family) | LH-type masking, T = 1 grid: W_r ≤ e^{−Θ(n)} w.p. → 1 while PIPs consistent | medium-high for a frozen grid; low-medium that the method's calibration realises T = 1 | deterministic core PROVED; family claims need W1-EXP Thm 6, O-BGIBBS LH, W4-SHARE M(b) | whether the restricted-ESS grid is blind to the crossing (T13(iii)) | no |
 | Paper claim at n = 200 | §7 lists 4 claimable and 3 non-claimable statements | high | — | — | optional diagnostic (§8) |
+
+## 10. Eight-line summary
+
+1. PROVED (M1): E_𝓒[(Ẑ_r/Z)·max_j|PIP̂_rj − 1{j∈S₀}|] ≤ δ₁ + ρ̄ + u_π for every regime, grid and N; the evidence weight sits on the realisations whose PIPs are right.
+2. PROVED (M2): non-crossing islands report Ẑ_r ≤ √δ₁·Z except w.p. 2√δ₁; islands (or the pooled run) with Ẑ ≥ cZ have PIP error ≤ ε except w.p. (δ₁+ρ̄+u_π)/(cε). Wrong PIPs with accurate evidence cannot happen.
+3. PROVED (M3): no first-moment "restart T26" for Ẑ: E[Ẑ_r/Z | crossing] ≥ (1−2δ₁)/P(crossing), and P(Ẑ_r/Z < c | crossing) is unconstrained; only T31(i)'s one-sided bound survives.
+4. PROVED as composition (Theorem R / R′): masked-regime PIP and MPM consistency from population delivery to a repair basin (DELIV-POP, OPEN) + repair (W1-T24G, candidate) + T03, with no evidence input.
+5. PROVED (N-a) / PROOF SKETCH (N-c): on non-crossing realisations Ẑ_r underestimates Z by ≥ δ₁^{−1/2} → ∞; on LH-type masking with a one-stage grid by e^{Θ(n)} while PIPs stay consistent.
+6. Numerics (p = 18, 3,840 island-runs, helper): one-stage and blind restricted-ESS grids give median log Ẑ_r/Z = −4 to −12 with PIP error equal to the exact posterior's and MPM right in 100%; (I2), (I3) never violated; (M2-a) untested (the φ = 1 round always delivered).
+7. Paper at n = 200 may claim unbiasedness, the 95% bound (possibly astronomically loose), the pathwise PIP bound and the evidence–PIP coupling; it may not claim any relative accuracy of Ẑ or PIP accuracy derived from the evidence (§7).
+8. Content commit a2ed9b2170730e4c431d34240d137b8af7253c96 on theory/F-MASKPIP (this summary is the following commit); helper simulation commit 4d82c31.
