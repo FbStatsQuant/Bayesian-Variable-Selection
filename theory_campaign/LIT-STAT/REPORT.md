@@ -82,4 +82,165 @@ The "holds for our designs" entries are my **assessment**, except where a comput
 | 24 | Sparks, Khare & Ghosh | Bayesian Analysis 10(3), 2015 (abstract and theorem list) | g-priors with p ∼ n | Necessary and sufficient conditions for sup-norm coefficient consistency | — | Not selection. Complementary |
 | 25 | Song & Liang | JRSS-B 77, 2015 — **UNVERIFIED** (second-hand via A-DRAFT §1.2) | Split and merge | Sure screening (Thm 3), misspecified-posterior consistency (Thm 4) | — | Prop M refutes a naive union, **not** Song–Liang's method (A-DRAFT's own caveat) |
 
-(Report continues in §3 onward.)
+
+## 3. Gaps: what nobody has proved that we prove or could prove
+
+These are my **assessment**. "Not found" means not found in the sources in §8 plus the searches logged in `notes/`. It is not a proof
+of absence.
+
+- **G1. Concentration under BB(1,p) with a g = n slab and a cap of order n.**
+  - Every concentration theorem I read uses one of three things to beat the multiplicity of large models: a complexity or exponentially
+    decreasing dimension prior (CSvdV, YWJ, Hou–Atchadé, Ročková–George), a slab variance growing like p^{2+δ} (Narisetty–He; YWJ's
+    g = p^{2κ₁}), or a maximum size p̄ ≪ n (Rossell; Shin et al.).
+  - T03♯ uses none of these. BB(1,p) has dimension ratio ≈ ½ (PROVED, §6), g = n < p, and K = ⌊n/2⌋.
+  - The device that makes this work is T02(i♯)'s exact tail. It bounds Π(|S| > m | y) by the prior tail ratio R_m times
+    (n+1)^{s₀/2}√n, with a tight factor Θ♯, and so moves the SE requirement down to sizes ≤ m♯_n ≈ s₀ + O(log n). Prop. D (duplicate
+    columns) shows that some log n growth of the cutoff is necessary without SE.
+  - I found no published analogue of either the upper bound (exact BB(1,p) tail) or the lower bound (Prop. D) for a non-complexity BB prior.
+  - **This is the defensible statistical novelty of Thm 1. It is modest.**
+- **G2. Guarantees for the reported HPM of a finite-budget algorithm whose start law masks the truth while the posterior concentrates.**
+  - The statistics papers stop at the posterior (π, the global HPM, the MPM).
+  - The computation-plus-statistics papers (YWJ, Zhou et al., Hou–Atchadé) get recovery through rapid mixing under Condition 1, from any
+    start, with priors stronger than ours.
+  - Nothing I read separates "posterior fine, start masked, a repair move needed", which is the content of Thm 2 masking, Thm 3 and
+    Thm 5(b). API-POS's finding (Condition 1(b) holds on LH for the posterior) sharpens this: the gap is about the **start law and the
+    algorithm as run**, not about the posterior.
+  - T21's composition adds a "truth never scored" term to Rossell's 2E[1 − π] term. It is elementary, but I did not find it stated for
+    a best-ever-scored HPM.
+- **G3. Decision-theoretic bookkeeping for a capped model space.** The capped Hamming-optimal rule (T07(ii)(c)) and the within-size
+  ceiling (T07(i)) are unstated but trivial. They fill a gap in presentation, not in mathematics.
+- **G4. Finite-n relevance at n = 200.**
+  - No asymptotic theorem in the table has force at n = 200, p ∈ {500, 1000}.
+  - YWJ's (E) already fails for every s₀ ≥ 1 (§2 row 3). Rossell's (B1) fails for our cap. T03♯'s own thresholds are about 2·10⁶.
+  - The only explicit finite-sample posterior bound found (Hou–Atchadé Thm 2) is for a complexity prior and an approximate posterior,
+    with constants c₁ and c₂ that are not computable from the design alone.
+  - Nobody has a usable finite-n selection theorem for designs like the study's. API-N200's measured-Π(X) route is a different kind of
+    object (a composition plus measurement), not a competitor to any paper here.
+- **G5 (not ours to fill).** No statistical consistency or coverage theory for SuSiE was found.
+
+## 4. Threats: results that make one of ours standard, weaker or redundant
+
+| # | Threat | Affected result | Severity | What the paper must do |
+|---|---|---|---|---|
+| H1 | **Rossell (2022) Prop 1**: P(HPM ≠ t) ≤ 2E(1 − p(M_t \| y)), also for the MPM | T03♯(3); the 2E₀δ₁ term of Thm 4 (T21) and Thm 5(0) | **High for novelty, none for correctness** | Cite it as Rossell's. Do not present it as ours |
+| H2 | **Rossell (2022) §5 and Moreno–Girón–Casella (2015) Thm 3**: unit-information g plus a multiplicity-correcting BB model prior is consistent at polynomial p, with anchored eigenvalue quantities | Thm 1 (T03♯) as "the" consistency theorem | **Medium.** T03♯ becomes a modest extension (BB(1,p), K ≍ n, ridge slab, exact tail) | Cite both. State T03♯ as consistency **of the method's own target**, and put the novelty in the exact BB(1,p) tail and size-restricted SE (G1) |
+| H3 | Narisetty–He (2014) Δ_n(K) and Rossell's v_tm: identifiability anchored at the truth and restricted in size is standard | The "anchored SE" wording in Thm 1 | Low to medium | Do not call anchoring new. W6-FIXREV2 already notes that SE_w ⇔ λ_min(G_T) ≥ g₀ for all T with \|T∖S₀\| ≤ m♯_n, which is close to Rossell's v̄ over sizes in [p_t, p̄] |
+| H4 | YWJ (2016) and Zhou et al. (2022) with **their** priors cover LH (API-POS) | Any claim that polynomial-time recovery on LH is new | High for that claim | Already flagged by API-POS. Keep the claim to "for the paper's own target and start" |
+| H5 | Hou–Atchadé Thm 2 (explicit non-asymptotic posterior bound) | Any "first finite-sample BVS guarantee" wording | Medium | Avoid "first finite-n". Thm N200 is a composition with a measured Π(X), which is a different kind of result |
+| H6 | Johnson–Rossell (2012) Thm 2 (local priors fail for p > n^{1/2+ε} when prior ratios are bounded below) and MGC Thm 3(i) (g = n plus Bernoulli fails for b ≥ ½) | Referees may claim T03♯ contradicts them | Low (no contradiction) | One sentence: BB(1,p) violates JR's hypothesis (3), since w(s₀+1)/w(s₀) → 0. This matches MGC's positive part (ii) |
+| H7 | Barbieri–Berger (2004): the HPM is generally **not** the optimal predictive model | The framing of Prop 1, "the HPM is the right decision" | Low to medium | Say "Bayes rule for 0–1 support loss (exact recovery)". Note that under predictive loss the MPM can be optimal (BB 2004) |
+| H8 | Berger, García-Donato & Pericchi (2026) call Beta(1, k) "overly parsimonious … not … objective". Castillo–van der Vaart (2012) say the slab "needs to have heavy tails" | The fixed prior choices (Felipe's decisions), not any theorem | Medium as a referee point | Defend BB(1,p) via T03♯'s need for multiplicity control at p = n^A, and the Gaussian slab via hypothesis R and the unit-information scale. Disclose both |
+| H9 | Papaspiliopoulos–Rossell (2017) block-diagonal exactness; omitted-variable bias of block-wise fits | Naive-merge Prop M (A-DRAFT) | Medium for novelty | Present Prop M as a motivating COUNTEREXAMPLE that quantifies a known phenomenon, citing PR2017. Do not claim it refutes Song–Liang (A-DRAFT's own caveat) |
+| H10 | Barbieri–Berger (2004) Thm 1's proof (coordinate-wise thresholding at ½) | T07(ii)(b) | Low | Cite as standard |
+
+## 5. Statements (citation-framed wording proposed for the paper)
+
+No new mathematics. These are proposed wordings that attach the correct provenance to our existing statements.
+
+- **Thm 1 (T03♯), clause (iii).** "P₀(S† ≠ S₀) ≤ 2E₀[1 − π(S₀)] → 0. The inequality is Rossell (2022, Prop. 1); the convergence follows
+  from (i) by bounded convergence."
+- **Thm 1, lead sentence.** "Under the method's own target (ridge unit-information slab, IG variance, BB(1,p) size prior capped at
+  ⌊n/2⌋), … [T03♯ as of record]. Comparable results for Zellner priors with Beta-Binomial(1,1) model priors and p̄ ≪ n are in Rossell
+  (2022, §5), and for g = n with k = O(n^b), b ≤ 1, in Moreno, Girón & Casella (2015). The new ingredient is the exact BB(1,p) size tail
+  (T02(i♯)): BB(1,p) is not a complexity prior in the sense of Castillo et al. (2015, (2.2)), since its dimension ratio is
+  (p−s+1)/(2p−s) → ½."
+- **Prop 1 (T07).** "(ii)(a)–(b) are the standard Bayes rules for 0–1 and Hamming support loss (cf. the coordinate-wise argument in
+  Barbieri & Berger, 2004, Thm 1). (ii)(c) adapts (b) to the capped model space. (i) records that a size-only prior, the class studied
+  by Scott & Berger (2010) and Berger, García-Donato & Pericchi (2026), cannot reorder models of equal size."
+
+## 6. Evidence
+
+- `scripts/bb_ratios.py` → `results/bb_ratios.txt`. Exact rational arithmetic, deterministic, run via `owls_run -j 2`. It checks three
+  things:
+  1. w(k) = ½/C(2p−1,k) = B(k+1, 2p−k)/B(1,p), for k ≤ min(p, 60) and p ∈ {20, 500, 1000}.
+  2. The dimension ratio is π_p(s)/π_p(s−1) = (p−s+1)/(2p−s), asserted exactly. The implied CSvdV exponent is A4 = −log(ratio)/log p,
+     which is 0.1003–0.1080 at p = 1000 and 0.111–0.130 at p = 500 for s ≤ 100, and tends to 0 as p → ∞ for fixed s.
+  3. The per-model ratio is w(s)/w(s−1) = s/(2p−s).
+
+  **PROVED** (elementary algebra, with exact numerical confirmation): BB(1,p) satisfies CSvdV (2.2) for no fixed A4 > 0 uniformly in p,
+  so CSvdV Thms 1, 4 and Cor 1 do not apply to our size prior.
+- YWJ (E) at the study's sizes: n/(32 log p) = 200/(32 ln 500) = 1.006 and 200/(32 ln 1000) = 0.905. With C₀ ≥ 0 the condition forces
+  s₀ ≤ 1. This is arithmetic on the condition as quoted in Zhou et al.'s Thm S2.
+
+## 7. What fails and why (routes tried)
+
+- **Finding a SuSiE consistency theory.** Two searches found none; only methods papers (titles seen, not read).
+- **Locating a published statement of T07(i).** Searches and reading of Scott–Berger, Berger et al. (2026) and Wilson et al. found no
+  explicit statement. The search-engine summary agreed that it is implied but not stated.
+- **Reading YWJ (2016) directly.** Not done, for budget reasons. Its conditions are quoted from Zhou et al.'s Thm S2, so they are
+  UNVERIFIED against YWJ itself. API-POS read further.
+- **WebFetch summaries.** These refuse verbatim abstracts. I switched to downloading arXiv PDFs and abstract metadata with curl and
+  extracting text locally (untrusted files kept in /tmp, not committed).
+
+## 8. Sources actually read
+
+Local PDFs were read through `pdftotext`; web PDFs were downloaded from arXiv and read the same way. "Abstract only" means the arXiv
+abstract metadata from `export.arxiv.org/abs/<id>`.
+
+| Work | Source actually read | Depth |
+|---|---|---|
+| CSvdV 2015 | `Papers/Priors_and_decision_rules/Castillo_SchmidtHieber_vanderVaart2015_Sparse_priors_regression.pdf` | (2.2), Ex. 4–5, Thms 1, 4, 5, Cor 1 |
+| Castillo–vdV 2012 | `Papers/Priors_and_decision_rules/Castillo_vanderVaart2012_Needles_and_straw.pdf` | Ex. 2.2, the text after Thm 2.8 |
+| Zhou et al. 2022 (and YWJ 2016 second-hand) | `Papers/Core_bibliography/10_2022_Zhou_et_al_...pdf` | §2, Condition 1, Supplement S3 Thm S2 |
+| Johnson–Rossell 2012 | `Papers/Core_bibliography/17_2012_Johnson_Rossell_...pdf` | Thms 1–2, Cors 1–2 |
+| Shin–Bhattacharya–Johnson 2018 | `Papers/Core_bibliography/18_2018_Shin_...pdf` | Assumptions 1–5, Thms 1, 3 |
+| Rossell 2022 | https://arxiv.org/pdf/1806.04071 | Prop 1, Cors 1–2, §2.3 conditions, §5.2, §5.4 (Prop 9, Lemma 3) |
+| Narisetty–He 2014 | https://arxiv.org/pdf/1405.6545 | §4.1 Conditions 4.1–4.5, Lemma 4.1 (extraction partly garbled) |
+| Moreno–Girón–Casella 2015 | https://arxiv.org/pdf/1507.08041 | Abstract, Thm 3 |
+| Sparks–Khare–Ghosh 2015 | https://arxiv.org/pdf/1509.01060 | Abstract, theorem list |
+| Banerjee–Castillo–Ghosal review | https://arxiv.org/pdf/2101.04491 (v3) | Linear-regression section |
+| Liang et al. 2008 | `Papers/Core_bibliography/15_2008_Liang_et_al_...pdf` | §4.2 (garbled) |
+| Scott–Berger 2010 | `Papers/Core_bibliography/04_2010_Scott_Berger_...pdf` | §3 passages |
+| Wilson et al. 2010 | `Papers/Priors_and_decision_rules/Wilson_etal2010_MISA_BetaBinomial_1_p.pdf` | Eq. (2.7), §2.4.1 |
+| Barbieri–Berger 2004 | `Papers/Priors_and_decision_rules/Barbieri_Berger_2004_Optimal_predictive_model_selection.pdf` | Introduction, Thm 1 and proof, Cors 1–2 |
+| Barbieri et al. 2021 | `Papers/Core_bibliography/22_2021_Barbieri_et_al_...pdf` (arXiv v2) | Thm 3.1, dilution and replicates passages |
+| Papaspiliopoulos–Rossell 2017 | `Papers/Core_bibliography/12_2017_Papaspiliopoulos_Rossell_...pdf` | Abstract, §4 heuristic |
+| Ma 2015 | `Papers/Core_bibliography/13_2015_Ma_...pdf` | Abstract |
+| Ročková–George 2018 | `Papers/Benchmark_methods/Rockova_George_2018_SSL.pdf` | Lemma 3.3 remark, Thms 6.3–6.4 |
+| SuSiE (Wang et al. 2020) | `Papers/Core_bibliography/29_2020_Wang_et_al_...pdf` | Props 1–3, Cor 1, credible-set remark |
+| Hou–Wang–Atchadé | `Papers/Core_bibliography/31_2026_Hou_Atchade_...pdf` (arXiv:2407.20580v1) | Abstract, Thm 2 |
+| Berger–García-Donato–Pericchi 2026 | `Papers/Priors_and_decision_rules/Berger_GarciaDonato_Pericchi2026_Model_prior_probabilities.pdf` | Abstract, §2.6, WP/SP, Lemma 3 |
+| Womack et al. 2025 | `Papers/Priors_and_decision_rules/Womack_TaylorRodriguez_Fuentes2025_Matryoshka_doll_prior.pdf` | Abstract, statement list |
+| Li–Tokdar–Xu 2025; Kowal 2022 | local PDFs | Abstracts only (decision-theoretic estimation and subset selection for prediction; not support-loss results) |
+| van der Pas–Szabó–vdV 2017 | https://export.arxiv.org/abs/1607.01892 | Abstract only |
+| Lee–Chae–Martin 2024 | https://export.arxiv.org/abs/2408.04359 | Abstract only |
+| Yang–Pati | https://export.arxiv.org/abs/1701.00311 | Abstract only |
+
+Second-hand only (UNVERIFIED):
+- YWJ 2016, via Zhou et al.;
+- Song–Liang 2015, via A-DRAFT;
+- Fernández–Ley–Steel 2001, via Liang et al.;
+- the venues of Zhou et al. 2022, Barbieri et al. 2021 and Papaspiliopoulos–Rossell 2017;
+- SuSiE 2.0 and the residual-variance preprint (search-result titles only).
+
+## 9. Needs escalation
+
+- **E1. Confirm G1 independently.** Is there really no published dimension or size-tail bound for a non-complexity BB(1, p^u) prior
+  with u ≤ 1 combined with a unit-information slab? Candidates to check: the Rossell (2022) supplement (Lemmas S15–S16, Section S3),
+  Castillo–vdV 2012 §2 (lower bounds), and Martin, Mess & Walker (2017), whom Rossell cites on p̄ ≤ n. I did not read these.
+- **E2. Check YWJ (2016) directly.** My statement that YWJ's (E) fails at n = 200 for any s₀ ≥ 1 relies on Zhou et al.'s transcription
+  of the condition.
+
+## 10. Outside scope
+
+- Barbieri et al. (2021) and Berger et al. (2026) both discuss **dilution** of model priors under correlated or near-duplicate
+  predictors. That is the name, and arguably the mechanism, of the study's masking (W8-SYNTH "dilution"). Their discussion concerns prior
+  probabilities, whereas ours concerns the σ²-dilution of the start law. The overlap in vocabulary should be handled in the paper to avoid
+  confusion. I did not pursue it.
+
+## 11. Confidence card
+
+The column headings are:
+- **True?** Confidence that the statement is true.
+- **New?** My assessment of its novelty against the literature.
+- **Provable at reasonable cost?** Whether it is already proved, or could be proved cheaply.
+- **Method change?** Whether the method would have to change.
+
+| Target | Refined statement | True? | New? | Provable at reasonable cost? | Crux | Method change? |
+|---|---|---|---|---|---|---|
+| Thm 1 (T03♯) | As of record (W6-FIXREV2 §1.2), with clause (iii) credited to Rossell (2022) Prop 1 | High (PROVED, XF-verified) | **Modest extension** of Rossell (2022) and MGC (2015). Not standard for BB(1,p) / g = n / K ≍ n | Already proved | Exact BB(1,p) tail plus SE only up to m♯_n | No |
+| T02(i♯) exact BB(1,p) tail | As of record | High | **Plausibly new** (G1). Medium confidence in the novelty, pending E1 | Already proved | Prior tail ratio R_m against the S₀ Occam factor (n+1)^{s₀/2}√n | No |
+| Prop 1 (T07) | As of record, with (ii)(a)–(b) labelled standard | High (locked, Lean) | **Standard or folklore.** (i) and (ii)(c) are unstated but trivial | Already proved | — | No |
+| T03♯(3) / the 2E₀δ₁ term | Rossell (2022) Prop 1 | High | **Known** | — | — | No |
+| Naive merge (A-DRAFT Prop M) | As in A-DRAFT §3.1 | High (complete proof per A-DRAFT; A-REV4 uses it) | **Known phenomenon** (omitted-variable bias; PR2017's block-diagonal exactness condition), cleanly formalised | Already proved | Cross-block correlation ρ ≠ 0 | No |
+| Masked-regime reported-HPM results (Thms 2, 3, 5(b)) | Not re-stated here | — | **No prior art found** (G2). Strongest novelty claim relative to this literature | — | Start law vs posterior (API-POS) | — |
