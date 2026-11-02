@@ -126,4 +126,30 @@ RESULTS_TABLES_PLACEHOLDER
 
 ## 9. What the paper can claim about the reported Ẑ and PIPs at n = 200
 
-N200_PLACEHOLDER
+**What is PROVED and holds at n = 200 for every fit, with no regime assumption:**
+- The evidence is unbiased: E Ẑ = Z (T12).
+- The reported Ẑ is a valid 95% lower-confidence anchor: P(Z ≥ 0.05Ẑ) ≥ 0.95, and E log Ẑ ≤ log Z (T31(i)).
+- Z ≥ Z_𝒯 surely, so per fit log Z ≥ max(log Z_𝒯, log Ẑ − 3.0) w.p. ≥ 0.95 (C2). Also Ẑ/Z ≤ Ẑ/Z_𝒯 surely (C1). In the
+  four study fits re-scored by O-CERT, Ẑ exceeds Z_𝒯 by e^{0.18}–e^{0.59}, so none of them certifies an
+  underestimate. This is consistent with Ẑ ≈ Z but is not proof of it.
+
+**What the paper cannot claim:**
+- Any upper bound on Z, or any relative accuracy of Ẑ.
+- That agreement of the four islands (sd of log Ẑ_r 0.02–0.08 in those fits) shows accuracy. Islands whose bridges
+  collapsed agree just as well: Cor. E1b, and at p = 18 the blind grid gives log Ẑ_r/Z = −10.8 ± 0.01 on every island.
+
+**The mechanism the paper can state, as a theorem:**
+- Ẑ can be badly low only if the bridge reached the reported model's basin late, after a temperature step that the
+  candidate-set ESS did not see. The loss is then the log-odds overshoot of the late switch (E1, E2).
+- A full-space ESS grid cannot take such a step (Lemma J). Because V contains the top scored models, a blind step
+  requires that no calibration run scored the reported model's basin.
+- At p = 18, the method-like V always contained S₀ (9/9 pilots) and gave |median log Ẑ_r/Z| ≤ 0.04, while a blind V
+  gave −10.8 to −11.7 nats. This is evidence, not a theorem for n = 200.
+
+**PIPs:**
+- The RB PIPs are within TV(ν̄, π) of the posterior PIPs in mean (P1, PROVED). This bound is not certified per fit.
+- The top-store PIPs are within π(𝒯ᶜ) of the posterior PIPs (P3, deterministic), but π(𝒯ᶜ) has no certified upper
+  bound.
+- "PIPs ≈ the 0/1 truth" is not claimable at n = 200: the posterior itself is diffuse. O-CERT gives π(S₀) ≤ 0.37 even
+  on exactly correct fits, so every bound with u_π is vacuous there. The PIP consistency results (P1–P3) are
+  asymptotic statements on the masked family LH.
