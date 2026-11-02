@@ -53,6 +53,8 @@ The index n is suppressed when harmless.
 - **(Ω)** P₀(s₀ ≤ K_n) → 1;
 - **(P1)** for every ε > 0, P(𝒢_n ∩ {(T_n + 1)Δ_n > ε}) → 0 (joint probability over data and calibration streams;
   T_n the realised stage count). Sufficient deterministic-budget form: (T^max_n + 1)Δ_n → 0 in P₀-probability.
+- **(P1-ex)** P₀(ℰ_n ∩ {δ₁ > ε}) → 0 for every ε > 0 (the exact-branch twin of (P1); implied by the
+  deterministic-budget form of (P1), by T03(i), and vacuous when ℰ_n eventually fails, e.g. p ≥ 18 and n ≥ 22).
 
 No statistical assumption (G, R, SE, BM, EXP, VIS, NL) is used in Theorem A. The frozen second premise
 (L_n + 4)ρ*_n → 0 is **not needed** (Lemma 3, Remark 3.2).
@@ -91,7 +93,7 @@ on N); anything about runs selected by their flags or by their completion; float
 - strict EXP′: (T^max_n + 1)Δ_n = O_P( log²n · [2^B √(log n) n^{−κ} + e_n + √(log n / n)] ) → 0, e_n = o_P(n^{−m}) ∀m;
 - weak EXP′: on events of probability → 1, (T^max_n+1)Δ_n ≤ C log²n · [2^B √(log n) n^{−κ/2} + s₀e_n] + O_P(log^{2.5}n/√n) → 0.
 
-Hence all conclusions of Theorem A hold. (The frozen (L_n+4)ρ*_n → 0 also holds: it is O_P(log^{1.5}n/√n).)
+(P1-ex) holds by T03(i). Hence all conclusions of Theorem A hold. (The frozen (L_n+4)ρ*_n → 0 also holds: it is O_P(log^{1.5}n/√n).)
 
 *Where EXP enters, exactly.* Δ_n = max{1 − π₀(S₀), δ₁} (Lemma 1). The δ₁ part is discharged by T03 alone (no EXP).
 EXP′ (with VIS, NL_η, NL_avg) is used **only** to show (T^max_n + 1)(1 − π₀(S₀)) → 0, i.e. 1 − π₀(S₀) = o_P(1/log²n),
@@ -195,9 +197,7 @@ On ℰ_n the event 𝒢_n is empty, so (P1) says nothing there. We therefore nee
 **caveat** below. With δ₁ → 0 in P₀-probability, the PIP and MPM events on 𝒪_n ∩ ℰ_n have probability ≤
 P₀(δ₁ ≥ min(ε, ½)) + P₀(S₀ ∉ Ω) → 0 (MPM = S₀ when δ₁ < ½).
 
-*Caveat (exact branch).* (P1) only concerns 𝒢_n. To cover ℰ_n, Theorem A adds
-**(P1-ex)** P₀(ℰ_n ∩ {δ₁ > ε}) → 0 for every ε > 0.
-It is implied by the deterministic-budget form of (P1) (since δ₁ ≤ Δ_n ≤ (T^max+1)Δ_n), by T03(i), and it is vacuous
+*Exact branch hypothesis.* (P1) only concerns 𝒢_n; this is why Theorem A also assumes (P1-ex). It is implied by the deterministic-budget form of (P1) (since δ₁ ≤ Δ_n ≤ (T^max+1)Δ_n), by T03(i), and it is vacuous
 when ℰ_n eventually fails (p_n → ∞ fast enough; at p ≥ 18 and n ≥ 22, ℰ_n fails).
 
 *SMC branch.* By OUT, 𝒪_n ∖ ℰ_n ⊆ 𝒢_n and on it the reported outputs equal the potential ones. It suffices to bound
@@ -218,8 +218,6 @@ with limsup ≤ 108x/ε; let x ↓ 0. MPM: by (A-0)(d), P_𝓒(MPM̂° ≠ S₀)
 
 Combining the branches with OUT gives (A-i) and (A-ii). ∎
 
-**Correction to the statement of Theorem A.** Add (P1-ex) to its hypotheses (it is automatic under the
-deterministic-budget form of (P1), under T03, or when the exact branch eventually does not apply).
 
 Notes on the proof.
 - No probability is conditioned on 𝒪_n or on completion. 𝒪_n only appears as an intersected event.
