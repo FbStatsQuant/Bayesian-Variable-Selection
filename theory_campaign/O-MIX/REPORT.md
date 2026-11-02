@@ -251,13 +251,14 @@ Under BO the null increments become −½ log n + σ²Z_l²/(2σ̂²), whereas v
 | BO-D | 200 | −1.51 | −1.51 | **−1.51** | −0.27 | **−0.27** | −1.52 | −0.74 | 0.53 | 0.00 | 0.92 |
 | BO-D | 800 | −0.11 | −0.11 | **−0.11** | −0.04 | **−0.04** | −0.11 | −0.39 | 0.91 | 0.92 | 1.00 |
 
-Additional rows. C-grid at n = 3200 was skipped because m > 200. LH-B at n = 3200 was still running at hand-back.
+Additional rows. C-grid at n = 3200 was skipped because m > 200.
 
 | family | n | base v3 | 𝒫⁺ | **(B) mix** | C-oracle | **C-fix** | C-null | C-grid | π(S₀) | mode=S° | S₀ ⊆ C-fix mode |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | LH-A | 3200 | −2.73 | −0.02 | **−0.32** | −2.63 | **−2.66** | −2.73 | — | 0.94 | 1.00 | 0.00 |
 | LH-B (c = 2) | 200 | −4.33 | −0.14 | **−0.44** | −4.09 | **−4.22** | −4.33 | −4.32 | 0.71 | 1.00 | 0.00 |
 | LH-B (c = 2) | 800 | −4.92 | −0.04 | **−0.34** | −4.72 | **−4.84** | −4.92 | −5.23 | 0.81 | 1.00 | 0.00 |
+| LH-B (c = 2) | 3200 | −5.53 | −0.02 | **−0.32** | −5.41 | **−5.48** | −5.53 | — | 0.94 | 1.00 | 0.00 |
 | BO-D | 3200 | −0.02 | −0.02 | **−0.02** | −0.03 | **−0.03** | −0.02 | — | 0.94 | 1.00 | 1.00 |
 
 - **LH-B (c = 2):** the base start falls by ≈ 1 decade per factor 4 in n, which is T27's predicted slope of −c/2 per decade. (B) is ≈ 10^{−0.34…−0.44} with both pairs merged in one component, so the cost is log 2 and does not grow with c. (C) equals the base.
