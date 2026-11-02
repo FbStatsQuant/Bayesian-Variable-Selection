@@ -233,7 +233,7 @@ Status words used in this table:
 
 1. **(0) in full.** P(𝒪 ∩ {Ŝ ≠ S₀}) ≤ 2E₀δ₁ + P(𝒪̄, S₀ ∉ 𝒮̄). This is PROVED and holds for every n.
 2. **Theorem 5(a).** Favourable-regime consistency is PROVED-UNDER (F1), or under the checkable (F2)/(F3). It holds unconditionally on the ORTH family (a6).
-3. **Theorem 5(b1′).** If a one-flip neighbour of S₀ carries start mass > 1/10, the pilot's first stage scores S₀ w.p. → 1. This is PROVED given D2's design conditions (Dep, NB′). It is not proved on any explicit masked family; a sketch exists for LH with c = 1.
+3. **Theorem 5(b1′).** If a one-flip neighbour of S₀ carries start mass > 1/10, the pilot's first stage scores S₀ w.p. → 1. This is PROVED given D2's design conditions (Dep, NB′). It is not proved on any explicit masked family. For LH with c = 1 there are two sketches (T38_PROOF §4.2, and W3-PXN P7, unverified); in both, NB is the unfinished step.
 4. **Theorem 5(b2)** is conditional on DELIV, which is OPEN; C1 shows that DELIV is a genuine particle-level property.
 5. **Finite-n inequalities.** These are PROVED and deterministic, but vacuous or weak at n = 200:
    - Theorem B′;
