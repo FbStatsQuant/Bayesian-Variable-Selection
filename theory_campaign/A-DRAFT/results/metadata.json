@@ -1,0 +1,10 @@
+{
+  "seed": 20261102,
+  "rho": 0.8,
+  "beta": 1.0,
+  "sigma": 1.0,
+  "states": 4,
+  "method": "exact four-state sums, floating point",
+  "numpy": "2.5.4",
+  "owls_cores": "2"
+}
