@@ -1,0 +1,51 @@
+== LH16 n=400 (10 reps): max over x in W(S°), j in S°, l not in x of log-odds of the swap x -> x-j+l
+   unit_1  : median    -24.20  worst    -15.09   (per n: -0.0605)
+   unit_0  : median    -18.58  worst    -13.40   (per n: -0.0465)
+   other_1 : median    -31.70  worst    -23.61   (per n: -0.0792)
+   other_0 : median    -17.81  worst    -13.04   (per n: -0.0445)
+   hub_1   : median    -29.02  worst    -13.02   (per n: -0.0725)
+   hub_0   : median    -38.96  worst    -31.70   (per n: -0.0974)
+   Wplus_exit_1              : median     48.54  worst     69.39
+   Wplus_exit_0              : median     44.46  worst     56.05
+   swapped_minus_complete_1  : median    -52.59  worst    -38.64
+== LH16 n=1600 (10 reps): max over x in W(S°), j in S°, l not in x of log-odds of the swap x -> x-j+l
+   unit_1  : median    -97.37  worst    -64.96   (per n: -0.0609)
+   unit_0  : median    -77.80  worst    -59.85   (per n: -0.0486)
+   other_1 : median   -137.33  worst   -108.15   (per n: -0.0858)
+   other_0 : median    -78.11  worst    -60.64   (per n: -0.0488)
+   hub_1   : median   -111.73  worst    -82.25   (per n: -0.0698)
+   hub_0   : median   -158.40  worst   -139.17   (per n: -0.0990)
+   Wplus_exit_1              : median    188.09  worst    203.59
+   Wplus_exit_0              : median    160.40  worst    169.32
+   swapped_minus_complete_1  : median   -234.83  worst   -200.75
+== LH16 n=6400 (10 reps): max over x in W(S°), j in S°, l not in x of log-odds of the swap x -> x-j+l
+   unit_1  : median   -374.22  worst   -342.37   (per n: -0.0585)
+   unit_0  : median   -296.16  worst   -280.16   (per n: -0.0463)
+   other_1 : median   -532.75  worst   -498.77   (per n: -0.0832)
+   other_0 : median   -295.81  worst   -280.12   (per n: -0.0462)
+   hub_1   : median   -506.22  worst   -414.69   (per n: -0.0791)
+   hub_0   : median   -650.49  worst   -603.77   (per n: -0.1016)
+   Wplus_exit_1              : median    736.60  worst    829.73
+   Wplus_exit_0              : median    654.38  worst    684.34
+   swapped_minus_complete_1  : median   -921.73  worst   -890.52
+== LH20 n=1600 (4 reps): max over x in W(S°), j in S°, l not in x of log-odds of the swap x -> x-j+l
+   unit_1  : median    -62.48  worst    -54.82   (per n: -0.0391)
+   unit_0  : median    -50.79  worst    -46.86   (per n: -0.0317)
+   other_1 : median    -61.53  worst    -50.63   (per n: -0.0385)
+   other_0 : median    -50.36  worst    -46.76   (per n: -0.0315)
+   hub_1   : median     -2.40  worst      4.68   (per n: -0.0015)
+   hub_0   : median    -51.24  worst    -47.13   (per n: -0.0320)
+   Wplus_exit_1              : median    172.72  worst    192.33
+   Wplus_exit_0              : median    119.84  worst    137.07
+   swapped_minus_complete_1  : median   -114.20  worst   -106.82
+== LH20 n=6400 (4 reps): max over x in W(S°), j in S°, l not in x of log-odds of the swap x -> x-j+l
+   unit_1  : median   -345.87  worst   -339.01   (per n: -0.0540)
+   unit_0  : median   -229.80  worst   -228.13   (per n: -0.0359)
+   other_1 : median   -306.36  worst   -301.90   (per n: -0.0479)
+   other_0 : median   -229.90  worst   -227.38   (per n: -0.0359)
+   hub_1   : median    -64.16  worst    -51.65   (per n: -0.0100)
+   hub_0   : median   -229.75  worst   -227.76   (per n: -0.0359)
+   Wplus_exit_1              : median    711.94  worst    742.26
+   Wplus_exit_0              : median    487.22  worst    511.50
+   swapped_minus_complete_1  : median   -539.09  worst   -534.21
+total time 184s

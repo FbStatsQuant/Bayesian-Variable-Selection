@@ -61,28 +61,31 @@ def run(name, ns, reps=10, seed=20261102):
                     key = "unit" if unit[l] == unit[j] else ("hub" if (Mm >> l) & 1 else "other")
                     best[key + "_1"] = max(best[key + "_1"], d1); best[key + "_0"] = max(best[key + "_0"], d0)
             res.update({k: float(v) for k, v in best.items()})
-            # --- exits from W+ : states y = x - j + b' (b' masked hub not in x); deletion of a second S° member,
-            #     or swap of a second S° member, endpoint odds
+            # --- exits from W+ := W ∪ {x - j + b' : x in W, j in S°, b' in M \ x}: membership mask over all states,
+            #     then every single deletion / swap from a W+ \ W state that lands OUTSIDE W+; endpoint log-odds.
+            Wp = W.copy()
+            for j in Sref:
+                for bp in M:
+                    need = Srm & ~np.int64(1 << j)
+                    Wp |= ((all_states & need) == need) & ((all_states & (1 << j)) == 0) & ((all_states & (1 << bp)) != 0) & ok
+            ys = all_states[Wp & ~W]
             ex1, ex0 = -np.inf, -np.inf
-            if len(M) >= 1:
-                for j in Sref:
-                    for bp in M:
-                        sel = (xs & (1 << bp)) == 0
-                        ys = (xs[sel] & ~np.int64(1 << j)) | np.int64(1 << bp)
-                        ys = ys[ok[ys]]
-                        for j2 in Sref:
-                            if j2 == j: continue
-                            y2 = ys & ~np.int64(1 << j2)
-                            ex1 = max(ex1, float((m.lg1[y2] - m.lg1[ys]).max())); ex0 = max(ex0, float((m.lg0[y2] - m.lg0[ys]).max()))
-                            for l in range(p):
-                                sel2 = (ys & (1 << l)) == 0
-                                if not sel2.any() or l == j2: continue
-                                y3 = y2[sel2] | np.int64(1 << l)
-                                okk = ok[y3]
-                                if okk.any():
-                                    ex1 = max(ex1, float((m.lg1[y3] - m.lg1[ys[sel2]])[okk].max()))
-                                    ex0 = max(ex0, float((m.lg0[y3] - m.lg0[ys[sel2]])[okk].max()))
-                        # also: is y = x - j + b' ever posterior-better than x + b'?  (should be <= -cn)
+            for j2 in range(p):
+                has = (ys & (1 << j2)) != 0
+                if not has.any(): continue
+                y2 = ys[has] & ~np.int64(1 << j2)
+                outm = (~Wp[y2]) & ok[y2]
+                if outm.any():
+                    ex1 = max(ex1, float((m.lg1[y2] - m.lg1[ys[has]])[outm].max())); ex0 = max(ex0, float((m.lg0[y2] - m.lg0[ys[has]])[outm].max()))
+                for l in range(p):
+                    if l == j2: continue
+                    sel2 = (y2 & (1 << l)) == 0
+                    if not sel2.any(): continue
+                    y3 = y2[sel2] | np.int64(1 << l)
+                    outm = (~Wp[y3]) & ok[y3]
+                    if outm.any():
+                        base = ys[has][sel2]
+                        ex1 = max(ex1, float((m.lg1[y3] - m.lg1[base])[outm].max())); ex0 = max(ex0, float((m.lg0[y3] - m.lg0[base])[outm].max()))
             res["Wplus_exit_1"] = ex1; res["Wplus_exit_0"] = ex0
             # return margin: F(x - j + b') - F(x + b')
             ret = -np.inf
