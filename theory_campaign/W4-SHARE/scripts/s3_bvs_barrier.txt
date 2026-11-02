@@ -1,0 +1,23 @@
+lambda_min(R) = 0.0039; lambda_min(R_S0) = 0.0041
+== PB(n=4000, J=80): blocks [[0, 1, 2, 3], [8, 9, 10, 11], [4, 5, 6, 7], [12, 13, 14, 15]]; pi(S0) = 0.938; HPM = {0,4,8,12}; pi0(S0) = 6.81e-09; start mode {12} (pi0 0.980)
+           {8,12}: F - F({12}) =   -6.26   log gamma0 diff =   -6.31
+           {0,12}: F - F({12}) =   -6.85   log gamma0 diff =   -6.85
+         {0,8,12}: F - F({12}) =  -12.40   log gamma0 diff =  -12.73
+         {0,4,12}: F - F({12}) =  -13.23   log gamma0 diff =  -13.23
+         {4,8,12}: F - F({12}) =  -12.02   log gamma0 diff =  -12.69
+       {0,4,8,12}: F - F({12}) =   67.04   log gamma0 diff =  -18.78
+   pi0(R_0) = 0.984; min over phi in [0,1] of q_phi(R_0) = 0.938; grid T = 19
+   LS0 from the start mode: stops at {12}; S0 scanned: False
+   100 final islands, N = 2500 (39s): S0 scored in 82/100 islands; P(n_T(R_0) = 0) = 0.00, median n_T(R_0)/N = 0.982; min_t log P_t (h = 1_R0): median -0.00, worst -0.08; log(Zhat/Z): median -67.1, max 3.5
+   one round at phi = 1 from {12}, 200000 particles: S0 proposals/evaluations = 0
+== PB(n=16000, J=80): blocks [[0, 1, 2, 3], [8, 9, 10, 11], [4, 5, 6, 7], [12, 13, 14, 15]]; pi(S0) = 0.968; HPM = {0,4,8,12}; pi0(S0) = 8.81e-10; start mode {12} (pi0 0.990)
+           {8,12}: F - F({12}) =   -6.93   log gamma0 diff =   -6.98
+           {0,12}: F - F({12}) =   -7.55   log gamma0 diff =   -7.55
+         {0,8,12}: F - F({12}) =  -13.75   log gamma0 diff =  -14.09
+         {0,4,12}: F - F({12}) =  -14.61   log gamma0 diff =  -14.62
+         {4,8,12}: F - F({12}) =  -13.36   log gamma0 diff =  -14.05
+       {0,4,8,12}: F - F({12}) =   67.06   log gamma0 diff =  -20.84
+   pi0(R_0) = 0.992; min over phi in [0,1] of q_phi(R_0) = 0.968; grid T = 19
+   LS0 from the start mode: stops at {12}; S0 scanned: False
+   100 final islands, N = 2500 (39s): S0 scored in 51/100 islands; P(n_T(R_0) = 0) = 0.00, median n_T(R_0)/N = 0.991; min_t log P_t (h = 1_R0): median -0.00, worst -0.04; log(Zhat/Z): median -67.1, max 3.8
+   one round at phi = 1 from {12}, 200000 particles: S0 proposals/evaluations = 0

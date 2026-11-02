@@ -1,0 +1,50 @@
+== design E1a: n=1000 c=0.5  blocks=[[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15]]
+   pi(S0)=0.930  HPM={0,4,8}  pi0(S0)=8.788e-06  start mode={0,3,4,8} (pi0=0.163, d(S0)-d(mode)=14.8)
+   pi0(R_d), inf_grid q_phi(R_d), pi(R_d): d=0: 0.003, 0.002, 0.930; d=1: 0.347, 0.347, 0.997; d=2: 0.772, 0.772, 1.000
+   grid: T=19 stages (pilot 12, forced 0); first phi's [0.1246 0.1247 0.2543 0.2544]
+   100 islands (41s): S0 first scored at stage 0: 0.02, stages 1-2: 0.98, stages 3..T: 0.00, terminal rounds: 0.00, never: 0.00
+   mechanism of first S0 score: gibbs:98, init:2
+   W=R0: P(n_T(W)=0)=0.000  median n_T/N=0.930  min_t log P_t: median -0.70, worst -1.19  max outsider fraction: median 0.999, worst 1.000
+   W=R1: P(n_T(W)=0)=0.000  median n_T/N=0.996  min_t log P_t: median 0.26, worst 0.23  max outsider fraction: median 0.651, worst 0.674
+   W=R2: P(n_T(W)=0)=0.000  median n_T/N=1.000  min_t log P_t: median 0.11, worst 0.10  max outsider fraction: median 0.228, worst 0.248
+   LT: log(Zhat/Z) median -0.002, min -0.040; P(Zhat/Z < 1/2) = 0.000
+== design E1b: n=1000 c=0.3  blocks=[[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15]]
+   pi(S0)=0.658  HPM={0,4,8}  pi0(S0)=1.860e-03  start mode={4,8} (pi0=0.568, d(S0)-d(mode)=7.3)
+   pi0(R_d), inf_grid q_phi(R_d), pi(R_d): d=0: 0.570, 0.546, 0.799; d=1: 0.955, 0.952, 0.981; d=2: 0.998, 0.997, 0.999
+   grid: T=13 stages (pilot 7, forced 0); first phi's [0.3003 0.3003 0.4861 0.4862]
+   100 islands (30s): S0 first scored at stage 0: 0.98, stages 1-2: 0.02, stages 3..T: 0.00, terminal rounds: 0.00, never: 0.00
+   mechanism of first S0 score: gibbs:2, init:98
+   W=R0: P(n_T(W)=0)=0.000  median n_T/N=0.800  min_t log P_t: median -0.05, worst -0.07  max outsider fraction: median 0.464, worst 0.482
+   W=R1: P(n_T(W)=0)=0.000  median n_T/N=0.981  min_t log P_t: median -0.00, worst -0.01  max outsider fraction: median 0.053, worst 0.060
+   W=R2: P(n_T(W)=0)=0.000  median n_T/N=0.999  min_t log P_t: median -0.00, worst -0.00  max outsider fraction: median 0.004, worst 0.006
+   LT: log(Zhat/Z) median 0.003, min -0.042; P(Zhat/Z < 1/2) = 0.000
+== design E1c: n=4000 c=0.3  blocks=[[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15]]
+   pi(S0)=0.965  HPM={0,4,8}  pi0(S0)=3.242e-10  start mode={0,2,3,4,7,8} (pi0=0.488, d(S0)-d(mode)=37.2)
+   pi0(R_d), inf_grid q_phi(R_d), pi(R_d): d=0: 0.000, 0.000, 0.965; d=1: 0.019, 0.019, 0.999; d=2: 0.272, 0.272, 1.000
+   grid: T=28 stages (pilot 17, forced 0); first phi's [0.0812 0.154  0.154  0.2217]
+   100 islands (54s): S0 first scored at stage 0: 0.00, stages 1-2: 1.00, stages 3..T: 0.00, terminal rounds: 0.00, never: 0.00
+   mechanism of first S0 score: gibbs:100
+   W=R0: P(n_T(W)=0)=0.000  median n_T/N=0.966  min_t log P_t: median 0.00, worst -0.12  max outsider fraction: median 1.000, worst 1.000
+   W=R1: P(n_T(W)=0)=0.000  median n_T/N=0.999  min_t log P_t: median 0.90, worst 0.86  max outsider fraction: median 0.980, worst 0.987
+   W=R2: P(n_T(W)=0)=0.000  median n_T/N=1.000  min_t log P_t: median 0.37, worst 0.35  max outsider fraction: median 0.729, worst 0.752
+   LT: log(Zhat/Z) median 0.004, min -0.070; P(Zhat/Z < 1/2) = 0.000
+== design E1d: n=4000 c=0.5  blocks=[[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15]]
+   pi(S0)=0.965  HPM={0,4,8}  pi0(S0)=3.959e-32  start mode={0,1,2,3,4,7,8} (pi0=0.809, d(S0)-d(mode)=93.6)
+   pi0(R_d), inf_grid q_phi(R_d), pi(R_d): d=0: 0.000, 0.000, 0.965; d=1: 0.000, 0.000, 0.999; d=2: 0.000, 0.000, 1.000
+   grid: T=32 stages (pilot 26, forced 0); first phi's [0.1241 0.2152 0.2879 0.3502]
+   100 islands (56s): S0 first scored at stage 0: 0.00, stages 1-2: 0.00, stages 3..T: 1.00, terminal rounds: 0.00, never: 0.00
+   mechanism of first S0 score: gibbs:100
+   W=R0: P(n_T(W)=0)=0.000  median n_T/N=0.966  min_t log P_t: median 0.00, worst 0.00  max outsider fraction: median 1.000, worst 1.000
+   W=R1: P(n_T(W)=0)=0.000  median n_T/N=1.000  min_t log P_t: median 0.00, worst 0.00  max outsider fraction: median 1.000, worst 1.000
+   W=R2: P(n_T(W)=0)=0.000  median n_T/N=1.000  min_t log P_t: median 0.00, worst 0.00  max outsider fraction: median 1.000, worst 1.000
+   LT: log(Zhat/Z) median -0.012, min -0.076; P(Zhat/Z < 1/2) = 0.000
+== design E1e: n=400 c=0.8  blocks=[[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15]]
+   pi(S0)=0.890  HPM={0,4,8}  pi0(S0)=1.442e-04  start mode={3,4,8} (pi0=0.238, d(S0)-d(mode)=16.0)
+   pi0(R_d), inf_grid q_phi(R_d), pi(R_d): d=0: 0.028, 0.010, 0.890; d=1: 0.498, 0.498, 0.992; d=2: 0.872, 0.872, 1.000
+   grid: T=18 stages (pilot 12, forced 0); first phi's [0.1301 0.1302 0.249  0.249 ]
+   100 islands (35s): S0 first scored at stage 0: 0.31, stages 1-2: 0.69, stages 3..T: 0.00, terminal rounds: 0.00, never: 0.00
+   mechanism of first S0 score: gibbs:69, init:31
+   W=R0: P(n_T(W)=0)=0.000  median n_T/N=0.891  min_t log P_t: median -1.07, worst -1.72  max outsider fraction: median 0.991, worst 0.994
+   W=R1: P(n_T(W)=0)=0.000  median n_T/N=0.992  min_t log P_t: median 0.02, worst 0.01  max outsider fraction: median 0.505, worst 0.523
+   W=R2: P(n_T(W)=0)=0.000  median n_T/N=1.000  min_t log P_t: median 0.03, worst 0.02  max outsider fraction: median 0.129, worst 0.146
+   LT: log(Zhat/Z) median -0.002, min -0.066; P(Zhat/Z < 1/2) = 0.000
