@@ -13,3 +13,6 @@ Locked proofs: [P1] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex,
 ## Observation (task 3): by Cauchy interlacing, anchored SE_w(m) <=> lambda_min(G_T) >= g0 for EVERY nonempty T with |T \ S0| <= m
    (T is a subset of S0 u (T\S0)). Same for SE_lambda(j0). So "anchoring" only buys s0 extra columns; the real weakenings are
    (1) normalised -> unnormalised for large sets, (2) size m_n -> m#, (3) normalised only up to j0.
+## step 3 — scripts/propD_independent.py: Prop D reproduced (brute-force m(S) == closed form to 1e-13; bound holds on E_n
+   108/108 small-n incl. adversarial y; P(E_n)=1, bound 100% at n up to 2e5; cutoffs 4/6/8/9). Constant 0.25157>=1/4 (margin 0.0016).
+## Idea to check: SE_lambda(j0) normalised is needed ONLY in lem:signal; cor:diff lower half and ongood(c) work with g0 (rho_n -> O(1) const).

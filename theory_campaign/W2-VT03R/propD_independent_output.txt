@@ -1,0 +1,15 @@
+Part A: brute-force enumeration (generic linear algebra) vs closed form
+   max |log m(S) - log m(S')| within a size class, and vs closed form: 1.07e-13
+   cases: 200; on E_n: 108; bound holds on E_n: 108/108; min tail/bound on E_n = 5.762
+Part B: closed form at large n (beta1 = 1, sigma = 1, alpha = 0.7), 200 replicate data sets per row
+      n       p     K   P(E_n)  bound_ok|E_n  min_m 2^m*tail (m<=16)  max_m 2^m*tail  cutoff m*(tail<=n^-1/2): min/med/max   0.5log2 n
+       50      50    25   1.000  200/200                          0.186           1.000    3/  3/  3                           2.82
+      200     200   100   1.000  200/200                          0.701           1.000    4/  4/  4                           3.82
+      200     500   100   1.000  200/200                          0.870           1.000    4/  4/  4                           3.82
+     2000    2000  1000   1.000  200/200                          0.966           1.000    6/  6/  6                           5.48
+    20000   20000 10000   1.000  100/100                          0.997           1.000    8/  8/  8                           7.14
+   200000  200000 100000   1.000  40/40                           1.000           1.000    9/  9/  9                           8.80
+Part C: analytic constants in W1's proof of Prop. D
+   sqrt(2/3)/(1/2+e^1.01) = 0.25157  (>= 1/4 needed: OK; margin 0.00157)
+   ((n+1)N+1)(N+2b0) <= 2nN^2 for 3<=n<1e5: True  (equivalent to n^2-3.02n+2>=0)
+   (n+1)/(nN) <= 2/n for 3<=n<1e5: True;  e^(2nu/n)=e^(1+0.02/n) <= e^1.01 for n>=2: True
