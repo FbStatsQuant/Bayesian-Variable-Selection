@@ -33,3 +33,76 @@ from arXiv PDFs downloaded to /tmp (not committed) or from `Papers/Core_bibliogr
   targets, the chain can get trapped at some local mode for an arbitrarily large amount of time."
 - Text: Example 3 (p = 3, X1'X2 = −0.8n): "π can be unimodal but decrease when we move towards the true model δ* by flipping a
   coordinate different from δ*" — a suppressor-type example, same mechanism as LH linked pairs.
+
+## N3. Mathews & Schmidler, "Finite sample complexity of SMC estimators on multimodal target distributions",
+## AAP 34(1):1199–1223 (2024) (venue from search snippet + Le Fay et al. ref list; UNVERIFIED pages). Read arXiv:2208.06672v1: abstract, §2, Thm 1, §6 (comparison with tempering).
+- Abstract (verbatim): "We prove finite sample complexities for sequential Monte Carlo (SMC) algorithms which require only local
+  mixing times of the associated Markov kernels. ... in such cases our approach establishes benefits of SMC over the
+  corresponding Markov chain Monte Carlo (MCMC) estimator. ... SMC provides a fully polynomial time randomized approximation
+  scheme for some difficult multimodal problems where the corresponding Markov chain sampler is exponentially slow."
+- Setting: partition A = {A_j} of X (typically modes); µ⋆ := min_v min_j µ_v(A_j) = smallest mass of any partition element
+  along the WHOLE bridge; W, Z bound incremental weights / normalising-constant ratios.
+- Thm 1: with N > ε^{-2}·max{3456 V W Z²/µ⋆ · log(64Vp/µ⋆), ...} particles and t > max_{v,j} τ_{v,j}(ε²/(16NV), 7) local
+  (restricted-to-A_j) mixing steps, |N^{-1}Σ f(X_V^i) − E_π f| ≤ ε with prob ≥ 3/4. (Constants transcribed from pdftotext;
+  check against PDF before quoting numerically.)
+- Applications are continuous (mixtures of log-concave densities with equal scales in a location-scale family). No binary/BVS example.
+- §6: compares with Woodard–Schmidler–Huber persistence/overlap: "dependence of N on γ(A) is quadratic ... rather than exponential in |A|".
+- READING FOR US: the particle cost scales like 1/µ⋆. In the masked regime the S₀ basin has start mass π₀(S₀) ≍ n^{-c/2}
+  (chain-masking law, Thm 2), so µ⋆ ≲ n^{-c/2} and this theorem would demand N ≳ n^{c/2} particles — it does NOT by itself
+  certify a fixed-N SMC in the masked regime. Our masked results get around µ⋆ by MCMC moves that leave the start mode,
+  which is a global-mixing (not local-mixing) mechanism.
+
+## N4. Woodard, Schmidler, Huber (2009b), "Sufficient conditions for torpid mixing of parallel and simulated tempering",
+## EJP 14:780–804, doi:10.1214/EJP.v14-638. Read: EJP PDF (maths.tcd.ie EMIS mirror, article 638), §3, Thm 3.1.
+- Persistence: γ(A, φ) = min{1, φ[A]/π[A]}; conductance Φ_P(A) = (1_A, P1_{A^c})_µ /(µ(A)µ(A^c)).
+- Thm 3.1 (stated "for any swapping or simulated tempering chain with a set of densities φ_k not necessarily tempered versions
+  of π"): for any A and k*, Gap(P_sc) ≤ 12 max{ max_{k≥k*} Φ_{T_k}(A), max_{k≥k*, l<k*} δ(A,k,l), max_{k<k*} γ(A,k) }-type
+  bound (and a 192·(·)^{1/4} bound for simulated tempering). Torpid mixing needs BOTH low persistence at the hot levels AND
+  low conductance (a metastable A) at the cold levels.
+- Verbatim: "If A has low persistence for small values of β, then a parallel or simulated tempering chain starting in A^c may
+  take a long time to discover A at high temperatures".
+- READING FOR US: the masked regime is exactly "low persistence of the S₀ basin under the start φ_0 = π₀". But on LH the
+  cold-level conductance is NOT small: the target is unimodal there (API-POS Prop U, enumeration), so Chang–Zhou Thm 1 gives
+  Gap ≥ 1/(c(ρ)M) and Cheeger gives Φ ≥ Gap. So WSH's torpidity mechanism does not bite on LH; it would bite only for a
+  family where the target itself has a second metastable mode (T37-type designs / study dilution?).
+
+## N5. Gamarnik & Zadik, "Sparse high-dimensional linear regression. Algorithmic barriers and a local search algorithm",
+## arXiv:1711.04952v2 (2019). Read: abstract, §1, §2.4 (LSA), Thm 2.7. (A related AoS 50(2) 2022 paper "Estimating squared
+## error and a phase transition" exists — seen only on projecteuclid listing, UNVERIFIED content.)
+- Model: X iid N(0,1) entries, k-sparse β*, noise N(0,σ²). n_alg := k log p; n* := 2k log p/log(2k/σ² + 1).
+- Abstract (verbatim): "nalg, up to a multiplicative constant factor, is a phase transition point for the appearance of a certain
+  Overlap Gap Property (OGP) over the space of k-sparse vectors ... if n > C nalg ... a very simple algorithm based on a local
+  search improvement rule is able both to ℓ2-stably recover the unknown vector β* and to infer correctly its support".
+- Thm 2.7: ∃ c, C: if n ≥ C n_alg and σ² ≤ c|β*|²_min min{log p/(log log p), k}, LSA (swap-type best-improvement local search
+  over k-sparse supports, from ANY k-sparse start) terminates with Support(β̂) = Support(β*), ‖β̂ − β*‖ ≤ σ, w.h.p.
+- OGP is presented as EVIDENCE of hardness (no MCMC lower bound is proved in this paper).
+- Study scale: S1 (iid design), s₀ = 14, n = 200: n/(s₀ log p) = 2.33 (p = 500), 2.07 (p = 1000). Constants c, C are
+  unspecified, so the study is not certifiably on either side.
+
+## N6. Zhou & Smith, "Rapid convergence of informed importance tempering", AISTATS 2022 (PMLR 151); arXiv:2107.10827v2. Read: §3, Assumption 1, Lemma 3, Thm 1.
+- Assumption 1 (verbatim): "max_x |N(x)| ≤ p^α ... There exist a state x*, an operator T : X → X and some constants ν > α
+  such that T(x) ∈ N(x) and π(T(x)) ≥ p^ν π(x) for each x ≠ x*."
+- Lemma 3: Gap(P) ≥ κ(p,α,ν) min_{x≠x*} P(x, T(x)), κ = ½{1 − p^{−(ν−α)/2}}³. Thm 1: Gap(Q_h) ≥ κ h(p^ν)/E_π[Z_h];
+  e.g. ≥ κ p^{ν−α}/2 for h = h_{+1}.
+- Same unimodal-with-strong-ratio hypothesis as YWJ/ZYVR/Chang–Zhou.
+
+## N7. Li, Smith, Zhou, "Importance is important: generalized Markov chain importance sampling methods", arXiv:2304.06251v2 (Oct 2024). Read: abstract, §1.
+- Rejection-free multiple-try / informed importance-sampling schemes on discrete spaces with "a general theory on its
+  complexity" (Thm 1: asymptotic-variance comparison with the M–H version given Gap(P̃) < 1). Variable selection is an example.
+  No new landscape condition; inherits the unimodal assumptions above.
+
+## N8. Atchadé, "Approximate spectral gaps for Markov chains mixing times in high dimensions", arXiv:1903.11745v2
+## (SIAM J. Math. Data Sci. 2021 per search snippet; venue UNVERIFIED). Read: abstract, H2, Thm 6 and discussion.
+- Abstract: "for well-chosen initial distributions the mixing time of the Gibbs sampler is polynomial in the dimension".
+- Thm 6: Gibbs sampler for spike-and-slab regression, initialised at ν0 = Π(·|δ^(i), z) with δ^(i) ⊇ δ̃* (a SUPERSET of the
+  truth with FP false positives); mixing time polynomial under H1 (well-specified, sub-Gaussian) and H2 (sparse-eigenvalue
+  condition on L_δ^{-1}, "rules out settings where a small number of columns of X have the same linear span as all the columns").
+- Verbatim: "the initialization strategy sometimes used in practice where δ^(i) is taken as the zero vector is sub-optimal,
+  and might result in Markov chain with exponential mixing times" (a suggestion, not proved).
+- READING FOR US: the closest published analogue of "the start matters": a warm start must CONTAIN S₀. Our masked start
+  is exactly a start whose mode does not contain S₀.
+
+## N9. Jiang, "From estimation to sampling for Bayesian linear regression with spike-and-slab prior", arXiv:2307.05558v1 (2023). Read: abstract, §1.1, Prop 2.8 heading.
+- Prop 2.8 (Gibbs convergence rate) under event E_s with a warm start "made possible by frequentist estimators"; Thm 3.7:
+  stochastic-localization sampler guarantee. Quotes YWJ's slow-mixing example as the reason for the size cap.
+  Venue UNVERIFIED.
