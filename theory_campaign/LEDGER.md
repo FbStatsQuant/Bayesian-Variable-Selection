@@ -120,3 +120,6 @@ Key landings: O-BGIBBS Theorem BG3 (no-LS0 masked discovery on LH, p fixed, PROV
 
 ### 20:33 UTC: O-LS0 data check DONE (theory/O-LS0 @ 02348e2; coverage complete, 2,400 fits)
 LS0 changes the reported HPM in 0 / 2,394 completed fits; exact recovery unchanged (1,119/1,200 at c=1; 710/1,200 at c=0.5); cost 0.2–0.4 s per fit (<0.1%). Safety half of the investment rule PASSES on the full study. Felipe's conditional approval of LS0 is therefore effective. Caveat: most T38 premises fail at n=200 (π₀(S̃₀)>½ in 18/2,400; move cap in 1,968/2,400) — the theory value is asymptotic, as disclosed.
+
+### 20:35 UTC: CREDITS EXHAUSTED — no more cloud sessions
+Felipe's reading: $21 of $250 left; weekly plan 84% used (resets 21:00 UTC). Stop rule reached; W8-SYNTH (final synthesis) is the last credit session. From now on, work runs on subscriptions (balance CW/CP) and the launcher `launch_cloud.sh` must not be used.
