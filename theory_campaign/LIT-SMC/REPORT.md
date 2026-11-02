@@ -26,6 +26,8 @@ Our-side IDs follow `W8-SYNTH · BRIEF.md/SYNTHESIS.md`, `T38-RECORD · T38_STAT
    Markov's inequality, as used in Grosse–Ghahramani–Adams 2015. The genuinely non-standard items in Prop 2 are the
    negative ones: pooled × pooled is not an identity, and E[Ẑ | completed] ≠ Z. The second is consistent with Dai et
    al.'s warning that adaptation "may not preserve the unbiasedness".
+   O-PW2 Theorem A (exact variance identity) appears to be of the same kind as Cérou–Del Moral–Guyader 2011, Thm 1.4
+   (an exact second-moment decomposition with no assumptions). See §3A; this is a reading, not checked by derivation.
 4. **Gap: nobody proves discovery.** In everything I read, no SMC theorem addresses whether the run *scores* a given state,
    or whether the reported best-scored model is correct. The general finite-sample theory (Marion–Mathews–Schmidler 2023;
    Mathews–Schmidler 2024; Le Fay–Chopin–Vihola 2026; Paulin–Jasra–Thiery 2019) needs two things: bounded successive χ²
