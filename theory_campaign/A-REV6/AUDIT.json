@@ -5,11 +5,14 @@
   "review_file_sha256": {
     "BOOK.md": "4100a358c405462780fd03128a310a54c51b96a7e5805d1c8f02ab3ce39f65bd",
     "PARTITION.md": "cbc935cbda073e3da42a37ed827d88f1164c096bfd1f9034814d2ac2b3d4d002",
-    "REVIEW.md": "3c21b0bbade5e90dced9b96d384529cfa6f5554fbf32533685ba4666cb71dc07",
-    "SHARE.md": "554e7f9bc770e57c2a6ed74399958e372852847686da16182b8430a1ce14477a",
-    "STATUS.md": "3e460babd9017bc4c6a262c06d324cd33b063b19351df836a997c060c87f445a",
-    "WEIGHTS.md": "2ff65f0150d1fe9e472615d09b801a34af5daddc5a032f297bb56362bd726568"
+    "REVIEW.md": "8f85b5cc5a42e76a951bd9ca3b640dc2e376983d6c3b1206efaffac694ff8dbc",
+    "SHARE.md": "13a33f1235875f5b1bf73b13f9cca301dad30133338aeb4390f2add91fe632c1",
+    "STATUS.md": "375ebb2e35ee31a429327f2c156201c2149dccaec73bf066c041fd87b1ae196f",
+    "WEIGHTS.md": "34b065e5f83ab96d0799d936d049f0cf287394d8a5c70502c2a3a169358265f2"
   },
   "validation": "Administrative source-integrity and document checks only; no numerical workload",
-  "compute_runs": []
+  "compute_runs": [],
+  "hash_scope": "Committed Git blob bytes, before this metadata-only audit commit",
+  "review_content_head": "6e24333d13b10202c65190b766f6cc286adcc65d",
+  "committed_source_sha256_all_match": true
 }
