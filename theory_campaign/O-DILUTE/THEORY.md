@@ -174,7 +174,9 @@ response (v3 §6.3). For every data set and partition:
 In Gaussian designs that are block-orthogonal in population, a truth alone in its block has λ_j ≈ ½χ²₁(nρ_j²) − ½ log n
 − log(2p/s₀), with ρ_j² = (1 − κ_j)x_j ≤ ω_j (dilution; saturating in the signal scale), while every null of a truth-free
 block has λ_l ≈ ½χ²₁ − ½ log n − log(2p/s₀) exactly in law (Lemma N). At the study's n = 200, s₀ = 14, p ∈ {500, 1000}, about
-half of the truths have λ_j < 0 (V_t ≈ 20–50 nats) while E_{π₀}[M] ≈ 1: π₀(S₀) is 10^{−10}–10^{−25} while π₀(R₂) ≈ 0.5–0.95.
+half of the truths have λ_j < 0 (V_t ≈ 20–50 nats) while E_{π₀}[M] ≈ 0.7–3.8: the per-cell median π₀(S₀) is
+10^{−11}–10^{−26} while π₀(R₂) has median 0.79 (0.2–0.96 per cell; lowest in S4, where the start keeps proxies of truths,
+which R_d counts as extras).
 This is the regime of T38(b): the start is masked, but its mass is on the near-truth region R_d — through **subsets** of S₀
 that are 6–11 additions from S₀ — so delivery must come from the bridge and the Gibbs/addition moves, not from iid start
 draws.
