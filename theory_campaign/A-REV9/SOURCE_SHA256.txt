@@ -1,0 +1,22 @@
+﻿
+Hash                                                             Path                                                                                                                       
+----                                                             ----                                                                                                                       
+BB629ABAD8221D7E6D108E141DB3DD50091E92D7B389B4491AD7456DF8EFFA06 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\F-MASKPIP_REPORT.md  
+638BD73A70CDEC43030EE388895C6C5C4D70110AD9449E7E8BED189ACEC534A7 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\O-CERT_REPORT.md     
+4E522811268375D89D66614733FC672D8C419FA0CBA58E380BC0264477FC1B86 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\O-DILUTE_REPORT.md   
+4A32418ED3BF558B74F77E83DCB340804F6D15DBA74C3C49FAD1F898714CB9DE C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\O-PW2_REPORT.md      
+54BEA70FC985897A5039A1A40D0B1C416300888226D409D501C54F2DD578B0B6 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\O-STAGES_REPORT.md   
+9A41EE13C66F4F05AFEEA2E4E1409F685D52BBBB6C4D487D449E7DF10F267B54 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\O-SWAP_REPORT.md     
+A80EAB71D4292CAE341779D17F14BD44F40080FBF94C1BA763CF2DA319771B43 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\O-VCERT_REPORT.md    
+F1812B66F0B29942A6A8733D77DE4B34C61B4A9703D37914DAAA33ADC5160872 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\O-WSTAB_PROOF.md     
+B002A3FB5F9326AA1FC82301A2C9D65763FC5DA0A81B454EE7D9B19B0B4CB250 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\O-WSTAB_REPORT.md    
+EA85D6400FC74EC3B1E5B22AF68724381D34366754D25410A8E4259452296A06 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\W7-PART_PROOF.md     
+28A78E089771EE0380464B7BF0B88A09459549D65A8EF1FC0DBE44C9F8FDB914 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\W7-PART_REPORT.md    
+1C53476DC59DA0D23F5B723216915E5544C21E7981BBA7C4A42D2CFA6D3E328A C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\W7-SEC_REPORT.md     
+92001E8EA0CD297627BF146F0F7B5E213D6B96F55FE3AFB23E225207B25FCB2E C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\W7-SEP_PROOF.md      
+C845B83199A033B1548B4FA47FD35196E097DF71F479A52B9120549B43444421 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\W7-SEP_REPORT.md     
+79A7A0614C5CFB6B865E233956440D8FC1DB5852E0513F9801A8D9F6041A446E C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\W8-SYNTH_REPORT.md   
+6A35489B0AFFB240156FC8EC8757FA4BEF7B6432097EF7D3BB68FCD962BC5A89 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\theory_campaign\A-REV9\sources\W8-SYNTH_SYNTHESIS.md
+
+
+
