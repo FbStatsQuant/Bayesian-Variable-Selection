@@ -1,0 +1,25 @@
+A = 1.0: superset penalty kappa = 1 + 1/(2A) = 1.5
+d=2: (*) r < 0.1112 [rho*_d = 0.1492];  (*'a) r < 0.2000;  (*'b) r < 0.1430;  (*') r < 0.1430;  grouped family FAILS for r > 0.3333; C-LD fails for r > 0.5
+d=3: (*) r < 0.0771 [rho*_d = 0.1243];  (*'a) r < 0.1112;  (*'b) r < 0.0911;  (*') r < 0.0911;  grouped family FAILS for r > 0.1531
+d=4: (*) r < 0.0590 [rho*_d = 0.1087];  (*'a) r < 0.0771;  (*'b) r < 0.0668;  (*') r < 0.0668;  grouped family FAILS for r > 0.1000
+
+d = 2 detail: sup t^2/(2 log p) achievable in families vs the (*'a) bound tau_1^2 = (1+r)/(1-r)
+  r=0.050: C-LD 1+r = 1.0500; grouped (1+3r)/(1+r) = 1.0952; LD-rate relaxation = 1.0948; local/far bound (1+r)/(1-r) = 1.1053
+  r=0.100: C-LD 1+r = 1.1000; grouped (1+3r)/(1+r) = 1.1818; LD-rate relaxation = 1.1818; local/far bound (1+r)/(1-r) = 1.2222
+  r=0.200: C-LD 1+r = 1.2000; grouped (1+3r)/(1+r) = 1.3333; LD-rate relaxation = 1.3333; local/far bound (1+r)/(1-r) = 1.5000
+  r=0.250: C-LD 1+r = 1.2500; grouped (1+3r)/(1+r) = 1.4000; LD-rate relaxation = 1.3998; local/far bound (1+r)/(1-r) = 1.6667
+  r=0.333: C-LD 1+r = 1.3333; grouped (1+3r)/(1+r) = 1.5000; LD-rate relaxation = 1.4999; local/far bound (1+r)/(1-r) = 2.0000
+  r=0.400: C-LD 1+r = 1.4000; grouped (1+3r)/(1+r) = 1.5714; LD-rate relaxation = 1.5712; local/far bound (1+r)/(1-r) = 2.3333
+  r=0.500: C-LD 1+r = 1.5000; grouped (1+3r)/(1+r) = 1.6667; LD-rate relaxation = 1.6667; local/far bound (1+r)/(1-r) = 3.0000
+  r=0.700: C-LD 1+r = 1.7000; grouped (1+3r)/(1+r) = 1.8235; LD-rate relaxation = 1.8235; local/far bound (1+r)/(1-r) = 5.6667
+
+first order in r (d = 2): grouped excess 2r/(1+r) ~ 2r; local/far excess 2r/(1-r) ~ 2r -> same slope.
+  d=2: slope at r=0 of achievable excess 1.9998  vs  local/far bound 2.0002
+  d=3: slope at r=0 of achievable excess 3.9994  vs  local/far bound 4.0004
+  d=4: slope at r=0 of achievable excess 5.9988  vs  local/far bound 6.0006
+
+large-A asymptotics of the thresholds (d = 2): (*'a) r < 1/(4A+1); grouped fails for r > 1/(4A-1); ratio -> 1
+  A=1: (*) 0.1112  (*'a) 0.2000  (*'b) 0.1430  grouped-fail 0.3333  C-LD-fail 0.5000   ratio grouped/(*'a) = 1.667, C-LD/(*) = 4.50
+  A=2: (*) 0.0588  (*'a) 0.1111  (*'b) 0.0770  grouped-fail 0.1429  C-LD-fail 0.2500   ratio grouped/(*'a) = 1.286, C-LD/(*) = 4.25
+  A=4: (*) 0.0303  (*'a) 0.0588  (*'b) 0.0400  grouped-fail 0.0667  C-LD-fail 0.1250   ratio grouped/(*'a) = 1.133, C-LD/(*) = 4.12
+  A=8: (*) 0.0154  (*'a) 0.0303  (*'b) 0.0204  grouped-fail 0.0323  C-LD-fail 0.0625   ratio grouped/(*'a) = 1.065, C-LD/(*) = 4.06

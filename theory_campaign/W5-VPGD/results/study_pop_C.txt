@@ -1,0 +1,6 @@
+p=30 S1 (D = all nulls, R_{2,2}): eta_hat=0.1975 (N5 swap truth->truth); TRC_min=0.1975; GERC_max=0.0000; Cor P2' formula d=2: 0.1975
+p=30 S2 (D = all nulls, R_{2,2}): eta_hat=0.1264 (N5 swap truth->truth); TRC_min=0.1264; GERC_max=0.8000
+p=30 S3 (D = all nulls, R_{2,2}): eta_hat=0.0837 (N5 swap truth->truth); TRC_min=0.0837; GERC_max=0.7000; Cor P2' formula d=2: 0.0837
+p=30 S4 (D = all nulls, R_{2,2}): eta_hat=0.0432 (N5 swap truth->truth); TRC_min=0.0432; GERC_max=0.8500; Cor P2' formula d=2: 0.0432
+p=30 S5 (D = all nulls, R_{2,2}): eta_hat=0.0991 (N5 swap truth->truth); TRC_min=0.0991; GERC_max=0.7468
+p=30 S6 (D = all nulls, R_{2,2}): eta_hat=0.0571 (N5 swap truth->truth); TRC_min=0.0571; GERC_max=0.8000; Cor P2' formula d=2: 0.0571

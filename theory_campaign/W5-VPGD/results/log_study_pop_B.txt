@@ -1,0 +1,10 @@
+  size 11 done; states so far 0 max ratio -inf
+  size 12 done; states so far 91 max ratio 0.833402748854644
+  size 13 done; states so far 5201 max ratio 0.880514403936989
+  size 14 done; states so far 146125 max ratio 0.8920983642005021
+  size 15 done; states so far 167685 max ratio 0.8920983642005021
+S5 (p=500, R_{2,2}(D), 71 cols): eta_hat=0.1079 binding N5 swap truth->truth at [2, 36, 73, 105, 140, 141, 144, 212, 246, 283, 315, 354, 422, 456]; TRC_min=0.1079; GERC_max(R_{3,2})=0.6501 => GERC eta1=0.5773
+  size 11 done; states so far 0 max ratio -inf
+  size 12 done; states so far 91 max ratio 0.8024691358944517
+  size 13 done; states so far 5201 max ratio 0.8518518519208388
+  size 14 done; states so far 146125 max ratio 0.8518518519208388

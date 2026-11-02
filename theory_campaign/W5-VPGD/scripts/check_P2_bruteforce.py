@@ -107,59 +107,60 @@ def eta_formula(rhos_truth, thetas, b, d):
     return min(v1, v3)
 
 
-lines = []
-# (i)+(ii): block designs, 3 truth groups of 5 + one pure-null group, truths at position 0 of their group
-cases = [([.85, .85, .85, 0], [1.4, -1.0, 1.8]), ([.4, .7, .9, .3], [0.8, -1.6, 1.4]), ([.6, .0, .8, .5], [1.0, 1.0, -1.2])]
-for rhos, ths in cases:
-    Sig = block_sigma(rhos)
-    p = Sig.shape[0]
-    truth = [0, 5, 10]
-    th = np.zeros(p); th[truth] = ths
-    extras = [x for x in range(15) if x not in truth]          # D = all mates
-    groups = {g: list(range(5 * g, 5 * g + 5)) for g in range(4)}
-    truth_of = {0: 0, 1: 5, 2: 10, 3: None}
-    for d in (1, 2):
-        for a in (1, 2):
-            eb, trc_b = brute_pgd(Sig, th, truth, extras, a, d)
-            sc = scan(Sig, th, truth, extras, a, d)
-            e123 = eta_B123(Sig, th, groups, truth_of, set(extras), d)
-            ef = eta_formula(rhos[:3], ths, 5, d)
-            lines.append(f"rhos={rhos} theta={ths} a={a} d={d}: eta brute={eb:.6f} scan={sc['eta']:.6f} "
-                         f"(B1-B3)={e123:.6f} formula={ef:.6f} | TRC brute={trc_b:.6f} scan={sc['trc_min']:.6f} "
-                         f"| binding {sc['worst_type']}")
-# non-block random design: scan vs brute force
-for rep in range(3):
-    c = 9
-    A = rng.standard_normal((c, 30)); Sig = A @ A.T / 30; dd = np.sqrt(np.diag(Sig)); Sig = Sig / dd[:, None] / dd[None]
-    truth = [0, 3, 6]; th = np.zeros(c); th[truth] = rng.uniform(.5, 2, 3) * rng.choice([-1, 1], 3)
-    extras = [1, 2, 4, 5, 7, 8]
-    eb, trc_b = brute_pgd(Sig, th, truth, extras, 2, 2)
-    sc = scan(Sig, th, truth, extras, 2, 2)
-    lines.append(f"random rep {rep}: eta brute={eb:.6f} scan={sc['eta']:.6f} | TRC brute={trc_b:.6f} scan={sc['trc_min']:.6f}")
-# (iii) GERC: direct ERC(S, l) = sum_j |c_j| ||x~_j|| / ||x~_l|| from explicit residual vectors
-from popcheck import erc_batch
-for rep in range(3):
-    c = 9; n_ = 60
-    X = rng.standard_normal((n_, c)) @ rng.standard_normal((c, c)) * 0.3 + rng.standard_normal((n_, c))
-    X = X / np.linalg.norm(X, axis=0)
-    Sig = X.T @ X
-    truth = [0, 3, 6]; is_t = np.zeros(c, bool); is_t[truth] = True
-    worst_diff = 0.0
-    for S in [(), (1,), (0, 2), (3, 4, 8), (0, 1, 5)]:
-        S = list(S)
-        M = [t for t in truth if t not in S]
-        P = X[:, S] @ np.linalg.pinv(X[:, S]) if S else np.zeros((n_, n_))
-        R = X - P @ X
-        best = -np.inf
-        for l in range(c):
-            if l in S or l in truth:
-                continue
-            coef = np.linalg.lstsq(R[:, M], R[:, l], rcond=None)[0]
-            erc = sum(abs(coef[k]) * np.linalg.norm(R[:, M[k]]) for k in range(len(M))) / np.linalg.norm(R[:, l])
-            best = max(best, erc)
-        inS = np.zeros((1, c), bool); inS[0, S] = True
-        got = erc_batch(Sig, np.array([S]).reshape(1, len(S)), inS, is_t)[0]
-        worst_diff = max(worst_diff, abs(got - best))
-    lines.append(f"GERC rep {rep}: max |erc_batch - direct| = {worst_diff:.2e}")
-open('../results/check_P2_bruteforce.txt', 'w').write('\n'.join(lines) + '\n')
-print('\n'.join(lines))
+if __name__ == '__main__':
+    lines = []
+    # (i)+(ii): block designs, 3 truth groups of 5 + one pure-null group, truths at position 0 of their group
+    cases = [([.85, .85, .85, 0], [1.4, -1.0, 1.8]), ([.4, .7, .9, .3], [0.8, -1.6, 1.4]), ([.6, .0, .8, .5], [1.0, 1.0, -1.2])]
+    for rhos, ths in cases:
+        Sig = block_sigma(rhos)
+        p = Sig.shape[0]
+        truth = [0, 5, 10]
+        th = np.zeros(p); th[truth] = ths
+        extras = [x for x in range(15) if x not in truth]          # D = all mates
+        groups = {g: list(range(5 * g, 5 * g + 5)) for g in range(4)}
+        truth_of = {0: 0, 1: 5, 2: 10, 3: None}
+        for d in (1, 2):
+            for a in (1, 2):
+                eb, trc_b = brute_pgd(Sig, th, truth, extras, a, d)
+                sc = scan(Sig, th, truth, extras, a, d)
+                e123 = eta_B123(Sig, th, groups, truth_of, set(extras), d)
+                ef = eta_formula(rhos[:3], ths, 5, d)
+                lines.append(f"rhos={rhos} theta={ths} a={a} d={d}: eta brute={eb:.6f} scan={sc['eta']:.6f} "
+                             f"(B1-B3)={e123:.6f} formula={ef:.6f} | TRC brute={trc_b:.6f} scan={sc['trc_min']:.6f} "
+                             f"| binding {sc['worst_type']}")
+    # non-block random design: scan vs brute force
+    for rep in range(3):
+        c = 9
+        A = rng.standard_normal((c, 30)); Sig = A @ A.T / 30; dd = np.sqrt(np.diag(Sig)); Sig = Sig / dd[:, None] / dd[None]
+        truth = [0, 3, 6]; th = np.zeros(c); th[truth] = rng.uniform(.5, 2, 3) * rng.choice([-1, 1], 3)
+        extras = [1, 2, 4, 5, 7, 8]
+        eb, trc_b = brute_pgd(Sig, th, truth, extras, 2, 2)
+        sc = scan(Sig, th, truth, extras, 2, 2)
+        lines.append(f"random rep {rep}: eta brute={eb:.6f} scan={sc['eta']:.6f} | TRC brute={trc_b:.6f} scan={sc['trc_min']:.6f}")
+    # (iii) GERC: direct ERC(S, l) = sum_j |c_j| ||x~_j|| / ||x~_l|| from explicit residual vectors
+    from popcheck import erc_batch
+    for rep in range(3):
+        c = 9; n_ = 60
+        X = rng.standard_normal((n_, c)) @ rng.standard_normal((c, c)) * 0.3 + rng.standard_normal((n_, c))
+        X = X / np.linalg.norm(X, axis=0)
+        Sig = X.T @ X
+        truth = [0, 3, 6]; is_t = np.zeros(c, bool); is_t[truth] = True
+        worst_diff = 0.0
+        for S in [(), (1,), (0, 2), (3, 4, 8), (0, 1, 5)]:
+            S = list(S)
+            M = [t for t in truth if t not in S]
+            P = X[:, S] @ np.linalg.pinv(X[:, S]) if S else np.zeros((n_, n_))
+            R = X - P @ X
+            best = -np.inf
+            for l in range(c):
+                if l in S or l in truth:
+                    continue
+                coef = np.linalg.lstsq(R[:, M], R[:, l], rcond=None)[0]
+                erc = sum(abs(coef[k]) * np.linalg.norm(R[:, M[k]]) for k in range(len(M))) / np.linalg.norm(R[:, l])
+                best = max(best, erc)
+            inS = np.zeros((1, c), bool); inS[0, S] = True
+            got = erc_batch(Sig, np.array([S]).reshape(1, len(S)), inS, is_t)[0]
+            worst_diff = max(worst_diff, abs(got - best))
+        lines.append(f"GERC rep {rep}: max |erc_batch - direct| = {worst_diff:.2e}")
+    open('../results/check_P2_bruteforce.txt', 'w').write('\n'.join(lines) + '\n')
+    print('\n'.join(lines))

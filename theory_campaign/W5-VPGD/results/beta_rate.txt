@@ -1,0 +1,8 @@
+r=0.100: sup (beta)-rate ~ 1.8932   (fails iff > 3)
+r=0.200: sup (beta)-rate ~ 1.8584   (fails iff > 3)
+r=0.300: sup (beta)-rate ~ 1.8949   (fails iff > 3)
+r=0.333: sup (beta)-rate ~ 1.9378   (fails iff > 3)
+r=0.400: sup (beta)-rate ~ 2.0020   (fails iff > 3)
+r=0.500: sup (beta)-rate ~ 2.1335   (fails iff > 3)
+r=0.600: sup (beta)-rate ~ 2.2423   (fails iff > 3)
+r=0.800: sup (beta)-rate ~ 2.2995   (fails iff > 3)

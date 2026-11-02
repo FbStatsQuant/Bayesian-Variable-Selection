@@ -70,7 +70,7 @@ def scan(Sig, th, truth_idx, extras, a, d, gerc_a=None, batch=512, amin=1, verbo
     for s, lst in sorted(by.items()):
         for b0 in range(0, len(lst), batch):
             chunk = lst[b0:b0 + batch]
-            idx = np.array([S for S, _, _ in chunk]).reshape(len(chunk), s)
+            idx = np.array([S for S, _, _ in chunk], dtype=int).reshape(len(chunk), s)
             mm = np.array([m for _, m, _ in chunk])
             o = E.eval(idx, ld=False)
             inS = o['inS']
