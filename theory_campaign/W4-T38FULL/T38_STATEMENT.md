@@ -88,7 +88,7 @@ The first form is the stronger one: it says P(𝒪 ∩ {Ŝ⁺ = S₀}) = P(𝒪)
 - **What holds.** On LH:
   - (P), (M1), (M2) (with a fixed margin m₀ > 0) and (M3) all hold;
   - π₀(S₀) = p^{−c} n^{−c/2} e^{O_P(1)};
-  - Q_f π₀(S₀) → 0 for c ≥ 2, and also for c = 1 when p/√n → ∞. So route (a) does not apply.
+  - Q_f π₀(S₀) → 0 when c ≥ 2 and p → ∞, and also for c = 1 when p/(√n log²n) → ∞. So the final run's iid draws miss S₀ with probability → 1, and route (a) does not apply.
 - **Conclusion.** With LS0, P(𝒪 ∩ {Ŝ⁺ ≠ S₀}) → 0, with no statistical hypothesis left open.
 
 **(c) Cost.** The number of score evaluations is bounded deterministically by T32(i)'s ceiling, plus (ℓ+1)·max_{k≤K}[p + k(p−k)] for LS0. Under the v3 budgets this is O((n+p)(p+B)log²n + p²log²n), which is polynomial in n under R1.
@@ -178,7 +178,7 @@ Status words used in this table:
 | d1 | Lemma S (ESS share, tight); ESS non-increasing in φ | [W1-T38E §3] | PROVED | VERIFIED (W3-VT38E) |
 | d2 | Lemma A (Gibbs change probability ≤ max endpoint odds) | [W1-T38E §1] | PROVED | VERIFIED (2,048,000 cases) |
 | d3 | Theorem D2 with NB′ and r* = (11+2√10)/9 | [W1-T38E §4] + repair [W3-VT38E §3.1] | PROVED | VERIFIED after the constant repair |
-| d4 | D2's statistical instance (Dep < 1 − c₁, NB′, π₀(x°) > 1/10 w.p. → 1) on a masked family | T38_PROOF §4.2 (sketch on LH, c = 1) | PROOF SKETCH (LH, c = 1, p/√n → ∞); otherwise CONJECTURE | — |
+| d4 | D2's statistical instance (Dep < 1 − c₁, NB′, π₀(x°) > 1/10 w.p. → 1) on a masked family | T38_PROOF §4.2 (sketch on LH, c = 1) | PROOF SKETCH (LH exact Gram, c = 1, p/(√n log²n) → ∞); otherwise CONJECTURE | — |
 | d5 | pilot engine facts (pilot_next_phi, order, resampling) | [W3-VT38E §4] | IMPL | faithful |
 
 ### II.5 Part (b2): Gibbs-path route
