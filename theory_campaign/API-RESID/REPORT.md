@@ -157,4 +157,83 @@ T38(b)'s eligibility premise is π₀(R_d) ≥ b_n, which O-DILUTE showed holds 
 it would hold in most cells but **fail visibly in S5**. So backfit is not a pure improvement of the start law. It trades
 near-truth mass for exact-truth mass, and the trade goes badly in S5.
 
-*(Sections 3.4–5 follow.)*
+### 3.4 Is 3 sweeps a fixed point?
+
+*(Pending: `scripts/resid_sweeps.R`, up to 10 sweeps; filled in below when the job finishes.)*
+
+From the main run alone, 3 sweeps is clearly not 1 sweep. From sweep 1 to sweep 3 the median π₀(S₀) rises by 5.9 decades,
+the mode size changes in 2,264/2,400 fits, and mode = S₀ goes from 27 to 1,245. Sweep 2 was not recorded, so the main run
+cannot say whether sweep 3 has settled.
+
+## 4. What a start change can and cannot do for the study's numbers
+
+The study outcome of each fit is taken from O-LS0 (`agg_final/paired_per_fit.csv`, `prod_class`): 1,829 exact recovery,
+565 posterior miss, 6 no final ledger (resource limit). Cross-tabulated with the backfit start (`extra_tables.md` (c)):
+
+| study outcome | n | med log₁₀π₀(S₀) v3 → resid3 | resid3 favourable | resid3 mode = S₀ | med π₀(R₂) v3 → resid3 |
+|---|---|---|---|---|---|
+| exact recovery | 1,829 | −15.23 → −0.82 | 1,537 | 1,198 | 0.82 → 0.75 |
+| posterior miss | 565 | −16.94 → −2.83 | 349 | 45 | 0.77 → 0.47 |
+| resource limit | 6 | −33.26 → −12.46 | 2 | 2 | 0.00 → 0.03 |
+
+- **Posterior misses (565).**
+  - S₀ was scored in each of these runs and another model had a higher posterior. The posterior does not depend on the
+    start, so no start change can make these runs report S₀.
+  - A start that concentrates on S₀ here (45 fits) only means the sampler must move *away* from S₀ to reach the HPM.
+- **Exact recoveries (1,829).**
+  - These are already right.
+  - A better start can, in principle, make the run score a model that beats S₀ which the study run never reached (a
+    posterior-mode correction). That turns a correct report into a wrong one. This is the same one-sided risk that S-ELS
+    identified for LS0 and that O-LS0 measured for it.
+  - Step 0 cannot measure this risk. Only an SMC run can.
+- **Resource-limit fits (6, all S5).** These are the only fits where a start change could turn a failure into an exact
+  recovery. Backfit puts its mode on S₀ in 2 of them (p1000_S5_r030 c = 1, p1000_S5_r064 c = 1). In the other 4 it does
+  not (7–8 truths of 9–12). Whether those 2 runs would then finish within resources is unknown without SMC.
+
+So **the upper bound on what any start change can add to the study's HPM = S₀ count is 6/2,400 (0.25%)**, and backfit's
+start law reaches S₀ in 2 of those 6. There are also no search misses in the study, so the start does not limit accuracy
+anywhere else. What a favourable start *can* change is:
+- (a) whether the paper may say the start is in T22(iii)'s favourable regime at the study size, which is currently false
+  (0/2,400 favourable for v3);
+- (b) sampler cost and stability: stage count, first-stage ESS, run time, and possibly the S5 resource-limit stops.
+
+Step 0 cannot evaluate (b).
+
+## 5. Recommendation to Felipe, and status
+
+**Common σ̂²: reject; no pilot.**
+- F-SIGMA's pre-registered stop rule fired: flooding is seen.
+- The feasible plug-ins that do not flood gain nothing.
+
+**Residualised (backfit) tables: Step 0 passes on its own terms, but the case for an investment-rule pilot is narrow.**
+- **For:**
+  - The start-law effect is large and real on the PROD-H fits themselves. It is favourable in 1,888/2,400 fits, against
+    0 for v3, and it replicates the O-DILUTE pilot exactly.
+  - It is the only start change seen in the campaign that attacks dilution.
+- **Against:**
+  - It cannot improve the headline recovery numbers beyond 6 fits.
+  - It carries a one-sided risk on the 1,829 correct fits.
+  - It fails in S5 and loses near-truth mass there.
+  - It has no theorem. T22(iii) would need restating, and validity rests on F-DRAFT Prop P(i) (positive, product-form,
+    data-measurable tables), which O-DILUTE §9 argued but which no one has written out for these tables.
+- **My reading.** A pilot is worth running **only if** Felipe wants either the "favourable start at n = 200" statement
+  for the paper, or evidence on sampler cost and stability. If the goal is better recovery numbers, Step 0 says no.
+
+**If a pilot is run.** Adapting F-SIGMA §10 Step 1, the smallest informative design is:
+- paired datasets, same seeds, v3 vs backfit start, with the sweep rule fixed in advance (§3.4);
+- cells: S4 p = 500 at c = 0.5 and c = 1 (one graded, one strong), S5 p = 1,000 c = 1 (the weak cell, which also
+  contains 4 of the 6 resource-limit fits), and the 6 resource-limit fits themselves;
+- 20 datasets per cell;
+- record HPM = S₀, *harm* (exact → wrong, paired), π₀(S₀), first-stage ESS, stage count and run time;
+- pass criterion: no paired harm beyond 1 dataset per cell, together with a measurable cost or stability gain.
+
+**Status: nothing upgraded.**
+
+| item | before | after this run |
+|---|---|---|
+| Common σ̂² start (W8-SYNTH §4.5) | rejected on O-DILUTE/F-SIGMA evidence; "Step 0 would confirm" | rejected; **Step 0 done and confirms on the 2,400 real fits** (flooding under C-fix and oracle; no feasible plug-in favourable) |
+| F-SIGMA Thm S6 | PROVED | PROVED (unchanged; real-fit numerics consistent) |
+| Residualised / backfit tables | candidate, pilot on regenerated data only (378/480) | **candidate, unproven**; start-law evidence now on the real fits (1,888/2,400 favourable); no SMC evidence; no theorem |
+| Paper wording "the start is masked by dilution" (W8-SYNTH §1.3(ii)) | — | consistent: v3 0/2,400 favourable, median π₀(S₀) 10^{−15.65}, π₀(R₂) 0.81 (reproduced to 10⁻¹²) |
+
+*(§3.4 to be completed.)*
