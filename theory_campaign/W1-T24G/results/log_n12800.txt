@@ -1,0 +1,17 @@
+/home/user/Bayesian-Variable-Selection/theory_campaign/W1-T24G/scripts/run_designs.py:64: RuntimeWarning: Mean of empty slice
+  progress_rate_while_unscored=float(np.mean([res['prog'][h][(f < 0) | (f >= h)].mean()
+/usr/local/lib/python3.11/dist-packages/numpy/_core/_methods.py:142: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+S1 c=1.00 n=12800 done 13s  c2(a=1)=0.425 eta2(a=1)=0.140  P*min(a=1)=0.685 sim r1=1.000
+S1 c=0.50 n=12800 done 12s  c2(a=1)=0.416 eta2(a=1)=0.141  P*min(a=1)=0.679 sim r1=1.000
+Traceback (most recent call last):
+  File "/home/user/Bayesian-Variable-Selection/theory_campaign/W1-T24G/scripts/run_designs.py", line 81, in <module>
+    r = design_summary(s, c, n, reps=reps)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Bayesian-Variable-Selection/theory_campaign/W1-T24G/scripts/run_designs.py", line 34, in design_summary
+    st, bt, inc, ex = classify(M, int(x), inR, V, T)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Bayesian-Variable-Selection/theory_campaign/W1-T24G/scripts/round_analysis.py", line 101, in classify
+    s[-1] = lo + (M.pi0[S0] * (1 - min(1.0, math.exp(M.d[S0] - M.d[x]))) if x != S0 else 0.0)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+OverflowError: math range error
