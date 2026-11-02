@@ -142,3 +142,16 @@ Key stored at ~/.config/bvs-hq/api/anthropic_key (mode 600). The Claude Code CLI
 Org: no payment method on file; monthly spend limit $195.
 Running: API-RESID (synthesis task 8), API-FAVIID (task 9), Opus 5.5 high, $15 cap each.
 Also launched (Codex/OpenAI): A-REV8 (LS0 route, synthesis task 4), A-REV9 (new results, task 7). Claude Work (Owls): LH-LOCK (Fable, task 2), T38-RECORD (Opus, task 6). PR #1 (spine correction) open for Felipe.
+
+### 21:30 UTC: API credit wave (Felipe: "deploy Opus / Fables on those credits")
+| Task | Model | Cap | What |
+|---|---|---|---|
+| API-RESID | Opus | $15 | synthesis task 8: start tables recomputed from saved fits |
+| API-FAVIID | Opus | $15 | synthesis task 9: finish the 2^B-free favourable rate |
+| API-PXNGAP | Fable | $25 | close A-REV3's p >> n GAP of Thm 5(b1) |
+| API-N200 | Fable | $25 | quantitative finite-n theorem vs the study's n = 200 counts |
+| API-MASKZPIP | Opus | $15 | two-sided masked-regime Ẑ / PIP accuracy |
+| API-AUDIT | Opus | $12 | referee R10: code audit of SR, GUARD, emit_centre, scan-before-limit, IND-T |
+| API-T26BUD | Opus | $12 | referee R5: Theorem 6 with a proved stage count |
+| API-POS | Opus | $10 | referee R3: positioning vs the rapid-mixing literature |
+Held for 2026-11-03 (Console daily rate limits: Fable 100K / Opus 400K output tokens per day): API-UMODEL (R7), API-T03CONST (R9). Reserve ~$20 for repairs after A-REV5/6/7.
