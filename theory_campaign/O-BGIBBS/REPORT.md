@@ -1,6 +1,6 @@
 # O-BGIBBS — REPORT: bridge-Gibbs discovery (T38(b) without LS0)
 
-Run of 2026-11-02, branch `theory/O-BGIBBS`. Notation: `Docs/Theory/theorems/00_COMMON.md`, W1-T38E (Lemma A, D2), W4-SHARE (Prop. M, Lemma PD), W1-EXP §4 (LH family). Every result is a **candidate**: not reviewed, not adopted.
+Run of 2026-11-02, branch `theory/O-BGIBBS`. The first draft (Lemma R, BG1, Prop LH) came from the server instance. It was continued on the laptop, which added BG1′, BG2, LH-rate, BG3, LH-lock and all numerics in §4. Notation: `Docs/Theory/theorems/00_COMMON.md`, W1-T38E (Lemma A, D2), W4-SHARE (Prop. M, Lemma PD), W1-EXP §4 (LH family). Every result is a **candidate**: not reviewed, not adopted.
 
 ## 1. Headline
 
@@ -15,7 +15,7 @@ Run of 2026-11-02, branch `theory/O-BGIBBS`. Notation: `Docs/Theory/theorems/00_
 3. **Bridge-stage discovery, quantified (Lemma R, Theorem BG1 / Corollary BG1′, PROVED; Proposition LH-rate, PROOF SKETCH).**
    - One round at φ from the start mode scores S₀ with probability ≍ P_c·min(1, e^{φc₂n−λ_n})^{c−1}, with λ_n = log(2p√(n+1)).
    - Stage-1 discovery holds w.p. → 1 in the pilot (via its floor φ ≥ 1/T_e, for every c, when n ≫ T_e log n), and in both the pilot and the final run at **any** temperature for c = 1, and for c = 2 with p fixed (p = o(√n): CONJECTURE).
-   - Simulated: c = 2 was scored in pilot round 1 in **160/160** replicates (n = 400–25600), and in the final run's stage 1 whenever it was not an initial draw. For c = 3, the stage-1 hazard is Θ(1) and S₀ was scored at stage 1–2.
+   - Simulated: c = 2 was scored in pilot round 1 in **160/160** replicates (n = 400–25600), and in the final run's stage 1 in every replicate where it was not an initial draw (31/31; 5 were initial draws). For c = 3, the stage-1 hazard is Θ(1) and S₀ was scored at stage 1–2.
 4. **Obstructions (precise).**
    - (L2) fails on posterior-barrier designs (W4-SHARE PB: COUNTEREXAMPLE at finite n, to every local kernel).
    - (L1) would fail if a start-mode member were not supported by its own block table (not the case on LH).
@@ -173,7 +173,10 @@ for some c₃ > 0 depending only on the gaps. Hence, for every fixed c,
 
 for the **original method's final run alone**, with no pilot, no temperature condition and no survival hypothesis. With T38(0) and (P) on LH [W1-EXP Thm 5(d)]: P(𝒪 ∩ {Ŝ ≠ S₀}) → 0 without LS0.
 
-The gaps hold on LH in general (sketch in §3.7: within the pair block, x_{a_i} carries the component β_i(1−ψ_i²) of μ that no other column of its block reproduces). They are verified by exhaustive enumeration for both simulated designs (`bg3_popcheck`): min C1 = 0.218, min C2 = 0.030, min C3 = 0.086 (c = 2, p = 16; c = 3 in §4).
+**Status of the gaps.**
+- (C1′) and (C2′) hold on LH for **every** parameter value: they are PROVED in §3.7, because the group table sees μ only through β_i(1−ψ_i²)x_{a_i}.
+- (C4), zero gain for extras at T ⊇ S₀, is automatic, since μ ∈ span(S₀).
+- The γ₁ gaps (C1)–(C3) are **verified by exhaustive enumeration** for both simulated designs (`bg3_popcheck`; c = 2: min C1 = 0.218, C2 = 0.030, C3 = 0.086; c = 3: 0.238, 0.051, 0.093). A proof for general (ρ, ψ, g, c) is open (§3.7), so the proposition is stated with the gaps as checkable design conditions, like (M2)/(M3) of T38(b1).
 
 **Status of the constant.** 1/m! is a deliberately crude order constant: one fixed label order with the Λ labels first. The simulated q₁ is 0.06–0.17, far above it. The bound is useful only because N(L+4) → ∞ multiplies it.
 
@@ -357,7 +360,10 @@ Hence β₁ ≥ (1 − o_P(1))/m!.
 
 **Why the gaps hold on LH (sketch).** Pair blocks are mutually orthogonal (exact Gram), so all fits split over pair blocks and visible groups.
 - *(C1)* Within pair block i, for any T ∌ a_i, let r := x_{a_i} − P_T x_{a_i}. Using x_{b_i} = ψ_i x_{a_i} + w_i, with w_i ⟂ C_{a_i}: ⟨r, μ_i⟩ = β_i[(1−ψ_i²)‖r‖² − ψ_i⟨r, w_i⟩]. When T contains no C_{b_i} member, ⟨r, w_i⟩ = 0, and the gap is β_i²(1−ψ_i²)²‖r‖² > 0. When T contains members of C_{b_i}, the gap is not identically positive in closed form for all (ρ, ψ). This is why (C1)–(C3) are stated as **deterministic checks**, verified by enumeration for the simulated designs and not claimed for every LH parameter value.
-- *(C1′)* The group-C_{a_i} table uses only C_{a_i} columns: μ's projection on span(C_{a_i}) is β_i(1−ψ_i²)x_{a_i}, because x_{b_i} projects onto ψ_i x_{a_i}. So the gap is β_i²(1−ψ_i²)²(1 − R²(x_{a_i} | E)) > 0. This is PROVED for every LH parameter value.
+- *(C1′)* The group-C_{a_i} table uses only C_{a_i} columns: μ's projection on span(C_{a_i}) is β_i(1−ψ_i²)x_{a_i}, because x_{b_i} projects onto ψ_i x_{a_i}. So the gap is β_i²(1−ψ_i²)²(1 − R²(x_{a_i} | E)) > 0.
+- *(C2′)* A swap j → l with l in another group C′ adds zero γ₀-fit. C′ either contains its hub (a-groups and visible groups: μ projects on span(C′) through the hub, which is present) or is a masked group, with μ ⟂ C_{b_i}. So C2′ = C1′; a within-group swap a_i → k loses β_i²(1−ψ_i²)²(1 − R²(x_{a_i} | E∖a_i ∪ k)) > 0.
+
+(C1′) and (C2′) are PROVED for every LH parameter value, and the enumeration agrees: min C2′ = min C1′.
 - *(C3)* Generic positivity, by the Prop M(a) mechanism: λ_min(R) ≥ (1−ψ₊)(1−ρ₊).
 
 ## 4. Evidence
@@ -391,17 +397,18 @@ Here q(φ) is the per-particle probability that one round from S° at φ scores 
 
 | c | n | reps | q(0) (median) | pilot hazard H·q(φ₁) | final stage-1 φ₁ᶠ (median) | final hazard N·q(φ₁ᶠ) | first-score stage in the final island | min start-basin count before the first score |
 |---|---|---|---|---|---|---|---|---|
-| 2 | 400 | 10 | 7.9e-3 | 8.8–17.4 | 0.046 | 48–69 | stage 1: 8; initial draw: 2 | ≥ 0.94N |
+| 2 | 400 | 10 | 7.9e-3 | 8.8–17.4 | 0.045 | 48–69 | stage 1: 8; initial draw: 2 | ≥ 0.94N |
 | 2 | 1600 | 10 | 4.0e-3 | 6.8–12.4 | 0.013 | 32–43 | stage 1: 9; initial draw: 1 | ≥ 0.97N |
 | 2 | 6400 | 6 | 1.7e-3 | 12.8–22.5 | 0.0041 | 52–66 | stage 1: 5; initial draw: 1 | ≥ 0.98N |
 | 2 | 25600 | 10 | 1.0e-3 | 30–57 | 0.00115 | 156–268 | stage 1: 9; initial draw: 1 | ≥ 0.99N |
-| 3 | 400 | 10 | ≤ 1.5e-4 | 0.2–0.6 | 0.044 | 0.6–2.1 | stage 1: 8; stage 2: 2 | ≥ 0.94N |
-| 3 | 1600 | see file | ≈ 0 | 0.1–0.3 | 0.013 | 0.4–1.0 | stage 1 (see file) | ≥ 0.97N |
-| 3 | 6400 | 8 | ≈ 0 (< 5e-5) | 0.0–0.5 | 0.0040 | 0.0–1.3 | stage 1: 6; stage 2: 2 | ≥ 0.98N |
+| 3 | 400 | 10 | 7.5e-5 | 0.2–0.6 | 0.044 | 0.6–2.1 | stage 1: 8; stage 2: 2 | ≥ 0.94N |
+| 3 | 1600 | 10 | < 5e-5 | 0.1–0.5 | 0.013 | 0.2–1.4 | stage 1: 10 | ≥ 0.97N |
+| 3 | 6400 | 8 | < 5e-5 | 0.0–0.5 | 0.0040 | 0.0–1.3 | stage 1: 6; stage 2: 2 | ≥ 0.98N |
 
 This matches Proposition LH-rate.
 - For c = 2, q(0) ∝ (p√n)^{−1}: it halves as n quadruples. The hazard ≫ 1 at stage 1 even at φ = 0 scale, and n·φ₁ᶠ ≈ 18–29.
 - For c = 3, q(0) ∝ (p√n)^{−2} is unmeasurable. The stage-1 hazard is Θ(1), discovery spills into stage 2, and the cumulative hazard grows with φ.
+- The S°-only q understates the c = 3 hazard. The initial draws at one-hub states S° ∪ {b_i} (π₀ ≍ (p√n)^{−1} each, about 10 particles at N = 2500) need one accepted addition fewer, and they explain why stage 1 scores even when N·q(φ₁ᶠ) < 1.
 - No extinction was ever seen before the first score.
 
 ### 4.3 Locked start set and terminal discovery (`bg3_locked.py` → `bg3_locked.txt`; `bg3_popcheck.py` → `bg3_popcheck.txt`)
@@ -425,7 +432,7 @@ All of the gaps that must be positive are positive, and C4 = 0 to machine precis
 ## 5. What fails and why (and the precise obstruction)
 
 - **The obstruction for discovery *during* the bridge is the scoring temperature, not survival, and it is milder than the first draft said.** The first draft required stage 1 to be above φ_hub, the temperature at which every hub addition is *favoured*. That is not needed. By Lemma R, only c − 1 additions must be *accepted*, and the c-th only *evaluated* (SR). By BG2, a scoring probability per particle of order 1/H is enough. The correct threshold is φ_sc (Proposition LH-rate (R4)), and **φ_sc = 0 for c = 1, and for c = 2 when p = o(√n)**. Numerically, the median φ₁ is well below the largest φ_hub (0.013 vs 0.108 at n = 1600; 0.004 vs 0.024 at n = 6400; bg1), and S₀ was still scored in round 1 in 160/160 replicates, with hazards H·q(φ₁) ≈ 7–57 (bg2).
-- **For c ≥ 3, bridge-stage discovery is hazard-limited, but the final run does not need it (Theorem BG3).** The final run's stage-1 hazard is Θ(1) for c = 3 (bg2: N·q(φ₁ᶠ) ≈ 0.3–2.1), and later stages raise it. Any proof that relies on bridge-stage scoring then needs the start-mode count to survive until φ ≥ φ_sc. That is W4-SHARE's D4/D5 delivery input, which is not proved here. **BG3 bypasses this.** On LH the start set 𝒰 = {y ⊇ S°} is *locked*: leaving it costs e^{−Θ(n)} at both endpoints and at every φ, so no particle ever leaves it (bg3: min_t N_𝒰/N = 1 in every island). The L + 4 terminal rounds at φ = 1 have no resampling and are downhill to S₀. Extinction of 𝒰 takes ≳ e^{c₃n}/N rounds; scoring takes O(1/(Nβ₁)) rounds.
+- **For c ≥ 3, bridge-stage discovery is hazard-limited, but the final run does not need it (Theorem BG3).** The final run's stage-1 hazard is Θ(1) for c = 3 (bg2: N·q(φ₁ᶠ) ≈ 0.0–2.1 from S° alone, n = 400–6400), and later stages raise it. Any proof that relies on bridge-stage scoring then needs the start-mode count to survive until φ ≥ φ_sc. That is W4-SHARE's D4/D5 delivery input, which is not proved here. **BG3 bypasses this.** On LH the start set 𝒰 = {y ⊇ S°} is *locked*: leaving it costs e^{−Θ(n)} at both endpoints and at every φ, so no particle ever leaves it (bg3: min_t N_𝒰/N = 1 in every island). The L + 4 terminal rounds at φ = 1 have no resampling and are downhill to S₀. Extinction of 𝒰 takes ≳ e^{c₃n}/N rounds; scoring takes O(1/(Nβ₁)) rounds.
 - **Where BG3 fails: precise obstructions and counterexample families.**
   - **(L2) fails on posterior-barrier designs.** W4-SHARE's design PB (λ_min(R_{S₀}) = 0.004) keeps its start mode {12} ⊂ S₀ occupied (delivery to 𝓡₀ in 200/200 islands), but every path from it to S₀ goes down by 6–15 nats at **both** endpoints. So β₁ ≈ 5·10⁻⁶ per particle-round, and the Prop X bound 0.48 per island matches the observed 0.51. This is a COUNTEREXAMPLE at finite n (W4-SHARE `s3_bvs_barrier`, `s3b_gate_rate`) to discovery by any local kernel, and no method change (LS0, T39) fixes it.
   - **(L1) fails** when a member of the start mode is not supported by its own block table: γ₀ does not lock it, while γ₁ does. Then 𝒰 leaks at small φ, and BG3 must be replaced by a delivery argument. No LH instance has this, by (C1′).
