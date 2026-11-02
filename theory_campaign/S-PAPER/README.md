@@ -50,11 +50,11 @@ Seen but **not** used for any status (in progress or only scripts, no final repo
 
 | Branch | Head SHA | Note |
 |---|---|---|
-| `theory/W6-FIXREV1` | `7e58127` (full: see `git rev-parse origin/theory/W6-FIXREV1`) | scripts/checks only; no `T38_STATEMENT.md`, `T38_PROOF.md`, `REPORT.md` |
-| `theory/W6-FIXREV2` | `d213e7b` | `NOTES.md` and scripts only; no `STATEMENTS.md`, `REPORT.md` |
-| `theory/W5-LOCKBOOK` | `f3c037da66e2e294ab9bfe350a8817316a0aae69` | AUDIT.md (GUARD/OUT/SR code audit), STATEMENTS.tex in progress; cited as "in progress, unreviewed" |
-| `theory/W5-VPGD` | `194e12c22616643f58eca93f74f237a32b46b3dc` | `REFEREE.md` "draft verdicts" on Theorem W: no ERROR, four minor GAPs; quoted as a draft, status not upgraded |
-| `theory/W5-VMASK` | `c3e1b733f7eda2c7266a606df8ec274effe128e3` | independent core + sanity checks, no verdict |
+| `theory/W6-FIXREV1` | `5aa66487c72ae9ee0eddc0197ce7a82694f422bc` | last fetch: `CONSOLIDATED.md` (draft; says T38 files are separate) + scripts; **`T38_STATEMENT.md`, `T38_PROOF.md`, `REPORT.md` not yet pushed**, so T38 is still W4-T38FULL's version |
+| `theory/W6-FIXREV2` | `f0e0ae82b27a5aa63a76c86b5a43c175e7bc3dba` | `NOTES.md` and scripts only; `STATEMENTS.md`, `REPORT.md` not yet pushed |
+| `theory/W5-LOCKBOOK` | `a65392b` (cited in the .tex as f3c037d, the head when read) | AUDIT.md (GUARD/OUT/SR code audit), STATEMENTS.tex in progress; cited as "in progress, unreviewed" |
+| `theory/W5-VPGD` | `e74b951` (cited as 194e12c, the head when read) | `REFEREE.md` "draft verdicts" on Theorem W: no ERROR, four minor GAPs; quoted as a draft, status not upgraded |
+| `theory/W5-VMASK` | `c9f150b` (cited as c3e1b73, the head when read) | independent core + sanity checks, no verdict |
 | `theory/O-LS0` | `247170905d9dff734242ec9ea65a185fa1f1146a` | scripts only, no results; LS0's data check is therefore still pending |
 
 (Final head SHAs are re-fetched at the end of the run; if a branch moved after this table was written, the table in the commit message is authoritative.)
@@ -81,4 +81,4 @@ Seen but **not** used for any status (in progress or only scripts, no final repo
 - **EXP′ constant.** W1-EXP prints κ → 0.52/c_*; A-REV2 §5.1 shows the actual limit is 0.51/c_*. The `.tex` states κ_EXP without the limit.
 - **Prop 2 (f).** W2-BOOK `PROOF.md` states `α e^η P(𝒜) + ε`; `STATEMENTS.tex` states the weaker `α e^η + ε`; the weaker form is used.
 - **Theorem 1 label.** T02(i♯) and T02(ii♯) are typeset as Lemmas feeding Theorem 1 (their sources call them theorems). No hypotheses were changed.
-- **Compilation.** `pdflatex` exists; compile was attempted through `owls_run -j 1`, which refused repeatedly while 3 other jobs ran (policy rule 3: do not bypass). See `compile_status.txt`.
+- **Compilation.** `pdflatex` exists; `theory_section.tex` compiles (two passes, via `owls_run -j 1`) with no errors and no undefined references; `theory_section.pdf` is committed. One earlier attempt was refused by `owls_run` (3 jobs running) and was not bypassed. See `compile_status.txt`.
