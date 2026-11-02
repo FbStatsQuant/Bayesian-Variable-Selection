@@ -46,3 +46,64 @@ Local PDFs: Papers/Core_bibliography/NN_*.pdf, converted with `pdftotext -layout
   UNVERIFIED). Thm 2 (l.319-336): posterior concentration of the one-step Laplace posterior when c2 n ≥ 2(u+1) log p.
   Thm 4 (l.389-405): MH chain from δ(0) with warm-start condition Π̌(δ(0)|D) ≥ p^{-α}: if N ≥ C(s⋆ + (4α/u) log(1/ζ0) +
   α log p) p then ‖P(δ(N)=·|δ(0)) − Π̌‖_tv ≤ max(ζ0, 4/p^{4u}). Mixing guarantee conditional on a warm start.
+
+## Web sources (arXiv PDFs downloaded with curl to /tmp/litvenue_dl, converted with pdftotext; venues via Crossref, scripts/crossref.sh)
+
+- YWJ: Yang, Wainwright, Jordan, AoS 44(6) 2497–2532 (2016), DOI 10.1214/15-AOS1417 (venue from search result + Project Euclid
+  listing; arXiv 1505.07925 read). Thm 1 (l.461): under Assumptions A, B (s = Ks*), C, D(s*), if Cβ² ≥ c0(L+L̃+α+κ)σ0² log p / n
+  "then we have πn(γ*|Y) ≥ 1 − c1 p^{-1} with probability at least 1 − c2 p^{-c3}". Assumption C (l.414): "g ≍ p^{2α} for some
+  α > 0, and κ + α ≥ C1(L + L̃)". Assumption D(s*) (l.429): sparsity s* ≲ n/log p with C0 > 4, truncated prior s0.
+  Thm 2 (l.525): "the ε-mixing time of the Metropolis–Hastings chain (3) is upper bounded as τε ≤ c1 p s0² [c2 α (n+s0) log p
+  + log(1/ε) + 2] with probability at least 1 − 4p^{-c1}". Cor 2 (l.542): after that many iterations γt = γ* w.h.p.
+  l.501–506: in the intermediate SNR regime (10) "the MCMC algorithm ... can exhibit slow mixing due to multimodality"
+  (example in App. A.2). §3.4 "Illustrative simulations" (l.558), s* = 10.
+- GLS: Griffin, Łatuszyński, Steel, Biometrika 108(1) 53–69 (2021), DOI 10.1093/biomet/asaa055 (Crossref). arXiv 1708.05678v3
+  read: Prop 1 (l.252) variance of independent/random-walk proposals; Prop 2 (l.303) approximate posterior independence
+  of γj, γk via Bayes factors; §3 "Ergodicity of the algorithms" (l.517). No rate.
+- RAB: Rossell, Abril, Bhattacharya, "Approximate Laplace approximations for scalable model selection", JRSS-B 83 853–879 (2021),
+  DOI 10.1111/rssb.12466 (Crossref). arXiv 2012.07429: Thm 1 (l.608) under misspecification (y,z) ~ F*, ALA screening
+  "discards any variable outside the true model"; Thm 2 (l.675): ALA Bayes factor rates, spurious additions
+  B̃ = Op(n^{-(pγ − pγ̃*)/2}) for local priors.
+- RS: Ray & Szabó, "Variational Bayes for high-dimensional linear regression with sparse priors", JASA 117 1270–1281 (2022 print,
+  online 2020), DOI 10.1080/01621459.2020.1847121. arXiv 1904.07150 l.400: VB posterior contracts at minimax rates (Thm 1).
+- ZC23: Zhou & Chang, "Complexity analysis of Bayesian learning of high-dimensional DAG models and their equivalence classes",
+  AoS 51(3) 1058–1085 (2023), DOI 10.1214/23-AOS2280 (search + Euclid listing). arXiv 2101.04084 l.154–172: rapid mixing of
+  RW-GES under high-dim assumptions; needs a "swap" move so that boundary classes of the restricted space are not local modes;
+  strong selection consistency (Thm 5); consistency of greedy local search on restricted space.
+- CZ26: Chang & Zhou, "Dimension-free relaxation times of informed MCMC samplers on discrete spaces", Bernoulli 32 1404–1431
+  (2026), DOI 10.3150/25-BEJ1912 (Crossref; web search had found only arXiv). arXiv 2404.03867 read: R := min_{x≠x*}
+  max_{x'∈N(x)} π(x')/π(x) (l.577); "If R > 1, we say π is unimodal with respect to N"; random-walk MH mixes fast if R > M
+  (M = max |N(x)|), informed MH needs R > M². Thm 1 (l.672): ρ = R/M > 1 ⇒ π(x*) ≥ 1 − 1/ρ, Gap(P0^lazy)^{-1} ≤ c(ρ)M,
+  τ ≤ c(ρ) M log(1/…). Thm 4 (l.1009): multimodal case — restrict to X0 with R|X0 /M > 1, warm start x0 with π(x0) ≥ η and
+  π(X0) ≥ 1 − ε²η²/5 ⇒ τ_{x0} ≤ c(ρ) M log(1/(2ε²η²)).
+- CLLSZ22: Chang, Lee, Luo, Sang, Zhou, "Rapidly mixing multiple-try Metropolis algorithms for model selection problems",
+  NeurIPS 35 (2022) 25842–25855 (Crossref). Abstract read: MTM mixing bound smaller than MH by the number of trials.
+- ARZ26: Ascolani, Roberts, Zanella, "Scalability of Metropolis-within-Gibbs schemes for high-dimensional Bayesian models",
+  JRSS-B 88 1231–1250 (2026), DOI 10.1093/jrsssb/qkaf084 (Crossref). arXiv 2403.09416 Thm 1 (l.356): conductance comparison
+  Pi(∂A) ≥ κi(Pi,K)(Gi(∂A) − π(A∩K^c)) between MwG and Gibbs. Continuous-parameter models; not model space.
+- SBCD26: Syed et al. "Optimized annealed SMC samplers", JRSS-B (2026), DOI 10.1093/jrsssb/qkag082 (Crossref).
+- JOA20: Jacob, O'Leary, Atchadé, "Unbiased MCMC methods with couplings", JRSS-B 82 543–600 (2020), DOI 10.1111/rssb.12336
+  (Crossref). Prop 3.1 (l.332): H_{k:m}(X,Y) has expectation E_π[h], finite variance and finite expected computing time.
+- BJV19: Biswas, Jacob, Vanetti, "Estimating convergence of Markov chains with L-lag couplings", arXiv 1905.09971 (NeurIPS 2019:
+  venue UNVERIFIED). Thm 2.5 (l.134): d_TV(π_t, π) ≤ E[max(0, ⌈(τ^(L) − L − t)/L⌉)] — an upper bound estimable from coupled
+  runs (a Monte Carlo estimate, not a per-run certificate).
+- VGSCB21: Vehtari, Gelman, Simpson, Carpenter, Bürkner, improved R̂, Bayesian Analysis 16 667–718 (2021) (Crossref). Diagnostic.
+- BKM16: Bertsimas, King, Mazumder, "Best subset selection via a modern optimization lens", AoS 44 813–852 (2016) (Crossref).
+  arXiv 1507.03133 l.329: MIO gives a "certificate of suboptimality"; "heuristic methods do not provide such a certificate";
+  l.1448: optimality gap evolution for n = 350, p = 64 (Diabetes). Per-run optimality certificate (frequentist L0).
+- Duan 2026, "Revisiting Bayesian variable selection via optimization", arXiv 2604.21009 (abstract read): DC algorithm
+  converges to the global optimum of the marginal likelihood over latent precision parameters "under mild compact set
+  conditions" at a linear rate. Continuous-shrinkage mode, not the model-space HPM.
+- CerT-MCMC 2026, Wu, arXiv 2605.30722 (abstract read): computable spectral-gap certificates for flow-based independence MH;
+  covering certificate "rapidly weak and eventually vacuous as dimension increases"; tests D = 2–20. Continuous, low-dim.
+- HWA: Hou (Wang), Atchadé, AISTATS 2026, PMLR 300:3772–3780 (search result: proceedings.mlr.press/v300/hou26a.html; author
+  list differs from arXiv).
+- Crossref-only (content NOT read; UNVERIFIED beyond bibliographic data): South, Pettitt, Drovandi, "SMC samplers with
+  independent MCMC proposals", Bayesian Analysis 14 753–776 (2019); Barbieri, Berger, George, Ročková, "The median probability
+  model and correlated variables", Bayesian Analysis 16 1085–1112 (2021) (local arXiv version read: Thm 3.1 "mini-theorems",
+  q = 2 optimality of the median model).
+- Also local, 0 theorems found by grep: Schäfer & Chopin (Stat. Comput. 2013; local 07), Zhou, Johansen, Aston (JCGS 25 701–726,
+  2016, Crossref; local 25: unbiased Ẑ cited to Del Moral 2004 Prop 7.4.1, l.352), Titsias & Yau (JASA 112 1598–1611, 2017,
+  Crossref; local 11).
+- Venue of Papaspiliopoulos & Rossell (Biometrika 104, 2017): Crossref query did not return it — UNVERIFIED (from memory and the
+  INDEX title only).
