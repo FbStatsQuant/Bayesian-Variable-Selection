@@ -1,0 +1,9 @@
+n=200 G=30 g=10 rho=0.3 psi=0.0 indep  B=14: reps=40 (C*)<=>laminar agree=40 laminar=31 blocks=groups=31
+n=200 G=30 g=10 rho=0.35 psi=0.0 indep  B=14: reps=40 (C*)<=>laminar agree=40 laminar=39 blocks=groups=39
+n=100 G=20 g=10 rho=0.4 psi=0.0 indep  B=14: reps=40 (C*)<=>laminar agree=40 laminar=22 blocks=groups=22
+n=200 G=20 g=10 rho=0.7 psi=0.62 lh     B=14: reps=40 (C*)<=>laminar agree=40 laminar=40 blocks=groups=40
+n=200 G=20 g=10 rho=0.7 psi=0.68 lh     B=14: reps=40 (C*)<=>laminar agree=40 laminar=30 blocks=groups=30
+n=200 G=20 g=12 rho=0.5 psi=0.33 global B=14: reps=40 (C*)<=>laminar agree=40 laminar=19 blocks=groups=19
+n=200 G=30 g=9 rho=0.45 psi=0.0 indep  B=14: reps=40 (C*)<=>laminar agree=40 laminar=40 blocks=groups=40
+n=150 G=16 g=12 rho=0.4 psi=0.0 indep  B=14: reps=40 (C*)<=>laminar agree=40 laminar=40 blocks=groups=40
+TOTAL reps=320: (C*)<=>laminar agreement 320/320; laminar 261; blocks=groups 261; laminar & blocks!=groups 0; blocks=groups & not laminar 0; local margin (M) held 15, (M) & not (C*) 0

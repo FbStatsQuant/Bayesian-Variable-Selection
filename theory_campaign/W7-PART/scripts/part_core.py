@@ -264,3 +264,65 @@ def v3_blocks_engine(X, B):
     out = subprocess.check_output([ENGINE_BIN, fn]).decode()
     os.unlink(fn)
     return [sorted(map(int, line.split())) for line in out.strip().splitlines()]
+
+
+# ----------------------------------------------------------------------------------------------- Theorem A objects
+def group_tree(rsub):
+    """Complete linkage on one group alone (faithful port). Returns list of nodes (members tuple, height, parent
+    height); leaves have height 0; the root has parent height +inf."""
+    g = rsub.shape[0]
+    if g == 1:
+        return [((0,), 0.0, np.inf)]
+    T = complete_linkage_faithful(rsub)
+    nodes = []
+    parent_h = {}
+    for nn in range(g, 2 * g - 1):
+        parent_h[T["left"][nn]] = T["height"][nn]
+        parent_h[T["right"][nn]] = T["height"][nn]
+    for x in range(2 * g - 1):
+        mem = tuple(sorted(_subtree_leaves(T, x, g)))
+        nodes.append((mem, T["height"][x] if x >= g else 0.0, parent_h.get(x, np.inf)))
+    return nodes
+
+
+def cstar_violations(r, groups, return_list=False):
+    """Condition (C*) of Theorem A: for nodes A of T_h, A' of T_h' (h != h'), not both roots,
+       max_{A x A'} (1 - |r|) > min(pi(A), pi(A')).  Returns the number of violating node pairs (and the list)."""
+    D = 1.0 - np.abs(r)
+    trees = [group_tree(r[np.ix_(C, C)]) for C in groups]
+    memb = []
+    for C, nodes in zip(groups, trees):
+        M = np.zeros((len(nodes), len(C)), bool)
+        for i, (mem, h, ph) in enumerate(nodes):
+            M[i, list(mem)] = True
+        memb.append(M)
+    viol = []
+    Gn = len(groups)
+    for a in range(Gn):
+        for b in range(a + 1, Gn):
+            Dab = D[np.ix_(groups[a], groups[b])]
+            Ma, Mb = memb[a], memb[b]
+            # M1[A, k] = max_{j in A} D[j, k]
+            M1 = np.where(Ma[:, :, None], Dab[None, :, :], -np.inf).max(axis=1)
+            M2 = np.where(Mb[None, :, :], M1[:, None, :], -np.inf).max(axis=2)
+            pa = np.array([nd[2] for nd in trees[a]]); pb = np.array([nd[2] for nd in trees[b]])
+            thr = np.minimum(pa[:, None], pb[None, :])
+            bad = M2 <= thr
+            bad &= ~(np.isinf(pa)[:, None] & np.isinf(pb)[None, :])
+            if bad.any():
+                for i, j in zip(*np.nonzero(bad)):
+                    viol.append((a, b, trees[a][i][0], trees[b][j][0]))
+    return (len(viol), viol) if return_list else len(viol)
+
+
+def laminar(T, p, groups):
+    lab = np.empty(p, int)
+    for h, C in enumerate(groups):
+        lab[C] = h
+    gs = np.array([len(C) for C in groups])
+    for x in range(p, 2 * p - 1):
+        mem = _subtree_leaves(T, x, p)
+        hs, cnt = np.unique(lab[mem], return_counts=True)
+        if len(hs) > 1 and np.any(cnt != gs[hs]):
+            return False
+    return True
