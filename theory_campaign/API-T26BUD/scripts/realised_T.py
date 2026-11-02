@@ -121,7 +121,7 @@ def main():
     mask = feas.copy(); mask[s0] = False
     lr = pr.lg0[mask] - pr.lg0[s0]; e = d[mask] - d[s0]
     logR = lambda t: logsumexp(lr + t * e)
-    R0, R1 = math.exp(logR(0.0)), math.exp(logR(1.0))
+    R0, R1 = float(np.exp(logR(0.0))), float(np.exp(logR(1.0)))
     eta = None
     if R0 <= EPS0 and R1 <= EPS0:
         if logR(2.0) <= math.log(EPS0): eta = 1.0
@@ -135,8 +135,8 @@ def main():
     Delta = max(1 - pr.pi0[s0], 1 - pr.pi[s0])
     F_ = np.nonzero(feas)[0]
     l1 = pr.lg1[F_] - logsumexp(pr.lg1[F_]); l0 = pr.lg0[F_] - logsumexp(pr.lg0[F_])
-    chi2 = math.expm1(logsumexp(2 * l1 - l0))   # chi^2(pi || pi0); one step 0->1 passes on Omega iff <= 1/9
-    R2 = math.exp(logR(2.0))
+    chi2 = float(np.expm1(logsumexp(2 * l1 - l0)))   # chi^2(pi || pi0); one step 0->1 passes on Omega iff <= 1/9
+    R2 = float(np.exp(logR(2.0)))
     # ---- pilot ----
     prng = np.random.default_rng(5 * 10 ** 6 + 1000 * seed + n)
     sim = ScoredSim(pr)
