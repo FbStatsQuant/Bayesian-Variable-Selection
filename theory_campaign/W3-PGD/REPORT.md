@@ -23,7 +23,7 @@ W1-T37R `PROOF.md` (states R_{a,d}, progress/neutral/regressive moves, D_S, TD�
    0.003 (S5, far states) and 0.198; the binding move is always the truth → truth swap. GERC holds
    (max ERC 0.5–0.94 < 1). LD♭ holds exactly (ρ* = 0) for the block designs S1, S3, S4, S6.
    **At n = 200 the hypotheses fail at the sample level** (spurious correlations ≈ 0.32; GERC 1.3–1.7; sample PGD
-   negative on far states in S3–S6), yet the greedy repair succeeded from every tested centre whenever S₀ was a
+   negative on far states in S3, S4, S6), yet the greedy repair succeeded from every tested centre whenever S₀ was a
    local maximum (31/36 datasets); the 5 failures are posterior misses, as Lemma 0 forces.
 
 ## 2. Statements (full versions with proofs in PROOF.md)
@@ -117,19 +117,19 @@ The values are identical for p = 1000.
   constraint is (B3)/TRC: swapping a weak included truth (θ = 0.8) for the strongest missing one (θ = 1.8). In S5,
   the one-factor structure makes TRC nearly degenerate far from S₀ (TRC min 1e-4 on R_{14,0}, i.e. near-masking).
   Near S₀, on R_{3,2}, η = 0.087. GERC (ERC < 1) holds in all scenarios.
-- **LD♭.** It holds with ρ* = 0 for S1, S3, S4, S6, taking 𝔑 = group-mates. S5 has a residual equicorrelation
-  ≈ 0.06 between pure-null groups given S₀, which meets (★) only if d is small and A is moderate (d = 2 needs
-  roughly A < 2.4). For S2 the far AR correlations decay as 0.5^k.
+- **LD♭.** It holds with ρ* = 0 for S1, S3, S4, S6, taking 𝔑 = group-mates. S5 has residual partial correlations
+  0.016–0.058 between nulls of different groups given S₀ (max ρ with two far nulls ≈ 0.079), which meets (★) only
+  for moderate A (d = 2 needs A < 2.07). For S2 the far AR correlations decay as 0.5^k.
 - **Finite-n population score at n = 200.** We used the score F̄ = −ν log v − pen, with the noise switched off.
-  On R_{14,0} the progress move is not the F̄-best move in 57–79% of the states with many missing truths. The
+  On R_{14,0} the progress move is not the F̄-best move in 57–86% of the states with many missing truths. The
   reason is that the truth→truth swap saves the 6.8-nat size penalty when ν log(1 + Δ/v) is diluted by a large
   residual v. On all states with m ≤ 2, the progress move is F̄-best in 95–100% of cases. In other words, **at
   n = 200 TD′_P is not even true without noise far from S₀; it is a near-truth property.**
 
 **E2. Realised designs at n = 200, p = 500** (`n200_check.py`, `results/n200_p500_S*.json`; 3 replicates ×
 c ∈ {1, 0.5} × S1–S6 = 36 datasets).
-- **Sample PGD.** On R_{14,0}, sample PGD fails in S3–S6: η̂ ranges from −0.36 to −0.05, with "add a spurious null"
-  binding. It holds weakly in S1/S2 (η̂ = 0–0.03). On R_{2,1} it holds everywhere, with η̂ = 0.002–0.107
+- **Sample PGD.** On R_{14,0}, sample PGD fails in every replicate of S3, S4, S6 and in one of S5: η̂ ranges from
+  −0.36 to −0.05, with "add a spurious null" binding. It holds weakly in S1/S2 (η̂ = 0–0.03). On R_{2,1} it holds everywhere, with η̂ = 0.002–0.107
   (truth→truth swap binding).
 - **Sample GERC and TRC.** Sample GERC fails everywhere: max ERC = 1.29–1.68. Sample TRC (R_{2,1}) = 0.002–0.08.
 - **Anchored SE.** min λ_min(R_{S₀∪J}), |J| ≤ 2: 0.46 (S1), 0.26–0.30 (S2), 0.16–0.18 (S3, S5), 0.08–0.10 (S4),
