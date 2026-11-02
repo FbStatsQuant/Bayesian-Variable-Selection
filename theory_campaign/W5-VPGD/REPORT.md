@@ -202,12 +202,12 @@ Totals over scenarios:
 - **Cor P6 transfer happens, but late.** η̂ rises towards η_pop with n (S1: medians 0.079, 0.140, 0.172 against
   0.198; S4: 0.005, 0.018, 0.028 against 0.043). PGD(η_pop/2) holds in every design at n = 3200, in 23/30 at
   n = 800, and in 2/30 at n = 200. At n = 200 one S6 design has η̂ < 0 (a reverse margin, Prop P4's regime), and
-  one S4 design has η̂ = 0.0000.
+  one S4 design has 0 < η̂ < 10⁻⁴.
 - **TD′_P(R_{2,2}(𝒟)) holds at n ≥ 800 in 96/102 (design, c) cases.** The 6 failures are: superset-state noise
   (extra→null swaps at S₀ ∪ P, Lemma S's (γ) event: S1 n = 800, one design; S2 n = 3200, one design), and S4 at
   n = 800, c = 0.5 (m = 2 states via extra→null and truth→truth swaps, the move that binds PGD in S4).
-- **At n = 200 the two failure mechanisms separate by scenario.** In S1 and S2 the failures sit at superset states
-  (m0e1, m0e2), and (L) itself fails in 1–2 of 5 designs. These are posterior-side noise events, the penalty against
+- **At n = 200 the two failure mechanisms separate by scenario.** In S1 and S2 the failures sit mostly at superset
+  states (m0e1, m0e2), and (L) itself fails in 1–2 of 5 S1 designs (0–1 in S2). These are posterior-side noise events, the penalty against
   max-χ², not greedy-dominance failures. In S3, S4 and S6 most failures sit at m = 2 states, through truth→truth and
   extra→null swaps: the realised η̂ is 0.005–0.03, too small for the signal at n = 200.
 - TD′_P can hold where PGD(η/2) does not (S2/S5 at n = 200, c = 1; S3, S4, S6 at n = 800). PGD is a sufficient
