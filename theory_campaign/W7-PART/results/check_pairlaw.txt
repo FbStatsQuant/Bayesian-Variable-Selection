@@ -1,0 +1,26 @@
+n=30 r=0.0: integral of density = 1.0
+n=30 r=0.3: integral of density = 1.0
+n=30 r=0.7: integral of density = 1.0
+n=200 r=0.0: integral of density = 1.0
+n=200 r=0.3: integral of density = 1.0
+n=200 r=0.7: integral of density = 1.0
+
+exact tail (density) vs noncentral-t quadrature vs Monte Carlo (1e6 draws) vs Lemma-2 bound
+n=  30 r=0.000 t=0.25 U: exact=9.136525e-02 nct=9.136525e-02 MC=9.123e-02 (N=1000000) bound=6.842e-01 bound/exact=7.49
+n=  30 r=0.300 t=0.45 U: exact=1.870092e-01 nct=1.870092e-01 MC=1.868e-01 (N=1000000) bound=1.653e+00 bound/exact=8.84
+n=  30 r=0.500 t=0.60 U: exact=2.395954e-01 nct=2.395954e-01 MC=2.399e-01 (N=1000000) bound=2.373e+00 bound/exact=9.90
+n=  30 r=0.700 t=0.55 L: exact=8.527855e-02 nct=8.527855e-02 MC=8.546e-02 (N=1000000) bound=1.089e+01 bound/exact=127.72
+n=  30 r=0.700 t=0.45 L: exact=1.984961e-02 nct=1.984961e-02 MC=1.980e-02 (N=1000000) bound=3.527e+00 bound/exact=177.67
+n=  30 r=0.000 t=0.40 U: exact=1.425653e-02 nct=1.425653e-02 MC=1.427e-02 (N=1000000) bound=1.313e-01 bound/exact=9.21
+n=  30 r=0.245 t=0.45 U: exact=1.145523e-01 nct=1.145523e-01 MC=1.150e-01 (N=1000000) bound=1.051e+00 bound/exact=9.18
+n= 200 r=0.000 t=0.25 U: exact=1.783311e-04 nct=1.783311e-04 MC=1.450e-04 (N=200000) bound=7.542e-03 bound/exact=42.29
+n= 200 r=0.300 t=0.45 U: exact=7.235770e-03 nct=7.235770e-03 MC=7.210e-03 (N=200000) bound=3.280e-01 bound/exact=45.34
+n= 200 r=0.500 t=0.60 U: exact=2.270016e-02 nct=2.270016e-02 MC=2.232e-02 (N=200000) bound=1.094e+00 bound/exact=48.18
+n= 200 r=0.700 t=0.55 L: exact=2.263730e-04 nct=2.263730e-04 MC=1.900e-04 (N=200000) bound=1.577e-01 bound/exact=696.61
+n= 200 r=0.700 t=0.45 L: exact=4.617503e-08 nct=4.617500e-08 MC=0.000e+00 (N=200000) bound=4.958e-05 bound/exact=1073.71
+n= 200 r=0.000 t=0.40 U: exact=2.202306e-09 nct=2.202306e-09 MC=0.000e+00 (N=200000) bound=1.279e-07 bound/exact=58.06
+n= 200 r=0.245 t=0.45 U: exact=5.304342e-04 nct=5.304342e-04 MC=4.750e-04 (N=200000) bound=2.710e-02 bound/exact=51.08
+
+Lemma 1 representation n=20 r=0.6: two-sample KS p = 0.433
+Lemma 1 representation n=200 r=0.3: two-sample KS p = 0.658
+Lemma 2 grid check: 224 (n, r, t) cases, violations = 0, min bound/exact = 2.861
