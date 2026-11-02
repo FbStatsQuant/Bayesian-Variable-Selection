@@ -1,0 +1,77 @@
+fav_iid n=160 seed=0 same_blocks=False  1-pi0 mine 1.750601e-01 theirs 1.750601e-01 | delta1 2.049183e-01 2.049183e-01 | rhobar_sum 3.706063e-01 3.706063e-01 | T 1 1
+fav_iid n=160 seed=1 same_blocks=False  1-pi0 mine 2.391173e-01 theirs 2.391173e-01 | delta1 1.952299e-01 1.952299e-01 | rhobar_sum 3.699416e-01 3.699416e-01 | T 1 1
+fav_iid n=160 seed=2 same_blocks=False  1-pi0 mine 3.263437e-01 theirs 3.263437e-01 | delta1 3.789130e-01 3.789130e-01 | rhobar_sum 6.487175e-01 6.487175e-01 | T 2 2
+fav_iid n=160 seed=3 same_blocks=False  1-pi0 mine 1.952072e-01 theirs 1.952072e-01 | delta1 2.892485e-01 2.892485e-01 | rhobar_sum 4.944528e-01 4.944528e-01 | T 2 2
+fav_iid n=160 seed=4 same_blocks=False  1-pi0 mine 4.007381e-01 theirs 4.007381e-01 | delta1 2.721957e-01 2.721957e-01 | rhobar_sum 4.653410e-01 4.653410e-01 | T 3 3
+fav_iid n=160 seed=5 same_blocks=False  1-pi0 mine 2.792680e-01 theirs 2.792680e-01 | delta1 2.593271e-01 2.593271e-01 | rhobar_sum 5.003433e-01 5.003433e-01 | T 1 1
+fav_iid n=160 seed=6 same_blocks=False  1-pi0 mine 3.667728e-01 theirs 3.667728e-01 | delta1 2.436047e-01 2.436047e-01 | rhobar_sum 4.305814e-01 4.305814e-01 | T 2 2
+fav_iid n=160 seed=7 same_blocks=False  1-pi0 mine 2.948615e-01 theirs 2.948615e-01 | delta1 3.482129e-01 3.482129e-01 | rhobar_sum 5.940163e-01 5.940163e-01 | T 3 3
+fav_iid n=2560 seed=0 same_blocks=False  1-pi0 mine 1.400512e-01 theirs 1.400512e-01 | delta1 2.353263e-01 2.353263e-01 | rhobar_sum 3.363285e-01 3.363285e-01 | T 2 2
+fav_iid n=2560 seed=1 same_blocks=False  1-pi0 mine 4.708722e-02 theirs 4.708722e-02 | delta1 5.988840e-02 5.988840e-02 | rhobar_sum 1.059876e-01 1.059876e-01 | T 1 1
+fav_iid n=2560 seed=2 same_blocks=False  1-pi0 mine 1.800053e-01 theirs 1.496128e-01 | delta1 1.643103e-01 1.643103e-01 | rhobar_sum 3.086776e-01 3.060576e-01 | T 1 1
+fav_iid n=2560 seed=3 same_blocks=False  1-pi0 mine 4.893514e-02 theirs 4.893498e-02 | delta1 7.386873e-02 7.386873e-02 | rhobar_sum 1.215374e-01 1.215373e-01 | T 1 1
+fav_iid n=2560 seed=4 same_blocks=False  1-pi0 mine 7.720302e-02 theirs 7.852452e-02 | delta1 1.092136e-01 1.092136e-01 | rhobar_sum 1.729578e-01 1.741484e-01 | T 2 2
+fav_iid n=2560 seed=5 same_blocks=False  1-pi0 mine 4.266571e-02 theirs 4.266571e-02 | delta1 7.614445e-02 7.614445e-02 | rhobar_sum 1.193541e-01 1.193541e-01 | T 1 1
+fav_iid n=2560 seed=6 same_blocks=False  1-pi0 mine 4.933143e-02 theirs 4.933143e-02 | delta1 5.200301e-02 5.200301e-02 | rhobar_sum 9.464642e-02 9.464642e-02 | T 1 1
+fav_iid n=2560 seed=7 same_blocks=False  1-pi0 mine 4.501473e-02 theirs 4.501473e-02 | delta1 6.707985e-02 6.707985e-02 | rhobar_sum 1.111099e-01 1.111099e-01 | T 1 1
+fav_iid n=40960 seed=0 same_blocks=False  1-pi0 mine 2.893408e-02 theirs 2.893408e-02 | delta1 1.790129e-02 1.790129e-02 | rhobar_sum 3.111165e-02 3.111165e-02 | T 1 1
+fav_iid n=40960 seed=1 same_blocks=False  1-pi0 mine 1.313529e-02 theirs 1.313529e-02 | delta1 2.086624e-02 2.086624e-02 | rhobar_sum 3.258099e-02 3.258099e-02 | T 1 1
+fav_iid n=40960 seed=2 same_blocks=False  1-pi0 mine 1.325360e-02 theirs 1.325360e-02 | delta1 1.626835e-02 1.626835e-02 | rhobar_sum 2.771272e-02 2.771272e-02 | T 1 1
+fav_iid n=40960 seed=3 same_blocks=False  1-pi0 mine 1.114616e-02 theirs 1.114616e-02 | delta1 1.235776e-02 1.235776e-02 | rhobar_sum 2.286528e-02 2.286528e-02 | T 1 1
+fav_iid n=40960 seed=4 same_blocks=False  1-pi0 mine 2.562973e-02 theirs 2.562973e-02 | delta1 2.960578e-02 2.960578e-02 | rhobar_sum 5.332116e-02 5.332116e-02 | T 1 1
+fav_iid n=40960 seed=5 same_blocks=False  1-pi0 mine 1.518598e-02 theirs 1.518598e-02 | delta1 1.278824e-02 1.278824e-02 | rhobar_sum 2.420653e-02 2.420653e-02 | T 1 1
+fav_cor n=160 seed=0 same_blocks=False  1-pi0 mine 2.187904e-01 theirs 2.187904e-01 | delta1 2.058024e-01 2.058024e-01 | rhobar_sum 3.901901e-01 3.901901e-01 | T 1 1
+fav_cor n=160 seed=1 same_blocks=False  1-pi0 mine 2.165997e-01 theirs 2.165997e-01 | delta1 1.825464e-01 1.825464e-01 | rhobar_sum 3.454589e-01 3.454589e-01 | T 1 1
+fav_cor n=160 seed=2 same_blocks=False  1-pi0 mine 2.495274e-01 theirs 2.495274e-01 | delta1 1.916452e-01 1.916452e-01 | rhobar_sum 3.468799e-01 3.468799e-01 | T 2 2
+fav_cor n=160 seed=3 same_blocks=False  1-pi0 mine 2.635505e-01 theirs 2.635505e-01 | delta1 3.078052e-01 3.078052e-01 | rhobar_sum 5.582304e-01 5.582304e-01 | T 2 2
+fav_cor n=160 seed=4 same_blocks=True  1-pi0 mine 3.163367e-01 theirs 3.163367e-01 | delta1 4.321078e-01 4.321078e-01 | rhobar_sum 6.819124e-01 6.819124e-01 | T 4 4
+fav_cor n=160 seed=5 same_blocks=False  1-pi0 mine 3.615656e-01 theirs 3.615656e-01 | delta1 2.679292e-01 2.679292e-01 | rhobar_sum 4.310519e-01 4.310519e-01 | T 3 3
+fav_cor n=160 seed=6 same_blocks=False  1-pi0 mine 2.088858e-01 theirs 2.088858e-01 | delta1 2.180795e-01 2.180795e-01 | rhobar_sum 3.965512e-01 3.965512e-01 | T 2 2
+fav_cor n=160 seed=7 same_blocks=False  1-pi0 mine 3.071244e-01 theirs 3.071244e-01 | delta1 3.048422e-01 3.048422e-01 | rhobar_sum 5.765740e-01 5.765740e-01 | T 1 1
+fav_cor n=2560 seed=0 same_blocks=False  1-pi0 mine 1.871574e-01 theirs 1.871574e-01 | delta1 1.112908e-01 1.112908e-01 | rhobar_sum 1.993999e-01 1.993999e-01 | T 1 1
+fav_cor n=2560 seed=1 same_blocks=False  1-pi0 mine 8.210552e-02 theirs 8.210552e-02 | delta1 1.189698e-01 1.189698e-01 | rhobar_sum 1.791394e-01 1.791394e-01 | T 2 2
+fav_cor n=2560 seed=2 same_blocks=False  1-pi0 mine 4.600009e-02 theirs 4.600009e-02 | delta1 4.239928e-02 4.239928e-02 | rhobar_sum 8.115189e-02 8.115189e-02 | T 1 1
+fav_cor n=2560 seed=3 same_blocks=False  1-pi0 mine 9.184051e-02 theirs 9.184051e-02 | delta1 1.801965e-01 1.801965e-01 | rhobar_sum 2.659324e-01 2.659324e-01 | T 3 3
+fav_cor n=2560 seed=4 same_blocks=False  1-pi0 mine 5.205060e-02 theirs 5.205060e-02 | delta1 8.864381e-02 8.864381e-02 | rhobar_sum 1.353452e-01 1.353452e-01 | T 2 2
+fav_cor n=2560 seed=5 same_blocks=False  1-pi0 mine 5.533504e-02 theirs 5.533504e-02 | delta1 5.623201e-02 5.623201e-02 | rhobar_sum 1.008306e-01 1.008306e-01 | T 1 1
+fav_cor n=2560 seed=6 same_blocks=False  1-pi0 mine 5.083759e-02 theirs 5.083759e-02 | delta1 4.540974e-02 4.540974e-02 | rhobar_sum 8.520457e-02 8.520457e-02 | T 1 1
+fav_cor n=2560 seed=7 same_blocks=False  1-pi0 mine 1.301723e-01 theirs 1.301723e-01 | delta1 6.811667e-02 6.811667e-02 | rhobar_sum 1.178576e-01 1.178576e-01 | T 1 1
+fav_cor n=40960 seed=0 same_blocks=False  1-pi0 mine 2.787673e-02 theirs 2.787673e-02 | delta1 1.755061e-02 1.755061e-02 | rhobar_sum 3.063554e-02 3.063554e-02 | T 1 1
+fav_cor n=40960 seed=1 same_blocks=False  1-pi0 mine 3.753157e-02 theirs 3.753157e-02 | delta1 7.461208e-02 7.461208e-02 | rhobar_sum 1.083261e-01 1.083261e-01 | T 2 2
+fav_cor n=40960 seed=2 same_blocks=False  1-pi0 mine 1.802840e-01 theirs 1.802840e-01 | delta1 7.982712e-02 7.982712e-02 | rhobar_sum 1.508810e-01 1.508810e-01 | T 1 1
+fav_cor n=40960 seed=3 same_blocks=False  1-pi0 mine 3.685478e-02 theirs 3.685478e-02 | delta1 2.272219e-02 2.272219e-02 | rhobar_sum 3.941632e-02 3.941632e-02 | T 1 1
+fav_cor n=40960 seed=4 same_blocks=False  1-pi0 mine 2.564812e-02 theirs 2.564812e-02 | delta1 2.435502e-02 2.435502e-02 | rhobar_sum 3.934402e-02 3.934402e-02 | T 1 1
+fav_cor n=40960 seed=5 same_blocks=False  1-pi0 mine 1.973544e-02 theirs 1.973544e-02 | delta1 3.031474e-02 3.031474e-02 | rhobar_sum 4.480365e-02 4.480365e-02 | T 1 1
+masked n=160 seed=0 same_blocks=False  1-pi0 mine 7.383356e-01 theirs 7.383356e-01 | delta1 2.471674e-01 2.471674e-01 | rhobar_sum 3.339743e-01 3.339743e-01 | T 5 5
+masked n=160 seed=1 same_blocks=False  1-pi0 mine 3.506163e-01 theirs 3.506163e-01 | delta1 1.993832e-01 1.993832e-01 | rhobar_sum 3.510529e-01 3.510529e-01 | T 2 2
+masked n=160 seed=2 same_blocks=False  1-pi0 mine 5.092247e-01 theirs 5.092247e-01 | delta1 2.259019e-01 2.259019e-01 | rhobar_sum 3.620861e-01 3.620861e-01 | T 3 3
+masked n=160 seed=3 same_blocks=False  1-pi0 mine 6.860057e-01 theirs 6.860057e-01 | delta1 2.710476e-01 2.710476e-01 | rhobar_sum 3.824829e-01 3.824829e-01 | T 5 5
+masked n=160 seed=4 same_blocks=False  1-pi0 mine 9.994649e-01 theirs 9.994649e-01 | delta1 2.357599e-01 2.357599e-01 | rhobar_sum 2.554564e-01 2.554564e-01 | T 13 13
+masked n=160 seed=5 same_blocks=False  1-pi0 mine 6.199465e-01 theirs 6.199465e-01 | delta1 4.075798e-01 4.075798e-01 | rhobar_sum 5.926003e-01 5.926003e-01 | T 5 5
+masked n=160 seed=6 same_blocks=False  1-pi0 mine 6.252001e-01 theirs 6.252001e-01 | delta1 7.528811e-01 7.528811e-01 | rhobar_sum 1.085351e+00 1.085351e+00 | T 6 6
+masked n=160 seed=7 same_blocks=False  1-pi0 mine 4.462037e-01 theirs 4.462037e-01 | delta1 2.408630e-01 2.408630e-01 | rhobar_sum 3.909977e-01 3.909977e-01 | T 3 3
+masked n=2560 seed=0 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 7.455936e-02 7.455936e-02 | rhobar_sum 7.660812e-02 7.660812e-02 | T 16 16
+masked n=2560 seed=1 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 2.992040e-01 2.992040e-01 | rhobar_sum 3.146343e-01 3.146343e-01 | T 20 20
+masked n=2560 seed=2 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 1.085233e-01 1.085233e-01 | rhobar_sum 1.122645e-01 1.122645e-01 | T 18 18
+masked n=2560 seed=3 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 5.309249e-02 5.309249e-02 | rhobar_sum 5.404885e-02 5.404885e-02 | T 18 18
+masked n=2560 seed=4 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 8.479215e-02 8.479215e-02 | rhobar_sum 8.723008e-02 8.723008e-02 | T 14 14
+masked n=2560 seed=5 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 7.317724e-02 7.317724e-02 | rhobar_sum 7.481393e-02 7.481393e-02 | T 18 18
+masked n=2560 seed=6 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 1.440469e-01 1.440469e-01 | rhobar_sum 1.489614e-01 1.489614e-01 | T 18 18
+masked n=2560 seed=7 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 1.060476e-01 1.060476e-01 | rhobar_sum 1.108017e-01 1.108017e-01 | T 19 19
+masked n=40960 seed=0 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 1.304548e-02 1.304548e-02 | rhobar_sum 1.309912e-02 1.309912e-02 | T 25 25
+masked n=40960 seed=1 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 1.966397e-02 1.966397e-02 | rhobar_sum 1.979372e-02 1.979372e-02 | T 24 24
+masked n=40960 seed=2 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 6.382297e-02 6.382297e-02 | rhobar_sum 6.495484e-02 6.495484e-02 | T 25 25
+masked n=40960 seed=3 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 6.267115e-02 6.267115e-02 | rhobar_sum 6.346315e-02 6.346315e-02 | T 25 25
+masked n=40960 seed=4 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 1.705897e-02 1.705897e-02 | rhobar_sum 1.715665e-02 1.715665e-02 | T 25 25
+masked n=40960 seed=5 same_blocks=False  1-pi0 mine 1.000000e+00 theirs 1.000000e+00 | delta1 2.597570e-02 2.597570e-02 | rhobar_sum 2.618179e-02 2.618179e-02 | T 24 24
+rows compared: 66; identical partitions: 1
+max relative difference Delta (same partition = False): 9.552e-02
+max relative difference Delta (same partition = True): 9.250e-15
+max relative difference T_ideal (same partition = False): 0.000e+00
+max relative difference T_ideal (same partition = True): 0.000e+00
+max relative difference delta1 (same partition = False): 2.256e-11
+max relative difference delta1 (same partition = True): 9.250e-15
+max relative difference one_minus_pi0 (same partition = False): 2.031e-01
+max relative difference one_minus_pi0 (same partition = True): 0.000e+00
+max relative difference rho_bar_sum (same partition = False): 8.561e-03
+max relative difference rho_bar_sum (same partition = True): 4.070e-15
