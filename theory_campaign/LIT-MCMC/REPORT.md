@@ -19,6 +19,10 @@ cited here, not redone.
    **R > M² (informed samplers) fails at every n tested, up to 102,400**. The binding direction is the *overfitted* side:
    deleting an extra variable from a superset of S₀. That side matters for mixing, not for discovery.
 
+   **At the study's scale** (study-like S1/S4 designs, n = 200, p ∈ {500, 1000}, `results/ob_check.md`), R < M holds in
+   12 of 12 data sets, by a factor of at least p^{0.87}. This is a COUNTEREXAMPLE to the applicability of those theorems.
+   Prop. OB (PROOF SKETCH) explains it: per extra variable, our prior penalty is ≍ p√n, against a neighbourhood size ≍ p.
+
    So: on LH, "rapid mixing" is not certified by any published theorem for our target. "Fast discovery" is supported
    by the landscape (API-POS Prop. U, PROOF SKETCH) but is not stated as a theorem anywhere I read.
 
