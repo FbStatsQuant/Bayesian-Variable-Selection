@@ -220,8 +220,9 @@ T27's law with c = number of weak truths"). The evidence:
 | S6 | 500 | 0.5 / 1.0 | 10 | 11 / 10 | 1/10, 9/10 | 4/10, 9/10 | 11/14 | 2/6 |
 | S6 | 1000 | 0.5 / 1.0 | 11 | 12 / 8 | 3/10, 9/10 | 8/10, 10/10 | 18/18 | 0/2 |
 
-Reading: LS0 scores S₀ from the start mode whenever |S̃₀ Δ S₀| ≤ ℓ + 1 and the greedy path is monotone, which is the
-typical case in S1/S3. In S4 (ρ = 0.85) and S6 at scale 0.5 the start mode is often 12–14 moves away, beyond ℓ = 10–11.
+Reading: when |S̃₀ Δ S₀| ≤ ℓ + 1, LS0 scored S₀ in 113/128 fits (S1 40/40, S3 30/35, S4 14/21, S6 29/32). When the
+distance exceeds ℓ + 1 it scored S₀ in 13/32 (swaps can cut the distance by 2 per move). In S4 (ρ = 0.85) and S6 at
+scale 0.5 the start mode is often 12–14 moves away, beyond ℓ = 10–11.
 There LS0 fails or ends at a better-scoring wrong model, which would be a posterior miss and not a search miss. Dilution
 masking with c ≈ s₀/2–3s₀/4 masked truths is exactly the case where the fixed-c theory says nothing about ℓ.
 
@@ -262,7 +263,7 @@ masking with c ≈ s₀/2–3s₀/4 masked truths is exactly the case where the 
 4. **HQ decision.** T38(b) can now be stated on an explicit p ≫ n family (LH-iid). The paper must **not** present it as
    the explanation of the n = 200 masking, which is dilution (a different, finite-n mechanism). Suggested wording: "the
    masked regime of Thm 5 is realised by cross-block cancellation; at the study size the start is masked by dilution,
-   which disappears asymptotically and which LS0 repairs when |S̃₀ Δ S₀| ≤ ℓ + 1".
+   which disappears asymptotically; LS0 from the start mode repaired it in 113/128 simulated fits with |S̃₀ Δ S₀| ≤ ℓ + 1".
 5. **Felipe / method.** The LS0 numbers at n = 200 suggest that ℓ (10–11) binds in S4/S6. If LS0 is adopted, consider
    letting the LS0 search run to certification. This is a cost change of a few scans, and it would need its own
    validation under the investment rule.

@@ -465,8 +465,8 @@ orthogonality (only the truth j contributes to δ_{T,j}) and RSS_T/n → v_T. (b
   Proposition Q, across blocks *larger than half of B*).
 - Dilution masking is **not** CL(L) with bounded L: the masked truths have δ²_{T,j}/σ² = nθ_j²Var(x_j|X_T)/σ² of order n (50–200
   at the study size), and the chain multiplier e^{Σ L²σ²/(2v)} of W1-EXP Theorem 3/4 is enormous; T27(i)'s rate p^{−c}n^{−c/2} does
-  not describe π₀(S₀) there (REPORT §5: it overshoots by 20–30 orders of magnitude).
+  not describe π₀(S₀) there (REPORT §5: it overshoots by 17–29 orders of magnitude).
 - A fixed-s₀ asymptotic version requires leaving BM-∞: e.g. local alternatives θ_j² = κσ² log n/n for the diluted truths plus
-  fixed strong truths, with κ in the window (1 + 2A)σ² < κσ²... i.e. (1+2A) < κ < (1+2A)v_T/σ². Then π₀(S₀) → 0 polynomially
+  fixed strong truths, with κ in the window (1 + 2A) < κ < (1 + 2A)v_T/σ². Then π₀(S₀) → 0 polynomially
   while LO₁(j) → +∞; but π(S₀) → 1 would need a sharp-constant selection theorem that [T03]/T03♯ do not provide (their BM
   constant c₀ = L* is far above (1 + 2A)). CONJECTURE.
