@@ -1,2 +1,13 @@
-owls_run: REFUSED: 3 owls_run jobs already running (max 3)
-owls_run: wait for running jobs to finish, or move this work to NOTS (see /home/fb31/.config/bvs-hq/owls/POLICY.md).
+rc=0
+C2 instance g=9 c=2 rho=.4 psi=.2 beta=1: {"lam0": 0.48, "lmin": 0.528350402305893, "RM": 0.07680000000000001, "bvis2": 1.0, "cert": 0.4032, "cert_lmin": 0.45155040230589305, "m_del": 0.6111663157894737, "m_wswap": 0.606926504481434, "m_xswap": 0.5727663157894737, "m_stab": 0.5727663157894737}
+   Delta(S°) = 0.07679999999999998  R_M = 0.07680000000000001
+C1 brute vs types 3 [(0.6, 0.5, 0.3, 1.2), (0.7, 0.4, -0.25, -0.8)] [] brute {'del': np.float64(0.2382352941), 'swap': np.float64(0.1202992941)} types 0.1202992941 agree True
+C1 brute vs types 3 [(0.85, 0.85, 0.5, 1.4)] [(0.5, 0.7)] brute {'del': np.float64(0.2413581081), 'swap': np.float64(-0.0408333333)} types -0.0408333333 agree True
+C1 brute vs types 4 [(0.85, 0.85, 0.5, 1.4)] [] brute {'del': np.float64(0.2174375), 'swap': np.float64(-0.0047893136)} types -0.0047893136 agree True
+C1 brute vs types 3 [(0.4, 0.4, 0.2, 1.0)] [(0.4, 0.01)] brute {'del': np.float64(7.71429e-05), 'swap': np.float64(-0.0383228571)} types -0.0383228571 agree True
+C3 sweep: {'N': 1500, 'violations': 0, 'lam0_violations': 0, 'min_slack': np.float64(0.0002663344325929094), 'cert_positive': 820, 'stab_holds': 1149, 'cert_and_stab': 820}
+C4 structural: {'ZJL_max': np.float64(1.0061396160665481e-16), 'PZL_max': 3.064887623430988e-18, 'hubgain_min': np.float64(0.026094420600858648), 'hubgain_bound': 0.019200000000000002}
+C5 A-REV7 §5 witness: Delta(V)=0.3675000000000002 Delta(W)=0.3627106863596872 improvement=0.004789313640313
+ALL ASSERTIONS PASSED
+
+[exited with code 0]
