@@ -1,0 +1,527 @@
+[
+  {
+    "branch": "origin/theory/A-REV3",
+    "head": "522d83df6d5848fecba401343e99553f2ea03a74",
+    "path": "theory_campaign/A-REV3/REVIEW.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV3__REVIEW.md",
+    "sha256": "fce57ffe98be4529e128befe55f40ef603bfda701af5052c67fbf5f7469450fe"
+  },
+  {
+    "branch": "origin/theory/A-REV3",
+    "head": "522d83df6d5848fecba401343e99553f2ea03a74",
+    "path": "theory_campaign/A-REV3/STATUS.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV3__STATUS.md",
+    "sha256": "0de7a7dc8b9ab011890d2bf5d99836fe2c035cf2c47c3bea8a7fb56bd7988de6"
+  },
+  {
+    "branch": "origin/theory/A-REV3",
+    "head": "522d83df6d5848fecba401343e99553f2ea03a74",
+    "path": "theory_campaign/A-REV3/snapshots/EXP_PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV3__snapshots__EXP_PROOF.md",
+    "sha256": "d4226643233bd34ba49478dc7135ca3eaf4b0c8c591ce0fb54f53af5751bb424"
+  },
+  {
+    "branch": "origin/theory/A-REV3",
+    "head": "522d83df6d5848fecba401343e99553f2ea03a74",
+    "path": "theory_campaign/A-REV3/snapshots/T37_PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV3__snapshots__T37_PROOF.md",
+    "sha256": "1d24afda03fe507c215e56ce2d3933237db856929a39f755d2b860d13816db7a"
+  },
+  {
+    "branch": "origin/theory/A-REV3",
+    "head": "522d83df6d5848fecba401343e99553f2ea03a74",
+    "path": "theory_campaign/A-REV3/snapshots/T38_PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV3__snapshots__T38_PROOF.md",
+    "sha256": "9f54e8a8a9832a4e9c0d9f88eb724e5816c5c4ef29d72b78547b11c5a52dfc62"
+  },
+  {
+    "branch": "origin/theory/A-REV3",
+    "head": "522d83df6d5848fecba401343e99553f2ea03a74",
+    "path": "theory_campaign/A-REV3/snapshots/W3_PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV3__snapshots__W3_PROOF.md",
+    "sha256": "6adc91d5f02cff653e47dc70ce72a41b84ab175b83fdce7ea06f6d9d0d0c64ec"
+  },
+  {
+    "branch": "origin/theory/A-REV3",
+    "head": "522d83df6d5848fecba401343e99553f2ea03a74",
+    "path": "theory_campaign/A-REV3/snapshots/W4_PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV3__snapshots__W4_PROOF.md",
+    "sha256": "53fd62505d663a82c050a72f47fe531298f724ec712eda4a478445bf4855d83a"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/BOOK_CHECK.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__BOOK_CHECK.md",
+    "sha256": "70e7a499ab9e5b91893450e3e3c286864e12d5004669ad68faf939d4d35903fc"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/DRAFTS_CHECK.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__DRAFTS_CHECK.md",
+    "sha256": "58549685e55cc6fd8f1d37c9ae16be63c880435303610bd4dc437fcfdbee9141"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/NUMERICS.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__NUMERICS.md",
+    "sha256": "529284e8b815c347124ae61385be7cc3d1146adb261995ce1b3406490c692ef0"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/REVIEW.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__REVIEW.md",
+    "sha256": "ae2caec8e44dc075c5702ee166fca3d9541f6b836e3fb669a5979dfdf6ae594e"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/00_COMMON.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__00_COMMON.md",
+    "sha256": "a7d05134350823efd62add9d66a8ec1e8ff78185f2efc78415a504cc819e023d"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/A-DRAFT_REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__A-DRAFT_REPORT.md",
+    "sha256": "b572a25a7fd6039f8771581d3f1db5c945188a3f8b32072471f34b6793787eee"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/F-DRAFT_NEW_TARGETS.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__F-DRAFT_NEW_TARGETS.md",
+    "sha256": "dc061805989103d852e501d34df7a2f449fb84193fad9709c3811d9965857d72"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/LOCKED_PROOFS.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__LOCKED_PROOFS.md",
+    "sha256": "ea898e44183e2d5a73998916918527020583af1737c804fff96f4f147ef36147"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/METHODOLOGY_v3.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__METHODOLOGY_v3.md",
+    "sha256": "93043758058a6d422cca6ca4b6be8f3a9e8149b6f6de2e1bab1ce31c44b8019c"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/T01_T02_contrast_dimension_STATEMENT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__T01_T02_contrast_dimension_STATEMENT.md",
+    "sha256": "608ed07921a7c6d6e6c6d5da22af57b5b09bce53aeb882fc54c01440d6176e45"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/T03_A2_selection_consistency_STATEMENT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__T03_A2_selection_consistency_STATEMENT.md",
+    "sha256": "67e921493e5c4fa2b712d7fecbfce142ce9e2ccb796bafd2e964ceac51a627b7"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/T09_T7_kernel_validity_STATEMENT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__T09_T7_kernel_validity_STATEMENT.md",
+    "sha256": "da944993732a955086ffe9aaaceb725ff23ff63fa50e923b2881b39a72fcdc75"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/T12_T8_frozen_run_identities_STATEMENT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__T12_T8_frozen_run_identities_STATEMENT.md",
+    "sha256": "0740a239f6f82e507b51c4c97aab27de6485780622990242677bee638adf01f2"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/T14_LFM_first_moment_evidence_STATEMENT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__T14_LFM_first_moment_evidence_STATEMENT.md",
+    "sha256": "7e94d7e38de93534d5a65fe31521c18e6d1824fc6d02ba116feedfc771f36ffd"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/T15_LOCC_occupancy_STATEMENT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__T15_LOCC_occupancy_STATEMENT.md",
+    "sha256": "bdc3f847777d996115f9acb125b73cc07b9ba91d4cf9b0ee458f29559bf4b01f"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/T22_T16_start_aggregation_STATEMENT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__T22_T16_start_aggregation_STATEMENT.md",
+    "sha256": "4897c22a8bf5e913ec85493236602c79f9b4d6235888cd3cdba2f9e212802eef"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/T22iii_T16_start_aggregation_STATEMENT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__T22iii_T16_start_aggregation_STATEMENT.md",
+    "sha256": "30c4580b5396b83e4fb507c8d75bb4b55aa52d3752db5c07bd948f389afb277e"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/T23_T18_basin_prefix_STATEMENT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__T23_T18_basin_prefix_STATEMENT.md",
+    "sha256": "050076081770fac1cd513df611762ab24f3289d5e44f42da4ca03dbd03a80230"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/W2-BOOK_NOTES.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__W2-BOOK_NOTES.md",
+    "sha256": "f447a8f2306f90d64b5b7bdfc43e1d7e5559d13cc02f3aeea9b5e55ad9d9c68e"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/W2-BOOK_PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__W2-BOOK_PROOF.md",
+    "sha256": "9c58bfc11b9dfa6e1676e9125eb6812bd17ae7b26236abdab885fcb4db1ed73f"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/W2-BOOK_REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__W2-BOOK_REPORT.md",
+    "sha256": "0fb72d466768e6d16d3b03005b8572e3d2959f907686031f7680582a5936fcbe"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/W2-T26_PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__W2-T26_PROOF.md",
+    "sha256": "9fbfcf669d1c58932e2f0a182c2e2ef02e309f049df6f4a5c97673893b9d2264"
+  },
+  {
+    "branch": "origin/theory/A-REV4",
+    "head": "b95948c3f350a225647f110937c3dea403b8443a",
+    "path": "theory_campaign/A-REV4/snapshots/W2-T26_REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-REV4__snapshots__W2-T26_REPORT.md",
+    "sha256": "992a3c68d12a163c458f20b390d672acff62e36a73723b7008bb7da7c73d02a3"
+  },
+  {
+    "branch": "origin/theory/W8-SYNTH",
+    "head": "6876a9a575550065727c3e21891a9ce97a69911b",
+    "path": "theory_campaign/W8-SYNTH/BRIEF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W8-SYNTH__BRIEF.md",
+    "sha256": "a0c7fee902de1cd167db2e9cd731e8499e1e1189a7739b659e830b7a8210f183"
+  },
+  {
+    "branch": "origin/theory/W8-SYNTH",
+    "head": "6876a9a575550065727c3e21891a9ce97a69911b",
+    "path": "theory_campaign/W8-SYNTH/README.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W8-SYNTH__README.md",
+    "sha256": "2d17146b3e1dc6e3029116bba598dcf9f4296563032333fc6d32271c7e2cb6f3"
+  },
+  {
+    "branch": "origin/theory/W8-SYNTH",
+    "head": "6876a9a575550065727c3e21891a9ce97a69911b",
+    "path": "theory_campaign/W8-SYNTH/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W8-SYNTH__REPORT.md",
+    "sha256": "e5bcc7416adb2fd8ccbf7d11d539cf8e3414e3efd2c6907796820d7c87ddedd3"
+  },
+  {
+    "branch": "origin/theory/W8-SYNTH",
+    "head": "6876a9a575550065727c3e21891a9ce97a69911b",
+    "path": "theory_campaign/W8-SYNTH/SNAPSHOT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W8-SYNTH__SNAPSHOT.md",
+    "sha256": "f402ab574249aa62015946a978e79b48ce9049638af0a078cbbe7df3102949f8"
+  },
+  {
+    "branch": "origin/theory/W8-SYNTH",
+    "head": "6876a9a575550065727c3e21891a9ce97a69911b",
+    "path": "theory_campaign/W8-SYNTH/SYNTHESIS.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W8-SYNTH__SYNTHESIS.md",
+    "sha256": "aea5ed054ef15e49ad4a68564f1eb9e23505f9e40e707243d2e1ccb507e08998"
+  },
+  {
+    "branch": "origin/theory/W8-SYNTH",
+    "head": "6876a9a575550065727c3e21891a9ce97a69911b",
+    "path": "theory_campaign/W8-SYNTH/digests/G1_waves12.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W8-SYNTH__digests__G1_waves12.md",
+    "sha256": "fab34e5cfea80069974d458bbd58c730a12b3575f7e0f2faf6497aea7d5d2406"
+  },
+  {
+    "branch": "origin/theory/W8-SYNTH",
+    "head": "6876a9a575550065727c3e21891a9ce97a69911b",
+    "path": "theory_campaign/W8-SYNTH/digests/G2_waves345.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W8-SYNTH__digests__G2_waves345.md",
+    "sha256": "19669ad53bbcd0b3036e41a43e757596f1f7e7f9a6494d608e76a44425edcfd9"
+  },
+  {
+    "branch": "origin/theory/W8-SYNTH",
+    "head": "6876a9a575550065727c3e21891a9ce97a69911b",
+    "path": "theory_campaign/W8-SYNTH/digests/G3_w67_otheory.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W8-SYNTH__digests__G3_w67_otheory.md",
+    "sha256": "507c042ea784780a03d5054932d92c6fcf4db96f6f7064ccacbb8f5fdd254de8"
+  },
+  {
+    "branch": "origin/theory/W8-SYNTH",
+    "head": "6876a9a575550065727c3e21891a9ce97a69911b",
+    "path": "theory_campaign/W8-SYNTH/digests/G4_crossfamily_referee.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W8-SYNTH__digests__G4_crossfamily_referee.md",
+    "sha256": "ed32ce736a3fc9399a36e66128696159fab792e71e97dfe15346b3c2f03e10eb"
+  },
+  {
+    "branch": "origin/theory/W8-SYNTH",
+    "head": "6876a9a575550065727c3e21891a9ce97a69911b",
+    "path": "theory_campaign/W8-SYNTH/digests/G5_cert_data_lean.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W8-SYNTH__digests__G5_cert_data_lean.md",
+    "sha256": "df6391e6b46cdc0d001ff9497fc3b4844167f168f0ba30d935975be4c44d0e10"
+  },
+  {
+    "branch": "origin/theory/S-REGISTRY",
+    "head": "3d88da68859e1fd830b1a303b9af30f3857a85cd",
+    "path": "theory_campaign/S-REGISTRY/LOCKABLE.md",
+    "snapshot": "theory_campaign/A-REV6/sources/S-REGISTRY__LOCKABLE.md",
+    "sha256": "e700fd747fd8b12b5a431211f2b3ed954d58cbdc551c4fbfcf6535f1c877f5cb"
+  },
+  {
+    "branch": "origin/theory/S-REGISTRY",
+    "head": "3d88da68859e1fd830b1a303b9af30f3857a85cd",
+    "path": "theory_campaign/S-REGISTRY/REGISTRY.md",
+    "snapshot": "theory_campaign/A-REV6/sources/S-REGISTRY__REGISTRY.md",
+    "sha256": "be5347ab86d5da759fad0a0791f69b3d74982e6603273c1527b70c34a765d432"
+  },
+  {
+    "branch": "origin/theory/W4-SHARE",
+    "head": "0d3f3fe581b72186c0c9bffe701950044cc7a464",
+    "path": "theory_campaign/W4-SHARE/NOTES.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W4-SHARE__NOTES.md",
+    "sha256": "e1368c369e91deb3bb15f1ec845ddf3f5767edbaa693641a0ea2866240fa9c6a"
+  },
+  {
+    "branch": "origin/theory/W4-SHARE",
+    "head": "0d3f3fe581b72186c0c9bffe701950044cc7a464",
+    "path": "theory_campaign/W4-SHARE/PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W4-SHARE__PROOF.md",
+    "sha256": "2d79897a68b03e869268021509f9f0973b7c262d0b0e2b189dfbea8403fe0ea4"
+  },
+  {
+    "branch": "origin/theory/W4-SHARE",
+    "head": "0d3f3fe581b72186c0c9bffe701950044cc7a464",
+    "path": "theory_campaign/W4-SHARE/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W4-SHARE__REPORT.md",
+    "sha256": "33d485780f96be252a0f9db89abb7455d1b8649238c2c14105c8de6eed708d8a"
+  },
+  {
+    "branch": "origin/theory/W5-B2ENV",
+    "head": "053511d107eef6bf4c4c0ae6e1f5fbef55f8dc89",
+    "path": "theory_campaign/W5-B2ENV/NOTES.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W5-B2ENV__NOTES.md",
+    "sha256": "3d2a996faf34bc611fc4a2359918c981770f0c476619eef3f02ca771e8c3be9e"
+  },
+  {
+    "branch": "origin/theory/W5-B2ENV",
+    "head": "053511d107eef6bf4c4c0ae6e1f5fbef55f8dc89",
+    "path": "theory_campaign/W5-B2ENV/PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W5-B2ENV__PROOF.md",
+    "sha256": "a15e4a40fa177ded67f1ccbe64609909bed4649f125ceb945629c525a21bf4f4"
+  },
+  {
+    "branch": "origin/theory/W5-B2ENV",
+    "head": "053511d107eef6bf4c4c0ae6e1f5fbef55f8dc89",
+    "path": "theory_campaign/W5-B2ENV/REFEREE.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W5-B2ENV__REFEREE.md",
+    "sha256": "76a0b0c9771c0732df62d9a93b7db887441626fcd9d99bcabffa99d88852dbd4"
+  },
+  {
+    "branch": "origin/theory/W5-B2ENV",
+    "head": "053511d107eef6bf4c4c0ae6e1f5fbef55f8dc89",
+    "path": "theory_campaign/W5-B2ENV/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W5-B2ENV__REPORT.md",
+    "sha256": "26a1c8cbccc599d4acb3881405a72ee7a86f4af848313fcba3c72681ab9cad4d"
+  },
+  {
+    "branch": "origin/theory/F-SHARE",
+    "head": "13bc6654adca4ba4fc3ff85f56c60ccf9f1caa4f",
+    "path": "theory_campaign/F-SHARE/BRIEF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/F-SHARE__BRIEF.md",
+    "sha256": "fc5da9a12ee38c07073ca6272849ad1558a9c5d4f55e4a8a15f643d1e552bea2"
+  },
+  {
+    "branch": "origin/theory/F-SHARE",
+    "head": "13bc6654adca4ba4fc3ff85f56c60ccf9f1caa4f",
+    "path": "theory_campaign/F-SHARE/PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/F-SHARE__PROOF.md",
+    "sha256": "3fd9cfa41c7f696010ebdbb8043cca3cebef151b8e0bbdbd4085e9083ab61551"
+  },
+  {
+    "branch": "origin/theory/F-SHARE",
+    "head": "13bc6654adca4ba4fc3ff85f56c60ccf9f1caa4f",
+    "path": "theory_campaign/F-SHARE/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/F-SHARE__REPORT.md",
+    "sha256": "ecb914d284e67f7b8ed52cb9e59211ba66599681ded1d34e458c47c4712f1e30"
+  },
+  {
+    "branch": "origin/theory/O-BGIBBS",
+    "head": "55679ee634c714aa86ab38785a45622bd73d1654",
+    "path": "theory_campaign/O-BGIBBS/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/O-BGIBBS__REPORT.md",
+    "sha256": "6a68c5067742bd38f0272beadb7b770ac037de98479eeeb8b4ee7c1bf573f65d"
+  },
+  {
+    "branch": "origin/theory/F-MASKPIP",
+    "head": "dbe45faf6e7cd4bda027d3da16309d99f81600ed",
+    "path": "theory_campaign/F-MASKPIP/HELPER_BRIEF_SIM.md",
+    "snapshot": "theory_campaign/A-REV6/sources/F-MASKPIP__HELPER_BRIEF_SIM.md",
+    "sha256": "b07894e3450787361892b3568eda71c2dcf1c5d5407e8c10e6d94032036cf263"
+  },
+  {
+    "branch": "origin/theory/F-MASKPIP",
+    "head": "dbe45faf6e7cd4bda027d3da16309d99f81600ed",
+    "path": "theory_campaign/F-MASKPIP/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/F-MASKPIP__REPORT.md",
+    "sha256": "4d311a0700bfe16b302ef79f1a630f5a57d4efe9702fa86c024ab25f7abefc12"
+  },
+  {
+    "branch": "origin/theory/F-MASKPIP",
+    "head": "dbe45faf6e7cd4bda027d3da16309d99f81600ed",
+    "path": "theory_campaign/F-MASKPIP/results/SIM_NOTES.md",
+    "snapshot": "theory_campaign/A-REV6/sources/F-MASKPIP__results__SIM_NOTES.md",
+    "sha256": "75d0edf528b388be6875ee89cbb6f257eb8608da3c1cb837be0db9ef01dd2001"
+  },
+  {
+    "branch": "origin/theory/F-MASKPIP",
+    "head": "dbe45faf6e7cd4bda027d3da16309d99f81600ed",
+    "path": "theory_campaign/F-MASKPIP/results/summary.md",
+    "snapshot": "theory_campaign/A-REV6/sources/F-MASKPIP__results__summary.md",
+    "sha256": "5a498eb011ac48b34dab619fe2b566b49f3cd0a4916d771c18471d5431dab874"
+  },
+  {
+    "branch": "origin/theory/W5-VMASK",
+    "head": "4e41b974e0b8f954eb6adaf6be76d351821fdab0",
+    "path": "theory_campaign/W5-VMASK/PLAN.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W5-VMASK__PLAN.md",
+    "sha256": "0e299f2b589b821c174cac582ae6fb50818b60f3c7d57953e6ff556afa0cb1d5"
+  },
+  {
+    "branch": "origin/theory/W5-VMASK",
+    "head": "4e41b974e0b8f954eb6adaf6be76d351821fdab0",
+    "path": "theory_campaign/W5-VMASK/REPAIRS.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W5-VMASK__REPAIRS.md",
+    "sha256": "470e4f40a5726af812f4f40ce78d1e89115a53c4de190073b4081917524865a6"
+  },
+  {
+    "branch": "origin/theory/W5-VMASK",
+    "head": "4e41b974e0b8f954eb6adaf6be76d351821fdab0",
+    "path": "theory_campaign/W5-VMASK/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W5-VMASK__REPORT.md",
+    "sha256": "3b23ccf13c249e422a883afd7283378d2202b3dabca9a73232b5aac0b65e5010"
+  },
+  {
+    "branch": "origin/theory/W7-PART",
+    "head": "b2aa940b6d1212c01448fcc4ff1c8851d2bce74b",
+    "path": "theory_campaign/W7-PART/PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W7-PART__PROOF.md",
+    "sha256": "12e12fe5b553c10ac8e9b8f39ecaedf0dee307adaec8310b420a90ffd46fcf09"
+  },
+  {
+    "branch": "origin/theory/W7-PART",
+    "head": "b2aa940b6d1212c01448fcc4ff1c8851d2bce74b",
+    "path": "theory_campaign/W7-PART/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W7-PART__REPORT.md",
+    "sha256": "ca2961655e266fca7abf4531ed833a873314aef6d7235c8b8e0e331bb0ba683f"
+  },
+  {
+    "branch": "origin/theory/W5-LOCKBOOK",
+    "head": "a65392bffd4594fff57842287c56ff1ad743064e",
+    "path": "theory_campaign/W5-LOCKBOOK/AUDIT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W5-LOCKBOOK__AUDIT.md",
+    "sha256": "1bf2eaa363893b95f33af220bae26bd005652aaf19211f12f99aacd8cf0c8519"
+  },
+  {
+    "branch": "origin/theory/W5-LOCKBOOK",
+    "head": "a65392bffd4594fff57842287c56ff1ad743064e",
+    "path": "theory_campaign/W5-LOCKBOOK/NOTES.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W5-LOCKBOOK__NOTES.md",
+    "sha256": "fac7d8d75b97acb338d952ad4b597f6e8fca472f688d5c5457576495319d23d2"
+  },
+  {
+    "branch": "origin/theory/W5-LOCKBOOK",
+    "head": "a65392bffd4594fff57842287c56ff1ad743064e",
+    "path": "theory_campaign/W5-LOCKBOOK/PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W5-LOCKBOOK__PROOF.md",
+    "sha256": "fbd24078200ad9c42cace3e4f1ddbd6a85cd0441e6caad33b527cf709ba86702"
+  },
+  {
+    "branch": "origin/theory/W5-LOCKBOOK",
+    "head": "a65392bffd4594fff57842287c56ff1ad743064e",
+    "path": "theory_campaign/W5-LOCKBOOK/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W5-LOCKBOOK__REPORT.md",
+    "sha256": "4a80c575a05e7a5c7a6ed7345be623787ae2d0422e13eba6ceacd349d31a0377"
+  },
+  {
+    "branch": "origin/theory/W7-SEC",
+    "head": "7e33e8a16f4ad0bbbd91f9b125ac885350027971",
+    "path": "theory_campaign/W7-SEC/NOTES.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W7-SEC__NOTES.md",
+    "sha256": "a575208d71f5f99fc53811437c4efc8b2ff0584ddf06c6a9b8130f6ae29f179f"
+  },
+  {
+    "branch": "origin/theory/W7-SEC",
+    "head": "7e33e8a16f4ad0bbbd91f9b125ac885350027971",
+    "path": "theory_campaign/W7-SEC/PROOF_T05.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W7-SEC__PROOF_T05.md",
+    "sha256": "e409b98a01ffa7eabffaa47c2833cf0df1e76d20694807263bcb4c114c301ce4"
+  },
+  {
+    "branch": "origin/theory/W7-SEC",
+    "head": "7e33e8a16f4ad0bbbd91f9b125ac885350027971",
+    "path": "theory_campaign/W7-SEC/PROOF_T33.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W7-SEC__PROOF_T33.md",
+    "sha256": "18b4f1fc268946a9320c696a46efeacc5b65a69b7eccb5f8bcc3cc31e708a3b2"
+  },
+  {
+    "branch": "origin/theory/W7-SEC",
+    "head": "7e33e8a16f4ad0bbbd91f9b125ac885350027971",
+    "path": "theory_campaign/W7-SEC/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W7-SEC__REPORT.md",
+    "sha256": "f738487da34ff2dae3f69a9beec0c9e10009bda9ca520e9e2d3a0b5c3bb19ae6"
+  },
+  {
+    "branch": "origin/theory/O-WSTAB",
+    "head": "2ec30992adb12335e3cef3b0d9a88ca71c282d63",
+    "path": "theory_campaign/O-WSTAB/PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/O-WSTAB__PROOF.md",
+    "sha256": "2107da8044e9edc3446b2f20eee3eab4219a09f169cdf8d99cf3a47ae0109d27"
+  },
+  {
+    "branch": "origin/theory/O-WSTAB",
+    "head": "2ec30992adb12335e3cef3b0d9a88ca71c282d63",
+    "path": "theory_campaign/O-WSTAB/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/O-WSTAB__REPORT.md",
+    "sha256": "a2d1fe1b67ff249875e7daf36148be8d95593a118fb5fad79bad4d160209b3f5"
+  },
+  {
+    "branch": "origin/theory/O-WSTAB",
+    "head": "2ec30992adb12335e3cef3b0d9a88ca71c282d63",
+    "path": "theory_campaign/O-WSTAB/review/CHECK_SEP_W.md",
+    "snapshot": "theory_campaign/A-REV6/sources/O-WSTAB__review__CHECK_SEP_W.md",
+    "sha256": "e62341638078c1b9383f2f8b6247ce47d6948619e1fd9693386c8145320e3129"
+  },
+  {
+    "branch": "origin/theory/O-DILUTE",
+    "head": "abedf99c92a7b818e9fcdb81bded624335f2b741",
+    "path": "theory_campaign/O-DILUTE/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/O-DILUTE__REPORT.md",
+    "sha256": "23d9b42bb5087f464d3f785d7c0627ac41ffd97bf574ce285a2bd0ac4bbbdd56"
+  },
+  {
+    "branch": "origin/theory/O-DILUTE",
+    "head": "abedf99c92a7b818e9fcdb81bded624335f2b741",
+    "path": "theory_campaign/O-DILUTE/THEORY.md",
+    "snapshot": "theory_campaign/A-REV6/sources/O-DILUTE__THEORY.md",
+    "sha256": "6fb263acbba11dffa3412b152be063aa067606946a38bce928064faa9029bda4"
+  }
+]
