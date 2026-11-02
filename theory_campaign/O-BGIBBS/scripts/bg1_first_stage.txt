@@ -1,0 +1,12 @@
+LH exact Gram: p=16, g=4, rho=0.7, psi=0.5, beta=1, sigma=1, c=2; S0=[0, 4, 8, 12], S°=[0, 8], reps=40
+n=   400 H=  512 | S0 scored in stage-1 round: 40/40 (S0 among initial draws: 2) | pi(S0) med 0.793 | pi0(S0) med 5.5e-05 | pi0(S°) min 0.861
+          frac at S° min 0.844 | W_out/n° max 3.68e+30 | basin frac after resampling min 0.881 | phi1 min/med 0.0257/0.0426 (forced 0) | phi_hub max inf
+LH exact Gram: p=16, g=4, rho=0.7, psi=0.5, beta=1, sigma=1, c=2; S0=[0, 4, 8, 12], S°=[0, 8], reps=40
+n=  1600 H=  512 | S0 scored in stage-1 round: 40/40 (S0 among initial draws: 0) | pi(S0) med 0.893 | pi0(S0) med 1.4e-05 | pi0(S°) min 0.928
+          frac at S° min 0.906 | W_out/n° max 3.06e+65 | basin frac after resampling min 0.947 | phi1 min/med 0.00946/0.0131 (forced 0) | phi_hub max 0.108
+LH exact Gram: p=16, g=4, rho=0.7, psi=0.5, beta=1, sigma=1, c=2; S0=[0, 4, 8, 12], S°=[0, 8], reps=40
+n=  6400 H= 1311 | S0 scored in stage-1 round: 40/40 (S0 among initial draws: 0) | pi(S0) med 0.948 | pi0(S0) med 3.3e-06 | pi0(S°) min 0.962
+          frac at S° min 0.957 | W_out/n° max 2.4e+297 | basin frac after resampling min 0.969 | phi1 min/med 0.00319/0.00396 (forced 0) | phi_hub max 0.0243
+LH exact Gram: p=16, g=4, rho=0.7, psi=0.5, beta=1, sigma=1, c=2; S0=[0, 4, 8, 12], S°=[0, 8], reps=40
+n= 25600 H= 5243 | S0 scored in stage-1 round: 40/40 (S0 among initial draws: 0) | pi(S0) med 0.978 | pi0(S0) med 8.2e-07 | pi0(S°) min 0.980
+          frac at S° min 0.980 | W_out/n° max 5.92e+300 | basin frac after resampling min 0.989 | phi1 min/med 0.001/0.00112 (forced 2) | phi_hub max 0.00652
