@@ -195,7 +195,7 @@ deterministic unit vector).
 
 **Prop. T2.** On E_n, for every W ∈ 𝒮_a, i ∈ S₀ and l ∉ W:
  (a) 1 − o_i(W) ≤ 2p√(n+1)·e^{κ_n}·exp{−Δ_i/(8C_R)}, Δ_i := ‖(P_W − P_{W−i})μ‖² ≥ φ₀²(n−1)θ_i²;
- (b) γ₁(W−i+l)/γ₁(W) ≤ e^{2κ_n+ϑ′_n} n^{L/2} exp{−Δ_i′/(8C_R)}·√(n+1), Δ_i′ := ‖(P_{W+l} − P_{W+l−i})μ‖² ≥ φ₀²(n−1)θ_i².
+ (b) γ₁(W−i+l)/γ₁(W) ≤ e^{2κ_n+ϑ′_n} n^{L/2} exp{−Δ_i′/(8C_R)}, Δ_i′ := ‖(P_{W+l} − P_{W+l−i})μ‖² ≥ φ₀²(n−1)θ_i².
 Under BM-∞ both are n^{−ω(1)} (super-polynomial) uniformly; so the Gibbs truth-deletion term, the uniform-swap
 truth-removal term and the B neighbour-swap truth-removal terms of η₂(a) (the Hastings factor is ≤ p) are
 n^{−ω(1)}.
@@ -205,7 +205,7 @@ n^{−ω(1)}.
 eventually). (b) Same size, so the prior cancels: γ₁(W−i+l)/γ₁(W) = [BF(W+l−i)/BF(W+l)]·[BF(W+l)/BF(W)]. The first
 factor is 1/odds-type for deleting truth i from the superset W+l: ≤ √(n+1)e^{κ_n}e^{−Δ′_i/(8C_R)} by (C5) without the
 prior; the second is a zero-leakage addition, ≤ (n+1)^{−1/2}e^{κ_n+ϑ′_n}e^{Z²/2} ≤ e^{κ_n+ϑ′_n}n^{L/2} by (C3)
-(without the prior) and (E1). ∎
+(without the prior) and (E1); the factors (n+1)^{±1/2} cancel. ∎
 
 ### 3.2 The comparison lemma and the partner graph
 
