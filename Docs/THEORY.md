@@ -4,6 +4,8 @@ Draft of 2026-11-02 for the GH repository (`Docs/THEORY.md`). Drafted by Sonnet 
 
 Nothing in this document is adopted. Where a source file and this summary disagree, the source file governs.
 
+**Amended 2026-11-02 (E-SPINE).** The paper's spine is "moving off the start is needed", **not** "tempering is needed" (W7-SEP · REPORT.md · Proposition GU, Corollary GU-LH). LS0 is now part of the method. The common-σ² start is rejected. The n = 200 disclosure numbers are corrected. See `Docs/Theory/AMENDMENTS_20261102.md`. Status words are unchanged.
+
 ## 0. How to read this
 
 **Status vocabulary** (used exactly, never upgraded):
@@ -284,7 +286,7 @@ Rejected as targets (both reviewers): a comparative superiority theorem over SuS
 - **T27.** Replace the assumed ratio law by a bounded-leakage condition along the chain (two-sided law with a controlled multiplier); the exponent depends on the budget.
 - **T37.** The union bound is the weak point; use the extra-scan rule or a closer centre because l = 10 < s0 + d = 15.
 - **T24 (alternative).** Evaluate LK only at states containing S0 and charge look-alike additions to d; replace the 1/(s0+d+B+2)! constant by a progress argument of one correct step per round; failure point EXIT under internal non-Gibbs moves.
-- **T38.** Eligibility in the masked regime (best-scored model lands in R_d, or use tweak LS0: local search also from the start mode, addable after the fact); compatibility of T22(i) with T27; cost corollary from T32.
+- **T38.** Eligibility in the masked regime (best-scored model lands in R_d, or use tweak LS0: local search also from the start mode, addable after the fact); compatibility of T22(i) with T27; cost corollary from T32. *(Amended 2026-11-02: LS0 is now part of the method; the approval took effect after O-LS0's data check, with 0 of 2,394 reported HPMs changed. Without LS0 the masked regime has candidates on LH, pending cross-family review (A-REV7). The masked half of T38 shows that the run must move off its start, not that tempering is needed: W7-SEP Prop. GU.)*
 - **T26 (i)-(ii).** Require (T_n + 1) Delta_n -> 0 and (L_n + 4) rho*_n -> 0; remove the secondary PIP; no claims about the masked regime.
 - **T12.** Freeze everything before the final randomness; use the islandwise product identity (it is NOT an identity for the pooled Z-hat times the primary pooled PIP); drop the secondary PIP; validate floating point separately.
 - **T21.** Keep P(U) and the non-launch terms; "scored" includes rejected proposals.

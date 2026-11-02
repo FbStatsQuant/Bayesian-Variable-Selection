@@ -95,7 +95,7 @@ Then the GitHub cutover (§5) runs, and the theory phase starts in the new HQ.
 1. T37 (needs restating first; the literal TD fails generically in the data);
 2. T02(i) tail + T03 restatement;
 3. T22(i)/(iii) + T27 on one compatible family;
-4. T38 (composition + eligibility, LS0 tweak if needed);
+4. T38 (composition + eligibility, LS0 tweak if needed; *amended 2026-11-02: LS0 is now part of the method, see `Docs/Theory/AMENDMENTS_20261102.md`*);
 5. T24 only if T37 fails, T39 only if T38(b) fails;
 6. bookkeeping (T12, T21, T26(i)–(ii), T07, T05 remark).
 
