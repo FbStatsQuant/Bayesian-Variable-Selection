@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 cd /home/fb31/theory_campaign/A-REV3 || exit 99
 export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
 mkdir -p results
@@ -17,4 +17,8 @@ c=$?
 printf 'w4=%s w3=%s validate=%s\n' "$a" "$b" "$c" > results/exit_status.txt
 sha256sum results/*.npz results/*.jsonl > results/output_sha256.txt
 date -u
-
+/home/fb31/envs/dl/bin/python scripts/independent.py
+d=$?
+printf 'independent=%s\n' "$d" >> results/exit_status.txt
+sha256sum results/*.npz results/*.json* > results/output_sha256.txt
+exit $((a | b | c | d))

@@ -1,0 +1,90 @@
+﻿[
+    {
+        "path":  "Docs/Methodology/METHODOLOGY_v3.md",
+        "sha256":  "b4253987e3c43c2d703e0157eaf3e3a81d0fff7821ef890b735b167f4344090e"
+    },
+    {
+        "path":  "Docs/Theory/theorems/00_COMMON.md",
+        "sha256":  "db0b16d6856ffd606b88f71ee9f0b2904ebd25cd643befa5e97966ce16350079"
+    },
+    {
+        "path":  "Docs/Theory/proofs/LOCKED_PROOFS.md",
+        "sha256":  "ea898e44183e2d5a73998916918527020583af1737c804fff96f4f147ef36147"
+    },
+    {
+        "path":  "Docs/Theory/proofs/COLLECTED_PROOFS_v2.tex",
+        "sha256":  "acb3e266461964a4ee6f63d542f63184801f357527651a76db9f8f1233194eea"
+    },
+    {
+        "path":  "Docs/Theory/proofs/T03_A2_selection_consistency/STATEMENT.md",
+        "sha256":  "67e921493e5c4fa2b712d7fecbfce142ce9e2ccb796bafd2e964ceac51a627b7"
+    },
+    {
+        "path":  "Docs/Theory/proofs/T03_A2_selection_consistency/PROOF_v2.tex",
+        "sha256":  "bbc0bc0a346a51477065b96e4546a82b3ec4b886e4707134a083eccface885d0"
+    },
+    {
+        "path":  "Docs/Theory/proofs/T22_T16_start_aggregation/STATEMENT.md",
+        "sha256":  "4897c22a8bf5e913ec85493236602c79f9b4d6235888cd3cdba2f9e212802eef"
+    },
+    {
+        "path":  "Docs/Theory/proofs/T22_T16_start_aggregation/PROOF_v3.tex",
+        "sha256":  "08c3521c5ad28bc7d2be26f5093b191fcb0596d95eae811b850ed26922f95be1"
+    },
+    {
+        "path":  "Docs/Theory/proofs/T27i_T20C_cancellation_budget/STATEMENT.md",
+        "sha256":  "da6d6e8a8d67ac94ce23edbf80599701a4c8b1fe9ea109e852181caed6110a95"
+    },
+    {
+        "path":  "Docs/Theory/proofs/T27i_T20C_cancellation_budget/PROOF_v3.tex",
+        "sha256":  "7c875932d33165ed7a570fc2dce9774208215a161ddc1f5a93687a2514f4ef64"
+    },
+    {
+        "path":  "Docs/Theory/proofs/T09_T7_kernel_validity/STATEMENT.md",
+        "sha256":  "da944993732a955086ffe9aaaceb725ff23ff63fa50e923b2881b39a72fcdc75"
+    },
+    {
+        "path":  "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\theory-A-REV3\\Scripts\\SMC_BVS\\core\\cpp\\Makevars.v3",
+        "sha256":  "2ade7a4209d81938623bbc4bbce5e9b71183b96c2d24fc9a313e2ff2e0ec1c7b"
+    },
+    {
+        "path":  "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\theory-A-REV3\\Scripts\\SMC_BVS\\core\\cpp\\v3_blocks.h",
+        "sha256":  "8c68d4ac134463935121c1641c4c6c90c9ad25b590d3d1a340d058b55e291303"
+    },
+    {
+        "path":  "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\theory-A-REV3\\Scripts\\SMC_BVS\\core\\cpp\\v3_calib.h",
+        "sha256":  "e9ad470bfe82548bdcdef11c57ec4bbff48401ba57d82468ca294c41c4ec2c7e"
+    },
+    {
+        "path":  "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\theory-A-REV3\\Scripts\\SMC_BVS\\core\\cpp\\v3_core.cpp",
+        "sha256":  "fbe4773775d57eec41112d2acb3be80e5ac0cc7261f60b89cb0eed0bd13a3c0d"
+    },
+    {
+        "path":  "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\theory-A-REV3\\Scripts\\SMC_BVS\\core\\cpp\\v3_engine.h",
+        "sha256":  "9c47d604d8ad359a942d64a339f6cadaa5633e14eb722b9548fa1d1189033201"
+    },
+    {
+        "path":  "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\theory-A-REV3\\Scripts\\SMC_BVS\\core\\cpp\\v3_holder.h",
+        "sha256":  "87c5174e01ee411dbc7ee32a709fa75f39b84f11f978581f0fece4266483a583"
+    },
+    {
+        "path":  "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\theory-A-REV3\\Scripts\\SMC_BVS\\core\\cpp\\v3_ledger.h",
+        "sha256":  "7641811d73e635bf7176ec76be1c6655b60b2b2fb560453c4d7dc328d7b319a7"
+    },
+    {
+        "path":  "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\theory-A-REV3\\Scripts\\SMC_BVS\\core\\cpp\\v3_runtime.h",
+        "sha256":  "2e164ce34c61e5611e829208e99f6c5c0c6cce19145ab453e1beeb8e5a35900e"
+    },
+    {
+        "path":  "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\theory-A-REV3\\Scripts\\SMC_BVS\\core\\cpp\\v3_score.h",
+        "sha256":  "c306e4979fa41d499c17376990fce6cff1d9165a602beef7f788ff40ecbb0968"
+    },
+    {
+        "path":  "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\theory-A-REV3\\Scripts\\SMC_BVS\\core\\cpp\\v3_start.h",
+        "sha256":  "0926735067d46009fc558ec9776993a4bc80692151629fa88c720d03ad92b4ca"
+    },
+    {
+        "path":  "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\theory-A-REV3\\Scripts\\SMC_BVS\\core\\cpp\\v3_util.h",
+        "sha256":  "1841122ef2ad6d963b1e0f1d622e1bc154f23fd9e5d347e2b7e02890334d2e15"
+    }
+]

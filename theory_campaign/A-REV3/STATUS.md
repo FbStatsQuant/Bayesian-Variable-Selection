@@ -21,3 +21,13 @@ The second shell runner ended with a CRLF blank-line error after saving successf
 program exit statuses. Its original log is retained; a clean LF rerun follows.
 The reproducibility scripts imported from W3/W4 are identified by name in REVIEW.md;
 validate.py is referee-authored. Snapshots are UTF-8 text exports, not byte-identical git blobs.
+
+Clean LF runner PID 2509198 completed on 2026-11-02 at approximately 19:21 UTC.
+Inspected process status: PID no longer present. Saved component exit statuses:
+w4=0, w3=0, validate=0, independent=0; the runner exits their bitwise OR (0).
+Environment: Python 3.12.15, NumPy 2.5.4, SciPy 1.18.1, Linux x86_64.
+`results/run.txt` is the complete successful log; `run_crlf.txt` preserves the
+preceding runner's log. `results_failed_system_python/run.txt` preserves the failure.
+`results/source_snapshot.tar.gz` preserves exact executed source bytes, including
+line endings, independently of git text normalization. `independent.py` is also
+referee-authored; its SVD score check is separate from the original Gram solver.

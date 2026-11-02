@@ -1,0 +1,32 @@
+Mon Nov  2 07:19:21 PM UTC 2026
+owls.stat.rice.edu
+PID=2508171
+/home/fb31/envs/dl/bin/python scripts/w4_checks.py; /home/fb31/envs/dl/bin/python scripts/w3_checks.py; /home/fb31/envs/dl/bin/python scripts/validate.py
+(a) g increasing: True; g(1e-6)=0.500000; g(1)=0.581977 vs 1/(e-1)=0.581977; g(1e3)=0.999000
+(b) monotonicity violations: 0 / 2000
+(c) max ratio (1/theta0)/bound: monotone form 1.000000 (<=1), general form 1.000000 (<=1)
+(d) max exact/bound over 200 random chains: 0.999043 (<=1 required)
+(e) Prop M(a): min LHS/RHS over 3000 random cases = 1.00000000 (>=1 required)
+Lemma B: KS tests vs exact Beta laws (400 reps each)
+  a-group neutral  Beta(0.5, 98.0): KS p-value = 0.622
+  visible neutral  Beta(0.5, 98.0): KS p-value = 0.369
+  null             Beta(0.5, 98.0): KS p-value = 0.520
+  nullV2           Beta(1.0, 98.5): KS p-value = 0.171
+  bgroupV2         Beta(1.0, 98.5): KS p-value = 0.610
+  hub_b            Beta(0.5, 99.0): KS p-value = 0.252
+
+Theorem P6 population margins (exhaustive over neighbours inside the signal components + one null column)
+  smallest D_S margin over the grid: 0.002743 (c=3 rho=0.85 psi=0.20 beta=0.5)
+  smallest (L) deletion/swap margin over the grid: 0.002743
+  all margins positive: True  (grid size 81)
+{"python": "3.12.15 (main, Oct 14 2026, 01:05:27) [Clang 23.1.3 ]", "platform": "Linux-5.14.0-687.56.1.el9_8.x86_64-x86_64-with-glibc2.34", "numpy": "2.5.4", "scipy": "1.18.1"}
+{"config": "A", "n": 200, "p": 750, "rep": 0, "seed": 22868155, "B": 14, "g": 10, "K": 100, "S0": [0, 10, 20], "Sref": [0, 20], "M": [10], "margin_maxw": 0.4418927812752049, "margin_minc": 0.4785989800292044, "margin_ok": true, "blocks_eq_groups": true, "seblk_min_eig": 0.166778425998713, "lmin_RS0": 0.47838728136155595, "log_pi0_Sref": -0.25465779363111807, "log_pi0_S0": -8.808933983316315, "Mstat": 0.460297906488059, "Mstat_limit_const": 0.4054651081081644, "log_pi0_R0": -0.25446365155977446, "log_pi0_R2": -0.004691402177016357, "mode": [0, 20], "mode_is_Sref": true, "q": 0.18739319077536523, "log_e": -1.3229755275723063, "T22i_bound": 0.334610537403659, "start_pip_M": [-8.469983746586465], "LS0_path": [[0, 20]], "LS0_end_is_S0": false, "LS0_certified": true, "LS0_scored_S0": true, "LS0_nscored": 2247, "S0_local_max_gap": -0.13532421203206013, "log_nbr_mass_ratio_S0": 0.8314789447597097, "F_S0_minus_F_Sref": -0.13532421203206013, "Dep": 0.40726339616790375, "Dep_kappa0": 0.24171538134608722, "Dep_kappa1": 0.3219540408718038, "proxy_log_kappa1_max": -1.5261581617098727, "kD": 9, "H0": 512, "frac_draws_Sref": 0.748046875, "S0_drawn": false, "d_range": 8.576740989814539, "NB_threshold": 654.9259677397475, "NB_holds": true, "n_draws_with_proxy_of_M": 1, "secs": 1.7570295333862305}
+{"config": "A", "n": 200, "p": 750, "rep": 1, "seed": 22868156, "B": 14, "g": 10, "K": 100, "S0": [0, 10, 20], "Sref": [0, 20], "M": [10], "margin_maxw": 0.47043444607174423, "margin_minc": 0.5303008010267265, "margin_ok": true, "blocks_eq_groups": true, "seblk_min_eig": 0.16374209939957768, "lmin_RS0": 0.5302734268673617, "log_pi0_Sref": -0.32104047019119974, "log_pi0_S0": -9.131783300437426, "Mstat": 0.1374485893669477, "Mstat_limit_const": 0.4054651081081644, "log_pi0_R0": -0.3208913396030795, "log_pi0_R2": -0.007959901237420297, "mode": [0, 20], "mode_is_Sref": true, "q": 0.21412300787486144, "log_e": -0.1853295438456497, "T22i_bound": 0.14479963660607653, "start_pip_M": [-8.704341175693266], "LS0_path": [[0, 20], [0, 10, 20]], "LS0_end_is_S0": true, "LS0_certified": true, "LS0_scored_S0": true, "LS0_nscored": 5238, "S0_local_max_gap": 1.9572361750659297, "log_nbr_mass_ratio_S0": -0.019924569136762882, "F_S0_minus_F_Sref": 12.03027643359286, "Dep": 0.4807836275375328, "Dep_kappa0": 0.3058146486654527, "Dep_kappa1": 0.364832864048486, "proxy_log_kappa1_max": -0.3861224632320841, "kD": 9, "H0": 512, "frac_draws_Sref": 0.748046875, "S0_drawn": false, "d_range": 14.44669715992245, "NB_threshold": 654.9259677397475, "NB_holds": true, "n_draws_with_proxy_of_M": 3, "secs": 1.8596112728118896}
+{"config": "A", "n": 200, "p": 750, "rep": 2, "seed": 22868157, "B": 14, "g": 10, "K": 100, "S0": [0, 10, 20], "Sref": [0, 20], "M": [10], "margin_maxw": 0.45088223084467594, "margin_minc": 0.4948561765010462, "margin_ok": true, "blocks_eq_groups": true, "seblk_min_eig": 0.16369368417612662, "lmin_RS0": 0.4943505170864616, "log_pi0_Sref": -0.42495485760999685, "log_pi0_S0": -8.90863427432972, "Mstat": 0.3605976154746533, "Mstat_limit_const": 0.4054651081081644, "log_pi0_R0": -0.4247480599621838, "log_pi0_R2": -0.01479181073461433, "mode": [0, 20], "mode_is_Sref": true, "q": 0.2902668341323922, "log_e": 6.528204109642535, "T22i_bound": 7.615363364826507e-07, "start_pip_M": [-8.343277299751755], "LS0_path": [[0, 20], [0, 10, 20]], "LS0_end_is_S0": true, "LS0_certified": true, "LS0_scored_S0": true, "LS0_nscored": 5238, "S0_local_max_gap": 2.373012630954406, "log_nbr_mass_ratio_S0": -0.8229635848143577, "F_S0_minus_F_Sref": 6.13789482883692, "Dep": 0.5128092691263513, "Dep_kappa0": 0.4039243319317064, "Dep_kappa1": 0.261301854399736, "proxy_log_kappa1_max": 3.764882197882514, "kD": 9, "H0": 512, "frac_draws_Sref": 0.640625, "S0_drawn": false, "d_range": 8.495782215069198, "NB_threshold": 654.9259677397475, "NB_holds": true, "n_draws_with_proxy_of_M": 0, "secs": 1.4805781841278076}
+{"test": "SH_rare_outsider", "N": 100, "kappa": 13.815510557964275, "extinction": 0.629182929380292, "ceiling": 0.6339676587267709}
+{"test": "SH_rare_outsider", "N": 1000, "kappa": 20.72326583694641, "extinction": 0.6318203832024682, "ceiling": 0.6323045752290363}
+{"test": "SH_rare_outsider", "N": 10000, "kappa": 27.63102111592855, "extinction": 0.6320904770287854, "ceiling": 0.6321389535670295}
+{"test": "M_expansion", "exact_limit": 0.34657359027997264, "quadratic_limit": 0.25, "difference": 0.09657359027997264}
+{"test": "eta_replacement", "eta": 0.5, "exact_loss_per_stage": 0.6931471805599453, "claimed_loss_per_stage": 0.5}
+Mon Nov  2 07:19:46 PM UTC 2026
+scripts/run.sh: line 20: $'\r': command not found
