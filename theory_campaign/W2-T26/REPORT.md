@@ -23,7 +23,7 @@ Full statements and proofs: `PROOF.md` (this folder). Scripts: `scripts/`. Raw o
   addition. So Theorem B is not vacuous, but the family is not the p ≫ n study design.
 - **Numerics.** The premises are non-vacuous at exact p = 18 (smallest p the method does not enumerate): with the
   realised (ideal-grid) T, (T+1)Δ_n falls like n^{−1/2} to ≈ 0.02 at n = 163,840. With the deterministic cap
-  T^max = 4,000 they need n far beyond 10⁸. All finite-n (A-0) bounds hold in final-run simulations, with 10–100× slack.
+  T^max = 4,000 they need n far beyond 10⁸. All finite-n (A-0) bounds hold in final-run simulations, with 30–200× slack.
 
 ## 2. Statements (full versions in PROOF.md §1)
 
@@ -88,10 +88,42 @@ Medians:
 
 | design | n | 1−π₀(S₀) | δ₁ | Δ_n | T_ideal | (T_ideal+1)Δ_n | (T^max+1)Δ_n | ρ̄-bound + u_π | frozen (L+4)ρ* |
 |---|---|---|---|---|---|---|---|---|---|
-SCAN_TABLE
+| fav_iid | 40 | 9.67e-01 | 9.24e-01 | 9.83e-01 | 6 | 6.18e+00 | 3.93e+03 | 5.28e+01 | 1.00e+01 |
+| fav_iid | 80 | 6.61e-01 | 3.68e-01 | 7.34e-01 | 5 | 4.40e+00 | 2.94e+03 | 1.21e+00 | 1.10e+01 |
+| fav_iid | 160 | 2.87e-01 | 2.66e-01 | 3.19e-01 | 2 | 9.84e-01 | 1.28e+03 | 8.45e-01 | 1.20e+01 |
+| fav_iid | 320 | 1.41e-01 | 1.48e-01 | 1.48e-01 | 1 | 2.96e-01 | 5.93e+02 | 4.44e-01 | 1.30e+01 |
+| fav_iid | 640 | 1.15e-01 | 1.25e-01 | 1.31e-01 | 2 | 3.28e-01 | 5.23e+02 | 3.65e-01 | 1.35e+01 |
+| fav_iid | 1280 | 1.28e-01 | 1.21e-01 | 1.42e-01 | 2 | 4.10e-01 | 5.66e+02 | 3.29e-01 | 1.44e+01 |
+| fav_iid | 2560 | 4.91e-02 | 7.50e-02 | 7.50e-02 | 1 | 1.50e-01 | 3.00e+02 | 2.02e-01 | 9.08e+00 |
+| fav_iid | 5120 | 4.97e-02 | 5.20e-02 | 5.56e-02 | 1 | 1.11e-01 | 2.23e+02 | 1.46e-01 | 6.53e+00 |
+| fav_iid | 10240 | 4.04e-02 | 3.25e-02 | 4.04e-02 | 1 | 8.09e-02 | 1.62e+02 | 9.39e-02 | 4.23e+00 |
+| fav_iid | 40960 | 1.42e-02 | 1.71e-02 | 1.86e-02 | 1 | 3.71e-02 | 7.43e+01 | 4.68e-02 | 2.43e+00 |
+| fav_iid | 163840 | 8.51e-03 | 1.12e-02 | 1.12e-02 | 1 | 2.25e-02 | 4.49e+01 | 2.94e-02 | 1.75e+00 |
+| fav_cor | 40 | 9.95e-01 | 9.21e-01 | 9.95e-01 | 5 | 5.92e+00 | 3.98e+03 | 1.31e+01 | 1.00e+01 |
+| fav_cor | 80 | 8.23e-01 | 4.57e-01 | 8.23e-01 | 5 | 4.43e+00 | 3.29e+03 | 1.45e+00 | 1.10e+01 |
+| fav_cor | 160 | 2.57e-01 | 2.43e-01 | 2.78e-01 | 2 | 7.01e-01 | 1.11e+03 | 7.36e-01 | 1.20e+01 |
+| fav_cor | 320 | 2.08e-01 | 1.85e-01 | 2.31e-01 | 2 | 5.99e-01 | 9.25e+02 | 5.57e-01 | 1.30e+01 |
+| fav_cor | 640 | 1.51e-01 | 1.53e-01 | 1.86e-01 | 2 | 5.59e-01 | 7.46e+02 | 4.33e-01 | 1.40e+01 |
+| fav_cor | 1280 | 8.54e-02 | 8.56e-02 | 1.02e-01 | 1 | 2.13e-01 | 4.09e+02 | 2.52e-01 | 9.83e+00 |
+| fav_cor | 2560 | 6.87e-02 | 7.84e-02 | 1.04e-01 | 1 | 2.63e-01 | 4.15e+02 | 2.12e-01 | 9.54e+00 |
+| fav_cor | 5120 | 7.02e-02 | 5.31e-02 | 7.41e-02 | 1 | 1.58e-01 | 2.96e+02 | 1.51e-01 | 6.68e+00 |
+| fav_cor | 10240 | 3.73e-02 | 4.09e-02 | 4.38e-02 | 2 | 1.11e-01 | 1.75e+02 | 1.12e-01 | 5.37e+00 |
+| fav_cor | 40960 | 3.24e-02 | 2.73e-02 | 3.36e-02 | 1 | 6.72e-02 | 1.34e+02 | 7.02e-02 | 3.94e+00 |
+| fav_cor | 163840 | 8.60e-03 | 1.07e-02 | 1.10e-02 | 1 | 2.20e-02 | 4.41e+01 | 2.92e-02 | 1.67e+00 |
+| masked | 40 | 9.98e-01 | 9.92e-01 | 9.98e-01 | 4 | 4.47e+00 | 3.99e+03 | 1.41e+02 | 1.00e+01 |
+| masked | 80 | 9.77e-01 | 5.35e-01 | 9.77e-01 | 6 | 6.96e+00 | 3.91e+03 | 1.84e+00 | 1.10e+01 |
+| masked | 160 | 6.23e-01 | 2.44e-01 | 6.53e-01 | 5 | 3.92e+00 | 2.61e+03 | 6.85e-01 | 1.20e+01 |
+| masked | 320 | 9.92e-01 | 2.23e-01 | 9.92e-01 | 9 | 9.92e+00 | 3.97e+03 | 5.76e-01 | 1.30e+01 |
+| masked | 640 | 9.99e-01 | 1.23e-01 | 9.99e-01 | 10 | 1.10e+01 | 4.00e+03 | 2.69e-01 | 1.36e+01 |
+| masked | 1280 | 1.00e+00 | 1.20e-01 | 1.00e+00 | 12 | 1.30e+01 | 4.00e+03 | 2.61e-01 | 1.34e+01 |
+| masked | 2560 | 1.00e+00 | 9.54e-02 | 1.00e+00 | 18 | 1.90e+01 | 4.00e+03 | 2.05e-01 | 1.18e+01 |
+| masked | 5120 | 1.00e+00 | 4.63e-02 | 1.00e+00 | 20 | 2.10e+01 | 4.00e+03 | 9.56e-02 | 5.79e+00 |
+| masked | 10240 | 1.00e+00 | 3.64e-02 | 1.00e+00 | 22 | 2.30e+01 | 4.00e+03 | 7.44e-02 | 4.76e+00 |
+| masked | 40960 | 1.00e+00 | 2.28e-02 | 1.00e+00 | 25 | 2.60e+01 | 4.00e+03 | 4.64e-02 | 3.27e+00 |
+| masked | 163840 | 1.00e+00 | 8.01e-03 | 1.00e+00 | 27 | 2.80e+01 | 4.00e+03 | 1.61e-02 | 1.24e+00 |
 
 - Lemma 1 check: the grid minimum of q_φ(S₀) over 201 values of φ equalled the endpoint minimum in every one of the
-  SCAN_COUNT runs (max |Δ_grid − Δ| = 0).
+  246 runs (max |Δ_grid − Δ| = 0.0e+00).
 - In the favourable designs Δ_n ≈ c·n^{−1/2}, as T03 and T22(iii) at κ = ½ predict. With the realised (ideal-grid)
   T ∈ {1, 2}, (P1) is met in the limit and is ≈ 0.02 at n = 163,840. **With T^max = 4,000 it is ≥ 44 even at
   n = 163,840**, so the deterministic-budget form of (P1) needs n of order 10⁸–10⁹ in these designs.
@@ -104,7 +136,14 @@ SCAN_TABLE
 
 **4.2 ORTH family** (`orth_check.py` → `results/orth_check.csv`; p = n/2, s₀ = 3, θ = 0.6, 3 seeds):
 
-ORTH_TABLE
+| n | p | B | max|R| (max over seeds) | median 1−π₀(S₀) | median (T^max+1)(1−π₀(S₀)) |
+|---|---|---|---|---|---|
+| 200 | 100 | 10 | 0.164 | 1.896e-01 | 758.5 |
+| 400 | 200 | 14 | 0.153 | 1.306e-01 | 522.4 |
+| 800 | 400 | 16 | 0.125 | 9.433e-02 | 377.4 |
+| 1600 | 800 | 16 | 0.122 | 6.713e-02 | 268.6 |
+| 3200 | 1600 | 16 | 0.116 | 4.898e-02 | 196.0 |
+| 6400 | 3200 | 16 | 0.113 | 3.464e-02 | 138.6 |
 
 max|R| (the EXP′ remainder over every within-block addition) stays bounded, as Proposition C claims. 1 − π₀(S₀)
 decays like √(log n/n), which is the T22(iii) rate at κ = ½. So T22(iii) is attained here, not loose, and
@@ -114,10 +153,20 @@ decays like √(log n/n), which is the T22(iii) rate at κ = ½. So T22(iii) is 
 simulations of the potential uninterrupted final run: the 4-island SMC with the actual move round, multinomial
 resampling, L burn-in and 4 measured rounds, run on the ideal grid. Means over reps × 4 islands:
 
-SIM_TABLE
+| design | n | N | reps | T | Δ_n | E|W_r−1| | bound b | E occupancy (end T / round starts) | its bound | E max_j PIP err (island) | bound (A-0)(c) | old (L+5/2)ρ̄ bound | exact-posterior PIP err | MPM wrong |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| fav_iid | 320 | 2500 | 10 | 1 | 0.142 | 3.30e-03 | 6.61e-01 | 0.142 / 0.142 | 1.000 | 2.89e-02 | 1.42e+00 | 4.14 | 2.89e-02 | 0.00 |
+| fav_iid | 5120 | 2500 | 10 | 1 | 0.0553 | 2.19e-03 | 2.34e-01 | 0.056 / 0.055 | 0.579 | 1.42e-02 | 7.31e-01 | 2.08 | 1.42e-02 | 0.00 |
+| fav_cor | 5120 | 2500 | 10 | 1 | 0.0528 | 4.88e-03 | 2.23e-01 | 0.048 / 0.049 | 0.542 | 1.15e-02 | 6.73e-01 | 1.84 | 1.15e-02 | 0.00 |
+| fav_cor | 163840 | 2500 | 10 | 1 | 0.00842 | 1.02e-03 | 3.40e-02 | 0.008 / 0.008 | 0.084 | 1.34e-03 | 1.05e-01 | 0.38 | 1.34e-03 | 0.00 |
+| masked | 640 | 2500 | 10 | 10 | 1 | 1.43e-02 | 1.49e+05 | 0.121 / 0.121 | 1.000 | 3.91e-02 | 1.26e+00 | 2.69 | 3.91e-02 | 0.00 |
+| masked | 5120 | 2500 | 10 | 20 | 1 | 2.13e-02 | ∞ (Δ_n = 1 to double precision) | 0.037 / 0.037 | 1.000 | 6.72e-03 | 1.08e+00 | 1.62 | 6.72e-03 | 0.00 |
+| fav_iid | 320 | 50 | 40 | 1 | 0.142 | 2.49e-02 | 6.61e-01 | 0.137 / 0.143 | 1.000 | 2.89e-02 | 1.42e+00 | 4.14 | 2.89e-02 | 0.00 |
+| fav_cor | 5120 | 50 | 40 | 1 | 0.0528 | 2.96e-02 | 2.23e-01 | 0.051 / 0.048 | 0.542 | 1.15e-02 | 6.73e-01 | 1.84 | 1.15e-02 | 0.00 |
+| masked | 5120 | 50 | 40 | 20 | 1 | 1.63e-01 | ∞ (Δ_n = 1 to double precision) | 0.036 / 0.036 | 1.000 | 6.71e-03 | 1.08e+00 | 1.62 | 6.72e-03 | 0.00 |
 
 Every (A-0) bound holds. The realised occupancy matches δ₁, and the PIP error equals the exact-posterior PIP error, so
-the Monte Carlo error is negligible at these sizes. The bounds are loose by 10–100×, mostly from the factor 2 in
+the Monte Carlo error is negligible at these sizes. The bounds are loose by about 30–200× for the evidence and 50–80× for the PIPs, mostly from the factor 2 in
 2δ₁ + 2b and the (T+1) sum in b. Runs with N = 50 also satisfy the bounds, which are free of N.
 
 **4.4 Lemma 2 check** (`check_rho_bar.py` → `results/check_rho_bar.txt`; 200,000 one-round paths from S₀): the
@@ -154,8 +203,9 @@ simulated departure frequency agrees with the exact ρ̄ = 1 − ∏_e(1 − k_e
 
 ## 7. Outside scope
 
-- In the `masked` design at n = 640 (Δ_n = 1, T = 10), the simulated final run still estimates Z within 1.4% and the
-  PIPs within 0.04 of the truth at N = 2,500 (`results/smc_sim.jsonl`). The sampler works where T26 is silent; at
+- In the `masked` design (Δ_n = 1), the simulated final run still estimates Z within 1.4% (n = 640, T = 10) and 2.1%
+  (n = 5120, T = 20) in mean absolute relative error, with PIP errors equal to the exact-posterior ones, at N = 2,500
+  (16% evidence error at N = 50) (`results/smc_sim.jsonl`). The sampler works where T26 is silent; at
   p = 18 this is unsurprising, but it is a reminder that T26 is sufficient only.
 - Under ORTH with zero leakage, 1 − π₀(S₀) ≈ c√(log n/n): each null variable's table contributes about
   (1/2p)·n^{−1/2}·e^{χ²₁/2}, and the heavy-tailed sum over p nulls is of order √(log p). This makes T22(iii)'s κ = ½
