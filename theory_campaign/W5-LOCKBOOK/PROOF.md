@@ -215,7 +215,7 @@ E[P̄₁] − PIP₁ = −0.173974177850, E[ẐP̄₁]/(Z·PIP₁) − 1 = −0.
 ## §R2. Referee notes on W2-T26
 
 **Lemma 1.** Checked: T22(iv-b) gives sup_{φ∈[0,1]}(1 − q_φ(S₀)) ≤ max of the endpoint deficits; φ ∈ {0, 1} gives ≥.
-My reproduction found Δ_grid = Δ exactly (201-point grid) in every row (REPORT §4.2).
+My reproduction found |Δ_grid − Δ| ≤ 1.1·10⁻¹⁶ (201-point grid) in all 66 rows (REPORT §4.2).
 
 **Lemma 2.** Checked: π-reversibility gives K_e(x, y) ≤ π(y)/π(x); Gibbs-j at S₀ only reaches S₀Δ{j} (distinct over j),
 so the Gibbs labels contribute ≤ u_π in total; the other B + 2 labels ≤ u_π each. The exact form
@@ -237,7 +237,7 @@ stays, with probability 1 − K_{σ(k)}(S₀, Ω∖{S₀}) at step k, and the pr
 - 𝔄 = {S₀} is deterministic, hence fixed given 𝓒, as T15 requires.
 So E_𝓒 g_{r,h} ≤ min{1, 2δ₁ + 2b(𝓒)} for each h, and the frozen second premise (L+4)ρ* → 0 is indeed redundant.
 I see no gap. (Independent confirmation that the redundancy is not cosmetic: in my reproduction at n = 40,960 the
-median of (L + 4)ρ* is ≥ 1.6 in all three designs while ρ̄ + u_π ≈ 0.04; REPORT §4.2.)
+median of (L + 4)ρ* is 2.4–3.9 in the three designs while ρ̄ + u_π ≈ 0.05–0.07; REPORT §4.2.)
 
 **Theorem A.** (A-0)(a) T14(i-b) with S° = S₀: η_t ≤ Δ_n, ε_* ≤ Δ_n, so 2(T+1)Δ_n/(1−Δ_n) — checked. (b) T15(iii)+(i)
 with c = ½ — checked (π(𝔄ᶜ)/c = 2δ₁, B/(1 − c) = 2b). (c) T23(ii-a, b) + Lemma 3 — checked; the primary PIP by
