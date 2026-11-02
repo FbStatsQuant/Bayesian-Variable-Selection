@@ -117,6 +117,19 @@ the non-progress ones are exactly (N1)–(N5) below. Write η = min(η₁, η₂
      otherwise red < 0.
 (N5) swap truth u → truth j ∈ M: red = a_j(S) − a_u(S − u + j) ≤ (1 − η₂)a_j(S) ≤ (1 − η)ρ⁺ (TRC). ∎
 
+### Remarks on GERC. Status: PROVED.
+(a) *Tightness over θ.* For fixed S, l and M, sup over θ_M ≠ 0 of a_l(S)/max_{j∈M} a_j(S) equals ERC(S, l)².
+Indeed, with x̂_j := x̃_j/‖x̃_j‖, Ĝ := X̂_MᵀX̂_M and b := X̂_Mᵀx̂_l, ERC(S, l) = ‖Ĝ⁻¹b‖₁ (since c_j‖x̃_j‖/‖x̃_l‖ =
+(Ĝ⁻¹b)_j); r_S = X̃_Mθ_M ranges over all of span X̃_M, so the vector t := X̂_Mᵀr_S ranges over ℝ^M; then
+⟨x̂_l, r_S⟩ = (Ĝ⁻¹b)ᵀt and max_j a_j = ‖t‖²_∞, and sup_t ((Ĝ⁻¹b)ᵀt)²/‖t‖²_∞ = ‖Ĝ⁻¹b‖₁². Hence GERC(𝓡; η) is
+*equivalent* to "the add-null part of PGD(η) holds on 𝓡 for every θ with support S₀".
+(b) *A coherence sufficient condition (restricted-isometry type).* Let μ_S := max_{l null, j∈M}|⟨x̂_l, x̂_j⟩| and
+ν_S := max_{j≠k∈M}|⟨x̂_j, x̂_k⟩| (residualised, normalised atoms at S). If (m − 1)ν_S < 1 then
+ERC(S, l) ≤ mμ_S/(1 − (m − 1)ν_S) (Ĝ is diagonally dominant, ‖Ĝ⁻¹‖_{1→1} ≤ 1/(1 − (m−1)ν_S), ‖b‖₁ ≤ mμ_S).
+So GERC(𝓡; η) holds if mμ_S ≤ √(1 − η)(1 − (m−1)ν_S) on 𝓡; for near-truth regions (a small) this is a mild,
+anchored coherence bound. (c) The combination look-alike of W1-T37R Exp 3 has ERC(∅, 3) = √2·a = 1.20 > 1:
+GERC fails exactly where PGD fails.
+
 ### Proposition P2 (exact block reduction). Status: PROVED.
 Let 𝒢 be a partition of [p] such that (BO) X_gᵀX_h = 0 for distinct groups g ≠ h, and every group contains
 at most one truth. For a truth group g write j_g for its truth, N_g := g∖{j_g}, and for P ⊆ N_g
