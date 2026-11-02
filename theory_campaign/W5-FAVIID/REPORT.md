@@ -70,7 +70,76 @@ on span(X_{S₀}, Y), a Beta((s₀+1)/2, ·) variable: rate n^{−1/2}(log n)^{(
 
 ## 4. Evidence
 
-__EVIDENCE__
+All numbers are exact (EX-A): v3 partition (port of `v3_blocks.h`, W3-PXN's library, re-checked in `results/sanity.txt`),
+all block tables, π₀ by capped convolution. Designs follow `gen_dev_data.R` in distribution (numpy port: groups of 5,
+truths at the generator's positions, signal on sample-standardised columns, ε ~ N(0,1), the same X and ε for both scales).
+Sweep: S1/S3/S4/S6 × p ∈ {500, 1000} × scale ∈ {0.5, 1} × n ∈ {200, 400, 800, 1600, 3200}, 20 designs per cell
+(1,600 design-scale rows; `scripts/study_sweep.py`, `results/sweep.jsonl`, table `results/sweep_summary.txt`).
+
+### 4.1 Lemma checks and Theorems A/B on the study designs
+- **Lemma checks** (`results/sanity.txt`): FastTables = W3-PXN tables (0.0); brute-force = convolution normaliser (0.0);
+  Lemma X⁺ on 6,000 random (U, A) pairs: max(R⁺ − κ⁺) = −0.005 ≤ 0; Lemma S: 0 violations in 2,000 tests; Lemma B′ KS
+  p-values 0.71/0.77/0.73 for three (Γ, W, V) configurations; c_ML = 3.8311.
+- **T22(i) bound** (s₀+1)q/(1−q) + s₀e ≥ 1 − π₀(S₀) in **1,600/1,600** rows (0 violations). But it is **vacuous (> 1) in
+  every S3/S4/S6 cell up to n = 3,200** (medians 10²–10⁵) and in S1 up to n = 1,600: the e term (proxy-saturated U) dominates;
+  q itself is small (0.044–0.059 at n = 3,200).
+- **Theorem A's moment bound**: the realised q divided by ξ_n(ε₀ = 0) = √(log(2^Bp)/(n+1)) is 0.60–0.82 in every cell
+  (Theorem A: E q ≤ 3.83(1+o(1))ξ_n) — the bound holds with a factor ≈ 5 to spare, and q falls like √(log n/n).
+- **Theorem B's factorisation** q ≤ e^{o(1)}Q_real (Q_real = Q̄ at the realised truth contexts, computed exactly): the
+  ratio q/Q_real is ≤ 0.996 in all 1,200 S3/S4/S6 rows (the inequality holds even without the e^{o(1)}). **Q₀/Q_real
+  (all contexts replaced by W = ∅) is 0.999–1.050** (medians per cell): the truth context barely matters, which is the
+  numerical case for Conjecture B′ (no |𝒲| factor).
+- **Union of whole groups (Q_n)**: held in 1,598/1,600 designs; the two exceptions are S6 at n = 200 (ρ = 0.4 groups against
+  cross-group noise ≈ √(4 log p/n) ≈ 0.35). Realised truth context m_real ≤ 3 in S3/S4/S6.
+
+### 4.2 No fixed partition (Proposition N) and S1's contexts (`results/propN.txt`, `results/s1_contexts.txt`)
+For S3/S4/S6, 90–100% of groups share a block with another group (100% for n ≥ 400, B = 16), but **two independent designs at
+the same (scenario, p, n) share almost no co-blocked group pairs**: mean Jaccard 0.0007–0.0096, at or below the 0.0045–0.014
+expected if pairs were placed uniformly at random, at every n up to 3,200. The packing does not converge; Theorem B, not
+VEXP's R3 device, is the right tool. In S1 the largest number of truths sharing a block is 1–3 in 199/200 designs (one design
+at n = 200 had 5), so Theorem B's |𝒲(m)| with m = 3–4 (≤ 106–470) is the relevant S1 constant in practice.
+
+### 4.3 The rate and the sharp constant
+Median √(n/log n)(1 − π₀(S₀)) falls from ≈ 10 (n = 800) to 5.5–7.1 (n = 3,200) in every scenario: the √(log n/n) rate is
+reached by n ≈ 3,200 and the remaining decay before that is the deletion/swap terms dying. **The null-addition prediction
+1 − exp(−N_add^pred) (§10, no fitted constant) matches the exact 1 − π₀(S₀) to within a factor 0.86–1.11 at n = 3,200** in all
+16 cells (and 0.96–1.07 at n = 1,600 in S1/S3 p = 500); at n ≤ 1,600 in S4/S6 the exact deficit is up to 2.2× the null-only
+prediction because deletions and proxy swaps still contribute.
+
+### 4.4 Dilution threshold n*(design) (`results/threshold.txt`, columns "pred" in `results/sweep_summary.txt`)
+Exact medians of log₁₀π₀(S₀) (p = 500, scale 1; p = 1000 similar, ≈ 0.5–2 decades lower at n ≤ 800):
+
+| scen | n = 200 | 400 | 800 | 1600 | 3200 | frac π₀(S₀) > ½ at 1600 / 3200 |
+|---|---|---|---|---|---|---|
+| S1 | −10.7 | −4.2 | −0.61 | −0.22 | −0.16 | 0.90 / 0.95 |
+| S3 | −12.9 | −5.1 | −1.54 | −0.23 | −0.14 | 0.80 / 0.95 |
+| S4 | −13.6 | −5.9 | −2.28 | −0.85 | −0.15 | 0.25 / 0.85 |
+| S6 | −12.9 | −5.9 | −1.27 | −0.38 | −0.16 | 0.30 / 0.95 |
+
+Predicted thresholds (population plug-in, PROOF §11):
+
+| design | n*_null | n*_del | n*_half (pred) | empirical first n with median π₀(S₀) > ½ | n*_hit (pred) |
+|---|---|---|---|---|---|
+| S1 p=500 / 1000 | 1,020 / 1,130 | 670–750 / 730–820 | 1,050–1,080 / 1,140–1,175 | 1,600 / 1,600 | 330–370 / 380–420 |
+| S3 p=500 / 1000 | 1,020 / 1,130 | 680–770 / 740–830 | 1,065–1,111 / 1,158–1,191 | 1,600 / 3,200 | 340–380 / 380–430 |
+| S4 p=500 / 1000 | 1,020 / 1,130 | 810–900 / 830–940 | 1,314–1,409 / 1,370–1,449 | 3,200 / 3,200 | 360–400 / 400–440 |
+| S6 p=500 / 1000 | 1,020 / 1,130 | 710–800 / 760–850 | 1,142–1,208 / 1,225–1,277 | 3,200 / 3,200 | 340–380 / 380–430 |
+
+(ranges are over the two scales; the empirical column is on the grid {200, …, 3200}.) Reading:
+- **The favourable threshold is set by the null-addition mass, not by dilution.** n*_null (≈ ((s₀+1)M/(2 log 2))², independent of
+  θ and of v) exceeds n*_del in every design; dilution and proxy swaps add 5–40% (most in S4, ρ = 0.85).
+- **Scale-free**: thresholds differ by ≤ 10% between scale 0.5 and 1 (θ_j²/v depends on shares), confirming W3-PXN/VEXP.
+- **The predictor is optimistic by a factor ≈ 1.5–2.5 in n.** It reproduces log₁₀π₀(S₀) to ±0.1 at n ≥ 1,600 in S1/S3/S6 and at
+  n = 3,200 everywhere, but at n ≤ 800 it is 1–4 decades too high (median-level plug-in ignores the noncentral fluctuation of
+  the keep statistics, which enters through E e^{−V}, not e^{−median V}), and in S4 at n = 1,600 it misses 0.6 decades (proxy
+  swaps). The exact one-change decomposition (11.1) is within 0.1 decades at n ≥ 800 and 0.5–2.4 decades at n ≤ 400
+  ("decomposition" column), so the gap is in the population plug-in, not in (11.1). n*_half(pred) should be read as a lower
+  bound; the empirical thresholds are 1,600 (S1, S3 p = 500) and 3,200 (S3 p = 1,000, S4, S6).
+- **Discovery (Thm 5(a) route (a)) needs only n ≳ 330–440**: there Q_f^min·π₀(S₀) ≥ 3 by the predictor; exact medians of
+  π₀(S₀) at n = 400 (10⁻⁴·² to 10⁻⁹·⁴) bracket the 2·10⁻⁵ requirement and at n = 800 (≥ 10⁻²·⁹) clear it in every cell.
+
+### 4.5 (P1) with the realised pilot/grid stage count (`results/pilot_summary.txt`)
+__PILOT__
 
 ## 5. What fails and why
 
