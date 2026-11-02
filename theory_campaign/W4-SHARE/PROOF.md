@@ -84,7 +84,7 @@ which gives (2.1) because κ_t ≥ (b − a)⁺ and 1 + o(e^{x} − 1) ≤ e^{x}
 2. *The refined form.* (2.1) also gives P̲_t := exp{−Σ_{s≤t} ε_s(e^{Δ_sκ_s} − 1)}∏(1−η_s) on the event {o_{s−1} ≤ ε_s for all s} ∩ E. Then the loss is ≈ Σ ε_sΔ_sκ_s: an outsider class that is fitter by κ costs only its own (h-weighted) population fraction times κ. This is the form needed when κ is large but the outsiders are rare.
 3. *Reading.* Delivery to W is guaranteed (up to P(E^c)) as soon as
   Nπ₀(h_0) ≫ T·e^{Γ}/∏(1 − η_s),
-i.e. **Γ + Σ_s η_s ≤ log(Nπ₀(h_0)/T) − ω(1)**. The threshold is logarithmic in N; §3 shows it is sharp up to a factor 2 in log N.
+i.e. **Γ − Σ_s log(1 − η_s) ≤ log(Nπ₀(h_0)/T) − ω(1)** (for η_s ≤ ½, −log(1−η_s) ≤ 2η_s). The threshold is logarithmic in N; §3 shows it is sharp up to a factor 2 in log N.
 
 ---
 
