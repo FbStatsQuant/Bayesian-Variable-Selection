@@ -10,7 +10,7 @@ Run of 2026-11-02, branch `theory/O-BGIBBS`. The first draft (Lemma R, BG1, Prop
    - The bound is P(S₀ ∉ 𝒮) ≤ Nπ₀(𝒰ᶜ) + N(T + L + 4)m·e^{−c₃n} + e^{−N(L+4)β₁} + o(1).
    - With T38(0): **P(𝒪 ∩ {Ŝ ≠ S₀}) → 0 for the original method, without LS0.** This answers W4-T38FULL item 6 on LH with p fixed.
    - The deterministic premises (lock and downhill gaps C1–C3) are verified by exhaustive enumeration for both simulated designs (c = 2 and c = 3).
-   - Simulated islands: no particle ever left 𝒰 (min_t N_𝒰/N = 1 in 16/16 islands); q₁ = 0.06–0.17; the implied miss bound in the terminal rounds is ≤ 10⁻⁸⁰⁰.
+   - Simulated islands: no particle ever left 𝒰 (min_t N_𝒰/N = 1 in 19/19 islands); the minimum q₁ over the 28 tested states per island is 0.019–0.15; the implied miss bound in the terminal rounds is ≤ 10⁻³²⁰.
 2. **Discovery is a hazard, not a survival event (Theorem BG2, PROVED).** P(S₀ never scored by round t₁) ≤ P(Λ_{t₁} < Λ) + e^{−Λ}, where Λ_t = Σ_{s≤t} m_sβ_s is the cumulative scoring hazard of predictable good sets. One scoring event suffices (SR), and what happens after it is irrelevant. *Time-to-score* is the time for Λ to diverge; *time-to-extinction* is the time for m to reach 0. On LH, extinction of 𝒰 takes ≳ e^{c₃n}/N rounds, while scoring takes O(1) rounds at φ = 1, and usually already happens at stage 1.
 3. **Bridge-stage discovery, quantified (Lemma R, Theorem BG1 / Corollary BG1′, PROVED; Proposition LH-rate, PROOF SKETCH).**
    - One round at φ from the start mode scores S₀ with probability ≍ P_c·min(1, e^{φc₂n−λ_n})^{c−1}, with λ_n = log(2p√(n+1)).
@@ -178,7 +178,7 @@ for the **original method's final run alone**, with no pilot, no temperature con
 - (C4), zero gain for extras at T ⊇ S₀, is automatic, since μ ∈ span(S₀).
 - The γ₁ gaps (C1)–(C3) are **verified by exhaustive enumeration** for both simulated designs (`bg3_popcheck`; c = 2: min C1 = 0.218, C2 = 0.030, C3 = 0.086; c = 3: 0.238, 0.051, 0.093). A proof for general (ρ, ψ, g, c) is open (§3.7), so the proposition is stated with the gaps as checkable design conditions, like (M2)/(M3) of T38(b1).
 
-**Status of the constant.** 1/m! is a deliberately crude order constant: one fixed label order with the Λ labels first. The simulated q₁ is 0.06–0.17, far above it. The bound is useful only because N(L+4) → ∞ multiplies it.
+**Status of the constant.** 1/m! is a deliberately crude order constant: one fixed label order with the Λ labels first. The simulated q₁ is 0.02–0.17, far above it. The bound is useful only because N(L+4) → ∞ multiplies it.
 
 **What breaks for p → ∞ (CONJECTURE).** Two things.
 - (C1)–(C3) must hold *uniformly* over the 2^{p−|S°|} supersets of S°, with sample fluctuations O_P(√(n·K log p)) against gaps of order n. This needs size control (K log p = o(n) on the visited states, or a T03/SE-type uniform deviation bound).
@@ -417,8 +417,8 @@ This matches Proposition LH-rate.
 |---|---|---|---|---|---|---|---|
 | 2 | 400 | 5 | 8·10⁻¹²–5·10⁻⁹ | **1.0000** | 0.14–0.17 | 0.12–0.15 | −1812 to −2265 |
 | 2 | 1600 | 5 | 10⁻⁴⁴–10⁻³¹ | **1.0000** | 0.13–0.15 | 0.12–0.13 | −2147 to −2301 |
-| 3 | 400 | see file | 10⁻⁸–10⁻⁷ | **1.0000** | 0.07–0.08 | 0.058–0.063 | ≈ −850 |
-| 3 | 1600 | see file | (see file) | **1.0000** | (see file) | (see file) | (see file) |
+| 3 | 400 | 5 | 5·10⁻⁸–5·10⁻⁷ | **1.0000** | 0.07–0.08 | 0.058–0.074 | −836 to −1085 |
+| 3 | 1600 | 4 | 6·10⁻³⁵–2·10⁻²⁷ | **1.0000** | 0.05–0.07 | 0.019–0.065 | −321 to −1060 |
 
 Population gaps over every T ⊇ S° (exhaustive enumeration):
 
