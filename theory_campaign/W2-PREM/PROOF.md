@@ -504,3 +504,88 @@ draw S° is bad and its acceptance e^{d(S°)−d(W)} need not be small: **OPEN**
 (c) A start spread over many references: replace 1 − π₀(S°) by 1 − π₀(ℛ) for a finite reference set ℛ and require GS for
 each member — same proof (PROOF SKETCH). (d) The favourable regime S° = S₀: then S° is never bad and β_I ≤ 1 − π₀(S₀),
 which T22(iii) controls.
+
+---------------------------------------------------------------------------------------------------------
+
+## 8. One family where (almost) every premise is discharged: LH (exact Gram)
+
+Setting: [E] §4.1–4.2, exact-Gram realisation X'X = (n−1)Σ_LH, p ≤ n − 1, groups of size g, g ≤ B_n < 2g,
+|ψ_i| < min(ρ_{a_i}, ρ_{b_i}) (so blocks = groups, [E] Lemma 4.2), fixed nonzero coefficients, c linked pairs,
+any number of visible and null groups; **plus p_n/log n → ∞**. S° := S₀∖M, M = {j_{b_1},…,j_{b_c}} (masked hubs).
+Look-alike map 𝔄_LH(M′) := ⋃_{j_{b_i}∈M′}(C_{b_i}∖{j_{b_i}}). Eligible set 𝓧_LH := {x : S° ⊆ x ⊆ S₀ ∪ 𝔄_LH(M)}
+(so c = 0 and a = |𝔄_LH(M(x))| ≤ c(g−1)). Write η = η₁♯ + η₂(a).
+
+Population facts used (all exact in-sample because X'X = (n−1)Σ). Let ξ_i be the unit-variance part of x_{j_{b_i}}
+orthogonal to x_{j_{a_i}} (x_{j_b} = ψx_{j_a} + √(1−ψ²)ξ). In a linked pair: ξ ⊥ every column of C_a; a member k of
+C_b is ρ_b x_{j_b} + r_k with r_k ⊥ (hubs, C_a); a member k of C_a is ρ_a x_{j_a} + √(1−ρ_a²)e_k with e_k ⊥ (x_{j_a},
+x_{j_b}, C_b); and μ restricted to the pair is β(x_{j_a} − ψx_{j_b}) = β√(1−ψ²)·(x_{j_a}-part orthogonal to x_{j_b}).
+Columns of different components (pairs, visible groups, null groups) are orthogonal.
+
+| premise | on LH | status | where |
+|---|---|---|---|
+| SE(k), R-lite, BM-∞ | λ_min(Σ_LH) ≥ (1−ψ₊)(1−ρ₊) ([E] L4.1a); fixed θ | PROVED | [E] |
+| IND-T | stream discipline | PROVED | §1 |
+| τ₂ | — | PROVED | §3.1 |
+| NL0(a), UDEL(a) | partner graph given S₀: group-mates only (given the hubs, linked groups are conditionally independent; other groups orthogonal), D_n ≤ g − 1 | PROVED | §3.3 |
+| PA (replaces BTP) | — | PROVED | §4 |
+| TS(𝒵♯) | γ_{j_a}(W) ∈ [β(1−ψ²), β] when j_b ∉ W (see below); exact otherwise | PROVED | below |
+| FS (swaps) | substitutes only among the other pairs' missing hubs/look-alikes, D′ ≤ (c−1)g; no neighbour substitute | PROVED structurally; the neighbour gap c₀ verified numerically for configuration B | below |
+| TL♯ | ZJL exact (current junk has residual ⊥ residual signal); CS with 𝒞(l) = component of l, g₀ = 2g | PROVED | below |
+| ULR | equicorrelated look-alikes each carry a unique part of ξ | verified numerically for configuration B (c₀ = 0.0137); general LH: CONJECTURE | below |
+| IND-M | SCR(S°): 1 − π₀(S°) = O_P(2^B n^{−1/2}) ([E] Thm 5(a), candidate); GS(S°): Δ_T = Σ_{i∈T}ψ_i²β_i²(1−ψ_i²)(n−1) | PROVED (given [E] Thm 5(a)) | §7, below |
+
+**TS on LH. PROVED.** Let W ⊇ S° (bounded size, any nulls). Components separate, so γ_i(W) is computed inside i's
+component. Visible hub j_h: μ_h = β_h x_{j_h} ∈ span(W ∩ C_h), γ = β_h. Pair with j_b ∈ W: μ_pair ∈ span, γ_{j_a} = β,
+γ_{j_b} = −ψβ. Pair with j_b ∉ W: W_pair = {j_a} ∪ P_a ∪ P_b (P_a ⊆ C_a∖j_a, P_b ⊆ C_b∖j_b). Regress x_{j_b} on W_pair:
+x_{j_b} = ψx_{j_a} + √(1−ψ²)ξ, ξ ⊥ (x_{j_a}, X_{P_a}), and X_{P_b} = ρ_bψx_{j_a}1' + Y with columns y_k = α ξ + r_k,
+α = ρ_b√(1−ψ²), Y ⊥ (x_{j_a}, X_{P_a}). So P_W ξ = Σ_k w_k y_k with α Σ_k w_k = ‖P_Wξ‖²/‖ξ‖²·… ∈ [0, 1) (strictly < 1 by
+SE), and the coefficient of x_{j_a} in P_W x_{j_b} is c_a = ψ(1 − αΣw_k) ∈ (0, ψ]. Hence γ_{j_a}(W) = β(1 − ψc_a) ≥
+β(1 − ψ²) > 0. With ‖(I−P_{W−i})x_i‖² ≥ φ₀²(n−1), Δ⁻_i(W) ≥ min{β_h², β²(1−ψ²)², ψ²β²}φ₀²(n−1): linear in n. ∎
+
+**ZJL and CS on LH. PROVED.** Let W ∈ 𝒵♯(x), l ∈ J(W)∖W. The residual signal (I−P_W)μ lives in the components of the
+pairs with j_b ∉ W, where it equals −ψβ√(1−ψ²)(ξ − P_Wξ) and P_Wξ ∈ span(Y) ⊥ C_a. If l is in another component,
+x_l ⊥ that component: δ = 0. If l ∈ C_a of such a pair: its residual on W is the residual of √(1−ρ_a²)e_l, and e_l ⊥ ξ,
+e_l ⊥ Y, so ⟨(I−P_W)x_l, (I−P_W)μ⟩ = ⟨x_l, (I−P_W)μ⟩ = 0. (C_b members of an incomplete pair are in 𝔄_LH, not junk.)
+CS: u_{W,l} depends only on W ∩ comp(l), |comp(l)| ≤ 2g. Numerically max |δ|/(n−1) over all 6,112 phase-1 states of
+configuration B is 2·10⁻¹⁶. ∎
+
+**FS on LH (structure). PROVED.** Removing truth i and adding l: if l lies in a component with no residual signal and
+not in comp(i), x_l is orthogonal to (I−P_{W−i})μ, so the loss equals Δ⁻_i(W) (linear, by TS). So substitutes lie in
+comp(i) or in the incomplete pairs' components: D′ ≤ 2g·c, bounded. That no substitute is a *neighbour* of i (and the
+gap c₀) is a finite population computation per component type; for configuration B (`scripts/lh_fs_gap.py`,
+`results/lh_fs_gap.txt`): over all 6,112 phase-1 states, D′ = 4 for every c₀ ≤ 0.05 (substitute types: an added
+masked hub replaced by the other pair's masked hub or one of its look-alikes), and the minimal loss over neighbours is
+0.168 > 0. ULR: minimal loss 0.0137 > 0.
+
+**Theorem L (Gibbs-path repair on LH). PROOF SKETCH** (every component PROVED except the two finite population
+inequalities FS-neighbour gap and ULR, which are verified numerically for configuration B, and the cited candidate
+[E] Thm 5(a)). Under the setting above, uniformly over x ∈ 𝓧_LH, with H′ = L + 5:
+
+  c_*♯(x) ≥ min{1/|M(x)|, 1/(B+3)} − o_P(1),   η(x) = O_P(4^g(s₀+a+1)√(log n/n) + 2^B n^{−1/2} + (c g)/p),
+
+so (L+5)η → 0 and sup_{x∈𝓧_LH} P_x(S₀ not scored within H′) ≤ P(Bin(L+5, c) < v_max) + o_P(1) → 0, with
+v_max = c + c(g−1) = cg. By Theorem IND-T, if N particles of the terminal-start population lie in 𝓧_LH, the
+probability that none scores S₀ is ≤ (that bound)^N.
+
+The single-particle rate is slow: P(Bin(L+5, c) < v) ≈ n^{−c/(v ln 2)}·polylog. The multi-particle product is the
+operative route, exactly as [B] concluded.
+
+---------------------------------------------------------------------------------------------------------
+
+## 9. Assembly: Theorem B's asymptotic conclusion under explicit premises
+
+**Corollary A. PROVED UNDER the listed premises.** Assume G, R-lite(A,M), SE(2s₀+a+2; φ₀), BM-∞, EX-S, EX-A, SR, a
+fixed eligible set 𝓧 of starts with bounded a and v, a monotone look-alike map 𝔄, a reference S° ⊆ S₀, and
+
+  PG(a) [§3.2], TS(𝒵♯) [§6.1], FS(𝒵♯; D′, c₀) with p_n/log n → ∞ [§6.2], TL♯(𝒵♯) [§6.3], ULR(𝒵♯; c₀) [§6.4],
+  SCR(S°) + GS(S°) and x ⊇ S° for x ∈ 𝓧 [§7].
+
+Then, uniformly over x ∈ 𝓧, c_*♯ ≥ min{1/|M(x)|, 1/(B+3)} − o_P(1) and (L+5)(η₁♯ + η₂(a)) → 0 in probability; hence
+sup_{x∈𝓧} P_x(S₀ not scored within the L+5 terminal rounds) → 0 in probability, and, by IND-T, the multi-particle
+product bound of [B] Cor. B-M holds conditionally on the terminal-start population.
+
+*Proof.* Theorem B♯ (§5.2) with c₁♯ ≥ (1 − ε_pt)/|M(x)| (Prop. B1′) and ε_pt = n^{−ω(1)} (Prop. PA); c₂ ≥ 1/(B+3) −
+ε_del and ε_del → 0 (Prop. UDEL). η₂(a) ≤ Λ₂(a) + τ₂ + sup β_I (Props. NL0, T2, IND-M; extra-for-null swaps at
+supersets are neutral). η₁♯ ≤ TS-term + swap-terms + Λ₁ + ULR-terms + sup β_I (Props. TS, SW, TL, ULR, IND-M; the
+classification of §5.2). Each is O_P of a quantity that is o(1/log n) under the stated premises. Finally
+P(Bin(L+5, c) < v) → 0 as L → ∞ with v bounded and c > 0 fixed. ∎
