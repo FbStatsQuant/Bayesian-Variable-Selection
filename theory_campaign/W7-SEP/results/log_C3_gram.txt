@@ -122,3 +122,13 @@ C3 gram 409600 0 log10pi0S0=-10.74 piS0=0.963 LS0=True basin=1.0000 fracR=1.0000
 C3 gram 409600 1 log10pi0S0=-10.72 piS0=0.994 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.000782
 C3 gram 409600 2 log10pi0S0=-10.61 piS0=0.987 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.000994
 C3 gram 409600 3 log10pi0S0=-10.74 piS0=0.980 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.000737
+C3 gram 409600 4 log10pi0S0=-10.72 piS0=0.970 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.000778
+C3 gram 409600 5 log10pi0S0=-10.65 piS0=0.995 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.000913
+C3 gram 409600 6 log10pi0S0=-10.77 piS0=0.991 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.0007
+C3 gram 409600 7 log10pi0S0=-10.44 piS0=0.993 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.00148
+C3 gram 409600 8 log10pi0S0=-10.72 piS0=0.969 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.000787
+C3 gram 409600 9 log10pi0S0=-10.72 piS0=0.993 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.00078
+C3 gram 409600 10 log10pi0S0=-10.74 piS0=0.988 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.00075
+C3 gram 409600 11 log10pi0S0=-10.77 piS0=0.993 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.000697
+C3 gram 409600 12 log10pi0S0=-10.77 piS0=0.990 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.000691
+C3 gram 409600 13 log10pi0S0=-10.81 piS0=0.994 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.000638
