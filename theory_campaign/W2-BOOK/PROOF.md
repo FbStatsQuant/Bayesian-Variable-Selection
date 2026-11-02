@@ -97,7 +97,7 @@ its potential version.
 
 ### 0.3 COUNTEREXAMPLE: conditioning on completion breaks unbiasedness
 
-This is `scripts/frozen_run_exact.py`, log in `results/frozen_run_exact.log`. It is exact enumeration at 50 digits,
+This is `scripts/frozen_run_exact.py`, log in `results/frozen_run_exact.txt`. It is exact enumeration at 50 digits,
 not Monte Carlo.
 
 **Instance.** The T12(iv.b) component instance:

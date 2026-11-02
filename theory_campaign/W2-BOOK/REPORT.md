@@ -161,7 +161,7 @@ Each new proof is short. The new mathematics is:
 
 ## 4. Evidence
 
-- `scripts/frozen_run_exact.py` (exact law propagation, mpmath 50 digits; `results/frozen_run_exact.log`). It is an
+- `scripts/frozen_run_exact.py` (exact law propagation, mpmath 50 digits; `results/frozen_run_exact.txt`). It is an
   independent re-implementation from the STATEMENT; the T12 helper scripts are not in the repo.
   - It reproduces the locked T12(iv.b) values: D = 8.14676240634, π₀({1,2}) = 0.0279141173179,
     c₀ = 0.0694711126908, c₁ = 0.998708337452, PIP₁ = 0.990618012243, E[P̄₁] − PIP₁ = −0.173974177850.
@@ -176,7 +176,7 @@ Each new proof is short. The new mathematics is:
     | 0.93% | 0.798 |
     | 3.9% | 0.011 |
 
-- `scripts/wilson.py` (`results/wilson.log`): stop-rate intervals above.
+- `scripts/wilson.py` (`results/wilson.txt`): stop-rate intervals above.
 - Code reading (no execution; R is not available), confirming GUARD's basis and H ≤ L + 5:
   - `v3_runtime.h` (guard reads only the steady clock);
   - `v3_engine.h` ~l.335 (check after each bridge stage; burn-in and measured loops have no resampling and no check);

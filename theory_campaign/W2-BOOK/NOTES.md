@@ -23,7 +23,7 @@ sigma(C)-measurable. Conditioning on it is not covered by T12(iv.d) (launch even
 - Burn-in and measured rounds have no guard check.
 - So: the output-available event is a function of (potential-run record, clock). Stop-only coupling (GUARD) holds by reading of code.
 
-## scripts/frozen_run_exact.py (exact, 50 digits; results/frozen_run_exact.log)
+## scripts/frozen_run_exact.py (exact, 50 digits; results/frozen_run_exact.txt)
 - Independent re-implementation reproduces T12(iv.b): D = 8.14676240634, a = 0.0279141173179, c0, c1, PIP1 = 0.990618012243,
   E[Pbar_1] - PIP_1 = -0.173974177850 (all digits shown agree with the locked table).
 - Identities E Zhat = Z, E[Zhat PIPhat] = Z PIP: residual ~1e-50.
