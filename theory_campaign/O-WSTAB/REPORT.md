@@ -273,6 +273,17 @@ Theorem W(e) and the counterexample. Single rows fluctuate (e.g. A = 0.5, n = 10
 O_P(1) Gumbel fluctuations of max Z² near the boundary 2Ar ≈ 1, and the polylog factor (log p)^{−(1+r)/2} delays
 divergence at A = 0.7.
 
+**W′ at large (n, p)** (`orth_grid.py` → `results/orth_grid.txt`; r = 0.9, s₀ = 2). Using LB(w) ≤ ℓ(w) ≤ SEP(w) on a
+grid of w ∈ [1, 2], Prop G gives rigorous bounds g₋ ≥ …, g₊ ≤ … and hence an interval for T_ideal (up to the
+conditional-expectation tail in SEP). It is valid when 2ℓ*_ub < c.
+- 2Ar < 1 (A = 0.3; A = 0.45 at n = 10⁸, 10¹²): T_ideal = 1 exactly, as predicted.
+- 2Ar > 1 (A = 0.65, 0.8, all n): T_ideal = 2 exactly, as predicted. At A = 0.95, n = 10¹², 10¹⁶ the interval is
+  [2, 4] and [2, 3], which contains 2.
+- **One finite-n deviation:** A = 0.45, n = 10¹⁶ (2Ar = 0.81) gives T_ideal = 2, not 1. Here ρ_n(2) = n^{−0.095} ≈ 0.03,
+  and an O_P(1) Gumbel fluctuation of max Z² pushes ℓ(2) above c. This is within the stated error
+  δ_n = O_P(log log p/log p) (≈ 0.17 here, against G_n − g₊ ≈ 0.25), so it does not contradict the asymptotic statement.
+  It does mean that near 2Ar = 1 the asymptotic count is reached only very slowly.
+
 ## 5. What fails and why
 - **[FD] W(c) / W(b) on the divergent side** (COUNTEREXAMPLE above). The [FD] skeleton bounds the multi-extra layers by
   a geometric series in q⁽²⁾. That is right when q⁽²⁾ < 1, but when q⁽²⁾ > 1 the series diverges and the true sum is
