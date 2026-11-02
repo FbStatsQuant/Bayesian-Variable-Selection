@@ -45,7 +45,7 @@ LEVELS = [
 
 
 def is_referee_authored(row):
-    return row["st"] == "REFEREE" or row["id"].endswith("(A2)") or row["id"].endswith("(A4)")
+    return row["st"] == "REFEREE" or row["id"].endswith("(A2)") or row["id"].endswith("(A4)") or row["id"].endswith("(A3)")
 
 
 def level(row):
@@ -99,7 +99,9 @@ SECTIONS = [
     ("OBG-LemmaR", "New results: bridge-Gibbs discovery, T38(b) without LS0 (O-BGIBBS; unreviewed)"),
     ("FAV-LemmaX", "New results: 2^B-free favourable rate on iid block-diagonal designs (W5-FAVIID REPORT.md / PROOF.md; author only)"),
     ("OWS-WS1", "New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)"),
-    ("CEX-W2frac(A4)", "Referee-supplied items (A-REV4)"),
+    ("CEX-W2frac(A4)", "Referee-supplied items (A-REV4, A-REV3)"),
+    ("FMP-M1", "New results: masked-regime meaning of Ẑ and the PIPs (F-MASKPIP; unreviewed)"),
+    ("OMIX-B1", "New results: mixture start and common plug-in σ² (O-MIX; unreviewed)"),
     ("B2E-LemmaOF", "New results: no-method-change masked theorems on LH (W5-B2ENV PROOF.md; author only)"),
     ("W6F1-PropU′", "Repair drafts (W6-FIXREV1 CONSOLIDATED.md, W6-FIXREV2 STATEMENTS.md; not reviewed)"),
 ]
@@ -154,6 +156,8 @@ CONFLICTS = [
     (["Version: W1-T37R"], "W3-VT37R reviewed W1-T37R at d492f22 (REPORT.md an unfinished draft; exp1 json files 0 bytes). A-REV2 pinned 3bcc429 (complete REPORT, results present) and says the earlier referee's description does not apply. `git diff d492f22 3bcc429` touches only REPORT.md, exp1/exp1b results and a README: PROOF.md is identical, so the mathematical verdicts apply to the head; the W1 REPORT-level numbers (Exp 1/1b) were never adversarially re-run."),
     (["Legend: ARCHITECTURE"], "F-REFINE ARCHITECTURE.md marks nodes [P] = 'campaign PROVED, same-family VERIFIED' (e.g. Thm 4 T21 composition, Thm 2(ii)); the source reports show same-family verification for T21 only via W2-VT24G (route e′) and W3-VT38E (composition). Both F-REFINE files were written before A-REV1/A-REV2 landed (CARDS: 'had pushed nothing'): read their VERIFIED as same-family only, against the cross-family column here."),
     (["ThmW", "VPGD-PropT"], "W3-PGD Theorem W and F-REFINE ARCHITECTURE/CARDS ('the general sufficient condition for (M2)') vs W5-VPGD REPAIRS.md R6.1 Prop. T: in its REGION form R_{a,d}(𝒟), a ≥ 2, PGD fails with an exact tie on the masked linked-hub family with c ≥ 2 (20/20 population cases, D_S fails in 200/200 fits), so Theorem W does not cover the masked families; it holds in the lattice form W_Lat (VPGD-WLat), which W5-VPGD proves. W3 never claimed LH; the gap is in F-REFINE's description. Same-family only."),
+    (["PXN-P6"], "W5-VMASK verified W3-PXN P6 (including Lemma Tr with a union over n^{A+1}2^{17} sets and the general-set use of W1-EXP L1.4 with count (p+1)^{s₀+2}) vs A-REV3: P6 GAP (Lemma Λ(a) calls Tr(c) over all sets of size ≤ s₀+2, count p^{s₀+2} and dimension possibly > 16, beyond Tr(c)'s stated range; Lemma U(U1) arithmetic false). Both agree on U1; A-REV3 did not read W5-VMASK. The weaker verdict is recorded in the cross-family column; neither side has a counterexample to the intended lattice conclusion."),
+    (["SHARE-M(b)", "SHARE-B2W4"], "W4-SHARE Prop. M(b) PROOF SKETCH; W5-B2ENV referee: argument correct, upgraded on LH to PROVED (B2E-MLH, author only); Theorem B2-W4 VERIFIED given its inputs; vs A-REV3: M(b) ERROR (quadratic equality used as an expansion: exact gain/n → ½log 2 vs ¼; vanishing crossing temperature false under BM-C) and the §7 exit-loss simplification ERROR (two-state counterexample). D4, D5 and the conditional B2-W4 inequality are VERIFIED by both families. A-REV3 did not read W5-B2ENV; nobody states whether B2E-MLH (which uses EXP′, not the quadratic expansion) is affected."),
     (["LH-LAT", "LH-LAT-sharp"], "W4-T38FULL Prop. LH-LAT 'm₀ is sharp' (its own same-family subagent: 20 brute-force cases) vs W5-VMASK: validity VERIFIED in 202/202 settings, but m₀ is sharp only on homogeneous pairs (108/108) and not on 32/94 heterogeneous settings (down to ×0.002); repair R5 gives the exact formula."),
 ]
 flagged = {r["id"] for r in ROWS if r["flags"] == "CONFLICT"}
@@ -208,6 +212,11 @@ NOTES = {
     "theory/F-DRAFT": "no REPORT.md; CROSSWALK.md and NEW_TARGETS.md (summary table of statuses) read as its statements file.",
     "theory/F-SHARE": "BRIEF.md only (no results).",
     "theory/A-REV4": "REVIEW.md (verdict table, §§1–7), BOOK_CHECK.md, DRAFTS_CHECK.md and NUMERICS.md read (GPT-6 Astra; Owls numerics reported; covers W2-T26, W2-BOOK, F-DRAFT, A-DRAFT §2).",
+    "theory/A-REV3": "REVIEW.md (verdict table, W3-PXN and W4-SHARE sections, reproduction summary) read; STATUS.md not read.",
+    "theory/F-MASKPIP": "REPORT.md read (statements M1–M3, R, N; §4.1 helper simulation not extracted).",
+    "theory/O-MIX": "REPORT.md read (statements B1–B3, C0–C3, recommendation table).",
+    "theory/W7-PART": "specs and port/check scripts only; no report yet.",
+    "theory/W7-SEP": "NOTES.md (working notes and plan) only; no results yet.",
     "theory/O-PW2": "scripts only (exact small-p PW2 script); no report yet.",
     "theory/O-BGIBBS": "REPORT.md read (new at the fifth fetch; §4.1 simulation results still to be filled).",
     "theory/O-LS0": "scripts only; no REPORT.md yet (LS0 post hoc run on Owls).",
@@ -260,7 +269,7 @@ for s in STATUSES:
         tot[lv] += c[lv]
     w("| %s | %s | **%d** |\n" % (s, " | ".join(str(c[lv]) for lv in LEVELS), n))
 w("| **Total** | %s | **%d** |\n\n" % (" | ".join("**%d**" % tot[lv] for lv in LEVELS), len(results)))
-w("Levels: XF = reviewed by A-REV1/A-REV2 (VERIFIED, clean or with a stated qualification); XF-ADVERSE = a cross-family GAP/ERROR stands on that row; SF = a campaign verifier run only; REFEREE-AUTHORED = written by a cross-family referee; UNVERIFIED = author only (includes same-family *authors* checking their own work).\n\n")
+w("Levels: XF = reviewed by A-REV1/A-REV2/A-REV3/A-REV4 (VERIFIED, clean or with a stated qualification); XF-ADVERSE = a cross-family GAP/ERROR stands on that row; SF = a campaign verifier run only; REFEREE-AUTHORED = written by a cross-family referee; UNVERIFIED = author only (includes same-family *authors* checking their own work).\n\n")
 by_status = collections.Counter(r["st"] for r in results)
 w("By status only: " + ", ".join("%s %d" % (s, by_status[s]) for s in STATUSES if by_status[s]) + ".\n\n")
 

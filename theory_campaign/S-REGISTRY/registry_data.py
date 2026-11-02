@@ -1122,3 +1122,90 @@ r("AREV4-PropC-repair", "Thm 6 / Thm 5(a) (ORTH family)", "A-REV4 · REVIEW.md �
 r("AREV4-KLexact", "supplement (original-draft track)", "A-REV4 · REVIEW.md §3 W4 / DRAFTS_CHECK.md", "REFEREE", "N|n/a", "N|referee-authored",
   "exact bound supplied; F-DRAFT W4's KL rate not proved", "—",
   "KL(π‖π₀) ≤ −log π₀(S₀) + Σ_{S≠S₀} π(S)[d(S) − d(S₀)] (exact, from E_{π₀}e^d ≥ π₀(S₀)e^{d(S₀)}); and TV, KL → 0 with χ² → ∞ is possible in the abstract (π = (1−1/k, 1/k), π₀ = (1−1/k³, 1/k³)).")
+
+
+# ===============================================================================================================
+# EIGHTH FETCH: A-REV3 REVIEW.md (head 522d83d; GPT-6 Astra, cross-family) on W3-PXN (4aebea3) and W4-SHARE (0d3f3fe).
+# A-REV3 did NOT consult W5-VMASK or any helper verdict; its overall verdicts are GAP (W3-PXN) and GAP with ERRORs
+# (W4-SHARE).  Weakest verdict is kept; nothing upgraded.
+# ===============================================================================================================
+AR3 = "A-REV3 · REVIEW.md verdict table"
+for pid, code, txt in [
+    ("PXN-P1", "V", "W3 P1, actual blocks = groups, VERIFIED (strict within/between separation, g ≤ B < 2g, packing essential; 9 ≤ g ≤ 16 needed, groups of five do not prove it)"),
+    ("PXN-P2", "V", "W3 P2 (G, R, SE, SE-blk, anchored variants, BM-∞) VERIFIED (fixed constants, polynomial p, fixed support; the weak Gram condition follows from (n−1)φ₀² → ∞, not from a correlation bound exceeding every g₀)"),
+    ("PXN-LemmaB", "V", "W3 Lemma B(i)–(iii) VERIFIED (fixed index sets before selection; unconditional Gaussian geometry, NOT conditioning on partition recovery; W3 does not need that)"),
+    ("PXN-LemmaTr", "V*", "W3 Lemma Tr VERIFIED in its stated bounded-dimension and family-cardinality range (n^{A+1}2^{17}); the range is exceeded by the use in Lemma Λ(a), see PXN-P6"),
+    ("PXN-P3", "V", "W3 P3 / Beta-truncation start mass VERIFIED (actual-block transfer on a high-probability event; no untruncated exponential moment)"),
+    ("PXN-P4", "V*", "W3 P4 mask mass and limit law VERIFIED (direct singleton calculation; T27 H1–H3 hold); literal application of locked T27 keeps its polynomial-equivalence scaling (p comparable to one fixed power of n); H2 is joint tightness, not a deterministic uniform leakage constant"),
+    ("PXN-P5", "V", "W3 P5 start mode = reference VERIFIED (reference mass > ½)"),
+    ("PXN-P8", "V", "W3 P8 posterior concentration VERIFIED (conditional T03 plus the deterministic-sequence uniformisation lemma; does not establish schedule completion)"),
+]:
+    upd(pid, cf=code + "|" + AR3 + ": " + txt)
+upd("PXN-P6", cf="G|" + AR3 + ": W3 P6 TD′/lattice proof GAP (Lemma Λ(a) invokes Tr(c) over all sets of size ≤ s₀+2, count ~p^{s₀+2} and projection dimension may exceed 16, beyond Tr(c)'s n^{A+1}2^{17} range; Lemma U(U1) arithmetic false; tie wording); no counterexample to the intended lattice conclusion found",
+    rep="A-REV3's repairs: state Tr for any fixed upper dimension J (J = s₀+2, threshold C·log n/n with C > 4[A(s₀+2)+2]) or use Schur complement + covariance concentration; replace the constant in (U1); exclude other progress additions in the strict-margin sentence. W5-VMASK reports these points as covered by W1-EXP L1.4's count (p+1)^{s₀+2}, L > 4A(s₀+3) — not re-checked by a second family",
+    rs="pending", flags="CONFLICT")
+upd("PXN-LemmaLambda", cf="G|" + AR3 + ": inside the P6 GAP (Lemma Λ(a) uses Tr(c) beyond its range)")
+upd("PXN-LemmaU", cf="G|" + AR3 + ": Lemma U (U1) arithmetic false (left side → 20.4 with σ² = 1, M = 3, c_* = 1/40, not ≤ 1); U3 must account for the RSS error; only a fixed linear-in-n margin is needed")
+upd("PXN-LemmaU-U1", cf="E|" + AR3 + ": 'ν(1.02 + 1/(nφ₀²))/(c_* n) ≤ 1' is false (→ 20.4); replace 1 by a large fixed constant (independent confirmation of W5-VMASK R2; A-REV3 did not read it)")
+upd("PXN-P7", cf="G|" + AR3 + ": W3 P7 original-method no-tweak route GAP (D2(d) is only a sketch; second shape of the posterior-addition Beta is (n−2−s)/2 not (n−3−s)/2; missing-reference peeling and uniform discrepancy-family argument unwritten; tail needs summing over k; H₀ ≍ p so a generic o_P(1) bad-draw mass is insufficient)")
+upd("PXN-P7-NB", cf="G|" + AR3 + ": D2(d) GAP, left at GAP; W5-VMASK R1 (single run) supplies a proof that no second family has seen")
+upd("PXN-Cor", cf="G|" + AR3 + ": W3 joint T38(b), LS0 route: GAP (conditional candidate assembly; finish P6 bookkeeping; retain U and the explicit LS0 modification: production local search starts from the scored HPM, not the start mode (v3_core.cpp:447,610,657))")
+upd("SHARE-D4", cf="V|" + AR3 + ": W4 D4 VERIFIED (predictable killed Laplace process, fixed data and successful frozen calibration; the monotone-envelope constant is g(1) = 1/(e−1), not ½)")
+upd("SHARE-D5", cf="V|" + AR3 + ": W4 D5 VERIFIED (exact retention product and confinement failure term; the all-h=1 case should be treated separately; it replaces SHARE by another stochastic control condition and does not establish it for BVS)")
+upd("SHARE-SH", cf="V*|" + AR3 + ": SH(i),(ii) and the exact formula in (iii) VERIFIED (converse needs π₀(a)^N → 0); the universal sharp-transition prose is GAP (rare-outsider boundary has no 0→1 extinction transition; see CEX-SHrare(A3))")
+upd("SHARE-G", cf="V*|" + AR3 + ": weighted-oscillation identity (Γ ≤ max κ) VERIFIED and ESS alone does not ensure survival VERIFIED; the unrestricted 'no grid condition' / BVS extrapolation is GAP (needs a quantified class and a BVS construction; abstract examples are not BVS)")
+upd("SHARE-M(a)", cf="V|" + AR3 + ": Prop. M(a) deterministic core VERIFIED (Schur-complement/Cauchy bound incl. constants; no missing factor |M|)")
+upd("SHARE-M(b)", cf="E|" + AR3 + ": ERROR (i) the quadratic equality used as an expansion (orthogonal p = n−1, θ = 1: exact gain/n → ½log 2 = 0.34657 vs quadratic 1/4, remainder ≈ 0.0966n); ERROR (ii) 'vanishing crossing temperature under all T03 hypotheses' (BM-C allows θ² = C log n/n, ratio → 3/C > 0); GAP (iii) a favourable-addition path ends at S₀ ∪ P without deleting extras and gives no traversal bound within L+4 rounds",
+    rep="A-REV3's repair for the lower bound: exact RSS expansion, −log(1−x) ≥ x, uniform RSS upper bound and (δ+σZ)² ≥ δ²/2 − σ²Z² give gain ≥ cM_n log n − C log n under BM-∞ for fixed d; restrict the vanishing-temperature conclusion to BM-∞. Not applied to W4-SHARE's text",
+    rs="pending", flags="CONFLICT")
+upd("SHARE-B2W4", cf="V*|" + AR3 + ": §7 conditional B2-W4 inequality VERIFIED (D5 plus conditional island independence and a genuinely uniform REPAIR assumption); the replacement of the exact exit loss by Σ η is ERROR (claim SHARE-B2W4-exitloss)", flags="CONFLICT")
+claim("SHARE-B2W4-exitloss", "Thm 5 (b2) (W4-SHARE §7 assembly)", "W4-SHARE · REPORT.md §7 last paragraph: −Σlog(1−η_t) replaced by Ση_t with coefficient one", "N|none",
+      "E|" + AR3 + ": ERROR with a counterexample (two-state kernel, survival ½ per round, T = ⌊1.6 log N⌋: Ση = 0.8 log N so the printed condition holds, but E n_T(a) = N·2^{−T} → 0 and delivery fails w.p. → 1); the valid D5 theorem is unaffected",
+      "none written (A-REV3: keep the exact negative-log product; for η ≤ ½ a valid replacement is 2Ση, as W4 §2 already gives)", "pending",
+      "A constant per-stage exit probability changes the logarithmic delivery threshold; the simplification is not valid.")
+claim("SHARE-SH-prose", "SHARE-SH (iii)", "W4-SHARE · REPORT.md Prop. SH (iii) universal sharp-transition wording", "N|none",
+      "G|" + AR3 + ": GAP: with π₀(o) = 1/N the extinction probability at κ = 3 log N → 1 − e^{−1}, not 1; needs Nπ₀(a) → ∞ and Nπ₀(o) → ∞ (transition parameter Nπ₀(a)e^{−κ}/π₀(o))",
+      "none written (A-REV3 gives the clean regime)", "pending", "The exact boundary-regime formula is right; the universal zero-to-one reading is not.")
+for cid, mean in [
+    ("CEX-Mbquad(A3)", "In the orthogonal p = n−1 design with one fixed signal θ = 1 the exact score gain divided by n tends to ½log 2 = 0.34657, not the quadratic term's 1/4: the W4-SHARE Prop. M(b) quadratic equality is not an O_P(1) expansion (reproduced at n = 10000: 0.345653 vs 0.249564)."),
+    ("CEX-MbBMC(A3)", "With θ² = C·log n/n (C ≥ the locked BM-C constant, e.g. 1024) at p = n−1 the gain is (C/2 − 3/2)log n and the start-side λ_n = (3/2)log n, so the crossing-temperature ratio tends to 3/C > 0, not 0: Prop. M(b)'s vanishing crossing temperature needs BM-∞."),
+    ("CEX-exitloss(A3)", "Two-state kernel (good state a, absorbing bad state o, h = 1_a, survival ½ per round, all N particles start at a): TRACK is exact with η = ½, confinement certain, Γ = 0; at T = ⌊1.6 log N⌋ one has Ση = 0.8 log N ≤ log(N/T) − ω(1), but E n_T(a) = N2^{−T} → 0, so delivery fails."),
+    ("CEX-SHrare(A3)", "Rare outsider π₀(o) = 1/N: with probability (1−1/N)^N → e^{−1} no outsider is present at all, so extinction of a is at most 1 − e^{−1} even at κ = 3 log N (numerically 0.63212)."),
+    ("CEX-ESSneutral(A3)", "Two states, d = 0, identity moves, multinomial resampling: every interval has ESS ratio one, yet for fixed N repeated neutral resampling loses one class: an ESS condition alone is not a delivery theorem (abstract, not BVS)."),
+]:
+    r(cid, "Thm 5 (b2) (negative result)", "A-REV3 · REVIEW.md (W4-SHARE section)", "COUNTEREXAMPLE", "N|n/a", "N|referee-authored", "none: finding", "—", mean)
+
+
+# ---- F-MASKPIP REPORT.md (Fable 5.1; candidates; unreviewed) -----------------------------------------------------------
+FM = "F-MASKPIP · REPORT.md"
+FMT = "Thm 4 / Prop 2 / Thm 6 masked-regime PIP–evidence meaning (new; post-dates F-REFINE)"
+for pid, lab, st, prem, mean in [
+    ("FMP-M1", "§3 Proposition M1 (evidence-weighted PIP bound)", "PROVED", "locked T12(i.b), T23(ii), W2-T26 Lemmas 2–3 (VERIFIED by A-REV4 and W5-LOCKBOOK); T12 (R3) conditional step; EX-A, EX-S, CAL, START", "E_𝓒[(Ẑ_r/Z)·max_j|PIP̂_rj − 1{j∈S₀}|] ≤ δ₁ + ρ̄ + u_π for every island, regime and frozen grid, with no premise on the start."),
+    ("FMP-M2", "§3 Corollary M2 (dichotomies)", "PROVED", "M1 (Markov)", "A non-crossing island underestimates Z by a factor ≥ δ₁^{−1/2} except w.p. 2√δ₁; an island (or the pooled run) whose evidence is not a gross underestimate has accurate PIPs."),
+    ("FMP-M3", "§3 Proposition M3 (no conditional evidence theorem from first moments)", "PROVED", "—", "E_𝓒[Ẑ_r/Z | crossing] ≥ (1−2δ₁)/P_𝓒(crossing): conditioning on delivery makes Ẑ overestimate in mean; a restart theorem for Ẑ needs a second-moment input (PW2 / T25(iv))."),
+    ("FMP-ThmR", "§3 Theorem R (restart theorem for the PIPs; no evidence input)", "PROVED", "composition; CONDITIONAL on two masked-regime inputs: DELIV-POP (OPEN) and REP (W1-T24G Theorem B, candidate)", "E_𝓒 max_j|PIP̂_rj − 1{j∈S₀}| ≤ δ_𝔛 + β_H + (L+4)ρ̄ + u_π; with T03, PIP and MPM consistency in the masked regime reduce to population delivery and repair."),
+    ("FMP-ThmRprime", "§3 Corollary R′ (n-indexed form)", "PROVED", "composition, conditional on its inputs (triangular array R1)", "n-indexed form of Theorem R."),
+    ("FMP-DELIVPOP", "§3 DELIV-POP (population delivery)", "OPEN", "stronger than T38's one-particle DELIV; medium-cost route via an amplification lemma from W4-SHARE D4", "Whether a population (not just one particle) is delivered into the repair basin at the end of stage T."),
+    ("FMP-Na", "§3 Proposition N (a): evidence collapse on non-crossing", "PROVED", "δ₁ → 0 and liminf P_𝓒(f_{r,0} > ½) ≥ κ > 0", "Where the terminal population is off S₀, Ẑ_r underestimates Z by ≥ δ₁^{−1/2} → ∞ while T31(i)'s 95% bound stays valid but uninformative."),
+    ("FMP-Nb", "§3 Proposition N (b): reflected comparator", "PROOF SKETCH", "—", "What W_r actually is on a non-crossing realisation."),
+    ("FMP-Nc", "§3 Proposition N (c): explicit split family", "PROOF SKETCH", "deterministic core PROVED; family claims rest on W1-EXP Thm 6, O-BGIBBS LH, W4-SHARE M(b) (SHARE-M(b) now has an A-REV3 ERROR); T = 1 grid; whether calibration realises T = 1 is OPEN", "On an omission-masked LH-type family with a one-stage grid, Ẑ_r/Z ≤ e^{−Θ(n)} w.p. → 1 while the terminal Gibbs path repairs the population: evidence and PIPs separate."),
+]:
+    r(pid, FMT, FM + " " + lab, st, "N|none", N, "none", prem, mean)
+
+# ---- O-MIX REPORT.md (Opus 5.5; candidates; unreviewed) ------------------------------------------------------------------
+OM = "O-MIX · REPORT.md"
+OMT = "start-law modification / method change (new; supplement)"
+for pid, lab, st, prem, mean in [
+    ("OMIX-B1", "§3 Prop. B1 (mixture start: exact samplability; identities verbatim)", "PROVED", "positive tables, partitions fixed before start randomness", "A finite mixture of exact block starts is exactly samplable with an exactly known density; T09(ii)–(iv), T12, T13, T22(iv) hold verbatim, T22(i) with a factor λ_i, T22(ii-a) becomes a sandwich."),
+    ("OMIX-B2", "§3 Prop. B2 (random partitions do not undo LH masking)", "PROOF SKETCH", "crux PROVED modulo W1-EXP Thm 1 (VERIFIED)", "Mixing over random v3-type partitions does not remove cancellation masking on LH."),
+    ("OMIX-Blink", "§3 Lemma B-link (link graph recovers exactly the linked pairs)", "PROVED", "exact Gram (the iid version is a PROOF SKETCH)", "Thresholding max |r_jl| at τ_n = 3√(log p/n) recovers the linked block pairs."),
+    ("OMIX-B3", "§3 Theorem B3 ((B-merge) on LH, exact Gram)", "PROVED-UNDER", "W1-EXP Thm 6 (VERIFIED), locked T03, T11(iii), T21, Prop. B1; 2g ≤ 16; link detection; ≥ 2 signal blocks", "Mixing ½:½ the v3 partition with the linked-merged partition gives π₀^mix(S₀) ≥ ½ − O_P(2^{2g}n^{−1/2}), so T38(b) on LH holds WITHOUT LS0 by route (a); cost log 2 nats."),
+    ("OMIX-BiidLH", "§3 (B-merge) on LH-iid (p ≫ n)", "PROOF SKETCH", "ZL fails in-sample; not checked line by line", "The W3-PXN start argument at reference S₀ on the merged partition."),
+    ("OMIX-C0", "§4 Prop. C0 (common plug-in σ² tables: validity)", "PROVED", "σ̂² computed before the tables", "Common-σ̂² tables are positive product-form tables, so every locked identity holds verbatim."),
+    ("OMIX-C1", "§4 Theorem C1 (dilution removed exactly under BO)", "PROVED", "BO, deterministic; plug-in with |Q_{S′} − Q_{S₀}| = o(√n)", "π₀^C(S₀) ≥ π(S₀)·exp{−νψ(u)}: a plug-in σ² undoes dilution masking."),
+    ("OMIX-Cfix", "§4 (C-fix) iteration delivers such an S′", "CONJECTURE", "supported by numerics (S₀ ⊆ mode in 92% of BO-D replicates at n = 200)", "The fixed point of S′ ← argmax π₀^C[σ̂²(S′)] is close enough to S₀ for Theorem C1."),
+    ("OMIX-C2", "§4 Prop. C2 (σ̂²-grid mixture; logarithmic cost without a plug-in)", "PROVED", "BO", "A uniform mixture over a σ̂² grid removes dilution at logarithmic cost without a plug-in."),
+    ("OMIX-C3", "§4 Prop. C3 (cancellation masking is untouched by (C))", "PROVED", "CL(0) chain", "On any CL(0) chain π₀^C(S₀) ≤ p^{−c}n^{−c/2}e^{O_P(1)}: (C) alone does not make T38(b) provable on LH."),
+    ("OMIX-C-null", "§4.4 null-inflation risk of (C)", "PROOF SKETCH", "—", "Common plug-in σ² can inflate the start mass of null models; needs its own pilot."),
+]:
+    r(pid, OMT, OM + " " + lab, st, "N|none", N, "none", prem, mean)
