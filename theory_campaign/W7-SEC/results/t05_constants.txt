@@ -1,0 +1,7 @@
+q = median chi2_1 = 0.454936; mu_q = E min(chi2_1, q) = 0.298794; mu_q - q/2 = 0.071326
+with Hoeffding slack t_H = 0.02: beta0 = 0.051326; P(E_B^c) <= exp(-2 d t_H^2 / q^2) = exp(-0.003865 d)
+eps = 0.008: 2 eps log(e^2/eps) = 0.109253; theta_inf = 1/(1 - that) = 1.122653
+s0 =  1: crude sufficient conditions (N1),(C1),(C2) first hold at log n = 227.2
+s0 =  2: crude sufficient conditions (N1),(C1),(C2) first hold at log n = 227.2
+s0 =  5: crude sufficient conditions (N1),(C1),(C2) first hold at log n = 227.2
+s0 = 14: crude sufficient conditions (N1),(C1),(C2) first hold at log n = 227.2
