@@ -32,7 +32,7 @@ def lh(name):
     print(f"c={c}, s={s}; limit law of Mstat: q05/med/q95 = " + "/".join("%.2f" % v for v in lim))
     print("n p reps | blocks=groups | margin(maxw<minc) | SEblk min | med log10pi0(S0) | Mstat q05/med/q95 |"
           " sqrt(n/log n)*med(1-pi0(S°)) | med pi0(R0) | med pi0(R2) | mode=S° | med q | max log e | T22(i) bound<=pi0(S°) |"
-          " LS0 ends S0 certified | med F(S0)-F(S°) | S0 local max | Dep med (c=1) | NB holds | med d_range / thr")
+          " LS0 ends S0 certified | LS0 scores S0 | med F(S0)-F(S°) | S0 local max | Dep med (c=1) | NB holds | med d_range / thr")
     for (n, p), rs in sorted(by.items()):
         bg = [r["blocks_eq_groups"] for r in rs if r["blocks_eq_groups"] is not None]
         line = [f"{n} {p} {len(rs)}",
@@ -49,6 +49,7 @@ def lh(name):
                 "%.1f" % max(r["log_e"] for r in rs),
                 "%d/%d" % (sum(r["T22i_bound"] <= math.exp(r["log_pi0_Sref"]) + 1e-12 for r in rs), len(rs)),
                 "%d/%d" % (sum(r["LS0_end_is_S0"] and r["LS0_certified"] for r in rs), len(rs)),
+                "%d/%d" % (sum(r["LS0_scored_S0"] for r in rs), len(rs)),
                 "%.1f" % np.median([r["F_S0_minus_F_Sref"] for r in rs]),
                 "%d/%d" % (sum(r["S0_local_max_gap"] > 0 for r in rs), len(rs)),
                 ("%.3f" % np.median([r["Dep"] for r in rs])) if "Dep" in rs[0] else "-",
