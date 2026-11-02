@@ -66,7 +66,8 @@ randomness:
 V(W) = 0 iff W = S₀; V ≤ v(x) := V(x) on the good event below. An elementary transition W → W′ executed from
 W ∈ 𝓕(x)∖{S₀} is
 
-- **bad** if W′ ∉ 𝓕(x) or V(W′) > V(W);
+- **bad** if W′ ∉ 𝓕(x), or V(W′) > V(W), or W′ ⊉ W ∩ S₀ (some truth present in W is removed — this also
+  covers truth-for-truth swaps and independence jumps that keep |M| but change the missing set);
 - **progress** if W′ ∈ 𝓕(x) and V(W′) < V(W), or if it is a G_j execution with W △ S₀ ⊆ {j} (R4);
 - **neutral** otherwise.
 
@@ -179,7 +180,7 @@ Always c₂ ≥ 1/(B+3) − ε_del(a) (polynomial; Fable's order). If c_* ≤ 0 
 
 **Prop. B1 (phase-1 progress). PROVED.** For W ∈ 𝒵⁺: P_W(round has no bad and no progress step) ≤ ε_add(x).
 *Proof.* Put M′ = M(W) and pick j ∈ M′ attaining the inner min. On {no bad, no progress} no truth is added or
-removed (both change |M|, hence V), so the missing set equals M′ throughout and every state is in 𝒵⁺ (no bad ⇒ in 𝓕(x); V
+removed (a removal is bad by definition, an addition is progress), so the missing set equals M′ throughout and every state is in 𝒵⁺ (no bad ⇒ in 𝓕(x); V
 unchanged ⇒ still phase 1, and phase-1 states of 𝓕(x) are in 𝒵(x)). At the G_j step (it occurs, R2) the
 state W′ ∈ 𝒵⁺ has M(W′) = M′ ∋ j, and adding j would be progress (|M| drops; the result is in 𝒵(x) ∪ 𝒮_a ⊆ 𝓕(x)).
 So the event requires the G_j draw to be "remove", conditional probability 1 − o_j(W′) ≤ the sup. ∎

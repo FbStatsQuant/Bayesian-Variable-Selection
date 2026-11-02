@@ -56,7 +56,7 @@ Common setting (PROOF.md §0):
 - Feasibility: s₀ + a ≤ K.
 - Potential: V = |M| + a while M ≠ ∅, and V = |P| on supersets.
 - Step classification:
-  - **bad**: leaves 𝓕(x), or raises V;
+  - **bad**: leaves 𝓕(x), raises V, or removes any truth;
   - **progress**: lowers V, or is a Gibbs evaluation that scores S₀;
   - **neutral**: everything else.
 

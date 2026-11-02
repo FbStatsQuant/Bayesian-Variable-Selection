@@ -153,17 +153,18 @@ def phase1_B(M, x):
             if j in s0b and l not in s0b:
                 bad += pr
             elif j in s0b and l in s0b:
-                bad += np.where((dest & U0) == U0, 0.0, pr)              # truth-for-truth: bad only if leaves Z
+                bad += pr                                                 # truth-for-truth swap removes a truth: bad
             elif not famZ[dest].all():
                 bad += np.where(famZ[dest], 0.0, pr)
         parts[kind] = float(bad.max())
     eta += parts['U'] + M.n_nb * parts['N']
     dW = M.d[W]
     tot = SortedAcc(M, np.ones(1 << p, bool))(dW)
-    good = np.zeros(len(W))
-    for mm in np.unique(mW):
-        sel = mW == mm
-        good[sel] = SortedAcc(M, famZ & (missc <= mm))(dW[sel])
+    good = np.zeros(len(W))                     # good = S' in Z keeping every truth of W (incl. S' = W)
+    UW = W & S0
+    for u in np.unique(UW):
+        sel = UW == u
+        good[sel] = SortedAcc(M, famZ & ((allidx & u) == u))(dW[sel])
     parts['I'] = float((tot - good).max()); eta += parts['I']
     # epsadd = max over nonempty M' subset M(x) of min_{j in M'} sup_{W in Z+, M(W) = M'} (1 - o_j(W))
     Mx = bits_of(S0 & ~x, p)
