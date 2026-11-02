@@ -67,7 +67,7 @@ g_t(k) ≥ 0 for all k. Then E_t[e^{g_t(N)}1{N≤K}] ≥ P_t(N ≤ K). ∎
 
 *Remarks.* (a) The ceiling sharpens W3-VEXP's Prop D (which keeps only the e^{λ_b} part of each invisible block, since
 softplus(−λ) ≥ max(0, −λ)). (b) In the numerics P_t(N ≤ K) = 1 to machine precision (the start's size sits near 5),
-so the ceiling is −V − C; the size term is ≤ −0.6 nats in every fit (it always *lowers* π₀(S₀)): P_t sits at N ≈ 5 < s₀,
+so the ceiling is −V − C; the size term log A_t is ≤ −0.29 nats in all 480 fits (it always *lowers* π₀(S₀)): P_t sits at N ≈ 5 < s₀,
 where g_t(N) ≈ Σ_{i=N}^{s₀−1} log[(s₀+1)/(i+1)] > 0.
 
 ## 2. Theorem R (exact near-truth and Hamming mass). Status: **PROVED**
@@ -134,7 +134,9 @@ chosen F-block from ∅ to {l}; all other blocks unchanged). So Z̄₀ ≥ (coun
 
 *Meaning.* A common σ² rescales truths and nulls by the same factor, so it moves the inclusion threshold but not the
 ranking; the start can be favourable only if the marginal statistics separate the truths from the nulls of other blocks.
-At n = 200 they do not (REPORT §5: median ceiling ≈ 10^{−3}–10^{−6} per cell, already below 1/Q_f = 10^{−4} in most cells).
+At n = 200 they do not: the per-cell median ceiling is 10^{−0.8}–10^{−4.8} (10^{−6.7}–10^{−10.6} in S5) on the
+regenerated data (REPORT §5, `results/propS.txt`). So no choice of a common σ² can give π₀(S₀) above ≈ 0.02–0.15 in a
+typical study fit. Prop S is a ceiling only; the actual v3 values are 10–20 orders of magnitude lower.
 
 ## 6. Proposition D′ (finite-n dilution formula). Status: **PROOF SKETCH** (population limit), numerics in REPORT §3
 

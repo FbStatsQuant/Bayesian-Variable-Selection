@@ -4,6 +4,9 @@ import numpy as np
 
 L10 = np.log(10); QF = 1e4   # Q_f = 4 islands x 2,500 final iid start draws
 recs = [json.loads(l) for f in sys.argv[1:] for l in open(f)]
+_seen = {}
+for _r in recs: _seen.setdefault((_r["p"], _r["s"], _r["r"], _r["c"]), _r)
+recs = list(_seen.values())
 print("records:", len(recs))
 cells = sorted(set((r["p"], r["s"], r["c"]) for r in recs))
 V = ("v3", "known_oracle", "known_mode1", "known_iter", "resid")
@@ -79,3 +82,16 @@ fin = [(r["d_S0"], r["d_S0_W1"]) for r in recs if np.isfinite(r["d_S0_W1"])]
 print("\nLemma W1 (exact BO) formula for d(S0) vs actual d(S0): undefined (sum xi_b >= 1, impossible under BO) in %d/%d fits;"
       " where defined, median actual %.0f vs W1 %.0f, median |diff| %.0f nats" % (
           nanW1, len(recs), med([a for a, b in fin]), med([b for a, b in fin]), med([abs(a - b) for a, b in fin])))
+
+print("\n== Table 4. T27 bracket: -V versus the T27 rate over invisible blocks, and Hamming distance of the start ==")
+print("%5s %2s %4s | %6s %8s %8s %8s | %6s" % ("p", "S", "c", "c_eff", "-V", "T27rate", "resid", "E|SdS0|"))
+for cell in cells:
+    rs = [r for r in recs if (r["p"], r["s"], r["c"]) == cell]
+    ce, Vv, T27, res, ham = [], [], [], [], []
+    for r in rs:
+        p = r["p"]; t = (14 + 1) / (2 * p - 14 - 1); lo = np.log(1 / t) + 0.5 * np.log(201.0 * 199 / 200 + 1 / 200)
+        inv = [b for b in r["v3"]["per_block"] if b["lam"] < 0]
+        ce.append(sum(b["k0"] for b in inv)); Vv.append(-r["v3"]["vis"])
+        T27.append(-sum(b["k0"] * lo for b in inv)); res.append(-r["v3"]["vis"] + sum(b["k0"] * lo for b in inv))
+        ham.append(14 - r["v3"]["E_truths"] + r["v3"]["E_nulls"])
+    print("%5d %2d %4.1f | %6.1f %8.1f %8.1f %8.1f | %6.1f" % (*cell, med(ce), med(Vv), med(T27), med(res), med(ham)))
