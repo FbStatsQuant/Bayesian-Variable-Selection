@@ -52,3 +52,6 @@ Credit readings: $245 (16:00), $244 (17:19, after 7 s test), $239 (~17:22, right
 | O-LS0 | Opus 5.5 xhigh (CP, Owls, <= 40 cores) | LS0 post hoc on the 2,400 regenerated datasets | theory/O-LS0 |
 | A-REV1 | GPT-6 Astra high (Codex) | cross-family review: Theorem B, T38(b)-R, Lemma S, D2, E3 | theory/A-REV1 |
 | A-REV2 | GPT-6 Astra high (Codex) | cross-family review: T03♯, refined T37, EXP′ (NOT STARTED: T3 connection errors; retry) | theory/A-REV2 |
+
+### 18:20 UTC relaunch (after T3 restarts and the Owls overload)
+F-PXN cancelled (superseded by W3-PXN). F-SHARE, F-REFINE relaunched at Fable xhigh (CP). O-LS0 relaunched light (≤2 cores via owls_run; NOTS if > ~6 core-hours). A-REV1, A-REV2 (Astra high) relaunched. OWLS-STEWARD (Sonnet 5.5, Claude Work) is building the guardrails in ~/.config/bvs-hq/owls/.
