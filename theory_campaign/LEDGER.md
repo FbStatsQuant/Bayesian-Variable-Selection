@@ -104,3 +104,12 @@ Draft track done: F-DRAFT @ 4de6e4c, A-DRAFT @ dbf47f7. S-PAPER @ 556be30. A-REV
 ### 19:22 UTC: gap-fillers
 Cloud credits (Wave 7): W7-SEP (separation theorem: what the bridge buys), W7-PART (partition-recovery lemma, iid designs), W7-SEC (T05, T33, T32(i)).
 Laptop, Claude Work: L-LEAN (Lean 4 formalisation of T21, T07, T11(iii), Theorem A; mcp:launch:3734388b…), S-ELS (E_LS ledger extraction from the laptop fit archive; mcp:launch:6fe801ba…).
+
+### 19:27 UTC: last CP additions (Felipe: use the window; high at most; reset 21:00 UTC)
+| ID | Model | Task | Laptop thread |
+|---|---|---|---|
+| F-REFEREE | Fable high (CP) | hostile JRSS-B referee report + response plan | mcp:launch:04ab8d7c… |
+| F-SIGMA | Fable high (CP) | theory of the common-σ² start (validity, start mass, T38 route (a) without LS0, pilot design) | mcp:launch:00e29d07… |
+| O-STAGES | Opus high (CP) | theorem for the realised stage count T_n (W′/W″); T26's premise and T38's cost exponent | mcp:launch:a029f4b2… |
+| O-VCERT | Opus high (CP) | same-family verification of O-CERT (Lemma M, C1–C6) | mcp:launch:00adbb0a… |
+In flight now: laptop 18 (14 CP/Codex + 2 CW + 2 new CW), cloud 10, Owls O-LS0.
