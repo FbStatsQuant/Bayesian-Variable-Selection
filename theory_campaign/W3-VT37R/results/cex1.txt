@@ -1,0 +1,9 @@
+R_0 = [(0, 1), (1,), (0,), ()]
+literal TD(0,0) strict failures: []
+TD'_P(R_0) failures: [((), 'P')]  TD'_inf(R_0) failures: [((), 'N')]
+gains at {}: add x1 -2.298, add x2 -5.372, best null add -5.438
+F(S0) - F({}) = 20.990
+M({}) = None
+production local search from {}: {'path': [()], 'returned': (), 'certified': True, 'limit': False, 'moves': 0}
+global HPM by enumeration: (0, 1)  pi(S0) = 0.8645
+lambda_min(R_S0) = 0.050
