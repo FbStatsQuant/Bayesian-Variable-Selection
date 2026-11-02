@@ -98,3 +98,53 @@ through the SMC branch, ended `completed`, and used tier 0 with T = 3–21 stage
 - **Recommended fix** (one line, in `finish`, `v3_fit.R:55–62`): set `fit$log_Z <- NA_real_` (and `log_Z_r`,
   `log_Z_rel_m0`) whenever `estimates_available` is not `TRUE`. Alternatively, rename `log_Zbar0` so that it does not
   extend `log_Z`. This changes the R output structure, so it is not made here. It is flagged for the core owner.
+
+## 3. emit_centre / LS0 logging: HOLDS in the only LS0 implementation; production has none
+
+- **Production has no LS0.** All three `local_search` calls (`cpp/v3_core.cpp:447, 610, 657`) start at `led->hpmS`
+  with `emit_centre = false`. No call starts at the start mode S̃₀.
+- **The only LS0 is the O-LS0 test export** (`theory/O-LS0:theory_campaign/O-LS0/scripts/ls0_exports.cpp`).
+  - `cpp_final_run_ls0` is `cpp_final_run` plus one block after the final local search, run only if
+    `status == "completed"`: `ModeResult m = start_mode(st); E.local_search(m.S, o.ell, o.tier, true, -2);`.
+  - It runs on the **same** `Ledger` and `ScoreCache`, followed by a guard check labelled `"ls0"`.
+  - So S̃₀ is a ledger event (`cpp/v3_engine.h:381` with `emit = true`), and so is every scanned neighbour (`:390`).
+  - LS0 reads no uniforms and runs after the islands, so it does not perturb any stream.
+- **`emit_centre = true` is required, not cosmetic.** With `false`, a fresh centre is scored and inserted in the
+  cache (`cpp/v3_engine.h:91–94`) but never offered. Later hits on it are not fresh (`cpp/v3_ledger.h:110`), so it
+  would stay out of the HPM and stores until the cache is next cleared. The export sets `true`.
+- **Verdict for the paper.** "LS0's centre is logged" holds for `cpp_final_run_ls0`. If the theorem is about
+  "v3 + LS0", the supplement must cite that export as the reference implementation, or the block must be merged into
+  `cpp/v3_core.cpp`. As committed, the production core is v3 without LS0.
+
+## 4. Scan before limit: HOLDS
+
+`Engine::local_search`, `cpp/v3_engine.h:378–418` (spec comment `:370–377`; the task's "369–420" brackets it).
+
+- Each pass of `while (true)` (`:384`) does the following, in order:
+  - scores every feasible flip (`:393–398`; additions are skipped only when |C| ≥ K, `:396`);
+  - scores every swap j ∈ C, l ∉ C (`:399–405`);
+  - writes the archive with `scan_complete = 1` (`:406`);
+  - **only then** tests whether there is a strict improvement (`:407`) and the move limit `A.moves >= ell` (`:408`).
+- At the limit, it returns `best` *after* the complete scan (`:409`). Otherwise it moves (`:411`). With no strict
+  improvement, it is certified (`:413`).
+- So there are at most ℓ moves and ℓ + 1 complete scans, and every neighbour of every scanned centre is a ledger
+  event (`:390`).
+- Ties are broken lexicographically (`:391`); an exact F tie is not a move (`:407`).
+- There is no `VariateSource` in the function, so it uses no RNG.
+- *Executed corroboration:* local-search path, scanned centres and termination agree exactly in all 110 replays.
+
+## 5. IND-T sequential stream reading: HOLDS
+
+- **One stream per final island.** A fresh `RngSource`, seeded `seed_stream(seed, 9 + r)`, is created per island
+  (`cpp/v3_core.cpp:434–437`; streams 10–13). The calibration uses streams 0–9 (`:594–595, 635–636`).
+- **Order of reads in `run_island_s`** (`cpp/v3_engine.h:274–368`), all from the one `vs`:
+  1. N initial draws, particle 1 first (`:286–292`);
+  2. per stage: the reweighting (no uniforms, `:317–322`), then N resampling uniforms (`:250`), then
+     `population_round` (`:331`);
+  3. then the L + Hm rounds (`:343–360`).
+- **Within a round:** particle i finishes its whole round before particle i + 1 starts (`:215–218`). Each round reads
+  its m − 1 order uniforms first (`:195–200`, m = p + B + 2, `:72`), then the step uniforms (`:202–214`).
+- No other object reads the stream: there are no per-particle streams, no reseeding, and neither the guard (§2) nor
+  the local search (§4) reads a uniform. So W5's Lemma STREAM applies as stated.
+- *Executed:* `position_end` and `init_draws_hash` of all four final streams agree in all 110 fp/ld replays and in the
+  10 guarded/guard-free pairs.
