@@ -152,6 +152,38 @@ T5. **Discovery on LH is unsurprising given YWJ/ZYVR (#21–22).** API-POS alrea
 T6. **Schäfer–Chopin (#10)** already ran ESS-0.9 adaptive SMC on BVS. Every methodological novelty claim about the grid
    rule must be dropped. The novelty is in the start, the HPM ledger, LS0 and the theory.
 
+
+### 3A. Follow-up on T4: O-PW2 Theorem A versus Cérou–Del Moral–Guyader (done after the first push)
+
+Sources:
+- CDG, AIHP 2011, Thm 1.4, read from the numdam PDF, p. 633;
+- O-PW2's `REPORT.md` §1–§3, read from `origin/theory/O-PW2`.
+
+- **CDG Thm 1.4**, quoted: "For the simple genetic algorithm corresponding to the choice α = 0, we have an explicit
+  decomposition formula … ∀N > 1, E[γ_n^N(1)²] = γ_n(1)²·Σ_{s=0}^{n+1} (1 − 1/N)^{(n+1)−s}·(1/N^s)·v_n(s)" (as I parse
+  the pdftotext layout), with N-free constants v_n(s) given by coalescent-tree expansions. The authors stress that it
+  "holds true under no additional assumptions on the model … including … nonhomogeneous potential functions G_n and
+  Markov transitions M_n". Here α = 0 means multinomial selection at every step, which is the v3 island's structure per
+  O-PW2's "Fact F".
+- **O-PW2 Theorem A**: N·Var_c(W_T) = Σ_{s<T}(1 − 1/N)^{T−1−s}(E_c[W_s²μ_s(h²_{s,T})] − 1), with (A1) a martingale
+  M_s = W_s q̂_s(h_{s,T}).
+- **Assessment (my reading, not a proof):** Theorem A is an *exact, assumption-free second-moment identity of the same
+  kind* as CDG Thm 1.4, for the same quantity: the relative second moment of the unnormalised estimator under
+  multinomial resampling.
+  - The forms differ. CDG's is closed, with deterministic v_n(s) in powers of 1/N. O-PW2's still has the random W_s
+    inside an expectation.
+  - The martingale decomposition (A1) is the standard telescoping decomposition behind Feynman–Kac particle CLTs
+    (Del Moral 2004: **UNVERIFIED**, not read).
+  - The leading term Σ_s σ²_{s,T}, with σ²_{s,T} = Var_{q_s}(h_{s,T}), is the classical resample-every-step asymptotic
+    variance (DMDJ 2006 Prop 2, "when we resample at each iteration"; its formula was not transcribed here).
+  - **Recommendation:** present Theorem A as "a form of the exact Feynman–Kac second-moment decomposition (cf. CDG 2011,
+    Thm 1.4), specialised to v3", not as new.
+  - Theorem B (two-sided, O(N^{−3/2}) remainder, sup-norm H_{s,T}) and Theorem C (constants from v3 stage primitives,
+    the COUNTEREXAMPLE "PW2 with a_t = χ²_t") are the parts that may carry novelty. CDG Thm 1.5 is one-sided, under the
+    uniform conditions G(x) ≤ δG(x′) and M^m(x,·) ≤ βM^m(x′,·).
+  - Status of this comparison: CONJECTURE-level reading (forms compared, not derived). Upgrading it needs an
+    independent check that CDG's v_n(s) expansion reproduces O-PW2's (A2).
+
 ## 4. What fails and why (routes I tried)
 
 - *Plugging our designs into the general finite-sample theorems* (#8, #14, #17) fails at the mixing-time premise and, for
@@ -163,8 +195,8 @@ T6. **Schäfer–Chopin (#10)** already ran ESS-0.9 adaptive SMC on BVS. Every m
 
 ## 5. Needs escalation
 
-1. **O-PW2 versus Cérou–Del Moral–Guyader 2011 (Thm 1.4/1.5) and Del Moral's coalescent-tree variance formulas**: is
-   O-PW2 Theorem A a special case? This needs someone to read CDG §1–3 and O-PW2 line by line.
+1. **O-PW2 versus Cérou–Del Moral–Guyader 2011 (Thm 1.4/1.5)**: a partial comparison is in §3A. Theorem A looks like
+   a form of CDG's exact decomposition. Someone should derive one from the other (CDG §3, Prop 3.4) to confirm.
 2. **SVV Theorem 4.1 applied to v3's population grid.** It would give an *upper* bound T* = O(√(ln A)·…) with B = e²; our
    B is 10/9. Check whether SVV's proof gives a B-dependent constant that recovers or improves O-STAGES's
    T* ≤ T_e = O(log²(n+p)), or Theorem M's log₂A₀. Note: for the two-state family, ln A ≈ A₀, so SVV's √A₀ upper bound
@@ -187,7 +219,7 @@ T6. **Schäfer–Chopin (#10)** already ran ESS-0.9 adaptive SMC on BVS. Every m
 | O-STAGES item 4 (dense limit) | Known analogue (Syed et al. Λ) | high | high | idealised versus exact | no |
 | O-STAGES Theorem M, Theorem F | Not found in the literature read: plausibly new, elementary | medium | medium (needs a wider search in the counting/annealing literature) | SVV-style examples | no |
 | Prop 2 / T12 / T31(i) | Standard (unbiasedness, two-pass, Markov) except the negative items | high | high | none | no |
-| O-PW2 Thm A/B | Possibly a special case of Feynman–Kac variance formulas | low–medium (that it is subsumed) | medium | CDG Thm 1.4 comparison | no |
+| O-PW2 Thm A/B | Thm A: same kind as CDG 2011 Thm 1.4 (exact, assumption-free); Thm B/C possibly new (§3A) | medium–high (that Thm A is not new) | medium | derive CDG's v_n(s) form from (A2) | no |
 | T21 / T38 discovery, Theorem B, W7-SEP | No SMC literature overlap. Closest: YWJ Lemma 4 (structure), WSH persistence (mechanism) | high (that it is a gap) | — | — | no |
 | T26 / Thm 6 n-indexed Ẑ | No analogue found | medium–high | — | — | no |
 | Masked-regime Ẑ (F-MASKPIP) | Outside all general bounds (μ⋆, mixing) | high | — | — | no |
