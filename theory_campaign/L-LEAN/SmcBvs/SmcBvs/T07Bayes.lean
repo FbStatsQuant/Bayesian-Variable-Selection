@@ -74,11 +74,13 @@ theorem ceiling {K : ℕ} (rk : Finset (Fin p) → ℕ) (m : Finset (Fin p) → 
   have hargmax : IsArgmax m (sizeClass p S₀.card) S₀ := by
     refine ⟨hS₀class, fun T hT => ?_⟩
     have := h.1.2 T (hclassΩ T hT)
+    simp only at this
     rw [hg T hT, hg S₀ hS₀class] at this
     exact le_of_mul_le_mul_left this hγ
   refine ⟨hS₀K, hargmax, fun T hT => h.2 T ⟨hclassΩ T hT.1, fun U hU => ?_⟩⟩
   have hmT : m T = m S₀ := le_antisymm (hargmax.2 T hT.1) (hT.2 S₀ hS₀class)
   have := h.1.2 U hU
+  simp only at this ⊢
   rwa [hg S₀ hS₀class, ← hmT, ← hg T hT.1] at this
 
 /-- **T07(i), "no size-only prior can repair a within-size ranking error"** (contrapositive of
@@ -108,18 +110,18 @@ theorem ceiling_sharp {K : ℕ} (rk : Finset (Fin p) → ℕ) (m : Finset (Fin p
     ∃ w : ℕ → ℝ, PosSizePrior K w ∧
       IsLeastArgmax rk (fun S => sizePrior p K w S * m S) (Ωf p K) S₀ := by
   classical
-  set Σm := ∑ S ∈ Ωf p K, m S with hΣm
+  set sumM := ∑ S ∈ Ωf p K, m S with hsumM
   have hS₀Ω : S₀ ∈ Ωf p K := by simp [Ωf, hS₀K]
-  have hle : ∀ S ∈ Ωf p K, m S ≤ Σm := fun S hS =>
+  have hle : ∀ S ∈ Ωf p K, m S ≤ sumM := fun S hS =>
     single_le_sum (fun T _ => (hm T).le) hS
-  have hΣpos : 0 < Σm := lt_of_lt_of_le (hm S₀) (hle S₀ hS₀Ω)
-  set ε := m S₀ / (2 * Σm) with hε
+  have hsumpos : 0 < sumM := lt_of_lt_of_le (hm S₀) (hle S₀ hS₀Ω)
+  set ε := m S₀ / (2 * sumM) with hε
   have hεpos : 0 < ε := div_pos (hm S₀) (by linarith)
   -- ε * m S < m S₀ on Ω
   have hεm : ∀ S ∈ Ωf p K, ε * m S < m S₀ := by
     intro S hS
-    have h1 : ε * m S ≤ ε * Σm := mul_le_mul_of_nonneg_left (hle S hS) hεpos.le
-    have h2 : ε * Σm = m S₀ / 2 := by rw [hε]; field_simp
+    have h1 : ε * m S ≤ ε * sumM := mul_le_mul_of_nonneg_left (hle S hS) hεpos.le
+    have h2 : ε * sumM = m S₀ / 2 := by rw [hε]; field_simp
     linarith [hm S₀]
   let w : ℕ → ℝ := fun k => if k = S₀.card then 1 else ε
   have hw : PosSizePrior K w := fun k _ => by
@@ -176,13 +178,41 @@ def psi (q : Fin p → ℝ) (a : Finset (Fin p)) : ℝ := ∑ j ∈ a, (1 - 2 * 
 noncomputable def Jplus (q : Fin p → ℝ) : Finset (Fin p) := univ.filter fun j => 1 / 2 < q j
 
 theorem risk01_eq (a : Finset (Fin p)) : risk01 K F a = 1 - π K F a := by
-  sorry
+  have h1 : ∀ S, post F (Ωf p K) S * (if a = S then (0 : ℝ) else 1) =
+      post F (Ωf p K) S - (if a = S then post F (Ωf p K) S else 0) := by
+    intro S; split_ifs <;> ring
+  unfold risk01
+  unfold π
+  rw [Finset.sum_congr rfl (fun S _ => h1 S), Finset.sum_sub_distrib,
+    post_sum (Ωf_nonempty K), Finset.sum_ite_eq]
+  split_ifs with ha
+  · rfl
+  · rw [post_of_not_mem ha]
 
 /-- **T07(ii)(a)**: `a` minimises the posterior 0–1 risk over all subsets of `[p]` iff
 `a ∈ argmax_Ω F`. -/
 theorem risk01_min_iff (a : Finset (Fin p)) :
     (∀ b, risk01 K F a ≤ risk01 K F b) ↔ IsArgmax F (Ωf p K) a := by
-  sorry
+  have hZ : 0 < ∑ T ∈ Ωf p K, Real.exp (F T) := sum_exp_pos (Ωf_nonempty K)
+  simp only [risk01_eq, sub_le_sub_iff_left]
+  unfold π
+  constructor
+  · intro h
+    have ha : a ∈ Ωf p K := by
+      by_contra ha
+      have h0 := h ∅
+      rw [post_of_not_mem ha, post_of_mem (empty_mem_Ωf K)] at h0
+      have : 0 < Real.exp (F ∅) / ∑ T ∈ Ωf p K, Real.exp (F T) := div_pos (Real.exp_pos _) hZ
+      linarith
+    refine ⟨ha, fun T hT => ?_⟩
+    have hT' := h T
+    rw [post_of_mem hT, post_of_mem ha] at hT'
+    exact Real.exp_le_exp.mp ((div_le_div_iff_of_pos_right hZ).mp hT')
+  · intro ha b
+    by_cases hb : b ∈ Ωf p K
+    · rw [post_of_mem hb, post_of_mem ha.1]
+      exact div_le_div_of_nonneg_right (Real.exp_le_exp.mpr (ha.2 b hb)) hZ.le
+    · rw [post_of_not_mem hb]; exact post_nonneg _ _ _
 
 /-- **T07(ii)(a)**: the HPM `S†` minimises the posterior 0–1 risk. -/
 theorem hpm_min_risk01 (rk : Finset (Fin p) → ℕ) {Sd : Finset (Fin p)}
@@ -192,7 +222,33 @@ theorem hpm_min_risk01 (rk : Finset (Fin p) → ℕ) {Sd : Finset (Fin p)}
 /-- `ρ_H(a) = Σ_j PIP_j + ψ_PIP(a)` (PROOF_v2, proof of Theorem bayes (b)). -/
 theorem riskH_eq (a : Finset (Fin p)) :
     riskH K F a = ∑ j, PIP K F j + psi (PIP K F) a := by
-  sorry
+  have hA := Ωf_nonempty (p := p) K
+  have hsum := post_sum (F := F) hA
+  have hcard : ∀ s : Finset (Fin p), ((s.card : ℕ) : ℝ) = ∑ j, if j ∈ s then (1 : ℝ) else 0 := by
+    intro s; rw [Finset.sum_boole]; congr 2; ext j; simp
+  have hj : ∀ j, ∑ S ∈ Ωf p K, post F (Ωf p K) S * (if j ∈ symmDiff a S then (1 : ℝ) else 0) =
+      PIP K F j + if j ∈ a then 1 - 2 * PIP K F j else 0 := by
+    intro j
+    by_cases hja : j ∈ a
+    · have : ∀ S, post F (Ωf p K) S * (if j ∈ symmDiff a S then (1 : ℝ) else 0) =
+          post F (Ωf p K) S - (if j ∈ S then post F (Ωf p K) S else 0) := by
+        intro S; by_cases hjS : j ∈ S <;> simp [Finset.mem_symmDiff, hja, hjS]
+      rw [Finset.sum_congr rfl (fun S _ => this S), Finset.sum_sub_distrib, hsum]
+      simp only [hja, ↓reduceIte]
+      unfold PIP; ring
+    · have : ∀ S, post F (Ωf p K) S * (if j ∈ symmDiff a S then (1 : ℝ) else 0) =
+          (if j ∈ S then post F (Ωf p K) S else 0) := by
+        intro S; by_cases hjS : j ∈ S <;> simp [Finset.mem_symmDiff, hja, hjS]
+      rw [Finset.sum_congr rfl (fun S _ => this S)]
+      simp only [hja, ↓reduceIte]
+      unfold PIP; ring
+  have hpsi : psi (PIP K F) a = ∑ j, if j ∈ a then 1 - 2 * PIP K F j else 0 := by
+    unfold psi; rw [Finset.sum_ite_mem, Finset.univ_inter]
+  unfold riskH
+  rw [hpsi, ← Finset.sum_add_distrib]
+  simp_rw [hcard, Finset.mul_sum]
+  rw [Finset.sum_comm]
+  exact Finset.sum_congr rfl fun j _ => hj j
 
 /-- **Lemma psi (a)**: `J₊(q)` minimises `ψ_q` over all subsets. -/
 theorem psi_Jplus_le (q : Fin p → ℝ) (a : Finset (Fin p)) : psi q (Jplus q) ≤ psi q a := by
@@ -248,14 +304,26 @@ theorem reported_eq_hpm_iff (rk : Finset (Fin p) → ℕ) (hrk : Function.Inject
     {𝒮 : Finset (Finset (Fin p))} (h𝒮 : 𝒮 ⊆ Ωf p K) {Sd Sh : Finset (Fin p)}
     (hd : IsLeastArgmax rk F (Ωf p K) Sd) (hh : IsLeastArgmax rk F 𝒮 Sh) :
     Sh = Sd ↔ Sd ∈ 𝒮 := by
-  sorry
+  constructor
+  · intro h; rw [← h]; exact hh.1.1
+  · intro hd𝒮
+    have h1 : rk Sh ≤ rk Sd := hh.2 Sd ⟨hd𝒮, fun T hT => hd.1.2 T (h𝒮 hT)⟩
+    have hFle : F Sd ≤ F Sh := hh.1.2 Sd hd𝒮
+    have h2 : rk Sd ≤ rk Sh :=
+      hd.2 Sh ⟨h𝒮 hh.1.1, fun T hT => (hd.1.2 T hT).trans hFle⟩
+    exact hrk (le_antisymm h1 h2)
 
 /-- **T07(iii)(a)**: `Ŝ` minimises the posterior 0–1 risk iff `𝒮 ∩ argmax_Ω F ≠ ∅`. -/
 theorem reported_min_risk01_iff (rk : Finset (Fin p) → ℕ)
     {𝒮 : Finset (Finset (Fin p))} (h𝒮 : 𝒮 ⊆ Ωf p K) {Sh : Finset (Fin p)}
     (hh : IsLeastArgmax rk F 𝒮 Sh) :
     (∀ b, risk01 K F Sh ≤ risk01 K F b) ↔ ∃ T ∈ 𝒮, IsArgmax F (Ωf p K) T := by
-  sorry
+  rw [risk01_min_iff]
+  constructor
+  · intro h; exact ⟨Sh, hh.1.1, h⟩
+  · rintro ⟨T, hT𝒮, hT⟩
+    have hFT : F T ≤ F Sh := hh.1.2 T hT𝒮
+    exact ⟨h𝒮 hh.1.1, fun U hU => (hT.2 U hU).trans hFT⟩
 
 /-- **T07(iii)(b)**: with `F = log(ϖ m)` for a positive size-only weight and `m > 0`:
 `{Ŝ = S₀} ∩ {S*_{s₀} ≠ S₀} ⊆ {S*_{s₀} ∉ 𝒮}`. -/
@@ -265,7 +333,26 @@ theorem reported_truth_needs_unscored (rk : Finset (Fin p) → ℕ) (hrk : Funct
     (hh : IsLeastArgmax rk (fun S => Real.log (pw S.card * m S)) 𝒮 S₀)
     (hstar : IsLeastArgmax rk m (sizeClass p S₀.card) Sstar) (hne : Sstar ≠ S₀) :
     Sstar ∉ 𝒮 := by
-  sorry
+  intro hin
+  have hS₀𝒮 : S₀ ∈ 𝒮 := hh.1.1
+  have hS₀K : S₀.card ≤ K := (mem_filter.mp (h𝒮 hS₀𝒮)).2
+  have hc : Sstar.card = S₀.card := by
+    have := hstar.1.1; simp only [sizeClass, mem_filter, mem_univ, true_and] at this; exact this
+  have hpwpos : 0 < pw S₀.card := hpw _ hS₀K
+  have hS₀class : S₀ ∈ sizeClass p S₀.card := by simp [sizeClass]
+  have hFle : Real.log (pw Sstar.card * m Sstar) ≤ Real.log (pw S₀.card * m S₀) := hh.1.2 Sstar hin
+  rw [hc, Real.log_le_log_iff (mul_pos hpwpos (hm _)) (mul_pos hpwpos (hm _))] at hFle
+  have hm1 : m Sstar ≤ m S₀ := le_of_mul_le_mul_left hFle hpwpos
+  have hm2 : m S₀ ≤ m Sstar := hstar.1.2 S₀ hS₀class
+  have hmeq : m Sstar = m S₀ := le_antisymm hm1 hm2
+  have r1 : rk Sstar ≤ rk S₀ :=
+    hstar.2 S₀ ⟨hS₀class, fun T hT => by rw [← hmeq]; exact hstar.1.2 T hT⟩
+  have r2 : rk S₀ ≤ rk Sstar := by
+    refine hh.2 Sstar ⟨hin, fun T hT => ?_⟩
+    have := hh.1.2 T hT
+    simp only at this ⊢
+    rw [hc, hmeq]; exact this
+  exact hne (hrk (le_antisymm r1 r2))
 
 /-- **T07(iii)(c)**: PIP error bounds the excess Hamming risk. For any PIP estimate `q̂`, action
 class `𝒜`, `â ∈ 𝒜` minimising `ψ_q̂` over `𝒜`, and `a_opt ∈ 𝒜` minimising `ρ_H` over `𝒜`:
@@ -276,11 +363,42 @@ theorem excess_riskH_le (qhat : Fin p → ℝ) (𝒜 : Finset (Finset (Fin p)))
     0 ≤ riskH K F ahat - riskH K F aopt ∧
       riskH K F ahat - riskH K F aopt ≤ 2 * ∑ j ∈ symmDiff ahat aopt, |qhat j - PIP K F j| ∧
       2 * ∑ j ∈ symmDiff ahat aopt, |qhat j - PIP K F j| ≤ 2 * ∑ j, |qhat j - PIP K F j| := by
-  sorry
+  have hconst : ∀ x, riskH K F x = ∑ j, PIP K F j + psi (PIP K F) x := riskH_eq K F
+  set D : Fin p → ℝ := fun j => 2 * (qhat j - PIP K F j) with hD
+  have key : ∀ x, psi (PIP K F) x = psi qhat x + ∑ j ∈ x, D j := by
+    intro x; unfold psi; rw [← Finset.sum_add_distrib]
+    exact Finset.sum_congr rfl fun j _ => by simp only [hD]; ring
+  have split : ∀ x y : Finset (Fin p), ∑ j ∈ x, D j = ∑ j ∈ x \ y, D j + ∑ j ∈ x ∩ y, D j := by
+    intro x y
+    rw [← Finset.sum_union (Finset.disjoint_sdiff_inter x y), Finset.sdiff_union_inter]
+  have hsd : ∑ j ∈ symmDiff ahat aopt, |qhat j - PIP K F j| =
+      ∑ j ∈ ahat \ aopt, |qhat j - PIP K F j| + ∑ j ∈ aopt \ ahat, |qhat j - PIP K F j| := by
+    rw [symmDiff_def, Finset.sup_eq_union, Finset.sum_union disjoint_sdiff_sdiff]
+  have hmin := hahat_min aopt haopt
+  have b1 : ∑ j ∈ ahat \ aopt, D j ≤ 2 * ∑ j ∈ ahat \ aopt, |qhat j - PIP K F j| := by
+    rw [Finset.mul_sum]
+    exact Finset.sum_le_sum fun j _ => by simp only [hD]; nlinarith [le_abs_self (qhat j - PIP K F j)]
+  have b2 : -∑ j ∈ aopt \ ahat, D j ≤ 2 * ∑ j ∈ aopt \ ahat, |qhat j - PIP K F j| := by
+    rw [Finset.mul_sum, ← Finset.sum_neg_distrib]
+    exact Finset.sum_le_sum fun j _ => by simp only [hD]; nlinarith [neg_abs_le (qhat j - PIP K F j)]
+  have hinter : ahat ∩ aopt = aopt ∩ ahat := Finset.inter_comm _ _
+  refine ⟨by linarith [haopt_min ahat hahat], ?_, ?_⟩
+  · rw [hconst, hconst, key, key, split ahat aopt, split aopt ahat, hinter, hsd]
+    linarith
+  · have hnn : ∀ j ∈ (univ : Finset (Fin p)), j ∉ symmDiff ahat aopt → 0 ≤ |qhat j - PIP K F j| :=
+      fun j _ _ => abs_nonneg _
+    have := Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ (symmDiff ahat aopt)) hnn
+    linarith
 
 /-- **T07(iii)(c)**, last clause: `MPM̂ = MPM` iff `q̂_j > 1/2 ⇔ PIP_j > 1/2` for every `j`. -/
 theorem mpm_hat_eq_iff (qhat : Fin p → ℝ) :
     Jplus qhat = Jplus (PIP K F) ↔ ∀ j, (1 / 2 < qhat j ↔ 1 / 2 < PIP K F j) := by
-  sorry
+  constructor
+  · intro h j
+    have := congrArg (fun s => j ∈ s) h
+    simpa [Jplus] using this
+  · intro h
+    ext j
+    simpa [Jplus] using h j
 
 end SmcBvs.T07
