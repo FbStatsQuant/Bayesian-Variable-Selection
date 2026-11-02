@@ -160,7 +160,7 @@ min_{A×A'} |r̂| < max(σ(A), σ(A')). ∎
 3. Floating point: the engine compares rounded distances. A rounding flip requires two |r̂|'s within about 1e-15 of
    each other, an event of probability O(p²·1e-15) under a bounded density. We ignore it.
 
-Numerical check: `scripts/check_thmA.py` → `results/check_thmA.txt`. In 320 replicates over 8 hard configurations
+Numerical check: `scripts/check_thmA.py` → `results/check_thmA.txt`. B = 14 is fixed there: Theorem A is deterministic and holds for any B, so B need not equal the method's B(n, p). In 320 replicates over 8 hard configurations
 (indep / LH near the ψ = ρ boundary / global factor), (C\*) ⟺ laminar held 320/320, laminar ⟺ blocks = groups held
 320/320, and (M) ⇒ (C\*) held without exception.
 
@@ -385,9 +385,17 @@ failure is visible in the blocks:
   reproducible simulation, and on the proved mechanism (the hub pair merges first).
 
 **Finite-n boundary (not a counterexample to the lemma).** At n = 200 the lemma's probability is close to 1 only in
-part of the parameter range. Recovery collapses below ρ ≈ 0.35 for independent groups of 10 (p = 1000). It also
-collapses for the global factor with ρ = 0.5 and ψ = 0.2–0.3, and for LH as ψ → ρ (ψ = 0.65: about half the
-replicates fail). See REPORT §4. These are the finite-n failures of an asymptotically true statement. **No small
+part of the parameter range (`results/sim_partition.txt`, `results/sim_extra.txt`). For independent groups of 10,
+recovery fails in:
+- 10% / 39% of replicates at ρ = 0.35 (p = 500 / 1000);
+- 69% / 100% at ρ = 0.30.
+
+For LH with c = 2 linked pairs and ρ = 0.7, it fails in:
+- 2–3% of replicates at ψ = 0.65;
+- 23–26% at ψ = ρ = 0.7;
+- 80–83% at ψ = 0.75.
+
+The global factor at ρ = 0.5 degrades as ψ grows toward ρ. See REPORT §4. These are the finite-n failures of an asymptotically true statement. **No small
 algorithm change is needed for the stated regime.** The only failures that are not finite-n are hypothesis failures
 (CE1–CE3).
 

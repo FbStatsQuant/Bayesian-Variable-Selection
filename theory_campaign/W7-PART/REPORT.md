@@ -29,13 +29,14 @@ Every result is a **candidate**, not reviewed and not adopted.
      1.4e-8 to 4.7e-8 at p = 1000 (Corollary C). Theorem B gives 3.4e-5 to 1.3e-4.
    - **LH-iid (ρ = 0.7, ψ = 0.5, g = 10, c = 1):** the rigorous bound is only **0.17**. It is dominated by the one
      *dependent* linked group pair. The 95% Monte Carlo bound for that pair is 1.5e-4.
-   - **Actual algorithm:** 0 failures in 2,000 replicates in every one of these cells.
+   - **Actual algorithm:** 0 failures in each of these cells (500–2,000 replicates per cell).
 4. **COUNTEREXAMPLES: the lemma is false outside its hypotheses; each case is a hypothesis failure, not an algorithm
    bug.**
    - **g > B.** At n = 200, B = 14, so the task's "9 ≤ g ≤ 16" fails for g = 15, 16 with probability 1. The correct
      range is g ∈ [⌊B/2⌋ + 1, B].
    - **2g ≤ B** (the study's g = 5). blocks ≠ groups surely, but blocks are unions of whole groups w.h.p. (PROVED).
-   - **|ψ| ≥ ρ.** Recovery fails w.p. → 1 (mechanism PROVED; blocks ≠ groups shown in simulation).
+   - **|ψ| > ρ.** Recovery fails w.p. → 1 (mechanism PROVED; blocks ≠ groups shown in simulation). At
+     ψ = ρ (the boundary), 23–26% of replicates fail at n = 200; the limit is OPEN.
    - **No algorithm change is needed in the stated regime.**
 
 ## 2. Statements (full proofs in PROOF.md)
@@ -156,20 +157,33 @@ Reading the table:
 | indep ρ = 0.40 | 1/300 | 11/300 | 300 / 300 |
 | indep ρ = 0.50 | 0/300 | 0/300 | 65 / 157 |
 | LH c=2, ψ = 0.60 | 2/300 | 1/300 | 164 / 182 |
-| LH c=2, ψ = 0.65 | 6/300 | FILL | 283 / FILL |
-| LH c=2, ψ = 0.70 (= ρ) | 68/300 | FILL | 300 / FILL |
-| LH c=2, ψ = 0.75 (> ρ) | 239/300 | FILL | 300 / FILL |
-| LH all groups linked (G/2 pairs), ψ = 0.5 | 0/1000 | FILL | 265 / FILL |
-| global ρ = .7, ψ = .1 / .2 / .3 | 0 / 0 / 0 (of 300) | FILL | 0 / 0 / 0 |
-| global ρ = .5, ψ = .1 / .2 | 0/300 / 3/300 | FILL | 299 / 300 |
-| CE1: g = 15, 16 | 50/50, 50/50 (laminar in all; the cut splits groups) | FILL | — |
-| CE2: g = 5 (2g ≤ B) | 200/200 (blocks are unions of whole groups in 200/200) | FILL | — |
+| LH c=2, ψ = 0.65 | 6/300 | 9/300 | 283 / 290 |
+| LH c=2, ψ = 0.70 (= ρ) | 68/300 | 78/300 | 300 / 300 |
+| LH c=2, ψ = 0.75 (> ρ) | 239/300 | 248/300 | 300 / 300 |
+| LH all groups linked (G/2 pairs), ψ = 0.5 | 0/1000 | 0/1000 | 265 / 453 |
+| global ρ = .7, ψ = .1 / .2 / .3 | 0 / 0 / 0 (of 300) | 0 / 0 / 0 (of 300) | 0, 0, 0 / 0, 0, 5 |
+| global ρ = .5, ψ = .1 / .2 | 0/300, 3/300 | 0/300, 14/300 | 299, 300 / 300, 300 |
+| global ρ = .5, ψ = .3 (`sim_extra.txt`) | 73/100 | 98/100 | — |
+| global ρ = .4, ψ = .25 / ρ = .6, ψ = .3 (`sim_extra.txt`) | 100/100, 0/100 | 100/100, 1/100 | — |
+| CE1: g = 15, 16 | 50/50, 50/50 (laminar in all; the cut splits groups) | 50/50, 50/50 (same) | — |
+| CE2: g = 5 (2g ≤ B) | 200/200 (blocks are unions of whole groups in 200/200) | 200/200 (unions in 200/200) | — |
 
-The rows "not union" and "not laminar" in `sim_partition.txt` equal "fail" in every regime with g ≤ B. The
+The columns "not union" and "not laminar" in `sim_partition.txt` equal "fail" in every regime with g ≤ B < 2g. The
 margin (M) fails in a large fraction of the replicates in which the algorithm succeeds. That is why Theorems A/C,
 not the margin, describe the algorithm at n = 200.
 
-**4.4 n-sweep (p ≈ n^{1.25}; `sim_partition.txt`, last rows).** FILL
+**4.4 n-sweep (p ≈ n^{1.25}; `sim_partition.txt`, last rows).** Asymptotically the lemma bites, as it should. B = 14 at
+n = 200 and B = 16 at n ≥ 400.
+
+| regime | n = 200, p = 750 | n = 400, p = 1790 | n = 800, p = 4260 |
+|---|---|---|---|
+| LH c = 2, ρ = 0.7, ψ = 0.65: fail / reps | 3/200 | 1/200 | 0/60 |
+| LH c = 2, ψ = 0.65: margin (M) fails | 186/200 | 170/200 | 33/60 |
+| indep ρ = 0.4: fail / reps | 6/200 | 0/200 | 0/60 |
+| indep ρ = 0.4: margin (M) fails | 200/200 | 28/200 | 0/60 |
+
+The margin catches up with the algorithm only at n ≈ 800. This matches the factor-2 gap in the exponents
+(Cor B versus Cor C).
 
 ## 5. What fails and why
 
@@ -210,7 +224,8 @@ not the margin, describe the algorithm at n = 200.
 - **W3-PXN Lemma P1** can now cite Theorem B instead of the external C1. Its numerics "b = g 20/20" are consistent
   with §4.
 - **The S5-type global factor at n = 200** (cross 0.3, within 0.7) recovers the groups in simulation (0/300
-  failures), although Theorem B is vacuous there (1.4–3.8). A Theorem-C analogue for factor-dependent groups (partial
+  failures), although Theorem B is vacuous there (1.4–3.8). With weaker within-group correlation it breaks down:
+  ρ = 0.5, ψ = 0.3 fails in 73% / 98% of replicates at p = 500 / 1000. A Theorem-C analogue for factor-dependent groups (partial
   out the common factor in the analysis, not in the method) looks feasible.
 - **The neighbour graph** (M §6.4) uses the threshold √(2 log p/n). It is not part of the partition and was not
   studied.
