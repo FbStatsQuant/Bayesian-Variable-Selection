@@ -116,6 +116,21 @@ G_n ≥ 1/(2r) > ½).
 log(1+χ²(π‖π₀)) − [r log p − ½ log n]₊ → ∞ polynomially (Theorem W(e)). Also [FD] W(b) ("1+χ² ≤ 1 + p^{R²+ε}/√n + o(1)")
 is false there, because log(1+χ²) grows faster than any multiple of log p.
 
+**Connections (T13 and the regime split).**
+- *Locked T13.* T13(i) with V = Ω and T13(iii) with W = V are Prop L(ii): the restricted ESS is
+  ρ_V(u,v) = exp{−[ℓ_V(u) + ℓ_V(2v−u) − 2ℓ_V(v)]}, the exponential of minus a second difference of a convex function.
+  T13(ii)'s coverage bound 10/(9(1−ε_C)²) is the statement that the second differences of ℓ_Ω and ℓ_V agree up to
+  log(1−ε_C) terms. Theorem W evaluates ρ_Ω(0, 1) = 1/(1+χ²(π‖π₀)) statistically. Theorem W′ counts the grid
+  that T13 accepts.
+- *Favourable regime* (ℓ_{S₀}* → 0: T22(iii)/W1-EXP Thm 2; here Theorem W(a)). Every stage's weight variance is
+  ℓ_{S₀}(2v−u) + o_P(1) (Prop L(iii)), so only ℓ on [1, 2] matters. It is set by the dilution exponent 1 + (w−1)r of
+  Lemma W2, applied to the extreme nulls. One-step importance sampling succeeds iff 2Ar < 1. The bridge needs
+  ≤ 2 ideal stages (W′), and KL, TV → 0 throughout (W(f)). The draft's "weak dependence ⇒ stable weights" holds for
+  KL and TV, and for χ² only when 2Ar < 1, even at zero cross-block correlation.
+- *Masked regime* (ℓ_{S₀}(0) → ∞: T27(i), Prop NM of [FD]). Prop L(iv) gives log(1+χ²(π‖π₀)) ≥ ℓ(0) − 2ℓ(1) → ∞. Prop G's
+  halving forces ≥ log₂(ℓ(0)/c) − O(1) accepted stages ([PF] WS7(d)). Reweighting alone holds S₀ with probability
+  ≤ Nπ₀(S₀) ([PF] WS7(c)), so weight stability there is necessary but not sufficient: delivery (T38(b)) is the obligation.
+
 ## 3. Proofs
 
 ### 3.1 Prop W0
