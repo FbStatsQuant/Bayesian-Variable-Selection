@@ -34,8 +34,9 @@ outputs in `results/`.
    particle at Hamming distance one scores S₀ in the next round with probability ≥ a₁(x), rigorously, and
    a₁ ≥ 0.14 in all designs at n = 200. With conditional independence, N₁ such particles fail together with
    probability ≤ 0.86^{N₁}. Otherwise:
-   - Under G, R, SE, BM-∞ the phase-2 premises hold automatically for a ≤ 1.
-   - For a ≥ 2 and for incomplete starts, five extra named conditions are needed: NL0, UDEL, TS, TL, BTP/IND.
+   - Under G, R, SE, BM-∞ the phase-2 premises hold automatically only at S₀ itself and for deleting a
+     single extra (a = 1). Every superset family with a ≥ 1 also needs NL0(a).
+   - For a ≥ 2 and for incomplete starts, six extra named conditions are needed: NL0, UDEL, TS, TL, BTP and IND.
    - With c_* ≈ 1/(B+3), the single-particle bound decays like n^{−c_*/ln 2}, about n^{−0.07}.
    - At n = 200 (p = 20) the bound is vacuous: superset leakage η₂ is about 0.4–1.0 per round, because
      π(S₀) ≈ 0.72.
@@ -78,6 +79,11 @@ For x ⊇ S₀ use only phase 2, with a = |P(x)|.
 
 Choosing A = ∅ gives exactly v ≤ s₀ + d and the brief's exponent ⌊H/(s₀+d)⌋. The price is that look-alike
 additions then count as bad (junk overflow) and enter η₁.
+
+**Proposition D (drift form). PROVED.** Split η = η_ex (steps leaving 𝓕(x)) + η_in (other bad steps). With
+v_max = |M(x)| + a and ρ(z) = z⁻¹ + (1−z⁻¹)(1−c_*+η) + exp{(z^{v_max}−1)η} − 1,
+P_x(not scored within H) ≤ Hη_ex + inf_{z>1} ρ(z)^H z^{v−1}. Internal increases therefore need only η → 0, not
+Hη → 0.
 
 **Corollary B-unif. PROVED.** The bound holds uniformly over an eligible set 𝓧 fixed before selection, with
 inf c_*, sup v, sup η.
@@ -138,8 +144,8 @@ All entries below are PROOF SKETCH. Finite-n expressions are in PROOF.md §6.
 | premise | w.p. → 1? |
 |---|---|
 | truth deletion at supersets (τ₂) | **yes**: odds ≤ 2p√(n+1)·n^{−M_n(1−o(1))/2} |
-| superset leakage a ≤ 1 (zero leakage) | **yes**: O_P(s₀√(log p)/√n), heavy-tailed constant (E e^{Z²/2} = ∞) |
-| superset leakage a ≥ 2, i.e. the sup over P | needs **NL0(a)** (partial-Z inflation control; COH suffices) |
+| superset leakage at S₀ itself (zero leakage) | **yes**: O_P(s₀√(log p)/√n), heavy-tailed constant (E e^{Z²/2} = ∞) |
+| superset leakage for every a ≥ 1, i.e. the sup over W = S₀∪P | needs **NL0(a)**: partial-Z inflation control. Bounded correlation degree (S2–S4, S6) or COH suffices; equicorrelated nulls (S5) fail in rate for p ≳ n^{0.58} |
 | uniform deletability ε_del | **yes for a = 1**; needs **UDEL(a)** for a ≥ 2 (this is T24(iv)'s open multi-extra deletion issue, in sharper form) |
 | uniform addability ε_add | **yes if one truth is missing** (SE); otherwise needs **BTP** (best-target persistence; fails under cancellation) |
 | truth retention at incomplete states | **not implied by SE** (cancellation); needs **TS(𝒵)** (COH suffices) |
