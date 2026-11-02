@@ -98,5 +98,39 @@
   {
     "path": "Scripts/SMC_BVS/core/cpp/v3_engine.h",
     "sha256": "9c47d604d8ad359a942d64a339f6cadaa5633e14eb722b9548fa1d1189033201"
+  },
+  {
+    "ref": "origin/theory/W1-EXP",
+    "head": "722bd18e51fcc3b485c07590097e137dac71a5aa",
+    "path": "theory_campaign/W1-EXP/PROOF.md",
+    "sha256": "477cc41b059e4e3de524828851c14028a525db0fed95f9543f40a163d14eed2f"
+  },
+  {
+    "ref": "origin/theory/O-LS0",
+    "head": "02348e28a6074696ac1ca05ddee94cf837ddd776",
+    "path": "theory_campaign/O-LS0/results/paired_totals.txt",
+    "sha256": "7caa4c2608688c204248a5e8e2d294d339803bb509d0f042979ac9fc11dcd5c3"
+  },
+  {
+    "ref": "origin/theory/O-LS0",
+    "head": "02348e28a6074696ac1ca05ddee94cf837ddd776",
+    "path": "theory_campaign/O-LS0/results/data_hash_check.csv",
+    "sha256": "1f65d95cef6d1a6fcec7227a05c475c2431674f003219ca8661cd5fe2fd75000"
+  },
+  {
+    "path": "Scripts/SMC_BVS/core/cpp/v3_score.h",
+    "sha256": "c306e4979fa41d499c17376990fce6cff1d9165a602beef7f788ff40ecbb0968"
+  },
+  {
+    "path": "Scripts/SMC_BVS/core/cpp/v3_ledger.h",
+    "sha256": "7641811d73e635bf7176ec76be1c6655b60b2b2fb560453c4d7dc328d7b319a7"
+  },
+  {
+    "path": "Scripts/SMC_BVS/core/cpp/v3_runtime.h",
+    "sha256": "2e164ce34c61e5611e829208e99f6c5c0c6cce19145ab453e1beeb8e5a35900e"
+  },
+  {
+    "path": "Scripts/SMC_BVS/core/cpp/v3_core.cpp",
+    "sha256": "fbe4773775d57eec41112d2acb3be80e5ac0cc7261f60b89cb0eed0bd13a3c0d"
   }
 ]

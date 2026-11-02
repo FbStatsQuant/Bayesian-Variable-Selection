@@ -1,0 +1,9 @@
+Mon Nov  2 09:19:12 PM UTC 2026
+owls.stat.rice.edu
+Linux owls.stat.rice.edu 5.14.0-687.56.1.el9_8.x86_64 #1 SMP PREEMPT_DYNAMIC Tue Oct 6 21:51:31 EDT 2026 x86_64 x86_64 x86_64 GNU/Linux
+/home/fb31/envs/dl/bin/python
+Python 3.12.15
+OPENBLAS_NUM_THREADS=1
+OMP_NUM_THREADS=1
+MKL_NUM_THREADS=1
+9b52dc272457dda94e2d7f1f42c0503868b1b4878d8874960d6fafbed5e1c0ad  scripts/check.py

@@ -1,0 +1,116 @@
+[
+  {
+    "n": 200,
+    "rep": 0,
+    "mode": [
+      0,
+      18,
+      36
+    ],
+    "reference": [
+      0,
+      18,
+      36
+    ],
+    "reference_mass": 0.7250306447770184,
+    "scores_truth": true,
+    "moves": 2,
+    "min_required_margin": 12.741364727797304,
+    "truth_best": true
+  },
+  {
+    "n": 200,
+    "rep": 1,
+    "mode": [
+      0,
+      18,
+      36
+    ],
+    "reference": [
+      0,
+      18,
+      36
+    ],
+    "reference_mass": 0.8386325832416305,
+    "scores_truth": true,
+    "moves": 2,
+    "min_required_margin": 7.172461590980731,
+    "truth_best": true
+  },
+  {
+    "n": 200,
+    "rep": 2,
+    "mode": [
+      0,
+      18,
+      36
+    ],
+    "reference": [
+      0,
+      18,
+      36
+    ],
+    "reference_mass": 0.8378478378149073,
+    "scores_truth": true,
+    "moves": 2,
+    "min_required_margin": 10.849617105610548,
+    "truth_best": true
+  },
+  {
+    "n": 800,
+    "rep": 0,
+    "mode": [
+      0,
+      18,
+      36
+    ],
+    "reference": [
+      0,
+      18,
+      36
+    ],
+    "reference_mass": 0.9200502925192384,
+    "scores_truth": true,
+    "moves": 2,
+    "min_required_margin": 56.5570283191264,
+    "truth_best": true
+  },
+  {
+    "n": 800,
+    "rep": 1,
+    "mode": [
+      0,
+      18,
+      36
+    ],
+    "reference": [
+      0,
+      18,
+      36
+    ],
+    "reference_mass": 0.9228679133762455,
+    "scores_truth": true,
+    "moves": 2,
+    "min_required_margin": 59.47898834643229,
+    "truth_best": true
+  },
+  {
+    "n": 800,
+    "rep": 2,
+    "mode": [
+      0,
+      18,
+      36
+    ],
+    "reference": [
+      0,
+      18,
+      36
+    ],
+    "reference_mass": 0.9180405940576908,
+    "scores_truth": true,
+    "moves": 2,
+    "min_required_margin": 51.47763495079789,
+    "truth_best": true
+  }
+]
