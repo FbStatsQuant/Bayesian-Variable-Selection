@@ -1,4 +1,10 @@
-import Mathlib
+import Mathlib.Basic.Real.Basic
+import Mathlib.Data.Finset.Max
+import Mathlib.Data.Finset.Card
+import Mathlib.Logic.Function.Iterate
+import Mathlib.Order.Monotone.Basic
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Push
 
 /-!
 # T37(i) / Theorem A: deterministic greedy repair — abstract combinatorial core
@@ -150,7 +156,7 @@ noncomputable def rankAbove (F : α → ℝ) (R : Finset α) (S : α) : ℕ :=
   ((R.filter fun S' => F S < F S').card)
 
 /-- Under TD′_∞(R) the path from a state of `R` stays in `R` (before and after reaching `S₀`). -/
-theorem path_mem_of_TDinf (hTD : TDinf M R S₀) {S : α} (hS : S ∈ R) (hS₀ : S₀ ∈ R) :
+theorem path_mem_of_TDinf {R : Finset α} {S₀ : α} (hTD : TDinf M R S₀) {S : α} (hS : S ∈ R) (hS₀ : S₀ ∈ R) :
     ∀ k, path M S k ∈ R := by
   intro k
   induction k with
@@ -177,7 +183,7 @@ theorem theoremA1 [DecidableEq α] (hM : IsBestImprovement N F M) {R : Finset α
     refine ⟨τ, hτ, hp, fun j hj => ?_⟩
     rw [path_stays (by rw [hp]; exact hTD.1) j hj, hp]
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   set r := rankAbove F R S
   -- all steps `0..r` are moves
   have hmove : ∀ k ≤ r, M (path M S k) ≠ none := by
@@ -197,7 +203,7 @@ theorem theoremA1 [DecidableEq α] (hM : IsBestImprovement N F M) {R : Finset α
   have hmaps : Set.MapsTo (fun k => path M S (k + 1)) (Finset.range (r + 1) : Set ℕ)
       (R.filter fun S' => F S < F S' : Finset α) := by
     intro k hk
-    simp only [Finset.coe_filter, Set.mem_setOf_eq]
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq]
     refine ⟨hmem _, ?_⟩
     have := path_F_strictMono hM S (Nat.succ_pos k) (hmove 0 (Nat.zero_le _))
     rwa [path_zero] at this
@@ -264,7 +270,7 @@ theorem theoremA2 {Φ : α → ℕ} {R : Finset α} {S₀ : α} (hTD : TDP M Φ 
   -- S₀ is hit within Φ S steps
   have hhit : ∃ k ≤ Φ S, path M S k = S₀ := by
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     have hbound : ∀ k ≤ Φ S, Φ (path M S k) + k ≤ Φ S := by
       intro k hk
       induction k with

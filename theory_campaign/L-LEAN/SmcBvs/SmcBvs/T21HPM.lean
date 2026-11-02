@@ -1,4 +1,6 @@
 import SmcBvs.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.Set
+import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
 
 /-!
 # T21 (C1): composition inequality for the reported HPM — abstract finite version
@@ -44,6 +46,7 @@ theorem hpm_eq_truth {F : M → ℝ} {A 𝒮 : Finset M} {S₀ Ŝ : M} (h𝒮 : 
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
+omit [MeasurableSpace Ω] in
 /-- The event inclusion behind C1:
 `{U or Ŝ ≠ S₀} ⊆ U ∪ {Uᶜ, S₀ ∉ 𝒮} ∪ {Uᶜ, S₀ ∈ 𝒮, π(S₀) ≤ 1/2}`. -/
 theorem t21_event_subset (U : Set Ω) (A : Finset M) (𝒮 : Ω → Finset M) (F : Ω → M → ℝ)
@@ -84,8 +87,7 @@ theorem t21_decomposition' (P : Measure Ω) (U : Set Ω) (A : Finset M) (𝒮 : 
       P U + P {ω | S₀ ∉ 𝒮 ω} +
         P {ω | ω ∉ U ∧ S₀ ∈ 𝒮 ω ∧ post (F ω) A S₀ ≤ 1 / 2} := by
   refine (t21_decomposition P U A 𝒮 F Ŝ S₀ h𝒮 hŜ).trans ?_
-  gcongr
-  exact fun ω hω => hω.2
+  exact add_le_add_left (add_le_add_right (measure_mono fun ω hω => hω.2) _) _
 
 /-- Markov's inequality at level `1/2`: `P(δ ≥ 1/2) ≤ 2 E δ` for an integrable `δ ≥ 0`. -/
 theorem markov_half (P : Measure Ω) (δ : Ω → ℝ) (hδ0 : ∀ ω, 0 ≤ δ ω)
@@ -100,10 +102,10 @@ theorem measurable_post (A : Finset M) (F : Ω → M → ℝ) (S₀ : M)
     (hF : ∀ S, Measurable fun ω => F ω S) : Measurable fun ω => post (F ω) A S₀ := by
   unfold post
   by_cases h : S₀ ∈ A
-  · simp only [h, if_true]
+  · simp only [h, ↓reduceIte]
     exact (Real.measurable_exp.comp (hF S₀)).div
       (Finset.measurable_sum A fun T _ => Real.measurable_exp.comp (hF T))
-  · simp only [h, if_false]
+  · simp only [h, ↓reduceIte]
     exact measurable_const
 
 /-- **T21 (C1)**: `P(U or Ŝ ≠ S₀) ≤ P(U) + 2 E δ₁ + P(Uᶜ, S₀ ∉ 𝒮)`, with `δ₁ = 1 - π(S₀)`.
@@ -124,7 +126,7 @@ theorem t21_C1 (P : Measure Ω) [IsProbabilityMeasure P] (U : Set Ω) (A : Finse
     Integrable.of_bound hδm.aestronglyMeasurable 1 (Filter.Eventually.of_forall hδ1)
   have hsub : {ω | ω ∉ U ∧ S₀ ∈ 𝒮 ω ∧ post (F ω) A S₀ ≤ 1 / 2} ⊆ {ω | 1 / 2 ≤ δ ω} := by
     intro ω hω
-    simp only [Set.mem_setOf_eq, hδ] at hω ⊢
+    simp only [Set.mem_ofPred_eq, hδ] at hω ⊢
     linarith [hω.2.2]
   have hmain := t21_decomposition P U A 𝒮 F Ŝ S₀ h𝒮 hŜ
   have hreal : P.real (U ∪ {ω | ω ∉ U ∧ Ŝ ω ≠ S₀}) ≤
@@ -145,20 +147,20 @@ theorem integral_le_eps_add_prob (P : Measure Ω) [IsProbabilityMeasure P] (δ :
     ∫ ω, δ ω ∂P ≤ ε + P.real {ω | ε < δ ω} := by
   set E := {ω | ε < δ ω} with hE
   have hEm : MeasurableSet E := measurableSet_lt measurable_const hδm
-  have hbound : ∀ ω, δ ω ≤ ε + E.indicator (fun _ => (1 : ℝ)) ω := by
+  have hbound : ∀ ω, δ ω ≤ ε + E.indicator (1 : Ω → ℝ) ω := by
     intro ω
     by_cases h : ω ∈ E
-    · rw [Set.indicator_of_mem h]; linarith [hδ1 ω]
-    · rw [Set.indicator_of_notMem h]; simp only [hE, Set.mem_setOf_eq, not_lt] at h; linarith
+    · rw [Set.indicator_of_mem h, Pi.one_apply]; linarith [hδ1 ω]
+    · rw [Set.indicator_of_notMem h]; simp only [hE, Set.mem_ofPred_eq, not_lt] at h; linarith
   have hint : Integrable δ P := Integrable.of_bound hδm.aestronglyMeasurable 1
     (Filter.Eventually.of_forall fun ω => by
       rw [Real.norm_eq_abs, abs_of_nonneg (hδ0 ω)]; exact hδ1 ω)
-  have hint2 : Integrable (fun ω => ε + E.indicator (fun _ => (1 : ℝ)) ω) P :=
-    (integrable_const ε).add ((integrable_const (1 : ℝ)).indicator hEm)
-  calc ∫ ω, δ ω ∂P ≤ ∫ ω, (ε + E.indicator (fun _ => (1 : ℝ)) ω) ∂P :=
+  have hint2 : Integrable (fun ω => ε + E.indicator (1 : Ω → ℝ) ω) P :=
+    (integrable_const ε).add (show Integrable (E.indicator (1 : Ω → ℝ)) P from (integrable_const (1 : ℝ)).indicator hEm)
+  calc ∫ ω, δ ω ∂P ≤ ∫ ω, (ε + E.indicator (1 : Ω → ℝ) ω) ∂P :=
         integral_mono hint hint2 hbound
     _ = ε + P.real E := by
-        rw [integral_add (integrable_const ε) ((integrable_const (1 : ℝ)).indicator hEm),
+        rw [integral_add (integrable_const ε) (show Integrable (E.indicator (1 : Ω → ℝ)) P from (integrable_const (1 : ℝ)).indicator hEm),
           integral_const, integral_indicator_one hEm]
         simp
 

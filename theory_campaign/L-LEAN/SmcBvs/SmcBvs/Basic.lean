@@ -1,4 +1,7 @@
-import Mathlib
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.Finset.Max
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.BigOperators.Field
 
 /-!
 # Shared finite objects for the SMC-BVS formalisation
@@ -18,10 +21,10 @@ open Finset
 
 namespace SmcBvs
 
-variable {M : Type*} [DecidableEq M]
+variable {M : Type*}
 
 /-- Posterior `π(S) = e^{F(S)} / Σ_{T∈A} e^{F(T)}` on the finite model set `A`, and `0` off `A`. -/
-noncomputable def post (F : M → ℝ) (A : Finset M) (S : M) : ℝ :=
+noncomputable def post [DecidableEq M] (F : M → ℝ) (A : Finset M) (S : M) : ℝ :=
   if S ∈ A then Real.exp (F S) / ∑ T ∈ A, Real.exp (F T) else 0
 
 /-- `S` maximises `g` over `A`. -/
@@ -45,7 +48,7 @@ theorem exists_isLeastArgmax (rk : M → ℕ) (g : M → ℝ) {A : Finset M} (hA
   classical
   obtain ⟨S₁, hS₁A, hS₁⟩ := A.exists_max_image g hA
   set B := A.filter (fun S => ∀ T ∈ A, g T ≤ g S) with hB
-  have hBne : B.Nonempty := ⟨S₁, by simp [hB, hS₁A, hS₁]⟩
+  have hBne : B.Nonempty := ⟨S₁, by rw [hB, mem_filter]; exact ⟨hS₁A, hS₁⟩⟩
   obtain ⟨S, hSB, hS⟩ := B.exists_min_image rk hBne
   rw [hB, mem_filter] at hSB
   refine ⟨S, ⟨hSB.1, hSB.2⟩, fun T hT => hS T ?_⟩
@@ -62,6 +65,8 @@ theorem IsArgmax.eq_of_strict {g : M → ℝ} {A : Finset M} {S₀ S : M} (hS₀
 
 /-! ### The posterior -/
 
+variable [DecidableEq M]
+
 theorem post_of_mem {F : M → ℝ} {A : Finset M} {S : M} (hS : S ∈ A) :
     post F A S = Real.exp (F S) / ∑ T ∈ A, Real.exp (F T) := by
   simp [post, hS]
@@ -70,6 +75,7 @@ theorem post_of_not_mem {F : M → ℝ} {A : Finset M} {S : M} (hS : S ∉ A) :
     post F A S = 0 := by
   simp [post, hS]
 
+omit [DecidableEq M] in
 theorem sum_exp_pos {F : M → ℝ} {A : Finset M} (hA : A.Nonempty) :
     0 < ∑ T ∈ A, Real.exp (F T) :=
   Finset.sum_pos (fun T _ => Real.exp_pos (F T)) hA

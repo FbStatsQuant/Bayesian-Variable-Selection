@@ -1,4 +1,6 @@
-import Mathlib
+import Mathlib.Probability.Independence.Basic
+import Mathlib.MeasureTheory.Constructions.Pi
+import Mathlib.Analysis.Complex.Exponential
 
 /-!
 # T11(iii): miss probability of `Q` iid `π₀` draws
@@ -64,9 +66,9 @@ theorem t11_miss_iid (P : Measure Ω) [IsProbabilityMeasure P] (π₀ : Measure 
   have hi : ∀ i, P (X i ⁻¹' ({s}ᶜ : Set M)) = 1 - π₀ {s} := by
     intro i
     have hπ₀ : IsProbabilityMeasure π₀ := by
-      rw [← hlaw i]; exact isProbabilityMeasure_map (hXm i).aemeasurable
+      rw [← hlaw i]; infer_instance
     rw [← Measure.map_apply (hXm i) hmeas, hlaw i,
       prob_compl_eq_one_sub (measurableSet_singleton s)]
-  simp [hi]
+  simp only [hi, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
 
 end SmcBvs
