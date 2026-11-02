@@ -1,0 +1,8 @@
+"source","kind","p","s","r","ref","dataset_id","match","header_version","blas"
+"A: Owls dev (NOTS_READINESS s5)","dev",500,4,1,"2ba5c283","dev_p0500_S4_r001",TRUE,"4.6.0","OPENBLAS-OPENMP threads 1"
+"A: Owls dev (NOTS_READINESS s5)","dev",1000,4,1,"c4724d92","dev_p1000_S4_r001",TRUE,"4.6.0","OPENBLAS-OPENMP threads 1"
+"B: NOTS dev (bench_v2 checker)","dev",500,1,1,"ee045bfb113fee6cb3dd9451a77bf3067e0cada77b056317baf1b94035955f6f","dev_p0500_S1_r001",FALSE,NA,"OPENBLAS-OPENMP threads 1"
+"B: NOTS dev (bench_v2 checker)","dev",1000,4,1,"85c4921f8bdddc6dd9d4578ff50e6f0de613e0f1a4f56e73bf9c1f72dc3d16c7","dev_p1000_S4_r001",FALSE,NA,"OPENBLAS-OPENMP threads 1"
+"B: NOTS dev (bench_v2 checker)","dev",500,5,1,"f82c50993d31be2637b794865fcf162dd97b4eb0bde68b45e4dca24aad86bebd","dev_p0500_S5_r001",FALSE,NA,"OPENBLAS-OPENMP threads 1"
+"B: NOTS dev (bench_v2 checker)","dev",1000,6,1,"30b0c46136096c1ff124d59eddb6c20c29a869607c37df9c619cbd1e589a3457","dev_p1000_S6_r001",FALSE,NA,"OPENBLAS-OPENMP threads 1"
+"C: NOTS production (NOTS_READINESS s7)","prod",1000,4,1,"6d4b8b5f","p1000_S4_r001",FALSE,NA,"OPENBLAS-OPENMP threads 1"
