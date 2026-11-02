@@ -1,4 +1,4 @@
-"""Study-scale (n = 200, p = 500) EXP' remainders and start-mass anatomy. Seed 20261102 + 10*sc + rep.
+"""Study-scale (n = 200 default; argv: REPS SCS N SCALES [skipR]; p = 500) EXP' remainders and start-mass anatomy. Seed 20261102 + 10*sc + rep.
 
 For scenario sc in {1,3,4,5,6}, signal scale c in {1, 0.5} (Y = c*signal + eps, as gen_dev_data.R), REPS designs:
   * the v3 partition (port), all block tables;
@@ -16,7 +16,9 @@ sys.path.insert(0, __file__.rsplit('/', 1)[0])
 import vcore as V
 from scen import scenario_cov, truth
 
-N = 200
+N = int(sys.argv[3]) if len(sys.argv) > 3 else 200
+SCALES = [float(a) for a in sys.argv[4].split(',')] if len(sys.argv) > 4 else [1.0, 0.5]
+SKIP_R = len(sys.argv) > 5
 REPS = int(sys.argv[1]) if len(sys.argv) > 1 else 2
 SCS = [int(a) for a in sys.argv[2].split(',')] if len(sys.argv) > 2 else [1, 3, 4, 5, 6]
 p = 500
@@ -45,7 +47,7 @@ def table_and_rss(sf, C):
 out = []
 for sc in SCS:
     Sig = scenario_cov(sc, p); Lc = np.linalg.cholesky(Sig)
-    for cs in (1.0, 0.5):
+    for cs in SCALES:
         for r in range(REPS):
             rng = np.random.default_rng(20261102 + 10 * sc + r)
             Z = rng.standard_normal((N, p)) @ Lc.T
@@ -70,7 +72,7 @@ for sc in SCS:
                 tabs.append(t)
                 minrss = min(minrss, rss[-1])
                 m = len(C); codes = np.arange(1 << m)
-                for i in range(m):
+                for i in (range(m) if not SKIP_R else []):
                     base = codes[(codes >> i & 1) == 0]
                     x = (rss[base] - rss[base | (1 << i)]) / rss[base]
                     Rm = t[base | (1 << i)] - t[base] + 0.5 * math.log(N + 1) + nu * np.log1p(-x)
@@ -165,4 +167,4 @@ for sc in SCS:
                        mode_missing=sorted((int(j), float(th[j])) for j in S0 - mode), mode_extras=len(mode - S0),
                        mode_size=len(mode))
             print(json.dumps(row), flush=True); out.append(row)
-json.dump(out, open(__file__.rsplit('/', 2)[0] + '/results/study_exp_%s.json' % '_'.join(map(str, SCS)), 'w'), indent=0)
+json.dump(out, open(__file__.rsplit('/', 2)[0] + '/results/study_exp_%s_n%d_c%s.json' % ('_'.join(map(str, SCS)), N, '_'.join(map(str, SCALES))), 'w'), indent=0)
