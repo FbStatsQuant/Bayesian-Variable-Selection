@@ -245,7 +245,7 @@ blocks; VIS-lin holds under fixed beta-min and SE-blk. So Theorem 6 also gives, 
                    <= kappa_EXP + nu sigma^2 (L_n + |Z_i|)^2 / RSS_{T_i+l_i},
 
 with `Z_i = Z_{T_i,l_i} ~ N(0,1)` and `RSS_{T_i+l_i} >= sigma^2 (n-1)/2` on the event, so the upper bound is
-`<= kappa_EXP + 1.01 (L_n + |Z_i|)^2` for n >= 100. (a) If `L_n = L` is fixed, `max_i |E_{n,i}| = O_{P_0}(1)`: **H2 holds**.
+`<= kappa_EXP + 1.01 (L_n + |Z_i|)^2` for n >= 400. (a) If `L_n = L` is fixed, `max_i |E_{n,i}| = O_{P_0}(1)`: **H2 holds**.
 (b) In general `E_{n,i} ∈ [-O_P(1), O_P(1) + 1.01(L_n + O_P(1))^2]` — a two-sided law with multiplier `e^{O(L_n^2)}` on
 the upper side only.
 
@@ -256,7 +256,7 @@ floor (Lemma 1.4, which needs no SE); so on the event `E_n`,
 `x/(1-x) = (RSS_T - RSS_{T+l})/RSS_{T+l} = (delta + sigma Z)^2/RSS_{T+l}`
 (`RSS_T - RSS_{T+l} = ||(P_{T+l} - P_T) Y||^2 = (u'Y)^2 = (u'mu + u'eps)^2`, `u ∈ range C`). Lemma 1.4's proof gives
 `RSS_{T+l} >= sigma^2(n-1)/2` on `E_n`, and `|delta + sigma Z| <= sigma(L_n + |Z|)`. So
-`-nu log(1-x_i) <= (n/2 + 0.01)(L_n + |Z_i|)^2 / ((n-1)/2) <= 1.01 (L_n + |Z_i|)^2` for n >= 100. Each `Z_i` is exactly
+`-nu log(1-x_i) <= (n/2 + 0.01)(L_n + |Z_i|)^2 / ((n-1)/2) <= 1.01 (L_n + |Z_i|)^2` for n >= 400. Each `Z_i` is exactly
 N(0,1) (deterministic unit vector `u_{T_i,l_i}`), and `max_{i<c} |Z_i| = O_P(1)` (c fixed). ∎
 
 **Theorem 4 (T27(i) from bounded chain leakage).** Status: **PROVED** given H3 (and **PROOF SKETCH** when H3 is
