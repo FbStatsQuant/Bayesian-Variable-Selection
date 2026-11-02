@@ -412,8 +412,10 @@ inequality) and the v3 budgets only through N T_e a_n → 0 and N → ∞.
 **Regime check.** Combined with W1-EXP Thm 5(b), for c ≥ 2 (and c = 1 with p/(√n log²n) → ∞) the iid route fails and
 the start is masked; Theorem B2-LH then gives the masked-regime HPM consistency of the original method on LH, for every
 c, whenever STAB-LH holds (e.g. configuration A, c = 1; any g ∈ {4, 9, 16} with ρ ≤ 0.85, ψ = 0.2 or ρ ≤ 0.7, ψ = 0.5).
-For c ≥ 2 no STAB-LH instance has been computed yet (configuration B fails); one is expected for small ψ (OPEN, cheap:
-run `margins_types` with two pairs).
+For c = 2, `scripts/s1b_stab_c2.txt` (two pairs, no visible group, g ∈ {4, 9}, ρ ∈ {0.4, 0.7, 0.85}, ψ ∈ {0.1, 0.2, 0.35,
+0.5}, two coefficient choices): STAB-LH holds in 38/46 settings, e.g. every ψ ≤ 0.2 and every ρ = 0.4; all 8 failures have
+ψ ≥ 0.35 and ρ ≥ 0.7, and the failing move is again "a-hub of one pair → masked hub of the other pair" at states holding
+all non-hubs of that a-group. So Theorem B2-LH has masked c = 2 instances (with p → ∞, π₀(S₀) = p^{−2}n^{−1}e^{O_P(1)}).
 
 ### 4.6 Relation to W4-SHARE's envelope (D4/D5), and the clean negative for lattice potentials
 

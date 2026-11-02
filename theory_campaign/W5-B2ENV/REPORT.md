@@ -15,8 +15,8 @@ same-family work, not reviewed, not adopted.
    favourable moves (all states ⊇ S° with any subset of the masked groups and ≤ 19 junk variables); junk is
    non-persistent, so the whole particle system stays there (Prop. CONF, rate O(log^{3.5}n/√n)), and at φ = 1 every such
    state scores S₀ in one round with a fixed probability c₀ (Lemma R1). In D5's terms this is h ≡ 1_𝒩, Γ = 0.
-3. **STAB-LH is a real restriction**: it holds in configuration A and in many (g, ρ, ψ) settings including c = 2 with
-   g = 9, ρ ≤ 0.7, ψ ≤ 0.35; it **fails** e.g. at (ρ, ψ) = (0.85, 0.5) for every g tested and in configuration B
+3. **STAB-LH is a real restriction**: it holds in configuration A and in many (g, ρ, ψ) settings including 38/46 c = 2
+   settings (all with ψ ≤ 0.2 or ρ = 0.4); it **fails** e.g. at (ρ, ψ) = (0.85, 0.5) for every g tested and in configuration B
    (`s1_stab*.txt`). Where it fails, (b2) on LH is OPEN (§4.7 of PROOF; numerically the run is unaffected).
 4. **The envelope with lattice-indicator potentials cannot work at any budget** (PROOF SKETCH, numerically confirmed):
    its oscillation Γ grows like log(N·T) because early crossers multiply with N, while D5 allows log(N/T). A budget
@@ -71,7 +71,7 @@ negative, what is open without STAB); §5 LH-iid remarks. `REFEREE.md` has the W
 |---|---|---|
 | D4 Step 5 constants; SH(iii) transition; Prop M(a) | g increasing ½→1, g(1) = 1/(e−1); 1/θ₀ ≤ Σ1/P̲ (worst ratio 1.000); SH 50% point 7.3/9.6/14.2 vs heuristic 6.9/9.2/13.8; M(a) 0 violations in 20,000 | `r0_referee_checks.txt` |
 | STAB/GAIN/ZJL/PZL, c = 1 | A: m_STAB = 0.305 (OK); A85: −0.005 (FAIL); B: −0.18 (FAIL); ZJL, PZL = 0 to 1e−16; sweep 66/300 fail; type-based g ∈ {4,9,16}: fails only at (ρ, ψ) = (0.85, 0.5) among those tested | `s1_stab.txt`, `s1_stab_types.txt` |
-| STAB, c = 2 | e.g. g = 9: OK for ρ = 0.4 all ψ ≤ 0.35, ρ = 0.7 ψ ≤ 0.35; FAIL at ρ = 0.7, ψ = 0.5 with unequal betas | `s1b_stab_c2.txt` |
+| STAB, c = 2 | 38/46 settings OK (g ∈ {4, 9}): every ψ ≤ 0.2 and every ρ = 0.4; the 8 failures all have ψ ≥ 0.35 and ρ ≥ 0.7 (cross-pair truth→hub swap) | `s1b_stab_c2.txt` |
 | NB′, p = 16 (config A, exact enumeration) | not masked at this p: S₀ drawn in 65–100% of pilots; P(NB′ᶜ) = 0 in all 1,180 pilots; C_b-touching term H·π₀ grows ≈ √n/p (13.8 at n = 200, 20.9 at n = 102,400); d-range on 𝒢 ≤ 2.8 vs T₀ log r* = 655; S₀ scored by end of stage 1 in 100% | `s2_nbprime.txt` |
 | NB′, p = 4,000 / 20,000 (exact Gram, n = 10⁴ / 4·10⁴, group partition) | masked pilot: H·π₀(S₀) = 0.008 / 0.004, S₀ never drawn; P(NB′ᶜ) = 0/20, 0/10; φ₁ = 1 (no forced step); weighted share of S° ≥ 0.96; Dep = 0.027 / 0.015; D2 bound (excl. NB′) 2·10⁻²⁹ / 10⁻¹¹⁸ | `s2b_nbprime_largep.txt` |
 | (b2) final runs, configs A and A85, n ∈ {400, 1600, 6400}, method grid | 0 confinement exits in 100 islands (also A85, where STAB fails); stage-T round at φ = 1: 94–99.5% of particles score S₀, every island scores; one-round scoring from S°: 0.39–0.43, from S° + proxies + non-hubs + null: 0.24–0.28 (vs c₀(x) = 10⁻³–10⁻⁵) | `s3_b2_run.txt` |
