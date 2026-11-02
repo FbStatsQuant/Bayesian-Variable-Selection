@@ -4,3 +4,4 @@ S2 c=1.00 n=200 done 13s  c2(a=1)=0.427 eta2(a=1)=0.449  P*min(a=1)=0.531 sim r1
 S2 c=0.50 n=200 done 17s  c2(a=1)=0.423 eta2(a=1)=0.517  P*min(a=1)=0.529 sim r1=0.714
 S3 c=1.00 n=200 done 21s  c2(a=1)=0.460 eta2(a=1)=0.395  P*min(a=1)=0.541 sim r1=0.414
 S3 c=0.50 n=200 done 19s  c2(a=1)=0.458 eta2(a=1)=0.407  P*min(a=1)=0.539 sim r1=0.429
+S4 c=1.00 n=200 done 20s  c2(a=1)=0.469 eta2(a=1)=0.367  P*min(a=1)=0.546 sim r1=0.446

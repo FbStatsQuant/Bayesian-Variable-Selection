@@ -68,7 +68,8 @@ W ∈ 𝓕(x)∖{S₀} is
 
 - **bad** if W′ ∉ 𝓕(x), or V(W′) > V(W), or W′ ⊉ W ∩ S₀ (some truth present in W is removed — this also
   covers truth-for-truth swaps and independence jumps that keep |M| but change the missing set);
-- **progress** if W′ ∈ 𝓕(x) and V(W′) < V(W), or if it is a G_j execution with W △ S₀ ⊆ {j} (R4);
+- **progress** if it is not bad and V(W′) < V(W), or if it is a G_j execution with W △ S₀ ⊆ {j} (R4)
+  (a scoring evaluation ends the repair, whatever else it does);
 - **neutral** otherwise.
 
 Neutral transitions include: look-alike additions/deletions in phase 1 (V ignores extras while M ≠ ∅ — this is
@@ -220,7 +221,7 @@ N → ∞ suffice; no H → ∞ and no η → 0 are needed for this route.
 
 **Proposition D (drift form; internal increases need not satisfy Hη → 0). PROVED.** In the setting of
 Theorem B split η = η_ex + η_in, where η_ex bounds (Σ over labels of sups) the steps leaving 𝓕(x) and η_in the
-remaining bad steps (V-raising or truth-removing inside 𝓕(x)); let v_max := max_{𝓕(x)} V (≤ |M(x)| + 2a). For
+remaining bad steps (V-raising or truth-removing inside 𝓕(x)); let v_max := max_{𝓕(x)} V = |M(x)| + a (= a if x ⊇ S₀). For
 z > 1 put ρ(z) := z⁻¹ + (1 − z⁻¹)(1 − c_* + η) + exp{(z^{v_max} − 1)η} − 1. Then
   P_x(S₀ not scored within H rounds) ≤ H·η_ex + inf_{z>1} ρ(z)^H z^{v−1}.
 *Proof.* Let I_h = 1{round h has a progress step}, N_h = number of bad steps of round h taken from inside
