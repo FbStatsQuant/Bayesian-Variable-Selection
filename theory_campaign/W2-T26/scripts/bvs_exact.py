@@ -205,7 +205,7 @@ class Problem:
             if not self.feas[Sj]:
                 continue
             a, b = lg[S0], lg[Sj]
-            tot += 1.0 / (1.0 + np.exp(a - b))  # prob of moving to Sj
+            tot += 1.0 / (1.0 + np.exp(min(a - b, 700.0)))  # prob of moving to Sj
         k = self.s0
         ins = [j for j in range(p) if S0 >> j & 1]
         outs = [j for j in range(p) if not S0 >> j & 1]

@@ -44,8 +44,10 @@ def design(name, n, rng):
 
 def main():
     SEEDS = range(int(sys.argv[1]) if len(sys.argv) > 1 else 8)
+    ns = [int(v) for v in sys.argv[2].split(',')] if len(sys.argv) > 2 else NS
+    tag = sys.argv[3] if len(sys.argv) > 3 else ''
     os.makedirs(os.path.join(os.path.dirname(__file__), '..', 'results'), exist_ok=True)
-    path = os.path.join(os.path.dirname(__file__), '..', 'results', 'premise_scan.csv')
+    path = os.path.join(os.path.dirname(__file__), '..', 'results', f'premise_scan{tag}.csv')
     fields = ['design', 'n', 'seed', 'B', 'L', 'Tmax', 'blocks', 'one_minus_pi0', 'delta1', 'Delta', 'Delta_grid',
               'u_pi', 'rho_star', 'rho_bar_bound', 'T_ideal', 'P1_Tideal', 'P1_Tmax', 'P2', 'S0_is_HPM',
               'S0_is_start_mode']
@@ -53,7 +55,7 @@ def main():
         w = csv.DictWriter(fh, fieldnames=fields)
         w.writeheader()
         for di, name in enumerate(['fav_iid', 'fav_cor', 'masked']):
-            for n in NS:
+            for n in ns:
                 for seed in SEEDS:
                     t0 = time.time()
                     rng = np.random.default_rng(1000 * di + seed + 7919 * n)

@@ -273,3 +273,46 @@ reviewed" (LOCKED_PROOFS.md scope notes).
 So the longest hypothesis list in the pool collapses: the composition needs only (Ω), (P1), (P1-ex) and the standing
 idealisations. All statistical content sits in two places: T03 (posterior concentration, which gives δ₁ → 0) and the
 start concentration 1 − π₀(S₀) = o_P(1/T_n), which is where EXP′ is used.
+
+---
+
+## 6. Proposition C: Theorem B's hypotheses are jointly satisfiable (ORTH family). PROOF SKETCH
+
+Astra's rule ("prove compatible premises jointly") asks for one family satisfying every hypothesis of Theorem B.
+
+**Family ORTH-F.** For each n: standardised design with XᵀX = (n−1)I_p (00_COMMON ORTH), p = p_n ≤ min(n−1, n^A),
+G with σ*² fixed, s₀ fixed, θ*_j = θ_j fixed and nonzero for j ∈ S₀ (so ‖μ‖²/(n−1) = Σθ_j² =: M fixed), blocks = any
+partition into blocks of size ≤ B (with exact orthogonality all distances 1 − |r_jl| tie, so the method's partition is
+fixed by its tie rule; the argument below holds for every partition).
+
+**Claim.** On ORTH-F, G, R, SE, BM-C (eventually), VIS, NL_η (η = 0), NL_avg(κ) (every κ ∈ (0, ½]) and strict EXP′
+all hold. Hence Theorem B applies: T26(i)–(ii) holds on ORTH-F, conditional only on EX-A, EX-S, CAL, START, OUT.
+
+*Checks.* R, SE: every R_T = I, φ₀ = 1. BM-C: θ_min² fixed > M_*σ*² log n/n eventually. VIS: for U_b* ⊄ T,
+(P_{T∪U*} − P_T)μ = Σ_{j∈U*∖T} θ_j x_j, with squared norm ≥ (n−1)θ_min², while v_T ≤ σ*² + M; take
+M_n^V = (n−1)θ_min²/((σ*²+M) log n) → ∞. NL_η: for l ∉ S₀, u_{T,l} = x_l/√(n−1) and x_lᵀμ = (n−1)θ_l = 0, so
+δ_{T,l} = 0 on the whole leakage family; η = 0. NL_avg(κ): all E_{T,l} = 0, the average of e^{E} is 1 ≤ n^{½−κ}.
+
+*EXP′ (the only non-trivial check).* For T ⊆ C_b, |T| = k: H_T = ((n+1)(n−1)+1)I = n²I and G_T + I = nI, so
+D_T = n^k; z_T = X_Tᵀy and Q_T = yᵀy − ‖z_T‖²/n. The standardised residual sum of squares is
+ρ_T := RSS_T/s_y² = yᵀy − ‖z_T‖²/(n−1) (since P_Ty = X_Tz_T/(n−1)), and 1 − x_{T,l} = ρ_{T∪l}/ρ_T (x is
+scale-free). Therefore
+  log r_b(T∪l)/r_b(T) = −½ log n − ν log[(0.02 + Q_{T∪l})/(0.02 + Q_T)],
+  R_{n,b,T,l} = ½ log((n+1)/n) − ν{log(1 + a_{T∪l}/ρ_{T∪l}) − log(1 + a_T/ρ_T)},  a_T := 0.02 + ‖z_T‖²/(n(n−1)).
+Since ‖z_T‖²/(n−1) = ‖P_Ty‖² ≤ ‖y‖² = n − 1, a_T ∈ [0.02, 1.02]. For u, v ≥ 0, |log(1+u) − log(1+v)| ≤ max(u, v). So
+  max_{b,T,l} |R| ≤ 1/(2n) + (0.01 + n/2)·1.02/ρ_min,  ρ_min := min_b ρ_{C_b}  (ρ_T is decreasing in T).
+ρ_{C_b} = ‖(C − P_{C_b})Y‖²/s_y² with (C − P_{C_b}) a projection of rank n − 1 − |C_b| ≥ n − 1 − B; its numerator
+stochastically dominates σ*²χ²_{n−1−B}, so a χ² lower-tail bound and a union over J ≤ p ≤ n blocks give
+min_b ‖(C − P_{C_b})Y‖² ≥ σ*²(n−1−B)/2 with probability → 1. And s_y² = ‖Y‖²/(n−1) = O_P(1). Hence ρ_min ≥ c n with
+probability → 1, and max|R| = O_P(1): strict EXP′ holds. ∎ (sketch)
+
+*Why only a sketch.* The steps are elementary but have not been checked line by line by an independent reader; in
+particular the χ² lower-tail constant and the union bound are stated, not written out, and the method's exact tie rule
+for the partition under exact orthogonality was not traced (the argument does not depend on it).
+
+*Numerical check* (`scripts/orth_check.py`, `results/orth_check.csv`): with p = n/2, s₀ = 3, θ = 0.6, the maximum of
+|R| over **every** within-block addition is 0.11–0.16 for n = 200…6400 (bounded, as claimed).
+
+*Scope.* ORTH requires p ≤ n − 1, so this family does not touch the p ≫ n study design. It shows that Theorem B is not
+vacuous, not that its hypotheses hold where the paper's simulations live. This overlaps the W1-EXP task
+("EXP in the block-orthogonal benchmark"); HQ should reconcile the two.

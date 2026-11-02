@@ -114,9 +114,12 @@ class Sim:
         for _ in range(L):
             S = self.round(S, 1.0, rng)
         rec = np.zeros((N, self.p))
+        g = []
         for _ in range(4):
+            g.append(float(np.mean(S != pr.S0)))
             S = self.round(S, 1.0, rng, record=rec)
         pip = rec.sum(0) / (4 * N)
+        self.last_g = g
         return float(np.exp(logW)), f, pip
 
 
@@ -135,11 +138,14 @@ def main():
     Delta = q['Delta']
     b = 2 * (T + 1) * Delta / (1 - Delta)
     fbound = min(1.0, 2 * q['delta1'] + 2 * b)
-    pipbound = fbound + (pr.L + 2.5) * q['rho_bar_bound'] + q['u_pi']
-    Ws, fs, perr, pooled, primerr, mpm_wrong = [], [], [], [], [], 0
+    pipbound = fbound + min(1.0, q['rho_bar_bound']) + q['u_pi']          # Theorem A (A-0)(c), Lemma 3
+    pipbound_old = fbound + (pr.L + 2.5) * min(1.0, q['rho_bar_bound']) + q['u_pi']  # end-of-stage-T route (Remark 3.1)
+    Ws, fs, perr, pooled, primerr, mpm_wrong, gs = [], [], [], [], [], 0, []
     for rep in range(reps):
         srng = np.random.default_rng(10 ** 6 + 1000 * dseed + rep)
-        isl = [sim.island(grid, N, pr.L, srng) for _ in range(4)]
+        isl = []
+        for _ in range(4):
+            isl.append(sim.island(grid, N, pr.L, srng)); gs.extend(sim.last_g)
         for W, f, pip in isl:
             Ws.append(W); fs.append(f); perr.append(np.abs(pip - truth).max())
         pooled.append(np.mean([w for w, _, _ in isl]))
@@ -153,7 +159,7 @@ def main():
                bound_b=b, mean_abs_W_minus_1=float(np.abs(Ws - 1).mean()), mean_W=float(Ws.mean()),
                mean_abs_pooled_minus_1=float(np.abs(np.array(pooled) - 1).mean()),
                bound_f=fbound, mean_f=float(np.mean(fs)),
-               bound_pip=pipbound, mean_island_pip_err=float(np.mean(perr)), mean_primary_pip_err=float(np.mean(primerr)),
+               bound_pip=pipbound, bound_pip_old=pipbound_old, max_round_start_f=float(np.max(gs)) if gs else None, mean_round_start_f=float(np.mean(gs)) if gs else None, mean_island_pip_err=float(np.mean(perr)), mean_primary_pip_err=float(np.mean(primerr)),
                exact_pip_err=float(np.abs(pip_exact - truth).max()), mpm_wrong_frac=mpm_wrong / reps)
     print(json.dumps(out))
 
