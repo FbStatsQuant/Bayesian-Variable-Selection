@@ -86,19 +86,50 @@ scan (`results/sanity.txt`).
 **4.1 LH at p ≤ 20 (`scripts/sep_exact.py`, `results/summary.txt`).** Configurations: B2 = W1-EXP config B (c = 2,
 p = 20, one null group), V2 (c = 2, one visible and one null group, p = 18), C3 (c = 3, p = 18). n from 100 to 409,600.
 
-TABLE_PLACEHOLDER
+| config (c, p) | n | med log₁₀π₀(S₀) | med Mstat | med π(S₀) | med P(hit \| Q_f) | med P(hit \| Q = n²) | med log₁₀(1+χ²) | LS0 scores S₀ | min π₀(𝔅_ℓ) | reps with every C ⊆ R scoring S₀ | max moves from C ⊆ R / ℓ |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| B2 Gram (2, 20) | 100 | -4.07 | 1.22 | 0.581 | 1 | 0.572 | 4.16 | 10/10 | 1.00000 | 0/10 | 7 / 7 |
+| B2 Gram (2, 20) | 400 | -4.57 | 1.46 | 0.778 | 0.982 | 0.987 | 4.71 | 10/10 | 0.99996 | 0/10 | 9 / 9 |
+| B2 Gram (2, 20) | 1600 | -5.21 | 1.38 | 0.902 | 0.651 | 1 | 5.23 | 10/10 | 1.00000 | 10/10 | 11 / 11 |
+| B2 Gram (2, 20) | 25600 | -6.31 | 1.61 | 0.979 | 0.649 | 1 | 6.31 | 10/10 | 1.00000 | 10/10 | 12 / 15 |
+| B2 Gram (2, 20) | 102400 | -7.03 | 1.34 | 0.984 | 0.584 | 1 | 7.05 | 10/10 | 1.00000 | 10/10 | 12 / 17 |
+| B2 Gram (2, 20) | 409600 | -7.57 | 1.47 | 0.993 | 0.664 | 1 | 7.58 | 10/10 | 1.00000 | 10/10 | 12 / 19 |
+| B2 iid (2, 20) | 100 | -3.81 | 1.81 | 0.609 | 1 | 0.74 | 3.78 | 6/6 | 1.00000 | 0/6 | 7 / 7 |
+| B2 iid (2, 20) | 400 | -4.53 | 1.56 | 0.787 | 0.989 | 0.992 | 4.58 | 6/6 | 1.00000 | 0/6 | 9 / 9 |
+| B2 iid (2, 20) | 1600 | -5.06 | 1.71 | 0.830 | 0.771 | 1 | 5.07 | 6/6 | 1.00000 | 6/6 | 11 / 11 |
+| B2 iid (2, 20) | 25600 | -6.14 | 2.00 | 0.969 | 0.787 | 1 | 6.14 | 6/6 | 1.00000 | 6/6 | 12 / 15 |
+| B2 iid (2, 20) | 102400 | -6.84 | 1.79 | 0.984 | 0.747 | 1 | 6.84 | 6/6 | 1.00000 | 6/6 | 12 / 17 |
+| V2 Gram (2, 18) | 100 | -3.75 | 1.75 | 0.625 | 1 | 0.831 | 3.88 | 20/20 | 1.00000 | 0/20 | 7 / 7 |
+| V2 Gram (2, 18) | 400 | -4.29 | 1.89 | 0.767 | 1 | 1 | 4.35 | 20/20 | 1.00000 | 20/20 | 9 / 9 |
+| V2 Gram (2, 18) | 1600 | -4.86 | 1.96 | 0.896 | 0.902 | 1 | 4.87 | 20/20 | 1.00000 | 20/20 | 10 / 11 |
+| V2 Gram (2, 18) | 25600 | -6.06 | 1.98 | 0.969 | 0.846 | 1 | 6.08 | 20/20 | 1.00000 | 20/20 | 10 / 15 |
+| V2 Gram (2, 18) | 102400 | -6.63 | 2.04 | 0.982 | 0.888 | 1 | 6.68 | 20/20 | 1.00000 | 20/20 | 10 / 17 |
+| V2 Gram (2, 18) | 409600 | -7.25 | 2.01 | 0.993 | 0.901 | 1 | 7.26 | 20/20 | 1.00000 | 20/20 | 10 / 19 |
+| C3 Gram (3, 18) | 100 | -5.42 | 3.09 | 0.554 | 0.388 | 0.037 | 5.59 | 20/20 | 1.00000 | 0/20 | 7 / 7 |
+| C3 Gram (3, 18) | 400 | -6.28 | 3.21 | 0.706 | 0.0765 | 0.0814 | 6.43 | 20/20 | 1.00000 | 0/20 | 9 / 9 |
+| C3 Gram (3, 18) | 1600 | -7.17 | 3.23 | 0.842 | 0.0114 | 0.159 | 7.25 | 20/20 | 1.00000 | 20/20 | 11 / 11 |
+| C3 Gram (3, 18) | 25600 | -8.94 | 3.31 | 0.965 | 0.00247 | 0.529 | 8.97 | 20/20 | 1.00000 | 20/20 | 12 / 15 |
+| C3 Gram (3, 18) | 102400 | -9.85 | 3.30 | 0.984 | 0.00134 | 0.775 | 9.86 | 20/20 | 1.00000 | 20/20 | 12 / 17 |
+| C3 Gram (3, 18) | 409600 | -10.72 | 3.37 | 0.991 | 0.000781 | 0.959 | 10.76 | 20/20 | 1.00000 | 20/20 | 12 / 19 |
+
+Q_f = 4N₀(L+6) is the final run's minimal iid budget; π₀(𝔅_ℓ) is the exact per-draw success probability of "one iid π₀ draw + production search" (Prop. BASIN). Full table: `results/summary.txt`.
 
 Reading:
-- **Masking (A).** log₁₀π₀(S₀) falls by c/2 per decade of n (C3: −5.42 → −10.7 over 3.6 decades, slope ≈ −1.5);
-  Mstat is tight (W1-EXP's predicted limit for B2, q05/med/q95 = 1.29/1.42/1.89). At fixed p the p^c factor is a
-  constant, so the final run's Q_f ≍ n log n still finds S₀ for c = 2 (R-T20(i): c ≤ 2 certain at fixed p) but not for
-  c = 3 (P(hit | Q_f) → 0). The p-dependence is checked in 4.2.
+- **Masking (A).** log₁₀π₀(S₀) falls by c/2 per decade of n (C3: −5.42 → −10.72 over 3.6 decades, slope −1.47 against
+  −1.5; B2: slope −0.98 against −1.0). Mstat is tight and flat in n (B2 medians 1.2–1.6; W1-EXP's predicted limit for B2
+  has median 1.42). At fixed p the p^c factor is a constant, so the final run's Q_f ≍ n log n keeps a non-vanishing hit
+  probability for c = 2 (0.5–0.9 here; R-T20(i): c ≤ 2 is borderline-certain at fixed p) but not for c = 3
+  (P(hit | Q_f) = 0.39 → 7.8·10⁻⁴). Q = n² is above Q* = p³n^{3/2} only once n^{1/2} ≳ p³e^{−Mstat}, and the C3 column
+  crosses exactly there (0.04 → 0.96). The p-dependence is checked in 4.2.
 - **IS (B).** log₁₀(1 + χ²) tracks −log₁₀π₀(S₀) to within 0.2 in every cell; the per-draw relative variance equals
   1/π₀(S₀) − 1 exactly; KL grows like c log(p√n).
-- **Search (C).** LS0 scored S₀ in every replicate of every cell. π₀(𝔅_ℓ) (the per-draw success probability of
-  "iid draw + search") is ≥ 0.999999 in every replicate. At small n some centres C ⊆ R fail; all of them are
-  move-limited (max moves = ℓ) or posterior misses. From n = 1600 on, **every** centre in 2^R scores S₀ in every
-  replicate, as GU predicts, and the fraction over all 2^p centres is ≥ 0.989.
+- **Search (C).** LS0 scored S₀ in all 386 replicates. π₀(𝔅_ℓ) (the per-draw success probability of "iid draw +
+  search") is ≥ 0.99996 in every replicate. At n ≤ 400 some centres C ⊆ R fail (large centres with many extras); in
+  the classification run (`scripts/fail_classify.py`, C3/V2/A1, and `fail_classify_B2.py`) every such failure is either
+  move-limited (still improving after ℓ moves; it succeeds without the cap) or a posterior miss (the search ends at a
+  local maximum that beats S₀). There was **no** genuine search trap (a local maximum below S₀). From n = 1600 on,
+  **every** centre in 2^R scores S₀ in every replicate, as GU predicts; the number of moves needed plateaus at 10–12
+  while ℓ keeps growing (a constant τ_GU, as in the proposition); the median fraction over all 2^p centres is ≥ 0.989.
 
 **4.2 Budget scaling in p (`scripts/scaling.py`, `results/scaling.txt`).** LH exact Gram, g = 9, p ∈ {108, …, 864},
 n ∈ {1000, 4000}, exact start law by convolution (W4-T38FULL code), 3 reps per cell.
