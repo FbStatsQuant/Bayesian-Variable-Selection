@@ -67,17 +67,17 @@ Abbreviations: "PXN §k" = W3-PXN PROOF.md section k; "T38P §k" = W4-T38FULL T3
 | 4 | **Lemma Tr(a)** truncated moment | VERIFIED | Exponent (m−j)/2 − 1 − ν = −e₁. Γ(y+a)/Γ(y) ≤ (y+a)^a for integer a and (by Wendel) half-integer a. (2/j)/Γ(j/2) = 1/Γ(j/2+1) |
 | 5 | **Lemma Tr(b), (c)** | VERIFIED | X ≤ χ²_j/χ²_{m−j}. With x = t′/2 − √(jt′) − j: j + 2√(jx) + 2x ≤ t′ − j, so the Laurent–Massart bound gives n^{−(A+3)}e^{O(√log n)}. Union over n^{A+1}2^{17} → 0 |
 | 6 | W1-EXP L1.1, L1.2, L1.4 never use block membership | VERIFIED | L1.1 uses only λ_min(G_S) ≥ φ²(n−1) and ‖y‖² = n−1. L1.2's *statement* says T ⊆ C_b, but its proof uses only the Schur complement and λ_min. L1.4 uses block size only through the count 2^{16}p and dim W ≤ 17. For sets of size ≤ s₀+2 the count becomes (p+1)^{s₀+2}, dim W ≤ s₀+3 and L > 4A(s₀+3), as PXN says |
-| 7 | **PXN P3**: 1 − π₀(S°) = O_P(√(log n/n)) | VERIFIED | Chain telescoping to 1 − X_{h,V}. On 𝒢_n, Lemma Tr(a) with mτ_n ≤ t_n. j!C(g,j) ≤ g^j and Γ(j/2+1) ≥ 0.88. Jensen on E[(j!ã)^{1/j}1_𝒢]. D_b = max ≤ Σ. q̃ sums over p/g groups. The e-term uses the a-group partial covariance β(1−ψ²)Var(x_{j_a}\|X_U) ≠ 0 (re-derived). T22(i-a). Numerics: T22(i) bound ≤ π₀(S°) in 104/104 (A, B) and 158/158 overall; √(n/log n)(1−π₀(S°)) has median 1.5–2.8 |
-| 8 | **PXN P1**: partition = groups w.p. → 1 | VERIFIED (given cited C1) | The deterministic part matches `v3_blocks.h` exactly: merge order, R13 union-lex ties, left child by min index, cut "size ≤ B ⇒ retain, else push right then left", next-fit "cur + c > B ⇒ new block". Laminarity needs only D_in < D_out, and any tie rule works. The probabilistic part uses η = (ρ − max\|ψ\|)/3. Actual partition = groups: 104/104 (A, B), 30/30 (null ρ = 0.95), 50/50 (ψ = 0.65), 23/26 (ψ = 0.69) |
-| 8′ | "Margin condition used when p > 4300" | VERIFIED (sufficient, not necessary) | It held in 86/104 A/B replicates, and the actual partition was groups in all 104. At ψ = 0.65 it held in 1/50, with the partition still groups in 50/50. Using it at p = 10,120, n = 1600 (where it holds w.p. → 1) is legitimate |
+| 7 | **PXN P3**: 1 − π₀(S°) = O_P(√(log n/n)) | VERIFIED | Chain telescoping to 1 − X_{h,V}. On 𝒢_n, Lemma Tr(a) with mτ_n ≤ t_n. j!C(g,j) ≤ g^j and Γ(j/2+1) ≥ 0.88. Jensen on E[(j!ã)^{1/j}1_𝒢]. D_b = max ≤ Σ. q̃ sums over p/g groups. The e-term uses the a-group partial covariance β(1−ψ²)Var(x_{j_a}\|X_U) ≠ 0 (re-derived). T22(i-a). Numerics: T22(i) bound ≤ π₀(S°) in 236/236 replicates overall (`results/overall.txt`); √(n/log n)(1−π₀(S°)) has median 1.5–2.8 |
+| 8 | **PXN P1**: partition = groups w.p. → 1 | VERIFIED (given cited C1) | The deterministic part matches `v3_blocks.h` exactly: merge order, R13 union-lex ties, left child by min index, cut "size ≤ B ⇒ retain, else push right then left", next-fit "cur + c > B ⇒ new block". Laminarity needs only D_in < D_out, and any tie rule works. The probabilistic part uses η = (ρ − max\|ψ\|)/3. Actual partition = groups: 110/110 (A, B, including n = 1600, p = 10,120), 30/30 (null ρ = 0.95), 50/50 (ψ = 0.65), 23/26 (ψ = 0.69) |
+| 8′ | "Margin condition used when p > 4300" | VERIFIED (sufficient, not necessary) | At n ≤ 800 it held in 96/104 A/B replicates, and the actual partition was groups in all 104. At ψ = 0.65 it held in 1/50, with the partition still groups in 50/50. Using it at p = 10,120, n = 1600 (where it holds w.p. → 1) is legitimate |
 | 9 | **PXN P2** (SE family, R, BM-∞, G) | VERIFIED (given C1) | ‖R̂_T − Σ_T‖ ≤ k_nC₁√(log p/n) = O(log^{3/2}n/√n). Interlacing. The SLLN applies to finitely many columns |
 | 10 | **PXN P4** (limit law of Mstat) | VERIFIED | One-column table: G = n−1, H = n², det(G+1) = n, D = n, Q = (n−1) − (n−1)²r̂²/n, so log r + ½log n = −ν log(1 − κ_nr̂²). Prior ratio → Σlog((s+i)/2). Slutsky. Numerics: Mstat medians 0.21 → 0.43 (A, limit 0.63) and 1.69 → 2.15 (B, limit 2.30). The lag equals log π₀(S°), as PXN found |
-| 11 | **PXN P5** (S̃₀ = S° w.p. → 1) | VERIFIED | π₀(S°) > ½ ⇒ unique mode. Numerics: mode = S° in 52/52 (A) and 49/52 (B; the misses are at n ≤ 400: one proxy-for-hub, two null extras) |
+| 11 | **PXN P5** (S̃₀ = S° w.p. → 1) | VERIFIED | π₀(S°) > ½ ⇒ unique mode. Numerics: mode = S° in 55/55 (A) and 52/55 (B; the misses are at n ≤ 400: one proxy-for-hub, two null extras) |
 | 12 | **PXN Lemma U** (U1)–(U3) | VERIFIED; **ERROR (cosmetic)** in (U1) | "ν log(1 + a/RSS^y) ≤ ν(1.02+…)/(c_*n) ≤ 1" is false, since c_* ≤ 1/16 makes it ≈ 0.51/c_* ≥ 8. Only κ₂ = O(1) is used. Repair R2 |
 | 13 | **PXN Lemma Λ** (population residuals) | VERIFIED | (a): the null-column removal is Beta(\|A₀\|/2, ·) because nulls are independent of X_𝒮𝒱, and μ is a function of X_𝒮𝒱. (c): every value re-derived, e.g. Var(x_{j_b} \| x_{j_a}, x_l) = (1−ψ²)(1−η) with η = ρ²(1−ψ²)/(1−ψ²ρ²). Brute-force Δ agrees (margins grid) |
-| 14 | **PXN P6** (TD′ lattice condition at S°: D_S and (L)) | VERIFIED | Every neighbour class checked, including the truth→truth swap (margin β²(1−ψ²)²) and the visible swap. (L): RSS_{S₀+l}/RSS_{S₀} = 1 − Z_l²σ²/‖Π^⊥_{S₀}Cε‖², max Z² ≤ 2log p + 2loglog n, and −log((2p−s₀−1)/(s₀+1)) + log p → log((s₀+1)/2). Numerics: sample D_S > 0 at all lattice states in 99/104 (A, B). The 5 failures are at n ≤ 400, with margins −0.4 to −3.6 nats |
+| 14 | **PXN P6** (TD′ lattice condition at S°: D_S and (L)) | VERIFIED | Every neighbour class checked, including the truth→truth swap (margin β²(1−ψ²)²) and the visible swap. (L): RSS_{S₀+l}/RSS_{S₀} = 1 − Z_l²σ²/‖Π^⊥_{S₀}Cε‖², max Z² ≤ 2log p + 2loglog n, and −log((2p−s₀−1)/(s₀+1)) + log p → log((s₀+1)/2). Numerics: sample D_S > 0 at all lattice states in 105/110 (A, B). The 5 failures are at n ≤ 400, with margins −0.4 to −3.6 nats |
 | 15 | PXN (L) failure rate ≈ (s₀+1)/√(2π(n+1)t_n) | VERIFIED; labelling note | Simulated (config A): 2.47%, 1.47%, 0.80%, 0.67% at n = 200, 400, 800, 1600, against the formula's 2.72%, 1.80%, 1.20%, 0.81%. Config B: 3.60% and 2.93% against 4.18% and 2.76%. PXN's quoted 4%/1.2% are for s₀ = 5 (config B), not stated (R4) |
-| 16 | **PXN P7** D2-a, D2-b, D2-c (Dep = O_P(√(log n/n))) | VERIFIED | κ₀ additions: Σ ≤ (s+1)q. κ₀ deletions: ≤ e/s. κ₁ additions: Lemma B(ii) + Lemma Tr with j = 1. κ₁ deletions: Θ(n) loss. Numerics: median Dep 0.63/0.31/0.25 at n = 200/400/800 (PXN: 0.46/0.40/0.31) |
+| 16 | **PXN P7** D2-a, D2-b, D2-c (Dep = O_P(√(log n/n))) | VERIFIED | κ₀ additions: Σ ≤ (s+1)q. κ₀ deletions: ≤ e/s. κ₁ additions: Lemma B(ii) + Lemma Tr with j = 1. κ₁ deletions: Θ(n) loss. Numerics: median Dep 0.63/0.31/0.25/0.40 at n = 200/400/800/1600 (PXN: 0.46/0.40/0.31/0.19; 3 reps at 1600) |
 | 17 | **PXN P7 D2-d (NB)** | **GAP (fixable) → repaired, R1** | What was missing: (i) the bound π₀(S ⊉ S°) ≤ 2^{s+1}e_T, which needs the mass between sizes K and K+s (the map S ↦ S ∪ S° leaves Ω), handled by the q-generating function; (ii) the full-set EXP′ and RSS floor over sets of size ≤ s+k₀+1, plus the block-level Beta law for U ⊋ U_h° (Lemma B(i′), R6); (iii) Lemma Tr(c) with family exponent A(k₀+1); (iv) the NB constant 1.925 → r* (R3). All four are written in R1, which is a complete proof |
 | 18 | **PXN P8** design de-randomisation lemma | VERIFIED | The sup/contradiction argument is correct. Conditional laws are well defined because ε ⊥ X. T03's hypotheses hold on 𝒜′_n with fixed constants |
 | 19 | PXN Cor (b1): T38(b) on LH-iid via LS0, every fixed c | VERIFIED (composition) | [T38E-R] with 𝔅_n = {S°}: ELIG from P5, TD′ from P6, H-T03 from P8 |
@@ -216,9 +216,26 @@ Reading:
    co-blocked, so j_b becomes visible in its block and π₀(S₀) is large: about 0.65 at n = 400. (M1) fails, since
    π₀(S°) → 0 (W3-VEXP row 17), but the regime becomes the favourable one.
 
-### 5.6 n = 1600 runs with the actual partition
+### 5.6 n = 1600, p = 10,120, with the actual partition (3 replicates per config)
 
-See the addendum at the end of this report: those runs were still going when this section was written.
+PXN used only the sufficient margin condition at p > 4300. Here my port of the full v3 partition was run at
+p = 10,120 (about 70 s per replicate). Source: `results/table_A.txt`, `table_B.txt`, last row.
+
+| cfg | partition = groups | margin condition | med log₁₀π₀(S₀) (PXN) | med π₀(S°) (PXN) | mode = S° | LS0 scored / certified | (L) holds | med Dep |
+|---|---|---|---|---|---|---|---|---|
+| A | 3/3 | 3/3 | −5.44 (−5.06) | 0.90 (0.88) | 3/3 | 3/3 / 3/3 | 3/3 | 0.40 |
+| B | 3/3 | 3/3 | −10.56 (−9.95) | 0.83 (0.86) | 3/3 | 3/3 / 3/3 | 3/3 | – |
+
+Predicted change of log₁₀π₀(S₀) from n = 800 to 1600 (PXN, p ∝ n^{1.25}): −0.52 (A), −1.05 (B). Observed here:
+−0.55 (A), −1.33 (B), on 3 replicates. Overall, across all 236 LH-iid replicates of this run, 216 of them inside the
+family (`results/overall.txt`):
+- partition = groups: 213/216;
+- mode = S°: 195/216;
+- LS0 scored S₀: 212/216;
+- LS0 certified at S₀: 204/216;
+- T22(i) bound: 236/236.
+
+Every miss is at n ≤ 400, or at ψ = 0.69.
 
 ## 6. What fails and why (routes tried and abandoned)
 
