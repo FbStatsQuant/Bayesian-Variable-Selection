@@ -148,3 +148,89 @@ through the SMC branch, ended `completed`, and used tier 0 with T = 3–21 stage
   the local search (§4) reads a uniform. So W5's Lemma STREAM applies as stated.
 - *Executed:* `position_end` and `init_draws_hash` of all four final streams agree in all 110 fp/ld replays and in the
   10 guarded/guard-free pairs.
+
+## 6. VAL-FP (Proposition 2(f)): MEASURED
+
+**Contract measured.** VAL-FP(η, ε) says the floating-point run is within η of the exact run outside an event of
+probability ε (W5 `PROOF.md:175`). The calibration grid is continuous, so the exact run cannot be required to
+reproduce 𝓒 literally. I therefore state and measure the contract **given the frozen object 𝓒^fp**:
+- the final run under 𝓒^fp in double, against the same final run in long double, on the same streams;
+- G_fp = {every discrete decision of the final run agrees};
+- ε = P(G_fp^c);
+- η = max |log Ẑ_fp − log Ẑ_ld| on G_fp.
+
+The long-double core has 11 more mantissa bits, so its own error is about 2⁻¹¹ of the double error. Its outputs stand in
+for exact arithmetic, and η as measured is accurate to well under 1%.
+
+### 6.1 Replays (`results/compare_output.txt`, `results/valfp_table.csv`, `results/valfp_seeds.csv`)
+
+| Run | Paths that agree | η, pooled log Ẑ | η_r, island log Ẑ_r | max \|ΔPIP\| | HPM |
+|---|---|---|---|---|---|
+| 10 production fits; ld replay of the final run on 𝓒^fp | 10/10 | ≤ 2.26e-13 | ≤ 2.49e-13 | ≤ 2.0e-13 | same model; ΔF ≤ 2.3e-13 |
+| 10 fits × 10 further final-run seeds (100 replays) | 100/100 | ≤ 2.59e-13 | ≤ 2.86e-13 | ≤ 2.0e-13 | same in all |
+| 10 fits, full ld fit (calibration too) | 10/10 | ≤ 2.32e-13 | — | — | same |
+
+- "Paths that agree" compares the full discrete path:
+  - stream end positions and init-draw hashes;
+  - every per-stage move and acceptance count;
+  - the terminal table, score counts and cache counters;
+  - the HPM and its provenance, the MPM;
+  - the local-search path, scanned centres and termination;
+  - the top store and near ties.
+- *Full ld fit* (`ld_full`): the long-double calibration froze the same status, tier, T, inherited set and calibration
+  HPM on 10/10 fits. Its grid differed by at most 5.8e-14. So on these fits 𝓒^ld and 𝓒^fp differ only by continuous
+  rounding, and the given-𝓒^fp statement loses nothing.
+- **η.** |log Ẑ| ≈ 140–290 here, so η ≈ 2.6e-13 is a few ulp of log Ẑ (ulp ≈ 5.7e-14 at 250). This is about
+  1e-15 *relative* in log Ẑ, and about 2.6e-13 relative in Ẑ.
+- **ε from replays alone:** 0 disagreements in 110 paths. The Clopper–Pearson 95% upper bound is 0.027 (0.0295 on the
+  100). This is weak, which is why the threshold measurement below was added.
+
+### 6.2 Threshold logs: first-order ε (`results/thr_table.csv`, `results/eps_table.csv`)
+
+**Instrumented cores.** `scripts/make_log_cores.sh` builds copies of both cores that write out, during
+`cpp_final_run` only, every threshold a uniform is compared with:
+- the Gibbs o_j;
+- the three swap/independence acceptance probabilities;
+- all N normalised cumulative weights before each resampling;
+- the two π₀ cumulative boundaries of each categorical draw.
+
+No arithmetic changes. Checked: the logging fp core reproduces the production `log_Z_r` bit for bit on 10/10 fits
+(`results/run_thr.log`). Logs from the two cores are aligned entry by entry. Every fit's tag sequences matched, i.e. the
+path agreed.
+
+**Estimate.** Under EX-S, a uniform is U(0,1) and independent of the threshold it meets. So, given agreement up to that
+point, a comparison flips with probability |t_fp − t_ld|:
+- a resampling draw flips with probability Σ_k |ΔW_k|;
+- a π₀ draw flips with probability Σ_k |Δc_k|, estimated without bias at the drawn k (`scripts/analyze_thr.py`).
+
+**Index draws** floor(u·k) (`cpp/v3_engine.h:150, 151, 167, 171, 199`) cannot be logged as thresholds, so they were
+counted exactly (`scripts/index_draw_flips.py` → `results/index_draw_flips.csv`):
+- In long double, u·k is exact (x·k < 2⁶⁴). In double, it can round up onto an integer.
+- The number of 53-bit uniforms where this happens is at most 31 for every k ≤ 64, i.e. ≤ 1.2e-15 to 2.0e-15 per draw
+  for the round lengths here (k ≤ m = p + B + 2 ≤ 48).
+- The resampling bucket `floor(ue·N)` (`:252`) is only a starting guess, corrected by `:254–255`, so it cannot flip.
+
+| Channel (sum over one final run, max over the 10 fits) | ε contribution |
+|---|---|
+| resampling (N draws × Σ_k \|ΔW_k\| per stage) | 1.6e-7 – **2.1e-6** |
+| index draws (bound: all uniforms × max_k P_k) | ≤ 7.3e-8 |
+| π₀ categorical draws | ≤ 3.3e-8 |
+| Gibbs o_j | ≤ 1.4e-8 |
+| neighbour swap / independence / uniform swap α | ≤ 7.0e-9 / 2.9e-9 / 7.0e-10 |
+| **total, first order (union bound)** | **2.4e-7 – 2.2e-6 per final run** |
+
+So **ε ≈ 2e-6 per final run** on these fits. It is dominated by the N² boundary comparisons of multinomial
+resampling. It grows roughly with N² × (number of resamplings) × (cumulative-sum rounding). The first-order sum is an
+upper bound up to O(ε²).
+
+**Caveats.**
+1. *Grid granularity.* Uniforms lie on the 2⁻⁵³ grid, while |Δt| is about 1e-16. The flip probability at one comparison
+   is |Δt| only on average over where t lies relative to the grid. This is the right quantity for an expected count.
+2. *Scope: final run only.* Calibration decisions are inside 𝓒^fp by construction (§6 contract). The full-ld check
+   above found them unchanged on 10/10 fits.
+3. *Deterministic F comparisons are a separate channel, not part of ε.* These are the HPM order, the local-search
+   best/move tests (`cpp/v3_engine.h:391, 407`) and `hpm_better`. Here precision flips a decision only when two F
+   values are within about 1e-13 of each other. That is a property of the data (near ties, which the fit reports as
+   `near_ties`), not a probability over uniforms. Observed: 0 such flips in 110 replays.
+4. *Size and form of the test fits.* p ≤ 40 and n = 200. ε scales with N and T, so production-size fits (larger N, T)
+   should be expected to have proportionally larger ε. The bound is still many orders below any statistical error.
