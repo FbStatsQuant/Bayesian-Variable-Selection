@@ -129,7 +129,7 @@ statistics unconditionally, then intersect with recovery". Nothing below conditi
 (c) *(uniform tail over a polynomial family)* Fix J ∈ ℕ, D ≥ 0, C ≥ 1. Let (X_α)_{α∈𝔄_n} be any family (no independence
     assumed) of at most C n^D such variables with 1 ≤ j_α ≤ J and 0 ≤ u_α ≤ n/4. Put t_n := 8(D+1) log n and τ_n := t_n/n.
     Then for n ≥ n₀(J, D, C),
-      P(max_α X_α > τ_n) ≤ C n^D [ e^{−n/32} + n^{−4(D+1)} e^{√(2J(D+1) log n)} ] → 0.
+      P(max_α X_α > τ_n) ≤ C n^D [ e^{−n/32} + n^{−(D+1)} e^{√(2J(D+1) log n)} ] = O(n^{−1} e^{O(√log n)}) → 0.
 
 *Proof.* (a) The density is x^{j/2−1}(1−x)^{(m−j)/2−1}/B(j/2, (m−j)/2). Multiplying by (1−x)^{−ν} gives the exponent
 (m−j)/2 − 1 − ν = (n−1−u−j)/2 − 1 − 0.01 − n/2 = −e₁ < 0, so on [0, τ], (1−x)^{−e₁} ≤ (1−τ)^{−e₁} ≤ 2^{e₁}. Next
@@ -142,13 +142,10 @@ E ≤ 2^{e₁}(2/j)τ^{j/2}(m/2)^{j/2}/Γ(j/2) = 2^{e₁}(mτ/2)^{j/2}/Γ(j/2+1)
 (c) For u ≤ n/4 and n ≥ 8(J+1): m − j ≥ 3n/4 − 1 − J ≥ n/2, so e^{−(m−j)/16} ≤ e^{−n/32} and τ_n(m−j)/2 ≥ t_n/4 =: t′.
 [LM] upper tail: P(χ²_j ≥ j + 2√(jx) + 2x) ≤ e^{−x}. Take x := t′/2 − √(j t′). If t′ ≥ 6j then x > 0 and
 j + 2√(jx) + 2x ≤ j + 2√(j t′/2) + t′ − 2√(jt′) = t′ + j − (2−√2)√(jt′) ≤ t′ (since (2−√2)√(jt′) ≥ (2−√2)√6 j > j).
-Hence P(χ²_j > t′) ≤ exp(−t′/2 + √(jt′)) ≤ exp(−t_n/8 + √(J t_n/4)) = n^{−(D+1)} e^{√(2J(D+1)log n)}. Wait: t_n/8 = (D+1) log n,
-so this is n^{−(D+1)}e^{O(√log n)}; the union bound over C n^D variables gives C n^{−1} e^{O(√log n)} → 0. (The displayed
-exponent 4(D+1) in the statement is a misprint for (D+1); the conclusion → 0 is unchanged. The requirement t′ ≥ 6J holds
-for n ≥ n₀.) ∎
+Hence P(χ²_j > t′) ≤ exp(−t′/2 + √(jt′)) ≤ exp(−t_n/8 + √(J t_n/4)) = n^{−(D+1)} e^{√(2J(D+1)log n)}, since t_n/8 = (D+1) log n.
+The union bound over at most C n^D variables gives C n^{−1} e^{O(√log n)} → 0. The requirement t′ ≥ 6J holds for n ≥ n₀. ∎
 
-*Correction to the statement of (c), for the record:* P(max_α X_α > τ_n) ≤ C n^D [e^{−n/32} + n^{−(D+1)} e^{√(2J(D+1) log n)}]
-= O(n^{−1} e^{O(√log n)}) → 0. If a faster rate is wanted, take t_n := 8(D+D′+1) log n to get O(n^{−D′−1}e^{O(√log n)}).
+*Rate.* If a faster rate is wanted, take t_n := 8(D+D′+1) log n to get O(n^{−D′−1}e^{O(√log n)}); nothing below needs it.
 
 *Where it is used, and with which (J, u, D):*
 | use | J | u ≤ | family size | D |
@@ -208,3 +205,84 @@ constants on any polynomial family of bounded-size sets with a uniform Gram lowe
 with |R_{U+l} − R_U| ≤ 2κ_E =: κ. (3) Applied to 𝔉_n := {A : |A| ≤ s₀+2} (J = s₀+2, D = A(s₀+2)) it is PXN Lemma U(U1), with
 the false "≤ 1" replaced by the explicit 0.52/c_E (this is W5 R2's repair, now derived rather than asserted).
 (4) The RSS floor c_E n is the only place where ‖μ‖² ≤ Mn enters.
+
+---------------------------------------------------------------------------------------------------------
+
+## 5. Statistical premises on the random design (Lemma P2) and the Beta laws (Lemma B) — PROVED
+
+**Lemma P2 (PXN §3; verified by A-REV3; restated).** With φ₀² := λ₀/2 and M := 2θᵀΣθ + 1, the X-event ℰ_n on which
+(a) λ_min(R̂_T) ≥ φ₀² for every nonempty T with |T| ≤ m_n + s₀ (locked SE; m_n = O(log n)), hence for all T ⊆ C_h (|T| ≤ g)
+    and all T with |T| ≤ s₀ + 2;
+(b) ‖μ‖²/n ≤ M;
+(c) min_{j∈S₀} θ*_j² ≥ b₀ := ½ min(β_i²ψ_i², β_i², (β^vis_h)²) (BM-∞ with M_n = b₀nφ₀²/(σ² log n) → ∞), and R holds;
+has P(ℰ_n) → 1. *Proof.* (a) ‖R̂_T − Σ_T‖_op ≤ |T| max_{jk}|r̂_jk − Σ_jk| ≤ (m_n+s₀)C₁√(log p/n) → 0 by [CONC], and
+λ_min(Σ_T) ≥ λ₀ by interlacing. (b), (c): SLLN for the finitely many columns of 𝒮𝒱 (θ*_j = θ_j·sd_j → θ_j a.s.). ∎
+G holds conditionally on X by construction.
+
+**Lemma B (PXN §4 and W5 R6; verified by A-REV3; restated).** For a group h let U_h° := S° ∩ C_h ({j_h} for a- and visible
+groups, ∅ otherwise). (i) For nonempty V ⊆ C_h ∖ U_h°: X_{h,V} := 1 − RSS_{U_h°∪V}/RSS_{U_h°} ~ Beta(|V|/2, (n−1−|U_h°|−|V|)/2).
+(i′) For U with U_h° ⊆ U ⊆ C_h and a neutral l ∈ C_h ∖ U: x_{U,l} := 1 − RSS_{U+l}/RSS_U ~ Beta(½, (n−2−|U|)/2).
+(ii) For A ⊇ S° with A ∖ S° neutral and a neutral l ∉ A: x_{A,l} ~ Beta(½, (n−2−|A|)/2).
+(iii) The c columns x^r_{j_{b_i}} and y^r are mutually independent; (n−1)(r̂²_{j_{b_1},y}, …, r̂²_{j_{b_c},y}) →_d independent χ²_1.
+All laws are unconditional (Lemma T(iii)). *Proof (condensed; PXN §4 has the full version).* In each case the added
+columns W have population partial covariance 0 with μ given X_U (F2 for b-groups with U = ∅; F3 and weak union for
+a-groups with j_a ∈ U; x_{j_h} ∈ U for visible groups; independence for null groups; components independent, F5), so the
+population residual W^r := X^r_W − X^r_UΓ is Gaussian and independent of (X^r_U, y^r). Given (X_U, y), the vector
+r := Π_U^⊥Y is fixed and the |W|-plane span(Π_U^⊥W^r) is Haar on the Grassmannian of E := 1^⊥ ⊖ span X_U (its coordinates
+Q_EᵀG are iid Gaussian, and the covariance factor Σ_{W|U}^{1/2} does not change the span), so ‖P_{span}r‖²/‖r‖² is
+Beta(|W|/2, (dim E − |W|)/2). (iii): the c+1 Gaussian vectors are uncorrelated (F2, F5), hence independent; given y the
+unit vectors Cx_{j_b}/‖·‖ are iid uniform on the sphere of 1^⊥. ∎
+
+---------------------------------------------------------------------------------------------------------
+
+## 6. Theorem P3′ (near-truth start mass on the reference S°, uniformly over the random design) — PROVED
+
+**Statement.** On LH-iid, with q, e the T22(i) aggregation quantities of S° on the actual blocks,
+  q = O_P(√(log n/n)),  e = O_P(p√n e^{−c₆n}) (c₆ > 0 fixed),  and  1 − π₀(S°) ≤ (s+1)q/(1−q) + s·e = O_P(√(log n/n)).
+Explicitly: there are constants C_q, n₀ and events 𝒢_n with P(𝒢_nᶜ) ≤ P(𝒜_nᶜ) + P(ℰ_nᶜ) + P(𝒟_nᶜ ∩ ℰ_n) + P(max X_{h,V} > τ_n) → 0
+(each term explicit: Theorem R, [CONC], Lemma E, Lemma Tr-J(c) with D = A) such that E[q̃ 1_{𝒢_n}] ≤ C_q √(log n/n), and
+P(q > x) ≤ C_q√(log n/n)/x + P(𝒢_nᶜ) for every x > 0.
+
+*Proof.* Work with the group versions (Lemma T). Let 𝔉 := {U ⊆ C_h : h ≤ G_n} ∪ {∅} (|𝔉| ≤ 2^{16}n^A, J = g) and apply
+Lemma E on ℰ_n ∩ 𝒟_n. For V = {l₁,…,l_j} ⊆ C_h ∖ U_h°, telescoping (4.1) along U_h° ⊂ U_h° + l₁ ⊂ … ⊂ U_h° ∪ V gives
+  r̃_h(U_h° ∪ V)/r̃_h(U_h°) = (n+1)^{−j/2}(1 − X_{h,V})^{−ν} e^{R_{U°∪V} − R_{U°}} ≤ e^{2κ_E}(n+1)^{−j/2}(1 − X_{h,V})^{−ν},     (6.1)
+because the (1 − x) factors multiply to RSS_{U°∪V}/RSS_{U°} = 1 − X_{h,V} and the remainders telescope to a single
+difference bounded by 2κ_E (this is sharper than PXN's e^{jκ}).
+*Truncation.* 𝒢_n := 𝒜_n ∩ ℰ_n ∩ 𝒟_n ∩ {X_{h,V} ≤ τ_n ∀(h, V)}, τ_n = t_n/n, t_n = 8(A+1) log n. The family {X_{h,V}} has
+≤ G_n 2^g ≤ 2^{16}n^A members, each Beta(j/2, (m−j)/2) with j ≤ g ≤ 16, u = |U_h°| ≤ 1 (Lemma B(i)); Lemma Tr-J(c) with
+J = 16, D = A gives P(max X_{h,V} > τ_n) → 0.
+*Moment.* On 𝒢_n, ã_hj = Σ_{|V|=j} r̃_h(U°∪V)/r̃_h(U°) ≤ e^{2κ_E}(n+1)^{−j/2} Σ_{|V|=j}(1 − X_{h,V})^{−ν}1{X_{h,V} ≤ τ_n}. By
+Lemma Tr-J(a) (u ≤ 1, m ≤ n−1, mτ_n ≤ t_n), with C_e := 2^{(1+16+3)/2+0.01} ≤ 2^{10.01}:
+  E[ã_hj 1_{𝒢_n}] ≤ e^{2κ_E}(n+1)^{−j/2} C(g, j) C_e (t_n/2)^{j/2}/Γ(j/2+1).
+Since j! C(g, j) ≤ g^j and Γ(j/2+1) ≥ 0.88: E[j! ã_hj 1_{𝒢_n}] ≤ 1.14 C_e (gξ_n)^j with ξ_n := e^{2κ_E}√(t_n/(2(n+1))) (the
+factor e^{2κ_E/j} ≤ e^{2κ_E} is absorbed). Jensen for the concave x ↦ x^{1/j}: E[(j!ã_hj)^{1/j}1_{𝒢_n}] ≤ (1.14C_e)^{1/j}gξ_n ≤
+1.14C_e gξ_n. As D̃_h = max_j (j!ã_hj)^{1/j} ≤ Σ_{j≤g}(j!ã_hj)^{1/j}: E[D̃_h1_{𝒢_n}] ≤ 1.14C_e g²ξ_n, and q̃ = (p−s)⁻¹Σ_h D̃_h over
+G_n = p/g groups gives E[q̃1_{𝒢_n}] ≤ 1.14C_e gξ_n p/(p−s) ≤ 2.3C_e g ξ_n =: C_q√(log n/n)·(1+o(1)). Markov gives the tail.
+*Deletion quantity.* Only the s truth-carrying groups have U_h° ≠ ∅ (= {j_h}), so ẽ = 2p·max{r̃_h(U)/r̃_h(U + j_h) : h
+truth-carrying, U ⊆ C_h ∖ j_h}, a fixed finite family. By (4.1), log[r̃_h(U + j_h)/r̃_h(U)] ≥ −½ log(n+1) − 2κ_E + ν x_{U,j_h}
+(−log(1−x) ≥ x). By the SLLN (finitely many columns), x_{U,j_h} → x^pop(h, U) a.s., the population squared partial
+correlation of y and x_{j_h} given X_U, which is positive: for an a-group Cov(x_{j_a}, μ | X_U) = β(1−ψ²)Var(x_{j_a}|X_U)
+≠ 0 (PXN §6, using F1), for a visible group β_hVar(x_{j_h}|X_U) ≠ 0, and Var(x_{j_h}|X_U) ≥ λ₀. With x₀ := ½ min_{h,U} x^pop > 0,
+w.p. → 1 ẽ ≤ 2p√(n+1)e^{2κ_E}e^{−νx₀}; put c₆ := x₀/2.
+*Conclusion.* On 𝒜_n, (q, e) = (q̃, ẽ) (Lemma T). [T22i](i-a), deterministic for any partition and positive tables: if
+q < 1 then 1 − π₀(S°) ≤ (s+1)q/(1−q) + se. ∎
+
+*Remark.* No NL_η, VIS, zero-leakage or exact-Gram hypothesis is used; the Beta law of Lemma B replaces them. The rate
+√(log n/n) is the price of the max of ~p chi-squares in the truncation and is sharp in order (PXN REPORT §4).
+
+---------------------------------------------------------------------------------------------------------
+
+## 7. Theorem P4 (masking: π₀(S₀) → 0 at the CL(L) rate) and Theorem P5 (eligibility) — PROVED
+
+**P4.** On LH-iid, Mstat_n := log π₀(S₀) + c log p + (c/2) log n →_d Σ_{i=1}^c log((s+i)/2) + ½χ²_c; hence
+π₀(S₀) = p^{−c}n^{−c/2}e^{O_P(1)} → 0, and VIS at S₀ fails (the block of j_{b_i} carries no signal given nothing): the
+family is genuinely in the masked regime, while π₀(S°) → 1.
+*Proof (PXN §7; verified by A-REV3).* On 𝒜_n, [T22ii](ii-a) gives π₀(S₀) = π₀(S°)[w(s+c)/w(s)]∏_i r_{b_i}({j_{b_i}}) exactly
+(S₀ and S° differ only in the b-blocks, where S° is empty). w(k+1)/w(k) = (k+1)/(2p−1−k) gives log[w(s+c)/w(s)] + c log p →
+Σ_i log((s+i)/2). For a single column U = {j}: G = n−1, H = n², det(G+1) = n, D = n, z = (n−1)r̂_{j,y}, Q = (n−1) − (n−1)²r̂²/n,
+so log r({j}) + ½log n = −ν log(1 − κ_n r̂²) with κ_n := (n−1)²/(n(n−0.98)) → 1. By Lemma B(iii), (n−1)r̂²_i →_d independent
+χ²_1, so −ν log(1 − κ_n r̂_i²) →_d ½χ²_{1,i} jointly; log π₀(S°) → 0 by P3′; Slutsky. ∎
+
+**P5 (eligibility of the LS0 centre).** P(S̃₀ = S°) → 1, where S̃₀ = argmax π₀ (exact max-plus convolution, deterministic
+tie rule). Hence the LS0 centre lies in 𝓡₀ ⊆ 𝓡_d and Φ(S̃₀) = c, w.p. → 1.
+*Proof.* On {π₀(S°) > ½} no other model has mass ≥ ½, so the argmax is unique and equals S°; P(π₀(S°) > ½) → 1 by P3′. ∎
