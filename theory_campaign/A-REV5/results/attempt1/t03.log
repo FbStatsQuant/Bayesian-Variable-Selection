@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/fb31/theory_campaign/A-REV5/run_20261102/t03_thresholds.py", line 14, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'

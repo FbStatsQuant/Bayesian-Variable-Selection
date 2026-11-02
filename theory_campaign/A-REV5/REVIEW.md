@@ -185,4 +185,4 @@ All source reads are pinned in [sources/manifest.json](sources/manifest.json), w
 5. Theorem A feasible core: VERIFIED; literal cap-free lattice is ERROR; U probability arrow is ERROR.
 6. CARDS, PXN and T26 retain ERRORs with counterexamples; benchmark pre-search classification remains GAP.
 7. Owls final jobs exited 0; source snapshots, scripts, hashes, logs and outputs are saved under A-REV5.
-8. Reviewed head SHA: HEAD_SHA_PLACEHOLDER (review-content commit; final audit commit records this immutable head).
+8. Reviewed head SHA: 0370e5388e46ef46495cce653f95d56c70776927 (review-content commit; final audit commit records this immutable head).

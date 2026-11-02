@@ -1,0 +1,1 @@
+all TD-P clauses pass; literal lattice of {1,2,3,5} contains infeasible {1,2,3,4,5}
