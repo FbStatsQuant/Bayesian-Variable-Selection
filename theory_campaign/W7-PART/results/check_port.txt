@@ -1,0 +1,1 @@
+cases=70  engine==faithful: 70  engine==fast(scipy): 70  (blocks==groups in 12 cases, so both outcomes are exercised)
