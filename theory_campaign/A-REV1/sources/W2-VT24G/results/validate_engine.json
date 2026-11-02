@@ -1,0 +1,32 @@
+{
+ "detailed_balance_max_resid": 0.0010096706461268923,
+ "underflow_pairs": 508,
+ "unexplained_zero_pairs": 0,
+ "tv": [
+  {
+   "start": [
+    2,
+    6
+   ],
+   "tv_fast_slow": 0.013,
+   "tv_fast_fast": 0.011499999999999962
+  },
+  {
+   "start": [
+    6
+   ],
+   "tv_fast_slow": 0.0455,
+   "tv_fast_fast": 0.03749999999999999
+  },
+  {
+   "start": [
+    0,
+    2,
+    4,
+    6
+   ],
+   "tv_fast_slow": 0.03150000000000002,
+   "tv_fast_fast": 0.027999999999999983
+  }
+ ]
+}

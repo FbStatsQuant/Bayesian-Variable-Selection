@@ -1,0 +1,8 @@
+C0: q0(A)=0.99331 q1(A)=0.99331 inf q_phi(A)=9.0792e-05 at phi=0.5000; closed form at 1/2: 2e^-10/(1+2e^-10)=9.0792e-05
+C1: pi0(A)=0.999955 pi0(o)=4.5398e-05  log10 pi(A^c)=-838.2  sup_phi q_phi(A^c)=3.3009e-04 at phi=0.0253  d(o)-d(a1)=80.0
+C1[W1]: N=100000 T=1000 R=200: P(no particle in A at end)=0.450 (se 0.035); P(a2 occupied)=0.550; median log(Zhat/Z)=-1810.5; frac Zhat/Z<1/2=1.000
+C1[W1]: N=1000000 T=1000 R=200: P(no particle in A at end)=1.000 (se 0.000); P(a2 occupied)=0.000; median log(Zhat/Z)=-1930.0; frac Zhat/Z<1/2=1.000
+C1[rev]: N=100000 T=1000 R=200: P(no particle in A at end)=0.560 (se 0.035); P(a2 occupied)=0.440; median log(Zhat/Z)=-1928.5; frac Zhat/Z<1/2=1.000
+C1[rev]: N=1000000 T=1000 R=200: P(no particle in A at end)=1.000 (se 0.000); P(a2 occupied)=0.000; median log(Zhat/Z)=-1930.0; frac Zhat/Z<1/2=1.000
+C1[rev5]: N=100000 T=1000 R=200: P(no particle in A at end)=0.550 (se 0.035); P(a2 occupied)=0.450; median log(Zhat/Z)=-1928.4; frac Zhat/Z<1/2=1.000
+C1[rev5]: N=1000000 T=1000 R=200: P(no particle in A at end)=1.000 (se 0.000); P(a2 occupied)=0.000; median log(Zhat/Z)=-1930.0; frac Zhat/Z<1/2=1.000
