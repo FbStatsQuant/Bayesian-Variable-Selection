@@ -1,0 +1,2 @@
+E1c: T=28; grid phi at stages 1..8: [0.081 0.154 0.154 0.222 0.222 0.288 0.288 0.355]; first-S0 stage counts: [(1, 40)]
+E1d: T=32; grid phi at stages 1..8: [0.124 0.215 0.288 0.35  0.406 0.458 0.506 0.549]; first-S0 stage counts: [(5, 4), (6, 15), (7, 21)]
