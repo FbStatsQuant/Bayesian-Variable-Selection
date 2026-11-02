@@ -53,7 +53,7 @@ interpretive claim (the "factor 3–4" comparison of (★) with C-LD) that is mi
 
 | Step | Verdict | Note |
 |---|---|---|
-| Definition LD♭, (★) | definitions | The illustrative "ρ* ≈ 0.14/A for d = 2" is the small-ρ* root of (★) to first order ((★) ≈ 2√2ρ* < 1/(2A), ρ* < 0.177/A); the exact root at A = 1 is 0.126 (`results/star_thresholds.txt`). |
+| Definition LD♭, (★) | definitions | The illustrative "ρ* ≈ 0.14/A for d = 2" is fine at A = 1: the exact root of (★) there is ρ* = 0.149 (`results/star_thresholds.txt`). For large A the root is ≈ 0.177/A (first order: 2√2ρ* < 1/(2A)). |
 | Lemma LD | VERIFIED | I − P_{A∪F} = (I − P_A) − P_Ṽ; |⟨P_Ṽx̌_l, P_Ṽe⟩| ≤ ρ‖x̌_l‖‖P_Ṽe‖. |
 | Lemma S, list of comparators | VERIFIED | At S = S₀ ∪ P the non-progress neighbours are exactly S, S+l, S−e′+l, S−u, S−u+l (no missing truth, so no truth→truth swap). (T)+(α)+(β)+(γ) ⇒ D_S, and (T)+(L′) ⇒ (L): re-derived. |
 | Lemma S (T) | VERIFIED | g ≥ θ_u²λ_min(G_{S∪l}) ≥ Nφ₀²θ²_min needs SE_λ(d+1). C₁ = 1 because r_S = 0. |
