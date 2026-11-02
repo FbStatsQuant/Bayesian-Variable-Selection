@@ -41,6 +41,7 @@ import SmcBvs.T12Core
 #print axioms SmcBvs.t11_miss_pi
 #print axioms SmcBvs.t11_miss_pi_real
 #print axioms SmcBvs.t11_miss_iid
+#print axioms SmcBvs.t11_miss_iid_real
 -- T37(i)
 #print axioms SmcBvs.Greedy.exists_bestImprovement
 #print axioms SmcBvs.Greedy.path_F_strictMono
@@ -48,12 +49,14 @@ import SmcBvs.T12Core
 #print axioms SmcBvs.Greedy.theoremA1_converse
 #print axioms SmcBvs.Greedy.theoremA2
 #print axioms SmcBvs.Greedy.theoremA3
+#print axioms SmcBvs.Greedy.theoremA3_hpm
 #print axioms SmcBvs.Greedy.pd_of_reach
 #print axioms SmcBvs.Lattice.progress_mem_Lat
 #print axioms SmcBvs.Lattice.lemma2a
 #print axioms SmcBvs.Lattice.theoremA2_lattice
 #print axioms SmcBvs.Lattice.theoremA3_lattice
 #print axioms SmcBvs.Lattice.Φ_le_of_mem_Rad
+#print axioms SmcBvs.Lattice.card_le_of_mem_Rad
 -- T12(i.a) partial
 #print axioms SmcBvs.T12.invariance_step
 #print axioms SmcBvs.T12.resample_move_step

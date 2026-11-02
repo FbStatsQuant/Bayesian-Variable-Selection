@@ -19,8 +19,8 @@ Abstract setting (EX-A: exact scores and comparisons; data fixed):
   `F : α → ℝ` the log-score;
 * `M : α → Option α` a **best-improvement map**: `M S = none` iff no neighbour strictly improves
   `F`; otherwise `M S = some T` with `T` a neighbour of maximal score and `F T > F S`. Any tie rule
-  is allowed (`IsBestImprovement`); one exists for every injective rank (`exists_bestImprovement`),
-  e.g. the method's lexicographic rule;
+  is allowed (`IsBestImprovement`), the method's lexicographic rule included; at least one such
+  map exists (`exists_bestImprovement`, by choice);
 * the greedy path `path M S k = (step M)^[k] S`, where `step M S = (M S).getD S` (a state with no
   improving neighbour is a fixed point, so the path "stops" there);
 * the production search with move cap `ℓ` returns `path M S_c ℓ` and is *certified* when the
@@ -35,7 +35,10 @@ Results
   `R`, `Φ` strictly decreases at each move, and `S₀` is reached after `τ ≤ Φ(S)` moves.
 * `theoremA3`           (A3): if moreover `ℓ ≥ τ` (in particular `ℓ ≥ Φ(S_c)`), the capped search
   from `S_c` returns `S₀` certified, and every model scored by the search has `F ≤ F(S₀)`
-  (Lemma 0(c)).
+  (score-bound part of Lemma 0(c)); `theoremA3_hpm` adds the pre-search scored set, giving
+  "`Ŝ = S₀` up to exact ties".
+* Not formalised: the exact count `τ = m + e − σ ≥ max(m, e)`, the lattice-condition variant of
+  (A3) via the one-state events `D_S`, the other clauses of (A4), and (A5).
 * `pd_of_reach`         (A4, PD part): reaching `S₀` from `S ≠ S₀` forces `F S < F S₀`.
 -/
 
@@ -76,7 +79,8 @@ theorem path_stays {M : α → Option α} {S : α} {k : ℕ} (h : M (path M S k)
   | base => rfl
   | succ j hkj ih => rw [path_succ, ih, step_of_none h]
 
-/-- Existence of a best-improvement map for any injective tie rank (e.g. lexicographic). -/
+/-- Existence of a best-improvement map (non-vacuity of `IsBestImprovement`; the choice among
+tied best neighbours is arbitrary, so every tie rule is covered by the general results). -/
 theorem exists_bestImprovement (N : α → Finset α) (F : α → ℝ) :
     ∃ M : α → Option α, IsBestImprovement N F M := by
   classical
@@ -313,6 +317,25 @@ theorem theoremA3 (hM : IsBestImprovement N F M) {Φ : α → ℕ} {R : Finset �
   · -- at S₀ itself: no improving neighbour
     rw [heq, hτ] at hT
     exact (hM.none_iff S₀).mp hTD.1 T hT
+
+/-- **Lemma 0(c), HPM clause.** Under the hypotheses of `theoremA3`, suppose the production
+centre `S_c` is the running best of the pre-search scored set `pre` (`F S ≤ F S_c` on `pre`). Then
+`S₀ = path τ` is scored, and every model in the post-search scored set — `pre`, the centres
+`path k` (`k ≤ τ`) and their scanned neighbourhoods — has score `≤ F(S₀)`. Hence the reported
+HPM (a maximiser over that set) equals `S₀` up to exact score ties. -/
+theorem theoremA3_hpm (hM : IsBestImprovement N F M) {Φ : α → ℕ} {R : Finset α} {S₀ : α}
+    (hTD : TDP M Φ R S₀) (hS₀ : S₀ ∈ R) {Sc : α} (hSc : Sc ∈ R) (pre : Set α)
+    (hpre : ∀ S ∈ pre, F S ≤ F Sc) :
+    ∃ τ ≤ Φ Sc, path M Sc τ = S₀ ∧
+      ∀ T, (T ∈ pre ∨ ∃ k ≤ τ, T = path M Sc k ∨ T ∈ N (path M Sc k)) → F T ≤ F S₀ := by
+  obtain ⟨τ, hτΦ, hcert, hbound⟩ := theoremA3 hM hTD hS₀ hSc
+  refine ⟨τ, hτΦ, (hcert τ le_rfl).1, fun T hT => ?_⟩
+  rcases hT with hT | ⟨k, hk, rfl | hT⟩
+  · have h0 := (hbound 0 (Nat.zero_le _)).1
+    rw [path_zero] at h0
+    exact (hpre T hT).trans h0
+  · exact (hbound k hk).1
+  · exact (hbound k hk).2 T hT
 
 /-- **Theorem A (A4), PD part**: if the greedy path from `S ≠ S₀` reaches `S₀`, then
 `F S < F S₀`. -/

@@ -72,7 +72,8 @@ theorem resample_move_step {N : ℕ} (x : Fin N → α) (G : α → ℝ) (K : α
   field_simp
 
 /-- **T12(i.a), reduction**: if the functionals `E t f` (standing for `E_c[Ẑ_t q̂_t(f)]`) are
-given at stage 0 by `E 0 f = Σ γ₀ f` and satisfy the resample–move recursion
+given at stage 0 by `E 0 f = Σ γ₀ f` (stage 0: `Ẑ₀ = Z₀ = Σ γ₀` and the particles are iid
+`π₀ = γ₀/Z₀`, so `E[Ẑ₀ q̂₀(f)] = Z₀ π₀(f) = Σ γ₀ f`; here `γ₀` includes the factor `m(∅)`) and satisfy the resample–move recursion
 `E t f = E (t-1) (G_t · K_t f)`, with `γ_t = γ_{t-1} G_t` and `K_t` `γ_t`-invariant, then
 `E t f = Σ_x γ_t(x) f(x)` (`= Z_t q_t(f)`) for every `t`. -/
 theorem unbiased_of_step (γ : ℕ → α → ℝ) (G : ℕ → α → ℝ) (K : ℕ → α → α → ℝ)

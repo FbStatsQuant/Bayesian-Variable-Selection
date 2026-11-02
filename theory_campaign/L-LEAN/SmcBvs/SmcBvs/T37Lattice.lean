@@ -259,4 +259,13 @@ theorem Φ_le_of_mem_Rad {a d : ℕ} {S : Finset (Fin p)} (hS : S ∈ Rad S₀ a
   rw [Φ_eq]
   omega
 
+/-- Feasibility of `R_{a,d}`: if `s₀ + d ≤ K`, every model of `Rad S₀ a d` has size `≤ K`, so
+`Rad` is the source's (feasible) region `R_{a,d}`. -/
+theorem card_le_of_mem_Rad {K a d : ℕ} (hKd : S₀.card + d ≤ K) {S : Finset (Fin p)}
+    (hS : S ∈ Rad S₀ a d) : S.card ≤ K := by
+  have he : (S \ S₀).card ≤ d := ((mem_Rad S₀).mp hS).2
+  have h1 := Finset.card_sdiff_add_card_inter S S₀
+  have h2 : (S ∩ S₀).card ≤ S₀.card := Finset.card_le_card Finset.inter_subset_right
+  omega
+
 end SmcBvs.Lattice

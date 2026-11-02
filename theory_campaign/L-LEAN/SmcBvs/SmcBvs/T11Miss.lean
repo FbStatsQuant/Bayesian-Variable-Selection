@@ -71,4 +71,16 @@ theorem t11_miss_iid (P : Measure Ω) [IsProbabilityMeasure P] (π₀ : Measure 
       prob_compl_eq_one_sub (measurableSet_singleton s)]
   simp only [hi, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
 
+/-- **T11(iii), random-variable form, real-valued with the exponential bound.** -/
+theorem t11_miss_iid_real (P : Measure Ω) [IsProbabilityMeasure P] (π₀ : Measure M)
+    [IsProbabilityMeasure π₀] (Q : ℕ)
+    (X : Fin Q → Ω → M) (hXm : ∀ i, Measurable (X i)) (hind : iIndepFun X P)
+    (hlaw : ∀ i, P.map (X i) = π₀) (s : M) :
+    P.real {ω | ∀ i, X i ω ≠ s} = (1 - π₀.real {s}) ^ Q ∧
+      (1 - π₀.real {s}) ^ Q ≤ Real.exp (-(Q * π₀.real {s})) := by
+  refine ⟨?_, t11_pow_le_exp _ measureReal_le_one Q⟩
+  rw [measureReal_def, t11_miss_iid P π₀ Q X hXm hind hlaw s, ENNReal.toReal_pow,
+    ENNReal.toReal_sub_of_le prob_le_one ENNReal.one_ne_top]
+  simp [measureReal_def]
+
 end SmcBvs
