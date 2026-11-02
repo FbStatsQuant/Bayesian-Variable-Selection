@@ -275,8 +275,11 @@ P(|Z| > t) ≤ e^{−t²/2} (t ≥ 1): P(max Z² > 2 log N + 2 log log n) ≤ 1/
 equicorrelated with correlation r ∈ (0,1) (so SE holds with φ₀² = min(1, 1 − r), BM-∞ holds, ‖μ‖²/n bounded);
 p = ⌊n^β⌋ with β < 1 and rβ > ½ (e.g. r = 0.8, β = 0.9).
 
-**Claim. COUNTEREXAMPLE (asymptotic; PROVED modulo the standard extreme-value facts cited).** With probability → 1,
-Λ₂(1) ≥ c·p^{r}(log p)^{−(1+r)}·n^{−1/2}·e^{−O_P(√log p)} → ∞, and ε_del(2) → 1.
+**Claim. COUNTEREXAMPLE (asymptotic; PROVED modulo the standard extreme-value facts cited).** With probability → 1
+there is a pair (l*, m*) with odds_{l*}(S₀+m*) ≥ c·p^{r}(log p)^{−(1+r)}·n^{−1/2}·e^{−O_P(√log p)} → ∞; hence
+Λ₂(1) ≥ o_{l*}(S₀+m*) = 1 − o_P(1) (so (L+4)Λ₂(1) → ∞) and ε_del(2) → 1. (Leading-order count, not proved: the number
+of l whose sup-odds exceed 1 is ≈ p^{1−t₀²}, t₀ = √((1+r)(1 + 1/(2β))) − r, so Λ₂(1) itself grows like a small power
+of n; for r = 0.8, β = 0.9 the exponent is ≈ 0.24·0.9.)
 
 *Proof.* Residuals of nulls on S₀ are the nulls themselves (orthogonality), so ϱ_{lm} = r for all pairs and
 Z_l := Z_{S₀,l} is an equicorrelated Gaussian vector: Z_l = √r ξ + √(1−r) e_l with ξ, e_l iid N(0,1). For W = S₀+m,
@@ -285,7 +288,8 @@ l* = argmax_l e_l; w.p. → 1, e_{l*} ≥ √(2 log p) − log log p/√(2 log p
 (Z_{l*} − rZ_{m*})²/(1−r²) ≥ (1+r)[2 log p − 2 log log p − O(1)] − O_P(√log p). The matching lower bound of (C3) gives
 odds_{l*}(S₀+m*) ≥ (2p)⁻¹(n+1)^{−1/2}e^{−κ_n−ϑ′_n}e^{Z²/2}, i.e. ≥ c p^{r}(log p)^{−(1+r)}n^{−1/2}e^{−O_P(√log p)}. Since
 Λ₂(1) ≥ o_{l*}(S₀+m*), and odds → ∞ forces o → 1, Λ₂(1) does not tend to 0; the same pair (l*, m*) gives
-o_{l*}(S₀+m*+l*) → 1, i.e. ε_del(2) → 1. With rβ > ½ the odds diverge polynomially. ∎
+o_{l*}(S₀+m*+l*) → 1, i.e. ε_del(2) → 1. With rβ > ½ the odds diverge polynomially. (Each o ≤ 1, so the claim is
+Λ₂(1) ≥ 1 − o_P(1), not divergence of Λ₂ from this single term.) ∎
 
 So NL0(a) (a ≥ 1) and UDEL(a) (a ≥ 2) are genuine design conditions; PG is a sufficient one. With p > n allowed
 (random designs, A > 1) the same computation gives failure as soon as r > 1/(2A) (leading order). **Caveat.** This

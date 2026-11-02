@@ -8,13 +8,13 @@ Designs: s0 = 2 truths (theta = 1, 1) independent of the nulls; p-2 nulls either
   EQ : equicorrelated, r = 0.8 (every pair is a partner: PG fails; SE holds with phi0^2 = 0.2)
   BLK: independent groups of 5, within-group r = 0.8 (partner degree D = 4: PG holds)
 Sequence p = n^0.9 (so p <= n-2, A = 1).  Prediction (PROOF.md §3): EQ Lam1 ~ p^r n^{-1/2} (grows like n^{0.22}),
-BLK Lam1 = O(sqrt(log n / n)).  10 replicates per n, fixed seeds.  Output: results/nl0_equicorr.txt
+BLK Lam1 = O(sqrt(log n / n)).  6 replicates per n (3 at p = 1000), fixed seeds.  Output: results/nl0_equicorr.txt
 """
 import numpy as np
 from bvs_score import Data
 
 R = 0.8
-REPS = 10
+REPS = 6
 
 
 def design(p, kind):
@@ -62,7 +62,8 @@ if __name__ == "__main__":
         L = int(np.ceil(np.log2(n + 1)))
         for kind in ["EQ", "BLK"]:
             Sg, th = design(p, kind)
-            res = np.array([stats(Data(Sg, th, n, np.random.default_rng(1000 * p + r + (0 if kind == "EQ" else 7)))) for r in range(REPS)])
+            reps = REPS if p <= 500 else 3
+            res = np.array([stats(Data(Sg, th, n, np.random.default_rng(1000 * p + r + (0 if kind == "EQ" else 7)))) for r in range(reps)])
             med = np.median(res, axis=0)
             lines.append(f"{kind} | {p} | {n} | {med[0]:.4f} | {med[1]:.4f} | {med[2]:.4f} | {(L + 4) * med[1]:.3f}")
             print(lines[-1], flush=True)
