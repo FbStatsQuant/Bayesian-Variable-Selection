@@ -92,4 +92,3 @@ The `O(N^(-3/2))` slack and bounded limiting a_t conclusions hold for fixed fini
 ## Review boundary
 
 No fresh validation of stored numerical outputs, no approval of F-MASKPIP N-b/N-c or Theorem R, no review of O-PW2 Theorem C beyond reading it for context, and no theorem-status upgrade is made here. In particular the source campaigns' historical laptop computations are not reproduced or treated as new remote validation.
-

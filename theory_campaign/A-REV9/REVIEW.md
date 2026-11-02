@@ -135,5 +135,3 @@ W7-SEC T05/T33/T32(i): GAP meaning review incomplete, not a discovered counterex
 - O-WSTAB W(a-f) and W prime under H-ORTH and ideal-grid scope only.
 
 No branch status, locked source, method, or registry was edited. All writes are under theory_campaign/A-REV9. No empirical table or chart is presented as freshly validated data.
-
-

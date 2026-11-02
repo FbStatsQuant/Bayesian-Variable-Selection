@@ -1,4 +1,4 @@
-# Independent analytic check: DILUTE, STAGES, WSTAB
+﻿# Independent analytic check: DILUTE, STAGES, WSTAB
 
 Review only; no campaign status is changed. No numerical experiment, simulation, benchmark, or computational validation was run. Sources were read with `git show` at the following immutable branch heads:
 
@@ -50,5 +50,3 @@ Under the expressly restricted H-ORTH (`p log p=o(n)`, fixed nonzero truths, bou
 - W-prime obtains brackets near `G_n` only when they lie in `[0,1]`, where W(b),(c) apply; otherwise the lower bound `g_minus>=1` supplies one step. Since `G_n>=1/(2r)>1/2`, the stated ideal count at most two follows. Exact transition assertions require strict `2Ar<1` or `>1`; no equality conclusion follows. The statement's random delta can be chosen nonnegative to contain both one-sided error terms.
 
 I found no fatal algebraic defect in these restricted W(a)-(f)/W-prime arguments. This is an analytic review, not a reproduction of their saved outputs and not a certification of general BO, `p` comparable to n, the actual hybrid particle system, or the empirical/restricted grid. Those extensions remain explicit hypotheses or open obligations. The theorem lists W(g) out of alphabetical order; I inspected its integral construction, but did not independently audit every numerical prefactor.
-
-
