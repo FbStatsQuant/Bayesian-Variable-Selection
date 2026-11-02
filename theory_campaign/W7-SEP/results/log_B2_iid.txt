@@ -1,0 +1,10 @@
+B2 iid 100 0 log10pi0S0=-3.18 piS0=0.589 LS0=True basin=1.0000 fracR=0.9270 fracAll=0.5981 hitQf=1
+B2 iid 100 1 log10pi0S0=-4.16 piS0=0.606 LS0=True basin=1.0000 fracR=0.9141 fracAll=0.5754 hitQf=1
+B2 iid 100 2 log10pi0S0=-4.43 piS0=0.612 LS0=True basin=1.0000 fracR=0.9069 fracAll=0.5664 hitQf=0.992
+B2 iid 100 3 log10pi0S0=-3.50 piS0=0.685 LS0=True basin=1.0000 fracR=0.9270 fracAll=0.5981 hitQf=1
+B2 iid 100 4 log10pi0S0=-4.13 piS0=0.742 LS0=True basin=1.0000 fracR=0.9267 fracAll=0.5971 hitQf=1
+B2 iid 100 5 log10pi0S0=-2.91 piS0=0.484 LS0=True basin=1.0000 fracR=0.8398 fracAll=0.5442 hitQf=1
+B2 iid 400 0 log10pi0S0=-4.53 piS0=0.753 LS0=True basin=1.0000 fracR=0.9968 fracAll=0.8949 hitQf=0.989
+B2 iid 400 1 log10pi0S0=-4.47 piS0=0.802 LS0=True basin=1.0000 fracR=0.9968 fracAll=0.8949 hitQf=0.994
+B2 iid 400 2 log10pi0S0=-4.53 piS0=0.803 LS0=True basin=1.0000 fracR=0.9968 fracAll=0.8949 hitQf=0.988
+B2 iid 400 3 log10pi0S0=-4.25 piS0=0.771 LS0=True basin=1.0000 fracR=0.9968 fracAll=0.8949 hitQf=1

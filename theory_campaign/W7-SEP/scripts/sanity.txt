@@ -1,0 +1,6 @@
+gram: max |DFS - dense| log m over 300 random masks = 5.68e-13
+gram: successor map mismatches over 300 random centres = 0
+gram: sum pi0 = 1.000000000000, sum pi = 1.000000000000
+iid: max |DFS - dense| log m over 300 random masks = 6.82e-13
+iid: successor map mismatches over 300 random centres = 0
+iid: sum pi0 = 1.000000000000, sum pi = 1.000000000000
