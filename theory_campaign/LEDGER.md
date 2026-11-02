@@ -91,3 +91,12 @@ Owls copies cancelled. Each thread resumes from its pushed theory/<ID> branch.
 | S-REGISTRY | Sonnet high (CW) | mcp:launch:06e271c4… |
 Stays on Owls: O-LS0 (1-core systemd job; data in ~/ls0_work). Owls guard now runs as the systemd user unit owls-guard (Restart=always).
 Draft track done: F-DRAFT @ 4de6e4c, A-DRAFT @ dbf47f7. S-PAPER @ 556be30. A-REV1 @ 26815e8, A-REV2 @ 09dc230 (repairs in W6-FIXREV1/2, cloud).
+
+### 19:20 UTC: final CP window push on the laptop (~75 min to reset, ~20% CP)
+| ID | Model | Task | Laptop thread |
+|---|---|---|---|
+| O-PW2 | Opus high (CP) | PW2 / relative-variance bound for Ẑ (two-sided evidence control) | mcp:launch:a36022e6… |
+| O-MIX | Opus high (CP) | LS0 vs mixture-of-block-starts vs common σ²: which fix proves T38(b) | mcp:launch:19eacc2b… |
+| F-MASKPIP | Fable high (CP) | what Ẑ / PIPs mean in the masked regime | mcp:launch:96085453… |
+| A-REV3 | Astra high (Codex) | cross-family review: W3-PXN, W4-SHARE, Prop M | mcp:launch:2b9ff443… |
+| A-REV4 | Astra high (Codex) | cross-family review: W2-T26, W2-BOOK/Lemma RO, F-DRAFT, A-DRAFT §2 | mcp:launch:787f113a… |
