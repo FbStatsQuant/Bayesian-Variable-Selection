@@ -1,0 +1,1 @@
+argmin c = 1.6837, c_ML = 3.83114 ; f(1.684) = 3.83114 ; series vs closed form at 1/1.684: 1.332e-15
