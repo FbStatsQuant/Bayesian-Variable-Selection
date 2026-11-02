@@ -296,6 +296,13 @@ So NL0(a) (a ≥ 1) and UDEL(a) (a ≥ 2) are genuine design conditions; PG is a
 falsifies the *premise* (the sum-of-sups bad rate); it does not show that repair fails on this design — the actual
 per-round bad frequency is an average over visited states, not a sup.
 
+**How far away the asymptotics are.** The single-pair odds are ≈ p^{r}(log p)^{−(1+r)}/√n; with r = 0.8, p = n^{0.9}
+this is n^{0.22}/(0.9 ln n)^{1.8}, which exceeds 1 only for n ≳ 10¹¹. So at accessible n, ε_del(2) is *not* close to 1
+(numerics: 0.3–0.8). The failure that *is* visible is in the **sum**: by a Laplace computation (leading order, not
+proved), E Σ_l min{1, sup_m odds} ≍ p^{r}n^{−1/2}·(log p)^{−O(1)} with no (log p)^{1+r} loss (the integrand
+e^{−e²/2 + (e+rh)²/(2(1+r))} is maximised at e = h with curvature r/(1+r)), so Λ₂(1) does not decay, while under PG
+it decays like √(log n/n).
+
 **Numerics** (`scripts/nl0_equicorr.py`, `results/nl0_equicorr.txt`): see REPORT §4.
 
 ---------------------------------------------------------------------------------------------------------
