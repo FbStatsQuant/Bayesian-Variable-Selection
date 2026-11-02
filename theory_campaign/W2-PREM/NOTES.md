@@ -17,3 +17,19 @@ They are different objects. This run treats both: IND-T (trajectories) and IND-M
 4. Phase-1 premises: BTP replaced by pointwise addability (new Prop B1'); TS; TL; look-alike family defect.
 5. IND-M via start concentration on a reference S0-degree (S°).
 6. LH family (W1-EXP Thm 5): discharge everything that can be discharged; numerics at p = 20.
+
+## Log
+- IND-T: engine uses one xoshiro stream per island, particles consume sequentially at state-dependent rates.
+  Stopping-time lemma => independence under EX-S. Last stage round (phi_T = 1) is after the last resampling: H' = L+5.
+- Lemma U = EXP' Lemmas 1.1-1.4 with the block restriction removed (they never used it). Numerics max|R| ~ 0.8.
+- NL0 counterexample: equicorrelated nulls. Asymptotics far away for the max (log factors; n ~ 1e11), but the SUM
+  Lambda_2(1) visibly does not decay (3.8-7.7) while block nulls decay. Corrected my first claim (sum of probabilities,
+  each <= 1).
+- B1': pointwise addability via uniform argmin of arrival times; BTP dropped. PA needs only SE + BM-inf.
+- [B] family defect: neighbour-graph A includes group-mates of the PRESENT partner hub (symmetric union), useless;
+  junk-for-useless-look-alike swaps exit with O(1) prob. Fixed with monotone look-alike map (Theorem B#).
+- LH: TS, ZJL, CS, GS proved from the population algebra (xi = part of x_b orthogonal to x_a; xi ⊥ C_a). FS
+  substitutes are cross-pair (added masked hub <-> other pair's hub / look-alikes), D' = 4 at config B; neighbour gap
+  0.168; ULR 0.0137 (numerical only).
+- IND-M: reference bound beta_I <= (1-pi0(S°)) + 1{S° bad} pi(S°)/(pi(W)pi0(S°)); bad iff W meets M (x ⊇ S°).
+  Open: superset starts.
