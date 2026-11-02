@@ -123,3 +123,8 @@ LS0 changes the reported HPM in 0 / 2,394 completed fits; exact recovery unchang
 
 ### 20:35 UTC: CREDITS EXHAUSTED — no more cloud sessions
 Felipe's reading: $21 of $250 left; weekly plan 84% used (resets 21:00 UTC). Stop rule reached; W8-SYNTH (final synthesis) is the last credit session. From now on, work runs on subscriptions (balance CW/CP) and the launcher `launch_cloud.sh` must not be used.
+
+### 20:37 UTC: ALL AGENTS DONE
+W8-SYNTH @ origin/theory/W8-SYNTH (SYNTHESIS.md, BRIEF.md). NOTE: its "O-LS0 has not landed" is stale: O-LS0 landed 20:24 UTC (theory/O-LS0 @ 02348e2) and PASSED (0/2,394 HPM changes).
+L-LEAN @ origin/theory/L-LEAN: T21 (C1), T07, T11(iii), T37(i)/Theorem A sorry-free (101 declarations, 0 sorry); T12(i.a) partial; fidelity GREEN (Fable + Astra round 2).
+Campaign complete. Next steps: SYNTHESIS §8 (XF review of the no-LS0 LH routes; general LH-lock proof; Astra re-review of the Claude repairs).
