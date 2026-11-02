@@ -302,8 +302,29 @@ compete with the scoring Gibbs label.
 vacuous at this size for a single particle; see Headline 5. The cause is the sup over a family together with
 O(1) superset posterior mass.
 
-**Scaling** (`results/scaling_reps.json`, 10 design seeds, c = 0.5): see the table appended below by the
-script summary.
+**Scaling** (`results/scaling_reps.json`, 10 design seeds, c = 0.5, p = 20, B = 4).
+
+| design | n | L+4 | median η₂(a=1) | mean η₂(a=1) | median ε_del(1) | median c₂(1) | median η₂(2) | median c₂(2) | median 1−π(S₀) | (L+4)·median η₂(1) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| S1 c=0.5 | 200 | 12 | 0.596 | 0.725 | 0.113 | 0.309 | 0.759 | 0.247 | 0.317 | 7.15 |
+| S1 c=0.5 | 800 | 14 | 0.213 | 0.312 | 0.031 | 0.421 | 0.264 | 0.408 | 0.146 | 2.99 |
+| S1 c=0.5 | 3200 | 16 | 0.145 | 0.180 | 0.033 | 0.423 | 0.180 | 0.412 | 0.103 | 2.33 |
+| S1 c=0.5 | 12800 | 18 | 0.063 | 0.082 | 0.010 | 0.472 | 0.076 | 0.470 | 0.048 | 1.13 |
+| S4 c=0.5 | 200 | 12 | 1.344 | 1.735 | 0.090 | 0.410 | 1.992 | 0.193 | 0.339 | 16.13 |
+| S4 c=0.5 | 800 | 14 | 0.288 | 0.403 | 0.039 | 0.461 | 0.381 | 0.420 | 0.161 | 4.04 |
+| S4 c=0.5 | 3200 | 16 | 0.408 | 0.376 | 0.060 | 0.440 | 0.556 | 0.385 | 0.138 | 6.53 |
+| S4 c=0.5 | 12800 | 18 | 0.096 | 0.165 | 0.009 | 0.491 | 0.121 | 0.475 | 0.041 | 1.72 |
+| S5 c=0.5 | 200 | 12 | 0.821 | 0.960 | 0.059 | 0.441 | 1.183 | 0.258 | 0.295 | 9.85 |
+| S5 c=0.5 | 800 | 14 | 0.293 | 0.390 | 0.041 | 0.459 | 0.401 | 0.435 | 0.170 | 4.10 |
+| S5 c=0.5 | 3200 | 16 | 0.381 | 0.311 | 0.063 | 0.437 | 0.478 | 0.332 | 0.147 | 6.10 |
+| S5 c=0.5 | 12800 | 18 | 0.100 | 0.173 | 0.015 | 0.485 | 0.131 | 0.470 | 0.050 | 1.79 |
+
+Reading the table:
+- c₂ rises towards 1/2. That is the slot-hiding term H_a ≈ ½ with ε_del → 0, well above the floor 1/(B+3).
+- η₂ decays, but slowly and with heavy-tailed noise across seeds; it is not monotone at n = 3200 in S4/S5.
+- (L+4)·η₂ is still ≈ 1.1–1.8 at n = 12800. So the single-particle Theorem-B bound is vacuous at every
+  size computed here, consistent with the √(log p/n)·log n rate.
+- 1 − π(S₀) falls from about 0.3 to 0.05.
 
 **CE1** (`results/counterexample_H24.json`): the worst boundary state of 𝓡_d (d = 1, 2) has a one-round exit
 probability (20000 reps) of:
