@@ -159,3 +159,13 @@ Held for 2026-11-03 (Console daily rate limits: Fable 100K / Opus 400K output to
 
 ### 21:55 UTC: LH-LOCK failed (no output)
 LH-LOCK (Fable, CW) failed on a 64K-output-token API error before its first commit. NOT relaunched: its goal (general LH locking) was refuted by A-REV7 ("General LH locking is false; do not remove those hypotheses"); the conditional fixed-p implication is VERIFIED there. Successor route: API-VSTAB (Claude check of A-REV7's Astra-authored STAB-LH certificate). Lesson for future briefs: tell agents to write long proofs in several files/commits, never one giant response.
+
+### 23:25 UTC: API wave results (all 9 finished; measured cost ≈ $31 for 7 runs with a cost line + 2 unmeasured)
+- API-PXNGAP (Fable, $11.04): Thm 5(b1) with LS0 on LH-iid for every p ≤ n^A incl. p >> n, every premise discharged; answers each A-REV3/A-REV6 objection. PROVED (candidate) — needs cross-family review.
+- API-N200 (Fable, $6.06): Theorem N200 (every n), posterior-miss term Π(X); predicted vs observed wrong 558 vs 571 / 2,400; RMS z 1.08 over 24 cells. Discovery term measured, not proved.
+- API-VSTAB (Opus, $2.23): Astra's STAB certificate VERIFIED by Claude → no-LS0 masked theorem on a growing-p exact-Gram LH subfamily now cross-verified both ways.
+- API-MASKZPIP (Opus, $5.12): evidence lower tail set by the crossing temperature; Ẑ underestimates by the log-odds overshoot of a late switch.
+- API-T26BUD: Theorem G (stage count), one-stage regime ⇒ T26 with no run premise.
+- API-POS (Opus, $2.77): IMPORTANT — on LH the masking is a property of the START π₀, not the posterior; S₀ is the unique local mode; the YWJ random-walk MH chain hits S₀ from the empty model in ~70–140 iterations. Rapid-mixing theorems (YWJ, ZYVR) apply to LH. Novelty implication for Phase 2.
+- API-FAVIID: W5-FAVIID was already complete; audit found three claims hold only at the cell median.
+- API-RESID, API-AUDIT: computation finished but no report → resume runs launched ($6 cap each).
