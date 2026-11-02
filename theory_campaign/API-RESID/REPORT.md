@@ -14,18 +14,22 @@ start law π₀ from the production setup (blocks + v3 tables) of the same 2,400
 - **Residualised (backfit) tables, 3 sweeps: the O-DILUTE pilot replicates on the real fits.** Median log₁₀π₀(S₀) goes
   from −15.65 (v3) to −1.07. 1,888/2,400 fits are favourable (O-DILUTE criterion π₀(S₀) ≥ 10⁻⁴), against O-DILUTE's
   378/480 on regenerated data (78.7% vs 78.8%). The start mode equals S₀ in 1,245/2,400 fits, and there is no flooding.
-  It is weak in S5 (1–44 favourable per 100) and in S4 at c = 0.5 (74 and 47).
+  At 3 sweeps it is weak in S5 (1–44 favourable per 100) and in S4 at c = 0.5 (74 and 47).
+- **3 sweeps is not the backfit fixed point, and the fixed point is better (§3.4; an addition to the task, also free and
+  post hoc).** Iterated until the start mode repeats (at most 10 sweeps), the mode settles in 2,310/2,400 fits, but in
+  only 694 by sweep 3. The fixed-point start is favourable in 2,203/2,400, with mode = S₀ in 1,672 and median π₀(R₂)
+  0.77. S5 at c = 1 rises to 92–94 favourable per 100, and its π₀(R₂) recovers to 0.89–0.90. The weak spot that remains
+  is **S5 at c = 0.5**: 47 and 19 favourable, with the mode unsettled after 10 sweeps in 32 and 44 of 100 fits.
 - **But a start change cannot move the study's headline accuracy.** In the study, 1,829 fits recovered S₀ exactly, 565
   were posterior misses (S₀ was scored and lost on the posterior, so no start or search change can report S₀ there), and
   6 stopped on a resource limit, all in S5. The most any start change can add to HPM = S₀ is those 6 fits (0.25%).
-  Backfit puts its start mode on S₀ in 2 of the 6.
+  The backfit start mode is S₀ in 2 of the 6 at 3 sweeps and in 4 of the 6 at the fixed point.
 - **Is it worth an investment-rule pilot?** Only if what Felipe wants is (a) a start that is favourable at the study size
-  (for the theorem side: T22(iii)/T38 regime claims), or (b) cheaper or more stable SMC runs. It is **not** worth a pilot
-  for the reported recovery numbers. Step 0 caps that gain at 6/2,400, and the change can also cost: in principle it can
-  turn an exact recovery into a posterior-mode correction (the same asymmetry S-ELS found for LS0). Two caveats should be
-  resolved free, post hoc, before any pilot:
-  - 3 sweeps is not shown to be a fixed point (§3.4).
-  - Backfit lowers π₀(R₂) sharply in S5 (§3.3).
+  (for the theorem side: T22(iii)/T38 regime claims), or (b) cheaper or more stable SMC runs, including the S5
+  resource-limit stops. It is **not** worth a pilot for the reported recovery numbers. Step 0 caps that gain at 6/2,400,
+  and the change can also cost: in principle it can turn an exact recovery into a posterior-mode correction (the same
+  asymmetry S-ELS found for LS0). Only SMC can measure that. If a pilot is run, it should use the iterate-to-fixed-point
+  sweep rule with a cap, not 3 fixed sweeps (§5).
 - **Status, unchanged:** residualised tables remain an **unproven candidate**. No theorem covers them, and T22(iii) would
   need restating. This run adds the real-fit start-law evidence only.
 
@@ -145,25 +149,82 @@ Each cell has 100 fits; entries are c = 0.5 / c = 1.
   in 0–23. It is also the only scenario where the backfit mode carries ≥ 10 extras (6–19 per 100). This matches O-DILUTE §9
   ("weak in S5 … 10^{−4.6} to 10^{−19}").
 
-### 3.3 What backfit costs: π₀(R₂)
+### 3.3 What backfit costs: π₀(R₂) (at 3 sweeps; see §3.4 for the fixed point)
 
-Pooled π₀(R₂) falls only modestly (0.81 → 0.71), but the loss is concentrated where it matters:
-- In S5, π₀(R₂) collapses from 0.86–0.95 under v3 to 0.0001–0.33. The backfit start in S5 is neither on S₀ nor near
-  it: the median mode has 7–12 truths plus 0–3 extras.
+At 3 sweeps, pooled π₀(R₂) falls only modestly (0.81 → 0.71), but the loss is concentrated:
+- In S5, π₀(R₂) collapses from 0.86–0.95 under v3 to 0.0001–0.33. The median mode has 7–12 truths plus 0–3 extras.
 - In S4 at p = 1,000, c = 0.5, it falls from 0.40 to 0.18.
-- In the 565 fits the study got wrong (posterior misses), median π₀(R₂) falls from 0.77 to 0.47 (`extra_tables.md` (c)).
+- In the 565 posterior misses, the median falls from 0.77 to 0.47 (`extra_tables.md` (c)).
 
-T38(b)'s eligibility premise is π₀(R_d) ≥ b_n, which O-DILUTE showed holds for v3 at the study size. For backfit tables
-it would hold in most cells but **fail visibly in S5**. So backfit is not a pure improvement of the start law. It trades
-near-truth mass for exact-truth mass, and the trade goes badly in S5.
+§3.4 shows that most of this loss comes from stopping at 3 sweeps, not from backfit itself:
+- At the fixed point, S5 at c = 1 is at 0.89–0.90 (above v3's 0.86).
+- S5 at c = 0.5 is at 0.75–0.82.
+- S4 at c = 0.5 is at 0.45–0.48 (above v3's 0.28–0.40).
+- Pooled π₀(R₂) is 0.77.
+- The cost that remains is in the posterior misses: median 0.77 (v3) → 0.55 at the last sweep.
 
-### 3.4 Is 3 sweeps a fixed point?
+T38(b)'s eligibility premise is π₀(R_d) ≥ b_n, which O-DILUTE showed holds for v3 at the study size. At the backfit
+fixed point it does not visibly fail in any cell. At 3 sweeps it fails in S5.
 
-*(Pending: `scripts/resid_sweeps.R`, up to 10 sweeps; filled in below when the job finishes.)*
+### 3.4 Is 3 sweeps a fixed point? No: the fixed point is better (`scripts/resid_sweeps.R`, `results/sweeps_tables.md`)
 
-From the main run alone, 3 sweeps is clearly not 1 sweep. From sweep 1 to sweep 3 the median π₀(S₀) rises by 5.9 decades,
-the mode size changes in 2,264/2,400 fits, and mode = S₀ goes from 27 to 1,245. Sweep 2 was not recorded, so the main run
-cannot say whether sweep 3 has settled.
+This is an addition to the task, made because the pilot design depends on the sweep rule. It is free and post hoc:
+2,400 fits, about 1–2 s each, no SMC.
+- **Method.** The same backfit as `resid_step0.R` (copied, not changed) is run from the v3 mode until the start mode
+  repeats, with at most 10 sweeps.
+- **"Last"** is the fixed-point start where one was reached. In the 90 fits that did not settle, it is sweep 10.
+- **Check.** Sweep 3 reproduces `resid3` of the main run exactly: max |Δ log π₀(S₀)| = 0, and the mode = S₀ flag agrees in
+  2,400/2,400.
+
+**Convergence.** The sweep at which the mode first repeats is distributed as follows:
+
+| sweep | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | not within 10 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| fits | 37 | 29 | 628 | 842 | 448 | 201 | 78 | 32 | 13 | 2 | 90 |
+
+- So 694 fits have settled by sweep 3, and 2,310 by sweep 10.
+- 57 fits showed a 2-cycle.
+- Of the 90 unsettled fits, 82 are in S5 (mostly c = 0.5), 6 in S4 and 2 in S3.
+
+**Pooled, sweep 3 → sweep 5 → last.**
+
+| quantity | sweep 3 | sweep 5 | last |
+|---|---|---|---|
+| median log₁₀π₀(S₀) | −1.07 | −0.78 | −0.75 |
+| favourable (≥ 10⁻⁴) | 1,888 | 2,142 | 2,203 |
+| mode = S₀ | 1,245 | 1,609 | 1,672 |
+| median π₀(R₂) | 0.713 | — | 0.766 |
+
+Compared fit by fit, last vs sweep 3 is up more than 1 decade in 641 fits and down more than 1 decade in 49.
+
+**Per cell, where it moves** (favourable per 100, sweep 3 → last; mode = S₀ in brackets):
+
+| cell | sweep 3 | last |
+|---|---|---|
+| p = 500 S5, c = 1 | 44 (23) | 94 (89) |
+| p = 1,000 S5, c = 1 | 30 (14) | 92 (88) |
+| p = 500 S5, c = 0.5 | 4 (0) | 47 (14) |
+| p = 1,000 S5, c = 0.5 | 1 (0) | 19 (4) |
+| p = 500 S4, c = 0.5 | 74 (9) | 87 (18) |
+| p = 1,000 S4, c = 0.5 | 47 (7) | 85 (30) |
+| p = 1,000 S1/S2/S3/S6, c = 0.5 | 70–83 | 97–98 |
+
+The c = 1 cells outside S5 hardly move: they were already at 96–100.
+
+**Against the study outcome, at the last sweep:**
+
+| study outcome | favourable | mode = S₀ | median π₀(R₂) |
+|---|---|---|---|
+| exact recovery (1,829) | 1,757 | 1,633 | 0.79 |
+| posterior miss (565) | 441 | 35 | 0.55 |
+| resource limit (6) | 5 | 4 | 0.86 |
+
+**Reading.**
+- The real-fit evidence for backfit is stronger than the 3-sweep numbers, and stronger than the O-DILUTE pilot: 2,203/2,400
+  favourable vs 378/480.
+- The sweep rule matters: "3 sweeps" leaves about 300 favourable fits on the table and creates the S5 π₀(R₂) collapse.
+- What remains genuinely hard is S5 at c = 0.5: global equicorrelation 0.3 and the weak signal. There the backfit
+  iteration often does not settle within 10 sweeps, and its start is favourable in only 19–47 of 100 fits.
 
 ## 4. What a start change can and cannot do for the study's numbers
 
