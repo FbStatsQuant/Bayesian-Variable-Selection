@@ -182,7 +182,7 @@ for exact arithmetic, and η as measured is accurate to well under 1%.
   rounding, and the given-𝓒^fp statement loses nothing.
 - **η.** |log Ẑ| ≈ 140–290 here, so η ≈ 2.6e-13 is a few ulp of log Ẑ (ulp ≈ 5.7e-14 at 250). This is about
   1e-15 *relative* in log Ẑ, and about 2.6e-13 relative in Ẑ.
-- **ε from replays alone:** 0 disagreements in 110 paths. The Clopper–Pearson 95% upper bound is 0.027 (0.0295 on the
+- **ε from replays alone:** 0 disagreements in 110 paths. The one-sided Clopper–Pearson 95% upper bound, 1 − 0.05^(1/n), is 0.027 (0.0295 on the
   100). This is weak, which is why the threshold measurement below was added.
 
 ### 6.2 Threshold logs: first-order ε (`results/thr_table.csv`, `results/eps_table.csv`)
@@ -234,3 +234,28 @@ upper bound up to O(ε²).
    `near_ties`), not a probability over uniforms. Observed: 0 such flips in 110 replays.
 4. *Size and form of the test fits.* p ≤ 40 and n = 200. ε scales with N and T, so production-size fits (larger N, T)
    should be expected to have proportionally larger ε. The bound is still many orders below any statistical error.
+
+## 7. Corrections to earlier records, and what is left open
+
+**Corrections.**
+- Task text "local_search lines 369–420": the function is `cpp/v3_engine.h:378–418`.
+- The task names `run_island_s`. The final run calls `run_island` (`cpp/v3_core.cpp:437`), a thin wrapper that calls
+  `run_island_s` (`cpp/v3_engine.h:269–272`). The pilot and diagnostics call `run_island_s` directly
+  (`cpp/v3_core.cpp:600, 638`).
+- W5's VAL-FP repair ("the exact run has the same status and 𝓒") is replaced by the contract **given 𝓒^fp** (§6).
+- SR-3 (AUDIT.md §1) is new and harmless: table and inherited models enter the stores without entering the cache.
+
+**New hazard.** `fit$log_Z` on a stopped fit returns `log_Zbar0` (§2b). The proofs are unaffected. A one-line fix is
+recommended to the core owner.
+
+**Open / not done.**
+1. The stop path *inside the final run* (`v3_run.R:111–116`) was not executed; it is verified by code reading only.
+   Forcing it needs an allocation that passes calibration but not the final run, which depends on timing.
+2. LS0 was not executed in this run. Its audit is code reading of the O-LS0 export (§3).
+3. No sweep of campaign consumers for unguarded `$log_Z` reads (§2b).
+4. ε and η were measured at p ≤ 40, n = 200, tier 0. Production-size fits were not replayed.
+
+**Reproduction.** `make_cores.sh` → `run_valfp.sh` → `run_extra.sh` → `compare_valfp.R` → `make_log_cores.sh` →
+`run_thr.sh` → `index_draw_flips.py 256` → `eps_table.R`. All scripts are in `scripts/`, and all were run through
+`owls_run -j 2` (or `-j 1`). The working directory `~/api_audit_work` is outside git. The threshold logs (0.15–0.44 GB
+per fit) were deleted after analysis.

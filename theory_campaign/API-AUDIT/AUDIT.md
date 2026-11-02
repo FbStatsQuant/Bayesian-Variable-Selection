@@ -191,3 +191,19 @@ agree exactly between the two precisions and between the guarded and guard-free 
 - VAL-FP wording (new, §8.4): the contract can be stated **given the frozen object 𝓒^fp** of the floating-point
   calibration, so the exact-arithmetic run need not reproduce the calibration. This replaces W5's repair ("the exact
   run has the same status and the same 𝓒"), which cannot hold literally for a continuous grid.
+
+## 7. Executed GUARD checks
+
+Moved to `REPORT.md` §2 and §2b; the data are in `results/guard_table.csv` and `results/run_extra.log`.
+- On 10/10 fits, the guarded fit and the guard-free run (`runtime = NULL`) are bitwise identical in 𝓒, the path,
+  `log_Z_r`, `pip_r` and `hpm_F`.
+- On 10/10 forced stops: `resource_limit`, `estimates_available = FALSE`, `hpm_incomplete = TRUE`.
+- New hazard: `fit$log_Z` on a stopped fit partially matches `log_Zbar0`.
+
+## 8. VAL-FP
+
+Moved to `REPORT.md` §6. The "§8.4 wording" cited in §6 above is REPORT.md §6, "Contract measured" (given 𝓒^fp).
+Summary:
+- η ≤ 2.6e-13 (pooled log Ẑ);
+- 0/110 path disagreements;
+- first-order ε ≤ 2.2e-6 per final run, from the threshold logs on 10 fits; resampling dominates.
