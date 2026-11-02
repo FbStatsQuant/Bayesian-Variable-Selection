@@ -336,8 +336,13 @@ Hence S_L + S_N ≤ K_g H₀(μ). Split on {μ ≥ τ₀} and on {μ ∈ [τ_{i+
 P(μ < τ) ≤ 2·C(g,2)·P_ρ(|r̂| < τ), by the union bound over the 2·C(g,2) within pairs of the two groups and Corollary 1. ∎
 
 **Exponent.** The peeling sum behaves like exp(−n min_τ [I(τ; 0) + I(τ; ρ)]): a cross pair must beat a *deviant*
-within-group correlation, so both deviations are paid. The exponent κ_C(ρ) := min_τ [I(τ;0) + I(τ;ρ)] versus
-Theorem B's I*(ρ, 0) is tabulated in `results/thmC_analytic.txt` (ratio ≈ 2). The asymptotic statement
+within-group correlation, so both deviations are paid. Let κ_C(ρ) := min_τ [I(τ;0) + I(τ;ρ)]. Then
+**κ_C(ρ) = 2 I\*(ρ, 0) exactly** (PROVED):
+- I(τ;0) + I(τ;ρ) = −log(1−τ²) − ½log(1−ρ²) + log(1−ρτ);
+- its derivative 2τ/(1−τ²) − ρ/(1−ρτ) vanishes iff ρτ² − 2τ + ρ = 0, i.e. at τ = (1−√(1−ρ²))/ρ = t\*(ρ, 0);
+- at that point I(t\*;0) = I(t\*;ρ) = I\*.
+
+So Corollary C doubles Theorem B's exponent. The table is in `results/thmC_analytic.txt`. The asymptotic statement
 "P ≤ poly(n, p)·e^{−n κ_C}" follows by taking a grid of mesh 1/n. That last step is a PROOF SKETCH, since the mesh
 bookkeeping is not written out. The finite-n numbers do not depend on it.
 

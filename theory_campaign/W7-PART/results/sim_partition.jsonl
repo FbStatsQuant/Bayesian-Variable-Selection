@@ -16,3 +16,19 @@
 {"cfg": {"n": 200, "p": 500, "g": 10, "rho": 0.7, "psi": 0.1, "kind": "global"}, "reps": 300, "B": 14, "fail": 0, "not_union": 0, "not_laminar": 0, "margin_fail": 0, "ci": [0.0, 0.01222097469429355]}
 {"cfg": {"n": 200, "p": 500, "g": 10, "rho": 0.7, "psi": 0.2, "kind": "global"}, "reps": 300, "B": 14, "fail": 0, "not_union": 0, "not_laminar": 0, "margin_fail": 0, "ci": [0.0, 0.01222097469429355]}
 {"cfg": {"n": 200, "p": 500, "g": 10, "rho": 0.7, "psi": 0.3, "kind": "global"}, "reps": 300, "B": 14, "fail": 0, "not_union": 0, "not_laminar": 0, "margin_fail": 0, "ci": [0.0, 0.01222097469429355]}
+{"cfg": {"n": 200, "p": 500, "g": 10, "rho": 0.5, "psi": 0.1, "kind": "global"}, "reps": 300, "B": 14, "fail": 0, "not_union": 0, "not_laminar": 0, "margin_fail": 299, "ci": [0.0, 0.01222097469429355]}
+{"cfg": {"n": 200, "p": 500, "g": 10, "rho": 0.5, "psi": 0.2, "kind": "global"}, "reps": 300, "B": 14, "fail": 3, "not_union": 3, "not_laminar": 3, "margin_fail": 300, "ci": [0.0020670072350923163, 0.028944511255692605]}
+{"cfg": {"n": 200, "p": 495, "g": 15, "rho": 0.7, "psi": 0.0, "kind": "indep"}, "reps": 50, "B": 14, "fail": 50, "not_union": 50, "not_laminar": 0, "margin_fail": 0, "ci": [0.9288782635358024, 1.0]}
+{"cfg": {"n": 200, "p": 496, "g": 16, "rho": 0.7, "psi": 0.0, "kind": "indep"}, "reps": 50, "B": 14, "fail": 50, "not_union": 50, "not_laminar": 0, "margin_fail": 0, "ci": [0.9288782635358024, 1.0]}
+{"cfg": {"n": 200, "p": 500, "g": 5, "rho": 0.7, "psi": 0.0, "kind": "indep"}, "reps": 200, "B": 14, "fail": 200, "not_union": 0, "not_laminar": 0, "margin_fail": 0, "ci": [0.9817246596448638, 1.0]}
+{"cfg": {"n": 200, "p": 1000, "g": 8, "rho": 0.7, "psi": 0.0, "kind": "indep"}, "reps": 500, "B": 14, "fail": 0, "not_union": 0, "not_laminar": 0, "margin_fail": 0, "ci": [0.0, 0.007350610051907784]}
+{"cfg": {"n": 200, "p": 1000, "g": 10, "rho": 0.7, "psi": 0.0, "kind": "indep"}, "reps": 2000, "B": 14, "fail": 0, "not_union": 0, "not_laminar": 0, "margin_fail": 0, "ci": [0.0, 0.0018427397934059364]}
+{"cfg": {"n": 200, "p": 1000, "g": 14, "rho": 0.7, "psi": 0.0, "kind": "indep"}, "reps": 500, "B": 14, "fail": 0, "not_union": 0, "not_laminar": 0, "margin_fail": 0, "ci": [0.0, 0.007350610051907784]}
+{"cfg": {"n": 200, "p": 1000, "g": 10, "rho": 0.3, "psi": 0.0, "kind": "indep"}, "reps": 300, "B": 14, "fail": 299, "not_union": 299, "not_laminar": 299, "margin_fail": 300, "ci": [0.9815687479519322, 0.9999156108676822]}
+{"cfg": {"n": 200, "p": 1000, "g": 10, "rho": 0.35, "psi": 0.0, "kind": "indep"}, "reps": 300, "B": 14, "fail": 117, "not_union": 117, "not_laminar": 117, "margin_fail": 300, "ci": [0.33447000750198275, 0.4477253705988862]}
+{"cfg": {"n": 200, "p": 1000, "g": 10, "rho": 0.4, "psi": 0.0, "kind": "indep"}, "reps": 300, "B": 14, "fail": 11, "not_union": 11, "not_laminar": 11, "margin_fail": 300, "ci": [0.01844346081245977, 0.0646585181962982]}
+{"cfg": {"n": 200, "p": 1000, "g": 10, "rho": 0.5, "psi": 0.0, "kind": "indep"}, "reps": 300, "B": 14, "fail": 0, "not_union": 0, "not_laminar": 0, "margin_fail": 157, "ci": [0.0, 0.01222097469429355]}
+{"cfg": {"n": 200, "p": 1000, "g": 10, "rho": 0.85, "psi": 0.0, "kind": "indep"}, "reps": 300, "B": 14, "fail": 0, "not_union": 0, "not_laminar": 0, "margin_fail": 0, "ci": [0.0, 0.01222097469429355]}
+{"cfg": {"n": 200, "p": 1000, "g": 10, "rho": 0.7, "psi": 0.5, "kind": "lh", "nlink": 1}, "reps": 2000, "B": 14, "fail": 0, "not_union": 0, "not_laminar": 0, "margin_fail": 27, "ci": [0.0, 0.0018427397934059364]}
+{"cfg": {"n": 200, "p": 1000, "g": 10, "rho": 0.7, "psi": 0.5, "kind": "lh", "nlink": 2}, "reps": 2000, "B": 14, "fail": 0, "not_union": 0, "not_laminar": 0, "margin_fail": 50, "ci": [0.0, 0.0018427397934059364]}
+{"cfg": {"n": 200, "p": 1000, "g": 10, "rho": 0.7, "psi": 0.6, "kind": "lh", "nlink": 2}, "reps": 300, "B": 14, "fail": 1, "not_union": 1, "not_laminar": 1, "margin_fail": 182, "ci": [8.438913231780044e-05, 0.018431252048067885]}
