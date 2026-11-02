@@ -7,7 +7,7 @@
 (6) BO: max |d - d_sigma|: 4.619e-14
 (6) BO: min d (should be >= 0): 0.000e+00
 (6) BO: max (d_sigma - upper bound) (should be <= 0): 0.000e+00
-(6) BO: mean-field log BF by quadrature vs exact (50 models): 0.000e+00
+(6) BO: mean-field log BF by quadrature vs exact (50 models): 6.679e-13
 (7) WS4 violations over 4096 models: 0.000e+00
 (7) WS4 worst ratio |d - d_sigma| / eta: 8.879e-01
 (8) delta_{U*-l,l} vs theta_tilde * ||res|| (relative): 1.721e-15
