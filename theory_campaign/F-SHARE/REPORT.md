@@ -40,31 +40,31 @@ The crux of F1 is trivial (resampling copies states); the content is in the choi
 
 ### 4.1 Exact checks of the closure hypotheses (`f1_exact_lh.py`, helper H1; `results/f1_exact_lh.txt`, `f1_run.log`)
 
-All 2^{p−s} supersets x ∈ W(S°) enumerated (16,384 at p = 16; 131,072 at p = 20), exact scores, 20 (LH16) / 5 (LH20) noise replicates per n, n ∈ {400, 1600, 6400, 25600}. "median \| worst" over replicates.
+All 2^{p−s} supersets x ∈ W(S°) enumerated (16,384 at p = 16; 131,072 at p = 20), exact scores, 20 (LH16) / 5 (LH20) noise replicates per n, n ∈ {400, 1600, 6400, 25600}. "median \| worst" over replicates (LH20 columns: medians of the 5-replicate run).
 
 | quantity | LH16 n=400 | n=1600 | n=6400 | n=25600 | LH20 n=400 | n=1600 | n=6400 | n=25600 |
 |---|---|---|---|---|---|---|---|---|
-| posterior keep margin min_{x∈W, j∈S°}[F(x)−F(x−j)]/n | 0.059 \| 0.049 | 0.084 \| 0.080 | 0.087 \| 0.083 | 0.085 \| 0.084 | 0.068 | 0.063 | 0.066 | 0.071 |
-| start keep margin min[log γ₀(x)−log γ₀(x−j)]/n | 0.025 \| 0.021 | 0.045 \| 0.044 | 0.048 \| 0.046 | 0.048 \| 0.047 | 0.029 | 0.029 | 0.032 | 0.034 |
+| posterior keep margin min_{x∈W, j∈S°}[F(x)−F(x−j)]/n | 0.071 \| 0.044 | 0.080 \| 0.069 | 0.084 \| 0.074 | 0.084 \| 0.082 | 0.068 | 0.063 | 0.066 | 0.071 |
+| start keep margin min[log γ₀(x)−log γ₀(x−j)]/n | 0.034 \| 0.019 | 0.044 \| 0.037 | 0.047 \| 0.042 | 0.048 \| 0.046 | 0.029 | 0.029 | 0.032 | 0.034 |
 | argmin state | S° + all 3 a-proxies (the worst PK configuration) | same | same | same | same | S°+{9,10,11} | same | same |
-| hub gain min_{x,b}[F(x+b)−F(x)]/n | 0.016 \| 0.014 | 0.035 \| 0.032 | 0.039 \| 0.037 | 0.042 \| 0.041 | 0.012 | 0.021 | 0.030 | 0.034 |
+| hub gain min_{x,b}[F(x+b)−F(x)]/n | 0.023 \| 0.010 | 0.038 \| 0.031 | 0.040 \| 0.035 | 0.041 \| 0.038 | 0.012 | 0.021 | 0.030 | 0.034 |
 | #(x,b) with hub gain ≤ 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| start hub odds max g₀ (ref −log 2p − ½log(n+1)) | −2.9 (−6.5) | −3.6 (−7.2) | −4.3 (−7.8) | −4.9 (−8.5) | −2.9 (−6.7) | −3.4 (−7.4) | −4.2 (−8.1) | −5.1 (−8.8) |
-| max crossing temperature φ* over (x,b) | 0.42 \| 0.44 | 0.083 \| 0.088 | 0.023 \| 0.024 | 0.0060 \| 0.0061 | 0.47 | 0.13 | 0.029 | 0.0075 |
-| φ* at x = S° | 0.17 | 0.042 | 0.012 | 0.0032 | 0.22 | 0.061 | 0.015 | 0.0039 |
-| log₁₀ π₀(Ω∖W) | −7.0 \| −6.3 | −38.0 \| −37.8 | −142 \| −135 | −540 \| −536 | −7.8 | −26.4 | −97.5 | −391 |
-| log₁₀ π(Ω∖W) | −23 \| −20 | −111 \| −107 | −429 \| −408 | −1668 \| −1663 | −24 | −94 | −383 | −1618 |
-| log₁₀ max_{x∈W} η(x) (one-round Gibbs exit bound, Lemma 1.2) | −4.4 \| −3.7 | −31 \| −31 | −134 \| −127 | −531 \| −527 | −5.0 | −20 | −90 | −382 |
+| start hub odds max g₀, median (ref −log 2p − ½log(n+1)) | −2.9 (−6.5) | −3.6 (−7.2) | −4.3 (−7.8) | −5.0 (−8.5) | −2.9 (−6.7) | −3.4 (−7.4) | −4.2 (−8.1) | −5.1 (−8.8) |
+| max crossing temperature φ* over (x,b) | 0.33 \| 0.51 | 0.079 \| 0.091 | 0.022 \| 0.024 | 0.0062 \| 0.0063 | 0.47 | 0.13 | 0.029 | 0.0075 |
+| φ* at x = S° (median \| worst) | 0.17 \| 0.26 | 0.043 \| 0.050 | 0.012 \| 0.013 | 0.0033 \| 0.0034 | 0.22 | 0.061 | 0.015 | 0.0039 |
+| log₁₀ π₀(Ω∖W) | −9.0 \| −6.3 | −37 \| −32 | −139 \| −125 | −538 \| −519 | −7.8 | −26.4 | −97.5 | −391 |
+| log₁₀ π(Ω∖W) | −26 \| −20 | −106 \| −94 | −415 \| −388 | −1656 \| −1625 | −24 | −94 | −383 | −1618 |
+| log₁₀ max_{x∈W} η(x) (one-round Gibbs exit bound, Lemma 1.2) | −5.8 \| −3.2 | −31 \| −26 | −131 \| −118 | −530 \| −510 | −5.0 | −20 | −90 | −382 |
 | min_φ q_φ(W) | 1.000000 | 1.000000 | 1.000000 | 1.000000 | 1.000000 | 1.000000 | 1.000000 | 1.000000 |
-| π₀(W₀), π(W₀) (basin S°∪A, no extras) | 0.92, 0.81 | 0.96, 0.93 | 0.98, 0.94 | 0.99, 0.97 | 0.89, 0.72 | 0.95, 0.90 | 0.97, 0.91 | 0.99, 0.97 |
+| π₀(W₀), π(W₀) (basin S°∪A, no extras), medians (worst π(W₀)) | 0.92, 0.84 (0.67) | 0.96, 0.92 (0.63) | 0.98, 0.96 (0.54) | 0.99, 0.98 (0.92) | 0.89, 0.72 | 0.95, 0.90 | 0.97, 0.91 | 0.99, 0.97 |
 | non-proxy extras: max_{x,l}[F(x+l)−F(x)] | −0.70 \| 3.2 | −1.7 \| 0.13 | −2.5 \| 1.8 | −2.7 \| −0.65 | — | — | — | — |
 | non-proxy extras: max d-advantage d(x+l)−d(x) | 1.4 \| 4.0 | 1.3 \| 2.8 | 1.2 \| 4.0 | 1.7 \| 3.0 | — | — | — | — |
 | non-proxy extras: log max_x Σ_l e^{F(x+l)−F(x)} | −0.36 \| 3.2 | −1.2 \| 0.85 | −2.0 \| 1.8 | −2.2 \| −0.59 | — | — | — | — |
 
 Reading.
-- **KEEP holds with Θ(n) margins at both endpoints, uniformly over all supersets**, and the worst state is the one PK(g−1) is about (all proxies of a_i present): m₁/n ≈ 0.085 (LH16), 0.07 (LH20); m₀/n ≈ 0.045, 0.03. The one-round exit bound is 10^{−31} at n = 1600 and 10^{−134} at n = 6400, so N(T_e + L + 4)η is negligible from n = 1600 on; π₀(Ω∖W) and π(Ω∖W) are e^{−Θ(n)}. This is Theorem F2(a)(b) at p = 16, 20.
+- **KEEP holds with Θ(n) margins at both endpoints, uniformly over all supersets**, and the worst state is the one PK(g−1) is about (all proxies of a_i present): m₁/n ≈ 0.08 (LH16), 0.07 (LH20); m₀/n ≈ 0.045, 0.03, worst replicates 0.044 and 0.019 at n = 400. The one-round exit bound is 10^{−26} (worst) at n = 1600 and 10^{−118} at n = 6400, so N(T_e + L + 4)η is negligible from n = 1600 on; π₀(Ω∖W) and π(Ω∖W) are e^{−Θ(n)}. This is Theorem F2(a)(b) at p = 16, 20.
 - **Hub crossing.** The hub gain is Θ(n) at *every* superset (no (x, b) with gain ≤ 0), the start-side odds are −log(2p√n) + O(1) (the +3.5 offset is the size-prior term at |x| > s), and max_x φ*(x, b) falls like log n/n: 0.44 → 0.088 → 0.024 → 0.0061 (LH16). φ_hub at S° is 0.17, 0.042, 0.012, 0.0032.
-- **Extras.** The proxies of a *missing* hub (k ∈ C_{b_i}) are posterior-favourable by Θ(n) (a₁ ≈ 0.037n in the full table); these are the basin states 𝔅_P of O-BGIBBS, not extras, and they become null-like once the hub is present. Non-proxy (null-like) extras have posterior addition odds ≤ e^{−0.7}…e^{−2.7} in the median replicate, a bounded d-advantage ≤ 4 nats (the predicted (α₁−α₀)Z²/2 ≤ log(2p√n)), and total addition odds Σ_l e^{F(x+l)−F(x)} ≤ e^{−2.2} at n = 25600, decreasing slowly, as (2p√n)^{−ε_n}·polylog predicts. In 1–2 of 20 replicates at n ≤ 6400 some null has a posterior-favourable addition at some superset (worst a₁ = 3.2, 1.8): the heavy-tail event P(max_l Z_l² > 2 log(2p√n)) ≈ 1/(2√n√(π log(2p√n))), which vanishes slowly. This is the quantitative content of PROOF §4.2.
+- **Extras.** The proxies of a *missing* hub (k ∈ C_{b_i}) are posterior-favourable by Θ(n) (a₁ ≈ 0.037n in the full table); these are the basin states 𝔅_P of O-BGIBBS, not extras, and they become null-like once the hub is present. Non-proxy (null-like) extras have posterior addition odds ≤ e^{−0.7}…e^{−2.7} in the median replicate, a bounded d-advantage ≤ 4 nats (the predicted (α₁−α₀)Z²/2 ≤ log(2p√n)), and total addition odds Σ_l e^{F(x+l)−F(x)} ≤ e^{−2.2} at n = 25600, decreasing slowly, as (2p√n)^{−ε_n}·polylog predicts. In 1–2 of 20 replicates at n ≤ 6400 some null has a posterior-favourable addition at some superset (worst a₁ = 3.2, 1.8, at states with 11–14 extras; ≤ 1.7 among states with ≤ 2 extras), and in those replicates the posterior puts up to 46 % of its mass on extra-carrying supersets (worst π(W₀) = 0.54): the heavy-tail event P(max_l Z_l² > 2 log(2p√n)) ≈ 1/(2√n√(π log(2p√n))), which vanishes slowly. This is the quantitative content of PROOF §4.2.
 
 **Swap margins (`f1b_swap_margins.py`, F-SHARE; `results/f1b_swap_margins.txt`).** Max over x ∈ W(S°), j ∈ S°, l ∉ x of the swap log-odds F(x − j + l) − F(x) (posterior) and the start analogue, split by the added label: a member of unit(j) (proxies, partner), a column of another unit, or a missing hub of another pair (the DOM case). "median | worst" over 10 (LH16) / 4 (LH20) replicates.
 
