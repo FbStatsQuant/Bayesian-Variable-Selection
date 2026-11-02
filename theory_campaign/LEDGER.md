@@ -27,3 +27,14 @@ Wave 1 billed weekly PLAN usage (routines), not credits.
 | W2-PREM Theorem B premises | session_01PQxfr1ST3w5Mbz1YDufpUz |
 | W2-T26 evidence/PIP consistency | session_01PQxfr1MVeeqhgqNtppfaVU |
 | W2-BOOK bookkeeping restatements | session_01PQxfr2ZraGSVTmp9m1RxzE |
+
+## Wave 3 (2026-11-02 17:23 UTC, `claude --cloud`, Opus 5.5, credit-billed)
+| Task | Session |
+|---|---|
+| W3-VT37R verify W1-T37R | session_01PQxfqzxWYPwNVkWrHY35WD |
+| W3-VT38E verify W1-T38E | session_01PQxfr2yPS6HtgeUMUXxxxW |
+| W3-VEXP verify W1-EXP | session_01PQxfqzbTFigWzgzVLBarjG |
+| W3-PXN p >> n joint family | session_01PQxfqzMRuTfx7CzfyBXYqN |
+| W3-PGD PGD/LD for refined T37 | session_01PQxfqzyBxybg1PmiQ8ArGV |
+
+Credit readings: $245 (16:00), $244 (17:19, after 7 s test), $239 (~17:22, right after Wave 2 launch).
