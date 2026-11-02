@@ -67,8 +67,14 @@ def main():
         a = pr.lg0 + phi * pr.d
         return a - logsumexp(a)
 
-    def log_kappa(phi_t):   # kappa_t(A) = sum_{A^c} gamma0 e^{phi_t d + (1-phi_t) dmax} / Zbar_1
-        sel = (~inA) & feas
+    x_ = pr.masks ^ s0
+    ham = np.zeros(len(x_), dtype=np.int64)
+    for j in range(pr.p):
+        ham += (x_ >> j) & 1
+    Asets = {'basin': inA, 'S0': pr.masks == s0, 'ball1': ham <= 1}
+
+    def log_kappa(phi_t, Aset=None):   # middle bound of E2(a): sum_{A^c} gamma0 e^{phi_t d + (1-phi_t) dmax} / Zbar_1
+        sel = (~(inA if Aset is None else Aset)) & feas
         return float(logsumexp(pr.lg0[sel] + phi_t * pr.d[sel] + (1 - phi_t) * dmax) - logsumexp(pr.lg1))
 
     def late_pred(phi):  # min(0, log q_phi(A^c)/q_phi(A)): late-switch prediction for grid (0, phi, 1)
@@ -135,7 +141,8 @@ def main():
                     break
             # (U) miss events: E_t := no particle of stage t-1 in A, t = 1..T
             miss = [bool(not np.any(inA[pops[t - 1]])) for t in range(1, T + 1)]
-            rows.append(dict(logW=lW, sand=sand, miss=miss, f_endT=float(np.mean(endT != s0)),
+            missA = {k: [bool(not np.any(v[pops[t - 1]])) for t in range(1, T + 1)] for k, v in Asets.items()}
+            rows.append(dict(logW=lW, sand=sand, miss=miss, missA=missA, f_endT=float(np.mean(endT != s0)),
                              frac_S0_stage=[float(np.mean(P == s0)) for P in pops],
                              err_post=float(np.abs(pip - pip_exact).max())))
             pip_sum += pip
@@ -162,6 +169,11 @@ def main():
                     sandwich_maxwidth=float(max([r['sand']['hi'] - r['sand']['lo'] for r in rows if r['sand'] and 'hi' in r['sand']], default=0.0)),
                     log_kappa=lk, P_miss=[float(np.mean([r['miss'][t] for r in rows])) for t in range(T)],
                     E_W_miss=EWmiss, U_ok=bool(all(EWmiss[t] <= np.exp(lk[t]) * 1.0 + 3 * np.sqrt(np.exp(2 * lk[t]) / reps) + 1e-300 for t in range(T))),
+                    E2={k: dict(log_kappa=[log_kappa(grid[t], v) for t in range(1, T + 1)],
+                               P_miss=[float(np.mean([r['missA'][k][t] for r in rows])) for t in range(T)],
+                               E_W_miss=[float(np.mean([np.exp(r['logW']) * r['missA'][k][t] for r in rows])) for t in range(T)],
+                               frac_W_gt_kappa_over_eta=[float(np.mean([r['missA'][k][t] and r['logW'] > log_kappa(grid[t + 1], v) + np.log(20) for r in rows])) for t in range(T)])
+                        for k, v in Asets.items()},
                     mean_f_endT=float(np.mean([r['f_endT'] for r in rows])), TV_nubar_pi=TV,
                     bias_max=float(np.abs(pip_mean - pip_exact).max()), mean_err_post=float(np.mean([r['err_post'] for r in rows])),
                     delta1=setting['delta1'])
