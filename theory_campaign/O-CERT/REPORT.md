@@ -280,4 +280,18 @@ The paper sentence: "*Each fit reports a certificate card whose claims hold simu
   That would be a method change, so it falls under the investment rule.
 
 ## 8. Confidence card
-(See end of file.)
+
+| Item | Refined statement | True? | Provable at reasonable cost? | Crux | Method change? |
+|---|---|---|---|---|---|
+| Lemma M | Q_S ↓ and D_S ↑ in S (Loewner / determinant-lemma) | high | done (PROVED, 1 page) | (b): h(c) = 1 + c xᵀ(I+cM)⁻¹x is non-decreasing | no |
+| C1 | π(S) ≤ e^{F(S)}/max(Z_𝒯, αẐ) for all S simultaneously, output level ≤ αP(𝒜) | high | done (corollary of locked T12/T31 + Lemma RO) | the bad event is {Z < αẐ}, free of S, so selection is harmless | no |
+| C1(c) | no lower bound on π(Ŝ) from unbiasedness | high | done (from locked T31(c)) | — | no |
+| C2 | two-sided band under PW2 via Cantelli | high (as an implication) | done; **useful only if PW2 is proved**, which is open | PW2 constants are not data-checkable | no |
+| C3 | exact π(Ŝ \| R) on fully scored R; local/subset/best-of-scored gaps | high | done (trivial, but it is the only exact posterior statement at n = 200) | — | no (post-hoc rescoring, about 7k + 16k scores) |
+| C4/C5 | box certificate: Ŝ = argmax over 2^U and π(Ŝ \| 2^U) ≥ ρ_U; posterior-miss certificate on {S₀ ⊆ U} | high | done; cost is empirical (§4) | tree size ~ 2^{# ambiguous variables}; P(S₀ ⊄ U) is statistical | no for post-hoc; yes if built into the engine |
+| C6 | the card's L/R/G claims hold jointly w.p. ≥ 1 − αP(𝒜) at every n, no completion conditioning | high | done (candidate), modulo W2-BOOK review of Lemma RO/GUARD | VAL-FP and SC(η_F) must be measured by replay | no |
+| "π(Ŝ) ≥ ½ certified" | — | — | **not possible** without PW2 or enumeration (C1(c)) | — | would need a variance-controlled estimator |
+
+Overall: the certificate programme gives the paper a rigorous **finite-n, per-fit** layer. It says "Ŝ is optimal on an
+explicit, large region", "Ŝ is a posterior miss, not a search miss, whenever S₀ ⊆ U", and "π(Ŝ) ≤ u". It cannot turn
+any of this into "Ŝ is probably right", and the paper should say so.
