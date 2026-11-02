@@ -122,9 +122,10 @@ All are in PROOF.md:
 The two delicate points were each checked line by line.
 - **Prop. B2 slot argument.** It applies Lemma F to the σ-dependent event {e ≺ G_l, e removes l}. This is
   legitimate because σ is 𝓕₀-measurable.
-- **Prop. B1 quantifier.** On "no bad, no progress", the missing set stays constant. So ε_add must take its
-  sup over states with the same missing set. An earlier draft of the code got this wrong; it is fixed, and
-  the numbers below use the corrected code.
+- **Prop. B1 quantifier.** On "no bad, no progress", the missing set stays constant. This needs two things:
+  every truth removal is classified bad (truth-for-truth swaps and independence jumps can keep |M| and still
+  change the missing set), and ε_add takes its sup over states with the same missing set. Both were wrong in
+  an earlier draft; both are fixed, and the numbers below use the corrected code.
 
 ## 3. Task 1: one terminal round at φ = 1, and the potential
 
@@ -362,7 +363,7 @@ probability (20000 reps) of:
 | T1 round model + potential | §0, Lemmas F/O/C/P | 0.97 | done | R1 (order independent of state) and R3 (scoring) readings | no |
 | Theorem B (restated T24) | §1 | 0.90 | done (review needed) | bookkeeping of the family closure and the bad/neutral/progress classification; Prop. B2 slot step | no |
 | Prop. U (EXIT_d resolution) | §1 | 0.93 | done | that every undo is either V-raising or slot-hiding | no |
-| Asymptotic premises (Task 3) | §4 | 0.75 overall; 0.85 for phase 2 with a ≤ 1 | 0.5 (needs uniform log-BF expansions of EXP type over finite families; IND in the masked regime is genuinely open) | IND, TL(𝒵,A), UDEL(a≥2) | no |
+| Asymptotic premises (Task 3) | §4 | 0.75 overall (conditional on the named extras); 0.85 for the automatic items (truth deletion at supersets, leakage at S₀, deletability at a = 1) | 0.5 (needs uniform log-BF expansions of EXP type over finite families; IND in the masked regime is genuinely open) | IND, TL(𝒵,A), NL0(a) including a = 1 for correlated nulls, UDEL(a≥2) | no |
 | CE1 (H24 false) | §7 | 0.9 (numerical: reproducible); asymptotic sketch 0.85 | 0.8 | o_l(Y) → 1 at look-alike boundary states | no |
 | CE2 (form needs factor v) | §7 | 0.99 | done | — | no |
 | T21 (e′) and (e-M) | §5 | 0.9 | 0.9 | (R5) conditional independence in terminal rounds | no (confirm the implementation's streams) |

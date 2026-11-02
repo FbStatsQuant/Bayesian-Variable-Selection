@@ -31,3 +31,13 @@ Simulation from 3000 raw pi0 draws (not S0), 12 terminal rounds, actual K_1:
 - First scaling runs (single seed): eta2(a=1) 0.37-0.64 (n=200) -> 0.12-0.23 (n=800..12800); heavy-tailed
   (one null with large partial Z dominates); replicate study in results/scaling_reps.json.
 - Bug fixed: eps_add quantifier must be over states with the same missing set (Prop. B1); code and PROOF.md fixed.
+
+## 2026-11-02 final stretch
+- Gap found and fixed in Prop. B1: truth-for-truth swaps / independence jumps can keep |M| but change the
+  missing set; every truth removal is now classified bad (code + PROOF.md). All tables regenerated after this.
+- Error found and fixed in the asymptotic table: superset leakage over S_a needs NL0(a) already at a = 1
+  (partial-Z inflation Z_{l|S0+l'} for correlated nulls); only leakage at S0 itself is automatic.
+- Cor. P1 (distance-one scoring): rigorous a1 >= 0.14..0.44 at n = 200 (results/distance_one.json).
+- Prop. D (drift form) added.
+- One commit ("classification precedence") lacks the attribution trailer; amend + force-push was refused
+  by the environment's safety policy, so it was left as is.
