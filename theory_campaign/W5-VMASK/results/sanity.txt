@@ -1,0 +1,5 @@
+add_scan vs direct logBF: max abs err = 1.42e-14
+pi0 convolution vs enumeration: max abs err log pi0 = 1.78e-14; mode brute [0] vs DP [0]
+T22(i) bound check at S°={0,3}: bound -14.2572 <= pi0 0.3105
+complete-linkage port vs scipy (cluster sets identical): 20/20
+exact-Gram LH (G=12,g=9,n=400,B=10): blocks == groups: True
