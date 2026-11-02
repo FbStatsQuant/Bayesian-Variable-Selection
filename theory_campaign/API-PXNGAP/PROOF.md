@@ -286,3 +286,201 @@ so log r({j}) + ½log n = −ν log(1 − κ_n r̂²) with κ_n := (n−1)²/(n(
 **P5 (eligibility of the LS0 centre).** P(S̃₀ = S°) → 1, where S̃₀ = argmax π₀ (exact max-plus convolution, deterministic
 tie rule). Hence the LS0 centre lies in 𝓡₀ ⊆ 𝓡_d and Φ(S̃₀) = c, w.p. → 1.
 *Proof.* On {π₀(S°) > ½} no other model has mass ≥ ½, so the argmax is unique and equals S°; P(π₀(S°) > ½) → 1 by P3′. ∎
+
+---------------------------------------------------------------------------------------------------------
+
+## 8. Theorem P6′ (TD′ for LS0: the production search from S° scores and certifies S₀) — PROVED
+
+Throughout, 𝔉_n := {A ⊆ [p] : |A| ≤ s₀ + 2}, |𝔉_n| ≤ (p+1)^{s₀+2} ≤ 2^{s₀+2}n^{A(s₀+2)}; J := s₀+2, D := A(s₀+2).
+
+### 8.1 Lemma U (uniform score comparison on 𝔉_n) — PROVED
+On 𝒟_n ∩ ℰ_n (Lemma E with this (J, D); ℰ_n ⊆ ℰ(𝔉_n, φ₀) by P2(a)), for all A, A′ ∈ 𝔉_n with ||A| − |A′|| ≤ 2:
+(U1) = (E4) with κ₂ := κ_E;  (U2) = (E5);
+(U3) if Λ_{A′}/n ≥ Λ_A/n + c′ for a fixed c′ > 0, then for n ≥ n₀(c′, σ², M, A, s₀)
+   F(A) − F(A′) ≥ (n/2) log(1 + c′/(2(σ² + M))) − (2A + 1) log n − 2κ_E − 2 =: m_n(c′) → +∞.
+*Proof of (U3).* By (E6), F(A) − F(A′) ≥ ν log(RSS_{A′}/RSS_A) − |Δprior| − |Δdet| − 2κ_E, with |Δprior| = |log w(|A|) − log w(|A′|)|
+≤ 2 log(2p) ≤ 2A log n + 2 (w(k+1)/w(k) = (k+1)/(2p−1−k) ∈ [1/(2p), 1]) and |Δdet| ≤ log(n+1). By (U2),
+RSS_{A′}/RSS_A ≥ (nσ² + Λ_A + c′n − C₂n^{2/3})/(nσ² + Λ_A + C₂n^{2/3}) = 1 + (c′n − 2C₂n^{2/3})/(nσ² + Λ_A + C₂n^{2/3}) ≥
+1 + c′/(2(σ² + M)) for n ≥ n₀, using Λ_A ≤ ‖μ‖² ≤ Mn. Then ν log(·) ≥ (n/2) log(1 + c′/(2(σ²+M))). ∎
+This is A-REV3's repair: the RSS error is absorbed by halving the signal margin, and the constant is explicit.
+
+### 8.2 Lemma Λ (population residuals; the uniform sample-to-population step) — PROVED
+For B ⊆ 𝒮𝒱 put λ(B) := Var(μ | X_B) (population, per row) and λ_i(B) := Var(μ_i | X_B) for B ⊆ K_i.
+(a) max_{A∈𝔉_n} |Λ_A/n − λ(A ∩ 𝒮𝒱)| → 0 in probability.
+(b) λ(B) = Σ_i λ_i(B ∩ K_i) + Σ_h (β^vis_h)² Var(x_{j_h} | X_{B∩V_h}).
+(c) With G_i := ψ_i²β_i²(1−ψ_i²) and η_i := ρ²(1−ψ_i²)/(1−ψ_i²ρ²) ∈ (0,1):
+   λ_i(∅) = λ_i({j_b}) = β_i²(1−ψ_i²); λ_i({j_a}) = G_i; λ_i({j_a, j_b}) = 0; λ_i({j_a, l}) = G_i for l ∈ C_a∖j_a;
+   λ_i({j_a, l}) = G_i(1−η_i) for l ∈ C_b∖j_b (proxy); for B ⊆ K_i with |B| ≤ 2 and j_a ∉ B: λ_i(B) ≥ λ₀β_i²(1 + ψ_i²1{j_b∉B}).
+   Visible: Var(x_{j_h} | x_l) = 1 − ρ² for l ∈ V_h∖j_h; = 0 if j_h ∈ B; = 1 if B ∩ V_h = ∅.
+*Proof.* (a) Write A = A_s ∪ A_0, A_s := A ∩ 𝒮𝒱, A_0 ⊆ null groups, |A_0| ≤ s₀+2. *Signal part:* Λ_{A_s}/(n−1) =
+θ*ᵀ[R̂ − R̂_{·A_s}R̂_{A_sA_s}⁻¹R̂_{A_s·}]θ* (restricted to 𝒮𝒱 coordinates) → λ(A_s) a.s. by the SLLN: finitely many sets A_s
+(≤ 2^{gs₀}). *Null part:* 0 ≤ Λ_{A_s} − Λ_A = ‖P_{span Π^⊥_{A_s}X_{A_0}} Π^⊥_{A_s}μ‖². The null columns X_{A_0} are independent of
+(X_{𝒮𝒱}, μ) (F5), so given X_{𝒮𝒱} the vector r := Π^⊥_{A_s}μ is fixed and span(Π^⊥_{A_s}X_{A_0}) is Haar on the Grassmannian
+of |A_0|-planes of 1^⊥ ⊖ span X_{A_s} (as in Lemma B); hence (Λ_{A_s} − Λ_A)/Λ_{A_s} ~ Beta(|A_0|/2, (n−1−|A_s|−|A_0|)/2) when
+Λ_{A_s} > 0 (and = 0 otherwise). This is a family of at most 2^{gs₀}(p+1)^{s₀+2} ≤ C n^D Beta variables with j ≤ J = s₀+2 and
+u = |A_s| ≤ s₀+2 ≤ n/4 — exactly the range of **Lemma Tr-J(c)**, which gives max ≤ τ_n = 8(D+1) log n/n w.p. → 1. So
+max_A (Λ_{A_s} − Λ_A) ≤ Mn·τ_n = O(log n) = o(n), uniformly. (This is the step A-REV3 flagged; PXN's Lemma Tr(c) did not
+cover it, Lemma Tr-J does.) (b) F5. (c) Direct Gaussian computations (PXN §9.2, verified by A-REV3): Var(μ_i) = β²(1+ψ²−2ψ²);
+Var(μ_i|x_{j_a}) = ψ²β²Var(x_{j_b}|x_{j_a}); l ∈ C_a∖j_a adds nothing by F3; for a proxy l, Cov(x_{j_b}, x_l|x_{j_a}) = ρ − ψ·ψρ
+= ρ(1−ψ²) and Var(x_l|x_{j_a}) = 1 − ψ²ρ², so Var(x_{j_b}|x_{j_a}, x_l) = (1−ψ²)(1−η_i); the lower bound is λ_min(Σ_{K_i}) ≥ λ₀
+times the squared norm of the coefficient vector (β, −ψβ) restricted to {j_a, j_b} ∖ B. ∎
+
+### 8.3 The lattice margins (D_S for non-progress neighbours; ties among progress moves allowed) — PROVED
+For S ∈ Lat(S°) ∖ {S₀} = {S° ∪ M′ : M′ ⊊ M} let I := {i : j_{b_i} ∉ S} ≠ ∅ and i* ∈ argmax_{i∈I} G_i. The **progress
+neighbours** of S are exactly the additions S + j_{b_i}, i ∈ I (S ⊆ S₀ has no extras, so no deletion or swap lowers Φ).
+Put P* := S + j_{b_{i*}}. Every other neighbour A of S (feasible flip or swap, A ∉ {S + j_{b_i} : i ∈ I}), and A = S itself,
+satisfies the **population margin**
+  λ(A ∩ 𝒮𝒱) − λ(P* ∩ 𝒮𝒱) ≥ c₂ := min{ G_min, G_min(1 − η_max), c₄, min_i β_i²(1−ψ_i²)², min_i λ₀β_i², min_h (β^vis_h)²(1−ρ²) } > 0,
+with G_min := min_i G_i, η_max := max_i η_i, c₄ := min{ min_i β_i²(1−ψ_i²)², min_i β_i²(1−ψ_i²), G_min, min_h (β^vis_h)² }.
+*Proof (case list; λ(S) = Σ_{i∈I}G_i, λ(P*) = λ(S) − G_{i*}).*
+- A = S: margin G_{i*} ≥ G_min.
+- Add a neutral l (null-group member, a-group non-hub, visible non-hub): λ unchanged (Λ(c): a-group member adds nothing
+  given j_a; visible member adds nothing given j_h; null independent). Margin G_{i*}.
+- Add a proxy l ∈ C_{b_i}∖j_{b_i}: if i ∉ I nothing changes (pair complete); if i ∈ I, λ drops by G_iη_i ≤ G_{i*}η_max.
+  Margin ≥ G_{i*}(1 − η_max) ≥ G_min(1−η_max).
+- Delete a truth k ∈ S: λ rises by β_i²(1−ψ_i²)² (k = j_{a_i}, i ∈ I), β_i²(1−ψ_i²) (k = j_{a_i}, i ∉ I), G_i (k = j_{b_i}),
+  or (β^vis_h)² (k = j_h). Margin ≥ c₄ + G_{i*} ≥ c₄.
+- Swap k → l, l in a different component from k: the k-component rises by ≥ c₄ and the l-component drops by at most
+  G_{i′} ≤ G_{i*} (the largest one-variable drop in any component, attained by a missing hub). Margin ≥ c₄ + G_{i*} − G_{i*} = c₄.
+- Swap inside one component. Visible {j_h} → {l}: residual (β^vis_h)²(1−ρ²) > 0 = before; margin ≥ (β^vis_h)²(1−ρ²).
+  Complete pair {j_a, j_b} → {j_a, l}: ≥ G_i(1−η_i) from 0; → {j_b, l}: ≥ λ₀β_i² from 0. Incomplete pair {j_a} → {l}, l ≠ j_b:
+  λ_i({l}) − G_i + G_{i*} ≥ λ₀β_i²(1+ψ_i²); {j_a} → {j_b}: β_i²(1−ψ_i²) − G_i + G_{i*} ≥ β_i²(1−ψ_i²)². Margins ≥ c₂.
+- Add j_{b_i}, i ∈ I ∖ {i*}: a progress neighbour; **excluded** from D_S (it may tie with P*; a tie does not obstruct
+  progress, see 8.4). ∎
+
+**Sample version.** On the event Ω_n := ℰ_n ∩ 𝒟_n ∩ {max_{𝔉_n}|Λ_A/n − λ(A∩𝒮𝒱)| ≤ c₂/4} (probability → 1 by P2, Lemma E,
+Lemma Λ(a)), for every S ∈ Lat(S°)∖{S₀} and every non-progress neighbour A (and A = S): Λ_A/n ≥ Λ_{P*}/n + c₂/2, so by (U3)
+  F(P*) − F(A) ≥ m_n(c₂/2) = (n/2) log(1 + c₂/(4(σ²+M))) − (2A+1) log n − 2κ_E − 2 > 0 for n ≥ n₀.              (D_S)
+All sets involved have size ≤ s₀ + 1 ∈ 𝔉_n, and sizes differ by ≤ 2. (D_S) holds simultaneously for all 2^c − 1 lattice
+states because Ω_n is a single event.
+
+**(L): S₀ is a strict local maximum.** On Ω_n ∩ 𝒵_n, where 𝒵_n := {max_{l∉S₀} Z_l² ≤ 2 log p + 2 log log n},
+Z_l := ũ_lᵀε/σ, ũ_l the unit vector of Π^⊥_{S₀}x_l (given X, iid-free but each N(0,1); P(𝒵_nᶜ) ≤ p·2e^{−(log p + log log n)}/√(2π·2 log p)
+→ 0):
+- deletions and swaps A of S₀ miss a truth, so λ(A ∩ 𝒮𝒱) ≥ c₅ := min{min_i β_i²(1−ψ_i²), G_min, min_h(β^vis_h)², G_min(1−η_max),
+  min_i λ₀β_i², min_h (β^vis_h)²(1−ρ²)} > 0 = λ(S₀) (the deletion and within-component cases above with S = S₀), hence
+  F(S₀) − F(A) ≥ m_n(c₅/2) > 0;
+- additions A = S₀ + l: μ ∈ span X_{S₀}, so RSS_{S₀} = ‖Π^⊥_{S₀}ε‖² and RSS_{S₀+l} = RSS_{S₀} − σ²Z_l². By (E6),
+  F(S₀+l) − F(S₀) = log((s₀+1)/(2p−1−s₀)) − ½log(n+1) − ν log(1 − σ²Z_l²/RSS_{S₀}) + (R_{S₀+l} − R_{S₀}). With x_l := σ²Z_l²/RSS_{S₀}
+  ≤ (2 log p + 2 log log n)/(n/2) → 0 (E3) and −log(1−x) ≤ x(1+2x) for x ≤ ¼: ν x_l(1+2x_l) ≤ (Z_l²/2)(1 + o(1)) ≤ log p + log log n + o(1).
+  So F(S₀+l) − F(S₀) ≤ log(s₀+1) − log(2p−1−s₀) + log p − ½ log(n+1) + log log n + 2κ_E + o(1) = −½ log n + log log n + O(1) → −∞,
+  uniformly in l ∉ S₀.
+So on Ω_n ∩ 𝒵_n no feasible flip or swap improves S₀: (L). The (L) part has the slow margin ½ log n − log log n − O(1); its
+failure probability is of order (s₀+1)/√(2πn t_n) (PXN §9.3 remark, W5 R4: ≈ 2.5% at (200, 750, s₀ = 3)), and it affects
+**certification only**, not scoring (8.4).
+
+### 8.4 Lemma LS (what the production search does on the lattice) — PROVED (deterministic, from M §6.10)
+The production local search (M §6.10) from a centre S_c: scan every feasible flip and swap of the centre (every scanned model
+is scored); if the best scanned score strictly exceeds F(S_c), move there (lexicographic ties) and count one move; repeat
+while moves < ℓ; after ℓ moves perform one further scan; stop at the first scan with no strict improvement
+(`local_certified`); if the last scan still improves, set `local_limit`. With LS0, S_c = S̃₀ and the centre itself is
+scored (emitted).
+
+**Lemma LS.** Suppose (D_S) holds for every S ∈ Lat(S°)∖{S₀} (progress ties allowed) and S_c = S°, Φ(S°) = c.
+(i) The search makes exactly c moves before reaching S₀, each adding a missing masked hub; its states stay in Lat(S°).
+(ii) S₀ is **scored** as soon as the c-th scan is performed, which happens iff c − 1 < ℓ or (c − 1 = ℓ, the final scan).
+    Hence S₀ ∈ 𝒮_LS0 whenever ℓ ≥ c − 1.
+(iii) If moreover (L) holds and ℓ ≥ c, the search returns S₀ with `local_certified` and without `local_limit`.
+*Proof.* (i) At S ∈ Lat(S°)∖{S₀}, (D_S) says the best progress neighbour beats S and every non-progress neighbour strictly;
+so the best scanned score exceeds F(S) and is attained only by progress neighbours; the lexicographic tie rule picks one of
+them, an addition S + j_{b_i}, which lies in Lat(S°). Φ drops by one per move, so after c moves the centre is S₀, and no
+earlier scan stops the search (each found a strict improvement). (ii) The c-th scan is the scan at the centre
+S° ∪ (M ∖ {one hub}), which contains S₀ = that centre + its last missing hub as a flip neighbour; scanned models are
+scored. The scan at move count k = c − 1 is performed iff k < ℓ, or k = ℓ and it is the final scan. (iii) After the c-th move
+the centre is S₀ (c ≤ ℓ moves); the next scan — inside the loop if c < ℓ, else the final scan — finds no strict improvement
+by (L); the search stops with S₀ a scanned centre with no improving neighbour. ∎
+(Lemma LS is W1-T37R Theorem A(A3), lattice version, specialised to a centre without extras; proved here directly so that
+no candidate is cited.)
+
+### 8.5 Theorem P6′
+On LH-iid, w.p. → 1 (on 𝒜_n ∩ Ω_n ∩ {S̃₀ = S°}, probability → 1 by Theorem R, Lemma E, Lemma Λ, P5): LS0's centre is S°,
+the search adds the c masked hubs in c moves and **scores S₀** (ℓ_n = ⌈log₂(n+p+1)⌉ ≥ c − 1 for n ≥ n₀); on 𝒵_n in addition,
+it **certifies S₀** (`local_certified`). The cost is 1 + (c+1)·max_{k≤K}[p + k(p−k)] ≤ 1 + (c+1)(p + s₀p) scores (W5 R7).
+*Proof.* Lemma T, P5, 8.3 and Lemma LS. ∎
+
+---------------------------------------------------------------------------------------------------------
+
+## 9. Theorem P8′ (posterior concentration under the joint law) — PROVED (given [T03])
+
+**Lemma (design de-randomisation; PXN §11, verified by A-REV3).** Let 𝒜′_n be X-measurable with P(𝒜′_n) → 1 and Z_n ≥ 0 such
+that for every deterministic sequence x_n ∈ 𝒜′_n (n ≥ n₀), Z_n = O_P(r_n) under P(·|X = x_n). Then Z_n = O_P(r_n)
+unconditionally. *Proof.* Let f_n(M) := sup_{x∈𝒜′_n}P(Z_n > Mr_n | X = x). If the conclusion fails there are ε > 0 and
+n_k ↑ ∞ with f_{n_k}(k) > ε, hence x_{n_k} ∈ 𝒜′_{n_k} with P(Z_{n_k} > k r_{n_k} | x_{n_k}) > ε/2; complete to a sequence in
+𝒜′_n. The hypothesis gives M, N with P(Z_n > Mr_n | x_n) < ε/2 for n ≥ N, contradicting the choice at n_k ≥ N, k ≥ M. So for
+every ε there are M, N with f_n(M) ≤ ε for n ≥ N, and P(Z_n > Mr_n) ≤ ε + P(𝒜′_nᶜ). ∎
+
+**Theorem P8′.** On LH-iid, δ₁ := 1 − π(S₀) = O_P(√(log n/n)) under the joint law of (X, ε); hence E₀[δ₁] → 0 and
+P(π(S₀) > ½) → 1.
+*Proof.* Take 𝒜′_n := ℰ_n (Lemma P2 with fixed constants A, M, φ₀, b₀). For any deterministic x_n ∈ ℰ_n the model given X = x_n
+is the fixed-design model G with truth θ*(x_n) and G, R, SE, BM-∞ hold with these constants; [T03] gives
+1 − π(S₀) = O_P(√(log n/n)) under P(·|x_n), uniformly in the sense required (T03's bound depends on the design only through
+the named constants). Apply the lemma. δ₁ ∈ [0,1] and → 0 in probability, so E₀δ₁ → 0 by bounded convergence. ∎
+
+---------------------------------------------------------------------------------------------------------
+
+## 10. Theorem (Thm 5(b1) with LS0 on LH-iid, p ≫ n) — PROVED given [T22i], [T22ii], [T03], [CONC], [W7-B]
+
+**Hypotheses.**
+- (F) LH-iid of §0 with (SIZE), 18 ≤ p_n ≤ n^A, p_n → ∞, s₀ = 2c + v fixed. (No p ≥ n^a lower bound is needed.)
+- (OP) The operational hypotheses of [W6]: EX-A, EX-S, CAL, SR, GUARD, and **OP-LS0** (LS0 — one production local search
+  centred at S̃₀, centre emitted, scans completed — is executed on every fit counted as output 𝒪; post hoc execution allowed;
+  a stopped LS0 counts in U). 𝒪 := {st ∈ {exact, completed}}, U := 𝒪ᶜ, 𝒮⁺ := 𝒮 ∪ 𝒮_LS0, Ŝ⁺ := best model in 𝒮⁺.
+- The v3 budgets indexed by n; in particular ℓ_n = ⌈log₂(n+p+1)⌉.
+
+**Conclusions.** As n → ∞:
+(R) P(blocks ≠ groups) ≤ (2/(√π(1−ρ))) p²√n e^{−(n−4)I*} (Theorem R), summable.
+(S) 1 − π₀(S°) = O_P(√(log n/n)), with the explicit moment bound of P3′; π₀(S₀) = p^{−c}n^{−c/2}e^{O_P(1)} → 0 (P4): masked regime.
+(E) P(S̃₀ = S°) → 1; S° ∈ 𝓡₀, Φ(S°) = c (P5).
+(T) P(LS0 scores S₀) → 1, and P(LS0 returns S₀ with local_certified) → 1 (P6′).
+(P) δ₁ = 1 − π(S₀) = O_P(√(log n/n)); E₀δ₁ → 0 (P8′).
+(C) **Composition.** For every n,
+      P(𝒪 ∩ {Ŝ⁺ ≠ S₀}) ≤ 2E₀[δ₁] + D_n,   D_n := P(𝒪̄ ∩ {S₀ ∉ 𝒮̄⁺}) ≤ P(LS0 from S̃₀ does not score S₀),
+    and D_n → 0 by (T). Hence P(𝒪 ∩ {Ŝ⁺ ≠ S₀}) → 0, i.e.
+      P(𝒪 ∩ {Ŝ⁺ = S₀}) − (1 − P(U)) → 0,   liminf_n P(𝒪, Ŝ⁺ = S₀) = 1 − limsup_n P(U).
+    If P(U) → u then P(𝒪, Ŝ⁺ = S₀) → 1 − u. Recovery with probability → 1 additionally needs P(U) → 0, not provided here.
+(K) Cost: LS0 adds ≤ 1 + (ℓ_n+1)·max_{k≤K}[p + k(p−k)] = O(p² log(n+p)) scores; on the event of (T) it uses c + 1 scans.
+
+*Proof of (C) ([W6-0], repeated).* If S₀ ∈ 𝒮⁺ and π(S₀) > ½, then F(S₀) > F(S) for every S ≠ S₀ (π(S) < ½ < π(S₀)), so the
+running-best rule over 𝒮⁺ returns Ŝ⁺ = S₀ with no tie. Hence 𝒪 ∩ {Ŝ⁺ ≠ S₀} ⊆ {δ₁ ≥ ½} ∪ (𝒪 ∩ {S₀ ∉ 𝒮⁺}), and Markov gives
+P(δ₁ ≥ ½) ≤ 2E₀δ₁. Under GUARD and OP-LS0, on 𝒪 the scored set equals its potential-run version and contains 𝒮_LS0, so
+𝒪 ∩ {S₀ ∉ 𝒮⁺} ⊆ 𝒪̄ ∩ {S₀ ∉ 𝒮̄⁺} ⊆ {LS0 from S̃₀ does not score S₀}, whose probability → 0 by P6′. (P) gives E₀δ₁ → 0. ∎
+
+**Which premise is discharged where (the task's checklist).**
+| premise of Thm 5(b1) | discharged by | probability statement |
+|---|---|---|
+| partition recovery | Theorem R (W7-B) | explicit, ≤ p^{−C} eventually |
+| uniform control of the start mass on the random design | P3′ (Lemma T + Lemma B + Tr-J + Lemma E + [T22i]) | explicit moment bound, O_P(√(log n/n)) |
+| eligibility of the start mode | P5 | P(S̃₀ = S°) ≥ P(π₀(S°) > ½) → 1 |
+| TD′ for LS0 | P6′ (Lemma U, Lemma Λ with Tr-J, 8.3, Lemma LS) | → 1; failure ⊆ 𝒜ᶜ ∪ ℰᶜ ∪ 𝒟ᶜ ∪ {Tr-J tail} ∪ {Λ-convergence} |
+| π(S₀) → 1 | P8′ ([T03] + de-randomisation) | O_P(√(log n/n)) |
+| masked regime (not favourable) | P4 | π₀(S₀) → 0 at rate p^{−c}n^{−c/2} |
+| composition | (C) | for every n |
+
+---------------------------------------------------------------------------------------------------------
+
+## 11. Obstructions, boundaries, and what is not claimed
+
+**(O1) (SIZE) is necessary for this family (COUNTEREXAMPLE, deterministic; W7 CE1/CE2).** If g > B_n, the cut splits every
+group: blocks ≠ groups surely. If 2g ≤ B_n (the study's groups of 5 with B = 14), next-fit packs ≥ 2 whole groups per bin
+(equal sizes), so blocks ≠ groups surely; moreover PXN Prop. Q (PROOF SKETCH) indicates the linked pair is co-blocked and
+masking disappears. So the masked-regime theorem on LH-iid needs 9 ≤ g ≤ 16 (asymptotically) and does **not** describe the
+study's own generator (groups of 5). The strongest statement for 2g ≤ B is W7's "blocks are unions of whole groups"; what the
+start law and the masking look like then is OPEN.
+
+**(O2) p-range.** The theorem is for p_n ≤ n^A with any fixed A: the only places where polynomial p enters are [T03] (locked
+for p ≤ n^A), [CONC] (log p = o(n)), Theorem R (p² e^{−nI*} → 0), and the union bounds of Tr-J and Lemma E (families of size
+n^{O(1)}). The discovery half (R, S, E, T) survives log p = o(n) with thresholds t_n ∝ log|family| (CONJECTURE, not written);
+the posterior half (P) does not, because T03 is not available there. No restriction p ≤ n^A with a specific A is needed.
+
+**(O3) What the (L) failure means.** When some S₀ + l beats S₀ (probability of order n^{−1/2}(log n)^{−1/2}), LS0 still
+*scores* S₀ (Lemma LS(ii)) and the posterior term 2E₀δ₁ of (C) accounts for the resulting wrong report; this is a posterior
+miss, not a discovery miss. Certification fails, recovery is governed by (P).
+
+**(O4) Not claimed.** P(U) → 0; completion of the schedule; masked-regime PIP or evidence accuracy; anything about the
+original method without LS0 (the no-tweak route P7/W5-R1 is c = 1 only and remains GAP as reviewed; Lemma Tr-J removes its
+range objection, see REPORT "Outside scope"); anything about adaptive packing of groups of 5; comparative claims.
+
+**(O5) Finite n.** The margins in (D_S) are (n/2)log(1 + c₂/(4(σ²+M))) − (2A+1)log n − O(1), negative at n = 200 for small c₂
+(e.g. ρ = 0.7, ψ = 0.5, β = 1: G = 0.1875, c₂ ≈ 0.19·(1−η) ≈ 0.07 → (n/2)log(1 + 0.07/12) ≈ 0.58 at n = 200, against (2A+1)log n ≈ 20).
+The theorem is asymptotic; the exact checks in `scripts/` show the lattice route succeeding at n ∈ {100, 200, 400} because the
+actual margins are far larger than the proven lower bound (REPORT §4).
