@@ -18,3 +18,7 @@ Locked proofs: [P1] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex,
 ## Idea to check: SE_lambda(j0) normalised is needed ONLY in lem:signal; cor:diff lower half and ongood(c) work with g0 (rho_n -> O(1) const).
 ## step 4 — scripts/check_deterministic.py: B3, C6a (crude, no eigen), B1, eq:score identity, proposed OGc'/CDl' variants,
    den' and the T02(i#) pointwise chain on B_n: all hold on 60 random small designs (iid/equi/near-collinear), exhaustive over models.
+## step 5 — scripts/proof_thresholds.py: W1 proof_n0 claim "other thresholds bind earlier" is FALSE.
+   q_n <= 1/2 ([P3] prop:sup(b), geometric series) first holds n ~ 2.12e6 (A=1.17, m#) / 2.46e6 (A=1.30);
+   e^{2 eps_n} <= 4 (W1 (C5)(b)) first holds n ~ 2.56e7 / 2.98e7.  delta_n<=1/2 (W1's binding): 1.15e5 / 1.30e5.
+   -> REPORT/disclosure "deterministic thresholds from n ~ 1e5" should read ">= 2e6 (as written)". Direction: strengthens the disclosure.
