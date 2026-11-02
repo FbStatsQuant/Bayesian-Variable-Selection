@@ -36,3 +36,9 @@ Then the HPM is a top-k set; prove (ii) both halves and (iii) with explicit fini
 Compile `v3_score.h` in a C++ harness, compare log m(S) with an mpmath reference at 60 digits on well- and
 ill-conditioned designs; derive a rigorous bound via Cholesky backward error + the structural facts λ_min(H_S) ≥ 1,
 λ_min(A_S) ≥ 1, Q_S ≥ y′y/(n+1).
+
+## 4. Outcomes (see REPORT.md)
+- T05: all of (i)–(iii) PROVED; finite-n failure bound; wording correction (additive √log n in amplitude only).
+- T33: Lemmas M, Q; Thm T33-S; Cor NF (no numerical_failure at n = 200); Prop H; Prop Z (η explicit, ε vacuous a priori).
+  Engine heuristic error_bound COUNTEREXAMPLE at n ≥ 1e5.
+- T32(i): W5 verified; exact numeric reproduction; fp pilot addendum; slip (1+4ℓ ≥ 5ℓ) in W5's corollary proof, harmless.
