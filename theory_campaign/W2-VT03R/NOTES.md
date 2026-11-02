@@ -22,3 +22,4 @@ Locked proofs: [P1] Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex,
    q_n <= 1/2 ([P3] prop:sup(b), geometric series) first holds n ~ 2.12e6 (A=1.17, m#) / 2.46e6 (A=1.30);
    e^{2 eps_n} <= 4 (W1 (C5)(b)) first holds n ~ 2.56e7 / 2.98e7.  delta_n<=1/2 (W1's binding): 1.15e5 / 1.30e5.
    -> REPORT/disclosure "deterministic thresholds from n ~ 1e5" should read ">= 2e6 (as written)". Direction: strengthens the disclosure.
+## step 6 — REPORT.md written and pushed. Done.
