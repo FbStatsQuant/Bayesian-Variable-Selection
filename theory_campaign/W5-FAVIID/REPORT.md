@@ -6,7 +6,29 @@ not reviewed and not adopted. Status words are the protocol's and are never upgr
 
 ## 1. Headline
 
-__HEADLINE__
+1. **PROVED (candidate): a 2^B-free favourable-regime start rate on iid block-diagonal designs with a fixed partition
+   (Theorem A).** On P_n = {v3 blocks = a fixed union of groups}, 1 − π₀(S₀) = O_P((s₀+1)√(log n/n)) with leading constant
+   3.83(s₀+1)√((1+ε₀)A). The constant depends on neither B nor g; B enters only through log(2^Bp) inside the rate. The
+   ingredients: (i) a new one-sided table bound (Lemma X⁺: the O(1) EXP′ remainder is nonpositive, so κ_EXP ≈ 100+ nats
+   drops out of every upper bound); (ii) exact Beta laws (Lemma B′); (iii) a Mittag-Leffler aggregation bound for
+   D = max_j(j!a_j)^{1/j} (Lemma M), which is where 2^B disappears; (iv) locked T22(i).
+2. **PROVED (candidate): the study's actual, noise-dependent packing (Theorem B).** For groups of 5 there is **no** fixed
+   limit partition (Proposition N, PROOF SKETCH; numerically two designs share almost no co-blocked group pairs). Instead,
+   blocks are unions of whole groups w.p. → 1 (Lemma P1′). Block ratios also factor across population-independent groups up
+   to e^{o(1)}, for every packing at once. Hence 1 − π₀(S₀) = O_P(√(log n/n)) **unconditionally for S3, S4 and S6**, at a
+   price of |𝒲| ≤ 106 truth contexts (15 while B = 14). This closes W3-VEXP's partition–noise GAP without a
+   leave-one-column-out lemma. S1 (Prop. B1) has rate n^{−1/2}(log n)^{(s₀+1)/2} unconditionally. CONJECTURE: the |𝒲|
+   factor is an artefact (the realised context changes the bound by ≤ 5%).
+3. **PROVED (composition): Thm 6's (P1) and Thm 5(a) on S3/S4/S6-type designs (C2, C3),** with no EXP′/VIS/NL hypothesis.
+   The conditional inputs are locked T03, T21 and W2-T26 Theorem A.
+4. **Finite n: these are asymptotic statements. In iid designs the start's deficit is dominated by null-addition mass, not
+   by dilution.** The mass is 1 − π₀(S₀) ≈ 1 − exp(−(s₀+1)M_p/(2√n)), independent of θ, B and the partition (CONJECTURE;
+   it matches exact π₀ within ±15% at n = 3,200). Exact π₀ over 1,600 designs: median π₀(S₀) > ½ from n = 1,600 (S1; S3 at
+   p = 500) or 3,200 (S3 at p = 1000, S4, S6). Discovery by iid final draws needs only n ≈ 330–440. The T22(i) certificate
+   is valid in 1,600/1,600 designs but vacuous at every n ≤ 3,200 in S3/S4/S6.
+5. **(P1) with the realised grid is far from satisfied at study-like n.** The simulated pilot plus grid gives T_n ≈ 4–5
+   (not 1). (T_n + 1)Δ_n < 1 holds in 0/56 runs at n ≤ 3,200 and in 3/16 at n = 6,400, and its median is ≈ 1.5 at 12,800.
+   With T^max = 4,000 it would need n ≈ 10¹⁰.
 
 ## 2. Statements (full text and proofs in PROOF.md)
 
@@ -139,7 +161,32 @@ Predicted thresholds (population plug-in, PROOF §11):
   π₀(S₀) at n = 400 (10⁻⁴·² to 10⁻⁹·⁴) bracket the 2·10⁻⁵ requirement and at n = 800 (≥ 10⁻²·⁹) clear it in every cell.
 
 ### 4.5 (P1) with the realised pilot/grid stage count (`results/pilot_summary.txt`)
-__PILOT__
+Simulated (`scripts/pilot_sim.py`): the v3 pilot exactly as in M §6.6 / `v3_calib.h` (H_e = ⌈512N₀/2500⌉ particles from exact
+iid π₀ draws, ESS ≥ 0.9H bisection with the 1/T_e floor, multinomial resampling, one full move round per stage: p Gibbs
+flips, uniform swap, B neighbour swaps on the v3 neighbour graph, independence proposal, random order), then one candidate-grid
+construction (`build_grid`, pilot temperatures as targets) with V = top-20p by log γ₀ and by log γ₁ among the pilot-scored
+models plus ∅. Approximations, stated: no diagnostic-island rebuild loop and no table sub-models in V (both can only add grid
+points, so T_grid is a lower bound for the method's T). δ₁ is not computable exactly at p ≥ 500; I use the product estimate
+1 − exp(−u₁), u₁ = exact sum of π(S)/π(S₀) over the one-move neighbourhood of S₀ (the lower bound u₁/(1+u₁) is also stored);
+δ̂₁ ≈ 0.99·(1 − π₀(S₀)) at n ≥ 3200, so Δ_n is driven by both endpoints equally. Scale 1 unless stated; 2 replicates per cell;
+74 runs (`results/pilot.jsonl`, `results/pilot_summary.txt`).
+
+| n | runs | T_pilot median [range] | T_grid median [range] | Δ_n median | (T_grid+1)Δ_n median | runs with (T_grid+1)Δ_n < 1 |
+|---|---|---|---|---|---|---|
+| 800 | 16 | 10.5 [5, 24] | 13 [6, 33] | 0.89 | 12.5 | 0/16 |
+| 1,600 | 20 | 6 [3, 12] | 7.5 [4, 18] | 0.53 | 4.9 | 0/20 |
+| 3,200 | 20 | 4 [2, 8] | 4.5 [3, 13] | 0.33 | 1.9 | 1/20 |
+| 6,400 | 16 | 3 [2, 6] | 5 [3, 11] | 0.26 | 1.5 | 3/16 |
+| 12,800 | 2 (S3, S4, p = 500) | 3.5 [2, 5] | 5 [3, 7] | 0.24 | 1.6 | 1/2 |
+
+Per scenario at n = 6,400 ((T_grid+1)Δ over the 4 runs): S1 1.06–2.24, S3 0.80–1.77, S4 0.91–5.85, S6 1.45–1.91. Reading:
+- **The first n at which (T_n + 1)Δ_n < 1 is ≈ 6,400 for the best cells (S3, p = 500) and, in median, beyond 12,800.** Using §10's
+  Δ_n ≈ (s₀+1)M(p,n)/(2√n) and the observed T_grid ≈ 4–5 (flat from n = 3,200 on), the median crosses 1 near
+  n ≈ ((T+1)(s₀+1)M/2)² ≈ 2–5·10⁴ (extrapolation, CONJECTURE). With T^max = 4,000 it is ≈ 10¹⁰.
+- **T_n does not fall to 1.** The realised grid settles at 3–5 stages (pilot 2–4) for n ≥ 3,200 instead of decreasing: the pilot's
+  first-stage ESS is pinned at exactly 0.90 (the bisection binds), because the off-truth particles' weights e^{d(S)−d(S₀)} are
+  heavy-tailed (§5). This supports T_n = O_P(1) with a constant ≈ 4–5, not T_n → 1 (CONJECTURE).
+- At n ≤ 1,600 the start is still (partly) masked in S4/S6 and T_grid reaches 13–33, consistent with W2-T26's masked design.
 
 ## 5. What fails and why
 
@@ -176,7 +223,7 @@ __PILOT__
 3. **HQ decision (Thm 2(iii), Thm 6):** T22(iii)'s favourable branch can be stated for S3/S4/S6-type iid designs on the
    actual partition with no EXP′/VIS/NL hypothesis and no 2^B (Theorem B + C2). This also discharges W2-T26 Theorem B's
    CONDITIONAL input for these designs. The paper must not claim finite-n relevance: n*_half ≈ 1,050–1,450 for the study's
-   s₀ = 14 designs, and (P1) with the realised grid needs n of order 10³–10⁴ (§4.5).
+   s₀ = 14 designs, and (P1) with the realised grid needs n ≈ 6,400 in the best cells and, in median, n ≈ 2–5·10⁴ (§4.5).
 4. **Felipe / method (no change proposed):** the start's dominant finite-n defect in iid designs is the null-addition mass
    (s₀+1)M(p,n)/(2√n), which no signal strength removes and which depends on neither B nor the partition. Only a change of
    the start (e.g. a sharper null-addition penalty in the tables) would move it; that is outside this run.
@@ -195,4 +242,15 @@ __PILOT__
 
 ## 8. Confidence card
 
-__CARD__
+| Target | Refined statement | P(true) | P(provable at reasonable cost) | Crux | Method change? |
+|---|---|---|---|---|---|
+| Thm 2(iii) / T22(iii), favourable, iid, fixed partition | Theorem A: 1_{P_n}(1 − π₀(S₀)) = O_P((s₀+1)√(log n/n)), constant 3.83(s₀+1)√((1+ε₀)A), no 2^B | 0.95 | done (PROVED, candidate) | Lemma X⁺ sign; Lemma M | No |
+| Thm 2(iii), actual packing, S3/S4/S6 | Theorem B: 1 − π₀(S₀) = O_P(√(log n/n)) unconditionally, constant ×\|𝒲(3)\| ≤ 106 | 0.92 | done (PROVED, candidate) | factorisation across groups (Lemma S + (G3)) | No |
+| Same, without \|𝒲\| | Conjecture B′ | 0.85 | 0.35 | decoupling the X-measurable truth context from y-dependent group statistics | No |
+| S1 | Prop. B1: O_P(n^{−1/2}(log n)^{(s₀+1)/2}); O_P(√(log n/n)) on {≤ m truths per block} | 0.95 | done; sharp rate 0.4 | same as B′ | No |
+| No fixed limit partition for g = 5 | Prop. N | 0.95 | 0.6 (packing not equivariant) | index-dependent leaf order | No |
+| Sharp first order (§10) | 1 − π₀(S₀) ≈ 1 − exp(−(s₀+1)M_p(p−s₀)/((2p−s₀−1)√n)) | 0.85 | 0.5 | index-1 stable sum of within-group dependent e^{χ²/2} | No |
+| Dilution threshold (goal 3) | n*_half ≈ max(n*_null, n*_del) (+ proxy swaps), predictor optimistic by 1.5–2.5× in n; empirical 1,600–3,200 | 0.8 (mechanism) / 0.6 (formula) | 0.4 | median-level plug-in vs E e^{−V} | No |
+| Thm 5(a) (T38(a)) on S3/S4/S6 | C3: liminf P(Ŝ = S₀) ≥ 1 − limsup P(U); discovery from n ≈ 400 | 0.95 | done (composition of locked T21, T03 + Thm B) | — | No |
+| Thm 6 (P1) | C2: (T^max+1)Δ_n = O_P(log^{5/2}n/√n) → 0, so T26(i)–(ii) hold | 0.95 | done (composition) | — | No |
+| (P1) at finite n with realised T_n | first n with (T_n+1)Δ_n < 1: ≈ 6,400 (best cells), median ≈ 2–5·10⁴ | 0.8 | numerical only | T_n = O_P(1) (≈ 4–5) is OPEN | No (a sharper start penalty on null additions would be one) |

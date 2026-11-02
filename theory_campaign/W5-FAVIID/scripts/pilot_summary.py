@@ -3,7 +3,7 @@ import json, math
 from collections import defaultdict
 import numpy as np
 
-rows = [json.loads(l) for l in open("../results/pilot.jsonl") if l.strip()]
+rows = list({(r["scen"], r["p"], r["scale"], r["n"], r["rep"]): r for r in (json.loads(l) for l in open("../results/pilot.jsonl") if l.strip())}.values())  # dedupe
 cells = defaultdict(list)
 for r in rows:
     cells[(r["scen"], r["p"], r["scale"], r["n"])].append(r)
