@@ -4,3 +4,7 @@
 4 800 0 eta_hat=0.0151 TD c=1 True 0 c=.5 False 27 71.3 179.9
 1 3200 0 eta_hat=0.1774 TD c=1 True 0 c=.5 True 0 72.0 171.3
 4 3200 0 eta_hat=0.0283 TD c=1 True 0 c=.5 True 0 69.6 179.5
+1 200 1 eta_hat=0.0761 TD c=1 True 0 c=.5 False 20 70.4 177.6
+4 200 1 eta_hat=0.0000 TD c=1 False 684 c=.5 False 4479 64.9 170.3
+1 800 1 eta_hat=0.1531 TD c=1 True 0 c=.5 True 0 70.9 179.0
+4 800 1 eta_hat=0.0186 TD c=1 True 0 c=.5 True 0 71.3 181.2
