@@ -111,7 +111,26 @@ All proofs are in `T38_PROOF.md`. Source proofs are cited by label; the repairs 
 
 ## 6a. Same-family check of the new results (this run)
 
-*Filled in below after the background referee returned.*
+A fresh subagent of the same model family checked the four new results as an adversarial referee. It did not write them.
+
+**Verdict: all four VERIFIED, with no errors.**
+- Lemma LS-score, Lemma M and Theorem b1: every step was re-derived by hand.
+- Proposition LH-LAT:
+  - the unit algebra was re-derived by hand;
+  - the brute-force population check (`scripts/ref_lhlat.py`, seed 1) covered 20 parameter cases, including ρ in 0.05–0.99, negative ψ, |ψ| up to 0.99·min ρ, and c = 2–3. In every case the minimum margin was ≥ m₀;
+  - the bound is attained in two cases, so m₀ is sharp;
+  - the formula check (`scripts/ref_lhformulas.py`, seed 7) found a largest error of 3.6e-15.
+
+**Cosmetic fixes, now applied in T38_PROOF:**
+- "feasible" added to the definition of D_S;
+- the redundant min_i R_i term dropped from m₀;
+- (M3) now reads (1 − max|ψ_i|)(1−ρ₊);
+- 1{n < n₀} and the exact-branch remark added to Theorem b1 step 4;
+- σ = σ* noted, and the constant M disambiguated from the masked set.
+
+**Observation from the referee:** the population algebra needs only |ψ| < 1. The condition |ψ| < ρ is used only for the partition and for (M1).
+
+This is still a single same-family check. Cross-family review is still required (escalation 1).
 
 ## 7. Outside scope
 

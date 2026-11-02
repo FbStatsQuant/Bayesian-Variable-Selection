@@ -110,7 +110,7 @@ Under (F), 1 − π₀(S₀) → 0 in P₀-probability, so D_n → 0 by bounded 
 
 ### 3.1 Lemma LS-score (new). Status: PROVED
 
-**Definition.** For a model S ≠ S₀, let 𝒫(S) be its progress neighbours (Φ decreases) and 𝒩(S) the other flip or swap neighbours. The event **D_S** (W1-T37R) is: max_{T∈𝒫(S)} F(T) > max{F(S), max_{T∈𝒩(S)} F(T)}.
+**Definition.** For a model S ≠ S₀, let 𝒫(S) be its *feasible* progress neighbours (Φ decreases) and 𝒩(S) its other *feasible* flip or swap neighbours. The event **D_S** (W1-T37R) is: max_{T∈𝒫(S)} F(T) > max{F(S), max_{T∈𝒩(S)} F(T)}.
 
 **Lemma LS-score.** Fix the data. Let C₀ be a centre with s₀ + |C₀ ∖ S₀| ≤ K. Suppose:
 - (i) D_S holds for every S ∈ Lat(C₀) with Φ(S) ≥ 2;
@@ -146,6 +146,8 @@ Then the production local search from C₀ scores S₀. It needs at most Φ(C₀
 There is an event E_n with P₀(E_n) → 1 on which the following holds for every n ≥ n₀ and for every pair (A, B) of models satisfying four conditions: |A|, |B| ≤ k, A ∪ S₀ has size ≤ k, λ_min(R_A) ≥ φ₀², and Δ(B) − Δ(A) ≥ m_n:
 
   F(A) − F(B) ≥ M_n √(n log n)/(4 C_R) − 2k log(2p(n+1)) − c₀,   with C_R := 2M + 4σ² and c₀ = c₀(M, σ², φ₀).   (3.1)
+
+Here σ means σ* of 00_COMMON. The constant M in this lemma is the signal bound of R-lite; it is not the masked set M of §3.4.
 
 In particular F(A) > F(B) for all such pairs simultaneously.
 
@@ -201,7 +203,7 @@ In particular F(A) > F(B) for all such pairs simultaneously.
    - Every B ∈ 𝒩(S) ∪ {S} has |B| ≤ k, and Δ(B) − Δ(A_S) ≥ m_n.
    - By Lemma M, on E_n we get F(A_S) > F(B) for all such B. Hence max_𝒫(S) F ≥ F(A_S) > max(F(S), max_𝒩(S) F), which is D_S.
 3. **Scoring.** For n large, ℓ_n = ⌈log₂(n+p+1)⌉ ≥ φ̄ − 1 and s₀ + d ≤ K. Lemma LS-score with C₀ = S° then gives S₀ ∈ 𝒮_LS0. Under OP-LS0, LS0 runs on 𝒪̄.
-4. **Bound.** D_n ≤ P₀(π₀(S°) ≤ ½) + P₀(E_nᶜ) + 1{ℓ_n < φ̄ − 1} + P₀(s₀ + d > K) → 0. Then apply §1. ∎
+4. **Bound.** D_n ≤ P₀(π₀(S°) ≤ ½) + P₀(E_nᶜ) + 1{n < n₀} + 1{ℓ_n < φ̄ − 1} + P₀(s₀ + d > K) → 0, where n₀ is Lemma M's threshold. The exact branch is covered by §1 once s₀ ≤ K. Then apply §1. ∎
 
 *Sufficient condition for (M1).* [W1-EXP Thm 6] at the reference S° (b1.6): G, R-lite, SE-blk, ZL(S°), SPREAD and VIS-lin(S°) give 1 − π₀(S°) = O_P(2^B n^{−1/2}) → 0.
 
@@ -239,7 +241,7 @@ In particular F(A) > F(B) for all such pairs simultaneously.
 
 **Proposition LH-LAT.** On LH (exact Gram), POP-LAT(S°, m₀) holds with the fixed margin
 
-  m₀ := min{ (1 − κ_max)·R_min,  min_i R_i,  min_i β_i²(1−ψ_i²)²,  min_h θ_h² } > 0,
+  m₀ := min{ (1 − κ_max)·R_min,  min_i β_i²(1−ψ_i²)²,  min_h θ_h² } > 0,
 
 where R_i = β_i²ψ_i²(1−ψ_i²), κ_i = ρ_{b_i}²(1−ψ_i²)/(1−ψ_i²ρ_{b_i}²), κ_max = max_i κ_i and R_min = min_i R_i.
 
@@ -262,7 +264,7 @@ These are all the flip and swap neighbours, since S has no extras. ∎
 *Proof.* Check the hypotheses of Theorem b1:
 - **(M1).** By [W1-EXP Thm 5(a)], 1 − π₀(S°) = O_P(2^B n^{−1/2}), which tends to 0. This uses Lemma 4.2 (blocks = groups) and Theorem 6.
 - **(M2).** Proposition LH-LAT, with m_n = m₀.
-- **(M3).** λ_min(Σ) ≥ (1−ψ₊)(1−ρ₊) [W1-EXP Lemma 4.1(a)], plus interlacing; ‖μ‖²/n ≤ θᵀΣθ.
+- **(M3).** λ_min(Σ) ≥ (1 − max_i|ψ_i|)(1−ρ₊) [W1-EXP Lemma 4.1(a)], plus interlacing; ‖μ‖²/n ≤ θᵀΣθ.
 - **(P).** By [W1-EXP Thm 5(d)], which applies locked T03 with SE from Lemma 4.1(a) and BM-∞ from the fixed coefficients.
 - **The rest.** d = 0 and φ̄ = c. ∎
 

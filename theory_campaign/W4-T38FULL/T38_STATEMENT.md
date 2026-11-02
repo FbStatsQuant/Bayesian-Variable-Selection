@@ -158,13 +158,13 @@ Status words used in this table:
 | # | Input | Source | Status | Verification |
 |---|---|---|---|---|
 | b1.1 | LS0 eligibility: π₀(x°) > ½ ⇒ S̃₀ = x°; S̃₀ is exactly computable; cost ≤ (ℓ+1)max_k[p+k(p−k)] | [W1-T38E Thm E3] | PROVED | VERIFIED (W3-VT38E) |
-| b1.2 | **Lemma LS-score**: if D_S holds on Lat(C₀) ∩ {Φ ≥ 2} and ℓ ≥ Φ(C₀) − 1, the search from C₀ scores S₀ | T38_PROOF §3.1 (new; scoring-only version of [W1-T37R Thm A(A3), lattice form]) | PROVED | new here, unreviewed |
+| b1.2 | **Lemma LS-score**: if D_S holds on Lat(C₀) ∩ {Φ ≥ 2} and ℓ ≥ Φ(C₀) − 1, the search from C₀ scores S₀ | T38_PROOF §3.1 (new; scoring-only version of [W1-T37R Thm A(A3), lattice form]) | PROVED | same-family referee: VERIFIED; not cross-family |
 | b1.3 | Theorem A (refined T37(i)): TD′_∞ / TD′_P / lattice; A5 with POS | [W1-T37R Thm A]; repair [W3-VT37R R1] | PROVED | VERIFIED (W3-VT37R, exhaustive 720 designs) |
-| b1.4 | **Lemma M**: uniform score comparison under population margins m_n ≫ √(log n/n) | T38_PROOF §3.2 (new; it reuses [W1-T38E E1(a)(b)] and the RSS-floor idea of [W1-EXP Lemma 1.4]) | PROVED | new here, unreviewed |
-| b1.5 | **Theorem b1**: (M1)–(M3) + OP-LS0 ⇒ P(S₀ ∉ 𝒮⁺) → 0 | T38_PROOF §3.3 | PROVED-UNDER (M1)–(M3) | new here, unreviewed |
+| b1.4 | **Lemma M**: uniform score comparison under population margins m_n ≫ √(log n/n) | T38_PROOF §3.2 (new; it reuses [W1-T38E E1(a)(b)] and the RSS-floor idea of [W1-EXP Lemma 1.4]) | PROVED | same-family referee: VERIFIED; not cross-family |
+| b1.5 | **Theorem b1**: (M1)–(M3) + OP-LS0 ⇒ P(S₀ ∉ 𝒮⁺) → 0 | T38_PROOF §3.3 | PROVED-UNDER (M1)–(M3) | same-family referee: VERIFIED; not cross-family |
 | b1.6 | (M1) from Thm 6 at S° | [W1-EXP Thm 6] | PROVED | VERIFIED (W3-VEXP) |
 | b1.7 | LH, exact Gram: (M1) S̃₀ = S° w.p. → 1; masking; π(S₀) → 1 | [W1-EXP Thm 5(a)(b)(d), Lemmas 4.1, 4.2] | PROVED ((d) by locked T03; limit law PROOF SKETCH) | VERIFIED (W3-VEXP); the |ψ| < ρ boundary is sharp in effect (W3-VEXP row 17) |
-| b1.8 | **Prop. LH-LAT**: POP-LAT(S°, m₀) holds on LH with an explicit m₀ > 0 | T38_PROOF §3.4 (new; population algebra from Lemma 4.1) | PROVED | new here, unreviewed; numerics `scripts/lh_ls0_check.txt` |
+| b1.8 | **Prop. LH-LAT**: POP-LAT(S°, m₀) holds on LH with an explicit m₀ > 0, which is sharp | T38_PROOF §3.4 (new; population algebra from Lemma 4.1) | PROVED | same-family referee: VERIFIED, with a brute-force population check (`scripts/ref_lhlat.txt`, `ref_lhformulas.txt`); not cross-family |
 | b1.9 | LH-iid realisation (n^a ≤ p ≤ n^A, p ≫ n allowed): partition = groups, SE family, 1 − π₀(S°) = O_P(√(log n/n)), T27 limit law, S̃₀ = S°, TD′ lattice condition at S°, π(S₀) → 1 | [W3-PXN P1–P8] (arrived during this run, commit 30011cf); the start part supersedes the [W3-VEXP R3] sketch | PROVED (W3-PXN's claim) | **single run, unverified**; not checked line by line here |
 | b1.10 | general sufficient condition for (M2): TD′_P(R_{a,d}) w.p. → 1 under PGD + LD* | [W1-T37R Thm C] with repairs [W3-VT37R R4, R5] | PROOF SKETCH | VERIFIED as a sketch after repair; PGD fails under SE + BM-∞ (COUNTEREXAMPLE C3) |
 | b1.11 | literal TD(d,0) is false for d ≥ 1 on {π(S₀) > ½} | [W1-T37R Prop 1]; [W3-VT38E Prop. V1] | PROVED (negative) | VERIFIED |
