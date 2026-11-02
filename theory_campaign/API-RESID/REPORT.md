@@ -222,7 +222,7 @@ Step 0 cannot evaluate (b).
 **If a pilot is run.** Adapting F-SIGMA §10 Step 1, the smallest informative design is:
 - paired datasets, same seeds, v3 vs backfit start, with the sweep rule fixed in advance (§3.4);
 - cells: S4 p = 500 at c = 0.5 and c = 1 (one graded, one strong), S5 p = 1,000 c = 1 (the weak cell, which also
-  contains 4 of the 6 resource-limit fits), and the 6 resource-limit fits themselves;
+  contains 3 of the 6 resource-limit fits), and the 6 resource-limit fits themselves;
 - 20 datasets per cell;
 - record HPM = S₀, *harm* (exact → wrong, paired), π₀(S₀), first-stage ESS, stage count and run time;
 - pass criterion: no paired harm beyond 1 dataset per cell, together with a measurable cost or stability gain.
@@ -234,6 +234,6 @@ Step 0 cannot evaluate (b).
 | Common σ̂² start (W8-SYNTH §4.5) | rejected on O-DILUTE/F-SIGMA evidence; "Step 0 would confirm" | rejected; **Step 0 done and confirms on the 2,400 real fits** (flooding under C-fix and oracle; no feasible plug-in favourable) |
 | F-SIGMA Thm S6 | PROVED | PROVED (unchanged; real-fit numerics consistent) |
 | Residualised / backfit tables | candidate, pilot on regenerated data only (378/480) | **candidate, unproven**; start-law evidence now on the real fits (1,888/2,400 favourable); no SMC evidence; no theorem |
-| Paper wording "the start is masked by dilution" (W8-SYNTH §1.3(ii)) | — | consistent: v3 0/2,400 favourable, median π₀(S₀) 10^{−15.65}, π₀(R₂) 0.81 (reproduced to 10⁻¹²) |
+| Paper wording "the start is masked by dilution" (W8-SYNTH n = 200 disclosure draft, (ii)) | — | consistent: v3 0/2,400 favourable, median π₀(S₀) 10^{−15.65}, π₀(R₂) 0.81 (reproduced to 10⁻¹²) |
 
 *(§3.4 to be completed.)*
