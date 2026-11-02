@@ -224,7 +224,7 @@ Steps 1–2 finish the proof. ∎
 
 **Remarks.** (1) The rate has no `sqrt(log n)`: exact zero leakage plus SPREAD keeps the exponent `a < 1/2` integrable.
 (2) In the BO benchmark with `S° = S0`, ZL(S0) is automatic; SPREAD holds whenever the true variables meet `>= 2`
-blocks; VIS-lin holds under fixed beta-min and SE-blk. So Theorem 6 also gives the favourable-regime statement
+blocks; VIS-lin holds under fixed beta-min and SE-blk. So Theorem 6 also gives, under a *fixed* beta-min `min_{S0}|theta_j| >= b_0 > 0` (which yields VIS-lin), the favourable-regime statement
 `1 - pi_0(S0) = O_P(2^B n^{-1/2})` in BO **without** the locked T22(iii) (when the truth meets >= 2 blocks).
 
 ---------------------------------------------------------------------------------------------------
