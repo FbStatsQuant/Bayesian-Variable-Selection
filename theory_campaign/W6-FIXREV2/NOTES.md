@@ -20,3 +20,11 @@ Task: apply A-REV2 (`theory/A-REV2`, REVIEW.md) to T03♯, refined T37 (Theorem 
    κ limit 0.51/c_*; T03 thresholds).
 2. CHANGELOG (item | A-REV2 verdict | fix | downstream) → REPORT.md.
 3. STATEMENTS.md: paper-ready T03♯, Theorem A (tie-aware), EXP′ (+ Theorems 3/4 scope), Lemma U (budgeted).
+
+## Log
+- Scripts written and run: core.py, t37_checks.py, t37_extra.py, lemmaU_checks.py, t03_thresholds.py (all outputs in results/).
+- All A-REV2 counterexample numbers reproduced to 10 digits; T03 thresholds match V03 R1 to the integer.
+- New: Lemma NT (ties null under full-rank unions), Prop. F (three-way failure partition), budgeted Lemma U, C3-low′.
+- Downstream finding outside A-REV2's list: W3-PXN §9.1 (U1) "≤ 1" is false (constant only).
+- Engine check: final local search is the last scoring call; `hpm_before` records F_pre (v3_core.cpp).
+- Pushed to theory/W6-FIXREV2 as instructed by HQ (the harness-designated claude/ branch was not used).

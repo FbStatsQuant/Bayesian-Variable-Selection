@@ -218,7 +218,10 @@ are now special cases of Proposition F.
 **Data reading (not a theorem).** THEORY_PRIORITIES §5 / F-REFINE report that all 565 completed wrong HPMs in the p ≫ n
 study are posterior misses (0 search misses). If that classification used F(Ŝ) ≥ F(S₀) on the final ledger, then
 category II is empty on that data and every miss is in I ∪ III. The split I vs III (whether "0/541 repairs" is forced by
-monotonicity) still needs F_pre per fit: **OPEN** (one ledger extraction).
+monotonicity) still needs F_pre per fit: **OPEN** (one ledger extraction). The engine already records it:
+`v3_core.cpp` stores `hpm_before = (led.hpmS, led.hpmF)` immediately before `E.local_search(led.hpmS, …)`, which is the
+last scoring call of a completed fit (read 2026-11-02). So the split needs only `hpm_before$F` and one extra score F(S₀)
+per failed fit.
 
 ### 2.5 Corrected prose (replaces S37's "What is weakest")
 

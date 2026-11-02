@@ -130,7 +130,9 @@ Small-p checks are component-law checks; they do not show SMC discovery, asympto
    rank argument; also whether the HPM tie rule (size, then lexicographic) interacts with any downstream use.
 2. **Prop. F's link to the data**: it is exhaustive by construction, but its use on the benchmark requires (i) that the
    final local search is the last scoring event (V37 cites `v3_core.cpp:447`; A-REV2 agrees) and (ii) the per-fit F_pre.
-   The extraction F(S₀) − F_pre per failed fit is the one missing data item (OPEN).
+   The extraction F(S₀) − F_pre per failed fit is the one missing data item (OPEN); F_pre is already in the run output
+   as `hpm_before$F` (`v3_core.cpp`, recorded just before the final local search, which I confirmed is the last scoring
+   call of a completed fit), so only F(S₀) must be scored per failed fit.
 3. **C3-low′** (new) and the budgeted Lemma U's failure-probability expression (constants only).
 
 ## 7. Outside scope
