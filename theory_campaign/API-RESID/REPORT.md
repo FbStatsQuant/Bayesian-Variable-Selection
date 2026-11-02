@@ -68,6 +68,8 @@ So the v3 row below *is* the study's start law, not an approximation of it.
 - `results/tables.md`: pooled and per-cell tables for every variant (`scripts/aggregate.py`).
 - `results/extra_tables.md`: favourable counts, the flooding check, and the cross-tab against the study outcome
   (`scripts/report_extra.py`). The study outcome comes from O-LS0's `agg_final/paired_per_fit.csv`.
+- `results/sweeps.csv`, `results/sweeps_tables.md`: backfit iterated to its fixed point, at most 10 sweeps
+  (`scripts/resid_sweeps.R`, `scripts/run_sweeps.sh`, `scripts/aggregate_sweeps.py`; §3.4). This is an addition to the task.
 
 ## 2. Common σ̂²: Step 0 result (settles W8-SYNTH §4.5 on the real fits)
 
@@ -248,11 +250,12 @@ The study outcome of each fit is taken from O-LS0 (`agg_final/paired_per_fit.csv
     identified for LS0 and that O-LS0 measured for it.
   - Step 0 cannot measure this risk. Only an SMC run can.
 - **Resource-limit fits (6, all S5).** These are the only fits where a start change could turn a failure into an exact
-  recovery. Backfit puts its mode on S₀ in 2 of them (p1000_S5_r030 c = 1, p1000_S5_r064 c = 1). In the other 4 it does
-  not (7–8 truths of 9–12). Whether those 2 runs would then finish within resources is unknown without SMC.
+  recovery. At 3 sweeps, backfit puts its mode on S₀ in 2 of them (p1000_S5_r030 c = 1, p1000_S5_r064 c = 1). At
+  the fixed point it does so in 4: all four c = 1 fits. Of the two c = 0.5 fits, p1000_S5_r064 has π₀(S₀) = 10^{−3.8}
+  and mode 10/10 truths, and p1000_S5_r044 is unsettled after 10 sweeps at 10^{−21.9}. Whether those 2 runs would then finish within resources is unknown without SMC.
 
 So **the upper bound on what any start change can add to the study's HPM = S₀ count is 6/2,400 (0.25%)**, and backfit's
-start law reaches S₀ in 2 of those 6. There are also no search misses in the study, so the start does not limit accuracy
+start law reaches S₀ in 2 (3 sweeps) or 4 (fixed point) of those 6. There are also no search misses in the study, so the start does not limit accuracy
 anywhere else. What a favourable start *can* change is:
 - (a) whether the paper may say the start is in T22(iii)'s favourable regime at the study size, which is currently false
   (0/2,400 favourable for v3);
@@ -268,21 +271,23 @@ Step 0 cannot evaluate (b).
 
 **Residualised (backfit) tables: Step 0 passes on its own terms, but the case for an investment-rule pilot is narrow.**
 - **For:**
-  - The start-law effect is large and real on the PROD-H fits themselves. It is favourable in 1,888/2,400 fits, against
-    0 for v3, and it replicates the O-DILUTE pilot exactly.
+  - The start-law effect is large and real on the PROD-H fits themselves. It is favourable in 1,888/2,400 fits at 3 sweeps and
+    2,203/2,400 at the fixed point, against 0 for v3. It replicates the O-DILUTE pilot at 3 sweeps.
   - It is the only start change seen in the campaign that attacks dilution.
 - **Against:**
   - It cannot improve the headline recovery numbers beyond 6 fits.
   - It carries a one-sided risk on the 1,829 correct fits.
-  - It fails in S5 and loses near-truth mass there.
+  - It is weak in S5 at c = 0.5: 19–47 favourable per 100, often unsettled after 10 sweeps. It also lowers π₀(R₂)
+    in the posterior misses (0.77 → 0.55).
   - It has no theorem. T22(iii) would need restating, and validity rests on F-DRAFT Prop P(i) (positive, product-form,
     data-measurable tables), which O-DILUTE §9 argued but which no one has written out for these tables.
 - **My reading.** A pilot is worth running **only if** Felipe wants either the "favourable start at n = 200" statement
   for the paper, or evidence on sampler cost and stability. If the goal is better recovery numbers, Step 0 says no.
 
 **If a pilot is run.** Adapting F-SIGMA §10 Step 1, the smallest informative design is:
-- paired datasets, same seeds, v3 vs backfit start, with the sweep rule fixed in advance (§3.4);
-- cells: S4 p = 500 at c = 0.5 and c = 1 (one graded, one strong), S5 p = 1,000 c = 1 (the weak cell, which also
+- paired datasets, same seeds, v3 vs backfit start, with the sweep rule fixed in advance: iterate until the start mode repeats, with a cap (10 was enough in
+  2,310/2,400) and a fixed fallback for 2-cycles or the cap (§3.4);
+- cells: S4 p = 500 at c = 0.5 and c = 1 (one graded, one strong), S5 p = 1,000 at c = 0.5 (the weak cell, for the cap and fallback) and at c = 1 (which
   contains 3 of the 6 resource-limit fits), and the 6 resource-limit fits themselves;
 - 20 datasets per cell;
 - record HPM = S₀, *harm* (exact → wrong, paired), π₀(S₀), first-stage ESS, stage count and run time;
@@ -294,7 +299,13 @@ Step 0 cannot evaluate (b).
 |---|---|---|
 | Common σ̂² start (W8-SYNTH §4.5) | rejected on O-DILUTE/F-SIGMA evidence; "Step 0 would confirm" | rejected; **Step 0 done and confirms on the 2,400 real fits** (flooding under C-fix and oracle; no feasible plug-in favourable) |
 | F-SIGMA Thm S6 | PROVED | PROVED (unchanged; real-fit numerics consistent) |
-| Residualised / backfit tables | candidate, pilot on regenerated data only (378/480) | **candidate, unproven**; start-law evidence now on the real fits (1,888/2,400 favourable); no SMC evidence; no theorem |
+| Residualised / backfit tables | candidate, pilot on regenerated data only (378/480) | **candidate, unproven**; start-law evidence now on the real fits (1,888/2,400 favourable at 3 sweeps, 2,203/2,400 at the fixed point); no SMC evidence; no theorem; fixed-point convergence of the sweep iteration unproven (90/2,400 unsettled at 10) |
 | Paper wording "the start is masked by dilution" (W8-SYNTH n = 200 disclosure draft, (ii)) | — | consistent: v3 0/2,400 favourable, median π₀(S₀) 10^{−15.65}, π₀(R₂) 0.81 (reproduced to 10⁻¹²) |
 
-*(§3.4 to be completed.)*
+**What this run did not do.**
+- No SMC runs, so there is no evidence on HPM accuracy, harm, ESS or run time under any new start.
+- No new theorem, and no proof that the backfit sweep iteration converges.
+- No check of R_d's companion, the Hamming-ball mass π₀(B_d), on the real fits. O-DILUTE reports 0.60 for Ham ≤ 2
+  under resid; per-fit B_d was not part of the engine outputs used here.
+- The cost of the backfit tables inside the production C++ engine was not measured. The R-level recomputation here took
+  about 1–2 s per fit for all sweeps.
