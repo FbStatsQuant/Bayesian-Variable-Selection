@@ -26,7 +26,7 @@ from scipy.special import logsumexp
 import pxn_core as pc
 import fav_core as fc
 
-NS = [200, 400, 800, 1600, 3200]
+NS = [200, 400, 800, 1600, 3200, 6400, 12800]
 
 
 def neighbour_graph(D, B):
