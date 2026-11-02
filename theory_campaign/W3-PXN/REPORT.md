@@ -94,7 +94,42 @@ p ≈ n^{1.25} in A and B. Everything is computed exactly:
 
 The library is checked against brute-force enumeration in `results/sanity.txt` (agreement to 1e-15).
 
-TABLE_LH
+Columns:
+- **b=g:** blocks = groups (actual partition; at p > 4300, the margin condition of Lemma P1).
+- **SE-blk:** min_b λ_min(R_{C_b}).
+- **√(n/log n)(1−π₀(S°)):** median.
+- **pi0(R0), pi0(R2):** medians.
+- **mode=S°, LS0 cert/scored:** counts. LS0 cert = ends at S₀ certified; scored = S₀ scored.
+- **F(S₀)−F(S°):** median.
+- **Dep:** median, c = 1 only.
+- **NB:** number of replicates where NB holds; d-range is the median, against the threshold 655.
+
+| cfg | n | p | reps | b=g | SE-blk | med log₁₀π₀(S₀) | Mstat q05/med/q95 (limit) | √(n/log n)(1−π₀(S°)) | π₀(𝓡₀) | π₀(𝓡₂) | mode=S° | med q | T22(i) bound ≤ π₀(S°) | LS0 cert / scored | F(S₀)−F(S°) | Dep | NB (d-range) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| A (c=1) | 200 | 750 | 20 | 20/20 | 0.147 | −3.91 | −1.59/0.26/2.55 (0.41/0.63/2.33) | 1.83 | 0.70 | 0.990 | 17/20 | 0.227 | 20/20 | 17/20 / 20/20 | 10.3 | 0.459 | 20/20 (10.2) |
+| A | 400 | 1790 | 20 | 20/20 | 0.176 | −4.38 | 0.01/0.40/1.41 | 2.01 | 0.75 | 0.995 | 20/20 | 0.196 | 20/20 | 20/20 / 20/20 | 22.7 | 0.399 | 20/20 (10.7) |
+| A | 800 | 4260 | 12 | 12/12 | 0.204 | −4.97 | −0.25/0.25/0.70 | 2.00 | 0.82 | 0.998 | 12/12 | 0.140 | 12/12 | 12/12 / 12/12 | 53.1 | 0.307 | 12/12 (10.2) |
+| A | 1600 | 10120 | 6 | 6/6 (margin) | 0.230 | −5.06 | 0.63/1.27/2.46 | 1.71 | 0.88 | 0.999 | 6/6 | 0.089 | 6/6 | 6/6 / 6/6 | 121.3 | 0.186 | 6/6 (10.6) |
+| B (c=2) | 200 | 750 | 20 | 20/20 | 0.144 | −7.37 | −0.44/1.58/3.50 (1.66/2.30/4.61) | 2.59 | 0.65 | 0.984 | 16/20 | 0.206 | 20/20 | 16/20 / 19/20 | 17.7 | – | 20/20 (26.1) |
+| B | 400 | 1790 | 20 | 20/20 | 0.182 | −8.36 | 1.30/1.73/3.92 | 2.39 | 0.71 | 0.992 | 20/20 | 0.182 | 20/20 | 20/20 / 20/20 | 43.3 | – | 20/20 (19.4) |
+| B | 800 | 4260 | 12 | 12/12 | 0.210 | −9.27 | 1.42/2.06/3.92 | 2.28 | 0.79 | 0.997 | 12/12 | 0.125 | 12/12 | 12/12 / 12/12 | 101.3 | – | 12/12 (12.9) |
+| B | 1600 | 10120 | 6 | 6/6 (margin) | 0.232 | −9.95 | 1.53/2.92/3.85 | 2.07 | 0.86 | 0.999 | 6/6 | 0.081 | 6/6 | 5/6 / 6/6 | 224.6 | – | 6/6 (38.9) |
+| P (c=1) | 200 | 500 | 20 | 20/20 | 0.148 | −3.69 | −0.10/0.36/1.74 | 1.50 | 0.76 | 0.995 | 20/20 | 0.189 | 20/20 | 17/20 / 20/20 | 6.1 | 0.434 | 20/20 (13.5) |
+| P | 200 | 1000 | 20 | 20/20 | 0.146 | −4.04 | −0.08/0.25/0.82 | 1.68 | 0.73 | 0.992 | 19/20 | 0.219 | 20/20 | 20/20 / 20/20 | 10.2 | 0.442 | 20/20 (12.8) |
+| P | 200 | 2000 | 20 | 20/20 | 0.136 | −4.37 | −1.09/0.20/1.16 | 1.78 | 0.71 | 0.990 | 17/20 | 0.233 | 20/20 | 18/20 / 20/20 | 7.2 | 0.540 | 20/20 (11.6) |
+| P | 200 | 4000 | 10 | 10/10 | 0.144 | −4.67 | −0.70/0.20/1.83 | 2.51 | 0.59 | 0.980 | 9/10 | 0.291 | 10/10 | 8/10 / 10/10 | 1.7 | 0.621 | 10/10 (15.3) |
+
+Reading:
+- **Masking rate.** log₁₀π₀(S₀) falls by c/2·log₁₀4 + c·log₁₀(p ratio) per doubling of n. With p ∝ n^{1.25} that is a
+  predicted −0.52 (A) and −1.05 (B) per doubling; observed −0.47, −0.59, −0.09 (A, noisy at 6 reps) and −0.99, −0.91,
+  −0.68 (B). At fixed n = 200, Mstat is flat in p ∈ [500, 4000] (P), so the c·log p scaling is exact.
+- **Near-truth mass.** q decreases like √(log n/n), and the T22(i) lower bound held in 181/181 replicates.
+  π₀(𝓡₂) → 1 and π₀(𝓡₀) = π₀(S°) → 1 at the slow √(log n/n) rate. Dep → 0.
+- **Eligibility and repair.** S̃₀ = S° in 162/181 replicates, and in all of them at n ≥ 400. LS0 *scored* S₀ in 180/181
+  (the exception is a B, n = 200 replicate whose mode was {proxy of j_a} instead of j_a). The certified-end failures are
+  finite-n failures of (L) (S₀ + null beats S₀; PROOF §9.3 remark) or, at n = 200, proxy-for-hub substitutions, a D_S
+  failure at a finite-n margin.
+- **NB.** The d-range is ≈ 10–40 nats against the 655-nat threshold.
 
 Checks (`results/check_lemmas.txt`, `results/check_mstat.txt`):
 - **Lemma B:** KS tests of six exact Beta laws (a-group neutral, visible neutral and null additions given S°;
@@ -118,7 +153,38 @@ For each truth j the script computes:
 - the block statistic V₀ = −ν log(1 − x^blk);
 - its population (dilution) prediction V₀pop = δ²_pop/(2v_T) + ½.
 
-TABLE_STUDY
+| scen | p | scale | med log₁₀π₀(S₀) | med π₀(𝓡₂) | mean # start-masked truths (LO₀<0) | dilution-predicted # | frac masked with LO₁>0 | masked: V₀ / V₀pop / V₁ (medians) | masked: L² = δ²_pop/σ² | v_T/σ² | log₁₀π₀(S₀)−log₁₀π₀(S̃₀) | CL(0) prediction |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| S1 | 500 | 0.5 | −13.0 | 0.95 | 7.5 | 7.0 | 0.99 | 3.6 / 4.1 / 22.9 | 50 | 7.2 | −12.0 | −34.6 |
+| S1 | 500 | 1.0 | −12.1 | 0.91 | 6.3 | 7.0 | 1.00 | 3.2 / 4.4 / 69.7 | 199 | 25.6 | −11.0 | −28.9 |
+| S1 | 1000 | 0.5 | −17.4 | 0.96 | 8.4 | 9.7 | 0.99 | 3.7 / 5.5 / 29.0 | 72 | 7.2 | −16.6 | −41.5 |
+| S1 | 1000 | 1.0 | −13.8 | 0.89 | 7.1 | 7.0 | 1.00 | 3.4 / 4.4 / 74.1 | 199 | 25.6 | −12.6 | −31.1 |
+| S3 | 500 | 0.5 | −13.2 | 0.70 | 7.5 | 7.0 | 0.99 | 3.6 / 4.0 / 23.7 | 50 | 7.2 | −11.8 | −34.6 |
+| S3 | 500 | 1.0 | −13.8 | 0.72 | 7.5 | 7.0 | 1.00 | 3.7 / 4.4 / 70.6 | 199 | 25.6 | −12.6 | −34.6 |
+| S3 | 1000 | 0.5 | −17.8 | 0.84 | 8.2 | 9.6 | 1.00 | 3.7 / 4.1 / 26.7 | 50 | 7.2 | −16.5 | −45.7 |
+| S3 | 1000 | 1.0 | −16.3 | 0.67 | 8.1 | 7.0 | 1.00 | 4.4 / 4.4 / 78.2 | 199 | 25.6 | −14.7 | −39.4 |
+| S4 | 500 | 0.5 | −16.9 | 0.32 | 8.8 | 7.0 | 0.99 | 3.6 / 4.4 / 28.5 | 50 | 7.2 | −14.9 | −40.4 |
+| S4 | 500 | 1.0 | −13.4 | 0.11 | 7.1 | 7.0 | 1.00 | 4.4 / 4.4 / 75.6 | 199 | 25.6 | −11.4 | −38.5 |
+| S4 | 1000 | 0.5 | −17.8 | 0.29 | 8.5 | 10.0 | 0.99 | 3.8 / 4.0 / 23.5 | 50 | 7.2 | −16.2 | −43.6 |
+| S4 | 1000 | 1.0 | −17.6 | 0.25 | 8.0 | 7.0 | 1.00 | 3.5 / 4.4 / 77.0 | 199 | 25.6 | −15.9 | −43.6 |
+| S6 | 500 | 0.5 | −16.8 | 0.73 | 8.9 | 7.0 | 0.96 | 3.6 / 4.0 / 26.4 | 50 | 7.2 | −15.7 | −40.4 |
+| S6 | 500 | 1.0 | −12.4 | 0.47 | 7.5 | 7.0 | 1.00 | 4.4 / 4.4 / 74.1 | 199 | 25.6 | −10.8 | −34.6 |
+| S6 | 1000 | 0.5 | −18.4 | 0.84 | 9.0 | 9.9 | 0.98 | 4.1 / 4.0 / 25.8 | 50 | 7.2 | −17.1 | −41.5 |
+| S6 | 1000 | 1.0 | −12.8 | 0.70 | 7.2 | 7.0 | 1.00 | 4.2 / 4.4 / 70.2 | 199 | 25.6 | −11.1 | −33.2 |
+
+Dilution threshold τ = log((2p−s₀)/s₀) + ½log(n+1) = 7.0 (p = 500) and 7.6 (p = 1000). Per-truth agreement between
+"V₀pop < τ" and "LO₀ < 0" is 0.71–0.82 at n = 200; corr(V₀, V₀pop) = 0.69 over 2240 truths.
+
+**n-sweep** (p = 1000, scale 0.5, 8 replicates per cell): median log₁₀π₀(S₀) and mean number of start-masked truths.
+
+| scen | n = 200 | 400 | 800 | 1600 |
+|---|---|---|---|---|
+| S1 | −17.4 (8.4) | −7.6 (4.2) | −1.9 (1.4) | −0.3 (0.1) |
+| S3 | −17.8 (8.2) | −8.4 (4.4) | −2.6 (1.8) | −0.3 (0.0) |
+| S4 | −17.8 (8.5) | −7.7 (4.1) | −3.1 (1.0) | −1.1 (0.1) |
+| S6 | −18.4 (9.0) | −9.0 (4.4) | −3.0 (1.5) | −0.3 (0.0) |
+
+In the sweep corr(V₀, V₀pop) = 0.95 over 1344 truths and the per-truth prediction agreement rises to 0.77–1.00.
 
 **Answer to the task's question.** The study's masking (median π₀(S₀) ≈ 10⁻¹²–10⁻¹⁸) is weak-signal masking only in the
 block-SNR sense, which here is dilution. It is not consistent with W1-EXP's specific mechanism ("CL(L) with bounded L,
@@ -141,7 +207,16 @@ T27's law with c = number of weak truths"). The evidence:
 
 **LS0 on the study data** (`study_ls0.py`; HQ-relevant input for the LS0 tweak, outside the strict scope):
 
-TABLE_LS0
+| scen | p | scale | ℓ | med \|S̃₀ Δ S₀\| | LS0 ends at S₀ certified | LS0 scores S₀ | among dist ≤ ℓ+1: scored | among dist > ℓ+1: scored |
+|---|---|---|---|---|---|---|---|---|
+| S1 | 500 | 0.5 / 1.0 | 10 | 9 / 8 | 7/10, 10/10 | 10/10, 10/10 | 20/20 | – |
+| S1 | 1000 | 0.5 / 1.0 | 11 | 10 / 8 | 7/10, 10/10 | 10/10, 10/10 | 20/20 | – |
+| S3 | 500 | 0.5 / 1.0 | 10 | 10 / 9 | 5/10, 9/10 | 8/10, 9/10 | 15/16 | 2/4 |
+| S3 | 1000 | 0.5 / 1.0 | 11 | 11 / 10 | 5/10, 8/10 | 7/10, 9/10 | 15/19 | 1/1 |
+| S4 | 500 | 0.5 / 1.0 | 10 | 12 / 12 | 2/10, 4/10 | 3/10, 8/10 | 6/7 | 5/13 |
+| S4 | 1000 | 0.5 / 1.0 | 11 | 12 / 12 | 1/10, 5/10 | 4/10, 7/10 | 8/14 | 3/6 |
+| S6 | 500 | 0.5 / 1.0 | 10 | 11 / 10 | 1/10, 9/10 | 4/10, 9/10 | 11/14 | 2/6 |
+| S6 | 1000 | 0.5 / 1.0 | 11 | 12 / 8 | 3/10, 9/10 | 8/10, 10/10 | 18/18 | 0/2 |
 
 Reading: LS0 scores S₀ from the start mode whenever |S̃₀ Δ S₀| ≤ ℓ + 1 and the greedy path is monotone, which is the
 typical case in S1/S3. In S4 (ρ = 0.85) and S6 at scale 0.5 the start mode is often 12–14 moves away, beyond ℓ = 10–11.

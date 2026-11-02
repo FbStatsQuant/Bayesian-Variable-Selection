@@ -326,6 +326,14 @@ max_{l≤p}Z_l² ≤ 2log p + 2log log n w.p. → 1, and ‖Π^⊥_{S₀}Cε‖�
 F(S₀ + l) − F(S₀) ≤ −½log(n+1) − log((2p−s₀−1)/(s₀+1)) + (Z_l²/2)(1 + O(n^{−1/3})) + 2κ₂ ≤ −½log n + log log n + O(1) → −∞,
 uniformly in l. ∎
 
+*Remark (two speeds; numerically visible).* The D_S part rests on Θ(n) margins. The (L) part rests on the much smaller
+margin ½log n + log(2p/(s₀+1)) − ½max_lZ_l², and to first order P((L) fails) ≈ p·P(χ²₁ > t_n) = (s₀+1)/√(2π(n+1)t_n),
+with t_n := 2log((2p−s₀−1)/(s₀+1)) + log(n+1). This is ≈ 4% at (n, p) = (200, 750) and ≈ 1.2% at (1600, 10120)
+(`results/check_L_failure.txt`; one such event occurred among the 12 replicates at n = 1600, with Z² = 24.5 against
+t = 23.6). It tends to 0 only like n^{−1/2}(log n)^{−1/2}. A failure of (L) is the event that some S₀ + l beats S₀. That
+belongs to the posterior term 2E₀δ₁ of T21/T38(b)-R, not to discovery: the search still passes through, and so *scores*,
+S₀. [T38E-E3]'s TD′ only requires that S₀ be scored, so route (b1) needs only the D_S part.
+
 *Remark.* For c = 1, Lat(S°) = {S°, S₀} and the theorem is the statement "from S° the best move adds j_b, then S₀ is
 certified". The swap-dominance obstruction of W1-T38E §6.4 does not arise because the centre S° contains no extras; this
 is exactly why the *start mode* is a good LS0 centre on this family.
