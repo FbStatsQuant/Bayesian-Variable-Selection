@@ -1,0 +1,23 @@
+{"scen": 2, "n": 200, "seed": 1, "B": 4, "L": 8, "Y": [6, 13, 15, 18], "pstar_exit": 0.5798284979116566, "exit_mc": 0.7683, "Lplus4_times_exit": 9.2196}
+{"scen": 2, "n": 200, "seed": 2, "B": 4, "L": 8, "Y": [2, 6, 15, 19], "pstar_exit": 0.43160403836913563, "exit_mc": 0.605, "Lplus4_times_exit": 7.26}
+{"scen": 2, "n": 200, "seed": 3, "B": 4, "L": 8, "Y": [6, 13, 15, 19], "pstar_exit": 0.6707009904120717, "exit_mc": 0.8539, "Lplus4_times_exit": 10.2468}
+{"scen": 2, "n": 800, "seed": 1, "B": 4, "L": 10, "Y": [6, 11, 13, 15], "pstar_exit": 0.6073674632632348, "exit_mc": 0.769, "Lplus4_times_exit": 10.766}
+{"scen": 2, "n": 800, "seed": 2, "B": 4, "L": 10, "Y": [2, 7, 15], "pstar_exit": 0.6371666925125474, "exit_mc": 0.8979, "Lplus4_times_exit": 12.5706}
+{"scen": 2, "n": 800, "seed": 3, "B": 4, "L": 10, "Y": [6, 10, 13, 15], "pstar_exit": 0.76449141995104, "exit_mc": 0.8567, "Lplus4_times_exit": 11.9938}
+{"scen": 2, "n": 3200, "seed": 1, "B": 4, "L": 12, "Y": [2, 13, 19], "pstar_exit": 0.678123655663401, "exit_mc": 0.9507, "Lplus4_times_exit": 15.2112}
+{"scen": 2, "n": 3200, "seed": 2, "B": 4, "L": 12, "Y": [6, 15, 19], "pstar_exit": 0.6667251087142348, "exit_mc": 0.9636, "Lplus4_times_exit": 15.4176}
+{"scen": 2, "n": 3200, "seed": 3, "B": 4, "L": 12, "Y": [6, 15, 19], "pstar_exit": 0.6635233306908616, "exit_mc": 0.9659, "Lplus4_times_exit": 15.4544}
+{"scen": 3, "n": 200, "seed": 1, "B": 4, "L": 8, "Y": [10, 13, 15], "pstar_exit": 0.6711814547845635, "exit_mc": 0.9463, "Lplus4_times_exit": 11.3556}
+{"scen": 3, "n": 200, "seed": 2, "B": 4, "L": 8, "Y": [0, 2, 15], "pstar_exit": 0.6592266292477117, "exit_mc": 0.936, "Lplus4_times_exit": 11.232000000000001}
+{"scen": 3, "n": 200, "seed": 3, "B": 4, "L": 8, "Y": [2, 4, 6, 15], "pstar_exit": 0.6517187860040555, "exit_mc": 0.8472, "Lplus4_times_exit": 10.1664}
+{"scen": 3, "n": 800, "seed": 1, "B": 4, "L": 10, "Y": [6, 13, 19], "pstar_exit": 0.6845241154688806, "exit_mc": 0.9213, "Lplus4_times_exit": 12.8982}
+{"scen": 3, "n": 800, "seed": 2, "B": 4, "L": 10, "Y": [2, 13, 19], "pstar_exit": 0.6904261204550252, "exit_mc": 0.9157, "Lplus4_times_exit": 12.819799999999999}
+{"scen": 3, "n": 800, "seed": 3, "B": 4, "L": 10, "Y": [2, 19], "pstar_exit": 0.714645681359127, "exit_mc": 0.9769, "Lplus4_times_exit": 13.6766}
+{"scen": 3, "n": 3200, "seed": 1, "B": 4, "L": 12, "Y": [13, 19], "pstar_exit": 0.7506501933848748, "exit_mc": 0.9838, "Lplus4_times_exit": 15.7408}
+{"scen": 3, "n": 3200, "seed": 2, "B": 4, "L": 12, "Y": [6, 19], "pstar_exit": 0.7166157909033848, "exit_mc": 0.9814, "Lplus4_times_exit": 15.7024}
+{"scen": 3, "n": 3200, "seed": 3, "B": 4, "L": 12, "Y": [13, 19], "pstar_exit": 0.725556766812992, "exit_mc": 0.9844, "Lplus4_times_exit": 15.7504}
+{"scen": 4, "n": 200, "seed": 1, "B": 4, "L": 8, "Y": [13, 19], "pstar_exit": 0.7342605171154469, "exit_mc": 0.9533, "Lplus4_times_exit": 11.4396}
+{"scen": 4, "n": 200, "seed": 2, "B": 4, "L": 8, "Y": [2, 6, 7, 15], "pstar_exit": 0.6610143672274954, "exit_mc": 0.7765, "Lplus4_times_exit": 9.318}
+{"scen": 4, "n": 200, "seed": 3, "B": 4, "L": 8, "Y": [4, 6, 15], "pstar_exit": 0.725401550433647, "exit_mc": 0.8643, "Lplus4_times_exit": 10.371599999999999}
+{"scen": 4, "n": 800, "seed": 1, "B": 4, "L": 10, "Y": [13, 19], "pstar_exit": 0.6762032936976767, "exit_mc": 0.9723, "Lplus4_times_exit": 13.612200000000001}
+{"scen": 4, "n": 800, "seed": 2, "B": 4, "L": 10, "Y": [13, 19], "pstar_exit": 0.6787384246797976, "exit_mc": 0.9714, "Lplus4_times_exit": 13.5996}

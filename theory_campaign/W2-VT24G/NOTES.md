@@ -30,3 +30,17 @@ Checked against: Docs/Methodology/METHODOLOGY_v3.md §§6.5, 6.6, 6.8, 6.10; Scr
   independence move, hence W1's start-law statements (T4b, "S5 masked"), not the theorem.
 - CE2 (ce2_check.py): exact; brief's form violated in 395/1050 (v,H,c) cases, including v=2, H=12, c=1/20
   (0.88 > 0.74). W1's v(1-c)^floor(H/v) dominates in all. VERIFIED.
+
+## Step 3: numerics
+- CE1 (ce1_recheck.py; results/ce1_recheck.json): CONFIRMED independently. Seed 1 (W1's data): exit MC S1 0.16-0.22,
+  S2 0.62-0.78, S3 0.90-0.96, S4 0.89-0.96, S5 0.93-0.97, S6 0.72-0.95. New: an EXACT (enumeration) first-change
+  lower bound P*_exit >= 0.39 in every S2-S6 cell (>= 0.53 in S3-S6), so the n=200 counterexample does not rest on MC.
+  Fresh data seeds 2-4: same picture (S2-S6 exit 0.67-0.98).
+- CE1 scaling (ce1_scaling.py): exit probability does not decay with n (S2: 0.77 -> 0.96 from n=200 to 3200).
+- Cor. P1 (p1_and_repair.py): a1 min 0.139-0.439, every a1 <= simulated scoring frequency. CONFIRMED (B = 4 only).
+- Repair from raw pi_0 draws with the PRODUCTION packing: 100% within 12 rounds in all 12 cells (confirmed);
+  round-1 fractions differ from W1 for S5 (0.19-0.25 vs W1 0.11-0.12) because W1's pi_0 differs.
+- v = |M|+|A|+c at pi_0 draws: S5 c=0.5 has 10% of draws with v > H = 12 (bound trivially >= 1 there).
+- ERROR in W1 PROOF.md §6 (NL0 row): inflation for equicorrelated nulls is (1+r) = 1.3, not (1+r)/(1-r) = 1.86
+  (nl0_inflation.py: median max-ratio 1.08 -> 1.21 for p = 1e2 -> 1e6, approaching 1.3). Threshold for NL0(1) failing
+  in rate is p >> n^{1/(2r)} = n^{5/3}, not n^{0.58}.
