@@ -128,3 +128,11 @@ Felipe's reading: $21 of $250 left; weekly plan 84% used (resets 21:00 UTC). Sto
 W8-SYNTH @ origin/theory/W8-SYNTH (SYNTHESIS.md, BRIEF.md). NOTE: its "O-LS0 has not landed" is stale: O-LS0 landed 20:24 UTC (theory/O-LS0 @ 02348e2) and PASSED (0/2,394 HPM changes).
 L-LEAN @ origin/theory/L-LEAN: T21 (C1), T07, T11(iii), T37(i)/Theorem A sorry-free (101 declarations, 0 sorry); T12(i.a) partial; fidelity GREEN (Fable + Astra round 2).
 Campaign complete. Next steps: SYNTHESIS §8 (XF review of the no-LS0 LH routes; general LH-lock proof; Astra re-review of the Claude repairs).
+
+### 20:45 UTC: Felipe — "let Astra review the repairs"; "make all necessary changes" to the spine claim
+| ID | Model | Task | Where |
+|---|---|---|---|
+| A-REV5 | Astra high (Codex) | re-review W6-FIXREV1/2 repairs of the A-REV1/A-REV2 findings; LOCKABLE list | laptop mcp:launch:382beca1… |
+| A-REV6 | Astra high (Codex) | re-review repairs of the A-REV3/A-REV4 findings; write candidate repairs for Prop M(b), F-DRAFT W2/NM, A-REV4 bookkeeping; does W7-PART close the p >> n partition GAP | laptop mcp:launch:7620de24… |
+| A-REV7 | Astra high (Codex) | cross-family review of the no-LS0 masked routes (BG3, F1/F2, D2-LH/B2-LH, Prop GU) — synthesis task 1 | laptop mcp:launch:e0a5f1f8… |
+| E-SPINE | Opus high (CW) | replace "tempering is needed" with "moving off the start is needed" in main docs (PR) + S-PAPER/F-REFINE drafts; AMENDMENTS_20261102.md | Owls |
