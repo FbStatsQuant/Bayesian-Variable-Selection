@@ -33,10 +33,11 @@ CONJECTURE / OPEN, never upgraded. Notation of `00_COMMON.md`.
    `sqrt(n)(1 - pi0(S°))` is flat at 1.6 (no sqrt(log n)); the T27 statistic converges to its predicted law
    (median 0.55 vs 0.54, 95% 0.79–0.89 vs 0.84); `pi0(R_0) -> 1`; `pi(S0) -> 1`; the EXP′ remainder `max|R|` is at most 1.8 (n = 50, random design), decreasing to 0.67.
 6. **Regime split, study relevance.** At population level S1, S3, S4, S6 are block-orthogonal: they sit in the
-   *favourable* regime asymptotically. S5 (common factor) and S2 (AR) have block leakage linear in n (98/100 and 81/100 of
-   the 5-blocks; `scripts/pop_leak_study.py`): neither clean theorem applies there. The study's own masking at n = 200
-   (median `pi0(S0) ~ 1e-12`) is therefore **not** the cancellation mechanism of T27; it fits *weak-signal* masking,
-   which is CL(L) with bounded L (CONJECTURE, see "Needs escalation").
+   *favourable* regime asymptotically. S5 (common factor) has block leakage linear in n in 98/100 blocks (S2, AR: also leaky, figure indicative only;
+   `scripts/pop_leak_study.py`): neither clean theorem applies there. For S1/S3/S4/S6 the study's own masking at n = 200
+   (median `pi0(S0) ~ 1e-12`) therefore cannot be population cancellation; it fits *weak-signal* masking, which is CL(L)
+   with bounded L for the weak truths (CONJECTURE, see "Needs escalation"). SE-blk holds at the study size in all six
+   scenarios (`min_b lambda_min(R_{C_b}) >= 0.06`), so EXP′ (Thm 1) applies there.
 
 ## Refined statements (full; named hypotheses; regime explicit)
 
