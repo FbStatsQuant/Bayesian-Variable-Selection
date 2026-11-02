@@ -354,25 +354,32 @@ class StartLaw:
         """H exact iid pi0 draws (backward sampler)."""
         tot = self.fwd[-1] + self.lw
         pk = np.exp(tot - logsumexp(tot))
-        out = []
-        for _ in range(H):
-            k = rng.choice(len(pk), p=pk)
-            S = []
-            for b in range(len(self.T.blocks) - 1, -1, -1):
-                pr = self.prof[b]
-                prevf = self.fwd[b]
-                js = [j for j in range(len(pr)) if 0 <= k - j < len(prevf)]
-                lp = np.array([pr[j] + prevf[k - j] for j in js])
-                j = js[rng.choice(len(js), p=np.exp(lp - logsumexp(lp)))]
-                lr, pc = self.T.lr[b], self.T.size[b]
+        k = rng.choice(len(pk), size=H, p=pk)
+        out = [[] for _ in range(H)]
+        for b in range(len(self.T.blocks) - 1, -1, -1):
+            pr = self.prof[b]
+            prevf = self.fwd[b]
+            g = len(pr) - 1
+            lp = np.full((H, g + 1), -np.inf)
+            for j in range(g + 1):
+                kk = k - j
+                ok = (kk >= 0) & (kk < len(prevf))
+                lp[ok, j] = pr[j] + prevf[kk[ok]]
+            gum = lp + rng.gumbel(size=lp.shape)
+            jj = np.argmax(gum, axis=1)
+            lr, pc = self.T.lr[b], self.T.size[b]
+            C = self.T.blocks[b]
+            for j in np.unique(jj):
+                if j == 0:
+                    continue
+                who = np.flatnonzero(jj == j)
                 sel = np.flatnonzero(pc == j)
                 pm = np.exp(lr[sel] - logsumexp(lr[sel]))
-                m = sel[rng.choice(len(sel), p=pm)]
-                C = self.T.blocks[b]
-                S += [C[t] for t in range(len(C)) if (m >> t) & 1]
-                k -= j
-            out.append(sorted(S))
-        return out
+                ms = sel[rng.choice(len(sel), size=len(who), p=pm)]
+                for w, m in zip(who, ms):
+                    out[w] += [C[t] for t in range(len(C)) if (m >> t) & 1]
+            k = k - jj
+        return [sorted(S) for S in out]
 
 
 def agg_q_e(T, Sref):
