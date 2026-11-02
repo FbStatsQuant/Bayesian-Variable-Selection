@@ -14,11 +14,11 @@ The §2.3 ORTH composition and the §4.2 D2 sketch are also new. Notation follow
 
 ## 0. Conventions used throughout
 
-**(0.1) The production local search** (METHODOLOGY_v3 §6.10; engine `local_search`, read in W3-VT38E §4 and W3-VT37R §5).
+**(0.1) The production local search** (METHODOLOGY_v3 §6.10; engine `local_search`, `Scripts/SMC_BVS/core/cpp/v3_engine.h` lines 378–418, re-read in this run; also W3-VT38E §4 and W3-VT37R §5).
 - Given a centre C and a move counter t = 0, the search repeats the following two steps.
   1. **Scan.** Score every feasible flip of C (additions only if |C| < K) and every swap of C.
   2. **Move or stop.** Let T* be the best scanned neighbour, with exact ties broken lexicographically. If F(T*) > F(C) and t < ℓ, set C ← T* and t ← t + 1, and go back to step 1. Otherwise stop.
-- So a scan always precedes the move-limit test. With `emit_centre = true` the initial centre is also scored.
+- So a scan always precedes the move-limit test: the code completes the scan, and only then tests `A.moves >= ell`. The centre is passed to `eval` with the flag `emit_centre`, so it is scored only when that flag is true.
 - Every scanned model enters the scored set.
 
 **(0.2) Output-available event.** 𝒪 = {status ∈ {exact, completed}}, and U = 𝒪ᶜ.
