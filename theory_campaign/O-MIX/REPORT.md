@@ -330,4 +330,4 @@ A combined "(B) + (C)" redeploy is coherent: it is a mixture whose components us
 5. Cost: LS0 ≈ 1.7·10⁵ scores; (B) ≤ |E|·2^{2B} table scores + O(1) per score; (C) ≈ 0 (C-grid ×½√n log n tables).
 6. Exact numerics (p = 16/20) agree: on LH, (B) 10^{−0.35} against base 10^{−2.3}, with (C) equal to the base; on BO-D at n = 200, (C) 10^{−0.27} ≈ π(S₀) against base 10^{−1.5}.
 7. Recommendation: keep LS0 for the main theorem. If a start change is made, choose (B-merge) (no-regret, strongest route). Keep (C) as a separate, piloted, performance-driven change.
-8. Head SHA: see the final commit on `theory/O-MIX` (reported in the hand-back).
+8. Head SHA: d1cc689 (content); this line was set in the follow-up commit.
