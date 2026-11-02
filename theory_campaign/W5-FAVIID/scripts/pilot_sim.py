@@ -411,5 +411,14 @@ def run(scen, p, scale, n, rep, out):
 if __name__ == "__main__":
     out = sys.argv[1]
     scen, p, scale, n = int(sys.argv[2]), int(sys.argv[3]), float(sys.argv[4]), int(sys.argv[5])
+    import os
+    done = set()
+    if os.path.exists(out):
+        for l in open(out):
+            if l.strip():
+                r = json.loads(l)
+                done.add((r["scen"], r["p"], r["scale"], r["n"], r["rep"]))
     for rep in sys.argv[6:]:
+        if (scen, p, scale, n, int(rep)) in done:
+            continue
         run(scen, p, scale, n, int(rep), out)
