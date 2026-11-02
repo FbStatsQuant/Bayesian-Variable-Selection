@@ -1,0 +1,4 @@
+== D2 on CF(1) n=400 p=89 B=9 H=512 T_e=1000 [W1 design]
+pi0(x0={1}) = b = 0.9278 ; |D| = 8 ; Dep (off D) = 0.0910 ; Dep incl. D = 6.528e+15 ; largest off-D terms [(76, 0.0096), (61, 0.0064), (73, 0.0061)]
+beta = 0.0454 ; W1's reported third term exp(-H beta g(b)) = 3.133e-09 ; full D2 bound without NB term: min_t [e^{-2Ht^2} + exp(-H beta g(b-t))] = 2.244e-07 at t = 0.131
+pilot first stage, 3 replications: P(NB^c) est = 0/3 ; S0 among initial draws in 0 ; S0 scored by end of stage 1 in 3/3 ; phi_1 range [0.03872, 0.05016], forced 0 ; fraction of particles scoring S0 in the stage-1 round: mean 0.923 min 0.910 ; mechanisms {'gibbs': 1392, 'nswap': 23, 'indep': 1, 'uswap': 2}
