@@ -15,7 +15,7 @@ Branch `theory/O-WSTAB` (Opus 5.5, laptop run taking over from the stopped serve
    citation and gives a two-sided rate for the independence move. **W1** **PROVED** ([PF] WS3). **W2** **PROVED** in an
    *exact* finite-n form, κG ≤ LR ≤ κG/(1−y), with no EXP′ needed.
 3. **Theorem W under ORTH** (X′X = (n−1)I, any partition, s₀ and θ* fixed, p log p = o(n)), with r := R²_pop:
-   if p^r/√n → 0, then p^{r−ε}/√n ≤ χ²(π‖π₀) ≤ p^{r+ε}/√n w.p. → 1, both sides **PROVED**. If
+   if p^r√(log p)/√n → 0, then p^{r−ε}/√n ≤ χ²(π‖π₀) ≤ p^{r+ε}/√n w.p. → 1, both sides **PROVED**. If
    L_n := r log p − ½ log n − ((1+r)/2) log log p → ∞, then **c·e^{L_n/r} ≤ log(1+χ²) ≤ C·e^{L_n/r}(log p)^{5(1+r)/(2r)}**,
    i.e. log log(1+χ²) = L_n/r + O(log log p): polynomial in n (both sides **PROVED**, the upper one via an integral
    form of the separable bound).
@@ -72,7 +72,7 @@ The same holds for the V-restricted bridge with ℓ_V(φ) := −log q^V_φ(S°),
 **Proposition G (ideal-grid sandwich; deterministic; PROVED).** Fix S° with 2ℓ* < c. Let g₋ := sup{g ≥ 0 : ℓ(1+g) ≤ c − ℓ*}
 and g₊ := sup{g ≥ 0 : ℓ(1+g) ≤ c + 2ℓ*}, both in (0, ∞]. The *ideal grid* is φ₀ = 0,
 φ_t := max{v ∈ (φ_{t−1}, 1] : ρ_Ω(φ_{t−1}, v) ≥ 0.9}, until φ_T = 1. It is well defined, and
- ⌈log₂(1 + 1/g₊)⌉ ≤ T ≤ ⌈log₂(1 + 1/g₋)⌉ (with 1/∞ := 0).
+ max{1, ⌈log₂(1 + 1/g₊)⌉} ≤ T ≤ max{1, ⌈log₂(1 + 1/g₋)⌉} (with 1/∞ := 0).
 Moreover, along any grid with every interval accepted: 2ℓ(φ_t) ≥ ℓ(φ_{t−1}) − c (the masked-regime halving of [PF] WS7(d)).
 
 **Lemma SEP (separable domination under ORTH; deterministic; PROVED).** Assume ORTH (XᵀX = (n−1)I_p), any partition, any
@@ -96,9 +96,10 @@ whose blocks have size ≤ B, with B fixed (or B ≤ 16, the method's cap). Let 
  equal to O_P(p√n e^{−c₀n}).
 (c) **(uniform lower bound)** For all w ∈ [1, 2]: O(w) ≥ ρ_n(w)(log p)^{−(1+(w−1)r)/2}e^{−U_n}, with U_n = O_P(1) not
  depending on w.
-(d) **(convergent side)** If p^r/√n → 0, then for every ε ∈ (0, r): p^{r−ε}/√n ≤ χ²(π‖π₀) ≤ p^{r+ε}/√n. So the one-step
- ESS fraction 1/(1+χ²) → 1 at exactly this polynomial rate.
-(e) **(divergent side, lower bound)** If L_n := r log p − ½ log n − ((1+r)/2) log log p → ∞, then log(1 + χ²(π‖π₀)) ≥ e^{(L_n − C₁ − 1)/r}
+(d) **(convergent side)** If p^r/√n → 0, then for every ε ∈ (0, r): χ²(π‖π₀) ≥ p^{r−ε}/√n. If moreover
+ p^r√(log p)/√n → 0, then also χ²(π‖π₀) ≤ p^{r+ε}/√n. So the one-step ESS fraction 1/(1+χ²) → 1 at this polynomial rate.
+ (The window where p^r/√n → 0 but p^r√(log p)/√n does not is not covered on the upper side: review finding F1.)
+(e) **(divergent side, lower bound)** If L_n := r log p − ½ log n − ((1+r)/2) log log p → ∞, then log(1 + χ²(π‖π₀)) ≥ (1 − o_P(1))e^{(L_n − C₁ − 1)/r}
  with the constant C₁ := 1 + log 2 + (1+r) log 4 + ((1+r)/2) log(4π). With p = n^{A+o(1)} and Ar > ½ this is
  n^{A − 1/(2r) − o(1)}, and the ESS fraction is ≤ exp(−n^{A−1/(2r)−o(1)}).
 (g) **(divergent side, upper bound)** w.p. → 1, ℓ(2) ≤ (s₀+1) log 2 + o(1) + K_r(1 + o_P(1))·[p^r(log p)^{2(1+r)}/√n]^{1/r}
@@ -112,7 +113,10 @@ T_ideal ∈ {⌈log₂(1 + 1/(G_n + δ_n))⌉, …, ⌈log₂(1 + 1/(G_n − δ_
 **T_ideal = 1 if 2Ar < 1 and T_ideal = 2 if 2Ar > 1**, and always T_ideal ≤ 2 w.p. → 1 (ORTH forces p ≤ n − 1, so
 G_n ≥ 1/(2r) > ½).
 
-**Counterexample W(c).** [FD] Theorem W(c) is false on the divergent side: under H-ORTH with p = n^A and Ar > ½,
+**Counterexample W(c).** [FD] Theorem W assumes G, BO, SE-blk(φ₀), BM-blk, R-lite (p ≤ n^A, ‖μ‖² ≤ Mn), s₀ fixed, blocks
+of size ≤ B ≤ 16 (NEW_TARGETS §W). H-ORTH is a special case: ORTH ⇒ BO for every partition and SE-blk with φ₀ = 1;
+fixed θ* gives BM-blk and ‖μ‖² ≤ Mn. [FD] Theorem W(c) is false on the divergent side: under H-ORTH with
+p = n^A, A ∈ (1/(2r), 1),
 log(1+χ²(π‖π₀)) − [r log p − ½ log n]₊ → ∞ polynomially (Theorem W(e)). Also [FD] W(b) ("1+χ² ≤ 1 + p^{R²+ε}/√n + o(1)")
 is false there, because log(1+χ²) grows faster than any multiple of log p.
 
@@ -149,7 +153,9 @@ P(move) = Σ_{y≠x*} π₀(y) min{1, r(y)/M} ≤ Σ_y π₀(y)r(y)/M = 1/M. So 
 Under BO adding l changes t_{S°} and t_T by the same δQ̄, with δ := (t_{T+l} − t_T)/Q̄ (WS3(a)). By WS3(b),
 d = ν[g(x̄) − Σ_c g(x_c)], so d(S°+l) − d(S°) = ν[g(x̄+δ) − g(x̄)] − ν[g(x_T+δ) − g(x_T)]. The identity
 g(a+δ) − g(a) = g(δ/(1−a)) gives LR = ν g(δ/(1−x̄)) − ν g(δ/(1−x_T)). Also δ/(1−x̄) = y (because 1 − x̄ = (Q̄ − t_{S°})/Q̄),
-and δ/(1−x_T) = (1−κ)y. y < 1 because x_{S°+l} < 1 (Lemma 0). G = ν g(y) follows from Lemma 0 and D_{S°+l}/D_{S°} = D_{T+l}/D_T
+and δ/(1−x_T) = (1−κ)y. y < 1 because x_{S°+l} < 1 (Lemma 0). y ≥ 0 because t_S is nondecreasing under adding columns: by Woodbury,
+Q_S = yᵀ(I + nX_S(G_S+I)⁻¹X_Sᵀ)⁻¹y, and X_S(G_S+I)⁻¹X_Sᵀ = I − (I + X_SX_Sᵀ)⁻¹ is Loewner-nondecreasing. κ ≥ 0 because
+x̄ = Σ_c x_c(S°) ≥ x_T. G = ν g(y) follows from Lemma 0 and D_{S°+l}/D_{S°} = D_{T+l}/D_T
 (WS3(a)). Bounds: g is convex with g(0) = 0, so g((1−κ)y) ≤ (1−κ)g(y), giving LR ≥ κνg(y). The mean value theorem gives
 g(y) − g((1−κ)y) ≤ κy·g′(y) = κy/(1−y) ≤ κg(y)/(1−y) (since g(y) ≥ y). The statistical reading is §3.6 (S2)–(S3) with
 T = ∅: κ = x̄ = s. ∎
@@ -196,7 +202,7 @@ intervals tile [a, s]. (F3) For 0 ≤ z ≤ s and 0 ≤ h ≤ X_N: h ≤ g(z+h) 
 Φ = wν[g(a + X_E) − g(s)] + (1−w)ν Σ_b[g(a_b + e_b) − g(X_{S₀∩C_b})].
 If w ∈ [1, 2]: write the block part as (w−1)ν{Σ_b[g(X_{S₀∩C_b}) − g(a_b)] − Σ_b[g(a_b+e_b) − g(a_b)]} ≤ (w−1)ν{g(s) − g(a) − X_E}
 (F2, F3), and wν[g(a+X_E) − g(s)] = wν[g(a+X_E) − g(a)] − wν[g(s) − g(a)]. So
-Φ ≤ wν[g(a+X_E) − g(a)] − ν[g(s) − g(a)] − (w−1)νX_E ≤ β(w)νX_E − νX_M (F3 with z = a, F2).
+Φ ≤ wν[g(a+X_E) − g(a)] − ν[g(s) − g(a)] − (w−1)νX_E ≤ β(w)νX_E − νX_M (F3 with z = a; g′ ≥ 1 on [a, s]).
 If w ∈ [0, 1]: by F3 and F2 the block part is ≤ (1−w)ν{X_E/((1−s)(1−ū)) − X_M}, and wν[g(a+X_E) − g(s)] ≤
 wν{X_E/((1−s)(1−ū)) − X_M}. So again Φ ≤ β(w)νX_E − νX_M.
 *Prior.* ϖ(S)/ϖ(S₀) = w(s₀−m+e)/w(s₀) = [C(2p−1, s₀)/C(2p−1, s₀−m)]·[C(2p−1, s₀−m)/C(2p−1, s₀−m+e)]. The first factor is
@@ -233,9 +239,10 @@ g(x_l) ≤ x_l/(1−x_l): ≥ log[(s₀+1)/(2p)] − ½ log n + (Z_l²/2)(1+ζ_n
 ≥ 1 + (w−1)s − 2x_l ≥ a(w) − |η′_n| with η′_n = O_P(n^{−1/2} + log p/n) uniform in w and l (max x_l = O_P(log p/n) by
 (S3)). Take l := argmax_{N₀} Z². By (S3), (a(w)/2)Z_l² ≥ a(w) log m₀ − (a(w)/2) log log m₀ − O_P(1), and
 |η′_n|Z_l² = o_P(1). With m₀ ≥ p/2, O(w) ≥ max_l[ratio] ≥ ρ_n(w)(log p)^{−a(w)/2}e^{−U_n}. (This is [PF] WS6(d), made uniform in w.)
-**(d).** By (b) at w = 2, q(2) ≤ V_n p^r√(log p)/√n = o(1). Then ℓ(2) ≤ O_P(p√n e^{−c₀n}) + 2(s₀+1)q(2) ≤ p^{r+ε/2}/√n w.p. → 1. With ℓ(0) = O_P(√(log p/n)) = o(p^{r+ε/2}/√n):
-χ² = π(S₀)²e^{ℓ(2)}/π₀(S₀) − 1 ≤ e^{ℓ(2)+ℓ(0)} − 1 ≤ 2(ℓ(2) + ℓ(0)) ≤ p^{r+ε}/√n.
-Lower: χ² ≥ π(S₀)²(1 + O(2)) − 1 ≥ O(2) − 2(1 − π(S₀))(1 + O(2)), with 1 − π(S₀) ≤ ℓ(1) = O_P(√(log p/n)), and by (c)
+**(d).** Upper half, under p^r√(log p)/√n → 0: by (b) at w = 2, q(2) ≤ V_n p^r√(log p)/√n = o_P(1), so (SEP, −log(1−q) ≤ 2q)
+ℓ(2) ≤ O_P(p√n e^{−c₀n}) + 2(s₀+1)q(2) → 0, and ℓ(0) = O_P(√(log p/n)) → 0. Hence
+χ² = π(S₀)²e^{ℓ(2)}/π₀(S₀) − 1 ≤ e^{ℓ(2)+ℓ(0)} − 1 ≤ 2(ℓ(2) + ℓ(0)) ≤ p^{r+ε}/√n w.p. → 1 (each term is ≤ p^{r+ε/2}/√n).
+Lower half: χ² ≥ π(S₀)²(1 + O(2)) − 1 ≥ O(2) − 2(1 − π(S₀))(1 + O(2)), with 1 − π(S₀) ≤ ℓ(1) = O_P(√(log p/n)), and by (c)
 O(2) ≥ p^r n^{−1/2}(log p)^{−(1+r)/2}e^{−U_n}, which is ≫ √(log p/n). So χ² ≥ O(2)/2 ≥ p^{r−ε}/√n.
 **(e).** Let m₀ = |N₀| ≥ p/2, let k ≥ 1 with s₀ + k ≤ K, and let E_k be the k nulls of N₀ with the largest Z². Exactly,
 log[γ₂(S₀∪E_k)/γ₂(S₀)] = log[ϖ(S₀∪E_k)/ϖ(S₀)] − (k/2) log n + 2ν g(X_{E}/(1−s)) − ν Σ_b g(X_{E∩C_b})
@@ -248,7 +255,7 @@ Combining with Stirling, log k! ≥ k log(k/e), on {Z²_{(k)} ≥ τ_k}:
 log[γ₂(S₀∪E_k)/γ₂(S₀)] ≥ k[r log p − ½ log n − ((1+r)/2) log log p − r log k − C₁ − C|η_k| log p].
 Take k_n := ⌊e^{(L_n − C₁ − 1)/r}⌋ → ∞. Then k_n ≤ p n^{−1/(2r)} ≤ n^{1−1/(2r)} ≤ √n (because r < 1 and p ≤ n), so
 |η_{k_n}| log p = O_P(n^{−1/2}log p + k_n log² p/n) = o_P(1), and s₀ + k_n ≤ K. The bracket is ≥ 1 − o_P(1), so
-ℓ(2) ≥ log O(2) ≥ k_n(1 − o_P(1)). Finally log(1+χ²) ≥ ℓ(2) − 2ℓ* (Prop L(iv)). ∎
+ℓ(2) ≥ log O(2) ≥ k_n(1 − o_P(1)) = (1 − o_P(1))e^{(L_n−C₁−1)/r}. Finally log(1+χ²) ≥ ℓ(2) − 2ℓ* (Prop L(iv)). ∎
 **(g).** Lemma SEP′ at w = 2, with y_j := c_j(2)/p = n^{−1/2}p^{−1}e^{a_nZ_j²/2}, a_n := a_n(2) = 1 + r + η_n (proof of (b)).
 *Order statistics.* With τ_i := 2 log(m/i) + 4 log log m, P(∃i: Z²_{(i)} > τ_i) ≤ Σ_i C(m,i)P(Z² > τ_i)^i ≤
 Σ_i (e/(log m)²)^i → 0, because P(Z² > τ) ≤ e^{−τ/2} = (i/m)(log m)^{−2}. On this event,
@@ -270,7 +277,7 @@ Apply Prop G with S° = S₀. By Theorem W(a), ℓ* = o_P(1), so 2ℓ* < c w.p. 
 condition reads g ≤ G_n − δ₋ with δ₋ := [log(8(s₀+1)V_n/c) + ½ log log p]/(r log p) = O_P(log log p/log p) (valid while
 1 + g ≤ 2). Hence g₋ ≥ min{1, G_n − δ₋}.
 *g₊.* By W(c), ℓ(1+g) ≥ log(1 + ρ_n(1+g)(log p)^{−(1+r)/2}e^{−U_n}) > c + 2ℓ* as soon as
-gr log p ≥ ½ log n + ((1+r)/2) log log p + U_n + log(1/(e^{c+2ℓ*} − 1)). That is, as soon as g ≥ G_n + δ₊ with
+gr log p ≥ ½ log n + ((1+r)/2) log log p + U_n + log(e^{c+2ℓ*} − 1) (and take V_n ≥ 1 w.l.o.g. in the g₋ step). That is, as soon as g ≥ G_n + δ₊ with
 δ₊ = O_P(log log p/log p), if G_n + δ₊ ≤ 1. Convexity (Prop G) then gives g₊ ≤ G_n + δ₊.
 *Count.* Prop G gives ⌈log₂(1 + 1/(G_n + δ₊))⌉ ≤ T ≤ ⌈log₂(1 + 1/min{1, G_n − δ₋})⌉. Because p ≤ n − 1, G_n ≥ 1/(2r) > ½,
 so for large n, min{1, G_n − δ₋} > 1/3 and T ≤ 2. If 2Ar < 1, then G_n → 1/(2Ar) > 1 and T = 1. If 2Ar > 1, then
@@ -377,7 +384,7 @@ conditional-expectation tail in SEP). It is valid when 2ℓ*_ub < c.
 | W2 | exact κG ≤ LR ≤ κG/(1−y); ORTH reading | 0.98 | done | none (EXP′ only for general-BO reading) | no |
 | Prop L / Prop G | ℓ-form of T13; ideal-grid sandwich | 0.98 | done | none | no |
 | Lemma SEP | separable domination under ORTH | 0.95 | done (needs check) | (F2) telescoping | no |
-| Theorem W(a)–(d), (f), ORTH, p log p = o(n) | two-sided rate p^{r±ε}/√n on the convergent side; KL, TV → 0 | 0.92 | done (needs check) | (HT) uniformity, (S2) | no |
+| Theorem W(a)–(d), (f), ORTH, p log p = o(n) | two-sided rate p^{r±ε}/√n when p^r√log p/√n → 0; KL, TV → 0 | 0.93 | done (reviewed once) | (HT) loses √log p (F1 window) | no |
 | Theorem W(e) + counterexample to [FD] W(c) | log(1+χ²) ≥ e^{(L_n−C)/r} | 0.93 | done (needs check) | order statistics; k_n ≤ √n | no |
 | W(g) matching upper bound | log(1+χ²) ≤ C e^{L_n/r}(log p)^{5(1+r)/(2r)} | 0.9 | done (needs check) | SEP′ + order statistics | no |
 | W′ ORTH | T_ideal ∈ {1,2}; = 1 iff 2Ar < 1 | 0.9 | done (needs check) | uniform-in-w bounds near w = 1 + G_n | no |
@@ -385,4 +392,10 @@ conditional-expectation tail in SEP). It is valid when 2ℓ*_ub < c.
 | Theorem W, general BO + SE-blk | same dichotomy with r replaced by the realised dilution fraction | 0.85 | 0.6 | per-block SEP; EXP′ | no |
 | Theorem W, p ≍ n | same threshold | 0.8 | 0.4 | dimension control for q₂ (T02 analogue) | no |
 
-Agent and call counts: this laptop run used no helper agents; all mathematics and scripts are by this O-WSTAB instance.
+**Review record.** One independent Opus 5.5 (high) checker reviewed §3.2–3.7 at commit b3d89e2
+(`review/CHECK_SEP_W.md`, own numerics in `review/`). It found no fatal flaws. F1 (gap: W(d) upper half needs
+p^r√(log p)/√n → 0) is accepted, and the statement is restricted. F2–F7 (exposition) are fixed in this version. F8: the scope of the
+counterexample is now tied to [FD]'s hypotheses, which I read in NEW_TARGETS §W. The rigorous W(e) bound becomes large
+only asymptotically: the reviewer computes 8.9 nats at n = 10¹⁶, A = 0.95. At such finite n the contradiction rests on
+the exact numerics (LB ≈ 8·10³ nats in both independent implementations). Not reviewed: Lemma SEP′ and W(g),
+added after the review began. Agent counts: 1 Opus helper (review); all mathematics and scripts are by this O-WSTAB instance.
