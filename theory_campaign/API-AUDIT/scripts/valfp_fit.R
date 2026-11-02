@@ -88,6 +88,19 @@ if (mode %in% c("fp", "ld_full")) {
     c(compact(fr), list(final_seed = 50000L + 100L * id + k))
   })
   res <- list(runs = res, status = "multi", log_Z = NA)
+} else if (mode == "thr") {
+  # Threshold logging (instrumented cores from make_log_cores.sh): final run on the fp frozen C, original seed.
+  fp <- readRDS(file.path(out, sprintf("fit%02d_fp.rds", id)))
+  stopifnot(identical(fp$data_hash, data_hash))
+  pre <- v3_preprocess(X, y, dup_components = FALSE)
+  ctx <- v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE)
+  setup <- v3_setup(ctx)
+  Sys.setenv(V3_THR_LOG = file.path(out, sprintf("thr%02d_%s.bin", id, basename(core))))
+  fr <- v3_final_run(setup, fp$frozen, seed, NULL)
+  Sys.unsetenv("V3_THR_LOG")
+  res <- list(status = fr$status, log_Z = fr$log_Z, log_Z_r = fr$log_Z_r, same_as_fp_fit = identical(fr$log_Z_r, fp$log_Z_r),
+              settings = fr$settings, T = length(fp$frozen$grid) - 1, p = setup$ctx$p, B = setup$B)
+  cat(sprintf("thr fit %d core %s: log_Z_r identical to the fp fit's: %s\n", id, basename(core), res$same_as_fp_fit))
 } else stop("mode")
 res$seconds <- proc.time()[["elapsed"]] - t0
 saveRDS(res, file.path(out, sprintf("fit%02d_%s.rds", id, mode)))

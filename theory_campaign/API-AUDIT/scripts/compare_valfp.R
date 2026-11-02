@@ -11,9 +11,11 @@ moves_cols <- c("gibbs", "gibbs_state_changes", "uswap_exec", "uswap_acc", "uswa
                 "nswap_reject_noscore", "nswap_self", "indep_exec", "indep_acc")
 path_signature <- function(f) {     # every discrete record of the final run's path
   st <- f$stage_table; st <- st[st$phase %in% c("final", "final_bridge", "bridge") | grepl("final", st$phase), , drop = FALSE]
+  st <- as.matrix(st[, intersect(c(moves_cols, "distinct_resampled", "distinct_moved", "stage", "island"), names(st)), drop = FALSE])
+  tt <- f$terminal_table; tt <- as.matrix(tt[, setdiff(names(tt), "seconds"), drop = FALSE])
+  rownames(st) <- NULL; rownames(tt) <- NULL      # row names differ (the fit's stage table also holds calibration rows)
   list(streams = lapply(f$streams, function(s) c(s$position_end, s$init_draws_hash)),
-       stage_moves = st[, intersect(c(moves_cols, "distinct_resampled", "distinct_moved"), names(st)), drop = FALSE],
-       terminal = f$terminal_table[, setdiff(names(f$terminal_table), "seconds"), drop = FALSE],
+       stage_moves = st, terminal = tt,
        counts = f$score_counts, cache = f$cache, hpm = f$hpm, mpm = f$mpm, hpm_before = f$hpm_before_local$model,
        ls_path = f$local_search$path, ls_scanned = f$local_search$scanned_centres, ls_term = f$local_search$termination,
        top = f$top_store$models, near = f$near_ties, prov = f$hpm_provenance[c("phase", "island", "stage", "round", "particle", "position")])
@@ -69,3 +71,48 @@ cat(sprintf("\nreplays: %d, path disagreements: %d; Clopper-Pearson 95%% upper b
             if (n) qbeta(0.95, k + 1, n - k) else NA))
 cat(sprintf("eta (pooled log Zhat, max over fits): %.3e ; eta_r (max over fits and islands): %.3e\n",
             max(tab$eta_pooled, na.rm = TRUE), max(tab$eta_r_max, na.rm = TRUE)))
+
+# ---- GUARD checks: guarded production fit vs the guard-free run (runtime = NULL, no preflight), bitwise ----
+g <- list()
+for (id in 1:10) {
+  fp <- rd(id, "fp"); ng <- rd(id, "fp_nullguard"); stp <- rd(id, "fp_stop")
+  if (is.null(fp) || is.null(ng)) next
+  sa <- path_signature(fp); sb <- path_signature(ng)
+  agree <- vapply(names(sa), function(k) identical(sa[[k]], sb[[k]]), TRUE)
+  fz <- function(z) z[c("tier", "grid", "inherited")]
+  g[[length(g) + 1]] <- data.frame(id = id, frozen_identical = identical(fz(fp$frozen), fz(ng$frozen)),
+    path_identical = all(agree), log_Z_r_identical = identical(fp$log_Z_r, ng$log_Z_r),
+    pip_r_identical = identical(unname(fp$pip_r), unname(ng$pip_r)), hpm_F_identical = identical(fp$hpm_F, ng$hpm_F),
+    stop_status = if (is.null(stp)) NA else stp$status,
+    stop_estimates_available = if (is.null(stp)) NA else isTRUE(stp$estimates_available),
+    stop_hpm_incomplete = if (is.null(stp)) NA else isTRUE(stp$hpm_incomplete),
+    stop_has_log_Z = if (is.null(stp)) NA else ("log_Z" %in% names(stp)),
+    stop_dollar_log_Z_equals_log_Zbar0 = if (is.null(stp)) NA else identical(stp$log_Z, stp[["log_Zbar0"]]),
+    stop_checkpoint = if (is.null(stp) || !length(stp$last_checkpoint)) NA else stp$last_checkpoint[[1]]$checkpoint,
+    stop_phase = if (is.null(stp) || !length(stp$last_checkpoint)) NA else stp$last_checkpoint[[1]]$phase)
+}
+if (length(g)) { g <- do.call(rbind, g); write.csv(g, file.path(resd, "guard_table.csv"), row.names = FALSE); cat("\nGUARD\n"); print(g) }
+# ---- multi-seed final-run replays (10 extra final seeds per frozen C) ----
+m <- list()
+for (id in 1:10) {
+  a <- rd(id, "fp_seeds"); b <- rd(id, "ld_seeds")
+  if (is.null(a) || is.null(b)) next
+  for (k in seq_along(a$runs)) {
+    x <- a$runs[[k]]; y <- b$runs[[k]]
+    sa <- path_signature(x); sb <- path_signature(y)
+    agree <- vapply(names(sa), function(z) identical(sa[[z]], sb[[z]]), TRUE)
+    lo <- lo_parts(y); w <- exp(y$log_Z_r - lse(y$log_Z_r))
+    m[[length(m) + 1]] <- data.frame(id = id, final_seed = x$final_seed, status_fp = x$status, status_ld = y$status,
+      path_same = all(agree), path_diff = paste(names(agree)[!agree], collapse = ","),
+      eta_r_max = max(abs((x$log_Z_r - y$log_Z_r) - lo)),
+      eta_pooled = abs((lse(x$log_Z_r) - lse(y$log_Z_r)) - sum(w * lo)),
+      pip_maxdiff = max(abs(x$pip_r - y$pip_r)), hpm_same = identical(x$hpm, y$hpm))
+  }
+}
+if (length(m)) {
+  m <- do.call(rbind, m); write.csv(m, file.path(resd, "valfp_seeds.csv"), row.names = FALSE)
+  k <- sum(!m$path_same); n <- nrow(m)
+  cat(sprintf("\nmulti-seed: %d final-run replays, %d path disagreements, CP95 upper on eps %.4f; eta pooled max %.3e, eta_r max %.3e, pip maxdiff %.3e\n",
+              n, k, qbeta(0.95, k + 1, n - k), max(m$eta_pooled), max(m$eta_r_max), max(m$pip_maxdiff)))
+  print(m[!m$path_same, ])
+}

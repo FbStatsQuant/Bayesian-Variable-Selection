@@ -1,0 +1,42 @@
+   id  p scen scale status_fp tier  T n_inherited  log_Z_fp sec_fp setup_same path_same path_diff    eta_r_max   eta_pooled     dlogZbar0        dlogm0  pip_maxdiff     hpmF_diff sec_ld full_status_same full_tier_same full_T_same full_grid_maxdiff
+1   1 20    1  1.00 completed    0  4         884 -140.0598  2.345       TRUE      TRUE           2.492173e-13 2.264763e-13 -4.263256e-14  1.136868e-13 1.330880e-14  2.273737e-13  2.104             TRUE           TRUE        TRUE      1.199041e-14
+2   2 20    2  0.50 completed    0  9        1050 -241.4151  3.216       TRUE      TRUE           1.013495e-13 2.583655e-14 -1.776357e-14 -5.684342e-14 2.000622e-13 -8.526513e-14  2.630             TRUE           TRUE        TRUE      1.609823e-14
+3   3 20    4  0.50 completed    0 21        1199 -266.3452  5.487       TRUE      TRUE           2.262912e-13 1.711955e-13 -1.776357e-14  1.136868e-13 3.996803e-14  5.684342e-14  6.202             TRUE           TRUE        TRUE      4.440892e-16
+4   4 20    5  0.35 completed    0 16         994 -286.1252  3.959       TRUE      TRUE           6.225576e-14 6.255317e-15 -9.314771e-14  1.136868e-13 6.250556e-14  1.136868e-13  3.306             TRUE           TRUE        TRUE      2.742251e-14
+5   5 30    3  0.75 completed    0  3        1450 -199.3394  4.297       TRUE      TRUE           1.564027e-13 1.477164e-13  1.989520e-13  0.000000e+00 8.104628e-14  1.421085e-13  2.966             TRUE           TRUE        TRUE      5.839773e-14
+6   6 30    4  0.50 completed    0  5        1429 -250.6452  3.397       TRUE      TRUE           1.977585e-14 5.489042e-15 -1.065814e-14  0.000000e+00 1.001421e-13  0.000000e+00  2.575             TRUE           TRUE        TRUE      1.787459e-14
+7   7 30    6  0.50 completed    0  8        1484 -262.0884  3.634       TRUE      TRUE           1.520173e-13 1.080859e-13  4.263256e-14  0.000000e+00 4.407585e-14  5.684342e-14  3.386             TRUE           TRUE        TRUE      4.662937e-15
+8   8 40    2  0.50 completed    0 11        2122 -253.0767  9.696       TRUE      TRUE           1.440237e-13 8.536830e-14 -1.065814e-13  1.136868e-13 1.038059e-13  5.684342e-14  7.644             TRUE           TRUE        TRUE      1.693090e-14
+9   9 40    4  0.35 completed    0  4        1779 -268.2264  5.152       TRUE      TRUE           1.244838e-13 6.942003e-14 -3.552714e-13  1.136868e-13 4.096723e-14  5.684342e-14  5.734             TRUE           TRUE        TRUE      3.663736e-15
+10 10 40    5  0.50 completed    0 18        2352 -266.6004  8.925       TRUE      TRUE           1.358358e-13 6.951781e-14  3.552714e-14  0.000000e+00 8.237855e-14  5.684342e-14  8.553             TRUE           TRUE        TRUE      1.887379e-15
+   full_inherited_same full_cal_hpm_same full_path_same full_path_diff full_eta_pooled full_hpm_same
+1                 TRUE              TRUE           TRUE                   2.315495e-13          TRUE
+2                 TRUE              TRUE           TRUE                   2.965841e-14          TRUE
+3                 TRUE              TRUE           TRUE                   1.705002e-13          TRUE
+4                 TRUE              TRUE           TRUE                   6.057827e-14          TRUE
+5                 TRUE              TRUE           TRUE                   1.411068e-13          TRUE
+6                 TRUE              TRUE           TRUE                   2.540895e-14          TRUE
+7                 TRUE              TRUE           TRUE                   1.180773e-13          TRUE
+8                 TRUE              TRUE           TRUE                   8.874885e-14          TRUE
+9                 TRUE              TRUE           TRUE                   7.174427e-14          TRUE
+10                TRUE              TRUE           TRUE                   1.064894e-13          TRUE
+
+replays: 10, path disagreements: 0; Clopper-Pearson 95% upper bound on eps: 0.2589
+eta (pooled log Zhat, max over fits): 2.265e-13 ; eta_r (max over fits and islands): 2.492e-13
+
+GUARD
+   id frozen_identical path_identical log_Z_r_identical pip_r_identical hpm_F_identical    stop_status stop_estimates_available stop_hpm_incomplete stop_has_log_Z stop_dollar_log_Z_equals_log_Zbar0 stop_checkpoint stop_phase
+1   1             TRUE           TRUE              TRUE            TRUE            TRUE resource_limit                    FALSE                TRUE          FALSE                               TRUE    bridge_stage      pilot
+2   2             TRUE           TRUE              TRUE            TRUE            TRUE resource_limit                    FALSE                TRUE          FALSE                               TRUE    bridge_stage      pilot
+3   3             TRUE           TRUE              TRUE            TRUE            TRUE resource_limit                    FALSE                TRUE          FALSE                               TRUE    bridge_stage      pilot
+4   4             TRUE           TRUE              TRUE            TRUE            TRUE resource_limit                    FALSE                TRUE          FALSE                               TRUE    bridge_stage      pilot
+5   5             TRUE           TRUE              TRUE            TRUE            TRUE resource_limit                    FALSE                TRUE          FALSE                               TRUE    bridge_stage      pilot
+6   6             TRUE           TRUE              TRUE            TRUE            TRUE resource_limit                    FALSE                TRUE          FALSE                               TRUE    bridge_stage      pilot
+7   7             TRUE           TRUE              TRUE            TRUE            TRUE resource_limit                    FALSE                TRUE          FALSE                               TRUE    bridge_stage      pilot
+8   8             TRUE           TRUE              TRUE            TRUE            TRUE resource_limit                    FALSE                TRUE          FALSE                               TRUE    bridge_stage      pilot
+9   9             TRUE           TRUE              TRUE            TRUE            TRUE resource_limit                    FALSE                TRUE          FALSE                               TRUE    bridge_stage      pilot
+10 10             TRUE           TRUE              TRUE            TRUE            TRUE resource_limit                    FALSE                TRUE          FALSE                               TRUE    bridge_stage      pilot
+
+multi-seed: 100 final-run replays, 0 path disagreements, CP95 upper on eps 0.0295; eta pooled max 2.585e-13, eta_r max 2.860e-13, pip maxdiff 2.006e-13
+ [1] id          final_seed  status_fp   status_ld   path_same   path_diff   eta_r_max   eta_pooled  pip_maxdiff hpm_same   
+<0 rows> (or 0-length row.names)
