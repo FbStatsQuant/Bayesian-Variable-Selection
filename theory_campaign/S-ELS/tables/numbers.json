@@ -1,0 +1,25 @@
+{
+ "n_fits": 2400,
+ "n_stopped": 6,
+ "klass": {
+  "exact recovery": 1829,
+  "posterior miss": 565,
+  "no final ledger (fit stopped at resource_limit)": 6
+ },
+ "n_c541": 541,
+ "n_E3_all": 0,
+ "n_moves_gt0_all": 0,
+ "n_local_limit_all": 0,
+ "n_E1": 0,
+ "n_E2": 83,
+ "n_c_eq_S0": 1829,
+ "n_c541_exact": 0,
+ "n_search_miss": 0,
+ "max_F_truth_minus_F_hat_over_misses": -0.004869252081988407,
+ "scored_state": {
+  "scored (in top store)": 565
+ },
+ "c541_scored_state": {
+  "scored (in top store)": 541
+ }
+}

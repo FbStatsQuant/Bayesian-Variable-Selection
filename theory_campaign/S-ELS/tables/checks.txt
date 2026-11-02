@@ -1,0 +1,9 @@
+PASS  S0 equals H2 S0  
+PASS  H2 F_smc_hpm equals ledger F_hat (non-stopped)  max diff 1.9895196601282805e-12
+PASS  S_c == hpm_before_local model, F_c == F_before_local (all completed fits)  
+PASS  F_hat >= F_c (search never lowers the best)  
+PASS  S_hat == S_ret unless equal-F HPM tie change  S_hat!=S_ret in 0
+PASS  E3 == (F_hat > F_before_local)  E3 true in 0
+PASS  moves > 0  <=>  E3 (best-improvement path starts at the global best)  moves>0 in 0, E3 in 0
+PASS  F_truth == top-store F(S0) where S0 is in the store  n=2394, max diff 1.02e-12
+PASS  F_truth == F_hat on exact recoveries  n=1829, max diff 1.02e-12

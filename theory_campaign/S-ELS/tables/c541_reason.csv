@@ -1,0 +1,6 @@
+p,scale_key,A: F(S0) <= F(S_c)  (Lemma 0: S0 cannot be on the path; no search could deliver it)
+500,c050,218.0
+500,c100,40.0
+1000,c050,246.0
+1000,c100,37.0
+all,all,541.0
