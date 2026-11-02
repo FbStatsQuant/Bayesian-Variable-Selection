@@ -319,7 +319,7 @@ orthogonality; Δ_{u_i}(V∩u_i + j_{b_i}) = 0; Schur bound with missing set {j_
 ### 4.3 Proposition CONF (one-round confinement, uniform in φ and in the state) — PROVED under STAB-LH
 
 **Statement.** On 𝔈_n, for every φ ∈ [0,1] and every x ∈ 𝒩,
-  P_x(one round at φ ends outside 𝒩) ≤ a_n := m(2p²e^{−c₆n} + π₀(S ⊉ S°)) + 2Σ_{j=0}^{k₀+1}π₀(ν ≥ j)·ε_n^{k₀+1−j}/(k₀+1−j)!,
+  P_x(one round at φ ends outside 𝒩) ≤ a_n := 2mp²e^{−c₆n} + π₀(S ⊉ S°) + 2Σ_{j=0}^{k₀+1}π₀(ν ≥ j)·ε_n^{k₀+1−j}/(k₀+1−j)!,
 where m = p + B + 2 and π₀(ν ≥ 0) := 1. With Lemmas 2.1–2.2: a_n = O_P((v_max4^g)^{3}(log n/n)^{3/2}).
 
 **Proof.** Run the round step by step from x. Let τ be the first step whose result leaves 𝒩′ (τ = ∞ if none). Every step
@@ -339,9 +339,10 @@ every step ν(current) ≤ k + #NGI + 17 + ν(S′), and at the end of the round
 or (c) τ = ∞ and ν(end) ≥ k + 1. (b) needs #NGI + ν(S′) > k₁ − k − 17 = 2k₀ and (c) needs #NGI + ν(S′) ≥ k − 17 + 1
 = k₀ + 1; so (b) ∪ (c) ⊆ {#NGI(≤ τ) + ν(S′) ≥ k₀ + 1}. S′ is drawn with fresh randomness and the NGI bound holds
 conditionally on it, so P((b) ∪ (c)) ≤ Σ_{j=0}^{k₀+1}P(ν(S′) ≥ j)·ε_n^{k₀+1−j}/(k₀+1−j)! (and ε^r/r! ≤ 2ε^r/r! absorbs
-the j-split's boundary). P((a)) ≤ m·(2p²e^{−c₆n} + π₀(S ⊉ S°)) by Lemma T and a union bound over the m steps.
-Rates: π₀(ν ≥ j) ≤ π₀(S ⊉ S°) + 2e^{s}(eq)^j (Lemma 2.2(i)), π₀(S ⊉ S°) ≤ 2e^{u₀}(eq̃)^{k₀+1} + 2^{s+1}e_n
-(Lemma 2.2(ii)(iii)), q, q̃ = O_P(n^{−1/2}) and ε_n = O_P(v_max4^g√(log n/n)). ∎
+the j-split's boundary). P((a)) ≤ 2mp²e^{−c₆n} + π₀(S ⊉ S°) by Lemma T and a union bound over the m steps (the independence step occurs once
+per round, so its term π₀(S ⊉ S°) is not multiplied by m).
+Rates: π₀(ν ≥ j) ≤ π₀(S ⊉ S°) + 2e^{s}(eq)^j (Lemma 2.2(i)), π₀(S ⊉ S°) ≤ 2e^{u₀}(eq̃)^{k+1} + 2^{s+1}e_n
+(Lemma 2.2(ii)(iii), with k + 1 = 20 null extras in (ii); u₀ + k + s ≤ K), q, q̃ = O_P(n^{−1/2}) and ε_n = O_P(v_max4^g√(log n/n)). ∎
 
 **Corollary CONF-run. PROVED under STAB-LH.** For one final island with N particles and *any* frozen grid with T ≤ T_e
 stages, let E := {X_t^i ∈ 𝒩 for all i ≤ N and t = 0, …, T − 1}. On 𝔈_n,
@@ -438,7 +439,11 @@ So any lattice-type potential has Γ + Σ_tη_t ≥ log(NT) − O(1), while D5 n
 certificate fails by ≥ 2 log T for **every** N: enlarging N_e (a budget sequence) does not help, because the early
 crossers that create the oscillation multiply with N. The obstruction is the *choice of potential*, not the dynamics:
 the region must be closed under the favourable moves (§4.0). (Status: PROOF SKETCH; the visit claims are first-moment
-heuristics made rigorous only for the expected counts, and the numerics of §5 show both effects.)
+heuristics made rigorous only for the expected counts.) **Numerics** (`scripts/s3_b2_run.txt`, configurations A and A85,
+n ∈ {400, 1600, 6400}, method grid with T = 14–16): the realised Γ of the lattice potential is 6.2–9.9 (median per
+setting), against D5's allowance log(N/T_e) = 0.9–1.9 and log(NT) = 10.5–11.5 — the certificate fails as predicted —
+while delivery and scoring succeed in every island and the realised envelope barely moves (min_t log P_t ≥ −0.31). D5's
+worst-case κ is very pessimistic here; the realised r_t stays ≈ 1. For h = 1_𝒩 the realised Γ is 0 in every island.
 
 **(c) What a budget sequence would buy.** Nothing for (b). For §4.5, larger N only improves (1 − c₀)^N, while N T_e a_n
 must still → 0: N_n = o(n^{3/2}/log^{3.5}n) keeps confinement with k₀ = 2, and larger N needs a larger k₀ (k₀ with
@@ -459,9 +464,9 @@ bound for the transient proxy states, which is exactly what this proof avoided.
 ## 5. LH-iid (p ≫ n): remarks only
 - NB′: the proof of §2.2 uses exact orthogonality of the S°-side groups (Lemma OF). On LH-iid the groups are only
   approximately orthogonal (sample cross-correlations O_P(√(log p/n))); the d-range on 𝒢 then picks up cross terms of
-  order n·(log p/n) = log p per pair of touched groups, still O(log n) ≪ T₀ log r*. Combined with W3-PXN's Beta-law
-  aggregation bounds this should give NB′ on LH-iid with H ∝ p, needing H·g/(p√n)… → 0, i.e. **√n → ∞ suffices there
-  but H ≍ p makes the proxy term ≍ g/√n·(p/p)**: P(NB′ᶜ) = O(g n^{−1/2}) — CONJECTURE (not written).
+  order n·(log p/n) = log p per pair of touched groups, still O(log n) ≪ T₀ log r*. On LH-iid p ≥ n, so H ≍ p and the
+  proxy term H·g/(p√n) ≍ g/√n → 0 automatically: P(NB′ᶜ) = O(g n^{−1/2}) is expected, with W3-PXN's Beta-law aggregation
+  bounds replacing Lemma 2.1. CONJECTURE (not written).
 - Route (b2): Lemma J and Lemma T used exact zero leakage (ZJL) and exact unit orthogonality. On LH-iid, ZJL holds only
   in population; the sample leakage δ_{V,l} = O_P(√(log p)) (W3-PXN's Beta laws) is of the same order as the noise and
   is absorbed by the truncation exactly as in W3-PXN Lemma Tr. CONJECTURE (not written).
