@@ -1,0 +1,22 @@
+﻿A-REV9 audit record
+UTC: 2026-11-02T21:23:05.1523555Z
+Baseline: 581e4baeacc0901c7bbaef417828eda57769b5c3
+Branch: theory/A-REV9
+Execution: Windows PowerShell; analytical review only, no simulation, numerical experiment, benchmark, or compilation.
+Fetch: git fetch origin theory/W8-SYNTH; subsequent fetch of all branches listed in SNAPSHOT.txt.
+Source extraction: git show pinned_commit:path, saved through PowerShell Set-Content UTF8. Copies have platform line-ending/encoding transformation; authoritative source identity is Git commit plus path. SOURCE_SHA256 hashes the saved copies.
+A-REV6/A-REV7: git ls-tree -r --name-only at pinned heads returned no files under their corresponding campaign directories. git show of REVIEW.md failed because path absent.
+Checks: git diff --check; source/code reading; symbolic counterexamples recorded in REVIEW.md. No seeded workload or process/job ID applies.
+Writes restricted to theory_campaign/A-REV9. Source branches, methodology, production code and locked statements untouched.
+
+Hash                                                             Path                                                                                                       
+----                                                             ----                                                                                                       
+B4253987E3C43C2D703E0157EAF3E3A81D0FFF7821EF890B735B167F4344090E C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\Docs\Methodology\METHODOLOGY_v3.md  
+DB0B16D6856FFD606B88F71EE9F0B2904EBD25CD643BEFA5E97966CE16350079 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\Docs\Theory\theorems\00_COMMON.md   
+EA898E44183E2D5A73998916918527020583AF1737C804FFF96F4F147EF36147 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\Docs\Theory\proofs\LOCKED_PROOFS.md 
+C306E4979FA41D499C17376990FCE6CFF1D9165A602BEEF7F788FF40ECBB0968 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\Scripts\SMC_BVS\core\cpp\v3_score.h 
+9C47D604D8AD359A942D64A339F6CADAA5633E14EB722B9548FA1D1189033201 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\Scripts\SMC_BVS\core\cpp\v3_engine.h
+7641811D73E635BF7176EC76BE1C6655B60B2B2FB560453C4D7DC328D7B319A7 C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\theory-A-REV9\Scripts\SMC_BVS\core\cpp\v3_ledger.h
+
+
+
