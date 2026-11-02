@@ -1,0 +1,34 @@
+(1) Corollary T33-NF, worst case (lambda_H = 1, y'y/Q = n+1), standardised columns
+  n=  200 K= 100: eps_H=1.36e-07 eps_A=6.77e-10 eps_Q=2.28e-07 (n+1)r_Q=4.58e-05 universal eta_Q=4.58e-03  hypotheses hold: True
+  n=  200 K=  20: eps_H=2.00e-08 eps_A=9.96e-11 eps_Q=2.38e-08 (n+1)r_Q=4.80e-06 universal eta_Q=4.80e-04  hypotheses hold: True
+  n= 1000 K= 500: eps_H=8.43e-05 eps_A=8.42e-08 eps_Q=1.42e-04 (n+1)r_Q=1.42e-01 universal eta_Q=8.27e+01  hypotheses hold: True
+  n= 1000 K=  20: eps_H=2.29e-06 eps_A=2.29e-09 eps_Q=2.41e-06 (n+1)r_Q=2.41e-03 universal eta_Q=1.21e+00  hypotheses hold: True
+  largest n with the a-priori hypotheses, K = n/2: n = 1286
+  largest n with the a-priori hypotheses, K = 10: n = 4575
+  largest n with the a-priori hypotheses, K = 1: n = 8149
+
+(2) Proposition T33-Z at the study's final run (n = 200)
+  p=  500 tier=0 N=  2500 T=   10: decisions C_dec=1.14e+08; [measured per-score 1e-13] eta_Z=5.98e-11  epsilon (union bound)=1.83e-03
+  p=  500 tier=0 N=  2500 T=   10: decisions C_dec=1.14e+08; [rigorous per-score 1e-08] eta_Z=8.90e-07  epsilon (union bound)=8.74e+01
+  p=  500 tier=0 N=  2500 T=  100: decisions C_dec=5.78e+08; [measured per-score 1e-13] eta_Z=1.29e-10  epsilon (union bound)=9.16e-03
+  p=  500 tier=0 N=  2500 T=  100: decisions C_dec=5.78e+08; [rigorous per-score 1e-08] eta_Z=8.90e-07  epsilon (union bound)=4.34e+02
+  p=  500 tier=0 N=  2500 T= 1000: decisions C_dec=5.22e+09; [measured per-score 1e-13] eta_Z=8.21e-10  epsilon (union bound)=8.24e-02
+  p=  500 tier=0 N=  2500 T= 1000: decisions C_dec=5.22e+09; [rigorous per-score 1e-08] eta_Z=8.91e-07  epsilon (union bound)=3.90e+03
+  p=  500 tier=1 N= 10000 T=   10: decisions C_dec=4.54e+08; [measured per-score 1e-13] eta_Z=8.53e-11  epsilon (union bound)=1.02e-02
+  p=  500 tier=1 N= 10000 T=   10: decisions C_dec=4.54e+08; [rigorous per-score 1e-08] eta_Z=8.90e-07  epsilon (union bound)=3.75e+02
+  p=  500 tier=1 N= 10000 T=  100: decisions C_dec=2.31e+09; [measured per-score 1e-13] eta_Z=1.82e-10  epsilon (union bound)=5.49e-02
+  p=  500 tier=1 N= 10000 T=  100: decisions C_dec=2.31e+09; [rigorous per-score 1e-08] eta_Z=8.90e-07  epsilon (union bound)=1.76e+03
+  p=  500 tier=1 N= 10000 T= 4000: decisions C_dec=8.28e+10; [measured per-score 1e-13] eta_Z=4.38e-09  epsilon (union bound)=1.99e+00
+  p=  500 tier=1 N= 10000 T= 4000: decisions C_dec=8.28e+10; [rigorous per-score 1e-08] eta_Z=8.94e-07  epsilon (union bound)=6.18e+04
+  p= 1000 tier=0 N=  2500 T=   10: decisions C_dec=2.24e+08; [measured per-score 1e-13] eta_Z=1.09e-10  epsilon (union bound)=5.21e-03
+  p= 1000 tier=0 N=  2500 T=   10: decisions C_dec=2.24e+08; [rigorous per-score 1e-08] eta_Z=1.61e-06  epsilon (union bound)=1.94e+02
+  p= 1000 tier=0 N=  2500 T=  100: decisions C_dec=1.14e+09; [measured per-score 1e-13] eta_Z=1.78e-10  epsilon (union bound)=2.59e-02
+  p= 1000 tier=0 N=  2500 T=  100: decisions C_dec=1.14e+09; [rigorous per-score 1e-08] eta_Z=1.61e-06  epsilon (union bound)=9.71e+02
+  p= 1000 tier=0 N=  2500 T= 1000: decisions C_dec=1.03e+10; [measured per-score 1e-13] eta_Z=8.70e-10  epsilon (union bound)=2.33e-01
+  p= 1000 tier=0 N=  2500 T= 1000: decisions C_dec=1.03e+10; [rigorous per-score 1e-08] eta_Z=1.61e-06  epsilon (union bound)=8.74e+03
+  p= 1000 tier=1 N= 10000 T=   10: decisions C_dec=8.94e+08; [measured per-score 1e-13] eta_Z=1.56e-10  epsilon (union bound)=2.82e-02
+  p= 1000 tier=1 N= 10000 T=   10: decisions C_dec=8.94e+08; [rigorous per-score 1e-08] eta_Z=1.61e-06  epsilon (union bound)=8.02e+02
+  p= 1000 tier=1 N= 10000 T=  100: decisions C_dec=4.55e+09; [measured per-score 1e-13] eta_Z=2.53e-10  epsilon (union bound)=1.44e-01
+  p= 1000 tier=1 N= 10000 T=  100: decisions C_dec=4.55e+09; [rigorous per-score 1e-08] eta_Z=1.61e-06  epsilon (union bound)=3.91e+03
+  p= 1000 tier=1 N= 10000 T= 4000: decisions C_dec=1.63e+11; [measured per-score 1e-13] eta_Z=4.45e-09  epsilon (union bound)=5.15e+00
+  p= 1000 tier=1 N= 10000 T= 4000: decisions C_dec=1.63e+11; [rigorous per-score 1e-08] eta_Z=1.61e-06  epsilon (union bound)=1.39e+05
