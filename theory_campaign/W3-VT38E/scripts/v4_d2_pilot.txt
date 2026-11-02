@@ -17,3 +17,4 @@ pilot first stage, 30 replications: P(NB^c) est = 0/30 ; S0 among initial draws 
 == D2 on CF(1) n=1600 p=252 B=15 H=512 T_e=1000 [independent design seed 1]
 pi0(x0={1}) = b = 0.9623 ; |D| = 14 ; Dep (off D) = 0.0566 ; Dep incl. D = 1.215e+51 ; largest off-D terms [(89, 0.0066), (168, 0.0053), (68, 0.0025)]
 beta = 0.0295 ; W1's reported third term exp(-H beta g(b)) = 1.282e-06 ; full D2 bound without NB term: min_t [e^{-2Ht^2} + exp(-H beta g(b-t))] = 1.836e-05 at t = 0.115
+pilot first stage, 30 replications: P(NB^c) est = 0/30 ; S0 among initial draws in 2 ; S0 scored by end of stage 1 in 30/30 ; phi_1 range [0.01387, 1], forced 0 ; fraction of particles scoring S0 in the stage-1 round: mean 0.699 min 0.225 ; mechanisms {'gibbs': 10476, 'nswap': 258, 'uswap': 1}
