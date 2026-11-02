@@ -187,6 +187,46 @@ cross-block correlations are `O_P(sqrt(log p/n))` so NL_C holds w.p. -> 1, but N
 comparisons) fails at fixed SNR because `max_l delta_{∅,l}^2 ≈ 2A (theta'Sigma theta) log n`. The average condition is
 the right one; §4.3 sketches a direct route giving kappa = 1/2. Status: PROOF SKETCH.
 
+**Theorem 6 (direct start concentration under exact zero leakage; no truncation, no locked-proof transfer).**
+Status: **PROVED**. Let `S°` be deterministic, feasible, `|S°| = s` fixed. Assume G, R-lite(A, M), SE-blk(phi0), and
+* **ZL(S°)** (exact zero leakage): `lambda_b(S°) = 0` for every block, i.e. `P_{C_b} mu ∈ span X_{U_b°}`;
+* **SPREAD(Delta_0)**: `min_b ||(I - P_{C_b}) mu||^2/(n-1) >= Delta_0 > 0` (no single block carries all the signal);
+* **VIS-lin(c_V)**: `min_b g_b(S°) >= c_V n` with fixed `c_V > 0` (empty minimum = +inf).
+Then `1 - pi_0(S°) = O_{P_0}(2^B n^{-1/2})` (in particular `pi_0(S°) -> 1`), and `e_n° = O_P(e^{-c n})` for some c > 0.
+
+*Proof.* Step 0 (events). Let `E_n` be the event of Lemma 1.4 intersected with: (i) `||Y||^2 <= C_R n`,
+`C_R = 2M + 4 sigma^2`; (ii) `sup_{b, U ⊆ C_b} |RSS_U - (n-1) v_U| <= n^{3/4}`; (iii) `max ||(P_V - P_U) eps||^2 <= L sigma^2 log n`
+over nested within-block pairs `U ⊂ V = U ∪ U_b°` (L > 4A fixed). (ii) holds w.p. -> 1 because
+`RSS_U - (n-1)v_U = 2 r_U' eps + (||C eps||^2 - (n-1) sigma^2) - ||P_U eps||^2`, `r_U = (I - P_U) mu`, `||r_U||^2 <= Mn`:
+the first term is `O_P(sqrt(n log n))` uniformly by Gaussian tails and a union bound over `<= 2^16 n^A` sets, the second
+`O_P(sqrt n)`, the third `O_P(log n)` uniformly (as in Lemma 1.4). (iii) as in Lemma 1.4 (ranks <= 16, `<= 2^16 n^A` pairs).
+
+Step 1 (u°). Fix `l ∉ S°`, `b = b(l)`, `U_b° ⊆ T ⊆ C_b \ {l}`. By ZL and Lemma 2.3(i), `delta_{T,l} = 0`, hence
+`x = sigma^2 Z^2/RSS_T`, `Z = Z_{T,l} ~ N(0,1)`, and `x/(1-x) = sigma^2 Z^2 / RSS_{T+l}`. Also `Delta_{T+l} >= Delta_0`
+(`span X_{T+l} ⊆ span X_{C_b}`). On `E_n`, `RSS_{T+l} >= (n-1)(sigma^2 + Delta_0) - n^{3/4}`, so for `n >= n_0`
+`nu x/(1-x) <= a Z^2`, `a := (1/2) * sigma^2 / (sigma^2 + Delta_0/2) < 1/2`. Theorem 1 then gives, on `E_n`,
+`r_b(T+l)/r_b(T) <= (n+1)^{-1/2} e^{kappa_EXP} exp(a Z_{T,l}^2)` (using `-log(1-x) <= x/(1-x)`). Bounding the max over T
+by the sum,
+`u_n° <= (n+1)^{-1/2} e^{kappa_EXP} V_n`, `V_n := (p - s)^{-1} sum_{l ∉ S°} sum_{T} exp(a Z_{T,l}^2)`.
+`E V_n <= 2^B (1 - 2a)^{-1/2}` (linearity; no independence needed), so `V_n = O_P(2^B)` by Markov and
+`u_n° = O_P(2^B n^{-1/2})` (the event `E_n^c` has vanishing probability).
+
+Step 2 (e°). Fix b, `U ⊆ C_b` with `a = |U_b° \ U| > 0`, `V = U ∪ U_b°`. Add the missing members of `U_b°` one at a
+time; the logs telescope (`1 - x_k = RSS_{T_k}/RSS_{T_{k-1}}`), and Theorem 1 gives on `E_n`
+`log[r_b(V)/r_b(U)] >= -(a/2) log(n+1) - a kappa_EXP + nu log(RSS_U/RSS_V)`. Now
+`RSS_U - RSS_V = ||(P_V - P_U) Y||^2` and `(P_V - P_U)Y = (P_V - P_U)mu + (P_V - P_U)eps` (`P_V - P_U ≼ C`); by VIS-lin and (iii),
+`||(P_V - P_U)Y||^2 >= (sqrt(c_V n) - sqrt(L sigma^2 log n))^2 >= c_V n/2` for large n. With `-log t >= 1 - t` and
+`RSS_U <= ||Y||^2 <= C_R n`: `nu log(RSS_U/RSS_V) >= (n/2)(c_V/2)/C_R`. As `a <= 16`,
+`[r_b(U)/r_b(V)]^{1/a} <= (n+1)^{1/2} e^{kappa_EXP} exp(-n c_V/(64 C_R))`, so `e_n° <= 2 n^A (n+1)^{1/2} e^{kappa_EXP} e^{-n c_V/(64 C_R)}`.
+
+Step 3. Wave-1 T22(i-a,b) with reference S°: on `{u_n° < 1}`, `1 - pi_0(S°) <= (s+1) u_n°/(1 - u_n°) + s e_n°`.
+Steps 1–2 finish the proof. ∎
+
+**Remarks.** (1) The rate has no `sqrt(log n)`: exact zero leakage plus SPREAD keeps the exponent `a < 1/2` integrable.
+(2) In the BO benchmark with `S° = S0`, ZL(S0) is automatic; SPREAD holds whenever the true variables meet `>= 2`
+blocks; VIS-lin holds under fixed beta-min and SE-blk. So Theorem 6 also gives the favourable-regime statement
+`1 - pi_0(S0) = O_P(2^B n^{-1/2})` in BO **without** the locked T22(iii) (when the truth meets >= 2 blocks).
+
 ---------------------------------------------------------------------------------------------------
 
 ## 3. T27(i) from bounded leakage along the chain (masked regime)
@@ -300,12 +340,12 @@ Realisation: `X'X = (n-1) Sigma` exactly for every n (any centred orthonormal fr
 statements hold in-sample *exactly*. Regime R1 with `p = p_n <= n - 1` (G may grow; c, s0, the betas, psis and rhos fixed;
 `g <= B_n < 2g` for all large n).
 
-**Theorem 5 (masked regime on LH; input for T38(b)).** Status: **PROOF SKETCH** overall — parts (a)(b)(c)(e) are
-proved here from Theorems 1, 3, 4, Lemmas 2.3, 4.1, 4.2 and the locked T22(i), T22(ii-a), T22(iii) (via Prop. 2.2);
-part (d) quotes the locked T03. Under G, `sigma^2 > 0` fixed:
+**Theorem 5 (masked regime on LH; input for T38(b)).** Status: parts (a), (b), (c), (e): **PROVED** here from
+Theorems 1, 3, 4, 6, Lemmas 2.3, 4.1, 4.2 and the locked wave-1 T22(i), T22(ii-a), T22(iv-b); part (d) by citation of
+the locked T03 (its hypotheses verified below); the limit-law refinement in (b) is a PROOF SKETCH. Under G, `sigma^2 > 0` fixed:
 
-(a) **Near-truth start mass (T22(i) at S° ∈ R_0).** `1 - pi_0(S°) = O_{P_0}(2^B sqrt(log n) n^{-1/2})`; hence
-    `pi_0(R_d) >= pi_0(R_0) >= pi_0(S°) = 1 - O_P(2^B sqrt(log n) n^{-1/2})` for every `d >= 0`: `b_n -> 1`.
+(a) **Near-truth start mass (T22(i) at S° ∈ R_0).** `1 - pi_0(S°) = O_{P_0}(2^B n^{-1/2})`; hence
+    `pi_0(R_d) >= pi_0(R_0) >= pi_0(S°) = 1 - O_P(2^B n^{-1/2})` for every `d >= 0`: `b_n -> 1`.
 (b) **Masking (T27(i)).** `pi_0(S0) = p^{-c} n^{-c/2} e^{O_P(1)}`, with the limit law of §3 (the masked hubs are
     mutually independent and orthogonal).
 (c) **Regime.** VIS fails at reference S0 (block `C_{b_i}`, `U = ∅`: gain `||P_{x_{j_{b_i}}} mu||^2 = 0`), so the
@@ -316,12 +356,14 @@ part (d) quotes the locked T03. Under G, `sigma^2 > 0` fixed:
     `pi_0(R_0) -> 1`. By T22(iv-b) `inf_phi q_phi(S0) >= pi_0(S0)` only — the bridge must transport mass
     from `S° ∈ R_0` to `S0` (c missing-true additions), which is what T38(b) has to handle.
 
-*Proof of (a).* Blocks = groups (Lemma 4.2). Reference `S°`: by Lemma 4.1(b)(c), `P_{C_b} mu ∈ span X_{U_b°}` for every
-block, so `lambda_b(S°) = 0` (exact zero leakage: NL_0°, NL_avg°(1/2)). VIS°: on `C_{a_i}`, `U_b° = {j_a}` and for
+*Proof of (a).* Blocks = groups (Lemma 4.2). Reference `S°`: by Lemma 4.1(b)(c) (exact in-sample, since `X'X = (n-1)Sigma`),
+`P_{C_b} mu ∈ span X_{U_b°}` for every block: ZL(S°). SPREAD: `||(I - P_{C_b})mu||^2/(n-1) = theta'Sigma theta - gamma_b'Sigma_bb gamma_b`,
+which is `>= min{beta_i^2 psi_i^2 (1 - psi_i^2), beta_h^2, ...} > 0` because every block misses at least one linked pair's or
+visible group's contribution (the pair contributes `beta^2(1-psi^2)` to `theta'Sigma theta`, of which block `C_a` carries
+`beta^2(1-psi^2)^2`); it is a fixed positive number. VIS-lin: on `C_{a_i}`, `U_b° = {j_a}` and for
 `j_a ∉ U ⊆ C_a`: `(P_{U+j_a} - P_U) mu = (P_{U + j_a} - P_U) X_{C_a} gamma = beta(1-psi^2)(I - P_U) x_{j_a}` with squared norm
 `>= beta^2 (1-psi^2)^2 lambda_min(G_{U + j_a}) >= beta^2(1-psi^2)^2 (1-rho_+)(n-1)`; on visible groups the same with
-`beta_h^2`; on other groups `U_b° = ∅` (vacuous). This is `>= M_n (sigma^2 + 2M) log n` with `M_n ≍ n/log n`. SE-blk
-from Lemma 4.1(a). EXP′ from Theorem 1. Prop. 2.2 gives the rate with kappa = 1/2. ∎
+`beta_h^2`; on other groups `U_b° = ∅` (vacuous). So `c_V = (1 - rho_+) min{beta_i^2(1-psi_i^2)^2, beta_h^2}`. SE-blk from Lemma 4.1(a). Theorem 6. ∎
 *Proof of (b).* Chain: `S^(0) = S°`, add `j_{b_1}, …, j_{b_c}` in order; each `C_{b_i}` contains no other true variable,
 so `T_i = ∅` and `delta_{∅, j_{b_i}} = x_{j_{b_i}}' mu / sqrt(n-1) = 0` (Lemma 4.1(b)): CL(0). H3 holds with `c0 = 1/2` by (a).
 Theorem 4. ∎
