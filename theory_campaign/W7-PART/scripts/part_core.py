@@ -165,12 +165,12 @@ def margins(r, groups):
 
 
 # ----------------------------------------------------------------------------------------------- designs
-def gen_groups(n, G, g, rho, psi=0.0, kind="indep", rng=None, sizes=None):
+def gen_groups(n, G, g, rho, psi=0.0, kind="indep", rng=None, sizes=None, nlink=None):
     """Rows iid N(0, Sigma). Groups of size g (or `sizes`), within-group correlation rho.
     kind = 'indep'  : groups independent (cross correlation 0);
            'global' : one common factor, cross correlation psi for every cross pair (S5-like), needs 0 <= psi <= rho;
-           'lh'     : W3-PXN linked hubs: groups paired (0,1),(2,3),..; corr(hub_a, hub_b) = psi, cross correlations
-                      psi (hub-hub), rho*psi (hub-member), rho^2*psi (member-member), 0 elsewhere. Needs G even.
+           'lh'     : W3-PXN linked hubs: groups paired (0,1),(2,3),.. (first nlink pairs; default all); corr(hub_a, hub_b) = psi, cross correlations
+                      psi (hub-hub), rho*psi (hub-member), rho^2*psi (member-member), 0 elsewhere.
     """
     sizes = [g] * G if sizes is None else list(sizes)
     p = sum(sizes)
@@ -185,8 +185,12 @@ def gen_groups(n, G, g, rho, psi=0.0, kind="indep", rng=None, sizes=None):
             fh = rng.standard_normal(n)
             X[:, C] = (c0 * f0 + cg * fh)[:, None] + math.sqrt(1 - rho) * rng.standard_normal((n, len(C)))
     elif kind == "lh":
-        assert len(groups) % 2 == 0
-        for h in range(0, len(groups), 2):
+        nl = len(groups) // 2 if nlink is None else nlink
+        for h in range(2 * nl, len(groups)):  # unlinked groups: independent equicorrelated
+            C = groups[h]
+            fh = rng.standard_normal(n)
+            X[:, C] = math.sqrt(rho) * fh[:, None] + math.sqrt(1 - rho) * rng.standard_normal((n, len(C)))
+        for h in range(0, 2 * nl, 2):
             Ca, Cb = groups[h], groups[h + 1]
             f = rng.standard_normal(n)
             X[:, Ca] = math.sqrt(rho) * f[:, None] + math.sqrt(1 - rho) * rng.standard_normal((n, len(Ca)))
@@ -200,7 +204,7 @@ def gen_groups(n, G, g, rho, psi=0.0, kind="indep", rng=None, sizes=None):
     return X, groups
 
 
-def population_sigma(G, g, rho, psi=0.0, kind="indep", sizes=None):
+def population_sigma(G, g, rho, psi=0.0, kind="indep", sizes=None, nlink=None):
     sizes = [g] * G if sizes is None else list(sizes)
     p = sum(sizes)
     starts = np.cumsum([0] + sizes)
@@ -209,7 +213,8 @@ def population_sigma(G, g, rho, psi=0.0, kind="indep", sizes=None):
     if kind == "global":
         S = np.where(lab[:, None] == lab[None, :], rho, psi)
     if kind == "lh":
-        for h in range(0, len(sizes), 2):
+        nl = len(sizes) // 2 if nlink is None else nlink
+        for h in range(0, 2 * nl, 2):
             Ca = np.arange(starts[h], starts[h + 1]); Cb = np.arange(starts[h + 1], starts[h + 2])
             ha, hb = Ca[0], Cb[0]
             for j in Ca:

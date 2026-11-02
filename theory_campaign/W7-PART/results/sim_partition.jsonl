@@ -1,0 +1,2 @@
+{"cfg": {"n": 200, "p": 500, "g": 8, "rho": 0.7, "psi": 0.0, "kind": "indep"}, "reps": 500, "B": 14, "fail": 0, "not_union": 0, "not_laminar": 0, "margin_fail": 0, "ci": [0.0, 0.007350610051907784]}
+{"cfg": {"n": 200, "p": 500, "g": 10, "rho": 0.7, "psi": 0.0, "kind": "indep"}, "reps": 2000, "B": 14, "fail": 0, "not_union": 0, "not_laminar": 0, "margin_fail": 0, "ci": [0.0, 0.0018427397934059364]}
