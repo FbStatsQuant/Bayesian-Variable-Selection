@@ -10,7 +10,7 @@ Population plug-in predictor of log pi0(S0) (median level; REPORT ยง4.4, PROOF ย
   log pi0(S0) ~ (s0+1) log(1 - N_add/(s0+1)) - sum_j log(1 + O_del_j + O_swp_j).
 """
 import json, math, sys
-from collections import defaultdict
+from collections import defaultdict, Counter
 import numpy as np
 import fav_core as fc
 
@@ -150,3 +150,33 @@ for scen in (1, 3, 4, 6):
             Q("S%d p=%4d scale=%.1f: n*_half = %s, n*_null = %s, n*_del = %s, n*_hit = %s" % (scen, p, scale, nh, nn, nd, nhit))
 open("../results/threshold.txt", "w").write("\n".join(T) + "\n")
 print("\n".join(T))
+
+# Proposition N numerics: do independent designs share co-blocked group pairs? (S3/S4/S6, reps 0-3, scale 0.5)
+N = []
+N.append("# Prop N: co-blocked group pairs. cols: scen p n | mean # pairs | frac of groups in multi-group blocks | "
+         "mean Jaccard(pairs of rep a, pairs of rep b) over the 6 rep pairs | expected Jaccard if pairs were uniform")
+for scen in (3, 4, 6):
+    for p in (500, 1000):
+        for n in (200, 400, 800, 1600, 3200):
+            rs = [r for r in cells.get((scen, p, 0.5, n), []) if r["pairs"] is not None]
+            if len(rs) < 2:
+                continue
+            sets = [set(tuple(x) for x in r["pairs"]) for r in rs]
+            G = p // 5
+            frac = np.mean([len({h for pr in s for h in pr}) / G for s in sets])
+            jac = [len(a & b) / max(1, len(a | b)) for i, a in enumerate(sets) for b in sets[i + 1:]]
+            npairs = np.mean([len(s) for s in sets])
+            exp_j = npairs / (G * (G - 1) / 2)
+            N.append("S%d %4d %4d | %.1f | %.2f | %.4f | %.4f" % (scen, p, n, npairs, frac, np.mean(jac), exp_j))
+open("../results/propN.txt", "w").write("\n".join(N) + "\n")
+print("\n".join(N))
+# S1: realised truth contexts
+S = ["# S1: realised max number of truths sharing a block (m_real), distribution over designs"]
+for p in (500, 1000):
+    for n in (200, 400, 800, 1600, 3200):
+        rs = [r for r in cells.get((1, p, 0.5, n), [])]
+        if rs:
+            vals = [r["max_truths"] for r in rs]
+            S.append("S1 %4d %4d | max truths per block: %s" % (p, n, dict(sorted(Counter(vals).items()))))
+open("../results/s1_contexts.txt", "w").write("\n".join(S) + "\n")
+print("\n".join(S))
