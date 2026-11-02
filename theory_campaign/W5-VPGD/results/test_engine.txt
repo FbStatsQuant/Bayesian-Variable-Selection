@@ -1,0 +1,2 @@
+population Delta: max abs error 2.6645352591003757e-15
+score F: max abs error 2.842170943040401e-14
