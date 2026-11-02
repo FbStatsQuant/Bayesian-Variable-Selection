@@ -401,7 +401,7 @@ def population_checks():
 
 if __name__ == "__main__":
     ns = [int(v) for v in sys.argv[1:]] or [400, 1600, 6400, 25600, 102400, 409600, 1638400]
-    reps = 3
+    reps = 2
     pc = population_checks()
     print("population checks:", json.dumps(pc, indent=1), flush=True)
     allres = {"population": pc, "runs": []}
@@ -411,9 +411,10 @@ if __name__ == "__main__":
     lines.append(hdr)
     for n in ns:
         for r in range(reps):
-            res = analyse(n, 1000 * r + n % 997)
+            kinds = ("SH", "W1") if (r == 0 and n in (1600, 102400)) else ("SH",)
+            res = analyse(n, 1000 * r + n % 997, kinds)
             allres["runs"].append(res)
-            for kind in ("SH", "W1"):
+            for kind in [k_ for k_ in ("SH", "W1") if k_ in res]:
                 q = res[kind]
                 e1, e2 = q["eta1_parts"], q["eta2_parts"]
                 f = lambda d: "[" + ", ".join(f"{d[k]:.2e}" for k in ["gibbs_truth", "gibbs_null", "U", "B*N", "I"]) + "]"
@@ -421,6 +422,8 @@ if __name__ == "__main__":
                              f" | {q['eps_pt']:.2e} | {q['eps_add']:.2e} | {q['c1']:.3f} | {q['eps_del']:.2e} | {q['H_a']:.3f} | {q['c2']:.3f}"
                              f" | {q['c_star']:.3f} | {q['v']} | {q['Hprime']} | {q['Binom_tail']:.3f} | {q['Hprime_eta']:.3e}")
                 print(lines[-1], flush=True)
+            if "W1" not in res:
+                continue
             w1 = res["W1"]
             lines.append(f"   W1 family: A_nb = {w1['A_nb']}; W* = S°+{{1}} in family: {w1['Wstar_in_family']}; "
                          f"bad probs at W*: U = {w1['Wstar_bad']['U']:.3f}, B*N = {B * w1['Wstar_bad']['N']:.3f}" if w1["Wstar_bad"] else "")

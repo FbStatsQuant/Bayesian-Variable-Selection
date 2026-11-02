@@ -293,3 +293,214 @@ falsifies the *premise* (the sum-of-sups bad rate); it does not show that repair
 per-round bad frequency is an average over visited states, not a sup.
 
 **Numerics** (`scripts/nl0_equicorr.py`, `results/nl0_equicorr.txt`): see REPORT §4.
+
+---------------------------------------------------------------------------------------------------------
+
+## 4. Phase-1 progress without BTP
+
+[B] Prop. B1 needs ε_add → 0: *one fixed* missing truth j must be addable at every state with the same missing set
+(best-target persistence, BTP). BTP can fail when look-alikes in W change which missing truth carries the residual
+signal. It is not needed.
+
+**Prop. B1′ (pointwise addability). PROVED (EX-S, EX-A).** Let 𝒲 be any repair family whose phase-1 part is closed
+in the sense of [B] (on {no bad, no progress} the missing set is constant and the state stays in the family, and
+adding a missing truth at a family state is a progress step). Put
+
+  ε_pt(𝒲) := sup_{W∈𝒲, M(W)≠∅} min_{j∈M(W)} (1 − o_j(W)).
+
+Then for every phase-1 W ∈ 𝒲: P_W(the round has no bad and no progress step) ≤ 1 − (1 − ε_pt)/|M(W)|.
+Consequently Theorem B holds with c₁ replaced by c₁⁺ := max{1 − ε_add, (1 − ε_pt)/|M(x)|}.
+
+*Proof.* Realise the round by independent pairs (T_e, ω_e)_{e∈Λ}: T_e iid U(0,1) arrival times (the order σ), ω_e
+the randomness consumed by label e's step. By Theorem IND-T's argument (Lemma S applied to the step blocks within the
+round) this realisation has the same joint law of the round as the code. Let M′ := M(W), τ := min_{j∈M′} T_{G_j},
+J* := the argmin. Let 𝓗 := σ((T_e, ω_e)_{e∉G_{M′}}, τ). The labels executed before τ are the e ∉ G_{M′} with T_e < τ,
+in increasing T_e; so the state W_τ just before τ and the event 𝒜_τ := {no bad and no progress before τ} are
+𝓗-measurable. J* is uniform on M′ and independent of 𝓗 (exchangeability of the iid (T_{G_j})_{j∈M′}: the argmin is
+independent of the minimum and of everything else), and ω_{G_{J*}} is independent of (𝓗, J*). On 𝒜_τ, W_τ ∈ 𝒲 and
+M(W_τ) = M′ (an addition of a truth is progress, a removal is bad). If G_{J*} adds J* at time τ, that step is a
+progress step. Hence
+
+  P_W(no bad, no progress) ≤ E[1_{𝒜_τ}(1 − o_{J*}(W_τ))] = E[1_{𝒜_τ}·|M′|⁻¹Σ_{j∈M′}(1 − o_j(W_τ))]
+                          ≤ 1 − |M′|⁻¹ max_j o_j(W_τ) ≤ 1 − (1 − ε_pt)/|M′|.
+
+The cap is respected because |W_τ ∪ J*| ≤ s₀ + a ≤ K. In the proof of Theorem B ([B] §4, step (b)) only the
+inequality P(J_h = 1 | 𝓖_{h−1}) ≥ c_* is used, so c₁ may be replaced by the larger of the two constants. ∎
+
+**Prop. PA (pointwise addability holds). PROVED under G, R-lite, SE(k), BM-∞.** On E_n(𝔉_k), for every W with
+|W| + s₀ ≤ k and M(W) ≠ ∅,
+
+  min_{j∈M(W)} (1 − o_j(W)) ≤ 2p√(n+1)e^{κ_n} exp{−φ₀²M_nσ² log n·(n−1)/(8nC_R)},
+
+so ε_pt(𝒲) = n^{−ω(1)} for **every** family of bounded-size states, with no further condition (no BTP, no COH).
+
+*Proof.* Let M = M(W), r := (I − P_W)μ = (I − P_W)X_Mθ_M. By SE on W ∪ M, ‖r‖² ≥ λ_min(G_{W∪M})‖θ_M‖² ≥
+φ₀²(n−1)‖θ_M‖². Let Ǔ be the matrix of unit residuals ǔ_j of x_j (j ∈ M) on W; Ǔ'Ǔ is the rescaled Schur complement,
+so λ_min(Ǔ'Ǔ) ≥ φ₀², and r ∈ col(Ǔ). Hence Σ_{j∈M}(ǔ_j'r)² = ‖Ǔ'r‖² ≥ φ₀²‖r‖² and
+max_j Δ⁺_j(W) = max_j (ǔ_j'r)² ≥ φ₀⁴(n−1)‖θ_M‖²/|M| ≥ φ₀⁴(n−1)θ²_min ≥ φ₀²M_nσ² log n(n−1)/n. Apply (C5) to that j. ∎
+
+**Remark.** The price is the factor 1/|M(x)| (c₁⁺ ≥ 1/|M(x)| − o_P(1) instead of 1 − o_P(1)). BTP itself is not
+proved or refuted here; it is simply no longer a premise.
+
+---------------------------------------------------------------------------------------------------------
+
+## 5. The repair family: a defect of [B]'s 𝒵(x), and Theorem B♯
+
+### 5.1 The defect (COUNTEREXAMPLE to "η₁ → 0" with A = the method's neighbour graph)
+
+[B] fixes A = A(x) = ⋃_{j∈M(x)} N(j)∖S₀ and a junk budget c = |x ∩ J|. A swap that replaces an element of A in W by
+a junk null raises |Q| and **leaves 𝒵(x)** when |Q| = c, so it is a *bad* step. If that look-alike is *useless* at W
+(it carries no residual signal), the swap is accepted with probability of order one.
+
+**On LH this happens at the start itself.** Take an LH design ([E] §4.1) with a masked pair (j_a, j_b), x = S° (so
+c = 0). Under the symmetric-union neighbour graph, every k ∈ C_a∖{j_a} is a neighbour of j_b as soon as g − 1 < B
+(k's top-B list is its g−1 group-mates and then j_b, at correlation ψρ_a > ρ_n), so k ∈ A. But k is useless at
+every W ∋ j_a: its residual on j_a is √(1−ρ_a²)e_k, orthogonal to the residual signal ∝ ξ (the part of x_{j_b}
+orthogonal to x_{j_a}). At W* = S° ∪ {k} ∈ 𝒵(x), the uniform swap picks k with probability 1/|W*| and a junk l; with
+δ_{S°,k} = δ_{S°,l} = 0, the acceptance is 1 ∧ e^{(Z_l² − Z_k²)/2 + O(κ_n)}, of order one on average over l.
+So η₁ ≥ P_{W*}(U bad) ≥ c₀ > 0 and (L+4)η₁ → ∞: **COUNTEREXAMPLE** (numerical and reproducible: P_{W*}(U bad) =
+0.088 at n = 1600, configuration B, `scripts/lh_premises.py`; the asymptotic statement is a PROOF SKETCH — the
+average over junk l of 1 ∧ e^{(Z_l² − Z_k²)/2} stays bounded below as p grows because junk from independent groups
+has iid Z_l). The same mechanism appears whenever a look-alike becomes useless after its truth (or its partner) is
+present.
+
+### 5.2 Theorem B♯ (monotone look-alike map). PROVED (as a modification of [B]'s proof; EX-A, EX-S, SR)
+
+A **look-alike map** is a data-measurable 𝔄 : {∅ ≠ M′ ⊆ M(x)} → 2^{N₀} that is monotone (M″ ⊆ M′ ⇒ 𝔄(M″) ⊆ 𝔄(M′)).
+For a start x with M(x) ≠ ∅ put E_x := x∖S₀, c := |E_x∖𝔄(M(x))|, a := |𝔄(M(x))| + c, and
+
+  𝒵♯(x) := {W = U ∪ E : x∩S₀ ⊆ U ⊆ S₀, M(W) ≠ ∅, E ⊆ N₀, |E∖𝔄(M(W))| ≤ c + |𝔄(M(x))∖𝔄(M(W))|},
+  𝓕♯(x) := 𝒵♯(x) ∪ 𝒮_a,   V as in [B] (|M| + a on 𝒵♯, |P| on 𝒮_a).
+
+("Current junk" E∖𝔄(M(W)) may grow by exactly the look-alikes that stopped being look-alikes.) The constant map
+𝔄 ≡ A(x) gives back [B]'s 𝒵(x). Define ε_add♯, ε_pt♯, η₁♯ as in [B]/§4 with 𝒵♯⁺ = 𝒵♯(x) in place of 𝒵⁺, and
+c₁♯ := max{1 − ε_add♯, (1 − ε_pt♯)/|M(x)|}. Then **Theorem B holds verbatim**:
+P_x(S₀ not scored within H) ≤ P(Bin(H, c_*♯) < v) + H(η₁♯ + η₂(a)), c_*♯ = min(c₁♯, c₂), v = V(x).
+
+*Proof.* [B]'s proof uses the family only through: (F1) x ∈ 𝓕, S₀ ∈ 𝓕, V(W) = 0 iff W = S₀, V ≤ |M(x)| + a on 𝓕;
+(F2) "bad" includes leaving 𝓕, raising V, removing a truth (definition); (F3) in phase 1, adding a missing truth at
+a family state lands in 𝓕 with smaller V (used in B1, B1′); (F4) phase-2 states are 𝒮_a (B2 unchanged). Check:
+(F1) x ∈ 𝒵♯(x) since |E_x∖𝔄(M(x))| = c. *Size bound:* for W ∈ 𝒵♯, monotonicity gives 𝔄(M(W)) ⊆ 𝔄(M(x)), so
+|E| ≤ |𝔄(M(W))| + c + |𝔄(M(x))∖𝔄(M(W))| = a; hence |W| ≤ s₀ + a ≤ K and V ≤ |M(x)| + a. (F3) Let W ∈ 𝒵♯, j ∈ M(W),
+W′ = W ∪ {j}. If M(W′) = ∅ then W′ = S₀ ∪ E with |E| ≤ a, i.e. W′ ∈ 𝒮_a and V(W′) = |E| ≤ a < |M(W)| + a. Otherwise,
+with A₁ := 𝔄(M(W)) ⊇ A₂ := 𝔄(M(W′)): E∖A₂ ⊆ (E∖A₁) ∪ (A₁∖A₂), so |E∖A₂| ≤ c + |𝔄(M(x))∖A₁| + |A₁∖A₂| =
+c + |𝔄(M(x))∖A₂| (disjoint pieces, A₂ ⊆ A₁ ⊆ 𝔄(M(x))); and U′ ⊇ x∩S₀. So W′ ∈ 𝒵♯ and V drops by 1. Every other
+line of [B] §4 (Lemma F, Lemma C, B2, the main proof, Prop. D) is family-agnostic. ∎
+
+**Which steps are neutral now.** Swapping a current-junk null for another null, a look-alike for a look-alike, junk
+for a look-alike, and Gibbs deletions of nulls are neutral; the useless-look-alike swaps of §5.1 are neutral as soon
+as 𝔄 does not contain useless look-alikes. The remaining phase-1 bad steps are: (b1) truth removal (Gibbs: §6.1;
+swaps: §6.2); (b2) addition of a current-junk null at budget (Gibbs: §6.3) and swaps of a *useful* look-alike for
+current junk at budget (§6.4); (b3) independence jumps (§7).
+
+**Choice of 𝔄.** 𝔄 is a proof device (the method never uses it), so it may depend on the design and on S₀. The natural
+choice is the *useful-look-alike map*: nulls whose residual, on S₀ minus some subset of the missing truths, has
+non-negligible correlation with the missing signal. On LH this is 𝔄_LH(M′) = ⋃_{j_{b_i}∈M′}(C_{b_i}∖{j_{b_i}})
+(group-mates of the masked hub, not of the present hub).
+
+---------------------------------------------------------------------------------------------------------
+
+## 6. Phase-1 bad steps
+
+Notation: RSS^μ(V) := ‖(I − P_V)μ‖² (noise-free). For a family 𝒲 of phase-1 states: J(W) := N₀∖𝔄(M(W)) (current
+junk).
+
+### 6.1 TS: truth removal by Gibbs at incomplete states
+
+**TS(𝒲).** Δ⁻_i(W) := RSS^μ(W−i) − RSS^μ(W) ≥ M′_nσ² log n for all W ∈ 𝒲, i ∈ W∩S₀, some M′_n → ∞.
+Equivalently (up to φ₀²) n·γ_i(W)² ≥ M′_nσ² log n, γ(W) := G_W⁻¹X_W'μ, since Δ⁻_i = γ_i²‖(I−P_{W−i})x_i‖².
+
+**Prop. TS. PROVED UNDER TS(𝒲)** (with G, R-lite, SE(k)): Σ_{i∈S₀} sup_{W∈𝒲}(1 − o_i(W)) = n^{−ω(1)}. *Proof.* (C5). ∎
+
+**COUNTEREXAMPLE (TS is not implied by G, R, SE, BM-∞).** Exact Gram, truths 1, 2 with corr r ∈ (0,1), θ₁ = 1,
+θ₂ = −1/r (fixed: BM-∞ and SE hold), other columns orthogonal. At W = {1}, γ₁(W) = θ₁ + rθ₂ = 0, so Δ⁻₁ = 0 and the
+G₁ step deletes truth 1 with probability → 1 (it is a zero-leakage null at W∖1 = ∅: odds ≤ e^{O_P(1)}/(p√n)). Every
+start containing 1 but not 2 therefore has η₁ ≥ 1 − o_P(1). PROVED (the computation above);
+numerics `scripts/ts_cancel.py`: P(G₁ deletes 1 at {1}) = 0.996 → 0.99993 (n = 200 → 6.25·10⁵), while
+P(G₂ adds 2 at {1}) = 1.000: repair is not blocked, only the potential's bookkeeping fails (the layered version of
+[B] §8 is the fix; OPEN).
+
+Sufficient conditions: COH ([B] §6); and, on LH, §8 (PROVED).
+
+### 6.2 Truth removal by swaps: the few-substitutes condition
+
+The uniform swap removes a uniformly chosen element of W and adds a uniformly chosen outsider; a truth-for-l swap is
+bad. If some l *replaces* the truth's contribution (a "substitute"), its acceptance is of order one; only a vanishing
+fraction of proposals may hit substitutes.
+
+**FS(𝒲; D′, c₀).** For all W ∈ 𝒲, i ∈ W∩S₀: the set Sub(W,i) := {l ∉ W : RSS^μ(W−i+l) − RSS^μ(W) < c₀(n−1)} has at
+most D′ elements, and Sub(W,i) ∩ N(i) = ∅ (no substitute is a neighbour of i in the method's graph).
+
+**Prop. SW. PROVED UNDER FS(𝒲; D′, c₀)** (with G, R-lite(A,M), SE(k), c₀ > 0 fixed): on E_n,
+sup_W P_W(U removes a truth) ≤ D′/(p − k) + p·e^{−c₀n/(16C_R)}·e^{2κ_n} and
+sup_W P_W(N_b removes a truth) ≤ p·e^{−c₀n/(16C_R)}e^{2κ_n} for each of the B neighbour labels. Hence the swap part of
+η₁ is O(D′/p) + e^{−Ω(n)}, and (L+5)·(it) → 0 iff p_n/log n → ∞ (or D′ = 0).
+
+*Proof.* For l ∉ Sub(W,i) put V := W ∪ l. Since W−i+l = V−i and W = V−l, (U) gives
+log BF(W−i+l) − log BF(W) = −ν log(RSS_{V−i}/RSS_{V−l}) + R_l − R_i (the −½log(n+1) terms cancel). Write
+RSS_{V′} = RSS^μ(V′) + 2r_{V′}'ε + ‖(I−P_{V′})ε‖², r_{V′} = (I−P_{V′})μ. Then RSS_{V−i} − RSS_{V−l} ≥ c₀(n−1) −
+2‖r_{V−i} − r_{V−l}‖σ√(L log n) − Lσ² log n, because r_{V−i} − r_{V−l} ∈ span X_V and ‖P_Vε‖² ≤ Lσ²log n (E1); and
+‖r_{V−i} − r_{V−l}‖ ≤ 2‖μ‖ ≤ 2√(Mn). So the difference is ≥ c₀(n−1)/2 for large n, and with RSS_{V−l} ≤ C_R n,
+ν log(1 + t) ≥ (n/2)t/(1+t) gives an acceptance ≤ e^{2κ_n}e^{−c₀n/(8C_R)·(1−o(1))}. The same size cancels the prior;
+the neighbour swap's Hastings factor is ≤ p. U: the proposal hits a given (i, l) with probability 1/(|W|(p−|W|)),
+and at most |W∩S₀|·D′ pairs are substitutes. N: substitutes are excluded from N(i). ∎
+
+### 6.3 TL♯: current-junk additions at budget
+
+**TL♯(𝒲).** Λ₁(𝒲) := Σ_{l∈N₀} sup_{W∈𝒲 : l∈J(W)∖W} o_l(W) = o_P(1/log n).
+
+**Prop. TL. PROVED UNDER ZJL + CS(g₀)**, where
+- **ZJL(𝒲)** (zero junk leakage): δ_{W,l} = 0 for every W ∈ 𝒲 and l ∈ J(W)∖W;
+- **CS(g₀)** (component structure): there are sets 𝒞(l) ∋ l with |𝒞(l)| ≤ g₀ such that x_l ⊥ X_{W∖𝒞(l)} and
+  X_{W∩𝒞(l)} ⊥ X_{W∖𝒞(l)} for all W ∈ 𝒲 (so u_{W,l} = u_{W∩𝒞(l),l}).
+Then Λ₁(𝒲) = O_P(2^{g₀}(s₀+a+1)√(log n/n)).
+
+*Proof.* With δ = 0, (C3)'s proof applies verbatim (it used only δ = 0 and (E2), which holds for every V, superset of
+S₀ or not): odds_l(W) ≤ [(s₀+a+1)/(2p−s₀−a−1)](n+1)^{−1/2}e^{κ_n+ϑ′_n}e^{Z²_{W,l}/2}, and by CS, Z_{W,l} = Z_{W∩𝒞(l),l}
+takes at most 2^{g₀} values per l. Then as in Prop. NL0. ∎
+
+ZJL is exact zero leakage; in general designs it should be relaxed to a bounded-leakage version (δ² ≤ ησ² log n with
+η < (√(2A+1) − √(2A))², the 00_COMMON NL_η threshold) — PROOF SKETCH only: the extra factor e^{|δ|·|Z|} is
+n^{√(2Aη)+η/2} after truncation, which the threshold makes o(√n/ log^{3/2} n). For random designs the max-type
+NL_η fails at fixed SNR ([E] REPORT, "What fails"), and an average/Beta argument (as in [E] §4.3) would be needed:
+OPEN.
+
+### 6.4 ULR: retention of useful look-alikes
+
+**ULR(𝒲; c₀).** For all W ∈ 𝒲, k ∈ E(W) ∩ 𝔄(M(W)), l ∈ J(W)∖W: RSS^μ(W−k+l) − RSS^μ(W) ≥ c₀(n−1).
+
+**Prop. ULR. PROVED UNDER ULR(𝒲; c₀)** (with G, R-lite, SE(k)): the U- and N-swap probabilities of replacing a
+look-alike by current junk are ≤ p·e^{2κ_n}e^{−c₀n/(16C_R)} uniformly. *Proof.* As Prop. SW with k in the role of i. ∎
+
+---------------------------------------------------------------------------------------------------------
+
+## 7. IND-M: independence-proposal bad acceptance
+
+**Prop. IM (reference bound). PROVED.** For any feasible S° and any W,
+
+  β_I(W) := Σ_{S′ bad at W} π₀(S′)(1 ∧ e^{d(S′)−d(W)}) ≤ (1 − π₀(S°)) + 1{S° bad at W}·π(S°)/(π(W)π₀(S°)).
+
+*Proof.* Split S′ = S° from S′ ≠ S°; for the latter use 1 ∧ (·) ≤ 1. For S°: e^{d(S°)−d(W)} =
+[γ₁(S°)/γ₀(S°)][γ₀(W)/γ₁(W)] = [π(S°)/π(W)][π₀(W)/π₀(S°)] ≤ π(S°)/(π(W)π₀(S°)). ∎
+
+**SCR(S°)** (start concentration on a reference): S° ⊆ S₀ deterministic, fixed size, 1 − π₀(S°) = o_P(1/log n).
+**GS(S°)** (subset gain): for every ∅ ≠ T ⊆ M := S₀∖S°, Δ_T := RSS^μ(S°) − RSS^μ(S°∪T) ≥ M′_nσ² log n.
+(For T = M this is automatic from SE: Δ_M ≥ φ₀²(n−1)‖θ_M‖².)
+
+**Prop. IND-M. PROVED UNDER SCR(S°) + GS(S°)** (with G, R-lite, SE(s₀+a+2), BM-∞), for eligible starts x ⊇ S° and
+the family 𝓕♯(x) (or [B]'s 𝓕(x)): uniformly over W ∈ 𝓕(x)∖{S₀},
+
+  β_I(W) ≤ (1 − π₀(S°)) + 2(2p√(n+1)e^{κ_n})^{s₀+a}·exp{−M′_nσ² log n/(8C_R)} = o_P(1/log n).
+
+*Proof.* (i) *When is S° bad at W?* x ⊇ S° and W ∩ S₀ ⊇ x ∩ S₀ ⊇ S° (phase 1), or W ⊇ S₀ (phase 2). If W∩M = ∅ then
+(phase 1) W∩S₀ = S°, S° removes no truth, M(S°) = M(W), V(S°) = V(W), and S° ∈ 𝒵♯(x) (E = ∅; x∩S₀ ⊆ S°): not bad.
+If T := W∩M ≠ ∅ then S° ⊉ W∩S₀: bad. (ii) For T ≠ ∅, W = S° ∪ T ∪ E with E = W∖S₀, |E| ≤ a. Removing the nulls of E
+one at a time multiplies π by at most 2p√(n+1)e^{κ_n} each ((C2)), so π(S°∪T)/π(W) ≤ (2p√(n+1)e^{κ_n})^a; and (C6)
+with Δ_T gives π(S°)/π(S°∪T) ≤ (2p√(n+1)e^{κ_n})^{|T|}e^{−Δ_T/(8C_R)}. (iii) π₀(S°) ≥ ½ w.p. → 1 by SCR. ∎
+
+**What this does not cover.** (a) Starts not containing S°. (b) A start concentrated on a *superset* S° ⊋ S₀ (the
+double-counting supersets [B] observed at n = 200, p = 20 in S3/S4/S6): then at W ∈ 𝒮_a with |P(W)| < |P(S°)| the
+draw S° is bad and its acceptance e^{d(S°)−d(W)} need not be small: **OPEN** (plausibly false at finite n).
+(c) A start spread over many references: replace 1 − π₀(S°) by 1 − π₀(ℛ) for a finite reference set ℛ and require GS for
+each member — same proof (PROOF SKETCH). (d) The favourable regime S° = S₀: then S° is never bad and β_I ≤ 1 − π₀(S₀),
+which T22(iii) controls.
