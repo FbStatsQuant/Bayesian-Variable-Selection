@@ -1,0 +1,2 @@
+variant {"lambda_min_Sigma": 0.00870578863054657, "d_within": 0.010000000000000009, "d_cross_min": 0.050000000000000044, "blocks_equal_groups": true, "max_table_model_gain_over_empty": -2.8258673286055114, "start_mode": [], "best_flip_gain_at_empty": -2.8258673286055114, "truth_gain_over_empty": 19.915366092276287, "search_from_empty": {"returned": [], "certified": true}}
+phi_reach {"design": 0, "n": 40, "centre": [2, 5], "Phi": 3, "path": [[2, 5], [1, 5], [0, 1, 5], [0, 1, 2]], "moves": 3, "first_move_progress": false, "Phi_along_path": [3, 3, 2, 0]}
