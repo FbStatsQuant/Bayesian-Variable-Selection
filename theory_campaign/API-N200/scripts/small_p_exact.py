@@ -105,10 +105,16 @@ def run(kind, c, n=40, p=12, R=2000, seed=20261102):
     L1 = beats[one].any(0)
     L2 = beats[two].any(0)
     pe = beats[one].mean(1)
+    # exact posterior mass of S0 over Omega (log-sum-exp), hence delta1 = 1 - pi(S0) and T21's Markov term 2 E delta1
+    Fmax = Fm.max(0)
+    logZ = Fmax + np.log(np.exp(Fm - Fmax[None, :]).sum(0))
+    piS0 = np.exp(F0 - logZ)
+    delta1 = 1 - piS0
     res = dict(kind=kind, c=c, n=n, p=p, R=R, M=M,
                P_post=post_miss.mean(), P_L=L1.mean(), P_L2=L2.mean(),
                excess=(post_miss & ~L1).mean(), excess2=(post_miss & ~L2).mean(),
                max_pe=pe.max(), sum_pe=min(1.0, pe.sum()),
+               E_delta1=delta1.mean(), two_E_delta1=min(2 * delta1.mean(), 9.99), P_half=(piS0 <= 0.5).mean(),
                mean_dist_of_Sdagger_on_miss=(dist[arg][post_miss].mean() if post_miss.any() else float("nan")),
                max_dist_of_Sdagger=int(dist[arg].max()))
     # sanity: L implies post miss (deterministic inclusion), never violated
@@ -118,12 +124,12 @@ def run(kind, c, n=40, p=12, R=2000, seed=20261102):
 if __name__ == "__main__":
     t0 = time.time()
     out = []
-    hdr = "kind | c | P_post | P_L (one-move) | P_L2 (Hamming<=2) | excess=P_post-P_L (post miss, no one-move) | excess2 | max_e p_e | sum_e p_e | mean/max dist of S-dagger"
+    hdr = "kind | c | P_post=P(S-dagger!=S0) | P_L (one-move) | P_L2 (Hamming<=2) | excess=P_post-P_L | excess2 | max_e p_e | sum_e p_e | mean/max dist of S-dagger | P(pi(S0)<=1/2) | 2 E delta1 (T21 term)"
     out.append(hdr)
     for kind in ("iid", "equi0.3", "lookalike0.85"):
         for c in (0.35, 0.5, 0.75, 1.0):
             r = run(kind, c)
-            out.append(f"{kind} | {c} | {r['P_post']:.4f} | {r['P_L']:.4f} | {r['P_L2']:.4f} | {r['excess']:.4f} | {r['excess2']:.4f} | {r['max_pe']:.4f} | {r['sum_pe']:.4f} | {r['mean_dist_of_Sdagger_on_miss']:.2f}/{r['max_dist_of_Sdagger']}")
+            out.append(f"{kind} | {c} | {r['P_post']:.4f} | {r['P_L']:.4f} | {r['P_L2']:.4f} | {r['excess']:.4f} | {r['excess2']:.4f} | {r['max_pe']:.4f} | {r['sum_pe']:.4f} | {r['mean_dist_of_Sdagger_on_miss']:.2f}/{r['max_dist_of_Sdagger']} | {r['P_half']:.4f} | {r['two_E_delta1']:.3f}")
             print(out[-1], flush=True)
     out.append(f"(n = 40, p = 12, s0 = 3, beta = c*(1.4,-1,1.8), sigma = 1, R = 2000 noise draws per design, one design per kind, seed 20261102; {time.time()-t0:.0f} s)")
     with open(os.path.join(OUT, "small_p_exact.txt"), "w") as f:
