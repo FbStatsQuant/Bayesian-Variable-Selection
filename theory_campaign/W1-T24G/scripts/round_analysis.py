@@ -44,13 +44,14 @@ class IndTables:
             sel = keys == c
             dd = M.d[sel]; w = M.pi0[sel]
             o = np.argsort(dd); dd = dd[o]; w = w[o]
-            mx = dd.max()
-            self.cats[int(c)] = (dd, np.concatenate([[0], np.cumsum(w)]),
-                                 np.concatenate([[0], np.cumsum(w * np.exp(dd - mx))]), mx)
+            with np.errstate(divide='ignore'):
+                lw = np.log(w) + dd
+            lc = np.concatenate([[-np.inf], np.logaddexp.accumulate(lw)])
+            self.cats[int(c)] = (dd, np.concatenate([[0], np.cumsum(w)]), lc, 0.0)
     def acc(self, c, dx):
-        dd, cw, cwe, mx = self.cats[c]
+        dd, cw, lc, _ = self.cats[c]
         i = np.searchsorted(dd, dx, side='left')
-        return (cw[-1] - cw[i]) + cwe[i] * math.exp(mx - dx)
+        return (cw[-1] - cw[i]) + math.exp(lc[i] - dx)
     def self_acc(self, x):
         return self.M.pi0[x]
     def query(self, x):
