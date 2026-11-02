@@ -145,7 +145,7 @@ proposals `:153, :174`, independence proposal `:186`) or a resampled copy of suc
 in the final run comes from an `eval` with `emit = true`, except the final local-search centre (`emit_centre =
 false`, `cpp/v3_core.cpp:447`), which is `led.hpmS`, already offered. The same holds for the calibration state
 (`cpp/v3_core.cpp:610, 657`: centres are `led->hpmS`). (3) Cache eviction is "clear when full"
-(`cpp/v3_score.h:283`), after which a model is re-evaluated fresh and re-offered (idempotent: `offer_hpm` uses the
+(`cpp/v3_score.h:284`), after which a model is re-evaluated fresh and re-offered (idempotent: `offer_hpm` uses the
 strict order `hpm_better`, `cpp/v3_util.h:121–126`; stores reject duplicates, `cpp/v3_ledger.h:51`).
 Swap and independence proposals are evaluated before their accept uniform (`:153` before `:156`; `:174` before
 `:177`; `:186` before `:189`), so rejected proposals are scored. A neighbour swap with N(j)∖S = ∅ makes no proposal

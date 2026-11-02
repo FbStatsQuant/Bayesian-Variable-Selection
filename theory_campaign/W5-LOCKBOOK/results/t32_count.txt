@@ -1,0 +1,55 @@
+{
+ "n=200,p=500": {
+  "m": 516,
+  "Mp": 40500,
+  "ell": 10,
+  "L": 8,
+  "C_eval_both_tiers": 267610872968,
+  "C_eval_tier0_only": 16189996622,
+  "conjectured_rhs": 535236539242,
+  "ratio_conj_over_proved": 2.000055279166485,
+  "local_searches": 23,
+  "scan_evals_all_LS": 10246523
+ },
+ "n=200,p=1000": {
+  "m": 1016,
+  "Mp": 91000,
+  "ell": 11,
+  "L": 8,
+  "C_eval_both_tiers": 562428743935,
+  "C_eval_tier0_only": 33987423031,
+  "conjectured_rhs": 1124898854285,
+  "ratio_conj_over_proved": 2.0000735496104105,
+  "local_searches": 25,
+  "scan_evals_all_LS": 27300025
+ },
+ "n=800,p=1000": {
+  "m": 1018,
+  "Mp": 241000,
+  "ell": 11,
+  "L": 10,
+  "C_eval_both_tiers": 563899741650,
+  "C_eval_tier0_only": 34147891146,
+  "conjectured_rhs": 1127911724000,
+  "ratio_conj_over_proved": 2.0001990437159476,
+  "local_searches": 25,
+  "scan_evals_all_LS": 72300025
+ },
+ "n=10000,p=100000": {
+  "m": 100018,
+  "Mp": 475100000,
+  "ell": 17,
+  "L": 14,
+  "C_eval_both_tiers": 3058769489240074,
+  "C_eval_tier0_only": 184771815224038,
+  "conjectured_rhs": 6118094123214400,
+  "ratio_conj_over_proved": 2.0001814928310893,
+  "local_searches": 37,
+  "scan_evals_all_LS": 316416600037
+ },
+ "slack_check_min_conj_minus_proved": {
+  "value": 1094952614,
+  "n": 3,
+  "p": 1
+ }
+}
