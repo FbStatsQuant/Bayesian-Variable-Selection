@@ -1,0 +1,102 @@
+[
+  {
+    "ref": "origin/theory/W8-SYNTH",
+    "head": "6876a9a575550065727c3e21891a9ce97a69911b",
+    "path": "theory_campaign/W8-SYNTH/SYNTHESIS.md",
+    "sha256": "aea5ed054ef15e49ad4a68564f1eb9e23505f9e40e707243d2e1ccb507e08998"
+  },
+  {
+    "ref": "origin/theory/W4-T38FULL",
+    "head": "a0f9cb5e000dedf367e26fd0da019ccd2218fb42",
+    "path": "theory_campaign/W4-T38FULL/T38_PROOF.md",
+    "sha256": "c4a7e4727cb38e5b9bedcda292330ee62584f31fa112790962354cceae3edaa1"
+  },
+  {
+    "ref": "origin/theory/W4-T38FULL",
+    "head": "a0f9cb5e000dedf367e26fd0da019ccd2218fb42",
+    "path": "theory_campaign/W4-T38FULL/T38_STATEMENT.md",
+    "sha256": "967d2e5c5ffa2818610f7b0b40a77b937500ddd16f3635d7d4ea4c9afc86f7b8"
+  },
+  {
+    "ref": "origin/theory/W6-FIXREV1",
+    "head": "a7833f3d185d188ca48c7cb4a12faf4397ac63de",
+    "path": "theory_campaign/W6-FIXREV1/T38_PROOF.md",
+    "sha256": "c190776e9a8c0401ccc3fd5b7cb723574f2c8ee64cbb0e5a7f868bd7f6967252"
+  },
+  {
+    "ref": "origin/theory/W6-FIXREV1",
+    "head": "a7833f3d185d188ca48c7cb4a12faf4397ac63de",
+    "path": "theory_campaign/W6-FIXREV1/T38_STATEMENT.md",
+    "sha256": "2e5dcc20b59e0bab72ffe4d8102700eb6709d268c1a19cecf79aa9f0a1c3e2a9"
+  },
+  {
+    "ref": "origin/theory/W6-FIXREV1",
+    "head": "a7833f3d185d188ca48c7cb4a12faf4397ac63de",
+    "path": "theory_campaign/W6-FIXREV1/CONSOLIDATED.md",
+    "sha256": "55d1fb57dc918b16d7272f220956f7d9ce111b93defde3ec1aebf631e83c4620"
+  },
+  {
+    "ref": "origin/theory/W5-VMASK",
+    "head": "4e41b974e0b8f954eb6adaf6be76d351821fdab0",
+    "path": "theory_campaign/W5-VMASK/REPORT.md",
+    "sha256": "3b23ccf13c249e422a883afd7283378d2202b3dabca9a73232b5aac0b65e5010"
+  },
+  {
+    "ref": "origin/theory/W5-VMASK",
+    "head": "4e41b974e0b8f954eb6adaf6be76d351821fdab0",
+    "path": "theory_campaign/W5-VMASK/REPAIRS.md",
+    "sha256": "470e4f40a5726af812f4f40ce78d1e89115a53c4de190073b4081917524865a6"
+  },
+  {
+    "ref": "origin/theory/W5-VPGD",
+    "head": "8e2bbc4effa65a265817c95f72221ae105968aae",
+    "path": "theory_campaign/W5-VPGD/REPAIRS.md",
+    "sha256": "d990e970bf517151f82bb0ea132487b2c2daebc61b47aed9c8f1eaa2da0ddba0"
+  },
+  {
+    "ref": "origin/theory/W3-PXN",
+    "head": "4aebea3bf003f5f3c0c7239a24c824ec2d2aa574",
+    "path": "theory_campaign/W3-PXN/PROOF.md",
+    "sha256": "8120ac15735339bcb23a6d1df45455fcb42f197b8bcb8f47c455170860b11290"
+  },
+  {
+    "ref": "origin/theory/W3-PXN",
+    "head": "4aebea3bf003f5f3c0c7239a24c824ec2d2aa574",
+    "path": "theory_campaign/W3-PXN/REPORT.md",
+    "sha256": "6baf0de2509b5b734e2d8252c3757ecad873c60c6ab0dda61e451e8131ab480d"
+  },
+  {
+    "ref": "origin/theory/A-REV1",
+    "head": "26815e841f25cd472a20f8ea251c00b4ffab3e37",
+    "path": "theory_campaign/A-REV1/REVIEW.md",
+    "sha256": "05d64b97e3e254ebdac6c1fc2cdba35199e95a8e8d64597fe922ce50207ac5e0"
+  },
+  {
+    "ref": "origin/theory/A-REV3",
+    "head": "522d83df6d5848fecba401343e99553f2ea03a74",
+    "path": "theory_campaign/A-REV3/REVIEW.md",
+    "sha256": "fce57ffe98be4529e128befe55f40ef603bfda701af5052c67fbf5f7469450fe"
+  },
+  {
+    "ref": "origin/theory/O-LS0",
+    "head": "02348e28a6074696ac1ca05ddee94cf837ddd776",
+    "path": "theory_campaign/O-LS0/REPORT.md",
+    "sha256": "e0dc4c53c14ec0214f4f71c7175ad19aa26c4f9dd5420b2c8802bc41cccd1030"
+  },
+  {
+    "path": "Docs/Methodology/METHODOLOGY_v3.md",
+    "sha256": "b4253987e3c43c2d703e0157eaf3e3a81d0fff7821ef890b735b167f4344090e"
+  },
+  {
+    "path": "Docs/Theory/theorems/00_COMMON.md",
+    "sha256": "db0b16d6856ffd606b88f71ee9f0b2904ebd25cd643befa5e97966ce16350079"
+  },
+  {
+    "path": "Docs/Theory/proofs/LOCKED_PROOFS.md",
+    "sha256": "ea898e44183e2d5a73998916918527020583af1737c804fff96f4f147ef36147"
+  },
+  {
+    "path": "Scripts/SMC_BVS/core/cpp/v3_engine.h",
+    "sha256": "9c47d604d8ad359a942d64a339f6cadaa5633e14eb722b9548fa1d1189033201"
+  }
+]
