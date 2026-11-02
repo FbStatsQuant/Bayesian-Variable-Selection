@@ -136,6 +136,6 @@ for r in range(reps):
     found_init += init_hit
     found += init_hit or nhit > 0
     per_particle.append(nhit / H)
-print("pilot first stage, %d replications: P(NB^c) est = %d/%d ; S0 among initial draws in %d ; S0 scored by end of stage 1 in %d/%d ;"
+if reps > 0: print("pilot first stage, %d replications: P(NB^c) est = %d/%d ; S0 among initial draws in %d ; S0 scored by end of stage 1 in %d/%d ;"
       " phi_1 range [%.4g, %.4g], forced %d ; fraction of particles scoring S0 in the stage-1 round: mean %.3f min %.3f ; mechanisms %s" % (
       reps, nb_fail, reps, found_init, found, reps, min(phis), max(phis), forced, np.mean(per_particle), np.min(per_particle), mech))
