@@ -154,6 +154,16 @@ prior penalty-matched to p = 500 ("pm500", labelled).
   Consistent with T37's "Why", these are look-alike leakage at the level of the missing truth's projection.
 * At c = 0.25, S₀ is a local max in only 2–48% of datasets: the posterior misses dominate.
 
+**Exp 1b: p = 25, s₀ = 5, with the weak truth 0.8c included** (pm500, 20 replicates per cell;
+`results/exp1_p25_summary.md`). Results are among the 220/360 datasets with PD and S₀ a local max.
+* Literal TD(0) holds in only 0.70–0.80 of datasets even at c = 1.
+* On R_{s₀,2}: TD′_P = 0.25 and TD′_∞ = 0.90.
+* On R_{2,2}: TD′_P = 0.66 and TD′_∞ = 0.97. On R_{1,1}: TD′_P = 1.00.
+* At most 7 moves were needed.
+* As s₀ grows, TD′_P on the full R_d decays (more weak-truth masking at states missing many truths), while TD′_∞
+  and the small-a regions are stable. This supports stating T37 on R_{a,d} with small a, and with TD′_∞ or the
+  lattice condition rather than TD′_P on all of R_d.
+
 **Exp 3: COUNTEREXAMPLE to PGD under SE** (`exp3_combination_lookalike.py`, `results/exp3_combination.txt`).
 Design: truths x₁ ⊥ x₂, null x₃ = 0.85(x₁+x₂)/√2 + √(1−0.85²)z, so φ₀² = 0.15. At n = 3000 the first greedy move from
 ∅ is "add x₃" in 200/200 draws. The uncapped path still reaches S₀ in 3 moves, against Φ = 2. TD′_P fails and
