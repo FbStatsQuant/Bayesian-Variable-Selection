@@ -31,7 +31,7 @@ does not support the paper's empirical claims, and its headline theorem (Theorem
    length (§6). A referee will not punish the honesty; a referee will ask what the theorems are *for*.
 2. **The masked regime, which is the paper's reason to exist, is proved only with a method change (LS0), and the
    routes for the method that was evaluated are hypotheses-as-conclusions** ((b1′), (b2): conditional on DELIV, REP,
-   NB′, all OPEN on every family at the time of writing).
+   NB′; in the draft none is proved on any family, the best instance being a PROOF SKETCH on LH with c = 1).
 3. **The theory is not positioned against the rapid-mixing literature for Bayesian variable selection** (Yang,
    Wainwright & Jordan 2016, AoS; Zhou, Yang, Vats & Roberts 2022, JRSS-B), which proves *more* (polynomial mixing to the
    full posterior, hence HPM, PIPs and everything) under hypotheses of the same kind (sparse eigenvalues plus beta-min),
