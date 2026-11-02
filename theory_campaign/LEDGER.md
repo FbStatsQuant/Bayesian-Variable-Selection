@@ -156,3 +156,6 @@ Also launched (Codex/OpenAI): A-REV8 (LS0 route, synthesis task 4), A-REV9 (new 
 | API-POS | Opus | $10 | referee R3: positioning vs the rapid-mixing literature |
 Held for 2026-11-03 (Console daily rate limits: Fable 100K / Opus 400K output tokens per day): API-UMODEL (R7), API-T03CONST (R9). Reserve ~$20 for repairs after A-REV5/6/7.
 | API-VSTAB | Opus | $12 | Claude check of A-REV7's Astra-authored STAB-LH certificate (no-LS0 masked theorem) |
+
+### 21:55 UTC: LH-LOCK failed (no output)
+LH-LOCK (Fable, CW) failed on a 64K-output-token API error before its first commit. NOT relaunched: its goal (general LH locking) was refuted by A-REV7 ("General LH locking is false; do not remove those hypotheses"); the conditional fixed-p implication is VERIFIED there. Successor route: API-VSTAB (Claude check of A-REV7's Astra-authored STAB-LH certificate). Lesson for future briefs: tell agents to write long proofs in several files/commits, never one giant response.
