@@ -34,3 +34,7 @@
    s2 = s2_S0          0.1722 a=0.975 u0=1.000: log10 pi0^C(S0) = -160.48  IS log10 pi(S0) = 141.12 (ESS frac 0.00, mean|S| 99.5)  nu psi(u0) =     0.00  C1 bound log10 =  141.12  |mode|=100
    s2 = C-fix          0.1025 a=1.637 u0=1.680: log10 pi0^C(S0) = -394.32  IS log10 pi(S0) = 154.15 (ESS frac 0.00, mean|S| 100.0)  nu psi(u0) =    16.11  C1 bound log10 =  147.16  |mode|=100
    s2 = v3-mode RSS    0.5722 a=0.293 u0=0.301: log10 pi0^C(S0) =  -13.29  IS log10 pi(S0) =  13.41 (ESS frac 0.01, mean|S| 10.9)  nu psi(u0) =    50.18  C1 bound log10 =   -8.39  |mode|=7
+   s2 = screen top20   0.2699 a=0.622 u0=0.638: log10 pi0^C(S0) =  -48.98  IS log10 pi(S0) =  65.46 (ESS frac 0.00, mean|S| 67.0)  nu psi(u0) =     8.74  C1 bound log10 =   61.66  |mode|=49
+   s2 = null s_y^2     0.9950 a=0.169 u0=0.173: log10 pi0^C(S0) =  -19.03  IS log10 pi(S0) =  15.19 (ESS frac 0.00, mean|S| 3.6)  nu psi(u0) =    92.72  C1 bound log10 =  -25.08  |mode|=2
+   s2 = 0.7 sigma^2    0.1175 a=1.429 u0=1.465: log10 pi0^C(S0) = -319.84  IS log10 pi(S0) = 150.38 (ESS frac 0.00, mean|S| 100.0)  nu psi(u0) =     8.33  C1 bound log10 =  146.76  |mode|=100
+   s2 = 0.5 sigma^2    0.0839 a=2.000 u0=2.052: log10 pi0^C(S0) = -524.46  IS log10 pi(S0) = 162.50 (ESS frac 0.00, mean|S| 100.0)  nu psi(u0) =    33.30  C1 bound log10 =  148.04  |mode|=100
