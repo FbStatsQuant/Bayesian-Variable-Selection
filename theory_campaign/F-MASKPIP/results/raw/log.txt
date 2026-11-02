@@ -1,2 +1,8 @@
-done masked n=5120 N=2500 G1 T=1 reps=20 250dodone masked n=640 N=2500 G2 T=10 reps=20 328sdone masked n=5120 N=50 G2 T=20 reps=40 281s
+done masked n=5120 N=2500 G1 T=1 reps=20 250dodone masked n=640 N=2500 G2 T=10 reps=20 32done masked n=5120 N=2500 G2 T=20 reps=20 575s
 
+
+done masked n=5120 N=2500 G3 T=10 reps=20 275s
+ masked8 n=640 N=2500 G1 T=1 reps=20 116sdodone masked8 n=5120 N=50 G1 T=1 reps=40 82done mdone masked8 n=5120 N=2500 G2 T=21 reps=20 384s
+sked8 n=5120 N=50 G2 T=21 reps=40 207s
+1s
+done masked8 n=5120 N=2500 G3 T=1 reps=20 74s
