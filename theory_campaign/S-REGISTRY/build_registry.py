@@ -102,6 +102,7 @@ SECTIONS = [
     ("CEX-W2frac(A4)", "Referee-supplied items (A-REV4, A-REV3)"),
     ("FMP-M1", "New results: masked-regime meaning of Ẑ and the PIPs (F-MASKPIP; unreviewed)"),
     ("OMIX-B1", "New results: mixture start and common plug-in σ² (O-MIX; unreviewed)"),
+    ("OPW2-ThmA", "New results: PW2-free variance bound for the island evidence ratio (O-PW2; unreviewed)"),
     ("B2E-LemmaOF", "New results: no-method-change masked theorems on LH (W5-B2ENV PROOF.md; author only)"),
     ("W6F1-PropU′", "Repair drafts (W6-FIXREV1 CONSOLIDATED.md, W6-FIXREV2 STATEMENTS.md; not reviewed)"),
 ]
@@ -217,7 +218,8 @@ NOTES = {
     "theory/O-MIX": "REPORT.md read (statements B1–B3, C0–C3, recommendation table).",
     "theory/W7-PART": "specs and port/check scripts only; no report yet.",
     "theory/W7-SEP": "NOTES.md (working notes and plan) only; no results yet.",
-    "theory/O-PW2": "scripts only (exact small-p PW2 script); no report yet.",
+    "theory/O-PW2": "REPORT.md read (headline statements A–C and the numerical counterexample).",
+    "theory/W7-SEC": "NOTES.md only (working notes); no results yet.",
     "theory/O-BGIBBS": "REPORT.md read (new at the fifth fetch; §4.1 simulation results still to be filled).",
     "theory/O-LS0": "scripts only; no REPORT.md yet (LS0 post hoc run on Owls).",
     "theory/O-WSTAB": "no REPORT.md; PROOF.md read as its statements file (theorem headers and status words only).",

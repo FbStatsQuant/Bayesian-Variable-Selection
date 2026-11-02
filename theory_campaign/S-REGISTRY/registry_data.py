@@ -1209,3 +1209,19 @@ for pid, lab, st, prem, mean in [
     ("OMIX-C-null", "§4.4 null-inflation risk of (C)", "PROOF SKETCH", "—", "Common plug-in σ² can inflate the start mass of null models; needs its own pilot."),
 ]:
     r(pid, OMT, OM + " " + lab, st, "N|none", N, "none", prem, mean)
+
+
+# ---- O-PW2 REPORT.md (Opus 5.5; candidates; unreviewed): PW2-free variance bound for the island evidence ratio ----------------
+OP = "O-PW2 · REPORT.md §1"
+OPT = "Thm 4 / Prop 2 evidence variance (T25(iv) without PW2) (new; supplement)"
+for pid, lab, st, prem, mean in [
+    ("OPW2-ThmA", "Theorem A (exact variance identity)", "PROVED", "fixed data, successful frozen calibration, any q_t-invariant round kernels; EX-A, EX-S, CAL; no mixing assumption",
+     "For the actual v3 stage structure N·Var_c(W_T) = Σ_{s<T}(1−1/N)^{T−1−s}(E_c[W_s²μ_s(h²_{s,T})] − 1) = Σ_s E_c[W_s² Var_{μ_s}(h_{s,T})]."),
+    ("OPW2-ThmB", "Theorem B (two-sided non-asymptotic bound) and Corollary B2", "PROVED", "as Theorem A",
+     "|N·Var_c(W_T) − Σ_s(1−1/N)^{T−1−s}σ²_{s,T}| ≤ Σ_{s≥1}H²_{s,T}√(V_s(1+V_s)); delivers T25(iv)'s conclusion (incl. the /4 for pooling) with PW2 removed as a hypothesis, and PW2 itself with explicit a_t, ν_t (Cor. B2); error O(N^{−3/2})."),
+    ("OPW2-ThmC", "Theorem C (constants from stage primitives)", "PROVED", "L² mixing condition λ_t(1 + ḡ_tλ_t) ≤ κ < 1 and sup-norm control of h_{s,T}; NOT implied by the locked T09 constant (exponentially small): with only locked inputs the bound grows geometrically in T and is VACUOUS at study scale (author)",
+     "σ²_{s,T} and H_{s,T} obey recursions in the stage constants χ²_t (T13-certified), δ²_t, ḡ_t, λ_t, ε_t; with exact refresh (λ = 0) it reduces to Π(1 + χ²_t/N) − 1."),
+]:
+    r(pid, OPT, OP + " " + lab, st, "N|none", N, "none", prem, mean)
+r("OPW2-cex", OPT + " (negative result)", OP + " item 5 (exact enumeration, p ≤ 10)", "COUNTEREXAMPLE", "N|none", N, "none", "numerical, p = 6 Gibbs-only kernel",
+  "PW2 with a_t = χ²_t (the 'perfect-mixing' guess) is false: minimal a₄* = 0.90 against χ²₄ = 0.111; and the constants of helpers/OPTIONAL_PW2.md (B)–(C) make T25(iv)'s B_T vacuous (≈ 1–223 vs truth ≤ 0.1) in every case.")

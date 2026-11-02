@@ -10,22 +10,22 @@ Built by S-REGISTRY (branch `theory/S-REGISTRY`) on 2026-11-02 from `origin/theo
 
 ### A1. Counts by author status × verification level
 
-333 named results in the main table (§B) plus 39 flagged sub-claims (§C, not counted here). Verification level is the highest reached with a clean verdict; an adverse cross-family verdict overrides a same-family VERIFIED.
+337 named results in the main table (§B) plus 39 flagged sub-claims (§C, not counted here). Verification level is the highest reached with a clean verdict; an adverse cross-family verdict overrides a same-family VERIFIED.
 
 | Author status | XF-VERIFIED | XF-ADVERSE | SF-VERIFIED only | SF-ADVERSE only | REFEREE-AUTHORED | UNVERIFIED | **Total** |
 |---|---|---|---|---|---|---|---|
-| PROVED | 57 | 8 | 46 | 0 | 0 | 90 | **201** |
+| PROVED | 57 | 8 | 46 | 0 | 0 | 93 | **204** |
 | PROVED-UNDER | 3 | 9 | 3 | 0 | 0 | 27 | **42** |
 | PROOF SKETCH | 0 | 7 | 4 | 1 | 0 | 18 | **30** |
-| COUNTEREXAMPLE | 6 | 0 | 5 | 0 | 9 | 5 | **25** |
+| COUNTEREXAMPLE | 6 | 0 | 5 | 0 | 9 | 6 | **26** |
 | CONJECTURE | 0 | 0 | 0 | 2 | 0 | 20 | **22** |
 | OPEN | 0 | 0 | 0 | 0 | 0 | 7 | **7** |
 | REFEREE | 0 | 0 | 0 | 0 | 6 | 0 | **6** |
-| **Total** | **66** | **24** | **58** | **3** | **15** | **167** | **333** |
+| **Total** | **66** | **24** | **58** | **3** | **15** | **171** | **337** |
 
 Levels: XF = reviewed by A-REV1/A-REV2/A-REV3/A-REV4 (VERIFIED, clean or with a stated qualification); XF-ADVERSE = a cross-family GAP/ERROR stands on that row; SF = a campaign verifier run only; REFEREE-AUTHORED = written by a cross-family referee; UNVERIFIED = author only (includes same-family *authors* checking their own work).
 
-By status only: PROVED 201, PROVED-UNDER 42, PROOF SKETCH 30, COUNTEREXAMPLE 25, CONJECTURE 22, OPEN 7, REFEREE 6.
+By status only: PROVED 204, PROVED-UNDER 42, PROOF SKETCH 30, COUNTEREXAMPLE 26, CONJECTURE 22, OPEN 7, REFEREE 6.
 
 ### A2. CONFLICTS (sources disagree; both sides recorded in the rows)
 
@@ -569,6 +569,15 @@ Rows are grouped by source family. Within a group, lemmas precede theorems only 
 | `OMIX-C3` | start-law modification / method change (new; supplement) | O-MIX · REPORT.md §4 Prop. C3 (cancellation masking is untouched by (C)) | PROVED | none | none | none | CL(0) chain | On any CL(0) chain π₀^C(S₀) ≤ p^{−c}n^{−c/2}e^{O_P(1)}: (C) alone does not make T38(b) provable on LH. |
 | `OMIX-C-null` | start-law modification / method change (new; supplement) | O-MIX · REPORT.md §4.4 null-inflation risk of (C) | PROOF SKETCH | none | none | none | — | Common plug-in σ² can inflate the start mass of null models; needs its own pilot. |
 
+### B.New results: PW2-free variance bound for the island evidence ratio (O-PW2; unreviewed)
+
+| ID | Paper target | Source (branch · file · label) | Author status | Same-family verification | Cross-family verification | Repairs applied / pending | Open premises | Plain-English meaning |
+|---|---|---|---|---|---|---|---|---|
+| `OPW2-ThmA` | Thm 4 / Prop 2 evidence variance (T25(iv) without PW2) (new; supplement) | O-PW2 · REPORT.md §1 Theorem A (exact variance identity) | PROVED | none | none | none | fixed data, successful frozen calibration, any q_t-invariant round kernels; EX-A, EX-S, CAL; no mixing assumption | For the actual v3 stage structure N·Var_c(W_T) = Σ_{s<T}(1−1/N)^{T−1−s}(E_c[W_s²μ_s(h²_{s,T})] − 1) = Σ_s E_c[W_s² Var_{μ_s}(h_{s,T})]. |
+| `OPW2-ThmB` | Thm 4 / Prop 2 evidence variance (T25(iv) without PW2) (new; supplement) | O-PW2 · REPORT.md §1 Theorem B (two-sided non-asymptotic bound) and Corollary B2 | PROVED | none | none | none | as Theorem A | \|N·Var_c(W_T) − Σ_s(1−1/N)^{T−1−s}σ²_{s,T}\| ≤ Σ_{s≥1}H²_{s,T}√(V_s(1+V_s)); delivers T25(iv)'s conclusion (incl. the /4 for pooling) with PW2 removed as a hypothesis, and PW2 itself with explicit a_t, ν_t (Cor. B2); error O(N^{−3/2}). |
+| `OPW2-ThmC` | Thm 4 / Prop 2 evidence variance (T25(iv) without PW2) (new; supplement) | O-PW2 · REPORT.md §1 Theorem C (constants from stage primitives) | PROVED | none | none | none | L² mixing condition λ_t(1 + ḡ_tλ_t) ≤ κ < 1 and sup-norm control of h_{s,T}; NOT implied by the locked T09 constant (exponentially small): with only locked inputs the bound grows geometrically in T and is VACUOUS at study scale (author) | σ²_{s,T} and H_{s,T} obey recursions in the stage constants χ²_t (T13-certified), δ²_t, ḡ_t, λ_t, ε_t; with exact refresh (λ = 0) it reduces to Π(1 + χ²_t/N) − 1. |
+| `OPW2-cex` | Thm 4 / Prop 2 evidence variance (T25(iv) without PW2) (new; supplement) (negative result) | O-PW2 · REPORT.md §1 item 5 (exact enumeration, p ≤ 10) | COUNTEREXAMPLE | none | none | none | numerical, p = 6 Gibbs-only kernel | PW2 with a_t = χ²_t (the 'perfect-mixing' guess) is false: minimal a₄* = 0.90 against χ²₄ = 0.111; and the constants of helpers/OPTIONAL_PW2.md (B)–(C) make T25(iv)'s B_T vacuous (≈ 1–223 vs truth ≤ 0.1) in every case. |
+
 ## C. Flagged sub-claims (ERROR / GAP verdicts inside larger results; not counted in A1)
 
 | ID | Paper target | Source (branch · file · label) | Author status | Same-family verification | Cross-family verification | Repairs applied / pending | Open premises | Plain-English meaning |
@@ -651,13 +660,13 @@ Files matched: REPORT, REVIEW, REPAIRS, CARDS, STATEMENTS, ARCHITECTURE, plus RE
 | theory/F-DRAFT | `4de6e4c` | F-DRAFT/NEW_TARGETS.md | no REPORT.md; CROSSWALK.md and NEW_TARGETS.md (summary table of statuses) read as its statements file. |
 | theory/F-MASKPIP | `7392101` | F-MASKPIP/REPORT.md | REPORT.md read (statements M1–M3, R, N; §4.1 helper simulation not extracted). |
 | theory/F-REFINE | `db708ca` | F-REFINE/ARCHITECTURE.md, F-REFINE/CARDS.md |  |
-| theory/F-SHARE | `88e53de` | — | BRIEF.md only (no results). |
+| theory/F-SHARE | `12afe16` | — | BRIEF.md only (no results). |
 | theory/O-BGIBBS | `c8c191a` | O-BGIBBS/REPORT.md | REPORT.md read (new at the fifth fetch; §4.1 simulation results still to be filled). |
 | theory/O-CERT | `17e7f15` | O-CERT/REPORT.md |  |
 | theory/O-DILUTE | `94a1aa6` | — |  |
 | theory/O-LS0 | `2471709` | — | scripts only; no REPORT.md yet (LS0 post hoc run on Owls). |
-| theory/O-MIX | `5435429` | O-MIX/REPORT.md | REPORT.md read (statements B1–B3, C0–C3, recommendation table). |
-| theory/O-PW2 | `f799174` | — | scripts only (exact small-p PW2 script); no report yet. |
+| theory/O-MIX | `26b7708` | O-MIX/REPORT.md | REPORT.md read (statements B1–B3, C0–C3, recommendation table). |
+| theory/O-PW2 | `e685ead` | O-PW2/REPORT.md | REPORT.md read (headline statements A–C and the numerical counterexample). |
 | theory/O-SWAP | `453ae19` | O-SWAP/REPORT.md |  |
 | theory/O-WSTAB | `2afba8d` | — | no REPORT.md; PROOF.md read as its statements file (theorem headers and status words only). |
 | theory/S-PAPER | `556be30` | — | LaTeX skeleton + README (not a results branch). |
@@ -682,11 +691,11 @@ Files matched: REPORT, REVIEW, REPAIRS, CARDS, STATEMENTS, ARCHITECTURE, plus RE
 | theory/W5-FAVIID | `46c4378` | W5-FAVIID/REPORT.md | REPORT.md (statement table; body sections still placeholders) and PROOF.md headers/status words read, incl. Prop. B1. |
 | theory/W5-LOCKBOOK | `a65392b` | W5-LOCKBOOK/REPORT.md, W5-LOCKBOOK/STATEMENTS.tex | REPORT.md + STATEMENTS.tex read (same-family referee of W2-BOOK/W2-T26; proves T32(i)). AUDIT.md/PROOF.md not read. |
 | theory/W5-VMASK | `4e41b97` | W5-VMASK/REPAIRS.md, W5-VMASK/REPORT.md | REPORT.md read (26-row verdict table on W3-PXN and W4-T38FULL, statements, confidence card); REPAIRS.md R1–R7 via the report. |
-| theory/W5-VPGD | `63643ad` | W5-VPGD/REFEREE.md, W5-VPGD/REPAIRS.md, W5-VPGD/REPORT.md | REFEREE.md, REPAIRS.md (R0–R6) and REPORT.md (verdict table, statements) read. STAR.md referenced, not read. |
+| theory/W5-VPGD | `7b93d77` | W5-VPGD/REFEREE.md, W5-VPGD/REPAIRS.md, W5-VPGD/REPORT.md | REFEREE.md, REPAIRS.md (R0–R6) and REPORT.md (verdict table, statements) read. STAR.md referenced, not read. |
 | theory/W6-FIXREV1 | `a7833f3` | W6-FIXREV1/CONSOLIDATED.md, W6-FIXREV1/REPORT.md, W6-FIXREV1/T38_STATEMENT.md | REPORT.md read (change-log table); CONSOLIDATED.md and T38 files: section headings only, statements not individually extracted. |
 | theory/W6-FIXREV2 | `be2d456` | W6-FIXREV2/REPORT.md, W6-FIXREV2/STATEMENTS.md | REPORT.md read (change-log table §2.1 + §3); STATEMENTS.md headings only. |
-| theory/W7-PART | `eedd768` | — | specs and port/check scripts only; no report yet. |
-| theory/W7-SEC | `66153b2` | — |  |
-| theory/W7-SEP | `df3806f` | — | NOTES.md (working notes and plan) only; no results yet. |
+| theory/W7-PART | `d442756` | — | specs and port/check scripts only; no report yet. |
+| theory/W7-SEC | `92c5875` | — | NOTES.md only (working notes); no results yet. |
+| theory/W7-SEP | `d3145ab` | — | NOTES.md (working notes and plan) only; no results yet. |
 
 Named in the LEDGER but with no branch on origin at the last fetch: `theory/F-PXN` (F-PXN was cancelled). `theory/campaign` and smoke branches skipped. Re-run the builder after they land.
