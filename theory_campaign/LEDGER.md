@@ -136,3 +136,9 @@ Campaign complete. Next steps: SYNTHESIS §8 (XF review of the no-LS0 LH routes;
 | A-REV6 | Astra high (Codex) | re-review repairs of the A-REV3/A-REV4 findings; write candidate repairs for Prop M(b), F-DRAFT W2/NM, A-REV4 bookkeeping; does W7-PART close the p >> n partition GAP | laptop mcp:launch:7620de24… |
 | A-REV7 | Astra high (Codex) | cross-family review of the no-LS0 masked routes (BG3, F1/F2, D2-LH/B2-LH, Prop GU) — synthesis task 1 | laptop mcp:launch:e0a5f1f8… |
 | E-SPINE | Opus high (CW) | replace "tempering is needed" with "moving off the start is needed" in main docs (PR) + S-PAPER/F-REFINE drafts; AMENDMENTS_20261102.md | Owls |
+
+### 21:25 UTC: API credit track ($200 promotional, Felipe's Individual Org, expires 2026-11-17)
+Key stored at ~/.config/bvs-hq/api/anthropic_key (mode 600). The Claude Code CLI is NOT covered by the promotion ("Credit balance is too low"); the Agent SDK IS. Launcher: `~/.config/bvs-hq/launch_api.sh TASK_ID [MODEL] [MAX_USD] [EFFORT]` (Agent SDK worker, hard per-run cap, default $15). Logs: /home/fb31/api_workers/*.log, launches.log.
+Org: no payment method on file; monthly spend limit $195.
+Running: API-RESID (synthesis task 8), API-FAVIID (task 9), Opus 5.5 high, $15 cap each.
+Also launched (Codex/OpenAI): A-REV8 (LS0 route, synthesis task 4), A-REV9 (new results, task 7). Claude Work (Owls): LH-LOCK (Fable, task 2), T38-RECORD (Opus, task 6). PR #1 (spine correction) open for Felipe.
