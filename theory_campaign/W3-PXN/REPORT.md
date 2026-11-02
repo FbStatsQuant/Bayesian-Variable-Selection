@@ -16,7 +16,9 @@ cross-family review**. Status words never upgraded.
    - near-truth start mass 1 − π₀(S°) = O_P(√(log n/n));
    - T27 masking with an exact limit law, log π₀(S₀) + c log p + (c/2)log n →_d Σ log((s+i)/2) + ½χ²_c;
    - S̃₀ = S°;
-   - the TD′ lattice condition of W1-T37R Thm A at S̃₀, so LS0 scores and certifies S₀ in c moves;
+   - the TD′ lattice condition of W1-T37R Thm A at S̃₀, so LS0 scores and certifies S₀ in c moves (scoring rests on
+     Θ(n) margins; certification rests on the slow (L) margin, which fails with probability ≈
+     (s₀+1)/√(2π(n+1)t_n), about 1% at n = 1600);
    - π(S₀) → 1.
 
    T38(b) (W1-T38E composition) therefore holds on this family through route (b1), the LS0 tweak, for every fixed c.
@@ -28,7 +30,7 @@ cross-family review**. Status words never upgraded.
    masking therefore survives the method's own partition only for units larger than B/2.
 4. **The study's n = 200 masking is not the masking of T27/LH.** It is *dilution masking*: the start's block view treats
    the other 13 truths' signal as noise (v_T ≈ 7–26σ²). The masked truths have L² = δ²/σ² ≈ 50–200, not O(1). The
-   CL(L) rate overshoots log₁₀π₀(S₀) by 20–30, and the effect is scale-free and gone by n ≈ 1600. W1-EXP's "weak-signal
+   CL(L) rate overshoots log₁₀π₀(S₀) by 17–29, and the effect is scale-free and gone by n ≈ 1600. W1-EXP's "weak-signal
    masking" is right only in the block-SNR sense, and its "bounded L" version is rejected (numerics, §5). Under the frozen
    setting (s₀ fixed, BM-∞) dilution vanishes, so **no fixed-s₀ BM-∞ theorem describes the n = 200 numbers**
    (Proposition W, PROOF SKETCH).
@@ -120,12 +122,12 @@ Columns:
 | P | 200 | 4000 | 10 | 10/10 | 0.144 | −4.67 | −0.70/0.20/1.83 | 2.51 | 0.59 | 0.980 | 9/10 | 0.291 | 10/10 | 8/10 / 10/10 | 1.7 | 0.621 | 10/10 (15.3) |
 
 Reading:
-- **Masking rate.** log₁₀π₀(S₀) falls by c/2·log₁₀4 + c·log₁₀(p ratio) per doubling of n. With p ∝ n^{1.25} that is a
+- **Masking rate.** log₁₀π₀(S₀) falls by (c/2)log₁₀2 + c·log₁₀(p ratio) per doubling of n. With p ∝ n^{1.25} that is a
   predicted −0.52 (A) and −1.05 (B) per doubling; observed −0.47, −0.59, −0.09 (A, noisy at 6 reps) and −0.99, −0.91,
   −0.68 (B). At fixed n = 200, Mstat is flat in p ∈ [500, 4000] (P), so the c·log p scaling is exact.
-- **Near-truth mass.** q decreases like √(log n/n), and the T22(i) lower bound held in 181/181 replicates.
+- **Near-truth mass.** q decreases like √(log n/n), and the T22(i) lower bound held in 186/186 replicates.
   π₀(𝓡₂) → 1 and π₀(𝓡₀) = π₀(S°) → 1 at the slow √(log n/n) rate. Dep → 0.
-- **Eligibility and repair.** S̃₀ = S° in 162/181 replicates, and in all of them at n ≥ 400. LS0 *scored* S₀ in 180/181
+- **Eligibility and repair.** S̃₀ = S° in 174/186 replicates, and in all of them at n ≥ 400. LS0 *scored* S₀ in 185/186
   (the exception is a B, n = 200 replicate whose mode was {proxy of j_a} instead of j_a). The certified-end failures are
   finite-n failures of (L) (S₀ + null beats S₀; PROOF §9.3 remark) or, at n = 200, proxy-for-hub substitutions, a D_S
   failure at a finite-n margin.
@@ -136,7 +138,7 @@ Checks (`results/check_lemmas.txt`, `results/check_mstat.txt`):
   |V| = 2 block statistics in a null group and in the masked group; the masked hub). All p-values are in [0.17, 0.62]
   (400 reps each).
 - **Theorem P4:** T_n = Mstat − log π₀(S°) − prior term matches its exact finite-n law in every configuration (PIT KS
-  p = 0.93 for A, 0.34 for B, 0.93 for P). The slow approach of Mstat to its limit comes *only* from log π₀(S°).
+  p = 0.85 for A, 0.43 for B, 0.89 for P). The slow approach of Mstat to its limit comes *only* from log π₀(S°).
 - **Theorem P6 margins:** an exhaustive population check over 81 parameter settings (c ∈ {1,2,3}, ρ ∈ {.4,.7,.85},
   ψ up to ρ − .05, β ∈ {.5,1,2}). The smallest D_S margin is 0.0027 > 0 and the smallest (L) margin is 0.0027 > 0.
 
@@ -191,7 +193,7 @@ block-SNR sense, which here is dilution. It is not consistent with W1-EXP's spec
 T27's law with c = number of weak truths"). The evidence:
 - **Signal leaks strongly into the blocks.** The masked truths have L² = δ²_pop/σ² ≈ 50 (scale 0.5) to 199 (scale 1),
   not O(1). The CL(0) prediction −#missing·log₁₀(p√n) ≈ −29 to −46 overshoots the observed
-  log₁₀π₀(S₀) − log₁₀π₀(S̃₀) ≈ −11 to −17 by 20–30 orders of magnitude.
+  log₁₀π₀(S₀) − log₁₀π₀(S̃₀) ≈ −11 to −17 by 17–29 orders of magnitude.
 - **The dilution prediction fits.** Masked truths have V₀ ≈ 3.2–4.4 against a threshold τ = log((2p−s₀)/s₀) + ½log(n+1)
   ≈ 7.0–7.6. The posterior sees V₁ ≈ 23–78, and 96–100% of the start-masked truths have LO₁ > 0. corr(V₀, V₀pop) is 0.69
   at n = 200 and 0.95 in the n-sweep. The predicted number of masked truths (7.0–10.0 per fit) matches the observed
@@ -239,6 +241,11 @@ masking with c ≈ s₀/2–3s₀/4 masked truths is exactly the case where the 
   (T03♯'s c₀ = L* is far too large). It is recorded as CONJECTURE W′, not pursued.
 - **W1-EXP's random-design remark "NL_η fails, truncation essential".** Confirmed. Lemma Tr's truncation at
   τ_n = 4(A+3)log n/n is the device, and E(1−X)^{−ν} = ∞ for every Beta statistic here.
+- **Certification is slow, scoring is not.** (L) at S₀ (no null addition improves on S₀) has margin
+  ½log n + log(2p/(s₀+1)) − ½max_l Z_l². It fails with probability ≈ (s₀+1)/√(2π(n+1)t_n): 4% at n = 200 and 1.2% at
+  n = 1600 (`results/check_L_failure.txt`). One such event occurred among the 12 replicates at n = 1600 (Z² = 24.5
+  against 23.6). It is a posterior event (S₀ + null beats S₀), counted in T21's 2E₀δ₁. It is not a discovery failure,
+  and LS0 still scores S₀.
 - **The rate.** √(n/log n)·(1 − π₀(S°)) stays in 1.5–2.6 across n ∈ [200, 1600]. The √log n factor of P3 looks
   genuine: it comes from the max of p chi-squares. W1-EXP's exact-Gram realisation has n^{−1/2} because it has no null
   sample correlations.
