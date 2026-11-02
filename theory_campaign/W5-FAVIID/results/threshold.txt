@@ -1,20 +1,52 @@
 # Rate and sharp-constant check: median of sqrt(n/log n)(1 - pi0(S0)) and of (1-pi0(S0)) / [(s0+1) M(p,n) p/(2p) / sqrt(n+1)]
+S1  500 0.5  800 | sqrt(n/log n)(1-pi0) = 9.82 | (1-pi0)/(1-exp(-N_add pred)) = 1.69 | med q/xi_n(eps0=0) = 0.68
+S1  500 0.5 1600 | sqrt(n/log n)(1-pi0) = 6.02 | (1-pi0)/(1-exp(-N_add pred)) = 0.98 | med q/xi_n(eps0=0) = 0.65
 S1  500 0.5 3200 | sqrt(n/log n)(1-pi0) = 6.22 | (1-pi0)/(1-exp(-N_add pred)) = 0.97 | med q/xi_n(eps0=0) = 0.68
+S1  500 1.0  800 | sqrt(n/log n)(1-pi0) = 8.21 | (1-pi0)/(1-exp(-N_add pred)) = 1.42 | med q/xi_n(eps0=0) = 0.66
+S1  500 1.0 1600 | sqrt(n/log n)(1-pi0) = 5.89 | (1-pi0)/(1-exp(-N_add pred)) = 0.96 | med q/xi_n(eps0=0) = 0.65
 S1  500 1.0 3200 | sqrt(n/log n)(1-pi0) = 6.05 | (1-pi0)/(1-exp(-N_add pred)) = 0.95 | med q/xi_n(eps0=0) = 0.66
+S1 1000 0.5  800 | sqrt(n/log n)(1-pi0) = 10.51 | (1-pi0)/(1-exp(-N_add pred)) = 1.72 | med q/xi_n(eps0=0) = 0.75
+S1 1000 0.5 1600 | sqrt(n/log n)(1-pi0) = 6.62 | (1-pi0)/(1-exp(-N_add pred)) = 1.05 | med q/xi_n(eps0=0) = 0.66
 S1 1000 0.5 3200 | sqrt(n/log n)(1-pi0) = 6.73 | (1-pi0)/(1-exp(-N_add pred)) = 1.03 | med q/xi_n(eps0=0) = 0.73
+S1 1000 1.0  800 | sqrt(n/log n)(1-pi0) = 9.77 | (1-pi0)/(1-exp(-N_add pred)) = 1.59 | med q/xi_n(eps0=0) = 0.71
+S1 1000 1.0 1600 | sqrt(n/log n)(1-pi0) = 6.40 | (1-pi0)/(1-exp(-N_add pred)) = 1.01 | med q/xi_n(eps0=0) = 0.68
 S1 1000 1.0 3200 | sqrt(n/log n)(1-pi0) = 6.81 | (1-pi0)/(1-exp(-N_add pred)) = 1.04 | med q/xi_n(eps0=0) = 0.74
+S3  500 0.5  800 | sqrt(n/log n)(1-pi0) = 10.84 | (1-pi0)/(1-exp(-N_add pred)) = 1.87 | med q/xi_n(eps0=0) = 0.66
+S3  500 0.5 1600 | sqrt(n/log n)(1-pi0) = 6.56 | (1-pi0)/(1-exp(-N_add pred)) = 1.07 | med q/xi_n(eps0=0) = 0.63
 S3  500 0.5 3200 | sqrt(n/log n)(1-pi0) = 5.47 | (1-pi0)/(1-exp(-N_add pred)) = 0.86 | med q/xi_n(eps0=0) = 0.60
+S3  500 1.0  800 | sqrt(n/log n)(1-pi0) = 10.62 | (1-pi0)/(1-exp(-N_add pred)) = 1.83 | med q/xi_n(eps0=0) = 0.65
+S3  500 1.0 1600 | sqrt(n/log n)(1-pi0) = 6.03 | (1-pi0)/(1-exp(-N_add pred)) = 0.98 | med q/xi_n(eps0=0) = 0.63
 S3  500 1.0 3200 | sqrt(n/log n)(1-pi0) = 5.51 | (1-pi0)/(1-exp(-N_add pred)) = 0.86 | med q/xi_n(eps0=0) = 0.61
+S3 1000 0.5  800 | sqrt(n/log n)(1-pi0) = 10.54 | (1-pi0)/(1-exp(-N_add pred)) = 1.72 | med q/xi_n(eps0=0) = 0.67
+S3 1000 0.5 1600 | sqrt(n/log n)(1-pi0) = 8.44 | (1-pi0)/(1-exp(-N_add pred)) = 1.34 | med q/xi_n(eps0=0) = 0.71
 S3 1000 0.5 3200 | sqrt(n/log n)(1-pi0) = 6.94 | (1-pi0)/(1-exp(-N_add pred)) = 1.06 | med q/xi_n(eps0=0) = 0.79
+S3 1000 1.0  800 | sqrt(n/log n)(1-pi0) = 9.80 | (1-pi0)/(1-exp(-N_add pred)) = 1.60 | med q/xi_n(eps0=0) = 0.67
+S3 1000 1.0 1600 | sqrt(n/log n)(1-pi0) = 8.13 | (1-pi0)/(1-exp(-N_add pred)) = 1.29 | med q/xi_n(eps0=0) = 0.69
 S3 1000 1.0 3200 | sqrt(n/log n)(1-pi0) = 6.51 | (1-pi0)/(1-exp(-N_add pred)) = 0.99 | med q/xi_n(eps0=0) = 0.73
+S4  500 0.5  800 | sqrt(n/log n)(1-pi0) = 10.92 | (1-pi0)/(1-exp(-N_add pred)) = 1.88 | med q/xi_n(eps0=0) = 0.71
+S4  500 0.5 1600 | sqrt(n/log n)(1-pi0) = 13.65 | (1-pi0)/(1-exp(-N_add pred)) = 2.23 | med q/xi_n(eps0=0) = 0.68
 S4  500 0.5 3200 | sqrt(n/log n)(1-pi0) = 7.11 | (1-pi0)/(1-exp(-N_add pred)) = 1.11 | med q/xi_n(eps0=0) = 0.64
+S4  500 1.0  800 | sqrt(n/log n)(1-pi0) = 10.88 | (1-pi0)/(1-exp(-N_add pred)) = 1.88 | med q/xi_n(eps0=0) = 0.69
+S4  500 1.0 1600 | sqrt(n/log n)(1-pi0) = 12.65 | (1-pi0)/(1-exp(-N_add pred)) = 2.06 | med q/xi_n(eps0=0) = 0.61
 S4  500 1.0 3200 | sqrt(n/log n)(1-pi0) = 5.85 | (1-pi0)/(1-exp(-N_add pred)) = 0.91 | med q/xi_n(eps0=0) = 0.63
+S4 1000 0.5  800 | sqrt(n/log n)(1-pi0) = 10.91 | (1-pi0)/(1-exp(-N_add pred)) = 1.78 | med q/xi_n(eps0=0) = 0.65
+S4 1000 0.5 1600 | sqrt(n/log n)(1-pi0) = 11.51 | (1-pi0)/(1-exp(-N_add pred)) = 1.82 | med q/xi_n(eps0=0) = 0.64
 S4 1000 0.5 3200 | sqrt(n/log n)(1-pi0) = 6.01 | (1-pi0)/(1-exp(-N_add pred)) = 0.92 | med q/xi_n(eps0=0) = 0.62
+S4 1000 1.0  800 | sqrt(n/log n)(1-pi0) = 10.80 | (1-pi0)/(1-exp(-N_add pred)) = 1.76 | med q/xi_n(eps0=0) = 0.62
+S4 1000 1.0 1600 | sqrt(n/log n)(1-pi0) = 9.31 | (1-pi0)/(1-exp(-N_add pred)) = 1.48 | med q/xi_n(eps0=0) = 0.64
 S4 1000 1.0 3200 | sqrt(n/log n)(1-pi0) = 6.10 | (1-pi0)/(1-exp(-N_add pred)) = 0.93 | med q/xi_n(eps0=0) = 0.62
+S6  500 0.5  800 | sqrt(n/log n)(1-pi0) = 10.79 | (1-pi0)/(1-exp(-N_add pred)) = 1.86 | med q/xi_n(eps0=0) = 0.68
+S6  500 0.5 1600 | sqrt(n/log n)(1-pi0) = 9.98 | (1-pi0)/(1-exp(-N_add pred)) = 1.63 | med q/xi_n(eps0=0) = 0.82
 S6  500 0.5 3200 | sqrt(n/log n)(1-pi0) = 6.55 | (1-pi0)/(1-exp(-N_add pred)) = 1.02 | med q/xi_n(eps0=0) = 0.67
+S6  500 1.0  800 | sqrt(n/log n)(1-pi0) = 10.32 | (1-pi0)/(1-exp(-N_add pred)) = 1.78 | med q/xi_n(eps0=0) = 0.63
+S6  500 1.0 1600 | sqrt(n/log n)(1-pi0) = 8.53 | (1-pi0)/(1-exp(-N_add pred)) = 1.39 | med q/xi_n(eps0=0) = 0.78
 S6  500 1.0 3200 | sqrt(n/log n)(1-pi0) = 6.15 | (1-pi0)/(1-exp(-N_add pred)) = 0.96 | med q/xi_n(eps0=0) = 0.66
-S6 1000 0.5 3200 | sqrt(n/log n)(1-pi0) = 7.02 | (1-pi0)/(1-exp(-N_add pred)) = 1.07 | med q/xi_n(eps0=0) = 0.78
-S6 1000 1.0 3200 | sqrt(n/log n)(1-pi0) = 7.05 | (1-pi0)/(1-exp(-N_add pred)) = 1.08 | med q/xi_n(eps0=0) = 0.79
+S6 1000 0.5  800 | sqrt(n/log n)(1-pi0) = 10.38 | (1-pi0)/(1-exp(-N_add pred)) = 1.69 | med q/xi_n(eps0=0) = 0.67
+S6 1000 0.5 1600 | sqrt(n/log n)(1-pi0) = 8.83 | (1-pi0)/(1-exp(-N_add pred)) = 1.40 | med q/xi_n(eps0=0) = 0.65
+S6 1000 0.5 3200 | sqrt(n/log n)(1-pi0) = 6.58 | (1-pi0)/(1-exp(-N_add pred)) = 1.01 | med q/xi_n(eps0=0) = 0.73
+S6 1000 1.0  800 | sqrt(n/log n)(1-pi0) = 9.89 | (1-pi0)/(1-exp(-N_add pred)) = 1.61 | med q/xi_n(eps0=0) = 0.67
+S6 1000 1.0 1600 | sqrt(n/log n)(1-pi0) = 8.71 | (1-pi0)/(1-exp(-N_add pred)) = 1.38 | med q/xi_n(eps0=0) = 0.69
+S6 1000 1.0 3200 | sqrt(n/log n)(1-pi0) = 6.58 | (1-pi0)/(1-exp(-N_add pred)) = 1.00 | med q/xi_n(eps0=0) = 0.73
 
 # Thresholds (population plug-in predictor): n*_half = first n with predicted pi0(S0) >= 1/2;
 # n*_hit = first n with predicted Q_f^min pi0(S0) >= 3, Q_f^min = 4 N0 (L+6) (final-run iid draws, T >= 1).

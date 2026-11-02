@@ -1,0 +1,11 @@
+# S1: realised max number of truths sharing a block (m_real), distribution over designs
+S1  500  200 | max truths per block: {2: 18, 3: 1, 5: 1}
+S1  500  400 | max truths per block: {1: 4, 2: 10, 3: 5, 4: 1}
+S1  500  800 | max truths per block: {1: 1, 2: 12, 3: 7}
+S1  500 1600 | max truths per block: {1: 4, 2: 10, 3: 6}
+S1  500 3200 | max truths per block: {1: 2, 2: 13, 3: 5}
+S1 1000  200 | max truths per block: {1: 9, 2: 11}
+S1 1000  400 | max truths per block: {1: 7, 2: 12, 3: 1}
+S1 1000  800 | max truths per block: {1: 8, 2: 10, 3: 2}
+S1 1000 1600 | max truths per block: {1: 6, 2: 13, 3: 1}
+S1 1000 3200 | max truths per block: {1: 5, 2: 15}
