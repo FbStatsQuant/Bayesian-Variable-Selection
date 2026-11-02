@@ -135,3 +135,6 @@ V2 gram 409600 13 log10pi0S0=-7.29 piS0=0.992 LS0=True basin=1.0000 fracR=1.0000
 V2 gram 409600 14 log10pi0S0=-7.00 piS0=0.510 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.984
 V2 gram 409600 15 log10pi0S0=-7.21 piS0=0.993 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.918
 V2 gram 409600 16 log10pi0S0=-7.13 piS0=0.995 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.951
+V2 gram 409600 17 log10pi0S0=-7.29 piS0=0.995 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.879
+V2 gram 409600 18 log10pi0S0=-7.26 piS0=0.989 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.897
+V2 gram 409600 19 log10pi0S0=-7.02 piS0=0.991 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.979

@@ -30,3 +30,7 @@ B2 iid 25600 4 log10pi0S0=-6.15 piS0=0.967 LS0=True basin=1.0000 fracR=1.0000 fr
 B2 iid 25600 5 log10pi0S0=-5.97 piS0=0.971 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.9
 B2 iid 102400 0 log10pi0S0=-6.80 piS0=0.984 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.773
 B2 iid 102400 1 log10pi0S0=-6.87 piS0=0.987 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.72
+B2 iid 102400 2 log10pi0S0=-7.12 piS0=0.984 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.511
+B2 iid 102400 3 log10pi0S0=-6.58 piS0=0.980 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.917
+B2 iid 102400 4 log10pi0S0=-6.95 piS0=0.990 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.655
+B2 iid 102400 5 log10pi0S0=-6.68 piS0=0.969 LS0=True basin=1.0000 fracR=1.0000 fracAll=1.0000 hitQf=0.858
