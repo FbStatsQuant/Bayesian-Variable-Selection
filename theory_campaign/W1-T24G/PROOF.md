@@ -218,6 +218,26 @@ P(S₀ not scored during the segment | population) ≤ ∏_{i≤N} min{1, P(Bin(
 ≤ [P(Bin(H, c_*(𝓧)) < v(𝓧)) + Hη(𝓧)]^{N}. In particular a per-particle bound β < 1 bounded away from 1 and
 N → ∞ suffice; no H → ∞ and no η → 0 are needed for this route.
 
+**Proposition D (drift form; internal increases need not satisfy Hη → 0). PROVED.** In the setting of
+Theorem B split η = η_ex + η_in, where η_ex bounds (Σ over labels of sups) the steps leaving 𝓕(x) and η_in the
+remaining bad steps (V-raising or truth-removing inside 𝓕(x)); let v_max := max_{𝓕(x)} V (≤ |M(x)| + 2a). For
+z > 1 put ρ(z) := z⁻¹ + (1 − z⁻¹)(1 − c_* + η) + exp{(z^{v_max} − 1)η} − 1. Then
+  P_x(S₀ not scored within H rounds) ≤ H·η_ex + inf_{z>1} ρ(z)^H z^{v−1}.
+*Proof.* Let I_h = 1{round h has a progress step}, N_h = number of bad steps of round h taken from inside
+𝓕(x)∖{S₀}. On {no exit, not scored}: V_h ≤ V_{h−1} − I_h + v_max N_h (each increase is ≤ v_max because V ≤ v_max
+on 𝓕). For integers, z^{−I+v N} ≤ z^{−I} + (z^{vN} − 1) and z^{−I} = z⁻¹ + (1 − z⁻¹)1{I = 0}. By Props. B1/B2,
+P(I_h = 0 | 𝓖_{h−1}) ≤ (1 − c_*) + η. Given σ, step t is bad with conditional probability ≤ π_t :=
+sup_W P_W(σ(t) bad), and Σ_t π_t = η (σ is a bijection); the process u^{N_{≤t}}/∏_{s≤t}(1 + (u−1)π_s) is a
+supermartingale, so E[u^{N_h} | 𝓖_{h−1}] ≤ ∏_t(1 + (u−1)π_t) ≤ e^{(u−1)η} with u = z^{v_max}. Hence
+Y_h := z^{V_h}1{no exit, not scored by round h} satisfies E[Y_h | 𝓖_{h−1}] ≤ ρ(z) Y_{h−1}, so
+E Y_H ≤ ρ^H z^{v}; on {no exit, not scored} Y_H ≥ z, so that event has probability ≤ ρ^H z^{v−1}. Exits: ≤ Hη_ex
+by Lemma F. ∎
+Asymptotically (η → 0, c_* ≥ c > 0) ρ(z) → 1 − c(1 − z⁻¹) < 1, so only Hη_ex → 0 is needed, not Hη_in → 0.
+At n = 200 the sup-based constants (c_* ≈ 0.3–0.45, η ≈ 0.4–1) still give ρ > 1; with the *measured*
+per-round frequencies (progress ≈ 0.8, bad ≈ 0.1–0.15, `results/compare_cprime.json`) ρ(2) ≈ 0.8 < 1, i.e. the
+drift form would certify repair if the sups were replaced by the actual per-round rates (OPEN: a
+non-uniform version).
+
 ---------------------------------------------------------------------------------------------------------
 
 ## 5. Proposition A (sweep: whole repair inside one round). PROVED; numerically vacuous at p = 20, n = 200.
@@ -267,9 +287,11 @@ the single-particle route is asymptotic only; Corollary B-M is the operative fin
 PROOF SKETCH (asymptotic).** H24 requires sup_{x∈𝓡_d} P_x(first exit from 𝓡_d in one round) ≤ η_n with
 (L+4)η_n → 0. Take Y = (S₀∖{j}) ∪ P with |P| = d, P a set of nulls not correlated with j, and l ∉ Y a null with
 |corr(x_j, x_l)| ≥ r₀ > 0 (a group-mate in S3/S4/S6, an AR neighbour in S2). Then Y ∈ 𝓡_d, and adding l is an
-exit. Under BM-∞, Δ⁺_l(Y) ≈ r₀²(n−1)θ_j² ≫ log n, so o_l(Y) → 1 while the round reaches G_l before G_j and
-before every non-Gibbs label with probability ≥ 1/(B+4) (Lemma O(i) with C = {G_l}, D = 𝔑 ∪ {G_j}); so the
-one-round exit probability is ≥ (1 − o(1))/(B+4) and (L+4)η_n → ∞. Numbers: `results/counterexample_H24.json`
+exit. Under BM-∞, Δ⁺_l(Y) ≈ r₀²(n−1)θ_j² ≫ log n, so o_l(Y) → 1. With C = {G_l} and D = 𝔑 ∪ {G_j} ∪ {G_q : q ∈ P}
+(the labels that could change the state so that adding l is no longer an exit), Lemma O(i) gives probability
+1/(B+d+4) that G_l comes first; before it only Gibbs labels of truths in Y (kept, prob → 1 under TS-type
+stability at Y) and of other nulls (an addition is itself an exit) act. So the one-round exit probability is
+≥ (1 − o(1))/(B+d+4) and (L+4)η_n → ∞ for fixed d. Numbers: `results/counterexample_H24.json`
 (script `scripts/counterexample_H24.py`, seeds fixed).
 
 **CE2 (the proposed form (1−c′)^{⌊H/(s₀+d)⌋} is not implied by one-step-per-round progress). COUNTEREXAMPLE.**
@@ -285,9 +307,8 @@ the brief's form needs the factor v.
 - *Layered version (cancellation).* If BTP fails because truths become addable only after partners, split
   phase 1 into layers T₁ ⊆ T₂ ⊆ … ⊆ S₀ with families 𝒵_r and constants ε_add^{(r)}; the proof of Theorem B goes
   through with v increased by the number of layers. Statement and checkable sufficient conditions: OPEN.
-- *Drift instead of union.* At n = 200 the superset leakage η₂ is O(1) (π(S₀) ≈ 0.72), so the H·η term is
-  vacuous although the simulated repair is fast. A Lyapunov bound (E[z^{V_{h+1}} | 𝓖_h] ≤ ρ z^{V_h}) would keep
-  leakage additions inside the drift rather than as fatal events. OPEN.
+- *Drift instead of union.* Prop. D (PROVED) keeps internal increases inside the drift. It is still vacuous at
+  n = 200 with sup-based constants; a version with state-averaged (non-uniform) rates is OPEN.
 - *Production B.* With B = 14–16 the worst-case c₂ floor is 1/(B+3) ≈ 1/17–1/19; the measured progress is far
   higher because non-Gibbs labels rarely accept at near-truth states. CONJECTURE: c₂ → 1 − H_a with H_a
   governed by the extra-for-null swap acceptance.

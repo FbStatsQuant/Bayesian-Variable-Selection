@@ -24,7 +24,7 @@ outputs in `results/`.
 3. **H24 as written is false in correlated designs (CE1: COUNTEREXAMPLE, numerical and reproducible; PROOF
    SKETCH for the asymptotic version).** H24 needs a uniform one-round exit bound on 𝓡_d with (L+4)η_n → 0.
    But at a boundary state (S₀∖{j}) ∪ P with |P| = d, the Gibbs step of a look-alike of j exits with
-   probability ≥ (1−o(1))/(B+4). Measured at p = 20, n = 200: 0.62–0.98 in S2–S6, and 0.16–0.22 even in S1.
+   probability ≥ (1−o(1))/(B+d+4). Measured at p = 20, n = 200: 0.62–0.98 in S2–S6, and 0.16–0.22 even in S1.
    So **H24 cannot be discharged. T21 route (e) should be rewritten with Theorem B's inequality** (a drop-in
    replacement, §5), plus a multi-particle refinement (Cor. B-M) that holds because terminal trajectories are
    conditionally independent.
@@ -37,8 +37,8 @@ outputs in `results/`.
    - At n = 200 (p = 20) the bound is vacuous: superset leakage η₂ is about 0.4–1.0 per round, because
      π(S₀) ≈ 0.72.
    - The actual repair is far faster. From raw π₀ draws, which approximate a "masked" delivered population,
-     100% of particles score S₀ within 12 terminal rounds in all 12 designs: 41–90% in round 1, 66–99% by
-     round 2.
+     100% of particles score S₀ within 12 terminal rounds in all 12 designs: 41–90% in round 1 (only 11–12% in
+     the masked design S5), 66–99% by round 2.
    - The measured per-round progress is 0.75–1.00, against proven c₂ ≈ 0.25–0.47 and floor 1/(B+3) = 0.143.
 
 ## 1. Refined statements (full; every hypothesis named)
