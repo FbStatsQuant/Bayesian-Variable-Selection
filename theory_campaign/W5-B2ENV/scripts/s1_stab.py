@@ -77,7 +77,7 @@ CONFIGS = {
     "A85": dict(G=4, g=4, rho=0.85, links=[(0, 1, 0.5)], visible={0: 1.4, 2: 1.8}),
     "B": dict(G=5, g=4, rho=0.7, links=[(0, 1, 0.5), (2, 3, 0.5)], visible={0: 1.4, 2: 1.8}),
 }
-if __name__ == "__main__":
+if __name__ == "__main__" and True:
     for name, cfg in CONFIGS.items():
         r = margins(**cfg)
         pr(f"config {name}: states {r['states']}  m_del={r['m_del']:.4f}  m_swap={r['m_swap']:.4f}  m_gain={r['m_gain']:.4f}  "
@@ -155,7 +155,7 @@ def margins_types(g, rho, links, visible, nvis_groups=None):
     return md, ms, mg, arg
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and True:
     out2 = []
     pr2 = lambda s: (out2.append(s), print(s, flush=True))
     pr2("type-based STAB(inf) (all neutral non-hubs allowed), m_del / m_swap / m_gain:")
