@@ -59,6 +59,21 @@ Seen but **not** used for any status (in progress or only scripts, no final repo
 
 (Final head SHAs are re-fetched at the end of the run; if a branch moved after this table was written, the table in the commit message is authoritative.)
 
+## Amendment 2026-11-02 (E-SPINE, wording only)
+
+`theory_section.tex` was amended so that it no longer rests on "tempering / the sampler is needed". The reason is W7-SEP Prop. GU and Cor. GU-LH (858004e): on LH, start-only discovery plus the production local search scores S₀.
+
+The defensible claim is "moving off the start is needed". The bridge is one of several sufficient discovery routes; its own role is calibrated Ẑ/PIPs and the HPM ledger.
+
+Also amended:
+- LS0 is effective: O-LS0 02348e2, 0/2,394 HPM changes.
+- Disclosure items 2, 5 and 6 now use S-ELS (90423b1) and O-LS0.
+- The "800–1600" favourable figure is dropped.
+- "No-LS0 masked consistency (OPEN)" becomes "candidates on LH, pending A-REV7".
+- Item 8 gains (xiii).
+
+No status word changed. The PDF was recompiled (pdflatex, two passes, no errors). Full list: `main:Docs/Theory/AMENDMENTS_20261102.md` on branch `theory/E-SPINE`. The O-LS0 row in the table above is historical: the data check has since passed.
+
 ## Pending edits when W6-FIXREV1 / W6-FIXREV2 land (the `.tex` has NOT incorporated them)
 
 1. **Theorem 5 (T38)**: replace the statement with W6-FIXREV1's `T38_STATEMENT.md`. Expected changes from A-REV1: route (b1′) gets pilot rate margins; route (b2) gets an
