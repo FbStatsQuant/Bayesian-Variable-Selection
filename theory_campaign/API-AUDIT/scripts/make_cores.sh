@@ -26,8 +26,12 @@ done
 cd "$W/core_ld/cpp"
 perl -pi -e 's/(?<!long )\bdouble\b/long double/g; s/\bM_PI\b/3.14159265358979323846264338327950288L/g; s/\bM_LN2\b/0.693147180559945309417232121458176568L/g' *.h v3_core.cpp
 # keep the Rcpp-exported signatures in double (the R interface is double; the values convert exactly)
-perl -0pi -e 's{(// \[\[Rcpp::export\]\]\n)([^\n]*)}{$1 . ($2 =~ s/long double/double/gr)}ge' v3_core.cpp
+perl -0pi -e 's{(// \[\[Rcpp::export\]\]\n)([^\n]*)}{my ($a, $b) = ($1, $2); $a . ($b =~ s/long double/double/gr)}ge' v3_core.cpp
 # type fixups needed by the mechanical transform (no change of any formula)
 perl -pi -e 's/std::min\(1\.0, /std::min((long double)1.0, /g; s/std::max\(1\.0, /std::max((long double)1.0, /g' *.h v3_core.cpp
 perl -pi -e 's/data_init\(Data& D, const long double\* X, const long double\* y/data_init(Data& D, const double* X, const double* y/' v3_score.h
+# instrumentation only: export the low-order part of each island's long-double log Zhat_r (log_Z itself is rounded to
+# double at the R boundary), as an extra element of the island's `seconds` vector (List::create is at 20 elements)
+perl -pi -e 's/_\["measured"\] = r\.seconds_measured\)/_["measured"] = r.seconds_measured, _["log_Z_lo"] = (double)(r.logZ - (long double)(double)r.logZ))/' v3_core.cpp
+grep -q 'log_Z_lo' v3_core.cpp || { echo "log_Z_lo patch failed"; exit 1; }
 echo "ld transform applied"

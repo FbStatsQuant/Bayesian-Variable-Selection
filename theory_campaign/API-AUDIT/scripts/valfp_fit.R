@@ -55,6 +55,39 @@ if (mode %in% c("fp", "ld_full")) {
   fr$frozen <- fp$frozen; fr$blocks <- setup$blocks; fr$neighbours <- setup$neighbours
   fr$log_Zbar0 <- setup$start$log_Zbar0
   res <- compact(fr)
+} else if (mode == "fp_nullguard") {
+  # GUARD empirical check: the potential uninterrupted run R-bar = the same pipeline with runtime = NULL and no
+  # preflight (every `guard && ...` short-circuits). Compared bitwise with the guarded production fit.
+  pre <- v3_preprocess(X, y, dup_components = FALSE)
+  ctx <- v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE)
+  setup <- v3_setup(ctx)
+  cal <- v3_calibrate(setup, seed, preflight = NULL, runtime = NULL)
+  fr <- v3_final_run(setup, cal$frozen, seed, NULL)
+  fr$frozen <- cal$frozen; fr$blocks <- setup$blocks; fr$neighbours <- setup$neighbours
+  fr$log_Zbar0 <- setup$start$log_Zbar0
+  fr$calibration <- cal[c("status", "frozen", "flags", "hpm")]
+  res <- compact(fr)
+} else if (mode == "fp_stop") {
+  # GUARD stop path: allocation of 0.05 s (hours = 0.05/3600): the fit must end with status resource_limit.
+  f <- v3_fit(X, y, seed, allocation = list(mem_gb = 8, hours = 0.05 / 3600))
+  if (!is.null(f$calibration)) f$calibration <- f$calibration[c("status", "frozen", "flags", "hpm")]
+  res <- compact(f, list(estimates_available = f$estimates_available, hpm_incomplete = f$hpm_incomplete,
+                         partial_results = f$partial_results, n_checkpoints = NROW(f$runtime_guard$checkpoints),
+                         last_checkpoint = tail(f$runtime_guard$checkpoints, 1)))
+} else if (mode %in% c("fp_seeds", "ld_seeds")) {
+  # Extra final-run replays on the fp fit's frozen C with final seeds 50000 + 100 id + k, k = 1..10. Streams 10..13
+  # of any seed are independent of C, so these are draws of the final run given C (used to tighten the eps bound).
+  fp <- readRDS(file.path(out, sprintf("fit%02d_fp.rds", id)))
+  stopifnot(identical(fp$data_hash, data_hash))
+  pre <- v3_preprocess(X, y, dup_components = FALSE)
+  ctx <- v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE)
+  setup <- v3_setup(ctx)
+  res <- lapply(1:10, function(k) {
+    fr <- v3_final_run(setup, fp$frozen, 50000L + 100L * id + k, NULL)
+    fr$frozen <- fp$frozen; fr$log_Zbar0 <- setup$start$log_Zbar0
+    c(compact(fr), list(final_seed = 50000L + 100L * id + k))
+  })
+  res <- list(runs = res, status = "multi", log_Z = NA)
 } else stop("mode")
 res$seconds <- proc.time()[["elapsed"]] - t0
 saveRDS(res, file.path(out, sprintf("fit%02d_%s.rds", id, mode)))
