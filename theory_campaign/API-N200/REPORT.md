@@ -49,24 +49,29 @@ Pooled per (p, c), counts per 600 fits (per-cell rows in the results file):
 
 Per-cell: RMS z (observed posterior misses vs n_out·mean P̂₀(L|X), SD = design binomial + MC) = 1.08; |z| ≤ 1.5 in 20 of 24 cells; the four larger ones are p500 S4 c0.5 (+2.0), p1000 S5 c0.5 (+2.5), p1000 S5 c1 (+1.8), p500 S2 c0.5 (−1.5). The direction of the largest ones is positive, as the theorem predicts for a lower bound (Π ≥ P₀(L)) plus noise.
 
-Brackets at n = 200 (PA closed forms, per cell): at c = 1 the union bound Σ_e p_e is 6.7–9.6% against MC P₀(L|X) = 5.5–8.4%, so Π(X)'s one-move part is bracketed to within ≈ 1–2 points from above (modulo PA); the lower bracket max over drops/swaps is ≈ 0 at c = 1 (the adds are the whole story there, each ≈ 1.5·10⁻⁴ per null) and 4.6–24% at c = 0.5. At c = 0.5 the union bound is 1 in S4/S5 (vacuous), and the Le Cam two-point floor (for *any* selector) is 0.4–9.2%.
+Brackets at n = 200 (PA closed forms, per cell): at c = 1 the union bound Σ_e p_e is 6.7–9.6% against MC P₀(L|X) = 5.5–8.4%, so Π(X)'s one-move part is bracketed to within ≈ 1–2 points from above (modulo PA; in one cell, p = 500 S1, the MC estimate 7.4% exceeds the PA union bound 7.2% by 0.2 points, inside the MC standard error of 0.4 points, which is exactly where PA-exactness and MC error meet); the lower bracket max over drops/swaps is ≈ 0 at c = 1 (the adds are the whole story there, each ≈ 1.5·10⁻⁴ per null) and 4.6–24% at c = 0.5. At c = 0.5 the union bound is 1 in S4/S5 (vacuous), and the Le Cam two-point floor (for *any* selector) is 0.4–9.2%.
 
 The discovery term: observed 0 search misses in 2,394 completed fits; exact 95% Clopper–Pearson upper bound 0.125% per fit. The a-priori route-(a) bound is ≥ 1 − 10⁻⁶ (vacuous).
 
 ### 4.2 Exact enumeration at p = 12 (`results/small_p_exact.txt`, `scripts/small_p_exact.py`)
 
-n = 40, p = 12 (|Ω| = 4,096, all feasible), s₀ = 3, β = c·(1.4, −1, 1.8), σ = 1, R = 2,000 noise draws per design, one design per kind (iid; equicorrelated 0.3; look-alike blocks r = 0.85), seed fixed. Exact F over all of Ω, so Π(X), P₀(L|X), P₀(L₂|X), the brackets, and the exact π(S₀) are all computed. Findings (first run, `results/small_p_exact_v1.txt`; the rerun adds the δ₁ columns):
+n = 40, p = 12 (|Ω| = 4,096, all feasible), s₀ = 3, β = c·(1.4, −1, 1.8), σ = 1, R = 2,000 noise draws per design, one design per kind (iid; equicorrelated 0.3; look-alike blocks r = 0.85), seed fixed. Exact F over all of Ω, so Π(X), P₀(L|X), P₀(L₂|X), the brackets, and the exact π(S₀) are all computed. Findings:
 
-| design | c | Π = P(S† ≠ S₀) | P(L) | P(L₂) | Π − P(L) | Π − P(L₂) | max_e p_e | Σ_e p_e |
-|---|---|---|---|---|---|---|---|---|
-| iid | 1 | 0.077 | 0.075 | 0.077 | 0.002 | 0.000 | 0.011 | 0.078 |
-| iid | 0.5 | 0.509 | 0.490 | 0.505 | 0.019 | 0.004 | 0.381 | 0.875 |
-| equi 0.3 | 1 | 0.081 | 0.077 | 0.081 | 0.005 | 0.000 | 0.011 | 0.085 |
-| equi 0.3 | 0.5 | 0.667 | 0.584 | 0.663 | 0.083 | 0.004 | 0.484 | 1 |
-| look-alike 0.85 | 1 | 0.217 | 0.206 | 0.208 | 0.011 | 0.009 | 0.077 | 0.269 |
-| look-alike 0.85 | 0.5 | 0.789 | 0.762 | 0.768 | 0.028 | 0.021 | 0.381 | 1 |
+| design | c | Π = P(S† ≠ S₀) | P(L) | P(L₂) | Π − P(L) | Π − P(L₂) | max_e p_e | Σ_e p_e | P(π(S₀) ≤ ½) | 2E₀δ₁ (T21 term) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| iid | 1 | 0.077 | 0.075 | 0.077 | 0.002 | 0.000 | 0.011 | 0.078 | 0.304 | 0.934 |
+| iid | 0.75 | 0.136 | 0.133 | 0.136 | 0.003 | 0.000 | 0.039 | 0.162 | 0.453 | 1.045 |
+| iid | 0.5 | 0.509 | 0.490 | 0.505 | 0.019 | 0.004 | 0.381 | 0.875 | 0.823 | 1.459 |
+| equi 0.3 | 1 | 0.081 | 0.077 | 0.081 | 0.005 | 0.000 | 0.011 | 0.085 | 0.337 | 0.948 |
+| equi 0.3 | 0.75 | 0.196 | 0.184 | 0.196 | 0.012 | 0.001 | 0.104 | 0.248 | 0.547 | 1.130 |
+| equi 0.3 | 0.5 | 0.667 | 0.584 | 0.663 | 0.083 | 0.004 | 0.484 | 1 | 0.908 | 1.637 |
+| look-alike 0.85 | 1 | 0.217 | 0.206 | 0.208 | 0.011 | 0.009 | 0.077 | 0.269 | 0.627 | 1.203 |
+| look-alike 0.85 | 0.75 | 0.429 | 0.398 | 0.401 | 0.032 | 0.029 | 0.139 | 0.582 | 0.872 | 1.480 |
+| look-alike 0.85 | 0.5 | 0.789 | 0.762 | 0.768 | 0.028 | 0.021 | 0.381 | 1 | 0.995 | 1.812 |
 
-So the one-move event carries Π to within 0.2–1 point at c = 1 and within 2–8 points at c = 0.5 in this harder regime (n = 40, s₀/n larger than the study's); the Hamming-2 event carries it to within ≤ 0.4 points except in the look-alike design (2 points, where S† sits 2–7 flips away on a miss). The inclusion L ⊆ {S† ≠ S₀} was asserted on every draw (never violated). The deterministic inclusions of Lemma 1 need no numerical check.
+(c = 0.35 rows are in the results file: Π = 0.89–0.96, P(L) = 0.85–0.95, 2E₀δ₁ = 1.85–1.95.)
+
+So the one-move event carries Π to within 0.2–1 point at c = 1 and within 2–8 points at c = 0.5 in this harder regime (n = 40, s₀/n larger than the study's); the Hamming-2 event carries it to within ≤ 0.4 points except in the look-alike design (2 points, where S† sits 2–7 flips away on a miss). The inclusion L ⊆ {S† ≠ S₀} was asserted on every draw (never violated). The deterministic inclusions of Lemma 1 need no numerical check. **The last two columns are the point of Theorem N200(iv):** at the same (X, c), T21's Markov term 2E₀δ₁ is 0.93–1.95 (vacuous or nearly so) and even the pre-Markov event {π(S₀) ≤ ½} has probability 0.30–1.00, while the exact posterior-miss probability Π = P(S† ≠ S₀) is 0.08–0.79: the truth is the mode far more often than it carries half the mass, and only the former matters for the reported HPM.
 
 ### 4.3 Inputs taken from other runs (not re-derived here)
 
