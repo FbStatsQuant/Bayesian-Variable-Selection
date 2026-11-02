@@ -1,0 +1,5 @@
+blocks [[0, 4, 8], [1, 2, 5], [3, 10, 11], [6, 7, 9]]
+logpi0(S0) conv -0.7433752775 brute -0.7433752775
+pi0(R2) conv 0.9951167190 brute 0.9951167190
+decomposition -vis-comp+logA = -0.7433752775
+mode DP [0, 5, 9] brute (0, 5, 9)
