@@ -1,5 +1,5 @@
 """API-RESID: aggregate results/sweeps_shard*.csv -> results/sweeps.csv, results/sweeps_tables.md.
-Usage: python3 -I scripts/aggregate_sweeps.py results
+Usage: python3 -I scripts/aggregate_sweeps.py results [/home/fb31/ls0_work/agg_final/paired_per_fit.csv]
 Check: the sweep-3 values must reproduce resid3 of results/per_fit.csv (same code path).
 """
 import csv, glob, math, os, sys
@@ -42,5 +42,24 @@ for k, rs in sorted(cells.items()): line(f"p={k[0]} S{k[1]} {k[2]}", rs)
 line("**all**", rows)
 d = [lp(r, "last_lpS0") - lp(r, "s3_lpS0") for r in rows]
 P(f"\nlast vs sweep 3, per fit: up > 1 decade {sum(x > 1 for x in d)}, down > 1 decade {sum(x < -1 for x in d)}, median {median(d):+.3f} decades.")
+if len(sys.argv) > 2:
+    prod = {r["case_id"]: r["prod_class"] for r in csv.DictReader(open(sys.argv[2]))}
+    cls = lambda r: {"exact recovery": "exact", "posterior miss": "pmiss"}.get(prod[r["dataset_id"] + "_" + r["scale_key"]], "reslim")
+    nc = [r for r in rows if r["fixed_at"] == "NA"]
+    P(f"\nNot fixed within 10 sweeps: {len(nc)} fits; by scenario " + ", ".join(f"S{k}: {v}" for k, v in sorted(Counter(r['scenario'] for r in nc).items())) + ".")
+    P("\n## Last sweep against the study outcome\n")
+    P("| study outcome | n | med log10 pi0(S0) s3 / last | favourable s3 / last | mode = S0 s3 / last | med pi0(R2) s3 / last | not fixed by 10 |")
+    P("|---|---|---|---|---|---|---|")
+    for k in ("exact", "pmiss", "reslim"):
+        rs = [r for r in rows if cls(r) == k]
+        P(f"| {k} | {len(rs)} | {median(lp(r,'s3_lpS0') for r in rs):.2f} / {median(lp(r,'last_lpS0') for r in rs):.2f} | "
+          f"{sum(fav(r,'s3_lpS0') for r in rs)} / {sum(fav(r,'last_lpS0') for r in rs)} | "
+          f"{sum(r['s3_meq']=='TRUE' for r in rs)} / {sum(r['last_meq']=='TRUE' for r in rs)} | "
+          f"{median(math.exp(float(r['s3_lpR2'])) for r in rs):.3f} / {median(math.exp(float(r['last_lpR2'])) for r in rs):.3f} | {sum(r['fixed_at']=='NA' for r in rs)} |")
+    P("\n| resource-limit fit | fixed_at | last log10 pi0(S0) | last mode truths/size | last mode = S0 |")
+    P("|---|---|---|---|---|")
+    for r in rows:
+        if cls(r) == "reslim":
+            P(f"| {r['dataset_id']} {r['scale_key']} | {r['fixed_at']} | {lp(r,'last_lpS0'):.2f} | {r['last_mtrue']}/{r['last_msize']} | {r['last_meq']} |")
 open(os.path.join(res, "sweeps_tables.md"), "w").write("\n".join(out) + "\n")
 print("\n".join(out))
