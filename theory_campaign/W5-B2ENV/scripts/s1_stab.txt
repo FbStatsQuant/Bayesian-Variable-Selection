@@ -1,0 +1,20 @@
+config A: states 672  m_del=0.4272  m_swap=0.3051  m_gain=0.1682  ZJL=3.3e-16  PZL=2.2e-17  R=[0.3675]
+   argmins: swap ([0, 1, 2, 3, 8], 0, 4)  gain ([0, 5, 6, 7, 8], 4)
+config A85: states 672  m_del=0.2174  m_swap=-0.0048  m_gain=0.0907  ZJL=3.3e-16  PZL=7.7e-17  R=[0.3675]
+   argmins: swap ([0, 1, 2, 3, 8], 0, 4)  gain ([0, 1, 5, 6, 7, 8], 4)
+config B: states 10752  m_del=0.4272  m_swap=-0.1803  m_gain=0.1682  ZJL=3.3e-16  PZL=9.6e-17  R=[0.3675 0.6075]
+   argmins: swap ([0, 1, 2, 3, 8], 0, 12)  gain ([0, 5, 6, 7, 8], 4)
+sweep c=1, g=4, one visible group, kneu=2: 300 parameter draws, STAB/GAIN failures 66
+   fail rho=0.669 psi=0.624 beta_a=2.923 beta_h=1.732 m_swap=-0.6413 at ([0, 8, 9, 10], 8, 4)
+   fail rho=0.921 psi=0.414 beta_a=1.073 beta_h=1.979 m_swap=-0.0325 at ([0, 1, 2, 8], 0, 4)
+   fail rho=0.947 psi=0.714 beta_a=0.277 beta_h=0.479 m_swap=-0.0136 at ([0, 1, 2, 8], 0, 4)
+   fail rho=0.704 psi=-0.361 beta_a=1.724 beta_h=0.776 m_swap=-0.0855 at ([0, 8, 9, 10], 8, 4)
+   fail rho=0.921 psi=-0.613 beta_a=-2.033 beta_h=2.745 m_swap=-0.5158 at ([0, 1, 2, 8], 0, 4)
+   fail rho=0.814 psi=0.164 beta_a=2.455 beta_h=0.62 m_swap=-0.0539 at ([0, 8, 9, 10], 8, 4)
+   fail rho=0.881 psi=0.484 beta_a=2.958 beta_h=0.891 m_swap=-1.433 at ([0, 8, 9, 10], 8, 4)
+   fail rho=0.851 psi=0.667 beta_a=-2.948 beta_h=0.645 m_swap=-2.0564 at ([0, 8, 9, 10], 8, 4)
+   fail rho=0.927 psi=-0.414 beta_a=-0.376 beta_h=2.004 m_swap=-0.0052 at ([0, 1, 2, 8], 0, 4)
+   fail rho=0.708 psi=-0.369 beta_a=-2.28 beta_h=0.756 m_swap=-0.3759 at ([0, 8, 9, 10], 8, 4)
+   fail rho=0.866 psi=0.685 beta_a=1.719 beta_h=1.399 m_swap=-0.3519 at ([0, 8, 9, 10], 8, 4)
+   fail rho=0.685 psi=-0.581 beta_a=-2.842 beta_h=1.989 m_swap=-0.0551 at ([0, 8, 9, 10], 8, 4)
+sweep c=1, g=4, no visible group, kneu=3: 200 draws, STAB/GAIN failures 19
