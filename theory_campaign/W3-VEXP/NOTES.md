@@ -14,3 +14,10 @@ Scripts/Data_generators/gen_dev_data.R.
 - Thm 1: VERIFIED as a composition. Form of EXP' identical to T22iii STATEMENT §2 and T27i optional EXP'.
 - Engine check: v3_score.h logm = logCn - 0.5(logdet H - logdet(G+I)) - nu log(2b0+Q), Q = y'y - n z'H^{-1}z;
   tables r_b(U) = m(U)/m(empty) on full y (v3_start.h build_tables); gamma0 = varpi(|S|) prod r_b. Matches spec.
+
+## Step 2-4 log (summary; details in REPORT.md / REPAIRS.md)
+- Independent code: vcore.py (scores, engine-partition port, exact pi0/pi), sanity.py (all checks pass).
+- LH reproduction (explicit Gram designs + iid designs): agrees with W1 to ~2 decimals.
+- Boundary tests: psi >= rho makes pi0(S°) e^{-Theta(n)} (hub pair forms its own block); 2g <= B removes masking.
+- Study-scale: SE-blk and population leakage reproduce W1; EXP' actual max|R| <= 0.145, certificate <= 1.52, kappa_EXP ~ 100-1700.
+- Start at n=200 is dilution-masked (all scenarios, all c); favourable by n ~ 800-1600 (S3, p=500). Prop D ceiling >= exact in 26/26.
