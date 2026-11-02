@@ -1,5 +1,8 @@
-﻿# A-REV6 review checkpoint
+﻿# A-REV6 status
 
-Source snapshots are pinned in SOURCE_MANIFEST.json (raw Git blob contents, SHA-256).
-Review in progress: original statuses will be preserved; replacement statements are separate candidates.
-No simulations or numerical validation have been run locally or remotely for this proof review.
+Review complete; overall GAP with preserved original and additional ERROR findings.
+REVIEW.md contains the requested table, per-result verdicts, LOCKABLE list and eight-line summary.
+SHARE.md, WEIGHTS.md and BOOK.md contain Astra-authored candidates requiring independent Claude verification.
+PARTITION.md explains the restricted recovery result and unresolved p>>n obligations.
+No numerical workloads were executed. Source snapshots are raw Git contents with SHA-256 hashes.
+No locked registry or historical branch was changed.

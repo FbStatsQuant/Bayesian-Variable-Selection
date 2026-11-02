@@ -1,0 +1,15 @@
+{
+  "timestamp_utc": "2026-11-02T21:17:18.855837+00:00",
+  "source_snapshot_count": 89,
+  "source_sha256_all_match": true,
+  "review_file_sha256": {
+    "BOOK.md": "4100a358c405462780fd03128a310a54c51b96a7e5805d1c8f02ab3ce39f65bd",
+    "PARTITION.md": "cbc935cbda073e3da42a37ed827d88f1164c096bfd1f9034814d2ac2b3d4d002",
+    "REVIEW.md": "3c21b0bbade5e90dced9b96d384529cfa6f5554fbf32533685ba4666cb71dc07",
+    "SHARE.md": "554e7f9bc770e57c2a6ed74399958e372852847686da16182b8430a1ce14477a",
+    "STATUS.md": "3e460babd9017bc4c6a262c06d324cd33b063b19351df836a997c060c87f445a",
+    "WEIGHTS.md": "2ff65f0150d1fe9e472615d09b801a34af5daddc5a032f297bb56362bd726568"
+  },
+  "validation": "Administrative source-integrity and document checks only; no numerical workload",
+  "compute_runs": []
+}

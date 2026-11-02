@@ -523,5 +523,103 @@
     "path": "theory_campaign/O-DILUTE/THEORY.md",
     "snapshot": "theory_campaign/A-REV6/sources/O-DILUTE__THEORY.md",
     "sha256": "6fb263acbba11dffa3412b152be063aa067606946a38bce928064faa9029bda4"
+  },
+  {
+    "branch": "origin/theory/W2-T26",
+    "head": "0e4f1e7f5efd1e67330affa4168b69750eaff2f1",
+    "path": "theory_campaign/W2-T26/PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W2-T26__PROOF.md",
+    "sha256": "9fbfcf669d1c58932e2f0a182c2e2ef02e309f049df6f4a5c97673893b9d2264"
+  },
+  {
+    "branch": "origin/theory/W2-T26",
+    "head": "0e4f1e7f5efd1e67330affa4168b69750eaff2f1",
+    "path": "theory_campaign/W2-T26/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W2-T26__REPORT.md",
+    "sha256": "992a3c68d12a163c458f20b390d672acff62e36a73723b7008bb7da7c73d02a3"
+  },
+  {
+    "branch": "origin/theory/W2-T26",
+    "head": "0e4f1e7f5efd1e67330affa4168b69750eaff2f1",
+    "path": "theory_campaign/W2-T26/results/premise_summary.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W2-T26__results__premise_summary.md",
+    "sha256": "f6ea0de742aa3910f2b10df02d7fc0a9ca5d466f2644032dd2c5e4bcb9b8db47"
+  },
+  {
+    "branch": "origin/theory/W2-BOOK",
+    "head": "57eb3d0f6699d76c0796e8b389415dacb182c231",
+    "path": "theory_campaign/W2-BOOK/NOTES.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W2-BOOK__NOTES.md",
+    "sha256": "f447a8f2306f90d64b5b7bdfc43e1d7e5559d13cc02f3aeea9b5e55ad9d9c68e"
+  },
+  {
+    "branch": "origin/theory/W2-BOOK",
+    "head": "57eb3d0f6699d76c0796e8b389415dacb182c231",
+    "path": "theory_campaign/W2-BOOK/PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W2-BOOK__PROOF.md",
+    "sha256": "9c58bfc11b9dfa6e1676e9125eb6812bd17ae7b26236abdab885fcb4db1ed73f"
+  },
+  {
+    "branch": "origin/theory/W2-BOOK",
+    "head": "57eb3d0f6699d76c0796e8b389415dacb182c231",
+    "path": "theory_campaign/W2-BOOK/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W2-BOOK__REPORT.md",
+    "sha256": "0fb72d466768e6d16d3b03005b8572e3d2959f907686031f7680582a5936fcbe"
+  },
+  {
+    "branch": "origin/theory/W2-BOOK",
+    "head": "57eb3d0f6699d76c0796e8b389415dacb182c231",
+    "path": "theory_campaign/W2-BOOK/STATEMENTS.tex",
+    "snapshot": "theory_campaign/A-REV6/sources/W2-BOOK__STATEMENTS.tex",
+    "sha256": "825e244c1b6fa441cb8034f6bc8b90c351f10f938579a7ab57593e6bebb460b1"
+  },
+  {
+    "branch": "origin/theory/A-DRAFT",
+    "head": "dbf47f7abfe9940ec7914f89bbe5f28071ad9871",
+    "path": "theory_campaign/A-DRAFT/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/A-DRAFT__REPORT.md",
+    "sha256": "b572a25a7fd6039f8771581d3f1db5c945188a3f8b32072471f34b6793787eee"
+  },
+  {
+    "branch": "origin/theory/F-DRAFT",
+    "head": "4de6e4c7fab641f11f1ba8bb9f306beae5103b74",
+    "path": "theory_campaign/F-DRAFT/CROSSWALK.md",
+    "snapshot": "theory_campaign/A-REV6/sources/F-DRAFT__CROSSWALK.md",
+    "sha256": "61bea95244f72d0365f44b55efa632aea380db1f1e9de4da38b660c7beebaa53"
+  },
+  {
+    "branch": "origin/theory/F-DRAFT",
+    "head": "4de6e4c7fab641f11f1ba8bb9f306beae5103b74",
+    "path": "theory_campaign/F-DRAFT/NEW_TARGETS.md",
+    "snapshot": "theory_campaign/A-REV6/sources/F-DRAFT__NEW_TARGETS.md",
+    "sha256": "dc061805989103d852e501d34df7a2f449fb84193fad9709c3811d9965857d72"
+  },
+  {
+    "branch": "origin/theory/W3-PXN",
+    "head": "4aebea3bf003f5f3c0c7239a24c824ec2d2aa574",
+    "path": "theory_campaign/W3-PXN/PLAN.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W3-PXN__PLAN.md",
+    "sha256": "51cef05aa9051b84c90e9be8d6a929d73d2e78b9d63bda240663cd548548c487"
+  },
+  {
+    "branch": "origin/theory/W3-PXN",
+    "head": "4aebea3bf003f5f3c0c7239a24c824ec2d2aa574",
+    "path": "theory_campaign/W3-PXN/PROOF.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W3-PXN__PROOF.md",
+    "sha256": "8120ac15735339bcb23a6d1df45455fcb42f197b8bcb8f47c455170860b11290"
+  },
+  {
+    "branch": "origin/theory/W3-PXN",
+    "head": "4aebea3bf003f5f3c0c7239a24c824ec2d2aa574",
+    "path": "theory_campaign/W3-PXN/REPORT.md",
+    "snapshot": "theory_campaign/A-REV6/sources/W3-PXN__REPORT.md",
+    "sha256": "6baf0de2509b5b734e2d8252c3757ecad873c60c6ab0dda61e451e8131ab480d"
+  },
+  {
+    "branch": "origin/theory/W5-LOCKBOOK",
+    "head": "a65392bffd4594fff57842287c56ff1ad743064e",
+    "path": "theory_campaign/W5-LOCKBOOK/STATEMENTS.tex",
+    "snapshot": "theory_campaign/A-REV6/sources/W5-LOCKBOOK__STATEMENTS.tex",
+    "sha256": "125d289e966b0a0ed7c8f49e6529937069714e225c88a9e5900644983a1d889f"
   }
 ]
