@@ -220,6 +220,29 @@ What it shows:
 4. **Caveat.** p ≤ 20 is far from the study's p ≥ 500. OB predicts the failure is much worse there. Not checked beyond
    p = 20, since the space cannot be enumerated.
 
+**Study-scale check of OB** (`scripts/ob_check.py`, output `results/ob_check.md`).
+- **Generator.** Study-*like*, not the study's own: n = 200, p ∈ {500, 1000}, s₀ = 14 at the study's spacing, the
+  study's coefficient pattern, σ = 1, designs S1 (iid) and S4 (blocks of 5, 0.85H + 0.15I), 3 replicates each, and the
+  paper's exact score.
+- **Method.** Score only γ_{e*} = S₀ ∪ {e*}, the best single-extra superset, and all its add, delete and swap neighbours
+  (≈ 7,000–15,000 models). This gives an upper bound R_ub ≥ R and a lower bound M_lb = |N(γ_{e*})| ≤ M.
+
+| p | design | log_p R_ub (3 reps) | log_p M_lb | R < M certified |
+|---|---|---|---|---|
+| 500 | S1 | 0.23, 0.43, 0.36 | 1.44 | 3/3 |
+| 500 | S4 | 0.36, 0.54, 0.49 | 1.44 | 3/3 |
+| 1000 | S1 | −0.21, 0.43, 0.53 | 1.40 | 3/3 |
+| 1000 | S4 | 0.30, 0.47, 0.37 | 1.40 | 3/3 |
+
+- **The verdict.** In all 12 data sets R < M holds with a margin of at least p^{0.87}, so R > M² fails as well. The
+  hypotheses of Chang–Zhou Thm 1/4, Zhou–Smith Assumption 1, and (by the same deletion ratio) ZYVR's c₀ = 2 are
+  **false for the paper's target at the study's scale**. This is a COUNTEREXAMPLE to their applicability, reproducible
+  with the script.
+- **One replicate is a posterior miss.** In p = 1000, S1, replicate 0, log π(S₀)/π(γ_{e*}) = −2.08 and R_ub < 1: a
+  superset of S₀ is a strict local mode. This is the posterior-miss mechanism that API-N200 quantifies.
+- **The OB heuristic.** log_p(2√n/k) ≈ 0.1 underestimates log_p R_ub (0.2–0.5), because at finite p the noise maximum
+  T_{e*} is below 2 log p. The conclusion R ≪ M is unaffected.
+
 Discovery, as distinct from mixing, is fast on the same family: API-POS §6 measured YWJ-chain hitting times of S₀ of
 about 70–140 iterations from ∅ and from the start mode, flat in n. The study's own data agree: W8-SYNTH / S-ELS report
 0 search misses in 2,394 completed fits.
@@ -288,9 +311,9 @@ about 70–140 iterations from ∅ and from the start mode, flat in n. The study
 
 ## 8. Needs escalation
 
-1. **OB(ii)–(iii).** The determinant and residual approximations, uniformity in e, and the swap-neighbour control. It
-   needs a careful proof or, better, a numerical check at moderate p (e.g. p = 200–500 by scoring only γ_{e*} and its
-   neighbours, which is cheap, then comparing with M). I did not run this, to stay within budget.
+1. **OB(ii)–(iii).** The determinant and residual approximations, uniformity in e, and the swap-neighbour control still
+   need a careful proof. The numerical check at the study's scale is now done (§4, 12/12 data sets, R < M by a factor of
+   at least p^{0.87}), so the *conclusion* is supported at the study's scale regardless of the asymptotic proof.
 2. **The no-separation claim L2** should be checked by a second literature search, ideally by another model family. Two
    targets: (a) any 2024–2026 lower bound for add/delete/swap under correlated designs (my searches found none); (b) any
    SMC/PT result on binary spaces in the Schweizer 2012 / Marion–Mathews–Schmidler line.
@@ -311,5 +334,39 @@ about 70–140 iterations from ∅ and from the start mode, flat in n. The study
 |---|---|---|---|---|---|
 | T38 (Thm 5), masked parts on LH | Novel for the paper's target and method. A corollary of YWJ/ZYVR/Chang–Zhou under *their* prior (API-POS) | high | n/a (literature position) | OB: their hypotheses fail for our prior | no |
 | L2 (no published BVS tempering separation) | as stated | medium | OPEN (needs exhaustive search) | unread 2024–26 work | no |
-| Prop. OB | R/M → 0 for the paper's prior when p ≫ √n | medium-high | yes, about 1–2 pages | uniform residual approximation; swap neighbours | no |
+| Prop. OB | R/M → 0 for the paper's prior when p ≫ √n (12/12 study-like data sets: R < M) | high | yes, about 1–2 pages | uniform residual approximation; swap neighbours | no |
 | G1 (discovery from (1b)/(1c) alone, our prior) | an MH or greedy chain scores S₀ in poly time without (1a) | medium | medium (greedy: done on LH by GU/T38(b1); MH chain: open) | supersets of S₀ never drained without (1a); scoring needs only Hamming-1 neighbours | no |
+
+## 11. Sources actually read
+
+Everything below was read by me in this run: PDF text extracted with pdftotext, or a web page fetched. N-numbers point
+to the verbatim quotes in `NOTES.md`.
+
+| Work | What I read | Where |
+|---|---|---|
+| Yang, Wainwright, Jordan 2016 | abstract, §3.2–3.3 (Thm 2, Cor 2, remarks), App. A.2 | https://arxiv.org/pdf/1505.07925 (v1) |
+| Zhou, Yang, Vats, Roberts, Rosenthal 2022 | Condition 1, Thm 1, Remark 2, §7 diagnostics | `Papers/Core_bibliography/10_2022_Zhou_et_al_...pdf` (arXiv:2105.05719v3) |
+| Chang & Zhou 2024/25 | abstract page; §3.1–3.3, Thms 1, 2 (statement), 4, 5, Cor 5, Example 3 text | https://arxiv.org/abs/2404.03867v2 ; https://arxiv.org/pdf/2404.03867 |
+| Zhou & Smith 2022 | abstract, Assumption 1, Lemma 3, Thm 1 | https://arxiv.org/pdf/2107.10827 |
+| Zhou & Chang 2023 | theorem list only (Thm 1–2 headings) | https://arxiv.org/pdf/2101.04084 |
+| Li, Smith, Zhou 2023/24 | abstract, §1, Thm 1 heading | https://arxiv.org/pdf/2304.06251 |
+| Zanella & Roberts 2019 | Thm 1, Remarks 3–4, §3.3 | `Papers/Core_bibliography/14_...pdf` |
+| Zanella 2020 | Thms 2–4 | `Papers/Core_bibliography/09_...pdf` |
+| Liang, Livingstone, Griffin 2022 | Thm 2, §5.1 | `Papers/Core_bibliography/01_...pdf` |
+| Staerk, Kateri, Ntzoufras 2024 | abstract, Thm 1 | `Papers/Core_bibliography/08_...pdf` |
+| Schäfer & Chopin 2013 | abstract, §1.2 | `Papers/Core_bibliography/07_...pdf` |
+| Le Fay, Chopin, Vihola 2026 | abstract, §1–3 (Assumptions 2.1–2.4, 3.1; Thms 2.3, 3.2) | `Papers/Core_bibliography/24_...pdf` |
+| Mathews & Schmidler 2024 | abstract, §2, Thm 1, §6 | https://arxiv.org/pdf/2208.06672 (v1) |
+| Woodard, Schmidler, Huber 2009 | §3 (definitions, Thm 3.1), §4.2 intro | https://www.maths.tcd.ie/EMIS/journals/EJP-ECP/article/download/638/870.pdf |
+| Gamarnik & Zadik 2017/19 | abstract, §1, LSA, Thm 2.7 | https://arxiv.org/pdf/1711.04952 (v2) |
+| Atchadé 2019/21 | abstract, H2, Thm 6 and discussion | https://arxiv.org/pdf/1903.11745 (v2) |
+| Jiang 2023 | abstract, §1.1, proposition list | https://arxiv.org/pdf/2307.05558 (v1) |
+| Pozza & Zanella 2024/25 | abstract, Thm 1 / Cor 1 statements | https://arxiv.org/pdf/2410.23174 (v1) |
+| Gagnon, Maire, Zanella 2023 | abstract | https://arxiv.org/pdf/2211.11613 (v2) |
+| Kim & Ročková 2023/25 | abstract only (via fetch) | https://arxiv.org/abs/2306.00126 |
+| Griffin, Łatuszyński, Steel 2021 | via API-POS's reading; PDF re-downloaded, not re-read | https://arxiv.org/pdf/1708.05678 |
+
+Venues marked UNVERIFIED in §1 come from search snippets or arXiv listings only. Our own documents read:
+`theory/W8-SYNTH · BRIEF.md`, `theory/T38-RECORD · T38_STATEMENT.md` (head), `theory/API-POS · REPORT.md`,
+`theory/API-N200 · REPORT.md` (§1–2), `theory/W7-SEP · REPORT.md` (§1), `Docs/THEORY_PRIORITIES.md` §1–2,
+`Docs/Methodology/METHODOLOGY_v3.md` §1–5, and `MASTER_Methodology_and_Plan.md` (scenario table).
