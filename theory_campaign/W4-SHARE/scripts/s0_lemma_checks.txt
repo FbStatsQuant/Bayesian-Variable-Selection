@@ -1,0 +1,5 @@
+(a) g increasing: True; g(1e-6)=0.500000; g(1)=0.581977 vs 1/(e-1)=0.581977; g(1e3)=0.999000
+(b) monotonicity violations: 0 / 2000
+(c) max ratio (1/theta0)/bound: monotone form 1.000000 (<=1), general form 1.000000 (<=1)
+(d) max exact/bound over 200 random chains: 0.999043 (<=1 required)
+(e) Prop M(a): min LHS/RHS over 3000 random cases = 1.00000000 (>=1 required)

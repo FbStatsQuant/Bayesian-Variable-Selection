@@ -1,0 +1,61 @@
+A. Proposition SH: two states {a (W), o}, no moves, T = 1.
+  N=1000 pi0(a)=0.5: kappa | exact P(ext) | D5 upper | SH lower
+       2.21 | 2.192e-39 | 3.444e-23 | 0
+       4.21 | 6.196e-07 | 0.0006525 | 0
+       6.21 | 0.1361 | 0.3682 | 0
+       8.21 | 0.7626 | 0.8734 | 0
+       6.91 | 0.3681 | 0.6067 | 0
+      13.82 | 0.999 | 0.9995 | 0
+      16.82 | 1 | 1 | 0.9502
+  N=1000 pi0(a)=0.99: kappa | exact P(ext) | D5 upper | SH lower
+       2.90 | 5.495e-233 | 8.518e-24 | 0
+       4.90 | 1.335e-74 | 0.0006352 | 0
+       6.90 | 1.202e-20 | 0.3681 | 0
+       8.90 | 3.529e-05 | 0.8734 | 0
+      11.50 | 0.3515 | 0.99 | 0
+      13.82 | 0.8952 | 0.999 | 0
+      16.82 | 0.9944 | 1 | 0.9502
+  N=10000 pi0(a)=0.5: kappa | exact P(ext) | D5 upper | SH lower
+       4.52 | 6.277e-47 | 2.614e-24 | 0
+       6.52 | 4.02e-07 | 0.0006214 | 0
+       8.52 | 0.1354 | 0.3679 | 0
+      10.52 | 0.7628 | 0.8734 | 0
+       9.21 | 0.3679 | 0.6065 | 0
+      18.42 | 0.9999 | 1 | 1.776e-15
+      21.42 | 1 | 1 | 0.9502
+  N=10000 pi0(a)=0.99: kappa | exact P(ext) | D5 upper | SH lower
+       5.20 | 0 | 2.257e-24 | 0
+       7.20 | 1.681e-159 | 0.0006197 | 0
+       9.20 | 2.648e-34 | 0.3679 | 0
+      11.20 | 2.601e-06 | 0.8734 | 0
+      13.81 | 0.3661 | 0.99 | 0
+      18.42 | 0.99 | 0.9999 | 1.776e-15
+      21.42 | 0.9995 | 1 | 0.9502
+
+B. Two states, no moves, T uniform stages, pi0(a) = 0.9: simulated P(W extinct) (400 islands) vs D5 bound.
+  N=2500 T=100 kappa=  2.0: sim 0.0000   D5 bound 7.831e-06   log(N*0.9/T)=3.11
+  N=2500 T=100 kappa=  5.0: sim 0.0000   D5 bound 0.2908   log(N*0.9/T)=3.11
+  N=2500 T=100 kappa=  8.0: sim 0.3500   D5 bound 0.9098   log(N*0.9/T)=3.11
+  N=2500 T=100 kappa= 12.0: sim 0.9725   D5 bound 0.9975   log(N*0.9/T)=3.11
+  N=2500 T=100 kappa= 20.0: sim 1.0000   D5 bound 1   log(N*0.9/T)=3.11
+  N=2500 T=1000 kappa=  2.0: sim 0.0125   D5 bound 0.2992   log(N*0.9/T)=0.81
+  N=2500 T=1000 kappa=  5.0: sim 0.2475   D5 bound 0.8778   log(N*0.9/T)=0.81
+  N=2500 T=1000 kappa=  8.0: sim 0.7750   D5 bound 0.9898   log(N*0.9/T)=0.81
+  N=2500 T=1000 kappa= 12.0: sim 0.9900   D5 bound 0.9997   log(N*0.9/T)=0.81
+  N=2500 T=1000 kappa= 20.0: sim 1.0000   D5 bound 1   log(N*0.9/T)=0.81
+
+C. C1, reversible kernel, T = 1000 uniform stages, 1 move/stage, 9 terminal moves; 200 islands each.
+  pi0(o) = 4.5398e-05; o-lineage survival s (Poisson, mean e^0.08, 400 stages) = 0.1497
+  N=  10000: P(A extinct) sim 0.060  branching prediction 0.066   median log(Zhat/Z) -1837.3
+  N= 100000: P(A extinct) sim 0.465  branching prediction 0.493   median log(Zhat/Z) -1826.7
+  N=1000000: P(A extinct) sim 0.995  branching prediction 0.999   median log(Zhat/Z) -1930.1
+
+D. C1 with o removed (pi0(o) = 0): delivery is trivial; LT fails.
+  N=1e5, 50 islands: A survives in 50/50; log(Zhat/Z): max -1738.1, median -1804.2
+
+E. C1 with the method's grid (exact-law pilot temperatures, 60 bisections, floor 1/Te, Te = 1000;
+   candidate grid with V = all 4 states, restricted ESS >= 0.9).
+  method grid: T = 10 stages; first temperatures [0.      0.01289 0.01934 0.02257 0.0242  0.02509]; last [0.0264 0.0268 1.    ]
+  N=  10000: P(A extinct) with the method grid 0.260   (P(some o drawn) = 0.365)
+  N= 100000: P(A extinct) with the method grid 0.920   (P(some o drawn) = 0.989)
+  N=1000000: P(A extinct) with the method grid 1.000   (P(some o drawn) = 1.000)
