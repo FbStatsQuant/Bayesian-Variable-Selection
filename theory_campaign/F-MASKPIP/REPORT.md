@@ -185,12 +185,14 @@ Take the one-stage grid T = 1, φ = (0, 1) (admissible: T ≥ 1; all locked resu
 exactly W_r = q̂₀(e^d)/E_{π₀}[e^d] (T14(i-a)). Let M_D := {x ∈ Ω : d(x) ≤ d(S₀) − D}. On the event A := {all N initial
 draws lie in M_D},
   W_r ≤ e^{−D}/π₀(S₀)    (PROVED: E_{π₀}e^d ≥ π₀(S₀)e^{d(S₀)} and q̂₀(e^d) ≤ e^{d(S₀) − D} on A),
-and P_𝓒(Aᶜ) ≤ Nπ₀(Ω∖M_D). On the LH exact-Gram family of W1-EXP §4 (omission masking of c ≥ 1 hubs; start mode
-S° = S₀∖M): d(S₀) − d(S°) = Θ(n) (Prop. NM / F-DRAFT Lemma W1 dilution plus the hub signal), π₀(S₀) = p^{−c}n^{−c/2}e^{O_P(1)},
-and the states with d within D = Θ(n)/2 of d(S₀) are those containing the masked hubs, whose π₀-mass is p^{−c}n^{−c/2}
-e^{O_P(1)} (W1-T38E E1, O-BGIBBS Prop. LH); with N = N_e = O(n + p), Nπ₀(Ω∖M_D) → 0 when c ≥ 2 and p → ∞ (and for
-c = 1 when p/(√n log² n) → ∞, as in T38(b1-LH)). Hence **W_r ≤ e^{−Θ(n)} with probability → 1**: the 95% bound is off
-by e^{Θ(n)}. Meanwhile the whole start basin Lat(S°) is downhill to S₀ at φ = 1 (W4-SHARE Prop. M(b), PROOF SKETCH),
+and P_𝓒(Aᶜ) ≤ Nπ₀(Ω∖M_D). On the LH exact-Gram family of W1-EXP §4 (omission masking of c ≥ 1 hubs M; start mode
+S° = S₀∖M), take M_D := {x : x ∩ M = ∅} (hub-free models) and D := d(S₀) − max_{x∩M=∅} d(x). The claim needed is
+D = Θ(n): d(S₀) − d(S°) = Θ(n) (Prop. NM: the hubs' signal is visible to the full posterior and invisible to the
+tables), and a hub-free x gains over S° at most the extras' O_P(log n) discrepancies each (the dilution term of
+F-DRAFT Lemma W1 is already in d(S°)), so max_{hub-free} d ≤ d(S°) + O_P(K log n) — PROOF SKETCH. Then π₀(Ω∖M_D) =
+π₀(some hub present) = c·p^{−1}n^{−1/2}e^{O_P(1)} (W1-T38E E1, O-BGIBBS Prop. LH), and with N = N_e = O(n + p) the
+event A has probability → 1 whenever p/(√n log² n) → ∞ (the T38(b1-LH) c = 1 condition; p ≤ n − 1 on exact-Gram LH).
+Hence **W_r ≤ e^{−Θ(n)}·p^{c}n^{c/2} = e^{−Θ(n)} with probability → 1**: the 95% bound is off by e^{Θ(n)}. Meanwhile the whole start basin Lat(S°) is downhill to S₀ at φ = 1 (W4-SHARE Prop. M(b), PROOF SKETCH),
 so 𝔛 = Lat(S°) has δ_𝔛 ≤ 1 − π₀(Lat(S°)) → 0 by W1-EXP Thm 6 at S° (candidate), and Theorem B / Prop. LH give
 β_L → 0; Theorem R then gives PIP and MPM consistency on the same family, with the same output.
 *Caveat on the grid.* Whether the method's calibration produces T = 1 on such data is OPEN: the pilot's restricted
