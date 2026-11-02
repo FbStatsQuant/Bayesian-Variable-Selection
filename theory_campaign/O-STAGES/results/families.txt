@@ -1,0 +1,55 @@
+=== BO favourable family (p = 12, two blocks of 6, X_b1' X_b2 = 0 exactly) ===
+BO n=200 S0=[0, 6] th=1.5 rep0               T*=  4  Delta=0.515  pi0(S0)=0.866  pi(S0)=0.485  w-=1.000 w^=1.000 w+=1.433  N(w-)=None N(w^)=None N(w+)=2  g=0.222 W'=3
+BO n=200 S0=[0, 6] th=1.5 rep1               T*=  2  Delta=0.199  pi0(S0)=0.887  pi(S0)=0.801  w-=1.000 w^=1.000 w+=1.934  N(w-)=None N(w^)=None N(w+)=2  g=0.222 W'=3
+BO n=200 S0=[0, 6] th=1.5 rep2               T*=  1  Delta=0.142  pi0(S0)=0.893  pi(S0)=0.858  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  g=0.222 W'=3
+BO n=200 S0=[0, 6] th=0.6 rep0               T*=  1  Delta=0.129  pi0(S0)=0.882  pi(S0)=0.871  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  g=0.434 W'=2
+BO n=200 S0=[0, 6] th=0.6 rep1               T*=  1  Delta=0.196  pi0(S0)=0.847  pi(S0)=0.804  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  g=0.434 W'=2
+BO n=200 S0=[0, 6] th=0.6 rep2               T*=  1  Delta=0.211  pi0(S0)=0.83  pi(S0)=0.789  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  g=0.434 W'=2
+BO n=200 S0=[0, 1] th=1.5 rep0               T*=  1  Delta=0.152  pi0(S0)=0.869  pi(S0)=0.848  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  g=0.224 W'=3
+BO n=200 S0=[0, 1] th=1.5 rep1               T*=  2  Delta=0.885  pi0(S0)=0.126  pi(S0)=0.115  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  g=0.221 W'=3  A0=1.56 log2A0+7.7=8.3 pair_out_max=0.478
+BO n=200 S0=[0, 1] th=1.5 rep2               T*=  1  Delta=0.152  pi0(S0)=0.887  pi(S0)=0.848  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  g=0.221 W'=3
+BO n=800 S0=[0, 6] th=1.5 rep0               T*=  1  Delta=0.0856  pi0(S0)=0.943  pi(S0)=0.914  w-=1.000 w^=1.321 w+=2.000  N(w-)=None N(w^)=3 N(w+)=1  g=0.563 W'=2
+BO n=800 S0=[0, 6] th=1.5 rep1               T*=  1  Delta=0.0865  pi0(S0)=0.943  pi(S0)=0.913  w-=1.000 w^=1.292 w+=2.000  N(w-)=None N(w^)=3 N(w+)=1  g=0.563 W'=2
+BO n=800 S0=[0, 6] th=1.5 rep2               T*=  1  Delta=0.0825  pi0(S0)=0.943  pi(S0)=0.918  w-=1.000 w^=1.464 w+=2.000  N(w-)=None N(w^)=2 N(w+)=1  g=0.563 W'=2
+BO n=800 S0=[0, 6] th=0.6 rep0               T*=  1  Delta=0.08  pi0(S0)=0.93  pi(S0)=0.92  w-=1.000 w^=2.000 w+=2.000  N(w-)=None N(w^)=1 N(w+)=1  g=1.101 W'=1
+BO n=800 S0=[0, 6] th=0.6 rep1               T*=  1  Delta=0.122  pi0(S0)=0.906  pi(S0)=0.878  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  g=1.101 W'=1
+BO n=800 S0=[0, 6] th=0.6 rep2               T*=  1  Delta=0.0762  pi0(S0)=0.934  pi(S0)=0.924  w-=1.000 w^=2.000 w+=2.000  N(w-)=None N(w^)=1 N(w+)=1  g=1.101 W'=1
+BO n=800 S0=[0, 1] th=1.5 rep0               T*=  1  Delta=0.0603  pi0(S0)=0.948  pi(S0)=0.94  w-=1.000 w^=2.000 w+=2.000  N(w-)=None N(w^)=1 N(w+)=1  g=0.559 W'=2
+BO n=800 S0=[0, 1] th=1.5 rep1               T*=  2  Delta=0.0903  pi0(S0)=0.945  pi(S0)=0.91  w-=1.000 w^=1.141 w+=2.000  N(w-)=None N(w^)=4 N(w+)=1  g=0.565 W'=2
+BO n=800 S0=[0, 1] th=1.5 rep2               T*=  2  Delta=0.137  pi0(S0)=0.896  pi(S0)=0.863  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  g=0.564 W'=2
+BO n=3200 S0=[0, 6] th=1.5 rep0              T*=  1  Delta=0.0525  pi0(S0)=0.97  pi(S0)=0.948  w-=1.000 w^=1.813 w+=2.000  N(w-)=None N(w^)=2 N(w+)=1  g=0.904 W'=2
+BO n=3200 S0=[0, 6] th=1.5 rep1              T*=  1  Delta=0.0404  pi0(S0)=0.972  pi(S0)=0.96  w-=1.737 w^=2.000 w+=2.000  N(w-)=2 N(w^)=1 N(w+)=1  g=0.904 W'=2
+BO n=3200 S0=[0, 6] th=1.5 rep2              T*=  1  Delta=0.0306  pi0(S0)=0.974  pi(S0)=0.969  w-=2.000 w^=2.000 w+=2.000  N(w-)=1 N(w^)=1 N(w+)=1  g=0.904 W'=2
+BO n=3200 S0=[0, 6] th=0.6 rep0              T*=  1  Delta=0.046  pi0(S0)=0.962  pi(S0)=0.954  w-=1.954 w^=2.000 w+=2.000  N(w-)=2 N(w^)=1 N(w+)=1  g=1.767 W'=1
+BO n=3200 S0=[0, 6] th=0.6 rep1              T*=  1  Delta=0.077  pi0(S0)=0.948  pi(S0)=0.923  w-=1.000 w^=1.621 w+=2.000  N(w-)=None N(w^)=2 N(w+)=1  g=1.767 W'=1
+BO n=3200 S0=[0, 6] th=0.6 rep2              T*=  1  Delta=0.0569  pi0(S0)=0.955  pi(S0)=0.943  w-=1.000 w^=2.000 w+=2.000  N(w-)=None N(w^)=1 N(w+)=1  g=1.767 W'=1
+BO n=3200 S0=[0, 1] th=1.5 rep0              T*=  1  Delta=0.0452  pi0(S0)=0.969  pi(S0)=0.955  w-=1.413 w^=2.000 w+=2.000  N(w-)=2 N(w^)=1 N(w+)=1  g=0.905 W'=2
+BO n=3200 S0=[0, 1] th=1.5 rep1              T*=  1  Delta=0.0556  pi0(S0)=0.956  pi(S0)=0.944  w-=1.000 w^=2.000 w+=2.000  N(w-)=None N(w^)=1 N(w+)=1  g=0.906 W'=2
+BO n=3200 S0=[0, 1] th=1.5 rep2              T*=  1  Delta=0.071  pi0(S0)=0.95  pi(S0)=0.929  w-=1.000 w^=1.480 w+=2.000  N(w-)=None N(w^)=2 N(w+)=1  g=0.901 W'=2
+BO n=12800 S0=[0, 6] th=1.5 rep0             T*=  1  Delta=0.0175  pi0(S0)=0.986  pi(S0)=0.983  w-=2.000 w^=2.000 w+=2.000  N(w-)=1 N(w^)=1 N(w+)=1  g=1.245 W'=1
+BO n=12800 S0=[0, 6] th=1.5 rep1             T*=  1  Delta=0.0255  pi0(S0)=0.985  pi(S0)=0.975  w-=2.000 w^=2.000 w+=2.000  N(w-)=1 N(w^)=1 N(w+)=1  g=1.245 W'=1
+BO n=12800 S0=[0, 6] th=1.5 rep2             T*=  1  Delta=0.016  pi0(S0)=0.987  pi(S0)=0.984  w-=2.000 w^=2.000 w+=2.000  N(w-)=1 N(w^)=1 N(w+)=1  g=1.245 W'=1
+BO n=12800 S0=[0, 6] th=0.6 rep0             T*=  1  Delta=0.0546  pi0(S0)=0.967  pi(S0)=0.945  w-=1.000 w^=2.000 w+=2.000  N(w-)=None N(w^)=1 N(w+)=1  g=2.434 W'=1
+BO n=12800 S0=[0, 6] th=0.6 rep1             T*=  1  Delta=0.0198  pi0(S0)=0.983  pi(S0)=0.98  w-=2.000 w^=2.000 w+=2.000  N(w-)=1 N(w^)=1 N(w+)=1  g=2.434 W'=1
+BO n=12800 S0=[0, 6] th=0.6 rep2             T*=  1  Delta=0.0255  pi0(S0)=0.98  pi(S0)=0.974  w-=2.000 w^=2.000 w+=2.000  N(w-)=1 N(w^)=1 N(w+)=1  g=2.434 W'=1
+BO n=12800 S0=[0, 1] th=1.5 rep0             T*=  1  Delta=0.0253  pi0(S0)=0.986  pi(S0)=0.975  w-=2.000 w^=2.000 w+=2.000  N(w-)=1 N(w^)=1 N(w+)=1  g=1.243 W'=1
+BO n=12800 S0=[0, 1] th=1.5 rep1             T*=  1  Delta=0.0371  pi0(S0)=0.983  pi(S0)=0.963  w-=1.454 w^=1.752 w+=2.000  N(w-)=2 N(w^)=2 N(w+)=1  g=1.246 W'=1
+BO n=12800 S0=[0, 1] th=1.5 rep2             T*=  1  Delta=0.0191  pi0(S0)=0.983  pi(S0)=0.981  w-=2.000 w^=2.000 w+=2.000  N(w-)=1 N(w^)=1 N(w+)=1  g=1.243 W'=1
+
+=== masked: proxy split (truth {0}; x6 = 0.9 x0 + noise, other block) ===
+PROXY n=200 rep0                             T*= 14  Delta=1  pi0(S0)=4.09e-37  pi(S0)=0.832  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  A0=83.47 log2A0+7.7=14.1 pair_out_max=0.379
+PROXY n=200 rep1                             T*= 14  Delta=1  pi0(S0)=1.03e-36  pi(S0)=0.872  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  A0=82.66 log2A0+7.7=14.1 pair_out_max=0.186
+PROXY n=800 rep0                             T*= 16  Delta=1  pi0(S0)=2.29e-146  pi(S0)=0.925  w-=1.000 w^=2.000 w+=2.000  N(w-)=None N(w^)=1 N(w+)=1  A0=335.28 log2A0+7.7=16.1 pair_out_max=0.0697
+PROXY n=800 rep1                             T*= 16  Delta=1  pi0(S0)=1.05e-140  pi(S0)=0.898  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  A0=322.23 log2A0+7.7=16.0 pair_out_max=0.148
+PROXY n=3200 rep0                            T*= 18  Delta=1  pi0(S0)=0  pi(S0)=0.966  w-=1.000 w^=2.000 w+=2.000  N(w-)=None N(w^)=1 N(w+)=1  A0=1298.05 log2A0+7.7=18.0 pair_out_max=0.0515
+PROXY n=3200 rep1                            T*= 18  Delta=1  pi0(S0)=0  pi(S0)=0.975  w-=1.000 w^=2.000 w+=2.000  N(w-)=None N(w^)=1 N(w+)=1  A0=1349.34 log2A0+7.7=18.1 pair_out_max=0.0359
+
+=== masked: cancellation pair across blocks (truth {0,6}, corr r=0.6, th6 = -r th0: x6 invisible to its table) ===
+CANCEL n=200 rep0                            T*= 10  Delta=0.994  pi0(S0)=0.00564  pi(S0)=0.697  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  A0=5.04 log2A0+7.7=10.0 pair_out_max=0.524
+CANCEL n=200 rep1                            T*=  9  Delta=0.994  pi0(S0)=0.00595  pi(S0)=0.818  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  A0=5.01 log2A0+7.7=10.0 pair_out_max=0.272
+CANCEL n=800 rep0                            T*= 10  Delta=0.997  pi0(S0)=0.00302  pi(S0)=0.872  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  A0=5.73 log2A0+7.7=10.2 pair_out_max=0.185
+CANCEL n=800 rep1                            T*=  9  Delta=0.994  pi0(S0)=0.00554  pi(S0)=0.903  w-=1.000 w^=1.095 w+=2.000  N(w-)=None N(w^)=4 N(w+)=1  A0=5.14 log2A0+7.7=10.1 pair_out_max=0.145
+CANCEL n=3200 rep0                           T*= 10  Delta=0.999  pi0(S0)=0.00144  pi(S0)=0.877  w-=1.000 w^=1.000 w+=2.000  N(w-)=None N(w^)=None N(w+)=1  A0=6.43 log2A0+7.7=10.4 pair_out_max=0.157
+CANCEL n=3200 rep1                           T*= 10  Delta=0.998  pi0(S0)=0.00165  pi(S0)=0.963  w-=1.000 w^=2.000 w+=2.000  N(w-)=None N(w^)=1 N(w+)=1  A0=6.37 log2A0+7.7=10.4 pair_out_max=0.0558
+CANCEL n=12800 rep0                          T*= 10  Delta=0.999  pi0(S0)=0.00139  pi(S0)=0.976  w-=1.000 w^=2.000 w+=2.000  N(w-)=None N(w^)=1 N(w+)=1  A0=6.56 log2A0+7.7=10.4 pair_out_max=0.0266
+CANCEL n=12800 rep1                          T*= 10  Delta=0.999  pi0(S0)=0.0014  pi(S0)=0.978  w-=1.000 w^=2.000 w+=2.000  N(w-)=None N(w^)=1 N(w+)=1  A0=6.56 log2A0+7.7=10.4 pair_out_max=0.0396
