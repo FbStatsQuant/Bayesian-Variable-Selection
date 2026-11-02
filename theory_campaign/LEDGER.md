@@ -66,3 +66,14 @@ F-PXN cancelled (superseded by W3-PXN). F-SHARE, F-REFINE relaunched at Fable xh
 ## Wave 5 (2026-11-02 18:40 UTC, `claude --cloud`, credit-billed; specs from F-REFINE NEXT_TASKS)
 W5-VMASK, W5-VPGD, W5-B2ENV, W5-FAVIID, W5-LOCKBOOK (session URLs in ~/.config/bvs-hq/cloud_sessions.log).
 F-REFINE DONE: theory/F-REFINE @ db708ca (CARDS.md, ARCHITECTURE.md, NEXT_TASKS.md).
+
+### 18:50 UTC: CP window push (CP ~24% left, reset ~21:00 UTC; Opus at high; Sonnet workers on CW)
+| ID | Model | Task |
+|---|---|---|
+| O-CERT | Opus high (CP) | finite-n a posteriori certificates for each fit |
+| O-SWAP | Opus high (CP) | finite-n prediction of the posterior-miss rates (swap/superset/subset) vs observed |
+| O-DILUTE | Opus high (CP) | finite-n theory of the study's start masking (dilution); launch uncertain due to T3 resets, retried with an idempotent id |
+| O-BGIBBS | Opus high (CP) | no-LS0 masked theorem via bridge-Gibbs discovery |
+| S-REGISTRY | Sonnet high (CW) | claims registry + LOCKABLE list |
+| S-PAPER | Sonnet high (CW) | theory-section LaTeX skeleton with STATUS comments |
+Credit repairs: W6-FIXREV1 (A-REV1), W6-FIXREV2 (A-REV2).
