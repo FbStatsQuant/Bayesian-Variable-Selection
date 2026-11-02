@@ -53,6 +53,7 @@
 | theory/W6-FIXREV2 | be2d456 | 2026-11-02T19:07:35+00:00 |
 | theory/W7-PART | dc08f15 | 2026-11-02T20:10:24+00:00 |
 | theory/W7-SEC | 7e33e8a | 2026-11-02T19:55:48+00:00 |
-| theory/W7-SEP | e8b5416 | 2026-11-02T20:05:14+00:00 |
+| theory/W7-SEP | 44ca480 | 2026-11-02 (refetched; REPORT tables filled) |
 
 Note: theory/O-LS0 contains scripts only (no REPORT, no data) at this snapshot.
+theory/campaign LEDGER at 7c60111 ("wrap-up", 20:16 UTC): O-LS0 report is to be written by a separate O-LS0-WRAP run; L-LEAN still building at that time.
