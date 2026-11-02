@@ -30,9 +30,9 @@ PROVED is a **candidate** pending cross-family review. Proofs: `PROOF.md` (§ nu
    (**Theorem L, PROOF SKETCH**). Every component is proved except two finite population inequalities, which were
    verified numerically for configuration B. The open case is a start that concentrates on a *superset* of S₀.
 6. **Usefulness is still asymptotic.** On LH at p = 20, the junk/null-addition and independence terms decay like
-   n^{−1/2} as predicted. The swap-substitute term is D′/(k(p−k)) = 1/16 and needs p → ∞, and the single-particle
-   binomial factor stays near 1 for n ≤ 10⁶. The multi-particle product (now rigorous through IND-T) is the
-   operative route.
+   n^{−1/2} as predicted. The swap-substitute term is D′/(k(p−k)) = 1/16 and needs p → ∞. The single-particle
+   binomial factor P(Bin(L+5, c_*) < v) is 0.14 at n ≈ 10⁵ and 0.015–0.03 at n = 1.6·10⁶. The multi-particle product
+   (now rigorous through IND-T) is the operative route.
 
 ## 2. Premise-by-premise table
 
@@ -168,8 +168,9 @@ Reading:
   reason to be small. OPEN; plausibly false at finite n.
 - **TL♯ in random designs.** ZJL is exact zero leakage. With iid Gaussian rows, max-type NL_η fails at fixed SNR
   ([E]), and an average/Beta argument would be needed. OPEN.
-- **Rates.** Every o_P(1/log n) here holds, but the binomial factor P(Bin(L+5, c) < v) decays like n^{−c/(v ln 2)}.
-  For LH configuration B (v = 8, c ≈ 0.3–0.46), it is still 0.2–0.9 at n ≤ 1.6·10⁶.
+- **Rates.** Every o_P(1/log n) here holds, but the binomial factor P(Bin(L+5, c) < v) decays only through
+  H′ = L + 5 ≈ log₂ n. For LH configuration B (v = 8, c_* ≈ 0.33–0.5) it is 0.66–0.88 at n = 1600, 0.14 at
+  n = 10⁵ and 0.015–0.03 at n = 1.6·10⁶. The worst-case floor c₂ ≥ 1/(B+3) would be far slower.
 
 ## 6. Needs escalation
 
