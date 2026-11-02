@@ -1,0 +1,78 @@
+{
+ "cex1_positivity": {
+  "literal_TD00_failing_clauses": 0,
+  "best_gain_at_empty": -2.297799898405003,
+  "truth_gain_over_empty": 20.989977228844708,
+  "posterior_S0": 0.8645494124746878,
+  "global_HPM": [
+   0,
+   1
+  ],
+  "search_from_empty": {
+   "returned": [],
+   "certified": true
+  }
+ },
+ "cex2_postmiss_with_ELS": {
+  "F_Sc_minus_F_S0": -2.28625030046166,
+  "F_S0plus2_minus_F_S0": 7.210984655753208,
+  "path": [
+   [
+    0,
+    2
+   ],
+   [
+    0,
+    1,
+    2
+   ]
+  ],
+  "returned": [
+   0,
+   1,
+   2
+  ],
+  "certified": true,
+  "E_LS": true,
+  "F_post_minus_F_S0": 7.210984655753208,
+  "category": "III"
+ },
+ "tie_counterexample": {
+  "F1_minus_F2": 0.0,
+  "gain_empty_to_0": 7.630848942454946,
+  "gain_add_duplicate_at_truth": -0.0018640606576241225,
+  "swap_tie_at_truth": 0.0,
+  "M_empty": [
+   0
+  ],
+  "M_truth": null,
+  "TDP_R0": true,
+  "D_strict_empty": "False",
+  "D_lex_empty": "True"
+ },
+ "inferior_local_max": {
+  "E_LS": true,
+  "F_post_minus_F_S0": -20.989977228844708,
+  "certified": true,
+  "returned": [],
+  "in_R2_dichotomy": false,
+  "category": "II"
+ },
+ "exhaustive": {
+  "states": 6900,
+  "a_viol": 0,
+  "b_viol": 0,
+  "lex_not_strict": 325,
+  "designs_TDP": 25,
+  "designs_TDP_strict": 25,
+  "cat": {
+   "I": 498,
+   "II_cert": 3,
+   "II_limit": 10,
+   "III": 558,
+   "success": 131
+  },
+  "partition_viol": 0,
+  "R2_misses": 13
+ }
+}
