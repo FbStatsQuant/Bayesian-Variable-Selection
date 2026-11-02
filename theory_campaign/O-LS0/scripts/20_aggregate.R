@@ -32,8 +32,9 @@ if (!is.na(latdir)) {
 # ---- production HPM exact recovery (per cell counts)
 prod <- do.call(rbind, lapply(c("p0500", "p1000"), function(pp) {
   x <- read.csv(file.path(repo, "Results", "SMC_BVS_v3_production", pp, "exact_recovery_long.csv"))
-  x <- x[x$method_id == "SMCBVS" & x$rule_id == "hpm", ]
-  data.frame(p = x$p, scenario = x$scenario, scale_key = x$scale_key, prod_n = x$n_expected,
+  # each file carries rows for BOTH p (the other p as empty placeholders) and a "pooled" row: keep this p, per scenario
+  x <- x[x$method_id == "SMCBVS" & x$rule_id == "hpm" & x$p == as.integer(sub("^p0*", "", pp)) & x$scenario != "pooled", ]
+  data.frame(p = x$p, scenario = as.integer(x$scenario), scale_key = x$scale_key, prod_n = x$n_expected,
              prod_exact = x$exact_all_sum, prod_fail = x$n_fail_total)
 }))
 
@@ -43,8 +44,9 @@ d$prod_must_miss <- !d$S0_locmax                           # S0 not a flip/swap 
 d$fail_class <- ifelse(d$scored_S0, "scored",
                  ifelse(!d$S0_locmax, "posterior: S0 not a local max",
                   ifelse(d$best_beats_S0, "posterior: LS0 found a better model",
+                   ifelse(d$ls_moves == 0, "search: S~0 is a strict local max (0 moves)",
                    ifelse(!d$cap_ok & d$path_progress_all, "cap: progress-only path ran out of moves",
-                    ifelse(!d$path_progress_all, "search: non-progress move", "search: other")))))
+                    ifelse(!d$path_progress_all, "search: non-progress move", "search: other"))))))
 write.csv(d, file.path(res, "ls0_per_fit.csv"), row.names = FALSE)
 
 key <- c("scale_key", "p", "scenario")
@@ -72,6 +74,7 @@ summ <- do.call(rbind, lapply(seq_len(nrow(cells)), function(i) {
     f_post_notlm = sum(x$fail_class == "posterior: S0 not a local max"),
     f_post_better = sum(x$fail_class == "posterior: LS0 found a better model"),
     f_cap = sum(x$fail_class == "cap: progress-only path ran out of moves"),
+    f_zero = sum(x$fail_class == "search: S~0 is a strict local max (0 moves)"),
     f_nonprog = sum(x$fail_class == "search: non-progress move"), f_other = sum(x$fail_class == "search: other"),
     # lattice
     lat_checked = nrow(lc), lat_DS_all = sum(lc$lat_DS_all), lat_fail_frac_med = if (nrow(lc)) med(lc$lat_DS_fail / pmax(1, lc$lat_n)) else NA,
@@ -122,11 +125,11 @@ for (sk in c("c100", "c050")) {
                       tot("scored"), tot("certified"), tot("ls0_alone"), tot("prod_exact"), tot("harm_possible"), tot("post_lo"), tot("prod_exact"),
                       tot("best_beats_S0"), tot("S0_not_locmax"), tot("prod_miss"), tot("move_limit")))
   tab("C. Path geometry (TD′ / Lemma LS-score) and failure classes", list(f0("path_progress"), f0("path_in_R0"), f0("path_in_R1"), f0("path_in_R2"), f0("path_in_lat"),
-      f0("cap_ok"), fr("cert_given_scored"), f0("f_post_notlm"), f0("f_post_better"), f0("f_cap"), f0("f_nonprog"), f0("f_other")),
-      c("progress-only path", "path ⊂ R0", "⊂ R1", "⊂ R2", "path ⊂ Lat(S~0)", "ℓ ≥ Φ(S~0)−1", "P(cert | scored)", "miss: S0 not LM", "miss: LS0 beats S0", "miss: cap", "miss: non-progress", "miss: other"), s)
-  md <- c(md, sprintf("| **total** | **%d** | **%d** | **%d** | **%d** | **%d** | **%d** | | **%d** | **%d** | **%d** | **%d** | **%d** |",
+      f0("cap_ok"), fr("cert_given_scored"), f0("f_post_notlm"), f0("f_post_better"), f0("f_zero"), f0("f_cap"), f0("f_nonprog"), f0("f_other")),
+      c("progress-only path", "path ⊂ R0", "⊂ R1", "⊂ R2", "path ⊂ Lat(S~0)", "ℓ ≥ Φ(S~0)−1", "P(cert | scored)", "miss: S0 not LM", "miss: LS0 beats S0", "miss: 0 moves", "miss: cap", "miss: non-progress", "miss: other"), s)
+  md <- c(md, sprintf("| **total** | **%d** | **%d** | **%d** | **%d** | **%d** | **%d** | | **%d** | **%d** | **%d** | **%d** | **%d** | **%d** |",
                       tot("path_progress"), tot("path_in_R0"), tot("path_in_R1"), tot("path_in_R2"), tot("path_in_lat"), tot("cap_ok"),
-                      tot("f_post_notlm"), tot("f_post_better"), tot("f_cap"), tot("f_nonprog"), tot("f_other")))
+                      tot("f_post_notlm"), tot("f_post_better"), tot("f_zero"), tot("f_cap"), tot("f_nonprog"), tot("f_other")))
   tab("D. Lattice D_S check on Lat(S~0) ∩ {Φ ≥ 2} (subsample r = 1..20 per cell; checked when |Lat| ≤ 1024) and (M3) on all fits", list(f0("lat_checked"), f0("lat_DS_all"), fr("lat_fail_frac_med"), fr("lat_phi2_fail_frac"),
       f0("lat_scored_given_fail"), fr("lam_min_med"), fr("lam_min_min")),
       c("fits checked", "D_S on all of Lat", "med fraction of states failing", "fraction of Φ=2 states failing", "LS0 scored S0 when D_S failed somewhere", "med λmin(R_{S~0∪S0})", "min λmin"), s)

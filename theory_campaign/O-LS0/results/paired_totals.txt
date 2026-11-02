@@ -1,0 +1,4 @@
+fits paired: 2400 (S-ELS ledger rows matched: 2400); same S0 in all
+max |F_S0(Owls regenerated) - F_truth(NOTS production)| = 5e-08; TOL for cross-data F comparisons = 5e-05
+min |F_ls0_best - F_hat| over fits where LS0 best != prod S_hat: 0.002
+n = 2400; prod_completed = 2394; prod_exact = 1829; ls0_alone_exact = 1585; ls0_best_eq_prod = 1935; ls0_changes_hpm = 0; undetermined = 0; harm = 0; gain = 0; with_ls0_exact = 1829; end_beats_S0_in_prod_exact = 0; max_abs_dF_S0 = 4.99944121656881e-08

@@ -1,0 +1,2 @@
+lattice subsample: 480 fits (replicates 1..20), 480 matched in the main run
+LS0 fields compared (start_size, Phi_start, log_pi0_start, F_S0, F_best, ls_moves, ls_termination, scored_S0, certified_S0, best_eq_S0, S0_locmax): 0 field(s) differ
