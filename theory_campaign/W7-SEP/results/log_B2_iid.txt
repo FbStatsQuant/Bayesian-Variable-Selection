@@ -8,3 +8,6 @@ B2 iid 400 0 log10pi0S0=-4.53 piS0=0.753 LS0=True basin=1.0000 fracR=0.9968 frac
 B2 iid 400 1 log10pi0S0=-4.47 piS0=0.802 LS0=True basin=1.0000 fracR=0.9968 fracAll=0.8949 hitQf=0.994
 B2 iid 400 2 log10pi0S0=-4.53 piS0=0.803 LS0=True basin=1.0000 fracR=0.9968 fracAll=0.8949 hitQf=0.988
 B2 iid 400 3 log10pi0S0=-4.25 piS0=0.771 LS0=True basin=1.0000 fracR=0.9968 fracAll=0.8949 hitQf=1
+B2 iid 400 4 log10pi0S0=-4.53 piS0=0.746 LS0=True basin=1.0000 fracR=0.9968 fracAll=0.8949 hitQf=0.989
+B2 iid 400 5 log10pi0S0=-4.67 piS0=0.870 LS0=True basin=1.0000 fracR=0.9968 fracAll=0.8949 hitQf=0.958
+B2 iid 1600 0 log10pi0S0=-5.10 piS0=0.921 LS0=True basin=1.0000 fracR=1.0000 fracAll=0.9894 hitQf=0.743
