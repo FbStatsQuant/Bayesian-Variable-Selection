@@ -1,0 +1,14 @@
+c=2 p=16 g=4 n=400 N=2500 reps=5 (LH exact Gram)
+rep | pi0(U^c)  min_t N_U/N  N_U/N(end bridge)  N_U/N(final) | first score (stage, mech) | q1(S°)  min q1 over end-of-bridge U states (#states)  log10 bound
+ 0 | 5.2e-09  1.0000  1.0000  1.0000 | (1, 'gibbs') | 0.141  0.120 (28)  -1812
+ 1 | 5.7e-11  1.0000  1.0000  1.0000 | (0, 'init') | 0.169  0.139 (28)  -2112
+ 2 | 2.5e-09  1.0000  1.0000  1.0000 | (0, 'init') | 0.157  0.145 (28)  -2207
+ 3 | 8.3e-12  1.0000  1.0000  1.0000 | (1, 'gibbs') | 0.168  0.140 (28)  -2125
+ 4 | 1.7e-11  1.0000  1.0000  1.0000 | (1, 'gibbs') | 0.169  0.148 (28)  -2265
+c=2 p=16 g=4 n=1600 N=2500 reps=5 (LH exact Gram)
+rep | pi0(U^c)  min_t N_U/N  N_U/N(end bridge)  N_U/N(final) | first score (stage, mech) | q1(S°)  min q1 over end-of-bridge U states (#states)  log10 bound
+ 0 | 3.5e-37  1.0000  1.0000  1.0000 | (1, 'gibbs') | 0.139  0.124 (28)  -2165
+ 1 | 3.3e-42  1.0000  1.0000  1.0000 | (1, 'gibbs') | 0.149  0.128 (28)  -2235
+ 2 | 4.9e-31  1.0000  1.0000  1.0000 | (1, 'gibbs') | 0.126  0.123 (28)  -2147
+ 3 | 2.8e-41  1.0000  1.0000  1.0000 | (1, 'gibbs') | 0.144  0.127 (28)  -2212
+ 4 | 8.4e-44  1.0000  1.0000  1.0000 | (1, 'gibbs') | 0.143  0.132 (28)  -2301
