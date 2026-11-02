@@ -428,7 +428,7 @@ The example uses distinct predictors and a fixed eigenvalue lower bound; it ther
 
 ### 3.3 Exact small-p numerical illustration
 
-Script: [scripts/naive_merge.py](scripts/naive_merge.py). Outputs: [CSV](results/naive_merge.csv), [run log](results/run.log), [metadata](results/metadata.json), [PNG](results/naive_merge.png), [SVG](results/naive_merge.svg).
+Script: [scripts/naive_merge.py](scripts/naive_merge.py). Outputs: [CSV](results/naive_merge.csv), [run log](results/run.txt), [metadata](results/metadata.json), [PNG](results/naive_merge.png), [SVG](results/naive_merge.svg).
 
 Run, **one small job at a time**, through the mandatory wrapper:
 
@@ -437,7 +437,7 @@ Run, **one small job at a time**, through the mandatory wrapper:
   uv run --no-project --cache-dir theory_campaign/A-DRAFT/reading/uv-cache \
   --with numpy --with matplotlib \
   python theory_campaign/A-DRAFT/scripts/naive_merge.py \
-  > theory_campaign/A-DRAFT/results/run.log
+  > theory_campaign/A-DRAFT/results/run.txt
 ```
 
 Parameters: p=2, `ρ=0.8`, `b=σ*=1`, base seed `20261102`; an independent deterministic seed keyed by n is used in each row. This is **exact summation over four models using floating-point v3 scores**, not an SMC approximation, not symbolic/rational arithmetic, and not a Monte Carlo estimate of an across-data error rate. Randomness generates one data set per n. Gaussian sufficient statistics are sampled exactly: `X'ε~N(0,σ²G)` and the independent centred residual noise norm is `σ² χ²_{n−3}`. No large design matrix or enumeration campaign is needed.
