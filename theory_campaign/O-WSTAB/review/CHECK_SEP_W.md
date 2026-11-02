@@ -11,6 +11,14 @@ Scripts (written for this review; they do not import `wstab_core.py`, so they ar
 - `review/check_W_constants.py` → `review/check_W_constants.txt`: Mills/Chernoff/order-statistic constants, an
   independent large-(n, p) evaluation of the W(e) multi-extra bound, and the arithmetic for finding F1.
 
+**Version and scope note.** The reviewed text is REPORT.md at b3d89e2 (328 lines). While this review ran, the author
+pushed 5f181a6, 9ea77b4 and 7db87aa, which add Lemma SEP′, Theorem W(g), a "Connections" paragraph and more numerics.
+Those additions are **not reviewed** here. `git diff b3d89e2 7db87aa` removes no line of §3.2–3.7 except the W(e) label
+and Needs-escalation/card rows, so every finding below still applies to the current text. (W(g)'s bound contains an
+additive (s₀+1)log 2, so it does not by itself close F1; not checked further.) Process note: the author's commit 9ea77b4
+also committed this review's two scripts and outputs (byte-identical to the versions here); this commit adds the
+report file.
+
 Severity scale: **fatal** (a stated result is false or its proof cannot be repaired locally), **gap** (a step does not
 follow as written; the result may still be true), **exposition** (wrong or missing detail that does not affect the
 result).
