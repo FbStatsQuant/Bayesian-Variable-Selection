@@ -113,3 +113,7 @@ Laptop, Claude Work: L-LEAN (Lean 4 formalisation of T21, T07, T11(iii), Theorem
 | O-STAGES | Opus high (CP) | theorem for the realised stage count T_n (W′/W″); T26's premise and T38's cost exponent | mcp:launch:a029f4b2… |
 | O-VCERT | Opus high (CP) | same-family verification of O-CERT (Lemma M, C1–C6) | mcp:launch:00adbb0a… |
 In flight now: laptop 18 (14 CP/Codex + 2 CW + 2 new CW), cloud 10, Owls O-LS0.
+
+### 20:16 UTC: wrap-up
+27/28 agents done. O-LS0 delegate was cancelled by a T3 restart after its Owls jobs finished → O-LS0-WRAP (Opus high, CW, Owls, aggregation only) writes the report. W8-SYNTH (credits) writes SYNTHESIS.md + BRIEF.md. L-LEAN still building.
+Key landings: O-BGIBBS Theorem BG3 (no-LS0 masked discovery on LH, p fixed, PROVED); F-SHARE closure theorem; S-ELS: 0 search misses, local search 0 moves in 2,394/2,394; F-SIGMA: common-σ² catastrophic in random designs; O-VCERT: O-CERT verified; F-REFEREE: major revision.
