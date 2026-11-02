@@ -124,6 +124,15 @@ Mstat median 0.76, q95 2.66 at n = 1.6e6 — the predicted random-design law `co
 (the in-sample `delta_{∅,j_b} ~ N(0, ||mu||^2/(n-1))` adds variance; masking rate unchanged);
 `sqrt(n)(1 - pi0(S°))` stays in [2.5, 3.0] (consistent with `O_P(sqrt(log n) n^{-1/2})`); `pi0(R_0)` 0.998, `pi(S0)` 0.997.
 
+**SE-blk and block structure at the study size** (`scripts/study_seblk.py`, n = 200, one simulated design per cell,
+numpy RNG — distributionally equal to `gen_dev_data.R`, not bitwise): `min_b lambda_min(R_{C_b})` on the v3 partition
+(B = 14) is 0.46/0.25/0.17/0.086/0.17/0.064 for S1..S6 at p = 500 and 0.47/0.25/0.17/0.084/0.16/0.062 at p = 1000.
+So SE-blk (hence Thm 1, with `phi0^2 ~ 0.06`) holds at the study size in every scenario; the phi0-terms of
+`kappa_EXP` are then <= 0.75 at n = 200. In S3–S6 every block is a union of whole groups of 5 (two groups per block),
+as the population analysis assumes. Population leakage (`scripts/pop_leak_study.py`, blocks = unions of consecutive
+groups): `lambda_b(S0)/(n-1)` is exactly 0 in S1, S3, S4, S6 and positive in 98/100 (S5) blocks; the S2 figure (81/100)
+uses index windows, not the actual partition, and is only indicative.
+
 Config B (c = 2, p = 20): see `results/fam_B_*.log` (prediction: `log10 pi0(S0)` slope -1 per decade of n, Mstat
 -> `log(60/37) + log(80/36) + (chi^2_2)/(2·4.9)`, median 1.42). Table filled in §"Config B" below when the run completes.
 

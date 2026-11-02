@@ -1,0 +1,12 @@
+p=500 B=14 S1: J=49 min_b lambda_min(R_Cb)=0.4597  frac blocks = union of whole groups=0.00
+p=500 B=14 S2: J=49 min_b lambda_min(R_Cb)=0.2477  frac blocks = union of whole groups=0.02
+p=500 B=14 S3: J=54 min_b lambda_min(R_Cb)=0.1701  frac blocks = union of whole groups=1.00
+p=500 B=14 S4: J=53 min_b lambda_min(R_Cb)=0.0860  frac blocks = union of whole groups=1.00
+p=500 B=14 S5: J=55 min_b lambda_min(R_Cb)=0.1725  frac blocks = union of whole groups=1.00
+p=500 B=14 S6: J=54 min_b lambda_min(R_Cb)=0.0643  frac blocks = union of whole groups=1.00
+p=1000 B=14 S1: J=109 min_b lambda_min(R_Cb)=0.4698  frac blocks = union of whole groups=0.00
+p=1000 B=14 S2: J=100 min_b lambda_min(R_Cb)=0.2493  frac blocks = union of whole groups=0.00
+p=1000 B=14 S3: J=106 min_b lambda_min(R_Cb)=0.1694  frac blocks = union of whole groups=1.00
+p=1000 B=14 S4: J=106 min_b lambda_min(R_Cb)=0.0838  frac blocks = union of whole groups=1.00
+p=1000 B=14 S5: J=113 min_b lambda_min(R_Cb)=0.1601  frac blocks = union of whole groups=1.00
+p=1000 B=14 S6: J=111 min_b lambda_min(R_Cb)=0.0622  frac blocks = union of whole groups=1.00

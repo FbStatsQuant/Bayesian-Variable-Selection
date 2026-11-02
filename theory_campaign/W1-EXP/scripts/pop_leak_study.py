@@ -16,15 +16,16 @@ def truth(p=500):
     k = np.arange(s0); block = 1 + step * k
     act = 5 * (block - 1) + np.array([pos[i % 6] for i in k]) - 1
     th = np.zeros(p); th[act] = [pat[i % 6] for i in k]; return th
-p = 500; th = truth(p); S0 = set(np.flatnonzero(th))
-for s in range(1, 7):
-    Sig = cov(s, p); c = Sig @ th; tot = th @ c
-    for width in (5, 10):
-        lams, maxnull = [], 0.0
-        for start in range(0, p, width):
-            C = list(range(start, min(p, start + width))); U = [j for j in C if j in S0]
-            SC = Sig[np.ix_(C, C)]; gam = np.linalg.solve(SC, c[C]); full = c[C] @ gam
-            part = c[U] @ np.linalg.solve(Sig[np.ix_(U, U)], c[U]) if U else 0.0
-            lams.append(full - part)
-        lams = np.array(lams)
-        print(f"S{s} blocks of {width:2d}: max lambda_b/(n-1) = {lams.max():.4f}, #blocks with lambda>1e-10: {(lams>1e-10).sum()}/{len(lams)}, theta'Sigma theta={tot:.2f}")
+if __name__ == '__main__':
+    p = 500; th = truth(p); S0 = set(np.flatnonzero(th))
+    for s in range(1, 7):
+        Sig = cov(s, p); c = Sig @ th; tot = th @ c
+        for width in (5, 10):
+            lams, maxnull = [], 0.0
+            for start in range(0, p, width):
+                C = list(range(start, min(p, start + width))); U = [j for j in C if j in S0]
+                SC = Sig[np.ix_(C, C)]; gam = np.linalg.solve(SC, c[C]); full = c[C] @ gam
+                part = c[U] @ np.linalg.solve(Sig[np.ix_(U, U)], c[U]) if U else 0.0
+                lams.append(full - part)
+            lams = np.array(lams)
+            print(f"S{s} blocks of {width:2d}: max lambda_b/(n-1) = {lams.max():.4f}, #blocks with lambda>1e-10: {(lams>1e-10).sum()}/{len(lams)}, theta'Sigma theta={tot:.2f}")
