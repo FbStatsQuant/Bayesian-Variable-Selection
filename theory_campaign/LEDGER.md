@@ -169,3 +169,6 @@ LH-LOCK (Fable, CW) failed on a 64K-output-token API error before its first comm
 - API-POS (Opus, $2.77): IMPORTANT — on LH the masking is a property of the START π₀, not the posterior; S₀ is the unique local mode; the YWJ random-walk MH chain hits S₀ from the empty model in ~70–140 iterations. Rapid-mixing theorems (YWJ, ZYVR) apply to LH. Novelty implication for Phase 2.
 - API-FAVIID: W5-FAVIID was already complete; audit found three claims hold only at the cell median.
 - API-RESID, API-AUDIT: computation finished but no report → resume runs launched ($6 cap each).
+
+### 23:27 UTC: literature phase started on the API credit
+LIT-SMC, LIT-MCMC, LIT-STAT, LIT-VENUE (Opus, $8 cap each). Then LIT-SYNTH (Fable decision memo) and an Astra cross-check of the novelty verdict. Balance $160.34 before these. Felipe: a new $200 API credit arrives 2026-11-15, also for theory.
