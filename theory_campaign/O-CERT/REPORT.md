@@ -243,6 +243,14 @@ Under SC(η_F), every computed inequality with margin ≥ 2η_F implies the exac
 {Z < αẐ} (C1(b)), whose output-level probability is ≤ α·P(𝒜). With floating point, VAL-FP gives
 P(𝒪_E, Z < αẐ^{fp}) ≤ P(𝒪_E, Z < αe^{η}Ẑ̄) + ε ≤ αe^{η} + ε, by W2-BOOK Prop 2(f). ∎
 
+*Remark C6′ (deterministic regime; PROVED).* Every L, R and G claim on the card is true **surely** on the
+data-observable event 𝒟_α := {Z_𝒯 ≥ αẐ}. On 𝒟_α, max(Z_𝒯, αẐ) = Z_𝒯 ≤ Z, so u_α(S) = e^{F(S)}/Z_𝒯 ≥ π(S) by C1(a).
+The unscored-mass line reads "≥ 1 − Z_𝒯/(αẐ)", whose right side is ≤ 0, so it is vacuous. The L and R claims are
+deterministic. Hence {card false} ⊆ 𝒟_αᶜ ∩ {Z < αẐ}, and a fit whose card shows Z_𝒯 ≥ αẐ carries a card that is true
+with certainty, not merely with probability 1 − α. This is legitimate even though 𝒟_α is selected after the fact,
+because the claim holds pointwise on 𝒟_α. The price is that the G bound is then only as good as the top store. All
+four fits in §4 are in this regime.
+
 *What the card does **not** say.*
 - It does not say that π(Ŝ) is large. That needs C2 (PW2) or enumeration.
 - It does not say Ŝ = S₀. That needs Thm 1 (asymptotic) and the screening term of C5.
@@ -351,6 +359,7 @@ S6. Four fits are an illustration, not evidence about frequencies.
 | C3 | exact π(Ŝ \| R) on fully scored R; local/subset/best-of-scored gaps | high | done (trivial, but it is the only exact posterior statement at n = 200) | — | no (post-hoc rescoring, about 7k + 16k scores) |
 | C4/C5 | box certificate: Ŝ = argmax over 2^U and π(Ŝ \| 2^U) ≥ ρ_U; posterior-miss certificate on {S₀ ⊆ U} | high | done; cost is empirical (§4) | tree size ~ 2^{# ambiguous variables}; P(S₀ ⊄ U) is statistical | no for post-hoc; yes if built into the engine |
 | C6 | the card's L/R/G claims hold jointly w.p. ≥ 1 − αP(𝒜) at every n, no completion conditioning | high | done (candidate), modulo W2-BOOK review of Lemma RO/GUARD | VAL-FP and SC(η_F) must be measured by replay | no |
+| C6′ | on the observable event Z_𝒯 ≥ αẐ the whole card is true surely | high | done (two lines from C1(a)) | none; it shows the Markov step matters only when the top store misses > 95% of Ẑ | no |
 | "π(Ŝ) ≥ ½ certified" | — | — | **not possible** without PW2 or enumeration (C1(c)) | — | would need a variance-controlled estimator |
 
 Overall: the certificate programme gives the paper a rigorous **finite-n, per-fit** layer. It says "Ŝ is optimal on an
