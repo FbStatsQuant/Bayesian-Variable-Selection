@@ -1,0 +1,32 @@
+{
+ "D": 8.146762406340683,
+ "pi0_12": 0.02791411731793963,
+ "c0": 0.06947111269080761,
+ "c1": 0.9987083374518378,
+ "PIP1": 0.9906180122433582,
+ "Z_over_Z0": 97.33676018112273,
+ "rel_err_EZ": 2.557313502640298e-60,
+ "rel_err_EZP": 2.8913174276640434e-60,
+ "bias_Pbar": -0.1739741778498905,
+ "bias_formula_minus_cov_over_Z": 8.362176779625909e-61,
+ "pooledxpooled_rel_bias": -0.13171639499258733,
+ "pooledxpooled_minus_closed": -3.285752066710683e-58,
+ "pooled_island_product_rel": 1.0326133670228726e-61,
+ "three_quarters_cov_over_Z": 0.1304806333874179
+}
+guard convention both: rows with stop share in (0.1%, 5%)
+  h=28 P(O)=0.951185 E[Zhat|O]/Z=0.01121 E[1_O Zhat]/Z=0.01066
+  h=29 P(O)=0.958556 E[Zhat|O]/Z=0.01123 E[1_O Zhat]/Z=0.01077
+  h=30 P(O)=0.961367 E[Zhat|O]/Z=0.01123 E[1_O Zhat]/Z=0.01080
+  h=32 P(O)=0.990674 E[Zhat|O]/Z=0.79784 E[1_O Zhat]/Z=0.79040
+  h=33 P(O)=0.997834 E[Zhat|O]/Z=0.97392 E[1_O Zhat]/Z=0.97181
+  h=34 P(O)=0.997847 E[Zhat|O]/Z=0.97423 E[1_O Zhat]/Z=0.97213
+  h=35 P(O)=0.998874 E[Zhat|O]/Z=0.97333 E[1_O Zhat]/Z=0.97224
+  h=36 P(O)=0.998878 E[Zhat|O]/Z=0.97342 E[1_O Zhat]/Z=0.97233
+guard convention flip: rows with stop share in (0.1%, 5%)
+  h=16 P(O)=0.970286 E[Zhat|O]/Z=1.00136 E[1_O Zhat]/Z=0.97161
+  h=17 P(O)=0.980450 E[Zhat|O]/Z=0.99120 E[1_O Zhat]/Z=0.97182
+  h=18 P(O)=0.993850 E[Zhat|O]/Z=0.97811 E[1_O Zhat]/Z=0.97209
+  h=19 P(O)=0.996830 E[Zhat|O]/Z=0.97524 E[1_O Zhat]/Z=0.97215
+  h=21 P(O)=0.997313 E[Zhat|O]/Z=0.97479 E[1_O Zhat]/Z=0.97217
+ALL CHECKS PASSED
