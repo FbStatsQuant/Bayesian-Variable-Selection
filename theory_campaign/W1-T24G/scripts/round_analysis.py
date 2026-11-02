@@ -98,7 +98,7 @@ def classify(M, x, inR, V, accind=None):
     T = accind
     lo, eq, hi, out_, tot = T.query(x)
     ex[-1] = out_
-    s[-1] = lo + (M.pi0[S0] * (1 - min(1.0, math.exp(M.d[S0] - M.d[x]))) if x != S0 else 0.0)
+    s[-1] = lo + (M.pi0[S0] * (1 - math.exp(min(0.0, M.d[S0] - M.d[x]))) if x != S0 else 0.0)
     inc[-1] = hi
     b[-1] = tot - lo - T.self_acc(x)
     st = s.copy(); st[sc] = 1.0

@@ -165,11 +165,18 @@ def phase1_B(M, x):
         sel = mW == mm
         good[sel] = SortedAcc(M, famZ & (missc <= mm))(dW[sel])
     parts['I'] = float((tot - good).max()); eta += parts['I']
-    # epsadd
-    best = 1.0
-    for j in bits_of(S0 & ~x, p):
-        sel = ((W >> j) & 1) == 0
-        best = min(best, float((1 - gibbs_o(M, W[sel], j)).max()))
+    # epsadd = max over nonempty M' subset M(x) of min_{j in M'} sup_{W in Z+, M(W) = M'} (1 - o_j(W))
+    Mx = bits_of(S0 & ~x, p)
+    missmask = np.int64(S0) & ~W
+    best = 0.0
+    for r in range(1, len(Mx) + 1):
+        for Mp in __import__('itertools').combinations(Mx, r):
+            mm = sum(1 << j for j in Mp)
+            sel = missmask == mm
+            if not sel.any():
+                continue
+            v = min(float((1 - gibbs_o(M, W[sel], j)).max()) for j in Mp)
+            best = max(best, v)
     a = bin(A).count('1') + c
     return dict(eta1=float(eta), epsadd=best, c1=1 - best, a=a, A=A, c=c, famsize=int(famZ.sum()), parts=parts)
 

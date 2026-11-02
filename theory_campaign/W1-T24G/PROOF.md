@@ -158,7 +158,7 @@ path) disappears because (1) no greedy path is prescribed, (2) all V-increases, 
 with s₀ + a(x) ≤ K; a := a(x) (or a := |P(x)| if x ⊇ S₀).
 
 Phase 1 (only if M(x) ≠ ∅), over 𝒵⁺ := {W ∈ 𝒵(x) : M(W) ≠ ∅}:
-- ε_add(x) := sup_{W∈𝒵⁺} min_{j∈M(W)} sup_{W′∈𝒵⁺, j∈M(W′)} (1 − o_j(W′))     [uniform addability]
+- ε_add(x) := max_{∅≠M′⊆M(x)} min_{j∈M′} sup_{W′∈𝒵⁺, M(W′)=M′} (1 − o_j(W′))     [uniform addability]
 - η₁(x) := Σ_{e∈Λ} sup_{W∈𝒵⁺} P_W(e's step is bad)                              [phase-1 bad rate]
 
 Phase 2, over 𝒮_a° := 𝒮_a∖{S₀}:
@@ -178,10 +178,10 @@ terminal rounds at φ = 1 with no resampling in between,
 Always c₂ ≥ 1/(B+3) − ε_del(a) (polynomial; Fable's order). If c_* ≤ 0 the bound is trivial.
 
 **Prop. B1 (phase-1 progress). PROVED.** For W ∈ 𝒵⁺: P_W(round has no bad and no progress step) ≤ ε_add(x).
-*Proof.* Pick j ∈ M(W) attaining the inner min. On {no bad, no progress} no truth is added or removed
-(both change |M|, hence V), so j is missing throughout and every state is in 𝒵⁺ (no bad ⇒ in 𝓕(x); V
+*Proof.* Put M′ = M(W) and pick j ∈ M′ attaining the inner min. On {no bad, no progress} no truth is added or
+removed (both change |M|, hence V), so the missing set equals M′ throughout and every state is in 𝒵⁺ (no bad ⇒ in 𝓕(x); V
 unchanged ⇒ still phase 1, and phase-1 states of 𝓕(x) are in 𝒵(x)). At the G_j step (it occurs, R2) the
-state W′ ∈ 𝒵⁺ has j ∈ M(W′), and adding j would be progress (|M| drops; the result is in 𝒵(x) ∪ 𝒮_a ⊆ 𝓕(x)).
+state W′ ∈ 𝒵⁺ has M(W′) = M′ ∋ j, and adding j would be progress (|M| drops; the result is in 𝒵(x) ∪ 𝒮_a ⊆ 𝓕(x)).
 So the event requires the G_j draw to be "remove", conditional probability 1 − o_j(W′) ≤ the sup. ∎
 (The cap is respected: |W′∪{j}| ≤ s₀ + a ≤ K.)
 

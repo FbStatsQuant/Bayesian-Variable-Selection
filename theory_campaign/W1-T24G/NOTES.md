@@ -20,3 +20,14 @@ Simulation from 3000 raw pi0 draws (not S0), 12 terminal rounds, actual K_1:
 | S4 c=1 | 0.417 | 0.846 | 1.000 |  S4 c=.5 | 0.437 | 0.831 | 1.000 |
 | S5 c=1 | 0.107 | 0.664 | 1.000 |  S5 c=.5 | 0.121 | 0.688 | 1.000 |
 | S6 c=1 | 0.390 | 0.821 | 1.000 |  S6 c=.5 | 0.452 | 0.847 | 1.000 |
+
+## 2026-11-02 later
+- results/counterexample_H24.json: worst boundary state of R_d (d=1,2) one-round exit probability (simulated,
+  20000 reps): S1 0.16-0.22; S2 0.62-0.79; S3 0.83-0.94; S4 0.80-0.98; S5 0.83-0.97; S6 0.72-0.97.
+  (L+4) x exit = 1.9 .. 11.8.  => H24's uniform exit input fails at n = 200 in every design (CE1).
+- results/compare_cprime.json: per-round progress (actual round, MC) vs constants. Phase 2 worst states:
+  actual 0.75-0.89 vs P* 0.53-0.57, c2 0.30-0.46, c_poly 0.27-0.34, floor 1/(B+3) = 0.143.
+  Phase 1 (pi0-mode incomplete starts): c1 = 1.000 (uniform addability exact), actual progress ~1.000; eta1 1.2-3.3.
+- First scaling runs (single seed): eta2(a=1) 0.37-0.64 (n=200) -> 0.12-0.23 (n=800..12800); heavy-tailed
+  (one null with large partial Z dominates); replicate study in results/scaling_reps.json.
+- Bug fixed: eps_add quantifier must be over states with the same missing set (Prop. B1); code and PROOF.md fixed.

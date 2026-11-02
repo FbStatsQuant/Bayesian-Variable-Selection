@@ -2,16 +2,9 @@
   progress_rate_while_unscored=float(np.mean([res['prog'][h][(f < 0) | (f >= h)].mean()
 /usr/local/lib/python3.11/dist-packages/numpy/_core/_methods.py:142: RuntimeWarning: invalid value encountered in scalar divide
   ret = ret.dtype.type(ret / rcount)
-S1 c=1.00 n=3200 done 12s  c2(a=1)=0.459 eta2(a=1)=0.120  P*min(a=1)=0.683 sim r1=0.971
-S1 c=0.50 n=3200 done 13s  c2(a=1)=0.457 eta2(a=1)=0.120  P*min(a=1)=0.682 sim r1=0.981
-Traceback (most recent call last):
-  File "/home/user/Bayesian-Variable-Selection/theory_campaign/W1-T24G/scripts/run_designs.py", line 81, in <module>
-    r = design_summary(s, c, n, reps=reps)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Bayesian-Variable-Selection/theory_campaign/W1-T24G/scripts/run_designs.py", line 34, in design_summary
-    st, bt, inc, ex = classify(M, int(x), inR, V, T)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Bayesian-Variable-Selection/theory_campaign/W1-T24G/scripts/round_analysis.py", line 101, in classify
-    s[-1] = lo + (M.pi0[S0] * (1 - min(1.0, math.exp(M.d[S0] - M.d[x]))) if x != S0 else 0.0)
-                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
-OverflowError: math range error
+S1 c=1.00 n=3200 done 13s  c2(a=1)=0.459 eta2(a=1)=0.120  P*min(a=1)=0.683 sim r1=0.971
+S1 c=0.50 n=3200 done 12s  c2(a=1)=0.457 eta2(a=1)=0.120  P*min(a=1)=0.682 sim r1=0.981
+S4 c=1.00 n=3200 done 14s  c2(a=1)=0.482 eta2(a=1)=0.170  P*min(a=1)=0.587 sim r1=0.389
+S4 c=0.50 n=3200 done 13s  c2(a=1)=0.482 eta2(a=1)=0.171  P*min(a=1)=0.587 sim r1=0.388
+S5 c=1.00 n=3200 done 13s  c2(a=1)=0.487 eta2(a=1)=0.164  P*min(a=1)=0.589 sim r1=0.328
+S5 c=0.50 n=3200 done 13s  c2(a=1)=0.487 eta2(a=1)=0.165  P*min(a=1)=0.589 sim r1=0.416
