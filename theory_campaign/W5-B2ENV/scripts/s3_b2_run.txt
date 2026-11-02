@@ -1,0 +1,36 @@
+== config A, n=400: pi0(S°)=0.920 pi0(S0)=5.15e-03 pi(S0)=0.746; pi0(N^c)=6.15e-12; grid T=16 (pilot 11); lattice crossing phi*=0.0808; N=2500
+   20 islands (3s): confinement exits (particle-stage pairs outside N, stage ends 0..T-1): islands with any: 0.00, mean count 0.0; first exit stages []
+   stage-T round at phi=1: fraction of particles scoring S0: median 0.953 (min 0.942); islands with a score: 1.00
+   lattice potential: Gamma median 9.35 (max 9.86); min_t log P_t median -0.05 (worst -0.07);  log(N/T_e) = 0.92, log(N T) = 10.60
+   h = 1_N: Gamma median 0.000 (max 0.000)
+   P_x(S0 scored in one round at phi=1): S°: 0.429 (c0(x) = 1.19e-03); S°+proxy5: 0.473 (c0(x) = 5.41e-04); S°+all proxies: 0.473 (c0(x) = 1.46e-04); S°+3 C_a nonhubs: 0.347 (c0(x) = 1.46e-04); S°+proxies+nonhubs+null: 0.265 (c0(x) = 2.02e-05); S0+null12: 0.804 (c0(x) = 1.43e-01)
+== config A, n=1600: pi0(S°)=0.962 pi0(S0)=2.64e-03 pi(S0)=0.931; pi0(N^c)=4.35e-38; grid T=15 (pilot 10); lattice crossing phi*=0.0213; N=2500
+   20 islands (3s): confinement exits (particle-stage pairs outside N, stage ends 0..T-1): islands with any: 0.00, mean count 0.0; first exit stages []
+   stage-T round at phi=1: fraction of particles scoring S0: median 0.990 (min 0.986); islands with a score: 1.00
+   lattice potential: Gamma median 6.20 (max 7.77); min_t log P_t median -0.04 (worst -0.05);  log(N/T_e) = 0.92, log(N T) = 10.53
+   h = 1_N: Gamma median 0.000 (max 0.000)
+   P_x(S0 scored in one round at phi=1): S°: 0.402 (c0(x) = 1.19e-03); S°+proxy5: 0.399 (c0(x) = 5.41e-04); S°+all proxies: 0.454 (c0(x) = 1.46e-04); S°+3 C_a nonhubs: 0.376 (c0(x) = 1.46e-04); S°+proxies+nonhubs+null: 0.252 (c0(x) = 2.02e-05); S0+null12: 0.849 (c0(x) = 1.43e-01)
+== config A, n=6400: pi0(S°)=0.978 pi0(S0)=1.27e-03 pi(S0)=0.951; pi0(N^c)=4.56e-129; grid T=14 (pilot 9); lattice crossing phi*=0.0068; N=6400
+   10 islands (3s): confinement exits (particle-stage pairs outside N, stage ends 0..T-1): islands with any: 0.00, mean count 0.0; first exit stages []
+   stage-T round at phi=1: fraction of particles scoring S0: median 0.994 (min 0.992); islands with a score: 1.00
+   lattice potential: Gamma median 7.32 (max 9.37); min_t log P_t median -0.03 (worst -0.03);  log(N/T_e) = 1.86, log(N T) = 11.40
+   h = 1_N: Gamma median 0.000 (max 0.000)
+   P_x(S0 scored in one round at phi=1): S°: 0.398 (c0(x) = 1.19e-03); S°+proxy5: 0.406 (c0(x) = 5.41e-04); S°+all proxies: 0.407 (c0(x) = 1.46e-04); S°+3 C_a nonhubs: 0.394 (c0(x) = 1.46e-04); S°+proxies+nonhubs+null: 0.235 (c0(x) = 2.02e-05); S0+null12: 0.839 (c0(x) = 1.43e-01)
+== config A85, n=400: pi0(S°)=0.924 pi0(S0)=6.33e-03 pi(S0)=0.874; pi0(N^c)=1.39e-06; grid T=16 (pilot 11); lattice crossing phi*=0.0855; N=2500
+   20 islands (4s): confinement exits (particle-stage pairs outside N, stage ends 0..T-1): islands with any: 0.00, mean count 0.0; first exit stages []
+   stage-T round at phi=1: fraction of particles scoring S0: median 0.974 (min 0.964); islands with a score: 1.00
+   lattice potential: Gamma median 7.83 (max 8.34); min_t log P_t median -0.29 (worst -0.31);  log(N/T_e) = 0.92, log(N T) = 10.60
+   h = 1_N: Gamma median 0.000 (max 0.000)
+   P_x(S0 scored in one round at phi=1): S°: 0.425 (c0(x) = 1.19e-03); S°+proxy5: 0.471 (c0(x) = 5.41e-04); S°+all proxies: 0.528 (c0(x) = 1.46e-04); S°+3 C_a nonhubs: 0.372 (c0(x) = 1.46e-04); S°+proxies+nonhubs+null: 0.281 (c0(x) = 2.02e-05); S0+null12: 0.812 (c0(x) = 1.43e-01)
+== config A85, n=1600: pi0(S°)=0.962 pi0(S0)=2.49e-03 pi(S0)=0.935; pi0(N^c)=9.66e-22; grid T=15 (pilot 10); lattice crossing phi*=0.0237; N=2500
+   20 islands (3s): confinement exits (particle-stage pairs outside N, stage ends 0..T-1): islands with any: 0.00, mean count 0.0; first exit stages []
+   stage-T round at phi=1: fraction of particles scoring S0: median 0.988 (min 0.985); islands with a score: 1.00
+   lattice potential: Gamma median 6.38 (max 8.56); min_t log P_t median -0.15 (worst -0.17);  log(N/T_e) = 0.92, log(N T) = 10.53
+   h = 1_N: Gamma median 0.000 (max 0.000)
+   P_x(S0 scored in one round at phi=1): S°: 0.396 (c0(x) = 1.19e-03); S°+proxy5: 0.397 (c0(x) = 5.41e-04); S°+all proxies: 0.454 (c0(x) = 1.46e-04); S°+3 C_a nonhubs: 0.377 (c0(x) = 1.46e-04); S°+proxies+nonhubs+null: 0.247 (c0(x) = 2.02e-05); S0+null12: 0.806 (c0(x) = 1.43e-01)
+== config A85, n=6400: pi0(S°)=0.981 pi0(S0)=1.29e-03 pi(S0)=0.957; pi0(N^c)=1.00e-67; grid T=15 (pilot 10); lattice crossing phi*=0.0067; N=6400
+   10 islands (3s): confinement exits (particle-stage pairs outside N, stage ends 0..T-1): islands with any: 0.00, mean count 0.0; first exit stages []
+   stage-T round at phi=1: fraction of particles scoring S0: median 0.995 (min 0.994); islands with a score: 1.00
+   lattice potential: Gamma median 8.38 (max 9.13); min_t log P_t median -0.16 (worst -0.17);  log(N/T_e) = 1.86, log(N T) = 11.47
+   h = 1_N: Gamma median 0.000 (max 0.000)
+   P_x(S0 scored in one round at phi=1): S°: 0.385 (c0(x) = 1.19e-03); S°+proxy5: 0.394 (c0(x) = 5.41e-04); S°+all proxies: 0.450 (c0(x) = 1.46e-04); S°+3 C_a nonhubs: 0.372 (c0(x) = 1.46e-04); S°+proxies+nonhubs+null: 0.257 (c0(x) = 2.02e-05); S0+null12: 0.838 (c0(x) = 1.43e-01)
