@@ -59,7 +59,55 @@ because the actual margins are much larger than the proven lower bound.
 
 ## 4. Evidence (exact small-scale checks; all through `owls_run -j 2`)
 
-(Filled in §4 of this file after the runs; see `results/`.)
+All runs: one `owls_run -j 2` job (`scripts/run_all.sh`), numpy/scipy, fixed seeds, exact objects (EX-A) via the W3-PXN
+scorer `scripts/pxn_core.py` (unchanged copy) and the LH-iid generator `scripts/lh_gen.py`.
+
+**4.1 Lemma Tr-J (`scripts/check_trJ.py` → `results/check_trJ.txt`).** (a) truncated-moment bound vs exact quadrature for
+j ∈ {1,…,18}, u ∈ {0,1,5,20}, n ∈ {100,200,800} (beyond PXN's j, u ≤ 16): max exact/bound = 0.436, no violation.
+(c) exact Beta tails at τ_n = 8(D+1)log n/n vs the Laurent–Massart bound for (J, D) = (16, 2) [P3 row] and (5, 10)
+[Lemma Λ row with s₀ = 3, A = 2], n ∈ {200,…,3200}: 0 violations in 2·3·J·5 cases. Note that the *explicit* bound
+C n^D n^{−(D+1)}e^{√(2J(D+1)log n)} is > 1 at these n (it is asymptotic), while the exact union bounds are ≤ 10⁻¹⁷; for
+D = 10, τ_n > 1 until n ≈ 10⁴ — the lemma is a limit statement, as used.
+
+**4.2 Population margins (`scripts/check_margins.py` → `results/check_margins.txt`).** 60 random LH settings (seed
+20261102; c ≤ 3, v ≤ 2, g ∈ {3,4,5}, ρ ∈ (0.3, 0.9), |ψ| < ρ): brute-force minimum of λ(A) − λ(P*) over every lattice state
+and every non-progress neighbour is ≥ c₂ in 60/60 (ratio 1.00–1.12 at the tightest), and the (L) minimum over deletions and
+swaps of S₀ is ≥ c₅ in 60/60. The closed forms of PROOF §8.3 are valid lower bounds and sharp in most settings.
+
+**4.3 Lemma E (`scripts/check_lemmaE.py` → `results/check_lemmaE.txt`).** LH-iid, g = 10, ρ = .7, ψ = .5, c = v = 1, at
+(n, p) = (200, 500) and (400, 1000), family = all subsets of 6 groups + 3000 random sets of size ≤ s₀+2 (9,139 sets):
+(E1) η_A ∈ [−0.18, 0] within the bound; (E2) a_A ∈ [0.020, 0.43] within [0.02, 1.05]; (E3) min RSS_A/(nσ²) = 1.61 (≥ ½),
+‖Y‖²/(3(M+σ²)n) = 0.32 (≤ 1), min RSS^y_A/(c_E n) = 20 (≥ 1); (E4) the remainder R_A ranges over 0.41 nats (n = 200) and
+0.31 (n = 400), against the proven 2κ_E ≈ 38 — the bound holds and is loose by ~100×; (E5) max |RSS_A − nσ² − Λ_A|/n^{2/3}
+= 1.6 and 2.3; (4.1) within-group single-addition remainders over 10,926 additions range over 0.15–0.20 nats.
+
+**4.4 LS0 route end to end (`scripts/check_route.py` → `results/route.jsonl`, `results/route_table.txt`).** g = 10, ρ = .7,
+ψ = .5, β = 1, σ = 1; c ∈ {1, 2}, v = 1; B = ⌊√n⌋ (10 at n = 100, 14 at 200, 16 at 400), so (SIZE) holds at every cell.
+
+| cfg | n | p | reps | blocks = groups | S̃₀ = S° | 1 − π₀(S°) (min/med/max) | med log π₀(S₀) | LS0 scored S₀ | certified at S₀ | min D_S margin | (L) fail | D_S fail |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| c=1 | 100 | 300 | 10 | 10/10 | 8/10 | .27/.44/1.00 | −8.0 | 9/10 | 6/10 | −3.3 | 4 | 3 |
+| c=1 | 200 | 500 | 10 | 10/10 | 10/10 | .19/.31/.56 | −8.7 | 10/10 | 9/10 | −0.1 | 1 | 1 |
+| c=1 | 200 | 1000 | 6 | 6/6 | 6/6 | .21/.34/.53 | −9.4 | 6/6 | 6/6 | +1.1 | 0 | 0 |
+| c=1 | 400 | 1500 | 4 | 4/4 | 4/4 | .17/.19/.24 | −8.7 | 4/4 | 4/4 | +5.8 | 0 | 0 |
+| c=2 | 100 | 300 | 10 | 10/10 | 0/10 | .81/.98/1.00 | −16.4 | 8/10 | 5/10 | −4.4 | 4 | 4 |
+| c=2 | 200 | 500 | 10 | 10/10 | 8/10 | .28/.49/.93 | −16.3 | 10/10 | 10/10 | +2.5 | 0 | 0 |
+| c=2 | 200 | 1000 | 6 | 6/6 | 5/6 | .39/.56/.77 | −18.0 | 5/6 | 4/6 | −2.4 | 2 | 2 |
+| c=2 | 400 | 1500 | 4 | 4/4 | 4/4 | .19/.27/.28 | −18.6 | 4/4 | 4/4 | +5.7 | 0 | 0 |
+
+Reading. (i) Partition recovery: 60/60, consistent with Theorem R (W7's MC rate ≤ 1.5·10⁻⁴ at (200, 500)). (ii) Masking:
+log π₀(S₀) ≈ −c(log p + ½ log n) + O(1) as P4 says (−8.7 vs −c(6.2 + 2.6) = −8.8 at (200, 500, c = 1)). (iii) The start
+mass on S° is far from 1 at these n (1 − π₀(S°) ≈ 0.2–0.5 at n ∈ {200, 400}; q ≈ 0.16–0.29, so the T22 bound
+(s+1)q/(1−q) + se is often > 1 and vacuous): the √(log n/n) rate is an asymptotic statement, and eligibility relies on
+π₀(S°) > ½, which holds in 33/36 cells at n ≥ 200 and fails at n = 100 for c = 2 (0/10: the mode is S° plus extras or with
+a proxy). (iv) LS0 scores S₀ in 56/60 overall and in 35/36 at n ≥ 200; the one failure at n ≥ 200 (c = 2, p = 1000, rep 5) is
+a genuine D_S failure at a lattice state (first move non-progress, path leaves the lattice) — the finite-n boundary of
+P6′, not a counterexample to the limit. (v) Certification fails more often than scoring: (L) failures (some S₀ ± neighbour
+beats S₀) are 11/60 overall, 3/36 at n ≥ 200, consistent in order with the (s₀+1)/√(2πn t_n) ≈ 2–4% addition-part formula
+plus finite-n swap failures; these are posterior misses charged to 2E₀δ₁ (PROOF §11 (O3)). (vi) The proven (D_S) margin
+is negative at every cell (PROOF §11 (O5)); the observed minimum lattice margins (−4 to +11 nats) are what decides at
+these n. Everything is consistent with an asymptotic theorem whose finite-n reach starts around n ≈ 200 for c ≤ 2 on this
+family.
 
 ## 5. What fails and why (routes tried and abandoned)
 
@@ -115,6 +163,6 @@ because the actual margins are much larger than the proven lower bound.
 | Confidence it is true | **high** (every step is either locked, classical, or proved here with explicit constants; the only candidate input is W7-B, verified by A-REV6 on exactly this scope) |
 | Confidence it is provable at reasonable cost | **high** — it is written; what remains is cross-family review |
 | Crux | (i) Lemma Tr-J's range (closes objection 1); (ii) Lemma E's explicit constants (closes objection 2–3); (iii) Lemma T's quantifier discipline (objection 5); (iv) (SIZE), which excludes the study's generator |
-| Data evidence | §4: exact route at n ∈ {100, 200, 400}; partition and start mode recovered; LS0 scores S₀ in every replicate run so far; (L)-failure rate consistent with (s₀+1)/√(2πn t_n) |
+| Data evidence | §4: exact route at n ∈ {100, 200, 400}: partition recovered 60/60; start mode = S° in 33/36 at n ≥ 200 (0/10 at n = 100, c = 2); LS0 scores S₀ in 35/36 at n ≥ 200, certifies in 33/36; all four lemma-level checks pass with no violation |
 | Risk | relevance: LH-iid with groups of 9–16 is not the study's design (groups of 5); the proven margins are vacuous at n = 200 (asymptotic theorem) |
 | Method change needed | **yes, LS0** (as in all (b1) statements): one deterministic local search from the start mode, ≈ (c+1)(1+s₀)p scores, addable post hoc. No change to the sampler |

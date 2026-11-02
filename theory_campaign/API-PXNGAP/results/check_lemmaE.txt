@@ -1,0 +1,16 @@
+
+=== n=200 p=500 s0=3 |family|=9139 ||mu||^2/n=1.865 min lam_min(R_A)=0.1742 ===
+(E1) eta_A in [-0.1759, 0.0000]; bound [-2k/((n-1)phi0^2), 0] worst=-0.2885  OK
+(E2) a_A in [0.0200, 0.4283]; bound [0.02, 1.0489]  OK
+(E3) min RSS_A/(n sigma^2)=1.613 (>= 1/2?) ; ||Y||^2/(3(M+sigma^2)n)=0.318 (<= 1?) ; min RSS^y_A/(c_E n)=20.17 (>= 1?)
+(E4) remainder R_A range over family = [-0.3568, 0.0497] (spread 0.4065); kappa_E=18.88; 2 kappa_E=37.76  OK
+(E5) max |RSS_A - n sigma^2 - Lambda_A| / n^(2/3) = 1.628; cross-term scale sqrt(M n log n)/n^(2/3)=1.300
+(4.1) within-group remainder differences: range [-0.1405, 0.0110] over 10926 additions; bound 2 kappa_E = 37.76  OK
+
+=== n=400 p=1000 s0=3 |family|=9139 ||mu||^2/n=1.723 min lam_min(R_A)=0.1902 ===
+(E1) eta_A in [-0.0896, 0.0000]; bound [-2k/((n-1)phi0^2), 0] worst=-0.1318  OK
+(E2) a_A in [0.0200, 0.3843]; bound [0.02, 1.0332]  OK
+(E3) min RSS_A/(n sigma^2)=1.607 (>= 1/2?) ; ||Y||^2/(3(M+sigma^2)n)=0.310 (<= 1?) ; min RSS^y_A/(c_E n)=20.70 (>= 1?)
+(E4) remainder R_A range over family = [-0.2836, 0.0229] (spread 0.3065); kappa_E=17.99; 2 kappa_E=35.98  OK
+(E5) max |RSS_A - n sigma^2 - Lambda_A| / n^(2/3) = 2.262; cross-term scale sqrt(M n log n)/n^(2/3)=1.184
+(4.1) within-group remainder differences: range [-0.1973, 0.0059] over 10926 additions; bound 2 kappa_E = 35.98  OK
