@@ -2,6 +2,8 @@
 
 **Frozen 2026-10-28** by HQ with Felipe, after two independent consultant reviews of HQ's proposal (Fable 5.1 and Astra), both ENDORSE WITH CHANGES. This page is the strategic view: what we will pursue, why, in what order, and through which gates. Written 2026-11-02 for the GitHub handoff; statuses are as of that date.
 
+> **Amended 2026-11-02 (E-SPINE).** The wording below no longer says that tempering, or "the sampler", is *needed*. W7-SEP (`theory/W7-SEP` · `REPORT.md` · Proposition GU, Corollary GU-LH) shows that on the paper's own masked family LH, start-only discovery plus the production local search reaches S₀. What the theory supports is **"moving off the start is needed"**, not "tempering is needed". Every status word is unchanged. The full list of changes, their evidence and the other 2026-11-02 campaign decisions are in `Docs/Theory/AMENDMENTS_20261102.md`.
+
 - **Authoritative record:** `Docs/Theory/PAPER_SELECTION_20261028/FROZEN_LIST.md`.
 - **The full inventory** of all 39 items (T01–T36 plus the new T37–T39), with per-theorem one-pagers: `Docs/THEORY.md` and `Docs/Theory/one_pagers/`.
 - **Sources** used here, all under `Docs/Theory/PAPER_SELECTION_20261028/`: `PROPOSAL.md`, `FABLE_REVIEW.md`, `ASTRA_REVIEW.md`, `new_conjectures/T37–T39`. Also `Docs/Theory/proofs/LOCKED_PROOFS.md` and `Docs/Theory/INVENTORY_20261028/THEORY_INVENTORY.md`.
@@ -23,6 +25,8 @@
 ## 1. The story and the selected set
 
 **Story.** What SMC-BVS reports is consistent because the truth gets **scored**, not because the sampler converges. The reported HPM is the best model ever scored. So "right answer" = (a) the posterior favours the truth, and (b) the truth is scored at least once, and (c) the run produces output.
+
+**What (b) needs (amended 2026-11-02).** In the masked regime the run must **move off its start**: iid start draws alone fail there (T27; R-T20(i); W7-SEP Theorem SEP(A), whose threshold is Q* = p^c n^{c/2}). v3's moves supply this: bridge Gibbs flips, the terminal rounds and the local search, including LS0. The tempering bridge is **one of several sufficient discovery routes, not the uniquely necessary one**. On LH a single local search from the start mode already scores S₀ (W7-SEP Prop. GU, Cor. GU-LH: PROVED, candidate, not cross-family reviewed). The bridge's own role is to produce calibrated evidence and PIPs (T12, T26) and the HPM ledger.
 
 ### JRSS-B main text (8 results)
 
@@ -63,7 +67,7 @@
   - replace T02(i)'s 2^−m size tail by the exact BB(1,p) tail, which cuts m_n from about 200 to s₀ + O(s₀ log n / log p);
   - restrict SE to the comparison unions actually used;
   - replace M* by BM-∞ or an unnamed constant.
-- **Risk.** At n = 200, SE is *impossible* (rank ≤ 199 against subsets of 215–229 columns), and beta-min fails by about 100× in squared signal. The theorem explains the mechanism, not the n = 200 numbers. Restating does not yield a useful finite-n error rate. The risk to *validity* is low; the risk to *relevance* at n = 200 is accepted and must be disclosed.
+- **Risk.** At n = 200, SE is *impossible* (rank ≤ 199 against subsets of 215–229 columns), and beta-min fails by about 100× in squared signal. *(Amended 2026-11-02: for T03♯ the beta-min constant exceeds the executed signals by **at least 43×**, not about 100×, and the proof's deterministic thresholds hold only from n ≈ 2·10⁶ (F-REFINE · ARCHITECTURE.md §7; W2-VT03R · R1). The size-restricted SE_w ranges over ≤ 114 columns because the cap K binds, and it is unverified on the realised designs (F-REFINE · CARDS.md · Card 1). The "215–229 columns" figure refers to the old SE.)* The theorem explains the mechanism, not the n = 200 numbers. Restating does not yield a useful finite-n error rate. The risk to *validity* is low; the risk to *relevance* at n = 200 is accepted and must be disclosed.
 - **Fallback.** Present it as asymptotic, stated informally in the main text.
 
 ### Prop 1: T07 size-prior ceiling and Bayes decisions (+ T06(i) ties)
@@ -84,8 +88,8 @@
     - the tempering bridge never loses mass on S₀ below the smaller endpoint mass.
   - **T22(iii)**, favourable regime: under EXP′, VIS, NL_η and NL_avg(κ), 1 − π₀(S₀) = O_P(2^B √(log n) n^{−κ}).
   - **T27(i)**, masked regime: if d true variables mask each other along an addition chain (H2, H3), then π₀(S₀) = p^{−c} n^{−c/2} e^{O_P(1)}.
-- **Intuition.** The start finds the truth when the blocks see it, and provably cannot when true variables cancel. That is exactly why the sampler exists.
-- **Why it matters.** It is the motivation for the SMC machinery, in two sentences, and an input to T38's delivery step.
+- **Intuition.** The start finds the truth when the blocks see it, and provably cannot when true variables cancel. That is exactly why the method must move off its start draws. *(Amended 2026-11-02: this used to say "why the sampler exists". T27 bounds iid start draws only. On LH, the local search from the start mode also moves off the start and scores S₀ (W7-SEP Prop. GU), so the masked start motivates moves in general, not tempering in particular.)*
+- **Why it matters.** In two sentences, it motivates the moves that leave the start (bridge Gibbs, terminal rounds, local search incl. LS0), and it is an input to T38's delivery step.
 - **Status.**
   - T22(i)(ii)(iv): PROVED-LOCKED (wave 1, full chain).
   - T22(iii) and T27(i): PROVED-LOCKED, CONDITIONAL (wave 2):
@@ -141,13 +145,13 @@
     - **(b1)** T37 repairs from an eligible local-search centre, or
     - **(b2)** T24 repairs at the terminal rounds;
   - **(c)** cost corollary: polynomially many score evaluations (via T32).
-- **Why it matters.** It explains the method's *design* (start, bridge, moves, local search), not just its output. The masked regime is where SMC-BVS beats the coordinate-wise competitors at c = 0.5. It replaces T26(iii), which needed no sampler at all.
+- **Why it matters.** It explains why the method must move off its start, not just its output. The masked regime is where SMC-BVS beats the coordinate-wise competitors at c = 0.5. It replaces T26(iii), which needed no move off the start at all. *(Amended 2026-11-02: this used to say it explains the method's design "(start, bridge, moves, local search)". The masked half shows that **some** move off the start is needed. Bridge Gibbs, terminal rounds and the local search incl. LS0 are each a sufficient discovery route on LH: W7-SEP Prop. GU; O-BGIBBS Theorem BG3, with Prop. LH-lock a PROOF SKETCH, p fixed. No route is shown to be uniquely necessary. The bridge's distinct contribution is calibrated Ẑ/PIPs (T12, T26) and the HPM ledger.)*
 - **Status.** NEW CONJECTURE. Not claimed:
   - masked-regime evidence or PIP accuracy;
   - results for completion-selected fits;
   - comparative superiority.
 - **Crux.**
-  - **Eligibility:** show that the best-scored model, or the start mode with tweak **LS0** (local search also from the start mode; deterministic, about ℓ·p extra scores, addable after the fact), lands in 𝓡_d.
+  - **Eligibility:** show that the best-scored model, or the start mode with tweak **LS0** (local search also from the start mode; deterministic, about ℓ·p extra scores, addable after the fact), lands in 𝓡_d. *(Amended 2026-11-02: LS0 is now **part of the method**. Felipe's approval took effect when O-LS0's data check passed: the reported HPM changed in 0 of 2,394 completed fits (`theory/O-LS0` · `REPORT.md` §1). The LS0 cost is 1 + (ℓ+1)·max_k[p + k(p−k)] scores, not "about ℓ·p" (W6-FIXREV1). Without LS0 there are now masked-regime **candidates on LH, pending cross-family review (A-REV7)**.)*
   - **Compatibility** of T22(i) with T27 on one family.
   - ℓ_n < s₀ + d at n = 200.
 - **Risk.** High; this is the hole (§3).
@@ -184,13 +188,13 @@
 - **Risk.**
   - It is a **method change**: the 2,400 fits did not run it, so it needs validation runs under the investment rule.
   - The research content lies in the inputs b_n and a_n.
-  - If the tracks explain all the gain, the paper must say what tempering contributes.
+  - If the tracks explain all the gain, the paper must say what tempering contributes. *(Amended 2026-11-02: W7-SEP answers the general form of this question. On LH, discovery does not need tempering (Prop. GU), and there is no separation between the bridge and a single greedy search from the start mode (W7-SEP §1 item 4). Tempering's contribution is calibrated evidence and PIPs (T12, T26) and the HPM ledger.)*
 
 ---
 
 ## 3. The hole, and how it is filled
 
-Both consultants independently found the same hole: **a guarantee that a near-truth particle is *delivered* and then *repaired* within an explicit, finite budget.** T24 and T26 alone do not give it. T24 repairs an eligible particle but does not deliver one; T26 needs start concentration, which is exactly the regime where the sampler is unnecessary.
+Both consultants independently found the same hole: **a guarantee that a near-truth particle is *delivered* and then *repaired* within an explicit, finite budget.** T24 and T26 alone do not give it. T24 repairs an eligible particle but does not deliver one; T26 needs start concentration, which is exactly the regime where no move off the start is needed (iid start draws already score S₀). *(Amended 2026-11-02: this used to say "where the sampler is unnecessary". That wording implied the sampler is necessary in the masked regime. What is necessary there is moving off the start, which v3's bridge Gibbs, terminal rounds and local search incl. LS0 each provide: W7-SEP Prop. GU.)*
 
 | Step | Supplied by | Status |
 |---|---|---|
@@ -241,10 +245,10 @@ The extraction plan that maps each target to measurable quantities is `Docs/Camp
   - The near-truth region does carry start mass: the median π₀(𝓡₂) is about 0.8.
   - This makes **T38(b)** (masked regime, delivery plus repair) the theorem that matters, and T38(a) and T26 marginal for this design.
 - **The HPM is delivered by the Gibbs/swap moves, not by the local search.**
-  - About 98% of fresh scores come from Gibbs flips (≈ 1.7% neighbour swaps); the final local search repaired 0 fits.
-  - In 541 fits the search centre was in 𝓡₂ but not S₀, and it never returned S₀.
+  - About 98% of fresh scores come from Gibbs flips (≈ 1.7% neighbour swaps); the final local search repaired 0 fits. *(Amended 2026-11-02, S-ELS: in all 2,394 completed fits the final local search made 0 moves.)*
+  - In 541 fits the search centre was in 𝓡₂ but not S₀, and it never returned S₀. *(S-ELS: in all 541 this is forced by monotonicity, F(S₀) < F(S_c).)*
   - This questions T37's premise that the *local search* is the repair route at n = 200, and favours a Gibbs-path route (T24-type) or a restated T37.
-- **All misses are posterior misses, none are search misses.** Every completed wrong HPM has F(S₀) ≤ F(HPM) (565 posterior misses, 6 no-output, 0 search misses).
+- **All misses are posterior misses, none are search misses.** Every completed wrong HPM has F(S₀) ≤ F(HPM) (565 posterior misses, 6 no-output, 0 search misses). *(Confirmed 2026-11-02 by S-ELS from the per-fit records: S₀ was scored in every completed fit, and F(S₀) < F(Ŝ) strictly in all 565 posterior misses.)*
   - At c = 1 they are mostly supersets of S₀.
   - At c = 0.5 they are mostly same-size swaps and subsets.
   - This points the open work at the **statistical half** (T03/T02 restatement, T07's swap ceiling) rather than at discovery.
@@ -253,4 +257,4 @@ The extraction plan that maps each target to measurable quantities is `Docs/Camp
   - The "toward S₀" variant is **open**: in this partial audit it did not separate from the literal one.
   - This matches the low-p finding (D18) that the literal TD fails whenever a swap bringing in a missing truth is available.
 
-**Implication for P6, to be confirmed by the final reports.** T37 needs restating before any proof effort. The eligibility/delivery step of T38 should be argued through the bridge and Gibbs moves (or LS0), and the masked regime is the default case, not the exception.
+**Implication for P6, to be confirmed by the final reports.** T37 needs restating before any proof effort. The eligibility/delivery step of T38 should be argued through the bridge and Gibbs moves (or LS0), and the masked regime is the default case, not the exception. *(Amended 2026-11-02: any move off the start can carry delivery. On LH both LS0 (W7-SEP Prop. GU) and the original method's terminal Gibbs rounds (O-BGIBBS Theorem BG3, p fixed) are candidate routes. Neither is claimed as necessary.)*
