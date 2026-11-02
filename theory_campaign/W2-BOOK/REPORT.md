@@ -2,7 +2,7 @@
 
 Run of 2026-11-02, branch `theory/W2-BOOK`. **Nothing here has been reviewed.** Every PROVED is a candidate (checked
 line by line by me, not adopted). Proofs are in `PROOF.md`, working notes in `NOTES.md`, scripts in `scripts/`,
-outputs in `results/`. A LaTeX fragment of the paper statements is in `STATEMENTS.tex`.
+outputs in `results/`. A LaTeX fragment of the paper statements is in `STATEMENTS.tex` (not compiled: no LaTeX engine in this container).
 
 ## 1. Headline
 

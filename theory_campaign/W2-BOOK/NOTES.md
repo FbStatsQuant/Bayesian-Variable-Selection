@@ -31,3 +31,7 @@ sigma(C)-measurable. Conditioning on it is not covered by T12(iv.d) (launch even
 - Pooled island product (1/4) sum_r Zhat_r PIPhat_r1: unbiased to 1e-49.
 - Stylised guard (score cost 1 + k^3, check after stage-1 bridge stage): h = 33 gives P(O) = 0.99783, E[Zhat|O]/Z = 0.9739;
   h = 32 gives P(O) = 0.99067, E[Zhat|O]/Z = 0.798; h <= 30 gives ~0.011. COUNTEREXAMPLE to "unbiased given output".
+
+## Close (2026-11-02)
+Deliverables: REPORT.md, PROOF.md, STATEMENTS.tex (uncompiled), scripts/frozen_run_exact.py, scripts/wilson.py, results/.
+Not done: VAL-FP measurement (needs the R/C++ engine); confirmation of the 541-fit reading (needs ANALYSIS-H2 tables).
