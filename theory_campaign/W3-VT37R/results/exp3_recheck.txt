@@ -1,0 +1,5 @@
+pop. lambda_min(R_123) = 0.15 (1 - a = 0.15)
+pop. PGD at {}: R+ = theta^2 = 0.0900, R0 = 2 a^2 theta^2 = 0.1300
+n=200 draws=200 {'first_add3': 139, 'reach_from_empty': 40, 'TDP': 36, 'TDinf': 40, 'TDinf_fail_states': [('(2,)', 120), ('other', 104), ('(0, 1)', 42), ('(1,)', 9), ('(0,)', 9), ('()', 6)]}
+n=1000 draws=200 {'first_add3': 195, 'reach_from_empty': 166, 'TDP': 5, 'TDinf': 166, 'TDinf_fail_states': [('(2,)', 33), ('(0, 1)', 3), ('(0, 1, 5)', 1), ('(5,)', 1), ('(0, 1, 4)', 1)]}
+n=3000 draws=200 {'first_add3': 200, 'reach_from_empty': 198, 'TDP': 0, 'TDinf': 198, 'TDinf_fail_states': [('(0, 1)', 2), ('(0, 1, 4)', 1), ('(4,)', 1), ('(0, 1, 2)', 1)]}
