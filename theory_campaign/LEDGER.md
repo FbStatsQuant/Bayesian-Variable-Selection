@@ -155,3 +155,4 @@ Also launched (Codex/OpenAI): A-REV8 (LS0 route, synthesis task 4), A-REV9 (new 
 | API-T26BUD | Opus | $12 | referee R5: Theorem 6 with a proved stage count |
 | API-POS | Opus | $10 | referee R3: positioning vs the rapid-mixing literature |
 Held for 2026-11-03 (Console daily rate limits: Fable 100K / Opus 400K output tokens per day): API-UMODEL (R7), API-T03CONST (R9). Reserve ~$20 for repairs after A-REV5/6/7.
+| API-VSTAB | Opus | $12 | Claude check of A-REV7's Astra-authored STAB-LH certificate (no-LS0 masked theorem) |
