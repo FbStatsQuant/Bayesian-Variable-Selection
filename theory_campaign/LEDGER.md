@@ -77,3 +77,17 @@ F-REFINE DONE: theory/F-REFINE @ db708ca (CARDS.md, ARCHITECTURE.md, NEXT_TASKS.
 | S-REGISTRY | Sonnet high (CW) | claims registry + LOCKABLE list |
 | S-PAPER | Sonnet high (CW) | theory-section LaTeX skeleton with STATUS comments |
 Credit repairs: W6-FIXREV1 (A-REV1), W6-FIXREV2 (A-REV2).
+
+### 19:15 UTC: moved to Felipe's laptop (env 07f21594…, project GH-Bayesian-Variable-Selection 6166e65d…), T3 threads with worktree strategy
+Owls copies cancelled. Each thread resumes from its pushed theory/<ID> branch.
+| ID | Model | Laptop thread |
+|---|---|---|
+| F-SHARE | Fable high (CP) | mcp:launch:1306a77e… |
+| O-WSTAB | Opus high (CP) | mcp:launch:7fd33c90… |
+| O-CERT | Opus high (CP) | mcp:launch:f68ac0f9… |
+| O-SWAP | Opus high (CP) | mcp:launch:a9c92fa5… |
+| O-BGIBBS | Opus high (CP) | mcp:launch:ac5a82ce… |
+| O-DILUTE | Opus high (CP) | mcp:launch:31d5000e… |
+| S-REGISTRY | Sonnet high (CW) | mcp:launch:06e271c4… |
+Stays on Owls: O-LS0 (1-core systemd job; data in ~/ls0_work). Owls guard now runs as the systemd user unit owls-guard (Restart=always).
+Draft track done: F-DRAFT @ 4de6e4c, A-DRAFT @ dbf47f7. S-PAPER @ 556be30. A-REV1 @ 26815e8, A-REV2 @ 09dc230 (repairs in W6-FIXREV1/2, cloud).
