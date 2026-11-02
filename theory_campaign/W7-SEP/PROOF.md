@@ -293,8 +293,8 @@ The total is ≤ τ_GU. ∎
 1. **No PGD needed.** Prop. GU does not assume that greedy moves are progress moves (PGD fails under SE + BM-∞,
    [T37R] C3). It uses only the population descent of Δ (GU-1), which holds for every T ⊆ R under SE. Greedy may take
    look-alikes first; it never gets trapped, because every state with Δ > 0 has a Θ(1) Δ-reduction available and every
-   superset with an extra has a Θ(log n) deletion gain. This proves [T37R] Conjecture C4 in the exact-Gram,
-   isolated-relevant-set case, in the strong form "TD′_∞ on all of 2^R".
+   superset with an extra has a Θ(log n) deletion gain. This proves a version of [T37R] Conjecture C4 in the
+   exact-Gram, isolated-relevant-set case: TD′_∞ on all of 2^R (C4's region also allows null extras; not covered).
 2. **Where the isolation (REL) is used.** Only to keep nulls out of the path (phase 1) and to make phase 2 a union over a
    fixed finite family 𝔉. For LH-iid (random design, p ≫ n) nulls have sample correlations O(√(log p/n)) with R and μ,
    so Δ(S + l) − Δ(S) = O(log p/n) ≪ φ₀⁴θ₀²/s₀ and the same two phases go through with an extra union bound over
@@ -311,7 +311,8 @@ The total is ≤ τ_GU. ∎
    (LS0 alone), and it is a genuine gap for c ≥ 2. This is what "the start is masked" buys the story: start draws, and any
    reweighting of them, cannot find or weight the truth below Q* = p^c n^{c/2}.
 2. **Not separated (PROVED on LH, exact Gram):** v3 versus a deterministic search from the start mode. Proposition GU shows
-   that the masked regime of R1 has **no posterior-level barrier** between the start's support 2^R and S₀ (this extends
+   that on exact-Gram families with an isolated relevant set there is **no posterior-level barrier** between 2^R (which
+   carries start mass → 1 on LH) and S₀ (this extends
    [SH] Prop. M from 𝓡_d paths to all of 2^R). Any score-improving local scheme that starts on the start's support finds
    S₀. On LH, LS0 — which is itself a start-only method — is the only fully proved masked-regime route of T38.
 3. **Consequence for the paper's spine.** "The sampler is needed in the masked regime" is supported in the form

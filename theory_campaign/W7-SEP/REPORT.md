@@ -6,15 +6,16 @@ words follow `theory_campaign/PROTOCOL.md` and are never upgraded.
 
 ## 1. Headline
 
-1. **The task's claim (a), as written, is false on its own family.** On LH, "start-only + production local search" does
-   **not** fail: S̃₀ = S° and the search from it scores S₀ with probability → 1 (this is already T38(b1-LH)). The task's
+1. **The task's claim (a), as written, is false on its own family.** Its iid-only part is true (item 3), but on LH
+   "start-only + production local search" does **not** fail: S̃₀ = S° and the search from it scores S₀ with probability → 1 (this is already T38(b1-LH)). The task's
    exception ("unless the greedy basin of S₀ contains S̃₀") is the generic case, not an exception. **COUNTEREXAMPLE**
    (by proof, Corollary GU-LH; and numerically in 100% of replicates).
 2. **New: Proposition GU (greedy universality), PROVED (candidate).** On exact-Gram designs with an isolated relevant set R
    (Σ_{R,Rᶜ} = 0), SE on R and fixed signals, the production local search started at **every** C ⊆ R reaches, scores and
-   certifies S₀ w.p. → 1, in ≤ τ_GU moves (a constant). It needs no PGD (which fails under SE + BM-∞). It proves
-   W1-T37R's Conjecture C4 in this case, and extends W4-SHARE Prop. M: in R1 with SE and fixed signals the masked regime
-   has **no posterior-level barrier** anywhere on the start's support. Stress test: 40 random designs (24 violating PGD),
+   certifies S₀ w.p. → 1, in ≤ τ_GU moves (a constant). It needs no PGD (which fails under SE + BM-∞). It proves a
+   version of W1-T37R's Conjecture C4 (TD′_∞ without PGD, with the region 2^R: extras restricted to R, no null extras),
+   and extends W4-SHARE Prop. M: on these families the masked regime has **no posterior-level barrier** anywhere on 2^R,
+   which on LH carries start mass → 1. Stress test: 40 random designs (24 violating PGD),
    every relevant centre scores and certifies S₀ at n ≥ 5·10⁴.
 3. **What is separated, PROVED (candidate): sampling-only start methods versus search.** On LH (exact Gram; LH-iid through
    W3-PXN, unverified) with cancellation depth c: iid π₀ draws score S₀ w.p. → 0 or → 1 according as Q/Q* → 0 or ∞,
@@ -36,7 +37,7 @@ Mstat := log π₀(S₀) + c log p + (c/2) log n.
 
 **Theorem SEP (refined).**
 - **(A) iid start discovery.** P₀(S₀ scored by Q iid π₀ draws, plus all block tables) → 0 if Q/Q* → 0 and → 1 if
-  Q/Q* → ∞. Polynomial budget n^α fails iff α < c(a+½) (p ≍ n^a). Hypotheses: EX-A; LH (W1-EXP Thm 5(b), Lemma 4.2).
+  Q/Q* → ∞. A polynomial budget n^α fails if α < c(a+½) and succeeds if α > c(a+½) (p ≍ n^a). Hypotheses: EX-A; LH (W1-EXP Thm 5(b), Lemma 4.2).
   **PROVED.** (LH-iid: PROVED given W3-PXN P1, P4, unverified.)
 - **(B) one-shot importance correction.** 1 + χ²(π‖π₀) ≥ π(S₀)²/π₀(S₀) = Q*e^{−Mstat}(1+o_P(1));
   KL(π‖π₀) ≥ (c log p + (c/2) log n)(1 − o_P(1)) − O_P(1); for Î_Q = Q⁻¹Σ w̄(X_i)1{X_i = S₀},
@@ -118,7 +119,8 @@ Reading:
 - **Masking (A).** log₁₀π₀(S₀) falls by c/2 per decade of n (C3: −5.42 → −10.72 over 3.6 decades, slope −1.47 against
   −1.5; B2: slope −0.98 against −1.0). Mstat is tight and flat in n (B2 medians 1.2–1.6; W1-EXP's predicted limit for B2
   has median 1.42). At fixed p the p^c factor is a constant, so the final run's Q_f ≍ n log n keeps a non-vanishing hit
-  probability for c = 2 (0.5–0.9 here; R-T20(i): c ≤ 2 is borderline-certain at fixed p) but not for c = 3
+  probability for c = 2 (0.5–0.9 here: Q_fπ₀(S₀) grows only like log n at fixed p, with a small constant; R-T20(i)
+  says c ≤ 2 is eventually certain at fixed p) but not for c = 3
   (P(hit | Q_f) = 0.39 → 7.8·10⁻⁴). Q = n² is above Q* = p³n^{3/2} only once n^{1/2} ≳ p³e^{−Mstat}, and the C3 column
   crosses exactly there (0.04 → 0.96). The p-dependence is checked in 4.2.
 - **IS (B).** log₁₀(1 + χ²) tracks −log₁₀π₀(S₀) to within 0.2 in every cell; the per-draw relative variance equals
@@ -158,8 +160,9 @@ final run's own iid budget hits S₀ with probability 6·10⁻⁸, while LS0 sco
 | 50,000 | 40/40 | 40/40 | 1.000 | 1.000 | 0.98 |
 | 500,000 | 40/40 | 40/40 | 1.000 | 1.000 | 0.99 |
 
-The finite-n failures sit in near-collinear designs (φ₀² = λ_min(Σ_R) between 0.004 and 0.03) and mostly where
-π(S₀) is small (posterior misses); GU's thresholds scale with 1/φ₀⁴, consistent with this.
+The finite-n failures sit in near-collinear designs (φ₀² = λ_min(Σ_R) between 0.003 and 0.03) and mostly where
+π(S₀) is small (posterior misses). This is consistent with GU, whose per-step margin φ₀⁴θ₀²/s₀ degrades as φ₀ → 0, so
+its n-thresholds grow.
 
 ## 5. What fails and why
 
@@ -200,8 +203,9 @@ The finite-n failures sit in near-collinear designs (φ₀² = λ_min(Σ_R) betw
   Ŝ_pre ⊆ R (or GU extends to centres with a bounded number of nulls), GU makes the final search score S₀ on LH without
   LS0, for every c. Whether Ŝ_pre ⊆ R w.p. → 1 is not checked (W1-T38E E1 shows some state outside 𝓡_d beats S°, but
   it may still lie in 2^R). CONJECTURE; worth one task.
-- **GU answers W1-T37R Conjecture C4** (TD′_∞ without PGD on an enlarged region) in the exact-Gram isolated-R case, with
-  the region all of 2^R.
+- **GU answers a version of W1-T37R Conjecture C4** (TD′_∞ without PGD on an enlarged region) in the exact-Gram
+  isolated-R case: the region is all of 2^R, but C4's region R_{a,d+d₁} also allows null extras, which GU does not
+  cover.
 - In the study's S4/S6 at n = 200 the start mode is 12–14 moves from S₀ (W3-PXN §5) with ℓ = 10–11, so the move limit,
   not a barrier, is what stops LS0 there.
 
