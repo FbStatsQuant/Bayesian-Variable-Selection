@@ -128,9 +128,20 @@ def run(args):
 if __name__ == "__main__":
     reps = int(sys.argv[1]) if len(sys.argv) > 1 else 20
     nproc = int(sys.argv[2]) if len(sys.argv) > 2 else 4
-    jobs = [(s, p, ni, r) for s in (1, 3, 4, 6) for p in (500, 1000) for ni in range(len(NS)) for r in range(reps)]
+    done = set()
+    try:
+        cnt = {}
+        for l in open("../results/sweep.jsonl"):
+            r = json.loads(l)
+            k = (r["scen"], r["p"], NS.index(r["n"]), r["rep"])
+            cnt[k] = cnt.get(k, 0) + 1
+        done = {k for k, c in cnt.items() if c == 2}   # both scales written
+    except FileNotFoundError:
+        pass
+    jobs = [(s, p, ni, r) for s in (1, 3, 4, 6) for p in (500, 1000) for ni in range(len(NS)) for r in range(reps)
+            if (s, p, ni, r) not in done]
     jobs.sort(key=lambda j: -NS[j[2]])
-    with Pool(nproc) as pool, open("../results/sweep.jsonl", "w") as f:
+    with Pool(nproc) as pool, open("../results/sweep.jsonl", "a") as f:
         for res in pool.imap_unordered(run, jobs):
             for row in res:
                 f.write(json.dumps(row) + "\n")
