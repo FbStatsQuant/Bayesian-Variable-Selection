@@ -100,3 +100,7 @@ Draft track done: F-DRAFT @ 4de6e4c, A-DRAFT @ dbf47f7. S-PAPER @ 556be30. A-REV
 | F-MASKPIP | Fable high (CP) | what Ẑ / PIPs mean in the masked regime | mcp:launch:96085453… |
 | A-REV3 | Astra high (Codex) | cross-family review: W3-PXN, W4-SHARE, Prop M | mcp:launch:2b9ff443… |
 | A-REV4 | Astra high (Codex) | cross-family review: W2-T26, W2-BOOK/Lemma RO, F-DRAFT, A-DRAFT §2 | mcp:launch:787f113a… |
+
+### 19:22 UTC: gap-fillers
+Cloud credits (Wave 7): W7-SEP (separation theorem: what the bridge buys), W7-PART (partition-recovery lemma, iid designs), W7-SEC (T05, T33, T32(i)).
+Laptop, Claude Work: L-LEAN (Lean 4 formalisation of T21, T07, T11(iii), Theorem A; mcp:launch:3734388b…), S-ELS (E_LS ledger extraction from the laptop fit archive; mcp:launch:6fe801ba…).
