@@ -30,7 +30,7 @@ Setting: one final-run island given a successful 𝓒; EX-A, EX-S, CAL, SR; T �
 
 ## 3. Proofs
 
-`PROOF.md`: §1 F1 and Lemma 1.2; §2 F3; §3 the LH family (Lemmas 3.1–3.4, PK, Theorem F2, Remark 3.6 on W⁺); §4 extras, crossing, scoring (sketch); §5 failure modes (PB, leaky classes, the random-design obstruction).
+`PROOF.md`: §1 F1 and Lemma 1.2; §2 F3; §3 the LH family (Lemmas 3.1–3.4, PK, Theorem F2, Remark 3.6 on why the enlarged class fails); §4 extras, crossing, scoring (sketch); §5 failure modes (PB, leaky classes, the random-design obstruction).
 
 The crux of F1 is trivial (resampling copies states); the content is in the choice of W: a class closed under the kernel at the e^{−cn} level, which the *superset* class is whenever truths are kept at both endpoints, because additions never leave it. The crux of F2 is Lemma 3.1 (finite Gaussian families), which is exact-Gram-specific.
 
@@ -117,7 +117,7 @@ Reading.
 - **Minimal method change, compared with LS0 and T39.** On LH none is needed for delivery: F2 delivers every particle. LS0 (deterministic search from S̃₀ = S°) delivers eligibility for free but needs TD′; T39 (scoring tracks) delivers through start mass b_n and fails on posterior barriers like (b2). The closed-class route is the only one that uses the bridge, and it is the one consistent with the n = 200 data (98 % of fresh scores from Gibbs, local search repaired 0 fits).
 - **Paper text.** T38(b2) should read: DELIV(W(S°)) by Theorem F2 (every particle eligible) + REP(W(S°)). The hypothesis list is: LH exact Gram (or any family with two-endpoint keep margins, i.e. VIS-lin(S°) on the start side and a uniform posterior keep margin), PK, DOM, p ≤ (1 − c₀)n. Without DOM, use F1′ (reversible leaks). The ESS grid plays no role (consistent with W4's Proposition G).
 - **The n = 200 study.** W3-PXN showed the study's masking is dilution, not LH-type cancellation; nothing here speaks to n = 200 (the constants in §4.2 need n > 4^g).
-- **O-BGIBBS overlap.** BG1 proves pilot first-stage discovery when φ₁ ≥ φ_hub; F2 + §4 is the multi-stage complement: when φ₁ < φ_hub the particles wait in W⁺ (closed) until the grid passes φ_hub, then score S₀. Together they cover the final run on LH with no floor on the grid.
+- **O-BGIBBS overlap.** BG1 proves pilot first-stage discovery when φ₁ ≥ φ_hub; F2 + §4 is the multi-stage complement: when φ₁ < φ_hub the particles wait in W(S°) (closed) until the grid passes φ_hub, then score S₀. Together they cover the final run on LH with no floor on the grid.
 
 ## 8. Confidence card
 
@@ -128,7 +128,7 @@ Reading.
 | Lemmas 3.1–3.2 (unit structure) | PROOF §3.1 | 0.99 | done | — | — |
 | PK(g−1) for (0.7, 0.5, 4) | exact check | 0.98 | done numerically; general CONJECTURE 0.8 | ρ → 1 with many proxies | — |
 | Lemma 3.3 (start keep, via EXP′) | PROOF §3.2 | 0.95 | 0.9 | VIS-lin at all block configs | no |
-| Lemma 3.4 (posterior keep, uniform over supersets) | PROOF §3.2 | 0.9 | 0.8 | ridge remainders; W⁺ bookkeeping | no |
+| Lemma 3.4 (posterior keep, uniform over supersets) | PROOF §3.2 | 0.9 | 0.8 | ridge remainders; DOM case | no |
 | DOM for LH with equal β, ψ = 0.5, ρ = 0.7 | exact check | 0.9 (fails marginally at LH20 n = 1600 in 1/4 replicates) | — | the a-proxy-rich supersets | — |
 | Theorem F2 (LH exact Gram, DELIV(W(S°)) with all particles, under PK + DOM) | PROOF §3.3 | 0.9 | 0.75 | Lemma 3.4 | **no** |
 | §4 scoring on W(S°) (REP) | PROOF §4 | 0.85 | 0.5 | extras across resampling (Conj. 4.3) | no |
