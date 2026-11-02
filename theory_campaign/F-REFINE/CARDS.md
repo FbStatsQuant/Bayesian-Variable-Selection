@@ -3,6 +3,11 @@
 Lead: F-REFINE (Fable 5.1), 2026-11-02, branch `theory/F-REFINE`. Companion files: `ARCHITECTURE.md` (dependency
 graph, with/without LS0, journal cuts) and `NEXT_TASKS.md` (ready-to-run Opus specs).
 
+> **Amended 2026-11-02 (E-SPINE, wording only; no status word, P(true) or P(provable) changed).** Spine: "moving off the
+> start is needed", not "tempering is needed" (W7-SEP Prop. GU, Cor. GU-LH). LS0 is effective (O-LS0 02348e2). S-ELS
+> replaces the preliminary data counts. No-LS0 masked results: candidates on LH, pending A-REV7. See
+> `main:Docs/Theory/AMENDMENTS_20261102.md` (branch `theory/E-SPINE`).
+
 **What this is.** For each of the eight frozen targets (`Docs/THEORY_PRIORITIES.md` §1) I give the *best believed
 version*: the strongest statement I believe is true and provable at reasonable cost, consistent with every verified
 result and every counterexample produced by the campaign (branches `origin/theory/W1-*` … `W4-*`, read in full,
@@ -41,7 +46,8 @@ no REPORT yet); the frozen list, both consultant reviews, T37–T39, PROTOCOL an
    condition are false and must disappear from the paper; their replacements are proved.
 2. The only *method-change dependency* is LS0, and it carries the only masked-regime consistency instance whose
    premises are all proved on an explicit family (Thm 5(b1) on LH). Without LS0 the masked regime is conditional
-   (routes (b1′), (b2)). Nothing proved describes the n = 200 numbers: the study's start is dilution-masked, its
+   (routes (b1′), (b2)). *(Amended 2026-11-02: LS0 is now effective (O-LS0 passed). Without LS0 there are candidates
+   on LH, pending cross-family review (A-REV7): W8-SYNTH §4.2.)* Nothing proved describes the n = 200 numbers: the study's start is dilution-masked, its
    misses are posterior misses, and the T03 proof thresholds begin near n ≈ 2·10⁶.
 
 ---
@@ -192,6 +198,8 @@ factor**, and the exact limit law of the masking statistic (W3-PXN P1–P4): PRO
   exact): tables score against the full y, so each truth sees noise v_T ≈ 7–26σ²; the start mode misses 6–12 of the
   14 truths at *every* signal scale; π₀(𝓡₂) ≈ 0.8 is carried by small subsets of S₀ 6–11 additions from the truth
   (S4: only 0.1–0.3). It vanishes by n ≈ 800–1600 (p = 1000, scale 0.5: start-masked truths 8.4 → 4.2 → 1.4 → 0.1).
+  *(Amended 2026-11-02: W3-VEXP's figure. Other runs give 590–730 (O-DILUTE) and 1,050–3,200 (W5-FAVIID), so the
+  paper quotes no "favourable from n ≈ …" figure: W8-SYNTH §4.13, Decision 3.)*
   W1-EXP's "weak-signal masking with bounded L" was rejected by both W3 runs (L² ≈ 50–200, CL(0) overshoots by
   17–29 orders of magnitude).
 - Population level: S1/S3/S4/S6 have exactly zero block leakage on the actual partition (favourable asymptotically);
@@ -317,7 +325,9 @@ numerical).
   328/720; literal TD(2,0) in 0/720.
 - The "0 repairs in 541 fits" is explained by Lemma 0 only on E_LSᶜ; at production scale 233/234 non-repaired
   sampled centres had F(S₀) > F(S_c) and the search climbed past S₀ (CEX-2 pattern). **Whether the study's 541
-  final centres were in E_LS is OPEN** and needs one ledger extraction (F(S₀) − F(S_c) per fit).
+  final centres were in E_LS is OPEN** and needs one ledger extraction (F(S₀) − F(S_c) per fit). *(Amended
+  2026-11-02, S-ELS: extracted. E_LS is empty (0/2,394); all 541 have F(S₀) < F(S_c); the final search made 0 moves
+  in every completed fit.)*
 - Gibbs path from raw π₀ draws at p = 20, production packing: 100% score S₀ within 12 rounds in all 12 designs;
   round-1 rates 0.19–0.90; measured per-round progress 0.75–1.0 against proven c₂ = 0.33–0.47 and floor 0.143.
   Single-particle Theorem B is vacuous at n = 200 (Hη ≈ 4–16; v > H possible) and at every n computed (p = 20).
@@ -456,7 +466,7 @@ CONJECTURE (bookkeeping), so (c) is conditional.
 
 **Not claimed.** Masked-regime evidence/PIP accuracy; anything given completion; comparative superiority; any
 finite-n rate at n = 200; a masked p ≫ n instance until W3-PXN is verified; masked-regime consistency without LS0 on
-any explicit family.
+any explicit family *(amended 2026-11-02: candidates on LH, pending cross-family review (A-REV7); none claimed)*.
 
 ### Data evidence
 - Favourable route at the study size: 1/2,394 fits favourable; Q_f ≈ 3·10⁵ against median π₀(S₀) ≈ 10⁻¹²:
@@ -467,7 +477,8 @@ any explicit family.
 - Dilution: S̃₀ is 8–14 moves from S₀ at n = 200 (not a bounded Φ(S°)); LS0 post hoc on regenerated study data
   scored S₀ in 113/128 fits with |S̃₀ Δ S₀| ≤ ℓ + 1 and 13/32 beyond (S4/S6 at scale 0.5 fail or end at a
   better-scoring wrong model). LS0 cannot fix posterior misses. O-LS0 (Owls) is running LS0 on the 2,400 real
-  datasets; nothing pushed yet beyond scripts.
+  datasets; nothing pushed yet beyond scripts. *(Amended 2026-11-02: O-LS0 landed (02348e2). LS0 changed the
+  reported HPM in 0/2,394 completed fits; exact recovery is unchanged (1,119/1,200 at c = 1, 710/1,200 at c = 0.5).)*
 - LH exact Gram, G = 12, g = 9 (p = 108), c ∈ {1,2,3}, n ∈ {200, 800, 3200}: S̃₀ = S° in 90/90; LS0 scored S₀ in
   90/90 (exactly c moves for n ≥ 800); lattice margin grows linearly in n (11 → 58 → 266 nats, c = 1).
 - LH-iid, p ≈ n^{1.25} up to p = 10,120: S̃₀ = S° in 174/186 (all at n ≥ 400); LS0 scored S₀ in 185/186; the (L)
@@ -513,6 +524,10 @@ behaviour (Gibbs delivers) would eventually find a theorem, and F-SHARE is on it
   LH masking), so LH is a different masked mechanism from anything in the study.
 - Method: LS0 is a method change under the investment rule (pilot evidence required); it must emit its centre, fix
   the argmax-π₀ tie rule, label refits; W3-PXN suggests letting LS0 run to certification because ℓ binds at n = 200.
+  *(Amended 2026-11-02: the pilot evidence is in (O-LS0), and the approval is effective.)*
+- Spine *(added 2026-11-02)*: (b) must not be told as "tempering is needed". The masked start shows the run must move
+  off its start. On LH, LS0 (W7-SEP Prop. GU) and the terminal Gibbs rounds (O-BGIBBS BG3, p fixed) are each sufficient,
+  and no route is shown to be uniquely necessary. The bridge's own role is calibrated evidence/PIPs and the HPM ledger.
 
 ### Method change needed? **Yes, LS0, for (b1)/(b1-LH).** No for (0), (a), (b1′), (b2).
 ### P(true) 0.98 (0) / 0.95 (a) / 0.9 (b1, b1-LH) / 0.8 (b1-LH-iid) / 0.6 (b1′ instance) / 0.5 (a (b2) instance exists on LH)

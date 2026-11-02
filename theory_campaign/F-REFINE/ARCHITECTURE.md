@@ -3,6 +3,12 @@
 Lead: F-REFINE (Fable 5.1), 2026-11-02, branch `theory/F-REFINE`. Read with `CARDS.md` (statements, evidence,
 sources, probabilities) and `NEXT_TASKS.md` (what to run next). Nothing here is adopted.
 
+> **Amended 2026-11-02 (E-SPINE, wording only; no status word changed).** This draft no longer implies that tempering,
+> or "the sampler", is *needed*. W7-SEP (858004e · `REPORT.md` · Prop. GU, Cor. GU-LH) shows that on LH, start-only
+> discovery plus the production local search scores S₀. What the theory supports is **"moving off the start is needed"**.
+> Also: LS0 is effective (O-LS0 02348e2: 0/2,394 HPM changes); S-ELS counts; no-LS0 masked candidates pending A-REV7;
+> the "favourable from n ≈ …" figure is dropped. See `main:Docs/Theory/AMENDMENTS_20261102.md` (branch `theory/E-SPINE`).
+
 ## 1. The story, as it can honestly be told now
 
 What SMC-BVS reports is consistent because the truth gets **scored** and the posterior **ranks** it first. The
@@ -16,6 +22,12 @@ and the paper proves the two terms vanish in two different ways:
 - the **discovery** term either because the start already finds the truth (Thm 2 favourable regime + iid draws:
   Thm 5(a)), or because the start lands *near* the truth (Thm 2 masked regime, reference S°) and a deterministic
   greedy repair from that reference scores it (Thm 3 + LS0: Thm 5(b1)).
+
+**What discovery needs (amended 2026-11-02).** In the masked regime the run must **move off its start**: iid start
+draws alone fail (Thm 2 masked start / T27; W7-SEP Theorem SEP(A), Q* = p^c n^{c/2}). v3's moves supply this: bridge
+Gibbs, the terminal rounds (O-BGIBBS BG3 on LH, p fixed) and the local search incl. LS0 (W7-SEP Prop. GU). The tempering
+bridge is one of several sufficient discovery routes, not the uniquely necessary one. Its own role is the calibrated
+evidence and PIPs (Prop 2, Thm 6) and the HPM ledger.
 
 Thm 6 (evidence and PIPs) and Prop 2 (frozen-run identities, 95% bound) say the *other* reported quantities are
 consistent in the favourable regime and unbiased for every n. Prop 1 says the HPM is the right decision and names the
@@ -85,7 +97,8 @@ Edges that matter for review order:
 
 The study's own designs (groups of 5, B = 14) are **outside** LH (co-blocking kills cancellation masking, W3-PXN
 Prop. Q) and, at n = 200, outside every fixed-s₀ regime (dilution). The paper cannot present LH as the study's
-masking; it presents it as the masked regime the sampler is designed for.
+masking; it presents it as a masked regime in which the method must move off its start (not one that requires
+tempering: W7-SEP Prop. GU).
 
 ## 4. What the paper claims without LS0, and what LS0 adds
 
@@ -105,7 +118,9 @@ masking; it presents it as the masked regime the sampler is designed for.
 
 So without LS0 the paper has **no masked-regime consistency theorem whose premises are all proved on an explicit
 family**. The main theorem's masked half would be a conditional theorem plus a family on which every premise except
-delivery is proved.
+delivery is proved. *(Amended 2026-11-02: out of date. There are now no-LS0 **candidates on LH, pending cross-family
+review (A-REV7)**: D2-LH (c = 1), W5-VMASK R1, B2-LH under STAB-LH, O-BGIBBS BG3 + LH-lock (sketch), F-SHARE F1/F2 and
+W7-SEP Prop. GU (W8-SYNTH §4.2). None is closed beyond a single run or a sketch.)*
 
 **With LS0 (one deterministic extra local search from the exact start mode, centre emitted, ≈ (ℓ+1)max_k[p+k(p−k)]
 scores, addable post hoc):**
@@ -120,7 +135,8 @@ in the masked regime.
 **LS0 under the investment rule.** It is a method change, so (1) with it all or most key results must be provable:
 yes, it closes the only hole; (2) a pilot must show the method still performs: O-LS0 (Owls) is running LS0 post hoc
 on the 2,400 regenerated datasets; its only possible effect on the reported HPM is improvement (more scores), so the
-performance question is cost. Implementation requirements (W3-VT38E, W4-T38FULL): `emit_centre = true`; a fixed
+performance question is cost. *(Amended 2026-11-02: O-LS0 has landed (02348e2): 0 of 2,394 reported HPMs changed,
+exact recovery unchanged, cost < 0.1% of a fit. Felipe's approval is therefore effective, and LS0 is part of the method.)* Implementation requirements (W3-VT38E, W4-T38FULL): `emit_centre = true`; a fixed
 argmax-π₀ tie rule (the HPM rule); provenance labels on refits; optionally let LS0 run to certification. One redeploy
 carries all changes together.
 
@@ -163,7 +179,8 @@ remark; the paper then has no headline masked theorem and should lead with Thm 3
 6. "The correlated-design advantage follows from T37's margin": contradicted at n = 200 by the c = 0.5 posterior
    misses in S4–S6; state the LH-LAT margin as the mechanism on LH, nothing about the study.
 7. "The local search repairs": at the study size it repaired 0 fits; Gibbs flips deliver 98% of fresh scores.
-   Whether those 541 final centres were even in E_LS is unextracted.
+   *(Amended 2026-11-02, S-ELS: the final local search made 0 moves in all 2,394 completed fits, and E_LS is empty
+   (0/2,394); all 541 near-truth centres are forced by monotonicity.)*
 8. "T27 is a lower bound for the method": it bounds iid start draws only.
 9. "T26 with budgets indexed by n": the deterministic-budget form (T^max = 4,000) is vacuous below n ~ 10⁸; state
    (P1) with the realised T_n.
@@ -172,14 +189,19 @@ remark; the paper then has no headline masked theorem and should lead with Thm 3
 12. "VERIFIED" as if reviewed: all verification so far is same-family.
 13. D2 "covers one-cancellation masking at p ≫ √n": conditional; its CF instances are not masked.
 14. "No method change needed": true for everything except Thm 5(b1), which is the headline.
+15. *(Added 2026-11-02.)* "Tempering is needed", "the sampler is needed" or "start-only methods fail" for discovery:
+    false on LH, where a single local search from the start mode scores S₀ (W7-SEP Prop. GU, Cor. GU-LH). Say: the
+    method must move off its start (iid start draws alone fail), and v3's moves provide this. The bridge's own role
+    is calibrated evidence/PIPs and the HPM ledger.
 
 ## 7. The n = 200 disclosure (consolidated; one paragraph for the paper)
 
 At the study's size (n = 200, p ∈ {500, 1000}, s₀ = 14) the theorems are statements about mechanism, not about the
 reported numbers: (i) the block start is masked by dilution (each truth is scored against the other 13 as noise), so
-the start mode misses 6–12 truths at every signal scale, and this disappears only for n ≳ 800–1600 in these designs;
-(ii) every completed wrong HPM has F(S₀) ≤ F(HPM) (565 of 2,394 fits; 0 discovery misses; 6 resource stops, all in
-S5, counted as misses); (iii) the sparse-eigenvalue premise of Theorem 1 now ranges over ≤ 114 columns because the
+the start mode misses 6–12 truths at every signal scale (no "favourable from n ≈ …" figure is quoted: the campaign's
+estimates disagree, W8-SYNTH §4.13); (ii) every completed wrong HPM has F(S₀) < F(HPM) (565 of 2,394 fits; 0 search
+misses; S₀ scored in every completed fit, and the final local search never moved: S-ELS; 6 resource stops, all in S5,
+counted as misses); (iii) the sparse-eigenvalue premise of Theorem 1 now ranges over ≤ 114 columns because the
 cap K = 100 binds, but it is unverified on the realised designs, the beta-min constant exceeds the executed signals
 by ≥ 43×, and the proof's deterministic thresholds hold from n ≈ 2·10⁶; (iv) the start rates carry a 2^B factor that
 is ≥ 10³ at B = 14 for n ≤ 10⁴; (v) the HPM at this size is found by Gibbs flips during the bridge and terminal
@@ -189,7 +211,7 @@ rounds, a route for which the paper proves exact finite-n inequalities but no ra
 
 1. Cross-family review of the masked instance: W4-T38FULL Lemma M / LS-score / LH-LAT and W3-PXN Lemma B / P3 / P6.
    Cheap; load-bearing.
-2. The LS0 decision (Felipe) and the O-LS0 pilot.
+2. The LS0 decision (Felipe) and the O-LS0 pilot. *(Done 2026-11-02: O-LS0 passed; approval effective.)*
 3. Verification of W3-PGD Theorem W (Thm 3's asymptotic clause has no referee and its REPORT is a stub).
 4. A no-method-change masked instance: NB′ for D2 on LH (c = 1), and the envelope route (b2) on LH via D5 + Prop M
    (the route that matches how the method behaves).
@@ -197,3 +219,4 @@ rounds, a route for which the paper proves exact finite-n inequalities but no ra
    study-like designs; W3-PXN's method).
 6. GUARD / OUT / SR code audits; T32(i) proof; VAL-FP replay (operations).
 7. The E_LS ledger extraction (per-fit F(S₀) − F(final centre)) and the same-size-swap count (data, Owls/R).
+   *(E_LS done 2026-11-02 by S-ELS: empty in the data.)*
