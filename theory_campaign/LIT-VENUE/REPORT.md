@@ -121,3 +121,135 @@ Bottom line: **no paper in the sample gives an a-posteriori, per-run, verifiable
 p in the hundreds**, such as "this run scored S₀" or "no unscored model can beat Ŝ". Per-fit certification is what O-CERT
 C5 (box certificate) and the scored-set bookkeeping behind N200 aim at. It is a genuine gap, and it is also not yet run
 on our side (API-N200 item 3).
+
+---
+
+## 3. What each venue's papers prove: profile from the sample
+
+| Venue (sample rows) | Typical theorem load | Kind of result | How asymptotic | Evidence shown | How they handle the theory/simulation gap |
+|---|---|---|---|---|---|
+| **AoS** (1, 4, C1) | 2–5 main theorems plus corollaries; long supplements | Mixing-time or complexity bound for **the proposed algorithm**, plus posterior consistency (YWJ, ZC23). Optimisation certificate (BKM16) | Fully asymptotic (w.h.p. as n, p → ∞), unspecified constants (c₁, c₂, …) | Illustrative simulations only (YWJ §3.4, s* = 10) | They do not claim finite-n validity. Simulations show the *scaling trend* in p, n |
+| **JRSS-B** (2, 5, 13, 17, 19, 20, 22, C2) | Either a full mixing theory (ZYVR: Thm 1 explicit, 800·max{…}; ARZ26), or structural algorithm theorems (ZR19 variance comparisons and stylised relaxation times; DC22 CLTs; Syed26 variance formula; SuSiE: ELBO ascent only), or BF/posterior rates (RAB21) | Algorithm-level guarantees, often in stylised models (independent or two-collinear designs) | Asymptotic, but ZYVR's bound is explicit | Large simulations (p up to 5,000) **and real data** (ZYVR p = 328,129; SuSiE fine-mapping; ZR p = 57 / n = 192) | Theory is a stylised explanation. Numerics carry the practical claims. ZR19 states a conjecture openly |
+| **JASA T&M** (6, 10, 21) | 0–5 | General principles (locally balanced proposals), VB contraction rates, or none (Hamming ball) | Asymptotic | Real data expected; software | Theory optional if the method is strong in practice |
+| **Biometrika** (7, 11) | 2–4 propositions | Ergodicity, approximate independence, closed-form exact solutions in special designs | Little asymptotics | Compact simulations, one or two real examples | Short papers. The theory is the special-case explanation |
+| **Bayesian Analysis** (9, 24, C4) | 1–3 | Ergodicity/WLLN (MAdaSub), decision-theoretic mini-theorems (median model) | None or simple | Heavy numerics, real data up to p ≈ 2·10⁴ | — |
+| **JCGS / Stat. Comput.** (8, 15, 16) | 0–2 | None, or ergodicity/SLLN (PARNI) | — | Numerics, benchmarks, real data | — |
+| **Bernoulli / NeurIPS / AISTATS** (3, 14, 23) | 3–6 | General mixing theory (CZ26), warm-start mixing (HWA) | Asymptotic in p | Small numerical examples | — |
+
+**Comparison with our package.**
+- We have 6 theorems and 2 propositions, plus a large supplement of lemmas. That is more theorem mass than any
+  Biometrika, Bayesian Analysis, JCGS or JASA row in the sample, and comparable to the AoS rows.
+- **Our statuses are weaker than theirs.** Everything is a candidate, and only the Lean-formalised T07/T21 and the
+  XF-verified parts have independent checks. The masked-regime results hold on one constructed family (LH), and two
+  side clauses carry XF GAPs (W8-SYNTH; T38-RECORD V18, V19).
+- What the rows prove is either a clean asymptotic theorem about the proposed algorithm under general high-dimensional
+  conditions (AoS, JRSS-B), or almost nothing beyond validity (Biometrika, Bayesian Analysis, JCGS, JASA). Our package
+  sits between the two. It is deeper than the second group, but it lacks the general-design, explicit-rate main
+  theorem of the first.
+
+## 4. Gaps: what nobody in the sample proved that we prove or could prove
+
+| Gap | Our result (status from source) | Closest literature | Why it is a gap |
+|---|---|---|---|
+| G1. Consistency of the **output of an SMC sampler** for BVS, including discovery | T38 (a): PROVED (candidate). (b1) on LH with LS0: PROVED (candidate), XF VERIFIED for the core lemmas (A-REV8). (b2-LH): XF VERIFIED under STAB-LH (A-REV7) | Rows 15, 16, 18: no theorem for SMC-BVS. Le Fay–Chopin–Vihola need a spectral gap | No SMC-BVS paper in the sample has an output theorem |
+| G2. An **exact, every-n decomposition** of the reported-model error: posterior miss + search miss + no output, with the search term measurable per run | Thm 4 (T21): PROVED-LOCKED, Lean. API-N200 Theorem N200: PROVED (candidate, elementary) | Rows 12, 20 (consistent target + heuristic search, no link). BKM16 (L0 certificate) | Nobody separates "the posterior is wrong" from "the search failed" for a model-space posterior. Our n = 200 counts (0 search misses in 2,394 completed fits) are an empirical result made possible by this split |
+| G3. A **lower bound for an iid start law** (masking), together with repair theorems that restore consistency | Thm 2 masked / EXP′ chain masking: PROVED (XF). W7-SEP SEP(A): XF VERIFIED (A-REV9). Thm 3 Theorems A/B: PROVED (XF) | YWJ App. A.2: posterior multimodality slows MCMC. ZR19 Thm 3: Gibbs is slow on collinear pairs. CZ26 Thm 4 and HWA Thm 4 *assume* a warm start | The literature assumes warm starts or analyses posterior multimodality. Nobody proves that a natural, exactly sampleable start fails, and then proves which moves fix it |
+| G4. Per-fit **certificates** on model space at p ≈ 10³ | O-CERT C5 box certificate: designed, not yet run (API-N200 item 3) | C1 (L0, p ≈ 64), row 11 (block-diagonal), C5 (continuous, D ≤ 20) | Open everywhere. **Could** become a distinctive contribution if run over the 2,400 fits |
+| G5. Machine-checked proofs | T07, T21 in Lean (87 declarations, 0 sorry) | none in the sample | Novel in this literature, but not a statistical contribution. Venue impact uncertain |
+
+## 5. Threats: results that make ours standard, weaker or redundant
+
+| Our result | Threat | Severity | Suggested handling |
+|---|---|---|---|
+| **Thm 1 (T03♯)** | Posterior selection consistency is standard: YWJ Thm 1, SBJ18 Thm 1/3, RAB21 Thm 2, and earlier Johnson–Rossell 2012 and Narisetty–He 2014 (not re-read here). Our variant (g = n with a unit ridge, BB(1,p), cap ⌊n/2⌋, fixed s₀) differs in prior, not in kind. Thresholds ≈ 2·10⁶ | High for novelty, low for correctness | Present it as a needed lemma for our prior and cite YWJ/SBJ. Do not sell it |
+| **T38(c) polynomial cost**, and "poly-time recovery on LH" | YWJ Thm 2 and Cor 2, ZYVR Thm 1: poly-time (ZYVR dimension-free) recovery from *any* start in M(s₀), under their priors. API-POS: applies to LH in the iid realisation (PROOF SKETCH). CZ26 Thm 1 likewise under R > M; S₀ is the unique local mode on LH at p ≤ 20 | **High** | Already flagged by referee M6 and API-POS. The honest framing: "the published theorems cover a stronger prior and an MH chain; ours covers this prior and this SMC output". It is a formal gap, not a substantive one (API-POS item 3). Do not headline cost |
+| **API-POS finding**: on LH the masking is a property of π₀, not of π | Combined with YWJ/ZYVR/CZ26, any reasonable local MCMC from the empty model would find S₀ on LH. So LH demonstrates that the *start* is bad, not that the *problem* is hard | **High** for the masked-regime story | Referees will ask why one should use an SMC start that masks, when an MH chain from ∅ succeeds. The paper needs the evidence/PIP/calibration rationale (Prop 2, Thm 6), plus a design where the posterior itself is multimodal |
+| **Prop 2 (T12) unbiased evidence** | Standard SMC (Del Moral 2004 Prop 7.4.1, as cited in ZJA16 l.352). The islandwise PIP identity and the Markov 95% bound are elementary consequences | Medium | Keep it as a remark (the Biometrika cut already does) |
+| **Thm 6 (T26)** | Follows the standard pattern: SMC consistency/CLT (DC22) composed with posterior concentration | Medium | Supplement |
+| **Thm 4 (T21) / N200** | The proof is one page and elementary. A referee may call it bookkeeping. Its value lies in the measurement it enables | Medium | Sell it as a reporting principle (the "best-scored model" with provenance), with the 0-search-miss evidence. Pair it with certificates (G4) to make it substantive |
+| **Thm 3 (T37) repair** | ZC23 already proves consistency of greedy local search on a restricted space, for DAGs. Greedy-path arguments are the canonical-path ideas of YWJ | Low–medium | Cite ZC23 and YWJ's canonical paths as kin; ours is the deterministic, finite-move version |
+| **"Moving off the start is needed"** (W7-SEP) | HWA Thm 4 and CZ26 Thm 4 already treat warm-start mixing; ZR19 promotes tempering | Low | Ours is the converse: a warm start is *provably absent*. That is complementary |
+
+## 6. Venue verdict (judgement; not a status word)
+
+- **AoS: not realistic.** AoS rows prove general-design theorems for the proposed algorithm. Our masked-regime theorem
+  is tied to LH, its p ≫ n clause has an XF GAP, and by API-POS's account the main contrast with rapid-mixing theory is
+  "formal, not substantive".
+- **JRSS-B: a stretch.** It would need all of the following. Thm 5(b) for the algorithm as run (F-REFEREE's main ask).
+  A family where the posterior itself, not just π₀, is hard, so that the threat in §5 row 3 is answered. Competitive
+  numerics against LIT-MH, PARNI, MAdaSub, wTGS and SuSiE. At least one real-data analysis. JRSS-B BVS papers in the
+  sample (ZYVR, ZR19, SuSiE) all have real data.
+- **Biometrika (the 5-result cut): plausible, conditional on the referee point and on cutting.** Biometrika rows carry
+  2–4 propositions and strong compact numerics. Our cut (Thm 1–5) is heavier than that, which is acceptable if it is
+  framed as "what the reported HPM means", with Thm 4 as the organising idea. It needs one real-data example and a
+  compact comparison.
+- **JCGS, Bayesian Analysis, Statistics and Computing, EJS: realistic now**, given numerics of the quality of
+  MAdaSub/PARNI (benchmarks plus real data). Our theory exceeds the norm there by a wide margin. EJS also suits a
+  theory-forward version if the numerics stay modest.
+- **JASA T&M: possible** if the software and real-data application are strong. The theory there is a bonus, not a
+  requirement.
+
+**What is typically expected that we lack** (from the sample, in order of how often it appears):
+1. **Real-data analyses.** Present in ZYVR, ZR19, SuSiE, GLS, PARNI, MAdaSub and TY. I found none in the materials I read
+   for our method (BRIEF, ARCHITECTURE, THEORY_PRIORITIES); HQ should confirm.
+2. **Comparisons with current samplers and approximations** (LIT-MH, PARNI, MAdaSub, wTGS, SuSiE, SSL). They were
+   correctly rejected as theory targets, but they are still expected empirically.
+3. **Simulations that track the theory as n grows** (YWJ §3.4 style). The study has only n = 200, where every premise
+   fails (565 posterior misses).
+4. **A main theorem with explicit rates for the algorithm as run, under general high-dimensional conditions**, rather
+   than an explicit constructed family.
+5. **Independent review status.** The published theorems are refereed. Ours are AI-checked candidates, which is a
+   process risk at submission, not a content gap.
+
+## 7. What fails and why (routes tried in this task)
+
+- **Finding an SMC-BVS theory paper.** An arXiv API search for abstracts containing "sequential Monte Carlo" AND "variable
+  selection" returned no theory paper after 2013. Web search found only Schäfer–Chopin and Shi–Dunson, the latter not
+  read. So "no SMC-BVS output theory" rests on this sample and on these searches. It is not an exhaustive claim.
+- **Reading abstracts and theorems with WebFetch** failed on a PDF (binary). I switched to curl + pdftotext.
+- **Venue for Papaspiliopoulos–Rossell:** Crossref did not return it, so it stays UNVERIFIED.
+
+## 8. Needs escalation
+
+- Whether CZ26's condition R > M holds on LH at growing p, and with what margin. That would settle whether
+  dimension-free mixing theory covers our *target* on LH, and so strengthen or weaken threat row 3. It needs an
+  enumeration or analysis run, outside this task.
+- The claim "no theorem for the output of SMC-BVS" should be checked by a second literature run with a wider net:
+  particle stochastic search (Shi–Dunson), South–Pettitt–Drovandi BA 2019 (only bibliographic data checked here),
+  Bayesian-model-space annealing papers, and the 2025–26 arXiv.
+
+## 9. Outside scope
+
+- Le Fay–Chopin–Vihola Thm 3.4 gives finite-sample Ẑ accuracy from a spectral gap and χ̄² = 2. If our calibration enforces
+  χ² ≤ 1 per stage, then on the *favourable* regime (where π₀ ≈ π) a gap bound might give a cheap finite-n Ẑ statement for
+  Thm 6. I did not pursue this.
+- Our start uses exactly enumerated correlation blocks. Papaspiliopoulos–Rossell's closed-form top-model-by-size under
+  block-diagonal X′X is a possible exact baseline, and a certificate ingredient, for the block-enumeration step.
+
+## 10. Confidence card
+
+| Target touched | Refined statement (literature-side) | Confidence it is true | Confidence it holds up at reasonable cost | Crux | Method change needed? |
+|---|---|---|---|---|---|
+| Novelty of Thm 4/N200 (G2) | No published paper splits model-space reported-HPM error into posterior miss + search miss per run | medium (sample of 30 plus searches) | high (a wider search is cheap) | Possible precedent in the optimisation or "BMA with scored models" literature (BAS, Clyde et al.) not read | no |
+| Novelty of T38 as an SMC-output theorem (G1) | No published consistency theorem for an SMC-BVS output | medium–high | high | Shi–Dunson and South et al. not read in full | no |
+| Threat to T38(c) | Poly-time recovery on LH is implied by YWJ/ZYVR under their priors | high (API-POS plus my reading of the conditions) | — | The prior mismatch (g = n, cap) is a formal difference | no, but reframe |
+| Venue: Biometrika feasible | Needs Thm 5(b) for the algorithm as run, plus real data and a comparison | medium | medium | Real data and competitor numerics are absent | no method change; new numerics |
+| Venue: JRSS-B feasible | Needs a family where π itself is hard, general-design theorems, competitive numerics and real data | low | low | Threat row 3 (masking lives in π₀) | possibly |
+
+## 11. Sources actually read
+
+Full list with line numbers and quotes: `NOTES.md`.
+- **Local PDFs** (`Papers/Core_bibliography/`): 01, 02, 06 (scanned only), 07, 08, 09, 10, 11, 12, 14, 18, 22, 23, 24, 25, 29,
+  31.
+- **arXiv PDFs downloaded and read via pdftotext:**
+  - 1505.07925 (YWJ), 1708.05678 (GLS), 1708.03625 (JOA), 1905.09971 (BJV), 1507.03133 (BKM);
+  - 2012.07429 (RAB), 2101.04084 (ZC23), 2207.00689 (CLLSZ, abstract), 1903.08008 (Vehtari, header);
+  - 1904.07150 (RS), 2404.03867 (CZ26), 2403.09416 (ARZ), 2604.21009 (Duan, abstract), 2605.30722 (Wu, abstract).
+- **Venues:** checked through the Crossref API (`scripts/crossref.sh`) for every published row except Papaspiliopoulos–Rossell
+  (UNVERIFIED) and Biswas et al. (UNVERIFIED). Hou–Atchadé's AISTATS 2026 entry comes from a search result naming
+  proceedings.mlr.press/v300/hou26a.html.
+- **Our documents:**
+  - `origin/theory/W8-SYNTH:…/BRIEF.md`, `origin/theory/T38-RECORD:…/T38_STATEMENT.md` (Part 0 and I.A);
+  - `origin/theory/API-POS:…/REPORT.md` §1, `origin/theory/API-N200:…/REPORT.md` §1–2, `origin/theory/F-REFINE:…/ARCHITECTURE.md` §1;
+  - `Docs/THEORY_PRIORITIES.md` §1, `Docs/Methodology/METHODOLOGY_v3.md` §1–2.
+  - `LOCKABLE_v2.md` was not read, for budget reasons.
