@@ -1,0 +1,4 @@
+n=10000 p=4000 G=1000: pi0(S°)=0.9836  pi0(S0)=3.98e-06  H=2048  H*pi0(S0)=0.008  sqrt(n)/p=0.0250  d(S°+proxy)-d(S°)=568 vs T0 log r*=655  Dep=0.0269 beta=0.0442  (setup 1s)
+    20 pilots: P(NB'^c)=0.000  P(S0 drawn)=0.000  draws touching C_b (not S0): 1 in total  phi_1: median 1.0000 (forced 0)  share of S° after weighting: min 0.963  d-range on G: max 2.24  D2 bound (t optimised, excl. NB'): 1.70e-29
+n=40000 p=20000 G=5000: pi0(S°)=0.9918  pi0(S0)=4.44e-07  H=8192  H*pi0(S0)=0.004  sqrt(n)/p=0.0100  d(S°+proxy)-d(S°)=2422 vs T0 log r*=655  Dep=0.0146 beta=0.0448  (setup 4s)
+    10 pilots: P(NB'^c)=0.000  P(S0 drawn)=0.000  draws touching C_b (not S0): 0 in total  phi_1: median 1.0000 (forced 0)  share of S° after weighting: min 0.983  d-range on G: max 4.60  D2 bound (t optimised, excl. NB'): 9.62e-119
