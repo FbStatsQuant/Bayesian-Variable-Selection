@@ -1,0 +1,6 @@
+Collecting mpmath==1.3.0
+  Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+Installing collected packages: mpmath
+Successfully installed mpmath-1.3.0
+WARNING: You are using pip version 21.3.1; however, version 26.0.1 is available.
+You should consider upgrading via the '/home/fb31/theory_campaign/A-REV4/venv/bin/python3 -m pip install --upgrade pip' command.

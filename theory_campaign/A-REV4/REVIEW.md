@@ -107,3 +107,14 @@ Retain the conditional T26/A-DRAFT results with their full premise lists. Restri
 ## 7. Additional T26 exact-branch ERROR
 
 The repeated parenthetical assertion that the exact branch fails whenever p>=18 and n>=22 is false under the actual budgets. Counterexample: p=18, n=2^18. Then K=p, the state count is 2^18, N0=n, and the threshold (5H0+4N0)p is at least 4*2^18*18, strictly larger than the entire state count. The exact branch is therefore taken. More generally fixed p eventually enumerates, as common regime R2 explicitly says. Remove this parenthetical and replace it with the exact combinatorial inequality, or a genuinely sufficient growth condition. This does not invalidate Theorem A's fully written statement because P1-ex is retained, nor Theorem B because T03 supplies it. It does make the W2-T26 package contain an ERROR beyond the main verified implications.
+
+## Eight-line review summary
+
+1. Overall verdict: GAP; no candidate, sketch or conjecture status is upgraded.
+2. T26 A/B and Lemmas 1–3: VERIFIED under their full stated hypotheses.
+3. T26 exact-branch parenthetical: ERROR; Proposition C retains a GAP/sketch disposition.
+4. BOOK core identities: VERIFIED; literal GUARD and completed-HPM statements contain ERRORs.
+5. F-DRAFT: W1 VERIFIED; NM/W2 ERROR; W4 GAP.
+6. A-DRAFT §2: VERIFIED conditional posterior-expectation results.
+7. Owls checks finished; successful exit statuses, failed attempt, hashes and raw proxy statistics are saved.
+8. Reviewed-content checkpoint head SHA: 34e4f48da014d44de4def47319462c2b2d268f1b; final delivery head is reported in chat.
