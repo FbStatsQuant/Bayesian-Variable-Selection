@@ -1,0 +1,5 @@
+T05 Lemma 1 / Corollary 1 / Part-U inequality, brute-force enumeration; seed 20261102
+n= 40 p= 6 s0=2 |theta|=0.35: max|logD - k log n| = 7.11e-15, max rel|Q - (n-1)V_S/V_tot| = 1.04e-15, HPM = top-k at best k in 30/30, max[(F(S0)-F(S0-j)) - bound] = -5.442e-06 (must be <= 0)
+n= 25 p= 8 s0=3 |theta|=0.5: max|logD - k log n| = 1.07e-14, max rel|Q - (n-1)V_S/V_tot| = 3.30e-15, HPM = top-k at best k in 20/20, max[(F(S0)-F(S0-j)) - bound] = -2.034e-04 (must be <= 0)
+n= 60 p=10 s0=3 |theta|=0.25: max|logD - k log n| = 2.13e-14, max rel|Q - (n-1)V_S/V_tot| = 1.07e-15, HPM = top-k at best k in 10/10, max[(F(S0)-F(S0-j)) - bound] = -2.526e-04 (must be <= 0)
+n= 13 p=12 s0=2 |theta|=0.8: max|logD - k log n| = 5.33e-15, max rel|Q - (n-1)V_S/V_tot| = 4.69e-15, HPM = top-k at best k in 10/10, max[(F(S0)-F(S0-j)) - bound] = -1.136e-02 (must be <= 0)

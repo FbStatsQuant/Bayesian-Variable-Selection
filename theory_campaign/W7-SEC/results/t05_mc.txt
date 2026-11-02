@@ -1,0 +1,41 @@
+T05 Monte Carlo via Lemma 1; seed 20261102; reps = 4000 per row (MC s.e. <= 0.0079)
+
+(A) threshold (ii): lambda = (sqrt(tau) + c)^2, s0 = 2, p = ceil(n^0.5)
+       n      p     c  P(HPM=S0)  Phi(c)^s0  U-bound P(oracle)
+   1e+03     32  -1.0     0.0290     0.0252   0.0612    0.4390
+   1e+03     32   0.0     0.2375     0.2500   0.3747    0.8115
+   1e+03     32   1.0     0.7040     0.7079   0.8147    0.9685
+   1e+05    317  -1.0     0.0280     0.0252   0.0290    0.5710
+   1e+05    317   0.0     0.2417     0.2500   0.2672    0.8842
+   1e+05    317   1.0     0.7160     0.7079   0.7249    0.9858
+   1e+07   3163  -1.0     0.0225     0.0252   0.0256    0.6887
+   1e+07   3163   0.0     0.2532     0.2500   0.2523    0.9363
+   1e+07   3163   1.0     0.7063     0.7079   0.7102    0.9945
+   1e+09  31623  -1.0     0.0250     0.0252   0.0253    0.7632
+   1e+09  31623   0.0     0.2525     0.2500   0.2504    0.9595
+   1e+09  31623   1.0     0.6973     0.7079   0.7083    0.9978
+
+(B) gap (iii): p = ceil(n^a), a = 0.5, lambda = (1 - eps) tau with eps = 0.3 < 1/(1+2a) = 0.5
+       n      p  sqrt(lam)-sqrt(2logM)  sqrt(tau)-sqrt(lam)  P(HPM=S0)  U-bound P(oracle) 1-O-bound
+   1e+03     32                  0.497                0.606     0.0803   0.1441    0.6115    0.0000
+   1e+05    317                  0.623                0.784     0.0425   0.0530    0.6653    0.0000
+   1e+07   3163                  0.736                0.927     0.0312   0.0318    0.7010    0.0781
+   1e+09  31623                  0.834                1.052     0.0200   0.0215    0.7420    0.1863
+
+(C) the gap in amplitude units at p = n^a (leading order [sqrt(1+2a) - sqrt(2a)] sqrt(log n)):
+  a=0.25 n=1e3   sqrt(tau)-sqrt(2log(p-s0)) =   1.553   leading order   1.360   energy ratio tau/2log(p-s0) =  3.872
+  a=0.25 n=1e6   sqrt(tau)-sqrt(2log(p-s0)) =   1.942   leading order   1.924   energy ratio tau/2log(p-s0) =  3.048
+  a=0.25 n=1e12  sqrt(tau)-sqrt(2log(p-s0)) =   2.721   leading order   2.721   energy ratio tau/2log(p-s0) =  3.001
+  a=0.25 n=1e100 sqrt(tau)-sqrt(2log(p-s0)) =   7.855   leading order   7.855   energy ratio tau/2log(p-s0) =  3.000
+  a=0.50 n=1e3   sqrt(tau)-sqrt(2log(p-s0)) =   1.105   leading order   1.089   energy ratio tau/2log(p-s0) =  2.029
+  a=0.50 n=1e6   sqrt(tau)-sqrt(2log(p-s0)) =   1.540   leading order   1.540   energy ratio tau/2log(p-s0) =  2.000
+  a=0.50 n=1e12  sqrt(tau)-sqrt(2log(p-s0)) =   2.177   leading order   2.177   energy ratio tau/2log(p-s0) =  2.000
+  a=0.50 n=1e100 sqrt(tau)-sqrt(2log(p-s0)) =   6.285   leading order   6.285   energy ratio tau/2log(p-s0) =  2.000
+  a=0.75 n=1e3   sqrt(tau)-sqrt(2log(p-s0)) =   0.939   leading order   0.937   energy ratio tau/2log(p-s0) =  1.669
+  a=0.75 n=1e6   sqrt(tau)-sqrt(2log(p-s0)) =   1.325   leading order   1.325   energy ratio tau/2log(p-s0) =  1.667
+  a=0.75 n=1e12  sqrt(tau)-sqrt(2log(p-s0)) =   1.873   leading order   1.873   energy ratio tau/2log(p-s0) =  1.667
+  a=0.75 n=1e100 sqrt(tau)-sqrt(2log(p-s0)) =   5.408   leading order   5.408   energy ratio tau/2log(p-s0) =  1.667
+  a=1.00 n=1e3   sqrt(tau)-sqrt(2log(p-s0)) =   0.836   leading order   0.835   energy ratio tau/2log(p-s0) =  1.500
+  a=1.00 n=1e6   sqrt(tau)-sqrt(2log(p-s0)) =   1.181   leading order   1.181   energy ratio tau/2log(p-s0) =  1.500
+  a=1.00 n=1e12  sqrt(tau)-sqrt(2log(p-s0)) =   1.671   leading order   1.671   energy ratio tau/2log(p-s0) =  1.500
+  a=1.00 n=1e100 sqrt(tau)-sqrt(2log(p-s0)) =   4.823   leading order   4.823   energy ratio tau/2log(p-s0) =  1.500
