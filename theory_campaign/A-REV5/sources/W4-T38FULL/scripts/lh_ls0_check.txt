@@ -1,0 +1,10 @@
+W4-T38FULL lh_ls0_check.py, seed 20261102, G=12, g=9, rho=0.7, psi=0.5, visible beta=1.0
+c=1 n=  200 reps=10: mode=S° 10/10; median pi0(S°)=0.8822; LS0 scores S0 10/10; moves [1, 2]; D_S on Lat(S°) 10/10; min margin (nats) 11.3; S0 best of scored 8/10
+c=1 n=  800 reps=10: mode=S° 10/10; median pi0(S°)=0.9389; LS0 scores S0 10/10; moves [1, 2]; D_S on Lat(S°) 10/10; min margin (nats) 58.4; S0 best of scored 9/10
+c=1 n= 3200 reps=10: mode=S° 10/10; median pi0(S°)=0.9692; LS0 scores S0 10/10; moves [1]; D_S on Lat(S°) 10/10; min margin (nats) 266.1; S0 best of scored 10/10
+c=2 n=  200 reps=10: mode=S° 10/10; median pi0(S°)=0.8357; LS0 scores S0 10/10; moves [2]; D_S on Lat(S°) 9/10; min margin (nats) -1.1; S0 best of scored 9/10
+c=2 n=  800 reps=10: mode=S° 10/10; median pi0(S°)=0.9238; LS0 scores S0 10/10; moves [2]; D_S on Lat(S°) 10/10; min margin (nats) 23.9; S0 best of scored 10/10
+c=2 n= 3200 reps=10: mode=S° 10/10; median pi0(S°)=0.9604; LS0 scores S0 10/10; moves [2]; D_S on Lat(S°) 10/10; min margin (nats) 133.6; S0 best of scored 10/10
+c=3 n=  200 reps=10: mode=S° 10/10; median pi0(S°)=0.7865; LS0 scores S0 10/10; moves [3]; D_S on Lat(S°) 9/10; min margin (nats) -2.9; S0 best of scored 9/10
+c=3 n=  800 reps=10: mode=S° 10/10; median pi0(S°)=0.9049; LS0 scores S0 10/10; moves [3]; D_S on Lat(S°) 10/10; min margin (nats) 29.5; S0 best of scored 10/10
+c=3 n= 3200 reps=10: mode=S° 10/10; median pi0(S°)=0.9529; LS0 scores S0 10/10; moves [3]; D_S on Lat(S°) 10/10; min margin (nats) 135.4; S0 best of scored 10/10

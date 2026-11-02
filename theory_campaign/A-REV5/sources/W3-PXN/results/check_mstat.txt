@@ -1,0 +1,3 @@
+config A (c=1, 58 reps): median T = 0.273 (chi2_1/2 median 0.227); KS of PIT vs U(0,1): p = 0.852
+config B (c=2, 58 reps): median T = 0.766 (chi2_2/2 median 0.693); KS of PIT vs U(0,1): p = 0.425
+config P (c=1, 70 reps): median T = 0.188 (chi2_1/2 median 0.227); KS of PIT vs U(0,1): p = 0.886

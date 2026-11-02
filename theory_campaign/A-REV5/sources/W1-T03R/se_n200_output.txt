@@ -1,0 +1,10 @@
+== S1: lambda_min(R_S0) = 0.6019
+  SE_lambda: |J| = j0 = 48 (|T| = 62), normalised lambda_min(R)
+    random J: min 0.1634  median 0.2065   greedy adversarial J (full pool): 0.0334
+  SE_w: |J| = 100 (|T| = 114), unnormalised lambda_min(G) = (n-1) lambda_min(R)
+    random J: min 11.3172  median 13.0587   greedy adversarial J (full pool): 0.4007
+== S4: lambda_min(R_S0) = 0.6392
+  SE_lambda: |J| = j0 = 48 (|T| = 62), normalised lambda_min(R)
+    random J: min 0.0458  median 0.0595   greedy adversarial J (full pool): 0.0125
+  SE_w: |J| = 100 (|T| = 114), unnormalised lambda_min(G) = (n-1) lambda_min(R)
+    random J: min 2.9434  median 3.7199   greedy adversarial J (full pool): 0.2196

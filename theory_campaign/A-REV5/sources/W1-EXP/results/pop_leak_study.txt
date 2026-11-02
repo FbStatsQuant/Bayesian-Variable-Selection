@@ -1,0 +1,12 @@
+S1 blocks of  5: max lambda_b/(n-1) = 0.0000, #blocks with lambda>1e-10: 0/100, theta'Sigma theta=24.64
+S1 blocks of 10: max lambda_b/(n-1) = 0.0000, #blocks with lambda>1e-10: 0/50, theta'Sigma theta=24.64
+S2 blocks of  5: max lambda_b/(n-1) = 0.3600, #blocks with lambda>1e-10: 81/100, theta'Sigma theta=24.64
+S2 blocks of 10: max lambda_b/(n-1) = 0.0400, #blocks with lambda>1e-10: 34/50, theta'Sigma theta=24.64
+S3 blocks of  5: max lambda_b/(n-1) = 0.0000, #blocks with lambda>1e-10: 0/100, theta'Sigma theta=24.64
+S3 blocks of 10: max lambda_b/(n-1) = 0.0000, #blocks with lambda>1e-10: 0/50, theta'Sigma theta=24.64
+S4 blocks of  5: max lambda_b/(n-1) = 0.0000, #blocks with lambda>1e-10: 0/100, theta'Sigma theta=24.64
+S4 blocks of 10: max lambda_b/(n-1) = 0.0000, #blocks with lambda>1e-10: 0/50, theta'Sigma theta=24.64
+S5 blocks of  5: max lambda_b/(n-1) = 0.1637, #blocks with lambda>1e-10: 98/100, theta'Sigma theta=17.44
+S5 blocks of 10: max lambda_b/(n-1) = 0.4597, #blocks with lambda>1e-10: 48/50, theta'Sigma theta=17.44
+S6 blocks of  5: max lambda_b/(n-1) = 0.0000, #blocks with lambda>1e-10: 0/100, theta'Sigma theta=24.64
+S6 blocks of 10: max lambda_b/(n-1) = 0.0000, #blocks with lambda>1e-10: 0/50, theta'Sigma theta=24.64

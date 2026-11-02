@@ -1,0 +1,20 @@
+== D2 on CF(1) n=400 p=89 B=9 H=512 T_e=1000 [W1 design]
+pi0(x0={1}) = b = 0.9278 ; |D| = 8 ; Dep (off D) = 0.0910 ; Dep incl. D = 6.528e+15 ; largest off-D terms [(76, 0.0096), (61, 0.0064), (73, 0.0061)]
+beta = 0.0454 ; W1's reported third term exp(-H beta g(b)) = 3.133e-09 ; full D2 bound without NB term: min_t [e^{-2Ht^2} + exp(-H beta g(b-t))] = 2.244e-07 at t = 0.131
+pilot first stage, 100 replications: P(NB^c) est = 0/100 ; S0 among initial draws in 27 ; S0 scored by end of stage 1 in 100/100 ; phi_1 range [0.03034, 1], forced 0 ; fraction of particles scoring S0 in the stage-1 round: mean 0.904 min 0.328 ; mechanisms {'gibbs': 45336, 'nswap': 897, 'indep': 26, 'uswap': 17}
+== D2 on CF(1) n=400 p=89 B=9 H=512 T_e=1000 [independent design seed 1]
+pi0(x0={1}) = b = 0.9133 ; |D| = 8 ; Dep (off D) = 0.0809 ; Dep incl. D = 1.260e+13 ; largest off-D terms [(61, 0.0113), (23, 0.0028), (49, 0.0027)]
+beta = 0.0460 ; W1's reported third term exp(-H beta g(b)) = 4.231e-09 ; full D2 bound without NB term: min_t [e^{-2Ht^2} + exp(-H beta g(b-t))] = 2.813e-07 at t = 0.130
+pilot first stage, 100 replications: P(NB^c) est = 0/100 ; S0 among initial draws in 66 ; S0 scored by end of stage 1 in 100/100 ; phi_1 range [0.03027, 0.04767], forced 0 ; fraction of particles scoring S0 in the stage-1 round: mean 0.890 min 0.850 ; mechanisms {'gibbs': 44200, 'nswap': 1288, 'uswap': 27, 'indep': 62}
+== D2 on CF(1) n=400 p=89 B=9 H=512 T_e=1000 [independent design seed 2]
+pi0(x0={1}) = b = 0.9166 ; |D| = 8 ; Dep (off D) = 0.1011 ; Dep incl. D = 3.120e+07 ; largest off-D terms [(8, 0.0148), (62, 0.01), (40, 0.0076)]
+beta = 0.0449 ; W1's reported third term exp(-H beta g(b)) = 5.759e-09 ; full D2 bound without NB term: min_t [e^{-2Ht^2} + exp(-H beta g(b-t))] = 3.490e-07 at t = 0.130
+pilot first stage, 100 replications: P(NB^c) est = 0/100 ; S0 among initial draws in 27 ; S0 scored by end of stage 1 in 100/100 ; phi_1 range [0.05667, 1], forced 0 ; fraction of particles scoring S0 in the stage-1 round: mean 0.886 min 0.410 ; mechanisms {'gibbs': 43972, 'nswap': 1356, 'uswap': 21, 'indep': 16}
+== D2 on CF(1) n=1600 p=252 B=15 H=512 T_e=1000 [W1 design]
+pi0(x0={1}) = b = 0.9644 ; |D| = 14 ; Dep (off D) = 0.0487 ; Dep incl. D = 2.279e+50 ; largest off-D terms [(172, 0.0039), (131, 0.003), (175, 0.0021)]
+beta = 0.0297 ; W1's reported third term exp(-H beta g(b)) = 1.080e-06 ; full D2 bound without NB term: min_t [e^{-2Ht^2} + exp(-H beta g(b-t))] = 1.622e-05 at t = 0.115
+pilot first stage, 30 replications: P(NB^c) est = 0/30 ; S0 among initial draws in 2 ; S0 scored by end of stage 1 in 30/30 ; phi_1 range [0.01219, 1], forced 0 ; fraction of particles scoring S0 in the stage-1 round: mean 0.701 min 0.234 ; mechanisms {'gibbs': 10568, 'nswap': 201, 'uswap': 4}
+== D2 on CF(1) n=1600 p=252 B=15 H=512 T_e=1000 [independent design seed 1]
+pi0(x0={1}) = b = 0.9623 ; |D| = 14 ; Dep (off D) = 0.0566 ; Dep incl. D = 1.215e+51 ; largest off-D terms [(89, 0.0066), (168, 0.0053), (68, 0.0025)]
+beta = 0.0295 ; W1's reported third term exp(-H beta g(b)) = 1.282e-06 ; full D2 bound without NB term: min_t [e^{-2Ht^2} + exp(-H beta g(b-t))] = 1.836e-05 at t = 0.115
+pilot first stage, 30 replications: P(NB^c) est = 0/30 ; S0 among initial draws in 2 ; S0 scored by end of stage 1 in 30/30 ; phi_1 range [0.01387, 1], forced 0 ; fraction of particles scoring S0 in the stage-1 round: mean 0.699 min 0.225 ; mechanisms {'gibbs': 10476, 'nswap': 258, 'uswap': 1}

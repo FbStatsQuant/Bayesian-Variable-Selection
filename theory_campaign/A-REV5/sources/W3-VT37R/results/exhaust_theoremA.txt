@@ -1,0 +1,19 @@
+datasets 720
+litTD2 0
+litTD0 226
+TDP0 226
+TDP 160
+TDinf 328
+NA 468
+TL 259
+litTD0 & not TDP0 (A5 counterexamples): 0
+TDinf & not TDP: 168
+NA & TL: 193
+lattice-certified centres (total): 200700
+violations: 0
+n=40 c=0.25: N=120 TD'_P(R_2)=0 TD'_inf(R_2)=0 A5-cex=0
+n=40 c=0.50: N=120 TD'_P(R_2)=6 TD'_inf(R_2)=21 A5-cex=0
+n=40 c=1.00: N=120 TD'_P(R_2)=30 TD'_inf(R_2)=103 A5-cex=0
+n=80 c=0.25: N=120 TD'_P(R_2)=4 TD'_inf(R_2)=9 A5-cex=0
+n=80 c=0.50: N=120 TD'_P(R_2)=35 TD'_inf(R_2)=84 A5-cex=0
+n=80 c=1.00: N=120 TD'_P(R_2)=85 TD'_inf(R_2)=111 A5-cex=0

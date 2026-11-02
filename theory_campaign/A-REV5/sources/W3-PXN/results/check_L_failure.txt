@@ -1,0 +1,10 @@
+l=3514 group=351 Z^2=24.54 gain F(S0+l)-F(S0)=0.573
+l=3515 group=351 Z^2=13.64 gain F(S0+l)-F(S0)=-4.954
+l=3497 group=349 Z^2=13.31 gain F(S0+l)-F(S0)=-5.119
+first-order threshold on Z^2: 23.63; p * P(chi2_1 > thr) = 0.0123
+  n=200 p=750: P((L) fails) ~ p P(chi2_1 > 16.3) = 0.0419
+  n=400 p=1790: P((L) fails) ~ p P(chi2_1 > 18.8) = 0.0276
+  n=800 p=4260: P((L) fails) ~ p P(chi2_1 > 21.2) = 0.0184
+  n=1600 p=10120: P((L) fails) ~ p P(chi2_1 > 23.6) = 0.0123
+  n=10000 p=100000: P((L) fails) ~ p P(chi2_1 > 30.0) = 0.0044
+  n=1000000 p=31622776: P((L) fails) ~ p P(chi2_1 > 46.2) = 0.0004

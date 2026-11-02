@@ -1,0 +1,415 @@
+{
+  "A-REV1": {
+    "commit": "26815e841f25cd472a20f8ea251c00b4ffab3e37",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\A-REV1\\REVIEW.md": "05d64b97e3e254ebdac6c1fc2cdba35199e95a8e8d64597fe922ce50207ac5e0",
+      "theory_campaign\\A-REV5\\sources\\A-REV1\\results\\cf1_d2_reproduction.txt": "7eeffdcaadbb5304d031194c32e4923effab205572e6adac10dbf2eafac59db5",
+      "theory_campaign\\A-REV5\\sources\\A-REV1\\results\\check_stdout.txt": "cfa7fad73749dab6456e50337509f1afae6779946e74df3e7e814a4556e45fdb",
+      "theory_campaign\\A-REV5\\sources\\A-REV1\\results\\independent_checks.json": "5f07fde80e53b6a0587a2e88c4bf533120fa9a1402f328f5eaff4528bf9ba724",
+      "theory_campaign\\A-REV5\\sources\\A-REV1\\results\\ls0_reproduction.json": "a0c2f80817153cd6ce6b3eb6332ce3e9668fcae0b4806faa1dfa46e9e1075e38",
+      "theory_campaign\\A-REV5\\sources\\A-REV1\\scripts\\check_review.py": "2828ba261fe49862fd809fb197d0f3f8917d95538770745ac4893f9e4efd6dcd",
+      "theory_campaign\\A-REV5\\sources\\A-REV1\\scripts\\reproduce_ls0.py": "85eeb99c4cbc051805cffcabec219b863908e8ff946e8bbe369905dbf69ba25b",
+      "theory_campaign\\A-REV5\\sources\\A-REV1\\scripts\\requirements.txt": "5e7cb66d2a3374454132a5ff73596f40061357a52fe40d3f100840077d8cc547"
+    }
+  },
+  "A-REV2": {
+    "commit": "09dc2307b3b4a133765877239d5cd2149c25cd89",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\A-REV2\\REVIEW.md": "9aa3280304df9b5244cc2f47a39a7ede8ef2e44fd4a440c0454897330d437bc8",
+      "theory_campaign\\A-REV5\\sources\\A-REV2\\SOURCES.md": "c9df42c98cf9b9507b62e8f764569af21fcc4ea5ff80fb6809343c70b94d5919",
+      "theory_campaign\\A-REV5\\sources\\A-REV2\\results\\baseline_sha256.txt": "39e6e8661297a12a711ab0b46ffa449dd8354aa5e2df348c6a89768875239746",
+      "theory_campaign\\A-REV5\\sources\\A-REV2\\results\\checks.json": "20dd9f968992a1090839819e109775bec7e4afe7a1cdf8c18751f4d66daeb81d",
+      "theory_campaign\\A-REV5\\sources\\A-REV2\\results\\python_packages.txt": "983665a6331eda07ab1f4b23ef92d66f4b024c27b360ee0e7420511ef3b28c64",
+      "theory_campaign\\A-REV5\\sources\\A-REV2\\scripts\\check_review.py": "c24bc7eb2f76cde9d7818f3c81ae6c5169eddeada0d5b40e7d8d53c9cffe8b61"
+    }
+  },
+  "W6-FIXREV1": {
+    "commit": "a7833f3d185d188ca48c7cb4a12faf4397ac63de",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\CONSOLIDATED.md": "55d1fb57dc918b16d7272f220956f7d9ce111b93defde3ec1aebf631e83c4620",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\REPORT.md": "03ce0f100b96b75d1faf14415dcc88e6b26a9e29c297f762fb3f5c427206ff68",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\T38_PROOF.md": "c190776e9a8c0401ccc3fd5b7cb723574f2c8ee64cbb0e5a7f868bd7f6967252",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\T38_STATEMENT.md": "2e5dcc20b59e0bab72ffe4d8102700eb6709d268c1a19cecf79aa9f0a1c3e2a9",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\results\\ce1_sequence.json": "84ae2691c0d4dd0236d7fff7b05f8c1f141d0e5d82396f6ea62497fe6691fd8b",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\results\\ce1_sequence_stdout.txt": "950673240850198a2f165b6b3f5bed3fdd8c27c318603ff9cfd3037202502ac1",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\results\\e3_check.json": "9974046a2e56919ea426ae41aecca78149b9ddbdd07ab99b03efd758da7dccbd",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\results\\lemmaS_lemmaU_check.json": "82aef5710632551a8c1691001e5b13dd3e149d7276630aa935a93a5236350882",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\results\\lemmaS_lemmaU_stdout.txt": "001e5644170a1e5a91d9b79328de587ee896cf4a7b3bec647cf20b48d0c839d9",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\results\\propU_check.json": "a5ce0c787c85d723cf877168581afaef788503a05de42c964434dcce9e813127",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\scripts\\bvs_core.py": "c07ccd78555690bcef5b7906e36780360c93c804e9cd92284a830bc7ad504d3a",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\scripts\\ce1_sequence.py": "690ace212db632f969040b28563ecc696adf1d96cbd7b6e39bbecfd1fde00aa4",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\scripts\\e3_check.py": "342d893ad96823c92e28bd021c04719d38016b940a167cf45f472278af0ad9d1",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\scripts\\lemmaS_lemmaU_check.py": "b9a162d923955c57a729359e67ba2e6a193fcfe164ac219b3fcf3d7a6b3e4bdc",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV1\\scripts\\propU_check.py": "b3e5f8b3230a4ff06aad39a14c455ac446d1887bc5fb2b5125929bc173167e10"
+    }
+  },
+  "W6-FIXREV2": {
+    "commit": "be2d4568bca74dec2ae6dd08e25fe709c3da44f6",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\NOTES.md": "80e292f0e7e38d4d018489bd5c069a47426a8a5c7bd38c2e7db40a14a5faceaa",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\REPORT.md": "1d5aa9e34ec0afc92b28187587e6f9b581af64e3df5c2194c973a2ffbbe66e71",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\STATEMENTS.md": "6ea1ecb09d9652121d8c040b441d409c59f96b4650ee445544bc7c6d7a1f553b",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\results\\lemmaU_checks.json": "8ff16ab17d615a53c76f76a4911523cb6bf8c98f407fc4f5aa4e9b8b94e56d06",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\results\\lemmaU_checks.txt": "7e0ab9f04d8bbba2871b5912ebd5d28a4e5ee8315afdc7cedd9873a8213f1ed5",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\results\\t03_thresholds.txt": "6237ee518b3bf1e87bf9dfea58b0fa04ec2dfb2b458a5367f13e25719e68632c",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\results\\t37_checks.json": "efb51eb2d0eb587f54d7ba4b4ee18681dd3103e6c7e40c1eff90df8a1871d9f1",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\results\\t37_checks.txt": "8216d4e5f20eca6da9313182e683c8674e3d4db83b35634485bf09879c731629",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\results\\t37_extra.json": "9ee69259f5589470675699fc3a7ac8f716ad36bc34c79ffefd012dc103eb0cad",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\results\\t37_extra.txt": "72fafc5c91e357c4cfaa55aeaa5bf1bc1cedade401baca820e7ca110d4027157",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\scripts\\core.py": "dfc3a439fa6c7cef5a5d9e030141f3e5c79f8b56363eeaf299836888686f83c3",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\scripts\\lemmaU_checks.py": "5b4a34bf7633b06c13c94a538350338c6a9d2d7c1e308640b6cc4dcd3a760884",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\scripts\\t03_thresholds.py": "49d4b868a2f36050c3394865663d338a198d0bb0dcd30c2e60d1f469310ebc73",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\scripts\\t37_checks.py": "23dd1353879cb5c110a19e0c40f0369daf2c70f487f8ac08a92fb1f3cd533250",
+      "theory_campaign\\A-REV5\\sources\\W6-FIXREV2\\scripts\\t37_extra.py": "ec3ddef734ccc710ad86bd43f30cdbf4661b3da95ff8a2fec3fdb723b52e91ce"
+    }
+  },
+  "W4-T38FULL": {
+    "commit": "a0f9cb5e000dedf367e26fd0da019ccd2218fb42",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W4-T38FULL\\NOTES.md": "479504a0ee96ba99adacf289ee3aac4b230a620d631f3bdde21527f8c0f24234",
+      "theory_campaign\\A-REV5\\sources\\W4-T38FULL\\REPORT.md": "da09b0b1a396a12f7ef7529bf2cd95c32e42872e86a2e510cea93047ba008dd7",
+      "theory_campaign\\A-REV5\\sources\\W4-T38FULL\\T38_PROOF.md": "c4a7e4727cb38e5b9bedcda292330ee62584f31fa112790962354cceae3edaa1",
+      "theory_campaign\\A-REV5\\sources\\W4-T38FULL\\T38_STATEMENT.md": "967d2e5c5ffa2818610f7b0b40a77b937500ddd16f3635d7d4ea4c9afc86f7b8",
+      "theory_campaign\\A-REV5\\sources\\W4-T38FULL\\scripts\\lh_ls0_check.py": "dfd6f1d1b0c7ed77085227854f63431cffd09ca5be0d804ea9bce6d611df7249",
+      "theory_campaign\\A-REV5\\sources\\W4-T38FULL\\scripts\\lh_ls0_check.txt": "9e5ac91ec16379ca462b525a4c902228b686ff28ac069666a4e86543700aa624",
+      "theory_campaign\\A-REV5\\sources\\W4-T38FULL\\scripts\\ref_lhformulas.py": "4975511cc45667804bc4ddf426c1c0f7fb732a8b81413f885cfcd3761f0fa929",
+      "theory_campaign\\A-REV5\\sources\\W4-T38FULL\\scripts\\ref_lhformulas.txt": "e0035113f556d49fe31f146ac77d194baae272dff64c904f96a06d68556007c3",
+      "theory_campaign\\A-REV5\\sources\\W4-T38FULL\\scripts\\ref_lhlat.py": "8ecf9d79b16a1bbba223b09cdd3e5b068eb3530dbe0c4b493983a1a68f59c0ba",
+      "theory_campaign\\A-REV5\\sources\\W4-T38FULL\\scripts\\ref_lhlat.txt": "8c57716c9dc1893387561ccb2ca9c7c1ef8eabf6bec6be75661671573e36f5d9"
+    }
+  },
+  "W3-PXN": {
+    "commit": "4aebea3bf003f5f3c0c7239a24c824ec2d2aa574",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\PLAN.md": "51cef05aa9051b84c90e9be8d6a929d73d2e78b9d63bda240663cd548548c487",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\PROOF.md": "8120ac15735339bcb23a6d1df45455fcb42f197b8bcb8f47c455170860b11290",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\REPORT.md": "6baf0de2509b5b734e2d8252c3757ecad873c60c6ab0dda61e451e8131ab480d",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\results\\check_L_failure.txt": "3f0af04967ef4625f5d7c5259613e79c8f44c21eecf63826ef167300ec683c62",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\results\\check_lemmas.txt": "6cf475f03e9e2f49b9e8a2e05308ed5a0073d7709862f39da572fd1b69eb35ce",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\results\\check_mstat.txt": "5ee25a8281b13d4754d391f74b9f84932a39d38de96f46cda1380eb6ac47cb70",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\results\\sanity.txt": "6f28074750f83c803766a58b2b9d8be0d57ef81913c16c9deecd165eb50d6014",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\results\\summary.txt": "809e98800f450c391381131dc0c868c6a706de446f61fa5432cb12ffd3f49211",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\scripts\\check_L_failure.py": "ad693ad12c48cbfbd14c2f3887d5ba19a121bc0d4fb1a0caf8265b3aab1385b1",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\scripts\\check_lemmas.py": "118193a0a66066626c4fc7aa010dc7fb2c470b807de9c32b84622a4e5b9ea89b",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\scripts\\check_mstat.py": "ab1d3c22776eef222e856637788149f7bccc94c3b8e0abf34191c99524e43323",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\scripts\\lh_iid.py": "05be084362a2189f0cc9fd97b7074d50e61e12e28a64885f303c750de56b965e",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\scripts\\pxn_core.py": "5b6d4c239f57c6fa32fe5d37cd515b4691c25d5d4e3602dd9807c3fcbd384ab3",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\scripts\\sanity.py": "720ac7824803aa4f8f274e83a378ec7ef3d6b4d780a3ab0f791251a4d8232289",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\scripts\\study_ls0.py": "eac8818a3fc5011b3e6a22237d3df20a76d73990b2f482ba8d0dd7b706f87b07",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\scripts\\study_n200.py": "5627b4ca71d87e37aebfaf02f35815ee307fb632f8152d619bb5c775fa9535d3",
+      "theory_campaign\\A-REV5\\sources\\W3-PXN\\scripts\\summarise.py": "2f433eaf75474a2c2ffcd5b5b49dd027a0e9b093447613ba30970837b125b521"
+    }
+  },
+  "W3-PGD": {
+    "commit": "fdeaec34f5a23ced83ccd85b5bf00ee643cbcba0",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\PLAN.md": "82951be493d44aa720c1dfdbbd3e7765f33bd847d3438f6542b9608028b07460",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\PROOF.md": "08f18267cd770f345c899d843d305bf0797ac3b4c030d25dc30c31a7f5403127",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\REPORT.md": "745f4a14d7b4a46bb3a4e59744565e07cd9e4035ab16ba0021abe1442d86d2b3",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\results\\ld_counterexample.txt": "ffd0d6d536504df059e0f16a9b3868ac59a6845af09b86de19b220303e888b2a",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\results\\n200_p500_S1.json": "93e1952940dbcad19f64f996bdd3f792d578332ffc9e376e8d73faa5f3f78b58",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\results\\n200_p500_S2.json": "ca343546a88a86e30e81ca253d3ca4078ee123030d89441e5ef6e924847ff2d0",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\results\\n200_p500_S3.json": "82f76caebcc120706df3dff3159e0f87def56e2823d64b5f622c49fb37859cb4",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\results\\n200_p500_S4.json": "e0acab5de2c07fefb9bfbdb6dcb0d1c11de2dc7d8b92df2fd919fb08a1757cf0",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\results\\n200_p500_S5.json": "61c3b8ff77a2261c0042c4e131ad62b9a55cff8c475cfdcf3d526f4c2416ff26",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\results\\n200_p500_S6.json": "80f2aa3892aa2fad8d0ea365682bdb36c4461b847118b145416736b355e6250d",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\results\\pop_check_p1000.json": "4a357ed0ad3a14f849ee98c6bda6daae094d8456a1f608ef6a4bb5c6a555a4d8",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\results\\pop_check_p500.json": "c9afbde91a3c159fd2e729edcc76a93b867adf1fab5fa31e7261923599737829",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\scripts\\ld_counterexample.py": "29443cc242b13bd3bea686ffbbae6b6cc368bfb65351a5b15b9c0e61f1acc578",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\scripts\\n200_check.py": "91938a5587bab3b828710f5ffe488724c4bf74c137d29f780177045d1628d140",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\scripts\\pgd_core.py": "1ce3f1e62d1084cb169b8479fec5edc6bf8d26983562b1df8e6019cc5eda422f",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\scripts\\pop_check.py": "1edbac8cf0dbe274f6c2e999785c23691fcd80aff885e93b41d5a351f3f96696",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\scripts\\td_core.py": "599ee96d305d76538a166a27b939bad61ea321d998fb50618cfa524c2ad3fb51",
+      "theory_campaign\\A-REV5\\sources\\W3-PGD\\scripts\\test_engine.py": "9d72d480edfc34285d93385a9e535db47906ac4ecf99688b5edd561bcf92d302"
+    }
+  },
+  "W2-T26": {
+    "commit": "0e4f1e7f5efd1e67330affa4168b69750eaff2f1",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W2-T26\\PROOF.md": "9fbfcf669d1c58932e2f0a182c2e2ef02e309f049df6f4a5c97673893b9d2264",
+      "theory_campaign\\A-REV5\\sources\\W2-T26\\REPORT.md": "992a3c68d12a163c458f20b390d672acff62e36a73723b7008bb7da7c73d02a3",
+      "theory_campaign\\A-REV5\\sources\\W2-T26\\results\\check_rho_bar.txt": "89cfde25ddfe1c20bcc0abcc1a37ad2ac67d39c937088222f4a1cb6ea8f102af",
+      "theory_campaign\\A-REV5\\sources\\W2-T26\\results\\premise_summary.md": "f6ea0de742aa3910f2b10df02d7fc0a9ca5d466f2644032dd2c5e4bcb9b8db47",
+      "theory_campaign\\A-REV5\\sources\\W2-T26\\scripts\\bvs_exact.py": "c6c072712d3c9bf7962cb3169c031acd060aecfa03ff9e4aec0198f53edf7b69",
+      "theory_campaign\\A-REV5\\sources\\W2-T26\\scripts\\check_rho_bar.py": "c6fc428332640c7ee0be709ed74f77ffcbd5b1e9de07e2fa45903f8140b6ee47",
+      "theory_campaign\\A-REV5\\sources\\W2-T26\\scripts\\fill_report.py": "59e3e3946be6fff57134dc17d080c42022ccf36b250939eaab9de0f6c8d496ab",
+      "theory_campaign\\A-REV5\\sources\\W2-T26\\scripts\\orth_check.py": "e9c44f026a8188c22644b0aa280dba085e22fd042a15c9c1ce91a64771ea94df",
+      "theory_campaign\\A-REV5\\sources\\W2-T26\\scripts\\premise_scan.py": "9a20e1e5f100e4e8fcdc7d479dadf6556b6fcdf285cf2c50f3ba6ad134df3e1c",
+      "theory_campaign\\A-REV5\\sources\\W2-T26\\scripts\\smc_sim.py": "56aa7c4c42095394001e7dc32a73a5eb1e0caf63dd9abe84c71b70bf293f5d49",
+      "theory_campaign\\A-REV5\\sources\\W2-T26\\scripts\\summarise.py": "2e20b94cf45789c7ef039b2fff10af439923a523199101fc849755ec2bbb1fe5"
+    }
+  },
+  "F-REFINE": {
+    "commit": "db708ca9f98a616ea16c8ce8e950d8f65238835f",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\F-REFINE\\ARCHITECTURE.md": "c11b514ec2e0130bb36cf0e87b1e7b19004e577fd94e5bf49167f628adbe2d02",
+      "theory_campaign\\A-REV5\\sources\\F-REFINE\\CARDS.md": "27b4f6df8798c6353aaadf54dc28e7ecda522aa9b63abce0fd2e643c85c7cbed",
+      "theory_campaign\\A-REV5\\sources\\F-REFINE\\NEXT_TASKS.md": "37a7794469ec67fa3612d3ac2834093986ebfe440a7b884b0cb5e0627a67c4e4"
+    }
+  },
+  "W1-T03R": {
+    "commit": "7e14d6f090bef91861455f45c69017e2a5774198",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\BRIEF.md": "2a6316ab7f745f4f70017b10ff0f4d63494afe9eecb8fd93b5c5f2b7a9240a31",
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\NOTES.md": "a833128d10f7262c2bb30ea8515b5f8e4705c4e9996a7ab7af1a713734c64b6c",
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\PROOF.md": "1497376391655759bb8d0479b4f344c10f3c9e1a476182cd1881ee28868e9bd4",
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\REPORT.md": "7828c9e60c1e9f25ea74b58410a68795f647b96d2a7cdeae9cc6f15d74b08d6d",
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\bm_constants_output.txt": "d89d95e3ce275e853c0632665cc6175598ffc525300c5485621af22486318f55",
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\duplicate_counterexample_output.txt": "e605b43d7a3d229b506abf966d68d036851d24dca31738c632245841ff0bebcf",
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\proof_n0_output.txt": "851c87e6e6bad4c918b3def03fe64dc9c727552897a6bf5642d2f0a321551e0f",
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\scripts\\bm_constants.py": "2f4ca99b3b62db933f61644246aa07b680d974bda3ce14fc9172f0b18013b115",
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\scripts\\duplicate_counterexample.py": "764c72eadf5397ac2c1031f4f34d941abee36e6776e1c3522dc1afee23e0d81f",
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\scripts\\proof_n0.py": "5158ba82c9bed20784969455cd4daa5e38858ddb73635a5851c1dfdc6cc33ad8",
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\scripts\\se_n200.py": "bd24722efb6b48d0c89bf589351bbd24b0fb22e5b37703980f8ab567ddba184d",
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\scripts\\tail_bound.py": "bae21c3f58c40bdeccc2c9c7e5a9e2120ed9017aa28147e977b57532fef3c832",
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\se_n200_output.txt": "6144491644b3641fafc67746a699e1558525ab6ffec3e89bbdabdfdc8a566e57",
+      "theory_campaign\\A-REV5\\sources\\W1-T03R\\tail_bound_output.txt": "6fb36738b2d1cbccf784a17967cc78c82fbe3467897d5ec522c5b019b5dca6a3"
+    }
+  },
+  "W2-VT03R": {
+    "commit": "b9f6d9b8f6507dd1053d6b916d7a68e1f7b4aa5e",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W2-VT03R\\NOTES.md": "ee4602a1520713df2625dc630c95ed043732236bfb1f1f0c4815f9e795ccf3e3",
+      "theory_campaign\\A-REV5\\sources\\W2-VT03R\\REPORT.md": "c33ad5d2d9c9a20176f347ce788ad9bd6f25524296dcb9c350035df5fc7787bc",
+      "theory_campaign\\A-REV5\\sources\\W2-VT03R\\check_deterministic_output.txt": "f652eb3acf50cffd90c145aa388974bac123032884c53601e11aef3b771e092f",
+      "theory_campaign\\A-REV5\\sources\\W2-VT03R\\proof_thresholds_output.txt": "b165082ed19918e95c269292df6788ac1e6a3df1cd42dcfa674d5a19e60faf4a",
+      "theory_campaign\\A-REV5\\sources\\W2-VT03R\\propD_independent_output.txt": "c71715d2181f643c40560c8cc7be28da614b493b3a9ce36292d57efb20915774",
+      "theory_campaign\\A-REV5\\sources\\W2-VT03R\\scripts\\check_deterministic.py": "52d3e14ea6e4e527f4347a029ed5e8707f8ebb1c066cfc9335ab771e288be8ae",
+      "theory_campaign\\A-REV5\\sources\\W2-VT03R\\scripts\\proof_thresholds.py": "49e29c635b93e6275a0a1a29ac16bbda9179f33d3d23ab5de2195c6442ecfc88",
+      "theory_campaign\\A-REV5\\sources\\W2-VT03R\\scripts\\propD_independent.py": "074fa3905c5bdd5b60c7a075edd7a291da853a7358f6511a19874675678987a7",
+      "theory_campaign\\A-REV5\\sources\\W2-VT03R\\scripts\\verify_E1_exact.py": "8948cafb25c0fb7d44823143c954106787c8741f82d7cb165d8f9d38edf0044e",
+      "theory_campaign\\A-REV5\\sources\\W2-VT03R\\verify_E1_exact_output.txt": "e84dc657184a64b6390def5a1605c4623fd55335306d013c7aadf6328f4bcfe8"
+    }
+  },
+  "W1-T37R": {
+    "commit": "3bcc42958f9d7373178ebab931f62ad38538c8f3",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\BRIEF.md": "d54f0e31bb8a47e48963168b6e35440d819b2cc0c2a01163881da175f4a74e94",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\PROOF.md": "dddb5e95622245bbc9364d23c6ac989a3e3de4c7566f5cb26d0d11ab5bf6dbe5",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\REPORT.md": "140911d0f6340fb8358ae3a07fa46ca12881024da00c7eda29d979a3feffe727",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\results\\exp1_p20_pm0.json": "fb090b5800e746e3eefddc028ee9f93fab8a410d37e41a0302ccf302c2e14386",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\results\\exp1_p20_pm1.json": "e3dbb89a796579e9e1073f296d32dad336bc5d97fc44f85000cca8e9aacd35c9",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\results\\exp1_p20_summary.md": "a05e4a618e9154bf8fa5f3a4ea96f42ab29d93acd2e519850b262b1fd2c60d8e",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\results\\exp1_p25_pm1.json": "dafef4cc649f46011db864498efc1a68ecaa2a4b426449117d0a476f171f6274",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\results\\exp1_p25_summary.md": "c8ffbe5f11e825142c9308bbb809a89184d38a72e654baa383c40fee61af589f",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\results\\exp2_p500.json": "db9f273ed054d3c526add092d64eb1e4a2a6ebfcb5dd32a3587e0fa37a97b3b4",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\results\\exp2_summary.md": "88e48c9513c1714d02777b067d2a1a0a209a86bb598cb89b37317d6f00709b84",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\results\\exp3_combination.txt": "e79a5ee2a404bdf56069c899fe62ec0f23a0145962ea006d398bda52f0991a32",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\scripts\\README.md": "f4a5cb2a3b952702882efa32af2eba876dfe20aab90487ca45a7ced5a06fcb56",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\scripts\\exp1_small_exact.py": "80508ac66ea60602da9efce0c45cbb2ac3c670012b4497e531cc04f5a8cd2613",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\scripts\\exp2_prod_scale.py": "86e5fcbc71eb1cf95db257bf227a21a05c4cb632289e493100481a4c40cfd0c8",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\scripts\\exp3_combination_lookalike.py": "e0fe9c7cbea2f2d6c910a975b06a1caccc852f8a40b8330470c44b324eb26d89",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\scripts\\summarise.py": "6c0dccb9b5f78f1e138e4dca6dd51bc09fbfda4f815b0a13a89162a620cacf25",
+      "theory_campaign\\A-REV5\\sources\\W1-T37R\\scripts\\td_core.py": "a8f68fb8f9dcce6c1a3bb3dad8d02548c92aa680bf6050a1d170256af1742eed"
+    }
+  },
+  "W3-VT37R": {
+    "commit": "4988b966f2aafa9c61077e6002146297f0df0dd7",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\REPAIRS.md": "dccc47a655fd1db9c8808c1902d6c1e411cf874dda9965b73e1a580edc48874a",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\REPORT.md": "b75ee024aff4013edc8d4acb1c60026399a62d14ea74ba3f5540a6badd9a5e2c",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\results\\c2_noise_bound.txt": "a9e80c7c49b28a722d169a27bd8f94e8437936e286a305f0fa5f973783274e5a",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\results\\cex1.txt": "0c75b41dd76aff3efc5320cc2c2cb0eaba2b09bcc9fc08d4c1d3c669b0c10445",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\results\\exhaust_theoremA.json": "2c5cc44d8686c294966321edcddd2d21a3f588cb42c395b01ad49393e43dd366",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\results\\exhaust_theoremA.txt": "ffd10933705ec4de77ddbce619e267404498c49eb33e75a41bd0d317e06ccff5",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\results\\exp3_recheck.txt": "fc94b360b626e55f23034e9b0154ca57619f4bbf565639440e9943348c19ff2c",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\results\\phi_reach_vs_TDP.txt": "8e6128e0d1fa239a6e7886c15854397f2e26daa2169baf1ea4f55336db7c1e34",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\results\\prod_scale.json": "839e6d685fc64cc9abd8c6a4623662ca9a280dd4de02092611dbdefb1e2ff3b2",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\results\\prod_scale_summary.md": "25d71efe38ec08128137d654d52bad6e77d7418f3af952ed3d9e056ba1c944ba",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\scripts\\c2_noise_bound.py": "b2a5cf7cf1e11ba0d61f0950251684abfa793756fe2256df22e9f5a49acd584c",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\scripts\\cex1_literalTD_d0_no_positivity.py": "1d1b81c6ba39cd885ffd1989c10d0484ac8d76656ff0a8dab7504c7a21984e1a",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\scripts\\cex2_lemma0b_posterior_miss_with_ELS.py": "04a970f2165a23fe1f46fa96daa605d01c7a9495733cdd8c8f7159a186a366a0",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\scripts\\conditions.py": "9d938097fe9e8841222eb779da619dcae4acdb0e8cf72ff7bd4ae46874c87e2a",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\scripts\\exhaust_theoremA.py": "c93e229aaaec9c4a3b3a1d3acbdb94fcbac26fce2764444df5a16834669682ad",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\scripts\\exp3_recheck.py": "972a0f0b860bf5e522d0e82b0b743a0b8f7355357fb818e8e860bbdcc336310d",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\scripts\\phi_reach_vs_TDP.py": "f468271f694eb5b92d56962584238a470455f38c28bc7f9af1f488623e76544a",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\scripts\\prod_scale.py": "c12e57d0bc10b14aa688114873756c0042a5c01e656ccbb3f46cfac10d866a25",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\scripts\\summ_prod.py": "0f3ab2b77029699e1f74a3304aeb6b055a03b87edcafe961d4c4edfc9c7c582c",
+      "theory_campaign\\A-REV5\\sources\\W3-VT37R\\scripts\\vt_core.py": "1c3b73749eace4276a1b0dd020e6d60902a28c1059acf37a3e893a81ee5e6529"
+    }
+  },
+  "W1-EXP": {
+    "commit": "722bd18e51fcc3b485c07590097e137dac71a5aa",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\BRIEF.md": "bfd79ac8563e037f3f09bfda7252125ed2a1262781fab4e5bfb678080380ea76",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\PROOF.md": "477cc41b059e4e3de524828851c14028a525db0fed95f9543f40a163d14eed2f",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\REPORT.md": "b05c6e4cc594c0a4cb93f2b8343164d993e512c7817067a998004ee2f9ab9a16",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\results\\fam_A85_gram.json": "10acbdc4213b922b21b6c3d2f3dfea1378d2fd37b421cd6fa7b56f96cb3f854a",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\results\\fam_A_gram.json": "8b45b5ee9292a8baecdd9fe6a51a6386af8d24ba5575ef13477b9514cf189ade",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\results\\fam_A_random.json": "d52cf0b60aec7db0ac03899e7d4cf73e7a124e2afff907fc67588ed117b5c8cf",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\results\\fam_B_gram.json": "e56a7479632646e896d486c79f5b97d4e1c3e6ae7747b48aae2afb45eb83475a",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\results\\fam_B_random.json": "4bec5a1762f3816660534217680292a0e3e1fec875b4747ade101fbb93f5f39b",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\results\\leak_chain.json": "9202a216e565b20f0447a71f4a9f6bf7bf1c70db46acebf7afa69a6459533545",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\results\\pop_leak_study.txt": "5b1e8fb499b02fe42a7b4e4a8c6475c74a6f54339491311ccda68b1581036826",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\results\\study_seblk.txt": "2ba714353e2a88facf966621e2e5f80bdc91f98bc2cdf497f2cea3810185dc86",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\scripts\\bvs_exact.py": "e72e0db945fb17cb516d4126f57e71039e46a558f7dbaeeada43a25a2acd9a3b",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\scripts\\exp_family.py": "992db061a4621c2f0ba67232379dd165dc18376c385fbc80d1fef388643df50d",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\scripts\\exp_leak.py": "4b6a0ac8e5d51a54431d16097e4c259f0df07305f698a375cd27b0936d768d4b",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\scripts\\family.py": "ba5725f5db2553a1f56330f4226cd9ef28331bed514cb9f146f3f7a40e142219",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\scripts\\pop_leak_study.py": "da5ed1281c35ed21ee4ffdf3385efacd5eedf7229a70df761a871b32bd4415f4",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\scripts\\sanity.py": "cbea11cc55950569937ae7fffb83e5d740de2070a649680b2b87efa067975e2b",
+      "theory_campaign\\A-REV5\\sources\\W1-EXP\\scripts\\study_seblk.py": "d8336f511eb843703c25194ebac5b9ae8f3d5ffb1baedce851b95488df14acce"
+    }
+  },
+  "W3-VEXP": {
+    "commit": "7970fa0b00dd07c70d2670d17fcb44ba3748b52a",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\NOTES.md": "fd65fb5cfe1ca36b7a1d3a9f14a39f11bc3914e04b12bf25406e2bfa0ca7ebe1",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\REPAIRS.md": "41fb1f1751a3bd2ef82b7ee656ba791d7666a04316d83b201e2f3f022c3853e7",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\REPORT.md": "6c8ed5b9e42744afbbe40349776a01acdeb3a1d38b97b50cc50097e4b6c2b4f1",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\dilution_ceiling_n200.txt": "1a618d8d90bd2eeb2b1dbb2781abe458a820bbd8a50879d036f10bc7b398219f",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\dilution_ceiling_n400.txt": "3913af43f5e9ce3f9fc7b55a1c782bc4ec394653e4a91bb31175f692611dea0e",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\lh_boundary_Rd.txt": "282678a42726f68d28b9d1deb9010033f97c7897ff8c037cef4c268ba0bbab6c",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\lh_gram.json": "e487b88e70d74f7e6fb6714bcd22ae082c7c0e81406806188a067d9c938d8487",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\lh_gram.txt": "97fb5fca0b2f256b96025928b986051a0384bd8783099799f9103ee5598b7b27",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\lh_iid.json": "a5edccd0b5466599632fd07a9d3f3360893131646c6a31c653019577c2d0d132",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\lh_iid.txt": "f87327c7c28e4b28de836d5cbe11544d75171fa7bf379044aa2e2dbb7421e17e",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\lh_more_B.txt": "d315be7d411403232bead5263a599f608374ab1c27c9d183044844368ce9d50f",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\lh_more_G.txt": "8f5fca70572ab225d3aa401db67b388d02cef6354e33c6b2352de99e9db414da",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\lh_more_L.txt": "ecbac5d7f4d207b81fabba56d57ebfe1d3b39a51eb118b63e3699e678d2adda8",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\lh_more_P.txt": "2f34bf6d434ba6ff77ec3bbc35691faf1e8a9f1447ee0cbe06256a0c09f930e5",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\sanity.txt": "45f0740c3f347333daa0904da58595519769fc89d8323cb0e1f1ae33a7e9812b",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\study_check.json": "824ad0a216f5469181421caf4b368f0bdb14496850de9eb214f80b0a025582c8",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\study_check.txt": "8b2b63f6aa0d86088646edd80f039b546bc195da72fe6248c49c60c0cd9a2196",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\study_exp.txt": "fcf2aa7c4e9fb633b6744ef83159ac850793852d21c63683e00158262414dbc4",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\study_exp_1_2_3_4_5_6.json": "2559a1ed8b5a64c9535ecad9057157b524717f4924fc0f20406692382da3b785",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\study_exp_3.json": "2d20ff3e7010da289ac50743b0b87b55089f54fd59f7aed61e9f965b97af1967",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\study_exp_3_n1600_c1.0_4.0.json": "57ab6a7a37fd1bfa80491d60bc36df3a53661e3bd5db36d0a94159f2432978a0",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\study_exp_3_n200_c1.0_4.0.json": "d34fb535d5ee327d4958f2d58c02170f73477f1b289996cf95357d11b4416210",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\study_exp_3_n400_c1.0_4.0.json": "012c4c21c76f852702fc7ed92c19147f8384784d3f13dc42111ca285b3eb6870",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\study_exp_3_n800_c1.0_4.0.json": "649e78575d3e4620e821c2906f27aa212979291576f5f59de651d1fab7a5c705",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\results\\study_nsweep_S3.txt": "836eef9c64ffe88700f5085aaa363cf31f20e17fdfa4323de7563f136dfbc535",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\scripts\\dilution_ceiling.py": "4e2a81902bc1f994cb70fb9820058b44a6d1f8b583c82a41513f32dd914569d8",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\scripts\\lh_boundary_Rd.py": "7b9b552c7d54b0040529d702c26e9b11f30f2a98dbfec9d7dfd703ec257c0efa",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\scripts\\lh_more.py": "fa313e07cc4c5dc6efd549905b40b7890a16c833c8ce2705e774866c70ef85a1",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\scripts\\lh_repro.py": "d5519d15c110086209c3a2c55ce4c7d7c8efb8c4545ec4541c5b00f558da2c25",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\scripts\\sanity.py": "180b1259a43ed43517e49def290b75ac17a5221d7ccdbdcafa41beb4217b7961",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\scripts\\scen.py": "7b55037ef27e494233195a879fd363df5a8c2485464bf7c85d3a5df472c8bc6e",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\scripts\\study_check.py": "b2a5a8ca0c0bb094fc835c9790858c2ceaa5165629b226f71ac5ced3da44c8f8",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\scripts\\study_exp.py": "5f0778f0199e0e1d568b5d82a8320fbba8301be5ce8c265f703256b389f9b1a1",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\scripts\\summ.py": "a2d4e6179a68be1493ec441bb8e3118fc32c0996d1c700b9effe94ec0e1521df",
+      "theory_campaign\\A-REV5\\sources\\W3-VEXP\\scripts\\vcore.py": "34bcf05a80461701d7d05c4ce170492e5df7434817e6e7e87884cbd6496d8c23"
+    }
+  },
+  "W1-T24G": {
+    "commit": "9e210a3fafbc074cfbbcae18dafc5c8547e81af1",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\BRIEF.md": "ea65ceff4330f8d9f0fcd10aaef76b0f9479a9f3be5f37835d843c05e5697b8e",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\NOTES.md": "405ae0eeea94c186084d1b552547671ec9164d4bb2df2ebb7100cdcda7d9aca8",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\PROOF.md": "cb480207b528fafe19a74379cb24d066675c50fbd70fe76509f2df96aa920499",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\REPORT.md": "3b5a57d7e6f157d3d53f5651ff032d55948354104bb868832337158465df83e6",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\compare_cprime.json": "a8afeea79e0773e7b292d4ce88a23ed7db7fc8b2065c0d4a4d92a00c7797c05f",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\counterexample_H24.json": "2e2591939aa4d9fbdb9cb611fad36d5a2c292c4a60dbc41e964c3142c3fe3ede",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\designs_n200.json": "278dabd7a5303f424336fac2b0f5aafe50ed339de7d72d5b38e1bfd17d34b7df",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\designs_scale_n12800.json": "8cd44c762f456d7d76be4d9d29fd3c4ed5cb808fa8ea9ee18114d7a20d87102a",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\designs_scale_n3200.json": "cc6bdb49e580eee9f24bd6b3a9197368254fcce3230ec8748a0bb40985db535e",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\designs_scale_n800.json": "de4ef4dcb7167a15c2852b27d60cb5a61419dcfac9145d4221ea0dba8727db42",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\distance_one.json": "62201762c33e131fd9d427ad8f6d0e00c049123cb8787322dba5cb726385daba",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\log_cex.txt": "de268598aba1bcd662c69d1198bbd0cbda773551cdefa9ff84c4f52f70f3b703",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\log_cmp.txt": "a8adacf9a614adb18ab3babb51ea0262330c0984fc904cb893428bff89dcb94c",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\log_n12800.txt": "340d4b02ed37c3f44ada4deeb33747c03fcd4a84b207441f8e1541c217e4b3cb",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\log_n200.txt": "6398dc0fb92717fd601f4c6c6e7016eb2162f02438fbc3f9eef5438753d96fa1",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\log_n3200.txt": "575001828a43cef6e92fd20098d50c6a6cb9fe492d5399bc5465e5b18034e87a",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\log_n800.txt": "44b6f1317c6945e25d2d1a7ddf16368e1e4bab1eb4f28ed446b3d3bec2b481c9",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\log_scaling.txt": "1c3819d9e872e8d721ad9c5e5bcc3d35adb0da81ef25ab006c7cc48d1a0b8ed6",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\results\\scaling_reps.json": "83b3b19bbb011476c0e02fca3412fd3557cf39a20258bee7650c9eea0821ff02",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\scripts\\bvs_engine.py": "99eba601e1a2d6bb9802b2f8027f5f3fc7cca2a4b5207939e00aca120142c187",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\scripts\\compare_cprime.py": "2f16156b125c07d1fdd565acc675a186c6c817760988f0ce4fa765651a95f962",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\scripts\\counterexample_H24.py": "1059eb043f15d3128b71a006fc580616036829fcdc528e7f7b4938e155fbc117",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\scripts\\distance_one.py": "29eadb3af0fb293e08485639ef99fd7d8fc90d1359be5b6ac2b9e2afa446c57f",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\scripts\\progress_bounds.py": "49f7d4bc055cf71a0d7a15dcf806c7e99e3c471e916c593f0a1462ee82b215b5",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\scripts\\round_analysis.py": "64a5cd559537e2b4a38a06c398451ea3ca86a136061e803b16f6f817b2a38945",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\scripts\\run_designs.py": "4e7038873dcb5a418821b6ca731c1c882b63424c217269feb63b6b4f5998e5a8",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\scripts\\scaling_reps.py": "4689a1eba8850c58db11afcd4fd55fb68c82ee8afccbe128f53c6c0b5bf7de8d",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\scripts\\scaling_table.py": "439837952d2de8b54e33d68b9e69d0841df8279b94acfdeb88407ce971cf7ec5",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\scripts\\simulate.py": "dd98c88afaf17ca38869009215855764462adfe988b549f6ffd37d458e6569ad",
+      "theory_campaign\\A-REV5\\sources\\W1-T24G\\scripts\\sweep_bounds.py": "fde1b91e946162fb10492c1fdb39622abcffc4a1c6f3a72e20a839a1ad0f6312"
+    }
+  },
+  "W2-VT24G": {
+    "commit": "dba6ff4c12e0510c5a48bf733b1623834aa21c64",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\NOTES.md": "245b7abf2c9bf1227b68c6661fabea86bce60a13219be9ef71254f53767034dd",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\PROOF.md": "cff2656fb4f9bd3ba442e41a1a319f3a25f9a299680d0b43b8fe4542158b2bdd",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\REPORT.md": "c73b4e541126902672e4888af0c63814de029da6f5d9ed5964cb997ab8362cb0",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\results\\b2_check.json": "c73be58fad8a40f19a7cb2fae67af1b7b7dfea1b00ea665373498c059b76fb86",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\results\\ce1_recheck.json": "18ce4cf2e437f07b1ee77a026df9fae4ecddc92a039d605d384d45bd1dc6e433",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\results\\ce1_scaling.json": "1761e2e73b5171f98b38e5581ca861bb050b9867ea618571364bdba169ea8367",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\results\\ce2_check.json": "8f0211a8f1334fdacade601b21e73bcdb3a5537e53b786bc56a11ebc4b88ec2d",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\results\\log_ce1.txt": "8c2de176de6e73be0624115999b8305c943202389f08cfc1ed87e2bf636d5814",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\results\\log_ce1_scaling.txt": "ef227965a9f21bf0bda1b8329c955df087b2887ab03a68fe3cb9231590d76b08",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\results\\log_p1.txt": "281e86a4efdbed99ac9640faaf15fc8946bfe6b7894a7c5d5f3d18214a71a7fa",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\results\\nl0_inflation.json": "ad1830d2eeb0cdba10b59c45d26f76b0ba4142524963a77aeaa80dbc815f2dfa",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\results\\p1_repair.json": "d40534b288d8001c57c01a841c8fa88d2ef529f7097e3baf6df440829754118b",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\results\\validate_engine.json": "09ba5c069bc646fef8ae0cc8c7753fcfd1d7c518309eebf97627d067738b8b22",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\scripts\\b2_check.py": "273361f1d6020ed67b20bf3a8f58aa10671eb0b81b9cc0a23869f7bb208596bf",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\scripts\\ce1_recheck.py": "122a7f58676e19edbb75a4d102209f9373ce6e04d36f43c9b18bfe6569a89bfe",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\scripts\\ce1_scaling.py": "58e020aee7efd3dae9e09b76d16a7b6c00b0dd5b0ce049a04c37ddc692cbf839",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\scripts\\ce2_check.py": "f82cd2154c4c2594f7d58ebee0f27243b4294b4eec6d7a935259232c722ad72c",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\scripts\\exact_laws.py": "ef5f5b042b8570d7f314ea35520a41de3dbd98ed58be1a00e5c94f6f6937e220",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\scripts\\nl0_inflation.py": "7e523d1d9ffdf004c1bb6c7079e14220d71ea952a1ce7b39648d9a67ddd0ed67",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\scripts\\p1_and_repair.py": "e78f178dc3515f3343f998d829fe76ad805f54bfffafba84a48fd8635dba0b3e",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\scripts\\ref_engine.py": "09cdfbc17c9d9c136153f647f7c7f0e19ed70204616e323eb578a7c21513fe70",
+      "theory_campaign\\A-REV5\\sources\\W2-VT24G\\scripts\\validate_engine.py": "a837c930a1fba19c51b0c4b29e7c0e8d7b65cd9c750b7fc9c1a41d0768e0f55e"
+    }
+  },
+  "W1-T38E": {
+    "commit": "436a7125ace4853eb9d2507513f53db9c47b3825",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W1-T38E\\BRIEF.md": "20703795b3946d446512cc86f35bc5dbc18d999f4d8cfbf8af72904e526b39b3",
+      "theory_campaign\\A-REV5\\sources\\W1-T38E\\PROOF.md": "74f9153b25f1e294fff703a4436d710f6f02327811bbe689db49710ff5a079be",
+      "theory_campaign\\A-REV5\\sources\\W1-T38E\\REPORT.md": "c847720343914b27271685f2da88612a3e10b3ccbb941dcaad9413da980e2509",
+      "theory_campaign\\A-REV5\\sources\\W1-T38E\\scripts\\cf_extra.py": "5ba49d46d0d9f46f023f98ef6a49f475b826050a3bb37a7ee2a9ba7c57b1c40a",
+      "theory_campaign\\A-REV5\\sources\\W1-T38E\\scripts\\cf_family.py": "ead71607b31c73cd88ef1f7ce1eab10e33e7aa2f7fe40213b55cc53cfe8edca9",
+      "theory_campaign\\A-REV5\\sources\\W1-T38E\\scripts\\gp_fail_probe.py": "89398da0bf24e8f11a6c9637fa3f4efd08fdff47553295be14c3c4a2bc39f499",
+      "theory_campaign\\A-REV5\\sources\\W1-T38E\\scripts\\share_lemma_check.py": "88bdd52ce6f635a1202a044d6ae8b4b5ba71c7428019104dfdef1d97eb67dc02",
+      "theory_campaign\\A-REV5\\sources\\W1-T38E\\scripts\\toys_C0_C1.py": "6e2d44669e9d8dc3dee15bc183b3e4c57f33d41d35ff12d8ed7ae6862adf56c3"
+    }
+  },
+  "W3-VT38E": {
+    "commit": "3e4b732aff517140a124ac1f380410ee95a0d705",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\NOTES.md": "32efc0cdd398057f91d0341a6e07f73dcf0d5fab77fb48d8032555265fcddee7",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\REPORT.md": "725e7a952e9a4ca7692966b6c00aae5882367727735d477ca5c0f41ceb0ff531",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\scripts\\cfi.py": "bcb029845544402f44e54ea0e60a1419574e2426a5147dbf625a91282feed4a3",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\scripts\\v1_share_ess.py": "2d702a0a7d79dbec764f00d1d57e0e1ec52c53d594698852eb6eae92034c5a66",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\scripts\\v1_share_ess.txt": "56a1edd2385765405662538dbf8b7867fead218115acad2e1c44b6aee6aa645c",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\scripts\\v2_toys_C0_C1.py": "4f12eee36d3228df4d834da13c32296826c2abc261033617acb4c66bedb89ddf",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\scripts\\v2_toys_C0_C1.txt": "b4a59f9457ae37912760fd80b05698648120ba647c35130ee7d1bdb1fa159492",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\scripts\\v3_cf_checks.py": "9101726cc150eb0139e30774fb0957543a109258bb59f22e70761385997ad58a",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\scripts\\v3_cf_checks.txt": "4a0c7efa904c6bdf79e9a41e36f56e6548a1c9590c95dbbc0efed61e60b6b1a5",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\scripts\\v4_d2_pilot.py": "ffc7a076f2c21f98454f40fc9b7d0067a384e6b7ed40591443fe828c7557fa97",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\scripts\\v4_d2_pilot.txt": "62e01a2f0ade1459d8a0e4545517117c69d51568081806450dfdf8dca84d737e",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\scripts\\v5_d2_round_prob.py": "6b7953c5b7560cb6f903625cf332741c58a18fc8033c4783134c3b9789c6d677",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\scripts\\v5_d2_round_prob.txt": "d6b9aa887516ad6ffe1dc9c3c4f2fc392ad52e3c80e86125cd5eb97c705a0747",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\scripts\\v6_lemmaB_enum.py": "ac1907190f1393f1af3388b551fee7737ceb1346b08e8331f9ee54fad919013f",
+      "theory_campaign\\A-REV5\\sources\\W3-VT38E\\scripts\\v6_lemmaB_enum.txt": "63051ed0c362087a815b9822db4ad9f04b8559fce072e6df7edb2ac85ddf88db"
+    }
+  },
+  "W2-PREM": {
+    "commit": "988c5f55c0fb0fbd6050b6a4d0c75f14159716e3",
+    "files": {
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\NOTES.md": "83a018905018a557e6563ae819f36642af451628f634323b53bbfe3fa4778a66",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\PROOF.md": "f65eb3d6a5d7f884331c0d9188c41e2c646f006c32e70646c7cba72b05e671d3",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\REPORT.md": "d4acdba5bc6a342655a0099170fd4615a5ce67c2679aa438afecbc02e323670e",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\results\\ind_streams.txt": "97a70a683b46864da7cafe2e3d25e8647d394adc1711a694c192f739528b6889",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\results\\lemma_u_check.txt": "95d7a250e2c12d6a10a2dd29f10fe4dcb03594c5fce67ba144265c445e45bbae",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\results\\lh_fs_gap.txt": "f25fd6a581cf6d85cdefccdb7378937ae17fcaf03b7f815640bca7aa39692e2a",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\results\\lh_premises_all.json": "c6e4ff61fe1d31cc88c71c174c826459710a9d1ab7032f4e9fb5a6c30c36853b",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\results\\lh_premises_all.txt": "b08a1e60f8f9461f60e97b79df31e29ad0b3a693552ad87bc26e7d39b16bbe7f",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\results\\lh_premises_stdout.txt": "c247d0f771830fde727fc1e7345fcb8d36353f182abaa41fb8a4ee8e6aa0b15c",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\results\\lh_table.md": "b0c6929048877f8c729796d790856339f4095112dd79d4ef7606dba990cfa8f0",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\results\\nl0_equicorr.txt": "1062a3172065cf32e27b3864486fb5898c499299a71896d39ed18cf3759babea",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\results\\nl0_equicorr_stdout.txt": "64ce5b7aff6a60c6c5d95db30f38ca969d2584e68f17848e7ffc0c21c55eb12b",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\results\\ts_cancel.txt": "f59d63fd914902cc392eaba5674003bc6de58f46c58f33414a37b0b684698b83",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\scripts\\bvs_score.py": "5bc29f442c4f82c4a477d4b116df113a401ec94ef6cef5500f44bcb3a9dbdea8",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\scripts\\ind_streams.py": "7e5feb1291ce5de4a4681b6918e0dcefcaa240fc4647f6b383dd0897217a3039",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\scripts\\lemma_u_check.py": "0f40fceb1ad738b5c977afed918822dfe4059ac27b10d03618e2c002d1793602",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\scripts\\lh_fs_gap.py": "76f60a23cd3bccdd7126da3a1b6b0c7c1800b42d5ae8ae3c6d8d509a112225dc",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\scripts\\lh_premises.py": "f45e8f4357e2039763146737b4844264c2729ea12bb8c91a8ac5ddf48444110f",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\scripts\\lh_table.py": "6c3a8c2dd03bf862bcddef4eba9d9aaaa4eef759673455678d3c2601405c8dbe",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\scripts\\nl0_equicorr.py": "63ebc4343fcb5d444fc7ba83e6a8d3f80d699696c6ca66d95247c7a4f56656a4",
+      "theory_campaign\\A-REV5\\sources\\W2-PREM\\scripts\\ts_cancel.py": "d594ebcaa94be85818a46bf5331c150135f865ec735592215b40212cb413d28c"
+    }
+  }
+}

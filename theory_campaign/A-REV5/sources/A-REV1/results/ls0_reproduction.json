@@ -1,0 +1,33 @@
+{
+  "n": 400,
+  "p": 89,
+  "B": 9,
+  "seed": 1,
+  "ell": 9,
+  "centre": [
+    1
+  ],
+  "centre_mass": 0.8521410347141298,
+  "path": [
+    [
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      1,
+      2,
+      3
+    ]
+  ],
+  "truth": [
+    1,
+    2,
+    3
+  ],
+  "truth_scored": true,
+  "scored_models": 610,
+  "termination": "no_improvement"
+}

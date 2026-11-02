@@ -1,0 +1,9 @@
+lambda_min(Sigma) = 0.24178230065021242  bound (1-psi)(1-rho) = 0.15000000000000002
+v_empty = 5.71  predicted Mstat law (gram): 0.504 + chi2_1/(2v)
+{"n": 100, "Mstat": [0.247, 0.35, 0.664], "sqrtn_1mpi0Sdeg_med": 1.717, "pi0R0_med": 0.8426, "piS0_med": 0.7188, "maxR_max": 1.032, "maxR_med": 0.662, "kappa_med": 28.15, "t22_ok": "300/300", "blocks_eq_groups": "300/300", "med_log10_pi0S0": -2.052}
+{"n": 400, "Mstat": [0.417, 0.467, 0.739], "sqrtn_1mpi0Sdeg_med": 1.598, "pi0R0_med": 0.9256, "piS0_med": 0.8278, "maxR_max": 0.846, "maxR_med": 0.672, "kappa_med": 27.57, "t22_ok": "300/300", "blocks_eq_groups": "300/300", "med_log10_pi0S0": -2.302}
+{"n": 1600, "Mstat": [0.463, 0.502, 0.889], "sqrtn_1mpi0Sdeg_med": 1.616, "pi0R0_med": 0.9623, "piS0_med": 0.9195, "maxR_max": 0.769, "maxR_med": 0.672, "kappa_med": 27.43, "t22_ok": "300/300", "blocks_eq_groups": "300/300", "med_log10_pi0S0": -2.588}
+{"n": 6400, "Mstat": [0.484, 0.516, 0.861], "sqrtn_1mpi0Sdeg_med": 1.6, "pi0R0_med": 0.9813, "piS0_med": 0.9564, "maxR_max": 0.714, "maxR_med": 0.668, "kappa_med": 27.39, "t22_ok": "300/300", "blocks_eq_groups": "300/300", "med_log10_pi0S0": -2.883}
+{"n": 25600, "Mstat": [0.494, 0.534, 0.825], "sqrtn_1mpi0Sdeg_med": 1.631, "pi0R0_med": 0.9905, "piS0_med": 0.98, "maxR_max": 0.688, "maxR_med": 0.668, "kappa_med": 27.38, "t22_ok": "300/300", "blocks_eq_groups": "300/300", "med_log10_pi0S0": -3.176}
+{"n": 102400, "Mstat": [0.499, 0.537, 0.801], "sqrtn_1mpi0Sdeg_med": 1.619, "pi0R0_med": 0.9953, "piS0_med": 0.988, "maxR_max": 0.679, "maxR_med": 0.669, "kappa_med": 27.38, "t22_ok": "300/300", "blocks_eq_groups": "300/300", "med_log10_pi0S0": -3.476}
+predicted Mstat quantiles (5/50/95): [0.504 0.544 0.837]

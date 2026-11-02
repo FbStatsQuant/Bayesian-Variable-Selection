@@ -1,0 +1,10 @@
+(a) Lemma S: min(share - bound) over 300000 adversarial-subset cases = -1.465e-14 (>= -1e-12 required)
+    tight case f=0.20 e=0.90: ESS/H=0.900000 share=0.066667 bound=0.066667
+    tight case f=0.50 e=0.90: ESS/H=0.900000 share=0.333333 bound=0.333333
+    tight case f=0.90 e=0.90: ESS/H=0.900000 share=0.800000 bound=0.800000
+    tight case f=0.30 e=0.50: ESS/H=0.500000 share=-0.158258 bound=-0.158258
+(b) g(0.1)=-1.388e-17; min diff of g on grid=2.500e-06 (>0 => increasing); g(0.0999)=-0.0001
+(c) ESS non-increasing in phi: violations in 2000 random d vectors = 0
+(d) 4r/(1+r)^2 at r=1.925: 0.89999269  (< 0.9!)
+    exact root r* of 4r/(1+r)^2 = 0.9: 1.92495059 ; log r* = 0.65490030 vs log 1.925 = 0.65492597
+    two-level weights {1, 1.925}: min ESS/H = 0.89999270 at fraction 0.3420 of the high weight -> threshold 0.9H missed

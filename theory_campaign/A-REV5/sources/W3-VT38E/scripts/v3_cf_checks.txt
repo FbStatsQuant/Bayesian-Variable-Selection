@@ -1,0 +1,214 @@
+== CF(c=1) n=400 p=89 B=9 K=89 [W1 design (cf_family.build, seed 0)]
+lambda_min(full corr) = 0.0243 ; truth blocks pure: True ; J = 11
+pi0(S0) = 6.689e-04 ; pi0(S^(0)={1}) = 0.9278 ; pi0(R_d), d=0..3: [0.92845 0.99615 0.99982 0.99999] ; start mode = (1,) (pi0 = 0.9278)
+ell=9 L=9 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.000, tier1 0.000
+LS0 from start mode: path [(1,), (1, 2)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=42.19 kappa_n(d)=8.18 ; F(S0 u top1 nulls)-F(S~0)=38.77 ; E1 bound check F(S0uP)-F(S0)=-3.42 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=42.19 kappa_n(d)=16.36 ; F(S0 u top2 nulls)-F(S~0)=35.16 ; E1 bound check F(S0uP)-F(S0)=-7.03 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=42.19 kappa_n(d)=24.54 ; F(S0 u top3 nulls)-F(S~0)=31.77 ; E1 bound check F(S0uP)-F(S0)=-10.42 >= -kappa: True
+TD(0,0) [T37 wording]: states=4 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=352 failures=248 ; states with a missing truth AND an extra: 261, of which fail 248 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 174 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+== CF(c=1) n=1600 p=252 B=15 K=252 [W1 design (cf_family.build, seed 0)]
+lambda_min(full corr) = 0.0150 ; truth blocks pure: True ; J = 18
+pi0(S0) = 9.606e-05 ; pi0(S^(0)={1}) = 0.9644 ; pi0(R_d), d=0..3: [0.96451 0.99905 0.99998 1.     ] ; start mode = (1,) (pi0 = 0.9644)
+ell=11 L=11 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.000, tier1 0.000
+LS0 from start mode: path [(1,), (1, 2)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=143.01 kappa_n(d)=9.91 ; F(S0 u top1 nulls)-F(S~0)=138.65 ; E1 bound check F(S0uP)-F(S0)=-4.36 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=143.01 kappa_n(d)=19.82 ; F(S0 u top2 nulls)-F(S~0)=134.29 ; E1 bound check F(S0uP)-F(S0)=-8.72 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=143.01 kappa_n(d)=29.74 ; F(S0 u top3 nulls)-F(S~0)=129.75 ; E1 bound check F(S0uP)-F(S0)=-13.26 >= -kappa: True
+TD(0,0) [T37 wording]: states=4 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=1004 failures=728 ; states with a missing truth AND an extra: 750, of which fail 728 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 500 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+== CF(c=2) n=1600 p=252 B=15 K=252 [W1 design (cf_family.build, seed 0)]
+lambda_min(full corr) = 0.0149 ; truth blocks pure: True ; J = 18
+pi0(S0) = 1.503e-08 ; pi0(S^(0)={1}) = 0.9635 ; pi0(R_d), d=0..3: [0.96365 0.99901 0.99998 1.     ] ; start mode = (1,) (pi0 = 0.9635)
+ell=11 L=11 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.858, tier1 0.089
+LS0 from start mode: path [(1,), (1, 3), (1, 2, 3)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=180.29 kappa_n(d)=9.91 ; F(S0 u top1 nulls)-F(S~0)=176.22 ; E1 bound check F(S0uP)-F(S0)=-4.07 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=180.29 kappa_n(d)=19.82 ; F(S0 u top2 nulls)-F(S~0)=172.09 ; E1 bound check F(S0uP)-F(S0)=-8.20 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=180.29 kappa_n(d)=29.74 ; F(S0 u top3 nulls)-F(S~0)=167.74 ; E1 bound check F(S0uP)-F(S0)=-12.55 >= -kappa: True
+TD(0,0) [T37 wording]: states=8 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=2000 failures=1650 ; states with a missing truth AND an extra: 1743, of which fail 1650 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 747 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+== CF(c=1) n=400 p=89 B=9 K=89 [independent design, seed 1]
+lambda_min(full corr) = 0.0243 ; truth blocks pure: True ; J = 11
+pi0(S0) = 2.194e-03 ; pi0(S^(0)={1}) = 0.9133 ; pi0(R_d), d=0..3: [0.91546 0.9946  0.9997  0.99998] ; start mode = (1,) (pi0 = 0.9133)
+ell=9 L=9 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.000, tier1 0.000
+LS0 from start mode: path [(1,), (1, 2)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=35.85 kappa_n(d)=8.18 ; F(S0 u top1 nulls)-F(S~0)=32.51 ; E1 bound check F(S0uP)-F(S0)=-3.34 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=35.85 kappa_n(d)=16.36 ; F(S0 u top2 nulls)-F(S~0)=27.78 ; E1 bound check F(S0uP)-F(S0)=-8.07 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=35.85 kappa_n(d)=24.54 ; F(S0 u top3 nulls)-F(S~0)=23.24 ; E1 bound check F(S0uP)-F(S0)=-12.61 >= -kappa: True
+TD(0,0) [T37 wording]: states=4 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=352 failures=246 ; states with a missing truth AND an extra: 261, of which fail 246 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 174 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+== CF(c=1) n=1600 p=252 B=15 K=252 [independent design, seed 1]
+lambda_min(full corr) = 0.0150 ; truth blocks pure: True ; J = 18
+pi0(S0) = 9.585e-05 ; pi0(S^(0)={1}) = 0.9623 ; pi0(R_d), d=0..3: [0.9624  0.99894 0.99997 1.     ] ; start mode = (1,) (pi0 = 0.9623)
+ell=11 L=11 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.000, tier1 0.000
+LS0 from start mode: path [(1,), (1, 2)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=141.38 kappa_n(d)=9.91 ; F(S0 u top1 nulls)-F(S~0)=137.63 ; E1 bound check F(S0uP)-F(S0)=-3.75 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=141.38 kappa_n(d)=19.82 ; F(S0 u top2 nulls)-F(S~0)=133.95 ; E1 bound check F(S0uP)-F(S0)=-7.43 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=141.38 kappa_n(d)=29.74 ; F(S0 u top3 nulls)-F(S~0)=129.61 ; E1 bound check F(S0uP)-F(S0)=-11.76 >= -kappa: True
+TD(0,0) [T37 wording]: states=4 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=1004 failures=729 ; states with a missing truth AND an extra: 750, of which fail 729 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 500 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+== CF(c=2) n=1600 p=252 B=15 K=252 [independent design, seed 1]
+lambda_min(full corr) = 0.0149 ; truth blocks pure: True ; J = 18
+pi0(S0) = 1.556e-08 ; pi0(S^(0)={1}) = 0.9605 ; pi0(R_d), d=0..3: [0.96065 0.99884 0.99997 1.     ] ; start mode = (1,) (pi0 = 0.9605)
+ell=11 L=11 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.854, tier1 0.082
+LS0 from start mode: path [(1,), (1, 2), (1, 2, 3)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=167.99 kappa_n(d)=9.91 ; F(S0 u top1 nulls)-F(S~0)=164.53 ; E1 bound check F(S0uP)-F(S0)=-3.46 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=167.99 kappa_n(d)=19.82 ; F(S0 u top2 nulls)-F(S~0)=161.07 ; E1 bound check F(S0uP)-F(S0)=-6.91 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=167.99 kappa_n(d)=29.74 ; F(S0 u top3 nulls)-F(S~0)=156.93 ; E1 bound check F(S0uP)-F(S0)=-11.06 >= -kappa: True
+TD(0,0) [T37 wording]: states=8 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=2000 failures=1653 ; states with a missing truth AND an extra: 1743, of which fail 1653 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 747 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+== CF(c=1) n=400 p=89 B=9 K=89 [independent design, seed 2]
+lambda_min(full corr) = 0.0243 ; truth blocks pure: True ; J = 11
+pi0(S0) = 5.682e-04 ; pi0(S^(0)={1}) = 0.9166 ; pi0(R_d), d=0..3: [0.91716 0.99495 0.99973 0.99999] ; start mode = (1,) (pi0 = 0.9166)
+ell=9 L=9 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.000, tier1 0.000
+LS0 from start mode: path [(1,), (1, 2)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=20.85 kappa_n(d)=8.18 ; F(S0 u top1 nulls)-F(S~0)=17.54 ; E1 bound check F(S0uP)-F(S0)=-3.30 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=20.85 kappa_n(d)=16.36 ; F(S0 u top2 nulls)-F(S~0)=14.14 ; E1 bound check F(S0uP)-F(S0)=-6.70 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=20.85 kappa_n(d)=24.54 ; F(S0 u top3 nulls)-F(S~0)=10.70 ; E1 bound check F(S0uP)-F(S0)=-10.14 >= -kappa: True
+TD(0,0) [T37 wording]: states=4 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=352 failures=253 ; states with a missing truth AND an extra: 261, of which fail 253 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 174 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+== CF(c=1) n=1600 p=252 B=15 K=252 [independent design, seed 2]
+lambda_min(full corr) = 0.0150 ; truth blocks pure: True ; J = 18
+pi0(S0) = 2.395e-04 ; pi0(S^(0)={1}) = 0.9615 ; pi0(R_d), d=0..3: [0.9617  0.9989  0.99997 1.     ] ; start mode = (1,) (pi0 = 0.9615)
+ell=11 L=11 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.000, tier1 0.000
+LS0 from start mode: path [(1,), (1, 2)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=109.06 kappa_n(d)=9.91 ; F(S0 u top1 nulls)-F(S~0)=105.24 ; E1 bound check F(S0uP)-F(S0)=-3.82 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=109.06 kappa_n(d)=19.82 ; F(S0 u top2 nulls)-F(S~0)=100.90 ; E1 bound check F(S0uP)-F(S0)=-8.17 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=109.06 kappa_n(d)=29.74 ; F(S0 u top3 nulls)-F(S~0)=96.19 ; E1 bound check F(S0uP)-F(S0)=-12.87 >= -kappa: True
+TD(0,0) [T37 wording]: states=4 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=1004 failures=736 ; states with a missing truth AND an extra: 750, of which fail 736 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 500 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+== CF(c=2) n=1600 p=252 B=15 K=252 [independent design, seed 2]
+lambda_min(full corr) = 0.0149 ; truth blocks pure: True ; J = 18
+pi0(S0) = 4.010e-08 ; pi0(S^(0)={1}) = 0.9598 ; pi0(R_d), d=0..3: [0.96014 0.99881 0.99997 1.     ] ; start mode = (1,) (pi0 = 0.9598)
+ell=11 L=11 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.665, tier1 0.002
+LS0 from start mode: path [(1,), (1, 3), (1, 2, 3)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=144.77 kappa_n(d)=9.91 ; F(S0 u top1 nulls)-F(S~0)=141.24 ; E1 bound check F(S0uP)-F(S0)=-3.53 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=144.77 kappa_n(d)=19.82 ; F(S0 u top2 nulls)-F(S~0)=137.12 ; E1 bound check F(S0uP)-F(S0)=-7.65 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=144.77 kappa_n(d)=29.74 ; F(S0 u top3 nulls)-F(S~0)=132.60 ; E1 bound check F(S0uP)-F(S0)=-12.17 >= -kappa: True
+TD(0,0) [T37 wording]: states=8 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=2000 failures=1656 ; states with a missing truth AND an extra: 1743, of which fail 1656 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 747 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+== CF(c=1) n=400 p=89 B=9 K=89 [independent design, seed 3]
+lambda_min(full corr) = 0.0243 ; truth blocks pure: True ; J = 11
+pi0(S0) = 5.497e-04 ; pi0(S^(0)={1}) = 0.9279 ; pi0(R_d), d=0..3: [0.92842 0.99615 0.99982 0.99999] ; start mode = (1,) (pi0 = 0.9279)
+ell=9 L=9 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.000, tier1 0.000
+LS0 from start mode: path [(1,), (1, 2)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=28.71 kappa_n(d)=8.18 ; F(S0 u top1 nulls)-F(S~0)=25.24 ; E1 bound check F(S0uP)-F(S0)=-3.47 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=28.71 kappa_n(d)=16.36 ; F(S0 u top2 nulls)-F(S~0)=21.09 ; E1 bound check F(S0uP)-F(S0)=-7.62 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=28.71 kappa_n(d)=24.54 ; F(S0 u top3 nulls)-F(S~0)=16.67 ; E1 bound check F(S0uP)-F(S0)=-12.04 >= -kappa: True
+TD(0,0) [T37 wording]: states=4 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=352 failures=251 ; states with a missing truth AND an extra: 261, of which fail 251 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 174 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+== CF(c=1) n=1600 p=252 B=15 K=252 [independent design, seed 3]
+lambda_min(full corr) = 0.0150 ; truth blocks pure: True ; J = 18
+pi0(S0) = 1.247e-04 ; pi0(S^(0)={1}) = 0.9631 ; pi0(R_d), d=0..3: [0.96322 0.99898 0.99998 1.     ] ; start mode = (1,) (pi0 = 0.9631)
+ell=11 L=11 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.000, tier1 0.000
+LS0 from start mode: path [(1,), (1, 2)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=123.11 kappa_n(d)=9.91 ; F(S0 u top1 nulls)-F(S~0)=117.60 ; E1 bound check F(S0uP)-F(S0)=-5.51 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=123.11 kappa_n(d)=19.82 ; F(S0 u top2 nulls)-F(S~0)=111.85 ; E1 bound check F(S0uP)-F(S0)=-11.26 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=123.11 kappa_n(d)=29.74 ; F(S0 u top3 nulls)-F(S~0)=106.33 ; E1 bound check F(S0uP)-F(S0)=-16.78 >= -kappa: True
+TD(0,0) [T37 wording]: states=4 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=1004 failures=732 ; states with a missing truth AND an extra: 750, of which fail 732 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 500 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+== CF(c=2) n=1600 p=252 B=15 K=252 [independent design, seed 3]
+lambda_min(full corr) = 0.0149 ; truth blocks pure: True ; J = 18
+pi0(S0) = 4.373e-08 ; pi0(S^(0)={1}) = 0.9601 ; pi0(R_d), d=0..3: [0.96049 0.99883 0.99997 1.     ] ; start mode = (1,) (pi0 = 0.9601)
+ell=11 L=11 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.641, tier1 0.001
+LS0 from start mode: path [(1,), (1, 2), (1, 2, 3)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=135.68 kappa_n(d)=9.91 ; F(S0 u top1 nulls)-F(S~0)=130.46 ; E1 bound check F(S0uP)-F(S0)=-5.21 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=135.68 kappa_n(d)=19.82 ; F(S0 u top2 nulls)-F(S~0)=124.95 ; E1 bound check F(S0uP)-F(S0)=-10.73 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=135.68 kappa_n(d)=29.74 ; F(S0 u top3 nulls)-F(S~0)=119.61 ; E1 bound check F(S0uP)-F(S0)=-16.07 >= -kappa: True
+TD(0,0) [T37 wording]: states=8 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=2000 failures=1659 ; states with a missing truth AND an extra: 1743, of which fail 1659 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 747 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+== CF(c=2) n=400 p=89 B=9 K=89 [W1 design (cf_family.build, seed 0)]
+lambda_min(full corr) = 0.0241 ; truth blocks pure: True ; J = 11
+pi0(S0) = 5.855e-07 ; pi0(S^(0)={1}) = 0.9257 ; pi0(R_d), d=0..3: [0.92693 0.99593 0.9998  0.99999] ; start mode = (1,) (pi0 = 0.9257)
+ell=9 L=9 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.003, tier1 0.000
+LS0 from start mode: path [(1,), (1, 2), (1, 2, 3)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=44.47 kappa_n(d)=8.18 ; F(S0 u top1 nulls)-F(S~0)=41.34 ; E1 bound check F(S0uP)-F(S0)=-3.13 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=44.47 kappa_n(d)=16.36 ; F(S0 u top2 nulls)-F(S~0)=37.97 ; E1 bound check F(S0uP)-F(S0)=-6.50 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=44.47 kappa_n(d)=24.54 ; F(S0 u top3 nulls)-F(S~0)=34.77 ; E1 bound check F(S0uP)-F(S0)=-9.70 >= -kappa: True
+TD(0,0) [T37 wording]: states=8 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=696 failures=549 ; states with a missing truth AND an extra: 602, of which fail 549 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 258 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(2,0) [T37 wording]: states=29936 failures=26019 ; states with a missing truth AND an extra: 26187, of which fail 26018 ; failures of other types: 1 [(1, 2, 3, 25, 26)]
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 258 states; TD fails at all of them: True
+GP(2): failures=4 ; of which the production local search from that centre still scores S0: 4
+== CF(c=2) n=400 p=89 B=9 K=89 [independent design, seed 1]
+lambda_min(full corr) = 0.0241 ; truth blocks pure: True ; J = 11
+pi0(S0) = 3.521e-06 ; pi0(S^(0)={1}) = 0.8521 ; pi0(R_d), d=0..3: [0.85533 0.98821 0.99922 0.99995] ; start mode = (1,) (pi0 = 0.8521)
+ell=9 L=9 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.000, tier1 0.000
+LS0 from start mode: path [(1,), (1, 2), (1, 2, 3)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=35.43 kappa_n(d)=8.18 ; F(S0 u top1 nulls)-F(S~0)=32.39 ; E1 bound check F(S0uP)-F(S0)=-3.04 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=35.43 kappa_n(d)=16.36 ; F(S0 u top2 nulls)-F(S~0)=27.89 ; E1 bound check F(S0uP)-F(S0)=-7.54 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=35.43 kappa_n(d)=24.54 ; F(S0 u top3 nulls)-F(S~0)=23.55 ; E1 bound check F(S0uP)-F(S0)=-11.89 >= -kappa: True
+TD(0,0) [T37 wording]: states=8 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=696 failures=545 ; states with a missing truth AND an extra: 602, of which fail 545 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 258 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(2,0) [T37 wording]: states=29936 failures=26003 ; states with a missing truth AND an extra: 26187, of which fail 26003 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 258 states; TD fails at all of them: True
+GP(2): failures=149 ; of which the production local search from that centre still scores S0: 149
+== CF(c=2) n=400 p=89 B=9 K=89 [independent design, seed 2]
+lambda_min(full corr) = 0.0241 ; truth blocks pure: True ; J = 11
+pi0(S0) = 7.286e-07 ; pi0(S^(0)={1}) = 0.9110 ; pi0(R_d), d=0..3: [0.91237 0.99429 0.99968 0.99998] ; start mode = (1,) (pi0 = 0.9110)
+ell=9 L=9 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.001, tier1 0.000
+LS0 from start mode: path [(1,), (1, 2), (1, 2, 3)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=17.23 kappa_n(d)=8.18 ; F(S0 u top1 nulls)-F(S~0)=14.23 ; E1 bound check F(S0uP)-F(S0)=-3.00 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=17.23 kappa_n(d)=16.36 ; F(S0 u top2 nulls)-F(S~0)=11.07 ; E1 bound check F(S0uP)-F(S0)=-6.16 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=17.23 kappa_n(d)=24.54 ; F(S0 u top3 nulls)-F(S~0)=7.83 ; E1 bound check F(S0uP)-F(S0)=-9.40 >= -kappa: True
+TD(0,0) [T37 wording]: states=8 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=696 failures=554 ; states with a missing truth AND an extra: 602, of which fail 554 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 258 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0
+== CF(c=2) n=400 p=89 B=9 K=89 [independent design, seed 3]
+lambda_min(full corr) = 0.0241 ; truth blocks pure: True ; J = 11
+pi0(S0) = 5.797e-07 ; pi0(S^(0)={1}) = 0.9260 ; pi0(R_d), d=0..3: [0.92719 0.99599 0.9998  0.99999] ; start mode = (1,) (pi0 = 0.9260)
+ell=9 L=9 N0=2500 T0=1000 ; final-run iid miss (1-pi0(S0))^Qmax: tier0 0.003, tier1 0.000
+LS0 from start mode: path [(1,), (1, 3), (1, 2, 3)] ; S0 scored: True ; termination no_improvement
+E1 d=0: F(S0)-F(S~0)=33.84 kappa_n(d)=8.18 ; F(S0 u top1 nulls)-F(S~0)=30.66 ; E1 bound check F(S0uP)-F(S0)=-3.17 >= -kappa: True
+E1 d=1: F(S0)-F(S~0)=33.84 kappa_n(d)=16.36 ; F(S0 u top2 nulls)-F(S~0)=26.75 ; E1 bound check F(S0uP)-F(S0)=-7.09 >= -kappa: True
+E1 d=2: F(S0)-F(S~0)=33.84 kappa_n(d)=24.54 ; F(S0 u top3 nulls)-F(S~0)=22.51 ; E1 bound check F(S0uP)-F(S0)=-11.32 >= -kappa: True
+TD(0,0) [T37 wording]: states=8 failures=0 ; states with a missing truth AND an extra: 0, of which fail 0 ; failures of other types: 0 []
+GP(0): failures=0 ; of which the production local search from that centre still scores S0: 0
+TD(1,0) [T37 wording]: states=696 failures=552 ; states with a missing truth AND an extra: 602, of which fail 552 ; failures of other types: 0 []
+   structural lemma at S=(S0-j)+l: F(S0)>F(S0+l) holds at 258 states; TD fails at all of them: True
+GP(1): failures=0 ; of which the production local search from that centre still scores S0: 0

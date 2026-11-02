@@ -1,0 +1,15 @@
+Part 1: Lemma E1 (a) exact identity + (b),(c),(d) inequalities checked on 2779 (p,n,s0) triples, all m in [s0,K]: PASS
+   max R_m/ub(b) = 0.9983 (<=1 required);  max lb(c)/R_m = 1.0000 (<=1);  max ub*4 s0! e^gam/old = 1.0000 (<=1)
+Part 2: Lemma E2 (i)-(iii) on 129 (n,p,s0) cases with exact thresholds: PASS
+Part 3: threshold table, s0 = 14 (exact rational decisions)
+   n         p             K         m_old  m_sharp  m_sharp_uncapped  saving  log2(14!)=36.3
+   200       500           100       201    100      146               101
+   200       1000          100       215    100      168               115
+   1000      500           500       220    161      161               59
+   1000      1000          500       234    184      184               50
+   10000     1000          1000      260    207      207               53
+   1000000   1000          1000      313    251      251               62
+   10000     49177         5000      339    302      302               37
+   1000000   10905352      500000    501    465      465               36
+   100000000 26922274761   50000000  712    676      676               36
+Part 4: p = round(n^(log500/log200)): first n with m_sharp < K: 342;  first n with m_old < K: 464

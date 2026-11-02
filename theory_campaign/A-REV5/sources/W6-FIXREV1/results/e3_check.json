@@ -1,0 +1,28 @@
+{
+ "partA": {
+  "n": 20,
+  "p": 2,
+  "K": 2,
+  "r1": 0.22360679774997905,
+  "r2": 1935517816213.3362,
+  "q": 1935517816213.3362,
+  "e": 17.88854381999831,
+  "unrestricted_formula": 1.983334052945382e+23,
+  "pi0_ref": 9.441607620478008e-14,
+  "start_mode": [
+   2
+  ],
+  "x1_dot_x2": 1.5543122344752192e-15
+ },
+ "partB": {
+  "instances": 300,
+  "refs": 4146,
+  "q_lt_1": 2051,
+  "ia_viol": 0,
+  "ia_tail_viol": 0,
+  "q_ge_1": 2095,
+  "q_ge_1_formula_exceeds_mass": 864,
+  "q_ge_1_formula_gt_half_mass_le_half": 726,
+  "worst_ia_ratio": 1.00011035731223
+ }
+}

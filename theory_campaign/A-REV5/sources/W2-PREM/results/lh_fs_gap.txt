@@ -1,0 +1,5 @@
+c0=1e-09: D' = max #substitutes = 4; min loss over neighbours of the removed truth = 0.1682; substitute types (truth, l or group) = [(12, 4), (4, 'C3'), (4, 12)]
+c0=0.01: D' = max #substitutes = 4; min loss over neighbours of the removed truth = 0.1682; substitute types (truth, l or group) = [(12, 4), (4, 'C3'), (4, 12)]
+c0=0.05: D' = max #substitutes = 4; min loss over neighbours of the removed truth = 0.1682; substitute types (truth, l or group) = [(12, 4), (4, 'C3'), (4, 12)]
+c0=0.1: D' = max #substitutes = 4; min loss over neighbours of the removed truth = 0.1682; substitute types (truth, l or group) = [(0, 12), (12, 4), (4, 'C3'), (4, 12)]
+ULR min loss = 0.0137; TS min loss = 0.1682; phase-1 states = 6112

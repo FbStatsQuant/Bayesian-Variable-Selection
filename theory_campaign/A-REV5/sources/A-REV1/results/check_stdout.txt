@@ -1,0 +1,113 @@
+{
+  "seed": 20261102,
+  "ess": {
+    "cases": 2000,
+    "worst_slack": -3.7192471324942744e-15,
+    "rstar": 1.924950591148529,
+    "old_ratio": 1.925,
+    "old_ratio_ess": 0.8999926948644906,
+    "corrected_ratio_ess": 0.8999999999999998,
+    "f_005_lower": -0.022648315725677895,
+    "invalid_low_weight": -0.4529663145135579,
+    "valid_tight_slack": -2.7755575615628914e-17
+  },
+  "streams": {
+    "enumerated_streams": 256,
+    "independence_residual": 0.0,
+    "completion_counterexample": "Independent fair bits conditioned equal: P(00|equal)=1/2, product marginals=1/4"
+  },
+  "lemma_u": {
+    "rows": [
+      {
+        "n": 200,
+        "pairs": 232,
+        "max_abs_remainder": 0.6165656527988901,
+        "kappa": 18.724394267115976
+      },
+      {
+        "n": 800,
+        "pairs": 232,
+        "max_abs_remainder": 0.6324325800258066,
+        "kappa": 18.504616865216096
+      }
+    ],
+    "correct_limit": 18.4314,
+    "printed_limit": 18.7928
+  },
+  "ce1": [
+    {
+      "n": 200,
+      "proxy_add_probability": 0.9999999999999996,
+      "first_change_exit": 0.15250558075966286,
+      "lemma_E_lower": 0.1428571428571428
+    },
+    {
+      "n": 800,
+      "proxy_add_probability": 1.0,
+      "first_change_exit": 0.15057788679814746,
+      "lemma_E_lower": 0.14285714285714285
+    }
+  ],
+  "e3": {
+    "n": 20,
+    "p": 2,
+    "B": 1,
+    "reference": "{1}",
+    "y": "x_2",
+    "q": 1935517816213.2673,
+    "e": 17.88854381999831,
+    "false_lower_bound": 1.9833340529452415e+23,
+    "true_reference_mass": 9.441607620478356e-14,
+    "actual_start_mode_mask": 2,
+    "final_scan_scores_truth_at_zero_moves": true
+  },
+  "rounds": {
+    "p": 4,
+    "labels": 8,
+    "permutations": 40320,
+    "p1": [
+      {
+        "start": 4,
+        "a1": 0.2762920083968086,
+        "exact_round_hit": 0.9751457005193596
+      },
+      {
+        "start": 7,
+        "a1": 0.49696550117423366,
+        "exact_round_hit": 0.9881757269876155
+      },
+      {
+        "start": 1,
+        "a1": 0.33186257402204705,
+        "exact_round_hit": 0.9765278886236125
+      },
+      {
+        "start": 13,
+        "a1": 0.4742539199645638,
+        "exact_round_hit": 0.9870174079586963
+      }
+    ],
+    "theorem_B_cases": 45,
+    "nonvacuous_cases": 12,
+    "worst_lhs_minus_rhs": -0.3878608625176096,
+    "d2_dep": 0.02794295796422361,
+    "d2_round": [
+      {
+        "phi": 0.0,
+        "exact_hit": 0.978331773075167,
+        "beta": 0.16200950700596273
+      },
+      {
+        "phi": 0.3,
+        "exact_hit": 0.9771364003168621,
+        "beta": 0.16200950700596273
+      },
+      {
+        "phi": 1.0,
+        "exact_hit": 0.9765278886236125,
+        "beta": 0.16200950700596273
+      }
+    ],
+    "detailed_balance_residual": 2.345346139520643e-15
+  }
+}
