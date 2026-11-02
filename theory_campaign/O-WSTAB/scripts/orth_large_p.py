@@ -57,7 +57,7 @@ def run(n, p, theta, sigma=1.0, K0=20000, w=2.0):
     ok = XE < 1 - s
     ii = np.arange(K0, dtype=float)
     logprior = np.cumsum(np.log((s0 + ii + 1) / (2.0 * p - 1 - s0 - ii)))   # log w(s0+k)/w(s0), no cancellation
-    logratio = logprior - 0.5 * k * math.log(n) + w * nu * (g(s + XE) - g(s)) - (w - 1) * nu * np.cumsum(g(xtop))
+    logratio = logprior - 0.5 * k * math.log(n) + w * nu * g(XE / (1 - s)) - (w - 1) * nu * np.cumsum(g(xtop))
     logratio[~ok] = -np.inf
     i = int(np.argmax(logratio))
     LB = float(np.logaddexp(0, logratio[i]))
