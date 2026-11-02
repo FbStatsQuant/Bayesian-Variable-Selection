@@ -159,7 +159,9 @@ odds_l(W) := γ₁(W∪l)/γ₁(W∖l), so o_l(W) = odds/(1+odds).
 
 - **(C1) Gibbs odds.** log odds_l(W) = log[(k′+1)/(2p−k′−1)] − ½log(n+1) + ν log(1 + q/RSS_{W∪l}) + R,
   q := (δ + σZ)², δ = δ_{W∖l,l}, Z = Z_{W∖l,l}.
-- **(C2) Floor.** odds_l(W) ≥ (2p)⁻¹(n+1)^{−1/2}e^{−κ_n} always (log(1+t) ≥ 0, (k′+1)/(2p−k′−1) ≥ 1/(2p)).
+- **(C2) Floor.** odds_l(W) ≥ (2p)⁻¹(n+1)^{−1/2}e^{−κ_n} on E_n (log(1+t) ≥ 0, (k′+1)/(2p−k′−1) ≥ 1/(2p)). The locked
+  T10 gives the sharper *deterministic* floor odds_l(W) ≥ (k′+1)/((2p−k′−1)√(n+1)) for every data set; every use of
+  (C2) below may cite T10 instead (removing e^{−κ_n}).
 - **(C3) Zero-leakage ceiling.** If δ = 0 (e.g. W ⊇ S₀ and l ∉ S₀), then
   odds_l(W) ≤ [(k′+1)/(2p−k′−1)](n+1)^{−1/2} e^{κ_n + ϑ′_n} e^{Z²/2}, ϑ′_n := L log n·(ϑ_n + 3/n)/(1−ϑ_n) → 0.
   *Proof.* ν log(1 + σ²Z²/RSS) ≤ νσ²Z²/RSS ≤ Z²(n/2 + 0.01)/((n−1)(1−ϑ_n)) ≤ ½Z²(1 + ϑ_n + 3/n)/(1−ϑ_n) by (E2),
