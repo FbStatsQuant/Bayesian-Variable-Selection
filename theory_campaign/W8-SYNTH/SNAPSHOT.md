@@ -13,7 +13,7 @@
 | theory/F-REFINE | db708ca | 2026-11-02T12:34:10-06:00 |
 | theory/F-SHARE | 13bc665 | 2026-11-02T14:06:37-06:00 |
 | theory/F-SIGMA | e2a3481 | 2026-11-02T13:54:12-06:00 |
-| theory/L-LEAN | 42f9de0 | 2026-11-02T14:13:54-06:00 |
+| theory/L-LEAN | d9c2f2c | 2026-11-02T14:18-06:00 (refetched; Fable fidelity GREEN, STATUS.md, DECL_STATUS.md) |
 | theory/O-BGIBBS | 55679ee | 2026-11-02T13:54:16-06:00 |
 | theory/O-CERT | 17e7f15 | 2026-11-02T13:16:47-06:00 |
 | theory/O-DILUTE | abedf99 | 2026-11-02T13:57:18-06:00 |
@@ -51,9 +51,9 @@
 | theory/W5-VPGD | c214ca9 | 2026-11-02T19:56:11+00:00 |
 | theory/W6-FIXREV1 | a7833f3 | 2026-11-02T19:06:36+00:00 |
 | theory/W6-FIXREV2 | be2d456 | 2026-11-02T19:07:35+00:00 |
-| theory/W7-PART | dc08f15 | 2026-11-02T20:10:24+00:00 |
+| theory/W7-PART | b2aa940 | 2026-11-02 (refetched; REPORT filled, no FILL cells) |
 | theory/W7-SEC | 7e33e8a | 2026-11-02T19:55:48+00:00 |
-| theory/W7-SEP | 44ca480 | 2026-11-02 (refetched; REPORT tables filled) |
+| theory/W7-SEP | 858004e | 2026-11-02 (refetched twice; final wording) |
 
 Note: theory/O-LS0 contains scripts only (no REPORT, no data) at this snapshot.
 theory/campaign LEDGER at 7c60111 ("wrap-up", 20:16 UTC): O-LS0 report is to be written by a separate O-LS0-WRAP run; L-LEAN still building at that time.
