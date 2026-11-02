@@ -133,6 +133,10 @@ def main():
                 else: hi = mid
             eta = lo
     Delta = max(1 - pr.pi0[s0], 1 - pr.pi[s0])
+    F_ = np.nonzero(feas)[0]
+    l1 = pr.lg1[F_] - logsumexp(pr.lg1[F_]); l0 = pr.lg0[F_] - logsumexp(pr.lg0[F_])
+    chi2 = math.expm1(logsumexp(2 * l1 - l0))   # chi^2(pi || pi0); one step 0->1 passes on Omega iff <= 1/9
+    R2 = math.exp(logR(2.0))
     # ---- pilot ----
     prng = np.random.default_rng(5 * 10 ** 6 + 1000 * seed + n)
     sim = ScoredSim(pr)
@@ -171,7 +175,7 @@ def main():
     Dbar = max(Dks)
     out = dict(design=name, n=n, seed=seed, p=p, B=pr.B, H=H, Te=Te,
                one_minus_pi0=float(1 - pr.pi0[s0]), delta1=float(1 - pr.pi[s0]), Delta=float(Delta),
-               R0=R0, R1=R1, eta_star=eta,
+               R0=R0, R1=R1, R2=R2, chi2_pi_pi0=chi2, eta_star=eta,
                N_pilot=Npil, forced=forced, pilot_temps=[round(t, 6) for t in temps[:30]],
                T_V=TV, status_V=stV, bisect_V=nbV, T_full=TF, status_full=stF, bisect_full=nbF,
                S0_in_V=bool(np.any(V == s0)), V_size=int(V.size), n_scored=int(sc.size),
