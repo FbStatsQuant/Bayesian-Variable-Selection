@@ -181,3 +181,115 @@ Under BM-∞ every "Δ ≥ c·M_n σ² log n" makes these factors **super-polyno
 **Numerical check** (`scripts/lemma_u_check.py`, `results/lemma_u_check.txt`; exact Gram, p = 24, AR(0.5), s₀ = 3,
 k = 4, all 49,152 pairs): max |R| = 0.63, 0.80, 0.71, 0.76, 0.76 at n = 200, 10³, 5·10³, 2.5·10⁴, 1.25·10⁵; the
 deterministic bound κ_n is ≈ 20 (valid, loose by a factor ≈ 25, as [E] also found).
+
+---------------------------------------------------------------------------------------------------------
+
+## 3. Phase-2 premises (supersets 𝒮_a = {S₀ ∪ P : |P| ≤ a})
+
+Standing hypotheses of this section: G, R-lite(A, M), SE(s₀ + a + 1; φ₀), and E_n := E_n(𝔉_k) of Lemma U with
+k = s₀ + a + 2 (the extra 1 is used in §3.1 for swaps). Write N₀ := [p]∖S₀ (nulls). For W ⊇ S₀ and l ∉ W,
+μ ∈ span X_W, so **δ_{W,l} = 0** and x_{W,l} = σ²Z²_{W,l}/RSS_W, Z_{W,l} = u_{W,l}ᵀε/σ ~ N(0,1) exactly (u_{W,l} is a
+deterministic unit vector).
+
+### 3.1 τ₂: truth removal at supersets, by every label except I. PROVED under G, R-lite, SE(s₀+a+2), BM-∞
+
+**Prop. T2.** On E_n, for every W ∈ 𝒮_a, i ∈ S₀ and l ∉ W:
+ (a) 1 − o_i(W) ≤ 2p√(n+1)·e^{κ_n}·exp{−Δ_i/(8C_R)}, Δ_i := ‖(P_W − P_{W−i})μ‖² ≥ φ₀²(n−1)θ_i²;
+ (b) γ₁(W−i+l)/γ₁(W) ≤ e^{2κ_n+ϑ′_n} n^{L/2} exp{−Δ_i′/(8C_R)}·√(n+1), Δ_i′ := ‖(P_{W+l} − P_{W+l−i})μ‖² ≥ φ₀²(n−1)θ_i².
+Under BM-∞ both are n^{−ω(1)} (super-polynomial) uniformly; so the Gibbs truth-deletion term, the uniform-swap
+truth-removal term and the B neighbour-swap truth-removal terms of η₂(a) (the Hastings factor is ≤ p) are
+n^{−ω(1)}.
+
+*Proof.* (a) (P_W − P_{W−i})μ = θ_i(I − P_{W−i})x_i (the other truths lie in W−i), and ‖(I−P_{W−i})x_i‖² =
+1/(G_W⁻¹)_{ii} ≥ λ_min(G_W) ≥ φ₀²(n−1). 1 − o_i ≤ 1/odds_i(W−i); apply (C5) (Δ_i ≥ M_nσ² log n(n−1)/n ≥ 4Lσ² log n
+eventually). (b) Same size, so the prior cancels: γ₁(W−i+l)/γ₁(W) = [BF(W+l−i)/BF(W+l)]·[BF(W+l)/BF(W)]. The first
+factor is 1/odds-type for deleting truth i from the superset W+l: ≤ √(n+1)e^{κ_n}e^{−Δ′_i/(8C_R)} by (C5) without the
+prior; the second is a zero-leakage addition, ≤ (n+1)^{−1/2}e^{κ_n+ϑ′_n}e^{Z²/2} ≤ e^{κ_n+ϑ′_n}n^{L/2} by (C3)
+(without the prior) and (E1). ∎
+
+### 3.2 The comparison lemma and the partner graph
+
+**Definition (partner graph).** For nulls l ≠ m let ϱ_{lm} be the partial correlation of x_l and x_m given X_{S₀}
+(cosine of the angle between their residuals on span X_{S₀}). For a threshold c_n, 𝒢_n is the graph on N₀ with an
+edge {l, m} iff |ϱ_{lm}| > c_n. D_n := its maximum degree.
+
+**PG(a; c_n, D_n).** c_n log n → 0 and (eD_n + 1)^a log^{3/2}(n)/√n → 0.
+
+(For iid-Gaussian designs with population-uncorrelated nulls, max |ϱ| = O_P(√(log p/n)), so c_n = 1/log² n gives
+D_n = 0 w.p. → 1; block designs with bounded groups (S3, S4, S6 type) give D_n ≤ g − 1; AR(ρ) gives
+D_n = O(log log n). Common-factor / equicorrelated nulls give D_n = p − s₀ − 1: PG fails.)
+
+**Lemma CMP (comparison). PROVED.** On E_n, let W = S₀ ∪ P (|P| ≤ a), l ∉ W, let P₁ be the set of m ∈ P joined to l
+by a path of 𝒢_n inside P ∪ {l}, and P₂ := P∖P₁. Then, with C_a := (1 + a/φ₀²)/φ₀² and ρ² := a C_a² c_n²/φ₀²
+(assumed ≤ ¼),
+
+  Z²_{W,l} ≤ Z²_{S₀∪P₁,l} + ϵ_n,   ϵ_n := (2ρ + 3ρ²)·L log n·(1 + 2ρ²)  → 0 under PG.
+
+*Proof.* Put B := S₀ ∪ P₁ and let Π be the orthogonal projection onto span{(I − P_B)x_m : m ∈ P₂}; then
+I − P_W = (I − P_B) − Π. With ǔ := u_{B,l} (the unit residual of x_l on B), u_{W,l} = (ǔ − Πǔ)/√(1 − ‖Πǔ‖²), hence
+
+  Z_{W,l} = (Z_{B,l} − ǔᵀΠε/σ)/√(1 − ρ_l²),  ρ_l := ‖Πǔ‖,  |ǔᵀΠε| ≤ ρ_l‖Πε‖ ≤ ρ_l σ√(L log n)
+
+(Πε is a projection of P_Wε; (E1)). *Bound on ρ_l.* Let Ǧ be the Gram matrix of the residuals of X_{P₂} on B: it is
+a Schur complement of G_W, so Ǧ ⪰ φ₀²(n−1)I. With ǧ_m := ((I−P_B)x_m)ᵀǔ = ‖(I−P_B)x_m‖·ϱ_{lm|B},
+ρ_l² = ǧᵀǦ⁻¹ǧ ≤ Σ_{m∈P₂}ϱ²_{lm|B}/φ₀². *Bound on ϱ_{lm|B}.* Let Γ be the correlation matrix of the residuals on
+S₀ of {x_k : k ∈ P₁ ∪ {l, m}}; its off-diagonal entries are the ϱ's, and λ_min(Γ_Q) ≥ φ₀² for every sub-collection Q
+(a Schur complement of G_{S₀∪Q} rescaled by norms ≤ √(n−1)). Then ϱ_{lm|B} is the partial correlation of l, m given
+P₁ in Γ:
+
+  ϱ_{lm|B} = (Γ_{lm} − Γ_{l,P₁}Γ_{P₁}⁻¹Γ_{P₁,m}) / √((1 − R²_l)(1 − R²_m)),   1 − R² ≥ φ₀².
+
+By construction m ∈ P₂ has no 𝒢_n-edge to l or to any k ∈ P₁, so |Γ_{lm}| ≤ c_n and ‖Γ_{P₁,m}‖ ≤ √a c_n, while
+‖Γ_{l,P₁}‖ ≤ √a. Hence |ϱ_{lm|B}| ≤ (c_n + a c_n/φ₀²)/φ₀² = C_a c_n and ρ_l² ≤ aC_a²c_n²/φ₀² = ρ². Finally
+(|Z_B| + ρ√(L log n))²/(1−ρ²) ≤ (Z_B² + 2ρL log n + ρ²L log n)(1 + 2ρ²) and Z_B² ≤ L log n (E1). ∎
+
+**Counting.** 𝒦_a(l) := {Q ⊆ N₀∖{l} : |Q| ≤ a, Q ∪ {l} connected in 𝒢_n}. In a graph of maximum degree D the number of
+connected vertex sets of size j+1 containing a given vertex is ≤ (eD)^j, so |𝒦_a(l)| ≤ (eD_n + 1)^a.
+
+### 3.3 NL0(a) and UDEL(a). PROVED UNDER PG(a); UDEL(1) PROVED (no extra condition)
+
+**Prop. NL0.** Under G, R-lite, SE(s₀+a+2), PG(a), on E_n:
+
+  Λ₂(a) = Σ_{l∈N₀} sup_{W∈𝒮_a°, l∉W} o_l(W) ≤ e^{κ_n+ϑ′_n+ϵ_n/2}·[(s₀+a+1)/(2p−s₀−a−1)]·(n+1)^{−1/2}·Ξ_n,
+  Ξ_n := Σ_{l∈N₀} Σ_{Q∈𝒦_a(l)} e^{Z²_{S₀∪Q,l}/2}·1{Z²_{S₀∪Q,l} ≤ L log n},   E Ξ_n ≤ p(eD_n+1)^a·2√(L log n)/√(2π).
+
+Hence Λ₂(a) = O_P((s₀+a+1)(eD_n+1)^a√(log n/n)) and (L+5)Λ₂(a) → 0 in probability.
+
+*Proof.* o_l ≤ odds_l(W); (C3) gives odds_l(W) ≤ [(|W|+1)/(2p−|W|−1)](n+1)^{−1/2}e^{κ_n+ϑ′_n}e^{Z²_{W,l}/2}, and
+Lemma CMP gives e^{Z²_{W,l}/2} ≤ e^{ϵ_n/2}e^{Z²_{S₀∪P₁,l}/2} with P₁ ∈ 𝒦_a(l); bound the sup over W by the sum over
+𝒦_a(l). On E_n every Z² ≤ L log n, so the indicator is 1. Each Z_{S₀∪Q,l} is exactly N(0,1) and
+E[e^{Z²/2}1{Z² ≤ h²}] = 2h/√(2π) (no independence used). Markov's inequality. ∎
+
+**Prop. UDEL.** (a) a = 1: ε_del(1) = max_l o_l(S₀+l) ≤ (s₀+1)/(2p−s₀−1)·(n+1)^{−1/2}e^{κ_n+ϑ′_n}·p·log n with
+probability → 1, so ε_del(1) = O_P(log n/√n): **PROVED** under G, R-lite, SE(s₀+2) alone.
+(b) a ≥ 2, under PG(a−1): ε_del(a) = O_P((s₀+a)(eD_n+1)^{a−1} log n/√n) → 0: **PROVED UNDER PG**.
+
+*Proof.* o_l(W) for l ∈ P(W) is the Gibbs probability of keeping l, odds_l(W) with W∖l ∈ 𝒮_{a−1}; (C3) + CMP reduce
+the max over (W, l) to the max of N := p(eD_n+1)^{a−1} standard Gaussians Z_{S₀∪Q,l}, Q ∈ 𝒦_{a−1}(l). Union bound and
+P(|Z| > t) ≤ e^{−t²/2} (t ≥ 1): P(max Z² > 2 log N + 2 log log n) ≤ 1/log n. So max e^{Z²/2} ≤ N log n. For a = 1,
+𝒦₀(l) = {∅} and N = p − s₀. ∎
+
+### 3.4 COUNTEREXAMPLE: NL0(1) and UDEL(2) fail under G, R, SE, BM-∞ alone (equicorrelated nulls)
+
+**Construction (exact Gram, A = 1).** s₀ fixed truths with fixed θ, orthogonal to the nulls; the p − s₀ nulls
+equicorrelated with correlation r ∈ (0,1) (so SE holds with φ₀² = min(1, 1 − r), BM-∞ holds, ‖μ‖²/n bounded);
+p = ⌊n^β⌋ with β < 1 and rβ > ½ (e.g. r = 0.8, β = 0.9).
+
+**Claim. COUNTEREXAMPLE (asymptotic; PROVED modulo the standard extreme-value facts cited).** With probability → 1,
+Λ₂(1) ≥ c·p^{r}(log p)^{−(1+r)}·n^{−1/2}·e^{−O_P(√log p)} → ∞, and ε_del(2) → 1.
+
+*Proof.* Residuals of nulls on S₀ are the nulls themselves (orthogonality), so ϱ_{lm} = r for all pairs and
+Z_l := Z_{S₀,l} is an equicorrelated Gaussian vector: Z_l = √r ξ + √(1−r) e_l with ξ, e_l iid N(0,1). For W = S₀+m,
+Z_{W,l} = (Z_l − rZ_m)/√(1−r²) (the one-step version of the computation in CMP). Take m* = argmin_m e_m and
+l* = argmax_l e_l; w.p. → 1, e_{l*} ≥ √(2 log p) − log log p/√(2 log p) − 1 and e_{m*} ≤ −(same). Then
+(Z_{l*} − rZ_{m*})²/(1−r²) ≥ (1+r)[2 log p − 2 log log p − O(1)] − O_P(√log p). The matching lower bound of (C3) gives
+odds_{l*}(S₀+m*) ≥ (2p)⁻¹(n+1)^{−1/2}e^{−κ_n−ϑ′_n}e^{Z²/2}, i.e. ≥ c p^{r}(log p)^{−(1+r)}n^{−1/2}e^{−O_P(√log p)}. Since
+Λ₂(1) ≥ o_{l*}(S₀+m*), and odds → ∞ forces o → 1, Λ₂(1) does not tend to 0; the same pair (l*, m*) gives
+o_{l*}(S₀+m*+l*) → 1, i.e. ε_del(2) → 1. With rβ > ½ the odds diverge polynomially. ∎
+
+So NL0(a) (a ≥ 1) and UDEL(a) (a ≥ 2) are genuine design conditions; PG is a sufficient one. With p > n allowed
+(random designs, A > 1) the same computation gives failure as soon as r > 1/(2A) (leading order). **Caveat.** This
+falsifies the *premise* (the sum-of-sups bad rate); it does not show that repair fails on this design — the actual
+per-round bad frequency is an average over visited states, not a sup.
+
+**Numerics** (`scripts/nl0_equicorr.py`, `results/nl0_equicorr.txt`): see REPORT §4.
