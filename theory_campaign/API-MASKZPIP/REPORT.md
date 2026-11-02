@@ -116,7 +116,13 @@ RESULTS_TABLES_PLACEHOLDER
 
 ## 8. Confidence card
 
-CONFIDENCE_CARD_PLACEHOLDER
+| Target | Refined statement | True? | Provable at reasonable cost? | Crux | Method change? |
+|---|---|---|---|---|---|
+| T26(i) masked, PIPs | E1–P2: the RB PIP bias is ≤ TV(ν̄,π) ≤ E f_{r,0} + δ₁. After locking, the bias is ≤ δ₁ and the L¹ error is ≤ (L+4)ρ̄+u_π+δ₁. | high (PROVED given inputs) | high for the bounds. Locking on LH is BG3 (candidate); general DELIV-POP is OPEN (medium) | population delivery/locking | no |
+| T26(ii) masked, evidence via Ẑ | Dichotomy E4: blind ⇒ log W ≤ −φ_{τ_A}D_A + O_P(log T) (PROVED); resolved ⇒ log W = O_P(√(T/N)) | blind half: high; resolved half: medium | blind: done; resolved: medium-low (V11 leakage, sup-norm of h) | does V contain the competing pair; pair-refresh perturbation | no (the rebuild loop already targets it) |
+| Evidence via the top store | P3/P3′: Z_𝒯/Z ∈ [1−δ₁, 1] and |PIP^𝒯−PIP| ≤ δ₁ once S₀ ∈ 𝒯 | high (PROVED) | high (composition with T03 + BG3) | discovery (BG3) and T03 | reporting only (report log Z_𝒯 next to log Ẑ) |
+| T12/T31 (Prop 2) per fit | C1–C3: W ≤ Ẑ/Z_𝒯 surely; log Z ≥ max(log Z_𝒯, log Ẑ − log 20) w.p. ≥ 0.95; island agreement uninformative | high (PROVED) | done | — | no |
+| p ≫ n transfer | E1, E2, Lemma J, E3(a,b), P1, P3, C1–C3 are data-free statements given 𝓒 and hold for any p. LH-specific rates (D_A = Θ(n), locking, discovery) are proved only for exact-Gram p < n / p fixed | high for the generic parts | LH-iid rates: low-medium (O-BGIBBS lists them as CONJECTURE) | uniform gaps over supersets as p → ∞ | no |
 
 ## 9. What the paper can claim about the reported Ẑ and PIPs at n = 200
 
