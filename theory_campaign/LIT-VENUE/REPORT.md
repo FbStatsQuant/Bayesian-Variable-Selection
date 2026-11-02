@@ -50,7 +50,8 @@ Study: n = 200, p ∈ {500, 1000}, scenarios S1–S6, two signal scales, s₀ = 
    So **T38(c), "polynomial cost", is not a selling point on its own.**
 4. **Gaps that are genuinely ours.** I found nothing in the sample that does any of the following:
    - (i) gives an exact, algorithm-agnostic finite-n split of the reported-model error into a posterior-miss term and a
-     search-miss term that can be measured per run (Thm 4 / N200);
+     search-miss term that can be measured per run (Thm 4 / N200). Only the informal idea is published:
+     García-Donato–Martínez-Beneito, JASA 2013 §4, "best visited model";
    - (ii) proves a lower bound for an independent-draw start law (Thm 2 masked / SEP(A)), paired with a repair theorem that
      restores consistency (Thm 3, T38(b));
    - (iii) proves consistency of an SMC-BVS output at all.
