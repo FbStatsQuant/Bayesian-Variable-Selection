@@ -1,0 +1,220 @@
+{
+ "D": 8.146762406340683,
+ "pi0_12": 0.02791411731793963,
+ "c0": 0.06947111269080761,
+ "c1": 0.9987083374518378,
+ "PIP1": 0.9906180122433582,
+ "Z_over_Z0": 97.33676018112273,
+ "identity_Z_rel": 2.1088469490161838e-50,
+ "identity_ZP_rel": 1.5966146306792458e-50,
+ "bias_primary_Pbar": -0.1739741778498905,
+ "pooled_x_pooled_rel_bias": -0.13171639499258733,
+ "pooled_x_pooled_minus_closed_form": 5.131708243377016e-49,
+ "pooled_island_product_rel": -1.1353704040385747e-49,
+ "guard": [
+  {
+   "h": 8,
+   "P_O": 0.5467861311656226,
+   "E_Zhat_given_O_over_Z": 0.010273610896224772,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.007887830273949552,
+   "E_Zhat_1O_over_Z": 0.005617467955047728
+  },
+  {
+   "h": 9,
+   "P_O": 0.6464453802757331,
+   "E_Zhat_given_O_over_Z": 0.010273610896224772,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.007918677138250497,
+   "E_Zhat_1O_over_Z": 0.006641328302614938
+  },
+  {
+   "h": 10,
+   "P_O": 0.681959602372984,
+   "E_Zhat_given_O_over_Z": 0.010273610896224772,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.007932707234107057,
+   "E_Zhat_1O_over_Z": 0.007006187601724202
+  },
+  {
+   "h": 11,
+   "P_O": 0.7392288352860167,
+   "E_Zhat_given_O_over_Z": 0.010273610896224772,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.00794766085434265,
+   "E_Zhat_1O_over_Z": 0.007594549416997969
+  },
+  {
+   "h": 12,
+   "P_O": 0.7541974049286065,
+   "E_Zhat_given_O_over_Z": 0.010273610896224772,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.00795343406871201,
+   "E_Zhat_1O_over_Z": 0.007748330677178979
+  },
+  {
+   "h": 13,
+   "P_O": 0.7781369495574006,
+   "E_Zhat_given_O_over_Z": 0.010273610896224772,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.007960539660268686,
+   "E_Zhat_1O_over_Z": 0.007994276243728017
+  },
+  {
+   "h": 14,
+   "P_O": 0.7824730599840568,
+   "E_Zhat_given_O_over_Z": 0.010273610896224772,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.007962276458131549,
+   "E_Zhat_1O_over_Z": 0.008038823755054545
+  },
+  {
+   "h": 16,
+   "P_O": 0.8143828686509551,
+   "E_Zhat_given_O_over_Z": 0.010353158794686622,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.008114901909182619,
+   "E_Zhat_1O_over_Z": 0.008431435158815755
+  },
+  {
+   "h": 17,
+   "P_O": 0.83460106439254,
+   "E_Zhat_given_O_over_Z": 0.010356553760502159,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.00817174531069466,
+   "E_Zhat_1O_over_Z": 0.008643590791953665
+  },
+  {
+   "h": 18,
+   "P_O": 0.8405642380886473,
+   "E_Zhat_given_O_over_Z": 0.010360218646111492,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.008190247814176398,
+   "E_Zhat_1O_over_Z": 0.008708429292700503
+  },
+  {
+   "h": 19,
+   "P_O": 0.8517932037567911,
+   "E_Zhat_given_O_over_Z": 0.010362023693428805,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.00822018952306211,
+   "E_Zhat_1O_over_Z": 0.0088263013592295
+  },
+  {
+   "h": 20,
+   "P_O": 0.8562741996146932,
+   "E_Zhat_given_O_over_Z": 0.010362756258033892,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.0082320079914768,
+   "E_Zhat_1O_over_Z": 0.008873360820650125
+  },
+  {
+   "h": 21,
+   "P_O": 0.8618719420396697,
+   "E_Zhat_given_O_over_Z": 0.010363352338466499,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.008246243231440981,
+   "E_Zhat_1O_over_Z": 0.008931882605995473
+  },
+  {
+   "h": 22,
+   "P_O": 0.8633809691230142,
+   "E_Zhat_given_O_over_Z": 0.010363195487352466,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.008249799052334209,
+   "E_Zhat_1O_over_Z": 0.00894738576308162
+  },
+  {
+   "h": 24,
+   "P_O": 0.8708845946868863,
+   "E_Zhat_given_O_over_Z": 0.010932642233679863,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.008706460135294287,
+   "E_Zhat_1O_over_Z": 0.009521069700535022
+  },
+  {
+   "h": 25,
+   "P_O": 0.9147428634666028,
+   "E_Zhat_given_O_over_Z": 0.010969587398337506,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.008836774815433972,
+   "E_Zhat_1O_over_Z": 0.010034351787802412
+  },
+  {
+   "h": 26,
+   "P_O": 0.9234595803266589,
+   "E_Zhat_given_O_over_Z": 0.011117176396560197,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.008970492925912633,
+   "E_Zhat_1O_over_Z": 0.010266263049584919
+  },
+  {
+   "h": 27,
+   "P_O": 0.9454481187706593,
+   "E_Zhat_given_O_over_Z": 0.011137959382792545,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.009033862107159995,
+   "E_Zhat_1O_over_Z": 0.010530362745405225
+  },
+  {
+   "h": 28,
+   "P_O": 0.9511848402420016,
+   "E_Zhat_given_O_over_Z": 0.011209025538825258,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.009101207806331104,
+   "E_Zhat_1O_over_Z": 0.010661855166416018
+  },
+  {
+   "h": 29,
+   "P_O": 0.9585558040674275,
+   "E_Zhat_given_O_over_Z": 0.011233375241332489,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.009136006693734652,
+   "E_Zhat_1O_over_Z": 0.010767817036846596
+  },
+  {
+   "h": 30,
+   "P_O": 0.9613667824711675,
+   "E_Zhat_given_O_over_Z": 0.01123056894835881,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.00913938729848146,
+   "E_Zhat_1O_over_Z": 0.010796695935204312
+  },
+  {
+   "h": 32,
+   "P_O": 0.9906737888020727,
+   "E_Zhat_given_O_over_Z": 0.7978380627418148,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.7974558772756575,
+   "E_Zhat_1O_over_Z": 0.7903972564669395
+  },
+  {
+   "h": 33,
+   "P_O": 0.9978344363186914,
+   "E_Zhat_given_O_over_Z": 0.9739168148280263,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.9739262497299596,
+   "E_Zhat_1O_over_Z": 0.971807735945219
+  },
+  {
+   "h": 34,
+   "P_O": 0.9978468938486801,
+   "E_Zhat_given_O_over_Z": 0.9742253765258024,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.974194408083373,
+   "E_Zhat_1O_over_Z": 0.9721277658748327
+  },
+  {
+   "h": 35,
+   "P_O": 0.9988741434766367,
+   "E_Zhat_given_O_over_Z": 0.9733343791934326,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.973293889971116,
+   "E_Zhat_1O_over_Z": 0.9722385443332039
+  },
+  {
+   "h": 36,
+   "P_O": 0.998877683168263,
+   "E_Zhat_given_O_over_Z": 0.9734234569508371,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.9733694025327161,
+   "E_Zhat_1O_over_Z": 0.9723309674206936
+  },
+  {
+   "h": 37,
+   "P_O": 0.9992211842791227,
+   "E_Zhat_given_O_over_Z": 0.9731361061185715,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.9730774099465076,
+   "E_Zhat_1O_over_Z": 0.972378212420573
+  },
+  {
+   "h": 40,
+   "P_O": 0.9999994930784177,
+   "E_Zhat_given_O_over_Z": 0.9999825282306192,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.9999835804267304,
+   "E_Zhat_1O_over_Z": 0.9999820213178937
+  },
+  {
+   "h": 42,
+   "P_O": 0.9999998844469355,
+   "E_Zhat_given_O_over_Z": 0.9999960173017425,
+   "E_ZhatPIPhat_given_O_over_ZPIP": 0.9999962814269414,
+   "E_Zhat_1O_over_Z": 0.9999959017491383
+  }
+ ]
+}
+ALL CHECKS PASSED

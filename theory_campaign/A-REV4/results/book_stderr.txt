@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/fb31/theory_campaign/A-REV4/book_reproduction.py", line 22, in <module>
+    from mpmath import mp, mpf, matrix, det, exp, log, sqrt, eye
+ModuleNotFoundError: No module named 'mpmath'

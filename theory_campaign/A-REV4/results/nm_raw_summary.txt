@@ -1,0 +1,34 @@
+{
+  "seed": 20261102,
+  "host": "owls.stat.rice.edu",
+  "utc": "2026-11-02T19:24:33.419691+00:00",
+  "NM": [
+    {
+      "n": 64,
+      "reps": 256,
+      "proxy_logBF_remainder_sd": 2.034227803020316,
+      "sd_over_sqrt_n": 0.2542784753775395,
+      "mean_local_proxy": 0.7979885269641241,
+      "mean_posterior_truth": 0.8070494405049864,
+      "mean_start_truth": 0.20200364730282705
+    },
+    {
+      "n": 256,
+      "reps": 256,
+      "proxy_logBF_remainder_sd": 4.391254866416687,
+      "sd_over_sqrt_n": 0.2744534291510429,
+      "mean_local_proxy": 0.9999119441371817,
+      "mean_posterior_truth": 0.882600525732824,
+      "mean_start_truth": 8.805586281809556e-05
+    },
+    {
+      "n": 1024,
+      "reps": 256,
+      "proxy_logBF_remainder_sd": 8.036750029893629,
+      "sd_over_sqrt_n": 0.2511484384341759,
+      "mean_local_proxy": 1.0,
+      "mean_posterior_truth": 0.9336293475296517,
+      "mean_start_truth": 8.086261614481293e-22
+    }
+  ]
+}
