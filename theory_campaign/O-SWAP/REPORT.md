@@ -10,9 +10,9 @@ Run: O-SWAP (Opus 5.5), branch `theory/O-SWAP`, 2026-11-02. Everything here is a
   - Swap: Prop. 1, P ≈ Φ(−|δ_j|√((1−ρ_{jl})/2)), with no size-prior term (T07).
   - Superset: Prop. 2, a χ²₁ tail at a p-free threshold t_add ≈ 3.7–4.1σ that **rises with the SNR** through the τ = 1 pseudo-observation (Cor. 2.1).
   - Subset: Prop. 3, Φ(t_drop − |δ_j|).
-- **The observed misses are one-move posterior misses.** On the study's own data (regenerated in Python with R's RNG ported exactly), the exact-score one-move check reproduces the observed SMC-BVS miss count in all 24 cells to within ±1: 39 / 37 / 227 / 257 against 40 / 37 / 230 / 259.
+- **The observed misses match the one-move posterior misses.** On the study's own data (regenerated in Python with R's RNG ported exactly), the exact-score one-move check reproduces the observed SMC-BVS miss count in all 24 cells to within ±1: 39 / 37 / 227 / 257 against 40 / 37 / 230 / 259.
 - **The theory predicts the rates.** The design-averaged predictor T2 (Props 1–3 + 6) gives 43 / 40 misses per 600 at c = 1 against 40 / 37 observed, and 251 / 271 at c = 0.5 against 230 / 259. It reproduces the scenario ranking (S4 ≫ S5 > S6 ≈ S3 > S1 ≈ S2) and the type split: supersets at c = 1, swaps and drops at c = 0.5.
-- **Why the modes switch with c.** Supersets have a fixed prior threshold, so their rate only doubles from c = 1 to c = 0.5. Swaps and drops are exponential in δ² ∝ c². A higher-threshold selector (SuSiE/SSL-like) is predicted to win at c = 1 and lose at c = 0.5 (CONJECTURE as applied to those methods).
+- **Why the modes switch with c.** Supersets face a nearly fixed prior threshold (it falls only slightly with ω₀), so their rate only doubles from c = 1 to c = 0.5. Swaps and drops are exponential in δ² ∝ c². A higher-threshold selector (SuSiE/SSL-like) is predicted to win at c = 1 and lose at c = 0.5 (CONJECTURE as applied to those methods).
 
 ## 2. Setting and notation
 
