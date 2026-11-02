@@ -133,8 +133,19 @@ as the population analysis assumes. Population leakage (`scripts/pop_leak_study.
 groups): `lambda_b(S0)/(n-1)` is exactly 0 in S1, S3, S4, S6 and positive in 98/100 (S5) blocks; the S2 figure (81/100)
 uses index windows, not the actual partition, and is only indicative.
 
-Config B (c = 2, p = 20): see `results/fam_B_*.log` (prediction: `log10 pi0(S0)` slope -1 per decade of n, Mstat
--> `log(60/37) + log(80/36) + (chi^2_2)/(2·4.9)`, median 1.42). Table filled in §"Config B" below when the run completes.
+Config B (c = 2, p = 20; 5 groups of 4, two linked pairs (psi = 0.5; masked coefficients -0.7, -0.9), one null group;
+100 replicates, pi on 8). Predicted Mstat law `log(60/37) + log(80/36) + chi^2_2/(2·4.9)`: q05/med/q95 = 1.29/1.42/1.89
+(exact Gram); random-design law `... + chi^2_2/2`: 1.33/1.97/4.27.
+
+| n | med log10 pi0(S0) | Mstat q05/med/q95 (Gram) | sqrt(n)·med(1-pi0(S°)) | med pi0(R_0) | med pi(S0) | Mstat (random) | med pi0(R_0) (random) |
+|---|---|---|---|---|---|---|---|
+| 400 | -4.62 | 1.21/1.34/1.81 | 1.59 | 0.929 | 0.763 | 1.22/1.64/3.75 | 0.878 |
+| 6400 | -5.79 | 1.27/1.43/1.87 | 1.66 | 0.982 | 0.946 | 1.30/2.03/4.13 | 0.967 |
+| 102400 | -6.99 | 1.29/1.43/1.92 | 1.65 | 0.995 | 0.987 | 1.33/1.81/4.65 | 0.992 |
+| 1638400 | -8.19 | 1.29/1.43/1.96 | 1.65 | 0.999 | 0.985 | 1.31/1.95/4.13 | 0.998 |
+
+Slope of `log10 pi0(S0)`: -0.99 per decade of n (predicted -c/2 = -1). Blocks = groups in 100% of replicates for n >= 100
+(99% at n = 50, random design). The T22(i) bound held in every replicate of every configuration.
 
 Leakage chain (Task 2; `results/leak_chain.log`, 300 reps): masked coefficient perturbed so that
 `delta_{∅,j_b} = L_n` exactly. Predicted Mstat law `log(48/29) + (L_n + Z)^2/(2v)`:
