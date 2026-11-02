@@ -103,15 +103,18 @@ for rep in range(6):
                 tot["maxdQ"] = max(tot["maxdQ"], (Q2 - Q) / T.yy); tot["maxdD"] = max(tot["maxdD"], lD - lD2)
                 if Q2 > Q + TOL * T.yy: tot["Qviol"] += 1
                 if lD2 < lD - 1e-7: tot["Dviol"] += 1
+                dm = (-0.5 * lD2 - T.nu * math.log(2 * T.b0 + Q2)) - (-0.5 * lD - T.nu * math.log(2 * T.b0 + Q))
+                tot["m_up"] = tot.get("m_up", 0) + (dm > 0); tot["m_dn"] = tot.get("m_dn", 0) + (dm < 0)
         # (c): w non-increasing on 0..K, size marginal C(p,k)w(k) is NOT monotone
         lw = T.lw[: T.K + 1]
         assert np.all(np.diff(lw) <= 1e-12), "w not monotone"
 log(f"datasets={6*len(cases)}  (S,S+j) pairs={tot['pairs']}  Q increases={tot['Qviol']}  D decreases={tot['Dviol']}")
 log(f"  max rel. increase of Q on addition = {tot['maxdQ']:.3e} (<=0 expected); max decrease of log D = {tot['maxdD']:.3e}")
+log(f"  marginal likelihood m(S) on addition: increases {tot['m_up']}, decreases {tot['m_dn']} (m is NOT monotone)")
 log(f"  Q < y'y/(n+1) occurrences = {tot['Qfloor']};  max |(d) n x n form - k x k form| = {tot['maxd']:.2e}")
 T = Target(*design("iid", 30, 8))
 sm = T.lchp[: T.K + 1] + T.lw[: T.K + 1]
-log(f"  size-prior marginal log C(p,k)w(k), p=8 (not monotone): {np.round(sm,3).tolist()}; per-model log w(k): {np.round(T.lw[:T.K+1],3).tolist()}")
+log(f"  BB(1,p) size marginal log C(p,k)w(k), p=8 (ALSO non-increasing: ratio (p-k)/(2p-1-k)): {np.round(sm,3).tolist()}; per-model log w(k): {np.round(T.lw[:T.K+1],3).tolist()}")
 
 # ---------- 2. Thm C4 box bounds, exhaustive over all boxes L <= U ----------
 log("== 2. C4: F(S) <= Phi(L,U) and sum_[L,U] e^F <= e^M(L,U), all 3^p boxes ==")

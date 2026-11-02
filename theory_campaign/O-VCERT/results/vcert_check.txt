@@ -1,8 +1,9 @@
 == 1. Lemma M: exhaustive single-addition checks (implies all S <= S' by induction) ==
 datasets=150  (S,S+j) pairs=476160  Q increases=0  D decreases=0
   max rel. increase of Q on addition = -2.423e-14 (<=0 expected); max decrease of log D = -5.586e-03
+  marginal likelihood m(S) on addition: increases 185095, decreases 291065 (m is NOT monotone)
   Q < y'y/(n+1) occurrences = 0;  max |(d) n x n form - k x k form| = 7.89e-13
-  size-prior marginal log C(p,k)w(k), p=8 (not monotone): [-0.693, -1.322, -2.015, -2.788, -3.664, -4.675, -5.879, -7.383, -9.463]; per-model log w(k): [-0.693, -3.401, -5.347, -6.813, -7.912, -8.701, -9.211, -9.463, -9.463]
+  BB(1,p) size marginal log C(p,k)w(k), p=8 (ALSO non-increasing: ratio (p-k)/(2p-1-k)): [-0.693, -1.322, -2.015, -2.788, -3.664, -4.675, -5.879, -7.383, -9.463]; per-model log w(k): [-0.693, -3.401, -5.347, -6.813, -7.912, -8.701, -9.211, -9.463, -9.463]
 == 2. C4: F(S) <= Phi(L,U) and sum_[L,U] e^F <= e^M(L,U), all 3^p boxes ==
 boxes=285712  Phi violations=0  M violations=0  min slack Phi-max F=0.00e+00  (singleton boxes exact: 9088)
   sanity: endpoints max(F(L),F(U)) underestimate the box max in 2764/6561 boxes (F itself is not monotone; Phi is needed)
