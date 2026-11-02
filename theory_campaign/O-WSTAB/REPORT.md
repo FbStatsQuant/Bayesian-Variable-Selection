@@ -16,7 +16,9 @@ Branch `theory/O-WSTAB` (Opus 5.5, laptop run taking over from the stopped serve
    *exact* finite-n form, κG ≤ LR ≤ κG/(1−y), with no EXP′ needed.
 3. **Theorem W under ORTH** (X′X = (n−1)I, any partition, s₀ and θ* fixed, p log p = o(n)), with r := R²_pop:
    if p^r/√n → 0, then p^{r−ε}/√n ≤ χ²(π‖π₀) ≤ p^{r+ε}/√n w.p. → 1, both sides **PROVED**. If
-   L_n := r log p − ½ log n − ((1+r)/2) log log p → ∞, then **log(1+χ²) ≥ c·e^{L_n/r}**, polynomial in n (**PROVED**).
+   L_n := r log p − ½ log n − ((1+r)/2) log log p → ∞, then **c·e^{L_n/r} ≤ log(1+χ²) ≤ C·e^{L_n/r}(log p)^{5(1+r)/(2r)}**,
+   i.e. log log(1+χ²) = L_n/r + O(log log p): polynomial in n (both sides **PROVED**, the upper one via an integral
+   form of the separable bound).
    KL(π‖π₀) and TV(π, π₀) → 0 throughout (**PROVED**). The proof never takes an expectation of a heavy-tailed weight.
 4. **COUNTEREXAMPLE to [FD] Theorem W(c)** ("log(1+χ²) = [R² log p − ½ log n]₊ + O_P(log log p)"). On the divergent side,
    multi-extra models dominate: with p = n^A and Ar > ½, log(1+χ²) ≥ n^{A−1/(2r)−o(1)}, not O(log n). Exact large-p
@@ -79,6 +81,10 @@ suppose ū < 1. For w ∈ [0, 2] let β(w) := 1/((1−s)(1−ū)) if w ≤ 1 and
 c_j(w) := n^{−1/2}e^{β(w)νx_j}, q(w) := p^{−1}Σ_{j∈N} c_j(w). If q(w) < 1 then
  **ℓ_{S₀}(w) ≤ Σ_{j∈S₀} log(1 + 2p√n e^{−νx_j}) − (s₀ + 1) log(1 − q(w)).**
 
+**Lemma SEP′ (integral form; deterministic; PROVED).** Same setting as Lemma SEP, *without* the condition q(w) < 1:
+ **ℓ_{S₀}(w) ≤ Σ_{j∈S₀} log(1 + 2p√n e^{−νx_j}) + log[(1/s₀!)∫₀^∞ t^{s₀}e^{−t}∏_{j∈N}(1 + t c_j(w)/p) dt].**
+(Lemma SEP follows from it via ∏(1 + ty_j) ≤ e^{tq}.)
+
 **Theorem W (ORTH; two-sided).** Hypotheses **H-ORTH**: G; ORTH; s₀ ≥ 1 fixed and θ*_{S₀} fixed with all entries nonzero, so
 **r := R²_pop = ‖θ*‖²/(‖θ*‖² + σ*²) ∈ (0, 1)** is fixed; p → ∞ with p log p = o(n); any partition (it may depend on X)
 whose blocks have size ≤ B, with B fixed (or B ≤ 16, the method's cap). Let N₀ be the nulls in truth-free blocks
@@ -92,9 +98,12 @@ whose blocks have size ≤ B, with B fixed (or B ≤ 16, the method's cap). Let 
  depending on w.
 (d) **(convergent side)** If p^r/√n → 0, then for every ε ∈ (0, r): p^{r−ε}/√n ≤ χ²(π‖π₀) ≤ p^{r+ε}/√n. So the one-step
  ESS fraction 1/(1+χ²) → 1 at exactly this polynomial rate.
-(e) **(divergent side)** If L_n := r log p − ½ log n − ((1+r)/2) log log p → ∞, then log(1 + χ²(π‖π₀)) ≥ e^{(L_n − C₁ − 1)/r}
+(e) **(divergent side, lower bound)** If L_n := r log p − ½ log n − ((1+r)/2) log log p → ∞, then log(1 + χ²(π‖π₀)) ≥ e^{(L_n − C₁ − 1)/r}
  with the constant C₁ := 1 + log 2 + (1+r) log 4 + ((1+r)/2) log(4π). With p = n^{A+o(1)} and Ar > ½ this is
  n^{A − 1/(2r) − o(1)}, and the ESS fraction is ≤ exp(−n^{A−1/(2r)−o(1)}).
+(g) **(divergent side, upper bound)** w.p. → 1, ℓ(2) ≤ (s₀+1) log 2 + o(1) + K_r(1 + o_P(1))·[p^r(log p)^{2(1+r)}/√n]^{1/r}
+ with K_r := (r/2)(2π/((1+r) sin(π/(1+r))))^{(1+r)/r}. Together with (e), when L_n → ∞:
+ c e^{L_n/r} ≤ log(1+χ²(π‖π₀)) ≤ C e^{L_n/r}(log p)^{5(1+r)/(2r)}.
 (f) **(KL and TV)** TV(π, π₀) ≤ ℓ* = O_P(√(log p/n)) and KL(π‖π₀) = O_P((log p)^{3/2}/√n) in all cases, including (e).
 
 **Theorem W′ (ORTH; ideal grid).** Under H-ORTH, with G_n := log n/(2r log p): w.p. → 1, g± (Prop G, S° = S₀) satisfy
@@ -181,6 +190,8 @@ wν{X_E/((1−s)(1−ū)) − X_M}. So again Φ ≤ β(w)νX_E − νX_M.
 *Sum.* Since Ω ⊆ 2^{[p]}, 1/q_w(S₀) = Σ_Ω e^{Δ} ≤ Σ_{M⊆S₀} ∏_{j∈M}(2p√n e^{−νx_j}) × Σ_{e≥0} [(s₀+e)!/s₀!] e_e(c/p),
 where e_e is the elementary symmetric polynomial. e_e(c/p) ≤ (Σ_j c_j/p)^e/e! = q^e/e!, so the inner sum is
 ≤ Σ_e C(s₀+e, e)q^e = (1−q)^{−(s₀+1)}, and the outer sum is ∏_{j∈S₀}(1 + 2p√n e^{−νx_j}). ∎
+*SEP′.* Keep the inner sum exact. Write (s₀+e)! = ∫₀^∞ t^{s₀+e}e^{−t}dt and interchange (Tonelli):
+Σ_e [(s₀+e)!/s₀!]e_e(c/p) = (1/s₀!)∫ t^{s₀}e^{−t}Σ_e t^e e_e(c/p) dt = (1/s₀!)∫ t^{s₀}e^{−t}∏_{j∈N}(1 + tc_j/p) dt. ∎
 
 ### 3.6 Theorem W
 **(S1) Exact ORTH representation.** Z_j := x_jᵀε/(σ*√(n−1)), j ∈ [p], are iid N(0,1), because the x_j/√(n−1) are
@@ -223,6 +234,18 @@ log[γ₂(S₀∪E_k)/γ₂(S₀)] ≥ k[r log p − ½ log n − ((1+r)/2) log 
 Take k_n := ⌊e^{(L_n − C₁ − 1)/r}⌋ → ∞. Then k_n ≤ p n^{−1/(2r)} ≤ n^{1−1/(2r)} ≤ √n (because r < 1 and p ≤ n), so
 |η_{k_n}| log p = O_P(n^{−1/2}log p + k_n log² p/n) = o_P(1), and s₀ + k_n ≤ K. The bracket is ≥ 1 − o_P(1), so
 ℓ(2) ≥ log O(2) ≥ k_n(1 − o_P(1)). Finally log(1+χ²) ≥ ℓ(2) − 2ℓ* (Prop L(iv)). ∎
+**(g).** Lemma SEP′ at w = 2, with y_j := c_j(2)/p = n^{−1/2}p^{−1}e^{a_nZ_j²/2}, a_n := a_n(2) = 1 + r + η_n (proof of (b)).
+*Order statistics.* With τ_i := 2 log(m/i) + 4 log log m, P(∃i: Z²_{(i)} > τ_i) ≤ Σ_i C(m,i)P(Z² > τ_i)^i ≤
+Σ_i (e/(log m)²)^i → 0, because P(Z² > τ) ≤ e^{−τ/2} = (i/m)(log m)^{−2}. On this event,
+y_{(i)} ≤ ρ″ i^{−a_n} with ρ″ := p^{a_n−1}(log p)^{2a_n}/√n.
+*Sum.* x ↦ log(1 + x u^{−a}) is decreasing in u, so Σ_{i≥1} log(1 + ρ″t i^{−a}) ≤ ∫₀^∞ log(1 + ρ″t u^{−a})du = (ρ″t)^{1/a}C_a,
+with C_a := ∫₀^∞ log(1 + v^{−a})dv = a∫₀^∞ dv/(1 + v^a) = π/sin(π/a) (integration by parts; a > 1).
+*Integral.* −t + C_a(ρ″t)^{1/a} ≤ −t/2 + f*, with f* := max_t[C_a(ρ″t)^{1/a} − t/2] = ((a−1)/2)(2C_a/a)^{a/(a−1)}ρ″^{1/(a−1)}.
+So (1/s₀!)∫t^{s₀}e^{−t}∏(1 + ty_j)dt ≤ e^{f*}(1/s₀!)∫t^{s₀}e^{−t/2}dt = 2^{s₀+1}e^{f*}.
+*Rates.* a_n − 1 = r + η_n, with η_n log n = o_P(1) (in the divergent regime log p ≍ log n). So
+ρ″^{1/(a_n−1)} = p n^{−1/(2r)}(log p)^{2(1+r)/r}(1 + o_P(1)) and C_{a_n} → C_{1+r}, which gives the display.
+With e^{L_n/r} = p n^{−1/(2r)}(log p)^{−(1+r)/(2r)}, the ratio of the two bounds is (log p)^{5(1+r)/(2r)}.
+Finally log(1+χ²) ≤ ℓ(2) + ℓ* (Prop L(iv)). ∎
 **(f).** TV(π, π₀) ≤ max{1 − π₀(S₀), 1 − π(S₀)} ≤ ℓ* ([PF] WS1(d)). For KL, take θ = 1/log p in [PF] WS6(c):
 KL(π‖π₀) ≤ ℓ(0) + (π(S₀)/θ)·O(1+θ), and by (b) O(1+θ) ≤ e^{ℓ(1+θ)} − 1 = O_P(p^{r/log p}√(log p)/√n) = O_P(√(log p/n)). ∎
 
@@ -273,6 +296,18 @@ Theorem W(e) and the counterexample. Single rows fluctuate (e.g. A = 0.5, n = 10
 O_P(1) Gumbel fluctuations of max Z² near the boundary 2Ar ≈ 1, and the polylog factor (log p)^{−(1+r)/2} delays
 divergence at A = 0.7.
 
+**Divergent side, both bounds** (same script, column `SEPint` = Lemma SEP′). Wherever it is finite, SEP′ ≥ LB:
+
+| log₁₀n | A | LB ℓ(2) | SEP′ ℓ(2) | predicted growth p·n^{−1/(2r)} |
+|---|---|---|---|---|
+| 12 | 0.85 | 29.7 | 245 | n^{0.294} |
+| 14 | 0.85 | 74.2 | 614 | (×3.9 per 10² in n) |
+| 16 | 0.85 | 270 | 1891 | |
+
+From 10¹² to 10¹⁶ the two bounds grow ×9.1 and ×7.7, against ×15 predicted before polylog corrections. They differ by
+a factor of about 7–8, which is the polylog gap. At A = 0.95, SEP′ is ∞, because ū = Σ_N x_j/(1−s) = 0.16–0.63 is not small
+at these n: the theorem's p log p = o(n) is not yet in force there.
+
 **W′ at large (n, p)** (`orth_grid.py` → `results/orth_grid.txt`; r = 0.9, s₀ = 2). Using LB(w) ≤ ℓ(w) ≤ SEP(w) on a
 grid of w ∈ [1, 2], Prop G gives rigorous bounds g₋ ≥ …, g₊ ≤ … and hence an interval for T_ideal (up to the
 conditional-expectation tail in SEP). It is valid when 2ℓ*_ub < c.
@@ -302,9 +337,8 @@ conditional-expectation tail in SEP). It is valid when 2ℓ*_ub < c.
 ## 6. Needs escalation
 1. **Lemma SEP and Theorem W(a)–(f)**: an independent line-by-line check. The cruxes are the convex-telescoping step
    (F2) and the uniformity in w of (HT) + (S2), which W′ needs.
-2. **Theorem W(e)**: the order-statistic constants, and the claim that the divergent-side lower bound is sharp up to
-   polylog. The matching upper bound log(1+χ²) ≤ e^{(L_n + o(log p))/r} is a **CONJECTURE**, supported by the numerics
-   (k* tracks e^{L_n/r}). It needs a truncated elementary-symmetric bound in place of the geometric one.
+2. **Theorem W(e), (g)**: the order-statistic constants of both sides, the Γ-integral form (SEP′), and the
+   integral ∫₀^∞ log(1 + v^{−a})dv = π/sin(π/a).
 3. **General BO (correlated blocks, B ≤ 16)**: replace per-variable factors by per-block factors
    c_b(U) = n^{−|U|/2}·(table odds)^{β}… and run T22(i)'s aggregation with squared odds ([FD] skeleton step 5). The
    deterministic part looks routine; the statistical part needs EXP′ (candidate). **PROOF SKETCH.**
@@ -330,7 +364,7 @@ conditional-expectation tail in SEP). It is valid when 2ℓ*_ub < c.
 | Lemma SEP | separable domination under ORTH | 0.95 | done (needs check) | (F2) telescoping | no |
 | Theorem W(a)–(d), (f), ORTH, p log p = o(n) | two-sided rate p^{r±ε}/√n on the convergent side; KL, TV → 0 | 0.92 | done (needs check) | (HT) uniformity, (S2) | no |
 | Theorem W(e) + counterexample to [FD] W(c) | log(1+χ²) ≥ e^{(L_n−C)/r} | 0.93 | done (needs check) | order statistics; k_n ≤ √n | no |
-| W(e) matching upper bound | log(1+χ²) = e^{(L_n+o(log p))/r} | 0.75 | 0.5 | truncated e_k bound; large models | no |
+| W(g) matching upper bound | log(1+χ²) ≤ C e^{L_n/r}(log p)^{5(1+r)/(2r)} | 0.9 | done (needs check) | SEP′ + order statistics | no |
 | W′ ORTH | T_ideal ∈ {1,2}; = 1 iff 2Ar < 1 | 0.9 | done (needs check) | uniform-in-w bounds near w = 1 + G_n | no |
 | W′ method grid | same count for the V-restricted pilot grid | 0.6 | 0.3 | COVER at w_t; pilot ESS vs ρ_Ω | no |
 | Theorem W, general BO + SE-blk | same dichotomy with r replaced by the realised dilution fraction | 0.85 | 0.6 | per-block SEP; EXP′ | no |

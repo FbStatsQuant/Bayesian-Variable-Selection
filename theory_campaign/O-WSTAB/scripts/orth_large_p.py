@@ -74,15 +74,28 @@ def run(n, p, theta, sigma=1.0, K0=20000, w=2.0):
     q = (top + rest) / p
     trunc = float(np.sum(np.log1p(2 * p * math.sqrt(n) * np.exp(-nu * xt))))
     SEP = trunc - (s0 + 1) * math.log1p(-q) if (q < 1 and ubar < 1) else float("inf")
+    # ---- SEP' (integral form, valid for any q): (1/s0!) int t^s0 e^{-t} prod_j (1 + t c_j/p) dt
+    SEPI = float("inf")
+    yr = rest / p
+    if ubar < 1 and yr < 1:
+        lt = np.linspace(-12, 25, 3000)               # log t grid
+        tt = np.exp(lt)
+        ytop = np.exp(c1 * Z2top - 0.5 * math.log(n)) / p
+        acc = np.zeros_like(tt)
+        for ch in range(0, len(ytop), 2000):
+            acc += np.log1p(np.outer(tt, ytop[ch:ch + 2000])).sum(1)
+        logf = s0 * lt - tt * (1 - yr) + acc + lt          # + lt: dt = t dlogt
+        mx = logf.max()
+        SEPI = trunc + mx + math.log(np.trapz(np.exp(logf - mx), lt)) - math.lgamma(s0 + 1)
     FD = max(0.0, R2 * math.log(p) - 0.5 * math.log(n))
-    return dict(n=n, p=p, R2=R2, ubar=ubar, LB=LB, kstar=i + 1, SEP=SEP, q=q, FD=FD,
+    return dict(n=n, p=p, R2=R2, ubar=ubar, LB=LB, kstar=i + 1, SEP=SEP, SEPI=SEPI, q=q, FD=FD,
                 logrho=R2 * math.log(p) - 0.5 * math.log(n))
 
 
 def main():
     lines = []
     th = np.array([3 / math.sqrt(2), 3 / math.sqrt(2)])   # R2_pop = 0.9
-    hdr = f"{'log10 n':>7} {'A':>5} {'R2':>6} {'ubar':>8} {'R2logp-.5logn':>13} {'FD=W(c)':>8} {'LB ell(2)':>10} {'k*':>6} {'SEP ell(2)':>10} {'q(2)':>9}"
+    hdr = f"{'log10 n':>7} {'A':>5} {'R2':>6} {'ubar':>8} {'R2logp-.5logn':>13} {'FD=W(c)':>8} {'LB ell(2)':>10} {'k*':>6} {'SEP ell(2)':>10} {'SEPint':>9} {'q(2)':>9}"
     print(hdr); lines.append(hdr)
     for A in (0.4, 0.5, 0.7, 0.85, 0.95):
         for e in (4, 6, 8, 10, 12, 14, 16):
@@ -90,7 +103,7 @@ def main():
             p = int(n ** A)
             r = run(n, p, th)
             row = (f"{e:7d} {A:5.2f} {r['R2']:6.3f} {r['ubar']:8.2e} {r['logrho']:13.2f} {r['FD']:8.2f} {r['LB']:10.3g} "
-                   f"{r['kstar']:6d} {r['SEP']:10.3g} {r['q']:9.2e}")
+                   f"{r['kstar']:6d} {r['SEP']:10.3g} {r['SEPI']:9.4g} {r['q']:9.2e}")
             print(row); lines.append(row)
     with open(__file__.replace("scripts", "results").replace(".py", ".txt"), "w") as f:
         f.write("\n".join(lines) + "\n")

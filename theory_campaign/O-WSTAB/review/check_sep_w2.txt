@@ -1,0 +1,35 @@
+(1) ORTH log gamma_w formula (REPORT 3.5): max |formula - direct| over 6 designs x 5 w x all S = 3.40e-11
+(2) Lemma SEP: n p s0 blocks w | ell(w) | SEP bound | ok
+        40  8 2 pairs   0.0 | 1.4069 | 3.1172 | True
+        40  8 2 pairs   0.5 | 1.0788 | 3.1172 | True
+        40  8 2 pairs   1.0 | 0.85063 | 3.1172 | True
+        40  8 2 pairs   1.5 | 0.7203 | 3.3197 | True
+        40  8 2 pairs   2.0 | 0.67279 | 3.6126 | True
+       200  9 2 triples 0.0 | 0.19559 | 0.44886 | True
+       200  9 2 triples 0.5 | 0.2176 | 0.44886 | True
+       200  9 2 triples 1.0 | 0.24299 | 0.44886 | True
+       200  9 2 triples 1.5 | 0.27228 | 0.56907 | True
+       200  9 2 triples 2.0 | 0.30611 | 0.73583 | True
+      1000 10 3 random  0.0 | 0.059991 | 0.099689 | True
+      1000 10 3 random  0.5 | 0.060873 | 0.099689 | True
+      1000 10 3 random  1.0 | 0.061789 | 0.099689 | True
+      1000 10 3 random  1.5 | 0.062742 | 0.10125 | True
+      1000 10 3 random  2.0 | 0.063734 | 0.10288 | True
+      5000 10 1 single  0.0 | 0.018624 | 0.037207 | True
+      5000 10 1 single  0.5 | 0.019536 | 0.037207 | True
+      5000 10 1 single  1.0 | 0.020549 | 0.037207 | True
+      5000 10 1 single  1.5 | 0.021673 | 0.039271 | True
+      5000 10 1 single  2.0 | 0.022924 | 0.041571 | True
+       400 10 2 pairs   0.0 | 0.074016 | 0.15347 | True
+       400 10 2 pairs   0.5 | 0.080667 | 0.15347 | True
+       400 10 2 pairs   1.0 | 0.08875 | 0.15347 | True
+       400 10 2 pairs   1.5 | 0.098618 | 0.17117 | True
+       400 10 2 pairs   2.0 | 0.11071 | 0.19308 | True
+     20000  9 2 triples 0.0 | 0.055534 | 0.13091 | True
+     20000  9 2 triples 0.5 | 0.06467 | 0.13091 | True
+     20000  9 2 triples 1.0 | 0.075615 | 0.13091 | True
+     20000  9 2 triples 1.5 | 0.08872 | 0.15521 | True
+     20000  9 2 triples 2.0 | 0.1044 | 0.18493 | True
+    SEP violations: 0 of 30; finite-bound cases: 30
+(3) Lemma W2: 138 (S0, l) pairs in 6 BO correlated-block designs; sandwich violations = 0; max rel. error of G = nu g(y) and LR = nu[g(y)-g((1-kappa)y)] = 1.10e-08
+(4) Prop L(ii): max |log(1+chi2) - [l(u)+l(w)-2l(v)]| over 40 random (u,v) = 3.55e-13
