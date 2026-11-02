@@ -132,8 +132,14 @@ Either way, the pair (A, B') is available just before the merge at height π(A),
 contradicts the minimality of that merge. ∎
 
 *Proof of (A3).* The cut retains, on every root-to-leaf path, the first node with ≤ B members. Let c be a retained
-cluster. By laminarity c is either inside a group or a union of whole groups. Suppose c ⊊ h. The node h lies on the
-path from the root to c, and h has g_h ≤ g_max ≤ B members, so the cut stops at h or above, never at c. This is a
+cluster. By laminarity c is either inside a group or a union of whole groups. Suppose c ⊊ h.
+
+First, h is a node lying on the path from the root to c. Let N be the first ancestor of c that is not inside h, and
+let N_c be its child on the path (N_c ⊆ h, c ⊆ N_c). By laminarity N is a union of whole groups, so N ⊇ h. If
+N_c ⊊ h, the sibling N ∖ N_c would contain part, but not all, of h, together with points outside h (since N ⊋ h).
+That contradicts laminarity. Hence N_c = h.
+
+Now h has g_h ≤ g_max ≤ B members, so the cut stops at h or above, never at c. This is a
 contradiction, so every retained cluster is a union of whole groups. Packing concatenates whole retained clusters, so
 every block is a union of whole groups.
 
