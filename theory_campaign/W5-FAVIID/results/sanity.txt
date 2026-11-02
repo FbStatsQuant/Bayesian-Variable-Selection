@@ -1,0 +1,9 @@
+(1) max|FastTables - Tables| = 0.0
+(1) |logZ brute - logZ conv| = 0.0
+(2) Lemma X+: max over 6000 (U,A) pairs of R+ - kappa+ = -0.005039160900310172 (must be <= 0)
+(3) min_c c*E_{1/2}(1/c) = 3.8311 at c = 1.684; at c=1.7: 3.8314
+(3) scalar inequality violations: 0
+(4) Lemma S violations: 0
+(5) Lemma B' (own truth + co-blocked truth): KS p-value vs Beta(1.0, 57.5) = 0.714
+(5) Lemma B' (null group, two co-blocked truths): KS p-value vs Beta(1.5, 57.0) = 0.768
+(5) Lemma B' (own truth only): KS p-value vs Beta(0.5, 58.5) = 0.725
