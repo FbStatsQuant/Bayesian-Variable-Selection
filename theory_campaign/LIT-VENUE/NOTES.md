@@ -107,3 +107,11 @@ Local PDFs: Papers/Core_bibliography/NN_*.pdf, converted with `pdftotext -layout
   Crossref; local 11).
 - Venue of Papaspiliopoulos & Rossell (Biometrika 104, 2017): Crossref query did not return it — UNVERIFIED (from memory and the
   INDEX title only).
+
+## Added late
+- García-Donato & Martínez-Beneito, "On sampling strategies in BVS problems with large model spaces", JASA 108 340–352 (2013)
+  (Crossref; local 28). §4 (l.264–276): "Given a set of visited models M*, the obvious and most precise way of estimating the
+  HPM ... is τ̂ = argmax_{γ∈M*} B_γ0 Pr(M_γ). Notice that the goodness of the estimation of the HPM only depends upon the
+  ability of the methods to search for good models in very large model spaces." 0 numbered theorems.
+- Clyde, Ghosh, Littman, BAS, JCGS 20 80–101 (2011) (Crossref; local 27). Thm 1: sampling without replacement via updated
+  ρ^(t) assigning probability one to unsampled models Γt.
