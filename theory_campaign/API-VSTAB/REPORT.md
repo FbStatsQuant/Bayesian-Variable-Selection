@@ -51,7 +51,7 @@ All verdicts below are by a Claude model. Like every result in this campaign, th
   - So state the instance as: all groups have ρ_h = 0.4, or any fixed values in a compact subset of (0,1).
 - **R2 (which move binds).** The margin A-REV7 reports in §7 (0.6069) is the within-unit swap margin. On the c = 2 instance the binding move is a **cross-unit** swap: drop the a-hub of one pair and add a variable of the other pair's unit, giving m_STAB = 0.5728. This does not affect A-REV7's claim, which is a lower bound of 0.4032.
 - **R3 (sharper certificate).** Replacing λ₀ by the exact λ_min(Σ_{𝒮𝒰}) is still a valid sufficient condition (proof unchanged); on the instance it gives 0.4516. The certificate is a strict subset of the STAB region: in the sweep it applied in 820 of the 1149 STAB-true draws, and in no STAB-false draw.
-- **R4 (size of constants).** c_* = 1/(81·C(73,18)) ≈ 10^{−18.3} on the instance, and c₀(S°) ≈ 10^{−12.6}. So (1 − c_*)^N → 0 only for astronomically large N. The theorem is asymptotic only, and A-REV7 does not claim otherwise.
+- **R4 (size of constants).** c_* = 1/(81·C(73,18)) ≈ 10^{−18.65} on the instance, and c₀(S°) = 1/(81·C(36,18)) ≈ 10^{−11.87} (computed under owls_run; `scripts/constants.txt`). So (1 − c_*)^N → 0 only for astronomically large N. The theorem is asymptotic only, and A-REV7 does not claim otherwise.
 - **R5 (IND-T).** The product over particles uses fresh randomness per particle-round. The engine reads one shared stream, which is covered by W2-PREM IND-T. Its registry status is author PROVED, XF VERIFIED* (A-REV1, uninterrupted process), and no same-family verifier. That is the one cited input of B2-LH with no Claude verifier. It sits outside this task.
 
 ## 3. The resulting theorem (statement of record proposal)
