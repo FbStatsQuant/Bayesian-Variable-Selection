@@ -1,0 +1,2 @@
+response 0: brute force (L)=True, #failing D_S=0 | td_check (L)=True, #failing=0
+response 1: brute force (L)=False, #failing D_S=5 | td_check (L)=False, #failing=5

@@ -1,0 +1,6 @@
+S1: phi0^2=1.000 eps_required=2.86e-06  n needed ~ 8.8e+14
+S2: phi0^2=0.333 eps_required=7.95e-08  n needed ~ 1.1e+18
+S3: phi0^2=0.300 eps_required=3.28e-08  n needed ~ 6.7e+18
+S4: phi0^2=0.150 eps_required=2.11e-09  n needed ~ 1.6e+21
+S5: phi0^2=0.300 eps_required=4.22e-08  n needed ~ 4.0e+18
+S6: phi0^2=0.100 eps_required=8.28e-10  n needed ~ 1.0e+22
