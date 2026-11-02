@@ -129,6 +129,10 @@ path has a state ≠ S₀ iff there is a first k with X⁽ᵏ⁾ ≠ S₀, and t
 with kernels K_{σ(1)},…,K_{σ(m)} (R3), so P(first departure at step k | σ) ≤ K_{σ(k)}(S₀, Ω∖{S₀}). Summing over k
 (each label occurs once in σ) gives P(depart | σ) ≤ Σ_e K_e(S₀, Ω∖{S₀}); average over σ. Finally ρ̄ ≤ 1. ∎
 
+*Exact form.* By the same Markov structure, P(no departure | σ) = ∏_{k=1}^m [1 − K_{σ(k)}(S₀, Ω∖{S₀})], which does not
+depend on σ. Hence ρ̄ = 1 − ∏_e [1 − K_e(S₀, Ω∖{S₀})] exactly (≤ Σ_e K_e(S₀, Ω∖{S₀}) by the union bound). This is how
+`scripts/bvs_exact.py` evaluates ρ̄.
+
 ### Lemma 3 (round-start occupancy controls the bad-round fraction). PROVED.
 Fix data with S₀ ∈ Ω, 𝓒 ∈ 𝒢_n and an island r. Let B̄_r be the bad-round fraction of T23 STATEMENT §1 and g_{r,h} the
 fraction of island r's particles ≠ S₀ at the start of measured round h (= terminal round L + h). Then

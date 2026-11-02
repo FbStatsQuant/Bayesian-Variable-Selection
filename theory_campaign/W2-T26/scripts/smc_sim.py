@@ -48,7 +48,7 @@ class Sim:
     def lg(self, S, phi):
         return self.pr.lg0[S] + phi * self.pr.d[S]
 
-    def round(self, S, phi, rng, record=None):
+    def round(self, S, phi, rng, record=None, track=None):
         pr, p, B, K = self.pr, self.p, self.B, self.K
         N = len(S)
         order = rng.random((N, self.m)).argsort(1)
@@ -97,6 +97,8 @@ class Sim:
                 s = S[w]; sp = self.draw0(w.size, rng)
                 acc = np.log(rng.random(w.size)) < phi * (pr.d[sp] - pr.d[s])
                 S[w] = np.where(acc, sp, s)
+            if track is not None:
+                track |= S != self.pr.S0
         return S
 
     def island(self, grid, N, L, rng):

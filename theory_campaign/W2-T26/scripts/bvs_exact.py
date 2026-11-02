@@ -192,6 +192,7 @@ class Problem:
         out['Delta_grid'] = 1 - qs.min()
         out['Delta'] = max(1 - p0, 1 - p1)  # Lemma 1
         out['rho_bar_bound'] = self.departure_sum()
+        out['rho_bar'] = self.rho_bar_exact
         return out
 
     def departure_sum(self):
@@ -199,13 +200,15 @@ class Problem:
         S0, p, K = self.S0, self.p, self.K
         lg = self.lg1
         tot = 0.0
+        logstay = 0.0  # log prod_e (1 - k_e): exact rho_bar = 1 - exp(logstay)
         # Gibbs: heat bath on coordinate j
         for j in range(p):
             Sj = S0 ^ (1 << j)
             if not self.feas[Sj]:
                 continue
             a, b = lg[S0], lg[Sj]
-            tot += 1.0 / (1.0 + np.exp(min(a - b, 700.0)))  # prob of moving to Sj
+            ke = 1.0 / (1.0 + np.exp(min(a - b, 700.0)))  # prob of moving to Sj
+            tot += ke; logstay += np.log1p(-min(ke, 1 - 1e-300))
         k = self.s0
         ins = [j for j in range(p) if S0 >> j & 1]
         outs = [j for j in range(p) if not S0 >> j & 1]
@@ -216,7 +219,7 @@ class Problem:
                 for l in outs:
                     Sp = S0 ^ (1 << i) ^ (1 << l)
                     s += min(1.0, np.exp(lg[Sp] - lg[S0]))
-            tot += s / (k * (p - k))
+            ke = s / (k * (p - k)); tot += ke; logstay += np.log1p(-min(ke, 1 - 1e-300))
         # neighbour swap (B copies)
         if k > 0:
             s = 0.0
@@ -229,10 +232,11 @@ class Problem:
                     rev = [jj for jj in self.nbr[l] if not Sp >> jj & 1]
                     hast = len(cand) / len(rev)
                     s += (1.0 / len(cand)) * min(1.0, np.exp(lg[Sp] - lg[S0]) * hast)
-            tot += self.B * s / k
+            ke = s / k; tot += self.B * ke; logstay += self.B * np.log1p(-min(ke, 1 - 1e-300))
         # independence proposal from pi0, accept 1 ^ exp(d(S') - d(S0))
         mv = self.pi0 * np.minimum(1.0, np.exp(np.where(self.feas, self.d - self.d[S0], -np.inf)))
-        tot += float(mv.sum() - mv[S0])
+        ke = float(mv.sum() - mv[S0]); tot += ke; logstay += np.log1p(-min(ke, 1 - 1e-300))
+        self.rho_bar_exact = float(-np.expm1(logstay))
         return tot
 
     def ideal_grid(self, thr=0.9, halvings=60):
