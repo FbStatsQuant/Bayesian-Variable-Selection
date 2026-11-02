@@ -111,13 +111,15 @@ is at most the restricted sup. ∎
 
 This turns W1's CE1 asymptotic sketch into a deterministic inequality plus two named statistical limits.
 
-**Lemma E.** Let Y ∈ 𝓡_d with |P(Y)| = d and j ∈ M(Y). Write:
+**Lemma E.** Let Y ∈ 𝓡_d with |P(Y)| = d and m := |M(Y)| ≥ 1. Write:
 - Q_T(Y) := Σ_{i∈Y∩S₀} (1 − o_i(Y)), the total deletion probability of the truths present;
 - o*(Y) := max_{l ∉ Y∪S₀} o_l(Y), the best null-addition probability.
 
 Then
 
-  P_Y(some elementary state of the next round lies outside 𝓡_d) ≥ o*(Y) · [1 − Q_T(Y)/(B+d+5)] / (B+d+4).
+  P_Y(some elementary state of the next round lies outside 𝓡_d) ≥ o*(Y) · [1 − Q_T(Y)/(B+m+d+4)] / (B+m+d+3).
+
+With one missing truth (m = 1), the denominators are B+d+5 and B+d+4.
 
 *Proof.* Realise σ by iid U(0,1) arrival times T_e. Give each label an independent outcome Y_e ~ K_e(Y,·). The
 round agrees with the outcomes Y_e up to and including its first state change (W1 Lemma P coupling).
@@ -125,7 +127,7 @@ round agrees with the outcomes Y_e up to and including its first state change (W
 Let C be the set of Gibbs labels of nulls l ∉ Y ∪ S₀. Since |P(Y)| = d, any change caused by a label in C is
 an addition of a null, and therefore an exit.
 
-Let D := 𝔑 ∪ {G_j} ∪ {G_q : q ∈ P(Y)}, so |D| = B + 3 + d. Let T be the Gibbs labels of the truths in Y, and
+Let D := 𝔑 ∪ {G_j : j ∈ M(Y)} ∪ {G_q : q ∈ P(Y)}, so |D| = B + 2 + m + d. Let T be the Gibbs labels of the truths in Y, and
 put l* = argmax o_l(Y).
 
 Consider the event that Y_{G_{l*}} is an addition and that no label of D ∪ T changes the state before
@@ -138,8 +140,8 @@ The inequality uses q_e ≤ 1 and the Weierstrass product inequality. The integr
 [1 − Q_T/(|D|+2)]/(|D|+1). ∎
 
 **Consequence (CE1, asymptotic form).** Suppose there is a design sequence and boundary states Y_n ∈ 𝓡_d with
-o*(Y_n) → 1 and Q_T(Y_n) → 0 in P₀-probability. Then the uniform one-round exit bound η_n of H24 satisfies
-η_n ≥ (1 − o_P(1))/(B+d+4) ≥ (1 − o_P(1))/(d+20). Hence (L+4)η_n → ∞ in probability, and H24's asymptotic input
+o*(Y_n) → 1 and Q_T(Y_n) → 0 in P₀-probability, each Y_n missing exactly one truth (m = 1). Then the uniform
+one-round exit bound η_n of H24 satisfies η_n ≥ (1 − o_P(1))/(B+d+4) ≥ (1 − o_P(1))/(d+20). Hence (L+4)η_n → ∞ in probability, and H24's asymptotic input
 fails. The two limits are the statistical content:
 - o*(Y_n) → 1: a look-alike of a missing truth is attractive. This holds under BM-∞ when a null has a fixed
   correlation r₀ with a missing truth j.
