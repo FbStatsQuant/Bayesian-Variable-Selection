@@ -44,8 +44,8 @@ def lh_truth(G, g, hub, links, visible):
     for (a, b, psi) in links:
         jb = b * g + hub[b]
         th[jb] = -psi * visible[a]
-        M.append(jb)
-    S0 = sorted(np.flatnonzero(th).tolist())
+        M.append(int(jb))
+    S0 = [int(j) for j in sorted(np.flatnonzero(th).tolist())]
     Sref = sorted(set(S0) - set(M))
     return th, S0, sorted(M), Sref
 
