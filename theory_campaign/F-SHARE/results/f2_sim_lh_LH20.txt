@@ -1,0 +1,78 @@
+######## LH20: p=20 S0=[0, 4, 8, 12, 16] Sref=[0, 8, 16] M=[4, 12] lambda_min(R)=0.2418
+(set counts = snapshots after each stage's move round, stage 0 = initial draw, plus final states after the terminal rounds; within-round states not counted)
+
+==== LH20  n=1600  N=1000  1 datasets x 8 islands
+-- ds0: build+grid 296s; blocks=[[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15], [16, 17, 18, 19]]; T=18 (pilot 13, forced 0); L=11; pi(S0)=0.878; pi0(S0)=1.29e-05; start mode={0,8,16}; pi0(W)=1.0000 pi0(W0)=0.9495 pi(W0uH)=1.000
+   crossing: b=4: g0=-5.83 g1=100.17 phi*=0.0550; b=12: g0=-5.62 g1=88.27 phi*=0.0599  -> phi*=0.0599, t*=12 (grid[t*]=0.0602)
+   grid: 0.0000 0.0155 0.0257 0.0330 0.0387 0.0435 0.0477 0.0477 0.0517 0.0517 0.0557 0.0557 0.0602 0.0602 0.0656 0.0656 0.0735 0.0916 1.0000
+   isl0: 2.7s outW-snaps=0 maxfrac!W2=0.002 S0 first=(1,gibbs,phi=0.0155) t*=12 H>=50% t=12 H>=99% t=18  n_T(bridge) W/W0/H=1000/872/1000  final W/W0/H/W0uH=1000/855/1000/1000  minlogP W=0.000 W0=-0.106  log(Zhat/Z)=0.009
+   trace (ds0 isl0): stage phi  fW  fW0  fW2  fH
+         0 0.0000 1.000 0.954 1.000 0.000
+         1 0.0155 1.000 0.928 1.000 0.000
+         2 0.0257 1.000 0.913 1.000 0.006
+         3 0.0330 1.000 0.907 1.000 0.007
+         4 0.0387 1.000 0.879 1.000 0.039
+         5 0.0435 1.000 0.874 1.000 0.084
+         6 0.0477 1.000 0.864 0.999 0.162
+         7 0.0477 1.000 0.842 1.000 0.158
+         8 0.0517 1.000 0.860 1.000 0.264
+         9 0.0517 1.000 0.851 1.000 0.288
+        10 0.0557 1.000 0.859 0.999 0.412
+        11 0.0557 1.000 0.867 1.000 0.392
+        12 0.0602 1.000 0.862 0.999 0.566
+        13 0.0602 1.000 0.866 0.999 0.575
+        14 0.0656 1.000 0.881 1.000 0.730
+        15 0.0656 1.000 0.857 0.998 0.707
+        16 0.0735 1.000 0.889 1.000 0.851
+        17 0.0916 1.000 0.904 1.000 0.964
+        18 1.0000 1.000 0.872 1.000 1.000
+     final 1.0000 1.000 0.855 1.000 1.000
+   isl1: 2.9s outW-snaps=0 maxfrac!W2=0.001 S0 first=(1,gibbs,phi=0.0155) t*=12 H>=50% t=12 H>=99% t=18  n_T(bridge) W/W0/H=1000/893/1000  final W/W0/H/W0uH=1000/871/1000/1000  minlogP W=0.000 W0=-0.110  log(Zhat/Z)=-0.088
+   isl2: 2.8s outW-snaps=0 maxfrac!W2=0.002 S0 first=(1,gibbs,phi=0.0155) t*=12 H>=50% t=12 H>=99% t=18  n_T(bridge) W/W0/H=1000/870/1000  final W/W0/H/W0uH=1000/881/1000/1000  minlogP W=0.000 W0=-0.104  log(Zhat/Z)=-0.028
+   isl3: 2.9s outW-snaps=0 maxfrac!W2=0.001 S0 first=(1,gibbs,phi=0.0155) t*=12 H>=50% t=12 H>=99% t=18  n_T(bridge) W/W0/H=1000/889/1000  final W/W0/H/W0uH=1000/878/1000/1000  minlogP W=0.000 W0=-0.116  log(Zhat/Z)=-0.002
+   isl4: 2.7s outW-snaps=0 maxfrac!W2=0.002 S0 first=(1,gibbs,phi=0.0155) t*=12 H>=50% t=12 H>=99% t=18  n_T(bridge) W/W0/H=1000/886/1000  final W/W0/H/W0uH=1000/892/1000/1000  minlogP W=0.000 W0=-0.102  log(Zhat/Z)=0.050
+   isl5: 2.7s outW-snaps=0 maxfrac!W2=0.001 S0 first=(1,gibbs,phi=0.0155) t*=12 H>=50% t=12 H>=99% t=18  n_T(bridge) W/W0/H=1000/885/1000  final W/W0/H/W0uH=1000/888/1000/1000  minlogP W=0.000 W0=-0.116  log(Zhat/Z)=-0.028
+   isl6: 2.8s outW-snaps=0 maxfrac!W2=0.001 S0 first=(1,gibbs,phi=0.0155) t*=12 H>=50% t=12 H>=99% t=18  n_T(bridge) W/W0/H=1000/899/1000  final W/W0/H/W0uH=1000/870/1000/1000  minlogP W=0.000 W0=-0.128  log(Zhat/Z)=0.003
+   isl7: 4.0s outW-snaps=0 maxfrac!W2=0.001 S0 first=(1,gibbs,phi=0.0155) t*=12 H>=50% t=12 H>=99% t=18  n_T(bridge) W/W0/H=1000/894/1000  final W/W0/H/W0uH=1000/876/1000/1000  minlogP W=0.000 W0=-0.106  log(Zhat/Z)=-0.063
+## SUMMARY LH20 n=1600 (8 islands): islands with any particle outside W: 0; frac outside W2 over stages: median 0.000, max 0.002
+   S0 first-scored stage - t*: [-11, -11, -11, -11, -11, -11, -11, -11]  (pairs (first, t*): [(1, 12)]); mechanisms {'gibbs': 8}
+   n_T(H)=N at end of bridge: 8/8; at final: 8/8; median H>=50% stage 12.0, H>=99% 18.0; delivery failures (final W0uH = 0): 0
+   min log P_t: W 0.000, W0 -0.128; log(Zhat/Z) median -0.015, range [-0.088, 0.050]
+
+==== LH20  n=6400  N=1000  1 datasets x 8 islands
+-- ds0: build+grid 357s; blocks=[[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15], [16, 17, 18, 19]]; T=18 (pilot 13, forced 4); L=13; pi(S0)=0.925; pi0(S0)=2.58e-06; start mode={0,8,16}; pi0(W)=1.0000 pi0(W0)=0.9745 pi(W0uH)=1.000
+   crossing: b=4: g0=-6.52 g1=453.63 phi*=0.0142; b=12: g0=-6.57 g1=472.62 phi*=0.0137  -> phi*=0.0142, t*=12 (grid[t*]=0.0145)
+   grid: 0.0000 0.0040 0.0065 0.0082 0.0095 0.0105 0.0114 0.0115 0.0124 0.0125 0.0134 0.0135 0.0145 0.0145 0.0158 0.0158 0.0179 0.8300 1.0000
+   isl0: 2.4s outW-snaps=0 maxfrac!W2=0.000 S0 first=(1,gibbs,phi=0.004) t*=12 H>=50% t=12 H>=99% t=17  n_T(bridge) W/W0/H=1000/912/1000  final W/W0/H/W0uH=1000/923/1000/1000  minlogP W=0.000 W0=-0.086  log(Zhat/Z)=-0.051
+   trace (ds0 isl0): stage phi  fW  fW0  fW2  fH
+         0 0.0000 1.000 0.976 1.000 0.000
+         1 0.0040 1.000 0.971 1.000 0.000
+         2 0.0065 1.000 0.945 1.000 0.001
+         3 0.0082 1.000 0.936 1.000 0.009
+         4 0.0095 1.000 0.904 1.000 0.032
+         5 0.0105 1.000 0.915 1.000 0.063
+         6 0.0114 1.000 0.908 1.000 0.149
+         7 0.0115 1.000 0.922 1.000 0.164
+         8 0.0124 1.000 0.912 1.000 0.262
+         9 0.0125 1.000 0.902 1.000 0.307
+        10 0.0134 1.000 0.917 1.000 0.438
+        11 0.0135 1.000 0.898 1.000 0.480
+        12 0.0145 1.000 0.915 1.000 0.601
+        13 0.0145 1.000 0.926 1.000 0.633
+        14 0.0158 1.000 0.935 1.000 0.771
+        15 0.0158 1.000 0.931 1.000 0.778
+        16 0.0179 1.000 0.935 1.000 0.919
+        17 0.8300 1.000 0.926 1.000 1.000
+        18 1.0000 1.000 0.912 1.000 1.000
+     final 1.0000 1.000 0.923 1.000 1.000
+   isl1: 1.6s outW-snaps=0 maxfrac!W2=0.001 S0 first=(1,gibbs,phi=0.004) t*=12 H>=50% t=12 H>=99% t=17  n_T(bridge) W/W0/H=1000/916/1000  final W/W0/H/W0uH=1000/930/1000/1000  minlogP W=0.000 W0=-0.059  log(Zhat/Z)=0.038
+   isl2: 2.0s outW-snaps=0 maxfrac!W2=0.001 S0 first=(1,gibbs,phi=0.004) t*=12 H>=50% t=12 H>=99% t=17  n_T(bridge) W/W0/H=1000/930/1000  final W/W0/H/W0uH=1000/934/1000/1000  minlogP W=0.000 W0=-0.095  log(Zhat/Z)=-0.030
+   isl3: 1.9s outW-snaps=0 maxfrac!W2=0.000 S0 first=(1,gibbs,phi=0.004) t*=12 H>=50% t=12 H>=99% t=17  n_T(bridge) W/W0/H=1000/926/1000  final W/W0/H/W0uH=1000/916/1000/1000  minlogP W=0.000 W0=-0.068  log(Zhat/Z)=-0.016
+   isl4: 1.2s outW-snaps=0 maxfrac!W2=0.001 S0 first=(1,gibbs,phi=0.004) t*=12 H>=50% t=12 H>=99% t=17  n_T(bridge) W/W0/H=1000/914/1000  final W/W0/H/W0uH=1000/911/1000/1000  minlogP W=0.000 W0=-0.078  log(Zhat/Z)=-0.046
+   isl5: 2.0s outW-snaps=0 maxfrac!W2=0.001 S0 first=(1,gibbs,phi=0.004) t*=12 H>=50% t=11 H>=99% t=17  n_T(bridge) W/W0/H=1000/938/1000  final W/W0/H/W0uH=1000/929/1000/1000  minlogP W=0.000 W0=-0.074  log(Zhat/Z)=-0.014
+   isl6: 3.3s outW-snaps=0 maxfrac!W2=0.001 S0 first=(1,gibbs,phi=0.004) t*=12 H>=50% t=12 H>=99% t=17  n_T(bridge) W/W0/H=1000/910/1000  final W/W0/H/W0uH=1000/928/1000/1000  minlogP W=0.000 W0=-0.065  log(Zhat/Z)=0.055
+   isl7: 3.7s outW-snaps=0 maxfrac!W2=0.001 S0 first=(1,gibbs,phi=0.004) t*=12 H>=50% t=12 H>=99% t=17  n_T(bridge) W/W0/H=1000/918/1000  final W/W0/H/W0uH=1000/918/1000/1000  minlogP W=0.000 W0=-0.077  log(Zhat/Z)=-0.011
+## SUMMARY LH20 n=6400 (8 islands): islands with any particle outside W: 0; frac outside W2 over stages: median 0.000, max 0.001
+   S0 first-scored stage - t*: [-11, -11, -11, -11, -11, -11, -11, -11]  (pairs (first, t*): [(1, 12)]); mechanisms {'gibbs': 8}
+   n_T(H)=N at end of bridge: 8/8; at final: 8/8; median H>=50% stage 12.0, H>=99% 17.0; delivery failures (final W0uH = 0): 0
+   min log P_t: W 0.000, W0 -0.095; log(Zhat/Z) median -0.015, range [-0.051, 0.055]
