@@ -42,3 +42,13 @@ Credit readings: $245 (16:00), $244 (17:19, after 7 s test), $239 (~17:22, right
 ## Wave 4 (2026-11-02 ~17:55 UTC)
 | W4-T38FULL assemble T38 | see cloud_sessions.log |
 | W4-SHARE route b2 delivery | see cloud_sessions.log |
+
+## Plan-funded team (2026-11-02 18:02 UTC; Claude Personal weekly plan, 29% left, resets ~21:00 UTC; Felipe: "use as many threads as you want")
+| ID | Model | Task | Branch |
+|---|---|---|---|
+| F-SHARE | Fable 5.1 max (CP) | route b2 delivery crux | theory/F-SHARE |
+| F-REFINE | Fable 5.1 max (CP) | P6 believed versions, confidence cards, architecture, next tasks | theory/F-REFINE |
+| F-PXN | Fable 5.1 max (CP) | p >> n joint family, TD′ asymptotics, the masking vs dominance tension | theory/F-PXN |
+| O-LS0 | Opus 5.5 xhigh (CP, Owls, <= 40 cores) | LS0 post hoc on the 2,400 regenerated datasets | theory/O-LS0 |
+| A-REV1 | GPT-6 Astra high (Codex) | cross-family review: Theorem B, T38(b)-R, Lemma S, D2, E3 | theory/A-REV1 |
+| A-REV2 | GPT-6 Astra high (Codex) | cross-family review: T03♯, refined T37, EXP′ (NOT STARTED: T3 connection errors; retry) | theory/A-REV2 |
