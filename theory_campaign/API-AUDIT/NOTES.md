@@ -9,3 +9,7 @@
   cpp_final_run_ls0), which calls local_search(start_mode, ell, tier, emit_centre = true, -2) on the SAME ledger and
   cache after the final local search.
 - R and Rcpp exist on Owls (R 4.6.0), unlike W5's container: VAL-FP can be measured by a replay.
+- 2026-11-02 (resume run). Ran the threshold-log pipeline on fits 1–10 (logging core reproduces production log_Z_r
+  bitwise; all tag sequences aligned). Added an exact count of index-draw rounding flips (k ≤ 256). The first-order eps
+  is ≤ 2.2e-6 per final run, with resampling dominant. Confirmed the stopped-fit hazard: `fit$log_Z` partially
+  matches `log_Zbar0`. Wrote REPORT.md (verdicts per fact). Close.
