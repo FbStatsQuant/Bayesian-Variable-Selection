@@ -1,0 +1,2 @@
+scripts/run.sh: line 1: ﻿#!/bin/bash: No such file or directory
+scripts/run.sh: line 12: exit: 1: numeric argument required

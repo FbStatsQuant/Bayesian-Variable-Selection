@@ -21,3 +21,5 @@ Persistent process IDs and inspected outcomes:
 `results/input_*.npz` store exact sufficient statistics and signal configuration; `population.json` stores all heterogeneous population parameters. The script fixes seed 20261102, all dimensions and all simulation settings. `sources/manifest.json` preserves source heads and hashes. `results/SHA256SUMS` is the remote output manifest. Run timestamps and environment are recorded by the launcher, not inferred from this report.
 
 The system-Python failure did not trigger local fallback. The second failure did not count as a successful run. Only the final saved exit-zero outputs support REVIEW.md.
+
+Reviewed evidence head SHA: `c70df7c7f383e01978acc5ba29227e941f7adfb1`. The final report commit is supplied in the delivery message. Source/result bytes are retained using the directory-local `.gitattributes`; log files are force-added because the repository ignores `*.log` globally.

@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/fb31/theory_campaign/A-REV8/scripts/check.py", line 1, in <module>
+    ﻿import numpy as np, json, itertools, pathlib, platform, sys
+ModuleNotFoundError: No module named 'numpy'
