@@ -1,0 +1,6 @@
+max ratio in (I) with S' = pi(S): 5.239
+max ratio in (II) ||(P_pi - P_B)mu||^2 / R+(S): 1895.508 (unbounded => (II) false)
+max ratio in (III) (must be <= 1): 0.963323
+max of [||(P_pi-P_B)mu||^2 - 2(Delta_B-Delta_S)_+] / R+: 7.744  at (lambda_min(R), S, pi, B) = (np.float64(0.0407), (3, 4, 5), (2, 3, 4, 5), (3, 5, 6))
+orthogonal example S={x1}, S'=S+x3, S''=swap x1->x2, theta=(1,1,0.1): ||(P_S'-P_S'')mu||^2 = 2.010, |dDelta'|+|dDelta''| = 0.010  (ratio 201)
+(II) example S0={x1,x2}, theta=(3,0.2), S={x1}: R+ = 0.040, |Delta_{S-x1} - Delta_S| = 9.000
