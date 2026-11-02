@@ -39,12 +39,12 @@ and of W3-PXN `PROOF.md`. Every result is a **candidate**: not reviewed, not ado
 **Symbols introduced here.**
 - For a set U and V ⊆ [p] ∖ U: X_{U,V} := 1 − RSS_{U∪V}/RSS_U (partial R² of y on X_V given X_U; RSS_T := ‖(C − P_T)Y‖²).
 - 𝒯_K := S₀ ∩ K (truths of group K). A group is *truth-carrying* if 𝒯_K ≠ ∅; h₀ := number of truth-carrying groups (≤ s₀).
-- **Q_n** := {every v3 block is a union of whole groups of 𝒦_n}; **Q_n(m)** := Q_n ∩ {every block meets at most m
-  truth-carrying groups}.
+- **Q_n** := {every v3 block is a union of whole groups of 𝒦_n}; **Q_n(m)** := Q_n ∩ {for every group K, the block
+  containing K contains at most m − 1 truth-carrying groups other than K} (the *truth context* of K has ≤ m − 1 groups).
 - 𝒲_K(m) := {S₀ ∩ (K₁ ∪ … ∪ K_i) : 0 ≤ i ≤ m−1, K₁,…,K_i distinct truth-carrying groups ≠ K}; |𝒲(m)| := max_K |𝒲_K(m)|
   ≤ Σ_{i=0}^{m−1} C(h₀, i).
-- t_n := 2(1+ε₀) log N_n for a fixed ε₀ > 0, where N_n is the size of the truncation family used (stated in each theorem;
-  always N_n ≤ C n^A); τ_n := t_n/n; **ξ_n := √(t_n/(2(n+1)))** = √((1+ε₀)log N_n/(n+1)).
+- t_n := 2(1+ε₀) log max(N_n, n) for a fixed ε₀ > 0, where N_n is the size of the truncation family used (stated in each
+  theorem; always N_n ≤ C n^A); τ_n := t_n/n; **ξ_n := √(t_n/(2(n+1)))** = √((1+ε₀)log max(N_n, n)/(n+1)).
 - **c_ML := min_{c>0} c·E_{1/2}(1/c) = 3.8311** (at c = 1.684), where E_{1/2}(x) := Σ_{j≥0} x^j/Γ(j/2+1) = e^{x²}erfc(−x)
   (Mittag-Leffler function; only the numerical value of the convergent series at x = 1/1.684 is used, checked in
   `scripts/sanity.py`, item 3).
@@ -82,10 +82,10 @@ O(1) (κ_EXP ≈ 100–1,700 nats at study SNR, W3-VEXP R1): the O(1) part is **
 every upper bound on start mass off the reference can drop it. (3) The lower bound needed for deletions is Lemma X⁻.
 
 **Lemma X⁻ (lower bound; PROVED).** Same hypotheses. Then
-  log BF(A) − log BF(U) ≥ −(j/2)log(n+1) − ν log(RSS_A/RSS_U) − κ⁻,  κ⁻ := j(1+φ^{−2})/(2φ²(n−1)) + 1.03ν/RSS^y_A.
+  log BF(A) − log BF(U) ≥ −(j/2)log(n+1) − ν log(RSS_A/RSS_U) − κ⁻,  κ⁻ := j(1+φ^{−2})/(2φ²(n−1)) + 1.04ν/RSS^y_A.
 *Proof.* [W1-L1.2] two-sided gives (D_A/D_U)^{−1/2} ≥ (n+1)^{−j/2}e^{−j(1+φ^{−2})/(2φ²(n−1))}. And
 (R_U + a_U)/(R_A + a_A) ≥ R_U/(R_A(1 + a_A/R_A)), so [(0.02+Q_A)/(0.02+Q_U)]^{−ν} ≥ (RSS_U/RSS_A)^ν e^{−νa_A/R_A}, with
-a_A ≤ 0.02 + (n−1)/(n+1) + n/((n+1)²φ²) ≤ 1.03 when (n+1)φ² ≥ 50. ∎
+a_A ≤ 0.02 + (n−1)/(n+1) + n/((n+1)²φ²) ≤ 0.02 + 1 + 1/((n+1)φ²) ≤ 1.04 when (n+1)φ² ≥ 50. ∎
 
 ---------------------------------------------------------------------------------------------------------
 
@@ -119,8 +119,8 @@ p = 0.71, 0.77, 0.73 (`results/sanity.txt`, item 5).
 
 Let X ~ Beta(j/2, (m−j)/2), m = n − 1 − u, 1 ≤ j, u ≥ 0, j + u ≤ 2B + s₀, ν = 0.01 + n/2, τ ∈ (0, ½].
 (a) E[(1 − X)^{−ν} 1{X ≤ τ}] ≤ (1 − τ)^{−e₁}(mτ/2)^{j/2}/Γ(j/2 + 1), e₁ := (u + j + 3)/2 + 0.01.
-(b) Let 𝔉_n be a family of N_n such variables (any dependence), with N_n → ∞ and N_n ≤ Cn^A. With τ_n = t_n/n,
-    t_n = 2(1+ε₀)log N_n: P(max_{𝔉_n} X > τ_n) → 0.
+(b) Let 𝔉_n be a family of N_n such variables (any dependence), N_n ≤ Cn^A. With τ_n = t_n/n,
+    t_n = 2(1+ε₀)log max(N_n, n): P(max_{𝔉_n} X > τ_n) → 0.
 
 *Proof.* (a) is W3-PXN Lemma Tr(a) before its last crude step: the integrand is x^{j/2−1}(1−x)^{−e₁}/B(j/2,(m−j)/2), and
 (1−x)^{−e₁} ≤ (1−τ)^{−e₁} on [0, τ]; ∫₀^τ x^{j/2−1}dx = (2/j)τ^{j/2}; 1/B(j/2,(m−j)/2) ≤ (m/2)^{j/2}/Γ(j/2) (Wendel / integer case,
@@ -128,8 +128,9 @@ as in [PXN-Tr]). Keeping (1−τ)^{−e₁} instead of 2^{e₁} is the only chan
 (b) X = A/(A + A′), A ~ χ²_j ⊥ A′ ~ χ²_{m−j}. X > τ ⟺ A(1−τ) > τA′. Let δ_n := n^{−1/3}. Laurent–Massart's lower tail with
 x = (m−j)δ_n²/4 gives P(A′ < (m−j)(1−δ_n)) ≤ exp(−(m−j)n^{−2/3}/4) = exp(−Θ(n^{1/3})). On the complement X > τ_n forces
 A > s_n := τ_n(m−j)(1−δ_n) = t_n(1 − O(n^{−1/3})). Laurent–Massart's upper tail P(A ≥ j + 2√(jx) + 2x) ≤ e^{−x} with
-x := s_n/2 − √(j s_n) − j gives P(A > s_n) ≤ exp(−t_n/2 + O(√(log n))) = N_n^{−(1+ε₀)}e^{O(√log n)}. A union bound:
-N_n[N_n^{−(1+ε₀)}e^{O(√log n)} + e^{−Θ(n^{1/3})}] → 0. ∎
+x := s_n/2 − √(j s_n) − j (the root of j + 2√(jx) + 2x = s_n is x = s_n/2 − √(j(2s_n − j))/2 ≥ s_n/2 − √(j s_n) − j) gives
+P(A > s_n) ≤ exp(−t_n/2 + O(√(log n))) = N̄^{−(1+ε₀)}e^{O(√log n)}, N̄ := max(N_n, n). A union bound:
+N_n[N̄^{−(1+ε₀)}e^{O(√log n)} + e^{−Θ(n^{1/3})}] ≤ n^{−ε₀}e^{O(√log n)} + N_n e^{−Θ(n^{1/3})} → 0. ∎
 
 ---------------------------------------------------------------------------------------------------------
 
@@ -203,7 +204,7 @@ groups of 𝒦_n. Let P_n := {the v3 partition equals 𝒫_n}. Let q̃, ẽ be t
 𝒫_n (they coincide with the actual q, e on P_n: an identity of random variables, so no conditioning on P_n is used).
 Assume s₀ ≤ K eventually. Then, with N_n := Σ_b 2^{|C_b|} ≤ 2^B p and t_n, ξ_n as in §0:
 (A1) on an event 𝒢_n with P(𝒢_n) → 1, E[q̃ 1_{𝒢_n}] ≤ c_ML C_{0,n} ξ_n, with C_{0,n} → 1 explicit (in the proof);
-(A2) ẽ ≤ 2p√(n+1) e^{κ_e} exp(−νx₁/2) on 𝒢_n, with κ_e := (1+φ₀^{−2})/(2φ₀²(n−1)) + 1.03ν/(c_*n) → 0.52/c_* = 2.6v_∅/σ²
+(A2) ẽ ≤ 2p√(n+1) e^{κ_e} exp(−νx₁/2) on 𝒢_n, with κ_e := (1+φ₀^{−2})/(2φ₀²(n−1)) + 1.04ν/(c_*n) → 0.52/c_* = 2.6v_∅/σ²
      (an SNR-dependent O(1) prefactor, harmless against the exponential factor; finite-n values are computed exactly in §4);
 (A3) consequently, for every M > 0 and η > 0,
      limsup_n P(P_n ∩ {1 − π₀(S₀) > (1+η) M (s₀+1) c_ML ξ_n}) ≤ 1/M,
@@ -226,7 +227,7 @@ so E[j!ã_bj1_{𝒢_n}] ≤ C_{0,n}(N_bξ_n)^j/Γ(j/2+1) with C_{0,n} := e^{κ̄
 Then W ⊆ S₀ is nonempty, U ∩ W = ∅, U ∪ W ⊆ C_b, |U ∪ W| ≤ B, and S₀ ∩ C_b = U_b* ⊆ U ∪ W with C_b a union of groups: (U, W) ∈ 𝔙.
 Lemma X⁻ with A = U ∪ W and φ = φ₀ ((n+1)φ₀² ≥ 50 eventually):
 [r_b(U)/r_b(U∪W)]^{1/a} ≤ (n+1)^{1/2}e^{κ⁻/a}(1 − X_{U,W})^{ν/a} ≤ (n+1)^{1/2}e^{κ⁻/a}exp(−νX_{U,W}/a), with
-κ⁻/a ≤ (1+φ₀^{−2})/(2φ₀²(n−1)) + 1.03ν/RSS^y_{U∪W} ≤ κ_e by (G2) (|U ∪ W| ≤ B). (G4) gives X_{U,W}/a ≥ x₁/2. Hence
+κ⁻/a ≤ (1+φ₀^{−2})/(2φ₀²(n−1)) + 1.04ν/RSS^y_{U∪W} ≤ κ_e by (G2) (|U ∪ W| ≤ B). (G4) gives X_{U,W}/a ≥ x₁/2. Hence
 ẽ ≤ 2p√(n+1)e^{κ_e}e^{−νx₁/2}: (A2); it is o(n^{−k}) for every k since p ≤ n^A.
 *(A3).* On P_n, q = q̃ and e = ẽ (identity). Markov: P(𝒢_n ∩ {q̃ > Mc_MLC_{0,n}ξ_n}) ≤ 1/M. On 𝒢_n ∩ {q̃ ≤ Mc_MLC_{0,n}ξ_n},
 q̃ → 0, so [T22i] applies (q < 1) and 1 − π₀(S₀) ≤ (s₀+1)q̃/(1−q̃) + s₀ẽ ≤ (1+η)M(s₀+1)c_MLξ_n for n large (ẽ = o(ξ_n),
@@ -243,9 +244,10 @@ limit partition (§8, Proposition N); Theorem B handles that case.
 
 ### Lemma P1′ (union of groups w.p. → 1) — PROVED (given [C1])
 **Statement.** Assume FAV with every group of size ≤ min_n B_n and **ρ₋ := min over pairs (j, k) in a common group of |Σ_jk| > 0**.
-Then P(Q_n) → 1. Every block is a union of at most ⌊B/g_min⌋ groups, so Q_n ⊆ Q_n(m) with m := min(h₀, ⌊B/g_min⌋).
+Then P(Q_n) → 1. Every block is a union of at most ⌊B/g_min⌋ groups, so Q_n ⊆ Q_n(m) with m := min(h₀ + 1, ⌊B/g_min⌋).
 For S3, S4, S6 (g = 5): m = 2 when B = 14 (n ∈ [196, 224]) and m = 3 when B ∈ {15, 16}. For S1 (groups = singletons),
-Q_n holds surely and m ≤ min(s₀, B).
+Q_n holds surely and Q_n(m) is the observable event "no column shares its block with more than m − 1 truths other than itself"
+(m ≤ min(s₀ + 1, B)).
 
 **Proof.** Let D_in := max within-group distance 1 − |r̂_jk| and D_out := min cross-group distance. By [C1], w.p. → 1
 D_in ≤ 1 − ρ₋ + ε_n < 1 − ε_n ≤ D_out. On {D_in < D_out}: (a) *laminarity* — by induction on merges (W3-PXN Lemma P1(a)):
