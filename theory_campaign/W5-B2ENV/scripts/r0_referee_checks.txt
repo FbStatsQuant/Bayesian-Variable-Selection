@@ -1,0 +1,6 @@
+§1 g(u): min 0.500000 max 0.999000  monotone increasing: True  g(1) = 0.581977 = 1/(e-1) = 0.581977
+   1/theta_0 <= sum 1/P_t: worst ratio 1.0000 (<= 1); monotone-form bound held in 1000/1000 non-increasing cases
+§2 N=1000 pi0(a)=0.5: 50% point kappa=7.27;  log(N pi0(a)/pi0(o)) = 6.91;  log(N pi0(a)) = 6.21;  2 log N = 13.82
+§2 N=10000 pi0(a)=0.5: 50% point kappa=9.59;  log(N pi0(a)/pi0(o)) = 9.21;  log(N pi0(a)) = 8.52;  2 log N = 18.42
+§2 N=10000 pi0(a)=0.99: 50% point kappa=14.16;  log(N pi0(a)/pi0(o)) = 13.81;  log(N pi0(a)) = 9.20;  2 log N = 18.42
+§3 Prop M(a): violations 0; min LHS/RHS = 1.0000
