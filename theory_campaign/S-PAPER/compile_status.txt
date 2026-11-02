@@ -1,0 +1,1 @@
+pdflatex exists (/usr/bin/pdflatex). Compile attempted via owls_run -j 1; REFUSED repeatedly (3 other owls_run jobs running, policy max 3). Not bypassed. Status updated below if a later attempt succeeded.
