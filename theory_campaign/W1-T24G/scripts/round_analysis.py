@@ -34,6 +34,38 @@ def label_laws(M, x):
     return laws
 
 
+class IndTables:
+    """sum_{S' in cat} pi0(S') min(1, e^{d(S')-d(x)}) for categories V<V(x), V=V(x), V>V(x) (in R) and R^c."""
+    def __init__(self, M, inR, V):
+        self.M = M; self.inR = inR; self.V = V
+        self.cats = {}
+        keys = np.where(inR, V, -1)
+        for c in np.unique(keys):
+            sel = keys == c
+            dd = M.d[sel]; w = M.pi0[sel]
+            o = np.argsort(dd); dd = dd[o]; w = w[o]
+            mx = dd.max()
+            self.cats[int(c)] = (dd, np.concatenate([[0], np.cumsum(w)]),
+                                 np.concatenate([[0], np.cumsum(w * np.exp(dd - mx))]), mx)
+    def acc(self, c, dx):
+        dd, cw, cwe, mx = self.cats[c]
+        i = np.searchsorted(dd, dx, side='left')
+        return (cw[-1] - cw[i]) + cwe[i] * math.exp(mx - dx)
+    def self_acc(self, x):
+        return self.M.pi0[x]
+    def query(self, x):
+        Vx = self.V[x]; dx = self.M.d[x]
+        lo = eq = hi = out = 0.0
+        for c in self.cats:
+            a = self.acc(c, dx)
+            if c == -1: out += a
+            elif c < Vx: lo += a
+            elif c == Vx: eq += a
+            else: hi += a
+        eq -= self.M.pi0[x]
+        return lo, eq, hi, out, lo + eq + hi + out + self.M.pi0[x]
+
+
 def classify(M, x, inR, V, accind=None):
     """returns arrays s, b, inc, ex (length m) and score flags."""
     S0 = M.S0
@@ -61,17 +93,13 @@ def classify(M, x, inR, V, accind=None):
     for i, (typ, j, law) in enumerate(laws):
         if typ in ('U', 'N'):
             pass  # handled via s (accepted moves to S0 have V=0 < V(x)); rejected proposals of S0 ignored (conservative)
-    # independence
-    a = M.ind_accept_vector(x) if accind is None else accind
-    a = a.copy(); a[x] = 0.0
-    out = ~inR
-    ex[-1] = a[out].sum()
-    Vx = V[x]
-    lower = inR & (V < Vx)
-    s[-1] = a[lower].sum() + (M.pi0[S0] * (1 - min(1.0, math.exp(M.d[S0] - M.d[x]))) if x != S0 else 0)  # proposal of S0 scores it
-    higher = inR & (V > Vx)
-    inc[-1] = a[higher].sum()
-    b[-1] = a.sum() - a[lower].sum()
+    # independence (fast: per-category sorted tables, see IndTables)
+    T = accind
+    lo, eq, hi, out_, tot = T.query(x)
+    ex[-1] = out_
+    s[-1] = lo + (M.pi0[S0] * (1 - min(1.0, math.exp(M.d[S0] - M.d[x]))) if x != S0 else 0.0)
+    inc[-1] = hi
+    b[-1] = tot - lo - T.self_acc(x)
     st = s.copy(); st[sc] = 1.0
     bt = b.copy(); bt[sc] = 0.0
     return st, bt, inc, ex
@@ -108,15 +136,16 @@ def analyse(M, d, e, states=None, verbose=False):
     m = M.m_labels
     sup_inc = np.zeros(m); sup_ex = np.zeros(m)
     recs = []
+    T = IndTables(M, inR, V)
     for x in states:
-        st, bt, inc, ex = classify(M, x, inR, V)
+        st, bt, inc, ex = classify(M, x, inR, V, T)
         sup_inc = np.maximum(sup_inc, inc); sup_ex = np.maximum(sup_ex, ex)
         recs.append(dict(x=x, V=int(V[x]), miss=int(miss[x]), extra=int(extra[x]),
                          pstar=pstar(st, bt), cpoly=cpoly(st, bt),
                          inc=float(inc.sum()), ex=float(ex.sum()),
                          logpi=float(M.logpi[x]), logpi0=float(M.logpi0[x])))
     # also S0 itself for the sups (increase/exit from S0)
-    st, bt, inc, ex = classify(M, M.S0, inR, V)
+    st, bt, inc, ex = classify(M, M.S0, inR, V, T)
     sup_inc = np.maximum(sup_inc, inc); sup_ex = np.maximum(sup_ex, ex)
     return recs, sup_inc, sup_ex, inR, V
 
