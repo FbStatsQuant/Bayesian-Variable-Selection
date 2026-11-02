@@ -24,7 +24,10 @@ one same-family referee pass, not reviewed cross-family, not adopted.
 4. **Study designs (population): PGD(η) holds in all six scenarios** on R_{2,2}(truth-block mates):
    η = 0.198 (S1), 0.148 (S2), 0.084 (S3), 0.043 (S4), 0.108 (S5), 0.057 (S6). Every time the binding move is a
    truth→truth swap (a θ-ratio effect). Cor P2′ = (B1)–(B3) enumeration = brute force, to 4 decimals, for d = 1, 2, 3.
-5. **Realised designs: see §5.3.** Cor P6's sufficient condition is vacuous at every feasible n (it needs n ≈ 10^15–10^22).
+5. **Realised designs, p = 500 (81 Python-generated designs).** PGD(η_pop/2) holds in 2/30 designs at n = 200,
+   23/30 at n = 800 and 21/21 at n = 3200. TD′_P(R_{2,2}(𝒟)) holds in 9/30, 29/30 and 20/21 at c = 1, and in
+   0/30, 27/30 and 20/21 at c = 0.5. Transfer is real but late. Cor P6's own constant is vacuous at every feasible n
+   (it needs n ≈ 10^15–10^22).
 
 ---------------------------------------------------------------------------------------------------------
 
@@ -160,9 +163,55 @@ same set (pure-null groups are exchangeable given a state without pure nulls). S
 
 ### 5.3 Realised designs (Cor P6 transfer), p = 500, n ∈ {200, 800, 3200}
 
-(Filled from `results/realised_summary.md`; see §5.3 below the table for reading.)
+Generator re-implemented in Python (same law as `gen_dev_data.R`, not the same bits). Each design is evaluated on
+R_{2,2}(𝒟), 𝒟 = 56 truth-block mates, with moves over all 500 columns: 167,685 states with m ≥ 1 for PGD, and 169,280
+states plus (L) for TD′_P. There are 81 designs in total (3–5 per cell; seeds 20261102 + 1000·scen + n + rep, plus a
+second block with base 30261102). Sources: `results/realised.jsonl`, `results/realised_summary.md`, `scripts/realised.py`.
+"PGD(η/2)" means η̂ ≥ η_pop/2, the conclusion of Cor P6.
 
-REALISED_TABLE_PLACEHOLDER
+| scen | n | designs | eta_pop | median eta_hat [min, max] | PGD(eta_pop/2) | eta_hat > 0 | TD'_P c=1 | TD'_P c=0.5 | (L) c=1 / c=0.5 | median #failing states c=1 / c=0.5 | failing (m,e) classes c=0.5 | binding non-progress (c=0.5) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| S1 | 200 | 5 | 0.1975 | 0.0786 [0.0748, 0.1126] | 1/5 | 5/5 | 3/5 | 0/5 | 4/5 / 3/5 | 0 / 73 | m0e1:112, m0e2:2882, m2e0:106, m2e1:6 | swap extra->null:2994, swap truth->truth:112 |
+| S1 | 800 | 5 | 0.1975 | 0.1399 [0.1116, 0.1531] | 5/5 | 5/5 | 4/5 | 4/5 | 4/5 / 4/5 | 0 / 0 | m0e1:56, m0e2:1540 | swap extra->null:1596 |
+| S1 | 3200 | 4 | 0.1975 | 0.1723 [0.1408, 0.1811] | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 / 4/4 | 0 / 0 | - | - |
+| S2 | 200 | 5 | 0.1481 | 0.0501 [0.0427, 0.0826] | 1/5 | 5/5 | 2/5 | 0/5 | 5/5 / 4/5 | 1 / 87 | m0e1:56, m0e2:1498, m2e0:127, m2e1:180, m2e2:137 | swap extra->null:1597, swap truth->truth:401 |
+| S2 | 800 | 5 | 0.1481 | 0.1072 [0.0824, 0.1181] | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 / 5/5 | 0 / 0 | - | - |
+| S2 | 3200 | 4 | 0.1481 | 0.1272 [0.1202, 0.1298] | 4/4 | 4/4 | 3/4 | 3/4 | 4/4 / 4/4 | 0 / 0 | m0e2:203 | swap extra->null:203 |
+| S3 | 200 | 5 | 0.0837 | 0.0229 [0.0154, 0.0308] | 0/5 | 5/5 | 2/5 | 0/5 | 5/5 / 4/5 | 4 / 467 | m0e1:2, m0e2:6, m1e0:1, m1e1:69, m1e2:1439, m2e0:117, m2e1:606, m2e2:6398 | swap truth->truth:5092, swap extra->null:3530, delete truth:10 |
+| S3 | 800 | 5 | 0.0837 | 0.0485 [0.0374, 0.0526] | 4/5 | 5/5 | 5/5 | 5/5 | 5/5 / 5/5 | 0 / 0 | - | - |
+| S3 | 3200 | 4 | 0.0837 | 0.0633 [0.0536, 0.0683] | 4/4 | 4/4 | 4/4 | 4/4 | 4/4 / 4/4 | 0 / 0 | - | - |
+| S4 | 200 | 5 | 0.0432 | 0.0054 [0.0000, 0.0114] | 0/5 | 5/5 | 0/5 | 0/5 | 5/5 / 2/5 | 684 / 10979 | m0e1:62, m0e2:1316, m1e0:3, m1e1:248, m1e2:6400, m2e0:155, m2e1:1726, m2e2:42142 | swap extra->null:30676, swap truth->truth:20666, swap truth->null:447 |
+| S4 | 800 | 5 | 0.0432 | 0.0179 [0.0104, 0.0240] | 1/5 | 5/5 | 5/5 | 3/5 | 5/5 / 5/5 | 0 / 0 | m2e1:7, m2e2:238 | swap extra->null:218, swap truth->truth:27 |
+| S4 | 3200 | 3 | 0.0432 | 0.0283 [0.0259, 0.0323] | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 / 3/3 | 0 / 0 | - | - |
+| S5 | 200 | 5 | 0.1079 | 0.0372 [0.0170, 0.0501] | 0/5 | 5/5 | 2/5 | 0/5 | 5/5 / 4/5 | 1 / 108 | m0e1:1, m0e2:147, m1e0:1, m1e1:69, m1e2:1036, m2e0:177, m2e1:585, m2e2:3971 | swap extra->null:4877, swap truth->truth:1092, swap truth->null:11 |
+| S5 | 800 | 5 | 0.1079 | 0.0645 [0.0574, 0.0683] | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 / 5/5 | 0 / 0 | - | - |
+| S5 | 3200 | 3 | 0.1079 | 0.0929 [0.0913, 0.0949] | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 / 3/3 | 0 / 0 | - | - |
+| S6 | 200 | 5 | 0.0571 | 0.0066 [-0.0324, 0.0157] | 0/5 | 4/5 | 0/5 | 0/5 | 5/5 / 2/5 | 234 / 3599 | m0e1:3, m0e2:18, m1e0:3, m1e1:207, m1e2:4279, m2e0:108, m2e1:994, m2e2:20176 | swap extra->null:19209, swap truth->truth:6356, swap truth->null:133 |
+| S6 | 800 | 5 | 0.0571 | 0.0288 [0.0242, 0.0347] | 3/5 | 5/5 | 5/5 | 5/5 | 5/5 / 5/5 | 0 / 0 | - | - |
+| S6 | 3200 | 3 | 0.0571 | 0.0413 [0.0391, 0.0489] | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 / 3/3 | 0 / 0 | - | - |
+
+Totals over scenarios:
+
+| n | PGD(η_pop/2) | η̂ > 0 | TD′_P, c = 1 | TD′_P, c = 0.5 |
+|---|---|---|---|---|
+| 200 | 2/30 | 29/30 | 9/30 | 0/30 |
+| 800 | 23/30 | 30/30 | 29/30 | 27/30 |
+| 3200 | 21/21 | 21/21 | 20/21 | 20/21 |
+
+**Reading.**
+- **Cor P6 transfer happens, but late.** η̂ rises towards η_pop with n (S1: medians 0.079, 0.140, 0.172 against
+  0.198; S4: 0.005, 0.018, 0.028 against 0.043). PGD(η_pop/2) holds in every design at n = 3200, in 23/30 at
+  n = 800, and in 2/30 at n = 200. At n = 200 one S6 design has η̂ < 0 (a reverse margin, Prop P4's regime), and
+  one S4 design has η̂ = 0.0000.
+- **TD′_P(R_{2,2}(𝒟)) holds at n ≥ 800 in 96/102 (design, c) cases.** The 6 failures are: superset-state noise
+  (extra→null swaps at S₀ ∪ P, Lemma S's (γ) event: S1 n = 800, one design; S2 n = 3200, one design), and S4 at
+  n = 800, c = 0.5 (m = 2 states via extra→null and truth→truth swaps, the move that binds PGD in S4).
+- **At n = 200 the two failure mechanisms separate by scenario.** In S1 and S2 the failures sit at superset states
+  (m0e1, m0e2), and (L) itself fails in 1–2 of 5 designs. These are posterior-side noise events, the penalty against
+  max-χ², not greedy-dominance failures. In S3, S4 and S6 most failures sit at m = 2 states, through truth→truth and
+  extra→null swaps: the realised η̂ is 0.005–0.03, too small for the signal at n = 200.
+- TD′_P can hold where PGD(η/2) does not (S2/S5 at n = 200, c = 1; S3, S4, S6 at n = 800). PGD is a sufficient
+  population condition, while TD′_P is the data event.
 
 **Cor P6's own constant is vacuous here.** Lemma P5(iii) needs ε ≤ ηφ₀⁶θ²_min/(128s₀‖θ‖²). That is 2.9·10⁻⁶ (S1) down to
 8·10⁻¹⁰ (S6), i.e. n ≈ 10¹⁵–10²² (`results/corP6_constants.txt`). The numerics above are the only evidence on transfer.
@@ -234,7 +283,7 @@ failure frequency at r = 0.55 is 2–3.5% up to n = 2·10⁵, since the o(log n)
 | (★) sharpening (Prop. S′) | (★′a) ∧ (★′b) | 0.95 | done | splitting |T| ≤ d−1 from |T| ≤ d | no |
 | (★′a) alone suffices (β-removal) | CONJECTURE | 0.7 | 0.4 | joint Gaussian supremum for (β) | no |
 | Grouped-family failure (Prop. G) | r > 1/3 at A = 1, d = 2 | 0.95 | done for d = 2; sketch d ≥ 3 | order statistics of the best group | no |
-| Realised transfer on study designs at n ≤ 3200 | see §5.3 | — (empirical) | — | Cor P6 vacuous; empirical only | no |
+| Realised transfer on study designs | PGD(η/2) and TD′_P on R_{2,2}(𝒟) hold for n ≥ 800 in most designs and for n = 3200 in all but one; not at n = 200 | — (empirical, 81 designs) | — | Cor P6 vacuous quantitatively; superset noise persists at p = 500 | no |
 
 **Bottom line for the paper.** Thm 3(iii) can cite Theorem W (VERIFIED, candidate) for "TD′ w.p. → 1 under PGD + LD♭".
 For the masked regime (T38(b1), LH) it must cite Theorem W_Lat with Prop. LH-PGD, not the region form. The study's

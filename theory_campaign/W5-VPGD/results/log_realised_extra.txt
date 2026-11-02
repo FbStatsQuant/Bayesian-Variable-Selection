@@ -2,3 +2,14 @@
 2 200 0 eta_hat=0.0826 TD c=1 False 478 c=.5 False 1646 67.2 169.4
 3 200 0 eta_hat=0.0229 TD c=1 True 0 c=.5 False 182 73.5 176.5
 4 200 0 eta_hat=0.0079 TD c=1 False 914 c=.5 False 19728 75.9 175.9
+5 200 0 eta_hat=0.0501 TD c=1 True 0 c=.5 False 46 71.3 179.6
+6 200 0 eta_hat=0.0157 TD c=1 False 15 c=.5 False 388 75.2 176.6
+1 800 0 eta_hat=0.1355 TD c=1 False 1596 c=.5 False 1596 73.5 182.2
+2 800 0 eta_hat=0.1007 TD c=1 True 0 c=.5 True 0 74.6 176.3
+3 800 0 eta_hat=0.0485 TD c=1 True 0 c=.5 True 0 73.2 183.3
+4 800 0 eta_hat=0.0104 TD c=1 True 0 c=.5 False 218 73.2 179.4
+5 800 0 eta_hat=0.0654 TD c=1 True 0 c=.5 True 0 72.3 183.9
+6 800 0 eta_hat=0.0347 TD c=1 True 0 c=.5 True 0 79.5 190.3
+1 3200 0 eta_hat=0.1408 TD c=1 True 0 c=.5 True 0 76.9 172.7
+2 3200 0 eta_hat=0.1202 TD c=1 False 142 c=.5 False 203 68.6 181.0
+3 3200 0 eta_hat=0.0683 TD c=1 True 0 c=.5 True 0 72.2 174.6
