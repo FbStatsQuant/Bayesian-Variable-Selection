@@ -1,0 +1,7 @@
+p=500: A=1.1729 j0=48 C*=253.6 c0=L*=1037.5 M*=2076.0
+   theta^2 needed, phi0^2=1: c0 -> 27.48 (x43 the c=1 signal 0.64), M* -> 55.00 (x86)
+   with the greedy-adversarial S1 value phi0^2 <= 0.0334: c0 -> 823 (x1286)
+   r_n = 0.163;  orthogonal-design heuristic scale (log n + 2 log p)/n = 0.089
+p=1000: A=1.3038 j0=52 C*=288.3 c0=L*=1153.2 M*=2307.4
+   theta^2 needed, phi0^2=1: c0 -> 30.55 (x48 the c=1 signal 0.64), M* -> 61.13 (x96)
+   r_n = 0.163;  orthogonal-design heuristic scale (log n + 2 log p)/n = 0.096

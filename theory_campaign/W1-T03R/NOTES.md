@@ -10,3 +10,5 @@
 2. With the cap, R_m = 0 for m >= K, so the new threshold m# <= K automatically.
 3. SE can be split: normalised SE only on S0 u J, |J| <= j* (fixed); for |J| <= m# only lambda_min(G_{S0uJ}) >= g0 > 0
    (unnormalised, i.e. lambda_min(R) >= g0/(n-1)) is needed (determinant penalty f(g) >= (n+1)/(1+1/g)).
+
+## step 2 — deliverables written: PROOF.md, REPORT.md, scripts + outputs (tail_bound, duplicate_counterexample, se_n200, bm_constants, proof_n0).
