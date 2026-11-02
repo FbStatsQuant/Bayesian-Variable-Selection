@@ -102,7 +102,7 @@ This covers R⁺, R⁰, the F̄ margins, GERC and TRC.
 **E1. Population PGD, p = 500 and 1000** (`pop_check.py`, `results/pop_check_p*.json`). Exact reductions were used:
 the 14 truth groups plus representative nulls, which is exact for S1, S3, S4, S6 (BO) and for S5 (exchangeability).
 For S2, windows of ±10 around each truth are used, so S2 is approximate (truncation error ≤ 5e-4 correlation).
-The values are identical for p = 1000 (S1–S5 checked; S6 at p = 1000 was still running when this report was written).
+The values are identical for p = 1000 (all six scenarios checked).
 
 | scen | η on R_{14,0} | η on R_{14,1} | η on R_{3,2} | binding move | max ERC (GERC) | Cor P2′ prediction |
 |---|---|---|---|---|---|---|
