@@ -26,7 +26,10 @@ Every PROVED is a candidate that I checked line by line; it is not adopted. Scri
    on completion (Lemma RO). This is the right finite-n statement for n = 200 (Thm C6). The card certifies
    **optimality and uncertainty**: "Ŝ beats every model in an explicit region" and "π(Ŝ) is at most u". It cannot
    certify **confidence**: "π(Ŝ) ≥ ½" or "Ŝ is the global HPM" are out of reach without PW2 or exact enumeration.
-5. **Illustration** on 4 regenerated study datasets (p = 500, n = 200, production engine, study seeds): §4.
+5. **Illustration** on 4 regenerated study datasets (p = 500, n = 200, production engine, study seeds; §4). Engine
+   and certificate scores agree to 3·10⁻¹². On every fit, Z_𝒯 > 0.05Ẑ, so the G bound is in fact *deterministic*
+   (π(Ŝ) ≤ 0.37 even when Ŝ = S₀). The box B&B certifies Ŝ = argmax over 2^{30–31} models in ≤ 38 s. Both c = 0.5
+   misses (Ŝ = S₀ + 1 FP) are certified **posterior** misses, by g_del = F(Ŝ) − F(S₀) = 1.19 and 1.89 nats.
 
 (STATUS words follow PROTOCOL.md. "Candidate" = not reviewed.)
 
@@ -250,7 +253,64 @@ The paper sentence: "*Each fit reports a certificate card whose claims hold simu
 
 ## 4. Illustration (p = 500, n = 200, production engine)
 
-(Filled in below from `results/cards.txt`.)
+**Setup.** Four production datasets regenerated bit-for-bit with the study generator
+(`scripts/gen_data.R`, which calls `Scripts/Data_generators/gen_prod_data.R` with its own seeds): S1 and S3 (r001) at
+c = 1, and S4 and S6 (r001) at c = 0.5. Each was fitted with the production v3 engine (`scripts/run_fit.R`, the study
+method seed, single-threaded, on Felipe's laptop under Windows/R 4.4.1). The fits took 43–83 min, and all four have
+status `completed`. The cards were computed post hoc by `scripts/cert_run.R`, which uses an independent R
+implementation of F (`scripts/cert_lib.R`), the reported top store (|𝒯| = 20,001), and U = Ŝ ∪ {the 16 best single
+additions}. The full output is in `results/cards.txt`. The truth S₀ is used **only** for the "outcome" row. The card
+itself never uses it.
+
+| | S1 c100 | S3 c100 | S4 c050 | S6 c050 |
+|---|---|---|---|---|
+| outcome (uses S₀) | Ŝ = S₀ | Ŝ = S₀ | Ŝ = S₀ + 1 FP | Ŝ = S₀ + 1 FP |
+| score agreement, mine − engine (top 5) | ≤ 1.2e−12 | ≤ 2.8e−12 | ≤ 1.2e−12 | ≤ 8.5e−13 |
+| **L** `local_certified` (engine / recomputed) | T / T | T / T | T / T | T / T |
+| **L** g_add / g_del / g_swap (nats) | 2.27 / 36.0 / 38.5 | 2.91 / 34.5 / 20.1 | 0.53 / 1.19 / 2.01 | 2.77 / 1.89 / 1.51 |
+| **L** exact ρ_loc = π(Ŝ \| N̄(Ŝ)) | 0.459 | 0.460 | 0.211 | 0.264 |
+| **L** g_sub; Σ_{S⊊Ŝ} π(S)/π(Ŝ) | 36.0; 2.6e−16 | 34.5; 1.1e−15 | 1.19; 0.305 | 1.89; 0.345 |
+| **L** best-of-scored gap g; e^{−g} | 2.27; 0.103 | 2.91; 0.054 | 0.53; 0.590 | 1.51; 0.220 |
+| **R** Ŝ = argmax over 2^U (\|U\|, B&B nodes, time) | yes (30, 3,831, 0.8 s) | yes (30, 1,963, 5 s) | yes (31, 9,665, 5 s) | yes (31, 77,083, 38 s) |
+| **R** π(Ŝ \| 2^U) ≥ (mass B&B, τ = −12) | 0.698 | 0.728 | 0.278 | not finished (2·10⁵ nodes) |
+| log Z_𝒯 vs log(0.05 Ẑ) | −69.80 vs −72.59 | −72.30 vs −75.12 | −180.30 vs −182.70 | −206.97 vs −209.41 |
+| **G** π(Ŝ) ≤ e^{F(Ŝ)}/max(Z_𝒯, 0.05Ẑ) | 0.370 | 0.375 | 0.103 | 0.153 |
+| (plug-in e^{F(Ŝ)}/Ẑ, not a certificate) | 0.301 | 0.315 | 0.057 | 0.088 |
+| **C** under PW2, B_T = 0.25: π(Ŝ) ≥ 0.5e^{F}/Ẑ except w.p. ≤ 0.2 | 0.150 | 0.157 | 0.029 | 0.044 |
+| F(S₀) − F(Ŝ) (uses S₀) | 0 | 0 | −1.19 | −1.89 |
+
+**What the illustration shows.**
+1. **The score contract holds to ~10⁻¹² nats.** Two independent implementations (the engine's C++ and my R) agree
+   to within 3·10⁻¹² nats on every top-store score checked. This is a cross-implementation check, not a
+   high-precision replay, but it makes SC(η_F) with η_F = 10⁻⁹ comfortable. Every certified gap above is ≥ 0.5 nats,
+   about 10⁹ times the margin 2η_F.
+2. **The global claim was deterministic on every fit.** Z_𝒯 > 0.05Ẑ in all four cases, by 2.4–3.0 nats: the
+   reported top store already contains more than 5% of the estimated evidence. So max(Z_𝒯, αẐ) = Z_𝒯, and the G bound
+   π(Ŝ) ≤ e^{F(Ŝ)}/Z_𝒯 holds **surely** (C1(a)), with no probability at all. The Markov factor of T12/T31 adds nothing
+   at α = 0.05 here. It would become active only for a run whose top store sees less than 5% of Ẑ, the
+   exploration-failure case, which is exactly when the "unscored mass ≥ 1 − Z_𝒯/(αẐ)" line becomes non-vacuous.
+   Here that line is 0 on all four fits.
+3. **Even a correct fit carries little posterior mass at n = 200.** At c = 1, Ŝ = S₀, and yet π(Ŝ) ≤ 0.37 surely.
+   The binding alternatives are supersets (g_add = 2.3–2.9 nats ≪ g_del, g_swap ≈ 20–38 nats). This is the
+   finite-n face of the "superset misses at c = 1" finding (THEORY_PRIORITIES §5): exact recovery is the posterior
+   mode, but not with posterior probability ½. No certificate can say π(Ŝ) ≥ ½, and here even the truth fails it.
+4. **The two c = 0.5 misses are certified posterior misses.** In both, S₀ = Ŝ ∖ {FP} is a one-deletion of Ŝ. The
+   card's g_del (1.19 and 1.89 nats) is exactly F(Ŝ) − F(S₀), so π(S₀) ≤ e^{−g_del}π(Ŝ) = 0.30π(Ŝ) and 0.15π(Ŝ)
+   respectively. The box certificate independently confirms that S₀ ∈ 2^U and that Ŝ = argmax over 2^U (C5). Both
+   are posterior misses: no amount of extra search would have returned S₀. The card certifies this **without
+   knowing S₀**, because it bounds every model in N̄(Ŝ) and in 2^U uniformly. A reader who suspects that "the truth is
+   Ŝ minus one variable" is told by the card that every such model has posterior ratio ≤ e^{−1.19}.
+5. **The box certificate is cheap.** The optimality B&B over 2^U with |U| = 30–31 (10⁹ models) closed in
+   2·10³–8·10⁴ nodes and at most 38 s, consistent with the "2^{#ambiguous variables}" remark under C4. The mass
+   version is costlier (it must bound the whole tail to e^{−12}). It closed on three of the four fits, with
+   π(Ŝ | 2^U) ≥ 0.70, 0.73 and 0.28. Note that π(Ŝ | 2^U) ≥ 0.70 > 0.37 ≥ π(Ŝ) is not a contradiction. Conditioning on 2^U
+   removes at least 1 − 0.37/0.70 ≈ 47% of the mass of the models that compete with Ŝ (for example, supersets that
+   add a variable outside U).
+6. **Ẑ's island spread is small (SD of log Ẑ_r 0.02–0.08), but is not used.** By T31(d2), conditioning on a
+   small spread can destroy coverage. The C row is printed only as a what-if.
+
+**Not done.** I did not run larger studies, other replicates, or p = 1000. Nor did I enlarge the mass B&B budget for
+S6. Four fits are an illustration, not evidence about frequencies.
 
 ## 5. What fails and why
 - **A lower bound on π(Ŝ) from Ẑ alone.** It is impossible (C1(c)). The Markov direction is fixed: unbiased
@@ -270,7 +330,8 @@ The paper sentence: "*Each fit reports a certificate card whose claims hold simu
 - C1 and C6 rely on Lemma RO and GUARD (W2-BOOK, unreviewed). A cross-family check of the output-level step is needed.
 - Lemma M is short, but it is the engine of C4. Ask a reviewer to check (b), the determinant monotonicity, and to
   confirm that the engine's Q (with its non-negative recomputation branch, M §6.13) is the same function.
-- SC(η_F): someone should replay the card's scores in long double or mpfr to fix η_F for the paper.
+- SC(η_F): the engine and an independent R implementation agree to 3·10⁻¹² nats (§4). A replay in long double or
+  mpfr is still needed to fix η_F for the paper, because two double implementations can share a rounding pattern.
 
 ## 7. Outside scope
 - C4 is a *method-agnostic* post-hoc certificate. Applied to SuSiE, SSL or lasso supports, it would let the paper say

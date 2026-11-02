@@ -1,0 +1,68 @@
+
+====  p0500_S1_r001 c100  status: completed  wall(s): 2786 
+|S^|=14  TP=14 FP=0 FN=0  exact=TRUE
+score offset (mine - engine), top 5: -1.16529e-12 -6.82121e-13 -2.55795e-13 -6.82121e-13 1.42109e-13 
+F(S^)=-70.7934  F(S0)=-70.7934  F(S0)-F(S^)=0.0000  -> correct
+engine local_certified=TRUE | recomputed: local max=TRUE, n_nbr=7304, gaps add/del/swap = 2.271/36.008/38.524 nats
+exact local share pi(S^ | closed nbhd) = 0.4592
+all 16383 proper subsets of S^: gap g_sub=36.008, sum pi(S)/pi(S^) over subsets = 2.63e-16
+best-of-scored gap (top store, 20001 models) g = 2.2709 nats  -> pi(S)/pi(S^) <= 0.1032 for every scored S
+log Z_T=-69.799  log Zhat=-69.591  log(0.05 Zhat)=-72.587  log Zhat_r sd=0.068
+pi(S^) <= 0.3701 surely (top store);  pi(S^) <= 0.3701 w.p.>=0.95 (C1);  plug-in e^F/Zhat = 0.3006
+posterior mass outside the top store >= 0.0000 w.p.>=0.95
+  [conditional on PW2, B_T=0.25] pi(S^) >= 0.1503 except w.p. <= 0.200
+  [conditional on PW2, B_T=1.00] pi(S^) >= 0.1503 except w.p. <= 0.500
+  [conditional on PW2, B_T=4.00] pi(S^) >= 0.1503 except w.p. <= 0.800
+box U = S^ + 16 candidates (|U|=30, 1.07e+09 models): S0 subset of U: TRUE; opt-B&B done=TRUE nodes=3831 (0.8s); better models found: 0
+mass-B&B nodes=20951: sum_{S in 2^U, S!=S^} pi(S)/pi(S^) <= 0.4321  =>  pi(S^ | 2^U) >= 0.6983
+
+====  p0500_S3_r001 c100  status: completed  wall(s): 2608 
+|S^|=14  TP=14 FP=0 FN=0  exact=TRUE
+score offset (mine - engine), top 5: 2.52953e-12 2.84217e-12 2.75691e-12 2.81375e-12 2.43006e-12 
+F(S^)=-73.2824  F(S0)=-73.2824  F(S0)-F(S^)=0.0000  -> correct
+engine local_certified=TRUE | recomputed: local max=TRUE, n_nbr=7304, gaps add/del/swap = 2.912/34.477/20.118 nats
+exact local share pi(S^ | closed nbhd) = 0.4596
+all 16383 proper subsets of S^: gap g_sub=34.477, sum pi(S)/pi(S^) over subsets = 1.1e-15
+best-of-scored gap (top store, 20001 models) g = 2.9119 nats  -> pi(S)/pi(S^) <= 0.0544 for every scored S
+log Z_T=-72.301  log Zhat=-72.126  log(0.05 Zhat)=-75.121  log Zhat_r sd=0.017
+pi(S^) <= 0.3749 surely (top store);  pi(S^) <= 0.3749 w.p.>=0.95 (C1);  plug-in e^F/Zhat = 0.3145
+posterior mass outside the top store >= 0.0000 w.p.>=0.95
+  [conditional on PW2, B_T=0.25] pi(S^) >= 0.1572 except w.p. <= 0.200
+  [conditional on PW2, B_T=1.00] pi(S^) >= 0.1572 except w.p. <= 0.500
+  [conditional on PW2, B_T=4.00] pi(S^) >= 0.1572 except w.p. <= 0.800
+box U = S^ + 16 candidates (|U|=30, 1.07e+09 models): S0 subset of U: TRUE; opt-B&B done=TRUE nodes=1963 (5.0s); better models found: 0
+mass-B&B nodes=12993: sum_{S in 2^U, S!=S^} pi(S)/pi(S^) <= 0.3728  =>  pi(S^ | 2^U) >= 0.7284
+
+====  p0500_S4_r001 c050  status: completed  wall(s): 4992 
+|S^|=15  TP=14 FP=1 FN=0  exact=FALSE
+score offset (mine - engine), top 5: -3.97904e-13 -1.16529e-12 -4.26326e-13 -1.10845e-12 -4.26326e-13 
+F(S^)=-182.5704  F(S0)=-183.7581  F(S0)-F(S^)=-1.1877  -> POSTERIOR miss
+engine local_certified=TRUE | recomputed: local max=TRUE, n_nbr=7775, gaps add/del/swap = 0.528/1.188/2.012 nats
+exact local share pi(S^ | closed nbhd) = 0.2106
+all 32767 proper subsets of S^: gap g_sub=1.188, sum pi(S)/pi(S^) over subsets = 0.305
+best-of-scored gap (top store, 20001 models) g = 0.5278 nats  -> pi(S)/pi(S^) <= 0.5899 for every scored S
+log Z_T=-180.297  log Zhat=-179.704  log(0.05 Zhat)=-182.700  log Zhat_r sd=0.079
+pi(S^) <= 0.1030 surely (top store);  pi(S^) <= 0.1030 w.p.>=0.95 (C1);  plug-in e^F/Zhat = 0.0569
+posterior mass outside the top store >= 0.0000 w.p.>=0.95
+  [conditional on PW2, B_T=0.25] pi(S^) >= 0.0285 except w.p. <= 0.200
+  [conditional on PW2, B_T=1.00] pi(S^) >= 0.0285 except w.p. <= 0.500
+  [conditional on PW2, B_T=4.00] pi(S^) >= 0.0285 except w.p. <= 0.800
+box U = S^ + 16 candidates (|U|=31, 2.15e+09 models): S0 subset of U: TRUE; opt-B&B done=TRUE nodes=9665 (5.2s); better models found: 0
+mass-B&B nodes=58927: sum_{S in 2^U, S!=S^} pi(S)/pi(S^) <= 2.598  =>  pi(S^ | 2^U) >= 0.2779
+
+====  p0500_S6_r001 c050  status: completed  wall(s): 3675 
+|S^|=15  TP=14 FP=1 FN=0  exact=FALSE
+score offset (mine - engine), top 5: 7.67386e-13 7.38964e-13 8.52651e-13 5.40012e-13 6.53699e-13 
+F(S^)=-208.8488  F(S0)=-210.7399  F(S0)-F(S^)=-1.8911  -> POSTERIOR miss
+engine local_certified=TRUE | recomputed: local max=TRUE, n_nbr=7775, gaps add/del/swap = 2.768/1.891/1.514 nats
+exact local share pi(S^ | closed nbhd) = 0.2640
+all 32767 proper subsets of S^: gap g_sub=1.891, sum pi(S)/pi(S^) over subsets = 0.345
+best-of-scored gap (top store, 20001 models) g = 1.5143 nats  -> pi(S)/pi(S^) <= 0.2200 for every scored S
+log Z_T=-206.969  log Zhat=-206.414  log(0.05 Zhat)=-209.410  log Zhat_r sd=0.081
+pi(S^) <= 0.1526 surely (top store);  pi(S^) <= 0.1526 w.p.>=0.95 (C1);  plug-in e^F/Zhat = 0.0876
+posterior mass outside the top store >= 0.0000 w.p.>=0.95
+  [conditional on PW2, B_T=0.25] pi(S^) >= 0.0438 except w.p. <= 0.200
+  [conditional on PW2, B_T=1.00] pi(S^) >= 0.0438 except w.p. <= 0.500
+  [conditional on PW2, B_T=4.00] pi(S^) >= 0.0438 except w.p. <= 0.800
+box U = S^ + 16 candidates (|U|=31, 2.15e+09 models): S0 subset of U: TRUE; opt-B&B done=TRUE nodes=77083 (38.3s); better models found: 0
+mass-B&B not finished within 200000 nodes
