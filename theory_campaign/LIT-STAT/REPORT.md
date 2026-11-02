@@ -35,6 +35,10 @@ Our objects (from `00_COMMON.md`): standardised X, y; slab β_S ~ N(0, nσ²(G_S
    A4 > 0, and CSvdV's Thm 1 and Cor 1 do not cover it. CSvdV's own example needs Beta(1, p^u) with u > 1, and Cor 1 needs A4 > 1. I found
    no published dimension or tail bound for the BB(1,p) / g = n pair in which the Occam factor of the slab, not the prior, carries the size
    penalty. Rossell's §5.2 is the nearest result: BB(1,1), with p̄ ≪ n.
+   **Correction after a later check (§12):** per model, BB(1,p) and BB(1,1) penalise each added variable at the same order (ratios
+   (k+1)/(2p−1−k) vs (k+1)/(p−k)). BB(1,p) ≈ BB(1,1) × ((p+1)/2)·2^{−k}, i.e. BB(1,1) tilted by a Geometric(½) size law. So the gap is
+   narrow: it is "Rossell's BB(1,1) spurious-model analysis does not reach a cap K ≍ n; the geometric size tilt of BB(1,p) plus T02(i♯)
+   does". The novelty of T02(i♯) is **modest**, not a new mechanism.
 5. **The naive-merge proposition (A-DRAFT Prop M) formalises a known phenomenon.** That phenomenon is omitted-variable bias in block-wise
    or marginal fits. Papaspiliopoulos–Rossell (2017) state that block-local exactness requires a block-diagonal Gram matrix and is only a
    heuristic otherwise. Prop M is a clean COUNTEREXAMPLE for motivation, not a contribution.
@@ -97,7 +101,9 @@ of absence.
     (n+1)^{s₀/2}√n, with a tight factor Θ♯, and so moves the SE requirement down to sizes ≤ m♯_n ≈ s₀ + O(log n). Prop. D (duplicate
     columns) shows that some log n growth of the cutoff is necessary without SE.
   - I found no published analogue of either the upper bound (exact BB(1,p) tail) or the lower bound (Prop. D) for a non-complexity BB prior.
-  - **This is the defensible statistical novelty of Thm 1. It is modest.**
+  - **This is the defensible statistical novelty of Thm 1. It is modest.** It is narrowed further by §12: BB(1,p) is BB(1,1) times a
+    Geometric(½) size tilt, so Rossell's per-model accounting carries over up to constants. What remains new is handling a cap of order n
+    (Rossell's (B1) needs p̄ ≪ n) through the geometric tail and the exact cutoff m♯_n, together with Prop. D's matching lower bound.
 - **G2. Guarantees for the reported HPM of a finite-budget algorithm whose start law masks the truth while the posterior concentrates.**
   - The statistics papers stop at the posterior (π, the global HPM, the MPM).
   - The computation-plus-statistics papers (YWJ, Zhou et al., Hou–Atchadé) get recovery through rapid mixing under Condition 1, from any
@@ -123,7 +129,7 @@ of absence.
 | # | Threat | Affected result | Severity | What the paper must do |
 |---|---|---|---|---|
 | H1 | **Rossell (2022) Prop 1**: P(HPM ≠ t) ≤ 2E(1 − p(M_t \| y)), also for the MPM | T03♯(3); the 2E₀δ₁ term of Thm 4 (T21) and Thm 5(0) | **High for novelty, none for correctness** | Cite it as Rossell's. Do not present it as ours |
-| H2 | **Rossell (2022) §5 and Moreno–Girón–Casella (2015) Thm 3**: unit-information g plus a multiplicity-correcting BB model prior is consistent at polynomial p, with anchored eigenvalue quantities | Thm 1 (T03♯) as "the" consistency theorem | **Medium.** T03♯ becomes a modest extension (BB(1,p), K ≍ n, ridge slab, exact tail) | Cite both. State T03♯ as consistency **of the method's own target**, and put the novelty in the exact BB(1,p) tail and size-restricted SE (G1) |
+| H2 | **Rossell (2022) §5 and Moreno–Girón–Casella (2015) Thm 3**: unit-information g plus a multiplicity-correcting BB model prior is consistent at polynomial p, with anchored eigenvalue quantities | Thm 1 (T03♯) as "the" consistency theorem | **Medium–High (raised in §12).** T03♯ becomes a modest extension (BB(1,p), K ≍ n, ridge slab, exact tail) | Cite both. State T03♯ as consistency **of the method's own target**, and put the novelty in the exact BB(1,p) tail and size-restricted SE (G1) |
 | H3 | Narisetty–He (2014) Δ_n(K) and Rossell's v_tm: identifiability anchored at the truth and restricted in size is standard | The "anchored SE" wording in Thm 1 | Low to medium | Do not call anchoring new. W6-FIXREV2 already notes that SE_w ⇔ λ_min(G_T) ≥ g₀ for all T with \|T∖S₀\| ≤ m♯_n, which is close to Rossell's v̄ over sizes in [p_t, p̄] |
 | H4 | YWJ (2016) and Zhou et al. (2022) with **their** priors cover LH (API-POS) | Any claim that polynomial-time recovery on LH is new | High for that claim | Already flagged by API-POS. Keep the claim to "for the paper's own target and start" |
 | H5 | Hou–Atchadé Thm 2 (explicit non-asymptotic posterior bound) | Any "first finite-sample BVS guarantee" wording | Medium | Avoid "first finite-n". Thm N200 is a composition with a measured Π(X), which is a different kind of result |
@@ -239,8 +245,32 @@ The column headings are:
 | Target | Refined statement | True? | New? | Provable at reasonable cost? | Crux | Method change? |
 |---|---|---|---|---|---|---|
 | Thm 1 (T03♯) | As of record (W6-FIXREV2 §1.2), with clause (iii) credited to Rossell (2022) Prop 1 | High (PROVED, XF-verified) | **Modest extension** of Rossell (2022) and MGC (2015). Not standard for BB(1,p) / g = n / K ≍ n | Already proved | Exact BB(1,p) tail plus SE only up to m♯_n | No |
-| T02(i♯) exact BB(1,p) tail | As of record | High | **Plausibly new** (G1). Medium confidence in the novelty, pending E1 | Already proved | Prior tail ratio R_m against the S₀ Occam factor (n+1)^{s₀/2}√n | No |
+| T02(i♯) exact BB(1,p) tail | As of record | High | **Modest extension** (G1 as narrowed in §12): new only in reaching a cap K ≍ n via the geometric size tilt. Low-to-medium confidence in the novelty, pending E1 | Already proved | Prior tail ratio R_m against the S₀ Occam factor (n+1)^{s₀/2}√n | No |
 | Prop 1 (T07) | As of record, with (ii)(a)–(b) labelled standard | High (locked, Lean) | **Standard or folklore.** (i) and (ii)(c) are unstated but trivial | Already proved | — | No |
 | T03♯(3) / the 2E₀δ₁ term | Rossell (2022) Prop 1 | High | **Known** | — | — | No |
 | Naive merge (A-DRAFT Prop M) | As in A-DRAFT §3.1 | High (complete proof per A-DRAFT; A-REV4 uses it) | **Known phenomenon** (omitted-variable bias; PR2017's block-diagonal exactness condition), cleanly formalised | Already proved | Cross-block correlation ρ ≠ 0 | No |
 | Masked-regime reported-HPM results (Thms 2, 3, 5(b)) | Not re-stated here | — | **No prior art found** (G2). Strongest novelty claim relative to this literature | — | Start law vs posterior (API-POS) | — |
+
+## 12. Addendum: BB(1,p) versus Rossell's BB(1,1) (checked after the first draft)
+
+`scripts/bb11_vs_bb1p.py` → `results/bb11_vs_bb1p.txt` (exact rationals, deterministic, run via `owls_run -j 2`). It shows:
+
+- The per-model ratios are w(k+1)/w(k) = (k+1)/(p−k) for BB(1,1) and (k+1)/(2p−1−k) for BB(1,p), both asserted exactly. They agree to
+  within a factor of about 2.
+- w_{BB(1,p)}(k)/w_{BB(1,1)}(k) = (p+1)C(p,k)/(2C(2p−1,k)). This equals ((p+1)/2)·2^{−k}·(1 + o(1)) for k ≪ √p. The bracketed
+  correction is 1.000 at k = 0 and 0.96 at k = 14 (p = 1000), and only 0.0045 at k = 100 (p = 500), where BB(1,p) is even lighter.
+
+**PROVED** (elementary): BB(1,p) is BB(1,1) multiplied by a size-only factor that is at most ((p+1)/2)·2^{−k}. The inequality
+C(p,k)/C(2p−1,k) ≤ 2^{−k} holds because (p−i)/(2p−1−i) ≤ ½ for every i ≥ 0.
+
+Consequences for this audit:
+- **Spurious models.** Rossell's (2022) §5.2 accounting of spurious models (per-model prior ratio times a Bayes-factor bound) transfers to
+  BB(1,p) up to the constant (p+1)/2 at the denominator S₀ and an extra 2^{−(k−s₀)} that only helps.
+- **Cap.** His requirement p̄ ≪ n comes from summing a flat size law up to p̄. The geometric tilt is exactly what lets T02(i♯) live with
+  K = ⌊n/2⌋.
+- **Revised verdicts.** T03♯ is a **modest extension of Rossell (2022)** to a geometric-size-tilted BB prior, a cap of order n and a
+  ridge slab, rather than a different mechanism. H2's severity rises from Medium to **Medium–High**. G1 narrows to the cap and the exact
+  cutoff, with Prop. D's lower bound.
+- **E1 updated.** Rossell's supplement (Lemma S15, Lemma S21, read in the same arXiv PDF) treats BB(1,1), uniform and Complexity
+  priors only. It has no BB(1,p) and no cap of order n. A stronger reviewer should still check Martin, Mess & Walker (2017), which I did
+  not read.
