@@ -22,7 +22,8 @@ if (id == "smoke") {
   X <- inp$X; y <- unname(inp$Y[, sk])
 }
 seed <- as.integer(seed + soff)
-logr_D <- if (arm == "D") readRDS(file.path(ABL_WORK, "backfit", paste0(id, "_", sk, ".rds")))$logr else NULL
+BF <- if (arm == "D") readRDS(file.path(ABL_WORK, "backfit", paste0(id, "_", sk, ".rds"))) else NULL
+logr_D <- BF$logr
 SETUP <- NULL
 v3_setup <- function(ctx) { s <- abl_setup(ctx, mode, logr_D); SETUP <<- s; s }   # replaces the production setup
 lse <- function(x) { m <- max(x); m + log(sum(exp(x - m))) }
@@ -30,6 +31,7 @@ t0 <- proc.time()[["elapsed"]]
 fit <- v3_fit(X, y, seed)
 wall <- proc.time()[["elapsed"]] - t0
 st <- SETUP; ctx <- st$ctx
+if (arm == "D") stopifnot(identical(lapply(BF$blocks, as.integer), lapply(st$blocks, as.integer)))
 sc0 <- tryCatch(v3_score(ctx, S0[S0 %in% ctx$orig]), error = function(e) NULL)
 cal <- fit$calibration
 res <- list(id = id, scale = sk, arm = arm, mode = mode, seed = seed, S0 = S0, wall = wall, status = fit$status,
