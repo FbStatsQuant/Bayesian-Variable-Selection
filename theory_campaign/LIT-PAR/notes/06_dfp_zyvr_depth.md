@@ -45,3 +45,19 @@
   particle (informed / locally-balanced proposals scoring all p neighbours at once, Zanella 2020; tempered Gibbs, Zanella-Roberts 2019),
   so that a round has depth O(log p); then depth = O(T x rounds x log p) and the claim "depth = stage count (up to log p)" becomes true.
   Or phrase the claim as "depth in STAGES" with the per-stage depth stated honestly as O(p) score evaluations per round.
+
+## Schäfer & Chopin (2013), "Sequential Monte Carlo on large binary sampling spaces", Statistics and Computing 23:163-184
+## READ: local Papers/Core_bibliography/07_*.pdf (arXiv 1101.6037v4).
+- SMC tempering (from uniform/prior to posterior) on {0,1}^p for BVS, with a GLOBAL independence MH kernel whose proposal is a parametric
+  binary family (logistic conditionals) fitted to the particle cloud; adaptive stage selection by ESS.
+- Parallelism (quoted): "global methods have the property to be easily parallelisable"; "the Sequential Monte Carlo algorithm can be
+  parallelised in the sense that we can, on suitable hardware, run many evaluations of pi in parallel during the move step ... No analogue
+  speed-up can be performed in the context of Markov chains. We have processed variable selection problems from genetics with about a
+  thousand covariates within a few hours running a parallelised version of the algorithm on a 64-CPU cluster."
+- Per-particle depth of one independence move = 1 score (after a global proposal fit) => depth ~ (#stages x #moves), roughly p-free per move.
+- Theory: none for the BVS sampler (no theorem found; only standard SMC consistency). Evidence: multimodal, correlated test problems
+  (constructed), where local MCMC gets trapped.
+- THREAT: "parallel SMC with tempering for BVS targeting the exact posterior" is NOT new (2013). Our novelty must be (a) the exact
+  correlation-block start + bridge, (b) theorems (T38, T31(i), O-STAGES), (c) the depth/width accounting. The quoted claim
+  "No analogue speed-up ... in the context of Markov chains" is contradicted by informed proposals (ZYVR Sec 7.4, Zanella 2020):
+  do not repeat it in our paper.
