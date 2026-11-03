@@ -5,6 +5,12 @@ Every status below is copied from its source and is never upgraded. "Candidate" 
 Working material is in `digests/`: REG (registry, T38, architecture), API (nine API reports), AREV (Astra A-REV5..9), LIT (five LIT reports + API-POS), SL (Song–Liang 2015), LITGAP (new primary-source pass).
 Those digests were written by worker agents and spot-checked by me, not line-checked. Where this report and a digest differ, the source branch file is authoritative.
 
+**Protocol mapping.**
+- Statements, proofs: none new; this is an inventory task.
+- Evidence: §§1–4 tables plus `digests/`.
+- What fails: the refutations listed in §2 and in `digests/AREV.md` §2 / `digests/REG.md` §2.
+- No computation was run, so `owls_run` was not used.
+
 ## 0. Headline
 
 1. **Selection accuracy has the most theory.**
