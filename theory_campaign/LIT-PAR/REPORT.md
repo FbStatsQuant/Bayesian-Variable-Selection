@@ -95,7 +95,9 @@ Our design context:
 | **Yang, Wainwright, Jordan 2016**, AoS (UNVERIFIED here; read via API-POS) | Sequential RW-MH | Exact | Mixing O(p n s₀² log p) under restricted-eigenvalue-type conditions | as API-POS | Benchmark "sequential with guarantees" |
 | **Schäfer & Chopin 2013**, Stat. Comput. [n06]; local PDF | Tempered SMC on {0,1}^p with a global independence kernel; "run many evaluations of π in parallel during the move step" | Exact (SMC) | No BVS theorem | n/a | **Threat to novelty** of "parallel SMC for BVS". Do not repeat its claim "No analogue speed-up ... in the context of Markov chains" (contradicted by informed proposals) |
 | **Nie & Ročková 2023** BB-SSL, JASA; arXiv 2011.14279 [n05] | Independent MAP optimisations on reweighted data: "unapologetically parallelisable"; depth = one SSL optimisation | Bootstrap **pseudo-posterior** | Thms 4.2–4.3: near-minimax contraction if, among others, max_{i≠j}\|x_iᵀx_j\| ≲ λ₀²/n (low coherence) plus a restricted-norm condition | **No** (strong correlations) | Confirms Felipe's belief |
-| *Rows 2.2b (SuSiE, variational BVS, scalable horseshoe, data-splitting Bayes): see §2.4, from notes/04* | | | | | |
+| **Zanella & Roberts 2019** TGS/wTGS, JRSSB; arXiv 1805.00541 [n04 5a] | All p tempered conditionals are computed in one vectorised pass; the chain is sequential | Exact (importance-weighted) | Thm 1: var(h, TGS) ≤ b²·var(h, GS) + b²·var_f(h). A *relative* bound against Gibbs only; no design condition, no absolute mixing bound | Applies to any X, but guarantees nothing absolute | Its parallel-within-step move is a candidate for Option B (§3.3) |
+| **Jankowiak 2023** "BVS in a million dimensions", AISTATS (venue UNVERIFIED); arXiv 2208.01180 [n04 5b] | Subset wTGS on GPU; cost per iteration "sublinear in P"; chain sequential | Exact (weighted LLN) | Prop 1: a.s. consistency of weighted averages only; no rate | No guarantee under correlation (empirical correlated pairs only) | Practice precedent for GPU BVS |
+| **Griffin, Łatuszyński, Steel 2021**, Biometrika; arXiv 1708.05678 [n04 5c] | Adaptive MCMC; sequential | Exact | Ergodicity and SLLN, no rate (also API-POS item 4) | — | Benchmark |
 
 ### 2.3 Parallel SMC / tempering theory (generic, not BVS) [n03, n05, n07, n08]
 
@@ -113,8 +115,27 @@ Our design context:
 | **Lee, Yau, Giles, Doucet, Holmes 2010**, JCGS | Empirical GPU speedups of 35–500×; move steps "trivially parallelizable", resampling the sync point | Practice only |
 | TCS parallel sampling (Feng–Sun–Yin 2017; Feng–Hayes–Yin 2021; Anari et al. 2021, 2023, 2024; H. Lee 2024; Fischer–Ghaffari; Miao–Yin 2026) [n03 Part C] | Polylog or √n depth for structured or high-temperature models (counting oracles, isoperimetry, Dobrushin/spectral conditions); Ω(log n)/Ω(diam) lower bounds only in the LOCAL model | No BVS posterior covered. Use their work/depth reporting style. Do **not** claim a depth lower bound |
 
-### 2.4 Data-splitting Bayes, variational / IBSS, scalable shrinkage samplers
-(filled from `notes/04_datasplit_scalable_bvs.md`; see below)
+### 2.4 Data-splitting Bayes, variational / IBSS, scalable shrinkage samplers [n04]
+
+| Work | Parallel; depth | Target | PROVED (conditions) | Holds for us? | Relation |
+|---|---|---|---|---|---|
+| **Scott et al. 2016** consensus Monte Carlo, IJMSEM 11:78–88 (abstract only; full text NOT read) | Shards of observations; one average | Approximate | None seen in the abstract | Splitting n = 200 into shards leaves n/K ≪ p; averaging γ-draws is not a model posterior | Not a model-space method |
+| **Srivastava, Li, Dunson 2018** WASP, JMLR (arXiv 1508.05880); **Minsker et al. 2017** M-posterior, JMLR (arXiv 1403.2660) | Shards of observations; barycentre / geometric median | Approximate | Contraction for **continuous** parameters at fixed dimension, subset size → ∞, entropy/prior-mass conditions | No: fixed p, nothing for discrete model spaces | Not applicable |
+| **Zhang, Lam, Lin 2018** "Robust and parallel Bayesian model selection", CSDA 127 (venue per RePEc); arXiv 1610.06194 | Shards of observations; geometric median of subset posterior model probabilities | A robust aggregate, not the posterior | Thms 1–3: Hellinger contraction; BMA selection for a **finite, fixed, non-nested** model set with N/R → ∞; exponential concentration in R | No: fixed D, non-nested (the BVS lattice is nested); simulation 5000 × 10, uncorrelated | The only data-splitting model-selection theory found; irrelevant at p ≫ n |
+| **Li, Kang, Liu, Wu 2022**, Electron. Res. Arch. 30(5) | Data shards; local hierarchical Bayes; voting | Voting set | **No theorem** | AR(1) evidence (quoted): "With the increase of ρ, the number of selected noise variables increased, and the specificity ... decreased" | Empirical fragility |
+| **Johndrow, Orenstein, Bhattacharya 2020**, JMLR 21(73); horseshoe | Sequential chain; threaded linear algebra | Continuous shrinkage posterior (exact chain) / approximate chain | Geometric ergodicity; TV(approx, exact) ≤ C√δ + O(δ); no rate in n, p | — | Not a model posterior |
+| **Wang, Sarkar, Carbonetto, Stephens 2020** SuSiE/IBSS, JRSSB 82(5) | IBSS = sequential coordinate ascent over L effects; each single-effect fit is vectorised over p | Variational SuSiE posterior | Prop 2: convergence to a **stationary point** of the ELBO only. Quoted: "95% credible sets are not designed, or guaranteed, to have a frequentist coverage of 0.95". No 2023–2026 theory paper found | Designed for r > 0.99 LD; §4.1 has a masking-like example (the strongest marginal association is not causal), empirical only | Competes empirically under correlation; no guarantee |
+| **Ray & Szabó 2022**, JASA; arXiv 1904.07150 | CAVI: sequential sweeps, order-sensitive | Mean-field VB | Thm 1: prediction/ℓ₁/ℓ₂ contraction if compatibility numbers φ(S₀) and sparse singular values φ̃(c\|S₀\|) are ≥ c₀; examples: "diagonal ..., orthogonal designs, i.i.d. ... random matrices and ... strong irrepresentability" | No: for a pair with ρ ≈ 0.99, φ̃(2) ≲ √(1−ρ) (our calc.) | Confirms the belief; approximation |
+| **Yang, Pati, Bhattacharya 2020**, AoS 48(2) | No new algorithm | α-VB | Cor 4.2: rate √(s log(dn)/n) under a sparse-eigenvalue lower bound (supplement); no selection consistency | No (sparse eigenvalue → 0 with near-collinear pairs) | Same |
+
+**Discrepancy to flag.** Notes 04 infers that ZYVR Condition 1(b) "likely fails" on masked LH because true variables are
+marginally weak. That inference is **superseded by API-POS**. API-POS shows by exact enumeration (p = 16, 20) and a PROOF
+SKETCH that on LH the masking is a property of the start π₀, not of π: every underfitted model has a strongly beneficial
+addition. For the study scenarios S1–S6 (dilution-type masking), whether Condition 1 holds is **OPEN**.
+
+**Literal-constant remark (notes 04).** The YWJ remark "s₀ log p ≤ n/32", quoted by ZYVR, admits no s₀ ≥ 1 at n = 200,
+p = 1000. The theorems have unspecified universal constants, so they are asymptotic statements that are not checkable at the
+study size. The same holds for our own asymptotic Thm 1 (T03♯, thresholds ≈ 2·10⁶).
 
 ---
 
@@ -199,5 +220,110 @@ Our design context:
 
 ---
 
-## 4. Sources actually read
-(see §4 at the end, compiled after notes/04)
+## 4. Statements (PROTOCOL §2), evidence, failures
+
+### 4.1 Refined statements proposed for the paper (positioning claims, not theorems)
+- **S-GAP (CONJECTURE about the literature; evidence from §2).** Among published BVS methods, none simultaneously
+  - (a) targets the exact model posterior with an unbiased evidence estimate,
+  - (b) parallelises in communication-free width (islands), and
+  - (c) has a proved sequential-depth (stage-count) bound on a correlated design whose start is masked.
+
+  Every parallel BVS method with a theorem needs one of:
+  - cross-split faithfulness (SaM);
+  - weak correlation (DECO, BB-SSL, Ray–Szabó, Yang–Pati–Bhattacharya);
+  - block-diagonal Gram (Papaspiliopoulos–Rossell);
+  - large-n plug-in consistency (DFP);
+  - fixed-dimension shards (WASP, M-posterior, Zhang–Lam–Lin).
+
+  Exact parallel BVS samplers (Schäfer–Chopin, Ma, Jankowiak, Zanella–Roberts) have only qualitative or relative guarantees.
+- **S-COUNTER (from the literature).** Under ZYVR Condition 1, a single informed chain has a p-free iteration bound with
+  O(ps₀) parallel work per iteration. "Guarantees ⇒ sequential" is false as a general statement.
+- **S-DEPTH (to be carried by our theorems; status inherited).**
+  - v3 has depth D = T·L_r·(p + B + 2)·s(K) + O(2^B s(B)) + T·O(log RN) and width R·N.
+  - T obeys the O-STAGES bounds (PROVED / PROOF SKETCH there).
+  - Pooled error at fixed N decays as 1/R by T31(i) (standard; Whiteley–Lee–Heine).
+  - A single-island relative-variance bound in the masked regime is **OPEN**.
+
+### 4.2 Evidence
+No new numerics (a literature task). The evidence consists of quoted statements from primary sources (notes 01–08) and these
+published empirical findings:
+- Coats et al. 2026: F1 falls to 0.126 at ρ = 0.99 with contiguous splits;
+- Li et al. 2022: specificity falls with AR(1) ρ;
+- Ma 2015: PIPs are "unreliable" under high correlation;
+- Schäfer–Chopin 2013: parallel SMC at p ≈ 1000 on 64 CPUs.
+
+### 4.3 What fails and why (routes tried)
+- **Falsification route 1: find a feature-split method with a correlation-free guarantee.** DECO comes closest ("(almost) no
+  assumptions"), but its constants depend on λ_min(Σ), it needs s² log p/n small and Gaussian random design, and it targets a
+  lasso estimate. It fails as a counterexample to the exact-posterior claim.
+- **Falsification route 2: data-splitting Bayes for model spaces.** Only Zhang–Lam–Lin, with a fixed non-nested finite model
+  set. It fails.
+- **Falsification route 3: an exact parallel sampler with guarantees.** Two candidates came close:
+  - ZYVR parallelised: succeeds as a counterexample to "guarantees ⇒ sequential", but not to the three-part S-GAP (no
+    unbiased Ẑ, no islands, unimodality condition);
+  - pSMC (Liang et al. 2024): generic, and its uniform Doeblin condition fails for BVS.
+- **Not attempted:**
+  - reading the Song–Liang paper itself (paywalled; author slides used);
+  - the DFP supplement;
+  - the consensus Monte Carlo full text;
+  - Lindsten/Kuntz journal versions;
+  - most TCS proceedings pages.
+
+## 5. Needs escalation
+1. **Song–Liang Thm 5 and our reading of it** (screening keeps only variables with a nonzero projection coefficient within their
+   split). This needs a check against the JRSSB text. The proposed G4 counterexample on LH depends on it.
+2. **Whether T38(a) and T32(i) reduce to Mathews–Schmidler Thm 1.** If they do, they become corollaries, and the paper should
+   say so.
+3. **HQ method decision on depth** (§3.3 Options A/B). This is a method change if Option B is chosen.
+4. **Venues and pages** marked UNVERIFIED in notes 03 and 04 need a bibliography pass.
+
+## 6. Outside scope
+- **ZYVR Condition 1 on S1–S6.** If it holds for the paper's own prior, a parallelised LIT-MH is a strong baseline for the study.
+  Recommend an O-task to check Condition 1 by enumeration at small p, mirroring API-POS.
+- **Single-island relative variance of Ẑ in the masked regime.** Whiteley–Lee–Heine and Syed et al. both say this controls the R
+  needed. We have only one-sided M1–M3 results. This is the theorem a referee will ask for once the 1/R framing is used.
+- **SuSiE as an empirical comparator under masking-like designs.** Its §4.1 example is of exactly our type.
+
+## 7. Confidence card
+
+| Target | Refined statement | True? | Provable at reasonable cost? | Crux | Method change? |
+|---|---|---|---|---|---|
+| Gap claim (paper thesis) | S-GAP, three-part form (§4.1), with "guarantees ⇒ sequential" dropped | medium-high (a literature claim can always be overturned by a missed paper; 2023–2026 coverage was by search, not exhaustive) | n/a (literature) | ZYVR + parallel scoring; Schäfer–Chopin; pSMC | no |
+| Parallel scaling (S-DEPTH) | depth = T·L_r·(p+B+2) score evals, width R·N, error ∝ 1/R at fixed N | high (accounting) | high for the accounting; **low–medium** for a masked-regime single-island variance bound | single-island Var(Ẑ/Z) under a masked start | Option B (parallel-within-particle moves) is needed for "depth ≈ T up to log p" |
+| T31(i) | Ẑ-weighted pooling consistent as R → ∞ at fixed N | high | already proved in the literature | unbiasedness under the frozen calibration (P6/P7) | no; cite Whiteley–Lee–Heine and Dai et al. |
+| O-STAGES item 4 | √c·T* → L = Λ (Syed et al.) | high | known | — | no; cite |
+| O-STAGES items 2–3 | coarse-grid T* = log₂A₀ + O(1); not in the literature | (as O-STAGES) | (as O-STAGES) | layer law (PROOF SKETCH there) | no |
+| T38 masked-regime novelty | no published guarantee for SMC with a masked start on a correlated BVS family | medium-high | (as T38-RECORD) | μ⋆ exponentially small defeats generic bounds | no |
+
+## 8. Sources actually read
+Full lists with URLs and quotes are in `notes/03` (§"Sources actually read") and `notes/04` (§"Sources actually read").
+Read directly by the main run:
+
+- **Local PDFs:**
+  - Papers/Core_bibliography/12 (Papaspiliopoulos–Rossell 2017);
+  - 13 (Ma 2015);
+  - 10 (Zhou et al. 2022);
+  - 07 (Schäfer–Chopin 2013);
+  - 24 (Le, Fay, Chopin, Vihola 2026; header and parallel remarks only);
+  - 02 (Syed et al. arXiv 2408.12057v2).
+- **arXiv PDFs:**
+  - 1602.02575 (DECO);
+  - 2011.14279 (BB-SSL);
+  - 2609.20000 (Coats, Davies, Gupta 2026);
+  - 2208.06672 (Mathews–Schmidler);
+  - 1803.09365 (Marion–Mathews–Schmidler);
+  - 2007.11936v3 (Dai–Heng–Jacob–Whiteley);
+  - 2402.06173v2 (Liang et al. pSMC).
+- **Other:**
+  - https://www.stat.purdue.edu/~fmliang/STAT598Purdue/partI4.pdf (Liang's slides with the SaM theorems);
+  - https://tr.soe.ucsc.edu/sites/default/files/technical-reports/UCSC-SOE-21-04.pdf (DFP).
+- **Read by sub-sweeps** (verbatim quotes in their notes):
+  - **notes 03:** Vergé et al. 1306.3911; Lindsten et al. 1406.4993; Kuntz et al. 2110.15782; Whiteley–Lee–Heine 1309.2918;
+    Lee et al. 0905.2441; Syed et al. 1905.02939, 2408.12057; and the TCS papers listed there.
+  - **notes 04:** Zhang–Lam–Lin 1610.06194; Li et al. 2022 (aimspress PDF); WASP 1508.05880; M-posterior 1403.2660;
+    Johndrow et al.; SuSiE (JRSSB copy); Ray–Szabó 1904.07150; Yang–Pati–Bhattacharya 1710.03266; Zanella–Roberts 1805.00541;
+    Jankowiak 2208.01180; Griffin et al. 1708.05678; Yang–Wainwright–Jordan 1505.07925.
+- **Our branches read:** W8-SYNTH BRIEF, T38-RECORD T38_STATEMENT (head), API-POS REPORT §1, O-STAGES REPORT §1–2, W7-SEC
+  REPORT (grep), F-REFINE ARCHITECTURE (grep), METHODOLOGY_v3 §§1, 6.3–6.6, 8–9.
+- **Not read** (cited second-hand only, UNVERIFIED): the Song–Liang JRSSB full text; consensus Monte Carlo full text; the DFP
+  supplement; Andrieu–Doucet–Holenstein 2010 (cited via Dai et al.); Gelman–Meng 1998 (cited via Syed et al.).
