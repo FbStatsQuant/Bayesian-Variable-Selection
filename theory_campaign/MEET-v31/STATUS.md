@@ -1,9 +1,8 @@
 # MEET-v31 status (chair)
 
-- **Round:** Round 2 running (fresh tasks: Seat A, Seat B, Seat C; rebuttal + item 9), launched ~18:00 UTC.
-- **Amendment 01** (ground rule 9, agenda item 9: generality in (n, p)) received after Round 1 dispatch; in Round 2 for all seats.
-- **Evidence filed:** `evidence/2026-11-03_concurrency_runs.md` (Prop W bitwise on 3/3 study designs).
-- **Running:** Round 2 seats; proof check PC1 (Opus, Claude Work). Done: PIP rescoring helper (`evidence/2026-11-03_pip_rescore/`; full 2,394-fit Ẑ-weighted rescoring needs the per-island bundles on NOTS or the laptop — HQ action).
-- **Settlement spend:** $0 of $20.
+- **Round:** Round 2 complete (R2_A/B/C; SYNTH_R2.md). D3a–f, D4, D5, D6(ii–iv), D8 closed. Round 3 (only: item 1 vs the agreed ABL-START rule; certificate card; D6(i) wording; D7 estimator spec; item-9 table) waits for ABL-START results and PC2.
+- **Amendment 01** (ground rule 9, item 9) answered by all seats in Round 2; consolidated proposal in SYNTH_R2 §3.
+- **Evidence filed:** concurrency log (3/3 bitwise); PIP rescoring (partial; full study needs NOTS/laptop bundles — HQ action); PC1 proof check.
+- **Running:** PC2 proof check (Opus, Claude Work: O-CERT card items); ABL-START fits on Owls (48 = 12 designs × arms A–D; 6 done at 17:55 UTC) — its SDK worker ended at $2.45 before results, the chair will have the finished fits summarised with ABL-START's own scripts.
+- **Settlement spend:** $0 of $20 (all checks so far on Claude Work subscription).
 - **Owls jobs launched by chair:** none.
-- **ABL-START note for HQ (17:43 UTC):** the SDK worker ended its session after $2.45 ("Waiting for 18 fits to finish before the first interim summary"; final JSON line in the log), with its 48 fits (12 designs × arms A–D) still running in 3 Owls jobs (2921811, 2921862, 2934223). Only a draft REPORT (design section) is on `theory/ABL-START`. The chair is watching the Owls jobs and will have the finished fits summarised (free helper, Claude Work) into `evidence/` with the ABL-START scripts, unless HQ relaunches the worker first.
