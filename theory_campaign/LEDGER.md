@@ -182,3 +182,6 @@ Costs: LIT-SMC $2.81, LIT-MCMC $3.56, LIT-STAT $4.01, LIT-VENUE $2.78, API-RESID
 - API-RESID: no common-σ̂² pilot (floods); backfit start favourable in 78.7%; accuracy can move by ≤ 6 of 2,400 fits (565 posterior misses).
 - API-AUDIT: SR, GUARD, scan-before-limit, IND-T hold; LS0 exists only in the O-LS0 test export, not the production core.
 Next: LIT-SYNTH (Fable) + Astra cross-check of the novelty verdict, then Felipe's Phase 2 checkpoint.
+
+### 13:03 UTC 2026-11-03: objective clarified; LIT-PAR launched
+Felipe: keep current theory goals. Thesis/positioning = no BVS method is parallel + correlation-robust + strongly guaranteed; goal is to start retiring sequential MCMC for BVS (change of school). Paper 2 = trees, same logic. Primary: posterior accuracy; secondary: selection accuracy. LIT-PAR (Opus, $10) tries to falsify the gap claim. LIT-SYNTH waits for it.
