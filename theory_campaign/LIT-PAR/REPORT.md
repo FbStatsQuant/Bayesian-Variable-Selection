@@ -5,9 +5,9 @@ Run of 2026-11-03, branch `theory/LIT-PAR`. This is a literature task, and **no 
 - A "PROVED" attributed to a paper means the paper states it as a theorem. Its proof was not re-checked here.
 - All of our own items are **candidates**.
 
-Source notes with verbatim quotes are in `notes/01`–`notes/08`; the report cites them as [n01]…[n08]. Every entry names the
+Source notes with verbatim quotes are in `notes/01`–`notes/09`; the report cites them as [n01]…[n09]. Every entry names the
 file or URL actually read. **UNVERIFIED** marks anything seen only second-hand. Journal venues were mostly not checked on
-journal pages; §4 says which.
+journal pages; §8 says which.
 
 Our registry IDs used below:
 - T38(a), (b1-LH), (b2-LH), (c): `theory/T38-RECORD · T38_STATEMENT.md`;
