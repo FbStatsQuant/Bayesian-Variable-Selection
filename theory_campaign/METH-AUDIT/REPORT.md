@@ -198,16 +198,56 @@ do not change the kernel for depth (C10).
 
 ## 7. What fails and why
 
-[to be completed]
+- **"Depth = T stages" without the round factor fails.** The kernel is a p-step random-order Gibbs round, so per-stage
+  depth is m = p + B + 2 sequential score evaluations at best (Proposition D; LIT-PAR §3.3). The only fix is a kernel
+  change (C10), which breaks the Gibbs-path theorems. Rejected. The honest statement is
+  depth = (I + 2)(T + L + 4)·m score evaluations with T bounded by O-STAGES/Theorem G.
+- **"More islands always helps" fails for the equal-weight PIP under a split.** Proposition P(i): its limit is the
+  single-island mean, so its bias is set by N per island. Shrinking N to add islands (C8) makes it worse. The measured
+  difference at R = 32 × 312 (§6) is small on these designs, but the theorem gives no protection.
+- **Island-level parallelism alone does not scale p.** Depth under C1–C4 is ∝ N_e, and N₀ = max(2500, n, p). So for
+  p > 2500 the depth grows like p²·T. Particle-level parallelism (C6) is needed there, and it cannot be bitwise-identical
+  to the serial stream map. This is why C6 is LAW-PRESERVING, not ADDITIVE.
+- **Shortening calibration is not a parallel fix.** Calibration depth is (1 + I_e) island-depths. C2 cuts it 4-fold
+  bitwise, and C6 makes it N-free. Cutting rebuilds or H would touch T38(b1′) (H₀ in NB′), Theorem G (S₀ ∈ V) and (0_H)
+  (𝒮_cal), so C9 is rejected.
+- **A per-fit adaptive R is not allowed.** "Stack islands until the SE is small" breaks conditional unbiasedness
+  (Prop. P(v)), so R′ must be declared in advance.
+- **Not done:** the bitwise replay of the calibration (W-cal is code reading only), the law check for C6, and the full
+  10-design test (NOTS script provided, not run).
 
 ## 8. Needs escalation
 
-[to be completed]
+1. **Proposition W / W-cal** need an independent code check of the claim that "the ledger is write-only during an
+   island" and of the claim that the scorer has no state between calls. My evidence is code reading plus 4/4 bitwise
+   executions (smoke + 3 designs), and the calibration version is not executed. API-AUDIT-style referee: cheap.
+2. **Corollary V** (split neutrality to first order) is a PROOF SKETCH. It needs O-PW2 Theorem B's V_s and H_{s,T} written
+   out, and a check that the full-space χ²_t stays small at N_r ≈ 300.
+3. **DELIV under a split** (T38(b2) with smaller islands): OPEN. It is relevant only if C8 is ever adopted.
+4. **Prop. P(iii)'s practical scope:** in the masked regime E[W²] can be exponentially large. A referee should judge
+   whether the paper may phrase the Ẑ-weighted PIP result as "correctness at a cost in islands" without a bound on E[W²].
 
 ## 9. Outside scope
 
-[to be completed]
+- **Spec/code gap:** the Ẑ-weighted (secondary) PIP of METHODOLOGY §6.11 is not computed by the core (`v3_run.R`
+  assembles only `pip_primary` and `pip_r`). The study's reported "secondary PIP", if any, must come from a post hoc
+  script. Check before citing it.
+- **LS0 is not in the production core** (API-AUDIT fact 3). If v3.1 = v3 + LS0 + PEL, LS0 is one more deterministic
+  local search, parallel by scans (C3), and it is theorem-neutral for every row of §3.
+- **The 6 `resource_limit` stops** were wall-time stops (6,300 s at p = 500, 24,000 s at p = 1000, one CPU, islands
+  serial; BRIEFING_20261028 §Compute). Under C1 + C2 the same allocation gives about 4× more headroom for the final run
+  and the diagnostics. Re-running those 6 fits with PEL is the cheapest way to remove the P(U) caveat from the paper (6
+  fits × ≤ 2 h on 4 cores, NOTS).
+- The measured per-particle-round cost (§6) gives a direct estimate of what particle-parallel islands (C6) would take:
+  about (I + 2)(T + L + 4) rounds × a few ms, i.e. under a second of island depth at p = 500.
 
 ## 10. Confidence card
 
-[to be completed]
+| Target | Refined statement | True? | Provable at reasonable cost? | Crux | Method change needed? |
+|---|---|---|---|---|---|
+| Parallel execution of v3 (final islands) | Prop. W: worker islands with their own caches and ledgers give bitwise the serial outputs after merging by Lemma S | high (proved by reading, 4/4 executed) | done (PROVED, candidate) | scorer statelessness; ledger write-only in islands | no (ADDITIVE layer) |
+| Parallel calibration diagnostics | Prop. W-cal | high | done by reading; execution check cheap | stream persistence per diagnostic worker | no |
+| Pooling as R grows | Prop. P: Ẑ-weighted PIP consistent in R with a regime-free bound (via M1); equal-weight PIP keeps single-island bias | high | done (PROVED, elementary) | Maurer lower tail; M1 | no; report the secondary PIP (POST HOC) |
+| Split neutrality for Ẑ | Cor. V: same total particles ⇒ same leading variance | medium | medium | O-PW2 Thm B remainder at small N_r; full-space χ² | no (and C8 not recommended) |
+| Depth | Prop. D: depth (I+2)(T+L+4)(p+B+2) score evaluations, free of N, H, R with particle-parallel islands | high (counting) | done | needs per-particle streams (C6) to realise | LAW-PRESERVING stream map only |
+| Theorem robustness (§3) | all listed results hold under (i-a), (ii), (iv) and a shared calibration; the listed hypotheses change under (i-b) and a shortened calibration | medium-high (registry-level reading of T26 Theorem A and T38 parts; not re-proved) | yes (bookkeeping) | DELIV under a split | no |
