@@ -185,8 +185,8 @@ Covered by: **LIT-PAR** (main), **LIT-SMC** (Lindsten, Kuntz), LIT-VENUE (no).
 - Li, Kang, Liu & Wu 2022, *Electron. Res. Arch.* 30(5): R; no theorem.
 - **Lindsten, Johansen, Naesseth, Kirkpatrick, Schön, Aston & Bouchard-Côté**, *JCGS* 26(2):445–458 (2017), doi:10.1080/10618600.2016.1237363: LIT-SMC read arXiv:1406.4993 abstract only; "**statements not verified here**" (U for theorems). LIT-PAR notes 03 read parts.
 - **Kuntz, Crucinio & Johansen**, *AAP* 34(1B):1469–1523 (2024): LIT-SMC arXiv abstract only.
-- Embarrassingly parallel MCMC (Neiswanger et al.) as a named work: not in any report. Parallel SMC islands: Vergé et al. 2015, WLH 2016, Dai et al. 2022, Liang et al. 2024 (R).
-- **Missing**: Neiswanger–Wang–Xing embarrassingly parallel MCMC; consensus MC full text; Lindsten/Kuntz journal versions and theorem statements ("Not attempted" in LIT-PAR); the DFP supplement. LIT-PAR's blanket conclusion is that data-splitting guarantees are fixed-p and say nothing about discrete model spaces.
+- Embarrassingly parallel MCMC as a named work (the proposal's item): not in any report. Parallel SMC islands: Vergé et al. 2015, WLH 2016, Dai et al. 2022, Liang et al. 2024 (R).
+- **Missing**: the embarrassingly parallel MCMC literature; consensus MC full text; Lindsten/Kuntz journal versions and theorem statements ("Not attempted" in LIT-PAR); the DFP supplement. LIT-PAR's blanket conclusion is that data-splitting guarantees are fixed-p and say nothing about discrete model spaces.
 
 ### Theme 4. Importance tempering and SMC samplers (Zanella & Roberts 2019; Gramacy, Samworth & King 2010; Del Moral et al. 2006)
 
@@ -203,7 +203,7 @@ Covered only thinly, by **LIT-VENUE** (certificates/diagnostics rows) and **LIT-
 - **R-hat**: C4 Vehtari et al., *Bayesian Analysis* 16 2021, "Improved R̂", "Diagnostic only"; LIT-VENUE read "header" only (arXiv 1903.08008).
 - **Ẑ variance diagnostics**: Lee & Whiteley 2018 (*Biometrika* 105(3):609–625), "Unbiased estimator of Var(Ẑ) from one run (statement not verified here; UNVERIFIED)" (LIT-SMC); Dai et al. 2022 notes asymptotic variance can be estimated as R → ∞ (LIT-PAR n07); Syed et al. barrier Λ; LIT-PAR "Report single-island relative variance of Ẑ". Rao–Blackwellised variance estimators are not read.
 - **Spectral-gap certificates**: Wu arXiv 2605.30722 (abstract only); WSH note that swap-rate diagnostics cannot detect low persistence (LIT-SMC #20).
-- **Missing / not covered**: ESS (bulk/tail, Vehtari or Gelman–Rubin versions), PSIS (Pareto-smoothed importance sampling), Gelman–Rubin R-hat original, multi-chain diagnostics for discrete model spaces, SMC-specific ESS/genealogy diagnostics (Chan–Lai, Olsson–Douc, Lee–Whiteley beyond the index), and diagnostics for our own flags (low_empirical_ESS, grid_unconverged). No report ties diagnostics to the proposal's goal.
+- **Missing / not covered**: ESS (bulk/tail, Vehtari or Gelman–Rubin versions), PSIS (Pareto-smoothed importance sampling), Gelman–Rubin R-hat original, multi-chain diagnostics for discrete model spaces, SMC-specific ESS/genealogy-based variance diagnostics (Lee–Whiteley is only an index entry in LIT-SMC), and diagnostics for our own flags (low_empirical_ESS, grid_unconverged). No report ties diagnostics to the proposal's goal.
 
 ---
 
@@ -290,4 +290,4 @@ Verbatim key lines (LIT-PAR REPORT.md):
 - **Gamarnik–Zadik AoS 2022 companion**, **Atchadé SIAM J. Math. Data Sci. 2021**, **Pozza–Zanella Biometrika 2025**, **Chopin–Crucinio–Korba ICML 2024**: venues UNVERIFIED.
 - **Hans–Dobra–West 2007** and BVS stochastic-search certificate literature: not searched (LIT-SMC).
 - **Shi–Dunson, South–Pettitt–Drovandi 2019**: not read in full (LIT-VENUE).
-- **Gramacy–Samworth–King 2010; Ribatet 2012; Frazier 2023; Pauli; Varin; Neiswanger; PSIS; ESS/R-hat originals**: not covered by any report.
+- **Gramacy–Samworth–King 2010; Ribatet 2012; Frazier 2023; Pauli; Varin; embarrassingly parallel MCMC; PSIS; ESS/R-hat originals**: not covered by any report.
