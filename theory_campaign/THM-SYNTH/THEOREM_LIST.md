@@ -209,7 +209,7 @@ WLH. LIT-SMC: masked-regime Ẑ/PIP results "sit where the general bounds are va
 **(v) Difficulty and route.** M. Steps: (1) write the islandwise identity for the measured-round average of a bounded
 h from the locked T12/T15 statements; (2) copy M1's proof with h; (3) Prop P(iii) with the truncation variant; (4)
 compose with T03♯ for (d). Risk: (d)'s R_n condition is uncheckable without an upper bound on E[W²|𝓒_n] (or on
-M_𝓒(ε)); M3 shows E[W²|𝓒] ≥ 1/P_𝓒(crossing), so R_n must at least exceed the reciprocal crossing probability. The
+M_𝓒(ε)). Lower bound (PROOF SKETCH, this run): by Cauchy–Schwarz E[W²|𝓒] ≥ (E[W·1_cross|𝓒])²/P_𝓒(cross), and E[W·1_cross|𝓒] → 1 whenever the non-crossing islands' evidence is negligible (F-MASKPIP M2: Ẑ_r ≤ √δ₁Z there except w.p. 2√δ₁), so R_n must at least exceed the reciprocal crossing probability. Do **not** cite F-MASKPIP M3 for this: THM-INV records M3 as XF ERROR. The
 v1 paper states (a)–(c), (e) as theorems and (d) with R_n as a hypothesis, disclosing the lower bound.
 
 **(vi) Lean.** (a)'s deterministic step and (b)'s finite inequality: certifiable on a finite state space with abstract
@@ -379,8 +379,8 @@ any bounded h is ≤ 2δ₁ + c_h(ρ̄ + u_π) on every island (A1(a)), with no 
 deterministically, and on the ideal grid T = O(1) (favourable) or log₂A₀ + O(1) (masked crossing), where A₀ is the start's
 masking depth, a functional of X through the blocks (D2).
 (c) [*costs particles/islands*] The Ẑ-weighted pooled error exceeds t with probability ≤ exp{−R(1−s)²/(2E[W²|𝓒])} +
-(2δ₁ + …)/(st) (A1(b)); E[W²|𝓒] ≥ 1/P_𝓒(crossing) (M3), so the island count needed grows with the masking depth through
-the crossing probability; the equal-weight PIP's bias is set by N alone (V3(i)).
+(2δ₁ + …)/(st) (A1(b)); E[W²|𝓒] ≳ 1/P_𝓒(crossing) (Cauchy–Schwarz + M2, PROOF SKETCH in A1(v)), so the island count needed
+grows with the masking depth through the crossing probability; the equal-weight PIP's bias is set by N alone (V3(i)).
 (d) [*selection*] On LH (exact Gram) the reported HPM equals S₀ w.p. → 1 − limsup P(U) (R5), while a feature-splitting
 procedure loses the masked hub (C1).
 
@@ -532,7 +532,7 @@ hubs (j_{a_i}, j_{b_i}) with corr(j_{a_i}, j_{b_i}) = ψ_i, 0 < |ψ_i| < ρ, θ_
 its subset contains neither j_{a_i} nor any other member of j_{b_i}'s group.
 (a) *Isolation probability (finite combinatorics):* for a uniformly random equipartition, P(a given other column shares
 j_{b_i}'s subset) = (s_n − 1)/(P_n − 1), so P(E_nᶜ) ≤ c·g·(s_n − 1)/(P_n − 1) ≤ c·g/K_n, and P(E_n) → 1 whenever K_n → ∞
-(in particular under SL's K_n = O(√P_n)); at fixed K_n = 2 and g = 1 (LIT-PAR's design), P(E_n) = ½ − o(1).
+(in particular under SL's K_n = O(√P_n)). Exactly, P(j_{b_i} isolated from g given columns) = C(P_n−1−g, s_n−1)/C(P_n−1, s_n−1); the union bound is vacuous at small K_n: at K_n = 2, P(isolated) = 0.53 for g = 1 (LIT-PAR's design, P = 16) but 0.05 for g = 4 (`scripts/check_lemmas.py`). So at fixed K_n the failure probability is bounded away from 0 but can be small; the "→ 1" needs K_n → ∞.
 (b) *Loss of the hub on E_n (exact-Gram orthogonal-null lemma):* on E_n, x_{j_{b_i}} is orthogonal to every other
 column of its subset and x_{j_{b_i}}′μ = (n−1)(θ_{j_{b_i}} + ψ_iθ_{j_{a_i}}) = 0 exactly, so in its subset x_{j_{b_i}}
 is an orthogonal null column: Condition 5 fails exactly (cov = 0), β_{0,j_{b_i}} = 0 in every iteration, and under SL's
