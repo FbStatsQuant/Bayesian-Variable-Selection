@@ -13,12 +13,17 @@ ma_load()
 cores <- as.integer(Sys.getenv("OWLS_JOB_CORES", "1"))
 study <- "/home/fb31/ls0_work/study"
 pp <- sub("_.*", "", id); sc <- sub("^[^_]*_(S[0-9]).*", "\\1", id)
+if (id == "smoke") {            # small synthetic problem for a compile/logic test (fixed seed)
+  set.seed(20261103); n <- 100; p <- 60; Z <- matrix(rnorm(n * p), n); X <- Z + 0.6 * Z[, rep(1:12, 5)]
+  S0 <- c(3L, 17L, 40L); y <- drop(X[, S0] %*% c(1, -0.8, 0.7)) + rnorm(n); seed <- 12345L
+} else {
 man <- read.csv(file.path(study, "manifests", "cells", paste0(pp, "_", sc, "_inputs.csv")))
 seed <- man$method_seed[man$dataset_id == id]
 inp <- readRDS(file.path(study, "inputs", pp, paste0(id, ".rds")))
 tru <- read.csv(file.path(study, "manifests", "cells", paste0(pp, "_", sc, "_truth.csv")))
 S0 <- sort(as.integer(strsplit(tru$active[tru$dataset_id == id], ";")[[1]]))
 X <- inp$X; y <- unname(inp$Y[, sk])
+}
 lse <- function(x) { m <- max(x); m + log(sum(exp(x - m))) }
 el <- function() proc.time()[["elapsed"]]
 res <- list(id = id, scale = sk, seed = seed, S0 = S0, cores = cores)
