@@ -16,3 +16,20 @@
   T31(i) must be cited as standard; its only possible novelty is verifying the hypotheses for v3 as run (frozen calibration =>
   unbiasedness: P6/P7), i.e. the "given the frozen calibration" clause, which IS method-specific.
 - Ma (2015) LIPS (notes 01) already used islands with averaged Horvitz-Thompson estimates for BMA.
+
+## Liang, Lohani, Lukens, Kirby, Searles, Law, "SMC Is All You Need: Parallel Strong Scaling", arXiv:2402.06173v2 (2 Jun 2024);
+## v3 (Aug 2025) retitled "Comparison of parallel SMC and MCMC for Bayesian deep learning" (per arXiv listing; v3 not read). Peer review UNVERIFIED.
+READ: v2 PDF.
+- pSMC = P non-communicating SMC islands, estimator (6) = sum_p F^{N,p}(phi) / sum_p F^{N,p}(1) (Z-weighted island pooling).
+- Thm 3.1 (quoted): "Given Assumptions C.1 and C.2, for suitable values of (M, N, J) there exists a C_phi > 0 ... such that for any P in N,
+  E[(phi^pSMC - pi(phi))^2] <= C_phi / (N P)." Assumptions (quoted): C.1 "C^{-1} < f_j(theta), L(theta) <= C" (bounded likelihood/weights);
+  C.2 "there exists a rho in (0,1) such that for any (u,v) ... integral_A M_j(u,du') >= rho integral_A M_j(v,dv')" (uniform Doeblin mixing
+  of EVERY kernel). Text: "Only standard assumptions are required, which essentially state that the likelihood is bounded above and below
+  and the MCMC kernel is strongly mixing".
+- Table 1: pSMC time cost COST(d,m) COST_over(d,m) N (independent of P), MSE C_SMC(d,m)/(NP): "parallel strong scaling" = fixed wall time,
+  error -> 0 as processors P -> infinity.
+- THREAT: the work/depth framing "fixed depth, width R -> infinity, error O(1/(NR))" for Z-weighted islands is PUBLISHED (2024) as a generic
+  claim, under global-mixing assumptions. Our paper must cite it and position the contribution as: (a) BVS-specific constants
+  (C_phi depends on dimension through rho and C; for BVS on {0,1}^p a uniform Doeblin rho is typically exponentially small in p),
+  (b) depth given by the stage count with explicit O-STAGES laws, (c) a regime (masked start) where C_phi-type constants are analysed.
+  Our designs: Assumption C.2 with p-free rho fails for BVS posteriors with strong correlation (it would imply O(1) global mixing).
