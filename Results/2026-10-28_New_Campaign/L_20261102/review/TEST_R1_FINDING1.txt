@@ -1,0 +1,10 @@
+Warning message:
+package 'data.table' was built under R version 4.4.3 
+UNFILTERED: rows 152 keys 76 max copies per key 2 keys with conflicting outcomes 76 
+FILTERED:   rows 76 keys 76 max copies per key 1 failed rows 0 
+FILTERED exact recoveries by case:
+              case_id n_rules n_exact
+               <char>   <int>   <int>
+1: p0020_S1_r001_c050      38      15
+2: p0020_S1_r051_c050      38      15
+TEST_PASS 

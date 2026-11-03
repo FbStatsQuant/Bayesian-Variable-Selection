@@ -1,0 +1,17 @@
+{
+ "checks": "pass",
+ "smc_pooled": {
+  "hpm|c100|p500": 559,
+  "hpm|c100|p1000": 560,
+  "hpm|c050|p500": 370,
+  "hpm|c050|p1000": 340,
+  "mpm_rb|c100|p500": 559,
+  "mpm_rb|c100|p1000": 561,
+  "mpm_rb|c050|p500": 338,
+  "mpm_rb|c050|p1000": 321,
+  "mpm_plain|c100|p500": 559,
+  "mpm_plain|c100|p1000": 561,
+  "mpm_plain|c050|p500": 338,
+  "mpm_plain|c050|p1000": 320
+ }
+}

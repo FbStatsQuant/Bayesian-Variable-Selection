@@ -1,0 +1,52 @@
+BENCH_F3_PROD scored rows: 14400  cases: 2400 
+            
+               ok
+  cv_1se     2400
+  cv_min     2400
+  ebic05     2400
+  ebic05_K37 2400
+  ebic1      2400
+  ebic1_K37  2400
+
+pooled exact /600 by rule x scale x p:
+      rule_id scale_key    p exact
+1      cv_1se      c050  500     2
+2      cv_min      c050  500     0
+3      ebic05      c050  500   153
+4  ebic05_K37      c050  500   153
+5       ebic1      c050  500   253
+6   ebic1_K37      c050  500   253
+7      cv_1se      c100  500     7
+8      cv_min      c100  500     0
+9      ebic05      c100  500   276
+10 ebic05_K37      c100  500   277
+11      ebic1      c100  500   493
+12  ebic1_K37      c100  500   493
+13     cv_1se      c050 1000     0
+14     cv_min      c050 1000     0
+15     ebic05      c050 1000   103
+16 ebic05_K37      c050 1000   103
+17      ebic1      c050 1000   197
+18  ebic1_K37      c050 1000   197
+19     cv_1se      c100 1000     1
+20     cv_min      c100 1000     0
+21     ebic05      c100 1000   246
+22 ebic05_K37      c100 1000   246
+23      ebic1      c100 1000   512
+24  ebic1_K37      c100 1000   512
+
+D55: cv_min at the last lambda grid point (diag code lambda_last): 804 / 2400
+, , ll = FALSE
+
+       
+        c050 c100
+  p0500  542  340
+  p1000  505  209
+
+, , ll = TRUE
+
+       
+        c050 c100
+  p0500   58  260
+  p1000   95  391
+

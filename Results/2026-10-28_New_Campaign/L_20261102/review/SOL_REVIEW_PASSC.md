@@ -1,0 +1,27 @@
+# ANALYSIS-L pass C narrow review
+
+**Verdict: ACCEPT.**
+
+Independent reviewer: Sol 6.1, 2026-11-03. Scope: `SOL_BRIEF_PASSC.md`, new benchmark rows, plain-MPM addition, and ABESS size-k check only. Work was local on this Windows PC; no SSH or remote hosts. The accepted R1/R2 SMC/exact analysis was not reopened. Only this review file was written.
+
+## Class (i) findings
+
+**None.** No wrong benchmark numbers, wrong headline rules, denominator errors, or broken pass C process found.
+
+Evidence inspected and checks performed:
+
+- **Rules:** Checked campaign D17, D35/D42, D54.3, and D92 against `build_tables.py`, the renderers, `registry.R`, `lowp_derive`, and `score_final_bench/registry_used.csv`. F1-F3 use `ebic1_K37` for the analysis headline and `cv_min` for sensitivity; F4/F5 use `ebic1_K37`; A1/A2/A3 use `pip05`/`ssl_final`/`ci95`. The frozen registry still calls F1-F3 CV primary; the analysis explicitly applies the later D42 headline decision. This is consistent, not a rule-selection defect. LA-4 promotes the F4/F5 aliases and demotes the cap rows; at n=200 and p=20/30, K=min(floor(n/log(n)),p)=p. Their cap/K37 recovery outcomes agree in all 2,400 cases per method.
+- **Counts and denominators:** Independently recomputed every benchmark Q4 scenario, pooled, and passing-only count from `case_selection.csv` (44 benchmark table rows, 11 rules x 4 cells). Each row has 600 unique expected cases, with 100 per scenario. All 91,200 benchmark selection rows have status `ok`; the displayed 11 rules cover 26,400 rule-case results. The scorer retains failed/timeout/not-run results as non-recoveries on the expected grid. No duplicate case/method/rule keys were found. The reported zero failed/not-run results are correct.
+- **Raw support checks:** Independently read raw benchmark RDS records and sealed truth for four cases spanning both p values and scales: `p0020_S1_r001_c100`, `p0020_S4_r053_c050`, `p0030_S4_r022_c100`, and `p0030_S6_r100_c050`. All 44 headline/sensitivity rule outcomes matched the scoring CSV. This is a spot check, not a second full raw-record acceptance run.
+- **Plain MPM:** Recomputed its four pooled and 24 scenario counts from primary-fit `mpm_plain_eq_truth`; all match Q4. Independently confirmed accuracy-table RB MPM truth outcomes equal selection-table `pip05` in all 2,400 cases.
+- **Process and scope containment:** `passC.log` has rc=0 for all 24 chunks and overall completion. `merge_chunks.R` retains the own-chunk filter and checks partition, registry equality, key uniqueness, and required-grid coverage. All non-selection/non-H4 scoring CSVs are byte-identical to the previous score directory; non-benchmark selection rows are semantically unchanged. Headline and evidence diffs are confined to the stated additions. Inspected the 19,200/19,200 acceptance report, verified-pull OPS entry, and saved renderer consistency test (`TEST_PASS`); did not rerun writing renderers.
+- **ABESS:** The reference method matches the fitted objective: column-centred X, centred response, no intercept, exhaustive `leaps::regsubsets`, all sizes including an explicit empty model, and RSS tolerance 1e-8 with floor 1, allowing RSS ties. No support-identity requirement is imposed for optimality. The saved 2,400 unique case rows cover the roster and agree with all ABESS headline truth outcomes in the selection table. Recomputed totals: 25 headline supports suboptimal, 9 lost and 2 gained recoveries at the saved size, maximum relative headline RSS gap 0.02738060825; 15,712/60,000 path-size pairs suboptimal. Alignment is adequate for these saved results: maximum OLS/stored-RSS relative difference 1.8797e-15, maximum absolute X column mean 4.6534e-17, and zero supports below the exact minimum. Independently reran exhaustive all-size comparisons for the four cases above; their suboptimal-path-size counts (3, 8, 11, 18) match the saved CSV.
+- **Tie-out:** Inspected Terra's code, report, results, and canary key. The 21 genuine claims match; the only four mismatches are exactly the planted canaries, with their true values recovered. The two ABESS tie-out cells independently compare the selected-size RSS against exhaustive minima.
+- **Flags:** SSL exceeds the exact-posterior HPM in the three stated cells (590>576, 574>562, 586>571), but not the fourth (501<507); pooled 2,251 versus 2,216. Lasso/EN CV totals are 12/8 out of 2,400. The evidence discloses these as flags, leaves audit disposition to HQ, and does not claim that the SMC-BVS exact posterior is a recovery oracle or that the earlier high-p audit independently validates every low-p record.
+
+## Class (ii)/(iii), non-blocking
+
+- **(ii) ABESS counterfactual wording:** The reported +7 is correct for replacing the suboptimal support at each *saved headline-selected size*. Qualify “exact search would change ABESS's /2,400 count by +7” with “holding the selected sizes fixed.” The check does not recompute EBIC selection over a fully exact path, so +7 should not be read as the recovery change from that different procedure. This does not affect the observed recovery table or the D54.3 size-optimality result.
+- **(iii) Future robustness:** `abess_size_check.R` records centring/alignment/below-minimum diagnostics rather than failing on all of them. Explicit finite-value and tolerance assertions would strengthen future reuse; the inspected saved diagnostics satisfy the intended checks here.
+
+No additional review round is needed for the accepted pass C rows under D53.

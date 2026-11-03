@@ -211,3 +211,91 @@
 - **D69 (HQ watchdog, 2026-11-02 14:07Z).** The OPS pull chain stopped at 13:48Z: the PROD-H home-summary pull was refused because the local destination already existed (the merge guard worked). That stopped the F3 PROD and PROD_L_BENCH launch chains, and OPS-4's watcher didn't wake it. HQ woke OPS-4 to pull into a non-conflicting sibling folder, resume the remaining pulls and both launches, and make the watcher wake on STOP/FAILED. PROD-H p0500, p1000 and logs were already pulled, verified and deleted.
 - **D70 (Felipe, 2026-11-02).** GH migration packaging is launched now: GH-PACK assembles the vetted scripts, theory documentation, plan and HQ bootstrap into the Owls clone `/home/fb31/BVS_GH` of the public repo FbStatsQuant/Bayesian-Variable-Selection. Felipe pushes himself, so there are no commits from agents. Snapshot now; `SYNC_LATER.md` covers the post-experiment refresh. It does not touch the running campaign or NOTS. Crew: an Opus manager, Sonnet ×2, Haiku, and a Sol review.
 - **D71 (HQ watchdog, 2026-11-02 15:08Z).** ANALYSIS-L and ANALYSIS-H2 were idle from 13:41Z: their watchers died in a T3 event while their data had already landed. Both were resumed. PROD-H completion is Sol ACCEPT WITH FIXES (F1–F4 addressed in `ops/PRODH_COMPLETION_20261102.md`). PROD-L smcrep is still pulling.
+- **D72 (HQ, 2026-11-02 ~16:20Z).** PROD-L smcrep is pulled and verified (48,000 files, 4.0 GB) and deleted from scratch; all four PROD-L result pieces are local. To avoid idling NOTS during the long logs pull, OPS interleaves the BENCH_F3_PROD cell 1 launch now. PROD_L_BENCH stays behind the PROD-L clean-up, which frees the home space it needs.
+- **D73 (HQ, 2026-11-02).** GH-PACK is DONE: 1,287 files and 12.25 MiB added to Owls `/home/fb31/BVS_GH`. `verify_manifests` 23 PASS / 0 FAIL; Sol R1, R2 and a narrow check, with the final scanner (`prepush_scan.sh`) fixed directly under D53 and not re-reviewed.
+  - **Push state:** Felipe already pushed the pre-review snapshot (`c4ef0dc` "Transfer"). The reviewed fixes are uncommitted on top and need his second commit and push.
+  - **Felipe's decisions, from `Docs/PUSH_CHECKLIST.md`:**
+    - public vs private (unpublished proofs and reviews);
+    - rotate the NOTS password, which appears in an old transcript;
+    - keep or drop `Scripts/Archive/`.
+  - **Later:** `SYNC_LATER.md` covers the post-campaign refresh.
+- **D74 (HQ under D31, 2026-11-02 ~17:35Z).** NOTS home reached 9.86 GiB because T3's own `~/.t3` runtime grew by 481 MB (`0.1.7-nightly` installed beside `0.1.6`). That blocked F3 PROD cell 1.
+  - **Ruling:** erase the regenerable cache `~/.vscode-server/data/CachedExtensionVSIXs` (561 MB) after a quick Sol review of the list. There is no archive, since it is a regenerable cache.
+  - **Not touched:** the old VS Code servers (D9), and the old T3 runtime 0.1.6, because Felipe's live T3 server runs from `~/.t3`.
+  - **Felipe told:** about the T3 runtime growth.
+  - **Sequencing:** OPS may safely interrupt the logs pull to do the erase and launch cell 1.
+- **D75 (HQ, 2026-11-02 ~18:10Z).** ANALYSIS-L: the SMC and exact part is DONE (Terra tie-out PASS; Sol ACCEPT WITH FIXES in R1 and R2, all applied). **Low-p headline:** Q1 Ẑ accurate (RMSE 0.012 on log Z, 100% lower-bound coverage); Q2 SMC HPM = exact HPM 100%, = truth 92.3%, 0 search misses; Q3 PIPs accurate (RB max error mean 0.0005, plain 0.0020; MPM = exact 99.9% / 99.8%); Q4 recovery 576/562/571/507 of 600, identical to exact. All 6 seeds give the same HPM 100%. Benchmark rows are pending PROD_L_BENCH (pass C).
+- **D76 (HQ, 2026-11-02 ~18:20Z).** BENCH_F3_PROD cell 1 is submitted: job 2503200, `p0500_c100`, 600 fits; home 9.31 GiB after the D74 erase. Cells 2–4 are chained sequentially.
+  - **SSH rule amended:** at most two concurrent NOTS connections, one bulk lane for long transfers and one control lane for short commands (each ≤ 5 min, serialised, batched). Back-off rules and the host alias are unchanged.
+  - **Reason:** one multi-hour pull was blocking monitoring, launches and fail-fast detection.
+- **D77 (Felipe, 2026-11-02).** "Stop when it is done; the theory campaign is being executed elsewhere." HQ finishes ONLY the remaining empirical items (F3 PROD cells 1–4 and collection; PROD-L logs, clean-up, PROD_L_BENCH and collection; ANALYSIS-H2 final with the F3 rows; ANALYSIS-L pass C with the benchmark rows; final NOTS clean-up; the GH SYNC_LATER refresh into Owls with no push), then sends a final report, disables the watchdog and stops. No theory work from this HQ.
+- **D78 (HQ, 2026-11-02 ~19:40Z).** ANALYSIS-H2 is DONE.
+  - **Reproduction:** IDENTICAL on all 2,400 records.
+  - **Plain-PIP recovery:** 559/561 (c = 1), 338/320 (c = 0.5).
+  - **Headline:** the lasso family moves to `ebic1_K37` with the EN α disclosure; the aLasso row is pending F3 PROD.
+  - **Checks:** EVIDENCE_H; Terra tie-out PASS (46/46); Sol ACCEPT WITH FIXES ×2, applied.
+  - **Remaining:** the aLasso update after BENCH_F3_PROD (cell 2, job 2504013, running).
+- **D79 (Felipe, 2026-11-02 ~20:45Z).** NOTS home is near full ("10.07 of 10.24 GB"); Felipe: "start cleaning what you can, maybe cache or something, up to you". OPS-4 is authorised to erase, with no archive and after a quick Sol list review: (a) caches; (b) old T3 runtime versions not used by any loginx2 process; (c) old VS Code server versions not in use (the D9 other-node caveat is now accepted). Never touched: ~/.claude/remote, .t3-recovery, credentials or config, project data. Target ≤ 9.0 GiB. Owls was checked and is fine (30%).
+- **D80 (HQ watchdog, 2026-11-02 21:10Z).** OPS-4's run 52 was cancelled at 21:05Z (T3) during the D79 clean-up; it was resumed. F3 PROD cells 1–3 are terminal; cell 4 was NOT launched (chain stop at 21:07Z, probably the home guard). It is relaunched after the D79 clean-up, then F3 collection.
+- **D81 (HQ, 2026-11-02 ~21:55Z).** D79 clean-up done: 2,017.8 MB erased and verified; home is now 7.72 GiB (`du`); the conda cache was kept because it was in use. F3 cell 4 is relaunching. HQ flagged to OPS-4 that the PROD_L_BENCH chain is stalled although the PROD-L logs were pulled (20:08Z) and deleted (21:26Z): proceed to the clean-up and submit.
+- **D82 (HQ, 2026-11-02 ~22:15Z).** PROD_L_BENCH (run `20261102T1311Z`, jobs 2510090–2510092) FAILED at `s0_verify`: a bundle bug where the probe passes `test_library=` but the frozen signature is `test_versions=`; no fits ran. The PROD-L clean-up itself is VERIFIED. **Fix:** routed to PROD-L-BUILD with a real-probe test, a ledger regeneration and a narrow Sol check (class (i)). **OPS:** resubmit with a fresh STAMP, and pull then delete the failed run's evidence from NOTS. F3 cell 4 (2509541) is running.
+- **D83 (HQ, 2026-11-02 ~22:45Z).** The failed PROD_L_BENCH run is fully removed from NOTS, clean-up VERIFIED. F3 cell 4 is done with 0 failed, and the F3 collection is running. But home grew from 8.15 to 8.78 GB in 35 min (22:07–22:42Z), and the campaign's own home usage is 0.01 GB. **To OPS-4:**
+  - One read-only `du` breakdown against the D79 baseline.
+  - If the growth is ours, redirect it to scratch. If it is a regenerable cache not in use, erase it under D31 (Sol narrow check, verified delete).
+  - If it is a live install or Felipe's active session, do not delete; log it and report.
+  - Never override the guard.
+- **D84 (HQ, 2026-11-02 ~22:55Z).** Source found:
+  - **Not the campaign.** The growth was Felipe's VS Code self-update: a new server `Stable-261c84cb…` of 641 MB, installed at 22:25Z. It was a one-time jump.
+  - **Nothing erased.** Under the D79 rule, the newest server and the live ones stay. Home is 8.78 GB on the guard, with enough room for the PROD_L_BENCH stage.
+  - **F3 collection.** Its first pass falsely stopped with "DISPOSITION_NEEDED", from a bad pattern in the script. The fix was tested on two cases and the collection relaunched: all 2,400 tasks are COMPLETED, with 0 timeouts.
+- **D85 (HQ watchdog, 2026-11-02 ~23:10Z).** PROD_L_BENCH is READY for OPS (rev 2):
+  - Sol's narrow D82 check: RESOLVED, nothing blocking.
+  - Ledger `da08f38c…`; the frozen r2 code is unchanged.
+  - Full suite 1,258/0, real-probe suite 26/0, live run rev 2 passed.
+  - **Sent to OPS-4:** a fresh-STAMP resubmission at the alone profile (%32) within the ceiling and the guard, then collect, accept, reconcile, pull, verify and delete. The F3 collection keeps priority.
+  - OPS-4 taskId `<taskId>`.
+- **D86 (HQ, 2026-11-02 ~23:45Z).**
+  - **F3 PROD:** COLLECT_OK, 2,400 valid. 72.0 elapsed core-h, 144 billed. Copied to the laptop and verified, with manifests p0500 `e2600c82…`, p1000 `6b61c4b2…` and logs `5c96e7f6…`. The NOTS delete waits on Sol's review of the combined F3 dev and prod list (`ops/F3_DELETION_LIST_20261102.md`), and on PROD_L_BENCH ending.
+  - **PROD_L_BENCH rev 2:** `s0_verify` PASSED; 73/96 tasks were done with 0 failed at the last check.
+  - **Sent to ANALYSIS-H2:** score the new F3, replace the aLasso rows in `HEADLINE_H.md`, a Terra or Sonnet tie-out, then a narrow Sol check. taskId `<taskId>`.
+- **D87 (HQ watchdog, 2026-11-03 ~00:10Z).** **ANALYSIS-H2 aLasso rows DONE.** The p≫n headline is now COMPLETE for all 9 methods.
+  - **New F3 `ebic1_K37`, pooled /600** (old ridge pilot → new rerun): c = 1: p500 247 → 493, p1000 96 → 512; c = 0.5: p500 36 → 253, p1000 12 → 197.
+  - **Checks:** Terra tie-out PASS (41/41, 3/3 canaries caught); Sol narrow check ACCEPT, 0 findings.
+  - **Rank:** SMC-BVS HPM beats the adaptive lasso in 24/24 cells, and ranks 4th of 9 at c = 1.
+  - **F3 NOTS scratch:** cleared (all 8 folders, `F3_DELETE_DONE`).
+  - **PROD_L_BENCH rev 2:** 98/98 COMPLETED; its post-run chain (close, pull, accept, clean-up) is running.
+- **D88 (HQ, 2026-11-03 ~01:45Z).** NOTS has been unreachable from the laptop since 01:24:24Z: ssh port 22 times out, and ping gets no reply. The laptop's internet is up (HQ checked github, 200), so it is the Rice VPN or network path, or NOTS itself.
+  - OPS-4 backs off per the rule, then makes one check at about 01:53Z. The PROD_L_BENCH post-run chain resumes by itself. Nothing is at risk.
+  - **Open finding:** `reconcile_bench.py` had been slow for about 1.5 h before the drop. It is either very slow or hung; to be classified at that check.
+  - If the link stays down, Felipe may need to reconnect the VPN. Tell him only if it persists.
+- **D89 (HQ, 2026-11-03 ~02:00Z).** It persisted (01:53Z check). Confirmed cause: the laptop's Rice VPN dropped. There is no VPN adapter; traffic goes through the home router. **Felipe asked to reconnect the VPN** (needs his MFA). The PROD_L_BENCH post-chain resumes by itself, retrying every about 16 min. All campaign work is otherwise blocked only on this.
+- **D90 (HQ watchdog, 2026-11-03 ~11:58Z).** The VPN is still down. The PLB close poller has been silent since 02:13Z, so it probably died or the laptop slept.
+  - **OPS-4 told:** a local-only liveness check; arm a watcher on the VPN adapter or route; on reconnect, one check, then resume the post-chain without repeating any step.
+  - Felipe is reminded to reconnect the VPN.
+  - taskId `<taskId>`.
+- **D91 (HQ, 2026-11-03 ~12:05Z).** Felipe reconnected the VPN (AnyConnect is up, the route goes through <internal-ip>). OPS-4 was steered: one check, then resume the PROD_L_BENCH post-chain from its actual state, with no step repeated. If reconcile is hung, report it as a finding.
+- **D92 (HQ, 2026-11-03 ~13:30Z).** **PROD_L_BENCH rev 2 is CLOSED.**
+  - **Run:** 98/98 jobs; `accept_bench.R` ACCEPTED 19,200/19,200; 21.85 core-h.
+  - **Data:** pulled and verified (results `0dd8ced3…`, logs `0b8bc30d…`); NOTS clean-up VERIFIED.
+  - **Reconcile** was slow (about 2.5 h), not hung. The ABESS exact-size check (D54.3) was deferred by `accept_bench` and goes to ANALYSIS-L.
+  - **All four runs are closed on NOTS.**
+  - **HQ dispositions:**
+    - PROD-H F1 (scratch pruned per folder before the home summary had verified): ACCEPTED as a disclosed procedural deviation, with no data loss.
+    - OPS prunes the PROD-H home run folder and the 720 KB upload tar.
+  - **Sent:**
+    - to **ANALYSIS-L**, pass C: score the 8 benchmarks at low p, fill `HEADLINE_L`, the D54.3 check, a Terra or Sonnet tie-out, a narrow Sol check. taskId `<taskId>`;
+    - to **OPS-4**, the final close-out: the F1 prune, the F3 completion Sol review, the final NOTS sweep (scratch empty; home kept to small reusable code with a local archive first; Sol list check), and `ops/FINAL_NOTS_STATE.md`, then "OPS CLOSED". taskId `<taskId>`.
+- **D93 (HQ, 2026-11-03 ~14:05Z).** **OPS CLOSED** (`ops/FINAL_NOTS_STATE.md`).
+  - **NOTS:** no jobs of ours; home 8.42/10 GB; campaign home 2.4 MB (frozen code plus README, archived locally); scratch `New_Campaign` removed. The final sweep had Sol ACCEPT WITH FIXES ×2.
+  - **F3 PROD completion report:** Sol ACCEPT, fixes applied.
+  - **Disclosed:** PROD-H P5 not run (D62). D54.3 was done by ANALYSIS-L: ABESS RSS-optimal in 2,375/2,400 low-p fits (disclose, as at p≫n).
+  - **OPS lesson:** a burst of about 11 ssh connections hit the NOTS connection limit.
+  - **Remaining:** ANALYSIS-L pass C, then the GH SYNC_LATER refresh, the final report, and disabling the watchdog.
+- **D94 (HQ, 2026-11-03 ~14:35Z).** **ANALYSIS-L pass C DONE.** Terra tie-out PASS (21/21, 4/4 canaries caught); Sol ACCEPT. **EMPIRICAL CAMPAIGN COMPLETE.**
+  - **Low-p pooled /2,400:** SSL 2,251; SMC-BVS HPM 2,216 (= exact HPM in every cell); SuSiE 2,183; aLasso 2,066; MCP 2,061; ABESS 2,051; horseshoe 2,028; lasso 1,852; EN 1,692.
+  - **Flags, HQ disposition: no audit (D77 scope end), disclose only:**
+    - SSL > exact HPM is organic: the exact posterior is our model's own, not an oracle.
+    - Lasso and EN under CV are about 0, as already audited (D42).
+    - The horseshoe (`ci95`) drops at p = 30, c = 0.5 (367/600). Plausibly the conservative credible-interval rule under weak signals; disclose and leave for the paper phase.
+  - **ABESS (D54.3):** RSS-optimal in 2,375/2,400 fits; +7 if the rest were corrected.
+  - **GH-PACK told:** SYNC_LATER refresh into Owls (no push), a Sol narrow check, and an updated `PUSH_CHECKLIST`. taskId `<taskId>`.

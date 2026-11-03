@@ -1,0 +1,21 @@
+p,scale_key,centre,n,returned_S0,hpm_S0,moves_median
+500,c050,centre = S0,370,370,370,0.0
+500,c050,centre in R0 \ S0,49,0,0,0.0
+500,c050,centre in R1 \ R0,143,0,0,0.0
+500,c050,centre in R2 \ R1,26,0,0,0.0
+500,c050,centre outside R2,12,0,0,0.0
+500,c100,centre = S0,559,559,559,0.0
+500,c100,centre in R0 \ S0,0,0,0,
+500,c100,centre in R1 \ R0,37,0,0,0.0
+500,c100,centre in R2 \ R1,3,0,0,0.0
+500,c100,centre outside R2,0,0,0,
+1000,c050,centre = S0,340,340,340,0.0
+1000,c050,centre in R0 \ S0,84,0,0,0.0
+1000,c050,centre in R1 \ R0,131,0,0,0.0
+1000,c050,centre in R2 \ R1,31,0,0,0.0
+1000,c050,centre outside R2,12,0,0,0.0
+1000,c100,centre = S0,560,560,560,0.0
+1000,c100,centre in R0 \ S0,0,0,0,
+1000,c100,centre in R1 \ R0,35,0,0,0.0
+1000,c100,centre in R2 \ R1,2,0,0,0.0
+1000,c100,centre outside R2,0,0,0,

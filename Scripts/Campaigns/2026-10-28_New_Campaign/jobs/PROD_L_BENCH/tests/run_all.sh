@@ -1,5 +1,5 @@
 #!/bin/bash
-# run_all.sh WORKDIR -- runs every PROD_L_BENCH acceptance suite one after the other (only test_accept.sh starts R, one process at a time; the 8-process cap is respected).
+# run_all.sh WORKDIR -- runs every PROD_L_BENCH acceptance suite one after the other (only test_accept.sh and test_probe_real.sh start R, one process at a time; the 8-process cap is respected).
 #   Each suite: stdout+stderr -> WORKDIR/<suite>.log, exit status -> WORKDIR/<suite>.rc, scratch in WORKDIR/w_<suite>.
 #   Then WORKDIR/SUMMARY.txt (tab separated: suite, rc, passed, failed). Exit status 0 iff every suite exited 0.
 #   WORKDIR must lie under C:/Users/felip/AppData/Local/Temp/prodl_tests/ ; run it as:  bash <B>/tests/run_all.sh C:/Users/felip/AppData/Local/Temp/prodl_tests/run1
@@ -10,7 +10,7 @@ case "$WM" in c:/users/felip/appdata/local/temp/prodl_tests/?*) ;; *) echo "REFU
 case "$WM" in *..*) echo "REFUSED: WORKDIR contains .." >&2; exit 64;; esac
 WD=$(cygpath -u "$WD" 2>/dev/null || echo "$WD")
 mkdir -p "$WD"
-SUITES="test_lists.py test_ceiling.py test_waiter.sh test_jobmd.sh test_deadline.sh test_resubmit.sh test_manifests.sh test_cleanup.sh test_collect.sh test_retune.sh test_reconcile.py test_accept.sh test_stage_guard.sh test_driver.sh"
+SUITES="test_lists.py test_ceiling.py test_waiter.sh test_jobmd.sh test_deadline.sh test_resubmit.sh test_manifests.sh test_cleanup.sh test_collect.sh test_retune.sh test_reconcile.py test_accept.sh test_probe_real.sh test_stage_guard.sh test_driver.sh"
 SUMMARY="$WD/SUMMARY.txt"; printf 'suite\trc\tpassed\tfailed\n' > "$SUMMARY"
 ANYFAIL=0
 for s in $SUITES; do

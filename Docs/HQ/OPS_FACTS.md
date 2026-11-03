@@ -48,7 +48,7 @@ Learned the hard way during campaigns 2 and New Campaign. The binding rules are 
 | `/projects/ml75` | ~100 GB group quota, shared | no hefty data |
 | Owls `/home/fb31` | about 1.36 TB free of the user quota (2026-10-29), shared with Felipe's other work | the repo; bulk data in git-ignored `_data/` |
 
-- **Home on 2026-11-02** was about 9.49 GiB. Growth comes mostly from Felipe's own `~/.codex` releases and `~/.vscode-server` (both kept, by policy).
+- **Home at the campaign's close (2026-11-03, D93)** was 8.42 of 10 GB; the campaign home was 2.4 MB; scratch `New_Campaign` was removed. It was about 9.49 GiB on 2026-11-02, before the D74/D79 clean-ups. Growth comes mostly from Felipe's own `~/.codex` releases and `~/.vscode-server` (both kept, by policy).
 - **Disk-quota truncation is silent.** Always audit expected against analysed counts, and rerun with the same seeds.
 - **The disk guard's `du` fails while truth trees are locked** (mode 000). Serialise guarded staging after each truth unlock (D59).
 - **Clean-up must run from outside the tree it deletes**, because NFS leaves `.nfs*` files (D44 B3).
@@ -72,6 +72,17 @@ Learned the hard way during campaigns 2 and New Campaign. The binding rules are 
 | Bash permission prompts block agents silently (D37/D38) | Approval-safe tooling (`RULES.md` §4); the watchdog checks pending approvals |
 | A provider-error rerun sat queued for 6 h (D21) | `task_cancel` and relaunch |
 | A hard-coded 30-min scan limit timed out (D63) | Limits scale with the work: max(2 h, 600 s + 2 s/record) |
+
+**Closing lessons (2026-11-02/03, D76–D93):**
+
+| Lesson | Detail |
+|---|---|
+| A burst of about 11 ssh connections hit the NOTS connection limit | Keep to one batched call per lane (D76: one bulk lane + one control lane) |
+| Never rewrite a running script in place | Write a new version and relaunch |
+| A Rice VPN drop looks like a NOTS timeout | Check the laptop's route and VPN adapter before backing off on NOTS (D88–D91) |
+| NOTS home grows from Felipe's own tools (T3 runtime versions, VS Code self-updates, Codex releases) | Under D74/D79, regenerable caches and unused old versions may be erased after a Sol list review. Live installs, `~/.claude/remote` and `.t3-recovery` never are |
+| A slow `reconcile` (about 2.5 h for 19,200 records) is not a hang | Classify before acting (D92) |
+| Bundle probes must be exercised against the real frozen signatures | PROD_L_BENCH rev 1 failed at `s0_verify` on a renamed argument (D82); rev 2 added a real-probe test |
 
 - **Watchdog cadence** used: a check every 30 min; foreground polls ≤ 10 min; nudge after 45 min with no file change.
 - **Rice CRC help:** the Rice research-computing help desk (see the CRC website).

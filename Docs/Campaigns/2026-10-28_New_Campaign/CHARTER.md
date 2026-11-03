@@ -69,7 +69,7 @@ Everything else is collected and stored, not reported.
 
 - **Credentials.** Never repeat, store or put in a prompt any password. NOTS key auth works through `~/.ssh/id_rice`.
 - **SSH:**
-  - **Only the OPS thread opens SSH to NOTS**, one connection at a time, with batched commands.
+  - **Only the OPS thread opens SSH to NOTS**, with batched commands. At most **two** concurrent connections (D76): one bulk lane for long transfers, one control lane for short commands (each ≤ 5 min, serialised).
   - Use only the configured alias `ssh nots`. It is pinned to the login node that hosts Felipe's live T3 server (loginx2 since 2026-10-28). Never connect to another login node directly, and never touch `~/.claude/remote` or `.t3-recovery`.
   - After a timeout or a reset, back off 15 minutes.
   - Never hold an ssh session open for more than about 1 hour.

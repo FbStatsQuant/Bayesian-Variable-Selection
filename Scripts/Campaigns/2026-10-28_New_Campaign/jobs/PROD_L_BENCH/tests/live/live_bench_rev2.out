@@ -1,0 +1,270 @@
+staged footprint: 64498 KB; 1269 files plus hash list; no truth/holdout/dev
+bundle: /c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/bundle/prodLB_bundle_20261030T0001Z.tar
+STAGED_OK (extracted tar verifies)
+pilot_init arm=bench host=Felipe_Bedoya job=local_0 cpus=NA mem_mb=NA time_bin=/c/Users/felip/OneDrive/Documents/Local_to_global_Bayesian/02_Experiments/I_2026-10-28_New_Campaign/jobs/PROD_L/tests/live/gnutime_shim.sh
+pilot: frozen tree bench_lowp verified (34 files, manifest sha256 b6cf79a804b506b4)
+timed bench p0020_S1_r001_c100 rc=0 wall=23.80s maxrss_kb=1
+timed bench p0030_S4_r050_c050 rc=0 wall=31.28s maxrss_kb=1
+timed bench p0030_S6_r100_c100 rc=0 wall=30.09s maxrss_kb=1
+RUN bench rc=0
+== second pass under a NEW job id (a real resubmission): every method must come back skipped
+pilot_init arm=bench host=Felipe_Bedoya job=9002_0 cpus=NA mem_mb=NA time_bin=/c/Users/felip/OneDrive/Documents/Local_to_global_Bayesian/02_Experiments/I_2026-10-28_New_Campaign/jobs/PROD_L/tests/live/gnutime_shim.sh
+pilot: frozen tree bench_lowp verified (34 files, manifest sha256 b6cf79a804b506b4)
+timed bench p0020_S1_r001_c100 rc=0 wall=6.72s maxrss_kb=1
+timed bench p0030_S4_r050_c050 rc=0 wall=8.31s maxrss_kb=1
+timed bench p0030_S6_r100_c100 rc=0 wall=5.08s maxrss_kb=1
+RUN bench rc=0
+== third pass with the SAME job tag as the first (local_0): refused (start_record_exists), ledger untouched
+pilot_init arm=bench host=Felipe_Bedoya job=local_0 cpus=NA mem_mb=NA time_bin=/c/Users/felip/OneDrive/Documents/Local_to_global_Bayesian/02_Experiments/I_2026-10-28_New_Campaign/jobs/PROD_L/tests/live/gnutime_shim.sh
+pilot: frozen tree bench_lowp verified (34 files, manifest sha256 b6cf79a804b506b4)
+unit=p0020_S1_r001_c100 reason=start_record_exists
+unit=p0030_S4_r050_c050 reason=start_record_exists
+unit=p0030_S6_r100_c100 reason=start_record_exists
+inventory already exists: local_0
+RUN bench rc=1
+unit=p0020_S1_r001_c100 job_tag=local_0 outcome=unit_failed reason=start_record_exists utc=2026-11-02T22:24:40Z
+unit=p0030_S4_r050_c050 job_tag=local_0 outcome=unit_failed reason=start_record_exists utc=2026-11-02T22:24:40Z
+unit=p0030_S6_r100_c100 job_tag=local_0 outcome=unit_failed reason=start_record_exists utc=2026-11-02T22:24:41Z
+== ledger
+p0020_S1_r001_c100/9002_0.end: unit=p0020_S1_r001_c100 rc=0 outcome=skipped wall_s=6.72 cli_status=ok cli_skipped=TRUE end_utc=2026-11-02T22:24:21Z
+p0020_S1_r001_c100/9002_0.start: unit=p0020_S1_r001_c100 piece=bench task=0 job_tag=9002_0 host=Felipe_Bedoya start_utc=2026-11-02T22:24:14Z deadline_epoch=1793661730 need_s=780 end_source=local_script_time end_epoch=1793661850
+p0020_S1_r001_c100/local_0.end: unit=p0020_S1_r001_c100 rc=0 outcome=ok wall_s=23.80 cli_status=ok cli_skipped=FALSE end_utc=2026-11-02T22:23:07Z
+p0020_S1_r001_c100/local_0.start: unit=p0020_S1_r001_c100 piece=bench task=0 job_tag=local_0 host=Felipe_Bedoya start_utc=2026-11-02T22:22:42Z deadline_epoch=1793661638 need_s=780 end_source=local_script_time end_epoch=1793661758
+p0030_S4_r050_c050/9002_0.end: unit=p0030_S4_r050_c050 rc=0 outcome=skipped wall_s=8.31 cli_status=ok cli_skipped=TRUE end_utc=2026-11-02T22:24:31Z
+p0030_S4_r050_c050/9002_0.start: unit=p0030_S4_r050_c050 piece=bench task=0 job_tag=9002_0 host=Felipe_Bedoya start_utc=2026-11-02T22:24:22Z deadline_epoch=1793661730 need_s=780 end_source=local_script_time end_epoch=1793661850
+p0030_S4_r050_c050/local_0.end: unit=p0030_S4_r050_c050 rc=0 outcome=ok wall_s=31.28 cli_status=ok cli_skipped=FALSE end_utc=2026-11-02T22:23:39Z
+p0030_S4_r050_c050/local_0.start: unit=p0030_S4_r050_c050 piece=bench task=0 job_tag=local_0 host=Felipe_Bedoya start_utc=2026-11-02T22:23:07Z deadline_epoch=1793661638 need_s=780 end_source=local_script_time end_epoch=1793661758
+p0030_S6_r100_c100/9002_0.end: unit=p0030_S6_r100_c100 rc=0 outcome=skipped wall_s=5.08 cli_status=ok cli_skipped=TRUE end_utc=2026-11-02T22:24:36Z
+p0030_S6_r100_c100/9002_0.start: unit=p0030_S6_r100_c100 piece=bench task=0 job_tag=9002_0 host=Felipe_Bedoya start_utc=2026-11-02T22:24:31Z deadline_epoch=1793661730 need_s=780 end_source=local_script_time end_epoch=1793661850
+p0030_S6_r100_c100/local_0.end: unit=p0030_S6_r100_c100 rc=0 outcome=ok wall_s=30.09 cli_status=ok cli_skipped=FALSE end_utc=2026-11-02T22:24:10Z
+p0030_S6_r100_c100/local_0.start: unit=p0030_S6_r100_c100 piece=bench task=0 job_tag=local_0 host=Felipe_Bedoya start_utc=2026-11-02T22:23:39Z deadline_epoch=1793661638 need_s=780 end_source=local_script_time end_epoch=1793661758
+== unit logs (method lines)
+      1 p0020_S1_r001_c100 A1 ok,ok,ok 0.16 
+      1 p0020_S1_r001_c100 A1 skipped
+      1 p0020_S1_r001_c100 A2 ok 0.02 
+      1 p0020_S1_r001_c100 A2 skipped
+      1 p0020_S1_r001_c100 A3 ok,ok 15.42 
+      1 p0020_S1_r001_c100 A3 skipped
+      1 p0020_S1_r001_c100 F1 ok,ok,ok,ok,ok,ok 0.3 
+      1 p0020_S1_r001_c100 F1 skipped
+      1 p0020_S1_r001_c100 F2 ok,ok,ok,ok,ok,ok 0.65 
+      1 p0020_S1_r001_c100 F2 skipped
+      1 p0020_S1_r001_c100 F3 ok,ok,ok,ok,ok,ok 0.34 
+      1 p0020_S1_r001_c100 F3 skipped
+      1 p0020_S1_r001_c100 F4 ok,ok,ok,ok,ok,ok,ok 0.05 
+      1 p0020_S1_r001_c100 F4 skipped
+      1 p0020_S1_r001_c100 F5 ok,ok,ok,ok,ok,ok,ok 0.06 
+      1 p0020_S1_r001_c100 F5 skipped
+      1 p0030_S4_r050_c050 A1 ok,ok,ok 0.24 
+      1 p0030_S4_r050_c050 A1 skipped
+      1 p0030_S4_r050_c050 A2 ok 0.01 
+      1 p0030_S4_r050_c050 A2 skipped
+      1 p0030_S4_r050_c050 A3 ok,ok 18.31 
+      1 p0030_S4_r050_c050 A3 skipped
+      1 p0030_S4_r050_c050 F1 ok,ok,ok,ok,ok,ok 0.86 
+      1 p0030_S4_r050_c050 F1 skipped
+      1 p0030_S4_r050_c050 F2 ok,ok,ok,ok,ok,ok 3.5 
+      1 p0030_S4_r050_c050 F2 skipped
+      1 p0030_S4_r050_c050 F3 ok,ok,ok,ok,ok,ok 1.03 
+      1 p0030_S4_r050_c050 F3 skipped
+      1 p0030_S4_r050_c050 F4 ok,ok,ok,ok,ok,ok,ok 0.08 
+      1 p0030_S4_r050_c050 F4 skipped
+      1 p0030_S4_r050_c050 F5 ok,ok,ok,ok,ok,ok,ok 0.06 
+      1 p0030_S4_r050_c050 F5 skipped
+      1 p0030_S6_r100_c100 A1 ok,ok,ok 0.33 
+      1 p0030_S6_r100_c100 A1 skipped
+      1 p0030_S6_r100_c100 A2 ok 0.01 
+      1 p0030_S6_r100_c100 A2 skipped
+      1 p0030_S6_r100_c100 A3 ok,ok 17.14 
+      1 p0030_S6_r100_c100 A3 skipped
+      1 p0030_S6_r100_c100 F1 ok,ok,ok,ok,ok,ok 0.8 
+      1 p0030_S6_r100_c100 F1 skipped
+      1 p0030_S6_r100_c100 F2 ok,ok,ok,ok,ok,ok 3.08 
+      1 p0030_S6_r100_c100 F2 skipped
+      1 p0030_S6_r100_c100 F3 ok,ok,ok,ok,ok,ok 0.89 
+      1 p0030_S6_r100_c100 F3 skipped
+      1 p0030_S6_r100_c100 F4 ok,ok,ok,ok,ok,ok,ok 0.09 
+      1 p0030_S6_r100_c100 F4 skipped
+      1 p0030_S6_r100_c100 F5 ok,ok,ok,ok,ok,ok,ok 0.06 
+      1 p0030_S6_r100_c100 F5 skipped
+== results
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/A1.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/A1.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/A1.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/A1.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/A2.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/A2.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/A2.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/A2.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/A3.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/A3.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/A3.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/A3.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F1.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F1.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F1.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F1.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F2.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F2.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F2.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F2.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F3.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F3.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F3.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F3.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F4.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F4.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F4.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F4.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F5.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F5.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F5.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0020/p0020_S1_r001_c100/F5.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/A1.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/A1.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/A1.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/A1.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/A2.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/A2.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/A2.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/A2.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/A3.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/A3.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/A3.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/A3.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F1.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F1.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F1.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F1.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F2.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F2.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F2.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F2.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F3.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F3.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F3.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F3.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F4.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F4.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F4.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F4.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F5.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F5.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F5.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S4_r050_c050/F5.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/A1.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/A1.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/A1.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/A1.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/A2.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/A2.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/A2.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/A2.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/A3.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/A3.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/A3.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/A3.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F1.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F1.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F1.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F1.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F2.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F2.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F2.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F2.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F3.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F3.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F3.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F3.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F4.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F4.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F4.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F4.sha256
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F5.csv
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F5.done
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F5.rds
+/c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/results/20261030T0001Z_lowp_benchres/p0030/p0030_S6_r100_c100/F5.sha256
+== reconcile (expect exit 1: 3 of 2,400 cases)
+reconcile rc=1
+# PROD-L benchmark inventory: 20261030T0001Z
+
+| Piece | done | deferred | unit_failed | killed_timeout | killed_external | not_run |
+|---|---:|---:|---:|---:|---:|---:|
+| bench | 3 | 0 | 0 | 0 | 0 | 2397 |
+
+Closed: no.
+
+STATUS: INCOMPLETE OR UNRESOLVED
+
+## Rule statuses per method (rule rows of done cases)
+
+| Method | ok | warning | failed |
+|---|---:|---:|---:|
+| F1 | 18 | 0 | 0 |
+| F2 | 18 | 0 | 0 |
+| F3 | 18 | 0 | 0 |
+| F4 | 21 | 0 | 0 |
+| F5 | 21 | 0 | 0 |
+| A1 | 9 | 0 | 0 |
+| A2 | 3 | 0 | 0 |
+| A3 | 6 | 0 | 0 |
+
+D54.3: the ABESS exact size check is deferred and disclosed; it is not part of this reconciliation.
+
+## Exceptions
+
+None.
+bench	p0020_S1_r001_c100	done	rules=F1:ok=6,F2:ok=6,F3:ok=6,F4:ok=7,F5:ok=7,A1:ok=3,A2:ok=1,A3:ok=2
+bench	p0030_S4_r050_c050	done	rules=F1:ok=6,F2:ok=6,F3:ok=6,F4:ok=7,F5:ok=7,A1:ok=3,A2:ok=1,A3:ok=2
+bench	p0030_S6_r100_c100	done	rules=F1:ok=6,F2:ok=6,F3:ok=6,F4:ok=7,F5:ok=7,A1:ok=3,A2:ok=1,A3:ok=2
+== acceptance on the 3 cases (--local-test: provenance skipped)
+ACCEPTED 
+accept rc=0
+# PROD-L benchmark acceptance: ACCEPTED
+
+Records: 24 expected (3 cases x 8 methods); PASS 24, FAIL 0, INCOMPLETE 0.
+Code: supplied tree checked against the r2 manifest (match); runner fingerprint files hashed locally.
+Run id (results folder): 20261030T0001Z_lowp_benchres. Identity checked against the sealed inputs manifest C:/Users/felip/OneDrive - Rice University/NOTS Data/New_Campaign/inputs/lowp_study/manifests/inputs_manifest_lowp.csv.
+LOCAL TEST: environment checks (R 4.5.2, test_library FALSE, pinned library, package versions and locations) were SKIPPED; rules, coefficients, identity and code anchoring were checked.
+D42.5 coefficient evidence: F1-F5 per rule (penalized + OLS contract of the SPEC, support consistency, EBIC/K37 pairs); A1-A3 beta, A1 PIP.
+D54.3: the ABESS exact size check is deferred and NOT performed by this acceptance (disclosed).
+
+## Non-passing records
+
+None.
+== acceptance WITHOUT --local-test: must FAIL on provenance (laptop R 4.4.1, test library)
+FAIL 
+accept(provenance) rc=2
+24
+== negative control: a copy of one case with a truncated coefficient vector
+FAIL 
+accept(negative) rc=2 (expect 2)
+"p0020_S1_r001_c100","F1","FAIL","beta_pen/beta_ols not numeric of length p: cv_min"
+== s0_verify for REAL (HQ D82): the staged slurm/s0_verify.sbatch run as the job runs it (frozen check, P0b inputs check, env probe on the staged
+   frozen code). Library = metadata-only packages at the r2 pins (tests/mk_pinlib.R) + a copy of the real digest package; the staged bench.env's
+   R_LIBS_BENCH is pointed at it (bench.env is OPS-edited and outside STAGED_SHA256.txt). Rev 1 failed here on NOTS (job 2510090).
+pinlib C:/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/pinlib_ok 8 packages
+15:R_LIBS_BENCH="C:/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/pinlib_ok"
+s0_verify[ok] rc=0
+pilot_init arm=verify host=Felipe_Bedoya job=9101_0 cpus=NA mem_mb=NA time_bin=/c/Users/felip/OneDrive/Documents/Local_to_global_Bayesian/02_Experiments/I_2026-10-28_New_Campaign/jobs/PROD_L/tests/live/gnutime_shim.sh
+pilot: frozen tree bench_lowp verified (34 files, manifest sha256 b6cf79a804b506b4)
+timed verify inputs rc=0 wall=1.14s maxrss_kb=1
+timed verify bench_env rc=0 wall=0.41s maxrss_kb=1
+pilot_finish arm=verify failed_units=0
+-- unit log:
+PASS benchmark environment
+== s0_verify negative: glmnet at 4.1-10 in the pinned library -> must fail on the pin (not on wiring)
+pinlib C:/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/pinlib_bad 8 packages
+15:R_LIBS_BENCH="C:/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/pinlib_bad"
+s0_verify[bad] rc=1
+pilot_init arm=verify host=Felipe_Bedoya job=9102_0 cpus=NA mem_mb=NA time_bin=/c/Users/felip/OneDrive/Documents/Local_to_global_Bayesian/02_Experiments/I_2026-10-28_New_Campaign/jobs/PROD_L/tests/live/gnutime_shim.sh
+pilot: frozen tree bench_lowp verified (34 files, manifest sha256 b6cf79a804b506b4)
+timed verify inputs rc=0 wall=1.31s maxrss_kb=1
+timed verify bench_env rc=1 wall=0.47s maxrss_kb=1
+--- tail of /c/Users/felip/AppData/Local/Temp/prodlb_live/w_rev2b/scr/logs/20261030T0001Z_lowp_bench/units/verify.bench_env.9102_0.log ---
+FAIL: identical(as.character(utils::packageVersion(pkg)), version) is not TRUE
+pilot_finish arm=verify failed_units=1
+-- unit log:
+FAIL: identical(as.character(utils::packageVersion(pkg)), version) is not TRUE
+LIVE_DONE
+EXIT=0

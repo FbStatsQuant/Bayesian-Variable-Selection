@@ -1,0 +1,45 @@
+cell_no,quantity,rule,scale,p,scenario,claimed
+1,exact recoveries /100,ebic1_K37,c100,500,1,73
+2,exact recoveries /100,ebic1_K37,c100,500,2,86
+3,exact recoveries /100,ebic1_K37,c100,500,3,85
+4,exact recoveries /100,ebic1_K37,c100,500,4,82
+5,exact recoveries /100,ebic1_K37,c100,500,5,82
+6,exact recoveries /100,ebic1_K37,c100,500,6,82
+7,exact recoveries /100,ebic1_K37,c100,1000,1,82
+8,exact recoveries /100,ebic1_K37,c100,1000,2,85
+9,exact recoveries /100,ebic1_K37,c100,1000,3,91
+10,exact recoveries /100,ebic1_K37,c100,1000,4,83
+11,exact recoveries /100,ebic1_K37,c100,1000,5,77
+12,exact recoveries /100,ebic1_K37,c100,1000,6,94
+13,exact recoveries /100,ebic1_K37,c050,500,1,64
+14,exact recoveries /100,ebic1_K37,c050,500,2,69
+15,exact recoveries /100,ebic1_K37,c050,500,3,34
+16,exact recoveries /100,ebic1_K37,c050,500,4,11
+17,exact recoveries /100,ebic1_K37,c050,500,5,38
+18,exact recoveries /100,ebic1_K37,c050,500,6,37
+19,exact recoveries /100,ebic1_K37,c050,1000,1,59
+20,exact recoveries /100,ebic1_K37,c050,1000,2,53
+21,exact recoveries /100,ebic1_K37,c050,1000,3,29
+22,exact recoveries /100,ebic1_K37,c050,1000,4,7
+23,exact recoveries /100,ebic1_K37,c050,1000,5,14
+24,exact recoveries /100,ebic1_K37,c050,1000,6,32
+25,exact recoveries /600 (pooled S1-S6),ebic1_K37,c100,500,pooled,493
+26,exact recoveries /600 (pooled S1-S6),ebic1_K37,c100,1000,pooled,512
+27,exact recoveries /600 (pooled S1-S6),ebic1_K37,c050,500,pooled,253
+28,exact recoveries /600 (pooled S1-S6),ebic1_K37,c050,1000,pooled,197
+29,exact recoveries /600 (pooled S1-S6),cv_min,c100,500,pooled,0
+30,exact recoveries /600 (pooled S1-S6),cv_min,c100,1000,pooled,0
+31,exact recoveries /600 (pooled S1-S6),cv_min,c050,500,pooled,0
+32,exact recoveries /600 (pooled S1-S6),cv_min,c050,1000,pooled,0
+33,exact recoveries /600 (pooled S1-S6),cv_1se,c100,500,pooled,7
+34,exact recoveries /600 (pooled S1-S6),cv_1se,c100,1000,pooled,1
+35,exact recoveries /600 (pooled S1-S6),cv_1se,c050,500,pooled,2
+36,exact recoveries /600 (pooled S1-S6),cv_1se,c050,1000,pooled,2
+37,exact recoveries /600 (pooled S1-S6),ebic1,c100,500,pooled,493
+38,exact recoveries /600 (pooled S1-S6),ebic1,c100,1000,pooled,512
+39,exact recoveries /600 (pooled S1-S6),ebic1,c050,500,pooled,253
+40,exact recoveries /600 (pooled S1-S6),ebic1,c050,1000,pooled,197
+41,cv_min rows whose diag_codes contain 'lambda_last' (of 600),cv_min,c100,500,pooled,260
+42,cv_min rows whose diag_codes contain 'lambda_last' (of 600),cv_min,c050,500,pooled,58
+43,cv_min rows whose diag_codes contain 'lambda_last' (of 600),cv_min,c100,1000,pooled,391
+44,cv_min rows whose diag_codes contain 'lambda_last' (of 600),cv_min,c050,1000,pooled,95

@@ -1,0 +1,57 @@
+{
+  "pass_p500_other_p_smc_all_missing": true,
+  "pass_p500_own_smc_missing": 0,
+  "pass_p1000_other_p_smc_all_missing": true,
+  "pass_p1000_own_smc_missing": 0,
+  "benchmark_rows_equal_across_passes_all_columns": true,
+  "benchmark_rows": 1400,
+  "combined_rows": 1456,
+  "smc_fit_rows": 4800,
+  "smc_cases": 2400,
+  "reconciliation": [
+    {
+      "p": 500,
+      "scale_key": "c050",
+      "fits": 600,
+      "completed": 600,
+      "resource_limit": 0,
+      "status_ok": 600,
+      "status_failed": 0,
+      "expected": 600,
+      "missing": 0
+    },
+    {
+      "p": 500,
+      "scale_key": "c100",
+      "fits": 600,
+      "completed": 599,
+      "resource_limit": 1,
+      "status_ok": 599,
+      "status_failed": 1,
+      "expected": 600,
+      "missing": 0
+    },
+    {
+      "p": 1000,
+      "scale_key": "c050",
+      "fits": 600,
+      "completed": 598,
+      "resource_limit": 2,
+      "status_ok": 598,
+      "status_failed": 2,
+      "expected": 600,
+      "missing": 0
+    },
+    {
+      "p": 1000,
+      "scale_key": "c100",
+      "fits": 600,
+      "completed": 597,
+      "resource_limit": 3,
+      "status_ok": 597,
+      "status_failed": 3,
+      "expected": 600,
+      "missing": 0
+    }
+  ]
+}

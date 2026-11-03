@@ -1,0 +1,27 @@
+[
+ {
+  "cell_no": 37,
+  "true": 0.0114107,
+  "planted": 0.024263
+ },
+ {
+  "cell_no": 35,
+  "true": 93,
+  "planted": 90
+ },
+ {
+  "cell_no": 5,
+  "true": 0.011054,
+  "planted": 0.023817
+ },
+ {
+  "cell_no": 28,
+  "true": 100.0,
+  "planted": 125.0
+ },
+ {
+  "cell_no": 41,
+  "true": 4,
+  "planted": 2
+ }
+]

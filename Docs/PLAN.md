@@ -1,11 +1,12 @@
 # SMC-BVS: master plan from here to a proved, Lean-checked paper
 
-**As of 2026-11-02 ~15:30Z** (snapshot taken during the GH packaging). The experimental phase is still finishing on the old HQ. Refresh §2 from the final campaign `STATUS.md`/`DECISIONS.md` at cutover (`Docs/SYNC_LATER.md`).
+**As of 2026-11-03.** The empirical phase is **DONE** (HQ D94), and this repo has been refreshed with the final results (`Docs/SYNC_LATER.md`, done). Per Felipe (D77), "the theory campaign is being executed elsewhere", so the old HQ stopped after the empirical work. §3 onwards is the plan for whoever runs the theory phase.
 
 ## Read with
 - `Docs/HQ/BOOTSTRAP.md`: how the new HQ takes over.
 - `Docs/HQ/RULES.md`: Felipe's standing rules.
-- `Docs/HQ/DECISIONS.md`: decision log D1–D70.
+- `Docs/HQ/DECISIONS.md`: decision log D1–D94 (final).
+- `Docs/HQ/STATUS.md`: the results on one screen.
 - `Docs/HQ/OPS_FACTS.md`: NOTS facts.
 - `Docs/THEORY.md`: every result and its status.
 - `Docs/THEORY_PRIORITIES.md`: the frozen paper targets and their order.
@@ -32,7 +33,7 @@ Origin: the campaign plan of 2026-10-28 (`Docs/Campaigns/2026-10-28_New_Campaign
 
 ---
 
-## 2. Remaining experimental work (state as of 2026-11-02 ~15:30Z)
+## 2. Experimental phase: DONE (2026-11-03, D94)
 
 The shipped code is **SMC-BVS v2.2.1**, FROZEN (manifest `d880afdb…13e1`, 27 files, `Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/`).
 
@@ -47,25 +48,34 @@ The shipped code is **SMC-BVS v2.2.1**, FROZEN (manifest `d880afdb…13e1`, 27 f
 3. Are the PIPs (RB and plain) accurate?
 4. Exact recovery per scenario /100 and pooled /600, for every method.
 
-| Item | State | Next step | Owner (old HQ) |
-|---|---|---|---|
-| PROD-H: 2,400 SMC fits, p ∈ {500, 1000}, c ∈ {1, 0.5} | DONE. 2,394 ok + 6 `resource_limit` (P5 retries **not run**, D62; counted as non-recoveries). Pulled, verified and deleted on NOTS. Reproduction of the 2026-10-23 fits: 2,400/2,400 identical. Sol ACCEPT WITH FIXES. One deviation (per-folder delete before the home summary was verified) awaits HQ disposition | HQ disposition of finding F1 | OPS-4 thread |
-| PROD-L: enumeration + SMC + 100×5 repeats, p ∈ {20, 30} | DONE on NOTS. enum20, enum30, smc (9,600 files) and smcrep (48,000) pulled, VERIFIED and deleted. P5 not needed (D63) | PROD-L clean-up on NOTS (`cleanup_prodl.sh`, queued in the PLB chain) | OPS-4 |
-| BENCH_F3_DEV: adaptive-lasso dev pilot | DONE, 26/26 (D64) | — | OPS-4 |
-| BENCH_F3_PROD: aLasso lasso-pilot rerun, p ≫ n, 2,400 fits (D42) | READY (D65). Run `20261102T1252Z_bench_f3v2_prod`; 4 arrays of 600 at %30, one at a time; chain queued | Launch cells 1–4, then retry (TIMEOUT only, once, 2× wall), reconcile, pull, Sol deletion review, delete | OPS-4 (`ops/OPS8_F3PROD_PROGRESS.md`) |
-| PROD_L_BENCH: 8 benchmark methods at low p (bench_lowp r2) | READY (D67). Run `20261102T1311Z_lowp_bench`; chain queued after the pulls and F3 cell 1 | Submit `--profile alone`, reconcile, close, pull, `accept_bench.R`, clean-up | OPS-4 (`ops/OPS9_PLB_PROGRESS.md`) |
-| ANALYSIS-H2: p ≫ n reproduction, plain-PIP row, lasso-family `ebic1_K37` headline, theory evidence | RUNNING. Headline draft done; reproduction done; TD d = 0 sample (196 cases) running; EVIDENCE_H to write; Terra tie-out running; Sol review after (D53: at most 2 rounds) | Finish; aLasso rows after F3 PROD lands | ANALYSIS-H2 thread |
-| ANALYSIS-L: low-p headline Q1–Q4, repeat-seed stability, theory evidence | RUNNING. Pass A (theory + TD) done; pass B running | Tables → HEADLINE_L, EVIDENCE_L → Terra tie-out → Sol; benchmark rows after PROD_L_BENCH | ANALYSIS-L thread |
-| Benchmark freeze (`bench20261019/`, `Benchmarks/` on NOTS) | Copy-only until `RELOCATION_OK.md` exists (never written) | Decide who lifts it (open decision) | HQ |
-| Final NOTS clean-up | Continuous rule: a run is done only when its outputs are downloaded, verified and removed | Verify that scratch is empty of campaign data and that the campaign home footprint is ≤ 0.5 GiB | OPS |
+**Results:** `Docs/HQ/STATUS.md` has a one-screen summary. Full reports:
 
-**Experimental phase complete when:**
-- every row above is DONE, with Sol-accepted final reports (`HEADLINE_H`, `HEADLINE_L`, `EVIDENCE_H`, `EVIDENCE_L`, benchmark rows including aLasso v2);
-- downloads are verified;
-- NOTS is clean;
-- no job or writer is live.
+| Regime | Headline | Theory evidence |
+|---|---|---|
+| Low p | `Results/2026-10-28_New_Campaign/L_20261102/HEADLINE_L.md` | `EVIDENCE_L.md` |
+| High p | `Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md` | `EVIDENCE_H.md` |
 
-Then the GitHub cutover (§5) runs, and the theory phase starts in the new HQ.
+The 2026-10-23 fits' tables are in `Results/2026-10-28_New_Campaign/H_existing_20261030/`. Every final report has an independent tie-out (Terra) and a Sol acceptance next to it (`review/`, `tieout/`).
+
+| Run or analysis | Final state |
+|---|---|
+| PROD-H, run `20261030T0934Z_prodH` (2,400 SMC fits, p ∈ {500, 1000}) | Closed. 2,394 ok + 6 `resource_limit`, counted as misses; P5 not run (D62). Reproduces the 2026-10-23 fits exactly. The F1 procedural deviation was accepted and disclosed (D92) |
+| PROD-L, run `20261030T1811Z_lowp_prodL` (enumeration + SMC + 100×5 repeats, p ∈ {20, 30}) | Closed. 14,400 units completed natively; P5 not needed (D63) |
+| BENCH_F3_DEV and BENCH_F3_PROD (aLasso with the lasso pilot, 2,400 fits) | Closed. 2,400 valid, 71.98 core-h; Sol ACCEPT WITH FIXES (D86, D87, D93) |
+| PROD_L_BENCH rev 2, run `20261102T2309Z_lowp_bench` (8 benchmarks at low p) | Closed. `accept_bench` ACCEPTED 19,200/19,200. Rev 1 failed on a bundle probe defect, fixed in rev 2 (D82, D85, D92) |
+| ANALYSIS-H2 (p ≫ n headline, aLasso rows, EVIDENCE_H) | DONE (D78, D87) |
+| ANALYSIS-L (low-p headline Q1–Q4, stability, benchmark rows, EVIDENCE_L, ABESS exact-size check) | DONE (D75, D94) |
+| NOTS | OPS CLOSED (D93). No jobs of ours; scratch `New_Campaign` removed; campaign home 2.4 MB of frozen code. Record: `Scripts/Campaigns/2026-10-28_New_Campaign/ops/FINAL_NOTS_STATE.md` |
+
+**Disclosures carried into the paper:**
+- PROD-H P5 not run (6 stops are misses);
+- lasso-family headline `ebic1_K37`, with CV as a sensitivity (D42);
+- EN α at the grid edge; aLasso `cv_min` last grid point;
+- the post-hoc aLasso pilot change (the ridge rows are kept as a labelled sensitivity);
+- ABESS is a heuristic: RSS-optimal in 2,375/2,400 low-p fits, +7 recoveries if corrected (D54.3, D94);
+- low-p flags with no audit (D94): SSL exceeds the exact HPM, which is organic since the exact posterior is our own model's; the horseshoe `ci95` drop at p = 30, c = 0.5.
+
+**Data** (bulk, not in Git): see `Docs/Records/DATA_INDEX.md`. The data mirror is on Felipe's PC ("NOTS Data/New_Campaign"). Moving it to the git-ignored `_data/` on Owls is Felipe's call.
 
 **Redeployment standard (D36), if any rerun becomes necessary:**
 - one fix, applied in both regimes;
@@ -83,7 +93,7 @@ Then the GitHub cutover (§5) runs, and the theory phase starts in the new HQ.
 
 | Phase | What | Lead / staff | Gate |
 |---|---|---|---|
-| **P4 Let the data talk** | `EVIDENCE_H.md` + `EVIDENCE_L.md`, read together, give per target (THEORY_EXTRACTION_STRATEGY mapping): which premises hold, where and why the method fails, and a support / contradict / silent verdict per conjecture. Preliminary signals are in `Docs/THEORY_PRIORITIES.md` §5 | Analysis threads (Opus), Terra tie-out, Sol review | Report accepted by HQ |
+| **P4 Let the data talk** | `EVIDENCE_H.md` + `EVIDENCE_L.md`, read together, give per target (THEORY_EXTRACTION_STRATEGY mapping): which premises hold, where and why the method fails, and a support / contradict / silent verdict per conjecture. **Inputs DONE:** both reports are final and accepted (D78, D87, D94), and their verdicts are summarised in `Docs/THEORY_PRIORITIES.md` §5. Still to do: the joint synthesis that turns the verdicts into the P6 cards | Analysis threads (Opus), Terra tie-out, Sol review | Reports accepted (done); synthesis by whoever runs the theory phase |
 | **P5 Theory layer 1 (bookkeeping)** | Restatements with no new mathematics: potential-uninterrupted-run + output-available event for T11(iii), T12, T14, T15, T23, T25, T27(i), T31; write T34; T13 snapping wording; drop T12's secondary-PIP clause; T12 islandwise wording; T21 route wiring; T07 + T06(i) sentence; T26 scope; T02(i) exact BB(1,p) tail and T03 restatement; T05 remark | Opus lead, Sonnet workers, Sol review; Fable only on a stuck step | HQ accepts; Felipe informed |
 | **P6 Vetting the hard targets** | **Fable 5.1 leads statement refinement** ("believed versions") of T37, T22 + T27 on one compatible family, T38, T26(i)–(ii); T24 and T39 as fallbacks. One **confidence card** per target: refined statement; data evidence; exact small-case tests (p ≤ 30); proof skeleton with the crux isolated; Astra's attack; Sol's review; risk; method change needed? | Fable lead; Astra adversary; Sol review; Opus manager | **G3: Felipe green-lights each card.** No swarm without it |
 | (if a card fails) | Method-change proposal under the **investment rule** (§1.6), with a proof sketch and a pilot. If approved, loop back: one redeploy carries every change (P2–P3 again, D36 standard) | Opus + Fable; Sol; pilot via OPS | Felipe |
@@ -111,35 +121,39 @@ Felipe's:
 3. c = 0.75 at p = 500 (≈ 155–170 fit-h); never decided.
 4. Benchmark freeze: who lifts it (`RELOCATION_OK.md` never written). Copying is allowed; nothing is deleted.
 5. Public repo: which unpublished theory, manuscripts, reviews and PDFs may be pushed, or make the repo private (`Docs/PUSH_CHECKLIST.md`).
-6. Lasso-family headline rule: D42.6 made `ebic1_K37` the headline at both scales, with CV disclosed. Confirm when the tables land.
-7. Old VS Code server versions on NOTS (1.46 GiB) and old Codex releases: deferred.
-8. qr_data (~195 GB, non-BVS) on NOTS scratch: finish the transfer, or let the purge remove it.
+6. Old VS Code server versions on NOTS (1.46 GiB) and old Codex releases: deferred.
+7. qr_data (~195 GB, non-BVS) on NOTS scratch: finish the transfer, or let the purge remove it.
 
-HQ's (decide or carry):
-9. PROD-H completion finding F1 (delete before the home summary was verified; no data loss).
-10. 14 old CODE_LEDGER mismatches (F2/F4_MCP_SCAD/A2_SSL mirrors, 2026-10-21), never reported to Felipe.
-11. BFDR consult secondary outputs (postFDP, expected misses, ½-PFER set): adopt or reject.
-12. Novelty check: "report the best model ever visited" vs Hans, Dobra & West (2007) shotgun stochastic search. Matters for the T21/T38 novelty claims.
-13. THEORY.tex "Recommendations to the author" (10 items), the pair-addition move (LEVERS V10), the never-firing warnings E1/E3/local_limit: deferred.
-14. `cut_group`: redefine or drop (D13 made it informational; it fires in 2,398/2,400 fits).
-15. Wave-3 proofs' external review (queued). The v2.1 results never got a RESULTS.md or an external review (superseded by the v2.2.1 rerun reports).
-16. Tension between "use all prior knowledge" (principle 4) and "I don't care about prior attempts" (D6) in the theory phase.
-17. Local declutter questions on the old PC folder (P1/P2 tar packing, L1–L8, REORG questions).
-18. **Security:** a NOTS password appeared in an old HQ transcript (2026-10-22). Change it if not done; never export thread text unredacted.
+Already resolved; only check the implementation:
+- **Lasso-family headline (D42.6):** `ebic1_K37` is the headline at both scales, with CV disclosed as a sensitivity. Verify that the final tables implement it.
+
+Resolved at the campaign's close: the PROD-H finding F1 was accepted as a disclosed procedural deviation, with no data loss (D92).
+
+Carried forward (the old HQ stopped under D77, so these pass to whoever runs the theory phase or a new HQ):
+8. The ABESS low-p exact-size result (2,375/2,400 RSS-optimal) and the horseshoe `ci95` drop at p = 30, c = 0.5 are disclosed, not audited (D94). Decide whether the paper needs more.
+9. 14 old CODE_LEDGER mismatches (F2/F4_MCP_SCAD/A2_SSL mirrors, 2026-10-21), never reported to Felipe.
+10. BFDR consult secondary outputs (postFDP, expected misses, ½-PFER set): adopt or reject.
+11. Novelty check: "report the best model ever visited" vs Hans, Dobra & West (2007) shotgun stochastic search. Matters for the T21/T38 novelty claims.
+12. THEORY.tex "Recommendations to the author" (10 items), the pair-addition move (LEVERS V10), the never-firing warnings E1/E3/local_limit: deferred.
+13. `cut_group`: redefine or drop (D13 made it informational; it fires in 2,398/2,400 fits).
+14. Wave-3 proofs' external review (queued). The v2.1 results never got a RESULTS.md or an external review (superseded by the v2.2.1 rerun reports).
+15. Tension between "use all prior knowledge" (principle 4) and "I don't care about prior attempts" (D6) in the theory phase.
+16. Local declutter questions on the old PC folder (P1/P2 tar packing, L1–L8, REORG questions).
+17. **Security:** a NOTS password appeared in an old HQ transcript (2026-10-22). Change it if not done; never export thread text unredacted.
 
 ---
 
 ## 5. Cutover to this repo (after the experiments)
 
 Full design: `Docs/Records/GH_HANDOFF/ASTRA_HANDOFF_PLAN.md` §D, steps D1–D10, and `HQ_SPINUP_PLAN.md`. In short:
-1. Old HQ certifies the experimental phase complete (§2).
+1. Old HQ certifies the experimental phase complete (§2). **Done, D94.** Step 3 (the refresh) was done on 2026-11-03. What remains is Felipe's push (`Docs/PUSH_CHECKLIST.md`) and, if he wants a repo-based HQ, steps 7–9.
 2. Quiesce the old watchdog. Freeze the source.
 3. Refresh this repo per `Docs/SYNC_LATER.md`.
 4. Verify (`Scripts/Campaigns/2026-10-28_New_Campaign/verify_manifests.sh` + PUSH_CHECKLIST).
 5. **Felipe pushes.**
 6. PCs sync via GitHub Desktop.
-7. Bootstrap the new HQ on Owls (`Docs/HQ/BOOTSTRAP.md`), with a capability rehearsal and Felipe's readiness check.
-8. Transfer authority once (one HQ, one watchdog).
-9. Archive the old folder read-only.
+7. Bootstrap the new HQ on Owls (`Docs/HQ/BOOTSTRAP.md` §3): a capability rehearsal plus the activation evidence of BOOTSTRAP §4. That evidence is a Sol capability audit against the old HQ's responsibility table, a tested PC-independent archive and transfer receipt, persistent-job and log inspection, and the Owls re-login and out-of-band alert procedure. Felipe then accepts readiness.
+8. Transfer authority once: one HQ, one watchdog. Exercise one harmless watchdog recovery with Terra observing the saved cycle, then get Astra's final handoff review and Felipe's acceptance (BOOTSTRAP §5).
+9. Archive the old folder read-only only after step 8 is accepted. Any failed or unavailable capability leaves the dependent work inactive, and the old HQ stays authoritative.
 
 Bulk data never enters Git. It lands in the git-ignored `_data/` on Owls.

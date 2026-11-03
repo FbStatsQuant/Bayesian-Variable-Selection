@@ -76,4 +76,34 @@ Assumptions where DESIGN.md is silent (change them here and in the suite if the 
 | SG01-SG39 | capacity-modelling guard stub (home used + add > limit -> exit 1 `home+add>limit`, ops/guard.sh line format) seeded at 9.46 GiB: the pre-staging reservation of the stage (75 MB) is admitted; after "extraction" (usage += stage) the main wave is ADMITTED and the guard is called with PLANNED_HOME_MB_MAIN (5), never the stage size again; the old behaviour (stage size again) is refused; D57 line in launch/main/guard_receipt.txt; a home without room for the growth refuses (exit 1); guard_check.sh probes the guard's OWN limit: 9.70 GiB guard + REQUIRED 10171187 -> OK with probe ~327 MB, 9.70 guard + REQUIRED 9.6 -> refused, 9.6/9.6 unchanged (probe ~224 MB), guard below the floor or without the campaign limit refused | as stated | D57 |
 | D5701-D5709 (test_manifests.sh) | after clear_stale.sh --yes archived a lock dir and a hidden temp into LOG_RUN/cleanup/<utc>/ and with a hidden ledger temp `.7002_0.1234.tmp`: `--piece logs` SUCCEEDS and its MANIFEST.sha256 lists the archived files and the ledger temp; the result piece still refuses (exit 2) with a stale artefact in its own folder | as stated | D57 |
 
-Not encoded: the live local run of real cases through `batch_runner.sh` with the real CLI (DESIGN section 8, manager's live run), `stage_local.sh`, `final_accounting.sh`, `frozen_check` symlink variants (covered in PROD-L), the P0b R checks of `s0_verify` (needs R on the cluster build), `bench_env_probe.R`.
+Not encoded: the live local run of real cases through `batch_runner.sh` with the real CLI (DESIGN section 8, manager's live run), `stage_local.sh`, `final_accounting.sh`, `frozen_check` symlink variants (covered in PROD-L), the P0b R checks of `s0_verify` (needs R on the cluster build). (`bench_env_probe.R` was listed here until HQ D82; it is now encoded in `test_probe_real.sh`.)
+
+## HQ D82 (rev 2): `test_probe_real.sh` (26 checks) -- the env probe run for real
+
+Rev 1 failed on NOTS at `s0_verify` (job 2510090): `R/bench_env_probe.R` called `lowp_load_method(mid, code, p=20, test_library=FALSE)`; the frozen signature is
+`lowp_load_method(id, code_dir, p, test_versions = FALSE)` (`code/bench_lowp/R/common.R:2`), so R stopped with "unused argument (test_library = FALSE)".
+Why the suite missed it: (1) every unit suite replaces `Rscript` by a stub (`lib.sh`), so no bundle R script except `accept_bench.R` ever ran; (2) the probe was
+listed above as "not encoded"; (3) the live run's probe step expected a FAIL (laptop glmnet 4.1-10 != pin 5.1) and did not check the reason, and run 1 stopped
+before reaching it. A wrong keyword and a wrong package version both gave exit 1.
+
+| IDs | What | Expected |
+|---|---|---|
+| PR00-PR02 | prerequisites; `code/bench_lowp` = r2 file by file (34/0, the REAL frozen tree); the frozen signature line | as stated |
+| PR03-PR05 | the real probe on the real frozen code with a library of metadata-only packages at the r2 pins (`tests/mk_pinlib.R`; pins typed by hand) | exit 0, `PASS benchmark environment`, no "unused argument" |
+| PR06 | same without `--local-test` on R 4.4.1 | exit 1 `R 4.5.2 required` |
+| PR07 (x8) | each pinned package at 0.0.1 | exit 1 on the pin check, never a wiring error |
+| PR08, PR08b | doParallel / digest absent from the pinned library while the laptop's own copies are on the path | exit 1 `Package outside sealed library` (new probe check = frozen CLI rule) |
+| PR09 | strict pin check kept (`test_versions = FALSE`) | as stated |
+| PR10-PR11 | rev-1 line reproduced on the same code and library | exit 1 `unused argument (test_library = FALSE)` |
+| PR12-PR14 | `tests/check_frozen_calls.R`: match.call of every bundle call into a frozen definition (`accept_bench.R`, `R/*.R`) | 2 calls, 0 bad; the rev-1 line flagged BAD |
+| PR15 | the bundle has exactly 3 R scripts outside tests/review (all checked) | 3 |
+| PR16-PR17 | `s0_verify` passes `--code $BENCH_DIR --library $R_LIBS_BENCH`; `BENCH_DIR` = staged `code/bench_lowp` | as stated |
+
+The live run (rev 2, `tests/live/live_bench_rev2.out`) also runs the staged `slurm/s0_verify.sbatch` itself, end to end, on the extracted stage (positive and a
+wrong-pin negative).
+
+
+Known limits (Sol D82 narrow check, minor, documented): `mk_pinlib.R` packages carry no dependency metadata, so the transitive-dependency and
+base/recommended branches of the probe's location rule are verified by inspection against the frozen CLI, not by a test; `check_frozen_calls.R` is a
+name/formals compatibility check for this bundle's calls (it accepts any matching definition of a repeated name, skips file-local names, does not prove
+required arguments are supplied, and does not cover shell → CLI flags, which the live run exercises).

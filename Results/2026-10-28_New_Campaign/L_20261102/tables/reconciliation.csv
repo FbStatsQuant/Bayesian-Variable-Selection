@@ -1,0 +1,4 @@
+piece,expected,scored,failed,missing,balances
+"enum (exact, datasets)",1200,1200,0,0,True
+smc primary (cases),2400,2400,0,0,True
+"smcrep (fits, 5 per case)",12000,12000,0,0,True

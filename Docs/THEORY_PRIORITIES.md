@@ -1,6 +1,6 @@
 # Theory priorities: the frozen paper targets
 
-**Frozen 2026-10-28** by HQ with Felipe, after two independent consultant reviews of HQ's proposal (Fable 5.1 and Astra), both ENDORSE WITH CHANGES. This page is the strategic view: what we will pursue, why, in what order, and through which gates. Written 2026-11-02 for the GitHub handoff; statuses are as of that date.
+**Frozen 2026-10-28** by HQ with Felipe, after two independent consultant reviews of HQ's proposal (Fable 5.1 and Astra), both ENDORSE WITH CHANGES. This page is the strategic view: what we will pursue, why, in what order, and through which gates. Written 2026-11-02 for the GitHub handoff. §5 was updated 2026-11-03 with the final empirical evidence. The proof statuses in this repo are unchanged since 2026-11-02. Any results of the theory campaign running elsewhere (D77) are not reflected here.
 
 - **Authoritative record:** `Docs/Theory/PAPER_SELECTION_20261028/FROZEN_LIST.md`.
 - **The full inventory** of all 39 items (T01–T36 plus the new T37–T39), with per-theorem one-pagers: `Docs/THEORY.md` and `Docs/Theory/one_pagers/`.
@@ -71,7 +71,7 @@
   - the HPM minimises 0-1 loss (exact recovery), and the MPM minimises Hamming loss;
   - PIP error bounds the excess MPM risk;
   - no size-only prior can repair a within-size ranking error.
-  - T06(i): two supports tie for every y exactly when their projections agree, which is a ceiling for every method.
+  - T06(i): the score functions of two supports agree for every standardised response iff X_S X_Sᵀ = X_S′ X_S′ᵀ. Equal column spans alone do not suffice with this ridge prior; under G, observed exact ties almost surely have equal outer products. Such ties are a ceiling for every method.
 - **Why it matters.** It justifies reporting the HPM, and it names the within-size *look-alike swap* as the only error that re-tuning BB(1,p) cannot fix.
 - **Status.** PROVED-LOCKED (wave 3; external review queued); not adopted.
 - **Risk.** Low. Astra judged its standalone novelty modest and would demote it to a remark; that is what the Biometrika cut does.
@@ -83,8 +83,8 @@
     - the odds from a reference to the truth are exact;
     - the tempering bridge never loses mass on S₀ below the smaller endpoint mass.
   - **T22(iii)**, favourable regime: under EXP′, VIS, NL_η and NL_avg(κ), 1 − π₀(S₀) = O_P(2^B √(log n) n^{−κ}).
-  - **T27(i)**, masked regime: if d true variables mask each other along an addition chain (H2, H3), then π₀(S₀) = p^{−c} n^{−c/2} e^{O_P(1)}.
-- **Intuition.** The start finds the truth when the blocks see it, and provably cannot when true variables cancel. That is exactly why the sampler exists.
+  - **T27(i)**, masked regime: for a chain of c masked feasible additions satisfying H2/H3, π₀(S₀) = p^{−c} n^{−c/2} e^{O_P(1)}. Whether iid discovery fails depends on Q_f·π₀(S₀). The locked part proves the mass law, not a discovery failure; enough draws can still find the truth.
+- **Intuition.** The start concentrates on the truth when the blocks see it. When true variables cancel, the start gives the truth only polynomially vanishing mass, so the iid draws alone may not find it within the budget. That is the motivation for the sampler.
 - **Why it matters.** It is the motivation for the SMC machinery, in two sentences, and an input to T38's delivery step.
 - **Status.**
   - T22(i)(ii)(iv): PROVED-LOCKED (wave 1, full chain).
@@ -101,9 +101,9 @@
 
 ### Thm 3: T37 truth dominance and greedy repair (primary), T24 terminal repair (alternative)
 - **Statement (T37).**
-  - **(i), deterministic.** Under truth dominance TD(d, 0), the production local search moves from any centre in the near-truth region 𝓡_d (subsets of S₀ plus at most d extras) monotonically to S₀ in |S Δ S₀| moves, scores S₀ and certifies it.
-  - **(ii), finite n.** P₀(TD fails) is bounded by a sum of explicit non-central Gaussian events.
-  - **(iii)** Under G, R, SE and BM-∞ that bound → 0.
+  - **(i), deterministic.** Assume truth dominance TD(d, 0) with strict inequalities, and a move budget ℓ ≥ |S Δ S₀|. Then the production local search moves from any centre S in the near-truth region 𝓡_d (subsets of S₀ plus at most d extras) monotonically to S₀ in exactly |S Δ S₀| moves, never leaving 𝓡_d, and scores and certifies S₀.
+  - **(ii), finite n.** Under G and for fixed X, P₀(TD(d, m) fails) is bounded by a sum of explicit one- or two-dimensional non-central Gaussian events.
+  - **(iii), n-indexed.** Assume s₀ and d are fixed, ℓ_n = ⌈log₂(n+p+1)⌉ ≥ s₀ + d eventually, and G, R, SE and BM-∞ hold. Then the bound in (ii) → 0.
 - **Intuition.** Adding a missing true variable captures its full signal, while its look-alike captures only the r² share. Once S₀ ⊆ S, extras only pay the size penalty. So the greedy order is "truths in, then extras out". The margin (n−1)θ²(1−r²)/(2σ²) is also the proposed mechanism behind the correlated-design advantage.
 - **Why it matters.** It is the paper's one genuinely finite-n statement, and the repair step T38 needs. It replaces the open GAIN_d, LK_d and EXIT_d codes.
 - **Why T24 was singled out first, and why T37 now leads.**
@@ -115,7 +115,7 @@
   - The 2^{s₀} union bound in (ii) is loose at s₀ = 14; a bound along the actual greedy path is the research part.
   - ℓ = 10 < s₀ + d = 15 at n = 200, so use the extra-scan rule or a closer centre.
   - T37 does not deliver an eligible centre; that is T38's job.
-- **Risk.** **High on the literal wording; see §5.** Preliminary data show the literal TD condition fails generically.
+- **Risk.** **High on the literal wording; see §5.** The final evidence shows the literal TD premise fails in every audited case at both low and high p. The "toward S₀" form has no counterexample at p ≤ 30 as a sufficient condition.
 - **Fallback.**
   - Restate TD ("toward S₀" variant, or a path-wise condition).
   - Or T24, restated:
@@ -228,29 +228,37 @@ Adoption of the 21 locked entries is a separate, still unanswered decision for F
 
 ---
 
-## 5. What the data says so far
+## 5. What the data says (final, 2026-11-03)
 
-> **Preliminary, pending the ANALYSIS-H2 and ANALYSIS-L final reports** (`EVIDENCE_H.md`, `EVIDENCE_L.md`, not yet written on 2026-11-02; see `Docs/SYNC_LATER.md`).
->
-> These are p ≫ n numbers from the ANALYSIS-H2 working tables (n = 200, p ∈ {500, 1000}, 2,400 fits). They are not reviewed, the Terra tie-out and Sol review are still pending, and they will be replaced by the final report.
+**Sources.** The accepted final reports:
+- `Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md` (p ≫ n: 2,400 fits, p ∈ {500, 1000});
+- `Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md` (p ∈ {20, 30}: 2,400 cases + 12,000 repeat fits, exact posterior by enumeration).
 
-The extraction plan that maps each target to measurable quantities is `Docs/Campaigns/2026-10-28_New_Campaign/THEORY_EXTRACTION_STRATEGY.md`.
+Both have Terra tie-outs and Sol acceptance (D78, D87, D94). The extraction plan is `Docs/Campaigns/2026-10-28_New_Campaign/THEORY_EXTRACTION_STRATEGY.md`.
 
-- **The start is in the masked regime almost everywhere.**
-  - 1 of 2,394 evaluated fits is "favourable" (Q_f·π₀(S₀) ≳ 1); the per-cell median π₀(S₀) is about 10⁻¹² or smaller.
-  - The near-truth region does carry start mass: the median π₀(𝓡₂) is about 0.8.
-  - This makes **T38(b)** (masked regime, delivery plus repair) the theorem that matters, and T38(a) and T26 marginal for this design.
-- **The HPM is delivered by the Gibbs/swap moves, not by the local search.**
-  - About 98% of fresh scores come from Gibbs flips (≈ 1.7% neighbour swaps); the final local search repaired 0 fits.
-  - In 541 fits the search centre was in 𝓡₂ but not S₀, and it never returned S₀.
-  - This questions T37's premise that the *local search* is the repair route at n = 200, and favours a Gibbs-path route (T24-type) or a restated T37.
-- **All misses are posterior misses, none are search misses.** Every completed wrong HPM has F(S₀) ≤ F(HPM) (565 posterior misses, 6 no-output, 0 search misses).
-  - At c = 1 they are mostly supersets of S₀.
-  - At c = 0.5 they are mostly same-size swaps and subsets.
-  - This points the open work at the **statistical half** (T03/T02 restatement, T07's swap ceiling) rather than at discovery.
-- **T37's literal truth-dominance condition fails generically.**
-  - In the d = 0 audit, TD held strictly in 0 of 95 sampled cases (partial sample of 196); S₀ was a strict local maximum in about half.
-  - The "toward S₀" variant is **open**: in this partial audit it did not separate from the literal one.
-  - This matches the low-p finding (D18) that the literal TD fails whenever a swap bringing in a missing truth is available.
+**How to read the verdicts.** They describe what one n = 200 design can show:
+- **support** means consistent with the statement, not a proof of it;
+- a failed finite-n *premise* of a conditional theorem is **not** a contradiction of the implication;
+- **silent** means the data cannot speak to it here.
 
-**Implication for P6, to be confirmed by the final reports.** T37 needs restating before any proof effort. The eligibility/delivery step of T38 should be argued through the bridge and Gibbs moves (or LS0), and the masked regime is the default case, not the exception.
+| Target | p ≫ n (EVIDENCE_H) | p ≤ 30 (EVIDENCE_L) |
+|---|---|---|
+| **T22 + T27** (Thm 2), start mass | **Masking qualitatively consistent with T27.** The iid start intensity Q_f·π₀(S₀) is below 1 in 2,393/2,394 completed fits. The cell medians of π₀(S₀) are 10^−12.4 to 10^−25.6 and fall by 2–4 orders of magnitude from p = 500 to 1000. Pooled near-truth medians: π₀(𝓡₀) = 0.20, π₀(𝓡₂) = 0.81 (lower in S4). T27's law and T22(iii)'s hypotheses: **silent** | **Support:** a tiny start mass on the truth does not stop the SMC from delivering the exact HPM. Rates: **silent** |
+| **T37** (Thm 3), truth dominance and repair | The finite-n premise TD(0, 0) **fails in all 196 audited cases** (literal and "toward" coincide at d = 0). Truth-for-truth swaps explain the violations in the cases diagnosed. The final local search never made an improving move. T37(i), as an implication: **not contradicted**; (ii)–(iii): **silent** | The literal premise fails in all 2,400 cases; that limits **applicability** and is not a refutation. The **"toward S₀" wording has no counterexample as a sufficient condition** (1,511 cases at d = 1), but it is not necessary (705 hits violate it) |
+| **T38** (Thm 5), delivery + consistency + cost | **First discovery of the truth happens in the pilot SMC, by Gibbs flips and swaps, in every completed hit.** This motivates a pilot-discovery / T24-type route. T38(b2)'s formal premises: **silent**. Cost is descriptively consistent with polynomial growth (two values of p) | **Support delivery:** SMC HPM = exact HPM in 2,400/2,400 primary and 12,000/12,000 repeat fits. Asymptotic consistency and the cost rate: **silent** |
+| **T21** (Thm 4), decomposition | **Consistent.** 6 no-output fits + 565 completed misses, each with a scored competitor above the truth; 0 detected search misses. The discovery term is not identified at p ≫ n (no per-model trace), so it lies between 0 and 565 | **Support, but loose:** every HPM truth-recovery error is a posterior error, the search contributes none, and the mass-off-truth term dominates |
+| **Resource stop vs complete run** | 2,394/2,400 completed. The 6 guard stops (S5) could change at most 6 recoveries. The P5 retry was not run (D62) | **Silent:** all 14,400 units completed |
+| **T03 / T07** (Thm 1, Prop 1) | T03: **silent** (asymptotic); concentration is visibly incomplete at c = 0.5. **T07: support.** 207 of 565 completed misses (37%) are same-size wrong supports, which no size-only prior can repair | **Support both mechanisms:** supersets dominate at strong signal, same-size swaps at weak signal |
+| **T26(i)–(ii), T12** (Thm 6, Prop 2) | **Silent** by design (D22). The RB and plain MPMs agree in 2,391/2,394 fits | **Support T12:** the mean relative error of Ẑ is −0.00011 (SE 0.00010) over 14,400 fits. **Support T26(i)–(ii) as finite-setting accuracy:** log Ẑ RMSE 0.012; mean per-fit max PIP error 0.0005 (RB) / 0.0020 (plain) |
+
+**Implications for P6** (what the statement refinement must absorb; these are not new decisions):
+1. **T37 must be restated before any proof effort.** The literal TD premise never holds in this design. The "toward S₀" form is the data-supported candidate (sufficient in every low-p case, not necessary), and it needs its own assumptions and proof.
+2. **Delivery runs through the SMC moves.**
+   - **At high p:** first discovery in the completed hits is in the pilot by Gibbs flips and swaps, and the final local search made no improving move in any of the 2,394 completed fits.
+   - **At low p:** every first truth score is also in the pilot, mostly from initial draws or Gibbs flips. EVIDENCE_L notes that this attribution neither tests local-search repair nor rules out a later local-search role.
+   - So T38's eligibility and delivery step should be argued through the bridge, Gibbs and swap moves (a T24-type or pilot-discovery route, or LS0). The masked regime is the default case.
+3. **The open work in the error budget looks statistical rather than computational.**
+   - At low p there are 0 search misses against the exact reference.
+   - At p ≫ n there are 0 *detected* search misses: every completed miss has a better-scoring competitor, but whether the truth was ever scored in those 565 fits is unidentified, and the T21 probability bound is silent there.
+   - That points to T03/T02 (supersets at strong signal) and T07 (same-size swaps at weak signal).
+4. **Exactness claims rest on the low-p study.** Ẑ unbiasedness (T12) and PIP accuracy (T26) are supported at p ≤ 30 only; at p ≫ n they are silent by design.

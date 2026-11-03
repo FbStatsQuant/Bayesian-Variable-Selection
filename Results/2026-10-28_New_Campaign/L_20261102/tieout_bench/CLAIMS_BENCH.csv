@@ -1,0 +1,26 @@
+cell_no,cell_type,method_id,rule_id,p,scale_key,scenario,quantity,claimed
+1,recovery,F1,ebic1_K37,20,c050,2,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),92
+2,recovery,F2,ebic1_K37,20,c100,2,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),93
+3,recovery,F3,ebic1_K37,20,c100,5,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),84
+4,recovery,F4,ebic1_K37,20,c100,1,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),88
+5,recovery,F5,ebic1_K37,30,c050,5,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),83
+6,recovery,A1,pip05,20,c050,2,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),94
+7,recovery,A2,ssl_final,30,c100,all,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),586
+8,recovery,A3,ci95,20,c100,3,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),95
+9,recovery,F1,cv_min,20,c100,3,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),0
+10,recovery,F2,cv_min,30,c050,4,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),0
+11,recovery,F3,cv_min,30,c050,4,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),16
+12,recovery,F4,ebic1_K37,30,c050,all,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),478
+13,recovery,F2,ebic1_K37,20,c100,all,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),502
+14,recovery,F5,ebic1_K37,30,c100,all,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),529
+15,recovery,F1,ebic1_K37,20,c100,all,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),541
+16,recovery,A1,pip05,20,c050,all,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),547
+17,recovery,A3,ci95,30,c100,all,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),568
+18,recovery,A1,pip05,20,c100,1,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),91
+19,recovery,F1,ebic1_K37,30,c050,2,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),81
+20,recovery,A2,ssl_final,20,c050,1,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),99
+21,recovery,F4,ebic1_K37,20,c100,2,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),88
+22,recovery,SMCBVS,mpm_plain,30,c100,all,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),571
+23,recovery,SMCBVS,mpm_plain,20,c100,all,exact recoveries of the truth (count over the 100 or 600 expected cases; failed/not-run = not recovered),576
+24,abess_size,F5,ebic1_K37,30,c100,all,fits whose ebic1_K37 support has centred RSS above the exact best-subset RSS of the same size (rel. tol 1e-8),1
+25,abess_size,F5,ebic1_K37,20,c050,all,fits whose ebic1_K37 support has centred RSS above the exact best-subset RSS of the same size (rel. tol 1e-8),5

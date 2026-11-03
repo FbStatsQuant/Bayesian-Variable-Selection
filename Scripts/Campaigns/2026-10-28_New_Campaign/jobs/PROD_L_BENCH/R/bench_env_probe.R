@@ -14,10 +14,26 @@ main <- function(args) {
   if (!dir.exists(lib) || file.access(lib, 4L) != 0L) stop("Library is not readable")
   .libPaths(c(lib, .libPaths()))
   source(file.path(code, "R", "config_lowp.R")); source(file.path(code, "R", "common.R"))
+  pinned <- character()
   for (mid in c("F1", "F2", "F3", "F4", "F5", "A1", "A2", "A3")) {
-    mod <- lowp_load_method(mid, code, p=20, test_library=FALSE)
+    # frozen signature (code/bench_lowp/R/common.R:2): lowp_load_method(id, code_dir, p, test_versions = FALSE). HQ D82: the earlier
+    # keyword test_library= does not exist there and stopped s0_verify (job 2510090); test_versions = FALSE keeps the strict pin check.
+    mod <- lowp_load_method(mid, code, p=20, test_versions=FALSE)
     pins <- if (mid == "A3") mod$settings$A3$PKG_VERSIONS else setNames(mod$registry$pkg_version, mod$registry$package)
     for (pkg in names(pins)) mod$env$assert_pkg_version(pkg, unname(pins[[pkg]]))
+    pinned <- c(pinned, names(pins))
+  }
+  # HQ D82 test PR08: a pin satisfied by a package OUTSIDE the pinned library passed the version check. Same location rule as the frozen CLI
+  # (run_bench_case.R, "Package outside sealed library"): every pinned package, digest, and their installed dependency closure must resolve inside
+  # the pinned library, except base/recommended packages of .Library.
+  db <- utils::installed.packages()
+  deps <- unique(c(pinned, "digest", unlist(tools::package_dependencies(c(pinned, "digest"), db = db, recursive = TRUE))))
+  for (pkg in c(pinned, "digest")) if (!pkg %in% rownames(db)) stop("Package missing: ", pkg)
+  base_lib <- normalizePath(.Library, winslash = "/", mustWork = TRUE)
+  for (pkg in sort(intersect(deps, rownames(db)))) {
+    loc <- normalizePath(find.package(pkg), winslash = "/", mustWork = TRUE); dir <- normalizePath(dirname(loc), winslash = "/")
+    is_base <- identical(dir, base_lib) && db[pkg, "Priority"] %in% c("base", "recommended")
+    if (!is_base && !identical(dir, lib)) stop("Package outside sealed library: ", pkg, " ", loc)
   }
   cat("PASS benchmark environment\n")
 }

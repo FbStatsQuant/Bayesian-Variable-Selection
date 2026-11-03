@@ -8,6 +8,12 @@ stop() { echo "GATE $1 FAIL: $2"; echo "NOT SUBMITTED"; exit 1; }
 echo "date=$(date -u +%FT%TZ) RID=$RID"; squeue -h -u fb31 -o '%i %j %T' | awk '{print $2}' | sort | uniq -c
 squeue -h -u fb31 -o '%j' | grep -q lowpB_ && stop squeue "a PROD_L_BENCH job exists"
 squeue -h -u fb31 -o '%j' | grep -qE 'lowpL_s[1-4]' && stop squeue "a PROD-L fitting job is queued/running"
+# campaign ceiling (charter: <= 96 tasks / 192 billed CPUs; 1-CPU task bills 2). Concurrency per job: an array with a pending %N throttle counts N;
+# otherwise each listed (running) task counts 1. New: PROD_L_BENCH alone profile = %32. (Added 2026-11-02, HQ: respect the ceiling with F3 cell 4.)
+SQ=$(squeue -h -u fb31 -o '%F %K %T') || stop ceiling "squeue failed"
+cap=$(printf '%s\n' "$SQ" | awk 'NF>=2 {b=$1; if (match($2, /%[0-9]+/)) thr[b]=substr($2, RSTART+1, RLENGTH-1)+0; else n[b]++} END {t=0; for (b in n) if (!(b in thr)) t+=n[b]; for (b in thr) t+=thr[b]; print t}') || stop ceiling "parse failed"
+echo "ceiling: existing concurrency=$cap + new 32 = $((cap + 32)) tasks (<= 96), billed $(( 2 * (cap + 32) )) (<= 192)"
+[ $((cap + 32)) -le 96 ] || stop ceiling "would exceed 96 tasks / 192 billed CPUs"
 G=$(bash $HR/code/ops/guard.sh 75 2>&1); grc=$?; echo "GUARDLINE $G | rc=$grc"; [ $grc -eq 0 ] || stop guard "guard 75 refused"
 [ "$(sha256sum "$TAR" | cut -c1-64)" = "$TAR_SHA" ] || stop tar_sha "uploaded tar hash differs"
 cd $HR && test ! -e runs/$RID && tar -xf "$TAR" -C . && sha256sum --quiet -c runs/$RID/STAGED_SHA256.txt && echo STAGED_OK || stop staged "extract/verify failed"

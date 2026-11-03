@@ -1,0 +1,12 @@
+field,n_cases,n_identical,max_abs_diff
+fit$hpm,2400,2400,0.0
+fit$hpm_F,2400,2400,0.0
+fit$log_Z,2400,2400,0.0
+fit$log_Z_r,2400,2400,0.0
+fit$mpm,2400,2400,0.0
+fit$pip_primary,2400,2400,0.0
+fit$pip_r,2400,2400,0.0
+native_status,2400,2400,
+record$hpm,2400,2400,0.0
+record$mpm,2400,2400,0.0
+record$pip,2400,2400,0.0

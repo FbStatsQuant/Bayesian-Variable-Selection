@@ -25,10 +25,12 @@ The script prints one PASS/FAIL line per manifest and exits 0 only if nothing fa
 | `conformance/jobs/PROD_H/` | p ≫ n production bundle, 2,400 fits (run `20261030T0934Z_prodH`); `REVIEW2_FIXES.md` … `REVIEW7_FIXES.md` | `BUNDLE_SHA256SUMS` `2a2a8b1f…` (53) | — |
 | `conformance/review/` | Sol reviews: conformance, regression, CONF-2b rounds 1–7, pilot rev 7d, identity result | — | — |
 | `jobs/PROD_L/` | Low-p production: enumeration, SMC primary, 100×5 repeats (run `20261030T1811Z_lowp_prodL`) | built at staging by `stage_local.sh` (no static ledger) | — |
-| `jobs/PROD_L_BENCH/` | Low-p benchmark wave (run `20261102T1311Z_lowp_bench`) | `BUNDLE_SHA256SUMS.txt` `2a7ceba7…dfc3` (32) | — |
+| `jobs/PROD_L_BENCH/` | Low-p benchmark wave, **rev 2** (run `20261102T2309Z_lowp_bench`; ACCEPTED 19,200/19,200). Rev 1, run `20261102T1311Z`, failed on a probe defect (D82) | `BUNDLE_SHA256SUMS.txt` `da08f38c…` (32; rev 1 was `2a7ceba7…`) | — |
 | `bench_audit/AUDIT.md`, `bench_audit/review/` | Lasso/EN/aLasso/ABESS full-chain audit and its Sol reviews (D35, D42) | — | — |
 | `bench_audit/jobs/BENCH_F3_DEV/`, `BENCH_F3_PROD/` | Adaptive-lasso dev pilot (26/26) and the production rerun (run `20261102T1252Z_bench_f3v2_prod`) | `BUNDLE_SHA256SUMS_FINAL` DEV `3353b6f6…` (26), PROD `90579ad6…7e07` (63) | — |
 | `bench_audit/jobs/staging/` | The exact staged upload snapshots for the dev and prod runs | `UPLOAD_SHA256.txt` (34 each) | — |
+| `analysis/{L_20261102,H2_20261102,H_existing_20261030}/` | Scripts behind the final reports: scoring (`score_f3.R`), tables, evidence, pass-C benchmark merge, ABESS exact-size check, tie-out claims. Reports and tables are in `Results/2026-10-28_New_Campaign/` | — | — |
+| `review/` | Sol reviews of the ops deletion lists and completion reports (D74, D79, F3, final sweep, PROD-H) | — | — |
 | `ops/` | `guard.sh` (disk guard), `disk_check.sh`, `verify_against_local.py`, `transfer/` (`nots_pull.py`, `remote_pack.sh`, `verified_delete.sh`), `scaffold/` (incl. the `sshlock/` ssh lock shim and run chains), `review/` (Sol reviews of the deletion lists) | — | OPS |
 
 ## Also added by this import, outside this folder

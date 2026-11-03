@@ -1,0 +1,52 @@
+cell_no,cell_type,quantity,claimed,method,rule,scale,p,scenario,field,case
+1,smc_recovery,"exact recoveries, rule hpm (failed = miss)",559,SMCBVS,hpm,c100,500.0,pooled,,
+2,smc_recovery,"exact recoveries, rule hpm (failed = miss)",340,SMCBVS,hpm,c050,1000.0,pooled,,
+3,smc_recovery,"exact recoveries, rule hpm (failed = miss)",25,SMCBVS,hpm,c050,500.0,4,,
+4,smc_recovery,"exact recoveries, rule hpm (failed = miss)",84,SMCBVS,hpm,c100,1000.0,5,,
+5,smc_recovery,"exact recoveries, rule hpm (failed = miss)",65,SMCBVS,hpm,c050,1000.0,3,,
+6,smc_recovery,"exact recoveries, rule mpm_rb (failed = miss)",559,SMCBVS,mpm_rb,c100,500.0,pooled,,
+7,smc_recovery,"exact recoveries, rule mpm_rb (failed = miss)",321,SMCBVS,mpm_rb,c050,1000.0,pooled,,
+8,smc_recovery,"exact recoveries, rule mpm_rb (failed = miss)",18,SMCBVS,mpm_rb,c050,500.0,4,,
+9,smc_recovery,"exact recoveries, rule mpm_rb (failed = miss)",85,SMCBVS,mpm_rb,c100,1000.0,5,,
+10,smc_recovery,"exact recoveries, rule mpm_rb (failed = miss)",63,SMCBVS,mpm_rb,c050,1000.0,3,,
+11,smc_recovery,"exact recoveries, rule mpm_plain (failed = miss)",559,SMCBVS,mpm_plain,c100,500.0,pooled,,
+12,smc_recovery,"exact recoveries, rule mpm_plain (failed = miss)",320,SMCBVS,mpm_plain,c050,1000.0,pooled,,
+13,smc_recovery,"exact recoveries, rule mpm_plain (failed = miss)",18,SMCBVS,mpm_plain,c050,500.0,4,,
+14,smc_recovery,"exact recoveries, rule mpm_plain (failed = miss)",85,SMCBVS,mpm_plain,c100,1000.0,5,,
+15,smc_recovery,"exact recoveries, rule mpm_plain (failed = miss)",62,SMCBVS,mpm_plain,c050,1000.0,3,,
+16,bench_recovery,"exact recoveries, rule ebic1_K37",67,F1,ebic1_K37,c100,500.0,1,,
+17,bench_recovery,"exact recoveries, rule ebic1_K37",89,F1,ebic1_K37,c100,1000.0,pooled,,
+18,bench_recovery,"exact recoveries, rule ebic1_K37",24,F1,ebic1_K37,c050,500.0,pooled,,
+19,bench_recovery,"exact recoveries, rule ebic1_K37",48,F2,ebic1_K37,c100,500.0,1,,
+20,bench_recovery,"exact recoveries, rule ebic1_K37",50,F2,ebic1_K37,c100,1000.0,pooled,,
+21,bench_recovery,"exact recoveries, rule ebic1_K37",14,F2,ebic1_K37,c050,500.0,pooled,,
+22,reproduction,"cases (of 2400) with identical() fit$log_Z, old vs new",2400,,,,,,fit$log_Z,
+23,reproduction,"cases (of 2400) with identical() fit$hpm, old vs new",2400,,,,,,fit$hpm,
+24,reproduction,"cases (of 2400) with identical() fit$pip_primary, old vs new",2400,,,,,,fit$pip_primary,
+25,reproduction,"cases (of 2400) with identical() record$pip, old vs new",2397,,,,,,record$pip,
+26,reproduction,"cases (of 2400) with identical() native_status, old vs new",2400,,,,,,native_status,
+27,accounting,fits with native_status resource_limit,6,,,,,,,
+28,accounting,resource_limit fits whose instrumentation$stop$phase == 'diag',5,,,,,,,
+29,accounting,fits with fit$flags$escalated TRUE,112,,,c100,1000.0,,,
+30,accounting,fits with fit$flags$escalated TRUE,6,,,c050,500.0,,,
+31,registry,records whose instrumentation$scored$mode == 'hll',2400,,,,,,,
+32,registry,records whose instrumentation$scored$first_scored is NULL,2400,,,,,,,
+33,local_search,completed fits with fit$local_search$moves > 0,0,,,,,,,
+34,local_search,completed fits whose fit$hpm_provenance$phase == 'pilot',2394,,,,,,,
+35,local_search,completed fits whose fit$local_search$centre equals the truth,1829,,,,,,,
+36,pip,completed fits where MPM(RB PIP>0.5) == MPM(plain PIP>0.5) as sets,2391,,,,,,,
+37,pip,max over completed fits and variables of |record$pip - record$pip_plain| (4 dp),0.01,,,,,,,
+38,miss_shape,completed non-recovered fits with HPM shape superset vs truth,36,,,c100,500.0,,,
+39,miss_shape,completed non-recovered fits with HPM shape same_size_swap vs truth,106,,,c050,500.0,,,
+40,miss_shape,completed non-recovered fits with HPM shape subset vs truth,84,,,c050,1000.0,,,
+41,miss_shape,completed non-recovered fits with HPM shape mixed_size vs truth,35,,,c050,1000.0,,,
+42,miss_class,completed non-recovered fits with F(S0) > F(HPM) (search misses),2,,,c050,500.0,,,
+43,miss_class,completed non-recovered fits with F(S0) > F(HPM) (search misses),0,,,c100,1000.0,,,
+44,td_clause_c,"is S0 a strict local maximum of F over all single adds, removes and swaps? (TRUE/FALSE)",True,,,,,,,p0500_S1_r001_c050
+45,td_clause_c,"is S0 a strict local maximum of F over all single adds, removes and swaps? (TRUE/FALSE)",True,,,,,,,p0500_S1_r001_c100
+46,td_clause_c,"is S0 a strict local maximum of F over all single adds, removes and swaps? (TRUE/FALSE)",True,,,,,,,p1000_S1_r001_c050
+47,td_clause_c,"is S0 a strict local maximum of F over all single adds, removes and swaps? (TRUE/FALSE)",False,,,,,,,p1000_S1_r019_c100
+48,td_clause_c,"is S0 a strict local maximum of F over all single adds, removes and swaps? (TRUE/FALSE)",False,,,,,,,p1000_S1_r036_c100
+49,td_clause_c,"is S0 a strict local maximum of F over all single adds, removes and swaps? (TRUE/FALSE)",False,,,,,,,p1000_S1_r042_c100
+50,pi0,pi0(R1) (4 significant digits),0.6498,,,,,,,p0500_S1_r001_c100
+51,pi0,pi0(R1) (4 significant digits),0.105,,,,,,,p1000_S4_r050_c050

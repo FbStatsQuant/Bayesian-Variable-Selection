@@ -1,0 +1,5 @@
+p,scale_key,n_cases,smc_ok,smc_failed,smc_missing,exact_ok,evidence_ok,hpm_ok,rb_ok,plain_ok,cases_with_5_repeats,repeat_fits_found
+20,c050,600,600,0,0,600,600,600,600,600,600,3000
+20,c100,600,600,0,0,600,600,600,600,600,600,3000
+30,c050,600,600,0,0,600,600,600,600,600,600,3000
+30,c100,600,600,0,0,600,600,600,600,600,600,3000

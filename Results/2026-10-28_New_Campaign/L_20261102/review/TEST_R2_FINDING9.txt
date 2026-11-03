@@ -1,0 +1,5 @@
+pending: short-answer pending=True Q4 pending=True Q4 table=False -> OK
+complete: short-answer pending=False Q4 pending=False Q4 table=True -> OK
+partial: short-answer pending=False Q4 pending=False Q4 table=True -> OK
+real-tables render identical to HEADLINE_L.md: True
+TEST_PASS

@@ -1,6 +1,6 @@
 # Felipe's standing rules (binding for HQ and every thread)
 
-Collected 2026-11-02 from the New Campaign charter, DECISIONS D1–D70, the GH handoff gap list and the HQ memory. The decision numbers (Dxx) refer to `Docs/HQ/DECISIONS.md`. Where an older rule was superseded, only the current one is written here.
+Collected 2026-11-02 from the New Campaign charter, DECISIONS D1–D71, the GH handoff gap list and the HQ memory. The decision numbers (Dxx) refer to `Docs/HQ/DECISIONS.md`. Where an older rule was superseded, only the current one is written here.
 
 ## 1. Order, no clutter
 - **One dated area per campaign**, with the same subfolder names in every location (local/repo, data store, NOTS home, NOTS scratch): `inputs/`, `manifests/`, `results/<run_id>/`, `logs/<run_id>/`.
@@ -8,6 +8,7 @@ Collected 2026-11-02 from the New Campaign charter, DECISIONS D1–D70, the GH h
 - **HQ alone owns** `STATUS.md`, `DECISIONS.md` and the README/layout. Threads report to HQ; they do not message each other. Anything for NOTS goes through HQ to OPS as a job bundle (folder + `JOB.md`: command, inputs, expected outputs, memory and time requests, acceptance check).
 - **Settle every finished thread or delegate** as soon as its output is saved.
 - **Old attempts are out of scope** (D6); only the shipped method matters.
+- **No crawling.** Agents read only the paths their brief names. No scanning of R libraries, build caches, `.git`, old experiment folders, or whole disks (charter §2.5).
 - **No arbitrary constants.** Every setting is a function of n, p or a stated principle; show its values at the study sizes.
 
 ## 2. NOTS storage (10 GB home quota, shared with Felipe's other work)
@@ -28,7 +29,11 @@ Collected 2026-11-02 from the New Campaign charter, DECISIONS D1–D70, the GH h
 - **Running NOTS jobs are never killed on a pause**; let them finish. Cancel jobs only by explicit ID, and only our own. Never touch other users' files.
 
 ## 3. SSH discipline
-- **Only the OPS thread opens SSH to NOTS**, one connection at a time, with batched commands, through the configured alias `ssh nots`.
+- **Only the OPS thread opens SSH to NOTS**, with batched commands, through the configured alias `ssh nots`. At most **two** concurrent connections (D76):
+  - one bulk lane for long transfers;
+  - one control lane for short commands (each ≤ 5 min, serialised).
+
+  Otherwise it is one connection at a time.
   - The alias is pinned to the login node that hosts Felipe's live T3 server (loginx2 since 2026-10-28). Never connect to another login node directly.
   - Never touch `~/.claude/remote` or `.t3-recovery` on NOTS.
 - **No connection bursts.** NOTS blocks a source after bursts (2026-10-22: all login nodes for ~20 min). After a timeout or reset, back off 15 minutes. Never hold a session more than about 1 hour.

@@ -64,7 +64,11 @@ def sha_file(p):
     return h.hexdigest()
 
 
-def run(cmd, stdout=None, timeout=3600):
+def run(cmd, stdout=None, timeout=None):
+    # default per-call limit 3600 s; NOTS_PULL_TIMEOUT_S overrides it (2026-11-02: the remote manifest of a 50,533-file logs folder
+    # on scratch exceeded 3600 s). The tar call keeps its own explicit 6 h limit.
+    if timeout is None:
+        timeout = int(os.environ.get('NOTS_PULL_TIMEOUT_S', '3600'))
     return subprocess.run(cmd, stdout=stdout if stdout is not None else subprocess.PIPE,
                           stderr=subprocess.PIPE, timeout=timeout)
 

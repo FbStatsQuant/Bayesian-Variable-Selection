@@ -1,11 +1,17 @@
 #!/bin/bash
-# ssh shim (first in PATH for OPS pollers/waiters/scripts): take the global NOTS ssh lock, run the real ssh with a stall bound
-# (ServerAliveInterval 30 s x 4 = a stalled session ends after about 2 min; HQ D55), release the lock, return ssh's exit status.
-# Lock wait > NOTS_SSH_LOCK_WAIT_S -> exit 255 (callers treat it as an ssh failure and back off).
+# ssh shim (first in PATH for OPS pollers/waiters/scripts): take the lane's NOTS ssh lock (lock_lib.sh; default lane = control, HQ D76),
+# run the real ssh with a stall bound (ServerAliveInterval 30 s x 4 = a stalled session ends after about 2 min; HQ D55), release the lock,
+# return ssh's exit status. Control lane: each command is bounded at 5 min wall (timeout 300; exit 124 = treat as a timeout -> 15-min back-off).
+# Bulk lane (NOTS_SSH_LANE=bulk): no wall bound (long transfers). Lock wait > NOTS_SSH_LOCK_WAIT_S -> exit 255.
 # shellcheck disable=SC1091
 source "$(dirname "$0")/lock_lib.sh"
 REAL_SSH=${REAL_SSH:-/usr/bin/ssh}
-nots_lock_acquire || { echo "ssh-shim: could not get the NOTS ssh lock within ${NOTS_SSH_LOCK_WAIT_S}s" >&2; exit 255; }
-"$REAL_SSH" -o ServerAliveInterval=30 -o ServerAliveCountMax=4 "$@"; rc=$?
+nots_lock_acquire || { echo "ssh-shim: could not get the NOTS $NOTS_SSH_LANE lock within ${NOTS_SSH_LOCK_WAIT_S}s" >&2; exit 255; }
+if [ "$NOTS_SSH_LANE" = control ]; then
+  timeout -k 10 "${NOTS_CONTROL_WALL_S:-300}" "$REAL_SSH" -o ServerAliveInterval=30 -o ServerAliveCountMax=4 "$@"; rc=$?
+  [ $rc = 124 ] && echo "ssh-shim: control command exceeded ${NOTS_CONTROL_WALL_S:-300}s wall (killed; back off 15 min)" >&2
+else
+  "$REAL_SSH" -o ServerAliveInterval=30 -o ServerAliveCountMax=4 "$@"; rc=$?
+fi
 nots_lock_release
 exit $rc

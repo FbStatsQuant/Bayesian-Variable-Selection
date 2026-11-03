@@ -1,17 +1,28 @@
 # Sync later: what to refresh when the experimental phase ends
 
+> **DONE 2026-11-03** (HQ D94, by GH-PACK). Items 1–4, 6 and 7 below were carried out:
+> - the final records (D1–D94, STATUS);
+> - the results and analysis outputs under `Results/2026-10-28_New_Campaign/`;
+> - the final ops records, plus `Docs/Records/DATA_INDEX.md`;
+> - the code delta: PROD_L_BENCH rev 2, the new ops scaffold, and the analysis scripts under `Scripts/Campaigns/2026-10-28_New_Campaign/analysis/`;
+> - PLAN, STATUS, BOOTSTRAP and THEORY_PRIORITIES §5.
+>
+> **Not done, by decision:** item 5 (moving bulk data into Owls `_data/`) is Felipe's call. The handoff acceptance report of item 6 belongs to a repo-based HQ cutover, if Felipe wants one.
+>
+> The list below is kept as the record of what was planned.
+
 This repo content is a **snapshot taken 2026-11-02 ~15:30Z**, while the New Campaign was still running. OPS-4, ANALYSIS-L and ANALYSIS-H2 were live, and the BENCH_F3_PROD and PROD_L_BENCH runs were queued. Before the cutover push, refresh the items below from the old project folder (OLD = the old local project root, `02_Experiments/I_2026-10-28_New_Campaign/` = I), then re-run the checks at the end.
 
 ## 1. Campaign records (replace the snapshot copies)
 | Repo path | Source | Why |
 |---|---|---|
-| `Docs/HQ/DECISIONS.md` and `Docs/Campaigns/2026-10-28_New_Campaign/DECISIONS.md` | `I/DECISIONS.md` | D70 was the last entry at snapshot time; final decisions (F1 disposition, lasso headline, freeze, etc.) |
+| `Docs/HQ/DECISIONS.md` and `Docs/Campaigns/2026-10-28_New_Campaign/DECISIONS.md` | `I/DECISIONS.md` | D71 (15:08Z) is the last entry in this snapshot. Refresh through the final decision and record the actual cut-off (e.g. the F1 disposition, the benchmark-freeze ruling) |
 | `Docs/Campaigns/2026-10-28_New_Campaign/STATUS.md` | `I/STATUS.md` | the final board (all rows DONE) |
 | `Docs/Campaigns/2026-10-28_New_Campaign/CHARTER.md` | `I/CHARTER.md` | only if amended |
 | `Docs/PLAN.md` §2 | rewrite from the final STATUS/DECISIONS | "as of" table → final state |
 | `Docs/THEORY_PRIORITIES.md` §5 | the final EVIDENCE_H/L | replace the preliminary findings, keep the "preliminary" banner off only once Sol has accepted them |
 
-Apply the same path redaction as the snapshot (`Docs/PUSH_CHECKLIST.md` §3).
+Apply the same path redaction as the snapshot (`Docs/PUSH_CHECKLIST.md` §2): the placeholders listed there, applied to non-pinned documents only. Never edit a hash-pinned file.
 
 ## 2. Results and analysis outputs (new; small reports and tables only)
 Destination: `Results/2026-10-28_New_Campaign/`.

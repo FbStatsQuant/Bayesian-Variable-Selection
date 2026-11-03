@@ -1,0 +1,44 @@
+cell_no,cell_type,method_id,rule_id,p,scale_key,scenario,quantity,claimed
+1,Q1,SMCBVS,,30,c050,5,bias = mean of e = log Zhat - log Z_exact over main fits with evidence,-4.1e-05
+2,Q1,SMCBVS,,20,c050,3,bias = mean of e = log Zhat - log Z_exact over main fits with evidence,-0.001201
+3,Q1,SMCBVS,,20,c100,6,bias = mean of e = log Zhat - log Z_exact over main fits with evidence,0.000788
+4,Q1,SMCBVS,,30,c050,all,bias = mean of e = log Zhat - log Z_exact over main fits with evidence,-0.000357
+5,Q1,SMCBVS,,30,c050,all,RMSE of e over main fits with evidence,0.023817
+6,Q1,SMCBVS,,20,c050,6,RMSE of e over main fits with evidence,0.012916
+7,Q1,SMCBVS,,20,c050,4,RMSE of e over main fits with evidence,0.015131
+8,Q1,SMCBVS,,20,c100,all,90th percentile (R type 7) of |e|,0.023792
+9,Q1,SMCBVS,,20,c050,2,90th percentile (R type 7) of |e|,0.015802
+10,Q1,SMCBVS,,30,c100,4,90th percentile (R type 7) of |e|,0.019086
+11,Q1,SMCBVS,,30,c100,6,lower-bound coverage = share of main fits with log Zhat + log(0.05) <= log Z_exact,1.0
+12,Q1,SMCBVS,,30,c050,all,lower-bound coverage = share of main fits with log Zhat + log(0.05) <= log Z_exact,1.0
+13,Q2,SMCBVS,,20,c050,all,% of expected cases with SMC HPM = exact HPM (as sets),100.0
+14,Q2,SMCBVS,,30,c100,4,% of expected cases with SMC HPM = exact HPM (as sets),100.0
+15,Q2,SMCBVS,,20,c100,6,% of expected cases with SMC HPM = exact HPM (as sets),100.0
+16,Q2,SMCBVS,,30,c050,3,% of expected cases with exact HPM = truth,94.0
+17,Q2,SMCBVS,,30,c050,6,% of expected cases with exact HPM = truth,81.0
+18,Q2,SMCBVS,,30,c050,1,% of expected cases with SMC HPM = truth,94.0
+19,Q2,SMCBVS,,20,c050,all,% of expected cases with SMC HPM = truth,93.67
+20,Q3,SMCBVS,,30,c100,5,RB PIP: mean over main fits of max_j |PIPhat_j - PIP_exact_j|,0.000153907
+21,Q3,SMCBVS,,30,c050,6,RB PIP: mean over main fits of max_j |PIPhat_j - PIP_exact_j|,0.00179414
+22,Q3,SMCBVS,,20,c050,6,RB PIP: mean over main fits of max_j |PIPhat_j - PIP_exact_j|,0.00027079
+23,Q3,SMCBVS,,30,c100,2,plain PIP: mean over main fits of max_j |PIPhat_j - PIP_exact_j|,0.00180463
+24,Q3,SMCBVS,,30,c050,4,plain PIP: mean over main fits of max_j |PIPhat_j - PIP_exact_j|,0.00360977
+25,Q3,SMCBVS,,20,c100,all,plain PIP: mean over main fits of max_j |PIPhat_j - PIP_exact_j|,0.0017384
+26,Q3,SMCBVS,,30,c050,5,plain PIP: 90th percentile (type 7) of the per-fit max error,0.00362476
+27,Q3,SMCBVS,,30,c100,5,plain PIP: 90th percentile (type 7) of the per-fit max error,0.0024078
+28,Q3,SMCBVS,,30,c050,1,% of expected cases with RB MPM (PIP > 1/2) = exact MPM,125.0
+29,Q3,SMCBVS,,30,c050,5,% of expected cases with RB MPM (PIP > 1/2) = exact MPM,99.0
+30,Q4,EXACT,hpm,30,c050,1,exact recoveries of the truth (count; missing/failed = not recovered),94.0
+31,Q4,EXACT,mpm,20,c050,6,exact recoveries of the truth (count; missing/failed = not recovered),94.0
+32,Q4,SMCBVS,hpm,30,c100,1,exact recoveries of the truth (count; missing/failed = not recovered),95.0
+33,Q4,EXACT,hpm,20,c050,1,exact recoveries of the truth (count; missing/failed = not recovered),96.0
+34,Q4,EXACT,mpm,30,c100,6,exact recoveries of the truth (count; missing/failed = not recovered),98.0
+35,Q4,EXACT,mpm,30,c050,1,exact recoveries of the truth (count; missing/failed = not recovered),90.0
+36,stability,SMCBVS,,30,c050,3,mean over cases of sd(log Zhat) across the 6 seeds (primary + 5 extra),0.00943405
+37,stability,SMCBVS,,30,c100,4,mean over cases of sd(log Zhat) across the 6 seeds (primary + 5 extra),0.024263
+38,stability,SMCBVS,,30,c100,1,% of cases whose 6 seeds all give the same HPM,100.0
+39,stability,SMCBVS,,30,c050,4,% of cases whose 6 seeds all give the same HPM,100.0
+40,stability,SMCBVS,,20,c050,1,mean over cases of max_j sd(RB PIP_j) across the 6 seeds,0.000121666
+41,theory,SMCBVS,,20,c050,1,number of cases with miss_class posterior_miss (SMC HPM != truth and F(truth) <= F(SMC HPM)),2.0
+42,theory,SMCBVS,,30,c050,1,number of cases with miss_class posterior_miss (SMC HPM != truth and F(truth) <= F(SMC HPM)),6.0
+43,theory,SMCBVS,,20,c100,5,median over cases of pi0(S0),9.69616e-13

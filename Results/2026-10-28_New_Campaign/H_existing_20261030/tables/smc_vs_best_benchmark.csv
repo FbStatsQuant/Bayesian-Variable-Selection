@@ -1,0 +1,29 @@
+scale,p,scenario,smc_hpm,smc_mpm,best_benchmark,best_value,hpm_minus_best,hpm_rank_among_9
+c100,500,1,95,92,"SuSiE,Spike-and-slab lasso",99,-4,3
+c100,500,2,96,97,Spike-and-slab lasso,99,-3,4
+c100,500,3,94,93,Horseshoe,100,-6,4
+c100,500,4,91,93,SuSiE,95,-4,2
+c100,500,5,89,90,"SuSiE,Horseshoe",98,-9,4
+c100,500,6,94,94,Horseshoe,99,-5,4
+c100,500,pooled,559,559,SuSiE,585,-26,4
+c100,1000,1,95,94,"SuSiE,Spike-and-slab lasso",100,-5,3
+c100,1000,2,95,95,"SuSiE,Spike-and-slab lasso",96,-1,3
+c100,1000,3,97,97,Horseshoe,100,-3,4
+c100,1000,4,93,94,SuSiE,95,-2,2
+c100,1000,5,84,85,Horseshoe,98,-14,4
+c100,1000,6,96,96,Horseshoe,100,-4,4
+c100,1000,pooled,560,561,"SuSiE,Spike-and-slab lasso",582,-22,4
+c050,500,1,79,74,Spike-and-slab lasso,80,-1,2
+c050,500,2,84,83,Spike-and-slab lasso,84,0,1
+c050,500,3,64,63,Spike-and-slab lasso,53,11,1
+c050,500,4,25,18,"SuSiE,Spike-and-slab lasso",9,16,1
+c050,500,5,59,53,ABESS (ebic1_K37),48,11,1
+c050,500,6,59,47,SuSiE,39,20,1
+c050,500,pooled,370,338,Spike-and-slab lasso,303,67,1
+c050,1000,1,71,70,Spike-and-slab lasso,67,4,1
+c050,1000,2,75,76,"Spike-and-slab lasso,ABESS (ebic1_K37)",64,11,1
+c050,1000,3,67,63,SuSiE,47,20,1
+c050,1000,4,35,24,SuSiE,21,14,1
+c050,1000,5,31,32,Spike-and-slab lasso,28,3,1
+c050,1000,6,61,56,Spike-and-slab lasso,38,23,1
+c050,1000,pooled,340,321,Spike-and-slab lasso,255,85,1

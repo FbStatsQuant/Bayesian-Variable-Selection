@@ -1,0 +1,5 @@
+p,scale_key,fits,completed,resource_limit,status_ok,status_failed,expected,missing
+500,c050,600,600,0,600,0,600,0
+500,c100,600,599,1,599,1,600,0
+1000,c050,600,598,2,598,2,600,0
+1000,c100,600,597,3,597,3,600,0
