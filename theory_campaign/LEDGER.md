@@ -196,3 +196,9 @@ Next: THM-SYNTH (Fable) after METH-AUDIT + THM-INV + LIT-PAR → final theorem l
 - THM-INV ($7.99): inventory done. Largest gaps: E_π[h]/joint inclusion accuracy (masked), two-sided masked Ẑ, no work/depth theorem, P(U), production-method masked consistency beyond LH.
 - HQ METHOD DECISION: v3.1 = v3 + PEL (C1–C5) + LS0 + log_Z NA fix; v3.2 path = per-particle streams, Gram-free scorer. Study (2,400 fits) stands; no re-run now.
 - THM-SYNTH launched (Fable, $25 cap): final theorem list (G1–G6), v1/v2 tiers, HQ plan.
+
+## 2026-11-03 17:20 UTC: THM-SYNTH done; method meeting convened; ABL-START launched
+- THM-SYNTH ($8.4): 19-item list G1–G6, tiers, HQ_PLAN on theory/THM-SYNTH. Input to the later theorem meeting.
+- Concurrency re-run: design p0500_S4_r001 bitwise PASS (serial 672 s → 352 s). S5_r002 running.
+- Felipe: run a method meeting (1 Fable CP, 1 Fable CW, 1 Astra, all high), in a new thread "Methodology - Final meeting". HQ approves the final version, does not vote. Dossier: theory_campaign/MEET-v31/DOSSIER.md.
+- ABL-START launched (Opus, $12 cap): block start vs size-1 blocks vs prior start (vs backfit if exact), ≤20 fits/arm, Owls.

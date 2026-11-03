@@ -1,0 +1,21 @@
+# ABL-START: does the local-to-global (block) start earn its place?
+
+**Context.** Felipe's method meeting ("Methodology: final meeting", dossier `theory_campaign/MEET-v31/DOSSIER.md`; read §1 ground rules and §3 agenda item 1) must decide whether v3's correlation-clustered block start π₀ is worth keeping. Felipe: local-to-global "is not strictly mandatory but it is foundational for scalability and parallel computing, I'm open to dropping it but I need a very serious, irrefutable argument." The theory says the start controls sequential depth: T* = O(1) stages from a favourable start, about log₂A₀ from a masked one (O-STAGES, STG-M). THM-INV counts the block start as favourable on about 1 of 2,394 study fits; API-RESID finds a backfit start favourable on 79–92%. Nobody has measured what the block start buys inside the full SMC. This run measures it. **It is evidence for the meeting, not a method change.**
+
+**Read.** `Docs/Methodology/METHODOLOGY_v3.md` §6; the production engine `Scripts/SMC_BVS/core/` (start construction, block tables, π₀ sampler, calibration); the METH-AUDIT harness, which already drives the production engine on study designs: `theory/METH-AUDIT:theory_campaign/METH-AUDIT/scripts/{ma_core.R,ma_fit.R,ma_exports.cpp}` (re-use it); `theory/API-RESID:theory_campaign/API-RESID/REPORT.md` (the backfit start); `theory/API-AUDIT:theory_campaign/API-AUDIT/REPORT.md`. Study data: `/home/fb31/ls0_work/study/` (manifests, inputs, truths, saved fits; read-only).
+
+**Arms** (everything except the start identical: same calibration rule and caps, same budgets N_e, H_e, T_e, same kernel, local search, HPM, seeds):
+- **A: v3 block start** (production). Where a saved study fit has every metric below, re-use it instead of re-running; say which.
+- **B: blocks of size 1**, i.e. a product of exact single-variable factors (independent-Bernoulli start, the "no local-to-global" limit of the same construction). Prefer implementing it as B = 1 in the production partition code, so the sampler and normaliser stay exact.
+- **C: prior start**, π₀ = the model prior (standard SMC-from-prior).
+- **D (only if cheap):** the backfit start of API-RESID, *only* if it can be sampled exactly with a known normaliser so that Ẑ stays unbiased. Otherwise report why not, and give its start-quality numbers only.
+
+**Designs.** At most 20 fits per arm: 10 study datasets × 2 method seeds, or 20 datasets × 1 seed. Cover all scenarios S1–S6 at p = 500, plus p = 1000 if compute allows; include both favourable and masked/diluted cases. Use fixed seeds; list them.
+
+**Measure, per fit and arm:** stage count T of the final grid and of the pilot; number of rebuilds and tier; status (ok / schedule_limit / resource_limit / …); total score evaluations and wall time (calibration and final, separately); log Ẑ per island and its spread across islands; equal-weight and Ẑ-weighted PIPs; HPM and whether it equals S₀ and the best-known posterior mode; π₀(S₀) and A₀ (start masking depth) where computable. **PIP and Ẑ reference:** use the best available reference (e.g. the pooled result of a long stacked-island run of arm A on a subset, or exact enumeration where feasible); say what you used and its own error.
+
+**Report.** Paired comparisons A vs B vs C (vs D): stages, rebuilds, failures, cost, Ẑ spread, PIP error, HPM accuracy, by scenario. State plainly whether the block start reduces sequential depth and/or improves accuracy at matched compute, where, and by how much, with uncertainty (paired differences, sign counts). End with: "verdict for agenda item 1" in one paragraph: keep (with the measured reason), keep but reframe, or a case to drop (meeting the "irrefutable" bar or not).
+
+**Compute.** Owls only, through `/home/fb31/.config/bvs-hq/owls/owls_run -j 2` (≤ 3 jobs, ≤ 8 cores in total, and HQ may be using 2; read `~/.config/bvs-hq/owls/POLICY.md`). NOTS is not reachable from this machine. A p = 500 fit takes roughly 10–20 min of one core; plan the design count so the whole run finishes in about 4 hours of wall time, and push partial results as they arrive. Write long scripts and reports across several commits.
+
+**Deliverable.** `theory_campaign/ABL-START/REPORT.md` (tables + verdict), `scripts/`, `results/` (small summaries only; no large .rds in git). Honest status words; no method change is made by this run.
