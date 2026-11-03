@@ -57,7 +57,10 @@ Our registry IDs used below:
      T·L·(p + B + 2).
    - That is worse in p than a parallelised ZYVR chain. Either state the depth honestly, or change the move kernel
      (§3.3; method decision for HQ).
-5. **What survives: our candidates, with no literature equivalent found.**
+5. **COUNTEREXAMPLE (numerical, reproducible) to SaM-type feature splitting on a masked pair** (§3.1 G4, [n09]). In an LH-like
+   design the exact posterior recovers S₀ in 20/20 datasets. Split-and-merge recovers it in 5/318 splits that separate the linked
+   pair.
+6. **What survives: our candidates, with no literature equivalent found.**
    - **(a) Coarse-grid stage-count laws** (O-STAGES items 1–3): T* = O(1) favourable; log₂A₀ + O(1) for a masked crossing,
      governed by the *start's* masking depth A₀ and not by the barrier Λ.
    - **(b) Guarantees in the masked-start regime** (T38 (b1-LH)/(b2-LH)). Generic SMC complexity bounds degrade
@@ -154,9 +157,14 @@ study size. The same holds for our own asymptotic Thm 1 (T03♯, thresholds ≈ 
 - **G3.** A theorem tying the depth of a parallel BVS sampler to a design-dependent quantity (A₀, a property of the start built
   from correlation blocks). Nobody analyses correlation-clustered splitting. SaM and Coats et al. split arbitrarily or
   anti-cluster; Papaspiliopoulos–Rossell cluster but give no guarantee off block-diagonality.
-- **G4 (could prove, cheap).** A "no-split" impossibility contrast: on LH, any split that separates a linked pair makes SaM
-  Stage I discard a true variable with probability → 1. This would be a short COUNTEREXAMPLE to SaM-type guarantees on our
-  family. Its premise would be Song–Liang Thm 5 read in the paper itself. **OPEN; not attempted here.**
+- **G4. SaM-type splitting fails on a masked pair: COUNTEREXAMPLE (numerical) + PROOF SKETCH (analytic)** [n09],
+  `scripts/sam_lh_demo.py`, seed 20261103.
+  - Design: an LH-like design (our construction; p = 16, n = 200).
+  - Result at β = 1: the exact full posterior recovers S₀ in 20/20 datasets. SaM recovers S₀ in **5/318** random splits that
+    separate the linked pair (median Stage-I PIP of the masked variable 0.010), against 265/282 when the pair stays together.
+    At β = 0.6 the separated count is 0/318.
+  - The analytic sketch uses Song–Liang Thm 5: the masked variable has a zero within-split projection coefficient. The step
+    "PIP → 0" is not verified against the paper.
 
 ### 3.2 Threats: results that make ours standard, weaker or redundant
 - **TH1 (high). ZYVR + parallel neighbour scoring.**
@@ -245,8 +253,8 @@ study size. The same holds for our own asymptotic Thm 1 (T03♯, thresholds ≈ 
   - A single-island relative-variance bound in the masked regime is **OPEN**.
 
 ### 4.2 Evidence
-No new numerics (a literature task). The evidence consists of quoted statements from primary sources (notes 01–08) and these
-published empirical findings:
+- One script: `scripts/sam_lh_demo.py`, outputs in `results/` [n09]; the G4 COUNTEREXAMPLE.
+- Quoted statements from primary sources (notes 01–08), plus these published empirical findings:
 - Coats et al. 2026: F1 falls to 0.126 at ρ = 0.99 with contiguous splits;
 - Li et al. 2022: specificity falls with AR(1) ρ;
 - Ma 2015: PIPs are "unreliable" under high correlation;
