@@ -172,3 +172,13 @@ LH-LOCK (Fable, CW) failed on a 64K-output-token API error before its first comm
 
 ### 23:27 UTC: literature phase started on the API credit
 LIT-SMC, LIT-MCMC, LIT-STAT, LIT-VENUE (Opus, $8 cap each). Then LIT-SYNTH (Fable decision memo) and an Astra cross-check of the novelty verdict. Balance $160.34 before these. Felipe: a new $200 API credit arrives 2026-11-15, also for theory.
+
+### 2026-11-03 status: literature phase + resumes finished (all API workers idle)
+Costs: LIT-SMC $2.81, LIT-MCMC $3.56, LIT-STAT $4.01, LIT-VENUE $2.78, API-RESID resume $2.41, API-AUDIT resume $1.47 → ≈ $17.0; est. balance ≈ $143.
+- LIT-SMC: O-STAGES G(i)+Lemma 1 = Štefankovič–Vempala–Vigoda 2009 (cite as known); item 4 = Syed et al. global barrier; Prop 2 mostly standard (Dai et al. 2022, Markov); O-PW2 Thm A possibly = Cérou–Del Moral–Guyader 2011 Thm 1.4 (unchecked). Gaps: discovery, masked start = low persistence with exact cost, n-indexed Ẑ/PIP, favourable T* = O(1), certificates.
+- LIT-MCMC: published mixing theorems need R > M; fails for OUR target at study scale (12/12, factor ≥ p^0.87; Prop OB sketch) → rapid-mixing theorems do NOT formally cover our target. No published BVS MCMC-slow/SMC-fast separation (OPEN). Masked theorems fix a problem of the start, not beat MCMC.
+- LIT-STAT: Thm 1 modest extension of Rossell 2022; T03♯(3) = Rossell Prop 1 verbatim (must cite); BB(1,p) tail novelty narrow (cap K ≍ n); Prop 1 and Prop M bookkeeping/motivation.
+- LIT-VENUE: no theorem anywhere about an SMC-BVS output; genuinely ours: Thm 4/N200 error split, masked lower bound + repair, SMC-BVS consistency. Venue: Biometrika conditional; JCGS/BA/EJS/S&C comfortable; JRSS-B stretch. Missing: real data, head-to-head vs PARNI/TGS/SuSiE/SSL, growing-n sims, non-LH main theorem.
+- API-RESID: no common-σ̂² pilot (floods); backfit start favourable in 78.7%; accuracy can move by ≤ 6 of 2,400 fits (565 posterior misses).
+- API-AUDIT: SR, GUARD, scan-before-limit, IND-T hold; LS0 exists only in the O-LS0 test export, not the production core.
+Next: LIT-SYNTH (Fable) + Astra cross-check of the novelty verdict, then Felipe's Phase 2 checkpoint.
