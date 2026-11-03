@@ -190,3 +190,9 @@ Felipe: keep current theory goals. Thesis/positioning = no BVS method is paralle
 Track A: METH-AUDIT (Opus, $15) — work/depth map, theorem robustness under parallel execution, candidate changes (ADDITIVE vs WORKHORSE, real issues only), ≤20-seed check if needed.
 Track B: THM-INV (Opus, $12) — component→theorem map, theorem ledger with literature verdicts, coverage vs proposal and Song–Liang, missing literature themes. LIT-PAR ($10) running.
 Next: THM-SYNTH (Fable) after METH-AUDIT + THM-INV + LIT-PAR → final theorem list; Astra cross-check; CW complements. Inputs: theory_campaign/inputs/ (proposal, Song–Liang 2015).
+
+## 2026-11-03 16:50 UTC: METH-AUDIT and THM-INV done; method decided; THM-SYNTH launched
+- METH-AUDIT ($5.89): ship v3 unchanged + parallel execution layer (concurrent islands bitwise, Prop W). No WORKHORSE change. Depth factor p+B+2 per round kept and stated honestly. Gap: Ẑ-weighted PIP missing from core. Worker exited while waiting on runs: only smoke + design p0500_S1_r001 completed (bitwise PASS; R=32×312 split max ΔPIP 2e-4); its "3/3" headline is an overclaim. HQ re-running S4_r001 and S5_r002 on Owls.
+- THM-INV ($7.99): inventory done. Largest gaps: E_π[h]/joint inclusion accuracy (masked), two-sided masked Ẑ, no work/depth theorem, P(U), production-method masked consistency beyond LH.
+- HQ METHOD DECISION: v3.1 = v3 + PEL (C1–C5) + LS0 + log_Z NA fix; v3.2 path = per-particle streams, Gram-free scorer. Study (2,400 fits) stands; no re-run now.
+- THM-SYNTH launched (Fable, $25 cap): final theorem list (G1–G6), v1/v2 tiers, HQ plan.
