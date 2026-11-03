@@ -415,3 +415,294 @@ states as limitations: the as-coded masked T_n law (Conjecture P), the per-round
 upper bound on E[W²|𝓒]. v2: Conjecture P (HQ-STAGES-2), Cor V, a masked E[W²] bound (HQ-VAR).
 
 *(continued in Part B: G4, G5, G6.)*
+
+---
+
+## G4. Why the bridge; why the merge alone fails
+
+### S1. Theorem 2 (the start: deterministic mass, favourable rate, masking law, dilution identity)
+
+**(i) Statement.** Blocks C₁..C_J (complete linkage, cut, next-fit packing; |C_b| ≤ B), tables r_b, π₀ = γ₀/Z̄₀.
+(a) *Deterministic* (T22(i)(ii)(iv)): for any feasible reference S° with AGG quantities (q, e), π₀(S°) ≥ (1−q)^{s+1}/(1+e)^s;
+the odds π₀(S₀)/π₀(S°) are exact (product of table ratios); the bridge never puts less mass on S₀ than min(π₀(S₀), π(S₀)).
+(b) *Favourable* (T22(iii), EXP′): under EXP′, VIS, NL_η, NL_avg(κ), 1 − π₀(S₀) = O_P(2^B √(log n) n^{−κ}); FAV-ThmA/B give a
+2^B-free rate on iid block-diagonal designs.
+(c) *Masked* (T27(i), Thm3/4-EXP): if c true variables mask each other along an addition chain (H2, H3), then
+π₀(S₀) = p^{−c}n^{−c/2}e^{O_P(1)}. On LH exact Gram this holds with no open hypothesis (W1-EXP Thm 5).
+(d) *Dilution identity* (DIL-E): for any data and partition, −log π₀(S₀) = V + C − log A with V = Σ_b softplus(−λ_b) ≥ 0
+(truths invisible to their own table), C ≥ 0 (table mass on sub-models other than ∅ and S₀∩C_b), A the non-product part
+of BB(1,p); the exact joint law of (#truths, #non-truths) under π₀ (Thm R) gives π₀(𝓡_d) by a two-variable convolution.
+On 480 regenerated study fits V carries 83% of the deficit; median π₀(S₀) = 10^{−15.7}, median π₀(𝓡₂) = 0.79.
+
+**(ii) Plainly.** The merge (= π₀, Song–Liang's "merged" object) is exactly computable, carries the truth when blocks
+see it, and provably loses it by a polynomial factor when true variables cancel; at n = 200 it loses it by σ²-dilution
+(7 of 14 truths invisible). This is why a correction step exists at all, in two sentences, and it is the input A₀ to D2.
+
+**(iii) Status.** (a) PROVED-LOCKED (wave 1). (b) PROVED-LOCKED CONDITIONAL (EXP′ XF VERIFIED* fixed design; FAV author
+only). (c) PROVED-LOCKED CONDITIONAL (H2, H3); Thm3/4-EXP XF VERIFIED; on LH no open hypothesis. (d) DIL-E/E1/R/N PROVED,
+XF VERIFIED (A-REV9); DIL-DM(i) ERROR (do not cite). Components: THM-INV row 4.
+
+**(iv) Novelty.** (c),(d): NEW ("strongest novelty claim", LIT-STAT; "nobody proves a natural exactly-sampleable start
+fails and then which moves fix it", LIT-VENUE G3). (a): block start KNOWN (Papaspiliopoulos–Rossell 2017, exact only
+for block-diagonal XᵀX); cite as the precedent. Framing citation: Woodard–Schmidler–Huber 2009 (low persistence).
+
+**(v) Difficulty.** S (restatement). Never combine (b) and (c) on one sequence. Put (b) in the supplement: the study is
+favourable in 1/2,394 fits and the T22(iii) rate is vacuous at n = 200.
+
+**(vi) Lean.** (a) is finite algebra on tables: certifiable (T22(i) is a product inequality). (d) is an exact identity on
+a finite partition: certifiable and a good first Lean target of G4. (b),(c): Gaussian probability, cited/prose.
+
+**(vii) Depends on.** Nothing; feeds D2 (A₀), S2, C1, R5.
+
+### S2. Theorem SEP and Lemma KL (why the merge alone, or a one-shot correction, fails; the exp(KL) cost scale)
+
+**(i) Statement.** LH exact Gram with cancellation depth c; Q* := p^c n^{c/2}; Mstat := log π₀(S₀) + log Q*.
+(a) *SEP-A (iid discovery):* P₀(S₀ scored by Q iid π₀ draws plus the tables) → 0 if Q/Q* → 0 and → 1 if Q/Q* → ∞. With
+p ≍ n^a, a polynomial budget n^α fails iff α < c(a + ½); the iid exponent exceeds v3's polynomial ceiling exponent
+a + max(1, a) iff c ≥ 2.
+(b) *SEP-B (one-shot importance correction from π₀ to π):* 1 + χ²(π‖π₀) ≥ Q*e^{O_P(1)}; the relative variance of the
+self-normalised estimator with Q draws is (Q*/Q)e^{O_P(1)}, and its estimate of π(S₀) is exactly 0 w.p. → 1 below Q*.
+(c) *Lemma KL (NEW-SYNTH, elementary):* for any π, π₀ on Ω with δ₁ = 1 − π(S₀),
+KL(π‖π₀) ≥ (1 − δ₁)·log(1/π₀(S₀)) − log 2.
+Proof: data processing on the partition {S₀, Ω∖S₀} gives KL(π‖π₀) ≥ kl(1−δ₁ ‖ π₀(S₀)) ≥ (1−δ₁)log((1−δ₁)/π₀(S₀)) +
+δ₁ log δ₁ ≥ (1−δ₁)log(1/π₀(S₀)) − h(δ₁) with h ≤ log 2. ∎ (PROOF SKETCH only because unreviewed; the inequality is
+two lines.) Consequently, under T27(i), the Chatterjee–Diaconis sample size exp(KL(π‖π₀)) for importance sampling from
+π₀ to π is ≥ ½·Q*^{1−δ₁}·e^{O_P(1)}: the exp(KL) scale and SEP-B's Q* agree (THM-INV §4b B1 called this identification
+"my inference, unproved"; Lemma KL makes it a one-line corollary).
+(d) *What is not separated* (W7-SEP items 1, 4): on LH, one greedy search from the start mode already scores S₀ (R3 +
+R5(b1-LH)); there is no super-polynomial separation between the bridge and a greedy search in the frozen setting (c ≤ s₀
+fixed). The paper may say "moving off the start is needed", **not** "tempering is needed" (E-SPINE decision).
+
+**(ii) Plainly.** Keeping the merge as the answer (SL's Stage-1 object, or a product-of-blocks posterior) or correcting
+it in one importance-sampling shot costs p^c n^{c/2} draws; the exp(KL) law says this is necessary and sufficient for any
+one-shot scheme. The bridge's job is to make the correction's cost logarithmic in A₀ (D2) instead of exponential in it.
+
+**(iii) Status.** SEP-A/B PROVED, XF VERIFIED (A-REV9). Lemma KL PROOF SKETCH (this run; checked numerically in
+`scripts/check_lemmas.py`). Chatterjee–Diaconis 2018 Thms 1.1/1.2 KNOWN—CITE. (d) PROVED (candidate, W7-SEP), with its
+COUNTEREXAMPLE to the task's own claim (a). Components: THM-INV row 4 (F).
+
+**(iv) Novelty.** SEP NEW (LIT-SMC G2, LIT-MCMC Θ4: no BVS tempering separation exists in the literature); Lemma KL
+elementary; the composition with Chatterjee–Diaconis is the paper's "why one-shot fails" sentence.
+
+**(v) Difficulty.** S. Route: restate SEP-A/B; add Lemma KL with its proof; cite CD18.
+
+**(vi) Lean.** Lemma KL: yes (finite KL on a finite set, log-sum inequality; Mathlib has `klDiv`/`Real.log` tools), a
+model Lean target. SEP: Gaussian probability, prose.
+
+**(vii) Depends on.** S1(c).
+
+### S3. Proposition M (naive merge of block fits fails) — DROPPED as a theorem
+
+**Status.** A-DRAFT Prop M / SHARE-M(b): ERROR (A-REV3/A-REV6); FD-NM ERROR, repair pending. LIT-STAT: "known phenomenon
+... for motivation, not a contribution; refutes a naive union, not Song–Liang". **Decision:** drop. What survives: W5-B2ENV
+Prop M-LH (XF VERIFIED as a restricted fixed-coefficient replacement) as a one-sentence remark, and S2 as the quantitative
+statement. The Song–Liang comparison is C1, not this.
+
+### S4. Weight stability (proposal §5.3) — supplement remark only
+
+O-WSTAB WS1–WS8 PROVED (no review), W(a–f) XF VERIFIED under H-ORTH and an ideal grid; WS6e CONJECTURE, WS8d OPEN; FD-W(a)
+PROVED-UNDER, (b) PROOF SKETCH, (c) CONJECTURE. Proposal §5.3's "weak cross-block dependence ⇒ bounded weight variance"
+is matched only in the orthogonal-type idealisation (THM-INV §3a). **v2**; v1 cites Frazier et al. 2023 Assumption
+6(iv) (χ²-type proposal condition) as the generic precedent and gives the ESS-0.9 schedule as the method's answer.
+
+**Group G4 tiering note.** v1: S1(a),(c),(d) in the main text (Thm 2), S1(b) in the supplement, S2(a)–(c) as Theorem SEP +
+Lemma KL + a cited CD18 corollary, S2(d) as wording discipline. Dropped: S3. v2: S4.
+
+---
+
+## G5. Correlation robustness versus split-and-merge
+
+### C1. Theorem SL (an analytic separation from Song–Liang's split-and-merge on a masked family) — NEW-SYNTH
+
+**Setting (from the JRSS-B text; SL digest, THM-INV D10).** Song–Liang's procedure (SL §3.1): uniformly random
+partition of the P_n predictors into K_n subsets of size s_n = P_n/K_n (recommended K_n = O(√P_n), SL §6); Stage 1 per
+subset: BVS on D_n^{s} = (y, X_s) with priors σ² ~ IG(a₀,b₀), β_ξ | ξ ~ N(0, σ²V_ξ), π(ξ) ∝ λ_s^{|ξ|}(1−λ_s)^{|s|−|ξ|}1{|ξ| ≤ s̄},
+λ_s = |s|^{−γ}; selection of predictors whose marginal inclusion probability passes a threshold (FDR rule at level α₁);
+iterative re-selection on the remainder (justified by Condition 5: |cov(x_t, y)| > 0 for every true predictor; capped at 2
+iterations); merge S̃ = ∪ s̃_i; Stage 2: BVS on (y, X_S̃) with prior r_n/p_n. Theorem 4 / Corollary 2 with eq. (19): for a
+fixed subset s, the subset posterior concentrates on the KL projection f₀ with β₀ = Σ_s^{−1}cov(x_s, y), and a true
+predictor t ∈ s is asymptotically selected iff β_{0,t} ≠ 0 (the "only if" direction is stated in the text after Cor 2, not
+proved there; see crux (ii)). SL's output is the posterior restricted to S̃ (prior mass 0 outside S̃; SL §7).
+
+**Our family.** LH exact Gram (W1-EXP §4): independent equicorrelated groups of size g (correlation ρ), c linked pairs of
+hubs (j_{a_i}, j_{b_i}) with corr(j_{a_i}, j_{b_i}) = ψ_i, 0 < |ψ_i| < ρ, θ_{j_{b_i}} = −ψ_iθ_{j_{a_i}}, visible hubs
+θ_{j_h} = β_h, null groups; X′X = (n−1)Σ_LH, p ≤ n − 1. Masked hubs M = {j_{b_i}}; S° = S₀ ∖ M.
+
+**(i) Statement (proposed).** Let E_n be the event that, for some i, the masked hub j_{b_i} is *isolated* in its subset:
+its subset contains neither j_{a_i} nor any other member of j_{b_i}'s group.
+(a) *Isolation probability (finite combinatorics):* for a uniformly random equipartition, P(a given other column shares
+j_{b_i}'s subset) = (s_n − 1)/(P_n − 1), so P(E_nᶜ) ≤ c·g·(s_n − 1)/(P_n − 1) ≤ c·g/K_n, and P(E_n) → 1 whenever K_n → ∞
+(in particular under SL's K_n = O(√P_n)); at fixed K_n = 2 and g = 1 (LIT-PAR's design), P(E_n) = ½ − o(1).
+(b) *Loss of the hub on E_n (exact-Gram orthogonal-null lemma):* on E_n, x_{j_{b_i}} is orthogonal to every other
+column of its subset and x_{j_{b_i}}′μ = (n−1)(θ_{j_{b_i}} + ψ_iθ_{j_{a_i}}) = 0 exactly, so in its subset x_{j_{b_i}}
+is an orthogonal null column: Condition 5 fails exactly (cov = 0), β_{0,j_{b_i}} = 0 in every iteration, and under SL's
+priors π(j_{b_i} ∈ ξ | D_n^{s}) = O_P(λ_s·n^{−1/2}) → 0. Hence P(j_{b_i} ∈ S̃ | E_n) → 0 and SL's output cannot contain
+j_{b_i}: P(SL output = S₀) ≤ P(E_nᶜ) + o(1).
+(c) *The exact posterior is not the problem:* on the same family 1 − π(S₀) → 0 (W1-EXP Thm 5(d) / T03♯), and SL's own
+Theorem 3 (sure screening of identifiable predictors) applies to the full posterior: the failure is the split.
+(d) *v3.1 on the same family:* the final stage targets π exactly and all of V1 holds; with LS0, P(𝒪 ∩ {Ŝ⁺ ≠ S₀}) → 0
+(R5 (b1-LH), XF VERIFIED); without LS0, the same on A-REV7's STAB-LH subfamily (R5 (b2-LH)); the Ẑ-weighted PIPs and joint
+inclusions satisfy A1.
+(e) *Remark (clustered splits):* if the split keeps j_{b_i} with its group, β_{0,j_{b_i}} = ψ_iθ_{j_{a_i}}([Σ_bb^{−1}]₁₁ − 1) ≠ 0
+(the members carry the marginal signal −ρψβ), so Stage 1 retains the hub: SL's theory does not analyse clustering, and
+a clustered split still loses power (LIT-PAR note 09: 3/20 at β = 0.6). Our blocks are used only for the start.
+
+**(ii) Plainly.** The thesis sentence's first half as a theorem: "in split-and-merge, correlation breaks correctness":
+SL's correctness condition (Condition 5 / β_{0,t} ≠ 0) is violated *exactly* by a cancelling pair, and random splitting
+isolates the masked variable with probability → 1 under SL's own K_n, after which no later stage can recover it (prior
+mass 0). v3.1's correctness has no such condition. A referee will ask for exactly this (the task's G5).
+
+**(iii) Status.** COUNTEREXAMPLE (numerical, reproducible: LIT-PAR G4, p = 16, n = 200, 5/318 separated splits vs 20/20 for
+the exact posterior at β = 1; 0/318 at β = 0.6) + PROOF SKETCH (this run, (a)–(e) above; the isolation argument is new and
+differs from LIT-PAR's sketch, which did not consider the hub's group). The numerical seed used a singleton masked
+variable (g = 1) and Liang's slides; it should be re-run on the W1-EXP LH family with g ≥ 2 and K ∈ {2, 4, √p} to show
+(a)'s dependence on K (first step of HQ-SL). Components: THM-INV §3b rows "Thm 4/Cor 2" and "UQ of the merged output".
+
+**(iv) Novelty.** NEW. No analytic SaM failure is published (LIT-PAR; SL digest: SL has no theorem for the composed
+procedure). Cite SL Thm 4 / Cor 2 + eq. (19) + Condition 5 from the JRSS-B text, never "Thm 5" from slides.
+
+**(v) Difficulty and route.** M. Crux (ii): the orthogonal-null PIP → 0 under SL's IG + Gaussian + λ_s prior. With known
+σ² the inclusion posterior of an orthogonal column factorises exactly and the Bayes factor of a null column is O_P(1)·
+(1 + nV)^{−1/2}; with σ² integrated, use the standard Laplace/ratio bound (one page). The FDR rule: a variable whose PIP
+→ 0 is not selected provided the data-driven threshold is bounded away from 0, which holds when S̃ ≠ ∅ w.p. → 1 (the
+visible hubs give PIPs → 1); otherwise state the theorem for a fixed threshold q ∈ (0,1) and add the FDR rule as an
+escalation. Also to check: SL's cap s̄ and the iteration cap do not matter (an orthogonal null column is never selected at
+any iteration). The LH-iid (random design) version replaces the exact orthogonality by population orthogonality plus
+concentration (mirror W3-PXN): **v2**.
+
+**(vi) Lean.** (a) is finite combinatorics (hypergeometric sharing probability for a uniform equipartition): certifiable.
+(b)'s identity x′μ = 0 and the orthogonality are finite linear algebra on Σ_LH: certifiable. (e)'s coefficient formula is
+a 2×2-type inverse of an equicorrelation matrix: certifiable. The PIP → 0 step rests on cited probability.
+
+**(vii) Depends on.** S1(c) (LH masking), R1 (c), R5 (d), A1 (d), V1.
+
+**Group G5 tiering note.** v1: C1(a)–(e) on exact-Gram LH, with (b)'s PIP step as the one proof obligation; the numerical
+counterexample re-run on the LH family. v2: LH-iid; the study's dilution designs (where SL's Condition 5 holds but the
+within-split projection coefficients are small; no analytic statement yet).
+
+---
+
+## G6. Selection accuracy of the reported output (objective 3)
+
+### R1. Theorem 1 (posterior consistency: T03♯ with T02(i♯), T02(ii♯))
+
+**(i) Statement.** R1 (s₀ fixed, p ≤ n^A), G, R, SE_λ(j₀), SE_w(m♯_n; g₀) with g₀ fixed, BM-∞ or BM(c > c₀), fixed design.
+Then 1 − π(S₀) = O_P(√(log n/n)); PIP_j is within that distance of 1{j ∈ S₀}; the HPM and MPM of π equal S₀ w.p. → 1;
+P(S† ≠ S₀) ≤ 2E₀[1 − π(S₀)]; without beta-min, large signals still get PIP → 1. T02(i♯): the exact BB(1,p) size tail
+replaces the 2^{−m} tail (m_n ≈ s₀ + O(s₀ log n/log p)).
+
+**(ii) Plainly.** The target is right: with enough data the exact posterior concentrates on the truth. Without it,
+scoring the truth would not help (THEORY_PRIORITIES story (a)).
+
+**(iii) Status.** T01–T03 PROVED-LOCKED (wave 3; external review queued); T03♯ PROVED, SF W2-VT03R + XF A-REV2 VERIFIED;
+the onset sentence ERROR (repaired, W6-FIXREV2 §1.2). Thresholds n ≳ 2·10⁶; beta-min ≥ 43× above the study's signals; SE
+impossible at n = 200. Components: THM-INV row 1.
+
+**(iv) Novelty.** MODEST extension of Rossell 2022 (Bayesian Anal. 17(2)) and Moreno–Girón–Casella 2015; T03♯(3) is
+Rossell's Prop. 1 verbatim: KNOWN—CITE. LIT-VENUE: "do not sell it". **(v)** S (restatement; disclosure sentence).
+**(vi)** Lean: T02(i♯)'s exact tail is a finite combinatorial inequality on binomial coefficients: certifiable; the rest
+is Gaussian probability, prose. **(vii)** Depends on nothing; feeds R4, R5, A1(d), A3, C1(c).
+
+### R2. Proposition 1 (Bayes rules; size-prior ceiling; ties)
+
+**(i)** T07: HPM minimises 0–1 loss, MPM Hamming loss; PIP error bounds the excess MPM risk; no size-only prior repairs a
+same-size swap; T06(i): two supports tie for every y iff their projections agree. **(ii)** Justifies reporting the HPM and
+names the within-size swap as the one error no size prior fixes (the c = 0.5 study misses). **(iii)** PROVED-LOCKED; XF
+A-REV4 VERIFIED* (data paragraph ERROR, relabel pending). **(iv)** FOLKLORE (Barbieri–Berger 2004 Thm 1; Scott–Berger
+2010): cite; only the sharp ceiling (iii′) is ours. **(v)** S; remark. **(vi)** Lean: sorry-free (T07Bayes.lean, 28
+declarations). **(vii)** none.
+
+### R3. Theorem 3 (exact greedy repair: Theorem A; LS-score; Lemma M)
+
+**(i) Statement.** EX-A; completed scans; production tie-broken greedy map. (A1)–(A4): under TD′_∞ on Lat(S°) (every
+progress move strictly improves F and no non-progress move beats the best progress move), the local search from any
+C ∈ Lat(S°) with ℓ ≥ τ(C) reaches, scores and certifies S₀ in τ(C) ≤ Φ(C) moves; (A4) necessity with its quantifier;
+LS-score: LS0 (centre S̃₀ = S° emitted, scans completed) scores S₀ within max{Φ(S°) − 1, 0} moves; Lemma M (= Lemma SC):
+the score-comparison margin m_n ≥ M_n√(log n/n) makes TD′ hold w.p. → 1 under SE on the compared sets.
+
+**(ii) Plainly.** From a near-truth centre the deterministic local search finds the truth in finitely many moves; with
+LS0 the centre is the start mode, which the masking law puts in Lat(S°). It is the paper's one exact finite-n statement
+about the search.
+
+**(iii) Status.** Theorem A PROVED, SF VERIFIED, XF A-REV2 VERIFIED*; cap-free lattice restatement ERROR (A-REV5): keep the
+capped lattice; LS-score PROVED, XF VERIFIED (A-REV8; move count repaired V17); Lemma M PROVED, XF VERIFIED (A-REV8).
+Literal T37/TD retired (Prop1-TD, CEX1/2 COUNTEREXAMPLE); H24 retired (CE1/CE2). Data: LS0 changed 0/2,394 HPMs; the
+final local search repaired 0 fits (all misses are posterior misses). Components: THM-INV rows 11, 12.
+
+**(iv) Novelty.** "Unsurprising given YWJ/ZYVR" (LIT-SMC); must cite Gamarnik–Zadik Thm 2.7 and YWJ Lemma 4 (LIT-MCMC);
+the deterministic exact finite-n form is the difference. **(v)** S (done). **(vi)** Lean: sorry-free (T37Greedy.lean,
+T37Lattice.lean; Astra round 2 GREEN); LS-score's move count is a short addition. **(vii)** feeds R5(b1).
+
+### R4. Theorem 4 (composition for every n: T21(C1), T38(0), N200, Lemma RO)
+
+**(i) Statement.** EX-A; Ŝ the ≻-maximum of the scored set 𝒮 on the output event 𝒪; S† the ≻-maximum of Ω.
+(a) T21(C1)/T38(0): P(𝒪 ∩ {Ŝ⁺ ≠ S₀}) ≤ 2E₀[δ₁] + D_n, D_n := P(𝒪̄ ∩ {S₀ ∉ 𝒮̄⁺}); (0_H) adds D_n^{sl} under the HPM convention.
+(b) N200: P(U ∪ {Ŝ ≠ S₀}) = P(U) + P(𝒪, Ŝ ≻ S₀) + P(𝒪, S₀ ≻ Ŝ) ≤ P(U) + Π(X) + P(𝒪, S₀ ∉ 𝒮), and ≥ P(U) + P(𝒪, S† ≠ S₀) −
+P(𝒪, S† ∉ 𝒮), with Π(X) := P₀(S† ≠ S₀ | X) the design's posterior-miss probability; Π(X) ≤ 2E₀δ₁; lower bracket
+max_e p_e ≤ P₀(L | X) ≤ Π(X).
+(c) Lemma RO: on 𝒢ᶜ the outputs equal the potential run's.
+
+**(ii) Plainly.** Wrong report ⇒ no output, or the posterior itself is wrong, or the truth was never scored. At n = 200
+the three terms are: 6/2,400 (measured), 5–75% per cell (computed lower bracket), 0/2,394 (measured). It is the
+story's spine and the only inequality that is non-vacuous at n = 200.
+
+**(iii) Status.** T21(C1) PROVED-LOCKED (CONDITIONAL in its routes; (C1) itself is unconditional); T38(0) PROVED, XF
+VERIFIED (A-REV1/5/8); N200 PROVED (elementary, author only); Π(X) upper bound OPEN; Lemma RO XF VERIFIED. Components:
+THM-INV rows 1 (F), 11, 14.
+
+**(iv) Novelty.** Elementary; the 2E₀δ₁ term KNOWN—CITE (Rossell 2022 Prop 1); the "never scored" split is informally in
+García-Donato & Martínez-Beneito 2013 §4; Hou–Wang–Atchadé arXiv:2407.20580 Thm 2 threatens "first finite-n" wording
+(LIT-VENUE): do not use it. **(v)** S. **(vi)** Lean: t21_C1 sorry-free (fidelity GREEN); N200 Lemma 1 and (b) are the
+same finite set argument: certifiable in an afternoon. **(vii)** R1 (δ₁), R5 (D_n), R6 (P(U)).
+
+### R5. Theorem 5 (two-regime consistency of the reported HPM: T38)
+
+**(i) Statement.** As in `T38_STATEMENT.md` v3 Part I.C, with v3.1 = v3 + LS0 as *the method* and "v3 as run" as the
+no-LS0 variant. Assume EX-A, EX-S, CAL, SR, GUARD, (P) on R1. (0) as R4(a). (a) Favourable: under (F), D_n → 0. (b1) LS0
+route: under (M1) P₀(π₀(S°) > ½) → 1, (M2) POP-LAT(S°, m_n), (M3) eigenvalue floor, G, OP-LS0: D_n → 0. (b1-LH): on LH
+exact Gram with S° = S₀ ∖ M all of (P), (M1)–(M3) hold, so with LS0 P(𝒪 ∩ {Ŝ⁺ ≠ S₀}) → 0 with no open statistical
+hypothesis; iid final draws miss S₀ when n^{1−c/2}p^{−c}log²n → 0. (b2-LH): no LS0, every c, any frozen grid, under
+STAB-LH: P(S₀ ∉ 𝒮 | 𝓒) ≤ Nπ₀(𝒩ᶜ) + NT_e a_n + (1 − c₀ + o(1))^N → 0; explicit Astra subfamily g = 9, c = 2, ρ = 0.4, ψ = 0.2
+with STAB margin ≥ 0.4032 and π₀(S₀) = (p√n)^{−2}e^{O_P(1)}. (c) Cost: score evaluations ≤ T32(i)'s ceiling + the LS0 term
+1 + (ℓ+1)max_k[p + k(p−k)]: polynomial in n.
+
+**(ii) Plainly.** The reported model is the truth w.p. → 1 − limsup P(U) in both regimes, for the shipped method, on an
+explicit correlated family where the start is masked; and also without LS0 on a subfamily. This is the output theorem
+no SMC-BVS paper has (LIT-VENUE G1), and with LS0 in the shipped method (task (f)) the XF-verified (b1) route is a
+theorem about the method as shipped.
+
+**(iii) Status.** (0) PROVED XF VERIFIED; (0_H) PROVED XF VERIFIED; (a) PROVED-UNDER (F) (ORTH joint family PROOF SKETCH);
+(b1) PROVED-UNDER (M1)–(M3), XF VERIFIED (A-REV8); (b1′) PROVED (implication) XF VERIFIED; (b2) PROVED (implication),
+DELIV OPEN in general; (b1-LH) PROVED (candidate), SF W5-VMASK, XF VERIFIED (A-REV8); (b1′-LH) PROVED-UNDER, XF VERIFIED
+qualitative, rate GAP; (b2-LH) PROVED-UNDER STAB-LH, XF VERIFIED conditional (A-REV7), STAB certificate Astra-authored,
+Claude-VERIFIED (API-VSTAB); (b1-LH-iid) PROVED (candidate), XF GAP (A-REV3/6/8); (c) PROVED-UNDER T32(i), displayed rate
+GAP. Not covered: the study's generator (groups of 5, p ≫ n), LH-iid, general DELIV, P(U) → 0. Components: THM-INV
+rows 6, 11, 12.
+
+**(iv) Novelty.** NEW for the paper's target and method; "a corollary of YWJ/ZYVR/Chang–Zhou under *their* prior"
+(LIT-MCMC; D1 settled in REPORT §4: say both). Mathews–Schmidler 2024 template for (a) (LIT-PAR TH6: check whether (a)
+reduces to their Thm 1; if so, say so).
+
+**(v) Difficulty.** v1: S for assembly (statement of record exists). Decision needed (HQ/Felipe): headline (b1-LH) with
+LS0 (the shipped method) and (b2-LH) on the subfamily as the no-LS0 corollary; the c = 2 clause stays as repaired (V18).
+v2: LH-iid (close the Λ(a)/Tr(c) GAP), the study generator (needs a partition law for 2g ≤ B packing: W7-PART CE2 says
+unequal groups are not merged), DELIV general.
+
+**(vi) Lean.** The composition (0) is sorry-free; LS-score and the Lat move table are finite (T37Lattice): feasible;
+(M1)–(M3) and (b2-LH)'s population bounds are probability: prose. **(vii)** R1, R3, S1(c); feeds R4, A3, C1(d).
+
+### R6. Delivery of output: P(U) → 0 — stated as a limitation in v1
+
+No theorem bounds P(resource_limit), P(schedule_limit), P(numerical_failure), P(grid_unconverged) (THM-INV §5.4). Every
+consistency statement is joint with "output exists" and is **not** P(wrong | output). v1 reports P(U) = 6/2,400 (all S5
+wall-time stops on one CPU with serial islands) and notes that under v3.1 (concurrent islands, Prop W) the same
+allocation gives ≈ 4× headroom, so these are the only fits v3.1 can change; re-running them is the cheapest way to
+remove the caveat (METH-AUDIT §9). v2: HQ-DELIV.
+
+### R7. Finite-n upper bound on Π(X) — v2
+
+OPEN (API-N200). v1 gives the lower bracket and the measured remainder (≤ 1.1 points per cell). The convexity "shell"
+sketch (API-N200 PROOF §3) is the route.
+
+**Group G6 tiering note.** v1: R1 (asymptotic, disclosed), R2 (remark), R3, R4, R5 (0),(a),(b1-LH),(b2-LH subfamily),(c);
+limitations: R6, R7, study generator, LH-iid. v2: R5 extensions, R6, R7, the YWJ-style mixing statement (REPORT §4 D1).
