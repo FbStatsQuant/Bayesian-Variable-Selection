@@ -47,7 +47,9 @@ split-and-merge"). Status: primary-author source, but slides, not the paper; exa
 Read: arXiv PDF. Row+column splitting, SaM-like screening per batch, two-phase consensus. No theory (no theorem found by grep).
 Evidence (quoted, Fig. 5 caption): "Simple splitting performs well up until around rho = 0.6, beyond which the F1 score drops
 dramatically. Shuffling, on the other hand, is considerably more robust" (Toeplitz correlation). Simple (contiguous) splitting F1
-"dropped from around 1 for lower correlations, to 0.126 for the highly correlated case" (rho = 0.99). They also say (Sec 3) "It may be
-beneficial, where possible, to allocate highly correlated columns of X to" [different batches]. => 2026 empirical confirmation that
+"dropped from around 1 for lower correlations, to 0.126 for the highly correlated case" (rho = 0.99). They also say (Sec 3, quoted): "It may be
+beneficial, where possible, to allocate highly correlated columns of X to separate sub matrices in order to mitigate potential
+adverse effects of multicollinearity." NOTE: the OPPOSITE of our correlation-clustered blocks (and the opposite of what masking needs:
+separating a masked pair destroys the joint signal). => 2026 empirical confirmation that
 feature-split BVS is correlation-fragile; no guarantees. Its related-work states "Methods that combine row-wise and column-wise
 partitioning within a unified D&C framework for variable selection remain comparatively underexplored."
