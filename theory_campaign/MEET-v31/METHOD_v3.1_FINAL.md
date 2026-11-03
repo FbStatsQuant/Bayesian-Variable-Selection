@@ -1,6 +1,6 @@
 # SMC-BVS v3.1: final method of paper 1, written as a diff against METHODOLOGY_v3
 
-**Status: DRAFT for the MEET-v31 chair.** Not yet approved by HQ or Felipe. Item 1 (block start versus plain start) is **pending**, so it appears as a placeholder below. Nothing in this file is implemented, verified or proved unless a cited source says so. Status words (PROVED, OPEN, PROOF SKETCH, ...) are copied from their sources and never upgraded. Results argued by one seat and not yet proof-checked are marked **"seat-derived, unchecked"**.
+**Status: FINAL from MEET-v31 (chair), for HQ approval.** Not yet approved by HQ or Felipe. Item 1 (block start versus plain start) is closed by the pre-registered rule as **Outcome 2** (`ITEM1_ABL_START.md`). Nothing in this file is implemented, verified or proved unless a cited source says so. Status words (PROVED, OPEN, PROOF SKETCH, ...) are copied from their sources and never upgraded. Results argued by one seat and not yet proof-checked are marked **"seat-derived, unchecked"**.
 
 **Baseline.** `Docs/Methodology/METHODOLOGY_v3.md` (written "M" below; § numbers are M's).
 
@@ -54,7 +54,7 @@ Sources: S1 item 3, S2 §1, S3 R3-1 to R3-4, MA §5.
 - **"Depth free of N, H, R"** (S2 D3d).
 - **LS0 as "run by the production core"** until the merged-LS0 replay runs (S2 D3c; §6).
 - **The certificate card**, wherever the study's top store was not saved. Whether the bundles contain the stores was not checked here (R3_B R3-1: "computable for any saved fit whose top store is on disk").
-- **Any depth or speed claim for the block start.** This depends on item 1 (placeholder, §2 row 0).
+- **Any depth or speed claim for the block start.** Item 1 closed as Outcome 2: no such claim (§2 row 0; `ITEM1_ABL_START.md`).
 
 **Optional re-runs, all HQ decisions, none of them method questions:**
 1. **The 6 `resource_limit` fits.** These are S5 wall-time stops (MA §4 C1). They can be replayed under the parallel layer as operational evidence, labelled as a separate execution result. Such a replay cannot establish a delivery theorem (S2 D8; R2_C D8).
@@ -73,14 +73,14 @@ Unless §2 lists a change, each section stays verbatim.
 | §1 | one-paragraph description | unchanged (S1 item 3; THEOREM_REVISION_INPUTS M1) |
 | §2 Inputs | X, y, seed, allocation | unchanged as data. The allocation is re-classified as a declared (c) input (§2 #22). |
 | §2 Outputs | HPM with provenance, near-tie list, PIPs, MPM, evidence, flags, diagnostics, maps | kept, with additions (§2 #11–#17) |
-| §2 Statuses | `exact`, `completed`, `schedule_limit`, `numerical_failure`, `resource_limit`, `y_constant`, `no_predictors`, `invalid_input` | kept. Two are added: `degenerate_n` (e3) and an unsupported-resource status (e7). |
-| §2 Flags | `escalated`, `checks_passed_*`, `forced_pilot_steps`, `grid_unconverged`, `local_limit`, `low_empirical_ESS`, `near_tie_truncated`, `local_certified` | kept. `ls0_improved` is added. `global_certified` is relabelled as heuristic (e5). |
+| §2 Statuses | `exact`, `completed`, `schedule_limit`, `numerical_failure`, `resource_limit`, `y_constant`, `no_predictors`, `invalid_input` | kept. Two are added: `degenerate_n` (e3) and `unsupported_size` (e7). |
+| §2 Flags | `escalated`, `checks_passed_*`, `forced_pilot_steps`, `grid_unconverged`, `local_limit`, `low_empirical_ESS`, `near_tie_truncated`, `local_certified` | kept. `ls0_improved` is added. `global_certified` keeps its field name for compatibility and is documented as a heuristic numerical flag (e5). |
 | §3 Notation and budgets | K, B, ℓ, L, N₀, H₀, T₀, R = 4, tiers | **values unchanged**. Labels and classes change (B*, T₀ note; §2 #23–#26). |
 | §4 Preprocessing, rules 2–6 | constant-column drop, y constant, stable standardisation, duplicate report, preflight | unchanged. Rule 1 (input domain) changes (e3). Rule 6 / §8.6 gets a better estimate (e6). |
 | §5 Target posterior and reduction statement | g = n, τ = 1, IG(0.01, 0.01), BB(1, p), cap ⌊n/2⌋ | **unchanged** (Felipe's model) |
 | §6.1 Execution order | preprocess → exact or (blocks, calibration, freeze, final, local search, report) | unchanged in order. Additions: concurrency, R′ islands, extra search from c₄, LS0 last (§2 #1–#10). |
 | §6.2 Exact branch | streaming enumeration, rule Σ C(p, k) ≤ (5H₀ + 4N₀)p | rule unchanged. Wording w2 (§2 #27). |
-| §6.3 Blocks, tables, start | complete linkage, size cut, next-fit packing, exact tables, product start π₀ with exact Z̄₀, bridge γ_φ | **unchanged.** The table stage runs in parallel (§2 #4). Start: see item-1 placeholder (§2 row 0). Wording w5. |
+| §6.3 Blocks, tables, start | complete linkage, size cut, next-fit packing, exact tables, product start π₀ with exact Z̄₀, bridge γ_φ | **unchanged.** The table stage runs in parallel (§2 #4). Start: kept; item 1 = Outcome 2 (§2 row 0). Wording w5. |
 | §6.4 Neighbour graph | r_n = √(2 log p / n), ≤ B partners, forced best partner, symmetric union | unchanged. Fallback stated (w3). |
 | §6.5 Move round | m = p + B + 2 steps in a fresh random order per particle and round | **unchanged.** Changing it is WORKHORSE (THEOREM_REVISION_INPUTS M1; MA §4 C10). |
 | §6.6 Resampling and pilot | multinomial each stage; ESS 0.90; 60 halvings; floor 1/T_e | unchanged. ESS 0.90 is classified (c) (§2 #25). |
@@ -107,13 +107,13 @@ Unless §2 lists a change, each section stays verbatim.
 
 Column "class" uses MA's classes, or "spec text" for wording that does not change any computed value. "Effect on the 2,400 fits" says whether any study value changes and whether a re-run is needed.
 
-### Row 0: start (item 1, NOT decided)
+### Row 0: start (item 1, closed: Outcome 2)
 
 | # | change | M § | spec text | class | 2,400 fits | decided in |
 |---|---|---|---|---|---|---|
-| 0 | **Composite block start** | §6.3, §1 | "The v3 block start is retained in every outcome of the agreed ABL-START rule (SYNTH_R2 §2). What the paper may claim about it depends on the outcome: **[ITEM-1 OUTCOME PLACEHOLDER]**." | none (start unchanged) | none | S2 §2 (rule); S3 R3-6 (procedure); outcome pending |
+| 0 | **Composite block start** | §6.3, §1 | "The v3 block start is retained in every outcome of the agreed ABL-START rule (SYNTH_R2 §2). Item 1 closed as **Outcome 2 (keep, reframe)**: the start is presented as the exactly computable, theorem-bearing local step (S1/S2) plus the parallel table stage, with **no depth or speed claim**. The ablation may be printed as exploratory (12 designs × 1 seed)." | none (start unchanged) | none | S2 §2 (rule); S3 R3-6 (procedure); `ITEM1_ABL_START.md` (outcome) |
 
-For the record, the agreed rule allows exactly three outcomes (S2 §2, S3 R3-6). This file does not choose one:
+For the record, the agreed rule allows exactly three outcomes (S2 §2, S3 R3-6). The result was **Outcome 2**: 9 of 12 designs were complete for arms A–C, and all 9 were inconclusive because arm C's log Ẑ was 2.6–13.3 nats below A and B (`ITEM1_ABL_START.md` §2–3). The three outcomes:
 - **Outcome 1:** keep the start, depth claim allowed.
 - **Outcome 2:** keep the start and reframe it as the exactly computable, theorem-bearing local step plus the parallel table stage, with no depth or speed claim. This is also the result when fewer than 9 designs are conclusive.
 - **Outcome 3:** a real issue is flagged. v3.1 still ships the block start; the ablation is reported; a ≤ 20-seed paired check runs on the two worst designs; a WORKHORSE candidate goes to Felipe only if that check confirms.
@@ -179,7 +179,7 @@ PC1 claim 6 notes that E1, E2 and low-ESS on islands 1–4 match the v3 run. E3 
 | 26 | e4 | LS0 start-mode tie cap | §6.10 (LS0) | as in #8. The invariant "DP output = the prescribed choice" is an OPEN obligation (N3). A and B sketch a greedy index-by-index route with a feasibility max-plus DP (seat-derived, unchecked). | ADDITIVE | none (0/2,400 truncated) | S2 P-9 e4; S3 R3-4 |
 | 27 | e5 | `global_certified` | §2 flags, §6.2, §9 | "The exact-branch comparison against the scorer's error expression (`cpp/v3_score.h:240`, `cpp/v3_core.cpp:535`) is a **heuristic numerical margin**, reported as a labelled numerical flag. 'Certified' is reserved for validated arithmetic." M §2's "with numerical comparisons validated" and M §9's "the exact branch returns the exact HPM, PIPs and Z" stay true in exact arithmetic; the floating-point claim is labelled heuristic. | POST HOC (interface) | none (the study used the SMC branch, where the flag is always FALSE, `v3_run.R:147`) | S2 P-9 e5; PC2 `global_certified` verdict |
 | 28 | e6 | Memory preflight | §8.6, §4 rule 6 | "Before setup use J ≤ p blocks (not ⌈p/B⌉); after setup use the actual J. Shared and per-worker memory are accounted separately (each concurrent worker's populations, cache, archive). The result is labelled 'estimate', not 'certified peak'." | ADDITIVE (engineering) | none at study size. J = 46–60 (p = 500) and 95–120 (p = 1,000) versus proxies 36 and 72 [chair-checked]; still well under 8 GiB. | S2 §0.5, P-9 e6 |
-| 29 | e7 | Checked arithmetic | §2 statuses, §6.2, §7 | "Integer, stream-id and allocation arithmetic are checked before use. Overflow returns an explicit unsupported-resource status." The status name is not fixed in the minutes. | ADDITIVE (engineering) | none | S2 P-9 e7; S3 R3-4 |
+| 29 | e7 | Checked arithmetic | §2 statuses, §6.2, §7 | "Integer, stream-id and allocation arithmetic are checked before use. Overflow returns the explicit status `unsupported_size`." (Name fixed in MINUTES §4.) | ADDITIVE (engineering) | none | S2 P-9 e7; S3 R3-4 |
 
 ### Item-9 wording fixes w1–w7
 
@@ -313,7 +313,7 @@ The settings are merged from R2_A §4, R2_B §4 and R2_C §4.1. Classes are the 
 | 20 | 4 measured rounds (M §6.11) | (c) | RB averaging after burn-in | constant; correlated rounds are not 4 replications | keep; general-h accumulator (§2 #12) |
 | 21 | Exact branch Σ_{k≤K} C(p, k) ≤ (5H₀ + 4N₀)·p (M §6.2) | (b), (c) | enumerate when it costs about one SMC stage of all populations | fixed p is eventually exact as n grows (N₀ ≥ n); all p at n ≤ 5 [chair-checked]; n = 10: p ≤ 36; n ≥ 22: p ≤ 17; growing p ≪ n need not be exact | keep; **w2** |
 | 22 | Clustering: complete linkage on 1 − \|r\|, size-only cut, next-fit packing, lexicographic ties (M §6.3) | (b), (c) | deterministic X-dependent partition under the table budget | no correlation cut; O(p²) memory, O(p²)–O(p³) time; packing can merge separated groups | keep; **w5**; C11 (§3) |
-| 23 | Tables (all subsets per block, exponent 1, full y) and start π₀ (M §6.3) | (a), (b) | exactly computable composite step, corrected at φ = 1 | constant B bounds each table; the number of blocks grows with p | keep; **[ITEM-1 OUTCOME PLACEHOLDER]** for claims |
+| 23 | Tables (all subsets per block, exponent 1, full y) and start π₀ (M §6.3) | (a), (b) | exactly computable composite step, corrected at φ = 1 | constant B bounds each table; the number of blocks grows with p | keep; item 1 = Outcome 2: no depth or speed claim for the start |
 | 24 | Neighbour graph: r_n = √(2 log p / n), strict exceedance, forced best partner, ≤ B outgoing, symmetric union (M §6.4) | (b), (c) | chance-correlation scale of p columns; proposal heuristic | r_n → 0 when log p = o(n); r_n ≥ 1 when p > e^{n/2} ⇒ 1-NN graph; degrees may exceed B | keep; **w1**, **w3** |
 | 25 | `cut_group` diagnostic at ρ = r_n (`v3_core.cpp:760–770`) | (b) | descriptive only | can give large components or none | keep, descriptive |
 | 26 | Move round m = p + B + 2, fresh random order; multinomial resampling each stage (M §6.5–6.6) | (b), (c) | reversible, self-adjoint kernel; fixed mutation allocation | Θ(p) sequential steps per particle per round: inherent to the kernel (I1) | keep; changing it is WORKHORSE |
@@ -404,12 +404,12 @@ None of these can change a method decision taken in MEET-v31 (S3 R3-7; R3_A R3-7
 
 ---
 
-## Unresolved or flagged points (for the chair)
+## Points settled by the chair after drafting
 
-1. **Item 1 outcome: pending.** Placeholder only (§2 row 0, §5 row 23). The ABL-START fits were still running at the last status (STATUS.md).
-2. **ESS 0.90 class.** Seat B holds (a). The chair recorded (c) with B's caveat attached (S3 R3-4). This file follows S3. B's dissent is a recorded label difference, not an open method question.
-3. **Name of the e7 status** (unsupported resource) is not fixed in any synthesis. Whether `global_certified` is **renamed** under e5 ("reserve 'certified' for validated arithmetic") or only relabelled is not explicit either.
-4. **THEOREM_REVISION_INPUTS M9** (chair's draft helper) still lists "terminal frequency of the returned HPM" in the default 𝓗. S3 R3-3 dropped it. This file follows S3.
-5. **Calibration ratio 0.05 + 0.2·I** is seat-derived and unchecked (THEOREM_REVISION_INPUTS conflict 12). It is quoted as such.
-6. **Card computability on the study**: not checked here whether the NOTS bundles hold the top stores.
-7. **A2 wording**: M §9 / §6.12 were checked and contain no "errs only downward" sentence. The correction is a THEOREM_LIST edit (PC1 claim 4), carried here only as recommended paper wording.
+1. **Item 1:** Outcome 2 under the pre-registered rule (`ITEM1_ABL_START.md`).
+2. **ESS 0.90:** class (c) with Seat B's caveat; B's preference for (a) is a recorded label difference (MINUTES §4), not an open method question.
+3. **Names:** e7 status `unsupported_size`; `global_certified` keeps its field name and is documented as heuristic (e5).
+4. **HPM terminal frequency:** not in 𝓗; descriptive only (SYNTH_R3 R3-3).
+5. **Calibration-cost ratio 0.05 + 0.2·I:** seat-derived, unchecked; quoted as such; matches the three logged designs.
+6. **Certificate card on the study fits:** computable wherever the saved top store exists (NOTS bundles; HQ action), otherwise not claimed.
+7. **A2 wording:** a THEOREM_LIST edit (PC1 claim 4); no METHODOLOGY_v3 sentence needs deleting.

@@ -42,8 +42,11 @@ Written by the chair, 2026-11-03. What worked and what did not in this meeting f
 5. **Seat outputs are long** (22–52 KB in Round 2). The chair's synthesis is then the bottleneck. *Fix:* cap the free text per item, and ask for a fixed table per dispute (concede/hold, evidence that would change the position, class, study effect).
 6. **Status words in seat texts.** Seats sometimes wrote PROVED for their own elementary arguments, which no one else had checked. The chair treated these as claims until a proof check confirmed them. *Fix:* the brief should say "PROVED (by this seat, unchecked)" is the only allowed form until a check is filed.
 
+7. **A pre-registered rule can be vacuous.** The item-1 rule marked a design "inconclusive" when the arms' log Ẑ differed by more than 1 nat. That was meant to protect the leave-one-arm-out reference. But the prior-start arm was far off on every design, so all 9 complete designs were inconclusive, and the rule never compared the block start with the singleton start. The outcome (keep, no depth claim) is safe, but a useful comparison went untested. *Fix:* when fixing a rule in advance, dry-run it on a synthetic or partial table, including the case "one arm fails badly". Score each pair of arms against a reference fixed in advance (a long stacked baseline run, or enumeration), so that one failing arm cannot contaminate it.
+8. **Slow arms.** Three singleton-start fits on masked designs ran for more than 3–4 h, against 10–28 min for the baseline. *Fix:* a declared per-fit wall-time cap, treated as a delivery event, keeps an ablation on schedule.
+
 ## Costs
 
 - Seats and checks ran on subscription accounts.
-- Settlement API spend: see `MINUTES.md` (the chair's paid budget was $20).
-- The chair's relaunch of ABL-START used 3 Owls jobs × 2 cores for about 1–1.5 h.
+- Settlement API spend by the chair: $0 of $20. Seats, proof checks and helpers all ran on subscription accounts.
+- The chair's relaunch of ABL-START used 3 Owls jobs × 2 cores for about 5 h of wall time, including one relaunch lost to a T3 restart.

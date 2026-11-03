@@ -47,7 +47,17 @@ Sources: SYNTH_R1/R2/R3 and the files cited there. "All three" means all three s
 
 ## 3. Item 1: start ablation (ABL-START)
 
-[TO BE FILLED BY THE CHAIR WHEN THE FITS FINISH: rule applied, per-design table, outcome, what the paper may claim.]
+Full record: `ITEM1_ABL_START.md`. Data: `evidence/item1_per_fit.csv` and `evidence/item1_rule_table.csv`. Rule script: `evidence/item1_scripts/apply_rule.py`, committed before any arm-C or S4/S5 result was read.
+
+- **Rule.** SYNTH_R2 §2 with the R3-6 conventions (all three seats accepted). Arms: A = block start (production), B = singleton factors, C = prior start. Designs: 12 study designs at p = 500, one seed each.
+- **Result: Outcome 2, keep the block start, reframed.** 33 of 36 fits completed, and 9 designs were complete for arms A, B and C. All 9 were **inconclusive** under the > 1 nat clause, because arm C's log Ẑ was 2.6 to 13.3 nats below arms A and B. Fewer than 9 conclusive designs gives Outcome 2 by the agreed convention.
+  - Three arm-B fits did not finish: S4 r001 and S4 r002 were still running after more than 4 h of CPU, and S3 r001 was stopped by the chair after 3 h 06 min. Arm A took 10 to 28 min on the same designs.
+- **Decision (unchanged under every outcome).** The block start ships. The paper presents it as the exactly computable local step that carries the theorems (S1/S2), with the parallel table stage, and makes **no depth or speed claim** for it.
+- **Descriptive observations** (exploratory, not the pre-registered test):
+  - The prior start (C) underestimated log Z on 12/12 designs, by more than 2.5 nats on 11/12. Its island spread was larger (median about 8× arm A's), and it escalated to tier 1 on 9/12. This is the masked-crossing underestimation mechanism.
+  - The singleton start (B) matched A's log Ẑ within 0.24 nats. It needed at least as many rebuilds as A on 9/9 designs and more wall time on 8/9.
+  - All arms returned the best-known mode as the HPM (33/33).
+- **What would license a depth or accuracy claim:** a confirmatory paired A-vs-B and A-vs-C test on ≤ 20 seeds, with a reference fixed in advance (not the leave-one-arm-out pool that arm C contaminates). This is an optional HQ action. It is **not an open method question**, because the decision is the same whatever it shows.
 
 ## 4. Item 9 resolutions (every class-(e) item)
 
@@ -120,13 +130,26 @@ These are theorem obligations in `THEOREM_REVISION_INPUTS.md`, each with the dec
 9. **Optional:** replay of the 6 `resource_limit` fits under the parallel layer, labelled operational.
 10. **Paper-scope decision:** whether paper 1 claims particle-parallel depth. If yes, C6 is implemented and law-checked: 20 seeds, two stream maps.
 11. **Recorded for HQ:** Seat A's reversal criterion for decision 8, to be read against the full rescoring and the ABL-START reference error. Decision 8 is POST HOC, so a trigger would mean a report to Felipe, not a re-run.
+12. **ABL-START follow-up:**
+    - append the two arm-B S4 fits when they finish, by re-running `evidence/item1_scripts/` (reporting only);
+    - optionally, the confirmatory start test (§3).
+13. **ABL-START branch report:** HQ's `theory/ABL-START` REPORT.md is still a design-only draft. The results are in this meeting's `ITEM1_ABL_START.md`.
 
 ## 8. Spend
 
 - Settlement API spend by the chair: **$0** of the $20 budget. All seats, proof checks and helpers ran on the Claude Work, Claude Personal and Codex subscriptions.
 - HQ's ABL-START API run spent $2.45 (HQ budget).
-- The chair's Owls use for ABL-START: 3 jobs × 2 cores, about [TBD] h.
+- The chair's Owls use for ABL-START: 3 jobs × 2 cores from 18:06 to 18:52 UTC (killed by the T3 restart), then 3 detached jobs × 2 cores from 18:52 to about 23:00 UTC. One job ended at 22:58 UTC. Two jobs, each holding one arm-B S4 fit, are still running for HQ: wrapper PIDs 2975231 and 2975285. HQ may kill them; finished fits are kept.
 
 ## 9. Open questions
 
-[TO BE FILLED: must be empty.]
+**None.** Every method question raised in Rounds 1–3 was closed in one of three ways:
+- by evidence: concurrency log, PIP rescoring, ABL-START (§3);
+- by a proof check: PC1, PC2;
+- by acceptance of all three seats: SYNTH_R1–R3; in Round 3 all three seats answered "nothing else open".
+
+The remaining unproved properties of the decided method are **theorem obligations** in `THEOREM_REVISION_INPUTS.md` §3 (N1–N17). Each names the decision it supports and why that decision survives if the obligation fails. The remaining checks are **engineering or reporting actions** for HQ (§7). Neither kind can change a decision taken here.
+
+Two items are recorded but are not open questions:
+- **Seat B's class label (a) for ESS 0.90,** against the recorded (c). This is a label only; no setting changes (§4).
+- **The optional confirmatory start test (§3).**

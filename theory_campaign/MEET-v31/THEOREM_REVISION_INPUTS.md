@@ -40,7 +40,7 @@ Engineering actions (cannot change a decision): W-cal executed, integrated-LS0 r
 
 ### 1.B Item 1 (block start)
 
-**[ITEM-1 OUTCOME: to be filled by the chair]**
+**Item-1 outcome: Outcome 2 (keep, reframe).** 9 of 12 designs were complete for arms A–C; all 9 were inconclusive under the > 1 nat clause because arm C (prior start) was 2.6–13.3 nats low. So the rule never compared A and B head to head. Descriptively, B matched A's log Ẑ within 0.24 nats and cost more (rebuilds ≥ A on 9/9; three B fits unfinished after 3–4 h vs 10–28 min for A). Source: `ITEM1_ABL_START.md`. Theorem consequence: the Outcome-2 row below. N18 is **not** opened. A confirmatory A-vs-B / A-vs-C test is an optional HQ action, which could later license a depth claim and then open N18.
 
 Rule fixed before any result was read (S2 §2). **v3.1 ships the block start under every outcome**; HPM counts are reported but do not decide. Conventions adopted before results (S3 R3-6, all ACCEPT):
 - a design on which any of arms A–C did not finish or has no complete output, or whose pooled log Ẑ disagree by > 1 nat, is **inconclusive** and counts toward neither Outcome 1's nor Outcome 3's 9/12; an arm-A stop is a delivery event (e8, R6), not a start-quality signal;
@@ -316,4 +316,4 @@ INV §3a targets: §5.1 → N9; §5.2 → V1; §5.3 → S4 (OPEN); §5.4 → S1/
 - **E3. Seat-level results not proof-checked; statuses preserved, none upgraded:** calibration ratio 0.05 + 0.2·I (R2A); eventual exact dispatch for fixed p and the n = 2 extension (R2C); the n = 2 p-fold-tie statement (R3B); the store-eviction identity (R2C); Markov sharpness (R2C); Lemma KL (TL); the e4 greedy-DP route (R3A, R3B); "N1 is a short extension of the locked lemma" (R3A); "h fixed by streams 0–9 is covered by N1" (R3B).
 - **E4. M14 scope:** keep PC1's precise scope; do not turn "useful" or "Markov-only" into unrestricted impossibility claims (R3C).
 - **E5. Helper's reading, not a source statement:** S1(a),(d) may cover ABL-START arm B as the B = 1 partition (§1.B, Outcome 3).
-- **E6. Item 1** is filled by the chair at the placeholder in §1.B; this file has read no ABL-START result.
+- **E6. Item 1** was filled by the chair in §1.B (Outcome 2, `ITEM1_ABL_START.md`).
