@@ -185,3 +185,8 @@ Next: LIT-SYNTH (Fable) + Astra cross-check of the novelty verdict, then Felipe'
 
 ### 13:03 UTC 2026-11-03: objective clarified; LIT-PAR launched
 Felipe: keep current theory goals. Thesis/positioning = no BVS method is parallel + correlation-robust + strongly guaranteed; goal is to start retiring sequential MCMC for BVS (change of school). Paper 2 = trees, same logic. Primary: posterior accuracy; secondary: selection accuracy. LIT-PAR (Opus, $10) tries to falsify the gap claim. LIT-SYNTH waits for it.
+
+### 13:32 UTC 2026-11-03: method + theorem decision (Felipe gave HQ full authority; deliverables: final method proposal + specific theorem list)
+Track A: METH-AUDIT (Opus, $15) — work/depth map, theorem robustness under parallel execution, candidate changes (ADDITIVE vs WORKHORSE, real issues only), ≤20-seed check if needed.
+Track B: THM-INV (Opus, $12) — component→theorem map, theorem ledger with literature verdicts, coverage vs proposal and Song–Liang, missing literature themes. LIT-PAR ($10) running.
+Next: THM-SYNTH (Fable) after METH-AUDIT + THM-INV + LIT-PAR → final theorem list; Astra cross-check; CW complements. Inputs: theory_campaign/inputs/ (proposal, Song–Liang 2015).
