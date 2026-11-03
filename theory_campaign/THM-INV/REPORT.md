@@ -152,3 +152,78 @@ Columns:
 | (1) Joint inclusion | — | **everything** |
 | (2) Parallel scalability | T32(i) total work; table cost; Theorem G / STG-M stage counts (sequential depth, favourable or ideal) | work–depth theorem; islands-vs-particles trade-off; "correlation costs depth, never correctness" |
 | (3) Selection accuracy | T03, T07, T21, N200, T38(0)/(a)/(b1)/(b2-LH) | study generator; P(U) → 0; finite-n discovery; upper bound on Π(X) |
+
+## 4. Literature gaps against the proposal's five themes
+
+### 4a. Coverage by the existing LIT reports (digest `digests/LIT.md` §4)
+
+| Theme (proposal §7.1) | Covered by | Read at primary-source level | Missing before this run |
+|---|---|---|---|
+| 1. Split-and-merge BVS | LIT-PAR (main), LIT-STAT (one row) | Gutierrez–Guhaniyogi technical report; DECO; Papaspiliopoulos–Rossell 2017; Ma 2015 | **The Song–Liang paper itself** (LIT-PAR used Liang's slides, LIT-STAT second-hand). Now covered by `digests/SL.md`, read from the PDF in `theory_campaign/inputs/` |
+| 2. Composite likelihood and approximate posterior calibration | **none** (no LIT file mentions Ribatet, Frazier, Pauli, Varin or "composite likelihood") | — | entire theme; now covered by §4b |
+| 3. Divide-and-conquer Bayes | LIT-PAR (main), LIT-SMC | WASP, M-posterior, Zhang–Lam–Lin; Lindsten et al. 2017 abstract only | consensus MC full text; embarrassingly parallel MCMC (Neiswanger et al.) not named; Lindsten/Kuntz theorem statements. Not pursued: LIT-PAR already concludes that data-splitting guarantees are fixed-p and say nothing about discrete model spaces |
+| 4. Importance tempering and SMC samplers | LIT-SMC, LIT-MCMC, LIT-PAR, LIT-VENUE | Del Moral et al. 2006; Zanella–Roberts 2019; Zhou–Smith 2022; SVV; Syed et al.; Mathews–Schmidler 2024 | **Gramacy–Samworth–King 2010** (importance tempering); now covered by §4b |
+| 5. Diagnostics for scalable computation | LIT-VENUE (rows C2–C4), LIT-SMC/LIT-PAR (Ẑ variance) | Jacob–O'Leary–Atchadé 2020; Biswas–Jacob–Vanetti (Thm 2.5); R-hat header only | ESS theory, PSIS, R-hat in full, importance-sampling sample size; now covered by §4b |
+
+### 4b. Primary-source pass (10 works; details, quotes and URLs in `digests/LITGAP.md`)
+
+Every citation below was checked against Crossref and/or the publisher or journal page. Full text was read on arXiv for all except A2 and A3, where only the abstract was read. Equation numbers refer to the arXiv versions named in the digest.
+I spot-checked these citations against my own knowledge of the literature; the digest is the record.
+
+| # | Work | Key statement (quoted in LITGAP) | Bearing on our method |
+|---|---|---|---|
+| A1 | Ribatet, Cooley & Davison (2012), *Statistica Sinica* 22(2), 813–845 | Composite-likelihood posteriors are mis-calibrated; magnitude and curvature adjustments are needed before use as a posterior | Our π₀ is a block-product (composite) posterior used **only as a start**; φ = 1 is the exact posterior, so no calibration is needed for the reported output. It becomes relevant only if the π₀ marginals are ever reported as a cheap answer |
+| A2 | Pauli, Racugno & Ventura (2011), *Statistica Sinica* 21(1), 149–164 | Bayesian composite marginal likelihoods require a calibration (abstract only) | As A1 |
+| A3 | Varin, Reid & Firth (2011), *Statistica Sinica* 21(1), 5–42 | Overview of composite likelihood (abstract only) | Background citation for "local likelihoods" |
+| A4 | Frazier, Nott, Drovandi & Kohn (2023), *JASA* 118(544), 2821–2832 | Theorem 2 with Assumption 6(iv): the approximate posterior can serve as an IS / rejection proposal, given a finite second moment of the proposal-to-target density ratio | The nearest precedent for "approximate posterior as proposal". Its condition is χ²-type, the same quantity as our ESS / weight-stability (O-WSTAB) conditions. It is parametric and n → ∞, not model space |
+| A5 | Syring & Martin (2019), *Biometrika* 106(2), 479–486 | Generalised posterior Π_{n,ω} ∝ e^{−ωnR_n}Π; ω chosen by bootstrap so credible regions attain nominal coverage | Same: calibration is needed only when there is no exact target. We have one |
+| B1 | Chatterjee & Diaconis (2018), *Ann. Appl. Probab.* 28(2), 1099–1135 | Thms 1.1/1.2: importance sampling from π₀ to π needs a sample size of about exp(KL(π‖π₀)), which is necessary and sufficient. Thm 2.1 warns that variance-type diagnostics built from the same weights can certify too early | **The right cost scale for "one-shot correction of the merge" and hence for why a bridge is needed.** In the masked regime, KL(π‖π₀) ≳ c(log p + ½ log n) by T27(i), so one-shot needs ≳ p^c n^{c/2} draws. This matches SEP-A/B; the identification is my inference, unproved (no new proof here) |
+| B2 | Vehtari, Simpson, Gelman, Yao & Gabry (2024), *JMLR* 25(72), 1–58 (PSIS) | Pareto k̂ diagnostic; thresholds 0.5 and 0.7 | A candidate per-stage weight diagnostic; B2 §6.4 says k̂ for SMC weights is unstudied |
+| B3 | Vehtari, Gelman, Simpson, Carpenter & Bürkner (2021), *Bayesian Analysis* 16(2), 667–718 | Rank-normalised split-R̂ < 1.01 | A candidate formalisation of our island-agreement flag. But MASKZPIP E1c PROVES that island agreement is uninformative under a blind grid, so R̂ inherits this limit |
+| B4 | Elvira, Martino & Robert (2022), *Int. Statist. Rev.* 90(3), 525–550 | Critique of 1/Σw̄²; alternatives such as 1/max w̄ | Our schedule uses 1/Σw̄² (ESS 0.90); a max-weight companion is cheap |
+| B5 | Biswas, Jacob & Vanetti (2019), NeurIPS 32 | eq. (7): d_TV(q^(N), π) ≤ an expression depending only on the law of Ẑ (via PIMH L-lag couplings), "estimated using independent runs of the SMC sampler" | Our independent islands produce exactly this input. It gives an *estimated* (not certified) TV bound for one particle's law, not for PIPs. It is the best fit for a positive diagnostic |
+| C1 | Gramacy, Samworth & King (2010), *Stat. Comput.* 20(1), 1–7 | Importance tempering = simulated tempering + IS reweighting of all rungs; Prop 2.1: the ESS-optimal combination of IS estimators | A different algorithm (MCMC over temperatures, not an SMC bridge). Prop 2.1 might combine intermediate-stage estimates; not needed for correctness |
+
+**Gap conclusions** (within the works read; not an exhaustive search):
+1. No work found uses a composite or block-product posterior as an **SMC start that is then corrected exactly**. The composite-likelihood literature corrects by *calibration* because it has no exact target. The nearest positioning is: "Papaspiliopoulos–Rossell 2017 (block start) + Ribatet et al. 2012 (why the composite posterior alone is wrong) + Del Moral et al. 2006 (exact correction)".
+2. Diagnostics: no published diagnostic certifies accuracy of an SMC model-space posterior. B5 gives an estimated TV bound from the law of Ẑ. B1 explains why weight-variance diagnostics can certify too early, which matches our negative results (V12, E1c).
+
+## 5. Properties of our method with no guarantee yet (ordered by importance to the goal)
+
+1. **Accuracy of posterior expectations E_π[h(S)] as n grows, in the masked (study) regime.** This covers joint inclusion probabilities, functionals, and PIPs at p ≫ n. Nothing exists beyond the favourable-regime CONJECTURE (T26) and LH at fixed p (P1–P3). This is proposal §13.1 and Felipe's objective (1).
+2. **Two-sided relative accuracy of Ẑ in the masked regime.** Only the lower-tail mechanism is PROVED; the resolved-grid half is a CONJECTURE (OPEN for c ≥ 2). LIT-PAR calls the single-island relative variance "the theorem a referee will ask for".
+3. **A parallel work/depth theorem.** We need depth as a function of p, correlation and masking, and an R-versus-N trade-off. This is the formal content of "correlation costs depth and particles, never correctness". Today we have only total work (T32(i)) and stage counts in the favourable or ideal-grid cases (Theorem G, STG-M). Note LIT-PAR's warning that per-round depth is Θ(p).
+4. **Delivery of output: P(U) → 0.** No theorem bounds P(resource_limit), P(schedule_limit), P(numerical_failure) or P(grid_unconverged). Every consistency statement is joint with "output exists".
+5. **Masked-regime selection consistency for the production method on non-LH or random designs, including the study's own generator** (groups of 5 packed by next-fit, p ≫ n). The verified routes are only (b1) with LS0, which is not in production, and (b2-LH), an exact-Gram subfamily.
+6. **Finite-n guarantees.** These are an upper bound on Π(X) (OPEN) and a finite-n discovery bound for the Gibbs route (OPEN). All asymptotic results are vacuous at n = 200.
+7. **Mixing of the φ = 1 move round (V10).** No published or project theorem covers our prior. The rapid-mixing route is blocked as stated (D1).
+8. **Positive power of the diagnostics and flags.** Is there any condition under which a flag fires when the output is wrong? All theory is negative (V12, E1c).
+9. **Calibration behaviour.** Nothing covers convergence of the rebuild loop, the probability that V contains the competing pair, or the stage count T_n in the masked regime (Conjecture P OPEN).
+10. **Partition law for the actual adaptive packing**, and the effect of block construction (B, linkage, overlap or random partitions) on cost.
+11. **Floating-point accuracy at production size.** VAL-FP was measured at p ≤ 40 only, and there is no floating-point theorem.
+12. **Exactness of the composite start sampler, and reversibility and self-adjointness of the move round (V5).** These hold by construction and were consultant-checked, but I found no registry theorem (?). They are routine, but a paper claim needs a written proof or a citation.
+
+## 6. Needs escalation
+
+- **D1 (API-POS vs LIT-MCMC).** An independent reader should settle what the paper may say about YWJ/ZYVR/Chang–Zhou/Zhou–Smith for our prior. Specifically: is R > M failing a real obstruction or only a failed sufficient condition?
+- **Song–Liang citation details** for any claim that "SaM breaks under correlation". Use Theorem 4 / Corollary 2 + eq. (19) and Condition 5 from the JRSS-B text (SL digest), not "Thm 5" from slides. LIT-PAR's G4 counterexample relies on this reading.
+- **Citation clashes** (D9: SBJ venue, Le Fay et al. theorem number, YWJ constants) need a primary-source check before printing.
+- **Novelty of O-PW2 Thm A vs Cérou–Del Moral–Guyader 2011 Thm 1.4** is unchecked (LIT-SMC).
+- **ADRAFT-ThmA** (fixed-data SMC consistency) has only Astra-on-Astra review. Either cite Del Moral et al. or get a Claude check.
+- **The (?) items in this report:** I did not find registry rows for V5 (start-sampler exactness, move reversibility). A registry search by someone with the full T38-RECORD context should confirm.
+
+## 7. Outside scope
+
+- API-AUDIT hazard: `fit$log_Z` on a stopped fit silently returns `log_Zbar0`. The recommended fix (set it to NA when `estimates_available` is not TRUE) has not been applied.
+- LIT-PAR self-critique: v3's per-round depth is Θ(p) score evaluations. Option B (informed/tempered-Gibbs moves that score all p neighbours at once) is a method decision with direct bearing on objective (2).
+- API-RESID: the backfit start is favourable on 78.7–91.8% of study fits but has no theorem and no SMC evidence. It would make T22(iii)/T26 relevant to the study.
+
+## 8. Confidence card (per goal-level target; refined statements are inventory readings, not new conjectures)
+
+| Target | Refined statement (as inventoried) | P(true) | P(provable at reasonable cost) | Crux | Method change? |
+|---|---|---|---|---|---|
+| Fixed-data exactness ("never correctness") | For any data and frozen calibration, Ẑ_r is unbiased, and SMC estimators of E_π[h] converge as N → ∞ (or R → ∞ with Ẑ-weighted pooling) | high | high (standard; cite) | none; it is KNOWN—CITE, so it is not a contribution | no |
+| E_π[h] accuracy as n grows, masked regime (proposal §13.1) | For bounded h and n-indexed budgets, |Ê[h] − E_π[h]| → 0 in probability on a masked family | medium | low–medium | single-island relative variance through a masked crossing; resolved-grid V11 | possibly (grid resolution; LS0-type centre emission) |
+| Parallel depth ("costs only depth and particles") | Depth = O(T_n·L·(p+B+2)) with T_n = O(log₂A₀) on masked families; width R·N with error O(1/√(RN)) | medium | medium on ideal grids (STG-M exists); low for the as-coded grid | T_n for the coded schedule in the masked regime (Conjecture P); per-round Θ(p) | maybe (LIT-PAR option B) |
+| Selection consistency of the reported HPM, production method, realistic designs | T38(b) without LS0 beyond exact-Gram LH | medium | low–medium | general LH locking is false; adaptive packing; DELIV | maybe (LS0 is cheap: 0/2,394 HPM changes, but needs code merge) |
+| Comparison with Song–Liang | SL's merged output has no theorem; ours has fixed-data exactness and HPM consistency on masked families, where SL's Condition 5 / eq. (19) fails | high | high for a counterexample (LIT-PAR G4 numerical + sketch) | an analytic SL failure on a masked pair, checked against the JRSS-B text | no |
