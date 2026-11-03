@@ -58,6 +58,67 @@ Status words as in the sources (registry/REG digest, API, AREV). **NONE** = no t
   - the T12/T31 identities, given the frozen calibration;
   - Lemma RO and the per-fit certificates.
 
+## 2. Theorem ledger
+
+Columns:
+- **Status:** as in REGISTRY_v2 / THEORY_PRIORITIES / API reports. XF = cross-family (Astra) verdict; SF = same-family.
+- **Run:** AR = for the algorithm as run (under exact arithmetic, EX-A, and the potential-run convention); ID = idealisation, with the variant named.
+- **Lit:** the verdict from the LIT reports (see `digests/LIT.md` §1), with the citing source. ⚑ = novelty challenged by a LIT report; ⚔ = the reports disagree.
+
+| Paper slot | Result | Status (verbatim) | Key hypotheses | Run | Lit verdict (source) |
+|---|---|---|---|---|---|
+| Thm 1 | T01–T03 / T03♯ selection consistency; T02(i♯) BB(1,p) exact tail | T01–T03 PROVED-LOCKED; T03♯ PROVED, SF W2-VT03R + XF A-REV2 VERIFIED; onset sentence ERROR (repaired) | G, R, SE, BM-∞ (or BM-C), s₀ fixed, p ≤ n^A | algorithm-free (true posterior) | ⚑ MODEST EXTENSION of Rossell 2022 (Bayesian Anal. 17(2)) and Moreno–Girón–Casella 2015 (LIT-STAT). ⚔ LIT-VENUE: "standard in kind … do not sell it" (YWJ 2016 Thm 1; Shin–Bhattacharya–Johnson 2018) |
+| Thm 1 / Thm 4 | T03♯(3): P(S† ≠ S₀) ≤ 2E₀[1 − π(S₀)] (the 2E₀δ₁ term) | PROVED | as T03 | algorithm-free | ⚑ KNOWN—CITE: "Rossell (2022) Proposition 1 verbatim" (LIT-STAT) |
+| Thm 1 (remark) | Prop D (duplicate columns; cut-off growth lower bound) | PROVED (author = verifier) | — | algorithm-free | no analogue found (LIT-STAT) |
+| Prop 1 | T07 HPM / MPM Bayes rules; size-only prior ceiling; T06(i) ties | PROVED-LOCKED; XF A-REV4 VERIFIED* (data paragraph ERROR, relabel pending) | true posterior | algorithm-free | ⚑ STANDARD OR FOLKLORE: Barbieri–Berger 2004 Thm 1; Scott–Berger 2010 (LIT-STAT) |
+| Thm 2 | T22(i)(ii)(iv) deterministic start mass, odds, bridge mass | PROVED-LOCKED | none (deterministic) | AR (production start) | block start: Papaspiliopoulos–Rossell 2017 (Biometrika) is the nearest precedent, a "threat to novelty of the start"; it is exact only for block-diagonal XᵀX (LIT-PAR, LIT-VENUE) |
+| Thm 2 | T22(iii) favourable rate (EXP′, Thm6-EXP; FAV-ThmA/B 2^B-free) | PROVED-LOCKED, CONDITIONAL; EXP′ XF VERIFIED* (fixed design; random design/packing GAP); FAV-* PROVED (author only) | EXP′, VIS, NL_η, NL_avg | AR start, but needs favourable design (1/2,394 study fits) | NEW: "no prior art found" (LIT-STAT G2) |
+| Thm 2 | T27(i) masking law π₀(S₀) = p^{−c}n^{−c/2}e^{O_P(1)} (Thm3/4-EXP); DIL-* dilution; SEP-A/B | T27(i) PROVED-LOCKED, CONDITIONAL (H2, H3); Thm3/4-EXP XF VERIFIED; DIL-E/E1/R/N XF VERIFIED, DIL-DM(i) ERROR; SEP-A/B XF VERIFIED | LH chain (H2, H3); study tables (DIL) | AR start law (iid start draws only, "not a lower bound for the method") | NEW: "strongest novelty claim" (LIT-STAT); "nobody proves a natural exactly-sampleable start fails and then which moves fix it" (LIT-VENUE G3). Framing: Woodard–Schmidler–Huber 2009 low persistence (LIT-SMC) |
+| Thm 2 / Thm 5 input | W7-PART Thm A/B partition = groups | PROVED (author only); XF A-REV6 VERIFIED* on SIZE, A-REV9 B-exact VERIFIED, explicit constants GAP; CE2 COUNTEREXAMPLE | LH-iid, g ≤ B < 2g | AR clustering rule, ID design | not assessed |
+| Thm 3 | Theorem A (exact greedy repair, T37(i) refined) | PROVED; SF VERIFIED; XF A-REV2 VERIFIED*; cap-free lattice restatement ERROR (A-REV5); Lean sorry-free | TD′ / D_S margins | AR local search (centre = HPM) | ⚑ "unsurprising given YWJ/ZYVR" (LIT-SMC); must cite Gamarnik–Zadik Thm 2.7 and YWJ Lemma 4 (LIT-MCMC); deterministic exact finite-n is the difference |
+| Thm 3 | literal T37 / TD; H24 (T24 route (e)) | Prop1-TD, CEX1/2 COUNTEREXAMPLE (retires literal T37); CE1/CE2 COUNTEREXAMPLE (retires H24) | — | — | — |
+| Thm 3 (alt.) | Thm B-T24 Gibbs-path repair; ThmW / PGD family; LH-LAT | ThmB PROVED, XF VERIFIED(*) (vacuous at n = 200); ThmW PROVED (candidate), region form fails on masked LH c ≥ 2; LH-LAT PROVED, XF VERIFIED* | terminal Gibbs rounds; exact Gram | ID (asymptotic) | "outside that literature" (LIT-SMC G1); a hitting-time theorem under (1b)/(1c) only is not published: CONJECTURE (literature), medium (LIT-MCMC) |
+| Thm 4 | T21(C1) composition; Lemma RO; GUARD | T21 PROVED-LOCKED, CONDITIONAL; Lemma RO XF VERIFIED; GUARD implementation fact (literal claim ERROR) | H03, H10, exposure; SR, GUARD | AR | split: the 2E₀δ₁ term KNOWN (Rossell Prop 1); the "never scored" term is elementary, not stated for best-ever-scored HPM (LIT-STAT); idea informally in García-Donato & Martínez-Beneito 2013 §4 (LIT-VENUE) |
+| Thm 4 (finite n) | Thm N200 and Lemma 1 (posterior miss Π(X) + search miss) | PROVED (elementary, author only); Π(X) upper bound OPEN | EX-A only | **AR, every n** | MEDIUM threat (LIT-VENUE); Hou–Wang–Atchadé arXiv:2407.20580 Thm 2 threatens "first finite-n" wording |
+| Thm 5 | T38(0) composition, (0_H) | PROVED; XF A-REV1/5/8 VERIFIED | strict output 𝒪 | AR | — |
+| Thm 5 | T38(a) favourable | PROVED-UNDER (F) | iid final draws, EXP′ | ID (iid draws) | TH6: a BVS instance of the Mathews–Schmidler 2024 (AAP 34(1B)) template; "cite it" (LIT-PAR) |
+| Thm 5 | T38(b1) LS0 route; (b1-LH) exact Gram; (b1-LH-iid) p ≫ n (API-PXNGAP) | (b1) PROVED-UNDER (M1)–(M3), XF A-REV8 VERIFIED; (b1-LH) PROVED (candidate), XF VERIFIED; (b1-LH-iid) PROVED (candidate), XF GAP (A-REV3/6/8) | LS0; LH; g ≤ B < 2g | **ID: LS0 is not in production** (API-AUDIT) | ⚑⚔ "Novel for the paper's target and method; a corollary of YWJ/ZYVR/Chang–Zhou under *their* prior" (LIT-MCMC); "no SMC-BVS paper has an output theorem" (LIT-VENUE G1). API-POS vs LIT-MCMC: see note D1 |
+| Thm 5 | T38(b2-LH) no-LS0 masked consistency (B2-LH + STAB-LH) | PROVED-UNDER STAB-LH; XF A-REV7 VERIFIED; STAB certificate Astra-authored, Claude-VERIFIED (API-VSTAB) | exact-Gram LH subfamily, p ≤ n − 1, g ≤ B < 2g, frozen grid | **AR method (no LS0)**, ID design | as above |
+| Thm 5 | BG3 (abstract lock), LH-lock; F1/F2; SEP-GU | BG3 PROVED, XF VERIFIED; LH-lock XF VERIFIED conditional fixed p; **general LH locking FALSE** (A-REV7); F2 GAP, Lemma 3.4 ERROR; GU XF VERIFIED* as a greedy theorem | fixed p; strict C1–C3 | AR method, fixed-p component (production enumerates at fixed p) | — |
+| Thm 5(c) | T32(i) score count; Cost-T38 | PROVED; XF A-REV5 GAP (keep qualification); Cost-T38 PROVED-UNDER | — | AR (code-to-count) | ⚑ "not a selling point; do not headline cost" (LIT-VENUE); "polynomial-time recovery on LH is not new" under their priors (API-POS) |
+| Thm 6 | T26-ThmA/B, Lemmas 1–3 (Ẑ, PIP consistency, favourable) | T26 overall CONJECTURE; ThmA PROVED, XF VERIFIED*; ThmB PROVED-UNDER; PropC PROOF SKETCH | (T_n+1)Δ_n → 0 (holds in 1/56 runs at n ≤ 3,200), EXP, SE | ID: frozen run; favourable only | ⚔ LIT-SMC: "no analogue"; LIT-VENUE: "standard pattern" (Dau–Chopin 2022 CLTs + concentration) |
+| Thm 6 (P1) | Theorem G stage count; Thm 1 one-stage; Rule CAP (API-T26BUD) | Theorem G PROVED (deterministic, as coded); Thm 1 PROVED given inputs; Prop O PROOF SKETCH; Conjecture P | S₀ ∈ V | AR rule | ⚑ G(i)/Lemma 1 = Štefankovič–Vempala–Vigoda 2009 (J. ACM 56(3)): "present G(i) as known" (LIT-SMC; this is for O-STAGES G(i), and applies to T26BUD's count by analogy (?)) |
+| Thm 6 / Prop 2 | O-STAGES STG-M (masked crossing T* = log₂A₀ + O(1)), STG-F; item 4 dense limit | STG-M PROVED, XF VERIFIED* (ideal two-state grid) | ideal exact-frontier grid | ID | STG-M: "plausibly new, elementary" (LIT-SMC); item 4 KNOWN: Syed–Bouchard-Côté–Chern–Doucet arXiv:2408.12057 Thm 3 (LIT-SMC, LIT-PAR agree) |
+| Prop 2 | T12 E[Ẑ_r] = Z, islandwise E[Ẑ_r PIP̂_rj] = Z·PIP_j; T31(i) Markov 0.05·Ẑ | PROVED-LOCKED (wave 1); XF A-REV4 GAP on output-Markov wording | frozen calibration, potential run | ID: frozen calibration (the method freezes it by design) | ⚑ KNOWN—CITE: Whiteley–Lee–Heine 2016 §5.1; Dai–Heng–Jacob–Whiteley 2022 eq. (4.8); Grosse–Ghahramani–Adams 2015 (Markov). Only the negative items (pooled × pooled is not an identity; E[Ẑ \| completed] ≠ Z) are "genuinely non-standard" (LIT-SMC) |
+| Prop 2 | Prop 2(f) VAL-FP | PROVED-UNDER; XF A-REV4 GAP; API-AUDIT MEASURED (p ≤ 40) | floating-point contract | AR, small p | — |
+| Prop 2 / Thm 6 | O-PW2 Thm A (exact variance identity), B, C | A PROVED, XF VERIFIED; B, C PROVED (B XF VERIFIED* with fixed inputs only) | frozen calibration | ID | ⚑ A: "same kind as Cérou–Del Moral–Guyader 2011 Thm 1.4" (AIHP 47(3)), unchecked; B/C "may carry novelty" (LIT-SMC) |
+| Masked Ẑ / PIP | MASKZPIP E1/E2 (lower tail), E4 dichotomy, P1–P3, C1–C3; F-MASKPIP M1–M3 | E1/E2, P1, P3, C1 PROVED (candidate); E4 resolved half CONJECTURE; M1/M2 XF VERIFIED, M3 ERROR | frozen calibration, one island | ID (frozen) / per-fit AR (C1, P3) | "outside all general bounds (μ⋆, mixing)" (LIT-SMC) |
+| Remark | Prop M (naive merge of block fits fails); FD-NM | Prop M: SHARE-M(b) ERROR (A-REV3/6); FD-NM ERROR, repair pending | — | — | ⚑ "known phenomenon … for motivation, not a contribution"; refutes a naive union, **not** Song–Liang (LIT-STAT) |
+| Remark | O-WSTAB WS1–WS8 weight stability; FD-W1, FD-W(a–c) | WS PROVED (no review); W(a–f) XF VERIFIED under H-ORTH; WS6e CONJECTURE; WS8d OPEN; FD-W1 XF VERIFIED | H-ORTH, ideal grid, IID idealisation for WS8 | ID | not assessed by any LIT report |
+| Suppl. | O-CERT C1–C6, Lemma M (per-fit certificates) | Lemma M, C3, C4 PROVED, XF VERIFIED; C1 ERROR as quantified; C5 ERROR (tie prose) | — | AR (scored set) | NEW "in kind", medium; BVS stochastic-search literature not searched (LIT-SMC G5) |
+| Suppl. | ADRAFT-ThmA/CorA1/uniPIP (fixed-data N → ∞ consistency of SMC estimators) | PROVED (Astra author; Astra check only) | EX-A, EX-S | ID: frozen | standard (Del Moral et al. 2006; proposal §5.2 says so itself) |
+| Suppl. | IND-T; T05, T33, T34 remarks | IND-T PROVED, XF VERIFIED* (A-REV1 only); T05/T33 PROVED (author only) | stream implementation fact | AR | — |
+| (LIT-PAR) | G4: Song–Liang-type splitting fails on an LH-like masked pair | COUNTEREXAMPLE (numerical, reproducible) + PROOF SKETCH | p = 16, n = 200 | — | LIT-PAR's own result; its theorem reference ("Thm 5") should read Thm 4 / Cor 2 + eq. (19) in the JRSS-B text (SL digest) |
+
+**Disagreements to resolve (flagged).**
+- **D1: API-POS vs LIT-MCMC on rapid mixing.** The two reports agree that no published rapid-mixing theorem covers *our* prior and target as stated. They differ on why:
+  - API-POS puts the obstruction on the prior side (g = n, κ, cap ⌊n/2⌋). It expects a YWJ-style proof for our prior to "very likely succeed", and calls the gap "formal, not substantive".
+  - LIT-MCMC computes that the sufficient condition R > M fails at n = 200 and 1,600 on LH, and at study scale in 12/12 data sets (by a factor ≥ p^0.87). It concludes the unimodal-ratio route *cannot* certify our target.
+  - LIT-VENUE §1.3 says "R > M … since on LH S₀ is the unique local mode". LIT-MCMC's computation contradicts this: unimodality (R > 1) does not give R > M.
+  - **Reading:** both can be right. LIT-MCMC refutes a *sufficient condition*, not fast mixing, and API-POS's claim is a CONJECTURE. The paper should not say either "covered" or "not coverable". It needs an independent check (§6).
+- **D4: LIT-SMC vs LIT-PAR on island pooling.** LIT-SMC cites Vergé et al. as covering our identities; LIT-PAR calls Vergé "plain averaging" and contrasts it with Ẑ-weighted pooling. Both call T31(i) standard.
+- **D5: the size of μ⋆ under a masked start.** LIT-SMC and LIT-MCMC say "polynomially small"; LIT-PAR says "exponentially small" (Mathews–Schmidler).
+- **D6: Thm 6 / T26 novelty.** LIT-SMC says "no analogue"; LIT-VENUE says "standard pattern".
+- **D9: citation details that differ across reports.**
+  - Shin–Bhattacharya–Johnson venue: JASA (LIT-STAT) vs Statistica Sinica (LIT-VENUE).
+  - Le Fay–Chopin–Vihola theorem number: Thm 3.2 vs Thm 3.4.
+  - YWJ's size-cap constant is quoted three ways.
+  - All of these should be checked against the primary sources before printing.
+- **D10: Song–Liang's correlation condition.**
+  - Settled against the text (SL digest). Condition 5 ("|cov(x_t, y)| > 0 for any true predictor") justifies the iterative stage-1 step. Theorem 4 / Corollary 2 with eq. (19) is what retains a true predictor: it is retained only if its population projection coefficient β₀,t on the subset is nonzero.
+  - Masking can break both: cov(x_t, y) = 0 for a cancelled pair, and β₀,t = 0 when its partner sits in another split.
+  - LIT-PAR's "Thm 5" label and "read from slides" caveat should be replaced by this citation.
+
 ## 3. Coverage against the goal
 
 ### 3a. Proposal theory targets (Local-to-Global proposal §5, §13.1)
