@@ -1,6 +1,6 @@
 # Theorem meeting (MEET-THM): the theorem list of paper 1 — dossier (DRAFT, not frozen)
 
-Prepared by HQ ("SMC-BVS New HQ" thread), 2026-11-04. **Status: draft.** It is frozen before Round 1 is dispatched; later evidence is added only as dated files in `theory_campaign/MEET-THM/evidence/`. Round 0 (two fresh-eyes advisors) runs before the freeze and is an input.
+Prepared by HQ ("SMC-BVS New HQ" thread), 2026-11-04. **Status: FROZEN 2026-11-04 ~02:00 UTC.** Later evidence is added only as dated files in `theory_campaign/MEET-THM/evidence/`. Round 0 (two fresh-eyes advisors) is complete: `R0_D.md`, `R0_E.md`.
 
 ## 0. Purpose
 
@@ -42,7 +42,9 @@ No API credit: subscriptions only. On a usage limit, the affected role waits for
 
 | What | Where |
 |---|---|
-| The method (fixed) | `theory/MEET-v31:theory_campaign/MEET-v31/METHOD_v3.1_FINAL.md`; base `Docs/Methodology/METHODOLOGY_v3.md` |
+| The method (fixed; amended after independent review, HQ-approved) | `theory/MEET-v31:theory_campaign/MEET-v31/METHOD_v3.1_FINAL.md` (read `AMENDMENT_HQ_01.md` first); base `Docs/Methodology/METHODOLOGY_v3.md` |
+| Independent reviews of the method documents | `/home/fb31/hq_reviews/SOL1_proof_check.md` (60 findings), `SOL2_audit.md` (13), HQ dispositions `HQ_DISPOSITIONS.md` |
+| N9 kernel validity (closure gate, PASSED) | `theory/N9-KERNEL:theory_campaign/N9-KERNEL/{REPORT.md,PROOF.md,CHECK.md}` |
 | Method-meeting theory consequences: 17 obligations N1–N17, inherent limitations, what is NOT inherent | `theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md` |
 | Draft theorem list (24 entries V1–V4, A1–A4, D1–D4, S1–S4, C1, R1–R7 in groups G1–G6; tiers; HQ plan) | `theory/THM-SYNTH:theory_campaign/THM-SYNTH/{THEOREM_LIST.md,HQ_PLAN.md,REPORT.md}` |
 | Inventory: component × property map, gap list | `theory/THM-INV:theory_campaign/THM-INV/REPORT.md` (+ `digests/`) |
@@ -103,7 +105,8 @@ ID · draft statement with hypotheses · the guarantee in one plain sentence · 
 - Seats do not re-derive a result that already has a filed check; they cite the registry entry.
 - Known-false results (e.g. SHARE-M(b), FD-NM, general LH locking per A-REV7) are listed and may not be re-proposed without addressing the refutation.
 - Any decision rule fixed in advance is dry-run on mock tables first.
-- Long compute runs detached; agents only read results.
+- Long compute runs as its own `systemd-run --user` unit (see `~/.config/bvs-hq/owls/POLICY.md`): `setsid nohup` dies with the launching agent's session. Agents only read results.
+- Every heavy claim in a synthesis is traced to a seat file line; the auditor checks this after every synthesis.
 
 ## 9. Deliverables (under `theory_campaign/MEET-THM/`)
 
@@ -118,3 +121,22 @@ ID · draft statement with hypotheses · the guarantee in one plain sentence · 
 5. Delivery P(U) → 0 has no theorem (THM-INV §5.4); decide whether paper 1 states results joint with delivery or proves a delivery result.
 6. The draft list's "depth free of N, H, R" wording was removed by MEET-v31 (decision 6): depth is stated at the island level only (Felipe: paper 1 claims island-level depth).
 7. Biometrika length: about 14 candidate main theorems is a lot for one paper.
+
+## 11. Inclusion-criteria dry run on the 24-entry draft list (HQ, before the freeze)
+
+Purpose: show that IC1–IC7 can reject or demote, so they are not vacuous (MEET-v31 lesson 7). From THM-SYNTH's own statuses; the meeting re-decides every entry.
+
+| Entry | Likely IC verdict | Why |
+|---|---|---|
+| S3 (Prop M, naive merge) | **reject** | IC1/IC2: SHARE-M(b) ERROR, FD-NM ERROR; already dropped by THM-SYNTH |
+| R6 (delivery P(U) → 0) | **reject as theorem → limitation or future work** | IC2: no route (status NONE) |
+| R7 (finite-n bound on Π(X)) | **reject → future work** | IC2: OPEN, no route |
+| R2(i)–(ii) (HPM = 0–1 Bayes rule; MPM = Hamming) | **demote to cited lemma** | IC4: folklore (Barbieri–Berger 2004); (iii) size-prior ceiling may stay |
+| V1(a)–(c) (SMC unbiasedness/consistency) | **demote to cited lemmas**, method-specific hypotheses kept as a proposition | IC4: KNOWN—CITE (Del Moral et al. 2006; Whiteley–Lee–Heine 2016) |
+| V2 (worker equivalence) | **supplement lemma** | IC5: engineering fact, not a statistical guarantee |
+| D4 (R vs N trade-off) | **defer** unless a route is shown | IC2: PROOF SKETCH only |
+| S4 (weight stability, §5.3) | **fails IC3 as stated** (H-ORTH only: not a genuinely weak-but-nonzero correlation design) | must be strengthened (agenda 4) — binding goal |
+| A1, C1 (NEW-SYNTH) | **pass only after check wave 1** | IC1/IC2: PROOF SKETCH; IC3 must be exhibited |
+| R1, R3, R4, R5(0,a,b1-LH) | **pass**, subject to IC1 fidelity (agenda 8) | proved cores, routes and Lean cores named |
+
+So the criteria reject 3 entries, demote about 3, defer 1 and block 1 on IC3: they discriminate.
