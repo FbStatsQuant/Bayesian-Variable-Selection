@@ -1,6 +1,6 @@
 # MEET-THM · STATUS (chair)
 
-Updated 2026-11-04 (check wave 2 running).
+Updated 2026-11-04 (Round 3 running).
 
 | Step | State |
 |---|---|
@@ -16,7 +16,7 @@ Updated 2026-11-04 (check wave 2 running).
 | 8. Round 3 | **running** (`ROUND3_BRIEF.md`) |
 | 9. Close | not started |
 
-HQ: Q1–Q4 answered (`evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`), applied in `HQ_QUESTIONS.md`. FUTURE_WORK opened (FW1, FW2).
+HQ: Q1–Q5 answered (Q5: `evidence/2026-11-04_HQ_RULING_Q5.md`); Q1–Q4 (`evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`), applied in `HQ_QUESTIONS.md`. FUTURE_WORK opened (FW1, FW2).
 
 ## Running tasks (delegate task ids, suffix only)
 | Role | Target | Task |
@@ -29,6 +29,11 @@ HQ: Q1–Q4 answered (`evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`), applied in `HQ
 | Seat C, R2 | codex · gpt-6-astra high | done → `R2_C.md` |
 | PC1, wave 2 | codex · gpt-6.1-sol high | done → `evidence/W2_PC1/VERDICTS.md` |
 | Auditor, SYNTH_R2 | codex · gpt-6.1-sol high | done → PASS WITH CORRECTIONS (applied) |
+| Seat A, R3 | claudeAgent_personal · Fable 5.1 high | …92ed5ac2-f70d-4ee2-8bd4-9b218ad08378 |
+| Seat B, R3 | claudeAgent · Fable 5.1 high | …195715d5-3ec5-4214-9875-fb3b35a7a713 |
+| Seat C, R3 | codex · gpt-6-astra high | …2569b3ba-4b8f-411f-822a-bc3f816949e1 |
+| Seat D, R3 | claudeAgent_personal · Fable 5.1 high | …d7587c2e-d8a1-4912-af0b-a0ed056832b8 |
+| Registrar, REGISTRY_PAPER1 + NOTATION (draft) | claudeAgent · Sonnet 5.5 high | …2668f3f9-c07f-4274-8b3e-69b1f54ef339 |
 | PC2, wave 2 | claudeAgent · Opus 5.5 high | done → `evidence/W2_PC2/VERDICTS.md` (29 TRUE-AS-WRITTEN, 0 COUNTEREXAMPLE) |
 | Clerk, R2 side-by-side | claudeAgent · Haiku 5.5 | done |
 | Seat D, R2 | claudeAgent_personal · Fable 5.1 high | done → `R2_D.md` |
