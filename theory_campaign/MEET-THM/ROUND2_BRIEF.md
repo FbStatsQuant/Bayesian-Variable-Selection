@@ -9,7 +9,7 @@ You are **read-only**: do not edit, commit or push. Your **final message is your
 Working directory: `/home/fb31/.t3/worktrees/Bayesian-Variable-Selection/theory-MEET-THM`. Run `git fetch origin`.
 
 ## Read
-1. `theory_campaign/MEET-THM/SYNTH_R1.md`: the disagreement table (§2), the repairs required by the checks (§3), the agenda (§4). Also `SYNTH_R1_AUDIT.md` if present (the auditor's corrections, which bind the synthesis).
+1. `theory_campaign/MEET-THM/SYNTH_R1.md`: the v2 (corrected after the auditor's report `SYNTH_R1_AUDIT.md`; re-audit `SYNTH_R1_REAUDIT.md`): HQ's rulings as applied (§0.1), the §5.3 facts (§0.4), the disagreement table D1–D18 (§2), the repairs required by the checks (§3), the agenda (§4).
 2. `theory_campaign/MEET-THM/evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`, HQ's binding rulings on §5.3, §5.4 and the run card.
 3. The check verdicts: `evidence/W1_PC1/VERDICTS.md` (Seats A, B, D) and `evidence/W1_PC2/VERDICTS.md` (Seat C). Also `evidence/CHK_INHERITED/REPORT.md` if present (cross-family check of OWS-WS3/4/6d/7 and N9).
 4. All four Round 1 answers: `R1_A.md`–`R1_D.md`. Your own is `R1_{SEAT}.md`.
@@ -24,7 +24,7 @@ Working directory: `/home/fb31/.t3/worktrees/Bayesian-Variable-Selection/theory-
 
 ## Answer in these sections. Tables only; ≤ 80 words per rebuttal row; ≤ 250 words of free text per card; whole answer ≤ 12,000 words
 
-**§R1 Rebuttal**, one row per disagreement D1–D14 of SYNTH_R1 §2: `row | concede / hold / amend | your position now | evidence that would change it`.
+**§R1 Rebuttal**, one row per disagreement D1–D18 of SYNTH_R1 §2 (for D17 and D18, one row per K-ID or group): `row | concede / hold / amend | your position now | evidence that would change it`.
 
 **§R2 Final statements.** One card for every theorem you keep (main or supplement). Fields:
 - ID (K-IDs);
