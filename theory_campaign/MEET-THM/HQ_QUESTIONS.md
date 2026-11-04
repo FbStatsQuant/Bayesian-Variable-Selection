@@ -44,3 +44,13 @@ Chair, 2026-11-04 ~03:00 UTC. Raised in Round 1 (`R1_*.md` §I; side-by-side `ev
 
 - **N9 independent review** (D:603). N9-KERNEL PROOF.md §1–3 goes to the cross-family proof checker in check wave 2. Theorem V (everyone's rank 1) rests on it.
 - **R_n as a hypothesis in Theorem H(f)** (B:690). This is a meeting matter: ground rule 5 against ground rule 6, because E[W²|𝒞] is not a model or design condition. Round 2 settles it.
+
+## HQ rulings (2026-11-04), verbatim in `evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`; how the meeting applies them
+
+| Q | Ruling | Applied as |
+|---|---|---|
+| Q1 §5.3 | Bridge form ACCEPTED if paper 1 ships all of (a) the discrepancy half (π₀ vs π divergence controlled by cross-block terms + the σ²-coupling term, ε > 0 family, constants), (b) the bridge-form stability theorem (IC3 exhibited), (c) the refutation of the one-shot form (OWS-WS6(d), WS7) after a cross-family check | Round 2 must produce one §5.3 package with three named parts (a), (b), (c). OWS-WS6d and OWS-WS7 (author Opus 5.5, O-WSTAB PROOF.md §6–§7, author-only) go to PC1 (gpt-6.1-sol) in check wave 2; if the check fails, Q1 returns to HQ. If (a) or (b) lacks a credible route at close → escalation to HQ, never dropped. |
+| Q2 §5.4 coverage | Posterior-content / Monte Carlo reading ACCEPTED: |π(C(π̂)) − nominal| for reported credible quantities + their MC error | Round 2 cards state it in that form. Frequentist coverage of the exact posterior → `FUTURE_WORK.md` (entry FW1). |
+| Q3 §5.4 masked TV/KL | Not binding; obligation with fallback | Masked final-estimate TV/KL → `FUTURE_WORK.md` (FW2, V11/N10 OPEN); reverse-KL obstruction stated as a definitional fact. **Requirement:** the final list names at least one masked-regime accuracy statement paper 1 proves — Round 2 seats must name it (candidates: the certificate card's detection of underestimation, K42/K43/K45; a PIP bound conditional on delivery). |
+| Q4 Ĵ, leakage proxy | REPORTING, allowed (from existing quantities only; no random numbers; no feedback; POST HOC) | Round 2/3 seats give exact definitions (estimator, numerical label); the chair sends them to HQ at close for AMENDMENT_HQ_02. |
+| Chair | N9 → cross-family check in wave 2; R_n in H(f) is the meeting's | N9-KERNEL PROOF.md §1–3 → PC1 in wave 2 (author Claude; checker Codex Sol). R_n settled in Round 2. |

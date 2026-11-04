@@ -11,7 +11,7 @@ Updated 2026-11-04 02:40 UTC.
 | 4–8 | not started |
 
 Waiting for: PC1 and PC2 verdicts. Meanwhile the chair drafts Synthesis 1 from the four R1 files.
-HQ questions: Q1–Q4 in `HQ_QUESTIONS.md`, sent to HQ 2026-11-04 ~03:00 UTC; meeting continues on both readings.
+HQ questions: Q1–Q4 answered by HQ 2026-11-04 (`evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`), applied in `HQ_QUESTIONS.md`. Wave-2 queue: OWS-WS6d, OWS-WS7, N9 PROOF §1–3 → PC1.
 
 ## Running tasks (delegate task ids, suffix only)
 | Role | Target | Task |
