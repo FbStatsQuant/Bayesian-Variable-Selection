@@ -11,3 +11,13 @@ Updated 2026-11-04 02:30 UTC.
 
 Waiting for: R1_A–R1_D.
 HQ questions: none yet (`HQ_QUESTIONS.md` not opened).
+
+## Running tasks (delegate task ids, suffix only)
+| Role | Target | Task |
+|---|---|---|
+| Seat A, R1 | claudeAgent_personal · Fable 5.1 high | …d888db24-7ff9-4c9a-88e8-2c6fc7ae19f5 |
+| Seat B, R1 | claudeAgent · Fable 5.1 high | …974c200c-5478-4751-86db-f1fe59c16da2 |
+| Seat C, R1 | codex · gpt-6-astra high | …3ffe8797-ea44-4bfe-a83a-fda3f7b27c4d |
+| Seat D, R1 | claudeAgent_personal · Fable 5.1 high | …8a2ff402-1ed1-46dd-958a-86bec5768981 |
+
+Done: registrar R0 diff (…8512eb39-b16b-4aa6-b400-8f056969e4d8).
