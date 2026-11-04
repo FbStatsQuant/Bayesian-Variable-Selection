@@ -29,7 +29,7 @@ HQ: Q1–Q5 answered (Q5: `evidence/2026-11-04_HQ_RULING_Q5.md`); Q1–Q4 (`evid
 | Seat C, R2 | codex · gpt-6-astra high | done → `R2_C.md` |
 | PC1, wave 2 | codex · gpt-6.1-sol high | done → `evidence/W2_PC1/VERDICTS.md` |
 | Auditor, SYNTH_R2 | codex · gpt-6.1-sol high | done → PASS WITH CORRECTIONS (applied) |
-| Seat A, R3 | claudeAgent_personal · Fable 5.1 high | …92ed5ac2-f70d-4ee2-8bd4-9b218ad08378 |
+| Seat A, R3 | claudeAgent_personal · Fable 5.1 high | done → `R3_A.md` |
 | Seat B, R3 | claudeAgent · Fable 5.1 high | …195715d5-3ec5-4214-9875-fb3b35a7a713 |
 | Seat C, R3 | codex · gpt-6-astra high | done → `R3_C.md` |
 | Seat D, R3 | claudeAgent_personal · Fable 5.1 high | …d7587c2e-d8a1-4912-af0b-a0ed056832b8 |
