@@ -82,3 +82,10 @@ Chair, 2026-11-04 ~03:00 UTC. Raised in Round 1 (`R1_*.md` §I; side-by-side `ev
 - a continuous upper envelope.
 
 The literal alternative, the integer T as a continuous function, is false by construction, as PC1's counterexample shows. The meeting proceeds on the reading above unless HQ rules otherwise.
+
+**Q5 ruling (2026-11-04, verbatim in `evidence/2026-11-04_HQ_RULING_Q5.md`): ACCEPTED, with two conditions.**
+- The stage-count content of Q1(b) is exactly three things: the sandwich (η → 0), local constancy at non-critical thresholds, and a continuous upper envelope.
+- **Condition (1):** the real-valued parts must be genuine continuity or Lipschitz statements in ε on the correlated family: per-stage χ², weight-dispersion bounds and constants.
+- **Condition (2):** the theorem and the paper must say that T is a step function of ε that can jump at critical thresholds, citing PC1's example (T = 3 between {2, 4} at ε = 10⁻⁵). "Stable stage count" means the sandwich and nothing more.
+
+Applied in SYNTH_R2 and in the §5.3 card.
