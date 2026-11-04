@@ -1,0 +1,83 @@
+# N9 harness: n=20 p=6 design=AR1(0.8) seed=20261103  K=6  B=2  m=p+B+2=10
+blocks: {0,1} {2,3} {4,5}
+neighbour graph N(j) (0-based) and degree:
+  N(0) = {1,2}  deg=2
+  N(1) = {0,2,3}  deg=3
+  N(2) = {0,1,3}  deg=3
+  N(3) = {1,2,4,5}  deg=4
+  N(4) = {3,5}  deg=2
+  N(5) = {3,4}  deg=2
+graph symmetric and loop-free: yes
+states |S|<=K: 64
+[spec] max |log m_prod - log m_indep(long double)| = 9.780e-15
+[spec] phi=0.00: max |log gamma_phi(code) - log gamma_phi(spec)| up to a constant = 1.188e-14
+[spec] phi=0.50: max |log gamma_phi(code) - log gamma_phi(spec)| up to a constant = 9.218e-15
+[spec] phi=1.00: max |log gamma_phi(code) - log gamma_phi(spec)| up to a constant = 1.045e-14
+[start] log Zbar0 (build_start) = 2.279242524531271 ; brute force log sum_S gamma0 = 2.279242524531271 ; diff = 1.225e-16
+[start] independent (spec §5/§6.3, long double, own w(k), W_K, r_b) log Zbar0 = 2.279242524531268 ; diff to build_start = 2.701e-15
+[start] draw_pi0 exact law (DFS over its uniforms, 64 leaves, 9397 calls, 0 duplicate leaves, 0 states with mass 0): total=1
+[start] law(draw_pi0) vs gamma0/Zbar0: max relative error = 6.462e-14, TV = 1.687e-16
+[start] production RNG sample N=500000: chi2=63.0 df=63 p~0.476 ; TV(emp, exact)=0.0029 (E[TV] scale ~ 0.0045)
+
+== phi = 0.00 ==
+Gibbs: o_j vs extracted accept threshold: max diff = 0.9 grid units (2^-53)
+proposals enumerated: uswap 480, nswap 256 (of which 120 with |N(j)\S| != |N(l)\S'|, i.e. Hastings factor != 1)
+  Gibbs j=0                    rowsum_err=0.00e+00  ||piK-pi||_1=1.69e-16  DB abs=6.25e-17  DB rel(all)=8.65e-15  DB rel(flows>1e-13)=8.65e-15
+  Gibbs j=1                    rowsum_err=0.00e+00  ||piK-pi||_1=3.54e-17  DB abs=1.73e-18  DB rel(all)=2.88e-16  DB rel(flows>1e-13)=2.88e-16
+  Gibbs j=2                    rowsum_err=0.00e+00  ||piK-pi||_1=3.84e-17  DB abs=1.39e-17  DB rel(all)=3.22e-16  DB rel(flows>1e-13)=3.22e-16
+  Gibbs j=3                    rowsum_err=0.00e+00  ||piK-pi||_1=2.45e-17  DB abs=8.67e-19  DB rel(all)=2.89e-16  DB rel(flows>1e-13)=2.89e-16
+  Gibbs j=4                    rowsum_err=0.00e+00  ||piK-pi||_1=3.94e-17  DB abs=3.47e-18  DB rel(all)=3.25e-16  DB rel(flows>1e-13)=3.25e-16
+  Gibbs j=5                    rowsum_err=0.00e+00  ||piK-pi||_1=3.50e-17  DB abs=1.39e-17  DB rel(all)=2.38e-16  DB rel(flows>1e-13)=2.38e-16
+  uniform swap                 rowsum_err=2.22e-16  ||piK-pi||_1=6.26e-17  DB abs=8.24e-18  DB rel(all)=3.83e-14  DB rel(flows>1e-13)=3.83e-14
+  neighbour swap               rowsum_err=2.22e-16  ||piK-pi||_1=1.46e-16  DB abs=2.26e-17  DB rel(all)=3.16e-14  DB rel(flows>1e-13)=3.16e-14
+  independence (pi0)           rowsum_err=0.00e+00  ||piK-pi||_1=2.91e-16  DB abs=1.39e-17  DB rel(all)=7.56e-14  DB rel(flows>1e-13)=7.56e-14
+  ROUND (uniform random order) rowsum_err=4.44e-16  ||piK-pi||_1=4.27e-16  DB abs=1.04e-17  DB rel(all)=1.54e-14  DB rel(flows>1e-13)=1.54e-14
+  fixed canonical order        rowsum_err=4.44e-16  ||piK-pi||_1=4.14e-16  DB abs=1.27e-17  DB rel(all)=7.52e-14  DB rel(flows>1e-13)=7.52e-14
+  negative controls (must fail DB):
+    nswap w/o Hastings factor  rowsum_err=2.22e-16  ||piK-pi||_1=6.58e-02  DB abs=4.39e-03  DB rel(all)=6.67e-01  DB rel(flows>1e-13)=6.67e-01
+    indep w/ symmetric accept  rowsum_err=5.55e-16  ||piK-pi||_1=4.39e-01  DB abs=3.97e-02  DB rel(all)=1.00e+00  DB rel(flows>1e-13)=1.00e+00
+  MC one_round from state 0 (|S|=0), N=50000: chi2=48.3 df=50 p~0.543 TV=0.0072
+  MC one_round from state 63 (|S|=6), N=50000: chi2=53.4 df=50 p~0.346 TV=0.0068
+  MC one_round from state 32 (|S|=1), N=50000: chi2=56.6 df=50 p~0.243 TV=0.0082
+
+== phi = 0.50 ==
+Gibbs: o_j vs extracted accept threshold: max diff = 0.9 grid units (2^-53)
+proposals enumerated: uswap 480, nswap 256 (of which 120 with |N(j)\S| != |N(l)\S'|, i.e. Hastings factor != 1)
+  Gibbs j=0                    rowsum_err=0.00e+00  ||piK-pi||_1=1.94e-16  DB abs=6.94e-17  DB rel(all)=1.13e-14  DB rel(flows>1e-13)=1.13e-14
+  Gibbs j=1                    rowsum_err=0.00e+00  ||piK-pi||_1=4.56e-17  DB abs=3.47e-18  DB rel(all)=3.89e-16  DB rel(flows>1e-13)=3.89e-16
+  Gibbs j=2                    rowsum_err=0.00e+00  ||piK-pi||_1=3.10e-17  DB abs=6.94e-18  DB rel(all)=3.02e-16  DB rel(flows>1e-13)=3.02e-16
+  Gibbs j=3                    rowsum_err=0.00e+00  ||piK-pi||_1=3.97e-17  DB abs=1.73e-18  DB rel(all)=3.89e-16  DB rel(flows>1e-13)=3.89e-16
+  Gibbs j=4                    rowsum_err=0.00e+00  ||piK-pi||_1=4.34e-17  DB abs=3.47e-18  DB rel(all)=2.31e-16  DB rel(flows>1e-13)=2.31e-16
+  Gibbs j=5                    rowsum_err=0.00e+00  ||piK-pi||_1=5.00e-17  DB abs=6.94e-18  DB rel(all)=4.18e-16  DB rel(flows>1e-13)=4.18e-16
+  uniform swap                 rowsum_err=2.22e-16  ||piK-pi||_1=7.14e-17  DB abs=8.46e-18  DB rel(all)=5.71e-14  DB rel(flows>1e-13)=5.71e-14
+  neighbour swap               rowsum_err=2.22e-16  ||piK-pi||_1=1.46e-16  DB abs=2.30e-17  DB rel(all)=4.96e-14  DB rel(flows>1e-13)=4.96e-14
+  independence (pi0)           rowsum_err=4.44e-16  ||piK-pi||_1=3.65e-16  DB abs=1.39e-17  DB rel(all)=7.56e-14  DB rel(flows>1e-13)=7.56e-14
+  ROUND (uniform random order) rowsum_err=7.77e-16  ||piK-pi||_1=2.53e-16  DB abs=2.78e-17  DB rel(all)=1.49e-14  DB rel(flows>1e-13)=1.49e-14
+  fixed canonical order        rowsum_err=8.88e-16  ||piK-pi||_1=3.29e-16  DB abs=8.42e-04  DB rel(all)=6.82e-01  DB rel(flows>1e-13)=6.82e-01
+  negative controls (must fail DB):
+    nswap w/o Hastings factor  rowsum_err=2.22e-16  ||piK-pi||_1=6.23e-02  DB abs=4.21e-03  DB rel(all)=6.67e-01  DB rel(flows>1e-13)=6.67e-01
+    indep w/ symmetric accept  rowsum_err=5.55e-16  ||piK-pi||_1=4.18e-01  DB abs=4.18e-02  DB rel(all)=1.00e+00  DB rel(flows>1e-13)=1.00e+00
+  MC one_round from state 0 (|S|=0), N=50000: chi2=54.7 df=50 p~0.300 TV=0.0082
+  MC one_round from state 63 (|S|=6), N=50000: chi2=57.2 df=52 p~0.288 TV=0.0077
+  MC one_round from state 32 (|S|=1), N=50000: chi2=40.5 df=50 p~0.828 TV=0.0058
+
+== phi = 1.00 ==
+Gibbs: o_j vs extracted accept threshold: max diff = 0.9 grid units (2^-53)
+proposals enumerated: uswap 480, nswap 256 (of which 120 with |N(j)\S| != |N(l)\S'|, i.e. Hastings factor != 1)
+  Gibbs j=0                    rowsum_err=0.00e+00  ||piK-pi||_1=1.73e-16  DB abs=6.94e-17  DB rel(all)=1.95e-14  DB rel(flows>1e-13)=1.95e-14
+  Gibbs j=1                    rowsum_err=0.00e+00  ||piK-pi||_1=3.92e-17  DB abs=1.39e-17  DB rel(all)=3.86e-16  DB rel(flows>1e-13)=3.86e-16
+  Gibbs j=2                    rowsum_err=0.00e+00  ||piK-pi||_1=4.02e-17  DB abs=3.47e-18  DB rel(all)=3.45e-16  DB rel(flows>1e-13)=3.45e-16
+  Gibbs j=3                    rowsum_err=0.00e+00  ||piK-pi||_1=2.59e-17  DB abs=1.73e-18  DB rel(all)=3.49e-16  DB rel(flows>1e-13)=3.49e-16
+  Gibbs j=4                    rowsum_err=0.00e+00  ||piK-pi||_1=4.23e-17  DB abs=1.73e-18  DB rel(all)=3.57e-16  DB rel(flows>1e-13)=3.57e-16
+  Gibbs j=5                    rowsum_err=0.00e+00  ||piK-pi||_1=4.32e-17  DB abs=1.73e-18  DB rel(all)=9.35e-16  DB rel(flows>1e-13)=9.35e-16
+  uniform swap                 rowsum_err=2.22e-16  ||piK-pi||_1=6.07e-17  DB abs=9.11e-18  DB rel(all)=8.19e-14  DB rel(flows>1e-13)=8.19e-14
+  neighbour swap               rowsum_err=2.22e-16  ||piK-pi||_1=1.62e-16  DB abs=2.43e-17  DB rel(all)=1.05e-13  DB rel(flows>1e-13)=1.05e-13
+  independence (pi0)           rowsum_err=4.44e-16  ||piK-pi||_1=3.18e-16  DB abs=1.39e-17  DB rel(all)=7.54e-14  DB rel(flows>1e-13)=7.54e-14
+  ROUND (uniform random order) rowsum_err=7.77e-16  ||piK-pi||_1=3.92e-16  DB abs=4.16e-17  DB rel(all)=1.55e-14  DB rel(flows>1e-13)=1.55e-14
+  fixed canonical order        rowsum_err=1.11e-15  ||piK-pi||_1=3.59e-16  DB abs=1.73e-03  DB rel(all)=9.17e-01  DB rel(flows>1e-13)=9.17e-01
+  negative controls (must fail DB):
+    nswap w/o Hastings factor  rowsum_err=2.22e-16  ||piK-pi||_1=5.70e-02  DB abs=3.96e-03  DB rel(all)=6.67e-01  DB rel(flows>1e-13)=6.67e-01
+    indep w/ symmetric accept  rowsum_err=5.55e-16  ||piK-pi||_1=4.04e-01  DB abs=4.33e-02  DB rel(all)=1.00e+00  DB rel(flows>1e-13)=1.00e+00
+  MC one_round from state 0 (|S|=0), N=50000: chi2=60.9 df=48 p~0.101 TV=0.0074
+  MC one_round from state 63 (|S|=6), N=50000: chi2=44.0 df=53 p~0.806 TV=0.0066
+  MC one_round from state 32 (|S|=1), N=50000: chi2=52.7 df=48 p~0.297 TV=0.0066

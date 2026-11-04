@@ -1,0 +1,92 @@
+{
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "bo_max_error": 7.105427357601002e-15,
+  "ws4_max_positive_violation": 7.771561172376096e-16,
+  "identity_max_error": 3.0531133177191805e-15,
+  "ws7_max_positive_violation": 0.0,
+  "orth": [
+    {
+      "seed": 0,
+      "max_logc": 3.9479412905292266,
+      "max_expansion_error": 0.025689157826271902,
+      "maximum_centered": 2.6177515086064345,
+      "logc_bound_slack": 0.0
+    },
+    {
+      "seed": 1,
+      "max_logc": 1.3920740746651303,
+      "max_expansion_error": 0.14774692339355355,
+      "maximum_centered": -0.35772069298398623,
+      "logc_bound_slack": 0.0
+    },
+    {
+      "seed": 2,
+      "max_logc": 2.7593040876737547,
+      "max_expansion_error": 0.1278081936841211,
+      "maximum_centered": 1.1835779100360773,
+      "logc_bound_slack": 0.0
+    },
+    {
+      "seed": 3,
+      "max_logc": 0.567013437843028,
+      "max_expansion_error": 0.09077811080245479,
+      "maximum_centered": -1.2111560532406545,
+      "logc_bound_slack": 0.0
+    },
+    {
+      "seed": 4,
+      "max_logc": -1.090811817253882,
+      "max_expansion_error": 0.013699454369036301,
+      "maximum_centered": -2.9675411628667563,
+      "logc_bound_slack": 0.0
+    },
+    {
+      "seed": 5,
+      "max_logc": 0.9497826806039991,
+      "max_expansion_error": 0.08211812542194985,
+      "maximum_centered": -0.7762346886390157,
+      "logc_bound_slack": 0.0
+    },
+    {
+      "seed": 6,
+      "max_logc": 4.044900404191308,
+      "max_expansion_error": 0.002764808862918855,
+      "maximum_centered": 2.7509553559680304,
+      "logc_bound_slack": 0.0
+    },
+    {
+      "seed": 7,
+      "max_logc": 2.057643545991297,
+      "max_expansion_error": 0.04466802619853283,
+      "maximum_centered": 0.49633304981733684,
+      "logc_bound_slack": 0.0
+    },
+    {
+      "seed": 8,
+      "max_logc": 1.6552457031416539,
+      "max_expansion_error": 0.10204051411523252,
+      "maximum_centered": -0.014522873256379576,
+      "logc_bound_slack": 0.0
+    },
+    {
+      "seed": 9,
+      "max_logc": 0.12205588353190633,
+      "max_expansion_error": 0.09521929802640416,
+      "maximum_centered": -1.4988895482209452,
+      "logc_bound_slack": 0.0
+    }
+  ],
+  "ws7c_initial_presence": 0.75,
+  "ws7c_after_one_multinomial_resampling": 0.625
+}
