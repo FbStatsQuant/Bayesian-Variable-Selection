@@ -11,7 +11,7 @@ Updated 2026-11-04 02:40 UTC.
 | 4–8 | not started |
 
 Waiting for: PC1 and PC2 verdicts. Meanwhile the chair drafts Synthesis 1 from the four R1 files.
-HQ questions: none yet (`HQ_QUESTIONS.md` not opened).
+HQ questions: Q1–Q4 in `HQ_QUESTIONS.md`, sent to HQ 2026-11-04 ~03:00 UTC; meeting continues on both readings.
 
 ## Running tasks (delegate task ids, suffix only)
 | Role | Target | Task |
