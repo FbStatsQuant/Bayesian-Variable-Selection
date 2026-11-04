@@ -21,7 +21,7 @@ HQ: Q1–Q4 answered (`evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`), applied in `HQ
 | Auditor, SYNTH_R1 v1 | codex · gpt-6.1-sol high | done → FAIL |
 | Auditor, SYNTH_R1 v2 re-audit | codex · gpt-6.1-sol high | done → FAIL (6) |
 | Auditor, v2.1 narrow verification | codex · gpt-6.1-sol high | done → PASS WITH CORRECTIONS (applied) |
-| Seat A, R2 | claudeAgent_personal · Fable 5.1 high | …b35c61cd-98a3-4711-8040-1c067700c39e |
+| Seat A, R2 | claudeAgent_personal · Fable 5.1 high | done → `R2_A.md` |
 | Seat B, R2 | claudeAgent · Fable 5.1 high | …953b3f08-f168-493a-aec9-e4d625aa86d3 |
 | Seat C, R2 | codex · gpt-6-astra high | …0db6c84e-4f11-4fa7-b104-c303325718a8 |
 | Seat D, R2 | claudeAgent_personal · Fable 5.1 high | …83c57c6e-6c69-414b-8169-d8f2e10e6547 |
