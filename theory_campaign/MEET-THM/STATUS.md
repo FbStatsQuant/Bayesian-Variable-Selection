@@ -1,28 +1,22 @@
 # MEET-THM · STATUS (chair)
 
-Updated 2026-11-04 02:40 UTC.
+Updated 2026-11-04 (after Synthesis 1).
 
 | Step | State |
 |---|---|
 | 0. Dossier frozen; Round 0 (R0_D, R0_E) | done |
-| 1. R0 diff (chair + registrar) | **done**: `R0_DIFF.md` (K01–K108; coverage 24/72/44+15/17, none missing) |
-| 2. Round 1 (Seats A–D) | **done**: `R1_A.md`–`R1_D.md` (verbatim) |
-| 3. Check wave 1 (statement sanity) | **running**: brief `CHECK_W1_BRIEF.md`; PC1 (gpt-6.1-sol, Codex) on A, B, D cards; PC2 (Opus 5.5, Claude Work) on C cards; outputs → `evidence/W1_PC1/`, `evidence/W1_PC2/` |
-| 4–8 | not started |
+| 1. R0 diff | done: `R0_DIFF.md` (K01–K108) |
+| 2. Round 1 (Seats A–D) | done: `R1_A.md`–`R1_D.md` (verbatim); clerk side-by-side `evidence/R1_SIDE_BY_SIDE.md` |
+| 3. Check wave 1 | done: `evidence/W1_PC1/VERDICTS.md` (A, B, D: 11 COUNTEREXAMPLE, 25 NEEDS-HYPOTHESIS), `evidence/W1_PC2/VERDICTS.md` (C: 0 COUNTEREXAMPLE) |
+| 4. Synthesis 1 | written: `SYNTH_R1.md` (disagreement table D1–D14, repairs, Round 2 agenda). **Auditor running** (gpt-6.1-sol) |
+| — Inherited-proof check | **running**: PC1 (gpt-6.1-sol) on OWS-WS6d, WS7, WS3, WS4 and N9 (`CHECK_INHERITED_BRIEF.md` → `evidence/CHK_INHERITED/`); needed for HQ Q1(c) and Theorem V |
+| 5. Round 2 | waits for the auditor; brief being drafted |
+| 6–8 | not started |
 
-Waiting for: PC1 and PC2 verdicts. Meanwhile the chair drafts Synthesis 1 from the four R1 files.
-HQ questions: Q1–Q4 answered by HQ 2026-11-04 (`evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`), applied in `HQ_QUESTIONS.md`. Wave-2 queue: OWS-WS6d, OWS-WS7, N9 PROOF §1–3 → PC1.
+HQ: Q1–Q4 answered (`evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`), applied in `HQ_QUESTIONS.md`. FUTURE_WORK opened (FW1, FW2).
 
 ## Running tasks (delegate task ids, suffix only)
 | Role | Target | Task |
 |---|---|---|
-| Seat A, R1 | claudeAgent_personal · Fable 5.1 high | done → `R1_A.md` |
-| Seat B, R1 | claudeAgent · Fable 5.1 high | done → `R1_B.md` |
-| Seat C, R1 | codex · gpt-6-astra high | done → `R1_C.md` |
-| Seat D, R1 | claudeAgent_personal · Fable 5.1 high | done → `R1_D.md` |
-
-| PC1, wave 1 | codex · gpt-6.1-sol high | …9c5c9e4e-1173-41d9-b7ca-60acb3b31392 |
-| PC2, wave 1 | claudeAgent · Opus 5.5 high | …1610eca5-4b5a-4a7c-ae24-bf2aa36d8d90 |
-| Clerk, R1 side-by-side | claudeAgent · Haiku 5.5 | …36ef7ff9-6475-4527-bbed-2fc33dcd3f4e |
-
-Done: registrar R0 diff (…8512eb39-b16b-4aa6-b400-8f056969e4d8).
+| Auditor, SYNTH_R1 | codex · gpt-6.1-sol high | …c1d43c76-4dd2-43c5-80e6-ad7c8eb0844c |
+| PC1, inherited proofs | codex · gpt-6.1-sol high | …a04af14c-5aa6-41fc-8fa1-1e452504a8b8 |
