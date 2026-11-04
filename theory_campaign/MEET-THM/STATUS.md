@@ -34,7 +34,8 @@ HQ: Q1–Q5 answered (Q5: `evidence/2026-11-04_HQ_RULING_Q5.md`); Q1–Q4 (`evid
 | Seat C, R3 | codex · gpt-6-astra high | done → `R3_C.md` |
 | Seat D, R3 | claudeAgent_personal · Fable 5.1 high | done → `R3_D.md` |
 | Clerk, final assembly | claudeAgent · Sonnet 5.5 high | …36b1d58b-b9ce-4ba7-ace4-ae4e65b23ea8 |
-| Registrar, REGISTRY_PAPER1 + NOTATION (draft) | claudeAgent · Sonnet 5.5 high | …2668f3f9-c07f-4274-8b3e-69b1f54ef339 |
+| Registrar, REGISTRY_PAPER1 + NOTATION (draft) | claudeAgent · Sonnet 5.5 high | done (draft) |
+| Registrar, update to R3 decisions | claudeAgent · Sonnet 5.5 high | …537abe0a-b5b6-418c-9539-c11386383b2f |
 | PC2, wave 2 | claudeAgent · Opus 5.5 high | done → `evidence/W2_PC2/VERDICTS.md` (29 TRUE-AS-WRITTEN, 0 COUNTEREXAMPLE) |
 | Clerk, R2 side-by-side | claudeAgent · Haiku 5.5 | done |
 | Seat D, R2 | claudeAgent_personal · Fable 5.1 high | done → `R2_D.md` |
