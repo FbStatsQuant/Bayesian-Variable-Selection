@@ -1,0 +1,44 @@
+{
+  "N1": {
+    "N": 2,
+    "stages": [
+      0.4,
+      1.0
+    ],
+    "E_Z": 1.7721147727232838,
+    "Z": 1.772114772723284,
+    "E_ZH": 1.2411096864163347,
+    "Z_pi_h": 1.241109686416335,
+    "weighted_abs_error": 0.5003551381206923,
+    "bound_2delta": 1.6678504604023079
+  },
+  "N200_order_enumeration": {
+    "cases": 1440,
+    "result": "PASS"
+  },
+  "coverage_scope": "Fixed predeclared h is covered. Data/final-run selected I needs uniform TV/CDF control; endpoint quantiles also need margins/density.",
+  "off_truth_pointwise_cex": {
+    "pi0": [
+      0.99,
+      0.005,
+      0.005
+    ],
+    "pi": [
+      0.9,
+      0.09,
+      0.01
+    ],
+    "W": [
+      0.9090909090909092,
+      18.0,
+      2.0
+    ],
+    "delta": 0.1,
+    "off_state": 1,
+    "off_event_probability": 0.005,
+    "W_off": 18.0,
+    "sqrt_delta": 0.31622776601683794,
+    "setting": "N=1,T=1,identity invariant mutation"
+  },
+  "actual_kernel_off_event": "Choose masked pi0(S0)<pi(S0), pi(S0)>.5. All N initial particles S0; T=1 W=pi(S0)/pi0(S0)>1; resample S0, then all Gibbs draws delete a truth with positive probability. Terminal all off yet W>sqrt(delta)."
+}

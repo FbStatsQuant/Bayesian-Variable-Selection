@@ -1,0 +1,2 @@
+A described-setting reconstruction: 15 cases PASS; ratios range 0.9900393075286406 1.0000000000000004
+D described-setting reconstruction: 12 cases PASS; finite eta 9

@@ -1,0 +1,92 @@
+{
+  "tied_design": {
+    "n": 20,
+    "p": 2,
+    "G": [
+      [
+        19.000000000000004,
+        19.000000000000004
+      ],
+      [
+        19.000000000000004,
+        19.000000000000004
+      ]
+    ],
+    "z": [
+      9.499999999999998,
+      9.499999999999998
+    ],
+    "Y": 19.0
+  },
+  "B_F_family": {
+    "g": 9,
+    "rho": 0.6,
+    "c0": 0.001,
+    "sigma": 1,
+    "theta": [
+      0.2,
+      0.25
+    ],
+    "A": 1,
+    "eta": 0.0001,
+    "eta_A": 0.10102051443364368,
+    "leakage_bound_coefficient": 4.55625e-06,
+    "Mn": "loglog(n+exp(exp(1)))",
+    "p": "9*floor(sqrt(n)/9); sufficiently large n; B=16, 9<=16<18"
+  },
+  "SL_sample_cov_cex": {
+    "n": 20,
+    "x_mu": -3.533441755147956e-16,
+    "x_y": 0.4358898943540664,
+    "note": "Population cancellation x_h^T mu=0 does not imply x_h^T y=0; noise projection has continuous Gaussian law."
+  },
+  "CDF_quantile_gap": {
+    "F": "Uniform[0,1]",
+    "Ftilde": "Uniform[0,1+epsilon]",
+    "pointwise_CDF_error": "<=epsilon",
+    "quantile_error": "positive for every alpha>0",
+    "conclusion": "No exact equality of continuous quantiles from a positive CDF tolerance; need finite endpoint margin or inverse-CDF regularity for numerical error."
+  },
+  "delivery_limit_cex": {
+    "wrong_output": 0,
+    "P_U_even": 0,
+    "P_U_odd": 0.5,
+    "correct_even": 1,
+    "correct_odd": 0.5,
+    "claimed_limit": 0.5
+  },
+  "weak_signal_no_cancellation": [
+    {
+      "n": 40,
+      "beta": 0.15811388300841897,
+      "logBF": -1.3630927316345594,
+      "pi0_truth": 0.07406941131141591,
+      "leakage": 0,
+      "cancellation": 0
+    },
+    {
+      "n": 400,
+      "beta": 0.05,
+      "logBF": -2.497606323467192,
+      "pi0_truth": 0.026234481878827008,
+      "leakage": 0,
+      "cancellation": 0
+    },
+    {
+      "n": 4000,
+      "beta": 0.015811388300841896,
+      "logBF": -3.6472123105696808,
+      "pi0_truth": 0.008567135036125922,
+      "leakage": 0,
+      "cancellation": 0
+    },
+    {
+      "n": 40000,
+      "beta": 0.005,
+      "logBF": -4.7983361164532425,
+      "pi0_truth": 0.0027357029598929286,
+      "leakage": 0,
+      "cancellation": 0
+    }
+  ]
+}
