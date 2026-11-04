@@ -67,7 +67,7 @@ Seat D's note for Felipe: if objective (2) is to be served by a sentence in the 
 | S-IDENT | Restricted-ESS coverage identity, TI/KL/TV calculus, **C15-CI posterior-content credible-set clause, named** (K25 lemma, K104, K55, K103) | Seat B's "missing" item 1 (R3_B §S4) adopted: HQ Q2's posterior-content reading needs a named clause |
 | S-BLOCKS | Separation ⇒ groups kept; SIZE ⇒ equality (K07, K14, K06) | — |
 | S-OUT | Output-event validity, worker equivalence, stacking (K77, K78, K83–K86, K63) | K63/K86 are also named as premises in M1/M5 |
-| S-STGI | Ideal two-state crossing depth (K30 restated); **K29 only as a cited conditional implication** under (LL) or the over-tilted q_w bound | Its unconditional favourable application → FW. B (FW) and C (conditional cited) prevail over A and D (supplement conditional), whose substance is the same conditional implication |
+| ~~S-STGI~~ | **Dissolved** (corrected 2026-11-04 after the registrar's cross-check, `REGISTRY_PAPER1.md` §7). K30 is stated once, as M7(d), labelled ideal two-state grid. K29 → FUTURE_WORK FW23. Its conditional implication under (LL) or the over-tilted q_w bound may be cited as an attributed lemma, not a numbered claim | A (R3_A:43, "object: dissolve"), B (FW) and C (R3_C §S1, "object to K29 as a numbered contribution") prevail. **Dissent:** D (R3_D, "confirm K29 here"). The reason: (LL) is not a model/design condition, and no family exhibits it (W2PC1 A.S11, DESIGN-ASSERTED/GAP). v1 of these minutes misreported A's position |
 | S-LEAK | B's leakage clauses (F), (S) as a supplementary corollary to M2 | R3-5, unanimous |
 | S-REP | Run-card reporting corollary: Ĵ (B/C/D form) and ε̂_× with companions | Final card `R3_C.md` §S2 S-REP. **ū̂ is D's global block-table envelope ū̂ = Σ_b max_{U⊆C_b} x_b(U)**, not a maximum over V (C's objection, R3_C §S1, adopted, since a maximum over V ⊊ Ω does not bound all fits) |
 
@@ -105,7 +105,7 @@ The chair merged the seats' proposals (A §S3(b), B §S3(b), C §S3, D §S3(b)) 
 | Wave | HQs | Reason |
 |---|---|---|
 | 1 | **M1** V/H; **M3** START; **LP-FOUND** = S-TARGET + S-BLOCKS + S-KERNEL (+ S-T cited) | Foundations. N1 (binding §13.1) is the longest pole and starts first (B, D) |
-| 2 | **M2** WS (binding §5.3); **M7** STG; **M6** SEP + KL; **LP-IDENT** = S-IDENT + S-STGI | The §5.3 package and its inputs (d_σ from M3, the count from M7, the lower bound from M6) |
+| 2 | **M2** WS (binding §5.3); **M7** STG; **M6** SEP + KL; **LP-IDENT** = S-IDENT | The §5.3 package and its inputs (d_σ from M3, the count from M7, the lower bound from M6) |
 | 3 | **M5** HPM; **M4** Z𝒯 + masked statement; **M8** Prop D; **LP-AUDIT** = S-CERT + S-OUT | Code-audit wave: N2, N3, LS0, GUARD-W and the DAG serve M5, M4 and M8 together. M4(f) needs M5 |
 | 4 | **LP-REST** = S-Z + S-POOL + S-LIM; **LP-REP** = S-REP + S-LEAK | Consequences and reporting corollaries. Nothing binding waits on them |
 
@@ -134,7 +134,7 @@ The chair merged the seats' proposals (A §S3(b), B §S3(b), C §S3, D §S3(b)) 
 |---|---|
 | `THEOREM_LIST_FINAL.md` | Assembled from the verbatim final cards (§2.1) and the supplement statements (§2.2) |
 | `COVERAGE_MATRIX.md` | Proposal goals, Song–Liang items, THM-INV §1 cells and N1–N17 → list items, FW or cited lemmas |
-| `HQ_CHARTERS/` | 8 main-theorem charters (verbatim from the seats' §S3(c)) + 4 lemma-pack charters |
+| `HQ_CHARTERS/` | 8 main-theorem charters (verbatim from the seats' §S3(c)) + 5 lemma-pack charters (LP-FOUND, LP-IDENT, LP-AUDIT, LP-REST, LP-REP) |
 | `REGISTRY_PAPER1.md`, `NOTATION.md` | Registrar |
 | `FUTURE_WORK.md` | Complete |
 | `MINUTES.md` | This file |

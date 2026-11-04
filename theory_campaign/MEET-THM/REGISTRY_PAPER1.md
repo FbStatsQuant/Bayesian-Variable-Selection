@@ -1,8 +1,8 @@
-# REGISTRY_PAPER1 — registrar's registry of the paper-1 theorem list (MEET-THM, Round 3 draft)
+# REGISTRY_PAPER1 — registrar's registry of the paper-1 theorem list (MEET-THM, updated to the Round 3 decisions of MINUTES.md)
 
-Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only: no proving, no judging, no status upgrade.** Built for the chair's proposal `SYNTH_R2.md` §2 (v2). Items that Round 3 may still move are tagged **(R3-pending)**.
+Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only: no proving, no judging, no status upgrade.** First built for the chair's proposal `SYNTH_R2.md` §2 (v2); **updated to the Round 3 decisions of `MINUTES.md` §2** (main M1–M8, supplement cards, FUTURE_WORK and drops, waves and lemma-pack HQs in §2.5). Every item that the first draft marked as still open under Round 3 is resolved in a paragraph headed **Round 3 resolution**. Each item carries an **HQ** line (wave, HQ name, charter file `HQ_CHARTERS/<name>.md`).
 
-**R3 snapshot.** When this file was written, `R3_A.md`, `R3_C.md` and `R3_D.md` had been committed on this branch (commits `850e814`, `fb6cd0b`, `91a32f7`); `R3_B.md` had not. The registrar did **not** build to them. For information only: A, C and D each choose R3-1 (i) Proposition D in main, R3-2 one M1 theorem, R3-3 SL → FUTURE_WORK, R3-6 the B/C/D form of Ĵ, R3-5 supplement corollary (A:97–107; C:119–125; D:124–130). Nothing below is changed by that.
+**Update note.** The first draft was built before `R3_B.md` was committed and did not follow the Round 3 files. This update follows `MINUTES.md` §2, citing the seats' Round 3 files (`R3_A.md` … `R3_D.md`: §S2 final cards, §S3(a) edge lists, §S3(c) charters) as sources. K-ID statuses, check history, Lean and fidelity entries are unchanged from the first draft. **No registry status is changed anywhere in this file.** The meeting's check verdicts remain statement-sanity / cross-family verdicts, never registry status changes; §9 lists the registry updates this file *recommends to the registry owner* (the registry owner decides). HQ names: M1…M8, LP-FOUND, LP-IDENT, LP-AUDIT, LP-REST, LP-REP; the clerk's `HQ_CHARTERS/` is the authority on file names (not yet present when this file was updated).
 
 ## 0. How to read this file
 
@@ -18,6 +18,8 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 | `CHK:n` | `evidence/CHK_INHERITED/REPORT.md` line n |
 | `METHOD:n` | `origin/theory/MEET-v31:theory_campaign/MEET-v31/METHOD_v3.1_FINAL.md` line n |
 | `FUTURE_WORK.md` | `theory_campaign/MEET-THM/FUTURE_WORK.md` |
+| `R3_A:n` `R3_B:n` `R3_C:n` `R3_D:n` | `R3_A.md` … `R3_D.md` line n (Round 3 seat files, verbatim). In §5 the short forms `A3:n` `B3:n` `C3:n` `D3:n` mean the same, so that they do not clash with `A:n` = `R2_A.md` |
+| `MINUTES §x` | `MINUTES.md` section x (the binding Round 3 decisions) |
 
 **Rules followed.**
 - **Status words are copied, never upgraded.** The block labelled *R0_DIFF status cell* is the verbatim cell of the K-ID row (R0_DIFF itself abbreviates a few long registry cells with '…'; that abbreviation is the source's). Qualifiers (AUTHOR-ONLY, SAME-FAMILY-ONLY, XF/SF history, ASTRA-ONLY, 'external review queued', 'candidate: not reviewed') come from the **index flag** of each registry ID (`IDX:n`) and from the quoted cell.
@@ -28,13 +30,15 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 - **Flag vocabulary** (IDX conventions, REGISTRY_INDEX.md:22–27): `XF-VERIFIED` and `XF-VERIFIED*(qualified)` = a cross-family reviewer wrote VERIFIED (* with a stated qualification); `XF-ADVERSE:GAP` or `XF-ADVERSE:ERROR` = a cross-family reviewer wrote GAP or ERROR on that row; `FLAG SAME-FAMILY-ONLY` = only a same-model-family verifier; `FLAG AUTHOR-ONLY` = no verifier of any family; `ASTRA-ONLY` = Astra-written and Astra-checked. For **non-registry** results a bare `XF` means the source states a cross-family check history (read the quoted check text at the IDX line); `FLAG AUTHOR-ONLY` there means a candidate with no review.
 - Lean status is from `REGISTRY_INDEX.md` §3 (`origin/theory/L-LEAN` is the only branch with `.lean` files; library `SmcBvs/SmcBvs/*.lean`: 8 files, 101 theorems/lemmas, 0 `sorry`; older copies under `frozen/v1/` and `fidelity/packet/` carry `sorry` in `T07Bayes.lean` (12) and `T37Lattice.lean` (8)). A Lean 'core' in a card is a proposal, not an existing certificate unless a file is named.
 
-**Contents.** §1 main items M1–M8 · §2 supplement cards S-* · §3 cited lemmas · §4 FUTURE_WORK / drop / remark table · §5 dependency edge list · §6 registry CONFLICT rows touching the list · §7 status disagreements between sources.
+**Contents.** §1 main items M1–M8 · §2 supplement cards S-* (S-D removed: it is M8; S-LEAK added) · §3 cited lemmas · §4 FUTURE_WORK / drop / remark table · §5 dependency edge list (union of the four seats' R3 §S3(a) edges) · §6 registry CONFLICT rows touching the list · §7 status disagreements between sources, each with who resolves it · §8 named implementation premises / audit obligations · §9 registry updates recommended to the registry owner.
 
-## 1. Main items (SYNTH_R2 §2.1)
+## 1. Main items (MINUTES §2.1; unanimous in Round 3)
 
 ### M1 — Theorem V/H — validity of v3.1 and accuracy of reported bounded functionals
 
-**(R3-pending)** R3-1 (8th slot) and R3-2 (one theorem or split V+/H) both touch M1. Seats A and B drew two cards (V+, H); C and D one.
+**Round 3 resolution (MINUTES §2.1; R3-1, R3-2 unanimous):** one theorem V/H (no V+/H split). K-IDs on the card: K46, K32, K86, K35, K36, K50, K51, K52, K48, K62; cited K20, K21, K08, K47. Final card: `R3_A.md` §S2 M1. Growth-rate clause: the two optional stacking configurations of MINUTES §2.3 (R′_n = 4⌈log₂(n + p + 1)⌉ for a fixed finite set of declared summaries; R′_n = 4⌈(n + p)⁶/4⌉ for simultaneous control over ≤ (n + p)² declared summaries; both on families with D_* = O_P(1)); the shipped R′ = 4 carries only the fixed-R′ statements. K63 and K86 are premises named here and proved in S-OUT. Safeguard (binding §13.1): if N1's general record identity fails, the narrower theorem ships and §13.1 escalates (MINUTES §2.3).
+
+**HQ:** wave 1 · HQ `M1` · charter `HQ_CHARTERS/M1.md` (seat charter text: `R3_A.md` §S3(c) 'Charter M1'). N1 is the longest pole and starts first (MINUTES §2.5). Premises carried: N1; GUARD-W; IND-T extension (§8). Escalation: N1 refuted or unclosed after one wave; GUARD-W or IND-T extension audit failing → (c),(d) revert to potential-run statements and N2 reopens (R3_A:192).
 
 **Seat cards (R2):** A:40–58 (V+ (A:40–48), H (A:50–58)); B:81–99 (V+ (B:81–89), H (B:91–99)); C:68–77 (C1); D:55–63 (H′).
 
@@ -143,7 +147,9 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### M2 — Theorem WS — the §5.3 package (parts (a) discrepancy, (b) bridge-form stability, (c) one-shot refutation)
 
-**(R3-pending)** R3-5 (placement of B's leakage clauses (F),(S): supplement corollary vs inside M2). Part (b) stage-count clauses and the Q5 conditions (1),(2) are still to be written as statements (S2:143–146).
+**Round 3 resolution (MINUTES §2.1, §2.2; R3-5 unanimous):** B's leakage clauses (F),(S) go to the supplement as corollary **S-LEAK**, not inside M2 (R3_B:142, :173). Part (b) carries the HQ Q5 stage-count content (sandwich + local constancy + continuous envelope) and the step-function statement of T (PC1's example {2,4} → 3 at ε = 10⁻⁵). Part (c) is Proposition ONE-SHOT (WS6(d), WS7 with the CHK amendments). K-IDs: K102, K10, K11, K25, K53; K103/K104 as used; K17, K105, K19 are used by (c) (M3, M6). Final card: `R3_B.md` §S2 M2. Disclosed scale: useful constants need ε ≲ n^{−1/2}/p on the exhibited family (MINUTES §3); a sharp necessity statement is FUTURE_WORK. Safeguard (binding §5.3): if both the D_* route and the correlated-family route fail, it escalates (MINUTES §2.3).
+
+**HQ:** wave 2 · HQ `M2` · charter `HQ_CHARTERS/M2.md` (`R3_B.md` §S3(c)). Inputs: d_σ from M3, the count from M7, the lower bound from M6 (MINUTES §2.5). Premises: none of §8 is assigned to M2 by a seat.
 
 **Seat cards (R2):** A:60–73 (M3 WS-ε card; §R3 A:151–188); B:101–103 (M3 → §R3 B:209–228); C:79–81 (C2 → §R3 C:259–288); D:77 (WS′ → §R3 D:118–146).
 
@@ -241,7 +247,9 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### M3 — Theorem START — deterministic mass, σ²-coupling decomposition, masking law, dilution
 
-**(R3-pending)** K16 (favourable-rate clause) sits in the supplement in all seats (supplementary clause).
+**Round 3 resolution (MINUTES §2.1):** K16 is a supplementary clause of M3 (kept as a separate conditional citation: `R3_C.md` §S3 'M3 charter'). K-IDs: K15, K17, K18, K10 (K16 supplementary). Final card: `R3_C.md` §S2 M3.
+
+**HQ:** wave 1 · HQ `M3` · charter `HQ_CHARTERS/M3.md` (`R3_C.md` §S3 'M3 charter'). Check flagged in the charter: Thm5-LH is SAME-FAMILY-ONLY (R3_C:297).
 
 **Seat cards (R2):** A:75–83 (M4 START); B:105–113 (M4 Theorem 2); C:105–114 (C5); D:79 (M6 Theorem 2).
 
@@ -311,11 +319,13 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### M4 — Theorem Z𝒯 and the certificate card, including the masked-regime statement (HQ Q3)
 
-**(R3-pending)** R3-4: K95 placement (A main; B, D supplement; C cites) — proposal: supplement. K36/K78 are output-event clauses here.
+**Round 3 resolution (MINUTES §2.1, §2.2; R3-4 unanimous):** K95 (odds certificate) is placed in S-TARGET and only cited here. K36 and K78 are output-event clauses of M4. M4 = K42, K43, K45, K44 + the masked-regime statement (HQ Q3). Final card: `R3_B.md` §S2 M4. The masked final-estimate TV/KL is FW2 (not binding). Safeguard (MINUTES §2.3): loss of the masked statement without an approved replacement escalates (C §S5).
+
+**HQ:** wave 3 · HQ `M4` · charter `HQ_CHARTERS/M4.md` (`R3_B.md` §S3(c)). M4(f) needs M5 (same wave; MINUTES §2.5). Premises carried: GUARD-W (N2(e)); N3 DP invariant as a hypothesis of (f) (R3_B:213). Fallback: (a)–(d) always ship; if the GUARD-W audit fails, (e) ships in potential-run form only (R3_B:214).
 
 **Seat cards (R2):** A:85–93 (M5 Z𝒯/CARD; §R4 A:190–192); B:115–123 (M5 Z𝒯/CARD; §R4 B:232–234); C:94–103 (C4; §R4 C:282–288); D:71–75 (M3′ Z𝒯 + MASK-PIP; §R4 D:168–172).
 
-**K-IDs in this item:** K42 (core: Z ≥ Z_𝒯, Ẑ < Z_𝒯 ⇒ Ẑ < Z), K43 (core: TV/PIP bounds from stored mass), K45 (core: retention S₀ ∈ 𝒮, δ₁ < ½ ⇒ S₀ ∈ 𝒯), K44 (core: analytic envelope Z ≤ C_n(…)^{−ν} (N17)), K36 (output-event clause), K78 (output-event clause (joint with 𝒪)), K95 (placement R3-4: odds certificate).
+**K-IDs in this item:** K42 (core: Z ≥ Z_𝒯, Ẑ < Z_𝒯 ⇒ Ẑ < Z), K43 (core: TV/PIP bounds from stored mass), K45 (core: retention S₀ ∈ 𝒮, δ₁ < ½ ⇒ S₀ ∈ 𝒯), K44 (core: analytic envelope Z ≤ C_n(…)^{−ν} (N17)), K36 (output-event clause), K78 (output-event clause (joint with 𝒪)), K95 (not an M4 clause: placed in S-TARGET by R3-4 and cited here).
 
 **Registry statuses per K-ID** (verbatim cell, then index flags for every registry ID the cell names):
 
@@ -381,11 +391,13 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### M5 — Theorem HPM — composition at every n and reported-HPM consistency with LS0 on LH
 
-**(R3-pending)** R3-4/R3-8: K63 as hypothesis vs supplement S-OUT; K70 labelled variant clause (A, B main; D supplementary corollary; C attributed variant).
+**Round 3 resolution (MINUTES §2.1, §2.2; R3-4, R3-8):** K63 is a hypothesis of M5 (named here, proved in S-OUT); K70 is the labelled no-LS0 variant clause. M5 = K72, K69, K65, K68 (Theorem A; composition at every n; reported-HPM consistency with LS0 on LH). Final card: `R3_D.md` §S2 M5.
+
+**HQ:** wave 3 · HQ `M5` · charter `HQ_CHARTERS/M5.md` (`R3_D.md` §S3(c)). First lemma: the e4 tie-DP invariant N3 (OPEN; the only open mathematical obligation in the chain), in parallel the merged-LS0 replay N2(c) (R3_D:221). Fallback: (b1-LH) becomes 'conditional on N3' after one unproductive HQ cycle (R3_D:224). Premises carried: N3 DP invariant, N2(c), GUARD-W, LS0/OP-LS0 (§8).
 
 **Seat cards (R2):** A:95–103 (M6 HPM); B:125–133 (M6 HPM); C:83–92 (C3); D:65–69 (5′ Theorem 5).
 
-**K-IDs in this item:** K72 (core: composition at every n, N200), K69 (core: (b1-LH) with LS0 on exact-Gram LH), K65 (core: Theorem A / LS-score progress), K68 (core: iid favourable variant (a-fav)), K63 (hypothesis (R3-4)), K70 (labelled no-LS0 variant clause (R3-8)), K07 (lemma with SIZE (A:99)), K62 (B places it here (B:125)).
+**K-IDs in this item:** K72 (core: composition at every n, N200), K69 (core: (b1-LH) with LS0 on exact-Gram LH), K65 (core: Theorem A / LS-score progress), K68 (core: iid favourable variant (a-fav)), K63 (named hypothesis; proved in S-OUT (R3-4)), K70 (labelled no-LS0 variant clause (R3-8, decided)), K07 (lemma with SIZE (A:99)), K62 (MINUTES §2.1 places it in M1; B's R2 card placed it here (B:125)).
 
 **Registry statuses per K-ID** (verbatim cell, then index flags for every registry ID the cell names):
 
@@ -465,7 +477,9 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### M6 — Theorem SEP + Lemma KL — why the start/one-shot merge fails at the Q* scale
 
-**(R3-pending)** none beyond the shared R3-7 wording for Song–Liang items.
+**Round 3 resolution (MINUTES §2.1, §2.3):** M6 = K19, K106, K105 (Theorem SEP + Lemma KL). Shared Song–Liang wording (R3-7): Thm 2 — "fixed-design, fixed-sparsity selection counterpart only; SL's predictor-tail and prior hypotheses are not transferred"; Cor 2 — "no analytic null-exclusion/FDR separation established; LIT-PAR G4 numerical evidence" (C's wording; the SL analytic separation K97 is FUTURE_WORK, R3-3). Final card: `R3_C.md` §S2 M6.
+
+**HQ:** wave 2 · HQ `M6` · charter `HQ_CHARTERS/M6.md` (`R3_C.md` §S3 'M6 charter'). M6 supplies the lower bound used by M2.
 
 **Seat cards (R2):** A:115–123 (M8 SEP + KL); B:145–153 (M8 SEP + KL); C:116–125 (C6); D:87–90 (SEP′).
 
@@ -523,7 +537,9 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### M7 — Theorem STG — stage laws as coded, coverage identity
 
-**(R3-pending)** R3-4: K33 in M7 (A, C) or S-IDENT (B? D); R3-8: K27 (A, B main; D supplement; C supplement C8), K30 (A supplement; B, D main; C supplement C14), K29 (supplement/FW). Basis of M7 itself is '3 of 4' (S2:77); C places it in supplement C8.
+**Round 3 resolution (MINUTES §2.1, §2.2, §2.3; R3-4, R3-8):** M7 = K26, K25, K27, K30, K33; K28 cited. K33 is in M7 in its deterministic termination/count form (A, B, C; **dissent D: S-IDENT**, R3_D:25, :42, :131); rebuild convergence N5(b) is FUTURE_WORK either way. K30 is the labelled ideal-grid clause of M7 and is restated in S-STGI. K29 is not in M7 (S-STGI, cited conditional implication only). Final card: `R3_A.md` §S2 M7.
+
+**HQ:** wave 2 · HQ `M7` · charter `HQ_CHARTERS/M7.md` (`R3_A.md` §S3(c) 'Charter M7'). Feeds M2(b) (count) and M8 (T). Fallback: (a),(b),(d),(e) with T ≤ T_e; drop the counts of (c)/(c′) if the resolution/progress lemma fails (R3_A charter M7).
 
 **Seat cards (R2):** A:105–113 (M7 STG); B:135–143 (M7 STG); C:138–146 (C8 (supplement in C)); D:81–85 (STG′).
 
@@ -591,13 +607,15 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 - As-coded masked stage count T_n is Conjecture P (OPEN) → FUTURE_WORK (K31); fallback T ≤ T_e in main (A:21, D:82). STG-cexW2 is a registry COUNTEREXAMPLE: 'F-DRAFT's O(1) stage count is false'.
 - STG-Wp has a registry CONFLICT row (C22: (LL) may need restating for 2Ar > 1). STG-G/L0/L1/L/F: PROVED (SF none, XF none) — AUTHOR-ONLY; T26BUD-G flag AUTHOR-ONLY (omitted in C8, W2PC2:86).
 
-### M8 — Open slot — Proposition D, island-level work/depth (option (i)); or standalone V+ (ii); or none (iii)
+### M8 — Proposition D — island-level work, depth and width (R3-1: main, unanimous; this item replaces the former supplement item S-D)
 
-**(R3-pending)** R3-1 decides. C has Prop D in main (C:127; list C:357); A, B, D place it in the supplement in R2 (A:22; B:61; D:22).
+**Round 3 resolution (MINUTES §2.1; R3-1 unanimous: A:101; B:138; C:119; D:128):** Proposition D is the 8th main item (stated reason: IC5, objective (2)). K-IDs: K87, K88, K89, K06, K64; K90 as a remark. **S-D is not a separate item: it is M8** (the former S-D section is removed; K06's registry entry is in S-BLOCKS, K64's in S-CERT; their check rows are listed in the notes below). The Song–Liang §6 comparison is in the same units, with no speed claim. Final card: `R3_D.md` §S2 'Card Prop D'. Alternative recorded for Felipe (MINUTES §2.1; R3_D §S5): if objective (2) is served by an introduction sentence citing the supplement instead, Prop D moves to the supplement and main = 7; nothing else changes.
+
+**HQ:** wave 3 · HQ `M8` · charter `HQ_CHARTERS/M8.md` (`R3_D.md` §S3(c) 'Charter Prop D'). First lemma: the trajectory inventory of the execution DAG (R3_D:230). Premises carried: execution DAG audit, LS0 (counted), N2(b) calibration islands (§8). Escalation: depth growing with R′ at w ≥ R′, or a non-trajectory calibration cost of the same order as the final run (R3_D:234).
 
 **Seat cards (R2):** A:131 (S3 Proposition D); B:169–171 (S3 Theorem D); C:127–136 (C7 (main)); D:103 (M13 Proposition D).
 
-**K-IDs in this item:** K87 (core: work R′N(T+L+4)m + tables + calibration + LS), K88 (core: island depth N(T+L+4)m, waves ⌈R′/w⌉), K89 (accounting (Brent, Ω-depth, memory)), K90 (accounting remark: SL §6 same units, no speed claim).
+**K-IDs in this item:** K87 (core: work R′N(T+L+4)m + tables + calibration + LS), K88 (core: island depth N(T+L+4)m, waves ⌈R′/w⌉), K89 (accounting (Brent, Ω-depth, memory)), K90 (accounting remark: SL §6 same units, no speed claim). K06 (block count and table cost; registry entry in S-BLOCKS), K64 (scan bound ≤ ℓ+1; registry entry in S-CERT).
 
 **Registry statuses per K-ID** (verbatim cell, then index flags for every registry ID the cell names):
 
@@ -645,14 +663,16 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 **Notes (with sources):**
 
-- Option (ii) standalone V+ means splitting M1 (A, B); option (iii) leaves 7 main theorems. IC5 note: with Prop D in the supplement no main theorem serves objective (2), parallel scalability (S2:78).
+- SYNTH_R2 options (ii) standalone V+ and (iii) none are closed by R3-1 (MINUTES §2.1). Check rows carried over from the former S-D for K06/K64: W1PC1:228–230 (counts), W1PC1:271–274 (scans), W2PC1:181, :194, :205, W2PC2:133 (integrated execution DAG: NOT REPAIRED / GAP). Lean: none. Fidelity: as above.
 - MA-PropD `PROVED (counting, given the code's structure)` flag AUTHOR-ONLY; T32(i) `PROVED (SF: VERIFIED (W7-SEC); XF: none)` flag SAME-FAMILY-ONLY, displayed rate GAP; Cost-T38 `PROVED-UNDER (XF: GAP (A-REV5))`; registry CONFLICT C18 (T32(i), Cost-T38; recorded stale, not dissenting).
 
-## 2. Supplement cards (SYNTH_R2 §2.2)
+## 2. Supplement cards (MINUTES §2.2; statements as in the cited R2/R3 cards with the SYNTH_R2 §3 repairs)
 
 ### S-T — Supplement S-T — Theorem 1, target consistency (T03♯)
 
-**(R3-pending)** none (all four: supplement, cited in the main setup).
+**Round 3 resolution (MINUTES §2.2):** unanimous since Round 2: supplement card S-T, cited in the main text (K93, K04). Statement flags to restate: T01–T03 SAME-FAMILY-ONLY, external review queued (§7).
+
+**HQ:** wave 1 · HQ `LP-FOUND` · charter `HQ_CHARTERS/LP-FOUND.md` (cited only: S-T is registered in wave 1 with no HQ work of its own, R3_A:178, R3_B:224, R3_D:211).
 
 **Seat cards (R2):** A:127 (S1 Theorem T); B:165–167 (S2 Theorem 1); C:155–164 (C9); D:102 (M12 Theorem 1).
 
@@ -704,7 +724,9 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### S-Z — Supplement S-Z — evidence variance and masked tails (Theorem Z)
 
-**(R3-pending)** none (A, B, D supplement; C cites as lemmas).
+**Round 3 resolution (MINUTES §2.2):** K37–K41, K53; the terminal-off clause only in the exception-probability form (SYNTH_R2 §3 repair).
+
+**HQ:** wave 4 · HQ `LP-REST` · charter `HQ_CHARTERS/LP-REST.md`. The range corollary waits for the actual-grid envelope of M2(b) (R3_C:288); the inherited variance work can proceed independently.
 
 **Seat cards (R2):** A:133 (S4 Proposition Z); B:173–175 (S4 Theorem Z); D:110 (S6 evidence variance).
 
@@ -767,7 +789,9 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### S-TARGET — Supplement S-TARGET — propriety, invariance, envelopes, exact branch
 
-**(R3-pending)** R3-4: K95 (A main Z𝒯; B, D supplement) — proposal supplement. K23 not here.
+**Round 3 resolution (MINUTES §2.2; R3-4 unanimous):** K95 (odds certificate) is placed here; K23 is not here (FUTURE_WORK).
+
+**HQ:** wave 1 · HQ `LP-FOUND` · charter `HQ_CHARTERS/LP-FOUND.md` (S-TARGET + S-BLOCKS + S-KERNEL, S-T cited; MINUTES §2.5).
 
 **Seat cards (R2):** A:135 (S5 TARGET); B:185–187 (S7 TARGET); C:193–202 (C12); D:105–107 (S1 target lemmas / S3 decision rules / S12).
 
@@ -830,11 +854,13 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### S-KERNEL — Supplement S-KERNEL — N9 kernel facts, neighbour graph, start sampler, tie-DP, minorisation
 
-**(R3-pending)** R3-4: K23 (FW for A, D; supplement for B; cited for C) — proposal FW.
+**Round 3 resolution (MINUTES §2.2, §2.3; R3-4):** N9 kernel facts with the CHK amendments; K09 is the tie-DP proposition (C10); **K23 is FUTURE_WORK** (A, B, D; the K23 entry below is kept for provenance). **Dissent C:** keep the finite squared-kernel Dirichlet comparison as an attributed lemma in S-KERNEL (R3_C §S1); recorded; the HQ may cite it as an attributed lemma without a theorem number (MINUTES §2.3). The N3 DP invariant is a named premise (§8).
+
+**HQ:** wave 1 · HQ `LP-FOUND` · charter `HQ_CHARTERS/LP-FOUND.md`
 
 **Seat cards (R2):** A:137 (S6 PAR (K09 here); S10 (A:145)); B:177–179 (S5 KERNEL); C:166–175 (C10 (K09)); D:106 (S2 start machinery; S8 (D:112)).
 
-**K-IDs in this item:** K20 (moves reversible), K21 (round invariant/self-adjoint), K08 (exact Z̄₀, backward sampler), K09 (tie-DP (N3 OPEN)), K22 (graph facts), K103 (minorisation (also M2)), K23 (Dirichlet comparison — proposal FW).
+**K-IDs in this item:** K20 (moves reversible), K21 (round invariant/self-adjoint), K08 (exact Z̄₀, backward sampler), K09 (tie-DP (N3 OPEN)), K22 (graph facts), K103 (minorisation (also M2)), K23 (Dirichlet comparison — FUTURE_WORK (R3-4); entry kept for provenance; C dissent recorded).
 
 **Registry statuses per K-ID** (verbatim cell, then index flags for every registry ID the cell names):
 
@@ -902,7 +928,9 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### S-CERT — Supplement S-CERT — local search, certificate semantics, B&B soundness, perturbation
 
-**(R3-pending)** R3-8: K73 (A, B, D supplement; C withdraws operational region certification) — proposal: stated without the region-certificate clause.
+**Round 3 resolution (MINUTES §2.2; R3-8):** K73 is stated without the region-certification clause (C's withdrawal). K-IDs: K64, K73, K74, K05, K108.
+
+**HQ:** wave 3 · HQ `LP-AUDIT` · charter `HQ_CHARTERS/LP-AUDIT.md` (S-CERT + S-OUT; MINUTES §2.5). Search semantics feed M5 and M8.
 
 **Seat cards (R2):** A:141 (S8 CERT); B:189–191 (S8 CERT); D:113 (S9 search/certificates).
 
@@ -958,7 +986,9 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### S-LIM — Supplement S-LIM — limitations as theorems
 
-**(R3-pending)** none.
+**Round 3 resolution (MINUTES §2.2; R3-3):** K79, K81, K100, K101 as theorems; K99 as a qualitative remark (the quantitative k-way barrier is FUTURE_WORK). Duplicates: PIP = E[# selected in group]/d (d = number of interchangeable duplicates; NOTATION.md proposes s_dup); numeric limits only with their p qualification. K97 is FUTURE_WORK.
+
+**HQ:** wave 4 · HQ `LP-REST` · charter `HQ_CHARTERS/LP-REST.md` (S-Z + S-POOL + S-LIM; MINUTES §2.5).
 
 **Seat cards (R2):** A:143 (S9 LIM); B:181–183 (S6 LIM); D:115 (S11 limitations).
 
@@ -1017,11 +1047,13 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### S-POOL — Supplement S-POOL — pooling, equal-weight PIP, R_eff
 
-**(R3-pending)** R3-8: K57 general accuracy (A, B, D supplement; C FUTURE_WORK, C:28).
+**Round 3 resolution (MINUTES §2.2; R3-8):** pooling rules, the checked recording-marginal equal-weight bias comparison P1 (K57-P1), R_eff. **K57 is split:** P1 stays here; the general K57 accuracy statement is FUTURE_WORK (B, C). K-IDs: K49, K50, K54, K56, K57-P1 (K50 is also an M1 clause).
+
+**HQ:** wave 4 · HQ `LP-REST` · charter `HQ_CHARTERS/LP-REST.md`
 
 **Seat cards (R2):** A:139 (S7 POOL); B:197–199 (S10 PIP-eq); D:109–111 (S5 pooling; S7 equal-weight P1).
 
-**K-IDs in this item:** K49 (equal-weight PIP bias), K50 (pooled product not unbiased), K54 (R_eff, ratio-sandwich variance), K56 (RB variance), K57 (equal-weight bias ≤ TV of one-record marginal), K55 (fixed-grid CLTs (cited in S-IDENT)).
+**K-IDs in this item:** K49 (equal-weight PIP bias), K50 (pooled product not unbiased), K54 (R_eff, ratio-sandwich variance), K56 (RB variance), K57 (split: P1 only — equal-weight bias ≤ TV of one-record marginal; general accuracy FUTURE_WORK (R3-8)), K55 (fixed-grid CLTs (cited in S-IDENT)).
 
 **Registry statuses per K-ID** (verbatim cell, then index flags for every registry ID the cell names):
 
@@ -1085,11 +1117,13 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### S-IDENT — Supplement S-IDENT — restricted-ESS coverage identity, TI/KL/TV calculus, approximation corollaries
 
-**(R3-pending)** R3-4: K33 in S-IDENT (B? / D) vs M7 (A, C).
+**Round 3 resolution (MINUTES §2.2, §2.3; R3-4):** K33 is in M7, not here (D's dissent recorded). S-IDENT carries the **C15-CI posterior-content credible-set clause, named** (seat B's 'missing' item 1, `R3_B.md` §S4; HQ ruling Q2: the §5.4 coverage reading is posterior-content / Monte Carlo error; the frequentist half is FW1), together with K25 (lemma), K104, K55, K103 (the TV/KL/TV calculus; C15-TV, C15-KL). Check row for the clause: W2_PC2:161 `C15-CI · new form` — TRUE-AS-WRITTEN / DESIGN-VERIFIED / PLAUSIBLE / REPAIRED (statement-sanity verdict). Edge direction M2 ↔ S-IDENT differs between seats (§5).
+
+**HQ:** wave 2 · HQ `LP-IDENT` · charter `HQ_CHARTERS/LP-IDENT.md` (S-IDENT; S-STGI dissolved, MINUTES §2.2).
 
 **Seat cards (R2):** A:145 (S10 KL/TV and BLOCKS); B:193–195 (S9 IDENT); C:224–253 (C15-TV, C15-KL, C15-CI; C8 (C:138)); D:112 (S8 Doeblin/calculus).
 
-**K-IDs in this item:** K25 (lemma), K104 (exponential-family identities, Λ_len = ∫sd dφ ≤ √J), K55 (fixed-grid CLTs), K103 (minorisation/TV ≤ (1−1/M_φ)^L; useful iff M₁ = O(1)).
+**K-IDs in this item:** K25 (lemma), K104 (exponential-family identities, Λ_len = ∫sd dφ ≤ √J), K55 (fixed-grid CLTs), K103 (minorisation/TV ≤ (1−1/M_φ)^L; useful iff M₁ = O(1)). **C15-CI** (named clause: posterior-content credible-set; no K-ID; `R3_B.md` §S4 item 1).
 
 **Registry statuses per K-ID** (verbatim cell, then index flags for every registry ID the cell names):
 
@@ -1145,7 +1179,9 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### S-BLOCKS — Supplement S-BLOCKS — separation ⇒ groups kept; SIZE ⇒ equality
 
-**(R3-pending)** none.
+**Round 3 resolution (MINUTES §2.2):** K07, K14, K06 (separation ⇒ groups kept; SIZE ⇒ equality).
+
+**HQ:** wave 1 · HQ `LP-FOUND` · charter `HQ_CHARTERS/LP-FOUND.md`
 
 **Seat cards (R2):** A:145 (S10 BLOCKS part); B:201–203 (S11 BLOCKS); C:183–191 (C11); D:106 (S2).
 
@@ -1201,7 +1237,9 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### S-OUT — Supplement S-OUT — output-event validity, worker equivalence, stacking
 
-**(R3-pending)** R3-4: K63/K86 — main clauses (B; A, D headers) vs supplement; K63 is a hypothesis of M5.
+**Round 3 resolution (MINUTES §2.2; R3-4):** K77, K78, K83–K86, K63. K63 and K86 are also named as premises in M1/M5 (proved here). The integrated streams, GUARD-W and IND-T extension audits are code-audit obligations carried by this pack (§8).
+
+**HQ:** wave 3 · HQ `LP-AUDIT` · charter `HQ_CHARTERS/LP-AUDIT.md` (S-CERT + S-OUT). Wave note: M1 (wave 1) and M2-side clauses consume S-OUT, which launches in wave 3 (§5 wave check).
 
 **Seat cards (R2):** A:137 (S6 PAR); C:204–212 (C13); D:108 (S4 worker/stacking/output).
 
@@ -1267,9 +1305,11 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 - CEX-guard (registry COUNTEREXAMPLE) kills the completion-conditioned reading; BOOK-B1-GUARD XF ERROR (do not broaden bitwise equality to timing metadata, W1PC1 ledger S21, VERDICTS.md:99). MA-PropW code-reading + executed check (METHOD:46: executed bitwise on smoke + 3/3 study designs; REGISTRY_INDEX §5.B B1 records '1/1 vs 3/3' as a source CONFLICT); MA-Wcal code reading only, not executed.
 
-### S-STGI — Supplement S-STGI — ideal-grid and conditional stage clauses
+### S-STGI — DISSOLVED (corrected MINUTES §2.2: K30 → M7(d); K29 → FUTURE_WORK FW23; dissent D). Record kept below for reference
 
-**(R3-pending)** R3-8: K29 (A S11, B STG(f), D conditional on (LL), C FUTURE_WORK) and K30 (B, D main STG; A, C supplement).
+**Round 3 resolution (MINUTES §2.2; R3-8):** ideal two-state crossing depth (K30 restated); **K29 only as a cited conditional implication** under (LL) or the over-tilted q_w bound; its unconditional favourable application is FUTURE_WORK. MINUTES: B (FW) and C (conditional cited) prevail over A and D (supplement conditional), whose substance is the same conditional implication. Seat positions on file differ (§7).
+
+**HQ:** wave 2 · HQ `LP-IDENT` · charter `HQ_CHARTERS/LP-IDENT.md`
 
 **Seat cards (R2):** A:147 (S11 STG-ideal); B:139 (M7 (f)); C:214–222 (C14); D:114 (S10 calibration).
 
@@ -1317,7 +1357,9 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### S-REP — Supplement S-REP — reporting corollaries for Ĵ and ε̂_× (HQ Q4)
 
-**(R3-pending)** R3-6 (Ĵ form: B/C/D vs A's TI form).
+**Round 3 resolution (MINUTES §2.2; R3-6 unanimous):** Ĵ in the B/C/D form (A withdrew its TI form); ε̂_× with companions κ̂, δ̂, ū̂. **ū̂ is D's global block-table envelope ū̂ = Σ_b max_{U⊆C_b} x_b(U), not a maximum over V** (C's objection, R3_C §S1, adopted). K34 is dropped as a theorem (Ĵ ships as reporting). Final card: `R3_C.md` §S2 S-REP. Definitions for HQ: `AMENDMENT_HQ_02_DEFINITIONS.md`.
+
+**HQ:** wave 4 · HQ `LP-REP` · charter `HQ_CHARTERS/LP-REP.md` (S-REP + S-LEAK; MINUTES §2.5). Named premise: the read-only d accumulator, with d as a default member of the declared list 𝓗 (§8).
 
 **Seat cards (R2):** A:194–200 (§R5); B:238–246 (§R5); C:290–310 (§R5 and C16); D:174–182 (§R5).
 
@@ -1361,18 +1403,23 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 - Ĵ/ε̂_× are POST HOC reporting quantities (METHOD:158–160 reporting block); no RNG, no feedback. Ĵ is a 'post hoc Monte Carlo estimate' (C:296). C16's Ĵ tail bound is vacuous at R′ = 4 and at R′ = 50 (W2PC2:74); D's V-rescaling clause and T6 and A's TI form are removed/withdrawn (S2:211, 224–228).
 
-### S-D — Supplement S-D, Proposition D, work/depth (K87–K90, K06, K64)
+### S-LEAK — Supplement S-LEAK — B's leakage clauses (F), (S), supplementary corollary to M2 (R3-5)
 
-**(R3-pending)** S-D is the same proposition as **M8 option (i)** (R3-1): placement is main if (i) is chosen, supplement otherwise (A, B, D supplement in R2; C main). All K-ID statuses, check rows, Lean and fidelity entries are in §1 **M8** (K87–K90). The two further K-IDs listed under S-D:
+**Round 3 resolution (MINUTES §2.2; R3-5 unanimous):** the leakage clauses (F) and (S) of seat B are a supplementary corollary to M2, not part of HQ's (a)(b)(c) package; they are non-perturbative and at a different scale. The m-form of (S) and (F) go together; (b5)'s pathwise bound stays in M2 (R3_B:142, :173).
 
-- **K06** `R0_DIFF:80` · class NEW-DE · Next-fit packing of the complete-linkage cut gives ⌈p/B⌉ ≤ J ≤ 2⌈p/B⌉ blocks and total table cost Σ_b 2^|C_b| ≤ p·2^B/B.…
-  - *R0_DIFF status cell (verbatim):* D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row.
-  - no registry/index ID is named in the cell
-- **K64** `R0_DIFF:163` · class NEW-DE · Local search moves only on strict F improvement, makes at most ℓ+1 scans of at most p + |S|(p−|S|) models, and local_certified/local_limit have exact semantics (a flip/swap strict local maximum at the scanned centre).…
-  - *R0_DIFF status cell (verbatim):* D/E side: proposal (author’s PROOF SKETCH, unchecked). N7: L1 (C3(a)) CORRECT WITH AMENDMENT; L2 PROVED [INP 176]; INP row 12 bound (ℓ+1)(p+k*(p−k*)), k* = min(K,⌊p/2⌋) [INP 305]
-  - no registry/index ID is named in the cell
+**Source cards:** B:216 (R2 clauses (b5) OWS-WS6(b) with the m lower bound, and (b6) OWS-WS53F); R3 statement in `R3_B.md` §S2 M2 (the leakage corollary is split from the main card).
 
-Check rows for K06/K64: W1PC1:228–230 (counts), W1PC1:271–274 (scans), W2PC1:181, :194, :205, W2PC2:133 (integrated execution DAG: NOT REPAIRED / GAP). Lean: none. Fidelity: as M8.
+**K-IDs in this item:** none of its own; clauses of the M2 item (K102 context).
+
+**Registry IDs:** `OWS-WS53F` — PROVED-UNDER (SF: none; XF: none), FLAG AUTHOR-ONLY (IDX:407; B:216). `OWS-WS6(b)` — PROVED (SF: none; XF: none) as quoted at B:216; no index flag was read by the registrar for this ID.
+
+**Check history (rows listed under M2, statement-sanity verdicts, not proof statuses):** W1_PC1:143 `B.D6(F)` — TRUE-AS-WRITTEN / DESIGN-VERIFIED / PLAUSIBLE; :144 `B.D6(S)` — TRUE-AS-WRITTEN / DESIGN-VERIFIED / PLAUSIBLE; W2_PC1:70 `B.R3(b)(5),(6)` — TRUE-AS-WRITTEN / DESIGN-VERIFIED / PLAUSIBLE / REPAIRED DIFFERENTLY (these are the rows of M2's list that judge B's R2 clauses (b5),(b6); the mapping to (S),(F) is by B:216).
+
+**Lean:** none. **Fidelity to v3.1 as shipped:** as M2 (LS0: n/a).
+
+**Edges:** M2 → S-LEAK (D3:197); M3 → S-LEAK (B3:230); S-T → S-LEAK (B3:232). A3:170 writes 'S-LEAK → M2 (supplement corollary)', the opposite literal direction with the same substance (§5).
+
+**HQ:** wave 4 · HQ `LP-REP` · charter `HQ_CHARTERS/LP-REP.md` (S-REP + S-LEAK; MINUTES §2.5).
 
 ## 3. Cited lemmas used by the list items
 
@@ -1589,13 +1636,13 @@ Each lemma is cited, not a numbered list claim (SYNTH_R2 R3-8, last sentence: 'C
 - **Lean:** none
 - **Note:** MA-PropP AUTHOR-ONLY candidate; ADRAFT rows ASTRA-ONLY.
 
-## 4. FUTURE_WORK, drop and remark table (SYNTH_R2 §2.4)
+## 4. FUTURE_WORK, drop and remark table (MINUTES §2.3, §2.4; cross-reference to `FUTURE_WORK.md`)
 
 | K-ID / item | Disposition | Reason | Source | Registry/index status of the K-ID (verbatim start of cell, ≤ 260 chars) |
 |---|---|---|---|---|
 | K13 | FUTURE_WORK | Needs TG4-type probability bounds not supplied (R0_DIFF K13) | S2:173 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row. |
 | K24 | FUTURE_WORK | Polynomial mixing of the φ=1 round (YWJ transfer); N10 OPEN | S2:174 | D/E side: proposal (author’s PROOF SKETCH, unchecked). N10: NONE / OPEN (INV row 6); YWJ/ZYVR route blocked as stated (INV §2 D1) [INP 199] |
-| K23 | FUTURE_WORK (R3-4: FW vs supplement lemma) | Its only consumer K24 is deferred; FW for A and D, supplement for B, cited by C | S2:175; R3-4 S2:276 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row. |
+| K23 | FUTURE_WORK (R3-4: A, B, D). **Dissent C:** keep the finite squared-kernel Dirichlet comparison as an attributed lemma in S-KERNEL, without a theorem number (R3_C §S1); recorded | Its only consumer K24 is deferred (R2 positions: FW for A and D, supplement for B, cited by C; decided in R3-4) | S2:175; R3-4 S2:276; MINUTES §2.3 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row. |
 | K31 | FUTURE_WORK | Conjecture P OPEN (as-coded masked stage count) | S2:176 | ConjP: Conjecture P — 'the as-coded grid's realised T_n in the masked regime is Conjecture P, OPEN' (THEOREM_LIST.md D2(iii)); registry has no row named Conjecture P (registry S… [IDX 269]; T26BUD-G: PROVED, deterministic (Theorem G); Conjecture P (pilot stage… |
 | K58 | FUTURE_WORK | Reduces to population delivery; FMP-DELIVPOP OPEN | S2:177 | FMP-ThmR: PROVED (SF: none; XF: none) [IDX 215; REG 573]; FMP-DELIVPOP: OPEN (SF: none; XF: none) [IDX 217; REG 575]; ThmB-T24: PROVED (SF: VERIFIED* (W2-VT24G); XF: VERIFIED* (A-REV1)) [IDX 218; REG 210] |
 | K59 | FUTURE_WORK | R vs N at fixed total particles: PROOF SKETCH only (A:240) | S2:178 | D/E side: proposal (author’s PROOF SKETCH, unchecked). MA-CorV: PROOF SKETCH [IDX 306]; OPW2-ThmB: PROVED (SF: none; XF: VERIFIED* (A-REV9)) [IDX 170; REG 601] |
@@ -1606,69 +1653,166 @@ Each lemma is cited, not a numbered list claim (SYNTH_R2 R3-8, last sentence: 'C
 | K94 | FUTURE_WORK | Finite-n Π(X) envelope GAP (W1PC1:222) | S2:183 | D/E side: proposal (author’s PROOF SKETCH, unchecked). R7 draft status: OPEN (API-N200) [LST 43; IDX 596]; N200: PROVED (elementary, every n); Π(X) upper bound OPEN [IDX 534]; N12: p ≤ e^{Cn^α}: no theorem; OPEN, not impossible [INP 218] |
 | K99 (quantitative) | FUTURE_WORK | k-way barrier unproved (W1PC1:282 NEEDS-HYPOTHESIS; B's version IMPLAUSIBLE); qualitative barrier is a remark in S-LIM | S2:184 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row; related: SHARE-PB (COUNTEREXAMPLE): “A posterior barrier defeats (b2), LS0 and T39 alike: no method change helps.” [IDX 1001; REG 350]; INP I9(c),(d),(e) definitional limits [INP 274] |
 | K107 | FUTURE_WORK | Validated arithmetic; N16 OPEN; T33-errbound COUNTEREXAMPLE | S2:185 | D/E side: proposal (author’s PROOF SKETCH, unchecked). N16: OPEN. VAL-FP MEASURED at p ≤ 40 only; η a documented heuristic [INP 243]; T33-errbound (COUNTEREXAMPLE): “The engine's error_bound() is not a bound at large n (ratio 1.17 at n = 10⁵, 6.2 at 4·10⁶); n … |
-| K80 | FUTURE_WORK (R3-4: FW vs drop) | Flags are heuristics by decision; no sampling law for the flags (W1PC1:283 NEEDS-HYPOTHESIS) | S2:186 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row. |
-| K97 (SL analytic separation) | FUTURE_WORK (R3-3) | W2PC1 SL cards NOT REPAIRED (:26, :31, :33): the iteration-uniform null-BF / prior-odds step is asserted, not established — a hypothesis about SL's algorithm, not a model/design condition. LIT-PAR G4 numerical comparison may be cited, labelled | S2:81–84, :191; W2PC1:26,31,33,129,180,193 | D/E side: proposal (author’s PROOF SKETCH, unchecked). C1new: COUNTEREXAMPLE (numerical, LIT-PAR G4) + PROOF SKETCH (NEW-SYNTH, this run; crux in §C1) [IDX 443]; Thm5-LH: PROVED (SF: VERIFIED (W3-VEXP); XF: none) [IDX 325; REG 179]; T38-b1-LH: PROVED (SF: VERI… |
+| K80 | FUTURE_WORK (R3-4: A, B, C, D) | Flags are heuristics by decision; no sampling law for the flags (W1PC1:283 NEEDS-HYPOTHESIS) | S2:186; MINUTES §2.3 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row. |
+| K97 (SL analytic separation) | FUTURE_WORK (R3-3: unanimous). LIT-PAR G4 is cited in the paper as labelled numerical evidence | W2PC1 SL cards NOT REPAIRED (:26, :31, :33): the iteration-uniform null-BF / prior-odds step is asserted, not established — a hypothesis about SL's algorithm, not a model/design condition. LIT-PAR G4 numerical comparison may be cited, labelled | S2:81–84, :191; W2PC1:26,31,33,129,180,193; MINUTES §2.3 | D/E side: proposal (author’s PROOF SKETCH, unchecked). C1new: COUNTEREXAMPLE (numerical, LIT-PAR G4) + PROOF SKETCH (NEW-SYNTH, this run; crux in §C1) [IDX 443]; Thm5-LH: PROVED (SF: VERIFIED (W3-VEXP); XF: none) [IDX 325; REG 179]; T38-b1-LH: PROVED (SF: VERI… |
 | N12 / exponential p | FUTURE_WORK (scope) | N12 OPEN for BB(1,p) with g = n and cap ≍ n; the obstruction is the prior tail and the T02 technique (A:208; B:256; D:197) | S2:188 | — |
 | Hellinger / predictive contraction (Song–Liang Thm 1) | FUTURE_WORK (scope) | Not delivered; selection counterpart only | S2:189, :57 | — |
 | Sharp ε-scale necessity for §5.3 | FUTURE_WORK (new) | All three proposed necessity forms are COUNTEREXAMPLE (W2PC1:59, :72, :85); C's is a range obstruction for the D_* route only (W2PC2:111–112) | S2:38–41, :192 | — |
 | FW1 (frequentist coverage of exact posterior CIs) | FUTURE_WORK (already listed) | Outside §5.4; HQ ruling Q2 | FUTURE_WORK.md:5 | — |
 | FW2 (masked final-estimate TV/KL) | FUTURE_WORK (already listed) | Not binding (HQ Q3); needs V11 or N10, both OPEN | FUTURE_WORK.md:6 | — |
-| K12 | DROP | Test oracle, not a guarantee (A, B, D drop; C would defer) | S2:195 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row. |
-| K34 | DROP (as theorem) | TI evidence is not in the method; Ĵ half ships as reporting (S-REP). (A, B, D drop; C would defer) | S2:196 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row. |
-| K66 | DROP | HP3 landscape PARTLY-FALSE (C3-PGD, CEX-localmax(A2)) | S2:197 | D/E side: proposal (author’s PROOF SKETCH, unchecked). C3-PGD (COUNTEREXAMPLE): “SE and beta-min do not imply progress-greedy dominance: a null that looks like a combination of two truths is added first.” [IDX 988; REG 157]; VPGD-PropG (COUNTEREXAMPLE): “Group… |
-| K67 | DROP | Relies on K66 | S2:198 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row for HP4; LH analogue: T38-b1-LH: PROVED (SF: VERIFIED* (W5-VMASK); XF: VERIFIED* (A-REV8)) [IDX 438; REG 330]; C3-PGD (COUNTEREXAMPLE): “SE and beta-min do not imply progress-greedy dominan… |
-| K91 | DROP | Particles-vs-depth speed-up: no accuracy-matched comparator; OPW2-cex refutes the perfect-mixing formula (D:224; A:240) | S2:199 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row. INP §5 row 8: speed-up vs sequential MCMC → “empty (empirical)” [INP 301]. |
-| K98 | DROP | Naive merge KNOWN-FALSE (SHARE-M(b), FD-NM) | S2:200 | SHARE-M(a): PROVED (SF: VERIFIED (W5-B2ENV); XF: VERIFIED (A-REV3)) [IDX 382; REG 344]; SHARE-M(b) (PROOF SKETCH): “XF: **ERROR** — A-REV6 · REVIEW.md: original ERROR retained; Astra candidate M-star (exact log-RSS, normalised Gram eigenvalues, BM-∞) GAP pendi… |
-| K96 (thesis CD) | REMARK (not a theorem) | No sentence of CD is a non-corollary of M1–M8 (all four agree; A:18, B:57, C:16, D:18) | S2:50, :85 | D/E side: proposal (author’s PROOF SKETCH, unchecked). D3 draft: “assembled from V1 (KNOWN—CITE + locked), A1 (PROOF SKETCH), D1 (PROVED counting), D2 (PROVED ideal grid / OPEN as-coded), M3 (PROVED), R5 …” [LST 31, 392]; FMP-M3: PROVED (SF: none; XF: ERROR (A… |
+| K12 | DROP (R3-4: A, B, C, D in Round 3) | Test oracle, not a guarantee (A, B, D drop; C would defer) | S2:195; MINUTES §2.4 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row. |
+| K34 | DROP as a theorem (R3-4: A, B, C, D in Round 3); the Ĵ half ships as reporting in S-REP | TI evidence is not in the method; Ĵ half ships as reporting (S-REP). (A, B, D drop; C would defer) | S2:196; MINUTES §2.4 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row. |
+| K66 | DROP | HP3 landscape PARTLY-FALSE (C3-PGD, CEX-localmax(A2)) | S2:197; MINUTES §2.4 | D/E side: proposal (author’s PROOF SKETCH, unchecked). C3-PGD (COUNTEREXAMPLE): “SE and beta-min do not imply progress-greedy dominance: a null that looks like a combination of two truths is added first.” [IDX 988; REG 157]; VPGD-PropG (COUNTEREXAMPLE): “Group… |
+| K67 | DROP | Relies on K66 | S2:198; MINUTES §2.4 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row for HP4; LH analogue: T38-b1-LH: PROVED (SF: VERIFIED* (W5-VMASK); XF: VERIFIED* (A-REV8)) [IDX 438; REG 330]; C3-PGD (COUNTEREXAMPLE): “SE and beta-min do not imply progress-greedy dominan… |
+| K91 | DROP | Particles-vs-depth speed-up: no accuracy-matched comparator; OPW2-cex refutes the perfect-mixing formula (D:224; A:240) | S2:199; MINUTES §2.4 | D/E side: proposal (author’s PROOF SKETCH, unchecked). No registry row. INP §5 row 8: speed-up vs sequential MCMC → “empty (empirical)” [INP 301]. |
+| K98 | DROP | Naive merge KNOWN-FALSE (SHARE-M(b), FD-NM) | S2:200; MINUTES §2.4 | SHARE-M(a): PROVED (SF: VERIFIED (W5-B2ENV); XF: VERIFIED (A-REV3)) [IDX 382; REG 344]; SHARE-M(b) (PROOF SKETCH): “XF: **ERROR** — A-REV6 · REVIEW.md: original ERROR retained; Astra candidate M-star (exact log-RSS, normalised Gram eigenvalues, BM-∞) GAP pendi… |
+| K96 (thesis CD) | REMARK (not a theorem): scoped remark after the main theorems, unanimous since Round 2 | No sentence of CD is a non-corollary of M1–M8 (all four agree; A:18, B:57, C:16, D:18) | S2:50, :85; MINUTES §2.1 | D/E side: proposal (author’s PROOF SKETCH, unchecked). D3 draft: “assembled from V1 (KNOWN—CITE + locked), A1 (PROOF SKETCH), D1 (PROVED counting), D2 (PROVED ideal grid / OPEN as-coded), M3 (PROVED), R5 …” [LST 31, 392]; FMP-M3: PROVED (SF: none; XF: ERROR (A… |
+| K57 (general accuracy) | FUTURE_WORK (R3-8: B, C) | K57 is split: P1 (the recording-marginal equal-weight bias comparison) is in S-POOL; the general accuracy statement is FW | MINUTES §2.2, §2.3; R3_C:126 | K57 cell: see §2 S-POOL |
+| K29 (unconditional favourable stage law) | FUTURE_WORK; the conditional implication is cited in S-STGI | (LL) or the over-tilted q_w input is not a model/design condition and is unexhibited (W2PC1:187 DESIGN-ASSERTED, GAP); IC3 fails | MINUTES §2.2; R3_B:61; R3_C:40, :324 | see §2 S-STGI |
+| N5(b) rebuild convergence (with K33) | FUTURE_WORK | K33 ships only in its deterministic termination/count form (M7); rebuild convergence, P(S₀ ∈ V), P(schedule_limit) stay OPEN | MINUTES §2.3 (R3-4); R3_B:141; R3_D:247 | — |
+| K73 region-certification clause | withdrawn clause (C, R3-8); K73 is stated without it in S-CERT | Operational region certification not supported | MINUTES §2.2 | see §2 S-CERT |
 
-SYNTH_R2 §2.4 lists the seat-proposed items K13, K24, K23, K31, K58, K59, K71, K75, K92, K82, K94, K99 (quantitative), K107, K80 and the scope items; §2.2 and §2.1 'Not main' add K97. The 'Disposition' column is the chair's proposal; K23, K80, K12/K34 and K97 are open under R3-3/R3-4.
+Dispositions follow MINUTES §2.3–§2.4 (Round 3); `FUTURE_WORK.md` (completed at close) is the authority for the FW list and this table is the registrar's cross-reference. Dissents recorded: K23 (C), K33 placement (D; M7 prevails). The earlier proposal text (SYNTH_R2 §2.4) listed K13, K24, K23, K31, K58, K59, K71, K75, K92, K82, K94, K99 (quantitative), K107, K80 and the scope items; §2.2 and §2.1 'Not main' added K97.
 
-## 5. Dependency edge list (`X → Y`: Y uses X)
+## 5. Dependency edge list (`X → Y`: Y uses X) — union of the four seats' Round 3 §S3(a) edge lists
 
-Edges are only those the cards (or SYNTH_R2) state; the cite after each edge is the card line that states the use. 'clause' marks a dependency of one clause of Y, not of the whole item. Edges are read from the R2 cards and may change with R3.
+Sources: `R3_A.md` §S3(a) (lines 168, 170, 172: three prose paragraphs), `R3_B.md` §S3(a) (lines 224–236: key-lemma list and a code block), `R3_C.md` §S3 (lines 247–281: edge table in C's own node names L-N9, L-FK, L-RO, L-DIL, L-WS3/4, L-ATOM, L-N1, L-RANGE, L-ESS, L-PILOT, L-TIE, L-LH, L-LS and engineering nodes A-STREAM, A-GUARD, A-LS0, A-DAG), `R3_D.md` §S3(a) (lines 183–204: cited lemmas and a code block). Cite format: `A3:n` = `R3_A.md` line n, likewise `B3`, `C3`, `D3`. The registrar merged the seats' node names into one vocabulary (a clause label after a node is the seat's own: A, B, C and D letter some clauses differently, e.g. M4(d) in A = M4(e) in B). Edges are deduplicated; a row lists every seat that states it. **Rows stated by one seat only are marked ⚠ (X only).** This list replaces the R2 edge list; R2 edges that no R3 seat restates are in the last subsection. Nothing here is inferred by the registrar.
 
-- L-N9 (K20, K21, K08) → M1 — A:44(a); B:85; D:56 — N9 kernel facts cited with the certificate
-- L-T12 (K35, K36; T12, T31(i), Prop2) → M1 — A:44(b); B:85(a),(b); D:58 — Ẑ_r and RB-PIP identities cited
-- L-RO (K77, K78) + GUARD-W premise → M1 clauses (d),(e) — A:44(d),(e); B:85(d); D:56(a) — output-event form
-- S-OUT (K86 stream separation, K85 declared R′) → M1 clause (d) — A:44(d); A:206 — R′ declared before stream 10
-- M1 (frozen 𝒞, E[Ẑ_r]=Z, E W_r = 1) → M2(b) clause (iv) — B:223 'E W = 1 (T12/N9)'; A:70 'product-of-stage-averages argument'
-- L-WS3 (K10; OWS-WS3) → M2(a) — A:70, A:156; B:215 (a1); D:120
-- L-WS3 (K11; OWS-WS4) → M2(a),(b) — A:70, A:156, A:162; B:215 (a4),(b1); D:124, D:132
-- M7 (K25 coverage identity, K27 increment bound, C8 pilot extension) → M2(b) stage-count clause — C:262, C:274; S2:138–142; A:164
-- L-G (Theorem G / STG-G, K26) → M2(b)(iii) sandwich — A:70 'Theorem G greedy optimality for (iii)'; D:141
-- L-WS6 (WS6(d), WS7) + M3 (K17) + M6 (K19, K105, K106) → M2(c) — C:263; B:217; D:138; A:169
-- M2(b)(iv) (M₂ ≤ e^{osc d} ≤ e^{D_*}) → M1 clause H(g)/(d′)/(f) (growth) — A:54(g), A:165, A:206; B:95(f), B:96; D:56(d′), D:60
-- S-T (K93, T03♯) → M1 clause H(g)/(d′)/(f) — A:54(g); B:95(f); D:56(d′)
-- L-DEC (K62 MPM margin) → M1 clause (f)/(e) — A:54(e); D:56(f); B:129(4)
-- L-WS3 (K10 BO d = d_σ) → M3 clause (e) — A:79(e); B:109(b); C:107
-- M3 (K17 masking law on LH) → M4 masked statement — A:192 'masked start M4(c)'; C:286; D:170
-- S-T (K93: π(S₀) → 1 on LH) → M4 masked statement — A:192 (S1); C:285; D:170
-- M5 (K69 (b1-LH): S₀ ∈ 𝒮 jointly with output) → M4 masked statement — A:192; B:234; C:284–285; D:72(e), D:170; S2:54 (D12)
-- S-TARGET (K44 / N17 envelope, K95 odds certificate) → M4 clauses (d),(e),(f) — A:89(e),(f); B:119(d); C:96; D:72(d)
-- L-RO / S-OUT (K77, K78) → M4 output clauses — C:96, C:206; B:119(e); D:72(c)
-- M4 (K42: Ẑ < Z_𝒯 ⇒ Ẑ < Z) → S-Z (iv) — A:133(iv)
-- L-MASK (Thm5-LH, T27(i); K15, K17, K18) → M5 (b1-LH non-vacuity on LH) — C:89, C:92; A:99(2); B:129(2)
-- L-TA (Theorem A, LS-score, T38-(0), Thm4-C1, N200) → M5 — A:99; B:129; C:89; D:66
-- S-BLOCKS (K07 with SIZE g_max ≤ B < 2g_min) → M5 — A:99 '(lemma)'; D:66 (SIZE)
-- S-OUT (K63 order-independent HPM) → M5 (as hypothesis, R3-4) — S2:75; D:44; D:66
-- S-KERNEL (K09 tie-DP; N3 OPEN) → M5 emitted-centre premise — B:129 'e4 centre rule (N3 OPEN, carried as hypothesis)'; C:170
-- L-MASK (K15, K17, K18 LH masking scale) → M6 — B:149; C:118; D:88
-- L-WS6 (WS7(a)) → M6 Lemma KL (K105) — A:119; CHK:79
-- M7 clause (d) / K30 ideal two-state grid → M6 clause (d) comparison — D:88 (d) — D only
-- M2(a) (osc d ≤ D_*) → S-Z (vii) and S-IDENT/K103 (M_φ ≤ e^{φ osc d}) — A:133(vii); B:175; D:110; B:179; C:232; D:112
-- M7 (T ≤ T_e / C8 count) → M8 / S-D (T enters work and depth) — C:129–130; A:131 'each trajectory summed at its own T'
-- S-CERT (K64 scan count (ℓ+1)[p + k*(p−k*)]) → M8 / S-D — C:130; A:131; B:169
-- S-BLOCKS (K06 block count and table cost) → M8 / S-D — A:131; B:169; D:103; S2:94 (S-D K-list)
-- M5 (LS0, baseline search steps) → M8 / S-D — C:130 'count every prescribed search, including LS0'
-- M1 (N1, declared R′) and M2(b)(iv) → S-POOL — A:139 '(ii) moved to M2(b)'; B:199
-- M1 (C1) + M2 (M₂ ≤ e^{D_*}) → S-REP (Ĵ finite-R′ bound) — C:307, C:310; B:246 (T3); D:180 (T3)
-- L-WS3 (K11 / WS4 proxy bound) → S-REP (ε̂_× theorem) — C:304; B:246 (T1, T3); D:182 (T4)
-- S-KERNEL (K103 minorisation) → S-IDENT (C15-TV) — C:230; D:112
-- M5 (b1-LH) → K97 FW entry, clause (d) (SL comparison) — A:129(d); B:159(d); D:93(d)
-- S-T (K93) → K97 FW entry, clause (c) — B:159(c); D:93(c)
-- M1 (frozen 𝒞, IND-T over streams 10..9+R′) → S-OUT / stacking (K84) — A:44; METHOD:142, :401 (IND-T audit pending for R′ > 4)
+| # | Edge (X → Y) | Stated by (seat:line) | Note |
+|---|---|---|---|
+| 1 | S-TARGET → M1 | A3:168 | ⚠ (A only) propriety |
+| 2 | S-TARGET → M2 (Lemma 0) | A3:168 | ⚠ (A only) |
+| 3 | S-TARGET → M3 | A3:168; B3:236; C3:259; D3:187 | envelopes; C via L-DIL (start normalisation, dilution) |
+| 4 | S-TARGET → M4 (N17, K95) | A3:168; B3:236; C3:274; D3:187 | envelope, odds certificate |
+| 5 | S-TARGET → M7 | A3:168; C3:267 | C via L-ESS |
+| 6 | S-TARGET → S-Z | D3:187 | ⚠ (D only) |
+| 7 | S-TARGET → S-REP | D3:187 | ⚠ (D only) |
+| 8 | S-TARGET → S-T | C3:258 | ⚠ (C only) exact shipped prior/score in the selection theory |
+| 9 | S-TARGET → S-KERNEL | C3:256 | ⚠ (C only) C: S-TARGET → L-N9 → S-KERNEL (match actual target, partition, start, moves) |
+| 10 | S-TARGET (duplicates), S-Z (E1c) → S-LIM | A3:172 | ⚠ (A only) |
+| 11 | S-KERNEL (N9) → M1(a) | A3:168; B3:227; C3:265; D3:186 | C via L-N9 → L-N1 → M1 |
+| 12 | S-KERNEL → M3 | D3:186 | ⚠ (D only) |
+| 13 | S-KERNEL → S-REP | D3:186 | ⚠ (D only) |
+| 14 | S-KERNEL (K103 minorisation) → S-IDENT | A3:168; B3:233; C3:278 |  |
+| 15 | S-KERNEL (K103 minorisation) → M2(b)(iv) (Doeblin constants) | B3:233 | ⚠ (B only) B's clause (b4) |
+| 16 | S-KERNEL (tie-DP, L-TIE) → M5 | C3:262 | ⚠ (C only) mathematical launch centre; actual emission still audited |
+| 17 | S-BLOCKS → S-KERNEL | C3:256 | ⚠ (C only) C: via L-N9 (actual partition) |
+| 18 | S-BLOCKS (PART-ThmA, SIZE) → M3 | A3:168; B3:229; C3:260; D3:188 | C via L-LH → M3(f) |
+| 19 | S-BLOCKS (PART-ThmA, SIZE) → M5 | A3:168; B3:229; D3:188 | lemma |
+| 20 | S-BLOCKS → M2 (IC3 partition) | A3:168; D3:188 |  |
+| 21 | S-BLOCKS → M8 | C3:272 | ⚠ (C only) setup / tables |
+| 22 | S-OUT (Lemma RO, GUARD-W, IND-T) → M1 | A3:168; B3:227, 236; C3:266; D3:189 | A: M1(c,d); C: output clauses; B: also Lemma RO, GUARD-W separately |
+| 23 | S-OUT (Lemma RO, GUARD-W) → M4 | A3:168; B3:236; C3:274; D3:189 | A: M4(d); B: M4(e); output-event clauses |
+| 24 | S-OUT → M5 (0) | A3:168; C3:264; D3:189 | output event / delivered HPM fidelity |
+| 25 | S-OUT (K63, K83–K86) → M8 | A3:172; C3:272; D3:189 |  |
+| 26 | S-OUT → S-REP | C3:281 | ⚠ (C only) |
+| 27 | S-CERT (Theorem A, LS-score, Lemma M, Lemma S; C: via L-LS) → M5 | A3:172; B3:234; C3:263; D3:190 |  |
+| 28 | S-CERT (card semantics) → M4 | B3:235; C3:274; D3:190 |  |
+| 29 | S-CERT (search cost, K64 scans) → M8 | B3:235; C3:272; D3:190 |  |
+| 30 | S-T (T03♯) → M1 | A3:172; B3:232; D3:191 | A: M1(i); B: M1(f); D: M1(d′) |
+| 31 | S-T → M2 (c1) | B3:232 | ⚠ (B only) |
+| 32 | S-T → M3 | C3:260; D3:191 | C: M3(f) |
+| 33 | S-T → M4 (masked statement) | A3:172; B3:232; C3:275; D3:191 | B: M4(f) |
+| 34 | S-T → M5 | A3:172; B3:232; C3:263; D3:191 | δ₁ → 0 |
+| 35 | S-T → M6 | A3:172; C3:270; D3:191 |  |
+| 36 | S-T → S-LEAK | B3:232 | ⚠ (B only) |
+| 37 | N1 (key lemma of M1) → S-REP | B3:228 | ⚠ (B only) |
+| 38 | M1(a) (E W_r = 1) → M2(b)(iv) | A3:170; B3:228 | A: product-of-stage-averages; B: (b5) E W_r = 1 |
+| 39 | M1 (T12 E[Ẑ_r∣𝒞]=Z; probabilistic certificate) → M4 | A3:170; B3:228; C3:274; D3:198 | A: M4(d); B: M4(e); C: probabilistic certificate; D: M1(f) → M4 |
+| 40 | M1(f) (R′ declared) → M8 | A3:170; B3:235 | A: M1(f); B: M2(b5) + M1(b) (objective-2 composition) |
+| 41 | M1 → S-POOL | A3:170; B3:228, 236; C3:277; D3:198 |  |
+| 42 | M1 → S-REP | A3:170; B3:228; C3:281; D3:198 |  |
+| 43 | M1 (TV cell bound) → S-IDENT | C3:278; D3:198 |  |
+| 44 | S-POOL (K47 cited, K49, K50) → M1(b) | D3:202 | ⚠ (D only) D only; opposite direction to M1 → S-POOL (K50 is in both) |
+| 45 | M2(b)(iv) (M₂ ≤ e^{D_*}) → M1 (growth / stacking-rate clause) | A3:170; B3:233; D3:197 | A: M1(i); B: M1 (f, stacking rate); D: M2(a) → M1(d′) |
+| 46 | CHK WS3, WS4 (L-WS3/4) → M2(a),(b) | A3:170; B3:229, 231; C3:261; D3:194 |  |
+| 47 | CHK WS3 → M3 (e) | A3:170; B3:229; C3:261 |  |
+| 48 | FD-W1 → M3 | B3:229 | ⚠ (B only) |
+| 49 | T27(i)/Thm5-LH (masking law) → M3 | B3:229 | ⚠ (B only) |
+| 50 | M3 → M2(a) (d_σ; c2 masking law) | A3:170; B3:230; D3:192 |  |
+| 51 | M7 (T, count, envelope) → M2(b) stage-count clauses | A3:170; B3:231; C3:269; D3:196 | A: sandwich, envelope; B: (b6),(b6′); D: (b)(iii) |
+| 52 | S-IDENT (K25, K104) → M2 | A3:170; B3:231; D3:193 | A: M2; B: K25 → M2(b6); D: M2(b). C states the opposite direction (M2 → S-IDENT, below) |
+| 53 | M2 (W rates) → S-IDENT | C3:278 | ⚠ (C only) C only; opposite direction to S-IDENT → M2 (A, B, D) |
+| 54 | M6 / Lemma KL (K105) → M2 | A3:170; B3:232; D3:194, 195 | A: M2(a) lower bound; B: M2(c2); D: M2(c). C routes through L-ATOM instead (next rows) |
+| 55 | L-ATOM (finite singleton algebra) → M6 | C3:270 | ⚠ (C only) |
+| 56 | L-ATOM → M2(c) | C3:271 | ⚠ (C only) C: shared finite-law obstruction, not through a new M6 proof |
+| 57 | CHK WS6(d), WS7 → M2(c) | C3:269; D3:194 |  |
+| 58 | L-RANGE (D_*-lemma; C's decomposition) → M2(b) | B3:231; C3:268 | C: L-N9, L-FK → L-RANGE → M2(b) |
+| 59 | K25 coverage identity → M2 (b6) | B3:231 | ⚠ (B only) |
+| 60 | M3 → M6 | A3:170; B3:230; C3:270; D3:192 | π₀(S₀) law; C: M3(f) |
+| 61 | M3 → M5 | A3:170; B3:230; C3:263; D3:192 | start mode, centre; C: M3(f) |
+| 62 | M3 → M4(e) | D3:192 | ⚠ (D only) |
+| 63 | M3 (A₀) → M7(d) | A3:170 | ⚠ (A only) |
+| 64 | M3 → S-Z | A3:170; B3:236 |  |
+| 65 | M3 → S-POOL | B3:236 | ⚠ (B only) |
+| 66 | M3 → S-LEAK | B3:230 | ⚠ (B only) |
+| 67 | M3 → S-REP | C3:281 | ⚠ (C only) |
+| 68 | S-IDENT (K25, coverage identity; C: L-ESS) → M7 | A3:170; B3:231; C3:267; D3:193 |  |
+| 69 | Theorem G → M7 | B3:231 | ⚠ (B only) |
+| 70 | L-PILOT (coded bisection/progress invariant) → M7 | C3:267 | ⚠ (C only) |
+| 71 | S-IDENT → M6 | D3:193 | ⚠ (D only) |
+| 72 | S-IDENT → S-REP | A3:170; D3:193 |  |
+| 73 | L-ESS (K25 coverage identity) → S-IDENT | C3:278 | ⚠ (C only) |
+| 74 | M7 (K30 cited) → S-STGI | B3:231; C3:279 | B: K30 cited; C: STG-M recurrence, cited K28 → S-STGI. D states the opposite direction (S-STGI → M7(c), next row) |
+| 75 | S-STGI (K29, K30) → M7(c) | D3:201 | ⚠ (D only) D only; opposite direction |
+| 76 | M7 → M6(d) (comparison) | D3:196 | ⚠ (D only) |
+| 77 | M7 (T) → M8 | A3:172; B3:235; C3:273; D3:196 | C: calibration simplification (each trajectory retains its own grid) |
+| 78 | M5 (b1-LH; M5(2)) → M4 (masked statement) | A3:172; B3:234; C3:275; D3:199 | A: M4 masked; B: M4(f); D: M4(e) |
+| 79 | N13 retention (+ Lemma S, inheritance merge) → M4(c) | A3:172; B3:234; C3:275 | C: retention lemma → M4 masked |
+| 80 | T38-b1-LH, LS-score / Theorem A → M5 | B3:234; C3:263 |  |
+| 81 | M5 (LS0 baseline search) → M8 | B3:234; D3:199 | B: LS0 cost; D: search term |
+| 82 | M4 → S-REP (card labels) | A3:172 | ⚠ (A only) |
+| 83 | M4 (envelope) → S-Z | D3:200 | ⚠ (D only) |
+| 84 | M4 → S-LIM | B3:236 | ⚠ (B only) cited |
+| 85 | M2(a) (D_* bound) → S-REP | A3:170; B3:233; C3:281; D3:197 | A: η̂ domain and Ĵ tail; B: η̂ domain, D_* in the Ĵ bound |
+| 86 | M2(a) (D bound) → S-Z | A3:170; B3:233; C3:276; D3:197 | C: range corollary |
+| 87 | M2(b) → M8 (remark) | B3:235; D3:197 | D: remark; B: M2(b5) + M1(b) objective-2 composition |
+| 88 | M2 → S-LEAK (F, S) | D3:197 | ⚠ (D only) A's literal edge is 'S-LEAK → M2 (supplement corollary)' (A:170), i.e. the opposite direction; the substance is the same (corollary of M2) |
+| 89 | L-FK / SMC-cited (Del Moral 2004; DDJ 2006; WLH 2016) → M1 | B3:227; C3:265; D3:183 | B: T12 → M1; C: L-FK → L-N1 |
+| 90 | L-FK, OPW2 → S-Z | C3:276 | ⚠ (C only) |
+| 91 | T12 → M1 | B3:227 | ⚠ (B only) |
+| 92 | GUARD-W (audit) → M1, M4, S-OUT | B3:227 | ⚠ (B only) |
+| 93 | A-GUARD (GUARD-W audit) → S-OUT, M5 | C3:257, 264 | ⚠ (C only) |
+| 94 | A-STREAM (integrated streams audit) → S-OUT | C3:257 | ⚠ (C only) |
+| 95 | A-LS0 (LS0 audit) → M5 | C3:264 | ⚠ (C only) |
+| 96 | A-DAG (execution-DAG audit) → M8 | C3:272 | ⚠ (C only) |
+| 97 | Filed counterexamples → S-LIM | A3:172; C3:280; D3:203 | A: S-LIM is a leaf; D: S-LIM → discussion only |
+| 98 | cited SLLN / ratio lemmas → S-POOL | C3:277 | ⚠ (C only) |
+| 99 | Chatterjee–Diaconis 2018 → M6 | D3:183 | ⚠ (D only) |
+| 100 | Gelman–Meng 1998 → S-REP, M6 | D3:183 | ⚠ (D only) |
+| 101 | Štefankovič–Vempala–Vigoda 2009 → M7 | D3:183 | ⚠ (D only) |
+| 102 | Barbieri–Berger 2004 → M5, S-TARGET | D3:183 | ⚠ (D only) |
+| 103 | Rossell 2022 → M5 | D3:183 | ⚠ (D only) |
+| 104 | Brent 1974 → M8 | D3:183 | ⚠ (D only) |
+| 105 | M8 and all main items → CD remark (K96) | D3:204 | ⚠ (D only) |
 
-*Not stated by any card (registrar does not infer):* any edge from S-LIM, S-STGI, S-TARGET (K01–K03) or S-T into M2/M7; any Lean dependency graph.
+*Counts:* 105 edge rows after deduplication; stated by 4 seats: 21; by 3: 16; by 2: 14; by 1 (⚠): 54.
+
+### 5.1 Direction and clause disagreements between the seats (not resolved here)
+
+- **M2 ↔ S-IDENT.** A3:170, B3:231, D3:193: S-IDENT (K25, K104) → M2. C3:278: M2 (W rates) → S-IDENT. Different clauses of K25/K103 are probably involved (the coverage identity feeds M2(b); the W-rate bound feeds C's C15 clauses); the registrar does not decide. Resolve: HQ `M2` and HQ `LP-IDENT` (both wave 2) must state which clause each package owns.
+- **M7 ↔ S-STGI.** B3:231 and C3:279: M7 (K30 cited) → S-STGI; D3:201: S-STGI (K29, K30) → M7(c). K30 is stated in M7 as a labelled ideal-grid clause and restated in S-STGI (MINUTES §2.1, §2.2). Resolve: HQ `M7` and HQ `LP-IDENT`.
+- **M1 ↔ S-POOL.** A3:170, B3:228, C3:277, D3:198: M1 → S-POOL. D3:202 only: S-POOL (K47 cited, K49, K50) → M1(b). K50 is an M1 clause and is also in S-POOL. Resolve: HQ `M1` and HQ `LP-REST` (the clause-level reading, not a package cycle, is expected).
+- **M6 → M2.** A3:170 puts Lemma KL on M2(a)'s lower bound; B3:232 and D3:194–195 put M6 / Lemma KL under M2(c). C3:270–271 routes M2(c) through L-ATOM and does not state M6 → M2(c) ("without depending on a new M6 proof"). Resolve: HQ `M2` and HQ `M6`.
+- **M2 ↔ S-LEAK.** D3:197: M2 → S-LEAK (F,S). A3:170 writes 'S-LEAK → M2 (supplement corollary)', the opposite literal direction with the substance of D's edge. Resolve: HQ `LP-REP` (S-LEAK is a corollary of M2; MINUTES §2.2).
+- **M1 ↔ M2 (clause level).** M1(a) → M2(b)(iv) (E W_r = 1; A3:170, B3:228) and M2(b)(iv) → M1 growth clause (A3:170, B3:233, D3:197). Not a package cycle if the clause order is kept; HQ `M1` and HQ `M2` should fix the order.
+- **Clause labels.** The same edge carries different clause letters: S-OUT → M4(d) (A3:168) vs M4(e) (B3:236); M1 → M4(d) (A3:170) vs M4(e) (B3:228); M5 → M4(e) (D3:199) vs M4(f) (B3:234). Each HQ must map its own card's letters.
+
+### 5.2 Wave check (mechanical: producer wave later than consumer wave, MINUTES §2.5)
+
+Waves: 1 = M1, M3, LP-FOUND (S-TARGET, S-BLOCKS, S-KERNEL; S-T cited). 2 = M2, M7, M6, LP-IDENT (S-IDENT, S-STGI). 3 = M5, M4, M8, LP-AUDIT (S-CERT, S-OUT). 4 = LP-REST (S-Z, S-POOL, S-LIM), LP-REP (S-REP, S-LEAK). Rows above that put a later-wave producer under an earlier-wave consumer:
+- **S-OUT (wave 3) → M1 (wave 1)**, stated by all four seats (A3:168; B3:227, :236; C3:266; D3:189). M1's clauses (c),(d) rest on Lemma RO, GUARD-W and the IND-T extension, whose audits are in LP-AUDIT. M1 carries them as named premises; its fallback is the potential-run statements (R3_A:192). In A's own wave plan S-KERNEL + S-OUT were wave 1 (A3:178). The chair's merged waves (MINUTES §2.5) differ; flagged for the chair/HQ, not changed here.
+- **M2(b)(iv) (wave 2) → M1 growth clause (wave 1)** (A3:170; B3:233; D3:197). The M₂ ≤ e^{D_*} step is in M2; M1's growth clause (g)/(i) waits for it.
+- **S-POOL (wave 4) → M1(b) (wave 1)**: D only (D3:202), a clause-level direction anomaly (see 5.1).
+- Same-wave edges are not listed (e.g. M5 → M4(f), S-CERT → M5, S-IDENT ↔ M2, S-STGI ↔ M7).
+
+### 5.3 R2 edges that no Round 3 §S3(a) restates (kept for provenance only; not part of the edge list)
+
+- L-DEC (K62 MPM margin) → M1 clause (f)/(e) (R2: A:54(e); D:56(f); B:129(4)).
+- L-WS6 (WS7(a)) → M6 Lemma KL (R2: A:119; CHK:79).
+- M2(b)(iv) → S-POOL (R2: A:139 '(ii) moved to M2(b)'; B:199).
+- M1 (frozen 𝒞, IND-T over streams 10..9+R′) → S-OUT / stacking K84 (R2: A:44; METHOD:142, :401).
+- M5 (b1-LH) and S-T → the K97 FW entry (R2: A:129(d); B:159(c),(d); D:93(c),(d)); K97 is now FUTURE_WORK (R3-3).
 
 ## 6. Registry CONFLICT rows (⚑) touching the list
 
@@ -1693,23 +1837,69 @@ Edges are only those the cards (or SYNTH_R2) state; the cite after each edge is 
 
 Each line gives both sides with their sources. None is resolved here.
 
-- **OWS-WS3, OWS-WS4.** Registry: `PROVED (SF: none; XF: none)`, flag AUTHOR-ONLY (IDX:404–405). Cards and checks: CHK:13–14 'VERIFIED (PC1, cross-family, line by line)'; A:68 notes the registry rows are not yet updated; W2PC1:44 keeps both as separate entries.
-- **OWS-WS6(d), OWS-WS7.** Registry: `PROVED (SF: none; XF: none)`, flag AUTHOR-ONLY (IDX:411, :413). CHK:11–12: VERIFIED WITH AMENDMENT (amendments adopted by all four seats).
-- **N9K (kernel facts, start sampler).** Registry/index: `PROVED (candidate)`, flag AUTHOR-ONLY (IDX:72). CHK:15: VERIFIED WITH AMENDMENT; A:46 'registry row to be opened'. Also THEOREM_LIST 'no registry row' vs LOCKED_PROOFS row T09 vs branch N9-KERNEL: IDX §5.B B2.
-- **K10, K11 (σ²-coupling, cross-block bound).** R0_DIFF:84, :85: 'No registry row' for the decomposition / bound. R2 cards cite registry rows OWS-WS3 / OWS-WS4 for the same content (A:68; B:215; D:140). The registry rows exist (IDX:404–405); R0_DIFF's 'no registry row' is stale relative to the cards.
-- **Prop2(a,b,d,e).** THEOREM_LIST V1(iii): 'PROVED-LOCKED'. Registry: author PROVED, `SF: VERIFIED (W5-LOCKBOOK); XF: GAP (A-REV4)`, not in the strict-lockable list; the locked wave-1 result is T12 (IDX §5.B B10).
-- **T38-b1-LH (K69, K67).** Author PROVED, `SF: VERIFIED* (W5-VMASK); XF: VERIFIED* (A-REV8)` (index flag XF-VERIFIED*(qualified)); but the registry carries a CONFLICT (C24) on the iid sub-claim: A-REV5 ERROR vs A-REV8 GAP; LS0 consistency conclusion VERIFIED by A-REV8 (IDX:1198). W2PC2:88 notes the cards omit the ⚑ marker.
-- **T32(i), Cost-T38 (K87, K88).** T32(i): `PROVED (SF: VERIFIED (W7-SEC); XF: none)`, flag SAME-FAMILY-ONLY; Cost-T38: `PROVED-UNDER (SF: VERIFIED (W3-VT38E); XF: GAP (A-REV5))`. Registry CONFLICT C18: W6-FIXREV1 / W7-SEP 'CONJECTURE' dissent recorded as stale (IDX:1192). A:131 and B:171 omit the SAME-FAMILY-ONLY flag; C:132 states it; W2PC2:88 notes the ⚑ omission.
-- **STG-Wp (K29).** `PROVED-UNDER (SF: none; XF: none)`; registry CONFLICT C22 with O-WSTAB's COUNTEREXAMPLE to F-DRAFT W(b),(c) on the divergent side (IDX:1196); STG-cexW2 COUNTEREXAMPLE: 'F-DRAFT's O(1) stage count is false'.
-- **MZ-P3 (K42/K43/K45; M4).** Index: `PROVED (P3 top store, deterministic); P3′ conditional on T03 + discovery`, flag AUTHOR-ONLY, candidate: not reviewed (IDX:201). SYNTH_R2:266 requires D.M3′ to restore 'candidate, not reviewed, not adopted', AUTHOR-ONLY; D:74 writes MZ-C1 'PROVED (C1-C3 per-fit, deterministic)' with the qualifier only on MZ-P3. IDX §5.B B3: FMP-M3 `XF: ERROR (A-REV9)` vs D3(iii) citing M3 as PROVED.
-- **T26BUD-G, DIL-E, T26 flags (M7, M3).** W2PC2:85–88: minor omissions remain in C's cards — T26BUD-G's own AUTHOR-ONLY flag (C8), 'SF none' on DIL-E (C5), registry ⚑ CONFLICT markers on T32(i) (C7) and T38-b1-LH (C3).
-- **Thm5-LH (K17/K18, M3, S-T-adjacent).** `PROVED (SF: VERIFIED (W3-VEXP); XF: none)`, flag SAME-FAMILY-ONLY (IDX:325). Qualifier omitted in R1, restored in R2 (W2PC2:131, W1PC2:94 flags). Consistent in all four R2 cards.
-- **T01–T03 (S-T).** `PROVED-LOCKED (wave 3; external review queued)`, flag SAME-FAMILY-ONLY (IDX:469). W2PC2:159 'T01 … external review queued; SAME-FAMILY-ONLY' — flag (b) minor in W1PC2 (omitted in R1).
-- **LS0 in the production core (M4, M5, S-CERT).** THM-INV §1 row 12 / METH-AUDIT: 'LS0 is not in the production core' vs REGISTRY_v2 §I: 'LS0 is part of the method' (IDX §5.B B4). METHOD:48, :399: not yet in the production core, merged-LS0 replay pending; LS0 changed the HPM in 0/2,394 test-export fits.
-- **MA-PropW (S-OUT).** THEOREM_LIST V2: executed check on '1/1 completed design'; METH-AUDIT: '3/3 study designs'; METHOD:46: 'executed bitwise on smoke + 3/3 study designs' (IDX §5.B B1).
-- **K97 SL (R3-3).** R0_DIFF class CONFIRMED-DE; registry C1new `COUNTEREXAMPLE (numerical, LIT-PAR G4) + PROOF SKETCH (NEW-SYNTH)` (cards A:129, B:161, D:95). W2PC1:26, :31, :33, :129, :180, :193: NEEDS-HYPOTHESIS, NOT REPAIRED in all three checked cards. Seat placements differ: C FUTURE_WORK (C:17), A, B supplement (A:19; B:58), D main (D:92) (S2:81).
-- **PC1 claim 3 / N1 (M1).** N1 `PROOF SKETCH` [INP 131]; PC1c3 `PROVED (PC1 claim 3)` with 'E[W_r ĥ_r] = π(h) is still a premise' (R0_DIFF:140). W1PC2:101 and W2PC2 §0 TRUE-AS-WRITTEN numerically on a coded-grid replica — sanity only; the status stays PROOF SKETCH.
-- **K95 placement.** A: main Z𝒯 (A:85, A:89(f)); B, D: supplement (B:187; D:107); C: cited (C:44). Proposal: supplement (S2:94).
-- **Song–Liang Thm 2 / Cor 2 wording (R3-7).** Thm 2: B 'not applicable, fixed design' (B:70), A 'selection matched' (A:31), C/D fixed-design selection counterpart (C:393; D:235). Cor 2: A 'a comparison', B 'SL's separate GAP', C 'no analytic null-exclusion/FDR separation established', D 'covered by SL′ only if it ships' (S2:60–62).
+- **OWS-WS3, OWS-WS4.** Registry: `PROVED (SF: none; XF: none)`, flag AUTHOR-ONLY (IDX:404–405). Cards and checks: CHK:13–14 'VERIFIED (PC1, cross-family, line by line)'; A:68 notes the registry rows are not yet updated; W2PC1:44 keeps both as separate entries. **Resolve:** registry owner (status row update, recommended in §9); no HQ action.
+- **OWS-WS6(d), OWS-WS7.** Registry: `PROVED (SF: none; XF: none)`, flag AUTHOR-ONLY (IDX:411, :413). CHK:11–12: VERIFIED WITH AMENDMENT (amendments adopted by all four seats). **Resolve:** registry owner (§9). HQ `M2` carries the CHK amendments in part (c) (Proposition ONE-SHOT).
+- **N9K (kernel facts, start sampler).** Registry/index: `PROVED (candidate)`, flag AUTHOR-ONLY (IDX:72). CHK:15: VERIFIED WITH AMENDMENT; A:46 'registry row to be opened'. Also THEOREM_LIST 'no registry row' vs LOCKED_PROOFS row T09 vs branch N9-KERNEL: IDX §5.B B2. **Resolve:** registry owner (open the N9K row; §9) and the THEOREM_LIST/LOCKED_PROOFS/branch naming question (IDX §5.B B2). HQ `LP-FOUND` states S-KERNEL with the CHK amendments.
+- **K10, K11 (σ²-coupling, cross-block bound).** R0_DIFF:84, :85: 'No registry row' for the decomposition / bound. R2 cards cite registry rows OWS-WS3 / OWS-WS4 for the same content (A:68; B:215; D:140). The registry rows exist in the index (IDX:404–405). R0_DIFF's cell and the cards' status lines therefore differ on whether a registry row exists. **Resolve:** registry owner (which registry row backs K10/K11). HQ `M2` and HQ `M3` cite OWS-WS3/OWS-WS4 as the rows of record.
+- **Prop2(a,b,d,e).** THEOREM_LIST V1(iii): 'PROVED-LOCKED'. Registry: author PROVED, `SF: VERIFIED (W5-LOCKBOOK); XF: GAP (A-REV4)`, not in the strict-lockable list; the locked wave-1 result is T12 (IDX §5.B B10). **Resolve:** registry owner (PROVED-LOCKED vs author-PROVED with XF GAP). HQ `M1` quotes the registry status, not the draft's.
+- **T38-b1-LH (K69, K67).** Author PROVED, `SF: VERIFIED* (W5-VMASK); XF: VERIFIED* (A-REV8)` (index flag XF-VERIFIED*(qualified)); but the registry carries a CONFLICT (C24) on the iid sub-claim: A-REV5 ERROR vs A-REV8 GAP; LS0 consistency conclusion VERIFIED by A-REV8 (IDX:1198). W2PC2:88 notes the cards omit the ⚑ marker. **Resolve:** registry owner (CONFLICT C24); HQ `M5` restores the ⚑ marker in its card status (W2PC2:88). K67 is dropped.
+- **T32(i), Cost-T38 (K87, K88).** T32(i): `PROVED (SF: VERIFIED (W7-SEC); XF: none)`, flag SAME-FAMILY-ONLY; Cost-T38: `PROVED-UNDER (SF: VERIFIED (W3-VT38E); XF: GAP (A-REV5))`. Registry CONFLICT C18: W6-FIXREV1 / W7-SEP 'CONJECTURE' dissent recorded as stale (IDX:1192). A:131 and B:171 omit the SAME-FAMILY-ONLY flag; C:132 states it; W2PC2:88 notes the ⚑ omission. **Resolve:** registry owner (CONFLICT C18); HQ `M8` restores the SAME-FAMILY-ONLY flag in its card status.
+- **STG-Wp (K29).** `PROVED-UNDER (SF: none; XF: none)`; registry CONFLICT C22 with O-WSTAB's COUNTEREXAMPLE to F-DRAFT W(b),(c) on the divergent side (IDX:1196); STG-cexW2 COUNTEREXAMPLE: 'F-DRAFT's O(1) stage count is false'. **Resolve:** registry owner (CONFLICT C22); HQ `LP-IDENT` states K29 only as a cited conditional implication (MINUTES §2.2).
+- **MZ-P3 (K42/K43/K45; M4).** Index: `PROVED (P3 top store, deterministic); P3′ conditional on T03 + discovery`, flag AUTHOR-ONLY, candidate: not reviewed (IDX:201). SYNTH_R2:266 requires D.M3′ to restore 'candidate, not reviewed, not adopted', AUTHOR-ONLY; D:74 writes MZ-C1 'PROVED (C1-C3 per-fit, deterministic)' with the qualifier only on MZ-P3. IDX §5.B B3: FMP-M3 `XF: ERROR (A-REV9)` vs D3(iii) citing M3 as PROVED. **Resolve:** registry owner; HQ `M4` restores 'candidate, not reviewed, not adopted', AUTHOR-ONLY in its card (SYNTH_R2:266).
+- **T26BUD-G, DIL-E, T26 flags (M7, M3).** W2PC2:85–88: minor omissions remain in C's cards — T26BUD-G's own AUTHOR-ONLY flag (C8), 'SF none' on DIL-E (C5), registry ⚑ CONFLICT markers on T32(i) (C7) and T38-b1-LH (C3). **Resolve:** HQ `M7` (T26BUD-G's own AUTHOR-ONLY flag), HQ `M3` ('SF none' on DIL-E), HQ `M8` (⚑ on T32(i)), HQ `M5` (⚑ on T38-b1-LH); registry owner for the ⚑ rows themselves.
+- **Thm5-LH (K17/K18, M3, S-T-adjacent).** `PROVED (SF: VERIFIED (W3-VEXP); XF: none)`, flag SAME-FAMILY-ONLY (IDX:325). Qualifier omitted in R1, restored in R2 (W2PC2:131, W1PC2:76 flag (b)). Consistent in all four R2 cards. **Resolve:** HQ `M3` and HQ `M5` carry the SAME-FAMILY-ONLY qualifier (R3_C:297; R3_D:223); registry owner: none.
+- **T01–T03 (S-T).** `PROVED-LOCKED (wave 3; external review queued)`, flag SAME-FAMILY-ONLY (IDX:469). W2PC2:159 'T01 … external review queued; SAME-FAMILY-ONLY' — flag (b) minor in W1PC2 (omitted in R1). **Resolve:** registry owner (external review queued); HQ `LP-FOUND` states the flag where S-T is cited.
+- **LS0 in the production core (M4, M5, S-CERT).** THM-INV §1 row 12 / METH-AUDIT: 'LS0 is not in the production core' vs REGISTRY_v2 §I: 'LS0 is part of the method' (IDX §5.B B4). METHOD:48, :399: not yet in the production core, merged-LS0 replay pending; LS0 changed the HPM in 0/2,394 test-export fits. **Resolve:** registry owner / METHOD owner (merged-LS0 replay); HQ `M5` and HQ `LP-AUDIT` carry it as the named premise N2(c) (§8).
+- **MA-PropW (S-OUT).** THEOREM_LIST V2: executed check on '1/1 completed design'; METH-AUDIT: '3/3 study designs'; METHOD:46: 'executed bitwise on smoke + 3/3 study designs' (IDX §5.B B1). **Resolve:** registry owner (1/1 vs 3/3 designs); HQ `LP-AUDIT` (N2(a) replay count is part of its audit).
+- **K97 SL (R3-3).** R0_DIFF class CONFIRMED-DE; registry C1new `COUNTEREXAMPLE (numerical, LIT-PAR G4) + PROOF SKETCH (NEW-SYNTH)` (cards A:129, B:161, D:95). W2PC1:26, :31, :33, :129, :180, :193: NEEDS-HYPOTHESIS, NOT REPAIRED in all three checked cards. Seat placements differ: C FUTURE_WORK (C:17), A, B supplement (A:19; B:58), D main (D:92) (S2:81). **Closed for placement by MINUTES §2.3 (R3-3): FUTURE_WORK, unanimous.** The status disagreement (registry COUNTEREXAMPLE numerical + PROOF SKETCH vs NOT REPAIRED) stays with the registry owner.
+- **PC1 claim 3 / N1 (M1).** N1 `PROOF SKETCH` [INP 131]; PC1c3 `PROVED (PC1 claim 3)` with 'E[W_r ĥ_r] = π(h) is still a premise' (R0_DIFF:140). W1PC2:101 and W2PC2 §0 TRUE-AS-WRITTEN numerically on a coded-grid replica — sanity only; the status stays PROOF SKETCH. **Resolve:** registry owner (status stays PROOF SKETCH); HQ `M1` (N1 is the binding crux; §13.1 safeguard).
+- **K95 placement.** A: main Z𝒯 (A:85, A:89(f)); B, D: supplement (B:187; D:107); C: cited (C:44). Proposal: supplement (S2:94). **Closed by MINUTES §2.1/§2.2 (R3-4 unanimous): S-TARGET.**
+- **Song–Liang Thm 2 / Cor 2 wording (R3-7).** Thm 2: B 'not applicable, fixed design' (B:70), A 'selection matched' (A:31), C/D fixed-design selection counterpart (C:393; D:235). Cor 2: A 'a comparison', B 'SL's separate GAP', C 'no analytic null-exclusion/FDR separation established', D 'covered by SL′ only if it ships' (S2:60–62). **Closed by MINUTES §2.3 (R3-7): the wording adopted there is the one to use** (C's Cor 2 wording, adopted by B and D). HQ `M6`/`LP-FOUND` (S-T) apply it.
+
+- **Lemma-pack count.** `MINUTES.md` §4 says '4 lemma-pack charters'; `MINUTES.md` §2.5 names five (LP-FOUND, LP-IDENT, LP-AUDIT, LP-REST, LP-REP). This registry uses five. **Resolve:** chair/clerk (`MINUTES.md` §4 and `HQ_CHARTERS/`).
+- **S-STGI seat positions.** MINUTES §2.2: 'B (FW) and C (conditional cited) prevail over A and D (supplement conditional)'. R3_A:43, :67, :108: A objects to S-STGI ('dissolve: K30 → M7(d), K29 → FUTURE_WORK'); R3_D:45, :135: D keeps K29 conditional in S-STGI. A's position as filed matches B's, not D's. **Resolve:** chair (`MINUTES.md` §2.2 wording); the outcome (K29 only as a cited conditional implication; K30 in M7 and restated) is unchanged. **Resolved by the chair 2026-11-04:** MINUTES §2.2 corrected; S-STGI dissolved (A, B, C), dissent D.
+- **N3 DP invariant.** R3_B:304: 'N3 → hypothesis in M5; DP invariant FW'. MINUTES §2.3: the N3 DP invariant is a named implementation premise in the charters; R3_D:221: it is the first lemma of the M5 charter. **Resolve:** chair (MINUTES prevails); HQ `M5` carries it (§8).
+- **Which charters carry N2.** R3_B:304: N2 → M1, M4, M5 charters; R3_D:250: M1, M4, M5, Prop D charters, with S-OUT stating what is proved; R3_C:330, :377: S-KERNEL/S-OUT/M5/M8. **Resolve:** the clerk/chair in `HQ_CHARTERS/` (the registry's §8 lists the union).
+- **K33 placement.** A, B, C: M7 (deterministic termination/count form); D: S-IDENT (R3_D:25, :42, :131). MINUTES §2.3 decides M7 by majority. **Resolve:** closed; D's dissent recorded.
+- **K62 placement.** B's R2 card placed K62 in the HPM item (B:125); MINUTES §2.1 places it in M1. **Resolve:** closed by MINUTES; HQ `M1` and HQ `M5` note the use of the MPM margin.
+- **ū̂ description.** S2:218 describes ū̂ as 'the maximal fit fraction on V (D:182)'; D:182 and AMENDMENT_HQ_02 §A2 define ū̂ = Σ_b max_{U⊆C_b} x_b(U) from the block tables. MINUTES §2.2 adopts D's. **Resolve:** closed for the definition; HQ `LP-REP` and the AMENDMENT owner keep SYNTH_R2:218 out of the charter.
+- **Jeffreys-bound inequalities.** A:158: J ≤ osc(d)²/4; B:215 and C:261: J ≤ osc d; D:126: J ≤ 2·osc d (NOTATION.md §2 (iii)). The sources state different inequalities; the registrar does not judge them. **Resolve:** HQ `M2` / HQ `LP-IDENT` (K104 calculus) state the one the card uses.
+
+## 8. Named implementation premises / audit obligations
+
+These are neither theorems, nor FUTURE_WORK items, nor cited lemmas, nor drops, so the close rule has no slot for them. They are **named implementation premises in the HQ charters** (MINUTES §2.3, 'Audit obligations'; seat B's 'missing' item 2, R3_B:315, adopted). They are code-audit or execution facts, not model/design assumptions and not newly proved lemmas (R3_C:252). "Carried by" lists the HQ charters named by the seats; where seats name different charters the union is given and the clerk's `HQ_CHARTERS/` is the authority (§7, 'Which charters carry N2'). Status words are copied from the sources.
+
+**Name map (the same obligation under several names; each name the chair listed appears in the first column of the row that carries it).** GUARD-W = N2(e) = C's A-GUARD. IND-T extension = N14(c) (IND-T for streams 10..9+R′). 'Integrated streams' = C's A-STREAM = N2(b) (persistent per-worker stream state) + N14(c). 'LS0' premise = N2(c) + OP-LS0 + the emitted centre (N3). 'Execution DAG' = C's A-DAG = D's trajectory inventory.
+
+| Premise | Statement | Status (source wording) | Carried by (HQ charter) | Used by | Source |
+|---|---|---|---|---|---|
+| **N2(b)** (W-cal) | The 4 diagnostic (calibration) islands, with persistent per-worker stream state, are bitwise equal to the serial run | PROVED by code reading, **not executed** (INP N2) | LP-AUDIT (`HQ_CHARTERS/LP-AUDIT.md`: S-OUT K83); M8 (calibration trajectories of the DAG) | S-OUT K83; M8; Lemma-STREAM | INP N2 (`origin/theory/MEET-v31:…/THEOREM_REVISION_INPUTS.md:136–138`); R0_DIFF:192 (K83); R3_C:330, :377; R3_D:250 |
+| **N2(c)** (LS0 integration) | LS0 leaves island outputs, Ẑ, PIPs bitwise unchanged; 𝒯_new = top_c(𝒯_old ∪ 𝒮_added); fires no E3 | **not in the production core**; merged-LS0 replay pending (INP N2; METHOD:48, :399); self-flag 'integrated LS0 … audits open' (R3_D:150) | M5 (first lemma in parallel with N3: R3_D:221); M4 (N13 retention under the coded LS0 rule: R3_B:262); M8 (LS0 counted); LP-AUDIT | M5, M4(c), M8 | INP N2; R3_A:180; R3_D:221, :225; R3_B:262 |
+| **N2(e)** = **GUARD-W** (A-GUARD) | Any worker, merge or LS0 stop, or guard stop ⇒ no output (stop-only coupling) | **not audited** (API-AUDIT covered the serial v3 guard only; INP N2(e)). Lemma RO itself stays as recorded (XF VERIFIED* by A-REV6) | M1 (premise of (c),(d)); M4 (e) (R3_B:262, :265); M5; LP-AUDIT (S-OUT) | M1, M4(e), M5, S-OUT, S-REP (output form) | INP M6 (:31), N2 (:136–138); R0_DIFF:181 (K77); R3_A:119, :192; R3_B:213–214; R3_C:142, :257, :264; R3_D:139, :213 |
+| **N14(c)** = **IND-T extension** | IND-T for streams 10..9+R′ (independence of the final streams from 𝒞 and each other for R′ = 4k > 4) | **code audit, not done** (INP N14(c)); audited for R′ = 4 only, extension pending (R3_A:119); registry: IND-T PROVED (SF: none; XF: VERIFIED* (A-REV1)); Lemma-STREAM AUTHOR-ONLY (IDX:85–86) | M1 (stacking clauses, (c),(d)); LP-AUDIT (S-OUT K86, K84) | M1, S-OUT K84/K85/K86, S-POOL | INP N14 (:228–231); R0_DIFF:195 (K86); R3_A:119, :192; R3_D:139 |
+| **N3 DP invariant** (e4 tie-DP) | The max-plus DP returns the prescribed smallest-size, lexicographically smallest start-mode maximiser without enumerating ties | **OPEN** (INP N3; R0_DIFF:83 K09); W1PC2 D9: TRUE on 400 random instances, DESIGN-ASSERTED (R3_D:221) | M5 (first lemma; fallback: (b1-LH) conditional on N3 after one HQ cycle, R3_D:224); LP-FOUND (S-KERNEL K09 tie-DP proposition); M4 (hypothesis in (f), R3_B:213) | M5 (b1-LH), M4(f), S-KERNEL K09 | INP N3 (:143–146); R0_DIFF:83; R3_D:221, :224; R3_B:213, :304 (disagreement, §7) |
+| **Integrated streams** (A-STREAM) | The integrated v3.1 core's stream layout (calibration streams 0–9, final streams 10..9+R′, per-worker state) matches the stream contract | audit obligation (R3_C:252); overlaps N2(b), N14(c) | LP-AUDIT (S-OUT); LP-FOUND (S-KERNEL: R3_C:330) | S-OUT K83–K86; M1 | R3_C:252, :257, :330 |
+| **LS0** (A-LS0; OP-LS0; emitted centre) | The shipped LS0 is the specified local search from S̃₀ (reads no uniforms; completed scans; emitted centre = prescribed start mode) | not in the production core (METHOD:48, :399; registry §7 'LS0 in the production core'); LS0 changed the HPM in 0/2,394 test-export fits (METHOD) | M5; M4; M8; LP-AUDIT | M5 (reported-HPM consistency), M4(f), M8 | R3_C:252, :264; R3_D:150, :225; R3_A:180 |
+| **Execution DAG** (A-DAG) | Trajectory inventory: every executed pilot, diagnostic, rebuild and final trajectory with its own (N_i, T_i, L_i); every completed search | **NOT REPAIRED / GAP** (W2PC2:133; W2PC1:181, :194, :205); 'the open audit' (R3_D:230) | M8 (first lemma: R3_D:230); LP-AUDIT | M8 (a)–(c) | R3_D:164–174, :230; R3_C:272; SYNTH_R2:267 |
+| **Read-only d accumulator** (AMENDMENT_HQ_02 §A1) | Read-only record of the bridge potential d at initialisation and at the four measured endpoints; no new draws, transitions or scores; no feedback; d a default member of the declared list 𝓗 (fixed before stream 10, reads no uniforms) | per-particle d values exist during execution but **are not retained today** (SYNTH_R2:230; W2PC2:72, :146); historical fits report NA; HQ Q4 conditions met | LP-REP (S-REP; `HQ_CHARTERS/LP-REP.md`) | S-REP (Ĵ, ε̂_×) | AMENDMENT_HQ_02_DEFINITIONS.md §A1 (lines 36–41); SYNTH_R2:230; R3_A:77; R3_B:98, :323; R3_C:92, :214; R3_D:86 |
+
+**Escalations tied to these premises** (MINUTES §2.3; seat charters): GUARD-W or IND-T extension audit fails → M1 (c),(d) revert to potential-run statements and N2 reopens (R3_A:192); GUARD-W audit fails → M4(e) in potential-run form only (R3_B:214); N3 fails outright or the integrated LS0 differs from the specified LS0 → HQ decides (R3_D:225); the DAG audit finds an uncounted serial component → M8 (a)/(b) restated, not dropped (R3_D:174). Other premises named inside the cards (EX-A exact arithmetic, EX-S/H-U exact iid uniforms, CAL frozen 𝒞, SR, Lemma S merge) are model/design or code facts stated in the cards and are not audit obligations of this table.
+
+## 9. Registry updates recommended to the registry owner
+
+The registry owner decides; **this file changes no registry status**. The right-hand column is the meeting's check verdict, i.e. a statement-sanity / cross-family review verdict (`evidence/CHK_INHERITED/REPORT.md`), not an adoption decision and not a proof status.
+
+| Registry ID | Registry status now (index) | Meeting's check verdict (cross-family: PC1, gpt-6.1-sol, line by line) | Recommended entry | Source |
+|---|---|---|---|---|
+| OWS-WS3 | PROVED (SF: none; XF: none), FLAG AUTHOR-ONLY (IDX:404) | VERIFIED | **XF: VERIFIED (CHK, cross-family, line by line)** | CHK:13, :93 |
+| OWS-WS4 | PROVED (SF: none; XF: none), FLAG AUTHOR-ONLY (IDX:405) | VERIFIED | **XF: VERIFIED (CHK, cross-family, line by line)** | CHK:14, :112 |
+| OWS-WS6(d) | PROVED (SF: none; XF: none), FLAG AUTHOR-ONLY (IDX:411) | VERIFIED WITH AMENDMENT (bounded-block TV scope) | **XF: VERIFIED WITH AMENDMENT (CHK)**; amendment adopted by all four seats | CHK:11, :34 |
+| OWS-WS7 | PROVED (SF: none; XF: none), FLAG AUTHOR-ONLY (IDX:413) | VERIFIED WITH AMENDMENT (initial vs later presence; restricted-set stage-count qualification) | **XF: VERIFIED WITH AMENDMENT (CHK)** | CHK:12, :70 |
+| N9K (kernel facts, start sampler; N9-KERNEL §§0–3) | PROVED (candidate), FLAG AUTHOR-ONLY (IDX:72); A:46 'registry row to be opened' | VERIFIED WITH AMENDMENT (claims G, U, N, I, R, Z, S check against code; prose corrections CHK:155–161) | **XF: VERIFIED WITH AMENDMENT (CHK)**; open the registry row | CHK:15, :134 |
+
+Related entries that need no status change:
+- **One-shot refutation** (HQ Q1(c)): survives in the shipped bounded-block setting (CHK:177–195, §6); recorded on the OWS-WS6(d)/WS7 rows.
+- **N1** (M1's binding crux): stays PROOF SKETCH; PC1c3 PROVED with 'E[W_r ĥ_r] = π(h)' as premise; the numerical checks (W1PC2:101, W2PC2 §0) are statement-sanity only.
+- **Check wave results** (W1_PC1: 11 COUNTEREXAMPLE, 25 NEEDS-HYPOTHESIS on A, B, D; W1_PC2: 0 COUNTEREXAMPLE on C; W2_PC1: 9 COUNTEREXAMPLE; W2_PC2: 29/29 TRUE-AS-WRITTEN) concern seat-card clauses, not registry rows; they are listed per item above as statement-sanity verdicts. OWS-WS6e (CONJECTURE) and OWS-WS8d (OPEN) are unchanged.
 
 *End of registry. No file other than this one and `NOTATION.md` was written; nothing was committed or pushed.*

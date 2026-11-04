@@ -34,7 +34,7 @@ Thesis CD (K96): a scoped remark after the main theorems (Part III).
 | S-BLOCKS | Separation ⇒ groups kept; SIZE ⇒ equality (K07, K14, K06) | R2_C C11 + A/B/D | LP-FOUND | 1 |
 | S-KERNEL | N9 kernel facts, graph, start sampler, minorisation (K20, K21, K08, K09, K22, K103) | R2_B S5, R2_C C10 + A/D | LP-FOUND | 1 |
 | S-IDENT | Restricted-ESS coverage identity, TI/KL/TV calculus, C15-CI clause (K25 lemma, K104, K55, K103) | R2_C C15-TV/KL/CI + A/B/D | LP-IDENT | 2 |
-| S-STGI | Ideal two-state crossing depth (K30); K29 only as cited conditional implication | R2_C C14, R3_A M7(d) + A/B/D | LP-IDENT | 2 |
+| ~~S-STGI~~ | **Dissolved** (MINUTES §2.2): K30 = M7(d); K29 → FW23 (its conditional implication is citable as an attributed lemma) | — | — | — |
 | S-CERT | Local search, certificate semantics, B&B soundness, perturbation lemma (K64, K73 w/o region clause, K74, K05, K108) | R2_A S8, R2_B S8, R2_D S9 | LP-AUDIT | 3 |
 | S-OUT | Output-event validity, worker equivalence, stacking (K77, K78, K83–K86, K63) | R2_C C13 + A/D | LP-AUDIT | 3 |
 | S-Z | Evidence variance, masked tails (K37–K41, K53) | R2_A S4, R2_B S4, R2_D S6 | LP-REST | 4 |
@@ -352,7 +352,7 @@ Split note (if R3-1 (ii) were chosen instead): Proposition V+ = clauses (a)–(d
 
 **Chair's integration note.**
 1. K33 enters in its deterministic termination/count form only: the card's clause (a) (termination, ρ_V ≥ 0.9 per appended point, ≤ ℓ rebuilds per tier, T ≤ T_e) and clause (c) (the count). Rebuild convergence N5(b), P(S₀ ∈ V) and P(schedule_limit) → FUTURE_WORK (K31) in either case; Seat D's dissent (K33 in S-IDENT, R3_D §S1) is recorded in MINUTES §2.3.
-2. K30 is clause (d), labelled ideal two-state grid; S-STGI restates it. K29 is not in this card (FUTURE_WORK except as a cited conditional implication in S-STGI).
+2. K30 is clause (d), labelled ideal two-state grid, and is stated only here (S-STGI is dissolved). K29 is FUTURE_WORK FW23; its conditional implication may be cited as an attributed lemma.
 3. The card's escalation statement: no binding goal rests on STG alone; M2(b) has its own checked fallback T ≤ P + ⌈D_*/c_ρ⌉ + 1.
 
 
@@ -826,7 +826,7 @@ Final statement as R1 §D D19 with Λ_len := ∫₀¹ sd_{q_φ}(d)dφ ≤ √J (
 
 ---
 
-## S-STGI · Ideal two-state crossing depth (K30 restated); K29 only as a cited conditional implication
+## ~~S-STGI~~ · DISSOLVED (MINUTES §2.2, corrected): K30 is M7(d); K29 → FUTURE_WORK FW23. Seat texts are kept below for reference only; they are not list claims
 
 **Decision note (MINUTES §2.2, `theory_campaign/MEET-THM/MINUTES.md:70`):** content = Ideal two-state crossing depth (K30 restated); **K29 only as a cited conditional implication** under (LL) or the over-tilted q_w bound. Notes and decisions = Its unconditional favourable application → FW. B (FW) and C (conditional cited) prevail over A and D (supplement conditional), whose substance is the same conditional implication
 
@@ -1331,11 +1331,8 @@ Collected from the final cards and Round 3 files. Each is cited in the main text
 
 The chair does not vote. Each choice below keeps every clause the checks found TRUE-AS-WRITTEN. Where two seats' forms are compatible, both ship. Where they say the same thing, one wording is chosen and the other is kept in the cited R2 file.
 
-1. **S-STGI, K29.** Ship B's STG(f) wording (`R2_B.md` STG card, clause (f)) as a **cited conditional implication**:
-   - it holds under (LL) or the over-tilted q_w bound;
-   - the unconditional favourable application is FUTURE_WORK (MINUTES §2.2);
-   - A S11 and D STG′ state the same implication.
-2. **S-STGI, K30.** **Stated once**, as M7(d) in the final M7 card (`R3_A.md` M7, labelled ideal two-state grid), as R3_B §S1 asks. S-STGI restates nothing and points to M7(d). C14 (R2_C), A S11 and D STG′(c) are the same result with different hypothesis packaging; the M7 HQ may cite them.
+1. **K29.** Superseded by the corrected MINUTES §2.2: S-STGI is dissolved and K29 is FUTURE_WORK FW23. Its conditional implication, under (LL) or the over-tilted q_w bound, may be cited as an attributed lemma. B's STG(f) wording is the reference text. Dissent: D.
+2. **K30.** Stated once, as M7(d) in the final M7 card (`R3_A.md` M7, labelled ideal two-state grid). The other seats' wordings (C14, A S11, D STG′(c)) are references for the M7 HQ.
 3. **S-Z, variance.** **Both bounds ship**, as two clauses:
    - (vii-a) Var(Ẑ_r/Z | 𝒞) ≤ (T+1)·e^{2D}/N, with D = osc_Ω d, the deterministic full-space range (A S4(vii), B S4(vi); wave-1 repair);
    - (vii-b) Var(W_r | 𝒞) ≤ e^{2·osc_Ω d} − 1 (D S6; it follows from the pathwise bound W_r ∈ [e^{−osc d}, e^{osc d}] checked by PC2, W2_PC2 C2 rows).
