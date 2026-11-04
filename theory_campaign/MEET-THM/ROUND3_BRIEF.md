@@ -7,7 +7,7 @@ You are **Seat {SEAT}** of MEET-THM (paper 1's theorem list). You are **read-onl
 Working directory: `/home/fb31/.t3/worktrees/Bayesian-Variable-Selection/theory-MEET-THM`. Run `git fetch origin`.
 
 ## Read
-1. `theory_campaign/MEET-THM/SYNTH_R2.md` (v2, with the audit `SYNTH_R2_AUDIT.md` applied; correction log §6). This is the chair's reconciled-list **proposal** (§2), the required repairs (§3), the open items R3-1…R3-6 (§4) and this agenda (§5).
+1. `theory_campaign/MEET-THM/SYNTH_R2.md` (v2, with the audit `SYNTH_R2_AUDIT.md` applied; correction log §6). This is the chair's reconciled-list **proposal** (§2), the required repairs (§3), the open items R3-1…R3-8 (§4), the binding-goal safeguards (§2.7) and this agenda (§5).
 2. HQ rulings: `evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`, `evidence/2026-11-04_HQ_RULING_Q5.md`.
 3. The check verdicts:
    - `evidence/W2_PC1/VERDICTS.md`, `evidence/W2_PC2/VERDICTS.md`;
