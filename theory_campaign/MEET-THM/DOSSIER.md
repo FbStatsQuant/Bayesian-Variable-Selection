@@ -44,17 +44,18 @@ No API credit: subscriptions only. On a usage limit, the affected role waits for
 |---|---|
 | The method (fixed) | `theory/MEET-v31:theory_campaign/MEET-v31/METHOD_v3.1_FINAL.md`; base `Docs/Methodology/METHODOLOGY_v3.md` |
 | Method-meeting theory consequences: 17 obligations N1–N17, inherent limitations, what is NOT inherent | `theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md` |
-| Draft theorem list (19 items G1–G6, tiers, HQ plan) | `theory/THM-SYNTH:theory_campaign/THM-SYNTH/{THEOREM_LIST.md,HQ_PLAN.md,REPORT.md}` |
+| Draft theorem list (24 entries V1–V4, A1–A4, D1–D4, S1–S4, C1, R1–R7 in groups G1–G6; tiers; HQ plan) | `theory/THM-SYNTH:theory_campaign/THM-SYNTH/{THEOREM_LIST.md,HQ_PLAN.md,REPORT.md}` |
 | Inventory: component × property map, gap list | `theory/THM-INV:theory_campaign/THM-INV/REPORT.md` (+ `digests/`) |
 | Registry of results and statuses | `theory/T38-RECORD:theory_campaign/T38-RECORD/{REGISTRY_v2.md,LOCKABLE_v2.md,T38_STATEMENT.md}` |
 | Status vocabulary | `theory_campaign/PROTOCOL.md` (this branch) |
+| **Inherited-results index** (registrar): per draft entry and N1–N17, the registry IDs, verbatim statuses, source paths, check history (author-only / same-family / cross-family / Lean), method variant where stated; Lean index (25 files, library 101 results, 0 sorry); known-false list; 37 conflicts | `theory/MEET-THM-REG:theory_campaign/MEET-THM/evidence/REGISTRY_INDEX.md` |
 | Round 0 plans (fresh eyes) | `theory_campaign/MEET-THM/R0_D.md`, `R0_E.md` (added when done) |
 | Proposal, Song–Liang 2015 | `theory_campaign/inputs/` |
 | Literature | `theory/LIT-{PAR,SMC,MCMC,STAT,VENUE}:theory_campaign/LIT-*/REPORT.md` |
 | Lean work | to be indexed by the registrar (e.g. T07Bayes.lean, T37Greedy/Lattice.lean, T21HPM.lean, T12Core) |
 | Start ablation (confirmatory) | `theory/ABL-CONF` (running; evidence for the start theorems' numerical companion) |
 
-## 4. Inclusion criteria (fixed before Round 1; HQ dry-runs them on the 19-item draft list first)
+## 4. Inclusion criteria (fixed before Round 1; HQ dry-runs them on the 24-entry draft list first)
 
 A theorem enters the paper-1 list only if all hold:
 - **IC1 Statement:** precise, with every hypothesis named; about v3.1 as shipped, or the gap to the shipped method is itself stated as a lemma to prove.
