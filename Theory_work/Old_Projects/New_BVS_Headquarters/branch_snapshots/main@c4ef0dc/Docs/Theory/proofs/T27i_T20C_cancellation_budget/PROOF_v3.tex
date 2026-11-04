@@ -1,0 +1,170 @@
+﻿\documentclass[11pt]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newcommand{\Op}{O_{P_0}}
+\newcommand{\emp}{\varnothing}
+\title{T27(i): the sequential cancellation mass law}
+\author{Astra lead}
+\date{22 October 2026; version 2; not adopted}
+\begin{document}
+\maketitle
+\noindent\textbf{Scope.} This document proves only the conditional mass implication in T27(i). The two statistical premises are assumed, not established by the profiling campaign or by this proof. Parts (ii)--(iv) are outside scope.
+
+\section{Definitions and all premises}
+Let $n\to\infty$, with integer $p=p_n\ge1$ and $p\asymp n^a$ for a fixed $a\ge0$; that is, $d_-n^a\le p_n\le d_+n^a$ eventually, for fixed $0<d_-\le d_+<\infty$. Probabilities $P_0$ and stochastic orders refer to the data law. The project notation is $y^r=\alpha^*\mathbf1+X^r\beta^*+\varepsilon$ and $S_0=\operatorname{supp}\beta^*$. The proof uses no distributional restriction beyond the explicit stochastic premises below. In particular, it does not deduce those premises from Gaussian noise or design regularity.
+
+The retained raw predictor columns and response are nonconstant and are centered and divided by their sample standard deviations (denominator $n-1$). The resulting $X,y$ satisfy $\|x_j\|^2=\|y\|^2=n-1$. Set
+\[
+ K=\min\{p,\lfloor n/2\rfloor\},\qquad
+ \Omega=\{S\subseteq[p]:|S|\le K\}.
+\]
+The method's blocks $C_1,\ldots,C_J$ partition $[p]$. Each has size at most $B=\min\{\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16\}$. They are constructed from $X$ alone by complete linkage on $1-|x_j^\top x_l|/(n-1)$, lexicographic merge ties, top-down cutting until every cluster has at most $B$ entries, and next-fit packing of whole clusters in dendrogram leaf order (smallest-index child first).
+
+For any set $U$ used in a table, define
+\begin{align*}
+ G_U&=X_U^\top X_U,& z_U&=X_U^\top y,& H_U&=(n+1)G_U+I,\\
+ D_U&=\frac{\det H_U}{\det(G_U+I)},&
+ Q_U&=y^\top y-nz_U^\top H_U^{-1}z_U,& \nu&=0.01+n/2,\\
+ m(U)&=C_nD_U^{-1/2}(0.02+Q_U)^{-\nu},&&
+ C_n=\frac{(0.02)^{0.01}\Gamma(\nu)}{\pi^{n/2}\Gamma(0.01)}.
+\end{align*}
+Empty determinants equal one and empty quadratic forms equal zero. The tables and normalized composite start are
+\begin{align}
+ r_b(U)&=m(U)/m(\emp),\quad U\subseteq C_b,\label{eq:table}\\
+ w(k)&=\frac1{2\binom{2p-1}{k}},\qquad W_K=\sum_{k=0}^{K}\binom pk w(k),\nonumber\\
+ \gamma_0(S)&=\frac{w(|S|)}{W_K}\prod_{b=1}^J r_b(S\cap C_b),\qquad
+ \pi_0(S)=\frac{\gamma_0(S)}{\bar Z_0},\quad
+ \bar Z_0=\sum_{S\in\Omega}\gamma_0(S).\label{eq:start}
+\end{align}
+These are the unchanged v3 model prior and scores. On the exact-enumeration branch, no blocks are built by the algorithm; $\pi_0$ here is then the analytically defined component law given by these formulas. In particular this component interpretation applies eventually when $a=0$ and $p$ is bounded.
+
+\paragraph{H1: fixed feasible completion chain.}
+There are fixed integers $s\ge0$ and $c\ge1$ and a specified data-measurable chain
+\[
+ S^{(0)}\subset S^{(1)}\subset\cdots\subset S^{(c)}=S_0,
+ \quad |S^{(0)}|=s,\quad S^{(i+1)}=S^{(i)}\cup\{l_i\},
+\]
+with $l_i\notin S^{(i)}$, all sets feasible, and $|S_0|=s+c\le K$ eventually. A deterministic chain is allowed. Write $b_i$ for the block of $l_i$ and $T_i=S^{(i)}\cap C_{b_i}$, for $0\le i<c$.
+
+\paragraph{H2: joint sequential ratio law (open statistical premise).}
+For this very chain define
+\[
+ E_{n,i}=\log\frac{r_{b_i}(T_i\cup\{l_i\})}{r_{b_i}(T_i)}
+            +\tfrac12\log n.
+ \qquad \max_{0\le i<c}|E_{n,i}|=\Op(1).
+\]
+The remainder is two-sided and simultaneous over the successive states. If the chain is selected using the data, this hypothesis is on the selected chain. Pointwise control before selection is not substituted for it. No independence between the remainders is assumed.
+
+\paragraph{H3: normalized reference mass (open statistical premise).}
+For a fixed $c_0\in(0,1]$,
+\[
+ P_0\{\pi_0(S^{(0)})\ge c_0\}\longrightarrow1.
+\]
+This is a statement about the full capped normalizer in \eqref{eq:start}.
+
+\paragraph{H4: retained operational premises.}
+As in the theorem file: EX-A means exact scores, convolutions, probabilities and comparisons; EX-S means independent ideal uniform streams with the method's separation; CAL means calibration uses streams 0--9, final streams 10--13 are fresh and independent, and escalation is decided before final randomness. Successful final execution means the final run completes its frozen schedule. These premises are retained for the algorithmic setting. The mass assertion below is under $P_0$, not under a distribution conditioned on success or passing diagnostics. Its algebra does not require EX-S, CAL or successful execution; consequently no completion-probability claim or conditional tightness claim is being added.
+
+\begin{theorem}[T27(i), mass law]\label{thm:main}
+With the preceding definitions and premises,
+\[
+ \boxed{\ \pi_0(S_0)=p^{-c}n^{-c/2}\exp\{\Op(1)\}.\ }
+\]
+Precisely, $\log\pi_0(S_0)+c\log p+(c/2)\log n=\Op(1)$. Thus the positive multiplier and its reciprocal are both tight under $P_0$.
+\end{theorem}
+
+\section{Proof of the mass law}
+\paragraph{Positivity.}
+For every $U$, $G_U$ is positive semidefinite, so $H_U$ and $G_U+I$ are positive definite. The nonzero eigenvalues of $nX_UH_U^{-1}X_U^\top$ are $n\lambda/((n+1)\lambda+1)<n/(n+1)$, for eigenvalues $\lambda>0$ of $G_U$. Hence $Q_U\ge y^\top y/(n+1)\ge0$, and $m(U)$ is finite and positive. All table entries, prior weights and feasible start masses are therefore finite and positive. The finite sum $\bar Z_0$ is finite and nonzero, and $0<\pi_0(S)\le1$.
+
+\paragraph{Exact odds.}
+For any feasible $S,S'$ the common normalizers cancel in \eqref{eq:start}:
+\begin{equation}\label{eq:odds}
+ \frac{\pi_0(S')}{\pi_0(S)}
+ =\frac{w(|S'|)}{w(|S|)}
+   \prod_b\frac{r_b(S'\cap C_b)}{r_b(S\cap C_b)}.
+\end{equation}
+This is also the proved wave-1 T22(ii-a) reference-to-truth identity, with $S'=S_0$ and $S=S^{(0)}$. The calculation above supplies it within this packet. For a successive addition only block $b_i$ changes. The binomial formula gives
+\[
+ \frac{w(k+1)}{w(k)}=\frac{k+1}{2p-k-1},\qquad 0\le k\le p-1.
+\]
+Multiplying \eqref{eq:odds} along the chain and writing each table ratio as $n^{-1/2}e^{E_{n,i}}$ (the definition of $E_{n,i}$) yields the exact identity
+\begin{equation}\label{eq:exact}
+ \pi_0(S_0)=\pi_0(S^{(0)})\,p^{-c}n^{-c/2}
+ A_{p,s,c}\exp\!\left\{\sum_{i=0}^{c-1}E_{n,i}\right\},
+\end{equation}
+where the deterministic factor is
+\[
+ A_{p,s,c}:=\prod_{i=0}^{c-1}\frac{s+i+1}{2-(s+i+1)/p}.
+\]
+All denominators are positive: feasibility implies $s+i+1\le s+c\le p$. In fact
+\begin{equation}\label{eq:bounded}
+ \frac{(s+c)!}{2^c s!}\ \le\ A_{p,s,c}\ \le\ \frac{(s+c)!}{s!}.
+\end{equation}
+Thus $\log A_{p,s,c}=O(1)$, including when $p$ stays bounded. Repeated additions to the same block cause no problem: the ratios are evaluated at $T_i$, and all intervening block factors cancel exactly. Ratios evaluated only at the initial state would not give \eqref{eq:exact}.
+
+\paragraph{Control of the normalized multiplier.}
+H3 and $0<\pi_0(S^{(0)})\le1$ imply $\log\pi_0(S^{(0)})=\Op(1)$. Indeed for any $M> -\log c_0$,
+\[
+ P_0\{|\log\pi_0(S^{(0)})|>M\}
+ \le P_0\{\pi_0(S^{(0)})<c_0\}\longrightarrow0.
+\]
+Since $c$ is fixed, H2 gives
+\[
+ \left|\sum_{i=0}^{c-1}E_{n,i}\right|
+ \le c\max_{i<c}|E_{n,i}|=\Op(1).
+\]
+Take logarithms in \eqref{eq:exact}. The resulting normalized log mass is
+\[
+ \log\pi_0(S_0)+c\log p+\frac c2\log n
+ =\log\pi_0(S^{(0)})+\log A_{p,s,c}+\sum_{i=0}^{c-1}E_{n,i}
+ =\Op(1).
+\]
+A finite sum of tight random variables is tight without any independence assumption. If $Z_n$ denotes this log multiplier, then for every $M>0$, on $\{|Z_n|\le M\}$ both $e^{Z_n}$ and $e^{-Z_n}$ are at most $e^M$. This proves the claimed two-sided multiplicative form.\hfill$\square$
+
+\paragraph{Empty-chain extension.} For $c=0$, set $S^{(0)}=S_0$ and take empty products as one and empty sums as zero. The same conclusion is exactly $\log\pi_0(S_0)=\Op(1)$, already proved from H3; H2 is vacuous.
+
+\clearpage
+\section{What EXP\texorpdfstring{$'$}{'} would and would not supply}
+This section records the scope of Decision Point 2, not an additional premise of Theorem~\ref{thm:main}. No EXP assumption is invoked above. The sequential law H2 is already an explicit hypothesis of T27(i), and its verification from primitive statistical conditions remains open here.
+
+For a comparison $(T,l)$ with nonzero residual regressor $v=(I-P_T)x_l$ and nonzero residual response $e=(I-P_T)y$, the ordinary partial squared correlation is
+\[
+ x_{T,l}=\frac{(v^\top e)^2}{\|v\|^2\|e\|^2}.
+\]
+On a specified family with $0\le x_{T,l}<1$, EXP$'$ is the assumed expansion
+\begin{equation}\label{eq:expprime}
+ \log\frac{r_b(T\cup\{l\})}{r_b(T)}
+ =-\tfrac12\log(n+1)-\nu\log(1-x_{T,l})+R_{n,T,l},
+ \qquad \sup_{(T,l)}|R_{n,T,l}|=\Op(1).
+\end{equation}
+This is Decision Point 2's replacement for EXP; it is not proved by this document. If the comparison family contains the actual chain, put $x_i=x_{T_i,l_i}$ and $g_i=-\nu\log(1-x_i)\ge0$. Under \eqref{eq:expprime},
+\[
+ E_{n,i}=g_i+R_{n,T_i,l_i}-\tfrac12\log(1+1/n).
+\]
+Therefore H2 holds if and only if $\max_{i<c}g_i=\Op(1)$: each implication follows by the triangle inequality and the uniform remainder bound. This is in turn equivalent to $\max_{i<c}nx_i=\Op(1)$. For necessity use $x\le-\log(1-x)$ and $n/\nu\le2$. For sufficiency, $\max_i nx_i=\Op(1)$ implies $\max_i x_i\to0$ in probability, and on $\{\max_i x_i\le1/2\}$ use $-\log(1-x)\le2x$ and $\nu=O(n)$.
+
+The weaker condition $\max_i nx_i^2=\Op(1)$ controls only the Taylor remainder: it implies $\max_i x_i\to0$ in probability, and
+\[
+ 0\le-\log(1-x)-x=\sum_{j\ge2}\frac{x^j}{j}
+ \le\frac{x^2}{2(1-x)},\qquad 0\le x<1.
+\]
+Consequently $-\nu\log(1-x_i)=\nu x_i+\Op(1)$ uniformly over the selected chain comparisons $i=0,\ldots,c-1$. It does not make $\nu x_i$ tight. For example $x_i=n^{-1/2}$ has $nx_i^2=1$ but $\nu x_i\to\infty$; this is a scalar illustration of the logical distinction, not a counterexample to the theorem. Nor does a bound on a leakage family automatically cover this missing-true-variable chain. No Gaussian quadratic-score identity is claimed here.
+
+\paragraph{Remaining premises.}
+H2 must be verified at every successive comparison, and H3 requires a bound for the normalized reference mass. Neither is supplied merely by observed algebraic agreement in profiling. Wave-1 T22(i) offers deterministic reference-mass bounds, but to discharge H3 its lower bound must exceed a fixed positive constant with probability tending to one; merely having its aggregation quantity $q_n<1$ is insufficient. No such verification is assumed here. The theorem does not establish H2 or H3 from G, R, EXP$'$, or from simulation evidence alone. The scaling $p\asymp n^a$ and the operational premises have been retained from the source even though the mass implication uses only fixed $s,c$, feasibility, the exact weights, H2 and H3.
+
+\section*{Sources and scope of citations}
+\begin{enumerate}
+\item SMC-BVS v3 methodology, 19 October 2026, sections 4--6.3 (data, target, actual blocks and normalized start); its exact formulas are reproduced above.
+\item Theorem file \texttt{T27\_T20C\_cancellation\_budget.md}, part (i) and its assumptions, with shared definitions in \texttt{00\_COMMON.md}. No other part is claimed.
+\item Wave-1 \texttt{COLLECTED\_PROOFS\_v2.tex}, T22(ii-a), exact reference-to-truth odds, and T22(i), deterministic aggregation. These are cited as proved wave-1 results, not as adopted results; the only identity used is derived in \eqref{eq:odds}.
+\item Decision Point 2, \texttt{DP2\_DECISIONS.md}, 22 October 2026, D1. The read source is the local deployment snapshot of that decision. The final statement records the separate Astra statement-checker ruling.
+\end{enumerate}
+\end{document}
+

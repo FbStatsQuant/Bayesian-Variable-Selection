@@ -1,0 +1,314 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Sph}{\mathbb S}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\PIP}{\mathrm{PIP}}
+\newcommand{\MPM}{\mathrm{MPM}}
+\newcommand{\sS}{\mathcal S}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\spn}{span}
+\title{T06 (identifiability and exact ties) and T07 (size-only ranking ceiling and Bayes decisions)\\[2pt]\large SMC-BVS v3, wave 3 --- proof, version 2 (after review round 1)}
+\date{22 October 2026}
+\author{}
+\begin{document}
+\maketitle
+
+\noindent The statement proved is \texttt{STATEMENT.md} (T06(i)--(iii), T07(i)--(iii)). Section~\ref{sec:setting} fixes notation; Section~\ref{sec:prelim} proves the linear-algebra lemmas; Sections~\ref{sec:T06i}--\ref{sec:T06iii} prove T06; Section~\ref{sec:T07} proves T07. The only external input is the hypothesis H-T03 of T06(ii)(b), used in Section~\ref{sec:T06ii} and nowhere else. Standard facts used: the spectral theorem for real symmetric matrices and the functional calculus, the singular value decomposition, polarisation of quadratic forms, the Cauchy--Schwarz inequality and its equality case, Fubini's and Tonelli's theorems, the Gaussian density and continuity of $\Phi$, and the definition of $O_{P}$.
+
+\section{Setting and notation}\label{sec:setting}
+
+Throughout, $n\ge3$ and $p\ge1$. $C=I-\one\one^\top/n$ and $V=\operatorname{range}(C)=\{v\in\R^n:\one^\top v=0\}$, so $\dim V=n-1\ge2$, $C$ is the orthogonal projection onto $V$, and $C\one=0$. The standardised design $X\in\R^{n\times p}$ has columns $x_j\in V$ with $\|x_j\|^2=n-1$; $r_{ij}=x_i^\top x_j/(n-1)$. The contrast sphere is $\Sph=\{y\in V:\|y\|^2=n-1\}$; it is the set of standardised responses $y=Cy^r/s_y$, $s_y^2=\|Cy^r\|^2/(n-1)$, over non-constant raw responses $y^r$ (if $y\in\Sph$ then $y^r=y$ gives $Cy^r=y$, $s_y=1$). $K=\min(p,\lfloor n/2\rfloor)\ge1$ and $\Omega=\{S\subseteq[p]:|S|\le K\}$. Since $n\ge3$,
+\begin{equation}\label{eq:Kbound}
+K\le\lfloor n/2\rfloor\le n-2<n-1=\dim V .
+\end{equation}
+(For $n=3$: $1\le1$; for $n\ge4$: $n/2\le n-2$.)
+
+The score formulas below are those quoted verbatim in \texttt{STATEMENT.md} \S0 from \texttt{00\_COMMON.md} \S1 (target: $\beta_S\sim N(0,n\sigma^2(G_S+I)^{-1})$, $\sigma^2\sim\mathrm{IG}(0.01,0.01)$, $\mathrm{BB}(1,p)$ capped at $K$). For $S\subseteq[p]$ with $k=|S|$: $X_S$ is the $n\times k$ submatrix, $G_S=X_S^\top X_S$, $z_S=X_S^\top y$, $H_S=(n+1)G_S+I_k$, $D_S=\det H_S/\det(G_S+I_k)$, $Q_S=y^\top y-n\,z_S^\top H_S^{-1}z_S$; for $S=\emptyset$, $X_\emptyset X_\emptyset^\top:=0$, $D_\emptyset=1$, $Q_\emptyset=y^\top y$. With $a_0=b_0=0.01$ and $\nu=a_0+n/2$,
+\[
+m(S)=c_n\,D_S^{-1/2}(2b_0+Q_S)^{-\nu},\qquad c_n=\frac{(2b_0)^{a_0}\Gamma(\nu)}{\pi^{n/2}\Gamma(a_0)} .
+\]
+The prior is $\varpi(S)=w(|S|)/W_K$ with $w(k)=\tfrac12/\binom{2p-1}{k}>0$ and $W_K=\sum_{k\le K}\binom pk w(k)$; $F(S)=\log[\varpi(S)m(S)]$ for $S\in\Omega$, $Z=\sum_{S\in\Omega}e^{F(S)}$, $\pi(S)=e^{F(S)}/Z$ on $\Omega$ and $\pi(S):=0$ for $S\notin\Omega$; $\PIP_j=\sum_{S\ni j}\pi(S)$; $\MPM=\{j:\PIP_j>\tfrac12\}$. The score function of $S\in\Omega$ is $F_S:\Sph\to\R$, $y\mapsto F(S)$ evaluated at the response $y$.
+
+The tie order $\prec$ (method \S6.10) is the total order on subsets of $[p]$: smaller size first, then the lexicographically smaller sorted index list. $S^\dagger$ is the $\prec$-least element of $\argmax_\Omega F$; for a nonempty $\sS\subseteq\Omega$ (the scored set), $\hat S$ is the $\prec$-least element of $\argmax_{\sS}F$.
+
+Model G: $y^r=\alpha\one+X^r\beta+\varepsilon$, $\varepsilon\sim N_n(0,\sigma_*^2I)$, $\sigma_*^2>0$, $X^r$ fixed, its columns being the retained (non-constant) raw columns indexed by $[p]$; $D_x$ is the diagonal matrix of their raw sample standard deviations, which are positive, so $D_x$ is invertible; $X=CX^rD_x^{-1}$, $\theta=D_x\beta$, $\mu=CX^r\beta=X\theta\in V$, $S_0=\operatorname{supp}\beta$, $s_0=|S_0|$. In the deterministic results, $S_0$ is an arbitrary subset of $[p]$.
+
+A \emph{selector} is a measurable map $\delta=\delta(y^r,U)$ into the subsets of $[p]$, where $U$ is an auxiliary randomisation independent of $y^r$ whose law does not depend on the truth. $\delta$ is \emph{location-invariant} if $\delta=h(Cy^r,U)$ for a measurable $h$. Every measurable function of the standardised data $(X,y)$ and $U$ is location-invariant, since $y=Cy^r/s_y$ is a function of $Cy^r$; in particular $S^\dagger$, $\pi$, $\PIP$ and $\MPM$ are. (Measurability: each $F(S)$ is a continuous function of $y\in\Sph$, and $y=Cy^r/s_y$ is continuous in $Cy^r$ off $\{Cy^r=0\}$; so $\pi$ and $\PIP$ are continuous there, and $\{S^\dagger=S\}$ and $\{\MPM=a\}$ are finite intersections of sets of the form $\{F(S)>F(T)\}$, $\{F(S)\ge F(T)\}$, $\{\PIP_j>\tfrac12\}$, $\{\PIP_j\le\tfrac12\}$, hence Borel. On the null event $\{Cy^r=0\}$ these maps are given the value $\emptyset$; this convention affects no probability.)
+
+\section{Preliminaries}\label{sec:prelim}
+
+Write $f(\lambda)=\dfrac{n\lambda}{(n+1)\lambda+1}$ and $g(\lambda)=\dfrac{(n+1)\lambda+1}{\lambda+1}$ for $\lambda\ge0$. For a real symmetric positive semidefinite $A=\sum_i\lambda_iu_iu_i^\top$ (spectral decomposition) and a function $h$ on $[0,\infty)$, $h(A)=\sum_ih(\lambda_i)u_iu_i^\top$; this does not depend on the chosen decomposition, since $h(A)=\sum_{\lambda}h(\lambda)P_\lambda$ with $P_\lambda$ the orthogonal projection onto the $\lambda$-eigenspace.
+
+\begin{lemma}[smoother and determinant]\label{lem:smoother}
+For every $S\subseteq[p]$ put $M_S=n X_SH_S^{-1}X_S^\top$ ($M_\emptyset=0$). Then:
+\begin{enumerate}
+\item[(a)] $M_S=f(X_SX_S^\top)$; $M_S$ is symmetric positive semidefinite, its eigenvalues lie in $[0,\tfrac n{n+1})$, and $\operatorname{range}(M_S)=\operatorname{range}(X_S)\subseteq V$, so $\rank M_S\le|S|$ and $M_S\one=0$.
+\item[(b)] $Q_S=y^\top(I-M_S)y$ for every $y\in\R^n$, and $Q_S\ge y^\top y/(n+1)\ge0$.
+\item[(c)] $D_S=\prod_{i=1}^ng(\lambda_i)$, where $\lambda_1,\dots,\lambda_n$ are the eigenvalues of $X_SX_S^\top$ (with multiplicity).
+\end{enumerate}
+In particular $M_S$, $D_S$ and, for each $y$, $Q_S$ depend on $S$ only through $X_SX_S^\top$.
+\end{lemma}
+\begin{proof}
+For $S=\emptyset$ all claims are the conventions ($f(0)=0$, $g(0)=1$). Let $S\ne\emptyset$, $k=|S|$, and let $X_S=\sum_{i=1}^r s_iu_iv_i^\top$ be a thin singular value decomposition, $r=\rank X_S$, $s_i>0$, $\{u_i\}\subset\R^n$ and $\{v_i\}\subset\R^k$ orthonormal; complete $\{v_i\}_{i\le r}$ to an orthonormal basis $\{v_i\}_{i\le k}$ of $\R^k$. Then $G_S=\sum_{i\le r}s_i^2v_iv_i^\top$, $H_S=\sum_{i\le r}((n+1)s_i^2+1)v_iv_i^\top+\sum_{r<i\le k}v_iv_i^\top$, $H_S^{-1}=\sum_{i\le r}((n+1)s_i^2+1)^{-1}v_iv_i^\top+\sum_{r<i\le k}v_iv_i^\top$, and, since $X_Sv_i=s_iu_i$ for $i\le r$ and $X_Sv_i=0$ for $i>r$,
+\[
+M_S=nX_SH_S^{-1}X_S^\top=\sum_{i\le r}\frac{ns_i^2}{(n+1)s_i^2+1}u_iu_i^\top=\sum_{i\le r}f(s_i^2)u_iu_i^\top .
+\]
+As $X_SX_S^\top=\sum_{i\le r}s_i^2u_iu_i^\top$ (eigenvalue $0$ on $\{u_i\}^\perp$) and $f(0)=0$, $M_S=f(X_SX_S^\top)$. $f$ is strictly increasing on $[0,\infty)$ with $f(0)=0$ and $f<\tfrac n{n+1}$, so the eigenvalues of $M_S$ are $f(s_i^2)\in(0,\tfrac n{n+1})$ on $u_1,\dots,u_r$ and $0$ elsewhere; hence $M_S$ is symmetric positive semidefinite, $\operatorname{range}M_S=\spn\{u_i\}_{i\le r}=\operatorname{range}X_S\subseteq V$ (the columns of $X$ lie in $V$), $\rank M_S=r\le k$, and $M_S\one=0$ because $\one\perp V$. (b): $n z_S^\top H_S^{-1}z_S=y^\top(nX_SH_S^{-1}X_S^\top)y=y^\top M_Sy$; and $y^\top(I-M_S)y\ge(1-\tfrac n{n+1})\|y\|^2$. (c): $\det H_S=\prod_{i\le r}((n+1)s_i^2+1)$ and $\det(G_S+I)=\prod_{i\le r}(s_i^2+1)$, so $D_S=\prod_{i\le r}g(s_i^2)$; the eigenvalues of $X_SX_S^\top$ are $s_1^2,\dots,s_r^2$ and $n-r$ zeros, and $g(0)=1$.
+\end{proof}
+
+\begin{lemma}[injectivity of $f$ on matrices]\label{lem:inj}
+If $A,B$ are real symmetric positive semidefinite $n\times n$ matrices with $f(A)=f(B)$, then $A=B$.
+\end{lemma}
+\begin{proof}
+$f$ is continuous and strictly increasing on $[0,\infty)$, hence injective with an inverse $f^{-1}$ on $f([0,\infty))=[0,\tfrac n{n+1})$. Write $A=\sum_\lambda\lambda P_\lambda$ over the distinct eigenvalues of $A$. Then $f(A)=\sum_\lambda f(\lambda)P_\lambda$, and since the numbers $f(\lambda)$ are distinct, this is the spectral decomposition of $f(A)$: its distinct eigenvalues are the $f(\lambda)$, with eigenprojections $P_\lambda$. Hence $A=\sum_{\eta}f^{-1}(\eta)P^{f(A)}_\eta=f^{-1}(f(A))$, where $\eta$ runs over the distinct eigenvalues of $f(A)$ and $P^{f(A)}_\eta$ are its eigenprojections. The same holds for $B$, so $A=f^{-1}(f(A))=f^{-1}(f(B))=B$.
+\end{proof}
+
+\begin{lemma}[trace]\label{lem:trace}
+For every $S\subseteq[p]$, $\tr(X_SX_S^\top)=\sum_{j\in S}\|x_j\|^2=(n-1)|S|$. Hence $X_SX_S^\top=X_{S'}X_{S'}^\top$ implies $|S|=|S'|$.
+\end{lemma}
+\begin{proof}
+$X_SX_S^\top=\sum_{j\in S}x_jx_j^\top$ and $\tr(x_jx_j^\top)=\|x_j\|^2=n-1$; since $n-1>0$, equal traces give equal sizes.
+\end{proof}
+
+\begin{lemma}[scores on the sphere]\label{lem:sphere}
+Let $\kappa=1+2b_0/(n-1)$ and $A_S=\kappa I-M_S$. For $S\in\Omega$ and $y\in\Sph$,
+\[
+F_S(y)=\log c_n+\log\varpi(S)-\tfrac12\log D_S-\nu\log\big(y^\top A_Sy\big),
+\]
+and $v^\top A_Sv\ge(\kappa-\tfrac n{n+1})\|v\|^2>0$ for every $v\ne0$. For $S,S'\in\Omega$ put $a_{S,S'}=\log\frac{\varpi(S)}{\varpi(S')}-\frac12\log\frac{D_S}{D_{S'}}$ and $c_{S,S'}=e^{a_{S,S'}/\nu}>0$, which depend on $X$ only. Then for $y\in\Sph$,
+\begin{equation}\label{eq:tieform}
+F_S(y)=F_{S'}(y)\iff y^\top B_{S,S'}\,y=0,\qquad B_{S,S'}:=A_S-c_{S,S'}A_{S'} .
+\end{equation}
+\end{lemma}
+\begin{proof}
+For $y\in\Sph$, $y^\top y=n-1$, so $2b_0=\tfrac{2b_0}{n-1}y^\top y$ and, by Lemma~\ref{lem:smoother}(b), $2b_0+Q_S=\kappa y^\top y-y^\top M_Sy=y^\top A_Sy$. Substitute into $F(S)=\log\varpi(S)+\log c_n-\frac12\log D_S-\nu\log(2b_0+Q_S)$. Positivity: the eigenvalues of $M_S$ are $<\frac n{n+1}<1<\kappa$. Finally $F_S(y)-F_{S'}(y)=a_{S,S'}-\nu\log\frac{y^\top A_Sy}{y^\top A_{S'}y}$, which vanishes iff $y^\top A_Sy=c_{S,S'}\,y^\top A_{S'}y$.
+\end{proof}
+
+\begin{lemma}[quadratic forms vanishing on $V$]\label{lem:polar}
+Let $B$ be a real symmetric $n\times n$ matrix. If $v^\top Bv=0$ for all $v\in\Sph$, then $v^\top Bv=0$ for all $v\in V$, and $CBC=0$.
+\end{lemma}
+\begin{proof}
+For $v\in V\setminus\{0\}$, $y=\sqrt{n-1}\,v/\|v\|\in\Sph$ and $v^\top Bv=\frac{\|v\|^2}{n-1}y^\top By=0$; also $0^\top B0=0$. For $u,v\in V$, polarisation gives $u^\top Bv=\frac14[(u+v)^\top B(u+v)-(u-v)^\top B(u-v)]=0$. Applying this to $u=Ca$, $v=Cb$ for arbitrary $a,b\in\R^n$ gives $a^\top CBCb=0$, so $CBC=0$.
+\end{proof}
+
+\begin{lemma}[null sets of quadratic forms]\label{lem:null}
+Let $d\ge1$ and let $q(t)=t^\top Bt$ with $B$ a real symmetric $d\times d$ matrix, $B\ne0$. Then $\{t\in\R^d:q(t)=0\}$ has Lebesgue measure $0$. Consequently, if $T$ is a random vector in $\R^d$ with a density, $\Pr(q(T)=0)=0$.
+\end{lemma}
+\begin{proof}
+Write $B=O\Lambda O^\top$ with $O$ orthogonal and $\Lambda=\operatorname{diag}(\lambda_1,\dots,\lambda_d)$; since $B\ne0$, some $\lambda_i\ne0$, say $\lambda_1$. The orthogonal map $t\mapsto O^\top t$ preserves Lebesgue measure, so it suffices to show that $N=\{u:\sum_i\lambda_iu_i^2=0\}$ is null. For each fixed $(u_2,\dots,u_d)$ the section $\{u_1:\lambda_1u_1^2=-\sum_{i\ge2}\lambda_iu_i^2\}$ has at most two points, hence one-dimensional measure $0$; $N$ is closed, hence measurable, and by Fubini's theorem its $d$-dimensional measure is $0$. The last claim holds because a law with a density gives probability $0$ to Lebesgue-null sets.
+\end{proof}
+
+\section{T06(i): exact ties}\label{sec:T06i}
+
+\begin{theorem}[T06(i)(a)]\label{thm:iff}
+Let $S,S'\in\Omega$. Then $F_S=F_{S'}$ on $\Sph$ if and only if $X_SX_S^\top=X_{S'}X_{S'}^\top$. If $X_SX_S^\top=X_{S'}X_{S'}^\top$, then $|S|=|S'|$ and $F(S)=F(S')$ for every response vector $y\in\R^n$ put into the formulas of Section~\ref{sec:setting}.
+\end{theorem}
+\begin{proof}
+\emph{If.} Suppose $X_SX_S^\top=X_{S'}X_{S'}^\top$. By Lemma~\ref{lem:trace}, $|S|=|S'|$, so $\varpi(S)=\varpi(S')$. By Lemma~\ref{lem:smoother}, $M_S=M_{S'}$ and $D_S=D_{S'}$, and for every $y\in\R^n$, $Q_S=y^\top(I-M_S)y=Q_{S'}$. Hence $m(S)=m(S')$ and $F(S)=F(S')$ for every $y\in\R^n$, in particular on $\Sph$.
+
+\emph{Only if.} Suppose $F_S=F_{S'}$ on $\Sph$. Write $c=c_{S,S'}>0$. By \eqref{eq:tieform}, $y^\top(A_S-cA_{S'})y=0$ for all $y\in\Sph$, so by Lemma~\ref{lem:polar}, $C(A_S-cA_{S'})C=0$. By Lemma~\ref{lem:smoother}(a), $M_S$ and $M_{S'}$ are symmetric with range in $V$, so $CM_SC=M_S$ and $CM_{S'}C=M_{S'}$; also $CIC=C$. Therefore
+\begin{equation}\label{eq:compress}
+(1-c)\kappa\,C=M_S-cM_{S'} .
+\end{equation}
+By Lemma~\ref{lem:smoother}(a) and \eqref{eq:Kbound}, $\rank M_S\le|S|\le K<n-1=\dim V$. $M_S$ maps $V$ into $V$, so its restriction to $V$ has a nontrivial kernel: there is $u\in V$, $u\ne0$, with $M_Su=0$. Applying \eqref{eq:compress} to $u$ and taking the inner product with $u$ (note $Cu=u$):
+\[
+(1-c)\kappa\|u\|^2=-c\,u^\top M_{S'}u\le0 ,
+\]
+because $M_{S'}\succeq0$ and $c>0$; as $\kappa\|u\|^2>0$, $c\ge1$. In the same way there is $u'\in V\setminus\{0\}$ with $M_{S'}u'=0$, and $(1-c)\kappa\|u'\|^2=u'^\top M_Su'\ge0$ gives $c\le1$. Hence $c=1$, and \eqref{eq:compress} gives $M_S=M_{S'}$, i.e.\ $f(X_SX_S^\top)=f(X_{S'}X_{S'}^\top)$ by Lemma~\ref{lem:smoother}(a). Both matrices are symmetric positive semidefinite, so Lemma~\ref{lem:inj} gives $X_SX_S^\top=X_{S'}X_{S'}^\top$.
+\end{proof}
+
+\begin{example}[a valid design for every $n\ge4$]\label{ex:design}
+Let $n\ge4$, $p=4$, $c=\sqrt{n-1}/2$ and
+\[
+x_1=c\,(1,1,-1,-1,0,\dots,0)^\top,\quad x_2=c\,(1,-1,1,-1,0,\dots,0)^\top,\quad x_3=\tfrac{1}{\sqrt2}(x_1+x_2),\quad x_4=\tfrac1{\sqrt2}(x_1-x_2),
+\]
+vectors in $\R^n$ (zeros after the fourth coordinate). Then $x_1^\top x_2=c^2(1-1-1+1)=0$, $\|x_1\|^2=\|x_2\|^2=4c^2=n-1$ and $\|x_1\pm x_2\|^2=2(n-1)$, so every $x_j$ has entries summing to $0$ and $\|x_j\|^2=n-1$. Thus $X=[x_1,\dots,x_4]$ is a standardised design, arising from the valid raw input $X^r=X$ together with any non-constant raw response $y^r$ (all entries finite, $n\ge3$, no constant column; the method's standardisation returns $X$ itself, since each column is centred with sample SD $1$). $K=\min(4,\lfloor n/2\rfloor)\ge2$; all models below have size $\le2\le K$. (For $n=5$: $x_1=(1,1,-1,-1,0)^\top$, $x_2=(1,-1,1,-1,0)^\top$.) The correlations are computed in the proof of Proposition~\ref{prop:report}(b).
+\end{example}
+
+\begin{corollary}[T06(i)(b)]\label{cor:span}
+If $S,S'\in\Omega$ and $X_SX_S^\top\ne X_{S'}X_{S'}^\top$ (in particular if $\spn X_S=\spn X_{S'}$ but the outer products differ), then $F_S(y)\ne F_{S'}(y)$ for some $y\in\Sph$. Such pairs exist: in Example~\ref{ex:design}, $S=\{1,2\}$ and $S'=\{1,3\}$ are feasible, $\spn X_S=\spn X_{S'}=\spn\{x_1,x_2\}$, and $X_SX_S^\top\ne X_{S'}X_{S'}^\top$.
+\end{corollary}
+\begin{proof}
+The first claim is the contrapositive of the ``only if'' direction of Theorem~\ref{thm:iff}. In the example, $x_3\in\spn\{x_1,x_2\}$ and $x_2=\sqrt2x_3-x_1$, so the spans agree. Applying both outer products to $x_2$: $X_SX_S^\top x_2=x_1(x_1^\top x_2)+x_2(x_2^\top x_2)=(n-1)x_2$, while $X_{S'}X_{S'}^\top x_2=x_1(x_1^\top x_2)+x_3(x_3^\top x_2)=\tfrac{n-1}{\sqrt2}x_3=\tfrac{n-1}2(x_1+x_2)$, and $(n-1)x_2\ne\frac{n-1}2(x_1+x_2)$ since $x_1\ne x_2$.
+\end{proof}
+
+\begin{lemma}[the case $K=1$]\label{lem:K1}
+Suppose $K=1$ (for instance $n=3$, or $p=1$). Then (a) no two distinct $S,S'\in\Omega$ have $\spn X_S=\spn X_{S'}$ and $X_SX_S^\top\ne X_{S'}X_{S'}^\top$; (b) if $S\ne S'$ in $\Omega$ have $X_SX_S^\top=X_{S'}X_{S'}^\top$, then $\{S,S'\}=\{\{i\},\{j\}\}$ with $i\ne j$ and $|r_{ij}|=1$. Hence the existence claims of Corollary~\ref{cor:span} and Proposition~\ref{prop:report}(b) need $K\ge2$, and by Example~\ref{ex:design} they hold for some valid input at every $n\ge4$.
+\end{lemma}
+\begin{proof}
+$\Omega=\{\emptyset\}\cup\{\{j\}:j\in[p]\}$, and every $x_j\ne0$ (its squared norm is $n-1>0$). (a) $\spn X_\emptyset=\{0\}\ne\spn\{x_j\}$, so equal spans with $S\ne S'$ force $S=\{i\}$, $S'=\{j\}$, $i\ne j$, and $x_i=\lambda x_j$; equal norms give $\lambda=\pm1$, so $x_ix_i^\top=x_jx_j^\top$. (b) By Lemma~\ref{lem:trace}, $|S|=|S'|$; the only model of size $0$ is $\emptyset$, so $S=\{i\}$, $S'=\{j\}$ with $i\ne j$, and $x_ix_i^\top=x_jx_j^\top$; applying both sides to $x_i$ gives $(n-1)x_i=(n-1)r_{ij}x_j$, and taking norms, $|r_{ij}|=1$.
+\end{proof}
+
+\begin{theorem}[T06(i)(c)]\label{thm:as}
+Assume G. Then, $P_0$-almost surely, $Cy^r\ne0$ and every pair $S\ne S'$ in $\Omega$ with $F(S)=F(S')$ at the observed $y$ satisfies $X_SX_S^\top=X_{S'}X_{S'}^\top$. Consequently, under G and NIS, $P_0(\exists\,S\ne S'\in\Omega:\ F(S)=F(S'))=0$.
+\end{theorem}
+\begin{proof}
+Let $U\in\R^{n\times(n-1)}$ have orthonormal columns spanning $V$, so $U^\top U=I_{n-1}$ and $UU^\top=C$. Under G, $v:=Cy^r=C(\alpha\one+X^r\beta)+C\varepsilon=\mu+C\varepsilon$, and its coordinates $t:=U^\top v=U^\top\mu+U^\top\varepsilon$ (as $U^\top C=U^\top UU^\top=U^\top$) satisfy $t\sim N_{n-1}(U^\top\mu,\sigma_*^2I_{n-1})$, a law with a density on $\R^{n-1}$; and $v=Ut$. In particular $P_0(v=0)=P_0(t=0)=0$. On $\{v\ne0\}$, $y=v/s_y$ with $s_y=\|v\|/\sqrt{n-1}>0$, and $y\in\Sph$.
+
+Fix $S\ne S'$ in $\Omega$ with $X_SX_S^\top\ne X_{S'}X_{S'}^\top$, and let $B=B_{S,S'}$ of Lemma~\ref{lem:sphere}. By \eqref{eq:tieform} and homogeneity ($y$ is a positive multiple of $v$), on $\{v\ne0\}$: $F(S)=F(S')\iff v^\top Bv=0\iff t^\top(U^\top BU)t=0$. The matrix $U^\top BU$ is not $0$: otherwise $v^\top Bv=t^\top U^\top BUt=0$ for every $v=Ut\in V$, hence $F_S=F_{S'}$ on $\Sph$ by \eqref{eq:tieform}, and Theorem~\ref{thm:iff} would give $X_SX_S^\top=X_{S'}X_{S'}^\top$. By Lemma~\ref{lem:null} with $d=n-1$, $P_0(v\ne0,\ F(S)=F(S'))\le P_0(t^\top U^\top BUt=0)=0$. There are finitely many pairs, so, $P_0$-a.s., no pair with unequal outer products ties. Under NIS every pair $S\ne S'$ in $\Omega$ has unequal outer products, which gives the last claim.
+\end{proof}
+
+\begin{remark}
+The argument uses only that $Cy^r$ has a density on $V$; no condition on $\mu$ (hence on $\beta$, $S_0$, or the signal strength) is needed.
+\end{remark}
+
+\section{T06(ii): the fallback without NIS}\label{sec:T06ii}
+
+\begin{proposition}[T06(ii)(a)]\label{prop:strict}
+For every valid input, every $S_0\subseteq[p]$ and every response: if $\pi(S_0)>\tfrac12$, then $S_0\in\Omega$ and $F(S_0)>F(S)$ for every $S\in\Omega\setminus\{S_0\}$. Hence $\argmax_\Omega F=\{S_0\}$ and $S^\dagger=S_0$ whatever the tie rule.
+\end{proposition}
+\begin{proof}
+$\pi(S)=0$ for $S\notin\Omega$, so $\pi(S_0)>0$ forces $S_0\in\Omega$. For $S\in\Omega\setminus\{S_0\}$, $\pi(S)\le\sum_{T\ne S_0}\pi(T)=1-\pi(S_0)<\tfrac12<\pi(S_0)$. Since $F=\log\pi+\log Z$ on $\Omega$ and $\log$ is strictly increasing, $F(S)<F(S_0)$. So $S_0$ is the unique maximiser and any tie rule returns it.
+\end{proof}
+
+\begin{proposition}[T06(ii)(b)]\label{prop:prob}
+Assume H-T03: the conclusion of T03(i) holds along the sequence considered. (The conjecture file \texttt{theorems/T03\_A2\_selection\_consistency.md} states, verbatim: ``In R1 under G, R, SE and BM-C (or BM-$\infty$): (i) $1-\pi(S_0)=O_{P_0}(r_n)$'', with $r_n=\sqrt{\log n/n}$. T03 is unproved; this proposition is conditional on it.) Then $P_0(\pi(S_0)>\tfrac12)\to1$; on this event the conclusions of Proposition~\ref{prop:strict} hold. NIS is not used.
+\end{proposition}
+\begin{proof}
+Let $\epsilon>0$. By the definition of $O_{P_0}$, there are $M<\infty$ and $n_1$ with $P_0(1-\pi(S_0)>Mr_n)<\epsilon$ for $n\ge n_1$. Since $r_n\to0$, $Mr_n<\tfrac12$ for $n\ge n_2$. For $n\ge\max(n_1,n_2)$, $P_0(\pi(S_0)\le\tfrac12)=P_0(1-\pi(S_0)\ge\tfrac12)\le P_0(1-\pi(S_0)>Mr_n)<\epsilon$.
+\end{proof}
+
+\begin{remark}
+Only the consequence $\pi(S_0)\to1$ in $P_0$-probability of H-T03 is used. If $S_0\in\Omega$ had a ``twin'' $S'\ne S_0$ in $\Omega$ with $X_{S'}X_{S'}^\top=X_{S_0}X_{S_0}^\top$, then $\pi(S')=\pi(S_0)$ by Theorem~\ref{thm:iff} and so $\pi(S_0)\le\tfrac12$ for every response; thus H-T03 forces $S_0$ to have no twin in $\Omega$ for all large $n$, without any assumption of NIS for the other models.
+\end{remark}
+
+\section{T06(iii): duplicates and weak separation}\label{sec:T06iii}
+
+Assume DUP(a): $i\ne j$ and $x_i=s\,x_j$ with $s\in\{-1,1\}$ (by Cauchy--Schwarz and $\|x_i\|=\|x_j\|$, this is equivalent to $|r_{ij}|=1$). Let $\tau$ be the transposition of $i$ and $j$ on $[p]$, extended to subsets by $\tau S=\{\tau k:k\in S\}$.
+
+\begin{proposition}[T06(iii)(a)(b)]\label{prop:dup}
+(a) For every $S\in\Omega$: $|\tau S|=|S|$, $\tau S\in\Omega$, $X_{\tau S}X_{\tau S}^\top=X_SX_S^\top$, and $F(\tau S)=F(S)$ for every response.
+(b) If $S\in\Omega$ and $|S\cap\{i,j\}|=1$, then $\tau S\ne S$, $\pi(\tau S)=\pi(S)$ and $\pi(S)<\tfrac12$. Moreover $\PIP_i=\PIP_j$.
+\end{proposition}
+\begin{proof}
+(a) $\tau$ is a bijection of $[p]$, so $|\tau S|=|S|\le K$. For every $k\in[p]$, $x_{\tau k}x_{\tau k}^\top=x_kx_k^\top$: trivially if $k\notin\{i,j\}$, and $x_ix_i^\top=s^2x_jx_j^\top=x_jx_j^\top$. Hence $X_{\tau S}X_{\tau S}^\top=\sum_{k\in S}x_{\tau k}x_{\tau k}^\top=\sum_{k\in S}x_kx_k^\top=X_SX_S^\top$, and Theorem~\ref{thm:iff} (``if'' part) gives $F(\tau S)=F(S)$ for every response.
+(b) If $S$ contains exactly one of $i,j$, then $\tau S$ contains the other and not the first, so $\tau S\ne S$; by (a), $\pi(\tau S)=\pi(S)$. Both are nonempty, so $\emptyset\notin\{S,\tau S\}$, and $\emptyset\in\Omega$ has $\pi(\emptyset)>0$. Hence $2\pi(S)=\pi(S)+\pi(\tau S)\le1-\pi(\emptyset)<1$. For the PIPs, $S\mapsto\tau S$ is a bijection of $\Omega$ mapping $\{S\ni i\}$ onto $\{S\ni j\}$, so $\PIP_j=\sum_{S\ni i}\pi(\tau S)=\sum_{S\ni i}\pi(S)=\PIP_i$.
+\end{proof}
+
+\begin{theorem}[T06(iii)(c), two-point bound]\label{thm:twopoint}
+Let $\theta_k=(\alpha_k,\beta_k)$, $k=1,2$, be two truths under G with the same $X^r$ and the same $\sigma_*^2>0$, with supports $S_1\ne S_2$; $\mu_k=CX^r\beta_k$, $m_k=\alpha_k\one+X^r\beta_k$. Let $\delta=\delta(y^r,U)$ be a selector ($U$ independent of $y^r$, with a law $\lambda$ not depending on $k$). Then
+\begin{equation}\label{eq:twopoint}
+\max_kP_{\theta_k}(\delta\ne S_k)\ \ge\ \tfrac12\sum_kP_{\theta_k}(\delta\ne S_k)\ \ge\ \Phi\Big(-\frac{\|m_1-m_2\|}{2\sigma_*}\Big),
+\end{equation}
+and $\|m_1-m_2\|^2=\|\mu_1-\mu_2\|^2+\frac1n\big(\one^\top(m_1-m_2)\big)^2$; so $\|m_1-m_2\|=\|\mu_1-\mu_2\|$ iff the pair is \emph{mean-matched}, $\one^\top m_1=\one^\top m_2$, i.e.\ $\alpha_1+\bar x^{r\top}\beta_1=\alpha_2+\bar x^{r\top}\beta_2$ with $\bar x^r=X^{r\top}\one/n$ (this is not $\alpha_1=\alpha_2$). If $\delta$ is location-invariant, then $\max_kP_{\theta_k}(\delta\ne S_k)\ge\Phi(-\|\mu_1-\mu_2\|/(2\sigma_*))$ for any intercepts.
+\end{theorem}
+\begin{proof}
+Let $p_k$ be the $N_n(m_k,\sigma_*^2I)$ density of $y^r$ under $\theta_k$ and $\varphi(y^r)=\lambda\{u:\delta(y^r,u)=S_1\}\in[0,1]$, measurable by Fubini's theorem. Since $S_1\ne S_2$, $\{\delta=S_1\}\subseteq\{\delta\ne S_2\}$, and by independence of $U$,
+\[
+P_{\theta_1}(\delta\ne S_1)+P_{\theta_2}(\delta\ne S_2)\ge\int(1-\varphi)p_1+\int\varphi p_2\ge\int\min(p_1,p_2),
+\]
+the last step pointwise since $(1-\varphi)p_1+\varphi p_2$ is a convex combination of $p_1,p_2$. Let $\Delta=\|m_1-m_2\|$. If $\Delta=0$, $p_1=p_2$ and $\int\min(p_1,p_2)=1=2\Phi(0)$. If $\Delta>0$, let $e=(m_2-m_1)/\Delta$ and $T(y)=e^\top(y-\tfrac12(m_1+m_2))$. Then $\|y-m_1\|^2-\|y-m_2\|^2=2(m_2-m_1)^\top y+\|m_1\|^2-\|m_2\|^2=2\Delta T(y)$, so $p_2(y)>p_1(y)\iff T(y)>0$, and
+\[
+\int\min(p_1,p_2)=P_{\theta_1}(T>0)+P_{\theta_2}(T\le0).
+\]
+Under $\theta_1$, $T\sim N(e^\top(m_1-m_2)/2,\sigma_*^2)=N(-\Delta/2,\sigma_*^2)$, so $P_{\theta_1}(T>0)=\Phi(-\Delta/(2\sigma_*))$; under $\theta_2$, $T\sim N(\Delta/2,\sigma_*^2)$ and $P_{\theta_2}(T\le0)=\Phi(-\Delta/(2\sigma_*))$. Dividing by $2$ and using $\max\ge$ average gives \eqref{eq:twopoint}.
+
+The decomposition: $m_1-m_2=C(m_1-m_2)+(I-C)(m_1-m_2)$ is orthogonal, $C(m_1-m_2)=CX^r(\beta_1-\beta_2)=\mu_1-\mu_2$ as $C\one=0$, and $(I-C)(m_1-m_2)=\one\,\one^\top(m_1-m_2)/n$ has squared norm $(\one^\top(m_1-m_2))^2/n$.
+
+Location-invariant case: $\delta=h(Cy^r,U)$. Under $\theta_k$, $Cy^r=\mu_k+C\varepsilon$, whose law depends on $\theta_k$ only through $\mu_k$; so $P_{\theta_k}(\delta\ne S_k)$ is unchanged if $\alpha_2$ is replaced by $\alpha_2'=\alpha_2+\one^\top(m_1-m_2)/n$. With $m_2'=\alpha_2'\one+X^r\beta_2$, $\one^\top(m_1-m_2')=\one^\top(m_1-m_2)-n\cdot\one^\top(m_1-m_2)/n=0$, so $\|m_1-m_2'\|=\|\mu_1-\mu_2\|$, and \eqref{eq:twopoint} for the pair $(\theta_1,(\alpha_2',\beta_2))$ gives the claim.
+\end{proof}
+
+\begin{corollary}[T06(iii)(d), no uniform recovery]\label{cor:uniform}
+For each $n$ let $\Theta_n$ be a class of truths under G containing a pair $\theta_{1,n},\theta_{2,n}$ with a common design $X^r_n$, distinct supports, a common noise variance $\sigma_n^2$, and $\|\mu_{1,n}-\mu_{2,n}\|/\sigma_n\to0$. Then every sequence of location-invariant selectors $\delta_n$ satisfies $\liminf_n\sup_{\theta\in\Theta_n}P_\theta(\delta_n\ne S_0(\theta))\ge\tfrac12$; the same holds for every sequence of selectors when the pairs are mean-matched ($\one^\top m_{1,n}=\one^\top m_{2,n}$). In particular $\sup_{\Theta_n}P_\theta(\delta_n\ne S_0(\theta))\not\to0$. Under DUP(a) with $x_i=s\,x_j$, the truths $\theta^*=b\,e_i$ and $\theta^*=s\,b\,e_j$ ($b\ne0$, $\beta=D_x^{-1}\theta^*$) (with the same $X^r$ and the same $\sigma_*^2$, intercepts arbitrary) have supports $\{i\}\ne\{j\}$ and $\mu_1=\mu_2$, so every location-invariant selector has maximal error $\ge\tfrac12$ over this pair.
+\end{corollary}
+\begin{proof}
+$\sup_{\Theta_n}P_\theta(\delta_n\ne S_0(\theta))\ge\max_kP_{\theta_{k,n}}(\delta_n\ne S_{k,n})\ge\Phi(-\|\mu_{1,n}-\mu_{2,n}\|/(2\sigma_n))\to\Phi(0)=\tfrac12$ by Theorem~\ref{thm:twopoint} (with $\|m_{1,n}-m_{2,n}\|=\|\mu_{1,n}-\mu_{2,n}\|$ in the mean-matched case) and continuity of $\Phi$. For the duplicate pair, $\mu=X\theta^*$ (since $X\theta^*=CX^rD_x^{-1}D_x\beta$), so $\mu_1=b\,x_i$ and $\mu_2=s\,b\,x_j=s^2b\,x_i=b\,x_i$ (as $x_j=s\,x_i$); supports of $\beta$ equal those of $\theta^*$ since $D_x$ is diagonal and positive. Theorem~\ref{thm:twopoint} with $\|\mu_1-\mu_2\|=0$ gives the bound $\Phi(0)=\tfrac12$.
+\end{proof}
+
+\begin{proposition}[T06(iii)(e), the near-duplicate report]\label{prop:report}
+(a) Let $i\ne j$, $A\subseteq[p]\setminus\{i,j\}$, $|A|+1\le K$. Then $F_{A\cup\{i\}}=F_{A\cup\{j\}}$ on $\Sph$ if and only if $|r_{ij}|=1$. So a reported pair ($|r_{ij}|\ge1-10^{-10}$) with $|r_{ij}|<1$ gives no such identity.
+(b) For every $n\ge4$, in Example~\ref{ex:design}, $S=\{1,2\}$ and $S'=\{3,4\}$ are distinct feasible models with $X_SX_S^\top=X_{S'}X_{S'}^\top$ (identical score functions by Theorem~\ref{thm:iff}), while $\max_{i\ne j}|r_{ij}|=1/\sqrt2<1-10^{-10}$, so the method reports no pair.
+\end{proposition}
+\begin{proof}
+(a) Both models lie in $\Omega$ and are distinct. By Theorem~\ref{thm:iff}, the score functions agree iff $X_AX_A^\top+x_ix_i^\top=X_AX_A^\top+x_jx_j^\top$, i.e.\ iff $x_ix_i^\top=x_jx_j^\top$. If this holds, applying both sides to $x_i$ gives $(n-1)x_i=(x_j^\top x_i)x_j=(n-1)r_{ij}x_j$, so $x_i=r_{ij}x_j$, and taking norms, $|r_{ij}|=1$. Conversely, $|r_{ij}|=1$ is equality in Cauchy--Schwarz, so $x_i=\pm x_j$ and $x_ix_i^\top=x_jx_j^\top$.
+(b) $x_3x_3^\top+x_4x_4^\top=\tfrac12[(x_1+x_2)(x_1+x_2)^\top+(x_1-x_2)(x_1-x_2)^\top]=x_1x_1^\top+x_2x_2^\top$. Both models have size $2\le K$. The correlations: $r_{12}=0$; $r_{13}=x_1^\top(x_1+x_2)/(\sqrt2(n-1))=1/\sqrt2$, and likewise $r_{14}=r_{23}=1/\sqrt2$, $r_{24}=-1/\sqrt2$; $r_{34}=\frac{\|x_1\|^2-\|x_2\|^2}{2(n-1)}=0$. So $\max_{i\ne j}|r_{ij}|=1/\sqrt2<1-10^{-10}$. When $K=1$, Lemma~\ref{lem:K1}(b) shows that every such identity is between a reported pair.
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:report} shows that the report is neither sufficient nor necessary for an exact score identity: within a reported component, pairs with $|r_{ij}|<1$ never give identities of the form in (a) (and, under G, tie with probability $0$ unless the outer products are equal, by Theorem~\ref{thm:as}), while identities can occur between models that contain no reported pair. The report is therefore a warning about near-collinearity, not a statement of exact (non-)identifiability.
+\end{remark}
+
+\section{T07: size-only ceiling and Bayes decisions}\label{sec:T07}
+
+\begin{remark}[the tie order]\label{rem:order}
+The arguments of this section use only that $\prec$ is a total order on subsets of $[p]$, one and the same for $S^\dagger_{\tilde w}$, $S^\dagger$, $S^*_k$ and $\hat S$, and the fact that the $\prec$-least element of a finite set is also $\prec$-least in every subset containing it. So all results hold verbatim for any fixed total order used throughout; the method's order is one instance.
+\end{remark}
+
+Throughout this section $m$ enters only through $m(S)>0$ for every $S\subseteq[p]$ (Lemma~\ref{lem:smoother}(b) gives $2b_0+Q_S>0$, and $D_S>0$). For a positive size-only prior on $\Omega$, $\tilde w(k)>0$ ($0\le k\le K$), $\varpi_{\tilde w}(S)=\tilde w(|S|)/\tilde W$ with $\tilde W=\sum_{k\le K}\binom pk\tilde w(k)$; $S^\dagger_{\tilde w}$ is the $\prec$-least element of $\argmax_\Omega\varpi_{\tilde w}m$; $S^*_k$ ($0\le k\le p$) is the $\prec$-least element of $\argmax_{|S|=k}m$, well defined since $\{|S|=k\}$ is finite and nonempty.
+
+\begin{theorem}[T07(i), the ceiling]\label{thm:ceiling}
+For every response and every positive size-only prior $\tilde w$: if $S^\dagger_{\tilde w}=S_0$, then $s_0\le K$ and $S^*_{s_0}=S_0$. Equivalently, $\{S^\dagger_{\tilde w}=S_0\}\subseteq\{S^*_{s_0}=S_0\}$ (the left event being empty if $s_0>K$), and on $\{S^*_{s_0}\ne S_0\}$, $S^\dagger_{\tilde w}\ne S_0$ for every positive size-only prior.
+\end{theorem}
+\begin{proof}
+Suppose $S^\dagger_{\tilde w}=S_0$. Then $S_0\in\Omega$, so $s_0\le K$, and $\mathcal K=\{S:|S|=s_0\}\subseteq\Omega$. Let $M=\max_\Omega\varpi_{\tilde w}m=\varpi_{\tilde w}(S_0)m(S_0)$. On $\mathcal K$, $\varpi_{\tilde w}(S)m(S)=\gamma\,m(S)$ with $\gamma=\tilde w(s_0)/\tilde W>0$. For $S\in\mathcal K$, $\gamma m(S)\le M=\gamma m(S_0)$, so $S_0\in\mathcal A:=\argmax_{\mathcal K}m$, and every $S\in\mathcal A$ has $\varpi_{\tilde w}(S)m(S)=\gamma m(S_0)=M$, i.e.\ $\mathcal A\subseteq\argmax_\Omega\varpi_{\tilde w}m$. $S_0$ is $\prec$-least in $\argmax_\Omega\varpi_{\tilde w}m$, hence in its subset $\mathcal A\ni S_0$; that is, $S^*_{s_0}=S_0$. The other two formulations are restatements (contrapositive, and the event $\{S^*_{s_0}=S_0\}$ does not involve $\tilde w$).
+\end{proof}
+
+\begin{remark}[the ceiling is approached]\label{rem:sharp}
+Assume $s_0\le K$ and let $\tilde w_\epsilon(k)=\one\{k=s_0\}+\epsilon\one\{k\ne s_0\}$, $0<\epsilon<1$. On $\{S^*_{s_0}=S_0\}\cap\{m(S_0)>\epsilon\max_\Omega m\}$, every $S\in\Omega$ with $|S|\ne s_0$ has $\varpi_{\tilde w_\epsilon}(S)m(S)=\epsilon m(S)/\tilde W\le\epsilon\max_\Omega m/\tilde W<m(S_0)/\tilde W=\varpi_{\tilde w_\epsilon}(S_0)m(S_0)$, so $\argmax_\Omega\varpi_{\tilde w_\epsilon}m=\argmax_{|S|=s_0}m$, whose $\prec$-least element is $S_0$; thus $S^\dagger_{\tilde w_\epsilon}=S_0$. As $\epsilon\downarrow0$ these events increase to $\{S^*_{s_0}=S_0\}$ (because $m(S_0)>0$), so for any law of the data, $\sup_{\tilde w}\Pr(S^\dagger_{\tilde w}=S_0)=\Pr(S^*_{s_0}=S_0)$ by Theorem~\ref{thm:ceiling} and continuity from below. The maximising sequence depends on $s_0$, i.e.\ on the unknown truth.
+\end{remark}
+
+For the decision results, let $q=(q_1,\dots,q_p)\in[0,1]^p$ be any vector and put $\psi_q(a)=\sum_{j\in a}(1-2q_j)$ for $a\subseteq[p]$, $J_+(q)=\{j:q_j>\tfrac12\}$.
+
+\begin{lemma}[minimising $\psi_q$]\label{lem:psi}
+(a) $J_+(q)$ minimises $\psi_q$ over all subsets of $[p]$; it is the unique minimiser iff no $q_j=\tfrac12$.
+(b) Let $0\le K'\le p$, $\ell=\min(K',|J_+(q)|)$, and let $a^*\subseteq J_+(q)$ with $|a^*|=\ell$ and $\min_{j\in a^*}q_j\ge\max_{j\in J_+(q)\setminus a^*}q_j$ (conventions $\min\emptyset=+\infty$, $\max\emptyset=-\infty$; such $a^*$ exist, and any deterministic tie-breaking rule at the boundary selects one). Then $a^*$ minimises $\psi_q$ over $\{a:|a|\le K'\}$.
+\end{lemma}
+\begin{proof}
+Write $c_j=1-2q_j$: $c_j<0$ on $J_+=J_+(q)$, $c_j=0$ if $q_j=\frac12$, $c_j>0$ otherwise, and $c_j$ is strictly decreasing in $q_j$.
+(a) $\psi_q(a)=\sum_{j\in a}c_j\ge\sum_{j\in a,c_j<0}c_j\ge\sum_{j:c_j<0}c_j=\psi_q(J_+)$. Equality throughout forces $a\supseteq J_+$ and $a\setminus J_+\subseteq\{c_j=0\}$; so the minimisers are exactly $J_+\cup E$ with $E\subseteq\{j:q_j=\tfrac12\}$, unique iff that set is empty.
+(b) Existence of $a^*$: order $J_+$ by decreasing $q_j$ (ties in any fixed way) and take the first $\ell$. Let $|a|\le K'$ and $a'=a\cap J_+$. Then $\psi_q(a)\ge\psi_q(a')$ (removed terms have $c_j\ge0$), and $|a'|\le\min(K',|J_+|)=\ell$. The values $\{c_j\}_{j\in a^*}$ are the $\ell$ smallest of $\{c_j\}_{j\in J_+}$ (with multiplicity): by the defining inequality and monotonicity of $c$ in $q$, every $c_j$, $j\in J_+\setminus a^*$, is $\ge$ every $c_k$, $k\in a^*$. The sum of any $r=|a'|\le\ell$ elements of $\{c_j\}_{j\in J_+}$ is at least the sum of the $r$ smallest, which is at least the sum of the $\ell$ smallest because the further $\ell-r$ terms are negative. Hence $\psi_q(a')\ge\psi_q(a^*)$, and $|a^*|=\ell\le K'$.
+\end{proof}
+
+\begin{theorem}[T07(ii), Bayes decisions]\label{thm:bayes}
+Let $\rho_L(a)=\sum_{S\in\Omega}\pi(S)L(a,S)$.
+(a) For $L(a,S)=\one\{a\ne S\}$, $a\subseteq[p]$: $\rho(a)=1-\pi(a)$. The minimisers over all $a\subseteq[p]$ are exactly the elements of $\argmax_\Omega F$; in particular $S^\dagger$ is a minimiser, and the unique one iff $\argmax_\Omega F$ is a singleton.
+(b) For $L(a,S)=|a\triangle S|$, $a\subseteq[p]$: $\rho_H(a)=\sum_j\PIP_j+\psi_{\PIP}(a)$. $\MPM$ minimises $\rho_H$ over all subsets of $[p]$, uniquely iff no $\PIP_j=\tfrac12$.
+(c) With $J_+=\MPM$, $N_+=|J_+|$, $\ell=\min(K,N_+)$ and $a^*\subseteq J_+$ the $\ell$ elements with the largest PIPs (boundary ties broken by a fixed deterministic rule), $a^*$ minimises $\rho_H$ over $\Omega$.
+\end{theorem}
+\begin{proof}
+(a) $\rho(a)=\sum_S\pi(S)\one\{S\ne a\}=1-\pi(a)$. Minimising it means maximising $\pi(a)$ over $2^{[p]}$; $\pi>0$ on $\Omega\ne\emptyset$ and $\pi=0$ off $\Omega$, so the maximisers lie in $\Omega$, where $\pi=e^F/Z$; they are $\argmax_\Omega F$, which contains $S^\dagger$ by definition.
+(b) $|a\triangle S|=\sum_j[\one\{j\in a,j\notin S\}+\one\{j\notin a,j\in S\}]$; taking $\pi$-expectations, $\rho_H(a)=\sum_{j\in a}(1-\PIP_j)+\sum_{j\notin a}\PIP_j=\sum_j\PIP_j+\sum_{j\in a}(1-2\PIP_j)$. Apply Lemma~\ref{lem:psi}(a) with $q=\PIP$.
+(c) By (b), minimising $\rho_H$ over $\Omega=\{a:|a|\le K\}$ is minimising $\psi_{\PIP}$ there; apply Lemma~\ref{lem:psi}(b) with $q=\PIP$, $K'=K$.
+\end{proof}
+
+\begin{remark}
+Since $\pi$ is supported on $\Omega$, $\sum_j\PIP_j=\mathbb E_\pi|S|\le K$; if $N_+\ge1$, $\sum_{j\in J_+}\PIP_j>N_+/2$, so $N_+<2K$. The cap therefore binds (i.e.\ $a^*\ne\MPM$) only when $K<N_+<2K$.
+\end{remark}
+
+\begin{theorem}[T07(iii), target versus reported decisions]\label{thm:reported}
+Let $\sS\subseteq\Omega$ be nonempty and $\hat S$ the $\prec$-least element of $\argmax_\sS F$.
+(a) $\hat S=S^\dagger$ iff $S^\dagger\in\sS$. $\hat S$ minimises the posterior $0$--$1$ loss iff $\sS\cap\argmax_\Omega F\ne\emptyset$.
+(b) $\{\hat S=S_0\}\cap\{S^*_{s_0}\ne S_0\}\subseteq\{S^*_{s_0}\notin\sS\}$.
+(c) Let $\hat p\in[0,1]^p$, let $\mathcal A$ be either $2^{[p]}$ or $\Omega$, and let $\hat a$ minimise $\psi_{\hat p}$ over $\mathcal A$ (e.g.\ $\widehat{\MPM}=J_+(\hat p)$ for $\mathcal A=2^{[p]}$, or the rule of Theorem~\ref{thm:bayes}(c) applied to $\hat p$ for $\mathcal A=\Omega$; both are minimisers by Lemma~\ref{lem:psi}). For every minimiser $a_{\rm opt}$ of $\rho_H$ over $\mathcal A$,
+\[
+0\le\rho_H(\hat a)-\rho_H(a_{\rm opt})\le2\sum_{j\in\hat a\triangle a_{\rm opt}}|\hat p_j-\PIP_j|\le2\|\hat p-\PIP\|_1 .
+\]
+Also $\widehat{\MPM}=\MPM$ iff, for every $j$, $\hat p_j>\tfrac12\Leftrightarrow\PIP_j>\tfrac12$.
+\end{theorem}
+\begin{proof}
+(a) If $S^\dagger\in\sS$: $\max_\sS F\le\max_\Omega F=F(S^\dagger)\le\max_\sS F$, so $\max_\sS F=\max_\Omega F$ and $\argmax_\sS F=\sS\cap\argmax_\Omega F\ni S^\dagger$. $S^\dagger$ is $\prec$-least in $\argmax_\Omega F$, hence in this subset, so $\hat S=S^\dagger$. Conversely, $\hat S\in\sS$, so $\hat S=S^\dagger$ forces $S^\dagger\in\sS$. For the second claim, by Theorem~\ref{thm:bayes}(a), $\hat S$ minimises the $0$--$1$ risk iff $\hat S\in\argmax_\Omega F$. If $\sS\cap\argmax_\Omega F\ne\emptyset$ then, as above, $\max_\sS F=\max_\Omega F$ and $\hat S\in\argmax_\sS F\subseteq\argmax_\Omega F$. Conversely $\hat S\in\sS$.
+(b) Suppose $\hat S=S_0$, $S^*:=S^*_{s_0}\ne S_0$ and, for contradiction, $S^*\in\sS$. Since $S_0=\hat S\in\sS\subseteq\Omega$ and $|S^*|=s_0$, both lie in $\Omega$ with the same prior weight, so $F(S^*)-F(S_0)=\log m(S^*)-\log m(S_0)\ge0$ by the definition of $S^*$. If $>0$, $S_0\notin\argmax_\sS F$, contradicting $\hat S=S_0$. If $=0$, then $S_0\in\argmax_{|S|=s_0}m$ and $S^*$, the $\prec$-least element there, satisfies $S^*\prec S_0$; both are in $\argmax_\sS F$, so $\hat S\ne S_0$, a contradiction.
+(c) Write $\psi=\psi_{\PIP}$ and $\hat\psi=\psi_{\hat p}$, so $\rho_H=\sum_j\PIP_j+\psi$ by Theorem~\ref{thm:bayes}(b). The lower bound holds because $\hat a\in\mathcal A$ and $a_{\rm opt}$ minimises over $\mathcal A$. For the upper bound,
+\[
+\psi(\hat a)-\psi(a_{\rm opt})=[\psi(\hat a)-\hat\psi(\hat a)]+[\hat\psi(\hat a)-\hat\psi(a_{\rm opt})]+[\hat\psi(a_{\rm opt})-\psi(a_{\rm opt})] ,
+\]
+where the middle bracket is $\le0$. With $c_j-\hat c_j=2(\hat p_j-\PIP_j)$, the outer brackets sum to $\sum_{j\in\hat a}(c_j-\hat c_j)-\sum_{j\in a_{\rm opt}}(c_j-\hat c_j)=\sum_{j\in\hat a\setminus a_{\rm opt}}(c_j-\hat c_j)-\sum_{j\in a_{\rm opt}\setminus\hat a}(c_j-\hat c_j)\le2\sum_{j\in\hat a\triangle a_{\rm opt}}|\hat p_j-\PIP_j|$. The last claim is the definition of $\widehat{\MPM}=J_+(\hat p)$ and $\MPM=J_+(\PIP)$.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:reported} identifies exactly what the guarantees of Theorems~\ref{thm:ceiling}--\ref{thm:bayes} need in order to transfer to the reported objects: the scoring events $\{S^\dagger\in\sS\}$ or $\{\sS\cap\argmax_\Omega F\ne\emptyset\}$, and control of $\hat p-\PIP$. Neither is implied by (i)--(ii), which concern the target only: for instance, with $\sS=\{S_0\}$ (when $S_0\in\Omega$) one has $\hat S=S_0$ for every response, including on $\{S^*_{s_0}\ne S_0\}$, where $S^\dagger\ne S_0$ by Theorem~\ref{thm:ceiling}; and with $\sS=\{\emptyset\}$, $\hat S=\emptyset$ whatever $S^\dagger$ is. Bounds on them are computational results (T21, T23, T26), which this document neither uses nor proves.
+\end{remark}
+
+\end{document}

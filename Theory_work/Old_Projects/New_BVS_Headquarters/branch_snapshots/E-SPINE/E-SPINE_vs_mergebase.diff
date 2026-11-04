@@ -1,0 +1,307 @@
+diff --git a/Docs/PLAN.md b/Docs/PLAN.md
+index 32bfd5e..16484c0 100644
+--- a/Docs/PLAN.md
++++ b/Docs/PLAN.md
+@@ -95,7 +95,7 @@ Then the GitHub cutover (§5) runs, and the theory phase starts in the new HQ.
+ 1. T37 (needs restating first; the literal TD fails generically in the data);
+ 2. T02(i) tail + T03 restatement;
+ 3. T22(i)/(iii) + T27 on one compatible family;
+-4. T38 (composition + eligibility, LS0 tweak if needed);
++4. T38 (composition + eligibility, LS0 tweak if needed; *amended 2026-11-02: LS0 is now part of the method, see `Docs/Theory/AMENDMENTS_20261102.md`*);
+ 5. T24 only if T37 fails, T39 only if T38(b) fails;
+ 6. bookkeeping (T12, T21, T26(i)–(ii), T07, T05 remark).
+ 
+diff --git a/Docs/THEORY.md b/Docs/THEORY.md
+index 0a81b2f..80c9a2d 100644
+--- a/Docs/THEORY.md
++++ b/Docs/THEORY.md
+@@ -4,6 +4,8 @@ Draft of 2026-11-02 for the GH repository (`Docs/THEORY.md`). Drafted by Sonnet
+ 
+ Nothing in this document is adopted. Where a source file and this summary disagree, the source file governs.
+ 
++**Amended 2026-11-02 (E-SPINE).** The paper's spine is "moving off the start is needed", **not** "tempering is needed" (W7-SEP · REPORT.md · Proposition GU, Corollary GU-LH). LS0 is now part of the method. The common-σ² start is rejected. The n = 200 disclosure numbers are corrected. See `Docs/Theory/AMENDMENTS_20261102.md`. Status words are unchanged.
++
+ ## 0. How to read this
+ 
+ **Status vocabulary** (used exactly, never upgraded):
+@@ -284,7 +286,7 @@ Rejected as targets (both reviewers): a comparative superiority theorem over SuS
+ - **T27.** Replace the assumed ratio law by a bounded-leakage condition along the chain (two-sided law with a controlled multiplier); the exponent depends on the budget.
+ - **T37.** The union bound is the weak point; use the extra-scan rule or a closer centre because l = 10 < s0 + d = 15.
+ - **T24 (alternative).** Evaluate LK only at states containing S0 and charge look-alike additions to d; replace the 1/(s0+d+B+2)! constant by a progress argument of one correct step per round; failure point EXIT under internal non-Gibbs moves.
+-- **T38.** Eligibility in the masked regime (best-scored model lands in R_d, or use tweak LS0: local search also from the start mode, addable after the fact); compatibility of T22(i) with T27; cost corollary from T32.
++- **T38.** Eligibility in the masked regime (best-scored model lands in R_d, or use tweak LS0: local search also from the start mode, addable after the fact); compatibility of T22(i) with T27; cost corollary from T32. *(Amended 2026-11-02: LS0 is now part of the method; the approval took effect after O-LS0's data check, with 0 of 2,394 reported HPMs changed. Without LS0 the masked regime has candidates on LH, pending cross-family review (A-REV7). The masked half of T38 shows that the run must move off its start, not that tempering is needed: W7-SEP Prop. GU.)*
+ - **T26 (i)-(ii).** Require (T_n + 1) Delta_n -> 0 and (L_n + 4) rho*_n -> 0; remove the secondary PIP; no claims about the masked regime.
+ - **T12.** Freeze everything before the final randomness; use the islandwise product identity (it is NOT an identity for the pooled Z-hat times the primary pooled PIP); drop the secondary PIP; validate floating point separately.
+ - **T21.** Keep P(U) and the non-launch terms; "scored" includes rejected proposals.
+diff --git a/Docs/THEORY_PRIORITIES.md b/Docs/THEORY_PRIORITIES.md
+index a736b50..1e8d2e5 100644
+--- a/Docs/THEORY_PRIORITIES.md
++++ b/Docs/THEORY_PRIORITIES.md
+@@ -2,6 +2,8 @@
+ 
+ **Frozen 2026-10-28** by HQ with Felipe, after two independent consultant reviews of HQ's proposal (Fable 5.1 and Astra), both ENDORSE WITH CHANGES. This page is the strategic view: what we will pursue, why, in what order, and through which gates. Written 2026-11-02 for the GitHub handoff; statuses are as of that date.
+ 
++> **Amended 2026-11-02 (E-SPINE).** The wording below no longer says that tempering, or "the sampler", is *needed*. W7-SEP (`theory/W7-SEP` · `REPORT.md` · Proposition GU, Corollary GU-LH) shows that on the paper's own masked family LH, start-only discovery plus the production local search reaches S₀. What the theory supports is **"moving off the start is needed"**, not "tempering is needed". Every status word is unchanged. The full list of changes, their evidence and the other 2026-11-02 campaign decisions are in `Docs/Theory/AMENDMENTS_20261102.md`.
++
+ - **Authoritative record:** `Docs/Theory/PAPER_SELECTION_20261028/FROZEN_LIST.md`.
+ - **The full inventory** of all 39 items (T01–T36 plus the new T37–T39), with per-theorem one-pagers: `Docs/THEORY.md` and `Docs/Theory/one_pagers/`.
+ - **Sources** used here, all under `Docs/Theory/PAPER_SELECTION_20261028/`: `PROPOSAL.md`, `FABLE_REVIEW.md`, `ASTRA_REVIEW.md`, `new_conjectures/T37–T39`. Also `Docs/Theory/proofs/LOCKED_PROOFS.md` and `Docs/Theory/INVENTORY_20261028/THEORY_INVENTORY.md`.
+@@ -24,6 +26,8 @@
+ 
+ **Story.** What SMC-BVS reports is consistent because the truth gets **scored**, not because the sampler converges. The reported HPM is the best model ever scored. So "right answer" = (a) the posterior favours the truth, and (b) the truth is scored at least once, and (c) the run produces output.
+ 
++**What (b) needs (amended 2026-11-02).** In the masked regime the run must **move off its start**: iid start draws alone fail there (T27; R-T20(i); W7-SEP Theorem SEP(A), whose threshold is Q* = p^c n^{c/2}). v3's moves supply this: bridge Gibbs flips, the terminal rounds and the local search, including LS0. The tempering bridge is **one of several sufficient discovery routes, not the uniquely necessary one**. On LH a single local search from the start mode already scores S₀ (W7-SEP Prop. GU, Cor. GU-LH: PROVED, candidate, not cross-family reviewed). The bridge's own role is to produce calibrated evidence and PIPs (T12, T26) and the HPM ledger.
++
+ ### JRSS-B main text (8 results)
+ 
+ | Paper # | Target(s) | What it establishes | Status today |
+@@ -63,7 +67,7 @@
+   - replace T02(i)'s 2^−m size tail by the exact BB(1,p) tail, which cuts m_n from about 200 to s₀ + O(s₀ log n / log p);
+   - restrict SE to the comparison unions actually used;
+   - replace M* by BM-∞ or an unnamed constant.
+-- **Risk.** At n = 200, SE is *impossible* (rank ≤ 199 against subsets of 215–229 columns), and beta-min fails by about 100× in squared signal. The theorem explains the mechanism, not the n = 200 numbers. Restating does not yield a useful finite-n error rate. The risk to *validity* is low; the risk to *relevance* at n = 200 is accepted and must be disclosed.
++- **Risk.** At n = 200, SE is *impossible* (rank ≤ 199 against subsets of 215–229 columns), and beta-min fails by about 100× in squared signal. *(Amended 2026-11-02: for T03♯ the beta-min constant exceeds the executed signals by **at least 43×**, not about 100×, and the proof's deterministic thresholds hold only from n ≈ 2·10⁶ (F-REFINE · ARCHITECTURE.md §7; W2-VT03R · R1). The size-restricted SE_w ranges over ≤ 114 columns because the cap K binds, and it is unverified on the realised designs (F-REFINE · CARDS.md · Card 1). The "215–229 columns" figure refers to the old SE.)* The theorem explains the mechanism, not the n = 200 numbers. Restating does not yield a useful finite-n error rate. The risk to *validity* is low; the risk to *relevance* at n = 200 is accepted and must be disclosed.
+ - **Fallback.** Present it as asymptotic, stated informally in the main text.
+ 
+ ### Prop 1: T07 size-prior ceiling and Bayes decisions (+ T06(i) ties)
+@@ -84,8 +88,8 @@
+     - the tempering bridge never loses mass on S₀ below the smaller endpoint mass.
+   - **T22(iii)**, favourable regime: under EXP′, VIS, NL_η and NL_avg(κ), 1 − π₀(S₀) = O_P(2^B √(log n) n^{−κ}).
+   - **T27(i)**, masked regime: if d true variables mask each other along an addition chain (H2, H3), then π₀(S₀) = p^{−c} n^{−c/2} e^{O_P(1)}.
+-- **Intuition.** The start finds the truth when the blocks see it, and provably cannot when true variables cancel. That is exactly why the sampler exists.
+-- **Why it matters.** It is the motivation for the SMC machinery, in two sentences, and an input to T38's delivery step.
++- **Intuition.** The start finds the truth when the blocks see it, and provably cannot when true variables cancel. That is exactly why the method must move off its start draws. *(Amended 2026-11-02: this used to say "why the sampler exists". T27 bounds iid start draws only. On LH, the local search from the start mode also moves off the start and scores S₀ (W7-SEP Prop. GU), so the masked start motivates moves in general, not tempering in particular.)*
++- **Why it matters.** In two sentences, it motivates the moves that leave the start (bridge Gibbs, terminal rounds, local search incl. LS0), and it is an input to T38's delivery step.
+ - **Status.**
+   - T22(i)(ii)(iv): PROVED-LOCKED (wave 1, full chain).
+   - T22(iii) and T27(i): PROVED-LOCKED, CONDITIONAL (wave 2):
+@@ -141,13 +145,13 @@
+     - **(b1)** T37 repairs from an eligible local-search centre, or
+     - **(b2)** T24 repairs at the terminal rounds;
+   - **(c)** cost corollary: polynomially many score evaluations (via T32).
+-- **Why it matters.** It explains the method's *design* (start, bridge, moves, local search), not just its output. The masked regime is where SMC-BVS beats the coordinate-wise competitors at c = 0.5. It replaces T26(iii), which needed no sampler at all.
++- **Why it matters.** It explains why the method must move off its start, not just its output. The masked regime is where SMC-BVS beats the coordinate-wise competitors at c = 0.5. It replaces T26(iii), which needed no move off the start at all. *(Amended 2026-11-02: this used to say it explains the method's design "(start, bridge, moves, local search)". The masked half shows that **some** move off the start is needed. Bridge Gibbs, terminal rounds and the local search incl. LS0 are each a sufficient discovery route on LH: W7-SEP Prop. GU; O-BGIBBS Theorem BG3, with Prop. LH-lock a PROOF SKETCH, p fixed. No route is shown to be uniquely necessary. The bridge's distinct contribution is calibrated Ẑ/PIPs (T12, T26) and the HPM ledger.)*
+ - **Status.** NEW CONJECTURE. Not claimed:
+   - masked-regime evidence or PIP accuracy;
+   - results for completion-selected fits;
+   - comparative superiority.
+ - **Crux.**
+-  - **Eligibility:** show that the best-scored model, or the start mode with tweak **LS0** (local search also from the start mode; deterministic, about ℓ·p extra scores, addable after the fact), lands in 𝓡_d.
++  - **Eligibility:** show that the best-scored model, or the start mode with tweak **LS0** (local search also from the start mode; deterministic, about ℓ·p extra scores, addable after the fact), lands in 𝓡_d. *(Amended 2026-11-02: LS0 is now **part of the method**. Felipe's approval took effect when O-LS0's data check passed: the reported HPM changed in 0 of 2,394 completed fits (`theory/O-LS0` · `REPORT.md` §1). The LS0 cost is 1 + (ℓ+1)·max_k[p + k(p−k)] scores, not "about ℓ·p" (W6-FIXREV1). Without LS0 there are now masked-regime **candidates on LH, pending cross-family review (A-REV7)**.)*
+   - **Compatibility** of T22(i) with T27 on one family.
+   - ℓ_n < s₀ + d at n = 200.
+ - **Risk.** High; this is the hole (§3).
+@@ -184,13 +188,13 @@
+ - **Risk.**
+   - It is a **method change**: the 2,400 fits did not run it, so it needs validation runs under the investment rule.
+   - The research content lies in the inputs b_n and a_n.
+-  - If the tracks explain all the gain, the paper must say what tempering contributes.
++  - If the tracks explain all the gain, the paper must say what tempering contributes. *(Amended 2026-11-02: W7-SEP answers the general form of this question. On LH, discovery does not need tempering (Prop. GU), and there is no separation between the bridge and a single greedy search from the start mode (W7-SEP §1 item 4). Tempering's contribution is calibrated evidence and PIPs (T12, T26) and the HPM ledger.)*
+ 
+ ---
+ 
+ ## 3. The hole, and how it is filled
+ 
+-Both consultants independently found the same hole: **a guarantee that a near-truth particle is *delivered* and then *repaired* within an explicit, finite budget.** T24 and T26 alone do not give it. T24 repairs an eligible particle but does not deliver one; T26 needs start concentration, which is exactly the regime where the sampler is unnecessary.
++Both consultants independently found the same hole: **a guarantee that a near-truth particle is *delivered* and then *repaired* within an explicit, finite budget.** T24 and T26 alone do not give it. T24 repairs an eligible particle but does not deliver one; T26 needs start concentration, which is exactly the regime where no move off the start is needed (iid start draws already score S₀). *(Amended 2026-11-02: this used to say "where the sampler is unnecessary". That wording implied the sampler is necessary in the masked regime. What is necessary there is moving off the start, which v3's bridge Gibbs, terminal rounds and local search incl. LS0 each provide: W7-SEP Prop. GU.)*
+ 
+ | Step | Supplied by | Status |
+ |---|---|---|
+@@ -241,10 +245,10 @@ The extraction plan that maps each target to measurable quantities is `Docs/Camp
+   - The near-truth region does carry start mass: the median π₀(𝓡₂) is about 0.8.
+   - This makes **T38(b)** (masked regime, delivery plus repair) the theorem that matters, and T38(a) and T26 marginal for this design.
+ - **The HPM is delivered by the Gibbs/swap moves, not by the local search.**
+-  - About 98% of fresh scores come from Gibbs flips (≈ 1.7% neighbour swaps); the final local search repaired 0 fits.
+-  - In 541 fits the search centre was in 𝓡₂ but not S₀, and it never returned S₀.
++  - About 98% of fresh scores come from Gibbs flips (≈ 1.7% neighbour swaps); the final local search repaired 0 fits. *(Amended 2026-11-02, S-ELS: in all 2,394 completed fits the final local search made 0 moves.)*
++  - In 541 fits the search centre was in 𝓡₂ but not S₀, and it never returned S₀. *(S-ELS: in all 541 this is forced by monotonicity, F(S₀) < F(S_c).)*
+   - This questions T37's premise that the *local search* is the repair route at n = 200, and favours a Gibbs-path route (T24-type) or a restated T37.
+-- **All misses are posterior misses, none are search misses.** Every completed wrong HPM has F(S₀) ≤ F(HPM) (565 posterior misses, 6 no-output, 0 search misses).
++- **All misses are posterior misses, none are search misses.** Every completed wrong HPM has F(S₀) ≤ F(HPM) (565 posterior misses, 6 no-output, 0 search misses). *(Confirmed 2026-11-02 by S-ELS from the per-fit records: S₀ was scored in every completed fit, and F(S₀) < F(Ŝ) strictly in all 565 posterior misses.)*
+   - At c = 1 they are mostly supersets of S₀.
+   - At c = 0.5 they are mostly same-size swaps and subsets.
+   - This points the open work at the **statistical half** (T03/T02 restatement, T07's swap ceiling) rather than at discovery.
+@@ -253,4 +257,4 @@ The extraction plan that maps each target to measurable quantities is `Docs/Camp
+   - The "toward S₀" variant is **open**: in this partial audit it did not separate from the literal one.
+   - This matches the low-p finding (D18) that the literal TD fails whenever a swap bringing in a missing truth is available.
+ 
+-**Implication for P6, to be confirmed by the final reports.** T37 needs restating before any proof effort. The eligibility/delivery step of T38 should be argued through the bridge and Gibbs moves (or LS0), and the masked regime is the default case, not the exception.
++**Implication for P6, to be confirmed by the final reports.** T37 needs restating before any proof effort. The eligibility/delivery step of T38 should be argued through the bridge and Gibbs moves (or LS0), and the masked regime is the default case, not the exception. *(Amended 2026-11-02: any move off the start can carry delivery. On LH both LS0 (W7-SEP Prop. GU) and the original method's terminal Gibbs rounds (O-BGIBBS Theorem BG3, p fixed) are candidate routes. Neither is claimed as necessary.)*
+diff --git a/Docs/Theory/AMENDMENTS_20261102.md b/Docs/Theory/AMENDMENTS_20261102.md
+new file mode 100644
+index 0000000..6e6a5b3
+--- /dev/null
++++ b/Docs/Theory/AMENDMENTS_20261102.md
+@@ -0,0 +1,131 @@
++# Amendments of 2026-11-02 to the frozen theory documents
++
++**By:** E-SPINE (Opus 5.5), branch `theory/E-SPINE`, for Felipe's review. **Basis:** the 2026-11 theory campaign, as summarised in `theory/W8-SYNTH` · `theory_campaign/W8-SYNTH/SYNTHESIS.md` and `BRIEF.md`.
++
++**Scope.**
++- This is a wording correction only. Nothing was recomputed, no status word is changed and nothing is upgraded.
++- Every new result cited here is a **candidate**: an author's proof, sometimes checked by a same-family run. Cross-family (XF) review is noted where it exists.
++- The frozen documents keep their original wording wherever it is still defensible. Each changed passage is marked in place with *"Amended 2026-11-02"*.
++
++Evidence branch heads at the time of writing:
++
++| Branch | Head |
++|---|---|
++| W7-SEP | 858004e |
++| W8-SYNTH | 6876a9a |
++| S-ELS | 90423b1 |
++| O-BGIBBS | 55679ee |
++| O-LS0 | 02348e2 |
++| F-SIGMA | e2a3481 |
++| O-DILUTE | abedf99 |
++
++---
++
++## 1. The spine: "moving off the start is needed", not "tempering is needed"
++
++### The finding
++W7-SEP (`theory/W7-SEP` · `REPORT.md` §1, §5; `PROOF.md` §4.2) tested the planned claim that "start-only methods fail; the tempering bridge is needed". On the paper's own masked family LH, that claim is **false**.
++- **Proposition GU (greedy universality)** is PROVED (candidate; not XF reviewed; it uses W4-T38FULL Lemma M, which is same-family VERIFIED only). Its setting: exact-Gram designs with an isolated relevant set R, SE on R and fixed signals. Its conclusion: the production local search, started at **any** C ⊆ R, reaches, scores and certifies S₀ with probability → 1, in a bounded number of moves.
++- **Corollary GU-LH** (COUNTEREXAMPLE to the task's claim (a), by proof). On LH, start-only discovery plus the production local search (that is, LS0) scores S₀ with probability → 1. The same held numerically in 386/386 replicates.
++- W7-SEP §1 item 4: on LH there is **no separation between the tempering bridge and a single greedy search from the start mode**.
++
++### What is still true, and is the defensible claim
++**Moving off the start is needed.**
++- iid start draws alone fail in the masked regime: T27(i); R-T20(i).
++- W7-SEP Theorem SEP(A)/(B) (PROVED, candidate) makes this sharp on LH. iid discovery, and one-shot importance reweighting, need Q* = p^c n^{c/2} draws.
++
++**v3's moves provide the move off the start.** Each of the following is a sufficient discovery route; none is shown to be uniquely necessary:
++- bridge Gibbs flips;
++- the terminal rounds (O-BGIBBS Theorem BG3: PROVED for the original method on LH with p fixed; Prop. LH-lock is a PROOF SKETCH);
++- the local search, including LS0 (W7-SEP Prop. GU; T38(b1-LH)).
++
++**The bridge's own role** is to produce calibrated evidence and PIPs (T12, T26) and the HPM ledger.
++
++### Consistent facts
++- **S-ELS** (`theory/S-ELS` · `REPORT.md` §1, §3), on the 2,394 completed fits:
++  - the final local search made **0 moves** in every fit;
++  - every error is a posterior miss (565), with **0 search misses**;
++  - S₀ was scored in every completed fit.
++- **O-BGIBBS** (`theory/O-BGIBBS` · `REPORT.md` §1 · Theorem BG3): the original method's terminal Gibbs rounds score S₀ on LH, for fixed p.
++
++### Changes made (main, `Docs/`)
++
++| File | Passage | Change | Evidence |
++|---|---|---|---|
++| `Docs/THEORY_PRIORITIES.md` | header | Amendment banner pointing here | this note |
++| `Docs/THEORY_PRIORITIES.md` | §1 Story | Added "What (b) needs": move off the start; the bridge is one of several sufficient routes; its own role is Ẑ/PIPs and the ledger | W7-SEP Thm SEP(A), Prop. GU, Cor. GU-LH; T27; R-T20(i) |
++| `Docs/THEORY_PRIORITIES.md` | Thm 2 Intuition / Why it matters | "That is exactly why the sampler exists" → "why the method must move off its start draws"; "motivation for the SMC machinery" → "motivates the moves that leave the start" | W7-SEP Prop. GU |
++| `Docs/THEORY_PRIORITIES.md` | Thm 5 Why it matters | "explains the method's design (start, bridge, moves, local search)" → "explains why the method must move off its start"; "needed no sampler" → "needed no move off the start"; sufficient routes listed | W7-SEP Prop. GU; O-BGIBBS BG3 |
++| `Docs/THEORY_PRIORITIES.md` | T39 risk | "must say what tempering contributes": answered | W7-SEP §1 item 4, Prop. GU |
++| `Docs/THEORY_PRIORITIES.md` | §3 The hole | "the regime where the sampler is unnecessary" → "where no move off the start is needed" | W7-SEP Prop. GU |
++| `Docs/THEORY_PRIORITIES.md` | §5 data, implication | S-ELS confirmations (0 moves; 541 forced by monotonicity; S₀ always scored); delivery may be argued by any move off the start | S-ELS §1; W7-SEP; O-BGIBBS |
++| `Docs/THEORY.md` | header; §4.5 T38 note | Amendment banner; LS0 effective; no-LS0 candidates; spine | O-LS0; W8-SYNTH §4.2; W7-SEP |
++| `Docs/PLAN.md` | pursuit order item 4 | LS0 now part of the method | O-LS0 |
++| `Docs/Theory/one_pagers/T38.md` | new "Amendment" section | Spine, LS0 effective, no-LS0 candidates | W7-SEP; O-BGIBBS; O-LS0 |
++| `Docs/Theory/one_pagers/T27.md` | new "Amendment" section | T27 motivates moving off the start, not tempering | W7-SEP Thm SEP(A)/(B), Prop. GU |
++| `Docs/Theory/one_pagers/T39.md` | open obligations | Tempering's contribution answered | W7-SEP |
++
++### Errata for hash-frozen files (not edited)
++These files are listed in `Docs/Theory/PAPER_SELECTION_20261028/FROZEN.sha256`, so they are left byte-identical and corrected here. Where they disagree with this note, read them with these errata.
++- **`new_conjectures/T38_two_regime_HPM_consistency.md`, "Why it is needed".**
++  - The text "That regime does not need the sampler" should read: *"That regime needs no move off the start: iid start draws already score S₀. In the masked regime (T27) the run must move off its start draws, and any of v3's moves (bridge Gibbs, terminal rounds, local search incl. LS0) may deliver. W7-SEP Prop. GU shows that on LH the local search from the start mode suffices, so the main theorem must contain a delivery step, not a tempering step."*
++  - The LS0 bullet "It is needed only if eligibility cannot be proved otherwise" is superseded: LS0 is now part of the method (§2 below).
++- **`new_conjectures/T39_independent_repair_tracks.md`, "Role of tempering".** The question is answered as in the THEORY_PRIORITIES T39 risk above.
++- **`FABLE_REVIEW.md` Change A** ("the only regime where the sampler does work") is a consultant's review record and is left as it was. Its point, that T26(iii) needs no move off the start, still stands. Its implication that the sampler is uniquely needed in the masked regime is superseded by W7-SEP Prop. GU.
++
++---
++
++## 2. Other 2026-11-02 campaign decisions that change the frozen wording
++
++### 2.1 LS0 is effective (part of the method)
++Felipe approved LS0 on 2026-11-02, conditional on O-LS0's data check. The check passed:
++- source: `theory/O-LS0` @ 02348e2 · `REPORT.md` §1; `theory_campaign/LEDGER.md`, 20:33 UTC;
++- LS0 changed the reported HPM in **0 of 2,394** completed fits;
++- exact recovery is unchanged: 1,119/1,200 at c = 1 and 710/1,200 at c = 0.5;
++- the cost is under 0.1% of a fit.
++
++So the approval is effective. Where the frozen documents say "optional tweak", "addable after the fact" or "if needed", read "part of the method".
++
++Corrected cost: LS0 costs 1 + (ℓ+1)·max_k[p + k(p−k)] scores (W6-FIXREV1; ≈ 1.7·10⁵ at p = 1,000), not "about ℓ·p".
++
++Caveat (O-LS0 §1 item 6): most T38(b1) premises fail at n = 200, so LS0's theoretical value is asymptotic.
++
++### 2.2 The common-σ² start is rejected
++Two runs show that it floods the start in study-like designs, even with the oracle σ²:
++- `theory/O-DILUTE` · `REPORT.md` §5: "Do not adopt it."
++- `theory/F-SIGMA` · `REPORT.md` · Theorem S6: "should **not** be deployed as specified".
++
++O-MIX's support comes from an exactly block-orthogonal toy only. The decision is recorded in W8-SYNTH §1, Decision 2, and §4.5.
++
++If any start change is considered later, the candidate is residualised tables, and F-SIGMA's free post hoc Step 0 comes first. No main-branch document proposed the common-σ² start, so no main text changes.
++
++### 2.3 Corrected n = 200 disclosure numbers
++Source: W8-SYNTH §1, Decision 3, and §4.13.
++- **Beta-min** fails by **at least 43×**, not "about 100×". The 100× figure predates T03♯. Sources: F-REFINE, W6-FIXREV2, F-REFEREE.
++- **T03♯ thresholds** hold only from **n ≈ 2·10⁶** (W2-VT03R R1, confirmed by A-REV2 and W6-FIXREV2).
++- **Search misses: 0.** S₀ was scored in all 2,394 completed fits, and the final local search never moved (S-ELS).
++- **Stopped fits: 6** of 2,400 (S-ELS, W5-LOCKBOOK). O-SWAP's "4" is superseded.
++- **Drop the "favourable from n ≈ …" figure.** The sources disagree: 590–730 (O-DILUTE), 800–1,600 (W3-VEXP) and 1,050–3,200 (W5-FAVIID). Quote none, or attribute the W5-FAVIID empirical first n to its source.
++
++Edited on main: THEORY_PRIORITIES Thm 1 Risk, where the beta-min and threshold figures were corrected in place. The old-SE "215–229 columns" figure is kept and labelled. For T03♯, SE_w ranges over ≤ 114 columns because the cap K binds, and it is unverified on the realised designs (F-REFINE CARDS Card 1). No "favourable from n ≈" figure appears on main.
++
++### 2.4 "No masked theorem without LS0" is out of date
++W4-T38FULL, W6-FIXREV1 and F-REFINE said that without LS0 the paper has no masked-regime consistency theorem. That is superseded by: **"candidates on LH, pending cross-family review (A-REV7)"**. The candidates (W8-SYNTH §1 and §4.2) are:
++- D2-LH, c = 1;
++- W5-VMASK R1;
++- B2-LH under STAB-LH;
++- O-BGIBBS BG3 with LH-lock (PROOF SKETCH);
++- F-SHARE F1/F2;
++- W7-SEP Prop. GU.
++
++None is XF reviewed, so "closed without LS0" would overstate.
++
++---
++
++## 3. Campaign-branch drafts amended the same way (not main)
++
++| Branch | File | Changes |
++|---|---|---|
++| `theory/S-PAPER` (commit e073b69) | `theory_campaign/S-PAPER/theory_section.tex` (+ README note; PDF recompiled, no errors) | Story: added a "what discovery needs" paragraph (move off the start; the bridge is a sufficient route, not the necessary one; its role is Ẑ/PIPs and the ledger). LS0 definition: approval effective. Thm 5 Not claimed: "without LS0 … (OPEN)" → candidates on LH, pending A-REV7. Disclosure: "the masked regime the sampler is designed for" → "a masked regime in which the method must move off its start"; the "800–1600" favourable figure dropped; items 2, 5 and 6 updated with S-ELS and O-LS0; item 8 adds "(xiii) tempering/the sampler is needed for discovery". |
++| `theory/F-REFINE` (commit 450df6e) | `theory_campaign/F-REFINE/ARCHITECTURE.md` | §1 story: spine paragraph. §3: "designed for" wording. §4: no-LS0 candidates; LS0 effective. §6: overstatement item 15 ("tempering is needed"); item 7 updated with S-ELS. §7: "800–1600" figure dropped; numbers aligned. §8: items 2 and 7 marked done. |
++| `theory/F-REFINE` (commit 450df6e) | `theory_campaign/F-REFINE/CARDS.md` | Headline fact 2 and Card 6 "Not claimed" updated to no-LS0 candidates. Cards 4 and 6 updated with S-ELS and O-LS0 data. Card 3's "vanishes by n ≈ 800–1600" figure attributed and flagged as not for the paper. Card 6 Risk: spine note. |
+diff --git a/Docs/Theory/one_pagers/T27.md b/Docs/Theory/one_pagers/T27.md
+index 6ec68db..5af18ce 100644
+--- a/Docs/Theory/one_pagers/T27.md
++++ b/Docs/Theory/one_pagers/T27.md
+@@ -1,6 +1,9 @@
+ # T27 — Sequential cancellation and the iid-discovery budget (old label T20-C)
+ Status: PARTLY PROVED: (i) PROVED-LOCKED (wave 2) + CONDITIONAL on H2, H3; (ii)-(iv) not locked (CONJECTURED); not adopted (adoption is Felipe's decision)  | Rank: secondary (corollary) | Paper role: JRSS-B: merged into Thm 2 with T22 (route-specific bound for iid start draws, not for the hybrid sampler); Biometrika: remark under Thm 2
+ 
++## Amendment 2026-11-02 (E-SPINE; status unchanged)
++T27 is the reason the method must **move off its start** in the masked regime. It bounds iid start draws only. W7-SEP Theorem SEP(A)/(B) (PROVED, candidate) sharpens this on LH: iid discovery and one-shot reweighting need Q* = p^c n^{c/2} draws. T27 is **not** evidence that tempering is needed. On LH a single local search from the start mode scores S₀ (W7-SEP Prop. GU, Cor. GU-LH; PROVED, candidate, not cross-family reviewed). See `Docs/Theory/AMENDMENTS_20261102.md`.
++
+ ## Statement (as proved)
+ Source: proofs/T27i_T20C_cancellation_budget/STATEMENT.md; theorems/T27_T20C_cancellation_budget.md (repo paths under `Docs/Theory/`). Faithful condensation; the source file is authoritative.
+ - PROVED-LOCKED, (i) start-mass law under cancellation (a conditional implication): if along a chain S^(0) subset ... subset S^(c) = S0 of c feasible single additions each table ratio is n^-1/2 e^{O_P(1)} jointly (H2), and the starting model keeps normalised start mass pi0(S^(0)) >= c0 with probability -> 1 (H3), then log pi0(S0) + c log p + (c/2) log n = O_P(1), i.e. pi0(S0) = p^-c n^-c/2 exp(O_P(1)). For c = 0 the conclusion is log pi0(S0) = O_P(1).
+diff --git a/Docs/Theory/one_pagers/T38.md b/Docs/Theory/one_pagers/T38.md
+index 28c9306..377ca93 100644
+--- a/Docs/Theory/one_pagers/T38.md
++++ b/Docs/Theory/one_pagers/T38.md
+@@ -1,6 +1,12 @@
+ # T38 — Two-regime consistency of the reported HPM (headline theorem) (new conjecture, added 2026-10-28)
+ Status: CONJECTURED (not proved); NEW, added 2026-10-28 (replaces T26(iii) as the HPM headline)  | Rank: core (new; headline) | Paper role: JRSS-B Thm 5 (main HPM consistency theorem, with a polynomial-cost corollary); Biometrika Thm 5
+ 
++## Amendment 2026-11-02 (E-SPINE; status unchanged)
++- **Spine.** The masked half (b) shows that the run must **move off its start**: iid start draws alone fail (T27; R-T20(i); W7-SEP Theorem SEP(A)). It does **not** show that tempering is needed. On LH, start-only discovery plus the production local search scores S₀ (W7-SEP · REPORT.md · Prop. GU, Cor. GU-LH; PROVED, candidate, not cross-family reviewed). v3's bridge Gibbs, terminal rounds (O-BGIBBS Theorem BG3, p fixed) and local search incl. LS0 are each a sufficient route. The bridge's own role is calibrated evidence/PIPs (T12, T26) and the HPM ledger.
++- **LS0** is now part of the method. Felipe's approval took effect after O-LS0's data check: 0 of 2,394 reported HPMs changed (`theory/O-LS0` · REPORT.md §1). "Optional tweak" below is the frozen wording.
++- **Without LS0:** candidates on LH, pending cross-family review (A-REV7).
++- Details: `Docs/Theory/AMENDMENTS_20261102.md`. The source conjecture file is hash-frozen (`PAPER_SELECTION_20261028/FROZEN.sha256`) and is not edited. Its erratum is in the amendments note.
++
+ ## Statement (as conjectured)
+ Source: PAPER_SELECTION_20261028/new_conjectures/T38_two_regime_HPM_consistency.md (repo paths under `Docs/Theory/`). Faithful condensation; the source file is authoritative.
+ - Setting: triangular array, s0 fixed, p_n <= n^A, B <= 16, K_n = floor(n/2), budgets N_n, l_n, L_n, T_n indexed by n; ONE statistical family on which all premises hold jointly for the actual X-dependent block partition. Optional method tweak LS0: also run the local search from the start mode (deterministic, about l p extra scores; can be added after the fact because the HPM is the best model ever scored).
+diff --git a/Docs/Theory/one_pagers/T39.md b/Docs/Theory/one_pagers/T39.md
+index 6e577aa..8d1a598 100644
+--- a/Docs/Theory/one_pagers/T39.md
++++ b/Docs/Theory/one_pagers/T39.md
+@@ -23,4 +23,4 @@ None. NOT PROVED (the probability argument is elementary; the research work is i
+ Not evaluated (new conjecture). Risk recorded: T24's factorial constant may make the guarantee impractical. It would need separately labelled validation runs and does not describe the existing fits.
+ 
+ ## Open obligations
+-Whole statement; a compatible statistical family with useful b_n and a_n; the paper must say what tempering contributes if the tracks explain the selection gain.
++Whole statement; a compatible statistical family with useful b_n and a_n; the paper must say what tempering contributes if the tracks explain the selection gain. *(Amended 2026-11-02: on LH, discovery does not need tempering. W7-SEP Prop. GU shows a single search from the start mode suffices, and there is no bridge-versus-search separation there. Tempering's contribution is calibrated evidence/PIPs (T12, T26) and the HPM ledger. See `Docs/Theory/AMENDMENTS_20261102.md`.)*

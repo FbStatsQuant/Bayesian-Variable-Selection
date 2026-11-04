@@ -1,0 +1,171 @@
+% W5-LOCKBOOK: paper-ready statements of Prop 1, Prop 2, Thm 4 and Thm 6 (fragment; not compiled: no LaTeX engine here).
+% Status: candidates, unreviewed. Sources: W2-BOOK (Prop 1, Prop 2, Thm 4), W2-T26 (Thm 6), W2-VT24G (e'), W1-T24G
+% (Theorem B, Cor. B-M), W4-T38FULL (composition form), and the W5-LOCKBOOK audit (AUDIT.md) and referee repairs
+% (PROOF.md R1-R2). Requires amsmath, amssymb, amsthm. Macros:
+\providecommand{\Zh}{\widehat Z}
+\providecommand{\PIPh}{\widehat{\mathrm{PIP}}}
+\providecommand{\cC}{\mathcal C}
+\providecommand{\cA}{\mathcal A}
+\providecommand{\cS}{\mathcal S}
+\providecommand{\cO}{\mathcal O}
+\providecommand{\cG}{\mathcal G}
+\providecommand{\Rbar}{\bar R}
+
+% ---------------------------------------------------------------------------------------------------------
+\subsection*{Standing conventions}
+
+\begin{definition}[Idealisations and implementation facts]\label{def:standing}
+EX-A (exact arithmetic), EX-S (the random streams are independent i.i.d.\ uniform sequences, one per island, read
+sequentially) and CAL (calibration reads streams 0--9 only; the frozen calibration $\cC$, i.e.\ tier, grid, $T$, $N_e$,
+$L$, round and island counts, local-search cap and inherited score leaders, is fixed before any of the final streams
+10--13 is read) are declared idealisations. The following are implementation facts, verified by reading the code
+(supplement, Lemmas IMPL-GUARD, IMPL-OUT, IMPL-SR, IMPL-STREAM, IMPL-LS):
+\begin{itemize}
+\item[GUARD] Every resource check either does nothing or ends the fit with status \texttt{resource\_limit}; no check
+  consumes a random number or changes a setting, the inherited store or the score cache.
+\item[OUT] Evidence, its lower bound, PIPs and the MPM are reported only when the status is \texttt{exact} or
+  \texttt{completed}; no failure mode reports a partial estimate.
+\item[SR] Every Gibbs step counts its current state as scored and evaluates the other configuration whenever it is
+  feasible; every swap and independence proposal is evaluated, accepted or not; every evaluated model enters the
+  running best that defines the reported HPM.
+\item[STREAM] Between two resamplings the particles' trajectories are conditionally independent Markov chains with
+  the round kernel (a consequence of EX-S for the sequential single-stream implementation).
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Potential run and output events]\label{def:potential}
+The \emph{potential uninterrupted run} $\Rbar$ is the record the method produces from the same data and streams with
+the resource preflight and the in-run time guard removed. Let $\cG=\{\text{status}=\texttt{resource\_limit}\}$, let
+$\cO=\{\text{status}\in\{\texttt{exact},\texttt{completed}\}\}$ be the event that estimates are reported, and let $U$ be
+the event that no usable HPM is reported, with the convention that a stopped fit counts as no output:
+$\cG\subseteq U$. Bars denote potential-run versions ($\bar\cO$, $\bar U$, $\bar\cS$, \dots).
+\end{definition}
+
+\begin{lemma}[Run/output split]\label{lem:RO}
+Under GUARD, $\cO=\cG^c\cap\bar\cO$ and $U^c=\cG^c\cap\bar U^c$. For a reported output $g$ with potential version
+$\bar g$ and output event $\cO_\ast\in\{\cO,U^c\}$: $\mathbf 1_{\cO_\ast}g=\mathbf 1_{\cO_\ast}\bar g$;
+$\Pr(\cO_\ast,\ g\in A)\le\Pr(\bar\cO_\ast,\ \bar g\in A)$; and $\mathrm E[\mathbf 1_{\cO_\ast}g]\le\mathrm E[\mathbf
+1_{\bar\cO_\ast}\bar g]$ for $g\ge0$. No assumption is made on the law of $\cG$ given $\Rbar$. Identities in
+expectation do not survive conditioning on $\cO$: there are stop-only guards under which a stop rate of $0.22\%$ gives
+$\mathrm E[\Zh\mid\cO]=0.974\,Z$, and others under which the bias is upward.
+\end{lemma}
+
+% ---------------------------------------------------------------------------------------------------------
+\begin{proposition}[Decision rules and the size-prior ceiling; Prop.~1]\label{prop:decision}
+Let $\pi$ be the target posterior on $\Omega=\{S:|S|\le K\}$, $m$ the marginal likelihood, $\prec$ the method's tie
+order (smaller size, then lexicographic), and $S^*_k$ the $\prec$-least maximiser of $m$ among models of size $k$.
+\begin{enumerate}
+\item[(i)] The HPM is a Bayes rule for $0$--$1$ loss on supports; the median probability model
+  $\{j:\mathrm{PIP}_j>\tfrac12\}$ is a Bayes rule for Hamming loss over all subsets, unique iff no
+  $\mathrm{PIP}_j=\tfrac12$ (over $\Omega$: keep the $\min(K,N_+)$ largest PIPs above $\tfrac12$).
+\item[(ii)] For any PIP estimate $\hat p$, the plug-in Hamming rule has excess posterior risk at most
+  $2\|\hat p-\mathrm{PIP}\|_1$.
+\item[(iii)] If $s_0\le K$, some positive size-only prior has global HPM $S_0$ if and only if $S^*_{s_0}=S_0$. Hence a
+  within-size ranking error ($S\ne S_0$, $|S|=s_0$, $m(S)\ge m(S_0)$) is exactly the error that no re-tuning of the
+  size prior, including any truncated beta-binomial, can repair; the repairing prior in the converse depends on the data.
+\item[(iv)] (Certificate.) If a scored model $S'\ne S_0$ with $|S'|=s_0$ has an exactly computed score above that of
+  $S_0$, then no positive size-only prior recovers $S_0$ on those data.
+\item[(v)] Two supports have equal score for every response iff $X_SX_S^\top=X_{S'}X_{S'}^\top$ (equal outer
+  products, not merely equal spans); they then have equal size and nothing in the data or in a size-only prior
+  separates them.
+\end{enumerate}
+\end{proposition}
+% Hypotheses: none beyond m > 0 (finite, deterministic). Used for data: (iv) needs the score gap to exceed numerical
+% error (the engine's error bound is heuristic).
+
+% ---------------------------------------------------------------------------------------------------------
+\begin{proposition}[Frozen-run identities and the reported bound; Prop.~2]\label{prop:frozen}
+Assume EX-A, EX-S, CAL and exact $\pi_0$ start draws. Let $\cA$ be the event that calibration succeeds on the SMC
+branch. For the potential run, given $\cC$ on $\cA$, for every island $r$ and variable $j$:
+\begin{enumerate}
+\item[(a)] $\mathrm E[\Zh_r\mid\cC]=Z$ and $\mathrm E[\Zh_r\PIPh_{rj}\mid\cC]=Z\,\mathrm{PIP}_j$;
+\item[(b)] $\mathrm E[\Zh\mid\cC]=Z$ and $\mathrm E[\tfrac14\sum_r\Zh_r\PIPh_{rj}\mid\cC]=Z\,\mathrm{PIP}_j$;
+\item[(c)] for the reported PIP $\bar P_j=\tfrac14\sum_r\PIPh_{rj}$,
+  $\mathrm E[\Zh\,\bar P_j\mid\cC]=Z\,\mathrm{PIP}_j-\tfrac34\,\mathrm{Cov}(\PIPh_{1j},\Zh_1\mid\cC)$ and
+  $\mathrm E[\bar P_j\mid\cC]-\mathrm{PIP}_j=-\mathrm{Cov}(\PIPh_{1j},\Zh_1\mid\cC)/Z$; neither is zero in general
+  (in an explicit instance the two biases are $-0.1305\,Z$ and $-0.174$);
+\item[(d)] $\Pr(Z\ge\alpha\Zh\mid\cC)\ge1-\alpha$ for $0<\alpha<1$ (also islandwise), and $\mathrm E[\log\Zh\mid\cC]\le\log Z$.
+\end{enumerate}
+Under GUARD and OUT, for the reported evidence, without any conditioning on completion,
+\[
+\Pr\bigl(\cO,\ \alpha\Zh>Z\bigr)\le\alpha\Pr(\cA),\qquad \mathrm E[\mathbf 1_{\cO}\Zh]\le Z\Pr(\cA).
+\]
+If moreover, outside an event of probability $\varepsilon$ within $\cO$, the exact-arithmetic run on the same streams has
+the same status and the same $\cC$ and $|\log\Zh^{\rm fp}-\log\Zh|\le\eta$, then
+$\Pr(\cO,\ \alpha\Zh^{\rm fp}>Z)\le\alpha e^{\eta}\Pr(\cA)+\varepsilon$.
+\end{proposition}
+% Not claimed: E[Zhat | completed] = Z (false); unbiasedness of the reported PIP (false); the secondary PIP (removed).
+
+% ---------------------------------------------------------------------------------------------------------
+\begin{theorem}[Composition for the reported HPM; Thm~4]\label{thm:composition}
+Assume EX-A, EX-S, CAL, SR and GUARD, and let $\delta_1=1-\pi(S_0)$. For every $n$ and every data-generating law,
+\[
+\Pr(U\ \text{or}\ \widehat S\ne S_0)\le\Pr(U)+2\,\mathrm E_0\delta_1+\Pr(\bar U^c,\ S_0\notin\bar\cS),
+\qquad \Pr(U)\le\Pr(\cG)+\Pr(\bar U),
+\]
+equivalently $\Pr(U^c,\ \widehat S\ne S_0)\le 2\,\mathrm E_0\delta_1+\Pr(\bar U^c,\ S_0\notin\bar\cS)$. Here
+$\bar\cS$ is the potential scored set (block tables, inherited calibration models, every initial draw, both feasible
+Gibbs configurations, every swap and independence proposal, every local-search scan). The discovery term is at most
+each of the following.
+\begin{itemize}
+\item[(a)] \emph{iid final draws:}
+  $\Pr(\cA^c,\ S_0\notin\cS_{\rm cal})+\mathrm E[\mathbf 1_{\cA}\mathbf 1\{S_0\notin\cS_{\rm cal}\}(1-\pi_0(S_0))^{Q_f}]$,
+  $Q_f=4N_e(T+L+5)$.
+\item[(d)] \emph{tables and scans:} the probability that $S_0$ lies in no block and no local search of $\Rbar$ is
+  centred at a flip or swap neighbour of $S_0$.
+\item[(d$^+$)] \emph{greedy repair (Theorem~3):}
+  $\Pr_0(\mathrm{TD}'\ \text{fails on}\ \mathcal R_d)+\Pr(\text{no local-search centre of}\ \Rbar\ \text{in}\ \mathcal
+  R_d)+\mathbf 1\{\ell<s_0+d-1\}$; with LS0 the middle term is at most $\Pr(\tilde S_0\notin\mathcal R_d)$.
+\item[(e$'$)] \emph{Gibbs-path repair:} for a past-measurable particle state $X_{\rm sel}$ selected after the last
+  resampling on an availability event $A_F\subseteq\cA$ among feasible states ($s_0+a(x)\le K$),
+  $\Pr(\cA^c,\ S_0\notin\cS_{\rm cal})+\Pr(\cA,\ \text{no feasible particle})+\mathrm E[\mathbf
+  1_{A_F}\min\{1,\beta_H(X_{\rm sel})\}]$, with $\beta_H(x)=\Pr(\mathrm{Bin}(H,c'_*(x))<v(x))+H\eta(x)$ and $H\le L+5$.
+\item[(e-M)] as (e$'$) with $\prod_{i}\min\{1,\beta_H(X_i)\}$ over the feasible particles at the boundary.
+\end{itemize}
+\end{theorem}
+% Inputs: delta_1 -> 0 is Thm 1; (d+) uses Theorem 3 (Theorem A, TD'); (e') uses Theorem B' (W1-T24G/W2-VT24G,
+% unreviewed); (e-M) uses STREAM. The pi(S0) > 1/2 step is not needed on routes where the local search certifies S0.
+
+% ---------------------------------------------------------------------------------------------------------
+\begin{theorem}[Evidence and PIP consistency, favourable regime; Thm~6]\label{thm:evidence}
+Work on a triangular array with $s_0$ fixed, $p_n\le n^A$ and the method's budgets indexed by $n$. Assume EX-A, EX-S,
+CAL, exact $\pi_0$ start draws, GUARD and OUT. Let $\Delta_n=\max\{1-\pi_0(S_0),\,1-\pi(S_0)\}$ (which equals
+$1-\inf_{\varphi\in[0,1]}q_\varphi(S_0)$), let $T_n$ be the \emph{realised} number of stages of the frozen grid, and
+let $\cA_n$ be calibration success on the SMC branch. Assume
+\begin{itemize}
+\item[($\Omega$)] $\Pr_0(s_0\le K_n)\to1$;
+\item[(P1)] $\Pr(\cA_n\cap\{(T_n+1)\Delta_n>\varepsilon\})\to0$ for every $\varepsilon>0$;
+\item[(P1-ex)] $\Pr_0(\text{exact branch},\ 1-\pi(S_0)>\varepsilon)\to0$ for every $\varepsilon>0$.
+\end{itemize}
+Then, for every $\varepsilon>0$,
+\[
+\Pr\bigl(\cO,\ |\Zh/Z-1|>\varepsilon\bigr)\to0,\qquad
+\Pr\bigl(\cO,\ \max_j|\widehat{\mathrm{PIP}}_j-\mathbf 1\{j\in S_0\}|>\varepsilon\bigr)\to0,\qquad
+\Pr\bigl(\cO,\ \widehat{\mathrm{MPM}}\ne S_0\bigr)\to0,
+\]
+and the same holds for every island's $\Zh_r$ and $\PIPh_{rj}$ and for $\log\Zh$. For fixed $n$ and $\cC\in\cA_n$, with
+$b=2(T+1)\Delta_n/(1-\Delta_n)$: $\mathrm E_{\cC}|\Zh_r/Z-1|\le b$ and
+$\mathrm E_{\cC}\max_j|\PIPh_{rj}-\mathbf 1\{j\in S_0\}|\le\min\{1,2\delta_1+2b\}+\bar\rho+u_\pi$, where $\bar\rho\le(B+3)u_\pi$
+is the probability that one round at $\varphi=1$ started at $S_0$ leaves it and $u_\pi=\delta_1/(1-\delta_1)$.
+\end{theorem}
+% Not claimed: Pr(O) -> 1; the masked regime (there Delta_n -> 1 and the theorem is silent); the HPM; rates in N;
+% completion- or flag-selected runs; floating point. The premise (L_n+4)rho*_n -> 0 is not needed.
+% Sufficient for (P1): T03 (delta_1 = O_P(sqrt(log n/n))) plus a favourable start 1 - pi_0(S_0) = o_P(1/T_n).
+% The deterministic-budget form (T^max_n + 1)Delta_n -> 0, T^max = 4 max(1000, ell^2), implies (P1) but needs
+% n of order 10^8-10^9 in the p = 18 designs; state (P1) with the realised T_n.
+
+% ---------------------------------------------------------------------------------------------------------
+\subsection*{Disclosure sentences required at $n=200$}
+% (1) Stops. Of the 2,400 fits, 6 stopped with status resource_limit (0.25%; Wilson 95% interval [0.11%, 0.54%]),
+%     all in scenario S5 (6/400 = 1.5%, [0.69%, 3.2%]; at p = 1000, 5/200 = 2.5%, [1.1%, 5.7%]). They are counted as
+%     failures to report the truth. (Reproduced: results/wilson_indep.txt.)
+% (2) "Every guarantee about a reported quantity is stated for the event that the quantity is reported, never given
+%     completion: we bound Pr(reported and wrong), not Pr(wrong | reported). Conditioning on completion can bias the
+%     evidence in either direction even when stops are rare."
+% (3) "The reported PIP is an equal-weight average over islands and is not unbiased; the unbiased identities hold for
+%     each island's evidence and for the island products Zhat_r PIPhat_rj."
+% (4) "At n = 200 the premises of Theorem 6 fail (Delta_n is essentially 1: the start misses 6-12 of the 14 true
+%     variables), so Theorem 6 says nothing about the reported evidence or PIPs at the study's size; Proposition 2 and
+%     the 95% bound hold at every n."
+% (5) "The number of score evaluations is bounded deterministically (Supplement, Theorem T32(i)); at n = 200,
+%     p = 500 the bound is 2.7e11 with escalation and 1.6e10 without."

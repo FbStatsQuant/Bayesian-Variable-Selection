@@ -1,0 +1,68 @@
+% W2-BOOK: paper-ready statements (fragment; not compiled in this run -- no LaTeX engine available).
+% Status: candidates, unreviewed. See REPORT.md and PROOF.md. Requires amsmath, amssymb, amsthm.
+% Macros assumed: \Zh = \widehat Z, \PIPh = \widehat{\mathrm{PIP}}, \cC = \mathcal C, \cA = \mathcal A, \cS = \mathcal S.
+
+\begin{definition}[Potential run and output events]
+The \emph{potential uninterrupted run} $\bar R$ is the record produced by the method under exact arithmetic with
+the resource preflight and the in-run time guard removed. Let $\mathcal G=\{\text{status}=\texttt{resource\_limit}\}$.
+We assume the stop-only coupling (GUARD): on $\mathcal G^c$ the status and every reported output equal those of
+$\bar R$. No assumption is made on the law of $\mathcal G$ given $\bar R$. Write $\mathcal O_E$ for the event that
+evidence and PIPs are reported and $\mathcal O_H$ for the event that an HPM is reported.
+\end{definition}
+
+\begin{lemma}[Run/output split]
+Under GUARD, for an output-available event $\mathcal O=\mathcal G^c\cap\bar{\mathcal O}$ with
+$\bar{\mathcal O}\in\sigma(\bar R)$, a reported output $g$ and its potential version $\bar g$:
+$\mathbf 1_{\mathcal O}g=\mathbf 1_{\mathcal O}\bar g$;
+$\Pr(\mathcal O^c\cup\{g\notin A\})\le\Pr(\mathcal G)+\Pr(\bar{\mathcal O}^c)+\Pr(\bar{\mathcal O},\bar g\notin A)$;
+and $\mathrm E[\mathbf 1_{\mathcal O}g]\le\mathrm E[\mathbf 1_{\bar{\mathcal O}}\bar g]$ for $g\ge0$.
+Identities in expectation are not preserved under $\Pr(\cdot\mid\mathcal O)$.
+\end{lemma}
+
+\begin{proposition}[Frozen-run identities and the reported bound]\label{prop:frozen}
+Assume EX-A, EX-S, START and CAL, with the calibration $\cC$ (tier, grid, $T$, $N_e$, $L$, round and island counts,
+local-search cap, inherited score leaders and every other setting read by the final run) a function of the data and
+calibration streams only, and escalation decided before any final randomness. For the potential run, on the success
+event $\cA$ and for every island $r$ and variable $j$:
+\begin{enumerate}
+\item[(a)] $\mathrm E[\Zh_r\mid\cC]=Z$ and $\mathrm E[\Zh_r\PIPh_{rj}\mid\cC]=Z\,\mathrm{PIP}_j$;
+\item[(b)] $\mathrm E[\Zh\mid\cC]=Z$ and $\mathrm E[\tfrac14\sum_r\Zh_r\PIPh_{rj}\mid\cC]=Z\,\mathrm{PIP}_j$;
+\item[(c)] $\mathrm E[\Zh\,\bar P_j\mid\cC]=Z\,\mathrm{PIP}_j-\tfrac34\,\mathrm{Cov}(\PIPh_{1j},\Zh_1\mid\cC)$ and
+  $\mathrm E[\bar P_j\mid\cC]-\mathrm{PIP}_j=-\mathrm{Cov}(\PIPh_{1j},\Zh_1\mid\cC)/Z$, where
+  $\bar P_j=\tfrac14\sum_r\PIPh_{rj}$ is the reported PIP; both are non-zero in general;
+\item[(d)] $\Pr(Z\ge\alpha\Zh\mid\cC)\ge1-\alpha$ for $0<\alpha<1$, and $\mathrm E[\log\Zh\mid\cC]\le\log Z$.
+\end{enumerate}
+Under GUARD, for the reported evidence,
+$\Pr(\mathcal O_E,\ \alpha\Zh>Z)\le\alpha\Pr(\cA)$ and $\mathrm E[\mathbf 1_{\mathcal O_E}\Zh]\le Z\Pr(\cA)$.
+If moreover the floating-point evidence satisfies $|\log\Zh^{\rm fp}-\log\Zh|\le\eta$ outside an event of
+probability $\varepsilon$ within $\mathcal O_E$, then $\Pr(\mathcal O_E,\ \alpha\Zh^{\rm fp}>Z)\le\alpha e^{\eta}+\varepsilon$.
+\end{proposition}
+
+\begin{proposition}[Decision rules and the size-prior ceiling]\label{prop:decision}
+Let $\pi$ be the target posterior and $S^*_k$ the tie-order-least maximiser of the marginal likelihood among models
+of size $k$.
+(i) The HPM is a Bayes rule for 0--1 loss on supports; the median probability model is a Bayes rule for Hamming loss.
+(ii) For any PIP estimate $\hat p$ the plug-in Hamming rule has excess posterior risk at most $2\|\hat p-\mathrm{PIP}\|_1$.
+(iii) If $s_0\le K$, some positive size-only prior has global HPM $S_0$ if and only if $S^*_{s_0}=S_0$.
+In particular, if a scored model $S'\ne S_0$ with $|S'|=s_0$ has a higher score than $S_0$, no positive size-only prior
+recovers $S_0$ on those data.
+(iv) Two supports have equal score for every response if and only if $X_SX_S^\top=X_{S'}X_{S'}^\top$; they then have
+equal size.
+\end{proposition}
+
+\begin{theorem}[Composition for the reported HPM]\label{thm:composition}
+Assume EX-A, EX-S, CAL, SR and GUARD. Let $U\supseteq\mathcal G$ be the no-output event, $\bar U$ its potential-run
+part, $\bar\cS$ the potential scored set and $\delta_1=1-\pi(S_0)$. Then
+\[
+\Pr(U\text{ or }\widehat S\ne S_0)\le\Pr(U)+2\,\mathrm E_0\delta_1+\Pr(\bar U^c,\ S_0\notin\bar\cS),
+\qquad \Pr(U)\le\Pr(\mathcal G)+\Pr(\bar U).
+\]
+The last term is bounded by each of:
+(a) $\Pr(\cA^c,S_0\notin\cS_{\rm cal})+\mathrm E[\mathbf 1_{\cA}\mathbf 1\{S_0\notin\cS_{\rm cal}\}(1-\pi_0(S_0))^{Q_f}]$;
+(d) the probability that $S_0$ lies in no block table and no local search of $\bar R$ is centred at a flip or swap
+neighbour of $S_0$;
+(e$'$) $\Pr(\cA^c,S_0\notin\cS_{\rm cal})+\Pr(\cA,\text{no eligible particle})+\mathrm E[\mathbf 1_{A_F}\min\{1,\beta_H(X_{\rm sel})\}]$,
+with $\beta_H(x)=\Pr(\mathrm{Bin}(H,c_*(x))<v(x))+H\eta(x)$ from the terminal-repair theorem and $H\le L+5$;
+and, for the eligible particles $i$ at the boundary, with $\prod_i\min\{1,\beta_H(X_i)\}$ in place of
+$\min\{1,\beta_H(X_{\rm sel})\}$.
+\end{theorem}

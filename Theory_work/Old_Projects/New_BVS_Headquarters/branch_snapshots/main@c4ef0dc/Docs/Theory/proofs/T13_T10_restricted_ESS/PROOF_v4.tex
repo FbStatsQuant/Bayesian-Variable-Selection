@@ -1,0 +1,452 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{fontspec}
+\usepackage{fancyvrb}
+\newfontfamily\qfont{Cambria Math}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,columns=fullflexible}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}[lemma]{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}[lemma]{Remark}
+\newcommand{\Zb}{\bar Z}
+\newcommand{\E}{\mathcal{E}_{\mathrm{grid}}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\Pool}{\mathcal{P}}
+\newcommand{\chisq}{\chi^2}
+\title{T13 (T10): restricted ESS and the omitted-mass identity\\ \large Proof, version 4}
+\date{2026-10-22}
+\begin{document}
+\maketitle
+
+All notation is that of STATEMENT.md (version 3). In particular $\Omega=\{S\subseteq[p]:|S|\le K\}$, $\gamma_\psi=\gamma_0e^{\psi d}$, $\Zb_\psi(A)=\sum_{S\in A}\gamma_\psi(S)$, $\Zb_\psi=\Zb_\psi(\Omega)$, $q_\psi=\gamma_\psi/\Zb_\psi$, $q_\psi^A=q_\psi(\cdot\mid A)$, $a_W(\psi)=q_\psi(W)$, $a=a_V$, and $w=2v-u$ whenever $u,v$ are given. Throughout, $V\subseteq\Omega$ is nonempty and fixed.
+
+STATEMENT.md defines the model and sampler objects by reference to \texttt{00\_COMMON.md} and \texttt{METHODOLOGY\_v3.md}. Every definition from those files that this proof uses is quoted verbatim in Appendix~B (with the files' SHA-256 checksums); citations of the form [B: file, \S, lines] point there.
+
+\section{Preliminaries}
+
+\begin{lemma}[Positivity]\label{lem:pos}
+For every $S\in\Omega$, $\varpi(S)>0$ and $0<m(S)<\infty$. Consequently $\gamma_0(S)\in(0,\infty)$ and $d(S)\in\mathbb{R}$ for all $S\in\Omega$; for every real $\psi$ and nonempty $A\subseteq\Omega$, $\gamma_\psi>0$ on $\Omega$, $\Zb_\psi(A)\in(0,\infty)$, and $q_\psi$ and $q_\psi^A$ give positive mass to every point of $\Omega$ and of $A$ respectively.
+\end{lemma}
+\begin{proof}
+The definitions used are [B: 00\_COMMON.md, \S1, lines 10--11] (also [B: METHODOLOGY\_v3.md, \S5]): $G_S=X_S^\top X_S$, $z_S=X_S^\top y$, $H_S=(n+1)G_S+I$, $D_S=\det H_S/\det(G_S+I)$, $Q_S=y^\top y-nz_S^\top H_S^{-1}z_S$, $\nu=0.01+n/2$, $a_0=b_0=0.01$,
+$m(S)=(2b_0)^{a_0}\Gamma(\nu)/(\pi^{n/2}\Gamma(a_0))\cdot D_S^{-1/2}(2b_0+Q_S)^{-\nu}$, $w(k)=\tfrac12/\binom{2p-1}{k}$, $W_K=\sum_{k\le K}\binom pk w(k)$, $\varpi(S)=w(|S|)/W_K$; and $\mathrm{BF}(S)=m(S)/m(\emptyset)$, $r_b(U)=\mathrm{BF}(U)$ for $U\subseteq C_b$, $\gamma_0$, $d$ as in [B: 00\_COMMON.md, \S2, lines 18--20].
+
+$\varpi(S)=w(|S|)/W_K$ with $w(k)=\tfrac12/\binom{2p-1}{k}>0$ for $0\le k\le K\le p\le 2p-1$, and $W_K=\sum_{k\le K}\binom pk w(k)\ge w(0)>0$ is finite.
+For $m(S)$, and in fact for $m(U)$ with any $U\subseteq[p]$ (the argument does not use $|U|\le K$; we write it for $S$): $G_S=X_S^\top X_S$ is positive semidefinite, so $H_S=(n+1)G_S+I$ and $G_S+I$ are positive definite (for $S=\emptyset$ all matrices are $0\times 0$, determinants are $1$ and $Q_\emptyset=y^\top y$). Hence $D_S=\det H_S/\det(G_S+I)\in(0,\infty)$. With $\hat\beta=nH_S^{-1}z_S$,
+\[
+\|y-X_S\hat\beta\|^2+\tfrac1n\bigl(\|X_S\hat\beta\|^2+\|\hat\beta\|^2\bigr)
+= y^\top y-2\hat\beta^\top z_S+\tfrac1n\hat\beta^\top\bigl((n+1)G_S+I\bigr)\hat\beta
+\]\[
+= y^\top y-2n z_S^\top H_S^{-1}z_S+n z_S^\top H_S^{-1}z_S=Q_S,
+\]
+so $Q_S\ge0$ and $2b_0+Q_S\ge 0.02>0$. The constant $(2b_0)^{a_0}\Gamma(\nu)/(\pi^{n/2}\Gamma(a_0))$ is positive and finite. Hence $m(S)=\text{const}\cdot D_S^{-1/2}(2b_0+Q_S)^{-\nu}\in(0,\infty)$, so $\mathrm{BF}(S)=m(S)/m(\emptyset)\in(0,\infty)$, every table entry $r_b(U)=\mathrm{BF}(U)$ ($U\subseteq C_b$) is in $(0,\infty)$ by the same argument applied to $U$, $\gamma_0(S)=\varpi(S)\prod_b r_b(S\cap C_b)\in(0,\infty)$, and $d(S)=\log\mathrm{BF}(S)-\sum_b\log r_b(S\cap C_b)$ is finite. The remaining claims follow because $\Omega$ is finite.
+\end{proof}
+
+\begin{lemma}[Restricted second-moment identity]\label{lem:sm}
+For every nonempty $A\subseteq\Omega$ and all real $u,v$,
+\[
+1+\chisq\bigl(q_v^A\,\big\|\,q_u^A\bigr)=\frac{\Zb_u(A)\,\Zb_w(A)}{\Zb_v(A)^2}.
+\]
+For $A=\Omega$ this reads $1+\chisq(q_v\|q_u)=\Zb_u\Zb_w/\Zb_v^2$.
+\end{lemma}
+\begin{proof}
+By Lemma~\ref{lem:pos}, $q_u^A>0$ exactly on $A$ and $q_v^A$ vanishes off $A$, so the $\chi^2$ divergence is defined and its sum runs over $A$. For $S\in A$, $q_v^A(S)/q_u^A(S)=e^{(v-u)d(S)}\Zb_u(A)/\Zb_v(A)$. Hence
+\[
+\sum_{S\in A}q_u^A(S)\Bigl(\frac{q_v^A(S)}{q_u^A(S)}\Bigr)^2
+=\frac{\Zb_u(A)^2}{\Zb_v(A)^2}\sum_{S\in A}\frac{\gamma_0(S)e^{ud(S)}e^{2(v-u)d(S)}}{\Zb_u(A)}
+=\frac{\Zb_u(A)\Zb_w(A)}{\Zb_v(A)^2},
+\]
+since $u+2(v-u)=2v-u=w$. Subtracting $1$ gives the claim. For $A=\Omega$, $q^\Omega_\psi=q_\psi$.
+\end{proof}
+
+\begin{lemma}[Omitted mass]\label{lem:om}
+For nonempty $A\subseteq\Omega$ and real $\psi$: $\Zb_\psi(A)=a_A(\psi)\Zb_\psi$ with $a_A(\psi)=q_\psi(A)\in(0,1]$. If $\emptyset\neq W\subseteq V$ then $\Zb_\psi(W)=\Zb_\psi(V)\,a_W(\psi)/a_V(\psi)$ and $a_W(\psi)\le a_V(\psi)$.
+\end{lemma}
+\begin{proof}
+The first identity is the definition $q_\psi(A)=\Zb_\psi(A)/\Zb_\psi$; positivity is Lemma~\ref{lem:pos}. The second follows by dividing the first for $A=W$ by the first for $A=V$. Monotonicity: $W\subseteq V$ and $\gamma_\psi\ge0$.
+\end{proof}
+
+\section{Part (i)}
+By Lemma~\ref{lem:sm} with $A=\Omega$ and Lemma~\ref{lem:om} with $A=V$ (so $\Zb_\psi=\Zb_\psi(V)/a(\psi)$ for $\psi\in\{u,v,w\}$),
+\[
+1+\chisq(q_v\|q_u)=\frac{\Zb_u\Zb_w}{\Zb_v^2}
+=\frac{\Zb_u(V)\Zb_w(V)}{\Zb_v(V)^2}\cdot\frac{a(v)^2}{a(u)a(w)}
+=\rho_V(u,v)^{-1}\,\frac{a(v)^2}{a(u)a(w)},
+\]
+for all real $u,v$. All quantities are finite and positive by Lemma~\ref{lem:pos}. \qed
+
+\section{Part (iii)}
+Let $\emptyset\ne W\subseteq V$. By Lemma~\ref{lem:sm} with $A=W$ and Lemma~\ref{lem:om},
+\[
+1+\chisq(q_v^W\|q_u^W)=\frac{\Zb_u(W)\Zb_w(W)}{\Zb_v(W)^2}
+=\frac{\Zb_u(V)\Zb_w(V)}{\Zb_v(V)^2}\cdot\frac{a_W(u)}{a_V(u)}\cdot\frac{a_W(w)}{a_V(w)}\cdot\frac{a_V(v)^2}{a_W(v)^2},
+\]
+which is the identity of (iii), since the first factor is $\rho_V(u,v)^{-1}$. For $W=V$ the last three factors equal $1$, so $\rho_V(u,v)=1/(1+\chisq(q_v^V\|q_u^V))$.
+
+\emph{Bound.} Let $0\le\varepsilon_C<1$, $\rho_V(u,v)\ge 0.9$ and $a_W(v)\ge1-\varepsilon_C>0$. By Lemma~\ref{lem:om}, $a_W(u)/a_V(u)\le1$ and $a_W(w)/a_V(w)\le1$; also $a_V(v)\le1$. Hence
+$1+\chisq(q_v^W\|q_u^W)\le (10/9)\cdot 1/(1-\varepsilon_C)^2$.
+
+\emph{Grid consequence.} Let $(\varphi_t)$ be as in (ii)(b) and assume COVER$(W,\varepsilon_C)$. By (ii)(b) (proved below, without using (iii)) every interval $(\varphi_{t-1},\varphi_t)$ is accepted, and $\varphi_t\in\E$, so $a_W(\varphi_t)\ge1-\varepsilon_C$; the bound gives $1+\chisq(q^W_{\varphi_t}\|q^W_{\varphi_{t-1}})\le 10/(9(1-\varepsilon_C)^2)$. Since $q_\psi(V)\ge q_\psi(W)$ for every $\psi$, COVER$(W,\varepsilon_C)$ implies COVER$(V,\varepsilon_C)$, and (ii)(b) gives the full-space bound. \qed
+
+\section{Part (ii)(a)--(b)}
+\emph{(a).} By (i), $a(v)\le1$, $a(u)a(w)\ge(1-\varepsilon_C)^2>0$ and $\rho_V(u,v)^{-1}\le 10/9$:
+$1+\chisq(q_v\|q_u)\le (10/9)(1-\varepsilon_C)^{-2}$.
+
+\emph{(b).} Assume EX-A and let $0=\varphi_0<\dots<\varphi_T=1$ be the output of a successful construction with candidate set $V$. We read the construction of STATEMENT \S0 (quoted from [B: METHODOLOGY\_v3.md, \S6.7]) as follows, which is the only reading consistent with ``start at $u=0$ \dots\ continue from the appended point'' and with an output $0=\varphi_0<\dots<\varphi_T=1$: the current left point $u$ is always the last appended point (initially $u=0$), and the output grid is $0$ followed by the appended points in the order appended. (The parenthetical case of the frozen grid of a calibration is the special case in which the frozen grid is such an output, paired with its $V$.) So $\varphi_t$ was appended while $u=\varphi_{t-1}$. A point $b'$ is appended only in two cases: $b'=b$ is the next pilot temperature and $\rho_V(u,b)\ge0.90$; or $b'$ is a tested bisection endpoint that passes, i.e.\ $\rho_V(u,b')\ge0.90$. In both cases $\rho_V(\varphi_{t-1},\varphi_t)\ge 0.9$, and under EX-A this comparison (and the validation of the inequality at every appended point) is exact. Strict progress gives $\varphi_{t-1}<\varphi_t$. Hence every interval is accepted. By definition of $\E$, $\varphi_{t-1},\varphi_t,w_t\in\E$. Under COVER$(V,\varepsilon_C)$, $a(\varphi_{t-1})\ge1-\varepsilon_C$ and $a(w_t)\ge1-\varepsilon_C$, and (a) with $(u,v,w)=(\varphi_{t-1},\varphi_t,w_t)$ gives the bound for every $t$. \qed
+
+\section{Part (ii)(c)--(d): method-class witnesses}
+
+\subsection{The data set}
+Let $n=42$, $p=40$. Let $e_1,\dots,e_{41}$ be an orthonormal basis of $\mathbf 1^\perp=\{x\in\mathbb R^{42}:\sum_i x_i=0\}$ (dimension 41). Put $x_j=\sqrt{41}\,e_j$ ($j\in[40]$), $X^r=X=(x_1,\dots,x_{40})$.
+
+\emph{Blocks.} We use three properties of the method's blocks, all from [B: METHODOLOGY\_v3.md, \S6.3] and [B: 00\_COMMON.md, \S2, line 18].
+(a) \emph{They depend on $X$ only}: ``Blocks $C_1,\dots,C_J$ (deterministic in X: complete linkage, top-down cut, next-fit packing)''; the clustering distance $1-|r_{jl}|$ is ``computed from X'', and the cut and the packing use only the dendrogram, $B$ and index order. So the blocks can be computed from $X$ before $y$ is chosen.
+(b) \emph{They partition $[p]$}: the dendrogram's root contains all $p$ retained columns; the cut repeatedly replaces a node by its two children (which partition it) until every retained cluster has at most $B$ members, so the retained clusters partition $[p]$; packing places whole retained clusters (``a retained cluster is never split'') into blocks, each cluster into exactly one block. Hence every column lies in exactly one block.
+(c) \emph{Their size is capped}: $|C_b|\le B=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)=\min(6,6,16)=6<40$.
+By (a) the blocks are fixed by $X$. Let $j_1=1$; by (c) the block of $j_1$ does not contain all 40 columns, so we can pick $j_2\in[40]$ outside it; by (b) $j_1$ and $j_2$ lie in different blocks. Put
+\[
+y^r=y=\sqrt{41}\,(c_1e_{j_1}+c_2e_{j_2}+c_3e_{41}),\qquad c_1=0.97,\ c_2=0.10,\ c_3=\sqrt{1-c_1^2-c_2^2}=\sqrt{0.0491}.
+\]
+\emph{Input conditions and standardisation.} All entries are finite, $n=42\ge3$, $p=40\ge1$; each $x_j$ and $y$ is centred and nonzero, hence non-constant, so no column is dropped and $y$ is not constant [B: METHODOLOGY\_v3.md, \S4, items 1--3]. Both conventions in the sources use the sample SD with denominator $n-1$: [B: 00\_COMMON.md, \S1, line 9] (``$s_y^2=\|Cy^r\|^2/(n-1)$; so $\|x_j\|^2=\|y\|^2=n-1$'') and [B: METHODOLOGY\_v3.md, \S4, item 4] (``divide by its maximum absolute value, compute the mean, centre, then divide by the sample SD (denominator n $-$ 1)''). Here $\|x_j\|^2=\|y\|^2=41=n-1$ and the vectors are centred, so every sample SD equals $1$. Under 00\_COMMON's form, $D_x=I$, $s_y=1$, $CX^rD_x^{-1}=X$ and $Cy^r/s_y=y$. Under the method's form, a column $x$ is divided by $c=\max_i|x_i|>0$, stays centred, and has sample SD $1/c$, so the final division returns $x$; the same holds for $y$. Either way the standardised data are $X$ and $y$ themselves.
+\emph{SMC branch.} By [B: 00\_COMMON.md, \S2, lines 24--25] and [B: METHODOLOGY\_v3.md, \S3, \S6.2]: $N_0=\max(2500,n,p)=2500$ and $H_0=\lceil512N_0/2500\rceil=\lceil512\cdot2500/2500\rceil=512$, so $(5H_0+4N_0)p=12560\cdot40=502400$; $K=\min(p,\lfloor n/2\rfloor)=\min(40,21)=21$ and $\sum_{k\le21}\binom{40}k\ge\binom{40}{20}=137846528820>502400$. The exact branch is not taken.
+\emph{Budget.} Same sources: $\ell=\lceil\log_2(n+p+1)\rceil=\lceil\log_2 83\rceil=7$, $T_0=\max(1000,\ell^2)=1000$. Both witnesses use tier $e=0$, $T_e=T_0=1000$.
+
+\begin{lemma}[Closed forms]\label{lem:cf}
+Let $\nu=0.01+n/2=21.01$, $t_i=(n-1)^2c_i^2/\bigl(n(n-1+2b_0)\bigr)=1681c_i^2/(42\cdot41.02)$ ($i=1,2$), $g_i=(1-t_i)^{-\nu}$, and for $S\in\Omega$ let $I(S)=\{i\in\{1,2\}:j_i\in S\}$. Then $t_1+t_2<1$ and
+\[
+\mathrm{BF}(S)=n^{-|S|/2}\Bigl(1-\sum_{i\in I(S)}t_i\Bigr)^{-\nu},\qquad
+\gamma_0(S)=\varpi(S)\,n^{-|S|/2}\prod_{i\in I(S)}g_i,\qquad
+d(S)=D\,\mathbf 1\{I(S)=\{1,2\}\},
+\]
+with $D=\nu\log\dfrac{(1-t_1)(1-t_2)}{1-t_1-t_2}>0$. These forms do not depend on the block partition beyond $j_1,j_2$ lying in different blocks.
+\end{lemma}
+\begin{proof}
+For $|S|=k$: $G_S=41I_k$ (orthogonality), so $H_S=(43\cdot41+1)I_k=n^2I_k$, $G_S+I=nI_k$, $D_S=n^{2k}/n^k=n^k$. $z_j=x_j^\top y=41c_i$ if $j=j_i$ and $0$ otherwise (as $e_{41}\perp x_j$). So $Q_S=y^\top y-n\sum_{j\in S}z_j^2/n^2=41-\sum_{i\in I(S)}1681c_i^2/42$, and
+$\mathrm{BF}(S)=D_S^{-1/2}\bigl((2b_0+Q_S)/(2b_0+Q_\emptyset)\bigr)^{-\nu}=n^{-k/2}(1-\sum_{i\in I(S)}t_i)^{-\nu}$ since $2b_0+Q_\emptyset=41.02$. Next $t_1+t_2=1681\cdot0.9509/1722.84<0.928<1$. A block $C_b$ contains at most one of $j_1,j_2$, so $r_b(U)=n^{-|U|/2}\prod_{i\in I(U)}g_i$ for $U\subseteq C_b$; multiplying over blocks ($\sum_b|S\cap C_b|=|S|$, and each $j_i\in S$ lies in exactly one block, both by the partition property (b)) gives $\gamma_0$. Finally $d(S)=-\nu\log(1-\sum_{I(S)}t_i)+\nu\sum_{I(S)}\log(1-t_i)$, which is $0$ when $|I(S)|\le1$ and $D$ when $I(S)=\{1,2\}$; $D>0$ because $(1-t_1)(1-t_2)=1-t_1-t_2+t_1t_2>1-t_1-t_2>0$.
+\end{proof}
+
+\emph{Grouped sums.} Let $N=[40]\setminus\{j_1,j_2\}$ ($|N|=38$) and $\sigma(a)=\sum_{m=0}^{\min(38,K-a)}\binom{38}{m}\varpi(a+m)n^{-(a+m)/2}$. By Lemma~\ref{lem:cf}, grouping $S$ by $I(S)$ and $|S\cap N|$,
+\[
+\Zb_\psi=P+R\,e^{\psi D},\qquad P=\sigma(0)+(g_1+g_2)\sigma(1),\qquad R=g_1g_2\,\sigma(2),
+\]
+with $P$ the $\gamma_0$-mass of models not containing both $j_1,j_2$ and $R$ the $\gamma_0$-mass of the others. Write $r=R/P$.
+
+\emph{Numerical values and their certification.} Every number used below is a finite expression in exact rationals ($\varpi(k)$, $t_i$, $\nu$, binomial coefficients) and the operations $+,-,\times,/,\sqrt{\cdot},\log,\exp$. The script of Appendix~A computes the rationals exactly (integer and fraction arithmetic) and evaluates each expression in interval arithmetic with outward rounding (\texttt{mpmath.iv}, 50 digits), so each internal output interval is guaranteed to contain the exact real value (for display, its endpoints are rounded outward, so the printed intervals contain it too). Every inequality between transcendental quantities used in \S\S5.2--5.3 is decided by comparing interval endpoints (lower endpoint of the larger side against upper endpoint of the smaller side); the script prints these seven checks ($D>0$, $a_c(1)\ge0.9$, $a_c(2)<0.9$, $1+\chi^2>1000/729$, $\beta>\alpha$, and the two acceptance inequalities), and all pass (output in Appendix~A). The remaining facts used are exact: $t_1+t_2<1$ (exact rational arithmetic, asserted in the script and shown by hand in Lemma~\ref{lem:cf}); the set sizes $|V_c|=117$, $|V_d|=782\le800$, the counts $1,2\le T_e$ and the exact-branch inequality (integer arithmetic); $P>0$ and $R>0$ (Lemma~\ref{lem:pos}). All enclosures have width below $10^{-20}$. Below, ``$x\approx c$'' means that the certified enclosure of $x$ lies within one unit of the last displayed digit of $c$ (these displayed values are for orientation only; the proof uses only the seven certified checks):
+\begin{center}
+\begin{tabular}{ll}
+$t_1\approx0.91804979$, $t_2\approx0.0097571452$ & $D\approx2.457388918$, $e^D\approx11.6742892$\\
+$r=R/P\approx5.27195546\times10^{-3}$ & $re^D\approx0.0615463326$, $re^{2D}\approx0.718509685$
+\end{tabular}
+\end{center}
+
+\subsection{Witness for (ii)(c)}
+$V_c=\{\emptyset\}\cup\{\{j\}:j\in[40]\}\cup\{\{j_i,k\}:i=1,2,\ k\in N\}$, $|V_c|=117$. All its members have size $\le2\le K$, so $V_c\subseteq\Omega$. With pool $\Pool=V_c$: $|\Pool|\le 20p=800$, so both top-$20p$ lists equal $\Pool$, and $V(\Pool)=\Pool\cup\{\emptyset\}=V_c$; $V_c$ is of the method's form.
+No member of $V_c$ contains both $j_1,j_2$, so $d\equiv0$ on $V_c$ and $\Zb_\psi(V_c)=\Zb_0(V_c)=:Z_c$ for all $\psi$. Hence $F_{V_c}$ is constant and $\rho_{V_c}(u,v)=1$ for all $u,v$.
+\emph{Grid.} An implementation exists: e.g.\ test the pilot temperature $b$ first; if it fails, test the midpoints of $(u,b]$ successively (halving towards $u$ after a failure and towards $b$ after a success, at most 60 halvings), append the largest tested point that passed, and fail if none passed. In both witnesses (\S5.2 and \S5.3) every pilot temperature passes on its first test, so no bisection, endpoint choice or stopping rule is ever used, and every implementation satisfying STATEMENT \S0 gives the same output. Pilot list $(1)$, tier $0$: at $u=0$, $b=1$, $\rho_{V_c}(0,1)=1\ge0.90$, so $b$ is appended (strict progress $1>0$; inequality validated; $1\le T_e$ intervals); the list is exhausted and the output is the grid $(0,1)$, $T=1$, $w_1=2$. The interval $(0,1)$ is accepted.
+\emph{Coverage.} $a_c(\psi)=Z_c/(P+Re^{\psi D})$ is strictly decreasing in $\psi$ ($R>0$, $D>0$), where
+$Z_c=\varpi(0)+\varpi(1)n^{-1/2}(38+g_1+g_2)+38\,\varpi(2)n^{-1}(g_1+g_2)$, with certified $Z_c/P\approx0.984162996$. Hence, by the certified checks,
+\[
+\min_{\psi\in[0,1]}a_c(\psi)=a_c(1)=\frac{Z_c/P}{1+re^{D}}\approx0.92710319\ \ge0.9,\qquad
+a_c(2)=\frac{Z_c/P}{1+re^{2D}}\approx0.57268400\ <0.9 .
+\]
+\emph{Divergence.} By Lemma~\ref{lem:sm} with $A=\Omega$,
+\[
+1+\chisq(q_1\|q_0)=\frac{\Zb_0\Zb_2}{\Zb_1^2}=\frac{(1+r)(1+re^{2D})}{(1+re^D)^2}\approx1.53305467\ >\ \frac{10}{9\cdot0.81}=\frac{1000}{729}\approx1.37174211
+\]
+(certified: the lower endpoint of the enclosure of the left side exceeds the upper endpoint of the enclosure of $1000/729$).
+So with $\varepsilon_C=0.1$ the interval is accepted and coverage holds on $[0,1]$, while $q_{w_1}(V_c)<1-\varepsilon_C$ and the bound of (ii)(a) fails. This proves (ii)(c).
+
+\subsection{Witness for (ii)(d)}
+$V_d=\{\emptyset\}\cup\{\{j_1\}\}\cup\{\{j_1,k\}:k\in N\}\cup\{S:\{j_1,j_2\}\subseteq S,\ |S|\le4\}$, $|V_d|=1+1+38+(1+38+703)=782\le800$; sizes $\le4\le K$; as above $V(V_d)=V_d$ is of the method's form. By Lemma~\ref{lem:cf}, $\Zb_\psi(V_d)=A+Be^{\psi D}$ with
+\[
+A=\varpi(0)+g_1\bigl(\varpi(1)n^{-1/2}+38\varpi(2)n^{-1}\bigr),\qquad
+B=g_1g_2\bigl(\varpi(2)n^{-1}+38\varpi(3)n^{-3/2}+703\varpi(4)n^{-2}\bigr).
+\]
+Let $\alpha=A/P\approx0.984162996$ (this agrees with $Z_c/P$ to the digits shown but is a different number: $Z_c-A=\varpi(1)n^{-1/2}(38+g_2)+38\varpi(2)n^{-1}g_2>0$ is tiny relative to $P$; the certified enclosures in Appendix~A are disjoint), $\beta=B/R\approx0.996250785$ (certified: $\beta-\alpha>0$, enclosure $\approx0.0120877894$) and $\lambda(\psi)=Re^{\psi D}/(P+Re^{\psi D})$, strictly increasing in $\psi$. Then
+$a_d(\psi)=(A+Be^{\psi D})/(P+Re^{\psi D})=(1-\lambda(\psi))\alpha+\lambda(\psi)\beta$, strictly increasing because $\beta>\alpha$.
+\emph{Grid.} Pilot list $(\tfrac12,1)$, tier $0$, any implementation. With $s=B/A\approx5.33670722\times10^{-3}$,
+\[
+\rho_{V_d}(u,v)=\frac{(1+se^{vD})^2}{(1+se^{uD})(1+se^{(2v-u)D})},\qquad
+\rho_{V_d}(0,\tfrac12)\approx0.97081344,\quad \rho_{V_d}(\tfrac12,1)\approx0.91376273,
+\]
+and the certified checks give $\rho_{V_d}(0,\tfrac12)\ge0.9$ and $\rho_{V_d}(\tfrac12,1)\ge0.9$. So the construction appends $\tfrac12$ and then $1$ without bisection (strict progress, validated inequalities, $2\le T_e$ intervals) and outputs $(0,\tfrac12,1)$, $T=2$, $w_1=1$, $w_2=\tfrac32$, $\E=\{0,\tfrac12,1,\tfrac32\}$; both intervals are accepted.
+\emph{Coverage.} Since $a_d$ is strictly increasing, the minimum over $\E$ is attained only at $\varphi_0=0$, and the minimum over $\{w_1,w_2\}$ is attained at $w_1=1<\max_tw_t=w_2$. (For illustration: $a_d(0)\approx0.98422639$, $a_d(\tfrac12)\approx0.98437688$, $a_d(1)\approx0.98486382$, $a_d(\tfrac32)\approx0.98626327$; COVER$(V_d,\varepsilon_C)$ holds with $\varepsilon_C=0.016$, and the worst point is $\varphi_0$, not the largest $w_t$. Only $\beta>\alpha$ and the two acceptance inequalities are used.) This proves (ii)(d). \qed
+
+\section{Part (iv)}
+\emph{(a).} Both top lists of $V(\Pool)$ are subsets of $\Pool$, so $V\subseteq\Pool\cup\{\emptyset\}$ and $V\cap\M\subseteq(\Pool\cap\M)\cup(\{\emptyset\}\cap\M)=\emptyset$ under pool avoidance and $\emptyset\notin\M$. If calibration never scores a model of $\M$ and every member of $\Pool$ was scored by the calibration or belongs to an inherited set of scored models that avoids $\M$, then every member of $\Pool$ lies outside $\M$, i.e.\ $\Pool\cap\M=\emptyset$.
+
+\emph{(b).} Suppose $V\cap\M=\emptyset$ and let $\gamma'_\psi=\gamma_\psi\mathbf 1_{\M^c}$. On $\Omega'=\Omega\setminus\M$ (nonempty, as $\emptyset\in\Omega'$), $\gamma'_\psi=\gamma_0|_{\Omega'}\,e^{\psi d|_{\Omega'}}$ with $\gamma_0|_{\Omega'}>0$ (Lemma~\ref{lem:pos}), so $\gamma'$ is the bridge on $\Omega'$ with restricted $\gamma_0,d$, and $q'_\psi=\gamma_\psi\mathbf 1_{\M^c}/\Zb_\psi(\M^c)=q_\psi(\cdot\mid\M^c)$. Since $V\subseteq\M^c$, $\gamma'_0(S)e^{td'(S)}=\gamma_0(S)e^{td(S)}$ for every $S\in V$, hence $F'_V(t)=F_V(t)$ for all real $t$ and $\rho'_V(u,v)=\exp\{2F'_V(v)-F'_V(u)-F'_V(2v-u)\}=\rho_V(u,v)$ for all real $u,v$.
+Fix one implementation $\mathcal I$ and the inputs (pilot list, $V$, $T_e$). By definition, $\mathcal I$ is deterministic and accesses the bridge only through evaluations of $\rho_V$; each of its steps (the next query point, a comparison with $0.90$, a validation, appending, failing, stopping) is a function of the inputs and of the answers to the previous queries. Run $\mathcal I$ on both bridges. By induction on $k$: if the first $k-1$ queries and their answers coincide, then the $k$-th query point coincides (it is determined by the same inputs and answers), and its answer coincides because $\rho'_V=\rho_V$ at every real pair; under EX-A every comparison of the answer with $0.90$ is exact, so the same branch is taken. Hence the whole transcripts coincide, and so do the outcomes: the same grid, or failure in both. \qed
+
+\begin{remark}
+Nothing above concerns particles: the statements are identities and inequalities between exact bridge quantities, and no assertion derives particle mixing from ESS.
+\end{remark}
+
+\appendix
+\section{Certified computation of the witness inequalities}
+Script \texttt{witness\_certified.py} (run with \texttt{python -I witness\_certified.py}; Python 3 with mpmath):
+\begin{lstlisting}
+"""Certified enclosures for the T13 witnesses (proof Section 5), by interval arithmetic.
+
+All rational inputs (varpi(k), t_i, nu, binomial counts) are computed EXACTLY with Python integers / Fractions and
+converted to intervals that contain them; every transcendental operation (sqrt, log, exp) uses mpmath.iv, whose
+operations return intervals guaranteed to contain the exact result (outward rounding). Each internal interval
+therefore contains the exact real value, and each inequality is decided by comparing internal interval endpoints.
+For display, the internal binary endpoints are converted exactly to rationals and rounded OUTWARD to 22 decimals
+(lower endpoint down, upper endpoint up), so every printed interval also contains the exact value.
+Run: python -I witness_certified.py
+"""
+from fractions import Fraction as Fr
+from math import comb
+from mpmath import iv
+
+iv.dps = 50
+n, p = 42, 40
+K = min(p, n // 2)                       # 21
+nu = Fr(1, 100) + Fr(n, 2)               # 21.01 = 2101/100
+b0 = Fr(1, 100)
+c1, c2 = Fr(97, 100), Fr(10, 100)
+w = lambda k: Fr(1, 2) / comb(2 * p - 1, k)
+WK = sum(comb(p, k) * w(k) for k in range(K + 1))
+vp = lambda k: w(k) / WK                 # exact rationals
+t = [Fr((n - 1) ** 2) * c * c / (n * (n - 1 + 2 * b0)) for c in (c1, c2)]   # exact rationals
+assert t[0] + t[1] < 1
+
+def I(q):  # interval containing the rational q
+    return iv.mpf(q.numerator) / iv.mpf(q.denominator)
+
+NU, N = I(nu), iv.mpf(n)
+rs = 1 / iv.sqrt(N)                      # n^{-1/2}
+g = [iv.exp(-NU * iv.log(I(1 - ti))) for ti in t]                 # (1 - t_i)^{-nu}
+D = NU * iv.log(I((1 - t[0]) * (1 - t[1]) / (1 - t[0] - t[1])))   # D
+eD = iv.exp(D)
+Nn = p - 2
+def sigma(a):
+    tot = iv.mpf(0)
+    for m in range(0, min(Nn, K - a) + 1):
+        tot += iv.mpf(comb(Nn, m)) * I(vp(a + m)) * rs ** (a + m)
+    return tot
+s0, s1, s2 = sigma(0), sigma(1), sigma(2)
+P = s0 + (g[0] + g[1]) * s1
+R = g[0] * g[1] * s2
+r = R / P
+# witness (c)
+Zc = I(vp(0)) + I(vp(1)) * rs * (Nn + g[0] + g[1]) + I(vp(2)) / N * Nn * (g[0] + g[1])
+zc = Zc / P
+ac1 = zc / (1 + r * eD)
+ac2 = zc / (1 + r * eD * eD)
+chi = (1 + r) * (1 + r * eD * eD) / (1 + r * eD) ** 2
+bound = iv.mpf(1000) / iv.mpf(729)       # 10/(9*0.81) = 1000/729 exactly
+# witness (d)
+A = I(vp(0)) + g[0] * (I(vp(1)) * rs + Nn * I(vp(2)) / N)
+B = g[0] * g[1] * (I(vp(2)) / N + Nn * I(vp(3)) * rs ** 3 + comb(Nn, 2) * I(vp(4)) / N ** 2)
+alpha, beta, s = A / P, B / R, B / A
+def rho(u2, v2):  # u = u2/2, v = v2/2 (half-integers); rho = (1+s e^{vD})^2 / ((1+s e^{uD})(1+s e^{(2v-u)D}))
+    E = lambda k2: iv.exp(D * iv.mpf(k2) / 2)
+    return (1 + s * E(v2)) ** 2 / ((1 + s * E(u2)) * (1 + s * E(2 * v2 - u2)))
+ad = lambda k2: (A + B * iv.exp(D * iv.mpf(k2) / 2)) / (P + R * iv.exp(D * iv.mpf(k2) / 2))
+
+def exact_ends(x):  # the interval's two binary endpoints as exact rationals
+    def fr(t):
+        sign, man, exp, _ = t
+        q = Fr(man) * (Fr(2) ** exp)
+        return -q if sign else q
+    return fr(x._mpi_[0]), fr(x._mpi_[1])
+def show(name, x, k=22):  # outward-rounded decimal display: printed [lo, hi] contains the internal interval
+    lo, hi = exact_ends(x)
+    s = 10 ** k
+    L = Fr((lo.numerator * s) // lo.denominator)                    # floor(lo * 10^k)
+    H = Fr(-((-hi.numerator * s) // hi.denominator))                # ceil(hi * 10^k)
+    fmt = lambda q: (str(q.numerator // s) if q >= 0 else "-" + str((-q.numerator) // s)) + "." + str(abs(q.numerator) % s).zfill(k)
+    print(f"{name:18s} in [{fmt(L)}, {fmt(H)}]  (decimals outward-rounded; width < 1e-20: {hi - lo < Fr(1, 10**20)})")
+for nm, x in [("t1", I(t[0])), ("t2", I(t[1])), ("D", D), ("e^D", eD), ("r = R/P", r), ("r e^D", r * eD), ("r e^{2D}", r * eD * eD), ("Z_c/P", zc),
+              ("a_c(1)", ac1), ("a_c(2)", ac2), ("1+chi2(q1||q0)", chi), ("1000/729", bound),
+              ("alpha = A/P", alpha), ("beta = B/R", beta), ("beta - alpha", beta - alpha), ("s = B/A", s),
+              ("rho_Vd(0,1/2)", rho(0, 1)), ("rho_Vd(1/2,1)", rho(1, 2)),
+              ("a_d(0)", ad(0)), ("a_d(1/2)", ad(1)), ("a_d(1)", ad(2)), ("a_d(3/2)", ad(3))]:
+    show(nm, x)
+checks = {
+    "D > 0": D.a > 0,
+    "a_c(1) >= 0.9": ac1.a >= (iv.mpf(9) / 10).b,
+    "a_c(2) < 0.9": ac2.b < (iv.mpf(9) / 10).a,
+    "1+chi2 > 1000/729": chi.a > bound.b,
+    "beta > alpha": (beta - alpha).a > 0,
+    "rho(0,1/2) >= 0.9": rho(0, 1).a >= (iv.mpf(9) / 10).b,
+    "rho(1/2,1) >= 0.9": rho(1, 2).a >= (iv.mpf(9) / 10).b,
+}
+for k, v in checks.items(): print(f"CHECK {k:22s}: {v}")
+print("ALL CHECKS PASS" if all(checks.values()) else "SOME CHECK FAILS")
+\end{lstlisting}
+Output (each printed interval is the internal enclosure rounded outward to 22 decimals, so it also contains the exact value):
+\begin{lstlisting}
+t1                 in [0.9180497898818230363817, 0.9180497898818230363818]  (decimals outward-rounded; width < 1e-20: True)
+t2                 in [0.0097571451788906688955, 0.0097571451788906688956]  (decimals outward-rounded; width < 1e-20: True)
+D                  in [2.4573889178992225124231, 2.4573889178992225124232]  (decimals outward-rounded; width < 1e-20: True)
+e^D                in [11.6742891816087945733827, 11.6742891816087945733828]  (decimals outward-rounded; width < 1e-20: True)
+r = R/P            in [0.0052719554605095421403, 0.0052719554605095421404]  (decimals outward-rounded; width < 1e-20: True)
+r e^D              in [0.0615463325985499584319, 0.0615463325985499584320]  (decimals outward-rounded; width < 1e-20: True)
+r e^{2D}           in [0.7185096848229484693078, 0.7185096848229484693079]  (decimals outward-rounded; width < 1e-20: True)
+Z_c/P              in [0.9841629956846136023762, 0.9841629956846136023763]  (decimals outward-rounded; width < 1e-20: True)
+a_c(1)             in [0.9271031941446113197618, 0.9271031941446113197619]  (decimals outward-rounded; width < 1e-20: True)
+a_c(2)             in [0.5726839972892024642265, 0.5726839972892024642266]  (decimals outward-rounded; width < 1e-20: True)
+1+chi2(q1||q0)     in [1.5330546700532342666175, 1.5330546700532342666176]  (decimals outward-rounded; width < 1e-20: True)
+1000/729           in [1.3717421124828532235939, 1.3717421124828532235940]  (decimals outward-rounded; width < 1e-20: True)
+alpha = A/P        in [0.9841629956846136023757, 0.9841629956846136023758]  (decimals outward-rounded; width < 1e-20: True)
+beta = B/R         in [0.9962507850715599508558, 0.9962507850715599508559]  (decimals outward-rounded; width < 1e-20: True)
+beta - alpha       in [0.0120877893869463484800, 0.0120877893869463484801]  (decimals outward-rounded; width < 1e-20: True)
+s = B/A            in [0.0053367072216948640454, 0.0053367072216948640455]  (decimals outward-rounded; width < 1e-20: True)
+rho_Vd(0,1/2)      in [0.9708134408716465566174, 0.9708134408716465566175]  (decimals outward-rounded; width < 1e-20: True)
+rho_Vd(1/2,1)      in [0.9137627308499763841343, 0.9137627308499763841344]  (decimals outward-rounded; width < 1e-20: True)
+a_d(0)             in [0.9842263877716183656109, 0.9842263877716183656110]  (decimals outward-rounded; width < 1e-20: True)
+a_d(1/2)           in [0.9843768807694762001798, 0.9843768807694762001799]  (decimals outward-rounded; width < 1e-20: True)
+a_d(1)             in [0.9848638215300282733429, 0.9848638215300282733430]  (decimals outward-rounded; width < 1e-20: True)
+a_d(3/2)           in [0.9862632653219948237377, 0.9862632653219948237378]  (decimals outward-rounded; width < 1e-20: True)
+CHECK D > 0                 : True
+CHECK a_c(1) >= 0.9         : True
+CHECK a_c(2) < 0.9          : True
+CHECK 1+chi2 > 1000/729     : True
+CHECK beta > alpha          : True
+CHECK rho(0,1/2) >= 0.9     : True
+CHECK rho(1/2,1) >= 0.9     : True
+ALL CHECKS PASS
+\end{lstlisting}
+\section{Verbatim quotations of the definitions used}
+The passages below are copied mechanically (by line number) from \texttt{00\_COMMON.md} (SHA-256 \texttt{a7d05134350823efd62add9d66a8ec1e8ff78185f2efc78415a504cc819e023d}) and \texttt{METHODOLOGY\_v3.md} (SHA-256 \texttt{93043758058a6d422cca6ca4b6be8f3a9e8149b6f6de2e1bab1ce31c44b8019c}), the files STATEMENT.md refers to. For display only, lines longer than 100 characters are wrapped at spaces, and continuation lines begin with ``\texttt{\ \ |\ }''; removing these markers and rejoining recovers the source text (checked by the extraction script). Markdown markup is kept as in the source.
+\begin{Verbatim}[fontsize=\footnotesize,formatcom=\qfont]
+--- 00_COMMON.md, §1 Data, target (first three bullets), lines 9-11 ---
+- Raw data (X^r, y^r), n ≥ 3, no constant column, non-constant y^r. C = I − 11ᵀ/n; D_x = diag of
+  | retained raw column sample SDs. Standardised X = CX^rD_x⁻¹, y = Cy^r/s_y with s_y² = ‖Cy^r‖²/(n−1);
+  | so ‖x_j‖² = ‖y‖² = n − 1. Contrast coordinates: U ∈ ℝ^{n×(n−1)}, UᵀU = I, UUᵀ = C; y_c = Uᵀy^r, X_c
+  | = UᵀX.
+- State space Ω = {S ⊆ [p] : |S| ≤ K}, K = min(p, ⌊n/2⌋). G_S = X_SᵀX_S = (n−1)R_S; z_S = X_Sᵀy; H_S
+  | = (n+1)G_S + I; D_S = det H_S/det(G_S+I); Q_S = yᵀy − n z_SᵀH_S⁻¹z_S; ν = 0.01 + n/2; a₀ = b₀ =
+  | 0.01.
+- m(S) = (2b₀)^{a₀}Γ(ν)/(π^{n/2}Γ(a₀)) · D_S^{−1/2}(2b₀ + Q_S)^{−ν}; w(k) = ½/C(2p−1, k); W_K =
+  | Σ_{k≤K} C(p,k)w(k); ϖ(S) = w(|S|)/W_K.
+
+--- 00_COMMON.md, §2 Sampler objects (blocks, start, bridge), lines 18-20 ---
+- Blocks C₁, …, C_J (deterministic in X: complete linkage, top-down cut, next-fit packing), |C_b| ≤
+  | B = min(⌊√n⌋, ⌊√p⌋, 16). Tables r_b(A) = BF(A) for A ⊆ C_b (full response).
+- γ₀(S) = ϖ(S)∏_b r_b(S ∩ C_b); π₀ = γ₀/Z̄₀ (Z̄₀ by exact convolution of block size profiles with
+  | the capped size prior; backward sampler gives exact iid π₀ draws). Start mode S̃₀ := argmax π₀.
+- Discrepancy d(S) = log BF(S) − Σ_b log r_b(S ∩ C_b). Bridge γ_φ = γ₀e^{φd}, q_φ = γ_φ/Z̄_φ
+  | (defined for real φ; production φ ∈ [0,1]); q₀ = π₀, q₁ = π, Z = m(∅)Z̄₁.
+
+--- 00_COMMON.md, §2 Budgets and exact branch, lines 24-25 ---
+- Budgets: N₀ = max(2500, n, p); H₀ = ⌈512N₀/2500⌉; ℓ = ⌈log₂(n+p+1)⌉; T₀ = max(1000, ℓ²); (N_e,
+  | H_e, T_e) = 4^e(N₀, H₀, T₀), e ∈ {0,1}; L = max(4, ⌈log₂(n+1)⌉). Q_f := 4N_e(T + L + 5) iid π₀ draws
+  | scored in the final run (initialisation + independence proposals); 4N_e(L+6) ≤ Q_f ≤ 4N_e(T_e + L +
+  | 5).
+- Exact branch: Σ_{k≤K} C(p,k) ≤ (5H₀ + 4N₀)p; it precedes block/Gram construction and scores every
+  | feasible model.
+
+--- METHODOLOGY_v3.md, §3 Notation and budgets (table rows), lines 62-73 ---
+| Symbol | Definition | n = 200, p = 500 | n = 200, p = 1,000 |
+|---|---|---|---|
+| p | number of retained (non-constant) predictors | 500 | 1,000 |
+| K | size cap, min(p, ⌊n/2⌋) | 100 | 100 |
+| B | block size, min(⌊√n⌋, ⌊√p⌋, B*), B* = 16 (implementation limit) | 14 | 14 |
+| ℓ | ⌈log₂(n + p + 1)⌉ (local-search and rebuild budget) | 10 | 11 |
+| L | max(4, ⌈log₂(n + 1)⌉) (burn-in rounds at φ = 1) | 8 | 8 |
+| N₀ | max(2,500, n, p) final particles per island | 2,500 | 2,500 |
+| H₀ | ⌈512·N₀/2,500⌉ calibration particles (pilot and each diagnostic island) | 512 | 512 |
+| T₀ | max(1,000, ℓ²) stage ceiling | 1,000 | 1,000 |
+| R | 4 islands (final and diagnostic) | 4 | 4 |
+| tier e | e ∈ {0, 1}; (N_e, H_e, T_e) = 4^e (N₀, H₀, T₀) | | |
+
+--- METHODOLOGY_v3.md, §4 Preprocessing (items 1–4), lines 80-87 ---
+1. Stop with `invalid_input` if any entry of X or y is not finite, or n < 3, or p < 1.
+2. Drop column j only if all its entries are **exactly** equal; record it; it is never selected. p
+  | := number kept. If p = 0,
+   return Ŝ = ∅, PIPs and evidence unavailable, status `no_predictors`.
+3. If all entries of y are exactly equal, return Ŝ = ∅ (the exact HPM: every Q_S = 0, D_S ≥ 1 and w
+  | is decreasing), PIPs and
+   evidence unavailable, status `y_constant`. (The exact PIPs are not 0; they are not computed.)
+4. Standardise stably: for each column, divide by its maximum absolute value, compute the mean,
+  | centre, then divide by the
+   sample SD (denominator n − 1), so ‖x_j‖² = n − 1. Same for y, recording s_y² = ‖Cy‖²/(n − 1) with
+  | C = I − 11ᵀ/n.
+   Original indices, means and scales are kept for reporting and back-transformation.
+
+--- METHODOLOGY_v3.md, §5 Target posterior, lines 97-108 ---
+On the standardised data (X, y), for S ⊆ {1, …, p} with k = |S| ≤ K, G_S = X_SᵀX_S, z_S = X_Sᵀy:
+
+```text
+y | β_S, σ², S ~ N_n(X_S β_S, σ² I_n)                   (no intercept; y is centred)
+β_S | σ², S    ~ N_k(0, n σ² (G_S + I_k)⁻¹)              g = n (unit information), τ = 1 (one
+  | pseudo-observation)
+σ²             ~ IG(a₀, b₀),  a₀ = b₀ = 0.01
+ϖ(S)           = w(k) 1{k ≤ K} / W_K,   w(k) = B(1+k, 2p−k)/B(1, p) = ½ / C(2p−1, k),   W_K =
+  | Σ_{j≤K} C(p, j) w(j)
+
+H_S = (n + 1) G_S + I_k,   Q_S = yᵀy − n z_Sᵀ H_S⁻¹ z_S,
+log m(S) = log C_n − ½ [log det H_S − log det(G_S + I_k)] − (a₀ + n/2) log(2b₀ + Q_S),
+C_n = (2b₀)^{a₀} Γ(a₀ + n/2) / (π^{n/2} Γ(a₀)),
+π(S | y) = ϖ(S) m(S) / Z,   Z = Σ_{|S|≤K} ϖ(S) m(S).
+
+--- METHODOLOGY_v3.md, §6.2 Exact branch, lines 154-161 ---
+### 6.2 Exact branch
+
+If E = Σ_{k≤K} C(p, k) ≤ (5H₀ + 4N₀)·p (12,560·p at baseline; counted with saturating integer
+  | arithmetic), score every model
+with |S| ≤ K in a streaming pass: running best (strict order of §6.10), log-sum-exp accumulation of
+  | Z and of the PIP numerators.
+No blocks are built. Status `exact`; `global_certified` when all comparisons are numerically
+  | validated. This applies for
+p ≤ 17 for n ≥ 22 (p ≤ 18 at n = 20, 21), and for larger p when the cap binds (for example p ≤ 36 at
+  | n = 10; all p ≤ 3,000 at n ≤ 5). Because the
+threshold grows with N₀ ≥ n, every fixed-p problem is eventually enumerated as n grows.
+
+
+--- METHODOLOGY_v3.md, §6.3 Blocks, tables and the composite start, lines 162-177 ---
+### 6.3 Blocks, tables and the composite start
+
+- **Clustering:** complete linkage on the distance 1 − |r_jl| computed from X; ties between
+  | candidate merges broken
+  lexicographically on the sorted original-index lists.
+- **Cut:** top-down from the root; any node with more than B members is split into its two children
+  | (visited smallest index
+  first) until every retained cluster has at most B members.
+- **Packing:** next-fit in dendrogram leaf order, whole clusters only (a retained cluster is never
+  | split), into blocks
+  C₁, …, C_J of at most B members. J ≥ ⌈p/B⌉ (packing leaves gaps).
+- **Tables:** for each block, every sub-model U ⊆ C_b is scored against the full y; r_b(U) =
+  | m(U)/m(∅) (table exponent 1).
+  Since B ≤ K for n ≥ 3, no sub-model exceeds the cap. Every table score counts for the HPM. Table
+  | scores are not inserted in
+  the score cache.
+- **Start:** γ₀(S) = ϖ(S) ∏_b r_b(S ∩ C_b), π₀ = γ₀/Z̄₀. Z̄₀ is computed exactly by convolving the
+  | block size profiles
+  e_b(j) = Σ_{|U|=j} r_b(U) up to K with the size prior (valid because ϖ depends on S only through
+  | |S|). Exact iid draws:
+  draw the total size, then block sizes backwards, then each block's sub-model within its size
+  | class.
+- **Discrepancy:** d(S) = log BF(S) − Σ_b log r_b(S ∩ C_b), BF(S) = m(S)/m(∅); bridge γ_φ(S) = γ₀(S)
+  | e^{φ d(S)}, φ ∈ [0, 1];
+  γ₁ ∝ the posterior; Z = m(∅) Σ_S γ₁(S).
+
+--- METHODOLOGY_v3.md, §6.7 Candidate set and candidate grid (first four bullets), lines 211-222 ---
+### 6.7 Candidate set and candidate grid
+
+- **V:** the union of the top 20p scored models by log γ₀, the top 20p scored models by log γ₁ (the
+  | target), and ∅;
+  deduplicated; list ties lexicographic; frozen during each construction.
+- **Restricted log-normaliser:** F_V(t) = log Σ_{S∈V} γ₀(S) e^{t d(S)}.
+- **Restricted ESS** between temperatures u < v: ρ_V(u, v) = exp{2F_V(v) − F_V(u) − F_V(2v − u)},
+  | the population ESS fraction
+  of the weights e^{(v−u)d} under the restricted law q_u(· | V) (evaluating F_V beyond 1 is a
+  | finite-sum moment, not a
+  production temperature).
+- **Construction:** start at u = 0 with the pilot temperatures as targets. For the next pilot
+  | temperature b: if
+  ρ_V(u, b) ≥ 0.90 append b; otherwise bisect on (u, b] with u fixed, at most 60 halvings, and
+  | append the largest tested
+  endpoint that passes; continue from the appended point. Validate strict numerical progress and the
+  | inequality at every
+  appended point. Non-progress, failed validation, or more than T_e intervals → the construction
+  | fails.
+\end{Verbatim}
+
+\end{document}

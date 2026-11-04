@@ -1,0 +1,235 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newcommand{\unc}{\mathrm{unc}}
+\newcommand{\comp}{\mathrm{comp}}
+\newcommand{\gu}{\gamma_0^{\unc}}
+\title{T22 (T16), parts (i), (ii), (iv): aggregate start bounds and endpoint propagation\\[2pt] \large Proof, version 3}
+\author{Theorem-proving run, SMC-BVS v3.0}
+\date{2026-10-22}
+\begin{document}
+\maketitle
+
+\noindent All notation is that of \texttt{STATEMENT.md}. Every claim except (iv-c) is deterministic (and (iv-c) is a direct consequence of (iv-b)): the data $(X,y)$, the partition $C_1,\dots,C_J$ and the reference $S^\circ\in\Omega$ are fixed, and all quantities are exact. We write $S+l:=S\cup\{l\}$, $\varrho:=n+1$, and, for $S\subseteq[p]$, $M_S:=X_SX_S^\top\in\mathbb{R}^{n\times n}$ (with $M_\emptyset=0$). Throughout, $A\succeq B$ is the Loewner order. The letter $e$ always denotes the AGG quantity of the statement (never Euler's number), $e^{k}$ is its $k$-th power, and exponentials are written $\exp(\cdot)$. We use $x^0:=1$ for every $x\ge0$ (in particular $e^0=1$, and $D_b^0=1$ when $D_b=0$).
+
+\section{Preliminaries on the score}
+
+\begin{lemma}[Positivity and a closed form]\label{lem:pos}
+For every $S\subseteq[p]$,
+\[
+t_S=\frac{n}{\varrho}\,y^\top\bigl(I_n-(I_n+\varrho M_S)^{-1}\bigr)y,\qquad D_S=\frac{\det(I_n+\varrho M_S)}{\det(I_n+M_S)} .
+\]
+Consequently $0\le t_S\le \tfrac{n}{n+1}y^\top y$, $Q_S\ge y^\top y/(n+1)\ge 0$, $D_S\ge 1$, and $m(S)\in(0,\infty)$. In particular every table entry $r_b(U)$, every $w(k)$ ($0\le k\le p$), every $\gamma_0(S)$, $\gu(S)$, $\gamma_\varphi(S)$ is strictly positive and finite.
+\end{lemma}
+
+\begin{proof}
+For $S=\emptyset$ both formulas give $t_\emptyset=0$, $D_\emptyset=1$, matching the definitions. Let $S\neq\emptyset$, $k=|S|$, $A=X_S$. The matrices $I_k+\varrho A^\top A$ and $I_n+\varrho AA^\top$ are positive definite, and $(I_n+\varrho AA^\top)A=A(I_k+\varrho A^\top A)$, so $A(I_k+\varrho A^\top A)^{-1}=(I_n+\varrho AA^\top)^{-1}A$. Hence, since $H_S=\varrho A^\top A+I_k$,
+\[
+AH_S^{-1}A^\top=(I_n+\varrho AA^\top)^{-1}AA^\top=\tfrac1\varrho(I_n+\varrho AA^\top)^{-1}\bigl((I_n+\varrho AA^\top)-I_n\bigr)=\tfrac1\varrho\bigl(I_n-(I_n+\varrho M_S)^{-1}\bigr),
+\]
+and $t_S=n\,y^\top AH_S^{-1}A^\top y$ gives the formula for $t_S$. Since $0\prec(I_n+\varrho M_S)^{-1}\preceq I_n$, the matrix $I_n-(I_n+\varrho M_S)^{-1}$ has eigenvalues in $[0,1)$, so $0\le t_S\le \frac{n}{\varrho} y^\top y$ and $Q_S=y^\top y-t_S\ge y^\top y/\varrho\ge 0$. By Sylvester's determinant identity $\det(I_k+\tau A^\top A)=\det(I_n+\tau AA^\top)$ for every real $\tau$, applied with $\tau=\varrho$ and $\tau=1$, we get the formula for $D_S$; if $\lambda_1,\dots,\lambda_n\ge0$ are the eigenvalues of $M_S\succeq0$, then $D_S=\prod_{i=1}^n(1+\varrho\lambda_i)/(1+\lambda_i)\ge1$ because $\varrho\ge1$. Finally $2b_0+Q_S\ge 2b_0>0$, $c_n>0$, so $m(S)=c_nD_S^{-1/2}(2b_0+Q_S)^{-\nu}\in(0,\infty)$. Positivity of the remaining objects follows: $w(k)=\tfrac12/\binom{2p-1}{k}>0$ for $0\le k\le p\le 2p-1$, $W_K\ge w(0)>0$, $r_b(U)=m(U)/m(\emptyset)>0$, and $\exp(\varphi d(S))\in(0,\infty)$.
+\end{proof}
+
+\begin{lemma}[One addition]\label{lem:add}
+For every $S\subseteq[p]$ and $l\notin S$: $Q_{S+l}\le Q_S$, $D_{S+l}/D_S\le n+1$, and hence
+\[
+\frac{m(S+l)}{m(S)}\ \ge\ (n+1)^{-1/2}.
+\]
+\end{lemma}
+
+\begin{proof}
+The matrix $M_S$ does not depend on the order of the columns, and $M_{S+l}=M_S+x_lx_l^\top\succeq M_S$. Then $I_n+\varrho M_{S+l}\succeq I_n+\varrho M_S\succ0$, and inversion reverses the Loewner order on positive definite matrices, so $(I_n+\varrho M_{S+l})^{-1}\preceq (I_n+\varrho M_S)^{-1}$; by Lemma~\ref{lem:pos}, $t_{S+l}\ge t_S$, i.e.\ $Q_{S+l}\le Q_S$.
+
+For the determinant ratio, the matrix determinant lemma $\det(P+xx^\top)=\det P\,(1+x^\top P^{-1}x)$ ($P\succ0$) and Lemma~\ref{lem:pos} give
+\[
+\frac{D_{S+l}}{D_S}=\frac{\det(I_n+\varrho M_S+\varrho\,x_lx_l^\top)/\det(I_n+\varrho M_S)}{\det(I_n+M_S+x_lx_l^\top)/\det(I_n+M_S)}=\frac{1+\varrho\,\xi}{1+\zeta},
+\]
+with $\xi=x_l^\top(I_n+\varrho M_S)^{-1}x_l$ and $\zeta=x_l^\top(I_n+M_S)^{-1}x_l$. Since $I_n+\varrho M_S\succeq I_n+M_S\succ0$, $0\le\xi\le\zeta$. Thus $1+\varrho\xi\le 1+\varrho\zeta\le \varrho(1+\zeta)$ (as $\varrho\ge1$), i.e.\ $D_{S+l}/D_S\le \varrho$.
+
+Therefore, with $\nu>0$ and $2b_0+Q_{S+l}\le 2b_0+Q_S$ (both positive),
+\[
+\frac{m(S+l)}{m(S)}=\Bigl(\frac{D_S}{D_{S+l}}\Bigr)^{1/2}\Bigl(\frac{2b_0+Q_S}{2b_0+Q_{S+l}}\Bigr)^{\nu}\ \ge\ \varrho^{-1/2}\cdot 1 .\qedhere
+\]
+\end{proof}
+
+\begin{lemma}[Prior ratios]\label{lem:prior}
+For $0\le k\le p-1$: $w(k+1)/w(k)=(k+1)/(2p-k-1)$, and $w(k)/w(k+1)\le 2p-1<2p$. If $0\le s<p$ and $1\le j\le p-s$, then
+\[
+\frac{w(s+j)}{w(s)}\ \le\ \frac{(s+j)!}{s!\,(p-s)^j}.
+\]
+\end{lemma}
+
+\begin{proof}
+With $N=2p-1$, $w(k+1)/w(k)=\binom{N}{k}/\binom{N}{k+1}=(k+1)/(N-k)=(k+1)/(2p-k-1)$; its inverse is $(2p-k-1)/(k+1)\le 2p-1$. For the product, $w(s+j)/w(s)=\prod_{i=0}^{j-1}(s+i+1)/(2p-s-i-1)$, and for $0\le i\le j-1\le p-s-1$ we have $2p-s-i-1\ge 2p-s-(p-s-1)-1=p\ge p-s>0$. Hence the product is at most $\prod_{i=0}^{j-1}(s+i+1)/(p-s)=(s+j)!/(s!(p-s)^j)$.
+\end{proof}
+
+\section{Part (i)}
+
+Because $\gamma_0(S)=\gu(S)/W_K$ for $S\in\Omega$ and $S^\circ\in\Omega$,
+\begin{equation}\label{eq:pi0ratio}
+\pi_0(S^\circ)=\frac{\gu(S^\circ)}{\sum_{S\in\Omega}\gu(S)} .
+\end{equation}
+
+\paragraph{Completion bijection.} Let $\mathcal T=\{T: S^\circ\subseteq T\subseteq[p]\}$. The map $\Phi(S)=(S\cup S^\circ,\ S^\circ\setminus S)$ is a bijection from the power set of $[p]$ onto $\mathcal T\times 2^{S^\circ}$, with inverse $(T,M)\mapsto T\setminus M$. Indeed, $(S\cup S^\circ)\setminus(S^\circ\setminus S)=S$; and for $(T,M)\in\mathcal T\times2^{S^\circ}$, $(T\setminus M)\cup S^\circ=T$ (since $M\subseteq S^\circ\subseteq T$) and $S^\circ\setminus(T\setminus M)=S^\circ\cap M=M$. Note $|T\setminus M|=|T|-|M|$.
+
+\begin{lemma}[Completed sum]\label{lem:completed}
+If $q<1$, then $\sum_{T\in\mathcal T}\gu(T)\le (1-q)^{-(s+1)}\,\gu(S^\circ)$.
+\end{lemma}
+
+\begin{proof}
+If $s=p$, then $\mathcal T=\{S^\circ\}$ and the claim is $\gu(S^\circ)\le\gu(S^\circ)$ (here $q=0$). Let $s<p$. For $T\in\mathcal T$ put $V_b=(T\cap C_b)\setminus U_b^*\subseteq C_b\setminus U_b^*$. Since the blocks partition $[p]$, $T\mapsto(V_b)_b$ is a bijection from $\mathcal T$ onto $\prod_b 2^{C_b\setminus U_b^*}$, with $T\cap C_b=U_b^*\cup V_b$ and $|T|=s+\sum_b|V_b|$. Hence
+\[
+\frac{\gu(T)}{\gu(S^\circ)}=\frac{w(|T|)}{w(s)}\prod_b\frac{r_b(U_b^*\cup V_b)}{r_b(U_b^*)} ,
+\]
+and grouping the $T$ by $j=|T|-s$ and expanding the product of sums,
+\[
+\sum_{T\in\mathcal T}\frac{\gu(T)}{\gu(S^\circ)}=\sum_{j=0}^{p-s}\frac{w(s+j)}{w(s)}\,c_j,\qquad c_j:=\sum_{(j_b)_b:\ \sum_b j_b=j}\ \prod_b a_{b j_b},
+\]
+where $j_b$ ranges over nonnegative integers ($a_{bj_b}=0$ when $j_b>|C_b\setminus U_b^*|$).
+
+\emph{Coefficient bound.} For every $b$ and $j\ge0$, $a_{bj}\le D_b^{\,j}/j!$: for $j=0$ both sides equal $1$ ($D_b^0=1$); for $1\le j\le|C_b\setminus U_b^*|$ it is the definition of $D_b$ as a maximum; for larger $j$, $a_{bj}=0$. By the multinomial theorem,
+\[
+c_j\le\sum_{\sum_b j_b=j}\ \prod_b\frac{D_b^{\,j_b}}{j_b!}=\frac{(\sum_b D_b)^j}{j!}=\frac{((p-s)q)^j}{j!}.
+\]
+
+\emph{Prior bound.} By Lemma~\ref{lem:prior} (and trivially for $j=0$), $w(s+j)/w(s)\le (s+j)!/(s!(p-s)^j)$ for $0\le j\le p-s$. Therefore
+\[
+\sum_{T\in\mathcal T}\frac{\gu(T)}{\gu(S^\circ)}\le\sum_{j=0}^{p-s}\frac{(s+j)!}{s!\,(p-s)^j}\cdot\frac{(p-s)^jq^j}{j!}=\sum_{j=0}^{p-s}\binom{s+j}{j}q^j\le\sum_{j=0}^{\infty}\binom{s+j}{j}q^j=(1-q)^{-(s+1)},
+\]
+using $q\ge0$ and the negative binomial series $\sum_{j\ge0}\binom{s+j}{j}x^j=(1-x)^{-(s+1)}$ for $|x|<1$ (obtained by differentiating the geometric series $s$ times and dividing by $s!$).
+\end{proof}
+
+\begin{lemma}[Charging incomplete sets to completions]\label{lem:charge}
+For every $S\subseteq[p]$ with $\Phi(S)=(T,M)$: $\gu(S)\le e^{|M|}\,\gu(T)$.
+\end{lemma}
+
+\begin{proof}
+If $M=\emptyset$ then $S=T$. Let $M\neq\emptyset$; then $s\ge1$, the set over which $e$ is a maximum is nonempty (it contains $(b,\emptyset)$ for any $b$ with $U_b^*\neq\emptyset$), and $\epsilon:=e/(2p)>0$ satisfies $r_b(U)/r_b(U\cup U_b^*)\le\epsilon^{a}$ whenever $U\subseteq C_b$ and $a=|U_b^*\setminus U|>0$. Fix $b$ and put $U=S\cap C_b$. Since $T=S\cup S^\circ$, $T\cap C_b=U\cup U_b^*$, and $a_b:=|U_b^*\setminus U|=|M\cap C_b|$. If $a_b>0$, $r_b(S\cap C_b)/r_b(T\cap C_b)\le\epsilon^{a_b}$; if $a_b=0$ then $U\supseteq U_b^*$ and the ratio is $1=\epsilon^0$. Multiplying over $b$ (the $M\cap C_b$ partition $M$): $\prod_b r_b(S\cap C_b)/r_b(T\cap C_b)\le\epsilon^{|M|}$. For the prior, $|S|=|T|-|M|$ and, by Lemma~\ref{lem:prior} applied $|M|$ times (each intermediate size $k$ satisfies $k\le p-1$), $w(|S|)/w(|T|)\le(2p)^{|M|}$. Hence $\gu(S)/\gu(T)\le(2p\epsilon)^{|M|}=e^{|M|}$.
+\end{proof}
+
+\begin{proposition}[(i-a)]
+If $q<1$, then $\pi_0(S^\circ)\ge(1-q)^{s+1}/(1+e)^s$ and $1-\pi_0(S^\circ)\le (s+1)q/(1-q)+s\,e$.
+\end{proposition}
+
+\begin{proof}
+All terms are positive, so dropping the feasibility restriction and using the bijection $\Phi$, then Lemmas~\ref{lem:charge} and \ref{lem:completed},
+\[
+\begin{aligned}
+\sum_{S\in\Omega}\gu(S)&\le\sum_{S\subseteq[p]}\gu(S)=\sum_{T\in\mathcal T}\sum_{M\subseteq S^\circ}\gu(T\setminus M)\\
+&\le\sum_{T\in\mathcal T}\gu(T)\sum_{M\subseteq S^\circ}e^{|M|}=(1+e)^s\sum_{T\in\mathcal T}\gu(T)\\
+&\le\frac{(1+e)^s}{(1-q)^{s+1}}\,\gu(S^\circ).
+\end{aligned}
+\]
+With \eqref{eq:pi0ratio} this is the first bound. (The completions $T$ may have $|T|>K$; their uncapped weights are used only in this upper bound.) For the second, put $x=(1-q)^{s+1}\in(0,1]$ and $z=(1+e)^{-s}\in(0,1]$. Then $1-\pi_0(S^\circ)\le 1-xz=(1-x)+x(1-z)\le(1-x)+(1-z)$. Bernoulli's inequality gives $1-x\le(s+1)q\le (s+1)q/(1-q)$. The function $g(x)=1-(1+x)^{-s}$ satisfies $g(0)=0$ and $g'(x)=s(1+x)^{-s-1}\le s$ for $x\ge0$, so $1-z=g(e)\le se$.
+\end{proof}
+
+\begin{proposition}[(i-b)]
+$q\le u$. Hence, if $u<1$, both bounds of (i-a) hold with $u$ in place of $q$.
+\end{proposition}
+
+\begin{proof}
+If $s=p$, $q=u=0$. Let $s<p$. For $l\notin S^\circ$, with $b=b(l)$, put $\mu_l=\max\{r_b(T+l)/r_b(T):U_b^*\subseteq T\subseteq C_b\setminus\{l\}\}$; the index set is nonempty because $l\notin U_b^*$ (so $T=U_b^*$ is admissible), and $u=(p-s)^{-1}\sum_{l\notin S^\circ}\mu_l$. Fix $b$ and $V\subseteq C_b\setminus U_b^*$ with $|V|=j\ge1$, and list $V=\{v_1,\dots,v_j\}$ in any order. With $T_i=U_b^*\cup\{v_1,\dots,v_i\}$ we have $U_b^*\subseteq T_{i-1}\subseteq C_b\setminus\{v_i\}$, so telescoping,
+\[
+\frac{r_b(U_b^*\cup V)}{r_b(U_b^*)}=\prod_{i=1}^{j}\frac{r_b(T_{i-1}+v_i)}{r_b(T_{i-1})}\le\prod_{l\in V}\mu_l .
+\]
+Summing over $V$, $j!\,a_{bj}\le j!\sum_{V\subseteq C_b\setminus U_b^*,\,|V|=j}\prod_{l\in V}\mu_l\le\bigl(\sum_{l\in C_b\setminus U_b^*}\mu_l\bigr)^j$, because expanding the $j$-th power of a sum of nonnegative terms produces each product over a $j$-subset exactly $j!$ times (once per ordering), plus further nonnegative terms. Taking $j$-th roots and the maximum over $1\le j\le|C_b\setminus U_b^*|$, $D_b\le\sum_{l\in C_b\setminus U_b^*}\mu_l$ (also when $C_b=U_b^*$, both sides being $0$). The sets $C_b\setminus U_b^*$ partition $[p]\setminus S^\circ$, so $(p-s)q=\sum_bD_b\le\sum_{l\notin S^\circ}\mu_l=(p-s)u$.
+
+If $u<1$ then $q\le u<1$, so (i-a) applies; since $x\mapsto(1-x)^{s+1}$ is nonincreasing and $x\mapsto(s+1)x/(1-x)$ is nondecreasing on $[0,1)$, the bounds with $q$ imply those with $u$.
+\end{proof}
+
+\begin{proposition}[(i-c)]
+If $u<1$, then $\pi_0(S^\circ)\ge(1-u)^{s+1}/[1+(2^s-1)\delta^{\comp}]$.
+\end{proposition}
+
+\begin{proof}
+By the bijection $\Phi$, $\sum_{S\in\Omega}\gu(S)=\sum_{T\in\mathcal T}\sum_{M\subseteq S^\circ}\mathbf 1\{T\setminus M\in\Omega\}\gu(T\setminus M)$. Fix $T\in\mathcal T$. The term $M=\emptyset$ is at most $\gu(T)$. For $\emptyset\ne M\subseteq S^\circ$ with $S:=T\setminus M\in\Omega$: $S\not\supseteq S^\circ$ (it misses $M\neq\emptyset$) and $S\cup S^\circ=T$, so $\gu(S)\le\delta^{\comp}\gu(T)$ by definition of $\delta^{\comp}$ (a maximum over a finite set). There are at most $2^s-1$ such $M$ (the nonempty subsets of $S^\circ$, some of which may be excluded by feasibility; none when $s=0$). Hence $\sum_{S\in\Omega}\gu(S)\le[1+(2^s-1)\delta^{\comp}]\sum_{T\in\mathcal T}\gu(T)$. Since $q\le u<1$ (part (i-b)), Lemma~\ref{lem:completed} and monotonicity give $\sum_{T}\gu(T)\le(1-q)^{-(s+1)}\gu(S^\circ)\le(1-u)^{-(s+1)}\gu(S^\circ)$, and \eqref{eq:pi0ratio} concludes. The argument used the supremum over feasible $S$ only, so the bound also holds with the (larger) supremum over all $S\subseteq[p]$, $S\not\supseteq S^\circ$.
+\end{proof}
+
+\section{Part (ii)}
+
+Assume $S_0\in\Omega$.
+
+\begin{proposition}[(ii-a)]
+$\pi_0(S_0)=\pi_0(S^\circ)\,[w(s_0)/w(s)]\,\prod_b r_b(S_0\cap C_b)/r_b(S^\circ\cap C_b)$.
+\end{proposition}
+
+\begin{proof}
+For $S\in\Omega$, $\pi_0(S)=w(|S|)\prod_b r_b(S\cap C_b)/(W_K\bar Z_0)$, and $\pi_0(S^\circ)>0$ (Lemma~\ref{lem:pos}). Divide the expression for $S_0$ by that for $S^\circ$.
+\end{proof}
+
+\begin{lemma}[One feasible addition under $\pi_0$]\label{lem:pi0add}
+If $S\in\Omega$, $k=|S|<K$ and $l\notin S$, then $S+l\in\Omega$ and $\pi_0(S+l)\ge r_k\,\pi_0(S)$.
+\end{lemma}
+
+\begin{proof}
+$|S+l|=k+1\le K$. Let $b=b(l)$ and $U=S\cap C_b$; only block $b$ changes, $(S+l)\cap C_b=U+l$. By (ii-a)'s computation and Lemmas~\ref{lem:prior} and \ref{lem:add} (note $k\le K-1\le p-1$),
+\[
+\frac{\pi_0(S+l)}{\pi_0(S)}=\frac{w(k+1)}{w(k)}\cdot\frac{r_b(U+l)}{r_b(U)}=\frac{k+1}{2p-k-1}\cdot\frac{m(U+l)}{m(U)}\ge\frac{k+1}{(2p-k-1)\sqrt{n+1}}=r_k.\qedhere
+\]
+\end{proof}
+
+\begin{proposition}[(ii-b)]
+If $S^\circ\subseteq S_0$, then $\pi_0(S_0)/\pi_0(S^\circ)\ge\prod_{j=0}^{s_0-s-1}r_{s+j}$.
+\end{proposition}
+
+\begin{proof}
+If $s_0=s$ then $S_0=S^\circ$ and both sides equal $1$. Otherwise list $S_0\setminus S^\circ=\{l_1,\dots,l_{s_0-s}\}$ and put $S^{(i)}=S^\circ\cup\{l_1,\dots,l_i\}$, so $|S^{(i)}|=s+i$. For $0\le i\le s_0-s-1$, $|S^{(i)}|=s+i<s_0\le K$, so Lemma~\ref{lem:pi0add} gives $\pi_0(S^{(i+1)})\ge r_{s+i}\pi_0(S^{(i)})$. Multiplying these $s_0-s$ inequalities (all terms positive) gives the claim, since $S^{(0)}=S^\circ$ and $S^{(s_0-s)}=S_0$.
+\end{proof}
+
+\begin{remark}
+(ii) bounds $\pi_0(S_0)$ only relative to $\pi_0(S^\circ)$; an absolute bound needs a lower bound on the normalised mass $\pi_0(S^\circ)$, such as part (i).
+\end{remark}
+
+\section{Part (iv)}
+
+Assume $S_0\in\Omega$.
+
+\begin{lemma}[Endpoints and geometric interpolation]\label{lem:bridge}
+$q_1=\pi$, and for every $\varphi\in[0,1]$ and $S\in\Omega$, $\gamma_\varphi(S)=\gamma_0(S)^{1-\varphi}\gamma_1(S)^{\varphi}$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:pos}, $d(S)$ is finite and
+\[
+\gamma_1(S)=\gamma_0(S)\exp(d(S))=\varpi(S)\prod_br_b(S\cap C_b)\cdot\frac{\mathrm{BF}(S)}{\prod_br_b(S\cap C_b)}=\frac{\varpi(S)m(S)}{m(\emptyset)} .
+\] Hence $q_1(S)=\varpi(S)m(S)/\sum_{S'\in\Omega}\varpi(S')m(S')=\pi(S)$. Also $\gamma_0\exp(\varphi d)=\gamma_0^{1-\varphi}(\gamma_0\exp(d))^{\varphi}$.
+\end{proof}
+
+\begin{proposition}[(iv-a), (iv-b)]
+For every $\varphi\in[0,1]$, $1/q_\varphi(S_0)-1\le R_0^{1-\varphi}R_1^{\varphi}\le\max(R_0,R_1)$ (with $0^0=1$). Hence $\inf_{\varphi\in[0,1]}q_\varphi(S_0)\ge\min\{\pi_0(S_0),\pi(S_0)\}$, equivalently $\sup_{\varphi\in[0,1]}[1-q_\varphi(S_0)]\le\max\{1-\pi_0(S_0),1-\pi(S_0)\}$.
+\end{proposition}
+
+\begin{proof}
+Since $\gamma_\varphi>0$ on $\Omega$, $1/q_\varphi(S_0)-1=\sum_{S\in\Omega\setminus\{S_0\}}\gamma_\varphi(S)/\gamma_\varphi(S_0)$. With $\alpha_S=\gamma_0(S)/\gamma_0(S_0)$ and $\beta_S=\gamma_1(S)/\gamma_1(S_0)$ (positive), Lemma~\ref{lem:bridge} gives $\gamma_\varphi(S)/\gamma_\varphi(S_0)=\alpha_S^{1-\varphi}\beta_S^{\varphi}$, and $R_0=\sum_{S\ne S_0}\alpha_S$, $R_1=\sum_{S\neq S_0}\beta_S$ (sums over $\Omega\setminus\{S_0\}$), using $q_0=\pi_0$, $q_1=\pi$.
+
+Since $n\ge3$ and $p\ge1$, $K\ge1$, so $\emptyset$ and $\{1\}$ both lie in $\Omega$ and $\Omega\setminus\{S_0\}\neq\emptyset$; hence $R_0,R_1>0$ (the convention $0^0=1$ in the statement is never needed). For $\varphi\in\{0,1\}$ the first inequality is an equality. For $\varphi\in(0,1)$, Hölder's inequality with conjugate exponents $1/(1-\varphi)$ and $1/\varphi$ gives
+\[
+\sum_{S\ne S_0}\alpha_S^{1-\varphi}\beta_S^{\varphi}\le\Bigl(\sum_{S\neq S_0}\alpha_S\Bigr)^{1-\varphi}\Bigl(\sum_{S\ne S_0}\beta_S\Bigr)^{\varphi}=R_0^{1-\varphi}R_1^{\varphi}.
+\]
+Finally $R_0^{1-\varphi}R_1^{\varphi}\le\max(R_0,R_1)^{1-\varphi}\max(R_0,R_1)^{\varphi}=\max(R_0,R_1)$.
+
+For (iv-b): $q_\varphi(S_0)=1/(1+[1/q_\varphi(S_0)-1])\ge1/(1+\max(R_0,R_1))=\min\{1/(1+R_0),1/(1+R_1)\}=\min\{q_0(S_0),q_1(S_0)\}=\min\{\pi_0(S_0),\pi(S_0)\}$, for every $\varphi\in[0,1]$. Taking the infimum gives the claim; the supremum form is the same statement.
+\end{proof}
+
+\begin{proposition}[(iv-c)]
+Along a sequence of data sets with $P_0(S_0\in\Omega)\to1$, $1-\pi(S_0)\to0$ and $1-\pi_0(S_0)\to0$ in $P_0$-probability, $\sup_{\varphi\in[0,1]}[1-q_\varphi(S_0)]\to0$ in $P_0$-probability.
+\end{proposition}
+
+\begin{proof}
+(Masses of $S_0$ are $0$ when $S_0\notin\Omega$.) Let $\Sigma_n=\sup_{\varphi\in[0,1]}[1-q_\varphi(S_0)]$. On $E_n=\{S_0\in\Omega\}$, (iv-b) gives $\Sigma_n\le\max\{1-\pi_0(S_0),1-\pi(S_0)\}\le[1-\pi_0(S_0)]+[1-\pi(S_0)]$. For $\eta>0$,
+\[
+P_0(\Sigma_n>\eta)\le P_0(E_n^c)+P_0\bigl(1-\pi_0(S_0)>\eta/2\bigr)+P_0\bigl(1-\pi(S_0)>\eta/2\bigr)\to0 .
+\]
+Measurability: $\varphi\mapsto q_\varphi(S_0)$ is continuous on $[0,1]$ (a ratio of finite sums of positive functions $\gamma_0(S)\exp(\varphi d(S))$), so $\Sigma_n$ equals the supremum over rational $\varphi$ and is measurable whenever each $q_\varphi(S_0)$ is; in any case the displayed bound holds with outer probability.
+\end{proof}
+
+\begin{remark}[Scope]
+No assumption on the noise, the design, or the score expansion (EXP or EXP$'$) was used: (i), (ii) and (iv) are identities and inequalities valid for every data set, every partition with positive tables (for (ii-b): tables equal to Bayes factors), and every feasible reference. Statistical content enters only through (iv-c)'s hypotheses.
+\end{remark}
+
+\end{document}

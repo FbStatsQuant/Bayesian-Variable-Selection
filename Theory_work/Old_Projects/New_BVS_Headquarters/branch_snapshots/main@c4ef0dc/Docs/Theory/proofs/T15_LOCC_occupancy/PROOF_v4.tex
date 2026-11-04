@@ -1,0 +1,211 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newcommand{\Pc}{\mathbb{P}_{\mathcal C}}
+\newcommand{\Ec}{\mathbb{E}_{\mathcal C}}
+\newcommand{\A}{\mathfrak{A}}
+\title{T15 (L-OCC): occupancy from an evidence lower tail\\[2pt]\large Proof, version 4}
+\author{SMC-BVS v3 theory programme}
+\date{2026-10-22}
+\begin{document}
+\maketitle
+
+\section{Setting and hypotheses}
+
+We use the notation of STATEMENT.md. $\Omega$ is the finite model space, $\pi=\gamma_1/Z$ the posterior with
+evidence $Z\in(0,\infty)$, and $\mathcal C$ a successful frozen calibration; $\Pc$ and $\Ec$ are the probability and
+expectation over the final-run randomness given $\mathcal C$ and the data. For an island $r$, $\hat Z_r$ is its
+evidence estimate, which under EX-A is a finite, strictly positive random variable, and
+\[
+  W_r:=\hat Z_r/Z \in (0,\infty).
+\]
+Fix a recording position $\tau\in\mathcal T$ and a set $\A\subseteq\Omega$ fixed given $\mathcal C$, and let
+\[
+  f_r:=\hat q_{r,\tau}(1_{\A^c})=\frac1N\sum_{i=1}^N 1\{S_i(\tau)\notin\A\}\in[0,1].
+\]
+Since $\A$ is fixed given $\mathcal C$, the function $f=1_{\A^c}$ is bounded and fixed given $\mathcal C$, so
+hypothesis (H-T12) applies to it and gives
+\begin{equation}\label{eq:id}
+  \Ec[W_r f_r]=\frac{\Ec[\hat Z_r\,\hat q_{r,\tau}(1_{\A^c})]}{Z}=\frac{Z\,\pi(1_{\A^c})}{Z}=\pi(\A^c).
+\end{equation}
+For parts (i)--(iii) only the inequality $\Ec[W_rf_r]\le\pi(\A^c)$ is used. The random variable $W_rf_r$ is
+nonnegative, and by \eqref{eq:id} it is integrable.
+
+Throughout, $r$, $\tau$ and $\A$ are fixed, and we drop the subscript $r$: $W=W_r$, $f=f_r$.
+
+\section{Two elementary facts}
+
+\begin{lemma}[Splitting at $c$]\label{lem:split}
+Let $W\ge0$ and $f\in[0,1]$ be random variables on a common probability space, with $\mathbb E[Wf]\le a<\infty$.
+Then for every $c>0$,
+\[
+  \mathbb E\big[f\,1\{W\ge c\}\big]\le a/c .
+\]
+\end{lemma}
+\begin{proof}
+On the event $\{W\ge c\}$ we have $W/c\ge1$ and $f\ge0$, hence $f\le fW/c$. Off this event,
+$f\,1\{W\ge c\}=0\le fW/c$ because $f,W\ge0$. So pointwise
+$f\,1\{W\ge c\}\le fW/c$, and taking expectations gives $\mathbb E[f1\{W\ge c\}]\le \mathbb E[fW]/c\le a/c$.
+\end{proof}
+
+\begin{lemma}[Markov]\label{lem:markov}
+If $V\ge0$ is a random variable and $s>0$, then $\mathbb P(V\ge s)\le \mathbb E V/s$.
+\end{lemma}
+\begin{proof}
+$s\,1\{V\ge s\}\le V$ pointwise; take expectations.
+\end{proof}
+
+\section{Proof of (i): the mean bound}
+
+Fix $c\in(0,1)$. Since $0\le f\le1$, we have $\Ec f\le1$. Write $f=f\,1\{W\ge c\}+f\,1\{W<c\}$. By
+Lemma~\ref{lem:split} with $a=\pi(\A^c)$ (justified by \eqref{eq:id}), $\Ec[f1\{W\ge c\}]\le\pi(\A^c)/c$. Since
+$f\le1$, $\Ec[f1\{W<c\}]\le\Pc(W<c)$. Adding,
+\[
+  \Ec f\le \pi(\A^c)/c+\Pc(W<c).
+\]
+Together with $\Ec f\le1$ this is $\Ec f\le\min\{1,\ \pi(\A^c)/c+\Pc(W<c)\}$. \qed
+
+\section{Proof of (ii): the tail bound}
+
+Fix $c,u\in(0,1)$. Decompose
+\[
+  \{f>u\}\subseteq\big(\{f>u\}\cap\{W\ge c\}\big)\cup\{W<c\}.
+\]
+On $\{f>u\}\cap\{W\ge c\}$ we have $fW\ge fc>uc$, using $W\ge c>0$ and $f>u>0$. Hence
+$\{f>u\}\cap\{W\ge c\}\subseteq\{fW\ge cu\}$. By Lemma~\ref{lem:markov} applied to $V=fW\ge0$ and $s=cu>0$, and by
+\eqref{eq:id},
+\[
+  \Pc(fW\ge cu)\le \Ec[fW]/(cu)\le\pi(\A^c)/(cu).
+\]
+By the union bound,
+\[
+  \Pc(f>u)\le\pi(\A^c)/(cu)+\Pc(W<c). \qquad\qed
+\]
+
+\section{Proof of (iii): the lower tail from an $L^1$ bound}
+
+Assume $\Ec|W-1|\le B$, and fix $c\in(0,1)$. On $\{W<c\}$, $|W-1|\ge 1-W>1-c>0$. Hence
+$\{W<c\}\subseteq\{|W-1|\ge 1-c\}$, and Lemma~\ref{lem:markov} with $V=|W-1|$ and $s=1-c>0$ gives
+\[
+  \Pc(W<c)\le\Pc(|W-1|\ge1-c)\le\frac{\Ec|W-1|}{1-c}\le\frac{B}{1-c}.
+\]
+Substituting this bound into (i) and (ii) gives, for every $c,u\in(0,1)$,
+\[
+  \Ec f\le\min\Big\{1,\ \frac{\pi(\A^c)}{c}+\frac{B}{1-c}\Big\},\qquad
+  \Pc(f>u)\le\frac{\pi(\A^c)}{cu}+\frac{B}{1-c}. \qquad\qed
+\]
+
+\section{Proof of (iv): the lower tail must be islandwise}
+
+Fix $c,u\in(0,1)$ and $a\in(0,cu/4]$. Note $a<1/4$.
+
+\subsection{Proof of (iv-a)}
+Set
+\[
+  \varepsilon:=\frac12\min\Big\{c,\ \frac{4(1-c)}3,\ \frac{4a}3\Big\}>0,\qquad
+  h:=4-3\varepsilon,\qquad
+  b:=\frac{a-3\varepsilon/4}{h}.
+\]
+\emph{Elementary bounds on the constants.} Since $\varepsilon\le 2a/3\le cu/6<1/6$, we have $h\in(7/2,4)$. Since
+$3\varepsilon/4\le a/2<a$, we have $b>0$; and $b<a/h<a/3<1/12$. Moreover $\varepsilon\le c/2<c$, and
+$\varepsilon\le 2(1-c)/3$ gives $3\varepsilon/4\le(1-c)/2$, hence
+\begin{equation}\label{eq:h4}
+  h/4=1-3\varepsilon/4\ \ge\ (1+c)/2\ >\ c .
+\end{equation}
+
+\emph{The law.} Let $(W_r,f_r)$, $r=1,\dots,4$, be i.i.d.\ copies of a pair $(W,f)$ with the three-point law
+\[
+  \mathbb P\big((W,f)=(\varepsilon,1)\big)=\tfrac34,\qquad
+  \mathbb P\big((W,f)=(h,1)\big)=b,\qquad
+  \mathbb P\big((W,f)=(h,0)\big)=\tfrac14-b .
+\]
+The probabilities are positive (as $0<b<1/12$) and sum to $1$. Clearly $W\in\{\varepsilon,h\}\subset(0,\infty)$, so
+$W>0$ strictly, and $f\in\{0,1\}$. Also $\mathbb P(W=h)=1/4$ and $\mathbb P(f=1)=3/4+b$.
+
+\emph{The required moment properties.}
+$\mathbb E W=\tfrac34\varepsilon+\tfrac14h=\tfrac34\varepsilon+1-\tfrac34\varepsilon=1$, and
+$\mathbb E[Wf]=\tfrac34\varepsilon+hb=\tfrac34\varepsilon+a-\tfrac34\varepsilon=a$.
+
+\emph{The pooled lower tail.} Let $K:=\#\{r:W_r=h\}\sim\mathrm{Bin}(4,1/4)$. Then
+$\bar W=\tfrac14\big(Kh+(4-K)\varepsilon\big)$. If $K=0$, then $\bar W=\varepsilon<c$. If $K\ge1$, then
+$\bar W\ge h/4>c$ by \eqref{eq:h4}. Hence $\{\bar W<c\}=\{K=0\}$ and $\mathbb P(\bar W<c)=(3/4)^4=81/256$.
+
+\emph{The two left-hand sides.} $\mathbb E f_1=\mathbb P(f_1=1)=\tfrac34+b>\tfrac34$. Since $f_1\in\{0,1\}$ and
+$u<1$, $\{f_1>u\}=\{f_1=1\}$, so $\mathbb P(f_1>u)=\tfrac34+b>\tfrac34=\tfrac{192}{256}$.
+
+\emph{The two right-hand sides.} Since $a\le cu/4$, $a/c\le u/4<1/4$ and $a/(cu)\le1/4$. Hence
+\[
+  \frac ac+\mathbb P(\bar W<c)<\frac{64}{256}+\frac{81}{256}=\frac{145}{256},\qquad
+  \frac a{cu}+\mathbb P(\bar W<c)\le\frac{64}{256}+\frac{81}{256}=\frac{145}{256}.
+\]
+Since $145/256<192/256$, both
+\[
+  \mathbb E f_1> a/c+\mathbb P(\bar W<c)\qquad\text{and}\qquad \mathbb P(f_1>u)>a/(cu)+\mathbb P(\bar W<c)
+\]
+hold. As $\min\{1,x\}\le x$ for every real $x$, also $\mathbb E f_1>\min\{1,\ a/c+\mathbb P(\bar W<c)\}$. The pairs are
+independent and identically distributed and satisfy $W_r>0$, $f_r\in\{0,1\}$, $\mathbb E W_r=1$ and
+$\mathbb E[W_rf_r]=a$, which proves (iv-a). \qed
+
+\subsection{Proof of (iv-b)}
+Let $\Omega'$ be a finite set, $\pi'$ a probability on $\Omega'$, $\A'\subseteq\Omega'$ with $\pi'(\A'^c)=a$, and
+$N\ge1$. Since $a\in(0,1)$, both $\pi'(\A'^c)=a>0$ and $\pi'(\A')=1-a>0$, so the conditional laws
+\[
+  \pi'_{\rm out}:=\pi'(\,\cdot\mid\A'^c),\qquad \pi'_{\rm in}:=\pi'(\,\cdot\mid\A')
+\]
+are well defined; $\pi'_{\rm out}$ is carried by $\A'^c$ and $\pi'_{\rm in}$ by $\A'$.
+
+\emph{Construction.} Take the i.i.d.\ pairs $(W_r,f_r)$ of (iv-a). Independently across $r$, and given $(W_r,f_r)$,
+draw $S_{r,1},\dots,S_{r,N}$ i.i.d.\ from $\pi'_{\rm out}$ if $f_r=1$ and from $\pi'_{\rm in}$ if $f_r=0$. (Formally:
+let $(U_{r,i})$ and $(V_{r,i})$, $r\le4$, $i\le N$, be independent families of i.i.d.\ variables with laws
+$\pi'_{\rm out}$ and $\pi'_{\rm in}$, independent of the pairs, and set $S_{r,i}:=U_{r,i}$ if $f_r=1$ and
+$S_{r,i}:=V_{r,i}$ if $f_r=0$.) The four quadruples $\big(W_r,f_r,(U_{r,i})_i,(V_{r,i})_i\big)$ are i.i.d.: the
+pairs $(W_r,f_r)$ are i.i.d., the families $(U_{r,i})$ and $(V_{r,i})$ are independent of each other and of the
+pairs, and their laws do not depend on $r$. Since $(W_r,(S_{r,i})_i)$ is the same measurable function of each
+quadruple, the four pairs $(W_r,(S_{r,i})_{i\le N})$ are i.i.d.
+
+\emph{The outside fraction.} If $f_r=1$, every $S_{r,i}\in\A'^c$, so $\hat q_r(1_{\A'^c})=1$; if $f_r=0$, every
+$S_{r,i}\in\A'$, so $\hat q_r(1_{\A'^c})=0$. Hence $f_r=\hat q_r(1_{\A'^c})$.
+
+\emph{The identity.} Fix $g:\Omega'\to\mathbb R$ (bounded, as $\Omega'$ is finite). Since $(U_{r,i})$ and $(V_{r,i})$ are
+independent of $(W_r,f_r)$,
+\[
+  \mathbb E\big[W_r\,\hat q_r(g)\,\big|\,W_r,f_r\big]
+  =W_r\Big(f_r\,\pi'_{\rm out}(g)+(1-f_r)\,\pi'_{\rm in}(g)\Big),
+\]
+with $\pi'_{\rm out}(g)=\pi'(g1_{\A'^c})/a$ and $\pi'_{\rm in}(g)=\pi'(g1_{\A'})/(1-a)$. All variables involved are
+bounded, so taking expectations and using $\mathbb E[W_rf_r]=a$ and $\mathbb E[W_r(1-f_r)]=\mathbb EW_r-\mathbb E[W_rf_r]=1-a$,
+\[
+  \mathbb E\big[W_r\,\hat q_r(g)\big]=a\cdot\frac{\pi'(g1_{\A'^c})}{a}+(1-a)\cdot\frac{\pi'(g1_{\A'})}{1-a}
+  =\pi'(g1_{\A'^c})+\pi'(g1_{\A'})=\pi'(g).
+\]
+Multiplying by any constant $Z'>0$ gives $\mathbb E[(Z'W_r)\,\hat q_r(g)]=Z'\pi'(g)$, the identity of (H-T12) with
+$\hat Z_r:=Z'W_r$, for every test function $g$. Each island has a single population; using it at every recording
+position ($\hat q_{r,\tau}:=\hat q_r$ for all $\tau\in\mathcal T$) gives the identity at every position. This proves
+(iv-b). \qed
+
+\begin{remark}[Consistency with (i)--(iii)]
+In the example of (iv-a), the islandwise bounds hold, as they must. Since $\varepsilon<c<h$,
+$\mathbb P(W_1<c)=\mathbb P(W_1=\varepsilon)=3/4$, so $a/c+\mathbb P(W_1<c)\ge3/4+b=\mathbb E f_1$ because
+$b<a/3<a/c$; and $a/(cu)+\mathbb P(W_1<c)\ge 3/4+b=\mathbb P(f_1>u)$ because $b<a/3<a/(cu)$. The pooled version fails
+because of the event that island~1 has small evidence $W_1=\varepsilon$ and $f_1=1$ while another island has large
+evidence $h$, which keeps $\bar W$ above $c$. Part (iv) is a non-implication about substituting the pooled lower
+tail into (i)--(ii); it does not claim that the SMC final run, for a particular data set and calibration, realises
+this law.
+\end{remark}
+
+\begin{remark}[Scope and use of hypotheses]
+Parts (i)--(iii) bound the law of $f_r$ under $\Pc$; they give no bound on the outside fraction of a realised
+population. Parts (i) and (ii) use only $W_r\ge0$, $0\le f_r\le1$ and the instance $f=1_{\A^c}$ of (H-T12) (in
+fact only $\Ec[W_rf_r]\le\pi(\A^c)$). The first claim of part (iii), $\Pc(W_r<c)\le B/(1-c)$, uses only its own hypothesis
+$\Ec|W_r-1|\le B$ (which also makes $W_r$ integrable) and Markov's inequality, and not (H-T12); its
+``consequently'' clause substitutes this bound into (i) and (ii), and so rests on the same instance of (H-T12) as
+they do. Part (iv) concerns explicitly constructed laws
+and uses no property of the final run. Assumption EXP (or EXP$'$) is not used anywhere.
+\end{remark}
+
+\end{document}

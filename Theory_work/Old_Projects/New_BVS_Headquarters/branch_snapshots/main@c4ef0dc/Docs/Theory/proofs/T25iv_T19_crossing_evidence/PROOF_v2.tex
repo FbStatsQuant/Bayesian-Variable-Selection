@@ -1,0 +1,189 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[hidelinks,hypertexnames=false]{hyperref}
+\newcommand{\Ec}{\mathbb E_c}
+\newcommand{\Vc}{\operatorname{Var}_c}
+\newcommand{\qh}{\widehat q}
+\newcommand{\Zh}{\widehat Z}
+\newtheorem{theorem}{Theorem}
+\title{T25(iv): Conditional evidence variance under PW2}
+\author{SMC-BVS v3 proof run}
+\date{22 October 2026}
+\begin{document}
+\maketitle
+\noindent\textbf{Scope.} This document proves only the conditional assertion
+in T25(iv), including four-island pooling. It does not establish PW2 for
+unrestricted inputs. All notation and hypotheses are those of
+\texttt{STATEMENT.md}. The proof is not an adoption of the result.
+
+\section{Setting and precise conclusion}
+Fix the data and a successful frozen calibration value $c$. The finite
+state space is $\Omega=\{S\subseteq[p]:|S|\le K\}$, with
+$K=\min(p,\lfloor n/2\rfloor)$. The method's positive bridge is
+$\gamma_\varphi=\gamma_0 e^{\varphi d}$, with
+$\bar Z_\varphi=\sum_{S\in\Omega}\gamma_\varphi(S)$ and
+$q_\varphi=\gamma_\varphi/\bar Z_\varphi$.
+Here $\gamma_0(S)=\varpi(S)\prod_b r_b(S\cap C_b)$,
+$r_b(U)=m(U)/m(\emptyset)$, and
+$d(S)=\log[m(S)/m(\emptyset)]-\sum_b\log r_b(S\cap C_b)$.
+Consequently $\gamma_1(S)=\varpi(S)m(S)/m(\emptyset)$.
+
+Write $N=N_e$ for the number of particles in one island and fix
+$0=\varphi_0<\cdots<\varphi_T=1$. Put
+\[
+ q_t=q_{\varphi_t},\qquad Z_t=m(\emptyset)\bar Z_{\varphi_t},\qquad
+ G_t=e^{(\varphi_t-\varphi_{t-1})d},\qquad
+ c_t=\frac{Z_t}{Z_{t-1}},\qquad g_t=\frac{G_t}{c_t}.
+\]
+Thus $Z_T=Z$, $q_{t-1}(G_t)=c_t$, and, for every function $f$,
+\begin{equation}\label{eq:bridge}
+ q_{t-1}(g_t f)=q_t(f).
+\end{equation}
+The empirical measure $\qh_t$ is taken after stage-$t$ resampling and
+mutation. The particles start iid from $q_0$, with the exact normaliser
+$\Zh_0=Z_0$. The evidence update and its normalised form are
+\begin{equation}\label{eq:path}
+ \Zh_t=\Zh_{t-1}\qh_{t-1}(G_t),\qquad
+ W_t:=\frac{\Zh_t}{Z_t}
+       =W_{t-1}\qh_{t-1}(g_t),\qquad W_0=1.
+\end{equation}
+Each stage resamples multinomially and mutates with the method's
+$q_t$-invariant kernel $K_t$. All settings are fixed before final
+randomness (CAL), and all operations use exact arithmetic and fresh ideal
+streams (EX-A, EX-S). The four final islands use independent streams.
+No conditioning on final diagnostics is performed.
+
+\begin{theorem}[T25(iv), conditional form]\label{thm:main}
+For each $t=1,\ldots,T$, let $a_t,\nu_t$ be finite nonnegative constants
+fixed given $c$. Suppose that the actual island satisfies
+\begin{equation}\tag{PW2}\label{eq:pw2}
+ \Ec\!\left[W_{t-1}^2
+       \{(\qh_{t-1}(g_t))^2-1\}\right]
+ \le \frac{a_t}{N}\Ec W_{t-1}^2+\nu_t.
+\end{equation}
+Then
+\begin{equation}\label{eq:bound}
+ \Vc(W_T)\le B_T:=
+ \prod_{t=1}^T\left(1+\frac{a_t}{N}\right)-1
+ +\sum_{s=1}^T\nu_s
+       \prod_{t=s+1}^T\left(1+\frac{a_t}{N}\right).
+\end{equation}
+If each of the four final islands satisfies PW2 with these same constants,
+then for $W_{\rm pool}=\frac14\sum_{r=1}^4 W_{r,T}=\Zh/Z$,
+\begin{equation}\label{eq:poolbound}
+ \Vc(W_{\rm pool})\le\frac{B_T}{4}.
+\end{equation}
+Empty products are one. Here $N=N_e$ throughout.
+\end{theorem}
+
+\section{Finiteness and the first moment}
+Every $d(S)$ is finite. Write $d_- =\min_\Omega d$ and
+$d_+=\max_\Omega d$. Since the grid is increasing,
+\[
+ e^{\varphi_t d_-}\le \frac{\Zh_t}{Z_0}
+                       \le e^{\varphi_t d_+}.
+\]
+Also $Z_t>0$ is deterministic given $c$. Therefore $W_t$ has finite
+moments of every order for each fixed $c$ and $t$. In particular all
+expectations in PW2 and the following calculations are well defined.
+
+Wave-1 T12(i.a), transferred to conditional calibration in T12(iii),
+gives $\Ec[\Zh_t\qh_t(f)]=Z_tq_t(f)$. For completeness, its needed
+first-moment argument follows directly from the prescribed operations.
+Let $\mathcal F_{t-1}$ include the island's history through stage
+$t-1$. Multinomial resampling and mutation give
+\begin{equation}\label{eq:condmean}
+ \mathbb E_c[\qh_t(f)\mid\mathcal F_{t-1}]
+ =\frac{\qh_{t-1}(G_t K_t f)}{\qh_{t-1}(G_t)}.
+\end{equation}
+Indeed each child first chooses a parent with weights proportional to
+$G_t$ and then moves with $K_t$; averaging its conditional expectation
+over the $N$ children proves the identity.
+
+We prove simultaneously for all functions $f:\Omega\to\mathbb R$ that
+\begin{equation}\label{eq:weighted}
+ \Ec[W_t\qh_t(f)]=q_t(f).
+\end{equation}
+At $t=0$ this follows from iid $q_0$ starts and $W_0=1$. For the
+induction step, $W_t$ in \eqref{eq:path} is
+$\mathcal F_{t-1}$-measurable. Multiplying \eqref{eq:condmean} by it,
+taking expectation and using the induction hypothesis with the
+deterministic function $g_tK_tf$ gives
+\begin{align*}
+ \Ec[W_t\qh_t(f)]
+ &=\Ec[W_{t-1}\qh_{t-1}(g_tK_tf)]\\
+ &=q_{t-1}(g_tK_tf)=q_t(K_tf)=q_t(f).
+\end{align*}
+The last two equalities use \eqref{eq:bridge} and invariance. With
+$f\equiv1$ this yields
+\begin{equation}\label{eq:mean}
+ \Ec W_t=1,\qquad \Vc(W_t)=\Ec W_t^2-1.
+\end{equation}
+This is an unconditional first moment under the frozen-run law; it does
+not assert $\mathbb E_c[W_t\mid\mathcal F_{t-1}]=W_{t-1}$.
+
+\section{Second-moment recursion and its solution}
+Set $M_t=\Ec W_t^2$ and $\alpha_t=1+a_t/N\ge1$.
+Squaring the pathwise update \eqref{eq:path} and subtracting
+$W_{t-1}^2$ gives the exact identity
+\begin{equation}\label{eq:increment}
+ M_t-M_{t-1}
+ =\Ec\!\left[W_{t-1}^2
+       \{(\qh_{t-1}(g_t))^2-1\}\right].
+\end{equation}
+Applying PW2 to this identity yields
+\begin{equation}\label{eq:rec}
+ M_t\le\alpha_t M_{t-1}+\nu_t,\qquad M_0=1.
+\end{equation}
+By \eqref{eq:increment}, PW2 is equivalent to the recursion
+$M_t\le(1+a_t/N)M_{t-1}+\nu_t$. The theorem therefore adds no control of
+the evidence beyond PW2 itself; all of its substance lies in establishing
+PW2 with useful constants, which is not done here.
+Define
+\[
+ U_0=1,\qquad
+ U_t=\prod_{j=1}^t\alpha_j
+       +\sum_{s=1}^t\nu_s\prod_{j=s+1}^t\alpha_j.
+\]
+Separating the last term of the sum shows
+$U_t=\alpha_t U_{t-1}+\nu_t$. Induction now proves $M_t\le U_t$:
+the base case is equality, and if $M_{t-1}\le U_{t-1}$ then
+\[
+ M_t\le\alpha_tM_{t-1}+\nu_t
+       \le\alpha_tU_{t-1}+\nu_t=U_t,
+\]
+where the second inequality uses $\alpha_t\ge0$.
+By \eqref{eq:mean}, $\Vc(W_T)=M_T-1\le U_T-1=B_T$.
+This proves \eqref{eq:bound}, with the slack at stage $s$ multiplied
+only by the factors from later stages $t>s$.
+
+\section{Four independent islands}
+Under CAL and EX-S, conditional on $c$, each island is a measurable
+function of the fixed settings and its own fresh ideal stream. Thus the
+four evidence ratios are independent and identically distributed given
+$c$, as also established in wave-1 T12(iv.c). Each has mean one by
+\eqref{eq:mean}, and each has variance at most $B_T$. Hence
+\[
+ \Vc\!\left(\frac14\sum_{r=1}^4W_{r,T}\right)
+ =\frac1{16}\sum_{r=1}^4\Vc(W_{r,T})
+ \le\frac{4B_T}{16}=\frac{B_T}{4}.
+\]
+The factor $1/4$ applies to both terms in \eqref{eq:bound}.
+It is not obtained by replacing $N_e$ with $4N_e$ inside that formula.
+Terminal rounds and local search leave the evidence unchanged, so this
+is the bound for the reported pooled evidence. Since the argument holds
+for each successful frozen calibration, it holds almost surely given
+$\mathcal C$ on calibration success. This completes the proof.
+\hfill$\square$
+
+\paragraph{Dependency record.}
+The wave-1 source is \texttt{COLLECTED\_PROOFS\_v2.tex}, chapter
+``T12 (T8): frozen-run evidence and recorded Rao--Blackwell identities'',
+parts (i.a), (iii), (iv.c). These are used as proved, not adopted results;
+the needed first-moment induction is also displayed above. No unproved
+v3 conjecture is invoked. In particular, PW2 remains a hypothesis.
+\end{document}

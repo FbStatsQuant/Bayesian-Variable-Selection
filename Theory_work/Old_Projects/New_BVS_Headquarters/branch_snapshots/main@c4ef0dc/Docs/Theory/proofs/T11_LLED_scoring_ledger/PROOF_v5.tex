@@ -1,0 +1,243 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\Unif}{\mathrm{Unif}(0,1)}
+\newcommand{\1}{\mathbf{1}}
+\title{T11(iii): the final run's iid $\pi_0$ draws\\ \large Proof, version 5}
+\author{SMC-BVS v3 theory programme}
+\date{2026-10-22}
+\begin{document}
+\maketitle
+
+\noindent Notation and the setting are those of \texttt{STATEMENT.md} (items 1--6). Throughout, the data $(X,y)$ are fixed;
+$\Omega=\{S\subseteq[p]:|S|\le K\}$; $\pi_0=\gamma_0/\bar Z_0$ is a fixed probability on $\Omega$ with
+$\pi_0(S)>0$ for all $S\in\Omega$; $\Lambda$ is the event that the final run is launched; and
+$Q_f=4N_e(T+L+5)$.
+
+\section{Two facts about reading fresh uniforms}
+
+Let $(U_\iota)_{\iota\in I}$ be a countable family of independent $\Unif$ variables. A \emph{reading scheme} is a
+sequence of measurable maps $f_1,f_2,\dots$ with $f_1\in I$ a constant and $f_k:[0,1]^{k-1}\to I$, such that the
+indices
+\[
+\iota_1=f_1,\qquad \iota_k=f_k(V_1,\dots,V_{k-1}),\qquad V_k:=U_{\iota_k}\quad(k\ge1)
+\]
+are pairwise distinct for every realisation (each value is read at most once).
+
+\begin{lemma}[reading lemma]\label{lem:read}
+For every reading scheme, $(V_k)_{k\ge1}$ is an iid $\Unif$ sequence.
+\end{lemma}
+
+\begin{proof}
+It suffices to show, for every $k\ge1$ and Borel sets $A_1,\dots,A_k\subseteq[0,1]$, that
+$P(V_1\in A_1,\dots,V_k\in A_k)=\prod_{i\le k}\lambda(A_i)$, with $\lambda$ Lebesgue measure. We induct on $k$; the
+case $k=1$ holds because $V_1=U_{f_1}$. Let $k\ge2$ and $E=\{V_1\in A_1,\dots,V_{k-1}\in A_{k-1}\}$. Then
+\[
+P(E\cap\{V_k\in A_k\})=\sum_{\iota\in I}P\big(E\cap\{\iota_k=\iota\}\cap\{U_\iota\in A_k\}\big).
+\]
+Fix $\iota$. Let $U^{(\iota)}$ be the family $U$ with $U_\iota$ replaced by the constant $\tfrac12$, and let
+$(\iota'_j,V'_j)$ be the indices and values the same scheme produces from $U^{(\iota)}$; these are functions of
+$(U_\kappa)_{\kappa\ne\iota}$. On the event that $\iota\notin\{\iota_1,\dots,\iota_{k-1}\}$, an induction on
+$j\le k-1$ gives $\iota'_j=\iota_j$ and $V'_j=V_j$ (each index is computed from equal earlier values, and the value read
+there is not $U_\iota$), and hence $\iota'_k=\iota_k$. Symmetrically, on the event
+$\iota\notin\{\iota'_1,\dots,\iota'_{k-1}\}$ the same equalities hold. Because indices are never repeated,
+$\{\iota_k=\iota\}\subseteq\{\iota\notin\{\iota_1,\dots,\iota_{k-1}\}\}$ and likewise for the primed scheme, so
+\[
+E\cap\{\iota_k=\iota\}=E'\cap\{\iota'_k=\iota\},\qquad E':=\{V'_1\in A_1,\dots,V'_{k-1}\in A_{k-1}\}.
+\]
+The right side is $\sigma(U_\kappa:\kappa\ne\iota)$-measurable, hence independent of $U_\iota$. Therefore
+$P(E\cap\{\iota_k=\iota\}\cap\{U_\iota\in A_k\})=P(E\cap\{\iota_k=\iota\})\,\lambda(A_k)$. Summing over $\iota$
+gives $P(E\cap\{V_k\in A_k\})=P(E)\lambda(A_k)$, and the induction hypothesis completes the step.
+\end{proof}
+
+Let $\cF_t:=\sigma(V_1,\dots,V_t)$ ($\cF_0$ trivial). A random variable $\tau$ with values in
+$\{0,1,2,\dots\}$ is a \emph{stopping time} if $\{\tau=t\}\in\cF_t$ for every $t$.
+
+\begin{lemma}[fresh block]\label{lem:fresh}
+Let $(V_k)$ be iid $\Unif$ and $\tau$ an a.s.\ finite stopping time (on the null set $\{\tau=\infty\}$ put
+$V_{\tau+j}:=\tfrac12$). Then $(V_{\tau+j})_{j\ge1}$ is an iid $\Unif$ sequence independent of
+$\cF_\tau:=\{A\in\sigma(V_1,V_2,\dots):A\cap\{\tau=t\}\in\cF_t\ \forall t\}$.
+\end{lemma}
+
+\begin{proof}
+Let $A\in\cF_\tau$ and let $C$ be a measurable subset of $[0,1]^{\mathbb N}$. For each $t$,
+$A\cap\{\tau=t\}\in\cF_t$ is independent of $(V_{t+j})_{j\ge1}$, which is iid $\Unif$; hence
+$P(A\cap\{\tau=t\}\cap\{(V_{t+j})_j\in C\})=P(A\cap\{\tau=t\})\,\mu(C)$, where $\mu$ is the law of an iid $\Unif$
+sequence. Summing over $t$ (using $\tau<\infty$ a.s.) gives
+$P(A\cap\{(V_{\tau+j})_j\in C\})=P(A)\mu(C)$. Taking $A$ to be the whole sample space identifies the law as $\mu$, and the product form
+gives independence.
+\end{proof}
+
+\section{The $\pi_0$ sampler}
+
+Setting item 3 (EX-A) states that one call of the $\pi_0$ sampler maps the values it reads to its output by a
+measurable map (possibly depending on the run's state when the call starts) and that, when these values are iid
+$\Unif$, its output has law exactly $\pi_0$. For completeness we verify this for the backward sampler of METHODOLOGY \S6.3, written out as follows; only the
+conclusion of Lemma~\ref{lem:sampler} is used later. The verification uses the definitions in Setting item 1: the
+blocks partition $[p]$, every $r_b(U)>0$, $w(k)>0$, and $\gamma_0(S)=\frac{w(|S|)}{W_K}\prod_br_b(S\cap C_b)$ on
+$\Omega$.
+
+Let $e_b(j)=\sum_{U\subseteq C_b,|U|=j}r_b(U)$ for $0\le j\le|C_b|$ (and $e_b(j)=0$ otherwise), $c^{(0)}_k=\1\{k=0\}$,
+and $c^{(b)}_k=\sum_j e_b(j)c^{(b-1)}_{k-j}$ for $b=1,\dots,J$ and integers $k$ (with $c^{(b-1)}_m=0$ for $m<0$). Since
+the blocks partition $[p]$, $c^{(J)}_k=\sum_{|S|=k}\prod_b r_b(S\cap C_b)$, so
+$W_K\bar Z_0=\sum_{k\le K}w(k)c^{(J)}_k=:M$. One call reads values $u_0,u_J,\dots,u_1,u'_J,\dots,u'_1$ (fresh) and:
+\begin{enumerate}[label=(\alph*)]
+\item draws $k\in\{0,\dots,K\}$ with probability $w(k)c^{(J)}_k/M$ by the inverse distribution function at $u_0$;
+\item sets $k_J=k$ and, for $b=J,J-1,\dots,1$, draws $j_b$ with probability $e_b(j)c^{(b-1)}_{k_b-j}/c^{(b)}_{k_b}$ by the
+inverse distribution function at $u_b$, and sets $k_{b-1}=k_b-j_b$;
+\item for each $b$, draws $U_b\subseteq C_b$ with $|U_b|=j_b$ with probability $r_b(U_b)/e_b(j_b)$ by the inverse
+distribution function (in a fixed enumeration of the subsets) at $u'_b$; and returns $S=\bigcup_bU_b$.
+\end{enumerate}
+
+\begin{lemma}\label{lem:sampler}
+Under exact arithmetic, if the values read are iid $\Unif$, the returned $S$ has law $\pi_0$.
+\end{lemma}
+
+\begin{proof}
+All tables are positive, so $e_b(j)>0$ for $0\le j\le|C_b|$ and $c^{(b)}_k>0$ exactly for
+$0\le k\le\sum_{b'\le b}|C_{b'}|$. The probabilities in (a)--(c) are nonnegative and sum to one (for (b) by the
+recursion defining $c^{(b)}$). A value of $k_b$ with $c^{(b)}_{k_b}=0$ is reached with probability $0$: $k_J=k$ has
+$w(k)c^{(J)}_k>0$, and $j_b$ is drawn with positive probability only if $c^{(b-1)}_{k_b-j_b}>0$. At $b=1$ this forces
+$k_0=0$, so $\sum_bj_b=k$. An inverse distribution function evaluated at a $\Unif$ value is an exact draw from the
+corresponding finite distribution, and the values are independent, so the probability of a path is the product of
+its factors. A set $S\in\Omega$ is produced by exactly one path of positive probability: $k=|S|$, $j_b=|S\cap C_b|$, $U_b=S\cap C_b$, with
+$k_b=\sum_{b'\le b}j_{b'}$. Its probability is
+\[
+\frac{w(k)c^{(J)}_k}{M}\prod_{b=1}^J\frac{e_b(j_b)\,c^{(b-1)}_{k_{b-1}}}{c^{(b)}_{k_b}}
+\prod_{b=1}^J\frac{r_b(S\cap C_b)}{e_b(j_b)}
+=\frac{w(k)}{M}\,c^{(0)}_{0}\prod_b r_b(S\cap C_b)
+=\frac{w(|S|)}{W_K}\frac{\prod_b r_b(S\cap C_b)}{\bar Z_0}=\pi_0(S),
+\]
+the product of $c^{(b-1)}_{k_{b-1}}/c^{(b)}_{k_b}$ telescoping to $c^{(0)}_0/c^{(J)}_k$. Sets outside $\Omega$ are never
+returned since $k\le K$.
+\end{proof}
+
+\section{The final run is a reading scheme}
+
+\begin{remark}[the final run executes in full on $\Lambda$]\label{rem:full}
+The main proof uses Setting item 5 as stated. This remark only explains why item 5 is the method's specification,
+using the method facts quoted in \texttt{STATEMENT.md}. By the \S7 pseudocode, once launched, the final run consists of
+\texttt{FINAL\_ISLAND(grid, $N_e$)} for $r=1,\dots,4$ (``bridge + $L$ burn-in + 4 measured rounds''). Of the statuses
+that end a run early, \texttt{resource\_limit} is returned at the preflight and \texttt{schedule\_limit} when grid
+construction fails at tier 1, both before the final run; \texttt{numerical\_failure} means ``scoring failed after the
+fallback'' (\S2, \S6.13). We read EX-A (``scores are exact'') as: every score computation returns
+$\log m(S)$ exactly, and $m(S)$ is a finite positive number for every $S$ (Setting item 1); so scoring does not fail. Hence under EX-A no status interrupts a launched final run.
+Aborts imposed by the computing environment (wall time, memory) during the final run are outside the idealised model;
+Setting item 5 excludes them.
+\end{remark}
+
+Write $\Upsilon$ for streams 0--9 and $\Xi$ for streams 10--13. By EX-S, $\Upsilon$ and $\Xi$ are independent. By CAL,
+$\cC$ is a measurable function of $\Upsilon$ (the data being fixed), and so are $\Lambda$, $T$, $N_e$, $Q_f$ and $S^*$
+(Setting items 4--6). The final run, including the order in which it performs its random operations, is a measurable
+function of $(\Upsilon,\Xi)$; it reads values only from $\Xi$.
+
+\begin{proposition}\label{prop:iid}
+Fix a value $\upsilon$ of $\Upsilon$ with $\upsilon\in\Lambda$, and run the final run with $\Upsilon=\upsilon$ and
+$\Xi$ iid as in EX-S. Call a class of the run's $\pi_0$-sampler calls \emph{designated} if whether a call belongs to it
+is determined by the run's state when the call starts, and suppose the run makes exactly $Q$ designated calls, $Q$ a
+constant (given $\upsilon$). Number their outputs $D_1,\dots,D_Q$ in chronological order. Then $D_1,\dots,D_Q$ are iid
+with law $\pi_0$. In particular this holds for
+\begin{enumerate}[label=(\alph*)]
+\item the final iid draws of Setting item 5 (the $4N_e$ initial draws and the $4N_e(T+L+4)$ independence proposals),
+with $Q=Q_f$;
+\item the $4N_e(T+L+4)$ independence proposals alone, with $Q=Q_p:=4N_e(T+L+4)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+With $\upsilon$ fixed, the final run reads not-yet-read values of $\Xi$, each choice of the next index being a
+measurable function of the values read so far (Setting item 2). After the run ends, continue reading the unread
+values of stream 10 in increasing position; this does not affect the run. This is a reading scheme, so by
+Lemma~\ref{lem:read} the read sequence $(V_k)$ is iid $\Unif$, and the whole run is a measurable function of
+$(V_k)$.
+
+The $m$-th designated call ($m\le Q$) starts after $\tau_m$ values have been read. The run's state after $t$ reads is
+a function of $V_1,\dots,V_t$; whether the run starts a sampler call right after the $t$-th read, whether that call is
+designated, and how many designated calls preceded it are all determined by that state, so $\{\tau_m=t\}\in\cF_t$ and
+$\tau_m$ is a stopping time. It is finite: the $m$-th designated call does occur (by hypothesis), and since operations
+are executed one at a time, each completing before the next begins (Setting item 2), only finitely many values are read
+before it starts. The call reads $V_{\tau_m+1},V_{\tau_m+2},\dots$ (the next values read by the run, in order, until the
+call returns), so $D_m=G_{Z_m}\big((V_{\tau_m+j})_{j\ge1}\big)$, where $Z_m$ is the run's state when the call starts
+and, for each state $z$, $G_z$ maps an input sequence to the sampler's output. Measurability: take the state to be
+the history $z=(t,v_1,\dots,v_t)\in\bigsqcup_{t\ge0}[0,1]^t$ (any coarser state is a measurable function of it). Then
+$Z_m=(\tau_m,V_1,\dots,V_{\tau_m})$ is $\cF_{\tau_m}$-measurable, and, since the whole run is a Borel function of the
+values it reads (Setting item 2), $(z,w)\mapsto G_z(w)$ is jointly measurable on each piece $[0,1]^t\times[0,1]^{\mathbb N}$,
+hence on the disjoint union.
+By Setting item 3 (for the sampler of METHODOLOGY \S6.3, Lemma~\ref{lem:sampler}, where $G_z$ does not depend on $z$),
+$G_z$ applied to an iid $\Unif$ sequence has law $\pi_0$ for every $z$. The calls do not overlap, so
+$D_1,\dots,D_{m-1}$ are functions of the values read before the $m$-th designated call starts, that is, they are
+$\cF_{\tau_m}$-measurable. By Lemma~\ref{lem:fresh}, $W:=(V_{\tau_m+j})_{j\ge1}$ is iid $\Unif$ and independent of
+$\cF_{\tau_m}$; hence, for $A\in\cF_{\tau_m}$ and $s\in\Omega$, Fubini's theorem gives
+$P(A\cap\{G_{Z_m}(W)=s\})=E\big[\1_A\,P(G_z(W)=s)|_{z=Z_m}\big]=P(A)\,\pi_0(s)$. Taking
+$A=\{D_1=s_1,\dots,D_{m-1}=s_{m-1}\}$, for all $s_1,\dots,s_Q\in\Omega$,
+\[
+P(D_1=s_1,\dots,D_m=s_m)=P(D_1=s_1,\dots,D_{m-1}=s_{m-1})\,\pi_0(s_m),\qquad m=1,\dots,Q,
+\]
+and induction gives $P(D_1=s_1,\dots,D_Q=s_Q)=\prod_m\pi_0(s_m)$.
+
+For (a) and (b): whether a sampler call is an initial draw or the independence step of some particle's round is part
+of the run's state when the call starts, so both classes are designated; by Setting item 5 they contain exactly $Q_f$
+and $Q_p$ calls respectively, constants given $\upsilon$.
+\end{proof}
+
+\section{The theorem}
+
+\begin{theorem}[T11(iii)]\label{thm:main}
+Under Setting items 1--6, on $\Lambda$, almost surely,
+\[
+P\big(S^*\notin\{D_1,\dots,D_{Q_f}\}\,\big|\,\cC\big)=(1-\pi_0(S^*))^{Q_f}\le\exp\{-Q_f\pi_0(S^*)\}.
+\]
+\end{theorem}
+
+\begin{proof}
+Let $A=\Lambda\cap\{S^*\notin\{D_1,\dots,D_{Q_f}\}\}$. Its indicator is $\1_A=h(\Upsilon,\Xi)$ for a measurable $h$, and
+for fixed $\upsilon$ the map $\xi\mapsto h(\upsilon,\xi)$ is the indicator that the final run started from $\upsilon$
+avoids $s^*(\upsilon)$ (the value of $S^*$ at $\upsilon$), or $0$ if $\upsilon\notin\Lambda$. Because $\Upsilon$ and
+$\Xi$ are independent, Fubini's theorem gives $E[h(\Upsilon,\Xi)\mid\Upsilon]=g(\Upsilon)$ a.s., with
+$g(\upsilon):=E\,h(\upsilon,\Xi)$. For $\upsilon\in\Lambda$, Proposition~\ref{prop:iid}(a) gives
+\[
+g(\upsilon)=P(D_m\ne s^*(\upsilon)\ \text{for } m=1,\dots,Q_f(\upsilon))=(1-\pi_0(s^*(\upsilon)))^{Q_f(\upsilon)},
+\]
+and $g(\upsilon)=0$ otherwise. So $g(\Upsilon)=\1_\Lambda(1-\pi_0(S^*))^{Q_f}$, which is a function of $\cC$ (Setting
+items 4--6). Since $\sigma(\cC)\subseteq\sigma(\Upsilon)$, the tower property gives
+$P(A\mid\cC)=E[g(\Upsilon)\mid\cC]=\1_\Lambda(1-\pi_0(S^*))^{Q_f}$ a.s. On $\Lambda\in\sigma(\cC)$,
+$P(S^*\notin\{D_m\}\mid\cC)=P(A\mid\cC)$ a.s., which is the identity. The inequality follows from
+$0\le1-x\le e^{-x}$ for $x=\pi_0(S^*)\in(0,1]$, raised to the power $Q_f\ge0$.
+\end{proof}
+
+\section{Remarks}
+
+\begin{remark}[scope: calibration draws]\label{rem:scope}
+The argument uses two facts about the final draws that fail for the calibration's $\pi_0$ draws. (1) The exponent
+$Q_f$ is fixed by $\cC$ before any final value is read; the calibration's number of draws depends on its own
+randomness (rebuild loop, escalation). (2) The conditioning $\sigma$-field $\sigma(\cC)$ is independent of the final
+streams, but in general not of the calibration streams ($\cC$ is computed from them), so given $\cC$ the calibration
+draws need not be iid $\pi_0$. With a random count, $(1-\pi_0(S^*))^N$ is in general not the absence probability, even in expectation: with
+$D_1,D_2$ iid $\pi_0$, $x=\pi_0(s)\in(0,1)$, and $N=1$ if $D_1\ne s$, $N=2$ otherwise,
+$P(s\notin\{D_1,\dots,D_N\})=1-x$ while $E(1-x)^N=(1-x)^2(1+x)<1-x$. Accordingly, Theorem~\ref{thm:main} is asserted
+only with the exponent $Q_f$.
+\end{remark}
+
+\begin{remark}[unconditional form]
+Taking expectations, $P(\Lambda,\ S^*\notin\{D_1,\dots,D_{Q_f}\})=E[\1_\Lambda(1-\pi_0(S^*))^{Q_f}]$.
+\end{remark}
+
+\begin{corollary}[scoring; beyond the stated part]
+Read ``scored'' as ``its score $\log m(S)$ is computed''. By the method fact quoted in \texttt{STATEMENT.md}
+(\S6.5: ``Every proposal is scored, accepted or not''), each of the $Q_p=4N_e(T+L+4)$ final independence proposals is
+scored. Applying the argument of Theorem~\ref{thm:main} to the proposals alone (by Proposition~\ref{prop:iid}(b) they
+are iid $\pi_0$ given $\Upsilon$, and $Q_p$ is a function of $\cC$), on $\Lambda$,
+$P(S^*\text{ is not scored in the final run}\mid\cC)\le(1-\pi_0(S^*))^{Q_p}$ a.s. If the initial draws are also scored
+(the quoted text does not say so explicitly), the exponent $Q_p$ may be replaced by $Q_f$.
+\end{corollary}
+
+\end{document}

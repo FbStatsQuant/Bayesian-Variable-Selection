@@ -1,0 +1,226 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\Om}{\Omega}
+\newcommand{\BF}{\mathrm{BF}}
+\renewcommand{\Pr}{\mathbb P}
+\newcommand{\E}{\mathbb E}
+\newcommand{\cF}{\mathcal F}
+\newcommand{\cG}{\mathcal G}
+\newcommand{\ph}{\varphi}
+\newcommand{\vp}{\varpi}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\TV}{\mathrm{TV}}
+\newcommand{\sa}{\mathsf a}
+\newcommand{\sbb}{\mathsf b}
+\newcommand{\sab}{\mathsf{ab}}
+\title{T10 (old label T11): feasible-addition hazards and ordered paths\\[2pt]\large Proof, version 4}
+\author{Lead: Claude Opus 5.5 (high). Status: not adopted.}
+\date{2026-10-22}
+\begin{document}
+\maketitle
+
+\noindent The statement proved is \texttt{STATEMENT.md} in this folder; all notation is as defined there (it follows \texttt{00\_COMMON.md}).
+
+\section{Cited results}\label{sec:det}
+
+All from wave~1, \texttt{proofs/COLLECTED/COLLECTED\_PROOFS\_v2.tex}.
+\begin{itemize}
+\item \textbf{T09(ii).} At temperature $\ph$ the Gibbs-$j$ kernel is
+\begin{equation}\label{eq:gibbs}
+K_{G,j}(S,S^{\pm})=\frac{\gamma_\ph(S^{\pm})}{\gamma_\ph(S^+)+\gamma_\ph(S^-)},\qquad S^+=S\cup\{j\},\ S^-=S\setminus\{j\},
+\end{equation}
+a Markov kernel on $\Om$, with $\gamma_\ph=0$ off $\Om$, so an addition at $|S|=K$ has probability~$0$. By definition $o_j(S,\ph)=K_{G,j}(S,S^+)$. T09(ii) also states that every elementary kernel (Gibbs, uniform swap, neighbour swap, independence) is a $q_\ph$-reversible Markov kernel on $\Om$ for $\ph\in[0,1]$; this is used only in Remark~\ref{rem:ex}(c).
+\item \textbf{T22, Lemma~1 (positivity and a closed form).} For every $S\subseteq[p]$: $Q_S\ge0$, $D_S\ge1$ and $m(S)\in(0,\infty)$; every $r_b(U)$, $w(k)$ ($0\le k\le p$) and $\gamma_\ph(S)$ ($S\in\Om$) is positive and finite.
+\item \textbf{T22, Lemma~2 (one addition).} For every $T\subseteq[p]$ (no cap; any design, singular $G_T$ included) and $j\notin T$: $Q_{T\cup\{j\}}\le Q_T$, $D_{T\cup\{j\}}/D_T\le n+1$, and hence
+\begin{equation}\label{eq:floor}
+\frac{m(T\cup\{j\})}{m(T)}\ge(n+1)^{-1/2}.
+\end{equation}
+\item \textbf{T22, Lemma~3 (prior ratios).} For $0\le k\le p-1$, $w(k+1)/w(k)=(k+1)/(2p-k-1)$.
+\end{itemize}
+The three T22 lemmas are deterministic facts about the score formula of 00\_COMMON~\S1 and use none of the hypotheses of T22's theorem. (For the reader: $Q_T$ is the minimum over $\beta\in\mathbb R^T$ of $\|y-X_T\beta\|^2+n^{-1}(\|X_T\beta\|^2+\|\beta\|^2)$, and padding with $\beta_j=0$ embeds the $T$-problem in the $T\cup\{j\}$-problem, which gives $Q_{T\cup\{j\}}\le Q_T$; and with $M_T=X_TX_T^\top$, Sylvester's identity and the matrix determinant lemma give $D_{T\cup\{j\}}/D_T=(1+(n+1)\xi)/(1+\zeta)\le n+1$, where $\xi=x_j^\top(I_n+(n+1)M_T)^{-1}x_j\le\zeta=x_j^\top(I_n+M_T)^{-1}x_j$. Then $m(T')/m(T)=(D_{T'}/D_T)^{-1/2}\big((2b_0+Q_{T'})/(2b_0+Q_T)\big)^{-\nu}$ with $\nu>0$.)
+
+\section{Part (i)}
+
+Fix $S\in\Om$ with $k=|S|<K$, $j\notin S$ and $\ph\in[0,1]$. Then $|S+j|=k+1\le K$, so $S+j\in\Om$, and $w(k+1)/w(k)=\binom{2p-1}{k}/\binom{2p-1}{k+1}=(k+1)/(2p-k-1)$, by T22 Lemma~3, since $k\le K-1\le p-1$ (so $2p-k-1\ge p\ge1$).
+
+By T22 Lemma~1, $\vp(S)$, every $r_b(\cdot)$, $\BF(\cdot)$ and $\gamma_\ph(\cdot)$ are positive and finite on $\Om$, so the ratios and real powers below are well defined. Since $\gamma_\ph=\gamma_0e^{\ph d}$ and $\gamma_0(S)e^{d(S)}=\vp(S)\BF(S)$,
+\begin{equation}\label{eq:interp}
+\gamma_\ph(S)=\vp(S)\Big[\prod_b r_b(S\cap C_b)\Big]^{1-\ph}\BF(S)^{\ph}\qquad(S\in\Om).
+\end{equation}
+Let $b$ be the block containing $j$ and $U=S\cap C_b$. Then $(S+j)\cap C_b=U+j$ and $(S+j)\cap C_{b'}=S\cap C_{b'}$ for $b'\ne b$. By~\eqref{eq:interp}, with $r_b=\BF=m/m(\emptyset)$ on subsets of $C_b$,
+\[
+a_j(S,\ph)=\frac{\gamma_\ph(S+j)}{\gamma_\ph(S)}
+=\frac{w(k+1)}{w(k)}\Big[\frac{m(U+j)}{m(U)}\Big]^{1-\ph}\Big[\frac{m(S+j)}{m(S)}\Big]^{\ph}
+\]
+($W_K$ cancels because both sets lie in $\Om$). Both bracketed ratios are $\ge(n+1)^{-1/2}$ by~\eqref{eq:floor} (with $T=U$ and $T=S$; $j\notin U\subseteq S$), and the exponents $1-\ph,\ph$ are nonnegative with sum $1$. Hence
+\[
+a_j(S,\ph)\ge\frac{k+1}{2p-k-1}\,(n+1)^{-(1-\ph)/2}(n+1)^{-\ph/2}=r_k .
+\]
+Since $j\notin S$, $S^-=S$ and $S^+=S+j$ in~\eqref{eq:gibbs}, so $o_j(S,\ph)=a_j/(1+a_j)$; $x\mapsto x/(1+x)$ is increasing on $[0,\infty)$, so $o_j(S,\ph)\ge r_k/(1+r_k)=h_k$. Finally $\pi_0=\gamma_0/\bar Z_0$ and $\gamma_0=\gamma_\ph|_{\ph=0}$, so $\pi_0(S+j)/\pi_0(S)=a_j(S,0)\ge r_k$ (this clause is also T22's lemma ``One feasible addition under $\pi_0$''). \qed
+
+\begin{remark}Judging by the sketch in Section~\ref{sec:det} (not by the cited statements alone), the argument for part~(i) uses no property of the standardised data; it would hold for any real $X$ and $y\ne0$. This remark is not part of the statement and is not used.\end{remark}
+
+\section{Part (ii): the ordered-path lower bound}\label{sec:ii}
+
+Fix $S$, $J$, $a$, $\ph$ as in (ii). If $a=0$ the bound is $1$ and $X_0=S=S\cup J$. Let $a\ge1$. A round draws $\sigma$ uniformly from the $m!$ orders, independently of the state, and then $X_i\sim K_{\sigma(i)}(X_{i-1},\cdot)$ with fresh randomness (EX-S); thus for every order $\sigma_0$ and states $x_1,\dots,x_m$,
+\begin{equation}\label{eq:pathlaw}
+\Pr(\sigma=\sigma_0,X_1=x_1,\dots,X_m=x_m\mid X_0=S)=\frac1{m!}\prod_{i=1}^mK_{\sigma_0(i)}(x_{i-1},x_i),\qquad x_0=S.
+\end{equation}
+Let $\mathcal E$ be the set of orders whose first $a$ labels are the $a$ Gibbs labels of the coordinates of $J$, in any order. There are $a!\,(m-a)!$ such orders ($a\le K-k\le p\le m$), so $\Pr(\sigma\in\mathcal E)=\binom ma^{-1}$.
+
+Fix $\sigma_0\in\mathcal E$ and let $j_1,\dots,j_a$ be the coordinates of its first $a$ labels, in order; $\{j_1,\dots,j_a\}=J$. Put $S_0=S$ and $S_i=S\cup\{j_1,\dots,j_i\}$. For $1\le i\le a$: $S_{i-1}\in\Om$, $|S_{i-1}|=k+i-1\le k+a-1<K$ and $j_i\notin S_{i-1}$, so by~\eqref{eq:gibbs} and part~(i),
+$K_{G,j_i}(S_{i-1},S_i)=o_{j_i}(S_{i-1},\ph)\ge h_{k+i-1}$. Summing~\eqref{eq:pathlaw} over $x_{a+1},\dots,x_m$ (each $K$ is a Markov kernel),
+\[
+\Pr(\sigma=\sigma_0,\ X_i=S_i\ (1\le i\le a)\mid X_0=S)=\frac1{m!}\prod_{i=1}^a o_{j_i}(S_{i-1},\ph)\ge\frac1{m!}\prod_{i=0}^{a-1}h_{k+i}.
+\]
+On this event $X_a=S\cup J$, so $S\cup J$ is visited. Summing over the $a!(m-a)!$ orders $\sigma_0\in\mathcal E$ (disjoint events),
+\[
+\Pr(\text{visit }S\cup J\mid X_0=S)\ \ge\ \Pr\big(\sigma\in\mathcal E\text{ and each of the first $a$ Gibbs steps adds}\mid X_0=S\big)\ \ge\ \binom ma^{-1}\prod_{i=0}^{a-1}h_{k+i}.
+\]
+With $a=1$, $J=\{j\}$: $\Pr(\text{visit }S+j\mid X_0=S)\ge h_k/m$. \qed
+
+\section{A two-variable example: parts (ii-neg) and (iv-a)}\label{sec:ex}
+
+\paragraph{Data.} Let $n\ge400$ and $p=2$. Since $\{v\in\mathbb R^n:\one^\top v=0\}$ has dimension $n-1\ge3$, there are mutually orthogonal centred vectors $x_1,x_2,y$ with $\|x_1\|^2=\|x_2\|^2=\|y\|^2=n-1$. Take $X^r=[x_1\ x_2]$, $y^r=y$. These raw data satisfy the data conditions quoted in STATEMENT.md from 00\_COMMON~\S1 ($n\ge3$, finite entries, no constant column, $y^r$ non-constant), and they are already standardised: $Cx_j=x_j$, the sample SD with divisor $n-1$ is $\sqrt{\|x_j\|^2/(n-1)}=1$, so $D_x=I$ and $X=CX^rD_x^{-1}=X^r$; likewise $s_y=1$ and $y=Cy^r/s_y=y^r$. Put $\beta:=n^{-1/2}\in(0,1/20]$.
+
+\paragraph{Method objects.} $K=\min(2,\lfloor n/2\rfloor)=2$, so $\Om$ consists of the four sets $\emptyset$, $\sa=\{1\}$, $\sbb=\{2\}$, $\sab=\{1,2\}$. The block-size bound is $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt2\rfloor,16)=1$, so the blocks are $\{1\}$ and $\{2\}$, there is one neighbour swap, and $m=p+1+2=5$. The labels are $G_1,G_2$ (Gibbs), $U$ (uniform swap), $N$ (neighbour swap) and $I$ (independence). The neighbour rule always includes $j$'s single largest-$|r|$ partner, which for $p=2$ is the other variable; so $N(1)=\{2\}$ and $N(2)=\{1\}$.
+
+\paragraph{Scores.} For $T\subseteq\{1,2\}$ with $|T|=t$: $G_T=(n-1)I_t$ and $z_T=0$, so $Q_T=y^\top y$, $H_T=((n+1)(n-1)+1)I_t=n^2I_t$, $G_T+I_t=nI_t$, $D_T=n^{2t}/n^t=n^t$ and $\BF(T)=n^{-t/2}=\beta^t$. The tables are $r_{\{j\}}(\{j\})=\beta$, so $\prod_br_b(S\cap C_b)=\beta^{|S|}=\BF(S)$ and $d\equiv0$. Hence for every $\ph\in[0,1]$, $\gamma_\ph(S)=\gamma_0(S)=\vp(S)\beta^{|S|}$, and with $w(0)=\frac12$, $w(1)=w(2)=\frac16$,
+\[
+\gamma_\ph\propto\Big(\tfrac12,\ \tfrac\beta6,\ \tfrac\beta6,\ \tfrac{\beta^2}6\Big)\text{ on }(\emptyset,\sa,\sbb,\sab);\qquad
+\pi_0(\sab)=\frac{\beta^2}{3+2\beta+\beta^2}\le\frac{\beta^2}3,\qquad 1-\pi_0(\emptyset)=\frac{2\beta+\beta^2}{3+2\beta+\beta^2}\le\beta,
+\]
+the last inequality because $2\beta+\beta^2\le\beta(3+2\beta+\beta^2)$ for $\beta\ge0$.
+
+\paragraph{Kernels} (identical for every $\ph\in[0,1]$, since $\gamma_\ph$ and $d$ do not depend on $\ph$).
+\begin{itemize}
+\item $G_j$: by~\eqref{eq:gibbs} the inclusion probability of $j$ is $\frac{\beta/6}{\beta/6+1/2}=\frac{\beta}{3+\beta}$ if the other coordinate is absent and $\frac{\beta^2/6}{\beta^2/6+\beta/6}=\frac{\beta}{1+\beta}$ if it is present; in every case it is $<\beta$. The other coordinate is unchanged.
+\item $U$: self-loop at $\emptyset$ and $\sab$ ($|S|\in\{0,p\}$). At $\sa$: delete $1$, add $2$, accept with $1\wedge\gamma(\sbb)/\gamma(\sa)=1$; so $\sa\to\sbb$ surely, and likewise $\sbb\to\sa$.
+\item $N$: self-loop at $\emptyset$. At $\sab$: the deleted $j$ has $N(j)\setminus\sab=\emptyset$, so the move is rejected. At $\sa$: delete $1$; $N(1)\setminus\sa=\{2\}$; propose $\sbb$; accept with $1\wedge[\gamma(\sbb)/\gamma(\sa)]\cdot|N(1)\setminus\sa|/|N(2)\setminus\sbb|=1$. So $\sa\to\sbb$ surely, and likewise $\sbb\to\sa$.
+\item $I$: the proposal $S'\sim\pi_0$ is accepted with probability $1\wedge e^{\ph[d(S')-d(S)]}=1$, so the output is a $\pi_0$ draw independent of everything before.
+\end{itemize}
+In particular $U$ and $N$ act deterministically as $\emptyset\mapsto\emptyset$, $\sab\mapsto\sab$, $\sa\leftrightarrow\sbb$: they preserve $|S|$ and never move into or out of $\sab$.
+
+Here $S=\sa$, $k=1<K$, $j=2$, $r_1=\frac{2}{(4-2)\sqrt{n+1}}=(n+1)^{-1/2}$ and, since $\sqrt{n+1}=\sqrt{1+\beta^2}/\beta$,
+\begin{equation}\label{eq:h1}
+h_1=\frac1{1+\sqrt{n+1}}=\frac{\beta}{\beta+\sqrt{1+\beta^2}}.
+\end{equation}
+All probabilities below are for one round started at $X_0=\sa$, with $\sigma$ uniform on the $5!=120$ orders.
+
+\begin{lemma}[Coupling]\label{lem:coup}
+Let $K_1,\dots,K_m$ and $K'_1,\dots,K'_m$ be Markov kernels on a finite set with $\sup_x\|K_i(x,\cdot)-K'_i(x,\cdot)\|_{\TV}\le\delta$ for each $i$, where $\|\mu-\nu\|_{\TV}=\sup_E|\mu(E)-\nu(E)|$. Let $P$, $P'$ be the laws of the paths $(X_0,\dots,X_m)$ with the same $X_0$ and $X_i\sim K_i(X_{i-1},\cdot)$, resp.\ $K'_i(X_{i-1},\cdot)$. Then $|P(E)-P'(E)|\le m\delta$ for every set $E$ of paths.
+\end{lemma}
+\begin{proof}
+For $0\le l\le m$ let $P^{(l)}$ be the path law that uses $K'_1,\dots,K'_l$ and then $K_{l+1},\dots,K_m$; $P^{(0)}=P$ and $P^{(m)}=P'$. Under $P^{(l-1)}$ and $P^{(l)}$ the path $(X_0,\dots,X_{l-1})$ has the same law $\lambda$, and the kernels after step $l$ are the same; let $F(x_{0:l})\in[0,1]$ be the conditional probability of $E$ given $X_{0:l}=x_{0:l}$ under these later kernels. Then
+$|P^{(l-1)}(E)-P^{(l)}(E)|=\big|\sum_{x_{0:l-1}}\lambda(x_{0:l-1})\sum_{x_l}[K_l-K'_l](x_{l-1},x_l)F(x_{0:l})\big|\le\delta$, because $|\sum_z(\mu-\nu)(z)f(z)|\le\|\mu-\nu\|_{\TV}$ for probability vectors $\mu,\nu$ and $f$ with values in $[0,1]$. Sum over $l$.
+\end{proof}
+
+\paragraph{Comparison chain.} Define Markov kernels $K^0$ on the same four states for the same five labels directly (they are not the method at any $\beta$): $K^0_{G_j}(S,\cdot)=\delta_{S\setminus\{j\}}$ ($j$ removed surely, the other coordinate unchanged); $K^0_U=K_U$ and $K^0_N=K_N$ (the deterministic maps above); $K^0_I(S,\cdot)=\delta_\emptyset$. Given $\sigma$ this chain is deterministic, it never adds a variable, and $\emptyset$ is absorbing. At every state, the total-variation distance between a step of the actual chain and the same step of the comparison chain is at most $\beta$: for $G_j$ it is the inclusion probability ($<\beta$), for $U,N$ it is $0$, and for $I$ it is $1-\pi_0(\emptyset)\le\beta$. By Lemma~\ref{lem:coup} with $m=5$, applied for each fixed $\sigma$ and then averaged over $\sigma$,
+\begin{equation}\label{eq:coup}
+|\Pr(E)-\Pr^0(E)|\le5\beta\qquad\text{for every event $E$ of $(\sigma,X_0,\dots,X_5)$}.
+\end{equation}
+
+\begin{lemma}\label{lem:count}
+Let $E_2$ be the event that the state just before step $G_2$ is $\sa$, and $E_1$ the event that the state just before step $G_1$ is $\sbb$. Then $\Pr^0(E_2)=\frac{30}{120}$ and $\Pr^0(E_1)=\frac{16}{120}$.
+\end{lemma}
+\begin{proof}
+In the comparison chain started at $\sa$: $U$ and $N$ swap $\sa\leftrightarrow\sbb$ (``flips''); $G_1$ sends $\sa\to\emptyset$ and fixes $\sbb$; $G_2$ fixes $\sa$ and sends $\sbb\to\emptyset$; $I$ sends everything to $\emptyset$, which is absorbing. Let $P$ be the set of labels before $G_2$ (orders written left to right).
+$E_2$ requires $I\notin P$ and an even number of flips in $P$. If $G_1\in P$, $G_1$ must act at $\sbb$, so exactly one flip precedes it and, by parity, one follows it before $G_2$. The possibilities are: $P=\emptyset$ ($G_2$ first: $4!=24$ orders); $P=\{U,N\}$ ($2$ orders of $U,N$, then $G_2$, then $2$ orders of $G_1,I$: $4$ orders); $P=\{G_1,U,N\}$ in the order $UG_1N$ or $NG_1U$, then $G_2$, then $I$: $2$ orders. Total $30$.
+$E_1$ requires $I$ not before $G_1$ and an odd number of flips before $G_1$, so exactly one; and $G_2$, if before $G_1$, must act at $\sa$, i.e.\ before that flip. The possibilities are: $P'=\{U\}$ or $\{N\}$ as the set before $G_1$ ($U G_1$ or $N G_1$ first, then the other three labels in $3!=6$ orders: $12$ orders); $P'=\{G_2,U\}$ or $\{G_2,N\}$ in the order $G_2$, flip, $G_1$, then the remaining two labels in $2$ orders: $4$ orders. Total $16$.
+\end{proof}
+
+\begin{proposition}[(ii-neg): no ordering-free bound]\label{prop:neg}
+In the example, for every $n\ge400$ and every $\ph\in[0,1]$,
+\[
+\Pr(\text{visit }\sab\mid X_0=\sa)\le\tfrac{23}{60}\beta+\tfrac{31}{3}\beta^2<h_1 .
+\]
+So the inequality $\Pr(\text{visit }S+j\mid X_0=S)\ge h_k$ fails at $S=\sa$, $j=2$, $k=1$.
+\end{proposition}
+\begin{proof}
+If $\sab$ is visited, let $i\ge1$ be the first step with $X_i=\sab$ ($X_0=\sa\ne\sab$). Step $\sigma(i)$ is not $U$ or $N$, since they never move into $\sab$. If it is $G_2$, then $X_{i-1}$ agrees with $\sab$ off coordinate $2$ and $X_{i-1}\ne\sab$, so $X_{i-1}=\sa$; if it is $G_1$, then $X_{i-1}=\sbb$; otherwise it is $I$. Hence
+\[
+\Pr(\text{visit }\sab)\le\Pr(I\text{ outputs }\sab)+\Pr(E_2\text{ and }G_2\text{ adds }2)+\Pr(E_1\text{ and }G_1\text{ adds }1).
+\]
+The first term is $\pi_0(\sab)\le\beta^2/3$. $E_2$ is determined by $\sigma$ and the path before $G_2$, and the $G_2$ draw uses fresh randomness, so $\Pr(E_2\text{ and }G_2\text{ adds})=\Pr(E_2)\,o_2(\sa,\ph)=\Pr(E_2)\frac{\beta}{1+\beta}$; likewise $\Pr(E_1\text{ and }G_1\text{ adds})=\Pr(E_1)\frac\beta{1+\beta}$. By~\eqref{eq:coup} and Lemma~\ref{lem:count}, $\Pr(E_1)+\Pr(E_2)\le\frac{46}{120}+10\beta=\frac{23}{60}+10\beta$. Therefore
+\[
+\Pr(\text{visit }\sab)\le\frac{\beta^2}3+\beta\Big(\frac{23}{60}+10\beta\Big)=\frac{23}{60}\beta+\frac{31}3\beta^2 .
+\]
+By~\eqref{eq:h1}, this is $<h_1$ iff $f(\beta):=\big(\frac{23}{60}+\frac{31}{3}\beta\big)\big(\beta+\sqrt{1+\beta^2}\big)<1$. $f$ is increasing on $(0,\infty)$, and $f(1/20)=\frac{54}{60}\cdot\frac{1+\sqrt{401}}{20}<0.9\times1.0513<0.95$. Since $n\ge400$ means $\beta\le1/20$, the claim follows.
+\end{proof}
+
+\begin{proposition}[(iv-a): terminal occupancy; second display supplementary]\label{prop:end}
+In the example, for every $n\ge400$ and every $\ph\in[0,1]$,
+\[
+\Pr(X_5=\sab\mid X_0=\sa)\le\tfrac43\beta^2<\binom51^{-1}h_1,\qquad
+\frac{\Pr(X_5=\sab\mid X_0=\sa)}{\binom51^{-1}h_1}\le\tfrac{20}{3}\beta\big(\beta+\sqrt{1+\beta^2}\big)\xrightarrow[n\to\infty]{}0 .
+\]
+\end{proposition}
+\begin{proof}
+Let $G^\circ$ be the earlier and $G^*$ the later of the two Gibbs steps in $\sigma$, and $j^*$ the coordinate of $G^*$. Since $U$, $N$ preserve $\{\sab\}$ and its complement, and all steps after $G^*$ other than possibly $I$ are among $U,N$, we split on the position of $I$ (these three cases partition the orders, and $\sigma$ is independent of the chain's draws).
+\emph{$I$ after $G^*$.} After $I$ the state is a fresh $\pi_0$ draw and every later step is $U$ or $N$; so $X_5=\sab$ has conditional probability $\pi_0(\sab)\le\beta^2/3$.
+\emph{$I$ between $G^\circ$ and $G^*$.} After $I$ the state is a $\pi_0$ draw and the steps up to $G^*$ are among $U,N$, which preserve size; so the state before $G^*$ is nonempty with conditional probability $1-\pi_0(\emptyset)\le\beta$. All steps after $G^*$ are among $U,N$, so $X_5=\sab$ forces the state right after $G^*$ to be $\sab$, which requires a nonempty state before $G^*$ and the inclusion of $j^*$ at $G^*$; the latter has conditional probability $<\beta$ given the past. So the conditional probability is $\le\beta^2$.
+\emph{$I$ before $G^\circ$.} As in the previous case, the state before $G^\circ$ is nonempty with probability $\le\beta$; if it is empty, $G^\circ$ makes it nonempty with probability $\frac\beta{3+\beta}\le\frac\beta3$. The steps between $G^\circ$ and $G^*$ are among $U,N$. So the state before $G^*$ is nonempty with probability $\le\frac43\beta$, and as before the conditional probability of $X_5=\sab$ is $\le\frac43\beta^2$.
+Each case has conditional probability $\le\frac43\beta^2$, hence so does the mixture. By~\eqref{eq:h1}, $\binom51^{-1}h_1=\beta/\big(5(\beta+\sqrt{1+\beta^2})\big)$, which gives the ratio bound. The ratio bound is increasing in $\beta$, is $\le\frac{20}{3}\cdot\frac1{20}\cdot1.0513<0.36<1$ at $\beta=1/20$, and tends to $0$ as $\beta\to0$.
+\end{proof}
+
+\begin{remark}\label{rem:ex}
+(a) The example has $p=2$. Here $\sum_{k\le K}\binom{2}{k}=4\le(5H_0+4N_0)\cdot2$, so by the exact-branch rule quoted in STATEMENT.md the production method enumerates all models and runs no SMC round. (ii-neg) and (iv-a) are statements about the round kernel $K_\ph$, which is defined for all admissible data, and the example is admissible; but the example does not exhibit the failure in a regime where production SMC rounds are run. (b) The visit probability in the example is $\ge h_1/5$, as part~(ii) requires. (c) Corroboration, not used in the proofs above. In the example $d\equiv0$, so $q_\ph=\pi_0$; every elementary kernel is $\pi_0$-reversible (T09(ii)), hence $\pi_0$-invariant; the $I$ step outputs an exact $\pi_0$ draw; and the order is independent of the draws. So the state after $I$ has law $\pi_0$ and keeps it, and $X_5\sim\pi_0$ exactly: $\Pr(X_5=\sab\mid X_0=\sa)=\pi_0(\sab)=\beta^2/(3+2\beta+\beta^2)$, consistent with Proposition~\ref{prop:end}. Exact rational enumeration of all $120$ orders at $n=400$ gives visit probability $0.01978<h_1=0.04756$ and terminal occupancy $8.06\cdot10^{-4}=\pi_0(\sab)<h_1/5=0.00951$.
+\end{remark}
+
+\section{Part (iii): execution-time hazards}
+
+\paragraph{Model of a run (EX-A, EX-S).} Enumerate all elementary steps of a run (all particles, rounds and stages, of the pilot, the calibration and the final run) as $u=1,2,\dots$, in an order in which they can be executed sequentially (within a round, particles one after another; resampling and adaptive choices between steps). (The step index is $u$; $e$ is reserved for the budget tier.) For $u$ beyond the last step put $\lambda_u=\text{none}$. Let $\cF_{u^-}$ be the $\sigma$-field generated by the data and by every stream variate consumed before the own draw of step $u$ (including the round orders, resampling and adaptive choices made so far). It determines the label $\lambda_u$, the temperature $\ph_u$ used by step $u$ and the current state $X_{u^-}$ of the particle executing it; $X_u$ is that particle's state after step $u$. By the method (STATEMENT.md, ``Temperatures''), $\ph_u\in[0,1]$ for every move; this is the hypothesis of (iii). Under EX-A and EX-S, step $u$ draws $X_u$ from the elementary kernel of label $\lambda_u$ at temperature $\ph_u$ at the current state, using the next stream variate(s) not yet consumed. Under EX-S the stream is i.i.d.\ uniform; the number of variates consumed before the draw of step $u$ is a stopping time for the stream filtration (whether it equals $t$ is decided by the first $t$ variates and the data), and $\cF_{u^-}$ is the corresponding stopped $\sigma$-field; by the strong Markov property of an i.i.d.\ sequence at a stopping time, the next variates are uniform and independent of $\cF_{u^-}$. Hence, in particular, on $\{\lambda_u=G_j\}$,
+\begin{equation}\label{eq:step}
+\Pr(X_u=\cdot\mid\cF_{u^-})=K_{G,j}(X_{u^-},\cdot)\big|_{\ph=\ph_u}\quad\text{a.s.}
+\end{equation}
+
+\paragraph{(iii-a).} Fix $S\in\Om$ with $|S|=k<K$ and $j\notin S$, and let $A_u=\{\lambda_u=G_j,\ X_{u^-}=S\}\in\cF_{u^-}$. On $A_u$, \eqref{eq:step} and \eqref{eq:gibbs} give $\Pr(X_u=S+j\mid\cF_{u^-})=o_j(S,\ph_u)$, and $o_j(S,\ph_u)\ge h_k$ by part~(i), because $\ph_u\in[0,1]$ and $h_k$ does not depend on $\ph$.
+
+\paragraph{(iii-b).} The map $\ph\mapsto o_j(S,\ph)$ is continuous, so $o_j(S,\ph_u)\one_{A_u}$ is $\cF_{u^-}$-measurable. By Tonelli's theorem (nonnegative terms) and the tower property,
+\[
+\E N_j(S)=\sum_u\E\big[\one_{A_u}\one\{X_u=S+j\}\big]=\sum_u\E\big[\one_{A_u}\Pr(X_u=S+j\mid\cF_{u^-})\big]=\sum_u\E\big[\one_{A_u}\,o_j(S,\ph_u)\big]\ge h_k\sum_u\Pr(A_u),
+\]
+with values in $[0,\infty]$.
+
+\emph{Conditional form.} Let $\cG$ be a $\sigma$-field and $\mathcal I$ a (possibly random) set of step indices such that, for every $u$: $\{u\in\mathcal I\}\in\cG$; $B\cap\{u\in\mathcal I\}\in\cF_{u^-}$ for every $B\in\cG$; and $\ph_u\one\{u\in\mathcal I\}$ is $\cG$-measurable. Fix $u$ and $B\in\cG$, and write $I_u=\one\{u\in\mathcal I\}$. Since $B\cap\{u\in\mathcal I\}\cap A_u\in\cF_{u^-}$, (iii-a) gives
+$\E[\one_BI_u\one_{A_u}\one\{X_u=S+j\}]=\E[\one_BI_u\one_{A_u}o_j(S,\ph_u)]=\E[\one_BI_u\,o_j(S,\ph_u)\Pr(A_u\mid\cG)]$, the last step because $I_u\,o_j(S,\ph_u)$ is $\cG$-measurable. Hence $\E[I_u\one_{A_u}\one\{X_u=S+j\}\mid\cG]=I_u\,o_j(S,\ph_u)\Pr(A_u\mid\cG)$ a.s., and summing over $u$ (conditional monotone convergence) gives, almost surely,
+\[
+\E\Big[\sum_{u\in\mathcal I}\one_{A_u}\one\{X_u=S+j\}\Bigm|\cG\Big]=\sum_{u\in\mathcal I}\Pr(A_u\mid\cG)\,o_j(S,\ph_u)\ \ge\ h_k\sum_{u\in\mathcal I}\Pr(A_u\mid\cG).
+\]
+Illustration (method facts from 00\_COMMON~\S2, not used elsewhere): $\cG$ generated by the data and all variates consumed before the final run starts (so $\cG\supseteq\sigma(\mathcal C)$), and $\mathcal I$ the final-run steps enumerated stage by stage, particle by particle and position by position; the final run starts after $\cG$ is realised and its temperatures are fixed by the frozen grid, so the three conditions hold. With $\cG$ trivial and non-random $\ph_u$ this is the displayed form of the theorem, the sum running over the executions of coordinate $j$ ($A_u=\emptyset$ when $\lambda_u\ne G_j$). \qed
+
+\section{Part (iv)}
+
+\paragraph{(iv-a)} is Proposition~\ref{prop:end}; the supplementary ratio statement is its second display.
+
+\paragraph{(iv-b).} Let $0\le i<a$, so $1\le k+i+1\le K\le p$. Then $r_{k+i}=\frac{k+i+1}{(2p-k-i-1)\sqrt{n+1}}$ with $p\le2p-k-i-1\le2p$, so $\frac1{2p\sqrt{n+1}}\le r_{k+i}\le\frac1{\sqrt{n+1}}<1$, hence $h_{k+i}=\frac{r_{k+i}}{1+r_{k+i}}\ge\frac{r_{k+i}}2\ge\frac1{4p\sqrt{n+1}}$. Also $B\le\lfloor\sqrt p\rfloor\le p$, so $m=p+B+2\le2p+2\le4p$, and $\binom ma\le m^a/a!$. Therefore
+\[
+\binom ma^{-1}\prod_{i<a}h_{k+i}\ge\frac{a!}{(4p)^a}\cdot\frac1{(4p\sqrt{n+1})^a}=a!\,\big(16p^2\sqrt{n+1}\big)^{-a}\ge a!\,\big(16\sqrt2\,n^{2A+1/2}\big)^{-a},
+\]
+using $p\le n^A$ and $n+1\le2n$ in the last step. By part~(ii), $\Pr(\text{visit }S\cup J\text{ during the round}\mid X_0=S)\ge a!\,(16\sqrt2\,n^{2A+1/2})^{-a}$. This is uniform over the data, $S$, $J$ and $\ph\in[0,1]$, and inverse-polynomial in $n$ for fixed $a$. \qed
+
+\paragraph{(iv-c).} Scope: the final run with the declared budgets of 00\_COMMON~\S2, either tier $e\in\{0,1\}$. Let $a=1$, $k$ fixed, $p=n$ and $n\ge\max(2500,2k+2)$, so that $k<K=\lfloor n/2\rfloor$. Using $2p-k-1\ge p$,
+\[
+h_k\le r_k\le\frac{k+1}{p\sqrt n}=(k+1)n^{-3/2},\qquad \frac{h_k}m\le\frac{r_k}p\le(k+1)n^{-5/2}\quad(m\ge p).
+\]
+By the budget block and final-run structure quoted in STATEMENT.md from 00\_COMMON~\S2, the final run has $4N_e$ particles ($4$ islands $\times N_e$) and $T+L+4$ rounds per particle ($T$ grid stages with one round each, $L$ burn-in rounds and $4$ measured rounds). Moreover $T\le T_e$, from $Q_f=4N_e(T+L+5)\le4N_e(T_e+L+5)$; $N_e=4^eN_0=4^e\max(2500,n,p)=4^en\le4n$ (as $p=n\ge2500$); $\ell=\lceil\log_2(n+p+1)\rceil=\lceil\log_2(2n+1)\rceil$; $T_e=4^eT_0=4^e\max(1000,\ell^2)\le4(1000+\ell^2)$; and $L=\max(4,\lceil\log_2(n+1)\rceil)\le\ell+4$. So the number of final-run particle-rounds is
+\[
+R=4N_e(T+L+4)\le16n\,(4008+4\ell^2+\ell).
+\]
+(1) The (ii) bound summed over the final run: $R\cdot h_k/m\le16(k+1)\,n^{-3/2}(4008+4\ell^2+\ell)\to0$.
+(2) Each round contains exactly one Gibbs-$j$ step per particle, so the final run has exactly $R$ Gibbs-$j$ executions, and the (iii) bound satisfies $h_k\sum_{u\in\text{final run}}\Pr(A_u)\le h_kR\le16(k+1)\,n^{-1/2}(4008+4\ell^2+\ell)\to0$.
+Both limits hold because $\ell=O(\log n)$. So neither (ii) nor (iii), summed over the final-run budget, yields a quantity bounded away from $0$; no discovery guarantee within that budget follows from them. The theorem asserts nothing about discovery. \qed
+
+\paragraph{(iv-d).} If $|S|=K$ and $j\notin S$, then $|S+j|=K+1$, so $S+j\notin\Om$, $\vp(S+j)=0$, $\gamma_\ph(S+j)=0$, and by~\eqref{eq:gibbs} (T09(ii)) $o_j(S,\ph)=0$: no Gibbs step adds a variable at a size-$K$ state (the denominator $\gamma_\ph(S^+)+\gamma_\ph(S^-)\ge\gamma_\ph(S)>0$ by T22 Lemma~1). No other kernel leaves $\Om$: both swaps propose $S\setminus\{j\}\cup\{l\}$, of size $|S|$, and the independence proposal is a $\pi_0$ draw, supported on $\Om$. Parts (i)--(iii) are asserted, and proved above, only for $k<K$ and, in (ii), $k+a\le K$. \qed
+
+\section*{Hypothesis use}
+Part~(i) and (iv-b): deterministic, for every admissible data set; no statistical assumption. Part~(ii): the round's construction (uniform order, independent of the state) and EX-S. Part~(iii): EX-A and EX-S in the form~\eqref{eq:step}, and $\ph_u\in[0,1]$ for moves. T09(ii): the Gibbs kernel~\eqref{eq:gibbs} (and, in Remark~\ref{rem:ex}(c) only, reversibility of all elementary kernels). T22 Lemmas~1--3: positivity, the score floor~\eqref{eq:floor} and the prior ratio. 00\_COMMON budget block and exact-branch rule (quoted in STATEMENT.md): (iv-c) and Remark~\ref{rem:ex}(a). SR and CAL: not used.
+
+\end{document}

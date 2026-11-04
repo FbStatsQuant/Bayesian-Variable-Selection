@@ -1,0 +1,421 @@
+﻿\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newcommand{\Pp}{\mathbb P}
+\newcommand{\E}{\mathbb E}
+\newcommand{\1}{\mathbf 1}
+\newcommand{\Sc}{\mathcal S}
+\newcommand{\Fc}{\mathcal F}
+\newcommand{\Om}{\Omega}
+\newcommand{\Rd}{\mathcal R_d}
+\title{T21: Composition for the reported HPM\\\large C1 and discovery routes (a)--(f)}
+\author{Astra lead; reviewed by Sol 6.1 x2}
+\date{22 October 2026}
+\begin{document}
+\maketitle
+\noindent\textbf{proved (Astra lead; reviewed by Sol 6.1 x2); not adopted.}
+This proof establishes the conditional statement in \texttt{STATEMENT.md}.
+The posterior concentration input H03, the addition input H10, and the terminal
+repair input H24 are hypotheses, not previously proved theorems.
+No numerical experiment is used.
+
+\section{Setting and the composition claim}
+All notation and hypotheses are as in \texttt{STATEMENT.md}. In particular,
+\(\Om=\{S\subseteq[p]:|S|\le K\}\), \(K=\min(p,\lfloor n/2\rfloor)\),
+\(S_0\in\Om\), and
+\[
+ F(S)=\log\{\varpi(S)m(S)\},\qquad
+ Z=\sum_{S\in\Om}e^{F(S)},\qquad
+ \pi(S)=e^{F(S)}/Z,\qquad \delta_1=1-\pi(S_0).
+\]
+The score formula and the capped prior are those written out in the statement.
+The data law is \(P_0\); \(\Pp\) adds the independent algorithm randomness.
+The total HPM order first compares scores, then (only for exact equality)
+smaller size and lexicographic order. Its maximum on \(\Om\) is \(S^\dagger\).
+The cumulative set of scored models is \(\Sc\), with pre-final subset
+\(\Sc_{\rm cal}\). On \(U^c\), where a usable output exists, the reported
+\(\widehat S\) is the maximum of \(\Sc\) in that same order.
+
+The probabilities below are never conditioned on passing future diagnostics
+or on future completion. In route (a), a launched final run executes all its
+designated draws; in (d), the specified scan is completed; in (e), the specified
+terminal rounds execute. These are the operational hypotheses in the statement.
+If external interruption truncates a launched run, the full-count formula of
+(a) is not asserted for that run.
+
+\begin{theorem}[C1]
+For every valid problem and every such joint law,
+\begin{equation}\label{eq:C1}
+ \Pp\{U\text{ or }\widehat S\ne S_0\}
+ \le \Pp(U)+2E_0\delta_1+\Pp\{U^c,S_0\notin\Sc\}.
+\end{equation}
+Under H03, \(2E_0\delta_1\to0\). Consequently, if \(\Pp(U)\to0\)
+and the discovery term tends to zero under one of the conditions established
+below, \(\Pp\{U^c,\widehat S=S_0\}\to1\).
+\end{theorem}
+
+\begin{proof}
+On \(\{\pi(S_0)>1/2\}\), every \(S\ne S_0\) satisfies
+\[
+ \pi(S)\le1-\pi(S_0)<\pi(S_0).
+\]
+Thus \(S_0\) is the strict score maximum, with no tie. If it has also been
+scored and the output is usable, the method must return it. Hence
+\[
+ \{U^c,\widehat S\ne S_0\}
+ \subseteq\{\delta_1\ge1/2\}\cup\{U^c,S_0\notin\Sc\}.
+\]
+The first event depends only on the data, and
+\(\Pp(\delta_1\ge1/2)=P_0(\delta_1\ge1/2)\le2E_0\delta_1\).
+Add \(\Pp(U)\) to get \eqref{eq:C1}.
+
+H03 gives \(\delta_1\to0\) in \(P_0\)-probability, since
+\(\sqrt{\log n/n}\to0\). For every \(\epsilon>0\), using
+\(0\le\delta_1\le1\),
+\[
+ E_0\delta_1\le\epsilon+P_0(\delta_1>\epsilon).
+\]
+Taking a limsup, then \(\epsilon\downarrow0\), proves the asserted mean limit.
+This does not assert an \(O(\sqrt{\log n/n})\) frequentist error rate.
+\end{proof}
+
+This argument also proves directly the ledger fact needed here: if the global
+tie-broken maximum has been scored, the reported maximum on a usable run equals
+it. No unproved clause of T11 or T03 is needed for this deterministic fact.
+
+\section{Route (a): fresh final draws}
+Let \(\mathcal H_{\rm cal}\) contain the data and the entire pre-final
+history, including the tables and calibration streams. The event \(\Fc\)
+that calibration permits the final SMC run, its tier, grid, \(T\), and
+\(N_e\) are measurable there. On \(\Fc\), the number of initial draws
+plus independence proposals is
+\begin{equation}\label{eq:Q}
+ Q_f=4N_e+4N_e(T+L+4)=4N_e(T+L+5).
+\end{equation}
+Off \(\Fc\) set \(Q_f=0\) in indicator-weighted formulas.
+
+The wave-1 result T11(iii) says that, given data and frozen calibration, these
+designated draws are iid \(\pi_0\), and their fixed-model miss probability is
+\((1-\pi_0(S^*))^{Q_f}\). Its proof gives the same assertion conditional on
+the entire pre-final history: see the collected proof's proposition on the
+final run as a reading scheme, which fixes all calibration streams before
+reading fresh final streams. For completeness, the relevant reasoning is as
+follows. CAL and EX-S leave the final streams independent of
+\(\mathcal H_{\rm cal}\). Each designated call uses unread uniforms and
+has conditional law \(\pi_0\) given all preceding reads. Repeated conditioning
+therefore factors the joint law of its \(Q_f\) outputs, even though other
+random operations occur between calls. Their number is fixed by the pre-final
+history, not selected by their outcomes. Thus, writing \(\mathcal D_f\) for
+the set of these draws,
+\begin{equation}\label{eq:miss}
+ \Pp(S_0\notin\mathcal D_f\mid\mathcal H_{\rm cal})
+ =(1-\pi_0(S_0))^{Q_f}\quad\hbox{on }\Fc.
+\end{equation}
+Here the true support is fixed by the data-generating problem and in particular
+does not depend on final randomness. Initial draws and independence proposals
+are all scored, so \(\Sc_{\rm cal}\cup\mathcal D_f\subseteq\Sc\) on
+\(\Fc\). Splitting according to \(\Fc\), then applying
+\eqref{eq:miss} and the tower property, gives
+\begin{align}
+ \Pp(S_0\notin\Sc)
+ &\le\Pp(\Fc^c,S_0\notin\Sc_{\rm cal})\notag\\
+ &\quad+\E\left[\1_{\Fc}\1_{\{S_0\notin\Sc_{\rm cal}\}}
+       (1-\pi_0(S_0))^{Q_f}\right].\label{eq:a}
+\end{align}
+No independence between calibration success and its earlier scoring events
+was used. The indicator of earlier absence is measurable before final
+randomness. Since \(1-x\le e^{-x}\), the second line is at most the
+same expectation with \(e^{-Q_f\pi_0(S_0)}\).
+
+For any fixed \(M>0\),
+\[
+ \E[\1_{\Fc}e^{-Q_f\pi_0(S_0)}]
+ \le\Pp(\Fc,Q_f\pi_0(S_0)\le M)+e^{-M}.
+\]
+The stated divergence on launched runs therefore makes this expectation
+vanish, by first taking \(n\to\infty\) and then \(M\to\infty\).
+Together with the nonlaunch-and-no-earlier-hit term, this proves (a).
+This use of a fixed exponent does not apply to the adaptive calibration draw
+count.
+
+\subsection*{One-deletion start mass and actual budgets}
+Assume \(s_0\ge1\), \(i\in S_0\), and
+\(\widetilde S_0=S_0\setminus\{i\}\) has \(\pi_0\)-mass at least
+\(c>0\). Its being the start mode is allowed but not needed for the following
+inequality. The addition is feasible because \(s_0\le K\). Hypothesis H10
+gives
+\[
+ \pi_0(S_0)\ge c r_{s_0-1}
+ =\frac{c s_0}{(2p-s_0)\sqrt{n+1}}.
+\]
+Consequently, on \(\Fc\),
+\begin{equation}\label{eq:intensity}
+ Q_f\pi_0(S_0)\ge
+ \frac{4c s_0N_e(T+L+5)}{(2p-s_0)\sqrt{n+1}}.
+\end{equation}
+Since \(p\ge s_0\ge1\), \(p\le2p-s_0\le2p\). For fixed
+\(s_0,c\), the expression on the right has order
+\(N_e(T+L+5)/(p\sqrt n)\), with constants independent of the tier and
+grid. This is the order of a guaranteed lower bound, not a two-sided order
+for the actual intensity. If \(p\le C\sqrt n\), then \(N_e\ge n\),
+\(T\ge1\), and
+\[
+ \frac{4c s_0N_e(T+L+5)}{(2p-s_0)\sqrt{n+1}}
+ \ge\frac{2c s_0}{C}\sqrt{\frac n{n+1}}(L+6)\longrightarrow\infty.
+\]
+This includes \(p\) proportional to \(\sqrt n\), since
+\(L\ge\lceil\log_2(n+1)\rceil\). If the mass hypothesis holds only on
+an event \(G_n\) with \(\Pp(G_n)\to1\), split the expectation in
+\eqref{eq:a} over \(G_n\) and \(G_n^c\); the extra term is at most
+\(\Pp(G_n^c)\). A lower bound which ceases to diverge gives no upper
+bound on the true intensity and no proof of failure outside this sufficient
+range. No conclusion of T27 is invoked.
+
+\section{Route (b): a Gibbs execution}
+At the specified execution put \(A=X_{{\rm pre}-j}\setminus\{j\}
+=S_0\setminus\{j\}\). The two candidate configurations are \(A\) and
+\(A\cup\{j\}\). If \(j\in S_0\), the latter is \(S_0\) and is
+feasible because \(s_0\le K\). If \(j\notin S_0\), the former is
+\(S_0\) and is feasible, even if the alternative exceeds the cap. In either
+case SR scores \(S_0\). This is true whether or not the ensuing Gibbs draw
+selects it. Thus a missed truth implies the absence of the specified
+execution, and
+\(\Pp(U^c,S_0\notin\Sc)\le\Pp(U^c,E_G^c)\).
+
+The state immediately before coordinate \(j\) may have been changed by any
+earlier labels in the random-order round. Therefore a condition solely on
+round-start occupancy cannot be substituted for the displayed equality at
+execution time. No round-end occupancy claim is being made.
+
+\section{Route (c): stopped swap opportunities}
+Suppose the current proxy has the form
+\(S=(S_0\setminus\{l\})\cup\{j\}\), where
+\(l\in S_0\), \(j\notin S_0\), and \(k=|S|=s_0\in\{1,\ldots,p-1\}\).
+There is exactly one deletion/insertion pair producing \(S_0\), namely
+\((j,l)\). Conditional on the full past just before a uniform swap,
+that pair has probability
+\begin{equation}\label{eq:swap}
+ b=\frac1k\frac1{p-k}.
+\end{equation}
+Acceptance is irrelevant because the proposal is scored.
+
+We prove the stopped-opportunity bound directly, rather than citing an
+unproved ledger clause. Order all executed elementary operations
+chronologically; the finite budgets permit such an ordering, and stopped
+histories include the identity of the particle and the next operation.
+Count only eligible swap executions before the first truth score. Let
+\(\tau_i\) be the time of the \(i\)-th such execution, or \(\infty\)
+if it does not occur. Eligibility and the absence of prior discovery are
+known immediately before each draw. Let \(A_i\) be the event that
+\(\tau_i<\infty\) and its proposal misses \(S_0\), and put
+\(A_0\) equal to the whole probability space. The event
+\(\{\tau_i<\infty\}\) implies \(A_{i-1}\) for \(i\ge2\): a hit at
+an earlier counted execution would have stopped counting. Summing the
+conditional miss probabilities over the possible pre-execution histories
+gives
+\[
+ \Pp(A_i)=(1-b)\Pp(\tau_i<\infty)
+ \le(1-b)\Pp(A_{i-1})\le(1-b)^i.
+\]
+This argument does not condition on a future opportunity count. If the
+whole run misses truth and \(O\ge D\), then \(A_D\) occurs (for
+\(D=0\), simply use the bound 1). Hence
+\begin{align*}
+ \Pp(S_0\notin\Sc)
+ &\le\Pp(S_0\notin\Sc,O<D)
+     +\Pp(S_0\notin\Sc,O\ge D)\\
+ &\le\delta+(1-b)^D.
+\end{align*}
+The proof remains valid after conditioning on data or initial information
+for which the stipulated proposal laws hold and \(D,b\) are fixed.
+For PX choose \(D_n=\lceil\omega_n k(p-k)\rceil\). Then
+\((1-b)^{D_n}\le e^{-bD_n}\le e^{-\omega_n}\to0\); the deficient-exposure
+term vanishes by PX. A relation between two models, such as ONE, alone
+does not supply this execution count.
+
+For the neighbour-swap proposal, the unique useful pair is still
+\((j,l)\). Its conditional probability is zero if
+\(l\notin N(j)\setminus S\), and otherwise is
+\[
+ b_e=\frac1{k\,|N(j)\setminus S|}.
+\]
+The actual graph is essential. For a fixed deterministic \(b_*\in(0,1]\), if \(b_e\ge b_*\) at every counted
+execution, the same conditioning argument yields
+\(\Pp(A_i)\le(1-b_*)\Pp(A_{i-1})\), proving the asserted extension.
+For a random lower bound measurable at a conditioning boundary, apply this argument conditionally and then average; the resulting unconditional term is the expectation of \((1-b_*)^D\). There is no division by zero: an execution with the required edge has a
+nonempty insertion set. The uniform-swap formula was restricted to
+\(1\le k<p\) precisely to exclude the method's self-loop boundaries.
+
+\section{Route (d): tables and completed scans}
+For \(n\ge4\), \(\lfloor\sqrt n\rfloor\le\lfloor n/2\rfloor\);
+for \(n=3\), \(\lfloor\sqrt n\rfloor=1=\lfloor n/2\rfloor\).
+Also \(B\le p\), so \(B\le K\). Thus every subset of a block is
+feasible and every completed block table includes its true full-response
+score. In particular, if \(S_0\subseteq C_b\) and that table is
+constructed, \(S_0\) has been scored.
+
+The feasible flip-or-swap neighbourhood is symmetric: the reverse of an
+addition is a deletion, the reverse of a deletion is an addition to the
+original feasible state, and a swap is reversed by the opposite swap.
+If a completed scan has centre \(c\) in the neighbourhood of \(S_0\),
+then \(S_0\) lies in the neighbourhood scanned at \(c\). The method
+scores all of that neighbourhood, including at its last extra scan.
+This is also the scoring portion of wave-1 T20(ii); it needs no strict-mode
+assumption, although T20(ii)'s subsequent move/certificate conclusions do.
+It follows that
+\[
+ \{U^c,S_0\notin\Sc\}\subseteq\{U^c,E_{TS}^c\}.
+\]
+Once a score has been obtained it remains in the HPM ledger even if the
+schedule cannot be constructed later. Consequently schedule success is not
+needed for this route, provided the output is usable. C1 already accounts
+for output unavailability.
+
+\section{Route (e): terminal repair under H24}
+We prove the conditional repair inequality from the uniform one-round
+bounds assumed in H24. Fix the data and the entire available past at the
+selection boundary. On the availability event an eligible particle starts
+at \(x\in\Rd\). Its future terminal rounds use fresh randomness and the
+same kernel \(K_1\), without intervening resampling. The round count
+\(H\), and the constants \(a=a_n\), \(\eta=\eta_n\), are now fixed.
+H24 states
+\begin{equation}\label{eq:H24}
+ \inf_{x\in\Rd}K_1(x,\{S_0\})\ge a,
+ \qquad
+ \sup_{x\in\Rd}\Pp_x(\hbox{an exit during one round})\le\eta.
+\end{equation}
+These are assumptions on the actual hybrid round, including all its labels;
+they are not derived here from leakage or gain conditions.
+
+Let \(J\) be the event of any elementary-state exit from \(\Rd\) during
+the \(H\) rounds. Before the first exit each round starts in \(\Rd\).
+At each such boundary apply the second inequality in \eqref{eq:H24}
+conditional on that boundary's past. Summing the probabilities of a first
+exit in the different rounds gives
+\begin{equation}\label{eq:exit}
+ \Pp(J\mid\hbox{selection past})\le H\eta.
+\end{equation}
+For \(h=0,\ldots,H\), let \(B_h\) mean no exit through round \(h\)
+and none of its first \(h\) round-end states equals \(S_0\).
+With \(B_0\) the whole conditional space, on \(B_{h-1}\) the next start
+is in \(\Rd\), so the first inequality in \eqref{eq:H24} gives
+\[
+ \Pp(B_h\mid\hbox{selection past})
+ \le(1-a)\Pp(B_{h-1}\mid\hbox{selection past})\le(1-a)^h.
+\]
+Every terminal endpoint is a scored state. Indeed initial particle states
+are scored; Gibbs updates score both feasible alternatives under SR, swap
+and independence proposals are scored, and an acceptance moves to a scored
+state while a rejection retains the current scored state. Resampling before
+the terminal segment merely copies scored states. Thus a truth endpoint
+implies a truth score. Let \(M_H\) be the event that \(S_0\notin\Sc\) when
+those \(H\) rounds end. It follows that \(M_H\) is contained in
+\(J\cup B_H\), and
+\begin{equation}\label{eq:repair}
+ \Pp(M_H\mid\hbox{selection past})
+ \le(1-a_n)^H+H\eta_n.
+\end{equation}
+If the initial state is already truth, its score is already present and
+\(M_H\) is empty. In particular this case cannot worsen any
+whole-run bound. More generally, a truth visit before an endpoint only
+improves discovery. At \(H=0\) use the convention \((1-a)^0=1\).
+
+Let \(A\) be the past-measurable availability event. Split whole-run failure
+over \(A^c\) and \(A\), use \eqref{eq:repair}, cap the conditional
+bound by 1, and integrate. This gives
+\[
+ \Pp(S_0\notin\Sc)
+ \le\Pp(A^c)+\E\left[\1_A
+   \min\{1,(1-a_n)^H+H\eta_n\}\right].
+\]
+For a final-run segment use
+\(A_F=\Fc\cap\{\hbox{eligible particle available}\}\).
+Splitting first into nonlaunch, launch without an eligible particle, and
+\(A_F\), improves this to
+\begin{align}
+ \Pp(S_0\notin\Sc)
+ &\le\Pp(\Fc^c,S_0\notin\Sc_{\rm cal})
+   +\Pp(\Fc,\hbox{no eligible particle})\notag\\
+ &\quad+\E\left[\1_{A_F}
+     \min\{1,(1-a_n)^H+H\eta_n\}\right].\label{eq:finalrepair}
+\end{align}
+Selection may depend on all states and randomness observed so far, since
+\eqref{eq:H24} is uniform over eligible states. It may not inspect future
+randomness. At a pilot terminal boundary the same argument uses the pilot's
+forward filtration: unread uniforms are fresh there. Conditioning instead
+on the grid eventually produced by that pilot would reveal future information
+and is not part of this argument.
+
+For arbitrary \(H\), \((1-a_n)^H\le e^{-Ha_n}\); thus the conditions
+\(Ha_n\to\infty\) and \(H\eta_n\to0\) in probability on availability
+make the capped expectation tend to zero, by the same bounded-variable
+argument used for C1. For \(H=L+4\), H24's explicit asymptotic inputs give
+this directly: when \(s_0,d\) are fixed and \(B\le16\),
+\[
+ c_n=\frac1{(s_0+d+B+2)!}\ge\frac1{(s_0+d+18)!}>0.
+\]
+On an event of probability tending to one,
+\(a_n\ge c_n/2\), while \(L\to\infty\); hence \(Ha_n\to\infty\)
+in probability, and \(H\eta_n\to0\) is the other assumed input.
+The availability and nonlaunch terms must still vanish.
+The proposed formulas for \(a_n,\eta_n\) in the statement only specify
+which H24 input is intended; they do not prove H24 or its rates.
+
+\section{Route (f): completed exact enumeration}
+When
+\begin{equation}\label{eq:exact}
+ \sum_{k=0}^K\binom pk\le(5H_0+4N_0)p,
+\end{equation}
+the method chooses enumeration before constructing the SMC components.
+On its completion, every feasible model has been scored, so \(\Sc=\Om\).
+The running-best rule uses precisely the global tie order and therefore
+returns \(\widehat S=S^\dagger\). Its accumulated evidence and inclusion
+numerators are, under EX-A,
+\[
+ Z=\sum_{S\in\Om}\varpi(S)m(S),\qquad
+ Z_j=\sum_{\substack{S\in\Om\\j\in S}}\varpi(S)m(S).
+\]
+Consequently the evidence is exact and the primary PIP is \(Z_j/Z\).
+No Monte Carlo PIP or secondary-pooling assertion is used.
+This is finite enumeration, not an application of an unproved asymptotic
+Monte Carlo theorem. Wave-1 T09(i) establishes the exact start normaliser
+and sampler when those components are used; it is compatible with the
+method but unnecessary for these direct enumeration identities.
+
+For fixed \(p\ge1\), the left side of \eqref{eq:exact} is at most
+\(2^p\), whereas
+\((5H_0+4N_0)p\ge4np\to\infty\). Thus the branch inequality holds
+eventually (and eventually \(K=p\)). This proves eventual branch selection,
+not completion under a fixed external allocation. Conditional on completion,
+the discovery term in C1 is zero; H03 is still needed for truth consistency.
+
+\section{Scope and source locators}
+\small
+The method used is \emph{METHODOLOGY\_v3.md}, version 3.0 of 19 October 2026:
+\S3 for budgets; \S5 for the posterior; \S6.2 for exact enumeration;
+\S6.3 for tables and the start; \S6.5 for move proposals;
+\S\S6.8--6.9 for calibration and fresh final streams; and \S6.10 for the
+all-scored HPM and local scans. The only cited proved wave-1 statements
+are in \emph{COLLECTED\_PROOFS\_v2.tex}: the T11(iii) chapter, its
+``final run is a reading scheme'' proposition and theorem; the T20 chapter,
+clause (ii-A), first scoring implication; and the T09 chapter, part (i),
+quoted only for the exact start component. All facts required beyond these
+and the explicit H03/H10/H24 hypotheses were proved above from the method.
+
+For statistical interpretation, G/R/SE/BM-C are the proposed primitive
+conditions behind T03, not a proved route to H03 in this document. No
+EXP or EXP' expansion is invoked and no no-switch conclusion is made;
+therefore no cluster-separation implication is being presumed. The result
+keeps operational failure separate from posterior error and discovery.
+It proves neither evidence nor PIP accuracy on the SMC branch.
+\end{document}
+
+
+
+

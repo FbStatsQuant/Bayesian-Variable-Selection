@@ -1,0 +1,7 @@
+# API-PXNGAP: close the p ≫ n gap of the masked-regime main theorem (Fable)
+
+**Why.** The paper's main theorem in the masked regime (Thm 5(b1), with LS0) is fully proved on the linked-hub family LH only for exact-Gram designs, p < n (`theory/W4-T38FULL`, corrected in `theory/W6-FIXREV1`). The p ≫ n version on the iid family LH-iid (`theory/W3-PXN`, checked by `theory/W5-VMASK`) has an open **cross-family GAP** from Astra (`theory/A-REV3` REVIEW.md), centred on the random X-dependent partition and on uniformity over the random design. `theory/W7-PART` (partition-recovery lemma) and the Astra re-review `theory/A-REV6` (if pushed) bear directly on it. The study is p ≫ n (n = 200, p ∈ {500, 1000}), so this gap decides whether the headline theorem covers the study's regime at all.
+
+**Goal.** Close A-REV3's p ≫ n GAP: state and prove the LH-iid version of Thm 5(b1) with every premise discharged on the random design — partition recovery with explicit probability, uniform control of the start mass, eligibility of the start mode, TD′ for LS0, and π(S₀) → 1 — or, if some premise genuinely fails for p ≫ n, prove the obstruction and give the strongest true statement (e.g. a restricted p-range p ≤ n^A with explicit A, or a modified family). Read A-REV3's exact objections first and answer each one explicitly.
+
+**Deliverable:** `theory_campaign/API-PXNGAP/REPORT.md` (+ PROOF.md): a point-by-point answer to A-REV3's GAP, the theorem with all hypotheses named, full proofs, small-scale exact checks (through owls_run), confidence card.

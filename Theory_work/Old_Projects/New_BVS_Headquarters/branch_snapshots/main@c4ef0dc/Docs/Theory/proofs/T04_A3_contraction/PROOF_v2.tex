@@ -1,0 +1,593 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb R}
+\newcommand{\E}{\mathbb E}
+\renewcommand{\P}{\mathbb P}
+\newcommand{\Pd}{\Pi^\dagger}
+\newcommand{\ve}{\varepsilon}
+\newcommand{\vp}{\varpi}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\IG}{\mathrm{IG}}
+\newcommand{\sst}{\sigma_\star}
+\newcommand{\eps}{\epsilon}
+
+\title{T04 (A3): Contraction without beta-min for the SMC-BVS v3 target\\[2pt]\large Proof, version 2 (after review round 1)}
+\author{Wave 3, lead Claude Opus 5.5. Status: under review; not adopted.}
+\date{22 October 2026}
+
+\begin{document}
+\maketitle
+
+\noindent The statement is that of \texttt{STATEMENT.md}, which is restated in Section~0. Everything is proved from the definitions there (including the v3 definition of $\pi$, quoted in \S0), the assumptions G, R, SE, DX, and the single hypothesis H-T02 (= T02(i)). No other result is used, apart from elementary facts that are proved inline.
+
+\tableofcontents
+
+\setcounter{section}{-1}
+\section{Setting, hypotheses and the claim}\label{sec:setting}
+
+\paragraph{Data and contrast coordinates.} Throughout, $n\ge4$, $p\ge1$ and $N:=n-1$. The raw design $X^r\in\R^{n\times p}$ is fixed and has no constant column. $C=I_n-\mathbf 1\mathbf 1^\top/n$, $D_x$ is the diagonal matrix of raw column sample standard deviations, and $X=CX^rD_x^{-1}$ is the standardised design, so that $\|x_j\|^2=N$ for every column. $U\in\R^{n\times N}$ is a fixed matrix with $U^\top U=I_N$ and $UU^\top=C$. We write
+\[
+Z:=U^\top X\in\R^{N\times p}\quad(\text{so }X=UZ),\qquad y_c:=U^\top y^r\in\R^N,\qquad s_y^2:=\|Cy^r\|^2/N=\|y_c\|^2/N .
+\]
+$Z_S$ denotes the columns of $Z$ indexed by $S\subseteq[p]$, and $|S|=k$. Since $X=UZ$ and $U^\top U=I$,
+\[
+G_S:=X_S^\top X_S=Z_S^\top Z_S,\qquad \|z_j\|^2=\|x_j\|^2=N,\qquad R_S:=G_S/N .
+\]
+Further $H_S:=(n+1)G_S+I_k$, $D_S:=\det H_S/\det(G_S+I_k)$, $M_S:=nZ_SH_S^{-1}Z_S^\top\in\R^{N\times N}$, and $P_S$ is the orthogonal projection of $\R^N$ onto the column space of $Z_S$. For $S=\emptyset$: $G_\emptyset$ is the empty matrix, $D_\emptyset=1$, and $M_\emptyset=P_\emptyset=0$.
+
+\paragraph{Truth.} $y^r=\alpha^\ast\mathbf 1+X^r\beta^\ast+\ve$ with $\ve\sim N_n(0,\sst^2I_n)$, $\sst^2>0$ fixed. $\mu=CX^r\beta^\ast=X\theta^\ast$ with $\theta^\ast=D_x\beta^\ast$, $S_0=\operatorname{supp}\beta^\ast=\operatorname{supp}\theta^\ast$ and $s_0=|S_0|$. $\P_0,\E_0$ refer to the law of $\ve$. We put
+\[
+\mu_c:=U^\top\mu=Z\theta^\ast,\qquad e:=U^\top\ve,\qquad E:=\|e\|^2/\sst^2 .
+\]
+Since $U^\top\mathbf 1=U^\top C\mathbf 1=0$ and $U^\top X^r=U^\top CX^r$, we have $y_c=\mu_c+e$. Since $U^\top U=I_N$, $e\sim N_N(0,\sst^2I_N)$ and $E\sim\chi^2_N$. Also $\mu\in\operatorname{range}C$, so $\mu=U\mu_c$ and $\|\mu\|=\|\mu_c\|$.
+
+\paragraph{Prior and target.} $\Omega=\{S\subseteq[p]:|S|\le K\}$ with $K=\min(p,\lfloor n/2\rfloor)$. $w(k)=\tfrac12/\binom{2p-1}{k}$, $W_K=\sum_{k\le K}\binom pkw(k)$ and $\vp(S)=w(|S|)/W_K$ on $\Omega$. $b_0=0.01$ and $\nu=0.01+n/2$. $\pi$ is the v3 posterior on $\Omega$, defined in 00\_COMMON \S1 (and in \texttt{STATEMENT.md}) as follows: with $y:=Cy^r/s_y$, $z_S:=X_S^\top y$, $Q^{\rm v3}_S:=y^\top y-nz_S^\top H_S^{-1}z_S$ and $a_0=b_0=0.01$,
+\[
+m(S)=\frac{(2b_0)^{a_0}\Gamma(\nu)}{\pi^{n/2}\Gamma(a_0)}\,D_S^{-1/2}\big(2b_0+Q^{\rm v3}_S\big)^{-\nu},\qquad \pi(S)=\frac{\vp(S)m(S)}{\sum_{S'\in\Omega}\vp(S')m(S')}\quad(S\in\Omega).
+\]
+(In $m(S)$, $\pi^{n/2}$ is a power of the number $\pi$.) $\Pi(\cdot\mid y)$ denotes $\pi$ as a law on $S$.
+
+\paragraph{The joint contrast posterior $\Pd$.} Put $b:=b_0s_y^2$. $\Pd(\cdot\mid y)$ is the posterior of $(S,\theta,v)$, with $\theta\in\R^p$ and $\theta_j=0$ for $j\notin S$, in the model
+\[
+S\sim\vp,\quad v\sim\IG(0.51,b),\quad \theta_S\mid v,S\sim N_{|S|}\big(0,nv(G_S+I)^{-1}\big),\quad y_c\mid\theta,v,S\sim N_N(Z_S\theta_S,vI_N).
+\]
+Here $\IG(a,c)$ has density $\propto v^{-a-1}e^{-c/v}$ on $(0,\infty)$. The model is well defined when $b>0$, that is, when $y_c\ne0$. This holds $\P_0$-almost surely, because $y_c$ is Gaussian with covariance $\sst^2I_N$. All statements below are made on $\{y_c\ne0\}$. Since $X\theta=UZ\theta$ and $\mu=U\mu_c$,
+\begin{equation}\label{eq:normequal}
+\|X\theta-\mu\|=\|Z_S\theta_S-\mu_c\|\qquad\text{for every $S$ and every $\theta$ supported in $S$.}
+\end{equation}
+
+\paragraph{Rates.} $\ell_n:=\log(p\vee n)$, $\ve_{2,n}^2:=(s_0+1)\ell_n^2/n$, $\ve_{1,n}^2:=(s_0+1)\ell_n/n$, $d_\ast:=s_0+\lceil s_0(2A+1)\rceil$, and
+\[
+m_n:=\Big\lceil\frac{s_0\log(2p)+\frac{s_0+1}2\log n+\frac12\log n}{\log 2}\Big\rceil .
+\]
+Note that $\ell_n\ge\log4>1$, $\log p\le\ell_n$, $\log2\le\ell_n$ and $\log(n+1)\le2\log n\le2\ell_n$.
+
+\paragraph{Assumptions.}
+\begin{itemize}[leftmargin=2.2em]
+\item[R1] $n\to\infty$, $s_0$ fixed, $p=p_n\le n^A$ for a fixed $A\ge1$. Hence $\ell_n\le A\log n$.
+\item[G] The fixed design and Gaussian errors above.
+\item[R] $s_0$ fixed; $p\le n^A$; $\|\mu\|^2/n\le M$; $\lambda_{\min}(R_{S_0})\ge\varphi_0^2>0$ (vacuous if $s_0=0$); $s_0\le K$ for all large $n$.
+\item[SE] (where stated) $\lambda_{\min}(R_T)\ge\varphi_0^2$ for every nonempty $T\subseteq[p]$ with $|T|\le\min(p,m_n+s_0)$.
+\item[DX] (for (iv)) every diagonal entry of $D_x$ is at least $d_->0$.
+\item[H-T02] (T02(i), taken as a hypothesis) In R1 under G and R, $\Pi(|S|>m_n\mid y)\to0$ in $\P_0$-probability. (T02(i) states $\Pi(|S|>m_n(\omega_n)\mid y)=O_{\P_0}(e^{-\omega_n})$ for every deterministic $\omega_n\to\infty$ with $\omega_n=O(\log n)$. We use it only with $\omega_n=\frac12\log n$, for which $m_n(\omega_n)=m_n$.)
+\end{itemize}
+
+\paragraph{The claim (Theorem T04).} ``$\to0$'' means convergence to $0$ in $\P_0$-probability. There is a constant $C<\infty$, depending only on $(\sst^2,M,\varphi_0,A)$, such that in R1 under G, R and H-T02:
+\begin{enumerate}[label=(\roman*)]
+\item $\Pd(\|X\theta-\mu\|^2/n>C\ve_{2,n}^2\mid y)\to0$;
+\item under SE in addition: $\Pi(|S|>d_\ast\mid y)\to0$; $\Pd(\|X\theta-\mu\|^2/n>C\ve_{1,n}^2\mid y)\to0$; and $\Pd(\|\theta-\theta^\ast\|^2>C\ve_{1,n}^2/\varphi_0^2\mid y)\to0$;
+\item for every deterministic $u_n\to\infty$: $\Pd(|v/\sst^2-1|>C[\ve_n^2+u_n/\sqrt n]\mid y)\to0$, with $\ve_n=\ve_{2,n}$ under G, R, and $\ve_n=\ve_{1,n}$ under SE in addition;
+\item under SE and DX: $\Pd(\|D_x^{-1}(\theta-\theta^\ast)\|^2>C\ve_{1,n}^2/(\varphi_0^2d_-^2)\mid y)\to0$.
+\end{enumerate}
+The constant $C$ is given explicitly in \eqref{eq:Cfinal}.
+
+\paragraph{Notation.} Some letters carry fixed meanings that differ from nearby symbols: $C$ is the centring matrix, while the constant of the theorem is $C$ in \eqref{eq:Cfinal} (no confusion arises, since the centring matrix appears only in \S0--\S1); $M$ is the signal bound of R, while $M_S$ is a matrix and $\mathcal M$ a set of models; $B$ is a constant, $\mathcal B(d)$ a set, and $\mathrm B(\cdot,\cdot)$ the Beta function; $W_K$ is the prior normaliser and $W_S$ a noise term; $v$ is the variance parameter and $v_S$ a squared norm; $E$ is a $\chi^2_N$ variable and $\E$ an expectation; $\Gamma(\cdot)$ is the Gamma function.
+
+\paragraph{Plan.} Section~1 computes $\Pd$ and shows that its $S$-marginal is $\pi$. Section~2 collects the matrix algebra. Section~3 defines a high-probability noise event. Section~4 shows that models with a large ridge approximation error have negligible posterior mass. Section~5 turns this into a contraction bound for any dimension cut-off $d$ (the master theorem). Section~6 takes $d=m_n$ (from H-T02) and proves (i) and the first case of (iii). Section~7 proves the sharp dimension bound $\Pi(|S|>d_\ast\mid y)\to0$ under SE. Section~8 takes $d=d_\ast$ and proves (ii), the second case of (iii), and (iv).
+
+\section{The contrast posterior and the prior}\label{sec:posterior}
+
+For $S\subseteq[p]$ put
+\[
+Q_S:=y_c^\top(I_N-M_S)y_c .
+\]
+
+\begin{lemma}[The contrast posterior]\label{lem:post}
+On $\{y_c\ne0\}$, for every $S\in\Omega$:
+\begin{enumerate}[label=(\alph*)]
+\item $\Pd(S\mid y)=\vp(S)D_S^{-1/2}(2b+Q_S)^{-\nu}\big/\sum_{S'\in\Omega}\vp(S')D_{S'}^{-1/2}(2b+Q_{S'})^{-\nu}$;
+\item given $(S,y)$, $v\sim\IG(\nu,\,b+Q_S/2)$;
+\item given $(v,S,y)$, $\theta_S\sim N_{|S|}\big(nH_S^{-1}Z_S^\top y_c,\ nvH_S^{-1}\big)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Fix $S$ with $k=|S|$ and write $\Sigma_S:=I_N+nZ_S(G_S+I)^{-1}Z_S^\top$. Integrating $\theta_S$ out of the Gaussian model gives $y_c\mid v,S\sim N_N(0,v\Sigma_S)$. By Sylvester's determinant identity,
+\[
+\det\Sigma_S=\det\big(I_k+n(G_S+I)^{-1}G_S\big)=\det\big((G_S+I)^{-1}((n+1)G_S+I)\big)=D_S .
+\]
+By the Woodbury identity with $A=n(G_S+I)^{-1}$, so that $(A^{-1}+Z_S^\top Z_S)^{-1}=\big(((n+1)G_S+I)/n\big)^{-1}=nH_S^{-1}$, we get $\Sigma_S^{-1}=I_N-nZ_SH_S^{-1}Z_S^\top=I_N-M_S$. Hence the density of $y_c$ given $(v,S)$ is $(2\pi v)^{-N/2}D_S^{-1/2}\exp(-Q_S/(2v))$. Multiplying by the $\IG(0.51,b)$ density $b^{0.51}\Gamma(0.51)^{-1}v^{-1.51}e^{-b/v}$, the joint density of $(y_c,v)$ given $S$ is
+\[
+(2\pi)^{-N/2}D_S^{-1/2}\frac{b^{0.51}}{\Gamma(0.51)}\,v^{-(0.51+N/2)-1}\exp\Big(-\frac{b+Q_S/2}{v}\Big).
+\]
+Note that $0.51+N/2=0.01+n/2=\nu$. As a function of $v$ this is an $\IG(\nu,b+Q_S/2)$ kernel, which gives (b). Integrating over $v$ gives the marginal density
+\[
+(2\pi)^{-N/2}\frac{b^{0.51}\Gamma(\nu)}{\Gamma(0.51)}\,D_S^{-1/2}\,(b+Q_S/2)^{-\nu}.
+\]
+Its $S$-dependent part is $D_S^{-1/2}(2b+Q_S)^{-\nu}$, up to the $S$-free factor $2^{\nu}$. Multiplying by $\vp(S)$ and normalising gives (a). Here $2b+Q_S\ge2b>0$, because $I-M_S\succeq0$ (Lemma~\ref{lem:alg}(a), which does not depend on this lemma). For (c): given $(v,S)$ the log posterior density of $\theta_S$ is, up to constants, $-\frac1{2v}\big(\|y_c-Z_S\theta_S\|^2+\theta_S^\top(G_S+I)\theta_S/n\big)$. This is a Gaussian kernel with precision $(G_S+(G_S+I)/n)/v=H_S/(nv)$ and mean $(H_S/(nv))^{-1}Z_S^\top y_c/v=nH_S^{-1}Z_S^\top y_c$.
+\end{proof}
+
+\begin{lemma}[The $S$-marginal of $\Pd$ is $\pi$]\label{lem:marg}
+On $\{y_c\ne0\}$, $\Pd(S\mid y)=\pi(S)$ for every $S\in\Omega$.
+\end{lemma}
+
+\begin{proof}
+By the definition in \S0, $\pi(S)\propto\vp(S)D_S^{-1/2}(2b_0+Q^{\rm v3}_S)^{-\nu}$, with $Q^{\rm v3}_S=y^\top y-nz_S^\top H_S^{-1}z_S$, $y=Cy^r/s_y$ and $z_S=X_S^\top y$ (the factor in front of $D_S^{-1/2}$ does not depend on $S$). Since $Cy^r=UU^\top y^r=Uy_c$, we have $y=Uy_c/s_y$. Hence $y^\top y=\|y_c\|^2/s_y^2$ and $z_S=Z_S^\top U^\top Uy_c/s_y=Z_S^\top y_c/s_y$. Therefore $Q^{\rm v3}_S=Q_S/s_y^2$ and $2b_0+Q^{\rm v3}_S=(2b+Q_S)/s_y^2$. The factor $s_y^{2\nu}$ does not depend on $S$, so the normalised weights agree with Lemma~\ref{lem:post}(a). ($D_S$ is the same object in both, since $G_S=X_S^\top X_S$.)
+\end{proof}
+
+From now on $\Pi(\cdot\mid y)$ denotes both $\pi$ and the $S$-marginal of $\Pd$. For $\mathcal A\subseteq\Omega$ we write $\Pi(\mathcal A\mid y)=\sum_{S\in\mathcal A}\pi(S)$, and
+\begin{equation}\label{eq:ratio}
+\frac{\pi(S)}{\pi(S')}=\frac{\vp(S)}{\vp(S')}\Big(\frac{D_{S'}}{D_S}\Big)^{1/2}\Big(\frac{2b+Q_{S'}}{2b+Q_S}\Big)^{\nu}\qquad(S,S'\in\Omega).
+\end{equation}
+
+\begin{lemma}[The prior]\label{lem:prior}
+\begin{enumerate}[label=(\alph*)]
+\item $\sum_{k=0}^p\binom pkw(k)=1$; hence $W_K\le1$ and $\sum_{S\in\Omega}\vp(S)=1$.
+\item $w(k)/w(k+1)=(2p-1-k)/(k+1)\le 2p$ for $0\le k\le p-1$.
+\item If $s_0\le K$, then $\vp(S_0)\ge w(s_0)\ge\frac12(2p)^{-s_0}$.
+\item If $j\ge1$ and $s_0+j\le p$, then $w(s_0+j)/w(s_0)\le\big((s_0+j)/p\big)^j$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) With the Beta function, $p\,\mathrm B(k+1,2p-k)=p\,k!(2p-1-k)!/(2p)!=\frac12\,k!(2p-1-k)!/(2p-1)!=w(k)$. Since $\mathrm B(k+1,2p-k)=\int_0^1t^k(1-t)^{p-k}(1-t)^{p-1}dt$, the binomial theorem gives
+\[
+\sum_{k=0}^p\binom pkw(k)=p\int_0^1(1-t)^{p-1}\sum_{k=0}^p\binom pkt^k(1-t)^{p-k}\,dt=p\int_0^1(1-t)^{p-1}dt=1 .
+\]
+So $W_K\le1$, and $\sum_\Omega\vp=W_K/W_K=1$.
+(b) $\binom{2p-1}{k+1}/\binom{2p-1}{k}=(2p-1-k)/(k+1)$.
+(c) $W_K\le1$ gives $\vp(S_0)\ge w(s_0)$, and $\binom{2p-1}{s_0}\le(2p-1)^{s_0}\le(2p)^{s_0}$.
+(d) By (b), $w(s_0+j)/w(s_0)=\prod_{i=s_0}^{s_0+j-1}\frac{i+1}{2p-1-i}$. Each factor is at most the last one, $(s_0+j)/(2p-s_0-j)$, and $2p-s_0-j\ge p$.
+\end{proof}
+
+\section{Matrix algebra}\label{sec:alg}
+
+Define, for every $S\subseteq[p]$,
+\[
+a_S:=\mu_c^\top(I-M_S)\mu_c,\qquad W_S:=\mu_c^\top(I-M_S)e,\qquad v_S:=\|(I-M_S)\mu_c\|^2,\qquad \delta:=\frac{\|\mu\|^2+\|\theta^\ast\|^2}{n}.
+\]
+
+\begin{lemma}\label{lem:alg}
+For every $S\subseteq[p]$ with $k=|S|$:
+\begin{enumerate}[label=(\alph*)]
+\item $M_S$ is symmetric, $0\preceq M_S\preceq\frac{n}{n+1}P_S\preceq P_S$, $M_S^2\preceq M_S$, $\tr M_S\le k$, and $0\preceq I-M_S\preceq I$ with $(I-M_S)^2\preceq I-M_S$.
+\item For every $w\in\R^N$, $w^\top(I-M_S)w=\min_{t\in\R^k}\{\|w-Z_St\|^2+t^\top(G_S+I)t/n\}$. Consequently $0\le Q_S\le\|y_c\|^2$, $0\le v_S\le a_S\le\|\mu\|^2$, and $a_{S}\le\delta$ for every $S\supseteq S_0$.
+\item $Q_S=a_S+2W_S+\sst^2E-e^\top M_Se$, with $0\le e^\top M_Se\le\|P_Se\|^2$. Hence $|Q_S-\sst^2E|\le a_S+2|W_S|+\|P_Se\|^2$.
+\item $1\le D_S\le(n+1)^k$.
+\item $\|M_Sy_c-\mu_c\|^2\le2a_S+2\|P_Se\|^2$.
+\item If $S\subseteq S'$, then $Q_{S'}\le Q_S$ and $1\le D_{S'}/D_S\le(n+1)^{|S'\setminus S|}$.
+\item If $k\ge1$ and $\lambda_{\min}(G_S)\ge N\varphi_0^2>0$, then $M_S\succeq\big(1-\frac{1+\varphi_0^{-2}}{n}\big)P_S$.
+\item If $S\subseteq S'$, $J:=S'\setminus S$ has $j\ge1$ elements, $\lambda_{\min}(G_{S'})\ge N\varphi_0^2>0$, and $\|z_i\|^2=N$ for $i\in J$, then $D_{S'}/D_S\ge\big(n\varphi_0^2/(j+1)\big)^j$.
+\item Under R, $\delta\le\bar\delta:=M(1+\varphi_0^{-2})$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) Let $G_S=V\operatorname{diag}(\lambda_1,\dots,\lambda_k)V^\top$ with $V$ orthogonal and $\lambda_i\ge0$. The vectors $Z_SVe_i$ are orthogonal with squared norms $\lambda_i$. For $\lambda_i>0$ put $q_i:=Z_SVe_i/\sqrt{\lambda_i}$; these form an orthonormal basis of the column space of $Z_S$. Then
+\[
+M_S=\sum_{i:\lambda_i>0}\frac{n\lambda_i}{(n+1)\lambda_i+1}q_iq_i^\top,\qquad P_S=\sum_{i:\lambda_i>0}q_iq_i^\top,
+\]
+and $0<\frac{n\lambda}{(n+1)\lambda+1}<\frac n{n+1}$ for $\lambda>0$. All claims follow.
+
+(b) For $k=0$ both sides equal $\|w\|^2$. For $k\ge1$, the map $t\mapsto\|w-Z_St\|^2+t^\top(G_S+I)t/n$ is a strictly convex quadratic with Hessian $2H_S/n$. Its minimum is $\|w\|^2-w^\top Z_S(H_S/n)^{-1}Z_S^\top w=w^\top(I-M_S)w$. With $w=y_c$ this gives $Q_S\ge0$, and with $t=0$ it gives $Q_S\le\|y_c\|^2$. With $w=\mu_c$, $t=0$ gives $a_S\le\|\mu_c\|^2=\|\mu\|^2$. By (a), $v_S=\mu_c^\top(I-M_S)^2\mu_c\le a_S$. If $S\supseteq S_0$, take $t=\theta^\ast_S$ (zero off $S_0$). Then $Z_St=\mu_c$ and $t^\top(G_S+I)t/n=(\|Z_St\|^2+\|t\|^2)/n=\delta$.
+
+(c) Expand $(\mu_c+e)^\top(I-M_S)(\mu_c+e)$ and use (a).
+
+(d) $D_S=\prod_i\frac{(n+1)\lambda_i+1}{\lambda_i+1}$, and each factor lies in $[1,n+1]$.
+
+(e) $M_Sy_c-\mu_c=-(I-M_S)\mu_c+M_Se$, so the left side is at most $2v_S+2e^\top M_S^2e\le2a_S+2\|P_Se\|^2$, by (a) and (b).
+
+(f) Let $t$ attain the minimum in (b) for $(S,w=y_c)$. Let $t'\in\R^{|S'|}$ equal $t$ on $S$ and $0$ on $S'\setminus S$. Then $Z_{S'}t'=Z_St$ and $t'^\top(G_{S'}+I)t'=\|Z_{S'}t'\|^2+\|t'\|^2=t^\top(G_S+I)t$, so $Q_{S'}\le Q_S$. For the determinants, order $S'$ as $(S,J)$ with $J=S'\setminus S$, $j=|J|$, and write $G_{S'}$ in blocks. By the Schur determinant formula,
+\begin{equation}\label{eq:schur}
+\frac{D_{S'}}{D_S}=\frac{\det\big((n+1)R_2+I_j\big)}{\det(R_1+I_j)},\qquad
+\begin{aligned}
+R_2&:=G_{JJ}-(n+1)G_{JS}\big((n+1)G_S+I\big)^{-1}G_{SJ},\\
+R_1&:=G_{JJ}-G_{JS}(G_S+I)^{-1}G_{SJ}.
+\end{aligned}
+\end{equation}
+Indeed, the Schur complement of $(n+1)G_S+I$ in $(n+1)G_{S'}+I$ is $(n+1)R_2+I$, and that of $G_S+I$ in $G_{S'}+I$ is $R_1+I$. (For $S=\emptyset$, read $R_1=R_2=G_{JJ}$.) Both are positive definite, being Schur complements of positive definite matrices. $R_1\succeq0$, because it is the Schur complement of the positive definite block $G_S+I$ in the positive semidefinite matrix $G_{S'}+\operatorname{diag}(I_{|S|},0)$. Since $(n+1)((n+1)G_S+I)^{-1}=(G_S+\frac1{n+1}I)^{-1}\succeq(G_S+I)^{-1}$, we have $R_2\preceq R_1$. Then $(n+1)R_2+I\preceq(n+1)R_1+I\preceq(n+1)(R_1+I)$, and monotonicity of the determinant on positive definite matrices gives $D_{S'}/D_S\le(n+1)^j$. For the lower bound $D_{S'}/D_S\ge1$: write $D_{S'}=\prod_{i}\frac{(n+1)\lambda_i'+1}{\lambda'_i+1}$ as in (d). Then $\log D_T=\sum_i g(\lambda_i(G_T))$ with $g(\lambda)=\log\frac{(n+1)\lambda+1}{\lambda+1}$, which is nondecreasing on $[0,\infty)$ and has $g(0)=0$. By Cauchy interlacing, the $i$-th largest eigenvalue of $G_{S'}$ is at least the $i$-th largest eigenvalue of its principal submatrix $G_S$ ($i\le|S|$), and the remaining eigenvalues of $G_{S'}$ are $\ge0$. Hence $\log D_{S'}\ge\log D_S$.
+
+(g) In the notation of (a), every $\lambda_i\ge N\varphi_0^2>0$, so the $q_i$ run over all $i$. For $\lambda\ge N\varphi_0^2$,
+\[
+\frac{n\lambda}{(n+1)\lambda+1}=\frac n{n+1}\cdot\frac1{1+\frac1{(n+1)\lambda}}\ge\frac n{n+1}\Big(1-\frac1{(n+1)\lambda}\Big)\ge1-\frac1{n+1}-\frac1{(n+1)N\varphi_0^2}\ge1-\frac{1+\varphi_0^{-2}}n,
+\]
+using $(n+1)N=n^2-1\ge n$.
+
+(h) $G_S$ is a principal submatrix of $G_{S'}\succ0$, so $G_S\succ0$ (or $S=\emptyset$). By \eqref{eq:schur}, and since $(G_S+\frac1{n+1}I)^{-1}\preceq G_S^{-1}$, $R_2\succeq R_0:=G_{JJ}-G_{JS}G_S^{-1}G_{SJ}$ (with $R_0=G_{JJ}$ if $S=\emptyset$). For $x\in\R^j$, $x^\top R_0x=\min_{t}(t,x)^\top G_{S'}(t,x)\ge N\varphi_0^2\|x\|^2$. Hence $\det((n+1)R_2+I)\ge((n+1)N\varphi_0^2+1)^j$. Also $R_1\preceq G_{JJ}$ and $\lambda_{\max}(G_{JJ})\le\tr G_{JJ}=Nj$, so $\det(R_1+I)\le(Nj+1)^j\le(N(j+1))^j$. Therefore
+\[
+\frac{D_{S'}}{D_S}\ge\Big(\frac{(n+1)N\varphi_0^2}{N(j+1)}\Big)^j\ge\Big(\frac{n\varphi_0^2}{j+1}\Big)^j .
+\]
+
+(i) If $s_0=0$, then $\mu=0$, $\theta^\ast=0$ and $\delta=0$. Otherwise $\|\mu\|^2=\theta^{\ast\top}_{S_0}G_{S_0}\theta^\ast_{S_0}\ge N\varphi_0^2\|\theta^\ast\|^2$, so $\|\theta^\ast\|^2\le nM/(N\varphi_0^2)$. Hence $\delta\le M+M/(N\varphi_0^2)\le M(1+\varphi_0^{-2})$.
+\end{proof}
+
+\section{The noise event}\label{sec:noise}
+
+\begin{lemma}[Two tail bounds]\label{lem:tails}
+(a) If $\xi\sim\chi^2_r$ with $r\ge0$ an integer ($\chi^2_0\equiv0$), then $\P(\xi\ge2r\log2+4\tau)\le e^{-\tau}$ for every $\tau\ge0$. (b) If $\zeta\sim N(0,s^2)$ with $s\ge0$, then $\P(|\zeta|>s\sqrt{2\tau})\le2e^{-\tau}$ for every $\tau\ge0$.
+\end{lemma}
+
+\begin{proof}
+(a) $\E e^{\xi/4}=2^{r/2}$; apply Markov's inequality to $e^{\xi/4}$. (b) The case $s=0$ is trivial. Otherwise use $\P(N(0,1)>x)\le e^{-x^2/2}$ for $x\ge0$ (Chernoff) on both tails, with $x=\sqrt{2\tau}$.
+\end{proof}
+
+Define the events
+\begin{align*}
+\mathcal E_1&:=\{E\le2N\},\\
+\mathcal E_2&:=\{\|P_Se\|^2\le14\sst^2|S|\ell_n\ \text{for every }S\subseteq[p]\},\\
+\mathcal E_3&:=\{|W_S|\le2\sst\sqrt{a_S(|S|+1)\ell_n}\ \text{for every }S\subseteq[p]\},\\
+\mathcal E_4(u)&:=\{|E-N|\le u\sqrt{2N}\}\quad(u\ge1),
+\end{align*}
+and $\Omega_n:=\mathcal E_1\cap\mathcal E_2\cap\mathcal E_3$. Put
+\[
+B:=2(1+b_0)(M+2\sst^2),\qquad c_0:=\frac1{2B},\qquad \bar b:=8b_0(M+2\sst^2).
+\]
+
+\begin{lemma}[The noise event]\label{lem:noise}
+$\P_0(\mathcal E_1^c)\le2/N$, $\P_0(\mathcal E_2^c)\le1/n$, $\P_0(\mathcal E_3^c)\le4/n$, $\P_0(\mathcal E_4(u)^c)\le u^{-2}$, and $\P_0(\Omega_n^c)\le8/n$. These bounds involve neither $p$, nor the design, nor $\theta^\ast$, nor the cap. Under R, on $\mathcal E_1$:
+\begin{equation}\label{eq:B}
+0<2b\le\bar b\qquad\text{and}\qquad 2b+Q_S\le nB\ \text{ for every }S .
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+$\mathcal E_1$ and $\mathcal E_4(u)$: Chebyshev, with $\E E=N$ and $\operatorname{Var}E=2N$. On $\mathcal E_1$, $\|y_c\|^2\le2\|\mu\|^2+2\sst^2E\le2nM+4n\sst^2$. So $2b=2b_0\|y_c\|^2/N\le2b_0(n/N)(2M+4\sst^2)\le\bar b$ (as $n/N\le2$), and, by Lemma~\ref{lem:alg}(b), $2b+Q_S\le(1+2b_0/N)\|y_c\|^2\le(1+b_0)\,n(2M+4\sst^2)=nB$. Positivity: $y_c\ne0$.
+
+$\mathcal E_2$: For $|S|=k\ge1$, $\|P_Se\|^2/\sst^2\sim\chi^2_r$ with $r=\operatorname{rank}Z_S\le k$. Put $t_k:=k\log p+k\log2+\ell_n$. Lemma~\ref{lem:tails}(a) and $r\le k$ give $\P_0(\|P_Se\|^2\ge\sst^2(2k\log2+4t_k))\le e^{-t_k}=p^{-k}2^{-k}e^{-\ell_n}$. There are $\binom pk\le p^k$ sets of size $k$, so the union over all $k\ge1$ has probability at most $e^{-\ell_n}\sum_k2^{-k}\le e^{-\ell_n}\le1/n$. Off this union, $\|P_Se\|^2<\sst^2(2k\log2+4k\log p+4k\log2+4\ell_n)\le14\sst^2k\ell_n$, using $\log2,\log p\le\ell_n$ and $k\ge1$. For $S=\emptyset$ both sides vanish.
+
+$\mathcal E_3$: $W_S\sim N(0,\sst^2v_S)$ with $v_S\le a_S$ (Lemma~\ref{lem:alg}(b)). With $t_k$ as above for $k\ge0$, Lemma~\ref{lem:tails}(b) and the union over all sets give probability at most $\sum_{k\ge0}p^k\cdot2p^{-k}2^{-k}e^{-\ell_n}=4e^{-\ell_n}\le4/n$. Off this union, since $t_k\le(2k+1)\ell_n\le2(k+1)\ell_n$, $|W_S|\le\sst\sqrt{2a_S\cdot2(k+1)\ell_n}$.
+
+Finally $2/N\le3/n$ for $n\ge4$, so $\P_0(\Omega_n^c)\le8/n$.
+\end{proof}
+
+\section{Models with a large approximation error lose}\label{sec:bad}
+
+For an integer $d\ge0$ put
+\[
+C_1:=22\sst^2+2\bar\delta,\qquad \rho(d):=\frac2{c_0}\big[3(s_0+1)+1\big]\ell_n+2C_1(d+s_0+1)\ell_n,\qquad L(d):=(d+s_0+1)\ell_n,
+\]
+\[
+C_a:=\frac8{c_0}+2C_1,\qquad \mathcal B(d):=\{S\in\Omega:|S|\le d,\ a_S>\rho(d)\}.
+\]
+Then $\rho(d)\le C_aL(d)$, because $3(s_0+1)+1\le4(s_0+1)\le4(d+s_0+1)$.
+
+\begin{proposition}[Bad models lose]\label{prop:bad}
+Assume R and $s_0\le K$. On $\Omega_n$, for every integer $d\ge0$, $\Pi(\mathcal B(d)\mid y)\le e^{-\ell_n}\le1/n$.
+\end{proposition}
+
+\begin{proof}
+Fix $S\in\mathcal B(d)$ with $k=|S|\le d$, and put $\Delta_S:=Q_S-Q_{S_0}$. By Lemma~\ref{lem:alg}(c),
+\[
+\Delta_S=a_S-a_{S_0}+2W_S-2W_{S_0}-e^\top M_Se+e^\top M_{S_0}e\ge a_S-a_{S_0}-2|W_S|-2|W_{S_0}|-\|P_Se\|^2 .
+\]
+On $\mathcal E_3$, $2|W_S|\le4\sst\sqrt{a_S(k+1)\ell_n}\le\frac{a_S}2+8\sst^2(k+1)\ell_n$, since $4\sqrt{xy}\le\frac x2+8y$. Since $a_{S_0}\le\delta\le\bar\delta$ (Lemma~\ref{lem:alg}(b),(i)), $2|W_{S_0}|\le4\sst\sqrt{\bar\delta(s_0+1)\ell_n}\le\bar\delta+4\sst^2(s_0+1)\ell_n$. On $\mathcal E_2$, $\|P_Se\|^2\le14\sst^2k\ell_n$. Hence
+\begin{equation}\label{eq:Delta}
+\Delta_S\ge\frac{a_S}2-2\bar\delta-\sst^2\big[8(k+1)+4(s_0+1)+14k\big]\ell_n\ge\frac{a_S}2-C_1(k+s_0+1)\ell_n,
+\end{equation}
+because $22k+4s_0+12\le22(k+s_0+1)$ and $2\bar\delta\le2\bar\delta(k+s_0+1)\ell_n$. Since $k\le d$ and $a_S>\rho(d)\ge2C_1(d+s_0+1)\ell_n$, \eqref{eq:Delta} gives $\Delta_S>0$.
+
+By \eqref{eq:ratio}, Lemma~\ref{lem:alg}(d) ($D_S\ge1$, $D_{S_0}\le(n+1)^{s_0}$) and $\log(1+x)\ge x/(1+x)$ for $x\ge0$,
+\[
+\log\frac{\pi(S)}{\pi(S_0)}\le\log\frac{\vp(S)}{\vp(S_0)}+\frac{s_0}2\log(n+1)-\nu\frac{\Delta_S}{2b+Q_S}\le\log\frac{\vp(S)}{\vp(S_0)}+s_0\ell_n-c_0\Delta_S .
+\]
+The last step uses $\nu\ge n/2$ and $2b+Q_S\le nB$ from \eqref{eq:B}. By Lemma~\ref{lem:prior}(c), $-\log\vp(S_0)\le\log2+s_0\log(2p)\le(2s_0+1)\ell_n$. By \eqref{eq:Delta}, $k\le d$, $a_S>\rho(d)$ and the definition of $\rho(d)$,
+\[
+c_0\Delta_S>\frac{c_0\rho(d)}2-c_0C_1(d+s_0+1)\ell_n=\big[3(s_0+1)+1\big]\ell_n .
+\]
+Hence $\pi(S)/\pi(S_0)<\vp(S)e^{-\ell_n}$. (The same estimates give $e^{-3\ell_n}$; $e^{-\ell_n}$ is all that is needed.) Summing over $\mathcal B(d)$ and using $\pi(S_0)\le1$ and $\sum_\Omega\vp=1$ (Lemma~\ref{lem:prior}(a)) gives the claim.
+\end{proof}
+
+\section{The master theorem}\label{sec:master}
+
+Put $\mathcal G(d):=\{S\in\Omega:|S|\le d,\ a_S\le\rho(d)\}$ and $r_n(d,u):=L(d)/n+u/\sqrt n$, and
+\[
+C_b:=2C_a+28\sst^2,\quad C_f:=2C_b+2,\quad C_c:=3C_a+16\sst^2,\]
+\[C_d:=\frac{\bar b+1.02\sst^2+C_c}{\sst^2}+\sqrt2,\quad C_e:=2C_d+2\sqrt2 .
+\]
+These constants depend only on $(\sst^2,M,\varphi_0)$ (and $b_0=0.01$).
+
+\begin{theorem}[Master theorem]\label{thm:master}
+Assume R and $s_0\le K$. For every integer $d\ge0$:
+\begin{enumerate}[label=(\roman*)]
+\item on $\Omega_n$, $\ \Pd\big(\|X\theta-\mu\|^2>C_fL(d)\mid y\big)\le\Pi(|S|>d\mid y)+e^{-\ell_n}+2B/\ell_n$;
+\item if $n\ge8$, then for every $u\in[1,\sqrt{n/8}]$, on $\Omega_n\cap\mathcal E_4(u)$, $\ \Pd\big(|v/\sst^2-1|>C_er_n(d,u)\mid y\big)\le\Pi(|S|>d\mid y)+e^{-\ell_n}+u^{-2}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{prop:bad}, on $\Omega_n$,
+\begin{equation}\label{eq:Gc}
+\Pi(\Omega\setminus\mathcal G(d)\mid y)\le\Pi(|S|>d\mid y)+\Pi(\mathcal B(d)\mid y)\le\Pi(|S|>d\mid y)+e^{-\ell_n}.
+\end{equation}
+Fix $S\in\mathcal G(d)$, $k=|S|\le d$. It suffices to bound the conditional probabilities given $(S,y)$ by $2B/\ell_n$ in (i) and by $u^{-2}$ in (ii), then average over $S\sim\Pi(\cdot\mid y)$ restricted to $\mathcal G(d)$ and add \eqref{eq:Gc}.
+
+(i) By \eqref{eq:normequal}, $\|X\theta-\mu\|=\|Z_S\theta_S-\mu_c\|$. By Lemma~\ref{lem:alg}(e), $\mathcal E_2$ and $a_S\le\rho(d)\le C_aL(d)$, we get $\|M_Sy_c-\mu_c\|^2\le2C_aL(d)+28\sst^2k\ell_n\le C_bL(d)$. Hence $\|Z_S\theta_S-\mu_c\|^2\le2\|Z_S\theta_S-M_Sy_c\|^2+2C_bL(d)$, and $\{\|X\theta-\mu\|^2>C_fL(d)\}\subseteq\{\|Z_S\theta_S-M_Sy_c\|^2>L(d)\}$. By Lemma~\ref{lem:post}(c), given $(v,S,y)$, $Z_S\theta_S-M_Sy_c\sim N_N(0,vM_S)$, with second moment $v\tr M_S\le vk$. By Lemma~\ref{lem:post}(b), $\E[v\mid S,y]=(2b+Q_S)/(2\nu-2)=(2b+Q_S)/(n-1.98)$. By Markov's inequality and \eqref{eq:B},
+\[
+\Pd\big(\|Z_S\theta_S-M_Sy_c\|^2>L(d)\mid S,y\big)\le\frac{k}{(d+s_0+1)\ell_n}\cdot\frac{nB}{n-1.98}\le\frac{2B}{\ell_n},
+\]
+since $n/(n-1.98)\le2$ for $n\ge4$.
+
+(ii) By Lemma~\ref{lem:alg}(c), $\mathcal E_2$, $\mathcal E_3$, $a_S\le\rho(d)$ and $4\sqrt{xy}\le2x+2y$,
+\[
+|Q_S-\sst^2E|\le\rho(d)+4\sst\sqrt{\rho(d)(k+1)\ell_n}+14\sst^2k\ell_n\le3\rho(d)+16\sst^2(k+1)\ell_n\le C_cL(d).
+\]
+Put $x_S:=(2b+Q_S)/(2\nu\sst^2)$. Since $2\nu=n+0.02=N+1.02$,
+\[
+2b+Q_S-2\nu\sst^2=2b+(Q_S-\sst^2E)+\sst^2(E-N)-1.02\sst^2 .
+\]
+On $\mathcal E_1\cap\mathcal E_4(u)$, using \eqref{eq:B}, $2\nu\ge n$ and $\sqrt{2N}/n\le\sqrt{2/n}$,
+\[
+|x_S-1|\le\frac{\bar b+1.02\sst^2}{n\sst^2}+\frac{C_cL(d)}{n\sst^2}+\frac{\sqrt2\,u}{\sqrt n}\le C_d\,r_n(d,u),
+\]
+since $1/n\le u/\sqrt n\le r_n(d,u)$. By Lemma~\ref{lem:post}(b), $\Upsilon:=(2b+Q_S)/(2v)\sim\mathrm{Gamma}(\nu,1)$ given $(S,y)$, and $v/\sst^2=x_S\,\nu/\Upsilon$. By Chebyshev, $\Pd(|\Upsilon-\nu|>u\sqrt\nu\mid S,y)\le u^{-2}$. On $\{|\Upsilon-\nu|\le u\sqrt\nu\}$, $u\le\sqrt{n/8}\le\sqrt\nu/2$ gives $\Upsilon\ge\nu/2$, so $|\nu/\Upsilon-1|\le2u/\sqrt\nu\le2\sqrt2u/\sqrt n\le1$. For reals $x,g$ with $|g-1|\le1$, $|xg-1|\le|x-1|g+|g-1|\le2|x-1|+|g-1|$. Hence $|v/\sst^2-1|\le2C_dr_n(d,u)+2\sqrt2u/\sqrt n\le C_er_n(d,u)$ there.
+\end{proof}
+
+\section{Part (i) and part (iii) under G, R}\label{sec:fallback}
+
+\begin{lemma}\label{lem:mn}
+$\log_2n\le m_n\le5(s_0+1)\ell_n$. Hence $L(m_n)\le6(s_0+1)\ell_n^2=6n\ve_{2,n}^2$.
+\end{lemma}
+
+\begin{proof}
+The numerator in $m_n$ is at least $\log n$ (from the term $\frac{s_0+1}{2}\log n+\frac12\log n\ge\log n$), which gives the lower bound. For the upper bound, it is at most $s_0(\log2+\log p)+\frac{s_0+2}2\log n\le(2s_0+\frac{s_0+2}2)\ell_n\le2.5(s_0+1)\ell_n$. Since $1/\log2<1.443$, $m_n\le3.61(s_0+1)\ell_n+1\le5(s_0+1)\ell_n$. Then $L(m_n)=(m_n+s_0+1)\ell_n\le6(s_0+1)\ell_n^2$, as $s_0+1\le(s_0+1)\ell_n$.
+\end{proof}
+
+\begin{proof}[Proof of (i)]
+Let $n$ be large enough that $s_0\le K$ (R). Theorem~\ref{thm:master}(i) with $d=m_n$ and Lemma~\ref{lem:mn} give, on $\Omega_n$,
+\[
+\Pd\big(\|X\theta-\mu\|^2/n>6C_f\ve_{2,n}^2\mid y\big)\le\Pi(|S|>m_n\mid y)+e^{-\ell_n}+2B/\ell_n .
+\]
+Fix $\epsilon_0>0$. Since $\ell_n\ge\log n\to\infty$, for all large $n$ we have $e^{-\ell_n}+2B/\ell_n\le\epsilon_0/2$. Then
+\[
+\P_0\Big(\Pd\big(\|X\theta-\mu\|^2/n>6C_f\ve_{2,n}^2\mid y\big)>\epsilon_0\Big)\le\frac8n+\P_0\big(\Pi(|S|>m_n\mid y)>\epsilon_0/2\big)\to0,
+\]
+by Lemma~\ref{lem:noise} and H-T02.
+\end{proof}
+
+\begin{proof}[Proof of (iii) under G, R]
+Let $u_n\to\infty$ be deterministic, and put $u_n':=\min\{u_n,\sqrt{n/8}\}$. Then $u'_n\to\infty$, $u'_n\le u_n$, and $u_n'\ge1$ for all large $n$. By Lemma~\ref{lem:mn}, $r_n(m_n,u'_n)\le6\ve_{2,n}^2+u'_n/\sqrt n\le6(\ve_{2,n}^2+u_n/\sqrt n)$. Theorem~\ref{thm:master}(ii) with $d=m_n$ and $u=u'_n$ gives, on $\Omega_n\cap\mathcal E_4(u'_n)$,
+\[
+\Pd\big(|v/\sst^2-1|>6C_e[\ve_{2,n}^2+u_n/\sqrt n]\mid y\big)\le\Pi(|S|>m_n\mid y)+e^{-\ell_n}+(u_n')^{-2}.
+\]
+As in the proof of (i), the $\P_0$-probability that the left side exceeds $\epsilon_0$ is at most $8/n+(u_n')^{-2}+\P_0(\Pi(|S|>m_n\mid y)>\epsilon_0/2)\to0$, for all $n$ large enough that $e^{-\ell_n}+(u'_n)^{-2}\le\epsilon_0/2$.
+\end{proof}
+
+\section{The sharp dimension bound under SE}\label{sec:sharp}
+
+Throughout this section, assume G, R, SE and H-T02, and put
+\[
+j_0:=\lceil s_0(2A+1)\rceil,\qquad d_\ast=s_0+j_0,\qquad u^\sharp_n:=\log n .
+\]
+Let $n_1$ be such that, for all $n\ge n_1$: $s_0\le K$; $m_n+s_0\le\lfloor n/2\rfloor$; and $d_\ast<m_n$. Such an $n_1$ exists by R, because $m_n=O(\log n)$ and $m_n\ge\log_2n$ (Lemma~\ref{lem:mn}). For $n\ge n_1$:
+\begin{equation}\label{eq:cap}
+K=\min(p,\lfloor n/2\rfloor)\ge\min(p,m_n+s_0).
+\end{equation}
+So every set $T$ with $|T|\le m_n+s_0$ lies in $\Omega$.
+
+\begin{lemma}[An underfitting model is dominated by its union with $S_0$]\label{lem:union}
+Let $n\ge n_1$, $S\in\Omega$ with $|S|\le m_n$, and $S':=S\cup S_0$. Then $S'\in\Omega$ and
+\[
+\frac{\pi(S)}{\pi(S_0)}\le(2p)^{s_0}(n+1)^{s_0/2}\,\frac{\pi(S')}{\pi(S_0)} .
+\]
+\end{lemma}
+
+\begin{proof}
+$|S'|\le\min(p,m_n+s_0)\le K$ by \eqref{eq:cap}. By Lemma~\ref{lem:prior}(b), $\vp(S)/\vp(S')=w(|S|)/w(|S'|)\le(2p)^{|S'|-|S|}\le(2p)^{s_0}$. By \eqref{eq:ratio} with Lemma~\ref{lem:alg}(f) ($Q_{S'}\le Q_S$, $D_{S'}/D_S\le(n+1)^{|S_0\setminus S|}$), $\pi(S)/\pi(S')\le(2p)^{s_0}(n+1)^{s_0/2}$.
+\end{proof}
+
+\begin{lemma}[A truncated exponential moment]\label{lem:trunc}
+Let $\xi\sim\chi^2_j$ with $j\ge1$, $\eta\ge0$ and $\tau>0$. Then $\E\big[e^{(1+\eta)\xi/2}\mathbf 1\{\xi\le\tau\}\big]\le(e\tau/j)^{j/2}e^{\eta\tau/2}$.
+\end{lemma}
+
+\begin{proof}
+With the $\chi^2_j$ density, the expectation equals
+\[
+\frac1{2^{j/2}\Gamma(j/2)}\int_0^\tau x^{j/2-1}e^{\eta x/2}dx\le\frac{e^{\eta\tau/2}\tau^{j/2}}{2^{j/2}\Gamma(j/2)(j/2)}=\frac{(\tau/2)^{j/2}e^{\eta\tau/2}}{\Gamma(j/2+1)} .
+\]
+Moreover $\Gamma(x+1)\ge\int_x^\infty t^xe^{-t}dt\ge x^xe^{-x}$ for $x>0$, so $(\tau/2)^{j/2}/\Gamma(j/2+1)\le(e\tau/j)^{j/2}$.
+\end{proof}
+
+Define the deterministic sequences
+\[
+\vartheta_n:=\frac{\sqrt2\,u^\sharp_n}{\sqrt N}+\frac{4\sqrt{\bar\delta(m_n+s_0+1)\ell_n}}{\sst N}+\frac{14(m_n+s_0)\ell_n}{N},\qquad \eta_n:=\frac{n+0.02}{N(1-\vartheta_n)}-1\quad(\vartheta_n<1),
+\]
+and, for $j\ge1$,
+\[
+\zeta_j:=\bar\delta+8\sst\sqrt{\bar\delta(s_0+j+1)\ell_n}+\frac{14(1+\varphi_0^{-2})\sst^2s_0\ell_n}{n},\qquad \tau_j:=14(s_0+j)\ell_n .
+\]
+By Lemma~\ref{lem:mn} and $\ell_n\le A\log n$, $(m_n+s_0+1)\ell_n=O(\log^2n)$, so $\vartheta_n=O(\log n/\sqrt n)+O(\log n/n)+O(\log^2n/n)$ and $\vartheta_n\ell_n\to0$. When $\vartheta_n\le\frac12$, $\eta_n=\frac{1.02+N\vartheta_n}{N(1-\vartheta_n)}\le2\vartheta_n+\frac{2.04}N$, so $\eta_n\ge0$ and $\eta_n\ell_n\to0$. Let $n_2\ge n_1$ be such that $\vartheta_n\le\frac12$ for $n\ge n_2$.
+
+For $J\subseteq[p]\setminus S_0$, $|J|=j$, put $S'=S_0\cup J$,
+\[
+\chi^2_J:=\|(P_{S'}-P_{S_0})e\|^2/\sst^2,\qquad \tilde T_j:=\sum_{J\subseteq[p]\setminus S_0,\ |J|=j}e^{(1+\eta_n)\chi^2_J/2}\,\mathbf 1\{\chi^2_J\le\tau_j\}.
+\]
+
+\begin{proposition}[Supersets of $S_0$]\label{prop:super}
+Let $n\ge n_2$ and $1\le j\le m_n$. On $\mathcal E_2\cap\mathcal E_3\cap\mathcal E_4(u_n^\sharp)$,
+\begin{equation}\label{eq:super}
+\sum_{J\subseteq[p]\setminus S_0,\ |J|=j}\frac{\pi(S_0\cup J)}{\pi(S_0)}\le\Phi_j\tilde T_j,\qquad \Phi_j:=\Big(\frac{s_0+j}p\Big)^j\Big(\frac{j+1}{n\varphi_0^2}\Big)^{j/2}\exp\Big(\frac{1+\eta_n}{2\sst^2}\zeta_j\Big),
+\end{equation}
+and
+\begin{equation}\label{eq:superE}
+\E_0\big[\Phi_j\tilde T_j\big]\le\Big(\frac{28e^3(s_0+1)^2(s_0+j)\ell_n}{n\varphi_0^2}\Big)^{j/2}\exp\Big(7\eta_n(s_0+j)\ell_n+\frac{1+\eta_n}{2\sst^2}\zeta_j\Big).
+\end{equation}
+(If $s_0+j>p$ the sum in \eqref{eq:super} and $\tilde T_j$ are empty, and both bounds hold trivially.)
+\end{proposition}
+
+\begin{proof}
+Fix $J$ with $|J|=j$ and $S'=S_0\cup J$. Then $1\le|S'|=s_0+j\le\min(p,m_n+s_0)$, so $S'\in\Omega$ by \eqref{eq:cap}. By SE, $\lambda_{\min}(G_{S'})\ge N\varphi_0^2$. In particular $Z_{S'}$ has full column rank, $P_{S'}-P_{S_0}$ is an orthogonal projection of rank $j$, and $\chi^2_J\sim\chi^2_j$ under $\P_0$. If $s_0\ge1$, R gives $\lambda_{\min}(G_{S_0})\ge N\varphi_0^2$. If $s_0=0$, $M_{S_0}=P_{S_0}=0$ and the terms involving $S_0$ below vanish.
+
+\emph{Prior.} By Lemma~\ref{lem:prior}(d), $\vp(S')/\vp(S_0)=w(s_0+j)/w(s_0)\le((s_0+j)/p)^j$.
+
+\emph{Occam factor.} By Lemma~\ref{lem:alg}(h) with $S=S_0$ and $\|z_i\|^2=N$: $(D_{S'}/D_{S_0})^{-1/2}\le((j+1)/(n\varphi_0^2))^{j/2}$.
+
+\emph{Fit.} By Lemma~\ref{lem:alg}(c) for $S_0$ and $S'$,
+\[
+Q_{S_0}-Q_{S'}=(a_{S_0}-a_{S'})+2(W_{S_0}-W_{S'})+e^\top(M_{S'}-M_{S_0})e .
+\]
+Here $a_{S_0}-a_{S'}\le a_{S_0}\le\bar\delta$. On $\mathcal E_3$, with $a_{S_0},a_{S'}\le\bar\delta$ (Lemma~\ref{lem:alg}(b),(i), since $S'\supseteq S_0$), $2|W_{S_0}|+2|W_{S'}|\le8\sst\sqrt{\bar\delta(s_0+j+1)\ell_n}$. By Lemma~\ref{lem:alg}(a),(g), $M_{S'}\preceq P_{S'}$ and $P_{S_0}-M_{S_0}\preceq\frac{1+\varphi_0^{-2}}nP_{S_0}$. Hence, on $\mathcal E_2$,
+\[
+e^\top(M_{S'}-M_{S_0})e\le e^\top(P_{S'}-P_{S_0})e+e^\top(P_{S_0}-M_{S_0})e\le\sst^2\chi^2_J+\frac{1+\varphi_0^{-2}}n\,14\sst^2s_0\ell_n .
+\]
+So $Q_{S_0}-Q_{S'}\le\sst^2\chi^2_J+\zeta_j$. For the denominator, by Lemma~\ref{lem:alg}(c),(a), $b>0$, $\mathcal E_2\cap\mathcal E_3\cap\mathcal E_4(u^\sharp_n)$, $a_{S'}\le\bar\delta$ and $s_0+j\le m_n+s_0$,
+\[
+\begin{aligned}
+2b+Q_{S'}&\ge\sst^2E-2|W_{S'}|-\|P_{S'}e\|^2\\
+&\ge\sst^2(N-u^\sharp_n\sqrt{2N})-4\sst\sqrt{\bar\delta(m_n+s_0+1)\ell_n}-14\sst^2(m_n+s_0)\ell_n=N\sst^2(1-\vartheta_n)>0 .
+\end{aligned}
+\]
+Hence $\nu/(2b+Q_{S'})\le(n+0.02)/(2N\sst^2(1-\vartheta_n))=(1+\eta_n)/(2\sst^2)$. Using $\log(1+x)\le x$ ($x>-1$) and the fact that the bound $\sst^2\chi^2_J+\zeta_j$ is $\ge0$,
+\[
+\nu\log\frac{2b+Q_{S_0}}{2b+Q_{S'}}\le\frac{\nu(Q_{S_0}-Q_{S'})}{2b+Q_{S'}}\le\frac{1+\eta_n}{2\sst^2}\big(\sst^2\chi^2_J+\zeta_j\big).
+\]
+
+\emph{Assembly.} By \eqref{eq:ratio}, $\pi(S')/\pi(S_0)\le\Phi_je^{(1+\eta_n)\chi^2_J/2}$. On $\mathcal E_2$, $\sst^2\chi^2_J\le\|P_{S'}e\|^2\le14\sst^2(s_0+j)\ell_n$, since the range of $P_{S'}-P_{S_0}$ is contained in that of $P_{S'}$. So $\chi^2_J\le\tau_j$, and the indicator in $\tilde T_j$ equals $1$. Summing over $J$ gives \eqref{eq:super}.
+
+\emph{Expectation.} $\Phi_j$ is deterministic. There are $\binom{p-s_0}j\le p^j/j!$ sets $J$. For each, Lemma~\ref{lem:trunc} gives $\E_0[e^{(1+\eta_n)\chi^2_J/2}\mathbf 1\{\chi^2_J\le\tau_j\}]\le(e\tau_j/j)^{j/2}e^{\eta_n\tau_j/2}$. Hence
+\[
+\E_0[\Phi_j\tilde T_j]\le\frac{(s_0+j)^j}{j!}\Big(\frac{j+1}{j}\cdot\frac{14e(s_0+j)\ell_n}{n\varphi_0^2}\Big)^{j/2}e^{7\eta_n(s_0+j)\ell_n+\frac{1+\eta_n}{2\sst^2}\zeta_j}.
+\]
+Finally $(s_0+j)^j/j!\le(e(s_0+j)/j)^j\le(e(s_0+1))^j=(e^2(s_0+1)^2)^{j/2}$, using $j!\ge(j/e)^j$, and $(j+1)/j\le2$.
+\end{proof}
+
+\begin{theorem}[Sharp dimension bound]\label{thm:sharp}
+Under G, R, SE and H-T02, in R1, $\Pi(|S|>d_\ast\mid y)\to0$ in $\P_0$-probability.
+\end{theorem}
+
+\begin{proof}
+Let $n\ge n_2$ and $\mathcal M:=\{S\in\Omega:d_\ast<|S|\le m_n\}$. Then
+\begin{equation}\label{eq:split}
+\Pi(|S|>d_\ast\mid y)\le\Pi(|S|>m_n\mid y)+\Pi(\mathcal M\mid y),
+\end{equation}
+and the first term tends to $0$ in probability by H-T02.
+
+\emph{Step 1 (reduction to supersets).} For $S\in\mathcal M$ let $J:=S\setminus S_0$ and $S'=S\cup S_0=S_0\cup J$. Then $j:=|J|\ge|S|-s_0>j_0$ and $j\le|S|\le m_n$. The map $S\mapsto S'$ is at most $2^{s_0}$-to-one, since $S$ is determined by $S'$ and $S\cap S_0$. By Lemma~\ref{lem:union} and $\pi(S_0)\le1$,
+\[
+\Pi(\mathcal M\mid y)\le\sum_{S\in\mathcal M}\frac{\pi(S)}{\pi(S_0)}\le(2p)^{s_0}(n+1)^{s_0/2}2^{s_0}\sum_{j=j_0+1}^{m_n}\ \sum_{J\subseteq[p]\setminus S_0,\ |J|=j}\frac{\pi(S_0\cup J)}{\pi(S_0)} .
+\]
+
+\emph{Step 2 (the good event).} By Proposition~\ref{prop:super}, on $\mathcal E_2\cap\mathcal E_3\cap\mathcal E_4(u_n^\sharp)$,
+\[
+\Pi(\mathcal M\mid y)\le\Xi_n:=(2p)^{s_0}(n+1)^{s_0/2}2^{s_0}\sum_{j=j_0+1}^{m_n}\Phi_j\tilde T_j .
+\]
+$\Xi_n$ is a nonnegative random variable defined for every $e$.
+
+\emph{Step 3 (the expectation of $\Xi_n$).} For $1\le j\le m_n$, $s_0+j\le s_0+m_n\le6(s_0+1)\ell_n$ (Lemma~\ref{lem:mn}). So \eqref{eq:superE} gives $\E_0[\Phi_j\tilde T_j]\le\kappa_n^{j/2}e^{\psi_j}$, with
+\[
+\kappa_n:=\frac{168e^3(s_0+1)^3\ell_n^2}{n\varphi_0^2},\qquad \psi_j:=7\eta_n(s_0+j)\ell_n+\frac{1+\eta_n}{2\sst^2}\zeta_j .
+\]
+For $j\ge1$: $s_0+j\le(s_0+1)j$, $s_0+j+1\le2(s_0+1)j$ and $\sqrt j\le j$. Hence $\psi_j\le(\alpha_n+\beta_n)j+\gamma_n$, with
+\[
+\alpha_n:=7(s_0+1)\eta_n\ell_n,\qquad \beta_n:=\frac{4(1+\eta_n)}{\sst}\sqrt{2\bar\delta(s_0+1)\ell_n},\qquad \gamma_n:=\frac{1+\eta_n}{2\sst^2}\Big(\bar\delta+\frac{14(1+\varphi_0^{-2})\sst^2s_0\ell_n}{n}\Big).
+\]
+By the remarks after the definition of $\eta_n$: $\alpha_n\to0$, $\beta_n=O(\sqrt{\log n})$ and $\gamma_n=O(1)$. Put $\kappa'_n:=\kappa_ne^{2\alpha_n+2\beta_n}$. Then
+\[
+\log\kappa'_n=-\log n+\varrho_n,\qquad \varrho_n:=2\log\ell_n+\log\frac{168e^3(s_0+1)^3}{\varphi_0^2}+2\alpha_n+2\beta_n=O(\sqrt{\log n}),
+\]
+since $\log\ell_n\le\log(A\log n)$. In particular $\kappa'_n\le\frac14$ for all large $n$, and then $\sum_{j>j_0}(\kappa'_n)^{j/2}\le(\kappa'_n)^{(j_0+1)/2}/(1-\sqrt{\kappa'_n})\le2(\kappa'_n)^{(j_0+1)/2}$. Hence the expectation $\bar\Xi_n:=\E_0\Xi_n$ satisfies
+\[
+\bar\Xi_n\le(2p)^{s_0}(n+1)^{s_0/2}2^{s_0}\cdot2e^{\gamma_n}(\kappa'_n)^{(j_0+1)/2}.
+\]
+Using $p\le n^A$ and $\log(n+1)\le\log n+1$ (if $\bar\Xi_n=0$ there is nothing to prove),
+\[
+\log\bar\Xi_n\le\Big(s_0A+\frac{s_0}2-\frac{j_0+1}2\Big)\log n+\frac{j_0+1}2\varrho_n+\gamma_n+(2s_0+1)\log2+\frac{s_0}2 .
+\]
+The coefficient of $\log n$ is $-\frac12\big[(j_0+1)-s_0(2A+1)\big]\le-\frac12$, because $j_0\ge s_0(2A+1)$. The remaining terms are $O(\sqrt{\log n})$. Hence $\log\bar\Xi_n\to-\infty$, that is, $\bar\Xi_n\to0$.
+
+\emph{Step 4 (conclusion).} By Markov's inequality, $\P_0(\Xi_n>\sqrt{\bar\Xi_n})\le\sqrt{\bar\Xi_n}$. So, by Lemma~\ref{lem:noise}, outside an event of probability at most $\frac1n+\frac4n+(\log n)^{-2}+\sqrt{\bar\Xi_n}\to0$, we have $\Pi(\mathcal M\mid y)\le\sqrt{\bar\Xi_n}\to0$. With \eqref{eq:split} this proves the theorem.
+\end{proof}
+
+\section{Parts (ii), (iii) under SE, and (iv)}\label{sec:SE}
+
+Since $d_\ast=s_0+\lceil s_0(2A+1)\rceil\le(2A+2)s_0+1$,
+\begin{equation}\label{eq:Ldstar}
+L(d_\ast)=(d_\ast+s_0+1)\ell_n\le(2A+3)(s_0+1)\ell_n=(2A+3)\,n\ve_{1,n}^2 .
+\end{equation}
+
+\begin{proof}[Proof of (ii)]
+The first claim is Theorem~\ref{thm:sharp}.
+
+\emph{Prediction.} By Theorem~\ref{thm:master}(i) with $d=d_\ast$ and \eqref{eq:Ldstar}, on $\Omega_n$ (for $n\ge n_1$),
+\[
+\Pd\big(\|X\theta-\mu\|^2/n>(2A+3)C_f\ve_{1,n}^2\mid y\big)\le\Pi(|S|>d_\ast\mid y)+e^{-\ell_n}+2B/\ell_n .
+\]
+As in the proof of (i), with Theorem~\ref{thm:sharp} in place of H-T02, the left side tends to $0$ in probability.
+
+\emph{Coefficients.} Let $n\ge n_1$, so that $d_\ast+s_0<m_n+s_0$. Take $(S,\theta)$ with $|S|\le d_\ast$ and $\theta$ supported in $S$, and put $T:=S\cup S_0$. If $T=\emptyset$, then $\theta=\theta^\ast=0$. Otherwise $1\le|T|\le\min(p,m_n+s_0)$, so SE gives $\|X(\theta-\theta^\ast)\|^2=(\theta-\theta^\ast)_T^\top G_T(\theta-\theta^\ast)_T\ge N\varphi_0^2\|\theta-\theta^\ast\|^2$. Since $X\theta^\ast=\mu$ and $n/N\le2$,
+\[
+\|\theta-\theta^\ast\|^2\le\frac{\|X\theta-\mu\|^2}{N\varphi_0^2}\le\frac{2}{\varphi_0^2}\cdot\frac{\|X\theta-\mu\|^2}{n}.
+\]
+Hence
+\[
+\Big\{\|\theta-\theta^\ast\|^2>\frac{2(2A+3)C_f\ve_{1,n}^2}{\varphi_0^2}\Big\}\subseteq\{|S|>d_\ast\}\cup\Big\{\frac{\|X\theta-\mu\|^2}{n}>(2A+3)C_f\ve_{1,n}^2\Big\},
+\]
+and the $\Pd$-probability of the right side tends to $0$ in probability by the first two claims.
+\end{proof}
+
+\begin{proof}[Proof of (iii) under SE]
+With $u_n'=\min\{u_n,\sqrt{n/8}\}$ as before, \eqref{eq:Ldstar} gives $r_n(d_\ast,u'_n)\le(2A+3)(\ve_{1,n}^2+u_n/\sqrt n)$. Theorem~\ref{thm:master}(ii) with $d=d_\ast$, $u=u'_n$ gives, on $\Omega_n\cap\mathcal E_4(u_n')$,
+\[
+\Pd\big(|v/\sst^2-1|>(2A+3)C_e[\ve_{1,n}^2+u_n/\sqrt n]\mid y\big)\le\Pi(|S|>d_\ast\mid y)+e^{-\ell_n}+(u'_n)^{-2},
+\]
+and the conclusion follows as before, with Theorem~\ref{thm:sharp} in place of H-T02.
+\end{proof}
+
+\begin{proof}[Proof of (iv)]
+$D_x^{-1}$ is diagonal with entries at most $1/d_-$, so $\|D_x^{-1}(\theta-\theta^\ast)\|^2\le d_-^{-2}\|\theta-\theta^\ast\|^2$. Hence $\{\|D_x^{-1}(\theta-\theta^\ast)\|^2>c/d_-^2\}\subseteq\{\|\theta-\theta^\ast\|^2>c\}$ for every $c>0$. Apply this with $c=2(2A+3)C_f\ve_{1,n}^2/\varphi_0^2$ and use (ii).
+\end{proof}
+
+\paragraph{The constant.} All parts hold with
+\begin{equation}\label{eq:Cfinal}
+C:=\max\big\{6C_f,\ 6C_e,\ 2(2A+3)C_f,\ (2A+3)C_e\big\},
+\end{equation}
+because every event above is monotone in its threshold. $C$ depends only on $(\sst^2,M,\varphi_0,A)$ (and $b_0=0.01$). It depends neither on $s_0$ nor on the sequences $p_n$, $u_n$.
+
+\section{Remarks}\label{sec:remarks}
+
+\begin{remark}[Where each hypothesis enters]
+\begin{itemize}[leftmargin=1.5em]
+\item G: through $e\sim N_N(0,\sst^2I)$ in Lemma~\ref{lem:noise} and Proposition~\ref{prop:super}.
+\item R: $\|\mu\|^2/n\le M$ in \eqref{eq:B} and $\bar\delta$; $\lambda_{\min}(R_{S_0})\ge\varphi_0^2$ in Lemma~\ref{lem:alg}(i),(g); $s_0\le K$ for $\vp(S_0)>0$ (Lemma~\ref{lem:prior}(c)). No eigenvalue condition on any other model is used in Sections~1--6.
+\item $p\le n^A$: in Section~7 (through $\ell_n\le A\log n$, $m_n=O(\log n)$ in the choice of $n_1$, and the conversion cost $(2p)^{s_0}\le2^{s_0}n^{As_0}$), and through H-T02, which is assumed in R1 and is used in Sections~6--8. The non-asymptotic statements of Sections~1--5 hold for every $p$.
+\item SE: only in Section~7 (full rank and Occam lower bound of $S_0\cup J$) and in the coefficient bound of (ii).
+\item The cap $K=\min(p,\lfloor n/2\rfloor)$: through $s_0\le K$, and in Section~7 through \eqref{eq:cap}. So every comparison with a superset $S\cup S_0$ stays inside $\Omega$; no augmentation beyond the cap is used.
+\item H-T02: only to discard $\{|S|>m_n\}$, in Section~6 and in \eqref{eq:split}.
+\item The data-dependent rate $b=b_0s_y^2$ enters through Lemmas~\ref{lem:post}--\ref{lem:marg} and through \eqref{eq:B} ($0<2b\le\bar b$ and $2b+Q_S\le nB$ on $\mathcal E_1$). All comparisons of Sections~4 and~7 are pointwise in $y$, so no change of the rate (no mixed-rate transfer) is needed.
+\item No beta-min condition is used. A weak true variable missed by $S$ costs little in $a_S$ (Section~4), and in Section~7 it is added in $S\cup S_0$ at the fixed price $(2p)^{s_0}(n+1)^{s_0/2}2^{s_0}$, which $j_0$ absorbs.
+\end{itemize}
+\end{remark}
+
+\begin{remark}[Provenance]
+The argument re-proves, for the v3 target, a draft argument for the v1/v2 target (a master theorem with a free dimension cut-off, and a superset-summation dimension bound). The changes for v3 are:
+\begin{itemize}[leftmargin=1.5em]
+\item the noise dimension $N=n-1$ of the contrast coordinates;
+\item column norms $N$;
+\item the $\IG(0.51,b_0s_y^2)$ prior with data-dependent rate;
+\item the cap $K$;
+\item the dimension input H-T02 in place of the earlier one.
+\end{itemize}
+Every step has been rechecked against these.
+\end{remark}
+
+\end{document}

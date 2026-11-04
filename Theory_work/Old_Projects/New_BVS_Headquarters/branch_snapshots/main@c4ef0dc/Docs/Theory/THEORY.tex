@@ -1,0 +1,314 @@
+% THEORY.tex — theoretical architecture of SMC-BVS v3 (every statement is a conjecture)
+% Lead: Fable 5.1 (high). Compile with: latexmk -pdf -outdir=build THEORY.tex
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{bm}
+\usepackage[margin=2.6cm]{geometry}
+\usepackage{enumitem}
+\usepackage{booktabs,longtable,array}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+
+\setlist[itemize]{leftmargin=1.6em,itemsep=2pt,topsep=3pt}
+\setlist[enumerate]{leftmargin=1.9em,itemsep=2pt,topsep=3pt}
+
+\theoremstyle{plain}
+\newtheorem{conjecture}{Conjecture}[section]
+\theoremstyle{definition}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Pz}{\mathbb{P}_0}
+\newcommand{\Ez}{\mathbb{E}_0}
+\newcommand{\Pc}{\mathbb{P}_{\mathcal C}}
+\newcommand{\Ec}{\mathbb{E}_{\mathcal C}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\frakP}{\mathfrak{P}}
+\newcommand{\frakA}{\mathfrak{A}}
+\newcommand{\Sz}{S_0}
+\newcommand{\St}{\widetilde S_0}
+\newcommand{\Sdag}{S^{\dagger}}
+\newcommand{\Shat}{\widehat S}
+\newcommand{\sz}{s_0}
+\newcommand{\PIP}{\mathrm{PIP}}
+\newcommand{\PIPhat}{\widehat{\mathrm{PIP}}}
+\newcommand{\MPM}{\mathrm{MPM}}
+\newcommand{\Zhat}{\widehat Z}
+\newcommand{\Zbar}{\bar Z}
+\newcommand{\pizero}{\pi_0}
+\newcommand{\BF}{\mathrm{BF}}
+\newcommand{\IG}{\mathrm{IG}}
+\newcommand{\Ne}{N_{e}}
+\newcommand{\Qf}{Q_{f}}
+\newcommand{\Tv}{\mathrm{TV}}
+\newcommand{\ind}[1]{\mathbf{1}\{#1\}}
+\newcommand{\lmin}{\lambda_{\min}}
+\newcommand{\rn}{r_n}
+\newcommand{\code}[1]{\textsf{#1}}
+\newcommand{\provisional}[1]{\textcolor{gray}{[provisional evidence, Sol check #1]}}
+\newcommand{\thfile}[1]{\textcolor{gray}{\footnotesize[file \texttt{#1}]}}
+
+\title{Theoretical architecture of SMC-BVS v3:\\ conjectured theorems, assumptions and proof routes}
+\author{Theory-architecture run\\ \small lead: Fable~5.1; council 2~Fable + 2~Astra; review group 4~Opus; judge Astra with 2~Sol assistants}
+\date{2026-10-20 --- Methodology v3.0 of 2026-10-19, SHA-256 \texttt{93043758\ldots8019c}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent\textbf{Status.} Every statement in this document is a conjecture about the exact method of \code{METHODOLOGY\_v3.md} (version 3.0, 2026-10-19). Nothing is proven. The document presents the 36 conjectured results of the run as a paper would present them: the setting and notation, the assumptions with their discussion, each result with its purpose, and the connections between them. The full statements, with every field needed by a proof run, are in the files \texttt{theorems/T01\ldots T36}; this document summarises and explains. Numerical results from the judge's assistants are throwaway evidence and are labelled \emph{provisional} throughout.
+
+\noindent\textbf{What the theory says, in one paragraph.} If the target-transfer conjectures hold, the posterior fixed by the method (standardised data, the $g=n$ slab, $\IG(0.01,0.01)$, the capped $\mathrm{BB}(1,p)$ prior) concentrates on the true support under sparse eigenvalues and a fixed beta-min constant, and contracts for prediction and variance without beta-min. Given exact arithmetic, ideal random streams and a frozen calibration, the final run's evidence and evidence-weighted Rao--Blackwell identities hold exactly; they give no finite-budget accuracy by themselves. The reported HPM is the truth whenever the truth is the strict target mode \emph{and some scoring route finds it}: initial draws, Gibbs evaluations, swap proposals, block tables, local scans, or a terminal repair. PIPs need a terminal occupancy, entrance and stability argument; the evidence needs either a single dominating model along the bridge (a first-moment argument) or particle-system stability through a crossing, which marginal occupancy does not supply. Negative results are conditional comparison theorems: when calibration avoids a hidden set and the run stays coupled to its complement, the evidence is biased by the restricted-mass factor while every evidence-measurable diagnostic looks normal; no production family realising this has been constructed. Finally, each reported certificate has a precise and limited meaning.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction and reading guide}
+
+The method under study is SMC-BVS v3, a sequential Monte Carlo sampler for Bayesian variable selection with a composite block-table start, a bridge $q_\phi$ between the start and the posterior, a pilot that calibrates a temperature grid, a final run of four islands, and an all-scored HPM decision. The run that produced this document followed the theoretical-architecture protocol: a council of four experts conjectured candidate theorems; a review group of four assessed them and sent six fatal-as-stated objections back; the council answered; a judge reviewed the whole proposal, ordered twelve single-seed numerical checks, and amended it; the lead ruled on every amendment (\texttt{RULINGS.md}). The result is organised like a theory paper: Part~A on the target posterior, Part~B on fixed-data Monte Carlo validity, Part~C on combined guarantees for the actual output, Part~D on limits and negative results.
+
+Three distinctions run through everything and the reader should keep them apart:
+\begin{itemize}
+\item a property of the exact mathematical algorithm (an identity), versus a conditional theorem whose computational hypotheses are unverified, versus an explicitly idealised component (fixed calibration with $N\to\infty$), versus an open question;
+\item \emph{scoring} a model (which the HPM needs), \emph{visiting} it, and \emph{occupying} it at a recording position (which PIPs and the evidence need);
+\item discovery of the truth by calibration, and accuracy of the evidence or the PIPs: the first never implies the second.
+\end{itemize}
+
+The decisions fixed by the author of the method are not changed by anything here: the target, the cap $K=\min(p,\lfloor n/2\rfloor)$, the block rule, $B=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$, the neighbour threshold $\rho_n=\sqrt{2\log p/n}$, the HPM decision with exact ties, the single prior arm, and the budgets. Where a result would benefit from a change, the change appears only as a recommendation (Section~\ref{sec:recs}).
+
+\section{Setting and notation}\label{sec:setting}
+
+\paragraph{Data and target.} Raw data $(X^r,y^r)$ with $n\ge3$; $C=I-\mathbf 1\mathbf 1^\top/n$; $X=CX^rD_x^{-1}$ and $y=Cy^r/s_y$ with $s_y^2=\|Cy^r\|^2/(n-1)$, so every column and $y$ have squared norm $n-1$. Contrast coordinates use $U\in\R^{n\times(n-1)}$ with $U^\top U=I$, $UU^\top=C$. The state space is $\Omega=\{S\subseteq[p]:|S|\le K\}$. For $S\in\Omega$,
+\[
+G_S=X_S^\top X_S=(n-1)R_S,\qquad z_S=X_S^\top y,\qquad H_S=(n+1)G_S+I,
+\]
+\[
+D_S=\frac{\det H_S}{\det(G_S+I)},\qquad Q_S=y^\top y-nz_S^\top H_S^{-1}z_S,
+\]
+$\nu=0.01+n/2$, $m(S)\propto D_S^{-1/2}(0.02+Q_S)^{-\nu}$, $w(k)=\tfrac12\binom{2p-1}{k}^{-1}$, $\varpi(S)=w(|S|)/W_K$, $F(S)=\log[\varpi(S)m(S)]$, $Z=\sum_\Omega\varpi(S)m(S)$, $\pi=e^F/Z$, $\BF(S)=m(S)/m(\varnothing)$. The global HPM $\Sdag$ maximises $F$ over $\Omega$ (ties: smallest size, then lexicographic); the reported HPM $\Shat$ applies the same rule over the set $\calS$ of all models ever \emph{scored}. $\PIP_j=\pi(j\in S)$ and $\MPM=\{j:\PIP_j>1/2\}$.
+
+\paragraph{Statistical model.} $y^r=\alpha_*\mathbf 1+X^r\beta_*+\varepsilon$, $\mu=CX^r\beta_*=X\theta_*$, $\Sz=\operatorname{supp}\beta_*$, $\sz=|\Sz|$. Contrast-scale parameters $\theta=s_y\beta$, $v=s_y^2\sigma^2$. $\rn=\sqrt{\log n/n}$.
+
+\paragraph{Sampler.} Deterministic blocks $C_1,\dots,C_J$ of size at most $B$ (complete linkage, top-down cut, next-fit packing); tables $r_b(A)=\BF(A)$ for $A\subseteq C_b$; composite start $\gamma_0(S)=\varpi(S)\prod_b r_b(S\cap C_b)$, $\pizero=\gamma_0/\Zbar_0$ (exact convolution, exact iid sampler); start mode $\St=\arg\max\pizero$; discrepancy $d(S)=\log\BF(S)-\sum_b\log r_b(S\cap C_b)$; bridge $q_\phi\propto\gamma_0e^{\phi d}$, so $q_0=\pizero$, $q_1=\pi$. A round $K_\phi$ executes $m=p+B+2$ labelled steps in uniformly random order: $p$ Gibbs flips (with pre-draw inclusion probabilities $o_j(S,\phi)$), one uniform swap, $B$ neighbour swaps, one independence proposal from $\pizero$. The calibration $\calC$ (grid $0=\phi_0<\dots<\phi_T=1$, candidate set $V$, tier, $\Ne$, $L$) is fixed by streams 0--9; the final run uses fresh streams: four islands of $\Ne$ iid $\pizero$ draws, multinomial resampling after every reweighting, one round per stage, $L$ burn-in and four measured rounds at $\phi=1$, then a local search of at most $\ell$ moves whose scans score every feasible flip and swap of the centre. Outputs: island evidences $\Zhat_r$, $\Zhat=\tfrac14\sum_r\Zhat_r$, the bound $0.05\Zhat$, Rao--Blackwell PIPs $\PIPhat_{rj}$ (pre-draw Gibbs conditionals averaged over the measured rounds), primary (equal-weight) and secondary ($\Zhat_r$-weighted) pooled PIPs, $\Shat$, statuses and flags. Budgets: $N_0=\max(2500,n,p)$, $H_0=\lceil 512N_0/2500\rceil$, $\ell=\lceil\log_2(n+p+1)\rceil$, $T_0=\max(1000,\ell^2)$, tier $e\in\{0,1\}$ multiplies by $4^e$, $L=\max(4,\lceil\log_2(n+1)\rceil)$; $\Qf=4\Ne(T+L+5)$ is the number of iid $\pizero$ draws scored in the final run. The exact branch (full enumeration) is taken when $\sum_{k\le K}\binom pk\le(5H_0+4N_0)p$.
+
+\paragraph{Regimes.} R1: $n\to\infty$, $\sz$ fixed, $p\le n^A$. R2: $p$ fixed (SMC statements are component results; enumeration eventually applies). R3: data and $\calC$ fixed while $N$ or the number of islands grows (idealised). R4: the actual budgets along R1. Fixed-data statements condition on a successful frozen calibration, never on passing later diagnostics.
+
+\section{Assumptions}\label{sec:assumptions}
+
+The full inventory, with every code's precise condition, is \texttt{theorems/00\_COMMON.md} \S3. We discuss the groups.
+
+\paragraph{Statistical (target) assumptions.} G (Gaussian fixed design) and R (fixed $\sz$, $p\le n^A$, bounded signal energy, eigenvalue floor on the true design) are the project's standard bundle. SE (sparse eigenvalues on every set of size $\le m_n+\sz$) is strong and cannot be checked exhaustively; it excludes exact duplicates. Beta-min comes in two forms: BM-C with an explicit fixed constant $M_*=2L_*+1$ obtained by auditing the project's selection proof (provisional; the proving run may replace it), and BM-$\infty$ with $M_n\to\infty$. The sharp constant for general designs is open; in the orthogonal benchmark the transition is sharp (Conjecture~\ref{c:A4}).
+
+\paragraph{Start-side assumptions.} VIS (actual-block visibility of each true variable's block projection), NL$_{\rm avg}(\kappa)$ (averaged no-leakage of signal into noise coordinates within blocks), and EXP, the uniform block-score expansion. EXP is the honest name for what the review group's ``AGG-stat'' silently assumed: a uniform one-sided expansion of every table addition ratio with a remainder $R_n=O_P(1)$ (or $o_P(\log n)$). Deriving EXP from G, R, SE is the main open analytic step of Part~C; the judge's assistant could only observe a remainder range of $[-0.10,0.17]$ on one small design \provisional{J5}.
+
+\paragraph{Computational hypotheses.} These are conditional obligations, never asserted properties of v3: HIT and PX (a scoring route succeeds), LK$_d$, EXIT$_d$, GAIN$_d$ (leakage, first-exit and gain controls for the terminal repair), BASIN (abstract basin constants), COVER (full-space coverage of the candidate set at every grid and over-tempered evaluation point), BW2 / BW$_W$ / WS / PW2 (particle-system stability conditions of increasing specificity), CPL-E / CPL-H / RB (couplings with a reflected comparator, output-specific), MISS-E / MISS-H (hidden-set avoidance), OP-a / OP-s (operational availability), NUM, NDR, STIFF. The declared idealisations EX-A (exact arithmetic), EX-S (ideal streams) and CAL (frozen calibration) are used throughout Parts B--D.
+
+\paragraph{What was retired.} MASS (replaced by exact start-mass identities), $\zeta$-EXIT (refuted on every dataset by the addition floor), AGG-stat as a hypothesis, OP's numerics clause, and the optional over-tempered ideas V$\le$, OT-lb, NA. The regimes are not declared mutually exclusive except where it is a derivation (exact duplicates conflict with SE and NIS; ORTH forces $p\le n-1$).
+
+\section{Part A: the target posterior}
+
+\begin{conjecture}[A0: contrast reduction and mixed-rate transfer]\thfile{T01}
+For every valid input, the v3 posterior equals the posterior of the contrast model $y_c\mid\theta_S,v\sim N_{n-1}(X_{c,S}\theta_S,vI)$, $\theta_S\mid v\sim N(0,nv(G_S+I)^{-1})$, $v\sim\IG(0.51,b_0s_y^2)$, with $m(S)=c_n(s_y)m^c_{b_0s_y^2}(S)$ for a model-independent $c_n(s)=s^{n-1}\Gamma(0.51)/(\sqrt{2\pi b_0}\Gamma(0.01))$. For rates $b_-\le b\le b_+$, $\kappa^{-1}m^c_{b_+}\le m^c_b\le\kappa m^c_{b_-}$ with $\kappa=(b_+/b_-)^{0.51}$, also for joint numerator integrals; under G, R the empirical rate $b_0s_y^2$ lies in a compact interval with probability $\to1$.
+\end{conjecture}
+\emph{Purpose.} This is the foundation of every statistical transfer: the project's proofs were written for a fixed-rate target, and v3's rate is random. The transfer is legitimate only in the mixed-endpoint form (numerator at $b_-$, denominator at $b_+$). Identities verified to $10^{-14}$ on small data \provisional{J1, J2}.
+
+\begin{conjecture}[A1: dimension control and no strict supersets]\thfile{T02}
+In R1 under G, R, for every deterministic threshold $m$, $\Pi(|S|>m\mid y)\le2^{-m}(2p)^{\sz}(n+1)^{\sz/2}\sqrt n\,\Theta_{n,m}$ with uniformly tight $\Theta_{n,m}$; hence $\Pi(|S|>m_n(\omega_n)\mid y)=O_{\Pz}(e^{-\omega_n})$. Under SE, $\Pi(S\supsetneq\Sz\mid y)=O_{\Pz}(\rn)$.
+\end{conjecture}
+\emph{Purpose.} The operational cap $\lfloor n/2\rfloor$ is large; this shows the posterior nevertheless lives on $O(\log n)$ models, so the cap need not be changed and no eigenvalue condition near the cap is needed.
+
+\begin{conjecture}[A2: selection, screening, PIPs, global HPM]\thfile{T03}
+In R1 under G, R, SE and BM-C (or BM-$\infty$): $1-\pi(\Sz)=O_{\Pz}(\rn)$; $\max_j|\PIP_j-\ind{j\in\Sz}|\le1-\pi(\Sz)$; $\Pz(\MPM=\Sz)\to1$; $\Pz(\Sdag\ne\Sz)\le2\Ez[1-\pi(\Sz)]\to0$, and on $\{\pi(\Sz)>1/2\}$ the truth is the strict global mode. Without full beta-min, the strong coordinates $J_n$ are screened in: $\Pi(S\not\supseteq J_n\mid y)=O_{\Pz}(\rn)$.
+\end{conjecture}
+\emph{Purpose.} The central target result, and the target half of every combined HPM theorem. The strict-mode clause is what makes the all-scored HPM decision work (Part~C). The fixed constant answers ``what signal strength suffices for $p>n$'' conservatively; its sharp value is open.
+
+\begin{conjecture}[A3: contraction without beta-min]\thfile{T04}
+In R1 under G, R: prediction contracts at $\epsilon_{2,n}^2=(\sz+1)\log^2(p\vee n)/n$; under SE the posterior dimension is bounded by $d_*=\sz+\lceil\sz(2A+1)\rceil$, prediction and coefficients contract at $\epsilon_{1,n}^2=(\sz+1)\log(p\vee n)/n$ (coefficients with the factor $\phi_0^{-2}$), and the contrast-scale variance satisfies $|v/\sigma_*^2-1|\le C[\epsilon_n^2+u_n/\sqrt n]$ for any $u_n\to\infty$; under DX the raw coefficients inherit the rate with the factor $d_-^{-2}$.
+\end{conjecture}
+\emph{Purpose.} The guarantee that survives when exact selection is inappropriate (weak signals). Promoted to core by the judge because it answers a central question of the brief.
+
+\begin{conjecture}[A4: orthogonal threshold and benchmark gap]\label{c:A4}\thfile{T05}
+Under ORTH, $D_S=n^{|S|}$ and $Q_S=y^\top y-n^{-1}\sum_{j\in S}z_j^2$; with $\lambda_n=(n-1)b_n^2/\sigma_*^2$ and $\tau_n=\log n+2\log((2p_n-\sz)/\sz)$, if $\sqrt{\lambda_n}-\sqrt{\tau_n}\to c$ then $\Pz(\Sdag=\Sz)\to\Phi(c)^{\sz}$. Any signal sequence between $\sqrt{2\log(p_n-\sz)}$ and $\sqrt{\tau_n}$ (both differences diverging) is recovered by the known-size, known-noise selector while v3's global HPM fails; the gap is $\log n+O(1)$ in squared signal, the price of $g=n$.
+\end{conjecture}
+\emph{Purpose.} Separates target-induced omission from computational failure, and quantifies a consequence of the fixed slab. Secondary because it is a benchmark ($p\le n-1$).
+
+\begin{conjecture}[A5: identifiability and exact ties]\thfile{T06}
+Two feasible score functions coincide for every standardised response iff $X_SX_S^\top=X_{S'}X_{S'}^\top$ (equal sizes follow from traces); under G and NIS accidental exact ties are null; without NIS, A2's strict mode makes the tie rule irrelevant at $\Sz$. Signed duplicates make the support label unlearnable by any method.
+\end{conjecture}
+
+\begin{conjecture}[A6: size-only ranking ceiling and Bayes decisions]\thfile{T07}
+No size-only prior can repair a within-size likelihood ranking error: $\{\Sdag=\Sz\}\subseteq\{S^*_{\sz}=\Sz\}$. The global HPM and the MPM are Bayes for 0--1 and Hamming loss on the target; the reported $\Shat$ and estimated PIPs inherit this only with their computational guarantees.
+\end{conjecture}
+
+\begin{conjecture}[A7: oracle joint Bernstein--von Mises limit; optional]\thfile{T08}
+Under G, R, SE, BM, GL, conditional on $S=\Sz$ the contrast coefficients and variance have the oracle Gaussian limit $N(0,\operatorname{diag}(\sigma_*^2\Gamma_0^{-1},2\sigma_*^4))$ after $\sqrt n$ scaling; the scaled coefficient covariance is exactly $n^2vH_{\Sz}^{-1}$.
+\end{conjecture}
+
+\section{Part B: Monte Carlo validity and rates (fixed data)}
+
+Given EX-A, EX-S and CAL, \emph{validity} is exact and needs no other condition: the evidence and the evidence-weighted Rao--Blackwell rewards are unbiased, the Markov bound holds, and every feasible Gibbs addition has an inverse-polynomial hazard floor. \emph{Accuracy} is always conditional and passes through one of four routes: concentration of the bridge on a single model (first moments), a reflected comparator with a coupling, particle-system stability (BW2 or a working set), or a crossing benchmark. The output never verifies any of them.
+
+\begin{conjecture}[T7: exact start, invariant kernels, whole-round minorisation]\thfile{T09}
+The convolution and backward sampler give $\Zbar_0$ and exact iid $\pizero$ draws; every elementary kernel is $q_\phi$-reversible including the cap boundaries; the order-averaged round is invariant and self-adjoint (a realised order need not be reversible); every realised order satisfies $K_\sigma(x,\cdot)\ge\epsilon_\phi q_\phi$ with $\epsilon_\phi=\inf_S\pizero(S)/q_\phi(S)$, giving a TV bound $(1-\epsilon_\phi)^h$. A tiny available $\epsilon_\phi$ is not evidence of slow mixing.
+\end{conjecture}
+
+\begin{conjecture}[T11: feasible-addition hazards]\thfile{T10}
+For $|S|=k<K$ and $j\notin S$, at every $\phi\in[0,1]$: $\gamma_\phi(S+j)/\gamma_\phi(S)\ge r_k=(k+1)/((2p-k-1)\sqrt{n+1})$, so $o_j(S,\phi)\ge h_k=r_k/(1+r_k)$ and $\pizero(S+j)\ge r_k\pizero(S)$. A round from $S$ visits $S\cup J$ ($|J|=a$) with probability at least $\binom ma^{-1}\prod h_{k+i}$ (an ordering factor is unavoidable, even for $a=1$); at an actual execution the entry probability is $o_j(S,\phi)\ge h_k$ conditional on the whole past.
+\end{conjecture}
+\emph{Purpose.} The quantitative accessibility fact that reorganises the negative results: no mode reachable by additions is exponentially hidden; exponential protection needs deletions, swaps or the cap. The full-round ordering effect was confirmed on a complete hybrid round \provisional{J8}.
+
+\begin{conjecture}[L-LED/T14-D: the scoring and discovery ledger]\thfile{T11}
+Each mechanism scores a fixed model $S^*$ with an exact conditional probability at its execution time: Gibbs at $j$ iff $X_{\mathrm{pre}\text{-}j}\setminus\{j\}=S^*\setminus\{j\}$; uniform swap $1/[k(p-k)]$; neighbour swap $1/[k|N(j)\setminus S|]$; iid proposals $\pizero(S^*)$ regardless of acceptance; tables and scans deterministically given the block or centre. The final iid draws miss $S^*$ with probability $(1-\pizero(S^*))^{\Qf}$; stopped opportunities obey $\Prob(\text{no hit},O\ge D)\le(1-b)^D$ and $\Prob(\text{hit})\ge b\E O$; set exposure is bounded by the first-hit hazard sum. If $\Sdag$ is scored then $\Shat=\Sdag$.
+\end{conjecture}
+\emph{Purpose.} One ledger serves the positive discovery theorems (Part~C) and the negative avoidance results (Part~D). HPM recovery is a scoring question, not a mixing question.
+
+\begin{conjecture}[T8: frozen-run identities]\thfile{T12}
+Given $\calC$: $\E[\Zhat_{r,t}\widehat q_{r,t}(f)]=Z_tq_t(f)$ through terminal resampling, invariant rounds and pre-draw recording positions; $\E\Zhat_r=Z$; $\E[\Zhat_r\PIPhat_{rj}]=Z\,\PIP_j$; $\E\log\Zhat\le\log Z$; $\Prob(Z\ge\alpha\Zhat)\ge1-\alpha$. Normalised PIPs and $\log\Zhat$ are not unbiased in general; nothing survives conditioning on favourable diagnostics; NUM gives no such guarantee for implemented evidence.
+\end{conjecture}
+
+\begin{conjecture}[T10: restricted ESS and omitted mass]\thfile{T13}
+With $a(\psi)=q_\psi(V)$ and $w=2v-u$,
+\[
+1+\chi^2(q_v\|q_u)=\rho_V(u,v)^{-1}\,\frac{a(v)^2}{a(u)\,a(w)};
+\]
+with COVER at both $u$ and the over-tempered point $w$, an accepted interval has $1+\chi^2\le10/(9(1-\epsilon_C)^2)$. If calibration never scored a set $\calM\not\ni\varnothing$, the grid equals the grid of the problem restricted to $\calM^c$.
+\end{conjecture}
+\emph{Purpose.} Says exactly what the candidate grid controls (a restricted one-step moment) and why hidden models remain invisible to it.
+
+\begin{conjecture}[L-FM: first-moment evidence consistency]\thfile{T14}
+With $\eta_t=1-q_t(S^\circ)$ for a model $S^\circ$ fixed given $\calC$, for every particle count,
+\[
+\E|\Zhat_r/Z-1|\le\frac{2}{1-\max_t\eta_t}\sum_{t=0}^{T}\eta_t,
+\]
+also for the pooled evidence; hence summable deficits give relative consistency with no over-tempered condition and no variance bound. For a set $\frakA$ of several models an additional within-set fluctuation term $\Phi_t\ge0$ appears that mass concentration does not control.
+\end{conjecture}
+\emph{Purpose.} The repair of the review group's objection O3: no-switch evidence consistency at the actual budgets without the over-tempered hypothesis. Constant and endpoint term verified exactly on finite laws, where tiny deficits coexist with $\E(\Zhat/Z)^2\approx10^6$ \provisional{J6}.
+
+\begin{conjecture}[L-OCC: occupancy from an evidence lower tail]\thfile{T15}
+$\E f_r(\frakA^c)\le\pi(\frakA^c)/c+\Prob(\Zhat_r/Z<c)$ for the fraction of island $r$ outside a set $\frakA$ at stage $T$ or at a fixed terminal prefix; the lower tail must be islandwise.
+\end{conjecture}
+\emph{Purpose.} Breaks the v1 circularity between the evidence theorem and the PIP theorem: decision outputs need only a lower tail of the evidence.
+
+\begin{conjecture}[T9 and R-T13: idealised limits]\thfile{T16, T36}
+With $\calC$ frozen and $N\to\infty$, the relative evidence and PIP errors are $O_{\calC}(N^{-1})$ in mean square with a Gaussian limit; with independent islands, the secondary pooling converges to $\PIP_j$ while the primary pooling converges to $\E[\PIPhat_{1j}\mid\calC]\neq\PIP_j$ in general. With a frozen stage ceiling and $H\to\infty$, the pilot schedule equals that of the deterministic rule applied to the population ESS (under NDR).
+\end{conjecture}
+
+\begin{conjecture}[L-RC: reflection with output-specific coupling]\thfile{T17}
+Reflecting every elementary transition at a set $W$ gives a comparator with evidence mean $Z\,q_1(W)/q_0(W)$ (not $Zq_1(W)$); a common-randomness coupling fails only through the first exit, with probability at most $4Nq_0(W^c)+\sum_e\E[\ind{\tau>e^-}K_e(X_{e^-},W^c)]$. Evidence needs coupling through the last weight evaluation; HPM needs every scored proposal and scan; PIPs need the recorded rewards, whose reflected mean $\mu_j^W$ differs from $\pi(j\in S\mid W)$ but satisfies $|\mu_j^W-\PIP_j|\le\pi(W^c)$. A large union bound proves no impossibility.
+\end{conjecture}
+
+\begin{conjecture}[B-RP: reflected single-flip pair benchmark; secondary]\thfile{T18}
+Reflected at a single-flip pair, the switching Gibbs coordinate refreshes the pair exactly each round, so the comparator's relative variance is $\prod_t(1+\chi_t^2/N)-1$ (divided by four over islands); with pair coverage, an explicit Chebyshev bound follows. This is a statement about the reflected process; a proxy-swap pair has no refresh.
+\end{conjecture}
+
+\begin{conjecture}[T12: conservative working-set bounds; optional]\thfile{T19}
+Under a normalised future-weight bound $a$ on a working set, the reflected evidence and reward estimators obey $\E(\Zhat^W_r/Z_W^\circ-1)^2\le(1+a^2/N)^T-1$ and a corresponding reward bound; actual outputs inherit probability bounds through the couplings. New judge conjecture, not numerically validated; its applicability is restrictive.
+\end{conjecture}
+
+\section{Part C: combined guarantees for the actual output}
+
+\begin{conjecture}[T15: local search]\thfile{T20}
+\code{local\_certified} means exactly that the returned model was scanned as a centre and had no strictly improving feasible flip or swap (weak local maximality). On the event that $\Sz$ is the strict global mode (probability $\to1$ by A2), every completed scan from a flip-or-swap neighbour of $\Sz$ scores $\Sz$; moving and certifying need a remaining move and a further scan. Under ORTH every best improvement reduces the distance to $\Sz$ (secondary); under COH the same is an optional conjecture. Under SE alone the claim is false: a signal-bearing proxy can win the first improvement \provisional{J3}.
+\end{conjecture}
+
+\begin{conjecture}[T14-H: the reported HPM]\thfile{T21}
+$\Prob\{\text{no usable output or }\Shat\ne\Sz\}\le\Prob(U)+2\Ez[1-\pi(\Sz)]+\Prob\{U^c,\Sz\notin\calS\}$, and the discovery term vanishes under any one route: (a) fresh iid draws, with the launch-qualified bound $\E[\ind{\text{launched},\Sz\notin\calS_{\rm cal}}(1-\pizero(\Sz))^{\Qf}]$ plus the non-launch term (one cancelled variable from a start mode of bounded-below mass gives intensity of scale $\Ne(T+L+5)/(p\sqrt n)$, diverging for $p\lesssim\sqrt n$); (b) a Gibbs execution next to $\Sz$; (c) swap executions from the proxy model with a stopped opportunity count (PX); (d) tables or a scanned neighbour centre; (e) terminal repair (T18$'$); (f) the exact branch.
+\end{conjecture}
+\emph{Purpose.} The area-3 headline: production HPM recovery without posterior mixing, with the hypothesis of each route named. The budget correction (a factor $n$ in v2) is \provisional{J7}.
+
+\begin{conjecture}[T16: start aggregation and conditional concentration]\thfile{T22}
+Deterministically, for any feasible reference $S^\circ$ with the aggregate activities $q_n<1$, $e_n$: $\pizero(S^\circ)\ge(1-q_n)^{s+1}/(1+e_n)^s$, and $q_n\le u_n$ (an average of maximal table addition ratios); the truth odds relative to $S^\circ$ are an exact product of table and prior ratios. Statistically, under G, R, within-block SE, VIS, NL$_{\rm avg}(\kappa)$ \emph{and EXP}: $1-\pizero(\Sz)=O_{\Pz}(2^B\sqrt{\log n}\,n^{-\kappa}+e_n)$. Along the bridge, $1/q_\phi(\Sz)-1\le R_0^{1-\phi}R_1^{\phi}$ (H\"older), so $\inf_{[0,1]}q_\phi(\Sz)\ge\min\{\pizero(\Sz),\pi(\Sz)\}$.
+\end{conjecture}
+\emph{Purpose.} The one regime in which the composite start is statistically correct; it makes the analytic obligation (EXP) explicit. Deterministic bounds pass 376 exact cases \provisional{J5}.
+
+\begin{conjecture}[T18: basin to output; file T23]
+Assume the abstract basin condition with constants $(\calR,r_0,a,\eta,\rho,\delta)$ (entrance within $r_0$ rounds with probability at least $a$, one-round first exit at most $\eta$, truth prefix-departure at most $\rho$, expected initial outside fraction at most $\delta$). After $H$ terminal rounds
+\[
+\E f_H(\Sz^c)\le\delta+(1-a)^{\lfloor H/r_0\rfloor}+H(\eta+\rho),
+\]
+and the measured-round PIPs obey the pathwise bound
+\[
+\max_j\bigl|\PIPhat_{rj}-\ind{j\in\Sz}\bigr|\le\bar B_r+u_\pi
+\]
+in terms of the fraction $\bar B_r$ of particle-rounds with a bad prefix; the primary average has error at most
+\[
+\delta+(1-a)^{\lfloor L/r_0\rfloor}+(L+4)(\eta+\rho)+u_\pi,
+\]
+with $\rho\le(B+3)u_\pi$ by reversibility and $\delta$ from L-OCC. The single-flip pair is a conditional instance; ONE alone establishes no basin.
+\end{conjecture}
+
+\begin{conjecture}[T18$'$: conservative terminal repair]\thfile{T24}
+For fixed $d$ with LK$_d$, EXIT$_d$, GAIN$_d$: from any state in $\calR_d$ (any subset of the truth plus at most $d$ extras) one $\phi=1$ round reaches $\Sz$ with probability at least $a_n=[c_n\{1-(\sz+d)e^{-g_n}\}-2^{\sz+d}\Lambda_n-\rho_*]_+$, $c_n=1/(\sz+d+B+2)!$, and first exits from $\calR_d$ have probability at most $(B+3)2^{\sz+d}\Lambda_n+\xi_n$. Since $L\to\infty$, any fixed positive $c_n$ suffices: an eligible particle scores $\Sz$ with probability $\to1$ whatever the number of cancelled true variables. The earlier slot constant was withdrawn because internal swaps can change the greedy maximiser without exiting \provisional{J4}.
+\end{conjecture}
+
+\begin{conjecture}[T19: evidence through a crossing]\thfile{T25}
+Under BW2 the reflected comparator has relative mean-square error at most $D_N=\prod_t(1+(C_t-1)/\Ne)-1$ and, with a coupling, the actual evidence inherits a probability bound. Marginal return/occupancy conditions do \emph{not} imply any such rate: an abstract two-state system with exact coverage and lazy within-pair movement has variance far above the refresh product \provisional{J10}. The missing ingredient is a squared-evidence-weighted recursion (PW2), recorded as a research target.
+\end{conjecture}
+
+\begin{conjecture}[T17: no-switch consistency at the actual budgets]\thfile{T26}
+Under G, R, SE, BM-C, VIS, NL$_{\rm avg}$, EXP, the idealisations and operational completion: $\Zhat/Z\to1$ and $\log\Zhat-\log Z\to0$ in joint probability (through L-FM with $(T+1)\Delta_n\to0$, $T=O(\log^2n)$); primary and secondary PIPs are uniformly consistent and $\widehat{\MPM}=\Sz$ with probability $\to1$ (through L-OCC and truth-prefix stability); the HPM is recovered from the pilot's initial draws. No Monte Carlo rate, bounded stage count or clean-flag statement is included.
+\end{conjecture}
+
+\section{Part D: limits and negative results}
+
+\begin{conjecture}[T20-C: cancellation and the iid budget]\thfile{T27}
+Along a completion chain with a two-sided sequential table-ratio law $n^{-1/2}e^{O_P(1)}$ and bounded-below reference mass, $\pizero(\Sz)=p^{-c}n^{-c/2}e^{O_P(1)}$ for $c$ cancelled variables, and the exponent of $\Qf\pizero(\Sz)$ is $\max(1,a)-c(a+\tfrac12)$ at $p\asymp n^a$: one cancellation is iid-cheap up to $p\asymp\sqrt n$ and never for $p\ge n$. Lower bounds alone prove no expense; other scoring routes are untouched.
+\end{conjecture}
+
+\begin{conjecture}[T21-E: evidence loss under avoidance and coupling]\thfile{T28}
+If calibration never scores a hidden set $\calM$ and the weight-bearing populations stay coupled to the comparator reflected at $\calM^c$ (failure $h_n^E$), then $\Prob(\Zhat/Z>x)\le h_n^E+r_W/x$ with $r_W=\pi(W)/\pizero(W)$, so $\Zhat/Z\to0$ when $r_W\to0$ although $\E\Zhat=Z$; evidence-measurable diagnostics have the comparator's law. Loss needs $\Sz\in\calM$, and exponential loss needs every bounded superset of $\Sz$ in $\calM$ (by the addition floors). No production family satisfying the hypotheses has been constructed.
+\end{conjecture}
+
+\begin{conjecture}[T21-H: HPM and PIP loss]\thfile{T29}
+HPM failure needs avoidance of \emph{every} scoring mechanism (rejected proposals and Gibbs alternatives count); PIP comparisons need the actual recorded rewards. A bounded-state additions-first path to $\Sz$ at $\phi=1$ is at most polynomially rare, which is accessibility, not discovery at the budget.
+\end{conjecture}
+
+\begin{conjecture}[T21-X: pilot discovery under the repair hypotheses; optional]\thfile{T30}
+Under the hypotheses of T18$'$, an eligible pilot particle and executed pilot terminal rounds, $\Prob(\Sz\in\calS_{\rm cal})\to1$; hence no hidden set containing the truth can satisfy MISS-E or MISS-H, and no exponential evidence-loss instance exists. Bounded occupancy alone (BOCC) does not supply the repair hypotheses; the universal contrapositive is withdrawn. One actual-partition instance with two cancelled variables scored the truth in the first bridge round \provisional{J12}.
+\end{conjecture}
+
+\begin{conjecture}[T22: what the certificates establish]\thfile{T31}
+$0.05\Zhat$ has coverage at least 95\% under the ideal final-run assumptions and no accuracy content; island agreement certifies nothing over the class of unbiased estimators (a two-point law); evidence-measurable diagnostics have no power against a coupled loss instance; simultaneous discovery certificates are $\lfloor1/t\rfloor e^{-\Qf t}$ for a fixed threshold and ``every model with $\Qf\pizero(S)\ge\log[1/(\delta\pizero(S))]$ is scored'' with probability $1-\delta$ (substituting $\pizero(\Shat)$ into a fixed-model formula is invalid); the restricted ESS controls only its restricted moment.
+\end{conjecture}
+
+\begin{conjecture}[T23-C, T23-N, T23-S, T23-R: resources, numerics, statuses, bisection]\thfile{T32--T35}
+The declared budgets give polynomial arithmetic-operation counts and branch-specific storage contracts (dense Gram $8p^2$ bytes on the SMC branch; a streaming exact branch needs $O(np+pK+nK+K^2)$ words), not wall-time or preflight guarantees; a score-error bound $\eta$ preserves the ranking of models actually scored when the gap exceeds $2\eta$ (A2 supplies a $\tfrac12\log n$ margin at $\Sz$), but does not preserve an adaptive trajectory; \code{schedule\_limit} returns the best scored model without evidence or PIPs, so HPM routes completed earlier need no schedule assumption; the universal memory ceiling $p_{\max}=\Theta(\sqrt{M_0})$ is false because enumeration precedes Gram construction; the candidate-grid bisection is obstructed only under a mass-qualified condition $\rho(a,D(b-u)2^{-60})<0.9$, and the discrepancy range is at most $[(J_{\max}+1)\nu+K]\log(n+1)$ (the former bound and the $10^{17}$ cutoff were wrong) \provisional{J9}.
+\end{conjecture}
+
+\section{How the results fit together}\label{sec:connections}
+
+\paragraph{Shared assumptions.} G, R, SE and a beta-min form carry all of Part~A and enter Part~C only through A2's strict mode (T14-H, T15, T18, T18$'$) and endpoint concentration (T16, T17). EX-A, EX-S and CAL carry all of Parts~B--D. The start-side assumptions VIS, NL$_{\rm avg}$ and EXP appear only in the no-switch regime (T16, T17). The repair assumptions LK, EXIT, GAIN appear only in T18$'$ and its users (T14-H route (e), T21-X). Coverage, coupling and particle-stability assumptions appear only in the crossing and loss results (T10, B-RP, T12, T19, T21).
+
+\paragraph{Which result feeds which.} A0 $\to$ A1 $\to$ A2 is the gate for everything statistical. T7 $\to$ T8 $\to$ \{L-FM, L-OCC\} is the gate for everything about the final run's outputs. T11 $\to$ L-LED is the gate for discovery and avoidance. T16 + L-FM give the evidence in the no-switch regime; L-OCC + T18 give the PIPs; L-LED + A2 give the HPM. T18$'$ extends discovery beyond one-move starts and, through T21-X, bounds what the negative results can contain. L-RC + T8 give the negative comparison theorems, and T22 reads every certificate through them. The dependency graph is acyclic (\texttt{THEOREM\_MAP.md}).
+
+\paragraph{What the theory says about the methodology.} Conditionally on the transfers: the target is the right object (A1--A3, with A4's explicit price for $g=n$); the sampler is exactly valid (T7, T8); the HPM decision is robust because scoring is cheap along several routes (L-LED, T14-H, T15); the PIPs and the evidence are consistent in the no-switch regime at the declared budgets (T16, T17) and conditionally at one-move crossings (T18, B-RP); the evidence can be badly wrong with every check passing, but only under avoidance and coupling hypotheses for which no regression instance has been built (T21-E, T22); and bounded-size trajectories with the repair hypotheses exclude such instances altogether (T18$'$, T21-X). The main analytic obligations are EXP (start concentration), the statistical derivation of LK/EXIT/GAIN (repair), and a particle-system stability condition for crossings (PW2).
+
+\section{Recommendations to the author (not adopted)}\label{sec:recs}
+\begin{enumerate}
+\item Report $\pizero(\Shat)$, $\Qf$ and a multiplicity-aware discovery threshold; do not present the selected model's fixed-atom miss expression as a global certificate.
+\item Consider reporting the exact start mode (max-product dynamic programme), its distance from the reported HPM, and the final search centre's distance from that HPM.
+\item Make the scoring reading SR explicit in implementation tests: both feasible Gibbs alternatives and rejected proposals enter the persistent all-scored ledger.
+\item Add execution-time exposure summaries where useful; round-start occupancy cannot replace them.
+\item Specify branch-specific storage, cache, clustering and arithmetic-error contracts before adopting implementation complexity or numerical guarantees.
+\item Correct scan and grid-cost reporting units ($\max_k k(p-k)$; log-sum-exp calls versus scalar summands).
+\item If unrestricted asymptotic schedule completion becomes a requirement, investigate adaptive bisection depth as a separate revision.
+\item Consider reporting completed-table activities and leakage diagnostics to assess the start assumptions.
+\item Treat joint pair-addition proposals as a separately evaluated future modification.
+\item Keep availability, conditional accuracy and certification separately visible in theorem statements and output documentation.
+\end{enumerate}
+
+\section{Provenance}
+Council: 2 Fable 5.1 (high) + 2 Astra (xhigh), one independent round and three joint rounds (\texttt{council/}); review group: 4 Opus 5.5 (high), two rounds and one send-back with six objections, all accepted (\texttt{review/}); judge: one Astra session, phase-1 review with 38 findings and 12 orders, two Sol 6.1 assistants (\texttt{judge/sol1}, \texttt{judge/sol2}; scripts and evidence kept there, labelled provisional), phase-2 verdict with 78 changes (\texttt{judge/PROPOSAL\_v3.md}); lead's rulings in \texttt{RULINGS.md}. External primary precedents not opened in this run are marked UNVERIFIED in the files; the project's own proofs (\texttt{Proposed\_project/proofs}) are transfer resources, not adopted results.
+
+\end{document}

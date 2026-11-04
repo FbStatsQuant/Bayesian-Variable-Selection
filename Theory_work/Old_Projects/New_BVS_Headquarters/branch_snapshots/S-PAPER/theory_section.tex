@@ -1,0 +1,757 @@
+% =====================================================================================================
+% S-PAPER: THEORY SECTION SKELETON for the SMC-BVS paper (JRSS-B target).
+% Self-contained article fragment: compile as is with pdflatex (amsmath, amssymb, amsthm only).
+%
+% DRAFT. Nothing here is reviewed or adopted. Every statement carries a comment line of the form
+%     % STATUS: <author status>; VERIFIED-BY: <branches>; SOURCE: <branch:file:label>
+% Status words are the campaign protocol's (PROVED-LOCKED, PROVED, PROVED-UNDER, PROOF SKETCH, CONJECTURE,
+% OPEN, IMPL, IDEAL, COUNTEREXAMPLE) and are never upgraded here.  "VERIFIED-BY: W..." is a verifier of the SAME
+% model family; "A-REV1/A-REV2" are cross-family (GPT-6 Astra) reviews, whose verdicts are quoted, never extended.
+% "VERIFIED-BY: none" means no verifier run exists on the branches fetched when this was written.
+% Statements are copied from their sources; where a source is a candidate proof, the statement is a candidate.
+% No proofs: each result points to a Supplement section (placeholders "Supplement S.x") and to its source branch.
+% Not incorporated: W6-FIXREV1 (A-REV1 repairs, new T38 files) and W6-FIXREV2 (A-REV2 repairs, STATEMENTS.md). Both branches had
+% been pushed when this was finalised (7e58127, d213e7b) but contained only scripts/checks/notes: no T38_STATEMENT.md, no STATEMENTS.md,
+% no REPORT.md. The statements below are therefore the pre-W6 versions plus the A-REV1/A-REV2 verdicts. See README.md, 'Pending edits'.
+% AMENDED 2026-11-02 (E-SPINE, wording only; no status word changed): the story no longer says that tempering or
+% "the sampler" is NEEDED. W7-SEP (REPORT.md, Prop. GU, Cor. GU-LH) shows that start-only discovery plus the production
+% local search reaches S0 on LH. The defensible claim is "moving off the start is needed". Also: LS0 effective
+% (O-LS0 02348e2: 0/2,394 HPM changes); S-ELS counts; no-LS0 masked candidates pending A-REV7; "favourable from n"
+% figure dropped. See main:Docs/Theory/AMENDMENTS_20261102.md (branch theory/E-SPINE).
+% =====================================================================================================
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+
+% ---------- theorem environments ----------
+\newtheorem{theorem}{Theorem}
+\newtheorem{thmpart}{Theorem}[theorem]
+\renewcommand{\thethmpart}{\thetheorem(\roman{thmpart})}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+% ---------- macros ----------
+\renewcommand{\Pr}{\mathrm{P}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Sz}{S_0}
+\newcommand{\Sh}{\widehat S}
+\newcommand{\Spl}{\widehat S^{+}}
+\newcommand{\Zh}{\widehat Z}
+\newcommand{\PIPh}{\widehat{\mathrm{PIP}}}
+\newcommand{\PIP}{\mathrm{PIP}}
+\newcommand{\MPM}{\mathrm{MPM}}
+\newcommand{\HPM}{\mathrm{HPM}}
+\newcommand{\cC}{\mathcal C}
+\newcommand{\cA}{\mathcal A}
+\newcommand{\cS}{\mathcal S}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\cE}{\mathcal E}
+\newcommand{\cG}{\mathcal G}
+\newcommand{\cR}{\mathcal R}
+\newcommand{\Phidist}{\Phi}
+\newcommand{\Lat}{\mathrm{Lat}}
+\newcommand{\given}{\mid}
+\newcommand{\Ind}{\mathbf 1}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\Bin}{Bin}
+
+\title{Theory section (skeleton): consistency of the reported model, evidence and inclusion probabilities
+for SMC-BVS}
+\author{Draft for the JRSS-B paper --- S-PAPER, branch \texttt{theory/S-PAPER}}
+\date{2 November 2026 --- DRAFT, unreviewed}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Reading guide.} Every numbered result below is a candidate statement assembled from the
+verification campaign. The comment lines in the \LaTeX{} source give, for every statement, its author status, the
+branches that verified it and the exact source label. In this typeset text, the phrase ``Proof: see Supplement
+\S\,X (source branch \dots)'' stands for a proof that is \emph{not} reproduced here. Where the source is a
+single-run proof not checked by a second run, this is said in a remark, and the status words of the campaign are
+never upgraded.
+
+% =====================================================================================================
+\section{Setting and notation}\label{sec:setting}
+% =====================================================================================================
+
+\subsection{Data, target and decision objects}
+
+% STATUS: definitions; VERIFIED-BY: n/a; SOURCE: main:Docs/Theory/theorems/00_COMMON.md:§1
+Let $(X^r,y^r)$ be raw data, $n\ge 3$, with $X^r$ having no constant column and $y^r$ non-constant. With
+$C=I-\mathbf 1\mathbf 1^\top/n$ and $D_x$ the diagonal matrix of retained raw column standard deviations, the
+standardised data are $X=CX^rD_x^{-1}$ and $y=Cy^r/s_y$ with $s_y^2=\|Cy^r\|^2/(n-1)$, so that
+$\|x_j\|^2=\|y\|^2=n-1$. The state space is $\Omega=\{S\subseteq[p]:|S|\le K\}$ with $K=\min(p,\lfloor n/2\rfloor)$.
+For $S\in\Omega$ write $G_S=X_S^\top X_S=(n-1)R_S$, $z_S=X_S^\top y$, $H_S=(n+1)G_S+I$, $D_S=\det H_S/\det(G_S+I)$,
+$Q_S=y^\top y-n\,z_S^\top H_S^{-1}z_S$ and $\nu=0.01+n/2$. The target is the Bayesian variable-selection posterior with
+$\beta_S\sim N(0,n\sigma^2(G_S+I)^{-1})$, $\sigma^2\sim\mathrm{IG}(0.01,0.01)$ and a beta--binomial size prior
+BB$(1,p)$ capped at $K$: the marginal likelihood is
+$m(S)=(2b_0)^{a_0}\Gamma(\nu)\pi^{-n/2}\Gamma(a_0)^{-1}D_S^{-1/2}(2b_0+Q_S)^{-\nu}$ ($a_0=b_0=0.01$), the prior is
+$\varpi(S)=w(|S|)/W_K$ with $w(k)=\tfrac12\binom{2p-1}{k}^{-1}$ and $W_K=\sum_{k\le K}\binom pk w(k)$, and
+\[
+F(S)=\log[\varpi(S)m(S)],\qquad Z=\sum_{S\in\Omega}\varpi(S)m(S),\qquad \pi(S)=e^{F(S)}/Z .
+\]
+Write $\PIP_j=\pi(j\in S)$ and $\MPM=\{j:\PIP_j>\tfrac12\}$. The \emph{global} HPM is $\argmax_\Omega F$ with ties
+broken by smaller size, then lexicographically. The \emph{reported} HPM $\Sh$ is the same rule applied to the set
+$\cS$ of all models ever scored.
+
+\subsection{Truth and asymptotic regime}
+
+% STATUS: definitions; VERIFIED-BY: n/a; SOURCE: main:Docs/Theory/theorems/00_COMMON.md:§1,§2 (R1), §3 (G, R)
+The statistical model is $y^r=\alpha^*\mathbf 1+X^r\beta^*+\varepsilon$ with $\mu=CX^r\beta^*=X\theta^*$,
+$\theta^*=D_x\beta^*$, $\Sz=\mathrm{supp}\,\beta^*$ and $s_0=|\Sz|$; $\Pr_0$ is the law of $\varepsilon$ and ``joint
+probability'' adds the algorithm's randomness. Put $\delta_1=1-\pi(\Sz)$ and $r_n=\sqrt{\log n/n}$.
+\textbf{Regime R1} is the triangular array $n\to\infty$, $s_0$ fixed, $p=p_n\le n^{A}$ for a fixed $A\ge1$.
+Two design/model bundles are used.
+\begin{itemize}
+\item \textbf{G}: fixed design; $\varepsilon\sim N_n(0,\sigma_*^2I)$ with $\sigma_*^2>0$ fixed; intercept removed by contrasts.
+\item \textbf{R}: $s_0$ fixed; $p\le n^A$ with $A\ge 1$; $\|\mu\|^2/n\le M$; $\lambda_{\min}(R_{\Sz})\ge\varphi_0^2>0$;
+$s_0\le K$ eventually.
+\end{itemize}
+
+\subsection{The sampler, in the notation the results use}
+
+% STATUS: definitions; VERIFIED-BY: n/a; SOURCE: main:Docs/Theory/theorems/00_COMMON.md:§2; main:Docs/Methodology/METHODOLOGY_v3.md (authoritative)
+The method partitions $[p]$ into blocks $C_1,\dots,C_J$ (deterministic in $X$; complete linkage, top-down cut,
+next-fit packing) of size at most $B=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$, and computes block tables
+$r_b(A)=\mathrm{BF}(A)=m(A)/m(\emptyset)$ for $A\subseteq C_b$ against the full response. The \emph{composite start}
+is $\pi_0=\gamma_0/\bar Z_0$ with $\gamma_0(S)=\varpi(S)\prod_br_b(S\cap C_b)$, sampled exactly; the \emph{start
+mode} is $\tilde S_0=\argmax\pi_0$ (computed exactly by max-plus convolution of the block tables). A
+tempering bridge $\gamma_\phi=\gamma_0e^{\phi d}$, $\phi\in[0,1]$, with $d(S)=\log\mathrm{BF}(S)-\sum_b\log r_b(S\cap C_b)$,
+connects $\pi_0=q_0$ to $\pi=q_1$. One round at level $\phi$ consists of $p$ Gibbs flips, one uniform swap, $B$
+neighbour swaps and one independence proposal from $\pi_0$, in a uniformly random order. The calibration
+$\cC$ (grid, number of stages $T$, burn-in $L=\max(4,\lceil\log_2(n+1)\rceil)$, population size $N_e$, tier, \dots)
+is a function of the data and calibration streams only. The final run uses 4 islands of $N_e$ exact i.i.d.\ draws
+from $\pi_0$, the frozen grid, $L$ burn-in rounds and 4 measured rounds at $\phi=1$, and a local search of at most
+$\ell=\lceil\log_2(n+p+1)\rceil$ moves whose scans score every feasible flip and swap of the (frozen) centre. Outputs
+are $\Zh_r$ (island evidence), $\Zh=\tfrac14\sum_r\Zh_r$, the bound $0.05\Zh$, the Rao--Blackwell islandwise PIPs
+$\PIPh_{rj}$, the primary PIP $\bar P_j=\tfrac14\sum_r\PIPh_{rj}$, $\widehat{\MPM}$ and $\Sh$. The final run scores
+$Q_f:=4N_e(T+L+5)$ i.i.d.\ draws from $\pi_0$, with $4N_e(L+6)\le Q_f$.
+
+\subsection{Runs, outputs, scored sets and LS0}
+
+% STATUS: definition; VERIFIED-BY: W2-BOOK (single run; set inclusions only); SOURCE: W2-BOOK:STATEMENTS.tex:Potential run and output events
+\begin{definition}[Potential run and output events]\label{def:run}
+The \emph{potential uninterrupted run} $\bar R$ is the record the method produces under exact arithmetic with the
+resource preflight and the in-run time guard removed. Let $\cG=\{\text{status}=\texttt{resource\_limit}\}$ and let
+$U\supseteq\cG$ be the no-output event (with potential-run part $\bar U$). Write $\cO=U^c$ for the event that output
+is available (status \texttt{exact} or \texttt{completed}), $\cO_E$ when evidence and PIPs are reported and
+$\cO_H$ when an HPM is reported; $\bar{\cO}:=\bar U^c$ is the output-available event of the potential run. $\bar{\cS}$ is the scored set of $\bar R$ (calibration, final run, rejected
+proposals, \emph{both} Gibbs configurations at each flip, local-search scans).
+\end{definition}
+
+% STATUS: IMPL (code reading) + method change under the investment rule (O-LS0 data check PASSED 2026-11-02: 0/2,394 reported HPMs changed; approval effective); VERIFIED-BY: none (HQ read of the code for centre emission); SOURCE: O-LS0:REPORT.md:§1 (02348e2); main:theory_campaign/LEDGER.md (20:33 UTC); W4-T38FULL:T38_STATEMENT.md:Objects (LS0); main:theory_campaign/HQ/SR_AUDIT.md (decision recorded); F-REFINE:ARCHITECTURE.md:§4
+\begin{definition}[LS0: the final local search from both the best-scored model and the start mode]\label{def:ls0}
+The method's final local search is the production local search (at most $\ell$ moves, all feasible flips and swaps
+scanned, strict-improvement moves, lexicographic tie rule) centred at the running HPM. \textbf{LS0} is the one extra
+production local search centred at the start mode $\tilde S_0=\argmax\pi_0$, with its centre emitted as a score
+event \emph{before} the search begins and with the same HPM tie rule. Let $\cS_{\rm LS0}$ be the models it scores and
+\[
+\cS^{+}:=\cS\cup\cS_{\rm LS0},\qquad \Spl:=\text{the best model of }\cS^{+}\text{ under the method's tie rule}.
+\]
+Without LS0, $\cS^+=\cS$ and $\Spl=\Sh$. LS0 is part of the method: the project lead approved it on 2 November 2026,
+conditional on the data check O-LS0, and the approval took effect when that check passed (LS0 changed the reported HPM in
+$0$ of the $2{,}394$ completed study fits). The reported HPM is $\Spl$, and $\bar{\cS}^+$ denotes the corresponding
+potential scored set.
+\end{definition}
+
+\subsection{Notation for the repair theory}
+
+% STATUS: definitions; VERIFIED-BY: W3-VT37R, A-REV2 (verdicts on the statements that use them, below); SOURCE: W1-T37R:PROOF.md:Definitions for the refined statement; W4-T38FULL:T38_STATEMENT.md:Objects; F-REFINE:CARDS.md:Card 4
+For a model $S$ put $\Phi(S)=|S\,\triangle\,\Sz|$, $m(S)=|\Sz\setminus S|$ (missing truths) and $e(S)=|S\setminus\Sz|$
+(extras), so $\Phi=m+e$. A flip or swap neighbour $T$ of $S$ is a \emph{progress} neighbour if $\Phi(T)<\Phi(S)$:
+adding a missing truth, deleting an extra, or swapping an extra for a truth. For $S=U\cup P$ with $U\subseteq\Sz$,
+$P\cap\Sz=\emptyset$, the lattice is $\Lat(S)=\{U'\cup P':U\subseteq U'\subseteq\Sz,\ P'\subseteq P\}$, of size $2^{\Phi(S)}$.
+$\cR_{a,d}=\{S=U\cup P:U\subseteq\Sz,\ m(S)\le a,\ P\cap\Sz=\emptyset,\ |P|\le d\}$ (feasible, $|S|\le K$), and
+$\cR_d=\cR_{s_0,d}$. $M(S)$ is the production best-move map ($\bot$ if no strictly improving feasible flip or swap).
+$D_S$ is the event that the best progress neighbour of $S$ strictly beats both $S$ and every non-progress neighbour.
+$P_T$ is the orthogonal projection on $\mathrm{span}\,X_T$ and $\Delta(T)=\|(I-P_T)\mu\|^2/(n-1)$ is the
+population residual (deterministic under G).
+
+% =====================================================================================================
+\section{Standing assumptions}\label{sec:assumptions}
+% =====================================================================================================
+
+The following five declared assumptions are used throughout; each theorem lists any further hypotheses itself.
+
+% STATUS: IDEAL; VERIFIED-BY: n/a; SOURCE: main:Docs/Theory/theorems/00_COMMON.md:§3 (EX-A)
+\begin{assumption}[EX-A]\label{as:exa}
+Exact scores, convolutions, probabilities and comparisons (exact arithmetic).
+\end{assumption}
+
+% STATUS: IDEAL; VERIFIED-BY: n/a; SOURCE: main:Docs/Theory/theorems/00_COMMON.md:§3 (EX-S)
+\begin{assumption}[EX-S]\label{as:exs}
+Independent ideal uniform streams with the method's stream separation.
+\end{assumption}
+
+% STATUS: method construction (METHODOLOGY_v3 §§6.8--6.9); VERIFIED-BY: n/a; SOURCE: main:Docs/Theory/theorems/00_COMMON.md:§3 (CAL)
+\begin{assumption}[CAL]\label{as:cal}
+The calibration $\cC$ uses streams 0--9 only; the final streams 10--13 are fresh; escalation is decided before any
+final randomness. In particular the calibration is a function of the data and of streams 0--9 only, and every
+fixed-data identity below conditions on a successful frozen $\cC$, never on later diagnostics.
+\end{assumption}
+
+% STATUS: IMPL (code reading); VERIFIED-BY: HQ read of v3_engine.h step_gibbs (theory_campaign/HQ/SR_AUDIT.md; HQ's own read, not an independent audit); W3-VT38E and W2-VT24G confirmed it in code; W5-LOCKBOOK (f3c037d, unreviewed, in progress) holds a separate GUARD/OUT/SR code audit whose verdict supersedes if it differs; SOURCE: main:Docs/Theory/theorems/00_COMMON.md:§3 (SR); main:theory_campaign/HQ/SR_AUDIT.md
+\begin{assumption}[SR]\label{as:sr}
+Each Gibbs update evaluates both feasible configurations (the current state $S$ and the flipped state
+$S\triangle\{j\}$), and both count as scored: ``scored'' means offered to the HPM store at least once in the fit.
+An infeasible addition ($|S|=K$, $j\notin S$) is not evaluated.
+\end{assumption}
+
+% STATUS: IMPL (code reading of v3_runtime.h, v3_engine.h, v3_core.cpp); VERIFIED-BY: none (needs an independent code check; W5-LOCKBOOK AUDIT.md, unreviewed, covers it); SOURCE: W2-BOOK:STATEMENTS.tex:Definition (Potential run and output events); W2-BOOK:PROOF.md:§0.1
+\begin{assumption}[GUARD]\label{as:guard}
+The resource guard is a stop-only coupling to $\bar R$: on $\cG^c$ the status and every reported output equal those
+of $\bar R$. No assumption is made on the law of $\cG$ given $\bar R$. (Operationally: no guard path touches a
+random-number generator or a setting.)
+\end{assumption}
+
+% STATUS: IMPL; VERIFIED-BY: none; SOURCE: W2-T26:PROOF.md:§0 (OUT, START); W2-BOOK:PROOF.md:§1 (setting)
+\begin{remark}[Two further operational assumptions]\label{rem:outstart}
+\textbf{START}: the start draws are exact i.i.d.\ $\pi_0$ draws with exact $\bar Z_0$. \textbf{OUT} (used by
+Theorem~\ref{thm:T26}): on $\cO\cap\{\text{SMC branch taken, calibration succeeded}\}$ the reported outputs equal the
+potential run's; on $\cO\cap\{\text{exact enumeration branch}\}$ they are exact. In all statements below,
+\emph{nothing is ever conditioned on $\cO$}: conclusions have the form $\Pr(\cO\cap\{\text{error}\})$.
+\end{remark}
+
+% =====================================================================================================
+\section{The story}\label{sec:story}
+% =====================================================================================================
+
+% STATUS: narrative summary; every claim points to the numbered result that carries it; VERIFIED-BY: n/a (inherits the statuses of Theorems 1--6); SOURCE: F-REFINE:ARCHITECTURE.md:§1
+SMC-BVS reports a consistent model because the truth gets \emph{scored} and the posterior then \emph{ranks} it first.
+The reported HPM is the best model ever scored: every table and scan, both Gibbs configurations of every flip,
+rejected proposals, and (with LS0) the local search from the start mode. Consequently the error decomposes, for every
+$n$ and every data set, as
+\begin{equation}\label{eq:story}
+\Pr(\text{output and }\Spl\ne\Sz)\ \le\ 2\,\E_0[1-\pi(\Sz)]\ +\ \Pr(\text{the output-potential run never scores }\Sz)
+\end{equation}
+(Theorem~\ref{thm:T21}). The paper proves that the two terms vanish, in two different ways.
+The \emph{posterior} term vanishes by Theorem~\ref{thm:T03} (selection consistency under anchored, size-restricted
+sparse-eigenvalue conditions and beta-min). The \emph{discovery} term vanishes in one of two regimes.
+\begin{itemize}
+\item \textbf{Favourable regime.} The start already finds the truth: $1-\pi_0(\Sz)\to0$ (Theorem~\ref{thm:favourable}), so the final run's i.i.d.\ $\pi_0$ draws score $\Sz$ (Theorem~\ref{thm:T38}(a)).
+\item \textbf{Masked regime.} The start mass at the truth vanishes, $\pi_0(\Sz)\to0$ (variables whose contribution
+cancels across blocks cannot be seen by any block table), but the start concentrates \emph{near} the truth at a
+reference model $S^\circ$ (Theorem~\ref{thm:masked}), and a deterministic greedy repair from the reference
+scores the truth (Theorem~\ref{thm:T37}, repair), which LS0 delivers from the start mode (Theorem~\ref{thm:T38}(b1)).
+\end{itemize}
+% STATUS: narrative (amended 2026-11-02, E-SPINE); Thm SEP(A)/(B) and Prop. GU are PROVED (candidates), not cross-family reviewed; GU uses W4-T38FULL Lemma M (same-family VERIFIED only); BG3 PROVED, LH-lock PROOF SKETCH (p fixed); SOURCE: W7-SEP:REPORT.md:§1 items 1--4, Theorem SEP, Prop. GU, Cor. GU-LH; O-BGIBBS:REPORT.md:Theorem BG3; T27 (locked, CONDITIONAL)
+\noindent\emph{What discovery needs in the masked regime.} The run must \emph{move off its start}: i.i.d.\ start draws alone
+fail there (Theorem~\ref{thm:masked}; on LH, i.i.d.\ discovery and one-shot reweighting need $p^cn^{c/2}$ draws, W7-SEP
+Theorem SEP). The theory does \emph{not} say that tempering is needed. v3's moves (bridge Gibbs flips, the terminal
+rounds, the local search including LS0) each supply the move off the start, and on LH a single local search from the
+start mode already scores $\Sz$ (W7-SEP, Proposition GU and Corollary GU-LH, candidates). The tempering bridge is therefore
+one of several sufficient discovery routes, not the uniquely necessary one. Its own role is to produce the calibrated
+evidence and inclusion probabilities (Proposition~\ref{prop:frozen}, Theorem~\ref{thm:T26}) and the HPM ledger.
+Theorem~\ref{thm:T26} says that, in the favourable regime, the \emph{other} reported quantities (evidence, inclusion
+probabilities) are consistent too; Proposition~\ref{prop:frozen} says that the frozen-run identities and the 95\%
+evidence bound hold at every $n$ for the potential run, and at the output level under GUARD; Proposition~\ref{prop:decision}
+says that the HPM is the right decision under 0--1 loss and names the one within-size error that no size-prior
+retuning can fix. What the story cannot say is anything numerical at $n=200$: this is the subject of
+Section~\ref{sec:disclosure}, and it must be read with every theorem.
+
+% =====================================================================================================
+\section{Results}\label{sec:results}
+% =====================================================================================================
+
+\subsection{Theorem 1: selection consistency (T03$^\sharp$) and the exact size tail}
+
+\noindent\textbf{Notation.} Let $q_k=\binom pk w(k)$ and
+\[
+R_m\;=\;\frac{\varpi(\{S\in\Omega:|S|>m\})}{\varpi(\Sz)}\;=\;\sum_{k=m+1}^{K}\frac{q_k}{w(s_0)}
+\]
+(a data-free number; $R_m=0$ for $m\ge K$). For real $\omega$ let
+$m^\sharp_n(\omega)=\min\{m\ge s_0:\ R_m\le n^{-(s_0+1)/2}e^{-\omega}\}$ and $m^\sharp_n:=m^\sharp_n(\tfrac12\log n)$
+(so $s_0\le m^\sharp_n\le K$). Let $j_0=\lceil(2A+1)s_0\rceil+1$ and fix $g_0>0$.
+
+% STATUS: definitions of the three restricted-eigenvalue/beta-min hypotheses; VERIFIED-BY: W2-VT03R (Lemma A1 for the equivalence), A-REV2 (T03♯ VERIFIED under these hypotheses); SOURCE: W1-T03R:PROOF.md:§4 (SE_λ, SE_w); §6 (BM-∞, BM(c)); W2-VT03R:REPORT.md:Lemma A1, R2
+\begin{definition}[Hypotheses of Theorem~\ref{thm:T03}]\label{def:SE}
+\begin{itemize}
+\item $\mathrm{SE}_\lambda(j_0)$ \emph{(anchored, normalised, bounded size)}: $\lambda_{\min}(R_{\Sz\cup J})\ge\varphi_0^2$ for every
+$J\subseteq[p]\setminus\Sz$ with $|J|\le j_0$ and $\Sz\cup J\ne\emptyset$.
+\item $\mathrm{SE}_w(m;g_0)$ \emph{(anchored, unnormalised)}: $\lambda_{\min}(G_{\Sz\cup J})\ge g_0$ (equivalently
+$\lambda_{\min}(R_{\Sz\cup J})\ge g_0/(n-1)$) for every $J\subseteq[p]\setminus\Sz$ with $|J|\le m$ and $\Sz\cup J\ne\emptyset$.
+\item $\mathrm{BM}\text{-}\infty$: $\min_{j\in\Sz}\theta_j^{*2}\ge M_n\sigma_*^2\log n/(n\varphi_0^2)$ with $M_n\to\infty$.
+$\mathrm{BM}(c)$: the same with a fixed constant $c>c_0(s_0,A)$, where $c_0(s_0,A)<\infty$ depends only on $s_0$ and
+$A$ (the proof gives $c_0=L_*=\max\{4C_*,32[s_0(A+1)+2]\}$; this is a proof artefact, not sharp).
+\end{itemize}
+By eigenvalue interlacing, ``anchored'' is equivalent to the unanchored condition on every column set $T$ with at
+most $j_0$ (resp.\ $m$) columns outside $\Sz$; in particular $\mathrm{SE}_w(m;g_0)$ requires every $m$ columns of $X$
+to be linearly independent, with $\lambda_{\min}(X^\top X)\ge g_0$ on them.
+\end{definition}
+
+% STATUS: PROVED (candidate); VERIFIED-BY: W2-VT03R (no GAP/ERROR in the mathematics), A-REV2 (T02(i♯) VERIFIED: "explicit constant and pointwise-in-m uniform tail-probability bound are correct"; E1, E2, E3 VERIFIED); SOURCE: W1-T03R:PROOF.md:Theorem T02(i♯), Lemma E1, E2
+\begin{lemma}[Exact size tail, T02$(\mathrm{i}^\sharp)$]\label{thm:T02}
+Assume G and R, and let $n$ be such that $s_0\le K$. For every integer $m$ define $\Theta^\sharp_{n,m}\ge0$ by
+$\Pi(|S|>m\mid y)=R_m\,(n+1)^{s_0/2}\sqrt n\;\Theta^\sharp_{n,m}$ if $R_m>0$ and $\Theta^\sharp_{n,m}:=0$ if $R_m=0$.
+Then for every $L>c^{\sharp2}$ (with $c^\sharp$ and $C_\Lambda$ explicit constants depending on $\sigma_*^2,M,\varphi_0$ only)
+\[
+\sup_m\Pr_0(\Theta^\sharp_{n,m}>L)\ \le\ \frac{8+24M/\sigma_*^2}{n-1}+\frac1{\sqrt L}+\frac{C_\Lambda}{\log(\sqrt L/c^\sharp)} .
+\]
+Consequently, for every deterministic real sequence $\omega_n$, $\Pi(|S|>m^\sharp_n(\omega_n)\mid y)=O_{\Pr_0}(e^{-\omega_n})$; in
+particular $\Pi(|S|>m^\sharp_n\mid y)=O_{\Pr_0}(n^{-1/2})$, with $m^\sharp_n\le\min\{K,m_n^{\rm old}\}$. The inequality is
+non-asymptotic. No sparse-eigenvalue condition is used.
+\end{lemma}
+\noindent\emph{Proof:} see Supplement \S S.1 (source branch \texttt{theory/W1-T03R}, \texttt{PROOF.md} \S\S1--2).
+
+% STATUS: PROVED (candidate); VERIFIED-BY: W2-VT03R, A-REV2 ("T02(ii♯)... Fixed unnormalized g0>0 suffices on the anchored comparison unions": VERIFIED); SOURCE: W1-T03R:PROOF.md:§5 Theorem T02(ii♯)
+\begin{lemma}[Superset mass, T02$(\mathrm{ii}^\sharp)$]\label{thm:T02ii}
+In regime R1 under G, R and $\mathrm{SE}_w(m^\sharp_n;g_0)$: $\Pi(\{S\in\Omega:S\supsetneq\Sz\}\mid y)=O_{\Pr_0}(r_n)$.
+\end{lemma}
+\noindent\emph{Proof:} see Supplement \S S.1 (source branch \texttt{theory/W1-T03R}, \texttt{PROOF.md} \S5).
+
+% STATUS: PROVED (candidate) as T03♯; the lines "no beta-min", "scale invariance" are conclusions (iv),(v) of the same statement; VERIFIED-BY: W2-VT03R (with threshold correction R1 and wording R2), A-REV2 ("T03♯(i)-(v), under its SE and BM hypotheses": VERIFIED; "no hidden normalized SE use on large unions found"); SOURCE: W1-T03R:PROOF.md:§6 Theorem T03♯ (hypotheses and conclusions copied); F-REFINE:CARDS.md:Card 1
+\begin{theorem}[Selection consistency, T03$^\sharp$]\label{thm:T03}
+Assume regime R1, G, R, $\mathrm{SE}_\lambda(j_0)$, $\mathrm{SE}_w(m^\sharp_n;g_0)$ for a fixed $g_0>0$, and a beta-min condition
+in one of the forms $\mathrm{BM}\text{-}\infty$ or $\mathrm{BM}(c)$ of Definition~\ref{def:SE} (for (i)--(iii)). No hypothesis H-T02 is used
+(Theorem~\ref{thm:T02} is used directly). Then:
+\begin{enumerate}
+\item[(i)] $1-\pi(\Sz)=O_{\Pr_0}(r_n)$;
+\item[(ii)] $\max_j|\PIP_j-\Ind\{j\in\Sz\}|\le1-\pi(\Sz)$ for \emph{every} data set, and $\Pr_0(\MPM=\Sz)\to1$;
+\item[(iii)] $\Pr_0(S^\dagger\ne\Sz)\le2\E_0[1-\pi(\Sz)]\to0$, where $S^\dagger$ is the global HPM; on $\{\pi(\Sz)>\tfrac12\}$,
+$\Sz$ is the strict global maximiser of $F$ (so $\HPM=\MPM=\Sz$ strictly);
+\item[(iv)] (no beta-min) for fixed $c>c_0$ and $J_n(c)=\{j\in\Sz:\theta_j^{*2}\ge c\,\sigma_*^2\log n/(n\varphi_0^2)\}$:
+$\Pi(S\not\supseteq J_n(c)\mid y)=O_{\Pr_0}(r_n)$ and $1-\min_{j\in J_n(c)}\PIP_j=O_{\Pr_0}(r_n)$; the same holds for
+$J_n^\infty=\{j:\theta^{*2}_j\ge M_n\sigma_*^2\log n/(n\varphi_0^2)\}$ with any $M_n\to\infty$;
+\item[(v)] scale invariance of the conclusions.
+\end{enumerate}
+\end{theorem}
+\noindent\emph{Proof:} see Supplement \S S.1 (source branch \texttt{theory/W1-T03R}, \texttt{PROOF.md} \S6; locked T01--T03 as cited there).
+
+% STATUS: PROVED (W2-VT03R Lemma A1); PROOF SKETCH (Prop. W); VERIFIED-BY: W2-VT03R (A1: proved there); A-REV2 did not review Prop. W; SOURCE: W2-VT03R:REPORT.md:Lemma A1, Proposition W
+\begin{remark}[Scope of Theorem~\ref{thm:T03}]\label{rem:T03}
+\begin{enumerate}
+\item The ``anchoring'' of the eigenvalue condition is cosmetic (interlacing; Definition~\ref{def:SE}). The real
+relaxations relative to the locked SE are the size range ($m^\sharp_n$ instead of $m_n$) and the normalisation ($g_0$
+instead of $(n-1)\varphi_0^2$) on large unions.
+\item The statement ``the exact tail cuts $m_n$ to $s_0+O(s_0\log n/\log p)$'' is \emph{false} under G and R alone
+(duplicated columns, W1-T03R Prop.~D, COUNTEREXAMPLE, reproduced by W2-VT03R and A-REV2); the exact tail improves the
+locked size cutoff by a constant ($4s_0!\,e^{\gamma_m}$) and an $m^2/(4p)$ term, not by a power of $p$. [Status: PROVED/VERIFIED, W1-T03R E1(d), Prop.~D.]
+\item (PROOF SKETCH, W2-VT03R Prop.~W.) $\mathrm{SE}_\lambda(j_0)+\mathrm{BM}$ may be replaced by $\mathrm{SE}_w$ plus a direct
+signal-separation condition SIG$(c)$, $c\ge L_*$, for conclusions (i)--(iii).
+\end{enumerate}
+\end{remark}
+
+\subsection{Proposition 1: Bayes decisions and the size-prior ceiling (T07, with T06(i))}
+
+% STATUS: PROVED-LOCKED (T07(i)--(iii), T06(i)(a)) with W2-BOOK restatement (i′),(iii′) PROVED (single run); VERIFIED-BY: none beyond the locked review chain; W5-LOCKBOOK (f3c037d) has this on its task list but pushed no report; SOURCE: W2-BOOK:STATEMENTS.tex:Proposition (Decision rules and the size-prior ceiling) [label prop:decision]; W2-BOOK:PROOF.md:§3; F-REFINE:CARDS.md:Card 2
+\begin{proposition}[Decision rules and the size-prior ceiling]\label{prop:decision}
+Let $\pi$ be the target posterior and $S^*_k$ the tie-order-least maximiser of the marginal likelihood among
+models of size $k$.
+\begin{enumerate}
+\item[(i)] The HPM is a Bayes rule for $0$--$1$ loss on supports; the median probability model is a Bayes rule for Hamming loss.
+\item[(ii)] For any PIP estimate $\hat p$ the plug-in Hamming rule has excess posterior risk at most $2\|\hat p-\PIP\|_1$.
+\item[(iii)] If $s_0\le K$, some positive size-only prior has global HPM $\Sz$ if and only if $S^*_{s_0}=\Sz$.
+In particular, if a scored model $S'\ne\Sz$ with $|S'|=s_0$ has a higher score than $\Sz$, no positive size-only prior
+recovers $\Sz$ on those data.
+\item[(iv)] Two supports have equal score for every response if and only if $X_SX_S^\top=X_{S'}X_{S'}^\top$ (outer
+products, not projections); they then have equal size.
+\end{enumerate}
+\end{proposition}
+\noindent\emph{Proof:} see Supplement \S S.2 (source branch \texttt{theory/W2-BOOK}, \texttt{PROOF.md} \S3; locked T07, T06).
+
+% STATUS: wording constraint (not a theorem); VERIFIED-BY: n/a; SOURCE: F-REFINE:CARDS.md:Card 2 (Risk); F-REFINE:ARCHITECTURE.md:§5
+\begin{remark}\label{rem:ceiling}
+Part (iii) concerns \emph{within-size} errors ($|S|=s_0$, $m(S)\ge m(\Sz)$) only; size-prior retuning \emph{can} move
+different-size (superset or subset) errors. It covers every truncated BB$(a,b)$ prior. For (iv), with the cap $K$ the
+MPM keeps the $\min(K,N_+)$ largest PIPs above $1/2$ and is unique iff no $\PIP_j=\tfrac12$.
+\end{remark}
+
+\subsection{Theorem 2: the start --- favourable and masked regimes (T22, T27)}
+\stepcounter{theorem}
+
+\noindent\textbf{Setting.} G, R-lite$(A,M)$ (meaning: $p\le n^A$ and $\|\mu\|^2\le Mn$), the v3 partition, blocks of size
+at most $16$, $\nu=0.01+n/2$. \textbf{SE-blk}$(\varphi_0)$: $\min_b\lambda_{\min}(R_{C_b})\ge\varphi_0^2$ (checkable on the realised
+blocks; by interlacing equivalent to $\lambda_{\min}(X_U^\top X_U/(n-1))\ge\varphi_0^2$ for every nonempty $U$ inside a block).
+\textbf{BO}: $X_{C_b}^\top X_{C_{b'}}=0$ for $b\ne b'$. For a reference $S^\circ$ and block $C_b$, $U_b^\circ=S^\circ\cap C_b$,
+$\lambda_b(S^\circ)=\|(P_{C_b}-P_{U_b^\circ})\mu\|^2$ and $g_b(S^\circ)=\min_{U\subseteq C_b,U_b^\circ\not\subseteq U}\|(P_{U\cup U_b^\circ}-P_U)\mu\|^2$.
+The conditions VIS, $\mathrm{NL}_\eta$, $\mathrm{NL}_{\rm avg}(\kappa)$, EXP$'$ are those of Section~3 of the common-definitions file.
+Specific conditions used below: \textbf{ZL}$(S^\circ)$ (exact zero leakage): $\lambda_b(S^\circ)=0$ for all blocks;
+\textbf{SPREAD}$(\Delta_0)$: $\min_b\|(I-P_{C_b})\mu\|^2/(n-1)\ge\Delta_0>0$; \textbf{VIS-lin}$(c_V)$: $\min_bg_b(S^\circ)\ge c_Vn$ with fixed
+$c_V>0$; \textbf{BM-blk}: $\min_{j\in\Sz}\theta_j^{*2}\ge M_n(\sigma^2+2M)\log n/(\varphi_0^2(n-1))$ with $M_n\to\infty$;
+\textbf{CL}$(L)$ (chain leakage): along a deterministic addition chain $S^{(0)}\subset\cdots\subset S^{(c)}=\Sz$ with
+$S^{(i+1)}=S^{(i)}+l_i$, $\max_i|\delta_{T_i,l_i}|\le L\sigma$, where $T_i=S^{(i)}\cap C_{b(l_i)}$ and
+$\delta_{T,l}=u_{T,l}^\top\mu$ ($u_{T,l}$ the unit residual of $x_l$ on $X_T$); \textbf{H3}: $\Pr_0(\pi_0(S^{(0)})\ge c_0)\to1$.
+
+% STATUS: PROVED-LOCKED (T22(i),(ii),(iv): wave 1, full chain); VERIFIED-BY: locked review chain; W2-T26 Lemma 1 (the Δ_n identity); SOURCE: F-REFINE:CARDS.md:Card 3 (i); W2-T26:PROOF.md:Lemma 1
+\begin{thmpart}[deterministic start bounds]\label{thm:T22}
+\emph{(i)} The composite start puts mass at least $(1-q)^{s+1}/(1+e)^s$ on any feasible reference model $S^\circ$
+($S^\circ\ne\Sz$ allowed), with $q,e$ the table constants of the locked T22(i); the odds from a reference to $\Sz$ are exact;
+and the tempering bridge keeps $\sup_{\phi\in[0,1]}[1-q_\phi(\Sz)]\le\max\{1-\pi_0(\Sz),1-\pi(\Sz)\}$. Hence, if $\Sz\in\Omega$,
+$\Delta_n:=1-\inf_{\phi}q_\phi(\Sz)=\max\{1-\pi_0(\Sz),\,1-\pi(\Sz)\}<1$ exactly.
+\end{thmpart}
+\noindent\emph{Proof:} see Supplement \S S.3 (locked T22; source branch \texttt{theory/W2-T26}, \texttt{PROOF.md} Lemma 1).
+
+% STATUS: PROVED; VERIFIED-BY: W3-VEXP (EXP′ theorem and finite-n certificate R1), A-REV2 ("SEX Theorem 1 EXP′, exact remainder and stated bound: VERIFIED" under fixed-X actual blocks, uniform SE-blk, bounded B, polynomial family; the displayed limiting constant 0.52/c_* is an ERROR, the actual limit is 0.51/c_*, so it is not quoted here); SOURCE: W1-EXP:PROOF.md:Theorem 1 (EXP′); W3-VEXP:REPORT.md:R1
+\begin{thmpart}[EXP$'$ is a theorem]\label{thm:EXP}
+Assume G, R-lite$(A,M)$ and SE-blk$(\varphi_0)$. Put $c_*=\sigma^2/(8(M+2\sigma^2))$. There is an explicit $\kappa_{\rm EXP}$
+(depending on $\varphi_0,\sigma,M,n$ only) and an event $E_n$ with $\Pr_0(E_n)\to1$ such that on $E_n$, \emph{every}
+within-block addition $(b,T,l)$ ($T\subseteq C_b\setminus\{l\}$) satisfies
+\[
+\log\frac{r_b(T+l)}{r_b(T)}=-\tfrac12\log(n+1)-\nu\log(1-x_{T,l})+R_{n,b,T,l},\qquad |R_{n,b,T,l}|\le\kappa_{\rm EXP},
+\]
+where $x_{T,l}=(\mathrm{RSS}_T-\mathrm{RSS}_{T+l})/\mathrm{RSS}_T$. In particular EXP$'$ holds in its strict form ($\rho_n=\max|R|=O_{\Pr_0}(1)$);
+at finite $n$ a data-computable certificate replaces $\kappa_{\rm EXP}$. Consequently EXP$'$ is removed from the hypothesis list of the
+favourable-start statement, and $\mathrm{NL}_\eta$ may be weakened to $\mathrm{NL}_C$ (W1-EXP Prop.~2.1, PROOF SKETCH).
+\end{thmpart}
+\noindent\emph{Proof:} see Supplement \S S.3 (source branch \texttt{theory/W1-EXP}, \texttt{PROOF.md} \S1; \texttt{theory/W3-VEXP}).
+
+% STATUS: (F1) PROVED-LOCKED CONDITIONAL on EXP′ (now discharged) with W1-EXP Prop 2.1 PROOF SKETCH; (F2) PROOF SKETCH in W1-EXP (verbatim corollary of (F1)+Thm 1); (F3) PROVED; VERIFIED-BY: W3-VEXP ((F2) VERIFIED as a verbatim corollary, R2; (F3) VERIFIED); SOURCE: F-REFINE:CARDS.md:Card 3 (iii); W1-EXP:PROOF.md:Prop 2.1, Theorem 2, Theorem 6
+\begin{thmpart}[favourable start]\label{thm:favourable}
+For a feasible reference $S^\circ$ (which may be $\Sz$, or $S^\circ\ne\Sz$), $1-\pi_0(S^\circ)\to0$ in probability at the rate
+stated under any one of:
+\begin{itemize}
+\item[(F1)] the locked T22(iii) hypotheses minus EXP$'$: G, R, SE-blk, VIS, $\mathrm{NL}_\eta$, $\mathrm{NL}_{\rm avg}(\kappa)$ (all at reference $S^\circ$): rate $O_{\Pr_0}(2^B\sqrt{\log n}\,n^{-\kappa})$;
+\item[(F2)] BO and BM-blk (with G, R, SE-blk, reference $\Sz$): rate $O_{\Pr_0}(2^B\sqrt{\log n}\,n^{-1/2})$;
+\item[(F3)] G, R-lite, SE-blk, ZL$(S^\circ)$, SPREAD, VIS-lin$(S^\circ)$: rate $O_{\Pr_0}(2^B n^{-1/2})$, self-contained (no locked-proof transfer).
+\end{itemize}
+\end{thmpart}
+\noindent\emph{Proof:} see Supplement \S S.3 (source branch \texttt{theory/W1-EXP}, \texttt{PROOF.md} \S2, Theorem 6; verification \texttt{theory/W3-VEXP}).
+
+% STATUS: PROVED (Theorems 3 and 4 of W1-EXP given H3); the limit-law refinement is a PROOF SKETCH; VERIFIED-BY: W3-VEXP; A-REV2 ("SEX Theorem 3 deterministic fixed-length chain: VERIFIED"; "SEX Theorem 4, fixed CL(L) and normalized H3: VERIFIED"; "growing-leakage bound: VERIFIED as a bound, the 'iff' gloss is an ERROR, sufficiency only"); SOURCE: W1-EXP:PROOF.md:Theorems 3, 4 and Limit law; F-REFINE:CARDS.md:Card 3 (iv)
+\begin{thmpart}[masked start]\label{thm:masked}
+Assume G, R-lite, SE-chain (implied by SE-blk), a deterministic fixed-length addition chain, CL$(L)$ with $L$ fixed, H3 and
+$p\ge2(s+c)$ ($s=|S^{(0)}|$, $c\ge1$ the chain length). Then with probability $\to1$, for all $i<c$,
+\[
+-1-\kappa_{\rm EXP}\ \le\ \log\frac{r_{b_i}(T_i+l_i)}{r_{b_i}(T_i)}+\tfrac12\log n\ \le\ \kappa_{\rm EXP}+1.01(L+|Z_i|)^2\quad(n\ge400),
+\]
+with $Z_i\sim N(0,1)$, and
+\[
+\log\pi_0(\Sz)+c\log p+\tfrac c2\log n=O_{\Pr_0}(1),\qquad\text{i.e. }\ \pi_0(\Sz)=p^{-c}n^{-c/2}e^{O_P(1)} .
+\]
+With $L=L_n\to\infty$ the upper side gains the term $1.01c(L_n+O_P(1))^2$ (a sufficient bound only). This is a statement about
+i.i.d.\ draws from $\pi_0$, \emph{not} about the hybrid sampler.
+\end{thmpart}
+\noindent\emph{Proof:} see Supplement \S S.3 (source branch \texttt{theory/W1-EXP}, \texttt{PROOF.md} \S3).
+
+% STATUS: exact-Gram part PROVED (W1-EXP Theorem 5 (a),(b),(c),(e); (d) by locked T03; the limit law inside (b) is a PROOF SKETCH); iid-Gaussian p≫n part PROVED by one run, unverified; VERIFIED-BY: W3-VEXP (exact Gram; |ψ|<ρ boundary sharp in effect, row 17); iid part: none (W3-PXN single run; W5-VMASK, branch c3e1b73, has pushed an independent core and sanity checks only, no verdict); SOURCE: W1-EXP:PROOF.md:Theorem 5, Lemmas 4.1, 4.2; W3-PXN:PROOF.md:P1–P8; F-REFINE:CARDS.md:Card 3 (v)
+\begin{thmpart}[one family carries both]\label{thm:LH}
+\textbf{The family LH} (linked hubs): $G$ groups of size $g$ with equicorrelation $\rho_h\in[\rho_-,\rho_+]\subset(0,1)$, a hub in each group;
+groups independent except $c$ disjoint \emph{linked pairs} $(a_i,b_i,\psi_i)$ with cross-covariance through the hubs; truth
+$\theta_{j_{a_i}}=\beta_i\ne0$, $\theta_{j_{b_i}}=-\psi_i\beta_i$ (the \emph{suppressor}), further unlinked visible groups with fixed
+nonzero coefficients; $s_0=2c+\#\text{visible}$ fixed. The masked set is $M=\{j_{b_1},\dots,j_{b_c}\}$ and $S^\circ=\Sz\setminus M$.
+\emph{Exact-Gram realisation:} $X^\top X=(n-1)\Sigma_{\rm LH}$, $p\le n-1$, $|\psi_i|<\min(\rho_{a_i},\rho_{b_i})$, $\psi_i\ne0$,
+$g\le B_n<2g$ for all large $n$, fixed coefficients. Then, under G with $\sigma^2>0$ fixed:
+\begin{enumerate}
+\item[(a)] $1-\pi_0(S^\circ)=O_{\Pr_0}(2^Bn^{-1/2})$, hence $\pi_0(\cR_d)\to1$ for every $d\ge0$;
+\item[(b)] $\pi_0(\Sz)=p^{-c}n^{-c/2}e^{O_P(1)}$ (masking), with an exact limit law for the masking statistic (PROOF SKETCH);
+\item[(c)] VIS fails at reference $\Sz$, so the favourable-start statement does not apply;
+\item[(d)] $1-\pi(\Sz)=O_{\Pr_0}(\sqrt{\log n/n})$ (locked T03);
+\item[(e)] $\pi_0(\Sz)\to0$, $\pi(\Sz)\to1$, $\pi_0(\cR_0)\to1$: the start is masked, the target is not.
+\end{enumerate}
+\emph{iid-Gaussian realisation (single unverified run).} With i.i.d.\ Gaussian rows and $n^a\le p\le n^A$ ($p\gg n$ allowed),
+the partition equals the groups with probability $\to1$, $1-\pi_0(S^\circ)=O_{\Pr_0}(\sqrt{\log n/n})$ \emph{without} the $2^B$ factor,
+and the exact limit law of the masking statistic holds (W3-PXN P1--P4, with P5--P8).
+\end{thmpart}
+\noindent\emph{Proof:} see Supplement \S S.3 (source branch \texttt{theory/W1-EXP}, \texttt{PROOF.md} \S4; \texttt{theory/W3-PXN}, \texttt{PROOF.md}).
+
+% STATUS: wording constraint; VERIFIED-BY: n/a; SOURCE: F-REFINE:CARDS.md:Card 3 (Regime discipline, Risk); W3-PXN:PROOF.md:Prop. Q
+\begin{remark}[Discipline]\label{rem:regime}
+Parts (iii) and (iv)--(v) of Theorem~2 are never combined on one sequence; on LH the reference in (iii) is $S^\circ$. The cliff
+$|\psi|<\rho$ (beyond it mass moves to a different regime) and the packing condition $g\le B<2g$ are part of the theorem and must be
+stated. The rates in (iii) carry a factor $2^B$ and are numerically vacuous below $n\approx10^9$ (Section~\ref{sec:disclosure}).
+\end{remark}
+
+\subsection{Theorem 3: the repair (refined T37, T24)}
+\stepcounter{theorem}
+
+\noindent\textbf{Conditions.} For a finite family $\cR\ni\Sz$ of feasible models: \textbf{(L)}: $M(\Sz)=\bot$;
+$\mathrm{TD}'_\infty(\cR)$: (L) and for every $S\in\cR\setminus\{\Sz\}$, $M(S)\ne\bot$ and $M(S)\in\cR$;
+$\mathrm{TD}'_P(\cR)$: (L) and $M(S)$ is a progress move for every $S\in\cR\setminus\{\Sz\}$.
+(Strict separation $\bigcap_SD_S$ together with (L) is \emph{sufficient} for $\mathrm{TD}'_P$; with exact ties it is not necessary.)
+$\mathrm{POS}(\cR_d)$: at every $S\in\cR_d\setminus\{\Sz\}$ the move designated by literal TD(1) or TD(2) has gain $>0$.
+
+% STATUS: PROVED (negative result); VERIFIED-BY: W3-VT37R (exhaustive), A-REV2 ("S37 Proposition 1 and swap identity: VERIFIED"); SOURCE: W1-T37R:PROOF.md:Proposition 1; W3-VT38E:V1; F-REFINE:CARDS.md:Card 4 ("What is false and must go")
+\begin{lemma}[The literal greedy-descent condition is unsatisfiable]\label{prop:literalTD}
+For $d\ge1$ the literal condition $\mathrm{TD}(d,m)$ of the original T37 is unsatisfiable: at $S=\Sz-j+l$ the swap $l\to j$ beats
+the addition of $j$ whenever $F(\Sz)>F(\Sz+l)$, so $\mathrm{TD}(d,0)$ fails for every $d\ge1$ on $\{\pi(\Sz)>\tfrac12\}$, i.e.\ under the conclusion of
+Theorem~\ref{thm:T03}. Therefore the literal T37, T37(ii)'s union bound (it includes a comparison with the wrong sign) and
+``exactly $|S\triangle\Sz|$ moves'' (swaps cut $\Phi$ by $2$) are withdrawn.
+\end{lemma}
+\noindent\emph{Proof:} see Supplement \S S.4 (source branches \texttt{theory/W1-T37R} Prop.~1; \texttt{theory/W3-VT38E} V1).
+
+% STATUS: PROVED; VERIFIED-BY: W3-VT37R (exhaustive check, 720 designs × 632 states at p=15, 0 violations); A-REV2 ((A1)–(A4): VERIFIED; (A5) literal TD ⇒ TD′_P without POS: ERROR, the POS repair R1 VERIFIED; "TD′_P iff (L) and all D_S": ERROR (sufficient only); "weakest" prose: ERROR (use W3-VT37R R3's correction)); SOURCE: W1-T37R:PROOF.md:Theorem A (A1)–(A5); W3-VT37R:REPAIRS.md:R1, R3; F-REFINE:CARDS.md:Card 4 part A
+\begin{thmpart}[deterministic greedy repair --- Theorem A]\label{thm:T37}
+Assume EX-A; $X,y$ fixed; $\ell$ the production move cap; $\cR$ a finite family of feasible models containing $\Sz$.
+\begin{enumerate}
+\item[(A1)] $\mathrm{TD}'_\infty(\cR)$ holds if and only if, for every $S\in\cR$, the uncapped greedy path from $S$ stays in $\cR$ and terminates at $\Sz$.
+\item[(A2)] Under $\mathrm{TD}'_P(\cR_{a,d})$, from every $S\in\cR_{a,d}$ the greedy path stays in $\Lat(S)\subseteq\cR_{a,d}$, $\Phi$ strictly
+decreases at each move and $\Sz$ is reached after $\tau(S)=m(S)+e(S)-\sigma(S)\le\Phi(S)$ moves, where $\sigma(S)$ is the number of
+extra$\to$truth swaps used; $\max\{m(S),e(S)\}\le\tau(S)$.
+\item[(A3)] If $\mathrm{TD}'_P(\cR_{a,d})$ holds and $\ell\ge a+d$ (or merely $\ell\ge\tau(S_c)$), then from any centre $S_c\in\cR_{a,d}$ the production
+local search returns $\Sz$ with \texttt{local\_certified}, without \texttt{local\_limit}, and afterwards $\Sh=\Sz$ up to exact ties
+(with \emph{no} $\pi(\Sz)>\tfrac12$ premise). The same holds for one centre $S_c$ under the lattice condition
+(L)\,$\wedge\bigcap_{S'\in\Lat(S_c)\setminus\{\Sz\}}D_{S'}$, which involves $2^{\Phi(S_c)}$ states only.
+\item[(A5, repaired)] Literal strict $\mathrm{TD}(d,0)\wedge\mathrm{POS}(\cR_d)\Rightarrow\mathrm{TD}'_P(\cR_d)\Rightarrow\mathrm{TD}'_\infty(\cR_d)$; the converse of the
+second implication fails.
+\end{enumerate}
+\end{thmpart}
+\noindent\emph{Proof:} see Supplement \S S.4 (source branch \texttt{theory/W1-T37R}, \texttt{PROOF.md} Theorem A; repairs \texttt{theory/W3-VT37R}, \texttt{REPAIRS.md} R1, R3).
+
+% STATUS: PROVED; VERIFIED-BY: same-family referee inside W4-T38FULL (not cross-family; A-REV1/A-REV2 did not review W4-T38FULL); SOURCE: W4-T38FULL:T38_PROOF.md:§3.1 Lemma LS-score; F-REFINE:CARDS.md:Card 4 part A (LS-score)
+\begin{lemma}[Lemma LS-score]\label{lem:LSscore}
+If $D_S$ holds on $\Lat(C_0)\cap\{\Phi\ge2\}$ and $\ell\ge\Phi(C_0)-1$, the production search from $C_0$ \emph{scores} $\Sz$ (the next scan at
+a flip neighbour scores it); certification is not required. This is the form used by Theorem~\ref{thm:T38}.
+\end{lemma}
+\noindent\emph{Proof:} see Supplement \S S.4 (source branch \texttt{theory/W4-T38FULL}, \texttt{T38\_PROOF.md} \S3.1).
+
+% STATUS: PROVED for the inclusion (new-delivery monotonicity); the posterior-miss inference of the source's Lemma 0(b) is an ERROR (A-REV2) and is NOT stated; VERIFIED-BY: A-REV2 ("S37 Lemma 0(a),(c): VERIFIED"; "Lemma 0(b) as written: ERROR — new-delivery monotonicity inclusion survives; its post-search 'posterior miss' inference does not"); W3-VT37R R2 (the proposed exhaustive failure dichotomy is itself an ERROR per A-REV2); SOURCE: W1-T37R:PROOF.md:Lemma 0; W3-VT37R:REPAIRS.md:R2; A-REV2:REVIEW.md:§4.2
+\begin{lemma}[Lemma 0, restricted to what survives review]\label{lem:lemma0}
+The final local search, centred at the running HPM, can deliver $\Sz$ (i.e.\ $\Sz\notin\cS_{\rm pre}$ and $\Sz\in\cS$ after the search)
+only on $E_{\rm LS}=\{\Sz\notin\cS_{\rm pre},\ F(\Sz)>F(\text{centre})\}$, by monotonicity of $F$ along the greedy path.
+After a certified repair with $\Sz$ the centre, $\Sh=\Sz$ up to exact ties.
+\end{lemma}
+\noindent\emph{Proof:} see Supplement \S S.4 (source branch \texttt{theory/W1-T37R}, \texttt{PROOF.md} Lemma 0 (a),(c) only).
+
+% STATUS: PROVED (candidate); VERIFIED-BY: none final (REPORT of W3-PGD is a stub; W5-VPGD, branch 194e12c, has pushed a same-family referee file REFEREE.md labelled "draft verdicts": no ERROR in any proof step, four minor GAPs G1-G4 and one misleading interpretive remark; not a final report, status not upgraded); A-REV2 flags the neighbouring W1-T37R Theorem C extensions as GAP and promotes no asymptotic TD′ theorem; SOURCE: W3-PGD:PROOF.md:Theorem W, Definition LD♭, Lemma S; F-REFINE:CARDS.md:Card 4 part B
+\begin{thmpart}[asymptotic repair --- Theorem W]\label{thm:W}
+Assume regime R1; $s_0$, $a\le s_0$, $d$ fixed; $\mathcal D=\mathcal D_n\subseteq\Sz^c$ deterministic ($X$-measurable); EX-A, G, R,
+$\mathrm{SE}_\lambda(d+1)$ ($\lambda_{\min}(R_{\Sz\cup J})\ge\varphi_0^2$ for $|J|\le d+1$), $\mathrm{BM}\text{-}\infty$, \textbf{PGD}$(\eta)$ on
+$\cR_{a,d}(\mathcal D)=\{U\cup P:U\subseteq\Sz,\ |\Sz\setminus U|\le a,\ P\subseteq\mathcal D,\ |P|\le d\}$ for a fixed $\eta\in(0,1]$ (at every state missing a truth,
+the best non-progress reduction of the population residual is at most $(1-\eta)$ times the best progress reduction), and one of
+(H1) $d\le1$; (H2) $(|\mathcal D|+1)^{d-1}\le n^{1/2-\epsilon}$; (H3) $\mathrm{LD}^\flat(d;B',\rho^*)$ with $\tau^2<1+1/(2A)$,
+$\tau=(1+\rho^*\sqrt d)/\sqrt{1-\rho^{*2}}$. Then $\Pr_0\big(\mathrm{TD}'_P(\cR_{a,d}(\mathcal D))\big)\to1$; consequently for every
+(data-dependent) centre $S_c$ and all $n$ with $\ell_n\ge a+d$,
+\[
+\Pr\big(\text{the search from }S_c\text{ does not return }\Sz\text{ certified}\big)\ \le\ \Pr\big(S_c\notin\cR_{a,d}(\mathcal D)\big)+o(1).
+\]
+\end{thmpart}
+\noindent\emph{Proof:} see Supplement \S S.4 (source branch \texttt{theory/W3-PGD}, \texttt{PROOF.md} \S4). The condition $\mathrm{LD}^\flat$ is that
+of \texttt{PROOF.md} \S3 (bounded neighbour sets $\mathfrak N(l)$ of size $\le B'$ and a squared partial multiple correlation at most $\rho^*$).
+
+% STATUS: PROVED (W3-PGD P4: sharpness; C-LD: counterexample); VERIFIED-BY: none; W1-T37R C3: COUNTEREXAMPLE VERIFIED by W3-VT37R (PGD is not implied by SE + BM-∞); SOURCE: W3-PGD:PROOF.md:Prop P4, Prop C-LD; W1-T37R:PROOF.md:Theorem C (C3)
+\begin{remark}[Limits of Theorem~\ref{thm:W}]\label{rem:Wlimits}
+PGD is not implied by $\mathrm{SE}+\mathrm{BM}\text{-}\infty$ (combination look-alike counterexample; W1-T37R, verified by W3-VT37R), and is sharp: a
+reverse margin $\rho^0\ge(1+\epsilon)\rho^+$ on a subsequence forces failure (W3-PGD Prop.~P4). The local-dependence condition cannot be dropped
+for $d\ge2$ with unrestricted extras (equicorrelated nulls with $r>\tfrac12$: $\mathrm{TD}'_P(\cR_{0,2})$ fails with probability $\to1$; W3-PGD Prop.~C-LD,
+COUNTEREXAMPLE); it is unnecessary for $d=1$ or for extras from a class of size $n^{o(1)}$.
+\end{remark}
+
+% STATUS: PROVED; VERIFIED-BY: same-family referee inside W4-T38FULL, with a brute-force population check of the margins (scripts/ref_lhlat.txt, ref_lhformulas.txt); not cross-family; SOURCE: W4-T38FULL:T38_PROOF.md:§3.2 Lemma M, §3.4 Prop. LH-LAT; F-REFINE:CARDS.md:Card 4 part C
+\begin{thmpart}[explicit margin on the masked family LH]\label{prop:LHLAT}
+On LH (exact Gram, as in Theorem~\ref{thm:LH}) with $S^\circ=\Sz\setminus M$, the population condition $\mathrm{POP\text{-}LAT}(S^\circ,m_0)$ holds with the explicit
+sharp margin $m_0=\min\{(1-\kappa_{\max})R_{\min},\ \min_i\beta_i^2(1-\psi_i^2)^2,\ \min_h\theta_h^2\}$, where
+$R_i=\beta_i^2\psi_i^2(1-\psi_i^2)$ and $\kappa_i=\rho^2(1-\psi_i^2)/(1-\psi_i^2\rho^2)$. Moreover (Lemma M) any population margin $m_n\gg\sqrt{\log n/n}$
+turns $\mathrm{POP\text{-}LAT}$ into the event $D_S$ on $\Lat(S^\circ)$ with probability $\to1$; hence the search from $S^\circ$ scores $\Sz$ in $c$ moves.
+\end{thmpart}
+\noindent\emph{Proof:} see Supplement \S S.4 (source branch \texttt{theory/W4-T38FULL}, \texttt{T38\_PROOF.md} \S\S3.2, 3.4).
+
+% STATUS: PROVED (finite inequality, after the Lemma F′ repair); Proposition U (the potential-function bookkeeping) is an ERROR as written and is NOT cited; the asymptotic premises are PROVED-UNDER / PROOF SKETCH / FALSE-without-conditions as listed; VERIFIED-BY: W2-VT24G (after Lemma F′); A-REV1 ("Theorem B, restated T24, finite inequality: VERIFIED after F′ repair"; Corollary P1: VERIFIED; Cor B-M: VERIFIED under IND-T; IND-T: VERIFIED for the uninterrupted process; Prop. U: ERROR; "W1 §6 premises imply Hη→0": GAP); SOURCE: W1-T24G:PROOF.md:§4 Theorem B; W2-VT24G:PROOF.md:Lemma F′, B1′/B2′; W2-PREM:PROOF.md:IND-T; F-REFINE:CARDS.md:Card 4 part D
+\begin{thmpart}[the Gibbs path --- Theorem B$'$ / B$^\sharp$]\label{thm:B}
+Assume EX-A, EX-S, SR, $\phi=1$. For a particle at a state $x\in\Omega\setminus\{\Sz\}$ at the start of $H$ terminal rounds at $\phi=1$
+without resampling in between, with the exact data functions $c_*(x)$, $v(x)$ and $\eta(x)$ of the Supplement ($v(x)$ is a two-phase potential,
+$\le|M(x)|+a$ while a truth is missing, and $|P|$ on supersets):
+\[
+\Pr_x(\Sz\text{ not scored within }H\text{ rounds})\ \le\ \Pr\big(\Bin(H,c_*(x))<v(x)\big)+H\eta(x)\ \le\ v(1-c_*)^{\lfloor H/v\rfloor}+H\eta,
+\]
+with $c_2\ge1/(B+3)-\varepsilon_{\rm del}$ deterministically on supersets, and $c_1\ge1/|M(x)|$-type bounds from pointwise addability (no factorial).
+Terminal-round trajectories of different particles are conditionally independent given the terminal-start population and past (IND-T, under EX-S), so the
+population failure probability is the product of the per-particle bounds for particles selected using the past only (Cor.\ B-M). At Hamming distance one
+the truth is scored in the next round with probability at least $a_1(x)$ (Cor.\ P1).
+\end{thmpart}
+\noindent\emph{Proof:} see Supplement \S S.5 (source branches \texttt{theory/W1-T24G} \S4, \texttt{theory/W2-VT24G} Lemma F$'$, B1$'$/B2$'$, \texttt{theory/W2-PREM} IND-T).
+\emph{Status caveat.} The exact definitions of $c_*(x)$, $v(x)$, $\eta(x)$ are those of W1-T24G \S4 as repaired; W6-FIXREV1 (which corrects Proposition U's
+classification or charging) had not delivered its package when this draft was finalised; the statement of $v$ above is therefore the source's inequality form, and the exact constants must be re-read
+from the W6-FIXREV1 package before submission.
+
+% STATUS: PROVED-UNDER / PROOF SKETCH / FALSE (as listed); VERIFIED-BY: none beyond W2-VT24G on the NL0(a) row; W2-PREM single run unreviewed; A-REV1: Lemma U finite expansion VERIFIED (limiting constant 0.52 is an ERROR, 0.51), IND-T VERIFIED, "W1 §6 premises imply Hη→0" GAP; SOURCE: W2-PREM:REPORT.md (final); F-REFINE:CARDS.md:Card 4 part D (asymptotic premises)
+\begin{remark}[Asymptotic premises of Theorem~\ref{thm:B}]\label{rem:Bpremises}
+The asymptotic status of the inputs to Theorem~\ref{thm:B} is mixed and must not be summarised as ``$H\eta\to0$''.
+$\tau_2$, $\mathrm{NL0}(0)$, $\mathrm{UDEL}(1)$: PROVED. $\mathrm{NL0}(a)$/$\mathrm{UDEL}(a\ge2)$: PROVED \emph{under} a partner-graph condition PG and FALSE
+without it (equicorrelated nulls). TS: PROVED under non-cancellation, FALSE under a cancellation pair. IND-M: PROVED under subset-start concentration and a
+non-degeneracy condition (SCR + GS), OPEN for superset starts. On LH all premises are PROOF SKETCH (two population inequalities only numerical). The older
+uniform exit hypothesis H24 is \emph{retired}: at boundary states of $\cR_d$ a look-alike of a missing truth exits with probability $\ge(1-o(1))/(B+d+4)$ (W1-T24G CE1,
+verified as a deterministic bound; the broad asymptotic wording for correlated designs is a GAP per A-REV1, to be replaced by a narrow statement), and the form
+$(1-c')^{\lfloor H/(s_0+d)\rfloor}$ of the brief is invalid (CE2).
+\end{remark}
+
+\subsection{Theorem 4: HPM composition (T21)}
+
+% STATUS: PROVED (set inclusions only; "Lemma RO"); VERIFIED-BY: none (single run; Lemma RO is trivial inclusions; W5-LOCKBOOK referee not completed as of f3c037d); SOURCE: W2-BOOK:STATEMENTS.tex:Lemma (Run/output split)
+\begin{lemma}[Run/output split]\label{lem:RO}
+Under GUARD, for an output-available event $\cO=\cG^c\cap\bar{\cO}$ with $\bar{\cO}\in\sigma(\bar R)$, a reported output $g$ and its potential version $\bar g$:
+$\Ind_{\cO}g=\Ind_{\cO}\bar g$; $\Pr(\cO^c\cup\{g\notin A\})\le\Pr(\cG)+\Pr(\bar{\cO}^c)+\Pr(\bar{\cO},\bar g\notin A)$; and
+$\E[\Ind_{\cO}g]\le\E[\Ind_{\bar{\cO}}\bar g]$ for $g\ge0$. Identities in expectation are not preserved under $\Pr(\cdot\mid\cO)$.
+\end{lemma}
+\noindent\emph{Proof:} see Supplement \S S.6 (source branch \texttt{theory/W2-BOOK}, \texttt{PROOF.md} \S0.2).
+
+% STATUS: PROVED (composition: strict maximiser + Markov, locked T21 (C1) restated); route (a) PROVED-LOCKED (T11(iii)); route (d) PROVED; route (e′): drop-in VERIFIED as an implication, route inputs conditional; VERIFIED-BY: W2-VT24G §6 (the three (e′) edits), A-REV1 (Cor B-M VERIFIED under IND-T, "does not prove the presence of eligible particles"); SOURCE: W2-BOOK:STATEMENTS.tex:Theorem (Composition for the reported HPM) [label thm:composition]; W2-BOOK:PROOF.md:§4; F-REFINE:CARDS.md:Card 5
+\begin{theorem}[Composition for the reported HPM, T21]\label{thm:T21}
+Assume EX-A, EX-S, CAL, SR and GUARD. Let $U\supseteq\cG$ be the no-output event, $\bar U$ its potential-run part, $\bar{\cS}$ the potential scored set and
+$\delta_1=1-\pi(\Sz)$. Then, for \emph{every} $n$ and every data set,
+\[
+\Pr(U\text{ or }\Sh\ne\Sz)\ \le\ \Pr(U)+2\,\E_0\delta_1+\Pr(\bar U^c,\ \Sz\notin\bar{\cS}),\qquad \Pr(U)\le\Pr(\cG)+\Pr(\bar U),
+\]
+equivalently $\Pr(\cO\cap\{\Sh\ne\Sz\})\le2\E_0\delta_1+\Pr(\bar{\cO},\ \Sz\notin\bar{\cS})$ (Lemma~\ref{lem:RO}). The last term, $\Pr(\bar U^c,\Sz\notin\bar{\cS})=\Pr(\bar{\cO},\Sz\notin\bar{\cS})$, is bounded by each of:
+\begin{itemize}
+\item[(a)] (i.i.d.\ final draws) $\Pr(\cA^c,\Sz\notin\cS_{\rm cal})+\E\big[\Ind_{\cA}\Ind\{\Sz\notin\cS_{\rm cal}\}(1-\pi_0(\Sz))^{Q_f}\big]$, with $Q_f=4N_e(T+L+5)$;
+\item[(d)] (tables and scans) the probability that $\Sz$ lies in no block table and no local search of $\bar R$ is centred at a flip or swap neighbour of $\Sz$;
+\item[(d$^+$)] (with Theorem~\ref{thm:T37}) if a data event $\mathrm{TD}^*$ is such that, on $\mathrm{TD}^*$, every completed local search of $\bar R$ centred in $\cR_d$ with $\ell\ge|c\triangle\Sz|$ scores $\Sz$,
+then $\Pr(\bar{\cO},\Sz\notin\bar{\cS})\le\Pr_0(\mathrm{TD}^{*c})+\Pr(E_{\rm LS}^c\cap\mathrm{TD}^*)+\Ind\{\ell<s_0+d\}$, where $E_{\rm LS}$ is the event that some local search of $\bar R$ has its centre in $\cR_d$ (drop the last term under the extra-scan rule). With LS0 the start-side event $\{\tilde S_0\in\cR_d\}\subseteq E_{\rm LS}$;
+\item[(e$'$)] (Gibbs-path repair at a past-measurable selected state $x$) $\Pr(\cA^c,\Sz\notin\cS_{\rm cal})+\Pr(\cA,\text{no eligible particle})+\E[\Ind_{A_F}\min\{1,\beta_H(X_{\rm sel})\}]$, with
+$\beta_H(x)=\Pr(\Bin(H,c_*(x))<v(x))+H\eta(x)$ from Theorem~\ref{thm:B} and $H\le L+5$; and, for eligible particles $i$ at the boundary, $\prod_i\min\{1,\beta_H(X_i)\}$ in place of $\min\{1,\beta_H(X_{\rm sel})\}$ (IND-T).
+\end{itemize}
+The earlier route (e) with H24 is retired. The premise $\pi(\Sz)>\tfrac12$ is not needed when the local search certifies $\Sz$ (Theorem~\ref{thm:T37}(A3)).
+\end{theorem}
+\noindent\emph{Proof:} see Supplement \S S.6 (source branches \texttt{theory/W2-BOOK}, \texttt{PROOF.md} \S4 and \texttt{STATEMENTS.tex}; \texttt{theory/W2-VT24G} \S6; locked T21).
+
+% STATUS: PROVED (same inequality, strict-maximiser step re-derived); VERIFIED-BY: same-family referee inside W4-T38FULL; A-REV1 verified the composition inequality of the neighbouring W1-T38E T38(b)-R ("The central composition inequality and liminf manipulation are valid"); SOURCE: W4-T38FULL:T38_STATEMENT.md:Theorem 5 (0)
+\begin{remark}[With LS0]\label{rem:T21LS0}
+The same inequality holds with $\Spl$, $\cS^+$ and $\bar{\cS}^+$ in place of $\Sh$, $\cS$, $\bar{\cS}$ (the strict-maximiser argument is unchanged):
+$\Pr(\cO\cap\{\Spl\ne\Sz\})\le2\E_0\delta_1+\Pr(\bar{\cO}\cap\{\Sz\notin\bar{\cS}^+\})$ (Theorem~\ref{thm:T38}(0)).
+\end{remark}
+
+% STATUS: empirical statement (data), not a theorem; VERIFIED-BY: W2-BOOK (counts); SOURCE: W2-BOOK:REPORT.md; F-REFINE:CARDS.md:Card 5 (Data evidence)
+\begin{remark}[Reporting $\Pr(U)$ and the no-conditioning rule]\label{rem:PU}
+$\Pr(U)$ must be reported empirically: $6/2{,}400=0.25\%$ (Wilson 95\% interval $[0.11\%,0.54\%]$); all six stops are scenario S5; S5 at $p=1000$ shows
+2.5\%. The stops are counted as misses. Never condition on completion: a $0.22\%$ stop rate can make $\E[\Zh\mid\text{output}]=0.974\,Z$ (W2-BOOK exact counterexample).
+\end{remark}
+
+\subsection{Theorem 5: consistency of the reported HPM (T38) --- the main theorem}
+
+\noindent\textbf{Hypotheses, in groups.}
+\emph{Operational:} EX-A, EX-S, CAL, SR, GUARD (Section~\ref{sec:assumptions}); LS0 (Definition~\ref{def:ls0}) is part of the method.
+\emph{Posterior:} \textbf{(P)} $\delta_1=1-\pi(\Sz)\to0$ in $\Pr_0$-probability, on a triangular array R1 (sufficient: the hypotheses of Theorem~\ref{thm:T03}).
+\emph{Favourable regime:} \textbf{(F)} $1-\pi_0(\Sz)\to0$ in probability (sufficient: (F1), (F2) or (F3) of Theorem~\ref{thm:favourable} at reference $\Sz$).
+\emph{Masked regime, route (b1):} there is a \emph{deterministic} reference $S^\circ\in\cR_d$ with $\Phi(S^\circ)$ bounded such that
+\begin{itemize}
+\item[(M1)] \textbf{ELIG}$(S^\circ)$: $\Pr_0(\pi_0(S^\circ)>\tfrac12)\to1$ (sufficient: G, R-lite, SE-blk, ZL$(S^\circ)$, SPREAD, VIS-lin$(S^\circ)$, by Theorem~\ref{thm:favourable}(F3) at $S^\circ$);
+\item[(M2)] $\mathrm{POP\text{-}LAT}(S^\circ,m_n)$: for every $S\in\Lat(S^\circ)$ with $\Phi(S)\ge2$ some progress neighbour $A_S$ of $S$ satisfies $\Delta(B)-\Delta(A_S)\ge m_n$ for every non-progress neighbour $B$ of $S$ and for $B=S$, with $m_n\ge M_n\sqrt{\log n/n}$, $M_n\to\infty$;
+\item[(M3)] $\lambda_{\min}(R_{S^\circ\cup\Sz})\ge\varphi_0^2>0$ and $\|\mu\|^2/n\le M$;
+\item[(OP-LS0)] LS0 is executed, with its centre emitted, whenever output is available.
+\end{itemize}
+
+% STATUS: PROVED for (0), (a), (b1), (b1-LH) (candidates); (b1-LH-iid) PROVED by one unverified run; (c) conditional on T32(i) = CONJECTURE; VERIFIED-BY: (0): W3-VT38E (for W1-T38E's form), W4-T38FULL same-family; A-REV1: "T38(b)-R route (b1), direct ELIG+TD′+OP: VERIFIED"; composition and liminf: valid; Lemma M / LS-score / LH-LAT / Theorem b1: same-family referee only (not reviewed by A-REV1/A-REV2); (b1-LH): inputs VERIFIED (W3-VEXP), assembly unreviewed; (b1-LH-iid): none; SOURCE: W4-T38FULL:T38_STATEMENT.md:Theorem 5 (T38) [to be superseded by W6-FIXREV1:T38_STATEMENT.md if pushed]; F-REFINE:CARDS.md:Card 6
+\begin{theorem}[Two-regime consistency of the reported HPM, T38]\label{thm:T38}
+Assume EX-A, EX-S, CAL, SR, GUARD and (P) on a triangular array R1 with the v3 budgets indexed by $n$.
+\begin{enumerate}
+\item[(0)] \textbf{Composition, every $n$.} $\Pr(\cO\cap\{\Spl\ne\Sz\})\le2\E_0[\delta_1]+\Pr(\bar{\cO}\cap\{\Sz\notin\bar{\cS}^+\})$.
+Hence, whenever the discovery term tends to $0$, $\Pr(\cO\cap\{\Spl\ne\Sz\})\to0$ and therefore
+$\liminf_n\Pr(\cO\cap\{\Spl=\Sz\})\ge1-\limsup_n\Pr(U)$.
+\item[(a)] \textbf{Favourable regime.} Under (F) the discovery term tends to $0$, with or without LS0 (the final run's $Q_f\ge4N_e(L+6)$ i.i.d.\ $\pi_0$ draws score $\Sz$; T11(iii)).
+\item[(b1)] \textbf{Masked regime} ($\pi_0(\Sz)\to0$ allowed, at the rate of Theorem~\ref{thm:masked}), \textbf{route (b1), LS0.} Under (M1), (M2), (M3), (OP-LS0) and G, on the corresponding events
+$\tilde S_0=S^\circ$ and LS0 scores $\Sz$ after at most $\Phi(S^\circ)-1$ moves; the cap $\ell_n\ge\Phi(S^\circ)-1$ suffices. Hence the discovery term tends to $0$.
+\item[(b1-LH)] \textbf{An explicit family on which every premise of (b1) holds jointly.} On LH in its exact-Gram realisation (Theorem~\ref{thm:LH}: $p\le n-1$, $|\psi_i|<\min(\rho_{a_i},\rho_{b_i})$, $\psi_i\ne0$, $g\le B_n<2g$, fixed nonzero coefficients), with $S^\circ=\Sz\setminus M$:
+(P), (M1), (M2) with a fixed margin $m_0>0$ (Proposition~\ref{prop:LHLAT}) and (M3) all hold; $\pi_0(\Sz)=p^{-c}n^{-c/2}e^{O_P(1)}$; and $Q_f\pi_0(\Sz)\to0$ when $c\ge2$ and $p\to\infty$, and also for $c=1$ when $p/(\sqrt n\log^2n)\to\infty$, so that route (a) fails. With LS0, $\Pr(\cO\cap\{\Spl\ne\Sz\})\to0$ and no statistical input is left open.
+\item[(c)] \textbf{Cost.} The number of score evaluations is bounded deterministically by T32(i)'s ceiling plus $(\ell+1)\max_{k\le K}[p+k(p-k)]$ for LS0; under the v3 budgets this is $O((n+p)(p+B)\log^2n+p^2\log^2n)$, polynomial in $n$ under R1. \emph{Conditional on T32(i), which is a CONJECTURE.}
+\end{enumerate}
+\textbf{Not claimed:} evidence or PIP accuracy in the masked regime; anything given completion, or for fits selected on diagnostics; comparative superiority; any finite-$n$ error rate at $n=200$; a masked $p\gg n$ instance until the single-run LH-iid argument is verified (Theorem~\ref{thm:LH}, iid realisation, is a \emph{candidate input}, not part of this theorem); masked-regime consistency \emph{without} LS0 on any explicit family: there are candidates on LH, pending cross-family review (A-REV7) (W5-B2ENV D2-LH and B2-LH, W5-VMASK R1, O-BGIBBS BG3 with LH-lock, F-SHARE F1/F2, W7-SEP Prop.~GU; W8-SYNTH \S4.2); none is claimed here.
+\end{theorem}
+\noindent\emph{Proof:} see Supplement \S S.7 (source branch \texttt{theory/W4-T38FULL}, \texttt{T38\_PROOF.md} \S\S1--3, 6--7; inputs: Theorems~\ref{thm:T21}, \ref{thm:favourable}, \ref{thm:T37}, Lemma~\ref{lem:LSscore}, Proposition~\ref{prop:LHLAT}).
+
+% STATUS: PROVED-UNDER the cited inputs (candidate); sketch on LH with c=1; VERIFIED-BY: W3-VT38E (Theorem D2 with the repaired constant r*, the finite pilot-stage bound); A-REV1: "Theorem D2 with r* = (11+2√10)/9: VERIFIED as a finite uninterrupted-pilot bound"; "D2-∞: VERIFIED under its additional uniform hypotheses"; "T38(b)-R, entire supplied statement: GAP" (routes (b1′) omit asymptotic rate margins; route (b2) needs an eligible set and the binomial bound; operational qualification must cover pilot and terminal execution); "route (b2), given uniform REPAIR and actual execution: VERIFIED as an implication"; SOURCE: W4-T38FULL:T38_STATEMENT.md:(b1′),(b2); W1-T38E:PROOF.md:§4 D2; W4-SHARE:PROOF.md (envelope hypotheses); F-REFINE:CARDS.md:Card 6
+\begin{remark}[Conditional routes --- not part of Theorem~\ref{thm:T38}]\label{rem:routes}
+Two further routes would remove the discovery term with \emph{no} method change, but both are conditional and A-REV1 classifies the supplied formulation as a GAP
+(to be repaired by W6-FIXREV1). \textbf{(b1$'$) Pilot first stage (D2).} If a one-flip neighbour $x^\circ=\Sz\oplus j$ has $\pi_0(x^\circ)\ge b>1/10$, the dependence parameter satisfies $\mathrm{Dep}\le1-c_1$ off a data-measurable set $\mathcal D$ with $|\mathcal D|\le k_D$, and the no-blow-up event $\mathrm{NB}'$ (effective sample size of the initial pilot weights $\ge0.9H$, or $\Sz$ drawn) has probability $\to1$ (with the corrected constant $r^*=(11+2\sqrt{10})/9$), then the first stage of the tier-0 pilot scores $\Sz$: $\Pr(\Sz\notin\cS_{\rm cal})\le e^{-2Ht^2}+\Pr(\mathrm{NB}'^c)+\exp\{-H(1-\mathrm{Dep})_+g(b-t)/(k_D+B+3)\}$. A statistical instance exists only as a candidate on LH with $c=1$ (D2-a,b,c PROVED by W3-PXN, unverified; NB: PROOF SKETCH); $c\ge2$ is OPEN. \textbf{(b2) Gibbs path.} With a data-measurable eligible set and checkable envelope hypotheses (potentials with $(K_th_t)\ge(1-\eta_t)h_{t-1}$, confinement sets with $\Pr(E^c)\le\varepsilon_E$, fitness oscillation $\Gamma+\sum_t\eta_t\le\log(N\pi_0(h_0)/T_e)-\omega(1)$) and (REP) $\sup_{x\in W}\beta_{L+5}(x)\to0$, then $\Pr(\Sz\notin\cS\mid\cC)\le[\varepsilon_E+\exp\{-N\pi_0(h_0)(1-e^{-c})\}]^4+\varepsilon_{\rm rep}$ (W4-SHARE, PROVED, unverified; no explicit family has these inputs verified: OPEN). The earlier ``bridge mass $\Rightarrow$ delivery'' route is false (C1, COUNTEREXAMPLE, verified by W3-VT38E with a reversible kernel).
+\end{remark}
+
+\subsection{Theorem 6: evidence and PIP consistency in the favourable regime (T26(i)--(ii))}
+
+% STATUS: PROVED (composition of locked T14(i), T15, T23(ii-a,b), T22(iv-b), T09(ii), T12(i.a,i.b)); VERIFIED-BY: none final (W2-T26 unverified; W5-LOCKBOOK, branch f3c037d, has referee notes in progress with no final report; status not upgraded); SOURCE: W2-T26:PROOF.md:Theorem A (T26(i)–(ii), premise form), Lemma 1; F-REFINE:CARDS.md:Card 7
+\begin{theorem}[Evidence and PIP consistency, T26(i)--(ii)]\label{thm:T26}
+Assume EX-A, EX-S, CAL, START, OUT (Remark~\ref{rem:outstart}), and
+\begin{itemize}
+\item[$(\Omega)$] $\Pr_0(s_0\le K_n)\to1$;
+\item[(P1)] for every $\varepsilon>0$, $\Pr\big(\cG_n\cap\{(T_n+1)\Delta_n>\varepsilon\}\big)\to0$ (joint probability over data and calibration streams; $T_n$ the \emph{realised} stage count; sufficient deterministic-budget form $(T^{\max}_n+1)\Delta_n\to0$ in $\Pr_0$-probability), with $\Delta_n=\max\{1-\pi_0(\Sz),1-\pi(\Sz)\}$ (Theorem~\ref{thm:T22});
+\item[(P1-ex)] $\Pr_0(\cE_n\cap\{\delta_1>\varepsilon\})\to0$ for every $\varepsilon>0$ (the exact-branch twin of (P1)).
+\end{itemize}
+Here $\cG_n$ is the event that the SMC branch is taken and the calibration succeeds, $\cE_n$ the exact-enumeration branch. No statistical assumption is used by this theorem. Then, \emph{never conditioning on completion}:
+\begin{enumerate}
+\item[(A-0)] (fixed $n$, calibration-conditional) for every island $r$: $\E_{\cC}|\Zh^\circ_r/Z-1|\le b(\cC):=2(T+1)\Delta_n/(1-\Delta_n)$; the occupancy fraction off $\Sz$ at the end of stage $T$ and at the start of each measured round has $\E_{\cC}f\le\min\{1,2\delta_1+2b(\cC)\}$; $\E_{\cC}\max_j|\PIPh^\circ_{rj}-\Ind\{j\in\Sz\}|\le\min\{1,2\delta_1+2b(\cC)\}+\bar\rho+u_\pi$ with $\bar\rho\le(B+3)u_\pi$ and $u_\pi=\delta_1/\pi(\Sz)$; $\Pr_{\cC}(\widehat{\MPM}^\circ\ne\Sz)\le2[\min\{1,2\delta_1+2b(\cC)\}+\bar\rho+u_\pi]$;
+\item[(A-i)] for every $\varepsilon>0$, $\Pr(\cO_n\cap\{|\Zh/Z-1|>\varepsilon\})\to0$ (also islandwise and for $\log\Zh$);
+\item[(A-ii)] for every $\varepsilon>0$, $\Pr(\cO_n\cap\{\max_j|\PIPh_j-\Ind\{j\in\Sz\}|>\varepsilon\})\to0$ and $\Pr(\cO_n\cap\{\widehat{\MPM}\ne\Sz\})\to0$.
+\end{enumerate}
+The frozen second premise $(L_n+4)\rho^*_n\to0$ is redundant. \textbf{Not claimed:} $\Pr(\cO_n)\to1$; any statement in the masked regime; the secondary ($\Zh_r$-weighted) PIP; the HPM (Theorem~\ref{thm:T38} replaces the old T26(iii)); uniform Monte Carlo rates in $N$; anything about runs selected by their flags or completion; floating-point validity.
+\end{theorem}
+\noindent\emph{Proof:} see Supplement \S S.8 (source branch \texttt{theory/W2-T26}, \texttt{PROOF.md} \S\S1--3).
+
+% STATUS: PROVED as a composition, CONDITIONAL on T03 + (F1) (hence on the removal of EXP′ by Theorem 1 of W1-EXP); Prop. C (ORTH family) PROOF SKETCH; VERIFIED-BY: none; SOURCE: W2-T26:PROOF.md:Theorem B, Prop. C; F-REFINE:CARDS.md:Card 7 (Theorem B discharged)
+\begin{remark}[Where the premise comes from, and its cost]\label{rem:T26B}
+In R1 under the hypotheses of Theorem~\ref{thm:T03} and (F1) of Theorem~\ref{thm:favourable}, (P1) holds in its deterministic-budget form, $(T^{\max}_n+1)\Delta_n=O_P\big(\log^2n\,[2^B\sqrt{\log n}\,n^{-\kappa}+e_n+\sqrt{\log n/n}]\big)\to0$ (with $e_n=o_P(n^{-m})$ for all $m$); the ORTH family ($X^\top X=(n-1)I$, $p\le n-1$, fixed $\theta$) satisfies all premises jointly (PROOF SKETCH). Premise (P1) must be stated with the \emph{realised} $T_n$ (random), not with $T^{\max}=4{,}000$: with the deterministic cap the quantity is vacuous below $n\sim10^8$--$10^9$.
+\end{remark}
+
+\subsection{Proposition 2: frozen-run identities and the reported bound (T12, T31(i))}
+
+% STATUS: PROVED-LOCKED (T12, T31(i): wave 1, full chain incl. consultant review) + W2-BOOK restatement PROVED (new content: Lemma RO, ¾-covariance formula, output-level bound); VERIFIED-BY: none beyond the locked chain (W5-LOCKBOOK referee not completed as of f3c037d); exact-law propagation reproduces the locked numbers to 1e-50 (W2-BOOK); SOURCE: W2-BOOK:STATEMENTS.tex:Proposition (Frozen-run identities and the reported bound) [label prop:frozen]; W2-BOOK:PROOF.md:§1; F-REFINE:CARDS.md:Card 8
+\begin{proposition}[Frozen-run identities and the reported bound]\label{prop:frozen}
+Assume EX-A, EX-S, START and CAL, with the calibration $\cC$ (tier, grid, $T$, $N_e$, $L$, round and island counts, local-search cap, inherited score leaders and every
+other setting read by the final run) a function of the data and calibration streams only, and escalation decided before any final randomness. For the potential run, on the
+success event $\cA$ and for every island $r$ and variable $j$:
+\begin{enumerate}
+\item[(a)] $\E[\Zh_r\mid\cC]=Z$ and $\E[\Zh_r\PIPh_{rj}\mid\cC]=Z\,\PIP_j$;
+\item[(b)] $\E[\Zh\mid\cC]=Z$ and $\E[\tfrac14\sum_r\Zh_r\PIPh_{rj}\mid\cC]=Z\,\PIP_j$;
+\item[(c)] $\E[\Zh\,\bar P_j\mid\cC]=Z\,\PIP_j-\tfrac34\mathrm{Cov}(\PIPh_{1j},\Zh_1\mid\cC)$ and $\E[\bar P_j\mid\cC]-\PIP_j=-\mathrm{Cov}(\PIPh_{1j},\Zh_1\mid\cC)/Z$, where $\bar P_j=\tfrac14\sum_r\PIPh_{rj}$ is the reported PIP; both are non-zero in general (so ``pooled evidence $\times$ pooled PIP'' is \emph{not} an identity);
+\item[(d)] $\Pr(Z\ge\alpha\Zh\mid\cC)\ge1-\alpha$ for $0<\alpha<1$ (also islandwise), and $\E[\log\Zh\mid\cC]\le\log Z$.
+\end{enumerate}
+Under GUARD, for the reported evidence, $\Pr(\cO_E,\ \alpha\Zh>Z)\le\alpha\Pr(\cA)$ and $\E[\Ind_{\cO_E}\Zh]\le Z\Pr(\cA)$. If moreover the floating-point evidence satisfies
+$|\log\Zh^{\rm fp}-\log\Zh|\le\eta$ outside an event of probability $\varepsilon$ within $\cO_E$ (the validation contract VAL-FP$(\eta,\varepsilon)$), then
+$\Pr(\cO_E,\ \alpha\Zh^{\rm fp}>Z)\le\alpha e^{\eta}+\varepsilon$. The secondary ($\Zh_r$-weighted) PIP is removed.
+\end{proposition}
+\noindent\emph{Proof:} see Supplement \S S.9 (source branch \texttt{theory/W2-BOOK}, \texttt{PROOF.md} \S1; locked T12, T31(i)).
+
+% STATUS: COUNTEREXAMPLE (exact, mpmath 50 digits); empirical; VERIFIED-BY: W2-BOOK (self); VAL-FP: not measured (needs an R/C++ replay); SOURCE: W2-BOOK:PROOF.md:§0.3; W2-BOOK:REPORT.md; F-REFINE:CARDS.md:Card 8
+\begin{remark}[What is not claimed]\label{rem:frozenno}
+No unbiasedness given completion is claimed: $\E[\Zh^{\rm rep}\mid\cO_E]=Z$ is false in general (W2-BOOK exact counterexample: $0.22\%$ stops give $\E[\Zh\mid\text{output}]=0.974\,Z$). The reported PIP is not unbiased for $\PIP_j$ (part (c)). The VAL-FP contract has not been measured.
+\end{remark}
+
+% =====================================================================================================
+\section{What the theory does and does not say at $n=200$}\label{sec:disclosure}
+% =====================================================================================================
+
+% STATUS: disclosure; every numerical fact below is quoted with its source and status; VERIFIED-BY: as listed per item; SOURCE: F-REFINE:ARCHITECTURE.md:§6 (overstatement watch), §7 (n = 200 disclosure); F-REFINE:CARDS.md:§9, Cards 1,3,4,6; W2-VT03R:REPORT.md:R1,R2
+\textbf{The theorems are statements about mechanism and about $n\to\infty$; they are not statements about the reported numbers at the study's size
+($n=200$, $p\in\{500,1000\}$, $s_0=14$).} The simulations are evidence in their own right. The following facts must be read with every theorem above.
+
+\subsection{What the theory does say}
+
+% STATUS: PROVED exact inequalities (non-asymptotic); VERIFIED-BY: per theorem (see source comments above); SOURCE: F-REFINE:ARCHITECTURE.md:§6 item 4
+The only non-vacuous \emph{finite-$n$} statements are exact inequalities: the composition (C1) of Theorem~\ref{thm:T21} (including its form with LS0, Remark~\ref{rem:T21LS0}), the
+deterministic Theorem~\ref{thm:T37} (with the lattice form of (A3), and Lemma~\ref{lem:LSscore}), the ESS-share inequality of the pilot analysis, Corollary P1 of Theorem~\ref{thm:B} at $B=4$, and Proposition~\ref{prop:frozen}.
+In particular, the decomposition~\eqref{eq:story} is exact, and at the study's size the error is carried by its first term (item 2 of the list in Section~\ref{sec:disclosure}).
+
+\subsection{What the theory does not say}
+
+\begin{enumerate}
+\item[1.] \textbf{The start at $n=200$ is dilution-masked, not cancellation-masked.}
+% STATUS: PROVED (exact, W3-VEXP Prop. D; W3-PXN Prop. W); thresholds PROOF SKETCH; VERIFIED-BY: single runs; SOURCE: F-REFINE:CARDS.md:Card 3 (Data evidence); W3-VEXP:REPORT.md:Prop. D; W3-PXN:PROOF.md:Prop. W
+The block tables score against the full response, so each truth sees the other truths as noise ($v_T\approx7$--$26\sigma^2$); the start mode misses $6$--$12$ of the $14$ truths at every signal scale. (No ``favourable from $n\approx\dots$'' threshold is quoted: the campaign's estimates disagree, W8-SYNTH \S4.13.) The masked start of Theorems~\ref{thm:masked} and~\ref{thm:LH} is a different mechanism (cancellation across blocks), and LH's cancellation cannot survive the study's partition (groups of 5 with $B=14$: co-blocking kills LH masking, W3-PXN Prop.~Q, PROOF SKETCH; LH needs $g\le B<2g$). The paper must therefore present Theorems~\ref{thm:masked}--\ref{thm:LH} and~\ref{thm:T38}(b1) as a masked regime in which the method must move off its start, \emph{not} as the study's masking, and not as a regime that requires tempering (W7-SEP, Proposition GU).
+
+\item[2.] \textbf{Every completed wrong HPM is a posterior miss.}
+% STATUS: empirical (per-fit ledgers, S-ELS); VERIFIED-BY: n/a; SOURCE: S-ELS:REPORT.md:§1, §3; F-REFINE:CARDS.md:Card 1 (Data evidence), Card 5; F-REFINE:ARCHITECTURE.md:§7(ii)
+In the $p\gg n$ study, $565$ of $2{,}394$ completed fits have $F(\Sz)<F(\Sh)$ strictly ($0$ search misses; $\Sz$ was scored in every completed fit); there are $6$ resource stops, all in S5, counted as misses ($6/2{,}400=0.25\%$). So the binding term at this size is the posterior term $2\E_0\delta_1$ of~\eqref{eq:story}; the repair statements (Theorems~\ref{thm:T37}, \ref{thm:W}) must be read ``whenever the posterior allows''.
+
+\item[3.] \textbf{Theorem~\ref{thm:T03} is asymptotic, with proof thresholds far above $n=200$.}
+% STATUS: PROVED (threshold computation; the earlier 1.2e5 claim was an ERROR); VERIFIED-BY: W2-VT03R (R1, numbers reproduced), A-REV2 (§3.5 confirms; W6-FIXREV2 independent recomputation d213e7b confirms per its commit message, final report pending); SOURCE: W2-VT03R:REPORT.md:R1, R2
+The deterministic steps of the proof, as written, hold only from $n\approx2.1\times10^6$ ($p=n^{1.17}$) to $2.5\times10^6$ ($p=n^{1.30}$): the binding condition is $q_n\le\tfrac12$ (the earlier figure $1.2\times10^5$ is an ERROR, corrected by W2-VT03R and confirmed by A-REV2); the $O_P$ constants are unspecified. The sparse-eigenvalue condition $\mathrm{SE}_w$ ranges over at most $114$ columns at $n=200$ \emph{because the cap $K=100$ binds}, not because of the exact size tail (uncapped $m^\sharp=146/168$); it is unverified on the realised designs (greedy-adversarial eigenvalue probes: $\lambda_{\min}(G)\le0.40$ for S1, $\le0.22$ for S4 at $|\Sz\cup J|=114$; feasibility of any fixed $g_0$ is unverified). By interlacing, it requires every $100$ columns of $X$ to be linearly independent. The beta-min constant of the proof exceeds the executed signal by at least $43\times$ (proof needs $\theta^{*2}\ge27.5/\varphi_0^2$ at $p=500$; executed $\theta^{*2}=0.64/0.16$), and the orthogonal-design scale $(\log n+2\log p)/n\approx0.09$ is $7\times$ \emph{below} the executed signal, so the shortfall is the constant, not the signal.
+
+\item[4.] \textbf{The start rates are vacuous at the study size.}
+% STATUS: PROVED (explicit arithmetic on the rate formulas); VERIFIED-BY: none (arithmetic on F-REFINE's quoted formulas; not independently recomputed here); SOURCE: F-REFINE:CARDS.md:Card 3 (Data evidence, "Rate relevance"); NOTE: F-REFINE:ARCHITECTURE.md:§7(iv) says the factor is "≥ 10^3 at B = 14 for n ≤ 10^4"; the CARDS arithmetic is used here because it is the stated product
+The rates of Theorem~\ref{thm:favourable} carry a factor $2^B$: $2^B\sqrt{\log n/n}$ at $B=14$ equals $2.7\times10^3$ at $n=200$, $497$ at $n=10^4$, $61$ at $n=10^6$, so they are numerically vacuous below $n\approx10^9$. (Only the $2^B$-free iid-Gaussian rate of Theorem~\ref{thm:LH}, a single unverified run, avoids this.) Theorem~\ref{thm:masked} bounds i.i.d.\ draws from $\pi_0$ only, and says nothing about the hybrid sampler.
+
+\item[5.] \textbf{The HPM at this size is found by Gibbs flips, a route with no completed theorem.}
+% STATUS: empirical; VERIFIED-BY: none (98% figure: preliminary, THEORY_PRIORITIES §5, not re-derived by the campaign); SOURCE: S-ELS:REPORT.md:§1 (E_LS extraction); F-REFINE:CARDS.md:Card 4 (Data evidence), Card 6 (Data evidence)
+$98\%$ of fresh scores in the study come from Gibbs flips (preliminary); the final local search made $0$ moves in all $2{,}394$ completed fits, and $E_{\rm LS}$ is empty in the data ($0$ of $2{,}394$; S-ELS), so the study's $541$ near-truth final centres are all forced by monotonicity. The paper proves exact finite-$n$ inequalities for this route (Theorem~\ref{thm:B}) but no rate: the single-particle bound is vacuous at $n=200$ ($H\eta\approx4$--$16$; $v>H$ possible). The route (b2) of Remark~\ref{rem:routes}, which would match the observed behaviour, has no verified instance. The local search is not the delivery mechanism at $n=200$, and ``the local search repairs'' must not appear as an explanation of the numbers.
+
+\item[6.] \textbf{LS0 does not change the picture at $n=200$.}
+% STATUS: empirical (post hoc, W3-PXN; O-LS0 on all 2,400 study fits, aggregation only, unreviewed); VERIFIED-BY: none; SOURCE: O-LS0:REPORT.md:§1 (02348e2); F-REFINE:CARDS.md:Card 6 (Data evidence); F-REFINE:ARCHITECTURE.md:§4; main:theory_campaign/HQ/SR_AUDIT.md
+LS0 cannot fix posterior misses; the start mode is $8$--$14$ moves from $\Sz$ at $n=200$ (not a bounded $\Phi(S^\circ)$), the cap $\ell=10$--$11$ binds in S4/S6, and post hoc on regenerated study data LS0 scored $\Sz$ in $113/128$ fits with $|\tilde S_0\triangle\Sz|\le\ell+1$ and $13/32$ beyond. The O-LS0 data check has passed: on all $2{,}400$ study fits LS0 changed the reported HPM in $0$ of $2{,}394$ completed fits, left exact recovery unchanged ($1{,}119/1{,}200$ at $c=1$, $710/1{,}200$ at $c=0.5$) and cost under $0.1\%$ of a fit, so the approval of LS0 is effective. LS0 buys the one masked-regime consistency statement whose premises are all proved on an explicit family (Theorem~\ref{thm:T38}(b1-LH)); it buys nothing for route (b2) or for evidence/PIP claims in the masked regime.
+
+\item[7.] \textbf{Evidence and PIP consistency are favourable-regime, long-hypothesis statements.}
+% STATUS: PROVED (as composition) with the relevance caveat; VERIFIED-BY: none (see Theorem 6); SOURCE: F-REFINE:CARDS.md:Card 7 (Data evidence, Risk); F-REFINE:ARCHITECTURE.md:§6 item 9
+At $n=200$, $\Delta_n\approx1$ (dilution) so Theorem~\ref{thm:T26} is silent, although the sampler still estimates $Z$ within $1$--$2\%$ in the masked design. (P1) must be stated with the realised $T_n$.
+
+\item[8.] \textbf{Statements the paper must not make.}
+% STATUS: constraint list (not a theorem); VERIFIED-BY: n/a; SOURCE: F-REFINE:ARCHITECTURE.md:§6 items 1--14 (items not already covered above are listed)
+(i) The literal T37/$\mathrm{TD}(d,m)$, ``exactly $|S\triangle\Sz|$ moves'', the $2^{s_0}$ union bound, ``T37 replaces GAIN, LK, EXIT'' (true only for the local-search route and only on $E_{\rm LS}$); (ii) H24 or any uniform-over-$\cR_d$ exit hypothesis, the $(1-c')^{\lfloor H/(s_0+d)\rfloor}$ form, T24's factorial; (iii) ``the exact BB tail makes SE meaningful at $n=200$'' (the cap does, and only for $\mathrm{SE}_w$; anchoring is cosmetic, Remark~\ref{rem:T03}); (iv) any finite-$n$ error rate at $n=200$ from Theorems~1, 2, 3(ii), 5 or 6; (v) ``the correlated-design advantage follows from T37's margin'' (contradicted at $n=200$ by the $c=0.5$ posterior misses in S4--S6; the LH margin of Proposition~\ref{prop:LHLAT} is the mechanism on LH, with no statement about the study); (vi) ``T27 is a lower bound for the method'' (it bounds i.i.d.\ start draws only); (vii) ``T26 with budgets indexed by $n$'' via $T^{\max}=4{,}000$; (viii) $\E[\Zh\mid\text{completed}]=Z$ and ``pooled $\Zh\times$ pooled PIP is unbiased'' (both false); (ix) the cost corollary as a theorem (T32(i) is a CONJECTURE); (x) the word ``VERIFIED'' as if it meant reviewed: all verification by the campaign is same-family (Claude checking Claude) except the two cross-family reviews A-REV1 and A-REV2, which cover only the items whose verdicts are quoted above; (xi) ``D2 covers one-cancellation masking at $p\gg\sqrt n$'' (conditional; its CF instances are not masked); (xii) ``no method change needed'': true for everything except Theorem~\ref{thm:T38}(b1), which is the headline and rests on LS0; (xiii) ``tempering is needed'', ``the sampler is needed'' or ``start-only methods fail'' for discovery: on LH a single local search from the start mode scores $\Sz$ (W7-SEP, Proposition GU, Corollary GU-LH). Say instead that the method must move off its start (i.i.d.\ start draws alone fail), that v3's moves provide this, and that the bridge's own role is calibrated evidence and PIPs and the HPM ledger.
+
+\item[9.] \textbf{Implementation facts the theorems lean on have had at most one reading.}
+% STATUS: IMPL; VERIFIED-BY: HQ read of step_gibbs for SR only (SR_AUDIT.md); none for GUARD, IND-T, scan-before-limit, LS0 emit_centre; SOURCE: F-REFINE:CARDS.md:§9 item 5; main:theory_campaign/HQ/SR_AUDIT.md; W5-LOCKBOOK:AUDIT.md (f3c037d, unreviewed)
+SR (HQ's read of \texttt{step\_gibbs}: current and flipped configurations are evaluated before the accept draw; no call site disables emission), GUARD (stop-only; code reading of \texttt{v3\_runtime.h}, \texttt{v3\_engine.h}, \texttt{v3\_core.cpp}), the scan-before-limit rule of the local search, IND-T's sequential stream reading, and LS0's \texttt{emit\_centre}. None has had an independent audit confirmed on these branches.
+\end{enumerate}
+
+\end{document}

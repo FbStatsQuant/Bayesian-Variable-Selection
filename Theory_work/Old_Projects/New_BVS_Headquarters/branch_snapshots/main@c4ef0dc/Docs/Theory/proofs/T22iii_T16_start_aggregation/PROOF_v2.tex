@@ -1,0 +1,481 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=blue!50!black]{hyperref}
+\usepackage{xcolor}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{remark}\newtheorem{remark}{Remark}
+\newcommand{\PP}{\mathbb P_0}
+\newcommand{\EE}{\mathbb E_0}
+\newcommand{\op}{o_{\PP}}
+\newcommand{\Op}{O_{\PP}}
+\newcommand{\RSS}{\operatorname{RSS}}
+\newcommand{\ind}{\mathbf 1}
+\newcommand{\Lc}{\mathcal L_n}
+\newcommand{\Ac}{\mathcal A_n}
+\newcommand{\Tc}{\mathcal T_n}
+\title{T22(iii): statistical concentration of the composite start\\
+\large Under EXP$'$ and $\mathrm{NL}_{\eta}$ (Decision Point 2)}
+\author{Astra lead}
+\date{22 October 2026 \quad --- \quad Version 1; not adopted}
+\begin{document}
+\maketitle
+
+\noindent This document proves part (iii) of T22 only, with the hypotheses and
+conventions of \texttt{STATEMENT.md}. EXP$'$ is an explicit hypothesis, replacing
+EXP as approved in Decision Point 2. The only previously proved input is
+T22(i), quoted in Section~\ref{sec:aggregation}. No target-posterior consistency,
+clustering-separation theorem, or other unproved v3 conjecture is used.
+
+\section{Setting and conclusion}
+
+The centered raw response is $Y=Cy^r=\mu+C\varepsilon$, where
+$C=I-\mathbf1\mathbf1^\top/n$, $\varepsilon\sim N_n(0,\sigma^2 I)$,
+$\sigma^2>0$ is fixed, and $\mu=X\theta^*$ is centered and deterministic.
+The standardized design has centered columns of squared norm $n-1$.
+The true support $S_0$ has fixed size $s_0$; $p\le n^A$, $A\ge1$;
+$\|\mu\|^2\le Mn$; and $S_0$ is eventually feasible for
+$K=\min(p,\lfloor n/2\rfloor)$. All within-block Gram correlation matrices
+have smallest eigenvalue at least a fixed $\phi_0^2>0$.
+The actual blocks $C_b$ are deterministic functions of $X$ and have sizes
+at most $B\le16$. Let $U_b^*=S_0\cap C_b$.
+
+Write $P_T$ for projection onto $X_T$ and, for $l\in C_b\setminus T$,
+\begin{align*}
+ u_{T,l}&=(I-P_T)x_l/\|(I-P_T)x_l\|,&
+ \delta_{T,l}&=u_{T,l}^\top\mu,&Z_{T,l}&=u_{T,l}^\top\varepsilon/\sigma,\\
+ \Delta_T&=\|(I-P_T)\mu\|^2/(n-1),&v_T&=\sigma^2+\Delta_T,&
+ \RSS_T&=\|(C-P_T)Y\|^2.
+\end{align*}
+The directions are well defined by within-block SE. Since $P_T C=P_T$,
+$\RSS_T=\|(I-P_T)Y\|^2$ and
+\begin{equation}\label{eq:partial}
+ x_{T,l}:=\frac{\RSS_T-\RSS_{T+l}}{\RSS_T}
+ =\frac{(\delta_{T,l}+\sigma Z_{T,l})^2}{\RSS_T}.
+\end{equation}
+Here and below $T+l=T\cup\{l\}$. For all sufficiently large $n$, every
+within-block residual space has positive dimension, so its Gaussian residual
+has positive squared norm almost surely; the finitely many $x_{T,l}$ then
+belong to $[0,1)$ almost surely. Standardizing the response does not change $x$.
+
+The exact block tables are $r_b(U)=m(U)/m(\varnothing)$, with the v3 marginal
+score $m$ defined in the statement. The exact start is
+\[
+ \pi_0(S)\ \propto\ w(|S|)\prod_b r_b(S\cap C_b),\qquad
+ |S|\le K,\qquad w(k)=\frac{1}{2\binom{2p-1}{k}}.
+\]
+In particular the tables and start weights are positive and finite.
+EXP$'$ assumes, uniformly over \emph{all} within-block additions,
+\begin{equation}\label{eq:expprime}
+ \log\frac{r_b(T+l)}{r_b(T)}
+ =-\frac12\log(n+1)-\nu\log(1-x_{T,l})+R_{n,b,T,l},
+ \qquad \nu=\frac n2+0.01,
+\end{equation}
+where $\rho_n=\max_{b,T,l}|R_{n,b,T,l}|=\Op(1)$ in the strict version,
+or $\rho_n=\op(\log n)$ in the weaker version.
+
+Define the deterministic families
+\[
+ \Ac=\{(b,T,l):l\in C_b,\ T\subseteq C_b\setminus\{l\}\},\qquad
+ \Lc=\{(b,T,l)\in\Ac:l\notin S_0,\ U_b^*\subseteq T\}.
+\]
+On $\Lc$, $\mathrm{NL}_{\eta}$ assumes
+$\delta_{T,l}^2\le\eta\sigma^2\log n$, with
+$0\le\eta<(\sqrt{2A+1}-\sqrt{2A})^2$.
+Fix $\epsilon_0>0$, set $h_n=\sqrt{2(A+\epsilon_0)\log n}$, and put
+\begin{equation}\label{eq:E}
+ E_{T,l}=\min\left\{\frac{\delta_{T,l}^2}{2\Delta_T},\,
+ \frac{\delta_{T,l}^2}{2v_T}+
+ \frac{|\delta_{T,l}|\sigma h_n}{v_T}\right\},
+\end{equation}
+with $E_{T,l}=0$ if $\delta_{T,l}=0$. If $\Delta_T=0$ then
+$\delta_{T,l}=0$, so this convention covers the zero denominator.
+The fixed $\kappa>0$ satisfies the statement's $\mathrm{NL}_{\rm avg}(\kappa)$:
+\begin{equation}\label{eq:avg}
+ \frac1{p-s_0}\sum_{l\notin S_0}
+ \max_{T:\,(b(l),T,l)\in\Lc}\exp(E_{T,l})
+ \le n^{1/2-\kappa}\qquad(p>s_0),
+\end{equation}
+eventually. Section~\ref{sec:kappa} verifies the stated choices supplied by
+$\mathrm{NL}_{\eta}$.
+
+VIS assumes, for some deterministic $M_n^V\to\infty$, that
+\begin{equation}\label{eq:vis}
+ g_{b,U}:=\|(P_{U\cup U_b^*}-P_U)\mu\|^2
+ \ge M_n^V v_U\log n
+ \quad\text{if }U\subseteq C_b,\ U_b^*\not\subseteq U.
+\end{equation}
+For $p>s_0$ write
+\[
+ u_n=\frac1{p-s_0}\sum_{l\notin S_0}
+ \max_{T:\,(b(l),T,l)\in\Lc}\frac{r_{b(l)}(T+l)}{r_{b(l)}(T)},
+\]
+and put $u_n=0$ if $p=s_0$. The quantities $q_n,e_n$ are exactly the
+aggregation quantities with reference $S_0$ in the statement; in particular
+\begin{equation}\label{eq:edef}
+ e_n=2p\max_{b,U:\,a=|U_b^*\setminus U|>0}
+ \left\{\frac{r_b(U)}{r_b(U\cup U_b^*)}\right\}^{1/a},
+\end{equation}
+where the empty maximum is zero. Set $a_n=2^B\sqrt{\log n}\,n^{-\kappa}$.
+
+\begin{theorem}[T22(iii)]\label{thm:main}
+Under these hypotheses with the strict EXP$'$ remainder,
+\begin{gather*}
+ q_n\le u_n=\Op(a_n),\qquad
+ e_n=\op(n^{-m})\ \text{for every fixed }m>0,\\
+ 1-\pi_0(S_0)=\Op(a_n+e_n)=\Op(a_n).
+\end{gather*}
+Under the weaker remainder there exist
+$\xi_n,\zeta_n=\op(1)$ such that, on events with probability tending to one,
+\[
+ q_n\le u_n\le a_n n^{\xi_n},\qquad
+ 1-\pi_0(S_0)\le a_n n^{\zeta_n}+s_0e_n.
+\]
+The superpolynomial bound for $e_n$ still holds. In either version,
+$\pi_0(S_0)\to1$ in probability. Exact zero leakage allows $\kappa=1/2$.
+\end{theorem}
+
+\section{Uniform residual control}
+
+We give the needed Gaussian bounds explicitly. None requires independence
+between comparisons. Throughout, constants are independent of $n,b,T,l$.
+If a family is empty its nonnegative supremum is zero.
+
+\begin{lemma}\label{lem:residual}
+Let $\Tc=\{T:T\subseteq C_b\text{ for some }b\}$. Then
+\begin{equation}\label{eq:residual}
+ \sup_{T\in\Tc}|\RSS_T-(n-1)v_T|=\Op(\sqrt{n\log n}),\qquad
+ \sigma^2\le v_T\le\sigma^2+2M.
+\end{equation}
+Consequently $\inf_{T\in\Tc}\RSS_T/n$ is bounded away from zero
+with probability tending to one, and
+\begin{equation}\label{eq:denominator}
+ \sup_{T\in\Tc}\left|\frac{\nu}{\RSS_T}-\frac1{2v_T}\right|
+ =\Op\left(\sqrt{\frac{\log n}{n}}\right).
+\end{equation}
+There is a deterministic $C_R<\infty$ for which
+$\PP(\|Y\|^2\le C_Rn)\to1$.
+\end{lemma}
+
+\begin{proof}
+There are at most $p2^B\le2^{16}n^A$ members of $\Tc$, and at most this
+many additions in $\Ac$: indeed
+$|\Ac|=\sum_b|C_b|2^{|C_b|-1}\le p2^B$.
+For every $T$, put $r_T=(I-P_T)\mu$. Since $P_T\preceq C$,
+\begin{align}
+ \RSS_T-(n-1)v_T
+ &=2r_T^\top\varepsilon+
+   \{\|C\varepsilon\|^2-(n-1)\sigma^2\}
+   -\|P_T\varepsilon\|^2.\label{eq:decompose}
+\end{align}
+The middle term is $\Op(\sqrt n)$, since
+$\|C\varepsilon\|^2/\sigma^2$ is chi-squared with $n-1$ degrees of
+freedom and variance $2(n-1)$. The first term is centered Gaussian with
+variance at most $4\sigma^2 Mn$. The Gaussian tail bound
+$\Pr(|N(0,1)|>t)\le2\exp(-t^2/2)$ and a union bound over $\Tc$ give
+$\sup_T|r_T^\top\varepsilon|=\Op(\sqrt{n\log n})$.
+If $M=0$ these terms are zero.
+
+For completeness, for any deterministic orthogonal projection $P$ of
+rank $d\le16$,
+\[
+ \EE\exp\{\|P\varepsilon\|^2/(4\sigma^2)\}=2^{d/2}\le2^8.
+\]
+Markov's inequality and a union bound imply
+\[
+ \PP\!\left(\max_{T\in\Tc}\|P_T\varepsilon\|^2>
+             L\sigma^2\log n\right)
+ \le2^{24}n^{A-L/4}\to0
+\]
+for any fixed $L>4A$. This proves \eqref{eq:residual} from
+\eqref{eq:decompose}. Also $0\le\Delta_T\le Mn/(n-1)\le2M$.
+Dividing \eqref{eq:residual} by $n$ proves the uniform positive lower bound
+and, using $\nu=n/2+0.01$, proves \eqref{eq:denominator} by taking reciprocals
+on that event. Finally
+$\|Y\|^2\le2\|\mu\|^2+2\|C\varepsilon\|^2$ and
+$\|C\varepsilon\|^2/n\to\sigma^2$ in probability, so a sufficiently
+large fixed $C_R$ works.
+\end{proof}
+
+\begin{lemma}[Quadratic specialization on the leakage family]\label{lem:quad}
+On $\Lc$,
+\begin{align}
+ \max_{\Lc}x_{T,l}&=\Op(\log n/n),&
+ \max_{\Lc}n x_{T,l}^2&=\op(1),\label{eq:smallx}\\
+ d_n:=\max_{\Lc}\left|
+ -\nu\log(1-x_{T,l})-
+ \frac{(\delta_{T,l}+\sigma Z_{T,l})^2}{2v_T}\right|&=\op(1).
+ \label{eq:quad}
+\end{align}
+In particular the logarithmic expansion is used in quadratic form only on
+this family, with no extra remainder assumption.
+\end{lemma}
+
+\begin{proof}
+Each $Z_{T,l}$ is exactly standard normal: $u_{T,l}$ is a deterministic
+unit vector. Let $\mathcal H_n=\{\max_{\Lc}|Z_{T,l}|\le h_n\}$. Counting
+comparisons as above gives
+\begin{equation}\label{eq:tail}
+ \PP(\mathcal H_n^c)\le2p2^B\exp(-h_n^2/2)
+ \le2^{17}n^{-\epsilon_0}\to0.
+\end{equation}
+On $\mathcal H_n$, $\mathrm{NL}_\eta$ implies
+\[
+ \max_{\Lc}(\delta_{T,l}+\sigma Z_{T,l})^2
+ \le\sigma^2\bigl(\sqrt\eta+\sqrt{2(A+\epsilon_0)}\bigr)^2\log n.
+\]
+Together with Lemma~\ref{lem:residual} and \eqref{eq:partial}, this gives
+\eqref{eq:smallx}. For $0\le x<1$,
+\[
+ 0\le-\log(1-x)-x=\int_0^x\frac{t}{1-t}\,dt
+ \le\frac{x^2}{2(1-x)}.
+\]
+Thus uniformly on $\Lc$, the difference between $-\nu\log(1-x)$ and
+$\nu x$ is $\Op((\log n)^2/n)=\op(1)$.
+The difference between $\nu x$ and the quadratic expression in
+\eqref{eq:quad} is, by \eqref{eq:denominator}, at most
+$\Op(\log n\sqrt{\log n/n})=\op(1)$.
+This proves the claim without conditioning on $s_y$ or treating standardized
+errors as independent Gaussian errors.
+\end{proof}
+
+\section{The averaged noise-addition rate}
+
+\begin{lemma}[A truncated Gaussian integral]\label{lem:integral}
+For deterministic $\Delta\ge0$, $v=\sigma^2+\Delta$,
+$\delta\in\mathbb R$ (with $\delta=0$ if $\Delta=0$), and $Z\sim N(0,1)$,
+\begin{equation}\label{eq:integral}
+ \mathbb E\left[
+ \exp\!\left\{\frac{(\delta+\sigma Z)^2}{2v}\right\}
+ \ind\{|Z|\le h\}\right]
+ \le\frac{2h}{\sqrt{2\pi}}\exp\left[
+ \min\left\{\frac{\delta^2}{2\Delta},
+ \frac{\delta^2}{2v}+\frac{|\delta|\sigma h}{v}\right\}\right]
+\end{equation}
+for $h>0$, with the minimum interpreted as zero when $\delta=0$.
+\end{lemma}
+
+\begin{proof}
+After including the Gaussian density the exponent inside the integral is
+\[
+ f(z)=\frac{\delta^2}{2v}+\frac{\delta\sigma}{v}z
+          -\frac{\Delta}{2v}z^2.
+\]
+For $|z|\le h$, dropping the nonpositive last term gives
+$f(z)\le\delta^2/(2v)+|\delta|\sigma h/v$. If $\Delta>0$, completing
+the square gives
+\[
+ f(z)=\frac{\delta^2}{2\Delta}
+       -\frac{\Delta}{2v}\left(z-\frac{\delta\sigma}{\Delta}\right)^2
+ \le\frac{\delta^2}{2\Delta}.
+\]
+If $\delta=0$, $f(z)\le0$, also when $\Delta=0$.
+Integrating the resulting uniform bound over $[-h,h]$ proves
+\eqref{eq:integral}.
+\end{proof}
+
+\begin{proposition}\label{prop:un}
+With $a_n=2^B\sqrt{\log n}\,n^{-\kappa}$, the strict remainder gives
+$u_n=\Op(a_n)$. Under the weaker remainder,
+$u_n\le a_n n^{\xi_n}$ on events of probability tending to one for some
+$\xi_n=\op(1)$, and hence $u_n\to0$ in probability.
+\end{proposition}
+
+\begin{proof}
+If $p=s_0$ the claims are immediate since $u_n=0$. For indices with
+$p>s_0$, define the nonnegative random variable
+\[
+ V_n=\frac1{p-s_0}\sum_{l\notin S_0}
+ \sum_{T:\,(b(l),T,l)\in\Lc}
+ \exp\!\left\{\frac{(\delta_{T,l}+\sigma Z_{T,l})^2}{2v_T}\right\}
+ \ind\{|Z_{T,l}|\le h_n\}.
+\]
+There are at most $2^B$ terms in the inner sum. Applying
+Lemma~\ref{lem:integral} to each term and using \eqref{eq:avg} yields
+\begin{equation}\label{eq:EV}
+ \EE V_n\le\frac{2h_n}{\sqrt{2\pi}}\,2^B n^{1/2-\kappa}.
+\end{equation}
+Linearity of expectation is all that is used; the comparisons need not be
+independent. Markov's inequality therefore gives
+\begin{equation}\label{eq:Vnorm}
+ W_n:=\frac{V_n}{2^B\sqrt{\log n}\,n^{1/2-\kappa}}=\Op(1).
+\end{equation}
+On $\mathcal H_n$, use \eqref{eq:expprime}, Lemma~\ref{lem:quad}, and
+the inequality maximum $\le$ sum to obtain
+\begin{equation}\label{eq:product}
+ u_n\le(n+1)^{-1/2}\exp(\rho_n+d_n)V_n
+ \le a_n\exp(\rho_n+d_n)W_n.
+\end{equation}
+No independence between $W_n$ and the remainder is required. If
+$\rho_n=\Op(1)$, then $\exp(\rho_n+d_n)=\Op(1)$, so their product
+is bounded in probability. Since $\PP(\mathcal H_n^c)\to0$, this proves
+$u_n=\Op(a_n)$.
+
+For the weaker version let
+\[
+ \xi_n=\frac{\rho_n+d_n+\log\max(1,W_n)}{\log n}
+\]
+when $p>s_0$, and set $\xi_n=0$ otherwise. Since
+$\log\max(1,W_n)=\Op(1)$, we have $\xi_n=\op(1)$ and
+\eqref{eq:product} gives the asserted high-probability inequality.
+Because $B\le16$ and $\kappa>0$, on $\{\xi_n\le\kappa/2\}$ its
+right side is at most $2^{16}\sqrt{\log n}\,n^{-\kappa/2}\to0$.
+The same concentration follows directly in the strict version. These
+arguments also cover sequences alternating between $p=s_0$ and $p>s_0$.
+\end{proof}
+
+\section{Visibility and the completion penalty}
+
+\begin{proposition}\label{prop:en}
+Under either remainder condition, $e_n=\op(n^{-m})$ for every fixed $m>0$.
+\end{proposition}
+
+\begin{proof}
+If the index family in \eqref{eq:edef} is empty, $e_n=0$. Otherwise for
+each pair $(b,U)$ in that family put
+$V=U\cup U_b^*$, $a=|U_b^*\setminus U|$, and $P=P_V-P_U$.
+Nestedness of the subspaces and SE show that $P$ is a deterministic
+orthogonal projection of rank $a$, with $1\le a\le B\le16$.
+There are at most $p2^B$ pairs. The same exponential-moment and union-bound
+argument used in Lemma~\ref{lem:residual} gives
+\begin{equation}\label{eq:completionnoise}
+ \max_{b,U}\|P\varepsilon\|=\Op(\sqrt{\log n}).
+\end{equation}
+Since $P\preceq C$, $PY=P\mu+P\varepsilon$. By VIS,
+$\|P\mu\|=\sqrt{g_{b,U}}\ge\sigma\sqrt{M_n^V\log n}$.
+It follows from \eqref{eq:completionnoise} and $M_n^V\to\infty$ that,
+simultaneously for every pair with probability tending to one,
+\begin{equation}\label{eq:gainobs}
+ \RSS_U-\RSS_V=\|PY\|^2
+ \ge\bigl(\|P\mu\|-\|P\varepsilon\|\bigr)^2
+ \ge\frac14 g_{b,U}.
+\end{equation}
+Here the middle inequality is used on the event
+$\|P\varepsilon\|\le\|P\mu\|/2$ for every pair; its probability
+tends to one by the preceding bounds.
+
+List the $a$ missing true variables in any fixed order and let
+$U=T_0\subset T_1\subset\cdots\subset T_a=V$ be the resulting
+within-block addition path. Summing EXP$'$ along this path is exact apart
+from the stated remainders:
+\begin{align}
+ \log\frac{r_b(V)}{r_b(U)}
+ &\ge-\frac a2\log(n+1)+\nu\log\frac{\RSS_U}{\RSS_V}-a\rho_n.
+ \label{eq:telescoping}
+\end{align}
+Indeed $1-x_{T_{i-1},l_i}=\RSS_{T_i}/\RSS_{T_{i-1}}$, so the
+logarithms telescope. No quadratic approximation is made on this path.
+For $0<t\le1$, $-\log t\ge1-t$. On the simultaneous event from
+\eqref{eq:gainobs} and $\|Y\|^2\le C_Rn$, since
+$\RSS_U\le\|Y\|^2$ and $\nu\ge n/2$,
+\begin{align}
+ \nu\log\frac{\RSS_U}{\RSS_V}
+ &\ge\nu\frac{\RSS_U-\RSS_V}{\RSS_U}
+ \ge\frac{g_{b,U}}{8C_R}
+ \ge c M_n^V\log n,
+ &c:=\frac{\sigma^2}{8C_R}>0.\label{eq:visibilitybound}
+\end{align}
+Combining \eqref{eq:telescoping}--\eqref{eq:visibilitybound}, taking
+$a$th roots of the reciprocal ratio, and using $a\le16$, gives
+\[
+ \left\{\frac{r_b(U)}{r_b(V)}\right\}^{1/a}
+ \le\exp\!\left\{\frac12\log(n+1)+\rho_n
+                -\frac{c}{16}M_n^V\log n\right\}.
+\]
+Thus, on an event of probability tending to one,
+\begin{equation}\label{eq:ebound}
+ e_n\le 2n^A(n+1)^{1/2}
+       \exp(\rho_n)n^{-cM_n^V/16}.
+\end{equation}
+In either remainder regime $\rho_n/\log n=\op(1)$. For fixed $m>0$,
+the logarithm of $n^m$ times the right side, divided by $\log n$, is
+\[
+ m+A+\tfrac12-\frac c{16}M_n^V+\op(1)+o(1)\ \longrightarrow\ -\infty
+\]
+in probability. Therefore $n^m e_n\to0$ in probability, including the
+negligible complement of the displayed event. This proves the result.
+\end{proof}
+
+\section{Admissible rates supplied by \texorpdfstring{$\mathrm{NL}_{\eta}$}{NL-eta}}\label{sec:kappa}
+
+For every leakage comparison, the second branch of \eqref{eq:E} and
+$v_T\ge\sigma^2$ imply
+\begin{equation}\label{eq:eta}
+ E_{T,l}\le
+ \left\{\frac\eta2+\sqrt{2\eta(A+\epsilon_0)}\right\}\log n.
+\end{equation}
+Hence \eqref{eq:avg} follows whenever
+\[
+ 0<\kappa\le\frac12-\frac\eta2-\sqrt{2\eta(A+\epsilon_0)}.
+\]
+To check that positive choices exist, put $t=\sqrt\eta$. At
+$\epsilon_0=0$ the condition for a positive upper endpoint is
+$t^2+2\sqrt{2A}\,t<1$, equivalent for $t\ge0$ to
+$t<\sqrt{2A+1}-\sqrt{2A}$. This is exactly the assumed strict threshold.
+Continuity allows a sufficiently small fixed $\epsilon_0>0$.
+When $\eta>0$, every fixed
+$0<\kappa<1/2-\eta/2-\sqrt{2A\eta}$ is allowed in this way.
+When $\eta=0$, all leakage $\delta_{T,l}$ vanish, so $E_{T,l}=0$;
+the average is $1$ if nonempty and $\kappa=1/2$ is allowed.
+Neither this calculation nor $\mathrm{NL}_\eta$ replaces EXP$'$.
+
+\section{Aggregation and completion of the proof}\label{sec:aggregation}
+
+We use the previously proved T22(i), with feasible reference $S_0$:
+\begin{equation}\label{eq:aggregation}
+ q_n\le u_n,\qquad
+ 1-\pi_0(S_0)\le\frac{(s_0+1)u_n}{1-u_n}+s_0e_n
+ \quad\text{on }\{u_n<1\}.
+\end{equation}
+This input holds for every partition with positive tables, with the cap
+included; the actual blocks satisfy $|C_b|\le B\le K$, since
+$\lfloor\sqrt n\rfloor\le\lfloor n/2\rfloor$ for $n\ge3$ and
+$\lfloor\sqrt p\rfloor\le p$, so the wave-1 hypotheses hold verbatim.
+Its source is the wave-1 T22 proof and the T22 chapter of
+\texttt{COLLECTED\_PROOFS\_v2.tex}. The bound is also quoted verbatim in
+\texttt{STATEMENT.md}, Section 5. It does not rely on part (iii).
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By Proposition~\ref{prop:un}, $u_n\to0$ in probability in both remainder
+regimes, so $\PP(u_n\le1/2)\to1$. On that event,
+\begin{equation}\label{eq:finish}
+ 1-\pi_0(S_0)\le2(s_0+1)u_n+s_0e_n.
+\end{equation}
+The strict version follows from $u_n=\Op(a_n)$ and
+Proposition~\ref{prop:en}. More explicitly, division of
+\eqref{eq:finish} by $a_n+e_n>0$ bounds the ratio by
+$2(s_0+1)u_n/a_n+s_0$, which is bounded in probability; the event
+where \eqref{eq:finish} need not hold has probability tending to zero.
+Choosing any $m>\kappa$ in Proposition~\ref{prop:en} gives
+$e_n/a_n\to0$ in probability, proving the sharper $\Op(a_n)$ form.
+
+For the weaker version, intersect $\{u_n\le1/2\}$ with the event in
+Proposition~\ref{prop:un} and set
+$\zeta_n=\xi_n+\log(2(s_0+1))/\log n=\op(1)$. Equation
+\eqref{eq:finish} then gives the asserted exponent-form bound. It tends
+to zero in probability, by the same $\kappa/2$ argument as in
+Proposition~\ref{prop:un}, and because $e_n\to0$. The bound
+$q_n\le u_n$ is deterministic by \eqref{eq:aggregation}.
+
+All empty-family conventions are respected: when $p=s_0$, $q_n=u_n=0$
+and \eqref{eq:aggregation} bounds the error by $s_0e_n$; when $s_0=0$,
+$e_n=0$ and VIS is vacuous. Section~\ref{sec:kappa} proves the final
+claim about exact zero leakage.
+\end{proof}
+
+\begin{remark}[Scope and interpretation]
+The conclusion concerns the probability law of a single exact start draw,
+through its mass $\pi_0(S_0)$. It asserts neither that all initial particles
+equal $S_0$ nor schedule completion, evidence accuracy, target concentration,
+or any property of cut groups. No independence between block comparisons,
+no numerical experiment, and no unproved design-prevalence claim enters the
+argument. The logarithmic EXP$'$ assumption is retained throughout; its
+quadratic specialization is justified only where $\mathrm{NL}_\eta$ applies.
+\end{remark}
+
+\end{document}

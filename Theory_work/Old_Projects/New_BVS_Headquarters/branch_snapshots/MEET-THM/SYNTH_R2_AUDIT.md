@@ -1,0 +1,25 @@
+# MEET-THM · Audit of SYNTH_R2 (auditor: gpt-6.1-sol, Codex, high)
+
+Verbatim final message, extracted by the chair from `/home/fb31/.codex/sessions/2026/11/03/rollout-2026-11-03T22-40-35-01a1a4db-e051-7662-9302-14f1d18b4390.jsonl`. Audited: SYNTH_R2.md at commit 30ec042 (kept as `SYNTH_R2_v1.md`). Verdict PASS WITH CORRECTIONS; corrections 1–12 applied in SYNTH_R2.md v2 (log §6).
+
+---
+
+Paths below are relative to `theory_campaign/MEET-THM/`; locations refer to `SYNTH_R2.md`.
+
+| # | location | finding | evidence (file:line) | correction |
+|---|---|---|---|---|
+| 1 | §1:56–60 | Song–Liang wording has not fully converged. B calls Thm 2 inapplicable; Cor 2 positions also differ. | `R2_B.md:70`; `R2_C.md:393`; `R2_C.md:397`; `R2_D.md:235` | State the shared restrictions, preserve these differences, and add them to §4. |
+| 2 | §2.1:66 | “7 agreed” overstates agreement: C places STG in the supplement. | `R2_C.md:143`; `R2_C.md:361` | Say “6 shared main packages + proposed STG + optional eighth slot.” |
+| 3 | §2.3:107–117 | The displayed matrix bounds omit their checked domain and computational premises. “Design-computable” does not supply those hypotheses. | `R2_C.md:50`; `R2_C.md:64`; `R2_C.md:65`; `evidence/W2_PC2/VERDICTS.md:101` | Explicitly incorporate A, the definitions of \(C_\sigma,b_X,D_*\), and \(a,\delta_A,\delta_H,r<1\). |
+| 4 | §2.3:121 | \(2\lceil D_*/c_\rho\rceil+2\) is discontinuous, so it is not the continuous envelope required by Q5. Its resolution premise is also omitted. | `R2_C.md:141`; `R2_C.md:274`; `evidence/W2_PC2/VERDICTS.md:105` | Retain the integer bound under C8’s premises, including \(2^{-60}\le h/2\), then give the continuous envelope \(4+2D_*/c_\rho\). |
+| 5 | §2.3:114–123 | The sandwich loses checked scope: fixed common nonempty \(V\), exact-frontier comparison, and coded resolution/snap/validation qualifications. Q5 conditions are placeholders rather than statements. | `evidence/W2_PC1/VERDICTS.md:55`; `evidence/W2_PC1/VERDICTS.md:81`; `evidence/2026-11-04_HQ_RULING_Q5.md:9` | Restore those qualifications; specify the same-data \(d_\sigma\) baseline and fixed-partition continuity. Explicitly state that \(T(\varepsilon)\) is a step function that can jump, with PC1’s example. |
+| 6 | §2.5:178 | “W2PC1 has no adverse row” overlooks the AMBIGUOUS/GAP verdict on A’s TI estimator. | `evidence/W2_PC1/VERDICTS.md:155` | Report that verdict: specify pre-resampling particles and incremental weights; do not reweight post-mutation states. T-J2/T-J3 have separate TRUE verdicts. |
+| 7 | §2.5:182 | The \((K-1)\) companion is incorrectly attributed to A and D. A specifies \(K\widehat\varepsilon/\widehat\kappa\). | `R2_A.md:200`; `R2_D.md:182` | Attribute \((K-1)\) to D; identify adopting it as the chair’s proposal. |
+| 8 | §2.5:183–187 | \(\widehat\delta<1\) alone does not justify the global discrepancy bound. Singular blocks and failed residual margins also invalidate it. | `R2_A.md:200`; `evidence/W2_PC1/VERDICTS.md:157`; `evidence/W2_PC1/VERDICTS.md:165` | Define \(\bar u\), require \(\kappa>0,\delta<1,\bar u<1,\delta\bar u<(1-\delta)(1-\bar u)\), and print NA otherwise; alternatively state A’s distinct residual-margin bound precisely. |
+| 9 | §2.2:101; §4 | Remaining disagreements omit K29, K57, K70, K73, and STG clause placements. C14 supplies K30, not K29. | `R2_C.md:19`; `R2_C.md:28`; `R2_C.md:44`; `R2_D.md:25`; `R2_A.md:21`; `R2_D.md:21` | Add: C defers K29/general K57 accuracy; A/B place K70 main, D supplementary, C attributed; C withdraws operational K73. Record K27/K30 placements and distinguish cited foundations from numbered supplement claims. |
+| 10 | §2.6:206 | “Recorded as the meeting’s method edit” reads as adoption despite the non-voting proposal framework. | `DOSSIER.md:7`; `R2_B.md:254`; `R2_C.md:323` | Say “proposed configurations for confirmation and subsequent recording in AMENDMENT_HQ_02.” |
+| 11 | §2.4:150–167 | Deferral descriptions conflate candidates: K13 is start-mode consistency, not mixing; K58 is population delivery/equal-weight consistency, not R:N allocation. Several reasons are absent. | `R1_D.md:129`; `R0_DIFF.md:152`; `R1_D.md:151`; `R1_D.md:156` | Separate K13/K58/K59; supply K75’s missing score-specific reduction and K92’s unproved moat/comparator construction. Give explicit drop reasons. |
+| 12 | §2; §5 | Binding-goal escalation safeguards are not carried into the reconciled proposal. | `R2_C.md:76`; `R2_C.md:404`; `evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md:7` | Preserve §13.1 escalation if general-record closure fails, and §5.3 escalation if both general and correlated-family routes fail. Add direct seat-line traces for these safeguards. |
+| 13 | §0; §3; deferrals | Verdict counts and inherited-check summaries match. §3 covers every requested adverse row in both wave-2 files. No listed deferral itself removes a binding goal. | `evidence/W2_PC1/VERDICTS.md:11`; `evidence/W2_PC1/VERDICTS.md:16`; `evidence/W2_PC2/VERDICTS.md:38`; `evidence/CHK_INHERITED/REPORT.md:11` | None beyond corrections above. |
+
+PASS WITH CORRECTIONS (1–12; the chair applies them without another audit).

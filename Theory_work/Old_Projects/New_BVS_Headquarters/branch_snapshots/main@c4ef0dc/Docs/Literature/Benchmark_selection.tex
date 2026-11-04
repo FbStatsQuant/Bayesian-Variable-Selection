@@ -1,0 +1,187 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,booktabs,array,microtype,enumitem,longtable}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\definecolor{navy}{RGB}{25,52,78}
+\definecolor{boxgray}{RGB}{245,245,243}
+\usepackage[colorlinks=true,linkcolor=navy,urlcolor=navy,citecolor=navy]{hyperref}
+\setlength{\parindent}{0pt}\setlength{\parskip}{5pt}
+\setlist{itemsep=2pt,topsep=3pt}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\pkg}[1]{\textsf{#1}}
+
+\title{\bfseries Ten benchmark algorithms for variable selection\\[4pt]
+\large Selection based on a reading of what recent papers compare against}
+\author{Prepared for Felipe Bedoya}
+\date{3 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This note fixes the external benchmarks for the Bayesian variable selection (BVS) campaign built on the composite-start SMC sampler. The choice is grounded in a literature sweep carried out on 3 October 2026: about 120 papers from 1996 to 2026 were opened at the level of their simulation sections and the list of competitors each one runs was recorded. Four strands were read separately (penalised and best-subset methods; spike-and-slab, shrinkage and variational Bayes; FDR-controlled selection and knockoffs; comparison studies and 2024--2026 method papers), plus the model-space sampler literature. Two independent popularity signals were added: OpenAlex citation counts and CRAN downloads for the last month. Section~\ref{sec:ten} gives the ten benchmarks with the evidence for each, Section~\ref{sec:spec} the configuration to run on the five scenarios of Experiment~1, Section~\ref{sec:excluded} what was considered and left out, and the appendix the frequency tables.
+\end{abstract}
+
+\tableofcontents
+
+\section{Setting and selection rule}
+
+The target campaign uses the five designs of \code{Experiment/Experiment\_ 1}: $n=100$, $p=30$, true support $\{2,3,8,14,19\}$ with effects $(1,-1,0.6,-0.8,0.5)$, $\sigma=1$, and correlation S1 independent, S2 AR(1) $0.5$, S3 block $0.7$, S4 block $0.85$, S5 block $0.7$ plus global $0.3$. Two facts about this setting drive the selection:
+\begin{itemize}
+\item $n\ge 2p$, so every low-dimensional method is available, including exact best-subset enumeration and fixed-$X$ knockoffs, and the exact posterior over $2^{30}$ models is already computed for every dataset.
+\item The SMC outputs a model-space posterior (PIPs, evidence, joint draws). The most informative benchmarks are therefore the ones that also produce PIPs or a posterior over models, but a credible benchmark table must also contain the frequentist methods a referee expects.
+\end{itemize}
+
+\paragraph{Rule used.} A method entered the list if (i) it appears as a comparator in many of the opened papers, with weight on 2020--2026; (ii) it is highly cited or its package is heavily downloaded; (iii) it has a maintained R or Python implementation that runs on $n=100$, $p=30$ in seconds to minutes; and (iv) it adds a paradigm not already covered. Rule (iv) is why adaptive and relaxed lasso are variants of the lasso row rather than rows of their own, and why only one of stability selection and knockoffs made the list.
+
+\section{The ten benchmarks}\label{sec:ten}
+
+The table gives the headline evidence. ``Papers'' is the number of opened papers whose experiments include the method as a comparator or as the proposed method (the counts of the four strands added together; the appendix gives them by strand). Citations are OpenAlex counts on 3 October 2026 for the founding paper; downloads are CRAN counts for the month to 3 October 2026.
+
+\begin{center}\footnotesize
+\begin{tabular}{@{}rp{4.6cm}p{2.9cm}rp{2.6cm}p{2.1cm}@{}}
+\toprule
+ & Benchmark & Package & Papers & Citations & Downloads/mo \\
+\midrule
+1 & Lasso (CV; relaxed and adaptive variants) & glmnet & $\approx 75$ & 53{,}500$^\ast$ & 186{,}879 \\
+2 & Elastic net & glmnet & 28 & 21{,}790 & (same) \\
+3 & MCP and SCAD & ncvreg & 25 / 31 & 4{,}027 / 9{,}288 & 5{,}200 \\
+4 & Best subset selection (exact, BIC/EBIC) & leaps; L0Learn & 17 & 683 (BKM); 2{,}118 (EBIC) & 85{,}777; 2{,}502 \\
+5 & Knockoff filter (fixed-$X$; model-$X$ MVR) & knockoff; knockpy & $\approx 40$ & 575 / 676 & 781 \\
+6 & BMA with $g$-priors, adaptive sampling & BAS & 8 (+2 wins) & 272; 1{,}152 (hyper-$g$) & 1{,}211 \\
+7 & Spike-and-slab Gibbs (SSVS) & BoomSpikeSlab & 26 & 2{,}747 & 4{,}190 \\
+8 & Horseshoe (and regularised horseshoe) & horseshoe; bayesreg; brms & 22 & 1{,}451 / 487 & 78; 544; 43{,}407 \\
+9 & SuSiE & susieR & 9 & 1{,}249 & 11{,}076 \\
+10 & Spike-and-slab LASSO (EMVS variant) & SSLASSO; EMVS & 12 / 7 & 359 / 265 & 236 / 31 \\
+\bottomrule
+\end{tabular}
+\end{center}
+{\footnotesize $^\ast$Semantic Scholar count for Tibshirani (1996); OpenAlex matched the 2011 retrospective instead. BKM = Bertsimas, King and Mazumder (2016).}
+
+\subsection*{1. Lasso, with relaxed and adaptive variants (\pkg{glmnet})}
+The lasso is in essentially every paper opened: 28 of 30 in the penalised strand, 24 in the comparison strand, 16 in the Bayesian strand. It is the universal baseline and the row every reader calibrates against. Run $\lambda$ by 10-fold CV at both the minimum and the one-standard-error rule. Two variants come free from the same package and are the ones recent papers single out for selection rather than prediction: the relaxed lasso (\code{relax=TRUE}), which Hastie, Tibshirani and Tibshirani (2020) call the best overall across their SNR grid, and the adaptive lasso (Zou 2006, 7{,}719 citations; a ridge or OLS first stage followed by weighted lasso). Expected behaviour on S4: the irrepresentable condition fails at within-block $\rho=0.85$ and the lasso selects block neighbours; Bhadra et al.\ (2019) show exactly this at $n=100$, $p=32$.
+
+\subsection*{2. Elastic net (\pkg{glmnet})}
+Second most common penalised comparator (12 in the comparison strand, 8 in the penalised strand, 4 in the Bayesian strand). It is in the list because it was built for correlated designs, which is what S3--S5 vary: Hanke et al.\ (2024, Biometrical Journal) found it the best frequentist selector under block correlation $\rho=0.7$ in a 270-scenario neutral comparison, and Hou et al.\ (2023) found it the most stable at high equicorrelation. Tune $\alpha\in\{0.1,\dots,0.9\}$ and $\lambda$ jointly by CV.
+
+\subsection*{3. MCP and SCAD (\pkg{ncvreg})}
+The nonconvex penalties are the standard ``oracle property'' comparators: SCAD in 31 papers and MCP in 25 across the strands, almost always run together through \pkg{ncvreg} (Breheny and Huang 2011). They are the methods the $L_0$ literature treats as its nearest rival and the ones Johnson and Rossell, Narisetty and He, and Ročková and George benchmark their Bayesian methods against. Tune $\lambda$ by 10-fold CV with the package default $\gamma$ (3 for MCP, 3.7 for SCAD); also record the BIC-tuned path since several Bayesian papers tune them that way.
+
+\subsection*{4. Best subset selection, exact (\pkg{leaps}), with EBIC}
+At $p=30$ exact enumeration is cheap: \pkg{leaps} branch-and-bound returns the best model of every size in under a second, which is why no Gurobi licence is needed. Best subset appears in 12 of 30 penalised papers and 5 comparison studies, and is the natural non-Bayesian counterpart of the highest-posterior-probability model. Select the size by BIC and by EBIC with $\gamma=0.5$ and $1$ (Chen and Chen 2008, 2{,}118 citations); report also the size-oracle row already used in the earlier design. Forward stepwise (\pkg{leaps} or \pkg{bestsubset}) and \pkg{L0Learn} ($L_0L_2$, Hazimeh and Mazumder 2020) are variants: Hastie et al.\ and Hanke et al.\ both show forward stepwise matches exact best subset, and \pkg{L0Learn} is the modern approximate-$L_0$ reference that third-party papers run (\pkg{abess} is rarely run by anyone but its authors). Expect the Hanke et al.\ result: $L_0$ wins only at high SNR and weak correlation.
+
+\subsection*{5. Knockoff filter (\pkg{knockoff}, \pkg{knockpy})}
+The frequentist FDR-controlled selector and the analogue of the BFDR rule used in the SMC decisions. Model-$X$ knockoffs appear in about 33 of 60 papers in the FDR strand and fixed-$X$ knockoffs in 17; together with Benjamini--Hochberg on OLS $p$-values they are the baseline of every FDR paper since 2015. Since $n=100\ge 2p=60$, fixed-$X$ knockoff+ (Barber and Candès 2015) is valid with no distributional assumption on $X$ and is the primary row; use the lasso signed-max or coefficient-difference statistic at $q=0.10$. Two cautions documented in the literature matter for S3--S5: the default SDP and equicorrelated constructions lose almost all power once within-block correlation exceeds $0.5$ (Spector and Janson 2022; Xing, Zhao and Liu 2023; Dai et al.\ 2023), so a model-$X$ row should use the MVR or maximum-entropy construction in \pkg{knockpy}; and single-run knockoffs are noisy, so the derandomised e-value version (Ren and Barber 2024) is the modern variant. Report FDR and power, not exact recovery, for this row. Add BH on OLS $t$-tests as the free low-dimensional baseline every knockoff paper carries.
+
+\subsection*{6. Bayesian model averaging with $g$-priors (\pkg{BAS})}
+This is the closest external method to the SMC target: a Bernoulli model prior, a Zellner-type slab, and a sampler over model space that returns PIPs, the HPM and the median probability model. It appears in fewer papers than the others (8, counting the $g$-prior family) but it won both large preregistered comparisons of the last five years: Porwal and Raftery (2022, PNAS, 21 methods on 14 real design matrices) and Sekulovski et al.\ (2025, 28 methods for logistic regression). In both, the adaptive $g$-priors ($g=n$, hyper-$g/n$, EB-local) beat spike-and-slab, horseshoe, SSLASSO, EMVS, nonlocal priors, lasso, elastic net, SCAD and MCP on estimation, selection and prediction. Run three priors: $g=n$ (Zellner, the nearest to the control slab), hyper-$g/n$ with $a=3$, and EB-local; Bernoulli(0.2) model prior to match; method \code{MCMC+BAS} with enough iterations that the PIPs are stable. Because the exact posterior for the control slab is available, the BAS $g=n$ run is also the only external row whose PIPs can be scored against an exact reference and against the SMC on the same footing (up to the ridge term and the inverse-gamma prior; record the difference by enumerating a few datasets with \pkg{BAS} directly if its enumeration finishes, or by matching the slab in the engine).
+
+\subsection*{7. Spike-and-slab Gibbs sampler, SSVS (\pkg{BoomSpikeSlab})}
+Point-mass or continuous spike-and-slab via Gibbs sampling is the de facto Bayesian comparator: 14 papers in the Bayesian strand and 12 in the comparison strand, and \pkg{BoomSpikeSlab::lm.spike} is the implementation used by Porwal and Raftery, Sekulovski et al., Kollipara et al.\ (2026, Statistics in Medicine), Polson and Sun, Bar et al.\ and Filippozzi et al. George and McCulloch (1993) has 2{,}747 citations. Run with the package's Zellner-type prior, expected model size 6 to match $h=0.2$, 20{,}000 draws after 2{,}000 burn-in; output PIPs and the median probability model. A second implementation is worth one extra row: an add-delete-swap Metropolis or single-site Gibbs chain on the SMC's own target, which is what the sampler papers (Griffin et al.\ 2021; Zanella and Roberts 2019; Liang et al.\ 2022; Jankowiak 2023) use as their reference, and which turns the SMC-vs-MCMC comparison into a like-for-like one at equal score evaluations.
+
+\subsection*{8. Horseshoe and regularised horseshoe (\pkg{horseshoe}, \pkg{bayesreg}, \pkg{brms})}
+The dominant continuous shrinkage prior: 22 papers across strands, 1{,}451 citations for Carvalho, Polson and Scott (2010) and 487 for the regularised version of Piironen and Vehtari (2017). It is in every Bayesian comparison of the last five years (Porwal and Raftery; Kollipara et al.; Xiao 2026, where it was the most robust method under $\rho\ge 0.6$). It does not produce PIPs, so selection is by the 95\% credible interval excluding zero and by the SAVS or $\kappa_j<0.5$ shrinkage-factor rule; report both. \pkg{horseshoe} (Gibbs, van der Pas et al.) is the fast default; \pkg{bayesreg} gives horseshoe+ and \pkg{brms}/\pkg{rstanarm} the regularised horseshoe through Stan if a second implementation is wanted.
+
+\subsection*{9. SuSiE (\pkg{susieR})}
+The modern set-valued method: 1{,}249 citations since 2020, by far the most downloaded Bayesian variable-selection package on CRAN (11{,}076 per month, ten times \pkg{BAS}), and newly adopted as a general-purpose comparator in Kollipara et al.\ (2026) and as a knockoff statistic in Chen et al.\ (2024). It returns PIPs and 95\% credible sets, so it is the natural foil for a PIP-producing sampler on the block designs, where it will report one credible set per signal block. It is also the method the earlier pilot already showed failing on the cancelling pair (2,3): a single-effect regression on the residual does not see $X_2-X_3$. Keep it in with that finding stated; it is a property of the method class, not a tuning accident. Settings as in the 28 September design: $L=10$, estimated prior and residual variances, coverage 0.95, purity 0.5, \code{refine=TRUE}. Score on PIP$>0.5$, on credible-set coverage of each signal, and on the number of false sets.
+
+\subsection*{10. Spike-and-slab LASSO (\pkg{SSLASSO}), with EMVS as the variant}
+The fast deterministic Bayesian comparator from Ročková and George (2018; 359 citations; 12 appearances, including Porwal and Raftery, Kollipara et al., Ray and Szabó, Nie and Ročková, and the sparse-projection paper of 2024). It gives a MAP path, not PIPs, so it is scored like a penalised method. Use the default ladder of spike penalties with the adaptive variant and $\lambda_1=1$. EMVS (Ročková and George 2014; 265 citations; 7 appearances) is the same school and the same scoring, and \pkg{EMVS} is on CRAN; run it as the variant row.
+
+\section{Configuration for the five scenarios}\label{sec:spec}
+
+\paragraph{Common protocol.} Same 500 datasets as Experiment~1 (100 per scenario, seeds $108000+1000(k-1)+r$). Every method sees the standardised $X$ and uncentred $y$ with no intercept, exactly as the engine does; where a package insists on an intercept, fit it and note it. CV is 10-fold with a fixed fold seed per dataset shared by all methods. Each method yields one point selection $\widehat S$ (its native rule) and, where available, a PIP vector or a ranking.
+
+\paragraph{Metrics.} The point selection is scored by exact recovery $\mathbf 1\{\widehat S=S^\dagger\}$, true positives, false positives, F1 and MCC. PIP-producing methods (SMC, BAS, SSVS, SuSiE) are additionally scored by PIP mean absolute error against the exact posterior of \emph{their own} target where that is available, by AUPRC of the PIP ranking against $S^\dagger$, and by agreement of their median probability model with the exact one. Knockoffs and the BFDR rule are scored by realised FDP and power at $q=0.10$. Record wall time per fit. These are the metrics that recur in the opened papers (Hanke et al., Kollipara et al., Porwal and Raftery, Hastie et al.).
+
+\paragraph{Per-method settings.}
+\begin{center}\small
+\begin{tabular}{@{}lp{10.8cm}@{}}
+\toprule
+Method & Setting \\
+\midrule
+Lasso & \code{cv.glmnet}, $\alpha=1$; report $\lambda_{\min}$ and $\lambda_{1se}$; relaxed: \code{relax=TRUE}, $\gamma$ by CV; adaptive: weights $1/|\hat\beta^{\mathrm{ridge}}|$ \\
+Elastic net & \code{cv.glmnet} over $\alpha\in\{0.1,\dots,0.9\}$, $\lambda$ by CV, $\alpha$ by minimum CV error \\
+MCP, SCAD & \code{cv.ncvreg}, $\gamma$ default; also BIC along the path \\
+Best subset & \code{leaps::regsubsets}, \code{nvmax=15}, exact; size by BIC, EBIC($\gamma=0.5,1$); variants: forward stepwise, \pkg{L0Learn} $L_0L_2$ by CV \\
+Knockoffs & \code{knockoff::create.fixed} (SDP) + \code{stat.glmnet\_lambdasmax}, knockoff+ at $q=0.10$; model-$X$ MVR via \pkg{knockpy} with known $\Sigma_k$; BH on OLS $t$-tests at $q=0.10$ \\
+BAS & \code{bas.lm}, \code{prior} $\in\{$\code{"g-prior"} $g=n$, \code{"hyper-g-n"} $a=3$, \code{"EB-local"}$\}$, \code{modelprior=Bernoulli(0.2)}, \code{method="MCMC+BAS"}, \code{MCMC.iterations} $=2\times10^5$; PIPs, HPM, MPM \\
+SSVS & \code{BoomSpikeSlab::lm.spike}, \code{SpikeSlabPrior} with expected model size 6, 22{,}000 draws, 2{,}000 burn-in; PIPs, MPM \\
+Horseshoe & \code{horseshoe::horseshoe}, \code{method.tau="halfCauchy"}, \code{method.sigma="Jeffreys"}, 10{,}000 draws after 5{,}000 burn-in; selection by 95\% CI and by $\kappa_j<0.5$ \\
+SuSiE & \code{susie(X, y, L=10, estimate\_residual\_variance=TRUE, estimate\_prior\_variance=TRUE, coverage=0.95, min\_abs\_corr=0.5, refine=TRUE, intercept=FALSE, standardize=FALSE)} \\
+SSLASSO & \code{SSLASSO(X, y, variance="unknown", lambda1=1, lambda0=seq(1,p,length=100), penalty="adaptive")}; EMVS: \code{EMVS(y, X, v0=seq(0.1,1,by=0.1), v1=1000, type="betabinomial")} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{What the literature predicts for S1--S5.} From the opened papers: the lasso family over-selects in all scenarios and substitutes neighbours in S4; elastic net is the most stable frequentist row in S3--S5; MCP/SCAD recover the support well in S1--S2 and become unstable above $\rho\approx0.8$ (Hou et al.\ 2023); exact best subset with EBIC is competitive in S1--S2 and falls behind in S4 (Hanke et al.); fixed-$X$ knockoffs keep FDR but lose power sharply in S4--S5 unless the MVR construction is used; BAS and SSVS track the exact PIPs and split mass between a signal and its proxy in S4 just as the SMC does; the horseshoe is robust to correlation but its interval rule is conservative for the 0.5 effect; SuSiE covers 8, 14 and 19 but not the pair (2,3); SSLASSO and EMVS behave like a sharper MCP.
+
+\section{Considered and not included}\label{sec:excluded}
+
+\begin{itemize}
+\item \textbf{Nonlocal priors (\pkg{mombf}; Johnson and Rossell 2012, 266 citations; 7 appearances).} A genuine model-space posterior with PIPs and the Rossell-school comparator (Porwal and Raftery; Hadj-Amar and Jewson 2026; Bar et al.). It is the first alternate and the natural eleventh row, especially since the 28 September design already specified a matched pMOM configuration. It lost its slot to SSLASSO on frequency of use only.
+\item \textbf{Stability selection (\pkg{stabs}; Meinshausen and Bühlmann 2010, 2{,}309 citations; 11 appearances).} A strong resampling-based selector with a false-positive bound, but it occupies the same ``error-controlled selection'' slot as knockoffs and is less used in 2020--2026 papers. Second alternate.
+\item \textbf{Variational spike-and-slab (\pkg{varbvs}, \pkg{sparsevb}; 7 appearances).} Useful fast PIP producers; SuSiE already represents the variational family, and at $p=30$ speed is not a constraint.
+\item \textbf{Dirichlet--Laplace, R2-D2, Bayesian lasso, horseshoe+.} Shrinkage priors that appear only inside horseshoe-family comparisons; the horseshoe row represents them.
+\item \textbf{Informed-proposal MCMC samplers (wTGS, ASI, PARNI, LIT, \pkg{millipede}).} These are the right comparators for a \emph{sampler} paper (they benchmark by PIP mean squared error against a long reference run and by ESS per second), not for a variable-selection benchmark table. At $p=30$ with the exact posterior known, the add-delete-swap chain under row 7 is the appropriate sampler baseline; if a sampler comparison is written up later, wTGS (Zanella and Roberts 2019) is the one to add because it was designed for the bimodal strongly correlated case.
+\item \textbf{Data splitting (DS/MDS), Gaussian mirrors, SLOPE, BH on debiased lasso.} All valid at $n>p$ and common in the FDR strand, but they add rows that say what knockoffs plus BH already say. Dai et al.\ (2023) report that in small $n\gg p$ problems BH on OLS $p$-values is the strongest of them, which is why that free row is attached to the knockoff benchmark.
+\item \textbf{Fine-mapping tools (FINEMAP, DAP-G, CAVIAR), \pkg{abess}, \pkg{projpred}, random-forest selectors.} Either domain-specific, rarely run by third parties, or prediction-oriented.
+\end{itemize}
+
+\section*{Appendix A. Frequency of comparators by strand}
+
+Counts are the number of opened papers in each strand whose experiments include the method. Strands: C = comparison studies and 2024--2026 method papers (about 40 papers); B = Bayesian spike-and-slab, shrinkage, nonlocal, variational (38 papers); P = penalised and best-subset (30 papers); F = FDR-controlled selection and knockoffs (about 60 papers). The sampler strand (Griffin et al.\ 2021; Zanella and Roberts 2019; Liang et al.\ 2022, 2023; Zhou et al.\ 2022; Jankowiak 2023) compares only samplers against one another: add-delete-swap MH, Gibbs, Hamming-ball, Schäfer--Chopin SMC, TGS/wTGS, ASI, PARNI, LIT, on AR(1) $\rho=0.6$ designs with 10 signals, scored by PIP error and ESS per second.
+
+\begin{center}\small
+\begin{tabular}{@{}lrrrrl@{}}
+\toprule
+Method & C & B & P & F & Packages named by the papers \\
+\midrule
+Lasso & 24 & 16 & 28 & 7 & glmnet; lars; scikit-learn \\
+Elastic net & 12 & 4 & 8 & 4 & glmnet \\
+SCAD & 11 & 9 & 11 & -- & ncvreg \\
+MCP & 8 & 5 & 10 & -- & ncvreg; sparsenet \\
+Spike-and-slab Gibbs / SSVS & 12 & 14 & -- & 5 & BoomSpikeSlab; spikeslab; skinnybasad \\
+Horseshoe family & 11 & 11 & -- & -- & horseshoe; bayesreg; rstanarm; brms \\
+Stepwise / forward & 10 & 2 & 8 & -- & stats::step; leaps; bestsubset \\
+Adaptive lasso & 6 & 6 & 5 & 4 & glmnet \\
+Best subset (exact) & 5 & -- & 12 & -- & leaps; Gurobi via bestsubset \\
+Stability selection & 5 & -- & 4 & 2 & stabs; c060 \\
+Relaxed lasso & 4 & -- & 6 & -- & glmnet relax=TRUE; bestsubset \\
+Spike-and-slab LASSO & 4 & 8 & -- & -- & SSLASSO \\
+SIS / ISIS & 4 & -- & 4 & -- & SIS \\
+EMVS & 3 & 4 & -- & -- & EMVS \\
+Nonlocal priors & 3 & 4 & -- & -- & mombf \\
+SuSiE & 3 & 3 & 1 & 2 & susieR \\
+Knockoffs, model-$X$ & 3 & -- & 1 & 33 & knockoff; knockpy \\
+Knockoffs, fixed-$X$ & -- & -- & -- & 17 & knockoff::create.fixed \\
+BH on $p$-values & -- & -- & -- & 20 & p.adjust; hdi \\
+$g$-prior BMA (BAS, BMS, BayesVarSel) & 2 & 6 & -- & -- & BAS; BMS; BayesVarSel \\
+varbvs / sparsevb & 2 & 7 & -- & -- & varbvs; sparsevb \\
+Bayesian lasso & -- & 4 & -- & -- & monomvn \\
+L0Learn / abess (by third parties) & -- & -- & 3 / 1 & -- & L0Learn; abess \\
+Data splitting DS/MDS & -- & -- & -- & 8 & authors' code \\
+Gaussian mirror & -- & -- & -- & 7 & gm \\
+SLOPE & -- & -- & -- & 5 & SLOPE \\
+BLiP & -- & -- & -- & 2 & pyblip; blipr \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Appendix B. Comparison studies closest to the present design}
+
+These are the opened papers whose designs are nearest to $n=100$, $p=30$, five signals, correlated $X$, and whose results can be used as sanity checks:
+\begin{itemize}
+\item Hastie, Tibshirani and Tibshirani (2020), low setting: $n=100$, $p=10$, $s=5$, AR(1) $\rho\in\{0,0.35,0.7\}$, SNR grid $0.05$--$6$; best subset, forward stepwise, lasso, relaxed lasso.
+\item Hanke et al.\ (2024): block correlation $\rho\in\{0.35,0.7\}$, block size 10; best subset, forward stepwise, lasso, elastic net; ``best achievable F1''.
+\item Bainter et al.\ (2023, Psychometrika): $n=100$, $p=50$, block size 5, $\rho\in\{0.4,0.8\}$; SSVS vs lasso, adaptive lasso, elastic net.
+\item Kipruto and Sauerbrei (2022, protocol): $n=100$, $p=15$ and $30$, AR(1) $\rho\in\{0.3,0.8\}$; lasso variants, best subset, backward elimination.
+\item Bhadra et al.\ (2019), Section 7: $n=100$, $p=60$, $s=7$ and $n=100$, $p=32$, AR(1) sweep; lasso, SCAD, horseshoe, Dirichlet--Laplace.
+\item Johnson and Rossell (2012), Narisetty and He (2014): $n=100$, five signals $(0.6,1.2,1.8,2.4,3.0)$, compound symmetry $0.25$ and a block design; nonlocal priors, BASAD, lasso, elastic net, SCAD.
+\item Xiao (2026, arXiv 2605.00835): $p\in\{20,50\}$, block size 5 and Toeplitz, $\rho$ up to $0.9$; OLS, ridge, lasso, elastic net, horseshoe, spike-and-slab.
+\item Focardi-Olmi et al.\ (2026, arXiv 2411.03304): $p=30$, $n=200$, six signals; model-$X$ knockoffs, lasso, spike-and-slab, nonlocal priors.
+\end{itemize}
+Nobody in the opened literature runs the S5 structure (block plus global correlation); it is a differentiating scenario.
+
+\end{document}

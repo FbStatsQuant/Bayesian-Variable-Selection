@@ -1,0 +1,243 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Om}{\Omega}
+\newcommand{\qh}{\widehat q}
+\newcommand{\Zh}{\widehat Z}
+\newcommand{\Zb}{\bar Z}
+\newcommand{\So}{S^{\circ}}
+
+\title{T14(i) (L-FM, singleton case): first-moment evidence consistency\\[2pt]
+\large Proof, version 3}
+\author{SMC-BVS v3 theory programme}
+\date{2026-10-22}
+
+\begin{document}
+\maketitle
+
+\section{Setting and statement}
+
+Everything is conditional on the data and on a successful calibration $\mathcal C$; $\E$ denotes expectation over the
+final-run randomness given (data, $\mathcal C$). By EX-S and CAL the final islands use streams independent of $\mathcal C$,
+so given (data, $\mathcal C$) each island evolves as described below; by EX-A every quantity is computed exactly.
+
+\paragraph{Bridge.} $\Om$ is a finite set. For $S\in\Om$, $\gamma_0(S)>0$ and $d(S)\in\mathbb R$; for real $\varphi$,
+$\gamma_\varphi(S)=\gamma_0(S)e^{\varphi d(S)}$, $\Zb_\varphi=\sum_{S\in\Om}\gamma_\varphi(S)$ and
+$q_\varphi=\gamma_\varphi/\Zb_\varphi$. Thus $q_\varphi(S)>0$ for all $S\in\Om$. The target evidence is
+$Z=m(\emptyset)\sum_{S\in\Om}\gamma_0(S)e^{d(S)}$ (the bridge normaliser at temperature $\varphi=1$) with $m(\emptyset)>0$.
+
+\paragraph{Grid.} $0=\varphi_0<\varphi_1<\dots<\varphi_T=1$ (so $T\ge1$), $\Delta_t=\varphi_t-\varphi_{t-1}$,
+$q_t=q_{\varphi_t}$, $\Zb_t=\Zb_{\varphi_t}$, and $G_t(S)=e^{\Delta_t d(S)}>0$ for $t=1,\dots,T$. Since $\varphi_T=1$, $Z=m(\emptyset)\Zb_T$. From here on a numerical subscript on $q$ or $\Zb$ is always a stage index ($q_t=q_{\varphi_t}$), never a temperature.
+
+\paragraph{One final island ($N\ge1$ particles).}
+\begin{enumerate}[label=(\alph*)]
+\item $\xi_0^1,\dots,\xi_0^N$ are iid with law $q_0$.
+\item For $t=1,\dots,T$: conditionally on $\F_{t-1}$ (defined below), $\zeta_t^1,\dots,\zeta_t^N$ are iid with law
+  \[
+  \mu_t:=\frac{\sum_{i=1}^N G_t(\xi_{t-1}^i)\,\delta_{\xi_{t-1}^i}}{\sum_{i=1}^N G_t(\xi_{t-1}^i)}
+  \]
+  (multinomial resampling); conditionally on $\F_{t-1}$ and $\zeta_t=(\zeta_t^1,\dots,\zeta_t^N)$, the $\xi_t^j$ are independent
+  with $\xi_t^j\sim K_t(\zeta_t^j,\cdot)$, where $K_t$ is a Markov kernel on $\Om$ with $q_tK_t=q_t$ (one move round at
+  $\varphi_t$). If these laws are given conditionally on a larger past (for instance one that also contains other
+  islands), they hold in particular given $\F_{t-1}$, respectively given $(\F_{t-1},\zeta_t)$, by the tower property,
+  because $\mu_t$ is $\F_{t-1}$-measurable and the law of $\xi_t^j$ depends only on $\zeta_t^j$.
+\item $\F_{t}=\sigma(\xi_0,\zeta_1,\xi_1,\dots,\zeta_t,\xi_t)$, $\F_0=\sigma(\xi_0)$, and
+  $\qh_t=N^{-1}\sum_{i=1}^N\delta_{\xi_t^i}$, so $\qh_t(f)=N^{-1}\sum_i f(\xi_t^i)$.
+\item $\Zh_r=m(\emptyset)\Zb_0\prod_{t=1}^T\qh_{t-1}(G_t)$. The pooled evidence is $\Zh=\tfrac14\sum_{r=1}^4\Zh_r$ over four
+  islands, each of the above form with the same grid, kernels and $N$.
+\end{enumerate}
+Only $\qh_0,\dots,\qh_{T-1}$ enter $\Zh_r$; what the island does after stage $T$ (resampling, burn-in and measured rounds,
+local search) is irrelevant here. Since $\Om$ is finite, every function $f:\Om\to\mathbb R$ is bounded and all
+expectations below are of bounded random variables.
+
+\paragraph{Reference model.} $\So\in\Om$ is fixed given (data, $\mathcal C$). Put
+$\eta_t=1-q_t(\So)$ ($0\le t\le T$), $\varepsilon_*=\max_{0\le t\le T}\eta_t$,
+$R_t=G_t/G_t(\So)$ ($1\le t\le T$), $A_t=\prod_{v=1}^t\qh_{v-1}(R_v)$ with $A_0=1$, and $b_t=q_0(\So)/q_t(\So)$ with
+$b_0=1$. Note $R_t(\So)=1$, $R_t>0$, $A_t>0$, $b_t>0$, and $\varepsilon_*<1$ because $q_t(\So)>0$ for every $t$.
+
+\begin{theorem}[T14(i)]\label{thm:main}
+For every $N\ge1$:
+\begin{enumerate}[label=(i-\alph*)]
+\item $\Zh_r/Z=A_T/b_T$ surely;
+\item
+  \[
+  \E\Bigl|\frac{\Zh_r}{Z}-1\Bigr|\;\le\;\frac{\sum_{t=1}^T\bigl(b_{t-1}\eta_{t-1}+b_t\eta_t\bigr)+|1-b_T|}{b_T}
+  \;\le\;\frac{2}{1-\varepsilon_*}\sum_{t=0}^T\eta_t ;
+  \]
+\item the same two bounds hold with the pooled $\Zh$ in place of $\Zh_r$;
+\item the endpoint term cannot be dropped in general: there is an instance of the setting above with
+  $\E|\Zh_r/Z-1|>\sum_{t=1}^T(b_{t-1}\eta_{t-1}+b_t\eta_t)/b_T$.
+\end{enumerate}
+\end{theorem}
+
+\section{Three exact identities}
+
+\begin{lemma}[change of temperature]\label{lem:change}
+For $1\le t\le T$ and every $h:\Om\to\mathbb R$,
+\[
+q_{t-1}(G_t h)=\frac{\Zb_t}{\Zb_{t-1}}\,q_t(h).
+\]
+\end{lemma}
+\begin{proof}
+For $S\in\Om$,
+$q_{t-1}(S)G_t(S)=\gamma_0(S)e^{\varphi_{t-1}d(S)}e^{\Delta_t d(S)}/\Zb_{t-1}=\gamma_{\varphi_t}(S)/\Zb_{t-1}
+=(\Zb_t/\Zb_{t-1})\,q_t(S)$. Multiply by $h(S)$ and sum over $\Om$.
+\end{proof}
+
+\begin{lemma}[ratio of the $b$'s]\label{lem:b}
+For $1\le t\le T$, \ $b_t/b_{t-1}=\dfrac{\Zb_t/\Zb_{t-1}}{G_t(\So)}$.
+\end{lemma}
+\begin{proof}
+$b_t/b_{t-1}=q_{t-1}(\So)/q_t(\So)$, and by Lemma~\ref{lem:change} with $h=\mathbf 1_{\{\So\}}$,
+$q_{t-1}(\So)G_t(\So)=(\Zb_t/\Zb_{t-1})q_t(\So)$. Divide by $G_t(\So)q_t(\So)>0$.
+\end{proof}
+
+\begin{lemma}[one stage in conditional mean]\label{lem:step}
+For $1\le t\le T$ and every $f:\Om\to\mathbb R$,
+\[
+\E\bigl[\qh_t(f)\bigm|\F_{t-1}\bigr]=\frac{\qh_{t-1}(G_t\,K_tf)}{\qh_{t-1}(G_t)},
+\qquad K_tf(x):=\sum_{y\in\Om}K_t(x,y)f(y).
+\]
+\end{lemma}
+\begin{proof}
+Fix $j$. Given $\F_{t-1}$ and $\zeta_t$, $\xi_t^j\sim K_t(\zeta_t^j,\cdot)$, so
+$\E[f(\xi_t^j)\mid\F_{t-1},\zeta_t]=K_tf(\zeta_t^j)$. Given $\F_{t-1}$, $\zeta_t^j\sim\mu_t$, so by the tower property
+\[
+\E[f(\xi_t^j)\mid\F_{t-1}]=\mu_t(K_tf)=\frac{\sum_iG_t(\xi_{t-1}^i)K_tf(\xi_{t-1}^i)}{\sum_iG_t(\xi_{t-1}^i)}
+=\frac{\qh_{t-1}(G_tK_tf)}{\qh_{t-1}(G_t)}.
+\]
+Average over $j=1,\dots,N$.
+\end{proof}
+
+(Only the conditional marginal laws of the $\zeta_t^j$ and $\xi_t^j$ were used; the independence across particles is not
+needed for first moments.)
+
+\section{The weighted mean identity}
+
+\begin{proposition}\label{prop:unbiased}
+For $0\le t\le T-1$ and every $f:\Om\to\mathbb R$,
+\[
+\E\bigl[A_t\,\qh_t(f)\bigr]=b_t\,q_t(f).
+\]
+\end{proposition}
+\begin{proof}
+Induction on $t$, for all $f$ at once. For $t=0$: $A_0=b_0=1$ and $\E\qh_0(f)=q_0(f)$ because the $\xi_0^i$ have law $q_0$.
+
+Let $1\le t\le T-1$ and assume the claim at $t-1$ for all functions. $A_t=A_{t-1}\qh_{t-1}(R_t)$ is
+$\F_{t-1}$-measurable, so by Lemma~\ref{lem:step},
+\[
+\E[A_t\qh_t(f)]=\E\Bigl[A_{t-1}\,\qh_{t-1}(R_t)\,\frac{\qh_{t-1}(G_tK_tf)}{\qh_{t-1}(G_t)}\Bigr]
+=\E\bigl[A_{t-1}\,\qh_{t-1}(R_tK_tf)\bigr],
+\]
+since $R_t=G_t/G_t(\So)$ gives $\qh_{t-1}(R_t)/\qh_{t-1}(G_t)=1/G_t(\So)$ and $\qh_{t-1}(G_tK_tf)/G_t(\So)
+=\qh_{t-1}(R_tK_tf)$. The induction hypothesis with the function $R_tK_tf$, then Lemma~\ref{lem:change} with
+$h=K_tf$, invariance $q_t(K_tf)=q_t(f)$, and Lemma~\ref{lem:b} give
+\[
+\E[A_t\qh_t(f)]=b_{t-1}\,q_{t-1}(R_tK_tf)=\frac{b_{t-1}}{G_t(\So)}\cdot\frac{\Zb_t}{\Zb_{t-1}}\,q_t(K_tf)=b_t\,q_t(f).
+\qedhere
+\]
+\end{proof}
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+\paragraph{(i-a).} Since $G_t=G_t(\So)R_t$, $\qh_{t-1}(G_t)=G_t(\So)\qh_{t-1}(R_t)$, and
+$\prod_{t=1}^TG_t(\So)=e^{d(\So)\sum_t\Delta_t}=e^{d(\So)}$ because $\varphi_T-\varphi_0=1$. Hence
+\[
+\frac{\Zh_r}{Z}=\frac{\Zb_0}{\Zb_T}\,e^{d(\So)}\,A_T .
+\]
+Now, since $\varphi_T=1$, $q_T(\So)/q_0(\So)=\bigl(\gamma_0(\So)e^{d(\So)}/\Zb_T\bigr)\big/\bigl(\gamma_0(\So)/\Zb_0\bigr)
+=e^{d(\So)}\Zb_0/\Zb_T$, so $\Zh_r/Z=A_T\,q_T(\So)/q_0(\So)=A_T/b_T$.
+
+\paragraph{One telescoping increment.} Fix $1\le t\le T$. Since $R_t(\So)=1$,
+\[
+\qh_{t-1}(R_t)-1=\qh_{t-1}(R_t-1)=\qh_{t-1}\bigl((R_t-1)\mathbf 1_{\Om\setminus\{\So\}}\bigr),
+\]
+and, because $R_t>0$,
+$|\qh_{t-1}(R_t)-1|\le\qh_{t-1}(R_t\mathbf 1_{\Om\setminus\{\So\}})+\qh_{t-1}(\mathbf 1_{\Om\setminus\{\So\}})$.
+Multiplying by $A_{t-1}>0$,
+\[
+|A_t-A_{t-1}|=A_{t-1}|\qh_{t-1}(R_t)-1|
+\le A_{t-1}\qh_{t-1}\bigl(R_t\mathbf 1_{\Om\setminus\{\So\}}\bigr)+A_{t-1}\qh_{t-1}\bigl(\mathbf 1_{\Om\setminus\{\So\}}\bigr).
+\]
+Take expectations and apply Proposition~\ref{prop:unbiased} at $t-1\in\{0,\dots,T-1\}$:
+\[
+\E|A_t-A_{t-1}|\le b_{t-1}\,q_{t-1}\bigl(R_t\mathbf 1_{\Om\setminus\{\So\}}\bigr)+b_{t-1}\eta_{t-1}.
+\]
+By Lemma~\ref{lem:change} with $h=\mathbf 1_{\Om\setminus\{\So\}}$ and then Lemma~\ref{lem:b},
+\[
+b_{t-1}\,q_{t-1}\bigl(R_t\mathbf 1_{\Om\setminus\{\So\}}\bigr)
+=\frac{b_{t-1}}{G_t(\So)}\cdot\frac{\Zb_t}{\Zb_{t-1}}\,q_t(\Om\setminus\{\So\})=b_t\eta_t .
+\]
+Therefore
+\begin{equation}\label{eq:incr}
+\E|A_t-A_{t-1}|\le b_{t-1}\eta_{t-1}+b_t\eta_t\qquad(1\le t\le T).
+\end{equation}
+
+\paragraph{(i-b), first inequality.} By (i-a),
+\[
+\frac{\Zh_r}{Z}-1=\frac{A_T-1}{b_T}+\frac{1-b_T}{b_T},
+\qquad |A_T-1|=|A_T-A_0|\le\sum_{t=1}^T|A_t-A_{t-1}| .
+\]
+Taking expectations and using \eqref{eq:incr},
+\[
+\E\Bigl|\frac{\Zh_r}{Z}-1\Bigr|\le\frac{\sum_{t=1}^T(b_{t-1}\eta_{t-1}+b_t\eta_t)+|1-b_T|}{b_T}.
+\]
+
+\paragraph{(i-b), second inequality.} For $0\le s\le T$,
+\[
+\frac{b_s}{b_T}=\frac{q_T(\So)}{q_s(\So)}\le\frac1{q_s(\So)}=\frac1{1-\eta_s}\le\frac1{1-\varepsilon_*}.
+\]
+Hence
+\[
+\frac{\sum_{t=1}^T(b_{t-1}\eta_{t-1}+b_t\eta_t)}{b_T}\le\frac{\sum_{t=1}^T(\eta_{t-1}+\eta_t)}{1-\varepsilon_*}
+=\frac{2\sum_{t=0}^T\eta_t-\eta_0-\eta_T}{1-\varepsilon_*}.
+\]
+For the endpoint term, $b_T=q_0(\So)/q_T(\So)$ gives
+\[
+\frac{|1-b_T|}{b_T}=\frac{|q_T(\So)-q_0(\So)|}{q_0(\So)}=\frac{|\eta_0-\eta_T|}{1-\eta_0}
+\le\frac{\eta_0+\eta_T}{1-\varepsilon_*},
+\]
+using $|\eta_0-\eta_T|\le\max(\eta_0,\eta_T)\le\eta_0+\eta_T$ (both are in $[0,1)$). Adding the two displays gives the
+bound $2(1-\varepsilon_*)^{-1}\sum_{t=0}^T\eta_t$.
+
+\paragraph{(i-c).} Both right-hand sides of (i-b) depend only on $(q_t)_{0\le t\le T}$ and $\So$, which are fixed by the
+data and $\mathcal C$; they are therefore the same for every island. Call the middle expression $M$. By the triangle inequality,
+$|\Zh/Z-1|=\bigl|\tfrac14\sum_r(\Zh_r/Z-1)\bigr|\le\tfrac14\sum_r|\Zh_r/Z-1|$, so
+$\E|\Zh/Z-1|\le\tfrac14\sum_r\E|\Zh_r/Z-1|\le M\le 2(1-\varepsilon_*)^{-1}\sum_t\eta_t$. No independence between islands
+is used.
+
+\paragraph{(i-d).} Take $\Om=\{\So,x\}$, $T=1$, $N=1$, $m(\emptyset)=1$, $K_1$ the identity kernel (it leaves every law
+invariant), and fix $a=0.01$, $c=0.1$. Put $\gamma_0(\So)=1-a$, $\gamma_0(x)=a$, $d(\So)=0$,
+$d(x)=\log\frac{c(1-a)}{a(1-c)}$. Then $q_0=(1-a,a)$, and $\gamma_1=(1-a,\;c(1-a)/(1-c))=\frac{1-a}{1-c}(1-c,c)$, so
+$q_1=(1-c,c)$. With $T=N=1$ (so stage $1$ is temperature $1$), $\Zh_r/Z=\Zb_0G_1(\xi_0^1)/\Zb_1=q_1(\xi_0^1)/q_0(\xi_0^1)$ (Lemma~\ref{lem:change} with
+$h=\mathbf 1_{\{y\}}$ gives $\Zb_0 G_1(y)/\Zb_1=q_1(y)/q_0(y)$), and $\xi_0^1\sim q_0$, so
+\[
+\E\Bigl|\frac{\Zh_r}{Z}-1\Bigr|=\sum_{y\in\Om}|q_1(y)-q_0(y)|=2|c-a|=0.18 .
+\]
+Here $\eta_0=a$, $\eta_1=c$, $b_0=1$, $b_1=(1-a)/(1-c)=1.1$, and
+\[
+\frac{b_0\eta_0+b_1\eta_1}{b_1}=\frac{0.01+0.11}{1.1}=0.1090\ldots<0.18 .
+\]
+So the bound without the endpoint term fails, while the full middle expression of (i-b) equals
+$0.1090\ldots+|1-1.1|/1.1=0.2$ and the right-hand side equals $(2/0.9)(0.11)=0.2444\ldots$, both $\ge0.18$ as the theorem
+requires. \qed
+
+\begin{remark}
+Proposition~\ref{prop:unbiased} is equivalent to the frozen-run identity $\E[\Zh_{r,t}\qh_t(f)]=Z_tq_t(f)$ (the form in
+which the project's conjecture T12(i) states it; that file is not needed here) rewritten through
+$\Zh_{r,t}=m(\emptyset)\Zb_0e^{\varphi_td(\So)}A_t$ and $Z_t=m(\emptyset)\Zb_t$; it is proved above directly, so the
+argument uses nothing from T12. Nothing about the internal structure of the move round is used beyond $q_tK_t=q_t$, and
+nothing about EXP/EXP$'$ or the statistical model enters.
+\end{remark}
+
+\end{document}

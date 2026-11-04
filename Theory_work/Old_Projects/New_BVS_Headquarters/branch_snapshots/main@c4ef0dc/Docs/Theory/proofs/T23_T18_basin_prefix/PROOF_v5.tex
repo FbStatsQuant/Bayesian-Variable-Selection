@@ -1,0 +1,240 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\R}{\mathcal R}
+\newcommand{\C}{\mathcal C}
+\newcommand{\PIP}{\widehat{\mathrm{PIP}}}
+\newcommand{\Pc}{P_{\C}}
+\newcommand{\Ec}{E_{\C}}
+
+\title{T23(ii): pathwise Rao--Blackwell PIP bound and its basin consequence\\[2pt]
+\large Proof, version 4 (unified after Stage B review, round 3)}
+\author{Proved by the lead (Opus 5.5) of the T23(ii) proof run}
+\date{2026-10-22}
+
+\begin{document}
+\maketitle
+
+\noindent All notation, the setting and the hypotheses are those of \texttt{STATEMENT.md}.
+We recall the objects used. The data are fixed throughout.
+
+\section{Setting}
+
+\paragraph{Models.} $\Omega=\{S\subseteq[p]:|S|\le K\}$; $\gamma_1(S)>0$ for $S\in\Omega$; $\pi=\gamma_1/Z$ on $\Omega$.
+For $S\in\Omega$ and $j\in[p]$ the Gibbs inclusion probability at $\varphi=1$ is
+\[
+o_j(S)=\begin{cases}
+\dfrac{\gamma_1(S\cup\{j\})}{\gamma_1(S\cup\{j\})+\gamma_1(S\setminus\{j\})}, & j\in S,\ \text{or } j\notin S \text{ and } |S|<K,\\[8pt]
+0, & j\notin S \text{ and } |S|=K .
+\end{cases}
+\]
+(We write $o_j(S)$ for $o_j(S,1)$.) In both cases $o_j(S)\in[0,1]$, and both sets in the first case belong to $\Omega$.
+$S_0\subseteq[p]$ is fixed. We extend $\pi$ by $\pi(S)=0$ for $S\notin\Omega$; then $\delta_1=1-\pi(S_0)$, $u_\pi=\delta_1/\pi(S_0)$, with $u_\pi=+\infty$ when $\pi(S_0)=0$, i.e.\ exactly when $S_0\notin\Omega$. When $S_0\notin\Omega$ the quantity $o_j(S_0)$ is not defined by the method; in that case we give it an arbitrary real value $c_j^\ast$ (the results below hold for every choice).
+
+\paragraph{Rounds.} A round started at $x\in\Omega$ applies the $m=p+B+2$ labelled elementary steps in a uniformly random order and produces a path $x=X^{(0)},X^{(1)},\dots,X^{(m)}$, all in $\Omega$. The Gibbs step for coordinate $j$ occurs exactly once in the round; if it is the $k$-th step ($1\le k\le m$), it records $o_j(X^{(k-1)})$. $K_1(x,\cdot)$ is the law of $X^{(m)}$ and $K_1^{r}$ its $r$-fold power. For $x\in\Omega$ and $A\subseteq\Omega$ write
+\[
+\mathrm{Path}_x(A^c)=\Pr\bigl(X^{(k)}\notin A\text{ for some }1\le k\le m \bigm| X^{(0)}=x\bigr),
+\]
+the probability that a round started at $x$ visits $A^c$.
+
+\paragraph{Terminal rounds of island $r$.} $N=N_e$ particles. $X_{i,s}$ is particle $i$'s state after $s$ terminal rounds ($s=0$: after the stage-$T$ resampling and the stage-$T$ round). The terminal rounds are $L$ burn-in and $4$ measured rounds, all with kernel $K_1$, with no reweighting and no resampling. Measured round $h\in\{1,2,3,4\}$ is terminal round $L+h$; its path for particle $i$ is $X^{(0)}_{i,h}=X_{i,L+h-1},X^{(1)}_{i,h},\dots,X^{(m)}_{i,h}=X_{i,L+h}$. Let $k_{i,h}(j)$ be the position of the Gibbs step for $j$ in that round and $S_{i,h,j}=X^{(k_{i,h}(j)-1)}_{i,h}$ the state immediately before it. Then
+\begin{gather*}
+\PIP_{rj}=\frac1{4N}\sum_{h=1}^4\sum_{i=1}^N o_j(S_{i,h,j}),\\
+B_{i,h}=\one\bigl\{X^{(k)}_{i,h}\neq S_0\text{ for some }0\le k\le m\bigr\},\qquad
+\overline B_r=\frac1{4N}\sum_{h=1}^4\sum_{i=1}^N B_{i,h}.
+\end{gather*}
+These objects belong to island $r$; we suppress the index $r$ in $X_{i,s}$, $S_{i,h,j}$, $B_{i,h}$, $k_{i,h}(j)$ and $\mathcal F^i_s$ below, and keep it in $\PIP_{rj}$ and $\overline B_r$. The primary estimator is $\PIP_j=\tfrac14\sum_{r=1}^4\PIP_{rj}$ and $\widehat{\mathrm{MPM}}=\{j:\PIP_j>\tfrac12\}$.
+
+\paragraph{BASIN$(\R,r_0,a,\eta,\rho,\delta)$.} $\R\subseteq\Omega$, $S_0\in\R$, $r_0\ge1$ an integer, $a,\eta,\rho\in[0,1]$, $\delta\ge0$, and
+\begin{enumerate}[label=(B\arabic*)]
+\item $K_1^{r_0}(x,\{S_0\})\ge a$ for every $x\in\R$;
+\item $\mathrm{Path}_x(\R^c)\le\eta$ for every $x\in\R$;
+\item $\mathrm{Path}_{S_0}(\{S_0\}^c)\le\rho$;
+\item $\Ec\bigl[N^{-1}\sum_{i}\one\{X_{i,0}\notin\R\}\bigr]\le\delta$ for every island $r$.
+\end{enumerate}
+Since the event ``$X^{(m)}\notin A$'' is contained in the event ``$X^{(k)}\notin A$ for some $1\le k\le m$'',
+\begin{equation}\label{eq:endpoint}
+K_1(x,\R^c)\le\eta\ (x\in\R),\qquad K_1(S_0,\{S_0\}^c)\le\rho .
+\end{equation}
+
+\section{The Markov structure of the terminal rounds}
+
+Throughout, $\C$ is fixed (a successful calibration) and all probabilities are $\Pc$. Fix an island $r$.
+
+\paragraph{Elementary steps.} For a label $e$ (one of the $p$ Gibbs coordinates, the uniform swap, the $B$ neighbour swaps, the independence proposal) let $K_e(x,\cdot)$ be the law of the state after step $e$ is applied at state $x$, as prescribed by the method at $\varphi=1$. By \texttt{STATEMENT.md} \S1, every terminal round uses the same round, with the same kernel $K_1$, fixed by the data and $\C$. So the $K_e$ do not depend on the round, the particle or the particle population. By the definition of a round, a round started at $x_0$ has path law
+\begin{equation}\label{eq:pathlaw}
+\Pr\bigl(X^{(1)}=x_1,\dots,X^{(m)}=x_m\bigm|X^{(0)}=x_0\bigr)=\frac1{m!}\sum_{\sigma}\prod_{t=1}^m K_{\sigma(t)}(x_{t-1},\{x_t\}),
+\end{equation}
+where $\sigma$ runs over the orderings of the $m$ labels and $\sigma(t)$ is the label at position $t$.
+
+\paragraph{The form of EX-S used.} Each random choice of the algorithm (an order of the labels, or the outcome of one elementary step) is made from uniform variates. EX-S (ideal independent uniform streams), together with CAL (island $r$'s streams are among $10$--$13$, independent of streams $0$--$9$ and hence of $\C$), is used in the following form:
+\begin{itemize}
+\item[(F)] For each random choice $c$ of island $r$'s final run, let $\mathcal D_c$ be the $\sigma$-field generated by all variates of island $r$ used by the random choices made before $c$. Conditionally on $\mathcal D_c$, the fresh variates from which $c$ is made (a sequence, if $c$ uses a random number of them) are i.i.d.\ uniform. Hence, given $\mathcal D_c$, the choice $c$ has the law that the method prescribes for it given the current state.
+\end{itemize}
+Concretely: the order of a round is uniform over the $m!$ orderings given $\mathcal D_c$ (the method draws it ``independently of the particle's state, afresh for every particle and every round''); and the outcome of step $e$ applied at the current state $x$ has law $K_e(x,\cdot)$ given $\mathcal D_c$. Under EX-A these laws are realised exactly. Variates are attributed to the choice that uses them, whenever they were generated. So (F) does not depend on whether particles are processed round by round across the population or one particle at a time, on how the variates are split into sub-streams, or on whether variates are generated in batches ahead of use. It is the idealisation EX-S itself, stated for the choices made by the algorithm.
+
+\paragraph{Per-particle $\sigma$-fields.} For a particle $i$ and $0\le s\le L+3$, let $\mathcal F^i_s$ be the $\sigma$-field generated by all variates of island $r$ used by the random choices made before particle $i$'s terminal round $s+1$ begins. Then $\mathcal F^i_s\subseteq\mathcal F^i_{s+1}$, because every choice made before round $s+1$ of particle $i$ begins is also made before its round $s+2$ begins. Also $X_{i,0},\dots,X_{i,s}$ are $\mathcal F^i_s$-measurable, because they are computed from the initial draws, the bridge stages and particle $i$'s own terminal rounds $1,\dots,s$, all of which precede its round $s+1$.
+
+\begin{lemma}\label{lem:markov}
+Assume EX-A, EX-S (in the form (F)) and CAL. For every particle $i$, every $0\le s\le L+3$ and every set $\Gamma\subseteq\Omega^{m+1}$ of paths,
+\[
+\Pc\bigl((Z^{(0)}_{i,s+1},\dots,Z^{(m)}_{i,s+1})\in\Gamma\bigm|\mathcal F^i_s\bigr)=\Pr\bigl((X^{(0)},\dots,X^{(m)})\in\Gamma\bigm|X^{(0)}=x\bigr)\Big|_{x=X_{i,s}}\quad\text{a.s.},
+\]
+where $(Z^{(0)}_{i,s+1},\dots,Z^{(m)}_{i,s+1})$ is particle $i$'s path in terminal round $s+1$, so $Z^{(0)}_{i,s+1}=X_{i,s}$ (no resampling between terminal rounds). In the notation of \S1, the path of measured round $h$ is $X^{(k)}_{i,h}=Z^{(k)}_{i,L+h}$. In particular, $\Pc(X_{i,s+1}\in A\mid\mathcal F^i_s)=K_1(X_{i,s},A)$. Moreover, for $0\le s<s+q\le L+4$ and $A\subseteq\Omega$, $\Pc(X_{i,s+q}\in A\mid\mathcal F^i_s)=K_1^{q}(X_{i,s},A)$.
+\end{lemma}
+
+\begin{proof}
+Write $Y_t=Z^{(t)}_{i,s+1}$ for $0\le t\le m$, and let $\Sigma$ be the order drawn for this round. Let $\mathcal D_0$ be the $\sigma$-field of all variates used by the random choices made before $\Sigma$ is chosen, and, for $1\le t\le m$, $\mathcal D_t$ the $\sigma$-field of all variates used by the random choices made before the outcome of the $t$-th step of this round is chosen. Then $\mathcal F^i_s\subseteq\mathcal D_0\subseteq\mathcal D_1\subseteq\dots\subseteq\mathcal D_m$. $Y_0=X_{i,s}$ is $\mathcal D_0$-measurable, and $\Sigma,Y_0,\dots,Y_{t-1}$ are $\mathcal D_t$-measurable. By (F), $\Pc(\Sigma=\sigma\mid\mathcal D_0)=1/m!$ for every ordering $\sigma$, and $\Pc(Y_t=y\mid\mathcal D_t)=K_{\Sigma(t)}(Y_{t-1},\{y\})$ for $1\le t\le m$. Fix $x_0,\dots,x_m\in\Omega$ and an ordering $\sigma$. Conditioning successively on $\mathcal D_m,\mathcal D_{m-1},\dots,\mathcal D_1,\mathcal D_0$ (tower property; all spaces are finite) gives
+\[
+\Pc\bigl(\Sigma=\sigma,\ Y_0=x_0,\dots,Y_m=x_m\bigm|\mathcal D_0\bigr)=\one\{X_{i,s}=x_0\}\,\frac1{m!}\prod_{t=1}^mK_{\sigma(t)}(x_{t-1},\{x_t\}).
+\]
+Indeed, at stage $t$ the factor $\one\{\Sigma=\sigma,Y_0=x_0,\dots,Y_{t-1}=x_{t-1}\}$ is $\mathcal D_t$-measurable, and on that event $\Pc(Y_t=x_t\mid\mathcal D_t)=K_{\sigma(t)}(x_{t-1},\{x_t\})$, a constant. Sum over $\sigma$ and condition on $\mathcal F^i_s\subseteq\mathcal D_0$. The right side is $\mathcal F^i_s$-measurable, so by \eqref{eq:pathlaw} the conditional law of the path given $\mathcal F^i_s$ is the round path law started at $X_{i,s}$. Summing over the paths in $\Gamma$ gives the first claim. The second claim is the case $\Gamma=\{\text{paths with }x_m\in A\}$.
+
+For the $q$-round claim, induct on $q$. The case $q=1$ is the second claim. If it holds for $q$, then, since $\mathcal F^i_s\subseteq\mathcal F^i_{s+q}$ and $X_{i,s+q}$ is $\mathcal F^i_{s+q}$-measurable (here $s+q\le L+3$),
+\[
+\Pc(X_{i,s+q+1}\in A\mid\mathcal F^i_s)=\Ec\bigl[K_1(X_{i,s+q},A)\bigm|\mathcal F^i_s\bigr]=\sum_{y}K_1^{q}(X_{i,s},\{y\})K_1(y,A)=K_1^{q+1}(X_{i,s},A).\qedhere
+\]
+\end{proof}
+
+\section{The pathwise bound}
+
+\begin{lemma}[pathwise RB bound]\label{lem:pathwise}
+Assume EX-A (the recorded value is the exact $o_j$ at the pre-draw state). On every realisation, for every island $r$ and every $j\in[p]$,
+\[
+|\PIP_{rj}-\one\{j\in S_0\}|\le \overline B_r+(1-\overline B_r)\,|o_j(S_0)-\one\{j\in S_0\}|
+\le \overline B_r+\max_{l\in[p]}|o_l(S_0)-\one\{l\in S_0\}|.
+\]
+\end{lemma}
+
+\begin{proof}
+If $S_0\notin\Omega$, then no path state (all lie in $\Omega$) equals $S_0$, so $B_{i,h}=1$ for all $(i,h)$ and $\overline B_r=1$; since $o_j\in[0,1]$, the left side is $\le1\le1+|c_l^\ast-\one\{l\in S_0\}|$ for any value $c_l^\ast$, and both inequalities hold. Assume now $S_0\in\Omega$.
+Write $c_j=\one\{j\in S_0\}$. By the triangle inequality,
+\[
+|\PIP_{rj}-c_j|=\Bigl|\frac1{4N}\sum_{h,i}\bigl(o_j(S_{i,h,j})-c_j\bigr)\Bigr|\le\frac1{4N}\sum_{h,i}|o_j(S_{i,h,j})-c_j| .
+\]
+Fix $(i,h)$. The state $S_{i,h,j}=X^{(k_{i,h}(j)-1)}_{i,h}$ is one of the states $X^{(0)}_{i,h},\dots,X^{(m-1)}_{i,h}$ of the path of measured round $h$.
+If $B_{i,h}=0$, every state of that path equals $S_0$ (so $S_0\in\Omega$), hence $S_{i,h,j}=S_0$ and $|o_j(S_{i,h,j})-c_j|=|o_j(S_0)-c_j|$.
+If $B_{i,h}=1$, then $|o_j(S_{i,h,j})-c_j|\le1$ because $o_j\in[0,1]$ and $c_j\in\{0,1\}$.
+Thus $|o_j(S_{i,h,j})-c_j|\le B_{i,h}+(1-B_{i,h})|o_j(S_0)-c_j|$. Averaging over $(i,h)$ gives the first inequality, and $(1-\overline B_r)\in[0,1]$ gives the second. The bound holds for each $j$, hence for $\max_j$.
+\end{proof}
+
+\begin{lemma}[truth term]\label{lem:truth}
+If $S_0\in\Omega$, then $\max_{j\in[p]}|o_j(S_0)-\one\{j\in S_0\}|\le u_\pi$.
+\end{lemma}
+
+\begin{proof}
+$\pi(S_0)>0$ since $\gamma_1>0$ on $\Omega$. Let $j\in S_0$. Then $S_0\setminus\{j\}\in\Omega$, $S_0\setminus\{j\}\neq S_0$, and
+\[
+1-o_j(S_0)=\frac{\gamma_1(S_0\setminus\{j\})}{\gamma_1(S_0)+\gamma_1(S_0\setminus\{j\})}\le\frac{\gamma_1(S_0\setminus\{j\})}{\gamma_1(S_0)}=\frac{\pi(S_0\setminus\{j\})}{\pi(S_0)}\le\frac{1-\pi(S_0)}{\pi(S_0)}=u_\pi .
+\]
+Let $j\notin S_0$. If $|S_0|=K$, then $o_j(S_0)=0$ and the bound is trivial. If $|S_0|<K$, then $S_0\cup\{j\}\in\Omega$, $S_0\cup\{j\}\ne S_0$, and
+\[
+o_j(S_0)=\frac{\gamma_1(S_0\cup\{j\})}{\gamma_1(S_0\cup\{j\})+\gamma_1(S_0)}\le\frac{\pi(S_0\cup\{j\})}{\pi(S_0)}\le\frac{1-\pi(S_0)}{\pi(S_0)}=u_\pi .
+\]
+In both displays we used $\pi(S')\le\pi(\Omega\setminus\{S_0\})=1-\pi(S_0)$ for $S'\in\Omega\setminus\{S_0\}$.
+\end{proof}
+
+\section{Expected bad-round fraction}
+
+Fix an island $r$ and a particle $i$; write $X_s=X_{i,s}$ and $\mathcal F_s=\mathcal F^i_s$ ($0\le s\le L+3$), and $\Pc$ for the conditional law given $\C$. All conditioning below is on $\mathcal F_s$ with $s\le L+3$, as required by Lemma~\ref{lem:markov}.
+Put $\bar\eta=\max_{x\in\R}K_1(x,\R^c)$ and $\bar\rho=K_1(S_0,\{S_0\}^c)$; by \eqref{eq:endpoint}, $\bar\eta\le\eta$ and $\bar\rho\le\rho$.
+
+\begin{lemma}[occupancy at round ends]\label{lem:occ}
+Under EX-A, EX-S, CAL and (B1), for every integer $0\le H\le L+4$,
+\[
+\Pc(X_H\neq S_0)\le\Pc(X_0\notin\R)+(1-a)^{\lfloor H/r_0\rfloor}+H(\bar\eta+\bar\rho).
+\]
+\end{lemma}
+
+\begin{proof}
+Let $k=\lfloor H/r_0\rfloor$, so $kr_0\le H$. Define the events
+\begin{align*}
+E_1&=\{X_0\notin\R\},\\
+E_2&=\{X_s\in\R,\ X_{s+1}\notin\R\ \text{for some }0\le s\le H-1\},\\
+E_3&=\{X_s=S_0,\ X_{s+1}\neq S_0\ \text{for some }0\le s\le H-1\},\\
+E_4&=\{X_{jr_0}\in\R\ \text{for }0\le j\le k-1\}\cap\{X_{jr_0}\neq S_0\ \text{for }1\le j\le k\}.
+\end{align*}
+(For $k=0$, $E_4$ is the whole space.)
+
+\emph{Inclusion: $\{X_H\neq S_0\}\subseteq E_1\cup E_2\cup E_3\cup E_4$.}
+Suppose $X_H\ne S_0$ and none of $E_1,E_2,E_3$ occurs. Since $E_1$ fails, $X_0\in\R$; since $E_2$ fails, induction on $s$ gives $X_s\in\R$ for all $0\le s\le H$. If $X_s=S_0$ for some $s\le H$, then, since $E_3$ fails, induction gives $X_{s'}=S_0$ for all $s\le s'\le H$, contradicting $X_H\neq S_0$. So $X_s\in\R\setminus\{S_0\}$ for all $0\le s\le H$; as $jr_0\le H$ for $0\le j\le k$, $E_4$ occurs.
+
+\emph{Bound on $E_2$ and $E_3$.} By the union bound and Lemma~\ref{lem:markov},
+\begin{align*}
+\Pc(E_2)&\le\sum_{s=0}^{H-1}\Pc(X_s\in\R,\,X_{s+1}\notin\R)\\&=\sum_{s=0}^{H-1}\Ec\bigl[\one\{X_s\in\R\}K_1(X_s,\R^c)\bigr]\le H\bar\eta,\\
+\Pc(E_3)&\le\sum_{s=0}^{H-1}\Pc(X_s=S_0,\,X_{s+1}\ne S_0)\\&=\sum_{s=0}^{H-1}\Ec\bigl[\one\{X_s=S_0\}K_1(S_0,\{S_0\}^c)\bigr]\le H\bar\rho .
+\end{align*}
+
+\emph{Bound on $E_4$.} For $1\le l\le k$ let $G_l=\{X_{jr_0}\in\R\text{ for }0\le j\le l-1\}\cap\{X_{jr_0}\ne S_0\text{ for }1\le j\le l\}$, and $G_0$ the whole space; so $E_4=G_k$. For $1\le l\le k$, $G_l=G_{l-1}\cap\{X_{(l-1)r_0}\in\R\}\cap\{X_{lr_0}\neq S_0\}$, and $G_{l-1}\cap\{X_{(l-1)r_0}\in\R\}\in\mathcal F_{(l-1)r_0}$. Since $(l-1)r_0\le H-r_0\le L+3$ and $lr_0\le H\le L+4$, the $q$-round part of Lemma~\ref{lem:markov} with $q=r_0$ gives $\Pc(X_{lr_0}=S_0\mid\mathcal F_{(l-1)r_0})=K_1^{r_0}(X_{(l-1)r_0},\{S_0\})$, which is $\ge a$ on $\{X_{(l-1)r_0}\in\R\}$ by (B1). Hence
+\[
+\Pc(G_l)=\Ec\Bigl[\one_{G_{l-1}\cap\{X_{(l-1)r_0}\in\R\}}\bigl(1-K_1^{r_0}(X_{(l-1)r_0},\{S_0\})\bigr)\Bigr]\le(1-a)\Pc(G_{l-1}),
+\]
+and $\Pc(E_4)=\Pc(G_k)\le(1-a)^k$.
+
+Summing the four bounds proves the lemma.
+\end{proof}
+
+\begin{lemma}[one measured round]\label{lem:round}
+Under EX-A, EX-S, CAL and (B1)--(B3), for every particle $i$ and $h\in\{1,2,3,4\}$,
+\[
+\Pc(B_{i,h}=1)\le\Pc(X_{i,0}\notin\R)+(1-a)^{\lfloor L/r_0\rfloor}+(L+3)\eta+(L+4)\rho .
+\]
+\end{lemma}
+
+\begin{proof}
+Let $H=L+h-1$, the number of terminal rounds before measured round $h$; $X^{(0)}_{i,h}=X_{i,H}$. If $B_{i,h}=1$ then either $X_{i,H}\ne S_0$, or $X_{i,H}=S_0$ and some state $X^{(k)}_{i,h}$, $1\le k\le m$, differs from $S_0$. By Lemma~\ref{lem:markov} with $s=H$ (the path of measured round $h$ is $Z^{(\cdot)}_{i,H+1}$) and (B3), the second event has probability $\Ec[\one\{X_{i,H}=S_0\}\mathrm{Path}_{S_0}(\{S_0\}^c)]\le\rho$. By Lemma~\ref{lem:occ},
+\[
+\Pc(B_{i,h}=1)\le\Pc(X_{i,0}\notin\R)+(1-a)^{\lfloor H/r_0\rfloor}+H(\bar\eta+\bar\rho)+\rho .
+\]
+Now $H\ge L$ and $0\le1-a\le1$ give $(1-a)^{\lfloor H/r_0\rfloor}\le(1-a)^{\lfloor L/r_0\rfloor}$; and $H\le L+3$, $\bar\eta\le\eta$, $\bar\rho\le\rho$ give $H(\bar\eta+\bar\rho)+\rho\le(L+3)\eta+(L+4)\rho$.
+\end{proof}
+
+\section{The theorem}
+
+\begin{theorem}[T23(ii)]\label{thm:main}
+\begin{enumerate}[label=(\alph*)]
+\item Under EX-A, on every realisation, for every island $r$: $\displaystyle\max_j|\PIP_{rj}-\one\{j\in S_0\}|\le\overline B_r+\max_j|o_j(S_0)-\one\{j\in S_0\}|$. If $S_0\notin\Omega$, the method does not define $o_j(S_0,1)$; it may then be given any real value, and the inequality holds for every such choice, because every path state lies in $\Omega$ and so $\overline B_r=1$.
+\item If $S_0\in\Omega$: $\max_j|o_j(S_0)-\one\{j\in S_0\}|\le u_\pi$.
+\item Under EX-A, EX-S, CAL and BASIN$(\R,r_0,a,\eta,\rho,\delta)$,
+\[
+\Ec\max_j|\PIP_j-\one\{j\in S_0\}|\le\delta+(1-a)^{\lfloor L/r_0\rfloor}+(L+4)(\eta+\rho)+u_\pi=:\mathcal B_n .
+\]
+\item Under the same hypotheses, $\Pc(\widehat{\mathrm{MPM}}\neq S_0)\le2\mathcal B_n$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) is Lemma~\ref{lem:pathwise} and (b) is Lemma~\ref{lem:truth}.
+
+(c) BASIN gives $S_0\in\R\subseteq\Omega$, so (a) and (b) give, for each island $r$, on every realisation,
+$\max_j|\PIP_{rj}-\one\{j\in S_0\}|\le\overline B_r+u_\pi$. For the primary estimator, by the triangle inequality,
+\begin{align*}
+\max_j|\PIP_j-\one\{j\in S_0\}|&=\max_j\Bigl|\frac14\sum_{r=1}^4\bigl(\PIP_{rj}-\one\{j\in S_0\}\bigr)\Bigr|\\
+&\le\frac14\sum_{r=1}^4\max_j|\PIP_{rj}-\one\{j\in S_0\}|\\
+&\le\frac14\sum_{r=1}^4\overline B_r+u_\pi .
+\end{align*}
+For each island, linearity of expectation and Lemma~\ref{lem:round} give
+\[
+\Ec\overline B_r=\frac1{4N}\sum_{h=1}^4\sum_{i=1}^N\Pc(B_{i,h}=1)
+\le\Ec\Bigl[\frac1N\sum_{i=1}^N\one\{X_{i,0}\notin\R\}\Bigr]+(1-a)^{\lfloor L/r_0\rfloor}+(L+3)\eta+(L+4)\rho,
+\]
+which is $\le\delta+(1-a)^{\lfloor L/r_0\rfloor}+(L+4)(\eta+\rho)$ by (B4). Taking $\Ec$ in the previous display proves (c). (When $u_\pi=+\infty$ the claim is trivial; under BASIN, $u_\pi<\infty$.)
+
+(d) If $\widehat{\mathrm{MPM}}\neq S_0$, there is $j$ with either $j\in S_0$ and $\PIP_j\le\frac12$, so $|\PIP_j-1|\ge\frac12$; or $j\notin S_0$ and $\PIP_j>\frac12$, so $|\PIP_j-0|>\frac12$. Hence $\{\widehat{\mathrm{MPM}}\ne S_0\}\subseteq\{\max_j|\PIP_j-\one\{j\in S_0\}|\ge\frac12\}$, and Markov's inequality and (c) give $\Pc(\widehat{\mathrm{MPM}}\ne S_0)\le2\mathcal B_n$.
+\end{proof}
+
+\begin{remark}
+No independence between particles is used: Lemma~\ref{lem:round} is a statement about one particle, and (c) uses only linearity of expectation over particles. No union bound over coordinates is used: the bad-round indicators $B_{i,h}$ do not depend on $j$, so one bound serves all $p$ coordinates at once.
+\end{remark}
+
+\begin{remark}
+Lemma~\ref{lem:occ} uses only (B1), with the end-of-round quantities $\bar\eta,\bar\rho$; (B2)--(B3) enter Lemma~\ref{lem:round} through $\bar\eta\le\eta$ and $\bar\rho\le\rho$ \eqref{eq:endpoint}. The path form of (B3) is needed once, in Lemma~\ref{lem:round}, because the Gibbs recordings of a measured round are taken at intermediate states of the round, not at its end.
+\end{remark}
+
+\end{document}
