@@ -268,7 +268,7 @@ def w(s=''):
     L.append(s)
 
 def esc(s):
-    return s.replace('|', '/').replace('\n', ' ')
+    return s.replace('\\|', '|').replace('|', '\\|').replace('\n', ' ')
 
 def reg_table(idrole):
     w('| Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |')
@@ -454,7 +454,8 @@ def stage3_oblig():
         w(f"- **Obligation (verbatim heading):** {esc(title)} — `{INPSRC}:L{a}`")
         st = [(a + j, l) for j, l in enumerate(block) if re.match(r'\s*-\s*\*Status', l) or re.match(r'\s*-\s*\*By item', l)]
         if key == 'N12':
-            st = [(a, '(regime table; per-regime status words are in the table at ' + f'L{a+3}-L{a+14})')]
+            tl = [a + j for j, l in enumerate(block) if l.startswith('|')]
+            st = [(a, f'(regime table; the per-regime status words are the table cells at L{tl[0]}-L{tl[-1]})')]
         for ln, s in st:
             w(f"- **Status (verbatim):** {esc(s.strip().lstrip('- '))} — `{INPSRC}:L{ln}`")
         if not st:

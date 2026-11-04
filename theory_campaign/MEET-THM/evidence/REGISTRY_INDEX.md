@@ -554,7 +554,7 @@ Each block: the list's own status string (verbatim, with line in `origin/theory/
 | `B2E-NBLH` | PROVED-UNDER | `origin/theory/W5-B2ENV:theory_campaign/W5-B2ENV/PROOF.md` · §2.2 Theorem NB′-LH | SF: none; XF: VERIFIED* (A-REV7) | XF-VERIFIED*(qualified) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L540` |
 | `OBG-BG3` | PROVED | `origin/theory/O-BGIBBS:theory_campaign/O-BGIBBS/REPORT.md` · §2 · Theorem BG3 (locked start set + terminal downhill: the final run alone) | SF: none; XF: VERIFIED (A-REV7) | XF-VERIFIED | 3b. Cross-family VERIFIED but no independent same-family check (LOCKABLE_v2.md:L190) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L612` |
 | `OBG-LH-lock` | PROOF SKETCH | `origin/theory/O-BGIBBS:theory_campaign/O-BGIBBS/REPORT.md` · §2 · Proposition LH-lock (premises of BG3 on LH exact Gram, p fixed) | SF: none; XF: VERIFIED* (A-REV7) | XF-VERIFIED*(qualified) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L614` |
-| `OBG-LH-lock-general` | — | `origin/theory/O-BGIBBS:theory_campaign/O-BGIBBS/REPORT.md` · LH-lock for general (ρ, ψ, g, c) with \/ψ\/ < ρ | SF: none; XF: ERROR (A-REV7) | FLAGGED-SUBCLAIM (SF none; XF ERROR) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L789` |
+| `OBG-LH-lock-general` | — | `origin/theory/O-BGIBBS:theory_campaign/O-BGIBBS/REPORT.md` · LH-lock for general (ρ, ψ, g, c) with \|ψ\| < ρ | SF: none; XF: ERROR (A-REV7) | FLAGGED-SUBCLAIM (SF none; XF ERROR) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L789` |
 | `OBG-T38b-BG3` | PROOF SKETCH | `origin/theory/O-BGIBBS:theory_campaign/O-BGIBBS/REPORT.md` · §1 headline 1 · T38(b) without LS0 on LH exact Gram, p fixed, every fixed c (final run alone) | SF: none; XF: VERIFIED* (A-REV7) | XF-VERIFIED*(qualified) | not listed | LS0: "…P(𝒪 ∩ {Ŝ ≠ S₀}) → 0 for v3 as run (no LS0) on LH with p fixed, every fixed c. Candidate N4 of T38 v3.…" [meaning] | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L615` |
 | `STAB-cert(A7)` | REFEREE | `origin/theory/A-REV7:theory_campaign/A-REV7/REVIEW.md` · §4 · analytic STAB certificate | SF: n/a; XF: referee-authored (Astra-authored) | REFEREE-AUTHORED (author is a cross-family referee) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L739` |
 | `B2LH-subfamily(A7)` | REFEREE | `origin/theory/A-REV7:theory_campaign/A-REV7/REVIEW.md` · §4 · concrete growing-p subfamily | SF: n/a; XF: referee-authored (Astra-authored) | REFEREE-AUTHORED (author is a cross-family referee) | not listed | LS0: "…and wrong) → 0 for the UNCHANGED method (no LS0) on an explicit, genuinely masked LH subfamily, with no…" [meaning] | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L740` |
@@ -594,6 +594,303 @@ Each block: the list's own status string (verbatim, with line in `origin/theory/
 | `N200` | PROVED (elementary, every n); Π(X) upper bound OPEN | `origin/theory/API-N200:theory_campaign/API-N200/REPORT.md (§2 Lemma 1, Theorem N200, Proposition 2); proofs origin/theory/API-N200:theory_campaign/API-N200/PROOF.md` | REPORT.md header: 'Run API-N200 (Fable 5.1) ... Everything here is a candidate: not reviewed, not adopted.' THEOREM_LIST.md R4(iii): 'N200 PROVED (elementary, author only)'.  Author: API-N200 = Fable 5.1 (REPORT.md:L3). | FLAG AUTHOR-ONLY | stated: 'the method as run' (EX-A and the definition of Ŝ; 'nothing about the sampler') | THEOREM_LIST.md R4(vi): 'N200 Lemma 1 and (b) ... certifiable' (no Lean file) |
 
 - **Flag summary for this item:** 1 × non-registry:AUTHOR-ONLY
+
+## 2. Method-meeting obligations N1–N17 (`THEOREM_REVISION_INPUTS.md` §3)
+
+Source for every N-block below: `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md` §3 (lines given per block). N18 exists only 'under item-1 Outcome 1' (line 247); item 1 closed as Outcome 2 (`origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md` §1.B), so N18 is **not opened** and is not counted. Family of origin: seats A, B = Fable 5.1 (Claude); seat C = gpt-6-astra (Codex); chair, PC1, PC2 = Opus 5.5 (`origin/theory/MEET-v31:theory_campaign/MEET-v31/MINUTES.md` lines 4–8; PC1/PC2 file headers).
+
+### N1
+
+- **Obligation (verbatim heading):** N1. Measured-round island identity for general bounded h (Theorem H crux; V1(a2)). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L124`
+- **Status (verbatim):** *Status:* **PROOF SKETCH**; PC1 claim 3 takes it as a premise. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L128`
+- **Check history as stated:** PROOF SKETCH; seat route R2C (gpt-6-astra) `:200-204`; R3A (Fable 5.1) 'unchecked'; PC1 claim 3 takes it as a premise.
+- **Flag:** AUTHOR-ONLY
+- **Method variant (only if stated):** not stated beyond hypotheses (frozen 𝓒; plain averages H_r(h) per INPUTS M9)
+- **Supports (verbatim):** *Supports:* M9, A1, C1(d) joint clause, D3(a) for general h. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L129`
+
+| Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |
+|---|---|---|---|---|---|---|---|
+| `Prop2(a,b,d,e)` | PROVED | `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md` · §2 · Prop. 2 (a),(b),(d),(e) | SF: VERIFIED (W5-LOCKBOOK); XF: GAP (A-REV4) | XF-ADVERSE:GAP (SF verified) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L260` |
+| `T26-Lemmas2-3` | PROVED | `origin/theory/W2-T26:theory_campaign/W2-T26/REPORT.md` · §2 · Lemmas 2, 3 | SF: VERIFIED (W5-LOCKBOOK); XF: VERIFIED (A-REV4) | XF-VERIFIED | 1. Strict candidates (LOCKABLE_v2.md:L43) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L273` |
+| `FMP-M1` | PROVED | `origin/theory/F-MASKPIP:theory_campaign/F-MASKPIP/REPORT.md` · §3 Proposition M1 (evidence-weighted PIP bound) | SF: none; XF: VERIFIED (A-REV9) | XF-VERIFIED | 3b. Cross-family VERIFIED but no independent same-family check (LOCKABLE_v2.md:L186) | grid: "…≤ δ₁ + ρ̄ + u_π for every island, regime and frozen grid, with no premise on the start.…" [meaning]; pooling: "…F-MASKPIP · REPORT.md §3 Proposition M1 (evidence-weighted PIP bound)…" [src] | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L570` |
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `T12` | PROVED-LOCKED (THEOREM_LIST.md V1(iii); THM-INV §1 row 9) | `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md (row T12 (T8), parts (i)-(iv); statement/proof paths and SHA-256 in that row)` | LOCKED_PROOFS.md review record: 'Stage A: statement APPROVED WITH CHANGES; proof verified. Stage B round 1 both not verified (same gap, fixed); round 2 both verified. Stage C edits E12-1, E12-2 give PROOF_v6.' Wave-1 header: 'Opus 5.5 lead; Stage A Astra #1; Stage B Astra #2 + Opus 5.5 xhigh; campaign review (Stage C) by Fable 5.1 (high) + Astra xhigh: correct.' | XF | not stated (hypotheses EX-A, EX-S, CAL, START per LOCKED_PROOFS.md; frozen calibration) | Lean T12Core.lean: PARTIAL (hstep hypothesis) -- origin/theory/L-LEAN:theory_campaign/L-LEAN/STATUS.md |
+| `PC1c3` | PROVED (PC1 claim 3); 'E[W_r ĥ_r] = π(h) is still a premise' | `origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC1_proof_check.md (Claim 3)` | PC1 (Opus 5.5). Claim originates from Seat C (gpt-6-astra) R1_C item 7. Takes the island identity (N1) as a premise. | XF | Ẑ-weighted self-normalised μ̂; finite R | none |
+
+### N2
+
+- **Obligation (verbatim heading):** N2. Integrated v3.1 core: Prop W, W-cal, LS0, stacking, GUARD-W. Code-audit facts plus executed replays, not mathematical theorems (TL:119). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L133`
+- **Status (verbatim):** *Status.* Lemma S PROVED. (a) PROVED by code reading, executed on smoke + 3/3 designs. (b) PROVED by code reading, **not executed**. (c) not in the production core. (d) PROVED (PC1 claim 6, deterministic). (e) **not audited** (API-AUDIT covered the serial v3 guard only). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L135`
+- **Check history as stated:** Lemma S PROVED; (a) code reading, executed on smoke + 3/3 designs; (b) code reading, not executed; (c) not in the production core; (d) PROVED (PC1 claim 6); (e) not audited.
+- **Flag:** SAME-FAMILY-ONLY (d); AUTHOR-ONLY (rest)
+- **Method variant (only if stated):** stated per part: v3.1 core with process workers; (c) 'LS0 ... not in the production core'
+- **Supports (verbatim):** *Supports:* M2, M5, M6, M7, card G2 premise (i), "the 2,394 study fits are v3.1 fits". — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L136`
+
+| Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |
+|---|---|---|---|---|---|---|---|
+| `IND-T` | PROVED | `origin/theory/W2-PREM:theory_campaign/W2-PREM/REPORT.md` · §1 · Theorem IND-T | SF: none (authored by W2-PREM); XF: VERIFIED* (A-REV1) | XF-VERIFIED*(qualified) | 3b. Cross-family VERIFIED but no independent same-family check (LOCKABLE_v2.md:L163) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L190` |
+| `Impl-lemmas` | PROVED | `origin/theory/W5-LOCKBOOK:theory_campaign/W5-LOCKBOOK/AUDIT.md` · §7 (GUARD, OUT, SR, STREAM, LS) | SF: none (authored by W5-LOCKBOOK); XF: none | FLAG AUTHOR-ONLY | 3e. Headline items with NO verification at all (LOCKABLE_v2.md:L228) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L366` |
+| `LemmaRO` | PROVED | `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md` · §2 · Lemma RO | SF: VERIFIED (W5-LOCKBOOK); XF: VERIFIED* (A-REV6) | XF-VERIFIED*(qualified) | 1. Strict candidates (LOCKABLE_v2.md:L39) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L258` |
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `MA-LemmaS` | PROVED (candidate; 'Every item is a candidate: not reviewed, not adopted') | `origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/PROOFS.md (## Lemma S)` | METH-AUDIT PROOFS.md header: 'Every item is a **candidate**: not reviewed, not adopted.' No registry row; no verifier or cross-family review found in the sources read.  Author: METH-AUDIT = Opus 5.5 (origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/REPORT.md:L3). | FLAG AUTHOR-ONLY | not stated (bounded top-c stores) | THEOREM_LIST.md V2(vi): 'certifiable' (no Lean file exists) |
+| `MA-PropW` | PROVED (code reading; executed check in REPORT §6) | `origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/PROOFS.md (## Proposition W)  [execution evidence: origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/REPORT.md §6; origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_concurrency_runs.md]` | Code reading by METH-AUDIT (Opus 5.5 per METH-AUDIT REPORT.md line 3); executed bitwise check: concurrency_runs.md lists 3 designs (p0500_S1_r001, p0500_S4_r001, p0500_S5_r002), each 'bitwise logZ TRUE pip TRUE hpm TRUE' (HQ re-run on Owls); METH-AUDIT REPORT.md says 'smoke problem and on 3/3 study designs'; THEOREM_LIST.md V2(iii) says '1/1 completed design ... treat METH-AUDIT's "3/3" as 1/1 + smoke' -> CONFLICT C-V2. | FLAG AUTHOR-ONLY | stated for the 'serial v3 production run' reproduced by workers; LS0 not in the production core (METH-AUDIT REPORT.md fact: 'LS0 is not in the production core (API-AUDIT fact 3)') | none (code-audit fact) |
+| `MA-Wcal` | PROVED (code reading only; not executed) | `origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/PROOFS.md (## Proposition W-cal)` | METH-AUDIT PROOFS.md heading: 'PROVED (code reading only; not executed)'. No other check found.  Author: METH-AUDIT = Opus 5.5 (origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/REPORT.md:L3). | FLAG AUTHOR-ONLY | not stated | none |
+| `MA-CorWR` | PROVED (by Proposition W(a, b) and the definition of the HPM) with a caveat (PROOFS.md); INPUTS: 'Cor W-R as written PROVED (PC1 claim 6)' | `origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/PROOFS.md (Corollary W-R); check: origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC1_proof_check.md Claim 6` | PC1 (Opus 5.5, Claude Work, read-only): 'Cor W-R as written (with its caveat): PROVED ... Post-search HPM monotone in R′ without the extra local search: FALSE (COUNTEREXAMPLE ...)'. Author METH-AUDIT is also an Opus 5.5 run.  Author: METH-AUDIT = Opus 5.5 (origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/REPORT.md:L3). | FLAG SAME-FAMILY-ONLY | stated for stacking R′ > 4 islands at fixed N_e on fresh streams; extra local search from the R=4 centre c4 kept (INPUTS M7) | none |
+| `PC1c6` | Cor W-R with caveat PROVED; 'post-search HPM monotone in R′ without the extra local search' FALSE (COUNTEREXAMPLE) | `origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC1_proof_check.md (Claim 6; scripts c6_ls.py, c6b_ls_downsets.py)` | PC1 (Opus 5.5). Dispute D3a; claim origin METH-AUDIT (Opus 5.5) Cor W-R. | FLAG SAME-FAMILY-ONLY | stacking with the extra local search from c4 (INPUTS M7) | none |
+
+### N3
+
+- **Obligation (verbatim heading):** N3. LS0-based T38(b1-LH) about the shipped method; e4 tie-DP invariant. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L140`
+- **Status (verbatim):** *Status.* (b1-LH) PROVED (candidate), XF VERIFIED (A-REV8) for "v3 + LS0"; bridge to code = N2(c), not done. DP invariant **OPEN**. R3A and R3B sketch the same route (unchecked): greedy choice j = 1..p, keeping j iff some size-k_min maximiser consistent with earlier choices contains j, each test a max-plus feasibility DP over (block, remaining size) (`v3_start.h:179–200`); polynomial, no tie enumeration. Study: 0/2,400 truncated; all had one tie. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L143`
+- **Check history as stated:** (b1-LH) PROVED (candidate), XF VERIFIED (A-REV8) for 'v3 + LS0'; bridge to code = N2(c) not done; DP invariant OPEN; R3A/R3B sketches 'unchecked' (both Fable 5.1).
+- **Flag:** XF for (b1-LH); AUTHOR-ONLY for e4 DP sketch
+- **Method variant (only if stated):** stated: 'v3 + LS0' (the shipped method with LS0); LH exact Gram, p ≤ n−1, g_max ≤ B < 2g_min
+- **Supports (verbatim):** *Supports:* M2, M12 e4. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L144`
+
+| Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |
+|---|---|---|---|---|---|---|---|
+| `T38-b1-LH` ⚑ CONFLICT | PROVED | `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md` · §2 · Theorem 5 (b1-LH) | SF: VERIFIED* (W5-VMASK); XF: VERIFIED* (A-REV8) | XF-VERIFIED*(qualified) | 1. Strict candidates (LOCKABLE_v2.md:L56) | LS0: "…On the explicit linked-hub family with LS0, every premise is proved and the reported HPM is…" [meaning] | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L330` |
+| `Thm-b1` | PROVED-UNDER | `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md` · §2 · Theorem b1 | SF: VERIFIED (W5-VMASK); XF: VERIFIED (A-REV8) | XF-VERIFIED | 3d. Conditional theorems (LOCKABLE_v2.md:L222) | LS0: "…With LS0, masked-regime consistency holds on any family with a…" [meaning] | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L328` |
+| `LS-score` | PROVED | `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md` · §2 · Lemma LS-score | SF: VERIFIED (W5-VMASK); XF: VERIFIED* (A-REV8) | XF-VERIFIED*(qualified) | 1. Strict candidates (LOCKABLE_v2.md:L53) | LS0: "…confirmed in v3_engine.h); IMPL caveat: LS0 must pass emit_centre = true (row 25)…" [sf] | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L326` |
+| `LemmaM` | PROVED | `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md` · §2 · Lemma M | SF: VERIFIED (W5-VMASK); XF: VERIFIED (A-REV8) | XF-VERIFIED | 1. Strict candidates (LOCKABLE_v2.md:L54) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L327` |
+| `LH-LAT` ⚑ CONFLICT | PROVED | `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md` · §2 · Prop. LH-LAT | SF: VERIFIED* (W5-VMASK); XF: VERIFIED* (A-REV8) | XF-VERIFIED*(qualified) | 1. Strict candidates (LOCKABLE_v2.md:L55) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L329` |
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `T21` | PROVED-LOCKED, CONDITIONAL (THEOREM_LIST.md R4(iii)); registry row Thm4-C1 gives the post-lock record | `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md (row T21 (HPM composition: C1 and routes (a)-(f)), wave 2)` | LOCKED_PROOFS.md: 'Statement check Astra xhigh round 2: approved (1 restart). Sol x2: round 1 verified, no findings. Astra xhigh closing review: verified. Claude Opus audit: correct. Fixes E1 and E3 applied (PROOF_v3 and STATEMENT.md); E2 ... skipped; E4 optional, skipped.' Lean t21_C1 sorry-free (L-LEAN STATUS.md). | XF | not stated (potential run / output event 𝒪) | T21HPM.lean sorry-free |
+
+### N4
+
+- **Obligation (verbatim heading):** N4. Finite-R accuracy of the Ẑ-weighted PIP and μ̂(h); the constant M under masking (V11). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L148`
+- **Status (verbatim):** (the block carries its status in the statement lines; see `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L148-L155`)
+- **Check history as stated:** (i) PROVED (PC1 claim 3; claim from Seat C = gpt-6-astra, checker Opus 5.5); (ii) Prop P(iii) with M1 (PROVED, candidate; M1 XF VERIFIED A-REV9); (iii) CONJECTURE/OPEN (V11, c ≥ 2); lower bound M ≳ 1/P_𝓒(cross) PROOF SKETCH; 'do not cite F-MASKPIP M3 (XF ERROR)'.
+- **Flag:** XF for (i); AUTHOR-ONLY for (iii)
+- **Method variant (only if stated):** Ẑ-weighted pooled estimator (primary); production grid for (iii)
+- **Supports (verbatim):** *Supports:* M4; M7's R′ guidance; R_eff reporting. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L152`
+
+| Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |
+|---|---|---|---|---|---|---|---|
+| `FMP-M1` | PROVED | `origin/theory/F-MASKPIP:theory_campaign/F-MASKPIP/REPORT.md` · §3 Proposition M1 (evidence-weighted PIP bound) | SF: none; XF: VERIFIED (A-REV9) | XF-VERIFIED | 3b. Cross-family VERIFIED but no independent same-family check (LOCKABLE_v2.md:L186) | grid: "…≤ δ₁ + ρ̄ + u_π for every island, regime and frozen grid, with no premise on the start.…" [meaning]; pooling: "…F-MASKPIP · REPORT.md §3 Proposition M1 (evidence-weighted PIP bound)…" [src] | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L570` |
+| `FMP-M3` | PROVED | `origin/theory/F-MASKPIP:theory_campaign/F-MASKPIP/REPORT.md` · §3 Proposition M3 (no conditional evidence theorem from first moments) | SF: none; XF: ERROR (A-REV9) | XF-ADVERSE:ERROR (no clean SF) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L572` |
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `MA-PropP` | PROVED (elementary) | `origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/PROOFS.md (## Proposition P); clause (iii) uses registry FMP-M1` | PROOFS.md: 'Every item is a candidate: not reviewed, not adopted.' THEOREM_LIST.md V3(iii): 'PROVED (candidate, elementary; METH-AUDIT PROOFS.md)'. PC1 'Not checked': 'MASKZPIP P3/C1 and Prop P were consulted only through their statements as quoted in THM-SYNTH.' PC1 claim 3 (Opus) proves a finite-R bound that INPUTS adds as (iii′).  Author: METH-AUDIT = Opus 5.5 (origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/REPORT.md:L3). | FLAG AUTHOR-ONLY | equal-weight vs Ẑ-weighted: stated explicitly -- (i) PIP^eq keeps single-island bias; (ii) PIP^zw consistent (THEOREM_LIST.md V3(i)); R fixed in advance | THEOREM_LIST.md V3(vi): (iv) identity 'yes'; no Lean file exists |
+| `PC1c3` | PROVED (PC1 claim 3); 'E[W_r ĥ_r] = π(h) is still a premise' | `origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC1_proof_check.md (Claim 3)` | PC1 (Opus 5.5). Claim originates from Seat C (gpt-6-astra) R1_C item 7. Takes the island identity (N1) as a premise. | XF | Ẑ-weighted self-normalised μ̂; finite R | none |
+
+### N5
+
+- **Obligation (verbatim heading):** N5. Calibration contract. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L156`
+- **Status (verbatim):** (the block carries its status in the statement lines; see `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L156-L161`)
+- **Check history as stated:** (a) assembly of T12/T31(i) (PROVED-LOCKED), IND-T (PROVED, XF VERIFIED*, A-REV1 only), Lemma RO; (b) OPEN.
+- **Flag:** XF for T12/T31(i); single XF check for IND-T
+- **Method variant (only if stated):** stated: ESS 0.90 (pilot = grid) is a hypothesis; frozen 𝓒 on streams 0-9
+
+| Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |
+|---|---|---|---|---|---|---|---|
+| `IND-T` | PROVED | `origin/theory/W2-PREM:theory_campaign/W2-PREM/REPORT.md` · §1 · Theorem IND-T | SF: none (authored by W2-PREM); XF: VERIFIED* (A-REV1) | XF-VERIFIED*(qualified) | 3b. Cross-family VERIFIED but no independent same-family check (LOCKABLE_v2.md:L163) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L190` |
+| `LemmaRO` | PROVED | `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md` · §2 · Lemma RO | SF: VERIFIED (W5-LOCKBOOK); XF: VERIFIED* (A-REV6) | XF-VERIFIED*(qualified) | 1. Strict candidates (LOCKABLE_v2.md:L39) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L258` |
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `T12` | PROVED-LOCKED (THEOREM_LIST.md V1(iii); THM-INV §1 row 9) | `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md (row T12 (T8), parts (i)-(iv); statement/proof paths and SHA-256 in that row)` | LOCKED_PROOFS.md review record: 'Stage A: statement APPROVED WITH CHANGES; proof verified. Stage B round 1 both not verified (same gap, fixed); round 2 both verified. Stage C edits E12-1, E12-2 give PROOF_v6.' Wave-1 header: 'Opus 5.5 lead; Stage A Astra #1; Stage B Astra #2 + Opus 5.5 xhigh; campaign review (Stage C) by Fable 5.1 (high) + Astra xhigh: correct.' | XF | not stated (hypotheses EX-A, EX-S, CAL, START per LOCKED_PROOFS.md; frozen calibration) | Lean T12Core.lean: PARTIAL (hstep hypothesis) -- origin/theory/L-LEAN:theory_campaign/L-LEAN/STATUS.md |
+| `T31(i)` | PROVED-LOCKED (THEOREM_LIST.md V1(iii)) | `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md (row T31(i) (T22, certificates))` | LOCKED_PROOFS.md: 'Stage A 1 round (verified). Stage B rounds 1-3, all verified by Astra #2 and Opus xhigh. Stage C: no edits.' Wave-1 header as T12. | XF | not stated | none |
+
+### N6
+
+- **Obligation (verbatim heading):** N6. Output-event coverage statements. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L162`
+- **Status (verbatim):** *Status:* (a) **PROVED** (potential run; output form CORRECT WITH AMENDMENT). (b) **PROVED modulo premise (i)**, whose GUARD-W part is the code-audit obligation N2(e). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L167`
+- **Check history as stated:** (a) PROVED (potential run; output form CORRECT WITH AMENDMENT) -- PC1 claim 2 (Opus 5.5; claim from Seat C); (b) PROVED modulo premise (i) whose GUARD-W part is the N2(e) code-audit obligation (PC2).
+- **Flag:** XF (claim origin Astra, checker Claude); premise GUARD-W unaudited
+- **Method variant (only if stated):** potential run vs output event: stated
+- **Supports (verbatim):** *Supports:* M10, M11. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L168`
+
+| Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |
+|---|---|---|---|---|---|---|---|
+| `LemmaRO` | PROVED | `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md` · §2 · Lemma RO | SF: VERIFIED (W5-LOCKBOOK); XF: VERIFIED* (A-REV6) | XF-VERIFIED*(qualified) | 1. Strict candidates (LOCKABLE_v2.md:L39) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L258` |
+| `IND-T` | PROVED | `origin/theory/W2-PREM:theory_campaign/W2-PREM/REPORT.md` · §1 · Theorem IND-T | SF: none (authored by W2-PREM); XF: VERIFIED* (A-REV1) | XF-VERIFIED*(qualified) | 3b. Cross-family VERIFIED but no independent same-family check (LOCKABLE_v2.md:L163) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L190` |
+| `Prop2(a,b,d,e)` | PROVED | `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md` · §2 · Prop. 2 (a),(b),(d),(e) | SF: VERIFIED (W5-LOCKBOOK); XF: GAP (A-REV4) | XF-ADVERSE:GAP (SF verified) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L260` |
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `T31(i)` | PROVED-LOCKED (THEOREM_LIST.md V1(iii)) | `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md (row T31(i) (T22, certificates))` | LOCKED_PROOFS.md: 'Stage A 1 round (verified). Stage B rounds 1-3, all verified by Astra #2 and Opus xhigh. Stage C: no edits.' Wave-1 header as T12. | XF | not stated | none |
+| `PC1c2` | PROVED for the potential run; output-event version CORRECT WITH AMENDMENT (PC1 claim 2) | `origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC1_proof_check.md (Claim 2)` | PC1 (Opus 5.5): premises (i)-(iv) required; (i) Lemma RO/GUARD 'unreviewed W2-BOOK premise' (PC2 C1(b)). Claim originates from Seat C (gpt-6-astra). | XF | potential run vs output event 𝒪 stated explicitly | none |
+| `PC2` | Lemma M PROVED; C1(a) CORRECT WITH AMENDMENT (third clause FALSE); C1(b) PROVED (unscored sentence FALSE); C2 PROVED CONDITIONAL on PW2; C3, C4 PROVED with amendments; C5/C6 CORRECT WITH AMENDMENT (PC2 verdicts) | `origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC2_certificate_card.md (Lemma M, C1-C6, summary table)` | PC2 (Opus 5.5, Claude Work, read-only); O-CERT author = Opus (registry rows OCERT-*); A-REV9 (Astra) earlier reviewed O-CERT (registry OCERT-* XF cells). PC2: 'Premise (i), Lemma RO and GUARD, is still the unreviewed W2-BOOK premise.' | XF | POST HOC card (INPUTS M10); exact arithmetic ('numerical implementation of an exact-arithmetic certificate') | none |
+
+### N7
+
+- **Obligation (verbatim heading):** N7. Certificate card G1/G2/L/R (PC2 verdicts; card as adopted in M10). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L172`
+- **Status (verbatim):** *By item:* **G1** (C1(a) amended, excl. Ŝ) PROVED, deterministic. **G2** (C1(b)) PROVED, output event, joint. **L1** (C3(a); empty maxima +∞; fp margin 2η_F) CORRECT WITH AMENDMENT; on the finally returned Ŝ. **L2** (C3(b)) PROVED. **L3** (C3(c), realised 𝒮, \|𝒯\| ≥ 2) amended form PROVED; premise holds under LS0. **R** (C4 + Lemma M) PROVED with amendments (drop \|L\| > K leaves; S ⊆ U, \|S\| ≤ K; SC covers Φ and M); C4(b) PROVED as written (isolating {Ŝ} is sharpness only; R3C withdrew). Card bound (C6) PROVED modulo premise (i). C6′ PROVED. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L173`
+- **Check history as stated:** PC2 verdicts (Opus 5.5; O-CERT author also Opus): G1 PROVED deterministic; G2 PROVED output event joint; L1 CORRECT WITH AMENDMENT; L2 PROVED; L3 amended PROVED; R PROVED with amendments; plus A-REV9 (Astra) verdicts in registry OCERT-* rows. FALSE items listed in INPUTS N7.
+- **Flag:** XF (A-REV9) + SAME-FAMILY (PC2)
+- **Method variant (only if stated):** POST HOC card (INPUTS M10); exact-arithmetic; numerical label until SC validated
+- **Supports (verbatim):** *Supports:* M10. *If SC is never validated:* the label stays (POST HOC). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L178`
+
+| Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |
+|---|---|---|---|---|---|---|---|
+| `OCERT-LemmaM` | PROVED | `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md` · §3 · Lemma M (Q_S ↓, D_S ↑ in S) | SF: VERIFIED (O-VCERT); XF: VERIFIED (A-REV9) | XF-VERIFIED | 1. Strict candidates (LOCKABLE_v2.md:L62) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L403` |
+| `OCERT-C1` | PROVED | `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md` · §3 · Thm C1 (one-sided global certificate) | SF: VERIFIED* (O-VCERT); XF: ERROR (A-REV9) | XF-ADVERSE:ERROR (SF verified) | 2. REPAIRED, not yet re-reviewed (LOCKABLE_v2.md:L104) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L404` |
+| `OCERT-C2` | PROVED-UNDER | `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md` · §3 · Thm C2 (two-sided band) | SF: VERIFIED (O-VCERT); XF: VERIFIED (A-REV9) | XF-VERIFIED | 3d. Conditional theorems (LOCKABLE_v2.md:L224) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L405` |
+| `OCERT-C3` | PROVED | `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md` · §3 · Thm C3 (exact relative certificates) | SF: VERIFIED (O-VCERT); XF: VERIFIED* (A-REV9) | XF-VERIFIED*(qualified) | 1. Strict candidates (LOCKABLE_v2.md:L63) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L406` |
+| `OCERT-C4` | PROVED | `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md` · §3 · Thm C4 (box certificate) | SF: VERIFIED (O-VCERT); XF: VERIFIED* (A-REV9) | XF-VERIFIED*(qualified) | 1. Strict candidates (LOCKABLE_v2.md:L64) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L407` |
+| `OCERT-C5` | PROVED | `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md` · §3 · Cor. C5 (posterior-miss certificate) | SF: VERIFIED* (O-VCERT); XF: ERROR (A-REV9) | XF-ADVERSE:ERROR (SF verified) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L408` |
+| `OCERT-C6` | PROVED | `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md` · §3 · Thm C6 (per-fit certificate card) | SF: VERIFIED* (O-VCERT); XF: GAP (A-REV9) | XF-ADVERSE:GAP (SF verified) | 2. REPAIRED, not yet re-reviewed (LOCKABLE_v2.md:L105) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L409` |
+| `OCERT-§4` ⚑ CONFLICT | — | `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md` · §4 (p = 500 illustration) | SF: GAP (O-VCERT); XF: none | FLAGGED-SUBCLAIM (SF GAP; XF none) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L787` |
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `PC2` | Lemma M PROVED; C1(a) CORRECT WITH AMENDMENT (third clause FALSE); C1(b) PROVED (unscored sentence FALSE); C2 PROVED CONDITIONAL on PW2; C3, C4 PROVED with amendments; C5/C6 CORRECT WITH AMENDMENT (PC2 verdicts) | `origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC2_certificate_card.md (Lemma M, C1-C6, summary table)` | PC2 (Opus 5.5, Claude Work, read-only); O-CERT author = Opus (registry rows OCERT-*); A-REV9 (Astra) earlier reviewed O-CERT (registry OCERT-* XF cells). PC2: 'Premise (i), Lemma RO and GUARD, is still the unreviewed W2-BOOK premise.' | XF | POST HOC card (INPUTS M10); exact arithmetic ('numerical implementation of an exact-arithmetic certificate') | none |
+
+### N8
+
+- **Obligation (verbatim heading):** N8. PART-pairing for the study generator g = 5 (2g ≤ B). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L181`
+- **Status (verbatim):** *Status:* **OPEN**; Prop Q **PROOF SKETCH** (R2B row 6′); W7-PART CE2 COUNTEREXAMPLE (unequal groups not merged). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L183`
+- **Check history as stated:** OPEN; Prop Q PROOF SKETCH (R2B row 6′, Fable 5.1); W7-PART CE2 COUNTEREXAMPLE; W7-PART 'author only; A-REV6 pending' (registry section header), later A-REV6/A-REV9 verdicts per INV §2 ledger.
+- **Flag:** AUTHOR-ONLY (Prop Q)
+- **Method variant (only if stated):** study generator g = 5 (2g ≤ B = 14) outside W7-PART's g ≤ B < 2g hypothesis (INPUTS M12 e1)
+- **Supports (verbatim):** *Supports:* M12 e1. *If it fails:* e1 survives (changing B or the cut is WORKHORSE); the study generator is disclosed as outside every selection theorem. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L184`
+
+| Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |
+|---|---|---|---|---|---|---|---|
+| `PART-ThmA` | PROVED | `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md` · §1 / PROOF.md · Theorem A (deterministic: laminarity, blocks = groups) | SF: none; XF: VERIFIED* (A-REV9) | XF-VERIFIED*(qualified) | 3b. Cross-family VERIFIED but no independent same-family check (LOCKABLE_v2.md:L197) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L660` |
+| `PART-ThmB` | PROVED | `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md` · §1 / PROOF.md · Theorem B | SF: none; XF: VERIFIED* (A-REV6) | XF-VERIFIED*(qualified) | 3b. Cross-family VERIFIED but no independent same-family check (LOCKABLE_v2.md:L198) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L663` |
+| `PART-CorB` | PROVED | `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md` · §1 / PROOF.md · Corollary B | SF: none; XF: GAP (A-REV9) | XF-ADVERSE:GAP (no clean SF) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L664` |
+| `PART-ThmC` | PROVED | `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md` · §1 / PROOF.md · Lemma L3, Theorem C, Corollary C (independent groups) | SF: none; XF: GAP (A-REV6) | XF-ADVERSE:GAP (no clean SF) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L665` |
+| `PART-CE2` | COUNTEREXAMPLE | `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md` · §1 / PROOF.md · CE2 (2g_min ≤ B) | SF: none; XF: ERROR (A-REV6) | XF-ADVERSE:ERROR (no clean SF) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L668` |
+| `PART-pairing` | OPEN | `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md` · §1 / PROOF.md · which groups share a block when 2g ≤ B (the study's g = 5) | SF: none; XF: none | FLAG AUTHOR-ONLY | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L670` |
+| `PART-kappa` | PROOF SKETCH | `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md` · §1 / PROOF.md · κ_C = 2I* bookkeeping | SF: none; XF: none | FLAG AUTHOR-ONLY | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L666` |
+
+### N9
+
+- **Obligation (verbatim heading):** N9. V5: kernel reversibility, self-adjointness, exact start sampler. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L187`
+- **Status (verbatim):** *Status:* by construction, consultant-checked, **no registry row** (INV §5 item 12; TL:77); one-page route (TL V1(v)). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L189`
+- **Check history as stated:** 'by construction, consultant-checked, no registry row' (INPUTS N9; THEOREM_LIST.md V1(iii); THM-INV §5.12). LOCKED_PROOFS.md lists T09 (wave 1) stating exactly the elementary-kernel reversibility, round self-adjointness, exact start sampler.
+- **Flag:** CONFLICT C-V5
+- **Method variant (only if stated):** not stated
+- **Supports (verbatim):** *Supports:* M1, V1, N1, rejection of C10. *If it fails:* V1 fails; the method question reopens. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L190`
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `T09` | PROVED-LOCKED (wave 1) -- THEOREM_LIST.md V1(iii) says V5 'has no registry row' | `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md (row T09 (T7), all parts (i)-(v)); statement: origin/theory/campaign:Docs/Theory/proofs/T09_T7_kernel_validity/STATEMENT.md lines 35-45 ((ii) each elementary kernel q_phi-reversible; (iii) K_phi q_phi-invariant and self-adjoint)` | LOCKED_PROOFS.md: 'Stage A 2 rounds (1 fatal in the lead's own gloss of (v), fixed). Stage B 2 rounds, both verified. Stage C: no edits.' Wave-1 header as T12. | XF | not stated | none |
+
+### N10
+
+- **Obligation (verbatim heading):** N10. V10: L versus t_mix. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L193`
+- **Status (verbatim):** *Status:* **NONE / OPEN** (INV row 6); YWJ/ZYVR route blocked as stated (INV §2 D1). Validity (V1, N1) holds at any L; L affects accuracy and variance. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L195`
+- **Check history as stated:** NONE / OPEN (INV row 6); YWJ/ZYVR route blocked as stated (INV §2 D1).
+- **Flag:** NONE-STATED
+- **Method variant (only if stated):** not stated
+- **Supports (verbatim):** *Supports:* M1. *If it fails:* theorems needing mixing carry L as a hypothesis. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L196`
+
+### N11
+
+- **Obligation (verbatim heading):** N11. ℓ versus the moves needed. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L199`
+- **Status (verbatim):** *Status:* on LH with c ≤ s₀ fixed, "eventually true" (R2B row 7; elementary, unchecked); growing s₀: **OPEN**. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L201`
+- **Check history as stated:** 'eventually true' on LH with c ≤ s₀ fixed (R2B row 7; elementary, unchecked, Fable 5.1); growing s₀ OPEN.
+- **Flag:** AUTHOR-ONLY
+- **Method variant (only if stated):** stated: LH, c ≤ s₀ fixed
+- **Supports (verbatim):** *Supports:* M2. *If it fails:* R3/R5 carry ℓ as a hypothesis; growing support would need a bigger budget (method-induced). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L202`
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `PC1c1` | PROVED (PC1 claim 1) | `origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC1_proof_check.md (Claim 1; scripts 2026-11-03_PC1_scripts/c1_bound.py)` | PC1 (Opus 5.5, Claude Work): 'Verdict: PROVED ... Enumeration: 4/4 designs pass.' Claim originates from Seat C (gpt-6-astra) R1_C §4 item 4 (PC1 heading). | XF | not stated (spec's m(S) as written) | none |
+
+### N12
+
+- **Obligation (verbatim heading):** N12. General (n, p) scope, per regime (S2 P-9 theory scope; R2A–R2C §4). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L205`
+- **Status (verbatim):** (regime table; the per-regime status words are the table cells at L207-L215) — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L205`
+- **Check history as stated:** Regime table: n ≤ 5 exact for all p (chair-checked, Opus 5.5); n = 2 extension PROOF SKETCH (R2C, gpt-6-astra); p-fold-tie statement elementary, unchecked (R3B, Fable 5.1); eventual exact dispatch seat-proved, unchecked (R2C).
+- **Flag:** AUTHOR-ONLY (seat sketches)
+- **Method variant (only if stated):** by regime; AM01 (amendment: method must apply for every (n,p)): origin/theory/campaign:theory_campaign/MEET-v31/evidence/AMEND_01_general_np.md or origin/theory/MEET-v31 same path
+
+| Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |
+|---|---|---|---|---|---|---|---|
+| `T03♯` | PROVED | `origin/theory/W1-T03R:theory_campaign/W1-T03R/REPORT.md` · §1 · Theorem T03♯ (i)–(v) | SF: VERIFIED (W2-VT03R); XF: VERIFIED (A-REV2) | XF-VERIFIED | 1. Strict candidates (LOCKABLE_v2.md:L18) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L134` |
+| `PXN-P6` ⚑ CONFLICT | PROVED | `origin/theory/W3-PXN:theory_campaign/W3-PXN/REPORT.md` · §2 · P6 | SF: VERIFIED (W5-VMASK); XF: GAP (A-REV6) | XF-ADVERSE:GAP (SF verified) | not listed | LS0: "…The repair-lattice condition holds at S° so LS0 scores and certifies S₀ in c moves (certification margin…" [meaning] | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L288` |
+
+### N13
+
+- **Obligation (verbatim heading):** N13. Retention lemma. If S₀ ∈ 𝒮 and δ₁ < ½ then S₀ ∈ 𝒯 = top_{40p+1}(𝒮), and the HPM and MPM^𝒯 certificates are equivalent. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L220`
+- **Status (verbatim):** *Status:* **PROVED** (PC1 claim 5; R2C D7); premises Lemma S and the inheritance merge (PC2 code facts). Unqualified retention stays false. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L221`
+- **Check history as stated:** PROVED (PC1 claim 5; R2C D7); premises Lemma S and the inheritance merge (PC2 code facts). Unqualified retention stays false.
+- **Flag:** SAME-FAMILY (claim origin Seat B Fable 5.1 / checker Opus 5.5) + Astra seat R2C
+- **Method variant (only if stated):** holds under LS0 (card L3 premise)
+- **Supports (verbatim):** *Supports:* A3 ∘ R5, card L3, M2's eviction wording. *Cell:* row 11 × A. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L222`
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `PC1c5` | (a) PROVED, ½ sharp; (b) 'needs ⅓' FALSE; amended: δ₁ < ½ suffices (PC1 claim 5) | `origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC1_proof_check.md (Claim 5)` | PC1 (Opus 5.5). Claim originates from Seat B (Fable 5.1) R1_B §2.2 -- checker and claimant are both Claude-family. | FLAG SAME-FAMILY-ONLY | not stated (reported HPM / top-store MPM) | none |
+| `MZ-P3` | PROVED (P3 top store, deterministic); P3′ conditional on T03 + discovery | `origin/theory/API-MASKZPIP:theory_campaign/API-MASKZPIP/REPORT.md (§2 P3, P3′)` | as MZ-E1E2 (candidate; not reviewed). PC1 claim 5 (Opus 5.5; origin of claim: Seat B, Fable 5.1) amends the MPM^𝒯 threshold to δ₁ < ½ (sharp) -- see N13.  Author: API-MASKZPIP = Opus 5.5 (origin/theory/API-MASKZPIP:theory_campaign/API-MASKZPIP/REPORT.md:L3). | FLAG AUTHOR-ONLY | not stated (needs only S₀ ∈ 𝒯; no grid, mixing or second-moment hypothesis, REPORT.md headline 3) | THEOREM_LIST.md A3(vi): finite, 'yes' (no Lean file) |
+
+### N14
+
+- **Obligation (verbatim heading):** N14. Stacking statements. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L224`
+- **Status (verbatim):** (the block carries its status in the statement lines; see `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L224-L231`)
+- **Check history as stated:** (a) PROVED (PC1 claim 6); (b) per-run for any R′ declared before final randomness (PC1 claim-6 table); (c) IND-T for streams 10..9+R′: code audit, not done; (d) per-record card.
+- **Flag:** SAME-FAMILY-ONLY
+- **Method variant (only if stated):** stacking with the extra search from c4 (INPUTS M7)
+- **Supports (verbatim):** *Supports:* M7. *Without the extra search:* PC1's three uses (monotonicity, D_n(R′) ≤ D_n(4), transfer of R = 4 measurements) go; no listed theorem affected. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L229`
+
+| Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |
+|---|---|---|---|---|---|---|---|
+| `IND-T` | PROVED | `origin/theory/W2-PREM:theory_campaign/W2-PREM/REPORT.md` · §1 · Theorem IND-T | SF: none (authored by W2-PREM); XF: VERIFIED* (A-REV1) | XF-VERIFIED*(qualified) | 3b. Cross-family VERIFIED but no independent same-family check (LOCKABLE_v2.md:L163) | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L190` |
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `MA-CorWR` | PROVED (by Proposition W(a, b) and the definition of the HPM) with a caveat (PROOFS.md); INPUTS: 'Cor W-R as written PROVED (PC1 claim 6)' | `origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/PROOFS.md (Corollary W-R); check: origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC1_proof_check.md Claim 6` | PC1 (Opus 5.5, Claude Work, read-only): 'Cor W-R as written (with its caveat): PROVED ... Post-search HPM monotone in R′ without the extra local search: FALSE (COUNTEREXAMPLE ...)'. Author METH-AUDIT is also an Opus 5.5 run.  Author: METH-AUDIT = Opus 5.5 (origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/REPORT.md:L3). | FLAG SAME-FAMILY-ONLY | stated for stacking R′ > 4 islands at fixed N_e on fresh streams; extra local search from the R=4 centre c4 kept (INPUTS M7) | none |
+| `PC1c6` | Cor W-R with caveat PROVED; 'post-search HPM monotone in R′ without the extra local search' FALSE (COUNTEREXAMPLE) | `origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC1_proof_check.md (Claim 6; scripts c6_ls.py, c6b_ls_downsets.py)` | PC1 (Opus 5.5). Dispute D3a; claim origin METH-AUDIT (Opus 5.5) Cor W-R. | FLAG SAME-FAMILY-ONLY | stacking with the extra local search from c4 (INPUTS M7) | none |
+
+### N15
+
+- **Obligation (verbatim heading):** N15. Work and depth at the implemented level (D1(b) restated). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L232`
+- **Status (verbatim):** *Status:* Prop D PROVED (counting); calibration share seat-derived (R2A, R2B), not proof-checked. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L234`
+- **Check history as stated:** Prop D PROVED (counting); calibration share seat-derived (R2A Fable 5.1, R2B Fable 5.1), not proof-checked.
+- **Flag:** AUTHOR-ONLY
+- **Method variant (only if stated):** stated: island-parallel v3.1 (D1(b) restated); particle-parallel is v3.2 only
+- **Supports (verbatim):** *Supports:* M5, M8, M13. *If it fails:* recount. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L235`
+
+| Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |
+|---|---|---|---|---|---|---|---|
+| `T32(i)` ⚑ CONFLICT | PROVED | `origin/theory/W5-LOCKBOOK:theory_campaign/W5-LOCKBOOK/REPORT.md` · §1.4 + PROOF.md §T32 (F-REFINE CARDS.md, written earlier, lists it as CONJECTURE) | SF: VERIFIED (W7-SEC); XF: none | FLAG SAME-FAMILY-ONLY | 3a. Author PROVED + same-family VERIFIED, no cross-family review yet (LOCKABLE_v2.md:L127) | LS0: "…mapping (re-check on any engine change); LS0 adds 1+(ℓ+1)M_p…" [prem] | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L252` |
+| `Cost-T38` ⚑ CONFLICT | PROVED-UNDER | `origin/theory/W1-T38E:theory_campaign/W1-T38E/REPORT.md` · Cost corollary | SF: VERIFIED (W3-VT38E); XF: GAP (A-REV5) | XF-ADVERSE:GAP (SF verified) | not listed | LS0: "…Scores ≤ T32(i)'s ceiling + LS0's (ℓ+1)max_k[p+k(p−k)].…" [meaning] | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L251` |
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `MA-PropD` | PROVED (counting, given the code's structure) | `origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/PROOFS.md (## Proposition D)` | PROOFS.md: candidate, not reviewed. THEOREM_LIST.md D1(iii): 'Prop D PROVED (counting, given the code's structure; METH-AUDIT)'. No other check found.  Author: METH-AUDIT = Opus 5.5 (origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/REPORT.md:L3). | FLAG AUTHOR-ONLY | particle-parallel islands (D_PP) vs island-parallel (D_PEL): stated in THEOREM_LIST.md D1(i)(b)(c); INPUTS M13: 'Free of N, H, R' dropped for v3.1 (v3.2 only) | THEOREM_LIST.md D1(vi): 'of low value' |
+
+### N16
+
+- **Obligation (verbatim heading):** N16. Floating-point contract. Validated SC(η_F) for scores, Φ, M, Z_𝒯⁻, and VAL-FP(η, ε) for Ẑ at production size. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L238`
+- **Status (verbatim):** *Status:* **OPEN.** VAL-FP MEASURED at p ≤ 40 only; η a documented heuristic (`v3_score.h:240`); PC2's exact-rational test found no violation in 60 cases (max \|error\|/η = 0.069): not a proof. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L239`
+- **Check history as stated:** OPEN. VAL-FP MEASURED at p ≤ 40 only; PC2 exact-rational test: no violation in 60 cases (max \|error\|/η = 0.069): 'not a proof'. Registry Prop2(f) SF GAP and XF GAP.
+- **Flag:** NONE-STATED
+- **Method variant (only if stated):** floating-point contract at production size
+- **Supports (verbatim):** *Supports:* M10 labels, G2 fp coverage, e2, e5. *If never done:* labels stay "numerical". — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L240`
+
+| Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |
+|---|---|---|---|---|---|---|---|
+| `Prop2(f)` | PROVED-UNDER | `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md` · §2 · Prop. 2 (f) | SF: GAP (W5-LOCKBOOK); XF: GAP (A-REV4) | XF-ADVERSE:GAP (no clean SF) | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L262` |
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `PC2` | Lemma M PROVED; C1(a) CORRECT WITH AMENDMENT (third clause FALSE); C1(b) PROVED (unscored sentence FALSE); C2 PROVED CONDITIONAL on PW2; C3, C4 PROVED with amendments; C5/C6 CORRECT WITH AMENDMENT (PC2 verdicts) | `origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC2_certificate_card.md (Lemma M, C1-C6, summary table)` | PC2 (Opus 5.5, Claude Work, read-only); O-CERT author = Opus (registry rows OCERT-*); A-REV9 (Astra) earlier reviewed O-CERT (registry OCERT-* XF cells). PC2: 'Premise (i), Lemma RO and GUARD, is still the unreviewed W2-BOOK premise.' | XF | POST HOC card (INPUTS M10); exact arithmetic ('numerical implementation of an exact-arithmetic certificate') | none |
+
+### N17
+
+- **Obligation (verbatim heading):** N17. Analytic bounds on Z and π(Ŝ). Z ≤ C_n(2b₀ + yᵀy/(n+1))^{−ν}; equivalently π(Ŝ) ≥ e^{F(Ŝ)}(2b₀ + yᵀy/(n+1))^{ν}/C_n. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L243`
+- **Status (verbatim):** *Status:* **PROVED** (PC1 claim 1; PC2 C1(c)); ≈ 530 nats loose at n = 200. Supports M14(ii). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L244`
+- **Check history as stated:** PROVED (PC1 claim 1, Opus 5.5; claim from Seat C gpt-6-astra; PC2 C1(c) PROVED relative to T31(c)).
+- **Flag:** XF (origin Astra, checker Claude)
+- **Method variant (only if stated):** not stated (spec's m(S) as written)
+
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `PC1c1` | PROVED (PC1 claim 1) | `origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC1_proof_check.md (Claim 1; scripts 2026-11-03_PC1_scripts/c1_bound.py)` | PC1 (Opus 5.5, Claude Work): 'Verdict: PROVED ... Enumeration: 4/4 designs pass.' Claim originates from Seat C (gpt-6-astra) R1_C §4 item 4 (PC1 heading). | XF | not stated (spec's m(S) as written) | none |
+| `PC2` | Lemma M PROVED; C1(a) CORRECT WITH AMENDMENT (third clause FALSE); C1(b) PROVED (unscored sentence FALSE); C2 PROVED CONDITIONAL on PW2; C3, C4 PROVED with amendments; C5/C6 CORRECT WITH AMENDMENT (PC2 verdicts) | `origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_PC2_certificate_card.md (Lemma M, C1-C6, summary table)` | PC2 (Opus 5.5, Claude Work, read-only); O-CERT author = Opus (registry rows OCERT-*); A-REV9 (Astra) earlier reviewed O-CERT (registry OCERT-* XF cells). PC2: 'Premise (i), Lemma RO and GUARD, is still the unreviewed W2-BOOK premise.' | XF | POST HOC card (INPUTS M10); exact arithmetic ('numerical implementation of an exact-arithmetic certificate') | none |
 
 ## 3. Lean index (every `*.lean` file on every origin branch)
 
@@ -670,4 +967,4 @@ Toolchain/lakefile as stated: `leanprover/lean4:v4.35.0-rc2`; Mathlib `v4.35.0-r
 | `LS-score`, `LemmaM` (R3, R5) | no Lean file stated; `THEOREM_LIST.md` R3(vi) says 'LS-score's move count is a short addition' | `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md` R3(vi) |
 
 
-<!-- build stage 2 of 5: later sections (per-item index, N-obligations, known-false, conflicts, Appendix A) are added in further commits -->
+<!-- build stage 3 of 5: later sections (per-item index, N-obligations, known-false, conflicts, Appendix A) are added in further commits -->
