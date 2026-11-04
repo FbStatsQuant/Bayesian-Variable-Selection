@@ -64,3 +64,21 @@ Chair, 2026-11-04 ~03:00 UTC. Raised in Round 1 (`R1_*.md` §I; side-by-side `ev
   - N9-KERNEL §0–3: VERIFIED WITH AMENDMENT. The prose treats sufficient order conditions as necessary; the RB consequence needs stationarity made explicit.
 - **One-shot refutation:** the report's answer is "Yes, for the mathematical laws of the shipped start and target", in the bounded-block setting (§6). WS6(d) refutes it already at zero cross-block dependence. WS7's masked-family premises (H3, the joint ratio law) remain non-design premises.
 - **Consequence:** the Q1(c) condition is met, so (c) can ship as a stated proposition with these amendments. It does not reopen with HQ.
+
+## Q5 (2026-11-04, after check wave 2). How should "stage count continuous in ε" in Q1(b) be read?
+
+**Facts from check wave 2** (`evidence/W2_PC1/VERDICTS.md` §"Seat D/B item 1" and its "Disposition for the chair"; `evidence/W2_PC2/VERDICTS.md` §0 item 2):
+- The stage count T of the coded greedy grid is an **integer**, so it cannot be continuous in ε at a threshold crossing.
+- PC1 builds an actual BVS design where the block-orthogonal baseline sits at a threshold (one-sided counts {2, 4}). A cross-block correlation of ε = 10⁻⁵ then gives T = 3.
+- **What is true and checked as written** (TRUE-AS-WRITTEN, design verified, ε > 0):
+  - **The sandwich:** T_bd(.9e^{−4η}) ≤ T_true(.9) ≤ T_bd(.9e^{4η}), for common pilot targets, with η → 0 as ε → 0 (PC1, A/B/D (b)(iii)).
+  - **Local constancy:** T equals the baseline count for small ε when the baseline is not at a threshold (a "non-critical threshold" condition).
+  - **Continuous envelopes:** the stage χ² and weights, the Doeblin constants, M₂ ≤ e^{D_*}, and an upper envelope T ≤ 2⌈D_*/c_ρ⌉ + 2 that is continuous in ε (PC2, against the coded pilot).
+- PC1: *"A fallback omitting stage count entirely would not meet binding Q1(b)."*
+
+**Decision needed.** Does Q1(b) accept "stage count controlled continuously in ε"? That would mean all three of the following:
+- the sandwich between baseline counts at thresholds e^{±4η}·0.9 (η → 0);
+- local constancy at non-critical thresholds;
+- a continuous upper envelope.
+
+The literal alternative, the integer T as a continuous function, is false by construction, as PC1's counterexample shows. The meeting proceeds on the reading above unless HQ rules otherwise.
