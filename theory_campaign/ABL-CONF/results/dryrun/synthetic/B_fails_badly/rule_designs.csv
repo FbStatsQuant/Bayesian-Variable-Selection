@@ -1,0 +1,7 @@
+claim,design,scen,ref_K,se_ref,n_cost,wins_A,wins_B,p_A,p_B,nondeliv_A,nondeliv_B,nondeliv_B_only,n_acc,cost_holds,cost_rev,acc_testable,acc_holds,acc_rev,verdict,nondeliv_C,med_errC,UCB_dC,LCB_dC,UCB_hC,LCB_hC,LCB_dE,UCB_dE,n_C_below_A,under,less
+1,p0500_S1_r001 c100,S1,8,0.03,10,10,0,0.0009766,1,0,10,10,0,True,False,False,False,False,holds_nondeliv,,,,,,,,,,,
+2,p0500_S1_r001 c100,S1,8,0.03,,,,,,0,,,10,,,True,,,holds,0,-9.686,-7.631,-12.56,-7.563,-12.63,7.563,12.49,10,True,True
+1,p0500_S4_r001 c100,S4,8,0.03,10,10,0,0.0009766,1,0,10,10,0,True,False,False,False,False,holds_nondeliv,,,,,,,,,,,
+2,p0500_S4_r001 c100,S4,8,0.03,,,,,,0,,,10,,,True,,,holds,0,-8.589,-6.573,-12.48,-6.571,-12.28,6.571,12.28,10,True,True
+1,p0500_S5_r001 c100,S5,8,0.03,10,10,0,0.0009766,1,0,10,10,0,True,False,False,False,False,holds_nondeliv,,,,,,,,,,,
+2,p0500_S5_r001 c100,S5,8,0.03,,,,,,0,,,10,,,True,,,holds,0,-6.029,-4.362,-10.41,-4.287,-10.39,4.287,10.39,10,True,True

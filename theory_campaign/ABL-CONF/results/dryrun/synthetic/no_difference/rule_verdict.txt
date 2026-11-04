@@ -1,0 +1,6 @@
+ABL-CONF rule  (ALPHA=0.05, DZ=0.5, DP=0.05, NMIN=6, KMIN=6, GUARD_SLACK=0.25)
+input: results/dryrun/synthetic/no_difference/per_fit.csv
+designs: 3   pending fits: 0
+guard (p0500_S1_r001 c100): pass  |refA - refB| = 0.018 vs tol 0.350
+Claim 1: INCONCLUSIVE   per design: p0500_S1_r001 c100=inconclusive, p0500_S4_r001 c100=inconclusive, p0500_S5_r001 c100=inconclusive
+Claim 2: INCONCLUSIVE   per design: p0500_S1_r001 c100=inconclusive, p0500_S4_r001 c100=inconclusive, p0500_S5_r001 c100=inconclusive

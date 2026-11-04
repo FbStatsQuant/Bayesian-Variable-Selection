@@ -1,0 +1,77 @@
+# ABL-CONF rule dry run (2026-11-03T18:50:54-06:00); rule = scripts/apply_rule.py sha256 8d5d888cf3fecf3d
+
+## (i) ABL-START table (12 designs x 1 seed; stand-in reference, see abl_start_table.py)
+
+### per_design
+ABL-CONF rule  (ALPHA=0.05, DZ=0.5, DP=0.05, NMIN=6, KMIN=6, GUARD_SLACK=0.25)
+input: results/dryrun/abl_start/per_design/per_fit.csv
+designs: 12   pending fits: 0
+guard (p0500_S1_r001 c100): unavailable
+Claim 1: INCONCLUSIVE   per design: p0500_S1_r001 c100=inconclusive, p0500_S1_r002 c050=inconclusive, p0500_S2_r001 c100=inconclusive, p0500_S2_r002 c050=inconclusive, p0500_S3_r001 c100=inconclusive, p0500_S3_r002 c050=inconclusive, p0500_S4_r001 c100=inconclusive, p0500_S4_r002 c050=inconclusive, p0500_S5_r001 c100=inconclusive, p0500_S5_r002 c050=inconclusive, p0500_S6_r001 c100=inconclusive, p0500_S6_r002 c050=inconclusive
+Claim 2: INCONCLUSIVE   per design: p0500_S1_r001 c100=inconclusive, p0500_S1_r002 c050=inconclusive, p0500_S2_r001 c100=inconclusive, p0500_S2_r002 c050=inconclusive, p0500_S3_r001 c100=inconclusive, p0500_S3_r002 c050=inconclusive, p0500_S4_r001 c100=inconclusive, p0500_S4_r002 c050=inconclusive, p0500_S5_r001 c100=inconclusive, p0500_S5_r002 c050=inconclusive, p0500_S6_r001 c100=inconclusive, p0500_S6_r002 c050=inconclusive
+
+### pooled
+ABL-CONF rule  (ALPHA=0.05, DZ=0.5, DP=0.05, NMIN=6, KMIN=6, GUARD_SLACK=0.25)
+input: results/dryrun/abl_start/pooled/per_fit.csv
+designs: 1   pending fits: 0
+guard (ALL): unavailable
+Claim 1: INCONCLUSIVE   per design: ALL=holds
+Claim 2: INCONCLUSIVE   per design: ALL=holds
+
+### pooled_guardpass
+ABL-CONF rule  (ALPHA=0.05, DZ=0.5, DP=0.05, NMIN=6, KMIN=6, GUARD_SLACK=0.25)
+input: results/dryrun/abl_start/pooled_guardpass/per_fit.csv
+designs: 1   pending fits: 0
+guard (ALL): pass  |refA - refB| = 0.000 vs tol 0.391
+Claim 1: INCONCLUSIVE   per design: ALL=holds
+Claim 2: LICENSED   per design: ALL=holds
+
+## (ii) synthetic tables (make_synthetic.py)
+
+### expected
+ABL-CONF rule  (ALPHA=0.05, DZ=0.5, DP=0.05, NMIN=6, KMIN=6, GUARD_SLACK=0.25)
+input: results/dryrun/synthetic/expected/per_fit.csv
+designs: 3   pending fits: 0
+guard (p0500_S1_r001 c100): pass  |refA - refB| = 0.015 vs tol 0.350
+Claim 1: LICENSED   per design: p0500_S1_r001 c100=holds, p0500_S4_r001 c100=holds_nondeliv, p0500_S5_r001 c100=holds
+Claim 2: LICENSED   per design: p0500_S1_r001 c100=holds, p0500_S4_r001 c100=holds, p0500_S5_r001 c100=holds
+
+### no_difference
+ABL-CONF rule  (ALPHA=0.05, DZ=0.5, DP=0.05, NMIN=6, KMIN=6, GUARD_SLACK=0.25)
+input: results/dryrun/synthetic/no_difference/per_fit.csv
+designs: 3   pending fits: 0
+guard (p0500_S1_r001 c100): pass  |refA - refB| = 0.018 vs tol 0.350
+Claim 1: INCONCLUSIVE   per design: p0500_S1_r001 c100=inconclusive, p0500_S4_r001 c100=inconclusive, p0500_S5_r001 c100=inconclusive
+Claim 2: INCONCLUSIVE   per design: p0500_S1_r001 c100=inconclusive, p0500_S4_r001 c100=inconclusive, p0500_S5_r001 c100=inconclusive
+
+### B_fails_badly
+ABL-CONF rule  (ALPHA=0.05, DZ=0.5, DP=0.05, NMIN=6, KMIN=6, GUARD_SLACK=0.25)
+input: results/dryrun/synthetic/B_fails_badly/per_fit.csv
+designs: 3   pending fits: 0
+guard (p0500_S1_r001 c100): pass  |refA - refB| = 0.035 vs tol 0.350
+Claim 1: INCONCLUSIVE   per design: p0500_S1_r001 c100=holds_nondeliv, p0500_S4_r001 c100=holds_nondeliv, p0500_S5_r001 c100=holds_nondeliv
+Claim 2: LICENSED   per design: p0500_S1_r001 c100=holds, p0500_S4_r001 c100=holds, p0500_S5_r001 c100=holds
+
+### C_fails_badly
+ABL-CONF rule  (ALPHA=0.05, DZ=0.5, DP=0.05, NMIN=6, KMIN=6, GUARD_SLACK=0.25)
+input: results/dryrun/synthetic/C_fails_badly/per_fit.csv
+designs: 3   pending fits: 0
+guard (p0500_S1_r001 c100): pass  |refA - refB| = 0.030 vs tol 0.350
+Claim 1: LICENSED   per design: p0500_S1_r001 c100=holds, p0500_S4_r001 c100=holds_nondeliv, p0500_S5_r001 c100=holds
+Claim 2: LICENSED   per design: p0500_S1_r001 c100=holds, p0500_S4_r001 c100=holds, p0500_S5_r001 c100=holds
+
+### reversed
+ABL-CONF rule  (ALPHA=0.05, DZ=0.5, DP=0.05, NMIN=6, KMIN=6, GUARD_SLACK=0.25)
+input: results/dryrun/synthetic/reversed/per_fit.csv
+designs: 3   pending fits: 0
+guard (p0500_S1_r001 c100): pass  |refA - refB| = 0.042 vs tol 0.350
+Claim 1: REFUSED   per design: p0500_S1_r001 c100=refuted, p0500_S4_r001 c100=refuted, p0500_S5_r001 c100=refuted
+Claim 2: REFUSED   per design: p0500_S1_r001 c100=refuted, p0500_S4_r001 c100=refuted, p0500_S5_r001 c100=refuted
+
+### guard_fails
+ABL-CONF rule  (ALPHA=0.05, DZ=0.5, DP=0.05, NMIN=6, KMIN=6, GUARD_SLACK=0.25)
+input: results/dryrun/synthetic/guard_fails/per_fit.csv
+designs: 3   pending fits: 0
+guard (p0500_S1_r001 c100): fail  |refA - refB| = 2.000 vs tol 0.350
+Claim 1: INCONCLUSIVE   per design: p0500_S1_r001 c100=holds, p0500_S4_r001 c100=holds_nondeliv, p0500_S5_r001 c100=holds
+Claim 2: INCONCLUSIVE   per design: p0500_S1_r001 c100=holds, p0500_S4_r001 c100=holds, p0500_S5_r001 c100=holds

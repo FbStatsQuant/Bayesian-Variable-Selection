@@ -1,0 +1,6 @@
+ABL-CONF rule  (ALPHA=0.05, DZ=0.5, DP=0.05, NMIN=6, KMIN=6, GUARD_SLACK=0.25)
+input: results/dryrun/abl_start/per_design/per_fit.csv
+designs: 12   pending fits: 0
+guard (p0500_S1_r001 c100): unavailable
+Claim 1: INCONCLUSIVE   per design: p0500_S1_r001 c100=inconclusive, p0500_S1_r002 c050=inconclusive, p0500_S2_r001 c100=inconclusive, p0500_S2_r002 c050=inconclusive, p0500_S3_r001 c100=inconclusive, p0500_S3_r002 c050=inconclusive, p0500_S4_r001 c100=inconclusive, p0500_S4_r002 c050=inconclusive, p0500_S5_r001 c100=inconclusive, p0500_S5_r002 c050=inconclusive, p0500_S6_r001 c100=inconclusive, p0500_S6_r002 c050=inconclusive
+Claim 2: INCONCLUSIVE   per design: p0500_S1_r001 c100=inconclusive, p0500_S1_r002 c050=inconclusive, p0500_S2_r001 c100=inconclusive, p0500_S2_r002 c050=inconclusive, p0500_S3_r001 c100=inconclusive, p0500_S3_r002 c050=inconclusive, p0500_S4_r001 c100=inconclusive, p0500_S4_r002 c050=inconclusive, p0500_S5_r001 c100=inconclusive, p0500_S5_r002 c050=inconclusive, p0500_S6_r001 c100=inconclusive, p0500_S6_r002 c050=inconclusive

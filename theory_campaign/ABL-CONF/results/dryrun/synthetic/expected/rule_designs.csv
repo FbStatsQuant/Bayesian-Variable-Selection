@@ -1,0 +1,7 @@
+claim,design,scen,ref_K,se_ref,n_cost,wins_A,wins_B,p_A,p_B,nondeliv_A,nondeliv_B,nondeliv_B_only,n_acc,med_dZ,UCB_dZ,LCB_dZ,UCB_dP,LCB_dP,LCB2_h,UCB2_h,cost_holds,cost_rev,acc_testable,acc_holds,acc_rev,verdict,nondeliv_C,med_errC,UCB_dC,LCB_dC,UCB_hC,LCB_hC,LCB_dE,UCB_dE,n_C_below_A,under,less
+1,p0500_S1_r001 c100,S1,8,0.03,10,10,0,0.0009766,1,0,0,0,10,0.0133,0.0932,-0.0533,0.00045,-0.0019,-0.115,0.0791,True,False,True,True,False,holds,,,,,,,,,,,
+2,p0500_S1_r001 c100,S1,8,0.03,,,,,,0,,,10,,,,,,,,,,True,,,holds,0,-9.326,-6.364,-12.06,-6.29,-12.02,6.29,12.02,10,True,True
+1,p0500_S4_r001 c100,S4,8,0.03,10,10,0,0.0009766,1,0,10,10,0,,,,,,,,True,False,False,False,False,holds_nondeliv,,,,,,,,,,,
+2,p0500_S4_r001 c100,S4,8,0.03,,,,,,0,,,10,,,,,,,,,,True,,,holds,0,-6.682,-5.095,-9.364,-4.945,-9.525,4.945,9.228,10,True,True
+1,p0500_S5_r001 c100,S5,8,0.03,10,10,0,0.0009766,1,0,0,0,10,0.0422,0.0857,-0.0652,0.00221,-0.00058,-0.0563,0.1845,True,False,True,True,False,holds,,,,,,,,,,,
+2,p0500_S5_r001 c100,S5,8,0.03,,,,,,0,,,10,,,,,,,,,,True,,,holds,0,-8.243,-5.09,-12.78,-5.082,-12.97,5.082,12.66,10,True,True
