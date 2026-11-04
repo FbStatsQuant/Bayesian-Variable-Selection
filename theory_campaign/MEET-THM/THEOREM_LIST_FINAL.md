@@ -277,8 +277,9 @@ Split note (if R3-1 (ii) were chosen instead): Proposition V+ = clauses (a)–(d
 
 **Chair's integration note.**
 1. K70 stays in this card as the labelled no-LS0 variant clause (b2-LH) (A, B, D: clause; C: supplementary attributed variant; MINUTES §2.1 follows the clause form). K63 is a hypothesis here, proved in S-OUT.
-2. N2(c) (integrated LS0 replay), the N3 DP invariant (e4 centre), GUARD-W and N14(c) (extra search at R′ > 4) are named implementation premises (MINUTES §2.3, "Audit obligations").
+2. N2(c) (integrated LS0 replay), the N3 DP invariant (e4 centre), GUARD-W, N14(c) (IND-T extension for R′ > 4) and K84/N14(a) (extra search at R′ > 4) are named implementation premises (MINUTES §2.3, "Audit obligations").
 3. If (b1-LH) falls, the §5.4 masked statement rests on M4's regime-free certificate; that loss escalates (MINUTES §2.3 §2.7).
+4. **δ₁ correction (final audit #7).** In the deterministic clause, read δ₁ := 1 − π(S₀), pointwise, as in M4: "if S₀ ∈ 𝒮⁺ and 1 − π(S₀) < ½, then Ŝ⁺ = S₀". The probability bound keeps its expectation, written 2E₀[1 − π(S₀)] + D_n. The card's single symbol "δ₁ := E₀[1 − π(S₀)]" conflates the two; the HQ uses this reading.
 
 
 **Source:** `theory_campaign/MEET-THM/R3_D.md:141–158` (verbatim)
@@ -828,10 +829,12 @@ Final statement as R1 §D D19 with Λ_len := ∫₀¹ sd_{q_φ}(d)dφ ≤ √J (
 
 ## ~~S-STGI~~ · DISSOLVED (MINUTES §2.2, corrected): K30 is M7(d); K29 → FUTURE_WORK FW23. Seat texts are kept below for reference only; they are not list claims
 
-**Decision note (MINUTES §2.2, `theory_campaign/MEET-THM/MINUTES.md:70`):** content = Ideal two-state crossing depth (K30 restated); **K29 only as a cited conditional implication** under (LL) or the over-tilted q_w bound. Notes and decisions = Its unconditional favourable application → FW. B (FW) and C (conditional cited) prevail over A and D (supplement conditional), whose substance is the same conditional implication
+**Decision (corrected MINUTES §2.2, `MINUTES.md:70`):** S-STGI is **dissolved**. A (R3_A:43), B and C object to K29 as a numbered claim; D dissents.
+- **K30** is owned by **M7(d)** (stated once).
+- **K29**'s application is FUTURE_WORK FW23.
+- K29's conditional implication, under (LL) or the over-tilted q_w bound, is only an optional attributed citation.
 
-Placement per MINUTES: B (FW) and C (conditional cited) prevail over A and D (supplement conditional), whose substance is the same conditional implication. The unconditional favourable application is FUTURE_WORK (see `FUTURE_WORK.md`). K29 is stated here only as a cited implication under (LL) or the over-tilted q_w bound. Where seats word the K29 implication or K30 differently, all are shown. Wording: see "Chair's choices" items 1–2 at the end of this file.
-
+*Everything below in this section is historical seat text, kept for reference. None of it is a list claim.*
 
 #### K30 as stated in the main card M7(d) (R3_A §S2 M7), labelled ideal grid
 

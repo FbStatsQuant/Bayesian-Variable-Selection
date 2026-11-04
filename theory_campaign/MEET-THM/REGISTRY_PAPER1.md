@@ -1307,11 +1307,11 @@ Registrar: Sonnet 5.5 (Claude Work). Date 2026-11-04. **Mechanical registry only
 
 ### S-STGI — DISSOLVED (corrected MINUTES §2.2: K30 → M7(d); K29 → FUTURE_WORK FW23; dissent D). Record kept below for reference
 
-**Round 3 resolution (MINUTES §2.2; R3-8):** ideal two-state crossing depth (K30 restated); **K29 only as a cited conditional implication** under (LL) or the over-tilted q_w bound; its unconditional favourable application is FUTURE_WORK. MINUTES: B (FW) and C (conditional cited) prevail over A and D (supplement conditional), whose substance is the same conditional implication. Seat positions on file differ (§7).
+**Round 3 resolution (corrected MINUTES §2.2):** S-STGI dissolved. K30 → M7(d) (HQ `M7`). K29's application → FUTURE_WORK FW23; its conditional implication is only an optional attributed citation. A, B and C prevail; D dissents. *The rest of this entry is historical.*
 
-**HQ:** wave 2 · HQ `LP-IDENT` · charter `HQ_CHARTERS/LP-IDENT.md`
+**HQ:** none (dissolved). K30 is carried by HQ `M7`.
 
-**Seat cards (R2):** A:147 (S11 STG-ideal); B:139 (M7 (f)); C:214–222 (C14); D:114 (S10 calibration).
+**Seat cards (R2), historical:** A:147 (S11 STG-ideal); B:139 (M7 (f)); C:214–222 (C14); D:114 (S10 calibration).
 
 **K-IDs in this item:** K29 (favourable O(1) stage count conditional on (LL) or over-tilted q_w bound), K30 (ideal two-state crossing log₂A₀ + O(1)).
 
@@ -1791,7 +1791,7 @@ Sources: `R3_A.md` §S3(a) (lines 168, 170, 172: three prose paragraphs), `R3_B.
 ### 5.1 Direction and clause disagreements between the seats (not resolved here)
 
 - **M2 ↔ S-IDENT.** A3:170, B3:231, D3:193: S-IDENT (K25, K104) → M2. C3:278: M2 (W rates) → S-IDENT. Different clauses of K25/K103 are probably involved (the coverage identity feeds M2(b); the W-rate bound feeds C's C15 clauses); the registrar does not decide. Resolve: HQ `M2` and HQ `LP-IDENT` (both wave 2) must state which clause each package owns.
-- **M7 ↔ S-STGI.** B3:231 and C3:279: M7 (K30 cited) → S-STGI; D3:201: S-STGI (K29, K30) → M7(c). K30 is stated in M7 as a labelled ideal-grid clause and restated in S-STGI (MINUTES §2.1, §2.2). Resolve: HQ `M7` and HQ `LP-IDENT`.
+- **M7 ↔ S-STGI.** B3:231 and C3:279: M7 (K30 cited) → S-STGI; D3:201: S-STGI (K29, K30) → M7(c). **Resolved:** S-STGI is dissolved. K30 is stated only in M7(d), so these edges collapse into M7.
 - **M1 ↔ S-POOL.** A3:170, B3:228, C3:277, D3:198: M1 → S-POOL. D3:202 only: S-POOL (K47 cited, K49, K50) → M1(b). K50 is an M1 clause and is also in S-POOL. Resolve: HQ `M1` and HQ `LP-REST` (the clause-level reading, not a package cycle, is expected).
 - **M6 → M2.** A3:170 puts Lemma KL on M2(a)'s lower bound; B3:232 and D3:194–195 put M6 / Lemma KL under M2(c). C3:270–271 routes M2(c) through L-ATOM and does not state M6 → M2(c) ("without depending on a new M6 proof"). Resolve: HQ `M2` and HQ `M6`.
 - **M2 ↔ S-LEAK.** D3:197: M2 → S-LEAK (F,S). A3:170 writes 'S-LEAK → M2 (supplement corollary)', the opposite literal direction with the substance of D's edge. Resolve: HQ `LP-REP` (S-LEAK is a corollary of M2; MINUTES §2.2).
@@ -1800,7 +1800,7 @@ Sources: `R3_A.md` §S3(a) (lines 168, 170, 172: three prose paragraphs), `R3_B.
 
 ### 5.2 Wave check (mechanical: producer wave later than consumer wave, MINUTES §2.5)
 
-Waves: 1 = M1, M3, LP-FOUND (S-TARGET, S-BLOCKS, S-KERNEL; S-T cited). 2 = M2, M7, M6, LP-IDENT (S-IDENT, S-STGI). 3 = M5, M4, M8, LP-AUDIT (S-CERT, S-OUT). 4 = LP-REST (S-Z, S-POOL, S-LIM), LP-REP (S-REP, S-LEAK). Rows above that put a later-wave producer under an earlier-wave consumer:
+Waves: 1 = M1, M3, LP-FOUND (S-TARGET, S-BLOCKS, S-KERNEL; S-T cited). 2 = M2, M7, M6, LP-IDENT (S-IDENT). 3 = M5, M4, M8, LP-AUDIT (S-CERT, S-OUT). 4 = LP-REST (S-Z, S-POOL, S-LIM), LP-REP (S-REP, S-LEAK). Rows above that put a later-wave producer under an earlier-wave consumer:
 - **S-OUT (wave 3) → M1 (wave 1)**, stated by all four seats (A3:168; B3:227, :236; C3:266; D3:189). M1's clauses (c),(d) rest on Lemma RO, GUARD-W and the IND-T extension, whose audits are in LP-AUDIT. M1 carries them as named premises; its fallback is the potential-run statements (R3_A:192). In A's own wave plan S-KERNEL + S-OUT were wave 1 (A3:178). The chair's merged waves (MINUTES §2.5) differ; flagged for the chair/HQ, not changed here.
 - **M2(b)(iv) (wave 2) → M1 growth clause (wave 1)** (A3:170; B3:233; D3:197). The M₂ ≤ e^{D_*} step is in M2; M1's growth clause (g)/(i) waits for it.
 - **S-POOL (wave 4) → M1(b) (wave 1)**: D only (D3:202), a clause-level direction anomaly (see 5.1).
@@ -1859,7 +1859,7 @@ Each line gives both sides with their sources. None is resolved here.
 - **Lemma-pack count.** `MINUTES.md` §4 says '4 lemma-pack charters'; `MINUTES.md` §2.5 names five (LP-FOUND, LP-IDENT, LP-AUDIT, LP-REST, LP-REP). This registry uses five. **Resolve:** chair/clerk (`MINUTES.md` §4 and `HQ_CHARTERS/`). **Resolved by the chair 2026-11-04:** MINUTES §4 corrected to five.
 - **S-STGI seat positions.** MINUTES §2.2: 'B (FW) and C (conditional cited) prevail over A and D (supplement conditional)'. R3_A:43, :67, :108: A objects to S-STGI ('dissolve: K30 → M7(d), K29 → FUTURE_WORK'); R3_D:45, :135: D keeps K29 conditional in S-STGI. A's position as filed matches B's, not D's. **Resolve:** chair (`MINUTES.md` §2.2 wording); the outcome (K29 only as a cited conditional implication; K30 in M7 and restated) is unchanged. **Resolved by the chair 2026-11-04:** MINUTES §2.2 corrected; S-STGI dissolved (A, B, C), dissent D.
 - **N3 DP invariant.** R3_B:304: 'N3 → hypothesis in M5; DP invariant FW'. MINUTES §2.3: the N3 DP invariant is a named implementation premise in the charters; R3_D:221: it is the first lemma of the M5 charter. **Resolve:** chair (MINUTES prevails); HQ `M5` carries it (§8).
-- **Which charters carry N2.** R3_B:304: N2 → M1, M4, M5 charters; R3_D:250: M1, M4, M5, Prop D charters, with S-OUT stating what is proved; R3_C:330, :377: S-KERNEL/S-OUT/M5/M8. **Resolve:** the clerk/chair in `HQ_CHARTERS/` (the registry's §8 lists the union).
+- **Which charters carry N2.** R3_B:304: N2 → M1, M4, M5 charters; R3_D:250: M1, M4, M5, Prop D charters, with S-OUT stating what is proved; R3_C:330, :377: S-KERNEL/S-OUT/M5/M8. **Resolved:** each charter names its premises (chair, 2026-11-04). Residual reconciliation: HQ `LP-AUDIT` with the registry owner. The registry's §8 lists the union.
 - **K33 placement.** A, B, C: M7 (deterministic termination/count form); D: S-IDENT (R3_D:25, :42, :131). MINUTES §2.3 decides M7 by majority. **Resolve:** closed; D's dissent recorded.
 - **K62 placement.** B's R2 card placed K62 in the HPM item (B:125); MINUTES §2.1 places it in M1. **Resolve:** closed by MINUTES; HQ `M1` and HQ `M5` note the use of the MPM margin.
 - **ū̂ description.** S2:218 describes ū̂ as 'the maximal fit fraction on V (D:182)'; D:182 and AMENDMENT_HQ_02 §A2 define ū̂ = Σ_b max_{U⊆C_b} x_b(U) from the block tables. MINUTES §2.2 adopts D's. **Resolve:** closed for the definition; HQ `LP-REP` and the AMENDMENT owner keep SYNTH_R2:218 out of the charter.

@@ -1,6 +1,6 @@
 # MEET-THM · STATUS (chair)
 
-Updated 2026-11-04 (Round 3 running).
+Updated 2026-11-04 (CLOSED; package sent to HQ).
 
 | Step | State |
 |---|---|
@@ -14,7 +14,7 @@ Updated 2026-11-04 (Round 3 running).
 | 6. Check wave 2 | **running**: `CHECK_W2_BRIEF.md`; PC1 (gpt-6.1-sol) on A, B, D; PC2 (Opus 5.5) on C → `evidence/W2_PC1/`, `evidence/W2_PC2/`. Clerk building `evidence/R2_SIDE_BY_SIDE.md` |
 | 7. Synthesis 2 | **final v2** `SYNTH_R2.md` (audit PASS WITH CORRECTIONS, 12 applied; `SYNTH_R2_AUDIT.md`) |
 | 8. Round 3 | **done**: `R3_A.md`–`R3_D.md` (verbatim); decisions in `MINUTES.md` |
-| 9. Close | all deliverables committed (MINUTES, THEOREM_LIST_FINAL, HQ_CHARTERS/ ×13, COVERAGE_MATRIX, REGISTRY_PAPER1, NOTATION, FUTURE_WORK, AMENDMENT_HQ_02_DEFINITIONS, FORMAT_NOTES). S-STGI dissolved after registrar cross-check. **Auditor final pass running**; then the close message to HQ |
+| 9. Close | **done**: all DOSSIER §9 deliverables committed; final audit PASS WITH CORRECTIONS (`CLOSE_AUDIT.md`), corrections #4–#10 applied. Close message sent to HQ. Waiting on: HQ approval, then Felipe |
 
 HQ: Q1–Q5 answered (Q5: `evidence/2026-11-04_HQ_RULING_Q5.md`); Q1–Q4 (`evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`), applied in `HQ_QUESTIONS.md`. FUTURE_WORK opened (FW1, FW2).
 
@@ -36,7 +36,7 @@ HQ: Q1–Q5 answered (Q5: `evidence/2026-11-04_HQ_RULING_Q5.md`); Q1–Q4 (`evid
 | Clerk, final assembly | claudeAgent · Sonnet 5.5 high | done |
 | Registrar, REGISTRY_PAPER1 + NOTATION (draft) | claudeAgent · Sonnet 5.5 high | done (draft) |
 | Registrar, update to R3 decisions | claudeAgent · Sonnet 5.5 high | done |
-| Auditor, final pass | codex · gpt-6.1-sol high | …555d8438-08e3-43c7-97d5-c96bdc58fbaf |
+| Auditor, final pass | codex · gpt-6.1-sol high | done → PASS WITH CORRECTIONS (applied) |
 | PC2, wave 2 | claudeAgent · Opus 5.5 high | done → `evidence/W2_PC2/VERDICTS.md` (29 TRUE-AS-WRITTEN, 0 COUNTEREXAMPLE) |
 | Clerk, R2 side-by-side | claudeAgent · Haiku 5.5 | done |
 | Seat D, R2 | claudeAgent_personal · Fable 5.1 high | done → `R2_D.md` |

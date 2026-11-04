@@ -5,8 +5,8 @@
 | HQ | LP-IDENT · identification and ideal-grid lemma pack |
 | Wave (MINUTES §2.5) | 2 |
 | Covers | S-IDENT (S-STGI dissolved per corrected MINUTES §2.2: K30 → M7(d), charter `M7.md`; K29 → FW23) |
-| K-IDs | S-IDENT: K25 lemma, K104, K55, K103 (C15-TV/KL/CI named); S-STGI: K30 restated, K29 only as cited conditional implication |
-| Final card(s) | `THEOREM_LIST_FINAL.md` Part II: `THEOREM_LIST_FINAL.md:724` (S-IDENT); `THEOREM_LIST_FINAL.md:829` (S-STGI) |
+| K-IDs | S-IDENT: K25 lemma, K104, K55, K103 (C15-TV/KL/CI named). S-STGI dissolved: K30 → M7(d), K29 → FW23 |
+| Final card(s) | `THEOREM_LIST_FINAL.md` Part II: `THEOREM_LIST_FINAL.md:724` (S-IDENT); the S-STGI section there is historical (dissolved) |
 
 **[charter drafted by clerk from cards; confirmed by the chair 2026-11-04, with the generic IC7 rule in the Fallback row]**
 
@@ -73,7 +73,7 @@ General rule (MINUTES §2.3, verbatim):
 | Item | Text |
 |---|---|
 | Goal | Prove/close the listed supplement statements: S-IDENT. (S-STGI rows below are kept for reference only; S-STGI is dissolved.) |
-| Statement | The cards in `THEOREM_LIST_FINAL.md` Part II named above (K-IDs: S-IDENT: K25 lemma, K104, K55, K103 (C15-TV/KL/CI named); S-STGI: K30 restated, K29 only as cited conditional implication). Statements are as filed by the seats; seat variants and the chair's editorial choices ("Chair's choices") are in that file. |
+| Statement | The cards in `THEOREM_LIST_FINAL.md` Part II named above (K-IDs: S-IDENT: K25 lemma, K104, K55, K103 (C15-TV/KL/CI named); S-STGI dissolved). Statements are as filed by the seats; seat variants and the chair's editorial choices ("Chair's choices") are in that file. |
 | First lemma | (none specified by the seats for the pack; each card's route is in its seat card) |
 | Fallback | Each card's own fallback (verbatim below where a seat card states one). **Chair's generic rule (IC7), for every card in this pack:** the card ships in the narrowest form its filed checks support. A clause whose proof or cross-family check fails after one repair cycle moves to `FUTURE_WORK.md` with the reason. It is never relabelled as a limitation, and no status is upgraded. |
 | Stop rule | Each card's own stop rule (below where stated); otherwise one proof attempt plus one cross-family check-and-repair cycle per card, then the generic rule above. |

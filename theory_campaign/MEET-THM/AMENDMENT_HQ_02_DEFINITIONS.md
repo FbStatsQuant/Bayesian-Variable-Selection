@@ -38,7 +38,7 @@ reported in nats, with its signed value preserved.
 - No new draws, transitions or scores.
 - Historical fits report NA. Absent records are not reconstructed.
 
-**Declared list:** d becomes a default member of the declared summary list 𝓗 (METHOD §6.11b). It is fixed before stream 10 and reads no uniforms (Seats A and B: R3_A §S5, R3_B §S5).
+**Declared list:** d becomes a default member of the declared summary list 𝓗 (METHOD §6.11b). It is fixed before stream 10 and reads no uniforms (Seats A and B: R3_A §S5, R3_B §S5). Because 𝓗 is defined as [0,1]-valued, **raw d is recorded**, and theorems (M1) apply to the globally range-scaled (d − min_Ω d)/D, with D = max_Ω d − min_Ω d > 0. If D = 0, then Ĵ = J = 0 (S-REP card).
 
 ### A2. ε̂_×: the cross-block correlation proxy, with companions
 

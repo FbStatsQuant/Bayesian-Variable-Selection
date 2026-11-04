@@ -4,7 +4,7 @@ Chair (Opus 5.5, non-voting), 2026-11-04. Branch `theory/MEET-THM`.
 
 The dossier (`DOSSIER.md`) was frozen at 02:00 UTC. HQ approves this package and brings it to Felipe, who approves the theorem list.
 
-**Open questions at close: none.** Every candidate K01–K108 (`R0_DIFF.md`) is in one of these states:
+**Open questions at close: none.** "None" refers to meeting decisions. Proof and audit statuses that are still OPEN or pending are disclosed as such in the cards, charters and registry, and are not questions for this meeting. Every candidate K01–K108 (`R0_DIFF.md`) is in one of these states:
 - on the list, with a fallback;
 - FUTURE_WORK, with a reason;
 - a cited lemma;
@@ -81,6 +81,9 @@ Seat D's note for Felipe: if objective (2) is to be served by a sentence in the 
 | R3-4, K12, K34 | Drop (A, B, C, D in Round 3) | — |
 | R3-4, K33 | M7, deterministic termination/count form (A, B, C) | D: S-IDENT (R3_D §S1). Rebuild convergence N5(b) → FW in either case |
 | R3-6, Ĵ | B/C/D form, unanimous. A withdrew its TI form | — |
+| R3-8, K30 | M7(d) (A, B, D) | C: K30 in the supplement, as S-STGI / C14 (R3_C:126) |
+| R3-8, K70 | A labelled no-LS0 variant clause of M5 (A, B, D) | C: a supplementary attributed variant (R3_C:126). M5's integration note records it |
+| R3-8, K57 | P1, the recording-marginal comparison, in S-POOL; general accuracy → FW (B, C; A:39, 108) | D: general K57 in the supplement (R3_D:135) |
 | R3-7, Song–Liang wording | **Thm 2:** "fixed-design, fixed-sparsity selection counterpart only; SL's predictor-tail and prior hypotheses are not transferred". **Cor 2:** "no analytic null-exclusion/FDR separation established; LIT-PAR G4 numerical evidence" (C's wording; adopted by B and D) | — |
 | §2.6, growth rates | Two optional stacking configurations, on families with D_* = O_P(1): (i) R′_n = 4⌈log₂(n + p + 1)⌉ for a fixed finite set of declared summaries; (ii) R′_n = 4⌈(n + p)⁶/4⌉ for simultaneous control over ≤ (n + p)² declared summaries. ℓ, L and N need no edit. The shipped R′ = 4 carries only the fixed-R statements | Confirmed by all four in §S1 §2.6 |
 | §2.7, safeguards | §13.1: if N1's general record identity fails, the narrower theorem ships and §13.1 escalates. §5.3: if both the D_* route and the correlated-family route fail, it escalates. Also: loss of the masked statement without an approved replacement escalates (C §S5) | — |

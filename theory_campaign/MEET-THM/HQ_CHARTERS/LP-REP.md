@@ -93,3 +93,4 @@ Card S-REP (R3_C §S2):
 | Fallback/stop rule | Retain precisely labelled descriptive fields if quantitative proof closure fails. If records are unavailable, report NA. Stop after one failed proof/audit repair cycle; remove quantitative reporting claims. Failure inherited from N1 or M2 triggers their binding-goal escalation, not a silent waiver. |
 <!-- END VERBATIM -->
 
+**Chair-specified fallback for S-LEAK (IC7, final audit #8):** the finite-law exact identity 1 + χ²(π‖π₀) = π(S₀)²/(π₀(S₀)·q₂(S₀)), plus the data-dependent bound m ≥ π₀(S₀)·e^{−2·osc d}. No design-uniform lower bound on m. (F) is dropped if its leakage route fails. Stop rule: the generic rule.

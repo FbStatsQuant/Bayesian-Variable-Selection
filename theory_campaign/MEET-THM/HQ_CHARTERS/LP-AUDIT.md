@@ -67,7 +67,7 @@ No binding theorem of its own, but M1(c),(d), M4(e), M5 and M8 rest on S-OUT (Le
 
 ## Named implementation premises / audit obligations (MINUTES §2.3)
 
-The integrated audits: streams (IND-T extension, N2/N14), LS0 (N2(c)), GUARD-W stop-only coupling (N2(e)), the execution DAG (N15), N14(c) extra-search nesting (K84). N7: K73 operational region certification withheld; N16/K107 numerical gap explicit (K108 stays). MINUTES §2.5: "Code-audit wave: N2, N3, LS0, GUARD-W and the DAG serve M5, M4 and M8 together."
+The integrated audits: streams (IND-T extension, N2/N14), LS0 (N2(c)), GUARD-W stop-only coupling (N2(e)), the execution DAG (N15), K84/N14(a) extra-search nesting; N14(c) IND-T extension (independence of streams 10..9+R′, R′ > 4). N7: K73 operational region certification withheld; N16/K107 numerical gap explicit (K108 stays). MINUTES §2.5: "Code-audit wave: N2, N3, LS0, GUARD-W and the DAG serve M5, M4 and M8 together."
 
 General rule (MINUTES §2.3, verbatim):
 
@@ -98,3 +98,4 @@ Card `C13 — K77`:
 | Fallback / stop | Potential-run theorem while the audit remains open. Never replace it with completion-conditioned validity. |
 <!-- END VERBATIM -->
 
+**Chair-specified fallback for S-CERT (IC7, final audit #8):** the deterministic perturbation lemma K108 (Z̃/Z ∈ [e^{−ε}, e^{ε}], TV ≤ tanh ε, and gap > 2ε preserves the winner). Also the exact semantics of the local-search flags (K64, a weak local maximum, with ties allowed). No B&B-soundness, rounding or region-certification claim. Stop rule: the generic rule.
