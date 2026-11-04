@@ -21,4 +21,8 @@ HQ questions: none yet (`HQ_QUESTIONS.md` not opened).
 | Seat C, R1 | codex · gpt-6-astra high | done → `R1_C.md` |
 | Seat D, R1 | claudeAgent_personal · Fable 5.1 high | done → `R1_D.md` |
 
+| PC1, wave 1 | codex · gpt-6.1-sol high | …9c5c9e4e-1173-41d9-b7ca-60acb3b31392 |
+| PC2, wave 1 | claudeAgent · Opus 5.5 high | …1610eca5-4b5a-4a7c-ae24-bf2aa36d8d90 |
+| Clerk, R1 side-by-side | claudeAgent · Haiku 5.5 | …36ef7ff9-6475-4527-bbed-2fc33dcd3f4e |
+
 Done: registrar R0 diff (…8512eb39-b16b-4aa6-b400-8f056969e4d8).
