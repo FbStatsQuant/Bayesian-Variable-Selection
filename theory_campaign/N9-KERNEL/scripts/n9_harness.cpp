@@ -279,9 +279,9 @@ static Mat kernel_indep_symmetric(Ctx& c, double phi, const std::vector<Leaf>& l
 }
 
 // ---- diagnostics
-struct DB { double rowsum_err, inv_l1, db_rel, db_abs; };
+struct DB { double rowsum_err, inv_l1, db_rel, db_abs, db_rel_big; };
 static DB check_db(const Mat& K, const std::vector<double>& pi, int nS) {
-  DB r{0, 0, 0, 0};
+  DB r{0, 0, 0, 0, 0};
   for (int i = 0; i < nS; ++i) { double s = 0; for (int j = 0; j < nS; ++j) s += K[i * nS + j]; r.rowsum_err = std::max(r.rowsum_err, std::fabs(s - 1)); }
   for (int j = 0; j < nS; ++j) { LD s = 0; for (int i = 0; i < nS; ++i) s += (LD)pi[i] * K[i * nS + j]; r.inv_l1 += std::fabs((double)(s - pi[j])); }
   for (int i = 0; i < nS; ++i) for (int j = i + 1; j < nS; ++j) {
@@ -289,6 +289,7 @@ static DB check_db(const Mat& K, const std::vector<double>& pi, int nS) {
     double d = std::fabs(f - g), m = std::max(f, g);
     r.db_abs = std::max(r.db_abs, d);
     if (m > 0) r.db_rel = std::max(r.db_rel, d / m);
+    if (std::min(f, g) > 1e-13) r.db_rel_big = std::max(r.db_rel_big, d / m);
   }
   return r;
 }
@@ -447,7 +448,7 @@ int main(int argc, char** argv) {
     printf("Gibbs: o_j vs extracted accept threshold: max diff = %.1f grid units (2^-53)\n", thr);
     printf("proposals enumerated: uswap %ld, nswap %ld (of which %ld with |N(j)\\S| != |N(l)\\S'|, i.e. Hastings factor != 1)\n", npu, npn, nasym);
     auto rep = [&](const char* nm, const Mat& K) { DB d = check_db(K, pi, c.nS);
-      printf("  %-28s rowsum_err=%.2e  ||piK-pi||_1=%.2e  DB max rel=%.2e  DB max abs=%.2e\n", nm, d.rowsum_err, d.inv_l1, d.db_rel, d.db_abs); return d; };
+      printf("  %-28s rowsum_err=%.2e  ||piK-pi||_1=%.2e  DB abs=%.2e  DB rel(all)=%.2e  DB rel(flows>1e-13)=%.2e\n", nm, d.rowsum_err, d.inv_l1, d.db_abs, d.db_rel, d.db_rel_big); return d; };
     double worst_g = 0; for (int j = 0; j < p; ++j) { char b[32]; snprintf(b, 32, "Gibbs j=%d", j); worst_g = std::max(worst_g, rep(b, KG[j]).db_rel); }
     rep("uniform swap", KU); rep("neighbour swap", KN); rep("independence (pi0)", KI);
     Mat R = round_kernel(KG, KU, KN, KI, p, c.B, c.nS);
