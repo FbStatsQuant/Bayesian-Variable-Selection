@@ -202,3 +202,10 @@ Next: THM-SYNTH (Fable) after METH-AUDIT + THM-INV + LIT-PAR → final theorem l
 - Concurrency re-run: design p0500_S4_r001 bitwise PASS (serial 672 s → 352 s). S5_r002 running.
 - Felipe: run a method meeting (1 Fable CP, 1 Fable CW, 1 Astra, all high), in a new thread "Methodology - Final meeting". HQ approves the final version, does not vote. Dossier: theory_campaign/MEET-v31/DOSSIER.md.
 - ABL-START launched (Opus, $12 cap): block start vs size-1 blocks vs prior start (vs backfit if exact), ≤20 fits/arm, Owls.
+
+## 2026-11-04 00:50 UTC: method meeting closed; theorem-meeting preparation started
+- MEET-v31 closed (theory/MEET-v31 @ c3e18ee): no open questions. v3.1 = v3 unchanged + parallel layer, stacking, LS0, Ẑ-weighted primary PIP, general-h accumulator, certificate card, item-9 generality fixes. Item 1 = Outcome 2 (block start kept, no cost/accuracy claim: the pre-registered rule was vacuous). Chair spend $0 (subscriptions). Two arm-B S4 fits ended rc 143 at 23:31 UTC without output (> 4.6 h each).
+- Felipe (2026-11-03): approved HQ's four recommendations (budget growth rates may be set by the theorem meeting; paper 1 claims island-level depth only; confirmatory start test; same seats). Theorem meeting: 4 active seats (Fable CP, Fable CW, Astra, fresh-eyes Fable CP) + one-shot raw Astra; 2 Sol 6.1 reviewers as HQ staff; Sonnet/Haiku clerical workers. Per-theorem HQs are for paper 1 (Biometrika) only. No API credit: subscriptions only; on a CW limit, wait for the reset.
+- Round 0 launched: fresh-eyes Fable (CP) and raw Astra (Codex), isolated in /home/fb31/fresh_eyes/{fable,astra} with a method-only packet.
+- Sol trial launched: Sol 1 proof check and Sol 2 audit of the MEET-v31 final documents (reports to /home/fb31/hq_reviews/).
+- ABL-CONF spec filed (confirmatory start test, pre-registered, Owls).
