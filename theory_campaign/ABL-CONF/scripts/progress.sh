@@ -8,3 +8,4 @@ echo "worker jobs alive:"; ps -u fb31 -o pid,etime,args | grep "[r]un_queue.sh" 
 echo "owls:"; jq -c '{ts,state,compute_cores,load_avg}' ~/.config/bvs-hq/owls/status.json
 echo "recent outcomes:"; tail -n ${1:-8} $W/progress.log 2>/dev/null | sed 's/^/  /'
 [ -s $W/killed.log ] && { echo "killed from outside (to re-run):"; sed 's/^/  /' $W/killed.log; }
+exit 0
