@@ -53,17 +53,18 @@ Nothing here upgrades a status. TRUE-AS-WRITTEN means "no counterexample found".
 - **D4, §5.3:** all four merge into **one package** with HQ parts (a), (b), (c). They differ only on where B's leakage clauses (F), (S) sit (§2.1, M2).
 - **D12, masked statement:** all four name the **Z𝒯/certificate masked clause** (K43/K45/K42) composed with the reported-HPM theorem on LH (SBS2 U6). They differ only in which consequence is headlined (§2.2).
 - **D13, size:** A, B and D have 8 main theorems, C has 7 (SBS2 U2).
-- **D15, Song–Liang wording:** converged on the itemised wording in SBS2 U8:
-  - "selection matched; contraction → FUTURE_WORK" for Thm 1/2;
-  - "compared, not exceeded" for Thm 4;
-  - Cor 2 depends on SL;
-  - same-units accounting for §6.
+- **D15, Song–Liang wording: largely converged.**
+  - **Shared restrictions** (SBS2 U8): Hellinger contraction is not delivered and goes to FUTURE_WORK; "compared, not exceeded" for Thm 4; same-units accounting with no speed claim for §6.
+  - **Remaining differences:**
+    - Thm 2: B calls it "not applicable, fixed design" (B:70); A gives "selection matched" (A:31); C and D give a fixed-design selection counterpart (C:393; D:235).
+    - Cor 2: A, "a comparison" (A:31); B, "null exclusion is SL's separate GAP" (B:70); C, "no analytic null-exclusion/FDR separation established" (C:397); D, "covered by SL′ only if it ships" (D:235).
+  - These go to R3-7.
 
 ## 2. Chair's reconciled list (proposal for Round 3)
 
 Each main row lists the seats that place it in main (SBS2 U2).
 
-### 2.1 Main text (proposal: 7 agreed + 1 slot for Round 3 to decide)
+### 2.1 Main text (proposal: 6 shared main packages + STG proposed + an optional eighth slot for Round 3)
 
 | # | Theorem (K-IDs) | Seats with it in main | Basis |
 |---|---|---|---|
@@ -73,7 +74,7 @@ Each main row lists the seats that place it in main (SBS2 U2).
 | M4 | **Theorem Z𝒯 and the certificate card, including the masked-regime statement** (K42, K43, K45, K44; K36, K78 as output-event clauses; K95 placement in §2.2) | All four (A:85; B:115; C:94; D:71) | Unanimous; it carries the HQ Q3 masked statement |
 | M5 | **Theorem HPM: composition at every n and reported-HPM consistency with LS0 on LH** (K72, K69, K65, K68, K63 as hypothesis; K70 as a labelled no-LS0 variant clause) | All four (A:95; B:125; C:83; D:65) | Unanimous |
 | M6 | **Theorem SEP + Lemma KL** (K19, K106, K105) | All four (A:115; B:145; C:116; D:87) | Unanimous |
-| M7 | **Theorem STG: stage laws as coded, coverage identity** (K26, K25, K27, K30; K28 cited; K33 per R3-4) | A, B, D (A:105; B:135; D:81). C: supplement C8 (C:359) | 3 of 4 |
+| M7 | **Theorem STG: stage laws as coded, coverage identity** (K26, K25, K27, K30; K28 cited; K33 per R3-4) | A, B, D (A:105; B:135; D:81). C: supplement C8 (C:143, C:361) | 3 of 4; a proposal, not agreement |
 | M8 | **Open slot; Round 3 decides between:**<br>(i) **Proposition D**, island-level work/depth (K87, K88; K89, K90 accounting). C has it main (C:127; list C:357). A, B, D have it in the supplement (A:22; B:61; D:22).<br>(ii) a **standalone validity proposition V+**, if M1 is split (A, B).<br>(iii) none (7 main) | — | The chair notes, for IC5, that with (i) in the supplement **no main theorem serves objective (2), parallel scalability**. Felipe lists that objective second (dossier §1 item 7). This is a fact for the seats to weigh, not a vote |
 
 **Not main.**
@@ -104,8 +105,19 @@ Each main row lists the seats that place it in main (SBS2 U2).
 ### 2.3 The §5.3 package, M2 (proposal assembled from the checked clauses)
 
 **(a) Discrepancy half** (HQ Q1(a)).
-- d = d_σ + d_X, with 0 ≤ d_σ ≤ C_σ (σ²-coupling) and |d_X| ≤ b_X (cross-block).
-- KL(π‖π₀), KL(π₀‖π), J ≤ D_*. D_* is design-computable from a, δ_A, δ_H, r (C's bound).
+- **Hypotheses:**
+  - C's computational specification A (C:50): the shipped prior and hyperparameters, the actual partition and tables, exact arithmetic, and a successful frozen calibration record.
+  - The matrix domain (C:64), all computed from the design and data:
+    - a = nz′H_D⁻¹z/Q̄ < 1;
+    - δ_A = ‖A_D^{−1/2}EA_D^{−1/2}‖ < 1;
+    - δ_H = ‖(n+1)H_D^{−1/2}EH_D^{−1/2}‖ < 1;
+    - r = δ_H·a/[(1−δ_H)(1−a)] < 1.
+- **Definitions** (C:65):
+  - C_σ = νa²/[2(1−a)];
+  - b_X = (K/2)[−log(1−δ_A) − log(1−δ_H)] − ν·log(1−r);
+  - D_* = C_σ + 2b_X;
+  - d_σ(S) = ν[Σ_b log(1−x_b) − log(1−Σ_b x_b)].
+- **Then:** d = d_σ + d_X, with 0 ≤ d_σ ≤ C_σ (σ²-coupling) and |d_X| ≤ b_X (cross-block) (W2PC2:101). Also KL(π‖π₀), KL(π₀‖π), J ≤ D_*.
 - The η-form alternative from WS3/WS4 (VERIFIED, CHK §§3–4) applies where its hypotheses hold.
 - Evidence: W2PC2 §0 item 1 (0 violations on 104 designs); W2PC1 A/B/D (a) TRUE-AS-WRITTEN.
 
@@ -116,11 +128,22 @@ Each main row lists the seats that place it in main (SBS2 U2).
 - Doeblin constants.
 - M₂ ≤ e^{D_*} on every successful coded grid (pathwise W bounds).
 - **Stage count:**
-  - the sandwich T_bd(.9e^{−4η}) ≤ T ≤ T_bd(.9e^{4η}), with common pilot targets and .9e^{4η} < 1;
-  - local constancy at non-critical thresholds;
-  - the continuous envelope T ≤ 2⌈D_*/c_ρ⌉ + 2.
-- **Q5 condition (1):** each real-valued bound stated as continuous (Lipschitz where available) in ε.
-- **Q5 condition (2):** the step-function sentence with PC1's example.
+  - **The sandwich.** T_bd(.9e^{−4η}) ≤ T ≤ T_bd(.9e^{4η}). Its scope (W2PC1:55, 81):
+    - the comparison is at exact frontiers;
+    - a fixed, common, nonempty V and common pilot targets;
+    - .9e^{4η} < 1;
+    - the baseline is the same-data block-diagonal d_σ computation, on a fixed partition;
+    - for the coded grid, the resolution qualifications (2^{−60} bisection and the 10^{−12} snap/validation).
+  - **Local constancy** at non-critical thresholds.
+  - **Integer bound and continuous envelope** (C:141, 274; W2PC2:105). Under C8's premises, including a global range bound D_* and 2^{−60} ≤ h/2:
+    - the integer bound T ≤ 2⌈D_*/c_ρ⌉ + 2;
+    - the **continuous envelope** T ≤ 4 + 2D_*/c_ρ;
+    - if D_* = 0, then T = 1.
+  - The checked fallback is T ≤ P + ⌈D_*/c_ρ⌉ + 1.
+- **Q5 condition (1), to be written as statements:**
+  - On the fixed-partition family, the bounds are continuous in ε: η(ε) → 0 as ε → 0 (and b_X(ε) → 0 as ε → 0 on C's family), the transfer factors e^{±4η}, the Doeblin constants, and the χ²/M₂ envelopes through D_*.
+  - Lipschitz constants are given where the seat's derivation supplies them.
+- **Q5 condition (2), to be written as a statement:** "T(ε) is a step function of ε. It can jump at critical thresholds: PC1 exhibits an actual design with one-sided baseline counts {2, 4} and T = 3 at ε = 10⁻⁵. 'Stable stage count' means the sandwich, and nothing more." 
 - **Evidence:** W2PC1 A/B/D (b)(i),(ii),(iv) and the sandwich TRUE-AS-WRITTEN; W2PC2 §0 item 2 (envelope against the coded pilot, 600 runs).
 - **Removed** (W2PC1 adverse rows):
   - A's zero-range clause: use max{1, ·};
@@ -147,11 +170,15 @@ The finite exhibits of A, B and D are cited as component checks.
 ### 2.4 FUTURE_WORK (proposal; union of the seats' lists, SBS2 U3, with reasons)
 
 - **Seat-proposed items:**
-  - K13, K24 and K23 (mixing: N10; no paper-1 consumer). K23 is FW for A and D, supplement for B, cited by C; proposal FW.
+  - K13: start-mode consistency under orthogonal blocks and a σ²-inflated beta-min margin. Needs TG4-type probability bounds not supplied (R0_DIFF K13).
+  - K24: polynomial mixing of the φ = 1 round (YWJ transfer). N10 OPEN.
+  - K23: Dirichlet/spectral comparison. Its only consumer, K24, is deferred. It is FW for A and D, supplement for B, cited by C; proposal FW.
   - K31 (Conjecture P OPEN).
-  - K58, K59 (R vs N; unproved).
+  - K58: masked consistency of the equal-weight PIP/MPM. It reduces to population delivery, and FMP-DELIVPOP is OPEN.
+  - K59: R vs N at fixed total particles. PROOF SKETCH only (A:240).
   - K71 ((b1-LH-iid) GAP).
-  - K75, K92.
+  - K75: NP-completeness for the fixed prior and penalty. Needs a score-specific reduction that has not been supplied.
+  - K92: a separation from single-chain flip/swap MCMC. The moat construction and the accuracy-matched comparator are unproved; speed-up claims are empirical by decision (D:224).
   - K82 (delivery P(U) → 0; no route).
   - K94 (finite-n Π(X): envelope GAP).
   - K99 quantitative (k-way barrier unproved).
@@ -164,7 +191,13 @@ The finite exhibits of A, B and D are cited as component checks.
   - **SL analytic separation** (K97, if R3-3 confirms).
   - **A sharp ε-scale necessity statement for §5.3.** All three proposed forms are COUNTEREXAMPLEs, and C's is a range obstruction for the D_* route only.
 - **Already listed:** FW1 (frequentist coverage) and FW2 (masked final-estimate TV/KL).
-- **Drop:** K12 and K34 (A, B, D drop; C FW; proposal drop, as test oracle / not in the method), K66, K67, K91, K98.
+- **Drop, with reasons:**
+  - K12: a test oracle, not a guarantee. A, B and D drop it; C would defer it.
+  - K34: TI evidence is not in the method; the Ĵ half ships as reporting (§2.5). A, B and D drop it; C would defer it.
+  - K66: HP3 landscape, PARTLY-FALSE (C3-PGD, CEX-localmax(A2)).
+  - K67: relies on K66.
+  - K91: the particles-vs-depth speed-up; no accuracy-matched comparator, and OPW2-cex refutes the perfect-mixing formula (D:224; A:240).
+  - K98: naive merge, KNOWN-FALSE (SHARE-M(b), FD-NM).
 
 ### 2.5 Run-card definitions (HQ Q4; proposal for AMENDMENT_HQ_02)
 
@@ -175,16 +208,19 @@ The finite exhibits of A, B and D are cited as component checks.
 - Identity: J = E_π d − E_{π₀} d (KNOWN—CITE).
 - Finite-R′ bound: C16, TRUE-AS-WRITTEN (W2PC2).
 - Label (C:296): "post hoc Monte Carlo estimate".
-- Seat A's trapezoid-TI form (A:198) is an alternative. Its theorems T-J1–T-J3 are "PROVED (by this seat, unchecked)", and W2PC1 has no adverse row on them. Proposal: B/C/D's form, as 3 of 4.
+- Seat A's trapezoid-TI form (A:198) is an alternative. W2PC1:155 marks its definition / T-J1 **AMBIGUOUS / GAP**. It must specify pre-resampling particles with their incremental weights, and must not reweight post-mutation states. T-J2/T-J3 have separate TRUE verdicts. Chair's proposal: B/C/D's form (3 of 4).
 
 **Leakage proxy** (all four):
 - ε̂_× := max over b ≠ b′ of |r_jl|, with label `cross_block_rmax`;
-- companions κ̂ := min_b λ_min(R_{C_b}) and δ̂ := (K − 1)·ε̂/κ̂ (A, D);
-- the derived η̂ is printed "n/a" when δ̂ ≥ 1 (D:182).
+- companions:
+  - κ̂ := min_b λ_min(R_{C_b}) (A, D);
+  - δ̂ := (K − 1)·ε̂/κ̂ (D:182). A uses δ̂ := K·ε̂/κ̂ (A:200). The chair proposes D's (K − 1) form;
+  - ū̂, the maximal fit fraction on V (D:182).
+- the derived η̂ is printed "n/a" unless the domain below holds.
 
 Theorems about it:
 - ε_S ≤ (|S| − 1)·ε̂/κ̂;
-- if δ̂ < 1, sup|d − d_σ| ≤ η(δ̂) (A T-L; D T4/T5);
+- the global discrepancy bound sup|d − d_σ| ≤ η(δ̂) holds only on the domain κ̂ > 0, δ̂ < 1, ū̂ < 1 and δ̂ū̂ < (1 − δ̂)(1 − ū̂), with "n/a" otherwise (W2PC1:157, 165; D T4/T5). A's residual-margin form (A:200) is an alternative only if stated with its own domain;
 - **drop D's T6 (NEC):** COUNTEREXAMPLE, W2PC1.
 
 Also:
@@ -203,7 +239,13 @@ W2PC1 item 6 and W2PC2 find both TRUE-AS-WRITTEN on C's family.
 
 **No growth needed:** ℓ = ⌈log₂(n + p + 1)⌉ as shipped suffices on LH. L = max{4, ⌈log₂(n + 1)⌉} as shipped. No N edit (all four, SBS2 U8 item 7).
 
-**Status:** both rates are recorded as the meeting's method edit for AMENDMENT_HQ_02. "Shipped R′ = 4" carries only the fixed-R statements (PC2 W1 §0 item 4).
+**Status:** both rates are **proposed configurations**, for confirmation in Round 3 and then recording in AMENDMENT_HQ_02. "Shipped R′ = 4" carries only the fixed-R statements (PC2 W1 §0 item 4).
+
+### 2.7 Binding-goal safeguards (carried into the charters)
+
+- **§13.1** (K46/N1): if the general measured-record identity cannot be closed, the narrower checked theorem ships (marginal records, fixed finite classes), and the unmet §13.1 goal **escalates to HQ** (C:76, C:404).
+- **§5.3** (M2): if both the general D_* route and the explicit correlated-family route fail, the unmet goal **escalates to HQ** (C:404; HQ Q1, `2026-11-04_HQ_RULINGS_Q1-Q4.md`:7). An orthogonal-only substitute does not close it.
+- **§5.4:** HQ Q3's fallback set (SYNTH_R1 §0.1) plus the masked statement in M4. FW2 is not binding.
 
 ## 3. Statement repairs required by check wave 2 (for the final cards)
 
@@ -234,13 +276,33 @@ W2PC1 item 6 and W2PC2 find both TRUE-AS-WRITTEN on C's family.
 | R3-4 | Minor placements | K63/K86: main clauses for B (and A/D headers) vs supplement S-OUT. K23: FW vs supplement. K80: FW vs drop. K12/K34: drop vs FW. K33 in STG or S-IDENT. K95 main (A) vs supplement | Proposal in §2.2/§2.4; object only with a reason |
 | R3-5 | B's leakage clauses (F), (S) | Supplement (A) vs inside M2 (B, D) | Proposal: supplement corollary |
 | R3-6 | Ĵ form | B/C/D form vs A's TI form | Proposal: B/C/D form |
+| R3-7 | Song–Liang wording, Thm 2 and Cor 2 | See §1 D15 | Final COVERAGE_MATRIX wording per item |
+| R3-8 | Clause placements still split | **K29:** A supplement (S11), B supplement STG(f), D supplement conditional on (LL); C FUTURE_WORK (C:19). **K30:** A supplement (S11), B main STG, D main STG′, C supplement C14. **K27:** A, B main STG; D supplement (D:21); C supplement C8. **K57 general accuracy:** A, B, D supplement; C FUTURE_WORK (C:28). **K70:** A, B main variant clause; D supplementary corollary (D:25); C attributed variant. **K73:** A, B, D supplement; C withdraws the operational region certification (C:44). Cited foundations (K28, K47, K60, K61, …) are not numbered supplement claims | Proposal in §2.1–§2.4; object only with a reason |
 
 ## 5. Round 3 agenda (frozen at dispatch)
 
-1. **Confirm or object**, item by item, to §2 (2.1–2.6) and §3. Answer R3-1 to R3-6 (≤ 60 words each).
+1. **Confirm or object**, item by item, to §2 (2.1–2.7) and §3. Answer R3-1 to R3-8 (≤ 60 words each).
 2. **Agenda 12, the HQ plan:**
    - the dependency graph between the final theorems and lemmas;
    - launch waves of 3–4, foundations first;
    - for each main theorem, a charter: goal, final statement, key lemma, fallback, stop rule, Lean core, check plan, numerical companion (≤ 20 seeds).
 3. **Final card drafting:** each seat drafts final cards for its assigned theorems (assignments in `ROUND3_BRIEF.md`).
 4. **"Nothing missing":** confirm that no proposal goal, Song–Liang item, THM-INV cell or N-obligation is left without a theorem, a FUTURE_WORK entry with a reason, or a cited lemma; or name what is missing.
+
+## 6. Correction log (audit `SYNTH_R2_AUDIT.md`, PASS WITH CORRECTIONS; v1 kept as `SYNTH_R2_v1.md`)
+
+| # | Change |
+|---|---|
+| 1 | §1 D15 rewritten: shared restrictions and the remaining Thm 2 / Cor 2 differences; new R3-7 |
+| 2 | §2.1 heading: 6 shared + STG proposed + optional slot; M7 basis "a proposal, not agreement" (C:143, 361) |
+| 3 | §2.3(a): computational specification A, the matrix domain and the definitions of C_σ, b_X, D_*, d_σ added (C:50, 64, 65) |
+| 4 | §2.3(b): the integer bound under C8's premises (2^{−60} ≤ h/2), then the continuous envelope 4 + 2D_*/c_ρ |
+| 5 | §2.3(b): sandwich scope restored (exact frontiers, fixed common nonempty V, same-data d_σ baseline, fixed partition, resolution/snap); Q5 (1), (2) written as statements |
+| 6 | §2.5: A's TI form reported as AMBIGUOUS/GAP (W2PC1:155) |
+| 7 | §2.5: (K − 1) attributed to D; A uses K; adoption marked as the chair's proposal |
+| 8 | §2.5: full domain κ̂ > 0, δ̂ < 1, ū̂ < 1, δ̂ū̂ < (1 − δ̂)(1 − ū̂), "n/a" otherwise |
+| 9 | §4: new R3-8 (K29, K30, K27, K57, K70, K73 placements; cited foundations distinguished) |
+| 10 | §2.6: rates are "proposed configurations", not adopted |
+| 11 | §2.4: K13, K24, K23, K58, K59, K75, K92 described separately with reasons; drop reasons for K12, K34, K66, K67, K91, K98 |
+| 12 | New §2.7: binding-goal safeguards (§13.1, §5.3, §5.4) with seat-line traces |
+
