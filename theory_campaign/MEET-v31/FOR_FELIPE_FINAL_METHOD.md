@@ -35,7 +35,13 @@ HQ, 2026-11-04. Approved by HQ after the method meeting (MEET-v31), two independ
 - **Descriptive findings**, 12 designs × 1 seed:
   - Arm C's evidence is **certifiably too low on 10 of 12 designs**: Ẑ falls below a model score the run itself found, which is a lower bound on Z. Arms A and B never are.
   - Arm B matched A's evidence but cost more, sometimes over 4 h against 10–28 min.
-- **A confirmatory test is running now** (118 fits, rule fixed in advance, dry-run first; due about 12:00 UTC). It decides whether the paper may say "the block start is cheaper than single-variable blocks at equal accuracy" and "the prior start underestimates the evidence".
+- **Confirmatory test (done, 2026-11-04; `theory/ABL-CONF` REPORT.md).** 118 fits, 3 designs × 10 seeds, rule fixed and dry-run in advance.
+  - **Licensed:** at equal declared budgets the prior start underestimates the evidence on all three designs, by 6–13 nats in median. The block start does not.
+  - **Cost, per design:**
+    - on the correlated design S5, the block start reached the same accuracy as single-variable blocks at about 30% less cost (10/10 paired wins);
+    - on the masked design S4, single-variable blocks never finished within 75 min (0/10), while the block start finished 9/10;
+    - on the favourable design S1, the two cost the same.
+  - Because the cost claim had to hold on every design, the overall cost claim is formally "inconclusive". The per-design results may be reported as pre-registered results.
 
 ## 3. Generality in (n, p): your rule
 
