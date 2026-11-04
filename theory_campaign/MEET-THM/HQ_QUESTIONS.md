@@ -54,3 +54,13 @@ Chair, 2026-11-04 ~03:00 UTC. Raised in Round 1 (`R1_*.md` §I; side-by-side `ev
 | Q3 §5.4 masked TV/KL | Not binding; obligation with fallback | Masked final-estimate TV/KL → `FUTURE_WORK.md` (FW2, V11/N10 OPEN); reverse-KL obstruction stated as a definitional fact. **Requirement:** the final list names at least one masked-regime accuracy statement paper 1 proves — Round 2 seats must name it (candidates: the certificate card's detection of underestimation, K42/K43/K45; a PIP bound conditional on delivery). |
 | Q4 Ĵ, leakage proxy | REPORTING, allowed (from existing quantities only; no random numbers; no feedback; POST HOC) | Round 2/3 seats give exact definitions (estimator, numerical label); the chair sends them to HQ at close for AMENDMENT_HQ_02. |
 | Chair | N9 → cross-family check in wave 2; R_n in H(f) is the meeting's | N9-KERNEL PROOF.md §1–3 → PC1 in wave 2 (author Claude; checker Codex Sol). R_n settled in Round 2. |
+
+**Q1(c) check, done 2026-11-04** (`evidence/CHK_INHERITED/REPORT.md`, PC1 gpt-6.1-sol, cross-family, line by line):
+- **Verdicts:**
+  - OWS-WS6(d): VERIFIED WITH AMENDMENT. Its TV conclusion needs the bounded-block setting (shipped B ≤ 16) or π₀(S₀) → 1 as a premise. The χ² divergence does not need either.
+  - OWS-WS7: VERIFIED WITH AMENDMENT. The amendment is wording only, on particle presence and the stage-count approximation; the obstruction is unchanged.
+  - OWS-WS3: VERIFIED.
+  - OWS-WS4: VERIFIED.
+  - N9-KERNEL §0–3: VERIFIED WITH AMENDMENT. The prose treats sufficient order conditions as necessary; the RB consequence needs stationarity made explicit.
+- **One-shot refutation:** the report's answer is "Yes, for the mathematical laws of the shipped start and target", in the bounded-block setting (§6). WS6(d) refutes it already at zero cross-block dependence. WS7's masked-family premises (H3, the joint ratio law) remain non-design premises.
+- **Consequence:** the Q1(c) condition is met, so (c) can ship as a stated proposition with these amendments. It does not reopen with HQ.
