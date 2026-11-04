@@ -417,3 +417,9 @@ None of these can change a method decision taken in MEET-v31 (S3 R3-7; R3_A R3-7
 5. **Calibration-cost ratio 0.0512 + 0.2048·I (single tier; rounded 0.05 + 0.2·I):** seat-derived, unchecked; quoted as such; matches the three logged designs.
 6. **Certificate card on the study fits:** computable wherever the saved top store exists (NOTS bundles; HQ action), otherwise not claimed.
 7. **A2 wording:** a THEOREM_LIST edit (PC1 claim 4); no METHODOLOGY_v3 sentence needs deleting.
+
+---
+
+## Amendment HQ_02 (2026-11-04): reporting fields and growth rate from the theorem meeting
+
+See `AMENDMENT_HQ_02.md`. Adopted: Ĵ (`J_hat`), d in the default 𝓗, ε̂_× (`cross_block_rmax`) with companions κ̂, δ̂, ū̂, r̂, η̂ (all POST HOC, no uniforms, no feedback), and the optional stacking configuration R′_n = 4⌈log₂(n + p + 1)⌉ (default stays R′ = 4). The rate 4⌈(n + p)⁶/4⌉ is a sufficient rate inside theorem M1 only, not a method configuration.
