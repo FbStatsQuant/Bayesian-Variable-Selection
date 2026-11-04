@@ -147,7 +147,7 @@ These are theorem obligations in `THEOREM_REVISION_INPUTS.md`, each with the dec
 
 ## 9. Open questions
 
-**Open method questions: none, conditional on N9** (running). If N9 fails, the method question reopens before the theorem meeting.
+**Open method questions: none, conditional on N9** (running). If N9 fails, the method question reopens before the theorem meeting. **Update 2026-11-04 (HQ): N9 PASSED** — all seven sub-claims PROVED (candidate, author-only), with exact numerical verification on the production engine headers and failing negative controls (`theory/N9-KERNEL:theory_campaign/N9-KERNEL/REPORT.md`, 3338896). The gate is closed: **open method questions: none.** An independent cross-family proof check is scheduled with V1's HQ.
 
 N9 (kernel reversibility and self-adjointness, exact start sampler; `THEOREM_REVISION_INPUTS.md` §3 N9, status words unchanged) is a **closure gate**, not an ordinary obligation. It is being checked against the code on branch `theory/N9-KERNEL`.
 
