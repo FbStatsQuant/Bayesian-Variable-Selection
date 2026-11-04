@@ -12,7 +12,8 @@ Updated 2026-11-04 (check wave 2 running).
 | — Inherited-proof check | **done**: `evidence/CHK_INHERITED/REPORT.md`. WS3, WS4 VERIFIED; WS6(d), WS7, N9 VERIFIED WITH AMENDMENT; one-shot refutation survives (Q1(c) met) |
 | 5. Round 2 (Seats A–D) | **done**: `R2_A.md`–`R2_D.md` (verbatim) |
 | 6. Check wave 2 | **running**: `CHECK_W2_BRIEF.md`; PC1 (gpt-6.1-sol) on A, B, D; PC2 (Opus 5.5) on C → `evidence/W2_PC1/`, `evidence/W2_PC2/`. Clerk building `evidence/R2_SIDE_BY_SIDE.md` |
-| 7–8 | not started |
+| 7. Synthesis 2 | written: `SYNTH_R2.md` (reconciled list proposal, §5.3 package, run-card, growth rates; R3-1..R3-6). **Auditor running** |
+| 8. Round 3; close | not started |
 
 HQ: Q1–Q4 answered (`evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`), applied in `HQ_QUESTIONS.md`. FUTURE_WORK opened (FW1, FW2).
 
@@ -25,7 +26,7 @@ HQ: Q1–Q4 answered (`evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`), applied in `HQ
 | Seat A, R2 | claudeAgent_personal · Fable 5.1 high | done → `R2_A.md` |
 | Seat B, R2 | claudeAgent · Fable 5.1 high | done → `R2_B.md` |
 | Seat C, R2 | codex · gpt-6-astra high | done → `R2_C.md` |
-| PC1, wave 2 | codex · gpt-6.1-sol high | …b7d18e2f-82e8-444b-a919-86419e5d799a |
+| PC1, wave 2 | codex · gpt-6.1-sol high | done → `evidence/W2_PC1/VERDICTS.md` |
 | PC2, wave 2 | claudeAgent · Opus 5.5 high | done → `evidence/W2_PC2/VERDICTS.md` (29 TRUE-AS-WRITTEN, 0 COUNTEREXAMPLE) |
 | Clerk, R2 side-by-side | claudeAgent · Haiku 5.5 | done |
 | Seat D, R2 | claudeAgent_personal · Fable 5.1 high | done → `R2_D.md` |
