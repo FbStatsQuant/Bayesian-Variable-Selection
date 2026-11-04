@@ -223,3 +223,7 @@ Next: THM-SYNTH (Fable) after METH-AUDIT + THM-INV + LIT-PAR → final theorem l
 - HQ rulings Q1–Q5 recorded (binding-goal readings, to be shown to Felipe). Song–Liang analytic separation → FUTURE_WORK (FW21); HQ recommends a scout HQ alongside wave 1.
 - AMENDMENT_HQ_02 recorded on theory/MEET-v31 (6a80fe5): J_hat, cross_block_rmax + companions, d in 𝓗, optional R'_n = 4⌈log₂(n+p+1)⌉; the (n+p)^6 rate kept theorem-side only.
 - ABL-CONF: 54/118 terminal at 05:28 UTC (relaunched as systemd units).
+
+## 2026-11-04 11:40 UTC: ABL-CONF done
+- 118/118 terminal (107 completed, 11 capped). Pre-registered verdicts: Claim 2 (prior start underestimates evidence at equal budgets) LICENSED on all 3 designs (median −6 to −13 nats); Claim 1 (block start cheaper at equal accuracy) INCONCLUSIVE overall: holds on S5 (10/10 paired wins, ~30% cheaper), holds_nondeliv on S4 (singleton 0/10 delivered within 75 min; block 9/10), no difference on S1. Guard passed. theory/ABL-CONF @ 7e12cf5.
+- Waiting on Felipe: approval of the paper-1 theorem list (theory/MEET-THM FOR_FELIPE_THEOREM_LIST.md) before wave 1 (M1, M3, LP-FOUND).
