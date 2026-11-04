@@ -67,9 +67,20 @@ def resolve(src):
             if cand.split('.')[0] in rest and f'theory_campaign/{b}/{cand}' in TC[b]:
                 fn = cand
                 break
+    inferred = ''
+    if fn is None:
+        # try a file named by a bare token (e.g. T38_STATEMENT) on any branch named in the cell
+        for bb in [b] + [x for x in BRANCHES if x in src and x != b]:
+            for tok in re.findall(r'[A-Za-z0-9_]{4,}', rest):
+                if f'theory_campaign/{bb}/{tok}.md' in TC[bb]:
+                    b, fn = bb, tok + '.md'; inferred = ' [file named by bare token in the cell]'
+                    break
+            if fn: break
+    if fn is None and f'theory_campaign/{b}/REPORT.md' in TC[b]:
+        fn = 'REPORT.md'; inferred = ' [the cell names no file; REPORT.md of that branch is the nearest — inferred by the registrar]'
     if fn is None:
         return f'origin/theory/{b}:theory_campaign/{b}/ (file not parsed from: {src})', ''
-    label = rest.replace(fn, '').strip(' ·')
+    label = rest.replace(fn, '').strip(' ·') + inferred
     return f'origin/theory/{b}:theory_campaign/{b}/{fn}', label
 
 # ---- registry parse ----
@@ -97,7 +108,7 @@ LOCKCAT = {}
 cat = None
 for i, l in enumerate(LOCK, 1):
     if l.startswith('## ') or l.startswith('### '):
-        cat = l.lstrip('# ').strip().split(' — ')[0].split(' (')[0][:60]
+        cat = l.lstrip('# ').strip().split(' — ')[0].split(' (')[0][:110]
     mm = re.match(r'\| `([^`]+)` \|', l)
     if mm and cat and cat[0] in '123':
         LOCKCAT.setdefault(mm.group(1), (cat, i))
@@ -159,13 +170,22 @@ PATS = [('LS0', r'with(?:out)? LS0|no LS0|LS0 route|LS0'),
         ('label', r'v3\.1|v3 as run|v3\.2|particle-parallel|island-parallel|iid final draws|iid draws')]
 
 def variant(r):
-    out = []
+    out = []; used = []
     for name, pat in PATS:
         for key in ('meaning', 'prem', 'rep', 'src', 'sf', 'xf'):
             m = re.search(pat, r[key])
             if m:
-                s = max(0, m.start() - 45); e = min(len(r[key]), m.end() + 60)
-                sn = re.sub(r'\s+', ' ', r[key][s:e]).replace('|', '/')
+                s0 = max(0, m.start() - 45); e0 = min(len(r[key]), m.end() + 60)
+                if any(k == key and not (e0 < a or s0 > b) for k, a, b in used):
+                    continue
+                used.append((key, s0, e0))
+                txt = r[key]
+                # start/end on word boundaries
+                if s0 > 0 and txt[s0 - 1] != ' ':
+                    j = txt.find(' ', s0); s0 = j + 1 if 0 <= j < m.start() else s0
+                if e0 < len(txt) and txt[e0] != ' ':
+                    j = txt.rfind(' ', m.end(), e0); e0 = j if j > m.end() else e0
+                sn = re.sub(r'\s+', ' ', txt[s0:e0]).replace('|', '/')
                 out.append(f'{name}: "…{sn}…" [{key}]')
                 break
     return '; '.join(out) if out else 'not stated'
@@ -258,7 +278,8 @@ def reg_table(idrole):
         path, label = resolve(r['src'])
         lc = LOCKCAT.get(rid)
         tag = (' ' + r['tag']) if r['tag'] else ''
-        w(f"| `{rid}`{tag} — {esc(role)} | {esc(r['author'])} | `{path}` · {esc(label or r['src'])} | {esc(hist(r))} | {flag(r)} | {esc(lc[0]) + ' (LOCKABLE_v2.md:L%d)' % lc[1] if lc else 'not listed'} | {esc(variant(r))} | `{REGBASE}REGISTRY_v2.md:L{r['line']}` |")
+        rl = (' — ' + esc(role)) if ('THEOREM_LIST' in role or 'INPUTS' in role or 'THM-INV' in role) else ''
+        w(f"| `{rid}`{tag}{rl} | {esc(r['author'])} | `{path}` · {esc(label or r['src'])} | {esc(hist(r))} | {flag(r)} | {esc(lc[0]) + ' (LOCKABLE_v2.md:L%d)' % lc[1] if lc else 'not listed'} | {esc(variant(r))} | `{REGBASE}REGISTRY_v2.md:L{r['line']}` |")
 
 def other_table(keys):
     w('| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |')
@@ -376,7 +397,7 @@ def stage1_lean():
     w()
 
 def stage2_items():
-    w('## 1. Per-item index: the draft theorem list (19 items V1–V4, A1–A4, D1–D4, S1–S4, C1, R1–R7; S4 is in the body)')
+    w('## 1. Per-item index: the draft theorem list (labels V1–V4, A1–A4, D1–D4, S1–S4, C1, R1–R7 = 24 entries; the brief says "19 + S4"; S4 is in the body — see §5.B B11)')
     w()
     w(f"Each block: the list's own status string (verbatim, with line in `{LISTSRC}`), then the registry rows the item rests on, then non-registry results it cites. "
       'Registry IDs were chosen by reading the item\'s "Status and components" paragraph (`THEOREM_LIST.md` (iii)), "Depends on" lines and `THEOREM_REVISION_INPUTS.md` §2 row for the item; rows cited by the list only as inputs of a *different* item are listed under that item.')
