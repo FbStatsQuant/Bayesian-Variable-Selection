@@ -26,7 +26,7 @@ HQ: Q1–Q4 answered (`evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`), applied in `HQ
 | Seat B, R2 | claudeAgent · Fable 5.1 high | done → `R2_B.md` |
 | Seat C, R2 | codex · gpt-6-astra high | done → `R2_C.md` |
 | PC1, wave 2 | codex · gpt-6.1-sol high | …b7d18e2f-82e8-444b-a919-86419e5d799a |
-| PC2, wave 2 | claudeAgent · Opus 5.5 high | …2df57d7b-1d88-4610-b84f-90d1812de7ae |
-| Clerk, R2 side-by-side | claudeAgent · Haiku 5.5 | …9dfd6826-2fce-4674-af17-76257f3bde30 |
+| PC2, wave 2 | claudeAgent · Opus 5.5 high | done → `evidence/W2_PC2/VERDICTS.md` (29 TRUE-AS-WRITTEN, 0 COUNTEREXAMPLE) |
+| Clerk, R2 side-by-side | claudeAgent · Haiku 5.5 | done |
 | Seat D, R2 | claudeAgent_personal · Fable 5.1 high | done → `R2_D.md` |
 | PC1, inherited proofs | codex · gpt-6.1-sol high | done |
