@@ -13,8 +13,8 @@ Updated 2026-11-04 (Round 3 running).
 | 5. Round 2 (Seats A–D) | **done**: `R2_A.md`–`R2_D.md` (verbatim) |
 | 6. Check wave 2 | **running**: `CHECK_W2_BRIEF.md`; PC1 (gpt-6.1-sol) on A, B, D; PC2 (Opus 5.5) on C → `evidence/W2_PC1/`, `evidence/W2_PC2/`. Clerk building `evidence/R2_SIDE_BY_SIDE.md` |
 | 7. Synthesis 2 | **final v2** `SYNTH_R2.md` (audit PASS WITH CORRECTIONS, 12 applied; `SYNTH_R2_AUDIT.md`) |
-| 8. Round 3 | **running** (`ROUND3_BRIEF.md`) |
-| 9. Close | not started |
+| 8. Round 3 | **done**: `R3_A.md`–`R3_D.md` (verbatim); decisions in `MINUTES.md` |
+| 9. Close | **assembling**: MINUTES, AMENDMENT_HQ_02_DEFINITIONS, FORMAT_NOTES written; clerk assembling THEOREM_LIST_FINAL, HQ_CHARTERS/, COVERAGE_MATRIX, FUTURE_WORK; registrar REGISTRY_PAPER1, NOTATION. Then auditor final pass, then HQ |
 
 HQ: Q1–Q5 answered (Q5: `evidence/2026-11-04_HQ_RULING_Q5.md`); Q1–Q4 (`evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`), applied in `HQ_QUESTIONS.md`. FUTURE_WORK opened (FW1, FW2).
 
@@ -33,6 +33,7 @@ HQ: Q1–Q5 answered (Q5: `evidence/2026-11-04_HQ_RULING_Q5.md`); Q1–Q4 (`evid
 | Seat B, R3 | claudeAgent · Fable 5.1 high | done → `R3_B.md` |
 | Seat C, R3 | codex · gpt-6-astra high | done → `R3_C.md` |
 | Seat D, R3 | claudeAgent_personal · Fable 5.1 high | done → `R3_D.md` |
+| Clerk, final assembly | claudeAgent · Sonnet 5.5 high | …36b1d58b-b9ce-4ba7-ace4-ae4e65b23ea8 |
 | Registrar, REGISTRY_PAPER1 + NOTATION (draft) | claudeAgent · Sonnet 5.5 high | …2668f3f9-c07f-4274-8b3e-69b1f54ef339 |
 | PC2, wave 2 | claudeAgent · Opus 5.5 high | done → `evidence/W2_PC2/VERDICTS.md` (29 TRUE-AS-WRITTEN, 0 COUNTEREXAMPLE) |
 | Clerk, R2 side-by-side | claudeAgent · Haiku 5.5 | done |
