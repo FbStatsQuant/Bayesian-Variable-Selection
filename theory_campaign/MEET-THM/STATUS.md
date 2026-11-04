@@ -23,6 +23,6 @@ HQ: Q1–Q4 answered (`evidence/2026-11-04_HQ_RULINGS_Q1-Q4.md`), applied in `HQ
 | Auditor, v2.1 narrow verification | codex · gpt-6.1-sol high | done → PASS WITH CORRECTIONS (applied) |
 | Seat A, R2 | claudeAgent_personal · Fable 5.1 high | done → `R2_A.md` |
 | Seat B, R2 | claudeAgent · Fable 5.1 high | done → `R2_B.md` |
-| Seat C, R2 | codex · gpt-6-astra high | …0db6c84e-4f11-4fa7-b104-c303325718a8 |
+| Seat C, R2 | codex · gpt-6-astra high | done → `R2_C.md` |
 | Seat D, R2 | claudeAgent_personal · Fable 5.1 high | done → `R2_D.md` |
 | PC1, inherited proofs | codex · gpt-6.1-sol high | done |
