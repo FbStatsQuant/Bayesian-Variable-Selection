@@ -43,7 +43,7 @@ def head(b):
     return git('rev-parse', '--short=7', f'origin/{b}').strip()
 HEADS = {b: head(b) for b in ['theory/campaign', 'theory/THM-SYNTH', 'theory/T38-RECORD', 'theory/MEET-v31', 'theory/THM-INV',
                                 'theory/L-LEAN', 'theory/METH-AUDIT', 'theory/API-MASKZPIP', 'theory/API-N200', 'theory/API-VSTAB',
-                                'theory/API-T26BUD', 'theory/LIT-PAR', 'main']}
+                                'theory/API-T26BUD', 'theory/LIT-PAR', 'theory/N9-KERNEL', 'theory/ABL-CONF', 'main']}
 
 # ---- branch/file index ----
 TC = collections.defaultdict(set)
@@ -305,13 +305,14 @@ def stage1_header():
     w()
     w('| Role | Path | Head |')
     w('|---|---|---|')
-    w(f"| draft list (19 items + S4 in body) | `{LISTSRC}` | `{HEADS['theory/THM-SYNTH']}` |")
+    w(f"| draft list (24 labelled entries: 23 table rows + S4 in body; see §5.B B11) | `{LISTSRC}` | `{HEADS['theory/THM-SYNTH']}` |")
     w(f"| registry | `{REGBASE}REGISTRY_v2.md` | `{HEADS['theory/T38-RECORD']}` |")
     w(f"| lockable candidates | `{REGBASE}LOCKABLE_v2.md` | `{HEADS['theory/T38-RECORD']}` |")
     w(f"| method-meeting obligations N1–N17 (§3) | `{INPSRC}` | `{HEADS['theory/MEET-v31']}` |")
     w(f"| inventory | `{INVSRC}` | `{HEADS['theory/THM-INV']}` |")
     w(f"| locked-proof register (locked results are not registry rows) | `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md` (also `origin/main`) | `{HEADS['theory/campaign']}` |")
     w(f"| Lean package | `origin/theory/L-LEAN:theory_campaign/L-LEAN/` | `{HEADS['theory/L-LEAN']}` |")
+    w(f"| new branches that appeared while this index was being built (read, not part of the original source list) | `origin/theory/N9-KERNEL` (`{head('theory/N9-KERNEL')}`: candidate PROOF.md for N9/V5), `origin/theory/ABL-CONF` (`{head('theory/ABL-CONF')}`: PREREG/RUNBOOK for the confirmatory start test; no theorem) | — |")
     w(f"| result sources outside the registry | `origin/theory/METH-AUDIT` (`{HEADS['theory/METH-AUDIT']}`), `API-MASKZPIP` (`{HEADS['theory/API-MASKZPIP']}`), `API-N200` (`{HEADS['theory/API-N200']}`), `API-VSTAB` (`{HEADS['theory/API-VSTAB']}`), `API-T26BUD` (`{HEADS['theory/API-T26BUD']}`), `LIT-PAR` (`{HEADS['theory/LIT-PAR']}`), MEET-v31 `evidence/` PC1, PC2 | — |")
     w()
     w('**Conventions used in the tables.**')
@@ -642,7 +643,7 @@ def stage4_conflicts():
        'V1(iii): "V5 (reversibility and self-adjointness) holds by construction, consultant-checked, but has **no registry row** (THM-INV §5.12)" — ' + R(LISTSRC, LIST, r'has \*\*no registry row\*\*') +
        '; INPUTS N9: "by construction, consultant-checked, **no registry row**" — ' + R(INPSRC, INP, r'no registry row\*\*\s*\(INV'),
        'LOCKED_PROOFS.md wave-1 row T09 (T7), all parts (i)-(v): "The exact start sampler draws from the start law pi0 with the right normaliser. Every elementary move (Gibbs, swaps, independence) and the randomly ordered round leave the bridge distribution invariant." — ' + R(LOCKEDP, LOCKED_T, r'\*\*T09\*\* \(T7\)') +
-       '; T09 STATEMENT (ii): "Each elementary kernel … is q_φ-reversible" — ' + R(T09P, T09L, r'\*\*\(ii\)\*\* Each elementary kernel') +
+       '; branch `N9-KERNEL` (new; head f16e864) PROOF.md §4: "Uniform random order of reversible kernels is self-adjoint … PROVED (candidate)" — `origin/theory/N9-KERNEL:theory_campaign/N9-KERNEL/PROOF.md:L302`' + '; T09 STATEMENT (ii): "Each elementary kernel … is q_φ-reversible" — ' + R(T09P, T09L, r'\*\*\(ii\)\*\* Each elementary kernel') +
        '; (iii): "K_φ is a Markov kernel, q_φ-invariant, and self-adjoint on L²(q_φ)" — ' + R(T09P, T09L, r'\*\*\(iii\)\*\* K_φ is a Markov kernel'))
     cf('C-M3 (F-MASKPIP M3)',
        'A1(v): "Do **not** cite F-MASKPIP M3 for this: THM-INV records M3 as XF ERROR." — ' + R(LISTSRC, LIST, r'Do \*\*not\*\* cite F-MASKPIP M3'),
@@ -737,6 +738,8 @@ def counts_table(extra):
     w(f"| Draft-list entries indexed (labels V1–V4, A1–A4, D1–D4, S1–S4, C1, R1–R7) | {len(ITEM_ORDER)} labelled entries = 23 summary-table rows + S4 (body). The task text and `MEET-THM/DOSSIER.md` say '19 items'; the labels enumerate to 24 → see COUNT DISCREPANCY in §5.B (B11). All 24 are indexed. | `{LISTSRC}` table lines L22–L{LROWS['R7']['line']} + S4 body L{LROWS['S4']['line']} |")
     w(f"| Method-meeting obligations indexed (N1–N17) | 17 (N18 conditional, not opened) | `{INPSRC}` §3 |")
     w(f"| Registry rows in `REGISTRY_v2.md` (main table §B + flagged §C) | 480 (431 + 49) | parsed from `{REGBASE}REGISTRY_v2.md`; the registry's A1 says 431 named results + 49 flagged |")
+    a1 = next(i for i, l in enumerate(REG, 1) if l.startswith('By status only:'))
+    w(f"| Registry author-status totals, all 431 named results (not the cited subset) | " + REG[a1 - 1].replace('By status only: ', '').replace('|', '/') + f" | `{REGBASE}REGISTRY_v2.md:L{a1}` |")
     w(f"| Distinct registry IDs cited under §1/§2 | {len(allids)} | §1 tables and §2 tables; verbatim rows in Appendix A |")
     w(f"| … by author status (verbatim words) | " + ', '.join(f'{k}: {v}' for k, v in sorted(au.items())) + " | registry 'Author status' column |")
     w(f"| … by flag | " + ', '.join(f'{k}: {v}' for k, v in sorted(fl.items())) + " | rule in the Conventions block |")
@@ -744,7 +747,7 @@ def counts_table(extra):
     w(f"| … by flag | " + ', '.join(f'{k}: {v}' for k, v in sorted(nfl.items())) + " | check history stated in the cited source |")
     w(f"| Lean files (`*.lean`) on all origin branches | {len(LEANSCAN)} (library 9 incl. `SmcBvs.lean`/`Axioms.lean`: {sum(1 for f in LEANSCAN if 'SmcBvs/SmcBvs' in f['p'] or f['p'].endswith('SmcBvs/SmcBvs.lean'))}; copies: {sum(1 for f in LEANSCAN if 'frozen' in f['p'] or 'packet' in f['p'])}) — all on `origin/theory/L-LEAN` | §3 |")
     w(f"| Lean theorem/lemma declarations in the library (current) / `sorry` / `admit` | {thm} / {sorry_cur} / 0 | §3.2 |")
-    w(f"| Lean copies containing `sorry` (statement stubs in `frozen/v1`, `fidelity/packet`) | {len([f for f in LEANSCAN if ('frozen' in f['p'] or 'packet' in f['p']) and f['sorry']])} files, {sum(f['sorry'] for f in LEANSCAN if ('frozen' in f['p'] or 'packet' in f['p']))} `sorry` | §3.3 |")
+    w(f"| Lean copies containing `sorry` (copies in `frozen/v1` and `fidelity/packet`; none in the library) | {len([f for f in LEANSCAN if ('frozen' in f['p'] or 'packet' in f['p']) and f['sorry']])} files, {sum(f['sorry'] for f in LEANSCAN if ('frozen' in f['p'] or 'packet' in f['p']))} `sorry` | §3.3 |")
     if extra:
         w(f"| Known-false list: COUNTEREXAMPLE-status rows / rows with an ERROR cell / registry retired table / later-source claims | {extra.get('A')} / {extra.get('B')} / {extra.get('C')} / {extra.get('D')} | §4.A / §4.B / §4.C / §4.D |")
         w(f"| CONFLICTs: registry's own (§A2) / registrar-found | {extra.get('nconf')} / {extra.get('ncf')} | §5.A / §5.B |")

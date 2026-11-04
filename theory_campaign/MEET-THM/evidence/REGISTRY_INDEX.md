@@ -8,13 +8,14 @@ Registrar run for the theorem-selection meeting (MEET-THM). **Mechanical index o
 
 | Role | Path | Head |
 |---|---|---|
-| draft list (19 items + S4 in body) | `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md` | `fc712e7` |
+| draft list (24 labelled entries: 23 table rows + S4 in body; see §5.B B11) | `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md` | `fc712e7` |
 | registry | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md` | `c785bc0` |
 | lockable candidates | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/LOCKABLE_v2.md` | `c785bc0` |
 | method-meeting obligations N1–N17 (§3) | `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md` | `8f6051b` |
 | inventory | `origin/theory/THM-INV:theory_campaign/THM-INV/REPORT.md` | `440a38d` |
 | locked-proof register (locked results are not registry rows) | `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md` (also `origin/main`) | `236892a` |
 | Lean package | `origin/theory/L-LEAN:theory_campaign/L-LEAN/` | `cfa78ed` |
+| new branches that appeared while this index was being built (read, not part of the original source list) | `origin/theory/N9-KERNEL` (`f16e864`: candidate PROOF.md for N9/V5), `origin/theory/ABL-CONF` (`c0730fe`: PREREG/RUNBOOK for the confirmatory start test; no theorem) | — |
 | result sources outside the registry | `origin/theory/METH-AUDIT` (`96464ae`), `API-MASKZPIP` (`1200e63`), `API-N200` (`453117a`), `API-VSTAB` (`ba9507f`), `API-T26BUD` (`2ac43ac`), `LIT-PAR` (`cf4a9d9`), MEET-v31 `evidence/` PC1, PC2 | — |
 
 **Conventions used in the tables.**
@@ -31,14 +32,15 @@ Registrar run for the theorem-selection meeting (MEET-THM). **Mechanical index o
 | Draft-list entries indexed (labels V1–V4, A1–A4, D1–D4, S1–S4, C1, R1–R7) | 24 labelled entries = 23 summary-table rows + S4 (body). The task text and `MEET-THM/DOSSIER.md` say '19 items'; the labels enumerate to 24 → see COUNT DISCREPANCY in §5.B (B11). All 24 are indexed. | `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md` table lines L22–L43 + S4 body L501 |
 | Method-meeting obligations indexed (N1–N17) | 17 (N18 conditional, not opened) | `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md` §3 |
 | Registry rows in `REGISTRY_v2.md` (main table §B + flagged §C) | 480 (431 + 49) | parsed from `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md`; the registry's A1 says 431 named results + 49 flagged |
+| Registry author-status totals, all 431 named results (not the cited subset) | PROVED 256, PROVED-UNDER 51, PROOF SKETCH 42, COUNTEREXAMPLE 34, CONJECTURE 29, OPEN 9, REFEREE 10. | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L30` |
 | Distinct registry IDs cited under §1/§2 | 166 | §1 tables and §2 tables; verbatim rows in Appendix A |
 | … by author status (verbatim words) | CONJECTURE: 3, COUNTEREXAMPLE: 11, OPEN: 4, PROOF SKETCH: 9, PROVED: 102, PROVED-UNDER: 25, REFEREE: 2, —: 10 | registry 'Author status' column |
 | … by flag | ASTRA-ONLY: 4, FLAG AUTHOR-ONLY: 51, FLAG SAME-FAMILY-ONLY: 9, FLAGGED-SUBCLAIM: 10, REFEREE-AUTHORED: 2, XF-ADVERSE: 23, XF-VERIFIED: 34, XF-VERIFIED*(qualified): 33 | rule in the Conventions block |
-| Non-registry results cited (distinct) | 34 | `items_data.py` NONREG; sources named per row |
-| … by flag | AUTHOR-ONLY: 15, NONE-STATED: 1, SAME-FAMILY-ONLY: 4, XF: 14 | check history stated in the cited source |
+| Non-registry results cited (distinct) | 36 | `items_data.py` NONREG; sources named per row |
+| … by flag | AUTHOR-ONLY: 16, NONE-STATED: 1, SAME-FAMILY-ONLY: 4, XF: 15 | check history stated in the cited source |
 | Lean files (`*.lean`) on all origin branches | 25 (library 9 incl. `SmcBvs.lean`/`Axioms.lean`: 9; copies: 16) — all on `origin/theory/L-LEAN` | §3 |
 | Lean theorem/lemma declarations in the library (current) / `sorry` / `admit` | 101 / 0 / 0 | §3.2 |
-| Lean copies containing `sorry` (statement stubs in `frozen/v1`, `fidelity/packet`) | 4 files, 40 `sorry` | §3.3 |
+| Lean copies containing `sorry` (copies in `frozen/v1` and `fidelity/packet`; none in the library) | 4 files, 40 `sorry` | §3.3 |
 | Known-false list: COUNTEREXAMPLE-status rows / rows with an ERROR cell / registry retired table / later-source claims | 34 / 40 / 19 / 24 | §4.A / §4.B / §4.C / §4.D |
 | CONFLICTs: registry's own (§A2) / registrar-found | 26 / 11 | §5.A / §5.B |
 
@@ -51,7 +53,7 @@ Each block: the list's own status string (verbatim, with line in `origin/theory/
 - **Draft status (verbatim):** T12, T31(i) PROVED-LOCKED; Prop P(ii),(v) PROVED (METH-AUDIT, candidate); ADRAFT-ThmA PROVED (Astra only) — `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md:L21`
 - **Draft tier / novelty (verbatim):** tier `v1 (cited lemma + Prop.)`; novelty KNOWN—CITE (Del Moral et al. 2006; Whiteley–Lee–Heine 2016 §5.1; Dai et al. 2022 (4.8)); method-specific hypotheses ours — `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md:L21`
 - **Item-level method variant:** item-level: stated conditional on a frozen calibration 𝓒 and R declared before final randomness (THEOREM_LIST.md V1(i)); v3.1 = v3 + LS0 + parallel layer (THEOREM_LIST.md header) -- LS0 not used by V1
-- **Note:** V5 (reversibility/self-adjointness/exact start sampler): THEOREM_LIST.md V1(iii) and THM-INV §5.12 say 'no registry row'; LOCKED_PROOFS.md has row T09 stating it -> CONFLICT C-V5.
+- **Note:** V5 (reversibility/self-adjointness/exact start sampler): THEOREM_LIST.md V1(iii) and THM-INV §5.12 say 'no registry row'; LOCKED_PROOFS.md has row T09 stating it; branch N9-KERNEL (new, after the registry) has a candidate PROOF.md for it -> CONFLICT C-V5 (§5.B B2).
 
 | Registry ID | Status (verbatim, REGISTRY_v2 "Author status") | Result lives at (branch:path · label) | Check history (from SF / XF cells) | Flag | LOCKABLE_v2 § | Method variant (only if a source states it) | Registry row |
 |---|---|---|---|---|---|---|---|
@@ -67,8 +69,9 @@ Each block: the list's own status string (verbatim, with line in `origin/theory/
 | `T31(i)` | PROVED-LOCKED (THEOREM_LIST.md V1(iii)) | `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md (row T31(i) (T22, certificates))` | LOCKED_PROOFS.md: 'Stage A 1 round (verified). Stage B rounds 1-3, all verified by Astra #2 and Opus xhigh. Stage C: no edits.' Wave-1 header as T12. | XF | not stated | none |
 | `MA-PropP` | PROVED (elementary) | `origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/PROOFS.md (## Proposition P); clause (iii) uses registry FMP-M1` | PROOFS.md: 'Every item is a candidate: not reviewed, not adopted.' THEOREM_LIST.md V3(iii): 'PROVED (candidate, elementary; METH-AUDIT PROOFS.md)'. PC1 'Not checked': 'MASKZPIP P3/C1 and Prop P were consulted only through their statements as quoted in THM-SYNTH.' PC1 claim 3 (Opus) proves a finite-R bound that INPUTS adds as (iii′).  Author: METH-AUDIT = Opus 5.5 (origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/REPORT.md:L3). | FLAG AUTHOR-ONLY | equal-weight vs Ẑ-weighted: stated explicitly -- (i) PIP^eq keeps single-island bias; (ii) PIP^zw consistent (THEOREM_LIST.md V3(i)); R fixed in advance | THEOREM_LIST.md V3(vi): (iv) identity 'yes'; no Lean file exists |
 | `T09` | PROVED-LOCKED (wave 1) -- THEOREM_LIST.md V1(iii) says V5 'has no registry row' | `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md (row T09 (T7), all parts (i)-(v)); statement: origin/theory/campaign:Docs/Theory/proofs/T09_T7_kernel_validity/STATEMENT.md lines 35-45 ((ii) each elementary kernel q_phi-reversible; (iii) K_phi q_phi-invariant and self-adjoint)` | LOCKED_PROOFS.md: 'Stage A 2 rounds (1 fatal in the lead's own gloss of (v), fixed). Stage B 2 rounds, both verified. Stage C: no edits.' Wave-1 header as T12. | XF | not stated | none |
+| `N9K` | Each of: Gibbs flip, uniform swap, neighbour swap, independence move γ_φ-reversible; uniform random order self-adjoint; draw_pi0 exact; Z̄₀ exact — all 'PROVED (candidate)' (N9-KERNEL PROOF.md §4 summary table) | `origin/theory/N9-KERNEL:theory_campaign/N9-KERNEL/PROOF.md (§1-§4; head f16e864, 2026-11-03 19:01, i.e. committed after the registry and after the draft list); harness origin/theory/N9-KERNEL:theory_campaign/N9-KERNEL/scripts/` | PROOF.md header: 'Each **PROVED** below is a *candidate*: it has not been reviewed.' No verifier or cross-family review exists in the sources read; author model not stated in the file. §5 'Departures of the implementation from the exact statements': 53-bit uniforms, rounding of lg0/d, one shared stream per island (floating-point / RNG-grid level). | FLAG AUTHOR-ONLY | stated: covers v3.1 as well because 'the v3.1 method decision … does not touch the step functions, the round or the start sampler' (PROOF.md header); exact arithmetic, (H-U), (H-D) | none |
 
-- **Flag summary for this item:** 3 × ASTRA-ONLY; 1 × XF-ADVERSE:GAP; 1 × XF-VERIFIED; 1 × non-registry:AUTHOR-ONLY; 3 × non-registry:XF
+- **Flag summary for this item:** 3 × ASTRA-ONLY; 1 × XF-ADVERSE:GAP; 1 × XF-VERIFIED; 2 × non-registry:AUTHOR-ONLY; 3 × non-registry:XF
 
 ### V2 — Prop W / W-cal / Lemma S (worker equivalence, bitwise)
 
@@ -415,7 +418,11 @@ Each block: the list's own status string (verbatim, with line in `origin/theory/
 | `FD-W(b)` — THEOREM_LIST.md S4: '(b) PROOF SKETCH' | PROOF SKETCH | `origin/theory/F-DRAFT:theory_campaign/F-DRAFT/NEW_TARGETS.md` · (summary table) · W(b) upper bound | SF: none; XF: none | FLAG AUTHOR-ONLY | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L389` |
 | `FD-W(c)` — THEOREM_LIST.md S4: '(c) CONJECTURE' | CONJECTURE | `origin/theory/F-DRAFT:theory_campaign/F-DRAFT/NEW_TARGETS.md` · (summary table) · W(c) sharp log log form | SF: none; XF: none | FLAG AUTHOR-ONLY | not listed | not stated | `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L390` |
 
-- **Flag summary for this item:** 17 × FLAG AUTHOR-ONLY; 1 × XF-VERIFIED
+| Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
+|---|---|---|---|---|---|---|
+| `AREV9-OWSTAB` | O-WSTAB W(a), W(b), W(c), W(d), W(e), W(f): 'VERIFIED under H-ORTH exactly as stated, including W(d)'s stronger upper-side premise'; O-WSTAB W prime: 'VERIFIED ideal full-space grid under H-ORTH; production-grid transfer remains GAP' (A-REV9 verdict table) | `origin/theory/A-REV9:theory_campaign/A-REV9/REVIEW.md lines 55-56 (verdict table), 113-115 ('Weight stability: restricted affirmative verdict'), 135 ('O-WSTAB W(a-f) and W prime under H-ORTH and ideal-grid scope only'); statements: origin/theory/O-WSTAB:theory_campaign/O-WSTAB/REPORT.md §3.5-3.7 (registry rows OWS-* are PROOF.md rows and carry no XF verdict)` | A-REV9 (Astra, cross-family) reviewed O-WSTAB REPORT §3.5-3.7. The registry's OWS-WS1..WS8 rows (PROOF.md) show SF none / XF none; the draft list's 'W(a–f) XF VERIFIED' (S4) and THM-INV §1 row 5 refer to this A-REV9 verdict, which is not a row of REGISTRY_v2.md. | XF | stated: 'under H-ORTH' and 'ideal-grid scope only' (A-REV9 REVIEW.md L135); W′: ideal full-space grid | none |
+
+- **Flag summary for this item:** 17 × FLAG AUTHOR-ONLY; 1 × XF-VERIFIED; 1 × non-registry:XF
 
 ### C1 — Thm SL (correlation robustness vs split-and-merge) **NEW-SYNTH**
 
@@ -770,14 +777,15 @@ Source for every N-block below: `origin/theory/MEET-v31:theory_campaign/MEET-v31
 
 - **Obligation (verbatim heading):** N9. V5: kernel reversibility, self-adjointness, exact start sampler. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L187`
 - **Status (verbatim):** *Status:* by construction, consultant-checked, **no registry row** (INV §5 item 12; TL:77); one-page route (TL V1(v)). — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L189`
-- **Check history as stated:** 'by construction, consultant-checked, no registry row' (INPUTS N9; THEOREM_LIST.md V1(iii); THM-INV §5.12). LOCKED_PROOFS.md lists T09 (wave 1) stating exactly the elementary-kernel reversibility, round self-adjointness, exact start sampler.
-- **Flag:** CONFLICT C-V5
+- **Check history as stated:** 'by construction, consultant-checked, no registry row' (INPUTS N9; THEOREM_LIST.md V1(iii); THM-INV §5.12). LOCKED_PROOFS.md lists T09 (wave 1) stating exactly the elementary-kernel reversibility, round self-adjointness, exact start sampler; branch N9-KERNEL (head f16e864, 19:01 on 2026-11-03) holds a candidate PROOF.md for the same statement against the production code (author-only, not reviewed).
+- **Flag:** CONFLICT C-V5; AUTHOR-ONLY (N9-KERNEL)
 - **Method variant (only if stated):** not stated
 - **Supports (verbatim):** *Supports:* M1, V1, N1, rejection of C10. *If it fails:* V1 fails; the method question reopens. — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L190`
 
 | Non-registry result | Status (verbatim from source) | Result lives at | Check history (as the source states it) | Flag | Method variant (only if a source states it) | Lean |
 |---|---|---|---|---|---|---|
 | `T09` | PROVED-LOCKED (wave 1) -- THEOREM_LIST.md V1(iii) says V5 'has no registry row' | `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md (row T09 (T7), all parts (i)-(v)); statement: origin/theory/campaign:Docs/Theory/proofs/T09_T7_kernel_validity/STATEMENT.md lines 35-45 ((ii) each elementary kernel q_phi-reversible; (iii) K_phi q_phi-invariant and self-adjoint)` | LOCKED_PROOFS.md: 'Stage A 2 rounds (1 fatal in the lead's own gloss of (v), fixed). Stage B 2 rounds, both verified. Stage C: no edits.' Wave-1 header as T12. | XF | not stated | none |
+| `N9K` | Each of: Gibbs flip, uniform swap, neighbour swap, independence move γ_φ-reversible; uniform random order self-adjoint; draw_pi0 exact; Z̄₀ exact — all 'PROVED (candidate)' (N9-KERNEL PROOF.md §4 summary table) | `origin/theory/N9-KERNEL:theory_campaign/N9-KERNEL/PROOF.md (§1-§4; head f16e864, 2026-11-03 19:01, i.e. committed after the registry and after the draft list); harness origin/theory/N9-KERNEL:theory_campaign/N9-KERNEL/scripts/` | PROOF.md header: 'Each **PROVED** below is a *candidate*: it has not been reviewed.' No verifier or cross-family review exists in the sources read; author model not stated in the file. §5 'Departures of the implementation from the exact statements': 53-bit uniforms, rounding of lg0/d, one shared stream per island (floating-point / RNG-grid level). | FLAG AUTHOR-ONLY | stated: covers v3.1 as well because 'the v3.1 method decision … does not touch the step functions, the round or the start sampler' (PROOF.md header); exact arithmetic, (H-U), (H-D) | none |
 
 ### N10
 
@@ -1198,7 +1206,7 @@ Each row: both statements verbatim, each with its own source path and line. Mark
 | # | CONFLICT | Side 1 (verbatim, source) | Side 2 (verbatim, source) |
 |---|---|---|---|
 | B1 | **CONFLICT** C-V2 (Prop W: how many designs were executed) | V2: "…executed check PASSED on the smoke problem and on **1/1 completed design** (p0500_S1_r001; the task file says treat METH-AUDIT's "3/3" as 1/1 + smoke)" — `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md:L110` | METH-AUDIT: "…on the smoke problem and on 3/3 study designs (§6)" — `origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/REPORT.md:L16`; MEET-v31 evidence lists three designs p0500_S1_r001, p0500_S4_r001, p0500_S5_r002, each "bitwise logZ TRUE pip TRUE hpm TRUE" — `origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_concurrency_runs.md:L8`; INPUTS §2 V2: "Executed: **smoke + 3/3 study designs**" — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L68` |
-| B2 | **CONFLICT** C-V5 (V5 / N9: kernel reversibility, self-adjointness, exact start sampler — "no registry row") | V1(iii): "V5 (reversibility and self-adjointness) holds by construction, consultant-checked, but has **no registry row** (THM-INV §5.12)" — `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md:L77`; INPUTS N9: "by construction, consultant-checked, **no registry row**" — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L189` | LOCKED_PROOFS.md wave-1 row T09 (T7), all parts (i)-(v): "The exact start sampler draws from the start law pi0 with the right normaliser. Every elementary move (Gibbs, swaps, independence) and the randomly ordered round leave the bridge distribution invariant." — `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md:L24`; T09 STATEMENT (ii): "Each elementary kernel … is q_φ-reversible" — `origin/theory/campaign:Docs/Theory/proofs/T09_T7_kernel_validity/STATEMENT.md:L43`; (iii): "K_φ is a Markov kernel, q_φ-invariant, and self-adjoint on L²(q_φ)" — `origin/theory/campaign:Docs/Theory/proofs/T09_T7_kernel_validity/STATEMENT.md:L45` |
+| B2 | **CONFLICT** C-V5 (V5 / N9: kernel reversibility, self-adjointness, exact start sampler — "no registry row") | V1(iii): "V5 (reversibility and self-adjointness) holds by construction, consultant-checked, but has **no registry row** (THM-INV §5.12)" — `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md:L77`; INPUTS N9: "by construction, consultant-checked, **no registry row**" — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L189` | LOCKED_PROOFS.md wave-1 row T09 (T7), all parts (i)-(v): "The exact start sampler draws from the start law pi0 with the right normaliser. Every elementary move (Gibbs, swaps, independence) and the randomly ordered round leave the bridge distribution invariant." — `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md:L24`; branch `N9-KERNEL` (new; head f16e864) PROOF.md §4: "Uniform random order of reversible kernels is self-adjoint … PROVED (candidate)" — `origin/theory/N9-KERNEL:theory_campaign/N9-KERNEL/PROOF.md:L302`; T09 STATEMENT (ii): "Each elementary kernel … is q_φ-reversible" — `origin/theory/campaign:Docs/Theory/proofs/T09_T7_kernel_validity/STATEMENT.md:L43`; (iii): "K_φ is a Markov kernel, q_φ-invariant, and self-adjoint on L²(q_φ)" — `origin/theory/campaign:Docs/Theory/proofs/T09_T7_kernel_validity/STATEMENT.md:L45` |
 | B3 | **CONFLICT** C-M3 (F-MASKPIP M3) | A1(v): "Do **not** cite F-MASKPIP M3 for this: THM-INV records M3 as XF ERROR." — `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md:L212` | D3(iii): "assembly of V1 (KNOWN—CITE + locked), A1 (PROOF SKETCH), D1 (PROVED counting), D2 (PROVED ideal grid / OPEN as-coded), **M3 (PROVED)**, R5 …" — `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md:L392`; registry `FMP-M3`: author PROVED, XF **ERROR** (A-REV9) — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L572` |
 | B4 | **CONFLICT** C-LS0 (is LS0 in the method / the production core?) | THM-INV §1 row 12: "LS0 absent from production (API-AUDIT)" — `origin/theory/THM-INV:theory_campaign/THM-INV/REPORT.md:L56`; §2 ledger: "**ID: LS0 is not in production** (API-AUDIT)" — `origin/theory/THM-INV:theory_campaign/THM-INV/REPORT.md:L91`; METH-AUDIT: "**LS0 is not in the production core** (API-AUDIT fact 3)" — `origin/theory/METH-AUDIT:theory_campaign/METH-AUDIT/REPORT.md:L235` | REGISTRY_v2.md §I: "**LS0 is part of the method**: approval in effect after O-LS0 (0/2,394 HPM changes …)" — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L978`; INPUTS M2: "**LS0 in the shipped core, after the final local search.**" — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L25` |
 | B5 | **CONFLICT** C-HEADROOM (R6 "≈ 4× headroom") | R6: "…under v3.1 (concurrent islands, Prop W) the same allocation gives ≈ 4× headroom…" — `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md:L699` | INPUTS §2 R6: "**"≈ 4× headroom" is not measured** (1.9× on 2 cores)" — `origin/theory/MEET-v31:theory_campaign/MEET-v31/THEOREM_REVISION_INPUTS.md:L114` |
@@ -1209,5 +1217,1667 @@ Each row: both statements verbatim, each with its own source path and line. Mark
 | B10 | **CONFLICT** C-PROMOTED (status word of Prop 2(a,b,d,e)) | THEOREM_LIST V1(iii): "Prop 2(a,b,d,e) PROVED-LOCKED" — `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md:L74` | registry `Prop2(a,b,d,e)`: author status "PROVED", XF "GAP" — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L260`; absent from the strict list of LOCKABLE_v2.md §1 (only `Prop2(c)` is there) — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/LOCKABLE_v2.md:L40`; the locked wave-1 result is T12 — `origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md:L26` |
 | B11 | **CONFLICT** C-TLCOUNT (number of draft-list items) | DOSSIER: "Draft theorem list (19 items G1–G6, tiers, HQ plan)" — `origin/theory/campaign:theory_campaign/MEET-THM/DOSSIER.md:L47`; the task statement: "19 items V1–V4, A1–A4, D1–D4, S1–S4, C1, R1–R7" | the labels enumerate to 4+4+4+4+1+7 = 24; the summary table has 23 rows (V1–V4, A1–A4, D1–D4, S1–S3, C1, R1–R7) — `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md:L36` — and S4 is the body section "### S4." — `origin/theory/THM-SYNTH:theory_campaign/THM-SYNTH/THEOREM_LIST.md:L501`; THEOREM_LIST.md states no total, and no source says which 19 are meant |
 
+## Appendix A. Registry rows cited in this index (verbatim cells, with `REGISTRY_v2.md` line numbers)
 
-<!-- build stage 4 of 5: later sections (per-item index, N-obligations, known-false, conflicts, Appendix A) are added in further commits -->
+166 distinct registry IDs are cited under §1 and §2. Row text (SF = same-family, XF = cross-family) is copied unchanged from `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md`.
+
+#### `Prop2(a,b,d,e)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L260`
+- Registry section: B.Theorem 4, Proposition 1, Proposition 2 — bookkeeping (W2-BOOK)
+- Paper target: Prop 2
+- Source (registry cell): W2-BOOK · REPORT.md §2 · Prop. 2 (a),(b),(d),(e) → `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W5-LOCKBOOK · REPORT.md verdict tables: CORRECT (T12(iii); output level; exact branch contributes 0)
+- Cross-family: **GAP** — A-REV4 · REVIEW.md verdict table: island identity and output Markov bound VERIFIED (event bound, not conditional unbiasedness); package GAP (probability convention B3: E[1_O Ẑ] ≤ Z·P(A) is fixed-data, jointly E[1_A Z(data)]; exact-branch extension B4: A undefined)
+- Repairs applied / pending: [PENDING] none written (A-REV4 proposes: fixed-data convention for all Prop. 2 expectations; A := whole space on the exact branch, or a separate exact-branch statement)
+- Open premises: GUARD; EX-A, EX-S, CAL, START
+
+#### `Prop2(c)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L261`
+- Registry section: B.Theorem 4, Proposition 1, Proposition 2 — bookkeeping (W2-BOOK)
+- Paper target: Prop 2
+- Source (registry cell): W2-BOOK · REPORT.md §2 · Prop. 2 (c) → `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W5-LOCKBOOK · REPORT.md verdict tables: CORRECT; ¾Cov/Z = 0.130481, relative bias −0.131716 reproduced to 10⁻⁵⁸
+- Cross-family: **VERIFIED** — A-REV4 · REVIEW.md verdict table: island identity and covariance VERIFIED (fixed data, frozen calibration, four conditionally iid potential islands; bias −¾Cov_C(PIP̂₁ⱼ, Ẑ₁)); A-REV4 Owls 50-digit finite-law reproduction (mpmath 1.3.0, PID 2508546, exit 0) matched −0.1739741778 (primary PIP bias) and −0.1317163950 (pooled relative bias), residuals ~10⁻⁵⁰ (numerical check, not an interval certificate)
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `ADRAFT-ThmA` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L372`
+- Registry section: B.Original-draft track (A-DRAFT, F-DRAFT; checked by A-REV4 where noted)
+- Paper target: none (original-draft track)
+- Source (registry cell): A-DRAFT · REPORT.md · §2.2 Theorem A (fixed-data particle consistency) → `origin/theory/A-DRAFT:theory_campaign/A-DRAFT/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED*** — A-REV4 REVIEW.md table + §4 (Astra checking Astra's A-DRAFT: independent of the author's run, NOT cross-family relative to it): Theorem A and A1 VERIFIED (fixed-data bounded-functional LLN/MSE, unnormalised identities; no CLT, T16 conjecture not upgraded)
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: EX-A, EX-S, START, CAL; potential uninterrupted run; N → ∞ at fixed calibration
+
+#### `ADRAFT-CorA1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L373`
+- Registry section: B.Original-draft track (A-DRAFT, F-DRAFT; checked by A-REV4 where noted)
+- Paper target: none (original-draft track)
+- Source (registry cell): A-DRAFT · REPORT.md · §2.3 Corollary A1 (from locked T12) → `origin/theory/A-DRAFT:theory_campaign/A-DRAFT/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED*** — A-REV4 REVIEW.md table + §4 (Astra checking Astra's A-DRAFT: independent of the author's run, NOT cross-family relative to it): A1 VERIFIED (pre-resampling identity; pooled product bias −¾Cov)
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: admissible terminal boundary
+
+#### `ADRAFT-uniPIP` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L374`
+- Registry section: B.Original-draft track (A-DRAFT, F-DRAFT; checked by A-REV4 where noted)
+- Paper target: none (original-draft track)
+- Source (registry cell): A-DRAFT · REPORT.md · §2.4 Uniform PIPs without (L+4)ρ*→0 → `origin/theory/A-DRAFT:theory_campaign/A-DRAFT/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED*** — A-REV4 DRAFTS_CHECK §A-DRAFT §2 (Astra checking Astra's A-DRAFT: independent of the author's run, NOT cross-family relative to it): D7 checked (elementary detailed balance; no p-union-bound loss); does not prove output availability → 1
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: re-control each measured-round start via T12
+
+#### `IND-T` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L190`
+- Registry section: B.Supplement — premises of Theorem B and Lemma U (W2-PREM; cross-family A-REV1/A-REV2)
+- Paper target: supplement (Thm B′/B♯)
+- Source (registry cell): W2-PREM · REPORT.md §1 · Theorem IND-T → `origin/theory/W2-PREM:theory_campaign/W2-PREM/REPORT.md`
+- Author status: PROVED
+- Same-family: none — authored by W2-PREM; no same-family verifier
+- Cross-family: **VERIFIED*** — A-REV1 §5: VERIFIED for the uninterrupted process (stopping-time argument); completion conditioning / fresh-score sets not covered
+- Repairs applied / pending: none needed
+- Open premises: EX-S, EX-A; H′ = L+5 rounds after the last resampling
+
+#### `Lemma-STREAM` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L365`
+- Registry section: B.Late-landing: implementation lemmas (W5-LOCKBOOK audit)
+- Paper target: supplement (Thm B′/B♯ via IND-T)
+- Source (registry cell): W5-LOCKBOOK · AUDIT.md §4 (REPORT.md §3) → `origin/theory/W5-LOCKBOOK:theory_campaign/W5-LOCKBOOK/AUDIT.md`
+- Author status: PROVED
+- Same-family: none — authored by W5-LOCKBOOK
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: EX-S; read, not run; second reader requested
+
+#### `Impl-lemmas` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L366`
+- Registry section: B.Late-landing: implementation lemmas (W5-LOCKBOOK audit)
+- Paper target: supplement
+- Source (registry cell): W5-LOCKBOOK · AUDIT.md §7 (GUARD, OUT, SR, STREAM, LS) → `origin/theory/W5-LOCKBOOK:theory_campaign/W5-LOCKBOOK/AUDIT.md`
+- Author status: PROVED
+- Same-family: none — authored by W5-LOCKBOOK (code reading; read, not run)
+- Cross-family: none — cross-family read requested for the stop-site list and the cache/offer invariant
+- Repairs applied / pending: caveats G1–G4 and emit_centre=true now written into the statements
+- Open premises: completeness of the stop-site list; cache-insertions-offered invariant; D61 same-seed replay not done
+
+#### `FMP-M1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L570`
+- Registry section: B.New results: masked-regime meaning of Ẑ and the PIPs (F-MASKPIP; unreviewed)
+- Paper target: Thm 4 / Prop 2 / Thm 6 masked-regime PIP–evidence meaning (new; post-dates F-REFINE)
+- Source (registry cell): F-MASKPIP · REPORT.md §3 Proposition M1 (evidence-weighted PIP bound) → `origin/theory/F-MASKPIP:theory_campaign/F-MASKPIP/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: **VERIFIED** — A-REV9 · REVIEW.md: M1(a–c) VERIFIED under locked exact frozen-run assumptions
+- Repairs applied / pending: none
+- Open premises: locked T12(i.b), T23(ii), W2-T26 Lemmas 2–3 (VERIFIED by A-REV4 and W5-LOCKBOOK); T12 (R3) conditional step; EX-A, EX-S, CAL, START
+
+#### `LemmaRO` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L258`
+- Registry section: B.Theorem 4, Proposition 1, Proposition 2 — bookkeeping (W2-BOOK)
+- Paper target: Thm 4 / Prop 2 (run/output split)
+- Source (registry cell): W2-BOOK · REPORT.md §2 · Lemma RO → `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W5-LOCKBOOK · REPORT.md verdict tables (W2-BOOK): CORRECT; 𝒪 = 𝒢ᶜ ∩ 𝒪̄ verified in code
+- Cross-family: **VERIFIED*** — A-REV6 · REVIEW.md: VERIFIED conditional implication (nonnegative potential values; chosen output projection); BOOK R1 pending Claude [earlier: A-REV4 · BOOK_CHECK.md 'RO: VERIFIED' for statistics extended by zero off their availability events; the potential statistic must be nonnegative (and bounded) on all of Ō, and RO gives no equality conditional on completion]
+- Repairs applied / pending: none
+- Open premises: GUARD (implementation fact: stop-only coupling)
+
+#### `CEX-guard` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L259`
+- Registry section: B.Theorem 4, Proposition 1, Proposition 2 — bookkeeping (W2-BOOK)
+- Paper target: Prop 2 (negative result)
+- Source (registry cell): W2-BOOK · REPORT.md §0.3 · exact counterexample → `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md`
+- Author status: COUNTEREXAMPLE
+- Same-family: **VERIFIED** — W5-LOCKBOOK · REPORT.md verdict tables: CONFIRMED, reproduced exactly; also under the engine-faithful cost rule (bias can be upward)
+- Cross-family: **VERIFIED*** — A-REV4 · BOOK_CHECK.md: 'path-dependent stopping can invalidate conditional unbiasedness' VERIFIED qualitatively by an analytic example; BOOK's cost example is stylised and does not establish the size or direction of production bias
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `RO-splits` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L265`
+- Registry section: B.Theorem 4, Proposition 1, Proposition 2 — bookkeeping (W2-BOOK)
+- Paper target: supplement
+- Source (registry cell): W2-BOOK · REPORT.md §2 · run/output split for T11(iii), T14(i), T15, T23(ii), T25(iv), T31, T34 → `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED*** — W5-LOCKBOOK · REPORT.md verdict tables: T11(iii), T14(i), T15, T25(iv), T31, T34 edits CORRECT; T23(ii-d) output corollary GAP (false on the exact branch; restrict to SMC branch)
+- Cross-family: none
+- Repairs applied / pending: [APPLIED] T23(ii-d) restricted to the SMC branch in W5-LOCKBOOK STATEMENTS.tex
+- Open premises: GUARD
+
+#### `BOOK-B1-GUARD` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L780`
+- Registry section: C. Flagged sub-claims (ERROR / GAP verdicts inside larger results; not counted in A1)
+- Paper target: GUARD / Lemma RO
+- Source (registry cell): W2-BOOK · PROOF §0.1, REPORT §2 · 'every reported output equals a component of R̄' → `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/PROOF.md`
+- Author status: —
+- Same-family: none
+- Cross-family: **ERROR** — A-REV4 · REVIEW.md verdict table: 'W2-BOOK GUARD literal full-output claim' ERROR (timing, allocation and peak-memory metadata differ on successful same-seed executions); the statistical stop-only reading checks by static inspection (v3_runtime.h:13–27, v3_engine.h:335–336, v3_core.cpp:435–450)
+- Repairs applied / pending: [PENDING] none written (A-REV4: project records onto statistical estimates, scores, discrete records and statuses; exclude resource/timing metadata from equality and replay tests)
+- Open premises: —
+
+#### `Stopped-HPM-G1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L766`
+- Registry section: C. Flagged sub-claims (ERROR / GAP verdicts inside larger results; not counted in A1)
+- Paper target: Thm 4 (U)
+- Source (registry cell): W2-BOOK Lemma RO / GUARD: 'every partial output hidden' → `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md`
+- Author status: —
+- Same-family: **GAP** — W5-LOCKBOOK · REPORT.md verdict tables §5: false literally — a stopped fit returns an incomplete HPM and the archive carries partial island evidences (G1, G2)
+- Cross-family: none
+- Repairs applied / pending: [APPLIED] conventions 𝒢 ⊆ U and 'reported = estimate fields' written into W5-LOCKBOOK STATEMENTS.tex; Felipe to confirm
+- Open premises: —
+
+#### `GUARD-diag(A8)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L793`
+- Registry section: C. Flagged sub-claims (ERROR / GAP verdicts inside larger results; not counted in A1)
+- Paper target: GUARD (IMPL)
+- Source (registry cell): W2-BOOK §0.1 literal claim 'every reported output equals the guard-free output' → `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md`
+- Author status: —
+- Same-family: n/a (referee-authored)
+- Cross-family: referee-authored: A-REV8 · REVIEW.md E2: RuntimeGuard::check appends a GuardRecord even when it does not stop, so operational diagnostics differ from the guard-free run; restrict the transfer to statistical outputs, scored sets, decisions and status semantics
+- Repairs applied / pending: [PENDING] restrict GUARD to statistical fields (also A-REV4, A-REV6 BOOK R1)
+- Open premises: —
+
+#### `FMP-M2` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L571`
+- Registry section: B.New results: masked-regime meaning of Ẑ and the PIPs (F-MASKPIP; unreviewed)
+- Paper target: Thm 4 / Prop 2 / Thm 6 masked-regime PIP–evidence meaning (new; post-dates F-REFINE)
+- Source (registry cell): F-MASKPIP · REPORT.md §3 Corollary M2 (dichotomies) → `origin/theory/F-MASKPIP:theory_campaign/F-MASKPIP/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: **VERIFIED** — A-REV9 · REVIEW.md: M2(a–e) VERIFIED as intersection bounds, not completion-conditioned guarantees
+- Repairs applied / pending: none
+- Open premises: M1 (Markov)
+
+#### `FMP-M3` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L572`
+- Registry section: B.New results: masked-regime meaning of Ẑ and the PIPs (F-MASKPIP; unreviewed)
+- Paper target: Thm 4 / Prop 2 / Thm 6 masked-regime PIP–evidence meaning (new; post-dates F-REFINE)
+- Source (registry cell): F-MASKPIP · REPORT.md §3 Proposition M3 (no conditional evidence theorem from first moments) → `origin/theory/F-MASKPIP:theory_campaign/F-MASKPIP/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: **ERROR** — A-REV9 · REVIEW.md: ERROR (probability-one counterexample); conditional means VERIFIED for 0 < κ < 1
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `T26-Lemmas2-3` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L273`
+- Registry section: B.Theorem 6 — evidence and PIP consistency (W2-T26)
+- Paper target: Thm 6
+- Source (registry cell): W2-T26 · REPORT.md §2 · Lemmas 2, 3 → `origin/theory/W2-T26:theory_campaign/W2-T26/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W5-LOCKBOOK · REPORT.md verdict tables: CORRECT, including the flagged Lemma 3 step (T15 at a terminal-round prefix = T12(i.b))
+- Cross-family: **VERIFIED** — A-REV4 · REVIEW.md verdict table: W2-T26 Lemmas 2 and 3 VERIFIED (first departure and refreshed occupancy remove the L factor)
+- Repairs applied / pending: none
+- Open premises: Lemma 3's use of T15 at a terminal-round prefix flagged for review
+
+#### `T03♯` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L134`
+- Registry section: B.Theorem 1 — T03♯ and its T02 lemmas (W1-T03R; verifier W2-VT03R; cross-family A-REV2)
+- Paper target: Thm 1
+- Source (registry cell): W1-T03R · REPORT.md §1 · Theorem T03♯ (i)–(v) → `origin/theory/W1-T03R:theory_campaign/W1-T03R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W2-VT03R · REPORT.md verdict table rows 12, 15–26, VERIFIED; no GAP/ERROR in the mathematics
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 S03 T03♯(i)–(v) VERIFIED under exactly its fixed-design, fixed-s₀ hypotheses
+- Repairs applied / pending: none needed (finite-n disclosure sentence replaced: thresholds ≈ 2·10⁶, not 1.2·10⁵; see flagged claim T03-1.2e5)
+- Open premises: R1, G, R, SE_λ(j₀), SE_w(m♯; g₀), BM-∞ or BM(c>c₀); fixed s₀; asymptotic only; proof thresholds n ≳ 2·10⁶; beta-min constant ≥ 43× above executed signals
+
+#### `OPW2-ThmA` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L600`
+- Registry section: B.New results: PW2-free variance bound for the island evidence ratio (O-PW2; unreviewed)
+- Paper target: Thm 4 / Prop 2 evidence variance (T25(iv) without PW2) (new; supplement)
+- Source (registry cell): O-PW2 · REPORT.md §1 Theorem A (exact variance identity) → `origin/theory/O-PW2:theory_campaign/O-PW2/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: **VERIFIED** — A-REV9 · REVIEW.md: A1–A4 VERIFIED
+- Repairs applied / pending: none
+- Open premises: fixed data, successful frozen calibration, any q_t-invariant round kernels; EX-A, EX-S, CAL; no mixing assumption
+
+#### `OPW2-ThmB` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L601`
+- Registry section: B.New results: PW2-free variance bound for the island evidence ratio (O-PW2; unreviewed)
+- Paper target: Thm 4 / Prop 2 evidence variance (T25(iv) without PW2) (new; supplement)
+- Source (registry cell): O-PW2 · REPORT.md §1 Theorem B (two-sided non-asymptotic bound) and Corollary B2 → `origin/theory/O-PW2:theory_campaign/O-PW2/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: **VERIFIED*** — A-REV9 · REVIEW.md: B1–B3 VERIFIED; the O(N^{−3/2}) remainder only for fixed inputs/grid or uniform constants
+- Repairs applied / pending: none
+- Open premises: as Theorem A
+
+#### `OPW2-ThmC` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L602`
+- Registry section: B.New results: PW2-free variance bound for the island evidence ratio (O-PW2; unreviewed)
+- Paper target: Thm 4 / Prop 2 evidence variance (T25(iv) without PW2) (new; supplement)
+- Source (registry cell): O-PW2 · REPORT.md §1 Theorem C (constants from stage primitives) → `origin/theory/O-PW2:theory_campaign/O-PW2/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: L² mixing condition λ_t(1 + ḡ_tλ_t) ≤ κ < 1 and sup-norm control of h_{s,T}; NOT implied by the locked T09 constant (exponentially small): with only locked inputs the bound grows geometrically in T and is VACUOUS at study scale (author)
+
+#### `FMP-Na` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L576`
+- Registry section: B.New results: masked-regime meaning of Ẑ and the PIPs (F-MASKPIP; unreviewed)
+- Paper target: Thm 4 / Prop 2 / Thm 6 masked-regime PIP–evidence meaning (new; post-dates F-REFINE)
+- Source (registry cell): F-MASKPIP · REPORT.md §3 Proposition N (a): evidence collapse on non-crossing → `origin/theory/F-MASKPIP:theory_campaign/F-MASKPIP/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: **GAP** — A-REV9 · REVIEW.md: literal finite-index/rate wording GAP; finite-index inequality with the actual non-crossing probability VERIFIED
+- Repairs applied / pending: none
+- Open premises: δ₁ → 0 and liminf P_𝓒(f_{r,0} > ½) ≥ κ > 0
+
+#### `T26-ThmA` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L274`
+- Registry section: B.Theorem 6 — evidence and PIP consistency (W2-T26)
+- Paper target: Thm 6
+- Source (registry cell): W2-T26 · REPORT.md §2 · Theorem A → `origin/theory/W2-T26:theory_campaign/W2-T26/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W5-LOCKBOOK · REPORT.md verdict tables: CORRECT; (A-0) constants 3x/27x/108x checked; OUT verified in code
+- Cross-family: **VERIFIED*** — A-REV4 · REVIEW.md verdict table: Theorem A, actual written statement, VERIFIED (EX-A/EX-S/CAL/START/OUT, feasibility, P1 and P1-ex; output-intersected conclusion only); the advertised single-premise shorthand is GAP (P1 restricted to successful SMC says nothing on the exact branch)
+- Repairs applied / pending: none
+- Open premises: EX-A, EX-S, CAL, START, OUT, (Ω), one premise (P1): (T_n+1)Δ_n → 0
+
+#### `T26-ThmB` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L275`
+- Registry section: B.Theorem 6 — evidence and PIP consistency (W2-T26)
+- Paper target: Thm 6
+- Source (registry cell): W2-T26 · REPORT.md §2 · Theorem B → `origin/theory/W2-T26:theory_campaign/W2-T26/REPORT.md`
+- Author status: PROVED-UNDER
+- Same-family: **VERIFIED** — W5-LOCKBOOK · REPORT.md verdict tables: CORRECT as a conditional composition
+- Cross-family: **VERIFIED*** — A-REV4 · REVIEW.md verdict table: Theorem B VERIFIED as a conditional composition of locked T03 and T22(iii); EXP′/VIS/NL remain assumptions
+- Repairs applied / pending: none
+- Open premises: T03's G,R,SE,BM and T22(iii)'s (F1); deterministic-budget form vacuous below n ~ 10⁸
+
+#### `T26-PropC` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L276`
+- Registry section: B.Theorem 6 — evidence and PIP consistency (W2-T26)
+- Paper target: Thm 6 / Thm 5(a)
+- Source (registry cell): W2-T26 · REPORT.md §2 · Prop. C (ORTH family) → `origin/theory/W2-T26:theory_campaign/W2-T26/REPORT.md`
+- Author status: PROOF SKETCH
+- Same-family: none — W5-LOCKBOOK · REPORT.md verdict tables: PROOF SKETCH kept; algebra re-done, no error found; constants not written out
+- Cross-family: **GAP** — A-REV4 · REVIEW.md verdict table: Proposition C GAP; retain PROOF SKETCH; A-REV4 §1 writes a proposed repair for the missing uniform probability details (see AREV4-PropC-repair)
+- Repairs applied / pending: [PENDING] proposed by A-REV4 (not written into the source), status stays PROOF SKETCH
+- Open premises: p ≤ n−1, X′X=(n−1)I
+
+#### `T26-shorthand` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L783`
+- Registry section: C. Flagged sub-claims (ERROR / GAP verdicts inside larger results; not counted in A1)
+- Paper target: Thm 6 (statement wording)
+- Source (registry cell): W2-T26 · REPORT.md / PROOF.md 'advertised single-premise shorthand' (P1 on successful SMC) → `origin/theory/W2-T26:theory_campaign/W2-T26/REPORT.md`
+- Author status: —
+- Same-family: none
+- Cross-family: **GAP** — A-REV4 · REVIEW.md verdict table: GAP; keep P1-ex (or the global deterministic-budget Δ premise); the written theorem already does
+- Repairs applied / pending: [PENDING] restore P1-ex in the shorthand
+- Open premises: —
+
+#### `T26-Lemma1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L272`
+- Registry section: B.Theorem 6 — evidence and PIP consistency (W2-T26)
+- Paper target: Thm 6
+- Source (registry cell): W2-T26 · REPORT.md §2 · Lemma 1 → `origin/theory/W2-T26:theory_campaign/W2-T26/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W5-LOCKBOOK · REPORT.md verdict tables (W2-T26): CORRECT (grid check 66/66)
+- Cross-family: **VERIFIED** — A-REV4 · REVIEW.md verdict table: W2-T26 Lemma 1 VERIFIED (endpoint identity, positive finite bridge, S₀ feasible)
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `FMP-ThmR` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L573`
+- Registry section: B.New results: masked-regime meaning of Ẑ and the PIPs (F-MASKPIP; unreviewed)
+- Paper target: Thm 4 / Prop 2 / Thm 6 masked-regime PIP–evidence meaning (new; post-dates F-REFINE)
+- Source (registry cell): F-MASKPIP · REPORT.md §3 Theorem R (restart theorem for the PIPs; no evidence input) → `origin/theory/F-MASKPIP:theory_campaign/F-MASKPIP/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: composition; CONDITIONAL on two masked-regime inputs: DELIV-POP (OPEN) and REP (W1-T24G Theorem B, candidate)
+
+#### `FMP-ThmRprime` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L574`
+- Registry section: B.New results: masked-regime meaning of Ẑ and the PIPs (F-MASKPIP; unreviewed)
+- Paper target: Thm 4 / Prop 2 / Thm 6 masked-regime PIP–evidence meaning (new; post-dates F-REFINE)
+- Source (registry cell): F-MASKPIP · REPORT.md §3 Corollary R′ (n-indexed form) → `origin/theory/F-MASKPIP:theory_campaign/F-MASKPIP/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: composition, conditional on its inputs (triangular array R1)
+
+#### `FMP-DELIVPOP` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L575`
+- Registry section: B.New results: masked-regime meaning of Ẑ and the PIPs (F-MASKPIP; unreviewed)
+- Paper target: Thm 4 / Prop 2 / Thm 6 masked-regime PIP–evidence meaning (new; post-dates F-REFINE)
+- Source (registry cell): F-MASKPIP · REPORT.md §3 DELIV-POP (population delivery) → `origin/theory/F-MASKPIP:theory_campaign/F-MASKPIP/REPORT.md`
+- Author status: OPEN
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: stronger than T38's one-particle DELIV; medium-cost route via an amplification lemma from W4-SHARE D4
+
+#### `ThmB-T24` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L210`
+- Registry section: B.Theorem 4 route (e′) / supplement — Gibbs-path repair, restated T24 (W1-T24G; verifier W2-VT24G; cross-family A-REV1)
+- Paper target: supplement (Thm B′/B♯); Thm 4 route (e′)
+- Source (registry cell): W1-T24G · REPORT.md §1 · Theorem B (restated T24) → `origin/theory/W1-T24G:theory_campaign/W1-T24G/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED*** — W2-VT24G · REPORT.md verdict table rows 'Theorem B': VERIFIED after Lemma F′ repair
+- Cross-family: **VERIFIED*** — A-REV1 · REVIEW.md §2 Theorem B, restated T24, finite inequality VERIFIED after F′ repair; statistical application remains GAP
+- Repairs applied / pending: [APPLIED] Lemma F′ applied (W2-VT24G); boundary conventions (H=0, a=0, c*≤0) to W6-FIXREV1 — now written in the W6-FIXREV REPORT.md (same-family, not yet reviewed)
+- Open premises: EX-A, EX-S, SR, φ=1, H terminal rounds without resampling, s₀+a ≤ K; usefulness asymptotic only (vacuous at n=200)
+
+#### `OBG-BG3` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L612`
+- Registry section: B.v2 — O-BGIBBS final head 55679ee: BG2, BG1′, LH-rate, BG3, LH-lock (T38(b) without LS0; author only; A-REV7 pending)
+- Paper target: Thm 5 (b) without LS0 (new)
+- Source (registry cell): O-BGIBBS · REPORT.md §2 · Theorem BG3 (locked start set + terminal downhill: the final run alone) → `origin/theory/O-BGIBBS:theory_campaign/O-BGIBBS/REPORT.md`
+- Author status: PROVED
+- Same-family: none — none (author only; A-REV7 pending)
+- Cross-family: **VERIFIED** — A-REV7 · REVIEW.md: VERIFIED (abstract round-boundary lock and terminal scoring inequality given EX-A/EX-S/SR); A-REV6 · REVIEW.md: conditional first-exit/terminal-hazard template
+- Repairs applied / pending: none
+- Open premises: deterministic given (L1) lock ε_𝒰 and (L2) terminal downhill β₁; data and 𝓒 fixed; no resampling in the L + 4 terminal rounds (v3_engine.h:352–373)
+
+#### `OBG-LH-lock` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L614`
+- Registry section: B.v2 — O-BGIBBS final head 55679ee: BG2, BG1′, LH-rate, BG3, LH-lock (T38(b) without LS0; author only; A-REV7 pending)
+- Paper target: Thm 5 (b) without LS0 (new)
+- Source (registry cell): O-BGIBBS · REPORT.md §2 · Proposition LH-lock (premises of BG3 on LH exact Gram, p fixed) → `origin/theory/O-BGIBBS:theory_campaign/O-BGIBBS/REPORT.md`
+- Author status: PROOF SKETCH
+- Same-family: none — none (author only; A-REV7 pending)
+- Cross-family: **VERIFIED*** — A-REV7 · REVIEW.md: VERIFIED as a conditional fixed-p implication from strict C1–C3 and block keep margins (Astra-authored completion §3, one common data event); unrestricted LH locking is FALSE (claim OBG-LH-lock-general). Fixed p eventually takes exact enumeration: an SMC component result
+- Repairs applied / pending: none
+- Open premises: γ₁ gaps (C1)–(C3) as checkable design conditions: verified by exhaustive enumeration for the two simulated designs only (c = 2: 0.218, 0.030, 0.086; c = 3: 0.238, 0.051, 0.093); score-level reduction routine but unreviewed; order constant 1/m! crude
+
+#### `T32(i)` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L252`
+- Registry section: B.Theorem 5 — delivery and eligibility (W1-T38E; verifier W3-VT38E; cross-family A-REV1)
+- Paper target: Thm 5 (c)
+- Source (registry cell): W5-LOCKBOOK · REPORT.md §1.4 + PROOF.md §T32 (F-REFINE CARDS.md, written earlier, lists it as CONJECTURE) → `origin/theory/W5-LOCKBOOK:theory_campaign/W5-LOCKBOOK/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W7-SEC · REPORT.md T32(i): 'independently re-checked here, no error in the count' (267,610,872,968 at (200, 500)); harmless slip in W5's corollary proof (1 + 4ℓ ≥ 5ℓ false for ℓ ≥ 2; conclusion stands)
+- Cross-family: none — A-REV6 · REVIEW.md BOOK: T32-a count 'supported by loop accounting' in W5's exact-arithmetic scope (no verdict word; no adoption); W7's slack-inequality correction noted; A-REV9 · REVIEW.md: W7-SEC T32(i) deferred (GAP in that review, no rejection)
+- Repairs applied / pending: none
+- Open premises: the code-to-count mapping (re-check on any engine change); LS0 adds 1+(ℓ+1)M_p
+
+#### `Cost-T38` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L251`
+- Registry section: B.Theorem 5 — delivery and eligibility (W1-T38E; verifier W3-VT38E; cross-family A-REV1)
+- Paper target: Thm 5 (c)
+- Source (registry cell): W1-T38E · REPORT.md · Cost corollary → `origin/theory/W1-T38E:theory_campaign/W1-T38E/REPORT.md`
+- Author status: PROVED-UNDER
+- Same-family: **VERIFIED** — W3-VT38E · REPORT.md verdict table cost corollary VERIFIED as a loose valid upper bound
+- Cross-family: **GAP** — A-REV5 · REVIEW.md: (c) must retain its T32(i) qualification (GAP); A-REV6 · REVIEW.md BOOK: T32(c)'s stated O(max(n,p)p log²(n+p) + p²log²(n+p)) misses the calibration-iteration factor, GAP; direct bound O(max(n,p)p log³(n+p) + p²log²(n+p)) (Astra candidate R5); polynomiality survives
+- Repairs applied / pending: none needed
+- Open premises: T32(i): PROVED by W5-LOCKBOOK; re-counted by W7-SEC (no error; same family). W6-FIXREV1 (dependency k1) and W7-SEP (input I11) still say CONJECTURE: stale
+
+#### `STG-L0` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L694`
+- Registry section: B.v2 — O-STAGES (head 8d3c142): stage count T_n (author only)
+- Paper target: Thm 5 (c) / Thm 6 (P1): stage count T_n (new)
+- Source (registry cell): O-STAGES · REPORT.md · Lemma 0 (reference-state identity) → `origin/theory/O-STAGES:theory_campaign/O-STAGES/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `STG-L1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L695`
+- Registry section: B.v2 — O-STAGES (head 8d3c142): stage count T_n (author only)
+- Paper target: Thm 5 (c) / Thm 6 (P1): stage count T_n (new)
+- Source (registry cell): O-STAGES · REPORT.md · Lemma 1 (monotonicity) → `origin/theory/O-STAGES:theory_campaign/O-STAGES/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `STG-G` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L696`
+- Registry section: B.v2 — O-STAGES (head 8d3c142): stage count T_n (author only)
+- Paper target: Thm 5 (c) / Thm 6 (P1): stage count T_n (new)
+- Source (registry cell): O-STAGES · REPORT.md · Theorem G (greedy optimality) → `origin/theory/O-STAGES:theory_campaign/O-STAGES/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `STG-L` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L697`
+- Registry section: B.v2 — O-STAGES (head 8d3c142): stage count T_n (author only)
+- Paper target: Thm 5 (c) / Thm 6 (P1): stage count T_n (new)
+- Source (registry cell): O-STAGES · REPORT.md · Theorem L (path length) → `origin/theory/O-STAGES:theory_campaign/O-STAGES/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: c → 0
+
+#### `STG-F` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L698`
+- Registry section: B.v2 — O-STAGES (head 8d3c142): stage count T_n (author only)
+- Paper target: Thm 5 (c) / Thm 6 (P1): stage count T_n (new)
+- Source (registry cell): O-STAGES · REPORT.md · Theorem F (favourable sandwich) → `origin/theory/O-STAGES:theory_campaign/O-STAGES/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: Δ ≤ 0.0513
+
+#### `STG-Wp` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L699`
+- Registry section: B.v2 — O-STAGES (head 8d3c142): stage count T_n (author only)
+- Paper target: Thm 5 (c) / Thm 6 (P1): stage count T_n (new)
+- Source (registry cell): O-STAGES · REPORT.md · Corollary W′ (BO favourable) → `origin/theory/O-STAGES:theory_campaign/O-STAGES/REPORT.md`
+- Author status: PROVED-UNDER
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: (LL): F-DRAFT Theorem W's layer law, PROOF SKETCH; O-WSTAB has a COUNTEREXAMPLE to F-DRAFT W(c)/W(b) for 2Ar > 1
+
+#### `STG-M` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L700`
+- Registry section: B.v2 — O-STAGES (head 8d3c142): stage count T_n (author only)
+- Paper target: Thm 5 (c) / Thm 6 (P1): stage count T_n (new)
+- Source (registry cell): O-STAGES · REPORT.md · Theorem M (masked two-state crossing) → `origin/theory/O-STAGES:theory_campaign/O-STAGES/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: **VERIFIED*** — A-REV9 · REVIEW.md: logarithmic order VERIFIED for the ideal two-state exact-frontier grid; explicit decimal constants GAP
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `STG-P` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L701`
+- Registry section: B.v2 — O-STAGES (head 8d3c142): stage count T_n (author only)
+- Paper target: Thm 5 (c) / Thm 6 (P1): stage count T_n (new)
+- Source (registry cell): O-STAGES · REPORT.md · Lemma P (perturbation) → `origin/theory/O-STAGES:theory_campaign/O-STAGES/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `STG-W3p` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L702`
+- Registry section: B.v2 — O-STAGES (head 8d3c142): stage count T_n (author only)
+- Paper target: Thm 5 (c) / Thm 6 (P1): stage count T_n (new)
+- Source (registry cell): O-STAGES · REPORT.md · Corollary W‴ (corrected W″) → `origin/theory/O-STAGES:theory_campaign/O-STAGES/REPORT.md`
+- Author status: PROOF SKETCH
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: PROVED given PAIR (unproven); LH c ≥ 2 OPEN
+
+#### `STG-cexW2` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L703`
+- Registry section: B.v2 — O-STAGES (head 8d3c142): stage count T_n (author only)
+- Paper target: Thm 5 (c) / Thm 6 (P1): stage count T_n (new)
+- Source (registry cell): O-STAGES · REPORT.md · W″ 'O(1) stages' (F-DRAFT) → `origin/theory/O-STAGES:theory_campaign/O-STAGES/REPORT.md`
+- Author status: COUNTEREXAMPLE
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: numerical: T* = log₂A₀ + 7.7 ± 0.4
+
+#### `EXP′` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L168`
+- Registry section: B.Theorem 2 — EXP′, chain laws, linked-hub family (W1-EXP; verifier W3-VEXP; cross-family A-REV2)
+- Paper target: Thm 2 (ii)
+- Source (registry cell): W1-EXP · REPORT.md §Refined · Thm 1 → `origin/theory/W1-EXP:theory_campaign/W1-EXP/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W3-VEXP · REPORT.md verdict table rows 1–5, VERIFIED (reproduced at p=8–24, n up to 1.6·10⁶)
+- Cross-family: **VERIFIED*** — A-REV2 · REVIEW.md §2 SEX Theorem 1 VERIFIED (exact expansion and bound); limiting constant 0.52 → 0.51 (flagged claim EXP-const)
+- Repairs applied / pending: constant correction pending W6-FIXREV1/2; finite-n certificate R1-cert replaces κ_EXP at the study size
+- Open premises: G, R-lite(A,M), SE-blk; fixed X; uniform over a polynomial family; κ_EXP ≈ 100–1,700 nats at study SNR
+
+#### `Thm6-EXP` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L173`
+- Registry section: B.Theorem 2 — EXP′, chain laws, linked-hub family (W1-EXP; verifier W3-VEXP; cross-family A-REV2)
+- Paper target: Thm 2 (iii)
+- Source (registry cell): W1-EXP · REPORT.md §Refined · Thm 6 → `origin/theory/W1-EXP:theory_campaign/W1-EXP/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W3-VEXP · REPORT.md verdict table row 11, VERIFIED (flat √n(1−π₀(S°)) ≈ 1.6)
+- Cross-family: none
+- Repairs applied / pending: none needed
+- Open premises: G, R-lite, SE-blk, ZL(S°), SPREAD, VIS-lin(S°)
+
+#### `Thm3-EXP` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L174`
+- Registry section: B.Theorem 2 — EXP′, chain laws, linked-hub family (W1-EXP; verifier W3-VEXP; cross-family A-REV2)
+- Paper target: Thm 2 (iv)
+- Source (registry cell): W1-EXP · REPORT.md §Refined · Thm 3 → `origin/theory/W1-EXP:theory_campaign/W1-EXP/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W3-VEXP · REPORT.md verdict table row 12, VERIFIED (needs a deterministic chain)
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 SEX Theorem 3 VERIFIED (1.01 multiplier valid for n ≥ 400; not for a response-selected chain)
+- Repairs applied / pending: none needed
+- Open premises: fixed deterministic chain, bounded chain leakage CL(L)
+
+#### `Thm4-EXP` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L175`
+- Registry section: B.Theorem 2 — EXP′, chain laws, linked-hub family (W1-EXP; verifier W3-VEXP; cross-family A-REV2)
+- Paper target: Thm 2 (iv)
+- Source (registry cell): W1-EXP · REPORT.md §Refined · Thm 4 → `origin/theory/W1-EXP:theory_campaign/W1-EXP/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W3-VEXP · REPORT.md verdict table row 13, VERIFIED
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 SEX Theorem 4 (fixed CL, normalised H3) VERIFIED
+- Repairs applied / pending: none needed
+- Open premises: H3 (π₀ of the chain's first set ≥ c₀ w.p. → 1) stays an explicit premise
+
+#### `Thm4-growL` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L176`
+- Registry section: B.Theorem 2 — EXP′, chain laws, linked-hub family (W1-EXP; verifier W3-VEXP; cross-family A-REV2)
+- Paper target: Thm 2 (iv)
+- Source (registry cell): W1-EXP · REPORT.md §Refined · Thm 4 (growing L_n) → `origin/theory/W1-EXP:theory_campaign/W1-EXP/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W3-VEXP · REPORT.md verdict table row 13 (wording)
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 §5.3 growing-leakage bound VERIFIED as sufficiency
+- Repairs applied / pending: none needed
+- Open premises: bound is sufficient only
+
+#### `Thm2-BO` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L170`
+- Registry section: B.Theorem 2 — EXP′, chain laws, linked-hub family (W1-EXP; verifier W3-VEXP; cross-family A-REV2)
+- Paper target: Thm 2 (iii)
+- Source (registry cell): W1-EXP · REPORT.md §Refined · Thm 2 (favourable regime, BO) → `origin/theory/W1-EXP:theory_campaign/W1-EXP/REPORT.md`
+- Author status: PROOF SKETCH
+- Same-family: **VERIFIED** — W3-VEXP · REPORT.md verdict table row 10 and REPAIRS R2: verbatim corollary of locked T22(iii), 'no step remains open'; author label left as PROOF SKETCH
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: G, R, SE-blk, BO, BM-blk
+
+#### `Thm5-LH` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L179`
+- Registry section: B.Theorem 2 — EXP′, chain laws, linked-hub family (W1-EXP; verifier W3-VEXP; cross-family A-REV2)
+- Paper target: Thm 2 (v)
+- Source (registry cell): W1-EXP · REPORT.md §Refined · Thm 5 (a)(b)(c)(e) [+ (d) by locked T03] → `origin/theory/W1-EXP:theory_campaign/W1-EXP/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W3-VEXP · REPORT.md verdict table rows 18–21, VERIFIED (config A/B reproduced)
+- Cross-family: none
+- Repairs applied / pending: none needed
+- Open premises: exact Gram (p ≤ n−1); \|ψ\|<ρ; g ≤ B < 2g; fixed coefficients
+
+#### `FAV-ThmA` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L500`
+- Registry section: B.New results: 2^B-free favourable rate on iid block-diagonal designs (W5-FAVIID REPORT.md / PROOF.md; author only)
+- Paper target: Thm 2 (iii) 2^B-free rate (candidate; post-dates F-REFINE)
+- Source (registry cell): W5-FAVIID · REPORT.md §1 (complete at head 31695b1) + PROOF.md · Theorem A → `origin/theory/W5-FAVIID:theory_campaign/W5-FAVIID/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: [C1] (cited Gaussian covariance concentration), locked T22(i), W1-EXP L1.1–1.2; FAV; s₀ ≤ K. PROOF.md header reads 'PROVED (given …)'; REPORT table reads 'PROVED'
+
+#### `FAV-ThmB` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L503`
+- Registry section: B.New results: 2^B-free favourable rate on iid block-diagonal designs (W5-FAVIID REPORT.md / PROOF.md; author only)
+- Paper target: Thm 2 (iii) 2^B-free rate (candidate; post-dates F-REFINE)
+- Source (registry cell): W5-FAVIID · REPORT.md §2 (statement table) · B (PROOF §9) → `origin/theory/W5-FAVIID:theory_campaign/W5-FAVIID/REPORT.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: [C1], [T22i], W1-L1.1–1.2; FAV; s₀ ≤ K; constant carries the set-count \|𝒲(m)\|
+
+#### `DIL-E` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L709`
+- Registry section: B.v2 — O-DILUTE (head abedf99): dilution masking (author only; A-REV6 pending)
+- Paper target: Thm 2 / n = 200 disclosure: dilution masking (new)
+- Source (registry cell): O-DILUTE · THEORY.md / REPORT.md · Theorem E (exact start decomposition) → `origin/theory/O-DILUTE:theory_campaign/O-DILUTE/THEORY.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV6 pending)
+- Cross-family: **VERIFIED** — A-REV9 · REVIEW.md: VERIFIED with feasibility/cap retained
+- Repairs applied / pending: none
+- Open premises: any data, any partition, positive tables
+
+#### `DIL-E1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L710`
+- Registry section: B.v2 — O-DILUTE (head abedf99): dilution masking (author only; A-REV6 pending)
+- Paper target: Thm 2 / n = 200 disclosure: dilution masking (new)
+- Source (registry cell): O-DILUTE · THEORY.md / REPORT.md · Cor. E1, E2 → `origin/theory/O-DILUTE:theory_campaign/O-DILUTE/THEORY.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV6 pending)
+- Cross-family: **VERIFIED*** — A-REV9 · REVIEW.md: E1 three-term identity VERIFIED for production BF tables (GAP for arbitrary positive tables without normalisation); E2 VERIFIED with interior-size/end-point conventions
+- Repairs applied / pending: none
+- Open premises: as Theorem E
+
+#### `DIL-R` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L711`
+- Registry section: B.v2 — O-DILUTE (head abedf99): dilution masking (author only; A-REV6 pending)
+- Paper target: Thm 2 / n = 200 disclosure: dilution masking (new)
+- Source (registry cell): O-DILUTE · THEORY.md / REPORT.md · Theorem R (exact law of #truths/#nulls under π₀) → `origin/theory/O-DILUTE:theory_campaign/O-DILUTE/THEORY.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV6 pending)
+- Cross-family: **VERIFIED** — A-REV9 · REVIEW.md: VERIFIED (integer d ≥ 0, feasible supports)
+- Repairs applied / pending: none
+- Open premises: as Theorem E
+
+#### `DIL-N` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L712`
+- Registry section: B.v2 — O-DILUTE (head abedf99): dilution masking (author only; A-REV6 pending)
+- Paper target: Thm 2 / n = 200 disclosure: dilution masking (new)
+- Source (registry cell): O-DILUTE · THEORY.md / REPORT.md · Lemma N (null score law) → `origin/theory/O-DILUTE:theory_campaign/O-DILUTE/THEORY.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV6 pending)
+- Cross-family: **VERIFIED*** — A-REV9 · REVIEW.md: VERIFIED under explicit joint independence; the parenthetical implication from zero truth correlation is ERROR
+- Repairs applied / pending: none
+- Open premises: Gaussian null independent of (y, X_{−l})
+
+#### `PART-ThmB` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L663`
+- Registry section: B.v2 — W7-PART (head b2aa940): partition = groups (author only; A-REV6 pending)
+- Paper target: Thm 2 / Thm 5 input: partition = groups (new)
+- Source (registry cell): W7-PART · REPORT.md §1 / PROOF.md · Theorem B → `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV6 pending)
+- Cross-family: **VERIFIED*** — A-REV6 · REVIEW.md: VERIFIED in restricted scope (SIZE, fixed correlation gap, Gaussian correlation-law input); A-REV9 · REVIEW.md: B-exact VERIFIED; L2 density constants GAP
+- Repairs applied / pending: none
+- Open premises: iid Gaussian rows, GRP, SIZE
+
+#### `DIL-DM` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L717`
+- Registry section: B.v2 — O-DILUTE (head abedf99): dilution masking (author only; A-REV6 pending)
+- Paper target: Thm 2 / n = 200 disclosure: dilution masking (new)
+- Source (registry cell): O-DILUTE · THEORY.md / REPORT.md · Prop. DM (i)–(iii) (paper wording) → `origin/theory/O-DILUTE:theory_campaign/O-DILUTE/THEORY.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV6 pending)
+- Cross-family: **ERROR** — A-REV9 · REVIEW.md: DM(i) size-sign ERROR (explicit construction)
+- Repairs applied / pending: none
+- Open premises: dilution clause PROOF SKETCH
+
+#### `SEP-A` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L641`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · Theorem SEP (A) (iid start discovery) → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: **VERIFIED** — A-REV9 · REVIEW.md: VERIFIED as an implication from its imported tight start-mass and posterior-concentration premises
+- Repairs applied / pending: none
+- Open premises: EX-A; LH (W1-EXP Thm 5(b), Lemma 4.2)
+
+#### `SEP-A-iid` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L642`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · Theorem SEP (A) on LH-iid → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: PROVED-UNDER
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: W3-PXN P1, P4 (XF: P1, P4 VERIFIED by A-REV3)
+
+#### `SEP-B` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L643`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · Theorem SEP (B) (one-shot importance correction) → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: **VERIFIED** — A-REV9 · REVIEW.md: SEP(B1–B3) VERIFIED as implications from imported premises
+- Repairs applied / pending: none
+- Open premises: (A)'s plus locked T03 via W1-EXP Thm 5(d)
+
+#### `SEP-C` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L644`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · Theorem SEP (C) (start + search) → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: Prop. GU; uses W4-T38FULL Lemma M (same-family VERIFIED only)
+
+#### `SEP-taska` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L645`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · task clause (a): start-only + search fails → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: COUNTEREXAMPLE
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: LH; by proof (Cor. GU-LH) and in 386/386 replicates
+
+#### `SEP-E` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L646`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · Theorem SEP (E) (exponents, p ≍ n^a) → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: PROVED-UNDER
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: v3 row conditional on T32(i), which W7-SEP lists as CONJECTURE (input I11) although W5-LOCKBOOK proves it
+
+#### `SEP-BASIN` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L647`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · Proposition BASIN (deterministic) → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `SEP-GU` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L648`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · Proposition GU (greedy universality) → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: **VERIFIED*** — A-REV7 · REVIEW.md: VERIFIED as a greedy best-neighbour theorem ('every swap loses' is stronger than needed: an extra swap is compared with its deletion); A-REV9 · REVIEW.md: GAP in that review (imported Lemma M not re-audited there; A-REV8 verified Lemma M)
+- Repairs applied / pending: none
+- Open premises: G; exact Gram; isolated R ⊇ S₀ (Σ_{R,Rᶜ} = 0, \|R\| ≤ r); λ_min(Σ_R) ≥ φ₀²; fixed signals; p ≤ n^A; uses Lemma M
+
+#### `SEP-GU1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L649`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · Lemma GU-1 (population descent) → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `SEP-GU2` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L650`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · Lemma GU-2 (supersets of S₀ inside R) → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `SEP-CorGULH` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L651`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · Corollary GU-LH → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: **VERIFIED*** — A-REV7 · REVIEW.md: VERIFIED as greedy repair on LH (with LS0)
+- Repairs applied / pending: none
+- Open premises: LH exact Gram
+
+#### `SEP-GUiid` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L652`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · Prop. GU on LH-iid → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: PROOF SKETCH
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `SEP-GUnulls` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L653`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · Prop. GU with data-chosen nulls in the centre → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: OPEN
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `SEP-noLS0` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L654`
+- Registry section: B.v2 — W7-SEP (head 858004e): separation theorem, Prop. GU (author only; A-REV7 pending)
+- Paper target: Thm 5 motivation / separation (new; spine)
+- Source (registry cell): W7-SEP · REPORT.md §2 / PROOF.md · §7 · no-LS0 T38(b) via GU (final local search from Ŝ_pre when Ŝ_pre ⊆ R) → `origin/theory/W7-SEP:theory_campaign/W7-SEP/REPORT.md`
+- Author status: CONJECTURE
+- Same-family: none — none (A-REV7 pending)
+- Cross-family: **GAP** — A-REV7 · REVIEW.md: GAP: the actual best-scored search centre may contain nulls outside R; eligibility, or a search from S° (LS0), is still needed
+- Repairs applied / pending: none
+- Open premises: needs the pre-search HPM inside R
+
+#### `SHARE-M(a)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L344`
+- Registry section: B.Theorem 5 route (b2) — envelope delivery (W4-SHARE; same-family referee W5-B2ENV; A-REV3 not landed)
+- Paper target: Thm 5 (b2)
+- Source (registry cell): W4-SHARE · REPORT.md §2 · Prop. M (a) → `origin/theory/W4-SHARE:theory_campaign/W4-SHARE/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W5-B2ENV · REFEREE.md verdict table: Prop. M(a) VERIFIED (20,000 random instances, 0 violations)
+- Cross-family: **VERIFIED** — A-REV3 · REVIEW.md verdict table: Prop. M(a) deterministic core VERIFIED (Schur-complement/Cauchy bound incl. constants; no missing factor \|M\|)
+- Repairs applied / pending: none
+- Open premises: λ_min(R_{T∪M}) > 0
+
+#### `SHARE-M(b)` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L345`
+- Registry section: B.Theorem 5 route (b2) — envelope delivery (W4-SHARE; same-family referee W5-B2ENV; A-REV3 not landed)
+- Paper target: Thm 5 (b2)
+- Source (registry cell): W4-SHARE · REPORT.md §2 · Prop. M (b) → `origin/theory/W4-SHARE:theory_campaign/W4-SHARE/REPORT.md`
+- Author status: PROOF SKETCH
+- Same-family: **VERIFIED*** — W5-B2ENV · REFEREE.md verdict table: Prop. M(b) PROOF SKETCH as labelled, argument correct; W5-B2ENV PROOF.md §3 now proves it on LH as Prop. M-LH (PROVED given EXP′, candidate, author only; see B2E-MLH)
+- Cross-family: **ERROR** — A-REV6 · REVIEW.md: original ERROR retained; Astra candidate M-star (exact log-RSS, normalised Gram eigenvalues, BM-∞) GAP pending Claude [earlier: A-REV3 · REVIEW.md verdict table: ERROR (i) the quadratic equality used as an expansion (orthogonal p = n−1, θ = 1: exact gain/n → ½log 2 = 0.34657 vs quadratic 1/4, remainder ≈ 0.0966n); ERROR (ii) 'vanishing crossing temperature under all T03 hypotheses' (BM-C allows θ² = C log n/n, ratio → 3/C > 0); GAP (iii) a favourable-addition path ends at S₀ ∪ P without deleting extras and gives no traversal bound within L+4 rounds]
+- Repairs applied / pending: [PENDING] A-REV3's repair for the lower bound: exact RSS expansion, −log(1−x) ≥ x, uniform RSS upper bound and (δ+σZ)² ≥ δ²/2 − σ²Z² give gain ≥ cM_n log n − C log n under BM-∞ for fixed d; restrict the vanishing-temperature conclusion to BM-∞. Not applied to W4-SHARE's text
+- Open premises: G,R,SE,BM-∞; explicit-remainder gain expansion
+
+#### `FD-NM` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L395`
+- Registry section: B.Original-draft track (A-DRAFT, F-DRAFT; checked by A-REV4 where noted)
+- Paper target: none (original-draft track)
+- Source (registry cell): F-DRAFT · NEW_TARGETS.md (summary table) · NM naive merge fails (rigorous) → `origin/theory/F-DRAFT:theory_campaign/F-DRAFT/NEW_TARGETS.md`
+- Author status: PROVED-UNDER
+- Same-family: none
+- Cross-family: **ERROR** — A-REV4 · REVIEW.md verdict table: F-DRAFT NM ERROR: even the identifiable fixed-p two-column family (b = σ = 1, proxy correlation r = ½) contradicts the stated O_P(1) remainder (nondegenerate √n fluctuation of log BF about n·log(8/7)/2; checked on Owls, 768 replicates saved); π₀({j}) → 0 does not control other states or the mode; O(1) ideal-grid conclusion unproved
+- Repairs applied / pending: [PENDING] A-REV4's repair: use the identifiable p = 2 family of A-DRAFT Prop. M; not applied to F-DRAFT's text
+- Open premises: modulo T03/EXP′/Cor. P1
+
+#### `ADRAFT-PropM` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L378`
+- Registry section: B.Original-draft track (A-DRAFT, F-DRAFT; checked by A-REV4 where noted)
+- Paper target: none (original-draft track)
+- Source (registry cell): A-DRAFT · REPORT.md · §3.1 Proposition M (naive merging) → `origin/theory/A-DRAFT:theory_campaign/A-DRAFT/REPORT.md`
+- Author status: COUNTEREXAMPLE
+- Same-family: none — none (author is the cross-family model; not a campaign verification)
+- Cross-family: none — A-REV4 DRAFTS_CHECK uses it as the valid fixed-p repair of F-DRAFT NM ('four-state direct comparison supplies all missing normalisation arguments') but gives no verdict row
+- Repairs applied / pending: none
+- Open premises: identifiable cross-block proxy, fixed p; complete proof
+
+#### `B2E-MLH` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L542`
+- Registry section: B.New results: no-method-change masked theorems on LH (W5-B2ENV PROOF.md; author only)
+- Paper target: Thm 5 (b1′)/(b2) on LH exact Gram, no method change (new)
+- Source (registry cell): W5-B2ENV · PROOF.md §3 Proposition M-LH (Prop. M(b) on LH) → `origin/theory/W5-B2ENV:theory_campaign/W5-B2ENV/PROOF.md`
+- Author status: PROVED-UNDER
+- Same-family: none
+- Cross-family: **VERIFIED** — A-REV6 · REVIEW.md: VERIFIED restricted fixed-coefficient lattice replacement (not M(b)'s scope); A-REV7 · REVIEW.md: exact log-RSS argument, unaffected by the A-REV3 quadratic-expansion ERROR; the '(1−o(1)) absorbed into g_*' step is fillable
+- Repairs applied / pending: none
+- Open premises: W1-EXP Thm 1
+
+#### `CEX-Mbquad(A3)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L560`
+- Registry section: B.Referee-supplied items (A-REV4, A-REV3)
+- Paper target: Thm 5 (b2) (negative result)
+- Source (registry cell): A-REV3 · REVIEW.md (W4-SHARE section) → `origin/theory/A-REV3:theory_campaign/A-REV3/REVIEW.md`
+- Author status: COUNTEREXAMPLE
+- Same-family: n/a (referee-authored)
+- Cross-family: referee-authored: referee-authored
+- Repairs applied / pending: none: finding
+- Open premises: —
+
+#### `CEX-MbBMC(A3)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L561`
+- Registry section: B.Referee-supplied items (A-REV4, A-REV3)
+- Paper target: Thm 5 (b2) (negative result)
+- Source (registry cell): A-REV3 · REVIEW.md (W4-SHARE section) → `origin/theory/A-REV3:theory_campaign/A-REV3/REVIEW.md`
+- Author status: COUNTEREXAMPLE
+- Same-family: n/a (referee-authored)
+- Cross-family: referee-authored: referee-authored
+- Repairs applied / pending: none: finding
+- Open premises: —
+
+#### `CEX-NMremainder(A4)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L557`
+- Registry section: B.Referee-supplied items (A-REV4, A-REV3)
+- Paper target: supplement (negative result; original-draft track)
+- Source (registry cell): A-REV4 · REVIEW.md §3 (F-DRAFT NM) → `origin/theory/A-REV4:theory_campaign/A-REV4/REVIEW.md`
+- Author status: COUNTEREXAMPLE
+- Same-family: n/a (referee-authored)
+- Cross-family: referee-authored: referee-authored
+- Repairs applied / pending: [PENDING] repair proposed: n⁻¹log BF → log(8/7)/2 or O_P(√n) remainder; use A-REV4/A-DRAFT Prop. M p = 2 family
+- Open premises: fixed-p two columns, b = σ = 1, r = ½
+
+#### `OWS-WS1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L518`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §1 Theorem WS1 (exponential-family identities) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `OWS-WS2` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L519`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §2 Theorem WS2 (one importance step; ESS, evidence variance, PW2 at the first stage) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: iid q_u draws
+
+#### `OWS-WS3` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L520`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §3 Theorem WS3 (block-orthogonal case) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: BO
+
+#### `OWS-WS4` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L521`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §4 Theorem WS4 (perturbation in the standardised cross-block Gram) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: ε_S < 1
+
+#### `OWS-WS52` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L522`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §5 Proposition WS5.2 (leakage formulas) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: SE-blk(φ₀)
+
+#### `OWS-WS53F` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L523`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §5 Theorem WS5.3(F) (weak leakage ⇒ favourable start) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: PROVED-UNDER
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: G, R, SE-blk, EBM(M_n), CBL(η), η < η_A; conclusion is a composition with locked T22(iii) and inherits the candidate status of W1-EXP Thm 1 (that theorem has since been VERIFIED by W3-VEXP and A-REV2)
+
+#### `OWS-WS53M` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L524`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §5 Theorem WS5.3(M) (masking needs order-one cross-block cancellation) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: deterministic
+
+#### `OWS-WS53N` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L525`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §5 Theorem WS5.3(N) (necessity form of (F)) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: contrapositive of (F); same status as (F)
+
+#### `OWS-WS6abc` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L526`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §6 Theorem WS6(a)–(c) (weights in the favourable regime) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: deterministic
+
+#### `OWS-WS6d` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L527`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §6 Theorem WS6(d) (noise-chasing obstruction under ORTH) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: ORTH, s₀ ≥ 1, \|N₀\| → ∞; cites locked T03 and W1-EXP Thm 6 / WS5.3(F)
+
+#### `OWS-WS6e` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L528`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §6 Theorem WS6(e) (threshold) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: CONJECTURE
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: ORTH or BO + SE-blk + favourable; p = n^A
+
+#### `OWS-WS7` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L529`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §7 Theorem WS7 (weights in the masked regime; why the sampler must move) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: T27(i) and locked T03 for (b)
+
+#### `OWS-WS8abc` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L530`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §8 Proposition WS8(a)–(c) (whole bridge and T25(iv)/PW2) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: (b) under the idealisation IID
+
+#### `OWS-WS8d` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L531`
+- Registry section: B.New results: weight stability and regime dichotomy (O-WSTAB PROOF.md; no REPORT)
+- Paper target: supplement (weight stability / n = 200 disclosure; new)
+- Source (registry cell): O-WSTAB · PROOF.md §8 Proposition WS8(d) → `origin/theory/O-WSTAB:theory_campaign/O-WSTAB/PROOF.md`
+- Author status: OPEN
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `FD-W1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L385`
+- Registry section: B.Original-draft track (A-DRAFT, F-DRAFT; checked by A-REV4 where noted)
+- Paper target: none (original-draft track)
+- Source (registry cell): F-DRAFT · NEW_TARGETS.md (summary table) · W1 exact d under block orthogonality → `origin/theory/F-DRAFT:theory_campaign/F-DRAFT/NEW_TARGETS.md`
+- Author status: PROVED
+- Same-family: none
+- Cross-family: **VERIFIED** — A-REV4 · DRAFTS_CHECK.md 'F-DRAFT W1: VERIFIED' (block-diagonal G, H; d = 0 iff at most one block has signal; with known common variance the globally prior-coupled start equals the posterior, including the cap; not a product of local posteriors)
+- Repairs applied / pending: none
+- Open premises: block orthogonality
+
+#### `FD-W(a)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L388`
+- Registry section: B.Original-draft track (A-DRAFT, F-DRAFT; checked by A-REV4 where noted)
+- Paper target: none (original-draft track)
+- Source (registry cell): F-DRAFT · NEW_TARGETS.md (summary table) · W(a) lower bound 1+χ² ≥ p^{R²−ε}/√n → `origin/theory/F-DRAFT:theory_campaign/F-DRAFT/NEW_TARGETS.md`
+- Author status: PROVED-UNDER
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: modulo W2
+
+#### `FD-W(b)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L389`
+- Registry section: B.Original-draft track (A-DRAFT, F-DRAFT; checked by A-REV4 where noted)
+- Paper target: none (original-draft track)
+- Source (registry cell): F-DRAFT · NEW_TARGETS.md (summary table) · W(b) upper bound → `origin/theory/F-DRAFT:theory_campaign/F-DRAFT/NEW_TARGETS.md`
+- Author status: PROOF SKETCH
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: second-moment aggregation
+
+#### `FD-W(c)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L390`
+- Registry section: B.Original-draft track (A-DRAFT, F-DRAFT; checked by A-REV4 where noted)
+- Paper target: none (original-draft track)
+- Source (registry cell): F-DRAFT · NEW_TARGETS.md (summary table) · W(c) sharp log log form → `origin/theory/F-DRAFT:theory_campaign/F-DRAFT/NEW_TARGETS.md`
+- Author status: CONJECTURE
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `T38-b1-LH` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L330`
+- Registry section: B.Theorem 5 assembled (W4-T38FULL)
+- Paper target: Thm 5 (b1-LH)
+- Source (registry cell): W4-T38FULL · REPORT.md §2 · Theorem 5 (b1-LH) → `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED*** — W5-VMASK · REPORT.md verdict table rows 20–24 and §9: LS-score, Lemma M, Thm b1, LH-LAT assembly VERIFIED by W5-VMASK (independent run)
+- Cross-family: **VERIFIED*** — A-REV8 · REVIEW.md: exact-Gram b1-LH consistency VERIFIED with LS0 (fixed parameters; c = 1 needs only the initial scan); the joint exact-Gram eligibility and posterior premises VERIFIED. The iid-draw-failure clause is excluded (claim T38-b1-LH-iidfail)
+- Repairs applied / pending: none
+- Open premises: LH exact Gram (p ≤ n−1), \|ψ\|<ρ, g ≤ B < 2g; LS0, now PART OF THE METHOD (approval in effect: O-LS0 0/2,394 HPM changes). Search step re-proved by SEP-CorGULH (W7-SEP, candidate)
+
+#### `B2E-B2LH` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L547`
+- Registry section: B.New results: no-method-change masked theorems on LH (W5-B2ENV PROOF.md; author only)
+- Paper target: Thm 5 (b1′)/(b2) on LH exact Gram, no method change (new)
+- Source (registry cell): W5-B2ENV · PROOF.md §4.5 Theorem B2-LH (route (b2), every c, no method change) → `origin/theory/W5-B2ENV:theory_campaign/W5-B2ENV/PROOF.md`
+- Author status: PROVED-UNDER
+- Same-family: none
+- Cross-family: **VERIFIED*** — A-REV7 · REVIEW.md: VERIFIED conditional theorem under STAB-LH, with an Astra event-rate correction (U2 gives relative RSS error O(n^{−1/3}); use η_n = O(n^{−1/3} + √(log n/n)); conclusions survive). Integrate the bound truncated at one for unconditional convergence; the conditional O_P rate is not an unconditional numerical rate
+- Repairs applied / pending: none
+- Open premises: STAB-LH (a numerical/analytic premise: instance computed for c = 1; for c ≥ 2 configuration B FAILS it; a small-ψ instance expected, OPEN)
+
+#### `E1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L127`
+- Registry section: B.Theorem 1 — T03♯ and its T02 lemmas (W1-T03R; verifier W2-VT03R; cross-family A-REV2)
+- Paper target: Thm 1 (T02 lemma)
+- Source (registry cell): W1-T03R · REPORT.md §1 · Lemma E1 → `origin/theory/W1-T03R:theory_campaign/W1-T03R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W2-VT03R · REPORT.md verdict table rows 1–4, VERIFIED (exact rational check, 2,779 triples)
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 S03 Lemma E1(a)–(d) VERIFIED
+- Repairs applied / pending: none needed
+- Open premises: p ≥ 2; (c) needs s₀ ≥ 1, m ≤ K−1
+
+#### `E2` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L128`
+- Registry section: B.Theorem 1 — T03♯ and its T02 lemmas (W1-T03R; verifier W2-VT03R; cross-family A-REV2)
+- Paper target: Thm 1 (T02 lemma)
+- Source (registry cell): W1-T03R · REPORT.md §1 · Lemma E2 → `origin/theory/W1-T03R:theory_campaign/W1-T03R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W2-VT03R · REPORT.md verdict table rows 6–7, VERIFIED
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 S03 Lemma E2(i)–(iii) VERIFIED
+- Repairs applied / pending: none needed
+- Open premises: s₀ ≥ 1 (or s₀ = 0 with n ≥ 5)
+
+#### `E3-T03` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L129`
+- Registry section: B.Theorem 1 — T03♯ and its T02 lemmas (W1-T03R; verifier W2-VT03R; cross-family A-REV2)
+- Paper target: Thm 1 (T02 lemma)
+- Source (registry cell): W1-T03R · REPORT.md §1 · Prop. E3 → `origin/theory/W1-T03R:theory_campaign/W1-T03R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W2-VT03R · REPORT.md verdict table row 8, VERIFIED
+- Cross-family: **VERIFIED*** — A-REV2 · REVIEW.md §2 S03 Proposition E3 VERIFIED, only as a barrier for this cutoff/envelope route
+- Repairs applied / pending: none needed
+- Open premises: Scope: Markov-numerator / S₀-denominator technique only
+
+#### `den′` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L130`
+- Registry section: B.Theorem 1 — T03♯ and its T02 lemmas (W1-T03R; verifier W2-VT03R; cross-family A-REV2)
+- Paper target: Thm 1 (T02 lemma)
+- Source (registry cell): W1-T03R · REPORT.md §2 · Lemma den′ → `origin/theory/W1-T03R:theory_campaign/W1-T03R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W2-VT03R · REPORT.md verdict table row 9, VERIFIED
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 S03 den′ and T02(i♯) VERIFIED (constant c♯ = κ²/(c_IG σ²), no stray 4)
+- Repairs applied / pending: none needed
+- Open premises: G, R
+
+#### `T02(i♯)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L131`
+- Registry section: B.Theorem 1 — T03♯ and its T02 lemmas (W1-T03R; verifier W2-VT03R; cross-family A-REV2)
+- Paper target: Thm 1
+- Source (registry cell): W1-T03R · REPORT.md §1 · Theorem T02(i♯) → `origin/theory/W1-T03R:theory_campaign/W1-T03R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W2-VT03R · REPORT.md verdict table row 10, VERIFIED
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 S03 den′ and T02(i♯) VERIFIED; quantifier is sup_m P(Θ>L), not P(sup_m Θ>L)
+- Repairs applied / pending: none needed
+- Open premises: G, R; cutoff must be deterministic
+
+#### `LemmaI-B` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L132`
+- Registry section: B.Theorem 1 — T03♯ and its T02 lemmas (W1-T03R; verifier W2-VT03R; cross-family A-REV2)
+- Paper target: Thm 1
+- Source (registry cell): W1-T03R · REPORT.md §1 · Lemma I (interlacing), Lemma B (B1–B3) → `origin/theory/W1-T03R:theory_campaign/W1-T03R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W2-VT03R · REPORT.md verdict table row 13, VERIFIED (9,000 random pairs)
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 S03 Lemmas I/B VERIFIED
+- Repairs applied / pending: none needed
+- Open premises: fixed g₀ > 0 (g₀,n → 0 not covered)
+
+#### `T02(ii♯)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L133`
+- Registry section: B.Theorem 1 — T03♯ and its T02 lemmas (W1-T03R; verifier W2-VT03R; cross-family A-REV2)
+- Paper target: Thm 1
+- Source (registry cell): W1-T03R · REPORT.md §1 · Theorem T02(ii♯) → `origin/theory/W1-T03R:theory_campaign/W1-T03R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W2-VT03R · REPORT.md verdict table row 14, VERIFIED
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 S03 Lemmas I/B and T02(ii♯) VERIFIED
+- Repairs applied / pending: none needed
+- Open premises: R1, G, R, SE_w(m♯; g₀)
+
+#### `PropD-T03` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L135`
+- Registry section: B.Theorem 1 — T03♯ and its T02 lemmas (W1-T03R; verifier W2-VT03R; cross-family A-REV2)
+- Paper target: supplement (negative result)
+- Source (registry cell): W1-T03R · REPORT.md §1 · Prop. D → `origin/theory/W1-T03R:theory_campaign/W1-T03R/REPORT.md`
+- Author status: COUNTEREXAMPLE
+- Same-family: **VERIFIED** — W2-VT03R · REPORT.md verdict table row 11, VERIFIED (reproduced analytically and numerically)
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 S03 Proposition D VERIFIED (G and R only; violates even size-two SE)
+- Repairs applied / pending: none needed
+- Open premises: Scope: G and R alone, duplicated columns
+
+#### `T03-1.2e5` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L748`
+- Registry section: C. Flagged sub-claims (ERROR / GAP verdicts inside larger results; not counted in A1)
+- Paper target: T03♯ (disclosure)
+- Source (registry cell): W1-T03R · REPORT.md headline 4/§3/§5 (proof thresholds 'n ≈ 1.2·10⁵') → `origin/theory/W1-T03R:theory_campaign/W1-T03R/REPORT.md`
+- Author status: —
+- Same-family: **ERROR** — W2-VT03R row 29 ERROR (binding condition q_n ≤ ½ first holds at n ≈ 2.1·10⁶ / 2.5·10⁶)
+- Cross-family: **ERROR** — A-REV2 §3.5 confirms: q ≈ 5.5·10²², 7.9·10²⁸ at n=130,328
+- Repairs applied / pending: [APPLIED] W2-VT03R R1 replacement sentence (n ≳ 2·10⁶); confirmed in W6-FIXREV2 REPORT.md (same-family)
+- Open premises: —
+
+#### `Prop1-T07` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L263`
+- Registry section: B.Theorem 4, Proposition 1, Proposition 2 — bookkeeping (W2-BOOK)
+- Paper target: Prop 1
+- Source (registry cell): W2-BOOK · REPORT.md §2 · Prop. 1 (T07 + T06(i); (i′),(iii′) new) → `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED*** — W5-LOCKBOOK · REPORT.md verdict tables: (i′) sharpness CORRECT; (iii′) certificate CORRECT with amendment 'strict beyond numerical error'
+- Cross-family: **VERIFIED*** — A-REV4 · BOOK_CHECK.md: the sharp size-prior construction and its strict same-size certificate are sound; but see ERROR B5 on the data paragraph (claim Prop1-wrongHPM)
+- Repairs applied / pending: amendment written in W5-LOCKBOOK STATEMENTS.tex
+- Open premises: locked parts (T07(i)–(iii), T06(i)(a)); size-prior retuning can still move different-size errors
+
+#### `Prop1-wrongHPM` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L779`
+- Registry section: C. Flagged sub-claims (ERROR / GAP verdicts inside larger results; not counted in A1)
+- Paper target: Prop 1 (data paragraph)
+- Source (registry cell): W2-BOOK · REPORT.md Prop. 1 data paragraph / PROOF §3: 'every completed wrong HPM is a posterior miss' → `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md`
+- Author status: —
+- Same-family: none
+- Cross-family: **ERROR** — A-REV4 · BOOK_CHECK.md ERROR B5: a wrong HPM does not imply a posterior miss (scored set {S₁} omitting S₀ returns a lower-scoring wrong HPM); only a strict same-size miss established by audit scores certifies the ceiling
+- Repairs applied / pending: [PENDING] none written (A-REV4: relabel as the empirical observation of zero search misses in the campaign fits, with its audit source)
+- Open premises: —
+
+#### `TheoremA` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L150`
+- Registry section: B.Theorem 3 part A — refined T37 / greedy repair (W1-T37R; verifier W3-VT37R; cross-family A-REV2)
+- Paper target: Thm 3 (Theorem A)
+- Source (registry cell): W1-T37R · REPORT.md §2 · Theorem A (A1)–(A4) → `origin/theory/W1-T37R:theory_campaign/W1-T37R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W3-VT37R · REPORT.md verdict table rows 5–8, VERIFIED (720 designs × 632 states, 0 violations; 'ℓ ≥ a+d is sufficient, exact need is τ(S_c)')
+- Cross-family: **VERIFIED*** — A-REV2 · REVIEW.md §2 S37 Theorem A(A1)–(A4) VERIFIED; A4 necessity must keep its quantifier; 'ℓ ≥ a+d' sufficient not necessary
+- Repairs applied / pending: none needed for A1–A4 (A5(a) separate)
+- Open premises: EX-A; finite family 𝓡; production tie-broken greedy map
+
+#### `Lemma0(a,c)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L146`
+- Registry section: B.Theorem 3 part A — refined T37 / greedy repair (W1-T37R; verifier W3-VT37R; cross-family A-REV2)
+- Paper target: Thm 3
+- Source (registry cell): W1-T37R · REPORT.md §2 · Lemma 0 (a),(c) → `origin/theory/W1-T37R:theory_campaign/W1-T37R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W3-VT37R · REPORT.md verdict table rows 2, 2e, VERIFIED
+- Cross-family: **VERIFIED*** — A-REV2 · REVIEW.md §2 S37 Lemma 0(a),(c) VERIFIED; W6-FIXREV2 §3.1 disputes only A-REV2's table wording 'initial centre is the truth is trivial success' (needs (L) at S₀)
+- Repairs applied / pending: none needed
+- Open premises: EX-A; completed scans
+
+#### `Lemma0(b)` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L147`
+- Registry section: B.Theorem 3 part A — refined T37 / greedy repair (W1-T37R; verifier W3-VT37R; cross-family A-REV2)
+- Paper target: Thm 3
+- Source (registry cell): W1-T37R · REPORT.md §2 · Lemma 0(b) → `origin/theory/W1-T37R:theory_campaign/W1-T37R/REPORT.md`
+- Author status: PROVED
+- Same-family: **GAP** — W3-VT37R · REPORT.md verdict table rows 2b/2c/2d: inclusion VERIFIED; 'in particular on every posterior miss' ERROR (CEX-2); repaired by W3-VT37R R2
+- Cross-family: **ERROR** — A-REV2 · REVIEW.md §2 §4.2: 'Lemma 0(b) as written' ERROR; V37 R2 repair also ERROR. (W6-FIXREV2 qualifies A-REV2's table row 'initial-centre-is-truth trivial success': a search from S₀ moves away unless (L) holds at S₀.)
+- Repairs applied / pending: [APPLIED] W3-VT37R R2 (itself ERROR per A-REV2); A-REV2 three-way partition F_pre/F_post proposed — applied in W6-FIXREV2 REPORT.md (same-family, not yet reviewed by a second family)
+- Open premises: S-ELS (PROD-H ledgers): all 541 unrepaired centres are forced by Lemma 0, and the final local search made 0 moves in 2,394/2,394 completed fits. True on the study data; false as a general logical claim (CEX-2). W3-VT37R's 233/234 refers to sampled centres on regenerated data (rerun on PROD-H: W8-SYNTH task 3)
+
+#### `A5(a)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L749`
+- Registry section: C. Flagged sub-claims (ERROR / GAP verdicts inside larger results; not counted in A1)
+- Paper target: Theorem A (A5(a))
+- Source (registry cell): W1-T37R · REPORT.md §2 · A5(a): strict literal TD(d,0) ⇒ TD′_P → `origin/theory/W1-T37R:theory_campaign/W1-T37R/REPORT.md`
+- Author status: —
+- Same-family: **ERROR** — W3-VT37R row 9 ERROR (CEX-1, no positivity clause)
+- Cross-family: **ERROR** — A-REV2 §4.1 ERROR (suppressor counterexample); POS repair VERIFIED
+- Repairs applied / pending: [APPLIED] R1-POS (W3-VT37R; verified by A-REV2); consolidated statement applied in W6-FIXREV2 REPORT.md (same-family, not yet reviewed by a second family)
+- Open premises: —
+
+#### `A5(b)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L151`
+- Registry section: B.Theorem 3 part A — refined T37 / greedy repair (W1-T37R; verifier W3-VT37R; cross-family A-REV2)
+- Paper target: Thm 3
+- Source (registry cell): W1-T37R · REPORT.md §2 · Theorem A (A5) second implication → `origin/theory/W1-T37R:theory_campaign/W1-T37R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W3-VT37R · REPORT.md verdict table row 10, VERIFIED (TD′_∞ in 198/200, TD′_P in 0/200 at n=3000)
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 S37 TD′_P ⇒ TD′_∞; converse fails VERIFIED
+- Repairs applied / pending: none needed
+- Open premises: region closure
+
+#### `R1-POS` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L152`
+- Registry section: B.Theorem 3 part A — refined T37 / greedy repair (W1-T37R; verifier W3-VT37R; cross-family A-REV2)
+- Paper target: Thm 3
+- Source (registry cell): W3-VT37R · REPAIRS.md · R1 → `origin/theory/W3-VT37R:theory_campaign/W3-VT37R/REPAIRS.md`
+- Author status: PROVED
+- Same-family: none — authored by W3-VT37R (the verifier)
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 §4.1 POS repair VERIFIED
+- Repairs applied / pending: this is a repair
+- Open premises: positivity clause POS on the designated move
+
+#### `Lemma2-T37` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L148`
+- Registry section: B.Theorem 3 part A — refined T37 / greedy repair (W1-T37R; verifier W3-VT37R; cross-family A-REV2)
+- Paper target: Thm 3
+- Source (registry cell): W1-T37R · REPORT.md §2 · Lemma 2 → `origin/theory/W1-T37R:theory_campaign/W1-T37R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W3-VT37R · REPORT.md verdict table row 3, VERIFIED (193 designs)
+- Cross-family: none
+- Repairs applied / pending: none needed
+- Open premises: —
+
+#### `Lemma3-T37` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L149`
+- Registry section: B.Theorem 3 part A — refined T37 / greedy repair (W1-T37R; verifier W3-VT37R; cross-family A-REV2)
+- Paper target: Thm 3
+- Source (registry cell): W1-T37R · REPORT.md §2 · Lemma 3 → `origin/theory/W1-T37R:theory_campaign/W1-T37R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W3-VT37R · REPORT.md verdict table row 4, VERIFIED
+- Cross-family: none
+- Repairs applied / pending: none needed
+- Open premises: SE on S∪S₀
+
+#### `LS-score` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L326`
+- Registry section: B.Theorem 5 assembled (W4-T38FULL)
+- Paper target: Thm 3 / Thm 5 (b1)
+- Source (registry cell): W4-T38FULL · REPORT.md §2 · Lemma LS-score → `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W5-VMASK · REPORT.md verdict table row 20: VERIFIED by an independent run (code facts confirmed in v3_engine.h); IMPL caveat: LS0 must pass emit_centre = true (row 25)
+- Cross-family: **VERIFIED*** — A-REV8 · REVIEW.md: scoring of S₀ VERIFIED; the move count 'at most Φ(C₀)−1' is ERROR at C₀ = S₀ (n = 4, p = 1 counterexample E1); repair: max{Φ(C₀)−1, 0}
+- Repairs applied / pending: none
+- Open premises: D_S on the lattice, ℓ ≥ Φ(C₀)−1, centre emitted
+
+#### `LemmaM` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L327`
+- Registry section: B.Theorem 5 assembled (W4-T38FULL)
+- Paper target: Thm 5 (b1)
+- Source (registry cell): W4-T38FULL · REPORT.md §2 · Lemma M → `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W5-VMASK · REPORT.md verdict table row 21: VERIFIED (every inequality; Lemma M needs λ_min only on A)
+- Cross-family: **VERIFIED** — A-REV8 · REVIEW.md: Lemma M VERIFIED, including uniformity and standardisation (fixed k, polynomial p, fixed noise variance, eigenvalue floor on the preferred model); it does not use the quadratic expansion A-REV3 rejected in W4-SHARE
+- Repairs applied / pending: none
+- Open premises: SE on the compared sets; margin m_n ≥ M_n√(log n/n)
+
+#### `Prop1-TD` (retires literal T37) — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L144`
+- Registry section: B.Theorem 3 part A — refined T37 / greedy repair (W1-T37R; verifier W3-VT37R; cross-family A-REV2)
+- Paper target: Thm 3 (negative result → supplement)
+- Source (registry cell): W1-T37R · REPORT.md §2 · Prop. 1 → `origin/theory/W1-T37R:theory_campaign/W1-T37R/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W3-VT37R · REPORT.md verdict table row 1, VERIFIED (720 designs, literal TD(2,0) in 0/720)
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 S37 Proposition 1 and swap identity VERIFIED
+- Repairs applied / pending: none needed
+- Open premises: s₀ ≥ 1, d ≥ 1, s₀+1 ≤ K
+
+#### `V1-TDfails` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L145`
+- Registry section: B.Theorem 3 part A — refined T37 / greedy repair (W1-T37R; verifier W3-VT37R; cross-family A-REV2)
+- Paper target: Thm 3 (negative result → supplement)
+- Source (registry cell): W3-VT38E · REPORT.md §3.4 · Prop. V1 → `origin/theory/W3-VT38E:theory_campaign/W3-VT38E/REPORT.md`
+- Author status: PROVED
+- Same-family: none — authored by W3-VT38E (the verifier)
+- Cross-family: none — A-REV1 does not itemise it; A-REV2 verifies the related Prop. 1
+- Repairs applied / pending: none needed
+- Open premises: s₀ ≥ 1, p ≥ s₀+1, s₀+1 ≤ K
+
+#### `CEX1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L159`
+- Registry section: B.Theorem 3 part A — refined T37 / greedy repair (W1-T37R; verifier W3-VT37R; cross-family A-REV2)
+- Paper target: supplement (negative result)
+- Source (registry cell): W3-VT37R · REPORT.md §4.1 · CEX-1 → `origin/theory/W3-VT37R:theory_campaign/W3-VT37R/REPORT.md`
+- Author status: COUNTEREXAMPLE
+- Same-family: **VERIFIED** — authored by W3-VT37R; reproduced in-run
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 §4.1 independently reproduced (gain −2.2977998984)
+- Repairs applied / pending: none needed
+- Open premises: —
+
+#### `CEX2` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L160`
+- Registry section: B.Theorem 3 part A — refined T37 / greedy repair (W1-T37R; verifier W3-VT37R; cross-family A-REV2)
+- Paper target: supplement (negative result)
+- Source (registry cell): W3-VT37R · REPORT.md §4.2 · CEX-2 → `origin/theory/W3-VT37R:theory_campaign/W3-VT37R/REPORT.md`
+- Author status: COUNTEREXAMPLE
+- Same-family: **VERIFIED** — authored by W3-VT37R; production rerun 233/234
+- Cross-family: **VERIFIED** — A-REV2 · REVIEW.md §2 §4.2 independently reproduced (−2.2862503005, +7.2109846558)
+- Repairs applied / pending: none needed
+- Open premises: —
+
+#### `W6F2-ThmA′` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L440`
+- Registry section: B.Repair drafts (W6-FIXREV1 CONSOLIDATED.md, W6-FIXREV2 STATEMENTS.md; not reviewed)
+- Paper target: Thm 3 (repair of an A-REV2 finding)
+- Source (registry cell): W6-FIXREV2 · STATEMENTS.md (REPORT.md landed) §2.3 Theorem A (tie-aware, POS repair) → `origin/theory/W6-FIXREV2:theory_campaign/W6-FIXREV2/STATEMENTS.md`
+- Author status: PROVED
+- Same-family: none — none (REPORT.md landed; same-family run; not reviewed)
+- Cross-family: **ERROR** — A-REV5 · REVIEW.md: feasible-lattice core, POS-repaired A5 and tie-aware repair VERIFIED; the literal cap-free lattice/count assertion ERROR (ignores K)
+- Repairs applied / pending: this is the repair; supersedes the corresponding rows once reviewed
+- Open premises: —
+
+#### `Thm4-C1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L264`
+- Registry section: B.Theorem 4, Proposition 1, Proposition 2 — bookkeeping (W2-BOOK)
+- Paper target: Thm 4
+- Source (registry cell): W2-BOOK · REPORT.md §2 · Theorem 4 (C1), routes (a),(d) → `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED*** — W5-LOCKBOOK · REPORT.md verdict tables: (C1′), routes (a), (d) CORRECT, needs the convention 𝒢 ⊆ U (stopped fits return an incomplete HPM, G1)
+- Cross-family: none — A-REV1 §7.4 verifies the same set-inclusion argument inside T38(b)-R; W2-BOOK's Theorem 4 not itself reviewed
+- Repairs applied / pending: none
+- Open premises: EX-A, EX-S, CAL, SR, GUARD; U must contain every stopped fit and abort (G1, G3)
+
+#### `T38-(0)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L324`
+- Registry section: B.Theorem 5 assembled (W4-T38FULL)
+- Paper target: Thm 5 (0) / Thm 4
+- Source (registry cell): W4-T38FULL · REPORT.md §2 · Theorem 5 (0) (= W1-T38E T38(b)-R composition) → `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W3-VT38E T38(b)-R composition VERIFIED; W4-T38FULL re-derives the strict-maximiser step
+- Cross-family: **VERIFIED*** — A-REV5 · REVIEW.md: T38 output/execution interface VERIFIED (strict and usable-HPM conventions; stop-only GUARD; no completion conditioning); A-REV8 · REVIEW.md: W6 formulation versus A-REV1 §7 VERIFIED [earlier: A-REV1 §7.4 repaired composition proof VERIFIED (same set argument as locked T21(C1)). Scope: A-REV1 reviewed W1-T38E's T38(b)-R, not W4-T38FULL (W6-FIXREV1 §3.1); the printed T38(b)-R as a whole is GAP; fixed by W6-FIXREV1's T38 files]
+- Repairs applied / pending: [APPLIED] W6-FIXREV1 T38_STATEMENT (v2) applies A-REV1 §7 (execution, usability, K); carried into T38-RECORD v3. Same family; not re-reviewed (A-REV5 pending)
+- Open premises: GUARD, EX-A, EX-S, CAL, SR; (P): δ₁ → 0 (T03)
+
+#### `T38-(a)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L325`
+- Registry section: B.Theorem 5 assembled (W4-T38FULL)
+- Paper target: Thm 5 (a)
+- Source (registry cell): W4-T38FULL · REPORT.md §2 · Theorem 5 (a) → `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md`
+- Author status: PROVED-UNDER
+- Same-family: **VERIFIED*** — inputs VERIFIED (W3-VEXP); ORTH composition unreviewed
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: (F1)/(F2)/(F3); T11(iii); ORTH joint family (see ORTH-joint)
+
+#### `Thm-b1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L328`
+- Registry section: B.Theorem 5 assembled (W4-T38FULL)
+- Paper target: Thm 5 (b1)
+- Source (registry cell): W4-T38FULL · REPORT.md §2 · Theorem b1 → `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md`
+- Author status: PROVED-UNDER
+- Same-family: **VERIFIED** — W5-VMASK · REPORT.md verdict table row 22: VERIFIED under (M1)–(M3)
+- Cross-family: **VERIFIED** — A-REV8 · REVIEW.md: Thm 5(b1) conditional consistency VERIFIED (v3 + LS0, (P), (M1)–(M3), execution assumptions, ideal arithmetic); A-REV5 · REVIEW.md: b1 direct route VERIFIED
+- Repairs applied / pending: none
+- Open premises: (M1) π₀(S°)>½, (M2) POP-LAT margin, (M3) SE(S°∪S₀), OP-LS0; LS0 method change
+
+#### `T38-b1-LH-iidfail` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L788`
+- Registry section: C. Flagged sub-claims (ERROR / GAP verdicts inside larger results; not counted in A1)
+- Paper target: T38-b1-LH
+- Source (registry cell): W4-T38FULL / W6-FIXREV1 T38_STATEMENT (b1-LH): 'Q_fπ₀(S₀) → 0 when c ≥ 2 and p → ∞' → `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/T38_STATEMENT.md`
+- Author status: —
+- Same-family: none
+- Cross-family: **ERROR** — A-REV5 · REVIEW.md: ERROR (c = 2, p ≍ log log n: Q_fπ₀(S₀) ≳ (log n)/p² → ∞); A-REV8 · REVIEW.md: GAP (the ceiling O_P(n^{1−c/2}p^{−c}log²n) does not vanish for slow p; not a counterexample to actual production Q_f, which may be on the exact branch)
+- Repairs applied / pending: [APPLIED] referee repair (A-REV5, A-REV8): require n^{1−c/2}p^{−c}log²n → 0 (c = 2: p/log n → ∞); state SMC applicability separately. Applied as wording in T38-RECORD v3
+- Open premises: —
+
+#### `LH-LAT` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L329`
+- Registry section: B.Theorem 5 assembled (W4-T38FULL)
+- Paper target: Thm 3 (part C) / Thm 5 (b1-LH)
+- Source (registry cell): W4-T38FULL · REPORT.md §2 · Prop. LH-LAT → `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED*** — W5-VMASK · REPORT.md verdict table rows 23, 23″, 24: validity VERIFIED (m₀ ≤ brute-force margin in 202/202 settings; algebra needs only \|ψ\|<1); 'm₀ is sharp' GAP (overstatement): sharp in 108/108 homogeneous, not sharp in 32/94 heterogeneous, down to ×0.002
+- Cross-family: **VERIFIED*** — A-REV8 · REVIEW.md: Prop. LH-LAT VERIFIED for fixed exact-Gram LH parameters; m₀ is a valid lower bound, not a universal sharp margin
+- Repairs applied / pending: [APPLIED] W5-VMASK R5 (exact margin formula; drop or qualify 'sharp')
+- Open premises: \|ψ\|<1 for the algebra; \|ψ\|<ρ for partition and (M1)
+
+#### `T38-b1′` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L331`
+- Registry section: B.Theorem 5 assembled (W4-T38FULL)
+- Paper target: Thm 5 (b1′)
+- Source (registry cell): W4-T38FULL · REPORT.md §2 · Theorem 5 (b1′) → `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md`
+- Author status: PROVED-UNDER
+- Same-family: **VERIFIED** — D2 verified by W3-VT38E
+- Cross-family: **GAP** — A-REV5 · REVIEW.md: the W6 rate-margin repair is VERIFIED (see W6F1-D2inf); the masked NB′ instance remains a sketch in the W4/W6 text (LH c = 1 instance: B2E-D2LH, A-REV7) [earlier: A-REV1 route (b1′) GAP (see T38b-R(b1′))]
+- Repairs applied / pending: [APPLIED] W6-FIXREV1 Cor. D2-∞ with rate margins (v2); masked instances: B2E-D2LH (LH exact Gram, c = 1) and VMASK-R1-NB (LH-iid, c = 1), both author or single run; A-REV7 pending
+- Open premises: D2 hypotheses; NB′; W5-VMASK R1 now proves NB on LH-iid c = 1 (single run, unreviewed); c ≥ 2 OPEN
+
+#### `T38-b2` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L332`
+- Registry section: B.Theorem 5 assembled (W4-T38FULL)
+- Paper target: Thm 5 (b2)
+- Source (registry cell): W4-T38FULL · REPORT.md §2 · Theorem 5 (b2) → `origin/theory/W4-T38FULL:theory_campaign/W4-T38FULL/REPORT.md`
+- Author status: PROVED-UNDER
+- Same-family: none
+- Cross-family: **GAP** — A-REV5 · REVIEW.md: the W6 eligible-set / repair-certificate interface is VERIFIED; genuine DELIV stays OPEN; the D3 surrogate's conditioning is a GAP (state SHARE/EXIT conditional on (data, 𝓒), or assume DELIV directly) [earlier: A-REV1 §7.2 (see T38b-R(b2))]
+- Repairs applied / pending: [APPLIED] W6-FIXREV1 eligible set 𝔛_n, repair certificates, capped β_H, boundary 𝔉_T (v2). DELIV stays OPEN in general; LH candidates FSH-F2, B2E-B2LH, OBG-BG3+OBG-LH-lock; A-REV7 pending
+- Open premises: DELIV (OPEN; C1) and REP (B♯ premises)
+
+#### `B2E-D2LH` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L541`
+- Registry section: B.New results: no-method-change masked theorems on LH (W5-B2ENV PROOF.md; author only)
+- Paper target: Thm 5 (b1′)/(b2) on LH exact Gram, no method change (new)
+- Source (registry cell): W5-B2ENV · PROOF.md §2.3 Corollary D2-LH (route (b1′), c = 1) → `origin/theory/W5-B2ENV:theory_campaign/W5-B2ENV/PROOF.md`
+- Author status: PROVED-UNDER
+- Same-family: none
+- Cross-family: **VERIFIED*** — A-REV7 · REVIEW.md: VERIFIED for qualitative consistency (c = 1, p/√n → ∞, exact Gram, groups = blocks); GAP for the stated unconditional O(√n/p) rate (needs expectation/tail control of the data events)
+- Repairs applied / pending: none
+- Open premises: D2 with r* (VERIFIED by W3-VT38E, A-REV1), [E-T1], [E-L4], [E-T5d]
+
+#### `B2E-CONF` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L545`
+- Registry section: B.New results: no-method-change masked theorems on LH (W5-B2ENV PROOF.md; author only)
+- Paper target: Thm 5 (b1′)/(b2) on LH exact Gram, no method change (new)
+- Source (registry cell): W5-B2ENV · PROOF.md §4.3 Proposition CONF and Cor. CONF-run (one-round confinement) → `origin/theory/W5-B2ENV:theory_campaign/W5-B2ENV/PROOF.md`
+- Author status: PROVED-UNDER
+- Same-family: none
+- Cross-family: **VERIFIED*** — A-REV7 · REVIEW.md: confinement checked against actual moves (independence proposal predrawn; ≤ 17 swap additions; 40-extra envelope); a_n = O_P((log n/n)^{3/2}) VERIFIED
+- Repairs applied / pending: none
+- Open premises: STAB-LH
+
+#### `B2E-LemmaR1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L546`
+- Registry section: B.New results: no-method-change masked theorems on LH (W5-B2ENV PROOF.md; author only)
+- Paper target: Thm 5 (b1′)/(b2) on LH exact Gram, no method change (new)
+- Source (registry cell): W5-B2ENV · PROOF.md §4.4 Lemma R1 (one-round repair at φ = 1 from every state of 𝒩) → `origin/theory/W5-B2ENV:theory_campaign/W5-B2ENV/PROOF.md`
+- Author status: PROVED-UNDER
+- Same-family: none
+- Cross-family: **VERIFIED*** — A-REV7 · REVIEW.md: repair order event VERIFIED with c_* = g^{−c}/C(2cg+19+B+2, B+2); stage T already suffices
+- Repairs applied / pending: none
+- Open premises: deletion part of STAB-LH
+
+#### `B2E-LemmaT` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L544`
+- Registry section: B.New results: no-method-change masked theorems on LH (W5-B2ENV PROOF.md; author only)
+- Paper target: Thm 5 (b1′)/(b2) on LH exact Gram, no method change (new)
+- Source (registry cell): W5-B2ENV · PROOF.md §4.2 Lemma T (truth retention) → `origin/theory/W5-B2ENV:theory_campaign/W5-B2ENV/PROOF.md`
+- Author status: PROVED-UNDER
+- Same-family: none
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: STAB-LH; (U1)–(U3)
+
+#### `B2E-LemmaJ` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L543`
+- Registry section: B.New results: no-method-change masked theorems on LH (W5-B2ENV PROOF.md; author only)
+- Paper target: Thm 5 (b1′)/(b2) on LH exact Gram, no method change (new)
+- Source (registry cell): W5-B2ENV · PROOF.md §4.2 Lemma J (junk and proxy inclusion odds) → `origin/theory/W5-B2ENV:theory_campaign/W5-B2ENV/PROOF.md`
+- Author status: PROVED-UNDER
+- Same-family: none
+- Cross-family: **VERIFIED*** — A-REV7 · REVIEW.md: VERIFIED, with η_n corrected to O(n^{−1/3} + √(log n/n))
+- Repairs applied / pending: none
+- Open premises: (U1)–(U3)
+
+#### `B2E-NBLH` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L540`
+- Registry section: B.New results: no-method-change masked theorems on LH (W5-B2ENV PROOF.md; author only)
+- Paper target: Thm 5 (b1′)/(b2) on LH exact Gram, no method change (new)
+- Source (registry cell): W5-B2ENV · PROOF.md §2.2 Theorem NB′-LH → `origin/theory/W5-B2ENV:theory_campaign/W5-B2ENV/PROOF.md`
+- Author status: PROVED-UNDER
+- Same-family: none
+- Cross-family: **VERIFIED*** — A-REV7 · REVIEW.md: NB′ bound O_P(√n/p + n^{−1/2}) used in the verified D2-LH consistency; corrected NB′ (ESS ≥ 0.9H at 1/T₀) required
+- Repairs applied / pending: none
+- Open premises: W1-EXP Thm 1, [E-T6], [E-L4]; LH exact Gram, c = 1
+
+#### `OBG-LH-lock-general` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L789`
+- Registry section: C. Flagged sub-claims (ERROR / GAP verdicts inside larger results; not counted in A1)
+- Paper target: OBG-LH-lock
+- Source (registry cell): O-BGIBBS · REPORT.md · LH-lock for general (ρ, ψ, g, c) with \|ψ\| < ρ → `origin/theory/O-BGIBBS:theory_campaign/O-BGIBBS/REPORT.md`
+- Author status: —
+- Same-family: none
+- Cross-family: **ERROR** — A-REV7 · REVIEW.md §5: ERROR. One pair, g = 4, ρ = 0.85, ψ = 0.5, β_a = 1.4, β_b = −0.7: the swap 0 → 4 improves the population fit by 0.00479, so C2 fails for allowed LH parameters (also g = 9). It is not a counterexample to an end-of-round bound or to the algorithm
+- Repairs applied / pending: keep C1–C3 as explicit hypotheses (A-REV7)
+- Open premises: —
+
+#### `OBG-T38b-BG3` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L615`
+- Registry section: B.v2 — O-BGIBBS final head 55679ee: BG2, BG1′, LH-rate, BG3, LH-lock (T38(b) without LS0; author only; A-REV7 pending)
+- Paper target: Thm 5 (b) without LS0 (new)
+- Source (registry cell): O-BGIBBS · REPORT.md §1 headline 1 · T38(b) without LS0 on LH exact Gram, p fixed, every fixed c (final run alone) → `origin/theory/O-BGIBBS:theory_campaign/O-BGIBBS/REPORT.md`
+- Author status: PROOF SKETCH
+- Same-family: none — none (author only; A-REV7 pending)
+- Cross-family: **VERIFIED*** — A-REV7 · REVIEW.md: BG3 + conditional LH-lock VERIFIED for fixed p with strict C1–C3 as hypotheses; recommended as a fixed-p component lemma, not the headline
+- Repairs applied / pending: none
+- Open premises: BG3 (PROVED) + LH-lock (PROOF SKETCH) + T38(0) + (P) via W1-EXP Thm 5(d); the composite carries the weakest input's word; author P(true) 0.9, P(provable) 0.8
+
+#### `STAB-cert(A7)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L739`
+- Registry section: B.v2 — T38-RECORD: statement of record for Theorem 5
+- Paper target: Thm 5 (b2) no LS0: explicit subfamily
+- Source (registry cell): A-REV7 · REVIEW.md §4 · analytic STAB certificate → `origin/theory/A-REV7:theory_campaign/A-REV7/REVIEW.md`
+- Author status: REFEREE
+- Same-family: n/a (referee-authored)
+- Cross-family: referee-authored: Astra-authored; checked by a Sol reviewer; pending Claude verification
+- Repairs applied / pending: none: finding
+- Open premises: λ₀ b_vis² > R_M, with R_M = Σβ_i²ψ_i²(1−ψ_i²), λ₀ = (1−max\|ψ_i\|)(1−ρ_max), b_vis² = min_{S°}θ_j²
+
+#### `B2LH-subfamily(A7)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L740`
+- Registry section: B.v2 — T38-RECORD: statement of record for Theorem 5
+- Paper target: Thm 5 (b2) no LS0: explicit subfamily
+- Source (registry cell): A-REV7 · REVIEW.md §4 · concrete growing-p subfamily → `origin/theory/A-REV7:theory_campaign/A-REV7/REVIEW.md`
+- Author status: REFEREE
+- Same-family: n/a (referee-authored)
+- Cross-family: referee-authored: Astra-authored; checked by a Sol reviewer; pending Claude verification
+- Repairs applied / pending: none: finding
+- Open premises: g = 9, c = 2, no unlinked visible groups, ρ = 0.4, ψ = 0.2, β = 1, σ² = 1, null groups appended, p_n = 9⌊n/18⌋ (exact Gram, B = 16 eventually); STAB margin ≥ 0.4032
+
+#### `PXN-P6` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L288`
+- Registry section: B.Theorems 2(v)/5(b1-LH-iid) — p ≫ n family (W3-PXN; same-family referee W5-VMASK; no cross-family review)
+- Paper target: Thm 2 (v) / Thm 5 (b1-LH-iid)
+- Source (registry cell): W3-PXN · REPORT.md §2 · P6 → `origin/theory/W3-PXN:theory_campaign/W3-PXN/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — W5-VMASK · REPORT.md verdict table rows 14, 15: VERIFIED (D_S > 0 at all lattice states in 105/110; 5 failures at n ≤ 400); (L) failure formula VERIFIED, 4%/1.2% quoted are for s₀ = 5 (R4)
+- Cross-family: **GAP** — A-REV6 · REVIEW.md and A-REV8 · REVIEW.md: GAP retained after W5-VMASK R2 (Λ(a)'s Tr(c) range and dimension not generalised) [earlier: A-REV3 · REVIEW.md verdict table: W3 P6 TD′/lattice proof GAP (Lemma Λ(a) invokes Tr(c) over all sets of size ≤ s₀+2, count ~p^{s₀+2} and projection dimension may exceed 16, beyond Tr(c)'s n^{A+1}2^{17} range; Lemma U(U1) arithmetic false; tie wording); no counterexample to the intended lattice conclusion found]
+- Repairs applied / pending: [PENDING] A-REV3's repairs: state Tr for any fixed upper dimension J (J = s₀+2, threshold C·log n/n with C > 4[A(s₀+2)+2]) or use Schur complement + covariance concentration; replace the constant in (U1); exclude other progress additions in the strict-margin sentence. W5-VMASK reports these points as covered by W1-EXP L1.4's count (p+1)^{s₀+2}, L > 4A(s₀+3) — not re-checked by a second family
+- Open premises: W1-EXP Lemmas 1.1,1.2,1.4; W1-T37R Thm A(A3)
+
+#### `T38-v3` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L738`
+- Registry section: B.v2 — T38-RECORD: statement of record for Theorem 5
+- Paper target: Thm 5 (statement of record)
+- Source (registry cell): T38-RECORD · T38_STATEMENT.md (v3) → `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/T38_STATEMENT.md`
+- Author status: PROVED-UNDER
+- Same-family: none — none (merge of W4-T38FULL, W6-FIXREV1, A-REV1 §7, W5-VMASK, W3-PXN, W5-VPGD, T32(i); no new mathematics)
+- Cross-family: none — A-REV5 / A-REV7 pending
+- Repairs applied / pending: none
+- Open premises: as W6F1-T38; LS0 part of the method; candidates N1–N6 listed separately
+
+#### `W6F1-T38` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L435`
+- Registry section: B.Repair drafts (W6-FIXREV1 CONSOLIDATED.md, W6-FIXREV2 STATEMENTS.md; not reviewed)
+- Paper target: Thm 5
+- Source (registry cell): W6-FIXREV1 · REPORT.md + T38_STATEMENT.md / T38_PROOF.md → `origin/theory/W6-FIXREV1:theory_campaign/W6-FIXREV1/REPORT.md`
+- Author status: PROVED-UNDER
+- Same-family: none — none (REPORT.md landed; not reviewed)
+- Cross-family: **ERROR** — A-REV5 · REVIEW.md: 'T38 statement' overall ERROR (unqualified c = 2 iid-budget clause in (b1-LH), slow-p counterexample); conditional interfaces (0), (0_H), b1, b1′, b2 VERIFIED; D3 surrogate conditioning GAP; cost must keep its T32(i) qualification (GAP). A-REV8 · REVIEW.md: W6 vs A-REV1 §7 VERIFIED
+- Repairs applied / pending: superseded as statement of record by T38-RECORD · T38_STATEMENT.md v3 (citations, review columns and candidate list only; no change of mathematics)
+- Open premises: as W4 T38 with A-REV1 §7 qualifications
+
+#### `T38b-R(whole)` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L248`
+- Registry section: B.Theorem 5 — delivery and eligibility (W1-T38E; verifier W3-VT38E; cross-family A-REV1)
+- Paper target: Thm 5
+- Source (registry cell): W1-T38E · REPORT.md · Theorem T38(b)-R as supplied → `origin/theory/W1-T38E:theory_campaign/W1-T38E/REPORT.md`
+- Author status: PROVED-UNDER
+- Same-family: **VERIFIED** — W3-VT38E · REPORT.md verdict table T38(b)-R composition VERIFIED
+- Cross-family: **GAP** — A-REV1 · REVIEW.md §2 T38(b)-R entire supplied statement GAP; central composition inequality and liminf VERIFIED; repaired formulation (§7.4) VERIFIED as a conditional implication
+- Repairs applied / pending: [APPLIED] A-REV1 §7 repaired formulation; applied in W6-FIXREV1 REPORT.md (same-family, not yet reviewed by a second family)
+- Open premises: named inputs; execution/usability qualifications; K = min(p,⌊n/2⌋)
+
+#### `OCERT-LemmaM` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L403`
+- Registry section: B.New results: a-posteriori certificates (O-CERT; unverified)
+- Paper target: none (new: post-hoc certificates; supplement/remark)
+- Source (registry cell): O-CERT · REPORT.md §3 · Lemma M (Q_S ↓, D_S ↑ in S) → `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — O-VCERT · REPORT.md §1, §6: (a)–(d) VERIFIED (0 violations in 476,160 exhaustive pairs)
+- Cross-family: **VERIFIED** — A-REV9 · REVIEW.md: VERIFIED in exact arithmetic
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `OCERT-C1` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L404`
+- Registry section: B.New results: a-posteriori certificates (O-CERT; unverified)
+- Paper target: none (new: post-hoc certificates; supplement/remark)
+- Source (registry cell): O-CERT · REPORT.md §3 · Thm C1 (one-sided global certificate) → `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED*** — O-VCERT · REPORT.md §1, §6: (a), (b) identity and probability VERIFIED (conditional on W2-BOOK Lemma RO/GUARD); last sentence ('unscored and unreported' mass) GAP with a counterexample, repaired by R1 ('not in 𝒯')
+- Cross-family: **ERROR** — A-REV9 · REVIEW.md: C1(a) ERROR as literally quantified (includes S = HPM: 1 ≤ e^{−g}); Z_𝒯 bound VERIFIED; C1(b) with R1 VERIFIED (original 'unscored' wording ERROR); C1(c) VERIFIED
+- Repairs applied / pending: [APPLIED] O-VCERT R1 (written by the referee; O-CERT's text not edited)
+- Open premises: EX-A, EX-S, CAL, START, GUARD; SC(η_F) for floating point
+
+#### `OCERT-C2` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L405`
+- Registry section: B.New results: a-posteriori certificates (O-CERT; unverified)
+- Paper target: none (new: post-hoc certificates; supplement/remark)
+- Source (registry cell): O-CERT · REPORT.md §3 · Thm C2 (two-sided band) → `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md`
+- Author status: PROVED-UNDER
+- Same-family: **VERIFIED** — O-VCERT · REPORT.md §1, §6: VERIFIED as a conditional implication (PW2); Cantelli bound tight
+- Cross-family: **VERIFIED** — A-REV9 · REVIEW.md: VERIFIED conditional PW2/Cantelli implication
+- Repairs applied / pending: none
+- Open premises: PW2 (T25(iv)), not data-checkable
+
+#### `OCERT-C3` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L406`
+- Registry section: B.New results: a-posteriori certificates (O-CERT; unverified)
+- Paper target: none (new: post-hoc certificates; supplement/remark)
+- Source (registry cell): O-CERT · REPORT.md §3 · Thm C3 (exact relative certificates) → `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — O-VCERT · REPORT.md §1, §6: VERIFIED (𝒮̄ read as the SR logical scored set; code-checked)
+- Cross-family: **VERIFIED*** — A-REV9 · REVIEW.md: exact ratios VERIFIED; GAP for identifying the locally returned centre with the HPM without an identity/tie check (v3_engine.h local_search)
+- Repairs applied / pending: none
+- Open premises: any fully scored region
+
+#### `OCERT-C4` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L407`
+- Registry section: B.New results: a-posteriori certificates (O-CERT; unverified)
+- Paper target: none (new: post-hoc certificates; supplement/remark)
+- Source (registry cell): O-CERT · REPORT.md §3 · Thm C4 (box certificate) → `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED** — O-VCERT · REPORT.md §1, §6: VERIFIED (0 violations over 285,712 boxes on 48 designs; B&B = brute force 80/80)
+- Cross-family: **VERIFIED*** — A-REV9 · REVIEW.md: exact boxes VERIFIED; floating-point clause GAP (needs interval bounds for the mixed ingredients of Φ)
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `OCERT-C5` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L408`
+- Registry section: B.New results: a-posteriori certificates (O-CERT; unverified)
+- Paper target: none (new: post-hoc certificates; supplement/remark)
+- Source (registry cell): O-CERT · REPORT.md §3 · Cor. C5 (posterior-miss certificate) → `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED*** — O-VCERT · REPORT.md §1, §6: VERIFIED with tie caveat (needs F(S₀) < F(Ŝ) strictly or tie order) and \|S₀\| ≤ K
+- Cross-family: **ERROR** — A-REV9 · REVIEW.md: tie-insensitive prose ERROR (duplicate-column example); the displayed strict-score event inclusion VERIFIED
+- Repairs applied / pending: none
+- Open premises: S₀ ⊆ U
+
+#### `OCERT-C6` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L409`
+- Registry section: B.New results: a-posteriori certificates (O-CERT; unverified)
+- Paper target: none (new: post-hoc certificates; supplement/remark)
+- Source (registry cell): O-CERT · REPORT.md §3 · Thm C6 (per-fit certificate card) → `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md`
+- Author status: PROVED
+- Same-family: **VERIFIED*** — O-VCERT · REPORT.md §1, §6: GAP → VERIFIED after R1 and R2 (exact arithmetic needs R1 only); O-CERT later added Remark C6′ (deterministic regime, PROVED, head 332bf3e, unreviewed)
+- Cross-family: **GAP** — A-REV9 · REVIEW.md: original card GAP; the repaired exact implication holds with R1, R2 and explicit local/region checks
+- Repairs applied / pending: [APPLIED] O-VCERT R1 (unscored → not in 𝒯) and R2 (floating-point inflation of the G items)
+- Open premises: Lemma RO; GUARD
+
+#### `OCERT-§4` ⚑ CONFLICT — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L787`
+- Registry section: C. Flagged sub-claims (ERROR / GAP verdicts inside larger results; not counted in A1)
+- Paper target: OCERT-C6 (illustration)
+- Source (registry cell): O-CERT · REPORT.md §4 (p = 500 illustration) → `origin/theory/O-CERT:theory_campaign/O-CERT/REPORT.md`
+- Author status: —
+- Same-family: **GAP** — O-VCERT · REPORT.md §1, §6: §4 empty and results/ absent at 17e7f15; 'every numeric claim of O-CERT … is therefore unsupported' (S4)
+- Cross-family: none
+- Repairs applied / pending: [APPLIED] O-CERT 0edc58f/332bf3e added an illustration on 4 study fits AFTER O-VCERT's review; not re-reviewed
+- Open premises: —
+
+#### `PART-ThmA` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L660`
+- Registry section: B.v2 — W7-PART (head b2aa940): partition = groups (author only; A-REV6 pending)
+- Paper target: Thm 2 / Thm 5 input: partition = groups (new)
+- Source (registry cell): W7-PART · REPORT.md §1 / PROOF.md · Theorem A (deterministic: laminarity, blocks = groups) → `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV6 pending)
+- Cross-family: **VERIFIED*** — A-REV9 · REVIEW.md: A1–A4 VERIFIED (deterministic, no ties; A2's extra premise); A-REV6 · REVIEW.md: A0(c) GAP (quantifier)
+- Repairs applied / pending: none
+- Open premises: GRP(ρ, ψ̄); SIZE g_max ≤ B < 2g_min
+
+#### `PART-CorB` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L664`
+- Registry section: B.v2 — W7-PART (head b2aa940): partition = groups (author only; A-REV6 pending)
+- Paper target: Thm 2 / Thm 5 input: partition = groups (new)
+- Source (registry cell): W7-PART · REPORT.md §1 / PROOF.md · Corollary B → `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV6 pending)
+- Cross-family: **GAP** — A-REV9 · REVIEW.md: explicit constants not locked (L2 density normalisation not independently established)
+- Repairs applied / pending: none
+- Open premises: as Theorem B; p ≤ n^A
+
+#### `PART-ThmC` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L665`
+- Registry section: B.v2 — W7-PART (head b2aa940): partition = groups (author only; A-REV6 pending)
+- Paper target: Thm 2 / Thm 5 input: partition = groups (new)
+- Source (registry cell): W7-PART · REPORT.md §1 / PROOF.md · Lemma L3, Theorem C, Corollary C (independent groups) → `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md`
+- Author status: PROVED
+- Same-family: none — none (A-REV6 pending)
+- Cross-family: **GAP** — A-REV6 · REVIEW.md: GAP (needs a corrected conditioning lemma; claim PART-L3)
+- Repairs applied / pending: none
+- Open premises: IND
+
+#### `PART-CE2` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L668`
+- Registry section: B.v2 — W7-PART (head b2aa940): partition = groups (author only; A-REV6 pending)
+- Paper target: Thm 2 / Thm 5 input: partition = groups (new)
+- Source (registry cell): W7-PART · REPORT.md §1 / PROOF.md · CE2 (2g_min ≤ B) → `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md`
+- Author status: COUNTEREXAMPLE
+- Same-family: none — none (A-REV6 pending)
+- Cross-family: **ERROR** — A-REV6 · REVIEW.md: unequal-size header ERROR (sizes 2 and 5, B = 5: next-fit cannot merge them); the equal-size study example survives
+- Repairs applied / pending: none
+- Open premises: blocks are unions of whole groups (PROVED)
+
+#### `PART-pairing` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L670`
+- Registry section: B.v2 — W7-PART (head b2aa940): partition = groups (author only; A-REV6 pending)
+- Paper target: Thm 2 / Thm 5 input: partition = groups (new)
+- Source (registry cell): W7-PART · REPORT.md §1 / PROOF.md · which groups share a block when 2g ≤ B (the study's g = 5) → `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md`
+- Author status: OPEN
+- Same-family: none — none (A-REV6 pending)
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: —
+
+#### `PART-kappa` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L666`
+- Registry section: B.v2 — W7-PART (head b2aa940): partition = groups (author only; A-REV6 pending)
+- Paper target: Thm 2 / Thm 5 input: partition = groups (new)
+- Source (registry cell): W7-PART · REPORT.md §1 / PROOF.md · κ_C = 2I* bookkeeping → `origin/theory/W7-PART:theory_campaign/W7-PART/REPORT.md`
+- Author status: PROOF SKETCH
+- Same-family: none — none (A-REV6 pending)
+- Cross-family: none
+- Repairs applied / pending: none
+- Open premises: identity PROVED; mesh-1/n bookkeeping sketched
+
+#### `Prop2(f)` — `origin/theory/T38-RECORD:theory_campaign/T38-RECORD/REGISTRY_v2.md:L262`
+- Registry section: B.Theorem 4, Proposition 1, Proposition 2 — bookkeeping (W2-BOOK)
+- Paper target: Prop 2
+- Source (registry cell): W2-BOOK · REPORT.md §2 · Prop. 2 (f) → `origin/theory/W2-BOOK:theory_campaign/W2-BOOK/REPORT.md`
+- Author status: PROVED-UNDER
+- Same-family: **GAP** — W5-LOCKBOOK · REPORT.md verdict tables: GAP (wording, fixable): VAL-FP must require the exact run to share status and 𝓒
+- Cross-family: **GAP** — A-REV4 · REVIEW.md verdict table: VAL-FP GAP: the implication (Ẑ_fp ≤ e^η Z̄ ⇒ α e^η P(A) + ε) is VERIFIED but no validated η or ε for production is supplied; no replay against exact arithmetic performed
+- Repairs applied / pending: [APPLIED] VAL-FP restated in W5-LOCKBOOK STATEMENTS.tex (same-family)
+- Open premises: VAL-FP(η, ε), unmeasured (needs an R/C++ replay)
+
