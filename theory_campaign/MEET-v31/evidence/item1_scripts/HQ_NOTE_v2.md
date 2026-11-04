@@ -1,0 +1,5 @@
+# HQ note on the item-1 rule script (2026-11-04)
+
+- **F04 (SOL2 audit):** `apply_rule.py` (v1, pre-registered in f53d0af) computes `need = ceil(0.75 · complete)`, so with 9 complete designs it would grant Outcome 1 from 7 conclusive designs, against the recorded gate "if fewer than 9 designs are conclusive, the result is Outcome 2" (R3_B:42). `apply_rule_v2.py` enforces `need = max(9, ceil(0.75 · complete))`. v1 is kept unchanged as the pre-registered evidence.
+- **Re-run of v2 on `item1_per_fit.csv`:** 12 designs, 9 complete, 0 conclusive, **Outcome 2**; output byte-identical to `item1_rule_table.csv`. The decision is unchanged.
+- **Certified evidence underestimation (deterministic, no reference needed):** every scored model S gives Z ≥ e^{F(S)}, so log Ẑ < max_S F(S) certifies Ẑ < Z. Using the best F scored by any arm on the same data: arm C (prior start) has log Ẑ below it on **10/12** designs; arm A on **0/12**; arm B on **0/9**. Exceptions for C: S4 r002 c050 and S6 r002 c050. This replaces the reference-based wording "C underestimated log Z on 12/12" (F05) with a certified count; the reference-based statement becomes "C is below A on 12/12".
