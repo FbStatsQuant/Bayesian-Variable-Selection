@@ -1,0 +1,73 @@
+design                     phi   kernel                             rowsum  ||piK-pi||1     DB abs  DB rel(all) DB rel(>1e-13)
+A_n20_p6_ar1               0.00  Gibbs (all j)                    0.00e+00     1.69e-16   6.25e-17     8.65e-15       8.65e-15
+A_n20_p6_ar1               0.00  uniform swap                     2.22e-16     6.26e-17   8.24e-18     3.83e-14       3.83e-14
+A_n20_p6_ar1               0.00  neighbour swap                   2.22e-16     1.46e-16   2.26e-17     3.16e-14       3.16e-14
+A_n20_p6_ar1               0.00  independence (pi0)               0.00e+00     2.91e-16   1.39e-17     7.56e-14       7.56e-14
+A_n20_p6_ar1               0.00  ROUND (uniform random order)     4.44e-16     4.27e-16   1.04e-17     1.54e-14       1.54e-14
+A_n20_p6_ar1               0.00  fixed canonical order            4.44e-16     4.14e-16   1.27e-17     7.52e-14       7.52e-14
+A_n20_p6_ar1               0.00  nswap w/o Hastings factor        2.22e-16     6.58e-02   4.39e-03     6.67e-01       6.67e-01
+A_n20_p6_ar1               0.00  indep w/ symmetric accept        5.55e-16     4.39e-01   3.97e-02     1.00e+00       1.00e+00
+A_n20_p6_ar1               0.50  Gibbs (all j)                    0.00e+00     1.94e-16   6.94e-17     1.13e-14       1.13e-14
+A_n20_p6_ar1               0.50  uniform swap                     2.22e-16     7.14e-17   8.46e-18     5.71e-14       5.71e-14
+A_n20_p6_ar1               0.50  neighbour swap                   2.22e-16     1.46e-16   2.30e-17     4.96e-14       4.96e-14
+A_n20_p6_ar1               0.50  independence (pi0)               4.44e-16     3.65e-16   1.39e-17     7.56e-14       7.56e-14
+A_n20_p6_ar1               0.50  ROUND (uniform random order)     7.77e-16     2.53e-16   2.78e-17     1.49e-14       1.49e-14
+A_n20_p6_ar1               0.50  fixed canonical order            8.88e-16     3.29e-16   8.42e-04     6.82e-01       6.82e-01
+A_n20_p6_ar1               0.50  nswap w/o Hastings factor        2.22e-16     6.23e-02   4.21e-03     6.67e-01       6.67e-01
+A_n20_p6_ar1               0.50  indep w/ symmetric accept        5.55e-16     4.18e-01   4.18e-02     1.00e+00       1.00e+00
+A_n20_p6_ar1               1.00  Gibbs (all j)                    0.00e+00     1.73e-16   6.94e-17     1.95e-14       1.95e-14
+A_n20_p6_ar1               1.00  uniform swap                     2.22e-16     6.07e-17   9.11e-18     8.19e-14       8.19e-14
+A_n20_p6_ar1               1.00  neighbour swap                   2.22e-16     1.62e-16   2.43e-17     1.05e-13       1.05e-13
+A_n20_p6_ar1               1.00  independence (pi0)               4.44e-16     3.18e-16   1.39e-17     7.54e-14       7.54e-14
+A_n20_p6_ar1               1.00  ROUND (uniform random order)     7.77e-16     3.92e-16   4.16e-17     1.55e-14       1.55e-14
+A_n20_p6_ar1               1.00  fixed canonical order            1.11e-15     3.59e-16   1.73e-03     9.17e-01       9.17e-01
+A_n20_p6_ar1               1.00  nswap w/o Hastings factor        2.22e-16     5.70e-02   3.96e-03     6.67e-01       6.67e-01
+A_n20_p6_ar1               1.00  indep w/ symmetric accept        5.55e-16     4.04e-01   4.33e-02     1.00e+00       1.00e+00
+B_n20_p8_factor            0.00  Gibbs (all j)                    0.00e+00     9.62e-17   6.94e-18     1.33e-15       1.33e-15
+B_n20_p8_factor            0.00  uniform swap                     4.44e-16     8.65e-17   5.69e-19     4.70e-15       4.70e-15
+B_n20_p8_factor            0.00  neighbour swap                   2.22e-16     6.54e-17   1.73e-18     1.93e-15       1.93e-15
+B_n20_p8_factor            0.00  independence (pi0)               6.66e-16     9.88e-16   6.51e-18     2.93e-13       2.93e-13
+B_n20_p8_factor            0.00  ROUND (uniform random order)     6.66e-16     6.23e-16   4.77e-18     4.50e-14       4.50e-14
+B_n20_p8_factor            0.00  fixed canonical order            8.88e-16     1.00e-15   7.37e-18     2.93e-13       2.93e-13
+B_n20_p8_factor            0.00  nswap w/o Hastings factor        2.22e-16     1.78e-01   1.17e-02     7.50e-01       7.50e-01
+B_n20_p8_factor            0.00  indep w/ symmetric accept        1.78e-15     3.99e-01   9.81e-04     1.00e+00       1.00e+00
+B_n20_p8_factor            0.50  Gibbs (all j)                    0.00e+00     1.20e-16   2.43e-17     3.56e-15       3.56e-15
+B_n20_p8_factor            0.50  uniform swap                     2.22e-16     1.09e-16   1.19e-18     1.33e-14       1.33e-14
+B_n20_p8_factor            0.50  neighbour swap                   2.22e-16     7.12e-17   3.47e-18     1.95e-15       1.95e-15
+B_n20_p8_factor            0.50  independence (pi0)               1.78e-15     6.49e-16   9.54e-18     2.93e-13       2.93e-13
+B_n20_p8_factor            0.50  ROUND (uniform random order)     2.44e-15     3.48e-16   1.47e-17     4.52e-14       4.52e-14
+B_n20_p8_factor            0.50  fixed canonical order            1.55e-15     7.20e-16   3.67e-03     8.09e-01       8.09e-01
+B_n20_p8_factor            0.50  nswap w/o Hastings factor        2.22e-16     1.65e-01   1.40e-02     7.50e-01       7.50e-01
+B_n20_p8_factor            0.50  indep w/ symmetric accept        1.33e-15     3.86e-01   1.97e-03     1.00e+00       1.00e+00
+B_n20_p8_factor            1.00  Gibbs (all j)                    0.00e+00     1.47e-16   3.12e-17     1.13e-14       1.13e-14
+B_n20_p8_factor            1.00  uniform swap                     3.33e-16     9.11e-17   2.60e-18     7.39e-14       7.39e-14
+B_n20_p8_factor            1.00  neighbour swap                   2.22e-16     8.13e-17   3.47e-18     1.51e-14       1.51e-14
+B_n20_p8_factor            1.00  independence (pi0)               1.78e-15     8.39e-16   8.24e-18     2.30e-12       2.30e-12
+B_n20_p8_factor            1.00  ROUND (uniform random order)     1.78e-15     3.65e-16   1.47e-17     5.59e-14       5.59e-14
+B_n20_p8_factor            1.00  fixed canonical order            1.78e-15     9.01e-16   1.24e-02     9.25e-01       9.25e-01
+B_n20_p8_factor            1.00  nswap w/o Hastings factor        2.22e-16     1.19e-01   1.14e-02     7.50e-01       7.50e-01
+B_n20_p8_factor            1.00  indep w/ symmetric accept        1.55e-15     2.96e-01   5.05e-03     1.00e+00       1.00e+00
+C_n10_p8_factor_capK5      0.00  Gibbs (all j)                    0.00e+00     5.99e-17   1.39e-17     4.10e-16       4.10e-16
+C_n10_p8_factor_capK5      0.00  uniform swap                     3.33e-16     2.14e-17   1.30e-18     5.76e-16       5.76e-16
+C_n10_p8_factor_capK5      0.00  neighbour swap                   2.22e-16     1.27e-17   1.73e-18     4.21e-16       4.21e-16
+C_n10_p8_factor_capK5      0.00  independence (pi0)               0.00e+00     2.02e-16   2.08e-17     5.36e-14       5.36e-14
+C_n10_p8_factor_capK5      0.00  ROUND (uniform random order)     1.11e-15     8.18e-16   2.78e-17     1.51e-14       1.51e-14
+C_n10_p8_factor_capK5      0.00  fixed canonical order            1.55e-15     4.02e-16   1.73e-17     5.56e-14       5.56e-14
+C_n10_p8_factor_capK5      0.00  nswap w/o Hastings factor        2.22e-16     4.37e-02   9.54e-03     5.00e-01       5.00e-01
+C_n10_p8_factor_capK5      0.00  indep w/ symmetric accept        1.11e-15     3.67e-01   3.76e-02     1.00e+00       1.00e+00
+C_n10_p8_factor_capK5      0.50  Gibbs (all j)                    0.00e+00     6.74e-17   1.39e-17     5.13e-16       5.13e-16
+C_n10_p8_factor_capK5      0.50  uniform swap                     2.22e-16     1.79e-17   8.67e-19     1.80e-15       1.80e-15
+C_n10_p8_factor_capK5      0.50  neighbour swap                   2.22e-16     1.14e-17   1.73e-18     1.78e-15       1.78e-15
+C_n10_p8_factor_capK5      0.50  independence (pi0)               1.55e-15     2.55e-16   2.08e-17     5.38e-14       5.38e-14
+C_n10_p8_factor_capK5      0.50  ROUND (uniform random order)     2.22e-15     3.03e-16   2.26e-17     1.04e-14       1.04e-14
+C_n10_p8_factor_capK5      0.50  fixed canonical order            2.00e-15     3.80e-16   5.65e-04     9.93e-01       9.93e-01
+C_n10_p8_factor_capK5      0.50  nswap w/o Hastings factor        2.22e-16     4.36e-02   9.45e-03     5.00e-01       5.00e-01
+C_n10_p8_factor_capK5      0.50  indep w/ symmetric accept        1.22e-15     3.77e-01   3.73e-02     1.00e+00       1.00e+00
+C_n10_p8_factor_capK5      1.00  Gibbs (all j)                    0.00e+00     7.55e-17   1.39e-17     1.45e-15       1.45e-15
+C_n10_p8_factor_capK5      1.00  uniform swap                     2.22e-16     1.86e-17   8.67e-19     7.88e-15       7.88e-15
+C_n10_p8_factor_capK5      1.00  neighbour swap                   2.22e-16     2.30e-17   1.73e-18     4.07e-15       4.07e-15
+C_n10_p8_factor_capK5      1.00  independence (pi0)               1.33e-15     3.18e-16   2.08e-17     6.02e-14       6.02e-14
+C_n10_p8_factor_capK5      1.00  ROUND (uniform random order)     2.22e-15     1.15e-15   5.55e-17     9.02e-15       9.02e-15
+C_n10_p8_factor_capK5      1.00  fixed canonical order            1.78e-15     7.27e-16   1.52e-03     9.99e-01       9.99e-01
+C_n10_p8_factor_capK5      1.00  nswap w/o Hastings factor        2.22e-16     4.33e-02   9.31e-03     5.00e-01       5.00e-01
+C_n10_p8_factor_capK5      1.00  indep w/ symmetric accept        1.44e-15     3.94e-01   3.67e-02     1.00e+00       1.00e+00
