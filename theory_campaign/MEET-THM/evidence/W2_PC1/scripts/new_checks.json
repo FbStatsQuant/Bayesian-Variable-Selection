@@ -1,0 +1,312 @@
+{
+  "D_jump_counterexample": {
+    "n": 40,
+    "p": 2,
+    "B": 1,
+    "blocks": [
+      [
+        0
+      ],
+      [
+        1
+      ]
+    ],
+    "V": [
+      [
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "eps": 1e-05,
+    "G": [
+      [
+        39.0,
+        0.00039000000000000005
+      ],
+      [
+        0.00039000000000000005,
+        39.0
+      ]
+    ],
+    "z": [
+      26.89917953164548,
+      14.016024931575227
+    ],
+    "Y": 39.0,
+    "x1": 0.46358653221149093,
+    "x2": 0.1258642714521645,
+    "zGinvz": 23.58993010407218,
+    "d_sigma_gap": 2.6591263515325587,
+    "d_true_gap": 2.658891036786116,
+    "targets": [
+      0.3418629701829448,
+      1.0
+    ],
+    "eta_D": 0.00030730094756678837,
+    "threshold_upper": 0.9011069636137956,
+    "left_right_counts": [
+      2,
+      4
+    ],
+    "perturbed_count": 3,
+    "perturbed_grid": [
+      0.0,
+      0.3418629701829448,
+      0.9999987524624048,
+      1.0
+    ],
+    "point": "One-sided baseline counts 2 and 4 do not exclude the intermediate count 3."
+  },
+  "revised_partitions": [
+    {
+      "n": 64,
+      "p": 16,
+      "g": 4,
+      "B": 4,
+      "K": 16,
+      "groups_equal_blocks": true,
+      "eps": 0.0001,
+      "min_eigenvalue": 0.4999999999999982
+    },
+    {
+      "n": 40,
+      "p": 8,
+      "g": 2,
+      "B": 2,
+      "K": 8,
+      "groups_equal_blocks": true,
+      "eps": 1e-05,
+      "min_eigenvalue": 0.3999999999999989
+    },
+    {
+      "n": 100,
+      "p": 60,
+      "g": 5,
+      "B": 7,
+      "K": 50,
+      "groups_equal_blocks": true,
+      "eps": 0.0,
+      "min_eigenvalue": 0.3375595251593312
+    }
+  ],
+  "A_Nd_fixed_eps_counterexample": {
+    "eps": 0.1,
+    "theta": [
+      0.8,
+      0.6
+    ],
+    "sigma2": 1.0,
+    "population_c": [
+      0.594022386295203,
+      0.4696921193962069
+    ],
+    "xbar_limit": 0.5734732824427481,
+    "actual_sup_dX_over_n_limit": 0.05602475190431138,
+    "claimed_lower_bound_over_n_limit": 0.06541387024608501,
+    "ratio_limit": 0.8564659405344455,
+    "point": "Ratio stays below 1; a multiplicative 1+o_P(1) needs eps->0 and a signal/noise margin."
+  },
+  "D_NEC_fixed_R2_counterexample": {
+    "eps": 0.1,
+    "theta": [
+      0.47377936967913425,
+      0.47377936967913425
+    ],
+    "sigma2": 1.0,
+    "R2": 0.33057851239669417,
+    "d_pair_over_n_limit": 5.551115123125783e-17,
+    "deterministic_LLNs": [
+      {
+        "n": 1000,
+        "d_pair": -0.02511545650941116,
+        "osc_over_n_eps": 0.0002511545650941116
+      },
+      {
+        "n": 10000,
+        "d_pair": -0.025178206400596537,
+        "osc_over_n_eps": 2.5178206400596537e-05
+      },
+      {
+        "n": 100000,
+        "d_pair": -0.02518448734190315,
+        "osc_over_n_eps": 2.518448734190315e-06
+      }
+    ],
+    "Gaussian_argument": "z/(n-1)->c; Y=n-1 after standardisation. Therefore osc(d)/n->0 in probability. There are only four models."
+  },
+  "B_NEC_weak_signal_counterexample": {
+    "theta_n": "(1/n,1/n)",
+    "eps": 0.01,
+    "SE_min": 0.99,
+    "rows": [
+      {
+        "n": 10000,
+        "median_actual_over_claimed": 2470.162718964275
+      },
+      {
+        "n": 1000000,
+        "median_actual_over_claimed": 237618.61957609653
+      }
+    ],
+    "point": "Noise gain is O_P(eps), not eps/n. Neither two nonzero truths nor SE supplies beta-min."
+  },
+  "D_ridge_formula": {
+    "exact": -0.36242091428146794,
+    "claimed": -0.3626262626262626,
+    "corrected": -0.3624209142814679,
+    "eH": 0.09993750000000001
+  },
+  "D_T6_dX_cancellation": {
+    "eps": 0.1,
+    "theta": [
+      0.8,
+      -0.04010050314704028
+    ],
+    "dX_over_n_limit": 0.0,
+    "claimed_order_over_n": 0.0032080402517632224,
+    "point": "Gaussian LLN gives d_X/n->0 despite a positive claimed n-scale."
+  },
+  "D_V_envelope_counterexample": {
+    "V": [
+      [],
+      [
+        0
+      ]
+    ],
+    "d_on_V": [
+      0.0,
+      0.0
+    ],
+    "d_on_Omega": [
+      0.0,
+      0.0,
+      0.0,
+      0.34492652040100324
+    ],
+    "point": "osc_V=0 but osc_Omega>0. V is not a global envelope."
+  },
+  "A_fixed_signal_growth_exhibit": [
+    {
+      "n": 64,
+      "eps": 0.000244140625,
+      "d_truth": 3.331296699067167,
+      "d_truth_over_n": 0.05205151092292448
+    },
+    {
+      "n": 256,
+      "eps": 1.52587890625e-05,
+      "d_truth": 13.799155628664721,
+      "d_truth_over_n": 0.053902951674471566
+    },
+    {
+      "n": 1024,
+      "eps": 9.5367431640625e-07,
+      "d_truth": 55.668275326002004,
+      "d_truth_over_n": 0.05436355012304883
+    },
+    {
+      "n": 4096,
+      "eps": 5.960464477539063e-08,
+      "d_truth": 223.14417116350342,
+      "d_truth_over_n": 0.0544785574129647
+    }
+  ],
+  "A_zero_range_grid": {
+    "n": 8,
+    "p": 2,
+    "G": [
+      [
+        7.0,
+        0.0
+      ],
+      [
+        0.0,
+        7.0
+      ]
+    ],
+    "z": [
+      0.0,
+      0.0
+    ],
+    "d": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "claimed_stage_count": 0,
+    "necessary_stage_count": 1
+  },
+  "common_pilot_sandwich_search": {
+    "cases": 40,
+    "applicable": 16,
+    "violations": 0,
+    "targets": [
+      0.15,
+      0.3,
+      0.55,
+      0.8,
+      1.0
+    ],
+    "eta_ranges": {
+      "1e-05": [
+        0.0019904888678025645,
+        0.0048242916712149635
+      ],
+      "0.0001": [
+        0.01992664984967074,
+        0.04833288640167964
+      ],
+      "0.001": [
+        0.20147621581631908,
+        0.4925549165970876
+      ],
+      "0.01": [
+        2.276192399447729,
+        6.163287295557211
+      ]
+    }
+  },
+  "AB_duplicate_limit_scope": {
+    "rows": [
+      {
+        "n": 400,
+        "p": 3,
+        "PIP_duplicate": 0.6019415873810199
+      },
+      {
+        "n": 4000,
+        "p": 3,
+        "PIP_duplicate": 0.6006265103032765
+      },
+      {
+        "n": 40000,
+        "p": 3,
+        "PIP_duplicate": 0.6001994017668625
+      }
+    ],
+    "limit": 0.6,
+    "general_fixed_p_limit": "p/(2p-1) for two duplicate true columns and otherwise orthogonal nulls",
+    "point": "2/3 needs the p=2 example or explicit prior-odds qualifications."
+  },
+  "SL_singleton_prior_boundary": {
+    "rows": [
+      {
+        "n": 1000,
+        "null_BF": 0.05220203921679707,
+        "lambda_s": 1.0,
+        "PIP": 1.0
+      },
+      {
+        "n": 10000,
+        "null_BF": 0.016489265314935053,
+        "lambda_s": 1.0,
+        "PIP": 1.0
+      }
+    ],
+    "point": "Exclude singleton prior degeneracy or specify prior odds/retained initial subset rate, not just lambda_s/sqrt(n)->0."
+  }
+}

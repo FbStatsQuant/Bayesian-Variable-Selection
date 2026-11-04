@@ -1,0 +1,1808 @@
+J. R. Statist. Soc. B (2015)
+77, Part 5, pp. 947–972
+
+
+
+      A split-and-merge Bayesian variable selection
+      approach for ultrahigh dimensional regression
+
+
+
+
+                                                                                                                     Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+      Qifan Song
+      Purdue University, West Lafayette, USA
+
+      and Faming Liang
+      University of Florida, Gainesville, USA
+
+      [Received May 2013. Final revision August 2014]
+
+      Summary. We propose a Bayesian variable selection approach for ultrahigh dimensional linear
+      regression based on the strategy of split and merge. The approach proposed consists of two
+      stages: split the ultrahigh dimensional data set into a number of lower dimensional subsets
+      and select relevant variables from each of the subsets, and aggregate the variables selected
+      from each subset and then select relevant variables from the aggregated data set. Since the
+      approach proposed has an embarrassingly parallel structure, it can be easily implemented in
+      a parallel architecture and applied to big data problems with millions or more of explanatory
+      variables. Under mild conditions, we show that the approach proposed is consistent, i.e. the
+      true explanatory variables can be correctly identified by the approach as the sample size be-
+      comes large. Extensive comparisons of the approach proposed have been made with penalized
+      likelihood approaches, such as the lasso, elastic net, sure independence screening and iter-
+      ative sure independence screening. The numerical results show that the approach proposed
+      generally outperforms penalized likelihood approaches: the models selected by the approach
+      tend to be more sparse and closer to the true model.
+      Keywords: Bayesian variable selection; Posterior consistency; Split and merge; Stochastic
+      approximation Monte Carlo sampling
+
+
+1.   Introduction
+Consider the problem of variable selection for the linear regression model:
+                                                 y = XβÅ + ε,                                                 .1/
+where y = .y1 , : : : , yn /T ∈ Rn is the response vector, n is the sample size, X = .x1 , : : : , xPn / ∈ Rn×Pn
+is the design matrix, Pn is the number of explanatory variables (which are also known as predic-
+tors), βÅ is the vector of unknown regression coefﬁcients and ε = ."1 , : : : , "n /T ∼ Nn .0, σ Å2 / is
+Gaussian random error. In this paper, we use the bold letter xi to denote an n-vector realization
+of the ith predictor. The subscript n in Pn means that Pn is a non-decreasing function of n.
+When Pn is large, identiﬁcation of the true predictors for model (1) is of particular interest, as
+this can generally improve the accuracy of prediction for future observations and deepen one’s
+understanding of the underlying system. In this paper, our study of variable selection will focus
+on the scenario Pn  n, i.e. the column dimension of X is ultrahigh. This kind of problem has
+
+  Address for correspondence: F. Liang, Department of Biostatistics, University of Florida, Gainesville, FL 32610,
+USA.
+E-mail: faliang@ufl.edu
+
+© 2014 Royal Statistical Society                                                           1369–7412/15/77947
+948     Q. Song and F. Liang
+arisen in diverse ﬁelds, ranging from biomedical science to social science. For instance, in a
+genomewide association study one may wish to identify the genes or single nucleotide polymor-
+phisms (SNPs) that are associated with a certain disease, and in economic study one may wish
+to identify stocks that generate proﬁts in investment portfolios.
+   In the literature, the problem of variable selection for high dimensional regression is often
+treated with penalized likelihood approaches, which are to ﬁnd a model ξ that minimizes the
+penalized likelihood function
+
+
+
+
+                                                                                                     Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+                                 − log{f.y; Xξ , βξ /} + pλ .βξ /,
+
+where Xξ and βξ denote respectively the design matrix and the regression coefﬁcient vector cor-
+responding to the model ξ, and pλ .·/ is a penalty function with tuning parameter λ which can
+be determined through cross-validation. The popular penalized likelihood approaches include
+the lasso (Tibshirani, 1996), the adaptive lasso (Zou, 2006), the elastic net (Zou and Hastie,
+2005), smoothly clipped absolute deviation (SCAD) (Fan and Li, 2001) and the minimax con-
+cave penalty (Zhang, 2010), among others. The lasso and adaptive lasso employ an L1 -penalty
+function, the elastic net employs a linear combination of an L1 -penalty and an L2 -penalty, and
+SCAD and the minimax concave penalty employ some concave penalty functions.
+   Although these penalized likelihood approaches have been successfully applied to many prob-
+lems, their performance tends to deteriorate as Pn increases. To address this issue, Fan and Lv
+(2008) and Fan and Song (2010) proposed the sure independence screening (SIS) approach and
+an iterative version of SIS (ISIS). SIS ﬁrst reduces the dimension of the problem by screening
+out those predictors with low marginal utility and then reﬁnes the variable selection by using the
+lasso or SCAD. The marginal utility measures the usefulness of a single predictor for predicting
+the response. For linear regression, it is simply measured by the correlation between each predic-
+tor and the response. To avoid missing true predictors, ISIS iteratively selects predictors from
+the remaining unselected predictors. Compared with other penalized likelihood approaches,
+SIS and ISIS are more efﬁcient in computation as they work on a dimension-reduced space.
+Moreover, SIS and ISIS tend to outperform other penalized likelihood approaches in variable
+selection; the models selected by SIS and ISIS tend to be more sparse.
+   Other than the penalty functions that were mentioned above, Chen and Chen (2008) proposed
+the extended Bayesian information criterion (EBIC) with an L0 -penalty function given by
+                                            |ξ|
+                               pλ .βξ / =       log.n/ + λ|ξ| log.Pn /,
+                                             2
+where |ξ| denotes the number of predictors contained in the model ξ. Chen and Chen (2008)
+showed that, if Pn = O.nκ / and λ > 1 − 1=.2κ/, then EBIC is consistent, i.e. the minimum EBIC
+model will converge to the true model in probability as the sample size becomes large. A major
+concern with the EBIC is the lack of an efﬁcient optimization algorithm to search over the model
+space. Because the model space is discrete, computer-intensive algorithms, such as Markov chain
+Monte Carlo (MCMC) algorithms, must be used.
+  Parallel to penalized likelihood approaches, various Bayesian approaches have been devel-
+oped to tackle this problem. These approaches advance either in a sophisticated model search
+algorithm, such as evolutionary stochastic search (Bottolo and Richardson, 2010), or in a prior
+speciﬁcation that is particularly suitable for high dimensional problems, such as the lasso prior
+(Park and Casella, 2008), the horseshoe prior (Carvalho et al., 2010; Polson and Scott, 2012),
+the Ising prior (Li and Zhang, 2010), the proportion of variance explanation prior (Guan and
+Stephens, 2011) and the non-local prior (Johnson and Rossel, 2012; Johnson, 2012). Although
+various numerical examples have demonstrated the successes of Bayesian approaches, there are
+                                              Split-and-merge Variable Selection Approach        949
+no extensive studies to show that Bayesian approaches can lead to a consistent selection of true
+predictors in Pn > n problems until quite recently; see for example Kundu and Dunson (2014)
+and Bondell and Reich (2012). Strawn et al. (2012) also studied the consistency of regression co-
+efﬁcient estimation in Pn > n problems. A major concern with Bayesian approaches is their high
+computational demand. Since the volume of the model space increases geometrically with the
+dimension Pn , the central processor unit (CPU) time for a Bayesian approach should increase
+accordingly or even faster.
+  In this paper, we propose Bayesian variable selection based on the strategy of the split-and-
+
+
+
+
+                                                                                                        Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+merge (SAM) approach. The approach proposed consists of two stages.
+  (a) Split the high dimensional data into a number of lower dimensional subsets and perform
+      Bayesian variable selection for each subset.
+  (b) Aggregate the variables that are selected from each subset and perform Bayesian variable
+      selection for the aggregated data set.
+Under mild conditions, we show that the approach proposed is consistent, i.e. the true model will
+be identiﬁed in probability 1 as the sample size becomes large, and that the approach proposed
+has favourable time complexity compared with conventional Bayesian approaches and even
+penalized likelihood approaches. Henceforth, we shall call the approach proposed the SAM
+approach for simplicity of description.
+   Our contribution in this paper is twofold. First, we propose a computationally feasible
+Bayesian approach for ultrahigh dimensional regression. Since the SAM approach has an em-
+barrassingly parallel structure, i.e. it can break the task of high dimensional variable selection
+into many small tasks between which there is a dependence or communication, it can be easily
+implemented in a parallel architecture and applied to big data problems with millions or more
+of predictors. This has been beyond the ability of conventional Bayesian approaches, as they
+directly work on the full data set. Second, under mild conditions we show that the Bayesian
+approach proposed can share the same asymptotics, such as sure screening and model selection
+consistency, as SIS. In spirit, the SAM approach is similar to SIS and ISIS. Its ﬁrst stage serves
+the purpose of dimension reduction, which screens out uncorrelated predictors; and its second
+stage reﬁnes the selection of predictors. However, compared with SIS and ISIS, the SAM ap-
+proach can often lead to more accurate selection of true predictors. This is because it screens
+uncorrelated predictors on the basis of the marginal inclusion probability, which has incor-
+porated the joint information of all predictors contained in a subset. Whereas, as previously
+mentioned, SIS makes use of only the marginal information of each predictor. ISIS tries to
+incorporate information from other predictors, but in an indirect way.
+   Finally, we note that the SAM strategy, or otherwise known as divide and conquer, has been
+often used in big data analysis; see for example Mackey et al. (2012), Lin and Xi (2011) and Xi
+et al. (2009). Our use of this strategy is different from others. In the SAM approach, the data split
+is done in the dimension of predictors, whereas this is done in the dimension of observations
+in other work. This difference necessitates the development of new theory for variable selection
+under the situation that the model is misspeciﬁed because of missing some true predictors. This
+will be detailed in Section 2.3.
+   The rest of this paper is organized as follows. Section 2 establishes consistency of the SAM
+approach for variable selection. Section 3 summarizes the approach and discusses some imple-
+mentational issues. Section 4 illustrates its performance by using two simulated examples along
+with comparisons with penalized likelihood approaches. Section 5 compares the SAM approach
+with penalized likelihood approaches on two real data examples. Section 6 concludes the paper
+with a brief discussion.
+950       Q. Song and F. Liang
+  The data that are analysed in the paper and the programs that were used to analyse them can
+be obtained from
+  http://wileyonlinelibrary.com/journal/rss-datasets
+
+2. Variable selection consistency of the split-and-merge approach
+This section is organized as follows. In Section 2.1, we establish the posterior consistency for
+
+
+
+
+                                                                                                                    Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+correctly speciﬁed models, i.e., if the model is correctly speciﬁed with all true predictors included
+in the set of candidate predictors, then the true density of observations from model (1) can be
+consistently estimated on the basis of the models sampled from the posterior as the sample size
+becomes large. The theory development and conditions in this subsection follow Jiang (2007)
+very closely. In Section 2.2, we establish the sure screening property for the correctly speciﬁed
+models on the basis of the marginal inclusion probability, i.e. the marginal inclusion probability
+of the true predictors will converge to 1 in probability as the sample size becomes large. We
+also establish the consistency of the maximum a posteriori (MAP) model. In Section 2.3, we
+show that, for the misspeciﬁed models for which some true predictors are missed in the set of
+candidate predictors, the sure screening property based on the marginal inclusion probability
+still holds. Combining the theory that is established in Sections 2.1–2.3 leads to the variable
+selection consistency of the SAM approach.
+
+2.1. Posterior consistency for correctly specified models
+Let Dn = {y; x1 , : : : , xPn } denote a data set of n observations drawn from model (1). Let x =
+.x1 , : : : , xPn /T denote a generic observation of the Pn predictors, and let y denote a generic
+observation of the response variable corresponding to x. Let νx denote the probability measure
+of x. Then the true probability density of .y, x/ is given by
+                                                      
+    Å                       1            .y − xT βÅ /2
+  f .y, x/ dx dy = √              exp −                  νx .dx/ dy = φ.y; xT βÅ , σ Å / νx .dx/ dy, .2/
+                          .2π/σ Å            2σ Å2
+where φ.·; μ, σ/ denotes a Gaussian density function with mean μ and standard deviation σ.
+  As in conventional studies of high dimensional variable selection, we consider the asymptotics
+of the SAM approach under the assumption that Pn increases as n increases. To be speciﬁc, we
+assume that Pn  nθ for some θ > 0, where bn  an means limn→∞ .an =bn / = 0. In addition, we
+assume that the true model is sparse. Two sparseness conditions are considered in this paper.
+One states that most components of βÅ are very small such that
+                                                     
+                                                     Pn
+                                             lim          |βjÅ | < ∞,                                        .3/
+                                            n→∞ j=1
+
+where βjÅ denotes the jth entry of βÅ . The other one is stronger but more usual, which requires
+that most components of βÅ are 0 such that
+                                                
+                                                Pn
+                                          lim        1{βjÅ = 0} < ∞:                                         .4/
+                                         n→∞ j=1
+
+   Let ξ ⊂ {1, : : : , Pn } denote a subset model, which includes the indices of all selected pre-
+dictors. Let |ξ| denote the number of predictors included in ξ. Thus, the strict sparsity con-
+dition (4) implies that the true model t = {i : βiÅ = 0, 1  i  Pn } has a ﬁnite model size. For
+a model ξ = {i1 , i2 , : : : , i|ξ| }, we let Xξ = .xi1 , xi2 , : : : , xi|ξ| / denote the design matrix, and let
+βξ = .βi1 , : : : , βi|ξ| /T denote the regression coefﬁcient vector. Let L.Dn |ξ, βξ , σ 2 / denote the
+                                                  Split-and-merge Variable Selection Approach        951
+likelihood function, and let π.ξ, dβξ , dσ 2 / denote the joint prior distribution imposed on ξ and
+the parameters σ 2 and βξ . Then the posterior distribution is given by
+                                                                
+                                                                
+  π.ξ, dβξ , dσ 2 |Dn / = L.Dn |ξ, βξ , σ 2 / π.ξ, dβξ , dσ 2 /     L.Dn |ξ, βξ , σ 2 /π.ξ, dβξ , dσ 2 /:
+                                                                  ξ   βξ ,σ 2
+                                                                                                     .5/
+
+2.1.1. Prior speciﬁcation
+
+
+
+
+                                                                                                            Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+For the model ξ, we assume that each predictor has a prior probability λn = rn =Pn , independent
+of other predictors, to be included in the model ξ. Further, we impose a constraint on the model
+size such that |ξ|  r̄ n , where the upper bound r̄ n is prespeciﬁed. Then the prior probability of ξ
+can be expressed as
+
+                                 π.ξ/ ∝ λ|ξ|
+                                         n .1 − λn /
+                                                     Pn −|ξ|
+                                                             I.|ξ|  r̄ n /:                         .6/
+
+The constraint on the model size |ξ| is not crucial to the data analysis. Since the true model
+is sparse, there is not much loss as long as the size of the true model is less than r̄ n . From
+the perspective of computation, such a constraint facilitates posterior simulations, because,
+as shown in expression (7), evaluation of the posterior distribution involves inverting a dense
+matrix of size at most r̄ n × r̄ n . It is known that the computational complexity of inverting
+such a matrix is O.r̄ 3n /. From the perspective of theoretical development, this constraint can be
+removed by imposing an additional condition, say, there exists r̄ n such that π.|ξ| > r̄ n / → 0 with
+an appropriate rate, without affecting the validity of the following theorems. Refer to Section 7
+of Jiang (2007) for more discussions on this issue.
+   We let the variance σ 2 be subject to an inverse gamma prior distribution with the hyper-
+parameters a0 and b0 , i.e. σ 2 ∼ IG.a0 , b0 /. Conditioned on the model ξ and σ 2 , we let βξ be
+subject to a Gaussian prior:
+
+                                        βξ |ξ, σ 2 ∼ N|ξ| .0, σ 2 Vξ /,
+
+where Vξ is a positive deﬁnite matrix depending on ξ.
+  To facilitate computation, we integrate out βξ and σ 2 from the posterior distribution (5). The
+resulting posterior distribution of ξ is given by
+                             |ξ|            Pn −|ξ|       √
+                        rn                rn                    det.Vξ−1 /
+             π.ξ|Dn / ∝                1−                 √
+                        Pn                Pn               det.XξT Xξ + Vξ−1 /
+                        × {2b0 + yT .I − Xξ .XξT Xξ + Vξ−1 /−1 XξT /y}−n=2−a0 I.|ξ|  r̄ n /:        .7/
+
+  For a fully Bayesian variable selection approach, λn is usually subject to a beta prior. As
+pointed out by Scott and Berger (2010), such a prior will induce an automatic multiplicity ad-
+justment for variable selection: the penalty for adding an extra variable increases as Pn increases.
+The multiplicity control is crucial for variable selection when Pn > n. Otherwise, the resulting
+model tends to be liberal. For example, the BIC places a ﬂat prior on the model space, and the
+resulting models are overly liberal for high dimensional regression (Broman and Speed, 2002). In
+this paper, we assume that λn → 0 as Pn → ∞, which corresponds to condition (13) in theorem 1.
+This condition provides an automatic mechanism of multiplicity control for the SAM approach.
+  The posterior (7) is also closely related to the EBIC (Chen and Chen, 2008), which is to choose
+a model ξ by minimizing the penalized likelihood function
+952      Q. Song and F. Liang
+
+                          EBIC.ξ/ = −l.ξ/ˆ + |ξ| log.n/ + γ|ξ| log.Pn /,
+                                                2
+      ˆ is the log-likelihood function of ξ evaluated at the maximum likelihood estimates
+where l.ξ/
+of βξ and σ 2 . If we set Vξ−1 = XξT Xξ =n, a0 = b0 ≈ 0, and rn = Pn
+                                                                     1−γ
+                                                                          for a constant γ ∈ .0, 1/,
+                −1                         |ξ|             −|ξ|                     1−γ
+then Xξ Xξ + Vξ ≈ Xξ Xξ and log.rn =Pn / .1 − rn =Pn / n
+      T               T                                  P      ≈ −γ|ξ| log.Pn / + Pn . Therefore,
+log{π.ξ|Dn /} ≈ −EBIC.ξ/ + C for some constant C independent of ξ. A similar approximation
+between the posterior and the EBIC can be found in Liang et al. (2013) for generalized linear
+models.
+
+
+
+
+                                                                                                            Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+2.1.2. Posterior consistency
+In what follows, we study the asymptotics of the posterior distribution with respect to the
+Hellinger distance under appropriate conditions of rn , r̄ n and Vξ . For two density functions
+f1 .x, y/ and f2 .x, y/, the Hellinger distance is deﬁned as
+                                         
+                                                1=2         1=2
+                          d.f1 , f2 / =      {f1 .x, y/ − f2 .x, y/}2 dx dy:
+
+   For a matrix Σ, we let c hi .Σ/ denote the ith largest eigenvalue, and let c hi .Σ/ denote the
+ith smallest eigenvalue. Deﬁne B.rn / = supξ:|ξ|=rn c h1 .Vξ−1 /, B̄.rn / = supξ:|ξ|=rn c h1 .Vξ /, B̃n =
+supξ:|ξ|r¯n c h1 .Vξ / and Δ.p/ = inf ξ:|ξ|=p Σi∈ξ |βiÅ |.
+   Theorem 1 follows from Jiang (2007). Here we consider the simple situation that all predic-
+tors have been standardized and uniformly bounded, and the sparsity condition (3) holds.
+  Theorem 1 (posterior consistency). Assume that the data set Dn is drawn from model (1) and
+  all predictors |xi |  1. If there is a sequence { n } ∈ .0, 1/ such that n 2n  1, and the following
+  conditions hold,
+                                                 Δ.rn / ≺    n,                                      .8/
+                                           r̄ n ln.1= 2n / ≺ n 2n ,                                  .9/
+                                              r̄ n ln.Pn / ≺ n 2n ,                                 .10/
+                                          r̄ n ln.n 2n B̃n / ≺ n 2n ,                               .11/
+                                              1  rn  r̄ n < Pn ,                                  .12/
+                                                    r n ≺ Pn ,                                      .13/
+                                                B.rn / ≺ n 2n ,                                     .14/
+  then the posterior consistency holds, i.e. there is a constant c1 > 0 such that
+                   P Å [π{d.f , f Å / > |D } > exp.−c n 2 /] < exp.−c n 2 /,
+                                          n     n                 1   n        1   n                .15/
+  for sufﬁciently large n, where the Hellinger distance is
+                                
+              d 2 .f , f Å / =     |φ1=2 .y; xT βÅ , σ Å / − φ1=2 .y; xT β, σ/|2 νx .dx/ dy,
+
+  f Å is as deﬁned in expression (2), f is the density function for a model simulated from the
+  posterior and P Å denotes the probability measure of data generation.
+  The proof of theorem 1 can be found in the on-line supplementary material. The validity of
+this theorem depends on the choice of the prior covariance matrix Vξ or, more precisely, the
+                                                         Split-and-merge Variable Selection Approach   953
+largest eigenvalues of Vξ and Vξ−1 . For most choices of Vξ , B.rn /  Brnv and B̃n  Brnv hold for
+some positive constants B and v. For example, if Vξ = cI|ξ| , where Ip is an identity matrix of order
+p, then both B.rn / and B̃n are constants. One can also set Vξ−1 = c E.xξT xξ / as in Zellner (1986)
+and Liang et al. (2008), where the expectation is replaced by its sample empirical estimator. If
+all xi s are standardized with zero mean and equal variance, then B.rn /  rn . Furthermore, if xi
+has some speciﬁc covariance structure, then B̃n can be shown to be bounded. For example, if all
+pairwise covariances cov.xi , xj / = ρ ∈ .0, 1/, then B̃n = 1 − ρ; if xi is generated from a ﬁnite order
+auto-regressive or moving average model without root for the characteristic polynomial on the
+
+
+
+
+                                                                                                             Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+unit circle, then B̃n is also bounded by some constant (Bickel and Levina, 2004). In general, for
+standardized xi s, we can choose a ‘ridge prior’ as suggested by Gupta and Ibrahim (2009): let
+Vξ−1 = E.xξT xξ / + cn I|ξ| ; then B.rn /  rn + cn and B̃n  cn−1 , where cn is proportional to 1=n, i.e.
+cn ∝ n−1 .
+   Theorem 1 assumes that all the predictors are uniformly bounded. However, this condition
+might not be satisﬁed for continuous predictors. In what follows, we relax this condition.
+  Condition 1. There are some constants M > 0 and δ > 0 such that for any subvector of x,
+.xj1 , : : : , xjr /T with 1  j1 <: : :< jr  Pn , r  r̄ n , and |ai |  δ for i = 1, : : : , r, we have
+                                                                 2
+                                                
+                                                r
+                                E exp                 ai xji =r           exp.M/,
+                                                i=1
+
+where the expectation is taken with respect to the distribution of the random variables xji .
+  Condition 1 controls the tail distribution of x such that the marginal distribution of y does not
+change dramatically in the sense of d1 -divergence (which is deﬁned in the on-line supplementary
+material) with respect to the change of β. If x has a heavy tail distribution, the prior information
+around f Å will be too weak to induce good posterior asymptotics. If all the variables are bounded
+by some constant m, as assumed in theorem 1, then
+                                       r             2
+                                         
+                              E exp         ai xji =r      exp.δ 2 m/
+                                               i=1
+
+and thus condition 1 holds. If x follows a Gaussian process with zero mean and var.xi / = 1, then
+.Σri=1 ai xji /2 follows the sχ21 -distribution, where the scale s  δ 2 r 2 . Therefore, by the moment-
+generating function of the χ21 -distribution,
+                                                        2
+                                         
+                                         r
+                           E exp                ai xji        r2        .1 − 2δ 2 /−1=2 ,
+                                         i=1
+
+condition 1 holds.
+  Under condition 1, we have the following theorem whose proof can be found in the on-line
+supplementary material.
+  Theorem 2. Assume that the data set Dn is generated from model (1) and all the predictors
+  satisfy condition 1. Given a sequence { n }, n → 0, and n 2n → ∞, if the conditions (9)–(14)
+  of theorem 1 hold, the model is strictly sparse, i.e. condition (4) holds, and rn  1, then the
+  posterior consistency still holds, i.e. there is a constant c1 > 0 such that, for sufﬁciently large n,
+                     P Å [π{d.f , f Å / >                       2                2
+                                            n |Dn } > exp.−c1 n n /] < exp.−c1 n n /:
+
+  Note that condition (8) of theorem 1 is redundant here as, for large n, rn > |t| and Δ.rn / = 0
+954      Q. Song and F. Liang
+hold under the sparseness condition (4). The following corollary concerns the convergence rate
+of the posterior distribution.
+  Corollary 1. Consider a strict sparse model, i.e. condition (4) holds. Suppose that Pn <
+exp .Cnα / for some α ∈ .0, 1/, and the prior speciﬁcation in Section 2.1.1 is used such that
+B.rn /  Brnv and B̃n  Bnv for some positive constants B and v. Take
+                                           rn < r̄ n ≺ logk .n/,
+
+
+
+
+                                                                                                             Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+or
+                                               rn < r̄ n ≺ nq ,
+for some k > 0 or some 0 < q < min{1 − α, 1=v}. Then the convergence rate in theorem 2 can be
+taken as
+                                                −.1−α/=2
+                                     n = O{n               logk=2 .n/},
+or
+                                               −.min{1−α−q,1−vq}/=2
+                                     n = O.n                          /:
+
+2.1.3. Remark for condition 1
+Condition 1 imposes a stringent requirement for the distribution of predictors, although one
+may treat each predictor as bounded in practice. If the distribution of a predictor is heavy tailed,
+then condition 1 fails. To address this issue, a much weaker condition is proposed below.
+  Condition 2. There are some constants M > 0 and δ > 0 such that, for any subvector of x,
+.xj1 , : : : , xjr /T with 1  j1 <: : :< jr  Pn , r  r̄ n , and |ai |  δ for i = 1, : : : , r, we have
+                                                 r              2
+                                                   
+                                               E       ai xji =r  M:
+                                            i=1
+Condition 2 imposes conditions on only the second moments of predictors. If all predictors
+have uniformly bounded second moments, then condition 2 holds. It is shown in the on-line
+supplementary material that, if condition 2 holds, a slightly weaker result of theorem 2 can be
+obtained as follows:
+                     lim P Å [π{d.f , f Å / > |D } > exp .−c n 2 /] = 0:
+                                                     n    n               1   n            .16/
+                        n→∞
+
+Under condition 1, π{d.f , f Å / > n |Dn } converges in L1 exponentially, whereas result (16) im-
+plies only convergence in probability.
+
+
+2.2. Variable screening and selection for correctly specified models
+To serve the purpose of variable selection for the case that the true model t exists, i.e. condition
+(4) holds, we need a consistent variable selection procedure. In this paper, we consider two
+procedures, which are based on the marginal inclusion probability and MAP model. The former
+is described below, and the latter is described in the on-line supplementary material.
+   Variable selection by marginal inclusion probability has been used in high dimensional
+Bayesian analysis; see for example Barbieri and Berger (2004) and Liang et al. (2013). In this
+paper, we study the property of marginal inclusion probability based on the posterior conver-
+gence result (15) or (16), which implies that π{d.f , f Å / > n |Dn } →p 0. Since our objective is
+to recover all the true predictors, we need to explore the relationship between the distance in
+                                                   Split-and-merge Variable Selection Approach          955
+distributions and the difference in models. Let qj denote the marginal inclusion probability of
+the predictor xj , which is given by
+                                                    
+                               qj = π.j ∈ ξ|Dn / =       π.ξ|Dn /:
+                                                        ξ∈{ξ̃:j∈ξ̃ }
+
+Naturally we expect that a true predictor has a high marginal inclusion probability and a false
+predictor has a low marginal inclusion probability. However, this might not be true in the high
+dimensional scenario where multicollinearity is present. Wilson (2010) studied the relationship
+
+
+
+
+                                                                                                                Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+between low rankness of the design matrix and consistency of pairwise model Bayes factors
+and global posterior probabilities. If a true predictor can be well approximated or even replaced
+by a couple of spurious predictors, then the marginal inclusion probabilities of the spurious
+predictors are inﬂated. Therefore, to select true predictors consistently, it is necessary to control
+the severeness of multicollinearity. For this purpose, we introduce the following identiﬁability
+condition which controls the severeness of multicollinearity through the sequence { n }.
+  Condition 3. A predictor xk is said to be identiﬁable among all other predictors, if, for any
+1  j1 , : : : , jr¯n  Pn (ji = k for all i) and bi ∈ R,
+                                              r¯n
+                                                          2
+                                               
+                           E exp − xk +            bi xji     1 − δn , δn  2n ,
+                                           i=1
+
+where xl denotes a generic observation of the predictor xl .
+  This condition states that, if a predictor xk is identiﬁable, then there does not exist a linear
+combination of other predictors in X which can mimic it.
+  If all the predictors have mean 0 and are bounded with |xi |  1, then
+                                                                            2 
+                                             1   − exp   −   1 +     |b   |                       
+                       r¯n          2                                     i                    2
+                                                                      i
+     E exp − xk +           bi xji     E 1−                          2             xk + bi xji
+                                                               
+                       i=1                                 1 + |bi |                      i
+                                                                i
+                                                                                   
+                                                               var xk + bi xji
+                                        1 − {1 − exp.−1/}              i
+                                                                  .1 + |bi |/2
+                                             1 − exp.−1/
+                                       1−                  c h1 {var.x̃/},
+                                               .r̄ n + 1/
+where x̃ = .xk , xj1 , : : : , xjr¯n /T , and c h1 {var.x̃/} is the smallest eigenvalue of the covariance ma-
+trix of x̃. Hence, if c h1 {var.x̃/}  r̄ n "2n for any choice of x̃, xt is identiﬁable. Furthermore, if
+c h1 {var.x/}  r̄ n 2n , then all the predictors are identiﬁable, where x = .x1 , : : : , xPn /T denotes a
+generic observation of all predictors.
+   If all the predictors follow the standard normal distribution, by the moment-generating func-
+tion of the χ2 -distribution, we have
+                                                                              −1=2
+                 E[exp{−.xk + bi xji /2 }] = 1 + 2 var xk + bi xji
+                                                                          i
+                                                                                       
+                                                     < max 0:5, 1 − var xk + bi xji 8 :
+                                                                             i
+
+Thus, if var.xk + Σi bi xji /    2,
+                                  n    then the identiﬁability condition is satisﬁed. Since
+956      Q. Song and F. Liang
+                             
+                var xk + bi xji  var.xk |x̃\xk /  c h1 {var.x̃/}  c h1 {var.x/},
+                           i
+
+by the same arguments, all predictors are identiﬁable if c h1 {var.x/}  2n . Further, it can
+be shown (in the proof of theorem 3) that, if a true predictor xt is identiﬁable, then d.f Å , f/  n
+for any density f that does not select xt . Therefore, we have the following sure screening
+property.
+
+  Theorem 3 (sure screening). Assume that all the conditions of theorem 2 hold. If a true
+
+
+
+
+                                                                                                         Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+  predictor xt (t ∈ t) is identiﬁable, then P Å [π{t ∈ ξ|Dn } < 1 − exp.−c1 n 2n /] < exp.−c1 n 2n /,
+  where ξ denotes a model sampled from the posterior distribution. Furthermore, if condition
+  2 holds, then the weaker convergence holds: limn P Å [π{t ∈ ξ|Dn } < 1 − exp.−c1 n 2n /] = 0.
+   The proof of theorem 3 can be found in the on-line supplementary material. Let ξq = {i : 1 
+i  Pn , qi > q} denote a model including all the predictors with the marginal inclusion probabil-
+ity greater than a threshold value of q ∈ .0, 1/. Then it follows from theorem 3 that π.t ⊂ ξq /→p 1
+if all true predictors are identiﬁable. To determine the threshold value q, we adopt the multiple-
+hypothesis testing procedure that was used in Liang et al. (2013), where it is used for selecting
+variables for a logistic regression model. The procedure was originally proposed in Liang and
+Zhang (2008). Compared with other false discovery rate (FDR) control procedures, one ad-
+vantage of this procedure is that it is applicable under general dependence between marginal
+inclusion probabilities.
+   Theorem S in the on-line supplementary material establishes the consistency of MAP models.
+Thus, we have two criteria for variable selection, by either marginal inclusion probabilities or
+the MAP model. Although theorem 3 states only the sure screening property (the sensitivity is
+asymptotically 1, but the speciﬁcity is not controlled), we suggest the use of marginal inclusion
+probabilities as the criterion for variable selection. Under this criterion, one may select more
+predictors, which are worthy of further investigation through a possibly different and expensive
+experiment. Since the sample size n can be small for a real problem, the MAP model might not
+capture all true predictors although it is consistent in theory.
+
+
+2.3. Variable screening for misspecified models
+Let Dns = {y, Xs } denote a ﬁxed subset of observations, where s ⊂ {1, 2, : : : , Pn } and Xs contains
+only s = |s| < Pn predictors with the indices belonging to s. Assume that Xs does not include all
+of the true predictors of model (1). Therefore, the model
+                                            y = Xs βs + ε
+is misspeciﬁed. Under the Bayesian framework, some work for misspeciﬁed models has been
+done by Berk (1966), Kleijn and van der Vaart (2006), Shalizi (2009) and De Blasi and Walker
+(2013), among others. Let Ps denote a set of parameterized densities for all possible models
+formed with Xs . It is obvious that f Å ∈ Ps . Let f0 denote the minimization point of the Kullback–
+Leibler divergence in Ps , i.e.
+                                                    
+                                   f0 = arg min         ln.f Å =f/f Å :                         .17/
+                                            f ∈Ps
+
+   With a slight abuse of notation, we use, as in previous sections, ξ to denote a model selected
+among the predictors in Xs . Further, the same prior distributions are speciﬁed for the parameters
+σ 2 and βξ , i.e.
+                                                         Split-and-merge Variable Selection Approach    957
+                                             π.σ 2 / ∼ IG.a0 , b0 /,
+                                          π.βξ |ξ, σ 2 / ∼ N.0, σ 2 Vξ /:
+Under these priors, we show in theorem 4 that the density f0 can be consistently estimated by
+the models sampled from the posterior π.ξ|Dns / as n → ∞. To prove theorem 4, π.ξ/ does not
+need to be speciﬁed, which is only required to be positive for all possible models, i.e. π.ξ/ > 0
+for all ξ.
+  Parallel to condition 1, we introduce the following condition regarding the range of xi s.
+
+
+
+
+                                                                                                                Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+   Condition 4. There is a constant δ > 0 such that for any a = .a1 , : : : , as /T ∈ Rs , with |ai |  δ for
+i = 1, : : : , s, we have
+                                                 E{.aT xs /2 } < ∞,
+where xs denote a generic observation of the predictors included in Xs .
+
+  Theorem 4. (posterior consistency for misspeciﬁed models). Assume that condition 4 holds
+  for a given subset s. Under the prior setting as described above, for any > 0,
+                        π[{f ∈ Ps : d.f0 , f/ > }|Dns ] → 0,                almost surely,              .18/
+  as n → ∞, where f0 is as deﬁned in equation (17), and f is a parameterized density proposed
+  from posterior.
+  It follows from lemma 1.2 (in the on-line supplementary material) that f0 = φ.y; βT
+                                                                                    0 xs , σ0 / ν.xs /,
+where ν.xs / denotes the probability measure of xs , and β0 is given by
+
+                                     β0 = arg min E.βT       ÅT 2
+                                                     s xs − β x/ ,
+                                                    βs
+
+i.e. βT
+      0 xs   is the projection of βÅT x. Let s̃ denote the subset of s corresponding to non-zero entries
+of β0 . Following the proof of theorem 3, we have the following corollary.
+   Corollary 2. Assume that the conditions of theorem 4 hold. If xs does not have exact multi-
+collinearity between variables, i.e. there does not exist a non-zero vector a ∈ Rs such that P.aT xs =
+0/ = 1, then for the posterior probability of model ξ, conditioned on the subset Dns , we have
+                                                                    p
+                                                 π.s̃ ⊂ ξ|Dns / → 1:
+
+    Corollary 2 implies that the marginal inclusion probability criterion is still applicable for
+selection of predictors in Xs . For any true predictor xt with t ∈ t ∩ s, it will be asymptotically
+selected under this criterion if and only if β0,t = 0, where β0,t is the entry of β0 corresponding to
+xt . Let y denote a generic observation of the response variable, let xt denote a generic observation
+of the true predictors and let βtÅ denote the regression coefﬁcient vector of the true predictors.
+Since
+                                 β = Σ−1 Σ βÅ = Σ−1 cov.x , y/,
+                                      0      s      s,t t       s       s                        .19/
+where Σs = var.xs / and Σs,t = cov.xs , xt /, s̃ is determined by the correlation structure of xs and
+xt and the value of the true regression coefﬁcients. However, when t  s, it is unclear whether
+β0,t is exactly 0 or not. Following from equation (19), if cov.xs , y/ = 0, then β0 = 0 and thus at
+least one predictor in s will be selected according to the marginal inclusion probability criterion.
+This motivates us to propose an iterative variable selection method for the subset data, provided
+that the following condition holds.
+958      Q. Song and F. Liang
+  Condition 5. |cov.xt , y/| > 0 for any true predictor xt .
+   The iterative variable selection method can be described as follows: ﬁrst select predictors
+from Xs based on the marginal inclusion probabilities estimated from the posterior π.ξ|Dns /;
+denote the set of unselected predictors by Xs , and then select predictors again from Xs based
+on the marginal inclusion probabilities estimated from the posterior π.ξ|y, Xs /; keep running
+the iterative procedure until no predictors can be selected. Denote all the selected predictors by
+Xs̃ . Under assumption 5, this procedure ensures that all true predictors that are contained in Xs
+
+
+
+
+                                                                                                           Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+will be selected.
+   There are a few remarks on this iterative procedure.
+
+  (a) Other than true predictors, how many other predictors will be selected? Generally speak-
+      ing, all the predictors that are correlated with Xt will be selected, because they are correl-
+      ated with y, where Xt denotes the set of all true predictors in Dn . This means that, if all
+      the predictors are linearly correlated, it is futile to apply this iterative procedure, as all the
+      predictors will be selected. The rationale underlying the SAM strategy lies in the belief
+      that, for a big data set, there are only a small proportion of predictors that are linearly
+      correlated with Xt . It is easy to show that if there are pn predictors correlated with the
+      true predictor Xt , pn ≺ Pn , then there are at most cpn predictors to be selected into Xs̃ for
+      some constant c.
+  (b) To ensure that all true predictors in Xs are selected, a liberal way, as we proposed, is to
+      repeat the selection iteratively until no predictors can be selected. In practice, it is rare to
+      have the case that β0,t is 0 exactly. Hence, the iterative procedure is not always necessary,
+      and one may set an upper bound for the iteration number. In this paper, we set the iteration
+      number to 2.
+  (c) Theorem 4 requires the prior probability π.ξ/ > 0 for all possible models. Hence, the inde-
+                               |ξ|
+      pendent prior π.ξ/ = λs .1 − λs /|s|−|ξ| for some λs ∈ .0, 1/ is still applicable here. When |s|
+      is large, we suggest imposing an upper bound for the model size to avoid expensive compu-
+      tation caused by inverting high order matrices. Then the posterior should asymptotically
+      concentrate on the models with the density function minimizing the Kullback–Leibler
+      divergence under the constraint of model size. In this case, although corollary 2 does not
+      hold anymore, the marginal inclusion probabilities for correlated and uncorrelated pre-
+      dictors are distinct and the sure screening property of the marginal inclusion probability
+      criterion should still hold.
+  (d) For data splitting, one extreme choice is s = 1. In this case, the SAM method will perform
+      like SIS (Fan and Lv, 2008) with only the marginal utility being used in variable screening.
+      However, this choice of s is not recommended, as the SAM approach tends to work better
+      with a large value of s, say s  500. A large value of s allows the joint information of pre-
+      dictors to be used in variable screening, and hence the SAM approach has a better chance
+      of screening out the predictors that are spuriously correlated with the response than SIS.
+      Since a large model is always penalized in either stage of the SAM approach, the marginal
+      inclusion probabilities of the spuriously correlated predictors tend to be low. It is often
+      to have the case that |corr.xi , y/| > |corr.xj , y/|, where corr.·, ·/ denotes the correlation
+      function, whereas the marginal inclusion probability of xi is lower than that of xj . This
+      is because xi is highly collinear with a true predictor, say xk , and xj is complementary
+      to xk for the regression. This case distinguishes the SAM approach from SIS. In addi-
+      tion, a large value of s will improve the accuracy of the marginal inclusion probability-
+      based variable screening procedure, which, as stated before, is multiple-hypothesis test
+      based.
+                                                         Split-and-merge Variable Selection Approach           959
+3.     Split-and-merge approach and its implementation
+3.1. Split-and-merge approach
+Based on the priors given in Section 2, the SAM approach can be summarized as follows.
+     (a) Split Pn predictors into Kn groups, s1 , : : : , sKn , with maxi=1,:::,Kn |si |  s for a prespeciﬁed
+         value of s.
+     (b) Stage 1: apply the iterative procedure, proposed in Section 2.3, to select predictors from
+         each subset Dnsi = {y, Xsi }, i = 1, : : : , Kn , at an FDR level of α1 . At each iteration, the
+
+
+
+
+                                                                                                                       Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+                                                                                                             |ξ|
+         Bayesian variable selection is subject to the prior setting π.σ/ ∼ IG(a0 , b0 ), π.ξ/ = λs .1 −
+         λs / |s|−|ξ| I.|ξ|  s̄/ and π.βξ |ξ, σ/ ∼ N{0, σ .Xξ Xξ + τ I/=n}, where s̄ denotes the upper
+                                                               2   T
+
+         bound of the size of the models that are considered for each subset of data. Let s̃1 , : : : , s̃Kn
+         denote the sets of indices of the selected predictors from the Kn subsets.
+     (c) Stage 2: merge the sets s̃1 , : : : , s̃Kn into a single set S̃ = ∪K    i=1 s̃i , and deﬁne pn = |S̃|. Per-
+                                                                                   n
+
+                                                                              S̃
+         form Bayesian variable selection on the subset data Dn = {y, XS̃ } at an FDR level of
+         α2 . The Bayesian variable selection is subject to the prior setting π.σ/ ∼ IG(a0 , b0 ),
+         π.ξ/ = .rn =pn /|ξ| .1 − rn =pn /pn −|ξ| I.|ξ|  r̄ n / and π.βξ |ξ, σ/ ∼ N{0, σ 2 .XξT Xξ + τ I/=n}.
+  Clearly, it follows from the theory that was developed in Section 2 that the SAM approach
+will lead to a consistent selection of true predictors. In step 3, the predictors can also be selected
+according to the MAP model.
+
+
+3.2. Simulation and hyperparameter setting
+Since different predictors can be highly correlated, the posterior (7) can have a rugged en-
+ergy landscape for some problems. Conventional MCMC algorithms, such as the Metropolis–
+Hasting algorithm, tend to become trapped in a local mode in simulations. To avoid this problem,
+the stochastic approximation Monte Carlo (SAMC) algorithm (Liang et al., 2007) was used in
+this paper. The SAMC algorithm belongs to the class of adaptive MCMC algorithms. How-
+ever, unlike conventional adaptive MCMC algorithms, e.g. the adaptive Metropolis algorithm
+(Haario et al., 2001), which adapt the proposal distribution, the SAMC algorithm adapts the
+invariant distribution at each iteration. As explained in Liang et al. (2007), the self-adjusting
+mechanism of the invariant distribution enables the SAMC algorithm to be immune to local
+trap problems. As shown in Liang (2009), the SAMC algorithm is essentially a dynamic impor-
+tance sampling algorithm, and quantities of interest can be estimated by averaging the samples
+with respect to their importance weights. Refer to the on-line supplementary material for the
+details of implementation of this algorithm.
+   Another issue related to the implementation of the SAM approach is how to set hyperpar-
+ameters. The prior distribution of the SAM approach contains an important hyperparameter,
+namely rn . According to theorem 2 and theorem S in the on-line supplementary material, rn can
+slowly grow with Pn for a good convergence rate of the posterior and the MAP model. In Section
+2.1.1, we establish the connection between the posterior (7) and the EBIC by choosing rn =
+  1−γ
+Pn . Chen and Chen (2008) showed that a choice of γ > 0:5 is preferred for high dimensional
+regression. In Liang et al. (2013), for a similar hyperparameter, Chen and Chen (2010) suggested
+the rule
+                                                                           
+                           γ = inf γ̃ : arg max π.|ξ||Dn , γ̃/ = |ξMAP, γ̃ | ,               .20/
+                                                   |ξ|
+
+i.e. choosing the minimum value of γ such that the mode of π.|ξ||Dn / coincides with the size
+of the MAP model ξMAP . If the resulting value of γ is greater than or equal to 1, truncate it
+960      Q. Song and F. Liang
+to a value less than 1, say 0.99. We can also apply this rule to determine the value of γ and
+           1−γ
+set rn = Pn . In practice, one may try a sequence of γ-values and then choose the smallest
+for which the mode of the posterior of model size coincides with the size of the MAP model.
+Our experience shows that, when n is not too small and log.Pn /=n is not too large, the choice
+                                                                                         1−γ
+of γ does not affect the result very much. In this paper, we set γ = 0:75 and rn = Pn unless
+otherwise stated. To make the prior for the subset data regression compatible with the prior for
+the whole data set regression, we set λs = |s|−γ . For other hyperparameters, we set a0 = b0 = 1
+and τ = 0:01.
+
+
+
+
+                                                                                                         Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+   In addition to rn , the SAM approach contains a few more free parameters, including s̄, r̄ n , α1
+and α2 . In practice, we usually set s̄ and r̄ n such that the probabilities of the models with size
+exceeding them are negligible. We usually set α1 to a large value, e.g. 15% or 10%, to minimize the
+chance of losing true predictors. In general, a large value of α1 should be used for a small subset
+and a small value of α1 for a large subset, as a large subset will provide a more accurate estimate
+of the FDR. As in conventional multiple-hypothesis tests, the choice of α2 may largely affect
+the results of the SAM approach especially when n is small. The value of α2 may be determined
+by using a test data set or through a cross-validation procedure. For simplicity, we set it to 1%
+in this paper. When n is large, as in Liang et al. (2013), we can show under posterior consistency
+that the marginal inclusion probability tends to be dichotomized, i.e. the marginal inclusion
+probabilities of the true and false predictors tend to 1 and 0 respectively. Hence, the choices of
+α1 and α2 are not crucial to the results of the SAM approach especially when n is large.
+
+
+4.    Simulated examples
+ 4.1. Toy examples
+ 4.1.1. Example 1
+ This example conﬁrms the theoretical results that were established in theorem 3 and theorem
+ S in the on-line supplementary material. For this purpose, the predictors are directly selected
+ without data splitting.
+     This example consists of multiple data sets with different values of n ranging from 20 to 120.
+ For each value of n, we set Pn = n1:5 and simulated 100 data sets independently. For each data
+ set, the design matrix X was generated from a multivariate normal distribution. The variance
+ of each column of X was set to be 1, and the correlation coefﬁcient between different columns
+ of X was set to be 0.25, which represents a strong correlation for real gene expression data (see
+ for example Johnson and Rossel (2012)). For each data set, we set σ Å = 1 and chose the ﬁrst ﬁve
+ columns of X as the true predictors with the regression coefﬁcients being 0.7, 0.9, 1.1, 1.3 and 1.5.
+     For each data set, the SAMC algorithm was run for 270Pn iterations, where the ﬁrst       √ 20Pn
+ were for
+        √  the burn-in process. In the simulations, we set the prior hyperparameters    r n =   n and
+r̄ n = 2 n, and set the gain factor sequence as, with k0 = 10Pn ,
+                                        ak = k0 =max{k0 , k},                                    .21/
+where k indexes the number of iterations of the SAMC algorithm.
+   Fig. 1 shows the distributions of marginal inclusion probabilities for the ﬁve true predictors
+and one false predictor. It is easy to see that, as n increases, the marginal inclusion probabilities
+of the true predictors converge towards 1, whereas the marginal inclusion probability of the false
+predictor stays close to 0. This conﬁrms the sure screening property of the marginal inclusion
+probability as established in theorem 3. Fig. 2 shows that the probability that the MAP model
+catches the true model increases with n. This conﬁrms theorem S in the on-line supplementary
+material that the MAP model is consistent. A comparison of Fig. 1 and Fig. 2 shows that, from
+                                                                         ●
+                                                                         ●                                                      ●        ●        ●
+                                                                                                                                                  ●
+                                                                 ●       ●                                                      ●        ●
+                                                                                                                                         ●
+                                                                 ●
+                                                                 ●       ●                                                      ●        ●
+                                                                 ●
+                                                                 ●       ●                                                               ●        ●
+                                                                                                                       ●                 ●
+                                                                                                                       ●
+                                                                                                                       ●
+                                                                 ●
+
+
+
+
+        0.8
+                                                                                         0.8
+                                                                                                                       ●
+                                                                         ●                                             ●        ●
+                                                        ●
+                                                        ●        ●                                                                                ●
+                                               ●                         ●                                             ●
+                                                                                                                       ●
+                                               ●        ●                ●                                                                        ●
+                                                        ●                ●                                             ●
+                                               ●                                                                                ●
+                                                                                                                                ●
+                                                        ●
+                                                        ●                                                              ●                 ●
+                                               ●        ●
+                                                        ●
+
+
+
+
+        0.4
+                                                                                         0.4
+                                               ●                                                                       ●        ●        ●
+                                               ●        ●
+                                               ●                                                                       ●                 ●
+                                               ●        ●                                                     ●        ●
+                                                        ●                                                     ●
+                                                        ●        ●                                            ●
+                                               ●                                                              ●        ●
+                                               ●        ●        ●                                            ●        ●
+
+
+
+
+        0.0
+                                                                                         0.0
+                   38       50       63       75       88      100      113                         38       50       63       75       88      100      113
+                                             (a)                                                                              (b)
+
+                                      ●
+                                      ●        ●        ●
+                                                        ●        ●
+                                                                 ●                                            ●        ●
+                                                                                                                       ●        ●        ●        ●
+                                                                                                              ●
+                                                                                                              ●
+                                      ●                                                                       ●
+                                                                                                              ●
+                                      ●        ●                                                              ●
+                             ●                                                                                ●
+
+
+
+
+        0.8
+                                                                                         0.8
+                             ●                                                                       ●
+                             ●
+                             ●                                                                       ●
+                                                                                                     ●
+                             ●                                                                                ●
+                             ●                                                                       ●
+                                                                                                     ●
+                             ●                                                                       ●
+                                                                                                     ●
+                             ●                                                                       ●
+                             ●        ●                                                              ●
+                                      ●
+                                      ●                                                              ●
+                                                                                                     ●        ●
+                             ●                                                                       ●
+
+
+
+
+        0.4
+                                                                                         0.4
+                                                                                                     ●
+                                                                                                     ●
+                                      ●                                                              ●
+
+                             ●
+                    ●
+                    ●                                                                                ●
+                             ●
+
+
+
+
+        0.0
+                                                                                         0.0
+                   38       50       63       75       88      100      113                         38       50       63       75       88      100      113
+                                             (c)                                                                              (d)
+
+                             ●
+                             ●        ●        ●
+                             ●
+                             ●
+                             ●
+                    ●
+                    ●
+                    ●
+                    ●
+                    ●
+
+
+
+
+        0.8
+                                                                                         0.8
+                    ●
+                    ●        ●
+                    ●
+                    ●
+                    ●
+
+
+
+
+        0.4
+                                                                                         0.4
+
+
+                    ●
+                                                                                                     ●                 ●
+                                                                                                     ●
+                                                                                                     ●        ●
+                                                                                                     ●        ●
+                                                                                                              ●        ●
+                                                                                                                       ●        ●
+                                                                                                                                ●        ●        ●       ●
+                                                                                                                                         ●        ●
+
+
+
+
+        0.0
+                                                                                         0.0
+
+
+
+
+                   38       50       63       75       88      100      113                         38       50       63       75       88      100      113
+                                             (e)                                                                               (f)
+                                                                                                                                                                             Split-and-merge Variable Selection Approach
+
+
+
+
+Fig. 1. Marginal inclusion probabilities of six predictors for the case of example 1 that the mutual correlation coefficient between different predictors is 0.25 for
+true regression coefficients (a) 0.7, (b) 0.9, (c) 1.1, (d) 1.3, (e) 1.5 and (f) 0: in each plot the seven boxplots are for sample sizes n D 38, 50, 63, 75, 88, 100, 113;
+each boxplot shows the distribution of the marginal inclusion probabilities of one predictor calculated from 100 simulated data sets;                    , mean value of
+the marginal inclusion probabilities
+                                                                                                                                                                             961
+
+
+
+
+                     Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+962      Q. Song and F. Liang
+
+
+
+
+               1.0
+                                                                                             ●
+                                                         ●
+
+
+               0.8
+                                                                      ●          ●
+
+
+
+
+                                               ●
+               0.6
+           p
+
+
+
+
+                                 ●
+
+
+
+
+                                                                                                                Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+               0.4
+
+
+
+
+                      ●
+               0.2
+               0.0
+
+
+
+
+                          40              60                  80                100
+                                                          n
+Fig. 2. Plot of the probability that the MAP model coincides with the true model (           , 95% confidence
+interval of the probability): for each value of n, the probability was estimated from 100 simulated data sets
+
+
+the perspective of variable selection, the marginal inclusion probability may work better than
+the MAP model, as the former seems to converge faster than the latter.
+   Later, a simulation study was conducted to study the stability of the SAM approach when
+the multicollinearity is extremely strong. We let the pairwise correlation increase to 0.9 and let
+n increase from 30 to 125, while keeping other settings unchanged. With such extremely high
+multicollinearity, the MAP criterion almost never catches the true model. However, as shown in
+Fig. 3, there is still a clear trend that the marginal inclusion probabilities of the true predictors
+increase with the sample size n.
+
+4.1.2. Example 2
+This example illustrates the SAM approach. It consists of 100 simulated data sets, each con-
+sisting of n = 150 observations and Pn = 1000 predictors. For each data set, the design ma-
+trix X was generated from a multivariate normal distribution. The ﬁrst 100 columns of X
+are mutually correlated with an equal correlation coefﬁcient of 0.25, and independent of the
+remaining 900 columns. The remaining 900 columns are mutually independent. The ﬁrst three
+columns were chosen as the true predictors with the regression coefﬁcients being 1.5, 3.0
+and 4.5.
+   We randomly split each data set into 50 subsets with s = 20. In stage 1, the predictors are
+iteratively selected twice for each subset. Each run of the SAMC algorithm consists of 270|s|
+iterations, where the ﬁrst 20|s| iterations were for the burn-in process, and s can be a subset
+directly split from the full data set or a remainder of a subset containing only unselected predic-
+tors. The gain factor sequence was set as ak = 10|s|= max{10|s|, k}, where k indexes the number
+of iterations of the SAMC algorithm. The prior hyperparameter s̄ was set to 20. The FDR level
+was set to α1 = 0:15, which is relatively large such that the variable selection is liberal and thus
+reduces the risk of losing true predictors. In stage 2, the SAMC algorithm was run for the aggre-
+gated data set with 270pn iterations, where the ﬁrst 20pn iterations were for the burn-in process.
+The gain factor sequence was set as ak = 10pn = max{10pn , k}, where k indexes the number of
+iterations of the SAMC algorithm. The prior hyperparameter r̄ n was set to 35. The FDR level
+was set to α2 = 0:01, which is small such that the resulting model is sparse.
+                                                        ●                                                     ●      ●         ●     ●     ●
+                                                                                                                                           ●      ●
+                                                                                                                                                  ●
+                                                                                                                                                  ●
+                                                                                                                                                  ●
+                                                        ●           ●                                         ●                ●           ●
+                           ●                            ●                                                                                         ●
+                                        ●                           ●                           ●
+                                                        ●     ●     ●                                  ●                       ●           ●
+                                        ●                                                       ●                              ●                  ●
+                                                  ●                                                                            ●
+
+
+
+
+        0.8
+                                                                                     0.8
+                                                              ●     ●                                                ●
+                                        ●                                                                                      ●           ●      ●
+                           ●                                                                           ●             ●         ●           ●
+                                                                                                                               ●           ●
+                                                  ●                                                    ●      ●      ●                     ●      ●
+                                  ●
+                                  ●                           ●                                 ●      ●                                   ●
+                                                              ●     ●                                         ●                            ●
+                                                                                                                                           ●
+                  ●               ●     ●         ●     ●     ●                                 ●
+                                                                                                ●                    ●         ●
+                  ●                                     ●
+                                                        ●                                                                                  ●
+                  ●                     ●                           ●                           ●             ●      ●         ●
+                                                                                                                               ●
+                           ●            ●               ●           ●                                                                      ●
+
+
+
+
+        0.4
+                                                                                     0.4
+                                                                    ●                                                          ●
+                                                                                                                               ●
+                                                                                                                               ●
+                  ●               ●     ●         ●                                             ●      ●      ●                ●
+                  ●                               ●           ●     ●
+                                                                    ●                                  ●      ●
+                                                                                                              ●                ●
+                                                                                                                               ●
+                                                  ●     ●           ●                                         ●                ●
+                           ●      ●               ●
+                                                  ●
+                                                  ●           ●     ●                           ●      ●
+                                                                                                       ●      ●
+                  ●        ●
+                           ●      ●     ●                     ●
+                                                              ●                                 ●
+                                                                                                ●             ●
+                  ●        ●      ●                           ●
+                  ●        ●      ●               ●
+                                  ●
+                                  ●
+
+
+
+
+        0.0
+                                                                                     0.0
+                 38       50     63    75         88   100   113   125                         38     50     63     75         88   100   113   125
+                                            (a)                                                                          (b)
+
+
+                  ●                     ●                                                                     ●
+                                        ●                                                              ●      ●
+                                                                                                              ●
+                  ●               ●     ●                                                       ●      ●
+                           ●      ●     ●                                                       ●      ●
+                           ●      ●     ●
+
+
+
+
+        0.8
+                                                                                     0.8
+                  ●        ●      ●     ●                                                              ●
+                           ●      ●
+                                  ●                                                             ●      ●
+                           ●      ●                                                                    ●
+                  ●               ●     ●                                                       ●
+                                                                                                ●
+                  ●        ●            ●                                                       ●
+                  ●               ●
+                                  ●                                                             ●
+                           ●
+                  ●                                                                             ●
+                  ●        ●
+
+
+
+
+        0.4
+                                                                                     0.4
+                           ●
+                           ●
+                           ●
+
+
+
+
+        0.0
+                                                                                     0.0
+                 38       50     63    75         88   100   113   125                         38     50     63     75         88   100   113   125
+                                            (c)                                                                          (d)
+
+                  ●
+                  ●
+                  ●
+
+                  ●                                                                  0.8
+
+
+
+
+        0.8
+                  ●
+                  ●
+                  ●
+                  ●
+
+
+                                                                    ●
+
+
+
+
+        0.4
+                                                                                     0.4
+
+
+                                                                    ●
+                                                                    ●                                         ●
+                                                                    ●
+                                                                    ●
+                                                              ●
+                                                              ●
+                                                              ●                                 ●
+                                                              ●     ●                           ●      ●                                          ●
+                                                              ●
+                                                              ●     ●                           ●
+                                                                                                ●      ●      ●
+                                                                                                              ●      ●         ●
+                                                                    ●                           ●      ●      ●
+                                                                                                              ●      ●
+                                                                                                                     ●         ●
+                                                                                                                               ●     ●     ●
+                                                                                                                                           ●
+                                                                                                                                           ●      ●
+                                                                                                                                                  ●
+                                                                                     0.0
+
+
+
+
+        0.0
+                 38       50     63    75         88   100   113   125                         38     50     63     75         88   100   113   125
+                                            (e)                                                                          (f)
+                                                                                                                                                                   Split-and-merge Variable Selection Approach
+
+
+
+
+Fig. 3. Marginal inclusion probabilities of six predictors for the case of example 1 that the mutual correlation coefficient between different predictors
+is 0.9 for true regression coefficients (a) 0.7, (b) 0.9, (c) 1.1, (d) 1.3, (e) 1.5 and (f) 0: in each plot, the boxplots are for the sample sizes n D 38, 50,
+63, 75, 88, 100, 113, 125; each boxplot shows the distribution of the marginal inclusion probabilities of one predictor calculated from 100 simulated data sets;
+                                                                                                                                                                   963
+
+
+
+
+       , mean value of the marginal inclusion probabilities
+
+                      Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+964      Q. Song and F. Liang
+                  Table 1.   Results of the SAM approach for the second toy example†
+
+
+                   Results for stage 1                         Results for stage 2
+
+                   Size‡          Number of correlated      Size§§     Number of true
+                                     predictors§                        predictorsÅ
+
+
+
+
+                                                                                                       Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+                   166.6 (0.87)          98.2 (0.22)      3.2 (0.05)           3.0 (0)
+
+                  †The values reported in parentheses are standard deviations of the
+                  corresponding estimate.
+                  ‡Average number of predictors selected in stage 1.
+                  §Average number of predictors that are correlated with the true predic-
+                  tors and selected in stage 1.
+                  §§Average number of predictors selected in stage 2.
+                  ÅAverage number of true predictors selected in stage 2.
+
+
+
+   Table 1 summarizes the simulation results. It shows that almost all predictors that are cor-
+related with the true predictors are selected in stage 1, and all true predictors are selected in
+stage 2. The SAM approach works perfectly for this example.
+
+4.2. Massive data example
+This example compares the SAM approach with several popular penalized likelihood ap-
+proaches for massive data sets. We simulated 100 data sets with σ Å2 = 0:25. Each data set was
+generated from a multivariate normal distribution with n = 100 observations and Pn = 500 000
+predictors, among which 2000 predictors are equally correlated with a correlation coefﬁcient of
+ρ = 0:25 and the rest of the predictors are uncorrelated. Among those 2000 correlated predictors,
+ﬁve were chosen as the true predictors with regression coefﬁcients (0.2, 0.3, 0.4, 0.5, 0.6).
+   Each data set was randomly split into 1000 subsets with s = 500. The SAMC algorithm was
+then run for each subset of data and the aggregated subset data with the same setting as for
+example 2 of Section 4.1.1. In the simulations, we set s̄ = 45 as the upper bound of model size for
+the subset data and r̄ n = 35 for the aggregated subset data, and we set the FDR level α1 = 0:15
+for variable selection in stage 1 and α2 = 0:01 in stage 2. On average (over the 100 data sets), the
+SAM approach reduced the dimension of the data to 18057:7 in stage 1 and then selected 5.3
+predictors in stage 2.
+   For comparison, several popular penalized likelihood approaches, including the lasso, elastic
+net, SIS and ISIS, were also applied to this example. The lasso was implemented for this example
+by using the R package glmnet (Friedman et al., 2010) with the tuning parameter λ determined
+through a tenfold cross-validation procedure. The elastic net was also implemented by using
+the R package glmnet, for which we set the penalty function pλ = λ.βL1 + β2L2 / and
+determined the value of λ via a tenfold cross-validation procedure. We used the R package
+SIS to implement SIS–SCAD and ISIS–SCAD, which ﬁrst reduce the number of predictors
+to n= log.n/ by marginal utility, and then apply SCAD to reﬁne the model. The results are
+summarized in Table 2.
+   To measure the performance of different methods for this example, we calculated the false
+selection rate fsr and negative selection rate nsr. Let t denote the set of true predictors, and let
+ξ denote the model selected by a method. Then, fsr and nsr are deﬁned by
+
+                              fsr = |ξ \ t|=|ξ|,          nsr = |t \ ξ|=|t|,
+                                                      Split-and-merge Variable Selection Approach        965
+Table 2. Comparison of the SAM approach with the lasso, elastic net, SIS and ISIS for the massive data
+example†
+
+
+Parameter                                        Results for the following methods:
+
+                     SAM                 Lasso            Elastic net             SIS             ISIS
+
+
+|ξ|‡
+
+
+
+
+                                                                                                                Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+                5.3 (0.22)          44.62 (0.98)        52.70 (0.21)          11.47 (0.29)     13.57 (0.59)
+|ξ ∩ t|§        3.53 (0.073)         4.24 (0.070)        4.07 (0.074)          3.31 (0.083)     3.37 (0.086)
+fsr (%)        25.5 (2.30)          89.7 (0.38)         92.3 (0.15)           67.7 (1.58)      65.8 (2.50)
+nsr (%)        29.4 (1.46)          15.2 (1.40)         18.6 (1.48)           33.8 (1.65)      32.6 (1.72)
+MSE§§           0.146 (0.013)Å       0.263 (0.011)       0.488 (0.011)         0.246 (0.016)    0.342 (0.022)
+
+†The numbers in parentheses are the corresponding standard deviations.
+‡Average number of predictors selected by the different methods.
+§Average number of true predictors selected by the different methods.
+§§Mean-squared error of β̂ξ , i.e. β̂ξ − βÅ 2 , produced by the different methods.
+Åβ is estimated by Bayesian model averaging.
+
+
+where |·| denotes the size of a model. The smaller the values of fsr and nsr are, the better the
+performance of the approach is. From Table 2, it is easy to see that the SAM method yields a
+much smaller value of fsr than all other methods, and about the same value of nsr as SIS and
+ISIS. The lasso and elastic net yield a smaller nsr but at the expense of a higher fsr. We have
+also compared the mean-squared errors of the estimates of β that are produced by different
+methods. For the SAM, approach β is estimated by averaging over the MCMC samples drawn
+in stage 2, while restricting the coefﬁcients of the predictors that are screened out in stage 1 to
+0. Strictly speaking, this estimator is not sparse, but, as shown in Table 2, it is more accurate
+than those produced by other methods.
+   A ﬁnal remark for this massive data example is on its CPU cost. Under the same settings
+for the burn-in period and total iteration numbers as those used in Section 4.1, the SAM cost
+for each data set about 16 h in a serial implementation on a single core of Intel® Xeon® CPU
+E5-2690 (2.90 GHz). This converts to about half an hour if 100 such cores are run in parallel,
+after accounting for the CPU times that are spent on each subset and the aggregated subset.
+
+5.    Real data examples
+5.1. Metabolic quantitative trait loci example
+The ﬁrst example is related to a metabolic quantitative trait loci experiment, which links SNPs
+data to metabolomics data (Dumas et al., 2007). The predictors come from a genomewide
+analysis of candidate genes for alanine amino transferase enzyme elevation in liver with the
+mass spectroscopy metabolomics data as the response (Kindmark et al., 2008). The spectra
+are divided by regions or bins to reduce the dimension of spectral data, and a common log-
+transformation is applied to normalize the signal. A total of 10 000 SNPs are preselected as
+candidate predictors on the basis of the following criteria: no missing values, no monomorphic
+SNPs and close to known regulatory regions. The total number of subjects included in the data
+set is 50. The genotype of each SNP is coded as 0, 1 and 2 for homozygous rare, heterozygous and
+homozygous common allele respectively. As in Bottolo and Richardson (2010), one particular
+metabolite bin that discriminates between the disease status of the clinical trial’s participants is
+chosen as the response.
+   The SAM approach was ﬁrst applied to this example. The data set was divided into 20 subsets
+966                           Q. Song and F. Liang
+                         50
+                         40
+CV−median square error
+                         30
+
+
+
+
+                                                                                                                                                                                       Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+                         20
+                         10
+
+
+
+
+                                                                                                                                                                  ●
+                                  ●   ●
+                                                                           ●
+                                                                                                       ●
+                                                                                                                                                     ●   ●                ●
+                                      ●   ●
+                                          ●   ●       ●           ●
+                                                                  ●                                        ●                ●   ●   ●   ●    ●
+                                                                                                                                                 ●
+                                                                                                                                                             ●        ●
+                                                  ●
+                                                  ●   ●   ●   ●
+                                                              ●       ●
+                                                                      ●    ●    ●
+                                                                                ●
+                                                                                     ●    ●
+                                                                                              ●
+                                                                                              ●    ●   ●       ●   ●    ●                                                     ●   ●
+                         0
+
+
+
+
+                              0                   5                   10                      15                   20                   25                   30                   35
+                                                                                                   model size
+
+Fig. 4. Comparison of the SAM approach () with the lasso (r), SIS–lasso (+) and the ISIS–lasso () for the
+metabolic quantitative trait loci data: leave-one-out cross-validation median-square error of the MAP1 –MAP35
+models
+
+with s = 500 and the method was then run with exactly the same setting as for the massive data
+example of Section 4.2. In stage 1 the SAM approach reduced the number of SNPs to 536 from
+10 000, and in stage 2 it selected two SNPs, rs17041311 and rs17392161, whose marginal inclusion
+probabilities were 0.98 and 0.93 respectively. The two SNPs also compose the MAP model for
+this example. We note that, in the data set, the SNP rs7896824 has the same genotypes as the
+SNP rs17041311 across all 50 subjects. Similarly, the SNPs rs17390419, rs12328732, rs2164473,
+rs322664, rs17415876, rs16950829, rs6607364, rs829156, rs829157 and rs2946537 share the same
+genotypes with the SNP rs17392161.
+   For comparison, SIS and ISIS were applied to this example. SIS–SCAD and ISIS–SCAD ﬁrst
+reduced the number of SNPs from 10 000 to 25 and then applied SCAD to reﬁne the selection,
+but both yielded the null model. To assess the performance of different methods, we used leave-
+one-out cross-validation. The median cross-validation square error of the SAM model is 1.8,
+and that of the null model is 9.74. (There is a slight abuse of the term ‘cross-validation’ here.
+In this work, we use leave-one-out cross-validation to evaluate the predictive performance of a
+ﬁxed model which is selected by some method. The mean cross-validation error of a ﬁxed model
+is given by
+
+                                                                                         1 n              .i/
+                                                                           CVξ =               .yi − xiT β̂ξ /2 ,
+                                                                                         n i=1
+                                                                               .i/
+where ξ denotes the ﬁxed model, β̂ξ is the ordinary least squares estimator of βξ based on
+                       .−i/
+the data set {y.−i/ , Xξ } and .·/.−i/ denotes removing the ith observation. The median cross-
+validation error is deﬁned in a similar way.)
+   We also compared the MAPi models that were produced by the SAM approach with those
+produced by the lasso, SIS–lasso and ISIS–lasso along their regularization paths. Here the MAPi
+model refers to the MAP model containing i SNPs. Fig. 4 shows the leave-one-out median-square
+error of these models. The lasso and SIS–lasso failed to select the SNP rs17041311, which is
+one of the two important SNPs that were identiﬁed by the SAM approach, and thus yielded
+                                                                                          Split-and-merge Variable Selection Approach                                         967
+
+                       0.4
+                                 ●
+                                 ●
+
+
+
+
+                                     ●
+CV−mean square error
+
+                       0.3
+
+
+
+
+                                     ●
+
+                                         ●
+
+
+                                             ●
+                                                     ●
+
+
+
+
+                                                                                                                                                                                    Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+                       0.2
+
+
+
+
+                                         ●
+
+
+
+
+                                             ●           ●
+
+                                                             ●
+                                                 ●               ●
+                       0.1
+
+
+
+
+                                                     ●
+                                                                                                                                                              ●
+                                                         ●                                                                      ●                        ●
+                                                             ●       ●            ●                            ●                                                              ●
+                                                                          ●   ●                    ●   ●            ●       ●       ●                             ●       ●
+                                                                 ●                    ●    ●   ●           ●            ●                        ●                    ●
+                                                                                                                                         ●   ●       ●
+                       0.0
+
+
+
+
+                             0                   5                   10                   15                   20                   25                   30                   35
+
+                                                                                               model size
+
+Fig. 5. Comparison of the SAM approach () with the lasso (r), SIS–lasso (+) and the ISIS–lasso () for
+the polymerase chain reaction data: leave-one-out cross-validation median-square error of the MAP1 –MAP35
+models
+
+
+enormous median-square errors. The ISIS–lasso method successfully selected both rs17041311
+and rs17392161, and thus yielded similar median-square errors to those of the SAM approach.
+
+5.2. Polymerase chain reaction example
+The second example relates to a polymerase chain reaction data set. Lan et al. (2006) conducted
+an experiment which examines the genetics of two inbred mouse populations (C57BL/6J and
+BTBR). A total of 60 F2 samples, with 31 female and 29 male mice, were used to monitor
+the expression levels of 22 575 genes. Some physiological phenotypes, including numbers of
+phosphoenopyruvate carboxykinase, glycerol-3-phosphate acyltransferase and stearoyl-CoA
+desaturase 1 were measured by quantitative realtime polymerase chain reaction. In this example,
+we study the relationship between phosphoenopyruvate carboxykinase (as responses) and the
+gene expression level. The gene expression data and the phenotype data are published in the gene
+expression omnibus database (http://www.ncbi.nlm.nih.gov/geo; accession number
+GSE3330). The gene expression data have been normalized before statistical analysis.
+   The SAM approach was ﬁrst applied to this example. The data were divided into 45 subsets
+with s = 502. In stage 1, the method selected 1113 genes from 22 575 genes. In stage 2, the SAM
+approach selected six genes under the setting rn = Pn0:3 . The six selected genes are 1429089 s at,
+1430779 at, 1432745 at, 1437871 at, 1440699 at and 1459563 x at. The ﬁrst ﬁve genes also
+compose the MAP model. The leave-one-out cross-validation mean-square error of the model
+of the six genes is 0.084. In comparison, SIS–SCAD selected 17 genes with leave-one-out mean-
+square error 0.204, and ISIS–SCAD selected nine genes with leave-one-out mean-square error
+0.112.
+   Fig. 5 shows the leave-one-out mean-square errors of the MAPi models selected by the SAM
+approach and the models selected by the lasso, SIS–lasso and ISIS–lasso along their regulariza-
+tion paths. For this example, the SIS–lasso and ISIS–lasso ﬁrst reduced the number of genes to
+30 and then applied the lasso to reﬁne the selection. From Fig. 5, it is easy to see that the SAM
+approach signiﬁcantly outperforms the penalized likelihood approaches for this example.
+968      Q. Song and F. Liang
+6. Time complexity analysis
+Since the SAM approach has an embarrassingly parallel structure, its time complexity can be
+simply analysed as follows. Suppose that there are enough numbers of processors available in
+the parallel architecture, and each subset is of about the same size. Let Kn denote the number of
+subsets, i.e. the number of processors that are used in SAM implementation. Then each subset
+contains about Pn =Kn predictors. Let s̄n denote the upper bound of the size of the models that
+are considered for each subset. Then, for each subset, the computational complexity of the ﬁrst-
+
+
+
+
+                                                                                                         Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+stage screening is bounded by
+                              O.nPn2 =Kn2 / + {O.s̄3n / + O.Pn =Kn /}T ,
+where the ﬁrst term is for the overhead computation of the matrix or vector products XsT Xs ,
+XsT y and yT y, which are prepared for calculation of .XξT Xξ /−1 and XξT y in simulations of the
+posterior (7), T is the number of iterations, O.s̄3n / is for evaluation of the posterior (7), which
+involves inversion of the matrix XξT Xξ + Vξ−1 , and O.Pn =Kn / is for evaluation of the proposal
+distribution as described in the on-line supplementary material. In our implementation of the
+SAMC algorithm we employed a proposal distribution for which the computational time for
+adding to or exchanging with the current model a predictor is approximately proportional to
+the number of predictors contained in the subset. If we further let the number of iterations
+increase with the subset size in a low power, say T = O{.Pn =Kn /α } for some α  1, then the
+computational complexity for each subset is O{.Pn =Kn /1+α } + O{n.Pn =Kn /2 } by assuming
+that s̄n = o{.Pn =Kn /1=3 } holds. To maintain the same estimation accuracy of marginal inclusion
+probabilities, α should be no less than 1. In this paper, we set α = 1. Similarly, we can derive that
+the computational complexity for the aggregated subset is O{.Kn r̄/1+α } + O{n.Kn r̄/2 }, where
+r̄ denotes the average number of predictors selected from each subset, and s̄ denotes the upper
+bound of the ﬁnal model size.
+   If we choose Kn to minimize the time complexity of the SAM approach, i.e. minimizing
+               O{.Pn =Kn /1+α } + O{.Kn r̄/1+α } + O{n.Pn =Kn /2 } + O{n.Kn r̄/2 },
+then it is easy to verify that the time complexity can be minimized at
+                                                       √
+                                             Kn = O. Pn /,
+                             √                                             √
+for any α > 0. If Kn = O. Pn /, then the resulting subset size is O. Pn /, and the resulting time
+                                              .1+α/=2
+complexity of the SAM approach is O.Pn                / + O.nPn /, i.e. the SAM approach can work in
+a linear or low order polynomial time of Pn . This is rather attractive compared with the existing
+high dimensional variable selection approaches. For example, the lasso has a computational
+complexity of O.nPn2 / when Pn >√n (Meinshausen, 2007). In a parallel implementation (see for
+example Boyd et al. (2010)) with Pn processors, its time complexity should be lower bounded
+           3=2
+by O.nPn /. The elementwise Gibbs sampler with a local shrinkage prior has a time complexity
+of at least O.Pn4 /, given that its                                                      3
+                                   √computational complexity at each iteration is O.Pn /. Even in a
+parallel implementation with Pn processors, its time complexity should be lower bounded by
+      7=2
+O.Pn /.
+   It is interesting to point out that, even if implementing on a serial computer, the SAM ap-
+proach can still have a favourable time complexity compared with the direct simulation of the
+full data posterior√  (i.e. setting Kn = 1). The √ time complexity of the SAM approach in a serial
+                                 .1+α/=2
+implementation is Pn O.Pn                + nPn / if Pn subsets are used, whereas the time complexity
+of the direst simulation of the full data posterior
+                                               √       is O.Pn1+α / + O.nPn2 /. The SAM strategy leads
+to a CPU time saving of order at least O. Pn / in serial implementations!
+                                             Split-and-merge Variable Selection Approach        969
+  In the recent literature, some researchers have explored the use of graphics processing units
+for scaling up Bayesian computation; see for example Suchard et al. (2010), Lee et al. (2010) and
+Bottolo et al. (2013). It is obvious that the SAM method can beneﬁt from the use of graphics
+processing units if parallel architectures are not available. For example, following Lee et al.
+(2010), one can implement a population SAMC algorithm (Song et al., 2014) with graphics
+processing units for each subset of data. Following Bottolo et al. (2013), one can use graphics
+processing units to accelerate the computation of the likelihood function in SAMC simulations.
+
+
+
+
+                                                                                                       Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+7.   Discussion
+In this paper, we propose a new Bayesian variable selection approach, the so-called SAM
+approach, for ultrahigh dimensional linear regression. The SAM approach works in two stages:
+stage 1 screens out the predictors that are uncorrelated with the response variable, and stage 2
+reﬁnes the selection of predictors. Both stages work under a Bayesian framework. Compared
+with the SIS approach of Fan and Lv (2008), a signiﬁcant advantage of the SAM approach is
+that it makes use of the joint information of multiple predictors in predictor screening, whereas
+SIS makes use of only the marginal utility of each predictor. Our numerical results, on both
+simulated and real data sets, show that the SAM approach can signiﬁcantly outperform SIS
+and ISIS, and also signiﬁcantly outperforms other penalized likelihood approaches such as the
+lasso and elastic net. The models that are selected by the SAM approach are more sparse and
+closer to the true model.
+   The SAM approach has an embarrassingly parallel structure and can be easily implemented
+in a parallel architecture. Therefore, it is ready to be applied to big data problems with millions
+or more predictors. This has been beyond the ability of conventional Bayesian approaches that
+directly work on the full data set. At this point, the SAM approach also distinguishes from
+SIS. Although SIS does penalized regression on a reduced data set, it still needs to process
+all predictors altogether in the screening stage—sorting the marginal utilities of all predictors.
+However, the SAM approach never needs to process all the predictors altogether. From this
+point of view, it is more suitable for big data problems.
+   We note that SAM is not a standard Bayesian approach, as it does not process all data al-
+together and thus only provides an approximate quantiﬁcation of uncertainty for each predictor
+through marginal inclusion probabilities. Since the marginal inclusion probability measures the
+contribution of a predictor given all other predictors in the regression, the marginal inclusion
+probability of a given predictor in the subset data regression should not be less than that in the
+full data regression, although the full data regression is never run in the SAM method. This
+observation is meaningful particularly for the predictors that are screened out in the ﬁrst stage,
+for which the marginal inclusion probabilities that are obtained in the subset data regression
+provide an upper bound for their marginal inclusion probabilities in the full data regression.
+   Regarding how to interpret the posterior probabilities that are associated with Bayesian model
+averaging in the subset data regression in comparison with their counterparts in the full data
+regression, we note that their difference can be interpreted as a difference resulting from their
+priors on the model space. The subset data regression is equivalent to the use of a data-dependent
+prior, which sets the prior probability to 0 for any models containing predictors that have been
+screened out in stage 1. Alternatively, the estimator that is obtained in the subset data regression
+can be interpreted as an Occam’s razor approximation (Madigan and Raftery, 1994) to its
+counterpart in the full data regression, as the models containing the predictors that are screened
+out in stage 1 tend to have very low posterior probabilities.
+   Although the SAM approach does not work in a standard Bayesian way, it controls the model
+970      Q. Song and F. Liang
+sparsity as in other Bayesian methods through specifying model priors, i.e. specifying a priori
+selection probability λn . The multiplicity is controlled by setting λn → 0 as Pn → ∞. Hence, as
+implied by expression (6), the prior of the SAM approach works more like an L0 -penalty. This
+may be a partial reason why the SAM approach produces favourable results compared with
+the lasso and SIS. The latter two methods employ an L1 - or SCAD penalty which both impose
+nearly 0 penalty values on nearly 0 coefﬁcients, and thus the resulting models tend to be dense.
+   Regarding parallel implementations for high dimensional variable selection, we note that
+Boyd et al. (2010) proposed a parallel algorithm for the lasso and group lasso by splitting
+
+
+
+
+                                                                                                      Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+across features. Although both Boyd’s algorithm and the SAM approach work on the basis of
+the same strategy of feature splitting, they are fundamentally different. The SAM approach
+is more on the side of statistics; it is a new statistical algorithm which has an embarrassingly
+parallel structure, and new statistical theory is required for its performance. Although Boyd’s
+algorithm is mainly on the side of computer science, it just implements the existing methods
+in a parallel way. Since Boyd’s algorithm cannot be implemented in an embarrassingly parallel
+way, internode communications may signiﬁcantly reduce its efﬁciency. In addition, as discussed
+in Section 6, Boyd’s algorithm may have a higher time complexity than the SAM method.
+   To justify the SAM approach, we establish Bayesian posterior consistency under both situ-
+ations that the model is correctly speciﬁed and misspeciﬁed. We show that, when the model is
+correctly speciﬁed, the marginal inclusion probability of the true predictor will converge to 1
+as the sample size becomes large; and, when the model is misspeciﬁed, the marginal inclusion
+probability of the predictor that is correlated with the response will converge to 1 as the sample
+size becomes large. We also show the sure screening property for the predictors that are selected
+on the basis of the marginal inclusion probability and that the MAP model is consistent as an
+estimator of the true model.
+   In this paper, the theoretical results are established under a Gaussian prior setting for the
+regression coefﬁcients. Although this prior setting has been widely used in the literature (e.g.
+Jiang (2005) and Liang et al. (2013)), it is not natural from the perspective of marginal inclusion
+probability evaluation as it assigns the highest density value to the null point. It is of interest
+to use a non-local prior (Johnson and Rossel, 2012), which assigns a zero probability to the
+null point and may lead to a better rate of convergence of the posterior distribution. A further
+extension of the SAM approach to generalized linear models is also of great interest.
+   Finally, we note that, in the recent literature, there is an active development of Bayesian
+sparse learning for high dimensional variable selection with local shrinkage priors (see for
+example Polson and Scott (2012)), such as the Laplace prior (Park and Casella, 2008) and the
+horseshoe prior (Carvalho et al., 2009, 2010), which aim to produce a sparse model by analogy
+with the pure shrinkage approach of something like the lasso under the Bayesian framework.
+We have conducted a comparison study to compare the performance of the horseshoe prior
+and the prior that is used in this paper. The latter is also called the SAM prior in the on-line
+supplementary material. As shown in Fig. 1 of the supplementary material, the SAM prior
+can perform much better than the horseshoe prior. The SAM prior is posterior consistent
+and efﬁcient in computation by restricting the models to be of a manageable size, whereas the
+horseshoe prior involves sampling from high dimensional normal distributions, and it is unclear
+whether it is posterior consistent or not under the high dimensional setting.
+
+
+8.    Supplementary material
+The supplementary material is organized as follows. Section 1 gives the proofs of theorems
+1–4, section 2 describes the SAMC algorithm and its implementation for high dimensional re-
+                                                     Split-and-merge Variable Selection Approach               971
+gression, section 3 establishes the consistency of the MAP model under the posterior distribution
+(7) and section 4 presents a comparison study for the performance of the horseshoe prior and
+the SAM prior.
+
+Acknowledgements
+The authors thank Dr Leonardo Bottolo for providing the metabolic quantitative trait loci
+data set and thank the Joint Editor, Associate Editor and two referees for their constructive
+
+
+
+
+                                                                                                                       Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+comments which have led to signiﬁcant improvement of this paper. Liang’s research was partially
+supported by National Science Foundation grants DMS-1106494 and DMS-1317131.
+
+References
+Barbieri, M. and Berger, J. (2004) Optimal predictive model selection. Ann. Statist., 32, 870–897.
+Berk, R. H. (1966) Limiting behaviour of posterior distributions when the model is incorrect. Ann. Math. Statist.,
+  37, 51–58.
+Bickel, P. and Levina, E. (2004) Some thoery for Fisher’s linear discriminant function, ‘naive Bayes’, and some
+  alternatives when there are many more variable than observations. Bernoulli, 10, 989–1010.
+Bondell, H. D. and Reich, B. J. (2012) Consistent high-dimensional Bayesian variable selection via penalized
+  credible regions. J. Am. Statist. Ass., 107, 1610–1624.
+Bottolo, L., Chadeau-Hyam, M., Hastie, D. I., Zeller, T., Liquet, B., Newcombe, P., Yengo, L., Wild, P. S.,
+  Schillert, A., Ziegler, A., Nielsen, S. F., Butterworth, A. S., Ho, W. K., Castagné, R., Munzel, T., Tregouet,
+  D., Falchi, M., Cambien, F., Nordestgaard, B. G., Fumeron, F., Tybjdaerg-Hansen, A., Froguel, P., Danesh,
+  J., Petretto, E., Blankenberg, S., Tiret, L. and Richardson, S (2013) GUESS-ing polygenic associations with
+  multiple phenotypes using a GPU-based evolutionary stochastic search algorithm. PLOS Genet., 9, article
+  e1003657.
+Bottolo, L. and Richardson, S. (2010) Evolutionary stochastic search for Bayesian model exploration. Baysn
+  Anal., 5, 583–618.
+Boyd, S., Parikh, N., Chu, E., Peleato, B. and Eckstein, J. (2010) Distributed optimization and statistical learning
+  via the alternating direction method of multipliers. Found. Trends Mach. Learn., 3, 1–122.
+Broman, K. W. and Speed, T. P. (2002) A model selection approach for the identiﬁcation of quantitative trait loci
+  in experimental crosses. J. R. Statist. Soc. B, 64, 641–656.
+Carvalho, C., Polson, N. and Scott, J. (2009) Handling sparsity via the horseshoe. J. Mach. Learn. Res., 5, 73–80.
+Carvalho, C., Polson, N. and Scott, J. (2010) The horseshoe estimator for sparse signals. Biometrika, 97, 465–480.
+Chen, J. and Chen, Z. (2008) Extended Bayesian information criteria for model selection with large model spaces.
+  Biometrika, 95, 759–771.
+De Blasi, P. and Walker, S. (2013) Bayesian asymptotics with misspeciﬁed models. Statist. Sin., 23, 169–187.
+Dumas, M., Wilder, S., Bihoreau, M., Barton, R., Fearnside, J., Arqoud, K., D’Amato, L., Wallis, R., Blancher, C.,
+  Keun, H., Baunsqaard, D., Scott, J., Sidelmann, U., Nicholson, J. and Gauquier, D. (2007) Direct quantitative
+  trait locus mapping of mammalian metabolic phenotypes in diabetic and normoglycemic rat models. Nat.
+  Genet., 39, 666–672.
+Fan, J. and Li, R. (2001) Variable selection via nonconcave penalized likelihood and its oracle properties. J. Am.
+  Statist. Ass., 96, 1348–1360.
+Fan, J. and Lv, J. (2008) Sure independence screening for ultrahigh dimensional feature space (with discussion).
+  J. R. Statist. Soc. B, 70, 849–911.
+Fan, J. and Song, R. (2010) Sure independence screening in generalized linear model with NP-dimensionality.
+  Ann. Statist., 38, 3567–3604.
+Friedman, J., Hastie, T. and Tibshirani, R. (2010) Regularization paths for generalized linear models via coordinate
+  descent. J. Statist. Softwr., 33, 1–22.
+Guan, Y. and Stephens, M. (2011) Bayesian variable selection regression for genome-wide association studies and
+  other large-scale problems. Ann. Appl. Statist., 5, 1780–1815.
+Gupta, M. and Ibrahim, J. (2009) An information matrix prior for Bayesian analysis in generalized linear models
+  with high dimensional data. Statist. Sin., 19, 1641–1663.
+Haario, H., Saksman, E. and Tamminen, J. (2001) An adaptive Metropolis algorithm. Bernoulli, 7, 223–242.
+Jiang, W. (2005) Bayesian variable selection for high dimensional generalized linear models. Technical Report
+  05-02. Department of Statistics, Northwestern University, Evanston.
+Jiang, W. (2007) Bayesian variable selection for high dimensional generalized linear models: convergence rate of
+  the ﬁtted densities. Ann. Statist., 35, 1487–1511.
+Johnson, V. (2012) On numerical aspects of Bayesian model selection in high and ultrahigh-dimensional settings.
+  Baysn Anal., 7, no. 4, 1–18.
+972       Q. Song and F. Liang
+Johnson, V. and Rossel, D. (2012) Bayesian model selection in high-dimensional settings. J. Am. Statist. Ass., 107,
+  649–660.
+Kindmark, A., Jawaid, A., Harbron, C., Barrat, B. and March, R. (2008) Genome-wide pharmacogenetic inves-
+  tigation of a hepatic adverse event without clinical signs of immunopathology suggests an underlying immune
+  pathogenesis. Pharmgenom. J., 8, 186–195.
+Kleijn, B. and van der Vaart, A. (2006) Misspeciﬁcation in inﬁnite-dimensional Bayesian statistics. Ann. Statist.,
+  34, 837–877.
+Kundu, S. and Dunson, D. B. (2014) Bayes variable selection in semiparametric linear models. J. Am. Statist. Ass.,
+  109, 437–447.
+Lan, H., Chen, M., Flowers, J., Yandell, B., Stapleton, D., Mata, C., Mui, E.., Flowers, M., Schueler, K., Manly,
+
+
+
+
+                                                                                                                          Downloaded from academic.oup.com/jrsssb/article/77/5/947/7040600 by Rice University user on 03 November 2026
+  K., Williams, R., Kendziorski, K. and Attie, A. D. (2006) Combined expression trait correlations and expres-
+  sion quantitative trait locus mapping. PLOS Genet., 2, article e6.
+Lee, A., Yau, C., Giles, M., Doucet, A. and Holmes, C. (2010) On the utility of graphics cards to perform massively
+  parallel simulation of advanced Monte Carlo methods. J. Computnl Graph. Statist., 19, 769–789.
+Li, F. and Zhang, N. (2010) Bayesian variable selection in structured High-Dimensional covariate spaces with
+  application in genomics. J. Am. Statist. Ass., 105, 1202–1214.
+Liang, F. (2009) On the use of SAMC for Monte Carlo intergration. Statist. Probab. Lett., 79, 581–587.
+Liang, F., Liu, C. and Carroll, R. (2007) Stochastic approximation in Monte Carlo computation. J. Am. Statist.
+  Ass., 102, 305–320.
+Liang, F., Paulo, R., Molina, G., Clyde, M. and Berger, J. (2008) Mixture of g priors for Bayesian variable selection.
+  J. Am. Statist. Ass., 103, 410–423.
+Liang, F., Song, Q. and Yu, K. (2013) Bayesian subset modeling for high dimensional generalized linear models.
+  J. Am. Statist. Ass., 108, 589–606.
+Liang, F. and Zhang, J. (2008) Estimating FDR under general dependence using stochastic approximation.
+  Biometrika, 95, 961–977.
+Lin, N. and Xi, R. (2011) Aggregated estimation equation estimation. Statist. Interf., 4, 73–83.
+Mackey, L., Talwalkar, A. and Jordan, M. (2012) Divide-and-conquer matrix factorization. Preprint arXiv:
+  1107.0789.
+Madigan, D. and Raftery, A. (1994) Model selection and accounting for model uncertainty in graphical models
+  using Occam’s windows. J. Am. Statist. Ass., 89, 1535–1546.
+Meinshausen, N. (2007) Relaxed Lasso. Computnl Statist. Data Anal., 52, 374–393.
+Park, T. and Casella, G. (2008) The Bayesian Lasso. J. Am. Statist. Ass., 103, 681–686.
+Polson, N. G. and Scott, J. G. (2012) Local shrinkage rules, Lévy processes and regularized regression. J. R. Statist.
+  Soc. B, 74, 287–311.
+Scott, J. and Berger, J. (2010) Bayes and empirical-Bayes multiplicity adjustment in the variable-selection problem.
+  Ann. Statist., 38, 2587–2619.
+Shalizi, C. (2009) Dynamics of Bayesian updating with dependent data and misspeciﬁed models. Electron. J.
+  Statist., 3, 1039–1074.
+Song, Q., Wu, M. and Liang, F. (2014) Weak convergence rates of population versus single-chain stochastic
+  approximation MCMC algorithms. Adv. Appl. Probab., to be published.
+Strawn, N., Armagan, A., Saab, R., Carin, L. and Dunson, D. (2012) Finite sample posterior concentration in
+  high-dimensional regression. Preprint arXiv:1207.4854.
+Suchard, M., Wang, Q., Chan, C., Frelinger, J., Cron, A. and West, M. (2010) Understanding GPU programming
+  for statistical computation: studies in massively parallel massive mixtures. J. Computnl Graph. Statist., 19,
+  419–438.
+Tibshirani, R. (1996) Regression shrinkage and selection via the lasso. J. R. Statist. Soc. B, 58, 267–288.
+Wilson, M. A. (2010) Bayesian model uncertainty and prior choice with applications to genetic association studies.
+  PhD Thesis. Duke University, Durham.
+Xi, R., Lin, N. and Chen, Y. (2009) Compression and aggregation for logistic regression analysis in data cubes.
+  IEEE Trans. Knowl. Data Engng, 21, 479–492.
+Zellner, A. (1986), On assessing prior distributions and Bayesian regression analysis with g-prior distribution. In
+  Bayesian Inference and Decision Techniques: Essays in Honor of Bruno de Finetti (eds P. Goel and A. Zellner),
+  pp. 233–243. Amsterdam: North-Holland.
+Zhang, C.-H. (2010) Nearly unbiased variable selection under minimax concave penalty. Ann. Statist., 38, 894–942.
+Zou, H. (2006) The adaptive lasso and its oracle properties. J. Am. Statist. Ass., 101, 1418–1429.
+Zou, H. and Hastie, T. (2005) Regularization and variable selection via the elastic net. J. R. Statist. Soc. B, 67,
+  301–320.
+
+
+
+Supporting information
+Additional ‘supporting information’ may be found in the on-line version of this article:
+  ‘Supplementary materials for “A split-and-merge variable selection approach for ultra-high dimensional regression”’.
+

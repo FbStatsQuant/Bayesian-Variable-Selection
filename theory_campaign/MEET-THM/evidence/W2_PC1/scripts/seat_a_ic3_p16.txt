@@ -1,0 +1,20 @@
+A) IC3 exhibit p=16, n=64, rho=0.5, groups of 4; method partition; all 65536 models
+eps seed | blocks=groups SIZE | eta_Om  max|d-ds| perS_ok | phi1 ratio1 bnd1 | v=.5 ratio bnd | v=1 ratio bnd | T(.9) Tsig(.9e^-4eta) Tsig(.9e^4eta) order_ok
+1e-04 0 | True True |   0.011   0.005 True | 0.573 1.000 1.026 | 1.000 1.023 | 0.999 1.047 | 2 2 3 True
+1e-04 1 | True True |   0.020   0.005 True | 0.378 1.000 1.031 | 1.000 1.041 | 1.000 1.085 | 2 2 5 True
+1e-04 2 | True True |   0.021   0.007 True | 1.000 1.000 1.087 | 1.000 1.042 | 1.000 1.087 | 1 1 2 True
+1e-03 0 | True True |   0.115   0.046 True | 0.577 0.997 1.304 | 0.998 1.259 | 0.993 1.584 | 2 -1 -1 None
+1e-03 1 | True True |   0.205   0.047 True | 0.382 0.999 1.369 | 0.998 1.508 | 0.999 2.274 | 2 -1 -1 None
+1e-03 2 | True True |   0.211   0.073 True | 1.000 0.998 2.325 | 1.000 1.525 | 0.998 2.325 | 1 -1 -1 None
+1e-02 0 | True True |   1.292   0.480 True | 0.619 0.967 24.495 | 0.978 13.252 | 0.930 175.618 | 2 -1 -1 None
+1e-02 1 | True True |   2.328   0.483 True | 0.425 0.987 52.353 | 0.986 105.127 | 0.985 11051.754 | 2 -1 -1 None
+1e-02 2 | True True |   2.451   0.753 True | 1.000 0.978 18138.190 | 0.996 134.678 | 0.978 18138.190 | 1 -1 -1 None
+transfer violations: 0
+
+B) necessity scale: fixed eps=0.05, rho=0.5, seed 0; sup|d-d_sigma| vs n, with |d_fit(S0)| and the 2x2 prediction nu*2*eps*c1*c2/(1-xbar)
+n   nu    sup|d-ds|  |d(S0)-ds(S0)|  pred  eta_Om
+  32   16.0     1.003     0.704     0.785       inf
+  64   32.0     2.838     0.821     0.889    13.206
+ 128   64.0     5.634     4.190     4.584    64.693
+ 256  128.0     8.837     5.382     5.818    65.417
+elapsed 16.3s

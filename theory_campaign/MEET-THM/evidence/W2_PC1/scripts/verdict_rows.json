@@ -1,0 +1,1002 @@
+[
+  [
+    "Seat A \u00b7 item 1 \u00b7 \u00a7R3 / main M3, WS-\u03b5",
+    [
+      [
+        "A.R3(a)",
+        "Discrepancy and divergences include explicit shared-variance and cross-block terms.",
+        "TRUE-AS-WRITTEN: reuse CHK \u00a7\u00a73\u20134 and W1 finite-law calculus.",
+        "DESIGN-VERIFIED: revised p=16 groups and C\u2019s asymptotic family.",
+        "PLAUSIBLE",
+        "REPAIRED: nondegeneracy wording; actual-partition exhibit replaced.",
+        "S-WS; EX-A",
+        "CHK \u00a7\u00a73\u20134; W1-PC1 \u00a716; reproduction A; E-partition."
+      ],
+      [
+        "A.R3(b)(i),(ii),(v)",
+        "Transfer 1+\u03c7\u00b2, normalized first-stage variance, and Doeblin constants.",
+        "TRUE-AS-WRITTEN: four-normalizer comparison; inherited first-stage identity.",
+        "DESIGN-VERIFIED: A\u2019s 9 cases, \u03b5>0.",
+        "PLAUSIBLE",
+        "REPAIRED: transfer 1+N_e Var, not Var; common comparison start.",
+        "S-WS; V\u2260\u03a9 needs coverage",
+        "CHK \u00a74; W1-PC1 \u00a74; reproduction A has zero transfer violations."
+      ],
+      [
+        "A.R3(b)(iii) \u00b7 sandwich",
+        "Common-target greedy counts lie between tightened and relaxed baseline counts.",
+        "TRUE-AS-WRITTEN for exact frontiers; coded resolution caveat must include snap/validation.",
+        "DESIGN-VERIFIED: E-pilot has 16 applicable cases, zero violations.",
+        "PLAUSIBLE",
+        "REPAIRED: threshold order, common V/targets, upper threshold below one.",
+        "c: fixed V/targets; d: exact-frontier comparison",
+        "E-pilot; W1-PC1 \u00a74. The quoted A script uses target {1}, not retained pilot targets."
+      ],
+      [
+        "A.R3(b)(iii) \u00b7 zero range",
+        "A uniform full-space grid uses ceil(range bound / constant) stages.",
+        "COUNTEREXAMPLE: BO, z=0 gives range=0 and claimed zero stages.",
+        "DESIGN-VERIFIED: n=8,p=2,G=7I; nonconstant centered y orthogonal to X.",
+        "PLAUSIBLE: use max{1,ceil(\u2026)}.",
+        "REPAIRED: W=\u03a9. New zero-range omission remains.",
+        "new boundary error",
+        "E-zero; a bridge from 0 to 1 requires at least one interval."
+      ],
+      [
+        "A.R3(b)(iv) / guarantee",
+        "Actual-island second moments and all bridge quantities transfer continuously from BO.",
+        "NEEDS-HYPOTHESIS: the M\u2082 upper bound is valid; it is not an e^{c\u03b7} comparison to actual BO M\u2082.",
+        "DESIGN-VERIFIED: C\u2019s filed actual-grid exhibit; finite correlated A exhibit.",
+        "GAP: retain upper envelope; qualify integer-count continuity away from jumps.",
+        "REPAIRED DIFFERENTLY: actual-grid upper bound replaces missing moment route.",
+        "S-C; c: threshold margin needed for local constant counts",
+        "W1-PC2 D14 actual-grid moment; E-jump refutes unconditional count continuity."
+      ],
+      [
+        "A.R3(c)",
+        "Zero-dependence and masked one-shot refutations ship with inherited amendments.",
+        "TRUE-AS-WRITTEN: cite CHK \u00a7\u00a71,2,6; no re-proof.",
+        "DESIGN-VERIFIED: CHK p=n\u22121, \u03b2=2, \u03c3\u00b2=1, bounded blocks.",
+        "PLAUSIBLE",
+        "REPAIRED: bounded-block TV; initial/later support distinction; set-mass/endpoint qualifications.",
+        "S-WS; c: masking mass conclusions need LH model/design instantiation",
+        "CHK \u00a7\u00a71\u20132; \u03b5=0 is allowed for HQ(c); LH verified in W1-PC2."
+      ],
+      [
+        "A.R3 \u00b7 N-d",
+        "Fixed-\u03b5 discrepancy has the displayed multiplicative first-order asymptotic lower bound.",
+        "COUNTEREXAMPLE: \u03b5=.1, \u03b2=(.8,.6), \u03c3\u00b2=1; actual/claimed limit=.856466.",
+        "DESIGN-VERIFIED: p=2, B=1, two truth blocks; \u03b5<1\u2212x\u0304.",
+        "GAP: require \u03b5\u21920 and controlled signal/noise; keep higher-order terms.",
+        "New clause; not inherited.",
+        "fixed-\u03b5 Taylor error",
+        "E-A-NEC: sup|d_X|/n\u2192.05602475; claimed lower bound/n\u2192.06541387."
+      ],
+      [
+        "A.R3 \u00b7 scale / growth exhibit",
+        "Shrinking cross-correlation makes A\u2019s fixed-signal exhibit suitable for bounded oscillation.",
+        "NEEDS-HYPOTHESIS: also control the \u03c3\u00b2 term, e.g. shrinking signal energy.",
+        "DESIGN-FAILS for this claimed asymptotic example; C\u2019s family remains valid.",
+        "PLAUSIBLE after using C\u2019s family.",
+        "REPAIRED: \u201ciff\u201d removed; new bounded-oscillation example still fails.",
+        "\u03bda\u00b2 need not be bounded when \u03b7 is bounded",
+        "E-growth: \u03b5_n=n^\u22122, d(S\u2080)/n\u2192about .0545. Raw-correlation scale also carries K/\u03ba."
+      ],
+      [
+        "A.R3 \u00b7 IC3 / scripts",
+        "The method\u2019s own size cut and packing return four groups of four.",
+        "TRUE-AS-WRITTEN: source script rerun and independent method-partition check.",
+        "DESIGN-VERIFIED: n=64,p=16,B=4; \u03b5=10^\u22124,10^\u22123,10^\u22122.",
+        "PLAUSIBLE",
+        "REPAIRED: old p=8 four-variable-group exhibit replaced.",
+        "d: component example; production dispatches exact",
+        "Reproduction A: all 9 partition/bound cases pass; sandwich applies only at 10^\u22124. C family eventually dispatches SMC."
+      ]
+    ]
+  ],
+  [
+    "Seat B \u00b7 item 1 \u00b7 \u00a7R3 / main M3, WS",
+    [
+      [
+        "B.R3(a)",
+        "D_* and \u03b7 bounds control divergence with the explicit \u03c3\u00b2-coupling term.",
+        "TRUE-AS-WRITTEN: cite W1-PC2 D14 and CHK \u00a7\u00a73\u20134.",
+        "DESIGN-VERIFIED: 40/40 rebuilt-pair cases, \u03b5>0; C family eventually.",
+        "PLAUSIBLE",
+        "REPAIRED: no claim that favourable start alone controls q\u2082.",
+        "S-C; S-WS",
+        "Reproduction B1: D_* .068\u20135.020, osc/D_* .066\u2013.701; all hypotheses hold."
+      ],
+      [
+        "B.R3(b)(1)\u2013(4)",
+        "Perturbation compares stage divergences, normalized variance, stage counts, and minorization.",
+        "TRUE-AS-WRITTEN: inherited inequalities plus corrected exact-frontier count order.",
+        "DESIGN-VERIFIED: D\u03b5 and E-pilot.",
+        "PLAUSIBLE",
+        "REPAIRED: variance offset; order; same V/targets; upper threshold below one.",
+        "c: fixed targets; d: normalize the stage-1 evidence variance",
+        "CHK \u00a74; W1-PC1 \u00a74; E-pilot has 16 applicable comparisons, zero violations."
+      ],
+      [
+        "B.R3(b) \u00b7 continuity sentence",
+        "Every constant in (b1)\u2013(b5), including stage count, tends to its BO value.",
+        "NEEDS-HYPOTHESIS: integer counts require a noncritical threshold; numerical snap needs its own qualification.",
+        "DESIGN-VERIFIED: E-jump is actual BVS with \u03b5>0.",
+        "PLAUSIBLE for continuous envelopes and locally constant noncritical counts.",
+        "REPAIRED: old comparison hypotheses; new continuity overstatement remains.",
+        "c: margin at baseline decision boundaries",
+        "E-jump: exact-frontier T(0)=2, small positive perturbations give T=3; envelope constants still converge."
+      ],
+      [
+        "B.R3(b)(5),(6)",
+        "Pathwise moments and nonperturbative leakage bounds replace a uniform q\u2082-tail lemma.",
+        "TRUE-AS-WRITTEN: cite filed actual-grid and leakage checks; m\u2265\u03c0\u2080(S\u2080)e^{\u22122 osc d} follows pointwise.",
+        "DESIGN-VERIFIED: W1 D_B and C family; informative constants require their stated scale.",
+        "PLAUSIBLE",
+        "REPAIRED DIFFERENTLY: false (N) withdrawn; q\u2082 route withdrawn; data-dependent m bound retained.",
+        "S-C; WS53F remains PROVED-UNDER, not independently proof-verified",
+        "W1-PC1 \u00a74 (F),(S); W1-PC2 D14. The m bound may be tiny; no uniform efficiency conclusion."
+      ],
+      [
+        "B.R3(c)",
+        "One-shot refutation includes bounded-block TV and qualified masked support/stage conclusions.",
+        "TRUE-AS-WRITTEN: use inherited cross-family check.",
+        "DESIGN-VERIFIED: CHK explicit orthogonal example and W1 LH family.",
+        "PLAUSIBLE",
+        "REPAIRED: inherited amendments explicitly adopted.",
+        "S-WS; c: mass premises distinguished from model conditions",
+        "CHK \u00a7\u00a71,2,6. The optional assumption \u03c0\u2080(S\u2080)\u21921 is not a model/design hypothesis; bounded B is the valid shipped scope."
+      ],
+      [
+        "B.R3 \u00b7 NEC",
+        "SE and two nonzero truths imply the displayed relative fit-term expansion.",
+        "COUNTEREXAMPLE: \u03b2_n=(1/n,1/n), \u03b5=.01; noise dominates the claimed \u03b5/n signal term.",
+        "DESIGN-VERIFIED: Gaussian exact Gram, \u03bb_min=.99, B=1.",
+        "GAP: add effective beta-min and scale-dependent remainder.",
+        "New clause; cancellation caveat is useful but does not supply beta-min.",
+        "c: no signal/noise margin stated",
+        "E-B-NEC: median actual/claimed ratios 2.47\u00d710\u00b3 and 2.38\u00d710\u2075 at n=10\u2074,10\u2076."
+      ],
+      [
+        "B.R3 \u00b7 scale / IC3",
+        "Built pairs verify finite \u03b5>0 bounds; useful full D_* constants need \u03bda\u00b2 and b_X bounded.",
+        "TRUE-AS-WRITTEN: reproduced 40 cases and checked actual partition.",
+        "DESIGN-VERIFIED: n=40,p=8,B=2; C family for asymptotic SMC.",
+        "PLAUSIBLE",
+        "REPAIRED: actual-block and eventual B\u22659 conditions stated.",
+        "d: finite example dispatches exact; operator \u03b5 differs from raw entry \u03b5",
+        "Reproductions B1/B2; E-partition. Full useful scale n^\u22121/2/p assumes a\u2248n^\u22121/2, \u03ba bounded below."
+      ]
+    ]
+  ],
+  [
+    "Seat D \u00b7 item 1 \u00b7 \u00a7R3 / main WS\u2032",
+    [
+      [
+        "D.R3(a)",
+        "Discrepancy bounds separate \u03c3\u00b2-coupling and cross-block dependence.",
+        "TRUE-AS-WRITTEN using each bound only where its hypotheses hold.",
+        "DESIGN-VERIFIED: D\u03b5 and C\u2019s filed correlated family.",
+        "PLAUSIBLE",
+        "REPAIRED: exact decomposition and constants retained.",
+        "S-WS; S-C; do not evaluate an unavailable side of min{\u2026,D_*}",
+        "CHK \u00a7\u00a73\u20134; W1-PC2 D14. \u03b7-form and D_*-form are alternative sufficient hypotheses."
+      ],
+      [
+        "D.R3(b)(i),(ii),(iv)",
+        "Global discrepancy, four-normalizer transfer, and Doeblin constants have explicit \u03b5 bounds.",
+        "TRUE-AS-WRITTEN: use W1-PC1 \u00a74 and CHK \u00a74.",
+        "DESIGN-VERIFIED: 15/15 D replica cases; independent built-pair check.",
+        "PLAUSIBLE",
+        "REPAIRED: exhibit and finite hypotheses, rather than arbitrary groups.",
+        "S-WS; c: V nonempty; restricted claims do not imply coverage",
+        "Reproduction D; inherited W1 D.M10(i),(ii),(iv)."
+      ],
+      [
+        "D.R3(b)(iii) \u00b7 sandwich",
+        "Exact-frontier common-target stage counts obey the corrected threshold order.",
+        "TRUE-AS-WRITTEN: feasibility inclusion and constrained greedy optimality; E-pilot search found no violation.",
+        "DESIGN-VERIFIED: D\u03b5; 16 applicable new common-target cases.",
+        "PLAUSIBLE",
+        "REPAIRED: reversed order and threshold hypothesis; alias in CD removed.",
+        "d: code also has 10^\u221212 snap/validation, not just 2^\u221260 bisection",
+        "W1-PC1 \u00a74; E-pilot. D\u2019s quoted greedy routine has no retained pilot targets."
+      ],
+      [
+        "D.R3(b)(iii) \u00b7 jump corollary",
+        "At a baseline threshold jump, perturbed T is one of the two one-sided counts.",
+        "COUNTEREXAMPLE: baseline counts {2,4}; perturbed count 3 at \u03b5=10^\u22125.",
+        "DESIGN-VERIFIED: actual n=40,p=2,B=1; all \u03b7 hypotheses hold.",
+        "IMPLAUSIBLE: sandwich permits intermediate integers.",
+        "New overstatement after a correctly repaired sandwich.",
+        "c: multiple simultaneous threshold equalities",
+        "E-jump: \u03b7=.000307301, .9e^{4\u03b7}=.901107. Replace two-point set by the integer interval; use margins for continuity."
+      ],
+      [
+        "D.R3(b)(v)",
+        "Bounded perturbation preserves divergence of the baseline one-shot \u03c7\u00b2.",
+        "TRUE-AS-WRITTEN: two-sided normalizer comparison; bounded \u03b7 prevents cancellation of logarithmic divergence.",
+        "DESIGN-VERIFIED: finite D\u03b5; asymptotic statement is a conditional transfer.",
+        "PLAUSIBLE",
+        "REPAIRED: sup_n \u03b7_n<\u221e; blanket H-ORTH transfer removed.",
+        "S-WS; c: \u03b7_n must be verified on the proposed design family",
+        "W1-PC1 \u00a74 D.M10(v); CHK \u00a74. No upgrade of WS6(e) or WS8(d)."
+      ],
+      [
+        "D.R3(c)",
+        "One-shot refutation uses bounded blocks, initial support, and amended restricted-grid lower bounds.",
+        "TRUE-AS-WRITTEN: cite CHK \u00a7\u00a71\u20132,6.",
+        "DESIGN-VERIFIED: inherited explicit orthogonal example; W1 masked LH.",
+        "PLAUSIBLE",
+        "REPAIRED: inherited amendments explicitly retained.",
+        "S-WS; c: LH must discharge masking mass premises",
+        "No re-proof of filed inherited checks; Q1(c) has the required independent pass with amendments."
+      ],
+      [
+        "D.R3 \u00b7 NEC",
+        "At fixed R\u00b2 the total discrepancy oscillation is bounded below at order n\u03b5.",
+        "COUNTEREXAMPLE: \u03b5=.1, \u03b2_1=\u03b2_2=.47377937 gives osc(d)/n\u21920.",
+        "DESIGN-VERIFIED: p=2,B=1,R\u00b2=.3305785, Gaussian noise.",
+        "GAP: shared-variance and cross-block terms can cancel.",
+        "New clause. First-order expansion alone does not imply the claimed consequence.",
+        "distinguish d_X from total osc(d)",
+        "E-D-NEC; also exact ridge formula uses \u03b5_H=(1\u2212n^\u22122)\u03b5, not \u03b5. Leading expansion may survive an amended remainder."
+      ],
+      [
+        "D.R3 \u00b7 scale / IC3",
+        "D\u03b5 has the built pairs and positive \u03b5; useful \u03b7 scales as nK\u03b5x\u0304/\u03ba.",
+        "TRUE-AS-WRITTEN on the stated small-\u03b5, bounded-residual-margin family.",
+        "DESIGN-VERIFIED: \u03b5=10^\u22125; larger \u03b5 can invalidate the stage comparison.",
+        "PLAUSIBLE",
+        "REPAIRED: finite \u03b7, built partition, and non-applicable cases disclosed.",
+        "d: component example; production exact branch; raw \u03b5 versus operator \u03b5",
+        "Reproduction D: \u03b7 .0020\u2013.0048 at 10^\u22125; at 10^\u22124 two of five seeds violate .9e^{4\u03b7}<1. E-partition."
+      ]
+    ]
+  ],
+  [
+    "Seat A \u00b7 item 2 \u00b7 ranked main-list cards, \u00a7R2",
+    [
+      [
+        "A.M1 \u00b7 V+",
+        "Validity, general-h identities, declared islands, and output-intersection bounds.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a7\u00a71,3; CHK \u00a75 for amended N9.",
+        "DESIGN-VERIFIED: filed finite-state checks, arbitrary valid X.",
+        "PLAUSIBLE",
+        "REPAIRED: adaptive rules \u201cneed not\u201d preserve identities; h normalized; N9 amendments retained.",
+        "c: EX-A/H-U/CAL/IND-T/GUARD-W; N1 remains PROOF SKETCH",
+        "No re-proof. Stationarity is not required of the ordinary terminal population for the evidence-weighted identity."
+      ],
+      [
+        "A.M2(a)\u2013(f) \u00b7 H",
+        "Bounded functionals, finite-R bounds, joint inclusions, margins, and finitely declared intervals.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a7\u00a72,14,16.",
+        "DESIGN-VERIFIED: filed finite positive systems; nontrivial bounds under stacking.",
+        "PLAUSIBLE",
+        "REPAIRED DIFFERENTLY: interval claim narrowed to finite declared probabilities; bounded-h normalization explicit.",
+        "c: N1; d: R\u2032=4 bound is vacuous; no quantile theorem",
+        "The earlier \u201cany/exact interval\u201d assertion is withdrawn, not proved. This is a valid narrower statement."
+      ],
+      [
+        "A.M2(g) \u00b7 H",
+        "Explicit logarithmic stacking yields truth-anchor consistency on bounded-oscillation families.",
+        "TRUE-AS-WRITTEN: filed moment bound plus finite-R error bound.",
+        "DESIGN-VERIFIED: C\u2019s family; A\u2019s fixed-signal extra example fails as noted in item 1.",
+        "PLAUSIBLE",
+        "REPAIRED DIFFERENTLY: explicit permitted R\u2032(n,p) replaces random-M premise; liminf form.",
+        "c: conditional computational model; d: stacking amendment must be recorded",
+        "W1-PC2 D14 budget consequence; R\u2032=4ceil(log\u2082(n+p)); no masked-family rate inferred."
+      ],
+      [
+        "A.M3 \u00b7 repair audit",
+        "Old variance, count-order, domain, and exhibit defects are addressed separately.",
+        "TRUE-AS-WRITTEN as a repair inventory; new defects are item-1 rows.",
+        "DESIGN-VERIFIED: revised groups and positive \u03b5.",
+        "GAP: full guarantee needs the item-1 amendments.",
+        "REPAIRED: variance offset, threshold/order, common targets, \u03a9 scope, nondegeneracy; new zero-range/necessity issues remain.",
+        "S-WS; S-C",
+        "Item 1 contains the clause-level verdicts for this main card; not a blanket approval."
+      ],
+      [
+        "A.M4 \u00b7 START",
+        "Exact start masses, masked law, dilution, and shared-variance discrepancy.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a75 and CHK \u00a73.",
+        "DESIGN-VERIFIED: W1-PC2 shared LH family and BO designs.",
+        "PLAUSIBLE",
+        "REPAIRED: \u201cnever trivial\u201d replaced by at least two positive block fits.",
+        "c: H2/H3 outside LH; known-\u03c3\u00b2 comparison is a different working model",
+        "T22/T27 qualifiers retained; Thm5-LH remains SAME-FAMILY-ONLY. No refuted DIL-DM/SHARE-M input."
+      ],
+      [
+        "A.M5 \u00b7 Z\ud835\udcaf/CARD",
+        "Stored mass, TV/KL/PIPs, retention, confidence bounds, and odds certificate.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a7\u00a73,16,20; W1-PC2 D5.",
+        "DESIGN-VERIFIED: filed finite stores and LH.",
+        "PLAUSIBLE",
+        "REPAIRED: reverse KL requires omitted positive mass; \u03b7<1 retained; output is joint.",
+        "c: GUARD-W; MZ-P3 AUTHOR-ONLY; numerical certificate needs SC+VAL-FP",
+        "Envelope U=Z_\ud835\udcaf+U_m[1\u2212sum_\ud835\udcaf\u03d6] is valid for a normalized common prior and valid U_m."
+      ],
+      [
+        "A.M6 \u00b7 HPM",
+        "Composition, finite search, LH consistency, variants, SIZE, and correct liminf delivery.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a7\u00a76\u20137 and W1-PC2 D4.",
+        "DESIGN-VERIFIED: full LH family already filed by PC2.",
+        "GAP: integrated LS0, emitted centre/N3, GUARD-W audits remain.",
+        "REPAIRED: SIZE; arbitrary-centre search budget/completed scan; liminf; iid/no-LS0 variants labelled; K71 deferred.",
+        "c: SR/OP-LS0/e4/scans; d: variants distinct from shipped run",
+        "TheoremA/LS-score/T38-b1-LH filed checks reused; no new delivery theorem or global-greedy claim."
+      ],
+      [
+        "A.M7 \u00b7 STG",
+        "Restricted ESS, coverage, coded target refinement, count bound, and ideal crossing laws.",
+        "TRUE-AS-WRITTEN for these clauses; zero-range existence omission is item 1.",
+        "DESIGN-VERIFIED: filed grid examples and E-pilot; ideal family is a comparison object.",
+        "PLAUSIBLE",
+        "REPAIRED: unconstrained \u201cexact/minimal\u201d removed; P included; resolution\u2264h/2; \u03a9 scope; favourable LL moved to supplement.",
+        "c: common threshold/targets; d: ideal laws; K31 remains OPEN",
+        "W1-PC1 \u00a79; W1-PC2 D7. Retain success/snap qualification; use max{1,ceil(\u2026)} for zero range."
+      ],
+      [
+        "A.M8 \u00b7 SEP/KL",
+        "IID discovery and specified one-shot atom losses have the masking scale.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a78 and CHK \u00a72.",
+        "DESIGN-VERIFIED: inherited LH, with correct blocks.",
+        "PLAUSIBLE",
+        "REPAIRED: universal algorithmic lower bound withdrawn; comparison loss explicitly restricted.",
+        "d: iid/one-shot comparison, not production SMC; SEP-taska respected",
+        "SEP-A/SEP-B remain PROVED (SF: none; XF: VERIFIED (A-REV9)); Lemma KL remains PROOF SKETCH (NEW-SYNTH)."
+      ]
+    ]
+  ],
+  [
+    "Seat B \u00b7 item 2 \u00b7 ranked main-list cards, \u00a7R2",
+    [
+      [
+        "B.M1(b) \u00b7 V+ RB wording",
+        "The evidence-weighted RB identity is qualified by a stationary round start.",
+        "AMBIGUOUS: stationary-start qualification belongs to the unweighted N9 corollary, not the FK weighted identity.",
+        "DESIGN-ASSERTED for literal stationary terminal starts in nontrivial finite runs.",
+        "GAP: separate the two statements.",
+        "REPAIRED DIFFERENTLY: N9 qualifier added, but attached to the wrong claim.",
+        "c: stationary-start assumption is an extra sampler condition",
+        "CHK \u00a75 last amendment; W1-PC1 \u00a71. Use the weighted marginal identity without claiming terminal stationarity."
+      ],
+      [
+        "B.M1(a),(c)\u2013(e) \u00b7 V+",
+        "Unnormalized identities, bounded declared h, output intersection, and pooling covariance.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a7\u00a71,3,14.",
+        "DESIGN-VERIFIED: filed finite FK/pooling examples.",
+        "PLAUSIBLE",
+        "REPAIRED: N9 sufficient/need-not wording and frozen-output contract retained.",
+        "c: ideal uniforms/CAL/IND-T/GUARD-W; N1 PROOF SKETCH",
+        "\u201cNot generally unbiased\u201d correctly allows zero-covariance exceptions. Expectations remain potential-run identities."
+      ],
+      [
+        "B.M2 \u00b7 H",
+        "Normalized finite-R bounds, fixed-data SLLN, and explicit-rate consistency.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a72; composition with filed moment bound.",
+        "DESIGN-VERIFIED: C family for growing dimensions; finite systems otherwise.",
+        "PLAUSIBLE",
+        "REPAIRED DIFFERENTLY: explicit log stacking plus design-verified oscillation bound; liminf form.",
+        "c: computational contract; d: stacking; R\u2032=4 bound vacuous",
+        "No useful masked M\u2082 rate follows from this card. Fixed-data SLLN does not imply triangular-array consistency by itself."
+      ],
+      [
+        "B.M3 \u00b7 repair audit",
+        "Old (N), q\u2082, variance, and count defects are replaced or withdrawn.",
+        "TRUE-AS-WRITTEN as an inventory; item 1 records the new NEC/continuity defects.",
+        "DESIGN-VERIFIED: D\u03b5 and D_B.",
+        "GAP: new unqualified continuity/necessity wording remains.",
+        "REPAIRED DIFFERENTLY: (N) and uniform q\u2082-tail lemma withdrawn, not proved; weaker explicit m bound used.",
+        "S-WS; S-C",
+        "Item 1 gives all \u00a7R3 clause verdicts; fallback without a stage-count clause alone would not satisfy HQ(b)."
+      ],
+      [
+        "B.M4 \u00b7 START",
+        "Exact start, masked chain, positive block-fit criterion, and conditional favourable rate.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a75; CHK \u00a73; filed leakage clause.",
+        "DESIGN-VERIFIED: LH and D_B.",
+        "PLAUSIBLE",
+        "REPAIRED: \u201cactive\u201d clarified as positive fit; H1\u2013H3 and conditional rate scope retained.",
+        "c: mass/expansion conclusions outside the exhibited families; WS53F PROVED-UNDER",
+        "Known-\u03c3\u00b2 statement requires recomputed known-precision tables; Thm5-LH remains SAME-FAMILY-ONLY."
+      ],
+      [
+        "B.M5 \u00b7 Z\ud835\udcaf/CARD",
+        "Stored-posterior functional error scales with h and the output certificate is joint.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a7\u00a73,16 and W1-PC2 D5.",
+        "DESIGN-VERIFIED: finite-store examples and LH.",
+        "PLAUSIBLE",
+        "REPAIRED: missing \u2016h\u2016\u221e included; retention/eviction rule explicit.",
+        "c: GUARD-W; AUTHOR-ONLY MZ-P3; exact arithmetic and SC+VAL-FP gate",
+        "The old h=(0,100) counterexample is repaired. No conditional-on-completion 95% guarantee asserted."
+      ],
+      [
+        "B.M6 \u00b7 HPM",
+        "LH search/output consistency, finite composition, margin transfer, and labelled variants.",
+        "TRUE-AS-WRITTEN: reuse W1-PC1 \u00a7\u00a76\u20137 and W1-PC2 D4.",
+        "DESIGN-VERIFIED: filed shared LH family.",
+        "GAP: integrated LS0/N3/GUARD-W audits.",
+        "REPAIRED: SIZE and liminf; K71 deferred; no-LS0 variant labelled.",
+        "c: prescribed centre and complete scans; polynomial cost keeps its registry rate GAP",
+        "T38-b1-LH qualified filed check reused; no delivery convergence inferred."
+      ],
+      [
+        "B.M7 \u00b7 STG",
+        "Target-constrained coded count includes P, range, and fine-enough bisection.",
+        "TRUE-AS-WRITTEN: cite W1-PC2 D7 with resolution typo corrected.",
+        "DESIGN-VERIFIED: filed grids and E-pilot.",
+        "PLAUSIBLE",
+        "REPAIRED: exact/minimal dropped; D_V on all tilts; \u2264h/2; absence of snap/ceiling failure; LL supplement.",
+        "d: ideal crossing/fine-grid limits; c: D_V>0 explicit",
+        "The zero-range issue in A is excluded here by D_V>0; a flat bridge can separately use retained pilot targets."
+      ],
+      [
+        "B.M8 \u00b7 SEP/KL",
+        "Masking-scale lower bounds concern iid discovery and explicitly specified one-shot estimators.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a78 and CHK \u00a72.",
+        "DESIGN-VERIFIED: filed LH.",
+        "PLAUSIBLE",
+        "REPAIRED: universal one-shot/algorithmic wording withdrawn.",
+        "d: comparison variants only; no production SMC lower bound",
+        "The formal relative-variance identity \u03c7\u00b2/Q is distinguished from its lower bound."
+      ]
+    ]
+  ],
+  [
+    "Seat D \u00b7 item 2 \u00b7 ranked main-list cards, \u00a7R2",
+    [
+      [
+        "D.H\u2032(a)\u2013(c),(e),(f)",
+        "Weighted identities, bounded finite-R errors, finite interval grid, and margin transfer.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a7\u00a71\u20133,14,16.",
+        "DESIGN-VERIFIED: filed finite laws and interval kernels.",
+        "PLAUSIBLE",
+        "REPAIRED: expectations stay potential-run; output intersections transfer; finite declared endpoints and union bound replace \u201cany interval\u201d.",
+        "c: EX-A/EX-S/CAL/IND-T/GUARD-W; N1 remains PROOF SKETCH",
+        "No terminal stationarity, conditional-output expectation, quantile accuracy, or frequentist coverage is asserted."
+      ],
+      [
+        "D.H\u2032(d\u2032)",
+        "Logarithmic declared stacking gives consistency on a model/design-verified bounded-oscillation family.",
+        "TRUE-AS-WRITTEN: filed M\u2082 bound and finite-R inequality.",
+        "DESIGN-VERIFIED: C\u2019s asymptotic family.",
+        "PLAUSIBLE",
+        "REPAIRED DIFFERENTLY: random-M hypothesis replaced by explicit R\u2032(n,p) plus exhibited family.",
+        "c: computational contract; d: optional stacking, not default four islands",
+        "D\u03b5 alone is finite; use C\u2019s family for the triangular-array non-vacuity claim."
+      ],
+      [
+        "D.5\u2032 \u00b7 HPM/Theorem A",
+        "Composition, completed-search certification, and qualified LH output consistency.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a7\u00a76\u20137 and W1-PC2 D4.",
+        "DESIGN-VERIFIED: full shared LH family.",
+        "GAP: emitted-centre, integrated LS0/N3/GUARD-W audits.",
+        "REPAIRED: \u2113\u2265\u03c4(C), final scan, SIZE, liminf, extra c\u2084 search, labelled variants.",
+        "c: OP-LS0/SR/e4/scans; d: iid/no-LS0 variants",
+        "The overbarred potential-run notation in D_n is not set complement. Filed TheoremA/LS-score checks reused."
+      ],
+      [
+        "D.M3\u2032 \u00b7 Z\ud835\udcaf/MASK-PIP",
+        "Retention and envelope certificates give a masked-family PIP/MPM accuracy statement.",
+        "TRUE-AS-WRITTEN: deterministic retention plus event containment.",
+        "DESIGN-VERIFIED: W1-PC2 LH family.",
+        "PLAUSIBLE",
+        "REPAIRED DIFFERENTLY: unverified regional U_rest replaced by valid global U_m envelope.",
+        "c: GUARD-W/HPM gates; b: MZ-C1 also needs candidate/AUTHOR-ONLY qualifiers",
+        "W1-PC1 \u00a73; W1-PC2 D5/D4. PIP failure event is contained in HPM error or \u03c0(S\u2080)\u22641/2."
+      ],
+      [
+        "D.WS\u2032 \u00b7 repair audit",
+        "Prior count-order and H-ORTH transfer defects are repaired, but new corollaries fail.",
+        "TRUE-AS-WRITTEN as a repair inventory; item 1 gives the adverse new clauses.",
+        "DESIGN-VERIFIED: revised D\u03b5.",
+        "GAP: amend jump corollary and necessity claims.",
+        "REPAIRED: order; bounded \u03b7 for divergence; actual blocks; blanket H-ORTH transfer withdrawn.",
+        "S-WS; S-C",
+        "Do not label the entire package TRUE-AS-WRITTEN based on its inherited components."
+      ],
+      [
+        "D.M6 \u00b7 START",
+        "Start mass, masked law, dilution, and BO shared-variance discrepancy.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a75 and CHK \u00a73.",
+        "DESIGN-VERIFIED: filed LH and BO families.",
+        "PLAUSIBLE",
+        "REPAIRED: positive fit fractions replace \u201cactive blocks\u201d; other checked clauses unchanged.",
+        "c: H2/H3 outside LH; Thm5-LH SAME-FAMILY-ONLY",
+        "Uses the actual start tables; no DIL-DM(i) or SHARE-M(b) proof substitution."
+      ],
+      [
+        "D.STG\u2032",
+        "Coded acceptance/coverage and explicitly ideal crossing/length laws.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a79 and W1-PC2 D7/D13.",
+        "DESIGN-VERIFIED: filed finite grids and ideal two-state comparison.",
+        "PLAUSIBLE",
+        "REPAIRED: optimality restricted to retained targets; favourable LL moved to supplement; \u039b_len renamed.",
+        "d: ideal/fine-grid clauses; finite snap validation remains a code qualification",
+        "K31 stays OPEN; T\u2264T_e is success accounting, not a masked stage-count rate."
+      ],
+      [
+        "D.SEP\u2032",
+        "IID masking lower bounds and ideal crossing comparison do not claim total work.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a78 and CHK \u00a72.",
+        "DESIGN-VERIFIED: filed LH.",
+        "PLAUSIBLE",
+        "REPAIRED: universal one-shot scope and logarithmic-total-work sentence withdrawn.",
+        "d: iid/one-shot and ideal-grid comparisons",
+        "Evidence relative variance is \u03c7\u00b2/Q; the atom bound is a lower bound, not an accuracy-matched SMC cost theorem."
+      ],
+      [
+        "D.SL\u2032(a)",
+        "Equipartition isolation tends to one for a fixed neighbourhood when K_n diverges.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a710 hypergeometric calculation.",
+        "DESIGN-VERIFIED: fixed-size LH groups; K_n\u2248\u221ap with p\u2192\u221e.",
+        "PLAUSIBLE",
+        "REPAIRED: population rather than observed cancellation used in (b).",
+        "c: fixed c,g; require feasible equipartitions and distinguish fixed K examples",
+        "Kn=2 or 4 are finite illustrations, not sequences making isolation probability tend to one."
+      ],
+      [
+        "D.SL\u2032(b)",
+        "SL\u2019s actual prior gives uniform-in-iteration vanishing PIP and exclusion at fixed threshold.",
+        "NEEDS-HYPOTHESIS: specify \u03bb_s, its odds, slab scale, subset-size growth, and justify the uniform null BF bound.",
+        "DESIGN-ASSERTED: no full SL-prior/iteration demonstration or promised LH replay filed.",
+        "GAP",
+        "NOT REPAIRED: prior/rate named; iteration-uniform bound asserted rather than established on a model/design family.",
+        "c: an algorithmic posterior/BF conclusion is not a model/design assumption; d: fixed PIP threshold variant",
+        "W1-PC1 \u00a710; local Song\u2013Liang \u00a7\u00a72.3,3.1: \u03bb_s=|s|^\u2212\u03b3, odds \u03bb_s/(1\u2212\u03bb_s). Singleton/reselected-subset cases need explicit handling."
+      ],
+      [
+        "D.SL\u2032(c),(d)",
+        "Exact-target and LS0 consistency hold on the same qualified LH family.",
+        "TRUE-AS-WRITTEN: cite filed T03\u266f and T38-b1-LH checks.",
+        "DESIGN-VERIFIED: shared LH with SIZE eventually.",
+        "GAP: code gates inherited from 5\u2032.",
+        "REPAIRED: liminf and method-scope wording; this does not establish SL exclusion.",
+        "Thm5-LH remains SAME-FAMILY-ONLY; c: LS0/code premises",
+        "W1-PC2 shared LH / D4 / D8. D\u2019s one-wave fallback for an unclosed SL-prior lemma should be enforced."
+      ]
+    ]
+  ],
+  [
+    "Seat A \u00b7 item 3 \u00b7 \u00a7R4 masked accuracy",
+    [
+      [
+        "A.R4 \u00b7 Z\ud835\udcaf / weighted h",
+        "Masked LH yields joint-output restricted-posterior accuracy and a regime-free weighted-h bound.",
+        "TRUE-AS-WRITTEN: retention plus HPM error tending to zero; cite filed weighted-h bound.",
+        "DESIGN-VERIFIED: shared masked LH, \u03c0\u2080(S\u2080)=p^\u2212c n^\u2212c/2 exp(O_P(1)).",
+        "PLAUSIBLE",
+        "REPAIRED: one named masked statement; no conditional-on-output claim; reverse KL has support condition.",
+        "c: implementation premises inherited; does not prove P(output)\u21921",
+        "W1-PC2 LH/D4/D5; W1-PC1 \u00a7\u00a72\u20133. All HQ fallback metrics acknowledged; FW2 cites V11/N10 OPEN."
+      ]
+    ]
+  ],
+  [
+    "Seat B \u00b7 item 3 \u00b7 \u00a7R4 masked accuracy",
+    [
+      [
+        "B.R4 \u00b7 Z\ud835\udcaf/CARD",
+        "Stored-posterior TV/PIP/MPM accuracy holds jointly with output on masked LH.",
+        "TRUE-AS-WRITTEN: event containment and filed LH/retention results.",
+        "DESIGN-VERIFIED: shared LH, c=2; bounded blocks eventually.",
+        "PLAUSIBLE",
+        "REPAIRED: named statement and support obstruction; all fallback metrics retained.",
+        "c: LS0/N3/GUARD-W gates; no delivery theorem",
+        "Interpret \u201cwith probability\u21921 jointly with output\u201d as vanishing P(output and error), not conditional success or P(output)\u21921."
+      ],
+      [
+        "B.R4 \u00b7 M\u2082 aside",
+        "Masking forces the actual multistage island second moment M\u2082 to diverge.",
+        "NEEDS-HYPOTHESIS: the cited \u03c7\u00b2 obstruction concerns one-shot weights; it gives no such actual-SMC implication.",
+        "DESIGN-ASSERTED: no lower bound for actual coded-grid M\u2082 supplied here.",
+        "GAP",
+        "New explanatory overstatement; core stored-posterior theorem does not need it.",
+        "a: do not substitute one-shot \u03c7\u00b2 for actual-kernel variance (OPW2-cex)",
+        "CHK \u00a76 explicitly distinguishes one-shot failure from multistage performance; W1-PC2 D14 is an upper-bound result."
+      ]
+    ]
+  ],
+  [
+    "Seat D \u00b7 item 3 \u00b7 \u00a7R4 masked accuracy",
+    [
+      [
+        "D.R4 \u00b7 MASK-PIP",
+        "On masked LH, joint-output PIP/MPM error vanishes through retention and LS0.",
+        "TRUE-AS-WRITTEN: stated event containment is valid.",
+        "DESIGN-VERIFIED: shared LH family; start misses polynomially.",
+        "PLAUSIBLE",
+        "REPAIRED: named masked accuracy clause; support obstruction; FW2 and fallback set explicit.",
+        "c: operational premises retained; no claim conditional on delivery",
+        "W1-PC2 D4/D5 and W1-PC1 \u00a73; inequality adds P(\u03c0(S\u2080)\u22641/2), which vanishes under T03\u266f."
+      ]
+    ]
+  ],
+  [
+    "Seat A \u00b7 item 4 \u00b7 \u00a7R5 run card",
+    [
+      [
+        "A.R5(i) \u00b7 \u0134 definition / T-J1",
+        "Weighted stage variances estimate a fixed-grid trapezoidal Jeffreys target.",
+        "AMBIGUOUS: specify pre-resampling particles with their incremental weights; post-mutation particles are already at q_\u03c6t.",
+        "DESIGN-VERIFIED: necessary pre-stage d and weights exist during each run.",
+        "GAP: fix timing and define the weighted mean explicitly.",
+        "New definition; LLN plausible after timing is fixed.",
+        "c: frozen grid; d: prospective deterministic accumulator, not available from saved study output",
+        "Engine run_island_s computes lw before resampling, then discards populations; measured rounds occur only at \u03c6=1. Reweighting post-move states again targets q_{2\u03c6t\u2212\u03c6t\u22121}."
+      ],
+      [
+        "A.R5(i) \u00b7 T-J2,T-J3",
+        "Trapezoid error uses \u03ba\u2084; J has range and masked lower bounds.",
+        "TRUE-AS-WRITTEN: composite trapezoid remainder and \u03ba\u2084 bound; inherited J/KL identities.",
+        "DESIGN-VERIFIED: finite discrepancy on each valid input.",
+        "PLAUSIBLE",
+        "New deterministic clauses; no finite-N concentration claim made.",
+        "No RNG or feedback; label J_hat_T as a quadrature target",
+        "Var\u2033=\u03ba\u2084, |\u03ba\u2084|\u2264osc(d)^4; error \u2264sup|\u03ba\u2084| sum \u0394\u00b3/12. W1-PC1 \u00a716 supplies J/KL bounds."
+      ],
+      [
+        "A.R5(ii) \u00b7 leakage",
+        "Maximum cross-block correlation and a block eigenvalue bound control per-model perturbations.",
+        "TRUE-AS-WRITTEN with positive \u03ba\u0302 and a maximum over V when used as \u03b7_V.",
+        "DESIGN-VERIFIED: revised built blocks; \u03b7\u0302 computable deterministically.",
+        "PLAUSIBLE",
+        "REPAIRED: leakage is a reporting proxy, not a power claim; V restriction explicit.",
+        "No RNG/feedback; c: finite domain and uniform maximum required for transfer",
+        "CHK \u00a74; W1-PC1 \u00a74. Inputs X/blocks/tables/V already exist. Singular \u03ba\u0302 or failed residual-margin tests must print n/a."
+      ]
+    ]
+  ],
+  [
+    "Seat B \u00b7 item 4 \u00b7 \u00a7R5 run card",
+    [
+      [
+        "B.R5(i) \u00b7 \u0134",
+        "Evidence-weighted endpoint mean minus iid-start mean estimates Jeffreys divergence.",
+        "TRUE-AS-WRITTEN for T1\u2013T4: finite bounded d, envelope scaling, and filed SLLN.",
+        "DESIGN-VERIFIED: finite correlated systems; C family for useful stacking bounds.",
+        "PLAUSIBLE",
+        "New definition; d must be declared before stream 10 as the seat requests.",
+        "No RNG/feedback; c: N1; prospective start/end accumulators needed",
+        "Existing particles carry d; add deterministic initial-mean and measured-d sums. Initial variance\u2264osc\u00b2/(4R\u2032N_e). Saved study records lack these sums."
+      ],
+      [
+        "B.R5(i) \u00b7 T5 interpretation",
+        "Masked lower bound on J means the displayed \u0134 detects large divergence.",
+        "AMBIGUOUS: target J lower bound is valid; detection/large-\u0134 claim needs an estimator-error bound in that regime.",
+        "DESIGN-ASSERTED for diagnostic power; target masked family is verified.",
+        "GAP: no informative masked error rate supplied.",
+        "New wording; retain T5 only as a statement about J.",
+        "a: record-blindness obstruction still applies; no flag-power theorem",
+        "A large true divergence does not force its finite-run estimate to be large. The displayed T3 bound is often vacuous under masking."
+      ],
+      [
+        "B.R5(ii) \u00b7 leakage T1\u2013T6",
+        "Cross-block proxy, explicit \u03b7, regularized norms, and V-only transfers are design-computable.",
+        "NEEDS-HYPOTHESIS: T2 needs \u03ba>0, \u03b4<1, \u016b<1 and \u03b4\u016b<(1\u2212\u03b4)(1\u2212\u016b), with failure reported n/a.",
+        "DESIGN-VERIFIED: D\u03b5 meets these conditions at the stated small \u03b5.",
+        "PLAUSIBLE after stating domains.",
+        "New reporting clause omits the finite-domain conditions present in \u00a7R3.",
+        "No RNG/feedback; c: V-only transfers remain V-only",
+        "CHK \u00a74; W1-PC1 D.M10(i). For T3, \u03b4_H\u2019s Gershgorin numerator includes the extra (n+1) factor. \u03b5\u0302=0\u21d4BO is valid."
+      ]
+    ]
+  ],
+  [
+    "Seat D \u00b7 item 4 \u00b7 \u00a7R5 run card",
+    [
+      [
+        "D.R5(i) \u00b7 \u0134,T1\u2013T3",
+        "Endpoint-minus-start Jeffreys estimate has an explicit finite-budget error bound.",
+        "TRUE-AS-WRITTEN using the actual global oscillation in T3.",
+        "DESIGN-VERIFIED: finite d and iid starts; C family for informative stacking.",
+        "PLAUSIBLE",
+        "New bound: split \u03b5/2 between ratio and iid mean; no independence between them needed.",
+        "No RNG/feedback; c: N1/declared d; prospective deterministic accumulators",
+        "The ratio term is 4(M\u2082\u22121)/R\u2032+16M\u2082 osc\u00b2/(R\u2032\u03b5\u00b2); start Chebyshev term osc\u00b2/(R\u2032N_e\u03b5\u00b2). Union bound gives T3."
+      ],
+      [
+        "D.R5(i) \u00b7 V rescaling",
+        "Enumerating V supplies global d_min and osc d for a bounded N1 test function.",
+        "COUNTEREXAMPLE: V={\u2205,{0}} has d=0; \u03a9 also contains d=.34492652.",
+        "DESIGN-VERIFIED: n=40,p=2,B=1, positive cross-correlation.",
+        "PLAUSIBLE: use global analytic envelopes or enumerate \u03a9.",
+        "New clause; finite-budget theorem survives with a valid global range.",
+        "c: h must be bounded on \u03a9; restricted calibration set is not full support",
+        "E-V: range on V is zero while range on \u03a9 is positive. V-only normalization may be undefined or exceed [0,1]."
+      ],
+      [
+        "D.R5(ii) \u00b7 \u03b5\u0302,\u03b7\u0302,T4,T5",
+        "Proxy and block-table bound supply global perturbation constants or n/a.",
+        "TRUE-AS-WRITTEN on the positive-\u03ba\u0302 finite domain; treat the empty model separately as zero.",
+        "DESIGN-VERIFIED: D\u03b5; per-block maxima bound capped-model fit sums.",
+        "PLAUSIBLE",
+        "New deterministic report; stage-count qualification remains as in item 1.",
+        "No RNG/feedback; c: \u03ba\u0302>0; singleton/empty conventions",
+        "CHK \u00a74 supplies the norm bound; \u03b7\u0302 uses a conservative global \u016b\u0302. n/a on invalid margins is correct; V\u2260\u03a9 is not used for a global \u03b7\u0302."
+      ],
+      [
+        "D.R5(ii) \u00b7 T6",
+        "Every two-signal-block family has |d_X(S\u2080)| of order n\u03b5\u0302|\u03b2_1\u03b2_2|/\u03c3\u00b2.",
+        "COUNTEREXAMPLE: \u03b5=.1, \u03b2=(.8,\u2212.04010050) gives d_X/n\u21920 with positive claimed order.",
+        "DESIGN-VERIFIED: Gaussian exact Gram, two singleton blocks, \u03ba=1.",
+        "GAP: first-order expansion permits cancellation; add a signal/alignment margin.",
+        "New clause; the upper bound in T5 is unaffected.",
+        "distinguish a sufficient upper envelope from a universal lower bound",
+        "E-D-T6: \u03b2_2/\u03b2_1=(\u22121+sqrt(1\u2212\u03b5\u00b2))/\u03b5; full and BO fitted gains agree to leading order."
+      ]
+    ]
+  ],
+  [
+    "Seat A \u00b7 item 5 \u00b7 changed supplement cards",
+    [
+      [
+        "A.S2 \u00b7 SL",
+        "Population isolation plus an assumed uniform null BF bound gives fixed-threshold exclusion.",
+        "NEEDS-HYPOTHESIS: specify prior odds and subset-size domain; a uniform null BF bound alone does not give PIP\u21920.",
+        "DESIGN-ASSERTED: no uniform SL-prior/iteration demonstration filed.",
+        "GAP",
+        "REPAIRED: population cancellation and fixed threshold. NOT REPAIRED: uniform BF/rate obligation moved into hypotheses.",
+        "c: assumed Bayes-factor conclusion is not a model/design hypothesis",
+        "W1-PC1 \u00a710; E-SL: literal \u03bb_1=1 gives PIP=1 despite BF\u21920. Numerical LH rerun is promised, not present."
+      ],
+      [
+        "A.S3 \u00b7 D",
+        "Trajectory/search accounting and same-units SL comparison replace a speed claim.",
+        "TRUE-AS-WRITTEN as corrected counting and comparison scope.",
+        "DESIGN-VERIFIED: actual budget loops and finite runs.",
+        "GAP: integrated execution DAG/rate audit remains.",
+        "REPAIRED: each T/search counted separately; workers, n/p, T, score cost, loss named; no exact-\u03c0 claim.",
+        "c: execution model; MA-PropD author-only; Cost-T38 XF GAP",
+        "W1-PC1 \u00a713; W1-PC2 D6. No new speed-up theorem or particle-parallel depth assertion."
+      ],
+      [
+        "A.S4 \u00b7 Z",
+        "Terminal-off bound allows exceptions and crude variance uses global oscillation.",
+        "TRUE-AS-WRITTEN: retain filed source exception-probability statement.",
+        "DESIGN-VERIFIED: finite full-space d; inherited masked family.",
+        "PLAUSIBLE",
+        "REPAIRED: exception\u22642sqrt(\u03b4\u2081), conditional division by \u03ba, deterministic full-space D.",
+        "FMP-Na XF GAP; exact-refresh formula not substituted",
+        "W1-PC1 \u00a715. OPW2-ThmA stays PROVED (SF: none; XF: VERIFIED (A-REV9)); T26 overall remains CONJECTURE."
+      ],
+      [
+        "A.S5 \u00b7 TARGET; S7 \u00b7 POOL",
+        "Target equivariance, IG constant, normalized h, and one-record marginal scopes are corrected.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a7\u00a714,20.",
+        "DESIGN-VERIFIED: filed finite designs, ties, and recording laws.",
+        "PLAUSIBLE",
+        "REPAIRED: target-only invariance; tie-free algorithm qualifier; 2\u03bdb\u2080; h\u2208[0,1]; uniform recording-state marginal; \u201ciff\u201d dropped.",
+        "No new algorithmic symmetry or unweighted-population exactness claim",
+        "Prop2(c) filed check reused. K76 remains seat-proved, unchecked; T01 qualifier retained."
+      ],
+      [
+        "A.S8 \u00b7 CERT",
+        "Weak local maxima, per-search scans, exact certificate completion, and deterministic score perturbations.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a717 and checked certificate lemmas.",
+        "DESIGN-VERIFIED: filed duplicate-tie example and finite scan arithmetic.",
+        "PLAUSIBLE",
+        "REPAIRED: ties allowed; unsupported rounding K107 deferred; exact perturbation K108 retained.",
+        "N16 OPEN; numerical card still needs SC+VAL-FP",
+        "Returned unscanned local_limit point gets no local certificate; unresolved region search gives no outside-region guarantee."
+      ],
+      [
+        "A.S9 \u00b7 duplicate numeric limit",
+        "Two duplicate columns under the ridge/BB target have limiting PIP 2/3.",
+        "COUNTEREXAMPLE without p=2 qualification: add one orthogonal null; duplicate PIP\u21923/5.",
+        "DESIGN-VERIFIED: p=3, fixed signal/noise; actual BB prior and singular Gram allowed.",
+        "PLAUSIBLE: label 2/3 as the W1 p=2 example.",
+        "REPAIRED DIFFERENTLY: symmetry formula is correct; new numeric paraphrase overgeneralizes the example.",
+        "prior odds depend on p and selected background size",
+        "E-duplicates: PIP=.601942,.600627,.600199 at n=400,4000,40000. Pair/single prior ratio=1/(p\u22121)."
+      ],
+      [
+        "A.S10 \u00b7 KL/TV/BLOCKS",
+        "Thermodynamic length, minorization, squared-kernel mixture, graph, and SIZE qualifications.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a7\u00a716,19.",
+        "DESIGN-VERIFIED: filed finite kernels and built-block designs.",
+        "PLAUSIBLE",
+        "REPAIRED: \u039b_len renamed; 1/M; R\u2082=(1/m)sum P_j\u00b2; p\u22652; SIZE.",
+        "c: positive minimum/range constants; no general mixing-rate conclusion",
+        "The graph p=1 exception is now explicit. Preservation and equality of groups are distinguished."
+      ],
+      [
+        "A.S11 \u00b7 STG-ideal",
+        "Favourable ideal depth is conditional on LL or the over-tilted truth-mass bound.",
+        "TRUE-AS-WRITTEN as a conditional statement.",
+        "DESIGN-ASSERTED: no newly verified LL family supplied.",
+        "GAP: LL/upper-tilt input still needs a design route.",
+        "REPAIRED: unconditional favourable inference removed; crossings require separated pair-dominance.",
+        "c: LL is not itself a model/design condition; d: ideal grid",
+        "W1-PC1 \u00a79. STG-F remains PROVED (SF: none; XF: none); W\u2032 production-grid transfer remains GAP."
+      ]
+    ]
+  ],
+  [
+    "Seat B \u00b7 item 5 \u00b7 changed supplement cards",
+    [
+      [
+        "B.S1 \u00b7 SL",
+        "Population nullity and fixed-threshold exclusion are posed under SL\u2019s actual prior.",
+        "NEEDS-HYPOTHESIS: uniform-in-iteration BF control and prior odds are unclosed; fixed FDR level is not a fixed PIP threshold.",
+        "DESIGN-ASSERTED for the exclusion theorem; finite g=5,p=60 partition is verified.",
+        "GAP",
+        "REPAIRED: population covariance and SIZE. NOT REPAIRED: iteration-uniform prior/FDR step, acknowledged as GAP.",
+        "c: specify \u03bb_s/(1\u2212\u03bb_s) and subset growth; d: fixed PIP threshold is a variant",
+        "E-partition verifies B=7 at n=100,p=60. Song\u2013Liang \u00a7\u00a72.3,3.1 and W1-PC1 \u00a710; promised numerical fallback is not a theorem."
+      ],
+      [
+        "B.S3 \u00b7 D; S4 \u00b7 Z",
+        "Per-trajectory accounting, same-units comparison, tail exceptions, and global-range variance scope.",
+        "TRUE-AS-WRITTEN: use corrected W1 scopes.",
+        "DESIGN-VERIFIED: actual finite budget loops and inherited finite laws.",
+        "GAP: integrated DAG/rate audit remains.",
+        "REPAIRED: own T/search counts; worker/n-p/T/score/loss accounting; exception-probability form; deterministic full-space D.",
+        "Cost-T38 XF GAP; FMP-Na XF GAP; no exact-refresh substitution",
+        "W1-PC1 \u00a7\u00a713,15; W1-PC2 D6. Imported exponential-tail clause must retain all named source hypotheses, as B stipulates."
+      ],
+      [
+        "B.S5 \u00b7 KERNEL; S9 \u00b7 IDENT",
+        "Sufficient reversibility, graph exception, squared-mixture minorization, and thermodynamic length.",
+        "TRUE-AS-WRITTEN for the revised mathematical scopes.",
+        "DESIGN-VERIFIED: filed finite kernels and built blocks.",
+        "PLAUSIBLE",
+        "REPAIRED: need-not fixed order; p\u22652; 1/M; squared R\u2082; \u039b_len.",
+        "c: N3 tie-DP is still OPEN; do not convert its assumption into a code fact",
+        "CHK \u00a75; W1-PC1 \u00a7\u00a716,19. No new implementation proof is supplied for tie-aware DP."
+      ],
+      [
+        "B.S6 \u00b7 withdrawals",
+        "Quantitative barrier and flag-power claims are withdrawn; qualitative limitations remain.",
+        "TRUE-AS-WRITTEN: cite filed counterexamples and corrected scope.",
+        "DESIGN-VERIFIED: inherited barrier/genealogy/oracle constructions.",
+        "PLAUSIBLE",
+        "REPAIRED DIFFERENTLY: implausible k-way bound and Gaussian flag formula withdrawn, not proved.",
+        "K99 quantitative/K80 FUTURE_WORK; no universal detection claim",
+        "W1-PC1 \u00a718. The stated qualitative SHARE-PB remark does not imply the withdrawn W(2p)^\u2212k rate."
+      ],
+      [
+        "B.S6 \u00b7 duplicate numeric limit",
+        "Two duplicates under the ridge/BB target have limiting PIP 2/3.",
+        "COUNTEREXAMPLE without p=2 qualification: p=3 with an orthogonal null gives 3/5.",
+        "DESIGN-VERIFIED: actual fixed-p BB target and duplicate design.",
+        "PLAUSIBLE: restrict the numerical example.",
+        "REPAIRED DIFFERENTLY: general symmetry formula correct; unqualified numeric limit remains false.",
+        "same issue as A.S9; not an estimator effect",
+        "E-duplicates. General two-duplicate/orthogonal-null limit is p/(2p\u22121); background selected predictors change the odds further."
+      ],
+      [
+        "B.S7 \u00b7 TARGET; S8 \u00b7 CERT",
+        "Target-only symmetry, \u03b7<1 odds, weak local maximum, and exact perturbation certificates.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a7\u00a717,20.",
+        "DESIGN-VERIFIED: filed duplicate/tie and finite-law examples.",
+        "PLAUSIBLE",
+        "REPAIRED: tie caveat, \u03b7<1, ties allowed; unsupported rounding bound withdrawn to K107.",
+        "T01 external review queued; N16 OPEN; SC+VAL-FP gate retained",
+        "The weak-local-maximum statement repairs the tie counterexample. Exact B&B gives unresolved on budget exhaustion."
+      ],
+      [
+        "B.S10 \u00b7 PIP-eq",
+        "TV bias uses a uniform recording-state marginal; splitting is an exact-refresh comparison.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a714.",
+        "DESIGN-VERIFIED: filed finite recording law.",
+        "PLAUSIBLE",
+        "REPAIRED: population-versus-state type error; split clause explicitly idealized.",
+        "d: exact refresh; general LH locking remains XF ERROR",
+        "MA-CorV remains PROOF SKETCH. No four-round finite-R variance ordering is asserted."
+      ]
+    ]
+  ],
+  [
+    "Seat D \u00b7 item 5 \u00b7 changed supplement cards",
+    [
+      [
+        "D.M13 \u00b7 D",
+        "Work/depth accounting and SL comparison use own trajectories and matched units.",
+        "TRUE-AS-WRITTEN as corrected accounting, not a speed theorem.",
+        "DESIGN-VERIFIED: finite actual-budget loops.",
+        "GAP: integrated DAG and displayed rate audit remain.",
+        "REPAIRED: per-T/search counts; workers, n/p, T, score cost, loss scope; no exact-\u03c0 output.",
+        "MA-PropD author-only; Cost-T38 XF GAP",
+        "W1-PC1 \u00a713 and W1-PC2 D6."
+      ],
+      [
+        "D.S1,S2,S4 \u00b7 target/graph/output",
+        "Target symmetry, graph p\u22652, SIZE, and adaptive islands \u201cneed not preserve\u201d wording.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a7\u00a73,19,20.",
+        "DESIGN-VERIFIED: filed finite/tie/block examples.",
+        "PLAUSIBLE",
+        "REPAIRED: target-only symmetry; p\u22652; preservation versus equality; adaptive wording.",
+        "c: IND-T/GUARD-W/N3 audits remain; approved n=2 extension is not an implemented fact",
+        "Unchanged target/worker lemmas are not re-proved. Fixed-p dispatch stays seat-proved, unchecked."
+      ],
+      [
+        "D.S6 \u00b7 evidence / envelope",
+        "Tail exceptions and global pathwise variance replace an unsupported regional bracket.",
+        "TRUE-AS-WRITTEN: Var(W)\u2264e^{2 osc_\u03a9 d}\u22121 follows from the filed pathwise range.",
+        "DESIGN-VERIFIED: finite full-space discrepancy; N17 provides a global envelope.",
+        "PLAUSIBLE",
+        "REPAIRED DIFFERENTLY: valid global envelope replaces regional covering; global D and exception form retained.",
+        "S-C; no 1/N rate claimed by the replacement bound",
+        "W1-PC2 D14/D5; W1-PC1 \u00a715. The bound is conservative and may be uninformative."
+      ],
+      [
+        "D.S8 \u00b7 terminal-law TV",
+        "Shipped logarithmic burn-in is useful iff M\u2081=O(1).",
+        "AMBIGUOUS: bounded M\u2081 is sufficient; item 7 correctly gives the broader L/M\u2081\u2192\u221e criterion.",
+        "DESIGN-VERIFIED: C family has M\u2081=O_P(1).",
+        "PLAUSIBLE with item-7 wording.",
+        "New \u201ciff useful\u201d wording should be replaced by the explicit rate criterion.",
+        "c: M\u2081 is a target/start ratio, not an observed mixing diagnostic",
+        "E.g. M\u2081\u2248sqrt(log n) still gives (1\u22121/M\u2081)^{L_n}\u21920. Filed minorization itself is unchanged."
+      ],
+      [
+        "D.S9,S11 \u00b7 rounding/duplicates",
+        "Unsupported rounding is deferred; duplicate symmetry uses expected group size.",
+        "TRUE-AS-WRITTEN: cite W1-PC1 \u00a7\u00a717\u201318.",
+        "DESIGN-VERIFIED: filed finite duplicate and score-perturbation examples.",
+        "PLAUSIBLE",
+        "REPAIRED: K107 removed; K108 retained; PIP=E[group size]/d; 1/d needs one selected asymptotically.",
+        "N16 OPEN; no unqualified 2/3 numeric limit inserted here",
+        "D\u2019s general duplicate correction is sound. Rigorous numerical certificates still require SC+VAL-FP."
+      ]
+    ]
+  ],
+  [
+    "Seat A \u00b7 item 6 \u00b7 \u00a7R6 item 7 growth rates",
+    [
+      [
+        "A.growth \u00b7 R\u2032,\u2113,L,N,T",
+        "Stacking rate is explicit; other main-card budgets remain the shipped functions.",
+        "TRUE-AS-WRITTEN for consistency on C\u2019s verified family.",
+        "DESIGN-VERIFIED: C family has bounded D_* and target concentration.",
+        "PLAUSIBLE",
+        "REPAIRED DIFFERENTLY: R\u2032_n=4ceil(log\u2082(n+p)) replaces sampler-M premise.",
+        "c: implementation gates; d: stacking edit must be recorded",
+        "\u2113=ceil(log\u2082(n+p+1)) suffices for fixed c on LH; L,N already depend on n,p. The separate fixed-data N\u2192\u221e LLN is an auxiliary limit, not a new shipped budget."
+      ]
+    ]
+  ],
+  [
+    "Seat B \u00b7 item 6 \u00b7 \u00a7R6 item 7 growth rates",
+    [
+      [
+        "B.growth \u00b7 R\u2032 and summaries",
+        "Explicit logarithmic or polynomial stacking controls fixed or polynomially many declared summaries.",
+        "TRUE-AS-WRITTEN: finite-R bound and filed C budget union bound.",
+        "DESIGN-VERIFIED: C family; at most (n+p)\u00b2 summaries.",
+        "PLAUSIBLE",
+        "REPAIRED DIFFERENTLY: R\u2032=4ceil(log\u2082(n+p)); simultaneous R\u2032=4ceil((n+p)^6/4).",
+        "d: optional stacking, not particle splitting; IND-T extension audit pending",
+        "Rates are explicit in n,p; no random realized M is used as a budget hypothesis."
+      ],
+      [
+        "B.growth \u00b7 T_e,L,\u2113,N",
+        "Stage success is budget-conditional; terminal-TV rates require sufficient burn-in.",
+        "TRUE-AS-WRITTEN as a conditional accounting/remark, not a model/design success theorem.",
+        "DESIGN-VERIFIED: C family supplies useful L via bounded global oscillation.",
+        "PLAUSIBLE",
+        "REPAIRED: no masked coded-T or universal delivery rate claimed.",
+        "c: T_e\u2265reported bound is a sampler-budget condition; exp(osc d) can be replaced by design envelope",
+        "A sufficient declared rate is L\u2265exp(D_bound)log(1/\u03b5) when such a global bound is available. No rate claimed for masked families."
+      ]
+    ]
+  ],
+  [
+    "Seat D \u00b7 item 6 \u00b7 \u00a7R6 item 7 growth rates",
+    [
+      [
+        "D.growth \u00b7 R\u2032,L,\u2113,N",
+        "Logarithmic stacking and shipped burn-in/search budgets have explicit consistency scopes.",
+        "TRUE-AS-WRITTEN: under L_n\u2192\u221e, the displayed contraction bound vanishes iff L_n/M\u2081\u2192\u221e.",
+        "DESIGN-VERIFIED: C family; fixed c LH for search.",
+        "PLAUSIBLE",
+        "REPAIRED DIFFERENTLY: R\u2032=4ceil(log\u2082(n+p+1)); no unknown-M budget premise.",
+        "c: non-model computational gates remain; d: stacking configuration",
+        "Bounds use design-computable d/D_*; their growth is verified on C\u2019s family, not asserted uniformly over masked designs."
+      ]
+    ]
+  ]
+]
