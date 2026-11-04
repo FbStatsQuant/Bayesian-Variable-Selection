@@ -1,6 +1,6 @@
 # MEET-THM · STATUS (chair)
 
-Updated 2026-11-04 02:24 UTC.
+Updated 2026-11-04 02:27 UTC.
 
 | Step | State |
 |---|---|
@@ -15,7 +15,7 @@ HQ questions: none yet (`HQ_QUESTIONS.md` not opened).
 ## Running tasks (delegate task ids, suffix only)
 | Role | Target | Task |
 |---|---|---|
-| Seat A, R1 | claudeAgent_personal · Fable 5.1 high | …d888db24-7ff9-4c9a-88e8-2c6fc7ae19f5 |
+| Seat A, R1 | claudeAgent_personal · Fable 5.1 high | done → `R1_A.md` |
 | Seat B, R1 | claudeAgent · Fable 5.1 high | done → `R1_B.md` |
 | Seat C, R1 | codex · gpt-6-astra high | done → `R1_C.md` |
 | Seat D, R1 | claudeAgent_personal · Fable 5.1 high | …8a2ff402-1ed1-46dd-958a-86bec5768981 |
