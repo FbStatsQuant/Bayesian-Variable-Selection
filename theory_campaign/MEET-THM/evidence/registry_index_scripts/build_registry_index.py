@@ -35,6 +35,8 @@ LOCK = srcfile(LOCKP).split('\n')
 LIST = srcfile(LISTP).split('\n')
 INP = srcfile(INPP).split('\n')
 INV = srcfile(INVP).split('\n')
+PC1T = srcfile(D.PC1).split('\n')
+PC2T = srcfile(D.PC2).split('\n')
 
 # ---- head SHAs of the source branches (for the provenance block) ----
 def head(b):
@@ -575,7 +577,7 @@ def stage4_false():
     add('THEOREM_LIST S3 Prop M (naive merge)', LIST, r'S3. Proposition M', LISTSRC, 'A-DRAFT Prop M / SHARE-M(b): ERROR (A-REV3/A-REV6); FD-NM ERROR, repair pending … **Decision:** drop.')
     add('THEOREM_LIST R3: literal T37/TD, H24', LIST, r'Literal T37/TD retired', LISTSRC, 'Literal T37/TD retired (Prop1-TD, CEX1/2 COUNTEREXAMPLE); H24 retired (CE1/CE2).')
     add('THEOREM_LIST R3: cap-free lattice restatement', LIST, r'cap-free lattice restatement ERROR', LISTSRC, 'cap-free lattice restatement ERROR (A-REV5): keep the capped lattice')
-    add('THEOREM_LIST V4: literal GUARD wording', LIST, r'literal "every output equals" wording ERROR', LISTSRC, 'GUARD implementation fact HOLDS, literal "every output equals" wording ERROR (A-REV8: statistical scope only)')
+    add('THEOREM_LIST V4: literal GUARD wording', LIST, r'^"every output equals" wording ERROR', LISTSRC, 'GUARD implementation fact HOLDS, literal "every output equals" wording ERROR (A-REV8: statistical scope only)')
     add('THEOREM_LIST A1: F-MASKPIP M3', LIST, r'THM-INV records M3 as XF ERROR', LISTSRC, 'Do **not** cite F-MASKPIP M3 for this: THM-INV records M3 as XF ERROR.')
     add('THEOREM_LIST R5: c = 2 iid-budget clause of (b1-LH)', LIST, r'the c = 2 clause stays as repaired', LISTSRC, 'the c = 2 clause stays as repaired (V18)')
     add('THM-INV row 2: W2-T26 exact-branch remark', INV, r'W2-T26 exact-branch remark ERROR', INVSRC, 'W2-T26 exact-branch remark ERROR (A-REV5)')
@@ -608,50 +610,75 @@ def stage4_conflicts():
         w(f"| {c[0]} | {esc(c[1])} | {esc(c[2])} | `{REGBASE}REGISTRY_v2.md:L{i+1}` |")
         nconf += 1
     w()
-    w('### 5.B Conflicts found by the registrar between the draft list, the registry, the inventory, the revision inputs and the locked register')
+    w('### 5.B Conflicts found by the registrar between the draft list, the registry, the inventory, the revision inputs, the locked register and the proof checks')
     w()
-    w('Each row: both statements verbatim with path and line. Marked **CONFLICT**; no resolution is proposed.')
+    w('Each row: both statements verbatim, each with its own source path and line. Marked **CONFLICT**; no resolution is proposed.')
     w()
     w('| # | CONFLICT | Side 1 (verbatim, source) | Side 2 (verbatim, source) |')
     w('|---|---|---|---|')
     LOCKED_T = open(os.path.join(ROOT, 'Docs/Theory/proofs/LOCKED_PROOFS.md'), encoding='utf-8').read().split('\n')
-    def ln(lines, pat):
+    DOSS = open(os.path.join(ROOT, 'theory_campaign/MEET-THM/DOSSIER.md'), encoding='utf-8').read().split('\n')
+    MARL = srcfile(D.MAR).split('\n')
+    CONC = 'origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_concurrency_runs.md'
+    CONCL = srcfile(CONC).split('\n')
+    T09P = 'origin/theory/campaign:Docs/Theory/proofs/T09_T7_kernel_validity/STATEMENT.md'
+    T09L = open(os.path.join(ROOT, 'Docs/Theory/proofs/T09_T7_kernel_validity/STATEMENT.md'), encoding='utf-8').read().split('\n')
+    LOCKEDP = 'origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md'
+    DOSSP = 'origin/theory/campaign:theory_campaign/MEET-THM/DOSSIER.md'
+    def R(path, lines, pat):
         for i, l in enumerate(lines, 1):
             if re.search(pat, l):
-                return i
-        raise SystemExit('missing ' + pat)
+                return f'`{path}:L{i}`'
+        raise SystemExit('missing ' + pat + ' in ' + path)
     CF = []
-    def cf(name, s1, p1, l1, s2, p2, l2):
-        CF.append((name, s1, f'`{p1}:L{l1}`', s2, f'`{p2}:L{l2}`'))
-    MAR = srcfile(D.MAR).split('\n'); CONC = srcfile('origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_concurrency_runs.md').split('\n')
-    cf('C-V2 (Prop W executed designs)', 'V2: "Prop W PROVED (code reading) with the executed check PASSED on the smoke problem and on **1/1 completed design** (p0500_S1_r001; …treat METH-AUDIT\'s \"3/3\" as 1/1 + smoke)"', LISTSRC, ln(LIST, r'1/1 completed design'),
-       'METH-AUDIT: "…on the smoke problem and on 3/3 study designs (§6)"; MEET-v31 evidence file lists three designs (p0500_S1_r001, p0500_S4_r001, p0500_S5_r002) each "bitwise logZ TRUE pip TRUE hpm TRUE"; INPUTS §2 V2: "Executed: **smoke + 3/3 study designs**"',
-       D.MAR + ' ; origin/theory/MEET-v31:theory_campaign/MEET-v31/evidence/2026-11-03_concurrency_runs.md ; ' + INPSRC, ln(MAR, r'3/3 study designs'))
-    cf('C-V5 (V5 / N9: kernel reversibility, self-adjointness, exact start sampler: "no registry row")', 'V1(iii): "V5 (reversibility and self-adjointness) holds by construction, consultant-checked, but has **no registry row** (THM-INV §5.12)"; INPUTS N9: "by construction, consultant-checked, **no registry row**"', LISTSRC, ln(LIST, r'has \*\*no registry row\*\*'),
-       'LOCKED_PROOFS.md wave-1 row T09 (T7), all parts (i)-(v): "The exact start sampler draws from the start law pi0 with the right normaliser. Every elementary move (Gibbs, swaps, independence) and the randomly ordered round leave the bridge distribution invariant."; `STATEMENT.md` T09 (ii) "Each elementary kernel … is q_φ-reversible", (iii) "K_φ is … self-adjoint on L²(q_φ)"',
-       'origin/theory/campaign:Docs/Theory/proofs/LOCKED_PROOFS.md (and T09_T7_kernel_validity/STATEMENT.md:L43-L45)', ln(LOCKED_T, r'\*\*T09\*\* \(T7\)'))
-    cf('C-M3 (F-MASKPIP M3)', 'A1(v): "Do **not** cite F-MASKPIP M3 for this: THM-INV records M3 as XF ERROR."', LISTSRC, ln(LIST, r'Do \*\*not\*\* cite F-MASKPIP M3'),
-       'D3(iii): "assembly of V1 …, A1 (PROOF SKETCH), D1 (PROVED counting), D2 (…), **M3 (PROVED)**, R5 …"; registry `FMP-M3`: author PROVED, XF **ERROR** (A-REV9)', LISTSRC, ln(LIST, r'M3 \(PROVED\)'))
-    cf('C-LS0 (is LS0 in the method?)', 'THM-INV §0 headline 1 / §1 row 12 / §2 ledger: "with LS0 (Thm 5(b1), A-REV8 VERIFIED), which is a method change absent from the production core"; "LS0 is not in production (API-AUDIT)"', INVSRC, ln(INV, r'LS0 is not in production'),
-       'REGISTRY_v2.md §I: "LS0 is part of the method: approval in effect after O-LS0 (0/2,394 HPM changes …)"; INPUTS M2: "LS0 in the shipped core, after the final local search"; METH-AUDIT REPORT: "LS0 is not in the production core (API-AUDIT fact 3)"', REGBASE + 'REGISTRY_v2.md ; ' + INPSRC, ln(REG, r'LS0 is part of the method'))
-    cf('C-HEADROOM (R6 "≈ 4× headroom")', 'R6: "under v3.1 (concurrent islands, Prop W) the same allocation gives ≈ 4× headroom"', LISTSRC, ln(LIST, r'4× headroom'),
-       'INPUTS §2 R6: "**\\"≈ 4× headroom\\" is not measured** (1.9× on 2 cores)"', INPSRC, ln(INP, r'is not measured'))
-    cf('C-FREE (D1 depth "free of N, H, R")', 'D1(c): "Depth, particle-parallel … **free of N, H and R**"; summary row D1: "Depth (I+2)(T+L+4)(p+B+2) score evaluations, free of N, H, R with particle-parallel islands"', LISTSRC, ln(LIST, r'free of N, H and R'),
-       'INPUTS M13/§2 D1: "\\"Free of N, H, R\\" (TL:29, 309) … are particle-parallel, v3.2 only (C6)"; M13: "\\"Free of N, H, R\\" dropped for v3.1"', INPSRC, ln(INP, r'dropped for v3\.1'))
-    cf('C-A2DOWN (A2 "can only fail downward")', 'A2(ii) plainly: "in the masked regime it can only fail *downward*, by an amount the run can partly certify"', LISTSRC, ln(LIST, r'can only fail \*downward\*'),
-       'PC1 claim 4: "Verdict: PROVED (C\'s COUNTEREXAMPLE is valid). It applies to A2\'s plain-language sentence and to its table row as written."', D.PC1, ln(PC1T, r'COUNTEREXAMPLE is valid'))
-    cf('C-ZUP (INV "upper bound on Z impossible")', 'THM-INV §1 row 9: "(an upper bound on Z is impossible from a run, MASKZPIP)"', INVSRC, ln(INV, r'upper bound on Z is impossible'),
-       'PC1 claim 1: "Verdict: PROVED. … Z ≤ C_n(2b₀ + yᵀy/(n+1))^{−ν}"; INPUTS N17: "INV\'s wording is literally false; correct to \\"no useful upper bound\\""', D.PC1, ln(PC1T, r'Claim 1'))
-    cf('C-PRIMARY (which PIP is primary)', 'THM-INV §1 row 10: "PIPs (Rao–Blackwellised; equal-weight primary, Ẑ-weighted secondary)"', INVSRC, ln(INV, r'equal-weight primary'),
-       'INPUTS M4: "**Ẑ-weighted PIP primary; equal-weight named secondary.**"', INPSRC, ln(INP, r'Ẑ-weighted PIP primary'))
-    cf('C-PROMOTED (Prop 2(a,b,d,e) status)', 'THEOREM_LIST V1(iii): "Prop 2(a,b,d,e) PROVED-LOCKED"', LISTSRC, ln(LIST, r'Prop 2\(a,b,d,e\) PROVED-LOCKED'),
-       'registry `Prop2(a,b,d,e)`: author status "PROVED", XF "GAP"; not in LOCKABLE_v2 §1 strict list (only `Prop2(c)` is); the locked wave-1 result is T12 (LOCKED_PROOFS.md)', REGBASE + 'REGISTRY_v2.md ; LOCKABLE_v2.md', ROWS['Prop2(a,b,d,e)']['line'])
-    cf('C-ASTRA (LIST "ADRAFT-ThmA PROVED (Astra only)" vs registry SF column)', 'V1 summary row: "ADRAFT-ThmA PROVED (Astra only)"', LISTSRC, ln(LIST, r'ADRAFT-ThmA PROVED \(Astra only\)'),
-       'registry `ADRAFT-ThmA`: SF "**VERIFIED*** — A-REV4 … (Astra checking Astra\'s A-DRAFT: independent of the author\'s run, NOT cross-family relative to it)"; XF "none" (consistent; wording only: the registry places the Astra-on-Astra check in the SF column)', REGBASE + 'REGISTRY_v2.md', ROWS['ADRAFT-ThmA']['line'])
-    cf('C-TLCOUNT (number of draft-list items)', 'task text / `theory_campaign/MEET-THM/DOSSIER.md` line 47: "Draft theorem list (19 items G1–G6, tiers, HQ plan)"; task text: "19 items V1–V4, A1–A4, D1–D4, S1–S4, C1, R1–R7"', 'origin/theory/campaign:theory_campaign/MEET-THM/DOSSIER.md', ln(open(os.path.join(ROOT,'theory_campaign/MEET-THM/DOSSIER.md'),encoding='utf-8').read().split('\n'), r'19 items'),
-       'the labels listed enumerate to 4+4+4+4+1+7 = 24; the summary table has 23 rows (V1–V4, A1–A4, D1–D4, S1–S3, C1, R1–R7) and S4 is the body section "### S4." (THEOREM_LIST.md has no sentence stating a total). No source says which 19 are meant', LISTSRC, ln(LIST, r'### S4\.'))
-    for i, (name, s1, p1, s2, p2) in enumerate(CF, 1):
-        w(f"| B{i} | **CONFLICT** {esc(name)} | {esc(s1)} — {p1} | {esc(s2)} — {p2 if p2.startswith('`') else '`'+p2+'`'} |")
+    def cf(name, s1, s2):
+        CF.append((name, s1, s2))
+    cf('C-V2 (Prop W: how many designs were executed)',
+       'V2: "…executed check PASSED on the smoke problem and on **1/1 completed design** (p0500_S1_r001; the task file says treat METH-AUDIT\'s \"3/3\" as 1/1 + smoke)" — ' + R(LISTSRC, LIST, r'1/1 completed design'),
+       'METH-AUDIT: "…on the smoke problem and on 3/3 study designs (§6)" — ' + R(D.MAR, MARL, r'3/3 study designs') +
+       '; MEET-v31 evidence lists three designs p0500_S1_r001, p0500_S4_r001, p0500_S5_r002, each "bitwise logZ TRUE pip TRUE hpm TRUE" — ' + R(CONC, CONCL, r'p0500_S4_r001 c050') +
+       '; INPUTS §2 V2: "Executed: **smoke + 3/3 study designs**" — ' + R(INPSRC, INP, r'Executed: \*\*smoke \+ 3/3'))
+    cf('C-V5 (V5 / N9: kernel reversibility, self-adjointness, exact start sampler — "no registry row")',
+       'V1(iii): "V5 (reversibility and self-adjointness) holds by construction, consultant-checked, but has **no registry row** (THM-INV §5.12)" — ' + R(LISTSRC, LIST, r'has \*\*no registry row\*\*') +
+       '; INPUTS N9: "by construction, consultant-checked, **no registry row**" — ' + R(INPSRC, INP, r'no registry row\*\*\s*\(INV'),
+       'LOCKED_PROOFS.md wave-1 row T09 (T7), all parts (i)-(v): "The exact start sampler draws from the start law pi0 with the right normaliser. Every elementary move (Gibbs, swaps, independence) and the randomly ordered round leave the bridge distribution invariant." — ' + R(LOCKEDP, LOCKED_T, r'\*\*T09\*\* \(T7\)') +
+       '; T09 STATEMENT (ii): "Each elementary kernel … is q_φ-reversible" — ' + R(T09P, T09L, r'\*\*\(ii\)\*\* Each elementary kernel') +
+       '; (iii): "K_φ is a Markov kernel, q_φ-invariant, and self-adjoint on L²(q_φ)" — ' + R(T09P, T09L, r'\*\*\(iii\)\*\* K_φ is a Markov kernel'))
+    cf('C-M3 (F-MASKPIP M3)',
+       'A1(v): "Do **not** cite F-MASKPIP M3 for this: THM-INV records M3 as XF ERROR." — ' + R(LISTSRC, LIST, r'Do \*\*not\*\* cite F-MASKPIP M3'),
+       'D3(iii): "assembly of V1 (KNOWN—CITE + locked), A1 (PROOF SKETCH), D1 (PROVED counting), D2 (PROVED ideal grid / OPEN as-coded), **M3 (PROVED)**, R5 …" — ' + R(LISTSRC, LIST, r'M3 \(PROVED\)') +
+       '; registry `FMP-M3`: author PROVED, XF **ERROR** (A-REV9) — `' + REGBASE + 'REGISTRY_v2.md:L' + str(ROWS['FMP-M3']['line']) + '`')
+    cf('C-LS0 (is LS0 in the method / the production core?)',
+       'THM-INV §1 row 12: "LS0 absent from production (API-AUDIT)" — ' + R(INVSRC, INV, r'LS0 absent from production') + '; §2 ledger: "**ID: LS0 is not in production** (API-AUDIT)" — ' + R(INVSRC, INV, r'ID: LS0 is not in production') +
+       '; METH-AUDIT: "**LS0 is not in the production core** (API-AUDIT fact 3)" — ' + R(D.MAR, MARL, r'LS0 is not in the production core'),
+       'REGISTRY_v2.md §I: "**LS0 is part of the method**: approval in effect after O-LS0 (0/2,394 HPM changes …)" — ' + R(REGBASE + 'REGISTRY_v2.md', REG, r'\*\*LS0 is part of the method\*\*') +
+       '; INPUTS M2: "**LS0 in the shipped core, after the final local search.**" — ' + R(INPSRC, INP, r'LS0 in the shipped core'))
+    cf('C-HEADROOM (R6 "≈ 4× headroom")',
+       'R6: "…under v3.1 (concurrent islands, Prop W) the same allocation gives ≈ 4× headroom…" — ' + R(LISTSRC, LIST, r'4× headroom'),
+       'INPUTS §2 R6: "**\"≈ 4× headroom\" is not measured** (1.9× on 2 cores)" — ' + R(INPSRC, INP, r'is not measured'))
+    cf('C-FREE (D1 depth "free of N, H, R")',
+       'D1(c): "Depth, particle-parallel … **free of N, H and R**" — ' + R(LISTSRC, LIST, r'free of N, H and R') +
+       '; summary row D1: "…free of N, H, R with particle-parallel islands" — ' + R(LISTSRC, LIST, r'free of N, H, R with particle-parallel'),
+       'INPUTS M13: "\"Free of N, H, R\" dropped for v3.1" — ' + R(INPSRC, INP, r'dropped for v3\.1') +
+       '; INPUTS §2 D1: "\"Free of N, H, R\" (TL:29, 309) and the TL:29 summary formula are particle-parallel, v3.2 only (C6)" — ' + R(INPSRC, INP, r'are particle-parallel, v3\.2 only'))
+    cf('C-A2DOWN (A2 "can only fail downward")',
+       'A2(ii): "in the masked regime it can only fail *downward*, by an amount the run can partly certify" — ' + R(LISTSRC, LIST, r'can only fail \*downward\*'),
+       'PC1 claim 4: "Verdict: PROVED (C\'s COUNTEREXAMPLE is valid). It applies to A2\'s plain-language sentence and to its table row as written. It does not apply to A2\'s formal statement (iii)." — ' + R(D.PC1, PC1T, r'COUNTEREXAMPLE is valid'))
+    cf('C-ZUP (INV "an upper bound on Z is impossible")',
+       'THM-INV §1 row 9: "(an upper bound on Z is impossible from a run, MASKZPIP)" — ' + R(INVSRC, INV, r'upper bound on Z is impossible'),
+       'PC1 claim 1: "Verdict: PROVED … Z ≤ C_n(2b₀ + yᵀy/(n+1))^{−ν}" — ' + R(D.PC1, PC1T, r'^\*\*Verdict: PROVED\.\*\* It holds for the spec') +
+       '; INPUTS N17: "**INV\'s wording is literally false**; correct to \"no useful upper bound\"" — ' + R(INPSRC, INP, r"INV's wording is literally false"))
+    cf('C-PRIMARY (which PIP is primary)',
+       'THM-INV §1 row 10: "PIPs (Rao–Blackwellised; equal-weight primary, Ẑ-weighted secondary)" — ' + R(INVSRC, INV, r'equal-weight primary'),
+       'INPUTS M4: "**Ẑ-weighted PIP primary; equal-weight named secondary.**" — ' + R(INPSRC, INP, r'Ẑ-weighted PIP primary'))
+    cf('C-PROMOTED (status word of Prop 2(a,b,d,e))',
+       'THEOREM_LIST V1(iii): "Prop 2(a,b,d,e) PROVED-LOCKED" — ' + R(LISTSRC, LIST, r'Prop 2\(a,b,d,e\) PROVED-LOCKED'),
+       'registry `Prop2(a,b,d,e)`: author status "PROVED", XF "GAP" — `' + REGBASE + 'REGISTRY_v2.md:L' + str(ROWS['Prop2(a,b,d,e)']['line']) + '`; absent from the strict list of LOCKABLE_v2.md §1 (only `Prop2(c)` is there) — `' + REGBASE + 'LOCKABLE_v2.md:L' + str(LOCKCAT['Prop2(c)'][1]) + '`; the locked wave-1 result is T12 — ' + R(LOCKEDP, LOCKED_T, r'\*\*T12\*\* \(T8\)'))
+    cf('C-TLCOUNT (number of draft-list items)',
+       'DOSSIER: "Draft theorem list (19 items G1–G6, tiers, HQ plan)" — ' + R(DOSSP, DOSS, r'19 items') + '; the task statement: "19 items V1–V4, A1–A4, D1–D4, S1–S4, C1, R1–R7"',
+       'the labels enumerate to 4+4+4+4+1+7 = 24; the summary table has 23 rows (V1–V4, A1–A4, D1–D4, S1–S3, C1, R1–R7) — ' + R(LISTSRC, LIST, r'^\| C1 \|') + ' — and S4 is the body section "### S4." — ' + R(LISTSRC, LIST, r'### S4\.') + '; THEOREM_LIST.md states no total, and no source says which 19 are meant')
+    for i, (name, s1, s2) in enumerate(CF, 1):
+        w(f"| B{i} | **CONFLICT** {esc(name)} | {esc(s1)} | {esc(s2)} |")
     w()
     return nconf, len(CF)
 
