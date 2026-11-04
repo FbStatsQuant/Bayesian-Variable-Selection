@@ -69,7 +69,7 @@ The index of adverse rows is at PC1:17–52. §3 lists every repair it implies.
 
 **Seat C's bound (PC2:47–63).**
 - osc d ≤ D_*: no counterexample in 124 exact cases at p ≤ 10 (PC2:48–50). D_* is the design-computable quantity built from a, δ_A, δ_H, r (C:349–351).
-- M₂ ≤ e^{D_*} on every path of a coded-grid replica (PC2:52–55). Both remain Seat C's PROOF SKETCH.
+- On a coded-grid replica (1,600 islands, good and poor V), every island's W lay pathwise in [e^{−osc d}, e^{osc d}] (PC2:53–54); with E W = 1 this gives the moment statement M₂ ≤ e^{D_*} on every successful coded grid (PC2:55, 125). Both remain Seat C's PROOF SKETCH.
 
 **On the examined exhibit family** — one coefficient n^{−1/4} in each of two groups, σ² = 1, so signal energy is of order √n (C:364) — PC2 observed:
 - D_* is O(1) up to ε ≈ n^{−1/2}/p and grows at fixed ε;
@@ -82,7 +82,7 @@ Scope of that observation:
 
 **Seat B is not perturbative.** Seat B's route explicitly is **not** a perturbation of the orthogonal case: it goes through cross-block leakage CBL(η) and effective beta-min (B:499, 505).
 - PC1 found its favourable clause (F) and its every-grid χ² clause (S) TRUE-AS-WRITTEN, with design verified (PC1:143–144).
-- But its necessity clause (N) has a COUNTEREXAMPLE, and its new q₂ lemma route is IMPLAUSIBLE as stated (PC1:145, 147).
+- But its necessity clause (N) has a COUNTEREXAMPLE (PC1:147), and its new q₂ lemma route is IMPLAUSIBLE as stated (PC1:145).
 - So "every true form is perturbative" (v1) was wrong. Leakage-based clauses are on a different scale.
 
 **Seats A and D.**
@@ -153,20 +153,62 @@ Scope of that observation:
 | D2 | Thesis theorem CD, K96 | A, B, D: main assembly (A:94, B:89, D:98). C: drop as a theorem; a scoped paragraph (C:90) | Does CD state anything not implied by its parts? PC1:38 — the assembly must first absorb the weight, grid, SL and delivery repairs | Agenda 6: the seat keeping CD writes the non-corollary sentence; else it becomes a remark |
 | D3 | Theorem SL, K97 | A, B, D: main (A:100, B:95, D:104). C: defer (C:96) | PC1:37: SL's actual prior/λ_s rate, an iteration-uniform bound, and an FDR threshold bounded away from 0; B.D9(b) is a COUNTEREXAMPLE | Round 2 statements, check wave 2; otherwise FUTURE_WORK |
 | D4 | §5.3 package K102 (+K10, K11, K25, K53) | Four statements (SBS T4): C design-computable D_*; A, D η-perturbation; B leakage CBL + favourable start | Which statements survive the checks (§0.4); at what ε the constants are useful; whether a necessity proposition is provable; an IC3 exhibit on the method's own partition | One merged package with HQ's (a), (b), (c); check wave 2 |
-| D5 | Stage laws K25–K31 (clause level) | K26/K28–K30: A, B, D main; C supplement or cited (K28 cited, C:127; K29 future). K25: A, D main; B supplement (B:125); C supplement. K27: A, B main; D supplement (D:135); C merged into K25. K31 (Conjecture P, OPEN): A, D in main as OPEN; B, C future | An OPEN conjecture cannot be a list theorem. PC1 cluster 9: "exact/minimal coded grid" wording is false | Rule: OPEN → FUTURE_WORK or a provable fallback; restated clauses |
+| D5 | Stage laws K25–K31 (clause level) | K26/K30: A, B, D main; C supplement. K28 (thermodynamic-length / fine-grid limit): cited KNOWN—CITE inside the A, B, D packages (A:341, 346; B:264, 269; D:308, 313) and a cited lemma for C (C:127). K29: A, D main; B supplementary (B:264); C future (C:128). K25: A, D main; B supplement (B:125); C supplement. K27: A, B main; D supplement (D:135); C merged into K25. K31 (Conjecture P, OPEN): A, D in main as OPEN; B, C future | An OPEN conjecture cannot be a list theorem. PC1 cluster 9: "exact/minimal coded grid" wording is false | Rule: OPEN → FUTURE_WORK or a provable fallback; restated clauses |
 | D6 | Work/depth K87–K90 | A, C, D main (A:92, C:88, D:96); B supplement (B:87); C drops K90 as a theorem | PC1:39: the SL §6 comparison needs worker counts, n-vs-p scaling, T, score cost and a loss criterion | Agenda 11; restated comparison |
 | D7 | Evidence Z, K37–K41 | A main; B, D supplement; C cited lemmas (A:89, B:84, C:85, D:93) | IC4; PC1 cluster 15: the terminal-off COUNTEREXAMPLE | IC4 + agenda 11 |
 | D8 | Target consistency K93 | A, B, D main (short); C supplement (C:97) | MODEST novelty; it is an input to other cards | Agenda 11 |
-| D9 | Reported HPM details | **K71** (b1-LH-iid): all four defer. A defers "(b1-LH-iid) v2 (GAP)" (A:105), although A's card header lists it (A:474; SBS:122 flags the extraction conflict). **K70**: A, B, D main; C cites. **R5 split**: C keeps the no-LS0 STAB-LH variant "attributed" (C:101) | PC1 cluster 6: A.C18 needs SIZE (g_max ≤ B < 2g_min; DESIGN-FAILS without it); D.M5(a) needs ℓ ≥ τ(C) and a completed scan; liminf delivery form (D10) | Repairs; K71 → FUTURE_WORK (no seat holds it) |
+| D9 | Reported HPM details | **K71** (b1-LH-iid): all four defer. A defers "(b1-LH-iid) v2 (GAP)" (A:105), although A's card header lists it (A:474; SBS:122 flags the extraction conflict). **K70** ((b2-LH), the no-LS0 corollary on STAB-LH): D a supplementary corollary (D:109); B keeps it as a subfamily clause (B:100), while its card header reads main (B:279; SBS:121 flags the conflict); A inside main card C18 (A:470); C a cited lemma (C:148). **R5 split**: C keeps the no-LS0 STAB-LH variant "attributed" (C:101) | PC1 cluster 6: A.C18 needs SIZE (g_max ≤ B < 2g_min; DESIGN-FAILS without it); D.M5(a) needs ℓ ≥ τ(C) and a completed scan; liminf delivery form (D10) | Repairs; K71 → FUTURE_WORK (no seat holds it) |
 | D10 | Delivery K82 (R6) | A: OPEN limitation (A:106). B: not a theorem and not a limitation (B:101). C: defer (C:102). D: OPEN obligation (D:110) | The no-open-questions rule: a limitation must be PROVED impossible. PC1:30: liminf P(correct output) = 1 − limsup P(U_n) | Chair proposal: FUTURE_WORK (no route); every output theorem joint with the output event, in liminf form |
 | D11 | R_n in H(f); finite-R bounds | A, B, D: R_n a hypothesis via M_n (B:690). C: a stacking budget R′(n, p) | GR6: M_n is not a design condition. Where a design-computable bound on M₂ exists (e.g. C's e^{D_*}, PC2:52–55), R′_n can be written through it | Chair proposal: R′_n stated through a design-computable bound on families where it is finite (a growth-rate edit), else the fixed-R statement only |
 | D12 | Masked-regime accuracy statement (HQ Q3) | Not asked in Round 1 | Which one: certificate detection of underestimation (K42/K43/K45), a PIP bound conditional on delivery, or K69 (b1-LH) | Each seat names one |
 | D13 | List size | Main counts: A 18, B 11, D 13, C 7 (SBS T3) | Biometrika: about 6–8 main | Agenda 11: main ≤ 8 |
 | D14 | Minor placements | K16 supplementary for A, B, D; cited lemma for C. K11 (OWS-WS4): A, C, D main; B remark. K57: A, B, D supplement; C defer | — | Agenda 11 |
-| D15 | Song–Liang coverage verdicts | A, B, D map Thm 1–4, Cor 2, Thm S and present them as matched or exceeded (A:34–39, B:36–41, D:51–57). C: K93 is "not their Hellinger contraction theorem"; the start results "do not replace general KL-projection theory" (C:52, 55) | What may be called "matched/exceeded" in COVERAGE_MATRIX | Round 2: each seat's wording per SL item; Hellinger contraction → FUTURE_WORK unless routed |
+| D15 | Song–Liang coverage verdicts, per item | **Thm 1:** all four say selection only; Hellinger/coefficient contraction is not delivered (A:34, B:36, D:51); C adds "Do not mark this 'exceeded'" (C:52). **Thm 2:** the tail condition does not arise for fixed designs (A:35, B:37, D:52); C: fixed sparse support only (C:53). **Thm 3:** A "matched for π; exceeded for the reported PIP" (A:36); B "delivered" (B:39); D no verdict (D:54); C: estimated PIPs need K46/K52 (C:54). **Thm 4 / Cor 2:** A "exceeded" (A:37); B "delivered and exceeded" (B:41); D "EXCEED in kind" (D:55–56); C: a cited comparison, not a theorem of our algorithm, and K97 needs a separate null-exclusion argument (C:55, 57). **Thm S:** A, B, D "exceeded" (A:39, B:40, D:57); C: covered, with SL's supplementary hypotheses unverified (C:58). **§6:** all, same-units accounting with no speed claim (A:40, B:42, D:58, C:59) | What may be called "matched/exceeded" in COVERAGE_MATRIX | Round 2: each seat's wording per SL item; Hellinger contraction → FUTURE_WORK unless routed |
 | D16 | THM-INV cells: K23, K80, K107 | **K23** (spectral comparison): A, B supplement lemma (A:59, B:123); C, D future (C:123, D:132). **K80** (flag power): A, D drop / nothing provable (A:76, D:153); B supplement (B:70, 144); C future (C:155). **K107** (validated numerics): A, C future/defer, N16 OPEN (A:157, C:171); B, D supplement (B:154, D:163) | Whether each is a provable paper-1 statement or "nothing provable / future work" with a reason | Item 1 closure in Round 2 |
 | D17 | Smaller substantive splits | **K02** equivariance: A main clause, ties break per-seed equivariance (A:114); C: target invariance only, algorithmic equivariance not assured under partition ties (C:108); B, D supplement. **K07** blocks: A, lemma (gap ⇒ recovery; A:118); C, preservation from separation but equality needs packing size (C:113). **K12** σ²-mixture oracle: A test oracle (A:122); B, D drop; C future (C:118). **K34** TI reporting: A, B, D drop; C future (C:131). **K67**: A defer as CONJECTURE (A:142); B, C, D drop (B:139, C:147). **K94** averaged finite-n: B supplement candidate (B:102); A, C, D future. **K99** barriers: B supplement (B:149); D, qualitative barrier as a remark via SHARE-PB, quantitative k-way bound future (D:158); A, C future (A:152, C:166) | For each: a provable statement now, or future work with a reason | Round 2 per K-ID |
-| D18 | Grouped placements still split (SBS T2) | Target/envelopes K01–K05, K95, K76; pooling K47, K49, K54, K56, K59; output validity K36, K77, K78, K85, K86; certificates/decision rules K60–K64, K73, K74; inherited calculus and limitations K79, K81, K100, K101, K103, K104, K108. The pattern: A main or supplement; B, D supplement; C cited lemma (SBS:52–58, 95–107, 111–115, 124–137, 146, 151–159) | IC4 (cited lemma vs our proposition) and paper fit | Agenda 11 + IC4, per group |
+| D18 | Placements still split in eight groups (target/envelopes; start machinery and blocks; calibration; evidence bounds; pooling; output validity and worker equivalence; certificates and decision rules; inherited calculus and limitations) | Per K-ID in §2.1; there is no uniform pattern (e.g. C places K49, K62, K73 in main and K103 in supplement; B places K36, K78 in main; K59 is future for A, C, D) | IC4 (cited lemma vs our proposition) and paper fit | Agenda 11 + IC4, per group |
+
+### 2.1 Row D18 in detail: placement per K-ID (extracted from SBS T2, verbatim cells with the seats' line refs; "≠" marks a conflict between a seat's §B/§C entry and its card header, as the clerk flagged it)
+
+| Group | K-ID | A | B | C | D | SBS line |
+|---|---|---|---|---|---|---|
+| Target, envelopes, invariance | K01 | main → C1 · A:113 | supplement → D17 · B:110 | supplement → D11 · C:107 | supplement → S1 · D:117 | SBS:52 |
+| Target, envelopes, invariance | K02 | main, folded into C1 · A:114 | supplement → D17 · B:111 | supplement, merged into D11 · C:108 | supplement → S1 · D:118 | SBS:53 |
+| Target, envelopes, invariance | K03 | main, folded into C1 · A:115 | supplement → D17 · B:112 | supplement, merged into D11 · C:109 | supplement → S1 · D:119 | SBS:54 |
+| Target, envelopes, invariance | K04 | main, folded into C1 · A:116 | cited lemma · B:113 | supplement, merged into D11 · C:110 | supplement → S1, feeds M12 · D:120 | SBS:55 |
+| Target, envelopes, invariance | K05 | main, folded into C16 · A:117 | supplement → D18 · B:114 | supplement, merged into D11 · C:111 | supplement → S9 · D:121 | SBS:56 |
+| Target, envelopes, invariance | K76 | supplement → S1 · A:146 | supplement → D17 · B:143 | supplement, merged into K01 · C:153 | supplement → S12 · D:152 | SBS:127 |
+| Target, envelopes, invariance | K95 | main → C7 · A:151 | supplement → D17 · B:148 | cited lemma · C:165 | supplement → S3 · D:157 | SBS:146 |
+| Start machinery and blocks | K06 | main → C12 · A:356 | supplement → D11, D21 · B:336 | supplement, merged into D10 · C:112 | supplement → S2 · D:122 | SBS:57 |
+| Start machinery and blocks | K14 | main, folded into C16 · A:124 | supplement → D21 · B:121 | cited lemma · C:120 | supplement → S2 · D:130 | SBS:65 |
+| Calibration | K33 | main → C11 · A:130 | supplement · B:127 | supplement, merged into K25 · C:130 | supplement → S10 · D:136 | SBS:84 |
+| Evidence bounds | K44 | main → C6 · A:133 | main → D3 · B:201 | main, merged into K43 · C:136 | supplement → S6 remark · D:139 | SBS:95 |
+| Pooling | K47 | cited lemma → C4 · A:219 | cited lemma (V1) · B:79 | cited lemma · C:80 | supplement → S5 ≠ V1 · D:434 | SBS:98 |
+| Pooling | K49 | main → C4 · A:219 | supplement → D14 · B:393 | main, merged into K46 · C:82 | supplement → S5 · D:434 | SBS:100 |
+| Pooling | K54 | main → C4 · A:136 | supplement → D19 · B:133 | cited lemma · C:140 | supplement → S5 · D:142 | SBS:105 |
+| Pooling | K56 | main → C4 (one-step) · A:138 | supplement · B:135 | cited lemma · C:142 | supplement → S5 remark · D:144 | SBS:107 |
+| Pooling | K59 | future work (defer) · A:62, A:95 | supplement → D14 · B:393 ≠ defer · B:90 | future work · C:91 | future work · D:99 | SBS:110 |
+| Output validity, worker equivalence | K36 | main → C3 · A:200 | main → D1, D3 · B:163 | cited lemma (V1 cite) · C:80 | main → M3 · D:202 | SBS:87 |
+| Output validity, worker equivalence | K77 | main → C3 · A:200 | supplement (V4) · B:82 | supplement, rank 14 · C:460 | supplement → S4 · D:420 | SBS:128 |
+| Output validity, worker equivalence | K78 | main → C3 · A:200 | main → D3 · B:201 | supplement, rank 14 · C:460 | main → M3 · D:202 | SBS:129 |
+| Output validity, worker equivalence | K83 | supplement → S1 · A:489 | supplement (V2) · B:80 | cited lemma · C:157 | supplement → S4 · D:420 | SBS:134 |
+| Output validity, worker equivalence | K84 | supplement → S1 · A:489 | supplement (V2) · B:80 | cited lemma · C:158 | supplement → S4 · D:420 | SBS:135 |
+| Output validity, worker equivalence | K85 | main → C3, C4 · A:200, A:86 | main, merged into D2 · B:81 | cited lemma · C:159 | main → M1 · D:168 | SBS:136 |
+| Output validity, worker equivalence | K86 | main → C2 · A:181 | main → D1 ≠ supplement (V2) · B:163, B:80 | cited lemma · C:160 | main → M1 · D:168 | SBS:137 |
+| Certificates and decision rules | K60 | cited lemma → S5 · A:102, A:565 | cited lemma (R2) · B:97 | cited lemma · C:98 | supplement → S3 ≠ R2 · D:406, D:106 | SBS:111 |
+| Certificates and decision rules | K61 | cited lemma → S5 · A:139 | cited lemma · B:136 | cited lemma · C:143 | supplement → S3 · D:145 | SBS:112 |
+| Certificates and decision rules | K62 | main → C7 · A:140 | main → D8 · B:137 | main, lemma in K46 · C:144 | supplement → S3 · D:146 | SBS:113 |
+| Certificates and decision rules | K63 | main → C16 · A:432 | main → D8 · B:279 ≠ supplement lemma · B:80 | cited lemma (V2) · C:81 | supplement → S4 · D:420 | SBS:114 |
+| Certificates and decision rules | K64 | main → C12, C16 · A:356 | supplement → D11, D18 · B:336 | cited lemma · C:145 | supplement → S9 · D:475 | SBS:115 |
+| Certificates and decision rules | K73 | main → C16 · A:143 | supplement → D18 · B:140 | main, merged into K43 · C:150 | supplement → S9 · D:149 | SBS:124 |
+| Certificates and decision rules | K74 | main → C16 · A:144 | supplement → D15 · B:141 | cited lemma · C:151 | supplement → S9 · D:150 | SBS:125 |
+| Inherited calculus and limitations | K79 | supplement → S3 · A:527 | supplement → D15 · B:406 | cited lemma · C:154 | supplement → S11 · D:493 | SBS:130 |
+| Inherited calculus and limitations | K81 | supplement → S3 · A:148 | supplement → D15 · B:145 | cited lemma · C:156 | supplement → S11 · D:154 | SBS:132 |
+| Inherited calculus and limitations | K100 | supplement → S3 · A:153 | supplement → D15 · B:150 | cited lemma · C:167 | supplement → S11 · D:159 | SBS:151 |
+| Inherited calculus and limitations | K101 | supplement → S3 · A:154 | supplement → D15 · B:151 | cited lemma · C:168 | supplement → S3 · D:160 | SBS:152 |
+| Inherited calculus and limitations | K103 | supplement → S6 · A:155 | supplement → D16 · B:152 | supplement → D15-TV · C:169 | supplement → S8 · D:161 | SBS:154 |
+| Inherited calculus and limitations | K104 | supplement → S4 · A:156 | supplement → D19 · B:153 | cited lemma · C:170 | supplement → S8 · D:162 | SBS:155 |
+| Inherited calculus and limitations | K108 | supplement → S4 · A:158 | supplement → D18 · B:155 | cited lemma · C:172 | supplement → S9 · D:164 | SBS:159 |
 
 ## 3. Repairs required by check wave 1 (each seat restates its affected clause in Round 2 or concedes)
 
@@ -250,3 +292,4 @@ Complete list of PC1's adverse index rows (PC1:17–52) and PC2's non-clean rows
 | 12 | New row D18 (grouped placement splits) |
 | 13, 14, 15 | §3 completed: B.D7(b)/A.C11(c) progress; SL hypotheses; thesis assembly; SL complexity; D.M11(b) alias; A.C13(d); A.C18 DESIGN-FAILS; D.S9 rounding; quantile margins; the duplicate rule PIP = E[selected in group]/d |
 | 16 | No change (OK) |
+| Re-audit N1–N6 (`SYNTH_R1_REAUDIT.md`) | N1: PC1 refs for B.D6(N)/q₂ swapped back. N2: D15 rewritten per SL item with every seat's own qualification. N3: K28 recorded as cited inside the packages; B's K29 supplementary. N4: K70 placements stated per seat, with the header conflict. N5: D18 replaced by the per-K table §2.1 (adds K06, K14, K33, K44, K83, K84). N6: pathwise W bounds separated from the M₂ moment bound |
