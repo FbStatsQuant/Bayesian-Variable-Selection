@@ -209,3 +209,11 @@ Next: THM-SYNTH (Fable) after METH-AUDIT + THM-INV + LIT-PAR → final theorem l
 - Round 0 launched: fresh-eyes Fable (CP) and raw Astra (Codex), isolated in /home/fb31/fresh_eyes/{fable,astra} with a method-only packet.
 - Sol trial launched: Sol 1 proof check and Sol 2 audit of the MEET-v31 final documents (reports to /home/fb31/hq_reviews/).
 - ABL-CONF spec filed (confirmatory start test, pre-registered, Owls).
+
+## 2026-11-04 02:05 UTC: method approved by HQ; theorem meeting launched
+- Sol trial passed: Sol 2 audit (13 findings, 4 decision-level) and Sol 1 proof check (60 findings: 7 FALSE, 6 GAP) of the MEET-v31 documents (/home/fb31/hq_reviews/). HQ dispositions applied (AMENDMENT_HQ_01.md, theory/MEET-v31 @ 791e5e3). No method decision changed; backfit "6/2,400 ceiling" rationale withdrawn; binding proposal goals may not be dropped silently; C6 trigger = union (particle-depth claim OR any p > 2,500 shown); item-1 rule v2 (absolute 9-design gate), Outcome 2 unchanged; certified: prior-start Ẑ < Z on 10/12 designs (A 0/12, B 0/9).
+- N9 (kernel reversibility, round self-adjointness, exact start sampler) PASSED: PROVED (candidate) + exact checks on production headers with failing negative controls (theory/N9-KERNEL @ 3338896). Closure gate closed: open method questions none. **HQ approves v3.1.**
+- Root cause of every rc 143 kill: T3 stops an agent's systemd scope when its session ends, killing setsid'd children. Long jobs now launched as `systemd-run --user` units (rule in Owls POLICY.md). ABL-CONF lost its first launch at 01:25 UTC (4 reference fits done); relaunched 01:29 UTC as systemd units; ETA ≈ 11:30–12:00 UTC.
+- Registrar index (theory/MEET-THM-REG @ b160085): 24 draft entries, 166 cited IDs (51 author-only), 25 Lean files (library 101 results, 0 sorry), 37 conflicts.
+- Round 0 done: Seat D (fresh Fable) 72 items; Advisor E (raw Astra) 44 packages (theory_campaign/MEET-THM/R0_{D,E}.md).
+- Dossier frozen (4c8dd50); chair brief (e24627b). Meeting thread "Theorems - Final meeting" launched (chair Opus, CW), branch theory/MEET-THM.
