@@ -217,3 +217,9 @@ Next: THM-SYNTH (Fable) after METH-AUDIT + THM-INV + LIT-PAR → final theorem l
 - Registrar index (theory/MEET-THM-REG @ b160085): 24 draft entries, 166 cited IDs (51 author-only), 25 Lean files (library 101 results, 0 sorry), 37 conflicts.
 - Round 0 done: Seat D (fresh Fable) 72 items; Advisor E (raw Astra) 44 packages (theory_campaign/MEET-THM/R0_{D,E}.md).
 - Dossier frozen (4c8dd50); chair brief (e24627b). Meeting thread "Theorems - Final meeting" launched (chair Opus, CW), branch theory/MEET-THM.
+
+## 2026-11-04 05:45 UTC: theorem meeting closed; list HQ-approved, awaiting Felipe
+- MEET-THM closed (theory/MEET-THM @ 514c8fc; Felipe summary 37b4d2b): 8 main theorems (M1 validity/accuracy, M2 §5.3 package, M3 start, M4 evidence+certificates+masked statement, M5 HPM, M6 SEP+KL, M7 stage laws, M8 Prop D) + 12 supplement cards; 108 candidates all dispositioned (27 FUTURE_WORK, 6 drops); two cross-family check waves; close audit PASS WITH CORRECTIONS. 8 main HQ charters + 5 lemma packs in 4 waves.
+- HQ rulings Q1–Q5 recorded (binding-goal readings, to be shown to Felipe). Song–Liang analytic separation → FUTURE_WORK (FW21); HQ recommends a scout HQ alongside wave 1.
+- AMENDMENT_HQ_02 recorded on theory/MEET-v31 (6a80fe5): J_hat, cross_block_rmax + companions, d in 𝓗, optional R'_n = 4⌈log₂(n+p+1)⌉; the (n+p)^6 rate kept theorem-side only.
+- ABL-CONF: 54/118 terminal at 05:28 UTC (relaunched as systemd units).
