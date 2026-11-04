@@ -134,3 +134,13 @@ MINUTES items 1–5 and 7–9 map onto these.
 5. **SOL1 #58 (UNCHECKABLE).** No change was made, because the imported TL conclusions already keep their recorded statuses and hypotheses. Please confirm that nothing further is wanted.
 6. **F04: proportional vs absolute gate.** v2's need = max(9, ⌈0.75·complete⌉) means the absolute 9-design gate always binds for ≤ 12 designs. The proportional-completion sentence (T §1.B; SYNTH_R3:57) therefore never raises the requirement. T now says the absolute gate is "kept alongside" that sentence. Please confirm that this is the intended settlement.
 7. **T31(c) wording.** The locked T31(c) text is not in this worktree. I stated it as "positivity and unbiasedness of Ẑ alone yield no upper bound on Z (a non-implication from the estimator's law, not a data-specific impossibility)", following SOL1 #26 and PC2 C1(c) ("no lower bound from unbiasedness"). Please check this paraphrase against the locked statement (collected proofs 4590ff) before it is printed.
+
+## HQ answers to the editor's questions (2026-11-04)
+
+1. **Markov sharpness (I8):** keep it moved to "Not inherent" with the "seat-derived, unchecked" label. The theorem meeting may restore it after a proof check (the two-point-law sharpness is classical, but it is not on record as checked).
+2. **Decision 1 ground-rule numbers:** leave as recorded in each document (MINUTES 1, 5, 7; METHOD §4 1, 5, 8); both sets are correct in context.
+3. **Other binding-goal mappings:** agreed: no escalation branch for §5.2 → V1 (its open items fail into engineering fixes) or for Lemma KL. Proposal §5.4 coverage is an agenda item of the theorem meeting (MEET-THM dossier §6 item 5).
+4. **SOL1 #60:** the run-history narrative (job-kill causes, CPU durations, spend, who read which result when) is the chair's and HQ's record, not an independently verifiable log; this note is the label.
+5. **SOL1 #58:** confirmed, no further change.
+6. **F04 gate:** yes, that is the intended settlement.
+7. **T31(c):** checked by HQ against the locked text (`origin/theory/T38-RECORD:Docs/Theory/proofs/COLLECTED_PROOFS_v2.tex`, T31 conclusions (a)–(d), ≈ lines 4575–4600). The paraphrase was replaced everywhere by the locked content: "the properties of Ẑ behind the 95% bound (positive, finitely many values, mean Z, iid islands) imply no two-sided relative-error bound: for every c₀ > 0 and η ∈ (0, 1) some such law has P(Ẑ < c₀Z) ≥ 1 − η, so {Z ≥ αẐ} places no upper limit on Z/Ẑ". It remains a non-implication, not a data-specific impossibility (the locked text itself notes that for fixed data Ẑ lies surely within e^{±Δ}Z for a data-dependent Δ that is not reported).
