@@ -8,7 +8,7 @@ Updated 2026-11-04 (after Synthesis 1).
 | 1. R0 diff | done: `R0_DIFF.md` (K01–K108) |
 | 2. Round 1 (Seats A–D) | done: `R1_A.md`–`R1_D.md` (verbatim); clerk side-by-side `evidence/R1_SIDE_BY_SIDE.md` |
 | 3. Check wave 1 | done: `evidence/W1_PC1/VERDICTS.md` (A, B, D: 11 COUNTEREXAMPLE, 25 NEEDS-HYPOTHESIS), `evidence/W1_PC2/VERDICTS.md` (C: 0 COUNTEREXAMPLE) |
-| 4. Synthesis 1 | v1 audited FAIL (15 findings, `SYNTH_R1_AUDIT.md`); v2 re-audit FAIL (6 findings, `SYNTH_R1_REAUDIT.md`); **v2.1** `SYNTH_R1.md` applies them. **Narrow verification running** |
+| 4. Synthesis 1 | **final v2.2** `SYNTH_R1.md`: audit FAIL → v2 re-audit FAIL → v2.1 verification PASS WITH CORRECTIONS (applied). Files: `SYNTH_R1_AUDIT.md`, `SYNTH_R1_REAUDIT.md`, `SYNTH_R1_VERIFY.md` |
 | — Inherited-proof check | **done**: `evidence/CHK_INHERITED/REPORT.md`. WS3, WS4 VERIFIED; WS6(d), WS7, N9 VERIFIED WITH AMENDMENT; one-shot refutation survives (Q1(c) met) |
 | 5. Round 2 | brief ready (`ROUND2_BRIEF.md`); dispatched after the re-audit passes |
 | 6–8 | not started |
