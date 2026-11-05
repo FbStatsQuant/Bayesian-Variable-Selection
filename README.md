@@ -86,3 +86,4 @@ Frozen scripts are byte-identical copies of what ran, so they still contain the 
 One-screen summary: `Docs/HQ/STATUS.md`. Bulk data locations: `Docs/Records/DATA_INDEX.md`.
 
 The v2.2.1 rerun reproduces the 2026-10-23 fits (`Results/SMC_BVS_v3_production/`) exactly.
+End.
