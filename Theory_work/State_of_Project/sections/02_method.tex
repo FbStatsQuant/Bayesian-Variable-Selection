@@ -1,0 +1,1035 @@
+\section{The method: SMC-BVS v3.1}\label{sec:method}
+
+This section states the method exactly as specified (method v3.1 = METHODOLOGY\_v3 plus the MEET-v31 diff) and as
+implemented in the frozen production code used for every study fit (code v2.2.1). Version numbers of the method
+(v3, v3.1) and of the code (v2.1, v2.2, v2.2.1) are different series
+\src{README.md:5-9}. The authoritative method text is \texttt{METHOD\_v3.1\_FINAL.md}, written as a diff against
+\texttt{METHODOLOGY\_v3.md} (``M'' below) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:1-9}. Definition IDs
+\rid{DF01}--\rid{DF25} are anchored in Appendix~\ref{app:notation}; method-meeting decisions \rid{MD01}--\rid{MD13} are
+defined in \S\ref{sec:method-md}.
+
+\begin{plain}[the method in one paragraph]
+Given $X$ ($n\times p$) and $y$, SMC-BVS computes the posterior over subsets $S$ of predictors under a unit-information
+$g$-prior with a unit ridge, a vague inverse-gamma noise prior and a beta-binomial BB$(1,p)$ size prior capped at
+$\lfloor n/2\rfloor$ variables. When the capped model space is small it enumerates it exactly. Otherwise it starts from an
+exactly sampleable product-of-blocks approximation $\pi_0$ built from small correlation blocks, each enumerated exactly,
+and tempers from $\pi_0$ to the posterior with an SMC bridge; a calibration phase builds the tempering schedule and a
+fresh final run with frozen settings produces the reported HPM, PIPs and evidence \src{Docs/Methodology/METHODOLOGY_v3.md:25-33}.
+v3.1 is ``v3 unchanged as a statistical method, plus a list of additions'' (parallel layer, optional stacking, LS0,
+reporting changes, wording fixes) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:26-41}.
+\end{plain}
+
+\begin{uncertain}[approval state of the method text]
+\texttt{METHOD\_v3.1\_FINAL.md} still says: ``\textbf{Status: FINAL from MEET-v31 (chair), for HQ approval.} Not yet approved
+by HQ or Felipe.'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:5}. The later plain summary says ``Approved by HQ
+after the method meeting (MEET-v31), two independent reviews (Sol 6.1: a proof check and an audit), and the N9 kernel
+check.'' \src{NBH/branch_snapshots/MEET-v31/FOR_FELIPE_FINAL_METHOD.md:3}; HQ wrote ``\textbf{The final method (v3.1) is
+approved.}'' \pos{1584}. Felipe approved the four method-process decisions \pos{1304}
+\src{NBH/START_HERE.md:16}; no source records Felipe approving the v3.1 method text itself. Treat v3.1 as HQ-approved;
+the header line of the method file is stale.
+\end{uncertain}
+
+\subsection{Inputs, preprocessing, statuses}\label{sec:method-pre}
+
+\textbf{Input} (M \S2): numeric $X\in\mathbb R^{n\times p}$, $y\in\mathbb R^n$, an integer seed $s\in[1,2^{31}-1]$, and the
+job's resource allocation (memory, wall time; default 8 GiB) \src{Docs/Methodology/METHODOLOGY_v3.md:37-38}. v3.1 rewrites
+Requirement (1) as: ``Runnable from X, y and one integer seed, with no statistical tuning beyond published defaults. The
+job's allocation (memory, wall time) is a declared (c) input that decides delivery only. Every estimate on 𝒪 is a
+function of (X, y, seed, binary).'' (item e8) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:179}.
+
+\textbf{Preprocessing} (\rid{DF04}; M \S4) \src{Docs/Methodology/METHODOLOGY_v3.md:80-93}:
+\begin{enumerate}[label=(\arabic*)]
+\item stop with \texttt{invalid\_input} if any entry is not finite, or $n<3$, or $p<1$ (v3; v3.1 item e3 proposes to admit
+  $n=2$, see below);
+\item drop column $j$ only if all its entries are \emph{exactly} equal; $p:=$ number kept; if $p=0$ return $\hat S=\varnothing$
+  with status \texttt{no\_predictors};
+\item if all entries of $y$ are exactly equal return $\hat S=\varnothing$, PIPs and evidence unavailable, status
+  \texttt{y\_constant};
+\item standardise stably: divide each column by its maximum absolute value, compute the mean, centre, divide by the sample SD
+  (denominator $n-1$), so $\|x_j\|^2=n-1$; same for $y$, recording $s_y^2=\|Cy\|^2/(n-1)$, $C=I-\mathbf 1\mathbf 1^\top/n$;
+\item report connected components of $\{|r_{jl}|\ge 1-10^{-10}\}$ (duplicates are kept);
+\item resource preflight (M \S8.6).
+\end{enumerate}
+These rules make the target invariant to affine maps of $y$ ($a\ne0$) and of each column, and to column permutation up to
+index-based tie-breaks \src{Docs/Methodology/METHODOLOGY_v3.md:92-93}. Code: \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_preprocess.R:97-132}
+(rejects $n<3$ at line 106; the near-constant ``anchored two-pass'' route at $\sqrt{\varepsilon_{\mathrm{mach}}}$ is at line 47).
+
+\textbf{Statuses} (exactly one): \texttt{exact}, \texttt{completed}, \texttt{schedule\_limit}, \texttt{numerical\_failure},
+\texttt{resource\_limit}, \texttt{y\_constant}, \texttt{no\_predictors}, \texttt{invalid\_input}
+\src{Docs/Methodology/METHODOLOGY_v3.md:48-52}; v3.1 adds \texttt{degenerate\_n} (e3) and \texttt{unsupported\_size} (e7)
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:80}. Item e3: ``Reject n = 0. n = 1 → status
+\texttt{degenerate\_n} [\dots]. \textbf{n = 2 is admitted}: K = 1, B = 1, E = p + 1, so the exact branch runs.'' The $n=2$
+output statement is ``seat-derived, unchecked'', and ``current preprocessing still rejects n < 3 and raw p = 0''
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:182}.
+
+\textbf{Flags}: \texttt{escalated}, \texttt{checks\_passed\_calibration}, \texttt{checks\_passed\_final},
+\texttt{forced\_pilot\_steps}, \texttt{grid\_unconverged}, \texttt{local\_limit}, \texttt{low\_empirical\_ESS} (any final stage
+below $0.5N$), \texttt{near\_tie\_truncated}, \texttt{local\_certified}, \texttt{global\_certified}
+\src{Docs/Methodology/METHODOLOGY_v3.md:54-58}; v3.1 adds \texttt{ls0\_improved} and documents \texttt{global\_certified} as
+``a heuristic numerical flag'' (e5) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:81}
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:184}.
+
+\subsection{Target posterior: likelihood, priors, score, evidence}\label{sec:method-target}
+
+Definitions \rid{DF01} (model, likelihood, $g$-prior, $\sigma^2$ prior), \rid{DF02} (size prior, cap), \rid{DF03} (score,
+evidence, posterior). v3.1 keeps the target ``\textbf{unchanged} (Felipe's model)''
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:84}.
+
+\begin{stmt}{Docs/Methodology/METHODOLOGY_v3.md:97-108}
+On the standardised data $(X,y)$, for $S\subseteq\{1,\dots,p\}$ with $k=|S|\le K$, $G_S=X_S^\top X_S$, $z_S=X_S^\top y$:
+\[
+y\mid\beta_S,\sigma^2,S\sim N_n(X_S\beta_S,\sigma^2I_n)\qquad\text{(no intercept; $y$ is centred)}
+\]
+\[
+\beta_S\mid\sigma^2,S\sim N_k\bigl(0,\,n\sigma^2(G_S+I_k)^{-1}\bigr)\qquad\text{$g=n$ (unit information), $\tau=1$ (one pseudo-observation)}
+\]
+\[
+\sigma^2\sim\mathrm{IG}(a_0,b_0),\quad a_0=b_0=0.01
+\]
+\[
+\varpi(S)=w(k)\,1\{k\le K\}/W_K,\quad w(k)=B(1+k,2p-k)/B(1,p)=\tfrac12\big/\tbinom{2p-1}{k},\quad W_K=\textstyle\sum_{j\le K}\binom pj w(j)
+\]
+\[
+H_S=(n+1)G_S+I_k,\qquad Q_S=y^\top y-n\,z_S^\top H_S^{-1}z_S,
+\]
+\[
+\log m(S)=\log C_n-\tfrac12\bigl[\log\det H_S-\log\det(G_S+I_k)\bigr]-(a_0+n/2)\log(2b_0+Q_S),
+\]
+\[
+C_n=(2b_0)^{a_0}\,\Gamma(a_0+n/2)\big/\bigl(\pi^{n/2}\,\Gamma(a_0)\bigr),\qquad
+\pi(S\mid y)=\varpi(S)\,m(S)/Z,\qquad Z=\textstyle\sum_{|S|\le K}\varpi(S)\,m(S).
+\]
+\end{stmt}
+
+The cap is $K=\min(p,\lfloor n/2\rfloor)$ and the model space is $\Omega=\{S:|S|\le K\}$
+\src{Docs/Methodology/METHODOLOGY_v3.md:65} \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:64}. The shape is
+$\nu=a_0+n/2$ and the theory cards write $\bar Q=2b_0+y^\top y$ \src{NBH/notation_and_conventions.md:142}.
+
+\textbf{The score $F$.} Throughout the method and the theory, the \emph{score} of a model is the log unnormalised posterior
+\[
+F(S)=\log\varpi(S)+\log m(S),\qquad e^{F(S)}=\varpi(S)\,m(S),\qquad Z=\textstyle\sum_{S\in\Omega}e^{F(S)},
+\]
+(``the strict maximum of log ϖ(S) + log m(S)'' \src{Docs/Methodology/METHODOLOGY_v3.md:263}; ``$Z_{\mathcal T}=\sum_{S\in\mathcal T}e^{F(S)}=\sum_{\mathcal T}\varpi(S)\,m(S)$'' \src{NBH/notation_and_conventions.md:91}; code
+\texttt{F = log varpi(|S|) + log m(S)} \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_engine.h:89-98}).
+So $F$ includes the prior; the marginal likelihood alone is $m(S)$. The Bayes factor against the empty model is
+$\mathrm{BF}(S)=m(S)/m(\varnothing)$ \src{Docs/Methodology/METHODOLOGY_v3.md:176}. The final theory cards write
+$m(U)=c_n[\det H_U/\det(G_U+I)]^{-1/2}(.02+Q_U)^{-\nu}$ and note ``The common positive $c_n$ cancels from posterior
+ratios'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:65}.
+
+\textbf{Reasons recorded for the target} (accepted by Felipe): $g=n$ is unit information and $\tau=1$ keeps every $m(S)$
+finite for collinear $X_S$; IG$(0.01,0.01)$ is ``proper, as the project proofs require''; BB$(1,p)$ ``depends on p only;
+prior mean size p/(p+1) ≈ 1; each extra variable costs log((2p−k−1)/(k+1)) nats''; the cap ``keeps near-interpolating
+models out of the space; the ½ is a declared restriction, not needed for propriety''
+\src{Docs/Methodology/METHODOLOGY_v3.md:111-119}. The v3 claim that the IG effect is negligible was narrowed in v3.1: its
+pairwise effect ``relative to the gap [\dots] is not uniformly negligible [\dots]; negligibility needs residual-scale
+assumptions; not negligible at tiny n'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:299}.
+
+\textbf{Reduction statement} (consensus of the v3 consultants; ``to be proved, V1''): with $\theta=s_y\beta$ and
+$v=s_y^2\sigma^2$, the posterior is that of the contrast regression of $U^\top y^r$ on $U^\top X$ with $n-1$ Gaussian errors,
+slab $\theta_S\mid v,S\sim N(0,nv(G_S+I)^{-1})$ and $v\sim\mathrm{IG}(0.51,0.01s_y^2)$; ``This is not a claim that the
+working evidence equals a raw-data marginal likelihood'' \src{Docs/Methodology/METHODOLOGY_v3.md:121-127}.
+
+\textbf{Code check (prior/score).} The scorer sets $K=\min(p,\lfloor n/2\rfloor)$, $a_0=b_0=0.01$, $\nu=a_0+n/2$,
+$\log C_n$, $\log w(k)=-\log 2-\log\binom{2p-1}{k}$, $\log W_K$ by log-sum-exp
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_score.h:39-72}, forms $H=(n+1)G_S+I$ and
+$A=G_S+I$ by Cholesky and computes $Q$ by subtraction with recomputation by the non-negative form below
+$10^{-8}y^\top y$ \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_score.h:175-224}; Cholesky,
+refactor, augmented QR, then \texttt{NumericalFailure}
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_score.h:227-238}. This matches M \S5 and \S6.13
+\src{Docs/Methodology/METHODOLOGY_v3.md:286-289}. No divergence found.
+
+\subsection{Budgets and the exact branch}\label{sec:method-budgets}
+
+\begin{center}\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Symbol & Definition (M \S3) & study ($n=200$; $p=500$ / $1000$)\\
+\midrule
+$K$ & size cap $\min(p,\lfloor n/2\rfloor)$ & 100 / 100\\
+$B$ & block size $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,B^*)$, $B^*=16$ & 14 / 14\\
+$\ell$ & $\lceil\log_2(n+p+1)\rceil$ (local-search and rebuild budget) & 10 / 11\\
+$L$ & $\max(4,\lceil\log_2(n+1)\rceil)$ (burn-in rounds at $\varphi=1$) & 8 / 8\\
+$N_0$ & $\max(2500,n,p)$ final particles per island & 2500 / 2500\\
+$H_0$ & $\lceil 512N_0/2500\rceil$ calibration particles (pilot and each diagnostic island) & 512 / 512\\
+$T_0$ & $\max(1000,\ell^2)$ stage ceiling & 1000 / 1000\\
+$R$ & 4 islands (final and diagnostic) & 4 / 4\\
+tier $e$ & $e\in\{0,1\}$; $(N_e,H_e,T_e)=4^e(N_0,H_0,T_0)$ & \\
+\bottomrule
+\end{tabular}
+\end{center}
+Source \src{Docs/Methodology/METHODOLOGY_v3.md:62-76}; ``These are \textbf{declared resource budgets}, not accuracy
+guarantees.'' v3.1 keeps the values and relabels classes: $B^*=16$ is ``a declared \textbf{(c) budget for exhaustive
+tables}'' (e1) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:180}; ``the ℓ² term exceeds 1,000 exactly when
+n + p ≥ 2³¹'' (w4) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:195}. Code:
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_preprocess.R:19-33} (exact integer
+$\lfloor\sqrt{\cdot}\rfloor$ and $\lceil\log_2\cdot\rceil$; matches).
+
+\textbf{Exact branch} (M \S6.2): if $E=\sum_{k\le K}\binom pk\le(5H_0+4N_0)\,p$ (saturating integer arithmetic), score every
+model with $|S|\le K$ in a streaming pass (running best in the strict HPM order; log-sum-exp for $Z$ and PIP numerators);
+status \texttt{exact} \src{Docs/Methodology/METHODOLOGY_v3.md:156-160}. ``Because the threshold grows with N₀ ≥ n, every
+fixed-p problem is eventually enumerated as n grows.'' v3.1 corrects ``all p ≤ 3,000 at n ≤ 5'' to ``all p at n ≤ 5'' (w2)
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:193}. Code: 128-bit saturating count
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_core.cpp:97-110}; enumeration
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_core.cpp:526-570}. On this branch
+\texttt{global\_certified} is set iff $F(\mathrm{HPM})-\eta(\mathrm{HPM})>\max_{S\ne\mathrm{HPM}}[F(S)+\eta(S)]$ with the
+scorer's heuristic error expression $\eta$ \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_exact.R:3-17};
+v3.1 (e5) labels this ``a \textbf{heuristic numerical margin}'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:184}.
+The 2,400-fit study used the SMC branch, where the flag is always FALSE
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:147}.
+
+\subsection{The block start \texorpdfstring{$\pi_0$}{pi0}}\label{sec:method-start}
+
+Definitions \rid{DF05} (blocks and tables), \rid{DF06} (start). v3.1 keeps blocks, tables and start ``\textbf{unchanged}'';
+the table stage runs in parallel (\#4) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:87}.
+
+\begin{stmt}{Docs/Methodology/METHODOLOGY_v3.md:164-177}
+\begin{itemize}
+\item \textbf{Clustering:} complete linkage on the distance $1-|r_{jl}|$ computed from $X$; ties between candidate merges broken
+  lexicographically on the sorted original-index lists.
+\item \textbf{Cut:} top-down from the root; any node with more than $B$ members is split into its two children (visited smallest
+  index first) until every retained cluster has at most $B$ members.
+\item \textbf{Packing:} next-fit in dendrogram leaf order, whole clusters only (a retained cluster is never split), into blocks
+  $C_1,\dots,C_J$ of at most $B$ members. $J\ge\lceil p/B\rceil$ (packing leaves gaps).
+\item \textbf{Tables:} for each block, every sub-model $U\subseteq C_b$ is scored against the full $y$; $r_b(U)=m(U)/m(\varnothing)$
+  (table exponent 1). Since $B\le K$ for $n\ge3$, no sub-model exceeds the cap. Every table score counts for the HPM. Table
+  scores are not inserted in the score cache.
+\item \textbf{Start:} $\gamma_0(S)=\varpi(S)\prod_b r_b(S\cap C_b)$, $\pi_0=\gamma_0/\bar Z_0$. $\bar Z_0$ is computed exactly by
+  convolving the block size profiles $e_b(j)=\sum_{|U|=j}r_b(U)$ up to $K$ with the size prior (valid because $\varpi$ depends on
+  $S$ only through $|S|$). Exact iid draws: draw the total size, then block sizes backwards, then each block's sub-model within
+  its size class.
+\item \textbf{Discrepancy:} $d(S)=\log\mathrm{BF}(S)-\sum_b\log r_b(S\cap C_b)$, $\mathrm{BF}(S)=m(S)/m(\varnothing)$; bridge
+  $\gamma_\varphi(S)=\gamma_0(S)e^{\varphi d(S)}$, $\varphi\in[0,1]$; $\gamma_1\propto$ the posterior; $Z=m(\varnothing)\sum_S\gamma_1(S)$.
+\end{itemize}
+\end{stmt}
+
+\textbf{Block-size rule and no correlation cut.} $B=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,B^*)$ is ``Felipe's rule;
+B ≤ K and B ≤ p'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:307}. w5: ``The dendrogram is cut by node size
+only (≤ B). There is no correlation-height threshold.'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:196}. e6
+records the study's actual block counts: ``J = 46–60 (p = 500) and 95–120 (p = 1,000) versus proxies 36 and 72''
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:185}. The theory's partition hypothesis \textbf{SIZE}
+$g_{\max}\le B<2g_{\min}$ is ``a hypothesis of one partition theorem [\dots], not a method parameter. The study's g = 5 is the
+theorem obligation PART-pairing'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:180} (obligation \rid{OB08};
+card \rid{TH11}).
+
+\textbf{Exact sampling (\texttt{draw\_pi0}) and $\bar Z_0$ in code.} Tables score every $U\subseteq C_b$ with
+$|U|\le K$ against the full $y$ \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_start.h:73-98};
+size profiles $\log e_b(j)$, partial convolutions $\log F_b(k)$ truncated at $K$, $\log\bar Z_0=\log\sum_k\varpi(k)F_J(k)$, and
+the backward conditional $P(k_b=j\mid r)=e_b(j)F_{b-1}(r-j)/F_b(r)$
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_start.h:100-151}; the draw uses one uniform for
+the total size, one per block $b=J,\dots,1$ while the remainder is positive, and one per non-empty block for the
+sub-model \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_start.h:153-176}. Blocks:
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_blocks.h:39-144} (complete linkage with the
+union-lexicographic tie rule; left child = child with smaller minimum index; next-fit packing). All match M \S6.3.
+Exactness of \texttt{draw\_pi0} and $\bar Z_0$ is part of N9 (\rid{OB09}), PASSED \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:150}
+(card \rid{TH12}; clause \rid{TH01.a}).
+
+\textbf{Start mode $\tilde S_0$.} $\tilde S_0=\arg\max\gamma_0$, ``computed exactly by the block DP, with the size-then-lexicographic
+tie rule'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:150}. The header function \texttt{start\_mode} computes
+per-block per-size maxima, a max-plus convolution up to $K$, picks the size by strict improvement (``ties keep the smaller
+size'') and enumerates all optimal choices keeping the lexicographically smallest set, capped at $10^6$ sets with a
+truncation flag \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_start.h:178-240}. e4: ``On
+truncation, use a deterministic tie-aware DP that returns the prescribed smallest-size, lexicographically smallest
+maximiser without enumerating ties'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:150}; ``The invariant `DP output
+= the prescribed choice' is an OPEN obligation (N3)'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:183}
+(\rid{OB03}). In the study, ``0/2,400 tie truncations; all 2,400 had a single tie''
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:150}.
+
+\textbf{Dilution (cite, do not derive).} The tables score each block's sub-models against the \emph{full} $y$ with the
+noise variance integrated out per sub-model, so a block's table does not see the other blocks' signal except as noise.
+O-DILUTE: ``Seen from a truth, the v3 table's own-σ² integration \emph{dilutes}; seen from a null, it \emph{calibrates} the
+leakage'' \src{NBH/branch_snapshots/O-DILUTE/THEORY.md:114-115}; mechanism ``σ²-dilution of the truths' table log-odds''
+with ``About 7 of the 14 truths are invisible at n = 200 for every c''
+\src{NBH/03_results_and_conclusions.md:269}. The exact identity $-\log\pi_0(S_0)=V+C-\log A(|S_0|)$ is card M3(d)
+\src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:206} (\rid{TH03}). The common plug-in $\sigma^2$ alternative was
+rejected (it ``floods the start'') \src{NBH/03b_reasoning_and_traces.md:83-88}.
+
+\textbf{Item 1 (start ablation).} The start is kept under Outcome 2: ``the start is presented as the exactly computable,
+theorem-bearing local step (S1/S2) plus the parallel table stage, with \textbf{no depth or speed claim}''
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:118} (\rid{MD01}).
+
+\subsection{Bridge, neighbour graph and move kernel}\label{sec:method-kernel}
+
+Definitions \rid{DF07} (discrepancy and bridge), \rid{DF08} (moves and round). The bridge family is
+$\gamma_\varphi=\gamma_0e^{\varphi d}$ (above); the theory cards write the normalised family $q_t\propto\gamma_0e^{td}$
+\src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:67} and the registrar's canonical notation is
+$q_\varphi:=\gamma_\varphi/\bar Z_\varphi$ \src{NBH/notation_and_conventions.md:55}.
+
+\textbf{Neighbour graph} (M \S6.4): $r_n=\sqrt{2\log p/n}$; for each $j$ the partners $l\ne j$ with $|r_{jl}|>r_n$, always
+including $j$'s single largest-$|r|$ partner, keeping at most the $B$ largest (ties by original index); then the symmetric
+union $N(j)$ (degrees may exceed $B$); no edges when $p=1$ \src{Docs/Methodology/METHODOLOGY_v3.md:181-183}. w3: when
+$r_n\ge1$ (i.e.\ $p>e^{n/2}$) ``the graph is the symmetric 1-nearest-neighbour graph''
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:194}. Code matches
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_blocks.h:146-173}.
+
+\begin{stmt}{Docs/Methodology/METHODOLOGY_v3.md:187-201}
+A round is the list of $m=p+B+2$ labelled elementary steps --- the $p$ Gibbs coordinate updates, one uniform swap, $B$ neighbour
+swaps, one independence proposal --- applied \textbf{in a uniformly random order drawn independently of the particle's state,
+afresh for every particle and every round}.
+\begin{itemize}
+\item \textbf{Gibbs coordinate $j$:} draw $j$'s inclusion from its conditional under $\gamma_\varphi$, with an addition at $|S|=K$
+  excluded. Record the conditional inclusion probability $o_j$ immediately before the draw (used for PIPs in measured rounds).
+\item \textbf{Uniform swap:} skipped (self-loop) if $|S|\in\{0,p\}$; delete $j$ uniformly from $S$, add $l$ uniformly from outside;
+  accept with $1\wedge\gamma_\varphi(S')/\gamma_\varphi(S)$.
+\item \textbf{Neighbour swap:} skipped if $S=\varnothing$; delete $j$ uniformly from $S$; if $N(j)\setminus S=\varnothing$ reject;
+  else add $l$ uniformly from $N(j)\setminus S$; accept with
+  $1\wedge[\gamma_\varphi(S')/\gamma_\varphi(S)]\cdot|N(j)\setminus S|/|N(l)\setminus S'|$.
+\item \textbf{Independence proposal:} $S'\sim\pi_0$ (exact draw), accepted with $1\wedge e^{\varphi[d(S')-d(S)]}$. Every proposal is
+  scored, accepted or not.
+\end{itemize}
+Each step is reversible with respect to $\gamma_\varphi$; the composition in a random order whose law is invariant under reversal is
+self-adjoint (checked by all three consultants; V5). An individual realised order is not.
+\end{stmt}
+
+\textbf{Invariance status.} N9 (``kernel reversibility and self-adjointness, exact start sampler'') was a closure gate of
+the method meeting; ``\textbf{N9 PASSED} --- all seven sub-claims PROVED (candidate, author-only), with exact numerical
+verification on the production engine headers and failing negative controls''
+\src{NBH/branch_snapshots/MEET-v31/MINUTES.md:150}. The sub-claim count is UNCERTAIN: other records give 7 \pos{1550} and 8 \pos{1593} (see the uncertain boxes under \rid{TH12} and \rid{OB09}). See \rid{OB09}, \rid{TH12} (S-KERNEL) and \rid{TH01.a} for the statement
+and its exact status words. v3.1 keeps the round unchanged; ``Changing it is WORKHORSE''
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:89}.
+
+\textbf{Code check (kernels).} \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_engine.h:111-215}:
+Gibbs computes $o_j=\mathrm{plogis}(\log\gamma_\varphi(S\cup j)-\log\gamma_\varphi(S\setminus j))$, sets $o_j=0$ for an infeasible
+addition at $|S|=K$, records $o_j$ before the draw, and counts both configurations as scored (``SR'');
+uniform swap self-loops at $|S|\in\{0,p\}$; neighbour swap self-loops at $S=\varnothing$, rejects without scoring when
+$N(j)\setminus S=\varnothing$, and includes the Hastings factor $|N(j)\setminus S|/|N(l)\setminus S'|$; the independence step
+draws $S'\sim\pi_0$ and accepts with $\exp\{\varphi(d(S')-d(S))\}\wedge1$; the order is a Fisher--Yates permutation of the $m$
+labels drawn afresh per particle and round. All match M \S6.5. The exact uniform-consumption order is documented in
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:24-40}.
+
+\subsection{Resampling, pilot schedule, candidate grid and calibration}\label{sec:method-calib}
+
+Definitions \rid{DF09} (resampling, pilot, ESS 0.90), \rid{DF10} (candidate set, grid, rebuild loop), \rid{DF11}
+(calibration record, tiers, final runs).
+
+\begin{stmt}{Docs/Methodology/METHODOLOGY_v3.md:205-227}
+\begin{itemize}
+\item \textbf{Resampling:} fresh multinomial resampling after every reweighting, including the terminal stage ($O(N)$ per stage with
+  a linear-time categorical sampler).
+\item \textbf{Pilot:} $H_e$ particles from $\pi_0$; at each stage the next temperature is the largest $\varphi'$ with population ESS of
+  the weights $e^{(\varphi'-\varphi)d}$ at least $0.90\cdot H_e$ (weight CV$^2\le1/9$), found by 60 bisection halvings; exploratory floor
+  $1/T_e$ (forced steps counted as \texttt{forced\_pilot\_steps}); ends exactly at $\varphi=1$; then $L$ burn-in rounds, 4 measured
+  rounds and a local search.
+\item \textbf{V:} the union of the top $20p$ scored models by $\log\gamma_0$, the top $20p$ scored models by $\log\gamma_1$ (the target),
+  and $\varnothing$; deduplicated; list ties lexicographic; frozen during each construction.
+\item \textbf{Restricted log-normaliser:} $F_V(t)=\log\sum_{S\in V}\gamma_0(S)e^{t\,d(S)}$.
+\item \textbf{Restricted ESS} between temperatures $u<v$: $\rho_V(u,v)=\exp\{2F_V(v)-F_V(u)-F_V(2v-u)\}$, the population ESS fraction
+  of the weights $e^{(v-u)d}$ under the restricted law $q_u(\cdot\mid V)$ (evaluating $F_V$ beyond 1 is a finite-sum moment, not a
+  production temperature).
+\item \textbf{Construction:} start at $u=0$ with the pilot temperatures as targets. For the next pilot temperature $b$: if
+  $\rho_V(u,b)\ge0.90$ append $b$; otherwise bisect on $(u,b]$ with $u$ fixed, at most 60 halvings, and append the largest tested
+  endpoint that passes; continue from the appended point. Validate strict numerical progress and the inequality at every
+  appended point. Non-progress, failed validation, or more than $T_e$ intervals $\to$ the construction fails.
+\item \textbf{Rebuild loop:} after each set of diagnostic islands, update $V$ and rebuild; stop when the rebuilt grid equals the
+  previous one; at most $\ell$ iterations [\dots]. If not converged: flag \texttt{grid\_unconverged} (a calibration trigger); at
+  tier 1 the last grid is used and the flag is reported. If a construction fails: trigger escalation at tier 0; status
+  \texttt{schedule\_limit} at tier 1.
+\end{itemize}
+\end{stmt}
+[\dots] = the lead's ruling that convergence is judged on the grid, not on $V$, with Fable-T3's dissent (judge on $V$)
+\src{Docs/Methodology/METHODOLOGY_v3.md:224-225}. Purpose and limits: the grid inserts temperatures ``exactly where models
+already scored would make the bridge jump''; it ``controls restricted one-step weight dispersion only; it does not control
+full-space ESS, particle occupancy, mixing, or modes never scored'' \src{Docs/Methodology/METHODOLOGY_v3.md:228-236}.
+
+\textbf{Calibration and escalation} (M \S6.8--6.9): calibration at tier $e$ runs the pilot and, per rebuild iteration, 4
+diagnostic islands of $H_e$ particles on the current grid, each followed by $L$ burn-in rounds, 4 measured rounds and a local
+search; streams 0 and 1--4 (tier 0), 5 and 6--9 (tier 1); score leaders are kept across tiers
+\src{Docs/Methodology/METHODOLOGY_v3.md:240-242}. Triggers (any one $\Rightarrow$ at most one escalation to tier 1, decided before
+any final randomness): E1 (some diagnostic island's best score more than 1 nat below the overall best), E2 (SD of the 4
+diagnostic $\log\hat Z$ exceeds 1 nat), E3 (a local search improved the best), forced pilot steps, \texttt{grid\_unconverged},
+a failed grid construction, \texttt{local\_limit}; after the final run E1--E3 and the empirical-ESS check are recomputed as
+flags only \src{Docs/Methodology/METHODOLOGY_v3.md:249-254}. v3.1 keeps these ``as calibration triggers, which define the law of
+𝓒'' and labels them heuristics (\rid{MD09}) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:93}.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:170}
+\textbf{Calibration contract.} ``The calibration output 𝓒 (grid, budgets $N_e$, tier, $R'$, $V$-independent settings) is frozen
+before any final randomness. Validity of the final estimates (unbiased $\hat Z_r$, PIP identities) holds conditionally on
+\textbf{any} frozen 𝓒, whatever happened in calibration. The grid satisfies Theorem G's cap. There are $\le\ell$ rebuilds per tier
+($\le2\ell$ in total with escalation, \texttt{v3\_calib.R:85, 141--149}). The restricted ESS controls one-step weight dispersion on
+$V$ only. The statuses \texttt{schedule\_limit}, \texttt{grid\_unconverged} and \texttt{escalated} are distinguished. Rebuild
+convergence, $P(S_0\in V)$ and $P(\texttt{schedule\_limit})$ are \textbf{OPEN theorem obligations, not inherent limitations}.
+Rebuilds, tier, $T$ and convergence are tabulated POST HOC from saved fits.''
+\end{stmt}
+
+\textbf{Code check (calibration).} Pilot next temperature (ESS $\ge0.90H$, 60 halvings, floor $1/T_e$, snap within
+$10^{-12}$ of 1) and grid construction (targets = pilot temperatures, 60 halvings, validation, $T_e$ cap)
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_calib.h:25-98}; rebuild loop of at most $\ell$
+iterations with convergence by grid equality \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_calib.R:84-119};
+at most one escalation, re-preflight before tier 1, freeze of (grid, tier, $N$, $L$, inherited leaders and HPM)
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_calib.R:135-175}. The frozen record in code also
+carries the \emph{inherited} calibration stores (top store and both leader stores) and the calibration HPM with its
+provenance, which the final run offers to its stores \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_core.cpp:731-743}
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_core.cpp:443-466}. Matches M \S6.6--6.9.
+
+\subsection{Final islands, streams, stacking and the parallel layer}\label{sec:method-islands}
+
+Definitions \rid{DF11}, \rid{DF12} (islands and stacking). \textbf{Final run} (M \S6.8): 4 islands $\times N_e$ particles from
+fresh iid $\pi_0$ draws, the frozen grid, multinomial resampling, one move round per stage, then $L$ burn-in rounds and 4
+measured rounds at $\varphi=1$, then a local search; streams 10--13, independent of all calibration randomness; no forced
+steps \src{Docs/Methodology/METHODOLOGY_v3.md:243-245}. ``Final observations never revise the schedule and never select
+replacement estimates.'' \src{Docs/Methodology/METHODOLOGY_v3.md:151-152}. In code, each stream is a xoshiro256** generator
+seeded by SplitMix64 from $x=(\mathrm{seed}\ll32)+\mathrm{stream}$; uniforms are $(\mathrm{next}\gg11)\,2^{-53}$
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:12-23}.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:142}
+\textbf{Optional stacking $R'=4k$ at $N_e$.}
+\begin{itemize}
+\item ``$R'=4$ by default. Optionally $R'=4k$, at \textbf{unchanged $N_e$}, declared before final randomness (before stream 10).''
+\item ``Final islands use streams $10,\dots,9+R'$. Islands 1--4 keep streams 10--13. \textbf{$N_e$ is never split} across more islands.''
+\item ``With $R'>4$, an \textbf{extra local search runs from the islands-1--4 centre $c_4$}, besides the search from the expanded centre.
+  The post-search scored set is then nested and HPM$(R')\succeq$ HPM(4) (Cor W-R with the extra search, PC1 claim 6).''
+\item ``Two records are kept. The \textbf{expanded record} covers all $R'$ islands, pooled $\hat Z$ over $R'$ and the expanded store; it
+  carries the run's reported flags. The \textbf{baseline record} covers islands 1--4, with its own baseline HPM, the search from $c_4$
+  and its own E1--E3, low-ESS and \texttt{local\_certified}. It is kept whenever baseline reproducibility is claimed.''
+\item ``Each record has its own certificate card (\#13).''
+\end{itemize}
+\end{stmt}
+AMENDMENT\_HQ\_02 adds the optional configuration $R'_n=4\lceil\log_2(n+p+1)\rceil$ (default stays $R'=4$); the rate
+$4\lceil(n+p)^6/4\rceil$ is ``a sufficient rate inside theorem M1 only, not a method configuration''
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:425} \src{NBH/branch_snapshots/MEET-v31/AMENDMENT_HQ_02.md:9-12}.
+An adaptive $R'$ is not allowed (``R′ must be declared in advance'') \src{NBH/branch_snapshots/METH-AUDIT/REPORT.md:214-215}.
+Splitting $N_e$ into many islands (C8) was rejected \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:274}.
+
+\textbf{Parallel execution layer} (\rid{MD04}) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:131-136}:
+(a) the $R'$ final islands run as concurrent \emph{process} workers with their own score cache and ledger, merged by
+Lemma S before the final local search; ``Output is bitwise-identical to serial execution (Prop W). `Bitwise' is scoped to
+one binary (\texttt{Makevars.v3}: \texttt{-ffp-contract=off -march=x86-64-v2}), single-thread BLAS and process workers'';
+(b) the 4 diagnostic islands per rebuild run concurrently --- ```Bitwise' may \textbf{not} be claimed for (b) until W-cal
+has been executed''; (c) local-search scan candidates may be scored in parallel with a max-reduction that keeps the
+lexicographic tie rule; (h) block tables are scored in parallel, with no change of floating-point summation order under a
+bitwise claim; workers are processes (threads would need private counters). (a) ``has been executed bitwise on smoke plus
+3/3 study designs (CONC)'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:46}; the speed figure 1.9$\times$ ``is a 2-core
+measurement'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:56}.
+
+\textbf{GUARD-W} (\#6): ``Any worker stop, LS0 stop or guard stop ⇒ no output. The fit returns the corresponding unavailable
+status with all estimate fields NA (\#15), never a partial estimate. [\dots] A completed LS0 that ends on its move cap is not
+a stop: it returns output with \texttt{local\_limit}, and L1 = `n/a' (\#10). Lemma RO (a guard that reads no uniforms is
+stop-only) stays as recorded (XF VERIFIED). That the v3.1 worker, merge and LS0 code satisfy GUARD-W is a
+\textbf{code-audit obligation} (\S6), not a mathematical gap.'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:136}.
+
+\textbf{Depth and cost} (\#19, \rid{MD06}): ``With island parallelism, the particle-round contribution to depth is
+$N_e\cdot(T+L+4)\cdot(p+B+2)$ \textbf{sequential elementary-step slots} per island at tier e'' and ```Depth free of N, H, R'
+is \textbf{not} claimed for v3.1''; the single-tier calibration/final trajectory ratio $(1+4I)H_0/(4N_0)=0.0512+0.2048\cdot I$ is
+``\textbf{seat-derived, unchecked}'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:171}. Local-search cost bound:
+scan size $p+k^*(p-k^*)$ with $k^*=\min(K,\lfloor p/2\rfloor)$, times $(\ell+1)$ scans
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:99}. Declared v3.2 path (not shipped): C6 per-particle counter-based
+streams, C7 Gram-free scorer, C11 faster exact linkage \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:259-265}.
+
+\subsection{Outputs}\label{sec:method-outputs}
+
+\subsubsection{Evidence \texorpdfstring{$\hat Z$}{Zhat}}
+Definition \rid{DF13}.
+\begin{stmt}{Docs/Methodology/METHODOLOGY_v3.md:279-282}
+Final island $r$: $\hat Z_r=m(\varnothing)\,\bar Z_0\prod_t(1/N_e)\sum_i\exp\{(\varphi_t-\varphi_{t-1})\,d(S_i^{(t-1)})\}$, with $W_K$ inside
+$\gamma_0$ exactly once. Pooled $\hat Z=(1/4)\sum_r\hat Z_r$ via log-sum-exp; 95\% lower bound $0.05\cdot\hat Z$ (Markov; one-sided, not an
+accuracy interval). Reported on the full working scale and relative to $m(\varnothing)$. Given the frozen calibration, each $\hat Z_r$
+is unbiased (existing project results P6, P7); $\log\hat Z$ is not.
+\end{stmt}
+v3.1 pools over the $R'$ islands (``pooled Ẑ over R′'') \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:142}, adds
+$Z_{\mathcal T}=\sum_{S\in\mathcal T}e^{F(S)}$ with ``Ẑ < Z\_𝒯 implies Ẑ < Z'' (\#14)
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:161}, and the card bound $\max\{Z_{\mathcal T},0.05\hat Z\}$ which ``keeps 95\%
+coverage on the output event'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:173}. Paper sentence (\#17): ``The
+probability that a run returns a card with a false claim is at most 5\%.'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:169}.
+Unbiasedness given $\mathcal C$ is clause \rid{TH01.a}. Code: $\log\hat Z_r=\log m(\varnothing)+\log\bar Z_0+\sum_t$ log-increment,
+increment $=\mathrm{LSE}(\Delta\varphi\,d_i)-\log N$, computed before resampling
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_engine.h:300-323}; pooled $\log\hat Z$, $\log(0.05)+\log\hat Z$,
+and the value relative to $m(\varnothing)$ \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:117-124}. Matches.
+
+\subsubsection{PIPs and MPMs}
+Definition \rid{DF14}. In each island, the RB-PIP averages the recorded Gibbs conditionals $o_j$ over particles and the 4
+measured rounds \src{Docs/Methodology/METHODOLOGY_v3.md:271-272}.
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:158}
+\begin{itemize}
+\item ``\textbf{Primary:} $\widehat{\mathrm{PIP}}_j=\sum_r\hat Z_r\widehat{\mathrm{PIP}}_{rj}/\sum_r\hat Z_r$ over the $R'$ final islands.''
+\item ``\textbf{Secondary (named):} the equal-weight mean over islands.''
+\item ``Report $\mathrm{MPM}_{\hat Z}=\{j:\text{primary }\widehat{\mathrm{PIP}}_j>\tfrac12\}$ and $\mathrm{MPM}_{\mathrm{eq}}$. Either may exceed $K$ and
+  is reported as computed.''
+\item ``Report $R_{\mathrm{eff}}=(\sum_rW_r)^2/\sum_rW_r^2$ with $W_r\propto\hat Z_r$.''
+\item ``Neither normalised estimate is generally unbiased at a finite budget.''
+\item ``The R-scaling guarantee is stated for the primary PIP; the equal-weight PIP keeps its single-island bias for every R (Prop P(i)).''
+\end{itemize}
+\end{stmt}
+This \emph{swaps} v3's pooling, where the equal-weight mean was primary and the $\hat Z$-weighted one secondary
+\src{Docs/Methodology/METHODOLOGY_v3.md:272-275} (\rid{MD08}). Code (v2.2.1) also computes \emph{plain} PIPs: per island the
+fraction of particles containing $j$ at the end of each of the 4 measured rounds
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_engine.h:350-371}, pooled with equal weights as
+\texttt{pip\_plain}, \texttt{mpm\_plain} \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:167-169}.
+These are the plain measured-endpoint averages $H_r(h)$ of \S\ref{sec:method-genh} for $h=1\{j\in S\}$, equal-weight pooled
+(this identification is an editorial reading of the two definitions, not a source statement).
+
+\subsubsection{HPM, local search, LS0}
+Definitions \rid{DF15} (HPM and local search), \rid{DF16} (LS0).
+\begin{stmt}{Docs/Methodology/METHODOLOGY_v3.md:258-267}
+\begin{itemize}
+\item \textbf{Local search:} from the current best scored model (the centre), scan every feasible flip and swap (additions beyond $K$
+  excluded) with the centre frozen during the scan; move to the best strict improvement (lexicographic ties); at most $\ell$ moves,
+  then one further scan; stop earlier when a scan finds no improvement. Every evaluated model updates the global best. If the
+  last scan still improves, set \texttt{local\_limit} (no restart). \texttt{local\_certified} only when the returned model is a scanned
+  centre with no improving neighbour. The search never alters particles.
+\item \textbf{HPM:} the strict maximum of $\log\varpi(S)+\log m(S)$ over every model ever scored (tables, pilot, calibration, final rounds,
+  rejected proposals, independence proposals, local searches), kept as a running best that survives cache eviction. Only exactly
+  equal scores invoke the tie rule: smallest $|S|$, then lexicographically smallest index set. A near-tie list (models within
+  $10^{-9}$ nat of the best, drawn from the stored top $40p+1$) is reported; it never reorders, and \texttt{near\_tie\_truncated} is set
+  if the list may be incomplete.
+\end{itemize}
+\end{stmt}
+Equivalently the HPM is the $\succ$-maximum of the scored set $\mathcal S$ for the strict total order
+$S\succ S'\iff(F(S),-|S|,\cdot)$ is larger, the last component being ``lexicographically smaller index set first''; code:
+\texttt{hpm\_better} \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_util.h:120-126}, running best
+updated on every fresh score event \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_ledger.h:83-115},
+table scores ingested first \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_core.cpp:402-417}.
+Lexicographic comparison is on sorted index lists with a proper prefix first
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_util.h:117-119}. The final local search starts from
+the global best \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_core.cpp:481}; within a scan the best
+neighbour is chosen by $F$, exact ties by plain lexicographic order (not size first), and a move needs a strict $F$ increase
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_engine.h:377-425}. v3.1 adds an \emph{informational}
+heuristic near-tie list at $\max(10^{-9},2\eta(\hat S))$ (e2) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:181}.
+Stores: top $40p+1$ by $F$ in HPM order; leader stores of $20p$ by $\log\gamma_0$ and by $\log\gamma_1$
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_ledger.h:73-81}.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:150}
+\textbf{LS0: local search from the start mode.}
+\begin{itemize}
+\item ``After the final local search (and after the extra search from $c_4$ when $R'>4$), run one local search with the \S6.10 rules from
+  the start mode $\tilde S_0=\arg\max\gamma_0$. $\tilde S_0$ is computed exactly by the block DP, with the size-then-lexicographic tie rule.''
+\item ``LS0 reads no uniforms. Every model it scores joins the all-scored set and the stores.''
+\item ``Models first scored by LS0 have provenance \texttt{ls0}. The flag \texttt{ls0\_improved} is set if LS0 raised the best score.''
+\item ``\textbf{An LS0 improvement does not fire E3.} E3 refers only to the final local search from the HPM centre.''
+\item ``An operational LS0 interruption means no complete output (GUARD-W, \#6). A completed LS0 capped at \texttt{local\_limit} still
+  returns output (\#10).''
+\item ``Start-mode ties: keep the enumeration fast path (cap $10^6$, \texttt{cpp/v3\_start.h:183}). On truncation, use a deterministic
+  tie-aware DP that returns the prescribed smallest-size, lexicographically smallest maximiser without enumerating ties (e4, \#29).''
+\end{itemize}
+\end{stmt}
+\#9: the bounded top store after LS0 is ``$\mathcal T_{\mathrm{new}}=\mathrm{top}_c(\mathcal T_{\mathrm{old}}\cup\mathcal S_{\mathrm{added}})$, not a
+superset of $\mathcal T_{\mathrm{old}}$''; ``stores nested'' and ``bitwise fit'' are struck
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:151}. \#10: \texttt{local\_certified} and card item L1 are evaluated on
+the finally returned $\hat S$, from whichever search ended on it \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:152}.
+LS0 cost: ``The runtime overhead is under 1 s per fit''; in the O-LS0 test export it changed the HPM in 0 of 2,394 fits
+\src{NBH/branch_snapshots/O-LS0/REPORT.md:380} \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:48}. Rejected: an HPM--MPM
+disagreement flag (``No provable power'') \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:277}.
+
+\subsubsection{General-\texorpdfstring{$h$}{h} accumulator, \texorpdfstring{$\hat J$}{Jhat}, cross-block proxy}\label{sec:method-genh}
+Definitions \rid{DF18}, \rid{DF19}, \rid{DF20}.
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:159}
+\textbf{Declaration.} ``𝓗 is a finite list of bounded model-space functions. The default list is fixed from $(X,y)$: model-size
+indicators, and joint inclusion on neighbour-graph edges ($\le2pB$ pairs). A user may also declare $h$ measurable in $(X,y,\mathcal C)$,
+fixed before stream 10. An $h$ defined from other calibration information (streams 0--9) is covered only if that information is
+included in 𝓒 before it is frozen (enlarge 𝓒 when necessary); measurability in streams 0--9 need not imply measurability in the
+compressed 𝓒. No final-run selection.'' \textbf{Accumulation.} ``$H_r(h)=(4N_e)^{-1}\sum_{q=1..4}\sum_ih(S_{rqi})$, taken after each complete
+measured round ($\varphi=1$, equal weights after multinomial resampling). Report $\hat\mu(h)=\sum_r\hat Z_rH_r(h)/\sum_r\hat Z_r$ and the
+equal-weight version.'' \textbf{Not allowed.} ``Products of marginal RB-PIPs are not joint estimates. v3.1 ships plain measured-round
+particle averages for joint $h$ ($c_h=0$). Rao--Blackwellisation is used only for the marginal PIPs. No RB joint estimator ships.''
+\textbf{Archive (optional).} ``The measured-round populations as a key → count multiset. An $h$ chosen adaptively after the run does not
+inherit the fixed-$h$ guarantee.'' \textbf{Continuous parameters.} ``Use $\bar h(S)=E[h\mid S,X,y]$.'' \textbf{Descriptive only.} ``The
+measured-round frequency of the returned HPM is \textbf{not} in 𝓗. It may be printed as a descriptive diagnostic with no theorem, next
+to $e^{F(\hat S)}/\hat Z$.'' Placement in code: \texttt{cpp/v3\_engine.h:351--359}. The identity for general $h$ is a PROOF SKETCH (N1).
+\end{stmt}
+AMENDMENT\_HQ\_02 adds $d$ to the default 𝓗 (``raw d is recorded'', theorems use $(d-\min_\Omega d)/D$), the estimate
+$\hat J=\sum_r\hat Z_rB_r/\sum_r\hat Z_r-(1/R')\sum_rA_r$ of the Jeffreys divergence $J=E_\pi d-E_{\pi_0}d$ with
+$A_r=N^{-1}\sum_id(S^{(0)}_{ri})$ (initial start particles) and $B_r=(4N)^{-1}\sum_{k=1}^4\sum_id(S^{(k)}_{ri})$ (measured
+endpoints), labelled ``Post hoc Monte Carlo estimate of Jeffreys divergence; not a certificate; floating-point error
+unvalidated'' \src{NBH/branch_snapshots/MEET-v31/AMENDMENT_HQ_02_DEFINITIONS_from_MEET-THM.md:16-41}; and the cross-block proxy
+$\hat\varepsilon_\times=\max_{b\ne c,\,j\in C_b,\,k\in C_c}|X_j^\top X_k|/(n-1)$ (\texttt{cross\_block\_rmax}) with companions
+$\hat\kappa=\min_b\lambda_{\min}(G_{C_b}/(n-1))$, $\hat\delta=(K-1)\hat\varepsilon_\times/\hat\kappa$, $\hat{\bar u}=\sum_b\max_{U\subseteq C_b}x_b(U)$,
+$\hat r=\hat\delta\hat{\bar u}/[(1-\hat\delta)(1-\hat{\bar u})]$, $\hat\eta=K\log(1/(1-\hat\delta))+\nu\log(1/(1-\hat r))$ on the stated domain, else
+``n/a'' \src{NBH/branch_snapshots/MEET-v31/AMENDMENT_HQ_02_DEFINITIONS_from_MEET-THM.md:43-58}. ``Reporting fields 1--3 are specified,
+not yet coded'' \src{NBH/branch_snapshots/MEET-v31/AMENDMENT_HQ_02.md:15}.
+
+\subsubsection{Certificate card}\label{sec:method-card}
+Definition \rid{DF17}; decision \rid{MD10}. The card is POST HOC, ``computed after the run and never feeds back into
+calibration''. Abridged items below keep every quantifier; full text \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:212-255}.
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:214-253}
+\textbf{Header.} Every line is stated in exact arithmetic. Until SC($\eta_F$) is established by validated arithmetic and VAL-FP holds at
+production size, every computed number carries the label ``numerical implementation of an exact-arithmetic certificate'', with $\eta$
+printed. L1, L2 and R run under one declared certificate budget; on exhaustion the item reports ``unresolved''. A failed or unfinished
+certificate never changes the fit's status. Under stacking there is one card per reported record.
+
+\textbf{G1 (deterministic).} $\mathcal T$ is the deduplicated reported store and $Z_{\mathcal T}=\sum_{S\in\mathcal T}e^{F(S)}$. Then: $Z_{\mathcal T}\le Z$;
+$\pi(S)\le e^{F(S)}/Z_{\mathcal T}$ for every $S$; $\pi(A)\le\sum_Ae^F/Z_{\mathcal T}$ for every $A\subseteq\mathcal T$; $\pi(S)/\pi(\hat S)\le e^{-g}$ on
+$\mathcal T\setminus\{\hat S\}$, with $g=F(\hat S)-\max_{\mathcal T\setminus\{\hat S\}}F$; $\hat Z<Z_{\mathcal T}\Rightarrow\hat Z<Z$.
+
+\textbf{G2 (one-sided, output-level).} Simultaneously for all $S$: $\pi(S)\le\min\{1,e^{F(S)}/\max(Z_{\mathcal T},0.05\hat Z)\}$;
+$\pi(\Omega\setminus\mathcal T)\ge1-Z_{\mathcal T}/(0.05\hat Z)$. This is mass \textbf{outside the reported store} (never scored, or scored and
+evicted). It is \textbf{not} a bound on never-scored mass. G2 fails only on $\{Z<0.05\hat Z\}$, and P(run returns output and G2 is false)
+$\le0.05\cdot P(\mathrm{SMC}\cap\mathcal A)\le0.05$. This is a probability \textbf{joint with output, never conditional on completion}. [\dots]
+If $Z_{\mathcal T}\ge0.05\hat Z$, G2 holds surely.
+
+\textbf{L1 (local).} Evaluated on the finally returned $\hat S$ [\dots]. If \texttt{local\_certified}, then $F(S)\le F(\hat S)$ for every
+feasible flip or swap. Report $g_{\mathrm{add}}$ ($+\infty$ if $|\hat S|=K$), $g_{\mathrm{del}}$ ($+\infty$ if $\hat S=\varnothing$),
+$g_{\mathrm{swap}}$ ($+\infty$ if there are no swaps), $\rho_{\mathrm{loc}}=\pi(\hat S\mid\{\hat S\}\cup\mathcal N(\hat S))$.
+
+\textbf{L2 (subsets).} $g_{\mathrm{sub}}=F(\hat S)-\max_{S\subsetneq\hat S}F(S)$ and $\sum_{S\subsetneq\hat S}\pi(S)/\pi(\hat S)$. With
+$\max\varnothing=-\infty$: when $\hat S=\varnothing$, $g_{\mathrm{sub}}=+\infty$ and the relative subset mass is 0.
+
+\textbf{L3 (best-of-scored).} If $\mathcal T=$ top-$(40p+1)$ of the realised scored set $\mathcal S$ and $|\mathcal T|\ge2$, then
+$\pi(S)\le e^{-g}\pi(\hat S)$ for all $S\in\mathcal S\setminus\{\hat S\}$, with $g=F(\hat S)-F(\mathrm{top}[2])$. This holds under LS0 because
+$\mathcal T_{\mathrm{new}}=\mathrm{top}_c(\mathcal T_{\mathrm{old}}\cup\mathcal S_{\mathrm{added}})$.
+
+\textbf{R (optional).} A declared region rule $U(X,y,\hat S)\ni\hat S$ [\dots]. B\&B on $[\varnothing,U]\cap\Omega$, dropping leaves with
+$|L|>K$, gives (a)--(c) as in PC2. ``Unresolved'' on budget exhaustion. In floating point, (a) needs $\tilde\Phi\le\tilde F(\hat S)-2\eta_F$.
+
+\textbf{Card-level statement.} ``The probability that a run returns a card with a false G2, L or R claim is at most 5\%'', in exact
+arithmetic. G1, L and R are true surely. [\dots] \textbf{Excluded:} C2; C5; the ``unscored mass'' wording; the B\&B cost remark; any
+rigorous reading of \texttt{global\_certified}.
+\end{stmt}
+Cuts [\dots]: G2's premise list (PC1 claim 2 (i)--(iv), premise (i) = Lemma RO plus GUARD-W, a code-audit obligation);
+L1's LS0 cap/interruption sentence (as \#10); R's printed node budget and $\tau$; the floating-point version of the card-level
+statement (needs validated SC and VAL-FP). See the source span.
+
+\subsubsection{Output convention, output event, unavailable outputs}
+Definition \rid{DF21}; decision \rid{MD12}.
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:168}
+\textbf{Output convention.} ``Every estimate on the output event 𝒪 is a function of (X, y, seed, binary). The allocation and hardware
+decide \textbf{delivery only} (stop-only guard, Lemma RO). Guarantees are stated for the potential (uninterrupted) run and as
+\textbf{P\{𝒪, ·\}} (joint with output), never as P(· | 𝒪). P(no output) is an operational frequency that depends on the allocation and
+hardware, and is reported with them (V13).''
+\end{stmt}
+\#15: ``On every return without complete output (\texttt{resource\_limit}, \texttt{schedule\_limit}, \texttt{numerical\_failure},
+GUARD-W stops, LS0 stop, degenerate statuses), \texttt{fit\$log\_Z} and \textbf{every estimate field} ($\hat Z_r$, $\hat Z$, bounds, PIPs,
+MPMs, $\hat\mu(h)$, card) are NA by exact name. [\dots] This fixes the partial-match hazard, where \texttt{fit\$log\_Z} silently
+returned \texttt{log\_Zbar0}'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:162}. On \texttt{schedule\_limit} and
+\texttt{numerical\_failure} the v3 rule is ``the best scored model is returned'', labelled incomplete
+\src{Docs/Methodology/METHODOLOGY_v3.md:49-51}.
+
+\subsection{The settings table and the \texorpdfstring{$(n,p)$}{(n,p)} rules}\label{sec:method-settings}
+
+Definition \rid{DF25}; decision \rid{MD13}. Ground rule 9 requires every setting to be ``(a) modelling convention with a
+stated reason; (b) explicit function of (n, p) or X; (c) declared resource budget; (d) numerical tolerance; (e)
+arbitrary'', and ``\textbf{No setting is class (e) in the method's law}''
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:287-294}; ``No separate p ≪ n / p ≫ n rule is needed: K, B, N₀, the
+exact-branch rule and r\_n switch regime by formula'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:210}. The
+constants paragraph: ``These values are conventions, not derived optima; changing them is not automatically
+law-preserving.'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:208}. The table below transcribes all 49 rows of
+METHOD \S5 (all six columns; markdown converted to LaTeX text) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:296-346};
+row $k$ is source line $297+k$, shown in parentheses in the first column. ``Numerical boundaries quoted from seats are
+seat-derived unless marked [chair-checked].'' Code pointers inside the rows (e.g.\ \texttt{v3\_core.cpp:142}) are METHOD's own
+and refer to the v2.1 tree (see the citation-version divergence in \S\ref{sec:method-impl}).
+
+{\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{xltabular}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.9cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{1.25cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{1.6cm}@{}}
+\toprule
+\# (line) & setting (value; source) & class & reason & behaviour as n, p grow & action\\
+\midrule
+\endhead
+1 (298) & g = n, τ = 1 (M §5; \texttt{v3\_score.h:175}) & (a), (b) & unit information; ridge keeps m(S) finite for collinear X\textsubscript{S} & p-free; τ matters more for p ≫ n (collinear sub-models) & keep (Felipe) \\
+2 (299) & IG(0.01, 0.01) (M §5) & (a) & proper, as the proofs require & pairwise effect ≤ n·b₀|1/Q₁ − 1/Q₂| on standardised data; relative to the gap it is not uniformly negligible (two equal-size, nearly collinear singleton models give a relative rate effect → 0.0142; review check, SOL1 \#43); negligibility needs residual-scale assumptions; not negligible at tiny n & keep; no universal "negligible" claim (R2\_C) \\
+3 (300) & BB(1, p), w(k) = ½/C(2p−1, k), W\textsubscript{K} explicit (M §5) & (a), (b) & sparse, multiplicity-aware; the project theory is for it & defined for every finite p; dense growing truths are not its regime & keep \\
+4 (301) & Cap K = min(p, ⌊n/2⌋) (M §3, §5) & (a), (b) & keeps near-interpolating models out & void for p ≤ n/2; binds for p ≳ n/2; K = 1 at n = 2, 3; s₀ > K unrecoverable by definition & keep \\
+5 (302) & Input domain: n ≥ 2, p ≥ 1 (v3.1, proposed; current code rejects n < 3, \texttt{v3\_preprocess.R:103–107}) & (b) & standardisation and the target are defined at n = 2 & n = 2 → exact branch (K = B = 1, E = p + 1); n = 1 → \texttt{degenerate\_n}; n = 0 rejected & \textbf{e3} (§2 \#25) \\
+6 (303) & Exact-constant column drop; \texttt{y\_constant}; \texttt{no\_predictors} (M §4) & (a) & removes undefined scales & regime-free & keep \\
+7 (304) & Standardisation: max-abs, centre, SD (n−1) (M §4) & (a), (b) & affine and permutation invariance & regime-free & keep \\
+8 (305) & Near-constant anchored two-pass route at √ε\textsubscript{mach} (\texttt{v3\_preprocess.R:47}) & (d) & cancellation protection, not screening & regime-free & keep; document (R2\_C) \\
+9 (306) & Duplicate report |r| ≥ 1 − 10⁻¹⁰ (M §4 rule 5; \texttt{v3\_core.cpp:722}) & (d) & reporting only; duplicates are kept & regime-free & keep \\
+10 (307) & B = min(⌊√n⌋, ⌊√p⌋, B*) (M §3) & (a), (b) & Felipe's rule; B ≤ K and B ≤ p & √p binds for p < n, √n for p > n; B = 1 at n = 2, 3 & keep \\
+11 (308) & \textbf{B* = 16} (M §3, §8.7; \texttt{v3\_core.cpp:142}) & \textbf{(c)} & exhaustive-table budget: ≤ 4,096p scores and 65,536p bytes & binds once n, p ≥ 289; theorem SIZE condition: B = 16 covers groups 9..16 & \textbf{e1} (§2 \#23) \\
+12 (309) & ℓ = ⌈log₂(n + p + 1)⌉ (M §3) & (b), (c) & local-search move cap and rebuild cap & 10–11 at the study, 20 at n + p ≈ 10⁶; not guaranteed enough for growing support (obligation) & keep \\
+13 (310) & L = max(4, ⌈log₂(n + 1)⌉) (M §3) & (b), (c) & burn-in at φ = 1; floor binds for n ≤ 15 & grows with n, not with p; "L logarithmic versus t\textsubscript{mix} possibly polynomial" is V10 OPEN & keep \\
+14 (311) & N₀ = max(2,500, n, p) (M §3) & (b), (c) & floor: the 2,500 is a declared budget. "Per-island RB-PIP MC SD ≤ 0.01" is an iid-sampling benchmark only (1/(2√N)); resampling creates dependence, so it is not a guarantee. Grows with dimension & floor binds at the study; N₀ = max(n, p) above 2,500 ⇒ Θ(p·max(n, p)) move steps per stage, Θ(p²) only when n = O(p); score-size costs extra (preflight reports it) & keep; C6 iff a particle-depth claim or any demonstrated fit with p > 2,500 (§3) \\
+15 (312) & H₀ = ⌈512·N₀/2,500⌉ (M §3) & (b), (c) & declared calibration/final ratio 0.2048 & grows linearly; single-tier calibration/final = 0.0512 + 0.2048·I ≤ ≈ 2.1 at I = ℓ = 10 (seat-derived; ≤ ℓ rebuilds per tier) & keep; print the formula (§2 \#19) \\
+16 (313) & T₀ = max(1,000, ℓ²) (M §3) & (b), (c) & finite stage ceiling; exceeding it ⇒ \texttt{schedule\_limit} & the ℓ² term binds only for n + p ≥ 2³¹; ideal-grid T* = O(log log p); as-coded T\textsubscript{n} OPEN (Conjecture P) & keep; \textbf{w4} (§2 \#33) \\
+17 (314) & Tiers e ∈ \{0, 1\}, factor 4, ≤ 1 escalation (M §3, §6.9) & (c) & bounded escalation, decided before final randomness & ≤ ≈ 16× bridge work; no unbounded rescue; beyond → \texttt{schedule\_limit} & keep \\
+18 (315) & R = 4 final islands; optional R′ = 4k at N\textsubscript{e}, declared before stream 10 (M §3; §2 \#7) & (c) & replication and parallel width & fixed 4 gives no growing-dimension accuracy; stacking at N\textsubscript{e} lowers the variance of the averaged evidence exactly ∝ 1/R′; for normalised PIPs and general h, 1/R′ is an asymptotic (delta-method) rate under moment conditions, not finite-R monotonicity & keep; \textbf{w7} \\
+19 (316) & 4 diagnostic islands per rebuild (M §6.8) & (c) & E2 is an SD over 4 values & regime-free & keep \\
+20 (317) & 4 measured rounds (M §6.11) & (c) & RB averaging after burn-in & constant; correlated rounds are not 4 replications & keep; general-h accumulator (§2 \#12) \\
+21 (318) & Exact branch Σ\textsubscript{k≤K} C(p, k) ≤ (5H₀ + 4N₀)·p (M §6.2) & (b), (c) & enumerate when it costs about one SMC stage of all populations & fixed p is eventually exact as n grows (N₀ ≥ n); all p at n ≤ 5 [chair-checked]; n = 10: p ≤ 36; n ≥ 22: every p ≤ 17 is exact (a uniform sufficient range; the maximum for n ≤ 2,500, while larger n can admit more, e.g. n = 3,000, p = 18; review check, SOL1 \#33); growing p ≪ n need not be exact & keep; \textbf{w2} \\
+22 (319) & Clustering: complete linkage on 1 − |r|, size-only cut, next-fit packing, lexicographic ties (M §6.3) & (b), (c) & deterministic X-dependent partition under the table budget & no correlation cut; O(p²) memory, O(p²)–O(p³) time; packing can merge separated groups & keep; \textbf{w5}; C11 (§3) \\
+23 (320) & Tables (all subsets per block, exponent 1, full y) and start π₀ (M §6.3) & (a), (b) & exactly computable composite step, corrected at φ = 1 & constant B bounds each table; the number of blocks grows with p & keep; item 1 = Outcome 2: no depth or speed claim for the start \\
+24 (321) & Neighbour graph: r\textsubscript{n} = √(2 log p / n), strict exceedance, forced best partner, ≤ B outgoing, symmetric union (M §6.4) & (b), (c) & chance-correlation scale of p columns; proposal heuristic & r\textsubscript{n} → 0 when log p = o(n); r\textsubscript{n} ≥ 1 iff p ≥ e\textsuperscript{n/2} (equality impossible for integer n, p) ⇒ 1-NN graph for p > 1; degrees may exceed B & keep; \textbf{w1}, \textbf{w3} \\
+25 (322) & \texttt{cut\_group} diagnostic at ρ = r\textsubscript{n} (\texttt{v3\_core.cpp:760–770}) & (b) & descriptive only & can give large components or none & keep, descriptive \\
+26 (323) & Move round m = p + B + 2, fresh random order; multinomial resampling each stage (M §6.5–6.6) & (b), (c) & reversible, self-adjoint kernel; fixed mutation allocation & Θ(p) sequential steps per particle per round: inherent to the kernel (I1) & keep; changing it is WORKHORSE \\
+27 (324) & ESS threshold 0.90, pilot and grid (M §6.6–6.7; \texttt{v3\_calib.h:31, 79}) & \textbf{(c)}, with B's caveat & one-step dispersion budget (weight CV² ≤ 1/9). Caveat: "defines the law of 𝓒; carried by the theorems as a hypothesis (Theorem G needs the same threshold for pilot and grid)" & dimensionless; does not control accumulated error or omitted mass & keep; S3 R3-4 records (c) over B's (a) \\
+28 (325) & 60 bisection halvings; endpoint snap 10⁻¹² (\texttt{v3\_calib.h:34–43, 82–94}) & (d) & 2⁻⁶⁰ below double resolution on [0, 1] & at very sharp crossings, progress may not resolve; failure is reported & keep \\
+29 (326) & Pilot floor 1/T\textsubscript{e} (M §6.6) & (b), (c) & exploratory progress within the ceiling; forced steps counted and trigger escalation & shrinks as T\textsubscript{e} grows & keep \\
+30 (327) & V = top 20p by γ₀ ∪ top 20p by γ₁ ∪ \{∅\}, |V| ≤ 40p + 1 (M §6.7) & (b), (c) & O(p) = size of a 1-flip neighbourhood; caps grid cost 60·|V|·T\textsubscript{e} & the retained fraction of model space vanishes; omitted mass not controlled & keep \\
+31 (328) & Grid convergence = grid equality; ≤ ℓ rebuilds (M §6.7) & stopping rule (b), a deterministic rule (reclassified from the lead's (a), R2\_B row 20, by HQ amendment 01; values unchanged); cap (b)/(c) & a flat posterior keeps V changing by MC noise & convergence and P(S₀ ∈ V) OPEN (obligations) & keep; contract (§2 \#18) \\
+32 (329) & E1 > 1 nat, E2 SD > 1 nat, E3, forced steps, grid failure/non-convergence, \texttt{local\_limit} (M §6.9) & (c) diagnostic criteria (S3 R3-4) & odds factor e; triggers define the law of 𝓒 & scale-free; no positive power as dimension grows & keep; labelled heuristics \\
+33 (330) & Low-ESS flag: final stage < 0.5N (M §2) & (c), (b) & report flag & regime-free & keep \\
+34 (331) & Top store 40p + 1; leader stores 20p (M §6.10) & (b), (c) & HPM survives eviction; near-ties, Z\_𝒯 and the card read it & linear in p; may truncate many near-equivalent models; restricted summaries labelled restricted & keep \\
+35 (332) & Score cache 500p, clear when full (M §8.6) & (b), (c) & a hit returns identical bits; no effect on the law & key storage up to O(pK) & keep \\
+36 (333) & Near-tie window 10⁻⁹ nat (M §6.10) & (d) & informational; the HPM uses exact equality & can fall below scorer error at large n; η depends on k, Q and conditioning, not on n alone, so a numerical crossing point needs a specified design and model (η ≈ 6·10⁻¹⁰ at n = 200; seat-derived) & keep + \textbf{e2} heuristic list (§2 \#24) \\
+37 (334) & HPM tie rule: exact equality, then smallest |S|, then lexicographic (M §6.10) & (a) & argmax convention & scale-free & keep \\
+38 (335) & MPM threshold ½; α = 0.05 for the Markov bound (M §6.11–6.12) & (a) & Hamming-loss rule; declared confidence & dimension-free; MPM may exceed K & keep \\
+39 (336) & Q recompute below 10⁻⁸·yᵀy; Cholesky → refactor → augmented QR → \texttt{numerical\_failure} (M §6.13) & (d) & stable evaluation of one score & conditioning worsens with n, K; failure explicit & keep \\
+40 (337) & Scorer error expression η (64ε…), used by \texttt{global\_certified} (\texttt{v3\_score.h:240}) & (d) as an indicator; (e) only if read as rigorous & the source calls it heuristic & no uniform validity established & \textbf{e5} (§2 \#27) \\
+41 (338) & LS0 start-mode tie enumeration cap 10⁶ (\texttt{v3\_start.h:183}) & (d)/(c) fast path & DP argmax exact; only the tie choice can truncate & ties can proliferate with duplicates or symmetry & \textbf{e4} (§2 \#26) \\
+42 (339) & Certificate budget (scores, B\&B nodes), region rule U, τ (card) & (c) declared certificate-region settings & PC2: Seat C's correction 6 upheld & "unresolved" on exhaustion; L2 needs 2\textsuperscript{|Ŝ|} − 1 scores & new in v3.1 (§2.1) \\
+43 (340) & Default 𝓗: size indicators, neighbour-edge pairs ≤ 2pB (§2 \#12) & (b) & fixed from (X, y) via the graph & linear in pB & new in v3.1 \\
+44 (341) & Allocation (default 8 GiB, 24 h), preflight, stop-only wall guard (M §2, §8.6) & \textbf{(c) declared input} & decides delivery only (Lemma RO) & a fixed allocation cannot support unrestricted growth (V13, by definition); the setup component alone, 8(3np + 3p²) bytes, gives p ≤ [−n + √(n² + 4·8·2³⁰/24)]/2 at 8 GiB (18,818 at n = 200; 11,398 at n = 20,000; review check, SOL1 \#39); this excludes all other allocations and workers and is not a feasible-fit threshold (seat-derived) & \textbf{e8}, \textbf{e6} (§2 \#22, \#28) \\
+45 (342) & Seed ∈ [1, 2³¹ − 1]; stream map 0–9 (calibration), 10..9+R′ (final); 53-bit uniforms; integer dimensions & (c), (d) & reproducibility conventions; "bitwise" is per binary and BLAS & integer ranges can be exceeded at huge sizes & \textbf{e7} (§2 \#29); IND-T for 10..9+R′ (§6) \\
+46 (343) & Workers: processes; worker count (§2 \#1–\#5) & (c) & delivery only; bitwise to serial & regime-free & new in v3.1 \\
+47 (344) & Archive/export limits: V snapshot all if p ≤ 25, else ≤ 10⁴; R Gram copy only for p ≤ 2,000 (\texttt{v3\_calib.R:15–20}; \texttt{v3\_setup.R:9}) & (c) & storage choices; full V still builds the grid & truncation grows with p; never reconstruct a "full" V from a snapshot & keep; expose truncation \\
+48 (345) & Other operational constants: exact-branch timing (200 scores, ≥ 64 columns), duplicate-check chunk 512, compiler-lock waits & (c) & profiling and workspace & hardware-dependent; outside the theory & keep \\
+49 (346) & Gram-based scorer; O(p²) correlations and distances (M §8.1) & (c) implementation of the exact target & — & the dominant practical storage limit of v3.1; integer-dimension, stream and allocation ranges and checked-arithmetic rejection are also hard implementation limits (§2 \#29, row 45) & v3.2: C7, C11 (§3) \\
+\bottomrule
+\end{xltabular}
+}
+Per-regime summary (tiny $n$; fixed $p$, $n\to\infty$; growing $p\ll n$; $p\approx n$; $p\le n^A$; $p\le e^{Cn^\alpha}$; joint growth)
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:350-377} and the adopted theory-scope sentence: ``The p ≤ n\textsuperscript{A}
+scope of the selection theorems comes from the target theory (Felipe's prior and the proof technique), not from a sampler choice.
+[\dots] Whether our prior admits it is OPEN, not impossible.'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:381}.
+Method-induced restrictions: the cap excludes $s_0>K$; fixed $B$ limits whole-group recovery (as a single block) to $g\le B$;
+bounded stores can omit posterior mass; logarithmic $\ell$ and $L$ may be short for some proof routes; $N_0\ge p$ and
+full-coordinate rounds impose real computational growth \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:383-388}.
+
+\subsection{The pipeline end to end}\label{sec:method-algo}
+
+Assembled from M \S6.1 and \S7 \src{Docs/Methodology/METHODOLOGY_v3.md:133-149} \src{Docs/Methodology/METHODOLOGY_v3.md:293-306}
+with the v3.1 additions \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:85}. Steps marked {\sffamily [v3.1]} are not in the
+frozen code v2.2.1 (\S\ref{sec:method-impl}).
+
+\begin{tcolorbox}[sopbase,colback=white,colframe=black!60,title={SMC-BVS v3.1$(X,y,s)$ --- pipeline}]
+\small
+\begin{enumerate}[leftmargin=*,label=\arabic*.]
+\item \textbf{Checks and preprocessing} (\S\ref{sec:method-pre}); statuses \texttt{invalid\_input}, \texttt{no\_predictors},
+  \texttt{y\_constant} {\sffamily [v3.1: \texttt{degenerate\_n}, \texttt{unsupported\_size}; $n=2$ admitted]}. Preflight $\to$ maybe
+  \texttt{resource\_limit}.
+\item \textbf{Budgets} $K,B,\ell,L,N_0,H_0,T_0$ from $(n,p)$. If $\sum_{k\le K}\binom pk\le(5H_0+4N_0)p$: \textbf{enumerate} (exact $Z$,
+  PIPs, HPM in the strict order, near ties), status \texttt{exact}; report and stop.
+\item \textbf{Setup}: Gram, correlations; complete-linkage blocks $C_1..C_J$ (size cut $B$, next-fit packing); exact tables
+  $r_b(U)$ for all $U\subseteq C_b$ (all table scores enter the HPM ledger) {\sffamily [v3.1: tables in parallel]}; size profiles,
+  $\bar Z_0$ by convolution, sampler of $\pi_0$; neighbour graph $N(\cdot)$.
+\item \textbf{Calibration}, tier $e=0$ (streams 0 and 1--4): pilot ($H_e$ particles from $\pi_0$; adaptive ESS-0.90 schedule,
+  floor $1/T_e$; multinomial resampling and one round per stage; $L$ burn-in + 4 measured rounds; local search) $\to$ $V$,
+  preliminary grid $\to$ repeat $\le\ell$ times: 4 diagnostic islands ($H_e$ each) on the grid {\sffamily [v3.1: concurrent]}
+  $\to$ local search $\to$ update $V$ $\to$ rebuild grid; stop when the grid repeats $\to$ triggers E1--E3, forced steps,
+  grid failure/non-convergence, \texttt{local\_limit}.
+\item If any trigger fired at $e=0$: re-preflight, then \textbf{one} escalation to tier 1 (streams 5 and 6--9), keeping score
+  leaders. If grid construction fails at $e=1$: \texttt{schedule\_limit} (best scored model returned).
+\item \textbf{Freeze} $\mathcal C$: grid, tier, $N_e$, $L$, inherited leaders/HPM {\sffamily [v3.1: and $R'$, declared before stream 10;
+  default $R'=4$; optional $R'=4k$ or $R'_n=4\lceil\log_2(n+p+1)\rceil$]}.
+\item \textbf{Final islands} $r=1..R'$ on streams $10..9+R'$ {\sffamily [v3.1: concurrent process workers, merged by Lemma S]}:
+  $N_e$ fresh iid $\pi_0$ draws; for $t=1..T$: weights $e^{(\varphi_t-\varphi_{t-1})d}$, log-increment, multinomial resampling,
+  one random-order round at $\varphi_t$; then $L$ burn-in and 4 measured rounds at $\varphi=1$ with RB recording of $o_j$
+  {\sffamily [v3.1: $H_r(h)$ for $h\in\mathcal H$; $d$ means for $\hat J$]}.
+\item \textbf{Final local search} from the global best (all scored models, all phases) {\sffamily [v3.1: scans in parallel; if
+  $R'>4$ also from $c_4$]}; then {\sffamily [v3.1] \textbf{LS0}} from $\tilde S_0$.
+\item \textbf{Report}: HPM $\hat S$ (strict order $F$, then $|S|$, then lex) with provenance; near ties; $\hat Z_r$, pooled $\hat Z$,
+  $0.05\hat Z$; PIPs {\sffamily [v3.1: $\hat Z$-weighted primary, equal-weight secondary, both MPMs, $R_{\mathrm{eff}}$; $\hat\mu(h)$; $\hat J$,
+  $\hat\varepsilon_\times$ and companions]}; flags; diagnostics {\sffamily [v3.1: POST HOC certificate card per record; on any return without
+  complete output every estimate field NA]}.
+\end{enumerate}
+\end{tcolorbox}
+
+\subsection{v3 \texorpdfstring{$\to$}{->} v3.1: what changed and what did not}\label{sec:method-diff}
+
+``\textbf{Does the 2,400-fit study need a re-run? No.} The study stands as \textbf{v3.1 at R′ = 4, with POST HOC additions}''; its
+saved sampler estimates are reusable with stated reporting limitations, and ``Full v3.1 records are not yet produced''
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:45}. Unchanged (M \S\S): target (\S5); blocks, tables, composite start
+(\S6.3); neighbour graph (\S6.4); move round (\S6.5); resampling (\S6.6); calibration law (\S6.6--6.9); budgets (\S3); HPM
+decision (\S6.10); evidence estimator (\S6.12) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:26-34}. The full
+per-section map is \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:74-106}. Change classes: ADDITIVE (outputs on completed
+fits unchanged or nested), POST HOC (computable from saved fits), LAW-PRESERVING (same law, different seed-to-uniform map),
+WORKHORSE (changes the method's law) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:16-20}. ``No change is WORKHORSE.''
+\src{NBH/branch_snapshots/MEET-v31/MINUTES.md:28}. The table summarises METHOD \S2 rows (names shortened; see source lines).
+
+{\footnotesize
+\begin{xltabular}{\linewidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\# & change & class & effect on the 2,400 fits (source line)\\
+\midrule\endhead
+0 & composite block start kept; item 1 = Outcome 2 (no depth/speed claim) & none & none \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:118}\\
+1 & (a) concurrent final islands, Prop W & ADDITIVE (bitwise) & none; executed bitwise smoke + 3/3 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:131}\\
+2 & (b) concurrent diagnostic islands, Prop W-cal & ADDITIVE (bitwise) claimed from code reading only & none; W-cal not executed \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:132}\\
+3 & (c) parallel local-search scans & ADDITIVE & none \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:133}\\
+4 & (h) parallel block-table stage & ADDITIVE (bitwise) & none \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:134}\\
+5 & process workers; counter rule & ADDITIVE (engineering) & none \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:135}\\
+6 & GUARD-W semantics & ADDITIVE (spec) & none; the 6 \texttt{resource\_limit} fits stay stops \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:136}\\
+7 & optional stacking $R'=4k$ at $N_e$; $c_4$ search; two records & ADDITIVE (nested) & none; study is $R'=4$ \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:142}\\
+8 & LS0 from the start mode & ADDITIVE & 0 of 2,394 HPMs changed (test export); merged replay pending \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:150}\\
+9 & D3c wording for LS0 (store = top$_c$, not superset) & spec text & none \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:151}\\
+10 & certificate attaches to the returned $\hat S$ & ADDITIVE (spec) & none \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:152}\\
+11 & $\hat Z$-weighted PIP primary; equal-weight secondary; both MPMs; $R_{\mathrm{eff}}$ & POST HOC & no refit; primary needs full rescoring (3 designs done: MPMs never differ, max$|\Delta\mathrm{PIP}|\le1.3\cdot10^{-3}$) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:158}\\
+12 & general-$h$ accumulator & ADDITIVE & not recoverable: no joint-summary claims \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:159}\\
+13 & certificate card & POST HOC & computable where the top store was saved \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:160}\\
+14 & $Z_{\mathcal T}$ and the underestimation certificate & POST HOC & as \#13 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:161}\\
+15 & unavailable output = explicit NA & ADDITIVE (interface) & only the 6 stopped fits' records change \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:162}\\
+16--21 & output convention; card sentence; calibration contract; depth/cost; memory wording; \S9 limitation wordings & spec text & none \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:168-173}\\
+22--29 & item-9 e8, e1, e2, e3, e4, e5, e6, e7 & spec text / POST HOC / ADDITIVE & none \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:179-186}\\
+30--36 & wording fixes w1--w7 & spec text & none \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:192-198}\\
+\bottomrule
+\end{xltabular}
+}
+
+\begin{notproved}[what is not claimable for the study]
+Quoting METHOD \S0 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:52-61}: joint posterior summaries (``No joint-summary claims
+for the 2,400 study fits''); the $\hat Z$-weighted (primary) PIPs and MPM on the full study until full rescoring (``So far only 3
+designs have been rescored''; the equal-weight PIPs remain valid as the \textbf{secondary}); any stacking ($R'>4$) result; a
+4-core speed-up (``The 1.9× figure is a 2-core measurement''); ``Bitwise'' for (b) until W-cal runs; ``Depth free of N, H, R'';
+``LS0 as `run by the production core' until the merged-LS0 replay runs''; the certificate card wherever the top store was not
+saved; ``Any depth or speed claim for the block start''.
+\end{notproved}
+
+Rejected changes (with reasons): backfit start (WORKHORSE, no exact sampler with known normaliser, no theorem); C8 split
+$N_e$; C9 shorter/shared calibration; C10 parallel-in-particle kernel; HPM--MPM flag; truth-based gate for the primary PIP;
+RB joint estimator; PSIS-$\hat k$/$\hat R$ flags; feeding certificates back \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:269-281}.
+Engineering checks that gate claims (W-cal, merged-LS0 replay, GUARD-W audit, IND-T, VAL-FP, preflight, checked arithmetic,
+full PIP rescoring, calibration timing) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:392-407}.
+
+\subsection{Implementation status (frozen code v2.2.1 vs spec)}\label{sec:method-impl}
+
+All study fits used the frozen tree \texttt{Scripts/Campaigns/2026-10-28\_New\_Campaign/code/core/v2\_2\_1/}; ``v2.2.1 = v2.2 core,
+byte-identical, plus one merged study layer'' and ``No numerical path changed''
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/CHANGES_v2_2_1.md:3-25}; ``The v2.2.1 rerun reproduces the 2026-10-23
+fits (\texttt{Results/SMC\_BVS\_v3\_production/}) exactly.'' \src{README.md:88}. Paths below are relative to that tree's
+\texttt{core/}. ``Spec only'' = specified, no code in the repo; ``prototype'' = code on a \texttt{theory/*} branch (the
+archive snapshots hold only .md/.tex/.lean).
+
+{\footnotesize
+\begin{xltabular}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{3.1cm}@{}}
+\toprule
+component & where (code location, verified) & status\\
+\midrule\endhead
+preprocessing, statuses, budgets & \texttt{v3\_preprocess.R:19-33, 97-132} & implemented (v3 rules; $n<3$ rejected)\\
+$n=2$, \texttt{degenerate\_n}, \texttt{unsupported\_size} (e3, e7) & --- & spec only\\
+prior, score $m(S)$, $F(S)$ & \texttt{cpp/v3\_score.h:39-72, 175-238}; \texttt{cpp/v3\_engine.h:89-98} & implemented, matches\\
+exact branch & \texttt{cpp/v3\_core.cpp:97-110, 526-570}; \texttt{v3\_exact.R} & implemented\\
+blocks, cut, packing; neighbour graph & \texttt{cpp/v3\_blocks.h:39-173} & implemented, matches\\
+tables, $\bar Z_0$, \texttt{draw\_pi0} & \texttt{cpp/v3\_start.h:73-176} & implemented (serial tables)\\
+start mode $\tilde S_0$ (DP, cap $10^6$) & \texttt{cpp/v3\_start.h:178-240} (header only; production removed its Rcpp export) & present, unused in production; e4 tie-aware DP spec only\\
+move kernels, random-order round & \texttt{cpp/v3\_engine.h:111-215} & implemented; N9 PASSED\\
+resampling, island loop, RB recording & \texttt{cpp/v3\_engine.h:231-375} & implemented\\
+pilot rule, $V$, grid, rebuild, escalation, freeze & \texttt{cpp/v3\_calib.h:25-98}; \texttt{v3\_calib.R:28-175} & implemented\\
+final run, 4 islands, streams 10--13 & \texttt{cpp/v3\_core.cpp:421-520}; \texttt{v3\_run.R:84-90} & implemented, serial, $R=4$ fixed\\
+(a) concurrent final islands & METH-AUDIT harness on branch \texttt{theory/METH-AUDIT} & prototype; executed bitwise 3/3\\
+(b) concurrent diagnostic islands; (c) parallel scans; (h) parallel tables & --- & spec only (W-cal not executed)\\
+stacking $R'$, $c_4$ search, two records & --- & spec only\\
+LS0, \texttt{ls0\_improved}, provenance \texttt{ls0} & \texttt{ls0\_core.R}, \texttt{ls0\_exports.cpp} on branch \texttt{theory/O-LS0} & prototype (test export); not merged\\
+HPM order, stores, near ties ($10^{-9}$) & \texttt{cpp/v3\_util.h:120-126}; \texttt{cpp/v3\_ledger.h:32-115}; \texttt{v3\_run.R:136-140} & implemented, matches\\
+local search, \texttt{local\_certified} & \texttt{cpp/v3\_engine.h:377-425}; \texttt{v3\_run.R:141-147} & implemented\\
+e2 heuristic near-tie list, $\eta(\hat S)$ & (\texttt{error\_bound} exists, \texttt{cpp/v3\_score.h:240-246}) & spec only\\
+$\hat Z_r$, $\hat Z$, $0.05\hat Z$ & \texttt{cpp/v3\_engine.h:300-323}; \texttt{v3\_run.R:117-124} & implemented\\
+equal-weight RB-PIP and MPM & \texttt{v3\_run.R:126-130} (named \texttt{pip\_primary}) & implemented (v3.1 \emph{secondary})\\
+plain PIP & \texttt{cpp/v3\_engine.h:350-371}; \texttt{v3\_run.R:167-169} & implemented (v2.2 addition)\\
+$\hat Z$-weighted PIP, $\mathrm{MPM}_{\hat Z}$, $R_{\mathrm{eff}}$ & \texttt{pip\_rescore.R} (MEET-v31 evidence, POST HOC) & POST HOC script; 3 designs rescored\\
+general-$h$ (joint), $\hat J$, $\hat\varepsilon_\times$ & --- & spec only\\
+$Z_{\mathcal T}$, certificate card & --- & spec only (POST HOC)\\
+E1--E3, low-ESS flags; calibration triggers & \texttt{v3\_run.R:148-156}; \texttt{v3\_calib.R:58-118} & implemented\\
+NA estimate fields & --- & spec only\\
+stop-only runtime guard & \texttt{cpp/v3\_engine.h:336-339}; \texttt{v3\_fit.R:76-81} & implemented (serial core); v3.1 worker/LS0 audit open\\
+preflight & \texttt{v3\_fit.R:16-46} & implemented: SMC memory only\\
+\bottomrule
+\end{xltabular}
+}
+Location sources: LS0 prototype \src{NBH/branch_snapshots/O-LS0/REPORT.md:69} \src{NBH/branch_snapshots/O-LS0/REPORT.md:95-97};
+METH-AUDIT harness \src{NBH/04_code_and_files_index.md:366}; \texttt{pip\_rescore.R} \src{NBH/04_code_and_files_index.md:369};
+production removals \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/README.md:15-19}.
+
+\begin{divergence}[spec v3.1 vs code: primary PIP]
+v3.1 makes the $\hat Z$-weighted PIP primary (\#11, \rid{MD08}). The frozen core computes only the equal-weight mean and calls it
+\texttt{pip\_primary} (``equal-weight mean over islands (M §6.11)'')
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:129}; production removed ``secondary PIP computation and
+outputs on both branches'' \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/README.md:16}, and the study adapter
+stops if a secondary PIP is returned \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/study/adapter.R:229}. METH-AUDIT
+flagged it: ``the Ẑ-weighted (secondary) PIP of METHODOLOGY §6.11 is not computed by the core''
+\src{NBH/branch_snapshots/METH-AUDIT/REPORT.md:232}. Consequence: every study field or table named ``primary PIP'' is the v3.1
+\emph{secondary} PIP. The v3.1 primary exists only via POST HOC rescoring, done on 3 designs
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:54}.
+\end{divergence}
+
+\begin{divergence}[decision vs code: LS0 not in the production core]
+\rid{MD03} decides ``LS0 in the shipped core''. In fact ``It is not yet in the production core, and the integrated replay is
+pending'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:48}; METH-AUDIT: ``\textbf{LS0 is not in the production core}''
+\src{NBH/branch_snapshots/METH-AUDIT/REPORT.md:235}. The O-LS0 check ran LS0 as a test export on the production core, and ``No
+production SMC fits were rerun with LS0 integrated (\texttt{ls0\_enable\_integrated} exists in \texttt{ls0\_core.R} but was not
+used)'' \src{NBH/branch_snapshots/O-LS0/REPORT.md:69}. The start-mode function is in the header but production removed ``the
+start-mode Rcpp export'' \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/README.md:15}. Hence OP-LS0 is a
+premise, not a code fact, and theorems ``about the shipped method'' that use LS0 (e.g.\ \rid{TH05} (b1-LH)) are about the
+spec; merged-LS0 replay = engineering check 2 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:399}.
+\end{divergence}
+
+\begin{divergence}[spec v3.1 vs code: islands, streams, parallel layer]
+Code fixes \texttt{islands = 4L} \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:88} and seeds final
+islands on streams $9+r$, $r=1..4$ \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_core.cpp:468-478},
+serially; the stream map is 0--13 \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:8-11}. No $R'$, no
+$c_4$ search, no baseline/expanded records, no concurrency: ``The production core is serial throughout''
+\src{NBH/branch_snapshots/METH-AUDIT/REPORT.md:172}. Prop W was executed with the METH-AUDIT harness, not the core; W-cal ``is
+code reading only'' \src{NBH/branch_snapshots/METH-AUDIT/REPORT.md:216}.
+\end{divergence}
+
+\begin{divergence}[spec v3.1 vs code: unavailable outputs, statuses, guard]
+\#15 requires every estimate field NA by exact name on any return without complete output. The core sets
+\texttt{fit\$log\_Zbar0} after setup \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_fit.R:146} and
+writes \texttt{log\_Z} only on completion \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:121}; on a
+stop, R's partial matching makes \texttt{fit\$log\_Z} return \texttt{log\_Zbar0} --- the hazard \#15 names
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:162}. Statuses \texttt{degenerate\_n} and \texttt{unsupported\_size} do not
+exist; $n<3$ is \texttt{invalid\_input} \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_preprocess.R:106}.
+Also v3 \S2 defines \texttt{resource\_limit} as ``preflight predicts the memory or time allocation will be exceeded''
+\src{Docs/Methodology/METHODOLOGY_v3.md:51-52}, while the code also returns it from a mid-run stop-only guard with partial,
+labelled results \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/README.md:19}; the 6 study stops are such
+wall-time stops \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:64}. v3.1's GUARD-W wording covers this (guard stop
+$\Rightarrow$ no output).
+\end{divergence}
+
+\begin{divergence}[spec v3 vs code: preflight]
+M \S8.6: ``estimate peak memory [\dots] and wall time [\dots]; if either exceeds the job allocation, return
+\texttt{resource\_limit}'' \src{Docs/Methodology/METHODOLOGY_v3.md:321-324}. Code: ``Lead rulings [\dots] SMC preflight is memory
+only'' \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_fit.R:16}, with block count proxy
+$\lceil p/B\rceil$ \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_fit.R:28} --- the e6 issue (``use J ≤ p
+blocks (not ⌈p/B⌉)'') \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:185}.
+\end{divergence}
+
+\begin{divergence}[reporting fields not coded]
+General-$h$ for joint $h$ (sizes, neighbour-edge pairs, $d$), $\hat J$, $\hat\varepsilon_\times$ and companions, $Z_{\mathcal T}$ and the
+certificate card, $R_{\mathrm{eff}}$, $\mathrm{MPM}_{\hat Z}$, the e2 heuristic near-tie list: no code in v2.2.1 (searched the tree);
+``Reporting fields 1--3 are specified, not yet coded'' \src{NBH/branch_snapshots/MEET-v31/AMENDMENT_HQ_02.md:15}. The only
+measured-round particle averages recorded are the marginal plain PIPs
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_engine.h:359-361}; ``The measured-round populations were
+not saved'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:53}.
+\end{divergence}
+
+\begin{divergence}[citation versions: METHOD's code line numbers]
+METHOD\_v3.1\_FINAL cites code lines that match the v2.1 tree \texttt{Scripts/SMC\_BVS/core/}, not v2.2.1: e.g.\ ``B* = 16 (M §3,
+§8.7; \texttt{v3\_core.cpp:142})'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:308} is \texttt{B\_MAX} at line 142 of
+\src{Scripts/SMC_BVS/core/cpp/v3_core.cpp:142} but at line 170 of
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_core.cpp:170}; \texttt{timings\$calibration} and
+\texttt{timings\$final} are at \texttt{v3\_fit.R:124, 136} in v2.1 \src{Scripts/SMC_BVS/core/v3_fit.R:124} but at lines 158 and 170 in
+v2.2.1 \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_fit.R:158}. The header-file citations
+(\texttt{v3\_score.h}, \texttt{v3\_start.h}, \texttt{v3\_calib.h}, \texttt{v3\_preprocess.R}) agree in both trees where checked. Not a
+behavioural divergence; agents must resolve METHOD's \texttt{file:line} pointers against \texttt{Scripts/SMC\_BVS/core/}.
+\end{divergence}
+
+\textbf{Checked and found consistent} (no divergence): prior and score; cap $K$ in scorer, Gibbs step and local search;
+block construction and tables; start convolution and sampler; neighbour graph; all four elementary steps and the random
+order; multinomial resampling; pilot and grid rules; rebuild loop and single escalation; evidence estimator; HPM order and
+running best over tables, calibration (inherited) and final phases; local-search rules; E1--E3 definitions.
+
+\subsection{Method decisions MD01--MD13 (MEET-v31, 2026-11-03)}\label{sec:method-md}
+
+Decision text = MINUTES \S2 ``Decision'' column (verbatim); reason = its ``Reason'' column (verbatim unless marked);
+status = \texttt{ID\_REGISTRY} status column. Meeting: chair Opus 5.5 (non-voting), seats A, B (Fable 5.1), C (gpt-6-astra)
+\src{NBH/branch_snapshots/MEET-v31/MINUTES.md:5-11}. Felipe's ground rules (DOSSIER \S1) are summarised in
+\src{NBH/notation_and_conventions.md:11}; objectives: (1) accuracy in recovering the true posterior, (2) parallel
+scalability, (3) BVS selection accuracy.
+
+\newcommand{\mdbody}[4]{\ \textbf{#1}\quad \status{#2}\par
+\noindent\emph{Decision.} #3\par\noindent\emph{Reason.} #4\par}
+
+\par\smallskip\noindent\defid{MD01}\mdbody{MEET-v31 decision 1}{decided (MEET-v31 MINUTES §2); closed in: R1 (all three); R2 rule; R3-6 procedure; result §3}
+{\textbf{Block (local-to-global) start kept.} The backfit start is rejected for paper 1. Arm D is v2 evidence only.
+\src{NBH/branch_snapshots/MEET-v31/MINUTES.md:36}}
+{``Ground rules 1, 5 and 7: no irrefutable case for dropping it; it carries the S1/S2 theorems. Backfit is WORKHORSE (full
+re-run) with no theorem, and no exact sampler with a known normaliser was exhibited for it [\dots], so Ẑ unbiasedness is not
+available. The earlier `headline gain capped at 6/2,400' rationale is withdrawn [\dots].'' Felipe: ``I'm open to dropping it but I
+need a very serious, irrefutable argument'' \pos{1132}; ablation result Outcome 2 \src{NBH/03b_reasoning_and_traces.md:161-166}. METHOD
+\S4 cites ground rules ``1, 5, 8''; HQ: ``both sets are correct in context''
+\src{NBH/branch_snapshots/MEET-v31/AMENDMENT_HQ_01.md:141}.}
+
+\par\smallskip\noindent\defid{MD02}\mdbody{MEET-v31 decision 2}{decided (MEET-v31 MINUTES §2); closed in: R1 (all three)}
+{\textbf{HPM stays the only decision rule.} MPMs of both PIPs are reported as descriptions. No HPM-vs-MPM disagreement flag.
+\src{NBH/branch_snapshots/MEET-v31/MINUTES.md:37}}
+{``HPM is the 0--1 Bayes rule (T07), and the finite-n spine T38(0)/N200 is about it. A disagreement flag has no provable power
+(ground rule 3).'' HQ: ``HPM stays primary, because it's the rule that is easiest to prove for an SMC output''
+\src{NBH/03b_reasoning_and_traces.md:168-172}.}
+
+\par\smallskip\noindent\defid{MD03}\mdbody{MEET-v31 decision 3}{decided (MEET-v31 MINUTES §2); closed in: R2 D3c}
+{\textbf{LS0 in the shipped core,} after the final local search. Own provenance and \texttt{ls0\_improved} flag. Does not fire E3.
+\src{NBH/branch_snapshots/MEET-v31/MINUTES.md:38}}
+{``Makes T38(b1-LH) a theorem about the shipped method. ADDITIVE.'' Evidence: ``O-LS0: 0/2,394 HPM changes''. Earlier HQ advice:
+``It closes the main theorem's biggest hole'', ``It costs almost nothing''; caveat ``most T38 premises fail at n=200 [\dots], so
+LS0's value is asymptotic'' \src{NBH/03b_reasoning_and_traces.md:68-75}. See the LS0 divergence above.}
+
+\par\smallskip\noindent\defid{MD04}\mdbody{MEET-v31 decision 4}{decided (MEET-v31 MINUTES §2); closed in: R1–R2 (D3e, D3f)}
+{\textbf{Parallel layer} (each item ADDITIVE / bitwise unless stated): (a) concurrent final islands; (b) concurrent diagnostic
+islands; (c) parallel scans with lexicographic reduction; (h) the block-table stage in parallel; process workers (threads need
+private counters); GUARD-W ``any worker / LS0 / guard stop ⇒ no output'' (an LS0 stop is an operational interruption; a completed
+LS0 capped at \texttt{local\_limit} still returns output, with L1 = n/a); (g) estimate fields NA on unavailable output.
+\src{NBH/branch_snapshots/MEET-v31/MINUTES.md:39}}
+{``Real issue: the parallel orientation (ground rule 2). The axis is islands and scans, not variables (ground rule 4).'' HQ:
+``The real problem is in the code, not the method'' (production code serial everywhere)
+\src{NBH/03b_reasoning_and_traces.md:153-159}.}
+
+\par\smallskip\noindent\defid{MD05}\mdbody{MEET-v31 decision 5}{decided (MEET-v31 MINUTES §2); closed in: R2 D3a, D3b}
+{\textbf{Stacking R′ = 4k at N\_e,} declared before stream 10 (streams 10..9+R′). N\_e is never split. Extra local search from the
+R = 4 centre. Baseline and expanded records each carry their own flags and card. \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:40}}
+{``Keeps stacking ADDITIVE (nested).'' Evidence: ``PC1 claim 6: without the extra search the post-search HPM is \textbf{not}
+monotone in R′ (COUNTEREXAMPLE). No listed theorem needs monotonicity; the extra search costs ≤ ℓ + 1 scans''.}
+
+\par\smallskip\noindent\defid{MD06}\mdbody{MEET-v31 decision 6}{decided (MEET-v31 MINUTES §2); closed in: R2 D3d, D4; C6 trigger: HQ (AMENDMENT\_HQ\_01)}
+{\textbf{Depth and cost are stated at the implemented (island) level.} ``Free of N, H, R'' is removed. Calibration is counted. C6
+(per-particle streams) and C7 (Gram-free scorer) are the declared v3.2 path. C6 is implemented and law-checked iff paper 1 claims
+particle-parallel depth \textbf{or} demonstrates any fit with p > 2,500. [\dots] Felipe decided (2026-11-03) that paper 1 claims
+island-level depth only, and the study has p ≤ 1,000, so neither trigger currently fires.
+\src{NBH/branch_snapshots/MEET-v31/MINUTES.md:41}}
+{``Honest scaling claim.'' Evidence: calibration took 0.45×, 0.62× and 1.76× the serial final run on S1, S5 and S4. [\dots] =
+the trigger's provenance (union of seat positions, HQ disposition), quoted in full in the registry row.}
+
+\par\smallskip\noindent\defid{MD07}\mdbody{MEET-v31 decision 7}{decided (MEET-v31 MINUTES §2); closed in: R1–R2 (all three)}
+{\textbf{Calibration kept unchanged, with a contract:} 𝓒 frozen before final randomness; validity holds for any frozen 𝓒; Theorem G
+cap; ≤ ℓ rebuilds per tier (≤ 2ℓ with escalation); restricted ESS on V only; statuses distinguished. Shortening it (C9) is
+rejected. \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:42}}
+{``Validity does not depend on calibration converging. The missing theorems concern efficiency and delivery (theorem
+obligations).'' Shortening calibration ``weakens three existing theorems'' \src{NBH/03b_reasoning_and_traces.md:157}.}
+
+\par\smallskip\noindent\defid{MD08}\mdbody{MEET-v31 decision 8}{decided (MEET-v31 MINUTES §2); closed in: R2 D5 (all three)}
+{\textbf{Ẑ-weighted PIP is primary,} equal-weight is secondary, and both MPMs and R\_eff are reported. POST HOC.
+\src{NBH/branch_snapshots/MEET-v31/MINUTES.md:43}}
+{``The only PIP with a consistency-in-R theorem (Prop P(ii), T31(i)). Equal weighting keeps the single-island bias for every R. The
+truth-based gate was withdrawn: closeness to the binary truth is objective 3, not objective 1.'' Evidence: 3-design rescoring
+(MPMs never differ, max|ΔPIP| ≤ 1.3·10⁻³) \src{NBH/03b_reasoning_and_traces.md:174-176}.}
+
+\par\smallskip\noindent\defid{MD09}\mdbody{MEET-v31 decision 9}{decided (MEET-v31 MINUTES §2); closed in: R1 (all three)}
+{\textbf{Flags E1–E3, ESS and grid flags kept} as calibration triggers (they define the law of 𝓒) and as labelled heuristics. No
+PSIS/R̂ flags. The certificate card never feeds back into calibration. \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:44}}
+{``Removing them is WORKHORSE. Their theory is negative (V12, E1c).''}
+
+\par\smallskip\noindent\defid{MD10}\mdbody{MEET-v31 decision 10}{decided (MEET-v31 MINUTES §2); closed in: R2 D2; R3-1}
+{\textbf{Certificate card (POST HOC):} PC2's minimal card. G1 [\dots]; G2 [\dots], joint with output, ≥ 95\%; L1–L3 [\dots]; R optional
+(box). One declared certificate budget, with ``unresolved'' on exhaustion. L1 is evaluated on the returned Ŝ (after LS0). Each
+number carries the label ``numerical implementation of an exact-arithmetic certificate'' until validated arithmetic (SC) and VAL-FP
+exist; a long-double replay alone does not remove it. \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:45} ([\dots] = item contents, given
+in full in \S\ref{sec:method-card}.)}
+{``The only diagnostics with a provable positive property (ground rule 3; HQ objection 8).''}
+
+\par\smallskip\noindent\defid{MD11}\mdbody{MEET-v31 decision 11}{decided (MEET-v31 MINUTES §2); closed in: R2 D7; R3-3}
+{\textbf{General-h estimator:} H\_r(h) after each complete measured round. Ẑ-weighted and equal-weight pools are reported. The default
+𝓗 is model size and pairwise inclusion on neighbour-graph edges. h must be fixed from (X, y), or from (X, y, 𝓒) before stream 10.
+Plain averages for joint h; Rao–Blackwellisation for marginal PIPs only. HPM terminal frequency is descriptive only. ADDITIVE.
+\src{NBH/branch_snapshots/MEET-v31/MINUTES.md:46}}
+{``Proposal §13.1 needs joint posterior summaries. The marginal RB product is not a joint estimate.'' The identity is a PROOF
+SKETCH (obligation N1, \rid{OB01}).}
+
+\par\smallskip\noindent\defid{MD12}\mdbody{MEET-v31 decision 12}{decided (MEET-v31 MINUTES §2); closed in: R2 item 9 e8}
+{\textbf{Output convention:} every estimate on the output event 𝒪 is a function of (X, y, seed, binary). The allocation and hardware
+decide only whether output is delivered (stop-only guard, Lemma RO). Guarantees are stated for the potential run and as P\{𝒪, ·\},
+never conditional on completion. \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:47}}
+{``Ground rule 9 (\texttt{resource\_limit} vs `runnable from X, y and one seed').''}
+
+\par\smallskip\noindent\defid{MD13}\mdbody{MEET-v31 decision 13}{decided (MEET-v31 MINUTES §2); closed in: R2–R3-4}
+{\textbf{Item 9: generality in (n, p).} No setting is class (e) in the method's law. Fixes e1–e8 and wordings w1–w7 are adopted (list
+in §4). No separate p ≪ n / p ≫ n rule is needed. \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:48}}
+{``Ground rule 9; METHODOLOGY\_v3 Requirement (4).'' Felipe's rule \pos{1214}: every setting a modelling convention with a reason, an
+explicit function of $(n,p)$ or $X$, or a declared budget \src{NBH/03b_reasoning_and_traces.md:183-185}.}
+
+\smallskip
+Closure: ``\textbf{open method questions: none}'' after N9 passed \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:150}. Binding-goal
+rule: if an obligation tied to a binding proposal goal fails (N1 / general $h$, \S13.1; S4 weight stability, \S5.3; N9, \S5.1),
+``the binding goal is not met by withdrawal: HQ escalates to Felipe for a method reconsideration or an explicit scope change''
+\src{NBH/branch_snapshots/MEET-v31/MINUTES.md:161}. Growth rates in $(n,p)$ may be added to budgets, ``limited to growth rates only,
+with no other method change'' (approved \pos{1304}) \src{NBH/notation_and_conventions.md:404}.
+
+\begin{agentnote}[what a theorist must keep in mind about the method]
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Object vs output.} The posterior $\pi$, $Z$ and the exact HPM/MPM are properties of the target (\S\ref{sec:method-target});
+  the method outputs $\hat S$ (best of the \emph{scored} set $\mathcal S$), $\hat Z$, pooled PIPs. Statements about the method's
+  output are about the \emph{potential (uninterrupted) run} and are transferred to delivery only as $P\{\mathcal O\cap\cdot\}$, never as
+  $P(\cdot\mid\mathcal O)$ (\rid{MD12}, \rid{DF21}); Lemma RO ``does not imply $P(B\mid\mathcal O,\mathcal C)\le\alpha$'' and CEX-guard is a
+  recorded COUNTEREXAMPLE \src{NBH/notation_and_conventions.md:433} (see \rid{TH15}).
+\item \textbf{Spec vs code.} v3.1 items LS0, stacking, concurrency, $\hat Z$-weighted primary PIP, general $h$, card, NA fields are spec;
+  the study's numbers come from v2.2.1 (\S\ref{sec:method-impl}). OP-LS0, GUARD-W, IND-T for $R'>4$ are \emph{premises}. Theorems
+  ``about the shipped method'' with LS0 are about the spec until the merged-LS0 replay.
+\item \textbf{Which ``primary''.} In code and study tables \texttt{pip\_primary} = equal-weight RB-PIP = v3.1 \emph{secondary}.
+\item \textbf{Score.} $F(S)=\log\varpi(S)+\log m(S)$ includes the capped prior; HPM ties use $(F,\,-|S|,\,\text{lex})$; the local-search
+  scan breaks exact ties by lex only. Notation $F$ clashes with V9's $F(S)$ and with a Frobenius $F_S$ (Appendix~\ref{app:notation}).
+\item \textbf{Calibration is part of the law.} Triggers, ESS 0.90, grid equality and the inherited leaders define the law of $\mathcal C$;
+  validity is conditional on \emph{any} frozen $\mathcal C$; convergence/delivery facts are OPEN obligations (\rid{OB05}).
+\item \textbf{Randomness.} One serial stream per pilot/island; final streams $\ge10$ are fresh. IND-T is recorded as ``IND-T (PROVED,
+  XF VERIFIED*, A-REV1 only)'', while ``IND-T for streams 10..9+R′: code audit, not done''
+  \src{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:160} \src{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:231}.
+  The independence step draws a fresh exact $\pi_0$ sample at every visit.
+\item \textbf{Fixed budgets.} $R=4$, 4 measured rounds, floors 2,500/1,000, ESS 0.90, $\times4$ tier are declared (c) budgets; growth
+  rates may be added only as explicit functions of $(n,p)$; anything else is a method change (WORKHORSE needs Felipe).
+\item \textbf{Do not} claim depth/speed for the block start, depth free of $N,H,R$, joint summaries or primary PIPs for the 2,400
+  study fits, or ``bitwise'' for concurrent calibration.
+\end{enumerate}
+\end{agentnote}

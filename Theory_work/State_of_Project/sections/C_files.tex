@@ -1,0 +1,106 @@
+\section{Files, code and data index}\label{app:files}
+
+Paths are relative to the repository root (\texttt{FbStatsQuant/Bayesian-Variable-Selection}, commit \texttt{\sourcecommit}); \texttt{NBH/} = \path{Theory_work/Old_Projects/New_BVS_Headquarters/}. Datasets, fits and binaries are not in git; their locations are listed in \S\ref{app:files:data}. The archive's own complete index is \path{NBH/04_code_and_files_index.md} (every branch, commit, thread, worktree, machine path and script) \src{NBH/04_code_and_files_index.md:3}.
+
+\subsection{The archive of the theory campaign (\texttt{NBH/})}
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{6.2cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{File} & \textbf{Purpose} \\
+\midrule
+\endhead
+\path{NBH/START_HERE.md} & One-page state of the theory, reading order, ``which file for what'' \src{NBH/START_HERE.md:59-84} \\
+\path{NBH/README.md} & What the archive is, source thread IDs, conventions, integrity checks, file index \src{NBH/README.md:1-123} \\
+\path{NBH/01_overview_and_timeline.md} & Arc of the thread by phase, dated timeline, Felipe's standing rules, final state \\
+\path{NBH/02_theory.md} & Final state (Part A): v3.1 setup, cards M1--M8 and supplements verbatim, obligations, future work, drops, rulings, coverage \\
+\path{NBH/02b_theory_campaign_history.md} & Campaign history (Part B, 2.7 MB; grep it): every result, refutation and counterexample (IDs $\ge101$), 14 themes, dead ends, conflicts \\
+\path{NBH/03_results_and_conclusions.md} & Final theoretical and empirical results with numbers; conclusions, novelty, venue, confidence \\
+\path{NBH/03b_reasoning_and_traces.md} & Decision log (DEC01--DEC47 of the archive), dead ends B01--B19, HQ corrections R01--R34, reviewer findings, trace index \\
+\path{NBH/04_code_and_files_index.md} & Every branch, commit, PR, thread, worktree, machine path, script, result file and billing fact \\
+\path{NBH/05_open_questions_and_next_steps.md} & Pending decisions, future work, obligations, conflicts, engineering TODOs, next steps, infrastructure rules \\
+\path{NBH/ID_REGISTRY.md} & Every archive ID (Part A final state; Part B campaign history) with native names and exact status; alias index \\
+\path{NBH/notation_and_conventions.md} & Symbols, priors, the v3.1 settings table and $(n,p)$ rules, convention changes, name collisions \\
+\path{NBH/inputs/Local_to_Global_draft.txt} & Felipe's first proposal draft (sets the mandatory goals §5.1--5.4, §13.1) \src{NBH/README.md:33} \\
+\path{NBH/transcript/INDEX.md}, \path{part_*.md}, \path{traces/} & Verbatim thread by position (\texttt{grep -n "BEGIN pos N "}); HQ reasoning, delegate briefs and file changes \src{NBH/README.md:38} \\
+\path{NBH/branch_snapshots/} & Verbatim .md/.tex/.lean of all 84 \texttt{theory/*} branches and \texttt{main@c4ef0dc/Docs}: the authoritative mathematical texts; \path{SNAPSHOT_MANIFEST.txt} (ref, path, sha256); \path{NONTEXT_INDEX.tsv} (non-text files by git blob) \src{NBH/README.md:34} \\
+\bottomrule
+\end{xltabular}
+}
+
+\subsection{Key branch snapshots (\texttt{NBH/branch\_snapshots/<BRANCH>/})}
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{6.2cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{File} & \textbf{Purpose} \\
+\midrule
+\endhead
+\path{MEET-THM/THEOREM_LIST_FINAL.md} & Final cards M1--M8, supplements, cited lemmas (TLF) \\
+\path{MEET-THM/FOR_FELIPE_THEOREM_LIST.md} & Plain-language theorem list presented for approval \\
+\path{MEET-THM/REGISTRY_PAPER1.md} & K-number registry of paper 1; §9 recommended registry updates (\rid{DEC08}) \\
+\path{MEET-THM/MINUTES.md}, \path{CLOSE_AUDIT.md}, \path{COVERAGE_MATRIX.md}, \path{FUTURE_WORK.md} & Theorem-meeting minutes (waves §2.5, dissents), Sol close audit, coverage of goals, FW1--FW27 with reasons \\
+\path{MEET-THM/HQ_CHARTERS/} & Charters of the per-theorem HQs (M1--M8) and lemma packs (LP-*) \\
+\path{MEET-THM/evidence/} & HQ rulings Q1--Q5 (\path{2026-11-04_HQ_RULINGS_Q1-Q4.md}, \path{..._HQ_RULING_Q5.md}); check waves W1\_PC1/PC2, W2\_PC1/PC2; CHK\_INHERITED \\
+\path{MEET-THM/DOSSIER.md}, \path{CHECK_W1_BRIEF.md} & Inclusion criteria IC1--IC7 and the card format; verdict vocabulary of the check waves \\
+\path{MEET-v31/METHOD_v3.1_FINAL.md}, \path{FOR_FELIPE_FINAL_METHOD.md} & Method spec v3.1 and its plain-language version \\
+\path{MEET-v31/AMENDMENT_HQ_01.md}, \path{AMENDMENT_HQ_02.md} & Sol-finding dispositions; reporting fields and growth rates (\rid{RL06}) \\
+\path{T38-RECORD/T38_STATEMENT.md}, \path{REGISTRY_v2.md}, \path{LOCKABLE_v2.md} & Statement of record of Theorem 5 (v3), the 431-result campaign registry (conflicts C1--C26), the 55 lockable candidates \\
+\path{L-LEAN/} (\path{SmcBvs/}, \path{STATUS.md}, \path{T12_PLAN.md}, \path{fidelity/}) & Lean 4 library (101 declarations, 0 \texttt{sorry}); plan for T12 \texttt{hstep} \\
+\path{A-REV1/} … \path{A-REV9/} (\path{REVIEW.md}) & Astra cross-family reviews \\
+\path{API-PXNGAP/REPORT.md}, \path{PROOF.md} & p $\gg$ n repair candidate (\rid{TH161}, \rid{FR01}) \\
+\path{API-N200/REPORT.md}, \path{PROOF.md} & Theorem N200, 558 vs 571 (\rid{TH334}) \\
+\path{O-DILUTE/REPORT.md}, \path{THEORY.md} & Dilution identity and numbers (\rid{TH172}, \rid{TH177}) \\
+\path{S-ELS/REPORT.md}, \path{O-LS0/REPORT.md} & Data facts on the 2,400 fits; LS0 data check (0/2,394) \\
+\path{W7-SEP/}, \path{LIT-PAR/REPORT.md}, \path{LIT-*/REPORT.md} & Separation and Prop GU; literature verdicts \\
+\path{F-REFEREE/REFEREE_REPORT.md}, \path{RESPONSE_PLAN.md} & Hostile JRSS-B referee simulation, response plan (LH-SCALE) \\
+\path{ABL-CONF/REPORT.md}, \path{PREREG.md} & Confirmatory start test (\rid{CJ164}, \rid{CJ165}) \\
+\path{N9-KERNEL/} & Kernel validity gate (\rid{OB09}, \rid{TH12}) \\
+\path{E-SPINE/} & PR \#1 contents (spine correction, \path{Docs/Theory/AMENDMENTS_20261102.md}) \\
+\path{campaign/LEDGER.md}, \path{campaign/PROTOCOL.md} & Campaign ledger (times, costs) and protocol (status words) \\
+\path{W8-SYNTH/SYNTHESIS.md} & Synthesis of 2026-11-02 evening (conflict groups §4) \\
+\bottomrule
+\end{xltabular}
+}
+
+\subsection{Repository: results, code, old docs}
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{6.2cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Path} & \textbf{Purpose} \\
+\midrule
+\endhead
+\path{Results/2026-10-28_New_Campaign/L_20261102/} (\path{HEADLINE_L.md}, \path{EVIDENCE_L.md}) & Low-$p$ results (exact posterior by enumeration) \src{README.md:83} \\
+\path{Results/2026-10-28_New_Campaign/H2_20261102/} (\path{HEADLINE_H.md}, \path{EVIDENCE_H.md}) & High-$p$ results (2,400 fits) \src{README.md:84} \\
+\path{Results/SMC_BVS_v3_production/} & 2026-10-23 production fits, reproduced exactly by v2.2.1 \src{README.md:88} \\
+\path{Docs/HQ/STATUS.md} & Results on one screen \src{README.md:86} \\
+\path{Scripts/Campaigns/2026-10-28_New_Campaign/} & Frozen New Campaign code (\path{code/core/v2_2_1/}: SMC-BVS v2.2.1), bundles, analysis scripts, Sol reviews; \texttt{verify\_manifests.sh} \src{README.md:51-77} \\
+\path{Scripts/SMC_BVS/} & v2.1 method code (2026-10-23 production) \src{README.md:41} \\
+\path{Docs/Methodology/} & METHODOLOGY\_v3 (the v3 method spec) \src{README.md:35} \\
+\path{Docs/THEORY.md}, \path{THEORY_PRIORITIES.md}, \path{PLAN.md}, \path{Docs/Theory/} & Pre-campaign theory documents; superseded (\S\ref{sec:history:olddocs}) \\
+\path{Docs/HQ/DECISIONS.md} & Old HQ decision log D1--D94 (empirical campaign) \\
+\path{Docs/Records/DATA_INDEX.md} & Where the bulk data lives \src{Docs/Records/DATA_INDEX.md:1-3} \\
+\path{Papers/} & Reference papers (e.g. \path{Papers/Priors_and_decision_rules/}) \\
+\path{Theory_work/State_of_Project/} & This document: \path{sections/}, \path{registry/*.tsv} (machine-readable registry), \path{scripts/} (\path{check.py}, \path{build.sh}), \path{AUTHORING.md} \\
+\bottomrule
+\end{xltabular}
+}
+
+\subsection{Data locations, machines and branches}\label{app:files:data}
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{6.2cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Location} & \textbf{What is there} \\
+\midrule
+\endhead
+Felipe's PC, OneDrive ``NOTS Data/New\_Campaign/'' & Mirror of every New Campaign run (inputs, results, logs), sha256-verified \src{Docs/Records/DATA_INDEX.md:9} \\
+Felipe's PC, \path{Documents/NOTS_BVS} & Earlier campaigns: the 2026-10-23 v2.1 production fits, benchmark study, profiling \src{Docs/Records/DATA_INDEX.md:11} \\
+NOTS \path{/scratch/fb31/smcbvs_v3_deploy_20261022/claude/prod_*/results/} & Per-island \texttt{pip\_r}, \texttt{log\_Z\_r} of the 2,394 completed fits (needed for \rid{ENG08}) \src{NBH/04_code_and_files_index.md:88} \\
+NOTS \path{/home/fb31/projects/BVS/} & Code/scripts; target of the NOTS reorganisation by the old HQ (\rid{ENG17}) \src{NBH/04_code_and_files_index.md:87}, \src{NBH/05_open_questions_and_next_steps.md:235} \\
+Owls \path{/home/fb31/Bayesian-Variable-Selection} & Current repo clone with all local \texttt{theory/*} branches and T3 worktrees \src{NBH/04_code_and_files_index.md:21} \\
+Owls \path{/home/fb31/ls0_work}, \path{ablconf_work}, \path{abl_work}, \path{api_workers}, \path{hq_reviews}, \path{fresh_eyes} & O-LS0 run on the 2,400 regenerated datasets; ABL-CONF and ABL-START fits; Agent SDK workers; Sol reviews; fresh-eyes Round 0 \src{NBH/04_code_and_files_index.md:26-32} \\
+Owls \path{~/.config/bvs-hq/} & HQ private config, launchers, Owls guard rails (secrets never in the archive) \src{NBH/04_code_and_files_index.md:23-24} \\
+GitHub \texttt{origin/theory/*} (84 branches incl.\ \texttt{campaign}) & All campaign work; snapshotted in \path{NBH/branch_snapshots/} \src{NBH/04_code_and_files_index.md:150} \\
+PR \#1, \url{https://github.com/FbStatsQuant/Bayesian-Variable-Selection/pull/1} & Head \texttt{theory/E-SPINE} (tip \texttt{cec1680}), the spine correction; unmerged (\rid{DEC09}) \src{NBH/04_code_and_files_index.md:138}; still OPEN on 2026-11-07 \src{Theory_work/State_of_Project/sources/PR1_status_2026-11-07.json:1} \\
+\texttt{main} & \texttt{c4ef0dc} (GH-PACK transfer, 2026-11-02), \texttt{d46ebed} (post-campaign refresh, 2026-11-03) \src{NBH/04_code_and_files_index.md:147-148}; then \texttt{620d8b7} (``Transfer'', 2026-11-04: archive branch snapshots), \texttt{79c483c} (README, 2026-11-05), \texttt{21ebc28} (theory archive docs added, 2026-11-07; the frozen source commit of this document) \src{Theory_work/State_of_Project/sources/git_log_main_2026-11-07.txt:1-3} \\
+\bottomrule
+\end{xltabular}
+}

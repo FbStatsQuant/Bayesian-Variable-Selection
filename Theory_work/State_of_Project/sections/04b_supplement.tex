@@ -1,0 +1,1459 @@
+% Supplement cards, obligations, future work, drops, limitations, cited lemmas (agent T2)
+% Sources frozen at commit 21ebc28. TLF = NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md
+\section{Supplement, obligations and future work}\label{sec:supp}
+
+This section holds everything of paper~1's theory that is not a main card (main cards \rid{TH01}--\rid{TH09} are in the previous section): the eleven supplement cards \rid{TH10}--\rid{TH20}, the dissolved card \rid{TH21} and the thesis remark \rid{TH22}; the seventeen proof obligations \rid{OB01}--\rid{OB17}; the 27 future-work items \rid{CJ01}--\rid{CJ27}; the six drops \rid{DR01}--\rid{DR06}; the nine inherent limitations \rid{LIM01}--\rid{LIM09}; and the 23 cited lemmas \rid{CL01}--\rid{CL23}. The exact status words come from part~A of the ID registry \src{NBH/ID_REGISTRY.md:90-234}.
+
+\textbf{Approval.} \approvedFB: Felipe Bedoya approved the paper-1 theorem list, including the supplement cards, on 2026-11-07. Approval fixes the cards as current targets. It changes no proof status.
+
+\textbf{How the supplement cards are stored in the source.} \texttt{THEOREM\_LIST\_FINAL.md} (TLF) Part~II gives, for each supplement card, the decision note from MINUTES §2.2 and then ``the statement copied verbatim from the seat card(s) that carry it''. Several seats (A, B, C, D) often filed the same card in different packaging. TLF keeps all of them and does not merge them \src{NBH/02_theory.md:1184}. MINUTES §2.2 says the statements are ``as in the cited R2/R3 cards, with the SYNTH\_R2 §3 repairs'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:56}. The chair's editorial choices fix wording in five places only: K29, K30, the S-Z variance clause, S-LEAK, and the Thesis CD wording \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1333-1349}. So each card below works like this:
+\begin{itemize}
+\item where TLF names a final card or the chair chose a wording, that text is transcribed in full and the other seat texts are transcribed after it;
+\item where TLF says the seat texts are complementary, every seat text is transcribed, because each one carries clauses the others lack;
+\item several seat texts read ``Final statement as R1 §D \ldots{} with: \ldots'' or ``Rest unchanged''. Their Round-1 base statements are not in TLF. Each card transcribes them from the R1 files under ``Round-1 base statements''. A base statement is superseded wherever the Round-2 text changes it.
+\item the only abridgements are Seat~D's Round-1 base cards that D's Round-2 rows mark ``unchanged''. These are listed by span and not transcribed: R1\_D S1 \src{NBH/branch_snapshots/MEET-THM/R1_D.md:376}, S2 \src{NBH/branch_snapshots/MEET-THM/R1_D.md:391}, S3 \src{NBH/branch_snapshots/MEET-THM/R1_D.md:406}, S6 \src{NBH/branch_snapshots/MEET-THM/R1_D.md:446}, S8 \src{NBH/branch_snapshots/MEET-THM/R1_D.md:465}, S9 \src{NBH/branch_snapshots/MEET-THM/R1_D.md:475}, S11 \src{NBH/branch_snapshots/MEET-THM/R1_D.md:493} and S12 \src{NBH/branch_snapshots/MEET-THM/R1_D.md:501}. Seats A, B and C cover the same content in the transcribed texts. R1\_D S4, S5 and S7 are transcribed.
+\end{itemize}
+
+\textbf{Who works on what.} Supplement cards are worked by lemma-pack HQs:
+\begin{itemize}
+\item LP-FOUND, wave~1: \rid{TH10}--\rid{TH12}, with S-T (\rid{TH09}) cited only;
+\item LP-IDENT, wave~2: \rid{TH13};
+\item LP-AUDIT, wave~3: \rid{TH14}, \rid{TH15};
+\item LP-REST, wave~4: \rid{TH16}--\rid{TH18};
+\item LP-REP, wave~4: \rid{TH19}, \rid{TH20}.
+\end{itemize}
+\src{NBH/branch_snapshots/MEET-THM/MINUTES.md:108-113}. Every pack charter carries the chair's generic fallback rule IC7, verbatim: ``the card ships in the narrowest form its filed checks support. A clause whose proof or cross-family check fails after one repair cycle moves to \texttt{FUTURE\_WORK.md} with the reason. It is never relabelled as a limitation, and no status is upgraded.'' The generic stop rule is ``one proof attempt plus one cross-family check-and-repair cycle per card'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-FOUND.md:112-113}.
+
+\textbf{Status vocabulary used below.}
+\begin{itemize}
+\item SF = same-family check; XF = cross-family check. ``VERIFIED*'' means verified with a qualification.
+\item PC1 = the cross-family proof checker gpt-6.1-sol, run on Seats A, B and D. PC2 = Opus~5.5, run on Seat~C.
+\item ``TRUE-AS-WRITTEN'' is a statement-sanity verdict, not a proof.
+\end{itemize}
+\src{NBH/02_theory.md:2794} \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:22-26}.
+
+\begin{agentnote}[how to use this section]
+Each card below gives: the status words; the final statement(s) verbatim; repairs; dependencies and placement; a plain reading; and what is \emph{not} claimed.
+Every ``PROVED'' in the obligation texts (§\ref{sec:oblig}) is a candidate: ``not reviewed, not adopted'' \src{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:9}. Do not upgrade any status word.
+Items in §\ref{sec:future} (future work) and §\ref{sec:drops} (drops and limitations) record routes that were tried and why they were deferred or dropped. Read them before proposing a new result.
+\end{agentnote}
+
+\subsection{Index of the supplement cards}\label{sec:supp-index}
+Dependencies are summarised from the lemma-pack charter edge lists (``$X\to Y$'': $Y$ uses $X$) \src{NBH/02_theory.md:1190-1203}.
+
+{\small
+\begin{xltabular}{\textwidth}{@{}l l l X@{}}
+\toprule
+ID & Native & Pack (wave) & Uses / used by \\
+\midrule
+\rid{TH10} & S-TARGET & LP-FOUND (1) & $\to$ M1 \rid{TH01}, M2 \rid{TH02} (Lemma 0), M3 \rid{TH03}, M4(d) \rid{TH04} (N17), M7 \rid{TH07}, S-REP \rid{TH19}, S-Z \rid{TH16}, S-T \rid{TH09} \\
+\rid{TH11} & S-BLOCKS & LP-FOUND (1) & $\to$ M2 (IC3 partition), M3, M5 \rid{TH05}, M8 \rid{TH08}, M4(f) (SIZE on LH) \\
+\rid{TH12} & S-KERNEL & LP-FOUND (1) & $\to$ M1(a), M3, M2(b4), S-IDENT \rid{TH13}, S-REP; K09/N3 carried as hypothesis in M5 and M4(f) \\
+\rid{TH13} & S-IDENT & LP-IDENT (2) & $\leftarrow$ S-KERNEL (K103), M1, M2 (W rates), M7; $\to$ M2(b), M6 \rid{TH06}, M7(e), S-REP \\
+\rid{TH14} & S-CERT & LP-AUDIT (3) & $\to$ M4 (card semantics), M5 (Theorem A, LS-score, scan bound), M8 (search cost) \\
+\rid{TH15} & S-OUT & LP-AUDIT (3) & $\to$ M1(c,d), M4(e), M5, M8, S-REP \\
+\rid{TH16} & S-Z & LP-REST (4) & $\leftarrow$ M2(a) (D), M3, M4 (envelope), S-TARGET \\
+\rid{TH17} & S-POOL & LP-REST (4) & $\leftarrow$ M1, M3 \\
+\rid{TH18} & S-LIM & LP-REST (4) & $\leftarrow$ M4 (cited) \\
+\rid{TH19} & S-REP & LP-REP (4) & uses M1; M2 for informative W rates; M3 for discrepancy definitions; S-KERNEL for exact initialization; S-OUT for delivered-event transfer \\
+\rid{TH20} & S-LEAK & LP-REP (4) & $\leftarrow$ M2, M3, S-T \\
+\rid{TH21} & S-STGI & --- & dissolved; K30 $=$ M7(d) \rid{TH07.d}; K29 $=$ \rid{CJ23} \\
+\rid{TH22} & Thesis CD (K96) & --- & remark after the main theorems \\
+\bottomrule
+\end{xltabular}
+}
+
+\subsection{Supplement cards TH10--TH20}\label{sec:supp-cards}
+
+% ======================================================================= TH10
+\begin{card}{TH10}{S-TARGET · Propriety, invariance, envelopes, exact branch, odds certificate (K01–K05, K76, K95)}
+\approvedFB\quad Status (REG-A, verbatim): \status{N17: PROVED. T01: PROVED-LOCKED (wave 3; external review queued); SAME-FAMILY-ONLY. Remaining assembly: PROOF SKETCH, unchecked. N12 eventual dispatch: seat-proved, unchecked; T26-exact-branch-paren: XF ERROR (corrected)} \src{NBH/ID_REGISTRY.md:90}
+
+\textbf{Decision note (MINUTES §2.2).} ``K95 here (R3-4 unanimous)'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:62}. TLF: ``K95 is here (R3-4, unanimous). Seat statements below are complementary (same content, different packaging).'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:508}. There is no chair's choice for this card, so all seat texts are transcribed.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:516-525}
+\textbf{Seat C (R2\_C), card C12 — K01/K02/K03/K04/K05/K76.}\\
+\textbf{Final statement.} For finite nonconstant standardized data, $n\ge3,p\ge1$, the shipped ridge/IG target is proper, including rank-deficient submodels. With $H_S=(n+1)G_S+I$, $Q_S=Y-nz_S'H_S^{-1}z_S$, $Q_S\ge Y/(n+1)$, and $1\le\det H_S/\det(G_S+I)\le(n+1)^{\lvert S\rvert}$. Thus $m(S),Z\le U_m=C_n(2b_0+Y/(n+1))^{-\nu}$, where $C_n$ is the shipped score’s common prefactor.\\
+\textbf{Other clauses.} Use the normalized capped prior once. Target probabilities are invariant under admissible affine rescaling and equivariant under column permutation. The contrast reduction uses IG shape $a_0+1/2$, rate $b_0s_y^2$. Real-arithmetic exact enumeration returns exact summaries; every fixed-$p$ sequence eventually enters that branch.\\
+\textbf{Repairs.} PC2 status repair; target equivariance only. The pairwise IG perturbation coefficient is $2\nu b_0$, not universally $nb_0$.\\
+\textbf{Status.} N17: \textbf{PROVED}. T01: \textbf{PROVED-LOCKED (wave 3; external review queued); SAME-FAMILY-ONLY}. Remaining assembly: \textbf{PROOF SKETCH, unchecked}.\\
+\textbf{Placement.} Supplement.\\
+\textbf{Route / Lean.} Checked spectral envelope and reduction; finite normalization/enumeration.\\
+\textbf{Fallback / stop.} Proper target and exact-arithmetic enumeration; no machine-certification claim.\\
+\textbf{IC3.} C10’s duplicated, rank-deficient correlated design.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:534}
+\textbf{Seat A (R2\_A) S5.} \textbf{S5 · Proposition TARGET (K01–K05, K76).} As R1 §D C1 with (ii) restricted to the target (affine invariance, permutation equivariance); algorithmic equivariance in law only for a tie-free partition and decision structure (PC1:301); K05 superset bound; K76 eventual exact dispatch (N12 seat-proved, unchecked); (iii) constant 2νb₀ (PC2:216; PC1:300). Status: N17 PROVED; rest D/E proposals, TRUE-AS-WRITTEN (PC1:300); T01 reduction PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY. Supplement.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:543}
+\textbf{Seat A (R2\_A): K95 odds-certificate clause} (fragment of A's Z𝒯 card, clause (f)).\\
+(f) odds certificate: π(S₀) = 1/(1+A(S₀)); A ≤ η < 1 ⇒ HPM = MPM = S₀ (PC1:130).
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:552-554}
+\textbf{Seat B (R2\_B) S7 · Proposition TARGET (K01, K02, K03, K04, K95, K76) · supplement.}\\
+Final statement as R1 §D D17 with: target affine-invariant and permutation-equivariant; algorithmic output need not be equivariant, even in law, under index ties (PC1 §20); A(S₀) ≤ η < 1 ⇒ HPM = MPM = S₀ (PC1 §20 NEEDS-HYPOTHESIS conceded); 2νb₀ as the exact pairwise IG constant (PC2 cluster 20). Status: N17: PROVED (PC1 claim 1); T01 reduction: PROVED-LOCKED (wave 3; external review queued); N12 eventual dispatch: seat-proved, unchecked; T26-exact-branch-paren: XF ERROR (corrected). Rest unchanged.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:563-575}
+\textbf{Seat D (R2\_D) rows.}\\
+S1 target lemmas — K01–K04 (+K76, K95 via S3/S12): Target invariance and permutation equivariance; algorithmic equivariance in law only without partition/decision ties (cluster 20). [status: unchanged]\\
+S3 decision rules — K62 moved to H′(f); K60, K61 cited; K95, K101: η < 1 stated (cluster 20). [status: unchanged]\\
+S12 fixed p/tiny n — K76, K02: unchanged. [status: N12 ``seat-proved, unchecked'']
+\end{stmt}
+
+\textbf{Round-1 base statements.} Seat~A's ``As R1 §D C1'' and Seat~B's ``as R1 §D D17'' point to the texts below. They are superseded wherever the Round-2 texts above say ``with:'' (equivariance restricted to the target; constant $2\nu b_0$).
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_A.md:166}
+\textbf{Seat A, R1 C1 · TARGET — Statement.} For every (X, y) passing preprocessing (n ≥ 3, rank-deficient $X_S$ allowed): (i) m(S) is finite and positive, Z finite, π proper, with envelopes $Q_S ≥ y^{\top}y/(n+1)$, $\log \mathrm{BF}(S) = −\tfrac12 \log D_S − ν \log(1 − x_S)$, $0 ≤ x_S < 1$ (OWS Lemma 0); (ii) π, Z/m(∅), PIPs are invariant under column/response affine maps and permutation-equivariant; per-seed output equivariant in law only; (iii) the working posterior equals the contrast-regression posterior with IG$(a_0 + \tfrac12, b_0s_y^2)$ noise; (iv) BB(1,p) sums to one, $W_K$ divides once, size masses decay with ratio ≤ p/(2p−1); (v) $Z ≤ C_n(2b_0 + y^{\top}y/(n+1))^{−ν}$.
+\end{stmt}
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_B.md:442}
+\textbf{Seat B, R1 D17 · Proposition TARGET — statement.} $H_S ≻ 0$ for rank-deficient $X_S$; $Q_S ≥ y^{\top}y/(n+1)$; $−(|S|/2)\log(n+1) ≤ \log \mathrm{BF}(S) ≤ ν \log[(2b_0+Y)/(2b_0+Y/(n+1))]$; affine invariance and permutation equivariance (ties break fixed-seed equivariance); contrast reduction with IG$(a_0+\tfrac12, b_0s_y^2)$; $|Δ \log \mathrm{BF}| ≤ 2νb_0|1/Q_1 − 1/Q_2|$ when $b_0 → 0$; BB(1,p) identities; π(S₀) = 1/(1+A(S₀)) and A ≤ η ⇒ HPM = MPM = S₀; fixed p is eventually enumerated exactly.
+\end{stmt}
+
+\textbf{Dependencies.} Used by M1, M2 (Lemma~0), M3, M4(d) (N17), M7, S-REP, S-Z and S-T \src{NBH/02_theory.md:1193}. Obligations: \rid{OB17} (N17, PROVED) and \rid{OB12} (N12, eventual exact dispatch K76). K60/K61 (Barbieri--Berger) are cited as \rid{CL12}.
+
+\begin{plain}
+The shipped target is a proper probability distribution on models for any finite non-constant standardised data with $n\ge 3$, including rank-deficient submodels. Every model's score is bounded by an explicit analytic envelope. Posterior probabilities do not change under admissible affine rescaling of the data, and they move with a permutation of the columns. For fixed $p$, the method eventually takes the exact-enumeration branch (N12: ``seat-proved, unchecked''). If the posterior odds against the truth are at most $\eta<1$, then HPM and MPM both equal $S_0$. All of this is about the \emph{target}, for fixed data.
+\end{plain}
+\begin{notproved}
+\begin{itemize}
+\item Equivariance is claimed for the target only. The algorithm's output is ``equivariant in law only for a tie-free partition and decision structure''. Under index ties it ``need not be equivariant, even in law'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:534}.
+\item No machine-certification claim is made \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:524}.
+\item Eventual exact dispatch (K76) is ``seat-proved, unchecked''.
+\item The remaining assembly is a PROOF SKETCH, unchecked.
+\item T01 is SAME-FAMILY-ONLY, with external review still queued.
+\end{itemize}
+\end{notproved}
+\end{card}
+
+% ======================================================================= TH11
+\begin{card}{TH11}{S-BLOCKS · Separation ⇒ groups kept; SIZE ⇒ equality (K07, K14, K06)}
+\approvedFB\quad Status (REG-A, verbatim): \status{PART-ThmA: PROVED; SF none; XF VERIFIED*. Counting/graph assembly: PROOF SKETCH, unchecked. PART-pairing remains OPEN, excluded. PART-CE2: COUNTEREXAMPLE} \src{NBH/ID_REGISTRY.md:91}
+
+\textbf{Decision note.} MINUTES gives no further decision (``—'') \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:68}. TLF: ``Seats agree; C11 is the fullest. A files it inside S10 (BLOCKS part), D inside the S2 row.'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:585}. C11 is transcribed first.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:593-601}
+\textbf{Seat C (R2\_C), card C11 — K07/K06/K22 (fullest).}\\
+\textbf{Final statement.} Suppose every within-group distance is strictly smaller than every between-group distance and every group has size at most $B$. Complete linkage forms each group before cross-group merging; cutting and whole-cluster packing preserve groups. If additionally $B<2g_{\min}$, output blocks equal groups. For actual blocks, $\lceil p/B\rceil\le J\le2\lceil p/B\rceil$, $\sum_b2^{\lvert C_b\rvert}\le p2^B/B$; the symmetrized capped graph has at most $pB$ edges and no isolated vertex when $p>1$.\\
+\textbf{Repairs.} PC2 Shared objects and cluster 4: replace unqualified eventual recovery by $n\ge9^6$ for both nine-variable exhibits. PC1 cluster 6: explicit SIZE.\\
+\textbf{Status.} PART-ThmA: \textbf{PROVED; SF none; XF VERIFIED*}. Counting/graph assembly: \textbf{PROOF SKETCH, unchecked}. PART-pairing remains \textbf{OPEN}, excluded.\\
+\textbf{Placement.} Supplement.\\
+\textbf{Route / Lean.} Cite checked separation/packing result; finite partition, bin-count and graph-union arguments.\\
+\textbf{Fallback / stop.} Group preservation and deterministic counts only; no size-five pairing law.\\
+\textbf{IC3.} W and LH satisfy strict separation and $9\le B\le16<18$ for $n\ge9^6$. Otherwise unchanged from R1 §D D10.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:610-614}
+\textbf{Seat B (R2\_B) S11 · Proposition BLOCKS (K07, K14, K06) · supplement.}\\
+Unchanged from R1 §D D21 (PC1 §19 B.D21 TRUE-AS-WRITTEN; preservation only, equality needs SIZE). Status: PART-ThmA: PROVED (SF: none; XF: VERIFIED* (A-REV9)); PART-pairing: OPEN; PART-CE2: COUNTEREXAMPLE.\\
+Dropped from the list since R1: D10 (CD → remark), D20 (K94 → FUTURE\_WORK).
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:628}
+\textbf{Seat D (R2\_D) S2 row.} S2 start machinery — K06, K07, K09, K14, K22: Graph ``no isolated vertex'' for p ≥ 2 (cluster 19); K07 preservation only, equality under SIZE. [status: unchanged]
+\end{stmt}
+Seat~A's BLOCKS clauses are the last clauses of A's S10. That text is transcribed once, under \rid{TH13} \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:620}.
+
+\textbf{Round-1 base statement.} Seat~B's ``Unchanged from R1 §D D21'' points to the text below. Seat~C's ``Otherwise unchanged from R1 §D D10'' (IC3 row only) points to \src{NBH/branch_snapshots/MEET-THM/R1_C.md:297}.
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_B.md:488}
+\textbf{Seat B, R1 D21 · Proposition BLOCKS — statement.} If every within-group distance is strictly below every between-group distance and groups have size ≤ B, complete linkage forms each group first and cut/packing never splits a group (so cross-block |r| ≤ max between-group |r|); every sub-model inside a block is scored at table time, so the HPM beats every block-local model and within-block masking of any order ≤ B costs nothing; study packing (2g ≤ B) is N8, OPEN.
+\end{stmt}
+
+\textbf{Dependencies.} Used by M2 (IC3 partition), M3, M5, M8 and M4(f) (SIZE on LH) \src{NBH/02_theory.md:1194}. Obligation \rid{OB08} (N8, PART-pairing) has its final placement here: ``S-BLOCKS (preservation, SIZE equality); FW25'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:75}. See also \rid{CJ25}.
+
+\begin{plain}
+Suppose the correlation clusters are strictly separated (every within-group distance is smaller than every between-group distance) and every group has size at most $B$. Then complete linkage, the size cut and the packing never split a group. If in addition every block is too small to hold two groups ($B<2g_{\min}$), the blocks are exactly the groups. The deterministic counts of blocks, table entries and graph edges (no isolated vertex for $p>1$) hold for any design; their assembly is a proof sketch.
+\end{plain}
+\begin{notproved}
+\begin{itemize}
+\item No pairing law when two groups fit in one block (PART-pairing OPEN). This includes the study generator ($g=5$, $B=14$).
+\item PART-CE2 is a counterexample: unequal groups are not merged.
+\item Equality of blocks and groups needs SIZE ($B<2g_{\min}$). Without it only preservation holds.
+\item The counting and graph assembly is a PROOF SKETCH, unchecked.
+\end{itemize}
+\src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:597-600} \src{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:184-186}
+\end{notproved}
+\end{card}
+
+% ======================================================================= TH12
+\begin{card}{TH12}{S-KERNEL · N9 kernel facts, graph (p ≥ 2), start sampler, minorisation (K20, K21, K08, K09, K22, K103)}
+\approvedFB\quad Status (REG-A, verbatim): \status{N9K: PROVED (candidate), N9-KERNEL §§0–3 VERIFIED WITH AMENDMENT (PC1, cross-family); T09: PROVED-LOCKED (wave 1); N3: OPEN; K22, K23, K103: PROVED (by this seat, unchecked), PC1 §19 TRUE-AS-WRITTEN. C10 (K09): PROOF SKETCH, unchecked} \src{NBH/ID_REGISTRY.md:92}
+
+\textbf{Decision note.} ``N9 with CHK amendments. K09 is the tie-DP proposition (C10)'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:63}. TLF adds the following \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:638}:
+\begin{itemize}
+\item The CHK amendments are in \texttt{evidence/CHK\_INHERITED/REPORT.md} §5 (VERIFIED WITH AMENDMENT).
+\item ``K23 (R3-4): FUTURE\_WORK (A, B, D); C dissents.'' The S-KERNEL HQ ``may cite it as an attributed lemma without a theorem number''.
+\item ``The Dirichlet-form clause ℰ$_Q$ ≥ ½ℰ$_{R_2}$ appears in seats A (S10) and B (S5) as filed; it is K23 and is not a numbered supplement claim.''
+\end{itemize}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:646-648}
+\textbf{Seat B (R2\_B) S5 · Proposition KERNEL (K20, K21, K08, K09, K22, K23, K103) · supplement, cited lemma + Lean.}\\
+Final statement as R1 §D D16 with: reversibility under the sufficient conditions of N9 (a fixed order need not be self-adjoint); the graph clause for p ≥ 2 (PC1 §19); $Q_φ(S,\cdot) ≥ π_φ/M_φ$ (E's constant $1/M_φ$, PC1 §19 TRUE; $1/(mM_φ)$ also valid) and $‖Q_φ^k(S,\cdot) − π_φ‖_{\mathrm{TV}} ≤ (1 − 1/M_φ)^k$ with $M_φ ≤ \exp\{φ\cdot\operatorname{osc} d\}$; $ℰ_Q ≥ \tfrac12ℰ_{R_2}$, $R_2 = (1/m)ΣP_j^2$; tie-aware DP returns the prescribed maximiser (N3 OPEN, hypothesis). Status: N9K: PROVED (candidate), N9-KERNEL §§0–3 VERIFIED WITH AMENDMENT (PC1, cross-family); T09: PROVED-LOCKED (wave 1); N3: OPEN; K22, K23, K103: PROVED (by this seat, unchecked), PC1 §19 TRUE-AS-WRITTEN. Rest unchanged.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:657-666}
+\textbf{Seat C (R2\_C), card C10 — K09 (tie-DP proposition).}\\
+\textbf{Final statement.} For positive finite block tables, size-only capped prior and exact comparisons, max-plus convolution gives the best start score at each size. Choose the smallest maximizing size. In ascending index order, include an index exactly when an optimal completion of that size consistent with the existing prefix remains possible. The result is the prescribed lexicographically smallest start maximizer.\\
+\textbf{Repairs.} PC2 §0/D9: the new duplicate-column exhibit below puts the tie at the global start mode, not merely somewhere in a table.\\
+\textbf{Status.} Proposed finite mathematical proposition: \textbf{PROOF SKETCH, unchecked}. Registry N3’s integrated tie-DP invariant remains \textbf{OPEN}; it is not being listed as a proved implementation theorem.\\
+\textbf{Placement.} Supplement.\\
+\textbf{Route / key lemma.} Optimal-completion invariant and prefix induction.\\
+\textbf{Lean core.} Finite constrained maximization and lexicographic order.\\
+\textbf{Fallback / stop.} Unique-maximizer instances. If the prefix invariant fails, drop the tie proposition and retain the integration gap.\\
+\textbf{IC3.} $n=40,p=20$; columns 1 and 2 identical; remaining columns mutually orthogonal and orthogonal to them. Standardized $y$ has squared correlation $1/2$ with the duplicate direction and zero with other columns. Complete linkage keeps the duplicate pair together; adding zero-score columns decreases the start score. The two singleton duplicates are tied global modes; SMC dispatch holds.
+\end{stmt}
+Seat~C filed a scalar sanity script for the C10 exhibit \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:675-679}. It prints log start scores relative to the empty model: 0, 7.858020937 and 4.91339373 for $k=0,1,2$, with $2^{20}=1048576$ models against a dispatch cutoff of 251200. The filed interpretation, verbatim: ``Scalar sanity check of the exhibit, not a DP implementation audit or an exact floating-point certificate.''
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:693}
+\textbf{Seat A (R2\_A) S6.} \textbf{S6 · Proposition PAR (K63, K83, K84, K86, K09).} Unchanged from R1 §D S1 (Lemma S candidate; MA-PropW: PROVED (code reading; executed check); MA-Wcal: PROVED (code reading only; not executed); IND-T extension audit pending; tie-DP invariant N3 OPEN; PC2:198 TRUE-AS-WRITTEN on random instances, DESIGN-ASSERTED). Supplement.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:704-710}
+\textbf{Seat D (R2\_D) rows.}\\
+S2 start machinery — K06, K07, K09, K14, K22: Graph ``no isolated vertex'' for p ≥ 2 (cluster 19); K07 preservation only, equality under SIZE. [status: unchanged]\\
+S8 Doeblin/calculus — K103, K104, K108: TV $≤ (1 − 1/M_φ)^L$ with the shipped $L = \max(4, ⌈\log_2(n+1)⌉) → ∞$; useful iff $M_1 = O(1)$. [status: PC2 D15-TV TRUE]
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:719}
+\textbf{Seat D (R2\_D) validity statement (the N9 statement, H′(a)).}\\
+Statement. Under EX-A, EX-S, CAL, GUARD-W, R′ declared. (a) Validity: each Gibbs flip, uniform swap, neighbour swap and independence move is $γ_φ$-reversible, the uniformly random-order round is $γ_φ$-invariant and self-adjoint, draw\_pi0 and Z̄₀ are exact (N9, cited); conditionally on frozen 𝓒, $E[\hat{Z}_r] = Z$, $E[\hat{Z}_r \widehat{\mathrm{PIP}}_{rj}] = Z\cdot\mathrm{PIP}_j$ (locked), and $E[\hat{Z}_r H_r(h)] = Z\cdot π(h)$ for h ∈ 𝓗 measurable in (X, y, 𝓒) (N1). Potential-run statements; the intersection inequalities P(𝒪 ∩ B) ≤ $P_{\mathrm{pot}}(B)$ transfer by Lemma RO + GUARD-W; expectations do not (D.M1(c) repair). (b) For 0 ≤ h ≤ 1, $M_2 = E[W_r^2|𝓒]$: $P(|\hat{μ}(h) − π(h)| > ε \mid 𝓒) ≤ \min\{1, 4(M_2−1)/R′ + 4M_2/(R′ε^2)\}$ (PC1c3). (c) Joint inclusions $h_A = 1\{A ⊆ S\}$ (plain averages, $c_h = 0$); predeclared $h_I(S) = P(β_j ∈ I \mid S, X, y)$ for a finite endpoint grid, with a union bound over the grid (cluster 16 repair: no ``any interval''). (d′) Growth clause: on any family with osc d = $O_P(1)$ (model/design condition) and $R′(n,p) = 4ℓ(n,p)$, $ℓ = ⌈\log_2(n+p+1)⌉$, under T03♯: $\hat{μ}(h) → h(S_0)$ jointly with output. (e) Fixed data: $\hat{μ}(h) → π(h)$ a.s. as R′ → ∞ (cited). (f) MPM margin: if every exact PIP is ≥ δ from ½ and the estimated PIPs err < δ, the reported MPM equals the exact MPM (K62).
+\end{stmt}
+TLF files this D text under S-KERNEL as ``the N9 statement, H′(a)''. Clauses (b)--(f) are main-card material; their final form is M1 \rid{TH01}. Seat~C's C15-TV (K103) and Seat~A's S10 (minorisation, graph, Dirichlet form) are transcribed once, under \rid{TH13} \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:685} \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:696}.
+
+\textbf{Round-1 base statement.} Seat~B's ``as R1 §D D16'' points to the text below. It is superseded where B's Round-2 text changes it: the minorisation constant is $1/M_\phi$, and ``a fixed order need not be self-adjoint''. Seat~A's ``Unchanged from R1 §D S1'' (PAR) is transcribed under \rid{TH15}. Seat~D's S2 base is at \src{NBH/branch_snapshots/MEET-THM/R1_D.md:391} (not transcribed).
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_B.md:426}
+\textbf{Seat B, R1 D16 · Proposition KERNEL — statement.} Each elementary move is $γ_φ$-reversible (cap and self-loops included); the uniformly random order is self-adjoint on $L^2(q_φ)$ (a realised order is not); draw\_pi0 exact, Z̄₀ exact; tie-aware DP returns the prescribed maximiser (N3 OPEN); the symmetrised capped graph has no isolated vertex and ≤ pB edges; $Q_φ(S,\cdot) ≥ π_φ/(mM_φ)$ with $M_φ ≤ \exp\{φ(d_{\max} − E_{π_0}d)\}$, so $‖Q_φ^k(S,\cdot) − π_φ‖_{\mathrm{TV}} ≤ (1 − 1/(mM_φ))^k$; $ℰ_Q ≥ \tfrac12ℰ_{R_2}$.
+\end{stmt}
+
+\textbf{K23 placement.} REG-A lists ``K23 \ldots{} PROVED (by this seat, unchecked)'' in this card's status words. The decision, however, is: K23 is FUTURE\_WORK (\rid{CJ05}). It may be cited as an attributed lemma without a theorem number (\rid{CL22}; Seat~C's dissent, recorded as DS02). The Dirichlet-form clause is therefore not a numbered claim of this card \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:638} \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:79}.
+
+\textbf{Dependencies.} Used by M1(a), M3, M2(b4), S-IDENT and S-REP. K09/N3 is carried as a hypothesis in M5 and M4(f) \src{NBH/02_theory.md:1195}. Obligations:
+\begin{itemize}
+\item \rid{OB09} (N9, the closure gate; final placement ``S-KERNEL (cited N9 with CHK amendments)'') \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:76};
+\item \rid{OB03} (N3; final placement ``Named premise (MINUTES §2.3) + K09 proposition C10 in S-KERNEL; not FW'') \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:70}.
+\end{itemize}
+Cited: \rid{CL01}. Kernel mixing is deferred: \rid{CJ04}, \rid{CJ05}.
+
+\begin{plain}
+Each elementary move of the kernel (Gibbs flip, uniform swap, neighbour swap, independence move) leaves the tempered target invariant and is reversible, under N9's sufficient conditions. A uniformly random order of the moves is self-adjoint. The start sampler draws exactly from the block-product start. One full round is minorised by the target with constant $1/M_\phi$, so after $k$ rounds the TV distance is at most $(1-1/M_\phi)^k$; this is useful only when $M_1=O(1)$ (K103: ``PROVED (by this seat, unchecked)''). N9's kernel facts are ``PROVED (candidate)''. Under exact comparisons, the max-plus DP picks the prescribed tie-broken start mode; that last clause is a proof sketch.
+\end{plain}
+\begin{notproved}
+\begin{itemize}
+\item A fixed (non-random) move order need not be self-adjoint.
+\item The minorisation bound is vacuous under masking: it is ``useful iff $M_1=O(1)$'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:710}.
+\item The integrated tie-DP invariant (N3) is OPEN; C10 is ``not being listed as a proved implementation theorem''.
+\item No mixing-time result for the φ = 1 round (\rid{CJ04}).
+\item The Dirichlet comparison K23 is not a numbered claim (\rid{CJ05}).
+\item N9K is ``PROVED (candidate)''.
+\end{itemize}
+\end{notproved}
+\begin{uncertain}[number of N9 sub-claims]
+HQ reports ``All 7 sub-claims are PROVED (candidate)'' at \pos{1550} and ``All 8 sub-claims are PROVED (candidate)'' at \pos{1593}. MEET-v31 MINUTES §9 says ``all seven sub-claims''. The archive does not reconcile them \src{NBH/02_theory.md:2786}.
+\end{uncertain}
+\end{card}
+
+% ======================================================================= TH13
+\begin{card}{TH13}{S-IDENT · Restricted-ESS coverage identity, TI/KL/TV calculus, C15-CI clause (K25 lemma, K104, K55, K103)}
+\approvedFB\quad Status (REG-A, verbatim): \status{C15-TV, C15-KL, C15-CI: PROOF SKETCH, unchecked (assembly); Independence-sampler foundation: KNOWN—CITE; S9: PROVED (by this seat, unchecked); OWS-WS1: PROVED (SF: none; XF: none)} \src{NBH/ID_REGISTRY.md:93}
+
+\textbf{Decision note.} ``Seat B's `missing' item 1 (R3\_B §S4) adopted: HQ Q2's posterior-content reading needs a named clause'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:67}. TLF adds three points \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:729}:
+\begin{itemize}
+\item ``C15-CI is named as a clause of this card \ldots{} It is the HQ Q2 deliverable: posterior-content error, not frequentist coverage (FW1).''
+\item ``K33 is not here (M7; D's dissent recorded in MINUTES §2.3).''
+\item ``The minorisation constant is $1/M_φ$ in A, B, C and D (B notes $1/(mM_φ)$ is also valid); compatible.''
+\end{itemize}
+Seat~C's C15 package is the fullest text and is transcribed first. The other seats' texts follow.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:737-745}
+\textbf{Seat C (R2\_C), card C15-TV — K103.}\\
+\textbf{Final statement.} Under A, $M_\phi=\max_Sq_\phi(S)/\pi_0(S)$. The complete production round minorizes $q_\phi$ by $1/M_\phi$, without a $1/m$ factor. Thus a terminal particle’s marginal law after $L$ terminal rounds has TV at most $q^L$, $q=1-1/M_1$. For a predeclared partition into $d_0$ cells, $P(TV(\widehat\pi_{\rm cell},\pi_{\rm cell})>\epsilon\mid\mathcal C)\le\min\{1,4(M_2-1)/R'+4d_0M_2/(R'\epsilon^2)\}$.\\
+\textbf{Repairs.} PC2 cluster 16 and §0 item 4: distinguish marginal law from realized empirical law; label default-$4$ bound vacuous. Full-state TV uses singleton cells and may be useless.\\
+\textbf{Status.} Production-round/record assembly: \textbf{PROOF SKETCH, unchecked}. Independence-sampler foundation: \textbf{KNOWN—CITE}.\\
+\textbf{Placement.} Supplement, one package with C15-KL/CI.\\
+\textbf{Route / Lean.} Cite PC2’s checked minorization/vector-ratio clauses; compose minorization through invariant kernels.\\
+\textbf{Fallback / stop.} Coarsened TV and bounded-functional error; no useful masked full-TV claim.\\
+\textbf{IC3.} W gives $M_1\le e^{D_*}=O_P(1)$; §R6 supplies explicit $L,R'$.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:754-762}
+\textbf{Seat C (R2\_C), card C15-KL — K103/K104.}\\
+\textbf{Final statement.} Under C15-TV, $\lambda_L=(1-q^L)\pi+q^L\nu_L$. Consequently $KL(\pi\Vert\lambda_L)\le-\log(1-q^L)$ and $KL(\lambda_L\Vert\pi)\le q^L\log(1/\pi_{\min})$. Also $KL(\widehat\pi\Vert\pi)\le4TV(\widehat\pi,\pi)^2/\pi_{\min}$, with the corresponding minimum cell mass for coarsenings. If any positive-posterior state is absent, $KL(\pi\Vert\widehat\pi)=\infty$; in particular this occurs surely when $\lvert\Omega\rvert>4NR'$.\\
+\textbf{Repairs.} PC2 cluster 16; HQ Q3: reverse empirical KL obstruction retained, useful masked final-TV/KL not claimed.\\
+\textbf{Status.} \textbf{PROOF SKETCH, unchecked} assembly; elementary divergence foundations cited.\\
+\textbf{Placement.} Supplement, C15 package.\\
+\textbf{Route / Lean.} Cite checked mixture/log-sum clauses; finite support and convexity.\\
+\textbf{Fallback / stop.} Fixed-data directional bounds. No forward-KL convergence rate without controlling $\pi_{\min}$; no silent smoothing.\\
+\textbf{IC3.} Every finite admissible correlated design for inequalities; W for terminal reverse-KL convergence. Otherwise unchanged from R1 §F D15-KL.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:771-780}
+\textbf{Seat C (R2\_C), card C15-CI — K103 (the named posterior-content credible-set clause).}\\
+\textbf{Final statement.} Under C15-TV, for any possibly output-selected union $C$ of the chosen cells and nominal content $1-\alpha$, $\lvert\pi(C)-(1-\alpha)\rvert\le TV(\widehat\pi_{\rm cell},\pi_{\rm cell})+\lvert\widehat\pi(C)-(1-\alpha)\rvert$. Therefore the probability, jointly with $\mathcal O$ under GUARD-W, that the left side exceeds $\epsilon$ plus the observed nominal-content discrepancy is bounded by C15-TV’s tail bound.\\
+\textbf{Available interval.} Use model-size cells, $d_0=K+1$, and an interval selected from the existing size distribution. Discrete overshoot is retained explicitly; estimated content need not equal nominal content.\\
+\textbf{Repairs.} HQ Q2 and PC1/PC2 cluster 16: absolute posterior-content deviation, not frequentist coverage. A pointwise fixed-$h$ bound does not validate arbitrary selected sets.\\
+\textbf{Status.} \textbf{PROOF SKETCH, unchecked}.\\
+\textbf{Placement.} Supplement, C15 package.\\
+\textbf{Route / Lean.} Simultaneous cell-law control and deterministic set-mass inequality.\\
+\textbf{Fallback / stop.} Predeclared interval endpoints with simultaneous CDF bounds; unavailable historical records remain unavailable.\\
+\textbf{IC3.} W with §R6’s stacking rate and actual size-distribution records.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:789-795}
+\textbf{Seat C (R2\_C), agenda-7 rows.}\\
+\textbf{C15 empirical TV/content.} The same $R'_n$ handles any predeclared coarsening with $d_0\le s^2$, including model size. It does not make singleton full-state TV informative when $\lvert\Omega\rvert$ is exponential.\\
+\textbf{C15 terminal law.} On W, $M_1\le e^{D_*}=O_P(1)$; the existing logarithmic $L$ gives terminal marginal TV and reverse-KL convergence in probability. Forward-KL convergence additionally needs control of $\log(1/\pi_{\min})$, which is not supplied.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:804-806}
+\textbf{Seat B (R2\_B) S9 · Proposition IDENT (K25, K104, K54, K55) · supplement.}\\
+Final statement as R1 §D D19 with $Λ_{\mathrm{len}} := ∫_0^1 \mathrm{sd}_{q_φ}(d)\,dφ ≤ √J$ (the length, not the cumulant Λ(1); PC1 §16 AMBIGUOUS). Status: PROVED (by this seat, unchecked); OWS-WS1: PROVED (SF: none; XF: none); PC1 §14, §16 TRUE-AS-WRITTEN. Rest unchanged.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:815}
+\textbf{Seat A (R2\_A) S10.} \textbf{S10 · Proposition KL/TV and BLOCKS (K104, K103, K07, K14, K22).} Exponential-family identities with the length $Λ_{\mathrm{len}} := ∫\mathrm{sd}_{q_φ}(d)\,dφ ≤ √J$ (renamed; PC1:257); minorisation $Q_φ(S,\cdot) ≥ π_φ/M_φ$ (constant $1/M_φ$, PC1:290; PC2:184), vacuous under masking; Dirichlet form $ℰ_Q ≥ \tfrac12ℰ_{R_2}$ with $R_2 = (1/m)ΣP_j^2$ (PC1:289); graph: ≤ pB edges, no isolated vertex for p ≥ 2 (PC1:291); strict-gap preservation (PART-ThmA) and the SIZE equality clause; every block sub-model is scored. Supplement. Status: D/E proposals TRUE-AS-WRITTEN at the cited rows; OWS-WS1 PROVED (no review).
+\end{stmt}
+Seat~D's S8 row, which is identical to the one transcribed under \rid{TH12}, is at \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:824}. The Dirichlet-form clause in Seat~A's S10 is K23. It is not a numbered claim (see \rid{TH12}, \rid{CJ05}).
+
+\textbf{Round-1 base statements.} Seat~B's ``as R1 §D D19'' and Seat~A's base S4 (KL/TV lemmas) are below. B's Round-2 text renames Λ to the length $Λ_{\mathrm{len}}$.
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_B.md:464}
+\textbf{Seat B, R1 D19 · Proposition IDENT — statement.} $ρ_{\mathrm{full}}(u,v) = ρ_V(u,v)\cdot a_u a_w/a_v^2$, $a_t = q_t(V)$, w = 2v−u; $(\log Z_φ)′ = E d$, ″ = Var d; $KL(π‖π_0) + KL(π_0‖π) = ∫_0^1\mathrm{Var}_{q_φ}(d)\,dφ =: J$; Λ ≤ √J; $R_{\mathrm{eff}}/R → Z^2/E[\hat{Z}^2|𝓒]$; sandwich variance estimator consistent as R → ∞; √N and √R CLTs [cited].
+\end{stmt}
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_A.md:550}
+\textbf{Seat A, R1 S4 · KL/TV lemmas — Statement.} (a) $π_φ$ is an exponential family in d: Λ′ = E d, Λ″ = Var d, $\log(Z/(m(∅)\bar{Z}_0)) = ∫_0^1E_{π_φ}d$, $KL(π‖π_0) + KL(π_0‖π) = ∫_0^1\mathrm{Var}_{π_φ}(d) = J$, J = 0 iff d constant, Λ ≤ √J; (b) if every log mass is perturbed by ≤ ε: $\tilde{Z}/Z ∈ [e^{−ε}, e^{ε}]$, TV(π̃, π) ≤ tanh ε, a winner with gap > 2ε is unchanged; kernel errors accumulate by path coupling as $Σδ_t$.
+\end{stmt}
+Clause (b) of Seat~A's S4 is the K108 perturbation lemma. It ships in S-CERT (\rid{TH14}). Seat~C's ``R1 §F D15-KL'' base is \src{NBH/branch_snapshots/MEET-THM/R1_C.md:389}; the related D15-TV and D15-CI base cards are \src{NBH/branch_snapshots/MEET-THM/R1_C.md:377} and \src{NBH/branch_snapshots/MEET-THM/R1_C.md:401}.
+
+\textbf{Charter.} LP-IDENT, wave~2. The binding requirement, verbatim: ``S-IDENT's C15-CI is the HQ Q2 deliverable (posterior-content reading of §5.4 credible-interval coverage; the frequentist half is FW1): it must be proved or its loss reported, not silently dropped'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-IDENT.md:57}. The charter names no audit obligation \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-IDENT.md:61}.
+
+\textbf{Dependencies.} Uses S-KERNEL \rid{TH12} (K103), M1, M2 (W rates) and M7. Used by M2(b), M6, M7(e) and S-REP \rid{TH19} \src{NBH/02_theory.md:1196}. Consumes \rid{OB01} (N1): ``C: M1/L-N1; S-REP and S-IDENT consume it'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:68}. \rid{OB10} (N10) has its final placement as ``FW4 (K24); S-IDENT minorisation/terminal-law TV ship'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:77}.
+
+\begin{plain}
+Under the card's setting (a proof-sketch assembly, unchecked): one production round at temperature φ is minorised by the tempered target with constant $1/M_\phi$. So a terminal particle's \emph{marginal} law is within $q^L$ of $\pi$ in TV, with $q=1-1/M_1$. For any cell partition fixed in advance, the pooled empirical cell law has a finite-$R'$ TV tail bound. That bound transfers, jointly with output under GUARD-W, to the posterior-content error of any union of cells, including a credible set chosen from the output, up to the observed nominal-content discrepancy. This is a statement about posterior content, not frequentist coverage. KL bounds follow in the reverse direction. Forward KL needs control of $\pi_{\min}$, which is not supplied. On the reporting family W, where $M_1\le e^{D_{*}}=O_P(1)$, the logarithmic $L$ gives terminal marginal TV and reverse-KL convergence in probability. Under masking the bounds are vacuous.
+\end{plain}
+\begin{notproved}
+\begin{itemize}
+\item No useful masked full-TV claim.
+\item The default $R'=4$ bound is vacuous.
+\item Singleton full-state TV is uninformative when $|\Omega|$ is exponential.
+\item No forward-KL convergence rate.
+\item No frequentist coverage of credible intervals (\rid{CJ01}).
+\item No masked final-estimate TV/KL (\rid{CJ02}).
+\item No mixing-time result (\rid{CJ04}).
+\item The assembly is a PROOF SKETCH, unchecked.
+\end{itemize}
+\src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:740-761} \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:789-795}
+\end{notproved}
+\end{card}
+
+% ======================================================================= TH14
+\begin{card}{TH14}{S-CERT · Local search, certificate semantics, B\&B soundness, perturbation lemma (K64, K73, K74, K05, K108)}
+\approvedFB\quad Status (REG-A, verbatim): \status{N7 L1: CORRECT WITH AMENDMENT; OCERT-LemmaM: PROVED (SF: VERIFIED (O-VCERT); XF: VERIFIED (A-REV9)); OCERT-C4: PROVED (XF: VERIFIED*)} \src{NBH/ID_REGISTRY.md:94}
+
+\textbf{Decision note.} Content: ``Local search (weak local maximum, ties allowed), certificate semantics, B\&B soundness, perturbation lemma (K64, K73 without the region-certification clause, K74, K05, K108)''. ``K73 per C's withdrawal (R3-8)'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:64}. TLF: ``K107 (rounding bound) is FUTURE\_WORK (N16 OPEN); K108 (deterministic perturbation lemma) stays. Seats A and B state the same card; D files it as the S9 row.'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:934}. The seat texts are complementary: A adds the scan bound and K74. Both are transcribed.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:942-944}
+\textbf{Seat B (R2\_B) S8 · Proposition CERT (K64, K73, K05, K108) · supplement.}\\
+Final statement as R1 §D D18 with: \texttt{local\_certified} = no strictly improving feasible flip or swap at the scanned centre (weak local maximum; ties allowed) (PC1 §17 COUNTEREXAMPLE conceded); B\&B exact when it completes, ``unresolved'' otherwise, in exact arithmetic; log-mass perturbation ε ⇒ $\tilde{Z}/Z ∈ [e^{−ε}, e^{ε}]$, TV ≤ tanh ε, winners with gap > 2ε unchanged. The rounding bound (K107) is withdrawn to FUTURE\_WORK (N16 OPEN; T33-errbound COUNTEREXAMPLE). Status: N7 L1: CORRECT WITH AMENDMENT; OCERT-LemmaM: PROVED (SF: VERIFIED (O-VCERT); XF: VERIFIED (A-REV9)); OCERT-C4: PROVED (XF: VERIFIED*). Rest unchanged.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:953}
+\textbf{Seat A (R2\_A) S8.} \textbf{S8 · Proposition CERT (K64, K73, K74, K05, K108).} \texttt{local\_certified} = no strictly improving feasible flip/swap neighbour at the scanned centre (weak local maximum; ties allowed; PC1:272); ≤ (ℓ+1) scans of ≤ p + k*(p−k*) models per search; card R (OCERT-C4 + Lemma M) exact on completion, ``unresolved'' on exhaustion, nothing outside U; perturbation lemma ($\tilde{Z}/Z ∈ e^{±ε}$, TV ≤ tanh ε, winner gap > 2ε); limitation CEX-localmax(A2), CEX2. K107 → FUTURE\_WORK (N16 OPEN; T33-errbound COUNTEREXAMPLE). Status unchanged from R1 §D C16/S4. Supplement.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:962}
+\textbf{Seat D (R2\_D) S9 row.} S9 search/certificates — K64, K73, K74, K05, K108: K107 rounding bound → FUTURE\_WORK (cluster 17); K108 deterministic perturbation lemma stays. [status: N16 ``OPEN'']
+\end{stmt}
+
+\textbf{Round-1 base statements.} These are superseded where Round~2 changes them. In particular, ``strict \ldots{} local maximum'' became ``weak local maximum; ties allowed'' (PC1 §17 COUNTEREXAMPLE), and B's rounding clause was withdrawn (K107 $=$ \rid{CJ16}). Seat~D's base S9 is at \src{NBH/branch_snapshots/MEET-THM/R1_D.md:475} (not transcribed). Seat~A's ``S4'' half (K108) is transcribed under \rid{TH13}.
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_B.md:453}
+\textbf{Seat B, R1 D18 · Proposition CERT — statement.} Local search moves only on strict improvement, ≤ (ℓ+1) scans of ≤ p + k*(p−k*) models, \texttt{local\_certified} = strict flip/swap local maximum at the scanned centre; B\&B over [∅, U] with the Furnival–Wilson superset bound is exact when it completes, ``unresolved'' otherwise; score rounding error ≲ $c\cdot k\cdot κ_2(H_S)\cdot u\cdot(ν+k)$; if every log mass moves ≤ ε then $\tilde{Z}/Z ∈ [e^{−ε}, e^{ε}]$, TV ≤ tanh ε, winners with gap > 2ε unchanged.
+\end{stmt}
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_A.md:436}
+\textbf{Seat A, R1 C16 · REPAIR and certificates — Statement.} EX-A, completed scans, tie-broken greedy map, capped lattice. (a) Theorem A: under $\mathrm{TD}'_∞$ on Lat(S°), the local search from C ∈ Lat(S°) with ℓ ≥ τ(C) reaches, scores and certifies S₀ in ≤ Φ(C) moves; LS-score: LS0 from the prescribed start mode scores S₀ within max\{Φ(S°) − 1, 0\} moves; Lemma M: margins ⇒ TD′ w.p. → 1 under SE; (b) Lemma S: the HPM is the ≻-maximum of the scored set, order-independent; $\mathrm{top}_c$ merges; with LS0, $𝒯_{\mathrm{new}} = \mathrm{top}_c(𝒯_{\mathrm{old}} ∪ 𝒮_{\mathrm{added}})$; (c) local search moves only on strict improvement, ≤ (ℓ+1) scans of ≤ p + k*(p−k*) models; local\_certified means a strict flip/swap local maximum at the scanned centre; every block sub-model is scored, so the HPM beats every block-local model; (d) card R: B\&B on [∅, U] with the leaps-and-bounds superset bound is exact when complete, ``unresolved'' on exhaustion, certifies nothing outside U; (e) limitation: a certified local maximum can lie far below the mode (CEX-localmax, CEX2).
+\end{stmt}
+Clause (a) of C16 (Theorem~A, LS-score) is main-card material, M5 \rid{TH05.a}.
+
+\textbf{Chair-specified fallback (IC7, close audit \#8)}, verbatim: ``the deterministic perturbation lemma K108 ($\tilde{Z}/Z ∈ [e^{−ε}, e^{ε}]$, TV ≤ tanh ε, and gap > 2ε preserves the winner). Also the exact semantics of the local-search flags (K64, a weak local maximum, with ties allowed). No B\&B-soundness, rounding or region-certification claim. Stop rule: the generic rule.'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-AUDIT.md:101} \src{NBH/branch_snapshots/MEET-THM/CLOSE_AUDIT.md:16}. LP-AUDIT is the code-audit wave (wave~3). Its named audits are listed under \rid{OB02} \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-AUDIT.md:70}.
+
+\textbf{Dependencies.} Used by M4 \rid{TH04} (card semantics), M5 \rid{TH05} (Theorem~A, LS-score, scan bound) and M8 \rid{TH08} (search cost) \src{NBH/02_theory.md:1197}. Obligations:
+\begin{itemize}
+\item \rid{OB07} (N7), final placement ``S-CERT (K73 without region clause) + M4(e); N16 = FW16'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:74};
+\item \rid{OB11} (N11), final placement ``M5 hypothesis (+ S-CERT)'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:78};
+\item \rid{OB16} (N16), final placement ``FW16; K108 in S-CERT'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:83}.
+\end{itemize}
+Cited: \rid{CL21} (Furnival--Wilson, K05). Deferred: \rid{CJ11} (NP-completeness), \rid{CJ16} (K107).
+
+\begin{plain}
+The flag \texttt{local\_certified} means exactly this: no single flip or swap strictly improves the score at the scanned centre. That is a weak local maximum, and ties are allowed. Each search scans a bounded number of models. In exact arithmetic, the branch-and-bound card R is exact when it completes and says ``unresolved'' otherwise. If every log-mass is perturbed by at most ε, the evidence moves by a factor in $[e^{-\varepsilon},e^{\varepsilon}]$, TV moves by at most $\tanh\varepsilon$, and any winner with a gap above 2ε stays the winner.
+\end{plain}
+\begin{notproved}
+\begin{itemize}
+\item No region certification: K73's operational region-certification clause was withdrawn \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1673}.
+\item No rounding-error bound (K107 $=$ \rid{CJ16}; T33-errbound COUNTEREXAMPLE). All certificates are exact-arithmetic statements, and production floating point is not validated (\rid{OB16}).
+\item A certified weak local maximum can be far below the mode (CEX-localmax(A2); see \rid{TH18}).
+\item No NP-completeness result (\rid{CJ11}).
+\item If the full card fails, the fallback ships without any B\&B-soundness claim.
+\end{itemize}
+\end{notproved}
+\end{card}
+
+% ======================================================================= TH15
+\begin{card}{TH15}{S-OUT · Output-event validity, worker equivalence, stacking (K77, K78, K83–K86, K63)}
+\approvedFB\quad Status (REG-A, verbatim): \status{LemmaRO: PROVED; SF VERIFIED; XF VERIFIED*. CEX-guard: COUNTEREXAMPLE; XF VERIFIED*. N6 potential-run: PROVED; output form: CORRECT WITH AMENDMENT. GUARD-W: not audited} \src{NBH/ID_REGISTRY.md:95}
+
+\textbf{Decision note.} ``K63/K86 are also named as premises in M1/M5'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:69}. TLF: ``Seat B has no S-OUT card in Round 2 (R3\_B places K63/K86 in hypotheses \ldots). Cards below are complementary.'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:972}.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:980-988}
+\textbf{Seat C (R2\_C), card C13 — K77/K78.}\\
+\textbf{Final statement.} Under A and stop-only statistical coupling GUARD-W, a potential-run event $B$ satisfying $P(B\mid\mathcal C)\le\alpha$ gives $P(\mathcal O\cap B\mid\mathcal C)\le\alpha$. It does not imply $P(B\mid\mathcal O,\mathcal C)\le\alpha$.\\
+\textbf{Repairs.} PC2 cluster 3; preserve actual statistical-output scope and the unaudited integrated coupling.\\
+\textbf{Status.} LemmaRO: \textbf{PROVED; SF VERIFIED; XF VERIFIED*}. CEX-guard: \textbf{COUNTEREXAMPLE; XF VERIFIED*}. N6 potential-run: \textbf{PROVED}; output form: \textbf{CORRECT WITH AMENDMENT}. GUARD-W: \textbf{not audited}.\\
+\textbf{Placement.} Supplement.\\
+\textbf{Route / Lean.} Cite filed coupling/event-containment result; finite probability core.\\
+\textbf{Fallback / stop.} Potential-run theorem while the audit remains open. Never replace it with completion-conditioned validity.\\
+\textbf{IC3.} Any admissible correlated input; unchanged from R1 §D D12 apart from explicit audit qualification.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:997}
+\textbf{Seat D (R2\_D) S4 row.} S4 worker/stacking/output — K63, K83–K86, K77, K78: ``Adaptive R′ need not preserve the bounds'' (cluster 3). [status: unchanged]
+\end{stmt}
+Seat~A's S6 (PAR: K63, K83, K84, K86, K09) is the same text transcribed under \rid{TH12} \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1006}.
+
+\textbf{Round-1 base statements.} TLF contains no full statement of the worker-equivalence and stacking clauses (K63, K83--K86). They live in the base cards transcribed here.
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_D.md:424}
+\textbf{Seat D, R1 S4 · Worker equivalence, stacking, output convention — Statement.} Lemma S (top-c merge order-independent); Prop W bitwise (one binary, process workers; 3/3 designs); W-cal by code reading; Cor W-R(b) with the extra search; pooled bounds hold for any R′ declared before stream 10 and fail for adaptive R′; Lemma RO (stop-only guard); CEX-guard; IND-T stream separation.
+\end{stmt}
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_A.md:493}
+\textbf{Seat A, R1 S1 · PAR — Statement.} (a) Prop W / W-cal: concurrent islands, diagnostic islands and scans reproduce the serial run bitwise (one binary, single-thread BLAS, process workers, fixed reduction order); (b) Cor W-R: stacking R′ = 4k leaves islands 1–4 unchanged; with the extra search from c₄ the scored set nests and HPM(R′) ⪰ HPM(4); without it, FALSE; (c) stream separation 10..9+R′ (IND-T extended; code audit); (d) tie-aware DP returns the prescribed start mode (N3 sub-obligation); (e) for fixed p the exact branch is eventually taken (N12).
+\end{stmt} Their obligation forms are \rid{OB02} (N2(a)--(e)) and \rid{OB14} (N14(a)--(d)), transcribed in §\ref{sec:oblig}. Seat~C's C13 base, ``R1 §D D12'', is at \src{NBH/branch_snapshots/MEET-THM/R1_C.md:323}.
+
+\textbf{Charter (LP-AUDIT).} ``No binding theorem of its own, but M1(c),(d), M4(e), M5 and M8 rest on S-OUT (Lemma RO, GUARD-W, IND-T extension, worker equivalence, stacking nesting). The M1 charter escalation evidence applies if the GUARD-W or IND-T extension audit fails.'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-AUDIT.md:66}.
+
+\textbf{Dependencies.} Used by M1(c,d), M4(e), M5, M8 and S-REP \src{NBH/02_theory.md:1198}. Obligations:
+\begin{itemize}
+\item \rid{OB06} (N6), final placement ``M1(d), M4(e), S-OUT'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:73};
+\item \rid{OB14} (N14), final placement ``S-OUT + M1(c)'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:81};
+\item \rid{OB02} (N2, the named implementation premises).
+\end{itemize}
+Cited: \rid{CL20} (Lemma RO, GUARD-W).
+
+\begin{plain}
+Fix a frozen calibration record, under the card's setting A. If a failure event has probability at most α for the \emph{potential} run (the run as if it always completed), then the probability that the run both returns output and fails is still at most α. This needs the guard to be stop-only (GUARD-W). It does \emph{not} say that a run that did return output fails with probability at most α.
+\end{plain}
+\begin{notproved}
+\begin{itemize}
+\item GUARD-W, the stop-only coupling of the integrated v3.1 code, is \emph{not audited}. Until it is, the statement is a potential-run theorem.
+\item The probability is never conditional on completion (CEX-guard is a counterexample to that reading).
+\item Adaptive $R'$ need not preserve the bounds.
+\item The IND-T extension to streams $10..9+R'$ is a code audit, not done (\rid{OB14}).
+\end{itemize}
+\end{notproved}
+\end{card}
+
+% ======================================================================= TH16
+\begin{card}{TH16}{S-Z · Evidence variance, masked tails (K37–K41, K53)}
+\approvedFB\quad Status (REG-A, verbatim): \status{OPW2-ThmA: PROVED (SF: none; XF: VERIFIED (A-REV9)); MZ-E1E2: PROVED (E1, E2), candidate: not reviewed, not adopted; FMP-Na: PROVED (SF: none; XF: GAP (A-REV9)); PC1c4: PROVED; T26-ThmA: PROVED (SF: VERIFIED (W5-LOCKBOOK); XF: VERIFIED* (A-REV4)); T26 overall CONJECTURE} \src{NBH/ID_REGISTRY.md:96}
+
+\textbf{Decision note.} ``Terminal-off clause only in the exception-probability form'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:61}. The seats differ on the variance clause \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1016}. The chair resolves it: both bounds ship. The chair's choice is transcribed first, then the seat texts.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1339-1343}
+\textbf{Chair's choice 3 (S-Z, variance).} \textbf{Both bounds ship}, as two clauses:\\
+– (vii-a) $\mathrm{Var}(\hat{Z}_r/Z \mid 𝒞) ≤ (T+1)\cdot e^{2D}/N$, with D = $\operatorname{osc}_Ω d$, the deterministic full-space range (A S4(vii), B S4(vi); wave-1 repair);\\
+– (vii-b) $\mathrm{Var}(W_r \mid 𝒞) ≤ e^{2\cdot\operatorname{osc}_Ω d} − 1$ (D S6; it follows from the pathwise bound $W_r ∈ [e^{−\operatorname{osc} d}, e^{\operatorname{osc} d}]$ checked by PC2, W2\_PC2 C2 rows).\\
+Their minimum is the reported bound. (vii-b) is the checked fallback if (vii-a)'s 1/N route fails in the LP-REST HQ.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1024}
+\textbf{Seat A (R2\_A) S4.} \textbf{S4 · Proposition Z (K37–K41, K53).} (i) $E[\hat{Z}_r \mid 𝓒] = Z$, $E[\log \hat{Z}_r] ≤ \log Z$, $P(0.05\hat{Z} > Z) ≤ 0.05$ (cited). (ii) exact variance identity (OPW2 Thm A, as a specialisation of CDG 2011 Thm 1.4 in kind); the exact-refresh product never substituted (OPW2-cex). (iii) masked lower tail: islands whose terminal population is off S₀ have $\hat{Z}_r ≤ √δ_1 Z$ \textbf{except on an event of probability ≤ $2√δ_1$} (source form, PC1:247; divided by κ if conditioned on an off-event of probability κ); PC1 claim 4 wording mandatory. (iv) $\hat{Z} < Z_{𝒯} ⇒ \hat{Z} < Z$. (vi) favourable $\hat{Z}/Z → 1$ under (P1) (remark). (vii) $\mathrm{Var}(\hat{Z}_r/Z \mid 𝓒) ≤ (T+1)e^{2D}/N$ with $D := \operatorname{osc}_Ω(d)$, deterministic, bounded by §R3(a) (PC1:249). Status unchanged from R1 §D C6 (FMP-Na: PROVED (XF: GAP (A-REV9)); MZ-E1E2: PROVED (E1, E2), candidate: not reviewed, not adopted; (vii) E proposal unchecked). Supplement.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1033-1035}
+\textbf{Seat B (R2\_B) S4 · Theorem Z, evidence variance (K39, K40, K38, K37, K41, K53) · supplement.}\\
+Final statement as R1 §D D12 with: (ii) in the exception-probability form, $P(\hat{Z}_r > √δ_1 Z$ on a terminal-off island$) ≤ 2√δ_1$ (÷κ if conditioned on an off event of probability κ) (PC1 §15 COUNTEREXAMPLE conceded); the E1/E2 path-tail clause imported with its full hypotheses (A, $x_m$, $τ_A$, $D_A$, exceptions) or omitted; (vi) $\mathrm{Var}(\hat{Z}_r/Z \mid 𝓒) ≤ (T+1)e^{2D}/N$ with D a deterministic full-space range bound ($D = \operatorname{osc} d ≤ D_*$ under §R3(a)). Status: OPW2-ThmA: PROVED (SF: none; XF: VERIFIED (A-REV9)); MZ-E1E2: PROVED (E1, E2), candidate: not reviewed, not adopted; FMP-Na: PROVED (SF: none; XF: GAP (A-REV9)); PC1c4: PROVED; T26-ThmA: PROVED (SF: VERIFIED (W5-LOCKBOOK); XF: VERIFIED* (A-REV4)); T26 overall CONJECTURE. Novelty of (i) vs Cérou–Del Moral–Guyader Thm 1.4 unchecked (LIT-SMC §3A: ``needs escalation''). Rest unchanged.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1044}
+\textbf{Seat D (R2\_D) S6 row.} S6 evidence variance — K37–K41, K53: Terminal-off clause in exception-probability form; $\mathrm{Var}(W_r|𝓒) ≤ e^{2\cdot\operatorname{osc}_Ω d} − 1$ (pathwise bound, PC2 D14) replaces the $(T+1)e^{2D}/N$ form; envelope per M3′(d). [status: OPW2-ThmA ``PROVED (SF: none; XF: VERIFIED (A-REV9))''; MZ-E1E2 ``PROVED (E1, E2)'' candidate]
+\end{stmt}
+
+\textbf{Round-1 base statements.} These are superseded where Round~2 repairs them: the terminal-off tail is now in exception-probability form, and Var bounds follow chair's choice~3. Seat~D's base S6 is at \src{NBH/branch_snapshots/MEET-THM/R1_D.md:446} (not transcribed). The E1/E2 path-tail clause ships ``with its full hypotheses (A, $x_m$, $τ_A$, $D_A$, exceptions) or omitted''. Its Round-1 form is B's clause (ii) below.
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_A.md:261}
+\textbf{Seat A, R1 C6 · Z — Statement.} One island, setting C2. (i) $E[\hat{Z}_r \mid 𝓒] = Z$, $E[\log \hat{Z}_r] ≤ \log Z$, $P(0.05\hat{Z} > Z) ≤ 0.05$; (ii) $N\cdot\mathrm{Var}(W_T \mid 𝓒) = Σ_s(1−1/N)^{T−1−s}(E[W_s^2μ_s(h^2_{s,T})] − 1)$ for any invariant kernels; the ideal-refresh product $∏(1 + χ^2_t/N) − 1$ is stated as an idealisation, never substituted (OPW2-cex); (iii) masked lower tail E1/E2 and N(a): $\hat{Z}_r ≤ √δ_1 Z$ on islands whose terminal population is off S₀; PC1 claim 4 wording: ``underestimates with high probability; the complementary rare event carries compensating overestimates; Markov caps them''; (iv) $\hat{Z} < Z_{𝒯} ⇒ \hat{Z} < Z$; (v) $Z ≤ C_n(2b_0 + y^{\top}y/(n+1))^{−ν}$, gap data-dependent; (vi) favourable: $\hat{Z}/Z → 1$ under (P1) (remark); (vii) crude universal bound $\mathrm{Var}(\hat{Z}_r/Z \mid 𝓒) ≤ (T+1)e^{2D}/N$ (remark, E T19, unchecked).
+\end{stmt}
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_B.md:359}
+\textbf{Seat B, R1 D12 · Theorem Z — statement.} (i) exact variance identity $N\cdot\mathrm{Var}(W_T|𝓒) = Σ_s(1−1/N)^{T−1−s}(E[W_s^2μ_s(h^2_{s,T})] − 1)$; under exact refresh $∏(1+χ^2_t/N) − 1$ (idealisation, not the kernel: OPW2-cex). (ii) masked lower tail: $P(W > (T/η)[π_0(A^{c})/π_0(x_m)]e^{−φ_{τ_A}D_A}) ≤ η + Nπ_0(A)$; if the terminal population is off S₀ w.p. ≥ κ then $\hat{Z}_r ≤ √δ_1 Z$ there. (iii) $E[\log \hat{Z}_r] ≤ \log Z$. (iv) island-minimum bound $0.05^{1/R}\min_r\hat{Z}_r$ (independence). (v) favourable: $\hat{Z}/Z → 1$ under (P1) (remark). (vi) design-free $\mathrm{Var}(\hat{Z}_r/Z|𝓒) ≤ (T+1)e^{2D}/N$ (crude).
+\end{stmt}
+
+\textbf{Chair-specified fallback (LP-REST)}, verbatim: ``The exact evidence identities (KNOWN—CITE); clause (vii-b), $\mathrm{Var}(W_r \mid 𝒞) ≤ e^{2\cdot\operatorname{osc} d} − 1$, from the pathwise bound checked by PC2; the terminal-off clause in exception-probability form. Clause (vii-a), the 1/N form, is dropped if its route fails'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-REST.md:89}.
+
+\textbf{Dependencies.} Uses M2(a) (for $D$), M3, M4 (envelope) and S-TARGET \rid{TH10} \src{NBH/02_theory.md:1199}. Cited: \rid{CL08} (Cérou--Del Moral--Guyader). Deferred: \rid{CJ24} (useful two-sided masked evidence precision).
+
+\begin{plain}
+Each island's evidence estimate is unbiased for $Z$ given the frozen calibration, and its variance has an exact identity. Under masking, an island whose final population misses the truth underestimates $Z$ by a factor $\sqrt{\delta_1}$, except on an event of probability at most $2\sqrt{\delta_1}$. Two explicit variance bounds ship, and the reported bound is the smaller of the two. Both are finite-data, deterministic-range statements; but (vii-a), the $1/N$ form, is an ``E proposal unchecked'' and is dropped if its route fails, with (vii-b) as the checked fallback \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1343}, \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-REST.md:89}.
+\end{plain}
+\begin{notproved}
+\begin{itemize}
+\item T26 overall is a CONJECTURE.
+\item MZ-E1E2 is ``candidate: not reviewed, not adopted''.
+\item FMP-Na has an XF GAP.
+\item Clause (vii-a) was an ``E proposal unchecked'' (Seat~A).
+\item The novelty of (i) relative to Cérou--Del Moral--Guyader Thm~1.4 is unchecked.
+\item The terminal-off tail holds only in exception-probability form: PC1 §15 is a counterexample to the unconditional form.
+\item No useful two-sided relative precision of $\hat{Z}$ under masking (\rid{CJ24}; see also \rid{LIM05}).
+\item Clause (vi), favourable $\hat{Z}/Z\to1$, is a remark only.
+\end{itemize}
+\end{notproved}
+\end{card}
+
+% ======================================================================= TH17
+\begin{card}{TH17}{S-POOL · Pooling rules, recording-marginal equal-weight bias comparison P1, R\_eff (K49, K50, K54, K56, K57-P1)}
+\approvedFB\quad Status (REG-A, verbatim): \status{MA-PropP: PROVED (elementary), author-only; Prop2(c): PROVED (XF VERIFIED); MZ-P1P2: P1 PROVED; MA-CorV: PROOF SKETCH; ADRAFT-ThmA Astra-only, cite Del Moral; OBG-LH-lock-general: XF ERROR} \src{NBH/ID_REGISTRY.md:97}
+
+\textbf{Decision note.} ``General K57 accuracy → FW (B, C; R3-8)'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:66}. TLF: ``C has no R2 card (cites). Seats are compatible; P1 is stated for the uniformly sampled recording-state / one-record marginal in all three.'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1054}. The Round-2 texts below are deltas on Round-1 base cards, so the base statements are transcribed after them. Read the base text with the Round-2 changes applied.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1062-1064}
+\textbf{Seat B (R2\_B) S10 · Proposition PIP-eq (K49, K50, K57; K59 FUTURE\_WORK) · supplement.}\\
+Final statement as R1 §D D14 with the TV clause on the uniformly sampled one-record marginal of the delivered population (PC1 §14 AMBIGUOUS) and the splitting clause labelled exact-refresh idealisation. Status: MA-PropP: PROVED (elementary), author-only; Prop2(c): PROVED (XF VERIFIED); MZ-P1P2: P1 PROVED; MA-CorV: PROOF SKETCH. Rest unchanged.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1073}
+\textbf{Seat A (R2\_A) S7.} \textbf{S7 · Proposition POOL (K49, K50, K54, K56, K57; K47, K55 cited).} As R1 §D C4 (i), (iii)–(vi) and S2 P1, with (ii) moved to M2(b) and 0 ≤ h ≤ 1 (PC1:240); P1 stated for the uniformly sampled recording-state marginal (PC1:237); ``iff delivered'' dropped. Status unchanged (MA-PropP: PROVED (elementary), author-only; Prop2(c): PROVED (XF VERIFIED); ADRAFT-ThmA Astra-only, cite Del Moral; MZ-P1P2: P1 PROVED; OBG-LH-lock-general: XF ERROR). Supplement.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1082-1088}
+\textbf{Seat D (R2\_D) S5 and S7 rows.}\\
+S5 pooling — K47 cited, K48–K50, K54, K56: unchanged. [status: unchanged]\\
+S7 equal-weight P1 — K57: unchanged (bias ≤ TV of the one-record marginal, cluster 14). [status: MZ-P1P2 ``P1 PROVED; P2 PROVED as a composition'']
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1097}
+\textbf{Seat C (R3\_C §S1), objection to unrestricted K57 accuracy (for the record).} §2.2 S-POOL: Object to unrestricted K57 accuracy. Retain the checked recording-marginal bias comparison; general fixed-budget equal-weight accuracy remains FUTURE\_WORK. W2P1 B.S10 verifies that narrower scope. [What would change it:] A checked estimator-level theorem for the actual records and budgets.
+\end{stmt}
+
+\textbf{Round-1 base statements (superseded wherever the Round-2 texts above say ``with:'').}
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_A.md:223}
+\textbf{Seat A, R1 C4 · POOL — Statement.} Setting C2, $W_r = \hat{Z}_r/Z$, $M = E[W_r^2 \mid 𝓒]$. (i) Ẑ-weighted $\hat{μ}(h) = Σ_r \hat{Z}_r H_r(h)/Σ_r \hat{Z}_r → π(h)$ a.s. as R → ∞ at fixed N; (ii) $P(|\hat{μ} − π(h)| > ε \mid 𝓒) ≤ \min\{1, 4(M−1)/R + 4M/(Rε^2)\}$; (iii) the equal-weight mean → $E[H_1(h) \mid 𝓒] ≠ π(h)$ in general, and $E[\bar{\hat{Z}}\cdot\mathrm{PIP}^{\mathrm{eq}}_j \mid 𝓒] − Z\cdot\mathrm{PIP}_j = −(1 − 1/R)\mathrm{Cov}(\hat{Z}_1, \widehat{\mathrm{PIP}}_{1j} \mid 𝓒)$; (iv) $R_{\mathrm{eff}}/R → Z^2/E[\hat{Z}^2 \mid 𝓒]$; (v) one-step RB: $\mathrm{Var}(o_j) ≤ \mathrm{Var}(1\{j ∈ S\})$ conditionally; (vi) for fixed R, N → ∞ consistency and CLTs: cited.
+\end{stmt}
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_A.md:512}
+\textbf{Seat A, R1 S2 · EQ-PIP — Statement.} P1: $|E[\widehat{\mathrm{PIP}}_{rj}] − \mathrm{PIP}_j| ≤ \mathrm{TV}$(law of the delivered terminal population, π); after locking (all particles at S₀) the bias is ≤ δ₁ and the $L^1$ error ≤ (L+4)ρ̄ + $u_π$ + δ₁ (LH, fixed p). Thm R (DELIV-POP) deferred.
+\end{stmt}
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_B.md:397}
+\textbf{Seat B, R1 D14 · Proposition PIP-eq — statement.} $\mathrm{PIP}^{\mathrm{eq}} → E[\widehat{\mathrm{PIP}}_{1j}|𝓒] ≠ \mathrm{PIP}_j$ at fixed N; $E[\bar{\hat{Z}}\cdot\mathrm{PIP}^{\mathrm{eq}}] − Z\cdot\mathrm{PIP} = −(1−1/R)\mathrm{Cov}$; $|E[\widehat{\mathrm{PIP}}_{rj}] − \mathrm{PIP}_j| ≤ \mathrm{TV}$(delivered population, π); splitting $N_e$ into more islands is neutral for Ẑ to first order (exact-refresh idealisation) but not for $\mathrm{PIP}^{\mathrm{eq}}$.
+\end{stmt}
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_D.md:438,461}
+\textbf{Seat D, R1 S5 · Pooling rules (Prop P) and R\_eff — Statement} (line 438). Fixed N: Ẑ-weighted pool → π(h) a.s. as R′ → ∞; equal-weight → $E[\widehat{\mathrm{PIP}}_{1j}|𝓒]$ (bias of order 1/N); $E[\bar{\hat{Z}}\cdot\mathrm{PIP}^{\mathrm{eq}}] − Z\cdot\mathrm{PIP} = −(1−1/R)\mathrm{Cov}$; fixed R: island estimates → π(h) as N → ∞ (cited); $R_{\mathrm{eff}}/R → Z^2/E[\hat{Z}^2|𝓒]$; one-step RB variance reduction.\\
+\textbf{Seat D, R1 S7 · Equal-weight PIP (A4) — Statement} (line 461). $|E[\widehat{\mathrm{PIP}}_{rj}] − \mathrm{PIP}_j| ≤ \mathrm{TV}$(delivered population, π); after locking ≤ δ₁ (LH fixed p). Thm R deferred (DELIV-POP OPEN; general LH locking FALSE per A-REV7).
+\end{stmt}
+Seat~A's clause (ii), the finite-$R$ bound, moved to M2(b) and M1(f) (\rid{TH01.f}). The locking clauses (``after locking \ldots'') rest on LH locking, which is ``general LH locking FALSE per A-REV7'' (OBG-LH-lock-general: XF ERROR). Only P1 is carried into the final card.
+
+\textbf{Chair-specified fallback (LP-REST)}, verbatim: ``Prop P(i),(ii) (MA-PropP, `PROVED (elementary)', author-only: checked in the HQ); the recording-marginal P1 comparison as checked (W2\_PC1 B.S10); R\_eff as the Kish identity (cited)''. Stop rule: ``Generic rule; general K57 accuracy stays FW'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-REST.md:90}.
+
+\textbf{Dependencies.} Uses M1 and M3 \src{NBH/02_theory.md:1200}. \rid{OB04}(ii) has its final placement in S-POOL \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:71}. The N14(c) IND-T extension (\rid{OB14}) is used by S-POOL \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1879}. Cited: \rid{CL02} (K47). Deferred: \rid{CJ07}, \rid{CJ08}, \rid{CJ09}. Dissent on K57: DS06, Seat~D \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:86}.
+
+\begin{plain}
+Given the frozen calibration, the primary (Ẑ-weighted) pooled estimate of a bounded summary converges almost surely to the exact posterior mean as the number of islands grows, at any fixed particle count (Seat A's clause (i) \src{NBH/branch_snapshots/MEET-THM/R1_A.md:223}, = METH-AUDIT Prop P(ii) \src{NBH/branch_snapshots/METH-AUDIT/PROOFS.md:126-128}; MA-PropP: ``PROVED (elementary), author-only''; for general $h$ it rests on N1, a proof sketch). The equal-weight (secondary) PIP converges instead to the single-island mean, which differs from the posterior value ``in general'' \src{NBH/branch_snapshots/MEET-THM/R1_A.md:223}: equal weighting retains any single-island bias for every $R$ (METH-AUDIT Prop P(i) \src{NBH/branch_snapshots/METH-AUDIT/PROOFS.md:122-124}). That bias is at most the TV distance between the law of one uniformly sampled recorded state and π (P1). $R_{\mathrm{eff}}$ is the Kish effective number of islands.
+\end{plain}
+\begin{notproved}
+\begin{itemize}
+\item No general fixed-budget accuracy for the equal-weight PIP (K57 $=$ \rid{CJ08}).
+\item No masked consistency of the equal-weight PIP or MPM (K58 $=$ \rid{CJ07}; DELIV-POP OPEN).
+\item No R-versus-N allocation result (K59 $=$ \rid{CJ09}).
+\item General LH locking is false (OBG-LH-lock-general XF ERROR).
+\item MA-PropP is author-only.
+\item MA-CorV is a PROOF SKETCH.
+\item ADRAFT-ThmA is Astra-only; cite Del Moral instead.
+\end{itemize}
+\end{notproved}
+\end{card}
+
+% ======================================================================= TH18
+\begin{card}{TH18}{S-LIM · Limitations as theorems (K79, K81, K100, K101); K99 qualitative remark}
+\approvedFB\quad Status (REG-A, verbatim): \status{CEX-localmax(A2), CEX2, CEX-ESSneutral(A3), PropD-T03, SHARE-PB: COUNTEREXAMPLE (constructions); INP I5 PROVED} \src{NBH/ID_REGISTRY.md:98}
+
+\textbf{Decision note.} ``Duplicates: PIP = E[\# selected in group]/d; numeric limits only with their p qualification'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:65}. TLF, verbatim: ``Duplicates clause (MINUTES; SYNTH\_R2 §3): PIP = E[\# selected in group]/d; the numeric limit 2/3 only for p = 2; with an orthogonal null it is 3/5; numeric limits only with their p qualification. The seats distribute clauses differently (A puts the weak-local-maximum limitation CEX-localmax in S-CERT; B has it as (b) here and K74 here; MINUTES places K74 in S-CERT); the duplicates clause is identical. C cites these.'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1107}. Seat~B's text is the fullest and is transcribed first.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1115-1117}
+\textbf{Seat B (R2\_B) S6 · Proposition LIM (K79, K74, K81, K100, K101; K99 remark) · supplement.}\\
+Final statement: (a) no transcript diagnostic certifies absence of an unqueried mode; (b) a certified weak local maximum can be far below the mode; (c) ESS = N throughout is compatible with genealogical collapse; (e) d exact duplicates: by symmetry PIP = E[number selected in the group]/d; the limit is 1/d only if exactly one is included asymptotically; under the ridge/BB target with two duplicates and fixed noise it is 2/3, group inclusion → 1; (f) MPM may exceed K; (g′) qualitative barrier: SHARE-PB's k-way contrast construction, as a remark. Repairs: (e) corrected (PC1 §18 COUNTEREXAMPLE conceded); (d) withdrawn (IMPLAUSIBLE); (g) withdrawn with K80 (FUTURE\_WORK). Status: CEX-localmax(A2), CEX2, CEX-ESSneutral(A3), PropD-T03, SHARE-PB: COUNTEREXAMPLE (constructions); INP I5 PROVED. Rest unchanged from R1 §D D15.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1126}
+\textbf{Seat A (R2\_A) S9.} \textbf{S9 · Proposition LIM (K79, K81, K100, K101).} (a), (b), (d) unchanged from R1 §D S3. (c) duplicates: d interchangeable columns have equal PIPs with PIP = E[number selected in the group]/d; the limit is 1/d only if exactly one is included asymptotically; under the ridge/BB target with two duplicates and fixed noise the limit is 2/3 (PC1:281); group inclusion → 1. Supplement.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1135}
+\textbf{Seat D (R2\_D) S11 row.} S11 limitations — K79, K81, K99 (qualitative), K100 (corrected): Duplicates: PIP = E[\#selected in group]/d (cluster 18). [status: unchanged]
+\end{stmt}
+
+\textbf{Round-1 base statements (superseded wherever the Round-2 texts above repair or withdraw a clause).}
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_B.md:410}
+\textbf{Seat B, R1 D15 · Proposition LIM — statement.} (a) no diagnostic from the transcript certifies absence of an unqueried mode (changing its mass leaves the transcript unchanged); (b) a certified flip/swap local maximum can be far below the mode; (c) ESS = N throughout is compatible with genealogical collapse; (d) cross-block masked contrasts of order k ≥ 4 in a saturated cluster are unreachable at budget $W\cdot(2p)^{−k}$ while every diagnostic passes; (e) duplicates: PIP → 1/d, group inclusion → 1; (f) MPM may exceed K; (g) E2 fires w.p. ≈ $P(χ^2_3 > 3/s^2)$ under a declared alternative.
+\end{stmt}
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_A.md:531}
+\textbf{Seat A, R1 S3 · LIMITS — Statement.} (a) E1c/E2: changing an unqueried state's mass leaves the transcript unchanged, so no run diagnostic certifies absence of unseen modes (oracle statement; positive certificates can still detect some failures); (b) flat weights do not prevent genealogical collapse (CEX-ESSneutral); (c) duplicates: equal PIPs, PIP → 1/d with group inclusion → 1, no estimator distinguishes duplicates; |S₀| > K has posterior zero; (d) the MPM may exceed K; HPM ≠ MPM in general.
+\end{stmt}
+Superseded in Round~2:
+\begin{itemize}
+\item B's (d) was withdrawn (IMPLAUSIBLE); its quantitative form is \rid{CJ15}.
+\item B's (g) was withdrawn with K80 (\rid{CJ17}).
+\item ``PIP $\to 1/d$'' in both base texts is replaced by PIP $=$ E[\# selected in group]/$d$ (PC1 §18 COUNTEREXAMPLE).
+\end{itemize}
+
+\textbf{Chair-specified fallback (LP-REST)}, verbatim: ``Each limitation restated with its filed construction: E1c/V12 for K79; duplicates with PIP = E[\# selected in group]/d, and numeric limits only with their p qualification''. Stop rule: ``Generic rule; a limitation whose proof fails moves to FW. It is never kept as an assertion'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-REST.md:91}.
+
+\textbf{Dependencies.} Cited by M4 \src{NBH/02_theory.md:1201}. Related method-level limitations: \rid{LIM04} (no universal diagnostic), \rid{LIM08} (cap $K$). Deferred quantitative barrier: \rid{CJ15}.
+
+\begin{plain}
+These are limitations, each backed by a filed construction (status: ``COUNTEREXAMPLE (constructions); INP I5 PROVED''):
+\begin{itemize}
+\item No diagnostic computed from the run's transcript can certify that an unvisited mode is absent.
+\item A certified weak local maximum can be far below the mode.
+\item Effective sample size $=N$ at every stage is compatible with all particles descending from one ancestor.
+\item Exact duplicate columns share PIP $=$ E[\# selected in group]/$d$, which need not tend to $1/d$ (numeric limits only with their $p$ qualification: 2/3 only for $p=2$).
+\item The MPM may have more than $K$ variables.
+\end{itemize}
+\end{plain}
+\begin{notproved}
+\begin{itemize}
+\item The numeric duplicate limit 2/3 holds ``only for $p=2$''; with an orthogonal null it is 3/5. MINUTES/TLF make numeric limits valid ``only with their p qualification'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1107}. The seat texts and the one-line REG-A description (``2/3 for two duplicates, fixed noise'') omit this qualification \src{NBH/ID_REGISTRY.md:98}. Use the qualified form.
+\item K99 is a qualitative remark only. Its quantitative $k$-way barrier is \rid{CJ15}.
+\item Flag power (K80) is \rid{CJ17}.
+\item K74's placement: MINUTES places K74 in S-CERT (\rid{TH14}). Seat~B lists it here.
+\end{itemize}
+\end{notproved}
+\end{card}
+
+% ======================================================================= TH19
+\begin{card}{TH19}{S-REP · Run-card reporting corollary: Ĵ (B/C/D form) and ε̂\textsubscript{×} with companions (K104/K11)}
+\approvedFB\quad Status (REG-A, verbatim): \status{Reporting assembly: PROOF SKETCH, unchecked. N1: PROOF SKETCH. PC1c3: PROVED, with N1 as premise. W2P2 C16 and repaired W2P1 T4/T5 are statement/route checks, not a full proof upgrade} \src{NBH/ID_REGISTRY.md:99}
+
+\textbf{Decision note.} TLF, verbatim: ``Final card is R3\_C §S2 S-REP (R3-6, unanimous: A withdrew its TI form). \textbf{ū̂ is D's global block-table envelope} ū̂ = $Σ_b \max_{U⊆C_b} x_b(U)$, not a maximum over V (C's objection, R3\_C §S1, adopted; a maximum over V ⊊ Ω does not bound all fits). \ldots{} the earlier R2 wording `maximal fit fraction on V' (SYNTH\_R2 §2.5; D:182) is withdrawn. Growth rates for the informative regime: the two stacking configurations of MINUTES §2.3 §2.6. d is a default member of 𝓗 (AMENDMENT\_HQ\_02). The accumulator is read-only (HQ Q4).'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1199} \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:72}. The final card follows in full, split into three boxes for page breaking.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1207-1222}
+\textbf{Final card (R3\_C §S2 S-REP) — run-card reporting corollary, part 1/3.}\\
+\textbf{IDs.} \textbf{S-REP: K104/K11 reporting corollary}, using M1/K46/K52 and M2/K102.\\
+\textbf{Hypotheses.} D0, EX-A and the MC contract. $d$ is fixed from data, blocks and tables before final randomness. Let $D=\max_\Omega d-\min_\Omega d$, $W_r=\widehat Z_r/Z$, $M_2=E(W_r^2\mid\mathcal C)$.\\
+\textbf{Implementation premises.} Read-only initial and measured-endpoint discrepancy accumulators; no new draws, transitions or scores; no feedback. Existing values are read when available. Missing historical records yield NA. Integrated accumulator and extended-stream fidelity require audit.\\
+\textbf{Initial records.} $A_r=N^{-1}\sum_{i=1}^Nd(S^{(0)}_{ri})$, using each final island’s initial iid start particles. Initial particles are not reweighted by final island evidence.\\
+\textbf{Endpoint records.} $B_r=(4N)^{-1}\sum_{k=1}^4\sum_{i=1}^Nd(S^{(k)}_{ri})$, at the four prescribed measured endpoints. These are plain discrepancies, not marginal RB PIP records.\\
+\textbf{Estimator.} $\displaystyle\widehat J=\frac{\sum_{r=1}^{R'}\widehat Z_rB_r}{\sum_{r=1}^{R'}\widehat Z_r}-\frac1{R'}\sum_{r=1}^{R'}A_r.$ Preserve its signed value. \textbf{Evidence:} W2P2 §4, “§R5 · Ĵ definition”, COMPLIANT; W2P1 B.R5(i), T1–T4.\\
+\textbf{Target identity.} $J=KL(\pi\Vert\pi_0)+KL(\pi_0\Vert\pi)=E_\pi d-E_{\pi_0}d$. \textbf{Evidence:} W2P2 §4, “C16 · Ĵ theorem”; W1P1 §16.\\
+\textbf{Finite-$R'$ statement.} For $\epsilon>0$, $P(|\widehat J-J|>\epsilon\mid\mathcal C)\le\min\{1,4(M_2-1)/R'+16D^2M_2/(R'\epsilon^2)+D^2/(R'N\epsilon^2)\}$. \textbf{Evidence:} W2P2 §4, C16 theorem; W2P1 D.R5(i), T1–T3.\\
+\textbf{Limits and zero range.} Fixed data/calibration: $\widehat J\to J$ almost surely under independent stacking. If $D=0$, both equal zero. On W, the adopted explicit stacking configurations yield consistency using $D\le D_*=O_P(1)$, $M_2\le e^{D_*}$. \textbf{Evidence:} W2P2 §4 and §6, C16.\\
+\textbf{Bound disclosure.} The bound can equal one at default $R'=4$, as in W2P2’s check; there is no default-budget accuracy or diagnostic-power promise. A large true $J$ does not ensure a large observed $\widehat J$.\\
+\textbf{Output form.} Under GUARD-W, replace the failure event by $\mathcal O\cap\{|\widehat J-J|>\epsilon\}$ with the same upper bound. \textbf{Evidence:} W1P2 cluster 3, D12; W2P2 §6, C16.\\
+\textbf{Numerical label.} \textbf{“Post hoc Monte Carlo estimate of Jeffreys divergence; not a certificate; floating-point error unvalidated.”} Report nats. The exact branch may report NA for this bridge diagnostic.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1223-1230}
+\textbf{Final card (R3\_C §S2 S-REP), part 2/3.}\\
+\textbf{Correlation proxy.} $\displaystyle\widehat\varepsilon_\times=\max_{b\ne c,\ j\in C_b,\ k\in C_c}|X_j^\top X_k|/(n-1)$, empty maximum zero; field \texttt{cross\_block\_rmax}. \textbf{Evidence:} W2P2 §4, proxy definition, COMPLIANT.\\
+\textbf{Proxy label.} \textbf{“Descriptive maximum cross-block correlation proxy; not signal leakage or a confidence bound; floating-point error unvalidated.”}\\
+\textbf{Global companions.} $\widehat\kappa=\min_b\lambda_{\min}(G_{C_b}/(n-1))$. If positive, $\widehat\delta=(K-1)\widehat\varepsilon_\times/\widehat\kappa$. Let $\widehat{\bar u}=\sum_b\max_{U\subseteq C_b}x_b(U)$, using already available block-score gains. This is a conservative global envelope, not a maximum over $V$.\\
+\textbf{Companion domain.} Require $\widehat\kappa>0,\ \widehat\delta<1,\ \widehat{\bar u}<1,\ \widehat\delta\widehat{\bar u}<(1-\widehat\delta)(1-\widehat{\bar u})$. Otherwise print derived $\widehat\eta$ as \textbf{“n/a”}. \textbf{Evidence:} W2P1 D.R5(ii), T4/T5; B.R5(ii) repair; SYNTH\_R2 §3.\\
+\textbf{Derived envelope.} Put $\widehat r=\widehat\delta\widehat{\bar u}/[(1-\widehat\delta)(1-\widehat{\bar u})]$, $\widehat\eta=K\log(1/(1-\widehat\delta))+\nu\log(1/(1-\widehat r))$. On the domain, $\sup_{S\in\Omega}|d(S)-d_\sigma(S)|\le\widehat\eta$. \textbf{Evidence:} W2P1 D.R5(ii), T4/T5.\\
+\textbf{Per-model norm clause.} For nonempty $S$, the standardized cross-block relative norm obeys $\varepsilon_S\le(|S|-1)\widehat\varepsilon_\times/\widehat\kappa$. Treat the empty model separately with norm zero. \textbf{Evidence:} W2P1 D.R5(ii), T4/T5.\\
+\textbf{Regularized proxy bounds.} With $G_D$ block diagonal, $E=G-G_D$, $A_D=G_D+I$, $H_D=(n+1)G_D+I$: $\delta_A\le\frac{(n-1)(p-1)\widehat\varepsilon_\times}{1+(n-1)\widehat\kappa}$, $\delta_H\le\frac{(n^2-1)(p-1)\widehat\varepsilon_\times}{1+(n^2-1)\widehat\kappa}$. \textbf{Evidence:} W2P2 §4, C16 proxy theorem.\\
+\textbf{Scope of derived bounds.} M2 still requires its full matrix/residual domain. Restricted-set calculations remain restricted-set calculations. Neither a lower bound of order $n\widehat\varepsilon_\times|\beta_j\beta_k|$ nor global rescaling from $V$ survives W2P1.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1231-1242}
+\textbf{Final card (R3\_C §S2 S-REP), part 3/3.}\\
+\textbf{Guarantee.} The permitted reporting fields have precise mathematical targets and qualified error bounds without influencing the sampling procedure.\\
+\textbf{Goals.} Objective (1); proposal §5.3 discrepancy reporting, §5.4 approximation and §13.1 bounded expectations; HQ Q4. No separate Song–Liang theorem-equivalence claim.\\
+\textbf{Status/self-check flag.} Reporting assembly: \textbf{PROOF SKETCH, unchecked}. N1: \textbf{PROOF SKETCH}. PC1c3: \textbf{PROVED}, with N1 as premise. W2P2 C16 and repaired W2P1 T4/T5 are statement/route checks, not a full proof upgrade.\\
+\textbf{Fidelity.} Reporting amendment authorized by Q4, to be recorded in AMENDMENT\_HQ\_02. Per-particle $d$ values exist during execution but are not currently retained. Historical availability is not inferred. No machine-certified bound is claimed.\\
+\textbf{Novelty/citation.} \textbf{MODEST/NEW-COMP} reporting consequence. Independent-system evidence weighting is established in Dai–Heng–Jacob–Whiteley, §4.2 (\url{https://arxiv.org/html/2007.11936v3}). The Jeffreys identity and norm inequalities are foundations; matching the prescribed initial and endpoint records is the contribution.\\
+\textbf{Proof route/key lemma.} Apply M1 to globally range-scaled $d$; split the error between endpoint ratio and initial mean. Use Popoviciu, Chebyshev and a union bound without assuming independence between those two estimates. Proxy bounds use row sums and block eigenvalues.\\
+\textbf{Difficulty/Lean core.} Routine mathematics; moderate accumulator audit. Lean: finite ratio bound, variance/union inequalities, range scaling, empty-set conventions and row-sum norm bounds.\\
+\textbf{Dependencies.} M1; M2 for informative W rates; M3 for discrepancy definitions; S-KERNEL for exact initialization; S-OUT for delivered-event transfer.\\
+\textbf{Risk.} Wrong endpoint timing; final-evidence weighting of initial particles; using $V$-range globally; invalid residual domain; interpreting a descriptive proxy as coefficient leakage or flag power.\\
+\textbf{Fallback/stop rule.} Retain precisely labelled descriptive fields if quantitative proof closure fails. If records are unavailable, report NA. Stop after one failed proof/audit repair cycle; remove quantitative reporting claims. Failure inherited from N1 or M2 triggers their binding-goal escalation, not a silent waiver.\\
+\textbf{IC3 exhibit/check.} W has $\widehat\kappa=3/4$, bounded discrepancy/moments and actual SMC dispatch. W2P2 \texttt{w\_family.py} checks its proxy bounds; \texttt{jhat\_mc.py} checks the estimator on a coded-grid component replica. W2P1 T4/T5 checks the global-envelope version.\\
+\textbf{Numerical companion.} None newly run. Proposed: at most ten seeds on enumerable correlated component designs; compare exact $J$, accumulated endpoint/start means and analytic proxy bounds. Replay identical streams with reporting enabled/disabled to test zero feedback. Report NA rather than reconstruct absent historical accumulators.
+\end{stmt}
+
+\textbf{Charter (LP-REP).} ``None. MINUTES §2.5, wave 4: `Nothing binding waits on them.' Failure inherited from N1 or M2 triggers their binding-goal escalation, not a silent waiver.'' The named premises are: ``Read-only initial and measured-endpoint discrepancy accumulators; integrated accumulator and extended-stream fidelity require audit (S-REP card); AMENDMENT\_HQ\_02 definitions (Ĵ, ε̂\textsubscript{×} with companions, d in 𝓗, the two R′ growth rates)'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-REP.md:61-65}. The read-only $d$ accumulator is a named premise. Per-particle $d$ values ``are not retained today'', so historical fits report NA \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1884}. The reporting definitions are DF19 and DF20 (\rid{DF19}, \rid{DF20}); the HQ ruling allowing them is RL04 (\rid{RL04}).
+
+\textbf{Dependencies.} As in the card's own Dependencies row \src{NBH/02_theory.md:1202}. The binding upstream obligation is \rid{OB01} (N1). Cited: \rid{CL11} (Dai--Heng--Jacob--Whiteley §4.2).
+
+\begin{plain}
+Two new run-card fields are read off records the sampler already produces, with no feedback into sampling:
+\begin{itemize}
+\item Ĵ estimates the Jeffreys divergence $J$ between start and posterior. Under D0, EX-A and the MC contract, given the frozen calibration, it has an explicit finite-$R'$ tail bound (vacuous at the default $R'=4$), converges a.s.\ for fixed data under independent stacking, and is consistent on the reporting family W under the adopted stacking rates. The assembly is a proof sketch resting on N1.
+\item ε̂\textsubscript{×} is the largest cross-block sample correlation. On a stated domain it yields a computable bound on how far the bridge potential $d$ can be from its shared-variance part.
+\end{itemize}
+Both fields are labelled post-hoc and descriptive.
+\end{plain}
+\begin{notproved}
+\begin{itemize}
+\item No accuracy at the default $R'=4$: the bound can equal one there.
+\item No diagnostic power: a large true $J$ does not ensure a large observed Ĵ.
+\item The proxy is not signal leakage and not a confidence bound.
+\item No machine-certified bound; floating point is unvalidated.
+\item Historical runs give NA.
+\item The whole card rests on \rid{OB01} (N1, PROOF SKETCH). The assembly is a PROOF SKETCH, unchecked.
+\end{itemize}
+\end{notproved}
+\end{card}
+
+% ======================================================================= TH20
+\begin{card}{TH20}{S-LEAK · B's leakage clauses (F), (S) as a supplementary corollary to M2}
+\approvedFB\quad Status (REG-A, verbatim): \status{OWS-WS6(b): PROVED (SF: none; XF: none), PC1 B.D6(S) TRUE; the m lower bound: PROVED (by this seat, unchecked); (b6) OWS-WS53F: PROVED-UNDER (SF: none; XF: none); PC1 B.D6(F) TRUE / DESIGN-VERIFIED ($D_B$)} \src{NBH/ID_REGISTRY.md:100}
+
+\textbf{Decision note.} ``R3-5, unanimous'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:71}. TLF, verbatim: ``(F), (S) are non-perturbative / different scale; they are not part of HQ's (a)(b)(c); (b5)'s pathwise bound stays in M2 \ldots{} R3\_C: `Preserve all inherited hypotheses; no positive uniform $q_2(S_0)$ conclusion' \ldots{} Seats B and D state (S) differently \ldots{} Only B states (F). See `Chair's choices' item 4 (compatible; both ship).'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1145}. The chair's choice is transcribed first.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1344-1348}
+\textbf{Chair's choice 4 (S-LEAK, (F) and (S)).} Ship:\\
+– (F) as B states it (\texttt{R2\_B.md} §R3 (b));\\
+– (S) as D's exact identity $1 + χ^2(π‖π_0) = π(S_0)^2 / (π_0(S_0)\cdot q_2(S_0))$, \textbf{plus} B's data-dependent bound $m ≥ π_0(S_0)\cdot e^{−2\cdot\operatorname{osc} d}$, \textbf{with} D's caveat that m has no design-uniform lower bound.\\
+These are compatible. W2\_PC1 B.R3(b)(5),(6) finds the m bound TRUE pointwise, and the $q_2$ route withdrawn. No uniform positive $q_2(S_0)$ conclusion is made (R3\_C).
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1162}
+\textbf{Clause (F) — Seat B (R2\_B), fragment (b6) of the §R3 card row} (other clauses of the line not reproduced).\\
+(b6) Favourable start under leakage: G, R, SE-blk(φ₀), EBM($M_n$), CBL(η), η < $η_A$ ⇒ $1 − π_0(S_0) = O_P(2^B\sqrt{\log n}\cdot n^{−κ})$.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1180}
+\textbf{Clause (S) — Seat D (R2\_D), the non-perturbative layer.}\\
+Non-perturbative layer (any ε, every grid; Seat B's (S), PC1 TRUE-AS-WRITTEN): $χ^2(q_{φ_t}‖q_{φ_{t−1}}) ≤ 1/m^2 − 1$ with $m = \min\{π_0(S_0), q_2(S_0)\}$, exact $1 + χ^2(π‖π_0) = π(S_0)^2/(π_0(S_0)q_2(S_0))$; m has no design-uniform lower bound ($q_2$ route IMPLAUSIBLE uniformly, PC1).
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1153}
+\textbf{Clause (S), m-form — Seat B (R2\_B), fragment of the (b5) clause} (other clauses of the line not reproduced).\\
+and $\max_t χ^2(q_{φ_t}‖q_{φ_{t−1}}) ≤ 1/m^2 − 1$, $m := \min\{π_0(S_0), q_2(S_0)\} ≥ π_0(S_0)e^{−2\cdot\operatorname{osc} d}$.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1171}
+\textbf{Seat B: status fragments for (S), (F), m-bound.}\\
+OWS-WS6(b): PROVED (SF: none; XF: none), PC1 B.D6(S) TRUE; […] the m lower bound: PROVED (by this seat, unchecked; $q_2(S_0)/π_0(S_0) = e^{2d(S_0)}/E_{π_0}e^{2d}$). […] (b6) OWS-WS53F: PROVED-UNDER (SF: none; XF: none); PC1 B.D6(F) TRUE / DESIGN-VERIFIED ($D_B$).
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1189}
+\textbf{Seat A (R2\_A) D4 row} (A places B's (F),(S) in a leakage supplement; states no clause).\\
+D4 | amend | One merged package (§R3): WS3/WS4 route, now VERIFIED cross-family (CHK:13–14), with C's pathwise $M_2 ≤ e^{\operatorname{osc} d}$ clause (PC2:125) and B's (F),(S) clauses as a leakage supplement. Concede A.C9(c) ``hence within'' (PC1:138), the exhibit (PC1:142), the (e) ``iff'' (PC1:141). B's (N) and $q_2$ lemma not adopted (PC1:145, 147). | A proof of B's $q_2$ tilt-tail lemma would add a non-perturbative clause.
+\end{stmt}
+
+\textbf{Hypotheses of (F).} Seat~B's §R3 row names G, R, SE-blk(φ₀), EBM($M_n$), CBL(η) and $η<η_A$ without defining them \src{NBH/branch_snapshots/MEET-THM/R2_B.md:216}. They are defined in Seat~B's Round-1 card D6 (Theorem WSTAB-C), transcribed next. That card also carries the original forms of (F) and (S). Its clause (O) is now M2(c) material. Its clause (N) was not adopted (Seat~A D4 above: ``B's (N) and $q_2$ lemma not adopted'').
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/R1_B.md:505}
+\textbf{Seat B, R1 card D6 · Theorem WSTAB-C — statement (Round-1 base; superseded by the chair's choice above where they differ).}\\
+Blocks any partition (the v3 one included); SE-blk(φ₀): $λ_{\min}(R_{C_b}) ≥ φ_0^2$ ∀b; G, R; cross-block leakage CBL(η): $\max_b Λ_b ≤ ησ^{*2}\log n$ with $Λ_b = ‖(P_{C_b} − P_{U^*_b})μ_{−b}‖^2$ (the energy other blocks' signal leaks into block b beyond its own truths), η < $η_A$; EBM($M_n$): $\min_{b,j∈U^*_b}|\tilde{θ}_{b,j}| ≥ [\sqrt{M_n(σ^{*2}+2M)\log n} + \sqrt{Λ_b}]/(φ_0\sqrt{n−1})$, $M_n → ∞$. Then: (F) $1 − π_0(S_0) = O_P(2^B\sqrt{\log n}\cdot n^{−κ})$ (favourable start). (S) For \textbf{every} grid $0 = φ_0 < … < φ_T = 1$ and every t: $χ^2(q_{φ_t}‖q_{φ_{t−1}}) ≤ 1/m^2 − 1$, $m := \min\{π_0(S_0), q_2(S_0)\}$, and $1 + χ^2(π‖π_0) = π(S_0)^2/(π_0(S_0)q_2(S_0))$ exactly; with T = 1, $\mathrm{Var}_{𝓒}(\hat{Z}_r/Z) = χ^2(π‖π_0)/N$. (O) Obstruction: under ORTH with |N₀| truth-free null predictors and p = n−1, $χ^2(π‖π_0) → ∞$ for every $\bar{R}^2 > \tfrac12$ while $\mathrm{TV}(π, π_0) → 0$; conversely under masking $\mathrm{ESS}_∞ ≤ π_0(S_0)/π(S_0)^2 = p^{−c}n^{−c/2}e^{O_P(1)}$. (N) Necessity: if $π_0(S_0) \not\to 1$ then infinitely often coefficients cancel or leakage is large.
+\end{stmt}
+The tilted law $q_t\propto\gamma_0e^{td}$, so that $q_2$ is the tilt at $t=2$, is defined in DF07 (\rid{DF07}).
+
+\textbf{Chair-specified fallback (IC7, close audit \#8)}, verbatim: ``the finite-law exact identity 1 + χ²(π‖π₀) = π(S₀)²/(π₀(S₀)·q₂(S₀)), plus the data-dependent bound m ≥ π₀(S₀)·$e^{−2\cdot\operatorname{osc} d}$. No design-uniform lower bound on m. (F) is dropped if its leakage route fails. Stop rule: the generic rule.'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-REP.md:96}.
+
+\textbf{Dependencies.} Uses M2 \rid{TH02}, M3 \rid{TH03} and S-T \rid{TH09} \src{NBH/02_theory.md:1203}.
+
+\begin{plain}
+These clauses hold for any ε and any grid, outside the perturbative §5.3 package:
+\begin{itemize}
+\item (S): the χ² divergence from start to posterior is an exact closed form in three probabilities of the true model. Every bridge increment is controlled by the smaller of the start and tilted masses of $S_0$, which is at least $\pi_0(S_0)e^{-2\operatorname{osc} d}$ for the given data.
+\item (F): under B's leakage conditions (G, R, SE-blk(φ₀), EBM($M_n$), CBL(η), $\eta<\eta_A$), $1-\pi_0(S_0)=O_P(2^B\sqrt{\log n}\,n^{-\kappa})$. This is asymptotic, in probability, and PROVED-UNDER with no SF or XF check.
+\end{itemize}
+\end{plain}
+\begin{notproved}
+\begin{itemize}
+\item No design-uniform lower bound on $m$. The $q_2$ route is ``IMPLAUSIBLE uniformly'' and was withdrawn, and ``No uniform positive $q_2(S_0)$ conclusion is made''.
+\item (F) is PROVED-UNDER with no SF or XF check. Its conditions are DESIGN-VERIFIED only on $D_B$.
+\item The $m$ lower bound is ``PROVED (by this seat, unchecked)''.
+\item (F) and (S) are not part of HQ's §5.3 (a)(b)(c).
+\end{itemize}
+\end{notproved}
+\end{card}
+
+\subsection{Remarks TH21 (dissolved card) and TH22 (Thesis CD)}\label{sec:supp-remarks}
+
+% ======================================================================= TH21
+\begin{card}{TH21}{S-STGI · K29/K30 — DISSOLVED (not a list item)}
+Status (REG-A, verbatim): \status{DISSOLVED (MINUTES §2.2, corrected)} \src{NBH/ID_REGISTRY.md:101}
+
+\textbf{Decision}, verbatim (corrected MINUTES §2.2): ``\textbf{Dissolved} (corrected 2026-11-04 after the registrar's cross-check, \texttt{REGISTRY\_PAPER1.md} §7). K30 is stated once, as M7(d), labelled ideal two-state grid. K29 → FUTURE\_WORK FW23. Its conditional implication under (LL) or the over-tilted $q_w$ bound may be cited as an attributed lemma, not a numbered claim''. On the vote: ``A (R3\_A:43, `object: dissolve'), B (FW) and C (R3\_C §S1, `object to K29 as a numbered contribution') prevail. \textbf{Dissent:} D (R3\_D, `confirm K29 here'). The reason: (LL) is not a model/design condition, and no family exhibits it (W2PC1 A.S11, DESIGN-ASSERTED/GAP). v1 of these minutes misreported A's position'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:70}.
+
+\textbf{Where the content went.}
+\begin{itemize}
+\item K30 (the ideal two-state grid crossing, $\log_2A_0+O(1)$ stages) is clause (d) of M7, \rid{TH07.d}. Chair's choice~2: ``Stated once, as M7(d) in the final M7 card \ldots{} The other seats' wordings (C14, A S11, D STG′(c)) are references for the M7 HQ'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1338}.
+\item K29's unconditional favourable-regime application is \rid{CJ23} (FW23).
+\item K29's conditional implication may be cited as an attributed lemma. Chair's choice~1: ``B's STG(f) wording is the reference text. Dissent: D'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1337}.
+\end{itemize}
+That reference text is reproduced below. It is \emph{not} a list claim.
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:879}
+\textbf{Seat B (R2\_B) STG card M7, clause (f) only} (fragment; the rest of the row is M7 material): (f) [supplement] favourable O(1) stages under STG-F's over-tilted $q_w$ bound or LL.
+\end{stmt}
+\textbf{Round-3 objections, verbatim (what would bring K29 back).}
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:906-924}
+\textbf{A (R3\_A:43).} S-STGI (K29, K30): \textbf{object: dissolve.} K30 → M7(d) labelled ideal grid (the chair's M7 row already lists it); K29 → FUTURE\_WORK | K29 fails IC3: (LL) is not a model/design condition and no family exhibits it (W2PC1:187 DESIGN-ASSERTED, GAP) | A design family on which (LL) or the over-tilted $q_w$ bound is verified; then K29 returns as a supplement clause.\\
+\textbf{B (R3\_B:61).} S-STGI (K29 conditional on (LL); K30 ideal): \textbf{object on K29} | (LL)/the over-tilted $q_w$ bound is not a model/design condition and no family satisfying it has been exhibited (W2PC1 A.S11: DESIGN-ASSERTED, GAP). IC3 fails; a list item cannot be conditional on an unexhibited hypothesis. K30 is already M7(d); state it once. | An exhibited design family satisfying (LL), checked in one wave: then K29 returns as a supplement clause. Until then FUTURE\_WORK.\\
+\textbf{C (R3\_C:40).} §2.2 S-STGI: Object to K29 as a numbered contribution | Its LL/over-tilted input lacks an exhibited model/design route: W2P1 A.S11 is DESIGN-ASSERTED/GAP. Cite the conditional implication; defer its unconditional favourable-regime application. Keep K30 as the ideal-grid result. | A checked IC3 family establishing the missing input.\\
+\textbf{D (R3\_D:45).} S-STGI (K29 conditional on (LL), K30 ideal): confirm K29 here; K30 also stated as M7's labelled clause (c) (R3-8) | — | none.
+\end{stmt}
+The other historical seat texts are kept ``for reference only; they are not list claims'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:830-837}. Their spans:
+\begin{itemize}
+\item Seat~C's C14 (K30) \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:853-861};
+\item Seat~A's S11 (K29 under (LL); K30) \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:870};
+\item Seat~D's STG′ \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:888};
+\item Seat~D's S10 row \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:897}.
+\end{itemize}
+Recorded dissents: DS03 (D, K29) and DS04 (C, K30 in the supplement).
+
+\begin{notproved}
+\begin{itemize}
+\item No favourable $O(1)$ stage law is claimed. The input it needs, (LL) or the over-tilted $q_w$ bound, is not a model/design condition and no family exhibits it.
+\item No ``as-coded'' masked stage count (\rid{CJ06}, Conjecture~P OPEN).
+\item K30 is an ideal-grid comparison result, not a statement about the coded grid.
+\end{itemize}
+\end{notproved}
+\begin{uncertain}[propagation of the corrected vote]
+The final audit found that old S-STGI vote and placement text survived in TLF:831,833, in REGISTRY\_PAPER1 and in charters M2/M6/M7 and LP-IDENT. The chair applied the corrections without another audit \src{NBH/branch_snapshots/MEET-THM/CLOSE_AUDIT.md:12}. The TLF snapshot carries the corrected heading \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:830}. The archive did not re-audit REGISTRY\_PAPER1 \src{NBH/02_theory.md:2787}. Treat ``K30 $=$ M7(d); K29 $=$ FW23'' as final. Treat any older text in REGISTRY\_PAPER1 that places S-STGI in LP-IDENT as superseded.
+\end{uncertain}
+\end{card}
+
+% ======================================================================= TH22
+\begin{card}{TH22}{Thesis CD (K96) · scoped remark after the main theorems}
+Status (REG-A, verbatim): \status{remark, not a theorem} \src{NBH/ID_REGISTRY.md:102}
+
+\textbf{Decision.} ``Thesis CD (K96): a scoped remark after the main theorems, unanimous since Round 2'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:54}. The thesis sentence adopted earlier at \pos{1044} was: ``In split-and-merge, correlation breaks correctness. In local-to-global SMC, correlation costs only sequential depth and particles, never correctness.'' \src{NBH/03_results_and_conclusions.md:115}. Chair's choice~5, verbatim: ``Use \textbf{Seat C's} scoped wording (\texttt{R2\_C.md} §R6 agenda 6 table): `Remark only; there is no retained non-corollary thesis sentence', with its fixed-data / asymptotic / not-claimed scopes. All seats conceded D2 to C's position. The other three wordings are kept above for the paper's authors.'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1349}.
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1278-1283}
+\textbf{Seat C (R2\_C, §R6 agenda 6) — the chosen wording.}\\
+\textbf{K96 disposition.} \textbf{Remark only.} There is no retained non-corollary thesis sentence.\\
+\textbf{Fixed data.} For each admissible finite input and successful frozen calibration, the idealized start, kernels and unnormalized identities target the specified posterior. Normalized finite-run posterior estimates are not generally unbiased or exact. Independent stacking gives fixed-data consistency for the stated records.\\
+\textbf{Asymptotic accuracy.} Exact-target selection uses C9’s model/design conditions. Growing-dimensional summary accuracy is established by the proposed C1/C2 assembly on W with explicit stacking. Masked output/store accuracy uses LH and LS0 with output/retention premises. These are separate scopes.\\
+\textbf{Correlation and cost.} Dependence affects the start discrepancy, available bounds and search difficulty. The results do not prove that correlation only increases cost, that all correlated designs admit polynomial accuracy budgets, or that the posterior itself remains statistically consistent under arbitrary correlation.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1260}
+\textbf{Seat A (R2\_A, agenda item 6).} \textbf{Item 6, thesis scope (CD).} Fixed data: M1 identities, M2(a)–(f), M5, M3(b) (all finite inequalities). Asymptotic: M2(g), M6(b1-LH), S1, S2, the ideal-grid depth laws. Favourable vs masked: M1, M2(a), M3, M5 are regime-free; depth laws differ by regime (M7(d) vs S11); selection is proved only on masked LH (M6). The sentence not a corollary of other cards: none. CD is a \textbf{remark} (``correlation enters the guarantees only through (δ₁, $\operatorname{osc} d_σ$, $η_Ω$, A₀), each computable from (X, y); it enters no identity and no limit''), placed after M8.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1269}
+\textbf{Seat B (R2\_B, agenda item 6).} \textbf{Item 6, thesis scope.} Remark only (concede D2). Scope of the remark: fixed data for (a) identities and (c) particle cost ($M_2 ≤ e^{\operatorname{osc} d}$, $R′ ≍ e^{\operatorname{osc} d}/ε^2$), both for every X; depth (b) is a fixed-data bound $T ≤ P + ⌈\operatorname{osc}_V d/0.3246⌉ + 1$ plus the ideal-grid crossing law $\log_2A_0 + O(1)$; selection (d) is asymptotic, favourable (b6 start, T03♯) or masked (HPM b1-LH) on separate sequences. Candidate non-corollary sentence ``correlation increases depth and M₂'' is false (non-monotone: R1 check, PC1 §11); the true non-monotone sentence is Proposition NEC's cancellation point. So: no theorem.
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1292}
+\textbf{Seat D (R2\_D, agenda item 6).} \textbf{Item 6, thesis theorem.} Scope: fixed data for the identities and finite-R′ bounds (H′(a),(b)); asymptotic for depth and selection (STG′(c), Theorem 5(b1-LH), SL′), with favourable and masked families kept on separate sequences. There is no sentence of CD that is not a corollary of H′, STG′, WS′, Theorem 5 and SL′ (the candidate ``ε ↦ (d, $χ^2_t$, T, $M_φ$) is continuous at 0 while ε ↦ P(𝒪 ∩ \{Ŝ ≠ S₀\}) is bounded through the same quantities'' is WS′(b) plus Theorem 5(0)). \textbf{Remark only}, placed as the organising paragraph of the main text. ``Never correctness'' = H′(a); ``costs depth'' = STG′ + WS′(b)(iii); ``costs particles/islands'' = H′(b) with $M_2 ≥ 1/P_{𝓒}(\mathrm{cross})$ disclosed and $M_2 ≤ e^{\operatorname{osc} d}$ where (a) applies; not monotone in correlation, never conditional on output.
+\end{stmt}
+Card labels inside the A, B and D wordings (e.g.\ M2(g), M6(b1-LH), S11, H′, STG′, WS′, Theorem~5, SL′) are each seat's Round-2 labels, not the final M1--M8 lettering. The final lettering is in \rid{TH01}--\rid{TH08}.
+
+\begin{plain}
+There is no separate ``thesis theorem''. What paper~1 can say about correlation is the sum of the cards, each with its own scope:
+\begin{itemize}
+\item fixed-data identities (idealised start, kernels and unnormalised identities) hold for each admissible finite input and successful frozen calibration; normalised finite-run estimates are not generally unbiased or exact;
+\item accuracy and selection results are asymptotic, with separate scopes: exact-target selection under C9's (T03♯) model/design conditions, summary accuracy on W with explicit stacking, masked output/store accuracy on LH with LS0 and output/retention premises;
+\item dependence affects the start discrepancy, the available bounds and search difficulty (Seat C's wording); no monotone ``correlation only increases cost'' statement is proved.
+\end{itemize}
+\end{plain}
+\begin{notproved}
+\begin{itemize}
+\item That correlation only increases cost. ``correlation increases depth and M₂'' is false: it is non-monotone.
+\item That all correlated designs admit polynomial accuracy budgets.
+\item That the posterior stays consistent under arbitrary correlation.
+\item That normalised finite-run estimates are unbiased or exact.
+\end{itemize}
+The thesis sentence of \pos{1044} is a slogan. It is not a theorem.
+\end{notproved}
+\end{card}
+
+% ======================================================================= OBLIGATIONS
+\subsection{Proof obligations OB01--OB17 (= N1--N17)}\label{sec:oblig}
+
+\textbf{Origin.} The method meeting MEET-v31 handed seventeen unproved properties to the theorem meeting as obligations N1--N17 \pos{1280} \pos{1290}. Their texts are in \texttt{THEOREM\_REVISION\_INPUTS.md} §3 (INP). Each gives a statement, hypotheses, status, the decision it supports, what happens if it fails, and the INV matrix cell. INP's header rule: ``\textbf{Every PROVED here is a candidate} (not reviewed, not adopted). No status is upgraded.'' and ``\,`Seat-proved, unchecked' = a seat gave an argument that no proof check (PC1/PC2) has covered'' \src{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:7-10}.
+
+\textbf{Naming.} Item labels inside the INP texts (M2, M4, M7, M9--M14, A1, A3, C1, D1--D4, R3, R5, R7, V1--V13) are labels of the draft list TL $=$ THM-SYNTH \texttt{THEOREM\_LIST.md}, not of the final M1--M8 \src{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:12}. The final placement of each obligation is the ``Final'' column of COVERAGE\_MATRIX §(d), quoted in each card below \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:62-84}. N18 existed only under item-1 Outcome~1 and ``was not opened''. Item~1 closed as Outcome~2, so there are seventeen \src{NBH/02_theory.md:2563}.
+
+\textbf{Audit obligations are premises, not future work.} MINUTES §2.3, verbatim: ``N2(b), N2(c), N2(e), N14(c), the N3 DP invariant, and the integrated streams/LS0/GUARD-W/execution-DAG audits are \textbf{named implementation premises in the charters} and are recorded in \texttt{REGISTRY\_PAPER1.md}'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:90}. REGISTRY\_PAPER1 §8 adds: ``They are code-audit or execution facts, not model/design assumptions and not newly proved lemmas'' \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1870}. Its name map, verbatim: ``GUARD-W = N2(e) = C's A-GUARD. IND-T extension = N14(c) (IND-T for streams 10..9+R′). `Integrated streams' = C's A-STREAM = N2(b) (persistent per-worker stream state) + N14(c). `LS0' premise = N2(c) + OP-LS0 + the emitted centre (N3). `Execution DAG' = C's A-DAG = D's trajectory inventory.'' \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1872}.
+
+\textbf{Binding safeguards (MINUTES §2.7).} ``§13.1: if N1's general record identity fails, the narrower theorem ships and §13.1 escalates. §5.3: if both the D\_* route and the correlated-family route fail, it escalates. Also: loss of the masked statement without an approved replacement escalates (C §S5)'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:89}.
+
+In each card, ``Clauses that depend on it'' lists the TH IDs (cards or clause rows) that the cited sources tie to the obligation. The ranking in §\ref{sec:oblig-rank} counts these lists.
+
+% ---------------------------------------------------------------- OB01
+\begin{card}{OB01}{N1 · Measured-round island identity for general bounded h (Theorem H crux; V1(a2))}
+Status (REG-A, verbatim): \status{PROOF SKETCH; PC1 claim 3 takes it as a premise. Binding §13.1: if it fails the goal is not met by withdrawal; HQ escalates to Felipe} \src{NBH/ID_REGISTRY.md:145}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:127-134}
+\textbf{N1. Measured-round island identity for general bounded h (Theorem H crux; V1(a2)).}\\
+– \emph{Statement.} Conditional on a successful frozen 𝓒, for each final island r and each h ∈ 𝓗 with 0 ≤ h ≤ 1, measurable in (X, y, 𝓒): $E[\hat{Z}_r\cdot H_r(h) \mid 𝓒] = Z\cdot π(h)$, with $H_r(h)$ as in M9.\\
+– \emph{Hypotheses.} EX-A, EX-S, CAL, V5 (each φ = 1 round π-invariant), multinomial resampling, R′ declared before stream 10.\\
+– \emph{Route} (R2C \texttt{:200–204}): the finite-state resample–move recursion gives $E[\hat{Z}_r η_{r,T}(f)] = Zπ(f)$; terminal rounds preserve π, so the identity holds at each measured endpoint and for their average. R3A (unchecked): the base case of the locked terminal-round lemma.\\
+– \emph{Status:} \textbf{PROOF SKETCH}; PC1 claim 3 takes it as a premise.\\
+– \emph{Supports:} M9, A1, C1(d) joint clause, D3(a) for general h.\\
+– \emph{If it fails:} the binding goal is not met by withdrawal: HQ escalates to Felipe for a method reconsideration or an explicit scope change (proposal §13.1, binding). Until that decision: $\hat{μ}(h)$ carries no theorem; A1 shrinks to marginal PIPs (locked); M4 survives (Prop P(ii) for PIPs).\\
+– \emph{Cell:} row 8 × V (islandwise identity, extended); row 10 × ``NONE: joint inclusion probabilities''.
+\end{stmt}
+\textbf{Final placement.} ``M1 (Lemma N1, final (b)); binding §13.1 safeguard.'' Seat~C's note: ``M1/L-N1; S-REP and S-IDENT consume it; failure escalates §13.1'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:68}.
+
+\textbf{Clauses that depend on it.}
+\begin{itemize}
+\item \rid{TH01.b}, \rid{TH01.e}, \rid{TH01.f}, \rid{TH01.g}, \rid{TH01.i}: the R3\_A edge reads ``N1 → M1(b,e,f,g,i)'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M1.md:28}.
+\item \rid{TH13} (S-IDENT) and \rid{TH19} (S-REP). TH19's status words include ``N1: PROOF SKETCH''.
+\end{itemize}
+
+\textbf{Who discharges it.} The M1 HQ, wave~1: ``N1 (binding §13.1) is the longest pole and starts first'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:110}. M1 charter, verbatim \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M1.md:114-118}:
+\begin{itemize}
+\item first lemma: ``N1 (measured-endpoint identity E[Ẑ\textsubscript{r} H\textsubscript{r}(h) | 𝓒] = Z·π(h)) via the terminal-round prefix identity; then (e) as its corollary on 1\{S ≠ S₀\}'';
+\item check: ``N1 proof to PC1 (Codex Sol); the Lean file to the registrar; a p ≤ 8 coded-grid replica of E[Ẑ\textsubscript{r} H\textsubscript{r}(h)] (10 seeds) by PC2'';
+\item fallback: ``marginal PIPs only (locked identity) for (e)–(i); one HQ wave on N1'';
+\item escalation: ``N1 refuted or unclosed after one wave (→ §13.1 unmet, HQ)''.
+\end{itemize}
+Lean: T12(i.a) is partially formalised. ``The resample–move recursion \texttt{hstep} is an explicit hypothesis: the probabilistic island model is not formalised'' \src{NBH/03_results_and_conclusions.md:145}.
+
+\textbf{Attempts recorded.} Only the route sketch above (R2C, R3A, unchecked). The numerical checks (W1PC2:101, W2PC2 §0) ``are statement-sanity only'' and do not upgrade N1 \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1902}.
+\end{card}
+
+% ---------------------------------------------------------------- OB02
+\begin{card}{OB02}{N2 · Integrated v3.1 core: Prop W, W-cal, LS0, stacking, GUARD-W}
+Status (REG-A, verbatim): \status{Lemma S PROVED. (a) PROVED by code reading, executed on smoke + 3/3 designs. (b) PROVED by code reading, not executed. (c) not in the production core. (d) PROVED (PC1 claim 6, deterministic). (e) not audited} \src{NBH/ID_REGISTRY.md:146}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:136-141}
+\textbf{N2. Integrated v3.1 core: Prop W, W-cal, LS0, stacking, GUARD-W.} Code-audit facts plus executed replays, not mathematical theorems (TL:119).\\
+– \emph{Statement.} For fixed (X, y, seed, binary), process workers, Lemma S merges: (a) final islands bitwise equal to serial (Prop W); (b) the 4 diagnostic islands, with persistent per-worker stream state, bitwise equal to serial (W-cal); (c) LS0 leaves island outputs, Ẑ, PIPs bitwise unchanged, gives $𝒯_{\mathrm{new}} = \mathrm{top}_c(𝒯_{\mathrm{old}} ∪ 𝒮_{\mathrm{added}})$, fires no E3; (d) R′ = 4k with the extra search leaves islands 1–4 unchanged and nests the post-search scored set; (e) \textbf{GUARD-W:} v3.1 worker, merge and LS0 code satisfy ``any worker, LS0 or guard stop ⇒ no output'' (an LS0 stop is an operational interruption; a completed capped LS0 returns \texttt{local\_limit}) (new code-audit obligation, class (iv); S3 R3-5(ii)).\\
+– \emph{Status.} Lemma S PROVED. (a) PROVED by code reading, executed on smoke + 3/3 designs. (b) PROVED by code reading, \textbf{not executed}. (c) not in the production core. (d) PROVED (PC1 claim 6, deterministic). (e) \textbf{not audited} (API-AUDIT covered the serial v3 guard only).\\
+– \emph{Supports:} M2, M5, M6, M7, card G2 premise (i), ``the 2,394 study fits' saved sampler estimates are reusable as v3.1'' (full v3.1 records pending: LS0 integration and flags, NA interface, certificates, primary rescoring).\\
+– \emph{If it fails:} (b) → LAW-PRESERVING, wall-clock claims capped at the D4 table, ``bitwise'' claims narrow; (e) → CEX-guard applies to v3.1 (N6); fixes are engineering; decisions survive.\\
+– \emph{Cell:} row 8 × V; row 7 × V; row 12 × ``NONE: LS0 absent from production''; row 14 × V.
+\end{stmt}
+\textbf{Final placement.} ``Named implementation premises in the charters (M1, M4, M5, M8; LP-AUDIT) and recorded in \texttt{REGISTRY\_PAPER1.md} (MINUTES §2.3)'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:69}.
+
+\textbf{Clauses that depend on it} (REGISTRY\_PAPER1 §8 ``Used by'' column \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1876-1883}).
+\begin{itemize}
+\item N2(b) W-cal: S-OUT \rid{TH15} (K83) and M8 \rid{TH08}.
+\item N2(c) LS0 integration: M5 \rid{TH05}, M4(c) \rid{TH04.c} and M8.
+\item N2(e) GUARD-W: M1 \rid{TH01.c} and \rid{TH01.d}; M4(e) \rid{TH04.e}; M5; S-OUT; S-REP \rid{TH19} (output form).
+\end{itemize}
+Through N6(b), premise (i) of the certificate-card bound also rests on N2(e) (\rid{OB06}).
+
+\textbf{Who discharges it.} The code-audit wave (wave~3): M5, M4, M8 and LP-AUDIT. ``Code-audit wave: N2, N3, LS0, GUARD-W and the DAG serve M5, M4 and M8 together'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:112}. Escalations, verbatim: ``GUARD-W or IND-T extension audit fails → M1 (c),(d) revert to potential-run statements and N2 reopens (R3\_A:192); GUARD-W audit fails → M4(e) in potential-run form only (R3\_B:214); N3 fails outright or the integrated LS0 differs from the specified LS0 → HQ decides (R3\_D:225); the DAG audit finds an uncounted serial component → M8 (a)/(b) restated, not dropped (R3\_D:174)'' \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1886}.
+
+\textbf{Attempts recorded.}
+\begin{itemize}
+\item Prop W was executed bitwise on smoke and 3/3 designs.
+\item W-cal was argued by code reading only and has not been executed.
+\item API-AUDIT covered the serial v3 guard only.
+\item LS0 changed the HPM in 0/2,394 test-export fits. LS0 is not in the production core \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1882}.
+\item The read-only $d$ accumulator for S-REP is a further named premise of the same kind \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1884}.
+\end{itemize}
+\begin{uncertain}[N2(b) label]
+The TLF registrar note says the label N2(b) ``is not defined in any R3 file; its definition is in \texttt{THEOREM\_REVISION\_INPUTS.md} (N2), which is not on this branch'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1329}. The archive resolves it: N2(b) $=$ W-cal (the 4 diagnostic islands bitwise equal to serial), as defined above \src{NBH/02_theory.md:2788}.
+\end{uncertain}
+\end{card}
+
+% ---------------------------------------------------------------- OB03
+\begin{card}{OB03}{N3 · LS0-based T38(b1-LH) about the shipped method; e4 tie-DP invariant}
+Status (REG-A, verbatim): \status{(b1-LH) PROVED (candidate), XF VERIFIED (A-REV8) for "v3 + LS0"; bridge to code = N2(c), not done. DP invariant OPEN} \src{NBH/ID_REGISTRY.md:147}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:143-149}
+\textbf{N3. LS0-based T38(b1-LH) about the shipped method; e4 tie-DP invariant.}\\
+– \emph{Statement.} For v3.1 with LS0, on LH exact Gram (p ≤ n − 1, c linked pairs, $g_{\max} ≤ B < 2g_{\min}$): $P(𝒪 ∩ \{\hat{S}^{+} ≠ S_0\}) → 0$, with no open statistical hypothesis. Sub-obligation: on truncation the tie-aware DP returns the prescribed smallest-size, lexicographically smallest maximiser.\\
+– \emph{Hypotheses.} EX-A, EX-S, CAL, SR, GUARD + GUARD-W, (P), (M1)–(M3) (verified on LH), \textbf{OP-LS0}, the \textbf{LS0 centre rule} (e4), \textbf{ℓ ≥ max\{Φ(S°) − 1, 0\}} (N11).\\
+– \emph{Status.} (b1-LH) PROVED (candidate), XF VERIFIED (A-REV8) for ``v3 + LS0''; bridge to code = N2(c), not done. DP invariant \textbf{OPEN}. R3A and R3B sketch the same route (unchecked): greedy choice j = 1..p, keeping j iff some size-$k_{\min}$ maximiser consistent with earlier choices contains j, each test a max-plus feasibility DP over (block, remaining size) (\texttt{v3\_start.h:179–200}); polynomial, no tie enumeration. Study: 0/2,400 truncated; all had one tie.\\
+– \emph{Supports:} M2, M12 e4.\\
+– \emph{If it fails:} headline falls back to (b2-LH) on STAB-LH without LS0; M2 survives (ADDITIVE; HPM unchanged 2,394/2,394) without theorem motivation.\\
+– \emph{Cell:} row 11 × A; row 12 × V/A.
+\end{stmt}
+\textbf{Final placement.} ``Named premise (MINUTES §2.3) + K09 proposition C10 in S-KERNEL; not FW'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:70}.
+
+\textbf{Clauses that depend on it.} \rid{TH05.b1LH} (status ``N3 OPEN''), \rid{TH04.f} (N3 carried as a hypothesis) and \rid{TH12} (K09, C10) \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1880}.
+
+\textbf{Who discharges it.} The M5 HQ, wave~3. Its first lemma, verbatim: ``the e4 tie-DP invariant (N3): the DP returns the prescribed smallest-size, lexicographically smallest start-mode maximiser (W1PC2 D9: TRUE on 400 random instances, DESIGN-ASSERTED). It is the only OPEN mathematical obligation in the chain. In parallel, the merged-LS0 replay (N2(c)) against LS-score's centre rule.'' Fallback: ``(b1-LH) becomes `conditional on N3' after one unproductive HQ cycle; (0) + (a) + (b2-LH) always ship'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M5.md:101-104}. The finite proposition is Seat~C's C10 in \rid{TH12}: PROOF SKETCH, unchecked. Its route is ``Optimal-completion invariant and prefix induction''.
+
+\textbf{Attempts recorded.} R3A and R3B sketched the greedy max-plus route (unchecked). W1PC2 D9 found it TRUE on 400 random instances (DESIGN-ASSERTED, not a proof).
+\end{card}
+
+% ---------------------------------------------------------------- OB04
+\begin{card}{OB04}{N4 · Finite-R accuracy of the Ẑ-weighted PIP and μ̂(h); the constant M under masking (V11)}
+Status (REG-A, verbatim): \status{(i) PROVED, given N1 for general h or the locked identity for PIPs; (ii) PROVED (candidate); (iii) Obligation: CONJECTURE, OPEN for c ≥ 2} \src{NBH/ID_REGISTRY.md:148}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:151-157}
+\textbf{N4. Finite-R accuracy of the Ẑ-weighted PIP and μ̂(h); the constant M under masking (V11).}\\
+– (i) PC1 claim 3: $P(|\hat{μ} − μ| > ε) ≤ \min\{1, 4(M−1)/R + 4M/(Rε^2)\}$, $M = E[(\hat{Z}_r/Z)^2 \mid 𝓒]$. \textbf{PROVED}, given N1 for general h or the locked identity for PIPs.\\
+– (ii) Prop P(iii) with M1 (PROVED, candidate): regime-free distance to 1\{j ∈ S₀\}.\\
+– (iii) \textbf{Obligation:} an upper bound on M on the production grid through a masked crossing (V11, ``resolved grid ⇒ $O_P(\sqrt{T/N})$'': CONJECTURE, OPEN for c ≥ 2). Known lower bound M ≳ $1/P_{𝓒}(\mathrm{cross})$, PROOF SKETCH (TL A1(v)); do not cite F-MASKPIP M3 (XF ERROR).\\
+– \emph{Supports:} M4; M7's R′ guidance; $R_{\mathrm{eff}}$ reporting.\\
+– \emph{If (iii) fails:} M4 survives (R-consistency holds; equal-weight has none); the paper claims correctness, not efficiency.\\
+– \emph{Cells:} row 10 × A; row 9 × ``NONE: two-sided relative accuracy of Ẑ (masked)''; row 8 × ``NONE: island variance vs correlation''; row 7 × A.
+\end{stmt}
+\textbf{Final placement.} ``(i) M1(f); (ii) S-POOL; (iii) M2(b5) on the domain; masked precision = FW24 (separate from FW2).'' The seats differed on (iii): ``A: masked M → FW2. D: V11 → FW2. C: M1 finite-R′, M2 design-derived moments, masked V11 FW (separate)'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:71}.
+
+\textbf{Clauses that depend on it.} \rid{TH01.f} (i), \rid{TH17} (ii) and \rid{TH02.b5} (iii, on the domain). The open masked part is \rid{CJ24}.
+
+\textbf{Who discharges it.} Part (i) is discharged once \rid{OB01} is. Part (iii) on the domain belongs to the M2 HQ. Masked (iii) is future work (\rid{CJ24}; reason: ``V11 OPEN'').
+
+\textbf{Do not retry / do not cite.} ``do not cite F-MASKPIP M3 (XF ERROR)''.
+\end{card}
+
+% ---------------------------------------------------------------- OB05
+\begin{card}{OB05}{N5 · Calibration contract}
+Status (REG-A, verbatim): \status{(a) assembly of T12/T31(i) (PROVED-LOCKED, conditional on 𝓒), IND-T (PROVED, XF VERIFIED*, A-REV1 only), Lemma RO; (b) OPEN} \src{NBH/ID_REGISTRY.md:149}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:159-163}
+\textbf{N5. Calibration contract.}\\
+– \emph{(a) Validity for any frozen 𝓒:} every final-run identity (V1, N1, N6) holds conditional on any successful 𝓒 on streams 0–9, final streams ≥ 10 independent. Status: assembly of T12/T31(i) (PROVED-LOCKED, conditional on 𝓒), IND-T (PROVED, XF VERIFIED*, A-REV1 only), Lemma RO; IND-T for streams 10..9+R′ is a code-audit item. ESS 0.90 (pilot = grid) is a hypothesis.\\
+– \emph{(b) OPEN} (all NONE in INV row 7 and §5 item 9): (b1) rebuild-loop convergence within ≤ ℓ rebuilds; (b2) P(S₀ ∈ V), ``V contains the competing pair''; (b3) P(schedule\_limit), P(grid\_unconverged) → 0, incl. as-coded masked $T_n$ (Conjecture P).\\
+– \emph{If (b) fails:} M8 \textbf{survives} (validity conditional on any frozen 𝓒); only delivery and efficiency suffer. Each is stated OPEN beside the POST HOC tabulation of rebuilds, tier, T, convergence.\\
+– \emph{Cells:} row 7 × V (a); row 7 × ``NONE'' (b1–b3 stay empty); row 14 × ``NONE: P(schedule\_limit)''; row 5 × ``NONE: realised $T_n$''.
+\end{stmt}
+\textbf{Final placement.} ``(a) M1(c); coded finite geometry and K33 count form M7 (D's S-IDENT placement recorded as dissent, MINUTES §2.3); (b) FW6'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:72}.
+
+\textbf{Clauses that depend on it.} \rid{TH01.c} for (a) and \rid{TH07} (K33 count form) for the coded geometry. Part (b) is \rid{CJ06}.
+
+\textbf{Who discharges it.} Part (a): the M1 HQ, together with the IND-T extension audit (\rid{OB14}(c)). Part (b) is future work: ``Rebuild convergence is FW in either placement of K33'' \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:14}.
+
+\textbf{Not an inherent limitation.} MEET-v31 lists ``rebuild convergence, P(S₀ ∈ V) and P(schedule\_limit) → 0'' and ``the as-coded masked $T_n$ law'' as ``Not inherent (OPEN; must not be presented as limitations)'' \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:96-99}.
+\end{card}
+
+% ---------------------------------------------------------------- OB06
+\begin{card}{OB06}{N6 · Output-event coverage statements}
+Status (REG-A, verbatim): \status{(a) PROVED (potential run; output form CORRECT WITH AMENDMENT). (b) PROVED modulo premise (i), whose GUARD-W part is the code-audit obligation N2(e)} \src{NBH/ID_REGISTRY.md:150}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:165-173}
+\textbf{N6. Output-event coverage statements.}\\
+– (a) $P(𝒪 ∩ \{\max(Z_{𝒯}, 0.05\hat{Z}) > Z\}) ≤ 0.05\cdot P(\mathrm{SMC} ∩ 𝒜) ≤ 0.05$; $\{L > Z\} = \{0.05\hat{Z} > Z\}$.\\
+– (b) Card level: P(𝒪 ∩ \{some G2, L or R item false\}) ≤ 0.05·P(SMC ∩ 𝒜).\\
+– (c) Every result is joint with 𝒪, never conditional on it: ``the probability that a run returns a card with a false claim is at most 5\%''.\\
+– \emph{Hypotheses} (PC1 claim 2): (i) Lemma RO + GUARD-W; (ii) successful 𝓒 with $E[\bar{\hat{Z}} \mid 𝓒] ≤ Z$; (iii) CAL, EX-S; (iv) Ẑ = Z on the exact branch; plus EX-A and distinct store entries. Rigorous fp coverage also needs validated SC and VAL-FP (N16).\\
+– \emph{Status:} (a) \textbf{PROVED} (potential run; output form CORRECT WITH AMENDMENT). (b) \textbf{PROVED modulo premise (i)}, whose GUARD-W part is the code-audit obligation N2(e).\\
+– \emph{Supports:} M10, M11.\\
+– \emph{If premise (i) fails:} CEX-guard applies and the output-event statements fail for v3.1; fix is engineering.\\
+– \emph{Cells:} row 9 × V; row 14 × V.
+\end{stmt}
+\textbf{Final placement.} ``M1(d), M4(e), S-OUT'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:73}.
+
+\textbf{Clauses that depend on it.} \rid{TH01.d}, \rid{TH04.e} and \rid{TH15}.
+
+\textbf{Who discharges it.} Nothing mathematical remains except premise (i). That premise is the GUARD-W audit N2(e) (\rid{OB02}), owned by the M4 HQ and LP-AUDIT. The M4 charter's first lemma, verbatim: ``N13 retention under the coded LS0 rule \ldots{} confirmed against the code \ldots; then the GUARD-W stop-only coupling audit N2(e), on which (e) rests'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M4.md:100}. Rigorous floating-point coverage additionally needs \rid{OB16}.
+\end{card}
+
+% ---------------------------------------------------------------- OB07
+\begin{card}{OB07}{N7 · Certificate card G1/G2/L/R (PC2 verdicts)}
+Status (REG-A, verbatim): \status{G1 PROVED; G2 PROVED; L1 CORRECT WITH AMENDMENT; L2 PROVED; L3 amended form PROVED; R PROVED with amendments; Card bound (C6) PROVED modulo premise (i); C6′ PROVED. Open sub-obligation SC(η\_F)/VAL-FP (N16)} \src{NBH/ID_REGISTRY.md:151}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:175-182}
+\textbf{N7. Certificate card G1/G2/L/R (PC2 verdicts; card as adopted in M10).}\\
+– \emph{By item:} \textbf{G1} (C1(a) amended, excl. Ŝ) PROVED, deterministic. \textbf{G2} (C1(b)) PROVED, output event, joint. \textbf{L1} (C3(a); empty maxima +∞; fp margin $2η_F$) CORRECT WITH AMENDMENT; on the finally returned Ŝ. \textbf{L2} (C3(b)) PROVED. \textbf{L3} (C3(c), realised 𝒮, |𝒯| ≥ 2) amended form PROVED; premise holds under LS0. \textbf{R} (C4 + Lemma M) PROVED with amendments (drop |L| > K leaves; S ⊆ U, |S| ≤ K; SC covers Φ and M); C4(b) PROVED as written (isolating \{Ŝ\} is sharpness only; R3C withdrew). Card bound (C6) PROVED modulo premise (i). C6′ PROVED.\\
+– Budget and per-record clauses: as M10.\\
+– \emph{FALSE or not a theorem:} C1(a) third clause; C1(b) ``unscored mass'' (COUNTEREXAMPLE \texttt{t4b}); the conditional C6 reading; ``SC checkable by replay''; rigorous \texttt{global\_certified} (η uses a \emph{lower} condition-number estimate); the C4 cost remark.\\
+– \emph{Excluded from the output:} C2 (conditional on PW2), C5 (needs S₀; a study-level item).\\
+– \emph{Open sub-obligation:} SC($η_F$) by validated arithmetic and VAL-FP(η, ε) at production size (N16); until then, labelled numerical.\\
+– \emph{Supports:} M10. \emph{If SC is never validated:} the label stays (POST HOC).\\
+– \emph{Cells:} row 13 × F (per-fit certificates, \textbf{not} flag power); row 9 × F; row 12 × ``NONE: meaning of \texttt{local\_certified}'' (L1, deterministic); row 11 × F.
+\end{stmt}
+\textbf{Final placement.} ``S-CERT (K73 without region clause) + M4(e); N16 = FW16'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:74}.
+
+\textbf{Clauses that depend on it.} \rid{TH14} and \rid{TH04.e}.
+
+\textbf{Who discharges it.} LP-AUDIT (S-CERT) and the M4 HQ. The remaining sub-obligation is \rid{OB16}.
+
+\textbf{Do not retry.} The items listed as ``FALSE or not a theorem'' above are settled negatives. They include C1(b) ``unscored mass'' (COUNTEREXAMPLE \texttt{t4b}) and a rigorous \texttt{global\_certified}.
+\end{card}
+
+% ---------------------------------------------------------------- OB08
+\begin{card}{OB08}{N8 · PART-pairing for the study generator g = 5 (2g ≤ B)}
+Status (REG-A, verbatim): \status{OPEN; Prop Q PROOF SKETCH; W7-PART CE2 COUNTEREXAMPLE} \src{NBH/ID_REGISTRY.md:152}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:184-188}
+\textbf{N8. PART-pairing for the study generator g = 5 (2g ≤ B).}\\
+– \emph{Statement (as far as sources go):} a partition law for complete linkage + size cut + next-fit packing with equal groups 2g ≤ B (study g = 5, B = 14): which groups are co-blocked, and does that remove masking (Prop Q)?\\
+– \emph{Status:} \textbf{OPEN}; Prop Q \textbf{PROOF SKETCH} (R2B row 6′); W7-PART CE2 COUNTEREXAMPLE (unequal groups not merged).\\
+– \emph{Supports:} M12 e1. \emph{If it fails:} e1 survives (changing B or the cut is WORKHORSE); the study generator is disclosed as outside every selection theorem.\\
+– \emph{Cells:} row 3 × ``NONE: partition law for the study's packing''; row 11 × ``NONE: study generator''.
+\end{stmt}
+\textbf{Final placement.} ``S-BLOCKS (preservation, SIZE equality); FW25'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:75}.
+
+\textbf{Clauses that depend on it.} \rid{TH11} ships without it, since PART-pairing is ``excluded''. The open part is \rid{CJ25}.
+
+\textbf{Who discharges it.} No HQ: it is future work (\rid{CJ25}). The study generator is disclosed as outside every selection theorem.
+
+\textbf{Do not retry.} W7-PART CE2 is a COUNTEREXAMPLE: unequal groups are not merged. ``SIZE does not determine pairings when two groups fit in one block'' \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:33}. ``the study generator's g = 5 partition theorem'' is listed as not inherent: OPEN, and not to be presented as a limitation \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:103}.
+\end{card}
+
+% ---------------------------------------------------------------- OB09
+\begin{card}{OB09}{N9 · V5: kernel reversibility, self-adjointness, exact start sampler (closure gate)}
+Status (REG-A, verbatim): \status{"by construction, consultant-checked, no registry row"; gate closed: N9-KERNEL "PROVED (candidate)" with exact numerical verification on production headers ([pos 1550]: 7 sub-claims; [pos 1593]: 8 sub-claims); cross-family VERIFIED WITH AMENDMENT (CHK\_INHERITED)} \src{NBH/ID_REGISTRY.md:153}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:190-195}
+\textbf{N9. V5: kernel reversibility, self-adjointness, exact start sampler.}\\
+– \emph{Statement:} each elementary move (Gibbs flip, uniform swap, neighbour swap, independence move with π₀ proposal) is $γ_φ$-reversible; a uniformly random order of reversible kernels is self-adjoint; the start sampler draws exactly from π₀ with exact Z̄₀.\\
+– \emph{Status:} by construction, consultant-checked, \textbf{no registry row} (INV §5 item 12; TL:77); one-page route (TL V1(v)).\\
+– \emph{Closure gate (HQ, 2026-11-04):} N9 is a closure gate, not an ordinary obligation; it is being checked against the code (branch \texttt{theory/N9-KERNEL}). Open method questions: none, \textbf{conditional on N9} (running). If N9 fails, the method question reopens before the theorem meeting. Status words above unchanged.\\
+– \emph{Supports:} M1, V1, N1, rejection of C10. \emph{If it fails:} V1 fails; the method question reopens before the theorem meeting. The binding goal (proposal §5.1) is not met by withdrawal: HQ escalates to Felipe for a method reconsideration or an explicit scope change.\\
+– \emph{Cells:} row 6 × V; row 4 × V.
+\end{stmt}
+\textbf{Final placement.} ``S-KERNEL (cited N9 with CHK amendments)'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:76}.
+
+\textbf{Clauses that depend on it.} \rid{TH12} and \rid{TH01.a} (status ``N9K: PROVED (candidate), code-checked'') \src{NBH/ID_REGISTRY.md:31}.
+
+\textbf{Who discharges it.} The gate is closed: N9-KERNEL was checked against production code and verified cross-family with amendment. What remains is the HQ-level registry row. REGISTRY\_PAPER1 recommends ``XF: VERIFIED WITH AMENDMENT (CHK); open the registry row'' \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1898}. LP-FOUND cites N9 with the CHK amendments.
+\begin{uncertain}[7 vs 8 sub-claims]
+\pos{1550} says 7 sub-claims and \pos{1593} says 8. MEET-v31 MINUTES §9 says seven. The archive does not reconcile them \src{NBH/02_theory.md:2786}.
+\end{uncertain}
+\end{card}
+
+% ---------------------------------------------------------------- OB10
+\begin{card}{OB10}{N10 · V10: L versus t\_mix}
+Status (REG-A, verbatim): \status{NONE / OPEN} \src{NBH/ID_REGISTRY.md:154}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:197-201}
+\textbf{N10. V10: L versus $t_{\mathrm{mix}}$.}\\
+– \emph{Statement:} do $L = \max(4, ⌈\log_2(n+1)⌉)$ terminal φ = 1 rounds give populations close to π?\\
+– \emph{Status:} \textbf{NONE / OPEN} (INV row 6); YWJ/ZYVR route blocked as stated (INV §2 D1). Validity (V1, N1) holds at any L; L affects accuracy and variance.\\
+– \emph{Supports:} M1. \emph{If it fails:} theorems needing mixing carry L as a hypothesis.\\
+– \emph{Cell:} row 6 × ``NONE: mixing / spectral gap''.
+\end{stmt}
+\textbf{Final placement.} ``FW4 (K24); S-IDENT minorisation/terminal-law TV ship'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:77}.
+
+\textbf{Clauses that depend on it.} None of TH01--TH20 has it as a premise. \rid{TH13} ships the minorisation/terminal-law bounds without it. It blocks \rid{CJ04} and is one of the two inputs that \rid{CJ02} needs (``needs V11 or N10, both OPEN'').
+
+\textbf{Who discharges it.} No HQ: future work (\rid{CJ04}).
+
+\textbf{Do not retry as stated.} ``the YWJ/ZYVR route is blocked as stated'' \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:12}.
+\end{card}
+
+% ---------------------------------------------------------------- OB11
+\begin{card}{OB11}{N11 · ℓ versus the moves needed}
+Status (REG-A, verbatim): \status{on LH with c ≤ s₀ fixed, "eventually true" (elementary, unchecked); growing s₀: OPEN} \src{NBH/ID_REGISTRY.md:155}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:203-207}
+\textbf{N11. ℓ versus the moves needed.}\\
+– \emph{Statement:} ℓ = ⌈log₂(n+p+1)⌉ ≥ max\{Φ(S°) − 1, 0\} (moves LS0 needs, LS-score), and the caps on the final local search and rebuilds are not binding w.p. → 1.\\
+– \emph{Status:} on LH with c ≤ s₀ fixed, ``eventually true'' (R2B row 7; elementary, unchecked); growing s₀: \textbf{OPEN}.\\
+– \emph{Supports:} M2. \emph{If it fails:} R3/R5 carry ℓ as a hypothesis; growing support would need a bigger budget (method-induced).\\
+– \emph{Cells:} row 12 × C/A; row 7 × C (rebuild cap).
+\end{stmt}
+\textbf{Final placement.} ``M5 hypothesis (+ S-CERT); growing support / cap nonbinding = FW19'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:78}.
+
+\textbf{Clauses that depend on it.} \rid{TH05}, where ℓ is a hypothesis, and \rid{TH14}. The open part is \rid{CJ19}.
+
+\textbf{Who discharges it.} The fixed-support LH part (``eventually true'', unchecked) could be checked inside the M5 HQ. Growing $s_0$ is future work (\rid{CJ19}).
+\end{card}
+
+% ---------------------------------------------------------------- OB12
+\begin{card}{OB12}{N12 · General (n, p) scope, per regime}
+Status (REG-A, verbatim): \status{see the table in the source; p ≤ e\textasciicircum\{Cn\textasciicircum α\}: OPEN, not impossible} \src{NBH/ID_REGISTRY.md:156}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:209-222}
+\textbf{N12. General (n, p) scope, per regime} (S2 P-9 theory scope; R2A–R2C §4).\par
+{\footnotesize
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{8.1cm}>{\raggedright\arraybackslash}p{3.6cm}@{}}
+\toprule
+Regime & What theory may claim & Cause of any restriction\\
+\midrule
+Tiny n & No asymptotic claim. n ≤ 5 exact for \textbf{all p} (chair-checked). n = 2 extension (e3, proposed; current code rejects n < 3): PROOF SKETCH (R2C E1); its p-fold-tie output statement (M12) is R3B's, elementary, \textbf{seat-derived, unchecked}; duplicates kept (chair-checked), which is a code fact, not a proof of the n = 2 output. n = 1 → \texttt{degenerate\_n}; zero predictors → \texttt{no\_predictors}; n = 0 rejected. & None from the method.\\
+Fixed p, n → ∞ & Eventually exact dispatch (R2C §4.4, seat-proved, unchecked), so V2–V4 apply. & —\\
+Growing p ≪ n & Polynomial-p target results under their assumptions; logarithmic L, ℓ may be short (N10, N11). & Method budgets (theorem hypotheses).\\
+p ≈ n & Exact-Gram LH needs p ≤ n − 1; centred designs have rank ≤ n − 1. & Proof family's geometry, not the target.\\
+Polynomial p ≫ n ($p ≤ n^A$) & T03/T03♯; T38(b1-LH-iid) XF GAP; study generator N8. & \textbf{Prior and proof technique} (INV §3b), not the sampler.\\
+$p ≤ e^{Cn^α}$ & No theorem; whether our prior admits it is \textbf{OPEN}, not impossible. & —\\
+Joint growth & Budgets polynomial; by-definition limits: fixed allocation, Θ(p) round; w4 boundary n + p ≥ 2³¹. & Method-induced: K excludes s₀ > K; fixed B limits whole-group recovery to g ≤ B (``recovery as a single block'', R3C); bounded stores; log ℓ and L; N₀ ≥ p.\\
+\bottomrule
+\end{tabular}}\par
+w1 and w3 affect proposal efficiency only; validity rests on the Hastings ratio.\\
+– \emph{Cells:} row 1 × A and row 1 × ``NONE: growing s₀''; INV §3b ``p up to $e^{Cn^α}$: LACK''.
+\end{stmt}
+The REG-A status cell writes the exponent as ``e\^{}\{Cn\^{}α\}''; it is rendered above in text form.
+
+\textbf{Final placement.} ``FW18; FW19; S-TARGET K76'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:79}.
+
+\textbf{Clauses that depend on it.} \rid{TH10}: K76 eventual exact dispatch is ``seat-proved, unchecked''. The open parts are \rid{CJ18} and \rid{CJ19}.
+
+\textbf{Who discharges it.} LP-FOUND can check the K76 eventual-dispatch argument. Exponential $p$ is future work (\rid{CJ18}): ``No completed prior-tail/contraction route; p ≤ n\textsuperscript{A} stays in scope'' \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:26}. ``subexponential-p theory under our prior'' is listed as not inherent: OPEN \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:102}.
+\end{card}
+
+% ---------------------------------------------------------------- OB13
+\begin{card}{OB13}{N13 · Retention lemma}
+Status (REG-A, verbatim): \status{PROVED (PC1 claim 5; R2C D7)} \src{NBH/ID_REGISTRY.md:157}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:224-226}
+\textbf{N13. Retention lemma.} If S₀ ∈ 𝒮 and δ₁ < ½ then $S_0 ∈ 𝒯 = \mathrm{top}_{40p+1}(𝒮)$, and the HPM and $\mathrm{MPM}^{𝒯}$ certificates are equivalent.\\
+– \emph{Status:} \textbf{PROVED} (PC1 claim 5; R2C D7); premises Lemma S and the inheritance merge (PC2 code facts). Unqualified retention stays false.\\
+– \emph{Supports:} A3 ∘ R5, card L3, M2's eviction wording. \emph{Cell:} row 11 × A.
+\end{stmt}
+\textbf{Final placement.} ``M4(c)'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:80}. Dependent clause: \rid{TH04.c}.
+
+\textbf{Remaining work.} Mathematically discharged, as a candidate. The M4 charter's first lemma re-confirms it ``against the code'' under the coded LS0 rule, which depends on \rid{OB02}(c). If the code's retention rule differs from union-then-top-$c$, ``N13's premise fails → HQ'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M4.md:100-104}. Unqualified retention is false: do not attempt it.
+\end{card}
+
+% ---------------------------------------------------------------- OB14
+\begin{card}{OB14}{N14 · Stacking statements}
+Status (REG-A, verbatim): \status{(a) PROVED (PC1 claim 6); (c) code audit, not done} \src{NBH/ID_REGISTRY.md:158}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:228-234}
+\textbf{N14. Stacking statements.}\\
+– (a) Cor W-R(b): post-search nesting, HPM(R′) ⪰ HPM(4) with the extra search. PROVED (PC1 claim 6).\\
+– (b) Every listed bound holds per run for any R′ declared before final randomness (PC1 claim-6 table).\\
+– (c) IND-T for streams 10..9+R′: code audit, not done.\\
+– (d) One certificate card per record (M7, M10).\\
+– \emph{Supports:} M7. \emph{Without the extra search:} PC1's three uses (monotonicity, $D_n(R′) ≤ D_n(4)$, transfer of R = 4 measurements) go; no listed theorem affected.\\
+– \emph{Cell:} row 8 × V; row 8 × ``NONE: choice of R vs N'' (D4 PROOF SKETCH, v2).
+\end{stmt}
+\textbf{Final placement.} ``S-OUT + M1(c); N14(c) = named audit premise (MINUTES §2.3)'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:81}.
+
+\textbf{Clauses that depend on it.}
+\begin{itemize}
+\item \rid{TH15} and \rid{TH01.c}.
+\item N14(c) is ``Used by'' M1, S-OUT K84/K85/K86 and S-POOL \rid{TH17} \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1879}.
+\item N14(c) is also named as a premise in the M5 \rid{TH05} and M8 \rid{TH08} charters \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M5.md:79} \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M8.md:61}.
+\end{itemize}
+
+\textbf{Who discharges it.} LP-AUDIT and M1 run the IND-T extension audit (code). If it fails, ``M1 (c),(d) revert to potential-run statements and N2 reopens''.
+\begin{uncertain}[N14(c) label in the charters]
+The final audit found N14(c) ``mislabeled as extra-search nesting'' in M1:92, M5:79, M8:61 and LP-AUDIT:70. The correction: ``Name IND-T extension under N14(c); name extra-search nesting under K84/N14(a)'' \src{NBH/branch_snapshots/MEET-THM/CLOSE_AUDIT.md:14}. The charter snapshots read correctly now, for example \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M5.md:79}. Read N14(c) as the IND-T extension in every source.
+\end{uncertain}
+\end{card}
+
+% ---------------------------------------------------------------- OB15
+\begin{card}{OB15}{N15 · Work and depth at the implemented level}
+Status (REG-A, verbatim): \status{Prop D PROVED (counting); calibration share seat-derived (R2A, R2B), not proof-checked} \src{NBH/ID_REGISTRY.md:159}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:236-240}
+\textbf{N15. Work and depth at the implemented level} (D1(b) restated).\\
+– \emph{Statement:} depth and work for island-parallel v3.1: setup, (h) tables, calibration ($(1+4I_e)\cdot H_e$ work and $(1+I_e)\cdot H_e$ depth per tier; ≤ ℓ rebuilds per tier, ≤ 2ℓ with escalation), final run $N_e(T+L+4)m$ sequential step slots (not scorer operations or seconds; add score costs and finite-worker scheduling; R′ above the worker count runs in waves), LS0, extra search, population reductions.\\
+– \emph{Status:} Prop D PROVED (counting); calibration share seat-derived (R2A, R2B), not proof-checked.\\
+– \emph{Supports:} M5, M8, M13. \emph{If it fails:} recount.\\
+– \emph{Cells:} row 8 × ``NONE: work–depth theorem'' (filled as counting; speed-up vs sequential MCMC stays empty, empirical); row 7 × C; row 5 × ``NONE: depth vs correlation'' (ideal grid via A₀ only).
+\end{stmt}
+\textbf{Final placement.} ``M8; DAG audit named premise'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:82}. Dependent card: \rid{TH08}.
+
+\textbf{Who discharges it.} The M8 HQ, wave~3. First lemma, verbatim: ``the trajectory inventory of the execution DAG (every executed pilot, diagnostic, rebuild and final trajectory with its own ($N_i$, $T_i$, $L_i$); every completed search), read from \texttt{v3\_engine.h}, \texttt{v3\_calib.h}, \texttt{v3\_fit.R}; this is the W1PC1 §13 repair and the open audit (W2PC2:40)'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M8.md:79}. The execution-DAG audit status is ``NOT REPAIRED / GAP'' \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1883}.
+
+\textbf{Do not claim.} No comparator speed-up: ``never state a comparator speed-up'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M8.md:82}. See also \rid{DR05} and \rid{CJ12}.
+\end{card}
+
+% ---------------------------------------------------------------- OB16
+\begin{card}{OB16}{N16 · Floating-point contract}
+Status (REG-A, verbatim): \status{OPEN. VAL-FP MEASURED at p ≤ 40 only} \src{NBH/ID_REGISTRY.md:160}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:242-245}
+\textbf{N16. Floating-point contract.} Validated SC($η_F$) for scores, Φ, M, $Z_{𝒯}^{−}$, and VAL-FP(η, ε) for Ẑ at production size.\\
+– \emph{Status:} \textbf{OPEN.} VAL-FP MEASURED at p ≤ 40 only; η a documented heuristic (\texttt{v3\_score.h:240}); PC2's exact-rational test found no violation in 60 cases (max |error|/η = 0.069): not a proof.\\
+– \emph{Supports:} M10 labels, G2 fp coverage, e2, e5. \emph{If never done:} labels stay ``numerical''.\\
+– \emph{Cells:} row 14 × ``NONE: floating-point error theorem''; row 9 × ``VAL-FP MEASURED at p ≤ 40 only''.
+\end{stmt}
+\textbf{Final placement.} ``FW16; K108 in S-CERT'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:83}.
+
+\textbf{Clauses that depend on it.} No clause has it as a premise. It decides the ``numerical'' label on the certificate card. The M4 charter, verbatim: ``N16 floating point (card is `numerical' until SC + VAL-FP)'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M4.md:82}. That label sits on \rid{TH04}. It is also the open sub-obligation of \rid{OB07}. The future-work item is \rid{CJ16}.
+
+\textbf{Do not retry.} T33-errbound is a COUNTEREXAMPLE: ``exact-arithmetic bounds do not validate rounded production computations'' \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:24}. The 60-case exact-rational test is ``not a proof''.
+\end{card}
+
+% ---------------------------------------------------------------- OB17
+\begin{card}{OB17}{N17 · Analytic bounds on Z and π(Ŝ)}
+Status (REG-A, verbatim): \status{PROVED (PC1 claim 1; PC2 C1(c))} \src{NBH/ID_REGISTRY.md:161}
+\begin{stmt}{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:247-249}
+\textbf{N17. Analytic bounds on Z and π(Ŝ).} $Z ≤ C_n(2b_0 + y^{\top}y/(n+1))^{−ν}$; equivalently $π(\hat{S}) ≥ e^{F(\hat{S})}(2b_0 + y^{\top}y/(n+1))^{ν}/C_n$.\\
+– \emph{Status:} \textbf{PROVED} (PC1 claim 1; PC2 C1(c)). Its gap to Z is data-dependent: the ≈ 530-nat figure at n = 200 compares against m(∅), not against Z, and is not a universal looseness (n = 200, p = 1, y = x₁ gives log(U/Z) = 3.83; review check, SOL1 \#27). Supports M14(ii).\\
+– \emph{Cell:} row 9 × ``NONE … an upper bound on Z is impossible from a run'': \textbf{INV's wording is literally false}; correct to what is proved (T31(c)'s non-implication plus this bound), not to a blanket ``no useful upper bound''.
+\end{stmt}
+\textbf{Final placement.} ``M4(d) (final letter) and S-TARGET (K44)'' \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:84}. Dependent clauses: \rid{TH04.d} and \rid{TH10}.
+
+\textbf{Remaining work.} None mathematical (candidate PROVED). Do not state a universal looseness figure for it.
+\end{card}
+
+\textbf{Notes carried with the obligations (INP, verbatim).} ``\textbf{Carried over unchanged (already in TL):} DELIV-POP (A4, OPEN); Conjecture P (in N5(b3)); Π(X) upper bound (R7); LH-iid XF GAP (R5); S4 weight stability (§5.3).'' and ``\textbf{Not obligations:} the HPM terminal frequency (descriptive, M9); an RB joint estimator (not shipped; as a v3.2 option it would need its own identity, R3A/R3B).'' \src{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:255-257}. N18 (``Depth comparison between starts'', OPEN, no route) existed only under item-1 Outcome~1 and was not opened \src{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:251-253}.
+
+% ======================================================================= FUTURE WORK
+\subsection{Future work CJ01--CJ27 (= FW1--FW27)}\label{sec:future}
+
+\textbf{Source and status.} All 27 items come from \texttt{MEET-THM/FUTURE\_WORK.md}, ``Opened by the chair 2026-11-04; completed at close. Items here get no per-theorem HQ for paper 1.'' The header reads: ``FW1 and FW2 are unchanged. FW3–FW27 were added by the clerk from MINUTES §2.3/§2.4, SYNTH\_R2 §2.4 and R3\_C §S4 `Required additions'; reasons are as the sources give them'' \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:3-5}. Every CJ row of REG-A carries the same status, verbatim: \status{FUTURE\_WORK (deferred; reason in 02a §A5.1)} \src{NBH/ID_REGISTRY.md:103-129}. The package was announced at \pos{1626}.
+
+\textbf{How to read the table.}
+\begin{itemize}
+\item ``Item'' and ``Reason'' are the verbatim cells of FUTURE\_WORK.md; row FW$k$ is at line $8+k$.
+\item ``Serves'' (what the item would buy) is taken only from the coverage mapping of proposal goals, Song--Liang items and INV matrix rows \src{NBH/02_theory.md:2742-2770}. An empty cell (---) means the coverage mapping names no goal for it.
+\end{itemize}
+The FUTURE\_WORK footer, verbatim: ``Items recorded as `outside the fixed method' (adaptive/overlapping partitions; backfit start) are dispositions in \texttt{COVERAGE\_MATRIX.md}, not FUTURE\_WORK. The audit obligations (N2(b),(c),(e), N14(c), the N3 DP invariant, the integrated streams/LS0/GUARD-W/DAG audits) are named implementation premises in \texttt{HQ\_CHARTERS/}, not FUTURE\_WORK (MINUTES §2.3).'' \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:48}.
+
+{\footnotesize
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{1.25cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{2.5cm}@{}}
+\toprule
+ID (FW) & Item (verbatim) & Reason (verbatim) & Serves \\
+\midrule
+\endhead
+\defid{CJ01} FW1 & Frequentist coverage of the exact posterior's credible intervals & A target-theory question outside proposal §5.4, which concerns the computed vs the exact posterior (HQ ruling Q2, 2026-11-04) \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:9} & §5.4 credible-interval coverage (frequentist half); INV row 10 \\
+\defid{CJ02} FW2 & TV/KL error bound for the final pooled estimate in the masked regime & Not binding (§5.4 lists ``possible metrics''; HQ ruling Q3); needs V11 or N10, both OPEN \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:10} & §5.4 TV, KL, masked accuracy (not binding); row 10 \\
+\defid{CJ03} FW3 & K13: start-mode consistency under orthogonal blocks and a σ²-inflated beta-min margin & Needs TG4-type probability bounds not supplied \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:11} & --- \\
+\defid{CJ04} FW4 & K24: polynomial mixing of the φ = 1 round (Yang–Wainwright–Jordan transfer); also useful general production mixing and masked population accuracy (N10) & N10 OPEN; the YWJ/ZYVR route is blocked as stated \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:12} & INV row 6 (moves); discharges \rid{OB10} \\
+\defid{CJ05} FW5 & K23: Dirichlet/spectral comparison of the random-order round with the random-scan mixture & Its only consumer, K24, is deferred (A, B, D, R3-4). Seat C dissents: it would keep the finite squared-kernel Dirichlet comparison as an attributed lemma in S-KERNEL; MINUTES allows the S-KERNEL HQ to cite it without a theorem number \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:13} & row 6; optional citation \rid{CL22} \\
+\defid{CJ06} FW6 & K31: as-coded masked stage count (realised $T_n$; Conjecture P OPEN); N5(b): rebuild convergence within ℓ rebuilds, candidate-pair coverage / P(S₀ ∈ V), P(schedule\_limit) and calibration-failure probabilities & Conjecture P OPEN; V's complement is never inspected (I9(d)); only T ≤ $T_e$ and the coverage identity are provable; successful-grid properties do not prove successful calibration. Rebuild convergence is FW in either placement of K33 \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:14} & rows 5, 7, 14; discharges \rid{OB05}(b) \\
+\defid{CJ07} FW7 & K58: masked consistency of the equal-weight PIP/MPM & Reduces to population delivery; FMP-DELIVPOP is OPEN \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:15} & row 10 \\
+\defid{CJ08} FW8 & K57, general fixed-budget equal-weight accuracy (only the recording-marginal bias comparison P1 ships in S-POOL) & A recording-marginal bias bound does not close estimator accuracy or DELIV-POP; needs a checked estimator-level theorem for the actual records and budgets \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:16} & row 10; dissent DS06 (D) \\
+\defid{CJ09} FW9 & K59: R vs N at fixed total particles (allocation) & PROOF SKETCH only \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:17} & row 8 \\
+\defid{CJ10} FW10 & K71: (b1-LH-iid) on LH with iid final draws, also under general DELIV & (b1-LH-iid) GAP; T38-b1-LH-iidfail XF ERROR \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:18} & --- \\
+\defid{CJ11} FW11 & K75: NP-completeness of the global-certificate decision problem for the fixed prior and penalty & Needs a score-specific reduction that has not been supplied \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:19} & --- \\
+\defid{CJ12} FW12 & K92: separation from single-chain flip/swap MCMC (moat construction) & The moat construction and the accuracy-matched comparator are unproved; speed-up claims are empirical by decision \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:20} & Song–Liang §6 complexity (accuracy-matched comparison) \\
+\defid{CJ13} FW13 & K82: delivery, P(U) → 0 (also delivery/resource-failure laws, P(resource\_limit)) & No route; every output theorem is stated jointly with the output event in liminf form \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:21} & rows 11, 14 \\
+\defid{CJ14} FW14 & K94: finite-n bound on the posterior-miss probability Π(X) & Envelope GAP \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:22} & row 1 (target) \\
+\defid{CJ15} FW15 & K99 quantitative: k-way barrier for cross-block masked contrasts & k-way barrier unproved (the qualitative remark ships in S-LIM) \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:23} & --- (qualitative form in \rid{TH18}) \\
+\defid{CJ16} FW16 & K107: validated arithmetic / rounding-error bound; production validated numerics (N16) & N16 OPEN; T33-errbound COUNTEREXAMPLE; exact-arithmetic bounds do not validate rounded production computations. K108 (deterministic perturbation lemma) stays in S-CERT \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:24} & §5.1 numerical fidelity; rows 2, 9, 14; discharges \rid{OB16} \\
+\defid{CJ17} FW17 & K80: positive power of the E1/E2/E3 and low\_empirical\_ESS flags & Flags are heuristics by decision; no sampling law for the flags \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:25} & §4.4/§8.2 diagnostics; row 13 \\
+\defid{CJ18} FW18 & N12 / exponential p: exponential-dimension contraction and selection (Song–Liang Cor 1) & No completed prior-tail/contraction route; p ≤ $n^A$ stays in scope \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:26} & Song–Liang Cor 1; row 1; \rid{OB12} \\
+\defid{CJ19} FW19 & Growing support and cap non-binding (N11/N12) & Fixed-support LH does not discharge these extensions \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:27} & row 1; \rid{OB11}, \rid{OB12} \\
+\defid{CJ20} FW20 & Hellinger / predictive contraction (Song–Liang Thm 1) & Not delivered; selection counterpart in S-T only \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:28} & Song–Liang Thm 1; row 1 \\
+\defid{CJ21} FW21 & K97: Song–Liang analytic separation (null-exclusion/FDR) & The iteration-uniform null-BF/prior-odds step is NOT REPAIRED (W2PC1) and is an unproved hypothesis about SL's algorithm, not a model/design condition. LIT-PAR G4 is cited in the paper as labelled numerical evidence \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:29} & Song–Liang Cor 2; \rid{CL23} \\
+\defid{CJ22} FW22 & Sharp ε-scale necessity statement for §5.3 & All three seat forms are COUNTEREXAMPLEs; C's is a range obstruction for the $D_*$ route only. The scale disclosure ships (not a theorem) \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:30} & §5.3 weight stability (binding) \\
+\defid{CJ23} FW23 & K29: favourable O(1) stage law, unconditional application & The (LL)/over-tilted $q_w$ input is not a model/design condition and no family exhibits it (W2PC1:187 DESIGN-ASSERTED, GAP). Only the conditional implication is cited in S-STGI \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:31} & --- (see \rid{TH21}) \\
+\defid{CJ24} FW24 & Useful two-sided masked evidence precision (N4(iii)/V11) & Distinct from FW2's final-estimate TV/KL and from one-shot variance failure; V11 OPEN \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:32} & rows 8, 9; \rid{OB04}(iii) \\
+\defid{CJ25} FW25 & Random/adaptive partition quality and study packing (N8; K71 as C pairs them), including the study generator (PART-pairing, g = 5, 2g ≤ B) & SIZE does not determine pairings when two groups fit in one block; PART-pairing OPEN; the study design is not the LH exhibit \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:33} & rows 3, 4, 11; \rid{OB08} \\
+\defid{CJ26} FW26 & Finite-n Gibbs discovery (HPM residual) & Existing asymptotic or vacuous bounds do not supply useful finite-n discovery (ThmB-T24 vacuous at n = 200; no route) \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:34} & row 11 \\
+\defid{CJ27} FW27 & Unbounded functionals: integrability extensions of M1 (§13.1) & M1 is stated for bounded h ∈ [0, 1]; unbounded functionals require integrability extensions (from C's coverage table, not its ``Required additions'' table) \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:35} & §13.1 (binding goal); row 10 \\
+\bottomrule
+\end{xltabular}
+}
+
+\begin{agentnote}[future work: what would reopen an item]
+The sources name the missing input for some items. Only these are restated here:
+\begin{itemize}
+\item \rid{CJ23} (K29) ``returns as a supplement clause'' given ``A design family on which (LL) or the over-tilted $q_w$ bound is verified'' (A), ``checked in one wave'' (B), or ``A checked IC3 family establishing the missing input'' (C) \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:906-918}.
+\item \rid{CJ08} needs ``A checked estimator-level theorem for the actual records and budgets'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1097}.
+\item \rid{CJ02} needs V11 or N10.
+\item \rid{CJ21} is blocked by the iteration-uniform null-BF/prior-odds step, which is NOT REPAIRED. The archive records a recommendation for a scout HQ on it (decision P2) \src{NBH/05_open_questions_and_next_steps.md:67}.
+\end{itemize}
+Items the method meeting listed as ``Not inherent (OPEN; must not be presented as limitations)'' must never be written up as limitations (§\ref{sec:drops}).
+\end{agentnote}
+
+% ======================================================================= DROPS AND LIMITATIONS
+\subsection{Drops DR01--DR06 and inherent limitations LIM01--LIM09}\label{sec:drops}
+
+\subsubsection*{Drops (candidates removed from the list; do not re-propose without new evidence)}
+The drops are recorded in MINUTES §2.4 and in FUTURE\_WORK.md under ``Dropped (MINUTES §2.4; not FUTURE\_WORK)'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:96-102} \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:37-46}. K12 and K34 were dropped by all four seats in Round~3 \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:81}. The ``Candidate'' column below quotes the registrar's description of the candidate \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1663-1668}.
+
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+\toprule
+ID (K) & Status (REG-A, verbatim) & Candidate and evidence (REGISTRY\_PAPER1 §4, verbatim fragments) \\
+\midrule
+\defid{DR01} K12 & \status{DROPPED. Reason: A test oracle, not a guarantee} & ``Test oracle, not a guarantee (A, B, D drop; C would defer)'' \\
+\defid{DR02} K34 & \status{DROPPED. Reason: TI evidence is not in the method (the Ĵ half ships as reporting, S-REP)} & ``DROP as a theorem \ldots{} TI evidence is not in the method; Ĵ half ships as reporting (S-REP). (A, B, D drop; C would defer)''. The Ĵ half is \rid{TH19}. \\
+\defid{DR03} K66 & \status{DROPPED. Reason: PARTLY-FALSE (C3-PGD, CEX-localmax(A2))} & ``HP3 landscape PARTLY-FALSE (C3-PGD, CEX-localmax(A2))''. C3-PGD (COUNTEREXAMPLE): ``SE and beta-min do not imply progress-greedy dominance: a null that looks like a combination of two truths is added first.'' \\
+\defid{DR04} K67 & \status{DROPPED. Reason: Relies on K66} & ``Relies on K66''. No registry row for HP4. Its LH analogue is T38-b1-LH (in M5, \rid{TH05.b1LH}). \\
+\defid{DR05} K91 & \status{DROPPED. Reason: No accuracy-matched comparator; OPW2-cex} & ``Particles-vs-depth speed-up: no accuracy-matched comparator; OPW2-cex refutes the perfect-mixing formula''. INP §5 row~8: speed-up vs sequential MCMC → ``empty (empirical)''. \\
+\defid{DR06} K98 & \status{DROPPED. Reason: KNOWN-FALSE (SHARE-M(b), FD-NM)} & ``Naive merge KNOWN-FALSE (SHARE-M(b), FD-NM)''. \\
+\bottomrule
+\end{xltabular}
+}
+REG-A status cells: \src{NBH/ID_REGISTRY.md:130-135}.
+\begin{uncertain}[line numbers of the drops in MINUTES]
+FUTURE\_WORK.md cites the drops as \texttt{MINUTES.md:94–99} \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:41-46}. The archive's conflict list says they ``sit at lines 98–103'' in the snapshot \src{NBH/02_theory.md:2789}. In the snapshot read for this document they are at lines 97--102, under the heading ``Drops, with reasons:'' at line~96 \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:96-102}. The content is identical in all three. Only the line numbers drift.
+\end{uncertain}
+
+\subsubsection*{Inherent limitations (method meeting MEET-v31, §5)}
+These nine items are the method meeting's list. The rule, verbatim: ``Each is either PROVED impossible or true by definition (rule: SYNTH\_R1 §3 as amended by the seats). Re-checked under HQ amendment 01: items that do not meet this rule were moved to the `Not inherent' list below.'' \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:84}. The positions are \pos{1128}, \pos{1280} and \pos{1302}. The paper-level theorem form of several of them is \rid{TH18} (S-LIM).
+
+\begin{description}[style=nextline,leftmargin=1.2cm]
+\item[\defid{LIM01}] \status{true by definition}. ``\textbf{Per-round sequential factor m = p + B + 2.} True by definition of a random-scan full-coordinate Gibbs round: each update conditions on the previous one. This is inherent to the chosen kernel, not to SMC or BVS. Removing it (C10) is WORKHORSE and breaks the Gibbs-path theorems (T38(b2), BG3, V5).'' \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:86}
+\item[\defid{LIM02}] \status{true by definition}. ``\textbf{Every worker needs scoring access to all predictors} (X or sufficient statistics, 8np bytes, local or shared/distributed at a communication cost). True by definition of a full-coordinate round. A private 8p² Gram per worker is \textbf{not} inherent (C7).'' \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:87}
+\item[\defid{LIM03}] \status{T27(i), PROVED-LOCKED (conditional, in its design class)}. ``\textbf{Masking of the product-of-blocks start built from block-local scores against the full y, under T27(i)'s hypotheses (H2, H3; verified on LH).} T27(i), PROVED-LOCKED (conditional, in its design class). This is a law for that construction and design class; it does not say that every product start is masked on every design. The bridge exists to correct it (SEP-B).'' \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:88}
+\item[\defid{LIM04}] \status{V12 and E1c PROVED; Chatterjee–Diaconis Thm 2.1}. ``\textbf{No diagnostic from the observed record (the run's own weights or islands) has a universal detection guarantee for never-visited modes.} V12 and E1c PROVED; Chatterjee–Diaconis Thm 2.1. This does not rule out alerts on particular runs: positive one-sided certificates (decision 10, e.g. $\hat{Z} < Z_{𝒯}$) can still detect some failures.'' \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:89}
+\item[\defid{LIM05}] \status{T31(c), PROVED-LOCKED; PC2 C1(c), PROVED relative to it}. ``\textbf{The properties of Ẑ behind the 95\% bound imply no two-sided relative-error bound} (positive, finitely many values, mean Z, iid islands: some such law has $P(\hat{Z} < c_0Z) ≥ 1 − η$ for any c₀ > 0, η ∈ (0, 1), so $\{Z ≥ α\hat{Z}\}$ places no upper limit on Z/Ẑ) (T31(c), PROVED-LOCKED; PC2 C1(c), PROVED relative to it). This is a non-implication from the estimator's law, not a data-specific impossibility; it excludes neither structural nor record-based bounds. A finite analytic bound exists (PC1 claim 1, PROVED): $Z ≤ C_n(2b_0 + y^{\top}y/(n+1))^{−ν}$. Its gap to Z is data-dependent; there is no universal looseness figure. The literal `no run can upper-bound Z' was FALSE, and the blanket `no useful upper bound on Z from the run's record alone' is withdrawn as an inherent limitation.'' \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:90}
+\item[\defid{LIM06}] \status{NOT inherent (moved); seat-derived, unchecked}. ``\emph{(Moved by HQ amendment 01.)} Markov sharpness (`0.05Ẑ is sharp given only nonnegativity and the mean') is Seat C's argument, \textbf{seat-derived, unchecked} (not covered by PC1), so it is no longer listed as inherent; see the list below. Unchanged and PROVED: the assumption-free probabilistic lower bound $\max\{Z_{𝒯}, 0.05\hat{Z}\}$ keeps ≥ 95\% coverage (PC1 claim 2). Sharper bounds need information beyond positivity and the mean (not necessarily a variance hypothesis).'' \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:91}
+\item[\defid{LIM07}] \status{true by definition of the fixed target (N200, T07)}. ``\textbf{Posterior misses at n = 200} (565 strict competitor defeats of S₀ among the 2,394 completed fits, with six stops: at least 565 target-mode misses, not the exact count of global-posterior misses on all 2,400 data sets). True by definition of the fixed target: no search can make the HPM equal S₀ when F(S₀) < F(Ŝ) (N200, T07). This is a fact about these data and this prior, not a universal error rate.'' \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:92}
+\item[\defid{LIM08}] \status{true by definition (V13)}. ``\textbf{The cap K excludes truths with s₀ > K,} by definition of the prior. \textbf{A fixed allocation cannot support unrestricted growth of (n, p),} by definition (V13).'' \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:93}
+\item[\defid{LIM09}] \status{true by definition}. ``\textbf{The restricted ESS on V cannot bound mass outside V} without further assumptions, by definition of a restricted diagnostic.'' \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:94}
+\end{description}
+REG-A status cells: \src{NBH/ID_REGISTRY.md:136-144}. REG-A maps LIM01 $=$ I1, LIM02 $=$ I2, LIM03 $=$ I3, LIM04 $=$ I5, LIM05 $=$ I7, LIM06 $=$ I8, LIM07 $=$ I6, LIM08 $=$ I9(a),(e) and LIM09 $=$ I9(d) in the INP I-table.
+
+\begin{agentnote}[not inherent: do not present these as limitations]
+MEET-v31 MINUTES §5, verbatim: ``\textbf{Not inherent (OPEN; must not be presented as limitations):}
+\begin{itemize}
+\item the severity of weight variance through a masked crossing on the production grid (V11);
+\item rebuild convergence, P(S₀ ∈ V) and P(schedule\_limit) → 0;
+\item the as-coded masked $T_n$ law;
+\item DELIV-POP;
+\item weak-dependence stability (proposal §5.3; a binding goal, so the escalation rule of §9 applies);
+\item subexponential-p theory under our prior;
+\item the study generator's g = 5 partition theorem;
+\item the measured-round identity for general h (proposal §13.1; a binding goal, so the escalation rule of §9 applies);
+\item Markov sharpness of the assumption-free lower bound on Z (moved from item 6: seat-derived, unchecked);
+\item the blanket `no useful upper bound on Z from the run's record alone' (withdrawn from item 5: `useful' is undefined and the claim is not proved; only T31(c) and PC1 claim 1 stand).
+\end{itemize}
+These are theorem obligations in \texttt{THEOREM\_REVISION\_INPUTS.md}, each with the decision it supports and what happens if the obligation fails. Where a failure would leave a binding proposal goal unmet (general h, §13.1; weight stability, §5.3; N9, §5.1), the goal is not met by withdrawal: HQ escalates to Felipe for a method reconsideration or an explicit scope change (§9).'' \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:96-108}
+
+Likewise the lemma packs: a clause whose proof fails ``is never relabelled as a limitation'' (IC7), and for S-LIM ``a limitation whose proof fails moves to FW. It is never kept as an assertion'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-REST.md:91}.
+\end{agentnote}
+\begin{uncertain}[which list of inherent limitations]
+Three counts coexist in the archive \src{NBH/02_theory.md:2783}:
+\begin{itemize}
+\item MEET-v31 MINUTES §5 has 9 numbered items, of which item~6 is a ``moved'' stub. LIM01--LIM09 follow this list.
+\item THEOREM\_REVISION\_INPUTS §4.A has I1--I7 and I9--I11 (I8 moved). This includes I4 (one-shot IS needs ≈ Q*), I10 (equal-weight bias) and I11 (sequential rebuilds), which are absent from the MINUTES nine.
+\item FOR\_FELIPE\_FINAL\_METHOD §4 lists 7.
+\end{itemize}
+The archive registers the MINUTES nine because HQ also says ``nine'' at \pos{1280}. The I-table is at \src{NBH/branch_snapshots/MEET-v31/THEOREM_REVISION_INPUTS.md:261-286}.
+\end{uncertain}
+
+% ======================================================================= CITED LEMMAS
+\subsection{Cited lemmas CL01--CL23}\label{sec:cited}
+These come from TLF Part~III, ``Cited lemmas (not numbered claims of paper 1)'': ``Collected from the final cards and Round 3 files. Each is cited in the main text or inside a card; none is a theorem number of paper 1 unless said so.'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1297-1299}. The REG-A status of each is ``cited (not a numbered claim of paper 1); used in: \ldots'' \src{NBH/ID_REGISTRY.md:212-234}. Columns 2 and 3 are verbatim. The last column is the archive's own source pointer (paths relative to MEET-THM).
+
+{\footnotesize
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{1.0cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{2.6cm} >{\raggedright\arraybackslash}p{2.9cm}@{}}
+\toprule
+ID & Cited result (verbatim) & Used in & Archive pointer \\
+\midrule
+\endhead
+\defid{CL01} & N9 kernel facts: $γ_φ$-reversibility of each elementary move, $q_φ$-invariance and self-adjointness of the uniformly random-order round, exact draw\_pi0 and Z̄₀ (K08, K20, K21), with the CHK amendments (VERIFIED WITH AMENDMENT) & M1(a), S-KERNEL & R3\_A:114,120; MINUTES:39,64 \\
+\defid{CL02} & K47 (pooling, cited) & M1; S-POOL & MINUTES:39; R3\_A:114 \\
+\defid{CL03} & SMC identities and fixed-data limits: Del Moral 2004; Del Moral–Doucet–Jasra 2006; Whiteley–Lee–Heine 2016; Dai et al. 2022 & M1(a), (f) & R3\_A:127; R3\_D:183 \\
+\defid{CL04} & Markov lower bound: Grosse–Ghahramani–Adams 2015 & M1(d), M4(e) & R3\_A:127; R3\_B:208 \\
+\defid{CL05} & Greedy-schedule optimality: Štefankovič–Vempala–Vigoda 2009 & M7(a), M2(b6) & R3\_A:154; R3\_B:179 \\
+\defid{CL06} & K28: $√c\cdot T^*(c) → Λ_{\mathrm{len}}$ (Syed et al. 2024 Thm 3; Gelman–Meng 1998) & M7(e) (cited) & R3\_A:147,154; MINUTES:45 \\
+\defid{CL07} & Chatterjee–Diaconis 2018 Thms 1.1–1.3 (exp(KL) scale; with log-weight-tail qualifications) & M6, M2(c2) & R3\_C:199; R3\_B:179; R3\_D:183 \\
+\defid{CL08} & Cérou–Del Moral–Guyader 2011 Thms 1.4–1.5 (variance theorems; novelty of S-Z (i) to the citation checker) & M2, S-Z & R3\_B:179; R2\_B S4 \\
+\defid{CL09} & Frazier et al. 2023, Assumption 6(iv) (generic χ² precedent; not re-fetched) & M2 & R3\_B:179 \\
+\defid{CL10} & Papaspiliopoulos–Rossell 2017 §§3.1–3.2 (block computation precedent) & M3 & R3\_C:170 \\
+\defid{CL11} & Dai–Heng–Jacob–Whiteley §4.2 (independent-system evidence weighting) & S-REP & R3\_C:236 \\
+\defid{CL12} & K60, K61: Barbieri–Berger 2004 HPM/MPM facts (cited lemmas) & M5, S-TARGET & R3\_D:151,183; R2\_D:46 \\
+\defid{CL13} & Rossell 2022 Prop 1 (the $2E_0δ_1$ term) & M5(0) & R3\_D:151 \\
+\defid{CL14} & Yang–Wainwright–Jordan 2016; Zhou–Yang–Vats–Roberts–Rosenthal 2022 (context next to M5; ``with their priors LH is covered by rapid mixing; ours is for the paper's own target and start'') & M5, M4 & R3\_D:151; R3\_B:208 \\
+\defid{CL15} & Hou–Wang–Atchadé arXiv:2407.20580 (never ``first finite-n'') & M5, M4 & R3\_D:151; R3\_B:208 \\
+\defid{CL16} & Brent 1974 (W/w + D scheduling) & M8(d) & R3\_D:170,183 \\
+\defid{CL17} & T22(iii) (K16) PROVED-LOCKED CONDITIONAL, with G, R, within-block SE, EXP′, VIS, $\mathrm{NL}_η$, $\mathrm{NL}_{\mathrm{avg}}(κ)$ retained & M3 (supplementary clause) & R3\_C:163 \\
+\defid{CL18} & CHK-verified WS3, WS4 (M2(a), M3(e)); WS6(d), WS7 with amendments (M2(c)) & M2, M3 & R3\_B:160,170–171; MINUTES:23 \\
+\defid{CL19} & T03♯ (S-T) target consistency, T01–T03 PROVED-LOCKED (external review queued) & M1(i), M3, M4(f), M5, M6 & R2\_C C9; MINUTES:60 \\
+\defid{CL20} & Lemma RO (event containment), GUARD-W (stop-only coupling; audit open) & M1(d), M4(e), S-OUT & R3\_B:194; R2\_C C13 \\
+\defid{CL21} & Furnival–Wilson 1974 (leaps-and-bounds superset bound, K05) & S-CERT & R0\_DIFF K05 row (line 74) \\
+\defid{CL22} & K23 squared-kernel Dirichlet comparison, as an attributed lemma without theorem number (C's dissent; optional for the S-KERNEL HQ) & S-KERNEL & MINUTES:79; R3\_C:59 \\
+\defid{CL23} & LIT-PAR G4 (Song–Liang numerical comparison), cited as labelled numerical evidence; the analytic separation K97 is FUTURE\_WORK & Coverage Cor 2 & MINUTES:78,84 \\
+\bottomrule
+\end{xltabular}
+}
+TLF table rows: \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1303-1325}. The local cross-references are: CL01 $\to$ \rid{TH12}, \rid{OB09}; CL08 $\to$ \rid{TH16}; CL11 $\to$ \rid{TH19}; CL12 $\to$ \rid{TH10}; CL19 $=$ \rid{TH09}; CL20 $\to$ \rid{TH15}; CL21 $\to$ \rid{TH14}; CL22 $=$ \rid{CJ05} (optional citation); CL23 $\to$ \rid{CJ21}.
+\begin{notproved}[cited lemmas]
+\begin{itemize}
+\item A cited lemma is not a numbered claim of paper~1. Its status is that of the cited source.
+\item CL09 is marked ``not re-fetched''.
+\item CL08's relation to S-Z (i) is unchecked: ``Novelty of (i) vs Cérou–Del Moral–Guyader Thm 1.4 unchecked'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1035}.
+\item CL15 must never be described as ``first finite-n''.
+\item CL20 carries an open audit (GUARD-W, \rid{OB02}(e)).
+\item CL17 is CONDITIONAL.
+\end{itemize}
+\end{notproved}
+\begin{uncertain}[archive pointers]
+The pointers in the last column are the archive's own. They refer to the MEET-THM seat files at the line numbers the archive records. Two of them had line drift in other places: MINUTES line numbers cited by FUTURE\_WORK.md, and the registrar's MINUTES:87 for the audit-obligations row, which is at line~90 in this snapshot \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:90}. This agent did not re-verify every CL pointer line.
+\end{uncertain}
+
+% ======================================================================= RANKING
+\subsection{Which obligations block the most card clauses}\label{sec:oblig-rank}
+\begin{agentnote}[ranking of obligations by number of dependent card clauses]
+\textbf{Method.} This is a count, with no judgement added. For each obligation, the sources tie a list of TH IDs (cards or clause rows) to it. Those lists are the ``Clauses that depend on it'' rows in §\ref{sec:oblig}. They come from the COVERAGE\_MATRIX ``Final'' column, the REGISTRY\_PAPER1 §8 ``Used by'' column, the charters' named premises and the card status words. The table counts distinct TH IDs. It omits OB13 and OB17, whose status is PROVED (a candidate status), even though TH IDs depend on them (OB13: \rid{TH04.c}; OB17: \rid{TH04.d}, \rid{TH10}). Ties keep the OB order.
+
+{\small
+\begin{tabular}{@{}r l >{\raggedright\arraybackslash}p{4.6cm} c >{\raggedright\arraybackslash}p{5.2cm}@{}}
+\toprule
+\# & ID & Open part (status words) & Count & Dependent TH IDs \\
+\midrule
+1 & \rid{OB02} (N2) & (b) not executed; (c) not in production core; (e) GUARD-W not audited & 8 & TH01.c, TH01.d, TH04.c, TH04.e, TH05, TH08, TH15, TH19 \\
+2 & \rid{OB01} (N1) & PROOF SKETCH (binding §13.1) & 7 & TH01.b, TH01.e, TH01.f, TH01.g, TH01.i, TH13, TH19 \\
+3 & \rid{OB14} (N14) & (c) code audit, not done & 5 & TH01.c, TH05, TH08, TH15, TH17 \\
+4 & \rid{OB03} (N3) & DP invariant OPEN; bridge to code not done & 3 & TH04.f, TH05.b1LH, TH12 \\
+5 & \rid{OB04} (N4) & (iii) CONJECTURE, OPEN for c ≥ 2 & 3 & TH01.f, TH02.b5, TH17 \\
+6 & \rid{OB06} (N6) & (b) modulo premise (i) $=$ N2(e) & 3 & TH01.d, TH04.e, TH15 \\
+7 & \rid{OB05} (N5) & (b) OPEN & 2 & TH01.c, TH07 \\
+8 & \rid{OB07} (N7) & sub-obligation SC/VAL-FP (N16) & 2 & TH04.e, TH14 \\
+9 & \rid{OB09} (N9) & PROVED (candidate), VERIFIED WITH AMENDMENT; registry row to open & 2 & TH01.a, TH12 \\
+10 & \rid{OB11} (N11) & growing s₀ OPEN; LH part unchecked & 2 & TH05, TH14 \\
+11 & \rid{OB08} (N8) & OPEN & 1 & TH11 (ships without it) \\
+12 & \rid{OB12} (N12) & K76 seat-proved, unchecked; exp.\ p OPEN & 1 & TH10 \\
+13 & \rid{OB15} (N15) & calibration share not proof-checked; DAG audit GAP & 1 & TH08 \\
+14 & \rid{OB16} (N16) & OPEN & 1 & TH04 (``numerical'' label only) \\
+15 & \rid{OB10} (N10) & NONE / OPEN & 0 & --- (blocks \rid{CJ04}, \rid{CJ02}) \\
+\bottomrule
+\end{tabular}
+}
+
+\textbf{Chains the sources state.}
+\begin{itemize}
+\item \rid{OB06}(b) reduces to N2(e) of \rid{OB02}.
+\item \rid{OB04}(i) and \rid{TH19} reduce to \rid{OB01}.
+\item \rid{OB07}'s open part is \rid{OB16}.
+\item The M5 charter calls N3 ``the only OPEN mathematical obligation in the chain'' of M5 \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M5.md:101}.
+\end{itemize}
+
+\textbf{Kinds of obligation.} OB01, OB03 (DP invariant) and OB04(iii) are mathematical. OB02, OB14(c), OB15 (DAG) and OB16 are code-audit or validated-numerics items. The theory loop can only prepare the latter, for example by writing the exact audit statement; executing them is engineering \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1870}.
+\end{agentnote}

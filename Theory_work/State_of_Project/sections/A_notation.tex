@@ -1,0 +1,201 @@
+\section{Notation and conventions}\label{app:notation}
+
+Sources: the archive's notation file \src{NBH/notation_and_conventions.md:1-7}, which embeds the registrar's table
+\texttt{MEET-THM/NOTATION.md} verbatim \src{NBH/notation_and_conventions.md:48-121}, and the shared definitions of the final
+theorem list \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:52-88}. \textbf{Caveat} (archive editor): ``the final cards in
+THEOREM\_LIST\_FINAL (02a TH01–TH20) are copied verbatim from the seats' Round-3 cards and keep the seats' own symbols [\dots]; the
+registrar's canonical renamings [\dots] govern the HQ charters and future writing but are not applied inside the verbatim cards''
+\src{NBH/notation_and_conventions.md:17}. Where the registrar flagged a clash it is marked [C] below; ``canonical'' means the
+registrar's proposal, ``adopted for the HQ charters unless an HQ objects'' (no objection is recorded). Positions \pos{N} are
+transcript positions.
+
+\subsection{Definition IDs DF01--DF25}\label{app:notation-df}
+
+Each row: archive ID (defined here), registry name, exact registry status, where this document gives the object, and the
+registry row. Statuses are copied verbatim from \texttt{NBH/ID\_REGISTRY.md}.
+
+{\footnotesize
+\begin{xltabular}{\linewidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}p{2.6cm}@{}}
+\toprule
+ID & name & status (exact) & given in\\
+\midrule\endhead
+\defid{DF01} & Model, likelihood, g-prior, σ² prior & \status{unchanged in v3.1 (``Felipe's model'')} & \S\ref{sec:method-target} \src{NBH/ID_REGISTRY.md:162}\\
+\defid{DF02} & Size prior BB(1,p) and cap K & \status{unchanged} & \S\ref{sec:method-target} \src{NBH/ID_REGISTRY.md:163}\\
+\defid{DF03} & Score m(S), evidence Z, posterior π & \status{unchanged} & \S\ref{sec:method-target} \src{NBH/ID_REGISTRY.md:164}\\
+\defid{DF04} & Preprocessing / standardisation & \status{rule 1 changed by e3 (n ≥ 2 proposed)} & \S\ref{sec:method-pre} \src{NBH/ID_REGISTRY.md:165}\\
+\defid{DF05} & Blocks and tables & \status{unchanged; table stage parallel (\#4)} & \S\ref{sec:method-start} \src{NBH/ID_REGISTRY.md:166}\\
+\defid{DF06} & Block-product start π₀ & \status{kept (item 1 Outcome 2: no depth/speed claim)} & \S\ref{sec:method-start} \src{NBH/ID_REGISTRY.md:167}\\
+\defid{DF07} & Discrepancy d and tempering bridge γ\_φ & \status{unchanged} & \S\ref{sec:method-start}, \S\ref{sec:method-kernel} \src{NBH/ID_REGISTRY.md:168}\\
+\defid{DF08} & Kernel moves and round & \status{unchanged; validity N9 (OB09, TH12)} & \S\ref{sec:method-kernel} \src{NBH/ID_REGISTRY.md:169}\\
+\defid{DF09} & Resampling, pilot, ESS 0.90 & \status{unchanged; ESS class (c)} & \S\ref{sec:method-calib} \src{NBH/ID_REGISTRY.md:170}\\
+\defid{DF10} & Candidate set V, restricted ESS, grid, rebuild loop & \status{unchanged; contract \#18} & \S\ref{sec:method-calib} \src{NBH/ID_REGISTRY.md:171}\\
+\defid{DF11} & Calibration record 𝒞, tiers, final runs & \status{contract \#18; streams extended \#7} & \S\ref{sec:method-calib}, \S\ref{sec:method-islands} \src{NBH/ID_REGISTRY.md:172}\\
+\defid{DF12} & Islands and stacking & \status{new in v3.1 (\#7)} & \S\ref{sec:method-islands} \src{NBH/ID_REGISTRY.md:173}\\
+\defid{DF13} & Evidence estimator Ẑ\_r, pooled Ẑ, Markov bound & \status{unchanged; card adds max\{Z\_𝒯, 0.05Ẑ\}} & \S\ref{sec:method-outputs} \src{NBH/ID_REGISTRY.md:174}\\
+\defid{DF14} & PIP rules, MPM, R\_eff & \status{swap of primary/secondary (\#11)} & \S\ref{sec:method-outputs} \src{NBH/ID_REGISTRY.md:175}\\
+\defid{DF15} & HPM decision and local search & \status{unchanged; scans parallel (\#3)} & \S\ref{sec:method-outputs} \src{NBH/ID_REGISTRY.md:176}\\
+\defid{DF16} & LS0 & \status{new (\#8–\#10)} & \S\ref{sec:method-outputs} \src{NBH/ID_REGISTRY.md:177}\\
+\defid{DF17} & Reported store 𝒯, Z\_𝒯 and the certificate card & \status{new (\#13, \#14; §2.1)} & \S\ref{sec:method-card} \src{NBH/ID_REGISTRY.md:178}\\
+\defid{DF18} & General-h accumulator 𝓗 & \status{new (\#12)} & \S\ref{sec:method-genh} \src{NBH/ID_REGISTRY.md:179}\\
+\defid{DF19} & Ĵ (J\_hat) & \status{reporting amendment} & \S\ref{sec:method-genh} \src{NBH/ID_REGISTRY.md:180}\\
+\defid{DF20} & ε̂\_× (cross\_block\_rmax) with κ̂, δ̂, ū̂, r̂, η̂ & \status{reporting amendment} & \S\ref{sec:method-genh} \src{NBH/ID_REGISTRY.md:181}\\
+\defid{DF21} & Output convention and event 𝒪, GUARD-W & \status{new wording (\#6, \#16)} & \S\ref{sec:method-outputs}, \S\ref{sec:method-islands} \src{NBH/ID_REGISTRY.md:182}\\
+\defid{DF22} & Shared implementation premises & \status{premises (not model conditions)} & \S\ref{app:notation-premises} \src{NBH/ID_REGISTRY.md:183}\\
+\defid{DF23} & Design families G, LH, W, ORTH & \status{families used for IC3} & \S\ref{app:notation-premises} \src{NBH/ID_REGISTRY.md:184}\\
+\defid{DF24} & H-DOM and constants a, δ\_A, δ\_H, r, C\_σ, b\_X, D\_* & \status{definition} & \S\ref{app:notation-premises} \src{NBH/ID_REGISTRY.md:185}\\
+\defid{DF25} & Settings table (49 rows), classes (a)–(e) & \status{METH31 §5 (ground rule 9)} & \S\ref{sec:method-settings} \src{NBH/ID_REGISTRY.md:186}\\
+\bottomrule
+\end{xltabular}
+}
+
+\subsection{Symbols}\label{app:notation-symbols}
+
+``N-tab'' = the registrar's table as embedded in \texttt{notation\_and\_conventions.md} (line cited). ``M'' =
+\texttt{METHODOLOGY\_v3.md}; ``M31'' = \texttt{METHOD\_v3.1\_FINAL.md}; ``TLF'' = \texttt{THEOREM\_LIST\_FINAL.md}. The last
+column records a change of convention during the campaign (``—'' = none recorded).
+
+{\footnotesize
+\begin{xltabular}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.1cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{3.3cm}@{}}
+\toprule
+symbol & meaning & defined in & changed when\\
+\midrule\endhead
+\multicolumn{4}{@{}l}{\textit{Data, model, target}}\\
+$n,p$ & sample size; number of retained (non-constant) predictors & M \src{Docs/Methodology/METHODOLOGY_v3.md:64} & input domain $n\ge3\to n\ge2$ proposed (e3) \pos{1251} \src{NBH/notation_and_conventions.md:400}\\
+$X,y$; $s_y$ & standardised design and response (max-abs, centre, SD with $n-1$); $s_y^2=\|Cy\|^2/(n-1)$ & M \src{Docs/Methodology/METHODOLOGY_v3.md:85-87} & —\\
+$S$, $k=|S|$, $S_b$ & model (index set), its size, $S\cap C_b$ & M \src{Docs/Methodology/METHODOLOGY_v3.md:97} & —\\
+$K$; $\Omega$; $k^*$ & cap $\min(p,\lfloor n/2\rfloor)$; model space $\{|S|\le K\}$; $k^*=\min(K,\lfloor p/2\rfloor)$ & N-tab \src{NBH/notation_and_conventions.md:96-97} & scan size $p+K(p-K)\to p+k^*(p-k^*)$ \pos{1480} \src{NBH/notation_and_conventions.md:395}. [C] $K_n$ (Song–Liang), K-IDs\\
+$G_S$, $z_S$, $H_S$, $Q_S$ & $X_S^\top X_S$; $X_S^\top y$; $(n+1)G_S+I$; $y^\top y-nz_S^\top H_S^{-1}z_S$ & M \src{Docs/Methodology/METHODOLOGY_v3.md:97-105} & [C] $G$ also model assumption, card G1/G2, Theorem G; $Q$ also draw counts \src{NBH/notation_and_conventions.md:102}\\
+$a_0,b_0$; $\nu$; $\bar Q$ & IG hyperparameters $0.01$; $\nu=a_0+n/2$; $\bar Q=2b_0+y^\top y$ & N-tab \src{NBH/notation_and_conventions.md:101} \src{NBH/notation_and_conventions.md:142} & ``negligible'' claim withdrawn \src{NBH/notation_and_conventions.md:396}\\
+$C_n$, $c_n$ & normalising constant of $m$ (M); cards' common constant $c_n$ & M \src{Docs/Methodology/METHODOLOGY_v3.md:107}; TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:65} & —\\
+$m(S)$, $\mathrm{BF}(S)$ & marginal likelihood; $m(S)/m(\varnothing)$ & M \src{Docs/Methodology/METHODOLOGY_v3.md:106} \src{Docs/Methodology/METHODOLOGY_v3.md:176} & —\\
+$w(k)$, $W_K$, $\varpi(S)$ & BB$(1,p)$ weight $\tfrac12/\binom{2p-1}{k}$; normaliser; capped prior $w(k)1\{k\le K\}/W_K$ & M \src{Docs/Methodology/METHODOLOGY_v3.md:103} & [C] $W$ also island weight, subset, exhibit \src{NBH/notation_and_conventions.md:76}\\
+$F(S)$ & score $\log\varpi(S)+\log m(S)$; $e^{F(S)}=\varpi(S)m(S)$ & N-tab \src{NBH/notation_and_conventions.md:91} & [C] Frobenius $F_S$ (A:153, D:120), canonical $\mathrm{Fro}_S$; M's V9 uses $F(S)=-(n/2)\log\bar\sigma^2(S)-(|S|/2)\log n$ \src{Docs/Methodology/METHODOLOGY_v3.md:372}\\
+$\pi$, $Z$ & posterior $\varpi m/Z$; evidence $\sum_\Omega\varpi m$ & N-tab \src{NBH/notation_and_conventions.md:53} \src{NBH/notation_and_conventions.md:108} & [V] $\pi_{\mathcal T}$, $\pi^{\mathcal T}$, $\hat\pi$; canonical $\pi_{\mathcal T}$\\
+$S_0$, $s_0$; $\delta_1$ & true support and size; $\delta_1:=1-\pi(S_0)$ & N-tab \src{NBH/notation_and_conventions.md:98} \src{NBH/notation_and_conventions.md:65} & [C] $S^\circ$ reference vs launch centre\\
+$\theta^*$, $\beta$ & true coefficients; generic coefficient & N-tab \src{NBH/notation_and_conventions.md:112} & —\\
+\multicolumn{4}{@{}l}{\textit{Blocks, start, bridge}}\\
+$B$, $B^*$ & block cap $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,B^*)$, $B^*=16$ & N-tab \src{NBH/notation_and_conventions.md:95} & $B^*$ ``implementation limit'' $\to$ (c) budget (e1) \pos{1226} \src{NBH/notation_and_conventions.md:402}\\
+$C_1..C_J$, $J$ & blocks (packing order); number of blocks & M \src{Docs/Methodology/METHODOLOGY_v3.md:168-169} & [C] $J$ also Jeffreys; canonical block count $N_{\mathrm{blk}}$ \src{NBH/notation_and_conventions.md:73}\\
+$r_b(U)$, $e_b(j)$ & block table $m(U)/m(\varnothing)$; size profile $\sum_{|U|=j}r_b(U)$ & M \src{Docs/Methodology/METHODOLOGY_v3.md:170-175} & —\\
+$\gamma_0,\pi_0,\bar Z_0$ & start weight $\varpi\prod_br_b(S\cap C_b)$; start law; its exact normaliser & N-tab \src{NBH/notation_and_conventions.md:54} & —\\
+$\tilde S_0$ & start mode $\arg\max\gamma_0$ (size, then lex ties) & M31 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:150} & —\\
+$d$; $\gamma_\varphi$, $q_\varphi$ ($q_t$) & discrepancy $\log\mathrm{BF}-\sum_b\log r_b$; bridge $\gamma_0e^{\varphi d}$; normalised $\gamma_\varphi/\bar Z_\varphi$ & N-tab \src{NBH/notation_and_conventions.md:55-56} & [C] $d$ duplicates count, cell count; canonical $q_\varphi$, drop $\pi_\varphi$\\
+$\varphi$, $\varphi_t$, $T$, $T_e$, $T_0$ & bridge index; grid points; realised stage count; ceiling at tier $e$; $\max(1000,\ell^2)$ & N-tab \src{NBH/notation_and_conventions.md:84-85} \src{NBH/notation_and_conventions.md:107} & [C] $T^\sigma/T_{\mathrm{bd}}$, $T^*$, $T_n$\\
+$J$, $\hat J$, $A_r$, $B_r$ & Jeffreys $\mathrm{KL}(\pi\|\pi_0)+\mathrm{KL}(\pi_0\|\pi)$; run-card estimate; initial and endpoint $d$ means & N-tab \src{NBH/notation_and_conventions.md:73-74} \src{NBH/notation_and_conventions.md:114} & Seat A's trapezoid form withdrawn \pos{1626} \src{NBH/notation_and_conventions.md:408}\\
+$d_\sigma$, $d_X$ & $\sigma^2$-coupling discrepancy; cross-block part $d-d_\sigma$ & N-tab \src{NBH/notation_and_conventions.md:57-58} & [C] $\sigma$ noise sd; baseline superscript ``bd''\\
+$a,\delta_A,\delta_H,r$,\newline $C_\sigma,b_X,D_*$ & H-DOM constants of M2 & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:148} & [C] many; canonical $r_*$ for C's $r$ \src{NBH/notation_and_conventions.md:66}\\
+$x_b$, $\bar x_S$ & block fit fractions $nz_{S_b}^\top H_{S_b}^{-1}z_{S_b}/\bar Q$, $\sum_bx_b$ & N-tab \src{NBH/notation_and_conventions.md:111} & —\\
+$\hat\varepsilon_\times,\hat\kappa,\hat\delta,\hat{\bar u},\hat r,\hat\eta$ & cross-block proxy and companions & N-tab \src{NBH/notation_and_conventions.md:69-72} \src{NBH/notation_and_conventions.md:117} & $\hat\delta$: $K\to K-1$; $\hat{\bar u}$: max over $V\to$ table envelope \src{NBH/notation_and_conventions.md:406-407}\\
+$\Lambda_{\mathrm{len}}$ & thermodynamic length $\int_0^1\mathrm{sd}_{q_\varphi}(d)\,d\varphi\le\sqrt J$ & N-tab \src{NBH/notation_and_conventions.md:100} & renamed from conflated $\Lambda$ \src{NBH/notation_and_conventions.md:409}\\
+\multicolumn{4}{@{}l}{\textit{Sampler, calibration, islands}}\\
+$r_n$, $N(j)$ & neighbour threshold $\sqrt{2\log p/n}$; neighbour set & M \src{Docs/Methodology/METHODOLOGY_v3.md:181-183} & scale wording w1 (not $\sqrt{\log n/n}$) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:192}\\
+$m$; $o_j$ & round length $p+B+2$; recorded Gibbs conditional & M \src{Docs/Methodology/METHODOLOGY_v3.md:187-192} & —\\
+$\ell$, $L$ & local-search/rebuild cap $\lceil\log_2(n+p+1)\rceil$; burn-in rounds $\max(4,\lceil\log_2(n+1)\rceil)$ & N-tab \src{NBH/notation_and_conventions.md:82-83} & [C] card items L1–L3; $\ell_0$ log-odds levels\\
+$N_0,N_e,H_0,H_e$ & final/calibration populations at tier $e$ & N-tab \src{NBH/notation_and_conventions.md:80-81} \src{NBH/notation_and_conventions.md:113} & 2,500 floor = budget, not MC guarantee \src{NBH/notation_and_conventions.md:398}\\
+$e$ (tier) & $e\in\{0,1\}$, factor 4 & M \src{Docs/Methodology/METHODOLOGY_v3.md:73} & [C] Euler's $e$, items e1–e8\\
+$V$, $F_V$, $\rho_V$, $\bar\rho$, $c_\rho$ & candidate set; restricted log-normaliser; restricted ESS; threshold 0.9; $\sqrt{\log(10/9)}$ & N-tab \src{NBH/notation_and_conventions.md:88-89} \src{NBH/notation_and_conventions.md:103} & ESS 0.90 class (c) with B's caveat \src{NBH/notation_and_conventions.md:403}\\
+$\mathcal C$ & frozen calibration record (grid, tier, $N$, $L$, budgets) before stream 10 & N-tab \src{NBH/notation_and_conventions.md:109} & —\\
+$R$, $R'$, $R'_n$ & default 4 islands; declared islands $4k$; growth rates & N-tab \src{NBH/notation_and_conventions.md:78-79} & $R'_n$ rates adopted \pos{1626} \pos{1639} \src{NBH/notation_and_conventions.md:405}\\
+$c_4$ & centre of islands 1–4 (extra search under stacking) & M31 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:142} & —\\
+$\hat Z_r$, $\hat Z$ & island evidence, ``unbiased for Z given 𝒞'' (clause \rid{TH01.a}, under its named implementation premises); pooled $(1/R')\sum_r\hat Z_r$ & N-tab \src{NBH/notation_and_conventions.md:75} & [V] $\bar{\hat Z}$ dropped\\
+$W_r$, $M_2$, $R_{\mathrm{eff}}$ & $\hat Z_r/Z$; $E[W_r^2\mid\mathcal C]$; $(\sum W_r)^2/\sum W_r^2$ & N-tab \src{NBH/notation_and_conventions.md:76-77}; M31 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:158} & —\\
+$S^{(k)}_{ri}$ & particle $i$ of island $r$ at measured round $k$ ($k=0$ initial) & N-tab \src{NBH/notation_and_conventions.md:115} & —\\
+\multicolumn{4}{@{}l}{\textit{Outputs and certificates}}\\
+$\widehat{\mathrm{PIP}}_j$, $\mathrm{MPM}_{\hat Z}$, $\mathrm{MPM}_{\mathrm{eq}}$ & primary ($\hat Z$-weighted) and secondary PIPs; MPMs at $\tfrac12$ & M31 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:158} & primary/secondary swapped in v3.1 \pos{1251} \src{NBH/notation_and_conventions.md:390}\\
+$\hat S$; $\mathcal S$, $\mathcal S^+$ & returned HPM; scored set, post-search scored set & N-tab \src{NBH/notation_and_conventions.md:110} & —\\
+$\mathcal T$, $Z_{\mathcal T}$ & deduplicated reported top store ($40p+1$); $\sum_{\mathcal T}e^F$ & N-tab \src{NBH/notation_and_conventions.md:90-91} & after LS0 $\mathcal T_{\mathrm{new}}=\mathrm{top}_c(\cdot)$ \src{NBH/notation_and_conventions.md:392}\\
+$\eta(S)$, $\eta_F$ & scorer's heuristic error expression ($64\varepsilon\dots$) & M31 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:337} & [C] discrepancy bound $\eta_S$, $\hat\eta$; canonical $e_F$ \src{NBH/notation_and_conventions.md:67}\\
+$g_{\mathrm{add}},g_{\mathrm{del}}$,\newline $g_{\mathrm{swap}},g_{\mathrm{sub}}$, $\rho_{\mathrm{loc}}$ & card gaps; local posterior share & M31 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:234-240} & [C] $g$ prior scale, group size \src{NBH/notation_and_conventions.md:104}\\
+$\mathcal H$, $h$, $H_r(h)$, $\hat\mu(h)$ & declared list; test function; measured-round island average; pooled estimate & N-tab \src{NBH/notation_and_conventions.md:87} \src{NBH/notation_and_conventions.md:119} & $d$ added to default $\mathcal H$ \pos{1626}\\
+$\mathcal O$, $\mathcal U$, $D_n$ & output event; $\mathcal O^c$; $P(\bar{\mathcal O}\cap\{S_0\notin\bar{\mathcal S}^+\})$ (overbar = potential run) & N-tab \src{NBH/notation_and_conventions.md:92}; TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:86} & [C] $U,U_n$ no-output event in seats\\
+$U_m$, $U_Z$ & analytic bound $m(S)\le C_n(2b_0+y^\top y/(n+1))^{-\nu}$; envelope & N-tab \src{NBH/notation_and_conventions.md:93} \src{NBH/notation_and_conventions.md:146} & ``≈ 530 nats loose'' withdrawn \pos{1512}\\
+$\Phi(S)$ & $|S\triangle S_0|$ lattice distance & N-tab \src{NBH/notation_and_conventions.md:99} & —\\
+\multicolumn{4}{@{}l}{\textit{Local search, lattice, LH variants (symbols used in M3, M5; definitions quoted from the cited source)}}\\
+$S^\circ$ & ``S° appears in the start-mass bound and as the launch centre''; ``S° is a reference model in $\pi_0(S^\circ)\ge(1-q)^{s+1}/(1+e)^s$ [\dots] and the launch/start-mode centre in Lat(S°), Φ(S°) [\dots]. The sources do not say whether the two coincide.'' & N-tab \src{NBH/notation_and_conventions.md:98} & [C] registrar: ``S° only if the card states which object''; local-search centre written $\tilde S_0$\\
+$M(S)$ (greedy map) & ``best(S) := the ≺-least element of $\arg\max_{T\in N(S)}F(T)$''; ``M(S) := best(S) if F(best(S)) > F(S), and M(S) := ⊥ otherwise'' & W6-FIXREV2 \src{NBH/branch_snapshots/W6-FIXREV2/STATEMENTS.md:93-94} & —\\
+TD′$_\infty$, TD′$_P$; TD′ & ``(L): M(S₀) = ⊥.'' ``TD′$_\infty(\mathcal R)$: (L), and for every $S\in\mathcal R\setminus\{S_0\}$: M(S) ≠ ⊥ and $M(S)\in\mathcal R$.'' ``TD′$_P(\mathcal R)$: (L), and for every $S\in\mathcal R\setminus\{S_0\}$: M(S) ≠ ⊥ and $M(S)\in\mathcal P(S)$'', with ``$\mathcal P(S):=\{T\in N(S):\Phi(T)<\Phi(S)\}$''. TD′ without subscript is defined only implicitly: the notation file lists the family ``TD(d,m), TD′, TD′\_P, TD′\_∞'' \src{NBH/notation_and_conventions.md:452}; first use in the final list: ``(a) TD′ lattice descent (TheoremA)'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:299} & W6-FIXREV2 \src{NBH/branch_snapshots/W6-FIXREV2/STATEMENTS.md:97} \src{NBH/branch_snapshots/W6-FIXREV2/STATEMENTS.md:101-103} & literal TD$(d,m)$ unsatisfiable (Prop 1-TD) \src{NBH/notation_and_conventions.md:452}\\
+$\mathrm{Lat}(S)$ & ``$R_{a,d}:=\{U\cup P: U\subseteq S_0, |S_0\setminus U|\le a, P\subseteq S_0^c, |P|\le d, |U\cup P|\le K\}$; $\mathrm{Lat}(S):=\{U'\cup P': U\subseteq U'\subseteq S_0, P'\subseteq P\}$ for $S=U\cup P$'' & W6-FIXREV2 \src{NBH/branch_snapshots/W6-FIXREV2/STATEMENTS.md:98-99} & —\\
+$C$ (centre); $\Phi(C)$, $\tau(C)$ & $C$ is defined only implicitly, as the centre the local search starts from; first use: ``local search from C ∈ Lat(S°) with ℓ ≥ τ(C) and a completed final scan reaches and certifies S₀ within Φ(C) moves'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:292}. $\Phi$ as in the row $\Phi(S)$. $\tau$: ``S₀ is reached after exactly τ(S) = m(S) + e(S) − σ(S) moves, where σ(S) is the number of extra→truth swaps used; max\{m(S), e(S)\} ≤ τ(S) ≤ Φ(S)'', with ``m(S) = $|S_0\setminus S|$, e(S) = $|S\setminus S_0|$'' & W6-FIXREV2 \src{NBH/branch_snapshots/W6-FIXREV2/STATEMENTS.md:151-152} \src{NBH/branch_snapshots/W6-FIXREV2/STATEMENTS.md:97} & the W6 text writes the centre as $S_c$; R2\_D: ``ℓ ≥ τ(C) = Φ(S°) − 1 = c − 1 fixed on LH'' \src{NBH/branch_snapshots/MEET-THM/R2_D.md:194}\\
+STAB-LH & ``(STAB-LH), a finite population condition on the fixed LH parameters. $m_{\mathrm{STAB}}:=\min\{\Delta(V-t)-\Delta(V),\ \Delta(V-t+l)-\Delta(V): S^\circ\subseteq V\subseteq\mathcal{SU},\ t\in S^\circ,\ l\in\mathcal{SU}\setminus V\}>0$'' ($\mathcal{SU}$ = the signal units; $\Delta$ = population residual variance). M5's (b2-LH) uses the instance ``STAB-LH (g = 9, c = 2, ρ = 0.4, ψ = 0.2)'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:292} & 02b \src{NBH/02b_theory_campaign_history.md:7852} & fails e.g.\ at $(\rho,\psi)=(0.85,0.5)$ \src{NBH/02b_theory_campaign_history.md:7852}\\
+L-DIL & Seat C's dependency-graph node name, defined only by its node-list entry ``L-DIL: factorization'' and the edge ``S-TARGET → L-DIL; L-DIL → M3(a–d) \textbar{} Start normalization and dilution.'' (used in the M3 charter's first lemma, ``Match production $\gamma_0,\bar Z_0$ to L-DIL'') & R3\_C \src{NBH/branch_snapshots/MEET-THM/R3_C.md:250} \src{NBH/branch_snapshots/MEET-THM/R3_C.md:259} & —\\
+\bottomrule
+\end{xltabular}
+}
+
+\subsection{Assumption, premise and label names}\label{app:notation-premises}
+
+{\footnotesize
+\begin{xltabular}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{4.6cm}@{}}
+\toprule
+name & meaning (source words, abridged where marked) & defined in\\
+\midrule\endhead
+D0 & ``\(n\ge3,p\ge1\); nonconstant columns and response, centered and standardized'' with the shipped target & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:64}\\
+G (sampling model) & fixed raw design; $y^r=\alpha\mathbf1+X^r\beta+\epsilon$, $\epsilon\sim N(0,\sigma^2I)$, fixed $\sigma^2>0$; standardise afterwards (\rid{DF23}) & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:68}\\
+R1, R & fixed-design triangular array, fixed $s_0\ge1$, $p\le n^A$, $s_0\le K$ eventually; G; $\|\mu\|^2\le Mn$; truth Gram eigenvalue $\ge\phi_0^2$ & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:448}\\
+$m_n^\sharp$, $j_0$ & tail cutoff $\min\{m\ge s_0:R_m\le n^{-(s_0+2)/2}\}$; $j_0=\lceil(2A+1)s_0\rceil+1$ & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:449-450}\\
+SE$_\lambda(j_0)$, SE$_w(m_n^\sharp;g_0)$ & anchored normalized / unnormalized minimum-eigenvalue conditions on $S_0\cup J$ & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:450}\\
+BM-$\infty$, BM$(c)$ & beta-min $\theta_{\min}^{*2}n\phi_0^2/(\sigma^2\log n)\to\infty$; or fixed $c>c_0(s_0,A)$ & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:451}\\
+LH & $p=9\lfloor n^{1/3}/9\rfloor$, groups of nine, within 0.4, two cross-group links 0.2, coefficients $(1,-0.2)$, $\sigma^2=1$; exact Gram $X^\top X=(n-1)\Sigma$ & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:69-70}\\
+LH-iid & the $p\gg n$ random-design LH family of W3-PXN (P1–P8); ``(b1-LH-iid)'' means different objects in FW10/K71 and in 02b & \src{NBH/02b_theory_campaign_history.md:4469} \src{NBH/notation_and_conventions.md:450}\\
+LH-LAT & lattice margin condition on LH ($m_0=0.0325>0$ on the exhibited design) & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:304}\\
+W & reporting exhibit: groups of nine, within $1/4$, cross $\varepsilon_n=1/(np)$ (also $n^{-1/2}/p$), two coefficients $n^{-1/4}$; $D_*=O_P(1)$ & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:71}\\
+ORTH & $X^\top X=(n-1)I$, $p\le n-1$ & \src{NBH/notation_and_conventions.md:164}\\
+SIZE & $g_{\max}\le B<2g_{\min}$; holds on LH for $n\ge9^6$ with $g=9$ & \src{NBH/notation_and_conventions.md:434}\\
+H-DOM & $a<1$, $\delta_A<1$, $\delta_H<1$, $r<1$ (matrix domain of M2; \rid{DF24}) & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:148}\\
+EX-A & ``Exact mathematical scores, arithmetic, sums and comparisons. This is an idealisation, not a validated floating-point property.'' & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:72}\\
+MC contract; Output contract & computational premises of the final run; delivery transfer ``by intersection with $\mathcal O$, never by conditioning on delivery'' & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:73-74}\\
+EX-S (H-U), CAL, IND-T, GUARD-W, SR, OP-LS0, e4, complete scans & see the verbatim box below (\rid{DF22}) & TLF \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:86}\\
+Lemma RO; CEX-guard & stop-only guard: $P(B\mid\mathcal C)\le\alpha\Rightarrow P(\mathcal O\cap B\mid\mathcal C)\le\alpha$, not $P(B\mid\mathcal O,\mathcal C)\le\alpha$; ``GUARD-W: not audited'' & \src{NBH/notation_and_conventions.md:433}\\
+VAL-FP, SC & floating-point validation of $\hat Z$ at production size; validated score arithmetic & M31 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:216} \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:402}\\
+W-cal; Prop W & bitwise replay of concurrent calibration; bitwise equivalence of concurrent final islands & M31 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:398} \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:131}\\
+PART-pairing & partition theorem for the study generator $g=5$ ($2g\le B$); obligation N8 (\rid{OB08}) & M31 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:180}\\
+obligation N$k$ & N1–N17 = \rid{OB01}–\rid{OB17}; written ``obligation N1'' & \src{NBH/notation_and_conventions.md:435}\\
+K-IDs & K01–K108 meeting candidate IDs, written ``K-ID K46'' & \src{NBH/notation_and_conventions.md:436}\\
+classes (a)–(e) & modelling convention; function of $(n,p)$ or $X$; declared budget; numerical tolerance; arbitrary & M31 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:288-292}\\
+ADDITIVE, POST HOC, LAW-PRESERVING, WORKHORSE & change classes of METH-AUDIT & M31 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:16-20}\\
+items e1–e8, w1–w7 & item-9 fixes and wording fixes & M31 \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:175-198}\\
+objectives (1)–(3) & accuracy in recovering the true posterior; parallel scalability; BVS selection accuracy (ground rule 6) & \src{NBH/notation_and_conventions.md:11-13}\\
+\bottomrule
+\end{xltabular}
+}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:86}
+Shared implementation premises (named once, used by both cards): \textbf{EX-A} exact scores and arithmetic; \textbf{EX-S} fresh independent
+ideal uniforms (H-U); \textbf{CAL} a successful frozen calibration record $\mathcal C$ on streams 0–9; \textbf{IND-T} final streams 10..9+R′
+independent of $\mathcal C$ and of each other, R′ = 4k declared before stream 10; \textbf{GUARD-W} stop-only guard (operational interruption
+⇒ no output); \textbf{SR} the method's stop/return rule as in the T38 hypotheses; \textbf{OP-LS0} LS0 integrated as specified (METHOD §2 \#8);
+\textbf{e4} emitted LS0 centre = the prescribed smallest-size, lexicographically smallest start-mode maximiser (DP invariant N3 OPEN);
+\textbf{complete scans} no operational interruption of any search. $\mathcal O$ is the output event; statements are $P\{\mathcal O\cap\cdot\}$;
+$D_n:=P(\bar{\mathcal O}\cap\{S_0\notin\bar{\mathcal S}^+\})$ in potential-run notation (the overbar is the potential run, not set
+complement; W2PC1:122).
+\end{stmt}
+
+\begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:73-74}
+\textbf{MC contract:} Exact iid start draws, multinomial resampling, actual invariant move rounds, independent ideal uniforms; successful full
+calibration $\mathcal C$ frozen before final randomness; independent final islands; common $N$; $R'=4k$ declared in advance. These are
+computational premises.
+\textbf{Output contract:} Potential uninterrupted final run first. GUARD-W identifies delivered statistical records with potential records
+on $\mathcal O$. Its integrated audit remains open. Bounds transfer by intersection with $\mathcal O$, never by conditioning on delivery.
+\end{stmt}
+
+\begin{uncertain}[the D0 data domain vs v3.1 e3]
+TLF's D0 says ``\(n\ge3,p\ge1\)'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:64}; v3.1 e3 says ``\textbf{n = 2 is
+admitted}'' as ``a proposed extension: current preprocessing still rejects n < 3''
+\src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:182}. The theory cards use $n\ge3$; the code rejects $n<3$.
+\end{uncertain}
+
+\subsection{Conventions that changed, and name collisions}\label{app:notation-changes}
+
+The archive lists 35 changed conventions C1–C35 with old $\to$ new, source and position
+\src{NBH/notation_and_conventions.md:386-422}. Those that touch the method or its reporting: top-store MPM threshold $\tfrac13\to\tfrac12$
+(C1); ``Ẑ can only fail downward'' withdrawn (C2); primary PIP equal-weight $\to\hat Z$-weighted (C3); ``no useful upper bound on Z''
+narrowed to T31(c) (C4); stores nested/bitwise under LS0 struck (C5); ``depth free of N, H, R'' struck (C6); C6 trigger widened to the
+union (C7); local-search scan size (C8); IG negligibility (C9); $N_0$ cost $\Theta(p\cdot\max(n,p))$ (C10); 2,500 floor a budget (C11);
+Requirement (1) and the output convention (C12); input domain $n\ge2$ proposed (C13); \texttt{global\_certified} heuristic (C14);
+$B^*$ a (c) budget (C15); ESS 0.90 class (c) (C16); growth-rate edits allowed (C17); $R'_n$ rates (C18); $\hat\delta$ (C19); $\hat{\bar u}$
+(C20); $\hat J$ form (C21); $\Lambda_{\mathrm{len}}$ (C22); N9 gate passed (C30); binding-goal escalation (C31); item 1 Outcome 2 (C33).
+
+Known collisions (``Always resolve through \texttt{ID\_REGISTRY.md}''): ``Lemma S'' (shift lemma / ESS-share lemma / HPM
+order-independence lemma), ``Lemma U'', ``Prop M'', ``Theorem SEP'' vs ``Lemma SEP'', ``BASIN'', ``Lemma R'', ``Theorem B'', ``Theorem
+A'', ``E1/E2'' (W1-T03R lemmas vs API-MASKZPIP theorems, and also the calibration flags E1–E3), ``IND'', ``C1'', ``T05''
+\src{NBH/notation_and_conventions.md:457-473}.

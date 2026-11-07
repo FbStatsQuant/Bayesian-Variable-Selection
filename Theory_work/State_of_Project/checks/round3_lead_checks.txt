@@ -1,0 +1,8 @@
+# check.py --log main.log (2026-11-07T20:53:51Z)
+C7 coverage 100.0% (273/273); missing list -> checks/coverage_report.txt
+WARN  C8 76 overfull hbox warnings
+checked 50 tex, 6 tsv; 1658 \src/stmt refs; 0 error(s), 1 warning(s)
+
+# verify_stmt.py 0.93
+116 stmt boxes; box-content covered by source (median) = 0.984; below 0.93: 18
+  cov=0.763 ratio=0.866  04b_supplement.tex:531  [NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1097] 

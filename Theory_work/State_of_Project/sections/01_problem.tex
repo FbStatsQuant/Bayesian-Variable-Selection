@@ -1,0 +1,61 @@
+\section{Problem, objectives and thesis}\label{sec:problem}
+
+\subsection{The problem the project addresses}\label{sec:problem:what}
+
+The project starts from Felipe Bedoya's proposal \emph{Local-to-Global Bayesian Computation} \src{NBH/inputs/Local_to_Global_draft.txt:1-16}. Its principle is
+\begin{center}
+local posterior computation $\longrightarrow$ merge local structures $\longrightarrow$ correct toward the global posterior,
+\end{center}
+with the correction step essential: ``Local posterior samples are useful computational building blocks, but they are not the target posterior distribution'' \src{NBH/inputs/Local_to_Global_draft.txt:38-43}. Bayesian variable selection (BVS) is the controlled test bed, because there the merge is easy but uncertainty is hard: two correlated predictors $X_j, X_\ell$ placed in different blocks can each look important locally, while the full posterior puts its mass on $S=\{j\}$ or $S=\{\ell\}$ and little on $S=\{j,\ell\}$; ``naive merging can destroy joint posterior uncertainty'' \src{NBH/inputs/Local_to_Global_draft.txt:168-186}. The proposal's message is ``easy merge $\not\Rightarrow$ valid posterior uncertainty'' \src{NBH/inputs/Local_to_Global_draft.txt:211-218}, and its Risk~4 is that ``local proposals miss important posterior regions'' \src{NBH/inputs/Local_to_Global_draft.txt:410-413}; the campaign's ``masked regime'' is exactly this risk \pos{1028}.
+
+The proposal names the theory a paper needs (§5.1 exactness under Metropolis--Hastings correction; §5.2 SMC consistency; §5.3 weight stability for variable selection under weak cross-block dependence; §5.4 approximation error in KL, TV, PIP, joint-PIP and credible-interval terms) \src{NBH/inputs/Local_to_Global_draft.txt:253-296}, and adds in §13.1: ``We should prove a theorem where our estimates of posterior expectation of $h(\theta)$ converge to the theoretical ground truth'' \src{NBH/inputs/Local_to_Global_draft.txt:499-501}. These goals are binding on the theorem list (ground rule 7 below); \S\ref{sec:problem:coverage} maps each to the cards.
+
+\subsection{Felipe's objectives and ground rules}\label{sec:problem:rules}
+
+The ground rules Felipe set on 2026-11-03 are binding on every agent \src{NBH/branch_snapshots/MEET-v31/DOSSIER.md:9-18}. In summary (the source is verbatim; read it before changing the method):
+\begin{enumerate}[label=\textbf{GR\arabic*}]
+\item \textbf{Baseline and burden of proof.} The method stays close to the v3 study method (composite likelihood, SMC structure, HPM rule) unless there are ``irrefutable reasons'' \src{NBH/branch_snapshots/MEET-v31/DOSSIER.md:11}.
+\item \textbf{Real issues only.} Changes must address real issues such as ``theorems breaking down or parallel computing orientation'' \src{NBH/branch_snapshots/MEET-v31/DOSSIER.md:12}.
+\item \textbf{Provable or nothing.} ``a fancy heuristic and hypothetically gives me perfect accuracy but cannot be formally proved is as good as nothing to me'' \src{NBH/branch_snapshots/MEET-v31/DOSSIER.md:13}.
+\item \textbf{What parallel means.} ``Parallel computing is the final goal but it is not the main driver, the final methodology must be parallelizable enough so you could scale it to p values that you could not otherwise in sequential MCMC.'' ``We are not trying to parallelize over variables.'' The parallel axis is particles and islands: stack CPUs/GPUs, compute a large total number of particles \src{NBH/branch_snapshots/MEET-v31/DOSSIER.md:14}, \pos{1113}.
+\item \textbf{Local-to-global} is foundational; dropping it needs ``a very serious, irrefutable argument'' \src{NBH/branch_snapshots/MEET-v31/DOSSIER.md:15}.
+\item \textbf{Objectives, in order:} (1) accuracy in recovering the true posterior; (2) parallel scalability; (3) BVS selection accuracy. ``It must work well under correlated designs, unlike Song \& Liang (2015) split-and-merge'' \src{NBH/branch_snapshots/MEET-v31/DOSSIER.md:16}.
+\item \textbf{Theory standard.} The theory must reach every goal of the proposal (§5.1–5.4, §13.1) and extract ``until the last drop'' the provable information the method has, as Song \& Liang (2015) did for theirs \src{NBH/branch_snapshots/MEET-v31/DOSSIER.md:17}.
+\item \textbf{Re-runs.} If the final method is close to v3, the 2,400-fit study is not re-run now; ``it is re-run at the end only if needed''; empirical checks use at most 10–20 seeds \src{NBH/branch_snapshots/MEET-v31/DOSSIER.md:18}.
+\end{enumerate}
+
+The ordering of objectives came from Felipe's messages of 2026-11-03: precision of BVS selection ``is not the main target'', the primary target is ``precision in terms of recovering the true posterior'', and the project was born to ``pursue parallel computing'', unlike Song (2015) it ``needs to do well also in correlated data scenarios'' \pos{1020} \src{NBH/transcript/part_05_958-1107.md:321}. Felipe then clarified that the current theoretical goals are kept, and stated the long-range aim: ``the big picture goal is basically to retire MCMC for BVS, the next gen samplers must be parallel and with the same degree of theoretical guarantees'' \pos{1030} \src{NBH/transcript/part_05_958-1107.md:374}. Paper~1 is BVS; a second paper ``will deal with trees and not variable selection, but it is the same logic'' \pos{1020}.
+
+\subsection{Thesis, scope and venue}\label{sec:problem:thesis}
+
+The paper-1 thesis, written by the old HQ and accepted by Felipe \pos{1044} \src{NBH/START_HERE.md:9}:
+\begin{center}
+\emph{In split-and-merge, correlation breaks correctness. In local-to-global SMC, correlation costs only sequential depth and particles, never correctness.}
+\end{center}
+In the method this reads: \emph{local step} = exact enumeration of correlation-clustered blocks, all in parallel; \emph{merge} = the product start $\pi_0$ (used only as a starting point, never as the answer); \emph{correction} = the tempering bridge to the exact posterior; \emph{width} = particles and independent islands whose unbiased $\hat Z$ lets them be combined exactly \src{NBH/transcript/part_05_958-1107.md:450-456}. The thesis is scoped by the theorems themselves: the thesis remark \rid{TH22} is a remark only, and the results do not prove ``that the posterior itself remains statistically consistent under arbitrary correlation'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1283}; see \S\ref{sec:theory} for the regime map.
+
+\textbf{Venue and standard.} Felipe's strategy (2026-11-03): ``build something rigorous enough to make it to Biometrika. Down to Lean certificates. Then we will analyze what more challenging results can we go to'' \pos{1015} \src{NBH/transcript/part_05_958-1107.md:296}. Paper scope on parallelism: Felipe decided that paper~1 claims \emph{island-level} depth only \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:135}.
+
+\subsection{How the proposal's goals map to the approved theorem list}\label{sec:problem:coverage}
+
+The theorem meeting's coverage matrix records, for each binding proposal goal, the cards that deliver it \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:14-23}. The cards are in \S\ref{sec:theory}; proof status is per clause and is \emph{not} implied by this table.
+
+\begin{center}\small
+\begin{tabular}{@{}p{3.6cm}p{11.2cm}@{}}
+\toprule
+Proposal goal & Delivered by (as recorded in the coverage matrix) \\ \midrule
+§5.1 exactness under MH correction & \rid{TH01} M1(a) (cited; validity); \rid{TH12} S-KERNEL; \rid{TH10} S-TARGET; numerical fidelity = FW16 \\
+§5.2 SMC consistency & \rid{TH01} M1(a),(f),(i): cited fixed-data limits, finite-$R'$ bound, asymptotic with $R'_n$; \rid{TH17} S-POOL \\
+§5.3 weight stability (binding) & \rid{TH02} M2 (a)(b)(c) with scale disclosure; \rid{TH03} M3 ($d_\sigma$); \rid{TH07} M7; \rid{TH06} M6 (Lemma KL); \rid{TH20} S-LEAK; FW22 \\
+§5.4 PIP and joint-PIP error & \rid{TH01} M1 (e),(f),(g),(h); \rid{TH04} M4(b) \\
+§5.4 TV and KL & \rid{TH04} M4(a),(b),(d),(g); \rid{TH02} M2(a); \rid{TH06} M6; \rid{TH13} S-IDENT (C15-TV, C15-KL); masked final-estimate TV/KL = FW2 (not binding) \\
+§5.4 credible-interval coverage & \rid{TH13} S-IDENT C15-CI (posterior-content error); \rid{TH01} M1(g); frequentist coverage = FW1 \\
+§5.4 masked accuracy & \rid{TH04} M4(f) composed with \rid{TH05} M5 (b1-LH) \\
+§13.1 $E_\pi[h]\to$ truth (binding) & \rid{TH01} M1 (b),(e),(i); unbounded functionals = FW27; safeguard: if N1 (\rid{OB01}) fails, a narrower theorem ships and §13.1 escalates \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{agentnote}[objectives]
+Judge every proposed change or new theorem against GR1--GR8 in this order: does it serve objective (1) posterior accuracy, then (2) parallel scalability over particles/islands, then (3) selection accuracy; is it provable (GR3); does it keep the method close to v3.1 (GR1) and the 2,400-fit study valid (GR8)? A result that only improves selection accuracy is the lowest priority. The binding proposal goals are §5.3 and §13.1; losing either without an approved replacement must be escalated to Felipe, never silently dropped \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:16}, \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:23}.
+\end{agentnote}

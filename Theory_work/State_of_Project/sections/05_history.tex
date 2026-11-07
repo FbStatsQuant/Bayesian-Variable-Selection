@@ -1,0 +1,341 @@
+\section{Work done: the campaign, reversals and lessons}\label{sec:history}
+
+This section is the memory of the project. It records how the theory reached its present state, which claims were reversed or refuted and why, which routes are known dead ends, how results were checked, and how the work sits against the literature. Every reversal below was paid for with real compute and reviewer time; the loop must not pay for it again. Statuses of campaign-history IDs (three-digit IDs, ``Part B'' of the archive registry) are copied verbatim into the registry and rendered in Appendix~\ref{app:registry}; where a status is quoted here it is inside \verb|\status{}| and copied from \src{NBH/ID_REGISTRY.md}.
+
+\begin{agentnote}[how to use this section]
+Before you attack any target, (1) find it in the reversal entries (\S\ref{sec:history:reversals}) and in the do-not-retry table (\S\ref{sec:history:dead}); (2) check whether a campaign-era result already covers part of it (its three-digit ID, Appendix~\ref{app:registry}); (3) note which check level its inputs carry (\S\ref{sec:history:verif}). A route listed as refuted may be revisited only with a new idea that addresses the recorded reason for failure, and you must say so explicitly in your output. The old repository documents (\S\ref{sec:history:olddocs}) are \emph{not} current; never quote their statuses or targets as the present state.
+\end{agentnote}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{Timeline of the theory work}\label{sec:history:timeline}
+
+The theory went through five stages: a pre-campaign architecture run and proof waves on the old repository (October 2026); the campaign thread ``New BVS Headquarters'' (2026-11-02 to 04: cloud waves W1--W8, Astra reviews, API runs, literature phase); the method meeting MEET-v31; the theorem meeting MEET-THM; and the transfer of the archive into this repository, followed by Felipe's approval of the theorem list on 2026-11-07. Positions \pos{N} refer to the thread transcript \path{NBH/transcript/}.
+
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{When (UTC)} & \textbf{Stage} & \textbf{What happened (sources)} \\
+\midrule
+\endhead
+2026-10-19 → 10-20 & Pre-campaign architecture run & Fable 5.1-led council, review group, judge (Astra + two Sol) and lead's rulings produced 36 conjectures T01--T36 (22 core, 10 secondary, 4 optional), \path{THEORY.tex}, \path{THEOREM_MAP.md}, \path{DROPPED.md}; ``RUN COMPLETE 2026-10-20'' \src{Docs/Theory/STATUS.md:6-17}. \\
+Oct 2026 & Pre-campaign proof waves & Three proof waves locked 21 entries in \path{proofs/LOCKED_PROOFS.md}; review depth differs by wave (wave 3 same-family only, external review queued); none adopted \src{Docs/THEORY.md:13-21}. \\
+2026-10-28 & Frozen paper targets & HQ and Felipe froze the JRSS-B list (Thm 1 = T03, Prop 1 = T07, Thm 2 = T22+T27, Thm 3 = T37, Thm 4 = T21, Thm 5 = T38, Thm 6 = T26, Prop 2 = T12) and a Biometrika cut of 5; new conjectures T37--T39 added \src{Docs/THEORY_PRIORITIES.md:1-40}. State at campaign start: 39 items, 21 locked entries, none adopted \src{NBH/02b_theory_campaign_history.md:65}. \\
+11-02 14:40 → 15:54 & Phase 0 (\pos{0--180}) & Thread becomes the ``New HQ''; GH-PACK transfer lands on \texttt{main} as \texttt{c4ef0dc}; HQ reads the transferred theory: ``So the paper hinges on T37 → T38'' \pos{156}; literal T37 already failing on data \pos{178}; green light \pos{180} \src{NBH/01_overview_and_timeline.md:13-38}. \\
+11-02 15:54 → 20:36 & Phase 1 (\pos{180--800}): cloud waves W1--W8 & Wave 1 (5 Opus routines: W1-T37R, W1-T24G, W1-T38E, W1-T03R, W1-EXP), Waves 2--8 (verifications, p $\gg$ n family, PGD, T38 assembly, SHARE, repairs W6-FIXREV1/2, W7-SEP/PART/SEC, W8-SYNTH), plus subscription teams (F-*, O-*, A-REV1--4, L-LEAN, S-ELS, F-REFEREE) \src{NBH/01_overview_and_timeline.md:48-65}. Literal T37, H24 and the sharper T02 cutoff fall; T03♯ proved; ``tempering is needed'' refuted by W7-SEP \src{NBH/01_overview_and_timeline.md:70-89}. \\
+11-02 21:08 → 22:36 & Phase 2 (\pos{800--960}) & Astra re-reviews A-REV5--9; E-SPINE opens PR \#1 (spine correction, unmerged); T38-RECORD statement of record v3 and registry v2 (431 results, 26 conflicts, LOCKABLE 48 → 55); API credit set up; API wave (PXNGAP, N200, MASKZPIP, RESID, FAVIID, AUDIT, T26BUD, POS, VSTAB); LH-LOCK dies on the 64K output limit \src{NBH/01_overview_and_timeline.md:115-131}. \\
+11-02 22:36 → 11-03 16:34 & Phase 3 (\pos{960--1110}) & API results; literature phase LIT-SMC/MCMC/STAT/VENUE, then LIT-PAR; Felipe sets Biometrika + Lean \pos{1015} and re-aims the project at posterior accuracy and parallelism \pos{1020}, \pos{1030}; thesis sentence \pos{1044}; METH-AUDIT, THM-INV, THM-SYNTH; method decision v3.1 \pos{1107} \src{NBH/01_overview_and_timeline.md:137-160}. \\
+11-03 16:34 → 11-04 00:01 & Phase 4 (\pos{1110--1300}): method meeting MEET-v31 & Three seats (Fable CP, Fable CW, Astra), chair Opus; decisions MD01--MD13; block start kept (\rid{MD01}); 49 settings audited (\rid{DF25}); 9 inherent limitations, 17 obligations \src{NBH/01_overview_and_timeline.md:164-194}. \\
+11-04 00:01 → 15:16 & Phase 5 (\pos{1300--1676}): Round 0, Sol trial, N9 gate, theorem meeting MEET-THM, ABL-CONF & Fresh-eyes Fable and raw Astra (Round 0); Sol 1/Sol 2 reviews (73 findings, none changed a method decision); N9 kernel gate passes; theorem meeting closes at 05:27 with 8 main + 12 supplement cards, 27 future-work items, 6 drops \pos{1626}; HQ approves with one change (\rid{RL06}) \pos{1639}; ABL-CONF verdicts \pos{1669} \src{NBH/01_overview_and_timeline.md:198-223}. \\
+11-04 15:10 & Thread end & Felipe: ``I will take a look at the theorems and give you feedback / questions later'' \pos{1673}; the last three runs fail because the working directory had moved \src{NBH/01_overview_and_timeline.md:396-398}. \\
+2026-11-04 & Archive & Text-only archive \path{NBH/} written (transcript, 84 branch snapshots, registry) \src{NBH/README.md:12-16}. \\
+2026-11-07 & Approval & Felipe approves the paper-1 theorem list (M1--M8 = \rid{TH01}--\rid{TH08}, supplement cards \rid{TH09}--\rid{TH20}) as the current targets \approvedFB{} \src{Theory_work/State_of_Project/sources/approval_2026-11-07.md:3-5}; recorded as decision \rid{DEC01} (\S\ref{sec:open:decisions}). \\
+\bottomrule
+\end{xltabular}
+}
+
+\paragraph{How the theorem count evolved.} 8 main + about 11 lemmas + about 5 remarks (frozen Oct 28) → ``6--7 main results and 12--15 in the supplement'' \pos{957} → ``About 22 main theorems in total. Around 14 would go in paper 1'' \pos{1348} → final 8 main + 12 supplement cards \pos{1626}, \pos{1650} \src{NBH/03b_reasoning_and_traces.md:125-127}. The draft list entering the theorem meeting had 24 entries, not 19 as earlier summaries said \src{NBH/03b_reasoning_and_traces.md:366}.
+
+% ------------------------------------------------------------------------------------------------
+\subsection{The old repository theory documents and what supersedes them}\label{sec:history:olddocs}
+
+The repository still carries the pre-campaign theory documents. They were written by the previous HQ (``SMC\_BVS Headquarters'') and its GH-PACK crew, and they describe the state \emph{before} the campaign. \path{Docs/THEORY_PRIORITIES.md} says so itself: ``The proof statuses in this repo are unchanged since 2026-11-02. Any results of the theory campaign running elsewhere (D77) are not reflected here'' \src{Docs/THEORY_PRIORITIES.md:3}; the old HQ stopped theory work under D77 (``the theory campaign is being executed elsewhere'') \src{Docs/HQ/DECISIONS.md:231}, \src{Docs/PLAN.md:3}. Where the archive and an older repo document disagree, the archive's final-state files win.
+
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{4.2cm}@{}}
+\toprule
+\textbf{Old document} & \textbf{What it is / what is stale in it} & \textbf{Superseded by} \\
+\midrule
+\endhead
+\path{Docs/THEORY.md} & 2026-11-02 status draft of T01--T39 with the pre-campaign vocabulary PROVED-LOCKED / CONDITIONAL / PARTLY PROVED / CONJECTURED / DROPPED \src{Docs/THEORY.md:1-21}. T37, T38, T39 appear as conjectures; the campaign refuted literal T37 and restated T38 (\S\ref{sec:history:reversals}). & \S\ref{sec:theory}, \S\ref{sec:supp} (cards \rid{TH01}--\rid{TH22}); \path{NBH/02_theory.md}; campaign history \path{NBH/02b_theory_campaign_history.md}. \\
+\path{Docs/THEORY_PRIORITIES.md} & Frozen 2026-10-28 JRSS-B targets (Thm 1--6, Prop 1--2), Biometrika cut of 5, pursuit order ``T37 first'' \src{Docs/THEORY_PRIORITIES.md:27-40}. Its story ``consistent because the truth gets scored'' \src{Docs/THEORY_PRIORITIES.md:25} was replaced by posterior accuracy + parallelism (reversal H.7). Its n = 200 disclosure ``beta-min fails by about 100×'' \src{Docs/THEORY_PRIORITIES.md:66} is retired (\defid{RF105}). & Approved list M1--M8 + supplement \approvedFB; venue Biometrika + Lean \pos{1015}; objectives \src{NBH/START_HERE.md:9-14}. \\
+\path{Docs/PLAN.md} & Old HQ plan (2026-11-03): phases P4--P9, proof pursuit order T37 → T02/T03 → T22+T27 → T38 → (T24, T39) → bookkeeping; open decisions 1--17 \src{Docs/PLAN.md:92-145}. & Per-theorem HQ waves and charters (\S\ref{sec:open:plan}); pending decisions \rid{DEC01}--\rid{DEC14}. \\
+\path{Docs/Theory/theorems/}, \path{one_pagers/}, \path{THEOREM_MAP.md}, \path{THEORY.tex} & Pre-campaign conjecture files T01--T36 and one-pagers T01--T39 \src{README.md:31-34}. Shared definitions in \path{theorems/00_COMMON.md} (G, R, R1, SE, BM, EX-A, EX-S, CAL, $F(S)$, \dots) are still the definitions used by the campaign results \src{NBH/notation_and_conventions.md:447}. & Notation: Appendix~\ref{app:notation}; statements: the cards. \\
+\path{Docs/Theory/proofs/LOCKED_PROOFS.md} & Register of the 21 locked entries (PROVED-LOCKED); ``Locked is not adopted'' \src{Docs/THEORY.md:21}. Locked statuses are inherited verbatim into the cards (e.g. T12, T31(i) in M1). & Card statuses (\S\ref{sec:theory}). Adoption remains open (\rid{DEC12}). \\
+\path{Docs/Theory/DROPPED.md}, \path{RULINGS.md} & Candidates dropped during the pre-campaign run with reasons LF/UR/TR/UA/DM \src{Docs/Theory/DROPPED.md:1-3}; lead's rulings of 2026-10-20 on the judge's changes \src{Docs/Theory/RULINGS.md:1-3}. Archived as \texttt{RF106}--\texttt{RF118} and \texttt{RF120} (status ``DROPPED (LF)'' etc.). & Still valid as history: do not resurrect a dropped item without addressing its recorded reason. \\
+\path{Docs/Theory/FAILED_ATTEMPTS.md} & Operational log of the pre-campaign council (truncated agent replies, stalls, a DNS outage), not mathematics \src{Docs/Theory/FAILED_ATTEMPTS.md:1-8}. & Infrastructure rules (\S\ref{sec:open:infra}). \\
+\path{Docs/HQ/DECISIONS.md} & Old HQ decision log D1--D94 for the \emph{empirical} New Campaign \src{Docs/HQ/DECISIONS.md:1}; the empirical campaign completed at D94 \src{Docs/HQ/DECISIONS.md:294}. & Still the record for the empirical study (\S\ref{sec:empirics}); not a theory source. \\
+\bottomrule
+\end{xltabular}
+}
+
+\begin{divergence}[old docs vs final state: PR \#1 not merged]
+The spine correction (every ``the bridge/sampler is needed'' → ``the run must move off its start'') was written by E-SPINE as PR \#1 against \path{Docs/PLAN.md}, \path{Docs/THEORY.md}, \path{Docs/THEORY_PRIORITIES.md}, a new \path{Docs/Theory/AMENDMENTS_20261102.md} and the T27/T38/T39 one-pagers \src{NBH/04_code_and_files_index.md:138}. ``It isn't merged'' \pos{850}; the archive (its information cutoff) does not record its later fate \src{NBH/05_open_questions_and_next_steps.md:29}. Observed on 2026-11-07: still OPEN and unmerged \src{Theory_work/State_of_Project/sources/PR1_status_2026-11-07.json:1}; the merge-or-close decision is pending (\rid{DEC09}). Hence the files on \texttt{main} still carry the pre-correction wording. Decision \rid{DEC09}.
+\end{divergence}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{Reversals and refutations}\label{sec:history:reversals}
+
+Each entry: the claim as it was held, why it failed (counterexample or proof), what replaced it, and the IDs and sources. Entries H.1--H.8 are the ones the lead listed as mandatory; H.9--H.21 are the other major reversals found in the sources. The decision-log, dead-end and HQ-correction catalogues they come from are \src{NBH/03b_reasoning_and_traces.md:264-374}; the full per-result history is in \path{NBH/02b_theory_campaign_history.md}.
+
+\subsubsection*{H.1 · Literal T37 (truth dominance ⇒ greedy repair) is false → Theorem A}
+\begin{description}[leftmargin=1.3em,style=unboxed,font=\normalfont]
+\item[\textbf{Claim.}] T37 (\defid{CJ117}), filed 2026-10-28 as the new primary route for the paper's Thm 3: finite-$n$ truth dominance TD$(d,m)$ (\defid{CJ129}) implies that the production local search repairs from any near-truth centre \src{NBH/03b_reasoning_and_traces.md:268-269}.
+\item[\textbf{Failed.}] \defid{RF101} (literal T37): \status{REFUTED: TH198 (Prop1-TD) PROVED, SF VERIFIED (W3-VT37R), XF VERIFIED (A-REV2); d = 0 counterexample RF101 (CEX1) VERIFIED (W3-VT37R, reproduced by A-REV2)} \src{NBH/ID_REGISTRY.md:1003}. \defid{TH198} (Prop1-TD) shows TD$(d,m)$ is self-contradictory for $d\ge1$; at $d=0$ it fails without positivity. On the data, 1 of 2,394 fits was favourable and local search repaired 0 \src{NBH/03b_reasoning_and_traces.md:270}. HQ's first reading (``T37 as written proves the wrong mechanism'' \pos{178}) was itself refined: the original is false even at $d=0$ \src{NBH/03b_reasoning_and_traces.md:344}. Same family: \defid{RF165}.
+\item[\textbf{Replacement.}] \defid{TH199} (Theorem A, refined T37(i)): greedy repair holds exactly under TD$'$ with positivity (final form M5(a), \rid{TH05.a}: from a centre $C\in\mathrm{Lat}(S^\circ)$ under TD$'_{\infty}$, with $\ell\ge\tau(C)$ and a completed final scan) (\status{PROVED (W6-FIXREV2 candidate); SF VERIFIED (W3-VT37R, 720 designs 0 violations); XF VERIFIED* (A-REV2 A1-A4 and POS-repaired A5; original A5(a) ERROR); A-REV5 core VERIFIED, literal cap-free lattice wording ERROR}); \defid{TH201} (Theorem B (T37), union bound); \defid{TH204} (Theorem W, PGD) \src{NBH/03b_reasoning_and_traces.md:272}. Theorem A's abstract core (Lemma 0, A1--A4, concrete lattice forms) is sorry-free in Lean (\texttt{T37Greedy.lean}, \texttt{T37Lattice.lean}); the capped-scan certification interface is not yet formalised (\S\ref{sec:theory-lean}) \src{NBH/03_results_and_conclusions.md:144} and is a core of M5 (\rid{TH05}).
+\item[\textbf{Side refutations.}] Theorem W in region form does not cover the masked regime: \defid{RF176}, exact tie on masked LH with $c\ge2$, \defid{TH217} (conflict C15 \src{NBH/05_open_questions_and_next_steps.md:152}); Lemma 0(b) ``every unrepaired centre is a posterior miss'' \defid{RF167} (conflict C1; true on the study data, open in general as \defid{CJ320}; failures partitioned by \defid{TH200}); the two-way failure dichotomy \defid{RF168}; ``TD$'_P$ iff (L) and all $D_S$'' fails with exact ties \defid{RF169} (conflict C2) \src{NBH/03b_reasoning_and_traces.md:321}, \src{NBH/05_open_questions_and_next_steps.md:138-139}.
+\end{description}
+
+\subsubsection*{H.2 · H24 (uniform exit) is false in correlated designs → Theorem B (restated T24)}
+\begin{description}[leftmargin=1.3em,style=unboxed,font=\normalfont]
+\item[\textbf{Claim.}] T24 terminal repair with input H24 (\defid{CJ120}): a uniform one-round truth-scoring floor $a_n$ and exit bound $\eta_n$ with $(L+4)\eta_n\to0$; this was the input of T21 route (e); constant $1/31!$ \src{NBH/03b_reasoning_and_traces.md:274-275}.
+\item[\textbf{Failed.}] \defid{RF102} (H24): \status{REFUTED as a general asymptotic input (CE144 (CE1) COUNTEREXAMPLE, SF VERIFIED* W2-VT24G, XF VERIFIED* A-REV1; broad asymptotic wording GAP, narrow explicit sequence VERIFIED A-REV5)} \src{NBH/ID_REGISTRY.md:1004}. Counterexample \defid{CE144} (CE1): exit probability $\ge 0.39$ in every correlated scenario \src{NBH/03b_reasoning_and_traces.md:276}; explicit sequence \defid{CE145} ($p=\lceil n^{1/3}\rceil$). The factorial constant $c_n=1/(s_0+d+B+2)!$ was retired as useless (\defid{RF183}); \defid{RF182} records the retirement of H24 in the pre-campaign register.
+\item[\textbf{Replacement.}] \defid{TH218} (Theorem B, restated T24; polynomial constant $\sim 1/(B+3)$): \status{PROVED (candidate); SF VERIFIED* (W2-VT24G, after Lemma F' repair); XF VERIFIED after F' repair (A-REV1; statistical application GAP); XF VERIFIED finite feasible uninterrupted bound (A-REV5); vacuous at n=200} \src{NBH/ID_REGISTRY.md:366}; T21 route (e$'$) \defid{TH239}. Finite-$n$ Gibbs discovery stays future work \rid{CJ26} (``ThmB-T24 vacuous at $n=200$'') \src{NBH/05_open_questions_and_next_steps.md:72}.
+\item[\textbf{Side errors (Astra).}] Prop.~U (\defid{TH227}, conflict C3; repaired as Prop.~U$'$), Lemma S attainment (\defid{LM174}, conflict C4), E3(ii) without $q<1$ (\defid{RF188}, conflict C5), the limiting constant 0.52 → 0.51 (\defid{RF134}, conflict C6) \src{NBH/05_open_questions_and_next_steps.md:140-143}.
+\end{description}
+
+\subsubsection*{H.3 · A sharper T02 size cutoff is impossible → T03♯}
+\begin{description}[leftmargin=1.3em,style=unboxed,font=\normalfont]
+\item[\textbf{Claim.}] Replacing T02(i)'s geometric tail by the exact BB$(1,p)$ tail would cut the size cutoff to $m_n=s_0+O(s_0\log n/\log p)$ under G and R \src{NBH/03b_reasoning_and_traces.md:280-282}.
+\item[\textbf{Failed.}] \defid{RF103}: \status{REFUTED under G and R alone: CE111 (PropD-T03) COUNTEREXAMPLE, SF VERIFIED (W2-VT03R row 11), XF VERIFIED (A-REV2); TH126 (E3-T03) barrier VERIFIED*} \src{NBH/ID_REGISTRY.md:1005}. \defid{CE111}: duplicated columns satisfy G and R but force $m_n\ge\tfrac12\log_2 n-O(1)$ \src{NBH/ID_REGISTRY.md:1207}.
+\item[\textbf{Replacement.}] \defid{TH128} (T03♯) with the exact BB$(1,p)$ tail and weaker eigenvalue conditions \src{NBH/03b_reasoning_and_traces.md:283}; final card \rid{TH09} (S-T). \textbf{Onset correction:} the wave-1 disclosure ``thresholds start near $n = 1.2\cdot10^5$'' was wrong (\defid{RF123}); the proof's thresholds start near $n\approx2\cdot10^6$ \src{NBH/03b_reasoning_and_traces.md:346}. See \rid{FR07}.
+\end{description}
+
+\subsubsection*{H.4 · ``Tempering is needed'' is false → ``moving off the start is needed''}
+\begin{description}[leftmargin=1.3em,style=unboxed,font=\normalfont]
+\item[\textbf{Claim.}] The paper's conceptual spine (from the old HQ story): in the masked regime start-only discovery fails, so the tempering bridge/sampler is needed. W7-SEP was set up to prove it \src{NBH/03b_reasoning_and_traces.md:296-297}.
+\item[\textbf{Failed.}] \defid{RF104}: \status{REFUTED on LH by proof (TH388 (SEP-GU) Cor. GU-LH: COUNTEREXAMPLE to the task's claim (a); numerically 386/386 replicates); SF: none (A-REV7 pending then), XF: TH388 (SEP-GU) VERIFIED* (A-REV7), GAP in A-REV9 review} \src{NBH/ID_REGISTRY.md:1006}. On the paper's own masked family LH, one greedy search from the start mode reaches $S_0$ with probability tending to one (Cor.\ GU-LH of \defid{TH388}, Prop GU: exact Gram, isolated relevant set, SE on it, fixed signals; \status{PROVED (candidate; SF: none; XF: VERIFIED* (A-REV7) as greedy best-neighbour theorem, GAP as standalone no-LS0 growing-p theorem; A-REV9: GAP in that review, Lemma M not re-audited)} \src{NBH/ID_REGISTRY.md:536}; \defid{RF262}); duplicate row \defid{RF264}.
+\item[\textbf{Replacement.}] Felipe: ``Make all necessary changes then'' \pos{798}; E-SPINE rewrote every ``needed'' as ``the run must move off its start, and v3's moves do that''; edits went to PR \#1, not to \texttt{main}; T38/T39 conjecture files were not edited because of the Oct 28 freeze hashes \src{NBH/03b_reasoning_and_traces.md:96-101}. \textbf{PR \#1 is unmerged}: ``It isn't merged'' at \pos{850}, and still OPEN and unmerged when queried on 2026-11-07 \src{Theory_work/State_of_Project/sources/PR1_status_2026-11-07.json:1} (\rid{DEC09}). Final theory: \rid{TH06} (M6 · Theorem SEP + Lemma KL: start-only obstruction at the LH threshold, one-shot correction needs polynomially many draws; in the card the one-shot part is a second-moment ($L^2$) obstruction, not a high-probability error lower bound, and the final assembly is a proof sketch), built on \defid{TH380}, \defid{TH382} (SEP A/B) \src{NBH/03b_reasoning_and_traces.md:300}.
+\item[\textbf{Honest scope.}] ``masking on LH is a property of the start; no published BVS example has MCMC provably slow while SMC succeeds'' (\defid{TH401}, \defid{CJ290}) \src{NBH/03b_reasoning_and_traces.md:300}. The masked-start theorems ``repair a problem created by the start. They don't show the method beats MCMC'' \src{NBH/03_results_and_conclusions.md:323}.
+\end{description}
+
+\subsubsection*{H.5 · Pooled $\hat Z$ × pooled PIP is biased → islandwise identities → $\hat Z$-weighted PIP}
+\begin{description}[leftmargin=1.3em,style=unboxed,font=\normalfont]
+\item[\textbf{Claim.}] The pooled evidence times the pooled PIP is an unbiased island-combination estimator of $Z\cdot\mathrm{PIP}_j$ \src{NBH/03b_reasoning_and_traces.md:285-286}.
+\item[\textbf{Failed.}] \defid{RF226}: \status{REFUTED (Prop 2(c)); SF reproduced to 1e-58; XF VERIFIED (A-REV4)} \src{NBH/ID_REGISTRY.md:1128}. Exact bias by \defid{TH298} (Prop2(c)): \status{PROVED; SF VERIFIED/CORRECT (W5-LOCKBOOK, reproduced to 1e-58); XF VERIFIED (A-REV4, Owls 50-digit reproduction -0.1739741778 and -0.1317163950; A-REV6 VERIFIED)} \src{NBH/ID_REGISTRY.md:446}; numerical instance \defid{CE182}.
+\item[\textbf{Replacement.}] Islandwise form \defid{TH297} (Prop2 (a,b,d,e)), then the $\hat Z$-weighted PIP as primary (\rid{MD08}), because only it provably converges as islands are added (\defid{TH397}, Prop P) \src{NBH/03b_reasoning_and_traces.md:174-176}, \src{NBH/03b_reasoning_and_traces.md:288}.
+\item[\textbf{Related.}] ``$E[\hat Z\mid\text{completed}]=Z$'' is false (\defid{RF221}, CEX-guard; also \defid{RF227}); replaced by output-intersected statements $P(\mathcal{O},\cdot)$ via Lemma RO \src{NBH/ID_REGISTRY.md:1123}.
+\end{description}
+
+\subsubsection*{H.6 · The shared (common plug-in) noise-variance start is rejected}
+\begin{description}[leftmargin=1.3em,style=unboxed,font=\normalfont]
+\item[\textbf{Claim.}] F-DRAFT flagged a common plug-in $\sigma^2$ for the block tables as a possible cure for the $n=200$ dilution masking \pos{616}; O-MIX arm C and F-SIGMA developed it \src{NBH/03b_reasoning_and_traces.md:83-85}, \src{NBH/03b_reasoning_and_traces.md:311}.
+\item[\textbf{Failed.}] \defid{RF150}: \status{rejected (E-SPINE 2.2, W8-SYNTH 4.5); refuted by O-DILUTE 5, F-SIGMA Thm S6, API-RESID Step 0 on 2400 real fits (0/2400 favourable)} \src{NBH/ID_REGISTRY.md:1052}. ``Two agents independently found it floods the start in study-like designs'' \pos{796}; oracle $\sigma^2$ gives median $\log_{10}\pi_0(S_0)=-690$ \src{NBH/03b_reasoning_and_traces.md:85}. F-SIGMA: ``the exact cure for dilution under block orthogonality, but catastrophic in random designs'' (\defid{TH186}, \defid{TH188}: ``vacuous as an improvement'' over v3) \src{NBH/01_overview_and_timeline.md:84}; ranking ceiling for every common $\sigma^2$ \defid{TH176}; O-MIX \defid{TH183} (conflict C23, ``decision: rejected'').
+\item[\textbf{Replacement.}] The block start with its own $\sigma^2$-coupling decomposition, \rid{TH03} (M3) \src{NBH/03b_reasoning_and_traces.md:311}. Round 0 found independently that ``orthogonal blocks still interact through the shared noise variance $\sigma^2$'' \src{NBH/01_overview_and_timeline.md:213}; this coupling is a term of M2(a) and M3, not a reason to share $\sigma^2$ in the start.
+\end{description}
+\begin{uncertain}[was the rejection ruled by Felipe?]
+HQ recommended ``Common-$\sigma^2$ start: reject'' \pos{796} and the PR \#1 amendments record it; ``Whether Felipe explicitly ruled is UNCERTAIN'' \src{NBH/03b_reasoning_and_traces.md:84}. Recorded as \rid{DEC11}.
+\end{uncertain}
+
+\subsubsection*{H.7 · From HPM consistency to posterior accuracy and parallelism \pos{1020--1044}}
+\begin{description}[leftmargin=1.3em,style=unboxed,font=\normalfont]
+\item[\textbf{Claim.}] The pre-campaign story: ``What SMC-BVS reports is consistent because the truth gets \textbf{scored}, not because the sampler converges'' \src{Docs/THEORY_PRIORITIES.md:25}; the paper hinged on T37 → T38 (HPM consistency) \pos{156}.
+\item[\textbf{Reversed.}] Felipe \pos{1020}: ``precision of the BVS part is not the main target neither is consistency or any theoretical property as there are already good BVS algorithms that provide accuracy and have theoretical guarantees. [\ldots] primary target is precision in terms of recovering the true posterior and secondary BVS accuracy''; the motivation is parallel computing (Song 2015); \pos{1030} ``retire MCMC for BVS'' \src{NBH/03b_reasoning_and_traces.md:141-145}. HQ: ``The literature readers were assessing against the wrong target'' \pos{1025}.
+\item[\textbf{Replacement.}] Objectives in order: (1) accuracy in recovering the true posterior, (2) parallel scalability over particles and islands, not over variables \pos{1113}, (3) selection accuracy \src{NBH/START_HERE.md:9-13}; theory re-ranked (accuracy of $\hat Z$, PIPs, joint inclusion > cross-block cost > parallel cost > selection accuracy) \pos{1028}; thesis \pos{1044}: ``In split-and-merge, correlation breaks correctness. In local-to-global SMC, correlation costs only sequential depth and particles, never correctness.'' The ``never correctness'' half was recorded as known and the ``costs only depth'' half as open, per THM-INV; in the final list the thesis is only the scoped remark \rid{TH22}, whose fixed-data scope covers the unnormalised identities given a frozen calibration \pos{1107} \src{NBH/03b_reasoning_and_traces.md:144}. HPM consistency survives as M5 (\rid{TH05}), objective 3.
+\end{description}
+
+\subsubsection*{H.8 · One-shot weight stability (the draft's §5.3 mechanism) is false → bridge form (M2)}
+\begin{description}[leftmargin=1.3em,style=unboxed,font=\normalfont]
+\item[\textbf{Claim.}] Felipe's first draft, §5.3 Theorem 1 (\defid{CJ251}): weight stability of the merged start under weak cross-block dependence \src{NBH/03b_reasoning_and_traces.md:290-291}.
+\item[\textbf{Failed.}] \defid{RF256}: \status{REFUTED for v3 tables: d=d\_sigma>=0 under exact BO; chi2 can diverge at zero cross-block correlation (WS6(d)); F-DRAFT: false for v3 tables} \src{NBH/ID_REGISTRY.md:1158}. The discrepancy is driven by per-block $\sigma^2$ estimation (dilution), not by cross-block correlation \pos{616}; F-DRAFT's Lemma W2 was an ERROR with an explicit counterexample (A-REV4) \src{NBH/03b_reasoning_and_traces.md:292}. For the shipped method the literal one-shot form is refuted (OWS-WS6(d), OWS-WS7, ``VERIFIED WITH AMENDMENT'' by the cross-family inherited check) \src{NBH/03b_reasoning_and_traces.md:294}, \src{NBH/03_results_and_conclusions.md:20}.
+\item[\textbf{Replacement.}] \defid{TH362} (Theorem W under H-ORTH), \defid{TH350} (Theorem WS3; exact BO structure of $d$), the exact dilution form \defid{LM212}, and the final bridge-form package \rid{TH02} (M2): ``Weight stability: start-to-posterior distance controlled by cross-block correlation; bridge stable as correlation grows; the literal one-shot form proved false'' \pos{1650} (HQ's plain words; the card's bounds hold inside the matrix domain H-DOM, the general $D_{*}$ route is a proof sketch, and useful constants need $\varepsilon\lesssim n^{-1/2}/p$ on W). HQ ruling \rid{RL01} accepts the bridge form as the faithful reading of §5.3. A related HQ correction: ``§5.3 is empty'' was wrong (O-WSTAB had results under an orthogonal idealisation) \src{NBH/03b_reasoning_and_traces.md:367}.
+\end{description}
+
+\subsubsection*{H.9 · Weak-signal masking → dilution masking; the $n=200$ disclosure numbers}
+\begin{description}[leftmargin=1.3em,style=unboxed,font=\normalfont]
+\item[\textbf{Claim.}] W1-EXP explained the $n=200$ masking by weak signals \src{NBH/03b_reasoning_and_traces.md:317}.
+\item[\textbf{Failed.}] \defid{RF136}: \status{ERROR (W3-VEXP row 27 'evidence against'; W3-PXN Prop W); retired in favour of dilution} \src{NBH/ID_REGISTRY.md:1038}; also \defid{RF151}.
+\item[\textbf{Replacement.}] Dilution masking \defid{TH158} (PXN-W), the exact identity $-\log\pi_0(S_0)=V+C-\log A$ (\defid{TH172}, Cor.~E1; final form TH03.d) and the finite-$n$ formula \defid{TH177} (Prop.~D$'$, PROOF SKETCH) \src{NBH/03_results_and_conclusions.md:268-270}. Disclosure numbers corrected: ``beta-min fails by about 100×'' → at least 43× (\rid{RF105}: \status{CORRECTED (number retired; not a theorem). Treat as a disclosure fact: beta-min fails by at least 43x (E-SPINE 2.3)}); single ``favourable from $n\approx\ldots$'' thresholds withdrawn (\defid{RF160}: \status{withdrawn: sources disagree (O-DILUTE 590-730; W3-VEXP 800-1,600; W5-FAVIID 1,050-3,200); omit or attribute (W8-SYNTH 4.13; E-SPINE 2.3; T38\_STATEMENT D6 open)}) \src{NBH/ID_REGISTRY.md:1007}, \src{NBH/ID_REGISTRY.md:1062}.
+\end{description}
+
+\subsubsection*{H.10 · General LH locking is false; ``no masked theorem without LS0'' is retired}
+\begin{description}[leftmargin=1.3em,style=unboxed,font=\normalfont]
+\item[\textbf{Claim.}] BG3's premises hold on the whole LH family (LH-LOCK task, Fable) \src{NBH/03b_reasoning_and_traces.md:302-303}.
+\item[\textbf{Failed.}] \defid{RF208}: \status{ERROR (A-REV7): C2 fails e.g. g=4, rho=0.85, psi=0.5; reproduced by Claude (API-VSTAB)} \src{NBH/ID_REGISTRY.md:1110}. The LH-LOCK run also died on the 64K output limit and was not relaunched (its goal was refuted) \src{NBH/03b_reasoning_and_traces.md:250}.
+\item[\textbf{Replacement.}] Conditional fixed-$p$ implication \defid{TH261}; fixed-$p$ corollary on (CERT) \defid{TH276}; no-LS0 subfamily theorem \defid{TH275}; B2-LH under STAB-LH \defid{TH272} (\status{PROVED-UNDER STAB-LH (author, W5-B2ENV); XF VERIFIED* conditional theorem (A-REV7, eta\_n corrected); theorem-specific parts cross-checked by Claude (API-VSTAB)}) \src{NBH/ID_REGISTRY.md:420}; final: TH05.b2LH labelled no-LS0 variant of M5 \src{NBH/03b_reasoning_and_traces.md:306}. ``Without LS0 no masked-regime consistency theorem'' was retired (\defid{RF212}, \defid{RF218}, \defid{RF280}). STAB-LH is a genuine restriction (fails at $(\rho,\psi)=(0.85,0.5)$ for every $g$ tested) \src{NBH/02b_theory_campaign_history.md:7934}.
+\end{description}
+
+\subsubsection*{H.11 · Naive merge recovers the posterior: false}
+\begin{description}[leftmargin=1.3em,style=unboxed,font=\normalfont]
+\item[\textbf{Claim.}] Merging block fits (SHARE-M(b), F-DRAFT Prop NM) recovers the posterior / gives vanishing crossing temperature.
+\item[\textbf{Failed.}] \defid{RF203} (SHARE-M(b)): XF ERROR by A-REV3, retained by A-REV6 (quadratic-expansion remainder of order $n$; crossing temperature fails under BM-C) \src{NBH/ID_REGISTRY.md:1105}; \defid{RF265} (FD-NM) ERROR (A-REV4); the consolidated claim \defid{RF266} (K98): \status{KNOWN-FALSE (SHARE-M(b) XF ERROR A-REV3/A-REV6; FD-NM XF ERROR A-REV4; ADRAFT-PropM COUNTEREXAMPLE); DROP} \src{NBH/ID_REGISTRY.md:1168} → drop \rid{DR06}.
+\item[\textbf{Replacement.}] The surviving naive-merge counterexample \defid{CE208} (Prop M, Astra) \src{NBH/03b_reasoning_and_traces.md:325}; the assembly \defid{TH254} (SHARE-B2W4) carries \status{PROVED given inputs (W4-SHARE); SF VERIFIED (W5-B2ENV, L+5 rounds note); XF VERIFIED* (A-REV3: conditional inequality VERIFIED, exit-loss line ERROR)} \src{NBH/ID_REGISTRY.md:402} (conflict C17); M6 (\rid{TH06}) states why the merge alone fails.
+\end{description}
+
+\subsubsection*{H.12 · Rapid-mixing theorems ``apply to LH'': qualified}
+\begin{description}[leftmargin=1.3em,style=unboxed,font=\normalfont]
+\item[\textbf{Claim.}] API-POS: the rapid-mixing theorems (Yang--Wainwright--Jordan, Zhou--Yang--Vats--Roberts--Rosenthal) apply to the linked-hub family \pos{978}.
+\item[\textbf{Failed.}] LIT-MCMC \pos{1009}: their hypotheses fail for our target in 12 of 12 study-like data sets by a factor $\ge p^{0.87}$ (\rid{TH401}, Prop OB) \src{NBH/03b_reasoning_and_traces.md:319}. \defid{RF274}: \status{QUALIFIED, UNCERTAIN: API-POS headline 2 itself says the theorems apply "with their own priors" to LH-iid and headline 3 that "for the paper's own target, neither theorem applies as stated"; LIT-MCMC refutes only a sufficient condition (R > M), not fast mixing; THM-INV D1 and THM-SYNTH REPORT §4.1: say both; replaced by Prop OB (TH401) and the positioning paragraph (TH404)} \src{NBH/ID_REGISTRY.md:1176}; LIT-VENUE's ``poly-time recovery on LH also follows'' contradicted (\defid{RF275}).
+\item[\textbf{Lesson.}] ``Say which object a literature theorem is about: a sufficient condition failing is not slow mixing'' \src{NBH/02b_theory_campaign_history.md:17502}. The spectral-gap question for the $\varphi=1$ round stays open (\rid{CJ04}, \rid{CJ05}); positioning in \defid{TH404}.
+\end{description}
+
+\subsubsection*{H.13 · Parallelism and depth claims that were withdrawn}
+\begin{itemize}[leftmargin=1.3em]
+\item ``Methods with guarantees are sequential'' (\defid{RF268}): \status{REFUTED as a general statement (LIT-PAR §1 item 2: "FALSE in the work/depth sense. Do not print it."); replaced by CJ282 S-GAP (three-part form); THM-SYNTH REPORT §3.3 "Do not print"; counterexample candidate CE212} \src{NBH/ID_REGISTRY.md:1170}. The three-part gap claim \defid{CJ282} survives ``TRUE WITH QUALIFICATIONS''.
+\item ``Depth = number of stages $T$'' (\defid{RF269}): a round is $p+B+2$ sequential steps; replaced by island-level depth accounting in Prop D (M8, \rid{TH08}): the final card gives per-island depth $N_e(T+L+4)m$ and inventories calibration trajectories separately \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:407}; the archive registry's formula $(I+2)(T+L+4)(p+B+2)$ \src{NBH/ID_REGISTRY.md:1171} is an earlier form (see the depth factor in \S\ref{sec:method-islands}).
+\item ``Depth free of $N,H,R$'' (\defid{RF271}): struck for v3.1; paper 1 claims island-level depth only (\rid{MD06}) \src{NBH/ID_REGISTRY.md:1173}.
+\item ``More islands always helps'' (\defid{RF273}): false for the equal-weight PIP under a split of a fixed budget; replaced by stacking at fixed $N_e$ and the $\hat Z$-weighted primary PIP \src{NBH/ID_REGISTRY.md:1175}. Post-search HPM monotone in $R'$ without the extra search: false (\defid{RF272}).
+\item METH-AUDIT's ``bitwise on 3/3 designs'' (\defid{RF270}): an overclaim at report time (1/1 + smoke), re-established by HQ re-runs as 3/3 \src{NBH/ID_REGISTRY.md:1172}, \src{NBH/03b_reasoning_and_traces.md:354}.
+\item Rejected method changes with reasons (\pos{1107}): ``Splitting a fixed particle budget into many small islands. It provably makes the equal-weight PIP worse.''; ``Shortening calibration. It weakens three existing theorems.''; ``A new move kernel to cut the sequential cost per particle [\ldots] would break the move-path theorems.'' \src{NBH/03b_reasoning_and_traces.md:157}.
+\end{itemize}
+
+\subsubsection*{H.14 · Evidence and output glosses corrected}
+\begin{itemize}[leftmargin=1.3em]
+\item ``$\hat Z$ can only fail downward'' (\defid{RF233}): \status{PROVED false (PC1 claim 4, theorem-meeting phase); formal tail statement untouched; also owned by theme 12 (THM-SYNTH)} \src{NBH/ID_REGISTRY.md:1135}. Replacement wording (PC1 claim 4), to be used if the paper discusses the masked regime: ``Ẑ underestimates Z with high probability; the complementary rare event carries compensating overestimates of the same total mean; Markov caps them, P(Ẑ > 20Z) ≤ 0.05; the certificate Ẑ < Z\_𝒯 detects underestimation only.'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:173}.
+\item ``No useful upper bound on $Z$'' as an inherent limitation: Astra's analytic bound $Z\le C_n(2b_0+y^\top y/(n+1))^{-\nu}$ (\rid{OB17}) showed it is not inherent; then narrowed by HQ: ``What's actually proved is narrower than the documents said'' \pos{1512}; see \rid{LIM05}, \rid{LIM06} \src{NBH/03b_reasoning_and_traces.md:361}.
+\item ``PIP Monte Carlo SD $\le 0.01$'' is not a guarantee (resampling induces dependence); ``$\Theta(p^2)$ work'' holds only when $n=O(p)$; the local-search scan bound is wrong when $K>p/2$; the MPM threshold is $\tfrac12$, not $\tfrac13$ \src{NBH/03b_reasoning_and_traces.md:359-365}.
+\end{itemize}
+
+\subsubsection*{H.15 · The Song--Liang analytic separation was not obtained}
+\begin{description}[leftmargin=1.3em,style=unboxed,font=\normalfont]
+\item[\textbf{Claim.}] Split-and-merge (Song--Liang 2015) loses the masked true predictor whenever the random split separates the linked pair; LIT-PAR G4 sketch \src{NBH/ID_REGISTRY.md:1178}.
+\item[\textbf{Failed.}] \defid{RF276}: \status{CORRECTED by THM-SYNTH REPORT §1.6(a) / Theorem SL(e) (checked numerically, scripts/check\_lemmas.py; CE214) and THM-INV D10; replaced by Theorem SL (TH417, PROOF SKETCH); final: K97 -> FUTURE\_WORK FW21 (null-exclusion/FDR step NOT REPAIRED, W2PC1)}. LIT-PAR's 5/318 used a singleton masked variable ($g=1$) (\defid{CE214}); the draft clause ``$\mathrm{cov}(x_t,y)=0$ on isolation'' had a counterexample (\defid{RF267}); the crux of \defid{TH417} (PIP → 0 under the SL priors) was ``NOT REPAIRED (W2PC1)'' \src{NBH/02b_theory_campaign_history.md:17495}. ``The meeting couldn't get a sound proof that their split-and-merge loses true predictors under correlation'' \pos{1650}.
+\item[\textbf{Current state.}] Future work \rid{CJ21} (FW21, K97); numerical counterexample \defid{CE213} (20/20 for the exact posterior vs 5/318 for split-and-merge, LH-like design, $p=16$, whose masked variable is a singleton, i.e.\ group size 1, not the LH family; \rid{CE214}) cited as labelled evidence \rid{CL23} \src{NBH/03_results_and_conclusions.md:263}. Scout HQ pending: \rid{DEC02}, frontier \rid{FR06}.
+\end{description}
+
+\subsubsection*{H.16 · ``Stage count continuous in $\varepsilon$'' → sandwich + local constancy}
+The chair's Q5 asked for a stage count continuous in the cross-block correlation $\varepsilon$. PC1 found $T=3$ between the baseline counts $\{2,4\}$ at $\varepsilon=10^{-5}$ \pos{1621}; HQ accepted the stage-count content only as ``sandwich + local constancy at non-critical thresholds + continuous upper envelope'', with the integer count stated to jump \src{NBH/03b_reasoning_and_traces.md:236-237}, \src{NBH/03b_reasoning_and_traces.md:327}. Ruling \rid{RL05}; clauses TH02.b6, TH02.b8 and \rid{TH07}.
+
+\subsubsection*{H.17 · The statement of Theorem 5 (T38) and the LS0 decision}
+\begin{itemize}[leftmargin=1.3em]
+\item T38(b)-R (\defid{TH241}) was superseded by T38-(0) (\defid{TH281}) after A-REV1 (conflicts C8, C11); the implications (b1$'$) \defid{TH285} and (b2) \defid{TH286} stand as implications; the statement of record is \defid{TH290} (T38-v3, ``nobody reviewed v3 itself'') \src{NBH/05_open_questions_and_next_steps.md:145-148}, \src{NBH/ID_REGISTRY.md:438}.
+\item The iid-failure clause of (b1-LH) for $c\ge2$ (\defid{RF217}) is an ERROR (A-REV5) / GAP (A-REV8), replaced by a growth condition; LS0 consistency unaffected; the iid case is future work \rid{CJ10} \src{NBH/ID_REGISTRY.md:1119}. The main masked clause (b1-LH) with LS0 is \defid{TH287} (conflict C24).
+\item LS0 was adopted after the O-LS0 data check (0 of 2,394 HPMs changed) \src{NBH/03b_reasoning_and_traces.md:68-75}; the headline choice ``LS0 vs no-LS0'' (\defid{CJ215}) was resolved in the final list by TH05.b1LH (with LS0) and TH05.b2LH (labelled variant without LS0). LS0 existed ``only in a test export'' (\defid{CJ213}): still OPEN as an implementation premise (\rid{ENG02}).
+\item Stale CONJECTURE labels on T32(i) (\defid{CJ112}) and the cost corollary \defid{TH289} versus PROVED in W5-LOCKBOOK (same family only) (conflict C18; \defid{RF219}); same staleness for \defid{TH386} (C19) \src{NBH/05_open_questions_and_next_steps.md:155-156}.
+\end{itemize}
+
+\subsubsection*{H.18 · Backfit/residualised start: not adopted; its rationale withdrawn}
+\defid{CJ162}: \status{candidate, unproven (API-RESID: 'unproven candidate'; no theorem, no SMC evidence); rejected for paper 1, recorded as future work (MEET-v31 MINUTES item 1)} \src{NBH/ID_REGISTRY.md:832}. Final reasons: ``your ground rules; switching to backfit would mean a full re-run; no exact backfit sampler with a known normaliser exists, so its $\hat Z$ would not be unbiased; there is no theorem for it'' \pos{1480}. The earlier argument ``the backfit start could gain at most 6 of 2,400 fits'' ``doesn't follow'' (\defid{RF164}) \src{NBH/03b_reasoning_and_traces.md:89-94}.
+
+\subsubsection*{H.19 · The start ablation: a vacuous pre-registered rule → ABL-CONF}
+ABL-START's rule (inconclusive when evidences differ by $>1$ nat) made every design inconclusive because the prior start's evidence was poor; official verdict Outcome 2 (``keep, no speed claim'', \defid{CJ166}); HQ: ``That flaw in the rule is mine to own as HQ'' \pos{1280} \src{NBH/03b_reasoning_and_traces.md:161-166}. Replaced by ABL-CONF with a 75-minute cap and non-delivery as a cost failure: Claim 2 (prior start under-estimates log evidence) \status{LICENSED (pre-registered rule: holds on S1, S4, S5; median log Z error -13.4/-10.8/-5.7 nats); XF none} (\defid{CJ165}); Claim 1 (block start cheaper) \status{INCONCLUSIVE (pre-registered rule: S1 inconclusive, S4 holds\_nondeliv, S5 holds); XF none} (\defid{CJ164}) \src{NBH/ID_REGISTRY.md:834-835}. ``Below the block start on 12 of 12'' was replaced by the certified 10 of 12 \src{NBH/03b_reasoning_and_traces.md:228}.
+
+\subsubsection*{H.20 · p $\gg$ n: the GAP that every Astra reviewer flagged}
+The LH-iid p $\gg$ n form of Thm 5(b1) (\defid{TH160}) carries \status{PROVED (candidate); SF VERIFIED (W5-VMASK); XF GAP (A-REV3, A-REV6, A-REV8)} \src{NBH/ID_REGISTRY.md:308}; PXN-P6 (\defid{TH153}) is XF GAP (conflict C16). API-PXNGAP (\defid{TH161}) answers each objection with a specific lemma but has \status{PROVED (candidate, API-PXNGAP) given T22(i),(ii), T03, CONC, W7 Thm B; no SF/XF review in the archive} \src{NBH/ID_REGISTRY.md:309}. Its own report names two obstructions: the family needs $g\le B_n<2g$, so the study's groups of 5 are excluded; and superpolynomial $p$ is blocked because T03 is locked only for $p\le n^A$ \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:17-20}. Open as \rid{FR01}, \rid{FR02}.
+
+\subsubsection*{H.21 · Pre-campaign drops}
+The pre-campaign run dropped candidates as likely false, unworkable, trivial or with unreasonable assumptions (archived as \texttt{RF106}--\texttt{RF120}), e.g. T19 Tier A uniform coupling (hypotheses refuted on every dataset), T5(iii) additive band (false for slowly growing $p$), T11(ii) ``no ordering constant for $a=1$'' (counterexample), T22(iv) existence of usable upper bounds (P8 counterexample) \src{Docs/Theory/DROPPED.md:8-18}. Pre-campaign failed experiments (BFDR, expected-F1, GFM, block-MAP, \dots) carry ``do not retry as is'' (\texttt{RF119}) \src{NBH/ID_REGISTRY.md:1021}.
+
+\begin{agentnote}[HQ claims that were later corrected]
+The archive lists 34 claims made or relayed by HQ that were later corrected (R01--R34), including billing (routines bill the plan), the $c=1$ accuracy correction (SMC-BVS is behind SuSiE/SSL/horseshoe at $c=1$, best at $c=0.5$), the N9 sub-claim count, and the draft-list count \src{NBH/03b_reasoning_and_traces.md:339-374}. Lesson recorded there: headlines of the form ``$N/3$'' may overclaim; statuses written by an author for its own work are same-family or author-only unless a cross-family review is named \src{NBH/02b_theory_campaign_history.md:17502}.
+\end{agentnote}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{Do-not-retry table}\label{sec:history:dead}
+
+Routes that are refuted, vacuous or blocked, with the recorded reason. ``Retry'' means: re-attempt the same route without a new idea addressing the reason.
+
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.3cm}@{}}
+\toprule
+\textbf{Route} & \textbf{Why it fails (as recorded)} & \textbf{IDs / source} \\
+\midrule
+\endhead
+Literal truth dominance TD$(d,m)$ as a premise for greedy repair & Self-contradictory for $d\ge1$ on any design; false at $d=0$ without positivity; literal TD never holds in the study design & \rid{RF101}, \rid{CJ129} \src{NBH/03b_reasoning_and_traces.md:270} \\
+Theorem W region form as the general sufficient condition in the masked regime & Exact tie on masked LH with $c\ge2$; PGD$(\eta)$ fails for every $\eta>0$; use the lattice form & \rid{RF176}, \rid{TH217} \src{NBH/05_open_questions_and_next_steps.md:152} \\
+H24 / uniform exit $(L+4)\eta_n\to0$ & False in correlated designs (exit $\ge0.39$) & \rid{RF102}, \rid{CE144} \src{NBH/03b_reasoning_and_traces.md:276} \\
+Factorial constants $1/(s_0+d+B+2)!$ & Useless; replaced by polynomial constants & \rid{RF183} \src{NBH/ID_REGISTRY.md:1085} \\
+Sharper size cutoff from the BB$(1,p)$ tail under G and R alone & Duplicated-column counterexample & \rid{RF103}, \rid{CE111} \src{NBH/03b_reasoning_and_traces.md:282} \\
+Pooled $\hat Z$ × pooled PIP; conditioning on completion & Biased ($-\tfrac34\,$Cov); $E[\hat Z\mid\text{completed}]\neq Z$; state output-intersected events instead & \rid{RF226}, \rid{RF221} \src{NBH/03b_reasoning_and_traces.md:287} \\
+Weak-signal explanation of $n=200$ masking & Evidence against; the mechanism is $\sigma^2$-dilution & \rid{RF136} \src{NBH/03b_reasoning_and_traces.md:317} \\
+Common plug-in $\sigma^2$ start (cure for dilution) & Floods the start in study-like designs; catastrophic in random designs & \rid{RF150} \src{NBH/03b_reasoning_and_traces.md:311} \\
+Mixture of block starts (B-merge) & ``does nothing for dilution''; not in v3.1 & \defid{TH181} \src{NBH/03b_reasoning_and_traces.md:315} \\
+Backfit/residualised start for paper 1 & No exact sampler with a known normaliser (so $\hat Z$ not unbiased); no theorem; full re-run & \rid{CJ162} \src{NBH/03b_reasoning_and_traces.md:92} \\
+The draft's one-shot weight-stability mechanism for v3 tables & $d=d_\sigma\ge0$ under exact BO; $\chi^2$ can diverge at zero cross-block correlation & \rid{RF256}, \rid{CJ251} \src{NBH/ID_REGISTRY.md:1158} \\
+Proving ``tempering is needed'' (start-only fails in the masked regime) & One greedy search from the start mode suffices on LH & \rid{RF104}, \rid{RF262} \src{NBH/03b_reasoning_and_traces.md:298} \\
+General LH locking (BG3 premises on all of LH) & C2 fails, e.g. $g=4,\rho=0.85,\psi=0.5$ & \rid{RF208} \src{NBH/03b_reasoning_and_traces.md:304} \\
+Naive merge / SHARE-M(b) / vanishing crossing temperature & Quadratic remainder of order $n$; crossing temperature false under BM-C & \rid{RF203}, \rid{RF266} \src{NBH/02b_theory_campaign_history.md:7931} \\
+Set analogue of T22(iv); ``start mass + bridge mass + exit control ⇒ delivery'' & Both false (C0, C1 counterexamples; extinction 0.48/0.995 at $N=10^5/10^6$) & \defid{RF198}, \defid{RF199} \src{NBH/02b_theory_campaign_history.md:7927} \\
+Lattice-indicator potentials to certify delivery & Cannot certify delivery at any budget; the right potential is the indicator of a closed region & \defid{TH273} \src{NBH/02b_theory_campaign_history.md:7935} \\
+Expecting any local method (LS0, route (b2), T39) to succeed on posterior-barrier designs & Barrier designs are a ceiling for every local method; keep R/SE-type hypotheses & \defid{CE169}, \defid{TH252} \src{NBH/02b_theory_campaign_history.md:7936} \\
+Rapid-mixing theorems (YWJ, ZYVR) as a certificate for our target & Their sufficient condition $R>M$ fails 12/12 by $\ge p^{0.87}$; a failed sufficient condition is not slow mixing & \rid{RF274}, \rid{TH401} \src{NBH/02b_theory_campaign_history.md:17492} \\
+Printing ``methods with guarantees are sequential'', ``first parallel exact BVS'', ``depth $=T$'' & False in the work/depth sense; wordings never to print & \rid{RF268}, \rid{RF269} \src{NBH/02b_theory_campaign_history.md:17486} \\
+Parallel-within-particle moves (to cut depth) & A workhorse kernel change that breaks the Gibbs-path theorems; rejected & \rid{RF269} \src{NBH/02b_theory_campaign_history.md:17487} \\
+Song--Liang separation via ``$\mathrm{cov}(x_t,y)=0$ on isolation'' or the numerical design with a singleton masked variable (group size 1, not the g-prior's $g$) & Counterexample to the clause; the 5/318 used group size 1; null-BF/FDR step not repaired & \rid{RF267}, \rid{CE214}, \rid{TH417} \src{NBH/02b_theory_campaign_history.md:17495} \\
+Union bound over Hamming balls for $\Pi(X)$ & Failed route; the $\Pi(X)$ upper bound stays OPEN & \defid{RF249}, \defid{CJ230} \src{NBH/ID_REGISTRY.md:1151} \\
+A-priori $\varepsilon$ of VAL-FP at study budgets & Vacuous; measure by replay & \defid{RF250} \src{NBH/ID_REGISTRY.md:1152} \\
+Making the $(D_S)$ margin non-vacuous at $n=200$ by a worst-case union over the family & The $(2A+1)\log n$ penalty is intrinsic to the worst-case union; a path-wise bound would be needed & \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:128-131} \\
+Covering the study's groups of 5 with the LH family & With $2g\le B$ next-fit packs two groups per block; by PXN Prop.~Q (a sketch) the linked pair is co-blocked and masking disappears & \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:125-127} \\
+Extending the PXNGAP route to superpolynomial $p$ & T03 is locked for $p\le n^A$ only, so the posterior half is unavailable & \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:123-124} \\
+Literal ``stage count continuous in $\varepsilon$'' & The count is an integer step function ($T=3$ between $\{2,4\}$) & \rid{RL05} \src{NBH/03b_reasoning_and_traces.md:327} \\
+Pre-registered rules with relative evidence gates & The ABL-START rule was vacuous; use absolute gates and caps & \rid{CJ166} \src{NBH/03b_reasoning_and_traces.md:323} \\
+\bottomrule
+\end{xltabular}
+}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{Verification infrastructure and what each check level means}\label{sec:history:verif}
+
+\paragraph{Status words of authors.} The campaign protocol allowed only: ``PROVED (a complete proof you checked line by line), PROOF SKETCH (the crux is identified and the steps are plausible, but not every step is verified), COUNTEREXAMPLE (with a reproducible script or explicit construction), CONJECTURE, and OPEN. Never upgrade a status. A proof here is a \textbf{candidate}: it is not reviewed and not adopted. Review happens later, by other model families'' \src{NBH/branch_snapshots/campaign/PROTOCOL.md:19}. In the theorem meeting a seat's own argument is ``PROVED (by this seat, unchecked)'' until a check is filed \src{NBH/branch_snapshots/MEET-THM/DOSSIER.md:104}. Pre-campaign ``PROVED-LOCKED'' results are same-family only with ``external review queued'' \src{NBH/03_results_and_conclusions.md:23}. Definitions of every word: Appendix~\ref{app:glossary}.
+
+\paragraph{Check levels.} \textbf{SF} = same-family check (Claude checking Claude); \textbf{XF} = cross-family check (Astra A-REV1--9; PC1 = gpt-6.1-sol on Seats A, B, D; PC2 = Opus 5.5 on Seat C, which was Astra; CHK = PC1 on inherited proofs) \src{NBH/03_results_and_conclusions.md:7}. Statement checks (TRUE-AS-WRITTEN, COUNTEREXAMPLE, NEEDS-HYPOTHESIS, AMBIGUOUS; design and route verdicts) are \emph{not} proofs: ``Your verdicts are about statement sanity; a TRUE-AS-WRITTEN is not a proof'' \src{NBH/branch_snapshots/MEET-THM/CHECK_W1_BRIEF.md:17-23}. \textbf{Lean} certifies finite abstract cores only. \textbf{Adoption/locking} is Felipe's decision and nothing has been adopted \src{NBH/05_open_questions_and_next_steps.md:251}. External human review of the proofs has not happened \src{NBH/03_results_and_conclusions.md:340}.
+
+\paragraph{Astra cross-family reviews (2026-11-02).} \src{NBH/03b_reasoning_and_traces.md:384-394}
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{4.6cm}@{}}
+\toprule
+\textbf{Review} & \textbf{Scope and headline (from the file)} & \textbf{Main IDs affected} \\
+\midrule
+\endhead
+A-REV1 & Theorem B (restated T24), T38(b)-R, D2, E3, Lemma S, Prop U, IND-T, CE1; the finite Gibbs-path bound ``survives independent review after the F$'$ repair''; errors in Prop U, Lemma S attainment, E3(ii), Lemma U's limit & \rid{TH218}, \rid{TH241}, \rid{RF102} \\
+A-REV2 & T03♯, refined T37 (Theorem A), EXP$'$: package GAP with T03♯ conditional VERIFIED; constant 0.52 → 0.51; exact-ties edge case & \rid{TH128}, \rid{TH199}, \rid{RF101} \\
+A-REV3 & W3-PXN (p $\gg$ n), W4-SHARE, Prop M: ``GAP as written''; M(b) ERROR & \rid{TH153}, \rid{TH254}, \rid{RF203} \\
+A-REV4 & W2-T26, Lemma RO, F-DRAFT, A-DRAFT: ``Overall: GAP''; F-DRAFT ``two explicit false formulas''; pooled bias VERIFIED & \rid{TH298}, \rid{RF226}, \rid{RF265}, \rid{CE208} \\
+A-REV5 & Re-review of W6 repairs: principal repairs sound within their restrictions; package not VERIFIED & downstream E3, R2, PXN; T38 iid growth \\
+A-REV6 & Repairs of A-REV3/4 findings; does W7-PART close p $\gg$ n: ``Only the restricted recovery premise; not the full result'' & \defid{TH253}, \rid{RF203}, \rid{RF265} \\
+A-REV7 & No-LS0 masked routes: B2-LH VERIFIED conditional on STAB-LH; ERROR: unconditional LH locking; ``DOM is void when $c=1$'' ERROR & \rid{TH272}, \rid{TH261}, \rid{RF208}, \rid{TH388} \\
+A-REV8 & LS0 masked route: conditional consistency of Thm 5(b1) VERIFIED, ``a theorem about v3 plus LS0''; p $\gg$ n interface flagged & \rid{TH290}, \rid{TH160}, \rid{TH153} \\
+A-REV9 & Certificates, masked PIP/evidence variance, dilution, separation, partition, stages, weight stability: restricted affirmative verdicts; certificate card repaired & \rid{TH172}, \rid{TH362}, \rid{TH380}, \rid{TH382} \\
+\bottomrule
+\end{xltabular}
+}
+HQ's summary: Astra ``is the most valuable check in the campaign'' \pos{1238}; it caught errors after Claude passed them; weaknesses: ``Many of its GAP verdicts concern conventions or wording'', and one self-review \src{NBH/03b_reasoning_and_traces.md:396}. Standing caveat: repairs of Claude results found wrong by Astra ``have not been re-checked by Astra'' unless covered by A-REV5--9 \src{NBH/05_open_questions_and_next_steps.md:165}.
+
+\paragraph{Sol (GPT-6.1) checks.} Method meeting: Sol 1 checked 60 claims (45 hold, 19 of them with corrections; 7 false; 6 gaps; 2 uncheckable); Sol 2 audit 13 findings (4 decision-level); dispositions in \path{MEET-v31/AMENDMENT_HQ_01.md}. Theorem meeting: W1\_PC1 (Sol) COUNTEREXAMPLE 11, NEEDS-HYPOTHESIS 25, AMBIGUOUS 12, TRUE-AS-WRITTEN 53; W2\_PC1 TRUE-AS-WRITTEN 70, COUNTEREXAMPLE 9, NEEDS-HYPOTHESIS 8, AMBIGUOUS 4; PC2 (Opus) on Seat C: W1\_PC2 54 of 56 clauses TRUE-AS-WRITTEN (2 AMBIGUOUS), W2\_PC2 29 of 29; ``Two rounds of proof checks by a different model family found 20 counterexamples in draft statements, and all were repaired or removed'' \pos{1650}; CHK\_INHERITED: OWS-WS3/WS4 VERIFIED, WS6(d), WS7, N9 VERIFIED WITH AMENDMENT; close audit ``PASS WITH CORRECTIONS'' \src{NBH/03b_reasoning_and_traces.md:400-408}.
+
+\paragraph{Registry and LOCKABLE.} LOCKABLE\_v2 rule (strict): ``author status \textbf{PROVED} (not PROVED-UNDER) \textbf{and} same-family verdict VERIFIED (or VERIFIED after repair) \textbf{and} cross-family verdict VERIFIED (or VERIFIED with qualification)''; counts: 55 strict candidates, 3 repaired by W6 but not re-reviewed, 43 same-family-only, 43 cross-family-only, 6 counterexamples confirmed by both, 5 conditional implications verified by both; ``This file lists candidates; it does not adopt, lock or upgrade anything'' \src{NBH/branch_snapshots/T38-RECORD/LOCKABLE_v2.md:3-5}. REGISTRY\_v2: 431 named results (PROVED 256, PROVED-UNDER 51, PROOF SKETCH 42, COUNTEREXAMPLE 34, CONJECTURE 29, OPEN 9, REFEREE 10; XF-VERIFIED 118, XF-ADVERSE 46, SF-VERIFIED only 53, UNVERIFIED 192) \src{NBH/03_results_and_conclusions.md:136}. The registrar index at the theorem meeting: 166 cited IDs, 51 checked only by their author, 9 same-family only, 4 Astra only \src{NBH/01_overview_and_timeline.md:214}.
+
+\paragraph{Lean library.} \path{L-LEAN}: \texttt{lake build} green, 0 errors, 0 \texttt{sorry}, 101 declarations; \texttt{\#print axioms} shows only \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound} for the 56 audited declarations. Sorry-free targets: T21 (C1) (\defid{TH418}, \defid{TH420}, \defid{TH422}), T07 (\defid{TH423}; \defid{TH106}), T11(iii) (\defid{TH109}), T37(i)/Theorem A (\rid{TH199}). T12(i.a) is partial: ``The resample--move recursion \texttt{hstep} is an explicit hypothesis''. Fidelity checks (Fable, Astra round 2) GREEN for statement fidelity only. ``The Lean files are abstract finite versions. They do not certify M1--M8'' \src{NBH/03_results_and_conclusions.md:143-147}. No main card is Lean-certified as a whole \src{NBH/03_results_and_conclusions.md:22}.
+
+\paragraph{Headline campaign-era results behind the cards.} Statuses as abridged by the source \src{NBH/03_results_and_conclusions.md:119-131}:
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{ID (native)} & \textbf{Status (exact words, abridged by the registry)} \\
+\midrule
+\endhead
+\defid{TH115} (T21 composition) & \status{PROVED-LOCKED (C1 and routes (a)-(f), wave 2) + CONDITIONAL on open hypotheses: H24 (route (e)) and the route-specific occurrence / exposure conditions; not adopted} \\
+\rid{TH422} (t21\_C1; Lean) & \status{Lean: sorry-free (lake build green, 0 sorry); Fable 5.1 GREEN; Astra r1 GREEN (statement fidelity only)} \\
+\defid{TH334} (Theorem N200) & \status{PROVED (elementary, every n); author-only (no SF, no XF); Pi(X) upper bound OPEN} \\
+\rid{TH106} (T07) & \status{PROVED-LOCKED (all parts, wave 3); not adopted} \\
+\rid{TH109} (T11; T11(iii)) & \status{PARTLY PROVED: (iii) PROVED-LOCKED (wave 1); (i), (ii), (iv)-(vii) not locked (CONJECTURED)} \\
+\rid{TH199} (Theorem A) & \status{PROVED (W6-FIXREV2 candidate); SF VERIFIED (W3-VT37R, 720 designs 0 violations); XF VERIFIED* (A-REV2 A1-A4 and POS-repaired A5; original A5(a) ERROR)} \\
+\defid{LM189} (LS-score) & \status{PROVED; SF VERIFIED (W5-VMASK row 20); XF VERIFIED* (A-REV8 …; move count 'at most Phi(C0)-1' ERROR at C0=S0, repaired to max\{Phi(C0)-1,0\})} \\
+\defid{LM204} (Lemma M) & \status{PROVED; SF VERIFIED (O-VCERT: 0 violations in 476,160 exhaustive pairs); XF VERIFIED in exact arithmetic (A-REV9); LOCKABLE\_v2} \\
+\defid{TH394} (Prop W, concurrent islands) & \status{PROVED (code reading; executed check …)}; author-only; executed on smoke + 3/3 designs \\
+\defid{TH395} (Prop W-cal) & \status{PROVED (code reading only; not executed)}; still not executed at MEET-v31 close \\
+\bottomrule
+\end{xltabular}
+}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{Literature positioning, novelty and venue}\label{sec:history:lit}
+
+The literature phase (LIT-SMC, LIT-MCMC, LIT-STAT, LIT-VENUE, then LIT-PAR) ran on the API credit \pos{985--1009}, \pos{1072}. Its positions, as the sources state them \src{NBH/03_results_and_conclusions.md:313-323}:
+
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.8cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Work} & \textbf{Position of the project} \\
+\midrule
+\endhead
+Rossell 2022 & T03♯ is ``a modest extension''; ``The bound $P(S^\dagger\neq S_0)\le 2E[1-\pi(S_0)]$ is his Proposition 1 word for word, so Thm 4 and Thm 5 must credit him'' (\rid{CL13}; \defid{RF130}); ours is the cap $K$ of order $n$ under BB$(1,p)$. \\
+Štefankovič--Vempala--Vigoda 2009 & The greedy ESS grid as the shortest valid grid (O-STAGES Theorem G(i)) ``is already in the literature''; cite as known (\rid{CL05}); the G(ii) sandwich is a routine v3-specific extension. \\
+Whiteley--Lee--Heine 2016; Dai--Heng--Jacob--Whiteley 2022 & Frozen-run unbiasedness, $\hat Z$-weighted pooling of independent islands and freeze-the-adaptive-run advice are standard and must be cited (\rid{CL03}, \rid{CL11}); the non-standard items are the negatives (pooled × pooled is not an identity; $E[\hat Z\mid\text{completed}]\neq Z$). \\
+Song--Liang 2015 (split-and-merge) & Model for ``how much theory to get out of a method'' \pos{1150}; their results are about selection, not the posterior; Condition 5 / Cor 2 violated under cancelling correlated partners; the analytic separation is not proved (\rid{CJ21}); the paper ``compares, and does not claim to exceed, Thm 1, Thm 2 and Thm 4''; 5/318 is labelled evidence (\rid{CL23}). \\
+Yang--Wainwright--Jordan 2016; Zhou--Yang--Vats--\allowbreak Roberts--\allowbreak Rosenthal 2022 & Rapid mixing under their priors covers LH-like designs; their condition $R>M$ fails for our target at study scale (12/12, factor $\ge p^{0.87}$; \rid{TH401}); ``No published BVS example has MCMC provably slow while tempering or SMC succeeds'' (open, \rid{CJ290}); the masked-start theorems ``repair a problem created by the start. They don't show the method beats MCMC'' (\rid{CL14}). \\
+Hou--Wang--Atchadé (arXiv:2407.20580) & Never claim ``first finite-$n$'' (\rid{CL15}). \\
+Lindsten et al.\ 2017 (D\&C-SMC) & ``closest conceptual antecedent''; ``The general local-to-global idea already exists'' \pos{616}; pitch ``when and why a scored-HPM SMC succeeds'', not ``local-to-global correction''. \\
+Schäfer--Chopin 2013; Papaspiliopoulos--Rossell 2017; Syed et al.\ 2024 & Ancestor of the method (no theorems); exact enumeration of correlation-clustered blocks (\rid{CL10}); dense-schedule barrier analogue (\rid{CL06}). \\
+Barbieri--Berger 2004 & Cited lemmas K60, K61 (``HPM/MPM facts'') used by M5 and S-TARGET (\rid{CL12}) \src{NBH/02_theory.md:2085}. LIT-STAT: the HPM is generally \emph{not} the optimal predictive model; say ``Bayes rule for 0--1 support loss (exact recovery)'' and note that under predictive loss the MPM can be optimal; the thresholding-at-$\tfrac12$ proof behind T07(ii)(b) is standard and cited \src{NBH/branch_snapshots/LIT-STAT/REPORT.md:137-140}. \\
+\bottomrule
+\end{xltabular}
+}
+
+\paragraph{What is genuinely ours (LIT-VENUE, LIT-SMC).} (i) the exact, algorithm-agnostic finite-$n$ split of the reported-model error into a posterior-miss term and a search-miss term measurable per run (Theorem N200 / T21 composition); (ii) the masked-start lower bound paired with a repair theorem; (iii) consistency of an SMC-BVS output at all (``No paper in the sample proves anything about the output of an SMC sampler for BVS''); (iv) run certificates; (v) Lean-checked finite cores. Polynomial-time recovery on LH already follows for YWJ/ZYVR priors: ``T38(c), `polynomial cost', is not a selling point on its own'' \src{NBH/03_results_and_conclusions.md:325}. LIT-PAR: ``The gap is real'' (no parallel BVS method with a theorem combines an exact model posterior with unbiased $\hat Z$, communication-free parallel computation and a proved depth bound under correlation), with the qualification never to print ``methods with guarantees are sequential'' (\rid{CJ282}, \rid{RF268}) \src{NBH/03_results_and_conclusions.md:264}.
+
+\paragraph{Venue.} Before the literature phase HQ judged ``JRSS-B is realistic, probably after one major revision'' \pos{933}. LIT-VENUE: ``The package realistically supports Biometrika, the 5-result cut, only if the referee's major point is met: Thm 5(b) for the algorithm as run, with the transition shown at growing $n$ [\ldots] JRSS-B is a stretch. AoS is not realistic''; unmet expectations: real-data analyses, head-to-head comparisons (PARNI, MAdaSub, TGS, SuSiE/SSL), simulations at growing $n$, a main theorem not tied to LH, external human review \src{NBH/03_results_and_conclusions.md:330}. Felipe's decision \pos{1015}: ``Let's try to build something rigorous enough to make it to Biometrika. Down to Lean certificates. Then we will analyze what more challenging results can we go to.'' Paper 1 = Biometrika, paper 2 = trees \src{NBH/03_results_and_conclusions.md:331}.
+\begin{uncertain}[venue view shifted]
+HQ's view moved from ``JRSS-B realistic'' \pos{933} to ``JRSS-B a stretch, Biometrika conditional'' \pos{1009}; the final state carries the later one, with Biometrika as the target by Felipe's instruction \src{NBH/03_results_and_conclusions.md:332}.
+\end{uncertain}
+
+\paragraph{Maturity and confidence (the sources' own words).} At \pos{929}: ``about two-thirds to three-quarters of what a strong JRSS-B submission needs''. After the meetings the list is complete as a list, but ``Proof maturity is lower than list completeness'' \src{NBH/03_results_and_conclusions.md:305-308}. High confidence: the T21 composition / N200 inequality and its Lean core, the 2,400-fit decomposition, LS0 neutrality, N9. Medium: the masked-regime theorems on a constructed family; p $\gg$ n only via API-PXNGAP. Low or open: N1, GUARD-W, N3, floating point, masked two-sided $\hat Z$, finite-$n$ $\Pi(X)$ bound, delivery, exponential $p$ \src{NBH/03_results_and_conclusions.md:336-338}. The hostile-referee simulation F-REFEREE recommended ``major revision'' (8 major points; registry rows \defid{CJ303}--\defid{CJ306}) \src{NBH/03b_reasoning_and_traces.md:417}.

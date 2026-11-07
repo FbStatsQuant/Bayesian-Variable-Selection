@@ -1,0 +1,574 @@
+\section{Empirical results}\label{sec:empirics}
+% Agent E. Every table marked "Generated" is produced by scripts/make_tables.py from the cited file in Results/;
+% re-run it with `python scripts/make_tables.py` (deterministic; prints every table and its consistency checks).
+
+This section reports every empirical result of the project: the New Campaign study (2026-10-28 to 2026-11-03) at
+low $p$ (exact posterior available) and at $p\gg n$ (truth only), and the numerical companions run during the theory
+campaign (``New BVS Headquarters'', 2026-11-02 to 04). It adds no analysis: every number is either generated from a
+machine-readable file in \path{Results/} by \texttt{scripts/make\_tables.py} (tables marked ``Generated''), or
+transcribed with its source. The empirical phase is closed: ``the New Campaign's empirical phase is COMPLETE (HQ D94)''
+\src{Docs/HQ/STATUS.md:3}. Key facts get stable IDs \texttt{EMP01}--\texttt{EMP27} (registry rows in
+\path{registry/empirics.tsv}); \S\ref{sec:emp-theory} maps them to the theory IDs they inform.
+
+\begin{plain}[how to read the numbers]
+A fit ``recovers'' when its selected set equals the true support $S_0$ exactly; failed or stopped fits count as
+misses \src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:3}. At low $p$ the SMC output is compared with
+the exact posterior of the \emph{same} model (full enumeration of all $2^p$ models); at $p\gg n$ ``the true Z, exact HPM
+and exact PIPs are not computed'' (D22) \src{Docs/HQ/DECISIONS.md:34}, so only selection against the truth is reported
+\src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:24}. The reports' verdict scale (support / contradict /
+silent) is about what one $n=200$ design can show; ``failure of a finite-n \emph{premise} of a conditional statement is
+reported as such, and is \textbf{not} a contradiction of the implication''
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:14-17}.
+\end{plain}
+
+% =====================================================================================================
+\subsection{Study design}\label{sec:emp-design}
+
+\paragraph{Data generator (both regimes).} $n=200$; $X$ is drawn as $N(0,\Sigma_s)$ rows (``X first via chol, then
+noise''), column-standardised (\texttt{scale}, sd with $n-1$), $\varepsilon\sim N(0,1)$, and $Y_c = c\,X\beta+\varepsilon$
+for the stored scales; only $c\in\{1,0.5\}$ (\texttt{c100}, \texttt{c050}) are fitted
+\src{Scripts/Data_generators/gen_prod_data.R:28-40} \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/lowp/LOWP_SPEC.md:13-17}
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/lowp/LOWP_SPEC.md:70}. The scenario covariances are built on
+\textbf{groups of 5 consecutive predictors} (\texttt{group <-} \texttt{ceiling(seq\_len(p)/5)}), $H=\mathbf 1\{\text{same group}\}$
+\src{Scripts/Data_generators/gen_dev_data.R:18-30}:
+
+\begin{center}\small
+\begin{tabular}{ll}
+\toprule
+scenario & $\Sigma_s$ (verbatim construction, \path{gen_dev_data.R:23-29}) \\
+\midrule
+S1 & $I$ \\
+S2 & $0.5^{|j-k|}$ (AR(1)) \\
+S3 & $0.7H+0.3I$ (equicorrelation 0.7 within each group of 5) \\
+S4 & $0.85H+0.15I$ (equicorrelation 0.85 within groups) \\
+S5 & $0.3\,\mathbf 1\mathbf 1^\top+0.4H+0.3I$ (0.7 within, 0.3 between groups) \\
+S6 & within group $b$: $\rho_b=0.4+0.1\cdot((b-1)\bmod 6)$, diagonal 1, 0 between groups \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Truth.} One signal per group of 5, placed by \texttt{truth(p)}: $k=0,\dots,s_0-1$, block $=1+\text{step}\cdot k$,
+active index $=5(\text{block}-1)+\text{pos}[k\bmod 6]$ with pos $=(3,2,4,1,5,3)$, $\beta=\text{pattern}[k\bmod 6]$ with
+pattern $=(1.4,-1.0,1.8,-1.2,0.8,-1.6)$; $s_0=14$ with step 7 ($p=500$) and 13 ($p=1000$)
+\src{Scripts/Data_generators/gen_dev_data.R:33-42}. At low $p$ the same rule with step 1 gives $s_0=4$ at $p=20$
+(active 3, 7, 14, 16; $\beta=1.4,-1.0,1.8,-1.2$) and $s_0=5$ at $p=30$ (active 3, 7, 14, 16, 25; $\beta=1.4,-1.0,1.8,-1.2,0.8$)
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/lowp/LOWP_SPEC.md:21-26}. Nominal SNR $c^2\beta'\Sigma_s\beta$ at low
+$p$ ranges from 5.65 to 8.28 at $c=1$ and 1.41 to 2.07 at $c=0.5$
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/lowp/LOWP_SPEC.md:39-48}; the smallest eigenvalue of $\Sigma_s$ is
+0.15 in S4 and 0.10 in S6 at $p=30$ \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/lowp/LOWP_SPEC.md:32-35}.
+
+\begin{agentnote}[the study design is not a theory family]
+The study generator has groups of size $g=5$. The theory's look-alike exhibit LH uses $g=9$ (``SIZE: $g_{\max}\le B<2g_{\min}$;
+holds on LH for $n\ge 9^6$ with $g=9$'') \src{NBH/notation_and_conventions.md:434}, and ``The study generator ($g=5$,
+$2g\le B$) is the obligation PART-pairing (N8)'' \src{NBH/notation_and_conventions.md:259}, recorded as
+``OPEN; Prop Q PROOF SKETCH; W7-PART CE2 COUNTEREXAMPLE'' \src{NBH/05_open_questions_and_next_steps.md:94}. The archive
+states it plainly: ``the $g=5$ study is not the LH exhibit'' \src{NBH/03_results_and_conclusions.md:74}. No theorem about LH or
+LH-iid therefore applies to these data as stated; the data can only be consistent or inconsistent with observable
+consequences.
+\end{agentnote}
+
+\paragraph{Design summary.}
+\begin{center}\footnotesize
+\begin{tabular}{p{3.2cm}p{5.6cm}p{5.6cm}}
+\toprule
+item & low $p$ (PROD-L) & high $p$ (PROD-H) \\
+\midrule
+$n$, $p$ & 200; $p\in\{20,30\}$ & 200; $p\in\{500,1000\}$ \\
+scenarios, replicates, $c$ & S1--S6, 100, $c\in\{1,0.5\}$ & S1--S6, 100, $c\in\{1,0.5\}$ \\
+datasets / cases & 1,200 / 2,400 \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/lowp/LOWP_SPEC.md:15} & 1,200 / 2,400 fits \src{NBH/03_results_and_conclusions.md:157} \\
+data seed & base $+10000s+r$; base 1,210,000 ($p=20$), 1,310,000 ($p=30$) \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/lowp/LOWP_SPEC.md:54-59} & base $+10000s+r$; base 1,410,000 ($p=500$), 1,510,000 ($p=1000$) \src{Scripts/Data_generators/gen_prod_data.R:3-5} \\
+method seed & data seed $+$ 4,000,000; repeat $m$: $+1{,}000m$ \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/lowp/LOWP_SPEC.md:63-65} & data seed $+$ 4,000,000 \src{Scripts/Data_generators/gen_prod_data.R:5} \\
+SMC-BVS fits & 2,400 primary $+$ 12,000 repeats (5 extra seeds per case); exact enumeration of 1,200 datasets \src{Results/2026-10-28_New_Campaign/L_20261102/HEADLINE_L.md:3} & 2,400 (run \texttt{20261030T0934Z\_prodH}, frozen v2.2.1; reproduces the 2026-10-23 fits) \src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:6-10} \\
+benchmarks & 8 methods $\times$ 2,400 cases $=$ 19,200 records \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:176} & 8 methods (aLasso rerun 2,400 fits, D86) \src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:13-15} \\
+reference & exact posterior of the same model & truth only (D22) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Benchmarks and rules.} F1 lasso, F2 elastic net, F3 adaptive lasso, F4 MCP, F5 ABESS, A1 SuSiE, A2
+spike-and-slab lasso (SSL), A3 horseshoe. Headline rules: F1--F3 \texttt{ebic1\_K37} with CV \texttt{cv\_min} ``as a
+disclosed sensitivity per D35/D42''; MCP and ABESS \texttt{ebic1\_K37}; SuSiE \texttt{pip05}, SSL \texttt{ssl\_final},
+horseshoe \texttt{ci95} \src{Results/2026-10-28_New_Campaign/L_20261102/HEADLINE_L.md:121}. \texttt{ebic1\_K37} is
+EBIC($\gamma=1$) over candidates with $k\le K$, ``$K=\lfloor n/\log n\rfloor=37$''
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/bench_v2/SPEC.md:38}; at $p\le 30$, $K=\min(\lfloor n/\log n\rfloor,p)=p$, so
+K37 and cap rows coincide \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/bench_lowp/ADAPTATIONS.md:8}. At $p\gg n$ the
+MCP/ABESS primary is ``EBIC($\gamma=1$) at $c=1$, and EBIC($\gamma=1$) with the size bound $K=37$ at $c=0.5$
+(pre-registered)'' \src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:30}. The adaptive lasso uses the lasso
+\texttt{cv\_min} pilot (it replaced a ridge pilot, D42 item 2) \src{Docs/HQ/DECISIONS.md:109}.
+
+\begin{uncertain}[version label of the $p\gg n$ fits]
+The same 2,400 fits are called ``the 2026-10-23 v2.1 production fits'' \src{Docs/Records/DATA_INDEX.md:11}, ``the existing
+2,400 SMC-BVS v3 fits'' \src{Results/2026-10-28_New_Campaign/H_existing_20261030/HEADLINE_H.md:5}, and the ``v3 study'' that
+``stands as v3.1 with 4 islands'' \src{NBH/03_results_and_conclusions.md:155}; the rerun used ``frozen code v2.2.1'' whose core is
+``byte-identical to v2.2'' \src{Scripts/Campaigns/2026-10-28_New_Campaign/README.md:16}. The labels mix code versions (v2.x)
+and method versions (v3, v3.1); no source states the mapping in one place.
+\end{uncertain}
+
+% =====================================================================================================
+\subsection{Low \texorpdfstring{$p$}{p}: SMC-BVS against the exact posterior}\label{sec:emp-lowp}
+
+PROD-L: ``1,200 datasets (p ∈ \{20, 30\}, S1–S6, 100 replicates) × c ∈ \{1, 0.5\} = 2,400 cases. The exact posterior comes
+from full enumeration of all 2\textasciicircum p models. Truth was used only in scoring. Reconciliation: enumeration 1200/1,200,
+SMC primary 2400/2,400, SMC repeats 12000/12,000. Failed: 0. Missing: 0.''
+\src{Results/2026-10-28_New_Campaign/L_20261102/HEADLINE_L.md:3}. Review: ``Terra tie-outs PASS, Sol ACCEPT (D75, D94)''
+\src{Docs/HQ/STATUS.md:24}.
+
+\begin{divergence}[which PIP the study reports]
+Every SMC-BVS PIP in this section (low and high $p$) is pooled over islands with \emph{equal weights} by the frozen v2.2.1 core:
+the RB PIP is \texttt{pip\_primary}, the equal-weight mean of the island RB PIPs
+\src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:126-129}, and the plain PIP is \texttt{pip\_plain},
+the equal-weight mean of the island plain PIPs \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:167-168}
+(see \S\ref{sec:method-outputs}). Equal-weight pooling is the v3.1 \emph{secondary} PIP; the v3.1 primary ($\hat Z$-weighted) exists only through POST HOC rescoring,
+done on 3 designs \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:54}. See the divergence box ``primary PIP'' in
+\S\ref{sec:method-impl}. Theorems stated for the $\hat Z$-weighted PIP are therefore not directly tested by these tables.
+\end{divergence}
+
+\begin{itemize}
+\item \defid{EMP01} \textbf{HPM is exact; 0 search misses.} ``SMC HPM = exact HPM in 2,400/2,400 primary fits and
+12,000/12,000 repeat fits. HPM = truth 92.3\%. Every miss is a miss of the exact posterior itself; there are 0 search
+misses'' \src{Docs/HQ/STATUS.md:29}. Miss classes: 2,216 hits, 0 search misses, 184 posterior misses, ``F(S₀) ≤ F(HPM)'' in
+every miss, no ties (closest gap $-0.0017$, median $-1.10$) \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:101}.
+\item \defid{EMP02} \textbf{Evidence $\hat Z$.} Over the 2,400 primary fits $e=\log\hat Z-\log Z$ has ``bias -0.0002, RMSE 0.012,
+median |e| 0.007, and 90th-percentile |e| 0.020'', and ``the 0.05·Ẑ lower bound covered Z in 100\% of fits (0 violations)''
+\src{Results/2026-10-28_New_Campaign/L_20261102/HEADLINE_L.md:7}. Over all 14,400 fits the mean relative error
+$\hat Z/Z-1$ is $-0.00011$ with SE 0.00010 (``within 1.1 SE of 0''; ``cancellation across cases cannot be excluded''), and the
+lower bound ``never fails, in 14,400/14,400 fits'' \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:150-154}.
+\item \defid{EMP03} \textbf{PIPs and MPM.} Mean per-fit max $|\mathrm{PIP}-\mathrm{PIP}^{\rm exact}|$ is 0.0005 (RB, 90th pct
+0.0014) and 0.0020 (plain, 90th pct 0.0033); ``The MPM equals the exact MPM in 99.9\% of cases (RB) and 99.8\% (plain). The RB
+PIPs are about 4× closer.'' \src{Results/2026-10-28_New_Campaign/L_20261102/HEADLINE_L.md:9}.
+\item \defid{EMP04} \textbf{Seed stability.} ``all 6 seeds gave the same HPM in \textbf{100\%} of cases (2,400/2,400)''; the sd
+of $\log\hat Z$ across seeds has mean 0.011 (90th pct 0.018, max 0.030), ``similar to the RMSE against the exact value
+(0.012), consistent with seed variability dominating the error''; the 12,000 extra-seed fits ``are as accurate as the
+primaries'' \src{Results/2026-10-28_New_Campaign/L_20261102/HEADLINE_L.md:150-153}. The spread uses primary $+$ 5 extra seeds,
+``a slight widening of the brief's `across the 5 extra seeds' definition'' \src{Results/2026-10-28_New_Campaign/L_20261102/HEADLINE_L.md:148}.
+\end{itemize}
+
+\paragraph{Accuracy by cell} (Q1--Q3; Generated):
+\input{tables/emp_lowp_accuracy}
+
+\paragraph{Seed stability and repeat-fit accuracy} (Generated):
+\input{tables/emp_lowp_stability}
+
+\paragraph{Recovery against benchmarks.} \defid{EMP05} Pooled exact recovery /2,400: SSL 2,251; SMC-BVS HPM (= exact HPM)
+2,216; SuSiE 2,183; adaptive lasso 2,066; MCP 2,061; ABESS 2,051; horseshoe 2,028; lasso 1,852; elastic net 1,692
+\src{Docs/HQ/STATUS.md:33-45}. The exact HPM equals the truth in 92.3\%, rising with signal: 96.0\% / 93.7\% ($p=20$,
+$c=1$ / 0.5) and 95.2\% / 84.5\% ($p=30$) \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:73-78}; the hardest
+cell is S4 at $p=30$, $c=0.5$ \src{Results/2026-10-28_New_Campaign/L_20261102/HEADLINE_L.md:10}.
+\input{tables/emp_lowp_recovery}
+Per-scenario counts, with the passing-only SMC counts (two flagged primary fits, both hits, are not credited:
+``p = 20, c = 1 has 575/600 and S4 94/100; p = 30, c = 1 has 570/600 and S3 96/100'')
+\src{Results/2026-10-28_New_Campaign/L_20261102/HEADLINE_L.md:144}:
+\input{tables/emp_lowp_recovery_byscen}
+
+\paragraph{Low-$p$ benchmark disclosures} (``Disclosed, not audited (D94)'' \src{Docs/HQ/STATUS.md:47-51}):
+\begin{itemize}
+\item ``SSL > exact HPM is organic (the exact posterior is our model's own, not an oracle)'' \src{Docs/HQ/STATUS.md:48}; SSL is
+above the exact HPM in three of the four $p\times c$ cells (not at $p=30$, $c=0.5$: 501 vs 507)
+\src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:265}; the $p=30$, $c=0.5$ counts \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:243-258}.
+\item Lasso and EN ``are ≈ 0 under CV (as audited in D42)'' \src{Docs/HQ/STATUS.md:49}: 12 and 8 of 2,400
+\src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:266}.
+\item The horseshoe (\texttt{ci95}) ``drops at p = 30, c = 0.5'' (367/600), ``Plausibly the conservative credible-interval rule
+under weak signals; disclose and leave for the paper phase'' \src{Docs/HQ/DECISIONS.md:299}.
+\item ABESS ``is RSS-optimal in 2,375/2,400 fits'' \src{Docs/HQ/STATUS.md:51}; replacing the 25 suboptimal supports by the exact
+best subset of the same size would change its count by $+7$ \src{Results/2026-10-28_New_Campaign/L_20261102/HEADLINE_L.md:142}.
+Generated:
+\end{itemize}
+\input{tables/emp_lowp_abess}
+
+% =====================================================================================================
+\subsection{High \texorpdfstring{$p$}{p} (\texorpdfstring{$p\gg n$}{p >> n}): selection against the truth}\label{sec:emp-highp}
+
+Review: ``Terra tie-outs PASS, Sol ACCEPT WITH FIXES ×2, narrow F3 check ACCEPT (D78, D87)'' \src{Docs/HQ/STATUS.md:54}. The
+truth has 14 variables \src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:3}.
+
+\begin{itemize}
+\item \defid{EMP06} \textbf{Reproduction.} ``The v2.2.1 rerun reproduces the 2026-10-23 fits exactly (2,400/2,400, 11 fields).''
+\src{Docs/HQ/STATUS.md:56}; ``The 6 stopped fits match too, including their unavailable (empty) fields. Every available estimate
+reproduces exactly, with max |diff| = 0'' \src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:7-9}. Generated:
+\end{itemize}
+\input{tables/emp_highp_repro}
+
+\begin{itemize}
+\item \defid{EMP07} \textbf{Exact recovery /600 (HPM).} 559 / 560 at $c=1$ and 370 / 340 at $c=0.5$ ($p=500$ / 1000)
+\src{Docs/HQ/STATUS.md:57-62}; shares 93.2\%, 93.3\%, 61.7\%, 56.7\%, with ``Monte Carlo standard error of each pooled share
+\dots about 1–2 percentage points'' \src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:116-121}.
+\item \defid{EMP08} \textbf{MPM rows.} ``RB and plain MPM agree in 2,391 of 2,394 completed fits''; each disagreement ``involves a
+single variable whose two PIPs straddle 0.5, within 0.003 of each other''; ``The largest |RB PIP − plain PIP| over all variables
+and fits is 0.0067'' \src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:123-127}. This is internal agreement only, not
+accuracy (D22) \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:194-200}.
+\end{itemize}
+
+\paragraph{Exact recovery, $c=1$} (Generated):
+\input{tables/emp_highp_recovery_c100}
+\paragraph{Exact recovery, $c=0.5$} (Generated):
+\input{tables/emp_highp_recovery_c050}
+\paragraph{Lasso-family CV rules and supplementary rows} (Generated):
+\input{tables/emp_highp_sensitivity}
+\input{tables/emp_highp_supp}
+
+\paragraph{Rankings.} \defid{EMP09}
+\begin{itemize}
+\item ``c = 0.5: SMC-BVS is first or tied-first in 11 of 12 cells, ahead of the best benchmark (SSL) by 67 datasets at p500 and 85
+at p1000.'' \src{Docs/HQ/STATUS.md:65}. The exception is p500 S1 (79 vs SSL 80)
+\src{Results/2026-10-28_New_Campaign/H_existing_20261030/HEADLINE_H.md:88}. Paired against SSL, only SMC-BVS recovers in 106 / 117
+datasets vs only SSL in 39 / 32 \src{Results/2026-10-28_New_Campaign/H_existing_20261030/HEADLINE_H.md:90-95}.
+\item ``c = 1: SMC-BVS ranks 4th of 9, behind SuSiE, SSL and the horseshoe. It beats the adaptive lasso (rerun with the lasso
+pilot: 493 / 512 at c = 1) in 24/24 cells.'' \src{Docs/HQ/STATUS.md:66}; ``Almost every miss adds variables to the truth''
+\src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:133}. The HPM also beats MCP and ABESS \texttt{ebic1\_K37} in all 24
+cells \src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:136}.
+\end{itemize}
+Generated (per-cell comparison; paired comparisons):
+\input{tables/emp_highp_best}
+\input{tables/emp_highp_paired}
+
+\begin{uncertain}[one ``best benchmark'' cell is superseded by the aLasso rerun]
+The per-cell comparison file predates the D86 adaptive-lasso rerun; at $p=500$, S4, $c=0.5$ it lists SuSiE/SSL with 9 as best
+\src{Results/2026-10-28_New_Campaign/H_existing_20261030/tables/smc_vs_best_benchmark.csv:19}, while the rerun aLasso
+\texttt{ebic1\_K37} has 11 there \src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:76}. The HPM (25) is still first, so
+``first or tied-first in 11 of 12'' is unaffected, and HEADLINE\_H states that ``every paired comparison \dots stands unchanged''
+\src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:131}; but the file's HPM-minus-best value in that cell (16)
+is computed against the pre-rerun best (9). Separately, the archive's comparison table
+\src{NBH/03_results_and_conclusions.md:171-179} reproduces the pre-D42 rows of
+\src{Results/SMC_BVS_v3_production/HEADLINE_TABLES.md:5-33} (ABESS \texttt{ebic1} 254/186 at $c=0.5$, CV lasso family 0); the final
+headline rows are those of HEADLINE\_H (ABESS primary at $c=0.5$ is \texttt{ebic1\_K37}: 256/214).
+\end{uncertain}
+
+\paragraph{High-$p$ benchmark disclosures.}
+\begin{itemize}
+\item Lasso-family headline \texttt{ebic1\_K37}, CV as sensitivity (D42): ``The CV rules' 0/2,400 is method behaviour: CV-min
+over-selects at p ≫ n by 30–80 false positives''; EBIC-K37 ``was a pre-registered companion at c = 0.5 and post hoc at c = 1''
+\src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:89-92}; D42 item 6 \src{Docs/HQ/DECISIONS.md:113}.
+\item Elastic-net $\alpha$: ``CV chose α* = 0.9, the top edge of the frozen grid \dots in \textbf{2,399 of 2,400 fits}''; ``Whether
+a wider grid would change its EBIC rows is untested'' \src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:98-100}
+(Generated below).
+\item Adaptive lasso \texttt{cv\_min} chose the last $\lambda$ of the grid in 804 of 2,400 fits (D55); it is a sensitivity row only
+\src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:103-110}. The old ridge-pilot rows are superseded
+(\texttt{ebic1\_K37} 247 $\to$ 493, 96 $\to$ 512, 36 $\to$ 253, 12 $\to$ 197) \src{Docs/HQ/DECISIONS.md:262}.
+\item ``The benchmark code is AI-written. Its frequentist reproduction check (G5) is partial. ABESS fails the independent same-size
+search check.'' \src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:33-35}; the Bayesian benchmarks pass G5
+\src{Results/2026-10-28_New_Campaign/H_existing_20261030/HEADLINE_H.md:156}.
+\end{itemize}
+\input{tables/emp_highp_enalpha}
+
+\paragraph{Accounting and stops.} \defid{EMP10} ``2,400 fits = 2,394 completed + 6 \texttt{resource\_limit} + 0 missing''; the 6
+stops are ``all in S5, one at p500 c = 1, three at p1000 c = 1 and two at p1000 c = 0.5''; each hit the runtime guard at its allocation
+(6,300 s at $p=500$; 24,000 s at $p=1000$); ``The same-seed retry at doubled allocation was not run (Felipe, D62). The 6 count as
+misses in every table''; in 3 of the 4 $c=1$ stops the support saved at the stop equals the truth, ``It is not counted''
+\src{Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:140-145}. D62: ``If the remaining 6 are not done then feel free to
+kill them, we have enough.'' \src{Docs/HQ/DECISIONS.md:191}. Maximum effect of completing them: ``at most \textbf{6} additional
+recoveries overall (0.25 percentage points of 2,400)''; ``The observed retry effect is unknown''
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:166-173}. Generated (reconciliation; diagnostic flags, informational
+only per D13):
+\input{tables/emp_reconciliation}
+\input{tables/emp_highp_flags}
+
+% =====================================================================================================
+\subsection{The miss decomposition and what is identified}\label{sec:emp-miss}
+
+\textbf{Low $p$ (exact reference).} Every one of the 184 misses is a posterior miss ($F(S_0)\le F(\text{HPM})$, strict in every case);
+0 search misses; the truth was scored in 2,400/2,400 fits; the scored models carry exact posterior mass with median 0.99995 and
+minimum 0.9980 \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:95-103}. ``In these fits, every observed HPM
+truth-recovery error is a posterior error; the search contributes none. This concerns HPM recovery only, not Ẑ or PIP estimation
+error.'' \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:119}. Generated:
+\input{tables/emp_lowp_missclass}
+
+\textbf{High $p$ (score-based, no exact reference).} \defid{EMP11} The operational decomposition is: no output (6
+\texttt{resource\_limit}); ``detected search miss: F(S₀) > F(HPM)''; ``completed miss with a scored competitor above the truth:
+F(S₀) ≤ F(HPM), with HPM ≠ S₀'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:131-134}. Counts: 1,829 hits, 565
+completed misses, 0 detected search misses, 6 no output; ``There are no exact ties: the smallest F(HPM) − F(S₀) is 0.0049 nats, 23 of
+565 are within 0.1 nats, and 39\% are within 1 nat.'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:136-143}.
+Generated:
+\input{tables/emp_highp_missclass}
+
+\begin{notproved}[what the $p\gg n$ decomposition identifies (repo reports, after Sol R1)]
+``\textbf{Shown:} each of the 565 completed misses has a scored competitor above S₀. Even scoring S₀ could not have made that
+report a hit; the error would remain. \textbf{Not identified:} whether S₀ was ever scored in those 565 fits. So T21's discovery term
+P(Uᶜ, S₀ ∉ 𝒮) is not identified: its count among completed fits lies anywhere between 0 and 565. \textbf{Why:} the per-model
+truth trace and the scored mass are unavailable at p > 64, because the registry runs in HLL mode (\texttt{truth\_scored},
+\texttt{log\_sum\_exp\_F} and \texttt{first\_scored} are NA/NULL in all 2,400 records). HPM provenance certifies that S₀ was scored
+only in the 1,829 hits. \textbf{Not evaluated:} the posterior-mass expectation 2E₀[1 − π(S₀)].''
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:147-150}. Verdict: ``Consistent with T21's decomposition'';
+``T21's probability bound: untested (silent)'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:153-154}. The status
+board repeats it: ``At high p, 0 detected, but whether the truth was ever scored is unidentified for the 565 completed misses, and
+the T21 probability bound is silent there'' \src{Docs/HQ/STATUS.md:75}. This wording was imposed by Sol R1 finding 1
+\src{Results/2026-10-28_New_Campaign/H2_20261102/review/SOL_REVIEW_H2_R1.md:11-13}.
+\end{notproved}
+
+\begin{uncertain}[was $S_0$ scored in the 565 completed misses?]
+\defid{EMP12}
+\textbf{Repo side (above):} not identified; between 0 and 565 \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:148}.
+\textbf{Archive side:} the theory-campaign data clerk S-ELS read the per-fit top store and reports: ``\textbf{S₀ was scored by the
+fit in all 2,394 completed fits}: it is in the 20,001-model top store, and the store's F(S₀) equals the offline F(S₀) to 1e-12. The
+event E\_LS (S₀ not scored before the search and better than the best scored model) is \textbf{empty in the data (0 of 2,394)}.''
+\src{NBH/branch_snapshots/S-ELS/REPORT.md:10}; its own limit: ``The store holds the top 20,001 scored models, so that check covers
+S₀ only because S₀ scored high enough to be kept, which it always was.'' \src{NBH/branch_snapshots/S-ELS/REPORT.md:103}. In 434 of the
+541 misses whose final local-search centre lies in $\mathcal R_2\setminus\{S_0\}$, ``S₀ was a one-move neighbour: the single scan
+scored it, and it was worse than S\_c'' \src{NBH/branch_snapshots/S-ELS/REPORT.md:74}. The archive adopts S-ELS
+\src{NBH/03_results_and_conclusions.md:168} (registry \rid{CJ222}, \rid{CJ223}) and so does API-N200 (``S₀ scored in 2,394 of 2,394
+completed fits, 0 search misses (S-ELS); exact 95\% upper bound 0.125\% per fit'') \src{NBH/branch_snapshots/API-N200/REPORT.md:12};
+\rid{CJ247} recommends ``use S-ELS for counts''. \textbf{No source reconciles the two statements explicitly}: the repo reports
+reasoned from the registry fields (NA in HLL mode), S-ELS from the top-store field. A further detail is unreconciled: S-ELS calls
+the store ``20,001-model'' at both $p$, while the v3.1 settings list ``top store $40p+1$'' \src{NBH/02_theory.md:648}
+($=20{,}001$ only at $p=500$). Until this is settled, theory must not rely on ``$S_0$ scored in every completed fit'' at $p\gg n$
+without citing S-ELS and this conflict.
+\end{uncertain}
+
+\paragraph{Shapes of the completed misses.} \defid{EMP13} ``At c = 1 these misses are almost all `truth + one extra variable'
+(median FP = 1, FN = 0), with small gaps''; at $c=0.5$ ``all shapes occur, and equal-size wrong supports are the largest class''
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:185-186}; ``207 of the 565 completed misses (37\%) are equal-size wrong
+supports, where the likelihood ranks a wrong model of the true size above S₀. No size-only prior can repair these''
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:190}. S-ELS: at $c=0.5$, 201 of 488 are strict same-size misses, 161
+of them single swaps, and S4 supplies half \src{NBH/branch_snapshots/S-ELS/REPORT.md:92}. Low $p$: 94 supersets, 78 same-size swaps,
+10 subsets, 2 mixed among 184 \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:132-136}. Generated:
+\input{tables/emp_highp_shape}
+
+\paragraph{Final local search.} \defid{EMP14} ``The production local search ran and scanned in every completed fit, but made no improving
+move (0 moves in 2,394 fits). In the 1,829 hits, the centre was already S₀. In 541 completed misses the centre lay in 𝓡₂ ∖ \{S₀\}. Each
+of these has F(centre) ≥ F(S₀), so no improving path to S₀ exists.'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:94-96};
+S-ELS: ``every search ended \texttt{no\_improvement}, \texttt{local\_certified = TRUE}, \texttt{local\_limit = FALSE}''; the 541 have
+median gap $-1.33$ (range $-9.05$ to $-0.0049$) \src{NBH/branch_snapshots/S-ELS/REPORT.md:9-12}. Generated:
+\input{tables/emp_highp_localsearch}
+
+% =====================================================================================================
+\subsection{Theory-companion empirics}\label{sec:emp-theory}
+
+The campaign measured, after the fit, quantities mapped to the pre-campaign theorems by
+\path{THEORY_EXTRACTION_STRATEGY.md} (D23a) \src{Docs/HQ/DECISIONS.md:115-117}. Pre-campaign labels and archive IDs: T21 $=$
+\rid{TH115}, T22 $=$ \rid{TH116}, T27 $=$ \rid{TH119}, T12 $=$ \rid{TH110}, T07 $=$ \rid{TH106}, locked T03 $=$ \rid{TH123}; refined T37
+(i)/(ii)/(iii) $=$ \rid{TH199}/\rid{TH201}/\rid{TH204}; T38 (0)/(a)/(b1) $=$ \rid{TH281}/\rid{TH283}/\rid{TH284}
+\src{NBH/ID_REGISTRY.md:254-267} \src{NBH/ID_REGISTRY.md:347-352} \src{NBH/ID_REGISTRY.md:429-432}. The final paper-1 cards that
+carry these themes are \rid{TH03} (M3 · Theorem START), \rid{TH05} (M5 · Theorem HPM), \rid{TH08} (M8 · Proposition D) and \rid{TH09}
+(S-T, T03♯) \approvedFB. The pre-campaign label T26 (``Thm 6'') has no row in the archive ID registry.
+
+\subsubsection{Start mass and masking (T22, T27; TH03, TH116, TH119)}
+\defid{EMP15}
+\textbf{High $p$.} ``π₀(S₀) is tiny. Median log₁₀ π₀(S₀) by cell is −12.4 to −25.6; the largest over all 2,400 cases is 10\textasciicircum−5.6.
+The iid intensity Q\_f·π₀(S₀) is below 1 in \textbf{2,393 of the 2,394} completed fits''; the exception (\texttt{p0500\_S2\_r034\_c100},
+intensity $\approx1.09$) first scored the truth in the pilot; the cell median falls by 1.9--4.1 orders of magnitude from $p=500$ to
+1000; pooled near-truth medians $\pi_0(\mathcal R_0)=0.20$, $\pi_0(\mathcal R_1)=0.56$, $\pi_0(\mathcal R_2)=0.81$
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:42-47}. Verdicts: masking ``qualitatively consistent'' with T27;
+T27(i)'s joint law, T22(iii), T38(a), and the premise $\pi_0(\mathcal R_d)\ge b_n$: silent
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:58-61}. Recovery does not track $\pi_0(\mathcal R_0)$ at $c=1$
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:55}. Generated:
+\input{tables/emp_highp_startmass}
+\input{tables/emp_highp_pi0rec}
+\textbf{Low $p$.} $\pi_0(S_0)$ ``spans 38 orders of magnitude''; median $5.5\cdot10^{-3}$, 53\% of cases below 0.01; S1 is favourable,
+S3--S6 at $p=20$ strongly masked \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:50-54}. ``In every class and cell the exact
+HPM has the same rate, so the SMC loses nothing relative to the exact posterior, even with a tiny start mass''
+\src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:65}. Verdict: support for the masked-regime claim at low $p$; silent on
+rates \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:68-69}. Generated:
+\input{tables/emp_lowp_startcost}
+\input{tables/emp_lowp_pi0rec}
+
+\subsubsection{Truth dominance and greedy repair (T37; TH199, TH05)}
+\defid{EMP16}
+\textbf{Low $p$.} The literal T37 condition ``\textbf{fails in every case}, 2,400/2,400 at both d''; 97.8\% of clause-(a)/(b) violations at
+$d=1$ are explained by a null-out/truth-in swap \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:15-19}. The ``toward $S_0$''
+wording holds strictly in 63.0\% ($d=1$) and 53.6\% ($d=2$) of cases; every case where it holds is a hit (1,511 at $d=1$), it fails in
+all 184 posterior misses, and it also fails in 705 hits at $d=1$ \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:21-35}.
+Verdict: contradict ``the applicability of the literal T37 condition''; ``A conditional theorem is not refuted merely because its premise
+fails''; the toward form is ``a candidate refinement \dots It needs its own assumptions and proof''
+\src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:39-44}. Generated:
+\input{tables/emp_lowp_td}
+\textbf{High $p$.} TD$(0,0)$ was audited on a fixed sample of 196 cases (replicates 1, 25, 50, 75, 100 per cell plus every $c=1$ HPM miss;
+18.7 core-h); ``The finite-n TD(0, 0) premise holds strictly in 0 of the 196 audited cases''; clause (a) fails at a median 77\% of the 16,383
+proper subsets; in the 4 diagnosed cases the competing move is mostly a truth-for-truth swap (lateral: $|S\Delta S_0|$ unchanged);
+clause (c) holds in 92/92 sampled hits and fails in 97/100 sampled misses
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:66-93}. Verdicts: ``T37(i) \dots \textbf{not contradicted}'', (ii)--(iii)
+silent, ``Repair by improving moves: not exercised'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:99-105}. Generated:
+\input{tables/emp_highp_td0}
+
+\subsubsection{Discovery of the truth (T38; TH05, TH281, TH284)}
+\defid{EMP17}
+\textbf{High $p$.} The reported HPM was first scored in ``the pilot (calibration) SMC in all 2,394 completed fits''; for the 1,829 hits by
+Gibbs flips (1,724), neighbour swaps (104) and a uniform swap (1); ``Neither final-run iid draws (§1) nor local-search moves (§2) were the
+source'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:110-113}. Verdict: ``motivates a pilot-discovery / T24-type route
+for T38''; ``The formal premises of T38(b2) are unverified: silent''; ``Pilot provenance does not identify a terminal-round repair
+trajectory'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:123-127}. \textbf{Low $p$:} the truth was always first scored
+in the pilot (initial draw 1,304, Gibbs flip 1,038, \texttt{nswap} 31, \texttt{uswap} 26, \texttt{indep} 1 of 2,400); ``First
+\emph{scoring} a model does not mean a particle visited or retained it'' \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:105-115};
+this ``neither tests the hypothesised local-search repair mechanism nor rules out a later role for local search''
+\src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:37}. Generated (high-$p$ provenance and score ledger; registry in HLL mode):
+\input{tables/emp_highp_provenance}
+
+\subsubsection{Cost (T38 cost corollary; TH08)}
+\defid{EMP18}
+When $p$ doubles (500 $\to$ 1000; medians): ``×2\textasciicircum1.07 fresh scores, ×2\textasciicircum1.5 distinct models (HLL estimate),
+×2\textasciicircum1.4 runtime''; escalation to tier 1 rises from 9.5\% to 18.7\% ($c=1$) and 1.0\% to 5.5\% ($c=0.5$); verdict:
+``descriptively consistent with polynomial growth \dots not a test of the asymptotic cost corollary''
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:115-126}. Low $p$: median 2.7 s per fit, ``essentially flat from p = 20 to
+p = 30''; distinct models scored about 3\% of $2^{20}$ and 0.007\% of $2^{30}$; no escalation; ``two values of p cannot establish a rate''
+\src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:80-88}. Generated:
+\input{tables/emp_highp_cost}
+
+\subsubsection{Evidence and PIP estimators (T12 = TH110; T26)}
+Low $p$: support for T12 (``the pooled mean relative error is compatible with zero'') and for T26(i)--(ii) ``as finite-setting accuracy
+evidence at n = 200, p ≤ 30''; ``Silent on consistency and rates: one n, two values of p, one computational configuration''
+\src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:162-165} (\rid{EMP02}, \rid{EMP03}). The final-card form of
+$E[\hat Z_r\mid\mathcal C]=Z$ is in \rid{TH01.a} and \rid{TH16} \src{NBH/ID_REGISTRY.md:31} \src{NBH/ID_REGISTRY.md:96}. High $p$: silent (D22);
+RB vs plain agreement only. Generated:
+\input{tables/emp_highp_pip}
+
+\subsubsection{Theory-campaign numerical runs (archive \S2)}
+These were run by theory-campaign agents, mostly post hoc on the PROD-H fits or on small exact designs. Their raw outputs are mostly
+not in the repo (branch snapshots keep reports and some result files); the numbers below are \textbf{transcribed from reports; raw data
+not in repo} unless stated.
+
+\begin{itemize}
+\item \defid{EMP19} \textbf{O-LS0} (\rid{CJ226}, \rid{CJ228}, \rid{CJ178}). LS0 run post hoc on all 2,400 fits: ``LS0's best-scored model
+\textbf{never beats the production HPM}: 0 / 2,394. The smallest margin is 0.002 nats''; exact recovery ``1,119 / 1,200 at c = 1''
+and ``710 / 1,200 at c = 0.5'', ``gain 0, harm 0''; LS0 alone scores $S_0$ in 1,087 ($c=1$) and 796 ($c=0.5$) fits; median cost 0.17 s
+/ 0.37 s, ``under 0.1\% of a production fit'' \src{NBH/branch_snapshots/O-LS0/REPORT.md:13-37}. T38(b1) premises mostly fail at $n=200$:
+``(M1) π₀(S̃₀) > ½ in 18 of 2,400 fits'' \src{NBH/03_results_and_conclusions.md:190}. Caveat: post hoc; ``LS0 exists only in the O-LS0
+test export''; the integrated LS0 check is an ``OPEN implementation check'' \src{NBH/03_results_and_conclusions.md:191}.
+\item \defid{EMP20} \textbf{API-N200} (\rid{TH334}, Theorem N200; \rid{CJ14}, \rid{CJ238}). Predicted wrong $=$ observed $P(U)+\sum\hat
+P_0(L\mid X)$ vs observed wrong: ``81.8 vs 81 at c = 1 and 476 vs 490 at c = 0.5; 558 vs 571 over 2,400 fits; RMS z = 1.08 over the 24
+cells, max |z| = 2.5 (p = 1000, S5, c = 0.5)'' \src{NBH/branch_snapshots/API-N200/REPORT.md:13}; pooled table
+\src{NBH/branch_snapshots/API-N200/REPORT.md:42-48}; ``The prediction is a lower bound plus a measured term''. Exact enumeration at
+$n=40$, $p=12$: $\Pi-P(L)$ is 0.002--0.083 across the nine design/$c$ rows \src{NBH/branch_snapshots/API-N200/REPORT.md:58-70}
+(result file \path{API-N200/results/} holds only \texttt{n200\_table.md}). ``An upper bound on Π(X) at finite n is OPEN''
+\src{NBH/03_results_and_conclusions.md:208}.
+\item \defid{EMP21} \textbf{API-RESID / common $\sigma^2$} (\rid{CJ162}, \rid{RF150}). Common $\hat\sigma^2$: ``None of the three feasible plug-ins
+gives one favourable fit (0/2,400 each)''; residualised (3 sweeps): median $\log_{10}\pi_0(S_0)$ $-15.65\to-1.07$, ``1,888/2,400 fits are
+favourable''; fixed-point: favourable 2,203/2,400; status ``\textbf{unproven candidate}'' \src{NBH/03_results_and_conclusions.md:212-215}.
+\item \defid{EMP22} \textbf{Concurrency} (\rid{TH394}, \rid{TH395}). 3/3 designs bitwise (358 $\to$ 189 s, 672 $\to$ 352 s, 413 $\to$ 219 s)
+at $R=4$ concurrent islands; Prop W-cal ``is not executed'' \src{NBH/03_results_and_conclusions.md:222-229}.
+\item \textbf{PIP rescoring} (chair helper). The equal-weight vs $\hat Z$-weighted MPM comparison ``cannot be computed for the 2,394
+completed fits from this machine''; on 3 designs max$|\Delta$PIP$|$ up to $1.29\cdot10^{-3}$ (S5 r002), MPMs differ in 0 rows; ``It says
+nothing about the rate of MPM disagreement in the study'' \src{NBH/03_results_and_conclusions.md:233-235}.
+\item \defid{EMP23} \textbf{ABL-START / ABL-CONF} (\rid{CJ166}, \rid{CJ164}, \rid{CJ165}). ABL-START: ``\textbf{Outcome 2. Keep the block start,
+reframed. The paper makes no depth or speed claim for the block start.}''; the prior start (arm C) was certified to underestimate $Z$ on 10/12
+designs \src{NBH/03_results_and_conclusions.md:239-241}. ABL-CONF (118 fits, rule pre-registered): ``Claim 2 (accuracy \dots): LICENSED'',
+median $\log\hat Z$ error of the prior start $-13.4$ (S1), $-10.8$ (S4), $-5.7$ (S5) nats; ``Claim 1 (cost \dots): INCONCLUSIVE''
+(S5 holds: block start cheaper in 10/10 pairs, sign test $p=0.001$, median wall 1,116 s vs 1,639 s, accuracy equivalent; S4: singleton factors did not deliver within the 75-min cap in 10/10 while the block start delivered in 9/10, ``a delivery result, not an equal-accuracy result''; S1: no cost advantage, B cheaper in 8/10 pairs, $p=0.055$; under the pre-registered rule ``licensed iff it holds on every design'', Claim 1 is not licensed). For Claim 2 the prior start ``escalated to tier 1 in 7, 9 and 8 of 10 fits and cost 2–4× the block start's wall time''
+\src{NBH/branch_snapshots/ABL-CONF/REPORT.md:9-14}; reference table \src{NBH/branch_snapshots/ABL-CONF/REPORT.md:18-22} (only
+\path{REPORT_TABLES.md} and \path{DEVIATIONS.md} of \path{results/final/} are in the repo).
+\item \defid{EMP24} \textbf{Calibration cost formula} (\rid{TH08.b}, \rid{OB15}). ``calibration/final ratio predicted 0.46/0.67/1.69 vs observed
+0.45/0.62/1.76 on 3 designs''; status ``seat-derived, unchecked'' \src{NBH/03_results_and_conclusions.md:258-259}.
+\item \defid{EMP25} \textbf{LIT-PAR} (\rid{CE213}). On an LH-like design ($p=16$), ``the exact full posterior recovers S₀ in 20/20 datasets.
+SaM recovers S₀ in \textbf{5/318} random splits that separate the linked pair'' \src{NBH/03_results_and_conclusions.md:263}. Scope: the LIT-PAR construction, not the LH family; its masked variable $x_4$ is a singleton linked only to hub $x_0$ (group size 1, not the g-prior's $g$) \src{NBH/ID_REGISTRY.md:1309}; for group size 1 the isolation probability under a uniform equipartition is 0.53 at $K_n=2$ versus 0.05 for group size 4 (\rid{CE214}) \src{NBH/ID_REGISTRY.md:1310}.
+\item \defid{EMP26} \textbf{Dilution} (\rid{LM212}, \rid{TH177}, \rid{TH158}). ``On 480 regenerated study fits, V carries 83\% of −log π₀(S₀),
+C carries 11\% and the size term 6\%''; ``About 7 of the 14 truths are invisible at n = 200 for every c''; per-cell medians of
+$\pi_0(S_0)$ $10^{-11.1}$ to $10^{-25.6}$ \src{NBH/03_results_and_conclusions.md:268-269}.
+\item \defid{EMP27} \textbf{O-CERT / O-VCERT} (\rid{LM204}, \rid{TH330}). ``0 violations in 476,160 exhaustive (S, S+j) pairs''; ``0 Φ-violations
+and 0 M-violations over all 285,712 boxes on 48 designs'' \src{NBH/03_results_and_conclusions.md:274}.
+\item \textbf{API-PXNGAP \S4} (LH-iid, exact small-scale; \rid{TH05}). LS0 ``scores S₀ in 56/60 overall and in 35/36 at n ≥ 200''; (L) failures
+11/60; ``Everything is consistent with an asymptotic theorem whose finite-n reach starts around n ≈ 200 for c ≤ 2 on this family''
+\src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:79-111}.
+\end{itemize}
+
+\begin{uncertain}[conflicts recorded inside the archive's empirical section]
+(i) Favourable count of the unmodified start: ``API-RESID table `v3 (method) … favourable (≥ 10⁻⁴) 0' of 2,400; O-DILUTE §1
+`Favourable fits: 0 of 480; study: 1 of 2,394'. Not reconciled.'' \src{NBH/03_results_and_conclusions.md:216}. (The ``1 of 2,394'' matches
+EVIDENCE\_H's different criterion $Q_f\pi_0(S_0)\ge1$ \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:44}.)
+(ii) Concurrency: ``the task statement says `32 islands within 2e-4'. The file shows R = 32 (N = 312) max ΔPIP ≤ 2e-4 only on S1; it is up to
+2.3e-3 on S4 and 7e-4 on S5'' \src{NBH/03_results_and_conclusions.md:228}.
+(iii) Single thresholds for ``favourable from $n$'': ``590–730, 800–1,600, 1,050–3,200'' \src{NBH/03_results_and_conclusions.md:270}.
+(iv) Stopped fits ``6 vs 4'' across reports; O-SWAP's ``4 no-output fits'' is superseded by S-ELS's 6 (\rid{CJ223}, \rid{CJ247}).
+\end{uncertain}
+
+\paragraph{Summary map (fact $\to$ theory).}
+\begin{center}\scriptsize
+\begin{tabular}{p{1.3cm}p{4.3cm}p{2.9cm}p{5.6cm}}
+\toprule
+fact & content & informs & source verdict (verbatim) \\
+\midrule
+\rid{EMP01} & low-$p$ HPM $=$ exact HPM 2,400/2,400; 0 search misses & \rid{TH05}, \rid{TH115} & ``Support'' (T21; bound loose) \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:118} \\
+\rid{EMP02}, \rid{EMP03} & $\hat Z$ and PIP accuracy vs exact & \rid{TH110}, \rid{TH01.a}, \rid{TH16} & ``Support'' T12; T26 finite-setting \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:163-164} \\
+\rid{EMP11}, \rid{EMP12} & 1,829 / 565 / 0 / 6 decomposition & \rid{TH115}, \rid{TH05}, \rid{TH334}, \rid{LIM07} & ``Consistent with T21's decomposition'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:26} \\
+\rid{EMP13} & 207/565 equal-size; supersets at $c=1$ & \rid{TH106}, \rid{TH09}, \rid{TH123} & ``T03: silent'', ``T07: support / relevant'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:28} \\
+\rid{EMP14} & local search never moved & \rid{TH199}, \rid{TH05}, \rid{CJ224} & ``Repair by improving moves: not exercised'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:105} \\
+\rid{EMP15} & masking: $Q_f\pi_0(S_0)<1$ in 2,393/2,394 & \rid{TH03}, \rid{TH116}, \rid{TH119} & ``qualitatively consistent with T27'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:23} \\
+\rid{EMP16} & TD fails (low $p$ 2,400/2,400; high $p$ 196/196) & \rid{TH199}, \rid{TH201}, \rid{TH204} & ``T37(i) … is not contradicted'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:24} \\
+\rid{EMP17} & first discovery in the pilot & \rid{TH281}, \rid{TH284}, \rid{TH218} & ``T38(b2)'s formal premises: unverified (silent)'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:25} \\
+\rid{EMP18} & cost exponents 1.07/1.5/1.4 & \rid{TH08} & ``descriptively consistent with polynomial scaling'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:25} \\
+\rid{EMP10} & 6 stops, P5 not run & \rid{TH05} (output event $\mathcal O$) & ``Small observed completion gap'' \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:27} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% =====================================================================================================
+\subsection{Reproducibility and review trail}\label{sec:emp-review}
+
+Every headline table was checked by an independent recomputation from raw records (``tie-out'', worker Terra 6.1, with planted
+canaries) and reviewed by Sol 6.1. Bulk data are not in Git; they are on Felipe's PC (OneDrive ``NOTS Data/New\_Campaign/'')
+with sha256 manifests \src{Docs/Records/DATA_INDEX.md:9}; per-case/per-fit tables cited by the reports (e.g.\
+\texttt{case\_theory\_H.csv}, \texttt{smc\_h2\_per\_fit.csv}, \texttt{ev\_stops.csv}) are kept out of the repo
+\src{Docs/Records/DATA_INDEX.md:28-41}.
+
+\begin{center}\scriptsize
+\begin{tabular}{p{3.3cm}p{5.2cm}p{5.6cm}}
+\toprule
+analysis & tie-out & review / decision \\
+\midrule
+Low $p$, SMC vs exact & PASS: 38/38 genuine cells, 5/5 canaries \src{Results/2026-10-28_New_Campaign/L_20261102/tieout/TIEOUT_VERDICT.md:8} & Sol R1 and R2 ``ACCEPT WITH FIXES'' \src{Results/2026-10-28_New_Campaign/L_20261102/review/SOL_REVIEW_R1.md:1} \src{Results/2026-10-28_New_Campaign/L_20261102/review/SOL_REVIEW_R2.md:1}; D75 \src{Docs/HQ/DECISIONS.md:227} \\
+Low $p$, benchmarks (pass C) & PASS: 21/21 genuine, 4/4 canaries \src{Results/2026-10-28_New_Campaign/L_20261102/tieout_bench/TIEOUT_VERDICT.md:11} & Sol ``ACCEPT'' \src{Results/2026-10-28_New_Campaign/L_20261102/review/SOL_REVIEW_PASSC.md:3}; D94 \src{Docs/HQ/DECISIONS.md:294} \\
+High $p$, existing fits & 44 targeted checks, 5 canaries flagged, ``The other 39 cells: all match'' \src{Results/2026-10-28_New_Campaign/H_existing_20261030/tieout/TIEOUT_VERDICT.md:4-13} & Sol ``ACCEPT WITH FIXES'' \src{Results/2026-10-28_New_Campaign/H_existing_20261030/review/SOL_REVIEW_HEADLINE_H.md:1} \\
+High $p$, H2 rerun & PASS: 46/46 genuine, 5/5 canaries \src{Results/2026-10-28_New_Campaign/H2_20261102/tieout/TIEOUT_VERDICT.md:26-27} & Sol R1 and R2 ``ACCEPT WITH FIXES'' \src{Results/2026-10-28_New_Campaign/H2_20261102/review/SOL_REVIEW_H2_R1.md:3} \src{Results/2026-10-28_New_Campaign/H2_20261102/review/SOL_RECHECK_H2_R2.md:3}; D78 \src{Docs/HQ/DECISIONS.md:232} \\
+High $p$, aLasso rerun (F3) & PASS: 41/41 genuine, 3 canaries \src{Results/2026-10-28_New_Campaign/H2_20261102/tieout/F3_TIEOUT_VERDICT.md:10} & Sol ``ACCEPT'' \src{Results/2026-10-28_New_Campaign/H2_20261102/review/SOL_CHECK_F3.md:3}; D87 \src{Docs/HQ/DECISIONS.md:261} \\
+Theory-campaign runs & none of the above kind & per-ID status in the registry (e.g.\ \rid{TH334} ``author-only (no SF, no XF)'') \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Frozen code: \path{Scripts/Campaigns/2026-10-28_New_Campaign/} is ``a byte-exact mirror of the campaign's code folders''; ``Frozen means
+frozen'' \src{Scripts/Campaigns/2026-10-28_New_Campaign/README.md:3} \src{Scripts/Campaigns/2026-10-28_New_Campaign/README.md:46}. All tables
+in this section regenerate with \texttt{python scripts/make\_tables.py}, which also re-checks the reports' quoted totals (e.g.\ 2,216, 2,251,
+559/560/370/340, 1,829/565/0/6, 207/565, 2,391/2,394) and exits non-zero on any mismatch.
+
+% =====================================================================================================
+\subsection{What the empirics do not show}\label{sec:emp-limits}
+
+\begin{notproved}[empirical scope]
+\begin{itemize}
+\item \textbf{One $n$.} Every study fit has $n=200$; consistency, rates and asymptotic statements are ``silent'' in every evidence report
+\src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:87} \src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:189}.
+Two values of $p$ per regime ``cannot establish a rate'' \src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:88}.
+\item \textbf{One generator, not a theory family.} Groups of 5; not LH ($g=9$) or LH-iid (\S\ref{sec:emp-design}).
+\item \textbf{No accuracy at $p\gg n$.} No $\hat Z$ or PIP accuracy is claimed at $p\gg n$ (D22)
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:8}; no head-to-head $\hat Z$/PIP comparison against other Bayesian methods
+exists \src{NBH/03_results_and_conclusions.md:181}.
+\item \textbf{Discovery at $p\gg n$.} Whether $S_0$ was scored in the 565 completed misses is unidentified in the repo reports and asserted by S-ELS
+(\rid{EMP12}); T21's probability bound is untested; $2E_0[1-\pi(S_0)]$ was not evaluated at $p\gg n$.
+\item \textbf{Repair.} The final local search never made an improving move at $p\gg n$; repair ``by improving moves: not exercised''.
+At low $p$ first-score attribution ``neither tests the hypothesised local-search repair mechanism nor rules out a later role''.
+\item \textbf{TD at $p\gg n$} covers $d=0$ only, on a 196-case sample enriched for misses; the move-type diagnosis covers 4 cases
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:231-233}.
+\item \textbf{Stops.} The P5 retry was not run, so ``The observed retry effect is unknown''.
+\item \textbf{Benchmarks.} AI-written code, partial G5; ABESS not RSS-optimal; EN $\alpha$ at the grid edge; benchmark comparisons are ``a
+comparison of \emph{targets} as much as of \emph{algorithms}'' (F-REFEREE) \src{NBH/03_results_and_conclusions.md:181}.
+\item \textbf{Theory-campaign runs} are mostly author-only, post hoc, or on 3--12 designs; LS0 is not in the production core.
+\end{itemize}
+\end{notproved}
+
+\begin{agentnote}[empirical facts a theorist must explain or must not contradict]
+\begin{enumerate}
+\item At low $p$ the SMC HPM equals the exact HPM in 14,400/14,400 fits and there are 0 search misses (\rid{EMP01}); any theorem whose
+finite-$n$ reading predicts search failures on such designs must explain this.
+\item At $n=200$ \textbf{every observed wrong report among completed fits is a posterior (target) error}: 184/184 at low $p$ (exact), and at $p\gg n$ each of the 565
+completed misses has a scored competitor strictly above $S_0$ (min gap 0.0049 nats); the other 6 high-$p$ errors are stopped fits with no output (\rid{EMP10}) (\rid{EMP11};\rid{LIM07} ``true by definition of the
+fixed target''). These observed competitor defeats establish target-mode misses \emph{for the existing fits} only.
+\begin{uncertain}[withdrawn inference: ``a start change can add at most the 6 stopped fits'']
+One archive summary still states: ``no start or search change can fix them (API-RESID: a start change can add at most the 6 stopped
+fits, 0.25\%)'' \src{NBH/03_results_and_conclusions.md:183}. This inference was withdrawn at the method meeting: ``The argument that the
+backfit start could gain at most 6 of 2,400 fits doesn't follow'' \pos{1480} \src{NBH/03b_reasoning_and_traces.md:92} (see \rid{MD01} and
+reversal H.18 in \S\ref{sec:history}). What stands is the definitional fact \rid{LIM07}: under the fixed target, no search can make the
+HPM equal $S_0$ when $F(S_0)<F(\hat S)$ \src{NBH/branch_snapshots/MEET-v31/MINUTES.md:92}. Do not cite the 6-fit cap.
+\end{uncertain}
+\item Do not claim ``$S_0$ was scored in every completed fit'' at $p\gg n$ without the \rid{EMP12} conflict.
+\item The start is masked almost everywhere ($Q_f\pi_0(S_0)<1$ in 2,393/2,394; median $\log_{10}\pi_0(S_0)$ down to $-25.6$), yet at high $p$ the reported HPM was
+first scored in the pilot in all 2,394 completed fits (for the 1,829 hits mostly by Gibbs flips, 1,724, and neighbour swaps, 104), and at low $p$ the truth was always first scored in the pilot (initial draw 1,304, Gibbs flip 1,038 of 2,400) (\rid{EMP15}, \rid{EMP17}). At $n=200$ ``The rigorous a-priori bounds (T21 routes) are \textbf{vacuous}''
+\src{NBH/branch_snapshots/API-N200/REPORT.md:12}; EVIDENCE\_H: ``This motivates a pilot-discovery / T24-type route for T38''
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:123}.
+\item Literal truth dominance fails in every checked case (low $p$ 2,400/2,400; high $p$ TD(0,0) 196/196, a $d=0$ check on a miss-enriched sample), via truth-in swaps ($d\ge1$) and lateral
+truth-for-truth swaps ($d=0$) (\rid{EMP16}); a usable repair premise ``must tolerate lateral (|S Δ S₀|-preserving) moves''
+\src{Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:102}.
+\item Error shapes: supersets dominate at $c=1$; equal-size wrong supports (37\% of completed misses) and subsets at $c=0.5$ (\rid{EMP13}).
+\item The N200 prediction (observed $P(U)$ plus the one-move term $\sum\hat P_0(L\mid X)$, ``a lower bound plus a measured term'') is 558 vs 571 observed wrong over 2,400 fits (\rid{EMP20}); an upper bound on $\Pi(X)$ at finite $n$ is open.
+\item RB PIPs are about 4$\times$ more accurate than plain PIPs at low $p$ (\rid{EMP03}); $\hat Z$'s pooled relative bias is within 1.1 SE of 0.
+\item Cost from $p=500$ to 1000 grows like $2^{1.07}$--$2^{1.5}$ in work (\rid{EMP18}); two points, no rate.
+\item SSL beats the exact HPM of SMC-BVS's own model at low $p$ (2,251 vs 2,216; \rid{EMP05}): ``The exact posterior is that of the
+SMC-BVS model, not an oracle, so another prior can recover more often''
+\src{Results/2026-10-28_New_Campaign/L_20261102/EVIDENCE_L.md:265}.
+\end{enumerate}
+\end{agentnote}

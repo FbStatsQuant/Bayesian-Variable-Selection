@@ -1,0 +1,476 @@
+\section{Open problems, pending decisions and plan}\label{sec:open}
+
+This section says what is open and what comes next. It has six parts: Felipe's decisions, closed and pending (\S\ref{sec:open:decisions}); the theory frontier, as precise open problems \rid{FR01}--\rid{FR14} (\S\ref{sec:open:frontier}); engineering and audit items \rid{ENG01}--\rid{ENG20} that gate claims (\S\ref{sec:open:eng}); every recorded conflict or uncertain item (\S\ref{sec:open:uncertain}); the planned next phase (\S\ref{sec:open:plan}); and the infrastructure rules for the new loop (\S\ref{sec:open:infra}). The obligations OB01--OB17, future work CJ01--CJ27, drops DR01--DR06 and limitations LIM01--LIM09 are defined in \S\ref{sec:supp}; they are referenced here and not restated.
+
+% ------------------------------------------------------------------------------------------------
+\subsection{Decisions: closed and pending}\label{sec:open:decisions}
+
+At the end of the source thread HQ had approved the method (v3.1) and the theorem package, and ``Felipe had not yet approved the theorem list'' \src{NBH/05_open_questions_and_next_steps.md:15}. That decision is now closed (\rid{DEC01}). The others in the archive's list \src{NBH/05_open_questions_and_next_steps.md:17-30} remain open unless a source closes them. ``Status'' gives the state as this document records it; the archive's own status words are in the sources cited.
+
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{1.3cm}>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{2.6cm}@{}}
+\toprule
+\textbf{ID} & \textbf{Decision (content, recommendation, sources)} & \textbf{Status} \\
+\midrule
+\endhead
+\defid{DEC01} & \textbf{Approve the paper-1 theorem list} (8 main cards \rid{TH01}--\rid{TH08}, supplement \rid{TH09}--\rid{TH20}); was P1 \src{NBH/05_open_questions_and_next_steps.md:19}, \pos{1650}. Approved by Felipe on 2026-11-07 as the current targets \src{Theory_work/State_of_Project/sources/approval_2026-11-07.md:3-5}; recorded in this document's changelog (Appendix~\ref{app:changelog}). Approval changes no proof status. & DECIDED 2026-11-07 \approvedFB \\
+\defid{DEC02} & \textbf{Song--Liang separation scout HQ.} ``I recommend one small scout HQ on the separation alongside wave 1. If it succeeds it becomes a ninth main theorem; nothing else waits on it'' \pos{1650}; = \rid{CJ21} (FW21, K97) + \rid{CL23} \src{NBH/05_open_questions_and_next_steps.md:20}. Frontier \rid{FR06}. & OPEN \\
+\defid{DEC03} & \textbf{Prop D (M8, \rid{TH08}) in the main text or the supplement.} HQ recommends main ``for parallel scalability. The alternative leaves 7 main theorems'' \pos{1650}; Seat D's alternative: main = 7 \src{NBH/05_open_questions_and_next_steps.md:21}, \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M8.md:57}. & OPEN (see box) \\
+\defid{DEC04} & \textbf{HQ's reading of proposal §5.3 (bridge form).} \rid{RL01}, \rid{RL05}: ``§5.3 is met by the bridge form. One caveat: the example family gives useful constants only for very weak cross-block correlation, of order $\varepsilon\lesssim n^{-1/2}/p$''; sharp $\varepsilon$-scale necessity is \rid{CJ22}; ``Felipe may overrule'' \src{NBH/05_open_questions_and_next_steps.md:22}. & OPEN (HQ ruling stands unless overruled) \\
+\defid{DEC05} & \textbf{HQ's reading of §5.4.} \rid{RL02}: ``coverage'' = distance from the exact posterior's credible quantities, not frequentist coverage (\rid{CJ01}); \rid{RL03}: TV/KL of the final estimate under masking is future work (\rid{CJ02}), with at least one masked accuracy statement shipped (TH04.f) \src{NBH/05_open_questions_and_next_steps.md:23}. & OPEN (HQ ruling stands unless overruled) \\
+\defid{DEC06} & \textbf{The stage count as a step function.} ``The stage count is a step function of correlation strength, held within two-sided bounds'' (TH02.b6, TH02.b8, \rid{TH07}; \rid{RL05}) \src{NBH/05_open_questions_and_next_steps.md:24}. & OPEN (for Felipe to see) \\
+\defid{DEC07} & \textbf{Items HQ decided on its own authority.} (i) Reporting-only run-card numbers $\hat J$ and $\hat\varepsilon_\times$ (\rid{DF19}, \rid{DF20}; \rid{RL04}; \path{MEET-v31/AMENDMENT_HQ_02.md}); (ii) growth rate (ii) $R'_n=4\lceil(n+p)^6/4\rceil$ kept only inside a theorem (\rid{RL06}, ``Felipe may overrule''); (iii) the overnight kill fixed by systemd units \src{NBH/05_open_questions_and_next_steps.md:25}. & OPEN (Felipe may overrule) \\
+\defid{DEC08} & \textbf{Registry updates for the registry owner}: \path{MEET-THM/REGISTRY_PAPER1.md} §9, ``five recommended registry updates'' \src{NBH/05_open_questions_and_next_steps.md:26}. & OPEN \\
+\defid{DEC09} & \textbf{PR \#1} (spine correction, branch \texttt{theory/E-SPINE}): ``It isn't merged'' \pos{850} \src{NBH/05_open_questions_and_next_steps.md:29}; on 2026-11-07 GitHub reports it OPEN, not merged, last updated 2026-11-02 \src{Theory_work/State_of_Project/sources/PR1_status_2026-11-07.json:1}. The repo's \path{Docs/} still carry the pre-correction wording (\S\ref{sec:history:olddocs}). Decision pending: merge or close. & OPEN (PR open, unmerged on 2026-11-07) \\
+\defid{DEC10} & \textbf{LH-SCALE go-ahead} (the simulated referee's one compute request; \rid{ENG18}): ``Needs your OK'' \pos{824} \src{NBH/05_open_questions_and_next_steps.md:29}, \src{NBH/05_open_questions_and_next_steps.md:216}. & OPEN (never approved or run) \\
+\defid{DEC11} & \textbf{Explicit ruling on the common-$\sigma^2$ start rejection.} HQ recommended ``Common-$\sigma^2$ start: reject'' \pos{796}; ``Whether Felipe explicitly ruled is UNCERTAIN'' \src{NBH/03b_reasoning_and_traces.md:84} (reversal H.6). & RECOMMENDED BY HQ; FELIPE'S RULING NOT RECORDED \\
+\defid{DEC12} & \textbf{Adoption / locking of results.} ``Nothing has been adopted or locked by Felipe; adoption is his decision'' \src{NBH/START_HERE.md:44}; the LOCKABLE\_v2 list ``lists candidates; it does not adopt, lock or upgrade anything'' \src{NBH/branch_snapshots/T38-RECORD/LOCKABLE_v2.md:3}; the old plan's ``Adopt the 21 locked proof entries'' was ``never answered'' \src{Docs/PLAN.md:119}. & OPEN \\
+\defid{DEC13} & \textbf{Sol as a second referee / fourth seat.} The sources record no plan beyond HQ's offer ``If you want to try Sol, I'd add it as a fourth seat or as a proof checker, not as a replacement for Astra'' \pos{1302} \src{NBH/05_open_questions_and_next_steps.md:224}. & OPEN \\
+\defid{DEC14} & \textbf{Residualised (backfit) start as an optional method-side investment.} ``not decided''; HQ said it ``attacks the method's main weakness at its source'' \pos{937}; it remains an unproven candidate (\rid{CJ162}); MEET-v31 item 1 rejected it for paper 1 \src{NBH/05_open_questions_and_next_steps.md:221}. & OPEN (not decided) \\
+\defid{DEC15} & \textbf{Island-level depth only for paper 1; per-particle streams = v3.2} (\rid{MD06}); one of the four method-process decisions ``All approved'' \pos{1304} \src{NBH/05_open_questions_and_next_steps.md:27}. & DECIDED 2026-11-04 (date conflict, box below) \\
+\defid{DEC16} & \textbf{Novelty check of ``report the best model ever visited'' against Hans, Dobra \& West (2007) shotgun stochastic search}, carried forward by the old HQ: ``Matters for the T21/T38 novelty claims'' \src{Docs/PLAN.md:136}. No resolution was found in the archive's narrative documents. & OPEN (not addressed in the archive) \\
+\bottomrule
+\end{xltabular}
+}
+
+\begin{uncertain}[does the 2026-11-07 approval settle the placement of M8 (\rid{DEC03})?]
+The approval record gives its scope as the main cards M1--M8 (TH01--TH08) and the supplement cards (TH09--TH20) \src{Theory_work/State_of_Project/sources/approval_2026-11-07.md:5}, i.e.\ the list as HQ presented it with Prop D as M8. HQ asked a \emph{separate} question, ``Prop D (M8) in the main text or the supplement'' \pos{1650}, and the approval record states that this placement question is not covered \src{Theory_work/State_of_Project/sources/approval_2026-11-07.md:6}. No source records an answer to it. Until Felipe says otherwise, treat M8 as listed among the main cards and \rid{DEC03} as open.
+\end{uncertain}
+\begin{uncertain}[date of the island-level depth decision (U14)]
+\path{METHOD_v3.1_FINAL.md} §3 says 2026-11-03; in the transcript it was proposed at \pos{1263} and \pos{1302} and approved at \pos{1304} on 2026-11-04T00:05Z \src{NBH/05_open_questions_and_next_steps.md:123}.
+\end{uncertain}
+
+\paragraph{HQ rulings and recorded dissents.} HQ ruled on the chair's questions Q1--Q5 under Felipe's delegation (``you have full autonomy wrt the specs of the meeting'' \pos{1616}); Felipe may overrule them (\rid{DEC04}, \rid{DEC05}, \rid{DEC07}) \src{NBH/03b_reasoning_and_traces.md:230-242}. Seats' disagreements with placements are recorded as dissents. Statuses verbatim \src{NBH/ID_REGISTRY.md:187-192}, \src{NBH/ID_REGISTRY.md:206-211}.
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{3.2cm}>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.0cm}@{}}
+\toprule
+\textbf{ID} & \textbf{Native} & \textbf{Content (registry)} & \textbf{Status} \\
+\midrule
+\endhead
+\defid{RL01} & HQ ruling Q1 (§5.3) & Bridge form accepted with three conditions: (a) discrepancy half, (b) bridge-form stability, (c) refutation of the one-shot form (OWS-WS6(d), WS7) after a cross-family check & \status{ACCEPTED ("Q1 (§5.3): ACCEPTED, with three conditions"); Q1(c) met by CHK\_INHERITED (VERIFIED WITH AMENDMENT)} \\
+\defid{RL02} & HQ ruling Q2 (§5.4 coverage) & ``Coverage error'' means $|\pi(C(\hat\pi))-\text{nominal}|$ plus MC error; frequentist coverage → \rid{CJ01} & \status{ACCEPTED} \\
+\defid{RL03} & HQ ruling Q3 (§5.4 TV/KL under masking) & Obligation with fallback; the list must contain at least one masked-regime accuracy statement (→ TH04(f)); masked final-estimate TV/KL → \rid{CJ02} & \status{NOT binding} \\
+\defid{RL04} & HQ ruling Q4 ($\hat J$ and leakage proxy) & Reporting allowed: from existing quantities, no random numbers, no feedback, precisely specified & \status{REPORTING, allowed} \\
+\defid{RL05} & HQ ruling Q5 (stage count continuous in $\varepsilon$) & Sandwich + local constancy + continuous envelope; real-valued parts continuity/Lipschitz; $T$ is a step function ($T=3$ between $\{2,4\}$ at $\varepsilon=10^{-5}$) & \status{ACCEPTED, with two conditions} \\
+\defid{RL06} & HQ approval amendment (growth rate (ii)) & Package approved; $R'_n=4\lceil(n+p)^6/4\rceil$ kept only as a sufficient rate inside the theorem, not a method configuration ($\approx10^{17}$ islands at study sizes) & \status{adopted by HQ; Felipe may overrule} \\
+\defid{DS01} & Dissent K33 (Seat D) & D would place K33 in S-IDENT; A, B, C: M7 & \status{recorded dissent} \\
+\defid{DS02} & Dissent K23 (Seat C) & C would keep the squared-kernel Dirichlet comparison as an attributed lemma in S-KERNEL; A, B, D: FUTURE\_WORK (\rid{CJ05}) & \status{recorded dissent} \\
+\defid{DS03} & Dissent K29 / S-STGI (Seat D) & D: ``confirm K29 here''; A, B, C prevail: S-STGI dissolved (\rid{TH21}) & \status{recorded dissent} \\
+\defid{DS04} & Dissent K30 (Seat C) & C: K30 in the supplement as S-STGI/C14; A, B, D: M7(d) & \status{recorded dissent} \\
+\defid{DS05} & Dissent K70 (Seat C) & C: K70 as a supplementary attributed variant; A, B, D: labelled no-LS0 variant clause of M5 & \status{recorded dissent} \\
+\defid{DS06} & Dissent K57 (Seat D) & D: general K57 in the supplement; B, C: only P1 in S-POOL, general accuracy → FW (\rid{CJ08}) & \status{recorded dissent} \\
+\bottomrule
+\end{xltabular}
+}
+
+\paragraph{Standing safeguard (P10).} ``if a theorem behind one of your mandatory proposal goals (§5.1--5.4, §13.1) fails, it comes back to you. It is never silently dropped''; currently live for \rid{OB01} (N1, binding §13.1) \src{NBH/05_open_questions_and_next_steps.md:28}. Standing instructions of Felipe that govern the next phase: ``extract until the last drop of information the method has into provable results. No rock can remain unturned'' \pos{1150}; method stays composite-start/SMC/HPM unless ``irrefutable reasons'' \pos{1155}; any $(n,p)$ with no arbitrary choices \pos{1214}; Biometrika first, ``Down to Lean certificates'' \pos{1015} \src{NBH/05_open_questions_and_next_steps.md:32-37}. The old plan's other open items (\path{Docs/PLAN.md} §4, items 3--10, 12--17) concern the empirical campaign, benchmarks, the public repository and operations \src{Docs/PLAN.md:116-145}; they are outside the theory loop's scope.
+
+% ------------------------------------------------------------------------------------------------
+\subsection{The theory frontier}\label{sec:open:frontier}
+
+Each frontier item states the gap, why it matters (which objective or card), what was tried and why it failed, candidate routes \emph{named in the sources}, and what ``done'' means according to the sources. Unless a charter says more, ``done'' follows the plan's general standard: each per-theorem HQ ``loops to a refereed proof plus a Lean certificate'' \src{NBH/START_HERE.md:57}, with a cross-family check on every claim, every self-proved claim labelled ``unchecked'', and Lean coverage per the cards' ``Lean core'' rows \src{NBH/05_open_questions_and_next_steps.md:209-212}; the card ships in the narrowest form its filed checks support, and a clause whose proof or cross-family check fails after one repair cycle moves to \path{FUTURE_WORK.md} with the reason, never relabelled as a limitation (IC7) \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-FOUND.md:112}. Obligations and future-work items are referenced by ID; their exact statuses are in \S\ref{sec:supp}.
+
+\begin{card}{FR01}{p $\gg$ n: a cross-family-checked masked consistency theorem, and beyond polynomial $p$}
+\textbf{Gap.} No p $\gg$ n version of the masked-regime HPM result has passed a cross-family review. The W5-VMASK form \rid{TH160} is XF GAP (A-REV3, A-REV6, A-REV8). The repair candidate API-PXNGAP (\rid{TH161}) is ``PROVED (candidate, API-PXNGAP) given T22(i),(ii), T03, CONC, W7 Thm B; no SF/XF review in the archive'' \src{NBH/ID_REGISTRY.md:308-309}; it is campaign-era and outside the final list \src{NBH/03_results_and_conclusions.md:337}. Beyond polynomial $p$: superpolynomial $p$ (log $p=o(n)$) is ``CONJECTURE, recorded in (O2)'' \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:123-124}; exponential $p$ is \rid{CJ18} / \rid{OB12} (``$p\le e^{Cn^\alpha}$: OPEN, not impossible'') \src{NBH/05_open_questions_and_next_steps.md:98}.
+
+\textbf{Why it matters.} The first of the main open edges named by the archive \src{NBH/START_HERE.md:47}; M5's masked clauses (b1-LH), (b2-LH) (\rid{TH05}) are stated on LH exact Gram with $p\le n-1$ \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:292}; the target card S-T (\rid{TH09}) keeps the scope ``$p\le n^A$ from prior and technique; $e^{Cn^\alpha}$ OPEN'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:478}; the study runs at $p\in\{500,1000\}$, $n=200$.
+
+\textbf{Tried.} A-REV3's objections and API-PXNGAP's lemma-by-lemma answers (Lemma Tr-J, Lemma E, Lemma T, Lemma LS, Theorem R) \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:25-40}. Routes abandoned and why: keeping PXN's Lemma Tr; citing W1-EXP; citing Theorem A(A3) for the lattice route; superpolynomial $p$ (T03 locked only for $p\le n^A$); groups of 5 (\rid{FR02}); non-vacuous $(D_S)$ at $n=200$ \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:112-131}.
+
+\textbf{Candidate routes (sources).} The report's own list of items needing an independent check: Lemma Tr-J(c) constants; Lemma E (E2), (E3); Lemma $\Lambda$(a) Haar-span step; Theorem R (= W7 Theorem B); the operational closure OP-LS0 + GUARD; Lean-readiness of Lemma LS and (C) \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:133-144}. Lemma E ``could replace the W1-EXP citations in W3/W4/W5'' \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:152-154}.
+
+\textbf{Done when.} The candidate's own card: ``Confidence it is provable at reasonable cost: high --- it is written; what remains is cross-family review'' \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:164}. A cross-family VERIFIED on PROOF §§1--10 with the six items above, then the generic standard. Whether and where it enters the list is a loop output: ``Future demotions/reformulations/additions are outputs of the theory loop'' \src{Theory_work/State_of_Project/AUTHORING.md:32}.
+\end{card}
+
+\begin{card}{FR02}{Covering the study's own design (groups of 5; dilution masking)}
+\textbf{Gap.} The masked-regime theorems are proved on the linked-hub family LH with $g\le B_n<2g$; ``with the study's groups of 5 (2g ≤ B) the partition packs ≥ 2 groups per block and LH masking is not available, so the theorem does not describe the study's own generator'' \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:17-20}. PART-pairing for the study generator is \rid{OB08} / \rid{CJ25} (``OPEN; Prop Q PROOF SKETCH; W7-PART CE2 COUNTEREXAMPLE'') \src{NBH/05_open_questions_and_next_steps.md:94}.
+
+\textbf{Why it matters.} The $n=200$ masking in the study is $\sigma^2$-dilution, not LH linkage (reversal H.9); the referee simulation and LIT-VENUE ask for theory that describes the algorithm as run and ``a main theorem not tied to the constructed LH family'' \src{NBH/05_open_questions_and_next_steps.md:217}.
+
+\textbf{Tried.} Covering groups of 5 on LH: impossible (next-fit packs two groups per block, W7 CE2; by PXN Prop.~Q (a sketch) the linked pair is co-blocked and masking disappears) \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:125-127}. The common-$\sigma^2$ cure for dilution: refuted (\rid{RF150}).
+
+\textbf{Candidate route (sources).} ``The right object for the study regime is a different family (dilution masking, PXN §14, CONJECTURE)'' \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:126-127}; the dilution identity \rid{TH172} and the finite-$n$ formula \rid{TH177} (PROOF SKETCH) are the existing inputs (M3, \rid{TH03}).
+
+\textbf{Done when.} \rid{CJ25} is future work: ``Items here get no per-theorem HQ for paper 1'' \src{NBH/05_open_questions_and_next_steps.md:43}. No acceptance criterion beyond the generic standard is stated in the sources.
+\end{card}
+
+\begin{card}{FR03}{From explicit exhibits (LH, W) to classes of designs}
+\textbf{Gap.} The correlated-design guarantees are exhibited on explicit families: LH for M5's masked clause, M6 and M4(f); Seat C's family W (within-group correlation $1/4$, $\varepsilon_n=1/(np)>0$, two $n^{-1/4}$ signals, blocks = groups for $n\ge9^6$) for M1(i) and M2 \src{NBH/02_theory.md:765}. M2's useful constants need $\varepsilon\lesssim n^{-1/2}/p$ on the exhibited family; at fixed $\varepsilon$, $D_*$ grows ($534\to6.45\cdot10^4$ on W at $\varepsilon=.01$) \src{NBH/02_theory.md:823}.
+
+\textbf{Why it matters.} LIT-VENUE's unmet expectation of a main theorem not tied to LH \src{NBH/03_results_and_conclusions.md:330}; the F-REFEREE points on stylised designs \src{NBH/03b_reasoning_and_traces.md:417}.
+
+\textbf{Tried and failed.} General LH locking (\rid{RF208}); the region form of Theorem W as a general sufficient condition (\rid{RF176}); STAB-LH is a genuine restriction (fails at $(\rho,\psi)=(0.85,0.5)$; $c=2$ partly open, \defid{CJ204}) \src{NBH/02b_theory_campaign_history.md:7934}; posterior-barrier designs are a ceiling for every local method (\rid{CE169}).
+
+\textbf{Candidate routes (sources).} M2's charter: if the general $D_*$ matrix route stalls, ``prove on W directly'' (fallback), and ``§5.3 escalates'' only if both the $D_*$ route and the correlated-family route fail \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M2.md:83}, \src{NBH/02_theory.md:835}. The general $D_*$ decomposition (M2(a1)) is Seat C's PROOF SKETCH and is the charter's first lemma \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M2.md:117}.
+
+\textbf{Done when.} For M2: per charter, cross-family proofs of (a1) and (b2)--(b7), $\le20$ seeds on W \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M2.md:119-121}. A theorem for a class of designs beyond the exhibits is not chartered for paper 1.
+\end{card}
+
+\begin{card}{FR04}{N1: the measured-round island identity for general bounded $h$ (binding §13.1)}
+\textbf{Gap.} \rid{OB01}: ``PROOF SKETCH; PC1 claim 3 takes it as a premise. Binding §13.1: if it fails the goal is not met by withdrawal; HQ escalates to Felipe'' \src{NBH/05_open_questions_and_next_steps.md:87}. The NEW-SYNTH Theorem H (\defid{TH412}): ``crux not verified: island identity $E[W_r\hat h_r]=\pi(h)$ for the measured-round average'' \src{NBH/ID_REGISTRY.md:560}.
+
+\textbf{Why it matters.} M1 (\rid{TH01}) clauses (b, e, f, g, i) rest on N1 (``Core: N1 → M1(b,e,f,g,i)'') \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M1.md:28}; objective 1 (posterior accuracy for every reported summary, joint inclusions); proposal §13.1 is binding.
+
+\textbf{Route (charter).} ``First lemma: N1 (measured-endpoint identity $E[\hat Z_r H_r(h)\mid\mathcal{C}]=Z\cdot\pi(h)$) via the terminal-round prefix identity; then (e) as its corollary on $1\{S\neq S_0\}$''; Lean target T12Core \texttt{unbiased\_of\_step} with \texttt{hstep} for multinomial resampling \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M1.md:114-115}. The card's route text locates the identity: ``N1: finite-state resample–move recursion; the state before each measured record is Zπ-weighted because the prefix of a uniformly random order is state-independent (terminal-round prefix identity, N9 §3)'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:119}. The N9 text it refers to (the RB-PIP case): ``\textbf{PIP identities} (RB marginal PIP, primary estimator): need only that every step is γ₁-invariant and that the order is independent of the state. Then the state just before each Gibbs step j is π-distributed, and E[o\_j] = π(j ∈ S). Both hold.'' \src{NBH/branch_snapshots/N9-KERNEL/REPORT.md:47-49}; full proofs of the moves and the round in \path{NBH/branch_snapshots/N9-KERNEL/PROOF.md} §1--§2. The proof text behind it: ``\emph{Invariance is weaker and is what the estimators use.} Each step is γ\_φ-invariant (reversible ⇒ invariant), so every realised order is γ\_φ-invariant, and so is the round. The state immediately before any Gibbs step j of a round started from γ\_φ is γ\_φ-distributed, whatever the order (the order is independent of the state); this is what the RB identity E[o\_j] = π\_φ(j ∈ S) needs.'' \src{NBH/branch_snapshots/N9-KERNEL/PROOF.md:241-244}; state independence of the order: ``the m−1 uniforms are independent of P's state (they are read before any step of the round, at a stopping time of the stream), and Fisher–Yates maps the (m−1)-tuple of choices bijectively onto the m! permutations [\ldots]. So σ is uniform on S\_m and independent of the state.'' \src{NBH/branch_snapshots/N9-KERNEL/PROOF.md:218-220}. The route sketch from the method meeting (Seat C): ``The proof route is concrete. Conditional on calibration, the finite-state resample–move recursion gives $E[\widehat Z_r\eta_{r,T}(f)]=Z\pi(f)$. Terminal rounds preserve $\pi$, so this identity extends to each measured endpoint and their average. This is a \textbf{PROOF SKETCH} pending the implementation-level recursion check.'' \src{NBH/branch_snapshots/MEET-v31/R2_C.md:200-204}; Seat A, explicitly as its own reading: ``(a2) for the plain average is the base case of the same terminal-round unbiasedness that the RB identity rests on ($E[\hat Z_r\eta_r(f)] = Z\pi(f)$ for a bounded f at a φ = 1 round), so N1 should be a short extension of the locked lemma rather than new theory; its status stays PROOF SKETCH until checked'' \src{NBH/branch_snapshots/MEET-v31/R3_A.md:38}. Lead's reading, comparing the two cited statements: N9's text covers the per-step RB marginal record; N1 (M1(b), \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:111}) asks for $E[\hat Z_r H_r(h)\mid\mathcal C]=Z\cdot\pi(h)$ with $H_r$ the plain measured-endpoint average of a general bounded $h$.
+
+\textbf{Done when.} Cross-family check of the N1 proof by PC1 (Codex Sol); the Lean file to the registrar; a $p\le8$ coded-grid replica of $E[\hat Z_r H_r(h)]$ (10 seeds) by PC2. Fallback: marginal PIPs only (locked identity) for (e)--(i); one HQ wave on N1. Escalation: ``N1 refuted or unclosed after one wave (→ §13.1 unmet, HQ)'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M1.md:116-118}. Wave 1; ``the longest pole and starts first'' \src{NBH/05_open_questions_and_next_steps.md:203}.
+\end{card}
+
+\begin{card}{FR05}{N3: the e4 tie-DP invariant}
+\textbf{Gap.} \rid{OB03}: ``(b1-LH) PROVED (candidate), XF VERIFIED (A-REV8) for `v3 + LS0'; bridge to code = N2(c), not done. DP invariant OPEN'' \src{NBH/05_open_questions_and_next_steps.md:89}.
+
+\textbf{Why it matters.} M5 (\rid{TH05}), objective 3: the e4 invariant is ``the only OPEN mathematical obligation in the chain'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M5.md:101}.
+
+\textbf{Route (charter).} ``the DP returns the prescribed smallest-size, lexicographically smallest start-mode maximiser (W1PC2 D9: TRUE on 400 random instances, DESIGN-ASSERTED)''; in parallel the merged-LS0 replay (\rid{ENG02}) \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M5.md:101}; engineering companion \rid{ENG10}.
+
+\textbf{Done when.} Cross-family check of the assembly; Thm5-LH (SAME-FAMILY-ONLY) and T38-(a) (XF none) to a cross-family check; $\le20$-seed LH replica with LS0. Fallback: ``(b1-LH) becomes `conditional on N3' after one unproductive HQ cycle; (0) + (a) + (b2-LH) always ship''. Escalation: a counterexample to T38-b1-LH on LH, the integrated LS0 differing from the specified one, or N3 failing outright \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M5.md:103-105}. Wave 3.
+\end{card}
+
+\begin{card}{FR06}{The Song--Liang separation (analytic)}
+\textbf{Gap.} \rid{CJ21} (FW21, K97): ``Iteration-uniform null-BF/prior-odds step NOT REPAIRED (W2PC1); LIT-PAR G4 cited as numerical evidence; scout HQ recommended (P2)'' \src{NBH/05_open_questions_and_next_steps.md:67}. Only numerical evidence exists: exact posterior 20/20 vs split-and-merge 5/318 on an LH-like masked design with $p=16$ whose masked variable is a singleton (group size 1, not the LH family; \rid{CE213}, \rid{CE214}, \rid{CL23}) \src{NBH/03_results_and_conclusions.md:263}.
+
+\textbf{Why it matters.} The thesis \pos{1044} contrasts split-and-merge with local-to-global SMC; ``our side, validity under any correlation, is proved (M1)'' \pos{1650} (HQ's words; in the card, validity is clause M1(a) [cited], under the named implementation premises, with the clause statuses of \rid{TH01.a}, and the general-$h$ identity N1 is a proof sketch). If it succeeds, ``it becomes a ninth main theorem'' (\rid{DEC02}).
+
+\textbf{Tried.} THM-SYNTH Theorem SL (\rid{TH417}, PROOF SKETCH; crux ``PIP → 0 under the SL priors'' NOT REPAIRED); LIT-PAR's analytic sketch corrected (\rid{RF276}); the 5/318 used group size 1, i.e. a singleton masked variable (\rid{CE214}; this ``$g$'' is a group size, not the g-prior's $g=n$); the clause ``$\mathrm{cov}(x_t,y)=0$ on isolation'' has a counterexample, replaced by population cancellation $x_t^\top\mu=0$ (\rid{RF267}); correct citation is Song--Liang Thm 4 / Cor 2 + eq. (19) + Condition 5 \src{NBH/02b_theory_campaign_history.md:17495}.
+
+\textbf{Done when.} A scout HQ is only recommended; its charter is not written. The paper otherwise ``compares, and does not claim to exceed, Thm 1, Thm 2 and Thm 4'' of Song--Liang \src{NBH/03_results_and_conclusions.md:316}.
+\end{card}
+
+\begin{card}{FR07}{Finite-$n$ versus asymptotic onset ($n\approx2\cdot10^6$ versus $n=200$)}
+\textbf{Gap.} The statistical theorems are asymptotic; T03♯'s proof thresholds start near $n\approx2\cdot10^6$ (\rid{RF123} corrected the earlier $1.2\cdot10^5$); beta-min fails by at least 43× at the study's signals (\rid{RF105}) \src{NBH/START_HERE.md:51}. Theorem N200 (\rid{TH334}) gives the finite-$n$ account at the level of $\Pi(X)$ predictions (``a lower bound plus a measured term''), 558 predicted vs 571 observed wrong reports \src{NBH/03_results_and_conclusions.md:339}, but its $\Pi(X)$ upper bound is OPEN (\rid{CJ14}, \rid{CJ230}: ``OPEN (Envelope GAP)''). Finite-$n$ Gibbs discovery is \rid{CJ26} (``ThmB-T24 vacuous at $n=200$; no route'').
+
+\textbf{Why it matters.} F-REFEREE's first major point: asymptotic theorems against $n=200$ simulations \src{NBH/03_results_and_conclusions.md:308}; the theory ``can explain the mechanism, not the $n=200$ numbers'' \src{NBH/03_results_and_conclusions.md:339}.
+
+\textbf{Tried.} The union bound over Hamming balls for $\Pi(X)$ failed (\rid{RF249}); the worst-case $(D_S)$ margin is negative at $n=200$ \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:56-58}.
+
+\textbf{Candidate routes (sources).} ``a path-wise bound using O(1) prior differences on the lattice would be the natural finite-n statement for T37'' \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:155-156}; the growing-$n$ simulation LH-SCALE (\rid{ENG18}) to show the predicted transition \src{NBH/05_open_questions_and_next_steps.md:216}.
+
+\textbf{Done when.} \rid{CJ14}, \rid{CJ26} are future work (no paper-1 HQ). LH-SCALE awaits \rid{DEC10}.
+\end{card}
+
+\begin{card}{FR08}{Forward-KL control of the terminal law}
+\textbf{Gap.} On W, the logarithmic number of terminal rounds gives terminal marginal TV and reverse-KL convergence in probability; ``Forward-KL convergence additionally needs control of $\log(1/\pi_{\min})$, which is not supplied'' \src{NBH/02_theory.md:1592}. The C15-KL clause's fallback: ``No forward-KL convergence rate without controlling $\pi_{\min}$; no silent smoothing'' \src{NBH/02_theory.md:1558}.
+
+\textbf{Why it matters.} Proposal §5.4 lists KL among the accuracy measures; the KL calculus sits in the S-IDENT card \rid{TH13} (wave 2, LP-IDENT) and M2(a2) \src{NBH/02_theory.md:1522}.
+
+\textbf{Done when.} Not chartered as a separate item; under \rid{RL03} the masked final-estimate TV/KL is future work \rid{CJ02}. Any forward-KL statement needs a bound on $\log(1/\pi_{\min})$, per the sources.
+\end{card}
+
+\begin{card}{FR09}{The §5.3 scale: useful constants only for $\varepsilon\lesssim n^{-1/2}/p$}
+\textbf{Starting material.} The M2 charter's first lemma: ``C's D\_* decomposition (a1) via the restriction-monotonicity lemma (PC2 Appendix A steps 2–4), written as a filed proof; in parallel the pilot-progress lemma behind (b6′)'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M2.md:117}; Seat C's bounds defining $b_X$, $C_\sigma$, $D_*$ \src{NBH/branch_snapshots/MEET-THM/R2_C.md:65} and its discrepancy half \src{NBH/branch_snapshots/MEET-THM/R2_C.md:261}; the PC2 check files are in \path{NBH/branch_snapshots/MEET-THM/evidence/W2_PC2/}.\par
+\textbf{Gap.} ``the §5.3 constants, useful only for $\varepsilon\lesssim n^{-1/2}/p$'' \src{NBH/START_HERE.md:49}. The sharp $\varepsilon$-scale necessity is \rid{CJ22}: ``All three seat forms COUNTEREXAMPLE; scale disclosure ships'' \src{NBH/05_open_questions_and_next_steps.md:68}.
+
+\textbf{Why it matters.} Binding goal §5.3 (M2, \rid{TH02}; \rid{RL01}); HQ's caveat to Felipe \pos{1650} (\rid{DEC04}).
+
+\textbf{Done when.} The scale is disclosed, not proved sharp; M2 ships with the disclosure \src{NBH/02_theory.md:823}. A sharp necessity theorem is future work.
+\end{card}
+
+\begin{card}{FR10}{Masked-regime two-sided accuracy of $\hat Z$ and PIPs}
+\textbf{Gap.} Masked $\hat Z$ and PIP statements are one-sided. \rid{OB04}(iii) ``Obligation: CONJECTURE, OPEN for $c\ge2$'' = \rid{CJ24} (useful two-sided masked evidence precision; V11 OPEN); masked consistency of the equal-weight PIP/MPM \rid{CJ07}; TV/KL of the final pooled estimate under masking \rid{CJ02} \src{NBH/05_open_questions_and_next_steps.md:48}, \src{NBH/05_open_questions_and_next_steps.md:53}, \src{NBH/05_open_questions_and_next_steps.md:70}, \src{NBH/05_open_questions_and_next_steps.md:90}.
+
+\textbf{Why it matters.} Objective 1; the F-REFEREE point ``evidence and PIPs mean nothing in the masked regime'' \src{NBH/03b_reasoning_and_traces.md:417}; listed as ``Low or open'' confidence \src{NBH/03_results_and_conclusions.md:338}. Paper 1 ships one masked accuracy statement (TH04.f) per \rid{RL03}.
+
+\textbf{Done when.} Future work for paper 1 (no HQ).
+\end{card}
+
+\begin{card}{FR11}{Delivery, calibration and mixing}
+\textbf{Gap.} Delivery $P(U)\to0$ and resource-failure laws (\rid{CJ13}: ``No route; output theorems stated jointly with $\mathcal{O}$ in liminf form''); the calibration contract's open half \rid{OB05}(b) = \rid{CJ06} (as-coded masked stage count, Conjecture P OPEN); polynomial mixing of the $\varphi=1$ round and the $L$ terminal rounds versus mixing time (\rid{CJ04}, \rid{OB10}: ``NONE / OPEN''); the random-order versus random-scan Dirichlet comparison (\rid{CJ05}, dissent \rid{DS02}) \src{NBH/05_open_questions_and_next_steps.md:50-52}, \src{NBH/05_open_questions_and_next_steps.md:59}, \src{NBH/05_open_questions_and_next_steps.md:96}.
+
+\textbf{Why it matters.} Every output theorem is stated jointly with the output event because delivery is not proved; ``Low or open'' confidence for delivery \src{NBH/03_results_and_conclusions.md:338}.
+
+\textbf{Tried.} The YWJ/ZYVR transfer route ``blocked as stated'' (\rid{CJ04}); ``start mass + bridge mass + exit control ⇒ delivery'' false (\rid{RF199}).
+
+\textbf{Done when.} Future work for paper 1.
+\end{card}
+
+\begin{card}{FR12}{No MCMC-slow / SMC-fast separation}
+\textbf{Gap.} ``No published BVS example has MCMC provably slow while tempering or SMC succeeds'' (\rid{CJ290}, OPEN as a literature claim) \src{NBH/03_results_and_conclusions.md:323}; separation from single-chain flip/swap MCMC (\rid{CJ12}: ``Moat construction and accuracy-matched comparator unproved''); DR05 dropped the comparison for lack of an accuracy-matched comparator \src{NBH/05_open_questions_and_next_steps.md:58}, \src{NBH/05_open_questions_and_next_steps.md:75}.
+
+\textbf{Why it matters.} Felipe's goal ``to retire MCMC for BVS'' \pos{1030}; the honest scope: the masked-start theorems ``don't show the method beats MCMC'' (reversal H.4).
+
+\textbf{Done when.} Future work; no charter.
+\end{card}
+
+\begin{card}{FR13}{The ``costs only depth'' half of the thesis}
+\textbf{Gap.} Of the thesis ``correlation costs only sequential depth and particles, never correctness'', ``the `never correctness' half is known; `costs only depth' half open per THM-INV'' \src{NBH/03b_reasoning_and_traces.md:144}. The stage laws (M7, \rid{TH07}; HQ's plain words: ``correlation costs about $\log_2$(masking depth) sequential stages'', which in the card is clause (d) on the ideal exact-frontier two-state grid only, while the coded grid has $T\le T_e$ and the count bound of (c)) and Prop D (M8, \rid{TH08}, given the execution DAG as specified, audit open) address it at island level; the as-coded masked stage count is \rid{CJ06}; the favourable $O(1)$ stage law unconditional is \rid{CJ23} (S-STGI dissolved, \rid{TH21}; dissent \rid{DS03}); Prop D's calibration share is ``seat-derived, unchecked'' (\rid{OB15}) \src{NBH/05_open_questions_and_next_steps.md:69}, \src{NBH/05_open_questions_and_next_steps.md:101}.
+
+\textbf{Why it matters.} Objective 2 (parallel scalability); the remark \rid{TH22} records that ``there is no retained non-corollary thesis sentence'' \src{NBH/03_results_and_conclusions.md:115}.
+
+\textbf{Done when.} M7 (wave 2) and M8 (wave 3) per charters; M8: cross-family code read reproducing (a)--(c) and the timing tabulation on $\le20$ saved fits (\rid{ENG09}); escalation if depth grows with $R'$ at $w\ge R'$ \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M8.md:81-83}.
+\end{card}
+
+\begin{card}{FR14}{Lean coverage of the main cards}
+\textbf{Gap.} ``No main card is Lean-certified as a whole''; every main card has a ``Lean core'' still to be written \src{NBH/03_results_and_conclusions.md:22}. T12(i.a) is partial: the resample--move recursion \texttt{hstep} is an explicit hypothesis \src{NBH/03_results_and_conclusions.md:145}. Floating-point: the label ``numerical implementation of an exact-arithmetic certificate'' stays until \rid{OB16} / \rid{CJ16} (``N16 OPEN; T33-errbound COUNTEREXAMPLE'') is closed (\rid{ENG05}).
+
+\textbf{Why it matters.} Venue target ``Down to Lean certificates'' \pos{1015}.
+
+\textbf{Route (sources).} ``T12 \texttt{hstep} discharge for multinomial resampling is the first named target (\path{L-LEAN/T12_PLAN.md}), keep \texttt{stmtdiff.py} frozen-statement check; Astra/Fable fidelity checks per file'' \src{NBH/05_open_questions_and_next_steps.md:212}; per-card Lean targets are in the charters (e.g. M1, M2, M5, M7, M8).
+
+\textbf{Done when.} Per card: the charter's Lean target compiles with 0 \texttt{sorry} and passes cross-family statement-fidelity checks.
+\end{card}
+
+\subsubsection*{Priority of the frontier problems (derived)}\label{sec:open:frontier-rank}
+The sources do not rank FR01--FR14 directly. The order below is \emph{derived by the lead} from two source facts only: which proposal goals are binding (§13.1 and §5.3) \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:16}, \src{NBH/branch_snapshots/MEET-THM/COVERAGE_MATRIX.md:23}, and the chartered wave order \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:110-113}. Problems outside the waves are scope extensions or scouts; their order among themselves is not set by any source.
+
+\begin{center}\small
+\begin{tabular}{@{}p{1.2cm}p{3.2cm}p{10.2cm}@{}}
+\toprule
+Priority & Problems & Basis in the sources \\ \midrule
+1 & \rid{FR04} (N1) & Binding §13.1; wave 1: ``N1 (binding §13.1) is the longest pole and starts first'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:110}. \\
+1 (same wave) & M3 START assembly (\rid{TH03}); LP-FOUND = S-TARGET, S-BLOCKS, S-KERNEL (\rid{TH10}--\rid{TH12}) & Also wave 1 (``Foundations'') \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:110}; no FR card because they are assemblies of card clauses, not open frontier problems. M3 first lemma: ``Match production $\gamma_0,\bar Z_0$ to L-DIL; then audit LH’s normalized reference mass and joint sequential ratio premises'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M3.md:93}; LP-FOUND: ``(none specified by the seats for the pack; each card's route is in its seat card)'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-FOUND.md:111}. \\
+2 & \rid{FR09} (§5.3 scale) & Binding §5.3; wave 2 (M2 with M7, M6, LP-IDENT) \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:111}. \\
+3 & \rid{FR08}, \rid{FR13} & Wave-2 cards (S-IDENT KL calculus; M7 stage laws), and wave 3 for M8 \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:111-112}. \\
+4 & \rid{FR05} (N3) & Wave 3, the code-audit wave: ``N2, N3, LS0, GUARD-W and the DAG serve M5, M4 and M8 together. M4(f) needs M5'' \src{NBH/branch_snapshots/MEET-THM/MINUTES.md:112}. \\
+deferred & \rid{FR10}, \rid{FR11} & Future work for paper 1 (no HQ) \src{NBH/branch_snapshots/MEET-THM/FUTURE_WORK.md:3}; they touch wave-3 cards (M4, M5) but are not chartered. \\
+5 & \rid{FR14} (Lean) & Runs inside every wave: each HQ ``loops all the way to Lean'' (\S\ref{sec:open:plan}). \\
+scope & \rid{FR01}, \rid{FR02}, \rid{FR03}, \rid{FR07} & Not on the chartered waves. They decide whether the theorems cover the study's own regime ($p\gg n$, groups of 5, $n=200$); no source orders them. \\
+scout & \rid{FR06}, \rid{FR12} & Recommended scout alongside wave 1 (\rid{DEC02}: ``nothing else waits on it'' \pos{1650}); FR12 is explicitly not claimed. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{Engineering and audit items that gate claims}\label{sec:open:eng}
+
+``None of these can change a method decision [\ldots] Each one gates only the claim named'' \src{NBH/05_open_questions_and_next_steps.md:171}. Items \rid{ENG01}--\rid{ENG17} are the archive's E1--E17; \rid{ENG18}--\rid{ENG20} are the simulation and review items of its next-step list.
+
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{2.2cm}@{}}
+\toprule
+\textbf{ID} & \textbf{Item} & \textbf{Gates} & \textbf{Status} \\
+\midrule
+\endhead
+\defid{ENG01} & W-cal: bitwise replay of \texttt{v3\_calibrate} with concurrent diagnostic islands on S1 r001, S4 r001, S5 r002 (about 1 h on Owls); Prop W-cal \rid{TH395} \src{NBH/05_open_questions_and_next_steps.md:175} & ``bitwise'' for calibration; any wall-clock claim & OPEN (not executed) \\
+\defid{ENG02} & LS0 merge into the production core plus merged-LS0 replay on the 3 designs (HPM, stores, flags, \texttt{ls0\_improved}, a deterministic eviction/tie example); \rid{CJ213}, \defid{CJ178}; LS0 cost data \defid{CJ228}, outcome neutrality \defid{CJ226} \src{NBH/05_open_questions_and_next_steps.md:176} & ``LS0 is in the shipped core''; T38(b1-LH) as a theorem about the shipped method (\rid{OB02}(c), \rid{OB03}) & OPEN \\
+\defid{ENG03} & Stop-handling / GUARD-W audit: ``any worker stop, LS0 stop or guard stop ⇒ no output''; forced-stop table after the \texttt{log\_Z} NA fix \src{NBH/05_open_questions_and_next_steps.md:177} & premise (i) of G2 and every $P\{\mathcal{O},\cdot\}$ statement (\rid{OB02}(e), \rid{OB06}(b)) & OPEN \\
+\defid{ENG04} & IND-T for streams $10..9+R'$ \src{NBH/05_open_questions_and_next_steps.md:178} & stacking theorems; frozen-$\mathcal{C}$ contract (\rid{OB14}(c)) & OPEN \\
+\defid{ENG05} & VAL-FP at production size: long-double replay on 2 study designs at $p=500$ (measured only at $p\le40$); validated arithmetic \src{NBH/05_open_questions_and_next_steps.md:179} & removal of the ``numerical implementation'' label (\rid{OB16}, \rid{CJ16}) & OPEN \\
+\defid{ENG06} & Preflight fixes (e6) and allocation audit of concurrent peak memory and stop behaviour \src{NBH/05_open_questions_and_next_steps.md:180} & \texttt{resource\_limit} estimates & OPEN \\
+\defid{ENG07} & Checked arithmetic (e7): overflow boundary tests \src{NBH/05_open_questions_and_next_steps.md:181} & support at huge $(n,p)$ & OPEN \\
+\defid{ENG08} & Full $\hat Z$-weighted PIP rescoring of all 2,394 fits on NOTS/laptop bundles (\texttt{pip\_rescore.R}), with $R_{\mathrm{eff}}$ per fit; only 3 designs done (max $\Delta$PIP $1.29\cdot10^{-3}$) \src{NBH/05_open_questions_and_next_steps.md:182} & primary PIP and MPM$_{\hat Z}$ for the 2,400 fits (\rid{MD08}) & OPEN \\
+\defid{ENG09} & Calibration timing tabulation from $\le20$ saved fits (Owls $\le8$ cores) \src{NBH/05_open_questions_and_next_steps.md:183} & cost wording; the 0.46/0.67/1.69 vs 0.45/0.62/1.76 formula & OPEN \\
+\defid{ENG10} & e4 tie-DP invariant tests (N3) and $n=2$ boundary tests \src{NBH/05_open_questions_and_next_steps.md:184} & LS0 under truncation; $n=2$ support (\rid{FR05}) & OPEN \\
+\defid{ENG11} & Certificate card on saved fits; C5 screening event over the 2,400 fits (\defid{CJ238}); per-dataset matching of O-SWAP checks \src{NBH/05_open_questions_and_next_steps.md:185} & certificate statements on study fits & OPEN \\
+\defid{ENG12} & Per-particle random streams (C6): implement and law-check iff paper 1 claims particle-parallel depth or shows a fit with $p>2{,}500$ \src{NBH/05_open_questions_and_next_steps.md:186} & particle-parallel depth (v3.2) & NOT TRIGGERED \\
+\defid{ENG13} & $X^\top X$-free scorer (C7), the declared v3.2 path \src{NBH/05_open_questions_and_next_steps.md:187} & scalability beyond $p\approx2{,}500$ (\rid{LIM02}) & v3.2 PATH \\
+\defid{ENG14} & Joint summaries (pair inclusion, model size): ``need a small new run, because those particles weren't saved'' \src{NBH/05_open_questions_and_next_steps.md:188} & joint-$h$ numerics (TH01.g) & OPEN \\
+\defid{ENG15} & AMENDMENT\_HQ\_02 reporting fields ($\hat J$, $\hat\varepsilon_\times$, $d$ in $\mathcal{H}$, read-only accumulator) \src{NBH/05_open_questions_and_next_steps.md:189} & \rid{TH19} (S-REP) & NOT CODED: ``Reporting fields 1–3 are specified, not yet coded'' \src{NBH/branch_snapshots/MEET-v31/AMENDMENT_HQ_02.md:15}; the open-questions file lists no code status \\
+\defid{ENG16} & Data caveat: Owls regeneration $\neq$ NOTS bits (\texttt{data\_hash\_check.csv} ``5/7 match=FALSE rows'') \src{NBH/05_open_questions_and_next_steps.md:190} & claims mixing Owls and NOTS records & UNCERTAIN (interpretation not recorded) \\
+\defid{ENG17} & Reproducible record for ABL-CONF fits; NOTS reorganisation (\path{projects/BVS}) by the old HQ \src{NBH/05_open_questions_and_next_steps.md:191}, \src{NBH/05_open_questions_and_next_steps.md:235} & all empirical claims & IN PROGRESS at \pos{1673} \\
+\defid{ENG18} & LH-SCALE: production code on LH at growing $n$; ``3 × 4 × 2 × 100 fits; $n\in\{400,1600,6400,25600\}$; $g=9$; $\rho\in\{0.6,0.85\}$; $\psi\in\{0.3,0.5\}$; $s_0=2c+4$'' (about 2,400 fits); report $P(\hat S=S_0)$, discovering mechanism, $\pi_0(S_0)$ vs the T27 rate, stage counts \src{NBH/05_open_questions_and_next_steps.md:216} & F-REFEREE's transition at growing $n$ (\rid{FR07}) & OPEN (awaits \rid{DEC10}; needs NOTS) \\
+\defid{ENG19} & Real data and head-to-head comparisons (PARNI, MAdaSub, TGS, SuSiE, SSL, Song--Liang numerics); no $\hat Z$/PIP head-to-head against other Bayesian methods exists \src{NBH/05_open_questions_and_next_steps.md:217} & LIT-VENUE expectations & OPEN \\
+\defid{ENG20} & Cross-family re-check of Claude repairs not covered by A-REV5--9 \src{NBH/05_open_questions_and_next_steps.md:165}, \src{NBH/05_open_questions_and_next_steps.md:224} & every repaired campaign result used by a card & OPEN \\
+\bottomrule
+\end{xltabular}
+}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{Recorded conflicts and uncertain items}\label{sec:open:uncertain}
+
+All items below are recorded in the archive as unresolved conflicts between sources (``both sides recorded, none closed by a new review unless stated'') \src{NBH/05_open_questions_and_next_steps.md:107-165}. They are reproduced so the loop does not treat either side as settled.
+
+\subsubsection*{Final-state items U1--U14 (from the final-state theory file)}
+\begin{uncertain}[U1 · growth rate (ii)]
+MINUTES, AMENDMENT\_HQ\_02\_DEFINITIONS §B and NOTATION say ``two optional rates''; HQ adopted only (i) as a method setting, (ii) ``only as a sufficient rate inside the theorem''. How the final M1 states (ii) is not recorded; a task text paraphrases it as ``$R'\ge c(n+p)^6$'' \src{NBH/05_open_questions_and_next_steps.md:110}. See \rid{RL06}.
+\end{uncertain}
+\begin{uncertain}[U2 · size of the draft list]
+``19 items'' \pos{1280}, \pos{1302}, \pos{1201} vs ``24 entries, not 19'' \pos{1492} (MINUTES §1 uses 24) \src{NBH/05_open_questions_and_next_steps.md:111}.
+\end{uncertain}
+\begin{uncertain}[U3 · number of inherent limitations]
+MINUTES §5: 9; THEOREM\_REVISION\_INPUTS §4.A: I1--I7, I9--I11; FOR\_FELIPE\_FINAL\_METHOD §4: 7. Registered: the MINUTES nine (\rid{LIM01}--\rid{LIM09}) \src{NBH/05_open_questions_and_next_steps.md:112}.
+\end{uncertain}
+\begin{uncertain}[U4 · M1 K-ID header]
+The M1 K-ID header differs between the card and MINUTES §2.1; the registry follows MINUTES \src{NBH/05_open_questions_and_next_steps.md:113}.
+\end{uncertain}
+\begin{uncertain}[U5 · M5 $\delta_1$]
+$\delta_1$ is defined as an expectation and then used pointwise; integration note 4 (CLOSE\_AUDIT \#7) fixes the pointwise reading \src{NBH/05_open_questions_and_next_steps.md:114}.
+\end{uncertain}
+\begin{uncertain}[U6 · N9 sub-claims]
+7 sub-claims (\pos{1550}; MEET-v31 MINUTES §9) vs 8 (\pos{1593}) \src{NBH/05_open_questions_and_next_steps.md:115}.
+\end{uncertain}
+\begin{uncertain}[U7 · S-STGI / K29 / K30 propagation]
+Treat ``K30 = M7(d); K29 = FW23 (\rid{CJ23})'' as final; \path{REGISTRY_PAPER1.md} not re-audited \src{NBH/05_open_questions_and_next_steps.md:116}.
+\end{uncertain}
+\begin{uncertain}[U8 · label N2(b)]
+N2(b) (W-cal) is defined in THEOREM\_REVISION\_INPUTS (on MEET-v31), not in the R3 files \src{NBH/05_open_questions_and_next_steps.md:117}.
+\end{uncertain}
+\begin{uncertain}[U9 · FUTURE\_WORK line numbers]
+Line-number drift in FUTURE\_WORK citations (content identical) \src{NBH/05_open_questions_and_next_steps.md:118}.
+\end{uncertain}
+\begin{uncertain}[U10 · supplement-card order]
+The order differs between MINUTES §2.2 and the TLF header table; IDs follow the TLF order \src{NBH/05_open_questions_and_next_steps.md:119}.
+\end{uncertain}
+\begin{uncertain}[U11 · who Seat D was]
+``Seat D'' is ``fresh-eyes Fable'' in FOR\_FELIPE and \pos{1584}; NOTATION lists the seats as A (Fable 5.1), B (Fable 5.1), C (gpt-6-astra), D (Fable 5.1) \src{NBH/05_open_questions_and_next_steps.md:120}.
+\end{uncertain}
+\begin{uncertain}[U12 · approvals]
+METH31's header ``Not yet approved by HQ or Felipe'' predates the approvals; at the archive's end Felipe's approval of the theorem list was not recorded \src{NBH/05_open_questions_and_next_steps.md:121}. \emph{Resolved for the theorem list} by the 2026-11-07 approval (\rid{DEC01}); Felipe's explicit sign-off of the plain-language final method is still not recorded \src{NBH/01_overview_and_timeline.md:399}.
+\end{uncertain}
+\begin{uncertain}[U13 · names of the checkers]
+A task text calls the check waves ``Sol'' and ``Opus''; the files call them PC1 (gpt-6.1-sol on Seats A, B, D) and PC2 (Opus 5.5 on Seat C); CHK = PC1 \src{NBH/05_open_questions_and_next_steps.md:122}.
+\end{uncertain}
+\begin{uncertain}[U14 · date of the island-depth decision]
+See the box under \rid{DEC15} \src{NBH/05_open_questions_and_next_steps.md:123}.
+\end{uncertain}
+
+\subsubsection*{Empirical and bookkeeping conflicts}
+\begin{uncertain}[concurrency ``32 islands within 2e-4'']
+Holds only for S1 (max $\Delta$PIP $2\cdot10^{-4}$); S4 $2.3\cdot10^{-3}$, S5 $7\cdot10^{-4}$; $\log Z$ gaps 0.027, 0.012, 0.47 nats \src{NBH/05_open_questions_and_next_steps.md:126}.
+\end{uncertain}
+\begin{uncertain}[favourable count of the unmodified v3 start]
+0/2,400 (API-RESID) vs 1/2,394 (O-DILUTE §1) \src{NBH/05_open_questions_and_next_steps.md:127}.
+\end{uncertain}
+\begin{uncertain}[thresholds and numerical inconsistencies]
+``Favourable from $n$'': 590--730 (O-DILUTE), 800--1,600 (W3-VEXP), 1,050--3,200 (W5-FAVIID) (\rid{RF160}); start-mode misses ``6--12 of 14'' vs ``holds 2.5--6 of 14'' vs ``7 of 14 masked''; beta-min shortfall $\ge43\times$ vs ``about 100×'' (old); SE columns $\le114$ vs 215--229; stopped fits 6 vs 4 (O-SWAP); LS0 cost ``about $\ell\cdot p$'' vs $1+(\ell+1)\max_k[p+k(p-k)]$ ($\approx1.7\cdot10^5$ at $p=1{,}000$); terminal segment $L+4$ vs $L+5$ (resolved: both right for different boundaries). The source recommends S-ELS for counts, O-DILUTE for start masses, W6-FIXREV1 for LS0 cost, and to drop or attribute the ``favourable from $n\approx\ldots$'' threshold \src{NBH/05_open_questions_and_next_steps.md:128}.
+\end{uncertain}
+\begin{uncertain}[credits]
+Cloud credits \$245 vs \$250; \$21 (LEDGER) vs \$19 \pos{1673}; API spend by run vs the implied \$79 \src{NBH/05_open_questions_and_next_steps.md:129}.
+\end{uncertain}
+\begin{uncertain}[Lean count wording]
+``101 declarations'' vs ``101 theorems/results''; 56 audited for axioms \src{NBH/05_open_questions_and_next_steps.md:130}.
+\end{uncertain}
+\begin{uncertain}[conflict counts]
+26 (REGISTRY\_v2) vs 37 (MEET-THM registrar index); they refer to different registries and are not reconciled \src{NBH/05_open_questions_and_next_steps.md:131}, \src{NBH/03_results_and_conclusions.md:137}.
+\end{uncertain}
+\begin{uncertain}[SSL numbers at $c=1$]
+HQ's SSL numbers (569/582) vs SSL-RS (supplement) 593/592 \src{NBH/05_open_questions_and_next_steps.md:132}.
+\end{uncertain}
+\begin{uncertain}[venue view]
+Shifted from \pos{933} to \pos{1009} (\S\ref{sec:history:lit}) \src{NBH/05_open_questions_and_next_steps.md:133}.
+\end{uncertain}
+\begin{uncertain}[\texttt{T11Miss.lean} and TH06.a]
+Whether \texttt{T11Miss.lean} is reused for TH06.a is not stated \src{NBH/05_open_questions_and_next_steps.md:134}.
+\end{uncertain}
+\begin{uncertain}[PR \#1 and LH-SCALE]
+Resolution not recorded (\rid{DEC09}, \rid{DEC10}) \src{NBH/05_open_questions_and_next_steps.md:135}.
+\end{uncertain}
+
+\subsubsection*{Registry conflicts C1--C26 (campaign registry REGISTRY\_v2)}
+\begin{uncertain}[C1 · Lemma 0(b), R2 dichotomy]
+\rid{RF167}, \rid{RF168}: W1-T37R PROVED vs W3-VT37R / A-REV2 ERROR; W6-FIXREV2 replaces them by Lemma 0(b$'$) and a three-way Prop.~F (same-family, unreviewed) \src{NBH/05_open_questions_and_next_steps.md:138}.
+\end{uncertain}
+\begin{uncertain}[C2 · TD$'_P$ iff DS]
+\rid{RF169}: SF VERIFIED vs XF ERROR (ties); W6-FIXREV2 Lemma T + Lemma NT \src{NBH/05_open_questions_and_next_steps.md:139}.
+\end{uncertain}
+\begin{uncertain}[C3 · Prop U]
+\rid{TH227}: SF VERIFIED (bookkeeping) vs XF ERROR; Theorem B unaffected \src{NBH/05_open_questions_and_next_steps.md:140}.
+\end{uncertain}
+\begin{uncertain}[C4 · Lemma S attainment]
+\rid{LM174}: ``tight'' claim VERIFIED vs XF ERROR on the full domain; the inequality itself VERIFIED \src{NBH/05_open_questions_and_next_steps.md:141}.
+\end{uncertain}
+\begin{uncertain}[C5 · E3(ii)]
+\rid{RF188}: SF VERIFIED vs XF ERROR (omits $q<1$) \src{NBH/05_open_questions_and_next_steps.md:142}.
+\end{uncertain}
+\begin{uncertain}[C6 · EXP constant]
+\rid{RF134}: $0.52/c_*$ vs actual $0.51/c_*$; finite bound unaffected \src{NBH/05_open_questions_and_next_steps.md:143}.
+\end{uncertain}
+\begin{uncertain}[C7 · Thm 4 ``iff'']
+\defid{RF135}: the ``iff'' gloss is an ERROR; VEXP's added claim not justified \src{NBH/05_open_questions_and_next_steps.md:144}.
+\end{uncertain}
+\begin{uncertain}[C8 · T38b-R (whole)]
+\rid{TH241}: SF VERIFIED whole vs A-REV1 GAP (superseded by W6-FIXREV1, see C11) \src{NBH/05_open_questions_and_next_steps.md:145}.
+\end{uncertain}
+\begin{uncertain}[C9 · ORTH-joint, T26-PropC]
+\defid{CJ210}, \defid{TH325}: PROOF SKETCH (weaker) recorded \src{NBH/05_open_questions_and_next_steps.md:146}.
+\end{uncertain}
+\begin{uncertain}[C10 · Thm2-BO label mismatch]
+The author's PROOF SKETCH kept \src{NBH/05_open_questions_and_next_steps.md:147}.
+\end{uncertain}
+\begin{uncertain}[C11 · T38-(0) scope]
+\rid{TH281} / T38b-R(whole): A-REV1 reviewed W1-T38E, not W4-T38FULL; W6-FIXREV1 supersedes \src{NBH/05_open_questions_and_next_steps.md:148}.
+\end{uncertain}
+\begin{uncertain}[C12 · Lemma 0(a,c) wording]
+\defid{LM144}: wording dispute on ``initial centre is the truth'' \src{NBH/05_open_questions_and_next_steps.md:149}.
+\end{uncertain}
+\begin{uncertain}[C13 · version of W1-T37R reviewed]
+Reviewed at \texttt{d492f22} (unfinished REPORT) vs \texttt{3bcc429}; PROOF.md identical \src{NBH/05_open_questions_and_next_steps.md:150}.
+\end{uncertain}
+\begin{uncertain}[C14 · F-REFINE legend]
+F-REFINE ``[P]'' is same-family only \src{NBH/05_open_questions_and_next_steps.md:151}.
+\end{uncertain}
+\begin{uncertain}[C15 · Theorem W vs VPGD-PropT]
+\rid{TH204} vs \rid{TH217}: Theorem W (region form) fails with an exact tie on masked LH ($c\ge2$); the lattice form $W_{\mathrm{Lat}}$ holds \src{NBH/05_open_questions_and_next_steps.md:152}.
+\end{uncertain}
+\begin{uncertain}[C16 · PXN-P6]
+\rid{TH153}: W5-VMASK verified vs A-REV3 GAP (A-REV3 did not read W5-VMASK) \src{NBH/05_open_questions_and_next_steps.md:153}.
+\end{uncertain}
+\begin{uncertain}[C17 · SHARE-M(b), SHARE-B2W4]
+\rid{RF203}, \rid{TH254}: PROOF SKETCH / upgrade vs A-REV3 ERROR \src{NBH/05_open_questions_and_next_steps.md:154}.
+\end{uncertain}
+\begin{uncertain}[C18 · Cost-T38, T32(i)]
+\rid{TH289}, \rid{CJ112}: stale CONJECTURE labels vs W5-LOCKBOOK PROVED (same family only) \src{NBH/05_open_questions_and_next_steps.md:155}.
+\end{uncertain}
+\begin{uncertain}[C19 · SEP-E]
+\rid{TH386}: same staleness \src{NBH/05_open_questions_and_next_steps.md:156}.
+\end{uncertain}
+\begin{uncertain}[C20 · no-LS0 masked candidates on LH]
+\rid{TH285}, \rid{TH286}, \defid{TH263}, \defid{TH267}, \defid{TH269}: none XF reviewed at the time (later A-REV7) \src{NBH/05_open_questions_and_next_steps.md:157}.
+\end{uncertain}
+\begin{uncertain}[C21 · O-CERT §4]
+O-VCERT ``§4 empty'' vs a later illustration (not reviewed) \src{NBH/05_open_questions_and_next_steps.md:158}.
+\end{uncertain}
+\begin{uncertain}[C22 · STG-Wp]
+\defid{TH367}: O-STAGES Cor.~W$'$ rests on (LL) vs O-WSTAB COUNTEREXAMPLE on the divergent side \src{NBH/05_open_questions_and_next_steps.md:159}.
+\end{uncertain}
+\begin{uncertain}[C23 · OMIX-C1]
+\rid{TH183}: common plug-in $\sigma^2$ vs O-DILUTE/F-SIGMA; rejected (E-SPINE §2.2) \src{NBH/05_open_questions_and_next_steps.md:160}.
+\end{uncertain}
+\begin{uncertain}[C24 · T38-b1-LH iid failure]
+\rid{TH287}, \rid{RF217}: A-REV5 ERROR vs A-REV8 GAP on ``$Q_f\pi_0(S_0)\to0$ when $c\ge2$'' \src{NBH/05_open_questions_and_next_steps.md:161}.
+\end{uncertain}
+\begin{uncertain}[C25 · SEP-GU]
+\rid{TH388}: A-REV7 VERIFIED vs A-REV9 GAP (import not re-audited) \src{NBH/05_open_questions_and_next_steps.md:162}.
+\end{uncertain}
+\begin{uncertain}[C26 · LH-LAT sharpness]
+\defid{TH293}, \defid{RF144}: $m_0$ ``sharp'' false on 32/94 heterogeneous settings; exact margin formula R5 \src{NBH/05_open_questions_and_next_steps.md:163}.
+\end{uncertain}
+\begin{uncertain}[further conflict lists]
+W8-SYNTH §4 (15 conflict groups, 02b P.4); the retired/refuted checklist (02b P.2); UNCERTAIN markers by theme authors (02b P.5, e.g. BASIN used for two objects; ``D18'' low-$p$ finding not in the snapshots; P8 counterexample identity; label-collision proposals) \src{NBH/05_open_questions_and_next_steps.md:164}. METH-AUDIT's ``1/1 vs 3/3'' residue is still listed as a source conflict (\rid{RF270}).
+\end{uncertain}
+
+% ------------------------------------------------------------------------------------------------
+\subsection{The planned next phase: per-theorem HQs}\label{sec:open:plan}
+
+After the approval of the list (\rid{DEC01}, now given), the plan is one HQ per main theorem plus five lemma packs, in waves of 3--4 ``because subscriptions cannot run 14 HQs at once'' \pos{1348} \src{NBH/05_open_questions_and_next_steps.md:198-209}. Charters: \path{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/} (M1--M8, LP-FOUND, LP-IDENT, LP-AUDIT, LP-REST, LP-REP); each gives wave, covered K-IDs, dependencies, Lean core, risks, numerical companion ($\le20$ seeds) and fallback.
+
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.9cm}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Wave} & \textbf{HQs (cards)} & \textbf{Reason (MINUTES §2.5) and first lemma (charter)} \\
+\midrule
+\endhead
+1 & M1 V/H (\rid{TH01}); M3 START (\rid{TH03}); LP-FOUND = S-TARGET \rid{TH10} + S-BLOCKS \rid{TH11} + S-KERNEL \rid{TH12} (+ S-T \rid{TH09} cited) & ``Foundations. N1 (binding §13.1) is the longest pole and starts first'' \src{NBH/05_open_questions_and_next_steps.md:203}. M1: N1 (\rid{FR04}) \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M1.md:114}. M3: ``Match production $\gamma_0,\bar Z_0$ to L-DIL; then audit LH's normalized reference mass and joint sequential ratio premises'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M3.md:93}. LP-FOUND: none specified; §5.1 ``exact correction'' rests on S-KERNEL \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/LP-FOUND.md:85}. \\
+2 & M2 WS (\rid{TH02}, binding §5.3); M7 STG (\rid{TH07}); M6 SEP + KL (\rid{TH06}); LP-IDENT = S-IDENT (\rid{TH13}) & ``The §5.3 package and its inputs ($d_\sigma$ from M3, the count from M7, the lower bound from M6)'' \src{NBH/05_open_questions_and_next_steps.md:204}. M2: $D_*$ decomposition (a1) and the pilot-progress lemma \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M2.md:117}; M7: Lemma RS, then the coverage identity \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M7.md:83}; M6: binary coarsening plus the singleton second-moment term \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M6.md:77}. \\
+3 & M5 HPM (\rid{TH05}); M4 Z$\mathcal{T}$ + masked statement (\rid{TH04}); M8 Prop D (\rid{TH08}); LP-AUDIT = S-CERT (\rid{TH14}) + S-OUT (\rid{TH15}) & ``Code-audit wave: N2, N3, LS0, GUARD-W and the DAG serve M5, M4 and M8 together. M4(f) needs M5'' \src{NBH/05_open_questions_and_next_steps.md:205}. M5: N3 (\rid{FR05}); M4: N13 retention under the coded LS0 rule, then the GUARD-W audit \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M4.md:100}; M8: trajectory inventory of the execution DAG \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M8.md:79}. \\
+4 & LP-REST = S-Z (\rid{TH16}) + S-POOL (\rid{TH17}) + S-LIM (\rid{TH18}); LP-REP = S-REP (\rid{TH19}) + S-LEAK (\rid{TH20}) & ``Consequences and reporting corollaries. Nothing binding waits on them'' \src{NBH/05_open_questions_and_next_steps.md:206}. \\
+\bottomrule
+\end{xltabular}
+}
+
+Process rules carried over: each HQ ``loops all the way to Lean''; cross-family check on every claim; batch math claims into one proof check; label every self-proved claim ``unchecked''; freeze the agenda before dispatch; cap seat output \src{NBH/05_open_questions_and_next_steps.md:209}. Binding-goal safeguards: §13.1 (M1) and §5.3 (M2) escalate to Felipe if their routes fail; ``an orthogonal-only substitute does not close'' §5.3 \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M2.md:83}; named implementation premises (N2(b), N2(c), N2(e), N14(c), the N3 DP invariant, the streams/LS0/GUARD-W/execution-DAG audits) are recorded in the charters \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M1.md:99}. The scout HQ on the Song--Liang separation would run alongside wave 1 if approved (\rid{DEC02}) \src{NBH/05_open_questions_and_next_steps.md:210}.
+
+% ------------------------------------------------------------------------------------------------
+\subsection{Infrastructure rules for the new loop}\label{sec:open:infra}
+
+The archive's rules, carried over \src{NBH/05_open_questions_and_next_steps.md:242-251}:
+\begin{enumerate}[leftmargin=1.5em]
+\item \textbf{Server restarts cancel delegated agents.} Long jobs must not depend on the agent session.
+\item \textbf{systemd-scope kill rule.} ``T3 runs each agent in its own system container, and when the agent's session ends it kills everything that agent started; launching jobs `detached' [\texttt{setsid}] doesn't escape that.'' Launch long jobs as independent \texttt{systemd-run --user} units (Owls \path{POLICY.md}).
+\item \textbf{Owls limits.} All compute through \texttt{owls\_run}; low priority, single-threaded BLAS, 2 cores per job, 8 cores total; ``Big work goes to NOTS, one ssh connection at a time''.
+\item \textbf{Billing.} Routines bill the weekly plan, only \texttt{claude --cloud} sessions bill the cloud credit; the promotional API credit covers the Agent SDK, not the Claude Code CLI.
+\item \textbf{64K output-token failure rule.} ``tell agents to write long proofs in several files/commits, never one giant response''.
+\item \textbf{Thread launches} must use a branch that exists where the thread starts.
+\item \textbf{Briefs.} ``N/3''-type headlines may overclaim; wait-for-run agents exit early; stale branch heads can mislead reviews.
+\item \textbf{Authority.} HQ has full authority for method and theorem decisions \pos{1061} but never adopts or locks results; the burden of proof is on any method change (``investment rule''); Felipe's preference ``use CW instead of CP''.
+\end{enumerate}
+Credits as of \pos{1673}: \$19 cloud (expired 2026-11-05) and \$121 of the API credit (expiry 2026-11-17); a new \$200 API credit was announced for 2026-11-15 \src{NBH/05_open_questions_and_next_steps.md:228-232}. Data and scripts of the empirical study were being moved to NOTS \path{projects/BVS} by the old HQ \src{NBH/05_open_questions_and_next_steps.md:235}.
+
+\begin{agentnote}[suggested first moves for the loop (ordered by the sources' own priorities)]
+\begin{enumerate}[leftmargin=1.4em]
+\item Start wave 1 as chartered: \textbf{M1} with N1 first (\rid{FR04}; ``the longest pole and starts first''), \textbf{M3}, and \textbf{LP-FOUND} \src{NBH/05_open_questions_and_next_steps.md:203}. Read the charter files first.
+\item Put to Felipe the still-open decisions that change wave 1's scope or run alongside it: the Song--Liang scout (\rid{DEC02}), then \rid{DEC03}--\rid{DEC07} (HQ readings he may overrule) \src{NBH/START_HERE.md:57}.
+\item Before wave 3, the engineering premises its theorems rest on: LS0 in the production core with replay (\rid{ENG02}), GUARD-W audit (\rid{ENG03}), IND-T (\rid{ENG04}), N3 tests (\rid{ENG10}) \src{NBH/05_open_questions_and_next_steps.md:205}.
+\item Outstanding cross-family re-checks of Claude repairs (\rid{ENG20}) and of API-PXNGAP (\rid{FR01}) are recorded as owed \src{NBH/05_open_questions_and_next_steps.md:224}, \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:164}.
+\item Never retry a route of \S\ref{sec:history:dead} without addressing its recorded reason; keep every status word verbatim.
+\end{enumerate}
+\end{agentnote}

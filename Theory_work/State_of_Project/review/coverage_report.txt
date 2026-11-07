@@ -1,0 +1,276 @@
+in-scope IDs: 273 (Part A 212, Part B cited by NBH/03,05: 61)
+present: 0  coverage: 0.0%
+missing:
+  CE213	SaM on an LH-like masked design; sam_lh_demo.py; 5/318 splits; LIT-PAR G4 numerical counte
+  CJ01	FW1
+  CJ02	FW2
+  CJ03	FW3
+  CJ04	FW4
+  CJ05	FW5
+  CJ06	FW6
+  CJ07	FW7
+  CJ08	FW8
+  CJ09	FW9
+  CJ10	FW10
+  CJ11	FW11
+  CJ112	T32; T23-C; branch-specific arithmetic and storage counts; T32(i); THEORY.md row T32
+  CJ12	FW12
+  CJ13	FW13
+  CJ14	FW14
+  CJ15	FW15
+  CJ16	FW16
+  CJ162	Backfit start; residualised tables; partial-residual tables; resid sweeps; O-DILUTE resid 
+  CJ164	ABL-CONF Claim 1; cost claim
+  CJ165	ABL-CONF Claim 2; accuracy claim
+  CJ166	ABL-START Outcome 1 depth claim; block start reduces depth/stages at equal accuracy; local
+  CJ17	FW17
+  CJ178	LS0-4; LS0-EMIT; integrated LS0 test fit
+  CJ18	FW18
+  CJ19	FW19
+  CJ20	FW20
+  CJ21	FW21
+  CJ210	ORTH-joint; ORTH joint family; ORTH composition; a6
+  CJ22	FW22
+  CJ226	LS0-1; LS0 post hoc outcome-neutral
+  CJ228	LS0-3; LS0 cost
+  CJ23	FW23
+  CJ238	Bookkeeping: C5 screening event over 2,400 fits; per-dataset matching; eta_F replay
+  CJ24	FW24
+  CJ25	FW25
+  CJ26	FW26
+  CJ27	FW27
+  CL01	Cited lemma/result (TLF Part III)
+  CL02	Cited lemma/result (TLF Part III)
+  CL03	Cited lemma/result (TLF Part III)
+  CL04	Cited lemma/result (TLF Part III)
+  CL05	Cited lemma/result (TLF Part III)
+  CL06	Cited lemma/result (TLF Part III)
+  CL07	Cited lemma/result (TLF Part III)
+  CL08	Cited lemma/result (TLF Part III)
+  CL09	Cited lemma/result (TLF Part III)
+  CL10	Cited lemma/result (TLF Part III)
+  CL11	Cited lemma/result (TLF Part III)
+  CL12	Cited lemma/result (TLF Part III)
+  CL13	Cited lemma/result (TLF Part III)
+  CL14	Cited lemma/result (TLF Part III)
+  CL15	Cited lemma/result (TLF Part III)
+  CL16	Cited lemma/result (TLF Part III)
+  CL17	Cited lemma/result (TLF Part III)
+  CL18	Cited lemma/result (TLF Part III)
+  CL19	Cited lemma/result (TLF Part III)
+  CL20	Cited lemma/result (TLF Part III)
+  CL21	Cited lemma/result (TLF Part III)
+  CL22	Cited lemma/result (TLF Part III)
+  CL23	Cited lemma/result (TLF Part III)
+  DF01	Model, likelihood, g-prior, σ² prior
+  DF02	Size prior BB(1,p) and cap K
+  DF03	Score m(S), evidence Z, posterior π
+  DF04	Preprocessing / standardisation
+  DF05	Blocks and tables
+  DF06	Block-product start π₀
+  DF07	Discrepancy d and tempering bridge γ_φ
+  DF08	Kernel moves and round
+  DF09	Resampling, pilot, ESS 0.90
+  DF10	Candidate set V, restricted ESS, grid, rebuild loop
+  DF11	Calibration record 𝒞, tiers, final runs
+  DF12	Islands and stacking
+  DF13	Evidence estimator Ẑ_r, pooled Ẑ, Markov bound
+  DF14	PIP rules, MPM, R_eff
+  DF15	HPM decision and local search
+  DF16	LS0
+  DF17	Reported store 𝒯, Z_𝒯 and the certificate card
+  DF18	General-h accumulator 𝓗
+  DF19	Ĵ (J_hat)
+  DF20	ε̂_× (cross_block_rmax) with κ̂, δ̂, ū̂, r̂, η̂
+  DF21	Output convention and event 𝒪, GUARD-W
+  DF22	Shared implementation premises
+  DF23	Design families G, LH, W, ORTH
+  DF24	H-DOM and constants a, δ_A, δ_H, r, C_σ, b_X, D_*
+  DF25	Settings table (49 rows), classes (a)–(e)
+  DR01	K12
+  DR02	K34
+  DR03	K66
+  DR04	K67
+  DR05	K91
+  DR06	K98
+  DS01	Dissent K33 (Seat D)
+  DS02	Dissent K23 (Seat C)
+  DS03	Dissent K29 / S-STGI (Seat D)
+  DS04	Dissent K30 (Seat C)
+  DS05	Dissent K70 (Seat C)
+  DS06	Dissent K57 (Seat D)
+  LIM01	Inherent limitation 1: Per-round sequential factor m = p + B + 2
+  LIM02	Inherent limitation 2: Every worker needs scoring access to all predictors
+  LIM03	Inherent limitation 3: Masking of the product-of-blocks start built from block-local score
+  LIM04	Inherent limitation 4: No diagnostic from the observed record has a universal detection gu
+  LIM05	Inherent limitation 5: The properties of Ẑ behind the 95% bound imply no two-sided relativ
+  LIM06	Inherent limitation 6: (Moved by HQ amendment 01) Markov sharpness of 0.05Ẑ
+  LIM07	Inherent limitation 7: Posterior misses at n = 200
+  LIM08	Inherent limitation 8: The cap K excludes truths with s₀ > K; a fixed allocation cannot su
+  LIM09	Inherent limitation 9: The restricted ESS on V cannot bound mass outside V without further
+  LM144	Lemma 0(a),(c); Lemma0(a,c); monotonicity; certified repair gives S-hat=S0
+  LM174	LemmaS-ineq; LemmaS-attain; Lemma S; Lemma S′; Lemma S'; Lemma ESS; ESS share lemma
+  LM189	LS-score; Lemma LS-score; Lemma LS
+  LM204	Lemma M; OCERT-LemmaM; Lemma MON (proposed rename); O-CERT Lemma M (monotonicity of the sc
+  LM212	Lemma W2 (O-WSTAB); exact dilution form; kappa G <= LR <= kappa G/(1-y)
+  MD01	MEET-v31 decision 1
+  MD02	MEET-v31 decision 2
+  MD03	MEET-v31 decision 3
+  MD04	MEET-v31 decision 4
+  MD05	MEET-v31 decision 5
+  MD06	MEET-v31 decision 6
+  MD07	MEET-v31 decision 7
+  MD08	MEET-v31 decision 8
+  MD09	MEET-v31 decision 9
+  MD10	MEET-v31 decision 10
+  MD11	MEET-v31 decision 11
+  MD12	MEET-v31 decision 12
+  MD13	MEET-v31 decision 13
+  OB01	N1 · Measured-round island identity for general bounded h (Theorem H crux; V1(a2))
+  OB02	N2 · Integrated v3.1 core: Prop W, W-cal, LS0, stacking, GUARD-W
+  OB03	N3 · LS0-based T38(b1-LH) about the shipped method; e4 tie-DP invariant
+  OB04	N4 · Finite-R accuracy of the Ẑ-weighted PIP and μ̂(h); the constant M under masking (V11)
+  OB05	N5 · Calibration contract
+  OB06	N6 · Output-event coverage statements
+  OB07	N7 · Certificate card G1/G2/L/R (PC2 verdicts)
+  OB08	N8 · PART-pairing for the study generator g = 5 (2g ≤ B)
+  OB09	N9 · V5: kernel reversibility, self-adjointness, exact start sampler (closure gate)
+  OB10	N10 · V10: L versus t_mix
+  OB11	N11 · ℓ versus the moves needed
+  OB12	N12 · General (n, p) scope, per regime
+  OB13	N13 · Retention lemma
+  OB14	N14 · Stacking statements
+  OB15	N15 · Work and depth at the implemented level
+  OB16	N16 · Floating-point contract
+  OB17	N17 · Analytic bounds on Z and π(Ŝ)
+  RF104	tempering is needed; the sampler is needed; the bridge is needed; start-only methods fail;
+  RF105	beta-min about 100x; n=200 disclosure numbers; 55 vs 0.64 and 0.16
+  RF134	EXP-const; kappa_EXP -> 0.52/c_*; 4.16(M+2 sigma^2)/sigma^2; Lemma U limit constant
+  RF135	Thm4-iff; Thm 4 'iff' gloss; masking persists iff eta < 1/2.02; p^-c alone forces vanishin
+  RF144	LH-LAT-sharp; W4-T38FULL LH-LAT 'm0 is sharp'
+  RF150	Common plug-in sigma^2 is the right tool for the n = 200 dilution masking (O-MIX 1/10)
+  RF167	Lemma0(b); Lemma 0(b); posterior miss inference; 0/541 forced remark
+  RF168	R2-dichotomy; V37 R2; two-way failure dichotomy
+  RF169	TDP-iff-DS; TD'_P iff (L) and all D_S
+  RF188	E3(ii); E3(ii) without q<1; F-REFINE Card 3(i)
+  RF203	SHARE-M(b); Proposition M(b); Prop M (b)
+  RF217	T38-b1-LH-iidfail; (b1-LH) iid-failure clause for c>=2; Q_f pi0(S0) -> 0 for c>=2 and p ->
+  RF276	LIT-PAR G4 analytic sketch: Song-Liang loses the masked variable whenever the split separa
+  RL01	HQ ruling Q1 (§5.3)
+  RL02	HQ ruling Q2 (§5.4 coverage)
+  RL03	HQ ruling Q3 (§5.4 TV/KL under masking)
+  RL04	HQ ruling Q4 (Ĵ and leakage proxy)
+  RL05	HQ ruling Q5 (stage count continuous in ε)
+  RL06	HQ approval amendment (growth rate (ii))
+  TH01	M1 · Theorem V/H (validity of v3.1 and accuracy of reported bounded functionals); K46, K32
+  TH01.a	M1(a) Validity [cited]
+  TH01.b	M1(b) Lemma N1
+  TH01.c	M1(c) Contract
+  TH01.d	M1(d) Output event
+  TH01.e	M1(e) Islandwise bound
+  TH01.f	M1(f) Finite-R′ bound
+  TH01.g	M1(g) Declared classes
+  TH01.h	M1(h) Decision transfer
+  TH01.i	M1(i) Asymptotic with R′_n
+  TH02	M2 · Theorem WS, the §5.3 package; K102, K10, K11, K25, K53; K103/K104; K27
+  TH02.a1	M2(a1) Decomposition
+  TH02.a2	M2(a2) Divergences
+  TH02.a3	M2(a3) Block-orthogonal case and per-model η-form
+  TH02.b1	M2(b1) Per-stage χ²
+  TH02.b2	M2(b2) Four-normaliser transfer
+  TH02.b3	M2(b3) First stage
+  TH02.b4	M2(b4) Doeblin constants
+  TH02.b5	M2(b5) Pathwise island moment
+  TH02.b6	M2(b6) Stage count: the sandwich
+  TH02.b6p	M2(b6′) Local constancy, integer bound, envelope (b6′)
+  TH02.b7	M2(b7) Q5 condition (1): continuity/Lipschitz in ε
+  TH02.b8	M2(b8) Q5 condition (2): step function statement
+  TH02.c1	M2(c1) Zero-dependence obstruction (WS6(d) with CHK amendment)
+  TH02.c2	M2(c2) Masked obstruction (WS7 with CHK amendments)
+  TH03	M3 · Theorem START; K15, K17, K18, K10 (K16 supplementary)
+  TH03.K16	K16 placement (supplementary conditional lemma)
+  TH03.a	M3(a) deterministic mass
+  TH03.b	M3(b) bridge mass
+  TH03.c	M3(c) exact factorization
+  TH03.d	M3(d) dilution
+  TH03.e	M3(e) shared variance
+  TH03.f	M3(f) masked law
+  TH04	M4 · Theorem Z𝒯 and the certificate card, with the masked-regime statement; K42, K43, K45,
+  TH04.a	M4(a) Deterministic identities
+  TH04.b	M4(b) Brackets when the truth is stored
+  TH04.c	M4(c) Retention (N13)
+  TH04.d	M4(d) Analytic envelope (N17)
+  TH04.e	M4(e) Output-event certificate
+  TH04.f	M4(f) Masked-regime statement (HQ Q3)
+  TH04.g	M4(g) Definitional facts
+  TH05	M5 · Theorem HPM; K72, K69, K65, K68; K63 hyp.; K70 variant; K82 remark
+  TH05.0	M5(0) Composition at every n, any X
+  TH05.a	M5(a) Theorem A / LS-score
+  TH05.afav	M5(a-fav) labelled variant
+  TH05.b1LH	M5(b1-LH) HPM with LS0 on LH
+  TH05.b2LH	M5(b2-LH) labelled variant (K70)
+  TH06	M6 · Theorem SEP + Lemma KL; K19, K106, K105
+  TH06.KL	Lemma KL
+  TH06.a	M6(a) discovery
+  TH06.b	M6(b) LH threshold
+  TH06.c	M6(c) singleton second moment
+  TH07	M7 · Theorem STG; K26, K25, K27, K30, K33; K28 cited
+  TH07.a	M7(a) Monotonicity and construction
+  TH07.b	M7(b) Coverage identity
+  TH07.c	M7(c) Interval inequality and count
+  TH07.cp	M7(c′) Pilot-count clause (cited from M2(b))
+  TH07.d	M7(d) Ideal grid (K30), labelled, not the coded grid
+  TH07.e	M7(e) [cited]
+  TH07.f	M7(f) as-coded masked T_n
+  TH08	M8 · Proposition D; K87, K88, K89, K06, K64; K90 remark
+  TH08.a	M8(a) Final run
+  TH08.b	M8(b) Calibration
+  TH08.c	M8(c) Searches
+  TH08.d	M8(d) Polynomial work and scheduling
+  TH08.e	M8(e) Ceilings
+  TH09	S-T · Theorem 1, target consistency T03♯ (K93, K04)
+  TH10	S-TARGET · Propriety, invariance, envelopes, exact branch, odds certificate (K01–K05, K76,
+  TH106	T07; A6; T5-C; size-only ranking ceiling; Bayes decisions; JRSS-B Prop 1; THEORY.md row T0
+  TH109	T11; L-LED; T14-D; unified scoring and discovery ledger; T11(iii); THEORY.md row T11
+  TH11	S-BLOCKS · Separation ⇒ groups kept; SIZE ⇒ equality (K07, K14, K06)
+  TH115	T21; T14-H; composition theorem for the reported HPM; JRSS-B Thm 4; C1; routes (a)-(f); TH
+  TH12	S-KERNEL · N9 kernel facts, graph (p ≥ 2), start sampler, minorisation (K20, K21, K08, K09
+  TH13	S-IDENT · Restricted-ESS coverage identity, TI/KL/TV calculus, C15-CI clause (K25 lemma, K
+  TH14	S-CERT · Local search, certificate semantics, B&B soundness, perturbation lemma (K64, K73,
+  TH15	S-OUT · Output-event validity, worker equivalence, stacking (K77, K78, K83–K86, K63)
+  TH153	PXN-P6; W3-PXN P6; TD′ lattice condition at S°; LS0 scores and certifies S0
+  TH158	PXN-W; W3-PXN Prop W; Proposition W; dilution masking
+  TH16	S-Z · Evidence variance, masked tails (K37–K41, K53)
+  TH17	S-POOL · Pooling rules, recording-marginal equal-weight bias comparison P1, R_eff (K49, K5
+  TH177	Proposition D'; Prop. D'; Prop. D-prime; DIL-Dp; finite-n dilution formula
+  TH18	S-LIM · Limitations as theorems (K79, K81, K100, K101); K99 qualitative remark
+  TH183	Theorem C1 (O-MIX); Thm C1; OMIX-C1; dilution removed exactly under BO
+  TH19	S-REP · Run-card reporting corollary: Ĵ (B/C/D form) and ε̂_× with companions (K104/K11)
+  TH199	Theorem A; TheoremA; T37-A; W6F2-TheoremA; refined T37(i); Thm 3 (Theorem A); A1-A5; POS; 
+  TH20	S-LEAK · B's leakage clauses (F), (S) as a supplementary corollary to M2
+  TH204	Theorem W; ThmW; Theorem PGD-W; refined T37(iii)
+  TH21	S-STGI · K29/K30 (DISSOLVED)
+  TH217	Prop T; VPGD-PropT; tie
+  TH22	Thesis CD (K96)
+  TH227	Prop. U'; Proposition U'; PropU; Prop. U; Proposition U; W6F1-PropU'; corrected undo class
+  TH241	T38b-R(whole); T38b-R(b1); T38b-R(b1′); T38b-R(b2); Theorem T38(b)-R; T38(b)-R composition
+  TH254	SHARE-B2W4; Theorem B2-W4; B2-W4 assembly
+  TH263	OBG-T38b-BG3; N4 of T38 v3; T38(b) without LS0 on LH, p fixed
+  TH267	FSH-T38b2; FSH-S4; T38(b2) on LH exact Gram no tweak; N5 of T38 v3
+  TH269	B2E-D2LH; Corollary D2-LH; D2-LH; (b1′-LH); N1 of T38 v3; (b1'-LH); (b1′-LH); Cor. D2-LH; 
+  TH281	T38-(0); T38 (0); Theorem 5 (0); T38(b)-R composition; (0); K72; W6F1-T38 (0)
+  TH285	T38-(b1'); (b1'); (b1′); T38-b1′; T38b-R(b1′); D2 route; Theorem 5(b1′)
+  TH286	T38-(b2); (b2); T38-b2; T38b-R(b2); Gibbs-path route; Theorem 5(b2)
+  TH287	T38-b1-LH; (b1-LH); Corollary b1-LH; Cor. b1-LH; Theorem 5(b1-LH); K69
+  TH289	T38-(c); (c); Theorem 5(c); Cost-T38; cost corollary of Theorem 5
+  TH293	LH-LAT; Prop. LH-LAT; Proposition LH-LAT; POP-LAT on LH; VPGD LH-LAT
+  TH325	T26-PropC; ORTH-joint; W2-T26 Proposition C; ORTH compatibility; Prop C
+  TH330	Corollary C5; Cor C5; OCERT-C5; posterior-miss certificate
+  TH334	Theorem N200; N200; finite-n composition theorem; Thm 4 finite-n form (K72)
+  TH367	O-STAGES Corollary W prime; Cor W′ (BO favourable); STG-Wp
+  TH386	SEP(E); SEP-E; budget exponents
+  TH388	Prop GU; Proposition GU; greedy universality; SEP-GU
+  TH394	Proposition W; Prop W; MA-PropW; V2 (THM-SYNTH); worker equivalence of the final run; conc
+  TH395	Proposition W-cal; Prop W-cal; MA-Wcal; worker equivalence of the calibration diagnostic i
+  TH417	Theorem SL; Thm SL; C1 (THM-SYNTH); C1new; analytic split-and-merge failure on a masked LH
+  TH422	t21_C1; Lean (C1); TH278 (Thm4-C1) (Lean); T21 (C1); T21 C1

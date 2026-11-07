@@ -1,0 +1,25 @@
+# check.py --log main.log (2026-11-07T20:14:40Z)
+C7 coverage 100.0% (273/273); missing list -> checks/coverage_report.txt
+WARN  C8 157 overfull hbox warnings
+checked 50 tex, 6 tsv; 1616 \src/stmt refs; 0 error(s), 1 warning(s)
+
+# verify_stmt.py 0.93
+116 stmt boxes; box-content covered by source (median) = 0.984; below 0.93: 18
+  cov=0.763 ratio=0.866  04b_supplement.tex:531  [NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1097] 
+  cov=0.784 ratio=0.278  04b_supplement.tex:783  [NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:879] 
+  cov=0.821 ratio=0.902  04b_supplement.tex:419  [NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:997] 
+  cov=0.828 ratio=0.906  04b_supplement.tex:586  [NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1135] 
+  cov=0.830 ratio=0.907  04b_supplement.tex:425  [NBH/branch_snapshots/MEET-THM/R1_D.md:424] 
+  cov=0.842 ratio=0.903  04b_supplement.tex:320  [NBH/branch_snapshots/MEET-THM/R1_B.md:464] 
+  cov=0.855 ratio=0.922  04b_supplement.tex:154  [NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:628] 
+  cov=0.862 ratio=0.926  04b_supplement.tex:365  [NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:962] 
+  cov=0.865 ratio=0.925  04b_supplement.tex:542  [NBH/branch_snapshots/MEET-THM/R1_B.md:397] 
+  cov=0.909 ratio=0.931  04b_supplement.tex:111  [NBH/branch_snapshots/MEET-THM/R1_B.md:442] 
+  cov=0.911 ratio=0.954  04b_supplement.tex:539  [NBH/branch_snapshots/MEET-THM/R1_A.md:512] 
+  cov=0.916 ratio=0.956  04b_supplement.tex:477  [NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1044] 
+  cov=0.917 ratio=0.948  04b_supplement.tex:226  [NBH/branch_snapshots/MEET-THM/R1_B.md:426] 
+  cov=0.919 ratio=0.952  04b_supplement.tex:323  [NBH/branch_snapshots/MEET-THM/R1_A.md:550] 
+  cov=0.922 ratio=0.644  04b_supplement.tex:545  [NBH/branch_snapshots/MEET-THM/R1_D.md:438,461] 
+  cov=0.925 ratio=0.961  04b_supplement.tex:370  [NBH/branch_snapshots/MEET-THM/R1_B.md:453] 
+  cov=0.926 ratio=0.633  04b_supplement.tex:525  [NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:1082-1088] 
+  cov=0.927 ratio=0.962  04b_supplement.tex:160  [NBH/branch_snapshots/MEET-THM/R1_B.md:488] 

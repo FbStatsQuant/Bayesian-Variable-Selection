@@ -1,0 +1,9 @@
+main.aux
+main.log
+main.out
+main.toc
+main.pdf
+main.synctex.gz
+build_pass*.out
+checks/preview_*.pdf
+__pycache__/

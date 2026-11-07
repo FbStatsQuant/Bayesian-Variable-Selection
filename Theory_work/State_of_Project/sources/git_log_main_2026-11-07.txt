@@ -1,0 +1,9 @@
+21ebc28 2026-11-07 Theory archive: add New_BVS_Headquarters docs, registry, transcript and tools
+79c483c 2026-11-05 Update README.md
+620d8b7 2026-11-04 Transfer
+d46ebed 2026-11-03 GH-PACK: reviewed doc fixes + pre-push scanner; post-campaign refresh (final results, records D1-D94, PROD_L_BENCH rev2, analysis scripts)
+c4ef0dc 2026-11-02 Transfer
+eb75737 2026-10-28 Add results, docs, papers and remaining SMC-BVS/benchmark tooling
+39db138 2026-10-28 Add SMC-BVS v3 scripts, benchmark scripts, papers and Others
+aa6099a 2026-10-28 Repo test
+(git log of main, recorded by the lead on 2026-11-07)

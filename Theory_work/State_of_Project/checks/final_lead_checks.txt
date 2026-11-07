@@ -1,0 +1,7 @@
+# FINAL check.py --log main.log (2026-11-07T21:43:29Z)
+C7 coverage 100.0% (273/273); missing list -> checks/coverage_report.txt
+WARN  C8 78 overfull hbox warnings
+checked 50 tex, 6 tsv; 1685 \src/stmt refs; 0 error(s), 1 warning(s)
+
+# verify_stmt.py 0.93
+117 stmt boxes; box-content covered by source (median) = 0.982; below 0.93: 18

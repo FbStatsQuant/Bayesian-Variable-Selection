@@ -1,0 +1,112 @@
+\section{Glossary of status words and review vocabulary}\label{app:glossary}
+
+Meanings are as the sources define them; the source of each definition is cited. Status words are always copied verbatim and never upgraded. Mathematical symbols and design families are defined in Appendix~\ref{app:notation}.
+
+\subsection{Status words (proof status of a result)}
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Word} & \textbf{Meaning (source)} \\
+\midrule
+\endhead
+PROVED & ``a complete proof you checked line by line'' (campaign protocol). Every campaign PROVED is a \emph{candidate} \src{NBH/02b_theory_campaign_history.md:46}. \\
+PROVED (candidate) & ``A proof here is a candidate: it is not reviewed and not adopted. Review happens later, by other model families'' \src{NBH/branch_snapshots/campaign/PROTOCOL.md:19}; ``candidate'' means AI-proved and not adopted \src{NBH/branch_snapshots/THM-SYNTH/THEOREM_LIST.md:3-4}. \\
+PROVED (by this seat, unchecked) & Theorem-meeting status of a seat's own argument until a check is filed \src{NBH/branch_snapshots/MEET-THM/DOSSIER.md:104}. A checker who reads it line by line may write only ``argument checked line by line by PC$k$: no error found'' \src{NBH/branch_snapshots/MEET-THM/CHECK_W1_BRIEF.md:23}. \\
+PROVED-LOCKED & A row of \path{Docs/Theory/proofs/LOCKED_PROOFS.md}: statement and proof frozen by hash, always ``not adopted'' \src{NBH/02b_theory_campaign_history.md:49}; pre-campaign, same-family only with ``external review queued'' \src{NBH/03_results_and_conclusions.md:23}. \\
+PROVED-UNDER & ``PROVED given/under named inputs'' (REGISTRY\_v2 author-status class) \src{NBH/02b_theory_campaign_history.md:52}. Excluded from LOCKABLE. \\
+CONDITIONAL & A locked theorem whose hypotheses (H24, PW2, EXP$'$, VIS, NL$_\eta$, NL$_{\mathrm{avg}}$, H2, H3, BASIN, COVER, exposure/occurrence conditions) are assumed, not proved \src{NBH/02b_theory_campaign_history.md:50}. \\
+PARTLY PROVED & Only named parts are locked; the others are CONJECTURED \src{NBH/02b_theory_campaign_history.md:51}, \src{Docs/THEORY.md:15}. \\
+PROOF SKETCH & ``the crux is identified and the steps are plausible, but not every step is verified'' \src{NBH/02b_theory_campaign_history.md:46}. Not proved. \\
+CONJECTURE / CONJECTURED (not proved) & Not proved; pre-campaign items not in the register and T37--T39 \src{Docs/THEORY.md:16}. \\
+OPEN & One of the five status words the protocol allows; it gives no further definition \src{NBH/branch_snapshots/campaign/PROTOCOL.md:19}. \\
+COUNTEREXAMPLE & ``with a reproducible script or explicit construction'' \src{NBH/02b_theory_campaign_history.md:46}; ``(numerical, reproducible)'' marks a computed one. \\
+REFUTED, RETIRED, CORRECTED, RETRACTED, STRUCK, QUALIFIED, SUPERSEDED, withdrawn & Registry Part B dispositions of claims that are false, obsolete, numerically corrected, withdrawn by their author, removed from a statement, or weakened; the exact word and its reason are in each row, e.g.\ \rid{RF101}, \rid{RF105}, \rid{RF270}, \rid{RF271}, \rid{RF274} \src{NBH/ID_REGISTRY.md:1003-1007}. \\
+KNOWN-FALSE & A claim on the meetings' list of known-false results (e.g.\ SHARE-M(b), FD-NM, general LH locking), which a card may not rely on without addressing the refutation \src{NBH/branch_snapshots/MEET-THM/CHECK_W1_BRIEF.md:21}; example \rid{RF266}. \\
+DROPPED (LF / UR / TR / UA / DM) & Pre-campaign drops: LF likely false; UR unprovable or unworkable route; TR trivial or vacuous; UA unreasonable, insufficient or unverifiable assumptions; DM demoted/merged \src{Docs/Theory/DROPPED.md:3}. In the final list, ``drop'' = \rid{DR01}--\rid{DR06}. \\
+REFEREE & A repair or counterexample supplied by a cross-family referee without a PROVED label \src{NBH/02b_theory_campaign_history.md:53}. \\
+{[APPLIED] / [PENDING]} & A repair a campaign run has written / not yet written \src{NBH/02b_theory_campaign_history.md:55}. \\
+not adopted; adoption; locking & ``Locked'' = files frozen and audited; ``Adopted'' = Felipe accepted the result into the paper's theory; nothing is adopted \src{Docs/THEORY.md:21}; adoption and locking are Felipe's decision (\rid{DEC12}). \\
+APPROVED (F.B., 2026-11-07) & This document's mark for the paper-1 theorem list approved by Felipe as the current targets; it changes no proof status (\rid{DEC01}). \\
+\bottomrule
+\end{xltabular}
+}
+
+\subsection{Check levels and review verdicts}
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Term} & \textbf{Meaning (source)} \\
+\midrule
+\endhead
+SF (same-family) & ``a Claude run (Opus or Fable) checked a Claude run'' \src{NBH/02b_theory_campaign_history.md:54}. \\
+XF (cross-family) & A review by a different model family: Astra A-REV1--9; PC1 = gpt-6.1-sol on Seats A, B, D; PC2 = Opus 5.5 on Seat C (Astra); CHK = PC1 on inherited proofs \src{NBH/03_results_and_conclusions.md:7}. \\
+VERIFIED, VERIFIED*, GAP, ERROR & Verdict tags of the SF/XF reviews; VERIFIED* = ``verified after a repair or with a stated qualification''. ``A re-review never raises an earlier adverse code on the original text; repaired texts carry the re-review verdict'' \src{NBH/02b_theory_campaign_history.md:54}. \\
+VERIFIED WITH AMENDMENT; CORRECT WITH AMENDMENT & The check accepted the proof or output form subject to amendments; for N9-KERNEL §§0--3 under CHK\_INHERITED the source records ``(amendments adopted)'' \src{NBH/02_theory.md:727}. Whether an amendment was adopted is stated per item, not implied by the verdict. \\
+SAME-FAMILY-ONLY & Checked only within the Claude family (e.g.\ PROVED-LOCKED items; Thm5-LH) \src{NBH/03_results_and_conclusions.md:23}, \src{NBH/03_results_and_conclusions.md:337}. \\
+AUTHOR-ONLY & Checked by nobody but its author (registrar flag; 51 of 166 cited IDs at the theorem meeting) \src{NBH/01_overview_and_timeline.md:214}. \\
+TRUE-AS-WRITTEN / COUNTEREXAMPLE / NEEDS-HYPOTHESIS / AMBIGUOUS & Check-wave verdict on a clause: no counterexample found (say how you searched) / explicit construction + script / a missing hypothesis named / the readings and which is true \src{NBH/branch_snapshots/MEET-THM/CHECK_W1_BRIEF.md:17}. ``a TRUE-AS-WRITTEN is not a proof'' \src{NBH/branch_snapshots/MEET-THM/CHECK_W1_BRIEF.md:23}. \\
+DESIGN-VERIFIED / DESIGN-ASSERTED / DESIGN-FAILS / NONE-GIVEN & Non-vacuity verdict: a concrete (for correlation theorems: genuinely correlated) design checked to satisfy every hypothesis / named but not verified / violates a hypothesis / none given \src{NBH/branch_snapshots/MEET-THM/CHECK_W1_BRIEF.md:18}. \\
+PLAUSIBLE / GAP / IMPLAUSIBLE (route) & Route verdict: key lemma right and steps fit / a named step missing / why not \src{NBH/branch_snapshots/MEET-THM/CHECK_W1_BRIEF.md:19}. \\
+W1PC1, W1PC2, W2PC1, W2PC2 & Verdict rows of check wave 1 or 2 by checker PC1 (Sol) or PC2 (Opus) \src{NBH/02_theory.md:727}; files in \path{MEET-THM/evidence/W1_PC1/} etc. W2PC1 also tallied repairs: ``repaired 57, repaired differently 16, new 15, not repaired 3'' \src{NBH/03b_reasoning_and_traces.md:404}. \\
+CHK, CHK\_INHERITED & PC1's line-by-line check of inherited proofs (OWS-WS3/4 VERIFIED; WS6(d), WS7, N9 VERIFIED WITH AMENDMENT) \src{NBH/03b_reasoning_and_traces.md:407}. \\
+A-REV1 … A-REV9 & The nine Astra cross-family reviews of 2026-11-02 (scopes in \S\ref{sec:history:verif}) \src{NBH/03b_reasoning_and_traces.md:384-394}. \\
+PASS WITH CORRECTIONS & Verdict of the Sol close audit of the theorem package; ``the chair applied all of them'' \src{NBH/03b_reasoning_and_traces.md:408}. \\
+LOCKABLE (LOCKABLE\_v2) & Strict rule: author status PROVED (not PROVED-UNDER) and SF VERIFIED (or after repair) and XF VERIFIED (or with qualification); the list ``does not adopt, lock or upgrade anything'' \src{NBH/branch_snapshots/T38-RECORD/LOCKABLE_v2.md:3}. \\
+Lean: sorry-free; \texttt{lake build} green; fidelity GREEN/RED & Formal proof with no \texttt{sorry}; the build passes; a reviewer judged the Lean statement faithful to the frozen informal statement (``statement fidelity only'') or not; \texttt{stmtdiff.py} checks frozen statements \src{NBH/03_results_and_conclusions.md:143-146}. \\
+NEW / NEW-COMP / KNOWN—CITE / MODEST & Novelty tags of the theorem-meeting cards, ``with checked citations'' \src{NBH/branch_snapshots/MEET-THM/DOSSIER.md:73}. KNOWN—CITE results become cited lemmas (IC4). \\
+NEW-SYNTH & A new statement proposed by THM-SYNTH, ``PROOF SKETCH at most'', ``a proposal for an HQ, not a result'' \src{NBH/branch_snapshots/THM-SYNTH/THEOREM_LIST.md:5-6}. \\
+IC1--IC7 & Inclusion criteria of the theorem meeting: statement, route, non-vacuous (exhibited design), not merely known, serves the goals, Lean core named, fallback \src{NBH/branch_snapshots/MEET-THM/DOSSIER.md:60-69}. \\
+LICENSED / INCONCLUSIVE / holds\_nondeliv & Outcomes of the pre-registered ABL-CONF rule (\rid{CJ164}, \rid{CJ165}); holds\_nondeliv = the comparison arm failed to deliver within the cap \src{NBH/03b_reasoning_and_traces.md:260}. \\
+ACCEPTED; NOT binding; REPORTING, allowed & Statuses of HQ rulings \rid{RL01}--\rid{RL05} \src{NBH/ID_REGISTRY.md:187-191}. \\
+recorded dissent & A seat's disagreement with a placement, kept in the minutes (\rid{DS01}--\rid{DS06}) \src{NBH/ID_REGISTRY.md:206-211}. \\
+UNCERTAIN & Marks a conflict between sources or something they do not settle \src{NBH/05_open_questions_and_next_steps.md:7}; rendered here as \texttt{uncertain} boxes. \\
+DECIDED / OPEN / NOT TRIGGERED / IN PROGRESS & This document's status words for its own \texttt{DEC}, \texttt{ENG}, \texttt{FR} items (\S\ref{sec:open}). \\
+\bottomrule
+\end{xltabular}
+}
+
+\subsection{People, models, accounts and roles}
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Term} & \textbf{Meaning (source)} \\
+\midrule
+\endhead
+Felipe (F.B.) & Project lead; sets objectives and rules, approves theorem targets \src{NBH/01_overview_and_timeline.md:9}. \\
+HQ & The orchestrating assistant of the source thread (Claude Opus 5.5 on Claude Personal, ``New HQ'') \src{NBH/01_overview_and_timeline.md:9}; the ``old HQ'' (``SMC\_BVS Headquarters'') ran the empirical campaign and wrote the old \path{Docs/}. Per-theorem HQs are the planned next-phase leads (\S\ref{sec:open:plan}). \\
+Astra & GPT-6 Astra (\texttt{gpt-6-astra}), OpenAI, on Codex; the cross-family reviewer of the campaign \src{NBH/03b_reasoning_and_traces.md:380}. \\
+Sol & GPT-6.1 Sol (\texttt{gpt-6.1-sol}), OpenAI, on Codex; Sol 1 (proof check), Sol 2 (audit), PC1 checker and close auditor \src{NBH/03b_reasoning_and_traces.md:380}. \\
+Terra & A Codex worker used by the old HQ for numerical tie-outs of the empirical analyses (``Terra tie-out PASS'') \src{Docs/HQ/DECISIONS.md:45}, \src{Docs/HQ/DECISIONS.md:76}. \\
+Fable 5.1, Opus 5.5, Sonnet, Haiku & Claude models: Fable the strongest, Opus the default worker; Sonnet/Haiku for clerical work, ``out of every mathematical judgment'' \src{NBH/01_overview_and_timeline.md:9}, \src{NBH/03b_reasoning_and_traces.md:205}. \\
+CP, CW & Claude Personal (Ultra) and Claude Work subscriptions \src{NBH/01_overview_and_timeline.md:9}. \\
+Seats A--D; chair & Theorem-meeting seats: A (Fable 5.1), B (Fable 5.1), C (gpt-6-astra), D (Fable 5.1; ``fresh-eyes Fable'' in some files, U11); chair Opus 5.5 (CW) \src{NBH/05_open_questions_and_next_steps.md:120}, \src{NBH/03b_reasoning_and_traces.md:207}. \\
+PC1, PC2 & Proof checkers of the theorem meeting: PC1 = gpt-6.1-sol on Seats A, B, D; PC2 = Opus 5.5 on Seat C \src{NBH/05_open_questions_and_next_steps.md:122}. \\
+Round 0; fresh eyes & Isolated fresh Fable and raw Astra planning round with a method-only packet \src{NBH/03b_reasoning_and_traces.md:209-212}. \\
+Registrar; clerk & Sonnet support roles (registry index, citation checks, charter drafting) \src{NBH/03b_reasoning_and_traces.md:205}. \\
+\bottomrule
+\end{xltabular}
+}
+
+\subsection{Identifiers and abbreviations}
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Term} & \textbf{Meaning (source)} \\
+\midrule
+\endhead
+Two-digit IDs (TH01--TH22, OB, CJ01--CJ27, DR, LIM, DF, RL, MD, DS, CL) & Final-state archive IDs (registry Part A) \src{NBH/README.md:39}. \\
+Three-digit IDs (TH101+, LM101+, CJ101+, RF101+, CE101+) & Campaign-history IDs (registry Part B): results, lemmas, conjectures/open problems, refuted claims, counterexamples \src{NBH/README.md:39}. \\
+DEC, ENG, FR & This document's own IDs: pending decisions, engineering items, frontier problems (\S\ref{sec:open}). EMP = empirical facts (\S\ref{sec:empirics}). \\
+M1--M8; S-*; LP-* & Main cards (= \rid{TH01}--\rid{TH08}); supplement cards (S-T, S-TARGET, \dots); lemma packs of the per-theorem HQs \src{NBH/05_open_questions_and_next_steps.md:208}. \\
+K-numbers (K01--K108) & The theorem meeting's candidate IDs (\path{MEET-THM/R0_DIFF.md}), written ``K-ID K46''; not archive IDs \src{NBH/notation_and_conventions.md:436}. \\
+FW1--FW27; N1--N17; E1--E17 & Future-work items = \rid{CJ01}--\rid{CJ27}; obligations = \rid{OB01}--\rid{OB17} \src{NBH/05_open_questions_and_next_steps.md:81}; engineering TODOs = \rid{ENG01}--\rid{ENG17}. \\
+T01--T39 & Pre-campaign theorem/conjecture numbers (\path{Docs/Theory/}) \src{Docs/THEORY.md:3}. \\
+Q1--Q5; P1--P12; U1--U14; C1--C26 & The chair's questions to HQ (rulings \rid{RL01}--\rid{RL05}); the archive's pending items; final-state uncertain items; campaign-registry conflicts (\S\ref{sec:open:uncertain}). \\
+H.1--H.21 & This document's reversal entries (\S\ref{sec:history:reversals}). \\
+02a, 02b, REG-A, REG-B, TLF, METH31 & \path{NBH/02_theory.md}; \path{NBH/02b_theory_campaign_history.md}; parts A/B of \path{NBH/ID_REGISTRY.md}; \path{MEET-THM/THEOREM_LIST_FINAL.md}; \path{MEET-v31/METHOD_v3.1_FINAL.md} \src{NBH/README.md:40-44}. \\
+\pos{N} & Position $N$ in the source-thread transcript (\texttt{grep -n "BEGIN pos N "} in \path{NBH/transcript/part_*.md}) \src{NBH/README.md:38}. \\
+W1--W8; F-*, O-*, A-*, S-*, API-*, LIT-*, L-LEAN, MEET-* & Campaign waves and the branch families (Fable, Opus, Astra, Sonnet synthesis, API-credit, literature, Lean, meetings); each is a branch \texttt{theory/<ID>} snapshotted in \path{NBH/branch_snapshots/} \src{NBH/01_overview_and_timeline.md:48-65}. \\
+Routines; \texttt{claude --cloud}; API credit; Agent SDK & Routines bill the weekly plan; \texttt{--cloud} sessions bill the cloud credit; the promotional API credit covers the Agent SDK, not the CLI \src{NBH/05_open_questions_and_next_steps.md:245-246}. \\
+\bottomrule
+\end{xltabular}
+}

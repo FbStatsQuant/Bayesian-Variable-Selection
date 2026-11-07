@@ -1,0 +1,73 @@
+% Dependency graph of the paper-1 main cards (agent T1). Edges from the cards' "Dependencies" fields,
+% NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md lines 122, 175, 222, 266, 301, 342, 382, 416 and 300 (M5 Lean core), 121 (M1 Lean core).
+% Arrow X -> Y : "Y uses X".
+\begin{figure}[p]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  >={Stealth[length=2.4mm]},
+  main/.style={draw=cardcol,fill=cardcol!8,thick,rounded corners=2pt,align=center,font=\sffamily\small,minimum width=2.5cm,minimum height=1.0cm},
+  supp/.style={draw=black!55,fill=black!4,rounded corners=2pt,align=center,font=\sffamily\scriptsize,minimum width=2.0cm,minimum height=0.85cm},
+  obl/.style={draw=npcol,fill=npcol!7,dashed,rounded corners=2pt,align=center,font=\sffamily\scriptsize,minimum width=2.1cm,minimum height=0.85cm},
+  lean/.style={draw=okcol,fill=okcol!7,rounded corners=2pt,align=center,font=\sffamily\scriptsize,minimum width=2.4cm,minimum height=0.85cm},
+  e/.style={->,draw=black!45,line width=0.45pt},
+  em/.style={->,draw=cardcol,line width=1.0pt},
+  eo/.style={->,draw=npcol,dashed,line width=0.8pt},
+  el/.style={->,draw=okcol,line width=0.8pt,densely dotted}]
+% ---- top: obligations and Lean
+\node[lean] (LN)  at (1.0,2.2)  {Lean (L-LEAN)\\T21HPM, T37Greedy/Lattice,\\T12Core (partial)};
+\node[obl]  (N1)  at (9.6,2.2)  {OB01 · N1\\(PROOF SKETCH)};
+\node[obl]  (N3)  at (5.6,2.2)  {OB03 · N3 DP invariant\\(OPEN)};
+% ---- foundations (supplement cards)
+\node[supp] (T09) at (0,0)    {TH09 · S-T\\T03♯ (cited)};
+\node[supp] (T10) at (2.7,0)  {TH10\\S-TARGET};
+\node[supp] (T11) at (5.4,0)  {TH11\\S-BLOCKS};
+\node[supp] (T12) at (8.1,0)  {TH12\\S-KERNEL (N9)};
+\node[supp] (T15) at (10.8,0) {TH15\\S-OUT};
+\node[supp] (T14) at (13.5,0) {TH14\\S-CERT};
+\node[supp] (T13) at (16.2,0) {TH13\\S-IDENT};
+% ---- main cards
+\node[main] (M3) at (1.2,-4.0)  {TH03 · M3\\START};
+\node[main] (M6) at (5.0,-4.0)  {TH06 · M6\\SEP + KL};
+\node[main] (M1) at (10.2,-4.0) {TH01 · M1\\V/H};
+\node[main] (M7) at (15.0,-4.0) {TH07 · M7\\STG};
+\node[main] (M5) at (2.4,-8.5)  {TH05 · M5\\HPM};
+\node[main] (M2) at (8.0,-8.5)  {TH02 · M2\\WS (§5.3)};
+\node[main] (M4) at (2.4,-13.0) {TH04 · M4\\Z𝒯 + certificate};
+\node[main] (M8) at (13.6,-13.0) {TH08 · M8\\Prop D};
+% ---- consumers in the supplement
+\node[supp] (T17) at (7.0,-13.0)  {TH17\\S-POOL};
+\node[supp] (T19) at (10.2,-13.0) {TH19\\S-REP};
+% ---- M3 uses: S-TARGET, S-BLOCKS, S-T
+\draw[e] (T10) -- (M3); \draw[e] (T11) -- (M3); \draw[e] (T09) -- (M3);
+% ---- M6 uses: M3, S-T, S-TARGET
+\draw[em] (M3) -- (M6); \draw[e] (T09) -- (M6); \draw[e] (T10) -- (M6);
+% ---- M1 uses: S-KERNEL, S-OUT, S-TARGET, M2(b) and S-T for (i); N1 for (b)
+\draw[e] (T12) -- (M1); \draw[e] (T15) -- (M1); \draw[e] (T10) -- (M1); \draw[e] (T09) -- (M1);
+\draw[eo] (N1) to[out=-80,in=80] (M1);
+% ---- M7 uses: S-TARGET, M3, M1(c), S-IDENT
+\draw[e] (T10) -- (M7); \draw[em] (M3) to[out=-25,in=-155] (M7); \draw[em] (M1) -- (M7); \draw[e] (T13) -- (M7);
+% ---- M2 uses: M3, M7, M1, S-KERNEL, S-T, M6, S-BLOCKS; M2(b) feeds M1(i)
+\draw[em] (M3) -- (M2); \draw[em] (M7) -- (M2); \draw[em] (M6) -- (M2);
+\draw[em] (M1.south west) to[bend right=10] (M2.north east); \draw[em] (M2.north) to[bend right=12] (M1.south);
+\draw[e] (T12) -- (M2); \draw[e] (T09) -- (M2); \draw[e] (T11) -- (M2);
+% ---- M5 uses: S-T, M3, S-BLOCKS, S-CERT, S-OUT; N3; Lean
+\draw[em] (M3) -- (M5); \draw[e] (T09) to[out=-95,in=135] (M5); \draw[e] (T11) -- (M5);
+\draw[e] (T14) -- (M5); \draw[e] (T15) -- (M5);
+\draw[eo] (N3) -- (M5);
+\draw[el] (LN) to[out=-110,in=160] (M5);
+\draw[el] (LN) to[out=-5,in=175] (M1);
+% ---- M4 uses: M5, S-T, S-OUT, S-TARGET, S-CERT, M1, S-BLOCKS
+\draw[em] (M5) -- (M4); \draw[em] (M1) -- (M4);
+\draw[e] (T09) to[out=-100,in=170] (M4); \draw[e] (T10) to[out=-100,in=150] (M4);
+\draw[e] (T11) to[out=-110,in=110] (M4); \draw[e] (T15) -- (M4); \draw[e] (T14) -- (M4);
+% ---- M8 uses: M7, S-CERT, S-OUT; M1 and M5 feed M8
+\draw[em] (M7) -- (M8); \draw[e] (T14) -- (M8); \draw[e] (T15) to[out=-60,in=110] (M8);
+\draw[em] (M1) -- (M8); \draw[em] (M5) to[out=-30,in=160] (M8);
+% ---- M1 feeds S-POOL, S-REP; M2 constants reported by S-REP
+\draw[em] (M1) -- (T17); \draw[em] (M1) -- (T19); \draw[em] (M2) -- (T19);
+\end{tikzpicture}}
+\caption{Dependencies of the main cards M1–M8 (blue boxes) on each other, on the key supplement cards (grey), on the two open obligations that carry the most weight (N1 behind M1(b) and the binding §13.1; N3 behind M5(b1-LH) and hence M4(f); dashed purple), and on the existing Lean library (dotted green). An arrow X → Y means ``Y uses X''. Clause-level meaning of the main-to-main edges: M1 → M2 is $E\,W_r=1$ for M2(b5); M2 → M1 is M2(b) for M1(i); M1 → M7 is the frozen-𝒞 contract M1(c); M5 → M4 is (b1-LH) for M4(f); M5 → M8 is the search-cost term; Lean → M5 covers parts of (0) and (a) (\texttt{t21\_C1}, Theorem A); Lean → M1 is the partial \texttt{T12Core} (hypothesis \texttt{hstep} not discharged). S-T edges are as the cards state them (for M1 only clause (i)). Not drawn: cited lemmas (CL), K-level edges, and the supplement packs' internal dependencies.}
+\label{fig:depgraph}
+\par\footnotesize Sources: \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:122,175,222,266,301,342,382,416} (Dependencies rows); \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:121,300} (Lean-core rows).
+\end{figure}
