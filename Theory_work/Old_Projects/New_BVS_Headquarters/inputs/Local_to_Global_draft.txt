@@ -1,0 +1,540 @@
+                     Local-to-Global Bayesian Computation
+
+
+
+                                               Abstract
+          This proposal develops a Bayesian computation framework for large structured model
+      spaces. The main idea is to run fast local posterior computations on small subproblems,
+      merge the resulting local structures, and then correct the merged output toward the global
+      posterior distribution. The project is motivated by Bayesian variable selection, where merg-
+      ing local structures is combinatorially easy but posterior uncertainty is not preserved. The
+      proposed framework treats local posterior samples as particles or proposals, not as the
+      final posterior. Correction is achieved through importance weighting, sequential Monte
+      Carlo, tempering, or Metropolis–Hastings steps targeting the full posterior. The goal is a
+      methodology strong enough for a statistics journal such as JASA or JRSSB : a clear statis-
+      tical principle, rigorous validity results, and convincing demonstrations in both familiar and
+      challenging structured model spaces.
+
+
+1    Motivation
+Many Bayesian inference problems involve posterior distributions over large structured model
+spaces. Examples include variable-selection models, graphical models, partitions, and symbolic
+expressions. In such problems, the posterior has the general form
+
+                               π(M, θM | y) ∝ L(y | M, θM )π(M, θM ),
+
+where M ∈ M is a structured model object and θM denotes the continuous parameters as-
+sociated with M . The model object M may be a selected variable set, a graph, or another
+combinatorial structure.
+    Direct Markov chain Monte Carlo over (M, θM ) may be slow for at least three reasons. First,
+the space M may be enormous. Second, the posterior may be multimodal. Third, likelihood
+evaluation can be expensive. A natural strategy is therefore to divide the problem into smaller
+local subproblems, run fast Bayesian computations locally, and combine the local results.
+    The central statistical difficulty is that naive local-to-global merging usually does not recover
+the full Bayesian posterior. Even if the merge operation is simple, posterior uncertainty can be
+wrong. This point is especially clear in Bayesian variable selection: local analyses can identify
+variables from different blocks, and taking their union is easy, but the resulting uncertainty may
+ignore cross-block dependence.
+    This project studies the following principle:
+
+local posterior computation       −→     merge local structures      −→      correct toward the global posterior.
+
+The correction step is essential. Local posterior samples are useful computational building
+blocks, but they are not the target posterior distribution.
+
+
+2    General Framework
+Let M ∈ M denote a structured model object and let θM ∈ ΘM denote its continuous param-
+eters. The full posterior is
+
+                                                L(y | M, θM )π(M, θM )
+                              π(M, θM | y) =                           ,                               (1)
+                                                          Z
+
+                                                    1
+where Z is the normalizing constant.
+   Suppose the full problem can be decomposed into K local subproblems. For each local
+subproblem k, we run a local Bayesian computation and obtain samples
+                              (s)   (s)
+                          (Mk , θk ) ∼ π
+                                       ek (Mk , θk | yk ),            k = 1, . . . , K.
+The local posterior π
+                    ek is usually a working posterior, not a marginal of (1). The project therefore
+treats the local samples as proposals or particles. A merging mechanism maps local structures
+into global candidates:
+                             A : (M1 , θ1 ), . . . , (MK , θK ) 7→ (M, θM ).
+This induces a proposal or preliminary approximation q(M, θM ) on the global space. The central
+task is to correct q toward the true posterior π.
+Definition 1 (Local-to-global posterior correction). A local-to-global posterior correction method
+consists of:
+  (i) local posterior computations π
+                                   e1 , . . . , π
+                                                eK ;
+ (ii) a merge proposal q induced by local samples and a merge map A;
+(iii) a correction mechanism whose target is either the full posterior π in (1), or a clearly
+      defined approximation to π with quantifiable error.
+   Several correction mechanisms are possible.
+
+2.1    Importance correction
+If q(M, θM ) can be evaluated or estimated, then importance sampling uses weights
+                                                     L(y | M, θM )π(M, θM )
+                                 w(M, θM ) =                                .
+                                                           q(M, θM )
+The corrected empirical distribution is
+                                    M
+                                    X                                     ws
+                             π
+                             bM =          w̄s δ(M (s) ,θ(s) ) ,   w̄s = PM         .
+                                     s=1                                   ℓ=1 wℓ
+
+The main weakness is weight degeneracy when q is far from π. This is expected in high-
+dimensional or highly discrete model spaces.
+
+2.2    Metropolis–Hastings correction
+Alternatively, use the local-to-global mechanism as a proposal in a Metropolis–Hastings algo-
+rithm. Given current state x = (M, θM ) and proposal x′ = (M ′ , θM     ′ ) ∼ q(x, ·), accept with
+                                                                          ′
+
+probability
+                                                 π(x′ | y)q(x′ , x)
+                                                                   
+                              α(x, x′ ) = min 1,                      .
+                                                 π(x | y)q(x, x′ )
+This gives exact posterior invariance when the proposal has adequate support and the posterior
+density can be evaluated up to proportionality.
+Proposition 1 (Posterior invariance). Assume the proposal kernel q(x, dx′ ) has support on the
+relevant posterior support and the Metropolis–Hastings acceptance probability is computed using
+the full posterior density in (1). Then the resulting Markov chain is reversible with respect to
+π, and hence π is invariant.
+Proof. This is the standard detailed balance argument. For x ̸= x′ ,
+                       π(x)q(x, x′ )α(x, x′ ) = min{π(x)q(x, x′ ), π(x′ )q(x′ , x)},
+which is symmetric in x and x′ . Therefore detailed balance holds, and π is invariant.
+
+                                                            2
+2.3   Sequential Monte Carlo correction
+A more stable strategy is to define a sequence of intermediate targets
+
+                                    π0 , π1 , . . . , πT ,        πT = π,
+
+where π0 is induced by local posterior computations and πT is the full posterior. Particles are
+propagated through the sequence by importance weighting, resampling, and MCMC rejuvena-
+tion.
+    For example, a tempered path may be
+
+           πλ (M, θM ) ∝ {L(y | M, θM )}λ {L(y
+                                           e | M, θM )}1−λ π(M, θM ),               λ ∈ [0, 1],   (2)
+
+where Le is a local or composite likelihood. At λ = 0, the target is local or approximate; at
+λ = 1, the target is the full posterior.
+
+Definition 2 (MCMC rejuvenation). An MCMC rejuvenation step at intermediate target πt is
+a Markov transition kernel Kt satisfying
+
+                                                πt Kt = πt .
+
+It is applied after resampling to restore particle diversity without changing the target distribution.
+
+Proposition 2 (SMC consistency, informal). Suppose π0 , . . . , πT are well-defined probability
+distributions, the incremental weights are correctly computed, and each rejuvenation kernel Kt
+leaves πt invariant. Under standard regularity conditions for sequential Monte Carlo samplers,
+the empirical particle measure converges weakly to πT as the number of particles tends to infinity.
+
+    This result follows from standard SMC sampler theory (Del Moral et al., 2006). The nov-
+elty of the proposed project is not the generic SMC consistency theorem; the novelty is the
+construction of useful local-to-global paths and merge proposals for structured Bayesian model
+spaces.
+
+
+3     Application I: Bayesian Variable Selection
+3.1   Model
+Consider Gaussian linear regression
+
+                                 y = Xβ + ϵ,                 ϵ ∼ N (0, σ 2 In ),
+
+with p predictors. Let S ⊂ {1, . . . , p} denote the active set. A spike-and-slab posterior has the
+general form
+                   π(S, βS , σ 2 | y) ∝ L(y | S, βS , σ 2 )π(βS | S, σ 2 )π(S)π(σ 2 ).
+    When p is large, full posterior exploration over 2p models can be difficult. A split-and-merge
+strategy partitions predictors into blocks B1 , . . . , BK , runs local Bayesian variable selection in
+each block, and merges selected variables. The local posterior in block k is a working posterior
+
+                              ek (Sk , βSk , σ 2 | y, XBk ),
+                              π                                         Sk ⊂ Bk .
+
+
+
+
+                                                        3
+3.2    Why naive merging fails
+The natural merge is
+                                                        K
+                                                        [
+                                                 Sb =         Sbk .
+                                                        k=1
+
+This merge is combinatorially easy. However, it does not preserve the full posterior distribution.
+    The main reason is cross-block dependence. Suppose two predictors Xj and Xℓ are highly
+correlated but assigned to different blocks. A local analysis of the block containing j may assign
+high inclusion probability to j, while a local analysis of the block containing ℓ may assign high
+inclusion probability to ℓ. The merged result may then suggest that both variables should be
+included. The full posterior, however, may place mass on two competing models:
+
+                                         S = {j}        or    S = {ℓ},
+
+with little mass on S = {j, ℓ}. Thus naive merging can destroy joint posterior uncertainty.
+   This example shows that variable selection is not trivial for the proposed framework. Even
+when the merge operation is easy, the posterior uncertainty problem remains hard.
+
+3.3    Proposed algorithm for variable selection
+The proposed variable-selection algorithm is:
+
+    1. Partition predictors into possibly overlapping blocks.
+
+    2. Run local Bayesian variable-selection chains in each block.
+
+    3. Use local posterior samples to build a global model proposal q(S).
+
+    4. Extend S to (S, βS , σ 2 ) by sampling or approximating the conditional posterior of contin-
+       uous parameters.
+
+    5. Correct the global proposal using importance weighting, Metropolis–Hastings, or an SMC
+       path ending at the full posterior.
+
+    A useful SMC bridge is
+
+               πλ (S, βS , σ 2 ) ∝ {L(y | S, βS , σ 2 )}λ {L(y
+                                                           e | S, βS , σ 2 )}1−λ π(S, βS , σ 2 ),
+
+where Le summarizes the local block analyses. The correction path moves from local evidence
+to the full likelihood.
+
+3.4    Scientific role of variable selection
+Variable selection is the controlled test bed for the project. It is a familiar topic, easy to
+simulate, and suitable for theory. Its role is to demonstrate the key statistical message:
+
+                             easy merge ̸⇒ valid posterior uncertainty.
+
+This application should be used to develop the core algorithm and to produce the first rigorous
+results.
+
+
+4     Main Methodological Questions
+The project should be organized around the following questions.
+
+
+                                                        4
+4.1    Question 1: What is the target?
+For each algorithm, the target distribution must be explicit. The strongest version targets the
+true full posterior π. If exact targeting is too expensive, the approximation must be clearly
+defined and the error must be studied.
+
+4.2    Question 2: What is the merge proposal?
+The merge proposal is problem-specific. In variable selection, it may be a distribution over
+variable sets constructed from local inclusion probabilities. For other structured model spaces,
+it may be a problem-specific distribution over globally valid configurations.
+
+4.3    Question 3: How is posterior uncertainty corrected?
+The correction layer is the core statistical contribution. Possible correction methods include:
+
+    1. full-posterior Metropolis–Hastings correction;
+
+    2. sequential Monte Carlo with intermediate targets;
+
+    3. importance tempering from local to global posterior;
+
+    4. delayed acceptance using cheap local scores followed by full likelihood correction.
+
+4.4    Question 4: When is correction stable?
+Correction is only useful when the local proposal has enough overlap with the global poste-
+rior. The project should therefore study weight degeneracy, effective sample size, cross-block
+dependence, and sensitivity to block construction.
+
+
+5     Potential Theoretical Results
+A strong journal paper needs theory beyond an algorithm. The following results are natural
+targets.
+
+5.1    Exactness under Metropolis–Hastings correction
+As shown earlier, if local-to-global proposals are used inside a valid Metropolis–Hastings algo-
+rithm with full posterior ratios, then the full posterior is invariant. This result is simple but
+important because it separates proposal construction from posterior validity.
+
+5.2    SMC consistency
+For a well-defined sequence of intermediate targets ending at the full posterior, standard SMC
+theory gives convergence as the number of particles increases. The paper should state this
+formally for the proposed local-to-global construction.
+
+5.3    Weight stability for variable selection
+For variable selection, we can study when local proposals produce stable correction weights. A
+possible direction is to show that, under weak cross-block correlation, the discrepancy between a
+product of block posteriors and the full posterior is controlled by cross-block dependence terms.
+   A possible informal statement is:
+
+
+
+
+                                                5
+Theorem 1 (Possible direction: weak cross-block dependence). Consider Gaussian linear re-
+gression with a sparse prior on S. Suppose the design matrix can be partitioned into blocks
+such that the cross-block correlations are uniformly small. Then, under suitable sparsity and
+signal-strength conditions, the divergence between the local block proposal and the full poste-
+rior is controlled by the magnitude of the cross-block covariance. Consequently, the variance of
+importance weights remains bounded when cross-block dependence is sufficiently weak.
+
+   The exact assumptions and proof are part of the student’s task. This theorem would for-
+malize when local variable-selection proposals are useful.
+
+5.4    Approximation error when exact correction is unavailable
+If exact correction is computationally prohibitive, the paper should quantify approximation
+error. Possible metrics include
+
+                                    KL(π∥b
+                                         π ),       ∥π − π
+                                                         b∥TV ,
+
+or problem-specific summaries such as posterior inclusion probability error, joint inclusion prob-
+ability error, and credible-interval coverage error.
+
+
+6     Simulation Plan
+6.1    Variable-selection simulations
+Begin with Gaussian linear regression. Use settings such as
+
+                 n ∈ {100, 200, 500},    p ∈ {100, 500, 1000},     s ∈ {5, 10, 20}.
+
+Vary the following:
+
+    1. within-block correlation;
+
+    2. cross-block correlation;
+
+    3. signal strength;
+
+    4. block size;
+
+    5. overlap size;
+
+    6. prior sparsity.
+
+    Compare:
+
+    1. full posterior MCMC;
+
+    2. naive split-and-merge;
+
+    3. product of local posterior approximations;
+
+    4. one-shot importance correction;
+
+    5. tempered SMC correction;
+
+    6. block-informed Metropolis–Hastings correction.
+
+    Metrics:
+
+                                                6
+    1. marginal posterior inclusion probability error;
+    2. joint inclusion probability error;
+    3. posterior model-size distribution;
+    4. coefficient credible interval coverage;
+    5. prediction interval coverage;
+    6. effective sample size;
+    7. runtime.
+   The key demonstration should be a setting where naive split-and-merge screens variables
+well but gives wrong posterior uncertainty, especially for correlated predictors placed in different
+blocks.
+
+
+7     Development Plan
+7.1    Phase 1: Literature review
+The student should first write a literature memo organized by five themes:
+    1. split-and-merge Bayesian variable selection;
+    2. composite likelihood and approximate posterior calibration;
+    3. divide-and-conquer Bayesian computation;
+    4. importance tempering and SMC samplers;
+    5. diagnostics for scalable Bayesian computation.
+    The memo should answer:
+    1. Which methods split data, variables, or model structures?
+    2. Which methods target the exact posterior?
+    3. Which methods target an approximation?
+    4. Which methods give valid posterior uncertainty?
+    5. Where is the gap for local-to-global structured model spaces?
+
+7.2    Phase 2: Variable-selection prototype
+The first implementation should be in Gaussian regression. The student should construct a
+simple example where cross-block correlation causes naive merging to distort uncertainty. Then
+the student should implement one correction method, preferably either Metropolis–Hastings
+correction or a simple tempered SMC correction.
+
+7.3    Phase 3: First theorem
+The first theorem should be modest and clean. The best options are:
+    1. exact posterior invariance under full-posterior Metropolis–Hastings correction;
+    2. SMC consistency for a specified local-to-global target sequence;
+    3. a weight-stability result under weak cross-block dependence in Gaussian regression.
+
+                                                 7
+7.4    Phase 5: Integrated paper
+The paper should be written around the general principle and use variable selection as the main
+application. The experiments should demonstrate across several dependence regimes that easy
+merging is not enough for valid uncertainty.
+
+
+8     Risks and Responses
+8.1    Risk 1: The project is too broad
+The framework could become too broad if it covers too many structured model spaces at once.
+The response is to keep the general framework simple and use variable selection as the controlled
+application:
+
+                        variable selection: easy merge, hard uncertainty.
+
+8.2    Risk 2: Novelty is challenged
+A reviewer may say that the project combines known ideas: split-and-merge, SMC, and Metropolis–
+Hastings. The response is that the contribution is a general posterior-correction framework for
+local model-space exploration, with explicit attention to uncertainty distortion after merging.
+    To make the novelty strong, the paper should include at least one new algorithmic device,
+such as:
+
+    1. adaptive local-to-global tempering;
+
+    2. a proposal learned from local posterior samples;
+
+    3. correction diagnostics based on effective sample size or local-global discrepancy;
+
+    4. theory for stable correction weights.
+
+8.3    Risk 3: Exact correction is expensive
+The paper should separate exact and approximate variants. The exact variant uses full-posterior
+Metropolis–Hastings or SMC targets ending at the full posterior. The approximate variant uses
+local-to-global correction with quantified approximation error.
+
+8.4    Risk 4: Local proposals miss important posterior regions
+If local computations do not cover important global posterior regions, correction cannot recover
+them well. The method should therefore use overlapping blocks, multiple random partitions,
+adaptive blocking, tempering, rejuvenation, and diagnostics for degeneracy.
+
+
+9     Why This Could Be a JASA or JRSSB Paper
+A strong paper should make a broad statistical point:
+
+       Local Bayesian computations are often used to scale posterior inference, but naive
+       local-to-global merging can badly distort posterior uncertainty. We develop a cor-
+       rection framework that uses local computations for speed while targeting or approx-
+       imating the global posterior distribution.
+
+    The paper should aim for three contributions:
+
+
+                                                 8
+  1. Conceptual contribution. Define posterior correction after local model-space explo-
+     ration as a general Bayesian inference problem.
+
+  2. Methodological contribution. Develop a divide–merge–correct Monte Carlo frame-
+     work using SMC, tempering, and Metropolis–Hastings correction.
+
+  3. Application contribution. Demonstrate the framework in Bayesian variable selection
+     across a range of dependence structures and problem sizes.
+
+   The ideal paper will have a clean algorithm, a rigorous validity result, one familiar statistical
+example, and one high-impact scientific application.
+
+
+10      First Four-Week Assignment
+The student’s first four-week task should be:
+
+  1. Read the core references listed below.
+
+  2. Write a two-page literature map.
+
+  3. Implement a toy Gaussian variable-selection example with predictor blocks.
+
+  4. Show at least one example where naive merging distorts posterior uncertainty.
+
+  5. Implement a simple correction, either importance weighting or Metropolis–Hastings.
+
+     The first checkpoint is to show the central statistical phenomenon:
+
+                    local merging can preserve signal but distort uncertainty.
+
+
+11      Core References
+Split-and-merge and feature partitioning
+ • Song and Liang (2015): split-and-merge Bayesian variable selection for ultrahigh-dimensional
+   regression.
+
+ • Gutierrez and Guhaniyogi (2022): dynamic feature partitioning for high-dimensional Bayesian
+   regression.
+
+Composite likelihood and approximate posterior calibration
+ • Ribatet et al. (2012): Bayesian inference from composite likelihoods and the need for pos-
+   terior calibration.
+
+ • Frazier et al. (2023): synthetic likelihood asymptotics and adjustments.
+
+Importance tempering and SMC
+ • Zanella and Roberts (2019): scalable importance tempering for Bayesian variable selection.
+
+ • Lindsten et al. (2017): divide-and-conquer with sequential Monte Carlo.
+
+ • Del Moral et al. (2006): general theory of sequential Monte Carlo samplers.
+
+
+
+
+                                                 9
+Efficient Bayesian regression computation
+ • Hahn et al. (2019): efficient sampling for Gaussian linear regression with arbitrary priors.
+
+
+12     Bottom Line
+The project should aim to establish the following principle:
+
+
+      Merging local Bayesian outputs is easy to do but hard to make statistically valid.
+
+   Variable selection gives a controlled and familiar setting where the merge is easy but posterior
+uncertainty can be wrong. It can support a broad methodology for local-to-global Bayesian
+computation over structured model spaces while keeping the paper focused.
+
+
+13     Other thoughts
+  1. We should prove a theorem where our estimates of posterior expectation of h(θ) converge
+     to the theoretical ground truth.
+
+  2. Song & Liang’s approach might yield problematic uncertainty quantification.
+
+  3. Let’s focus on variable selection and treat how to partition the parameter space as a
+     random variable to be inferred, corresponding to stochastic scheduling.
+
+
+References
+Del Moral, P., Doucet, A., and Jasra, A. (2006). Sequential Monte Carlo samplers. Journal of
+  the Royal Statistical Society: Series B, 68(3):411–436.
+
+Frazier, D. T., Nott, D. J., Drovandi, C., and Kohn, R. (2023). Bayesian inference using
+  synthetic likelihood: Asymptotics and adjustments. Journal of the American Statistical As-
+  sociation, 118(544):2821–2832.
+
+Gutierrez, R. and Guhaniyogi, R. (2022). Bayesian dynamic feature partitioning in high-
+ dimensional regression with big data. Technometrics, 64(2):224–240.
+
+Hahn, P. R., He, J., and Lopes, H. F. (2019). Efficient sampling for Gaussian linear regression
+ with arbitrary priors. Journal of Computational and Graphical Statistics, 28(1):142–154.
+
+Lindsten, F., Johansen, A. M., Naesseth, C. A., Kirkpatrick, B., Schön, T. B., Aston, J. A. D.,
+  and Bouchard-Côté, A. (2017). Divide-and-conquer with sequential Monte Carlo. Journal of
+  Computational and Graphical Statistics, 26(2):445–458.
+
+Ribatet, M., Cooley, D., and Davison, A. C. (2012). Bayesian inference from composite likeli-
+  hoods, with an application to spatial extremes. Statistica Sinica, 22:813–845.
+
+Song, Q. and Liang, F. (2015). A split-and-merge Bayesian variable selection approach for
+  ultrahigh dimensional regression. Journal of the Royal Statistical Society: Series B, 77(5):947–
+  972.
+
+Zanella, G. and Roberts, G. O. (2019). Scalable importance tempering and Bayesian variable
+  selection. Journal of the Royal Statistical Society: Series B, 81(3):489–517.
+
+
+
+                                                10
+
