@@ -1,0 +1,26 @@
+[
+ {
+  "r": 0,
+  "V_size": 20,
+  "exhaustive": true,
+  "zeta_ratio": 0.36,
+  "zeta_arg": "((53,), 74)",
+  "dec_unit": 0.6
+ },
+ {
+  "r": 1,
+  "V_size": 55,
+  "exhaustive": false,
+  "zeta_ratio": 0.00035,
+  "zeta_arg": "((53,), 69)",
+  "dec_unit": 0.6
+ },
+ {
+  "r": 2,
+  "V_size": 90,
+  "exhaustive": false,
+  "zeta_ratio": 0.0,
+  "zeta_arg": "((53,), 90)",
+  "dec_unit": 0.6
+ }
+]

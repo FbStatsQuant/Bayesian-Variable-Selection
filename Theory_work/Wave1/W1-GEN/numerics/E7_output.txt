@@ -1,0 +1,60 @@
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:60: SyntaxWarning: invalid escape sequence '\S'
+  s["|start\S0|"] = mm("start_extra_vs_S0")
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave1\W1-GEN\numerics\e7_proxy_flood.py:71: SyntaxWarning: invalid escape sequence '\S'
+  COLS = ["p", "d", "n", "N", "B", "blocks w/ proxies", "x1 in start", "|start| (min-max)", "|start\S0|", "proxies/nulls in start (max)", "ell",

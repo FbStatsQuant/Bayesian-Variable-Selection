@@ -1,0 +1,8 @@
+(a) score: max |batched - independent| over 300 models: 8.526512829121202e-14
+(b) DP vs brute force, random cases: 50 / 50  max |dlogZ0 or dlogpi0|: 1.4210854715202004e-14
+(b') duplicate-column tie cases: 10 / 10
+(c) own linkage vs scipy: max sorted-height diff 0.0 ; partition invariants ok 20 / 20
+(d) LS vs naive: 15 / 15
+(e) Lambda: pop formula vs direct projection, max abs diff: 1.1368683772161603e-13
+(e') VIS/NL helper vs brute:  0.0 0.0  U*= [(0,), (), (6,), ()]
+(e'') SEP/decrement sweep vs brute: 0.0 2.3092638912203256e-14 dec= 12.947027027027028 zeta= 0.0

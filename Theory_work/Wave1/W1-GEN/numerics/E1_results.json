@@ -1,0 +1,31 @@
+{
+ "a_score_max_abs_diff": 8.526512829121202e-14,
+ "a_score_ncheck": 300,
+ "b_dp_vs_bruteforce_random": {
+  "cases": 50,
+  "mode_matches": 50,
+  "max_abs_diff_logZ_or_logpi": 1.4210854715202004e-14
+ },
+ "b_dp_vs_bruteforce_ties": {
+  "cases": 10,
+  "mode_matches": 10
+ },
+ "c_linkage_max_height_diff_vs_scipy": 0.0,
+ "c_partition_invariants_ok": 20,
+ "d_ls_vs_naive": 15,
+ "e_pop_lambda_max_abs_diff": 1.1368683772161603e-13,
+ "e_vis_diff": 0.0,
+ "e_nl_diff": 0.0,
+ "e_Ustar": [
+  [
+   0
+  ],
+  [],
+  [
+   6
+  ],
+  []
+ ],
+ "e_sep_diff": 0.0,
+ "e_dec_diff": 2.3092638912203256e-14
+}
