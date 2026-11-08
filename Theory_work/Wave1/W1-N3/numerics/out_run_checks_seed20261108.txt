@@ -1,0 +1,12 @@
+
+SEED 20261108
+exhaustive_p<=3 {'instances': 19950, 'truncated': 9187, 'K_binding(k*=K<p)': 3054, 'ties>1': 7611, 'trunc_wrong(S!=S*)': 529}
+constructed {'instances': 548, 'K_binding(k*=K<p)': 145, 'ties>1': 321, 'truncated': 194, 'trunc_wrong(S!=S*)': 125}
+random_int_heavyties {'instances': 4000, 'ties>1': 1711, 'K_binding(k*=K<p)': 1906}
+random_int_01 {'instances': 3000, 'K_binding(k*=K<p)': 1335, 'ties>1': 1690}
+random_trunc_smallcap {'instances': 3000, 'ties>1': 2017, 'truncated': 1886, 'K_binding(k*=K<p)': 1474, 'trunc_wrong(S!=S*)': 219}
+random_Ksmall {'instances': 2000, 'K_binding(k*=K<p)': 1528, 'ties>1': 725, 'truncated': 380, 'trunc_wrong(S!=S*)': 70}
+random_wide {'instances': 1000, 'K_binding(k*=K<p)': 560, 'ties>1': 42}
+data(code scorer, real prior) {'instances': 400, 'truncated': 116, 'K=1 (n<=3)': 220, 'ties>1': 29}
+cap_edge(N-1,N,N+1) {'instances': 2053, 'ties>1': 1347, 'truncated': 1253, 'K_binding(k*=K<p)': 988, 'trunc_wrong(S!=S*)': 16}
+fp_stress(e only) {'instances': 3000, 'float_ties>1': 429, 'float_lex_differs(not claimed)': 26}

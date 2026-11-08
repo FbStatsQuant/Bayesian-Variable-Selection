@@ -1,0 +1,37 @@
+n2-p1-r0 K=1 J=1 distinct singleton log r: ['0x1.55e7fe31ef5a0p-2'] lambda(1)-lambda(0)=0.000000 code S: [0] ties: 1 S*: [0] OK
+n2-p1-r1 K=1 J=1 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=0.000000 code S: [0] ties: 1 S*: [0] OK
+n2-p1-r2 K=1 J=1 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=0.000000 code S: [0] ties: 1 S*: [0] OK
+n2-p2-r0 K=1 J=2 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-1.098612 code S: [] ties: 1 S*: [] OK
+n2-p2-r1 K=1 J=2 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-1.098612 code S: [] ties: 1 S*: [] OK
+n2-p2-r2 K=1 J=2 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-1.098612 code S: [] ties: 1 S*: [] OK
+n2-p3-r0 K=1 J=3 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-1.609438 code S: [] ties: 1 S*: [] OK
+n2-p3-r1 K=1 J=3 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-1.609438 code S: [] ties: 1 S*: [] OK
+n2-p3-r2 K=1 J=3 distinct singleton log r: ['0x1.55e7fe31ef590p-2', '0x1.55e7fe31ef5a0p-2'] lambda(1)-lambda(0)=-1.609438 code S: [] ties: 1 S*: [] OK
+n2-p4-r0 K=1 J=4 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-1.945910 code S: [] ties: 1 S*: [] OK
+n2-p4-r1 K=1 J=4 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-1.945910 code S: [] ties: 1 S*: [] OK
+n2-p4-r2 K=1 J=4 distinct singleton log r: ['0x1.55e7fe31ef590p-2', '0x1.55e7fe31ef5a0p-2'] lambda(1)-lambda(0)=-1.945910 code S: [] ties: 1 S*: [] OK
+n2-p5-r0 K=1 J=5 distinct singleton log r: ['0x1.55e7fe31ef590p-2', '0x1.55e7fe31ef5a0p-2'] lambda(1)-lambda(0)=-2.197225 code S: [] ties: 1 S*: [] OK
+n2-p5-r1 K=1 J=5 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-2.197225 code S: [] ties: 1 S*: [] OK
+n2-p5-r2 K=1 J=5 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-2.197225 code S: [] ties: 1 S*: [] OK
+n2-p6-r0 K=1 J=6 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-2.397895 code S: [] ties: 1 S*: [] OK
+n2-p6-r1 K=1 J=6 distinct singleton log r: ['0x1.55e7fe31ef590p-2', '0x1.55e7fe31ef5a0p-2'] lambda(1)-lambda(0)=-2.397895 code S: [] ties: 1 S*: [] OK
+n2-p6-r2 K=1 J=6 distinct singleton log r: ['0x1.55e7fe31ef590p-2', '0x1.55e7fe31ef5a0p-2'] lambda(1)-lambda(0)=-2.397895 code S: [] ties: 1 S*: [] OK
+n2-p7-r0 K=1 J=7 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-2.564949 code S: [] ties: 1 S*: [] OK
+n2-p7-r1 K=1 J=7 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-2.564949 code S: [] ties: 1 S*: [] OK
+n2-p7-r2 K=1 J=7 distinct singleton log r: ['0x1.55e7fe31ef590p-2', '0x1.55e7fe31ef5a0p-2'] lambda(1)-lambda(0)=-2.564949 code S: [] ties: 1 S*: [] OK
+n2-p8-r0 K=1 J=8 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-2.708050 code S: [] ties: 1 S*: [] OK
+n2-p8-r1 K=1 J=8 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-2.708050 code S: [] ties: 1 S*: [] OK
+n2-p8-r2 K=1 J=8 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-2.708050 code S: [] ties: 1 S*: [] OK
+n2-p9-r0 K=1 J=9 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-2.833213 code S: [] ties: 1 S*: [] OK
+n2-p9-r1 K=1 J=9 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-2.833213 code S: [] ties: 1 S*: [] OK
+n2-p9-r2 K=1 J=9 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-2.833213 code S: [] ties: 1 S*: [] OK
+n2-p10-r0 K=1 J=10 distinct singleton log r: ['0x1.55e7fe31ef590p-2', '0x1.55e7fe31ef5a0p-2'] lambda(1)-lambda(0)=-2.944439 code S: [] ties: 1 S*: [] OK
+n2-p10-r1 K=1 J=10 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-2.944439 code S: [] ties: 1 S*: [] OK
+n2-p10-r2 K=1 J=10 distinct singleton log r: ['0x1.55e7fe31ef590p-2', '0x1.55e7fe31ef5a0p-2'] lambda(1)-lambda(0)=-2.944439 code S: [] ties: 1 S*: [] OK
+n2-p11-r0 K=1 J=11 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-3.044522 code S: [] ties: 1 S*: [] OK
+n2-p11-r1 K=1 J=11 distinct singleton log r: ['0x1.55e7fe31ef590p-2', '0x1.55e7fe31ef5a0p-2'] lambda(1)-lambda(0)=-3.044522 code S: [] ties: 1 S*: [] OK
+n2-p11-r2 K=1 J=11 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-3.044522 code S: [] ties: 1 S*: [] OK
+n2-p12-r0 K=1 J=12 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-3.135494 code S: [] ties: 1 S*: [] OK
+n2-p12-r1 K=1 J=12 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-3.135494 code S: [] ties: 1 S*: [] OK
+n2-p12-r2 K=1 J=12 distinct singleton log r: ['0x1.55e7fe31ef590p-2'] lambda(1)-lambda(0)=-3.135494 code S: [] ties: 1 S*: [] OK
+OK 36 of 36

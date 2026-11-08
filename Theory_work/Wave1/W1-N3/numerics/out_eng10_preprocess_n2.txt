@@ -1,0 +1,2 @@
+n = 2 status: invalid_input | reason: n < 3 
+n = 3 status: ok 

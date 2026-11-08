@@ -1,0 +1,5 @@
+code: {'id': 'fp', 'lg0': 1000.0, 'ties': 1, 'truncated': 0, 'S': [0, 2]}
+max ghat = 1000.0  float argmax sets: [[0, 1], [0, 2]]  float size-then-lex choice: [0, 1]
+ghat(code S) == lg0 == max ghat: True
+exact-real prescribed (EX-A): [0, 2]
+example 2 code: {'id': 'fp2', 'lg0': 1.8014398509481984e+16, 'ties': 1, 'truncated': 0, 'S': [1]}  float argmax: [[0], [1]]  ghat(code S)==lg0==max: True
