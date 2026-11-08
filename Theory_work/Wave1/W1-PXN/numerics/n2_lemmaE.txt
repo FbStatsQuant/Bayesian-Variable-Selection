@@ -1,0 +1,54 @@
+N2 n2_lemmaE.py -- Lemma E: LH-iid, g=10, rho=0.7, psi=0.5, c=1, v=1, beta=1, beta_vis=1, sigma=1
+
+====================================================================================================
+(n,p) = (100,60): lambda_min(Sigma)=0.2350 (F4 bound (1-psi)(1-rho)=0.1500), phi0^2=0.1175, M=4.500, c_E=0.01515, kappa_E=35.32, nu=50.01
+sets checked (all seeds): 63505  (per seed: 10701 structured + 2000 random)
+[E1] sample lambda_min(R_A): min over all sets = 0.1441  (phi0^2 = 0.1175);  #sets with lambda_min(R_A) < phi0^2 : 0  (event E fails there)
+[E1] eta_A range: [-0.1495, 0];  #violations of eta<=0: 0;  #violations of eta >= -2|A|/((n-1)phi0^2): 0;  max eta/lower-bound = 0.2282 (<=1 required)
+[E1] violations among sets with lambda_min(R_A)>=phi0^2: 0
+[E2] max abs error of identity G^-1 - nH^-1 = G^-1 (G+I) H^-1 : 7.134e-17
+[E2] Q_A - RSS^y_A in [0, 0.7082];  upper bound 1+1/((n-1)phi0^2) = 1.0860  (max gap/bound = 0.6521);  #viol lower(<0): 0, upper: 0;  among E-sets: 0
+[E2] a_A in [0.0200, 0.7282]; claimed [2b0, 2b0+1+1/((n-1)phi0^2)] = [0.02, 1.1060]
+[E3] min RSS_A over all sets = 83.51  (n sigma^2/2 = 50.0);  #viol RSS_A >= n s^2/2 : 0;  among E-sets: 0
+[E3] max ||Y||^2 over seeds = 293.9  (bound 3(M+s^2)n = 1650.0); #seeds violating: 0 of 5;   max ||mu||^2/n = 2.146  (M = 4.500), #seeds violating: 0
+[E3] min RSS^y_A / n = 0.2813  (c_E = 0.01515); #viol RSS^y_A >= c_E n : 0
+[E4] R_A range = [-1.2445, 0.0510];  kappa_E = 35.32;  claimed range [-0.52/c_E, J/((n-1)phi0^2)] = [-34.32, 0.430];  #viol |R_A|<=kappa_E : 0 (among E-sets: 0)
+[E4] identity F(A) = log w - |A|/2 log(n+1) - nu log RSS_A + c_n + R_A : max abs error = 1.137e-13
+[E5] max |RSS_A - n sigma^2 - Lambda_A| = 65.62 ; max of that / n^(2/3) = 3.046  (C2 not explicit in PROOF)
+(elapsed 29.5s)
+
+====================================================================================================
+(n,p) = (200,120): lambda_min(Sigma)=0.2350 (F4 bound (1-psi)(1-rho)=0.1500), phi0^2=0.1175, M=4.500, c_E=0.01515, kappa_E=35.32, nu=100.01
+sets checked (all seeds): 63505  (per seed: 10701 structured + 2000 random)
+[E1] sample lambda_min(R_A): min over all sets = 0.1882  (phi0^2 = 0.1175);  #sets with lambda_min(R_A) < phi0^2 : 0  (event E fails there)
+[E1] eta_A range: [-0.06126, 0];  #violations of eta<=0: 0;  #violations of eta >= -2|A|/((n-1)phi0^2): 0;  max eta/lower-bound = 0.1732 (<=1 required)
+[E1] violations among sets with lambda_min(R_A)>=phi0^2: 0
+[E2] max abs error of identity G^-1 - nH^-1 = G^-1 (G+I) H^-1 : 1.503e-17
+[E2] Q_A - RSS^y_A in [0, 0.7066];  upper bound 1+1/((n-1)phi0^2) = 1.0428  (max gap/bound = 0.6776);  #viol lower(<0): 0, upper: 0;  among E-sets: 0
+[E2] a_A in [0.0200, 0.7266]; claimed [2b0, 2b0+1+1/((n-1)phi0^2)] = [0.02, 1.0628]
+[E3] min RSS_A over all sets = 178.24  (n sigma^2/2 = 100.0);  #viol RSS_A >= n s^2/2 : 0;  among E-sets: 0
+[E3] max ||Y||^2 over seeds = 643.1  (bound 3(M+s^2)n = 3300.0); #seeds violating: 0 of 5;   max ||mu||^2/n = 2.021  (M = 4.500), #seeds violating: 0
+[E3] min RSS^y_A / n = 0.2888  (c_E = 0.01515); #viol RSS^y_A >= c_E n : 0
+[E4] R_A range = [-1.2407, 0.0132];  kappa_E = 35.32;  claimed range [-0.52/c_E, J/((n-1)phi0^2)] = [-34.32, 0.214];  #viol |R_A|<=kappa_E : 0 (among E-sets: 0)
+[E4] identity F(A) = log w - |A|/2 log(n+1) - nu log RSS_A + c_n + R_A : max abs error = 3.411e-13
+[E5] max |RSS_A - n sigma^2 - Lambda_A| = 103.83 ; max of that / n^(2/3) = 3.036  (C2 not explicit in PROOF)
+(elapsed 30.0s)
+
+====================================================================================================
+(n,p) = (400,200): lambda_min(Sigma)=0.2350 (F4 bound (1-psi)(1-rho)=0.1500), phi0^2=0.1175, M=4.500, c_E=0.01515, kappa_E=35.32, nu=200.01
+sets checked (all seeds): 63505  (per seed: 10701 structured + 2000 random)
+[E1] sample lambda_min(R_A): min over all sets = 0.2201  (phi0^2 = 0.1175);  #sets with lambda_min(R_A) < phi0^2 : 0  (event E fails there)
+[E1] eta_A range: [-0.02457, 0];  #violations of eta<=0: 0;  #violations of eta >= -2|A|/((n-1)phi0^2): 0;  max eta/lower-bound = 0.1671 (<=1 required)
+[E1] violations among sets with lambda_min(R_A)>=phi0^2: 0
+[E2] max abs error of identity G^-1 - nH^-1 = G^-1 (G+I) H^-1 : 6.995e-18
+[E2] Q_A - RSS^y_A in [0, 0.6725];  upper bound 1+1/((n-1)phi0^2) = 1.0213  (max gap/bound = 0.6584);  #viol lower(<0): 0, upper: 0;  among E-sets: 0
+[E2] a_A in [0.0200, 0.6925]; claimed [2b0, 2b0+1+1/((n-1)phi0^2)] = [0.02, 1.0413]
+[E3] min RSS_A over all sets = 385.12  (n sigma^2/2 = 200.0);  #viol RSS_A >= n s^2/2 : 0;  among E-sets: 0
+[E3] max ||Y||^2 over seeds = 1210.0  (bound 3(M+s^2)n = 6600.0); #seeds violating: 0 of 5;   max ||mu||^2/n = 1.950  (M = 4.500), #seeds violating: 0
+[E3] min RSS^y_A / n = 0.3255  (c_E = 0.01515); #viol RSS^y_A >= c_E n : 0
+[E4] R_A range = [-1.0562, 0.0009];  kappa_E = 35.32;  claimed range [-0.52/c_E, J/((n-1)phi0^2)] = [-34.32, 0.107];  #viol |R_A|<=kappa_E : 0 (among E-sets: 0)
+[E4] identity F(A) = log w - |A|/2 log(n+1) - nu log RSS_A + c_n + R_A : max abs error = 6.821e-13
+[E5] max |RSS_A - n sigma^2 - Lambda_A| = 89.28 ; max of that / n^(2/3) = 1.644  (C2 not explicit in PROOF)
+(elapsed 41.5s)
+
+DONE

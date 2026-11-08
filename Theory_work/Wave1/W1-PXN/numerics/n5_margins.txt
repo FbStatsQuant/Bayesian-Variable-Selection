@@ -1,0 +1,129 @@
+N5 n5_margins.py -- population lattice margins c2, c5 and the closed forms of Lemma Lambda(c)
+
+====================================================================================================
+RANDOM (40 settings, seed 20260108)
+ #  c  v  g   rho psimax    lam0 |        c2 minMargin    min/c2 |        c5   L-min |  L-min/c5         | category of minimiser
+ 0  2  0  3  0.42  0.179  0.5318 |   0.03344   0.03352     1.002 |   0.03344   0.03352   1.002 | add-proxy(i in I)
+ 1  1  2  3  0.63  0.314  0.3280 |   0.03226   0.03226     1.000 |   0.03226   0.03226   1.000 | add-proxy(i in I)
+ 2  3  0  4  0.86  0.776  0.0985 |   0.06780   0.09450     1.394 |   0.06780   0.09450   1.394 | add-proxy(i in I)
+ 3  2  1  3  0.84  0.785  0.1087 |   0.16738   0.19096     1.141 |   0.16738   0.19096   1.141 | add-proxy(i in I)
+ 4  3  1  5  0.33  0.276  0.5515 |   0.00017   0.00017     1.000 |   0.00017   0.00017   1.000 | add-proxy(i in I)
+ 5  1  1  4  0.54  0.454  0.3483 |   0.13864   0.13864     1.000 |   0.13864   0.13864   1.000 | add-proxy(i in I)
+ 6  1  1  5  0.64  0.231  0.3319 |   0.00990   0.00990     1.000 |   0.00990   0.00990   1.000 | add-proxy(i in I)
+ 7  2  1  3  0.76  0.224  0.2266 |   0.00850   0.00852     1.003 |   0.00850   0.00852   1.003 | add-proxy(i in I)
+ 8  1  2  5  0.37  0.171  0.5723 |   0.04811   0.04811     1.000 |   0.04811   0.04811   1.000 | add-proxy(i in I)
+ 9  1  2  4  0.67  0.605  0.2310 |   0.46491   0.46491     1.000 |   0.46491   0.46491   1.000 | add-proxy(i in I)
+10  3  1  5  0.50  0.333  0.4101 |   0.00834   0.00834     1.000 |   0.00834   0.00834   1.000 | add-proxy(i in I)
+11  2  2  4  0.84  0.721  0.1174 |   0.01583   0.01583     1.000 |   0.01583   0.01583   1.000 | add-proxy(i in I)
+12  3  1  3  0.80  0.756  0.1337 |   0.00239   0.00239     1.000 |   0.00239   0.00239   1.000 | add-proxy(i in I)
+13  1  0  5  0.55  0.183  0.4170 |   0.00613   0.00613     1.000 |   0.00613   0.00613   1.000 | add-proxy(i in I)
+14  1  2  3  0.33  0.022  0.6640 |   0.00074   0.00074     1.000 |   0.00074   0.00074   1.000 | add-proxy(i in I)
+15  2  0  3  0.49  0.406  0.4010 |   0.12706   0.12706     1.000 |   0.12706   0.12706   1.000 | add-proxy(i in I)
+16  3  0  4  0.71  0.457  0.2459 |   0.03000   0.03000     1.000 |   0.03000   0.03000   1.000 | add-proxy(i in I)
+17  2  2  4  0.39  0.264  0.5167 |   0.04189   0.04189     1.000 |   0.04189   0.04189   1.000 | add-proxy(i in I)
+18  2  0  3  0.44  0.331  0.4663 |   0.12569   0.12569     1.000 |   0.12569   0.12569   1.000 | add-proxy(i in I)
+19  1  0  3  0.47  0.014  0.5285 |   0.00015   0.00015     1.000 |   0.00015   0.00015   1.000 | add-proxy(i in I)
+20  2  2  3  0.63  0.366  0.3237 |   0.09221   0.09221     1.000 |   0.09221   0.09221   1.000 | add-proxy(i in I)
+21  1  0  4  0.49  0.191  0.4678 |   0.04773   0.04773     1.000 |   0.04773   0.04773   1.000 | add-proxy(i in I)
+22  2  2  4  0.80  0.711  0.1410 |   0.01474   0.01474     1.000 |   0.01474   0.01474   1.000 | add-proxy(i in I)
+23  2  2  4  0.76  0.164  0.2327 |   0.01163   0.01166     1.002 |   0.01163   0.01166   1.002 | add-proxy(i in I)
+24  2  0  3  0.66  0.631  0.2354 |   0.17944   0.19299     1.076 |   0.17944   0.19299   1.076 | add-proxy(i in I)
+25  2  1  3  0.38  0.146  0.5768 |   0.00256   0.00256     1.000 |   0.00256   0.00256   1.000 | add-proxy(i in I)
+26  1  2  4  0.69  0.247  0.2844 |   0.09830   0.09830     1.000 |   0.09830   0.09830   1.000 | add-proxy(i in I)
+27  1  2  4  0.59  0.039  0.4047 |   0.00087   0.00087     1.000 |   0.00087   0.00087   1.000 | add-proxy(i in I)
+28  3  2  4  0.88  0.622  0.1002 |   0.00066   0.00066     1.000 |   0.00066   0.00066   1.000 | add-proxy(i in I)
+29  1  0  4  0.59  0.439  0.3226 |   0.42191   0.42191     1.000 |   0.42191   0.42191   1.000 | add-proxy(i in I)
+30  3  2  5  0.40  0.311  0.4875 |   0.03133   0.03133     1.000 |   0.03133   0.03133   1.000 | add-proxy(i in I)
+31  1  1  4  0.60  0.048  0.3918 |   0.00359   0.00359     1.000 |   0.00359   0.00359   1.000 | add-proxy(i in I)
+32  2  1  4  0.60  0.462  0.3114 |   0.05029   0.05029     1.000 |   0.05029   0.05029   1.000 | add-proxy(i in I)
+33  3  2  3  0.89  0.803  0.0807 |   0.09841   0.09841     1.000 |   0.09841   0.09841   1.000 | add-proxy(i in I)
+34  3  2  3  0.67  0.377  0.2909 |   0.00066   0.00066     1.000 |   0.00066   0.00066   1.000 | add-proxy(i in I)
+35  3  0  4  0.78  0.482  0.1910 |   0.04093   0.04093     1.000 |   0.04093   0.04093   1.000 | add-proxy(i in I)
+36  2  0  5  0.54  0.481  0.3359 |   0.01235   0.01235     1.000 |   0.01235   0.01235   1.000 | add-proxy(i in I)
+37  2  2  5  0.31  0.297  0.5498 |   0.00485   0.00485     1.000 |   0.00485   0.00485   1.000 | add-proxy(i in I)
+38  3  1  3  0.45  0.329  0.4595 |   0.01275   0.01275     1.000 |   0.01275   0.01275   1.000 | add-proxy(i in I)
+39  2  0  4  0.59  0.418  0.3307 |   0.00436   0.00436     1.000 |   0.00436   0.00436   1.000 | add-proxy(i in I)
+
+Summary:
+  min over settings of minMargin/c2 = 1.0000 (>=1 required);  #settings with min margin < c2: 0
+  min over settings of (minMargin - c2) = -1.013e-15 ; of (L-min - c5) = -1.013e-15   (negative would be a violation; ~0 means the bound is attained)
+  #settings where the c2 bound is attained to within 1e-9 (tight): 34 of 40;  c5 attained: 34 of 40
+  min over settings of L-min/c5      = 1.0000 (>=1 required);  #settings with min (L) lambda < c5: 0
+  c2 > 0 in all settings: True; c5 > 0: True; c4 > 0: True
+  (F4) lambda_min(Sigma) >= (1-psibar)(1-rho): min slack = 4.662e-03
+  Lemma Lambda(c)/(b) equalities: max abs deviation = 1.776e-15 ; inequality lambda_i(B) >= lam0 beta^2 (1+psi^2 1{jb notin B}) min slack = 4.210e-02 (>=0 required)
+  s8.3 case-list closed values (lambda(S)=sum G_i, lambda(P*), proxy drop G_i eta_i, deletion rises): max abs deviation = 2.304e-15
+  lambda(S0)= 8.88e-16 (max), lambda(S0 + l) max |.| = 1.78e-15
+  per-category min of margin / c2 across settings:
+     A=S                    min margin/c2 =    1.108   (setting 37, move stay)
+     add-other              min margin/c2 =    1.108   (setting 37, move ('add', 1))
+     add-proxy(i in I)      min margin/c2 =    1.000   (setting 14, move ('add', 4))
+     delete                 min margin/c2 =    2.655   (setting 18, move ('del', 3))
+     swap-diff-component    min margin/c2 =    1.108   (setting 37, move ('swap', 15, 5))
+     swap-same-component    min margin/c2 =    2.404   (setting 18, move ('swap', 9, 10))
+  VIOLATIONS: none
+
+====================================================================================================
+EXTRA ADVERSARIAL (40 settings: |psi| in (0.9,0.995)*rho, rho in {.3,.5,.9}, |beta| in {.5,2})
+ #  c  v  g   rho psimax    lam0 |        c2 minMargin    min/c2 |        c5   L-min |  L-min/c5         | category of minimiser
+ 0  3  2  4  0.50  0.473  0.3644 |   0.03221   0.03221     1.000 |   0.03221   0.03221   1.000 | add-proxy(i in I)
+ 1  3  1  5  0.90  0.881  0.0607 |   0.04750   0.20189     4.250 |   0.04750   0.04750   1.000 | swap-diff-component
+ 2  2  0  5  0.50  0.488  0.3540 |   0.03609   0.03609     1.000 |   0.03609   0.03609   1.000 | add-proxy(i in I)
+ 3  3  2  3  0.90  0.890  0.0606 |   0.01515   0.02304     1.521 |   0.01515   0.02304   1.521 | add-proxy(i in I)
+ 4  3  0  4  0.50  0.493  0.3558 |   0.03232   0.03232     1.000 |   0.03232   0.03232   1.000 | add-proxy(i in I)
+ 5  3  2  4  0.30  0.297  0.5635 |   0.01654   0.01654     1.000 |   0.01654   0.01654   1.000 | add-proxy(i in I)
+ 6  1  0  3  0.90  0.873  0.0649 |   0.01416   0.02251     1.589 |   0.01623   0.02251   1.386 | add-proxy(i in I)
+ 7  2  2  5  0.90  0.884  0.0599 |   0.01497   0.02149     1.435 |   0.01497   0.02303   1.538 | swap-diff-component
+ 8  2  1  4  0.30  0.293  0.5655 |   0.22750   0.25000     1.099 |   0.22750   0.22750   1.000 | swap-diff-component
+ 9  1  0  5  0.90  0.840  0.0688 |   0.27511   0.36845     1.339 |   0.27511   0.36845   1.339 | add-proxy(i in I)
+10  3  0  3  0.90  0.884  0.0623 |   0.01200   0.01200     1.000 |   0.01559   0.02212   1.419 | swap-diff-component
+11  1  1  3  0.90  0.845  0.0705 |   0.04750   0.25000     5.263 |   0.04750   0.04750   1.000 | swap-diff-component
+12  1  1  3  0.50  0.481  0.3678 |   0.03542   0.03542     1.000 |   0.03542   0.03542   1.000 | add-proxy(i in I)
+13  2  0  3  0.90  0.850  0.0696 |   0.01741   0.01929     1.108 |   0.01741   0.02296   1.319 | swap-diff-component
+14  3  2  4  0.90  0.894  0.0580 |   0.01001   0.01001     1.000 |   0.01449   0.02159   1.490 | swap-diff-component
+15  1  0  5  0.30  0.272  0.5729 |   0.25064   0.25064     1.000 |   0.25064   0.25064   1.000 | add-proxy(i in I)
+16  1  0  5  0.30  0.297  0.5590 |   0.29460   0.29460     1.000 |   0.29460   0.29460   1.000 | add-proxy(i in I)
+17  1  2  3  0.50  0.470  0.3728 |   0.18750   0.25000     1.333 |   0.18750   0.18750   1.000 | swap-diff-component
+18  2  2  3  0.90  0.855  0.0686 |   0.04750   0.25000     5.263 |   0.04750   0.04750   1.000 | swap-diff-component
+19  2  2  5  0.50  0.490  0.3531 |   0.18750   0.25000     1.333 |   0.18750   0.18750   1.000 | swap-diff-component
+20  3  1  3  0.90  0.874  0.0647 |   0.01393   0.01393     1.000 |   0.01617   0.02247   1.390 | swap-diff-component
+21  3  0  5  0.90  0.874  0.0622 |   0.01393   0.01393     1.000 |   0.01554   0.02247   1.446 | swap-diff-component
+22  1  1  5  0.50  0.477  0.3589 |   0.03489   0.03489     1.000 |   0.03489   0.03489   1.000 | add-proxy(i in I)
+23  3  1  5  0.30  0.298  0.5583 |   0.01732   0.01732     1.000 |   0.01732   0.01732   1.000 | add-proxy(i in I)
+24  3  2  3  0.30  0.287  0.5766 |   0.01632   0.01632     1.000 |   0.01632   0.01632   1.000 | add-proxy(i in I)
+25  1  1  4  0.90  0.888  0.0598 |   0.01124   0.02194     1.952 |   0.01494   0.02194   1.469 | add-proxy(i in I)
+26  3  2  4  0.50  0.486  0.3587 |   0.03444   0.03452     1.002 |   0.03444   0.03452   1.002 | add-proxy(i in I)
+27  3  0  5  0.30  0.297  0.5589 |   0.01551   0.01551     1.000 |   0.01551   0.01551   1.000 | add-proxy(i in I)
+28  3  0  4  0.90  0.873  0.0634 |   0.01419   0.01419     1.000 |   0.01584   0.02251   1.421 | swap-diff-component
+29  1  0  3  0.30  0.270  0.5858 |   0.01548   0.01548     1.000 |   0.01548   0.01548   1.000 | add-proxy(i in I)
+30  3  1  5  0.30  0.296  0.5592 |   0.01802   0.01803     1.001 |   0.01802   0.01803   1.001 | add-proxy(i in I)
+31  1  1  5  0.30  0.277  0.5700 |   0.22750   0.25000     1.099 |   0.22750   0.22750   1.000 | swap-diff-component
+32  1  2  5  0.90  0.834  0.0698 |   0.27928   0.36861     1.320 |   0.27928   0.36861   1.320 | add-proxy(i in I)
+33  2  2  4  0.90  0.874  0.0630 |   0.01554   0.01554     1.000 |   0.01574   0.02268   1.441 | swap-diff-component
+34  3  2  3  0.90  0.889  0.0610 |   0.01460   0.01460     1.000 |   0.01524   0.02257   1.481 | swap-diff-component
+35  2  2  3  0.30  0.293  0.5734 |   0.01684   0.01684     1.000 |   0.01684   0.01684   1.000 | add-proxy(i in I)
+36  1  1  4  0.90  0.870  0.0641 |   0.04750   0.25000     5.263 |   0.04750   0.04750   1.000 | swap-diff-component
+37  3  1  3  0.50  0.486  0.3659 |   0.03495   0.03513     1.005 |   0.03495   0.03513   1.005 | add-proxy(i in I)
+38  3  0  4  0.30  0.296  0.5642 |   0.01788   0.01789     1.001 |   0.01788   0.01789   1.001 | add-proxy(i in I)
+39  2  2  3  0.50  0.480  0.3685 |   0.03294   0.03294     1.000 |   0.03294   0.03294   1.000 | add-proxy(i in I)
+
+Summary:
+  min over settings of minMargin/c2 = 1.0000 (>=1 required);  #settings with min margin < c2: 0
+  min over settings of (minMargin - c2) = -7.182e-16 ; of (L-min - c5) = -7.182e-16   (negative would be a violation; ~0 means the bound is attained)
+  #settings where the c2 bound is attained to within 1e-9 (tight): 21 of 40;  c5 attained: 22 of 40
+  min over settings of L-min/c5      = 1.0000 (>=1 required);  #settings with min (L) lambda < c5: 0
+  c2 > 0 in all settings: True; c5 > 0: True; c4 > 0: True
+  (F4) lambda_min(Sigma) >= (1-psibar)(1-rho): min slack = 4.739e-02
+  Lemma Lambda(c)/(b) equalities: max abs deviation = 1.776e-15 ; inequality lambda_i(B) >= lam0 beta^2 (1+psi^2 1{jb notin B}) min slack = 6.882e-03 (>=0 required)
+  s8.3 case-list closed values (lambda(S)=sum G_i, lambda(P*), proxy drop G_i eta_i, deletion rises): max abs deviation = 2.220e-15
+  lambda(S0)= 1.78e-15 (max), lambda(S0 + l) max |.| = 1.78e-15
+  per-category min of margin / c2 across settings:
+     A=S                    min margin/c2 =    1.090   (setting 16, move stay)
+     add-other              min margin/c2 =    1.090   (setting 16, move ('add', 1))
+     add-proxy(i in I)      min margin/c2 =    1.000   (setting 5, move ('add', 13))
+     delete                 min margin/c2 =    2.196   (setting 23, move ('del', 5))
+     swap-diff-component    min margin/c2 =    1.000   (setting 20, move ('swap', 0, 15))
+     swap-same-component    min margin/c2 =    2.104   (setting 23, move ('swap', 25, 26))
+  VIOLATIONS: none
+
+DONE

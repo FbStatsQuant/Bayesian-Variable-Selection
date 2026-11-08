@@ -1,0 +1,56 @@
+N1 n1_trJ.py -- Lemma Tr-J numerical falsification
+
+=== (a) truncated moment:  E[(1-X)^-nu 1{X<=tau}]  <=  2^e1 (m tau/2)^{j/2} / Gamma(j/2+1) ===
+grid: n in [50, 100, 200, 800]  u in [0, 1, 5, 20]  tau in [0.01, 0.05, 0.2, 0.5]  j in 1..24  (m = n-1-u)
+cells evaluated: 1536
+self-check: max |log exact (substitution) - log exact (direct x-quad)| on a subsample (j>=2): 1.49e-13
+max ratio exact/bound = 0.461582  (log = -0.7731) at (n,u,tau,j) = (800, 0, 0.5, 8)
+max ratio by tau: {0.01: 0.2497, 0.05: 0.2567, 0.2: 0.2887, 0.5: 0.4616}
+max ratio by j (j=1,2,4,8,12,16,20,24): {1: 0.4038, 2: 0.4287, 4: 0.451, 8: 0.4616, 12: 0.4564, 16: 0.4433, 20: 0.4249, 24: 0.4023}
+VIOLATIONS of (a): none
+
+=== (b) tail:  P(X>tau) <= exp(-(m-j)/16) + P(chi2_j > tau (m-j)/2) ===
+cells evaluated: 1536
+max ratio exact/bound = 0.999987 (log -0.0000) at (n,u,tau,j) = (200, 0, 0.01, 18)
+VIOLATIONS of (b): none
+
+=== (c-core) P(chi2_j > t') <= exp(-t'/2 + sqrt(j t')) for t' >= 6j ===
+grid: t' = 6j + [0..4000], 5000 pts per j; j = 1..30
+max ratio exact/bound over t' >= 6j = 0.0248084 (log -3.6966) at (j, t') = (1, 6.0)
+VIOLATIONS of (c-core) on t'>=6j: none
+
+Slack of the condition t' >= 6j: scan r = t'/j on a fine grid [1,10] (step 0.001);
+'first fail' = smallest r where P(chi2_j>t') > exp(-t'/2+sqrt(j t')); 'last fail' = largest such r.
+(for r<4 the bound exceeds 1 so it cannot fail; the claim is only used for r>=6)
+j= 1  no failure anywhere on r in [1,10]  (max log-ratio -1.6479 at r=1.000)
+j= 2  no failure anywhere on r in [1,10]  (max log-ratio -2.0000 at r=1.000)
+j= 3  no failure anywhere on r in [1,10]  (max log-ratio -2.4375 at r=1.000)
+j= 4  no failure anywhere on r in [1,10]  (max log-ratio -2.9014 at r=1.000)
+j= 5  no failure anywhere on r in [1,10]  (max log-ratio -3.3774 at r=1.000)
+j= 6  no failure anywhere on r in [1,10]  (max log-ratio -3.8599 at r=1.000)
+j= 7  no failure anywhere on r in [1,10]  (max log-ratio -4.3466 at r=1.000)
+j= 8  no failure anywhere on r in [1,10]  (max log-ratio -4.8359 at r=1.000)
+j= 9  no failure anywhere on r in [1,10]  (max log-ratio -5.3272 at r=1.000)
+j=10  no failure anywhere on r in [1,10]  (max log-ratio -5.8199 at r=1.000)
+j=11  no failure anywhere on r in [1,10]  (max log-ratio -6.3136 at r=1.000)
+j=12  no failure anywhere on r in [1,10]  (max log-ratio -6.8082 at r=1.000)
+j=13  no failure anywhere on r in [1,10]  (max log-ratio -7.3034 at r=1.000)
+j=14  no failure anywhere on r in [1,10]  (max log-ratio -7.7992 at r=1.000)
+j=15  no failure anywhere on r in [1,10]  (max log-ratio -8.2954 at r=1.000)
+j=16  no failure anywhere on r in [1,10]  (max log-ratio -8.7919 at r=1.000)
+j=17  no failure anywhere on r in [1,10]  (max log-ratio -9.2889 at r=1.000)
+j=18  no failure anywhere on r in [1,10]  (max log-ratio -9.7860 at r=1.000)
+j=19  no failure anywhere on r in [1,10]  (max log-ratio -10.2834 at r=1.000)
+j=20  no failure anywhere on r in [1,10]  (max log-ratio -10.7810 at r=1.000)
+j=21  no failure anywhere on r in [1,10]  (max log-ratio -11.2788 at r=1.000)
+j=22  no failure anywhere on r in [1,10]  (max log-ratio -11.7768 at r=1.000)
+j=23  no failure anywhere on r in [1,10]  (max log-ratio -12.2749 at r=1.000)
+j=24  no failure anywhere on r in [1,10]  (max log-ratio -12.7731 at r=1.000)
+j=25  no failure anywhere on r in [1,10]  (max log-ratio -13.2714 at r=1.000)
+j=26  no failure anywhere on r in [1,10]  (max log-ratio -13.7698 at r=1.000)
+j=27  no failure anywhere on r in [1,10]  (max log-ratio -14.2683 at r=1.000)
+j=28  no failure anywhere on r in [1,10]  (max log-ratio -14.7669 at r=1.000)
+j=29  no failure anywhere on r in [1,10]  (max log-ratio -15.2656 at r=1.000)
+j=30  no failure anywhere on r in [1,10]  (max log-ratio -15.7643 at r=1.000)
+
+DONE

@@ -1,0 +1,40 @@
+N7 n7_posterior.py -- miniature of (P); p=10 (g=2, c=2 linked pairs, 1 null group), rho=.7, psi=.5, beta=1, sigma=1; 20 seeds per n
+Far from p >> n: sanity check only that 1 - pi(S0) decreases.
+
+n = 100
+  1 - pi(S0):                median = 4.7792e-01   90% quantile = 8.5145e-01   max = 9.1356e-01   min = 2.3730e-01
+  (1-pi(S0))/sqrt(log n/n):  median = 2.2271   90% quantile = 3.9677   max = 4.2571
+  decomposition of 1-pi(S0): median mass of strict supersets of S0 = 2.384e-01 ; median mass of models not containing S0 = 1.902e-01
+  (1-pi(S0))*sqrt(n):         median = 4.779   90% quantile = 8.515   (heavy right tail expected: e^{Z^2/2} has infinite mean)
+  seeds with 1-pi(S0) > 1/2: 10  [(2, 0.556, (0, 2, 4, 6)), (4, 0.833, (0, 2, 4, 6, 7)), (6, 0.684, (0, 2, 4, 6)), (8, 0.914, (0, 4)), (9, 0.913, (0, 2, 4)), (10, 0.728, (0, 2, 4, 5, 6)), (13, 0.719, (0, 2, 4, 6)), (14, 0.845, (0, 2, 4, 7)), (16, 0.508, (0, 2, 4, 6)), (17, 0.657, (0, 2, 4, 6))]
+  MAP = S0 in 15/20 seeds;  pi(S0) > 1/2 in 10/20 seeds
+
+n = 400
+  1 - pi(S0):                median = 1.6671e-01   90% quantile = 2.5006e-01   max = 3.2844e-01   min = 1.1259e-01
+  (1-pi(S0))/sqrt(log n/n):  median = 1.3621   90% quantile = 2.0432   max = 2.6836
+  decomposition of 1-pi(S0): median mass of strict supersets of S0 = 1.665e-01 ; median mass of models not containing S0 = 8.664e-09
+  (1-pi(S0))*sqrt(n):         median = 3.334   90% quantile = 5.001   (heavy right tail expected: e^{Z^2/2} has infinite mean)
+  seeds with 1-pi(S0) > 1/2: 0  []
+  MAP = S0 in 20/20 seeds;  pi(S0) > 1/2 in 20/20 seeds
+
+n = 1600
+  1 - pi(S0):                median = 8.1366e-02   90% quantile = 1.8138e-01   max = 8.6988e-01   min = 5.1317e-02
+  (1-pi(S0))/sqrt(log n/n):  median = 1.1982   90% quantile = 2.6711   max = 12.8102
+  decomposition of 1-pi(S0): median mass of strict supersets of S0 = 8.137e-02 ; median mass of models not containing S0 = 1.166e-31
+  (1-pi(S0))*sqrt(n):         median = 3.255   90% quantile = 7.255   (heavy right tail expected: e^{Z^2/2} has infinite mean)
+  seeds with 1-pi(S0) > 1/2: 1  [(17, 0.87, (0, 2, 4, 6, 9))]
+  MAP = S0 in 19/20 seeds;  pi(S0) > 1/2 in 19/20 seeds
+
+n = 6400
+  1 - pi(S0):                median = 4.9219e-02   90% quantile = 1.6614e-01   max = 7.8227e-01   min = 2.8682e-02
+  (1-pi(S0))/sqrt(log n/n):  median = 1.3301   90% quantile = 4.4897   max = 21.1395
+  decomposition of 1-pi(S0): median mass of strict supersets of S0 = 4.922e-02 ; median mass of models not containing S0 = 7.202e-141
+  (1-pi(S0))*sqrt(n):         median = 3.938   90% quantile = 13.291   (heavy right tail expected: e^{Z^2/2} has infinite mean)
+  seeds with 1-pi(S0) > 1/2: 1  [(15, 0.782, (0, 2, 4, 6, 7))]
+  MAP = S0 in 19/20 seeds;  pi(S0) > 1/2 in 19/20 seeds
+
+Monotonicity of the median / 90% quantile of 1-pi(S0) in n: median decreasing = True ; q90 decreasing = True
+Ratio (1-pi)/sqrt(log n/n) median by n: 100: 2.227, 400: 1.362, 1600: 1.198, 6400: 1.330
+Ratio q90 by n:                          100: 3.968, 400: 2.043, 1600: 2.671, 6400: 4.490
+
+DONE

@@ -1,0 +1,36 @@
+VERDICT: VERIFIED WITH MINOR FIXES
+
+References below use `PROOF = Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/API-PXNGAP/PROOF.md`.
+
+| Claim / step (path:line) | Verdict | Reason |
+|---|---|---|
+| Setting and event, PROOF:162-167; application PROOF:213-219 | MINOR | Valid for a fixed family (also an X-measurable family satisfying the cardinality bound), fixed positive phi0, and an X-event with both the Gram and signal-norm bounds. The applications supply both on E_n. Clarify the event as in finding 2; the bare Gram event need not imply the norm bound. All conclusions require sufficiently large n. |
+| E1, PROOF:168,176-178 | VERIFIED | For each g_i >= (n-1)phi0^2, the determinant factor is (n+1)(1-x_i), x_i = n/((n+1)(g_i+1)). Eventually x_i <= 1/2, so -2 sum x_i <= eta_A <= 0 gives the stated bound. Empty-set determinant and eta are 1 and 0. |
+| E2 identities and eigenvalues, PROOF:169,179-180 | VERIFIED | P_A = X_A G_A^{-1} X_A^T and z_A = X_A^T y give RSS_A^y = y^T y - z_A^T G_A^{-1}z_A. The score definition gives Q_A. Since H=(n+1)G+I, G^{-1}-nH^{-1}=G^{-1}(G+I)H^{-1}; its eigenvalues are exactly (g_i+1)/(g_i((n+1)g_i+1)), positive and bounded as displayed. |
+| E2 bound, PROOF:181-182 | VERIFIED | The eigenvalue comparison is with G^{-1}: the ratio is (g_i+1)/((n+1)g_i+1) <= (1+1/g_i)/(n+1). Thus Q_A-RSS_A^y <= (1+1/((n-1)phi0^2))(n-1)/(n+1), implying the asserted weaker bound. The projection bound uses the standardised norm ||y||^2=n-1. For the empty set the difference is zero. |
+| E3 decomposition and conditional laws, PROOF:183-189 | VERIFIED | C-P_A is an orthogonal projection, and mu is centred and X-measurable. Given X, epsilon remains N(0,sigma^2 I), so the three laws displayed are correct; rank(P_A)=|A| on the Gram event. The linear term is identically zero when Lambda_A=0. Independence between these statistics or across sets is unnecessary. |
+| d1-d3 and displayed failure probability, PROOF:166,186-189 | MINOR | d1 costs 2 exp(-n^(1/3)); d2 and d3 have exactly the displayed polynomial terms. Line 166 drops the factor 2 from d1; see finding 1. |
+| E3 RSS floor, PROOF:190-191 | VERIFIED | Writing t=sqrt(Lambda_A), t^2-4 sigma sqrt((D+1)log n)t has minimum -4 sigma^2(D+1)log n. Combining with d1 and d2 gives sigma^2[n-1-2n^(2/3)-12(D+1)log n] >= n sigma^2/2 eventually. |
+| E3 response bound and scale conversion, PROOF:62-64,192-193 | VERIFIED | d1 implies ||C epsilon||^2 <= sigma^2(n+3n^(2/3)) eventually. Hence ||Y||^2 <= 2Mn+2sigma^2(n+3n^(2/3)) <= 3(M+sigma^2)n eventually. Since s_y^2=||Y||^2/(n-1), RSS_A^y=(n-1)RSS_A/||Y||^2 >= (n-1)sigma^2/[6(M+sigma^2)] >= c_E n for n>=2. Raw and standardised scales are used consistently. |
+| E4, remainder and common c_n, PROOF:171,194-197 | VERIFIED | With B=0.52/c_E, the nonnegative logarithmic correction is at most B eventually, since its bound tends to 0.51/c_E. Also 0<=-eta_A/2<=J/((n-1)phi0^2)<=1 eventually. Thus R_A lies in [-B,1], and |R_A|<=B+1=kappa_E. The offset c_n=log[(2b0)^a0 Gamma(nu)/(pi^(n/2)Gamma(a0))]+nu log(||Y||^2/(n-1))-log W_K is random but identical for every set A. |
+| E5 and C2, PROOF:172,198-199 | VERIFIED | Lambda_A<=Mn on the working event. The displayed error bound follows directly from d1-d3. One admissible constant is C2=4 sigma sqrt(M(D+1)) + sigma^2[5+8(D+1)]: use sqrt(log n)<=n^(1/6), log n<=n^(2/3), and 1,n^(1/3)<=n^(2/3), eventually. C2 needs no J, C, or phi0 dependence; the onset may depend on them. |
+| E6, PROOF:173-174,199 | VERIFIED | Subtracting E4 cancels c_n exactly and bounds the remainder difference by 2kappa_E. |
+| Within-group application and telescoping, PROOF:203-205,246-250 | VERIFIED | The family contains the empty set, has J=g and cardinality <=2^16 n^A under SIZE. For l in C_h minus U, log r_h(U+l)-log r_h(U) is a log-marginal difference, so there is no size-prior term. The RSS ratio gives (4.1). Along any addition path, log RSS ratios and the same globally defined remainders telescope, leaving R_final-R_initial, bounded by 2kappa_E rather than a bound multiplied by the path length. |
+| All-small-sets application and remark (3), PROOF:205-206,294-298 | VERIFIED | For J=s0+2, the family size is <=(p+1)^J<=2^J n^(AJ), so D=AJ and C=2^J work. E_n supplies both required X-bounds. The remark's sharper absolute remainder bound 0.52/c_E is also available eventually: c_E<=1/12 implies B>=6.24, so [-B,1] is contained in [-B,B]. Section 8.1 safely uses the larger kappa_E. |
+| Remark (4), PROOF:207 | MINOR | The signal-norm bound is also used for the E5 cross-term bound, and explicitly for the bound on ||Y||^2 leading to the standardised RSS floor. See finding 3. |
+
+1. **MINOR — missing probability factor (PROOF:166 versus 186).** Replace the first term of the explicit failure bound by `2 exp(-n^(1/3))`. Given X on the working event, d2 follows by stochastic domination by chi-square_J and the tail calculation of section 3(c) with t'=8(D+1)log n (eventually t'>=6J); d3 uses the two-sided standard Gaussian bound. Integrating the conditional union bound gives
+   `P(D_n^c intersect E) <= 2 exp(-n^(1/3)) + C n^D [n^(-4(D+1)) exp(sqrt(8J(D+1)log n)) + 2n^(-2(D+1))]`.
+   No conditional independence among d1-d3 is asserted or needed. The locked W1-PXN STATEMENT section 3 already has this corrected factor. The asymptotic conclusion is unaffected.
+
+2. **MINOR — make the working X-event explicit (PROOF:162-167,213-219).** State the lemma on `E* = E(F,phi0) intersect {||mu||^2<=Mn}`, or on any X-measurable subevent of E*; give the failure bound for `D_n^c intersect E*`. In the applications use E_n as that subevent. A Gram lower bound for standardised columns alone cannot bound the raw-centred signal norm: multiplying all raw design columns by a common positive scalar preserves their correlations and scales mu. P2(b) supplies precisely the additional bound, and the proof already establishes the required subevent version, so this is a statement/application clarification rather than a missing estimate. Specify fixed phi0>0, a deterministic or X-measurable family, and `for n>=n0` for E1-E6. An epsilon-selected family would not justify the conditional-law union bound.
+
+3. **MINOR — false explanatory remark (PROOF:207).** Replace remark (4) by: `The signal-norm bound is used to control ||Y||^2 and hence the standardised RSS floor in E3, and to obtain the uniform n^(2/3) approximation in E5. The raw-scale RSS lower bound itself does not require it.`
+
+A-dependence: The repaired lemma and both applications hold for every fixed A>=1, including A>1. Use D=A for the within-group family and D=A(s0+2) for all small sets. These D's enter the probability exponents, thresholds and C2; n0 also depends on J, phi0 and the other fixed parameters (and may depend on C). c_E and kappa_E have no direct A-dependence when M and sigma^2 are fixed. No uniformity over growing A is proved or needed.
+
+---
+## Disposition (W1-PXN lead, 2026-11-08)
+VERIFIED WITH MINOR FIXES accepted. Findings 1–3 adopted verbatim as ERRATA E-1..E-3 (lemmas/ERRATA.md); explicit C₂ as
+E-4. No repair needs re-check beyond the reviewer's own wording (no new mathematics). Item #2 of REPORT.md:133-144
+(Lemma E (E2), (E3)): (E2) VERIFIED, (E3) VERIFIED.

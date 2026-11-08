@@ -1,0 +1,30 @@
+VERDICT: VERIFIED WITH MINOR FIXES
+
+Scope: I1 only; the W5 R1 row is excluded. Below, `PROOF` denotes `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/API-PXNGAP/PROOF.md`.
+
+| Claim / step (path:line) | Verdict | Reason |
+|---|---|---|
+| Tr-J(a), exponent and integration, PROOF:125-139 | VERIFIED | With a=j/2 and b=(m-j)/2>0, b-1-ν=−(u+j+3)/2−0.01=−e₁. For τ≤1/2 the integrand factor is at most 2^{e₁}; integrating x^{a−1} gives τ^a/a, yielding precisely the displayed bound. |
+| Gamma ratio for every real a>0, PROOF:136-139 | VERIFIED | Write a=k+f, k≥0 integer, 0≤f<1. The recurrence and Wendel upper bound give Γ(y+a)/Γ(y)≤(y+k)^k(y+k)^f≤(y+a)^a. This includes k=0 and f=0. Independently, the fractional bound follows from E[T^f]≤(ET)^f=z^f for T~Gamma(z,1), so no restriction to a≤1 is hidden. |
+| Tr-J(b), PROOF:128,140-141 | VERIFIED | Couple X=U/(U+V), U~χ²_j, V~χ²_{m−j} independently. Then X≤U/V; outside V<(m−j)/2, X>τ implies U>τ(m−j)/2. Laurent–Massart with x=(m−j)/16 gives the exceptional probability ≤exp(−(m−j)/16). |
+| Uniform denominator and threshold, PROOF:130-143 | VERIFIED | u≤n/4 implies m−j≥3n/4−1−J≥n/2 for n≥8(J+1) (a sufficient, conservative onset). Thus the first tail is ≤e^{−n/32} and the numerator threshold is ≥t_n/4=t′. Eventually 0<τ_n≤1/2, covering both tail and moment uses. |
+| Laurent–Massart inversion, PROOF:143-145 | VERIFIED | t′≥6j implies x=t′/2−√(jt′)>0 and x≤t′/2. Hence j+2√(jx)+2x≤t′+j−(2−√2)√(jt′)≤t′, since (2−√2)√6>1. Consequently P(χ²_j>t′)≤exp(−t′/2+√(jt′)). |
+| Exponential substitution, union bound and rate, PROOF:132,145-148 | VERIFIED | t′=2(D+1)log n gives exp(−t′/2+√(jt′))≤n^{−(D+1)}exp(√(2J(D+1)log n)). Multiplication by Cn^D yields Cn^D e^{−n/32}+Cn^{−1}exp(√(2J(D+1)log n))=n^{−1+o(1)}→0; no independence is needed. The optional faster-rate replacement also works for fixed D′≥0. |
+| P3′ family count and exact law, PROOF:153,222-234,246-253 | VERIFIED | Index nonempty V only, as B(i) specifies. The count is ≤G_n2^g≤2^{16}n^A. Here j=\|V\|∈[1,g], u=\|U_h°\|∈{0,1}, m=n−1−u, and the second Beta parameter is exactly (m−j)/2. In fact u+j≤g, so m−j≥n−1−g>0 eventually. J=g or the larger J=16 both work. |
+| Haar argument underlying the P3′ law, PROOF:227-233 | VERIFIED | Gaussian population residualization makes the added columns independent of the conditioning columns and response in these within-group cases. In the centered residual space of dimension n−1−u, their nonsingular column covariance changes no span; that span is a Haar j-plane. Column standardization also changes no span or projection. These are unconditional group laws, without conditioning on recovery or good-design events. |
+| P3′ truncated-moment application, PROOF:251-256 | VERIFIED | For all sufficiently large n, τ_n=8(A+1)log n/n≤1/2 and mτ_n≤nτ_n=t_n. With u≤1 and j≤16, e₁≤10.01. Applying (a) to each nonempty-V term after dropping the other event indicators gives exactly line 256, without requiring independence of the event and X_{h,V}. |
+| Lambda family count and parameters, PROOF:154,315-321 | VERIFIED | Put K=s₀+2. There are ≤2^{gs₀} choices of A_s and ≤Σ_{k=0}^K binom(p,k)≤(p+1)^K choices of A₀. Thus C=2^{gs₀+K}, D=AK suffice. For nonzero increments, j=\|A₀\|∈[1,K], u=\|A_s\|≤K, m=n−1−u, and the law is exactly Beta(j/2,(m−j)/2). Since \|A_s\|+\|A₀\|≤K, m−j≥n−1−K>0 eventually. |
+| Lambda Haar law, zero cases and conclusion, PROOF:317-322 | MINOR | Null columns are independent of the signal columns; their joint Gaussian row covariance is positive definite even when some belong to the same group. Conditional on the signal columns, residualization therefore produces a Haar j-plane in dimension n−1−\|A_s\|. The nondegenerate Beta law follows and does not depend on the conditioning values. Empty A₀ and zero signal residuals must be treated separately as zero increments, rather than called Beta variables. The uniform bound still follows; intersecting afterward with ‖μ‖²≤Mn gives max_A(Λ_{A_s}−Λ_A)≤8M(AK+1)log n=o(n). |
+| Table wording, PROOF:153,156 | MINOR | P3′ is in §6, not §5. The u-values vary over the families but have fixed bounds, which is all the argument needs. |
+
+The cited chi-square inequalities match equations (4.3)–(4.4), p. 1325, of [Laurent–Massart (2000)](https://projecteuclid.org/journals/annals-of-statistics/volume-28/issue-5/Adaptive-estimation-of-a-quadratic-functional-by-model-selection/10.1214/aos/1015957395.pdf).
+
+1. **MINOR — zero increments are not Beta variables (PROOF:319-321).** Line 320 acknowledges zero residuals, but the next sentence calls the entire family Beta, and A₀=∅ gives j=0 outside Tr-J. Accepted repair: explicitly remove indices with A₀=∅ or Λ_{A_s}=0 from the Beta family and set their increments to zero. This can use a deterministic index set: for n−1≥gs₀ the signal columns have full rank almost surely, so Λ_{A_s}=0 exactly when S₀⊆A_s. Apply Tr-J to the remaining fixed indices. Counts only decrease; every threshold and conclusion remains unchanged.
+2. **MINOR — table wording (PROOF:153,156).** Replace “P3 start mass (§5)” by “P3′ start mass (§6)”; for the two reviewed rows replace “u is fixed” by “u is uniformly bounded by a fixed constant.” No mathematical change is required.
+
+A-dependence: Valid for every fixed A≥1, including A>1. Use D=A for P3′ and D=A(s₀+2) for Lambda. Sufficient common onset conditions are n≥8(J+1), log n≥3J/(D+1), τ_n≤1/2, and n≥4u_max. Threshold constants grow as 8(D+1); the subexponential tail coefficient is √(2J(D+1)). The P3′ moment bound carries powers of (A+1), and Lambda's projection-loss bound has coefficient 8M(A(s₀+2)+1). Constants/onsets may depend on fixed A,g,s₀ and the standing model parameters; no uniformity over unbounded A is claimed.
+
+---
+## Disposition (W1-PXN lead, 2026-11-08)
+VERIFIED WITH MINOR FIXES accepted; both minors adopted verbatim (ERRATA E-5, E-6). Report item #1 (Tr-J(c) constants:
+x = t′/2 − √(jt′), t′ ≥ 6j, exponent D+1, family counts D = A for P3′ and D = A(s₀+2) for Λ(a)): VERIFIED.

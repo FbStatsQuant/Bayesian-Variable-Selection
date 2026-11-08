@@ -1,0 +1,117 @@
+n8 end-to-end LS0 route; g=9 rho=0.7 beta=1 beta_vis=1 sigma=1; seeds per cell = 10
+cols: A=blocks==groups, E=S~0==S0ref(Sref), Sc=S0 scored by LS0, Ce=S0 returned+certified, L=(L) holds at S0,
+      DSvis=min over visited lattice states of (D_S) margin, DSall=min over all lattice states (visited or not)
+n,p,c,v,psi | A | E | Sc | Ce | L | moves(mean) | 1-pi0(Sref) med/max | log pi0(S0)+c log p+(c/2)log n  med (pred) | DSvis min/med | DSall min/med | Lgap min/med
+150,270,1,0,(0.5,) | 10/10 | 9/10 | 10/10 | 9/10 | 9/10 | 0.90 | 0.2236/0.8756 | -0.13 (pred med 0.23, mean 0.50; obs mean -0.14) | -0.00/2.76 | -0.00/3.51 | -0.00/1.92   [2s]
+150,270,1,1,(0.5,) | 10/10 | 10/10 | 10/10 | 8/10 | 8/10 | 0.80 | 0.2787/0.7015 | 0.41 (pred med 0.63, mean 0.91; obs mean 0.85) | -3.58/3.22 | -3.58/3.22 | -3.58/2.57   [3s]
+150,270,2,0,(0.5, 0.5) | 10/10 | 8/10 | 10/10 | 8/10 | 8/10 | 2.30 | 0.4011/0.9724 | 1.32 (pred med 1.79, mean 2.10; obs mean 1.54) | -1.52/1.27 | -1.52/1.38 | -1.52/1.78   [5s]
+150,270,2,1,(0.5, 0.5) | 10/10 | 7/10 | 8/10 | 6/10 | 7/10 | 1.70 | 0.6842/0.9972 | 1.15 (pred med 2.30, mean 2.61; obs mean 0.69) | -2.29/1.49 | -7.32/0.81 | -7.32/0.81   [7s]
+300,540,1,0,(0.5,) | 10/10 | 10/10 | 10/10 | 10/10 | 10/10 | 1.00 | 0.1286/0.1917 | 0.07 (pred med 0.23, mean 0.50; obs mean 0.18) | 6.83/13.30 | 6.83/13.30 | 0.35/4.53   [11s]
+300,540,1,1,(0.5,) | 10/10 | 9/10 | 10/10 | 10/10 | 10/10 | 1.10 | 0.2513/0.7018 | 0.21 (pred med 0.63, mean 0.91; obs mean 0.19) | 8.02/13.46 | 8.02/13.46 | 0.82/3.35   [14s]
+300,540,2,0,(0.5, 0.5) | 10/10 | 10/10 | 10/10 | 10/10 | 10/10 | 2.10 | 0.2153/0.4294 | 1.45 (pred med 1.79, mean 2.10; obs mean 1.78) | -0.44/5.92 | -0.44/5.92 | 0.69/4.06   [18s]
+300,540,2,1,(0.5, 0.5) | 10/10 | 9/10 | 10/10 | 9/10 | 9/10 | 2.10 | 0.2613/0.7397 | 1.80 (pred med 2.30, mean 2.61; obs mean 2.01) | 1.35/8.58 | 1.35/8.41 | -0.82/2.57   [21s]
+300,540,2,1,(0.5, 0.3) | 10/10 | 10/10 | 10/10 | 10/10 | 10/10 | 2.00 | 0.2622/0.4867 | 1.88 (pred med 2.30, mean 2.61; obs mean 1.99) | 0.26/2.40 | 0.26/2.40 | 0.26/2.34   [24s]
+150,270,2,1,(0.5, 0.3) | 10/10 | 9/10 | 8/10 | 3/10 | 3/10 | 1.30 | 0.5082/0.7595 | 1.53 (pred med 2.30, mean 2.61; obs mean 1.57) | -4.23/-2.01 | -7.29/-3.11 | -4.56/-2.50   [26s]
+
+Per-fit detail (cell; seed; blocks==groups; start==Sref; 1-pi0(Sref); log pi0(S0); S0 scored; certified; moves; limit; DSvis; DSall; Lgap; F(S0)-F(Sref); nblocks; maxblock; trunc)
+(150, 270, 1, 0, (0.5,)) s0 A=1 E=1 1-pi0=2.460e-01 lpS0=-8.37 Sc=1 Ce=1 mv=1 lim=0 DSvis=1.13 DSall=1.13 Lgap=1.13 dF=1.13 DSworst_competitor=self L_best_nbr=-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 1, 0, (0.5,)) s1 A=1 E=1 1-pi0=5.802e-01 lpS0=-8.71 Sc=1 Ce=1 mv=1 lim=0 DSvis=1.11 DSall=1.11 Lgap=1.11 dF=1.11 DSworst_competitor=self L_best_nbr=-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 1, 0, (0.5,)) s2 A=1 E=1 1-pi0=2.434e-01 lpS0=-8.20 Sc=1 Ce=1 mv=1 lim=0 DSvis=4.27 DSall=4.27 Lgap=3.22 dF=4.27 DSworst_competitor=self L_best_nbr=+12[G1m] nb=30 mb=9 tr=0
+(150, 270, 1, 0, (0.5,)) s3 A=1 E=1 1-pi0=1.689e-01 lpS0=-8.18 Sc=1 Ce=1 mv=1 lim=0 DSvis=2.76 DSall=2.76 Lgap=1.83 dF=2.76 DSworst_competitor=self L_best_nbr=+91[G10m] nb=30 mb=9 tr=0
+(150, 270, 1, 0, (0.5,)) s4 A=1 E=1 1-pi0=1.829e-01 lpS0=-7.21 Sc=1 Ce=0 mv=0 lim=0 DSvis=-0.00 DSall=-0.00 Lgap=-0.00 dF=-0.00 DSworst_competitor=self L_best_nbr=-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 1, 0, (0.5,)) s5 A=1 E=1 1-pi0=2.038e-01 lpS0=-7.88 Sc=1 Ce=1 mv=1 lim=0 DSvis=4.71 DSall=4.71 Lgap=1.81 dF=6.61 DSworst_competitor=+12[G1m] L_best_nbr=+126[G14h] nb=30 mb=9 tr=0
+(150, 270, 1, 0, (0.5,)) s6 A=1 E=1 1-pi0=1.538e-01 lpS0=-8.22 Sc=1 Ce=1 mv=1 lim=0 DSvis=8.87 DSall=8.87 Lgap=3.18 dF=8.99 DSworst_competitor=+15[G1m] L_best_nbr=+167[G18m] nb=30 mb=9 tr=0
+(150, 270, 1, 0, (0.5,)) s7 A=1 E=1 1-pi0=6.047e-01 lpS0=-9.03 Sc=1 Ce=1 mv=1 lim=0 DSvis=2.65 DSall=2.65 Lgap=2.65 dF=6.55 DSworst_competitor=+10[G1m] L_best_nbr=+10[G1m]-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 1, 0, (0.5,)) s8 A=1 E=0 1-pi0=8.756e-01 lpS0=-8.35 Sc=1 Ce=1 mv=1 lim=0 DSvis=nan DSall=4.87 Lgap=2.02 dF=11.12 DSworst_competitor=+12[G1m] L_best_nbr=+269[G29m] nb=30 mb=9 tr=0 START=(0, 269)
+(150, 270, 1, 0, (0.5,)) s9 A=1 E=1 1-pi0=1.780e-01 lpS0=-8.26 Sc=1 Ce=1 mv=1 lim=0 DSvis=9.12 DSall=9.12 Lgap=3.98 dF=9.12 DSworst_competitor=self L_best_nbr=+16[G1m] nb=30 mb=9 tr=0
+(150, 270, 1, 1, (0.5,)) s0 A=1 E=1 1-pi0=4.487e-01 lpS0=-6.64 Sc=1 Ce=1 mv=1 lim=0 DSvis=10.55 DSall=10.55 Lgap=2.81 dF=13.93 DSworst_competitor=+10[G1m] L_best_nbr=+269[G29m] nb=30 mb=9 tr=0
+(150, 270, 1, 1, (0.5,)) s1 A=1 E=1 1-pi0=3.332e-01 lpS0=-6.17 Sc=1 Ce=0 mv=0 lim=0 DSvis=-3.58 DSall=-3.58 Lgap=-3.58 dF=-3.58 DSworst_competitor=self L_best_nbr=-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 1, 1, (0.5,)) s2 A=1 E=1 1-pi0=1.965e-01 lpS0=-7.76 Sc=1 Ce=1 mv=1 lim=0 DSvis=2.44 DSall=2.44 Lgap=2.44 dF=2.44 DSworst_competitor=self L_best_nbr=-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 1, 1, (0.5,)) s3 A=1 E=1 1-pi0=2.601e-01 lpS0=-7.99 Sc=1 Ce=1 mv=1 lim=0 DSvis=2.99 DSall=2.99 Lgap=2.99 dF=2.99 DSworst_competitor=self L_best_nbr=-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 1, 1, (0.5,)) s4 A=1 E=1 1-pi0=7.015e-01 lpS0=-8.37 Sc=1 Ce=1 mv=1 lim=0 DSvis=5.10 DSall=5.10 Lgap=4.73 dF=10.36 DSworst_competitor=+15[G1m] L_best_nbr=+64[G7m] nb=30 mb=9 tr=0
+(150, 270, 1, 1, (0.5,)) s5 A=1 E=1 1-pi0=2.202e-01 lpS0=-7.92 Sc=1 Ce=1 mv=1 lim=0 DSvis=3.45 DSall=3.45 Lgap=0.86 dF=11.80 DSworst_competitor=+11[G1m] L_best_nbr=+165[G18m] nb=30 mb=9 tr=0
+(150, 270, 1, 1, (0.5,)) s6 A=1 E=1 1-pi0=1.940e-01 lpS0=-7.58 Sc=1 Ce=1 mv=1 lim=0 DSvis=11.60 DSall=11.60 Lgap=3.62 dF=17.34 DSworst_competitor=+14[G1m] L_best_nbr=+151[G16m] nb=30 mb=9 tr=0
+(150, 270, 1, 1, (0.5,)) s7 A=1 E=1 1-pi0=2.850e-01 lpS0=-7.87 Sc=1 Ce=1 mv=1 lim=0 DSvis=10.51 DSall=10.51 Lgap=2.70 dF=10.51 DSworst_competitor=self L_best_nbr=+161[G17m] nb=30 mb=9 tr=0
+(150, 270, 1, 1, (0.5,)) s8 A=1 E=1 1-pi0=6.662e-01 lpS0=-4.60 Sc=1 Ce=0 mv=0 lim=0 DSvis=-2.42 DSall=-2.42 Lgap=-2.42 dF=-2.42 DSworst_competitor=self L_best_nbr=-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 1, 1, (0.5,)) s9 A=1 E=1 1-pi0=2.724e-01 lpS0=-7.64 Sc=1 Ce=1 mv=1 lim=0 DSvis=1.58 DSall=1.58 Lgap=1.58 dF=4.93 DSworst_competitor=+17[G1m] L_best_nbr=+17[G1m]-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 2, 0, (0.5, 0.5)) s0 A=1 E=1 1-pi0=4.652e-01 lpS0=-14.53 Sc=1 Ce=0 mv=1 lim=0 DSvis=-1.52 DSall=-1.52 Lgap=-1.52 dF=4.34 DSworst_competitor=+27[G3h]-9[G1h] L_best_nbr=-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 2, 0, (0.5, 0.5)) s1 A=1 E=1 1-pi0=2.357e-01 lpS0=-14.97 Sc=1 Ce=1 mv=2 lim=0 DSvis=0.55 DSall=0.55 Lgap=0.55 dF=2.09 DSworst_competitor=self L_best_nbr=-27[G3h] nb=30 mb=9 tr=0
+(150, 270, 2, 0, (0.5, 0.5)) s2 A=1 E=1 1-pi0=4.606e-01 lpS0=-13.04 Sc=1 Ce=1 mv=2 lim=0 DSvis=5.30 DSall=5.30 Lgap=2.30 dF=22.97 DSworst_competitor=self L_best_nbr=+96[G10m] nb=30 mb=9 tr=0
+(150, 270, 2, 0, (0.5, 0.5)) s3 A=1 E=1 1-pi0=4.889e-01 lpS0=-14.88 Sc=1 Ce=1 mv=2 lim=0 DSvis=1.27 DSall=1.27 Lgap=1.27 dF=5.90 DSworst_competitor=+27[G3h]-9[G1h] L_best_nbr=-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 2, 0, (0.5, 0.5)) s4 A=1 E=1 1-pi0=2.278e-01 lpS0=-15.21 Sc=1 Ce=0 mv=3 lim=0 DSvis=0.00 DSall=-1.08 Lgap=-1.08 dF=14.03 DSworst_competitor=+10[G1m] L_best_nbr=+10[G1m]-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 2, 0, (0.5, 0.5)) s5 A=1 E=0 1-pi0=9.724e-01 lpS0=-14.38 Sc=1 Ce=1 mv=4 lim=0 DSvis=nan DSall=1.50 Lgap=3.34 dF=25.72 DSworst_competitor=+30[G3m] L_best_nbr=+123[G13m] nb=30 mb=9 tr=0 START=(0, 19)
+(150, 270, 2, 0, (0.5, 0.5)) s6 A=1 E=1 1-pi0=3.416e-01 lpS0=-14.89 Sc=1 Ce=1 mv=2 lim=0 DSvis=4.12 DSall=4.12 Lgap=3.64 dF=14.31 DSworst_competitor=+27[G3h]-9[G1h] L_best_nbr=+97[G10m] nb=30 mb=9 tr=0
+(150, 270, 2, 0, (0.5, 0.5)) s7 A=1 E=1 1-pi0=2.642e-01 lpS0=-12.46 Sc=1 Ce=1 mv=2 lim=0 DSvis=2.99 DSall=2.99 Lgap=2.86 dF=13.26 DSworst_competitor=+13[G1m] L_best_nbr=+55[G6m] nb=30 mb=9 tr=0
+(150, 270, 2, 0, (0.5, 0.5)) s8 A=1 E=0 1-pi0=9.091e-01 lpS0=-17.23 Sc=1 Ce=1 mv=3 lim=0 DSvis=5.30 DSall=5.30 Lgap=3.62 dF=16.89 DSworst_competitor=self L_best_nbr=+119[G13m] nb=30 mb=9 tr=0 START=(0, 21)
+(150, 270, 2, 0, (0.5, 0.5)) s9 A=1 E=1 1-pi0=2.867e-01 lpS0=-15.05 Sc=1 Ce=1 mv=2 lim=0 DSvis=0.38 DSall=0.38 Lgap=0.38 dF=2.85 DSworst_competitor=+27[G3h]-9[G1h] L_best_nbr=-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.5)) s0 A=1 E=0 1-pi0=8.786e-01 lpS0=-14.25 Sc=1 Ce=0 mv=2 lim=0 DSvis=-2.29 DSall=-2.29 Lgap=-2.29 dF=2.87 DSworst_competitor=+27[G3h]-9[G1h] L_best_nbr=-9[G1h] nb=30 mb=9 tr=0 START=(8, 18, 36)
+(150, 270, 2, 1, (0.5, 0.5)) s1 A=1 E=1 1-pi0=4.852e-01 lpS0=-14.35 Sc=1 Ce=1 mv=2 lim=0 DSvis=3.44 DSall=3.44 Lgap=3.05 dF=19.93 DSworst_competitor=+31[G3m] L_best_nbr=+210[G23m] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.5)) s2 A=1 E=1 1-pi0=3.260e-01 lpS0=-14.82 Sc=1 Ce=1 mv=2 lim=0 DSvis=2.50 DSall=2.50 Lgap=1.36 dF=9.25 DSworst_competitor=+27[G3h]-9[G1h] L_best_nbr=+113[G12m] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.5)) s3 A=1 E=1 1-pi0=8.615e-01 lpS0=-16.47 Sc=1 Ce=1 mv=2 lim=0 DSvis=0.62 DSall=0.62 Lgap=0.62 dF=4.17 DSworst_competitor=+16[G1m] L_best_nbr=+16[G1m]-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.5)) s4 A=1 E=0 1-pi0=8.450e-01 lpS0=-16.32 Sc=0 Ce=0 mv=2 lim=0 DSvis=nan DSall=1.76 Lgap=1.76 dF=7.83 DSworst_competitor=+33[G3m] L_best_nbr=+33[G3m]-27[G3h] nb=30 mb=9 tr=0 START=(0, 36)
+(150, 270, 2, 1, (0.5, 0.5)) s5 A=1 E=1 1-pi0=5.578e-01 lpS0=-13.79 Sc=1 Ce=1 mv=2 lim=0 DSvis=4.06 DSall=3.70 Lgap=3.41 dF=10.37 DSworst_competitor=+32[G3m] L_best_nbr=+23[G2m] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.5)) s6 A=1 E=1 1-pi0=6.076e-01 lpS0=-15.29 Sc=1 Ce=1 mv=2 lim=0 DSvis=0.29 DSall=0.29 Lgap=0.29 dF=2.20 DSworst_competitor=+27[G3h]-9[G1h] L_best_nbr=-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.5)) s7 A=1 E=1 1-pi0=3.227e-01 lpS0=-14.67 Sc=1 Ce=0 mv=1 lim=0 DSvis=-1.83 DSall=-1.83 Lgap=-1.83 dF=3.98 DSworst_competitor=self L_best_nbr=-27[G3h] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.5)) s8 A=1 E=1 1-pi0=7.609e-01 lpS0=-15.65 Sc=1 Ce=1 mv=2 lim=0 DSvis=2.36 DSall=1.00 Lgap=1.00 dF=11.07 DSworst_competitor=+16[G1m] L_best_nbr=+16[G1m]-9[G1h] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.5)) s9 A=1 E=0 1-pi0=9.972e-01 lpS0=-19.53 Sc=0 Ce=0 mv=0 lim=0 DSvis=nan DSall=-7.32 Lgap=-7.32 dF=2.92 DSworst_competitor=+167[G18m] L_best_nbr=+167[G18m]-27[G3h] nb=30 mb=9 tr=0 START=(7, 18, 36, 167)
+(300, 540, 1, 0, (0.5,)) s0 A=1 E=1 1-pi0=1.549e-01 lpS0=-9.16 Sc=1 Ce=1 mv=1 lim=0 DSvis=16.16 DSall=16.16 Lgap=2.25 dF=18.39 DSworst_competitor=+17[G1m] L_best_nbr=+215[G23m] nb=60 mb=9 tr=0
+(300, 540, 1, 0, (0.5,)) s1 A=1 E=1 1-pi0=1.286e-01 lpS0=-8.92 Sc=1 Ce=1 mv=1 lim=0 DSvis=13.01 DSall=13.01 Lgap=4.42 dF=13.01 DSworst_competitor=self L_best_nbr=+396[G44h] nb=60 mb=9 tr=0
+(300, 540, 1, 0, (0.5,)) s2 A=1 E=1 1-pi0=1.350e-01 lpS0=-7.85 Sc=1 Ce=1 mv=1 lim=0 DSvis=15.41 DSall=15.41 Lgap=5.44 dF=23.95 DSworst_competitor=+11[G1m] L_best_nbr=+388[G43m] nb=60 mb=9 tr=0
+(300, 540, 1, 0, (0.5,)) s3 A=1 E=1 1-pi0=1.243e-01 lpS0=-8.72 Sc=1 Ce=1 mv=1 lim=0 DSvis=11.84 DSall=11.84 Lgap=4.64 dF=20.54 DSworst_competitor=+10[G1m] L_best_nbr=+274[G30m] nb=60 mb=9 tr=0
+(300, 540, 1, 0, (0.5,)) s4 A=1 E=1 1-pi0=1.075e-01 lpS0=-9.26 Sc=1 Ce=1 mv=1 lim=0 DSvis=16.31 DSall=16.31 Lgap=4.90 dF=20.85 DSworst_competitor=+12[G1m] L_best_nbr=+59[G6m] nb=60 mb=9 tr=0
+(300, 540, 1, 0, (0.5,)) s5 A=1 E=1 1-pi0=1.118e-01 lpS0=-8.98 Sc=1 Ce=1 mv=1 lim=0 DSvis=13.72 DSall=13.72 Lgap=4.77 dF=20.64 DSworst_competitor=+14[G1m] L_best_nbr=+318[G35m] nb=60 mb=9 tr=0
+(300, 540, 1, 0, (0.5,)) s6 A=1 E=1 1-pi0=1.286e-01 lpS0=-9.27 Sc=1 Ce=1 mv=1 lim=0 DSvis=13.59 DSall=13.59 Lgap=3.35 dF=16.45 DSworst_competitor=+10[G1m] L_best_nbr=+364[G40m] nb=60 mb=9 tr=0
+(300, 540, 1, 0, (0.5,)) s7 A=1 E=1 1-pi0=1.917e-01 lpS0=-9.34 Sc=1 Ce=1 mv=1 lim=0 DSvis=6.83 DSall=6.83 Lgap=0.35 dF=16.50 DSworst_competitor=+13[G1m] L_best_nbr=+130[G14m] nb=60 mb=9 tr=0
+(300, 540, 1, 0, (0.5,)) s8 A=1 E=1 1-pi0=1.345e-01 lpS0=-9.18 Sc=1 Ce=1 mv=1 lim=0 DSvis=8.26 DSall=8.26 Lgap=2.71 dF=12.61 DSworst_competitor=+16[G1m] L_best_nbr=+54[G6h] nb=60 mb=9 tr=0
+(300, 540, 1, 0, (0.5,)) s9 A=1 E=1 1-pi0=1.104e-01 lpS0=-8.96 Sc=1 Ce=1 mv=1 lim=0 DSvis=8.05 DSall=8.05 Lgap=5.86 dF=17.97 DSworst_competitor=+17[G1m] L_best_nbr=+264[G29m] nb=60 mb=9 tr=0
+(300, 540, 1, 1, (0.5,)) s0 A=1 E=1 1-pi0=2.069e-01 lpS0=-8.64 Sc=1 Ce=1 mv=1 lim=0 DSvis=12.74 DSall=12.74 Lgap=2.69 dF=17.15 DSworst_competitor=+13[G1m] L_best_nbr=+173[G19m] nb=60 mb=9 tr=0
+(300, 540, 1, 1, (0.5,)) s1 A=1 E=1 1-pi0=5.626e-01 lpS0=-9.56 Sc=1 Ce=1 mv=1 lim=0 DSvis=14.70 DSall=14.70 Lgap=3.20 dF=16.20 DSworst_competitor=+13[G1m] L_best_nbr=+194[G21m] nb=60 mb=9 tr=0
+(300, 540, 1, 1, (0.5,)) s2 A=1 E=1 1-pi0=2.529e-01 lpS0=-9.00 Sc=1 Ce=1 mv=1 lim=0 DSvis=15.22 DSall=15.22 Lgap=3.83 dF=16.88 DSworst_competitor=+13[G1m] L_best_nbr=+352[G39m] nb=60 mb=9 tr=0
+(300, 540, 1, 1, (0.5,)) s3 A=1 E=1 1-pi0=1.956e-01 lpS0=-8.95 Sc=1 Ce=1 mv=1 lim=0 DSvis=8.57 DSall=8.57 Lgap=3.32 dF=20.97 DSworst_competitor=+16[G1m] L_best_nbr=+97[G10m] nb=60 mb=9 tr=0
+(300, 540, 1, 1, (0.5,)) s4 A=1 E=1 1-pi0=2.497e-01 lpS0=-8.91 Sc=1 Ce=1 mv=1 lim=0 DSvis=8.83 DSall=8.83 Lgap=3.39 dF=10.79 DSworst_competitor=+11[G1m] L_best_nbr=+456[G50m] nb=60 mb=9 tr=0
+(300, 540, 1, 1, (0.5,)) s5 A=1 E=1 1-pi0=2.299e-01 lpS0=-8.85 Sc=1 Ce=1 mv=1 lim=0 DSvis=14.18 DSall=14.18 Lgap=2.70 dF=27.41 DSworst_competitor=+10[G1m] L_best_nbr=+442[G49m] nb=60 mb=9 tr=0
+(300, 540, 1, 1, (0.5,)) s6 A=1 E=1 1-pi0=2.327e-01 lpS0=-8.93 Sc=1 Ce=1 mv=1 lim=0 DSvis=8.02 DSall=8.02 Lgap=4.67 dF=14.35 DSworst_competitor=+17[G1m] L_best_nbr=+475[G52m] nb=60 mb=9 tr=0
+(300, 540, 1, 1, (0.5,)) s7 A=1 E=1 1-pi0=3.195e-01 lpS0=-9.11 Sc=1 Ce=1 mv=1 lim=0 DSvis=11.68 DSall=11.68 Lgap=4.65 dF=22.11 DSworst_competitor=+12[G1m] L_best_nbr=+387[G43h] nb=60 mb=9 tr=0
+(300, 540, 1, 1, (0.5,)) s8 A=1 E=1 1-pi0=3.555e-01 lpS0=-9.09 Sc=1 Ce=1 mv=1 lim=0 DSvis=18.68 DSall=18.68 Lgap=4.23 dF=24.78 DSworst_competitor=+11[G1m] L_best_nbr=+199[G22m] nb=60 mb=9 tr=0
+(300, 540, 1, 1, (0.5,)) s9 A=1 E=0 1-pi0=7.018e-01 lpS0=-8.53 Sc=1 Ce=1 mv=2 lim=0 DSvis=16.76 DSall=16.76 Lgap=0.82 dF=25.01 DSworst_competitor=+11[G1m] L_best_nbr=+519[G57m] nb=60 mb=9 tr=0 START=(18,)
+(300, 540, 2, 0, (0.5, 0.5)) s0 A=1 E=1 1-pi0=3.769e-01 lpS0=-17.26 Sc=1 Ce=1 mv=2 lim=0 DSvis=4.22 DSall=4.22 Lgap=4.02 dF=34.60 DSworst_competitor=+15[G1m] L_best_nbr=+252[G28h] nb=60 mb=9 tr=0
+(300, 540, 2, 0, (0.5, 0.5)) s1 A=1 E=1 1-pi0=1.631e-01 lpS0=-16.95 Sc=1 Ce=1 mv=2 lim=0 DSvis=10.29 DSall=10.29 Lgap=4.27 dF=35.47 DSworst_competitor=+11[G1m] L_best_nbr=+177[G19m] nb=60 mb=9 tr=0
+(300, 540, 2, 0, (0.5, 0.5)) s2 A=1 E=1 1-pi0=1.672e-01 lpS0=-15.89 Sc=1 Ce=1 mv=2 lim=0 DSvis=5.77 DSall=5.77 Lgap=3.52 dF=21.06 DSworst_competitor=+32[G3m] L_best_nbr=+208[G23m] nb=60 mb=9 tr=0
+(300, 540, 2, 0, (0.5, 0.5)) s3 A=1 E=1 1-pi0=2.145e-01 lpS0=-16.99 Sc=1 Ce=1 mv=2 lim=0 DSvis=6.06 DSall=6.06 Lgap=5.23 dF=30.36 DSworst_competitor=+12[G1m] L_best_nbr=+307[G34m] nb=60 mb=9 tr=0
+(300, 540, 2, 0, (0.5, 0.5)) s4 A=1 E=1 1-pi0=2.560e-01 lpS0=-17.43 Sc=1 Ce=1 mv=2 lim=0 DSvis=4.93 DSall=4.93 Lgap=2.74 dF=33.83 DSworst_competitor=+10[G1m] L_best_nbr=+229[G25m] nb=60 mb=9 tr=0
+(300, 540, 2, 0, (0.5, 0.5)) s5 A=1 E=1 1-pi0=4.294e-01 lpS0=-15.59 Sc=1 Ce=1 mv=2 lim=0 DSvis=10.58 DSall=10.58 Lgap=4.34 dF=33.58 DSworst_competitor=+28[G3m] L_best_nbr=+186[G20m] nb=60 mb=9 tr=0
+(300, 540, 2, 0, (0.5, 0.5)) s6 A=1 E=1 1-pi0=2.851e-01 lpS0=-16.95 Sc=1 Ce=1 mv=2 lim=0 DSvis=6.32 DSall=6.32 Lgap=5.07 dF=36.58 DSworst_competitor=+12[G1m] L_best_nbr=+481[G53m] nb=60 mb=9 tr=0
+(300, 540, 2, 0, (0.5, 0.5)) s7 A=1 E=1 1-pi0=2.138e-01 lpS0=-15.82 Sc=1 Ce=1 mv=2 lim=0 DSvis=2.38 DSall=2.38 Lgap=2.38 dF=23.15 DSworst_competitor=+15[G1m] L_best_nbr=+15[G1m]-9[G1h] nb=60 mb=9 tr=0
+(300, 540, 2, 0, (0.5, 0.5)) s8 A=1 E=1 1-pi0=2.161e-01 lpS0=-16.73 Sc=1 Ce=1 mv=3 lim=0 DSvis=-0.44 DSall=-0.44 Lgap=0.69 dF=27.99 DSworst_competitor=+12[G1m] L_best_nbr=+12[G1m]-9[G1h] nb=60 mb=9 tr=0
+(300, 540, 2, 0, (0.5, 0.5)) s9 A=1 E=1 1-pi0=2.109e-01 lpS0=-15.50 Sc=1 Ce=1 mv=2 lim=0 DSvis=9.94 DSall=9.94 Lgap=4.10 dF=34.27 DSworst_competitor=+33[G3m] L_best_nbr=+99[G11h] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.5)) s0 A=1 E=1 1-pi0=4.132e-01 lpS0=-16.75 Sc=1 Ce=0 mv=3 lim=0 DSvis=12.96 DSall=12.96 Lgap=-0.82 dF=42.96 DSworst_competitor=+12[G1m] L_best_nbr=+286[G31m] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.5)) s1 A=1 E=1 1-pi0=2.428e-01 lpS0=-15.11 Sc=1 Ce=1 mv=2 lim=0 DSvis=2.92 DSall=2.92 Lgap=2.92 dF=23.48 DSworst_competitor=+34[G3m] L_best_nbr=+34[G3m]-27[G3h] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.5)) s2 A=1 E=1 1-pi0=2.954e-01 lpS0=-16.90 Sc=1 Ce=1 mv=2 lim=0 DSvis=8.25 DSall=8.25 Lgap=2.43 dF=30.04 DSworst_competitor=+10[G1m] L_best_nbr=+522[G58h] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.5)) s3 A=1 E=1 1-pi0=2.727e-01 lpS0=-14.60 Sc=1 Ce=1 mv=2 lim=0 DSvis=11.17 DSall=6.86 Lgap=2.71 dF=39.27 DSworst_competitor=+29[G3m] L_best_nbr=+315[G35h] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.5)) s4 A=1 E=1 1-pi0=2.498e-01 lpS0=-16.35 Sc=1 Ce=1 mv=2 lim=0 DSvis=1.35 DSall=1.35 Lgap=1.35 dF=19.88 DSworst_competitor=+12[G1m] L_best_nbr=+12[G1m]-9[G1h] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.5)) s5 A=1 E=1 1-pi0=2.345e-01 lpS0=-15.81 Sc=1 Ce=1 mv=2 lim=0 DSvis=6.86 DSall=6.86 Lgap=5.17 dF=20.14 DSworst_competitor=+30[G3m] L_best_nbr=+244[G27m] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.5)) s6 A=1 E=1 1-pi0=2.298e-01 lpS0=-16.66 Sc=1 Ce=1 mv=2 lim=0 DSvis=9.86 DSall=9.86 Lgap=3.17 dF=39.10 DSworst_competitor=+32[G3m] L_best_nbr=+188[G20m] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.5)) s7 A=1 E=0 1-pi0=7.397e-01 lpS0=-17.90 Sc=1 Ce=1 mv=2 lim=0 DSvis=nan DSall=9.20 Lgap=0.08 dF=29.17 DSworst_competitor=+31[G3m] L_best_nbr=+399[G44m] nb=60 mb=9 tr=0 START=(0, 18, 36, 399)
+(300, 540, 2, 1, (0.5, 0.5)) s8 A=1 E=1 1-pi0=2.373e-01 lpS0=-16.62 Sc=1 Ce=1 mv=2 lim=0 DSvis=8.58 DSall=8.58 Lgap=2.33 dF=34.32 DSworst_competitor=+28[G3m] L_best_nbr=+113[G12m] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.5)) s9 A=1 E=1 1-pi0=3.260e-01 lpS0=-16.12 Sc=1 Ce=1 mv=2 lim=0 DSvis=10.29 DSall=10.29 Lgap=5.16 dF=28.30 DSworst_competitor=+11[G1m] L_best_nbr=+328[G36m] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.3)) s0 A=1 E=1 1-pi0=2.025e-01 lpS0=-15.82 Sc=1 Ce=1 mv=2 lim=0 DSvis=0.27 DSall=0.27 Lgap=0.27 dF=19.15 DSworst_competitor=+34[G3m] L_best_nbr=+34[G3m]-27[G3h] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.3)) s1 A=1 E=1 1-pi0=2.688e-01 lpS0=-16.73 Sc=1 Ce=1 mv=2 lim=0 DSvis=4.67 DSall=4.67 Lgap=2.62 dF=17.53 DSworst_competitor=+35[G3m] L_best_nbr=+265[G29m] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.3)) s2 A=1 E=1 1-pi0=4.867e-01 lpS0=-17.13 Sc=1 Ce=1 mv=2 lim=0 DSvis=5.47 DSall=5.47 Lgap=3.90 dF=36.29 DSworst_competitor=+34[G3m] L_best_nbr=+50[G5m] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.3)) s3 A=1 E=1 1-pi0=2.787e-01 lpS0=-16.63 Sc=1 Ce=1 mv=2 lim=0 DSvis=2.74 DSall=2.74 Lgap=2.74 dF=21.38 DSworst_competitor=self L_best_nbr=-27[G3h] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.3)) s4 A=1 E=1 1-pi0=2.371e-01 lpS0=-16.29 Sc=1 Ce=1 mv=2 lim=0 DSvis=2.06 DSall=2.06 Lgap=2.06 dF=26.59 DSworst_competitor=+29[G3m] L_best_nbr=+29[G3m]-27[G3h] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.3)) s5 A=1 E=1 1-pi0=2.378e-01 lpS0=-15.68 Sc=1 Ce=1 mv=2 lim=0 DSvis=0.26 DSall=0.26 Lgap=0.26 dF=22.54 DSworst_competitor=+32[G3m] L_best_nbr=+32[G3m]-27[G3h] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.3)) s6 A=1 E=1 1-pi0=3.333e-01 lpS0=-16.62 Sc=1 Ce=1 mv=2 lim=0 DSvis=1.38 DSall=1.38 Lgap=1.38 dF=23.34 DSworst_competitor=+29[G3m] L_best_nbr=+29[G3m]-27[G3h] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.3)) s7 A=1 E=1 1-pi0=2.992e-01 lpS0=-15.42 Sc=1 Ce=1 mv=2 lim=0 DSvis=4.24 DSall=4.24 Lgap=3.95 dF=21.86 DSworst_competitor=self L_best_nbr=+263[G29m] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.3)) s8 A=1 E=1 1-pi0=2.305e-01 lpS0=-16.52 Sc=1 Ce=1 mv=2 lim=0 DSvis=9.61 DSall=9.61 Lgap=3.60 dF=30.19 DSworst_competitor=+17[G1m] L_best_nbr=+200[G22m] nb=60 mb=9 tr=0
+(300, 540, 2, 1, (0.5, 0.3)) s9 A=1 E=1 1-pi0=2.556e-01 lpS0=-16.16 Sc=1 Ce=1 mv=2 lim=0 DSvis=0.52 DSall=0.52 Lgap=0.52 dF=17.15 DSworst_competitor=+28[G3m] L_best_nbr=+28[G3m]-27[G3h] nb=60 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.3)) s0 A=1 E=1 1-pi0=3.380e-01 lpS0=-14.64 Sc=1 Ce=0 mv=1 lim=0 DSvis=-2.99 DSall=-2.99 Lgap=-2.99 dF=1.77 DSworst_competitor=self L_best_nbr=-27[G3h] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.3)) s1 A=1 E=0 1-pi0=7.595e-01 lpS0=-15.47 Sc=1 Ce=0 mv=2 lim=0 DSvis=nan DSall=-4.56 Lgap=-4.56 dF=10.07 DSworst_competitor=+83[G9m] L_best_nbr=+83[G9m]-27[G3h] nb=30 mb=9 tr=0 START=(0, 18, 36, 149)
+(150, 270, 2, 1, (0.5, 0.3)) s2 A=1 E=1 1-pi0=5.170e-01 lpS0=-14.79 Sc=1 Ce=1 mv=2 lim=0 DSvis=1.15 DSall=1.15 Lgap=1.15 dF=5.81 DSworst_competitor=self L_best_nbr=-27[G3h] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.3)) s3 A=1 E=1 1-pi0=5.125e-01 lpS0=-14.47 Sc=1 Ce=0 mv=1 lim=0 DSvis=-4.23 DSall=-4.23 Lgap=-4.23 dF=0.70 DSworst_competitor=self L_best_nbr=-27[G3h] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.3)) s4 A=1 E=1 1-pi0=5.040e-01 lpS0=-14.23 Sc=1 Ce=0 mv=1 lim=0 DSvis=-3.24 DSall=-3.24 Lgap=-3.24 dF=5.14 DSworst_competitor=self L_best_nbr=-27[G3h] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.3)) s5 A=1 E=1 1-pi0=2.917e-01 lpS0=-13.04 Sc=0 Ce=0 mv=0 lim=0 DSvis=-4.08 DSall=-7.29 Lgap=-3.21 dF=-7.29 DSworst_competitor=-9[G1h] L_best_nbr=-27[G3h] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.3)) s6 A=1 E=1 1-pi0=4.475e-01 lpS0=-14.72 Sc=1 Ce=1 mv=2 lim=0 DSvis=0.10 DSall=0.10 Lgap=0.10 dF=2.78 DSworst_competitor=+29[G3m] L_best_nbr=+29[G3m]-27[G3h] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.3)) s7 A=1 E=1 1-pi0=5.928e-01 lpS0=-14.64 Sc=1 Ce=1 mv=2 lim=0 DSvis=4.54 DSall=4.54 Lgap=2.16 dF=14.47 DSworst_competitor=+15[G1m] L_best_nbr=+242[G26m] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.3)) s8 A=1 E=1 1-pi0=7.355e-01 lpS0=-15.45 Sc=1 Ce=0 mv=2 lim=0 DSvis=-2.01 DSall=-2.01 Lgap=-2.01 dF=11.11 DSworst_competitor=+34[G3m] L_best_nbr=+34[G3m]-27[G3h] nb=30 mb=9 tr=0
+(150, 270, 2, 1, (0.5, 0.3)) s9 A=1 E=1 1-pi0=4.261e-01 lpS0=-14.90 Sc=0 Ce=0 mv=0 lim=0 DSvis=-1.49 DSall=-3.33 Lgap=-1.84 dF=-3.33 DSworst_competitor=-9[G1h] L_best_nbr=-27[G3h] nb=30 mb=9 tr=0
+total runtime 26s; cells=10; seeds/cell=10

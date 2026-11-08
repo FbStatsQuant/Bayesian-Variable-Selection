@@ -1,0 +1,108 @@
+N6 n6_ls_and_C.py -- Lemma LS and (C) on the p=10 miniature (g=2, c=2, rho=.7, psi=.5, beta=1, sigma=1); exact enumeration of 1024 models
+S0 = (0, 2, 4, 6), masked hubs M = {2,6}, S-degree = (0, 4), start = S-degree; ell = ceil(log2(n+p+1))
+
+====================================================================================================
+n = 50   (K = 10, ell = 6, #models = 1024, 20 seeds)
+seed | D_all minDmargin |   (L)   L-margin | scored certified    status/final moves |  pi(S0)   MAP bestS
+   0 | False     -5.042 | False     -2.739 |  False     False certified@(0, 4, 7)     1 |  0.0031 False False
+   1 | False     -0.354 |  True      0.241 |  False     False certified@(0, 4)     0 |  0.2224 False False
+   2 | False     -0.038 | False     -0.038 |   True     False certified@(0, 4, 6)     1 |  0.2504 False False
+   3 | False     -3.247 | False     -3.247 |   True     False certified@(0, 2, 4)     1 |  0.0270 False False
+   4 | False     -2.842 | False     -2.842 |   True     False certified@(0, 4, 6)     1 |  0.0148 False False
+   5 | False     -1.933 | False     -1.933 |   True     False certified@(0, 2, 4)     1 |  0.0956 False False
+   6 | False     -0.783 |  True      0.059 |  False     False certified@(1, 4)     1 |  0.0726 False False
+   7 |  True      0.005 |  True      0.005 |   True      True    certified@S0     2 |  0.2997  True  True
+   8 | False     -2.465 | False     -2.465 |   True     False certified@(0, 4, 6)     1 |  0.0506 False False
+   9 | False     -1.191 | False     -1.790 |   True     False certified@(0, 4, 6)     1 |  0.0641 False False
+  10 | False     -2.293 | False     -2.293 |   True     False certified@(0, 2, 4)     1 |  0.0361 False False
+  11 | False     -2.032 | False     -1.759 |  False     False certified@(4, 6)     1 |  0.0472 False False
+  12 | False     -2.083 | False     -2.083 |   True     False certified@(0, 4, 6)     1 |  0.0751 False False
+  13 |  True      1.372 |  True      1.565 |   True      True    certified@S0     2 |  0.4304  True  True
+  14 | False     -1.784 | False     -1.784 |   True     False certified@(0, 2, 4)     1 |  0.0398 False False
+  15 | False     -0.378 | False     -0.378 |   True     False certified@(0, 4, 6)     1 |  0.1562 False False
+  16 | False     -0.780 | False     -0.780 |   True     False certified@(0, 4, 6)     1 |  0.1897 False False
+  17 | False     -0.629 | False     -0.459 |  False     False    certified@()     2 |  0.0403 False False
+  18 | False     -1.002 | False     -0.851 |  False     False  certified@(0,)     1 |  0.0543 False False
+  19 |  True      1.956 |  True      1.691 |   True      True    certified@S0     2 |  0.4486  True  True
+Summary n=50:
+  D_S holds on all lattice states: 3/20;  (L) holds: 5/20;  search scores S0: 14/20;  search certifies S0: 3/20
+  pi(S0)>1/2: 0/20; MAP = S0: 3/20
+  Lemma LS(i)  [D_all => first c moves each add a masked hub, states in Lat, c-th state = S0]: premise true 3, violations 0
+  Lemma LS(ii) [D_all and ell>=c-1 => S0 scored]:                                  premise true 3, violations 0
+  Lemma LS(iii)[D_all and (L) and ell>=c => certified at S0, no local_limit]:      premise true 3, violations 0
+  (C) [S0 scored and pi(S0)>1/2 => best scored model = S0]:                        premise true 0, violations 0
+  (C') [pi(S0)>1/2 => MAP = S0] premise true 0, violations 0
+  info: seeds where D_all fails but S0 is still scored: 11; D_all fails and S0 not scored: 6; scored without certification: 11
+  info: (L) fails in 15 seeds; of those pi(S0) values: ['0.003', '0.250', '0.027', '0.015', '0.096', '0.051', '0.064', '0.036', '0.047', '0.075', '0.040', '0.156', '0.190', '0.040', '0.054']
+
+====================================================================================================
+n = 200   (K = 10, ell = 8, #models = 1024, 20 seeds)
+seed | D_all minDmargin |   (L)   L-margin | scored certified    status/final moves |  pi(S0)   MAP bestS
+   0 |  True     11.607 |  True      2.946 |   True      True    certified@S0     2 |  0.8273  True  True
+   1 |  True      4.467 |  True      0.704 |   True      True    certified@S0     2 |  0.5317  True  True
+   2 |  True      0.554 |  True      0.554 |   True      True    certified@S0     2 |  0.4906  True  True
+   3 |  True      0.906 |  True      0.906 |   True      True    certified@S0     2 |  0.5112  True  True
+   4 |  True      6.503 |  True      3.145 |   True      True    certified@S0     2 |  0.8202  True  True
+   5 |  True     13.601 |  True      3.497 |   True      True    certified@S0     2 |  0.8536  True  True
+   6 |  True      3.647 |  True      2.733 |   True      True    certified@S0     2 |  0.7550  True  True
+   7 |  True      9.748 |  True      2.128 |   True      True    certified@S0     2 |  0.7846  True  True
+   8 |  True      4.445 |  True      2.586 |   True      True    certified@S0     2 |  0.7781  True  True
+   9 |  True      7.888 |  True      3.218 |   True      True    certified@S0     2 |  0.8105  True  True
+  10 |  True      6.640 |  True      2.019 |   True      True    certified@S0     2 |  0.7572  True  True
+  11 |  True      9.570 |  True      1.979 |   True      True    certified@S0     2 |  0.7390  True  True
+  12 |  True     12.237 |  True      0.736 |   True      True    certified@S0     2 |  0.5093  True  True
+  13 |  True      9.473 |  True      2.346 |   True      True    certified@S0     2 |  0.7923  True  True
+  14 |  True     13.804 |  True      2.326 |   True      True    certified@S0     2 |  0.7300  True  True
+  15 |  True      6.440 |  True      2.838 |   True      True    certified@S0     2 |  0.8064  True  True
+  16 |  True      0.357 | False     -0.808 |   True     False certified@(0, 1, 2, 4, 7)     4 |  0.0965 False False
+  17 |  True      5.188 |  True      3.216 |   True      True    certified@S0     2 |  0.8193  True  True
+  18 |  True      9.901 |  True      3.055 |   True      True    certified@S0     2 |  0.8274  True  True
+  19 |  True      5.683 |  True      2.657 |   True      True    certified@S0     2 |  0.7893  True  True
+Summary n=200:
+  D_S holds on all lattice states: 20/20;  (L) holds: 19/20;  search scores S0: 20/20;  search certifies S0: 19/20
+  pi(S0)>1/2: 18/20; MAP = S0: 19/20
+  Lemma LS(i)  [D_all => first c moves each add a masked hub, states in Lat, c-th state = S0]: premise true 20, violations 0
+  Lemma LS(ii) [D_all and ell>=c-1 => S0 scored]:                                  premise true 20, violations 0
+  Lemma LS(iii)[D_all and (L) and ell>=c => certified at S0, no local_limit]:      premise true 19, violations 0
+  (C) [S0 scored and pi(S0)>1/2 => best scored model = S0]:                        premise true 18, violations 0
+  (C') [pi(S0)>1/2 => MAP = S0] premise true 18, violations 0
+  info: seeds where D_all fails but S0 is still scored: 0; D_all fails and S0 not scored: 0; scored without certification: 1
+  info: (L) fails in 1 seeds; of those pi(S0) values: ['0.096']
+
+====================================================================================================
+n = 1000   (K = 10, ell = 10, #models = 1024, 20 seeds)
+seed | D_all minDmargin |   (L)   L-margin | scored certified    status/final moves |  pi(S0)   MAP bestS
+   0 |  True     52.257 |  True      3.440 |   True      True    certified@S0     2 |  0.9042  True  True
+   1 |  True     34.391 |  True      3.279 |   True      True    certified@S0     2 |  0.9124  True  True
+   2 |  True     37.208 |  True      3.268 |   True      True    certified@S0     2 |  0.8942  True  True
+   3 |  True     56.596 |  True      2.838 |   True      True    certified@S0     2 |  0.8654  True  True
+   4 |  True     28.766 |  True      3.657 |   True      True    certified@S0     2 |  0.9090  True  True
+   5 |  True     46.951 |  True      3.451 |   True      True    certified@S0     2 |  0.8743  True  True
+   6 |  True     41.574 |  True      3.619 |   True      True    certified@S0     2 |  0.8941  True  True
+   7 |  True     35.149 |  True      4.113 |   True      True    certified@S0     2 |  0.9247  True  True
+   8 |  True     49.549 |  True      2.178 |   True      True    certified@S0     2 |  0.8209  True  True
+   9 |  True     56.955 |  True      3.860 |   True      True    certified@S0     2 |  0.9226  True  True
+  10 |  True     47.103 |  True      3.792 |   True      True    certified@S0     2 |  0.9155  True  True
+  11 |  True     36.260 |  True      3.736 |   True      True    certified@S0     2 |  0.8903  True  True
+  12 |  True     53.996 |  True      2.893 |   True      True    certified@S0     2 |  0.8676  True  True
+  13 |  True     32.272 |  True      3.353 |   True      True    certified@S0     2 |  0.8945  True  True
+  14 |  True     41.515 |  True      3.261 |   True      True    certified@S0     2 |  0.8910  True  True
+  15 |  True     37.426 |  True      1.999 |   True      True    certified@S0     2 |  0.8219  True  True
+  16 |  True     33.251 |  True      3.688 |   True      True    certified@S0     2 |  0.8942  True  True
+  17 |  True     47.107 |  True      3.846 |   True      True    certified@S0     2 |  0.9163  True  True
+  18 |  True     45.278 |  True      3.961 |   True      True    certified@S0     2 |  0.9070  True  True
+  19 |  True     43.589 |  True      3.440 |   True      True    certified@S0     2 |  0.8932  True  True
+Summary n=1000:
+  D_S holds on all lattice states: 20/20;  (L) holds: 20/20;  search scores S0: 20/20;  search certifies S0: 20/20
+  pi(S0)>1/2: 20/20; MAP = S0: 20/20
+  Lemma LS(i)  [D_all => first c moves each add a masked hub, states in Lat, c-th state = S0]: premise true 20, violations 0
+  Lemma LS(ii) [D_all and ell>=c-1 => S0 scored]:                                  premise true 20, violations 0
+  Lemma LS(iii)[D_all and (L) and ell>=c => certified at S0, no local_limit]:      premise true 20, violations 0
+  (C) [S0 scored and pi(S0)>1/2 => best scored model = S0]:                        premise true 20, violations 0
+  (C') [pi(S0)>1/2 => MAP = S0] premise true 20, violations 0
+  info: seeds where D_all fails but S0 is still scored: 0; D_all fails and S0 not scored: 0; scored without certification: 0
+  info: (L) fails in 0 seeds; of those pi(S0) values: []
+
+TOTAL implication violations over all n and seeds: none
+
+DONE

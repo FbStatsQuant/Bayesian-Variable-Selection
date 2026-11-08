@@ -1,0 +1,37 @@
+N3 n3_haar.py -- Haar-span step, Lemma Lambda(a) and Lemma B; n=60, p=40, g=10, rho=.7, psi=.5, beta=beta_vis=1, sigma=1
+hubs: j_a=0, j_b=10, j_vis=20; null group = 30..39; lambda_min(Sigma) = 0.2350
+simulation: 5 seeds x 2000 draws = 10000 draws per test, 16.4s
+
+test                                                                                                   a        b |  meanEmp  meanThy | KS p-values per seed | pooled KS p | #seeds p<.05
+Lam1: A_s={j_a}, A_0=2 null members                                                                 1.00    28.00 |  0.03480  0.03448 | 0.034 0.570 0.063 0.124 0.667 | 0.3563 | 1
+                                                                                                  mean z-score = 0.97, var emp/thy = 1.003
+Lam2: A_s={j_a}, A_0=3 null members                                                                 1.50    27.50 |  0.05151  0.05172 | 0.053 0.482 0.417 0.594 0.371 | 0.5044 | 0
+                                                                                                  mean z-score = -0.53, var emp/thy = 0.963
+Lam3: A_s={j_a,j_vis}, A_0=2 null members                                                           1.00    27.50 |  0.03562  0.03509 | 0.574 0.032 0.778 0.017 0.062 | 0.4404 | 2
+                                                                                                  mean z-score = 1.56, var emp/thy = 1.025
+Lam4: A_s={} (empty), A_0=2 null members                                                            1.00    28.50 |  0.03408  0.03390 | 0.511 0.026 0.258 0.610 0.931 | 0.1819 | 1
+                                                                                                  mean z-score = 0.55, var emp/thy = 0.981
+Lam5: A_s={j_a}, A_0=1 null member                                                                  0.50    28.50 |  0.01754  0.01724 | 0.331 0.953 0.103 0.623 0.608 | 0.5104 | 0
+                                                                                                  mean z-score = 1.24, var emp/thy = 1.006
+B(i'): U={j_a, a-nonhub 1}, l = a-nonhub 2 (neutral)                                                0.50    28.00 |  0.01745  0.01754 | 0.725 0.012 0.571 0.974 0.100 | 0.9004 | 1
+                                                                                                  mean z-score = -0.38, var emp/thy = 0.968
+B(i): a-group U0={j_a}, V={a-nonhub 1,2}                                                            1.00    28.00 |  0.03430  0.03448 | 0.787 0.665 0.648 0.857 0.075 | 0.5578 | 0
+                                                                                                  mean z-score = -0.54, var emp/thy = 0.967
+B(i): b-group U0={}, V={j_b}  (masked hub, F2)                                                      0.50    29.00 |  0.01700  0.01695 | 0.808 0.530 0.203 0.397 0.412 | 0.8696 | 0
+                                                                                                  mean z-score = 0.20, var emp/thy = 1.008
+B(i): b-group U0={}, V={j_b, proxy}                                                                 1.00    28.50 |  0.03399  0.03390 | 0.073 0.443 0.975 0.216 0.165 | 0.9280 | 0
+                                                                                                  mean z-score = 0.27, var emp/thy = 1.003
+B(i): visible group U0={j_vis}, V={vis nonhub}                                                      0.50    28.50 |  0.01726  0.01724 | 0.992 0.719 0.383 0.691 0.672 | 0.9643 | 0
+                                                                                                  mean z-score = 0.06, var emp/thy = 1.003
+B(ii): A = S0 minus b = {j_a, j_vis} + null member 31, l = null 32                                  0.50    27.50 |  0.01745  0.01786 | 0.956 0.386 0.041 0.239 0.402 | 0.1709 | 1
+                                                                                                  mean z-score = -1.65, var emp/thy = 0.980
+B(i) null group U0={}, V={2 null members}                                                           1.00    28.50 |  0.03392  0.03390 | 0.050 0.223 0.216 0.840 0.847 | 0.5342 | 0
+                                                                                                  mean z-score = 0.06, var emp/thy = 0.968
+NEG-CONTROL: a-group U={}, V={j_a} (j_a carries signal) -- should NOT be the Beta law               0.50    29.00 |  0.21282  0.01695 | 0.000 0.000 0.000 0.000 0.000 | 0.0000 | 5
+                                                                                                  mean z-score = 838.01, var emp/thy = 15.292
+
+Expected under a correct Beta law: per-seed p-values ~ U(0,1) (about 5% below .05); pooled p-value uniform.
+Pooled KS p < 0.01 among the non-control tests: none
+(NEG-CONTROL row demonstrates the KS test has power: the Beta law must be rejected there.)
+
+DONE

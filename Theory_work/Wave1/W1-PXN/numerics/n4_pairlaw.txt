@@ -1,0 +1,82 @@
+N4 n4_pairlaw.py -- Hotelling density, Lemma 2 bounds (U),(L), Corollary B
+
+=== 1. Hotelling density: normalisation, mpmath check of 2F1, Monte Carlo and Lemma-1 cross-checks ===
+max |int_{-1}^{1} f - 1| over n in {10,20,50,100,200,500}, r in {-.9,-.5,0,.3,.7,.9}: 5.83e-13
+max relative deviation scipy hyp2f1 vs mpmath at 7 points (incl. n=500, z up to .985): 4.43e-16
+Monte Carlo (400000 draws) vs exact Hotelling tails:
+   n      r      t  tail |        exact           MC     MC se       z
+  10   0.50   0.80     U | 8.115377e-02 8.071750e-02  4.32e-04   -1.01
+  10   0.00   0.50     U | 7.055664e-02 7.071500e-02  4.05e-04    0.39
+  10   0.70   0.30     L | 5.097699e-02 5.119250e-02  3.48e-04    0.62
+  20   0.00   0.40     U | 4.027694e-02 4.060500e-02  3.11e-04    1.06
+  20  -0.60  -0.80     L | 5.337905e-02 5.297000e-02  3.55e-04   -1.15
+  20   0.70   0.90     U | 8.291086e-03 8.230000e-03  1.43e-04   -0.43
+  50   0.70   0.55     L | 3.907465e-02 3.930250e-02  3.06e-04    0.74
+  50   0.50   0.65     U | 6.460332e-02 6.462500e-02  3.89e-04    0.06
+ 100   0.70   0.60     L | 3.982244e-02 3.994000e-02  3.09e-04    0.38
+ 100   0.00   0.25     U | 6.061599e-03 6.187500e-03  1.23e-04    1.03
+max |z| over the 10 MC comparisons: 1.15
+Independent exact route (Lemma 1 mixture of noncentral t, quadrature over W~chi2_{n-1}) for P(rhat >= t):
+  n= 10 r=0.5 t=0.80: Hotelling 8.1153774541e-02   Lemma-1 mixture 8.1153774541e-02   rel diff 3.9e-15
+  n= 20 r=0.0 t=0.40: Hotelling 4.0276936054e-02   Lemma-1 mixture 4.0276936054e-02   rel diff 2.8e-15
+  n= 20 r=0.7 t=0.90: Hotelling 8.2910859559e-03   Lemma-1 mixture 8.2910859559e-03   rel diff 4.6e-15
+  n= 50 r=0.5 t=0.65: Hotelling 6.4603315364e-02   Lemma-1 mixture 6.4603315364e-02   rel diff 2.0e-14
+  n= 50 r=0.3 t=0.70: Hotelling 9.4675610147e-05   Lemma-1 mixture 9.4675610147e-05   rel diff 1.5e-14
+
+=== 2. Lemma 2: (U) t>=r: P(rhat>=t) <= a_n (1+|r|)^{3/2} (1-|r|)^{-1} (1-t) Lambda_r(t)^m ;  (L) t<=r: P(rhat<=t) <= a_n (...)(1+t) Lambda_r(t)^m ===
+(U): 1482 (n,r,t) triples;  max ratio exact/bound = 0.443113 at (n,r,t)=(10,-0.0,0.0000);  min ratio = 2.55e-06;  #violations (ratio>1): 0
+   max ratio by n: 10: 0.443, 20: 0.295, 50: 0.181, 100: 0.127, 200: 0.0891, 500: 0.0562
+(L): 1482 (n,r,t) triples;  max ratio exact/bound = 0.443113 at (n,r,t)=(10,-0.0,-0.0000);  min ratio = 2.55e-06;  #violations (ratio>1): 0
+   max ratio by n: 10: 0.443, 20: 0.295, 50: 0.181, 100: 0.127, 200: 0.0891, 500: 0.0562
+(elapsed 9.7s)
+
+Two-sided consequences: |r|<=psib<t: P_r(|rhat|>=t) <= 2 a_n (1+psib)^{3/2}(1-psib)^{-1}(1-t) Lambda_psib(t)^m ;  within: 0<t<rho=r: P(|rhat|<=t) <= a_n (1+rho)^{3/2}(1-rho)^{-1}(1+t) Lambda_rho(t)^m
+cross form: 750 triples, max ratio exact/bound = 0.2857, violations: none
+within form: 144 triples, max ratio exact/bound = 0.1399, violations: none
+
+=== 3. Corollary B: rho=0.7, psib=0.5 ===
+q = 1.212678, t* = 0.609612, Lambda_rho(t*) = 0.97513992, Lambda_psib(t*) = 0.97513992 (equal: True), I* = 0.012587 (W7 claims 0.0126)
+    p      n | log LHS(Cor.B) |  log N_w*P_w  log N_x*P_x | log RHSexact log Bexplicit | LHS/exactRHS  LHS>=exact?  LHS>=B-explicit?
+  100    200 |       10.717 |        1.689        4.104 |      4.189      9.071 | ratio=684  True  True
+  100   1000 |        1.452 |       -9.074       -6.672 |     -6.585     -0.190 | ratio=3094  True  True
+  100   5000 |      -48.092 |      -60.198      -57.798 |    -57.712    -49.733 | ratio=1.506e+04  True  True
+  500    200 |       13.936 |        3.299        7.408 |      7.424     12.101 | ratio=673.3  True  True
+  500   1000 |        4.671 |       -7.465       -3.368 |     -3.351      2.840 | ratio=3048  True  True
+  500   5000 |      -44.873 |      -58.589      -54.494 |    -54.478    -46.703 | ratio=1.484e+04  True  True
+Corollary B violations: none
+Note: LHS>1 for n=200 (vacuous as a probability bound); the check is that LHS dominates the exact union bound.
+
+Extra: Cor. B LHS >= B-explicit and >= exact union bound for other (rho,psib), p=500, g=10, n in {200,1000}:
+  rho=0.50 psib=0.00 n= 200: t*=0.268 I*=0.0373  logLHS=    8.591 logExact=    2.738 logBexpl=    6.578  ok=True
+  rho=0.50 psib=0.00 n=1000: t*=0.268 I*=0.0373  logLHS=  -20.406 logExact=  -27.828 logBexpl=  -22.415  ok=True
+  rho=0.50 psib=0.20 n= 200: t*=0.359 I*=0.0149  logLHS=   12.964 logExact=    6.868 logBexpl=   11.300  ok=True
+  rho=0.50 psib=0.20 n=1000: t*=0.359 I*=0.0149  logLHS=    1.817 logExact=   -5.799 logBexpl=    0.157  ok=True
+  rho=0.50 psib=0.40 n= 200: t*=0.451 I*=0.0020  logLHS=   15.506 logExact=   10.086 logBexpl=   14.195  ok=True
+  rho=0.50 psib=0.40 n=1000: t*=0.451 I*=0.0020  logLHS=   14.732 logExact=    8.004 logBexpl=   13.425  ok=True
+  rho=0.70 psib=0.00 n= 200: t*=0.408 I*=0.0912  logLHS=   -1.476 logExact=   -8.337 logBexpl=   -4.120  ok=True
+  rho=0.70 psib=0.00 n=1000: t*=0.408 I*=0.0912  logLHS=  -73.646 logExact=  -82.101 logBexpl=  -76.286  ok=True
+  rho=0.70 psib=0.20 n= 200: t*=0.489 I*=0.0542  logLHS=    5.776 logExact=   -1.438 logBexpl=    3.446  ok=True
+  rho=0.70 psib=0.20 n=1000: t*=0.489 I*=0.0542  logLHS=  -36.795 logExact=  -45.591 logBexpl=  -39.121  ok=True
+  rho=0.70 psib=0.40 n= 200: t*=0.569 I*=0.0244  logLHS=   11.620 logExact=    4.820 logBexpl=    9.611  ok=True
+  rho=0.70 psib=0.40 n=1000: t*=0.569 I*=0.0244  logLHS=   -7.099 logExact=  -15.450 logBexpl=   -9.103  ok=True
+  rho=0.70 psib=0.60 n= 200: t*=0.653 I*=0.0038  logLHS=   15.661 logExact=    9.567 logBexpl=   14.017  ok=True
+  rho=0.70 psib=0.60 n=1000: t*=0.653 I*=0.0038  logLHS=   13.437 logExact=    5.950 logBexpl=   11.797  ok=True
+  rho=0.85 psib=0.00 n= 200: t*=0.557 I*=0.1855  logLHS=  -19.260 logExact=  -27.301 logBexpl=  -22.603  ok=True
+  rho=0.85 psib=0.00 n=1000: t*=0.557 I*=0.1855  logLHS= -166.848 logExact= -176.493 logBexpl= -170.188  ok=True
+  rho=0.85 psib=0.20 n= 200: t*=0.623 I*=0.1327  logLHS=   -8.920 logExact=  -17.358 logBexpl=  -12.021  ok=True
+  rho=0.85 psib=0.20 n=1000: t*=0.623 I*=0.1327  logLHS= -114.304 logExact= -124.342 logBexpl= -117.401  ok=True
+  rho=0.85 psib=0.40 n= 200: t*=0.686 I*=0.0842  logLHS=    0.585 logExact=   -7.533 logBexpl=   -2.257  ok=True
+  rho=0.85 psib=0.40 n=1000: t*=0.686 I*=0.0842  logLHS=  -66.003 logExact=  -75.715 logBexpl=  -68.841  ok=True
+  rho=0.85 psib=0.60 n= 200: t*=0.751 I*=0.0391  logLHS=    9.431 logExact=    1.742 logBexpl=    6.895  ok=True
+  rho=0.85 psib=0.60 n=1000: t*=0.751 I*=0.0391  logLHS=  -21.052 logExact=  -30.314 logBexpl=  -23.584  ok=True
+  rho=0.95 psib=0.00 n= 200: t*=0.724 I*=0.3713  logLHS=  -54.575 logExact=  -64.344 logBexpl=  -58.506  ok=True
+  rho=0.95 psib=0.00 n=1000: t*=0.724 I*=0.3713  logLHS= -350.789 logExact= -362.167 logBexpl= -354.716  ok=True
+  rho=0.95 psib=0.20 n= 200: t*=0.769 I*=0.3005  logLHS=  -40.695 logExact=  -50.874 logBexpl=  -44.521  ok=True
+  rho=0.95 psib=0.20 n=1000: t*=0.769 I*=0.3005  logLHS= -280.255 logExact= -292.042 logBexpl= -284.077  ok=True
+  rho=0.95 psib=0.40 n= 200: t*=0.810 I*=0.2297  logLHS=  -26.833 logExact=  -36.724 logBexpl=  -30.536  ok=True
+  rho=0.95 psib=0.40 n=1000: t*=0.810 I*=0.2297  logLHS= -209.814 logExact= -221.312 logBexpl= -213.514  ok=True
+  rho=0.95 psib=0.60 n= 200: t*=0.852 I*=0.1540  logLHS=  -11.988 logExact=  -21.541 logBexpl=  -15.532  ok=True
+  rho=0.95 psib=0.60 n=1000: t*=0.852 I*=0.1540  logLHS= -134.380 logExact= -145.536 logBexpl= -137.920  ok=True
+extra violations: none
+
+DONE
