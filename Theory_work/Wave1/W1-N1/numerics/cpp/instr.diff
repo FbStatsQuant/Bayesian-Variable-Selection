@@ -1,0 +1,4 @@
+69a70
+>   std::function<void(const std::vector<Particle>&, int)> measured_hook;  // W1-N1 instrumentation (read-only)
+361a363
+>       if (measured_hook) measured_hook(P, h);  // W1-N1 instrumentation: read-only view of the measured endpoints
