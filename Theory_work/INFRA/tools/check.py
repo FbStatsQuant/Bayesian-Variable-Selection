@@ -78,9 +78,13 @@ def run():
         if span is None:
             add("ERROR", "C2-hash", cid, f"bad line span {r.get('lines')!r}")
             continue
-        if R.statement_hash(f, span) == r.get("sha256"):
+        h = R.claim_hash(r)
+        if h is None:
+            add("ERROR", "C2-hash", cid, f"a premise span is unreadable: {r.get('premises')!r}")
             continue
-        new = R.relocate(f, r.get("sha256", ""), span[1] - span[0] + 1)
+        if h == r.get("sha256"):
+            continue
+        new = None if r.get("premises") else R.relocate(f, r.get("sha256", ""), span[1] - span[0] + 1)
         if new:
             add("WARN", "C2-moved", cid, f"statement unchanged but moved {f}:{span[0]}-{span[1]} -> {new[0]}-{new[1]} "
                 f"(registry.py rehash {cid} --lines {new[0]}-{new[1]} --bump none --reason moved)")
@@ -91,6 +95,8 @@ def run():
     g = R.Graph(rows, aliases)
     for cid, ref in g.dangling:
         add("ERROR", "C3-dangling", cid, f"depends_on {ref!r} resolves to no registry id")
+    for cid, ref in g.self_edges:
+        add("ERROR", "C3-self", cid, f"depends_on lists the claim itself ({ref!r})")
     for cid, ref in g.unregistered:
         add("INFO", "C3-unregistered", cid, f"uses {ref!r}: literature / named premise / archive lemma with no "
             "registry row (aliases.tsv '-')")
@@ -103,8 +109,8 @@ def run():
         s_me = R.status_strength(r.get("status", ""))
         for d in g.deps.get(cid, []):
             dr = by[d]
-            if r["state"] == "ACTIVE" and dr["state"] in BLOCKING and d not in acks:
-                add("ERROR", "C4-lifecycle", cid, f"ACTIVE but uses {d}@{','.join(sorted(g.uses[(cid, d)]))} "
+            if r["state"] in R.VALID and dr["state"] in BLOCKING and d not in acks:
+                add("ERROR", "C4-lifecycle", cid, f"{r['state']} but uses {d}@{','.join(sorted(g.uses[(cid, d)]))} "
                     f"which is {dr['state']} ({dr.get('state_reason', '')[:100]}); propagate.py or ack")
             elif dr["state"] == "SUPERSEDED-VALID":
                 add("INFO", "C4-lifecycle", cid, f"uses {d}, SUPERSEDED-VALID by {dr.get('superseded_by')} "
@@ -113,6 +119,9 @@ def run():
             if isinstance(s_me, int) and isinstance(s_d, int) and s_me == 3 and s_d <= 1 and d not in acks:
                 add("WARN", "C5-strength", cid, f"status {R.status_token(r['status'])!r} rests on {d} "
                     f"({dr.get('status', '')[:90]!r})")
+            elif isinstance(s_me, int) and s_me == 3 and s_d == 2 and dr["ticket"] != r["ticket"] and d not in acks:
+                add("INFO", "C5-strength", cid, f"checked result uses {d} from another ticket whose own status is "
+                    f"author-level ({dr.get('status', '')[:60]!r}); a ticket council does not certify inputs")
     # C7
     loop_path = os.path.join(R.ROOT, "Theory_work/State_of_Project/registry/theory_loop.tsv")
     loop = {x["id"]: x for x in R.read_tsv(loop_path)[1]}
@@ -162,19 +171,22 @@ def run():
         return re.sub(r"\s+", " ", re.sub(r"[*`_|;,]", " ", s or "")).strip().lower()
     for r in rows:
         src, st = r.get("status_source", ""), norm(r.get("status", ""))
-        if not st or r["kind"] == "external":
+        if r["kind"] == "external":
+            continue
+        if not st:
+            add("WARN", "C10-verbatim", r["id"], "empty status (no own status written in the ticket files)")
             continue
         path, _, ln = src.rpartition(":")
         lines = R.read_lines(path) if path else None
         sp = R.parse_span(ln.split(",")[0]) if lines else None
         if lines is None or sp is None:
-            add("WARN", "C10-verbatim", r["id"], f"status_source {src!r} is not a readable path:line")
+            add("ERROR", "C10-verbatim", r["id"], f"status_source {src!r} is not a readable path:line (no provenance)")
             continue
         window = norm(" ".join(lines[max(0, sp[0] - 4): sp[1] + 3]))
         if st in window:
             continue
         if st in norm(" ".join(lines)):
-            add("INFO", "C10-verbatim", r["id"], f"status found in {path} but not near line {ln}")
+            add("WARN", "C10-verbatim", r["id"], f"status found in {path} but not at line {ln} (± 3): fix status_source")
         else:
             add("WARN", "C10-verbatim", r["id"], f"status {r['status'][:80]!r} not found verbatim in {path}")
     # M1 method pinning
@@ -247,14 +259,28 @@ def run():
         sb = r.get("superseded_by", "")
         if sb and R.resolve(sb, ids, aliases, r["ticket"]) is None:
             add("ERROR", "S1-schema", cid, f"superseded_by {sb!r} resolves to no id")
-        if bool(sb) != (r.get("state") == "SUPERSEDED-VALID"):
-            add("ERROR", "S1-schema", cid, "state SUPERSEDED-VALID iff superseded_by is set")
+        if r.get("state") == "SUPERSEDED-VALID" and not sb:
+            add("ERROR", "S1-schema", cid, "SUPERSEDED-VALID without superseded_by")
+        if sb and r.get("state") in ("ACTIVE", "CANDIDATE", "REBASE-NEEDED"):
+            add("ERROR", "S1-schema", cid, f"superseded_by set but state {r['state']}")
+        if r.get("tex"):
+            tl = R.span_lines(r["tex"])
+            if tl is None:
+                add("ERROR", "C11-tex", cid, f"tex span {r['tex']!r} unreadable")
+            elif r.get("tex_sha256") and R.text_hash(tl) != r["tex_sha256"]:
+                add("WARN", "C11-tex", cid, "LaTeX transcription changed since its last review against the statement "
+                    "(re-check, then registry.py set ... tex_sha256 via rehash --tex)")
+            elif not r.get("tex_sha256"):
+                add("INFO", "C11-tex", cid, "LaTeX transcription never reviewed against the Markdown statement")
         if r.get("headline") == "yes":
             derived = R.improvable(r, sharp)
             if r.get("improvable", "") != derived:
                 add("WARN", "S3-improvable", cid, f"stored {r.get('improvable')!r} != derived {derived!r} "
                     "(registry.py refresh)")
             gts = r.get("gates", "")
+            for gname, ev in re.findall(r"(\w+):PASS(?:\(([^)]*)\))?", gts):
+                if not (ev or "").strip():
+                    add("WARN", "S4-gates", cid, f"gate {gname}:PASS without evidence in parentheses")
             if "correct:PASS" not in gts:
                 add("WARN", "S4-gates", cid, "headline has not passed the correctness gate (correct:PASS)")
             miss = [k for k in ("lit", "necessity", "better") if f"{k}:PASS" not in gts]
@@ -275,7 +301,11 @@ def run():
                 add("INFO", "S8-freeze", cid, "freeze criterion MET" if not unsettled else
                     f"freeze criterion not met: {len(unsettled)} hypothesis(es) without necessity evidence or "
                     f"2 failed removals ({','.join(unsettled[:6])})")
-    cap = int(R.config().get("max_assumption_sets", "10") or 10)
+    cfg = R.config()
+    if cfg.get("freeze") == "yes":
+        for msg in freeze_violations(rows, sharp, cfg):
+            add("ERROR", "S8-freeze", "-", f"freeze=yes but {msg}")
+    cap = int(cfg.get("max_assumption_sets", "10") or 10)
     if len(sets) > cap:
         add("WARN", "S6-sets", "-", f"{len(sets)} distinct headline assumption sets > cap {cap}; prefer splitting "
             "assumptions into shared interface properties")
@@ -298,6 +328,22 @@ def run():
     e = sum(o["severity"] == "ERROR" for o in out)
     w = sum(o["severity"] == "WARN" for o in out)
     return out, e, w, len(rows)
+
+
+def freeze_violations(rows, sharp, cfg):
+    """Freeze criterion (LIFECYCLE §5.3): every hypothesis of every valid headline settled (NECESSARY or >= 2
+    distinct failed removal routes), and the latest strategy review and adversarial round are recorded files."""
+    out = []
+    for r in rows:
+        if r.get("headline") == "yes" and r["state"] in R.VALID:
+            for a in R.hypotheses(r):
+                if not R.settled(r["id"], a, sharp):
+                    out.append(f"{r['id']} hypothesis {a} is not settled")
+    for k in ("last_strategy_review", "last_adversarial_round"):
+        v = cfg.get(k, "")
+        if not v or not os.path.exists(os.path.join(R.ROOT, v)):
+            out.append(f"config {k} does not name an existing review file")
+    return out
 
 
 def main():

@@ -40,6 +40,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -47,7 +48,7 @@ import bvsreg as R  # noqa: E402
 
 DECISIONS = os.path.join(R.INFRA, "DECISIONS.md")
 ROUTES = os.path.join(R.INFRA, "FAILED_ROUTES.md")
-INERT = R.DEAD | {"SUPERSEDED-VALID"}
+INERT = R.DEAD  # SUPERSEDED-VALID claims are still TRUE claims: a correctness change upstream must reach them
 LABELS = {"retract": ["retraction", "theory"], "narrow": ["retraction", "theory"],
           "downgrade": ["retraction", "theory"], "patch": ["lemma-gap", "theory"], "deprecate": ["strategy", "theory"],
           "suspect": ["suspect", "theory"], "supersede": ["strategy", "theory", "major-claim"],
@@ -72,6 +73,18 @@ def decision(kind, x, y, axes, reason, actor, extra=""):
 def gh_issue(title, body_file, labels):
     from ghapi import issue  # gh CLI if installed, else the REST API with git's stored credential
     return issue(title, body_file, labels)
+
+
+def revert_edge(d: dict, rp: dict) -> None:
+    """Undo one confirmed re-point exactly: put back the recorded `before` item; remove the `after` item only if
+    it did not exist before the confirmation (an independent use of the target is an obligation of its own)."""
+    items = R.split_list(d["depends_on"])
+    after, before = rp.get("after") or f"{rp['to']}@{rp['use']}", rp.get("before") or f"{rp['from']}@{rp['use']}"
+    if rp.get("preexisting") != "yes":
+        items = [it for it in items if it != after]
+    if before not in items:
+        items.append(before)
+    d["depends_on"] = R.join_list(items)
 
 
 def diff_lines(x, y, asm):
@@ -119,6 +132,7 @@ def main():
     ap.add_argument("--axes", default="")
     ap.add_argument("--key-step-checked", default="")
     ap.add_argument("--parity-with")
+    ap.add_argument("--no-reference", default="", help="promote without a predecessor: the reason")
     ap.add_argument("--from", dest="from_")
     ap.add_argument("--to")
     ap.add_argument("--checked-by", default="")
@@ -161,20 +175,47 @@ def main():
                and rp["state"] == "PROPOSED"]
         if not hit or not a.checked_by:
             sys.exit("no PROPOSED re-point with these ids, or --checked-by missing")
-        print("\n".join(report + [f"- {a.op}: {cid} uses {src} -> {dst}, checked by {a.checked_by}"]))
+        problems = []
+        if a.op == "confirm-repoint":
+            if by[dst]["state"] != "ACTIVE":
+                problems.append(f"destination {dst} is {by[dst]['state']}, not ACTIVE")
+            for rp in hit:
+                if rp.get("from_version") and rp["from_version"] != by[src]["version"] or \
+                        rp.get("to_version") and rp["to_version"] != by[dst]["version"]:
+                    problems.append(f"stale proposal ({rp['use']}): versions changed since it was proposed "
+                                    f"({rp.get('from_version')}->{by[src]['version']}, "
+                                    f"{rp.get('to_version')}->{by[dst]['version']}); re-run supersede --dry-run")
+            uses_now = {R.parse_dep(it)[1] for it in R.split_list(x["depends_on"])
+                        if R.resolve(it, ids, aliases, x["ticket"]) == src}
+            for rp in hit:
+                if rp["use"] not in uses_now:
+                    problems.append(f"{cid} no longer uses {src}@{rp['use']}")
+            if dst in g.dependents(cid) or cid == dst:
+                problems.append(f"{dst} depends on {cid}: re-pointing would create a cycle")
+        print("\n".join(report + [f"- {a.op}: {cid} uses {src} -> {dst}, checked by {a.checked_by}"]
+                              + [f"- BLOCKING: {p_}" for p_ in problems]))
+        if problems:
+            sys.exit(f"{a.op} refused")
         if a.dry_run:
             return
         for rp in hit:
             rp.update(state="CONFIRMED" if a.op == "confirm-repoint" else "REJECTED", checked_by=a.checked_by,
                       date=stamp)
         if a.op == "confirm-repoint":
-            items = []
-            for it in R.split_list(x["depends_on"]):
-                ref, use = R.parse_dep(it)
-                items.append(f"{dst}@{use}" if R.resolve(ref, ids, aliases, x["ticket"]) == src else it)
-            x["depends_on"] = R.join_list(dict.fromkeys(items))
-            if x["state"] == "REBASE-NEEDED":
-                x["state"], x["state_reason"] = "ACTIVE", f"rebased onto {dst} {stamp} (checked by {a.checked_by})"
+            items = R.split_list(x["depends_on"])
+            for rp in hit:
+                before = next(it for it in items if R.resolve(it, ids, aliases, x["ticket"]) == src
+                              and R.parse_dep(it)[1] == rp["use"])
+                after = f"{dst}@{rp['use']}"
+                pre = any(R.resolve(it, ids, aliases, x["ticket"]) == dst and R.parse_dep(it)[1] == rp["use"]
+                          for it in items)
+                items = [it for it in items if it != before] + ([] if pre else [after])
+                rp.update(before=before, after=after, preexisting="yes" if pre else "no")
+            x["depends_on"] = R.join_list(items)
+        open_left = [rp for rp in rps if rp["dependent"] == cid and rp["state"] == "PROPOSED"]
+        if x["state"] == "REBASE-NEEDED" and not open_left:
+            x["state"], x["state_reason"] = "ACTIVE", f"rebase obligations resolved {stamp} (last: {src} -> {dst}, " \
+                                                      f"{a.op}, checked by {a.checked_by})"
         R.save_repoints(rps)
         R.save_claims(rows)
         R.log_event(a.op, cid, src, dst, f"checked by {a.checked_by} {a.reason}", a.actor)
@@ -202,13 +243,26 @@ def main():
         yid = need(a.with_ if a.op == "coexist" else a.by, "--with/--by")
         y = by[yid]
         axes = R.compare(x, y, asm, dict(kv.split("=") for kv in a.axes.split(",") if "=" in kv))
-        print("\n".join(report + [f"- axes (Y vs X): {axes} -> {R.verdict(axes)}"]))
+        problems = []
+        if a.op == "coexist":
+            if x["state"] != "ACTIVE" or y["state"] != "ACTIVE":
+                problems.append(f"both must be ACTIVE ({cid} {x['state']}, {yid} {y['state']})")
+            if R.verdict(axes) in ("dominates", "dominated", "equal"):
+                problems.append(f"comparable ({R.verdict(axes)}): use supersede or decline, not coexist")
+            if R.config().get("freeze") == "yes" and "yes" in (x.get("headline"), y.get("headline")):
+                problems.append("FROZEN: coexist changes the headline set")
+        if yid == cid:
+            problems.append("X and Y are the same claim")
+        print("\n".join(report + [f"- axes (Y vs X): {axes} -> {R.verdict(axes)}"]
+                              + [f"- BLOCKING: {p_}" for p_ in problems]))
+        if problems:
+            sys.exit(f"{a.op} refused")
         if a.dry_run:
             return
         if a.op == "coexist":
             for u, v in ((x, y), (y, x)):
                 u["coexists_with"] = R.join_list(dict.fromkeys(R.split_list(u.get("coexists_with", "")) + [v["id"]]))
-            x["notes"] = (x.get("notes", "") + f" [{stamp}: kept alongside {yid} (COEXIST: incomparable)]").strip()
+            x["notes"] = (x.get("notes", "") + f" [{stamp}: parallel theorem to {yid} (COEXIST: incomparable)]").strip()
             R.save_claims(rows)
         decision(a.op, cid, yid, axes, a.reason, a.actor)
         R.log_event(a.op, cid, "", yid, a.reason, a.actor)
@@ -217,10 +271,14 @@ def main():
         if x["state"] != "CANDIDATE":
             sys.exit(f"{cid} is {x['state']}, not CANDIDATE")
         need_gates = ["correct"]
+        if not a.parity_with and not a.no_reference:
+            sys.exit("promote needs --parity-with <the claim it would replace> (or --no-reference REASON for a "
+                     "genuinely new result)")
         if a.parity_with:
             xp = by[need(a.parity_with, "--parity-with")]
             need_gates += [s.split(":")[0].strip() for s in R.split_list(xp.get("gates", "")) if ":PASS" in s]
-        missing = sorted({k for k in need_gates if f"{k}:PASS" not in x.get("gates", "")})
+        have = {k for k, ev in re.findall(r"(\w+):PASS\(([^)]+)\)", x.get("gates", "")) if ev.strip()}
+        missing = sorted({k for k in need_gates if k not in have})
         print("\n".join(report + [f"- gates required: {sorted(set(need_gates))}; missing: {missing or 'none'}"]))
         if missing:
             sys.exit("assurance parity not reached: Y stays CANDIDATE; keep working on X")
@@ -245,6 +303,10 @@ def main():
                    f"- axes (Y vs X): {axes} -> **{v}**", f"- decision-rule class: **{mode}**"]
         report += ["", "## Statement diff", ""] + [f"- {d}" for d in diff]
         problems = []
+        if yid == cid:
+            problems.append("X and Y are the same claim")
+        if x["state"] != "ACTIVE":
+            problems.append(f"X is {x['state']}: only an ACTIVE claim can be superseded")
         if y["state"] != "ACTIVE":
             problems.append(f"Y is {y['state']}: it must pass the same gates as X first (promote); keep working on X")
         missing = [s.split(":")[0].strip() for s in R.split_list(x.get("gates", "")) if ":PASS" in s
@@ -257,6 +319,8 @@ def main():
             problems.append(f"Y does not dominate X ({v}): use `coexist` (or `decline`)")
         elif v == "undetermined":
             problems.append("some axes unknown: declare them with --axes rate=better,scope=equal,...")
+        elif v == "equal":
+            problems.append("not strictly better on any axis: use `decline` or `remark`")
         if mode == "internal-only":
             problems.append("internal-only and not free: log it with `remark`, no rebuild")
         if mode == "headline-changing" and not a.key_step_checked:
@@ -264,8 +328,8 @@ def main():
                             "independently checked>")
         if R.config().get("freeze") == "yes" and mode != "free":
             problems.append("FROZEN: only free supersessions (Y ⇒ X) allowed")
-        if cid in g.dependents(yid):
-            problems.append(f"{yid} itself depends on {cid}")
+        if yid in g.dependents(cid):
+            problems.append(f"{yid} itself depends on {cid}: superseding would orphan the replacement's own proof")
         paths = {d: p for d, p in g.dependents(cid).items() if by[d]["state"] not in INERT}
         direct = sorted(d for d, p in paths.items() if len(p) == 2)
         report += ["", "## Rebuild cost", ""]
@@ -293,8 +357,8 @@ def main():
         rps = R.load_repoints()
         for d in direct:
             for use in sorted(g.uses[(d, cid)]):
-                rps.append({"dependent": d, "from": cid, "to": yid, "use": use, "state": "PROPOSED", "date": stamp,
-                            "notes": mode})
+                rps.append({"dependent": d, "from": cid, "to": yid, "use": use, "from_version": x["version"],
+                            "to_version": y["version"], "state": "PROPOSED", "date": stamp, "notes": mode})
             if mode != "free":
                 old = by[d]["state"]
                 by[d]["state"] = "REBASE-NEEDED" if old == "ACTIVE" else old
@@ -324,6 +388,10 @@ def main():
         # ------------------------------------------------ correctness rollbacks
         if a.op == "downgrade" and not a.status:
             sys.exit("downgrade needs --status")
+        if a.op == "downgrade":
+            so, sn = R.status_strength(x["status"]), R.status_strength(a.status)
+            if isinstance(so, int) and isinstance(sn, int) and sn > so:
+                sys.exit(f"downgrade refused: new status is stronger ({sn} > {so}); upgrades need a ticket result")
         if a.op == "clear" and x["state"] not in ("SUSPECT", "REBASE-NEEDED", "NARROWED"):
             sys.exit(f"{cid} is {x['state']}; clear lifts SUSPECT / REBASE-NEEDED / NARROWED only")
         covered = set(R.split_list(a.still_covers))
@@ -331,7 +399,7 @@ def main():
                "narrow": lambda uses: not uses <= covered}.get(a.op, lambda uses: True)
         restored, reverted = [], []
         if a.op == "retract":  # reversibility: restore what this claim superseded, revert confirmed re-points
-            restored = [r for r in rows if r.get("superseded_by") == cid and r["state"] == "SUPERSEDED-VALID"]
+            restored = [r for r in rows if r.get("superseded_by") == cid]
             reverted = [rp for rp in R.load_repoints() if rp["to"] == cid and rp["state"] == "CONFIRMED"]
         if a.op == "clear":
             paths = {}
@@ -339,10 +407,7 @@ def main():
             if reverted:  # recompute the graph as it will be after the reverts
                 tmp = {r["id"]: dict(r) for r in rows}
                 for rp in reverted:
-                    d = tmp[rp["dependent"]]
-                    d["depends_on"] = R.join_list(
-                        f"{rp['from']}@{R.parse_dep(it)[1]}" if R.resolve(it, ids, aliases, d["ticket"]) == cid
-                        and R.parse_dep(it)[1] == rp["use"] else it for it in R.split_list(d["depends_on"]))
+                    revert_edge(tmp[rp["dependent"]], rp)
                 g = R.Graph(list(tmp.values()), aliases)
             paths = {d: p for d, p in g.dependents(cid, hop).items() if by[d]["state"] not in INERT}
         direct = sorted(d for d, p in paths.items() if len(p) == 2)
@@ -376,9 +441,15 @@ def main():
                 x["status"] = a.status
         R.log_event(a.op, cid, before, f"{x['state']} v{x['version']}", a.reason, a.actor)
         for r in restored:
-            r["state"], r["superseded_by"] = "ACTIVE", ""
-            r["state_reason"] = f"restored {stamp}: its replacement {cid} was retracted ({a.reason})"
-            R.log_event("restore", r["id"], "SUPERSEDED-VALID", "ACTIVE", f"{cid} retracted", a.actor)
+            old = r["state"]
+            r["superseded_by"] = ""
+            if old == "SUPERSEDED-VALID":  # still valid: back in service
+                r["state"] = "ACTIVE"
+                r["state_reason"] = f"restored {stamp}: its replacement {cid} was retracted ({a.reason})"
+            else:  # invalidated meanwhile: stays as it is, history kept in the reason
+                r["state_reason"] = (r.get("state_reason", "") + f" || replacement {cid} retracted {stamp}; "
+                                     "not restored (own state not valid)")
+            R.log_event("restore", r["id"], old, r["state"], f"{cid} retracted", a.actor)
         if a.op == "retract":
             rps = R.load_repoints()
             for rp in rps:
@@ -390,11 +461,11 @@ def main():
             for rp in rps:
                 if rp["to"] == cid and rp["state"] == "CONFIRMED":
                     d = by[rp["dependent"]]
-                    d["depends_on"] = R.join_list(
-                        f"{rp['from']}@{R.parse_dep(it)[1]}" if R.resolve(it, ids, aliases, d["ticket"]) == cid
-                        and R.parse_dep(it)[1] == rp["use"] else it for it in R.split_list(d["depends_on"]))
+                    revert_edge(d, rp)
                     rp["state"], rp["notes"] = "REVERTED", f"{stamp}: {cid} retracted"
                     R.log_event("revert-repoint", d["id"], cid, rp["from"], f"{cid} retracted", a.actor)
+                    if by[rp["from"]]["state"] not in R.VALID and d["id"] not in paths:  # restored onto a dead input
+                        paths[d["id"]] = [rp["from"], d["id"]]
             R.save_repoints(rps)
         for d, path in paths.items():
             r = by[d]

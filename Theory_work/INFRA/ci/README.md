@@ -1,6 +1,9 @@
 # Continuous audit (CI) for the theory program
 
-`run_ci.py` is a local, read-only audit (it restores every file a re-run script touches). It schedules nothing by
+`run_ci.py` is a local, read-only audit: every ticket script (falsification numerics, citecheck) runs inside a
+disposable DETACHED git worktree of HEAD in a temp directory (stdout to a file, the whole process tree killed on
+timeout, the sandbox reset after each script and removed at the end), so the working checkout is never touched. CI
+therefore audits the COMMITTED state. It schedules nothing by
 itself: **HQ schedules it with T3 scheduled tasks**. Rules behind each step: `../LIFECYCLE.md`.
 
 ## Steps
@@ -38,7 +41,7 @@ committed; HQ copies what it acts on into the relevant ticket or issue.
 Run from a checkout of `main` that is up to date (`git pull`) and has no uncommitted ticket work, or pass
 `--out` to keep outputs elsewhere. The audit never edits tracked files (restores them), but if a ticket thread is
 running numerics in the same checkout at the same time, run CI in a separate worktree
-(`git worktree add ../BVS-ci main`).
+(`git worktree add ../BVS-ci main`); the sandboxing makes this a convenience, not a safety requirement.
 
 ## Maintaining `falsification.tsv`
 
@@ -50,3 +53,6 @@ compare, `;`-separated), `expect` (regex that must appear in stdout), `notes`.
   (120 s cap per script; sets `cheap`).
 - Tickets add their own entries in their PR (one row per script; boundary-violation numerics with
   `kind=boundary` and the `assumption` id).
+- A boundary script must end by printing exactly one line `BOUNDARY-RESULT: HOLDS` (the conclusion still held just
+  outside the assumption: an *improvable* signal) or `BOUNDARY-RESULT: FAILS`; a crash, import error or timeout is
+  an execution FAILURE, never a scientific outcome.

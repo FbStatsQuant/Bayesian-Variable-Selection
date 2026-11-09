@@ -1,0 +1,66 @@
+id	field	new_value	evidence
+C-PACK:I1-UM	premises	Theory_work/Wave1C/C-PACK/lemmas/I1_e4_replacement.md:72-76;Theory_work/Wave1/W1-N3/STATEMENT.md:42-88;Theory_work/Wave1/W1-N3/STATEMENT.md:90-109	setting + W1-N3 instance/S*,N + H1-H4 used by UM statement
+C-PACK:I1-UM	depends_on	W1-N3:Thm-N3-code(a-d)	Theory_work/Wave1C/C-PACK/lemmas/I1_e4_replacement.md:82-83 N3(c)/(a); old ids N3(a)/(c) absent from registry
+C-PACK:I1-UM-FP	premises	Theory_work/Wave1C/C-PACK/lemmas/I1_e4_replacement.md:91-100;Theory_work/Wave1/W1-N3/STATEMENT.md:42-88;Theory_work/Wave1/W1-N3/STATEMENT.md:90-109	objects f*,f^,g^,eta,eps,Delta + N3 setting, H1-H4, H2-FP
+C-PACK:I1-UM-FP	depends_on	W1-N3:Thm-N3-code(e)	Theory_work/Wave1C/C-PACK/lemmas/I1_e4_replacement.md:111-115 proof uses N3(e) only, not UM; fold bound internal (:102-1
+C-PACK:I1-PXNrepair	lines	61-69	Theory_work/Wave1C/C-PACK/lemmas/I1_e4_replacement.md:61-69 Replacement + consequence; :55-60 is defect discussion
+C-PACK:I1-PXNrepair	premises	Theory_work/Wave1/W1-PXN/STATEMENT.md:13-20;Theory_work/Wave1/W1-PXN/STATEMENT.md:24-30;Theory_work/Wave1/W1-PXN/STATEMENT.md:54-54	Theory_work/Wave1C/C-PACK/lemmas/I1_e4_replacement.md:62-69 uses S0°, A_n, pi0 of PXN (A_n def at STATEMENT:54)
+C-PACK:I1-PXNrepair	depends_on	C-PACK:I1-UM@stmt;W1-PXN:Thm-R@stmt;W1-PXN:Thm-PXN(S)@stmt	Theory_work/Wave1C/C-PACK/lemmas/I1_e4_replacement.md:68-69 P(A_n^c)->0 (Thm R), P(pi~0(S°)<=1/2)->0 (P3′ = (S))
+C-PACK:I1-e4prime	lines	141-155	Theory_work/Wave1C/C-PACK/lemmas/I1_e4_replacement.md:156-160 explanatory remark, not part of e4′ text
+C-PACK:I1-e4prime	premises	Theory_work/Wave1C/C-PACK/lemmas/I1_e4_replacement.md:9-14	Theory_work/Wave1C/C-PACK/lemmas/I1_e4_replacement.md:10-14 e4 as recorded (replaced text)
+C-PACK:I2	premises	Theory_work/Wave1C/C-PACK/lemmas/I2_LHiid_unconditional.md:51-59;Theory_work/Wave1/W1-PXN/STATEMENT.md:13-20;Theory_work/Wave1/W1-GEN/lemmas/L6_instances.md:70-74	convention; LH-iid family/SIZE; GEN C_n definition
+C-PACK:I2	depends_on	W1-PXN:Thm-R@stmt;W1-PXN:CR@stmt	Theory_work/Wave1C/C-PACK/lemmas/I2_LHiid_unconditional.md:68-79 proof uses (R-c) and [CONC′]; GEN theorem not used
+C-PACK:SEL-check	depends_on	W1-GEN:Thm-GEN(C5d-S1346);C-PACK:I2	P_SEL_L6d.md:5-6 uses I2 §4 replacement; Lemma-SEL id absent, it is L6(d)=C5d
+C-PACK:SL0	premises	Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md:11-18	objects/conventions (delta, PIP, HPM, MPM, xi_q)
+C-PACK:SL1	premises	Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md:11-18	objects/conventions (delta, PIP, HPM, MPM, xi_q)
+C-PACK:SL1'	premises	Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md:11-18	objects/conventions (delta, PIP, HPM, MPM, xi_q)
+C-PACK:SL2	premises	Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md:11-18	objects/conventions (delta, PIP, HPM, MPM, xi_q)
+C-PACK:SL1	lines	39-48	Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md:49-51 proof; :53-63 instances are conditional remarks
+C-PACK:SL1	depends_on	C-PACK:SL0@stmt	Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md:49-51 proof uses SL0(i),(ii),(iv),(v); instances only supply delta
+C-PACK:SL1	notes	split-needed: instances I-a..I-d (:53-63) cite T03♯/PXN/GEN as rate sources	Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md:53-63
+C-PACK:SL1'	lines	65-66	Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md:67-68 is proof
+C-PACK:SL1'	depends_on	EXT:T03♯	Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md:65-68 proof does not use SL1
+C-PACK:SL2	depends_on	C-PACK:SL0@stmt;EXT:M4(b);EXT:M4(c)	Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md:100-103 proof uses SL0(i), M4(b),(c); SL1 only a convention; (gamm
+C-MIS:LemR	premises	Theory_work/Wave1C/C-MIS/STATEMENT.md:46-58	true model, GR, definitions of beta^C, eps′
+C-MIS:Thm-MIS(i)	lines	65-69	Theory_work/Wave1C/C-MIS/STATEMENT.md:70-72 is Corollary N (separate claim C-MIS:Cor-N)
+C-MIS:Thm-MIS(i)	premises	Theory_work/Wave1C/C-MIS/STATEMENT.md:46-50;Theory_work/Wave1C/C-MIS/STATEMENT.md:54-62	setting, GR, definitions, H-MIS
+C-MIS:Thm-MIS(i)	depends_on	C-MIS:LemR@stmt;EXT:T03♯	Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md:47-50 proof uses Lemma R + T03♯ only; T01-T03 not used
+C-MIS:Cor-N	premises	Theory_work/Wave1C/C-MIS/STATEMENT.md:46-50;Theory_work/Wave1C/C-MIS/STATEMENT.md:54-62	hypotheses of (i)
+C-MIS:LemDR	depends_on		Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md:82-86 self-contained; :88 GEN L5.3 is comparison only
+C-MIS:Thm-MIS(ii)	premises	Theory_work/Wave1C/C-MIS/STATEMENT.md:46-50;Theory_work/Wave1C/C-MIS/STATEMENT.md:54-62	setting, GR, H-MIS
+C-MIS:Thm-MIS(ii)	depends_on	C-MIS:LemR@stmt;C-MIS:LemDR@stmt;EXT:T03♯	Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md:108-120 proof uses Lemma R, DR, T03♯; not (i)
+C-MIS:Prop-P	lines	14-38	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md:38 Intercept formula is part of statement
+C-MIS:Prop-P	premises	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md:7-12	setting: rows iid N(m,Sigma), M:=S0\C, marginal Sigma
+C-MIS:GD(a)	premises	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md:7-12	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md:57-63 uses Gaussian-row setting
+C-MIS:GD(a)	depends_on	C-MIS:Prop-P@proof:Prop P(a) GR decomposition;C-MIS:Thm-MIS(ii)@stmt	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md:61,71
+C-MIS:GD(b)	lines	73-81	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md:83-86 cited input DS is not statement; :88-106 proof
+C-MIS:GD(b)	premises	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md:7-12	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md:73-81 Gaussian-row setting
+C-MIS:GD(b)	depends_on	C-MIS:Prop-P@stmt;C-MIS:Thm-MIS(ii)@stmt;EXT:Vershynin Cor 5.35 / Davidson–Szarek;EXT:[P3] lem:chi(a);EXT:T03R E2(i)	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md:91,97,102,106
+C-MIS:E1	depends_on	C-MIS:GD(a)@stmt;C-MIS:Thm-MIS(ii)@stmt;C-MIS:Prop-P@stmt	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md:124-125 uses Prop P Theta computation
+C-MIS:Cor-H	premises	Theory_work/Wave1C/C-MIS/STATEMENT.md:39-45	D0 setting, valid inputs, Omega_C
+C-MIS:Cor-H	depends_on	C-MIS:Thm-MIS(i)@stmt;C-MIS:Thm-MIS(ii)@stmt;C-MIS:Thm-F@stmt;EXT:T38-(0);EXT:M5(0)	Theory_work/Wave1C/C-MIS/lemmas/L3_hpm.md:19,28-29 limit clause uses MIS(i)/(ii)/F
+C-MIS:Cor-D	lines	114-119	Theory_work/Wave1C/C-MIS/STATEMENT.md:120 Optional pointer to Cor D′
+C-MIS:Cor-D	premises	Theory_work/Wave1C/C-MIS/STATEMENT.md:46-50;Theory_work/Wave1C/C-MIS/STATEMENT.md:54-58	setting + GR
+C-MIS:Cor-D	depends_on	C-MIS:LemR@stmt;W1-GEN:Thm-GEN;W1-GEN:Thm-GEN(C4)	Theory_work/Wave1C/C-MIS/lemmas/L3_hpm.md:43-48 proof uses Lemma R and GEN conclusions/(C4); Cor-H, MIS(i) unused
+C-MIS:Cor-D'	depends_on	C-MIS:Cor-D@stmt;W1-GEN:Thm-GEN(C5c)@proof:L6(c) verification of (H0),(H2) for W family	Theory_work/Wave1C/C-MIS/lemmas/L3_hpm.md:61-70
+C-MIS:Thm-F	lines	124-137	Theory_work/Wave1C/C-MIS/STATEMENT.md:124-125 coordinates needed by EP/hypotheses; :122-123 heading
+C-MIS:Thm-F	premises	Theory_work/Wave1C/C-MIS/STATEMENT.md:39-50	Theory_work/Wave1C/C-MIS/STATEMENT.md:124-137 uses D0 setting, N, r_n, U
+C-MIS:Cor-F(a)	premises	Theory_work/Wave1C/C-MIS/STATEMENT.md:124-133	EP, Delta_n, hypotheses of Thm F
+C-MIS:Cor-F(b)	premises	Theory_work/Wave1C/C-MIS/STATEMENT.md:124-133	EP, Delta_n, hypotheses of Thm F
+C-MIS:Lemma-T	premises	Theory_work/Wave1C/C-MIS/STATEMENT.md:124-130	EP, Delta_n, G, R^C
+C-MIS:Lemma-T	depends_on	EXT:[P3] lem:det;EXT:[P3] lem:prior(b);EXT:[P3] lem:chi;EXT:T03R (C6)(a);C-MIS:Thm-F@proof:L4.4(a) bound ||y_c||^2<=4n(M+sigma^2);C-MIS:Thm-F@proof:L4.2 event (G5)	Theory_work/Wave1C/C-MIS/lemmas/L4_theoremF.md:164-191 proof (L4.4(a), (G5), (C6)(a), lem:det/prior/chi)
+C-MIS:LemZ	premises	Theory_work/Wave1C/C-MIS/lemmas/L6_null.md:6-11	setting, EP/GR instances, hypotheses
+C-MIS:LemZ	depends_on	C-MIS:LemR@stmt;EXT:[P3] lem:red;EXT:[P3] lem:det;EXT:[P3] lem:prior(b);EXT:[P3] lem:smoother(b);EXT:[P3] lem:chi(a)	Theory_work/Wave1C/C-MIS/lemmas/L6_null.md:4,15-29
+C-MIS:LemO1	lines	9-10	Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md:11-18 is consequence/discussion
+C-MIS:LemO1	premises	Theory_work/Wave1C/C-MIS/STATEMENT.md:124-129	EP representation X^T r = 0
+C-MIS:LemO1	depends_on		Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md:10 trivial proof; [P1] lem:num is background (:22-23)
+C-MIS:LemO2	kind	lemma	Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md:33 source label "Lemma O2" (proved bound)
+C-MIS:LemO2	premises	Theory_work/Wave1C/C-MIS/STATEMENT.md:124-129	EP, Delta_n
+C-MIS:LemO2	depends_on	EXT:[P1] integral representation	Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md:37-44 proof; T02(i♯)/den′ only compared
+C-MIS:E2	depends_on	EXT:T03♯	Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md:84-86 conditional G-model, T03♯ applied directly
+C-MIS:E3	depends_on	C-MIS:Cor-F(a)@stmt	Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md:94-95 uses Cor F(a)
+W1C-FINAL:Lemma-CAP	premises	Theory_work/Wave1C/FINAL/sections/s7_impl.tex:36-43	setting (L1)-(L4), greedy path, notation
+W1C-FINAL:Lemma-CAP	depends_on	C-ENG:Impl-Merge@stmt;EXT:[OP] operational closure	Theory_work/Wave1C/FINAL/sections/s7_impl.tex:58-60 proof uses (L1)-(L4),[OP]; Cor-H/GEN/M5(0) not cited; C-ENG:L1-3 abs
+HQ_AUDIT-W1C:A2	lines	5-35	Theory_work/Wave1C/HQ_AUDIT/A2_propF_GROW.md:5-35 claim+exact extended statement; :37+ proof
+HQ_AUDIT-W1C:A2	premises	Theory_work/Wave1C/HQ_AUDIT/A1_propF_redteam.md:9-17;Theory_work/Wave1C/HQ_AUDIT/A1_propF_redteam.md:62-75	Theory_work/Wave1C/HQ_AUDIT/A2_propF_GROW.md:9 premises of A1:62-75; W_G/M_G A1:9-17
+HQ_AUDIT-W1C:A2	depends_on	C-DLV:Prop-F@stmt;C-GROW:Thm-GROW@stmt;HQ_AUDIT-W1C:A1@stmt;C-DLV:L1-R@stmt;C-DLV:Thm-D@proof:exit walk L4:24-40;C-DLV:L2-S1;C-DLV:L2-S2;C-DLV:L2-S3;C-DLV:Cor-Dp@proof:pointwise scored-set argument;C-GROW:C5a;C-GROW:C5c;C-GROW:L6.2	Theory_work/Wave1C/HQ_AUDIT/A2_propF_GROW.md:25,39-62

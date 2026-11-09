@@ -11,8 +11,7 @@ W2-APP:POST	A:IID-GAUSS-ROWS	NONE		no necessity evidence recorded for this pair
 W2-APP:POST	A:P-POLY	NONE		no necessity evidence recorded for this pair
 W2-APP:POST	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
 W2-APP:POST	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
-W2-APP:POST	A:BETAMIN	WEAKENABLE	Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-35	(b) without beta-min the inclusion clause for J_n(c) holds
-SOP:TH05.0	A:OP	NONE		no necessity evidence recorded for this pair
+W2-APP:POST	A:COEF-BOUNDED	NONE		R01: the inclusion clause is a WEAKER conclusion, not a weakening of beta-min for posterior concentration
 W1-N1:Thm-N1	A:OP	NONE		no necessity evidence recorded for this pair
 W1-N1:Thm-N1	A:N1-KERNEL	WEAKENABLE	Theory_work/Wave1/W1-N1/STATEMENT.md:80	N1 uses SI, a sufficient premise weaker than the card's IND-T; independence between islands not used
 W1-PXN:Thm-PXN	A:INST-LH-IID	NONE		no necessity evidence recorded for this pair
@@ -136,7 +135,7 @@ W2-LOC2:Thm-Poly	A:PTV	NONE		no necessity evidence recorded for this pair
 W2-LOC2:Thm-Poly	A:LSF	NONE		no necessity evidence recorded for this pair
 W2-LOC2:Thm-Poly	A:IID-GAUSS-ROWS	NONE		no necessity evidence recorded for this pair
 W2-LOC2:Thm-Poly	A:NA-FRAME	NONE		no necessity evidence recorded for this pair
-W2-LOC2:Thm-Poly	A:RELEVANCE-SIZE	NONE		no necessity evidence recorded for this pair
+W2-LOC2:Thm-Poly	A:RELEVANCE-POLY	NONE		no necessity evidence recorded for this pair
 W2-LOC2:Thm-Poly	A:BETAMIN	NONE		no necessity evidence recorded for this pair
 W2-LOC2:Thm-Poly	A:P-POLY	NONE		no necessity evidence recorded for this pair
 W2-LOC2:Thm-Poly	A:FIXED-S0	NONE		no necessity evidence recorded for this pair

@@ -55,3 +55,19 @@ T37R Lemma 2(b)	-	archive lemma without a SoP row
 W1-EXP:Lemma4.2	-	archive (W1-EXP) lemma without a SoP row
 Vershynin Cor 5.35 / Davidson–Szarek	-	literature
 TH162	SOP:TH11	W7 Theorem A (PART-ThmA) has no own SoP row; it is carried inside card TH11 (S-BLOCKS)
+[P3] lem:chi(a)	SOP:TH09	T03 proof archive (P3)
+[P3] lem:smoother(b)	SOP:TH09	T03 proof archive (P3)
+T03R E2(i)	SOP:TH128	Theorem 1 (W1-T03R) proof
+T03R (C6)(a)	SOP:TH128	Theorem 1 (W1-T03R) proof
+[P1] integral representation	-	archive lemma without a SoP row
+OP-closure	-	named operational premise
+[OP] operational closure	-	named operational premise
+CONC	-	archive concentration lemma (input of TH161) without its own SoP row
+W1-EXP:Lemma4.1(a)	-	archive (W1-EXP) lemma without a SoP row
+API-PXNGAP:P2	SOP:TH161	API-PXNGAP proof component
+API-PXNGAP:P1(a)	SOP:TH161	API-PXNGAP proof component
+Lemma Λ	SOP:TH161	API-PXNGAP proof lemma
+Lemma U-(D_S)	SOP:TH161	API-PXNGAP proof lemma
+Lemma Tr-J	SOP:TH161	API-PXNGAP proof lemma
+Lemma B(i),(iii)	SOP:TH161	API-PXNGAP proof lemma (B(ii) repaired in W1-PXN:B-ii)
+Lemma RO	SOP:TH04	LemmaRO is carried in card TH04 (M4) status, no own SoP row

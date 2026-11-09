@@ -27,11 +27,16 @@ Two risks are managed separately:
 **Claim** (row of `claims.tsv`): one theorem / lemma / proposition / corollary / counterexample / obstruction /
 audit verdict / implementation claim, or an **external anchor** `SOP:<row>` (State-of-Project inputs such as T03♯ =
 `SOP:TH09`, M5(0) = `SOP:TH05.0`, T12 = `SOP:TH110`). Key fields:
-- `file` + `lines` + `sha256`: the statement text; `check.py` fails if it changes without a `rehash`.
+- `file` + `lines` + `premises` + `sha256`: the statement text plus the spans it relies on (setting, hypotheses,
+  event/threshold definitions written elsewhere); all are hashed together, so a silent change to a hypothesis is
+  caught. `check.py` fails if the hash changes without a `rehash`. A LaTeX transcription (`tex`) is hashed
+  separately (`tex_sha256`) when someone has compared it with the statement (`registry.py rehash ID --tex`).
 - `version` (semver): **major** = the claim changed (narrowed, strengthened, retracted), **minor** = proof or
   status changed, **patch** = editorial.
-- `status`: the ticket's status words **verbatim** (PROVED-CHECKED, PROVED (by this seat, unchecked), PARTIAL, …).
-  Never upgraded by tools; changed only by an explicit `downgrade` or a new ticket result.
+- `status`: the ticket's status words **verbatim**, copied from ONE place (`status_source`, checked by C10).
+  Never upgraded by tools: `registry.py set` cannot touch it; `registry.py correct-status` fixes a transcription
+  error only if the new text occurs verbatim at the given source line; `propagate.py downgrade` refuses a stronger
+  status; an upgrade needs a new ticket result (PR).
 - `state` (lifecycle, added by INFRA): `ACTIVE`, `CANDIDATE` (new result not yet at assurance parity),
   `SUSPECT` (an input is in doubt), `REBASE-NEEDED` (still true, but built on a superseded input and scheduled to be
   rebuilt), `NARROWED` (statement narrowed in place, dependents being checked), `RETRACTED`, `DEPRECATED`,
@@ -87,12 +92,15 @@ Always run the operation with `--dry-run` first and attach its impact report to 
 
 | level | trigger | statement | command | who |
 |---|---|---|---|---|
-| **PATCH** | proof gap, statement stands | unchanged | `propagate.py patch ID --reason R` (only `@proof:` dependents SUSPECT) | HQ |
+| **PATCH** | a proof gap was found AND repaired (repair lemma-checked); the statement stands | unchanged | `propagate.py patch ID --reason R` (only `@proof:` dependents SUSPECT) | HQ |
 | **DOWNGRADE** | evidence weaker than recorded (review withdrawn, gate failed) | unchanged | `propagate.py downgrade ID --status "<new verbatim>" --reason R` | HQ (Felipe for headline) |
-| **NARROW** | statement too strong; a narrower one holds | edited in place | edit the statement → `propagate.py narrow ID --still-covers "stmt:(a);proof:E_n" --reason R` → `registry.py rehash ID --bump major` | Felipe (headline) / HQ |
+| **NARROW** | statement too strong; a narrower one holds | edited in place | edit the statement → `propagate.py narrow ID --still-covers "stmt:(a);proof:E_n" --reason R` (owns the major bump) → `registry.py rehash ID --bump none --reason "narrowed text"` | Felipe (headline) / HQ |
 | **RETRACT** | statement false | kept for history | `propagate.py retract ID --reason R` | Felipe (headline) / HQ |
 | **DEPRECATE** | wrong target / dead route | kept, archived | `propagate.py deprecate ID --reason R` + archive branch + tag | Felipe (headline) / HQ |
 | SUSPECT / CLEAR | possible gap / repair done | — | `propagate.py suspect ID` / `propagate.py clear ID` | HQ |
+
+An OPEN proof gap (not yet repaired) is not a PATCH: mark the claim `suspect` (statement users become SUSPECT
+too) or `downgrade` it, and PATCH only once the repair is checked.
 
 Each SUSPECT dependent gets a repair issue (one per ticket, `--gh` creates them): re-check the step that uses the
 upstream claim; PATCH and `clear` if it survives, else narrow/retract and propagate further.
@@ -102,8 +110,10 @@ upstream claim; PATCH and `clear` if it survives, else narrow/retract and propag
    `git tag -a claim/<id-with-:-as-_>/v<version> -m "<reason>" <commit>` (e.g. `claim/W2-FAC-A_Thm-FAC-L/v1.0.0`).
 2. Work on `theory/<ticket>-<op>` (e.g. `theory/W2-FAC-A-narrow`), commit the statement edit + registry change +
    `issues/…/00_impact.md`, open a PR with the template, label `retraction` (+ `major-claim` for headlines).
-3. To undo a *merged* wrong change: `git revert -m 1 <merge-commit>` on a branch + PR (the revert restores the
-   registry rows too); then `check.py`. Do not hand-edit `claims.tsv` state fields — use `propagate.py`.
+3. To undo a *merged* wrong change: first price it on the CURRENT graph (`propagate.py retract|narrow … --dry-run`
+   on the claims the merge introduced or changed — later work may depend on them), then `git revert -m 1
+   <merge-commit>` on a branch, then apply the propagation the dry run showed for the dependents added after the
+   merge, and `check.py`, all in one PR. Do not hand-edit `claims.tsv` state fields — use `propagate.py`.
 4. DEPRECATE: `git branch archive/<ticket> <last commit of the route>` and `git tag -a deprecated/<ticket> …`, push
    both; add a `DEPRECATED` banner at the top of the ticket's REPORT.md via the PR; the route goes to
    FAILED_ROUTES.md (written by `propagate.py deprecate`).
@@ -142,7 +152,7 @@ pass is the PR approval (§9).
 - **literature dominance**: a published result already proves more under less.
 - **prover divergence**: independent provers needed different/extra hypotheses for the same step.
 - **unharvested conclusions**: rates or uniformity proved inside the proof but not stated.
-Before heavy proving, each ticket writes a one-page **assumption entry map** (`templates/ASSUMPTION_ENTRY_MAP.md`):
+Before heavy proving, each ticket writes a one-page **assumption map** (`ASSUMPTION_MAP.md`, Wave 3 protocol item 3) (`templates/ASSUMPTION_MAP.md`):
 for every hypothesis, where it enters, how (bound/mechanism), and which signal applies.
 
 ## 5. Strength changes: candidates, supersession, coexistence
@@ -165,20 +175,46 @@ axis the paper uses and better on one; **incomparable** otherwise.
 | **free** | interface-level implication Y ⇒ X recorded (`implies`) and verified | SUPERSEDE at the next quiet point. Dependents of X keep pointing to X (still true); re-points to Y are **proposed** in `repoints.tsv` and applied only after a cheap check that the used fact survives (`propagate.py confirm-repoint D --from X --to Y --checked-by …`). |
 | **headline-changing** | X is a headline, Y does not imply X | SUPERSEDE once Y's key new step is independently checked (`--key-step-checked <evidence>`); Felipe approves. X → SUPERSEDED-VALID; direct dependents → REBASE-NEEDED (still true; one issue each with the exact hypothesis/conclusion diff). |
 | **internal-only, not free** | X is not a headline and Y does not imply X | log as a remark (`propagate.py remark X --by Y`); no rebuild. |
-| **incomparable** | neither dominates | COEXIST (`propagate.py coexist X --with Y`): X kept as corollary / special case. Tie-break for which one the paper leads with: **design-agnosticism > range of p > rate > constants**. |
+| **incomparable** | neither dominates | COEXIST (`propagate.py coexist X --with Y`): X and Y are kept as **parallel theorems** (X is a corollary / special case of Y only if that restricted implication is proved and recorded in `implies`). Tie-break for which one the paper leads with: **design-agnosticism > range of p > rate > constants**. |
 | declined | Y not worth the price | `propagate.py decline X --by Y --reason R` |
 
-**Reversibility.** If Y is later retracted, every claim it superseded is restored automatically
-(SUPERSEDED-VALID → ACTIVE) and confirmed re-points to Y are reverted (`propagate.py retract`).
+**Dispatch order.** (1) Is Y ACTIVE and at assurance parity, and is X ACTIVE? If not, nothing happens (Y stays
+CANDIDATE). (2) Is Y ⇒ X recorded and verified? → free. (3) Otherwise compare axes: strictly better on some axis
+and no worse on any → headline-changing (X headline) or internal-only (X not headline); equal → decline / remark;
+incomparable → coexist; worse → decline. `propagate.py` enforces (1)–(3), including strict improvement.
+
+**Reversibility.** A SUPERSEDED-VALID claim is still a true claim: correctness changes upstream reach it like any
+other claim (it can become SUSPECT while keeping `superseded_by`). If Y is later retracted, every claim it
+superseded that is still SUPERSEDED-VALID is restored automatically (→ ACTIVE); one invalidated meanwhile is not.
+Confirmed re-points to Y are reverted exactly (the recorded `before` edge is put back; an edge to Y that existed
+independently before the re-point is kept, so that dependent is still invalidated by Y's retraction); a dependent
+restored onto an input that is no longer valid becomes SUSPECT. Re-point proposals record the versions of X and Y;
+a confirmation against changed versions is refused, and REBASE-NEEDED is lifted only when every open proposal for
+that dependent is resolved.
 
 **Freeze.** When every headline hypothesis is settled (NECESSARY or ≥ 2 documented failed removal routes) and the
-latest strategy review + adversarial round produced no headline-changing candidate, Felipe sets `freeze=yes`.
+latest strategy review + adversarial round produced no headline-changing candidate, Felipe sets the freeze with
+`registry.py freeze --set --reason …`, which refuses unless the criterion holds (failed routes count by distinct
+evidence; `config.tsv` keys `last_strategy_review` and `last_adversarial_round` must name existing review files).
+`check.py` raises an ERROR if `freeze=yes` while the criterion fails. Failed routes are procedural stopping
+evidence, not mathematical necessity.
 After freeze only correctness rollbacks and free supersessions are allowed (`propagate.py` enforces it).
 `check.py` reports the freeze criterion per headline (S8).
 
 ### 5.4 Decision log
 Every supersede / coexist / decline / remark decision and every failed sharpening attempt goes to `DECISIONS.md`
 (`propagate.py` appends automatically; add the human rationale in the PR).
+
+## 5.5 What the tools enforce vs what people attest
+Machine-enforced: statement + premise hashes; verbatim status at its source; no status upgrade through tools;
+use-level propagation (including bridge lemmas: consuming a property P is an edge to P's bridge lemma); lifecycle
+invariants (no valid claim on an invalid input without an ack); CANDIDATE → ACTIVE only against a reference claim and
+with evidence-bearing `k:PASS(evidence)` gates; supersede / coexist validity, strict dominance and freeze; re-point
+confirmation only against the versions it was proposed for; freeze criterion. Attested by HQ / Felipe in the PR
+(with the review files linked): that the reviews named in `gates` examined the current statement version; reviewer
+independence; that an `implies` edge is mathematically right; that a narrowing still covers the listed uses; the
+binding-map mechanisms. The binding map and sharpness rows seeded on 2026-11-09 are DRAFTS until a headline's
+strength gate confirms them.
 
 ## 6. Pricing a change
 `propagate.py <op> … --dry-run` prints the rebuild cost in review units: for each direct dependent that must be
@@ -194,7 +230,8 @@ or the ticket's tests), then either re-pins (`registry.py set ID method_commit=<
 `suspect` / `downgrade`.
 
 ## 8. Continuous review
-`ci/run_ci.py` (see `ci/README.md`): registry check, paper freshness, cheap falsification re-runs and
+`ci/run_ci.py` (see `ci/README.md`; scripts run only inside a disposable git worktree of HEAD, never in a working
+checkout): registry check, paper freshness, cheap falsification re-runs and
 boundary-violation numerics, citation re-checks, and one random PROVED-CHECKED claim per run for a fresh adversarial
 re-audit. The **optimizer** step is event-triggered only (wave boundary, newly landed technique, new strategy-review
 proposal): it picks one binding claim of an unsettled headline hypothesis and writes an improvement-ticket brief

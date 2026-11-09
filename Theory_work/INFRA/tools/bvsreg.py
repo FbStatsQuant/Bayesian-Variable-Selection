@@ -55,7 +55,8 @@ COLUMNS = [
     "short",         # plain-language summary incl. scope
     "file",          # repo-relative path of the authoritative statement text
     "lines",         # "a-b", 1-based inclusive
-    "sha256",        # of the normalised statement text (see text_hash)
+    "premises",      # extra spans "path:a-b" (setting, hypotheses, event definitions) hashed WITH the statement
+    "sha256",        # of the normalised statement text + premise spans (see claim_hash)
     "version",       # semver: major = claim changes, minor = proof/status changes, patch = editorial
     "status",        # VERBATIM status words from the ticket (tools change it only on an explicit downgrade)
     "state",         # lifecycle, see STATES
@@ -83,14 +84,15 @@ COLUMNS = [
     "improvable",    # derived (registry.py refresh): "yes(A:..)" / "no" / "" (not a headline)
     "gates",         # e.g. "correct:PASS(R07/R08); lit:PENDING; necessity:PARTIAL; better:PENDING"
     "tex",           # LaTeX statement block for the paper, "path:a-b"
+    "tex_sha256",    # hash of the tex span when its transcription was last reviewed against the statement
     "notes",
 ]
 STATES = ["ACTIVE", "CANDIDATE", "SUSPECT", "REBASE-NEEDED", "NARROWED", "RETRACTED", "DEPRECATED",
           "SUPERSEDED-VALID"]
 VALID = {"ACTIVE", "SUPERSEDED-VALID"}           # true statements one may depend on
 DEAD = {"RETRACTED", "DEPRECATED"}
-KINDS = ["theorem", "lemma", "proposition", "corollary", "counterexample", "obstruction", "audit",
-         "implementation", "external"]
+KINDS = ["theorem", "lemma", "proposition", "corollary", "counterexample", "obstruction", "frontier", "audit",
+         "implementation", "external"]  # frontier = an open boundary / numerical observation, NOT a proved obstruction
 TICKET_COLUMNS = ["ticket", "wave", "folder", "result", "result_source", "headline", "sop_row", "branch",
                   "kill_budget", "notes"]
 CONCLUSION_LEVELS = ["identity", "target", "posterior", "reported-model", "delivery"]  # + "negative" (unordered)
@@ -98,7 +100,8 @@ NECESSITY = ["NECESSARY", "NECESSARY-FOR-ROUTE", "FAILED-REMOVAL", "ARTEFACT", "
 ASSUMPTION_COLUMNS = ["id", "kind", "shared", "name", "statement", "source", "implies", "bridge", "version", "notes"]
 SHARPNESS_COLUMNS = ["claim", "assumption", "verdict", "evidence", "notes"]
 BINDING_COLUMNS = ["headline", "assumption", "binding_claim", "mechanism", "signals", "notes"]
-REPOINT_COLUMNS = ["dependent", "from", "to", "use", "state", "checked_by", "date", "notes"]
+REPOINT_COLUMNS = ["dependent", "from", "to", "use", "from_version", "to_version", "state", "before", "after",
+                   "preexisting", "checked_by", "date", "notes"]
 SIGNALS = ["boundary-numerics", "artefact-threshold", "single-use-union-bound", "family-named",
            "literature-dominance", "prover-divergence", "unharvested-conclusion"]
 SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
@@ -230,6 +233,31 @@ def statement_hash(relpath: str, span: tuple[int, int]) -> str | None:
     return text_hash(lines[span[0] - 1: span[1]])
 
 
+def span_lines(spec: str):
+    """'path:a-b' -> list of lines, or None."""
+    path, _, sp = (spec or "").rpartition(":")
+    span = parse_span(sp)
+    lines = read_lines(path) if path else None
+    if lines is None or span is None or span[1] > len(lines):
+        return None
+    return lines[span[0] - 1: span[1]]
+
+
+def claim_hash(row: dict, span=None) -> str | None:
+    """sha256 over the statement span plus every premise span (in order). None if any span is unreadable."""
+    span = span or parse_span(row.get("lines", ""))
+    lines = read_lines(row.get("file", ""))
+    if lines is None or span is None or span[1] > len(lines):
+        return None
+    parts = [lines[span[0] - 1: span[1]]]
+    for spec in split_list(row.get("premises", "")):
+        pl = span_lines(spec)
+        if pl is None:
+            return None
+        parts.append(["--premise " + spec.rpartition(":")[0] + "--"] + pl)
+    return text_hash([l for part in parts for l in part])
+
+
 def relocate(relpath: str, sha: str, length: int) -> tuple[int, int] | None:
     """The unique window of `length` lines whose hash is `sha` (statement moved, text unchanged)."""
     lines = read_lines(relpath)
@@ -260,7 +288,8 @@ _RULES = [
     (re.compile(r"^(PROVED|VERIFIED|HOLDS)[^;,.]*?(UNCHECKED|BY THIS SEAT|AUTHOR-ONLY)"), 2),
     (re.compile(r"^PROVED[- ]?(CHECKED|LOCKED)"), 3),
     (re.compile(r"^(VERIFIED|HOLDS|EXTENDS|CONFIRMED|ACCEPT|DONE|OK|CORRECT|TRUE-AS-WRITTEN|FAITHFUL)"), 3),
-    (re.compile(r"^(PARTIAL|PROOF SKETCH|SKETCH|CANDIDATE|PLAUSIBLE|CONDITIONAL|IN PROGRESS|DRAFT)"), 1),
+    (re.compile(r"^(PARTIAL|PROOF SKETCH|SKETCH|CANDIDATE|PLAUSIBLE|CONDITIONAL|IN PROGRESS|DRAFT|NOT PROVED)"), 1),
+    (re.compile(r"^PROVED[- ]?CONDITIONAL"), 1),
     (re.compile(r"^PROVED"), 2),
     (re.compile(r"^(OPEN(?! ITEMS)|STUCK|CONJECTURE|GAP|ERROR|FAILED|UNPROVED|NOT PROVED|RETRACTED)"), 0),
 ]
@@ -318,6 +347,8 @@ class Graph:
         ids = {r["id"] for r in rows}
         self.deps, self.rdeps, self.uses, self.dangling = defaultdict(list), defaultdict(list), defaultdict(set), []
         self.unregistered = []  # references aliased to "-": literature, named premises, archive lemmas
+        self.self_edges = []    # a claim listing itself (an error; recorded, not silently dropped)
+        asm = load_assumptions()
         for r in rows:
             for item in split_list(r.get("depends_on", "")):
                 ref, use = parse_dep(item)
@@ -330,11 +361,21 @@ class Graph:
                     self.dangling.append((r["id"], item))
                     continue
                 if t == r["id"]:
+                    self.self_edges.append((r["id"], item))
                     continue
-                if t not in self.deps[r["id"]]:
-                    self.deps[r["id"]].append(t)
-                    self.rdeps[t].append(r["id"])
-                self.uses[(r["id"], t)].add(use)
+                self._add(r["id"], t, use)
+            # interface rule: consuming a property P is a proof use of P's bridge lemma(s)
+            for p in split_list(r.get("consumes", "")):
+                for b in split_list(asm.get(p, {}).get("bridge", "")):
+                    t = resolve(b, ids, aliases) if b != "MISSING" else None
+                    if t and t != r["id"]:
+                        self._add(r["id"], t, f"proof:{p}")
+
+    def _add(self, u, t, use):
+        if t not in self.deps[u]:
+            self.deps[u].append(t)
+            self.rdeps[t].append(u)
+        self.uses[(u, t)].add(use)
 
     def dependents(self, cid: str, first_hop=lambda uses: True) -> dict[str, list[str]]:
         """Transitive dependents -> shortest path. `first_hop(uses)` filters the direct edges by what they use
@@ -405,9 +446,11 @@ def asm_closure(ids, asm: dict[str, dict]) -> set[str]:
 
 
 def necessity(claim: str, a: str, sharp: list[dict]) -> tuple[str, int]:
-    """Aggregate verdict for (claim, assumption): best verdict and the number of FAILED-REMOVAL routes."""
+    """Aggregate verdict for (claim, assumption): best verdict and the number of DISTINCT failed removal routes
+    (distinct by evidence text; duplicate rows do not count twice)."""
     rows = [s for s in sharp if s["claim"] == claim and s["assumption"] == a]
-    fails = sum(s["verdict"] == "FAILED-REMOVAL" for s in rows)
+    fails = len({s.get("evidence", "").strip().lower() for s in rows
+                 if s["verdict"] == "FAILED-REMOVAL" and s.get("evidence", "").strip()})
     for v in NECESSITY:
         if any(s["verdict"] == v for s in rows):
             return v, fails

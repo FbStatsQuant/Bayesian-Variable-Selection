@@ -1,0 +1,66 @@
+id	field	new_value	evidence
+W2-FAC-A:Thm-FAC-L	lines	102-152	Theory_work/Wave2/W2-FAC-A/STATEMENT.md:102 Part I header line is the label line
+W2-FAC-A:Thm-FAC-L	premises	Theory_work/Wave2/W2-FAC-A/STATEMENT.md:43-59;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:63-71;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:86-99	setting, class F/alpha0 definition, hypotheses (H0)(AG)(P)(TV)(TV-pop)
+W2-FAC-A:Thm-FAC-L	depends_on	W2-FAC-A:L1;W2-FAC-A:L2;W2-FAC-A:L3.1;W2-FAC-A:L3.2;W2-FAC-A:L4;W2-FAC-A:L5;W2-FAC-A:Prop-F-FAC;W2-FAC-A:Lemma-kappa;W2-FAC-A:Lemma-TVF;EXT:T03♯;EXT:M5(0);EXT:T38-(0);EXT:Proposition F;C-GROW:L1.2;W1-GEN:Thm-GEN;W1-PXN:CR	W1-PXN:Lemma-CR is not a registry id; the lemma is W1-PXN:CR (L5_random_instances.md:31)
+W2-FAC-A:Prop-SHARP	premises	Theory_work/Wave2/W2-FAC-A/STATEMENT.md:44-44;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:46-48;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:57-57	K, model G, NA(L) definitions used by the statement
+W2-FAC-A:Prop-SHARP	depends_on	W2-FAC-A:L1@proof:U(a) eq (1.1);W2-FAC-A:L3.1@proof:(E1),(E2),E_Y	Theory_work/Wave2/W2-FAC-A/lemmas/L6_sharp.md:16-20,34-38 uses L1 (1.1) and L3 (E1),(E2),E_Y; no T03
+W2-FAC-A:L1	kind	corollary	Theory_work/Wave2/W2-FAC-A/lemmas/L1_uniform_add.md:149 "Corollary U" (span 149-154 is Cor U)
+W2-FAC-A:L1	premises	Theory_work/Wave2/W2-FAC-A/STATEMENT.md:46-48;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:63-69;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:90-91	G, class F with kappa, (AG) used by Corollary U
+W2-FAC-A:L1	notes	split-needed: Lemma U(a)-(d) (L1_uniform_add.md:33-46,74-83,95-109,125-133) are separate claims used at proof level by L6, L5, L3	Theory_work/Wave2/W2-FAC-A/lemmas/L1_uniform_add.md:156
+W2-FAC-A:L2	premises	Theory_work/Wave2/W2-FAC-A/lemmas/L2_sandwich.md:8-11;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:46-48;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:58-59	hypotheses block of L2 and Sand_n definition
+W2-FAC-A:L2	depends_on	W1-GEN:L1;C-GROW:L0.1@proof:L0.2(c)	Theory_work/Wave2/W2-FAC-A/lemmas/L2_sandwich.md:5-6,17-23: C-GROW L3 not cited verbatim; uses GEN-L1 and C-GROW L0.2(c)
+W2-FAC-A:L3.1	premises	Theory_work/Wave2/W2-FAC-A/lemmas/L3_NA_TL.md:7-9;Theory_work/Wave2/W2-FAC-A/lemmas/L3_NA_TL.md:13-14;Theory_work/Wave2/W2-FAC-A/lemmas/L3_NA_TL.md:26-27;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:57-57	hypotheses, K=p/notation, event E_Y, NA(L) definition
+W2-FAC-A:L3.2	premises	Theory_work/Wave2/W2-FAC-A/lemmas/L3_NA_TL.md:7-9;Theory_work/Wave2/W2-FAC-A/lemmas/L3_NA_TL.md:13-14;Theory_work/Wave2/W2-FAC-A/lemmas/L3_NA_TL.md:26-27;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:58-58	hypotheses incl BM-inf, notation, E_Y, TL(L) definition
+W2-FAC-A:L4	premises	Theory_work/Wave2/W2-FAC-A/STATEMENT.md:46-48;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:52-59;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:86-95	model G, method premises, lattice defs, H0/AG/P/TV
+W2-FAC-A:L4	depends_on	W2-FAC-A:L2;W2-FAC-A:L3.1;W2-FAC-A:L3.2;C-GROW:L1.2;W1-GEN:L5@proof:[OP] operational closure;EXT:M5(0);EXT:T03♯	Theory_work/Wave2/W2-FAC-A/lemmas/L4_assembly.md:9-12 [OP] is GEN L5, not Theorem GEN as a whole
+W2-FAC-A:L5	premises	Theory_work/Wave2/W2-FAC-A/STATEMENT.md:49-51;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:96-99	random-design setting and (TV-pop)
+W2-FAC-A:L5	depends_on	W2-FAC-A:L2;W2-FAC-A:L3.1;W2-FAC-A:L3.2;W2-FAC-A:L4;W1-PXN:CR;EXT:T03♯;EXT:M5(0);W1-GEN:Thm-GEN(C4)@proof:every-sequence argument	Theory_work/Wave2/W2-FAC-A/lemmas/L5_random_instances.md:31,55-59 (W1-PXN:Lemma-CR is not an id; T03, M5(0), GEN (C4) ci
+W2-FAC-A:Lemma-kappa	premises	Theory_work/Wave2/W2-FAC-A/STATEMENT.md:65-67	kappa and c_min definitions
+W2-FAC-A:Lemma-TVF	depends_on	W2-FAC-A:L1@proof:U(a) eq (1.1)	Theory_work/Wave2/W2-FAC-A/lemmas/L5_random_instances.md:130 variance formula "is L1 (1.1)"
+W2-FAC-A:Prop-F-FAC	premises	Theory_work/Wave2/W2-FAC-A/lemmas/L7_delivery.md:7-20	method/premises/allocation and added classes
+W2-FAC-A:Prop-F-FAC	depends_on	W2-FAC-A:L2;W2-FAC-A:L3.1;W2-FAC-A:L3.2;W2-FAC-A:L4;W2-FAC-A:L5;C-GROW:L1.2;EXT:T03♯;EXT:Proposition F;EXT:A1;EXT:A2;EXT:A4;C-DLV:Cor-R;C-DLV:Thm-D;C-DLV:Cor-Dp	Theory_work/Wave2/W2-FAC-A/lemmas/L7_delivery.md:35-48 Step 2 uses Cor R/Thm D; Step 3 uses L2,L3,L1.2,T03, D-prime
+W2-FAC-A:Lemma-GAP	depends_on	W2-FAC-A:Lemma-CS-1D@proof:move identities	Theory_work/Wave2/W2-FAC-A/lemmas/L8_frontier.md:21-26,39-41 deletion-closest rule from move identities
+W2-FAC-A:Conj-PATH-CS	kind	frontier	Theory_work/Wave2/W2-FAC-A/lemmas/L8_frontier.md:3-4 "Conjecture PATH-CS: OPEN (evidence only)"
+W2-FAC-B:Thm-FAC-CS	lines	124-126	Theory_work/Wave2/W2-FAC-B/STATEMENT.md:124 "(C3) Theorem FAC-CS"; C1,C2,C4 are separate claims
+W2-FAC-B:Thm-FAC-CS	premises	Theory_work/Wave2/W2-FAC-B/STATEMENT.md:45-48;Theory_work/Wave2/W2-FAC-B/STATEMENT.md:53-69;Theory_work/Wave2/W2-FAC-B/STATEMENT.md:73-84	model G, method and implementation premises, (CS)(P)(theta)(FS)
+W2-FAC-B:Thm-FAC-CS	depends_on	W2-FAC-B:L5;W2-FAC-B:L2;W2-FAC-B:L4;W2-FAC-B:L3;EXT:T03♯;EXT:T38-(0)	Theory_work/Wave2/W2-FAC-B/lemmas/L5_assembly.md:47-48 proof; delivery (C4) removed with the span
+W2-FAC-B:Thm-FAC-CS	notes	C4 delivery (STATEMENT.md:127-134; L5_assembly.md:50-53) has no registry row: add one (needs EXT:Proposition F, EXT:Lemma CAP)	Theory_work/Wave2/W2-FAC-B/STATEMENT.md:127
+W2-FAC-B:Thm-FAC-CS(C1-M)	premises	Theory_work/Wave2/W2-FAC-B/STATEMENT.md:73-84	(FS) and (CS),(P),(theta) being weakened
+W2-FAC-B:L1	premises	Theory_work/Wave2/W2-FAC-B/STATEMENT.md:73-74;Theory_work/Wave2/W2-FAC-B/lemmas/L1_cs_reduction.md:9-9;Theory_work/Wave2/W2-FAC-B/lemmas/L1_cs_reduction.md:42-50	CS hypothesis, notation a, alpha,beta,gamma_u, quad_U used by L1.3
+W2-FAC-B:L1	notes	split-needed: L1.1 (rep), L1.2 (closed form of F), L1.4 (centre), L1.5 (size terms) are used separately by L2, L4, PK:L0	Theory_work/Wave2/W2-FAC-B/lemmas/L1_cs_reduction.md:19,40,87,105
+W2-FAC-B:L2	premises	Theory_work/Wave2/W2-FAC-B/lemmas/L2_start.md:11-12;Theory_work/Wave2/W2-FAC-B/STATEMENT.md:73-84	setting incl N0 and K=p, hypotheses (CS)(P)(theta)(FS)
+W2-FAC-B:L2	depends_on	W2-FAC-B:L1;W2-FAC-B:L1@proof:L1.1,L1.2,L1.5(b)	Theory_work/Wave2/W2-FAC-B/lemmas/L2_start.md:16-23 uses L1.2-L1.3, L1.1; L2.2 uses L1.5(b)
+W2-FAC-B:Cor-M	premises	Theory_work/Wave2/W2-FAC-B/lemmas/L2_start.md:11-12;Theory_work/Wave2/W2-FAC-B/lemmas/L2_start.md:89-90	setting and (FS-prime) definition
+W2-FAC-B:Cor-M	depends_on	W2-FAC-B:L2;W2-FAC-B:L2@proof:L2.3(i),L2.4(a)	Theory_work/Wave2/W2-FAC-B/lemmas/L2_start.md:96-100 proof reuses L2.3(i) and L2.4(a)
+W2-FAC-B:L3	premises	Theory_work/Wave2/W2-FAC-B/lemmas/L3_event.md:7-30;Theory_work/Wave2/W2-FAC-B/STATEMENT.md:73-78	setting, notation, definition of E1..E7
+W2-FAC-B:L4	premises	Theory_work/Wave2/W2-FAC-B/lemmas/L4_path.md:10-11;Theory_work/Wave2/W2-FAC-B/lemmas/L3_event.md:20-30;Theory_work/Wave2/W2-FAC-B/STATEMENT.md:73-78	setting, event E_n, hypotheses CS,P,theta (FS not used)
+W2-FAC-B:L4	depends_on	W2-FAC-B:L1;W2-FAC-B:L1@proof:L1.1,L1.4,L1.5;W2-FAC-B:L3	Theory_work/Wave2/W2-FAC-B/lemmas/L4_path.md:10,27-45; L2 only mentioned in remark 1 (line 213), not used
+W2-FAC-B:L5	premises	Theory_work/Wave2/W2-FAC-B/STATEMENT.md:53-69;Theory_work/Wave2/W2-FAC-B/STATEMENT.md:73-84;Theory_work/Wave2/W2-FAC-B/lemmas/L5_assembly.md:30-30	method/implementation premises, hypotheses, K_n definition
+W2-FAC-B:L5	depends_on	W2-FAC-B:L2;W2-FAC-B:L3;W2-FAC-B:L4;W2-FAC-B:L1@proof:L1.0;EXT:T03♯;EXT:T38-(0);W1-GEN:L5@proof:[OP] operational closure;EXT:Lemma CAP	Theory_work/Wave2/W2-FAC-B/lemmas/L5_assembly.md:6-16,31-36,47-48; L5.4 delivery (Prop F) is outside span 44-45
+W2-FAC-PK:P1	premises	Theory_work/Wave2/W2-FAC-PK/STATEMENT.md:37-43;Theory_work/Wave2/W2-FAC-PK/STATEMENT.md:47-54	setting/caps/blocks and hypotheses (CS)(theta)(PK-prime)(PK)(PB)
+W2-FAC-PK:P1	depends_on	W2-FAC-PK:L0;W2-FAC-B:L2@proof:L2.1,L2.3(i);W2-FAC-B:L1@proof:L1.2	Theory_work/Wave2/W2-FAC-PK/lemmas/L1_start.md:50-54 cites FACB L2.1, L2.3(i), not the statement of L2
+W2-FAC-PK:Thm-NEG	kind	theorem	Theory_work/Wave2/W2-FAC-PK/lemmas/L2_neg.md:58 "Theorem NEG" (source label)
+W2-FAC-PK:Thm-NEG	premises	Theory_work/Wave2/W2-FAC-PK/STATEMENT.md:37-43;Theory_work/Wave2/W2-FAC-PK/STATEMENT.md:47-54	setting/caps and hypotheses (PK),(PB),(theta)
+W2-FAC-PK:Thm-NEG	depends_on	W2-FAC-PK:P1;W2-FAC-PK:P1@proof:L1.1 event E^S_n;W2-FAC-PK:L2.3;EXT:Lemma CAP	Theory_work/Wave2/W2-FAC-PK/lemmas/L2_neg.md:60-69 proof uses L2.3, L1(a), L1.1 and prefix property; L0, L2.2 not cited
+W2-FAC-PK:Thm-PATH	premises	Theory_work/Wave2/W2-FAC-PK/STATEMENT.md:37-43;Theory_work/Wave2/W2-FAC-PK/STATEMENT.md:47-50	setting, (CS),(theta),(PK-prime)
+W2-FAC-PK:Thm-PATH	depends_on	W2-FAC-PK:L3.3;W2-FAC-PK:L3.4;W2-FAC-PK:P1;EXT:Lemma CAP	Theory_work/Wave2/W2-FAC-PK/lemmas/L3_static.md:118 proof: L1(a), L3, L3.4, prefix property; L0 not cited
+W2-FAC-PK:Thm-FAC-PK	premises	Theory_work/Wave2/W2-FAC-PK/STATEMENT.md:37-43;Theory_work/Wave2/W2-FAC-PK/STATEMENT.md:47-50	setting, (CS),(theta),(PK-prime)
+W2-FAC-PK:Thm-FAC-PK	depends_on	W2-FAC-PK:Thm-PATH;W2-FAC-B:L5@proof:L5.1 (H0) and L5.4 delivery;EXT:T03♯;EXT:T38-(0);W1-GEN:L5@proof:[OP] operational closure;EXT:Proposition F;EXT:Lemma CAP	Theory_work/Wave2/W2-FAC-PK/lemmas/L4_assembly.md:29-39: (ii) uses PATH,[OP],M5-0; (i),(iii) FACB L5.1/L5.4
+W2-FAC-PK:P6	kind	frontier	Theory_work/Wave2/W2-FAC-PK/STATEMENT.md:96-100 "No claim is made", numerical/pending
+W2-FAC-PK:L0	lines	11-41	Theory_work/Wave2/W2-FAC-PK/lemmas/L0_imports.md:11-13 notation and L0.1-L0.6 at 15-41; 43-47 "Not imported" excluded
+W2-FAC-PK:L0	premises	Theory_work/Wave2/W2-FAC-PK/STATEMENT.md:47-48	(CS) and (theta) under which the imports hold
+W2-FAC-PK:L0	depends_on	W2-FAC-B:L1;W2-FAC-B:L4@proof:L4.0(a),(b)	Theory_work/Wave2/W2-FAC-PK/lemmas/L0_imports.md:29,38 cite FACB L4.0(a),(b)
+W2-FAC-PK:L2.2	premises	Theory_work/Wave2/W2-FAC-PK/lemmas/L2_neg.md:10-12;Theory_work/Wave2/W2-FAC-PK/lemmas/L2_neg.md:15-17	setting and events (N1),(N2)
+W2-FAC-PK:L2.2	depends_on	W2-FAC-PK:L0;W2-FAC-PK:P1@proof:L1.1 event E^S_n	Theory_work/Wave2/W2-FAC-PK/lemmas/L2_neg.md:26-45 uses L0.3-L0.6 and E^S_n from L1.1
+W2-FAC-PK:L2.3	premises	Theory_work/Wave2/W2-FAC-PK/lemmas/L2_neg.md:10-12;Theory_work/Wave2/W2-FAC-PK/lemmas/L2_neg.md:15-17	setting and events (N1),(N2)
+W2-FAC-PK:L3.3	lines	38-43	Theory_work/Wave2/W2-FAC-PK/lemmas/L3_static.md:38-43 statement incl (e); 44-46 is the proof of (e)
+W2-FAC-PK:L3.3	premises	Theory_work/Wave2/W2-FAC-PK/lemmas/L3_static.md:9-14;Theory_work/Wave2/W2-FAC-PK/lemmas/L3_static.md:16-20	setting/constants and events E1-E4
+W2-FAC-PK:L3.3	depends_on	W2-FAC-PK:L0;W2-FAC-PK:L2.2;W2-FAC-B:L4@proof:L4.0(d)	Theory_work/Wave2/W2-FAC-PK/lemmas/L3_static.md:25-26,43-46 (M2) cites FACB L4.0(d); (M3),(e) cite L2.2
+W2-FAC-PK:L3.4	premises	Theory_work/Wave2/W2-FAC-PK/lemmas/L3_static.md:9-14;Theory_work/Wave2/W2-FAC-PK/lemmas/L3_static.md:16-20;Theory_work/Wave2/W2-FAC-PK/lemmas/L1_start.md:14-17	setting, events E1-E4, E^S_n for L1(a)
+W2-FAC-PK:L3.4	depends_on	W2-FAC-PK:L3.3;W2-FAC-PK:P1;W2-FAC-PK:L2.2	Theory_work/Wave2/W2-FAC-PK/lemmas/L3_static.md:94-101 uses L3(a-e), L1(a), L2.2(i)
+W2-FAC-PKA:L1	premises	Theory_work/Wave2/W2-FAC-PKA/STATEMENT.md:9-9;Theory_work/Wave2/W2-FAC-PKA/STATEMENT.md:13-13;Theory_work/Wave2/W2-FAC-PKA/STATEMENT.md:15-15	model G, partition convention, D0 score
+W2-FAC-PKA:L2	premises	Theory_work/Wave2/W2-FAC-PKA/SINGLETON_TARGET.md:3-3;Theory_work/Wave2/W2-FAC-PKA/STATEMENT.md:9-9;Theory_work/Wave2/W2-FAC-PKA/STATEMENT.md:15-15	singleton setting, G, D0
+W2-FAC-PKA:L3	premises	Theory_work/Wave2/W2-FAC-PKA/SINGLETON_TARGET.md:3-3	"Same fixed singleton setting as L2"
+W2-FAC-PKA:L4	depends_on		lemmas/L4_table_discovery.md:14,18-20: no T03 used; pi(S0)->1 is a hypothesis of the conclusion (empty list)
+W2-FAC-PKA:L4	premises	Theory_work/Wave2/W2-FAC-PKA/STATEMENT.md:15-17	D0 score and method/GUARD-W premises
+W2-FAC-PKA:T2-prod	kind	frontier	Theory_work/Wave2/W2-FAC-PKA/STATEMENT.md:27 open target (REPORT.md:15 production profile OPEN)

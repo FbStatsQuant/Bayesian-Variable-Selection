@@ -20,7 +20,7 @@ superseded (when a better theorem is found), with consequences propagated mechan
 | `tools/assemble.py` | generates the paper's theorem blocks and provenance / dependency / strength tables from the registry |
 | `tools/build_registry.py` | one-off seeding from fragments (refuses to overwrite a live registry) |
 | `ci/run_ci.py`, `ci/README.md`, `ci/falsification.tsv` | continuous audit and how HQ schedules it |
-| `templates/ASSUMPTION_ENTRY_MAP.md` | one-page map each ticket writes before heavy proving |
+| `templates/ASSUMPTION_MAP.md` | one-page map each ticket writes before heavy proving |
 | `../../.github/` | PR template and issue templates |
 
 Start with `python Theory_work/INFRA/tools/check.py --quiet` and `python Theory_work/INFRA/tools/registry.py stats`.

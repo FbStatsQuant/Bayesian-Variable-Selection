@@ -1,0 +1,77 @@
+id	field	new_value	evidence
+C-GROW:L0.1	premises	Theory_work/Wave1C/C-GROW/lemmas/L0_toolkit.md:5-17	L0_toolkit.md:10-17 notation + 'What changes' (J_n,t_n)
+C-GROW:L1.1	premises	Theory_work/Wave1C/C-GROW/lemmas/L1_descent.md:9-17	L1_descent.md:9-17 Setting, NA/TL defs
+C-GROW:L1.1	depends_on		L1_descent.md:3-4 T37R is only the 'Model'; proof (27-38) uses NA/TL only
+C-GROW:L1.2	premises	Theory_work/Wave1C/C-GROW/lemmas/L1_descent.md:9-17	L1_descent.md:9-17 Setting, NA/TL defs
+C-GROW:L1.2	depends_on	C-GROW:L1.1;W1-GEN:L4@proof:L4.1(iii)	L1_descent.md:45-53 uses L1.1(a),(b); :53 cites GEN L4.1(iii)
+C-GROW:L2.1	premises	Theory_work/Wave1C/C-GROW/lemmas/L2_NA_TL.md:5-17	L2_NA_TL.md:5-17 hypotheses + family/event E_n
+C-GROW:L2.1	depends_on	C-GROW:L0.1;C-GROW:L0.1@proof:L0.2(c);W1-GEN:L1@proof:L1.4(a)-(c)	L2_NA_TL.md:30-32 cites GEN L1.4(a),(c),(b), L0.2(c)
+C-GROW:L2.2	premises	Theory_work/Wave1C/C-GROW/lemmas/L2_NA_TL.md:5-21	L2_NA_TL.md:5-21 hyps, E_n, facts F1-F2 (Z_{T,l})
+C-GROW:L2.2	depends_on	C-GROW:L0.1;C-GROW:L0.1@proof:L0.2(b);C-GROW:L0.1@proof:L0.2(c)	L2_NA_TL.md:41-45 uses L0.2(c) and L0.2(b)
+C-GROW:L2.3	premises	Theory_work/Wave1C/C-GROW/lemmas/L2_NA_TL.md:5-21;Theory_work/Wave1C/C-GROW/STATEMENT.md:96-98	L2_NA_TL.md:50-52 (G4-chi),(G4-dir) defined at STATEMENT.md:96-98
+C-GROW:L3	premises	Theory_work/Wave1C/C-GROW/lemmas/L3_sandwich.md:6-11	L3_sandwich.md:6-11 hypotheses and objects
+C-GROW:L3	depends_on	C-GROW:L0.1;C-GROW:L0.1@proof:L0.2(a)-(c);W1-GEN:L1@proof:L1.4(b)	L3_sandwich.md:17-19,43,82,86 use L0.2(a)-(c), GEN L1.4(b)
+C-GROW:Thm-GROW	premises	Theory_work/Wave1C/C-GROW/STATEMENT.md:51-80;Theory_work/Wave1C/C-GROW/STATEMENT.md:84-98;Theory_work/Wave1C/C-GROW/STATEMENT.md:102-103	STATEMENT.md:51-80 setting/MR1, 84-98 hypotheses, 102-103 NA/TL
+C-GROW:Thm-GROW	depends_on	C-GROW:L1.2;C-GROW:L2.1;C-GROW:L2.2;C-GROW:L2.3;C-GROW:L3;W1-GEN:L5@proof:operational closure OP;EXT:M5(0);EXT:T03♯;C-ENG:Impl-GROW-MR1	L4_assembly.md:14-18 [OP]=GEN L5; :43 'L2.2-L2.3'; W1-GEN:OP is not a registry id
+C-GROW:C5a	premises	Theory_work/Wave1C/C-GROW/STATEMENT.md:51-80;Theory_work/Wave1C/C-GROW/STATEMENT.md:84-98	STATEMENT.md:51-80 setting, 84-98 hypotheses (H0),(G1)-(G4)
+C-GROW:C5b	premises	Theory_work/Wave1C/C-GROW/STATEMENT.md:51-80;Theory_work/Wave1C/C-GROW/STATEMENT.md:84-98	STATEMENT.md:51-80 setting, 84-98 hypotheses (H0),(G1)-(G4)
+C-GROW:C5c	premises	Theory_work/Wave1C/C-GROW/STATEMENT.md:51-80;Theory_work/Wave1C/C-GROW/STATEMENT.md:84-98	STATEMENT.md:51-80 setting, 84-98 hypotheses (H0),(G1)-(G4)
+C-GROW:C5c	depends_on	C-GROW:L6.2;C-GROW:L6.5;C-GROW:L6.6;C-GROW:L6.7;C-GROW:L1.2;W1-GEN:L5@proof:operational closure OP;EXT:T03♯;EXT:M5(0);C-ENG:Impl-GROW-MR1	L6_random_AR1.md:64-72,471-487 assembly uses OP, S-T, M5-0, A_X of L6.2, MR1
+C-GROW:C6	kind	frontier	STATEMENT.md:150-156 'Frontier (with evidence, not proved)'
+C-GROW:L6.2	premises	Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:12-33	L6_random_AR1.md:12-33 setting, (6.0), Q, lattice
+C-GROW:L6.2	depends_on	C-GROW:L0.1;W1-GEN:L1@proof:L1.2,L1.4(b);C-GROW:C5a@proof:population facts P3,P4	L6_random_AR1.md:129 'by P3/P4'; :157-160 A_score = L0/GEN-L1 events
+C-GROW:L6.3	premises	Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:12-33;Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:171-182	L6_random_AR1.md:171-182 H_l, I_l, h_{U,l} defined
+C-GROW:L6.3	depends_on	C-GROW:L6.2;C-GROW:C5a@proof:P4	L6_random_AR1.md:197-205 uses P4 and Lemma L6.2
+C-GROW:L6.4	premises	Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:12-33;Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:171-182	L6_random_AR1.md:171-182 H_l, I_l, h_{U,l} defined
+C-GROW:L6.4	depends_on	C-GROW:L6.2;C-GROW:L6.3;C-GROW:C5a@proof:P4	L6_random_AR1.md:253 P4; :296 'By L6.3'
+C-GROW:L6.5	premises	Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:12-33;Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:35-39;Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:171-182	L6_random_AR1.md:35-39 event (6.1); 171-182 h_{U,l}
+C-GROW:L6.5	depends_on	C-GROW:L6.4;C-GROW:L6.2;C-GROW:L6.3;C-GROW:L0.1;C-GROW:L0.1@proof:L0.2(c);W1-GEN:L1@proof:L1.4(b)	L6_random_AR1.md:323 'by L6.3'; :325 L0.2(c); :372 GEN L1.4(b)
+C-GROW:L6.6	premises	Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:12-33;Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:35-39;Theory_work/Wave1C/C-GROW/lemmas/L1_descent.md:15-15	L1_descent.md:15 defines NA(L); L6:39 (6.1)
+C-GROW:L6.6	depends_on	C-GROW:L6.4;C-GROW:L6.2;C-GROW:L2.2;C-GROW:L0.1	L6_random_AR1.md:447-450 'L2.2 on A_score proves NA'
+C-GROW:L6.7	premises	Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:12-33;Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:35-39;Theory_work/Wave1C/C-GROW/lemmas/L1_descent.md:16-17	L1_descent.md:16 defines TL(L); L6:39 (6.1)
+C-GROW:L6.7	depends_on	C-GROW:L2.1;C-GROW:L6.2;C-GROW:L0.1	L6_random_AR1.md:456-463 uses L2.1, L6.2 envelopes, L0 bounds
+C-GROW:Cor-L6.8	premises	Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:12-27	L6_random_AR1.md:20-27 separation (6.0)
+C-DLV:Target-T	premises	Theory_work/Wave1C/C-DLV/STATEMENT.md:11-46	STATEMENT.md:11-46 objects, premises
+C-DLV:Target-T	notes	Goal/target, explicitly NOT claimed (STATEMENT.md:48); kind left 'theorem'	STATEMENT.md:48 '(T) ... kept as the goal, NOT claimed'
+C-DLV:P1-Inventory	premises	Theory_work/Wave1C/C-DLV/STATEMENT.md:11-20	STATEMENT.md:11-20 objects (U_n)
+C-DLV:L1-R	premises	Theory_work/Wave1C/C-DLV/lemmas/L1_resources.md:7-12;Theory_work/Wave1C/C-DLV/lemmas/L1_resources.md:110-116;Theory_work/Wave1C/C-DLV/STATEMENT.md:21-46	L1_resources.md:7-12 R.0; 110-116 R.4 inputs; STATEMENT 21-46 CONFIG/MACH
+C-DLV:L1-R	depends_on	C-ENG:TDP_E;W1-N3:L7;C-DLV:L3-3.3@stmt;W1-PXN:Thm-PXN(K)	L1_resources.md:16 pilot cap (L3 3.3); :24 LS0 cap (W1-PXN (K)); STATEMENT.md:40-42
+C-DLV:Cor-R	premises	Theory_work/Wave1C/C-DLV/lemmas/L1_resources.md:118-127;Theory_work/Wave1C/C-DLV/STATEMENT.md:21-46	L1_resources.md:118-127 R.5 envelopes P0,P1,P_t; STATEMENT 21-46
+C-DLV:Cor-R	depends_on	C-DLV:L1-R;C-DLV:P1-Inventory	L1_resources.md:131 conclusion refers to INVENTORY paths B1-B3,E1-E5,X1,X5
+C-DLV:L2-S1	notes	Span is the whole audit section (claim+argument merged, no separate statement); formal statement = L2_degenerate.md:70 (S.4) / STATEMENT.md:57-58	L2_degenerate.md:5-70 sections S.1-S.4; STATEMENT.md:57-58
+C-DLV:L2-S2	notes	Span is the whole audit section (claim+argument merged, no separate statement); formal statement = L2_degenerate.md:70 (S.4) / STATEMENT.md:57-58	L2_degenerate.md:5-70 sections S.1-S.4; STATEMENT.md:57-58
+C-DLV:L2-S3	notes	Span is the whole audit section (claim+argument merged, no separate statement); formal statement = L2_degenerate.md:70 (S.4) / STATEMENT.md:57-58	L2_degenerate.md:5-70 sections S.1-S.4; STATEMENT.md:57-58
+C-DLV:L2-S3	depends_on	C-DLV:L2-S2@stmt;C-DLV:L3-3.4	L2_degenerate.md:56 'scorer k>K throw: S.2'; :63-65 'L3 Lemma 3.4'
+C-DLV:Thm-D	premises	Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md:6-11;Theory_work/Wave1C/C-DLV/STATEMENT.md:11-46	L4_delivery.md:6-11 Setting (SL_n, V_c, k_c); STATEMENT 11-46
+C-DLV:Thm-D	depends_on	C-DLV:L1-R;C-DLV:Cor-R;C-DLV:L2-S1;C-DLV:L2-S2;C-DLV:L2-S3;C-DLV:P1-Inventory;C-DLV:L3-3.2;C-DLV:L3-3.3;C-DLV:L3-3.4;C-DLV:L3-3.5a;C-DLV:L3-3.5b	L4_delivery.md:40 '(iii) is L3 Lemma 3.4(c) with Lemma 3.2'
+C-DLV:Cor-Dp	premises	Theory_work/Wave1C/C-DLV/STATEMENT.md:11-46	STATEMENT.md:75-76 refers to classes and premises (STATEMENT 11-46)
+C-DLV:Cor-Dp	depends_on	C-DLV:Thm-D;W1-GEN:Thm-GEN;W1-PXN:Thm-PXN(T);W1-PXN:Thm-PXN(P);EXT:T03♯	L4_delivery.md:56-60 cites W1-PXN (T),(P); ids W1-PXN:T/P do not exist
+C-DLV:Cor-Dp	notes	W1-GEN (C1),(C2) (L4_delivery.md:56) have no registry row of their own; mapped to W1-GEN:Thm-GEN - check	L4_delivery.md:56-59
+C-DLV:C1-CondDelivery	premises	Theory_work/Wave1C/C-DLV/STATEMENT.md:11-46	STATEMENT.md:68-74 uses E_n, tier-1 constructions (STATEMENT 11-46)
+C-DLV:Prop-F	premises	Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md:6-11;Theory_work/Wave1C/C-DLV/STATEMENT.md:11-46	L4_delivery.md:6-11 Setting; Prop F 'premises of Theorem D'
+C-DLV:Prop-F	depends_on	C-DLV:Thm-D;C-DLV:Cor-Dp;C-DLV:L3-3.3;C-DLV:L3-3.4	L4_delivery.md:82-83 'by L3 Lemma 3.4'; :85 Lemma 3.3
+C-DLV:O	kind	frontier	STATEMENT.md:79-84 'Open obstruction' = unproved target, not a proved negative
+C-DLV:O	premises	Theory_work/Wave1C/C-DLV/STATEMENT.md:11-20;Theory_work/Wave1C/C-DLV/STATEMENT.md:68-69	E_n defined at STATEMENT.md:68-69; objects 11-20
+C-DLV:L3-3.1	premises	Theory_work/Wave1C/C-DLV/lemmas/L3_grid.md:9-13	L3_grid.md:9-13 Setting (V, F, q_t, rho, Delta)
+C-DLV:L3-3.2	premises	Theory_work/Wave1C/C-DLV/lemmas/L3_grid.md:9-13	L3_grid.md:9-13 Setting (V, F, q_t, rho, Delta)
+C-DLV:Cor-3.2p	premises	Theory_work/Wave1C/C-DLV/lemmas/L3_grid.md:9-13	L3_grid.md:9-13 Setting (V, F, q_t, rho, Delta)
+C-DLV:L3-3.4	premises	Theory_work/Wave1C/C-DLV/lemmas/L3_grid.md:9-13	L3_grid.md:9-13 Setting (V, F, q_t, rho, Delta)
+C-DLV:L3-3.5a	premises	Theory_work/Wave1C/C-DLV/lemmas/L3_grid.md:9-13	L3_grid.md:9-13 Setting (V, F, q_t, rho, Delta)
+C-DLV:L3-3.5b	premises	Theory_work/Wave1C/C-DLV/lemmas/L3_grid.md:9-13	L3_grid.md:9-13 Setting (V, F, q_t, rho, Delta)
+C-DLV:L3-3.3	premises	Theory_work/Wave1C/C-DLV/lemmas/L1_resources.md:9-9;Theory_work/Wave1C/C-DLV/lemmas/L3_grid.md:9-13	tier caps T_e defined L1_resources.md:9; L3 Setting 9-13
+C-DLV:L3-3.4	depends_on	C-DLV:L3-3.2;C-DLV:L3-3.3	L3_grid.md:48-49 'N_p' <= k <= T_e'; :54 'monotonicity, Lemma 3.2'
+C-DLV:L3-3.5a	depends_on	C-DLV:L3-3.1;C-DLV:Cor-3.2p;C-DLV:L3-3.2;C-DLV:L3-3.3;C-DLV:L3-3.4	L3_grid.md:69-74 uses 3.2 (variance), 3.3, 3.4 behaviour, 3.1(i)
+C-DLV:L5-5.0	premises	Theory_work/Wave1C/C-DLV/lemmas/L5_insertions.md:5-9;Theory_work/Wave1C/C-DLV/lemmas/L3_grid.md:9-13	L5_insertions.md:5-9 trial/bisection-limited defs; L3 notation (line 4)
+C-DLV:L5-5.2	premises	Theory_work/Wave1C/C-DLV/lemmas/L5_insertions.md:5-9;Theory_work/Wave1C/C-DLV/lemmas/L3_grid.md:9-13	L5_insertions.md:5-9 trial/bisection-limited defs; L3 notation (line 4)
+C-DLV:L5-5.2p	premises	Theory_work/Wave1C/C-DLV/lemmas/L5_insertions.md:5-9;Theory_work/Wave1C/C-DLV/lemmas/L3_grid.md:9-13	L5_insertions.md:5-9 trial/bisection-limited defs; L3 notation (line 4)
+C-DLV:Cor-5.3	premises	Theory_work/Wave1C/C-DLV/lemmas/L5_insertions.md:5-9;Theory_work/Wave1C/C-DLV/lemmas/L3_grid.md:9-13	L5_insertions.md:5-9 trial/bisection-limited defs; L3 notation (line 4)
+C-DLV:L5-5.1	premises	Theory_work/Wave1C/C-DLV/lemmas/L3_grid.md:9-13	L5_insertions.md:4 'Notation of L3'
+C-DLV:L5-5.0	depends_on	C-DLV:L3-3.4@stmt	L5_insertions.md:6 bisection-limited via L3 3.4(a); :14 60 halvings
+C-DLV:L5-5.2	depends_on	C-DLV:L5-5.0;C-DLV:L5-5.1;C-DLV:L3-3.1;C-DLV:L3-3.2	L5_insertions.md:36-37 'by Lemma 3.1 (with M = M2)'
+C-DLV:L5-5.2p	depends_on	C-DLV:L5-5.2;C-DLV:L5-5.0	L5_insertions.md:63 'by its last failing test w (Lemma 5.0)'
+C-DLV:Cor-5.3	lines	79-91	L5_insertions.md:91 ends '(gamma).'; :91-92 'Using N_b ... FALSE' and 92 are remark text
+C-DLV:Cor-5.3	depends_on	C-DLV:L5-5.2;C-DLV:L5-5.2p;C-DLV:L5-5.2@proof:criterion (B);C-DLV:L3-3.4	L5_insertions.md:83-86 uses (B) of 5.2 proof and 'L3 Lemma 3.4(c)'
+C-ENG:TDP_E	premises	Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:6-36	TDP_E.md:6-36 objects, enumeration set E, algorithm, hypotheses
+C-ENG:TDP_E	depends_on	W1-N3:L7@proof:greedy invariant;W1-N3:Thm-N3-code(a-d);W1-N3:L1@proof:L1(iii)	TDP_E.md:40 N3-code (b); :50 'as L7'; :52 'W1-N3 L1(iii)'
+C-ENG:Impl-DLV-A2	depends_on	C-ENG:TDP_E;C-DLV:L1-R;W1-N3:Thm-N3-code(a-d);W1-N3:L7	REPORT.md:54 'E = A* (W1-N3 (b))', = W1-N3 TDP output
+C-ENG:Impl-LS0-preflight	depends_on	C-ENG:Impl-GROW-MR1	REPORT.md:63-66 worst case from cap l_n+|S0~| (C-GROW MR1)

@@ -40,70 +40,97 @@ MAN_COLS = ["kind", "claims", "assumption", "script", "args", "timeout_s", "runt
             "expect", "notes"]  # kind: falsify | boundary
 CAP = 120
 PY = sys.executable
+RECAL_ALL = "--recalibrate-all" in sys.argv
 import shlex  # noqa: E402
 # interpreter for the tickets' numerics (needs numpy/scipy/mpmath): config.tsv `numerics_python`, env BVS_NUMERICS_PY
 PYNUM = shlex.split(os.environ.get("BVS_NUMERICS_PY") or R.config().get("numerics_python") or "") or [PY]
 
 
-def git(*a):
-    return subprocess.run(["git", "-C", R.ROOT, *a], capture_output=True, text=True).stdout
+def git(*a, cwd=None):
+    return subprocess.run(["git", "-C", cwd or R.ROOT, *a], capture_output=True, text=True,
+                          encoding="utf-8", errors="replace").stdout
 
 
-def snapshot_all(reldir):
-    """Bytes of every file in reldir (small text dirs only: numerics/, reviews/)."""
-    out = {}
-    d = os.path.join(R.ROOT, reldir)
-    for b, _, fs in os.walk(d):
-        if "__pycache__" in b:
-            continue
-        for f in fs:
-            p = os.path.join(b, f)
-            if os.path.getsize(p) < 50_000_000:
-                with open(p, "rb") as fh:
-                    out[p] = fh.read()
-    return out
+class Sandbox:
+    """A disposable DETACHED git worktree of HEAD in a temp directory. Every script runs there, never in the
+    real checkout, so nothing tracked or untracked in the user's tree can be modified or deleted. After each run
+    the sandbox is reset (checkout + clean); on exit it is removed (`git worktree remove --force` + prune), also
+    on errors and interrupts. CI therefore audits the COMMITTED state (HEAD), not uncommitted work."""
+
+    def __enter__(self):
+        import tempfile
+        # remove sandboxes left by a run that was killed before its cleanup could run
+        for ln in git("worktree", "list", "--porcelain").splitlines():
+            if ln.startswith("worktree ") and "bvs-ci-" in ln:
+                subprocess.run(["git", "-C", R.ROOT, "worktree", "remove", "--force", ln[9:].strip()],
+                               capture_output=True)
+        git("worktree", "prune")
+        self.path = tempfile.mkdtemp(prefix="bvs-ci-")
+        os.rmdir(self.path)  # git worktree add wants to create it
+        r = subprocess.run(["git", "-C", R.ROOT, "worktree", "add", "--detach", self.path, "HEAD"],
+                           capture_output=True, text=True)
+        if r.returncode != 0:
+            raise RuntimeError(f"cannot create CI sandbox: {r.stderr.strip()[:300]}")
+        return self
+
+    def reset(self):
+        git("checkout", "--", ".", cwd=self.path)
+        git("clean", "-fdqx", cwd=self.path)
+
+    def changed(self, prefix):
+        """Tracked files modified and files created under prefix since HEAD (repo-relative)."""
+        out = git("status", "--porcelain", "--untracked-files=all", "--", prefix, cwd=self.path)
+        return [ln[3:].strip().strip('"') for ln in out.splitlines() if ln.strip()]
+
+    def __exit__(self, *exc):
+        import shutil
+        subprocess.run(["git", "-C", R.ROOT, "worktree", "remove", "--force", self.path], capture_output=True)
+        subprocess.run(["git", "-C", R.ROOT, "worktree", "prune"], capture_output=True)
+        shutil.rmtree(self.path, ignore_errors=True)
+        return False
 
 
-def run_guarded(script_rel, args, timeout, compare=()):
-    """Run a script in its own directory; restore every file afterwards. Returns (rc, secs, stdout, diffs)."""
-    sdir = os.path.dirname(os.path.join(R.ROOT, script_rel))
-    rel_dir = os.path.relpath(sdir, R.ROOT)
-    saved = snapshot_all(rel_dir)
-    t0 = time.time()
-    try:
-        p = subprocess.run([*PYNUM, os.path.basename(script_rel), *args], cwd=sdir, capture_output=True, text=True,
-                           timeout=timeout, encoding="utf-8", errors="replace",
-                           env={**os.environ, "PYTHONHASHSEED": "0", "MPLBACKEND": "Agg"})
-        rc, out = p.returncode, (p.stdout or "") + (p.stderr or "")
-    except subprocess.TimeoutExpired as e:
-        rc, out = "TIMEOUT", str(e.stdout or "")[-2000:]
-    secs = time.time() - t0
-    diffs = []
-    for rel in compare:
-        fp = os.path.join(R.ROOT, rel)
-        if fp in saved and os.path.exists(fp):
-            with open(fp, "rb") as fh:
-                if fh.read() != saved[fp]:
-                    diffs.append(rel)
-    # restore: rewrite saved files, delete new ones
-    for b, _, fs in os.walk(sdir):
-        for f in fs:
-            p_ = os.path.join(b, f)
-            if p_ not in saved and "__pycache__" not in b:
-                try:
-                    os.remove(p_)
-                except OSError:
-                    pass
-    for p_, data in saved.items():
+def kill_tree(pid):
+    if os.name == "nt":
+        subprocess.run(["taskkill", "/T", "/F", "/PID", str(pid)], capture_output=True)
+    else:
+        import signal
         try:
-            with open(p_, "rb") as fh:
-                same = fh.read() == data
+            os.killpg(os.getpgid(pid), signal.SIGKILL)
         except OSError:
-            same = False
-        if not same:
-            with open(p_, "wb") as fh:
-                fh.write(data)
-    return rc, secs, out, diffs
+            pass
+
+
+def run_in(sb, script_rel, args, timeout, logdir):
+    """Run one script inside the sandbox; stdout/stderr go to a file (no pipe a stray child could hold open);
+    on timeout the whole process tree is killed. Returns (rc, secs, text, changed_files)."""
+    sdir = os.path.dirname(os.path.join(sb.path, script_rel))
+    logf = os.path.join(logdir, "_run.log")
+    t0 = time.time()
+    kw = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt" else {"start_new_session": True}
+    with open(logf, "w", encoding="utf-8", errors="replace") as fh:
+        try:
+            p = subprocess.Popen([*PYNUM, os.path.basename(script_rel), *args], cwd=sdir, stdout=fh,
+                                 stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+                                 env={**os.environ, "PYTHONHASHSEED": "0", "MPLBACKEND": "Agg"}, **kw)
+        except OSError as e:
+            return f"LAUNCH-ERROR {e}", 0.0, "", []
+        try:
+            rc = p.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            kill_tree(p.pid)
+            try:
+                p.wait(timeout=30)
+            except subprocess.TimeoutExpired:
+                pass
+            rc = "TIMEOUT"
+    secs = time.time() - t0
+    with open(logf, encoding="utf-8", errors="replace") as fh:
+        text = fh.read()
+    ticket_dir = "/".join(script_rel.replace("\\", "/").split("/")[:3])
+    changed = sb.changed(ticket_dir)
+    sb.reset()
+    return rc, secs, text, changed
 
 
 # ------------------------------------------------------------------ steps
@@ -112,8 +139,8 @@ def step_check(out):
                        capture_output=True, text=True, encoding="utf-8", errors="replace")
     with open(os.path.join(out, "check.txt"), "w", encoding="utf-8") as fh:
         fh.write(p.stdout + p.stderr)
-    last = (p.stdout.strip().splitlines() or ["?"])[-1]
-    return p.returncode == 0, f"check.py: {last} (full list: check.txt)"
+    last = (p.stdout.strip().splitlines() or ["?"])[-2:]
+    return p.returncode == 0, "check.py: " + " | ".join(last) + " (full list: check.txt)"
 
 
 def step_paper(out):
@@ -126,38 +153,54 @@ def load_manifest():
     return R.read_tsv(MANIFEST)[1] if os.path.exists(MANIFEST) else []
 
 
+BOUNDARY = re.compile(r"^BOUNDARY-RESULT:\s*(HOLDS|FAILS)\b", re.M)
+
+
 def step_falsify(out, calibrate=False):
     man = load_manifest()
+    # calibration resumes: rows already timed (runtime_s set) are skipped unless --recalibrate-all
+    todo = [m for m in man if (calibrate and (RECAL_ALL or not m.get("runtime_s"))) or
+            (not calibrate and m.get("cheap") == "yes")]
+    if not todo:
+        return True, "0 script(s) run (manifest empty or nothing cheap)"
     lines, ok = [], True
-    for m in man:
-        if not calibrate and m.get("cheap") != "yes":
-            continue
-        timeout = CAP if calibrate else int(float(m.get("timeout_s") or CAP))
-        rc, secs, txt, diffs = run_guarded(m["script"], m.get("args", "").split(), timeout,
-                                           R.split_list(m.get("outputs", "")))
-        exp = m.get("expect", "")
-        exp_ok = (not exp) or re.search(exp, txt or "") is not None
-        good = rc == 0 and exp_ok
-        if calibrate:
-            m["runtime_s"] = f"{secs:.1f}" if rc != "TIMEOUT" else f">{CAP}"
-            m["cheap"] = "yes" if rc == 0 and secs < CAP else "no"
-            m["timeout_s"] = str(min(CAP, max(30, int(secs * 3) + 10))) if m["cheap"] == "yes" else str(CAP)
-            if rc != 0:
-                m["notes"] = f"calibration rc={rc}: {txt.strip().splitlines()[-1][:120] if txt.strip() else ''}"
-        tag = "PASS" if good else ("TIMEOUT" if rc == "TIMEOUT" else "FAIL")
-        if m.get("kind") == "boundary":  # outside the assumption: holding = improvable signal
-            tag = (f"SIGNAL improvable (conclusion held outside {m.get('assumption', '?')})" if good else
-                   "boundary: conclusion failed outside the assumption (consistent with necessity)")
-            good = rc != "TIMEOUT"
-        ok &= good or calibrate
-        dnote = f"; output differs from committed: {', '.join(diffs)}" if diffs else ""
-        lines.append(f"- {tag} `{m['script']}` ({secs:.1f}s; claims {m['claims']}){dnote}")
-        with open(os.path.join(out, "falsify.log"), "a", encoding="utf-8") as fh:
-            fh.write(f"===== {m['script']} {m.get('args', '')} rc={rc} {secs:.1f}s\n{(txt or '')[-4000:]}\n")
+    with Sandbox() as sb:
+        for m in todo:
+            timeout = CAP if calibrate else int(float(m.get("timeout_s") or CAP))
+            rc, secs, txt, changed = run_in(sb, m["script"], m.get("args", "").split(), timeout, out)
+            exp = m.get("expect", "")
+            good = rc == 0 and ((not exp) or re.search(exp, txt) is not None)
+            if calibrate:
+                m["runtime_s"] = f"{secs:.1f}" if rc != "TIMEOUT" else f">{CAP}"
+                m["cheap"] = "yes" if rc == 0 and secs < CAP else "no"
+                m["timeout_s"] = str(min(CAP, max(30, int(secs * 3) + 10))) if m["cheap"] == "yes" else str(CAP)
+                last = txt.strip().splitlines()[-1][:120] if txt.strip() else ""
+                m["notes"] = "" if rc == 0 else f"calibration rc={rc}: {last}"
+            tag = "PASS" if good else ("TIMEOUT" if rc == "TIMEOUT" else "FAIL")
+            if m.get("kind") == "boundary":
+                # only a COMPLETED experiment that prints `BOUNDARY-RESULT: HOLDS|FAILS` is a scientific outcome;
+                # crashes / import errors / timeouts are execution failures
+                b = BOUNDARY.search(txt) if rc == 0 else None
+                if b and b.group(1) == "HOLDS":
+                    tag = f"SIGNAL improvable (conclusion held outside {m.get('assumption', '?')})"
+                elif b:
+                    tag = "boundary: conclusion failed outside the assumption (consistent with necessity)"
+                else:
+                    tag, good = f"FAIL (boundary experiment did not complete: rc={rc})", False
+            ok &= good or calibrate
+            outs = set(R.split_list(m.get("outputs", "")))
+            diff = [c for c in changed if c in outs]
+            note = (f"; regenerated output differs from committed: {', '.join(diff)}" if diff else "") + \
+                   (f"; also wrote {len(changed) - len(diff)} other file(s)" if len(changed) > len(diff) else "")
+            lines.append(f"- {tag} `{m['script']}` ({secs:.1f}s; claims {m['claims']}){note}")
+            if calibrate:  # persist after every script, so an interrupted calibration loses nothing
+                R.write_tsv(MANIFEST, MAN_COLS, man)
+            with open(os.path.join(out, "falsify.log"), "a", encoding="utf-8") as fh:
+                fh.write(f"===== {m['script']} {m.get('args', '')} rc={rc} {secs:.1f}s changed={changed}\n"
+                         f"{txt[-4000:]}\n")
     if calibrate:
         R.write_tsv(MANIFEST, MAN_COLS, man)
-    n = len(lines)
-    return ok, f"{n} script(s) run" + ("" if n else " (manifest empty or nothing cheap)") + "\n" + "\n".join(lines)
+    return ok, f"{len(lines)} script(s) run in a disposable worktree of HEAD\n" + "\n".join(lines)
 
 
 def miss_count(text):
@@ -167,40 +210,48 @@ def miss_count(text):
 def step_cite(out):
     import glob
     lines, ok = [], True
-    for cc in sorted(glob.glob(os.path.join(R.ROOT, "Theory_work", "Wave*", "*", "**", "citecheck.py"),
-                               recursive=True)):
-        rel = os.path.relpath(cc, R.ROOT).replace("\\", "/")
-        if "/INFRA/" in rel:
-            continue
-        d = os.path.dirname(cc)
-        cands = [os.path.join(d, "CITECHECK.txt"), os.path.join(d, "reviews", "CITECHECK.txt"),
-                 os.path.join(os.path.dirname(d), "CITECHECK.txt")]
-        committed = next((c for c in cands if os.path.exists(c)), None)
-        before = open(committed, encoding="utf-8", errors="replace").read() if committed else ""
-        tdir = os.path.relpath(os.path.dirname(d) if d.endswith("reviews") else d, R.ROOT)
-        saved = snapshot_all(tdir)
-        try:
-            p = subprocess.run([*PYNUM, os.path.basename(cc)], cwd=d, capture_output=True, text=True, timeout=CAP,
-                               encoding="utf-8", errors="replace")
-            after = open(committed, encoding="utf-8", errors="replace").read() if committed and \
-                os.path.exists(committed) else p.stdout
-            rc = p.returncode
-        except subprocess.TimeoutExpired:
-            after, rc = "", "TIMEOUT"
-        finally:
-            for p_, data in saved.items():
-                try:
-                    same = open(p_, "rb").read() == data
-                except OSError:
-                    same = False
-                if not same:
-                    with open(p_, "wb") as fh:
-                        fh.write(data)
-        b, a = miss_count(before), miss_count(after)
-        good = rc in (0, 1) and a <= b
-        ok &= good
-        lines.append(f"- {'PASS' if good else 'FAIL'} `{rel}`: MISS {b} committed -> {a} now (rc={rc})")
+    with Sandbox() as sb:
+        for cc in sorted(glob.glob(os.path.join(sb.path, "Theory_work", "Wave*", "*", "**", "citecheck.py"),
+                                   recursive=True)):
+            rel = os.path.relpath(cc, sb.path).replace("\\", "/")
+            d = os.path.dirname(cc)
+            cands = [os.path.join(d, "CITECHECK.txt"), os.path.join(d, "reviews", "CITECHECK.txt"),
+                     os.path.join(os.path.dirname(d), "CITECHECK.txt")]
+            committed = next((c for c in cands if os.path.exists(c)), None)
+            before = open(committed, encoding="utf-8", errors="replace").read() if committed else ""
+            rc, secs, txt, changed = None, 0.0, "", []
+            # run, read the regenerated report BEFORE the sandbox reset, then reset
+            sdir_rel = os.path.relpath(cc, sb.path)
+            rc, secs, txt, changed = run_in_keep(sb, sdir_rel, CAP, out, committed)
+            after = txt
+            b, a = miss_count(before), miss_count(after)
+            good = rc in (0, 1) and a <= b
+            ok &= good
+            lines.append(f"- {'PASS' if good else 'FAIL'} `{rel}`: MISS {b} committed -> {a} now (rc={rc})")
     return ok, "\n".join(lines)
+
+
+def run_in_keep(sb, script_rel, timeout, logdir, report_path):
+    """Like run_in, but returns the regenerated report (or stdout if the script writes none) before resetting."""
+    sdir = os.path.dirname(os.path.join(sb.path, script_rel))
+    logf = os.path.join(logdir, "_cite.log")
+    kw = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt" else {"start_new_session": True}
+    t0 = time.time()
+    with open(logf, "w", encoding="utf-8", errors="replace") as fh:
+        p = subprocess.Popen([*PYNUM, os.path.basename(script_rel)], cwd=sdir, stdout=fh, stderr=subprocess.STDOUT,
+                             stdin=subprocess.DEVNULL, **kw)
+        try:
+            rc = p.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            kill_tree(p.pid)
+            rc = "TIMEOUT"
+    secs = time.time() - t0
+    if report_path and os.path.exists(report_path):
+        text = open(report_path, encoding="utf-8", errors="replace").read()
+    else:
+        text = open(logf, encoding="utf-8", errors="replace").read()
+    sb.reset()
+    return rc, secs, text, []
 
 
 def proof_files(r):
@@ -338,6 +389,7 @@ def main():
     ap.add_argument("--note", default="", help="what happened (quoted in the optimizer brief)")
     ap.add_argument("--seed", type=int)
     ap.add_argument("--calibrate", action="store_true")
+    ap.add_argument("--recalibrate-all", action="store_true", help="with --calibrate: re-time rows already timed")
     ap.add_argument("--out")
     a = ap.parse_args()
     day = dt.date.today().isoformat()
@@ -368,9 +420,6 @@ def main():
     with open(summ, "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines))
     print("\n".join(lines))
-    if git("status", "--porcelain", "--", "Theory_work/Wave1", "Theory_work/Wave1C", "Theory_work/Wave2") != \
-            "" and "--allow-dirty" not in sys.argv:
-        print("note: ticket folders have uncommitted changes (pre-existing or from a step); inspect `git status`")
     sys.exit(0 if all(ok for _, ok, _, _ in results) else 1)
 
 

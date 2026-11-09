@@ -8,6 +8,11 @@
   rehash ID [--lines a-b] --bump none|patch|minor|major --reason R
                                    accept the current statement text: new sha256 (+ span) and version bump
                                    (patch = editorial, minor = proof/status, major = the claim changed)
+  rehash ID --tex --reason R       record that the LaTeX transcription (`tex`) was reviewed against the statement
+  correct-status ID --status S --source path:line --reason R
+                                   fix a TRANSCRIPTION error: S must occur verbatim at path:line (± 3 lines)
+                                   (real status changes: propagate.py downgrade / a new ticket result)
+  freeze --set|--unset --reason R  set config freeze; --set refuses unless the freeze criterion holds
   refresh                          recompute derived fields (`improvable`)
   compare X Y [--axes k=v,...]     strength partial order of Y vs X (assumptions, conclusion, rate, scope)
   sets                             distinct versioned assumption sets of the headline claims (cap: config.tsv)
@@ -26,7 +31,8 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bvsreg as R  # noqa: E402
 
-PROTECTED = {"id", "state", "superseded_by", "sha256", "version", "improvable"}
+PROTECTED = {"id", "state", "superseded_by", "sha256", "version", "improvable", "status", "status_source",
+             "tex_sha256"}
 
 
 def get(rows, ref):
@@ -39,7 +45,7 @@ def get(rows, ref):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("cmd", choices=["show", "deps", "rdeps", "add", "set", "rehash", "refresh", "compare", "sets",
-                                    "assumption-impact", "stats", "dot", "add-external"])
+                                    "assumption-impact", "stats", "dot", "add-external", "correct-status", "freeze"])
     ap.add_argument("args", nargs="*")
     ap.add_argument("--reason", default="")
     ap.add_argument("--lines")
@@ -52,6 +58,10 @@ def main():
     ap.add_argument("--field", action="append", default=[])
     ap.add_argument("--axes", default="")
     ap.add_argument("--headline", action="store_true")
+    ap.add_argument("--tex", action="store_true")
+    ap.add_argument("--source")
+    ap.add_argument("--set", dest="do_set", action="store_true")
+    ap.add_argument("--unset", action="store_true")
     ap.add_argument("--actor", default="HQ")
     a = ap.parse_args()
     rows = R.load_claims()
@@ -88,12 +98,11 @@ def main():
         if not (a.file and a.lines and a.kind and a.name and a.status is not None and a.reason):
             sys.exit("add needs --file --lines --kind --name --status --reason")
         span = R.parse_span(a.lines)
-        h = R.statement_hash(a.file, span) if span else None
-        if h is None:
-            sys.exit("cannot hash the span (file/lines)")
+        if span is None:
+            sys.exit("bad --lines")
         t, _, loc = cid.partition(":")
         r = {c: "" for c in R.COLUMNS}
-        r.update(id=cid, ticket=t, local_id=loc, kind=a.kind, name=a.name, file=a.file, lines=a.lines, sha256=h,
+        r.update(id=cid, ticket=t, local_id=loc, kind=a.kind, name=a.name, file=a.file, lines=a.lines, sha256="",
                  version="1.0.0", status=a.status, state=a.state, commit=R.git_last_commit(a.file),
                  state_reason=f"{a.state} {R.today()}: {a.reason}" if a.state != "ACTIVE" else "")
         for kv in a.field:
@@ -101,6 +110,7 @@ def main():
             if k not in R.COLUMNS or k in PROTECTED:
                 sys.exit(f"field {k!r} not settable")
             r[k] = v
+        r["sha256"] = R.claim_hash(r) or sys.exit("cannot hash the statement/premise spans")
         r["improvable"] = R.improvable(r, sharp)
         rows.append(r)
         R.save_claims(rows)
@@ -116,14 +126,29 @@ def main():
                 sys.exit(f"field {k!r} not settable here (state: propagate.py; sha/version: rehash)")
             R.log_event("set", r["id"], f"{k}={r.get(k, '')[:80]}", f"{k}={v[:80]}", a.reason, a.actor)
             r[k] = v
+            if k == "premises":  # the hashed statement now covers different text: re-hash, minor bump
+                h = R.claim_hash(r)
+                if h is None:
+                    sys.exit("premise span unreadable; nothing saved")
+                if h != r["sha256"]:
+                    r["sha256"], r["version"] = h, R.bump(r["version"], "patch")
         r["improvable"] = R.improvable(r, sharp)
         R.save_claims(rows)
+    elif a.cmd == "rehash" and a.tex:
+        r = get(rows, a.args[0])
+        tl = R.span_lines(r.get("tex", ""))
+        if tl is None or not a.reason:
+            sys.exit("rehash --tex needs a readable tex span and --reason (who compared it with the statement)")
+        r["tex_sha256"] = R.text_hash(tl)
+        R.save_claims(rows)
+        R.log_event("rehash-tex", r["id"], "", r["tex_sha256"][:12], a.reason, a.actor)
+        print(f"{r['id']}: tex transcription recorded as reviewed")
     elif a.cmd == "rehash":
         r = get(rows, a.args[0])
         if not a.bump or not a.reason:
             sys.exit("rehash needs --bump and --reason")
         span = R.parse_span(a.lines or r["lines"])
-        h = R.statement_hash(r["file"], span) if span else None
+        h = R.claim_hash(r, span) if span else None
         if h is None:
             sys.exit("cannot hash the span")
         before = f"{r['lines']} {r['sha256'][:12]} v{r['version']}"
@@ -187,6 +212,37 @@ def main():
         R.save_claims(rows)
         R.log_event("add-external", eid, "", "ACTIVE", a.reason or "external anchor", a.actor)
         print(f"added {eid}")
+    elif a.cmd == "correct-status":
+        r = get(rows, a.args[0])
+        if not (a.status and a.source and a.reason):
+            sys.exit("correct-status needs --status, --source path:line and --reason")
+        import re as _re
+        norm = lambda t: _re.sub(r"\s+", " ", _re.sub(r"[*`]", "", t)).strip()  # noqa: E731
+        path, _, ln = a.source.rpartition(":")
+        lines, n = R.read_lines(path), int(ln) if ln.isdigit() else 0
+        if not lines or n < 1 or norm(a.status) not in norm(" ".join(lines[n - 1: n + 3])):
+            sys.exit("the status is not found verbatim at --source (± 3 lines); nothing changed")
+        R.log_event("correct-status", r["id"], f"{r['status'][:80]} @ {r['status_source']}",
+                    f"{a.status[:80]} @ {a.source}", a.reason, a.actor)
+        r["status"], r["status_source"] = a.status, a.source
+        r["version"] = R.bump(r["version"], "patch")
+        R.save_claims(rows)
+        print(f"{r['id']}: status corrected (transcription), v{r['version']}")
+    elif a.cmd == "freeze":
+        import check
+        cfg_h, cfg = R.read_tsv(R.CONFIG)
+        if a.do_set == a.unset or not a.reason:
+            sys.exit("freeze needs exactly one of --set / --unset, and --reason (Felipe's decision)")
+        if a.do_set:
+            bad = check.freeze_violations(rows, sharp, R.config())
+            if bad:
+                sys.exit("freeze criterion not met:\n  " + "\n  ".join(bad))
+        for c in cfg:
+            if c["key"] == "freeze":
+                c["value"] = "yes" if a.do_set else "no"
+        R.write_tsv(R.CONFIG, cfg_h, cfg)
+        R.log_event("freeze", "-", "", "yes" if a.do_set else "no", a.reason, a.actor)
+        print("freeze =", "yes" if a.do_set else "no")
     elif a.cmd == "stats":
         for f in ("ticket", "kind", "state"):
             c = collections.Counter(r[f] for r in rows)

@@ -1,0 +1,69 @@
+id	field	new_value	evidence
+W2-APP:POST	premises	Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:8-25	L1_POST.md:8-25 Setting + LSF definition
+W2-APP:POST	depends_on	EXT:T03♯;C-PACK:I4;C-GROW:L6.2@proof:entrywise event (first paragraph)	L1_POST.md:46-52 step (2) uses only L6.2 first paragraph
+W2-APP:CD	premises	Theory_work/Wave2/W2-APP/lemmas/L2_CT.md:36-39	L2_CT.md:36-39 class LOC(c,C,K,a) definition
+W2-APP:CD	depends_on	W2-APP:CT	L2_CT.md:52-58 proof applies Lemma CT
+W2-APP:Thm-LOC	premises	Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:19-23;Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:25-28;Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:30-32	L3_LOC.md:19-32 Setting, Hypotheses, Relevance set
+W2-APP:Thm-LOC	depends_on	W2-APP:POST;W2-APP:CD;W2-APP:L3.6;C-GROW:L0.1;C-GROW:L1.1;C-GROW:L1.2;C-GROW:L2.1;C-GROW:L2.2;C-GROW:L6.2@proof:A_X/A_cov events;C-GROW:L6.3@proof:selection removal;C-GROW:L6.4@proof:spherical tail;C-GROW:L6.5@proof:sandwich + size ladder;C-GROW:Thm-GROW@proof:L4 pathwise assembly;EXT:M5(0);EXT:[OP];EXT:T03♯	L3_LOC.md:40-53,158-168 inputs and assembly; GEN Thm not used
+W2-APP:L3.6	premises	Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:19-23;Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:25-28;Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:30-32	L3_LOC.md:99 says 'hypotheses of Theorem LOC' (setting, LOC, relevance set)
+W2-APP:L3.6	depends_on	W2-APP:CD;C-GROW:L2.2;C-GROW:L0.1;W2-APP:Thm-LOC@proof:L3.2 regularity event	L3_LOC.md:101-102 L0 event 'as in [L6] 1 / L3.2'; CD(a),(b) used
+W2-APP:LOC-B	premises	Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:19-23;Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:30-32;Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:34-38	L3_LOC.md:171 'Setting as L3.0', enlargement rule, conclusions of Thm LOC
+W2-APP:LOC-B	depends_on	W2-APP:Thm-LOC@proof:L3.2-L3.8 delta (steps reused);C-GROW:L2.3(a)	L3_LOC.md:180-198 proof is a delta to L3.2-L3.8; NA via GROW L2.3(a)
+W2-APP:VN	premises	Theory_work/Wave2/W2-APP/lemmas/L5_VN.md:14-21	L5_VN.md:14-21 setting, F16, VNF
+W2-APP:VN	depends_on	C-GROW:L6.2@proof:entrywise/A_cov argument;C-GROW:L0.1@proof:L0.2(c) block-table form	L5_VN.md:37-47 proof cites L6.2 and L0.2(c); POST never used
+W2-APP:VN-routes	premises	Theory_work/Wave2/W2-APP/lemmas/L5_VN.md:14-21	L5_VN.md:14-21
+W2-APP:VN-routes	depends_on	W2-APP:VN;W1-GEN:Thm-GEN;C-GROW:Thm-GROW;W1-GEN:L5@proof:L5.3 diagonal argument	L5_VN.md:57-60 corollary uses GEN (C1), GROW (C3), GEN L5.3
+W2-APP:Ex-STAR	premises	Theory_work/Wave2/W2-APP/lemmas/L5_VN.md:14-21	L5_VN.md:14-21 F16/VNF definitions used in V1
+W2-APP:Family-map	depends_on	W2-APP:POST;W2-APP:Thm-LOC;W2-APP:LOC-B;W2-APP:VN;W2-APP:Ex-STAR;W2-APP:ENUM;W2-FAC-A:Thm-FAC-L;C-GROW:Thm-GROW;C-GROW:C5c;C-GROW:C6;W1-GEN:Thm-GEN;W1-GEN:Thm-GEN(C5d-S1346)	L4_families.md:146-168 rows cite GROW (C5)(c), (C6), GEN (C5)(d), STAR
+W2-APP:ENUM	premises	Theory_work/Wave2/W2-APP/lemmas/L6_ENUM.md:7-14	L6_ENUM.md:7-14 code facts defining (EXB), exact branch, output event
+W2-APP:Thm-APP	depends_on	W2-APP:POST;W2-APP:CT;W2-APP:CD;W2-APP:Thm-LOC;W2-APP:L3.6;W2-APP:LOC-B;W2-APP:VN;W2-APP:VN-routes;W2-APP:Ex-STAR;W2-APP:ENUM;W2-APP:Family-map	STATEMENT.md:45-99 claims (A)-(F) incl. NA lemma L3.6, VN routes, STAR
+W2-APP:Thm-APP	notes	umbrella of (A)-(F); kind 'implementation' kept as nearest allowed; not split	STATEMENT.md:12-102
+W2-LOC2:L0'	premises	Theory_work/Wave2/W2-LOC2/STATEMENT.md:19-31	STATEMENT.md:19-31 Section 1 setting and events
+W2-LOC2:L0'	depends_on	W1-GEN:L1;C-GROW:L0.1;C-GROW:L2.1;C-GROW:L2.2	STATEMENT.md:35-41 'hence GROW L2.0-L2.2 (TL and the NA reduction)'
+W2-LOC2:NA-R	premises	Theory_work/Wave2/W2-LOC2/STATEMENT.md:19-31	STATEMENT.md:19-31 Section 1 setting and events
+W2-LOC2:CT_d	depends_on		L3_CTd.md:30-43 standalone proof (packing fact L3.0); APP CT only template
+W2-LOC2:CT_d	premises	Theory_work/Wave2/W2-LOC2/lemmas/L3_CTd.md:15-18	L3_CTd.md:15-18 site map definition
+W2-LOC2:CD_d	premises	Theory_work/Wave2/W2-LOC2/lemmas/L3_CTd.md:46-48	L3_CTd.md:46-48 class LOC_d definition
+W2-LOC2:CD_d	depends_on	W2-LOC2:CT_d;W2-APP:CD@proof:conditioning/Schur-complement/interlacing argument	L3_CTd.md:58 'As APP L2_CT Lemma CD with Lemma CT replaced'
+W2-LOC2:RB	premises	Theory_work/Wave2/W2-LOC2/lemmas/L3_CTd.md:46-48;Theory_work/Wave2/W2-LOC2/lemmas/L3_CTd.md:50-52	L3_CTd.md:46-52 class LOC_d, constants K2,t2 of CD_d
+W2-LOC2:RB	depends_on	W2-LOC2:CD_d;W2-LOC2:CT_d	L3_CTd.md:72-75 proof applies CT_d to B and CD_d(c)
+W2-LOC2:TAIL	premises	Theory_work/Wave2/W2-LOC2/lemmas/L3_CTd.md:46-48;Theory_work/Wave2/W2-LOC2/lemmas/L3_CTd.md:50-52	L3_CTd.md:46-52 class LOC_d, K2,t2 in kappa(r)
+W2-LOC2:TAIL	depends_on	W2-LOC2:CD_d;W2-APP:L3.6@proof:Step 3	L3_CTd.md:83 '(a) As in APP L3.6 Step 3'; CD_d(a),(b)
+W2-LOC2:PLR	premises	Theory_work/Wave2/W2-LOC2/STATEMENT.md:19-31	STATEMENT.md:19-31 Section 1 setting and events
+W2-LOC2:PLR	depends_on	W2-LOC2:NA-R;W2-LOC2:L0';W2-APP:POST;C-GROW:L2.1;C-GROW:L2.2;C-GROW:L1.2;EXT:[OP];EXT:M5(0)	L5_assembly.md:22-37 proof cites GROW L2.1/L2.2/L1.2, [OP], M5(0), L1_POST(b)
+W2-LOC2:LOC-d	premises	Theory_work/Wave2/W2-LOC2/STATEMENT.md:19-31;Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:28;Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:30-32;Theory_work/Wave2/W2-LOC2/lemmas/L3_CTd.md:50-52	STATEMENT.md:67-74 uses setting, PTV(a0), d_n of APP L3.0, (K2,t2) of CD_d
+W2-LOC2:LOC-d	depends_on	W2-LOC2:PLR;W2-LOC2:NA-R;W2-LOC2:L0';W2-LOC2:CD_d;W2-LOC2:RB;W2-LOC2:TAIL;W2-APP:Thm-LOC@proof:L3.2-L3.5 deltas;C-GROW:L6.5@proof:size ladder	L4_LOCd.md:21-58 Part A is a delta to APP L3.2-L3.5; d=1 containment is only a remark
+W2-LOC2:LOC-BF	premises	Theory_work/Wave2/W2-LOC2/STATEMENT.md:19-31;Theory_work/Wave2/W2-LOC2/STATEMENT.md:70-71	STATEMENT.md:76-85 'enlarged as above' = rule at :71-72
+W2-LOC2:LOC-BF	depends_on	W2-LOC2:PLR;W2-LOC2:NA-R;W2-LOC2:L0';W2-APP:LOC-B@proof:L3.8B delta (independence across groups)	L4_LOCd.md:84-91 B.1 is APP L3.8B delta; VN only in a remark (:117-120)
+W2-LOC2:Thm-Poly	lines	87-93	STATEMENT.md:94-98 is v1.2 note + status text; claim complete at :93
+W2-LOC2:Thm-Poly	premises	Theory_work/Wave2/W2-LOC2/STATEMENT.md:19-31;Theory_work/Wave2/W2-LOC2/STATEMENT.md:70-71;Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:28	L6_poly.md:30-41 setting, PTV at APP L3_LOC.md:28, enlargement as D1
+W2-LOC2:Thm-Poly	depends_on	W2-LOC2:Lemma-BC;W2-LOC2:Lemma-IR;W2-LOC2:PLR@proof:assembly re-run with polynomial sizes;W2-LOC2:NA-R@proof:reference argument re-run (L6 sec 6);W2-LOC2:L0'@proof:size-sensitive steps re-checked (L6 sec 3);W1-GEN:L1;C-GROW:L0.1;C-GROW:L1.2;C-GROW:L6.3@proof:selection removal replaced;C-GROW:L6.4@proof:spherical tail replaced;W2-APP:POST;EXT:M5(0)	L6_poly.md:60-70,206,272,294,354-425 polylog hypotheses of LOC2 L1/L2/L5 not invoked, re-run
+W2-LOC2:Lemma-BC	lines	78-84	L6_poly.md:83-84 statement continues: spectrum [c,C], conditional variances in [c,1]
+W2-LOC2:Lemma-BC	premises	Theory_work/Wave2/W2-LOC2/lemmas/L6_poly.md:33-41	L6_poly.md:33-41 decay hypothesis and fixed constants
+W2-LOC2:Lemma-BC	depends_on	W2-APP:CD@proof:CD(b) conditional-covariance formula	L6_poly.md:109 'as APP/lemmas/L2_CT.md:55'
+W2-LOC2:Lemma-IR	lines	118-129	L6_poly.md:125-129 'Consequently ...' regression bounds (P3) belong to the lemma statement
+W2-LOC2:Lemma-IR	premises	Theory_work/Wave2/W2-LOC2/lemmas/L6_poly.md:33-41	L6_poly.md:33-41 decay hypothesis and fixed constants
+W2-LOC2:Lemma-IR	depends_on	W2-APP:CT@proof:L2.1(ii)-(iii) conjugation + Schur test	L6_poly.md:147 'APP/lemmas/L2_CT.md:22-28 then applies'
+W2-LOC2:F-LOC2	premises	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:7-15	L7_delivery.md:7-15 method/premises/allocation and classes
+W2-LOC2:F-LOC2	depends_on	W2-LOC2:LOC-d;W2-LOC2:LOC-BF;W2-LOC2:Thm-Poly;W2-FAC-A:Prop-F-FAC@proof:FACA L7 Steps 1-3;W2-LOC2:PLR@proof:(c) posterior E[1-pi(S0)]->0;C-GROW:L1.2;C-DLV:Cor-Dp	L7_delivery.md:21-35 Steps 1-3 cite FACA L7, L5(c), GROW L1.2, Cor D'
+W2-UNI:UNI-P	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:20-32;Theory_work/Wave2/W2-UNI/STATEMENT.md:39-43;Theory_work/Wave2/W2-UNI/STATEMENT.md:72-74	STATEMENT.md:85-89 uses setting, (A1-post)/LSF, (A3)
+W2-UNI:CT_M	premises	Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:12-15;Theory_work/Wave2/W2-UNI/STATEMENT.md:48-51	L1_metric.md:12-15 pseudometric/growth; STATEMENT.md:48-51
+W2-UNI:CT_M	depends_on		L1_metric.md:44-62 standalone proof via (G-shell); CT_d only a delta source
+W2-UNI:CD_M	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:48-51;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:66-69	L1_metric.md:66-69 class LOC and constants t1,K1,t2,K2
+W2-UNI:CD_M	depends_on	W2-UNI:CT_M	L1_metric.md:78-85 proof applies CT_M
+W2-UNI:RB_M	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:48-51;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:66-69;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:89-90	L1_metric.md:89-90 define beta_A(l), t', B, L0
+W2-UNI:RB_M	depends_on	W2-UNI:CD_M;W2-UNI:CT_M	L1_metric.md:94-98 proof uses CD_M(b),(c) and restricted CT_M
+W2-UNI:TAIL_M	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:48-51;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:66-69;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:103-104	L1_metric.md:103-104 define kappa(r)
+W2-UNI:LOCL	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:48-51;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:66-69;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:89-90;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:119-121	L1_metric.md:119-121 define eps(r); 89-90 L0,B,t'
+W2-UNI:LOCL	depends_on	W2-UNI:RB_M;W2-UNI:TAIL_M;W2-UNI:CD_M	L1_metric.md:135-153 proof cites RB_M, CD_M, TAIL_M
+W2-UNI:SC_M	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:48-51	STATEMENT.md:48-51 class definition
+W2-UNI:SC_M	depends_on		L1_metric.md:159-162 proof elementary (Rayleigh quotients); CD_M not used
+W2-UNI:UNI-0	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:20-32;Theory_work/Wave2/W2-UNI/STATEMENT.md:48-51;Theory_work/Wave2/W2-UNI/STATEMENT.md:72-74	STATEMENT.md:99-106 setting, class LOC_M, PTV(a0)
+W2-UNI:UNI-0	depends_on	W2-LOC2:PLR;W2-LOC2:NA-R;W2-LOC2:L0';W2-LOC2:LOC-d@proof:Part A delta (A.1-A.6);W2-UNI:CT_M;W2-UNI:CD_M;W2-UNI:RB_M;W2-UNI:TAIL_M;W2-UNI:LOCL;W2-UNI:UNI-P;W2-UNI:F-UNI	L2_k0.md:1-10,79-170 line-by-line delta of LOC2 Part A + PLR + F-UNI; SC_M 'not used'
+W2-UNI:U-LOC	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:48-51;Theory_work/Wave2/W2-UNI/STATEMENT.md:57-63	STATEMENT.md:57-63 (A2-1) psi, lambda-tilde, s_T, kappa'; :48-51 class
+W2-UNI:U-LOC	depends_on	W2-UNI:LOCL;W2-UNI:CD_M;W2-UNI:RB_M;W2-FAC-A:L1	L3_ULOC.md:9-14,51-125 'FACA U(a) verbatim', F2 uses RB_M; 'W2-FAC-A:U(a)-(d)' is not a registry id
+W2-UNI:U-LOC	notes	split-needed: STATEMENT.md:147-161 lumps U-LOC (a)-(d) (L3_ULOC.md:31-106) and Corollary U-LOC (L3.5:107+); UNI-1 proof uses Cor U-LOC separately	L4_k1.md:21-27 replaces FACA Corollary U by Corollary U-LOC
+W2-UNI:UNI-1	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:20-32;Theory_work/Wave2/W2-UNI/STATEMENT.md:48-51;Theory_work/Wave2/W2-UNI/STATEMENT.md:57-63;Theory_work/Wave2/W2-UNI/STATEMENT.md:70;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:94-100	STATEMENT.md:108-123 uses setting, LOC_M, (A2-1), alpha0 formula, TV/TV-pop of FACA 3
+W2-UNI:UNI-1	depends_on	W2-UNI:U-LOC@proof:Corollary U-LOC (L3.5);W2-UNI:RB_M;W2-UNI:F-UNI;W2-FAC-A:L2;W2-FAC-A:L3.1;W2-FAC-A:L3.2;W2-FAC-A:L4;W2-FAC-A:L5;C-GROW:L1.2;EXT:[OP];EXT:T03♯;EXT:M5(0)	L4_k1.md:49-60 proof uses FACA L2, L3.1/3.2, L4.1, L5.1; UNI-0, FAC-L only remarks
+W2-UNI:F-UNI	premises	Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md:8-13	L5_delivery.md:8-13 method, premises, allocation
+W2-UNI:F-UNI	depends_on	W2-FAC-A:Prop-F-FAC@proof:FACA L7 Steps 1-2;C-GROW:L1.2;C-DLV:Cor-Dp;EXT:[OP]	L5_delivery.md:24-37 Steps cite FACA L7 Step 1-2, GROW L1.2, Cor D'; F-LOC2 only a template
