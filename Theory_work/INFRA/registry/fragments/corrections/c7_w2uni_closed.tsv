@@ -1,0 +1,89 @@
+id	field	new_value	evidence
+W2-UNI:UNI-P	lines	87-91	Theory_work/Wave2/W2-UNI/STATEMENT.md:87-91 (moved from 85-89)
+W2-UNI:UNI-0	lines	103-110	Theory_work/Wave2/W2-UNI/STATEMENT.md:103-110
+W2-UNI:UNI-1	lines	112-131	Theory_work/Wave2/W2-UNI/STATEMENT.md:112-131
+W2-UNI:U-LOC	lines	155-169	Theory_work/Wave2/W2-UNI/STATEMENT.md:155-169 (R3 text; lemma proofs L3_ULOC.md:31-105)
+W2-UNI:OBS-k	lines	12-14	Theory_work/Wave2/W2-UNI/lemmas/L6_frontier.md:12-14 (moved from 6-8)
+W2-UNI:UNI-P	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:22-27;Theory_work/Wave2/W2-UNI/STATEMENT.md:40-45;Theory_work/Wave2/W2-UNI/STATEMENT.md:74-76	design/response, A1-post, A3 bounds
+W2-UNI:UNI-0	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:22-34;Theory_work/Wave2/W2-UNI/STATEMENT.md:50-53;Theory_work/Wave2/W2-UNI/STATEMENT.md:74-76	setting+events, LOC_M def, A3
+W2-UNI:UNI-1	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:22-34;Theory_work/Wave2/W2-UNI/STATEMENT.md:50-53;Theory_work/Wave2/W2-UNI/STATEMENT.md:59-72;Theory_work/Wave2/W2-UNI/STATEMENT.md:74-76;Theory_work/Wave2/W2-FAC-A/STATEMENT.md:94-100	adds k=1 notation/A2-1 (old 57-63+70 now 59-72), TV/TV-pop
+W2-UNI:U-LOC	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:50-53;Theory_work/Wave2/W2-UNI/STATEMENT.md:59-72	LOC_M def, k=1 notation + A2-1
+W2-UNI:CT_M	premises	Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:12-15;Theory_work/Wave2/W2-UNI/STATEMENT.md:50-53	STATEMENT LOC_M def moved 48-51 -> 50-53
+W2-UNI:CD_M	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:50-53;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:66-69	STATEMENT LOC_M def moved 48-51 -> 50-53
+W2-UNI:RB_M	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:50-53;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:66-69;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:89-90	STATEMENT LOC_M def moved 48-51 -> 50-53
+W2-UNI:TAIL_M	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:50-53;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:66-69;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:103-104	STATEMENT LOC_M def moved 48-51 -> 50-53
+W2-UNI:LOCL	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:50-53;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:66-69;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:89-90;Theory_work/Wave2/W2-UNI/lemmas/L1_metric.md:119-121	STATEMENT LOC_M def moved 48-51 -> 50-53
+W2-UNI:SC_M	premises	Theory_work/Wave2/W2-UNI/STATEMENT.md:50-53	STATEMENT LOC_M def moved 48-51 -> 50-53
+W2-UNI:UNI-0	depends_on	W2-LOC2:PLR;W2-LOC2:NA-R;W2-LOC2:L0';W2-LOC2:LOC-d@proof:Part A delta (A.1-A.6);W2-APP:Thm-LOC@proof:L3.2-L3.5 chain;C-GROW:L6.2;C-GROW:L6.3;C-GROW:L6.4;C-GROW:L6.5;W2-UNI:CT_M;W2-UNI:CD_M;W2-UNI:RB_M;W2-UNI:TAIL_M;W2-UNI:LOCL;W2-UNI:UNI-P;W2-UNI:F-UNI	Theory_work/Wave2/W2-UNI/lemmas/L2_k0.md:60 (APP L3.2-L3.5, GROW L6.2-L6.5 chain reused with deltas)
+W2-UNI:UNI-1	depends_on	W2-UNI:U-LOC-Cor;W2-UNI:RB_M;W2-UNI:F-UNI;W2-FAC-A:L1@proof:U(d) perturbation;W2-FAC-A:L2;W2-FAC-A:L3.1;W2-FAC-A:L3.2;W2-FAC-A:L4;W2-FAC-A:L5;C-GROW:L1.2;EXT:[OP];EXT:T03♯;EXT:M5(0)	Theory_work/Wave2/W2-UNI/lemmas/L4_k1.md:7-12 (inputs); U-LOC edge now to Corollary row
+W2-UNI:U-LOC	depends_on	W2-UNI:LOCL;W2-UNI:CD_M;W2-UNI:RB_M;W2-FAC-A:L1@proof:U(a)-(c) decomposition	Theory_work/Wave2/W2-UNI/lemmas/L3_ULOC.md:10-13
+W2-UNI:F-UNI	depends_on	W2-FAC-A:Prop-F-FAC@proof:FACA L7 Steps 1-2;C-GROW:L1.2;C-DLV:Cor-Dp;EXT:[OP]	Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md:23-34 (unchanged)
+W2-UNI:CT_M	status	PROVED-CHECKED	REPORT.md:21 ticket-level PROVED-CHECKED covers this claim (lemma header stays unchecked, REPORT.md:84)
+W2-UNI:CT_M	status_source	Theory_work/Wave2/W2-UNI/REPORT.md:21	
+W2-UNI:CT_M	council	Astra 9.0 / Opus 8.9, round 1	REPORT.md:22-24
+W2-UNI:CT_M	evidence	reviews/R01_statement_lock_sol.md: LOCK-WITH-CHANGES (8/8 applied); reviews/R02_L1L2_check_sol.md: VERIFIED-WITH-AMENDMENTS (1 MINOR applied); reviews/R05a_sweep_sol.md: sweep, no counterexample, items applied (v1.1.2); reviews/R05b_sweep_astra.md: VERIFIED-WITH-AMENDMENTS (math level); reviews/C1_council_astra.md: PASS 9.0 (6/6 gates); reviews/C1_council_opus.md: PASS 8.9 (6/6 gates)	reviews headers
+W2-UNI:CD_M	status	PROVED-CHECKED	REPORT.md:21 ticket-level PROVED-CHECKED covers this claim (lemma header stays unchecked, REPORT.md:84)
+W2-UNI:CD_M	status_source	Theory_work/Wave2/W2-UNI/REPORT.md:21	
+W2-UNI:CD_M	council	Astra 9.0 / Opus 8.9, round 1	REPORT.md:22-24
+W2-UNI:CD_M	evidence	reviews/R01_statement_lock_sol.md: LOCK-WITH-CHANGES (8/8 applied); reviews/R02_L1L2_check_sol.md: VERIFIED-WITH-AMENDMENTS (1 MINOR applied); reviews/R05a_sweep_sol.md: sweep, no counterexample, items applied (v1.1.2); reviews/R05b_sweep_astra.md: VERIFIED-WITH-AMENDMENTS (math level); reviews/C1_council_astra.md: PASS 9.0 (6/6 gates); reviews/C1_council_opus.md: PASS 8.9 (6/6 gates)	reviews headers
+W2-UNI:RB_M	status	PROVED-CHECKED	REPORT.md:21 ticket-level PROVED-CHECKED covers this claim (lemma header stays unchecked, REPORT.md:84)
+W2-UNI:RB_M	status_source	Theory_work/Wave2/W2-UNI/REPORT.md:21	
+W2-UNI:RB_M	council	Astra 9.0 / Opus 8.9, round 1	REPORT.md:22-24
+W2-UNI:RB_M	evidence	reviews/R01_statement_lock_sol.md: LOCK-WITH-CHANGES (8/8 applied); reviews/R02_L1L2_check_sol.md: VERIFIED-WITH-AMENDMENTS (1 MINOR applied); reviews/R05a_sweep_sol.md: sweep, no counterexample, items applied (v1.1.2); reviews/R05b_sweep_astra.md: VERIFIED-WITH-AMENDMENTS (math level); reviews/C1_council_astra.md: PASS 9.0 (6/6 gates); reviews/C1_council_opus.md: PASS 8.9 (6/6 gates)	reviews headers
+W2-UNI:TAIL_M	status	PROVED-CHECKED	REPORT.md:21 ticket-level PROVED-CHECKED covers this claim (lemma header stays unchecked, REPORT.md:84)
+W2-UNI:TAIL_M	status_source	Theory_work/Wave2/W2-UNI/REPORT.md:21	
+W2-UNI:TAIL_M	council	Astra 9.0 / Opus 8.9, round 1	REPORT.md:22-24
+W2-UNI:TAIL_M	evidence	reviews/R01_statement_lock_sol.md: LOCK-WITH-CHANGES (8/8 applied); reviews/R02_L1L2_check_sol.md: VERIFIED-WITH-AMENDMENTS (1 MINOR applied); reviews/R05a_sweep_sol.md: sweep, no counterexample, items applied (v1.1.2); reviews/R05b_sweep_astra.md: VERIFIED-WITH-AMENDMENTS (math level); reviews/C1_council_astra.md: PASS 9.0 (6/6 gates); reviews/C1_council_opus.md: PASS 8.9 (6/6 gates)	reviews headers
+W2-UNI:LOCL	status	PROVED-CHECKED	REPORT.md:21 ticket-level PROVED-CHECKED covers this claim (lemma header stays unchecked, REPORT.md:84)
+W2-UNI:LOCL	status_source	Theory_work/Wave2/W2-UNI/REPORT.md:21	
+W2-UNI:LOCL	council	Astra 9.0 / Opus 8.9, round 1	REPORT.md:22-24
+W2-UNI:LOCL	evidence	reviews/R01_statement_lock_sol.md: LOCK-WITH-CHANGES (8/8 applied); reviews/R02_L1L2_check_sol.md: VERIFIED-WITH-AMENDMENTS (1 MINOR applied); reviews/R05a_sweep_sol.md: sweep, no counterexample, items applied (v1.1.2); reviews/R05b_sweep_astra.md: VERIFIED-WITH-AMENDMENTS (math level); reviews/C1_council_astra.md: PASS 9.0 (6/6 gates); reviews/C1_council_opus.md: PASS 8.9 (6/6 gates)	reviews headers
+W2-UNI:SC_M	status	PROVED-CHECKED	REPORT.md:21 ticket-level PROVED-CHECKED covers this claim (lemma header stays unchecked, REPORT.md:84)
+W2-UNI:SC_M	status_source	Theory_work/Wave2/W2-UNI/REPORT.md:21	
+W2-UNI:SC_M	council	Astra 9.0 / Opus 8.9, round 1	REPORT.md:22-24
+W2-UNI:SC_M	evidence	reviews/R01_statement_lock_sol.md: LOCK-WITH-CHANGES (8/8 applied); reviews/R02_L1L2_check_sol.md: VERIFIED-WITH-AMENDMENTS (1 MINOR applied); reviews/R05a_sweep_sol.md: sweep, no counterexample, items applied (v1.1.2); reviews/R05b_sweep_astra.md: VERIFIED-WITH-AMENDMENTS (math level); reviews/C1_council_astra.md: PASS 9.0 (6/6 gates); reviews/C1_council_opus.md: PASS 8.9 (6/6 gates)	reviews headers
+W2-UNI:UNI-0	status	PROVED-CHECKED	REPORT.md:21 ticket-level PROVED-CHECKED covers this claim (lemma header stays unchecked, REPORT.md:84)
+W2-UNI:UNI-0	status_source	Theory_work/Wave2/W2-UNI/REPORT.md:21	
+W2-UNI:UNI-0	council	Astra 9.0 / Opus 8.9, round 1	REPORT.md:22-24
+W2-UNI:UNI-0	evidence	reviews/R01_statement_lock_sol.md: LOCK-WITH-CHANGES (8/8 applied); reviews/R02_L1L2_check_sol.md: VERIFIED-WITH-AMENDMENTS (1 MINOR applied); reviews/R04_midpoint_sol.md: CONTINUE (1 MAJOR, 2 MINOR, 1 NIT, applied); reviews/R05a_sweep_sol.md: sweep, no counterexample, items applied (v1.1.2); reviews/R05b_sweep_astra.md: VERIFIED-WITH-AMENDMENTS (math level); reviews/C1_council_astra.md: PASS 9.0 (6/6 gates); reviews/C1_council_opus.md: PASS 8.9 (6/6 gates)	
+W2-UNI:U-LOC	status	PROVED-CHECKED	REPORT.md:21 ticket-level PROVED-CHECKED covers this claim (lemma header stays unchecked, REPORT.md:84)
+W2-UNI:U-LOC	status_source	Theory_work/Wave2/W2-UNI/REPORT.md:21	
+W2-UNI:U-LOC	council	Astra 9.0 / Opus 8.9, round 1	REPORT.md:22-24
+W2-UNI:U-LOC	evidence	reviews/R01_statement_lock_sol.md: LOCK-WITH-CHANGES (8/8 applied); reviews/R03_L3L6_check_sol.md: VERIFIED-WITH-AMENDMENTS (L3_ULOC; 1 MAJOR T=empty for TL, applied); reviews/R04_midpoint_sol.md: CONTINUE; reviews/R05a_sweep_sol.md: sweep, no counterexample, items applied (v1.1.2); reviews/R05b_sweep_astra.md: VERIFIED-WITH-AMENDMENTS (math level); reviews/C1_council_astra.md: PASS 9.0 (6/6 gates); reviews/C1_council_opus.md: PASS 8.9 (6/6 gates)	
+W2-UNI:UNI-1	status	PROVED-CHECKED	REPORT.md:21 ticket-level PROVED-CHECKED covers this claim (lemma header stays unchecked, REPORT.md:84)
+W2-UNI:UNI-1	status_source	Theory_work/Wave2/W2-UNI/REPORT.md:21	
+W2-UNI:UNI-1	council	Astra 9.0 / Opus 8.9, round 1	REPORT.md:22-24
+W2-UNI:UNI-1	evidence	reviews/R01_statement_lock_sol.md: LOCK-WITH-CHANGES (8/8 applied); reviews/R03_L3L6_check_sol.md: VERIFIED-WITH-AMENDMENTS (L4_k1, applied); reviews/R04_midpoint_sol.md: CONTINUE; reviews/R05a_sweep_sol.md: sweep, no counterexample, items applied (v1.1.2); reviews/R05b_sweep_astra.md: VERIFIED-WITH-AMENDMENTS (math level); reviews/C1_council_astra.md: PASS 9.0 (6/6 gates); reviews/C1_council_opus.md: PASS 8.9 (6/6 gates)	
+W2-UNI:F-UNI	status	PROVED-CHECKED	REPORT.md:21 ticket-level PROVED-CHECKED covers this claim (lemma header stays unchecked, REPORT.md:84)
+W2-UNI:F-UNI	status_source	Theory_work/Wave2/W2-UNI/REPORT.md:21	
+W2-UNI:F-UNI	council	Astra 9.0 / Opus 8.9, round 1	REPORT.md:22-24
+W2-UNI:F-UNI	evidence	reviews/R01_statement_lock_sol.md: LOCK-WITH-CHANGES (8/8 applied); reviews/R03_L3L6_check_sol.md: VERIFIED-WITH-AMENDMENTS (L5_delivery, applied); reviews/R04_midpoint_sol.md: CONTINUE; reviews/R05a_sweep_sol.md: sweep, no counterexample, items applied (v1.1.2); reviews/R05b_sweep_astra.md: VERIFIED-WITH-AMENDMENTS (math level); reviews/C1_council_astra.md: PASS 9.0 (6/6 gates); reviews/C1_council_opus.md: PASS 8.9 (6/6 gates)	
+W2-UNI:OBS-k	status	PROVED-CHECKED	REPORT.md:21 ticket-level PROVED-CHECKED covers this claim (lemma header stays unchecked, REPORT.md:84)
+W2-UNI:OBS-k	status_source	Theory_work/Wave2/W2-UNI/REPORT.md:21	
+W2-UNI:OBS-k	council	Astra 9.0 / Opus 8.9, round 1	REPORT.md:22-24
+W2-UNI:OBS-k	evidence	reviews/R01_statement_lock_sol.md: LOCK-WITH-CHANGES (8/8 applied); reviews/R03_L3L6_check_sol.md: VERIFIED (OBS-k); reviews/R05a_sweep_sol.md: sweep, no counterexample, items applied (v1.1.2); reviews/R05b_sweep_astra.md: VERIFIED-WITH-AMENDMENTS (math level); reviews/C1_council_astra.md: PASS 9.0 (6/6 gates); reviews/C1_council_opus.md: PASS 8.9 (6/6 gates)	
+W2-UNI:UNI-P	status	PROVED (by this seat, unchecked)	REPORT.md:99 APP L1_POST status; restated per REPORT.md:22-23
+W2-UNI:UNI-P	status_source	Theory_work/Wave2/W2-UNI/REPORT.md:99	
+W2-UNI:UNI-P	evidence	reviews/R01_statement_lock_sol.md: LOCK-WITH-CHANGES (8/8 applied); reviews/C1_council_astra.md: PASS 9.0 (UNI-P uses actual two-level LSF cutoffs); reviews/C1_council_opus.md: PASS 8.9	G2 row of council
+W2-UNI:UNI-P	notes	Restated from APP L1_POST(b) with its source status; not proved in W2-UNI so ticket council score not assigned as claim council. PLR (i') restated from W2-LOC2:PLR (no W2-UNI row).	REPORT.md:22-23
+W2-UNI:UNI-P	substance	no	old span text identical (bcfbea4 vs now); only moved/proof edits
+W2-UNI:UNI-0	substance	no	old span text identical (bcfbea4 vs now); only moved/proof edits
+W2-UNI:U-LOC	substance	no	old span text identical (bcfbea4 vs now); only moved/proof edits
+W2-UNI:F-UNI	substance	no	old span text identical (bcfbea4 vs now); only moved/proof edits
+W2-UNI:OBS-k	substance	no	statement lines identical; proof only (L_* fix, R05a-17)
+W2-UNI:CT_M	substance	no	old span text identical (bcfbea4 vs now); only moved/proof edits
+W2-UNI:CD_M	substance	no	old span text identical (bcfbea4 vs now); only moved/proof edits
+W2-UNI:RB_M	substance	no	old span text identical (bcfbea4 vs now); only moved/proof edits
+W2-UNI:TAIL_M	substance	no	old span text identical (bcfbea4 vs now); only moved/proof edits
+W2-UNI:LOCL	substance	no	old span text identical (bcfbea4 vs now); only moved/proof edits
+W2-UNI:SC_M	substance	no	old span text identical (bcfbea4 vs now); only moved/proof edits
+W2-UNI:UNI-1	substance	yes	conclusion changed: LS0 move-count qualified by event [R05a-5]; containment narrowed to fixed-positive-beta-min subclass of FAC-L [R05a-1] (STATEMENT.md:122-131)
+W2-UNI:U-LOC	notes	split resolved: Corollary U-LOC (L3.5) now row W2-UNI:U-LOC-Cor; U-LOC row = (a)-(d) via STATEMENT R3 (proofs L3_ULOC.md:31-105)	Theory_work/Wave2/W2-UNI/lemmas/L3_ULOC.md:107
+W2-UNI:U-LOC-Cor	new_claim	U-LOC-Cor|corollary|Corollary U-LOC (population and sample versions)|Theory_work/Wave2/W2-UNI/lemmas/L3_ULOC.md|107-126	UNI-1 proof uses it separately; lines 114-115 hold its short population proof (interleaved)
+W2-UNI:U-LOC-Cor	lines	107-126	Theory_work/Wave2/W2-UNI/lemmas/L3_ULOC.md:107-126
+W2-UNI:U-LOC-Cor	premises	Theory_work/Wave2/W2-UNI/lemmas/L3_ULOC.md:15-29;Theory_work/Wave2/W2-UNI/STATEMENT.md:50-53;Theory_work/Wave2/W2-UNI/STATEMENT.md:59-72	L3.0 setting/notation
+W2-UNI:U-LOC-Cor	depends_on	W2-UNI:U-LOC;W2-FAC-A:L1@proof:U(d) sample coupling	Theory_work/Wave2/W2-UNI/lemmas/L3_ULOC.md:114,127-133
+W2-UNI:U-LOC-Cor	status	PROVED-CHECKED	REPORT.md:21 ticket-level PROVED-CHECKED covers this claim (lemma header stays unchecked, REPORT.md:84)
+W2-UNI:U-LOC-Cor	status_source	Theory_work/Wave2/W2-UNI/REPORT.md:21	
+W2-UNI:U-LOC-Cor	council	Astra 9.0 / Opus 8.9, round 1	REPORT.md:22-24
+W2-UNI:U-LOC-Cor	evidence	reviews/R03_L3L6_check_sol.md: VERIFIED-WITH-AMENDMENTS (L3_ULOC; MAJOR R03-1 empty set applied); reviews/R04_midpoint_sol.md: CONTINUE; reviews/R05a_sweep_sol.md: sweep, no counterexample, items applied (v1.1.2); reviews/R05b_sweep_astra.md: VERIFIED-WITH-AMENDMENTS (math level); reviews/C1_council_astra.md: PASS 9.0 (6/6 gates); reviews/C1_council_opus.md: PASS 8.9 (6/6 gates)	

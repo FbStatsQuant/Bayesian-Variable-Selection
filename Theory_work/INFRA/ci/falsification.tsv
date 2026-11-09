@@ -1,22 +1,22 @@
 kind	claims	assumption	script	args	timeout_s	runtime_s	cheap	outputs	expect	notes
-falsify	W1-PXN:Thm-PXN; W1-PXN:Thm-PXN(T); W1-PXN:Thm-PXN(C); W1-PXN:Thm-PXN(K); W1-PXN:Lemma-LS		Theory_work/Wave1/W1-PXN/numerics/n6_ls_and_C.py		120					
-falsify	W1-PXN:Thm-PXN		Theory_work/Wave1/W1-PXN/numerics/n8/n8_route.py		120					
-falsify	W1-PXN:Thm-PXN(R); W1-PXN:Thm-R		Theory_work/Wave1/W1-PXN/numerics/n4_pairlaw.py		120					
-falsify	W1-PXN:Thm-PXN(R); W1-PXN:Thm-PXN(T)		Theory_work/Wave1/W1-PXN/numerics/n5_margins.py		120					
-falsify	W1-PXN:Thm-PXN(S); W1-PXN:Thm-PXN(P); W1-PXN:P8		Theory_work/Wave1/W1-PXN/numerics/n7_posterior.py		120					
-falsify	W1-PXN:Lemma-L		Theory_work/Wave1/W1-PXN/numerics/n2_lemmaE.py		120					
-falsify	W1-PXN:B-ii		Theory_work/Wave1/W1-PXN/numerics/n3_haar.py		120					
-falsify	W1-N1:Thm-N1; W1-N1:Cor-E; W1-N1:B; W1-N1:P		Theory_work/Wave1/W1-N1/numerics/n1_exact.py		120					
-falsify	W1-N1:Thm-N1; W1-N1:B		Theory_work/Wave1/W1-N1/numerics/n1_mc.py		120					
-falsify	W1-N3:Thm-N3-code(a-d); W1-N3:Thm-N3-code(e); W1-N3:Thm-N3-code(f); W1-N3:L1; W1-N3:L4; W1-N3:L5; W1-N3:L6; W1-N3:LFP		Theory_work/Wave1/W1-N3/numerics/run_checks.py		120					
-falsify	W1-N3:Thm-N3-code(a-d); W1-N3:L6; W1-N3:Cex-N3-Dm		Theory_work/Wave1/W1-N3/numerics/cex_family.py		120					
-falsify	W1-N3:Thm-N3-code(a-d); W1-N3:L6; W1-N3:Cex-N3-Dm		Theory_work/Wave1/W1-N3/numerics/cex_default_cap.py		120					
-falsify	W1-N3:Thm-N3-code(e); W1-N3:LFP		Theory_work/Wave1/W1-N3/numerics/fp_example.py		120					
-falsify	W1-N3:Thm-N3-code(f); W1-N3:L7		Theory_work/Wave1/W1-N3/numerics/tdp.py		120					
-falsify	W1-N3:L1		Theory_work/Wave1/W1-N3/numerics/check_union_order.py		120					
-falsify	W1-N3:L2; W1-N3:L3; W1-N3:L5		Theory_work/Wave1/W1-N3/numerics/lemma_probes.py		120					
-falsify	W1-GEN:L1		Theory_work/Wave1/W1-GEN/numerics/e1_unit_tests.py		120					
-falsify	W1-GEN:L2; W1-GEN:L4; W1-GEN:Thm-GEN(C5a)		Theory_work/Wave1/W1-GEN/numerics/e2_lh_exact.py		120					
+falsify	W1-PXN:Thm-PXN; W1-PXN:Thm-PXN(T); W1-PXN:Thm-PXN(C); W1-PXN:Thm-PXN(K); W1-PXN:Lemma-LS		Theory_work/Wave1/W1-PXN/numerics/n6_ls_and_C.py		89	26.5	yes			
+falsify	W1-PXN:Thm-PXN		Theory_work/Wave1/W1-PXN/numerics/n8/n8_route.py		120	>120	no			calibration rc=TIMEOUT: 300,540,2,1,(0.5, 0.5) | 10/10 | 9/10 | 10/10 | 9/10 | 9/10 | 2.10 | 0.2613/0.7397 | 1.80 (pred med 2.30, mean 2.61; obs
+falsify	W1-PXN:Thm-PXN(R); W1-PXN:Thm-R		Theory_work/Wave1/W1-PXN/numerics/n4_pairlaw.py		120	59.1	yes			
+falsify	W1-PXN:Thm-PXN(R); W1-PXN:Thm-PXN(T)		Theory_work/Wave1/W1-PXN/numerics/n5_margins.py		50	13.4	yes			
+falsify	W1-PXN:Thm-PXN(S); W1-PXN:Thm-PXN(P); W1-PXN:P8		Theory_work/Wave1/W1-PXN/numerics/n7_posterior.py		74	21.6	yes			
+falsify	W1-PXN:Lemma-L		Theory_work/Wave1/W1-PXN/numerics/n2_lemmaE.py		120	>120	no			calibration rc=TIMEOUT: (n,p) = (200,120): lambda_min(Sigma)=0.2350 (F4 bound (1-psi)(1-rho)=0.1500), phi0^2=0.1175, M=4.500, c_E=0.01515, kappa
+falsify	W1-PXN:B-ii		Theory_work/Wave1/W1-PXN/numerics/n3_haar.py		120	60.2	yes			
+falsify	W1-N1:Thm-N1; W1-N1:Cor-E; W1-N1:B; W1-N1:P		Theory_work/Wave1/W1-N1/numerics/n1_exact.py		30	6.5	yes			
+falsify	W1-N1:Thm-N1; W1-N1:B		Theory_work/Wave1/W1-N1/numerics/n1_mc.py		120	8.5	no			calibration rc=1: IndexError: list index out of range
+falsify	W1-N3:Thm-N3-code(a-d); W1-N3:Thm-N3-code(e); W1-N3:Thm-N3-code(f); W1-N3:L1; W1-N3:L4; W1-N3:L5; W1-N3:L6; W1-N3:LFP		Theory_work/Wave1/W1-N3/numerics/run_checks.py		120	4.0	no			calibration rc=1: FileNotFoundError: [WinError 2] The system cannot find the file specified
+falsify	W1-N3:Thm-N3-code(a-d); W1-N3:L6; W1-N3:Cex-N3-Dm		Theory_work/Wave1/W1-N3/numerics/cex_family.py		120	3.6	no			calibration rc=1: FileNotFoundError: [WinError 2] The system cannot find the file specified
+falsify	W1-N3:Thm-N3-code(a-d); W1-N3:L6; W1-N3:Cex-N3-Dm		Theory_work/Wave1/W1-N3/numerics/cex_default_cap.py		120	2.8	no			calibration rc=1: FileNotFoundError: [WinError 2] The system cannot find the file specified
+falsify	W1-N3:Thm-N3-code(e); W1-N3:LFP		Theory_work/Wave1/W1-N3/numerics/fp_example.py		120	4.7	no			calibration rc=1: FileNotFoundError: [WinError 2] The system cannot find the file specified
+falsify	W1-N3:Thm-N3-code(f); W1-N3:L7		Theory_work/Wave1/W1-N3/numerics/tdp.py		30	1.8	yes			
+falsify	W1-N3:L1		Theory_work/Wave1/W1-N3/numerics/check_union_order.py		30	2.0	yes			
+falsify	W1-N3:L2; W1-N3:L3; W1-N3:L5		Theory_work/Wave1/W1-N3/numerics/lemma_probes.py		120	3.2	no			calibration rc=1: FileNotFoundError: [WinError 2] The system cannot find the file specified
+falsify	W1-GEN:L1		Theory_work/Wave1/W1-GEN/numerics/e1_unit_tests.py		120	37.0	yes			
+falsify	W1-GEN:L2; W1-GEN:L4; W1-GEN:Thm-GEN(C5a)		Theory_work/Wave1/W1-GEN/numerics/e2_lh_exact.py		120	84.9	yes			
 falsify	W1-GEN:L3; W1-GEN:L4		Theory_work/Wave1/W1-GEN/numerics/e4_adversarial.py		120					
 falsify	W1-GEN:Thm-GEN(C5b)		Theory_work/Wave1/W1-GEN/numerics/e3_lh_iid.py		120					
 falsify	W1-GEN:Thm-GEN(C5d-S1346); W1-GEN:Obs-GEN-S2S5		Theory_work/Wave1/W1-GEN/numerics/e6_study.py		120					

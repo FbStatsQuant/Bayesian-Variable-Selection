@@ -20,6 +20,6 @@ W2-FAC-S5F	Wave2	Theory_work/Wave2/W2-FAC-S5F							in progress (CHECKPOINT only
 W2-FAC-X	Wave2	Theory_work/Wave2/W2-FAC-X	PROVED-CHECKED (Target 1 — Theorem FAC-CS-iid); Target 2 partial	Theory_work/Wave2/W2-FAC-X/REPORT.md:39	Thm-FAC-CS-iid				
 W2-FAC-XA	Wave2	Theory_work/Wave2/W2-FAC-XA							in progress: CHECKPOINT 'PARTIAL, research in progress'
 W2-LOC2	Wave2	Theory_work/Wave2/W2-LOC2	PROVED-CHECKED — council round 1 PASSED (Codex gpt-6.1-sol xhigh 9.3, Claude Opus 5.5 high 9.1; all six gates	Theory_work/Wave2/W2-LOC2/REPORT.md:3	PLR;Thm-Poly;F-LOC2				
-W2-UNI	Wave2	Theory_work/Wave2/W2-UNI		Theory_work/Wave2/W2-UNI/REPORT.md:15					in progress (committed REPORT: [pending sweep R05 and council]); further work uncommitted on main
+W2-UNI	Wave2	Theory_work/Wave2/W2-UNI	PROVED-CHECKED — STATEMENT v1.1.4: Theorem UNI-0 (ii), Theorem UNI-1 (iii), reduction lemmas R1–R4	Theory_work/Wave2/W2-UNI/REPORT.md:21	UNI-0;UNI-1;F-UNI				closed on main c9b3403 (council Astra 9.0 / Opus 8.9); re-registered 2026-11-09
 W2-FAC-K2	Wave2	Theory_work/Wave2/W2-FAC-K2							in progress (LOG only)
 HQ_AUDIT-W2	Wave2	Theory_work/Wave2/HQ_AUDIT			B1;B2;B3;B4				
