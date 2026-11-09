@@ -1,6 +1,7 @@
-citecheck.py: 186 citations checked, 0 problems
+citecheck.py: 190 citations checked, 0 problems
 OK            consistency.tex:18  \srcq{W1C/PROTOCOL.md:35}  [PROVED-CHECKED]
 OK            consistency.tex:19  \path{W1C/FINAL/reviews/F1_fidelity_sol.md}
+OK            consistency.tex:19  \srcq{W1C/HQ_AUDIT/A4_postcouncil_check.md:1}  [OK-WITH-FIXES]
 OK            consistency.tex:19  \path{W1C/FINAL/reviews/C1_disposition.md}
 OK            consistency.tex:20  \path{Theory_work/Wave1/}
 OK            consistency.tex:20  \path{Theory_work/Wave1C/}
@@ -107,23 +108,26 @@ OK            sections\s6_delivery.tex:22  \srcq{W1C/C-DLV/lemmas/L4_delivery.md
 OK            sections\s6_delivery.tex:26  \srcq{W1C/C-DLV/lemmas/L4_delivery.md:79-93}  [Proposition F]
 OK            sections\s6_delivery.tex:26  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:7-19}  [MAJOR]
 OK            sections\s6_delivery.tex:26  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:60-75}  [Exact corrected statement]
-OK            sections\s6_delivery.tex:42  \srcq{W1C/C-DLV/REPORT.md:70}  [PROVED-CHECKED for the patched calibration law]
-OK            sections\s6_delivery.tex:42  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:56}  [The longer C-GROW search contains]
-OK            sections\s6_delivery.tex:47  \srcq{W1C/HQ_AUDIT/A2_propF_GROW.md:25}  [Add to Proposition F's classes]
-OK            sections\s6_delivery.tex:49  \path{W1C/C-DLV/lemmas/L4_delivery.md}
-OK            sections\s6_delivery.tex:49  \path{W1C/C-DLV/lemmas/L1_resources.md}
-OK            sections\s6_delivery.tex:49  \srcq{W1C/C-GROW/lemmas/L4_assembly.md:26-28}  [LS0 scores S₀ as soon as its cap is]
-OK            sections\s6_delivery.tex:49  \srcq{W1C/C-GROW/lemmas/L4_assembly.md:28-29}  [P(NA(𝓛)ᶜ) → 0 by L2.2–L2.3]
-OK            sections\s6_delivery.tex:49  \srcq{W1C/HQ_AUDIT/A2_propF_GROW.md:37-67}  [Lemma S extends]
-OK            sections\s6_delivery.tex:51  \srcq{W1C/HQ_AUDIT/A2_propF_GROW.md:1-5}  [EXTENDS]
-OK            sections\s6_delivery.tex:51  \srcq{W1C/HQ_AUDIT/A3_check_A2.md:5}  [VERIFIED-WITH-AMENDMENTS]
-OK            sections\s6_delivery.tex:51  \srcq{W1C/HQ_AUDIT/A3_check_A2.md:31-39}  [PROVED (A2), checked by A3, not council-passed]
-OK            sections\s6_delivery.tex:55  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:43}  [out\$grid=NULL]
-OK            sections\s6_delivery.tex:55  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:33}  [LS0, workers, merge, certificates, return allocation]
-OK            sections\s6_delivery.tex:55  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:54}  [last successful tier-1 construction]
-OK            sections\s6_delivery.tex:55  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:62-64}  [Not counted]
-OK            sections\s6_delivery.tex:55  \srcq{BRH/Theory_work/Wave1C/C-ENG/REPORT.md:63-81}  [now charges this worst case]
-OK            sections\s6_delivery.tex:55  \srcq{BRH/Scripts/SMC_BVS/core/v3_fit.R:43-65}  [ls0_worst_case]
+OK            sections\s6_delivery.tex:44  \srcq{W1C/HQ_AUDIT/A4_postcouncil_check.md:7-25}  [ŝ_K <= (τ U_K + τ₀)/200]
+OK            sections\s6_delivery.tex:49  \srcq{W1C/C-DLV/REPORT.md:70}  [PROVED-CHECKED for the patched calibration law]
+OK            sections\s6_delivery.tex:49  \srcq{W1C/HQ_AUDIT/A4_postcouncil_check.md:1}  [OK-WITH-FIXES]
+OK            sections\s6_delivery.tex:49  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:56}  [The longer C-GROW search contains]
+OK            sections\s6_delivery.tex:54  \srcq{W1C/HQ_AUDIT/A2_propF_GROW.md:25}  [Add to Proposition F's classes]
+OK            sections\s6_delivery.tex:56  \path{W1C/C-DLV/lemmas/L4_delivery.md}
+OK            sections\s6_delivery.tex:56  \path{W1C/C-DLV/lemmas/L1_resources.md}
+OK            sections\s6_delivery.tex:56  \srcq{W1C/C-GROW/lemmas/L4_assembly.md:26-28}  [LS0 scores S₀ as soon as its cap is]
+OK            sections\s6_delivery.tex:56  \srcq{W1C/C-GROW/lemmas/L4_assembly.md:28-29}  [P(NA(𝓛)ᶜ) → 0 by L2.2–L2.3]
+OK            sections\s6_delivery.tex:56  \srcq{W1C/HQ_AUDIT/A2_propF_GROW.md:37-67}  [Lemma S extends]
+OK            sections\s6_delivery.tex:58  \srcq{W1C/HQ_AUDIT/A4_postcouncil_check.md:1}  [OK-WITH-FIXES]
+OK            sections\s6_delivery.tex:58  \srcq{W1C/HQ_AUDIT/A2_propF_GROW.md:1-5}  [EXTENDS]
+OK            sections\s6_delivery.tex:58  \srcq{W1C/HQ_AUDIT/A3_check_A2.md:5}  [VERIFIED-WITH-AMENDMENTS]
+OK            sections\s6_delivery.tex:58  \srcq{W1C/HQ_AUDIT/A3_check_A2.md:31-39}  [PROVED (A2), checked by A3, not council-passed]
+OK            sections\s6_delivery.tex:62  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:43}  [out\$grid=NULL]
+OK            sections\s6_delivery.tex:62  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:33}  [LS0, workers, merge, certificates, return allocation]
+OK            sections\s6_delivery.tex:62  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:54}  [last successful tier-1 construction]
+OK            sections\s6_delivery.tex:62  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:62-64}  [Not counted]
+OK            sections\s6_delivery.tex:62  \srcq{BRH/Theory_work/Wave1C/C-ENG/REPORT.md:63-81}  [now charges this worst case]
+OK            sections\s6_delivery.tex:62  \srcq{BRH/Scripts/SMC_BVS/core/v3_fit.R:43-65}  [ls0_worst_case]
 OK            sections\s7_impl.tex:4  \srcq{W1C/PROTOCOL.md:40-47}  [Method-side changes]
 OK            sections\s7_impl.tex:6  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:3-8}  [DONE (implemented, tested, all code reviews APPROVE)]
 OK            sections\s7_impl.tex:8  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:12-16}  [reproduces the v3 fit entirely]

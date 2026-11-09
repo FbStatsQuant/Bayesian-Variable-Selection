@@ -41,3 +41,15 @@ The only remaining occurrence of "not council-passed" is the hidden citation tok
 **Scope note.** The post-council allocation addition in Proposition F (the C-ENG head preflight term
 time_n ≥ (ℓ_n+K+1)q(p)(τU_K+τ₀)/100 and mem_n ≥ P_e + ls0_archive bytes; Opus round-3 finding 1) and the
 current-head preflight facts were added after round 3 and are **outside what round 3 checked**; HQ is spot-checking them.
+
+## HQ audit A4 (post-council spot-check, OK-WITH-FIXES) — both MINOR fixes applied (writer, 2026-11-09)
+1. `sections/s6_delivery.tex` Proposition F, "Addition for the C-ENG head code": U_K replaced by A4's text (deterministic
+   polynomial upper bound on all operations between timing start and elapsed-time read in `cpp_time_scores(ctx,K,200)`,
+   incl. model construction, sorting and scoring; MACH bounds the measured elapsed time by τU_K+τ₀); archive bytes defined
+   explicitly, A = (2s+4)(12K+256) + 96s + 4(8W+4K+96) + 4096 with s = ℓ_n+K+1, W = ⌈p/64⌉; inserted the two-line
+   inequality ŝ_K ≤ (τU_K+τ₀)/200 ⇒ 2sqŝ_K ≤ sq(τU_K+τ₀)/100 = P̄_LS0 ≤ time_n ≤ 3600·allocation$hours, with "strict >
+   rejection tests, equality passes"; cites A4:7-25.
+2. Scope sentence appended to the Proposition F status box, the Proposition F-GROW status box and the front-matter status
+   summary (consistency.tex agentnote): "The full round-3 check applies to the d315c1e statements. The current-head
+   preflight allocation addition was made after that council and is checked separately in HQ audit A4 (OK-WITH-FIXES,
+   fixes applied)." (cites A4:1).
