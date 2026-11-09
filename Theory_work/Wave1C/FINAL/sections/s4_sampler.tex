@@ -1,0 +1,44 @@
+% =====================================================================
+\section{Sampler level}\label{sec:sampler}
+
+\subsection{Unbiasedness of every bounded summary per measured round (M1(b), Lemma N1)}
+Island $r$ runs on final stream $9+r$ after a calibration record $\mathcal C$ frozen on streams 0--9; $\hat{Z}_r$ is its evidence estimate, $Z$ the normalising constant, $W_r:=\hat{Z}_r/Z$. After each of the four measured \texttt{population\_round(P,1.0)} calls the population is $(S_{rqi})_{i\le N_e}$, $q=1,\dots,4$ \src{CORE/cpp/v3_engine.h:355-361}; the v3.1 accumulator is $H_r(h)=(4N_e)^{-1}\sum_{q,i}h(S_{rqi})$, which for $h=1\{j\in S\}$ is exactly the coded \texttt{pip\_plain[j]}.
+
+\textbf{Premises (named).} EX-A; EX-S/H-U (iid uniforms within stream $9+r$); START (\texttt{draw\_pi0} exact, $\bar{Z}_0$ exact; N9 \st{PROVED (candidate)}); KERNEL (the coded steps realise the T12 kernels; N9 \st{PROVED (candidate), code-checked}, CHK\_INHERITED \st{VERIFIED WITH AMENDMENT}); CAL; SI (stream $9+r$ independent of streams 0--9; for $r>4$ implied by IND-T, whose extension audit is pending); MEAS; the potential (uninterrupted) run; worker equivalence for v3.1's concurrent workers \srcq{W1/W1-N1/STATEMENT.md:68-91}{SI (single-island independence}.
+
+Let $\mathcal A\in\sigma(\mathcal C)$ be the successful-calibration event and $E_r=\mathcal A\cap\{r\le R'\}$. An identity $\EE[Y\mid\mathcal C]=b$ ``almost surely on $E_r$'' means $\EE[1_{E_r}Y\mid\mathcal C]=1_{E_r}b$ almost surely; no island record is asserted outside $E_r$ \srcq{W1/W1-N1/STATEMENT.md:94-99}{localised form}.
+\begin{lemma}[N1]\label{lem:N1}
+For every island $r$, every $q\in\{1,\dots,4\}$ and every jointly measurable $h(S;\mathcal C)$ with a deterministic bound $|h|\le B_h$, fixed before stream 10, almost surely on $\mathcal A\cap\{r\le R'\}$ (localised form):
+\[
+\EE\Bigl[\hat{Z}_r\cdot\tfrac1{N_e}\textstyle\sum_ih(S_{rqi})\Bigm|\mathcal C\Bigr]=Z\,\pi(h),\qquad\text{hence}\qquad \EE[\hat{Z}_rH_r(h)\mid\mathcal C]=Z\,\pi(h).
+\]
+No regime assumption on $X$ is made.
+\end{lemma}
+\begin{corollary}[E = M1(e), constant $\delta_1$]\label{cor:E}
+Under N1's named premises, almost surely on $E_r$ in the same localised sense: for $h\in[0,1]$ (as in Lemma N1, defined on $\Omega\cup\{S_0\}$) and $\delta_1:=1-\pi(S_0)$: $\EE[W_r|H_r(h)-h(S_0)|\mid\mathcal C]\le\EE[W_rH_r(1\{S\ne S_0\})\mid\mathcal C]=\delta_1\le2\delta_1$, attained by $h=1\{S\ne S_0\}$.
+\end{corollary}
+\begin{statusbox}
+W1-N1: \st{PROVED-CHECKED}; N1 \st{PROVED under the named premises — cross-family checked, council-passed (round 1)}; Corollary E \st{PROVED under the same premises}; council Codex 9.3 / Opus 8.9 \srcq{W1/W1-N1/REPORT.md:44-46}{PROVED under the named premises}. Statement \srcq{W1/W1-N1/STATEMENT.md:95-111}{(N1-q)}. Stronger than the card in three places (any bounded $h$; each measured round; constant $\delta_1$). \textbf{Not Lean-certified} (Lean not supplied; HQ to waive or open a registrar task). The SoP card still reads \st{N1: PROOF SKETCH} \srcq{SoP/04_theory.tex:123}{N1: PROOF SKETCH}; the registry update is HQ's.
+\end{statusbox}
+
+\subsection{What holds for the reported PIPs}\label{sec:pips}
+The paper must distinguish four PIP objects \srcq{W1C/C-PACK/lemmas/I4_SL_corollaries.md:70-88}{What the method's reported quantities satisfy}:
+\begin{enumerate}
+\item \textbf{Exact PIPs} $\mathrm{PIP}_j=\pi(j\in S)$: consistent with rate (Cor.~\ref{cor:SL1}).
+\item \textbf{Plain measured-endpoint PIP, islandwise} (shipped $R'=4$): Corollary~\ref{cor:E} with $h=1\{j\in S\}$, evidence-weighted, in expectation given $\mathcal C$, for the potential run. This is \emph{not} the study's \texttt{pip\_primary} and not a statement in probability about the pooled estimate.
+\item \textbf{Pooled reported PIPs.} The cited cards contain \textbf{no in-probability sure-screening theorem for the pooled shipped-$R'=4$ estimator}. M1(i), status \st{(h), (i): PROVED (by this seat, unchecked)} \srcq{SoP/04_theory.tex:130}{(h), (i): PROVED (by this seat, unchecked)}, gives $\hat{\mu}(h)\to h(S_0)$ in probability jointly with output for a \emph{fixed finite} declared list under T03♯'s hypotheses, $\operatorname{osc}d\le D_*=O_P(1)$ and the stacking configuration $R'_n=4\lceil\log_2(n+p+1)\rceil$; simultaneous control of $\le(n+p)^2$ declared summaries needs the card's separate configuration $R'_n=4\lceil(n+p)^6/4\rceil$ \srcq{SoP/04_theory.tex:111}{4⌈(n + p)⁶/4⌉}. The finite-$R'$ bound M1(f) is ``vacuous at $R'=4$'' \srcq{SoP/04_theory.tex:117}{vacuous at R′ = 4}. With N1 now proved (Lemma~\ref{lem:N1}), the premise ``E[W$_r$ ĥ$_r$] = π(h)'' of PC1c3 used by M1(f),(g),(i) is discharged islandwise; those clauses keep their own statuses and remaining premises (IND-T extension for $R'>4$, GUARD-W, stacking, T03♯) \srcq{W1/W1-N1/REPORT.md:48}{Discharged islandwise}.
+\item \textbf{Store-restricted PIPs} $\mathrm{PIP}^{\mathcal T}$ ($\pi$ conditioned on the reported store $\mathcal T$), Corollary SL2 below.
+\end{enumerate}
+
+\begin{corollary}[SL2: store-restricted PIPs, jointly with output]\label{cor:SL2}
+Assume M4(b) (if $S_0\in\mathcal T$: $|\mathrm{PIP}^{\mathcal T}_j-\mathrm{PIP}_j|\le\delta_1$), M4(c) (if $S_0\in\mathcal S^{+}$ and $\delta_1<\frac12$ then $S_0\in\mathcal T$, under LS0 with $\mathcal T_{\rm new}=\mathrm{top}_c(\mathcal T_{\rm old}\cup\mathcal S_{\rm added})$), exact score ordering, a positive-capacity store, truth discovery with output $\PP(\Ocal\cap\{S_0\notin\mathcal S^{+}\})\to0$ (PXN or GEN), and $\delta_n=O_P(r_n)$. Then $\PP(\Ocal\cap\{\max_j|\mathrm{PIP}^{\mathcal T}_j-1\{j\in S_0\}|>2\delta_n\})\to0$, and the same with any deterministic threshold $t_n$, $r_n=o(t_n)$.
+\end{corollary}
+\begin{statusbox}
+SL2: \st{PROVED (by this seat, unchecked)}, R34 re-derived; C-PACK council passed. Inputs verbatim: M4(a) \st{MZ-P3: "PROVED (P3 top store, deterministic); P3′ conditional on T03 + discovery"; "candidate: not reviewed, not adopted"; AUTHOR-ONLY}; M4(b) \st{same as (a); W1PC1 §3 B.D3(b) COUNTEREXAMPLE repaired with ‖h‖$_{\infty}$}; M4(c) \st{N13: PROVED (PC1 claim 5)} \srcq{W1C/C-PACK/lemmas/I4_SL_corollaries.md:112-114}{MZ-P3}. Statement \srcq{W1C/C-PACK/lemmas/I4_SL_corollaries.md:90-103}{Corollary SL2}.
+\end{statusbox}
+\begin{notproved}[sampler level]
+\begin{itemize}
+\item No in-probability sure-screening or selection theorem for the shipped pooled $R'=4$ PIPs or MPM; no TV/KL bound for the final pooled estimate under masking (CJ02).
+\item N1 and Corollary E are about the potential run; delivered records equal potential ones on $\Ocal$ only through GUARD-W (audit open). Worker equivalence, the IND-T extension ($R'>4$) and START/KERNEL (N9, candidate) remain premises.
+\end{itemize}
+\end{notproved}

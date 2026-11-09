@@ -1,0 +1,30 @@
+% =====================================================================
+\section{Provenance}\label{sec:prov}
+
+Council scores are (Codex gpt-6.1-sol / Claude Opus 5.5), round in which both seats passed with all gates. Review files are in each ticket's \texttt{reviews/}. Commits are on \texttt{main} (messages checked in the local reflog).
+
+{\footnotesize
+\begin{xltabular}{\linewidth}{@{}p{2.5cm}p{3.6cm}Xp{1.5cm}p{1.1cm}@{}}
+\toprule
+Result & proof files & review trail & council & commit \\
+\midrule
+\endhead
+S-T / T03♯ (Thm~\ref{thm:ST}) & SoP card TH09; \path{NBH/branch_snapshots/W6-FIXREV2/STATEMENTS.md} & SF W2-VT03R, XF A-REV2 (archive) & — (cited card) & frozen \texttt{21ebc28} \\
+SL0, SL1, SL1′, SL2, map v2 & \path{W1C/C-PACK/lemmas/I4_SL_corollaries.md}, \path{SONG_LIANG_MAP.md} & R34 (ERROR as written → 9 fixes), R38 CONTINUE, R39 sweep, C1 & 9.0 / 8.7 (r1) & \texttt{3b1d795} \\
+e4′, Lemma UM, UM-FP & \path{W1C/C-PACK/lemmas/I1_e4_replacement.md}, \path{patches/P_e4_consumers.md} & R30 lock, R33 GAP → 7 fixes, R38, R39, C1 & 9.0 / 8.7 (r1) & \texttt{3b1d795} \\
+LH-iid unconditional (Lemma I2) & \path{W1C/C-PACK/lemmas/I2_LHiid_unconditional.md}, \path{patches/P_GEN_LHiid.md} & R35 V-W-A (3 fixes), R38, R39, C1 & 9.0 / 8.7 (r1) & \texttt{3b1d795} \\
+SEL, L8 (C1′) amendments & \path{W1C/C-PACK/patches/P_SEL_L6d.md}, \path{P_L8_certificate.md} & R31, R32 (xhigh) V-W-A; R37 re-check & 9.0 / 8.7 (r1) & \texttt{3b1d795} \\
+PXN consolidated supplement & \path{W1C/C-PACK/item5_PXN_consolidated/} (00--06, INDEX, MAP, APPLIED\_ERRATA) & R36 fidelity FAITHFUL-WITH-FIXES; R39 & (item 5 outside council scope) & \texttt{3b1d795} \\
+Theorem PXN & \path{W1/W1-PXN/FINAL_PROOF.md}, \path{W1/W1-PXN/lemmas/} & R00 lock; R11--R17, R19, R21 item checks; R20 CONTINUE; R30 sweep (1 ERROR, 2 GAP, 4 MINOR fixed) & 8.6 / 8.3 (r1) & \texttt{f1751f3} \\
+W1-N3 (start mode as coded, TDP) & \path{W1/W1-N3/PROOF.md}, \path{W1/W1-N3/lemmas/} & R01 lock; R02, R03, R05 checks; R04 CONTINUE; R06 sweep & 9.3 / 8.6 (r1) & \texttt{21d5e80} \\
+Theorem GEN & \path{W1/W1-GEN/lemmas/00_MAIN.md}, L1--L8 & R01 lock; R02--R04, R06--R09 checks; R05 CONTINUE; R10 sweep (0 fatal) & 9.0 / 8.9 (r1) & \texttt{94ac305} \\
+Lemma N1, Cor.~E & \path{W1/W1-N1/lemmas/N1_theorem.md}, \path{E_corollary.md}, L1--L3 & SL1 lock; LC1; MP1 CONTINUE; SW1 sweep (0 critical) & 9.3 / 8.9 (r1) & \texttt{f16ce15} \\
+Theorem MIS, F, Cor.~H/D/D′, Lemma Z & \path{W1C/C-MIS/lemmas/00_MAIN.md}, L1--L6 & R01 lock; R02, R03, R05 checks; R04 CONTINUE; R06 sweep (0 fatal) & 9.2 / 9.0 (r1) & \texttt{05dcd85} \\
+Theorem D, Cor.~D′, (O), Prop.~F (C-DLV form) & \path{W1C/C-DLV/lemmas/L1_resources.md}--\path{L5_insertions.md}, \path{INVENTORY.md} & R01 REJECT → v2; R02--R04 checks; R05 CONTINUE; R06 sweep; C1 not passed (7.6 / 8.6), fixed & 9.0 / 8.9 (r2) & \texttt{604f58a} \\
+Prop.~F (corrected, Prop.~\ref{prop:F}) & \path{W1C/HQ_AUDIT/A1_propF_redteam.md} & HQ red team (Codex Sol xhigh): HOLDS-WITH-AMENDMENTS & — (not councilled) & \texttt{af2c454} \\
+Theorem GROW & \path{W1C/C-GROW/lemmas/00_MAIN.md}, L0--L6 & R01 lock; R02--R04, R06 (Opus), R07 checks; R05 CONTINUE; R08 sweep (0 fatal, 0 major) & 9.2 / 9.0 (r1) & \texttt{1853fcd} \\
+Lemma CAP (Lemma~\ref{lem:cap}) & this chapter, §\ref{sec:cap} & F1 fidelity reviewer (Codex Sol high) VERIFIED-WITH-AMENDMENTS, applied; A1 states the prefix property independently & — & — \\
+\bottomrule
+\end{xltabular}
+}
+\noindent Sources: \srcq{W1C/C-PACK/REPORT.md:66-82}{Review trail}; \srcq{W1/W1-PXN/REPORT.md:71-82}{Review trail}; \srcq{W1/W1-GEN/REPORT.md:71-83}{Review trail}; \srcq{W1/W1-N1/REPORT.md:67-86}{Review trail}; \srcq{W1/W1-N3/REPORT.md:52-61}{Review trail}; \srcq{W1C/C-MIS/REPORT.md:116-129}{Review trail}; \srcq{W1C/C-DLV/REPORT.md:74-86}{Review trail}; \srcq{W1C/C-GROW/REPORT.md:72-82}{Review trail}.

@@ -1,0 +1,70 @@
+% =====================================================================
+\section{Implementation status and method requirements}\label{sec:impl}
+
+LS0 and the e4 tie fallback were not in the production core; the Wave-1C protocol allowed proofs to fix parameters of these not-yet-shipped components as method requirements, and forbade changes to shipped components (reported as findings instead) \srcq{W1C/PROTOCOL.md:40-47}{Method-side changes}. C-ENG merges them on branch \texttt{w1c/ls0-merge} (worktree; not read by this writer, who runs no git commands).
+
+{\small
+\begin{xltabular}{\linewidth}{@{}p{2.6cm}Xp{2.4cm}p{2.6cm}@{}}
+\toprule
+Requirement & content and reason & source & state (HQ, 2026-11-09) \\
+\midrule
+\endhead
+LS0 merge (OP-LS0) & one §6.10 local search from the start mode after the final search (and the $c_4$ search), centre emitted, no uniforms, provenance \texttt{ls0}, GUARD-W semantics & SoP §6.10 / METHOD \#8 & merged on \texttt{w1c/ls0-merge} (C-ENG) \\
+e4 → e4′ & LS0 centre = coded \texttt{start\_mode(st,cap).S} (or a routine returning the unique maximiser when unique) as a data function on every branch; \textbf{no consistency result needs the lexicographic tie rule or the truncation fallback}; GROW needs only ``some maximiser'' & C-PACK MR1--MR3 \srcq{W1C/C-PACK/METHOD_REQUIREMENTS.md:6-16}{MR3 (no reliance on lex rule)} & premise replacement (patches \path{W1C/C-PACK/patches/P_e4_consumers.md}) \\
+TDP-IMPL & the e4 tie fallback is W1-N3's reference algorithm TDP, $O(p\sum_b(2^{|C_b|}+(K+1)^2))$ operations; needed only for the delivery resource bound & C-DLV A.2 \srcq{W1C/C-DLV/METHOD_REQUIREMENTS.md:8-15}{TDP-IMPL} & merged (C-ENG) \\
+MR1 (GROW): LS0 cap & $\ell^{\rm LS0}=\ell_n+|\tilde{S}_0|$ (final search keeps $\ell_n$); any cap $\ge|\tilde{S}_0|$ is accepted by the proof; a cap $o(|\tilde{S}_0|)$ cannot carry the LS0 descent guarantee when $|\tilde{S}_0\setminus S_0|\to\infty$ & \srcq{W1C/C-GROW/METHOD_REQUIREMENTS.md:1-25}{Alternative accepted by the proof} & on branch (C-ENG) \\
+Calibration fallback (shipped component) & freeze the last successful tier-1 construction or the completed tier-1 pilot schedule instead of returning \texttt{schedule\_limit} (Prop.~\ref{prop:F}, A1's total-fallback form) & C-DLV B \srcq{W1C/C-DLV/METHOD_REQUIREMENTS.md:17-25}{FINDING on a shipped component} & \textbf{adopted by HQ} as a method change, behind a switch \\
+\bottomrule
+\end{xltabular}
+}
+\noindent\textbf{C-ENG report.} At the time of writing \texttt{Theory\_work/Wave1C/C-ENG/REPORT.md} is on the C-ENG branch and its summary had not reached the writer; this section must be amended with it (tests, regression, the order of LS0 among the searches, the switch name and default). Nothing in this chapter asserts that the merged code satisfies OP-LS0, e4′, TDP-IMPL or GUARD-W; these remain named premises, with the integration replay (N2(c)/ENG02) open.
+
+% ---------------------------------------------------------------------
+\subsection{Integration lemma: the larger LS0 cap}\label{sec:cap}
+PXN, GEN and C-MIS Cor.~D were proved with LS0 cap $\ell_n$; C-GROW and Proposition~F use $a_n=\ell_n+|\tilde{S}_0|\ge\ell_n$. The lemma below shows which conclusions transfer.
+
+\textbf{Setting.} For a finite-integer-valued deterministic measurable function $a=a(X,y)\ge\ell_n$ of the admissible data (the coded cap is an \texttt{int}), let $\mathfrak M(a)$ be the method that differs from the specified v3.1 + LS0 only in LS0's move cap, which is $a$. Structural facts used, each from the specification or the code:
+\begin{itemize}
+\item[(L1)] LS0 is the last search: it runs after the final local search and after the $c_4$ search ($R'>4$), and only the HPM running best, the stores, flags and archives are updated after it \srcq{SoP/02_method.tex:490-494}{After the final local search}.
+\item[(L2)] LS0 reads no uniforms and alters no particle; its centre $\tilde{S}_0$ is the e4′ data function computed before LS0 and does not depend on the cap.
+\item[(L3)] LS0 executes \texttt{local\_search(centre, ell, \ldots, emit\_centre = true)}: the centre is evaluated; each loop iteration completes a scan of every feasible flip and swap of the current centre $C$, selects the best scanned neighbour (largest $F$, exact ties lexicographic), and then: if its $F$ is not strictly larger than $F(C)$, terminates with \texttt{no\_improvement}, \texttt{local\_certified}, returning $C$; otherwise, if the move count has reached \texttt{ell}, terminates with \texttt{local\_limit}, returning that neighbour; otherwise moves to it. The cap enters \emph{only} in this test \srcq{CORE/cpp/v3_engine.h:385-425}{if (A.moves >= ell)}; same code in \srcq{PROD/cpp/v3_engine.h:378-418}{if (A.moves >= ell)}.
+\item[(L4)] EX-A (scores exact; $F$ a fixed function on $\Omega$); GUARD-W (on $\Ocal$ the delivered record equals the potential record); the reported HPM is the $\succ$-maximum of the all-scored set.
+\end{itemize}
+Let $N(C)$ be the feasible flip/swap neighbourhood of $C$, and let $C_0=\tilde{S}_0,C_1,\dots$ be the \emph{uncapped} greedy path ($C_{k+1}$ = best scanned neighbour of $C_k$ when it strictly improves $F$); $m^*$ = the number of its moves. Since $F$ strictly increases along the path and $\Omega$ is finite, $m^*<\infty$.
+
+\begin{lemma}[CAP: LS0-cap monotonicity]\label{lem:cap}
+Let $a,a'$ be finite-integer-valued measurable functions of the admissible data with $\ell_n\le a\le a'$; couple $\mathfrak M(a)$ and $\mathfrak M(a')$ through the same valid seed and ideal uniforms. The deterministic LS0 search is defined on every admissible data set, also on branches that do not execute it (exact-branch convention); its scored set is distinguished from the set actually scored by the fit. For every data set, seed and uniform realisation:
+\begin{enumerate}
+\item[(a)] \emph{Prefix.} LS0 with cap $a$ makes $\min(a,m^*)$ moves along $C_0,C_1,\dots$, scans exactly $C_0,\dots,C_{\min(a,m^*)}$, and its scored set is $\mathcal S_{\rm LS0}(a)=\{C_0\}\cup\bigcup_{k\le\min(a,m^*)}N(C_k)$. It terminates certified at $C_{m^*}$ iff $m^*\le a$; otherwise with \texttt{local\_limit}. Hence $\mathcal S_{\rm LS0}(a)\subseteq\mathcal S_{\rm LS0}(a')$, and if the cap-$a$ search ends certified, the cap-$a'$ search is identical (same moves, scans, scored set, return value and flags).
+\item[(b)] \emph{Potential run.} The potential runs of $\mathfrak M(a)$ and $\mathfrak M(a')$ coincide up to LS0, $\bar{\Ocal}$ does not depend on the cap, $\bar{\mathcal S}^{+}(a)\subseteq\bar{\mathcal S}^{+}(a')$, $\{\text{LS0}(a')\text{ misses }S_0\}\subseteq\{\text{LS0}(a)\text{ misses }S_0\}$, and $D_n(a')\le D_n(a)$.
+\item[(c)] \emph{Reported HPM.} For $\mathfrak M(a)$ with any $a\ge\ell_n$:
+$\ \Ocal(a)\cap\{\Shat(a)\ne S_0\}\subseteq\{\pi(S_0)\le\tfrac12\}\cup\bigl(\bar{\Ocal}\cap\{S_0\notin\bar{\mathcal S}^{+}(\ell_n)\}\bigr)$, hence
+\[
+\PP\bigl(\Ocal(a)\cap\{\Shat(a)\ne S_0\}\bigr)\le2\,\EE_0[1-\pi(S_0)]+D_n(\ell_n)\le2\,\EE_0[1-\pi(S_0)]+\PP(\text{LS0}(\ell_n)\text{ misses }S_0).
+\]
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) Induction on loop iterations using (L3). Before the $(k+1)$-st scan both runs are at the same centre $C_k$ with the same move count $k$ (true for $k=0$: the same emitted centre, (L2)). The scan, the selected neighbour and the strict-improvement test depend only on $C_k$ and $F$ ((L4)), not on the cap. If there is no strict improvement ($k=m^*$), both terminate certified at $C_k$. Otherwise the cap-$a$ run terminates iff $k\ge a$, i.e.\ $k=a$ (the count never exceeds the cap); while $k<a$ both move to $C_{k+1}$. So the cap-$a$ run scans $C_0,\dots,C_{\min(a,m^*)}$ and the scored set is as stated; the cap-$a'$ run scans a superset of centres. If $m^*\le a\le a'$ both stop at the same iteration with the same outputs.
+(b) By (L1)--(L2) everything before LS0 in the potential run uses the same uniforms and the same deterministic computations for both caps, and LS0 changes neither particles nor the calibration; the potential status (\texttt{exact}, \texttt{completed} or \texttt{schedule\_limit}) is fixed before LS0, and a capped LS0 returns output, so $\bar{\Ocal}$ is the same event. On a completed SMC potential run, $\bar{\mathcal S}^{+}(a)=\bar{\mathcal S}\cup\mathcal S_{\rm LS0}(a)$ with the same pre-LS0 set $\bar{\mathcal S}$, so (a) gives the inclusions. On the exact branch every feasible model is already scored and the sets coincide for both caps. On a \texttt{schedule\_limit} branch neither fit executes LS0, the actual scored sets coincide, and the branch is outside $\bar{\Ocal}$. Thus the inclusions hold on every branch, and $D_n(a')=\PP(\bar{\Ocal}\cap\{S_0\notin\bar{\mathcal S}^{+}(a')\})\le D_n(a)$.
+(c) Actual output implies potential output ($\Ocal(a)\subseteq\bar{\Ocal}$, the guard only stops), and on $\Ocal(a)$ the delivered all-scored set is $\bar{\mathcal S}^{+}(a)\supseteq\bar{\mathcal S}^{+}(\ell_n)$ (GUARD-W, (b)). If $S_0$ lies in it and $\pi(S_0)>\frac12$ then $F(S_0)>F(S)$ for every $S\ne S_0$, so the $\succ$-maximum is $S_0$. This gives the inclusion; Markov's inequality gives $\PP(\pi(S_0)\le\frac12)\le2\EE_0[1-\pi(S_0)]$, and $D_n(\ell_n)\le\PP(\text{LS0}(\ell_n)\text{ misses }S_0)$ is the operational closure [OP] of §\ref{sec:route}.
+\end{proof}
+
+\begin{reviewflag}[Lemma CAP]
+Status: \st{PROVED (by this seat)}; cross-family check by the fidelity reviewer F1 (Codex gpt-6.1-sol, high): \st{VERIFIED-WITH-AMENDMENTS} (finite integer caps; explicit bookkeeping for the exact and \texttt{schedule\_limit} branches; GEN transfer wording), all applied \srcq{W1C/FINAL/reviews/F1_fidelity_sol.md:1-12}{VERIFIED-WITH-AMENDMENTS}. Not councilled. The proof reads the coded \texttt{local\_search} (frozen core and \texttt{PROD/}) and takes (L1)--(L2) from the specification; it does not inspect C-ENG's merged LS0 (in particular that LS0 is still the last search there, and that the MR1 cap is passed as \texttt{ell} to the same routine). HQ audit A1 independently states the prefix property \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:56}{greedy scans/path are identical up to the smaller cap}. Request: council scrutiny of (a)--(c) and of the list below, and a C-ENG confirmation of (L1)--(L3) on the merged code.
+\end{reviewflag}
+
+\textbf{What survives under MR1 (cap $a_n=\ell_n+|\tilde{S}_0|$).} By Lemma~\ref{lem:cap}(c), every conclusion that was obtained by bounding $\PP(\text{LS0}(\ell_n)\text{ misses }S_0)$ or $D_n(\ell_n)$ and $\EE_0[1-\pi(S_0)]$ holds verbatim for $\mathfrak M(a_n)$, with $\Ocal$, $U_n$ those of $\mathfrak M(a_n)$:
+\begin{itemize}
+\item PXN (C) and (T)'s first clause (``LS0 scores $S_0$''); (T)'s second clause (``returns $S_0$ with \texttt{local\_certified}'') too, because on that event the cap-$\ell_n$ search ends certified and (a) makes the cap-$a_n$ search identical; PXN (K)'s \emph{on-event} clause ($c+1$ scans on $\mathcal T_n$) for the same reason.
+\item GEN (C2) consequences, (C3), (C3-fav), (C4) and the instances (C5)(a)--(d): these retain their hypotheses and onsets; whenever $\ell_n\ge2^{\bar{v}}-2$ (part of GEN's onset), also $a_n\ge2^{\bar{v}}-2$, so the discovery conclusion transfers; more directly, the capped search scores $S_0$ when $a_n\ge\tau(C)-1$ and has certified endpoint $S_0$ when $a_n\ge\tau(C)$.
+\item C-MIS Corollaries D and D′ (through GEN); Corollary H holds for every cap as stated. M5(b1-LH) (LS-score: LS0 scores $S_0$ within $\max\{\Phi(S^\circ)-1,0\}$ moves) — with its own statuses unchanged.
+\item C-DLV Corollary D′ and the consistency clause of Proposition~F ($\mathcal K_n(a_n)\supseteq\mathcal K_n(\ell_n)$); SL2's discovery input ($\PP(\Ocal\cap\{S_0\notin\mathcal S^{+}\})\to0$); M4(c) retention is a property of the update rule $\mathrm{top}_c(\mathcal T_{\rm old}\cup\mathcal S_{\rm added})$, not of the cap.
+\end{itemize}
+\textbf{What does not transfer verbatim.}
+\begin{itemize}
+\item \emph{Worst-case costs.} PXN (K)'s first clause becomes $\le1+(a_n+1)\max_{k\le K}[p+k(p-k)]\le1+(\ell_n+K+1)(p+p^2/4)$ scores — of order $(\ell_n+K)p^2$, not $O(p^2\log(n+p))$ in general. C-DLV's Lemma R row ``LS0 \ldots{} cap $\ell_n=\ell$'', its score count, work/memory envelopes and Corollary R's allocation must be replaced by A1's $W_G,M_G$ and amended allocation (built into Prop.~\ref{prop:F}); the old declared allocation is not shown to prevent a guard stop \srcq{W1C/C-DLV/lemmas/L1_resources.md:24-25}{LS0 (spec)}. M8's accounting (card TH08) counts local searches with $\ell=\lceil\log_2(n+p+1)\rceil$ \srcq{SoP/04_theory.tex:708}{ℓ = ⌈log₂(n + p + 1)⌉}; its LS0 term would have to be re-charged with $a_n+1$ scans.
+\item \emph{Flags and metadata.} When the cap-$\ell_n$ search ends with \texttt{local\_limit}, the cap-$a_n$ search continues: \texttt{local\_limit}, the LS0 move count and return value, \texttt{ls0\_improved}, the \texttt{local\_certified} flag of the finally reported model, the provenance counts, the score-event ledger, the store contents beyond $S_0$ (the update $\mathrm{top}_c$ can evict models, so stores are not monotone in the cap) and the near-tie list may all differ. No theorem of this chapter asserts these outside the events named above.
+\item \emph{Negative statements.} GEN (C6) (``P(LS0 from $\tilde{S}_0$ misses $S_0)\to1$'' on its explicit design) is about the cap $\ell_n$: its proof uses that LS0 reaches only models within symmetric-difference distance $2(\ell_n+1)$ of $\tilde{S}_0$. Monotonicity runs the other way, so (C6) is \textbf{not established for MR1}; under MR1 the reachable distance is $2(a_n+1)\ge2|\tilde{S}_0|$.
+\item \emph{The actual no-output event.} $U_n$ depends on the cap through runtime (a longer LS0 can meet a guard stop). Joint-with-output statements are stated for each method's own $U_n$; delivery requires the amended allocation (Prop.~\ref{prop:F}).
+\end{itemize}

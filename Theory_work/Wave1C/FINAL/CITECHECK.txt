@@ -1,0 +1,147 @@
+citecheck.py: 146 citations checked, 0 problems
+OK            consistency.tex:16  \srcq{W1C/PROTOCOL.md:35}  [PROVED-CHECKED]
+OK            consistency.tex:17  \path{W1C/FINAL/reviews/F1_fidelity_sol.md}
+OK            consistency.tex:18  \path{Theory_work/Wave1/}
+OK            consistency.tex:18  \path{Theory_work/Wave1C/}
+OK            consistency.tex:18  \path{Theory_work/State_of_Project/sections/}
+OK            consistency.tex:18  \path{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/}
+OK            consistency.tex:18  \path{Scripts/SMC_BVS/core/}
+OK            consistency.tex:18  \path{W1C/FINAL/citecheck.py}
+OK            consistency.tex:18  \path{W1C/FINAL/CITECHECK.txt}
+OK            sections\s1_setting.tex:4  \path{SoP/02_method.tex}
+OK            sections\s1_setting.tex:4  \path{SoP/A_notation.tex}
+OK            sections\s1_setting.tex:7  \srcq{SoP/04_theory.tex:70-74}  [G: sampling model]
+OK            sections\s1_setting.tex:7  \srcq{W1C/C-GROW/STATEMENT.md:56-63}  [scaled to yᵀy = n − 1]
+OK            sections\s1_setting.tex:13  \srcq{SoP/04_theory.tex:71-72}  [Score.]
+OK            sections\s1_setting.tex:13  \srcq{W1C/C-PACK/lemmas/I4_SL_corollaries.md:11-18}  [distinct from the method's reported best-scored model]
+OK            sections\s1_setting.tex:15  \path{CORE/cpp/v3_start.h}
+OK            sections\s1_setting.tex:15  \srcq{W1/W1-GEN/STATEMENT.md:26-38}  [start mode S̃₀ = argmax_Ω γ₀]
+OK            sections\s1_setting.tex:18  \srcq{SoP/02_method.tex:463-467}  [Local search:]
+OK            sections\s1_setting.tex:18  \srcq{CORE/cpp/v3_engine.h:376-425}  [strict F improvement only]
+OK            sections\s1_setting.tex:20  \srcq{SoP/02_method.tex:490-501}  [LS0: local search from the start mode]
+OK            sections\s1_setting.tex:20  \srcq{PROD/cpp/v3_core.cpp:447}  [final local search from the global best]
+OK            sections\s1_setting.tex:22  \srcq{SoP/02_method.tex:468-473}  [HPM:]
+OK            sections\s1_setting.tex:24  \srcq{SoP/02_method.tex:579-583}  [Output convention]
+OK            sections\s1_setting.tex:28  \srcq{SoP/04_theory.tex:84}  [potential-run notation]
+OK            sections\s1_setting.tex:31  \srcq{SoP/04_theory.tex:84}  [Shared implementation premises]
+OK            sections\s1_setting.tex:32  \srcq{W1C/C-DLV/STATEMENT.md:21-46}  [IDEAL-W]
+OK            sections\s1_setting.tex:35  \srcq{SoP/04_theory.tex:822}  [three different questions]
+OK            sections\s1_setting.tex:39  \srcq{SoP/04_theory.tex:477-489}  [Composition at every n]
+OK            sections\s2_map.tex:4  \srcq{W1C/C-PACK/SONG_LIANG_MAP.md:1-12}  [SONG_LIANG_MAP]
+OK            sections\s2_map.tex:4  \srcq{W1C/C-PACK/SONG_LIANG_MAP.md:10-12}  [P_n/n^θ → ∞]
+OK            sections\s2_map.tex:4  \srcq{W1C/C-PACK/REPORT.md:87}  [Theorem S]
+OK            sections\s2_map.tex:28  \srcq{W1C/C-PACK/SONG_LIANG_MAP.md:14-28}  [Thm 1, posterior consistency]
+OK            sections\s2_map.tex:28  \srcq{W1C/C-MIS/STATEMENT.md:15-35}  [What SL prove]
+OK            sections\s2_map.tex:28  \srcq{W1C/C-MIS/REPORT.md:3-9}  [Scope vs Song–Liang]
+OK            sections\s2_map.tex:28  \srcq{W1C/C-GROW/REPORT.md:24-30}  [PROVED-CHECKED]
+OK            sections\s2_map.tex:28  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:3}  [HOLDS-WITH-AMENDMENTS]
+OK            sections\s3_posterior.tex:16  \srcq{SoP/04_theory.tex:765}  [T03♯: PROVED; SF VERIFIED]
+OK            sections\s3_posterior.tex:16  \srcq{SoP/04_theory.tex:774-782}  [Anchored eigenvalues]
+OK            sections\s3_posterior.tex:18  \srcq{SoP/04_theory.tex:787-811}  [no universal onset]
+OK            sections\s3_posterior.tex:20  \srcq{W1/W1-PXN/REPORT.md:49}  [(P) via T03♯ + design event]
+OK            sections\s3_posterior.tex:20  \srcq{W1C/C-PACK/lemmas/I4_SL_corollaries.md:57-60}  [diagonal tightness transfer]
+OK            sections\s3_posterior.tex:33  \srcq{W1C/C-PACK/lemmas/I4_SL_corollaries.md:3-7}  [PROVED (by this seat, unchecked)]
+OK            sections\s3_posterior.tex:33  \srcq{W1C/C-PACK/lemmas/I4_SL_corollaries.md:20-48}  [Lemma SL0]
+OK            sections\s3_posterior.tex:33  \srcq{W1C/C-PACK/lemmas/I4_SL_corollaries.md:53-68}  [Corollary SL1′]
+OK            sections\s3_posterior.tex:33  \path{W1C/C-PACK/numerics/R34_falsify_out.txt}
+OK            sections\s3_posterior.tex:37  \srcq{W1C/C-MIS/STATEMENT.md:37-50}  [re-run on the candidate data]
+OK            sections\s3_posterior.tex:39  \srcq{W1C/C-MIS/STATEMENT.md:54-58}  [(GR).]
+OK            sections\s3_posterior.tex:52  \srcq{W1C/C-MIS/REPORT.md:21-29}  [PROVED-CHECKED]
+OK            sections\s3_posterior.tex:52  \srcq{W1C/C-MIS/STATEMENT.md:64-95}  [Theorem MIS.]
+OK            sections\s3_posterior.tex:52  \srcq{W1C/C-MIS/STATEMENT.md:126-141}  [(EP).]
+OK            sections\s3_posterior.tex:52  \srcq{W1C/C-MIS/STATEMENT.md:101-105}  [Null projection]
+OK            sections\s3_posterior.tex:54  \srcq{W1C/C-MIS/REPORT.md:131-139}  [Open items]
+OK            sections\s4_sampler.tex:5  \src{CORE/cpp/v3_engine.h:355-361}
+OK            sections\s4_sampler.tex:7  \srcq{W1/W1-N1/STATEMENT.md:68-91}  [SI (single-island independence]
+OK            sections\s4_sampler.tex:9  \srcq{W1/W1-N1/STATEMENT.md:94-99}  [localised form]
+OK            sections\s4_sampler.tex:21  \srcq{W1/W1-N1/REPORT.md:44-46}  [PROVED under the named premises]
+OK            sections\s4_sampler.tex:21  \srcq{W1/W1-N1/STATEMENT.md:95-111}  [(N1-q)]
+OK            sections\s4_sampler.tex:21  \srcq{SoP/04_theory.tex:123}  [N1: PROOF SKETCH]
+OK            sections\s4_sampler.tex:25  \srcq{W1C/C-PACK/lemmas/I4_SL_corollaries.md:70-88}  [What the method's reported quantities satisfy]
+OK            sections\s4_sampler.tex:29  \srcq{SoP/04_theory.tex:130}  [(h), (i): PROVED (by this seat, unchecked)]
+OK            sections\s4_sampler.tex:29  \srcq{SoP/04_theory.tex:111}  [4⌈(n + p)⁶/4⌉]
+OK            sections\s4_sampler.tex:29  \srcq{SoP/04_theory.tex:117}  [vacuous at R′ = 4]
+OK            sections\s4_sampler.tex:29  \srcq{W1/W1-N1/REPORT.md:48}  [Discharged islandwise]
+OK            sections\s4_sampler.tex:37  \srcq{W1C/C-PACK/lemmas/I4_SL_corollaries.md:112-114}  [MZ-P3]
+OK            sections\s4_sampler.tex:37  \srcq{W1C/C-PACK/lemmas/I4_SL_corollaries.md:90-103}  [Corollary SL2]
+OK            sections\s5_hpm.tex:9  \srcq{W1/W1-GEN/STATEMENT.md:169-171}  [Operational closure [OP]]
+OK            sections\s5_hpm.tex:9  \srcq{W1/W1-PXN/REPORT.md:43}  [operational closure OP-LS0 + GUARD]
+OK            sections\s5_hpm.tex:16  \srcq{W1C/C-PACK/lemmas/I1_e4_replacement.md:141-160}  [Premise replacement]
+OK            sections\s5_hpm.tex:16  \srcq{W1C/C-GROW/lemmas/00_MAIN.md:31-33}  [some maximiser of γ₀ on Ω]
+OK            sections\s5_hpm.tex:18  \srcq{W1C/C-PACK/REPORT.md:19-21}  [PROVED-CHECKED]
+OK            sections\s5_hpm.tex:18  \srcq{W1/W1-N3/REPORT.md:12-14}  [PROVED-CHECKED]
+OK            sections\s5_hpm.tex:22  \srcq{W1C/C-PACK/item5_PXN_consolidated/00_statement_and_conventions.md:8-30}  [g ≤ B_n < 2g]
+OK            sections\s5_hpm.tex:37  \srcq{W1C/C-PACK/item5_PXN_consolidated/03_start.md:111}  [O_P(√(log n/n) + 1/p)]
+OK            sections\s5_hpm.tex:39  \srcq{W1/W1-PXN/REPORT.md:3-6}  [PROVED-CHECKED]
+OK            sections\s5_hpm.tex:39  \srcq{W1C/C-PACK/item5_PXN_consolidated/00_statement_and_conventions.md:97-119}  [Theorem PXN.]
+OK            sections\s5_hpm.tex:47  \srcq{W1/W1-GEN/STATEMENT.md:56-75}  [NL_avg(κ)]
+OK            sections\s5_hpm.tex:49  \srcq{W1/W1-GEN/STATEMENT.md:89-97}  [Canonical certificate]
+OK            sections\s5_hpm.tex:49  \srcq{W1C/C-PACK/patches/P_L8_certificate.md:7-13}  [admissible (ε₀, κ)]
+OK            sections\s5_hpm.tex:54  \srcq{W1C/C-PACK/patches/P_GEN_LHiid.md:18-24}  [Neither candidate Theorem B nor [CONC]]
+OK            sections\s5_hpm.tex:54  \srcq{W1C/C-PACK/lemmas/I2_LHiid_unconditional.md:80}  [far beyond practical n]
+OK            sections\s5_hpm.tex:56  \srcq{W1/W1-GEN/REPORT.md:17-25}  [PROVED-CHECKED]
+OK            sections\s5_hpm.tex:56  \srcq{W1/W1-GEN/STATEMENT.md:84-154}  [Centre law]
+OK            sections\s5_hpm.tex:56  \srcq{W1C/C-PACK/patches/P_SEL_L6d.md:42-44}  [No hypothesis or conclusion of Theorem GEN changes]
+OK            sections\s5_hpm.tex:60  \srcq{W1C/C-GROW/METHOD_REQUIREMENTS.md:1-6}  [ℓ^{LS0} := ℓ_n + |S̃₀|]
+OK            sections\s5_hpm.tex:71  \srcq{W1C/C-GROW/STATEMENT.md:118-149}  [Instances]
+OK            sections\s5_hpm.tex:73  \srcq{W1C/C-GROW/REPORT.md:24-30}  [PROVED-CHECKED]
+OK            sections\s5_hpm.tex:73  \srcq{W1C/C-GROW/STATEMENT.md:84-117}  [(G1) growing relevance set]
+OK            sections\s5_hpm.tex:83  \srcq{W1C/C-MIS/STATEMENT.md:109-120}  [Corollary D.]
+OK            sections\s5_hpm.tex:91  \path{Scripts/Data_generators/gen_dev_data.R}
+OK            sections\s5_hpm.tex:100  \srcq{W1/W1-GEN/STATEMENT.md:135-143}  [Study generator]
+OK            sections\s5_hpm.tex:100  \srcq{W1C/C-GROW/STATEMENT.md:150-156}  [Frontier]
+OK            sections\s5_hpm.tex:100  \srcq{W1C/C-GROW/REPORT.md:12-15}  [Diagnosis]
+OK            sections\s6_delivery.tex:6  \srcq{W1C/C-DLV/STATEMENT.md:10-46}  [IDEAL-W]
+OK            sections\s6_delivery.tex:12  \srcq{W1C/C-DLV/STATEMENT.md:52-67}  [(P2) Lemma R]
+OK            sections\s6_delivery.tex:14  \srcq{W1C/C-DLV/STATEMENT.md:68-84}  [Open obstruction]
+OK            sections\s6_delivery.tex:20  \srcq{W1C/C-DLV/REPORT.md:22-27}  [PARTIAL]
+OK            sections\s6_delivery.tex:20  \srcq{W1C/C-DLV/REPORT.md:61-70}  [AUDITED (code reading)]
+OK            sections\s6_delivery.tex:20  \path{W1C/C-DLV/lemmas/L1_resources.md}
+OK            sections\s6_delivery.tex:20  \srcq{W1C/C-DLV/lemmas/L4_delivery.md:13-22}  [Theorem D (reduction)]
+OK            sections\s6_delivery.tex:24  \srcq{W1C/C-DLV/lemmas/L4_delivery.md:79-93}  [Proposition F]
+OK            sections\s6_delivery.tex:24  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:7-19}  [MAJOR]
+OK            sections\s6_delivery.tex:24  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:60-75}  [Exact corrected statement]
+OK            sections\s6_delivery.tex:40  \srcq{W1C/C-DLV/REPORT.md:70}  [PROVED-CHECKED for the patched calibration law]
+OK            sections\s6_delivery.tex:40  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:56}  [The longer C-GROW search contains]
+OK            sections\s6_delivery.tex:43  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:43}  [out\$grid=NULL]
+OK            sections\s7_impl.tex:4  \srcq{W1C/PROTOCOL.md:40-47}  [Method-side changes]
+OK            sections\s7_impl.tex:13  \srcq{W1C/C-PACK/METHOD_REQUIREMENTS.md:6-16}  [MR3 (no reliance on lex rule)]
+OK            sections\s7_impl.tex:13  \path{W1C/C-PACK/patches/P_e4_consumers.md}
+OK            sections\s7_impl.tex:14  \srcq{W1C/C-DLV/METHOD_REQUIREMENTS.md:8-15}  [TDP-IMPL]
+OK            sections\s7_impl.tex:15  \srcq{W1C/C-GROW/METHOD_REQUIREMENTS.md:1-25}  [Alternative accepted by the proof]
+OK            sections\s7_impl.tex:16  \srcq{W1C/C-DLV/METHOD_REQUIREMENTS.md:17-25}  [FINDING on a shipped component]
+OK            sections\s7_impl.tex:28  \srcq{SoP/02_method.tex:490-494}  [After the final local search]
+OK            sections\s7_impl.tex:30  \srcq{CORE/cpp/v3_engine.h:385-425}  [if (A.moves >= ell)]
+OK            sections\s7_impl.tex:30  \srcq{PROD/cpp/v3_engine.h:378-418}  [if (A.moves >= ell)]
+OK            sections\s7_impl.tex:54  \srcq{W1C/FINAL/reviews/F1_fidelity_sol.md:1-12}  [VERIFIED-WITH-AMENDMENTS]
+OK            sections\s7_impl.tex:54  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:56}  [greedy scans/path are identical up to the smaller cap]
+OK            sections\s7_impl.tex:66  \srcq{W1C/C-DLV/lemmas/L1_resources.md:24-25}  [LS0 (spec)]
+OK            sections\s7_impl.tex:66  \srcq{SoP/04_theory.tex:708}  [ℓ = ⌈log₂(n + p + 1)⌉]
+OK            sections\s8_scope.tex:6  \srcq{SoP/04_theory.tex:811}  [n\gtrsim2\cdot10^{6}]
+OK            sections\s8_scope.tex:6  \srcq{W1C/C-PACK/lemmas/I2_LHiid_unconditional.md:80-81}  [≈ 10¹⁰]
+OK            sections\s8_scope.tex:8  \srcq{W1C/C-GROW/REPORT.md:86-90}  [S5 / factor designs with growing p]
+OK            sections\s8_scope.tex:13  \srcq{SoP/02_method.tex:414-415}  [C7 Gram-free scorer]
+OK            sections\s9_prov.tex:12  \path{NBH/branch_snapshots/W6-FIXREV2/STATEMENTS.md}
+OK            sections\s9_prov.tex:13  \path{W1C/C-PACK/lemmas/I4_SL_corollaries.md}
+OK            sections\s9_prov.tex:14  \path{W1C/C-PACK/lemmas/I1_e4_replacement.md}
+OK            sections\s9_prov.tex:15  \path{W1C/C-PACK/lemmas/I2_LHiid_unconditional.md}
+OK            sections\s9_prov.tex:16  \path{W1C/C-PACK/patches/P_SEL_L6d.md}
+OK            sections\s9_prov.tex:17  \path{W1C/C-PACK/item5_PXN_consolidated/}
+OK            sections\s9_prov.tex:18  \path{W1/W1-PXN/FINAL_PROOF.md}
+OK            sections\s9_prov.tex:18  \path{W1/W1-PXN/lemmas/}
+OK            sections\s9_prov.tex:19  \path{W1/W1-N3/PROOF.md}
+OK            sections\s9_prov.tex:19  \path{W1/W1-N3/lemmas/}
+OK            sections\s9_prov.tex:20  \path{W1/W1-GEN/lemmas/00_MAIN.md}
+OK            sections\s9_prov.tex:21  \path{W1/W1-N1/lemmas/N1_theorem.md}
+OK            sections\s9_prov.tex:22  \path{W1C/C-MIS/lemmas/00_MAIN.md}
+OK            sections\s9_prov.tex:23  \path{W1C/C-DLV/lemmas/L1_resources.md}
+OK            sections\s9_prov.tex:24  \path{W1C/HQ_AUDIT/A1_propF_redteam.md}
+OK            sections\s9_prov.tex:25  \path{W1C/C-GROW/lemmas/00_MAIN.md}
+OK            sections\s9_prov.tex:30  \srcq{W1C/C-PACK/REPORT.md:66-82}  [Review trail]
+OK            sections\s9_prov.tex:30  \srcq{W1/W1-PXN/REPORT.md:71-82}  [Review trail]
+OK            sections\s9_prov.tex:30  \srcq{W1/W1-GEN/REPORT.md:71-83}  [Review trail]
+OK            sections\s9_prov.tex:30  \srcq{W1/W1-N1/REPORT.md:67-86}  [Review trail]
+OK            sections\s9_prov.tex:30  \srcq{W1/W1-N3/REPORT.md:52-61}  [Review trail]
+OK            sections\s9_prov.tex:30  \srcq{W1C/C-MIS/REPORT.md:116-129}  [Review trail]
+OK            sections\s9_prov.tex:30  \srcq{W1C/C-DLV/REPORT.md:74-86}  [Review trail]
+OK            sections\s9_prov.tex:30  \srcq{W1C/C-GROW/REPORT.md:72-82}  [Review trail]

@@ -1,0 +1,39 @@
+% =====================================================================
+\section{Setting, method and notation}\label{sec:setting}
+
+Full definitions are in \path{SoP/02_method.tex} (method v3.1) and \path{SoP/A_notation.tex}; this section fixes only what the theorems below use.
+
+\subsection{Data, target posterior, start}
+\paragraph{Model G.} Fixed (or, where stated, random) raw design $X^r\in\mathbb R^{n\times p}$ with nonconstant columns; $y^r=\alpha\mathbf 1+X^r\beta+\varepsilon$, $\varepsilon\sim N_n(0,\sigma^2I_n)$, $\sigma^2>0$ fixed; in random-design statements $\varepsilon$ is independent of $X^r$. Columns are centred and scaled, $X=CX^rD_x^{-1}$ with $C=I-\mathbf 1\mathbf 1^\top/n$ and $\|x_j\|^2=n-1$; the response is centred and scaled inside the score. $\mu:=CX^r\beta=X\theta^*$, $\theta^*:=D_x\beta$, $S_0:=\operatorname{supp}\beta$, $s_0:=|S_0|\ge1$ fixed, $p=p_n\le n^A$ for a fixed $A\ge1$ ($p\gg n$ allowed) \srcq{SoP/04_theory.tex:70-74}{G: sampling model}; \srcq{W1C/C-GROW/STATEMENT.md:56-63}{scaled to yᵀy = n − 1}.
+
+\paragraph{Target (D0).} $K=\min(p,\lfloor n/2\rfloor)$, $\Omega=\{S:|S|\le K\}$. With $G_U=X_U^\top X_U$, $z_U=X_U^\top y$, $H_U=(n+1)G_U+I$, $Q_U=y^\top y-nz_U^\top H_U^{-1}z_U$, $\nu=0.01+n/2$:
+\[
+m(U)=c_n\Bigl[\tfrac{\det H_U}{\det(G_U+I)}\Bigr]^{-1/2}(0.02+Q_U)^{-\nu},\qquad w(k)=\bigl[2\tbinom{2p-1}{k}\bigr]^{-1},\qquad \pi(S)\propto w(|S|)\,m(S)\ \ (S\in\Omega),
+\]
+the shipped $g=n$ ridge score with IG$(0.01,0.01)$ and the capped BB$(1,p)$ size prior \srcq{SoP/04_theory.tex:71-72}{Score.}. $F(S):=\log w(|S|)+\log m(S)$. $\mathrm{PIP}_j:=\pi(j\in S)$, $\mathrm{MPM}:=\{j:\mathrm{PIP}_j>\tfrac12\}$, $\xi_q:=\{j:\mathrm{PIP}_j>q\}$, and the \emph{exact-posterior} HPM $:=\arg\max_\Omega\pi$ (distinct from the method's reported model $\Shat$ below) \srcq{W1C/C-PACK/lemmas/I4_SL_corollaries.md:11-18}{distinct from the method's reported best-scored model}.
+
+\paragraph{Blocks, start law, start mode.} The method partitions the columns into blocks $C_1,\dots,C_J$ (complete linkage on $1-|\hat{r}|$, top-down cut at $B=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$, next-fit packing; a deterministic function of $X$). Block tables $r_b(U)=m(U)/m(\varnothing)$; start $\gamma_0(S)\propto w(|S|)\prod_b r_b(S\cap C_b)$ on $\Omega$, $\pi_0=\gamma_0/\bar{Z}_0$; the \textbf{start mode} $\tilde{S}_0=\arg\max_\Omega\gamma_0$ is computed exactly by a block DP (\path{CORE/cpp/v3_start.h}) \srcq{W1/W1-GEN/STATEMENT.md:26-38}{start mode S̃₀ = argmax_Ω γ₀}.
+
+\subsection{Method v3.1 + LS0, reported model, output event}
+\paragraph{Local search (M §6.10).} From a centre, scan every feasible flip (additions beyond $K$ excluded) and every swap with the centre frozen; every scanned model is scored; move to the best scanned neighbour if its $F$ is \emph{strictly} larger than the centre's (exact $F$ ties among neighbours broken lexicographically); at most $\ell$ moves, then one further scan; \texttt{local\_limit} iff that scan still improves; \texttt{local\_certified} iff the returned model is a scanned centre with no improving neighbour \srcq{SoP/02_method.tex:463-467}{Local search:}; code \srcq{CORE/cpp/v3_engine.h:376-425}{strict F improvement only}. Production cap $\ell_n=\lceil\log_2(n+p+1)\rceil$.
+
+\paragraph{LS0.} After the final local search (and after the extra search from $c_4$ when $R'>4$), one local search with the §6.10 rules from the start mode $\tilde{S}_0$; LS0 reads no uniforms, every model it scores joins the all-scored set and the stores, its centre is scored (emitted); a completed LS0 capped at \texttt{local\_limit} still returns output \srcq{SoP/02_method.tex:490-501}{LS0: local search from the start mode}. LS0 is \textbf{not} in the frozen production core (which calls only the search from the global best, \srcq{PROD/cpp/v3_core.cpp:447}{final local search from the global best}); it is merged on branch \texttt{w1c/ls0-merge} by C-ENG (§\ref{sec:impl}).
+
+\paragraph{Reported HPM.} $\Shat$ is the maximum of the all-scored set $\mathcal S^{+}$ (every model ever scored, including LS0) for the strict total order $(F(S),-|S|,\text{lex})$ \srcq{SoP/02_method.tex:468-473}{HPM:}.
+
+\paragraph{Output event and potential run.} $\Ocal$ is the event that the fit returns estimates (status \texttt{exact} or \texttt{completed}); $U_n:=\Ocal^c$. Guarantees are stated for the potential uninterrupted run and as $\PP(\Ocal\cap\cdot)$, never as $\PP(\cdot\mid\Ocal)$ \srcq{SoP/02_method.tex:579-583}{Output convention}. Bars denote potential-run objects; the never-scored term is
+\[
+D_n:=\PP\bigl(\bar{\Ocal}\cap\{S_0\notin\bar{\mathcal S}^{+}\}\bigr)\quad\text{(potential-run notation; the bar is not a complement)}
+\]
+\srcq{SoP/04_theory.tex:84}{potential-run notation}.
+
+\subsection{Named implementation premises}\label{sec:premises}
+The reported-model theorems are proved for the method \emph{as specified} under named premises; these are not model assumptions and are not discharged by the theorems \srcq{SoP/04_theory.tex:84}{Shared implementation premises}:
+\textbf{EX-A} exact scores and arithmetic (an idealisation, not a validated floating-point property); \textbf{EX-S} fresh independent ideal uniforms; \textbf{CAL} a successful frozen calibration record on streams 0--9; \textbf{IND-T} final streams independent, $R'=4k$ declared before stream 10 (needed when $R'>4$); \textbf{GUARD-W} stop-only guard (operational interruption $\Rightarrow$ no output); \textbf{SR} the stop/return rule; \textbf{OP-LS0} LS0 integrated as specified; \textbf{e4} the emitted LS0 centre is the prescribed start-mode maximiser (replaced by the weaker \textbf{e4′}, §\ref{sec:e4}); \textbf{complete scans}. The delivery results (§\ref{sec:delivery}) add the idealisation premises \textbf{IDEAL-W} (unbounded words), \textbf{MACH} (wall time and bytes proportional to operations and words; allocations succeed within the declared memory; no external interruption), \textbf{CONFIG} (default declared list, polynomial certificate budgets, fixed worker count) and \textbf{TDP-IMPL} (the e4 tie fallback is W1-N3's reference algorithm TDP), and do \emph{not} assume CAL \srcq{W1C/C-DLV/STATEMENT.md:21-46}{IDEAL-W}.
+
+\subsection{Three layers}
+As in the SoP regime map \srcq{SoP/04_theory.tex:822}{three different questions}, results live on three layers that compose only explicitly: \textbf{(i)} the exact posterior $\pi$ concentrates on $S_0$ (§\ref{sec:posterior}); \textbf{(ii)} the sampler's outputs track $\pi$ or $h(S_0)$ (§\ref{sec:sampler}); \textbf{(iii)} the reported model $\Shat$ equals $S_0$ jointly with output (§\ref{sec:hpm}). Delivery, $\PP(\Ocal)\to1$, is a fourth question (§\ref{sec:delivery}). M5(0) composes (i) and (iii) at every $n$:
+\[
+\PP(\Ocal\cap\{\Shat\ne S_0\})\le 2\,\EE_0[1-\pi(S_0)]+D_n
+\]
+(the deterministic part: if $S_0\in\mathcal S^{+}$ and $1-\pi(S_0)<\frac12$ then $\Shat=S_0$), status \st{T38-(0) "PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))"} \srcq{SoP/04_theory.tex:477-489}{Composition at every n}. Hence every reported-HPM theorem below reduces to $\EE_0[1-\pi(S_0)]\to0$ (layer (i)) plus $D_n\to0$ (discovery of $S_0$ by the search).

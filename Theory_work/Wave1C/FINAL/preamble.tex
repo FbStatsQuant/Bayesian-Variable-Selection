@@ -1,0 +1,112 @@
+% Consistency chapter — preamble copied from Theory_work/State_of_Project/preamble.tex (LuaLaTeX).
+\usepackage[a4paper,margin=2.3cm,marginparwidth=1.8cm]{geometry}
+\usepackage{fontspec}
+% Fallback chain: any Unicode symbol the text font lacks is taken from Cambria Math / Segoe UI Symbol.
+\directlua{luaotfload.add_fallback("sopfb", {"Cambria Math:mode=node;", "Segoe UI Symbol:mode=node;", "Segoe UI Emoji:mode=node;"})}
+\usepackage{amsmath,amsthm,mathtools}
+\usepackage{unicode-math}
+\setmainfont{cambria.ttc}[BoldFont=cambriab.ttf,ItalicFont=cambriai.ttf,BoldItalicFont=cambriaz.ttf,RawFeature={fallback=sopfb}]
+\setsansfont{calibri.ttf}[BoldFont=calibrib.ttf,ItalicFont=calibrii.ttf,BoldItalicFont=calibriz.ttf,RawFeature={fallback=sopfb}]
+\setmathfont{Cambria Math}
+\setmathfont{Segoe UI Symbol}[range={"266D-"266F}]  % ♭♮♯ (Cambria Math lacks \sharp)
+\setmonofont{Consolas}[Scale=0.88,RawFeature={fallback=sopfb}]
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{booktabs,array,longtable,xltabular,makecell,multirow,adjustbox}
+\usepackage{enumitem}
+\usepackage{ragged2e}
+\setlist{itemsep=1pt,topsep=3pt}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes,fit,calc}
+\usepackage{url}
+\urlstyle{tt}
+\usepackage[hidelinks,bookmarksnumbered]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=MidnightBlue,urlcolor=MidnightBlue,citecolor=MidnightBlue}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{3em}  % fewer overfull lines from long identifiers
+\let\sopunderscore\_
+\renewcommand{\_}{\sopunderscore\allowbreak}  % allow breaks after underscores in file and field names
+\setlength{\parindent}{0pt}
+
+% ---------------------------------------------------------------- version
+\newcommand{\sopversion}{draft v1}
+\newcommand{\sopdate}{2026-11-09}
+\newcommand{\sourcecommit}{21ebc28}
+
+% ---------------------------------------------------------------- colours
+\definecolor{srccol}{RGB}{110,110,110}
+\definecolor{idcol}{RGB}{20,60,140}
+\definecolor{uncol}{RGB}{200,110,0}
+\definecolor{divcol}{RGB}{180,30,30}
+\definecolor{npcol}{RGB}{120,40,120}
+\definecolor{cardcol}{RGB}{30,70,120}
+\definecolor{okcol}{RGB}{30,110,50}
+
+% ---------------------------------------------------------------- source citations
+% \src{path:line} or \src{path:a-b} or \src{path §x}. Paths are relative to the repo root,
+% except the prefix NBH/ which means Theory_work/Old_Projects/New_BVS_Headquarters/ .
+\newcommand{\src}[1]{{\footnotesize\textcolor{srccol}{[\path{#1}]}}}
+% \pos{N} or \pos{N, M} : position(s) in the source thread transcript (NBH/transcript/).
+\newcommand{\pos}[1]{{\footnotesize\textcolor{srccol}{[pos~#1]}}}
+
+% ---------------------------------------------------------------- stable IDs
+% \defid{TH05} : the single place where an ID is defined (creates an anchor + bold tag).
+% \rid{TH05}   : reference to an ID anywhere (hyperlinked if defined in this document).
+\newcommand{\defid}[1]{\hypertarget{id:#1}{\textbf{\textcolor{idcol}{\texttt{#1}}}}}
+\newcommand{\rid}[1]{\hyperlink{id:#1}{\textcolor{idcol}{\texttt{#1}}}}
+
+% ---------------------------------------------------------------- status words
+% \status{...} : status words copied VERBATIM from the source. Never paraphrase inside it.
+\newcommand{\status}[1]{\textsf{\small #1}}
+% Approval record: sources/approval_2026-11-07.md (post-commit source).
+\newcommand{\approvedFB}{\textcolor{okcol}{\textsf{\small APPROVED (F.B., 2026-11-07)}}}
+
+% ---------------------------------------------------------------- boxes
+\tcbset{sopbase/.style={enhanced,breakable,boxrule=0.6pt,arc=2pt,left=5pt,right=5pt,top=4pt,bottom=4pt,fonttitle=\sffamily\bfseries\small}}
+% Result card: \begin{card}{TH05}{M5 · Theorem HPM} ... \end{card}
+\newtcolorbox{card}[2]{sopbase,colback=cardcol!3,colframe=cardcol,title={\hypertarget{id:#1}{}#1 \;·\; #2}}
+% Verbatim formal statement (math faithfully transcribed): \begin{stmt}{NBH/branch_snapshots/...:141-158} ... \end{stmt}
+\newtcolorbox{stmt}[1]{sopbase,colback=white,colframe=black!45,title={Statement (verbatim from source)},after title={\hfill\mdseries\footnotesize\path{#1}}}
+% Unresolved conflict between sources:
+\newtcolorbox{uncertain}[1][]{sopbase,colback=uncol!6,colframe=uncol,title={UNCERTAIN\ifx&#1&\else\ — #1\fi}}
+% Spec and code (or two specs) disagree:
+\newtcolorbox{divergence}[1][]{sopbase,colback=divcol!5,colframe=divcol,title={DIVERGENCE\ifx&#1&\else\ — #1\fi}}
+% What a result does NOT say / what is not proved:
+\newtcolorbox{notproved}[1][]{sopbase,colback=npcol!5,colframe=npcol,title={Not claimed / not proved\ifx&#1&\else\ — #1\fi}}
+% Short plain-language reading:
+\newtcolorbox{plain}[1][]{sopbase,colback=black!3,colframe=black!25,title={Plain reading\ifx&#1&\else\ — #1\fi}}
+% Instructions to agents of the theory loop:
+\newtcolorbox{agentnote}[1][]{sopbase,colback=idcol!5,colframe=idcol,title={For agents\ifx&#1&\else\ — #1\fi}}
+
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily SMC-BVS · Consistency theory (Wave 1 closure)}
+\fancyhead[R]{\small\sffamily \sopversion\ · \sopdate}
+\fancyfoot[C]{\small\thepage}
+
+% ---------------------------------------------------------------- chapter additions
+% \srcq{path:lines}{token}: citation whose token is verified by citecheck.py to occur in the cited lines.
+% Path aliases: W1/ = Theory_work/Wave1/, W1C/ = Theory_work/Wave1C/, SoP/ = Theory_work/State_of_Project/sections/,
+% CORE/ = Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/, PROD/ = Scripts/SMC_BVS/core/.
+\newcommand{\srcq}[2]{\src{#1}}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\Shat}{\hat S^{+}}
+\newcommand{\Ocal}{\mathcal O}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\EE}{\mathbb E}
+\newcommand{\st}[1]{\status{#1}}
+\newtcolorbox{statusbox}[1][]{sopbase,colback=okcol!4,colframe=okcol!70!black,title={Status and evidence\ifx&#1&\else\ — #1\fi}}
+\newtcolorbox{reviewflag}[1][]{sopbase,colback=uncol!6,colframe=uncol,title={Flagged for review\ifx&#1&\else\ — #1\fi}}
