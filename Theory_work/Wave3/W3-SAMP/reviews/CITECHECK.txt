@@ -1,0 +1,85 @@
+OK       [STATEMENT.md] Docs/Theory/proofs/T12_T8_frozen_run_identities/STATEMENT.md:5-22 | ## 0. Data and target (fixed, deterministic objects)
+OK       [STATEMENT.md] Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:13-16 | O_r = Φ(𝓒, U_r). **Localisation convention.** Island-r quantities (Ẑ_r, the endpoints S_{rqi}) are defined on
+OK       [STATEMENT.md] cpp/v3_engine.h:269-273 | IslandResult run_island(int r, int N, const std::vector<double>& grid, int L, int Hm, int tier,
+OK       [STATEMENT.md] v3_run.R:68-82 | v3_frozen <- function(grid, tier = 0, N = NULL, L = NULL, inherited = NULL, budgets = NULL) {
+OK       [STATEMENT.md] cpp/v3_core.cpp:446-446 | res.push_back(E.run_island(r, o.N, g, o.L, o.Hm, o.tier, nullptr));
+OK       [STATEMENT.md] v3_run.R:88-92 | v3_run_settings <- function(setup, frozen, ls0 = getOption("v3.ls0", TRUE)) {
+OK       [STATEMENT.md] v3_preprocess.R:21-30 | K <- min(p, n %/% 2)
+OK       [STATEMENT.md] cpp/v3_engine.h:299-299 | double logZ = D.logm0 + st.logZbar0;
+OK       [STATEMENT.md] v3_run.R:150-154 | logZr <- vapply(isl, function(r) r$log_Z, 0)
+OK       [STATEMENT.md] v3_run.R:159-163 | P <- do.call(cbind, lapply(isl, function(r) r$pip))
+OK       [STATEMENT.md] Theory_work/Wave1/W1-N1/REPORT.md:11-12 | **PROVED-CHECKED.** N1 and Corollary E are proved under the named premises. The proof was cross-family checked
+OK       [STATEMENT.md] W1-N1/lemmas/L2_post_terminal.md:3-5 | Status: the statement is T12 clause (i.b) (with (i.a)), **PROVED-LOCKED** (card TH01 status row "T12, T31(i): 
+OK       [STATEMENT.md] Theory_work/Wave3/W3-POST/STATEMENT.md:79-80 | **Theorem 1.** In R1 under G, (E), (F_λ), (F_w):
+OK       [STATEMENT.md] STATEMENT.md:59-59 | - (i.a) For every c, t ∈ {0, …, T} and f : Ω → ℝ: E_c[Ẑ_t q̂_t(f)] = Z_t q_t(f). In particular E_c[Ẑ] = Z.
+OK       [STATEMENT.md] v3_fit.R:120-127 | if (fit$branch_run == "exact") {
+OK       [lemmas\CC_code_check.md] cpp/v3_engine.h:286-292 | for (int i = 0; i < N; ++i) {
+OK       [lemmas\CC_code_check.md] cpp/v3_engine.h:182-192 | void step_indep(Particle& P, double phi) {
+OK       [lemmas\CC_code_check.md] cpp/v3_engine.h:108-108 | void draw_start(std::vector<int>& S) { draw_pi0(st, *vs, S); }
+OK       [lemmas\CC_code_check.md] cpp/v3_start.h:158-176 | inline void draw_pi0(const Start& st, VariateSource& vs, std::vector<int>& S, std::vector<int>* sizes_out = nu
+OK       [lemmas\CC_code_check.md] cpp/v3_engine.h:195-214 | void draw_order(std::vector<int>& ord) {
+OK       [lemmas\CC_code_check.md] v3_run.R:90-90 | ro <- list(N = as.integer(b$tiers$N[tier + 1]), L = as.integer(b$L), measured_rounds = 4L,
+OK       [lemmas\CC_code_check.md] v3_run.R:91-91 | islands = 4L, tier = as.integer(tier), ell = as.integer(b$ell),
+OK       [lemmas\CC_code_check.md] cpp/v3_core.cpp:443-452 | for (int r = 1; r <= o.islands; ++r) {
+OK       [lemmas\CC_code_check.md] cpp/v3_engine.h:89-101 | void eval(Particle& q, int mech, bool emit = true) {
+OK       [lemmas\CC_code_check.md] cpp/v3_ledger.h:104-113 | inline void Ledger::event(const std::vector<int>& S, double F, double lg0, double logm, bool is_fresh, bool is
+OK       [lemmas\CC_code_check.md] cpp/v3_util.h:121-126 | inline bool hpm_better(double F1, const std::vector<int>& S1, double F2, const std::vector<int>& S2) {
+OK       [lemmas\CC_code_check.md] cpp/v3_engine.h:97-97 | q.logm = lm; q.lg0 = D.logprior[k] + c; q.d = (lm - D.logm0) - c; q.F = D.logprior[k] + lm;
+OK       [lemmas\CC_code_check.md] cpp/v3_core.cpp:409-409 | ScoreCache cache; cache.init(D.W, (size_t)o.cache_capacity);
+OK       [lemmas\CC_code_check.md] cpp/v3_core.cpp:456-456 | LocalArchive A = E.local_search(led.hpmS, o.ell, o.tier, false);  // final local search from the global best (
+OK       [lemmas\CC_code_check.md] cpp/v3_engine.h:382-382 | Particle C; set_model(C, centre); eval(C, ME_LOCAL, emit_centre);
+OK       [lemmas\CC_code_check.md] cpp/v3_score.h:284-284 | if (count >= capacity) { std::fill(used.begin(), used.end(), 0); pool.clear(); count = 0; ++clears; }
+OK       [lemmas\CC_code_check.md] cpp/v3_engine.h:103-105 | void held(const Particle& q, int mech) {
+OK       [lemmas\CC_code_check.md] cpp/v3_core.cpp:372-386 | static void ingest_tables(Ledger& led, const Holder& h) {
+OK       [lemmas\CC_code_check.md] cpp/v3_start.h:92-92 | if ((int)U.size() > D.K) continue;
+OK       [lemmas\CC_code_check.md] cpp/v3_core.cpp:418-429 | // inherited state (frozen calibration): offered to the stores and the HPM with provenance "inherited"
+OK       [lemmas\CC_code_check.md] v3_run.R:142-142 | out$hpm <- led$hpm$model; out$hpm_F <- led$hpm$F; out$hpm_provenance <- led$hpm$provenance
+OK       [lemmas\CC_code_check.md] v3_run.R:143-149 | if (raw$status != "completed") {   # numerical_failure: best scored model so far, labelled incomplete (M §2)
+OK       [lemmas\CC_code_check.md] cpp/v3_engine.h:113-132 | void step_gibbs(Particle& P, int j, double phi) {
+OK       [lemmas\CC_code_check.md] v3_run.R:159-162 | P <- do.call(cbind, lapply(isl, function(r) r$pip))
+OK       [lemmas\CC_code_check.md] v3_run.R:163-163 | out$mpm <- as.integer(orig[out$pip_primary > 0.5])
+OK       [lemmas\CC_code_check.md] v3_run.R:154-154 | out$log_Z <- v3_log_sum_exp(logZr) - log(R)                    # pooled Zhat = (1/R) sum_r Zhat_r (log-sum-exp
+OK       [lemmas\CC_code_check.md] cpp/v3_engine.h:299-299 | double logZ = D.logm0 + st.logZbar0;
+OK       [lemmas\CC_code_check.md] cpp/v3_start.h:158-176 | inline void draw_pi0(const Start& st, VariateSource& vs, std::vector<int>& S, std::vector<int>* sizes_out = nu
+OK       [lemmas\CC_code_check.md] Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:77-88 | **(B-b) Randomness.** Write F_k = σ(u₁, …, u_k). By (B-0) the record's variables are computed by reading unifo
+OK       [lemmas\CC_code_check.md] cpp/v3_engine.h:116-116 | bool add_ok = in || (int)P.S.size() < D.K;
+OK       [lemmas\CC_code_check.md] cpp/v3_start.h:92-92 | if ((int)U.size() > D.K) continue;
+OK       [lemmas\CC_code_check.md] cpp/v3_core.cpp:425-425 | if ((int)S.size() > D.K) stop("inherited model larger than K");
+OK       [lemmas\CC_code_check.md] v3_preprocess.R:23-23 | ell <- v3_ceil_log2(n + p + 1)
+OK       [lemmas\CC_code_check.md] cpp/v3_calib.h:94-94 | if ((int)g.grid.size() - 1 > Te) { g.ok = false; g.reason = "too_many_intervals"; return g; }
+OK       [lemmas\CC_code_check.md] cpp/v3_calib.h:32-32 | if (population_ess(d, 1.0 - phi) >= thr) return {1.0, false};
+OK       [lemmas\CC_code_check.md] v3_calib.R:122-124 | if (isTRUE(grid_fallback) && trig$grid_failure && tier == 1) {   # tier 0 failures escalate as in v3
+OK       [lemmas\CC_code_check.md] v3_preprocess.R:22-22 | B <- min(v3_isqrt(n), v3_isqrt(p), 16)            # B* = 16 (implementation limit)
+OK       [lemmas\CC_code_check.md] v3_run.R:68-82 | v3_frozen <- function(grid, tier = 0, N = NULL, L = NULL, inherited = NULL, budgets = NULL) {
+OK       [lemmas\CC_code_check.md] cpp/v3_core.cpp:446-446 | res.push_back(E.run_island(r, o.N, g, o.L, o.Hm, o.tier, nullptr));
+OK       [lemmas\CC_code_check.md] v3_run.R:88-92 | v3_run_settings <- function(setup, frozen, ls0 = getOption("v3.ls0", TRUE)) {
+OK       [lemmas\CC_code_check.md] cpp/v3_engine.h:269-273 | IslandResult run_island(int r, int N, const std::vector<double>& grid, int L, int Hm, int tier,
+OK       [lemmas\C_theorem.md] cpp/v3_engine.h:317-322 | for (int i = 0; i < N; ++i) lw[i] = dphi * P[i].d;
+OK       [lemmas\C_theorem.md] Theory_work/Wave3/W3-POST/STATEMENT.md:79-80 | **Theorem 1.** In R1 under G, (E), (F_λ), (F_w):
+OK       [lemmas\D_theorem.md] L1_bridge.md:77-88 | **(B-b) Randomness.** Write F_k = σ(u₁, …, u_k). By (B-0) the record's variables are computed by reading unifo
+OK       [lemmas\D_theorem.md] cpp/v3_start.h:158-176 | inline void draw_pi0(const Start& st, VariateSource& vs, std::vector<int>& S, std::vector<int>* sizes_out = nu
+OK       [lemmas\D_theorem.md] cpp/v3_util.h:121-126 | inline bool hpm_better(double F1, const std::vector<int>& S1, double F2, const std::vector<int>& S2) {
+OK       [lemmas\D_theorem.md] v3_preprocess.R:24-25 | L <- max(4, v3_ceil_log2(n + 1))
+OK       [lemmas\D_theorem.md] v3_run.R:90-90 | ro <- list(N = as.integer(b$tiers$N[tier + 1]), L = as.integer(b$L), measured_rounds = 4L,
+OK       [lemmas\LT_theorem.md] cpp/v3_ledger.h:43-57 | struct TopStore {
+OK       [lemmas\MR_identities.md] PROOF_v6.tex:157-162 | \begin{lemma}[freezing]\label{lem:freeze}
+OK       [lemmas\MR_identities.md] L1_bridge.md:14-20 | **Record convention.** Φ(c, u) denotes the **statistical record** of this run: the evidence log Ẑ_r; the popul
+OK       [lemmas\MR_identities.md] L1_bridge.md:29-31 | `v3_blocks.h` identical; `v3_engine.h` differs only by the write-only plain-PIP lines (v2.2.1 `:39-40, 352, 35
+OK       [lemmas\MR_identities.md] L3_freezing.md:34-36 | *Boundedness.* For c ∈ A₀ with grid (φ_t), every factor (1/N)Σ_i e^{Δ_t d(·)} lies in [e^{Δ_t min_Ω d}, e^{Δ_t
+OK       [lemmas\MR_identities.md] L3_freezing.md:28-30 | g : E × Υ → ℝ piecewise: g(c, u) := Ẑ(Φ(c, u)) · η_q(Φ(c, u))(h(·; c)) for c ∈ A₀, and g(c, u) := 0 for c ∉ A₀
+OK       [lemmas\MR_identities.md] STATEMENT.md:61-61 | - (i.c) *State-independent prefixes.* Consider any round of the run (a stage-t round, with Ẑ_t and target q_t,
+OK       [lemmas\MR_identities.md] cpp/v3_engine.h:205-212 | for (size_t pos = 0; pos < ord.size(); ++pos) {
+OK       [lemmas\MR_identities.md] L1_bridge.md:14-20 | **Record convention.** Φ(c, u) denotes the **statistical record** of this run: the evidence log Ẑ_r; the popul
+OK       [lemmas\MR_identities.md] L3_freezing.md:34-36 | *Boundedness.* For c ∈ A₀ with grid (φ_t), every factor (1/N)Σ_i e^{Δ_t d(·)} lies in [e^{Δ_t min_Ω d}, e^{Δ_t
+OK       [lemmas\PC_completed.md] cpp/v3_engine.h:335-338 | if (guard && guard->check(secs_since(stage_start), "bridge_stage", ev)) {
+OK       [lemmas\PC_completed.md] cpp/v3_core.cpp:451-451 | if (res.back().partial) { status = "resource_limit"; break; }
+OK       [lemmas\PC_completed.md] v3_run.R:143-143 | if (raw$status != "completed") {   # numerical_failure: best scored model so far, labelled incomplete (M §2)
+OK       [lemmas\PC_completed.md] cpp/v3_engine.h:362-365 | res.rb_acc = rb_acc;
+OK       [lemmas\PC_completed.md] v3_run.R:142-142 | out$hpm <- led$hpm$model; out$hpm_F <- led$hpm$F; out$hpm_provenance <- led$hpm$provenance
+OK       [lemmas\PC_completed.md] cpp/v3_core.cpp:407-407 | Ledger led(&D, o.islands);
+OK       [lemmas\ST_stay.md] PROOF_v6.tex:54-81 | \begin{lemma}[elementary steps are $q_\varphi$-reversible]\label{lem:rev}
+OK       [lemmas\ST_stay.md] W1-N1/lemmas/L2_post_terminal.md:18-19 | - (bridge) Z_{t−1} q_{t−1}(G_t f) = Z_t q_t(f) for every f : Ω → ℝ (`:42-52`).
+OK       [lemmas\ST_stay.md] STATEMENT.md:44-44 | **Randomness (from EX-S and the prescribed operations).** (R1) the stage-0 draws are iid π₀; (R2) given everyt
+
+82 citations checked; 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, ticket folder;
+bare continuation references (':NNN' after a path) are not machine-checked and were checked by hand.

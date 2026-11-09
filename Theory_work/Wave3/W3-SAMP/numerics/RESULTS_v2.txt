@@ -1,0 +1,35 @@
+seed 7
+
+[reg-indep-blocks] |Omega|=64 delta=7.448e-01 o1=2.919e+00 o0=6.426e+00 dbar=6.426e+00 pi0(S0)=1.347e-01 osc(d)=4.02 inv_err=5.6e-17
+  ST: kappa_sum=1.134e+00<=o1:True; max non-Gibbs leave=3.217e-01<=o1:True; lambda0=1.544e+00<=(B+3)o1=1.459e+01
+  T= 1: max|z|=1.23; u=0.25: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.8669<= 17.1368; u=0.5: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9022<= 25.7051; C-i all:True; E|W-1|=0.4017<= 108.6580; max W=8.28; P(RB err>=kappa0+.1)=0.0001; P(MPM wrong)=0.6172
+  T= 3: max|z|=0.95; u=0.25: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.8680<= 34.2735; u=0.5: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9058<= 51.4103; C-i all:True; E|W-1|=0.2336<= 211.4785; max W=4.56; P(RB err>=kappa0+.1)=0.0000; P(MPM wrong)=0.6235
+  T=10: max|z|=2.03; u=0.25: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.8665<= 94.2521; u=0.5: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9073<= 141.3782; C-i all:True; E|W-1|=0.1247<= 571.3503; max W=2.09; P(RB err>=kappa0+.1)=0.0000; P(MPM wrong)=0.6216
+  D: P(no draw=S0) emp 0.0007 vs exact 0.0006 (D_r=51)
+
+[reg-AR0.7-split] |Omega|=64 delta=9.625e-01 o1=2.570e+01 o0=3.154e+02 dbar=3.154e+02 pi0(S0)=3.160e-03 osc(d)=2.63 inv_err=1.1e-16
+  ST: kappa_sum=1.125e+00<=o1:True; max non-Gibbs leave=2.062e-01<=o1:True; lambda0=1.709e+00<=(B+3)o1=1.285e+02
+  T= 1: max|z|=1.14; u=0.25: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9970<= 841.0888; u=0.5: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9970<= 1261.6332; C-i all:True; E|W-1|=0.0970<= 5097.9359; max W=5.14; P(RB err>=kappa0+.1)=0.9963; P(MPM wrong)=1.0000
+  T= 3: max|z|=1.78; u=0.25: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9969<= 1682.1776; u=0.5: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9969<= 2523.2664; C-i all:True; E|W-1|=0.0843<= 10144.4686; max W=2.80; P(RB err>=kappa0+.1)=0.9967; P(MPM wrong)=1.0000
+  T=10: max|z|=1.67; u=0.25: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9968<= 4625.9883; u=0.5: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9968<= 6938.9825; C-i all:True; E|W-1|=0.0546<= 27807.3331; max W=1.60; P(RB err>=kappa0+.1)=0.9959; P(MPM wrong)=1.0000
+  D: P(no draw=S0) emp 0.8500 vs exact 0.8509 (D_r=51)
+
+[reg-weak] |Omega|=32 delta=9.904e-01 o1=1.032e+02 o0=7.048e+01 dbar=1.032e+02 pi0(S0)=1.399e-02 osc(d)=0.82 inv_err=1.1e-16
+  ST: kappa_sum=1.904e+00<=o1:True; max non-Gibbs leave=9.853e-01<=o1:True; lambda0=3.897e+00<=(B+3)o1=4.128e+02
+  T= 1: max|z|=1.40; u=0.25: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9855<= 275.1742; u=0.5: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9861<= 412.7614; C-i all:True; E|W-1|=0.0137<= 1857.4261; max W=1.13; P(RB err>=kappa0+.1)=0.0000; P(MPM wrong)=1.0000
+  T= 3: max|z|=2.70; u=0.25: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9860<= 550.3485; u=0.5: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9867<= 825.5227; C-i all:True; E|W-1|=0.0122<= 3508.4715; max W=1.04; P(RB err>=kappa0+.1)=0.0000; P(MPM wrong)=1.0000
+  T=10: max|z|=1.59; u=0.25: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9860<= 1513.4583; u=0.5: min(U,u)<=Y all:True, stage bound all:True, E[Y]=0.9865<= 2270.1874; C-i all:True; E|W-1|=0.0084<= 9287.1304; max W=1.02; P(RB err>=kappa0+.1)=0.0000; P(MPM wrong)=1.0000
+  D: P(no draw=S0) emp 0.4862 vs exact 0.4875 (D_r=51)
+
+[heavy-tail W] artificial target, one rare state with huge pi/pi0
+  delta=4.828e-01; max W=89.5; P(W>5)=3.10e-04; identities max|z|=2.01
+
+OVERALL: identity max|z| = 2.70 (rule <= 4.5); inequality violations = 0
+[reg-concentrated n=200] delta=6.687e-01 o1=2.019e+00 o0=4.749e-01 pi0(S0)=0.6780 kappa0=6.27e-01
+  T= 1 T*dbar=2.019: E|W-1|=0.3337 (bound 36.3380); E min(U,1)=0.8679 (bound 16.1502); P(W<.5)=0.2624; max RB err (95%)=6.52e-01; P(MPM wrong)=1.0000; P(S0 not drawn initially)=0.0118
+  T= 5 T*dbar=10.094: E|W-1|=0.1425 (bound 100.9388); E min(U,1)=1.0000 (bound 48.4506); P(W<.5)=0.0000; max RB err (95%)=6.52e-01; P(MPM wrong)=1.0000; P(S0 not drawn initially)=0.0097
+  T=20 T*dbar=40.376: E|W-1|=0.0710 (bound 343.1920); E min(U,1)=1.0000 (bound 169.5772); P(W<.5)=0.0000; max RB err (95%)=6.52e-01; P(MPM wrong)=1.0000; P(S0 not drawn initially)=0.0111
+[reg-concentrated n=400] delta=1.005e-01 o1=1.117e-01 o0=9.100e-02 pi0(S0)=0.9166 kappa0=4.09e-02
+  T= 1 T*dbar=0.112: E|W-1|=0.0360 (bound 2.0105); E min(U,1)=0.1839 (bound 0.8936); P(W<.5)=0.0000; max RB err (95%)=4.49e-02; P(MPM wrong)=0.0000; P(S0 not drawn initially)=0.0001
+  T= 5 T*dbar=0.558: E|W-1|=0.0164 (bound 5.5848); E min(U,1)=0.5283 (bound 2.6807); P(W<.5)=0.0000; max RB err (95%)=4.50e-02; P(MPM wrong)=0.0000; P(S0 not drawn initially)=0.0001
+  T=20 T*dbar=2.234: E|W-1|=0.0083 (bound 18.9883); E min(U,1)=0.9827 (bound 9.3824); P(W<.5)=0.0000; max RB err (95%)=4.50e-02; P(MPM wrong)=0.0000; P(S0 not drawn initially)=0.0001

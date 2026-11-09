@@ -1,0 +1,58 @@
+seed 20261109
+
+======== 1. Lemma MR identities (Monte Carlo) and Lemma ST (exact) ========
+[mid] |Omega|=31 delta=0.7308 o1=2.7140 o0=16.2695 inv_err=5.55e-17
+   ST-b: sum_j |o_j(S0)-1| = 1.0286e+00 <= o1 2.7140e+00: True; Gibbs leave sum = 1.0286e+00 (equal to kappa_sum: True)
+   ST-a: max leave over non-Gibbs labels = 1.5481e-01 <= o1: True
+   ST-c: lambda0 = 1.3700e+00 <= (B+3) o1 = 1.3570e+01: True
+   grid [0, 1.0]: max|z| over 12 identities = 1.53; unweighted RB bias max = 0.000; E[Lambda] = 2.1110e-01 <= lambda0: True
+   grid [0, 0.3, 0.7, 1.0]: max|z| over 14 identities = 2.70; unweighted RB bias max = 0.000; E[Lambda] = 2.1093e-01 <= lambda0: True
+[cap] |Omega|=16 delta=0.7258 o1=2.6464 o0=25.3108 inv_err=1.11e-16
+   ST-b: sum_j |o_j(S0)-1| = 9.4300e-01 <= o1 2.6464e+00: True; Gibbs leave sum = 9.4300e-01 (equal to kappa_sum: True)
+   ST-a: max leave over non-Gibbs labels = 7.0501e-02 <= o1: True
+   ST-c: lambda0 = 1.1246e+00 <= (B+3) o1 = 1.3232e+01: True
+   grid [0, 1.0]: max|z| over 12 identities = 1.47; unweighted RB bias max = 0.001; E[Lambda] = 2.1614e-01 <= lambda0: True
+   grid [0, 0.3, 0.7, 1.0]: max|z| over 14 identities = 2.27; unweighted RB bias max = 0.000; E[Lambda] = 2.1731e-01 <= lambda0: True
+[flat] |Omega|=16 delta=0.9526 o1=20.0854 o0=40.3336 inv_err=5.55e-17
+   ST-b: sum_j |o_j(S0)-1| = 2.5431e+00 <= o1 2.0085e+01: True; Gibbs leave sum = 2.5431e+00 (equal to kappa_sum: True)
+   ST-a: max leave over non-Gibbs labels = 6.7253e-01 <= o1: True
+   ST-c: lambda0 = 4.8657e+00 <= (B+3) o1 = 1.0043e+02: True
+   grid [0, 1.0]: max|z| over 11 identities = 1.14; unweighted RB bias max = 0.008; E[Lambda] = 4.8085e-02 <= lambda0: True
+   grid [0, 0.3, 0.7, 1.0]: max|z| over 13 identities = 1.27; unweighted RB bias max = 0.002; E[Lambda] = 4.7699e-02 <= lambda0: True
+OVERALL max|z| (identities) = 2.70  (rule: <= 4.5)
+
+======== 2. Theorem LT# inequalities (empirical lhs <= rhs) ========
+eps=0.02 eta=0.1: LT-b 0.0011 <= 136.4641 (with 19o1: 426.3988); LT-a 0.6732 <= 121.4971
+eps=0.02 eta=0.3: LT-b 0.0011 <= 55.5938 (with 19o1: 345.5286); LT-a 0.6732 <= 40.6269
+eps=0.02 eta=0.5: LT-b 0.0011 <= 39.5585 (with 19o1: 329.4933); LT-a 0.6732 <= 24.5916
+eps=0.05 eta=0.1: LT-b 0.0000 <= 54.5933 (with 19o1: 170.5672); LT-a 0.6732 <= 48.6066
+eps=0.05 eta=0.3: LT-b 0.0000 <= 22.3168 (with 19o1: 138.2907); LT-a 0.6732 <= 16.3300
+eps=0.05 eta=0.5: LT-b 0.0000 <= 16.0002 (with 19o1: 131.9741); LT-a 0.6732 <= 10.0135
+eps=0.1 eta=0.1: LT-b 0.0000 <= 27.3031 (with 19o1: 85.2900); LT-a 0.6732 <= 24.3097
+eps=0.1 eta=0.3: LT-b 0.0000 <= 11.2244 (with 19o1: 69.2114); LT-a 0.6732 <= 8.2311
+eps=0.1 eta=0.5: LT-b 0.0000 <= 8.1475 (with 19o1: 66.1344); LT-a 0.6732 <= 5.1541
+delta=0.2430 o1=0.3209 kappa0=0.0706; violations (tol .01): 0
+LT-c: P(S0 never a measured/entering endpoint) = 0.0000 <= delta/eta+P(W<eta) at eta=.5: 0.7807
+kappa0 sharpness: islands with all measured endpoints at S0 have RB error = 6.7458e-02 vs kappa0 7.0626e-02
+
+======== 3. Theorem C: E|W-1| <= 2 o1 + 8 (T+1) dbar ; E min(U,1) <= 4 (T+1) dbar ========
+a=4.0 b=3.0 dbar=1.676e-01 T=  1 T*dbar=0.168: E|W-1|=0.1141 (bound 2.8473, ok=True); E min(U,1)=0.2137 (bound 1.3404); P(RB err>.1)=0.0000; P(W<.5)=0.0089
+a=4.0 b=3.0 dbar=1.676e-01 T=  4 T*dbar=0.670: E|W-1|=0.0684 (bound 6.8686, ok=True); E min(U,1)=0.4804 (bound 3.3511); P(RB err>.1)=0.0000; P(W<.5)=0.0001
+a=4.0 b=3.0 dbar=1.676e-01 T= 16 T*dbar=2.681: E|W-1|=0.0354 (bound 22.9539, ok=True); E min(U,1)=0.9354 (bound 11.3937); P(RB err>.1)=0.0000; P(W<.5)=0.0000
+a=4.0 b=3.0 dbar=1.676e-01 T= 64 T*dbar=10.724: E|W-1|=0.0183 (bound 87.2950, ok=True); E min(U,1)=1.0000 (bound 43.5643); P(RB err>.1)=0.0000; P(W<.5)=0.0000
+a=3.0 b=2.5 dbar=4.673e-01 T=  1 T*dbar=0.467: E|W-1|=0.1979 (bound 8.0098, ok=True); E min(U,1)=0.4983 (bound 3.7386); P(RB err>.1)=0.0001; P(W<.5)=0.0344
+a=3.0 b=2.5 dbar=4.673e-01 T=  4 T*dbar=1.869: E|W-1|=0.1039 (bound 19.2256, ok=True); E min(U,1)=0.8622 (bound 9.3465); P(RB err>.1)=0.0000; P(W<.5)=0.0003
+a=3.0 b=2.5 dbar=4.673e-01 T= 16 T*dbar=7.477: E|W-1|=0.0541 (bound 64.0889, ok=True); E min(U,1)=0.9998 (bound 31.7782); P(RB err>.1)=0.0000; P(W<.5)=0.0000
+a=3.0 b=2.5 dbar=4.673e-01 T= 64 T*dbar=29.909: E|W-1|=0.0270 (bound 243.5422, ok=True); E min(U,1)=1.0000 (bound 121.5048); P(RB err>.1)=0.0000; P(W<.5)=0.0000
+a=2.5 b=2.0 dbar=9.037e-01 T=  1 T*dbar=0.904: E|W-1|=0.2523 (bound 16.2674, ok=True); E min(U,1)=0.7148 (bound 7.2299); P(RB err>.1)=0.9991; P(W<.5)=0.0059
+a=2.5 b=2.0 dbar=9.037e-01 T=  4 T*dbar=3.615: E|W-1|=0.1151 (bound 37.9572, ok=True); E min(U,1)=0.9771 (bound 18.0749); P(RB err>.1)=0.9996; P(W<.5)=0.0000
+a=2.5 b=2.0 dbar=9.037e-01 T= 16 T*dbar=14.460: E|W-1|=0.0580 (bound 124.7165, ok=True); E min(U,1)=1.0000 (bound 61.4545); P(RB err>.1)=0.9995; P(W<.5)=0.0000
+a=2.5 b=2.0 dbar=9.037e-01 T= 64 T*dbar=57.840: E|W-1|=0.0287 (bound 471.7538, ok=True); E min(U,1)=1.0000 (bound 234.9732); P(RB err>.1)=0.9995; P(W<.5)=0.0000
+
+======== 4. NC_r: necessity probes ========
+trap: delta=0.0099 pi0(S0)=1.52e-08; P(W<0.01)=1.000; P(RB err >= .5)=1.000; P(MPM wrong)=1.000  -> P-CONC holds, NC fails, outputs wrong
+near: delta=0.0214 pi0(S0)=4.24e-05; P(W<0.01)=0.000; P(RB err >= .1)=0.007  -> NC fails, yet the terminal rounds repair the RB PIPs (NC not necessary)
+
+======== 5. Theorem D: P(no pi_0 draw equals S0) = (1 - pi0(S0))^D_r ========
+pi0(S0)=0.0598 D_r=16: empirical 0.3754 vs exact 0.3728 (z=1.07); P(S0 never a particle endpoint) = 0.0608
+pi0(S0)=0.0149 D_r=16: empirical 0.7876 vs exact 0.7861 (z=0.74); P(S0 never a particle endpoint) = 0.0271
