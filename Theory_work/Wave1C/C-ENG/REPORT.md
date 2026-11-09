@@ -105,9 +105,10 @@ truncated the legacy result fields (S, lg0, ties, truncated) are unchanged.
 | R06 | R05 fix check bf093a8..0638af9 | Codex gpt-6.1-sol high (fresh) | **APPROVE, no new findings; C-GROW MR1, C-DLV A.2, C-DLV B all MET** | `R06_fix_check_raw.md` |
 | R07 | preflight LS0 worst-case delta 8a27652..ef33f91 | Codex gpt-6.1-sol high (fresh) | REJECT (2 MAJOR: archive allowance below the conversion peak; benchmark ran before a certain memory rejection) | `R07_preflight_review_raw.md` (incl. disposition); both fixed in 98fac03 |
 | R08 | R07 fix check ef33f91..98fac03 | Codex gpt-6.1-sol high (fresh) | APPROVE-WITH-FIXES (both R07 MAJOR RESOLVED; 1 MINOR: archive test used a copied formula) | `R08_fix_check_raw.md` (incl. disposition); fixed: test reads the production allowance; +4096 fixed bytes |
+| R09 | final delta 98fac03..72785fe (R08 test fix, +4096 bytes) | Codex gpt-6.1-sol high (fresh) | **APPROVE, no findings** (mutation: allowance 0 fails all 5 archive checks) | `R09_final_delta_raw.md` |
 
 Every production-code change is covered by a review: f16ce15..9b9d234 (R03), the MR2 guard (R04), the wave-2 diff (R05) and
-its fixes (R06), the preflight term (R07) and its fixes (R08). No production code changed after 98fac03.
+its fixes (R06), the preflight term (R07), its fixes (R08) and the final constant (R09). No production code changed after 72785fe.
 
 ## 3. Tests and results (scripts in `tests/`, outputs in `numerics/`; local Windows, R 4.6.1, Rtools45, Rcpp 1.1.2)
 
