@@ -1,80 +1,92 @@
-C-ENG test_preflight.R 2026-11-08 23:59:43 
+C-ENG test_preflight.R 2026-11-09 00:04:03 
 core = C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\t3-68de3711\Scripts\SMC_BVS\core 
 
 1. p = 30 regression design (n = 100, S1-S6, replicate 1; the 48 regression datasets share n, p)
 2. study sizes, dev generator (Scripts/SMC_BVS/smoke/reference/gen_dev_data.R), n = 200, c100
      case   n    p   K ell mem_gb hours old_GiB new_GiB ls0_scans ls0_requests
-   p30 S1 100   30  30   8      8    24  0.0041  0.0041        39         9945
-   p30 S2 100   30  30   8      8    24  0.0041  0.0041        39         9945
-   p30 S3 100   30  30   8      8    24  0.0041  0.0041        39         9945
-   p30 S4 100   30  30   8      8    24  0.0041  0.0041        39         9945
-   p30 S5 100   30  30   8      8    24  0.0041  0.0041        39         9945
-   p30 S6 100   30  30   8      8    24  0.0041  0.0041        39         9945
-  p500 S1 200  500 100  10      8    24  0.1442  0.1443       111      6993000
-  p500 S1 200  500 100  10      2    24  0.1442  0.1443       111      6993000
-  p500 S2 200  500 100  10      8    24  0.1442  0.1443       111      6993000
-  p500 S2 200  500 100  10      2    24  0.1442  0.1443       111      6993000
-  p500 S3 200  500 100  10      8    24  0.1442  0.1443       111      6993000
-  p500 S3 200  500 100  10      2    24  0.1442  0.1443       111      6993000
-  p500 S4 200  500 100  10      8    24  0.1442  0.1443       111      6993000
-  p500 S4 200  500 100  10      2    24  0.1442  0.1443       111      6993000
-  p500 S5 200  500 100  10      8    24  0.1442  0.1443       111      6993000
-  p500 S5 200  500 100  10      2    24  0.1442  0.1443       111      6993000
-  p500 S6 200  500 100  10      8    24  0.1442  0.1443       111      6993000
-  p500 S6 200  500 100  10      2    24  0.1442  0.1443       111      6993000
- p1000 S1 200 1000 100  11      8    24  0.2973  0.2974       112     28112000
- p1000 S1 200 1000 100  11      2    24  0.2973  0.2974       112     28112000
- p1000 S2 200 1000 100  11      8    24  0.2973  0.2974       112     28112000
- p1000 S2 200 1000 100  11      2    24  0.2973  0.2974       112     28112000
- p1000 S3 200 1000 100  11      8    24  0.2973  0.2974       112     28112000
- p1000 S3 200 1000 100  11      2    24  0.2973  0.2974       112     28112000
- p1000 S4 200 1000 100  11      8    24  0.2973  0.2974       112     28112000
- p1000 S4 200 1000 100  11      2    24  0.2973  0.2974       112     28112000
- p1000 S5 200 1000 100  11      8    24  0.2973  0.2974       112     28112000
- p1000 S5 200 1000 100  11      2    24  0.2973  0.2974       112     28112000
- p1000 S6 200 1000 100  11      8    24  0.2973  0.2974       112     28112000
- p1000 S6 200 1000 100  11      2    24  0.2973  0.2974       112     28112000
+   p30 S1 100   30  30   8      8    24  0.0041  0.0042        39         9945
+   p30 S2 100   30  30   8      8    24  0.0041  0.0042        39         9945
+   p30 S3 100   30  30   8      8    24  0.0041  0.0042        39         9945
+   p30 S4 100   30  30   8      8    24  0.0041  0.0042        39         9945
+   p30 S5 100   30  30   8      8    24  0.0041  0.0042        39         9945
+   p30 S6 100   30  30   8      8    24  0.0041  0.0042        39         9945
+  p500 S1 200  500 100  10      8    24  0.1442  0.1445       111      6993000
+  p500 S1 200  500 100  10      2    24  0.1442  0.1445       111      6993000
+  p500 S2 200  500 100  10      8    24  0.1442  0.1445       111      6993000
+  p500 S2 200  500 100  10      2    24  0.1442  0.1445       111      6993000
+  p500 S3 200  500 100  10      8    24  0.1442  0.1445       111      6993000
+  p500 S3 200  500 100  10      2    24  0.1442  0.1445       111      6993000
+  p500 S4 200  500 100  10      8    24  0.1442  0.1445       111      6993000
+  p500 S4 200  500 100  10      2    24  0.1442  0.1445       111      6993000
+  p500 S5 200  500 100  10      8    24  0.1442  0.1445       111      6993000
+  p500 S5 200  500 100  10      2    24  0.1442  0.1445       111      6993000
+  p500 S6 200  500 100  10      8    24  0.1442  0.1445       111      6993000
+  p500 S6 200  500 100  10      2    24  0.1442  0.1445       111      6993000
+ p1000 S1 200 1000 100  11      8    24  0.2973  0.2976       112     28112000
+ p1000 S1 200 1000 100  11      2    24  0.2973  0.2976       112     28112000
+ p1000 S2 200 1000 100  11      8    24  0.2973  0.2976       112     28112000
+ p1000 S2 200 1000 100  11      2    24  0.2973  0.2976       112     28112000
+ p1000 S3 200 1000 100  11      8    24  0.2973  0.2976       112     28112000
+ p1000 S3 200 1000 100  11      2    24  0.2973  0.2976       112     28112000
+ p1000 S4 200 1000 100  11      8    24  0.2973  0.2976       112     28112000
+ p1000 S4 200 1000 100  11      2    24  0.2973  0.2976       112     28112000
+ p1000 S5 200 1000 100  11      8    24  0.2973  0.2976       112     28112000
+ p1000 S5 200 1000 100  11      2    24  0.2973  0.2976       112     28112000
+ p1000 S6 200 1000 100  11      8    24  0.2973  0.2976       112     28112000
+ p1000 S6 200 1000 100  11      2    24  0.2973  0.2976       112     28112000
  s_per_score ls0_est_hours old_exceeds new_exceeds
-    1.82e-05      1.01e-04       FALSE       FALSE
-    1.23e-05      6.79e-05       FALSE       FALSE
-    1.41e-05      7.82e-05       FALSE       FALSE
-    1.00e-05      5.55e-05       FALSE       FALSE
-    9.95e-06      5.50e-05       FALSE       FALSE
-    1.10e-05      6.06e-05       FALSE       FALSE
-    4.20e-04      1.63e+00       FALSE       FALSE
-    4.93e-04      1.91e+00       FALSE       FALSE
-    3.70e-04      1.44e+00       FALSE       FALSE
-    3.69e-04      1.43e+00       FALSE       FALSE
-    3.62e-04      1.41e+00       FALSE       FALSE
-    3.66e-04      1.42e+00       FALSE       FALSE
-    4.26e-04      1.65e+00       FALSE       FALSE
-    3.56e-04      1.38e+00       FALSE       FALSE
-    4.52e-04      1.76e+00       FALSE       FALSE
-    3.71e-04      1.44e+00       FALSE       FALSE
-    3.33e-04      1.29e+00       FALSE       FALSE
-    2.97e-04      1.15e+00       FALSE       FALSE
-    3.51e-04      5.48e+00       FALSE       FALSE
-    3.31e-04      5.17e+00       FALSE       FALSE
-    3.52e-04      5.50e+00       FALSE       FALSE
-    3.23e-04      5.05e+00       FALSE       FALSE
-    4.25e-04      6.64e+00       FALSE       FALSE
-    4.16e-04      6.50e+00       FALSE       FALSE
-    3.65e-04      5.71e+00       FALSE       FALSE
-    4.07e-04      6.36e+00       FALSE       FALSE
-    3.64e-04      5.69e+00       FALSE       FALSE
-    4.19e-04      6.54e+00       FALSE       FALSE
-    4.26e-04      6.66e+00       FALSE       FALSE
-    3.05e-04      4.76e+00       FALSE       FALSE
+    1.22e-05      6.72e-05       FALSE       FALSE
+    1.06e-05      5.88e-05       FALSE       FALSE
+    1.11e-05      6.13e-05       FALSE       FALSE
+    1.45e-05      8.02e-05       FALSE       FALSE
+    1.81e-05      1.00e-04       FALSE       FALSE
+    1.03e-05      5.70e-05       FALSE       FALSE
+    5.42e-04      2.10e+00       FALSE       FALSE
+    4.06e-04      1.58e+00       FALSE       FALSE
+    3.04e-04      1.18e+00       FALSE       FALSE
+    3.34e-04      1.30e+00       FALSE       FALSE
+    2.99e-04      1.16e+00       FALSE       FALSE
+    3.25e-04      1.26e+00       FALSE       FALSE
+    3.02e-04      1.17e+00       FALSE       FALSE
+    2.98e-04      1.16e+00       FALSE       FALSE
+    3.13e-04      1.21e+00       FALSE       FALSE
+    3.04e-04      1.18e+00       FALSE       FALSE
+    3.99e-04      1.55e+00       FALSE       FALSE
+    4.75e-04      1.85e+00       FALSE       FALSE
+    3.50e-04      5.47e+00       FALSE       FALSE
+    3.06e-04      4.77e+00       FALSE       FALSE
+    4.79e-04      7.48e+00       FALSE       FALSE
+    3.29e-04      5.14e+00       FALSE       FALSE
+    4.80e-04      7.49e+00       FALSE       FALSE
+    4.09e-04      6.38e+00       FALSE       FALSE
+    4.05e-04      6.32e+00       FALSE       FALSE
+    4.35e-04      6.79e+00       FALSE       FALSE
+    4.45e-04      6.95e+00       FALSE       FALSE
+    6.00e-04      9.37e+00       FALSE       FALSE
+    3.06e-04      4.78e+00       FALSE       FALSE
+    2.97e-04      4.64e+00       FALSE       FALSE
 
 Fits passing the shipped preflight that the v3.1 preflight would refuse: 0 
   [PASS] p = 30 regression design: preflight passes in both modes at 8 GiB / 24 h
   [PASS] study sizes p = 500 / 1000 at the default allocation 8 GiB / 24 h: passes in both modes (none newly refused)
-  [PASS] LS0 archive term = 2 (ell + K + 1)(4K + 64) bytes; scans = ell + K + 1; requests = scans (p + p^2/4)
+  [PASS] scans = ell + K + 1; requests = scans (p + p^2/4)
+
+R07 #1: archive allowance vs a constructed worst-case archive (R copy measured + C++ upper estimate)
+  K = 100, ell = 10, p = 500: R archive 106808 B + C++ estimate 195920 B = 302728 B; allowance 341952 B
+  [PASS] archive allowance covers the conversion peak (K = 100, p = 500)
+  K = 100, ell = 11, p = 1000: R archive 107736 B + C++ estimate 197904 B = 305640 B; allowance 345216 B
+  [PASS] archive allowance covers the conversion peak (K = 100, p = 1000)
+  K = 30, ell = 8, p = 30: R archive 17928 B + C++ estimate 25360 B = 43288 B; allowance 55152 B
+  [PASS] archive allowance covers the conversion peak (K = 30, p = 30)
+  K = 1000, ell = 15, p = 2000: R archive 8272680 B + C++ estimate 16419728 B = 24692408 B; allowance 25068160 B
+  [PASS] archive allowance covers the conversion peak (K = 1000, p = 2000)
+  [PASS] R07 #2: memory rejection (est 228 GiB > 8 GiB) returns without running the timing benchmark
+  [PASS] memory fits: the benchmark runs once and the LS0 time is evaluated
 
 3. public v3_fit: preflight record and switches
   [PASS] default: preflight carries ls0_worst_case and the ls0_archive memory component; fit completed
   [PASS] v3.ls0_cap = 'ell_n' and ls0 = FALSE: preflight identical to the shipped preflight (no LS0 term)
   [PASS] the LS0 term does not change the fit outputs (Zhat, PIPs, HPM identical to the ell_n preflight run)
-  [PASS] hours = half the LS0 worst case (0.126 s): refused at preflight (resource_limit, preflight exceeds); not by the shipped preflight
+  [PASS] hours = half the LS0 worst case (0.137 s): refused at preflight (resource_limit, preflight exceeds); not by the shipped preflight
 
-TOTAL: 7 PASS, 0 FAIL
+TOTAL: 13 PASS, 0 FAIL

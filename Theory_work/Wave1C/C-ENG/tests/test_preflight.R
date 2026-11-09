@@ -48,9 +48,34 @@ if (nrow(newly)) print(newly, row.names = FALSE)
 check("p = 30 regression design: preflight passes in both modes at 8 GiB / 24 h", all(!tab$old_exceeds[1:6] & !tab$new_exceeds[1:6]))
 d8 <- tab[tab$mem_gb == 8 & tab$p >= 500, ]
 check("study sizes p = 500 / 1000 at the default allocation 8 GiB / 24 h: passes in both modes (none newly refused)", all(!d8$old_exceeds) && all(!d8$new_exceeds))
-check("LS0 archive term = 2 (ell + K + 1)(4K + 64) bytes; scans = ell + K + 1; requests = scans (p + p^2/4)",
-      all(abs(tab$new_GiB - tab$old_GiB - round(2 * tab$ls0_scans * (4 * tab$K + 64) / 2^30, 4)) <= 1e-4) &&
+check("scans = ell + K + 1; requests = scans (p + p^2/4)",
       all(tab$ls0_scans == tab$ell + tab$K + 1) && all(abs(tab$ls0_requests - tab$ls0_scans * (tab$p + tab$p^2 / 4)) < 1e-6))
+# R07 #1: validate the archive allowance against a worst-case archive at the conversion peak: the R copy built exactly as
+# local_to_list builds it (measured with object.size) plus an upper estimate of the live C++ LocalArchive (each model a
+# std::vector<int> of capacity <= 2K: 24 + 8K bytes + 16 allocator; parallel vectors of capacity <= 2 scans).
+cat("\nR07 #1: archive allowance vs a constructed worst-case archive (R copy measured + C++ upper estimate)\n")
+for (cfg in list(c(K = 100, ell = 10, p = 500), c(K = 100, ell = 11, p = 1000), c(K = 30, ell = 8, p = 30), c(K = 1000, ell = 15, p = 2000))) {
+  K <- cfg[["K"]]; ell <- cfg[["ell"]]; pp <- cfg[["p"]]; scans <- ell + K + 1; W <- ceiling(pp / 64)
+  mods <- function(m) lapply(seq_len(m), function(i) sample.int(pp, K))
+  Rarch <- list(centre = sample.int(pp, K), centre_F = 0, path = mods(scans - 1), path_F = numeric(scans - 1),
+                scanned_centres = mods(scans), scanned_F = numeric(scans), scan_complete = integer(scans), scan_size = integer(scans),
+                termination = "move_limit", local_limit = TRUE, local_certified = FALSE, returned = sample.int(pp, K), returned_F = 0,
+                moves = as.integer(scans - 1), n_evaluated = 1e9, move_cap = as.integer(scans - 1), move_cap_rule = "ell_n + |start mode|")
+  r_bytes <- as.numeric(object.size(Rarch))
+  cpp_bytes <- (2 * scans + 2) * (24 + 8 * K + 16) + 2 * scans * (8 + 8 + 4 + 4) + 4 * (8 * W + 4 * K + 96 + 24 * 2)
+  allowance <- (2 * scans + 4) * (12 * K + 256) + 96 * scans + 4 * (8 * W + 4 * K + 96)
+  cat(sprintf("  K = %d, ell = %d, p = %d: R archive %d B + C++ estimate %d B = %d B; allowance %d B\n", K, ell, pp,
+              as.integer(r_bytes), as.integer(cpp_bytes), as.integer(r_bytes + cpp_bytes), as.integer(allowance)))
+  check(sprintf("archive allowance covers the conversion peak (K = %d, p = %d)", K, pp), allowance >= r_bytes + cpp_bytes)
+}
+# R07 #2: memory is checked before the timing benchmark
+calls <- 0; tf_spy <- function(k) { calls <<- calls + 1; 1e-4 }
+bb <- v3_budgets(20000, 10000)
+pf_big <- v3_preflight(20000, 10000, bb, "smc", list(mem_gb = 8, hours = 24), time_fun = tf_spy, ls0_worst_case = TRUE)
+check(sprintf("R07 #2: memory rejection (est %.0f GiB > 8 GiB) returns without running the timing benchmark", pf_big$est_bytes / 2^30),
+      isTRUE(pf_big$exceeds) && calls == 0 && identical(pf_big$ls0_worst_case$timed, FALSE))
+pf_ok <- v3_preflight(200, 500, v3_budgets(200, 500), "smc", list(mem_gb = 8, hours = 24), time_fun = tf_spy, ls0_worst_case = TRUE)
+check("memory fits: the benchmark runs once and the LS0 time is evaluated", calls == 1 && isTRUE(pf_ok$ls0_worst_case$timed) && !isTRUE(pf_ok$exceeds))
 
 cat("\n3. public v3_fit: preflight record and switches\n")
 set.seed(4001); X <- scale(matrix(rnorm(100 * 30), 100)); y <- drop(X[, 3] - X[, 7] + rnorm(100))

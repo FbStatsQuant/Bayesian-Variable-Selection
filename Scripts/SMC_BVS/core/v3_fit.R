@@ -17,8 +17,12 @@ v3_time_scores <- function(Xs, ys, kbar) {
 # v3.1 (C-GROW MR1 cap; HQ_AUDIT A1 finding 1): with ls0_worst_case = TRUE the SMC preflight also charges LS0 at its worst
 # case under the cap ell_n + |S~0| <= ell_n + K: at most ell_n + K + 1 complete scans of at most q(p) = p + p^2/4 models
 # each, timed at the measured seconds per score of a size-K model times a declared bookkeeping factor 2 (cache lookup and
-# insert, ledger/store offers), and its path/scanned-centre archive (2 (ell_n + K + 1) models of 4K + 64 bytes, as for the
-# stores). The LS0 time counts against the allocation's hours. ls0_worst_case = FALSE is the shipped preflight.
+# insert, ledger/store offers; an operational estimate, not a rigorous runtime bound), and its archive at the conversion
+# peak, when the C++ LocalArchive and its R copy are both alive: (2 scans + 4) models (path, scanned centres, centre,
+# returned; C++ vector with capacity growth 8K + 128 bytes, R integer vector + list slot 4K + 128) plus 96 bytes per scan
+# for the parallel F / scan_complete / scan_size vectors (both copies, capacity growth) plus 4 scan particles
+# (8W + 4K + 96). Memory is checked first: the size-K timing benchmark runs only if the memory estimate already fits
+# (R07 #2). The LS0 time counts against the allocation's hours. ls0_worst_case = FALSE is the shipped preflight.
 v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL, ls0_worst_case = FALSE) {
   K <- b$K; B <- b$B; N <- b$tiers$N[tier + 1]; C_cache <- 500 * p
   mem_gb <- allocation[["mem_gb"]] %||% 8; hours <- allocation[["hours"]] %||% 24
@@ -38,8 +42,9 @@ v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL,
     s <- scores <- seconds <- NA_real_
     if (isTRUE(ls0_worst_case)) {
       ls0_scans <- b$ell + K + 1; ls0_requests <- ls0_scans * (p + p^2 / 4)
-      ls0_s <- time_fun(K); ls0_seconds <- 2 * ls0_requests * ls0_s
-      comp <- c(comp, ls0_archive = 2 * ls0_scans * (4 * K + 64))
+      comp <- c(comp, ls0_archive = (2 * ls0_scans + 4) * (12 * K + 256) + 96 * ls0_scans + 4 * (8 * W + 4 * K + 96))
+      ls0_s <- ls0_seconds <- NA_real_
+      if (sum(comp) <= mem_gb * 2^30) { ls0_s <- time_fun(K); ls0_seconds <- 2 * ls0_requests * ls0_s }  # R07 #2
     }
   }
   bytes <- sum(comp)
@@ -56,8 +61,8 @@ v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL,
   if (branch != "exact" && isTRUE(ls0_worst_case)) {
     out$ls0_worst_case <- list(label = "v3.1 LS0 worst case (cap ell_n + |S~0| <= ell_n + K); operational estimate",
       scans = ls0_scans, requests = ls0_requests, model_size_timed = K, seconds_per_score = ls0_s,
-      bookkeeping_factor = 2, est_seconds = ls0_seconds, archive_bytes = comp[["ls0_archive"]])
-    out$exceeds <- out$exceeds || ls0_seconds > hours * 3600
+      bookkeeping_factor = 2, est_seconds = ls0_seconds, timed = !is.na(ls0_seconds), archive_bytes = comp[["ls0_archive"]])
+    out$exceeds <- out$exceeds || isTRUE(ls0_seconds > hours * 3600)
   }
   out
 }
