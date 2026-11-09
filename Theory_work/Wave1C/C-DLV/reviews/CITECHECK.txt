@@ -1,0 +1,426 @@
+# CITECHECK (numerics/citecheck.py output). Each cited range was compared with its claim by the lead (draft pass 22:13: 4 wrong lines fixed; final pass 22:42: new citations inspected, one range corrected to 540-569).
+citations checked: 160; missing/out of range: 0
+
+v3_fit.R:19-19  [STATEMENT.md]
+    L19: mem_gb <- allocation[["mem_gb"]] %||% 8; hours <- allocation[["hours"]] %||% 24
+v3_fit.R:66-71  [STATEMENT.md]
+    L66: if (!is.list(allocation)) stop("allocation must be a list containing mem_gb and hours")
+    L71: runtime <- .v3cpp$cpp_runtime_new(allocation$hours, proc.time()[["elapsed"]] - t_start)
+core/v3_fit.R:49-144  [INVENTORY.md]
+    L49: v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24)) {
+    L144: }
+SoP/02_method.tex:585-590  [INVENTORY.md]
+    L585: hardware, and is reported with them (V13).''
+    L590: returned \texttt{log\_Zbar0}'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:162}. On \texttt{schedule\_limit} and
+core/v3_fit.R:63-64  [INVENTORY.md]
+    L63: valid_seed <- tryCatch({ if (length(seed) != 1) stop("seed must be a single integer"); v3_check_seed(seed); TRUE }, error = function(e) conditionMessa
+    L64: if (!isTRUE(valid_seed)) { fit$status <- "invalid_input"; fit$message <- valid_seed; return(finish(fit)) }
+core/v3_preprocess.R:7-11  [INVENTORY.md]
+    L7: v3_check_seed <- function(seed, what = "seed") {
+    L11: }
+core/v3_fit.R:66-69  [INVENTORY.md]
+    L66: if (!is.list(allocation)) stop("allocation must be a list containing mem_gb and hours")
+    L69: !is.finite(allocation[[nm]]) || allocation[[nm]] <= 0) stop("allocation$", nm, " must be finite and positive")
+core/v3_preprocess.R:97-107  [INVENTORY.md]
+    L97: v3_preprocess <- function(X, y, dup_components = TRUE) {
+    L107: if (p_raw < 1) return(bad("p < 1"))
+core/v3_preprocess.R:111-114  [INVENTORY.md]
+    L111: constant <- apply(X, 2, function(x) all(x == x[1]))   # dropped only if all entries are exactly equal
+    L114: if (!length(kept)) return(c(list(status = "no_predictors", hpm = integer(0)), base))
+core/v3_fit.R:74-77  [INVENTORY.md]
+    L74: if (pre$status != "ok") {
+    L77: return(finish(fit))
+core/v3_preprocess.R:115-115  [INVENTORY.md]
+    L115: if (all(y == y[1])) return(c(list(status = "y_constant", hpm = integer(0)), base))
+SoP/02_method.tex:59-63  [INVENTORY.md]
+    L59: \src{Docs/Methodology/METHODOLOGY_v3.md:48-52}; v3.1 adds \texttt{degenerate\_n} (e3) and \texttt{unsupported\_size} (e7)
+    L63: \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:182}.
+SoP/02_method.tex:59-60  [INVENTORY.md]
+    L59: \src{Docs/Methodology/METHODOLOGY_v3.md:48-52}; v3.1 adds \texttt{degenerate\_n} (e3) and \texttt{unsupported\_size} (e7)
+    L60: \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:80}. Item e3: ``Reject n = 0. n = 1 → status
+SoP/02_method.tex:659-659  [INVENTORY.md]
+    L659: 45 (342) & Seed ∈ [1, 2³¹ − 1]; stream map 0–9 (calibration), 10..9+R′ (final); 53-bit uniforms; integer dimensions & (c), (d) & reproducibility conve
+core/v3_fit.R:17-46  [INVENTORY.md]
+    L17: v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL) {
+    L46: }
+core/v3_fit.R:88-90  [INVENTORY.md]
+    L88: pf <- v3_preflight(n, p, b, fit$branch_run, allocation, time_fun = time_fun)
+    L90: if (pf$exceeds) { fit$status <- "resource_limit"; return(finish(fit)) }
+core/v3_fit.R:21-25  [INVENTORY.md]
+    L21: if (branch == "exact") {
+    L25: s <- time_fun(kstar); scores <- b$exact_count; seconds <- scores * s
+core/v3_fit.R:45-45  [INVENTORY.md]
+    L45: exceeds = bytes > mem_gb * 2^30 || (branch == "exact" && seconds > hours * 3600))
+core/v3_fit.R:117-121  [INVENTORY.md]
+    L117: pf_fun <- function(e) {
+    L121: }
+core/v3_calib.R:147-148  [INVENTORY.md]
+    L147: # preflight again before the escalation (M §8.6); if it fails the escalation does not happen (review RC-3)
+    L148: if (!is.null(preflight) && isTRUE(preflight(1))) { status <- "resource_limit"; blocked <- "resource_limit"; break }
+core/cpp/v3_core.cpp:504-524  [INVENTORY.md]
+    L504: std::string status = "exact", message;
+    L524: try { rec(0); } catch (NumericalFailure& e) { status = "numerical_failure"; message = e.what(); }
+core/v3_fit.R:95-103  [INVENTORY.md]
+    L95: fit$timings$exact <- proc.time()[["elapsed"]] - t0; fit$exact <- e; fit$status <- e$status
+    L103: } else { fit$message <- e$message; fit$hpm_incomplete <- TRUE }
+core/cpp/v3_core.cpp:281-291  [INVENTORY.md]
+    L281: } catch (NumericalFailure& e) {
+    L291: List fail = List::create(_["status"] = "numerical_failure", _["message"] = e.what(), _["hpm"] = to_orig(D, bestS), _["hpm_F"] = bestF,
+core/v3_setup.R:71-72  [INVENTORY.md]
+    L71: if (r$status != "ok")   # numerical_failure while scoring the tables (M §2): best table model so far, incomplete
+    L72: return(structure(c(r, list(ctx = ctx, budgets = b, B = B)), class = "v3_setup_failed"))
+core/v3_fit.R:107-111  [INVENTORY.md]
+    L107: if (inherits(setup, "v3_setup_failed")) {
+    L111: }
+core/cpp/v3_core.cpp:617-618  [INVENTORY.md]
+    L617: } catch (NumericalFailure& e) {
+    L618: return List::create(_["status"] = "numerical_failure", _["message"] = e.what());
+core/cpp/v3_core.cpp:663-664  [INVENTORY.md]
+    L663: } catch (NumericalFailure& e) {
+    L664: return List::create(_["status"] = "numerical_failure", _["message"] = e.what());
+core/cpp/v3_core.cpp:685-688  [INVENTORY.md]
+    L685: } catch (NumericalFailure& e) {
+    L688: return List::create(_["status"] = "numerical_failure", _["message"] = e.what());
+core/v3_calib.R:57-57  [INVENTORY.md]
+    L57: if (pil$status != "ok") return(fail(pil))
+core/v3_calib.R:67-67  [INVENTORY.md]
+    L67: if (identical(V$status, "numerical_failure")) return(V)
+core/v3_calib.R:80-80  [INVENTORY.md]
+    L80: if (identical(g$status, "numerical_failure")) return(fail(g))
+core/v3_calib.R:100-100  [INVENTORY.md]
+    L100: if (dg$status != "ok") return(fail(dg))
+core/v3_calib.R:112-112  [INVENTORY.md]
+    L112: if (identical(gn$status, "numerical_failure")) return(fail(gn))
+core/cpp/v3_core.cpp:452-453  [INVENTORY.md]
+    L452: } catch (NumericalFailure& e) {
+    L453: status = "numerical_failure"; message = e.what();
+core/v3_run.R:111-116  [INVENTORY.md]
+    L111: if (raw$status != "completed") {   # numerical_failure: best scored model so far, labelled incomplete (M §2)
+    L116: }
+core/cpp/v3_score.h:226-238  [INVENTORY.md]
+    L226: // log m(S) for a sorted feasible model S (internal indices). Throws NumericalFailure after the last fallback.
+    L238: }
+core/v3_calib.R:79-82  [INVENTORY.md]
+    L79: g <- build("preliminary")
+    L82: if (!g$ok) trig$grid_failure <- TRUE
+core/v3_calib.R:111-114  [INVENTORY.md]
+    L111: gn <- build(paste0("rebuild_", it))
+    L114: if (!gn$ok) { trig$grid_failure <- TRUE; break }
+core/v3_calib.R:120-120  [INVENTORY.md]
+    L120: out$grid <- if (trig$grid_failure) NULL else g$grid
+core/v3_calib.R:141-153  [INVENTORY.md]
+    L141: repeat {
+    L153: if (status == "ok" && is.null(last$grid)) status <- if (e == 1) "schedule_limit" else "grid_failure_no_escalation"
+core/v3_fit.R:126-132  [INVENTORY.md]
+    L126: if (cal$status != "ok") {
+    L132: }
+core/cpp/v3_calib.h:68-98  [INVENTORY.md]
+    L68: inline GridResult build_grid(const std::vector<double>& lg0, const std::vector<double>& d, std::vector<double> targets, int Te) {
+    L98: }
+core/v3_calib.R:153-153  [INVENTORY.md]
+    L153: if (status == "ok" && is.null(last$grid)) status <- if (e == 1) "schedule_limit" else "grid_failure_no_escalation"
+core/v3_calib.R:59-61  [INVENTORY.md]
+    L59: E3 <- improved(pil); llim <- isTRUE(pil$local_search$local_limit)
+    L61: grid_unconverged = FALSE, local_limit = llim)
+core/v3_calib.R:101-118  [INVENTORY.md]
+    L101: E1 <- any(dg$island_best < dg$best_after_local$F - 1)          # R5 island bests vs the overall best
+    L118: if (!trig$grid_failure && !converged) trig$grid_unconverged <- TRUE
+core/v3_calib.R:145-146  [INVENTORY.md]
+    L145: fired <- any(unlist(a$triggers))
+    L146: if (!fired || e == 1) break
+core/cpp/v3_calib.h:30-46  [INVENTORY.md]
+    L30: inline NextPhi pilot_next_phi(const std::vector<double>& d, double phi, double H, int Te) {
+    L46: }
+core/cpp/v3_engine.h:303-341  [INVENTORY.md]
+    L303: while (true) {
+    L341: res.seconds_bridge = secs_since(t0); t0 = Clock::now();
+core/v3_calib.R:85-85  [INVENTORY.md]
+    L85: for (it in seq_len(cs$ell)) {
+core/v3_calib.R:141-150  [INVENTORY.md]
+    L141: repeat {
+    L150: }
+core/cpp/v3_engine.h:335-338  [INVENTORY.md]
+    L335: if (guard && guard->check(secs_since(stage_start), "bridge_stage", ev)) {
+    L338: }
+core/cpp/v3_core.cpp:605-605  [INVENTORY.md]
+    L605: if (res.partial) return List::create(_["status"] = "resource_limit", _["island"] = island_to_list(res, D),
+core/cpp/v3_core.cpp:646-646  [INVENTORY.md]
+    L646: return List::create(_["status"] = "resource_limit", _["islands"] = isl, _["streams"] = streams,
+core/cpp/v3_core.cpp:442-442  [INVENTORY.md]
+    L442: if (res.back().partial) { status = "resource_limit"; break; }
+core/cpp/v3_core.cpp:613-613  [INVENTORY.md]
+    L613: return List::create(_["status"] = (c->guard && c->guard->check(sec_ls, "local_search", local_event(tier, 0))) ? "resource_limit" : "ok", _["island"] =
+core/cpp/v3_core.cpp:660-660  [INVENTORY.md]
+    L660: return List::create(_["status"] = (c->guard && c->guard->check(sec_ls, "local_search", local_event(tier, iter))) ? "resource_limit" : "ok", _["islands
+core/cpp/v3_core.cpp:450-450  [INVENTORY.md]
+    L450: if (E.guard && E.guard->check(sec_local, "local_search", local_event(o.tier, -1))) status = "resource_limit";
+core/v3_calib.R:75-81  [INVENTORY.md]
+    L75: g$resource_limit <- !is.null(runtime) && .v3cpp$cpp_runtime_check(runtime,
+    L81: if (isTRUE(g$resource_limit)) return(fail(c(g, list(status = "resource_limit"))))
+core/v3_calib.R:113-113  [INVENTORY.md]
+    L113: if (isTRUE(gn$resource_limit)) return(fail(c(gn, list(status = "resource_limit"))))
+core/cpp/v3_runtime.h:21-27  [INVENTORY.md]
+    L21: bool check(double operation, const std::string& checkpoint, const EventCtx& event) {
+    L27: }
+SoP/02_method.tex:403-406  [INVENTORY.md]
+    L403: \textbf{GUARD-W} (\#6): ``Any worker stop, LS0 stop or guard stop ⇒ no output. The fit returns the corresponding unavailable
+    L406: stop-only) stays as recorded (XF VERIFIED). That the v3.1 worker, merge and LS0 code satisfy GUARD-W is a
+core/cpp/v3_core.cpp:546-546  [INVENTORY.md]
+    L546: if (a.size() != b.size()) stop("logg0_V and d_V must have equal length");
+core/v3_calib.R:6-6  [INVENTORY.md]
+    L6: .v3cpp$cpp_build_grid(as.numeric(logg0_V), as.numeric(d_V), as.numeric(pilot_temps), as.integer(T_e))
+core/v3_calib.R:68-68  [INVENTORY.md]
+    L68: g <- v3_build_grid(V$log_gamma0, V$d, pil$schedule, cs$T_e)
+core/v3_calib.R:137-137  [INVENTORY.md]
+    L137: cseed <- seed; v3_check_seed(seed)
+core/v3_run.R:173-173  [INVENTORY.md]
+    L173: v3_check_grid(frozen[["grid"]]); v3_check_seed(seed)
+core/cpp/v3_core.cpp:269-311  [INVENTORY.md]
+    L269: List cpp_setup(SEXP ctx, int B) {
+    L311: return List::create(_["status"] = "ok", _["ptr"] = ptr, _["B"] = B, _["blocks"] = blocks_to_R(D, st.blocks), _["tables"] = tables,
+core/v3_run.R:78-80  [INVENTORY.md]
+    L78: if (!is.numeric(grid) || length(grid) < 2 || any(!is.finite(grid))) stop("grid must be a finite numeric vector of length >= 2")
+    L80: if (any(diff(grid) <= 0)) stop("grid must be strictly increasing")
+core/cpp/v3_score.h:230-230  [INVENTORY.md]
+    L230: if (k > D->K) throw std::runtime_error("v3_score: |S| > K (infeasible model; callers never pass these, R1)");
+core/cpp/v3_core.cpp:109-109  [INVENTORY.md]
+    L109: if ((int)s.size() > D.K) stop("v3_score: |S| = %d > K = %d (infeasible model; callers never pass these, R1)", (int)s.size(), D.K);
+core/cpp/v3_core.cpp:209-216  [INVENTORY.md]
+    L209: for (int j = 0; j < g->D->p; ++j) if (st.blk[j] < 0) stop("blocks do not cover every column");
+    L216: if (lr.size() != ((R_xlen_t)1 << st.blocks[b].size()) || lm.size() != lr.size()) stop("v3_start: table %d has the wrong length", b + 1);
+core/cpp/v3_core.cpp:520-520  [INVENTORY.md]
+    L520: if (((long)count & 65535) == 0) Rcpp::checkUserInterrupt();
+core/v3_fit.R:72-72  [INVENTORY.md]
+    L72: pre <- v3_preprocess(X, y, dup_components = FALSE)
+core/v3_run.R:73-73  [INVENTORY.md]
+    L73: fr$sha256 <- digest::digest(fr[c("grid", "tier", "N", "L", "inherited")], algo = "sha256")
+SoP/02_method.tex:404-405  [INVENTORY.md]
+    L404: status with all estimate fields NA (\#15), never a partial estimate. [\dots] A completed LS0 that ends on its move cap is not
+    L405: a stop: it returns output with \texttt{local\_limit}, and L1 = `n/a' (\#10). Lemma RO (a guard that reads no uniforms is
+SoP/02_method.tex:497-498  [INVENTORY.md]
+    L497: \item ``An operational LS0 interruption means no complete output (GUARD-W, \#6). A completed LS0 capped at \texttt{local\_limit} still
+    L498: returns output (\#10).''
+SoP/02_method.tex:497-497  [INVENTORY.md]
+    L497: \item ``An operational LS0 interruption means no complete output (GUARD-W, \#6). A completed LS0 capped at \texttt{local\_limit} still
+SoP/02_method.tex:499-500  [INVENTORY.md]
+    L499: \item ``Start-mode ties: keep the enumeration fast path (cap $10^6$, \texttt{cpp/v3\_start.h:183}). On truncation, use a deterministic
+    L500: tie-aware DP that returns the prescribed smallest-size, lexicographically smallest maximiser without enumerating ties (e4, \#29).''
+SoP/02_method.tex:655-655  [INVENTORY.md]
+    L655: 41 (338) & LS0 start-mode tie enumeration cap 10⁶ (\texttt{v3\_start.h:183}) & (d)/(c) fast path & DP argmax exact; only the tie choice can truncate &
+SoP/02_method.tex:365-385  [INVENTORY.md]
+    L365: Definitions \rid{DF11}, \rid{DF12} (islands and stacking). \textbf{Final run} (M \S6.8): 4 islands $\times N_e$ particles from
+    L385: \end{stmt}
+SoP/02_method.tex:392-401  [INVENTORY.md]
+    L392: \textbf{Parallel execution layer} (\rid{MD04}) \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:131-136}:
+    L401: measurement'' \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:56}.
+v3_preprocess.R:19-33  [L1_resources.md]
+    L19: v3_budgets <- function(n, p) {
+    L33: }
+cpp/v3_engine.h:202-212  [L1_resources.md]
+    L202: void one_round(Particle& P, int i, double phi) {
+    L212: }
+cpp/v3_engine.h:306-308  [L1_resources.md]
+    L306: if (!sch.adaptive) {
+    L308: phi_prev = (*sch.grid)[t]; phi_new = (*sch.grid)[t + 1];
+cpp/v3_calib.h:94-94  [L1_resources.md]
+    L94: if ((int)g.grid.size() - 1 > Te) { g.ok = false; g.reason = "too_many_intervals"; return g; }
+cpp/v3_engine.h:342-360  [L1_resources.md]
+    L342: ev.phase = PH(PH_BURN_IN); ev.stage = T; ev.phi = 1.0;
+    L360: }
+cpp/v3_calib.h:34-37  [L1_resources.md]
+    L34: for (int i = 0; i < 60; ++i) {
+    L37: }
+cpp/v3_calib.h:83-85  [L1_resources.md]
+    L83: double mid = 0.5 * (lo + hi);
+    L85: }
+cpp/v3_engine.h:378-421  [L1_resources.md]
+    L378: LocalArchive local_search(const std::vector<int>& centre, int ell, int tier, bool emit_centre, int iter = -1) {
+    L421: }  // namespace v3
+SoP/02_method.tex:490-501  [L1_resources.md]
+    L490: \textbf{LS0: local search from the start mode.}
+    L501: \end{itemize}
+cpp/v3_engine.h:234-260  [L1_resources.md]
+    L234: std::vector<int> resample(const std::vector<double>& lw) {
+    L260: 
+cpp/v3_start.h:190-194  [L1_resources.md]
+    L190: mb[b].assign(top + 1, NEG_INF); arg[b].assign(top + 1, {});
+    L194: if (v > mb[b][j]) { mb[b][j] = v; arg[b][j].assign(1, c); }
+cpp/v3_start.h:217-239  [L1_resources.md]
+    L217: std::function<void(int, int)> rec = [&](int b, int r) {
+    L239: return res;
+v3_fit.R:92-92  [L1_resources.md]
+    L92: fit$preprocessing$dup_components <- .v3cpp$cpp_dup_components(ctx)
+v3_fit.R:114-114  [L1_resources.md]
+    L114: cg <- .v3cpp$cpp_cut_group(setup$ptr)
+v3_preprocess.R:14-15  [L1_resources.md]
+    L14: v3_isqrt <- function(x) { r <- floor(sqrt(x)); while ((r + 1)^2 <= x) r <- r + 1; while (r^2 > x) r <- r - 1; r }
+    L15: v3_ceil_log2 <- function(x) { c <- 0; while (2^c < x) c <- c + 1; c }   # smallest c with 2^c >= x
+v3_preprocess.R:28-28  [L1_resources.md]
+    L28: ex <- .v3cpp$cpp_exact_count(n, p, N0, H0)
+cpp/v3_core.cpp:69-81  [L1_resources.md]
+    L69: List cpp_exact_count(double n_, double p_, double N0, double H0) {
+    L81: return List::create(_["count"] = sum_d, _["saturated"] = saturated, _["threshold"] = (double)thr, _["exact_branch"] = !saturated);
+cpp/v3_core.cpp:504-530  [L1_resources.md]
+    L504: std::string status = "exact", message;
+    L530: if (top.s.size() >= 2) second_F = std::next(top.s.begin())->v;
+cpp/v3_score.h:162-238  [L1_resources.md]
+    L162: // Fill Gs (row-major k x k) from the stored Gram (route chol) or recomputed from X (route chol_refactor).
+    L238: }
+cpp/v3_score.h:264-289  [L1_resources.md]
+    L264: void init(int /*W (unused)*/, size_t cap) {
+    L289: }
+cpp/v3_start.h:52-64  [L1_resources.md]
+    L52: // composite sum  sum_b log r_b(S n C_b), summed over blocks met by S in increasing block order (blocks with an
+    L64: }
+cpp/v3_ledger.h:33-53  [L1_resources.md]
+    L33: struct TopCmp {
+    L53: if (s.size() > cap) s.erase(std::prev(s.end()));
+cpp/v3_core.cpp:671-690  [L1_resources.md]
+    L671: List cpp_cal_V(SEXP state) {
+    L690: return List::create(_["models"] = M, _["log_gamma0"] = lg0, _["d"] = d, _["F"] = F,
+cpp/v3_calib.h:70-70  [L1_resources.md]
+    L70: std::sort(targets.begin(), targets.end());
+cpp/v3_calib.h:74-75  [L1_resources.md]
+    L74: double b = NEG_INF;
+    L75: for (double t : targets) if (t > u) { b = t; break; }
+cpp/v3_start.h:174-174  [L1_resources.md]
+    L174: std::sort(S.begin(), S.end());
+cpp/v3_blocks.h:151-170  [L1_resources.md]
+    L151: std::vector<std::vector<int>> N(p);
+    L170: for (int j = 0; j < p; ++j) for (int l : chosen[j]) { N[j].push_back(l); N[l].push_back(j); }
+v3_fit.R:10-14  [L1_resources.md]
+    L10: v3_time_scores <- function(Xs, ys, kbar) {
+    L14: }
+v3_fit.R:22-22  [L1_resources.md]
+    L22: kstar <- min(K, ceiling(p / 2))
+cpp/v3_core.cpp:120-133  [L1_resources.md]
+    L120: // [[Rcpp::export]]
+    L133: double s = secs_since(t0) / std::max(1, reps);
+v3_calib.R:138-138  [L1_resources.md]
+    L138: ro <- list(cache_capacity = as.numeric(500 * setup$ctx$p))
+v3_run.R:89-89  [L1_resources.md]
+    L89: cache_capacity = as.numeric(500 * setup$ctx$p))
+v3_calib.R:49-56  [L1_resources.md]
+    L49: out$pilot <- list(schedule = pil$schedule, forced_pilot_steps = pil$forced_pilot_steps, stream = pil$stream, stage_record = pil$island, local_search =
+    L56: ess = pil$island$ess, log_increment = pil$island$log_increment))
+v3_calib.R:85-99  [L1_resources.md]
+    L85: for (it in seq_len(cs$ell)) {
+    L99: ess = lapply(dg$islands, function(x) x$ess)))
+v3_calib.R:125-125  [L1_resources.md]
+    L125: out$triggers <- trig; out$iterations <- iters; out$snapshots <- snapshots; out$grids <- grids
+v3_calib.R:17-21  [L1_resources.md]
+    L17: v3_V_snapshot <- function(V, p) {
+    L21: }
+cpp/v3_core.cpp:505-524  [L1_resources.md]
+    L505: std::function<void(int)> rec = [&](int start) {
+    L524: try { rec(0); } catch (NumericalFailure& e) { status = "numerical_failure"; message = e.what(); }
+SoP/02_method.tex:514-525  [L1_resources.md]
+    L514: \textbf{Declaration.} ``𝓗 is a finite list of bounded model-space functions. The default list is fixed from $(X,y)$: model-size
+    L525: to $e^{F(\hat S)}/\hat Z$.'' Placement in code: \texttt{cpp/v3\_engine.h:351--359}. The identity for general $h$ is a PROOF SKETCH (N1).
+SoP/02_method.tex:540-569  [L1_resources.md]
+    L540: calibration''. Abridged items below keep every quantifier; full text \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:212-255}.
+    L569: $|L|>K$, gives (a)--(c) as in PC2. ``Unresolved'' on budget exhaustion. In floating point, (a) needs $\tilde\Phi\le\tilde F(\hat S)-2\eta_F$.
+SoP/02_method.tex:656-656  [L1_resources.md]
+    L656: 42 (339) & Certificate budget (scores, B\&B nodes), region rule U, τ (card) & (c) declared certificate-region settings & PC2: Seat C's correction 6 up
+v3_fit.R:27-32  [L1_resources.md]
+    L27: comp <- c(data_gram_correlation_distance = 8 * (3 * n * p + 3 * p * p),
+    L32: populations = 2 * N * (8 * W + 4 * K + 96))
+v3_fit.R:25-25  [L1_resources.md]
+    L25: s <- time_fun(kstar); scores <- b$exact_count; seconds <- scores * s
+v3_fit.R:23-24  [L1_resources.md]
+    L23: comp <- c(data_gram = 8 * (3 * n * p + p * p),
+    L24: exact_store = 8 * (40 * p + 1) * (kstar + 8), predictors = 32 * p)
+SoP/02_method.tex:658-658  [L1_resources.md]
+    L658: 44 (341) & Allocation (default 8 GiB, 24 h), preflight, stop-only wall guard (M §2, §8.6) & \textbf{(c) declared input} & decides delivery only (Lemma
+cpp/v3_score.h:175-188  [L2_degenerate.md]
+    L175: // Cholesky route: H = (n+1) G_S + I, A = G_S + I.
+    L188: }
+cpp/v3_score.h:76-90  [L2_degenerate.md]
+    L76: inline bool chol_inplace(std::vector<double>& A, int k) {
+    L90: }
+cpp/v3_engine.h:390-390  [L2_degenerate.md]
+    L390: eval(q, ME_LOCAL); A.n_eval++;
+SoP/02_method.tex:193-194  [L2_degenerate.md]
+    L193: \item \textbf{Tables:} for each block, every sub-model $U\subseteq C_b$ is scored against the full $y$; $r_b(U)=m(U)/m(\varnothing)$
+    L194: (table exponent 1). Since $B\le K$ for $n\ge3$, no sub-model exceeds the cap. Every table score counts for the HPM. Table
+v3_calib.R:82-82  [L2_degenerate.md]
+    L82: if (!g$ok) trig$grid_failure <- TRUE
+v3_calib.R:114-114  [L2_degenerate.md]
+    L114: if (!gn$ok) { trig$grid_failure <- TRUE; break }
+cpp/v3_core.cpp:143-145  [L2_degenerate.md]
+    L143: static void check_B(int B) { if (B < 1 || B > B_MAX) stop("block size B = %d outside the supported range 1..%d", B, B_MAX); }
+    L145: for (auto& b : bl) if (b.empty() || (int)b.size() > B_MAX) stop("a block has %d members (supported 1..%d)", (int)b.size(), B_MAX);
+SoP/02_method.tex:189-192  [L2_degenerate.md]
+    L189: \item \textbf{Cut:} top-down from the root; any node with more than $B$ members is split into its two children (visited smallest
+    L192: $C_1,\dots,C_J$ of at most $B$ members. $J\ge\lceil p/B\rceil$ (packing leaves gaps).
+v3_fit.R:106-116  [L2_degenerate.md]
+    L106: t0 <- proc.time()[["elapsed"]]; setup <- v3_setup(ctx)
+    L116: fit$cut_group_graph <- cg[c("threshold", "graph")]
+cpp/v3_core.cpp:24-35  [L2_degenerate.md]
+    L24: static std::vector<int> to_internal(const Data& D, SEXP Sx) {
+    L35: if (std::adjacent_find(out.begin(), out.end()) != out.end()) stop("model has duplicated indices");
+cpp/v3_ledger.h:9-16  [L2_degenerate.md]
+    L9: enum Phase { PH_TABLE = 0, PH_PILOT, PH_DIAG, PH_FINAL_INIT, PH_FINAL_BRIDGE, PH_BURN_IN, PH_MEASURED, PH_LOCAL, PH_INHERITED, PH_TEST, N_PHASE };
+    L16: }
+cpp/v3_engine.h:143-143  [L2_degenerate.md]
+    L143: throw std::runtime_error("nth_nonmember out of range");
+v3_setup.R:8-8  [L2_degenerate.md]
+    L8: stopifnot(is.matrix(Xs), length(ys) == nrow(Xs), length(orig) == ncol(Xs), !is.unsorted(orig, strictly = TRUE))
+v3_fit.R:91-91  [L2_degenerate.md]
+    L91: ctx <- v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE)
+v3_fit.R:12-12  [L2_degenerate.md]
+    L12: tctx <- v3_context(Xs[, seq_len(m), drop = FALSE], ys, return_gram = FALSE)
+v3_run.R:172-172  [L2_degenerate.md]
+    L172: stopifnot(inherits(setup, "v3_setup"), inherits(frozen, "v3_frozen"))
+cpp/v3_engine.h:274-341  [L3_grid.md]
+    L274: IslandResult run_island_s(int r, int N, const Schedule& sch, int L, int Hm, int tier,
+    L341: res.seconds_bridge = secs_since(t0); t0 = Clock::now();
+v3_calib.R:44-82  [L3_grid.md]
+    L44: pil <- .v3cpp$cpp_cal_pilot(state, tier, cs$H, cs$T_e, cs$L, cs$Hm, cs$ell)
+    L82: if (!g$ok) trig$grid_failure <- TRUE
+v3_calib.R:111-122  [L3_grid.md]
+    L111: gn <- build(paste0("rebuild_", it))
+    L122: out$grid_label <- if (trig$grid_failure) NULL else g$label
+v3_core.cpp:671-690  [L3_grid.md]
+    L671: List cpp_cal_V(SEXP state) {
+    L690: return List::create(_["models"] = M, _["log_gamma0"] = lg0, _["d"] = d, _["F"] = F,
+v3_calib.h:49-53  [L3_grid.md]
+    L49: inline double F_V(const std::vector<double>& lg0, const std::vector<double>& d, double t) {
+    L53: }
+v3_calib.h:55-58  [L3_grid.md]
+    L55: inline double rho_V(const std::vector<double>& lg0, const std::vector<double>& d, double u, double v, long* evals = nullptr) {
+    L58: }
+v3_engine.h:303-341  [L3_grid.md]
+    L303: while (true) {
+    L341: res.seconds_bridge = secs_since(t0); t0 = Clock::now();
+v3_calib.h:30-46  [L3_grid.md]
+    L30: inline NextPhi pilot_next_phi(const std::vector<double>& d, double phi, double H, int Te) {
+    L46: }
+v3_core.cpp:604-604  [L3_grid.md]
+    L604: std::vector<double> sched{0.0}; sched.insert(sched.end(), res.phi.begin(), res.phi.end());
+v3_calib.R:44-44  [L3_grid.md]
+    L44: pil <- .v3cpp$cpp_cal_pilot(state, tier, cs$H, cs$T_e, cs$L, cs$Hm, cs$ell)
+v3_calib.R:79-79  [L3_grid.md]
+    L79: g <- build("preliminary")
+v3_calib.R:111-111  [L3_grid.md]
+    L111: gn <- build(paste0("rebuild_", it))
+v3_calib.h:68-98  [L3_grid.md]
+    L68: inline GridResult build_grid(const std::vector<double>& lg0, const std::vector<double>& d, std::vector<double> targets, int Te) {
+    L98: }
+v3_calib.R:135-175  [L4_delivery.md]
+    L135: v3_calibrate <- function(setup, seed, tier = 0, preflight = NULL, runtime = NULL) {
+    L175: }
+cpp/v3_core.cpp:388-480  [L4_delivery.md]
+    L388: List cpp_final_run(SEXP setup, NumericVector grid, List ro, double seed, SEXP inherited, SEXP runtime) {
+    L480: _["cache"] = NumericVector::create(_["capacity"] = (double)cache.capacity, _["hits"] = (double)cache.hits,
+v3_run.R:166-166  [L4_delivery.md]
+    L166: out$estimates_available <- TRUE
+cpp/v3_core.cpp:681-683  [L4_delivery.md]
+    L681: for (auto& S : V) {  // std::set of vectors iterates in lexicographic order
+    L683: M[i] = to_orig(D, S); lg0[i] = D.logprior[S.size()] + cmp; d[i] = (lm - D.logm0) - cmp; F[i] = D.logprior[S.size()] + lm; ++i;
+v3_run.R:77-82  [L4_delivery.md]
+    L77: v3_check_grid <- function(grid) {
+    L82: }
+v3_calib.h:83-85  [L5_insertions.md]
+    L83: double mid = 0.5 * (lo + hi);
+    L85: }

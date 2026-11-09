@@ -1,0 +1,2 @@
+"design","n","p","seed","status","message","branch_run","estimates_available","escalated","tier_final","hpm","hpm_eq_S0","total_seconds","wall_seconds","peak_memory_kb","preflight_est_bytes","guard_checkpoints","guard_exceeded","rebuilds_final_tier","converged_final_tier","triggers_by_tier"
+"F",200,54,2,"completed","","smc",TRUE,FALSE,0,"1+19",TRUE,13.53,13.53,175612,10916152,172,FALSE,2,TRUE,"t0:"

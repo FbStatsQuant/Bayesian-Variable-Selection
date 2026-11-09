@@ -1,0 +1,4 @@
+"design","n","p","seed","tier","T_e","N_p","forced_pilot_steps","construction","ok","reason","intervals","N_b","S0_in_V","V_size","truncated","Lambda_V","Lambda_lt_log109"
+"M",100,27,8,0,1000,3,0,"preliminary",TRUE,"ok",4,1,TRUE,722,FALSE,2.75545310805042,FALSE
+"M",100,27,8,0,1000,3,0,"rebuild_1",TRUE,"ok",4,1,TRUE,723,FALSE,2.75921552741654,FALSE
+"M",100,27,8,0,1000,3,0,"rebuild_2",TRUE,"ok",4,1,TRUE,723,FALSE,2.75921552741654,FALSE
