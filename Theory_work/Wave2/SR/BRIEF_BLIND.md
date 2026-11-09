@@ -25,8 +25,8 @@ all welcome.
    discovery, or hybrids).
 
 ## What you may read (and only this — do NOT open anything else under Theory_work/ or Docs/Theory/, to avoid anchoring)
-- The method: `Theory_work/State_of_Project/sections/02_method.tex` and the notation in
-  `Theory_work/State_of_Project/sections/A_notation.tex` (method symbols only); the production code
+- The method: `Theory_work/State_of_Project/sections/02_method.tex` (do NOT open A_notation.tex — it summarises prior
+  theory; corrected 2026-11-09 after a scope leak); the production code
   `Scripts/SMC_BVS/core/` (R + C++: v3_fit.R, v3_run.R, v3_calib.R, cpp/v3_engine.h, v3_start.h, v3_score.h, ...).
 - The Song–Liang PDF; any standard literature you know (cite precisely; do not invent results).
 
