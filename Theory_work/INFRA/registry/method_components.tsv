@@ -1,0 +1,8 @@
+component	paths	notes
+core	Scripts/SMC_BVS/core	default: any change to the shipped method
+score	Scripts/SMC_BVS/core/cpp/v3_score.h; Scripts/SMC_BVS/core/v3_exact.R	model score / target
+blocks	Scripts/SMC_BVS/core/cpp/v3_blocks.h; Scripts/SMC_BVS/core/v3_preprocess.R	partition / blocks
+start	Scripts/SMC_BVS/core/cpp/v3_start.h	start sampler, start-mode DP
+engine	Scripts/SMC_BVS/core/cpp/v3_engine.h; Scripts/SMC_BVS/core/cpp/v3_core.cpp	SMC engine, local search, LS0
+calibration	Scripts/SMC_BVS/core/cpp/v3_calib.h; Scripts/SMC_BVS/core/v3_calib.R	calibration, tier-1 fallback
+runtime	Scripts/SMC_BVS/core/cpp/v3_runtime.h; Scripts/SMC_BVS/core/v3_run.R; Scripts/SMC_BVS/core/v3_fit.R; Scripts/SMC_BVS/core/v3_setup.R	driver, preflight, output event

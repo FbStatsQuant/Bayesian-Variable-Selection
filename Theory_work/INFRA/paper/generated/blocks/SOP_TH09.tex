@@ -1,0 +1,14 @@
+% generated from registry claim SOP:TH09 (v1.0.0); edit the registry, not this file
+\begin{theorem}[S-T / T03♯; card TH09]\label{reg:SOP_TH09}
+Fixed-design triangular array (model G), fixed $s_0\ge1$, $p\le n^A$ for a fixed $A$, $s_0\le K$ eventually. Assume
+\begin{itemize}
+\item \textbf{R}: $\mu=X\theta^*$, $\|\mu\|^2\le Mn$, and $\lambda_{\min}(\hat{R}_{S_0})\ge\phi_0^2>0$ ($\hat{R}=X^\top X/(n-1)$);
+\item \textbf{tail cutoff}: $R_m=\sum_{k=\max(m+1,0)}^{K}\binom pk w(k)/w(s_0)$, $m^\sharp_n=\min\{m\ge s_0:R_m\le n^{-(s_0+2)/2}\}$ (deterministic, data-free);
+\item \textbf{SE$_\lambda(j_0)$}, $j_0=\lceil(2A+1)s_0\rceil+1$: every $S_0\cup J$, $|J|\le j_0$, has normalised minimum eigenvalue $\ge\phi_0^2$; \textbf{SE$_w(m^\sharp_n;g_0)$}: every $S_0\cup J$, $|J|\le m^\sharp_n$, has unnormalised minimum eigenvalue $\ge g_0>0$;
+\item \textbf{beta-min}: BM-∞, $\theta^{*2}_{\min}n\phi_0^2/(\sigma^2\log n)\to\infty$; or BM$(c)$ with a fixed $c>c_0(s_0,A)$, meaning $\theta_{\min}^{*2}\ge c\sigma^2\log n/(n\phi_0^2)$ eventually, $c_0=\max\{4C_*,32[s_0(A+1)+2]\}$ ($C_*$ the locked T03 proof constant).
+\end{itemize}
+Then $1-\pi(S_0)=O_P(\sqrt{\log n/n})$; the exact HPM and MPM are consistent. Without beta-min, for $J_n(c)=\{j\in S_0:\theta_j^{*2}\ge c\sigma^2\log n/(n\phi_0^2)\}$, $c>c_0$: $\pi(S\not\supseteq J_n(c))=O_P(\sqrt{\log n/n})$.
+\end{theorem}
+\begin{statusbox}
+\regref{SOP:TH09} v1.0.0: \st{T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2). T02(i♯), T02(ii♯): PROVED; SF/XF VERIFIED. T01–T03: PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY}. Evidence: SF:W2-VT03R; XF:A-REV2(T03♯); T01-T03 PROVED-LOCKED SAME-FAMILY-ONLY; Lean:none. Statement: \regref{Theory\_work/State\_of\_Project/registry/theory\_main.tsv:68-68}.
+\end{statusbox}

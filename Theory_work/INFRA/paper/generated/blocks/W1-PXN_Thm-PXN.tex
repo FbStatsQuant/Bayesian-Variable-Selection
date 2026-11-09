@@ -1,0 +1,16 @@
+% generated from registry claim W1-PXN:Thm-PXN (v1.0.0); edit the registry, not this file
+\begin{theorem}[PXN]\label{reg:W1-PXN_Thm-PXN}
+Under LH-iid with (SIZE), $18\le p_n\le n^A$, $p_n\to\infty$, $s_0$ fixed, and (OP), as $n\to\infty$:
+\begin{itemize}
+\item[(R)] $\PP(\text{blocks}\ne\text{groups})\to0$, summable, and for every fixed $C>0$, $\le p^{-C}$ for $n\ge\max\{n_1,\allowbreak n_0(A,C,\rho,\bar{\psi})\}$  ($n_1$ the SIZE onset); explicitly \[\PP(\text{blocks}\ne\text{groups})\le\frac{2}{\sqrt\pi(1-\rho)}p^2\sqrt n\,e^{-(n-4)I^*}\] for $n\ge5$ with SIZE at $n$, $I^*=I(t^*;\bar{\psi})>0$.
+\item[(S)] $1-\pi_0(S^\circ)=O_P(\sqrt{\log n/n})$; $\pi_0(S_0)=p^{-c}n^{-c/2}e^{O_P(1)}\to0$, more precisely $\log\pi_0(S_0)+c\log p+\frac c2\log n\to_d\sum_{i\le c}\log\frac{s+i}2+\frac12\chi^2_c$ (the masked regime).
+\item[(E)] $\PP(\tilde{S}_0=S^\circ)\to1$.
+\item[(T)] $\PP(\text{LS0 scores }S_0)\to1$ and $\PP(\text{LS0 returns }S_0\text{ with \texttt{local\_certified}})\to1$.
+\item[(P)] $1-\pi(S_0)=O_P(\sqrt{\log n/n})$ under the joint law of $(X^r,\varepsilon)$.
+\item[(C)] For every $n$: $\PP(\Ocal\cap\{\Shat\ne S_0\})\le2\EE_0[1-\pi(S_0)]+D_n$, $D_n\le\PP(\text{LS0 misses }S_0)\to0$; hence $\PP(\Ocal\cap\{\Shat\ne S_0\})\to0$, $\PP(\Ocal\cap\{\Shat=S_0\})-(1-\PP(U_n))\to0$, $\liminf\PP(\Ocal\cap\{\Shat=S_0\})=1-\limsup\PP(U_n)$, and $\PP(\Ocal\cap\{\Shat=S_0\})\to1-u$ whenever $\PP(U_n)\to u$.
+\item[(K)] LS0 costs $\le1+(\ell_n+1)\max_{k\le K}[p+k(p-k)]=O(p^2\log(n+p))$ scores; on the joint event $\mathcal T_n$ (lattice arrival, (L), $\ell_n\ge c$) it uses $c+1$ scans.
+\end{itemize}
+\end{theorem}
+\begin{statusbox}
+\regref{W1-PXN:Thm-PXN} v1.0.0: \st{PROVED-CHECKED}. Council: Codex 8.6 / Opus 8.3, round 1. Evidence: reviews/R00\_statement\_lock\_codex.md: LOCK WITH CHANGES; reviews/R20\_midpoint\_codex.md: CONTINUE; reviews/R30\_sweep\_codex.md: SWEEP: 1 ERROR, 2 GAP, 4 MINOR (all fixed); reviews/C1\_council\_codex.md: 8.6, all gates PASS. Statement: \regref{Theory\_work/Wave1/W1-PXN/STATEMENT.md:70-71}.
+\end{statusbox}

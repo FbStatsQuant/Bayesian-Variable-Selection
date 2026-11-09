@@ -1,0 +1,195 @@
+claim	assumption	verdict	evidence	notes
+SOP:TH09	A:P-POLY	ARTEFACT	Theory_work/Wave1C/FINAL/sections/s3_posterior.tex:18	source's own scope note: p<=n^A comes from the prior and proof technique, e^{Cn^alpha} OPEN; not independently verified here
+SOP:TH09	A:BETAMIN	WEAKENABLE	Theory_work/Wave1C/FINAL/sections/s3_posterior.tex:11	BM(c) with c>c0 as alternative to BM-inf
+SOP:TH09	A:BETAMIN	WEAKENABLE	C-PACK:SL1'	no beta-min: pi(S not>=J_n(c))=O_P(sqrt(log n/n)); inclusion of large signals only
+SOP:TH09	A:ENERGY	NONE		no necessity evidence recorded for this pair
+SOP:TH09	A:SPARSE-EIG	NONE		no necessity evidence recorded for this pair
+SOP:TH09	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+SOP:TH09	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+W2-APP:POST	A:LSF	NONE		no necessity evidence recorded for this pair
+W2-APP:POST	A:IID-GAUSS-ROWS	NONE		no necessity evidence recorded for this pair
+W2-APP:POST	A:P-POLY	NONE		no necessity evidence recorded for this pair
+W2-APP:POST	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+W2-APP:POST	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+W2-APP:POST	A:BETAMIN	WEAKENABLE	Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-35	(b) without beta-min the inclusion clause for J_n(c) holds
+SOP:TH05.0	A:OP	NONE		no necessity evidence recorded for this pair
+W1-N1:Thm-N1	A:OP	NONE		no necessity evidence recorded for this pair
+W1-N1:Thm-N1	A:N1-KERNEL	WEAKENABLE	Theory_work/Wave1/W1-N1/STATEMENT.md:80	N1 uses SI, a sufficient premise weaker than the card's IND-T; independence between islands not used
+W1-PXN:Thm-PXN	A:INST-LH-IID	NONE		no necessity evidence recorded for this pair
+W1-PXN:Thm-PXN	A:IID-GAUSS-ROWS	NONE		no necessity evidence recorded for this pair
+W1-PXN:Thm-PXN	A:SIZE	NONE		no necessity evidence recorded for this pair
+W1-PXN:Thm-PXN	A:P-POLY	NONE		no necessity evidence recorded for this pair
+W1-PXN:Thm-PXN	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+W1-PXN:Thm-PXN	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+W1-PXN:Thm-PXN	A:BETAMIN	NONE		no necessity evidence recorded for this pair
+W1-PXN:Thm-PXN	A:OP	NONE		no necessity evidence recorded for this pair
+W1-PXN:Thm-PXN	A:CAL	WEAKENABLE	C-DLV:Cor-Dp	uses only (T),(P) data-level clauses; CAL-free pathwise
+W1-GEN:Thm-GEN	A:P-POLY	NONE		no necessity evidence recorded for this pair
+W1-GEN:Thm-GEN	A:BETAMIN	NONE		no necessity evidence recorded for this pair
+W1-GEN:Thm-GEN	A:ENERGY	NONE		no necessity evidence recorded for this pair
+W1-GEN:Thm-GEN	A:SPARSE-EIG	NONE		no necessity evidence recorded for this pair
+W1-GEN:Thm-GEN	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+W1-GEN:Thm-GEN	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+W1-GEN:Thm-GEN	A:RELEVANCE-SIZE	NECESSARY-FOR-ROUTE	W1-GEN:Cex-GEN(C6)	removing both size bounds |V|<=vbar, s*<=vbar: P(LS0 from S~0 misses S0)->1 while pi(S0)->1
+W1-GEN:Thm-GEN	A:RELEVANCE-SIZE	WEAKENABLE	W1-GEN:Thm-GEN(C3-fav)	if S*=S0 (H1) is not needed
+W1-GEN:Thm-GEN	A:RELEVANCE-SIZE	WEAKENABLE	C-GROW:Thm-GROW	bounded relevance set relaxed to |Q|<=C_Q log n under G1-G4
+W1-GEN:Thm-GEN	A:GRAM-FLOOR-LATTICE	NONE		no necessity evidence recorded for this pair
+W1-GEN:Thm-GEN	A:BLOCK-LE-16	NONE		no necessity evidence recorded for this pair
+W1-GEN:Thm-GEN	A:BLOCK-VIS	NONE		no necessity evidence recorded for this pair
+W1-GEN:Thm-GEN	A:OP	NONE		no necessity evidence recorded for this pair
+W1-GEN:Thm-GEN	A:CAL	WEAKENABLE	C-DLV:Cor-Dp	pathwise argument replaces the CAL-bearing assembly step for delivery-type conclusions
+C-GROW:Thm-GROW	A:P-POLY	NONE		no necessity evidence recorded for this pair
+C-GROW:Thm-GROW	A:BETAMIN	NONE		no necessity evidence recorded for this pair
+C-GROW:Thm-GROW	A:ENERGY	NONE		no necessity evidence recorded for this pair
+C-GROW:Thm-GROW	A:SPARSE-EIG	NONE		no necessity evidence recorded for this pair
+C-GROW:Thm-GROW	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+C-GROW:Thm-GROW	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+C-GROW:Thm-GROW	A:RELEVANCE-SIZE	NECESSARY-FOR-ROUTE	W2-APP:VN-routes	if min(K,|N_n|)/log n->inf no O(log n) sandwich/GROW-LOC route exists
+C-GROW:Thm-GROW	A:RELEVANCE-SIZE	NECESSARY-FOR-ROUTE	W2-APP:Ex-STAR	bounded-spectrum non-local design obeys POST yet start mode has >=n^(1/3) nulls
+C-GROW:Thm-GROW	A:GRAM-FLOOR-LATTICE	NONE		no necessity evidence recorded for this pair
+C-GROW:Thm-GROW	A:BLOCK-LE-16	NONE		no necessity evidence recorded for this pair
+C-GROW:Thm-GROW	A:BLOCK-VIS	NONE		no necessity evidence recorded for this pair
+C-GROW:Thm-GROW	A:MR1-CAP	WEAKENABLE	Theory_work/Wave1C/C-GROW/STATEMENT.md:116	(C4)(b): under G4-chi the production cap ell_n suffices
+C-GROW:Thm-GROW	A:OP	NONE		no necessity evidence recorded for this pair
+C-GROW:Thm-GROW	A:CAL	NONE		no necessity evidence recorded for this pair
+C-MIS:Thm-MIS(i)	A:GR	NECESSARY-FOR-ROUTE	C-MIS:E2	common random omitted slope has rank-one covariance so GR fails; transfer fails (pi({1,2})->1, target {1} wrong)
+C-MIS:Thm-MIS(i)	A:P-POLY	NONE		no necessity evidence recorded for this pair
+C-MIS:Thm-MIS(i)	A:BETAMIN	WEAKENABLE	Theory_work/Wave1C/C-MIS/STATEMENT.md:65-72	without beta-min the inclusion clause pi_C(S not>=J_n^C(c))=O_P(r_n) holds
+C-MIS:Thm-MIS(i)	A:ENERGY	NONE		no necessity evidence recorded for this pair
+C-MIS:Thm-MIS(i)	A:SPARSE-EIG	NONE		no necessity evidence recorded for this pair
+C-MIS:Thm-MIS(i)	A:FIXED-S0	WEAKENABLE	C-MIS:LemZ	s0^C=0 handled separately for bounded p_C (null case)
+C-MIS:Thm-MIS(i)	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+C-MIS:Thm-MIS(ii)	A:GR	NECESSARY-FOR-ROUTE	C-MIS:E2	as MIS(i)
+C-MIS:Thm-MIS(ii)	A:P-POLY	NONE		no necessity evidence recorded for this pair
+C-MIS:Thm-MIS(ii)	A:BETAMIN	WEAKENABLE	C-MIS:Thm-MIS(ii)	(ii') drops beta-min, inclusion clause only
+C-MIS:Thm-MIS(ii)	A:ENERGY	NONE		no necessity evidence recorded for this pair
+C-MIS:Thm-MIS(ii)	A:SPARSE-EIG	NONE		no necessity evidence recorded for this pair
+C-MIS:Thm-MIS(ii)	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+C-MIS:Thm-MIS(ii)	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+C-MIS:Thm-MIS(ii)	A:IID-GAUSS-ROWS	NONE		no necessity evidence recorded for this pair
+C-DLV:Prop-F	A:P-POLY	NONE		no necessity evidence recorded for this pair
+C-DLV:Prop-F	A:BETAMIN	NONE		no necessity evidence recorded for this pair
+C-DLV:Prop-F	A:ENERGY	NONE		no necessity evidence recorded for this pair
+C-DLV:Prop-F	A:SPARSE-EIG	NONE		no necessity evidence recorded for this pair
+C-DLV:Prop-F	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+C-DLV:Prop-F	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+C-DLV:Prop-F	A:RELEVANCE-SIZE	NONE		no necessity evidence recorded for this pair
+C-DLV:Prop-F	A:BLOCK-VIS	NONE		no necessity evidence recorded for this pair
+C-DLV:Prop-F	A:DELIVERY-ALLOC	NECESSARY-FOR-ROUTE	C-DLV:Cor-5.3	post-snap validation (gamma) failure NOT excluded (counterexample): fallback needed on this route
+C-DLV:Prop-F	A:DELIVERY-ALLOC	NECESSARY-FOR-ROUTE	C-DLV:O	P(SL_n)->0 without the patch is OPEN
+C-DLV:Prop-F	A:OP	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Prop-F-FAC	A:DELIVERY-ALLOC	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Prop-F-FAC	A:OP	WEAKENABLE	Theory_work/Wave2/W2-FAC-A/STATEMENT.md:136	premise list stronger than the 'some maximiser' premise sufficient for (L4)
+W2-FAC-A:Prop-F-FAC	A:MR1-CAP	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Prop-F-FAC	A:INST-FACTOR	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Prop-F-FAC	A:P-ALPHA0	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Prop-F-FAC	A:EXACT-GRAM	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Prop-F-FAC	A:IID-GAUSS-ROWS	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Prop-F-FAC	A:BLOCK-VIS	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Prop-F-FAC	A:BETAMIN	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Prop-F-FAC	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+W2-LOC2:F-LOC2	A:DELIVERY-ALLOC	NONE		no necessity evidence recorded for this pair
+W2-LOC2:F-LOC2	A:OP	NONE		no necessity evidence recorded for this pair
+W2-LOC2:F-LOC2	A:MR1-CAP	NONE		no necessity evidence recorded for this pair
+W2-LOC2:F-LOC2	A:LOC-DECAY	NONE		no necessity evidence recorded for this pair
+W2-LOC2:F-LOC2	A:PTV	NONE		no necessity evidence recorded for this pair
+W2-LOC2:F-LOC2	A:POLY-DECAY	NONE		no necessity evidence recorded for this pair
+W2-LOC2:F-LOC2	A:IID-GAUSS-ROWS	NONE		no necessity evidence recorded for this pair
+W2-LOC2:F-LOC2	A:RELEVANCE-SIZE	NONE		no necessity evidence recorded for this pair
+W2-LOC2:F-LOC2	A:BETAMIN	NONE		no necessity evidence recorded for this pair
+W2-LOC2:F-LOC2	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+W2-UNI:F-UNI	A:DELIVERY-ALLOC	NONE		no necessity evidence recorded for this pair
+W2-UNI:F-UNI	A:IID-GAUSS-ROWS	WEAKENABLE	Theory_work/Wave2/W2-UNI/STATEMENT.md:38	setting (E) approximate-Gram fixed design is an alternative to iid rows
+W2-UNI:F-UNI	A:GRAM-OP-BOUND	NONE		no necessity evidence recorded for this pair
+W2-UNI:F-UNI	A:P-POLY	NONE		no necessity evidence recorded for this pair
+W2-UNI:F-UNI	A:OP	NONE		no necessity evidence recorded for this pair
+W2-UNI:F-UNI	A:MR1-CAP	NONE		no necessity evidence recorded for this pair
+W2-UNI:F-UNI	A:RELEVANCE-SIZE	NONE		no necessity evidence recorded for this pair
+W2-APP:Thm-LOC	A:LOC-DECAY	NECESSARY-FOR-ROUTE	W2-APP:Ex-STAR	bounded condition number alone does not give a small start mode
+W2-APP:Thm-LOC	A:LOC-DECAY	WEAKENABLE	W2-LOC2:Thm-Poly	polynomial decay alpha>17/2 replaces exponential decay
+W2-APP:Thm-LOC	A:LOC-DECAY	WEAKENABLE	W2-UNI:UNI-0	any polynomial-growth pseudometric, not only the index line
+W2-APP:Thm-LOC	A:PTV	NONE		no necessity evidence recorded for this pair
+W2-APP:Thm-LOC	A:LSF	NONE		no necessity evidence recorded for this pair
+W2-APP:Thm-LOC	A:IID-GAUSS-ROWS	NONE		no necessity evidence recorded for this pair
+W2-APP:Thm-LOC	A:P-POLY	NONE		no necessity evidence recorded for this pair
+W2-APP:Thm-LOC	A:BETAMIN	NONE		no necessity evidence recorded for this pair
+W2-APP:Thm-LOC	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+W2-APP:Thm-LOC	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+W2-APP:Thm-LOC	A:RELEVANCE-SIZE	NECESSARY-FOR-ROUTE	W2-APP:VN-routes	no O(log n) sandwich route if visible nulls |N_n|/log n->inf
+W2-APP:Thm-LOC	A:BLOCK-LE-16	NONE		no necessity evidence recorded for this pair
+W2-APP:Thm-LOC	A:MR1-CAP	NONE		no necessity evidence recorded for this pair
+W2-APP:Thm-LOC	A:OP	NONE		no necessity evidence recorded for this pair
+W2-APP:Thm-LOC	A:CAL	NONE		no necessity evidence recorded for this pair
+W2-LOC2:PLR	A:RELEVANCE-SIZE	WEAKENABLE	W2-LOC2:LOC-BF	group sizes up to (log n)^kappa where APP LOC-B's size inequality fails
+W2-LOC2:PLR	A:NA-FRAME	NONE		no necessity evidence recorded for this pair
+W2-LOC2:PLR	A:LSF	NONE		no necessity evidence recorded for this pair
+W2-LOC2:PLR	A:IID-GAUSS-ROWS	NONE		no necessity evidence recorded for this pair
+W2-LOC2:PLR	A:BETAMIN	NONE		no necessity evidence recorded for this pair
+W2-LOC2:PLR	A:P-POLY	NONE		no necessity evidence recorded for this pair
+W2-LOC2:PLR	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+W2-LOC2:PLR	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+W2-LOC2:PLR	A:MR1-CAP	NONE		no necessity evidence recorded for this pair
+W2-LOC2:PLR	A:OP	NONE		no necessity evidence recorded for this pair
+W2-LOC2:PLR	A:CAL	NONE		no necessity evidence recorded for this pair
+W2-LOC2:Thm-Poly	A:POLY-DECAY	ARTEFACT	Theory_work/Wave2/W2-LOC2/STATEMENT.md:87-98	alpha0=17/2 is the cutoff of the selection-removal/junk-exclusion counting, not a necessity statement
+W2-LOC2:Thm-Poly	A:PTV	NONE		no necessity evidence recorded for this pair
+W2-LOC2:Thm-Poly	A:LSF	NONE		no necessity evidence recorded for this pair
+W2-LOC2:Thm-Poly	A:IID-GAUSS-ROWS	NONE		no necessity evidence recorded for this pair
+W2-LOC2:Thm-Poly	A:NA-FRAME	NONE		no necessity evidence recorded for this pair
+W2-LOC2:Thm-Poly	A:RELEVANCE-SIZE	NONE		no necessity evidence recorded for this pair
+W2-LOC2:Thm-Poly	A:BETAMIN	NONE		no necessity evidence recorded for this pair
+W2-LOC2:Thm-Poly	A:P-POLY	NONE		no necessity evidence recorded for this pair
+W2-LOC2:Thm-Poly	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+W2-LOC2:Thm-Poly	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+W2-LOC2:Thm-Poly	A:MR1-CAP	NONE		no necessity evidence recorded for this pair
+W2-LOC2:Thm-Poly	A:OP	NONE		no necessity evidence recorded for this pair
+W2-LOC2:Thm-Poly	A:CAL	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Thm-FAC-L	A:INST-FACTOR	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Thm-FAC-L	A:P-ALPHA0	NECESSARY-FOR-ROUTE	W2-FAC-A:Prop-SHARP	exact-Gram CS (kbar=1): liminf log p/log n>1/6 => P(NA(lattice))->0; optimal only for the full-lattice route
+W2-FAC-A:Thm-FAC-L	A:GRAM-OP-BOUND	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Thm-FAC-L	A:BLOCK-VIS	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Thm-FAC-L	A:BLOCK-LE-16	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Thm-FAC-L	A:BETAMIN	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Thm-FAC-L	A:ENERGY	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Thm-FAC-L	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Thm-FAC-L	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Thm-FAC-L	A:OP	WEAKENABLE	Theory_work/Wave2/W2-FAC-A/STATEMENT.md:136	delivery premise list stronger than needed for (L4)
+W2-FAC-A:Thm-FAC-L	A:MR1-CAP	NONE		no necessity evidence recorded for this pair
+W2-FAC-A:Thm-FAC-L	A:DELIVERY-ALLOC	NONE		no necessity evidence recorded for this pair
+W2-FAC-B:Thm-FAC-CS	A:INST-CS	NONE		no necessity evidence recorded for this pair
+W2-FAC-B:Thm-FAC-CS	A:EXACT-GRAM	WEAKENABLE	W2-FAC-X:Thm-FAC-CS-iid	iid rows, p up to n^{1/2-}
+W2-FAC-B:Thm-FAC-CS	A:P-HALF-N	NECESSARY-FOR-ROUTE	W2-FAC-PK:Thm-NEG	liminf p/K>16/15 (K=floor(n/2)) the merged LS0 route fails; frontier K<p<=16K/15 open
+W2-FAC-B:Thm-FAC-CS	A:FS	WEAKENABLE	W2-FAC-B:Thm-FAC-CS(C1-M)	(FS) replaced by (FS'): masked truths allowed if their block holds a null
+W2-FAC-B:Thm-FAC-CS	A:FS	WEAKENABLE	Theory_work/Wave2/W2-FAC-B/STATEMENT.md:84	(FS) is sufficient, not necessary
+W2-FAC-B:Thm-FAC-CS	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+W2-FAC-B:Thm-FAC-CS	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+W2-FAC-B:Thm-FAC-CS	A:BLOCK-LE-16	NONE		no necessity evidence recorded for this pair
+W2-FAC-B:Thm-FAC-CS	A:MR1-CAP	NECESSARY-FOR-ROUTE	Theory_work/Wave2/W2-FAC-B/STATEMENT.md:122	legacy cap ell_n: LS0 scored set misses S0 whenever m0>=ell_n+2
+W2-FAC-B:Thm-FAC-CS	A:OP	NONE		no necessity evidence recorded for this pair
+W2-FAC-B:Thm-FAC-CS	A:CAL	WEAKENABLE	Theory_work/Wave2/W2-FAC-B/STATEMENT.md:127	(C4) delivery is CAL-free
+W2-FAC-B:Thm-FAC-CS	A:DELIVERY-ALLOC	NONE		no necessity evidence recorded for this pair
+W2-FAC-X:Thm-FAC-CS-iid	A:INST-CS	NONE		no necessity evidence recorded for this pair
+W2-FAC-X:Thm-FAC-CS-iid	A:IID-GAUSS-ROWS	NONE		no necessity evidence recorded for this pair
+W2-FAC-X:Thm-FAC-CS-iid	A:P-HALF	NECESSARY-FOR-ROUTE	Theory_work/Wave2/W2-FAC-X/STATEMENT.md:99	beyond 1/2 uniform-over-n form of (C2)(ii) is false (R20 item 1); route-specific
+W2-FAC-X:Thm-FAC-CS-iid	A:FS	NONE		no necessity evidence recorded for this pair
+W2-FAC-X:Thm-FAC-CS-iid	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+W2-FAC-X:Thm-FAC-CS-iid	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+W2-FAC-X:Thm-FAC-CS-iid	A:BLOCK-LE-16	NONE		no necessity evidence recorded for this pair
+W2-FAC-X:Thm-FAC-CS-iid	A:MR1-CAP	NECESSARY-FOR-ROUTE	Theory_work/Wave2/W2-FAC-X/STATEMENT.md:90	legacy cap ell_n misses S0 whenever m0>=ell_n+2
+W2-FAC-X:Thm-FAC-CS-iid	A:OP	NONE		no necessity evidence recorded for this pair
+W2-FAC-X:Thm-FAC-CS-iid	A:DELIVERY-ALLOC	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-NEG	A:PK-NEG-REGIME	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-NEG	A:PK-REGIME	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-NEG	A:INST-CS	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-NEG	A:EXACT-GRAM	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-NEG	A:MR1-CAP	NECESSARY-FOR-ROUTE	W2-FAC-PK:Thm-NEG	the claim itself: merged cap and legacy cap fail; cap>=(1+delta)|S~0| suffices (Thm-PATH, Thm-FAC-PK)
+W2-FAC-PK:Thm-NEG	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-NEG	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-NEG	A:OP	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-PATH	A:PK-REGIME	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-PATH	A:INST-CS	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-PATH	A:EXACT-GRAM	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-PATH	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-PATH	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-PATH	A:BLOCK-LE-16	NONE		no necessity evidence recorded for this pair
+W2-FAC-PK:Thm-PATH	A:OP	NONE		no necessity evidence recorded for this pair

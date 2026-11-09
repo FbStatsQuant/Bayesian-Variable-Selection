@@ -1,0 +1,67 @@
+id	file	lines	status_now	status_source_now
+W1-PXN:Lemma-LS	Theory_work/Wave1/W1-PXN/lemmas/LS_P6_repair.md	13-37	repair by this seat; XF VERIFIED WITH MINOR FIXES (R21), fixes applied	Theory_work/Wave1/W1-PXN/lemmas/LS_P6_repair.md:3
+W1-PXN:Thm-R	Theory_work/Wave1/W1-PXN/lemmas/R_branch_repair.md	9-13	repair by this seat; XF VERIFIED WITH MINOR FIXES (R21), fixes applied	Theory_work/Wave1/W1-PXN/lemmas/R_branch_repair.md:3
+W1-PXN:B-ii	Theory_work/Wave1/W1-PXN/lemmas/B_ii_domain.md	8-9	repair by this seat; XF VERIFIED (R21)	Theory_work/Wave1/W1-PXN/lemmas/B_ii_domain.md:3
+W1-N1:B	Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md	8-44	PROVED under the named premises of STATEMENT §2 — cross-family checked (LC1, MP1 CONTINUE, SW1, council C1), council-passed, round 1	Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:3
+W1-N1:P	Theory_work/Wave1/W1-N1/lemmas/L2_post_terminal.md	24-28	PROVED-LOCKED (statement is T12 clause (i.b); re-derivation by this seat)	Theory_work/Wave1/W1-N1/lemmas/L2_post_terminal.md:3
+W1-N1:F	Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md	19-23	PROVED under the named premises of STATEMENT §2 — cross-family checked, council-passed, round 1	Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:3
+W1-N3:Thm-N3-code(a-d)	Theory_work/Wave1/W1-N3/STATEMENT.md	115-127	PROVED; XF-checked (PROVED-CHECKED)	Theory_work/Wave1/W1-N3/REPORT.md:41
+W1-N3:L1	Theory_work/Wave1/W1-N3/lemmas/L1_reduction.md	7-25	PROVED; XF-checked	Theory_work/Wave1/W1-N3/lemmas/L1_reduction.md:3
+W1-N3:L2	Theory_work/Wave1/W1-N3/lemmas/L2_block_maxima.md	20-25	PROVED; XF-checked	Theory_work/Wave1/W1-N3/lemmas/L2_block_maxima.md:3
+W1-N3:L3	Theory_work/Wave1/W1-N3/lemmas/L3_L4_dp_and_size.md	29-32	PROVED; XF-checked	Theory_work/Wave1/W1-N3/lemmas/L3_L4_dp_and_size.md:3
+W1-N3:L4	Theory_work/Wave1/W1-N3/lemmas/L3_L4_dp_and_size.md	48-50	PROVED; XF-checked	Theory_work/Wave1/W1-N3/lemmas/L3_L4_dp_and_size.md:3
+W1-N3:L5	Theory_work/Wave1/W1-N3/lemmas/L5_enumeration.md	37-51	PROVED; XF-checked	Theory_work/Wave1/W1-N3/lemmas/L5_enumeration.md:3
+W1-N3:L6	Theory_work/Wave1/W1-N3/lemmas/L6_assembly_and_deviation.md	5-15	PROVED; XF-checked	Theory_work/Wave1/W1-N3/lemmas/L6_assembly_and_deviation.md:3
+W1-N3:L7	Theory_work/Wave1/W1-N3/lemmas/L7_tie_aware_dp.md	18-22	PROVED; XF-checked	Theory_work/Wave1/W1-N3/lemmas/L7_tie_aware_dp.md:3
+W1-N3:LFP	Theory_work/Wave1/W1-N3/lemmas/LFP_floating_point.md	23-29	PROVED; XF-checked	Theory_work/Wave1/W1-N3/lemmas/LFP_floating_point.md:3
+W1-GEN:Thm-GEN(C5d-S1346)	Theory_work/Wave1/W1-GEN/STATEMENT.md	135-144	PROVED (by this seat, unchecked) (Lemma SEL checked only inside sweep R10 and council; no dedicated lemma check)	Theory_work/Wave1/W1-GEN/lemmas/L6_instances.md:3
+W1-GEN:Cex-GEN(C6)	Theory_work/Wave1/W1-GEN/STATEMENT.md	145-155	PROVED (by this seat, unchecked) (R09 VERIFIED)	Theory_work/Wave1/W1-GEN/lemmas/L7_counterexample.md:3
+C-MIS:LemR	Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md	26-31	PROVED-CHECKED (R02 VERIFIED)	Theory_work/Wave1C/C-MIS/REPORT.md:98
+C-MIS:Thm-MIS(i)	Theory_work/Wave1C/C-MIS/STATEMENT.md	65-72	PROVED-CHECKED (R02 VERIFIED)	Theory_work/Wave1C/C-MIS/REPORT.md:98
+C-MIS:Cor-N	Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md	65-74	PROVED-CHECKED (R05 VERIFIED-WITH-AMENDMENTS, applied)	Theory_work/Wave1C/C-MIS/REPORT.md:102
+C-MIS:LemDR	Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md	78-80	PROVED-CHECKED (R02 VERIFIED)	Theory_work/Wave1C/C-MIS/REPORT.md:98
+C-MIS:Thm-MIS(ii)	Theory_work/Wave1C/C-MIS/STATEMENT.md	73-78	PROVED-CHECKED (R02 VERIFIED-WITH-AMENDMENTS, applied)	Theory_work/Wave1C/C-MIS/REPORT.md:99
+C-MIS:Prop-P	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md	14-36	PROVED-CHECKED (R02 VERIFIED; R04 wording fixes checked in R05)	Theory_work/Wave1C/C-MIS/REPORT.md:100
+C-MIS:GD(a)	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md	57-63	PROVED-CHECKED (R02 VERIFIED)	Theory_work/Wave1C/C-MIS/REPORT.md:100
+C-MIS:GD(b)	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md	73-86	PROVED-CHECKED (R02 VERIFIED-WITH-AMENDMENTS, applied)	Theory_work/Wave1C/C-MIS/REPORT.md:99
+C-MIS:E1	Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md	119-132	PROVED-CHECKED (R05 VERIFIED-WITH-AMENDMENTS, applied)	Theory_work/Wave1C/C-MIS/REPORT.md:102
+C-MIS:Cor-H	Theory_work/Wave1C/C-MIS/STATEMENT.md	109-113	PROVED-CHECKED (R02 VERIFIED)	Theory_work/Wave1C/C-MIS/REPORT.md:98
+C-MIS:Cor-D	Theory_work/Wave1C/C-MIS/STATEMENT.md	114-120	PROVED-CHECKED (R02 VERIFIED)	Theory_work/Wave1C/C-MIS/REPORT.md:98
+C-MIS:Cor-D'	Theory_work/Wave1C/C-MIS/lemmas/L3_hpm.md	50-60	PROVED-CHECKED (R02 VERIFIED-WITH-AMENDMENTS, applied)	Theory_work/Wave1C/C-MIS/REPORT.md:99
+C-MIS:Thm-F	Theory_work/Wave1C/C-MIS/STATEMENT.md	126-137	PROVED-CHECKED (R03 xhigh VERIFIED / VERIFIED-WITH-AMENDMENTS, applied)	Theory_work/Wave1C/C-MIS/REPORT.md:101
+C-MIS:Cor-F(a)	Theory_work/Wave1C/C-MIS/STATEMENT.md	138-138	PROVED-CHECKED (R03 VERIFIED)	Theory_work/Wave1C/C-MIS/REPORT.md:101
+C-MIS:Lemma-T	Theory_work/Wave1C/C-MIS/lemmas/L4_theoremF.md	158-162	PROVED-CHECKED (R03 VERIFIED)	Theory_work/Wave1C/C-MIS/REPORT.md:101
+C-MIS:Cor-F(b)	Theory_work/Wave1C/C-MIS/STATEMENT.md	139-141	PROVED-CHECKED (R03 VERIFIED)	Theory_work/Wave1C/C-MIS/REPORT.md:101
+C-MIS:LemZ	Theory_work/Wave1C/C-MIS/lemmas/L6_null.md	6-13	PROVED-CHECKED (R05 VERIFIED-WITH-AMENDMENTS, applied)	Theory_work/Wave1C/C-MIS/REPORT.md:102
+C-MIS:LemO1	Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md	9-18	VERIFIED-WITH-AMENDMENTS (R03, applied)	Theory_work/Wave1C/C-MIS/REPORT.md:103
+C-MIS:LemO2	Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md	33-36	VERIFIED-WITH-AMENDMENTS (R03, applied; original consequence paragraph GAP/FALSE, replaced)	Theory_work/Wave1C/C-MIS/REPORT.md:103
+C-MIS:E2	Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md	80-89	PROVED-CHECKED (R05 VERIFIED)	Theory_work/Wave1C/C-MIS/REPORT.md:102
+C-MIS:E3	Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md	91-96	PROVED-CHECKED (R05 VERIFIED)	Theory_work/Wave1C/C-MIS/REPORT.md:102
+C-GROW:C6	Theory_work/Wave1C/C-GROW/STATEMENT.md	150-156	not proved (frontier)	Theory_work/Wave1C/C-GROW/REPORT.md:30
+W2-APP:L3.6	Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md	99-99	PROVED (by this seat, unchecked); R03 key lemma, NA window argument passed	Theory_work/Wave2/W2-APP/REPORT.md:113
+W2-APP:LOC-B	Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md	169-178	PROVED (by this seat, unchecked); as Theorem LOC; target gap fixed in STATEMENT v1.2	Theory_work/Wave2/W2-APP/REPORT.md:114
+W2-APP:Family-map	Theory_work/Wave2/W2-APP/lemmas/L4_families.md	152-171	L4 v1 FALSE as written (R05) -> v2 with all repairs; derived entries PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-APP/REPORT.md:116
+W2-FAC-PKA:L0	Theory_work/Wave2/W2-FAC-PKA/lemmas/L0_rank.md	5-5	PROVED (by this seat), lemma check R02 VERIFIED; Not PROVED-CHECKED	Theory_work/Wave2/W2-FAC-PKA/lemmas/L0_rank.md:3
+W2-FAC-X:Thm-FAC-GL	Theory_work/Wave2/W2-FAC-X/STATEMENT_T2.md	49-62	PARTIAL (not council-passed); lemmas 'PROVED (by this seat, unchecked)'	Theory_work/Wave2/W2-FAC-X/REPORT.md:168
+W2-FAC-X:Cor-FAC-NCS	Theory_work/Wave2/W2-FAC-X/STATEMENT_T2.md	64-69	PARTIAL (not council-passed); X7 'PROVED (by this seat, unchecked)' for iid rows (R)	Theory_work/Wave2/W2-FAC-X/REPORT.md:169
+W2-FAC-X:L4r-S	Theory_work/Wave2/W2-FAC-X/T2/STATEMENT_T2.md	41-79	PROVED (by this seat, unchecked); L4r.0-L4r.3 VERIFIED (R11)	Theory_work/Wave2/W2-FAC-X/T2/L4r_path.md:3
+W2-FAC-XA:X1	Theory_work/Wave2/W2-FAC-XA/STATEMENT.md	74-75	PARTIAL, research in progress; no iid-row consistency extension claimed (CHECKPOINT)	Theory_work/Wave2/W2-FAC-XA/CHECKPOINT.md:9
+W2-FAC-XA:X3	Theory_work/Wave2/W2-FAC-XA/STATEMENT.md	83-84	PARTIAL, research in progress; no iid-row consistency extension claimed (CHECKPOINT)	Theory_work/Wave2/W2-FAC-XA/CHECKPOINT.md:9
+W2-FAC-XA:X4	Theory_work/Wave2/W2-FAC-XA/STATEMENT.md	85-86	PARTIAL, research in progress; no iid-row consistency extension claimed (CHECKPOINT)	Theory_work/Wave2/W2-FAC-XA/CHECKPOINT.md:9
+W2-FAC-XA:L1	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md	11-14	PROVED (by this seat); cross-family R02b verdict PASS-WITH-FIXES (minor), F1-F6 applied	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:3
+W2-FAC-XA:L7	Theory_work/Wave2/W2-FAC-XA/lemmas/L7_shadow_midpoint_attempt.md	10-29	No theorem-status upgrade (research proof attempt for fresh Claude review)	Theory_work/Wave2/W2-FAC-XA/lemmas/L7_shadow_midpoint_attempt.md:1
+W2-LOC2:L0'	Theory_work/Wave2/W2-LOC2/STATEMENT.md	35-41	PROVED (by this seat, unchecked); R02 Sol high V-W-A; ticket RESULT PROVED-CHECKED	Theory_work/Wave2/W2-LOC2/REPORT.md:56
+W2-LOC2:NA-R	Theory_work/Wave2/W2-LOC2/STATEMENT.md	43-59	PROVED (by this seat, unchecked); R03 Sol xhigh V-W-A; ticket RESULT PROVED-CHECKED	Theory_work/Wave2/W2-LOC2/REPORT.md:57
+W2-LOC2:CT_d	Theory_work/Wave2/W2-LOC2/lemmas/L3_CTd.md	24-28	PROVED (by this seat, unchecked); R02 Sol high V-W-A; ticket RESULT PROVED-CHECKED	Theory_work/Wave2/W2-LOC2/REPORT.md:58
+W2-LOC2:CD_d	Theory_work/Wave2/W2-LOC2/lemmas/L3_CTd.md	50-57	PROVED (by this seat, unchecked); R02 Sol high V-W-A; ticket RESULT PROVED-CHECKED	Theory_work/Wave2/W2-LOC2/REPORT.md:58
+W2-LOC2:RB	Theory_work/Wave2/W2-LOC2/lemmas/L3_CTd.md	67-71	PROVED (by this seat, unchecked); R02 Sol high V-W-A; ticket RESULT PROVED-CHECKED	Theory_work/Wave2/W2-LOC2/REPORT.md:58
+W2-LOC2:TAIL	Theory_work/Wave2/W2-LOC2/lemmas/L3_CTd.md	77-80	PROVED (by this seat, unchecked); R02 Sol high V-W-A; ticket RESULT PROVED-CHECKED	Theory_work/Wave2/W2-LOC2/REPORT.md:58
+W2-LOC2:PLR	Theory_work/Wave2/W2-LOC2/STATEMENT.md	61-65	PROVED (by this seat, unchecked); R04 Sol high V-W-A; ticket RESULT PROVED-CHECKED	Theory_work/Wave2/W2-LOC2/REPORT.md:60
+W2-LOC2:LOC-d	Theory_work/Wave2/W2-LOC2/STATEMENT.md	67-74	PROVED (by this seat, unchecked); R04 Sol high V-W-A; ticket RESULT PROVED-CHECKED	Theory_work/Wave2/W2-LOC2/REPORT.md:59
+W2-LOC2:LOC-BF	Theory_work/Wave2/W2-LOC2/STATEMENT.md	76-85	PROVED (by this seat, unchecked); R04 Sol high V-W-A; ticket RESULT PROVED-CHECKED	Theory_work/Wave2/W2-LOC2/REPORT.md:59
+W2-LOC2:Thm-Poly	Theory_work/Wave2/W2-LOC2/STATEMENT.md	87-98	PROVED (by this seat, unchecked); R06a Opus high V-W-A; R06b Sol xhigh V-W-A; ticket RESULT PROVED-CHECKED	Theory_work/Wave2/W2-LOC2/REPORT.md:61
+W2-LOC2:Lemma-BC	Theory_work/Wave2/W2-LOC2/lemmas/L6_poly.md	78-81	PROVED (by this seat, unchecked); R06a Opus high V-W-A; R06b Sol xhigh V-W-A; ticket RESULT PROVED-CHECKED	Theory_work/Wave2/W2-LOC2/REPORT.md:61
+W2-LOC2:Lemma-IR	Theory_work/Wave2/W2-LOC2/lemmas/L6_poly.md	118-123	PROVED (by this seat, unchecked); R06a Opus high V-W-A; R06b Sol xhigh V-W-A; ticket RESULT PROVED-CHECKED	Theory_work/Wave2/W2-LOC2/REPORT.md:61
+W2-LOC2:F-LOC2	Theory_work/Wave2/W2-LOC2/STATEMENT.md	100-102	PROVED (by this seat, unchecked); R04 Sol high VERIFIED; ticket RESULT PROVED-CHECKED	Theory_work/Wave2/W2-LOC2/REPORT.md:62
+W2-UNI:UNI-P	Theory_work/Wave2/W2-UNI/STATEMENT.md	85-89	PROVED (by this seat, unchecked) (APP L1_POST; R02 V-W-A)	Theory_work/Wave2/W2-UNI/REPORT.md:71
+W2-UNI:U-LOC	Theory_work/Wave2/W2-UNI/STATEMENT.md	147-161	PROVED (by this seat, unchecked); R03 Sol xhigh V-W-A (1 MAJOR: T=empty for TL; fixed)	Theory_work/Wave2/W2-UNI/REPORT.md:65

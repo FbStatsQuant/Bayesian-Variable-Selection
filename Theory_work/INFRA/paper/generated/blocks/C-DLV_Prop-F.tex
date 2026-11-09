@@ -1,0 +1,24 @@
+% generated from registry claim C-DLV:Prop-F (v1.0.0); edit the registry, not this file
+\begin{proposition}[F: total tier-1 fallback, with the C-GROW cap; C-DLV + A1]\label{reg:C-DLV_Prop-F}
+Consider the specified v3.1 method with deterministic LS0 from the exact e4 start mode, complete scans, emitted centre and scored-set HPM retention. Let $\ell_n=\lceil\log_2(n+p+1)\rceil$, $K=\min(p,\lfloor n/2\rfloor)$, and set LS0's move cap to $a_n=\ell_n+|\tilde{S}_0|$; all other local-search caps remain $\ell_n$. Keep fixed declared $R'=4k$, fixed worker count, and the other CONFIG restrictions of C-DLV. Assume EX-A with its unit-cost interpretation, IDEAL-W, EX-S, SR, e4, GUARD-W, TDP-IMPL and MACH as stated in C-DLV, and OP-LS0 with the cap replaced by $a_n$, with valid declared seed/allocation and model G on the stated classes.
+
+\emph{Fallback.} At the first failed tier-1 grid construction, terminate that tier and select its last successful construction if one exists, otherwise its completed pilot schedule. Preserve the tier-1 budgets and inherited scored state, freeze the selected complete grid through the normal frozen-record construction before final randomness, and continue with the prescribed final run and LS0. Retain the failure/fallback metadata; make no further calibration attempts and do not promote a partial failed grid to a fallback. Leave other branches unchanged.
+
+\emph{Allocation.} With $q(p)=p+p^2/4$, $W_G:=\bar{W}+C\,K\,q(p)\,[n^3+p(n+2)]$ and $M_G:=\bar{M}+C\,K(K+1)$ ($\bar{W},\bar{M}$ the work and memory envelopes of C-DLV Lemma R, $C$ a large enough constant for the fixed implementation and concurrency (fixed worker count), raw dimension in the envelopes), choose
+\[
+\mathrm{mem}_n\ge\max\{\beta M_G(n,p_{\rm raw})+\beta_0,P_0,P_1\},\quad \mathrm{time}_n\ge\max\{2[\tau W_G(n,p_{\rm raw})+\tau_0],\bar{P}_t\},
+\]
+\texttt{allocation\$mem\_gb} $\ge\mathrm{mem}_n/2^{30}$, \texttt{allocation\$hours} $\ge\mathrm{time}_n/3600$, where $P_0,P_1,\bar{P}_t$ are Corollary R's preflight bounds and certificate budgets remain included. \emph{Addition for the C-ENG head code (council round 3, Opus finding 1):} for the implementation at \texttt{493579a}, whose preflight also charges LS0's worst case (Remark (5)), the allocation must in addition satisfy $\mathrm{time}_n\ge\bar P_{\rm LS0}:=(\ell_n+K+1)q(p)(\tau U_K+\tau_0)/100$ ($U_K(n,p_{\rm raw})$ a deterministic polynomial upper bound on all operations between the timing start and elapsed-time read in \texttt{cpp\_time\_scores(ctx,K,200)}, including model construction, sorting and scoring; MACH bounds this measured elapsed time by $\tau U_K+\tau_0$) and $\mathrm{mem}_n\ge P_e+A$ ($e=0,1$), where, with $s=\ell_n+K+1$ and $W=\lceil p/64\rceil$, the \texttt{ls0\_archive} bytes are $A=(2s+4)(12K+256)+96s+4(8W+4K+96)+4096$. Then, writing $q=q(p)$ and $\hat s_K$ for the measured seconds per size-$K$ score,
+\[
+\begin{aligned}
+\hat s_K&\le(\tau U_K+\tau_0)/200,\\
+2sq\,\hat s_K&\le sq(\tau U_K+\tau_0)/100=\bar P_{\rm LS0}\le\mathrm{time}_n\le3600\cdot\texttt{allocation\$hours},
+\end{aligned}
+\]
+and the preflight rejection tests use strict $>$, so equality passes; hence the new preflight adds no no-output event under this allocation \srcq{W1C/HQ_AUDIT/A4_postcouncil_check.md:7-25}{ŝ_K <= (τ U_K + τ₀)/200}.
+
+Then for every admissible $n\ge3$, $\PP(\text{no output})=0$. On LH exact Gram, LH-iid and the W1-GEN class, under the respective statistical hypotheses and inherited dependency qualifications used in Corollary~\ref{cor:Dprime} (for random-design members of the GEN class, model G is read as: $X^r$ has nonconstant columns almost surely and $\varepsilon\sim N_n(0,\sigma^2I_n)$ is independent of $X^r$; Lemma S.1 verifies the first for fixed standardised designs and nonsingular Gaussian rows), $\PP(\Shat=S_0)\to1$ under the original unconditioned data law. CAL, restricted-ESS success, and any bound on the probability of triggering the fallback are unnecessary. With the original LS0 cap $a_n=\ell_n$, the original Lemma R envelopes suffice.
+\end{proposition}
+\begin{statusbox}
+\regref{C-DLV:Prop-F} v1.0.0: \st{PROVED-CHECKED for the patched calibration law (R04; council round 2)}. Council: Codex gpt-6.1-sol 9.0 / Claude Opus 5.5 8.9, round 2 (round 1: Codex 7.6 / Opus 8.6, not passed). Evidence: reviews/R04\_L4\_codex.md: VERIFIED-WITH-AMENDMENTS (applied). Statement: \regref{Theory\_work/Wave1C/C-DLV/lemmas/L4\_delivery.md:79-84}.
+\end{statusbox}

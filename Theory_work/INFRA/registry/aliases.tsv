@@ -1,0 +1,57 @@
+alias	id	notes
+T03♯	SOP:TH09	S-T / Theorem 1
+T01–T03	SOP:TH09	
+T02(i♯)	SOP:TH09	T02 belongs to the T01–T03 package behind T03♯
+T03R (C1)–(C10)	SOP:TH128	Theorem 1 (W1-T03R)
+T03R den′	SOP:TH128	
+M5(0)	SOP:TH05.0	
+T38-(0)	SOP:TH281	
+T38 Theorem b1	SOP:TH05.b1LH	
+T12	SOP:TH110	
+T22(i)	SOP:TH116	
+T22(ii)	SOP:TH116	
+T22(iii)	SOP:TH116	
+N9	SOP:OB09	
+TH163	SOP:TH163	
+W7-PART:Thm-B	SOP:TH163	PART Theorem B
+M4(b)	SOP:TH04.b	
+M4(c)	SOP:TH04.c	
+[P3] lem:det	SOP:TH09	internal lemma of the T03 proof (archive P3)
+[P3] lem:chi	SOP:TH09	
+[P3] lem:prior(b)	SOP:TH09	
+[P3] lem:red	SOP:TH09	
+[P3] T03_A2 lemmas	SOP:TH09	
+Lemma E	W1-GEN:L1	
+Lemma CR	W1-PXN:CR	
+Lemma CAP	W1C-FINAL:Lemma-CAP	
+Proposition F	C-DLV:Prop-F	
+F-GROW	HQ_AUDIT-W1C:A2	Proposition F on the GROW class (A2 + A3 amendments)
+A1	HQ_AUDIT-W1C:A1	
+A2	HQ_AUDIT-W1C:A2	
+A4	HQ_AUDIT-W1C:A4	
+FAC-A Lemma L6 SHARP	W2-FAC-A:Prop-SHARP	
+C-GROW:L0	C-GROW:L0.1	
+C-GROW:L2.3(a)	C-GROW:L2.3	
+W1-GEN:L5.3	W1-GEN:L5	
+W1-GEN:Lemma-SEL	W1-GEN:Thm-GEN(C5d-S1346)	Lemma SEL lives in L6(d) (study instances); not registered separately
+W1-N3:N3(a)	W1-N3:Thm-N3-code(a-d)	
+W1-N3:N3(c)	W1-N3:Thm-N3-code(a-d)	
+W1-N3:Thm-N3-code	W1-N3:Thm-N3-code(a-d)	
+W1-N3:N3(e)	W1-N3:Thm-N3-code(e)	
+W1-PXN:Lemma-CR	W1-PXN:CR	
+W1-PXN:P	W1-PXN:Thm-PXN(P)	
+W1-PXN:T	W1-PXN:Thm-PXN(T)	
+W2-FAC-A:L2-L5	W2-FAC-A:Thm-FAC-L	L2–L5 used together (assembly)
+W2-FAC-A:U(a)-(d)	W2-FAC-A:L1	Lemma U(a)-(d) is in L1_uniform_add.md
+C-PACK:I4	C-PACK:SL0	item 4 = SL0–SL2 corollaries
+C-ENG:L1	C-ENG:Impl-Merge	(L1)-(L3) are LS0 code properties of the merged implementation
+C-ENG:L2	C-ENG:Impl-Merge	
+C-ENG:L3	C-ENG:Impl-Merge	
+[OP]	-	named operational premise (an assumption, not a claim)
+W1-GEN:OP	-	named operational premise
+[CONC′]	-	archive concentration lemma without a SoP row
+[P1] lem:num	-	archive lemma without a SoP row
+T37R Lemma 2(b)	-	archive lemma without a SoP row
+W1-EXP:Lemma4.2	-	archive (W1-EXP) lemma without a SoP row
+Vershynin Cor 5.35 / Davidson–Szarek	-	literature
+TH162	SOP:TH11	W7 Theorem A (PART-ThmA) has no own SoP row; it is carried inside card TH11 (S-BLOCKS)

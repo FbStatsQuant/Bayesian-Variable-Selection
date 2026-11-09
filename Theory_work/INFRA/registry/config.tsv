@@ -1,0 +1,4 @@
+key	value	notes
+freeze	no	yes = only correctness rollbacks and free supersessions (LIFECYCLE §5)
+max_assumption_sets	10	cap on distinct headline assumption sets (check S6)
+numerics_python	py -3.13	interpreter for ticket numerics and citecheck scripts (numpy, scipy, mpmath); override with env BVS_NUMERICS_PY

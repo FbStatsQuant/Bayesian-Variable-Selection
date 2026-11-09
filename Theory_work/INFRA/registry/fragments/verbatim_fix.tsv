@@ -1,0 +1,67 @@
+id	status	status_source	notes
+W1-PXN:Lemma-LS	repair by this seat (wording largely proposed by R15); XF VERIFIED WITH MINOR FIXES (R21), fixes applied — v2, 2026-11-08.	Theory_work/Wave1/W1-PXN/lemmas/LS_P6_repair.md:3	
+W1-PXN:Thm-R	repair by this seat (wording largely proposed by R14); XF VERIFIED WITH MINOR FIXES (R21), fixes applied — v2, 2026-11-08.	Theory_work/Wave1/W1-PXN/lemmas/R_branch_repair.md:3	
+W1-PXN:B-ii	repair by this seat (wording proposed by R13), 2026-11-08; XF VERIFIED (R21).	Theory_work/Wave1/W1-PXN/lemmas/B_ii_domain.md:3	
+W1-N1:B	PROVED under the named premises of STATEMENT §2 — cross-family checked (Codex gpt-6.1-sol: LC1, MP1 CONTINUE, SW1, council C1 9.3) and council-passed (Claude Opus 5.5: C1 8.9), round 1, 2026-11-08.	Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:3	
+W1-N1:P	PROVED-LOCKED	Theory_work/Wave1/W1-N1/lemmas/L2_post_terminal.md:3	label for the T12 clause the lemma restates; header continues with card cite
+W1-N1:F	PROVED under the named premises of STATEMENT §2 — cross-family checked (Codex gpt-6.1-sol: LC1, MP1 CONTINUE, SW1, council C1 9.3) and council-passed (Claude Opus 5.5: C1 8.9), round 1, 2026-11-08.	Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:3	
+W1-N3:Thm-N3-code(a-d)	PROVED; XF-checked	Theory_work/Wave1/W1-N3/REPORT.md:41	status cell of REPORT row (a)-(d)
+W1-N3:L1	PROVED; cross-family check: R03 CORRECT (Sol).	Theory_work/Wave1/W1-N3/lemmas/L1_reduction.md:3	
+W1-N3:L2	PROVED; cross-family check: R02 CORRECT (Sol).	Theory_work/Wave1/W1-N3/lemmas/L2_block_maxima.md:3	
+W1-N3:L3	PROVED; cross-family check: R02 CORRECT-WITH-MINOR-FIXES (Sol; evidence wording only, fixed).	Theory_work/Wave1/W1-N3/lemmas/L3_L4_dp_and_size.md:3	
+W1-N3:L4	PROVED; cross-family check: R02 CORRECT-WITH-MINOR-FIXES (Sol; evidence wording only, fixed).	Theory_work/Wave1/W1-N3/lemmas/L3_L4_dp_and_size.md:3	
+W1-N3:L5	PROVED; cross-family check: R03 CORRECT (Sol).	Theory_work/Wave1/W1-N3/lemmas/L5_enumeration.md:3	
+W1-N3:L6	PROVED; cross-family check: R05 CORRECT (Sol).	Theory_work/Wave1/W1-N3/lemmas/L6_assembly_and_deviation.md:3	
+W1-N3:L7	PROVED; cross-family check: R05 CORRECT (Sol).	Theory_work/Wave1/W1-N3/lemmas/L7_tie_aware_dp.md:3	
+W1-N3:LFP	PROVED; cross-family check: R05 CORRECT-WITH-MINOR-FIXES (Sol; monotonicity wording, fixed).	Theory_work/Wave1/W1-N3/lemmas/LFP_floating_point.md:3	
+W1-GEN:Thm-GEN(C5d-S1346)	PROVED (by this seat, unchecked)	Theory_work/Wave1/W1-GEN/lemmas/L6_instances.md:4	header gives per-part statuses: (a),(c) PBU; (b) PBU conditional on W7-PART Thm B and [CONC]; (d) mixed; first occurrence copied
+W1-GEN:Cex-GEN(C6)	PROVED (by this seat, unchecked)	Theory_work/Wave1/W1-GEN/lemmas/L7_counterexample.md:3	
+C-MIS:LemR	R02 VERIFIED; council R07/R08 PASS	Theory_work/Wave1C/C-MIS/REPORT.md:98	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:Thm-MIS(i)	R02 VERIFIED; council R07/R08 PASS	Theory_work/Wave1C/C-MIS/REPORT.md:98	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:Cor-N	R05 VERIFIED / V-W-A (applied); council PASS	Theory_work/Wave1C/C-MIS/REPORT.md:102	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:LemDR	R02 VERIFIED; council R07/R08 PASS	Theory_work/Wave1C/C-MIS/REPORT.md:98	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:Thm-MIS(ii)	R02 VERIFIED-WITH-AMENDMENTS (applied); council PASS	Theory_work/Wave1C/C-MIS/REPORT.md:99	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:Prop-P	R02 VERIFIED; R04 wording fixes checked in R05; council PASS	Theory_work/Wave1C/C-MIS/REPORT.md:100	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:GD(a)	R02 VERIFIED; R04 wording fixes checked in R05; council PASS	Theory_work/Wave1C/C-MIS/REPORT.md:100	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:GD(b)	R02 VERIFIED-WITH-AMENDMENTS (applied); council PASS	Theory_work/Wave1C/C-MIS/REPORT.md:99	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:E1	R05 VERIFIED / V-W-A (applied); council PASS	Theory_work/Wave1C/C-MIS/REPORT.md:102	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:Cor-H	R02 VERIFIED; council R07/R08 PASS	Theory_work/Wave1C/C-MIS/REPORT.md:98	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:Cor-D	R02 VERIFIED; council R07/R08 PASS	Theory_work/Wave1C/C-MIS/REPORT.md:98	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:Cor-D'	R02 VERIFIED-WITH-AMENDMENTS (applied); council PASS	Theory_work/Wave1C/C-MIS/REPORT.md:99	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:Thm-F	R03 (xhigh) VERIFIED / V-W-A (applied); pathwise inequalities corroborated by numerics/check_L4.py (no violation); council PASS	Theory_work/Wave1C/C-MIS/REPORT.md:101	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:Cor-F(a)	R03 (xhigh) VERIFIED / V-W-A (applied); pathwise inequalities corroborated by numerics/check_L4.py (no violation); council PASS	Theory_work/Wave1C/C-MIS/REPORT.md:101	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:Lemma-T	R03 (xhigh) VERIFIED / V-W-A (applied); pathwise inequalities corroborated by numerics/check_L4.py (no violation); council PASS	Theory_work/Wave1C/C-MIS/REPORT.md:101	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:Cor-F(b)	R03 (xhigh) VERIFIED / V-W-A (applied); pathwise inequalities corroborated by numerics/check_L4.py (no violation); council PASS	Theory_work/Wave1C/C-MIS/REPORT.md:101	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:LemZ	R05 VERIFIED / V-W-A (applied); council PASS	Theory_work/Wave1C/C-MIS/REPORT.md:102	REPORT Evidence cell of status-per-clause table (no separate status word given)
+C-MIS:LemO1	R03 VERIFIED-WITH-AMENDMENTS (applied)	Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md:3	L5 header per-claim; Lemma O1
+C-MIS:LemO2	R03 VERIFIED-WITH-AMENDMENTS (its original consequence paragraph was GAP/FALSE and was replaced)	Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md:3	L5 header per-claim; Lemma O2
+C-MIS:E2	R05 VERIFIED	Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md:4	L5 header: "Examples E2, E3 - added after R04, R05 VERIFIED"
+C-MIS:E3	R05 VERIFIED	Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md:4	L5 header: "Examples E2, E3 - added after R04, R05 VERIFIED"
+C-GROW:C6	not proved (frontier, (C6))	Theory_work/Wave1C/C-GROW/REPORT.md:30	
+W2-APP:L3.6	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-APP/REPORT.md:113	
+W2-APP:LOC-B	as above; target gap (enlarged-Q bound) fixed in STATEMENT v1.2	Theory_work/Wave2/W2-APP/REPORT.md:114	"as above" refers to the L3 LOC row (PBU)
+W2-APP:Family-map	derived entries: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-APP/lemmas/L4_families.md:4	header: entries are cited (status verbatim from source) or derived here
+W2-FAC-PKA:L0	PROVED (by this seat), lemma check R02 VERIFIED (reviews/R02_lemmas_claude.md). Target T0. Not PROVED-CHECKED.	Theory_work/Wave2/W2-FAC-PKA/lemmas/L0_rank.md:3	
+W2-FAC-X:Thm-FAC-GL	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-X/REPORT.md:168	cell: proofs/lemmas X8,X9,X10 each this status
+W2-FAC-X:Cor-FAC-NCS	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-X/REPORT.md:169	lemma X7
+W2-FAC-X:L4r-S	§L4r.0–L4r.4: PROVED (by this seat, unchecked); §L4r.0–L4r.3 key-lemma check R11 (Codex Sol xhigh, ../reviews/R11_L4rS_X9_check_sol.md): VERIFIED.	Theory_work/Wave2/W2-FAC-X/T2/L4r_path.md:3	
+W2-FAC-XA:X1	PARTIAL, research in progress; no iid-row consistency extension claimed	Theory_work/Wave2/W2-FAC-XA/CHECKPOINT.md:9	ticket-level overall status; no own status for this claim
+W2-FAC-XA:X3	PARTIAL, research in progress; no iid-row consistency extension claimed	Theory_work/Wave2/W2-FAC-XA/CHECKPOINT.md:9	ticket-level overall status; no own status for this claim
+W2-FAC-XA:X4	PARTIAL, research in progress; no iid-row consistency extension claimed	Theory_work/Wave2/W2-FAC-XA/CHECKPOINT.md:9	ticket-level overall status; no own status for this claim
+W2-FAC-XA:L1	PROVED (by this seat); cross-family R02b verdict PASS-WITH-FIXES (minor), F1–F6 applied.	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:3	
+W2-FAC-XA:L7	No theorem-status upgrade.	Theory_work/Wave2/W2-FAC-XA/lemmas/L7_shadow_midpoint_attempt.md:3	no status; file says attempt, no upgrade
+W2-LOC2:L0'	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/REPORT.md:56	REPORT status cell
+W2-LOC2:NA-R	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/REPORT.md:57	REPORT status cell
+W2-LOC2:CT_d	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/REPORT.md:58	REPORT status cell
+W2-LOC2:CD_d	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/REPORT.md:58	REPORT status cell
+W2-LOC2:RB	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/REPORT.md:58	REPORT status cell
+W2-LOC2:TAIL	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/REPORT.md:58	REPORT status cell
+W2-LOC2:PLR	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/REPORT.md:60	REPORT status cell
+W2-LOC2:LOC-d	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/REPORT.md:59	REPORT status cell
+W2-LOC2:LOC-BF	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/REPORT.md:59	REPORT status cell
+W2-LOC2:Thm-Poly	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/REPORT.md:61	REPORT status cell
+W2-LOC2:Lemma-BC	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/REPORT.md:61	REPORT status cell
+W2-LOC2:Lemma-IR	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/REPORT.md:61	REPORT status cell
+W2-LOC2:F-LOC2	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/REPORT.md:62	REPORT status cell
+W2-UNI:UNI-P	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-UNI/REPORT.md:71	UNI-P has no own status; REPORT cites APP L1_POST (UNI-P = APP POST) with this status verbatim
+W2-UNI:U-LOC	PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-UNI/REPORT.md:65	REPORT status cell (L3_ULOC)

@@ -1,0 +1,25 @@
+ticket	wave	folder	result	result_source	headline	sop_row	branch	kill_budget	notes
+W1-PXN	Wave1	Theory_work/Wave1/W1-PXN	PROVED-CHECKED — the p ≫ n masked reported-HPM theorem (TH161, as repaired here) is cross-family VERIFIED	Theory_work/Wave1/W1-PXN/REPORT.md:4	Thm-PXN	W1-PXN			
+W1-N1	Wave1	Theory_work/Wave1/W1-N1	PROVED-CHECKED. N1 and Corollary E are proved under the named premises.	Theory_work/Wave1/W1-N1/REPORT.md:11	Thm-N1	W1-N1			
+W1-N3	Wave1	Theory_work/Wave1/W1-N3	PROVED-CHECKED — for the locked target STATEMENT.md v1.3 (Theorem N3-code (a)–(e) + supplementary (f)); N3 as an unconditional property of the frozen code is false; e4 for integrated LS0 stays OPEN	Theory_work/Wave1/W1-N3/REPORT.md:12	Thm-N3-code(a-d)	W1-N3			
+W1-GEN	Wave1	Theory_work/Wave1/W1-GEN	PROVED-CHECKED — Theorem GEN (STATEMENT.md v2.3, lemmas/00_MAIN.md)	Theory_work/Wave1/W1-GEN/REPORT.md:20	Thm-GEN	W1-GEN			
+C-PACK	Wave1C	Theory_work/Wave1C/C-PACK	PROVED-CHECKED — items 1–4; item 5 FAITHFUL-WITH-FIXES	Theory_work/Wave1C/C-PACK/REPORT.md:20	SL1	C-PACK			
+C-MIS	Wave1C	Theory_work/Wave1C/C-MIS	PROVED-CHECKED. This is the narrowed form in §2	Theory_work/Wave1C/C-MIS/REPORT.md:23	Thm-MIS(i);Thm-MIS(ii);Thm-F	C-MIS			
+C-GROW	Wave1C	Theory_work/Wave1C/C-GROW	PROVED-CHECKED — Theorem GROW (reported-HPM consistency with a growing relevance set, under MR1)	Theory_work/Wave1C/C-GROW/REPORT.md:26	Thm-GROW	C-GROW			
+C-DLV	Wave1C	Theory_work/Wave1C/C-DLV	PARTIAL. Every no-output path except schedule_limit is excluded (probability 0) under a declared polynomial allocation	Theory_work/Wave1C/C-DLV/REPORT.md:23	Thm-D;Prop-F	C-DLV			
+C-ENG	Wave1C	Theory_work/Wave1C/C-ENG	DONE (implemented, tested, every production change reviewed; final reviews APPROVE)	Theory_work/Wave1C/C-ENG/REPORT.md:6	Impl-Merge	C-ENG			
+W1C-FINAL	Wave1C	Theory_work/Wave1C/FINAL	final council PASSED (round 3: Sol 9.3, Opus 8.6; all six gates)	Theory_work/State_of_Project/registry/theory_loop.tsv:16	Lemma-CAP	W1C-FINAL			
+HQ_AUDIT-W1C	Wave1C	Theory_work/Wave1C/HQ_AUDIT			A1;A2;A3;A4	-			theory_loop rows HQ-A1..HQ-A4 are per audit
+W2-APP	Wave2	Theory_work/Wave2/W2-APP	PROVED-CHECKED — council round 3 PASSED (Codex gpt-6.1-sol xhigh 9.1, Claude Opus 5.5 high 9.1, all six gates	Theory_work/Wave2/W2-APP/REPORT.md:3	POST;Thm-LOC;Thm-APP				
+W2-FAC-A	Wave2	Theory_work/Wave2/W2-FAC-A	PROVED-CHECKED (for the narrowed, flagged target STATEMENT.md v1.2) — Theorem FAC-L and Proposition SHARP	Theory_work/Wave2/W2-FAC-A/REPORT.md:20	Thm-FAC-L;Prop-F-FAC				
+W2-FAC-B	Wave2	Theory_work/Wave2/W2-FAC-B	PROVED-CHECKED — Theorem FAC-CS (claims (C1)–(C4) of STATEMENT v3.1, plus the flagged (C1-M))	Theory_work/Wave2/W2-FAC-B/REPORT.md:30	Thm-FAC-CS				
+W2-FAC-PK	Wave2	Theory_work/Wave2/W2-FAC-PK	PARTIAL relative to the brief; (P1)–(P5) on the exact-Gram stage: PROVED-CHECKED	Theory_work/Wave2/W2-FAC-PK/REPORT.md:17	Thm-NEG;Thm-PATH				
+W2-FAC-PKA	Wave2	Theory_work/Wave2/W2-FAC-PKA	PARTIAL — midpoint CONTINUE; cap-remedy analysis in progress.	Theory_work/Wave2/W2-FAC-PKA/REPORT.md:1					in progress
+W2-FAC-S5	Wave2	Theory_work/Wave2/W2-FAC-S5	PARTIAL	Theory_work/Wave2/W2-FAC-S5/REPORT.md:4	Thm-FAC-BCS-R				
+W2-FAC-S5F	Wave2	Theory_work/Wave2/W2-FAC-S5F							in progress (CHECKPOINT only)
+W2-FAC-X	Wave2	Theory_work/Wave2/W2-FAC-X	PROVED-CHECKED (Target 1 — Theorem FAC-CS-iid); Target 2 partial	Theory_work/Wave2/W2-FAC-X/REPORT.md:39	Thm-FAC-CS-iid				
+W2-FAC-XA	Wave2	Theory_work/Wave2/W2-FAC-XA							in progress: CHECKPOINT 'PARTIAL, research in progress'
+W2-LOC2	Wave2	Theory_work/Wave2/W2-LOC2	PROVED-CHECKED — council round 1 PASSED (Codex gpt-6.1-sol xhigh 9.3, Claude Opus 5.5 high 9.1; all six gates	Theory_work/Wave2/W2-LOC2/REPORT.md:3	PLR;Thm-Poly;F-LOC2				
+W2-UNI	Wave2	Theory_work/Wave2/W2-UNI		Theory_work/Wave2/W2-UNI/REPORT.md:15					in progress (committed REPORT: [pending sweep R05 and council]); further work uncommitted on main
+W2-FAC-K2	Wave2	Theory_work/Wave2/W2-FAC-K2							in progress (LOG only)
+HQ_AUDIT-W2	Wave2	Theory_work/Wave2/HQ_AUDIT			B1;B2;B3;B4				
