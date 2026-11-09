@@ -117,15 +117,19 @@ add("v2_inherited_rescore_failure_retains_hpm_and_is_contained", local({
          "inherited rescore escaped the native failure handler")
     exact(z$ledger$hpm$model, saved$model); exact(z$ledger$hpm$F, saved$F)
     exact(z$ledger$hpm$provenance, saved$provenance)
-    exact(z$ledger$logical, injected$ledger_before$logical)
-    exact(z$ledger$fresh, injected$ledger_before$fresh)
+    # v3.1 (C-ENG): with LS0 enabled the final ledger also serialises an `ls0` counter row; LS0 never ran here (zero row)
+    no_ls0 <- function(m) { if ("ls0" %in% rownames(m)) { need(all(m["ls0", ] == 0), "LS0 ran after a failed inheritance"); m[rownames(m) != "ls0", , drop = FALSE] } else m }
+    exact(no_ls0(z$ledger$logical), injected$ledger_before$logical)
+    exact(no_ls0(z$ledger$fresh), injected$ledger_before$fresh)
     need(all(vapply(z$islands, is.null, TRUE)) && !length(z$local_search), "continued after failed inheritance")
     fr <- v3_frozen(c(0, 1), inherited = injected$calibration_export$inherited, budgets = s$budgets)
     a <- v3_assemble_final(z, s, fr, r, 173L)
     need(a$status == "numerical_failure" && a$hpm_incomplete && a$partial_results && !a$estimates_available,
          "ordinary assembly lost the contained failure")
     exact(a$hpm, saved$model); exact(a$hpm_F, saved$F); exact(a$hpm_provenance, saved$provenance)
-    need(is.null(a$pip_primary) && is.null(a$log_Z), "failed inheritance exposed estimates")
+    # v3.1 (C-ENG, GUARD-W #15): unavailable estimates are absent (v3) or scalar NA by exact name (v3.1)
+    unavailable <- function(x) is.null(x) || (length(x) == 1L && is.na(x))
+    need(unavailable(a[["pip_primary", exact = TRUE]]) && unavailable(a[["log_Z", exact = TRUE]]), "failed inheritance exposed estimates")
     # RAII fault restoration: the formerly failing singleton scores normally again.
     need(is.finite(.v3cpp$cpp_score(ctx, injected$failure_model)$log_m), "test corruption was not restored")
     evidence[[if (after_hpm) "after_hpm" else "before_hpm"]] <- list(injection = injected, assembled = a)
