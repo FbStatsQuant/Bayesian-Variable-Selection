@@ -37,12 +37,13 @@ setup_of <- function(d) {
   v3_setup(ctx)
 }
 # direct final run with a tiny sampler (testing settings: N particles, L burn-in, grid (0, 1)); LS0 on
-low_run <- function(setup, N = 2L, L = 0L, seed = 11, inherited = NULL, ls0_ell = NULL, ls0 = TRUE, islands = 4L, ell = NULL) {
+low_run <- function(setup, N = 2L, L = 0L, seed = 11, inherited = NULL, ls0_ell = NULL, ls0 = TRUE, islands = 4L, ell = NULL,
+                    ls0_cap = "ell_n_plus_mode") {
   b <- setup$budgets
   ro <- list(N = as.integer(N), L = as.integer(L), measured_rounds = 4L, islands = as.integer(islands), tier = 0L,
              ell = as.integer(ell %||% b$ell),
              cache_capacity = as.numeric(500 * setup$ctx$p))
-  if (ls0) { ro$ls0 <- TRUE; ro$ls0_ell <- as.integer(ls0_ell %||% b$ell); ro$ls0_tie_dp <- TRUE }
+  if (ls0) { ro$ls0 <- TRUE; ro$ls0_ell <- as.integer(ls0_ell %||% b$ell); ro$ls0_tie_dp <- TRUE; ro$ls0_cap <- ls0_cap }
   fr <- v3_frozen(c(0, 1), tier = 0, N = N, L = L, inherited = inherited)
   raw <- .v3cpp$cpp_final_run(setup$ptr, c(0, 1), ro, seed, inherited, NULL)
   list(raw = raw, fit = v3_assemble_final(raw, setup, fr, ro, seed), ro = ro)
@@ -101,7 +102,7 @@ if (variant == "normal") {
     if (r$fit$status == "completed" && r$fit$ls0$moves >= 1) { found <- TRUE; break }
   }
   check("found a fixture where LS0 makes >= 1 strict move", found)
-  r0 <- low_run(st, seed = sd, ls0_ell = 0L); f0 <- r0$fit
+  r0 <- low_run(st, seed = sd, ls0_ell = 0L, ls0_cap = "ell_n"); f0 <- r0$fit   # cap exactly 0 (C-GROW MR1 rule off)
   cat("  dataset seed", 2000 + sd, ": LS0 moves at ell =", st$budgets$ell, ":", r$fit$ls0$moves, "; at ell = 0: termination", f0$ls0$termination, "\n")
   check("ell = 0: termination move_limit, ls0_local_limit TRUE", identical(f0$ls0$termination, "move_limit") && isTRUE(f0$ls0_local_limit))
   check("ell = 0: status completed, estimates available (a capped LS0 is not a stop)", f0$status == "completed" && isTRUE(f0$estimates_available) && is.finite(f0$log_Z))
@@ -241,6 +242,78 @@ if (variant == "paths") {
         is.finite(f6$log_Z) && isTRUE(o6$estimates_available) && identical(o6$mpm, unname(which(o6$pip > 0.5))))
   f7 <- v3_fit(d$X, d$y, 7001, allocation = list(mem_gb = 8, hours = 0.05 / 3600), ls0 = FALSE)
   check("switch off: forced stop keeps the v3 output (no log_Z field; log_Zbar0 present)", f7$status == "resource_limit" && !("log_Z" %in% names(f7)))
+}
+if (variant == "wave2") {
+  TIMING <- c("seconds", "seconds_total", "seconds_local", "timings", "elapsed_seconds", "projected_seconds", "operation_seconds")
+  strip_cal <- function(x) { if (is.list(x) && !is.data.frame(x)) { if (!is.null(names(x))) x <- x[!(names(x) %in% TIMING)]; x[] <- lapply(x, strip_cal); x } else x }
+  # ---- C-GROW MR1: LS0 move cap ell_n + |S~0| (default) vs ell_n (switch) ----
+  cat("C-GROW MR1: LS0 move cap\n")
+  d <- make_data(3, 4001)
+  fit <- v3_fit(d$X, d$y, 4001)
+  ell <- fit$budgets$ell
+  check(sprintf("default fit: LS0 move_cap == ell_n + |S~0| (%d + %d), rule recorded", ell, length(fit$start_mode$model)),
+        identical(fit$ls0$move_cap, as.integer(ell + length(fit$start_mode$model))) && identical(fit$ls0$move_cap_rule, "ell_n + |start mode|"))
+  options(v3.ls0_cap = "ell_n"); f2 <- v3_fit(d$X, d$y, 4001); options(v3.ls0_cap = NULL)
+  strip_t <- function(x) x[setdiff(names(x), c("seconds"))]
+  check("switch v3.ls0_cap = 'ell_n': move_cap == ell_n; final search, islands, Zhat identical to default", identical(f2$ls0$move_cap, as.integer(ell)) &&
+        identical(strip_t(f2$local_search), strip_t(fit$local_search)) && identical(f2$log_Z, fit$log_Z) && identical(f2$pip_primary, fit$pip_primary))
+  # binding case: base cap 0; with the ell_n rule LS0 stops at the cap, with ell_n + |S~0| it completes its descent
+  found <- FALSE
+  for (sd in 1:60) {
+    d2 <- make_data(4, 2000 + sd, scale = 0.5); st2 <- setup_of(d2)
+    r <- low_run(st2, seed = sd)
+    if (r$fit$status == "completed" && r$fit$ls0$moves >= 1 && r$fit$ls0$moves <= length(r$fit$start_mode$model)) { found <- TRUE; break }
+  }
+  ra <- low_run(st2, seed = sd, ls0_ell = 0L, ls0_cap = "ell_n"); rb <- low_run(st2, seed = sd, ls0_ell = 0L, ls0_cap = "ell_n_plus_mode")
+  cat("  dataset seed", 2000 + sd, ": |S~0| =", length(r$fit$start_mode$model), " moves (production cap):", r$fit$ls0$moves,
+      "; base 0, rule ell_n:", ra$fit$ls0$termination, "; base 0, rule ell_n + |S~0|:", rb$fit$ls0$termination, "moves", rb$fit$ls0$moves, "\n")
+  check("binding fixture found (1 <= LS0 moves <= |S~0|)", found)
+  check("base cap 0, rule ell_n: move_limit; rule ell_n + |S~0|: completes the same descent as with the production cap",
+        identical(ra$fit$ls0$termination, "move_limit") && identical(rb$fit$ls0$termination, "no_improvement") &&
+        identical(rb$fit$ls0$path, r$fit$ls0$path) && identical(rb$fit$hpm, r$fit$hpm))
+
+  # ---- C-DLV B: calibration fallback grid on a tier-1 grid-construction failure (injected) ----
+  cat("\nC-DLV B: calibration fallback grid (grid construction failures injected by wrapping v3_build_grid)\n")
+  orig_build <- v3_build_grid
+  inject <- function(fail_calls) {
+    k <- 0
+    assign("v3_build_grid", function(...) { k <<- k + 1; g <- orig_build(...); if (k %in% fail_calls || identical(fail_calls, "all")) { g$ok <- FALSE; g$reason <- "C-ENG TEST INJECTION" }; g }, envir = globalenv())
+  }
+  restore <- function() assign("v3_build_grid", orig_build, envir = globalenv())
+  d <- make_data(1, 8001)
+  ref <- v3_fit(d$X, d$y, 8001)                                   # no failure
+  ref_off <- v3_fit(d$X, d$y, 8001, ls0 = FALSE)
+  check("no failure: grid_fallback 'none'; calibration identical with/without the switch", identical(ref$flags$grid_fallback, "none") &&
+        identical(strip_cal(ref$calibration), strip_cal(ref_off$calibration)) && identical(ref$frozen, ref_off$frozen))
+  inject("all"); fa <- v3_fit(d$X, d$y, 8001); restore()
+  t1 <- fa$calibration$tiers[[length(fa$calibration$tiers)]]
+  cat("  all constructions fail: status", fa$status, "; tiers", length(fa$calibration$tiers), "; grid_fallback", fa$flags$grid_fallback %||% NA, "\n")
+  check("all constructions fail: fit completed, estimates finite, flags$grid_fallback == 'pilot_schedule'",
+        fa$status == "completed" && is.finite(fa$log_Z) && identical(fa$flags$grid_fallback, "pilot_schedule") && identical(fa$calibration$grid_fallback, "pilot_schedule"))
+  check("frozen grid == the tier-1 pilot schedule (strictly increasing 0 -> 1), tier 1, rho_V NULL, label pilot_schedule",
+        length(fa$calibration$tiers) == 2 && identical(fa$frozen$grid, as.numeric(t1$pilot$schedule)) && identical(fa$frozen$tier, 1L) &&
+        is.null(fa$frozen$rho_V) && identical(fa$frozen$grid_label, "pilot_schedule") && all(diff(fa$frozen$grid) > 0))
+  check("calibration checks reported as not passed (grid_failure trigger kept)", identical(fa$flags$checks_passed_calibration, FALSE) &&
+        "grid_failure" %in% fa$flags$calibration_triggers)
+  inject("all"); fo <- v3_fit(d$X, d$y, 8001, ls0 = FALSE); restore()
+  check("switch ls0 = FALSE: v3 behaviour, status schedule_limit, no fallback fields", fo$status == "schedule_limit" && is.null(fo$calibration$grid_fallback) && !("log_Z" %in% names(fo)))
+  options(v3.grid_fallback = FALSE); inject("all"); fg <- v3_fit(d$X, d$y, 8001); restore(); options(v3.grid_fallback = NULL)
+  check("switch v3.grid_fallback = FALSE (LS0 on): schedule_limit, estimate fields NA", fg$status == "schedule_limit" && is.na(fg$log_Z) && is.na(fg$pip_primary))
+  inject(c(1, 3)); fb <- v3_fit(d$X, d$y, 8001); restore()
+  t1b <- fb$calibration$tiers[[length(fb$calibration$tiers)]]
+  cat("  tier-0 preliminary and tier-1 rebuild_1 fail: status", fb$status, "; grid_fallback", fb$flags$grid_fallback %||% NA, "\n")
+  check("tier-1 rebuild fails after a successful tier-1 construction: fallback 'last_successful_construction' = that grid",
+        fb$status == "completed" && identical(fb$flags$grid_fallback, "last_successful_construction") &&
+        identical(fb$frozen$grid, t1b$grids[[1]]$grid) && isTRUE(t1b$grids[[1]]$ok) && identical(fb$frozen$grid_label, "preliminary") &&
+        identical(fb$frozen$rho_V, t1b$grids[[1]]$rho_appended))
+  inject(1); fc <- v3_fit(d$X, d$y, 8001); restore()
+  inject(1); fc0 <- v3_fit(d$X, d$y, 8001, ls0 = FALSE); restore()
+  check("tier-0 failure only (v3 escalates and succeeds): no fallback, calibration and frozen grid identical to v3",
+        fc$status == "completed" && identical(fc$flags$grid_fallback, "none") && identical(strip_cal(fc$calibration), strip_cal(fc0$calibration)) &&
+        identical(fc$frozen, fc0$frozen) && identical(fc$log_Z, fc0$log_Z))
+
+  # ---- C-DLV A.2 (TDP-IMPL): GUARD-W and no uniforms for LS0 + e4 ----
+  check("LS0 reads no uniforms: final stream endpoints identical with LS0 on and off", identical(ref$streams, ref_off$streams))
 }
 cat(sprintf("\nTOTAL: %d PASS, %d FAIL\n", n_pass, n_fail))
 sink()

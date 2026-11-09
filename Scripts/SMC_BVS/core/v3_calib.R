@@ -25,7 +25,7 @@ v3_V_snapshot <- function(V, p) {
 v3_E3_fires <- function(x) x$best_after_local$F > x$best_before_local$F
 
 # One calibration tier (M §6.1 CALIBRATION(e)). Returns the archive of the tier, its grid and triggers.
-v3_cal_tier <- function(state, setup, tier, runtime = NULL) {
+v3_cal_tier <- function(state, setup, tier, runtime = NULL, grid_fallback = FALSE) {
   cs <- v3_cal_settings(setup, tier)
   t_all <- proc.time()[["elapsed"]]
   out <- list(tier = tier, settings = cs, status = "ok")
@@ -117,6 +117,12 @@ v3_cal_tier <- function(state, setup, tier, runtime = NULL) {
     }
     if (!trig$grid_failure && !converged) trig$grid_unconverged <- TRUE
   }
+  # C-DLV B (v3.1, adopted by HQ): on a grid failure, record a valid fallback grid for v3_calibrate: the last successful
+  # construction of this tier if one exists, else this tier's pilot schedule (0 < ... < 1, strictly increasing).
+  if (isTRUE(grid_fallback) && trig$grid_failure && tier == 1) {   # tier 0 failures escalate as in v3
+    out$fallback_grid <- if (isTRUE(g$ok)) list(grid = g$grid, rho_V = g$rho_appended, grid_label = g$label, source = "last_successful_construction")
+                         else list(grid = pil$schedule, rho_V = NULL, grid_label = "pilot_schedule", source = "pilot_schedule")
+  }
   out$grid <- if (trig$grid_failure) NULL else g$grid
   out$rho_V <- if (trig$grid_failure) NULL else g$rho_appended
   out$grid_label <- if (trig$grid_failure) NULL else g$label
@@ -132,14 +138,17 @@ v3_cal_tier <- function(state, setup, tier, runtime = NULL) {
 
 # Production calibration: at most one escalation; persistent stores and independent streams.
 # preflight (internal) = function(tier) returning TRUE if the allocation would be exceeded before that tier.
-v3_calibrate <- function(setup, seed, tier = 0, preflight = NULL, runtime = NULL) {
+# grid_fallback (v3.1, C-DLV B; default TRUE): if the tier-1 grid construction fails, freeze the fallback grid recorded by
+# v3_cal_tier and continue (calibration status "ok", grid_fallback = its source) instead of returning schedule_limit.
+# Identical to v3 whenever v3 did not return schedule_limit. grid_fallback = FALSE reproduces v3.
+v3_calibrate <- function(setup, seed, tier = 0, preflight = NULL, runtime = NULL, grid_fallback = getOption("v3.grid_fallback", TRUE)) {
   t0 <- proc.time()[["elapsed"]]
   cseed <- seed; v3_check_seed(seed)
   ro <- list(cache_capacity = as.numeric(500 * setup$ctx$p))
   state <- .v3cpp$cpp_cal_new(setup$ptr, as.numeric(cseed), ro, runtime)
   tiers <- list(); status <- "ok"; e <- tier; blocked <- NULL
   repeat {
-    a <- v3_cal_tier(state, setup, e, runtime)
+    a <- v3_cal_tier(state, setup, e, runtime, grid_fallback = grid_fallback)
     tiers[[length(tiers) + 1]] <- a
     if (a$status != "ok") { status <- a$status; break }
     fired <- any(unlist(a$triggers))
@@ -150,6 +159,14 @@ v3_calibrate <- function(setup, seed, tier = 0, preflight = NULL, runtime = NULL
   }
   ex <- .v3cpp$cpp_cal_export(state)
   last <- tiers[[length(tiers)]]
+  fallback <- NULL
+  if (status == "ok" && is.null(last$grid) && e == 1 && isTRUE(grid_fallback) && !is.null(last$fallback_grid) &&
+      isTRUE(tryCatch(v3_check_grid(last$fallback_grid$grid), error = function(err) FALSE))) {
+    fallback <- last$fallback_grid$source
+    last$grid <- last$fallback_grid$grid; last$rho_V <- last$fallback_grid$rho_V; last$grid_label <- last$fallback_grid$grid_label
+    last$grid_source <- paste("fallback:", fallback)
+    tiers[[length(tiers)]] <- last
+  }
   if (status == "ok" && is.null(last$grid)) status <- if (e == 1) "schedule_limit" else "grid_failure_no_escalation"
   out <- list(status = status, calibration_seed = cseed, tier_final = e, escalated = e == 1 && tier == 0,
               escalation_blocked = blocked, tiers = tiers, hpm = ex$inherited$hpm, ledger = ex$ledger, cache = ex$cache)
@@ -163,6 +180,7 @@ v3_calibrate <- function(setup, seed, tier = 0, preflight = NULL, runtime = NULL
                       forced_pilot_steps = sum(vapply(tiers, function(x) x$pilot$forced_pilot_steps %||% 0L, 0)),
                       grid_unconverged = isTRUE(tr$grid_unconverged), triggers_fired = names(tr)[unlist(tr)],
                       triggers_by_tier = lapply(tiers, function(x) x$triggers))
+  if (!is.null(fallback)) { out$grid_fallback <- fallback; out$flags$grid_fallback <- fallback }
   if (status == "ok") {
     N <- setup$budgets$tiers$N[e + 1]
     out$frozen <- v3_frozen(last$grid, tier = e, N = N, L = last$settings$L, inherited = ex$inherited, budgets = setup$budgets)

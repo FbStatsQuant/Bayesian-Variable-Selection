@@ -391,7 +391,7 @@ static void ingest_tables(Ledger& led, const Holder& h) {
 List cpp_final_run(SEXP setup, NumericVector grid, List ro, double seed, SEXP inherited, SEXP runtime) {
   HPtr h = get_holder(setup); const Data& D = *h->D; const Start& st = *h->st;
   if (!h->has_graph) stop("setup required");
-  struct RunOpts { int N, L, Hm, islands, tier, ell; double cache_capacity; bool ls0, ls0_tie_dp; int ls0_ell; };
+  struct RunOpts { int N, L, Hm, islands, tier, ell; double cache_capacity; bool ls0, ls0_tie_dp, ls0_cap_plus_mode; int ls0_ell; };
   RunOpts o;
   o.N = as<int>(ro["N"]); o.L = as<int>(ro["L"]); o.Hm = as<int>(ro["measured_rounds"]); o.islands = as<int>(ro["islands"]);
   o.tier = as<int>(ro["tier"]); o.ell = as<int>(ro["ell"]);
@@ -400,6 +400,8 @@ List cpp_final_run(SEXP setup, NumericVector grid, List ro, double seed, SEXP in
   o.ls0 = ro.containsElementNamed("ls0") && as<bool>(ro["ls0"]);
   o.ls0_tie_dp = !ro.containsElementNamed("ls0_tie_dp") || as<bool>(ro["ls0_tie_dp"]);
   o.ls0_ell = ro.containsElementNamed("ls0_ell") ? as<int>(ro["ls0_ell"]) : o.ell;
+  // C-GROW MR1: LS0 move cap = ell_n + |S~0| (default); ls0_cap = "ell_n" keeps ell_n. The final local search keeps ell_n.
+  o.ls0_cap_plus_mode = !ro.containsElementNamed("ls0_cap") || as<std::string>(ro["ls0_cap"]) != "ell_n";
   std::vector<double> g(grid.begin(), grid.end());
   auto t_all = Clock::now();
   Ledger led(&D, o.islands);
@@ -468,9 +470,11 @@ List cpp_final_run(SEXP setup, NumericVector grid, List ro, double seed, SEXP in
       smode = List::create(_["model"] = to_orig(D, m.S), _["log_gamma0"] = m.lg0, _["log_pi0"] = m.lg0 - st.logZbar0,
                            _["ties"] = (double)m.ties, _["truncated"] = m.truncated, _["tie_dp_used"] = m.tie_dp_used,
                            _["tie_rule"] = o.ls0_tie_dp ? "enumeration (cap 1e6), e4 tie-aware DP on truncation" : "enumeration (cap 1e6), v3 rule");
-      LocalArchive A0 = E.local_search(m.S, o.ls0_ell, o.tier, true, -1, PH_LS0);
+      int ls0_cap = o.ls0_ell + (o.ls0_cap_plus_mode ? (int)m.S.size() : 0);
+      LocalArchive A0 = E.local_search(m.S, ls0_cap, o.tier, true, -1, PH_LS0);
       sec_ls0 = secs_since(t1);
       ls0 = local_to_list(A0, D);
+      ls0["move_cap"] = ls0_cap; ls0["move_cap_rule"] = o.ls0_cap_plus_mode ? "ell_n + |start mode|" : "ell_n";
       if (E.guard && E.guard->check(sec_ls0, "ls0", local_event(o.tier, -1, PH_LS0))) status = "resource_limit";
     }
     }

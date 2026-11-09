@@ -123,7 +123,8 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
     pf$exceeds
   }
   t0 <- proc.time()[["elapsed"]]
-  cal <- v3_calibrate(setup, seed, preflight = pf_fun, runtime = runtime)
+  cal <- v3_calibrate(setup, seed, preflight = pf_fun, runtime = runtime,
+                      grid_fallback = isTRUE(ls0) && isTRUE(getOption("v3.grid_fallback", TRUE)))
   fit$timings$calibration <- proc.time()[["elapsed"]] - t0; fit$calibration <- cal
   fit$stage_table <- cal$stage_table
   if (cal$status != "ok") {
@@ -141,6 +142,7 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
   fr$flags$escalated <- cf$escalated; fr$flags$checks_passed_calibration <- cf$checks_passed_calibration
   fr$flags$forced_pilot_steps <- cf$forced_pilot_steps; fr$flags$grid_unconverged <- cf$grid_unconverged
   fr$flags$calibration_triggers <- cf$triggers_fired
+  if (isTRUE(ls0)) fr$flags$grid_fallback <- cf$grid_fallback %||% "none"   # C-DLV B: "none", "last_successful_construction", "pilot_schedule"
   for (nm in names(fr)) fit[[nm]] <- fr[[nm]]
   fit$flags$cut_group <- fit$cut_group
   finish(fit)

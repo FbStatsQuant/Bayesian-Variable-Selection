@@ -94,6 +94,8 @@ v3_run_settings <- function(setup, frozen, ls0 = getOption("v3.ls0", TRUE)) {
     ro$ls0 <- TRUE
     ro$ls0_ell <- as.integer(getOption("v3.ls0_ell", b$ell))
     ro$ls0_tie_dp <- isTRUE(getOption("v3.ls0_tie_dp", TRUE))
+    # C-GROW MR1 (adopted by HQ): LS0 move cap ell_n + |S~0| (default "ell_n_plus_mode"); "ell_n" = cap ell_n
+    ro$ls0_cap <- if (identical(getOption("v3.ls0_cap", "ell_n_plus_mode"), "ell_n")) "ell_n" else "ell_n_plus_mode"
   }
   ro
 }
