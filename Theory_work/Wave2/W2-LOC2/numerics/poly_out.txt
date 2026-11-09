@@ -1,0 +1,51 @@
+Population cases: 12288; seeds=12; p=8; no simulation claim.
+Banded inverse Schur/conjugation and resolvent cases: 36
+Projection-tower coefficient identity max error: 2.35e-17
+Variance decomposition max error: 1.1e-16
+Max l1 difference / finite tail bound: 1
+Max conditional covariance / explicit BC bound: 0.19979157
+alpha=8.5001: selection exponent=-3.333333e-06; max-tail exponent=-1.470571e-06; deletion slack=1.470571e-06
+alpha=8.6: selection exponent=-0.003333333; max-tail exponent=-0.001453488; deletion slack=0.001453488
+alpha=9: selection exponent=-0.01666667; max-tail exponent=-0.006944444; deletion slack=0.006944444
+alpha=12: selection exponent=-0.1166667; max-tail exponent=-0.03645833; deletion slack=0.03645833
+Recursive algebra n=1e8: error=5.7716226, rate envelope=3.6984961 (check: error <= 4 x envelope; ratio=1.56; only O(1) is used, L6 Sec. 4)
+Recursive algebra n=1e16: error=6.2766178, rate envelope=3.5776057 (check: error <= 4 x envelope; ratio=1.75; only O(1) is used, L6 Sec. 4)
+Recursive algebra n=1e32: error=4.9420478, rate envelope=2.5996783 (check: error <= 4 x envelope; ratio=1.9; only O(1) is used, L6 Sec. 4)
+Recursive algebra n=1e64: error=2.0750292, rate envelope=1.0485492 (check: error <= 4 x envelope; ratio=1.98; only O(1) is used, L6 Sec. 4)
+Citation existence and line text audit (human semantic check still required):
+APP/lemmas/L2_CT.md:22: (iii) *Schur test.* For every i, since x is injective at most two j satisfy d_ij = d for each d ≥ 1, so
+APP/lemmas/L2_CT.md:55: for j ≠ k. Let V := [p] ∖ U. For Gaussian W, Cov(W_V | W_U) = (Θ_VV)⁻¹ (block inversion). Θ_VV is a principal
+APP/lemmas/L3_LOC.md:28: * (PTV(a₀)) for every j ∈ S₀ and every U ⊆ [p] ∖ {j} with |U| ≤ 15: |Cov(W_j, Σ_{k∈S₀}θ*_kW_k | W_U)| ≥ a₀, a₀ > 0 fixed.
+APP/lemmas/L3_LOC.md:63: * TV (G3b): [L6] uses P3/P4 + (6.0) to get a population residual covariance ≥ a₀ for every j ∈ S₀, |U| ≤ 15; here
+GEN/lemmas/L1_lemmaE.md:3: Status: **PROVED (by this seat, unchecked)**; lemma check R02 (Codex Sol): VERIFIED-WITH-AMENDMENTS, amendments
+GEN/lemmas/L1_lemmaE.md:33: *Proof.* 𝒟₁: ‖Cε‖²/σ² ~ χ²_{n−1}; Laurent–Massart with x = n^{1/3}: P(χ²_k ≥ k + 2√(kx) + 2x) ≤ e^{−x},
+GEN/lemmas/L1_lemmaE.md:74: *Proof.* (E1) If g_i ≥ (n − 1)φ₀² are the eigenvalues of G_A, D_A = ∏_i ((n + 1)g_i + 1)/(g_i + 1)
+GROW/lemmas/L0_toolkit.md:33: (a) **RSS floor, sharp form.** For every A ∈ 𝔉: RSS_A ≥ σ²n(1 − ω_n), ω_n := 4n^{−1/3} + (h_n² + t_n + 1)/n → 0.
+GROW/lemmas/L2_NA_TL.md:12: 𝔉 := {∅} ∪ 𝓛 ∪ {T ∪ {l} : T ∈ 𝓛, l ∉ T} ∪ {T ∖ {i} : T ∈ 𝓛, i ∈ S₀} ∪ {(T ∖ {i}) ∪ {l} : T ∈ 𝓛, i ∈ S₀, l ∉ T}.
+GROW/lemmas/L2_NA_TL.md:27: *Proof.* Let T ∈ 𝓛, i ∈ S₀, and A = T ∖ {i} or A = (T ∖ {i}) ∪ {l}, l ∉ T, feasible. S₀ ∖ {i} ⊆ A, so
+GROW/lemmas/L2_NA_TL.md:41: *Proof.* Let T ∈ 𝓛, |T| = k < K, l ∉ T. By L0.2(c), (F2):
+GROW/lemmas/L3_sandwich.md:30: Since only the factor of block b and the prior change, for every U ⊆ C_b with k̃ − |Ũ_b| + |U| ≤ K:
+GROW/lemmas/L6_random_AR1.md:115: Here m_n^sharp=O(log n). Indeed for p>=2 and k<=p,
+GROW/lemmas/L6_random_AR1.md:143: For later partial correlations involving Y, use raw centered columns and
+GROW/lemmas/L6_random_AR1.md:157: We also use a common score event A_score [A3: A_score := 𝒟₁ ∩ 𝒟₂ ∩ 𝒟₃ of L0/[GEN-L1] for both families below,
+GROW/lemmas/L6_random_AR1.md:180:     h_{U,l}=n (RSS_U-RSS_{U+l})/RSS_U
+GROW/lemmas/L6_random_AR1.md:203: Let a,b be the sample vectors of partial correlations of W_l and Y,
+GROW/lemmas/L6_random_AR1.md:245: *Proof.* All index sets in this paragraph are deterministic. Let
+GROW/lemmas/L6_random_AR1.md:262: The innovation e is independent of W_D, has independent N(0,tau^2)
+GROW/lemmas/L6_random_AR1.md:316: *Proof.* On A_cov intersect A_score, for any l outside Q, |U|<=15,
+GROW/lemmas/L6_random_AR1.md:329: Fix ANY maximizer S_tilde, k=|S_tilde|, U_b=S_tilde intersect C_b.
+GROW/lemmas/L6_random_AR1.md:366: Truth inclusion follows from the TV part of L6.2 and the same argument
+GROW/lemmas/L6_random_AR1.md:51: Named inputs, with statuses retained:
+GROW/lemmas/L6_random_AR1.md:85: *Proof.* Adjoin the independent noise column eps/sigma to W. An orthonormal
+LOC2/STATEMENT.md:15: (numerics/D1_SUMMARY.md) [R01-5, C1-Opus-3].
+LOC2/lemmas/L2_NAR.md:62: **Step 2 (events).** Let x := ℓ_𝔓 + 2 log n and δ_n := 2√(x/N) + 2x/N → 0 (x = O((log n)^κ)).
+LOC2/lemmas/L2_NAR.md:72: * E_c: ‖P_Qε‖² ≤ 4σ²(|Q| + log n). (Conditionally on X, ‖P_Qε‖²/σ² ~ χ²_{rank P_Q}, rank ≤ |Q|; the same mgf bound
+LOC2/lemmas/L2_NAR.md:79: * E_e: ‖Cε‖² ≤ 2σ²N, and for every a ∈ 𝒜_n: |(C𝒲a)ᵀε| ≤ y_n‖Cε‖, with the adaptive threshold [R03-1]
+LOC2/lemmas/L2_NAR.md:88: **Step 3 (population statistic).** Let Z^pop_{T,l} := gᵀε/(σ‖g‖) (g = Ce_{T,l} ≠ 0 on E_a). By (R2),
+LOC2/lemmas/L2_NAR.md:96: **Step 4 (sample vs population).** From (2.1), |Z_{T,l}| ≤ |Z^pop_{T,l}|·‖g‖/‖h‖ + ‖P_Te‖‖P_Tε‖/(σ‖h‖). On E_a ∩ E_b,
+LOC2/lemmas/L3_CTd.md:73: Ψ := B⁻¹. Block inversion gives β_A(l)_v = −Ψ_vl/Ψ_ll and Ψ_ll = 1/Var(W_l | W_A) ≥ 1. Lemma CT_d applied to B
+LOC2/lemmas/L4_LOCd.md:51: * (R2) Atoms 𝒜_n := {e_v : v ∈ Q} (Var = 1, |𝒜_n| ≤ |Q|). Since W_Tβ_T(l) − W_{T′}β_{T′}(l) = Σ_{v∈T}λ_{T,l,v}W_v with
+LOC2/lemmas/L5_assembly.md:26: (b) *Path.* By [OP], D_n ≤ P(LS0 from the emitted centre does not score S₀). On Sand_n the emitted centre S̃₀ (some
+LOC2/lemmas/L5_assembly.md:30: (c) *Posterior (C-ii).* By LSF (e.g. from λ_min(Σ_n) ≥ c: λ_min(Σ_{n,S}) ≥ c for all S), L1_POST (b): on X-events
+LOC2/lemmas/L5_assembly.md:7: **Inputs (statuses verbatim).** [OP] GEN L5 operational closure "PROVED (by this seat, unchecked)" inside Theorem GEN
+PASS: all local assertions; no independent review or asymptotic verification claimed.

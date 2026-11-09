@@ -1,0 +1,77 @@
+OK         L7_delivery.md -> Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:54-54 token «Add to Proposition F's classes»
+OK         L7_delivery.md -> Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md:65-77 token «S₀»
+OK         L2_NAR.md / L1_toolkit.md (c_n) -> Theory_work/Wave1C/C-GROW/lemmas/L2_NA_TL.md:38-38 token «c_n := log(n + 1) + 2 log p − 2 log(|Q| + 1) − 4κ_E − 2»
+OK         L2_NAR.md (u, Z def) -> Theory_work/Wave1C/C-GROW/lemmas/L2_NA_TL.md:21-21 token «Z_{T,l} := u_{T,l}ᵀε/σ»
+OK         L1_toolkit.md (t_n) -> Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md:21-23 token «t_n := 4(D + 2) log n»
+OK         L1_toolkit.md (GROW L0 t_n) -> Theory_work/Wave1C/C-GROW/lemmas/L0_toolkit.md:17-17 token «t_n := 4(D + 2 + C_J) log n»
+OK         L5_assembly.md (descent) -> Theory_work/Wave1C/C-GROW/lemmas/L1_descent.md:47-47 token «scores S₀ whenever ℓ ≥ |C ∖ S₀| − 1»
+OK         L4_LOCd.md (L6.5 ladder) -> Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:353-353 token «K<=n/2»
+OK         L4_LOCd.md (L6.3 H_l) -> Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:174-174 token «R_n=ceil(2 log n/log(1/r))»
+OK         L4_LOCd.md (APP L3.6 window) -> Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:109-109 token «r_n := ⌈log log n/t₂⌉»
+OK         L4_LOCd.md (APP LOC-B) -> Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:175-175 token «(B-χ) s₀(g_n − 1) ≤ (1 − δ₀) log n»
+OK         L3_CTd.md (APP CD) -> Theory_work/Wave2/W2-APP/lemmas/L2_CT.md:41-41 token «Lemma CD (conditional decay)»
+OK         STATEMENT.md (K_n) -> Theory_work/State_of_Project/sections/02_method.tex:618-618 token «Cap K = min(p, ⌊n/2⌋)»
+OK         STATEMENT.md (VN V2) -> Theory_work/Wave2/W2-APP/lemmas/L5_VN.md:1-109 token «(V2)»
+OK         L7_delivery.md (F-FAC) -> Theory_work/Wave2/W2-FAC-A/lemmas/L7_delivery.md:22-22 token «Proposition F-FAC»
+OK         L6_poly.md -> L2 Step 2 -> Theory_work/Wave2/W2-LOC2/lemmas/L2_NAR.md:62-62 token «Step 2 (events)»
+OK         L6_poly.md -> L2 E_c -> Theory_work/Wave2/W2-LOC2/lemmas/L2_NAR.md:72-72 token «E_c»
+OK         L6_poly.md -> L2 E_e -> Theory_work/Wave2/W2-LOC2/lemmas/L2_NAR.md:79-79 token «adaptive threshold»
+OK         L6_poly.md -> L2 Step 3 -> Theory_work/Wave2/W2-LOC2/lemmas/L2_NAR.md:88-88 token «Step 3 (population statistic)»
+OK         L6_poly.md -> L2 Step 4 -> Theory_work/Wave2/W2-LOC2/lemmas/L2_NAR.md:96-96 token «Step 4 (sample vs population)»
+OK         L6_poly.md -> L3 RB -> Theory_work/Wave2/W2-LOC2/lemmas/L3_CTd.md:73-73 token «Block inversion gives β_A(l)_v = −Ψ_vl/Ψ_ll»
+OK         L6_poly.md -> L4 atoms -> Theory_work/Wave2/W2-LOC2/lemmas/L4_LOCd.md:51-51 token «(R2) Atoms»
+OK         L6_poly.md -> L5 path -> Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:26-26 token «(b) *Path.*»
+OK         L6_poly.md -> L5 posterior -> Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:30-30 token «(c) *Posterior (C-ii).*»
+OK         L6_poly.md -> L5 inputs -> Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:7-7 token «Inputs (statuses verbatim)»
+OK         L6_poly.md IR -> APP CT algebra -> Theory_work/Wave2/W2-APP/lemmas/L2_CT.md:22-28 token «Schur test»
+OK         L6_poly.md -> GROW L6 ladder -> Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:329-329 token «Fix ANY maximizer»
+OK         status «PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)» in Theory_work/Wave1C/FINAL/sections/s3_posterior.tex
+OK         status «PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))» in Theory_work/Wave1C/FINAL/sections/s1_setting.tex
+OK         status «C-GROW: \st{PROVED-CHECKED}» in Theory_work/Wave1C/FINAL/sections/s5_hpm.tex
+OK         status «W1-GEN: \st{PROVED-CHECKED}» in Theory_work/Wave1C/FINAL/sections/s5_hpm.tex
+OK         status «lemma check R03 (Codex Sol high, reviews/R03_L0L1L2_check_sol.md): VERIFIED» in Theory_work/Wave1C/C-GROW/lemmas/L0_toolkit.md
+OK         status «VERIFIED-WITH-AMENDMENTS (2), applied» in Theory_work/Wave1C/C-GROW/lemmas/L2_NA_TL.md
+OK         status «VERIFIED-WITH-AMENDMENTS (1)» in Theory_work/Wave1C/C-GROW/lemmas/L4_assembly.md
+OK         status «VERIFIED-WITH-AMENDMENTS» in Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md
+OK         status «R04 (Sol high): VERIFIED-WITH-AMENDMENTS» in Theory_work/Wave2/W2-FAC-A/lemmas/L7_delivery.md
+OK         status «PROVED-CHECKED» in Theory_work/Wave2/W2-FAC-A/REPORT.md
+OK         status «PROVED-CHECKED» in Theory_work/Wave2/W2-APP/REPORT.md
+OK         status «PROVED (by this seat, unchecked)» in Theory_work/Wave2/W2-APP/lemmas/L1_POST.md
+OK         qualification «LOCKED» in STATEMENT.md
+OK         qualification «NOT locked» in STATEMENT.md
+OK         qualification «K_n := min(p, ⌊n/2⌋)» in STATEMENT.md
+OK         qualification «min_{k∈S₀}» in STATEMENT.md
+OK         qualification «INCLUDES sequences» in STATEMENT.md
+OK         qualification «(C-ii)» in STATEMENT.md
+OK         qualification «b_n := √(log n/(1 + L_n²))» in lemmas/L2_NAR.md
+OK         qualification «H := [p] ∖ U» in lemmas/L3_CTd.md
+OK         qualification «|θ*_j|Var(W_j | W_U) ≥ c_Bθ_lo» in lemmas/L4_LOCd.md
+OK         qualification «(C-ii)» in lemmas/L5_assembly.md
+OK         qualification «observations only» in numerics/D1_SUMMARY.md
+OK         qualification «component port» in REPORT.md
+OK         qualification «α > 17/2» in REPORT.md
+OK         qualification «observations only» in REPORT.md
+OK         qualification «max(2lambda, 1/2) < tau» in lemmas/L6_poly.md
+OK         qualification «≤ one truth per group» in REPORT.md
+OK         qualification «increasing-domain» in REPORT.md
+OK         deliverable STATEMENT.md
+OK         deliverable PLAN.md
+OK         deliverable LOG.md
+OK         deliverable CHECKPOINT.md
+OK         deliverable REPORT.md
+OK         deliverable lemmas/L1_toolkit.md
+OK         deliverable lemmas/L2_NAR.md
+OK         deliverable lemmas/L3_CTd.md
+OK         deliverable lemmas/L4_LOCd.md
+OK         deliverable lemmas/L5_assembly.md
+OK         deliverable lemmas/L6_poly.md
+OK         deliverable lemmas/L7_delivery.md
+OK         deliverable numerics/poly_check.py
+OK         deliverable numerics/poly_out.txt
+OK         deliverable numerics/d1_diag.py
+OK         deliverable numerics/d1_results.csv
+OK         deliverable numerics/d1_out.txt
+OK         deliverable numerics/D1_SUMMARY.md
+OK         deliverable numerics/n4_nar_check.py
+OK         deliverable numerics/n4_out.txt
+TOTAL MISSES: 0

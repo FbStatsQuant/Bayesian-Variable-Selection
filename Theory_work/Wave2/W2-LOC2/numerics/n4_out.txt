@@ -1,0 +1,9 @@
+== Part 1: CT_d on 2-D grids ==
+phi=0.8 lambda_min=0.4835 a=1.250 t*=0.005799 worst |Ainv|/bound=0.316 (<=1 required)  max||beta||_1=0.869  L0=1.71e+08
+phi=1.2 lambda_min=0.3369 a=0.833 t*=0.001197 worst |Ainv|/bound=0.293 (<=1 required)  max||beta||_1=1.029  L0=2.37e+10
+phi=2.0 lambda_min=0.2070 a=0.500 t*=0.0001405 worst |Ainv|/bound=0.28 (<=1 required)  max||beta||_1=1.265  L0=5.45e+11
+== Part 2: NA-R components ==
+G2E n=3200 p=400 q=83 max(1-cos identity)=5.6e-16 max ||Z|-|Zpop||=0.413 (|Q|/sqrt n=1.47) max Z^2=15.83 max Zpop^2=15.76 2log p=11.98 NA-R bound holds: True min slack 6.56e-08 max ||Cr||/||Ce||=1.0009
+G2E n=12800 p=400 q=83 max(1-cos identity)=4.4e-16 max ||Z|-|Zpop||=0.263 (|Q|/sqrt n=0.734) max Z^2=14.71 max Zpop^2=14.64 2log p=11.98 NA-R bound holds: True min slack 5.48e-08 max ||Cr||/||Ce||=1.0005
+EBM n=3200 p=400 q=75 max(1-cos identity)=5.6e-16 max ||Z|-|Zpop||=0.469 (|Q|/sqrt n=1.33) max Z^2=11.57 max Zpop^2=11.44 2log p=11.98 NA-R bound holds: True min slack 5.73e-06 max ||Cr||/||Ce||=1.0000
+EBM n=12800 p=400 q=87 max(1-cos identity)=5.6e-16 max ||Z|-|Zpop||=0.198 (|Q|/sqrt n=0.769) max Z^2=10.20 max Zpop^2=10.03 2log p=11.98 NA-R bound holds: True min slack 1.77e-08 max ||Cr||/||Ce||=1.0000
