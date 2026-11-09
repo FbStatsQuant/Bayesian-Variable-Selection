@@ -1,0 +1,102 @@
+n4_r2_pseudo SUMMARY -- generated programmatically from: n4_r2_pseudo_results.csv, n4_r2_pseudo_results_n8000.csv
+FALSIFICATION PROBE: observations only, not a proof.  All 'LS0' counts use the COMPLETE search (bc.local_search);
+scr_* columns are the screened-search endpoint (ls_fast), comparison only.
+
+TABLE A -- counts k/N (N = runs in group)
+group          S0<=mode sandR1 sandR2 sandR3 LS0(compl)->S0 compl.certified latNA(sup>c_n')FAIL latsup>2logp NA(F)FAIL(gain>0) TLmargin(del+swap)>0 truth-del margin>0 pathNA(>c_n')fail scr->S0 scr_final==compl scr_path==compl
+PC1 n=500         20/20  19/20  19/20  19/20          20/20           20/20               11/20         8/20              4/20                20/20              20/20              3/20   20/20            20/20           20/20
+PC1 n=2000        20/20  17/20  20/20  20/20          20/20           20/20                6/20         9/20              4/20                20/20              20/20              3/20   20/20            20/20           20/20
+PC1 n=8000        20/20   4/20  18/20  20/20          20/20           20/20                2/20         4/20              1/20                20/20              20/20              1/20   20/20            20/20           20/20
+PC2 n=500         20/20  19/20  20/20  20/20          20/20           20/20               20/20        19/20             19/20                20/20              20/20              8/20   20/20            20/20           20/20
+PC2 n=2000        20/20   2/20  18/20  19/20          19/20           20/20               14/20        13/20             10/20                20/20              20/20              7/20   19/20            20/20           20/20
+PC2 n=8000        20/20   0/20   6/20  19/20          20/20           20/20               11/20        12/20              3/20                20/20              20/20              1/20   20/20            20/20           20/20
+PC1 ALL n         60/60  40/60  57/60  59/60          60/60           60/60               19/60        21/60              9/60                60/60              60/60              7/60   60/60            60/60           60/60
+PC2 ALL n         60/60  21/60  44/60  58/60          59/60           60/60               45/60        44/60             32/60                60/60              60/60             16/60   59/60            60/60           60/60
+TOTAL           120/120 61/120 101/120 117/120        119/120         120/120              64/120       65/120            41/120              120/120            120/120            23/120 119/120          120/120         120/120
+
+TABLE B -- extremes / means
+group  lam_min(min)  |Q_R2|mean  extras mean  max lat.sup h  min c_n'  2logp  max path_max_h  max NA(F) gain  min truth-del margin  min TL margin(del+swap)  swapbinding  pathStates outLat
+PC1 n=500       0.500  27.4  0.10  17.74  10.46  11.41  14.97  2.545  62.07  62.07  18/20  0
+PC1 n=2000      0.500  27.4  0.25  16.36  11.84  11.41  15.97  0.983  308.65  308.65  20/20  0
+PC1 n=8000      0.500  27.4  1.55  16.93  13.23  11.41  16.55  0.429  1322.29  1322.29  20/20  0
+PC2 n=500       0.550  68.2  0.20  21.81  9.31  11.41  13.72  5.263  61.12  61.12  18/20  0
+PC2 n=2000      0.550  68.2  2.35  21.44  10.63  11.41  18.44  4.053  324.75  324.75  20/20  4
+PC2 n=8000      0.550  68.2  9.70  16.41  11.99  11.41  13.95  1.104  1358.03  1358.03  20/20  0
+PC1 ALL n       0.500  27.4  0.63  17.74  10.46  11.41  16.55  2.545  62.07  62.07  58/60  0
+PC2 ALL n       0.550  68.2  4.08  21.81  9.31  11.41  18.44  5.263  61.12  61.12  58/60  4
+TOTAL           0.500  47.8  2.36  21.81  9.31  11.41  18.44  5.263  61.12  61.12  116/120  4
+
+Per-run flags (sandwich R2 fail / S0 not in mode / complete LS0 not at S0 or not certified / lattice NA proxy fail / NA(F) fail / TL<=0 / path NA flag / screened-vs-complete disagreement):
+  PC1 n=500 seed=1 : sandR2fail(max_extra_dist=19.20)
+  PC1 n=500 seed=2 : NA(F)FAIL(gain=2.55 at h=17.73); latNAfail(sup=17.74>c_n'=10.57); pathNAfail(path_max_h=14.97>c_n'=10.57)
+  PC1 n=500 seed=3 : latNAfail(sup=11.41>c_n'=11.11)
+  PC1 n=500 seed=4 : latNAfail(sup=12.42>c_n'=10.69)
+  PC1 n=500 seed=5 : NA(F)FAIL(gain=0.75 at h=14.23); latNAfail(sup=14.26>c_n'=11.03); pathNAfail(path_max_h=11.31>c_n'=11.03)
+  PC1 n=500 seed=7 : NA(F)FAIL(gain=0.64 at h=13.93); latNAfail(sup=13.93>c_n'=10.51)
+  PC1 n=500 seed=10 : latNAfail(sup=11.39>c_n'=10.89)
+  PC1 n=500 seed=11 : latNAfail(sup=12.63>c_n'=12.08)
+  PC1 n=500 seed=13 : latNAfail(sup=12.58>c_n'=11.19)
+  PC1 n=500 seed=14 : NA(F)FAIL(gain=2.26 at h=17.31); latNAfail(sup=17.31>c_n'=10.82); pathNAfail(path_max_h=12.64>c_n'=10.82)
+  PC1 n=500 seed=15 : latNAfail(sup=11.19>c_n'=10.46)
+  PC1 n=500 seed=19 : latNAfail(sup=11.32>c_n'=10.46)
+  PC1 n=2000 seed=7 : NA(F)FAIL(gain=0.98 at h=15.80); latNAfail(sup=16.36>c_n'=11.90); pathNAfail(path_max_h=15.97>c_n'=11.90)
+  PC1 n=2000 seed=13 : latNAfail(sup=12.66>c_n'=12.57)
+  PC1 n=2000 seed=14 : NA(F)FAIL(gain=0.34 at h=15.45); latNAfail(sup=15.45>c_n'=12.21); pathNAfail(path_max_h=14.30>c_n'=12.21)
+  PC1 n=2000 seed=15 : latNAfail(sup=12.12>c_n'=11.84)
+  PC1 n=2000 seed=16 : NA(F)FAIL(gain=0.21 at h=14.73); latNAfail(sup=14.73>c_n'=12.21); pathNAfail(path_max_h=13.49>c_n'=12.21)
+  PC1 n=2000 seed=19 : NA(F)FAIL(gain=0.15 at h=14.14); latNAfail(sup=14.14>c_n'=11.84)
+  PC1 n=8000 seed=4 : NA(F)FAIL(gain=0.43 at h=16.19); latNAfail(sup=16.93>c_n'=13.46); pathNAfail(path_max_h=16.55>c_n'=13.46)
+  PC1 n=8000 seed=14 : sandR2fail(max_extra_dist=2.10)
+  PC1 n=8000 seed=16 : latNAfail(sup=14.11>c_n'=13.59)
+  PC1 n=8000 seed=18 : sandR2fail(max_extra_dist=2.10)
+  PC2 n=500 seed=1 : NA(F)FAIL(gain=3.33 at h=18.18); latNAfail(sup=18.18>c_n'=9.31); pathNAfail(path_max_h=11.91>c_n'=9.31)
+  PC2 n=500 seed=2 : NA(F)FAIL(gain=2.16 at h=15.68); latNAfail(sup=15.69>c_n'=9.31)
+  PC2 n=500 seed=3 : NA(F)FAIL(gain=4.68 at h=20.66); latNAfail(sup=20.66>c_n'=9.34); pathNAfail(path_max_h=9.35>c_n'=9.34)
+  PC2 n=500 seed=4 : NA(F)FAIL(gain=3.19 at h=18.19); latNAfail(sup=18.19>c_n'=9.31); pathNAfail(path_max_h=10.18>c_n'=9.31)
+  PC2 n=500 seed=5 : NA(F)FAIL(gain=0.55 at h=13.04); latNAfail(sup=13.04>c_n'=9.31)
+  PC2 n=500 seed=6 : NA(F)FAIL(gain=2.89 at h=17.36); latNAfail(sup=17.36>c_n'=9.31)
+  PC2 n=500 seed=7 : NA(F)FAIL(gain=1.11 at h=13.46); latNAfail(sup=13.74>c_n'=9.31)
+  PC2 n=500 seed=8 : NA(F)FAIL(gain=3.60 at h=18.54); latNAfail(sup=18.58>c_n'=9.31)
+  PC2 n=500 seed=9 : NA(F)FAIL(gain=3.73 at h=18.95); latNAfail(sup=19.05>c_n'=9.31)
+  PC2 n=500 seed=10 : NA(F)FAIL(gain=4.28 at h=20.40); latNAfail(sup=20.40>c_n'=9.31); pathNAfail(path_max_h=13.72>c_n'=9.31)
+  PC2 n=500 seed=11 : NA(F)FAIL(gain=5.26 at h=21.81); latNAfail(sup=21.81>c_n'=9.31); pathNAfail(path_max_h=10.92>c_n'=9.31)
+  PC2 n=500 seed=12 : NA(F)FAIL(gain=2.83 at h=17.58); latNAfail(sup=17.58>c_n'=9.31)
+  PC2 n=500 seed=13 : NA(F)FAIL(gain=3.24 at h=18.52); latNAfail(sup=18.52>c_n'=9.31); pathNAfail(path_max_h=10.54>c_n'=9.31)
+  PC2 n=500 seed=14 : NA(F)FAIL(gain=2.52 at h=16.45); latNAfail(sup=16.45>c_n'=9.31)
+  PC2 n=500 seed=15 : NA(F)FAIL(gain=1.75 at h=15.27); latNAfail(sup=15.27>c_n'=9.34)
+  PC2 n=500 seed=16 : latNAfail(sup=9.80>c_n'=9.65)
+  PC2 n=500 seed=17 : NA(F)FAIL(gain=3.43 at h=18.30); latNAfail(sup=18.34>c_n'=9.31)
+  PC2 n=500 seed=18 : NA(F)FAIL(gain=3.28 at h=17.86); latNAfail(sup=17.86>c_n'=9.31); pathNAfail(path_max_h=10.29>c_n'=9.31)
+  PC2 n=500 seed=19 : NA(F)FAIL(gain=1.48 at h=14.30); latNAfail(sup=14.30>c_n'=9.31)
+  PC2 n=500 seed=20 : NA(F)FAIL(gain=2.80 at h=17.14); latNAfail(sup=17.14>c_n'=9.37); pathNAfail(path_max_h=9.90>c_n'=9.37)
+  PC2 n=2000 seed=1 : sandR2fail(max_extra_dist=3.89)
+  PC2 n=2000 seed=2 : NA(F)FAIL(gain=0.20 at h=13.25); latNAfail(sup=13.25>c_n'=10.66)
+  PC2 n=2000 seed=3 : LS0complete(final=[62, 75, 178, 223],S0=[62, 178, 223],certified=True,limit=False); NA(F)FAIL(gain=4.05 at h=21.44); latNAfail(sup=21.44>c_n'=10.72); pathNAfail(path_max_h=18.44>c_n'=10.72)
+  PC2 n=2000 seed=4 : NA(F)FAIL(gain=2.96 at h=18.97); latNAfail(sup=18.98>c_n'=10.69); pathNAfail(path_max_h=13.37>c_n'=10.69)
+  PC2 n=2000 seed=6 : NA(F)FAIL(gain=0.34 at h=13.81); latNAfail(sup=13.81>c_n'=10.69)
+  PC2 n=2000 seed=7 : NA(F)FAIL(gain=1.24 at h=15.44); latNAfail(sup=15.44>c_n'=10.69); pathNAfail(path_max_h=11.09>c_n'=10.69)
+  PC2 n=2000 seed=8 : latNAfail(sup=11.83>c_n'=10.69)
+  PC2 n=2000 seed=9 : NA(F)FAIL(gain=2.32 at h=17.75); latNAfail(sup=17.75>c_n'=10.69); pathNAfail(path_max_h=14.54>c_n'=10.69)
+  PC2 n=2000 seed=11 : NA(F)FAIL(gain=0.52 at h=14.12); latNAfail(sup=14.12>c_n'=10.69)
+  PC2 n=2000 seed=12 : latNAfail(sup=12.97>c_n'=10.69)
+  PC2 n=2000 seed=13 : latNAfail(sup=11.35>c_n'=10.69)
+  PC2 n=2000 seed=14 : NA(F)FAIL(gain=0.39 at h=14.46); latNAfail(sup=14.46>c_n'=10.69); pathNAfail(path_max_h=11.91>c_n'=10.69)
+  PC2 n=2000 seed=16 : NA(F)FAIL(gain=0.80 at h=14.85); latNAfail(sup=14.98>c_n'=11.03)
+  PC2 n=2000 seed=18 : latNAfail(sup=13.47>c_n'=10.69); pathNAfail(path_max_h=10.97>c_n'=10.69)
+  PC2 n=2000 seed=20 : sandR2fail(max_extra_dist=2.06); NA(F)FAIL(gain=3.02 at h=19.14); latNAfail(sup=19.26>c_n'=10.72); pathNAfail(path_max_h=11.87>c_n'=10.72)
+  PC2 n=8000 seed=1 : sandR2fail(max_extra_dist=2.09); latNAfail(sup=14.37>c_n'=12.05)
+  PC2 n=8000 seed=2 : sandR2fail(max_extra_dist=2.61)
+  PC2 n=8000 seed=3 : sandR2fail(max_extra_dist=2.19); latNAfail(sup=14.09>c_n'=12.08)
+  PC2 n=8000 seed=4 : sandR2fail(max_extra_dist=3.07); latNAfail(sup=13.63>c_n'=12.05)
+  PC2 n=8000 seed=5 : sandR2fail(max_extra_dist=2.22); NA(F)FAIL(gain=1.10 at h=16.41); latNAfail(sup=16.41>c_n'=12.05); pathNAfail(path_max_h=13.95>c_n'=12.05)
+  PC2 n=8000 seed=8 : sandR2fail(max_extra_dist=2.51); latNAfail(sup=12.51>c_n'=12.02)
+  PC2 n=8000 seed=9 : NA(F)FAIL(gain=0.11 at h=14.43); latNAfail(sup=14.43>c_n'=11.99)
+  PC2 n=8000 seed=10 : NA(F)FAIL(gain=0.22 at h=14.86); latNAfail(sup=14.86>c_n'=12.08)
+  PC2 n=8000 seed=11 : sandR2fail(max_extra_dist=2.33); latNAfail(sup=13.36>c_n'=12.05)
+  PC2 n=8000 seed=12 : sandR2fail(max_extra_dist=2.36); latNAfail(sup=13.71>c_n'=12.02)
+  PC2 n=8000 seed=13 : sandR2fail(max_extra_dist=2.20); latNAfail(sup=12.90>c_n'=12.05)
+  PC2 n=8000 seed=14 : sandR2fail(max_extra_dist=2.06)
+  PC2 n=8000 seed=15 : sandR2fail(max_extra_dist=2.54)
+  PC2 n=8000 seed=16 : sandR2fail(max_extra_dist=2.01); latNAfail(sup=12.95>c_n'=12.38)
+  PC2 n=8000 seed=17 : sandR2fail(max_extra_dist=2.14)
+  PC2 n=8000 seed=20 : sandR2fail(max_extra_dist=2.24)

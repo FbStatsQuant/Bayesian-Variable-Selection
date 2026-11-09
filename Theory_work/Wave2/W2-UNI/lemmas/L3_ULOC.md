@@ -1,14 +1,14 @@
 # L3 — Key lemma U-LOC: uniform add-statistic bound for one global factor + metric-local idiosyncratic part
 
 Status: **PROVED (by this seat, unchecked)** — v1.1, 2026-11-09. Falsification numerics: `numerics/n3_uloc.py` →
-`numerics/n3_out.txt` (identity (a) error ≤ 1.3e-14, 0 violations of (b) in 27 162 random/greedy pairs on non-block Ψ);
+`numerics/n3_out.txt` (identity (a) error ≤ 1.3e-14, 0 violations of (b) in 27 324 random/greedy pairs [R05a-16] on non-block Ψ);
 `numerics/n3b_exhaustive.py` → `numerics/n3b_out.txt` (exhaustive p ≤ 10, planned per R01 optional suggestion).
 Check record: R03 (Codex gpt-6.1-sol xhigh, `reviews/R03_L3L6_check_sol.md`): VERIFIED-WITH-AMENDMENTS (1 MAJOR: empty
 conditioning set for TL; 2 MINOR), all applied (v1.1; `reviews/R03_disposition.md`). The exhaustive script was corrected
 to include T = [p] in the c_𝒢 enumeration and re-run [R03-3].
 
 Generalises W2-FAC-A `lemmas/L1_uniform_add.md` (Lemma U(a)–(c), Corollary U; "PROVED (by this seat, unchecked)", R02 Sol
-xhigh VERIFIED-WITH-AMENDMENTS, inside W2-FAC-A "PROVED-CHECKED") from block-diagonal Ψ to Ψ ∈ 𝓛𝓞𝓒 (STATEMENT §2).
+xhigh VERIFIED-WITH-AMENDMENTS, inside W2-FAC-A "PROVED-CHECKED (for the narrowed, flagged target STATEMENT.md v1.2)") from block-diagonal Ψ to Ψ ∈ 𝓛𝓞𝓒 (STATEMENT §2).
 The only new inputs are the metric toolkit of `lemmas/L1_metric.md` (RB_M: uniform ℓ¹ regression bound L₀; CD_M(b):
 conditional variances of ζ are ≥ c; LOCL: ℓ¹ localisation ε(r) → 0 with the variance comparison).
 

@@ -2,7 +2,7 @@
 
 Status: **PROVED (by this seat, unchecked)**; check R02 (Codex gpt-6.1-sol high, `reviews/R02_L1L2_check_sol.md`):
 VERIFIED-WITH-AMENDMENTS (1 MINOR, applied). Seat: parallel prover (Claude Opus 5.5 subagent), 2026-11-09.
-Target: `W2-UNI/STATEMENT.md:132-140` (R1, as amended by `reviews/R01_statement_lock_sol.md:63-77`, required change 4).
+Target: `W2-UNI/STATEMENT.md:143-151` (R1, as amended by `reviews/R01_statement_lock_sol.md:63-77`, required change 4).
 Model (delta source): LOC2 `lemmas/L3_CTd.md` (CT_d, CD_d, RB, TAIL; status there "PROVED (by this seat, unchecked)",
 check R02 "VERIFIED-WITH-AMENDMENTS"; inside W2-LOC2 "PROVED-CHECKED", `W2-LOC2/REPORT.md:3`), itself modelled on APP
 `lemmas/L2_CT.md`. Falsification numerics: `numerics/n2_metric.py` → `numerics/n2_metric_out.txt` (zero-distance
@@ -12,7 +12,7 @@ All statements are uniform in p, n and the pseudometric; constants depend only o
 **Notation.** K is the decay-envelope constant of 𝓛𝓞𝓒 (not the model-size cap K_n). For a finite index set I, a
 *pseudometric* δ on I is symmetric, δ(i, i) = 0, satisfies the triangle inequality, and may vanish between distinct
 indices. B(i, r) := {k ∈ I : δ(i, k) ≤ r} (contains i). Growth: N_δ(r) := max_i |B(i, r)| ≤ C₀(1 + r)^{d₀} for all r ≥ 0
-(`STATEMENT.md:48-51`); necessarily C₀ ≥ 1, d₀ ≥ 0 real. Empty index sets carry zero vectors and empty sums are 0.
+(`STATEMENT.md:50-53`); necessarily C₀ ≥ 1, d₀ ≥ 0 real. Empty index sets carry zero vectors and empty sums are 0.
 
 ## M0. Two elementary facts about the growth function
 
@@ -63,7 +63,7 @@ Delta to LOC2 `L3_CTd.md:23-43`: (2m + 3)^d → C₀(m + 2)^{d₀}; shells m ≥
 
 ## M2. Class 𝓛𝓞𝓒 and Lemma CD_M (conditional decay and conditional spectra)
 
-𝓛𝓞𝓒(C₀, d₀, c, C, K, a) is as in `STATEMENT.md:48-51` (symmetric Ψ on [p], spectrum in [c, C], 0 < c ≤ C; pseudometric of
+𝓛𝓞𝓒(C₀, d₀, c, C, K, a) is as in `STATEMENT.md:50-53` (symmetric Ψ on [p], spectrum in [c, C], 0 < c ≤ C; pseudometric of
 growth ≤ C₀(1 + r)^{d₀}; (Σ-branch) |Ψ_jk| ≤ Ke^{−aδ(j,k)} or (Θ-branch) |(Ψ⁻¹)_jk| ≤ Ke^{−aδ(j,k)}, j ≠ k). Unit diagonal is
 NOT assumed. Write t*(·, ·, ·) for the CT_M rate with the class's (C₀, d₀). Define
   (Σ-branch) t₁ := t*(c, K, a), K₁ := 2/c;   (Θ-branch) t₁ := a, K₁ := K;   t₂ := t*(1/C, K₁, t₁),  K₂ := 2C.
@@ -148,7 +148,7 @@ required. (2) TAIL_M(a) and LOCL(iv) bound the same quantity Var(Δᵀζ) = Var(
 different routes (κ(r) vs Cε(r)²); either suffices for every use below. (3) Unlike the crude bound
 ‖Δ‖₁ ≤ ‖β_T‖₁ + ‖β_U‖₁ ≤ 2L₀ (used by LOC2 `L4_LOCd.md:51-53` for NA-R's (R2)), LOCL makes the atom coefficient
 **vanish** as r → ∞; with r_n → ∞ the atom part of NA-R becomes o(1)·max|atom statistic|, which is what R3(b) of
-`STATEMENT.md:146-150` needs. Sample usage: with r_n = ⌈(log log n)²⌉, ε(r_n) ≤ ε̄e^{−t′((log log n)²−1)/2} = o((log n)^{−M})
+`STATEMENT.md:158-161` needs. Sample usage: with r_n = ⌈(log log n)²⌉, ε(r_n) ≤ ε̄e^{−t′((log log n)²−1)/2} = o((log n)^{−M})
 for every fixed M.
 
 ## M6. Lemma SC_M (rescaling to unit diagonal stays in the class)
@@ -158,7 +158,7 @@ spectrum in [c/C, C/c], and R obeys the Σ-branch envelope with (K/c, a) if Ψ d
 (KC, a) if Ψ does (Θ-branch). Hence R ∈ 𝓛𝓞𝓒(C₀, d₀, c/C, C/c, K max(1/c, C), a).
 *Proof.* Ψ_jj ∈ [c, C] (diagonal entries of a matrix with spectrum in [c, C]). For x ≠ 0, xᵀRx = yᵀΨy with y = D^{−1/2}x,
 ‖y‖² ∈ [‖x‖²/C, ‖x‖²/c]: spectrum of R ⊆ [c/C, C/c]. R_jk = Ψ_jk/√(Ψ_jjΨ_kk), |R_jk| ≤ |Ψ_jk|/c; R⁻¹ = D^{1/2}Ψ⁻¹D^{1/2},
-|(R⁻¹)_jk| ≤ C|(Ψ⁻¹)_jk|. ∎ (This is what makes "Σ_n unit diagonal WLOG" of `STATEMENT.md:20-21` compatible with membership in
+|(R⁻¹)_jk| ≤ C|(Ψ⁻¹)_jk|. ∎ (This is what makes "Σ_n unit diagonal WLOG" of `STATEMENT.md:22-23` compatible with membership in
 𝓛𝓞𝓒 at changed fixed constants; it is a remark, not used below.)
 
 ## M7. Constant table (all explicit in (C₀, d₀, c, C, K, a))

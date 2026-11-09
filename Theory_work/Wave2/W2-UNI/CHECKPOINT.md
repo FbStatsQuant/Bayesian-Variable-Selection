@@ -21,3 +21,7 @@ probes ⇒ α₀ ≈ 1/30–1/80); k ≥ 2 and k = 1 beyond α₀ stay open here
   set for TL). Theorem UNI-1 reduction (L4_k1), delivery reduction F-UNI (L5), OBS-k (L6) checked in the same round.
 * Pending: L1_metric (LOCL etc.) + L2_k0 from the parallel prover → R02 check; then mid-point (fresh Sol xhigh), sweep,
   CITECHECK, council. UNI-1 depends on LOCL/RB_M/CD_M exactly as stated in STATEMENT R1 (R03 confirmed nothing more is used).
+
+# FINAL (2026-11-09 ~15:43 CST, resumed lead)
+Sweeps R05a (Sol, pre-pause) and R05b (fresh Astra high) fixed in full; council round 1 PASSED (Astra 9.0, Opus 8.9, all gates);
+citation check + manual audit done. RESULT: PROVED-CHECKED for STATEMENT v1.1.4 (see REPORT.md).

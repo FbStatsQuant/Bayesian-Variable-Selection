@@ -4,8 +4,11 @@ For Psi in LOC_M (three geometries: 2-D jittered sites with exponential covarian
 (Theta-branch), random geometric graph with graph distance (Sigma-branch, exp of graph distance)), compute for many
 (T, l) and radii r:
   Delta(r) = || beta_T(l) - beta_{T cap B(l,r)}(l) ||_1   (zero-padded; beta_A(l) = Psi_AA^{-1} Psi_{A l})
-and record max over (T, l) as a function of r (must decay to 0, roughly exponentially), plus the CT_M entry ratio
-|(A^{-1})_ij| / ((2/alpha) e^{-t* d_ij}) over principal submatrices (must be <= 1).
+and record max over (T, l) as a function of r (must decay to 0, roughly exponentially), plus fitted exponential decay
+slopes of the observed inverse-entry envelopes of principal submatrices.
+[R05a-13] The fitted slopes are exploratory observations only: this script does NOT construct the CT_M constants or t*
+and does NOT test the analytic CT_M ratio |(A^{-1})_ij| / ((2/alpha) e^{-t* d_ij}) <= 1. That ratio check is in
+n2_metric.py (-> n2_metric_out.txt). (Docstring corrected after the R05a sweep; code and n1_out.txt unchanged.)
 T: random subsets of densities 0.1/0.5/0.9 and 'greedy' sets = all of [p] minus a random small set.
 Observations only (a falsification probe; the proofs are the certificate).
 Run: py -3.13 -B n1_metric.py > n1_out.txt

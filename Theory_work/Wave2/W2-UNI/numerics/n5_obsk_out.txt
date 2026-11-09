@@ -1,0 +1,41 @@
+OBS-k probe: I(T) = lambda_min(Lam_T' Psi_TT^-1 Lam_T)/|T| for the proof's T; checks I(T) <= mid <= eta^2/c
+k=2 m=1 p=   50 ncell=  12 c=0.600: I(T)=-1.388e-17 mid=1.284e-33 eta^2/c=0.000e+00 chain_ok=True  I([p])=2.249e-01
+k=2 m=1 p=  200 ncell=  50 c=0.600: I(T)=-2.776e-17 mid=0.000e+00 eta^2/c=0.000e+00 chain_ok=True  I([p])=2.471e-01
+k=2 m=1 p=  800 ncell= 200 c=0.600: I(T)=-2.776e-17 mid=0.000e+00 eta^2/c=0.000e+00 chain_ok=True  I([p])=2.332e-01
+k=2 m=1 p= 3200 ncell= 800 c=0.600: I(T)=-5.551e-17 mid=5.136e-33 eta^2/c=0.000e+00 chain_ok=True  I([p])=nan
+k=2 m=2 p=   50 ncell=   6 c=0.600: I(T)=1.955e-05 mid=7.891e-04 eta^2/c=1.647e-03 chain_ok=True  I([p])=2.363e-01
+k=2 m=2 p=  200 ncell=  25 c=0.600: I(T)=4.818e-10 mid=1.458e-09 eta^2/c=3.115e-08 chain_ok=True  I([p])=1.984e-01
+k=2 m=2 p=  800 ncell= 100 c=0.600: I(T)=5.582e-11 mid=1.213e-10 eta^2/c=5.903e-09 chain_ok=True  I([p])=2.413e-01
+k=2 m=2 p= 3200 ncell= 400 c=0.600: I(T)=3.425e-13 mid=6.458e-13 eta^2/c=2.276e-11 chain_ok=True  I([p])=nan
+k=2 m=3 p=   50 ncell=   4 c=0.600: I(T)=9.584e-05 mid=1.635e-04 eta^2/c=4.003e-03 chain_ok=True  I([p])=1.989e-01
+k=2 m=3 p=  200 ncell=  17 c=0.600: I(T)=3.841e-07 mid=1.590e-06 eta^2/c=8.812e-06 chain_ok=True  I([p])=2.639e-01
+k=2 m=3 p=  800 ncell=  67 c=0.600: I(T)=1.146e-08 mid=8.972e-08 eta^2/c=7.406e-07 chain_ok=True  I([p])=2.253e-01
+k=2 m=3 p= 3200 ncell= 267 c=0.600: I(T)=2.617e-10 mid=2.298e-09 eta^2/c=2.119e-08 chain_ok=True  I([p])=nan
+k=2 m=5 p=   50 ncell=   4 c=0.600: I(T)=3.806e-04 mid=8.287e-04 eta^2/c=9.194e-03 chain_ok=True  I([p])=1.825e-01
+k=2 m=5 p=  200 ncell=  10 c=0.600: I(T)=1.107e-04 mid=6.473e-04 eta^2/c=4.072e-03 chain_ok=True  I([p])=2.528e-01
+k=2 m=5 p=  800 ncell=  40 c=0.600: I(T)=1.887e-06 mid=3.751e-06 eta^2/c=4.349e-05 chain_ok=True  I([p])=2.387e-01
+k=2 m=5 p= 3200 ncell= 160 c=0.600: I(T)=3.424e-08 mid=1.664e-07 eta^2/c=7.804e-07 chain_ok=True  I([p])=nan
+k=3 m=1 p=   50 ncell=   4 c=0.600: I(T)=-1.222e-16 mid=5.134e-33 eta^2/c=0.000e+00 chain_ok=True  I([p])=1.299e-01
+k=3 m=1 p=  200 ncell=   7 c=0.600: I(T)=-9.020e-17 mid=3.210e-34 eta^2/c=0.000e+00 chain_ok=True  I([p])=1.389e-01
+k=3 m=1 p=  800 ncell=  14 c=0.600: I(T)=-1.332e-16 mid=0.000e+00 eta^2/c=0.000e+00 chain_ok=True  I([p])=1.513e-01
+k=3 m=1 p= 3200 ncell=  28 c=0.600: I(T)=-2.241e-16 mid=1.284e-33 eta^2/c=0.000e+00 chain_ok=True  I([p])=nan
+k=3 m=2 p=   50 ncell=   4 c=0.600: I(T)=-7.660e-18 mid=5.522e-03 eta^2/c=1.644e-02 chain_ok=True  I([p])=1.250e-01
+k=3 m=2 p=  200 ncell=   5 c=0.600: I(T)=-8.207e-17 mid=6.695e-06 eta^2/c=1.682e-04 chain_ok=True  I([p])=1.382e-01
+k=3 m=2 p=  800 ncell=  10 c=0.600: I(T)=-6.160e-17 mid=6.651e-06 eta^2/c=1.608e-04 chain_ok=True  I([p])=1.461e-01
+k=3 m=2 p= 3200 ncell=  20 c=0.600: I(T)=-1.187e-16 mid=1.323e-04 eta^2/c=5.092e-04 chain_ok=True  I([p])=nan
+k=3 m=3 p=   50 ncell=   4 c=0.600: I(T)=5.400e-07 mid=4.410e-04 eta^2/c=7.525e-03 chain_ok=True  I([p])=1.014e-01
+k=3 m=3 p=  200 ncell=   4 c=0.600: I(T)=9.953e-07 mid=4.375e-05 eta^2/c=7.445e-03 chain_ok=True  I([p])=1.315e-01
+k=3 m=3 p=  800 ncell=   8 c=0.600: I(T)=1.236e-10 mid=4.180e-05 eta^2/c=2.670e-03 chain_ok=True  I([p])=1.538e-01
+k=3 m=3 p= 3200 ncell=  16 c=0.600: I(T)=6.590e-11 mid=2.823e-05 eta^2/c=1.269e-03 chain_ok=True  I([p])=nan
+k=3 m=4 p=   50 ncell=   4 c=0.600: I(T)=3.330e-04 mid=1.232e-02 eta^2/c=1.732e-01 chain_ok=True  I([p])=1.285e-01
+k=3 m=4 p=  200 ncell=   4 c=0.600: I(T)=1.396e-05 mid=7.732e-05 eta^2/c=7.986e-04 chain_ok=True  I([p])=1.250e-01
+k=3 m=4 p=  800 ncell=   7 c=0.600: I(T)=1.893e-06 mid=3.701e-05 eta^2/c=1.587e-03 chain_ok=True  I([p])=1.532e-01
+k=3 m=4 p= 3200 ncell=  14 c=0.600: I(T)=2.115e-08 mid=8.061e-07 eta^2/c=1.086e-04 chain_ok=True  I([p])=nan
+k=3 m=5 p=   50 ncell=   4 c=0.600: I(T)=6.333e-04 mid=7.643e-03 eta^2/c=3.053e-02 chain_ok=True  I([p])=1.543e-01
+k=3 m=5 p=  200 ncell=   4 c=0.600: I(T)=3.352e-05 mid=4.204e-04 eta^2/c=9.110e-03 chain_ok=True  I([p])=1.404e-01
+k=3 m=5 p=  800 ncell=   6 c=0.600: I(T)=3.307e-06 mid=8.396e-06 eta^2/c=4.121e-03 chain_ok=True  I([p])=1.496e-01
+k=3 m=5 p= 3200 ncell=  13 c=0.600: I(T)=8.260e-07 mid=1.297e-05 eta^2/c=1.340e-03 chain_ok=True  I([p])=nan
+total chain violations: 0
+R01-7 example p=50: I([p])=0.1169; I(T, m=1 rows of type e1)=0.00e+00; I(T, m=2 rows of type e1)=0.00e+00; I(T, m=3 rows of type e1)=0.00e+00; I(T, m=5 rows of type e1)=0.00e+00
+R01-7 example p=200: I([p])=0.1145; I(T, m=1 rows of type e1)=0.00e+00; I(T, m=2 rows of type e1)=0.00e+00; I(T, m=3 rows of type e1)=0.00e+00; I(T, m=5 rows of type e1)=0.00e+00
+R01-7 example p=800: I([p])=0.1138; I(T, m=1 rows of type e1)=0.00e+00; I(T, m=2 rows of type e1)=0.00e+00; I(T, m=3 rows of type e1)=0.00e+00; I(T, m=5 rows of type e1)=0.00e+00

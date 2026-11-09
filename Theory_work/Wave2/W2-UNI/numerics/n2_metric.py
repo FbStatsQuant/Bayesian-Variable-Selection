@@ -9,8 +9,11 @@ Adversarial features (beyond the lead's n1_metric.py):
     with C0 the exact growth constant sup_r N_delta(r)/(1+r)^d0 (attained at distance values);
   * exhaustive enumeration of every (l, T) at p = 10 for the LOCL identity and inequality chain.
 t*(alpha, K, a) is computed from the series S(t) of L1_metric with an adaptive truncation (tail factor e^-50), i.e.
-essentially exactly; any residual truncation UNDER-estimates S, hence OVER-estimates t*, which makes the checked bound
-smaller (a stricter test), never looser.
+essentially exactly. In exact arithmetic any residual truncation UNDER-estimates S, hence OVER-estimates t*, which makes
+the checked bound smaller (a stricter test), never looser; in floating point this direction is not certified (no directed
+rounding or tail enclosure). [R05b-13] The factor 1 - e^{-t(m+1)} is evaluated as -expm1(-t(m+1)) to avoid cancellation
+at rates ~1e-17 (the previous 1 - exp form returned 0 for t = 1e-20 and gave a rate ≈ 1.7e-26 smaller in the cluster2d
+example); constants recomputed with the stable form; n2_metric_out.txt is unchanged at its printed precision.
 Observations only: a falsification probe of the analytic lemmas, not a certificate.
 Run: py -3.13 -B n2_metric.py > n2_metric_out.txt
 """
@@ -24,7 +27,7 @@ rng = np.random.default_rng(20261110)
 def S_fun(t, K, a, C0, d0):
     M = int(min(50.0 / max(a - t, 1e-9) + 200, 2_000_000))
     m = np.arange(M + 1, dtype=float)
-    return K * C0 * np.sum((m + 2.0) ** d0 * np.exp(-(a - t) * m) * (1.0 - np.exp(-t * (m + 1.0))))
+    return K * C0 * np.sum((m + 2.0) ** d0 * np.exp(-(a - t) * m) * (-np.expm1(-t * (m + 1.0))))
 
 
 def t_star(alpha, K, a, C0, d0):

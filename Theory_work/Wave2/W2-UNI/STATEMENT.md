@@ -1,6 +1,8 @@
 # W2-UNI — STATEMENT (design-agnostic main consistency theorem)
 
-Ticket W2-UNI, Theory Wave 2. Lead: Claude Opus 5.5 (Claude Personal). Status of this file: **v1.1.1 — LOCKED** (2026-11-09; v1.1.1 = R04-1 editorial split of (i′), no UNI-0/UNI-1 hypothesis or conclusion changed)
+Ticket W2-UNI, Theory Wave 2. Lead: Claude Opus 5.5 (Claude Personal). Status of this file: **v1.1.4 — LOCKED** (2026-11-09; v1.1.1 = R04-1 editorial split of (i′); v1.1.2 = R05a sweep fixes
+[R05a-1, 2, 5]: PLR scope stated explicitly, LS0 move count qualified by its event, FAC-L containment restricted to the
+fixed-beta-min subclass; v1.1.3 = R05b-4 wording in §6; v1.1.4 = council C1 NIT-3, status wording in (i′); no UNI-0/UNI-1 hypothesis or conclusion changed)
 after statement-lock review R01 (Codex gpt-6.1-sol high, LOCK-WITH-CHANGES; all eight required changes applied, see
 `reviews/R01_disposition.md`; change markers [R01-#]). Protocol: `Theory_work/Wave2/PROTOCOL.md` (extends Wave1C and
 Wave1 protocols). All results are asymptotic (n → ∞); finite-n behaviour is out of scope and never listed as a limitation.
@@ -88,8 +90,10 @@ in APP L1_POST(b). This is APP L1_POST(b), independent of any factor representat
 separately under APP L1_POST(c). Approximate fixed Grams require verification of the T03♯ sample-design hypotheses and are
 not covered by population LSF alone.
 
-**(i′) Theorem PLR (general reported-model engine; LOC2 L5, PROVED-CHECKED there)** [R01 optional]. Stated as the
-principal abstract theorem [R04-1]: for any Σ_n with a deterministic relevance set Q (|Q| ≤ (log n)^κ, feasibility
+**(i′) Theorem PLR (general reported-model engine; LOC2 L5: "PROVED (by this seat, unchecked)", R04 VERIFIED-WITH-AMENDMENTS, inside W2-LOC2 "PROVED-CHECKED" [C1-B NIT-3])** [R01 optional]. Stated as the
+principal abstract theorem [R04-1]. [R05a-2] Under setting (R) (random rows; this is not an (E)-design theorem), fixed
+s₀, the coefficient bounds of (A3) (fixed beta-min θ_lo > 0, θ_hi) without PTV, and the method premises of §1, let Σ_n be
+any population correlation sequence with a deterministic relevance set Q (|Q| ≤ (log n)^κ, feasibility
 dichotomy, floor (N1)) such that P(Sand_n(Q)) → 1 and Lemma NA-R's (R1)–(R3) hold: (C-i) P(NA(𝓛)) → 1, P(TL(𝓛)) → 1 and
 D_n → 0; (C-ii) **if additionally (A1-post)/LSF holds**, 1 − π(S₀) = O_P(√(log n/n)) and P(𝒪 ∩ {Ŝ⁺ ≠ S₀}) → 0
 (output-intersected reported-model consistency); unconditional delivery P(Ŝ⁺ = S₀) → 1 only with F-UNI's premises (R4).
@@ -116,11 +120,15 @@ entrywise Gaussian correlation concentration gives ‖R̂ − Σ‖_op = O_P(p�
 to zero under this exponent condition, as in FACA L5.1. No separate p ≤ K_n assumption or upper bound on λ_max(Σ) is needed
 [R01-5].
 Conclusions: P(Sand_n([p])) → 1, P(NA(𝓛)) → 1 and P(TL(𝓛)) → 1 on the full lattice 𝓛 = [S₀, [p]], D_n → 0,
-P(𝒪 ∩ {Ŝ⁺ ≠ S₀}) → 0, and with the delivery premises P(Ŝ⁺ = S₀) → 1. LS0 reaches S₀ after exactly |S̃₀ ∖ S₀| deletions
-(the merged cap is used essentially).
-Containment [R01-2]: the structural class includes every FACA representation with bounded idiosyncratic blocks; for its
-group partition, c_𝒢 = c_min and κ_UNI = κ_FACA, so the exponent is unchanged. With the same TV or TV-pop hypotheses,
-UNI-1 includes FAC-L. The extension beyond bounded idiosyncratic blocks is a new target requiring U-LOC.
+P(𝒪 ∩ {Ŝ⁺ ≠ S₀}) → 0, and with the delivery premises P(Ŝ⁺ = S₀) → 1. [R05a-5] On Sand_n([p]) ∩ NA(𝓛) ∩ TL(𝓛) (an event
+of probability tending to one), the prescribed deterministic LS0, viewed as uninterrupted on these data, reaches S₀ after
+exactly |S̃₀ ∖ S₀| deletion moves, within the merged cap ℓ_n + |S̃₀|; a delivered SMC run executes that search, and the
+exact-enumeration branch scores S₀ directly.
+Containment [R01-2, R05a-1]: the structural class includes every FACA representation with bounded idiosyncratic blocks;
+for its group partition, c_𝒢 = c_min and κ_UNI = κ_FACA, so the exponent is unchanged. UNI-1 contains the
+fixed-positive-beta-min subclass of FAC-L, with the same structural representation, κ, exponent, and TV/TV-pop
+qualifications. FAC-L's fixed-design BM-∞ relaxation (vanishing signals with nθ*²_min/log n → ∞) remains a separate
+imported result. The extension beyond bounded idiosyncratic blocks is a new target requiring U-LOC.
 
 **(iii′) k ≥ 2 and k = 1 beyond α₀ — strongest current statement + absorption plan.** Not claimed as theorems. The report
 gives: (a) **Lemma OBS-k** [R01-7]: fix k ≥ 2 and a positive integer m independent of n. If p_n → ∞, the loading rows are
@@ -175,7 +183,7 @@ for each parallel ticket (FAC-S5/S5F, FAC-X/XA, FAC-K2, FAC-PK/PKA), which gener
 | LOC2 LOC-d (PROVED-CHECKED) | UNI-0 | Separated Euclidean sites give polynomial growth; source spectrum and PTV assumptions retained. |
 | LOC2 LOC-BF (PROVED-CHECKED) | Additional PLR instance | Uses the reference/atom construction of LOC2 L4 Part B; no membership of growing groups in fixed-constant LOC_M is asserted. |
 | LOC2 polynomial decay α > 17/2 (PROVED-CHECKED) | Separate extension of the engine | Uses LOC2 L6's polynomial-size re-run of the toolkit, NA and assembly; not Theorem PLR directly, whose relevance sets are polylogarithmic. |
-| FACA FAC-L (PROVED-CHECKED) | UNI-1 | Bounded idiosyncratic blocks give LOC_M, c_𝒢 = c_min and κ_UNI = κ_FACA; retain AG, growth, and actual-block TV or covering-family TV-pop. S5 inherits its certified family of unions of whole groups. |
+| FACA FAC-L (PROVED-CHECKED) | UNI-1 for its fixed-positive-beta-min subclass [R05a-1] | Bounded idiosyncratic blocks give LOC_M, c_𝒢 = c_min and κ_UNI = κ_FACA; retain AG, growth, and actual-block TV or covering-family TV-pop. S5 inherits its certified family of unions of whole groups. FAC-L's fixed-design BM-∞ relaxation (vanishing signals) is a separate imported result, not an instance of UNI-1. |
 | FACB FAC-CS (PROVED-CHECKED) | Overlapping special case below 1/6, otherwise separate | Fixed exact-Gram CS, including column signs, with FACB's signal and method assumptions and p ≤ n/2. The actual-block-TV subclass below 1/6 is an instance of UNI-1(E). Masked truths under FS′ remain a separate result; they are not instances of a visibility theorem even below 1/6. |
 | APP ENUM (inside APP PROVED-CHECKED) | Separate enumeration override | Require the coded EXB inequality eventually, EX-A, and posterior consistency. LSF alone does not activate enumeration. It gives output-intersected selection consistency, not an independent delivery theorem. |
 
@@ -183,5 +191,5 @@ for each parallel ticket (FAC-S5/S5F, FAC-X/XA, FAC-K2, FAC-PK/PKA), which gener
 Non-Gaussian rows; growing s₀; θ_lo → 0 for the reported model; visibility failures (masking) except where a cited family
 result covers them (PXN, FACB (FS′)); k ≥ 2; k = 1 with limsup log p/log n ≥ α₀(κ̄) in general; [R01-5] representations
 with c_{𝒢,n} = 0 or without a uniform bound on κ_n (vanishing common loading scale is not itself excluded when c_{𝒢,n} > 0
-and κ_n stays bounded); Ψ with polynomial decay or super-polynomial growth (outside LOC_M; polynomial decay on a line:
-LOC2 L6, α > 17/2); fixed-domain (infill) asymptotics; p > K_n in (iii); approximate fixed Grams for (i).
+and κ_n stays bounded); Ψ outside LOC_M, e.g. with only polynomial decay or super-polynomial growth [R05b-4] (polynomial
+decay on a line: LOC2 L6, α > 17/2); fixed-domain (infill) asymptotics; p > K_n in (iii); approximate fixed Grams for (i).
