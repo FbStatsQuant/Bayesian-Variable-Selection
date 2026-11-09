@@ -59,9 +59,22 @@ lists the 2,400 study fits as 2,394 `completed` + 6 `resource_limit` (p = 500: 1
 contains the string `schedule_limit` (only code, schemas and review documents do). The published outputs are therefore
 unaffected by C-DLV B.
 
-**Resource note (C-GROW MR1):** with cap ℓ_n + \|S̃₀\| ≤ ℓ_n + K, LS0 performs at most ℓ_n + K + 1 scans of
-≤ p + k*(p − k*) models each (was ℓ_n + 1); the resource-envelope change is handled on the theory side (HQ). Not counted
-in the shipped preflight formula (unchanged).
+**Resource note (C-GROW MR1) and preflight (HQ item, `HQ_AUDIT/A1_propF_redteam.md` finding 1):** with cap
+ℓ_n + \|S̃₀\| ≤ ℓ_n + K, LS0 performs at most **ℓ_n + K + 1 scans** of ≤ p + k(p − k) ≤ q(p) = p + p²/4 models each (was
+ℓ_n + 1); the resource-envelope change itself is handled on the theory side. The SMC preflight (`v3_preflight`,
+`Scripts/SMC_BVS/core/v3_fit.R:16–63`) now charges this worst case when the C-GROW cap is in force (`ls0_worst_case`):
+memory component `ls0_archive` = 2(ℓ_n + K + 1)(4K + 64) bytes (path + scanned-centre archive, per-model cost as for the
+stores; the O(K(K+1)) words of M_G); time `ls0_worst_case$est_seconds` = 2 × (ℓ_n + K + 1)·q(p) × the measured seconds per
+score of a size-K model (`v3_time_scores`, 200 scores; factor 2 = declared bookkeeping constant for cache lookup/insert
+and ledger/store offers — the "C" of W_G), checked against the allocation's hours in `exceeds` for the initial and the
+escalation preflight. Switch: `options(v3.ls0_cap = "ell_n")` or `ls0 = FALSE` ⇒ the shipped preflight exactly.
+Test (`tests/test_preflight.R`, `numerics/out_test_preflight.txt`, **7/7 PASS**): p = 30 regression design (n = 100) and
+the study sizes (dev generator S1–S6, n = 200, p = 500 and 1000) at 8 GiB/24 h and 2 GiB/24 h: **0 fits newly refused**
+(all pass both preflights); LS0 worst case ≈ 1.2–1.9 h at p = 500 and 4.8–6.7 h at p = 1000 (this Windows machine, shared
+CPU; actual LS0 time in the replay fits is seconds), extra memory ≈ 0.1 MiB; with `v3.ls0_cap = "ell_n"` / `ls0 = FALSE`
+the preflight record is identical to the shipped one; an allocation of half the LS0 worst case is refused by the new
+preflight and not by the shipped one. The check is one-sided (it compares the LS0 term alone with the whole allocation,
+as the shipped SMC preflight has no time term for the rest of the fit). Review R07 (below).
 
 Spec mapping (`NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md`): #8 LS0 (when, centre, rules, no uniforms, all scored
 models join the stores, provenance `ls0`, `ls0_improved`, no E3, e4); #6 GUARD-W (LS0 stop / numerical failure in LS0 ⇒ no
