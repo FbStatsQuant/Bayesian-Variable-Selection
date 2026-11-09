@@ -1,0 +1,6 @@
+name=fred_md n_data=775 p=99 k=99 delta=0.1
+input_md5=a4cb0f16debe19624b9bf417c15c5661
+max|rowSums(L^2) - (1-delta)| = 5.44e-15
+top eigenvalues of R: 21.104 8.758 5.7968 5.362 4.0324 3.2924 2.8914 2.5754 2.1829 2.071
+lambda1/p = 0.2132 ; trace share top1/5 = 0.2132 / 0.4551
+prov: BVAR 1.0.5 (R 4.4 library; data/Rdata.rdb md5 e8a6695491a756245ea9cf99f02d03d8; fred_trans.csv md5 3c729ac3b865bcb93934ab5e2c3506ee): fred_md, 19 NA-columns dropped of 118, 0 columns non-finite after transform dropped; transformed by BVAR code table (fred_md) re-implemented; rows 4..778

@@ -1,0 +1,52 @@
+{
+  "frozen": {
+    "trials": 180000,
+    "failures": [],
+    "n_failures": 0
+  },
+  "cs_n": 72,
+  "cs_worst_CC_ratio": 2.450262161562777,
+  "cs_smallest_CC_ratio": 0.7417728197286043,
+  "cs_by_alpha": {
+    "0.2": {
+      "n": 24,
+      "min_ratio": 0.7417728197286043,
+      "max_ratio": 1.143999477328011,
+      "passes": 17
+    },
+    "0.35": {
+      "n": 24,
+      "min_ratio": 1.2484797330030768,
+      "max_ratio": 1.8008567538084752,
+      "passes": 0
+    },
+    "0.49": {
+      "n": 24,
+      "min_ratio": 1.7083498169294506,
+      "max_ratio": 2.450262161562777,
+      "passes": 0
+    }
+  },
+  "cs_paths_with_level_decrease": 72,
+  "bcs_n": 60,
+  "bcs_local_champion_failures": 0,
+  "bcs_original_champion_failures": 60,
+  "first_original_champion_counterexample": {
+    "j": 733,
+    "y": [
+      0.3269801004001033,
+      -0.3905010986040817
+    ],
+    "e": 0.0640948975639751,
+    "shifted": [
+      0.3910749979640784,
+      -0.32640620104010665
+    ]
+  },
+  "protected_shell_exponent": 1.0045512803030305,
+  "protected_shell_field_margin": 0.004750000000000032,
+  "S5_anchor_lambda_min": 3.807017543859649,
+  "S5_neighbour_coefficient": 0.34441087613293053,
+  "S5_end_CC_ratio_at_alpha_half": 0.9037203019322569,
+  "S5_end_alpha_cutoff": 0.6192405950443117
+}

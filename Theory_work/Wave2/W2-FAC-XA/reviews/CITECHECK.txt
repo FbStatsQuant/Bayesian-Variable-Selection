@@ -1,0 +1,7 @@
+PASS Theory_work/Wave2/W2-FAC-B/REPORT.md:30 **PROVED-CHECKED** — Theorem FAC-CS (claims (C1)–(C4) of STATEMENT v3.1, plus the flagged (C1-M)). Statement lock
+PASS Theory_work/Wave2/W2-FAC-A/REPORT.md:20 **PROVED-CHECKED** (for the narrowed, flagged target STATEMENT.md v1.2) — Theorem FAC-L (Part I: (L1)–(L5), delivery
+PASS Theory_work/Wave2/W2-FAC-B/STATEMENT.md:157 XF VERIFIED (A-REV2)"; [OP] "PROVED (by this seat, unchecked)" inside Theorem GEN "PROVED-CHECKED"; Lemma CAP (FINAL s7)
+PASS Theory_work/Wave2/W2-FAC-B/STATEMENT.md:159 addition checked in A4 "OK-WITH-FIXES") and F-GROW (A2 "PROVED (A2), checked by A3").
+PASS Theory_work/Wave2/PROTOCOL.md:21 **Scope rule (Felipe, binding):** all target results are asymptotic. Do not treat "asymptotic only / not at n = 200"
+PASS Theory_work/Wave1/PROTOCOL.md:44 - Mid-point REDIRECT/STOP → report.
+Failures: 0

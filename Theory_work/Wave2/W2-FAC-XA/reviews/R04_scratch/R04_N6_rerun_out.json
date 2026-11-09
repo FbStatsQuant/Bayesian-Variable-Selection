@@ -1,0 +1,92 @@
+[
+  {
+    "seed": 0,
+    "e": 0.0644956630243922,
+    "sets": 64,
+    "max_algebra_error": 4.547473508864641e-13,
+    "max_J": 0.005445863413315433,
+    "centered_score_difference": 0.09668319648221768,
+    "ratio_to_scale": 0.263917516195234
+  },
+  {
+    "seed": 1,
+    "e": 0.05531481020257609,
+    "sets": 64,
+    "max_algebra_error": 2.2737367544323206e-13,
+    "max_J": 0.005227207004054435,
+    "centered_score_difference": 0.10174908737735677,
+    "ratio_to_scale": 0.1435680427883577
+  },
+  {
+    "seed": 2,
+    "e": 0.06442273992027944,
+    "sets": 64,
+    "max_algebra_error": 2.2737367544323206e-13,
+    "max_J": 0.0054270354129148934,
+    "centered_score_difference": 0.049794494977504655,
+    "ratio_to_scale": 0.14870585645510287
+  },
+  {
+    "seed": 3,
+    "e": 0.05052362374518206,
+    "sets": 64,
+    "max_algebra_error": 4.547473508864641e-13,
+    "max_J": 0.0055900283600727185,
+    "centered_score_difference": 0.046967046612962804,
+    "ratio_to_scale": 0.12673231949799707
+  },
+  {
+    "seed": 4,
+    "e": 0.047900810867115715,
+    "sets": 64,
+    "max_algebra_error": 4.547473508864641e-13,
+    "max_J": 0.0050156335744282465,
+    "centered_score_difference": 0.12139773809099097,
+    "ratio_to_scale": 0.16263684482023624
+  },
+  {
+    "seed": 5,
+    "e": 0.055061206905200805,
+    "sets": 64,
+    "max_algebra_error": 4.547473508864641e-13,
+    "max_J": 0.0051614689064720665,
+    "centered_score_difference": 0.1693993379958556,
+    "ratio_to_scale": 0.2971677134771532
+  },
+  {
+    "seed": 6,
+    "e": 0.043184326143270974,
+    "sets": 64,
+    "max_algebra_error": 2.2737367544323206e-13,
+    "max_J": 0.005304945171273445,
+    "centered_score_difference": 0.14413573182491746,
+    "ratio_to_scale": 0.17207924372689304
+  },
+  {
+    "seed": 7,
+    "e": 0.0697559208284713,
+    "sets": 64,
+    "max_algebra_error": 4.547473508864641e-13,
+    "max_J": 0.005171999957958917,
+    "centered_score_difference": 0.08790747267698862,
+    "ratio_to_scale": 0.15112859442620902
+  },
+  {
+    "seed": 8,
+    "e": 0.045276478976448625,
+    "sets": 64,
+    "max_algebra_error": 4.547473508864641e-13,
+    "max_J": 0.005425833571358396,
+    "centered_score_difference": 0.03686551840769425,
+    "ratio_to_scale": 0.13318395880361458
+  },
+  {
+    "seed": 9,
+    "e": 0.06435893963843346,
+    "sets": 64,
+    "max_algebra_error": 2.2737367544323206e-13,
+    "max_J": 0.004879826100027351,
+    "centered_score_difference": 0.10244326155111594,
+    "ratio_to_scale": 0.1660251137151858
+  }
+]

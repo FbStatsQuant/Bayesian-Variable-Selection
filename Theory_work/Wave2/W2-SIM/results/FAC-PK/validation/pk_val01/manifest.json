@@ -1,0 +1,26 @@
+{
+ "run_id": "pk_val01",
+ "slurm_job_id": "2634167",
+ "submitted_utc": "2026-11-09T16:41:36.285623+00:00",
+ "sbatch_args": "--parsable --job-name=w2sim_pk_val01 --account=commons --partition=scavenge --qos=nots_scavenge --nodes=1 --ntasks=1 --cpus-per-task=1 --mem=4G --time=00:30:00 --export=NONE --no-requeue --array=1-2%2 --output=/scratch/fb31/theory_w2/pk_val01/slurm/%A_%a.out --error=/scratch/fb31/theory_w2/pk_val01/slurm/%A_%a.err",
+ "code_commit": "11dc9b73416dacb9f159846d39902d4b57b49a57",
+ "config": {
+  "RUN_ID": "pk_val01",
+  "OUT": "/scratch/fb31/theory_w2/pk_val01",
+  "CODE": "/home/fb31/projects/BVS/theory_w2/code/main_11dc9b7/repo",
+  "TICKETS": "/home/fb31/projects/BVS/theory_w2/code/tickets_20261109T0943"
+ },
+ "files_sha256": {
+  "tasks.tsv": "3adbd20be8b41b5a1822b62d948c50a7b02ea1f68067d48368dfce7dc16ea168",
+  "config.env": "86dae7f9e8e70ead148bcba0114967532a6fca97f66001e3f07146a19ef041cf",
+  "run_table.sh": "d029b534d2c7f6cb98fb21711c2cdf7095813aebbda47e0c4cf71191cab4511d",
+  "env_sim.sh": "a7fce02547e42c387a719b982268ee601964c4668587ee2f449960d7abe6ceca",
+  "scripts/validate_s5_partition.py": "5406f089f693e6385794462ca7f02322fa825d936dbf7cebbaed2e041cc758e9",
+  "scripts/s5_exact.py": "5b392b83d3f4f3cc8d75e285cc36ec69bfc04193f71a8ddb9d57ad2dc161933b",
+  "scripts/pk_common.py": "f635d1b4d4fe51cd23c6d929d482bea6d6d9da99f3480155788b337f5c4842b8",
+  "scripts/r1_cs.py": "8735c27bf0cbe1d7af06df453127b0503491508e9b3e941cddd48f6c783143e0",
+  "scripts/r3_iid.py": "f7b4880e7283cd83a74691aea0875d7ecfd110bd678fcc982bd067324a479cf0",
+  "scripts/validate_general.py": "c7d906b190ef138e680f5a9ee81ec8f06415d4984809b3498794c4e3dbea33eb"
+ },
+ "modules": "GCC/14.3.0 R/4.5.2 SciPy-bundle/2025.07 (Python 3.13.5, numpy 2.3.2, scipy 1.16.1)"
+}

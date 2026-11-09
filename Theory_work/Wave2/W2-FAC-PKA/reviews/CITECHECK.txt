@@ -1,0 +1,29 @@
+PASS lemmas\L2_singleton_start_swaps.md -> Scripts/SMC_BVS/core/cpp/v3_engine.h:97 expected='q.F = D.logprior[k] + lm'
+      q.logm = lm; q.lg0 = D.logprior[k] + c; q.d = (lm - D.logm0) - c; q.F = D.logprior[k] + lm;
+PASS lemmas\L2_singleton_start_swaps.md -> Scripts/SMC_BVS/core/cpp/v3_engine.h:408 expected='best.F > C.F'
+        if (have && best.F > C.F) {  // strict F improvement only (R14)
+PASS lemmas\L2_singleton_start_swaps.md -> Scripts/SMC_BVS/core/cpp/v3_engine.h:409 expected='A.moves >= ell'
+          if (A.moves >= ell) {
+PASS lemmas\L2_singleton_start_swaps.md -> Scripts/SMC_BVS/core/cpp/v3_core.cpp:473 expected='long long cap_ll'
+        long long cap_ll = (long long)o.ls0_ell + (o.ls0_cap_plus_mode ? (long long)m.S.size() : 0LL);  // checked (R05 #2)
+PASS lemmas\L2_singleton_start_swaps.md -> Scripts/SMC_BVS/core/cpp/v3_score.h:40 expected='D.K = std::min(p, n / 2)'
+    D.n = n; D.p = p; D.K = std::min(p, n / 2); D.W = nwords(p);
+PASS lemmas\L2_singleton_start_swaps.md -> Scripts/SMC_BVS/core/cpp/v3_core.cpp:372 expected='static void ingest_tables'
+  static void ingest_tables(Ledger& led, const Holder& h) {
+PASS lemmas\L2_singleton_start_swaps.md -> Scripts/SMC_BVS/core/cpp/v3_core.cpp:408 expected='ingest_tables(led, *h)'
+    ingest_tables(led, *h);
+PASS SINGLETON_TARGET.md -> Scripts/SMC_BVS/core/cpp/v3_core.cpp:372 expected='static void ingest_tables'
+  static void ingest_tables(Ledger& led, const Holder& h) {
+PASS SINGLETON_TARGET.md -> Scripts/SMC_BVS/core/cpp/v3_core.cpp:408 expected='ingest_tables(led, *h)'
+    ingest_tables(led, *h);
+PASS STATEMENT.md -> Theory_work/State_of_Project/sections/04_theory.tex:74 expected='G: sampling model.'
+  \par\smallskip\noindent\textbf{G: sampling model.}\enspace Fixed raw design; \(y^r=\alpha\mathbf1+X^r\beta+\epsilon\), \(\epsilon\sim N(0,\sigma^2I)\), fixed \(\sigma^2>0\). Standardize afterwards. Standardized errors are not assumed independently Gaussian.
+PASS STATEMENT.md -> Theory_work/State_of_Project/sections/04_theory.tex:70 expected='D0: data/target'
+  \par\smallskip\noindent\textbf{D0: data/target.}\enspace \(n\ge3,p\ge1\); nonconstant columns and response, centered and standardized. \(K=\min(p,\lfloor n/2\rfloor)\), \(\Omega=\{S:|S|\le K\}\). Use the shipped \(g=n,\tau=1,a_0=b_0=.01\) score and normalized capped BB\((1,p)\) prior.
+PASS STATEMENT.md -> Theory_work/State_of_Project/sections/04_theory.tex:71 expected='Score.'
+  \par\smallskip\noindent\textbf{Score.}\enspace \(G_U=X_U^\top X_U,\ z_U=X_U^\top y,\ H_U=(n+1)G_U+I,\ Q_U=y^\top y-nz_U^\top H_U^{-1}z_U,\ \nu=.01+n/2\). \(m(U)=c_n[\det H_U/\det(G_U+I)]^{-1/2}(.02+Q_U)^{-\nu}\). The common positive \(c_n\) cancels from posterior ratios.
+PASS STATEMENT.md -> Theory_work/State_of_Project/sections/04_theory.tex:72 expected='Prior.'
+  \par\smallskip\noindent\textbf{Prior.}\enspace \(w(k)=[2\binom{2p-1}{k}]^{-1}\), \(W_K=\sum_{k\le K}\binom pk w(k)\), \(\varpi(S)=w(|S|)/W_K\).
+PASS STATEMENT.md -> Theory_work/State_of_Project/sections/04_theory.tex:73 expected='Start/bridge.'
+  \par\smallskip\noindent\textbf{Start/bridge.}\enspace Actual blocks \(C_b\), \(r_b(U)=m(U)/m(\varnothing)>0\). \(\gamma_0(S)=\varpi(S)\prod_b r_b(S_b)\), \(\pi_0=\gamma_0/\bar Z_0\), \(\pi=\varpi m/Z\), \(d=\log BF-\sum_b\log r_b\), \(q_t\propto\gamma_0e^{td}\).
+CHECKED 14 citations; MISSES 0

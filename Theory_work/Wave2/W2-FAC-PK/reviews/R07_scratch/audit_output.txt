@@ -1,0 +1,68 @@
+{
+  "N1": {
+    "rows": 60,
+    "saturated": 55,
+    "MR1_misses": 53,
+    "doubled_scores": 60,
+    "phase_exceptions": 0
+  },
+  "N3": {
+    "rows": 360,
+    "endpoint_misses": 9,
+    "doubled_scores": 360,
+    "phase_exceptions": 0,
+    "max_moves_K": 1.26,
+    "MW_range": [
+      0.483793291871218,
+      2.723272799360076
+    ],
+    "max_p_cap_exceeds_double": 198
+  },
+  "L2_chain": {
+    "rows": 48,
+    "x_ok": 48,
+    "j_ok": 48,
+    "M_ok": 48,
+    "V_ok": 48,
+    "G_ok": 48,
+    "impl_applicable": 42,
+    "impl_ok": 42
+  },
+  "L3_static": {
+    "rows": 988,
+    "minimum_gain_ratio": 0.26891066737732855,
+    "summaries_match": true
+  },
+  "L3_small": {
+    "rows": 288,
+    "summaries_match": true
+  },
+  "L12": {
+    "counts": {
+      "L1": 6,
+      "L2": 66
+    },
+    "L1_extreme_counts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "L2_deletion_bounds_pass": 66,
+    "L2_extreme_conditions": 0
+  },
+  "hashes": {
+    "N1_raw.jsonl": "28c94867ea263a101c91b687b186a58658f1039087f43dd7b2b87249c96d86a6",
+    "N3_raw_final360.jsonl": "3dd50980a03d5561104d23d03cdcbcfb240ffb8098145f301fc3c3c1f719db9c"
+  },
+  "independent_matrix_checks": {
+    "gains": 5620,
+    "max_errors": {
+      "score_identity": 8.260059303211165e-14,
+      "neighbour_gain": 9.281464485866309e-14,
+      "rss_comparison": 0.0
+    }
+  }
+}

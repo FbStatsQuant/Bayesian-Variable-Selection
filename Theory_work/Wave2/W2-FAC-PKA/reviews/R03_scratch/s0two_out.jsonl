@@ -1,0 +1,8 @@
+{"n": 800, "p": 480, "seed": 0, "start": 400, "truth_in": true, "init_swaps": 15, "ell": 11, "need": 15, "miss_pred": true, "moves": 413, "final_S0": true}
+{"n": 800, "p": 480, "seed": 1, "start": 400, "truth_in": true, "init_swaps": 14, "ell": 11, "need": 15, "miss_pred": false, "moves": 412, "final_S0": true}
+{"n": 800, "p": 680, "seed": 0, "start": 400, "truth_in": true, "init_swaps": 33, "ell": 11, "need": 15, "miss_pred": true, "moves": 431, "final_S0": true}
+{"n": 800, "p": 680, "seed": 1, "start": 400, "truth_in": true, "init_swaps": 33, "ell": 11, "need": 15, "miss_pred": true, "moves": 431, "final_S0": true}
+{"n": 2000, "p": 1200, "seed": 0, "start": 1000, "truth_in": true, "init_swaps": 32, "ell": 12, "need": 16, "miss_pred": true, "moves": 1030, "final_S0": true}
+{"n": 2000, "p": 1200, "seed": 1, "start": 1000, "truth_in": true, "init_swaps": 25, "ell": 12, "need": 16, "miss_pred": true, "moves": 1023, "final_S0": true}
+{"n": 2000, "p": 1700, "seed": 0, "start": 1000, "truth_in": true, "init_swaps": 86, "ell": 12, "need": 16, "miss_pred": true, "moves": 1084, "final_S0": true}
+{"n": 2000, "p": 1700, "seed": 1, "start": 1000, "truth_in": true, "init_swaps": 54, "ell": 12, "need": 16, "miss_pred": true, "moves": 1052, "final_S0": true}

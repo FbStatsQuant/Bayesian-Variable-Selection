@@ -1,0 +1,1 @@
+{"rows": 48, "x_ok": 48, "j_ok": 48, "M_ok": 48, "V_ok": 48, "G_ok": 48, "impl_applicable": 42, "impl_ok": 42}

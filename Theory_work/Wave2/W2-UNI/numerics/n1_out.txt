@@ -1,0 +1,40 @@
+== exp2d(m=14,phi=1.0): p=196 spectrum=[0.480,4.968]
+   r= 0  max ||Delta beta||_1 = 9.621e-01
+   r= 1  max ||Delta beta||_1 = 8.164e-01
+   r= 2  max ||Delta beta||_1 = 2.530e-01
+   r= 3  max ||Delta beta||_1 = 8.826e-02
+   r= 4  max ||Delta beta||_1 = 2.693e-02
+   r= 6  max ||Delta beta||_1 = 5.236e-03
+   r= 8  max ||Delta beta||_1 = 3.455e-04
+   sampled max ||beta_T(l)||_1 = 0.953
+   inverse-entry envelope decay rate per unit distance (min over 10 submatrices) = 1.318
+== exp2d(m=14,phi=2.0): p=196 spectrum=[0.349,14.941]
+   r= 0  max ||Delta beta||_1 = 1.149e+00
+   r= 1  max ||Delta beta||_1 = 1.182e+00
+   r= 2  max ||Delta beta||_1 = 6.622e-01
+   r= 3  max ||Delta beta||_1 = 4.219e-01
+   r= 4  max ||Delta beta||_1 = 2.583e-01
+   r= 6  max ||Delta beta||_1 = 7.854e-02
+   r= 8  max ||Delta beta||_1 = 1.352e-02
+   sampled max ||beta_T(l)||_1 = 1.133
+   inverse-entry envelope decay rate per unit distance (min over 10 submatrices) = 0.882
+== gmrf(m=14,k=0.22): p=196 spectrum=[0.385,5.154]
+   r= 0  max ||Delta beta||_1 = 8.800e-01
+   r= 1  max ||Delta beta||_1 = 5.577e-01
+   r= 2  max ||Delta beta||_1 = 2.004e-01
+   r= 3  max ||Delta beta||_1 = 1.758e-01
+   r= 4  max ||Delta beta||_1 = 5.556e-02
+   r= 6  max ||Delta beta||_1 = 1.613e-02
+   r= 8  max ||Delta beta||_1 = 2.948e-03
+   sampled max ||beta_T(l)||_1 = 0.880
+   inverse-entry envelope decay rate per unit distance (min over 10 submatrices) = 0.931
+== rgg(p=196,r=0.12): p=196 spectrum=[0.335,5.567]
+   r= 0  max ||Delta beta||_1 = 1.964e+00
+   r= 1  max ||Delta beta||_1 = 9.535e-01
+   r= 2  max ||Delta beta||_1 = 3.591e-01
+   r= 3  max ||Delta beta||_1 = 9.772e-02
+   r= 4  max ||Delta beta||_1 = 2.966e-02
+   r= 6  max ||Delta beta||_1 = 3.104e-03
+   r= 8  max ||Delta beta||_1 = 6.100e-04
+   sampled max ||beta_T(l)||_1 = 1.828
+   inverse-entry envelope decay rate per unit distance (min over 10 submatrices) = 1.004

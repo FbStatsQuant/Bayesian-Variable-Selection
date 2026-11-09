@@ -1,0 +1,2 @@
+1	python3 validate_general.py $OUT/raw/validate_general.jsonl
+2	python3 validate_s5_partition.py $OUT/raw/validate_s5_partition.jsonl

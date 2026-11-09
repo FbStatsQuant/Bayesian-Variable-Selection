@@ -1,0 +1,14 @@
+1	python3 validate_general.py $OUT/raw/validate_general.jsonl
+2	python3 validate_s5_partition.py $OUT/raw/validate_s5_partition.jsonl
+3	python3 r3_iid.py $OUT/raw/t3.jsonl PILOT cs0.5 2000 1500 aligned 0
+4	python3 r3_iid.py $OUT/raw/t4.jsonl PILOT cs0.5 1000 2000 aligned 0
+5	python3 r3_iid.py $OUT/raw/t5.jsonl PILOT cs0.5 400 4000 aligned 0
+6	python3 r3_iid.py $OUT/raw/t6.jsonl PILOT cs0.5 200 2000 aligned 0
+7	python3 r3_iid.py $OUT/raw/t7.jsonl PILOT cs0.5 500 1000 mixed 0
+8	python3 r1_cs.py $OUT/raw/t8.jsonl 0.5 200000 0.99 aligned 0 PILOT
+9	python3 r1_cs.py $OUT/raw/t9.jsonl 0.8 60000 0.6 mixed 0 PILOT
+10	python3 s5_exact.py $OUT/raw/t10.jsonl 2000 0.99 aligned 0 PILOT
+11	python3 s5_exact.py $OUT/raw/t11.jsonl 4000 0.99 aligned 0 PILOT
+12	python3 r3_iid.py $OUT/raw/t12.jsonl PILOT s5 800 8000 aligned 0
+13	python3 r3_iid.py $OUT/raw/t13.jsonl PILOT s5 400 400 aligned 0
+14	python3 r1_cs.py $OUT/raw/t14.jsonl 0.2 200000 0.6 mixed 0 PILOT

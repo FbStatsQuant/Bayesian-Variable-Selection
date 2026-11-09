@@ -1,0 +1,16 @@
+200 10000000000 1 exh True pure True S0 True swapmargin -0.5 add -0.5
+200 10000000000 2 exh True pure True S0 True swapmargin -0.5 add -0.5
+200 10000000000 3 exh True pure True S0 True swapmargin -0.481 add -0.464
+200 1000000 1 exh True pure True S0 True swapmargin -0.501 add -0.5
+200 1000000 2 exh True pure True S0 True swapmargin -0.501 add -0.5
+200 1000000 3 exh True pure True S0 True swapmargin -0.47 add -0.441
+500 1000000000000 1 exh True pure True S0 True swapmargin -0.5 add -0.5
+500 1000000000000 2 exh True pure True S0 True swapmargin -0.5 add -0.5
+500 1000000000000 3 exh True pure True S0 True swapmargin -0.468 add -0.432
+500 1000000 1 exh True pure True S0 True swapmargin -0.5 add -0.5
+500 1000000 2 exh True pure True S0 True swapmargin -0.5 add -0.5
+500 1000000 3 exh True pure True S0 True swapmargin -0.436 add -0.363
+500 100000000 1 exh True pure True S0 True swapmargin -0.5 add -0.5
+500 100000000 2 exh True pure True S0 True swapmargin -0.5 add -0.5
+500 100000000 3 exh True pure True S0 True swapmargin -0.452 add -0.397
+pure&S0: 15 / 15

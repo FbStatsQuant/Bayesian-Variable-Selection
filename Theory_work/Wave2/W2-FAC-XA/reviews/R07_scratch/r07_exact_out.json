@@ -1,0 +1,14 @@
+{
+ "steps": 287482,
+ "both_side_steps": 79369,
+ "clip_checks": 79369,
+ "sel_checks": 79369,
+ "jump_checks": 42005,
+ "ident_checks": 79369,
+ "mid_checks": 79369,
+ "cert_checks": 287482,
+ "h_on_point": 783,
+ "failures": [],
+ "configs": 400,
+ "history_nodes": 287882
+}

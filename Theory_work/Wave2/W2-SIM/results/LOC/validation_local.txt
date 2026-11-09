@@ -1,0 +1,20 @@
+case | p | B | partition_equal | start | LS(start): path_equal final cert lim moves | LS(perturbed): path_equal moves types | fast_err_max | t_bc_ls t_fast_ls
+PT 1.5 adj n=400 q s=1 | 100 | 10 | True | |mode|=3 S0in=True | True True True False 0 | True 4 sddd | 2.27e-13 | 0.1s 0.0s
+PT 1.5 adj n=400 q s=2 | 100 | 10 | True | |mode|=3 S0in=True | True True True False 0 | True 3 ddd | 2.27e-13 | 0.0s 0.0s
+PT 0.5 spread n=400 q s=1 | 100 | 10 | True | |mode|=11 S0in=True | True True True False 8 | True 11 ddddddddddd | 6.82e-13 | 0.3s 0.0s
+PT 0.5 spread n=400 q s=2 | 100 | 10 | True | |mode|=8 S0in=True | True True True False 5 | True 8 dddddddd | 3.41e-13 | 0.1s 0.1s
+PT 8.5 spread n=600 q s=1 | 150 | 12 | True | |mode|=3 S0in=True | True True True False 0 | True 3 ddd | 2.27e-13 | 0.0s 0.0s
+PT 8.5 spread n=600 q s=2 | 150 | 12 | True | |mode|=4 S0in=True | True True True False 1 | True 4 dddd | 4.55e-13 | 0.0s 0.0s
+AF 0.4 adj n=400 q s=1 | 100 | 10 | True | |mode|=21 S0in=True | True True True False 18 | True 21 ddddddddddddddddddddd | 6.82e-13 | 2.0s 0.1s
+AF 0.4 adj n=400 q s=2 | 100 | 10 | True | |mode|=19 S0in=False | True True True False 17 | True 20 sddddddddddddddddddd | 4.55e-13 | 2.1s 0.1s
+AF 0.25 spread n=800 s s=1 | 55 | 7 | True | |mode|=6 S0in=True | True True True False 3 | True 6 dddddd | 9.09e-13 | 0.1s 0.0s
+AF 0.25 spread n=800 s s=2 | 55 | 7 | True | |mode|=6 S0in=True | True True True False 3 | True 6 dddddd | 1.36e-12 | 0.0s 0.0s
+PT 2.5 adj n=800 q s=1 | 200 | 14 | True | |mode|=3 S0in=True | True True True False 0 | True 3 ddd | 4.55e-13 | 0.0s 0.0s
+PT 2.5 adj n=800 q s=2 | 200 | 14 | True | |mode|=3 S0in=True | True True True False 0 | True 3 ddd | 4.55e-13 | 0.0s 0.0s
+CSG (0.5, 0.8) two n=600 q s=1 | 150 | 12 | True | |mode|=9 S0in=False | True True True False 7 | True 10 ssdddddddd | 2.27e-12 | 0.4s 0.0s
+CSG (0.5, 0.8) two n=600 q s=2 | 150 | 12 | True | |mode|=9 S0in=False | True True True False 7 | True 10 ssdddddddd | 2.50e-12 | 0.4s 0.1s
+CSG (0.35, 0.5) one n=800 q s=1 | 198 | 14 | True | |mode|=3 S0in=True | True True True False 0 | True 3 ddd | 9.09e-13 | 0.0s 0.0s
+CSG (0.35, 0.5) one n=800 q s=2 | 198 | 14 | True | |mode|=3 S0in=True | True True True False 0 | True 3 ddd | 4.55e-13 | 0.0s 0.0s
+CSG (0.2, 0.8) one n=400 q s=1 | 100 | 10 | True | |mode|=3 S0in=True | True True True False 0 | True 3 ddd | 3.41e-13 | 0.0s 0.0s
+CSG (0.2, 0.8) one n=400 q s=2 | 100 | 10 | True | |mode|=3 S0in=True | True True True False 0 | True 3 ddd | 2.27e-13 | 0.0s 0.0s
+ALL_EQUAL True

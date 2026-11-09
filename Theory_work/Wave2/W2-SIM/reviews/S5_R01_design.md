@@ -1,0 +1,29 @@
+# S5 R01 — design review of E-S5CC (Codex gpt-6.1-sol, reasoningEffort high; delegate_task, fresh)
+
+Launched 2026-11-09 10:20 (task node …3781c672…); reply received ~10:39. Reply verbatim below.
+
+---
+
+NO-GO
+
+1. **BLOCKER — The mid-phase maxima use the wrong states.** `Theory_work/Wave2/W2-SIM/S5/scripts/s5cc.py:62–72`: the `elif m >= 5` belongs to `if m in MCHK`, rather than the phase classification. Consequently, `r_mid` and `rT_mid` include bulk states except checkpoints. At p=500, 463 bulk states enter the mid-phase update. The six seeds I checked happened to retain the correct maximum, but any larger bulk value would silently corrupt the reported mid-phase statistic and its scaling slope. **Fix:** classify phases with one `if m >= 30 / elif m >= 5 / else` chain; record checkpoints independently. Add independent per-state checks of every added phase maximum. Original-field equality in `S5/validation/val_compare.txt:1–7` cannot detect this bug.
+
+2. **MAJOR — Early stopping turns unobserved end phases into negative observations.** `S5/scripts/s5cc.py:40–45,77,88–100` initializes phase maxima and end imbalance to zero, then can stop before those phases occur. `S5/scripts/summarise_cc.py:51–66` includes those zeros in means and uses **all runs** as the denominator for end-phase imbalance. A run stopping at m=100 contributes “no imbalance at m≤5” despite never visiting that region. This can suppress criterion (b) precisely when criterion (c) identifies trouble. **Fix:** track phase visitation explicitly, emit null for unobserved statistics, report observed denominators and unresolved runs, and exclude incomplete trajectories from complete-path scaling estimates. Preserve failed seeds and distinguish failure reasons.
+
+3. **MAJOR — The reported “CCδ margin” does not directly measure the fixed-δ condition, and half the grid is deterministically infeasible.** `S5/scripts/s5cc.py:56` records  
+   `min_T (Λ_k − (H_q+κ₀ max|e|)²)/log n`.  
+   The relevant maximum admissible δ is instead  
+   `min_T [1 − (H_q+κ₀ max|e|)²/Λ_k]`  
+   (`W2-FAC-S5/STATEMENT.md:98–104`). Moreover, every planned n=10¹² cell fails CC already at the full model even with e=0. For S5, H_q² is 28.771 at p=2000 and 37.981 at p=200000, versus Λ_p≈27.63. Thus these failures cannot diagnose excessive global error. **Fix:** retain the requested grid, but add the exact admissible-δ statistic, a deterministic feasibility baseline, and pass rates for prespecified δ values. Explain that these finite-grid failures do not refute asymptotic KL.
+
+4. **MAJOR — `reached_S0` is not certification of the stated LS0 path or endpoint.** `S5/scripts/s5cc.py:49,87–91` selects only deletions and exits immediately when no null remains. It ignores additions, omits swaps, and never checks terminal improvement. A superior addition or swap could divert actual LS0 while this driver reports success. `S5/DESIGN.md:17–20` discloses the restriction, but still presents `reached_S0` as secondary evidence for C2-R; that claim requires competing-move and endpoint inequalities (`W2-FAC-S5/STATEMENT.md:111–116`). **Fix:** label this explicitly as deletion-path completion. Record addition violations using the already-computed `G["gadd"]`; separately specify swap certification coverage. Do not interpret successful deletion completion as verification of C2-R.
+
+5. **MAJOR — The summary accepts duplicate, incomplete, or inconsistent batches as independent data.** `S5/scripts/summarise_cc.py:9,31–43` groups arbitrary rows without checking expected task keys, unique seeds, RNG identity, or completion. Duplicate results from collection/reruns inflate sample sizes and narrow bootstrap/Wilson intervals; missing tasks silently change the experiment. The pairing dictionaries at `:138` additionally overwrite duplicates. **Fix:** validate input against both task tables, reject duplicate `(q,rb,rw,p,n,seed)` keys, verify RNG seeds and complete-path invariants, and list missing/failed tasks before producing inferential summaries. The supplied tables themselves correctly contain 480 tasks and 240 distinct streams paired across n.
+
+6. **MINOR — The n-pairing check proves less than its description suggests.** `S5/scripts/summarise_cc.py:140–142` compares only `r_bulk`, `r_end`, and `end_trace`; trace floats are rounded at `s5cc.py:79`. Different mid-path trajectories can share those summaries while differing in band maxima, fixed-m values, centre maxima, or bulk-proper statistics. **Fix:** compare all unrounded e-statistics and record a deletion-sequence digest if claiming identical paths. Report missing partners and mismatched fields explicitly.
+
+7. **MINOR — “Positive fraction” and “persists” need operational definitions and a power statement.** `S5/DESIGN.md:54–57` substitutes “ever |I|≥2 at m≤5” for persistence. The pilot already illustrates the ambiguity: `results/FAC-S5_CC/pilot01/cc_pilot.jsonl:1` has I(5)=−1, I(4)=−2, I(3)=−1, I(2)=−2. Also, zero events in 50 independent runs has Wilson upper bound ≈7.1%; zero in 20 has upper bound ≈16.1%. **Fix:** prespecify whether one excursion suffices, retain the trajectory-based distinction, and state which event rates the experiment can exclude. A zero count cannot establish absence of a positive fraction.
+
+8. **MINOR — Singleton pilot slope intervals falsely imply certainty.** `S5/scripts/summarise_cc.py:125–129` bootstraps slopes even with one observation per p, producing zero-width intervals; see `pilot_summary.md:44–51`. The mean-CI function correctly returns unavailable intervals for singleton cells, but slopes lack that safeguard. **Fix:** suppress slope CIs when any contributing cell lacks replication and mark pilot slopes descriptive.
+
+The scorer hash matches the declared ticket hash; independent dense calculations agreed with its e_R and τ diagnostics to floating-point precision. The mean bootstrap, replicated-cell slope bootstrap, and Wilson formulas themselves are sound.

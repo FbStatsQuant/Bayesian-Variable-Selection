@@ -1,0 +1,1 @@
+{'generated': 400, 'tested': 361, 'normal_eq': 1.4210854715202004e-14, 'resid_decomp': 9.43689570931383e-16, 'var_formula': 4.996003610813204e-16, 'tau_bound_viol': 0, 'indep_cov': 1.1102230246251565e-16}

@@ -1,0 +1,11 @@
+p=40 n=80 q=5 rb=0.3 rw=0.7 reps=2000 (Bartlett vs explicit rows)
+XtX[0,1] same grp    Bartlett mean 55.0293 sd 4.8047 | explicit mean 55.2511 sd 4.5095 | KS D=0.0375 p=0.120
+XtX[0,5] diff grp    Bartlett mean 23.6531 sd 8.2380 | explicit mean 23.4299 sd 8.1457 | KS D=0.0165 p=0.948
+XtX[0,39]            Bartlett mean 23.5620 sd 8.1426 | explicit mean 23.7723 sd 8.3343 | KS D=0.0320 p=0.257
+Xty truth1           Bartlett mean 39.2393 sd 6.7388 | explicit mean 38.7922 sd 6.7924 | KS D=0.0355 p=0.161
+Xty truth3           Bartlett mean 47.5189 sd 5.7893 | explicit mean 47.6194 sd 5.7987 | KS D=0.0175 p=0.919
+Xty null a           Bartlett mean 8.7848 sd 8.8775 | explicit mean 8.7331 sd 8.5304 | KS D=0.0265 p=0.484
+Xty null b           Bartlett mean 9.1665 sd 8.8221 | explicit mean 8.9693 sd 8.6557 | KS D=0.0225 p=0.692
+path final=S0        Bartlett mean 0.9155 sd 0.2781 | explicit mean 0.9295 sd 0.2560 | KS D=0.0140 p=0.990
+path #moves          Bartlett mean 35.8750 sd 0.6398 | explicit mean 35.9125 sd 0.4897 | KS D=0.0160 p=0.960
+path final size      Bartlett mean 4.1455 sd 0.6606 | explicit mean 4.1075 sd 0.4989 | KS D=0.0150 p=0.978

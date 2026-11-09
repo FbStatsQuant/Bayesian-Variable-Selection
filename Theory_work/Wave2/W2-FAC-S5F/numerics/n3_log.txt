@@ -1,0 +1,23 @@
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave2\W2-FAC-S5F\numerics\n3_tools.py:4: SyntaxWarning: invalid escape sequence '\S'
+  and also unstructured random covariances) and random T containing S0, j in T\S0, l notin T:
+== Part A: Pythagoras identity and jump inequality on explicit designs ==
+A1 Pythagoras identity: max relative discrepancy = 0.00e+00
+A2 jump inequality: max violation (should be <= 0 up to rounding) = -3.82e-04
+A3 Z(l;T) for fixed sets: mean=-0.035 var=1.016 P(Z^2>3.84)=0.052 (N(0,1): 0, 1, 0.05)
+== Part B: block-CS closed forms (bcs_core, exact Gram) ==
+B1 swap identity (scanner): max rel. discrepancy = 1.91e-08
+B2 drift identity: min kappa = (c_bar_T - c_bar_(T\j))/r_j over 60 random (T,j) = 0.0148 (must be > 0)
+B3 ytilde identity: max rel. discrepancy = 2.12e-14
+B4 closed-form add statistic vs scanner (relative, incl. the O(1/n) ridge/scale corrections): 1.06e-06
+B2b kappa for u=1: values [0.065807, 0.065807] ; predicted a*c*w_(u-1)/(1+aW_(T\j)) = 0.049310
+B2b kappa for u=2: values [0.041877, 0.041877, 0.041877, 0.041877] ; predicted a*c*w_(u-1)/(1+aW_(T\j)) = 0.020103
+B2b kappa for u=3: values [0.03071, 0.03071, 0.03071, 0.03071, 0.03071] ; predicted a*c*w_(u-1)/(1+aW_(T\j)) = 0.012669
+B2b kappa for u=4: values [0.024245, 0.024245, 0.024245, 0.024245] ; predicted a*c*w_(u-1)/(1+aW_(T\j)) = 0.009258
+B2b kappa for u=5: values [0.020028, 0.020028, 0.020028, 0.020028, 0.020028, 0.020028, 0.020028, 0.020028, 0.020028] ; predicted a*c*w_(u-1)/(1+aW_(T\j)) = 0.007296
+== Part C: level / centre / hole bounds along S5 paths (p=1000) ==
+n=1e+04 seed=0: pure=True final=S0:True | level<=bound: 996/996 (worst ratio 0.29) | |delta'|<=bound: 996/996 (worst ratio 0.03) | hole<=(sqrt((q-1)lmax)+s|delta'|)^2: 995/995 (worst ratio 0.25) | max hole/level=3.86 at m=15; steps with hole/level>2: 47 (m range 9-569)
+n=1e+04 seed=1: pure=True final=S0:True | level<=bound: 996/996 (worst ratio 0.52) | |delta'|<=bound: 996/996 (worst ratio 0.04) | hole<=(sqrt((q-1)lmax)+s|delta'|)^2: 995/995 (worst ratio 0.25) | max hole/level=3.61 at m=251; steps with hole/level>2: 39 (m range 19-616)
+n=1e+06 seed=0: pure=True final=S0:True | level<=bound: 996/996 (worst ratio 0.35) | |delta'|<=bound: 996/996 (worst ratio 0.04) | hole<=(sqrt((q-1)lmax)+s|delta'|)^2: 995/995 (worst ratio 0.24) | max hole/level=3.59 at m=54; steps with hole/level>2: 32 (m range 14-610)
+n=1e+06 seed=1: pure=True final=S0:True | level<=bound: 996/996 (worst ratio 0.35) | |delta'|<=bound: 996/996 (worst ratio 0.06) | hole<=(sqrt((q-1)lmax)+s|delta'|)^2: 995/995 (worst ratio 0.25) | max hole/level=3.72 at m=49; steps with hole/level>2: 39 (m range 6-626)
+n=1e+10 seed=0: pure=True final=S0:True | level<=bound: 996/996 (worst ratio 0.28) | |delta'|<=bound: 996/996 (worst ratio 0.03) | hole<=(sqrt((q-1)lmax)+s|delta'|)^2: 995/995 (worst ratio 0.25) | max hole/level=3.98 at m=10; steps with hole/level>2: 36 (m range 2-553)
+n=1e+10 seed=1: pure=True final=S0:True | level<=bound: 996/996 (worst ratio 0.30) | |delta'|<=bound: 996/996 (worst ratio 0.03) | hole<=(sqrt((q-1)lmax)+s|delta'|)^2: 995/995 (worst ratio 0.25) | max hole/level=4.09 at m=6; steps with hole/level>2: 42 (m range 1-484)

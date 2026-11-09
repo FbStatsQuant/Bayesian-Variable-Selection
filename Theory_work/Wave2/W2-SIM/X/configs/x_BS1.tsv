@@ -1,0 +1,8 @@
+1	python3 -B x_paths.py $OUT/raw/B_two03_09_r0.5_n100000_p2000_coefrev_s0-9.jsonl item=B rho=0.5 n=100000 p=2000 load=two03_09 seeds=0-9 start=full coef=rev
+2	python3 -B x_paths.py $OUT/raw/B_two05_095_r0.5_n100000_p2000_coefrev_s0-9.jsonl item=B rho=0.5 n=100000 p=2000 load=two05_095 seeds=0-9 start=full coef=rev
+3	python3 -B x_paths.py $OUT/raw/B_unif02_09_r0.5_n100000_p2000_lseed1_s0-9.jsonl item=B rho=0.5 n=100000 p=2000 load=unif02_09 seeds=0-9 start=full lseed=1
+4	python3 -B x_paths.py $OUT/raw/B_unif02_09_r0.5_n100000_p2000_lseed2_s0-9.jsonl item=B rho=0.5 n=100000 p=2000 load=unif02_09 seeds=0-9 start=full lseed=2
+5	python3 -B x_paths.py $OUT/raw/B_two03_09_r0.5_n1000000_p2000_coefrev_s0-9.jsonl item=B rho=0.5 n=1000000 p=2000 load=two03_09 seeds=0-9 start=full coef=rev
+6	python3 -B x_paths.py $OUT/raw/B_two05_095_r0.5_n1000000_p2000_coefrev_s0-9.jsonl item=B rho=0.5 n=1000000 p=2000 load=two05_095 seeds=0-9 start=full coef=rev
+7	python3 -B x_paths.py $OUT/raw/B_unif02_09_r0.5_n1000000_p2000_lseed1_s0-9.jsonl item=B rho=0.5 n=1000000 p=2000 load=unif02_09 seeds=0-9 start=full lseed=1
+8	python3 -B x_paths.py $OUT/raw/B_unif02_09_r0.5_n1000000_p2000_lseed2_s0-9.jsonl item=B rho=0.5 n=1000000 p=2000 load=unif02_09 seeds=0-9 start=full lseed=2

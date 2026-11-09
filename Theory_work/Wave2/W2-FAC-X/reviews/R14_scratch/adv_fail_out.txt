@@ -1,0 +1,9 @@
+{"n": 100000, "seed": 11, "moves": [["swapN", 149, 26, 6.205], ["delN", 50, null, 5.923], ["delN", 151, null, 5.934]], "xi_max": 3.263, "xT": -0.209, "Delta": 5.912, "approx_Gadd": 0.082, "log2p2_plus_Ln": 8.335, "half_logn": 5.756}
+{"n": 10000000, "seed": 11, "ok": true, "max_add_over_logn": -0.137, "swap_minus_del": -2.211, "exc_over_maxd": 0.66, "band_over_maxd": 0.34}
+{"n": 10000000, "seed": 12, "ok": true, "max_add_over_logn": -0.259, "swap_minus_del": -4.178, "exc_over_maxd": 0.89, "band_over_maxd": 0.6}
+{"n": 10000000, "seed": 13, "ok": true, "max_add_over_logn": -0.206, "swap_minus_del": -3.325, "exc_over_maxd": 1.02, "band_over_maxd": 1.02}
+{"n": 10000000, "seed": 14, "ok": true, "max_add_over_logn": -0.312, "swap_minus_del": -5.044, "exc_over_maxd": 1.05, "band_over_maxd": 0.65}
+{"n": 1000000000, "seed": 11, "ok": true, "max_add_over_logn": -0.218, "swap_minus_del": -4.533, "exc_over_maxd": 0.34, "band_over_maxd": 0.34}
+{"n": 1000000000, "seed": 12, "ok": true, "max_add_over_logn": -0.312, "swap_minus_del": -6.475, "exc_over_maxd": 0.02, "band_over_maxd": 0.02}
+{"n": 1000000000, "seed": 13, "ok": true, "max_add_over_logn": -0.272, "swap_minus_del": -5.641, "exc_over_maxd": 0.43, "band_over_maxd": 0.43}
+{"n": 1000000000, "seed": 14, "ok": true, "max_add_over_logn": -0.353, "swap_minus_del": -7.326, "exc_over_maxd": 0.21, "band_over_maxd": 0.21}

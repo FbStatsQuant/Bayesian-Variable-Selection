@@ -1,0 +1,154 @@
+{
+  "constants": {
+    "alpha": 0.17,
+    "theta_infimum": 0.057958477508650796,
+    "theta_point_one_alpha_cutoff": 0.17257049925019763,
+    "theta_point_zero_six_alpha_cutoff": 0.17012172879828472,
+    "pair_shift_coefficient": 0.5222329678670935,
+    "endpoint_250_ratio": 0.9997589302313648
+  },
+  "exhaustive": {
+    "p": 15,
+    "subsets": 32767,
+    "max_variance_ratio": 1.0,
+    "lattice_event_violations": []
+  },
+  "exact_paths": 12,
+  "path_birth_formula_max_error": 1.3322676295501878e-15,
+  "path_max_level_deficit": 0.3526415285821831,
+  "singleton_crossings": 0,
+  "cohort_interval_failures": 0,
+  "raw_exception_pair_failures": 0,
+  "largest_singleton_drift_distance_ratio": 0.1322370668140755,
+  "literal_core_failures": 12,
+  "first_literal_core_counterexample": {
+    "step": 0,
+    "k": 2000,
+    "j": 1481,
+    "X": 0.4604421598902046,
+    "level_record": 0.00019856080459539378,
+    "E": 0.0027886713155967865,
+    "members": [
+      0.0323301614044991,
+      0.38523354971114565,
+      1.551056745643932,
+      -0.3339617110677155,
+      0.5816156899766243
+    ],
+    "field": 0.0027886713155967865
+  },
+  "extremal_sets": [
+    {
+      "p": 10000,
+      "theta": 0.01,
+      "alpha": 0.17,
+      "m": 2,
+      "normalized_field": 0.139803986691009,
+      "predicted_limit": 0.99498743710662,
+      "CC_ratio": 0.5795961286732756,
+      "predicted_CC_limit": 1.0124131806318282
+    },
+    {
+      "p": 10000,
+      "theta": 0.06,
+      "alpha": 0.17,
+      "m": 2,
+      "normalized_field": 0.20688589670466756,
+      "predicted_limit": 0.9695359714832658,
+      "CC_ratio": 0.6331404202451008,
+      "predicted_CC_limit": 0.999457760388467
+    },
+    {
+      "p": 10000,
+      "theta": 0.1,
+      "alpha": 0.17,
+      "m": 3,
+      "normalized_field": 0.2689644862481216,
+      "predicted_limit": 0.9486832980505138,
+      "CC_ratio": 0.6874184087414835,
+      "predicted_CC_limit": 0.9885946727981235
+    },
+    {
+      "p": 100000,
+      "theta": 0.01,
+      "alpha": 0.17,
+      "m": 2,
+      "normalized_field": 0.2127517610919349,
+      "predicted_limit": 0.99498743710662,
+      "CC_ratio": 0.5901969930791596,
+      "predicted_CC_limit": 1.0124131806318282
+    },
+    {
+      "p": 100000,
+      "theta": 0.06,
+      "alpha": 0.17,
+      "m": 2,
+      "normalized_field": 0.19936393917490713,
+      "predicted_limit": 0.9695359714832658,
+      "CC_ratio": 0.5797361198987221,
+      "predicted_CC_limit": 0.999457760388467
+    },
+    {
+      "p": 100000,
+      "theta": 0.1,
+      "alpha": 0.17,
+      "m": 4,
+      "normalized_field": 0.28627597305885605,
+      "predicted_limit": 0.9486832980505138,
+      "CC_ratio": 0.6530339819212642,
+      "predicted_CC_limit": 0.9885946727981235
+    },
+    {
+      "p": 1000000,
+      "theta": 0.01,
+      "alpha": 0.17,
+      "m": 2,
+      "normalized_field": 0.16971533781274037,
+      "predicted_limit": 0.99498743710662,
+      "CC_ratio": 0.5254320949899759,
+      "predicted_CC_limit": 1.0124131806318282
+    },
+    {
+      "p": 1000000,
+      "theta": 0.06,
+      "alpha": 0.17,
+      "m": 3,
+      "normalized_field": 0.27513022349113253,
+      "predicted_limit": 0.9695359714832658,
+      "CC_ratio": 0.6077245628769881,
+      "predicted_CC_limit": 0.999457760388467
+    },
+    {
+      "p": 1000000,
+      "theta": 0.1,
+      "alpha": 0.17,
+      "m": 4,
+      "normalized_field": 0.3101242414284298,
+      "predicted_limit": 0.9486832980505138,
+      "CC_ratio": 0.6372976945404785,
+      "predicted_CC_limit": 0.9885946727981235
+    }
+  ],
+  "analytic_all_set_witness": {
+    "log_p": 10000.0,
+    "theta": 0.01,
+    "alpha": 0.17,
+    "threshold": 0.99,
+    "log_expected_exceedances": 191.52987910525007,
+    "log_selected_count": 100.0,
+    "log_expected_count_over_selected": 91.52987910525007,
+    "anchor_failure_bound": 3.846040299559467e-86,
+    "CC_ratio_lower_bound": 1.0080709420738598,
+    "caveat": "All-set witness; neither a realized sample nor a greedy-path counterexample."
+  },
+  "band_scalar": {
+    "paths": 200,
+    "violations": 0,
+    "max_neighbour": 0.344521811968224
+  },
+  "dense_matrix_checks": {
+    "states": 1200,
+    "max_tau_error": 1.9984014443252818e-15,
+    "max_update_error": 5.273559366969494e-16
+  }
+}

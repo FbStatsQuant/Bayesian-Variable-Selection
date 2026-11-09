@@ -1,0 +1,48 @@
+{
+  "started_utc": "2026-11-09T15:38:28.886023+00:00",
+  "finished_utc": "2026-11-09T15:39:08.492846+00:00",
+  "python": "3.12.4",
+  "numpy": "1.26.4",
+  "scipy": "1.13.1",
+  "source_hashes": {
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-XA\\numerics\\N2_simulations.py": "da2f441454f090df923370e654f8e3d2f59dbc9b555cb2c80cab3e4eaa587f76",
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-XA\\numerics\\N1_simulations.py": "b2a303ad27b6d6f8230c445500a9537556758c3c3aa9b653ddfa16a56af0d59e",
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-XA\\PLAN.md": "84def4e405598a107ccff73284d2250f060571fe22dfccbb18424a99233dbea0",
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-XA\\STATEMENT.md": "e754526598d5190c00b96bcb3a1f7127160d89b271e559193dc3fbfba31f3c7c",
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-B\\numerics\\fac_core.py": "e06d7dc50e132dcf40061b32383385a518ba9482cf6d9efca63ee77af1521f24",
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-B\\numerics\\bvs_core.py": "e8283f5600f203a7f6016d62c55d07fd56bd9bbad4b7af1b9a9c87e05e0cc603",
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-B\\numerics\\cs_core.py": "14b14cfd277bd2b52f0c16cf1404ebf83c3e05a158078dba5b89567302d3f074"
+  },
+  "source_hashes_after": {
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-XA\\numerics\\N2_simulations.py": "da2f441454f090df923370e654f8e3d2f59dbc9b555cb2c80cab3e4eaa587f76",
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-XA\\numerics\\N1_simulations.py": "b2a303ad27b6d6f8230c445500a9537556758c3c3aa9b653ddfa16a56af0d59e",
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-XA\\PLAN.md": "84def4e405598a107ccff73284d2250f060571fe22dfccbb18424a99233dbea0",
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-XA\\STATEMENT.md": "e754526598d5190c00b96bcb3a1f7127160d89b271e559193dc3fbfba31f3c7c",
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-B\\numerics\\fac_core.py": "e06d7dc50e132dcf40061b32383385a518ba9482cf6d9efca63ee77af1521f24",
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-B\\numerics\\bvs_core.py": "e8283f5600f203a7f6016d62c55d07fd56bd9bbad4b7af1b9a9c87e05e0cc603",
+    "C:\\Users\\felip\\Bayesian-Variable-Selection\\Theory_work\\Wave2\\W2-FAC-B\\numerics\\cs_core.py": "14b14cfd277bd2b52f0c16cf1404ebf83c3e05a158078dba5b89567302d3f074"
+  },
+  "source_hashes_unchanged": true,
+  "n": [
+    1000000,
+    100000000
+  ],
+  "p": [
+    32,
+    100,
+    200
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "runs": 120,
+  "dont_write_bytecode": true,
+  "law_validation_reps": 6000,
+  "statement": "XA v1 LOCKED research target; diagnostics only",
+  "gram_df": "n-1",
+  "response_residual_df": "n-1-p"
+}

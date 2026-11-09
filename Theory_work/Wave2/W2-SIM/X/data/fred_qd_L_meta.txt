@@ -1,0 +1,6 @@
+name=fred_qd n_data=257 p=170 k=170 delta=0.1
+input_md5=638bc3fed6988243a17bf69921757051
+max|rowSums(L^2) - (1-delta)| = 9.33e-15
+top eigenvalues of R: 45.043 14.796 10.509 8.5775 5.6189 4.677 4.4325 3.9371 3.8377 3.2243
+lambda1/p = 0.2650 ; trace share top1/5 = 0.2650 / 0.4973
+prov: BVAR 1.0.5 (R 4.4 library; data/Rdata.rdb md5 e8a6695491a756245ea9cf99f02d03d8; fred_trans.csv md5 3c729ac3b865bcb93934ab5e2c3506ee): fred_qd, 63 NA-columns dropped of 233, 0 columns non-finite after transform dropped; transformed by BVAR code table (fred_qd) re-implemented; rows 1959-09-01..2023-09-01

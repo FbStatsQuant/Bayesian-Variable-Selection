@@ -1,0 +1,42 @@
+(1) F_closed vs F_direct
+  max relative |F_closed - F_direct| = 1.28e-14
+(2) closed-form gains vs F_direct differences (first two steps of the path)
+  two02_095 n=10000: path move delN j=28 gain 4.604447 | direct best delN j=28 gain 4.604447
+  two02_095 n=1e+06: path move delN j=29 gain 6.904244 | direct best delN j=29 gain 6.904244
+  three n=10000: path move delN j=0 gain 4.604796 | direct best delN j=0 gain 4.604796
+  three n=1e+06: path move delN j=0 gain 6.907518 | direct best delN j=0 gain 6.907518
+  max |gain diff| = 1.35e-09
+(3) full path equality: eg_path vs iid_core.ls0_path on explicit X'X
+  two02_095  n=10000    p=40   seed=0 moves 37/37 same=True max|gain diff|=6.2e-14 final_S0 True/True
+  two02_095  n=10000    p=40   seed=1 moves 37/37 same=True max|gain diff|=1.9e-13 final_S0 True/True
+  two02_095  n=10000    p=120  seed=0 moves 117/117 same=True max|gain diff|=7.6e-12 final_S0 True/True
+  two02_095  n=10000    p=120  seed=1 moves 117/117 same=True max|gain diff|=3.3e-12 final_S0 True/True
+  two02_095  n=1e+06    p=40   seed=0 moves 37/37 same=True max|gain diff|=4.4e-12 final_S0 True/True
+  two02_095  n=1e+06    p=40   seed=1 moves 37/37 same=True max|gain diff|=6.0e-12 final_S0 True/True
+  two02_095  n=1e+06    p=120  seed=0 moves 117/117 same=True max|gain diff|=2.9e-12 final_S0 True/True
+  two02_095  n=1e+06    p=120  seed=1 moves 117/117 same=True max|gain diff|=7.7e-12 final_S0 True/True
+  two03_09   n=10000    p=40   seed=0 moves 37/37 same=True max|gain diff|=4.2e-14 final_S0 True/True
+  two03_09   n=10000    p=40   seed=1 moves 37/37 same=True max|gain diff|=3.6e-14 final_S0 True/True
+  two03_09   n=10000    p=120  seed=0 moves 117/117 same=True max|gain diff|=7.6e-12 final_S0 True/True
+  two03_09   n=10000    p=120  seed=1 moves 117/117 same=True max|gain diff|=4.6e-12 final_S0 True/True
+  two03_09   n=1e+06    p=40   seed=0 moves 37/37 same=True max|gain diff|=3.8e-12 final_S0 True/True
+  two03_09   n=1e+06    p=40   seed=1 moves 37/37 same=True max|gain diff|=2.9e-12 final_S0 True/True
+  two03_09   n=1e+06    p=120  seed=0 moves 117/117 same=True max|gain diff|=6.4e-11 final_S0 True/True
+  two03_09   n=1e+06    p=120  seed=1 moves 117/117 same=True max|gain diff|=5.4e-11 final_S0 True/True
+  three      n=10000    p=40   seed=0 moves 37/37 same=True max|gain diff|=1.6e-12 final_S0 True/True
+  three      n=10000    p=40   seed=1 moves 37/37 same=True max|gain diff|=5.4e-13 final_S0 True/True
+  three      n=10000    p=120  seed=0 moves 117/117 same=True max|gain diff|=5.0e-12 final_S0 True/True
+  three      n=10000    p=120  seed=1 moves 117/117 same=True max|gain diff|=2.2e-12 final_S0 True/True
+  three      n=1e+06    p=40   seed=0 moves 37/37 same=True max|gain diff|=4.6e-12 final_S0 True/True
+  three      n=1e+06    p=40   seed=1 moves 37/37 same=True max|gain diff|=1.8e-12 final_S0 True/True
+  three      n=1e+06    p=120  seed=0 moves 117/117 same=True max|gain diff|=1.0e-10 final_S0 True/True
+  three      n=1e+06    p=120  seed=1 moves 117/117 same=True max|gain diff|=2.1e-10 final_S0 True/True
+  cs         n=10000    p=40   seed=0 moves 37/37 same=True max|gain diff|=1.7e-13 final_S0 True/True
+  cs         n=10000    p=40   seed=1 moves 37/37 same=True max|gain diff|=8.7e-14 final_S0 True/True
+  cs         n=10000    p=120  seed=0 moves 117/117 same=True max|gain diff|=2.0e-12 final_S0 True/True
+  cs         n=10000    p=120  seed=1 moves 117/117 same=True max|gain diff|=2.8e-12 final_S0 True/True
+  cs         n=1e+06    p=40   seed=0 moves 37/37 same=True max|gain diff|=1.8e-12 final_S0 True/True
+  cs         n=1e+06    p=40   seed=1 moves 37/37 same=True max|gain diff|=3.4e-12 final_S0 True/True
+  cs         n=1e+06    p=120  seed=0 moves 117/117 same=True max|gain diff|=2.7e-11 final_S0 True/True
+  cs         n=1e+06    p=120  seed=1 moves 117/117 same=True max|gain diff|=2.1e-11 final_S0 True/True
+  identical move sequences: 32/32

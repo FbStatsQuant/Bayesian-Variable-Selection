@@ -1,0 +1,6 @@
+30 61 1 | complete: True | visited {'bulk': 0, 'mid': 22, 'end': 5} | all added fields agree: True 
+500 1e12 1 | complete: True | visited {'bulk': 467, 'mid': 25, 'end': 5} | all added fields agree: True 
+2000 1e6 2 | complete: True | visited {'bulk': 1967, 'mid': 25, 'end': 5} | all added fields agree: True 
+600 1e12 1 3 .2 .6 | complete: True | visited {'bulk': 567, 'mid': 25, 'end': 5} | all added fields agree: True 
+1000 1e20 5 | complete: True | visited {'bulk': 967, 'mid': 25, 'end': 5} | all added fields agree: True 
+ALL AGREE: True

@@ -1,0 +1,6 @@
+1	python3 s5p_exact.py 50000 1e5 1 > $OUT/raw/ex_1.json
+2	python3 s5p_exact.py 20000 1e5 1 > $OUT/raw/ex_2.json
+3	python3 s5p_exact.py 5000 1e4 1 > $OUT/raw/ex_3.json
+4	python3 s5p_iid.py 1000 2000 1 > $OUT/raw/iid_4.json
+5	python3 s5p_iid.py 2000 1e4 1 > $OUT/raw/iid_5.json
+6	python3 s5p_iid.py 4000 2e4 1 > $OUT/raw/iid_6.json

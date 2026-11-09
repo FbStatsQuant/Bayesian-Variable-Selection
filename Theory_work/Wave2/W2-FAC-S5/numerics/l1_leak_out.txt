@@ -1,0 +1,3 @@
+{'n': 10000, 'max_rel_reconstruction_err': np.float64(6.700054210307607e-11), 'n32_leak_max': np.float64(0.00745966558503343), 'leak_over_bound_max': np.float64(0.00019727878931697615), 'eps_over_rate_max': np.float64(0.009906785060043246)}
+{'n': 1000000, 'max_rel_reconstruction_err': np.float64(3.9162184514239825e-11), 'n32_leak_max': np.float64(0.007460034735914824), 'leak_over_bound_max': np.float64(0.0001972787847668692), 'eps_over_rate_max': np.float64(0.0025724563558844017)}
+{'n': 100000000, 'max_rel_reconstruction_err': np.float64(7.144167218898351e-12), 'n32_leak_max': np.float64(0.007460038428622267), 'leak_over_bound_max': np.float64(0.0001972787847664274), 'eps_over_rate_max': np.float64(0.0017564326581086269)}

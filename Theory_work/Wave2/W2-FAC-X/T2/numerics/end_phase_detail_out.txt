@@ -1,0 +1,41 @@
+design          truth n      p    | end steps  minority-del  |W|-increases  max l_hi|X|/Hbar  final_S0
+cs05           s1lo  n=1e+06  p=1500 |  160          0             2           0.29              True  (|W|>=1 steps counted for |W|-increases)
+cs05           s3mix n=1e+06  p=1500 |  160          0             6           0.17              True  (|W|>=1 steps counted for |W|-increases)
+    detail (r2_06_08, s1lo, seed 0): m, X/Hbar, W, deleted class (0 = lowest loading), sign, flags, D'
+     m= 13 X/H=-0.049 W=-0.905  del c0-   D'=18.60
+     m= 12 X/H=-0.016 W=-0.283  del c0+   D'=18.03
+     m= 11 X/H=-0.050 W=-0.871  del c1-   D'=17.47
+     m= 10 X/H=+0.016 W=+0.248  del c1+   D'=15.69
+     m=  9 X/H=-0.055 W=-0.772  del c0+ MINORITY  D'=13.92
+     m=  8 X/H=-0.102 W=-1.368  del c1-   D'=13.35
+     m=  7 X/H=-0.016 W=-0.187  del c0+   D'=11.58
+     m=  6 X/H=-0.072 W=-0.794  del c1-   D'=11.01
+     m=  5 X/H=+0.049 W=+0.452  del c1+   D'=9.24
+     m=  4 X/H=-0.082 W=-0.615  del c1-   D'=7.46
+     m=  3 X/H=+0.115 W=+0.653  del c0+   D'=5.68
+     m=  2 X/H=-0.000 W=-0.002  del c1+   D'=5.12
+r2_06_08       s1lo  n=1e+06  p=1500 |  160          1             4           0.54              True  (|W|>=1 steps counted for |W|-increases)
+r2_06_08       s3mix n=1e+06  p=1500 |  160          1             9           0.27              True  (|W|>=1 steps counted for |W|-increases)
+r2_03_09       s1lo  n=1e+06  p=1500 |  160          0            14           0.76              True  (|W|>=1 steps counted for |W|-increases)
+r2_03_09       s3mix n=1e+06  p=1500 |  160          0            17           0.39              True  (|W|>=1 steps counted for |W|-increases)
+r2_02_095      s1lo  n=1e+06  p=1500 |  160          0            32           0.87              True  (|W|>=1 steps counted for |W|-increases)
+r2_02_095      s3mix n=1e+06  p=1500 |  160          0            28           0.41              True  (|W|>=1 steps counted for |W|-increases)
+    detail (r2_02_095_lo, s1lo, seed 2): m, X/Hbar, W, deleted class (0 = lowest loading), sign, flags, D'
+     m= 15 X/H=-0.051 W=-1.027  del c0-   D'=20.10
+     m= 14 X/H=-0.043 W=-0.872  del c0+   D'=20.05
+     m= 13 X/H=-0.051 W=-1.023  del c0-   D'=20.01
+     m= 12 X/H=-0.043 W=-0.868  del c0+   D'=19.97
+     m= 11 X/H=-0.051 W=-1.021  del c0+ MINORITY |W|up D'=19.93
+     m= 10 X/H=-0.059 W=-1.174  del c0-   D'=19.89
+     m=  9 X/H=-0.051 W=-1.016  del c0-   D'=19.85
+     m=  8 X/H=-0.043 W=-0.857  del c0+   D'=19.80
+     m=  7 X/H=-0.051 W=-1.012  del c0-   D'=19.76
+     m=  6 X/H=-0.043 W=-0.846  del c0-   D'=19.72
+     m=  5 X/H=-0.034 W=-0.672  del c0-   D'=19.68
+     m=  4 X/H=-0.025 W=-0.498  del c0+   D'=19.64
+r2_02_095_lo   s1lo  n=1e+06  p=1500 |  160         13            27           1.49              True  (|W|>=1 steps counted for |W|-increases)
+r2_02_095_lo   s3mix n=1e+06  p=1500 |  160          4            22           0.48              True  (|W|>=1 steps counted for |W|-increases)
+r2_01_098      s1lo  n=1e+06  p=1500 |  160          0            27           0.94              True  (|W|>=1 steps counted for |W|-increases)
+r2_01_098      s3mix n=1e+06  p=1500 |  160          0            59           0.42              True  (|W|>=1 steps counted for |W|-increases)
+r3_02_06_095   s1lo  n=1e+06  p=1500 |  160          0            20           0.85              True  (|W|>=1 steps counted for |W|-increases)
+r3_02_06_095   s3mix n=1e+06  p=1500 |  160          0            29           0.42              True  (|W|>=1 steps counted for |W|-increases)

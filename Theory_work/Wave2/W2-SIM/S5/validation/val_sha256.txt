@@ -1,0 +1,3 @@
+2f759fd028220b3a88617177afbab273368b58d39f2933fcb7bdd44156c1be95 *../../../W2-FAC-S5/numerics/bcs_core.py
+0c446783dc38fcf58061fde91a7719b9e802a8b95602836428c3942beb568ca8 *../../../W2-FAC-S5/numerics/s3_cc.py
+6854779efeff7cd4c251ebf01990433b5ccb9ccef25843712a766f74d5c609a8 *../scripts/s5cc.py

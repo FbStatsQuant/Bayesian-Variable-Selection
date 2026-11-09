@@ -1,0 +1,7 @@
+1	python3 -B x_paths.py $OUT/raw/pilot.jsonl item=A rho=0.3 n=10000 p=1000 seeds=900 start=both
+2	python3 -B x_paths.py $OUT/raw/pilot.jsonl item=A rho=0.3 n=100000 p=2000 seeds=900 start=both
+3	python3 -B x_paths.py $OUT/raw/pilot.jsonl item=A rho=0.3 n=100000 p=4000 seeds=900 start=both
+4	python3 -B x_paths.py $OUT/raw/pilot.jsonl item=A rho=0.7 n=1000000 p=4000 seeds=900 start=full
+5	python3 -B x_paths.py $OUT/raw/pilot.jsonl item=A rho=0.3 n=20000 p=8000 seeds=900 start=full
+6	python3 -B x_paths.py $OUT/raw/pilot.jsonl item=B n=1000000 p=2000 load=two03_09 seeds=900 start=full
+7	python3 -B x_paths.py $OUT/raw/pilot.jsonl item=B n=100000 p=5000 load=unif02_09 seeds=900 start=full

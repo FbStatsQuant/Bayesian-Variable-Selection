@@ -1,0 +1,21 @@
+D_truth_both seed=0 n=8000 p=4000: moves=3996 final=4 extras=0 missing=0 scoredS0=True types={'-N': 3996} maxX=[0.569, 1.337] kappa_eff=[1.22, 0.531] (39s)
+D_truth_both seed=1 n=8000 p=4000: moves=3996 final=4 extras=0 missing=0 scoredS0=True types={'-N': 3996} maxX=[0.606, 1.29] kappa_eff=[1.22, 0.531] (39s)
+Traceback (most recent call last):
+  File "C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave2\W2-FAC-K2\numerics\n1_paths.py", line 86, in <module>
+    run(case, seeds)
+    ~~~^^^^^^^^^^^^^
+  File "C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave2\W2-FAC-K2\numerics\n1_paths.py", line 60, in run
+    res = mc.ls0_path(P, list(range(p)), S0, record=rec)
+  File "C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave2\W2-FAC-K2\numerics\mc_core.py", line 319, in ls0_path
+    sc = P.scan(T)
+  File "C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave2\W2-FAC-K2\numerics\mc_core.py", line 187, in scan
+    FT = float(Fof(ldT, quadT, kT))
+               ~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave2\W2-FAC-K2\numerics\mc_core.py", line 182, in Fof
+    return lw[size] - 0.5 * ld - nu * np.log(0.02 + yty - n * quad)
+           ~~^^^^^^
+IndexError: index 4500 is out of bounds for axis 0 with size 4001
+C_trap_corr seed=0 n=8000 p=4000: moves=3996 final=4 extras=0 missing=0 scoredS0=True types={'-N': 3996} maxX=[0.43, 1.432] kappa_eff=[1.0, 0.54] (48s)
+C_trap_corr seed=1 n=8000 p=4000: moves=3996 final=4 extras=0 missing=0 scoredS0=True types={'-N': 3996} maxX=[0.601, 1.755] kappa_eff=[1.0, 0.54] (42s)
+B_ctrl_indep seed=0 n=8000 p=4000: moves=3996 final=4 extras=0 missing=0 scoredS0=True types={'-N': 3996} maxX=[0.49, 1.184] kappa_eff=[1.0, 2.333] (58s)
+B_ctrl_indep seed=1 n=8000 p=4000: moves=3996 final=4 extras=0 missing=0 scoredS0=True types={'-N': 3996} maxX=[0.462, 0.61] kappa_eff=[1.0, 2.333] (55s)

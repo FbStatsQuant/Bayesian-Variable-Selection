@@ -1,0 +1,20 @@
+OK    [STATEMENT.md] 04_theory.tex:69-74
+      \par\smallskip\noindent\textbf{Shared definition.}\enspace Exact scope | \par\smallskip\noindent\textbf{D0: data/target.}\enspace \(n\ge3,p\ge1\); nonconstant columns and response, centered and standardized. \(K=\min(p,\lfloor n/2\rfloor)\), \ | \par\smallskip\noindent\textbf{Score.}\enspace \(G_U=X_U^\top X_U,\ z_U=X_U^\top y,\ H_U=(n+1)G_U+I,\ Q_U=y^\top y-nz_U^\top H_U^{-1}z_U,\ \nu=.01+n/2\). \(m(U)=c_n[\det  | \par\smallskip\noindent\textbf{Prior.}\enspace \(w(k)=[2\binom{2p-1}{k}]^{-1}\), \(W_K=\sum_{k\le K}\binom pk w(k)\), \(\varpi(S)=w(|S|)/W_K\).
+OK    [REPORT.md] lemmas/KL_attempt_sol/README.md:9-15
+      1. **Full S5 partition, final two-null region.** With s0=4 and any truth | layout, for any fixed `0<alpha_lo<=log p/log n<=alpha_hi<1/2`, | `CC_n(.04)` holds with probability 1-o(1), simultaneously for every | parent set with at most two nulls and all its one-null-deletion
+OK    [REPORT.md] 01_group_lattice.md:135-159
+      ### Endpoint specialization at this exponent |  | Assume s0=4 and arbitrary truth layout, so the anchor from the first | round satisfies `lambda_0>=217/57`. Its elementary all-set proof gives,
+OK    [REPORT.md] 05_conditional_terminal.md:3-29
+      This is a **conditional deterministic implication on an event of | probability tending to one**, not a proof that the gate is reached with | a small field. It does not use conditional symmetry of the random | retained set. Assume s0=4, arbitrary truth layout, and exact argmin.
+OK    [lemmas\L5_assembly.md] 04_theory.tex:492-492
+      \par\noindent\rid{TH05.0} (M5(0) Composition at every n, any X): \status{T38-(0) "PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))"; N200 "PROVED (elementary, eve
+OK    [lemmas\L5_assembly.md] 04_theory.tex:84-84
+      \par\noindent Shared implementation premises (named once, used by both cards): \textbf{EX-A} exact scores and arithmetic; \textbf{EX-S} fresh independent ideal uniforms (
+OK    [lemmas\L5_assembly.md] Theory_work/Wave1/W1-GEN/STATEMENT.md:169-169
+      * Operational closure [OP] 𝒪̄ ∩ {S₀ ∉ 𝒮̄⁺} ⊆ {LS0 from S̃₀ does not score S₀}: PROVED (by this seat, unchecked)
+OK    [lemmas\L5_assembly.md] Theory_work/Wave1C/HQ_AUDIT/A2_propF_GROW.md:55-67
+      **3. Replace D′'s statistical inputs by GROW's data events.** Define 𝒦_n to mean that deterministic LS0 with cap a_n scores S₀, whether or not a run delivers. Put E_n = S |  | P(𝒦_nᶜ) ≤ P(Sand_nᶜ)+P(NA(𝓛)ᶜ)+P(TL(𝓛)ᶜ) → 0. | 
+OK    [lemmas\L5_assembly.md] s6_delivery.tex:37-44
+      \texttt{allocation\$mem\_gb} $\ge\mathrm{mem}_n/2^{30}$, \texttt{allocation\$hours} $\ge\mathrm{time}_n/3600$, where $P_0,P_1,\bar{P}_t$ are Corollary R's preflight bound | \[ | \begin{aligned} | \hat s_K&\le(\tau U_K+\tau_0)/200,\\
+
+TOTAL ok=9 miss=0

@@ -1,0 +1,9 @@
+family,test,reps,max_abs_mean_z,max_variance_relative_error
+CS,Bartlett_Wishart_moments,6000,1.0513448728873758,0.05165874500787293
+CS,N1_raw_centered_Wishart_moments,6000,1.8852903320634753,0.053279483788542525
+CS,normalized_Gram_vs_N1_raw_law,6000,2.2659305599508905,
+CS,normalized_response_and_scale_vs_N1_raw_law,6000,2.2699180416740865,
+unequal,Bartlett_Wishart_moments,6000,1.0513448728873758,0.042443421634119405
+unequal,N1_raw_centered_Wishart_moments,6000,2.1589615170074286,0.06629220866911367
+unequal,normalized_Gram_vs_N1_raw_law,6000,1.8612249935534741,
+unequal,normalized_response_and_scale_vs_N1_raw_law,6000,2.0559898840805615,

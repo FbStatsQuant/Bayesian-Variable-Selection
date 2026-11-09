@@ -1,0 +1,50 @@
+{
+  "status": "UNCHECKED pending Claude",
+  "rational_trace": [
+    {
+      "index": 2,
+      "center": "12/575",
+      "excess": "12/25",
+      "excess_float": 0.48
+    },
+    {
+      "index": 3,
+      "center": "11/150",
+      "excess": "1/25",
+      "excess_float": 0.04
+    },
+    {
+      "index": 8,
+      "center": "43/475",
+      "excess": "417/950",
+      "excess_float": 0.43894736842105264
+    },
+    {
+      "index": 7,
+      "center": "19/850",
+      "excess": "202/425",
+      "excess_float": 0.4752941176470588
+    },
+    {
+      "index": 5,
+      "center": "-19/375",
+      "excess": "33/100",
+      "excess_float": 0.33
+    },
+    {
+      "index": 6,
+      "center": "-33/325",
+      "excess": "12/25",
+      "excess_float": 0.48
+    },
+    {
+      "index": 1,
+      "center": "-109/550",
+      "excess": "477/1100",
+      "excess_float": 0.43363636363636365
+    }
+  ],
+  "shadow_steps_checked": 256,
+  "max_actual_replacement_over_bound": 1.0,
+  "note": "Checks witness paths stored by exhaustive subset search, not all shadow histories."
+}

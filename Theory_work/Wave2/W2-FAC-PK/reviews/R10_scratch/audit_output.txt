@@ -1,0 +1,10 @@
+Citation registry: 38 checked, 0 misses; []
+Frozen SHA256 matches: N1_raw.jsonl
+Frozen SHA256 matches: N3_raw_final360.jsonl
+N1_raw.jsonl: {'rows': 60, 'saturated': 55, 'MR1_misses': 53, 'doubled_misses': 0}
+N3_raw_final360.jsonl: {'rows': 360, 'nontruth_endpoints': 9, 'doubled_misses': 0, 'swaps_after_first_deletion': 0}
+Direct-matrix neighbour gain comparisons: 30426; maximum absolute error 4.228e-13
+Complete-scan cap-prefix checks: 611
+Generic nested Q/determinant checks, including p>n: 60
+Protected package/code files unchanged during audit: 12
+These are identity, control-flow and reporting checks, not numerical proofs of asymptotic claims.

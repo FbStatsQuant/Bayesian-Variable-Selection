@@ -1,0 +1,6 @@
+1	TICKETS=/home/fb31/projects/BVS/theory_w2/code/tickets_20261109T1105_pka python3 -B validate.py $OUT/raw/validation_v1.json v1
+2	TICKETS=/home/fb31/projects/BVS/theory_w2/code/tickets_20261109T1105_pka python3 -B validate.py $OUT/raw/validation_v2.json v2
+3	TICKETS=/home/fb31/projects/BVS/theory_w2/code/tickets_20261109T1105_pka python3 -B validate.py $OUT/raw/validation_v4.json v4
+4	TICKETS=/home/fb31/projects/BVS/theory_w2/code/tickets_20261109T1105_pka python3 -B validate_path.py $OUT/raw/validation_v3b.json v3b
+5	TICKETS=/home/fb31/projects/BVS/theory_w2/code/tickets_20261109T1105_pka python3 -B validate_path.py $OUT/raw/validation_v5.json v5
+6	TICKETS=/home/fb31/projects/BVS/theory_w2/code/tickets_20261109T1105_pka python3 -B validate_path.py $OUT/raw/validation_v6.json v6

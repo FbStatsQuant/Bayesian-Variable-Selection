@@ -1,0 +1,9 @@
+{"rho": 0.95, "n": 2000, "cD": 0.0128, "worst_ratio": 0.1904, "worst_at": [2, "balanced", 3.59], "S0_best_add_over_logn": -0.998}
+{"rho": 0.95, "n": 20000, "cD": 0.0128, "worst_ratio": 0.3043, "worst_at": [2, "balanced", 3.88], "S0_best_add_over_logn": -1.094}
+{"rho": 0.95, "n": 200000, "cD": 0.0128, "worst_ratio": 0.3993, "worst_at": [2, "balanced", 4.16], "S0_best_add_over_logn": -1.023}
+{"rho": 0.8, "n": 2000, "cD": 0.0556, "worst_ratio": 0.213, "worst_at": [2, "balanced", 3.61], "S0_best_add_over_logn": -0.978}
+{"rho": 0.8, "n": 20000, "cD": 0.0556, "worst_ratio": 0.3966, "worst_at": [2, "balanced", 3.78], "S0_best_add_over_logn": -0.999}
+{"rho": 0.8, "n": 200000, "cD": 0.0556, "worst_ratio": 0.4599, "worst_at": [2, "balanced", 4.1], "S0_best_add_over_logn": -0.958}
+{"rho": 0.5, "n": 2000, "cD": 0.1667, "worst_ratio": 0.2801, "worst_at": [2, "balanced", 3.65], "S0_best_add_over_logn": -0.911}
+{"rho": 0.5, "n": 20000, "cD": 0.1667, "worst_ratio": 0.5495, "worst_at": [2, "balanced", 3.64], "S0_best_add_over_logn": -0.837}
+{"rho": 0.5, "n": 200000, "cD": 0.1667, "worst_ratio": 0.5623, "worst_at": [2, "balanced", 4.04], "S0_best_add_over_logn": -0.854}

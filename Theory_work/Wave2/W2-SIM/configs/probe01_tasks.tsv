@@ -1,0 +1,11 @@
+1	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=4000 design=excs n=200 p=190 rep=1 arm=mr1
+2	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=4000 design=excs n=200 p=190 rep=1 arm=dbl
+3	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=4000 design=excs n=400 p=380 rep=1 arm=mr1
+4	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=4000 design=excs n=600 p=570 rep=1 arm=mr1
+5	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=4000 design=excs n=600 p=570 rep=1 arm=dbl
+6	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=4000 design=excs n=1200 p=1100 rep=1 arm=mr1
+7	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=4000 design=iidcs n=200 p=500 rep=1 arm=mr1
+8	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=4000 design=iidcs n=200 p=500 rep=1 arm=dbl
+9	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=4000 design=iidcs n=400 p=1000 rep=1 arm=mr1
+10	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=4000 design=iidcs n=400 p=500 rep=1 arm=mr1
+11	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=4000 design=iidcs n=200 p=500 rep=1 arm=mr1 hours=24 tag=_h24

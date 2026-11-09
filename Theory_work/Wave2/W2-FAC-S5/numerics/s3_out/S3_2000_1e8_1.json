@@ -1,0 +1,1 @@
+{"p": 2000, "n": 100000000, "seed": 1, "alpha": 0.4126287494579976, "steps": 1996, "reached_S0": true, "cc_max": 0.16154636489896979, "cc_max_at_m": 2, "cc_bulk_m30": 0.02909782432030392, "gain_approx_err_over_logn": 2.1323385438100205e-05, "c_needed_for_alpha": 0.10079198898724484}

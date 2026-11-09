@@ -1,0 +1,1 @@
+1	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=iidcs n=20000 p=2000 rho=0.3 rep=1 arm=mr1 hours=22 mem_gb=24 signs=mixed

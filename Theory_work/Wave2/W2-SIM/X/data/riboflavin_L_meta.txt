@@ -1,0 +1,6 @@
+name=riboflavin n_data=71 p=4088 k=70 delta=0.1
+input_md5=487ac28843470624e68fb92b64f93734
+max|rowSums(L^2) - (1-delta)| = 4.79e-14
+top eigenvalues of R: 1488.2 466.54 217.55 181.51 154.36 133.17 127.04 108.73 92.78 81.511
+lambda1/p = 0.3640 ; trace share top1/5 = 0.3640 / 0.6135
+prov: hdi 0.1-10 (https://cran.r-project.org/src/contrib/Archive/hdi/hdi_0.1-10.tar.gz, tarball md5 e7cf1f703e575b5ac3acfdef79b2aa84), data/riboflavin.RData (md5 2ea5489eabefbaa5ff1fe91d28b2b509); X=riboflavin$x, y=riboflavin$y

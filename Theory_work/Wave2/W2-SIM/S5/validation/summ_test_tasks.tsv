@@ -1,0 +1,7 @@
+1	python3 s5cc.py 500 1e12 1 > x
+2	python3 s5cc.py 500 1e20 1 > x
+3	python3 s5cc.py 500 1e12 2 > x
+4	python3 s5cc.py 500 1e20 2 > x
+5	python3 s5cc.py 1000 1e12 1 > x
+6	python3 s5cc.py 1000 1e12 2 > x
+7	python3 s5cc.py 1000 1e12 3 > x

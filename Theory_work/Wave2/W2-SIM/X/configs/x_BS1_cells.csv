@@ -1,0 +1,9 @@
+script,item,rho,n,p,A,load,start,extra,nseeds,pred_cost_s_per_seed
+x_paths.py,B,0.5,100000,2000,0.66,two03_09,full,coef=rev,10,154.7
+x_paths.py,B,0.5,100000,2000,0.66,two05_095,full,coef=rev,10,154.7
+x_paths.py,B,0.5,100000,2000,0.66,unif02_09,full,lseed=1,10,154.7
+x_paths.py,B,0.5,100000,2000,0.66,unif02_09,full,lseed=2,10,154.7
+x_paths.py,B,0.5,1000000,2000,0.55,two03_09,full,coef=rev,10,154.7
+x_paths.py,B,0.5,1000000,2000,0.55,two05_095,full,coef=rev,10,154.7
+x_paths.py,B,0.5,1000000,2000,0.55,unif02_09,full,lseed=1,10,154.7
+x_paths.py,B,0.5,1000000,2000,0.55,unif02_09,full,lseed=2,10,154.7

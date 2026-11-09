@@ -1,0 +1,215 @@
+{
+ "provenance": {
+  "code": "C:\\Users\\felip\\Bayesian-Variable-Selection",
+  "tickets": "C:\\Users\\felip\\Bayesian-Variable-Selection",
+  "files": {
+   "Theory_work/Wave2/W2-FAC-B/numerics/bvs_core.py": "e8283f5600f203a7f6016d62c55d07fd56bd9bbad4b7af1b9a9c87e05e0cc603",
+   "Theory_work/Wave2/W2-FAC-B/numerics/cs_core.py": "14b14cfd277bd2b52f0c16cf1404ebf83c3e05a158078dba5b89567302d3f074",
+   "Theory_work/Wave2/W2-FAC-PKA/numerics/n1_exact_grid.py": "13983c759ec6a5be8a457c4fc9ff670ba086a8a17f6ff1ab4dc74ba3333eb39b",
+   "Theory_work/Wave2/W2-FAC-PKA/numerics/n3_singletons.py": "bd7f7205ce888217223658e2fcd1e79f9b1ca9008055379b00d14f23c0793bb2",
+   "PKA/scripts/make_tasks.py": "6a88986779c3cb0e2b28f3b08d0e16c20adcba1ec75670fe6afe3484c105cf53",
+   "PKA/scripts/p1_run.py": "6c3dd79d7f69981fd9021460a980bc66e0b4c920217112fc7e9bdce3eb88d3f5",
+   "PKA/scripts/p2_run.py": "cf8341fa219846105460edd25e53b2751c7fb8d9f83dbcc851794223a717ba04",
+   "PKA/scripts/pka_lib.py": "b22e7835b42fa03832b9684a1e6aa42a6243538d71c3180ac5a4a0a5e63374e5",
+   "PKA/scripts/summarise.py": "b2d4633029baa2adcc3a4cdf08035f86310aa0d2ddcc1ae26eccca5c20341a0b",
+   "PKA/scripts/validate.py": "b735ee869090c0492df68f8d123f0f8717f2d1fdd66a555013a6a6c7e907c3c8"
+  },
+  "numpy": "1.26.4",
+  "python": "3.12.4"
+ },
+ "part": "v4",
+ "V4_singleton_start": [
+  {
+   "n": 60,
+   "p": 51,
+   "s0": 1,
+   "rep": 0,
+   "size": 16,
+   "equal": true
+  },
+  {
+   "n": 60,
+   "p": 51,
+   "s0": 1,
+   "rep": 1,
+   "size": 2,
+   "equal": true
+  },
+  {
+   "n": 60,
+   "p": 51,
+   "s0": 1,
+   "rep": 2,
+   "size": 30,
+   "equal": true
+  },
+  {
+   "n": 60,
+   "p": 51,
+   "s0": 2,
+   "rep": 0,
+   "size": 30,
+   "equal": true
+  },
+  {
+   "n": 60,
+   "p": 51,
+   "s0": 2,
+   "rep": 1,
+   "size": 29,
+   "equal": true
+  },
+  {
+   "n": 60,
+   "p": 51,
+   "s0": 2,
+   "rep": 2,
+   "size": 10,
+   "equal": true
+  },
+  {
+   "n": 120,
+   "p": 72,
+   "s0": 1,
+   "rep": 0,
+   "size": 60,
+   "equal": true
+  },
+  {
+   "n": 120,
+   "p": 72,
+   "s0": 1,
+   "rep": 1,
+   "size": 60,
+   "equal": true
+  },
+  {
+   "n": 120,
+   "p": 72,
+   "s0": 1,
+   "rep": 2,
+   "size": 60,
+   "equal": true
+  },
+  {
+   "n": 120,
+   "p": 72,
+   "s0": 2,
+   "rep": 0,
+   "size": 60,
+   "equal": true
+  },
+  {
+   "n": 120,
+   "p": 72,
+   "s0": 2,
+   "rep": 1,
+   "size": 60,
+   "equal": true
+  },
+  {
+   "n": 120,
+   "p": 72,
+   "s0": 2,
+   "rep": 2,
+   "size": 57,
+   "equal": true
+  },
+  {
+   "n": 200,
+   "p": 196,
+   "s0": 1,
+   "rep": 0,
+   "size": 100,
+   "equal": true
+  },
+  {
+   "n": 200,
+   "p": 196,
+   "s0": 1,
+   "rep": 1,
+   "size": 100,
+   "equal": true
+  },
+  {
+   "n": 200,
+   "p": 196,
+   "s0": 1,
+   "rep": 2,
+   "size": 100,
+   "equal": true
+  },
+  {
+   "n": 200,
+   "p": 196,
+   "s0": 2,
+   "rep": 0,
+   "size": 100,
+   "equal": true
+  },
+  {
+   "n": 200,
+   "p": 196,
+   "s0": 2,
+   "rep": 1,
+   "size": 100,
+   "equal": true
+  },
+  {
+   "n": 200,
+   "p": 196,
+   "s0": 2,
+   "rep": 2,
+   "size": 100,
+   "equal": true
+  },
+  {
+   "n": 400,
+   "p": 340,
+   "s0": 1,
+   "rep": 0,
+   "size": 200,
+   "equal": true
+  },
+  {
+   "n": 400,
+   "p": 340,
+   "s0": 1,
+   "rep": 1,
+   "size": 200,
+   "equal": true
+  },
+  {
+   "n": 400,
+   "p": 340,
+   "s0": 1,
+   "rep": 2,
+   "size": 200,
+   "equal": true
+  },
+  {
+   "n": 400,
+   "p": 340,
+   "s0": 2,
+   "rep": 0,
+   "size": 200,
+   "equal": true
+  },
+  {
+   "n": 400,
+   "p": 340,
+   "s0": 2,
+   "rep": 1,
+   "size": 200,
+   "equal": true
+  },
+  {
+   "n": 400,
+   "p": 340,
+   "s0": 2,
+   "rep": 2,
+   "size": 200,
+   "equal": true
+  }
+ ]
+}

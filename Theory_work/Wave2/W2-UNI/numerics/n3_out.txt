@@ -1,0 +1,6 @@
+ar1   p=  64: pairs=3186, identity max err=4.00e-15, inequality violations=0, sup|Xi|=3.18 vs sqrt(2logp)=2.88, sup F^2/(2h log(ep/h)+4log(h+1))=0.251, kappa'=2.301, c_G(sampled inf)=0.192, kappa=5.255
+exp2d p=  64: pairs=3186, identity max err=2.00e-15, inequality violations=0, sup|Xi|=2.98 vs sqrt(2logp)=2.88, sup F^2/(2h log(ep/h)+4log(h+1))=0.564, kappa'=1.430, c_G(sampled inf)=0.201, kappa=3.192
+ar1   p= 144: pairs=5238, identity max err=6.83e-15, inequality violations=0, sup|Xi|=3.29 vs sqrt(2logp)=3.15, sup F^2/(2h log(ep/h)+4log(h+1))=0.155, kappa'=2.273, c_G(sampled inf)=0.194, kappa=5.158
+exp2d p= 144: pairs=5238, identity max err=2.66e-15, inequality violations=0, sup|Xi|=3.86 vs sqrt(2logp)=3.15, sup F^2/(2h log(ep/h)+4log(h+1))=0.177, kappa'=1.333, c_G(sampled inf)=0.192, kappa=3.043
+ar1   p= 289: pairs=5238, identity max err=1.28e-14, inequality violations=0, sup|Xi|=2.86 vs sqrt(2logp)=3.37, sup F^2/(2h log(ep/h)+4log(h+1))=0.128, kappa'=2.455, c_G(sampled inf)=0.191, kappa=5.614
+exp2d p= 289: pairs=5238, identity max err=4.00e-15, inequality violations=0, sup|Xi|=2.94 vs sqrt(2logp)=3.37, sup F^2/(2h log(ep/h)+4log(h+1))=0.311, kappa'=1.502, c_G(sampled inf)=0.191, kappa=3.436

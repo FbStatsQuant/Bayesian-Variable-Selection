@@ -1,0 +1,25 @@
+N1 rows 60 saturated 55 unsaturated starts [243, 244, 244, 244, 253] unsat (n,p) [(600, 360)]
+N1 MR1 misses 53 all saturated: True
+N1 cap_2K misses 0
+N1 swaps after first deletion (max) 0 additions: 0
+  p/n=0.95 n=600 W range (27, 46)
+  p/n=0.95 n=2000 W range (87, 127)
+  p/n=0.95 n=6000 W range (189, 208)
+  p/n=0.95 n=20000 W range (289, 381)
+N3 rows 360 keys ['K', 'MW', 'cap_2', 'cap_MR1', 'counts', 'final_is_S0', 'first_del', 'has_S0', 'k_hit', 'lay', 'lead_swaps', 'moves', 'n', 'p', 'rho', 'seed', 'start', 'swaps_after_first_del', 't']
+N3 not ending at S0: 9 [(2000, 0.95, None)]
+N3 swaps after first deletion (max) 0
+N3 max m*/K 1.260
+G1: max (L increment - log(n+1)) = -5.878e-01 (must be <= 0); min increment = 2.845e-01 (>= 0); max Q increase = -1.470e-09 (<= 0)
+n=1e+04  V_lower - (log n + 5) = 12.73 ; G_sw_lower - (0.5 log n + 2) = -0.49
+n=1e+06  V_lower - (log n + 5) = 12.75 ; G_sw_lower - (0.5 log n + 2) = 0.22
+n=1e+09  V_lower - (log n + 5) = 12.75 ; G_sw_lower - (0.5 log n + 2) = 0.46
+n=1e+15  V_lower - (log n + 5) = 12.75 ; G_sw_lower - (0.5 log n + 2) = 0.50
+n=1e+04 p=1.0e+04 Delta_K=5.70  expected #nulls with tau^2/2 > Delta_K: 3.7
+n=1e+04 p=1.0e+06 Delta_K=10.59  expected #nulls with tau^2/2 > Delta_K: 2.1
+n=1e+04 p=1.0e+08 Delta_K=15.20  expected #nulls with tau^2/2 > Delta_K: 1.8
+n=1e+04 p=1.0e+12 Delta_K=24.41  expected #nulls with tau^2/2 > Delta_K: 1.4
+n=1e+06 p=1.0e+06 Delta_K=8.01  expected #nulls with tau^2/2 > Delta_K: 31.5
+n=1e+06 p=1.0e+09 Delta_K=15.20  expected #nulls with tau^2/2 > Delta_K: 17.5
+n=1e+06 p=1.0e+12 Delta_K=22.11  expected #nulls with tau^2/2 > Delta_K: 14.7
+n=1e+06 p=1.0e+18 Delta_K=35.93  expected #nulls with tau^2/2 > Delta_K: 11.6

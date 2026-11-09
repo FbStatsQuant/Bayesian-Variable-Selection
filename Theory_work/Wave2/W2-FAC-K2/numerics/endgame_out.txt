@@ -1,0 +1,264 @@
+END-GAME verification (USTAR=3); IMAX=3; a in {0.5,0.75,0.9,1.0}; (EM) passes iff 0 failing start states.
+=== indep .5/.7, truths (4,0): kappa_eff@S0=[1.0, 0.429]  trap thresholds (1+k)/2 for truth-free classes: [np.float64(0.714)]
+   a=0.5: 120 start states, 0 failing 
+   a=0.75: 120 start states, 88 failing {'TRAP': 88}
+        ('L', 'L') -> TRAP at ((0, 0), (2, 0)): best gain -0.033 (('del', 1, 1))
+        ('L', (2, -2)) -> TRAP at ((0, 0), (2, 0)): best gain -0.033 (('del', 1, 1))
+        ('L', (2, 0)) -> TRAP at ((0, 0), (2, 0)): best gain -0.033 (('del', 1, 1))
+   a=0.9: 120 start states, 88 failing {'TRAP': 88}
+        ('L', 'L') -> TRAP at ((0, 0), (2, 0)): best gain -0.144 (('del', 1, 1))
+        ('L', (2, -2)) -> TRAP at ((0, 0), (2, 0)): best gain -0.144 (('del', 1, 1))
+        ('L', (2, 0)) -> TRAP at ((0, 0), (2, 0)): best gain -0.144 (('del', 1, 1))
+   a=1.0: 120 start states, 92 failing {'TRAP': 92}
+        ('L', 'L') -> TRAP at ((0, 0), (2, 0)): best gain -0.200 (('del', 1, 1))
+        ('L', (2, -2)) -> TRAP at ((0, 0), (2, 0)): best gain -0.200 (('del', 1, 1))
+        ('L', (2, 0)) -> TRAP at ((0, 0), (2, 0)): best gain -0.200 (('del', 1, 1))
+=== indep .5/.3, truths (4,0): kappa_eff@S0=[1.0, 2.333]  trap thresholds (1+k)/2 for truth-free classes: [np.float64(1.667)]
+   a=0.5: 120 start states, 0 failing 
+   a=0.75: 120 start states, 0 failing 
+   a=0.9: 120 start states, 0 failing 
+   a=1.0: 120 start states, 0 failing 
+=== r12=.3 .5/.7, truths (4,0): kappa_eff@S0=[1.0, 0.54]  trap thresholds (1+k)/2 for truth-free classes: [np.float64(0.77)]
+   a=0.5: 120 start states, 0 failing 
+   a=0.75: 120 start states, 0 failing 
+   a=0.9: 120 start states, 90 failing {'TRAP': 90}
+        ('L', 'L') -> TRAP at ((0, 0), (2, 0)): best gain -0.094 (('del', 1, 1))
+        ('L', (2, -2)) -> TRAP at ((0, 0), (2, 0)): best gain -0.094 (('del', 1, 1))
+        ('L', (2, 0)) -> TRAP at ((0, 0), (2, 0)): best gain -0.094 (('del', 1, 1))
+   a=1.0: 120 start states, 90 failing {'TRAP': 90}
+        ('L', 'L') -> TRAP at ((0, 0), (2, 0)): best gain -0.150 (('del', 1, 1))
+        ('L', (2, -2)) -> TRAP at ((0, 0), (2, 0)): best gain -0.150 (('del', 1, 1))
+        ('L', (2, 0)) -> TRAP at ((0, 0), (2, 0)): best gain -0.150 (('del', 1, 1))
+=== r12=.3 .5/.7, truths (3,1): kappa_eff@S0=[1.22, 0.531]  trap thresholds (1+k)/2 for truth-free classes: []
+   a=0.5: 120 start states, 0 failing 
+   a=0.75: 120 start states, 0 failing 
+   a=0.9: 120 start states, 0 failing 
+   a=1.0: 120 start states, 0 failing 
+=== r12=.6 .7/.7, truths (1,1): kappa_eff@S0=[0.882, 0.882]  trap thresholds (1+k)/2 for truth-free classes: []
+   a=0.5: 120 start states, 48 failing {'near-tie': 48}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.688 vs ('del', 1, 1) 0.688
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.688 vs ('del', 1, 1) 0.688
+        ('L', (3, -1)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.688 vs ('del', 1, 1) 0.688
+   a=0.75: 120 start states, 56 failing {'near-tie': 56}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.354 vs ('del', 1, 1) 0.354
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.354 vs ('del', 1, 1) 0.354
+        ('L', (3, -3)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.354 vs ('del', 1, 1) 0.354
+   a=0.9: 120 start states, 56 failing {'near-tie': 56}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.243 vs ('del', 1, 1) 0.243
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.243 vs ('del', 1, 1) 0.243
+        ('L', (3, -3)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.243 vs ('del', 1, 1) 0.243
+   a=1.0: 120 start states, 56 failing {'near-tie': 56}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.188 vs ('del', 1, 1) 0.188
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.188 vs ('del', 1, 1) 0.188
+        ('L', (3, -3)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.188 vs ('del', 1, 1) 0.188
+=== r12=.69 .7/.7, truths (1,1): kappa_eff@S0=[1.34, 1.34]  trap thresholds (1+k)/2 for truth-free classes: []
+   a=0.5: 120 start states, 48 failing {'near-tie': 48}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.794 vs ('del', 1, 1) 0.794
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.794 vs ('del', 1, 1) 0.794
+        ('L', (3, -1)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.794 vs ('del', 1, 1) 0.794
+   a=0.75: 120 start states, 48 failing {'near-tie': 48}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.461 vs ('del', 1, 1) 0.461
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.461 vs ('del', 1, 1) 0.461
+        ('L', (3, -1)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.461 vs ('del', 1, 1) 0.461
+   a=0.9: 120 start states, 48 failing {'near-tie': 48}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.350 vs ('del', 1, 1) 0.350
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.350 vs ('del', 1, 1) 0.350
+        ('L', (3, -1)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.350 vs ('del', 1, 1) 0.350
+   a=1.0: 120 start states, 52 failing {'near-tie': 52}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.294 vs ('del', 1, 1) 0.294
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.294 vs ('del', 1, 1) 0.294
+        ('L', (3, -1)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.294 vs ('del', 1, 1) 0.294
+=== r12=.69 .7/.7, truths (2,0): kappa_eff@S0=[0.429, 2.145]  trap thresholds (1+k)/2 for truth-free classes: [np.float64(1.572)]
+   a=0.5: 120 start states, 22 failing {'near-tie': 22}
+        ((1, -1), (3, -3)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 1.428 vs ('del', 1, -1) 1.428
+        ((1, -1), (3, -1)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 1.428 vs ('del', 1, -1) 1.428
+        ((1, -1), (3, 1)) -> near-tie at ((1, -1), (3, 1)): ('del', 1, 1) 0.866 vs ('del', 0, -1) 0.866
+   a=0.75: 120 start states, 20 failing {'near-tie': 20}
+        ((1, -1), (2, -2)) -> near-tie at ((1, -1), (2, -2)): ('swap', 0, -1, 1, 1) 1.500 vs ('swap', 1, -1, 1, 1) 1.500
+        ((1, -1), (3, -3)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 1.094 vs ('del', 1, -1) 1.094
+        ((1, -1), (3, -1)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 1.094 vs ('del', 1, -1) 1.094
+   a=0.9: 120 start states, 20 failing {'near-tie': 20}
+        ((1, -1), (2, -2)) -> near-tie at ((1, -1), (2, -2)): ('swap', 0, -1, 1, 1) 1.500 vs ('swap', 1, -1, 1, 1) 1.500
+        ((1, -1), (3, -3)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 0.983 vs ('del', 1, -1) 0.983
+        ((1, -1), (3, -1)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 0.983 vs ('del', 1, -1) 0.983
+   a=1.0: 120 start states, 20 failing {'near-tie': 20}
+        ((1, -1), (2, -2)) -> near-tie at ((1, -1), (2, -2)): ('swap', 0, -1, 1, 1) 1.500 vs ('swap', 1, -1, 1, 1) 1.500
+        ((1, -1), (3, -3)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 0.928 vs ('del', 1, -1) 0.928
+        ((1, -1), (3, -1)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 0.928 vs ('del', 1, -1) 0.928
+=== k3 G, truths (2,1,1): kappa_eff@S0=[1.091, 0.849, 1.95]  trap thresholds (1+k)/2 for truth-free classes: []
+   a=0.5: 1330 start states, 0 failing 
+   a=0.75: 1330 start states, 0 failing 
+   a=0.9: 1330 start states, 0 failing 
+   a=1.0: 1330 start states, 0 failing 
+=== k3 G, truths (4,0,0): kappa_eff@S0=[1.0, 0.746, 1.562]  trap thresholds (1+k)/2 for truth-free classes: [np.float64(0.873), np.float64(1.281)]
+   a=0.5: 1330 start states, 0 failing 
+   a=0.75: 1330 start states, 0 failing 
+   a=0.9: 1330 start states, 922 failing {'TRAP': 922}
+        ('L', 'L', 'L') -> TRAP at ((0, 0), (2, 0), (0, 0)): best gain -0.017 (('del', 1, 1))
+        ('L', 'L', (0, 0)) -> TRAP at ((0, 0), (2, 0), (0, 0)): best gain -0.017 (('del', 1, 1))
+        ('L', 'L', (1, -1)) -> TRAP at ((0, 0), (2, 0), (0, 0)): best gain -0.017 (('del', 1, 1))
+   a=1.0: 1330 start states, 946 failing {'TRAP': 946}
+        ('L', 'L', 'L') -> TRAP at ((0, 0), (2, 0), (0, 0)): best gain -0.073 (('del', 1, 1))
+        ('L', 'L', (0, 0)) -> TRAP at ((0, 0), (2, 0), (0, 0)): best gain -0.073 (('del', 1, 1))
+        ('L', 'L', (1, -1)) -> TRAP at ((0, 0), (2, 0), (0, 0)): best gain -0.073 (('del', 1, 1))
+=== k3 .8/.5, truths (1,1,1): kappa_eff@S0=[0.429, 0.429, 0.429]  trap thresholds (1+k)/2 for truth-free classes: []
+   a=0.5: 1330 start states, 1048 failing {'near-tie': 1048}
+        ('L', 'L', 'L') -> near-tie at ((0, 0), (2, 0), (2, 0)): ('del', 1, 1) 0.591 vs ('del', 2, 1) 0.591
+        ('L', 'L', (0, 0)) -> near-tie at ((2, 0), (2, 0), (0, 0)): ('del', 0, 1) 0.591 vs ('del', 1, 1) 0.591
+        ('L', 'L', (1, -1)) -> near-tie at ((2, 0), (2, 0), (0, 0)): ('del', 0, 1) 0.591 vs ('del', 1, 1) 0.591
+   a=0.75: 1330 start states, 1096 failing {'near-tie': 1096}
+        ('L', 'L', 'L') -> near-tie at ((2, 0), (2, 0), (2, 0)): ('del', 0, 1) 0.260 vs ('del', 1, 1) 0.260
+        ('L', 'L', (0, 0)) -> near-tie at ((2, 0), (2, 0), (0, 0)): ('del', 0, 1) 0.258 vs ('del', 1, 1) 0.258
+        ('L', 'L', (1, -1)) -> near-tie at ((2, 0), (2, 0), (0, 0)): ('del', 0, 1) 0.258 vs ('del', 1, 1) 0.258
+   a=0.9: 1330 start states, 1072 failing {'near-tie': 1072}
+        ('L', 'L', 'L') -> near-tie at ((2, 0), (2, 0), (2, 0)): ('del', 0, 1) 0.149 vs ('del', 1, 1) 0.149
+        ('L', 'L', (0, 0)) -> near-tie at ((2, 0), (2, 0), (0, 0)): ('del', 0, 1) 0.147 vs ('del', 1, 1) 0.147
+        ('L', 'L', (1, -1)) -> near-tie at ((2, 0), (2, 0), (0, 0)): ('del', 0, 1) 0.147 vs ('del', 1, 1) 0.147
+   a=1.0: 1330 start states, 1108 failing {'near-tie': 1108}
+        ('L', 'L', 'L') -> near-tie at ((2, 0), (2, 0), (2, 0)): ('del', 0, 1) 0.094 vs ('del', 1, 1) 0.094
+        ('L', 'L', (0, 0)) -> near-tie at ((2, 0), (2, 0), (0, 0)): ('del', 0, 1) 0.091 vs ('del', 1, 1) 0.091
+        ('L', 'L', (1, -1)) -> near-tie at ((2, 0), (2, 0), (0, 0)): ('del', 0, 1) 0.091 vs ('del', 1, 1) 0.091
+=== k3 .8/.5, truths (3,0,0): kappa_eff@S0=[0.25, 0.391, 0.391]  trap thresholds (1+k)/2 for truth-free classes: [np.float64(0.695), np.float64(0.695)]
+   a=0.5: 1330 start states, 544 failing {'near-tie': 544}
+        ('L', 'L', 'L') -> near-tie at ((0, 0), (2, 0), (2, 0)): ('del', 1, 1) 0.313 vs ('del', 2, 1) 0.313
+        ('L', 'L', (2, 0)) -> near-tie at ((0, 0), (2, 0), (2, 0)): ('del', 1, 1) 0.313 vs ('del', 2, 1) 0.313
+        ('L', 'L', (3, -3)) -> near-tie at ((0, 0), (2, 0), (2, 0)): ('del', 1, 1) 0.313 vs ('del', 2, 1) 0.313
+   a=0.75: 1330 start states, 1256 failing {'TRAP': 988, 'near-tie': 268}
+        ('L', 'L', 'L') -> TRAP at ((0, 0), (2, 0), (2, 0)): best gain -0.020 (('del', 1, 1))
+        ('L', 'L', (0, 0)) -> TRAP at ((0, 0), (2, 0), (0, 0)): best gain -0.052 (('del', 1, 1))
+        ('L', 'L', (1, -1)) -> TRAP at ((0, 0), (2, 0), (0, 0)): best gain -0.052 (('del', 1, 1))
+   a=0.9: 1330 start states, 1284 failing {'TRAP': 992, 'near-tie': 292}
+        ('L', 'L', 'L') -> TRAP at ((0, 0), (2, 0), (2, 0)): best gain -0.131 (('del', 1, 1))
+        ('L', 'L', (0, 0)) -> TRAP at ((0, 0), (2, 0), (0, 0)): best gain -0.163 (('del', 1, 1))
+        ('L', 'L', (1, -1)) -> TRAP at ((0, 0), (2, 0), (0, 0)): best gain -0.163 (('del', 1, 1))
+   a=1.0: 1330 start states, 1284 failing {'TRAP': 992, 'near-tie': 292}
+        ('L', 'L', 'L') -> TRAP at ((0, 0), (2, 0), (2, 0)): best gain -0.187 (('del', 1, 1))
+        ('L', 'L', (0, 0)) -> TRAP at ((0, 0), (2, 0), (0, 0)): best gain -0.219 (('del', 1, 1))
+        ('L', 'L', (1, -1)) -> TRAP at ((0, 0), (2, 0), (0, 0)): best gain -0.219 (('del', 1, 1))
+=== neg r12=-.4 .7/.7, truths (1,1): kappa_eff@S0=[0.556, 0.556]  trap thresholds (1+k)/2 for truth-free classes: []
+   a=0.5: 120 start states, 52 failing {'near-tie': 52}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.615 vs ('del', 0, 1) 0.615
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.615 vs ('del', 0, 1) 0.615
+        ('L', (3, -1)) -> near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.615 vs ('del', 0, 1) 0.615
+   a=0.75: 120 start states, 60 failing {'near-tie': 60}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.282 vs ('del', 0, 1) 0.282
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.282 vs ('del', 0, 1) 0.282
+        ('L', (3, -3)) -> near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.282 vs ('del', 0, 1) 0.282
+   a=0.9: 120 start states, 56 failing {'near-tie': 56}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.171 vs ('del', 0, 1) 0.171
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.171 vs ('del', 0, 1) 0.171
+        ('L', (3, -3)) -> near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.171 vs ('del', 0, 1) 0.171
+   a=1.0: 120 start states, 56 failing {'near-tie': 56}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.115 vs ('del', 0, 1) 0.115
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.115 vs ('del', 0, 1) 0.115
+        ('L', (3, -3)) -> near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.115 vs ('del', 0, 1) 0.115
+=== neg r12=-.4 .7/.7, truths (2,0): kappa_eff@S0=[0.429, 0.586]  trap thresholds (1+k)/2 for truth-free classes: [np.float64(0.793)]
+   a=0.5: 120 start states, 28 failing {'near-tie': 28}
+        ((1, -1), (3, -3)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 1.221 vs ('del', 1, -1) 1.221
+        ((1, -1), (3, -1)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 1.221 vs ('del', 1, -1) 1.221
+        ((1, -1), (3, 1)) -> near-tie at ((1, -1), (3, 1)): ('del', 0, -1) 1.332 vs ('del', 1, 1) 1.332
+   a=0.75: 120 start states, 30 failing {'near-tie': 30}
+        ((1, -1), (2, 2)) -> near-tie at ((1, -1), (2, 2)): ('swap', 0, -1, 1, -1) 1.692 vs ('swap', 1, 1, 1, -1) 1.692
+        ((1, -1), (3, -3)) -> near-tie at ((1, -1), (3, -1)): ('del', 1, -1) 0.888 vs ('del', 0, -1) 0.888
+        ((1, -1), (3, -1)) -> near-tie at ((1, -1), (3, -1)): ('del', 1, -1) 0.888 vs ('del', 0, -1) 0.888
+   a=0.9: 120 start states, 86 failing {'TRAP': 60, 'near-tie': 26}
+        ('L', 'L') -> TRAP at ((0, 0), (2, 0)): best gain -0.075 (('del', 1, 1))
+        ('L', (2, -2)) -> TRAP at ((0, 0), (2, 0)): best gain -0.075 (('del', 1, 1))
+        ('L', (2, 0)) -> TRAP at ((0, 0), (2, 0)): best gain -0.075 (('del', 1, 1))
+   a=1.0: 120 start states, 90 failing {'TRAP': 62, 'near-tie': 28}
+        ('L', 'L') -> TRAP at ((0, 0), (2, 0)): best gain -0.130 (('del', 1, 1))
+        ('L', (2, -2)) -> TRAP at ((0, 0), (2, 0)): best gain -0.130 (('del', 1, 1))
+        ('L', (2, 0)) -> TRAP at ((0, 0), (2, 0)): best gain -0.130 (('del', 1, 1))
+=== r12=.3 .9/.9, truths (1,1): kappa_eff@S0=[0.123, 0.123]  trap thresholds (1+k)/2 for truth-free classes: []
+   a=0.5: 120 start states, 60 failing {'near-tie': 60}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.529 vs ('del', 1, 1) 0.529
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.529 vs ('del', 1, 1) 0.529
+        ('L', (3, -3)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.529 vs ('del', 1, 1) 0.529
+   a=0.75: 120 start states, 52 failing {'near-tie': 52}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.196 vs ('del', 1, 1) 0.196
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.196 vs ('del', 1, 1) 0.196
+        ('L', (3, -3)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.196 vs ('del', 1, 1) 0.196
+   a=0.9: 120 start states, 52 failing {'near-tie': 52}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.085 vs ('del', 1, 1) 0.085
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.085 vs ('del', 1, 1) 0.085
+        ('L', (3, -3)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.085 vs ('del', 1, 1) 0.085
+   a=1.0: 120 start states, 52 failing {'near-tie': 52}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.029 vs ('del', 1, 1) 0.029
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.029 vs ('del', 1, 1) 0.029
+        ('L', (3, -3)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.029 vs ('del', 1, 1) 0.029
+=== r12=.85 .9/.9, truths (1,1): kappa_eff@S0=[0.563, 0.563]  trap thresholds (1+k)/2 for truth-free classes: []
+   a=0.5: 120 start states, 48 failing {'near-tie': 48}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.642 vs ('del', 1, 1) 0.642
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.642 vs ('del', 1, 1) 0.642
+        ('L', (3, -1)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.642 vs ('del', 1, 1) 0.642
+   a=0.75: 120 start states, 60 failing {'near-tie': 60}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.309 vs ('del', 1, 1) 0.309
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.309 vs ('del', 1, 1) 0.309
+        ('L', (3, -3)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.309 vs ('del', 1, 1) 0.309
+   a=0.9: 120 start states, 56 failing {'near-tie': 56}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.198 vs ('del', 1, 1) 0.198
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.198 vs ('del', 1, 1) 0.198
+        ('L', (3, -3)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.198 vs ('del', 1, 1) 0.198
+   a=1.0: 120 start states, 56 failing {'near-tie': 56}
+        ('L', 'L') -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.142 vs ('del', 1, 1) 0.142
+        ('L', (2, 0)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.142 vs ('del', 1, 1) 0.142
+        ('L', (3, -3)) -> near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.142 vs ('del', 1, 1) 0.142
+=== r12=.85 .9/.9, truths (2,0): kappa_eff@S0=[0.111, 0.717]  trap thresholds (1+k)/2 for truth-free classes: [np.float64(0.858)]
+   a=0.5: 120 start states, 22 failing {'near-tie': 22}
+        ((1, -1), (3, -3)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 1.385 vs ('del', 1, -1) 1.385
+        ((1, -1), (3, -1)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 1.385 vs ('del', 1, -1) 1.385
+        ((1, -1), (3, 1)) -> near-tie at ((1, -1), (3, 1)): ('del', 0, -1) 1.131 vs ('del', 1, 1) 1.131
+   a=0.75: 120 start states, 28 failing {'near-tie': 28}
+        ((1, -1), (2, -2)) -> near-tie at ((1, -1), (2, -2)): ('swap', 1, -1, 1, 1) 1.777 vs ('swap', 0, -1, 1, 1) 1.777
+        ((1, -1), (3, -3)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 1.052 vs ('del', 1, -1) 1.052
+        ((1, -1), (3, -1)) -> near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 1.052 vs ('del', 1, -1) 1.052
+   a=0.9: 120 start states, 82 failing {'TRAP': 52, 'near-tie': 30}
+        ('L', 'L') -> TRAP at ((0, 0), (2, 0)): best gain -0.027 (('del', 1, 1))
+        ('L', (2, 0)) -> TRAP at ((0, 0), (2, 0)): best gain -0.027 (('del', 1, 1))
+        ('L', (3, -3)) -> TRAP at ((0, 0), (2, 0)): best gain -0.027 (('del', 1, 1))
+   a=1.0: 120 start states, 84 failing {'TRAP': 58, 'near-tie': 26}
+        ('L', 'L') -> TRAP at ((0, 0), (2, 0)): best gain -0.082 (('del', 1, 1))
+        ('L', (2, 0)) -> TRAP at ((0, 0), (2, 0)): best gain -0.082 (('del', 1, 1))
+        ('L', (3, -3)) -> TRAP at ((0, 0), (2, 0)): best gain -0.082 (('del', 1, 1))
+
+RANDOM designs, k in {2,3}, truths >= 1 in every class, a = 1.0 (worst), IMAX = 3:
+   FAIL: R=[[0.518, 0.514], [0.514, 0.518]] s=[2, 2]: near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.369 vs ('del', 0, 1) 0.369
+   FAIL: R=[[0.757, 0.468], [0.468, 0.757]] s=[2, 2]: near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.214 vs ('del', 1, 1) 0.214
+   FAIL: R=[[0.868, 0.649], [0.649, 0.868]] s=[1, 1]: near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.070 vs ('del', 1, 1) 0.070
+   FAIL: R=[[0.756, 0.618], [0.618, 0.756]] s=[2, 2]: near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.240 vs ('del', 1, 1) 0.240
+   FAIL: R=[[0.762, -0.495], [-0.495, 0.762]] s=[2, 2]: near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.215 vs ('del', 1, 1) 0.215
+   FAIL: R=[[0.683, -0.535], [-0.535, 0.683]] s=[2, 2]: near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.252 vs ('del', 1, 1) 0.252
+   FAIL: R=[[0.594, 0.481], [0.481, 0.594]] s=[1, 1]: near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.212 vs ('del', 1, 1) 0.212
+   FAIL: R=[[0.742, -0.308], [-0.308, 0.742]] s=[2, 2]: near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.207 vs ('del', 1, 1) 0.207
+   FAIL: R=[[0.84, -0.591], [-0.591, 0.84]] s=[1, 1]: near-tie at ((2, 0), (2, 0)): ('del', 1, 1) 0.076 vs ('del', 0, 1) 0.076
+   FAIL: R=[[0.449, -0.115], [-0.115, 0.449]] s=[2, 2]: near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.267 vs ('del', 1, 1) 0.267
+   FAIL: R=[[0.655, -0.634], [-0.634, 0.655]] s=[2, 2]: near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.336 vs ('del', 1, 1) 0.336
+   FAIL: R=[[0.375, 0.359], [0.359, 0.375]] s=[2, 2]: near-tie at ((2, 0), (2, 0)): ('del', 0, 1) 0.370 vs ('del', 1, 1) 0.370
+   random designs with truths in every class: 12/60 fail (EM) at a=1.0
+
+RANDOM designs, k=2, class 2 truth-free, a = 1.0: (EM) vs kappa_eff(2) > 1 (uncoupled-type criterion):
+   DISAGREE: R=[[0.377, 0.344], [0.344, 0.377]] s=[2, 0] kappa_eff2=3.032 EM=near-tie at ((1, -1), (2, -2)): ('swap', 0, -1, 1, 1) 1.222 vs ('swap', 1, -1, 1, 1) 1.222
+   DISAGREE: R=[[0.42, 0.418], [0.418, 0.42]] s=[2, 0] kappa_eff2=3.338 EM=near-tie at ((1, -1), (2, -2)): ('swap', 1, -1, 1, 1) 1.256 vs ('swap', 0, -1, 1, 1) 1.256
+   DISAGREE: R=[[0.609, -0.596], [-0.596, 0.609]] s=[2, 0] kappa_eff2=2.332 EM=near-tie at ((1, -1), (2, 2)): ('swap', 1, 1, 1, -1) 1.442 vs ('swap', 0, -1, 1, -1) 1.442
+   DISAGREE: R=[[0.579, 0.481], [0.481, 0.579]] s=[2, 0] kappa_eff2=1.475 EM=near-tie at ((1, -1), (2, -2)): ('swap', 1, -1, 1, 1) 1.501 vs ('swap', 0, -1, 1, 1) 1.501
+   DISAGREE: R=[[0.429, 0.39], [0.39, 0.429]] s=[2, 0] kappa_eff2=2.634 EM=near-tie at ((1, -1), (2, -2)): ('swap', 0, -1, 1, 1) 1.294 vs ('swap', 1, -1, 1, 1) 1.294
+   DISAGREE: R=[[0.701, -0.689], [-0.689, 0.701]] s=[2, 0] kappa_eff2=2.101 EM=near-tie at ((1, -1), (2, 2)): ('swap', 0, -1, 1, -1) 1.504 vs ('swap', 1, 1, 1, -1) 1.504
+   DISAGREE: R=[[0.43, -0.109], [-0.109, 0.43]] s=[2, 0] kappa_eff2=1.380 EM=near-tie at ((1, -1), (3, -1)): ('del', 1, -1) 0.690 vs ('del', 0, -1) 0.690
+   DISAGREE: R=[[0.851, -0.85], [-0.85, 0.851]] s=[2, 0] kappa_eff2=2.083 EM=near-tie at ((1, -1), (2, 2)): ('swap', 0, -1, 1, -1) 1.556 vs ('swap', 1, 1, 1, -1) 1.556
+   DISAGREE: R=[[0.435, 0.092], [0.092, 0.435]] s=[2, 0] kappa_eff2=1.337 EM=near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 0.760 vs ('del', 1, -1) 0.760
+   DISAGREE: R=[[0.308, 0.297], [0.297, 0.308]] s=[2, 0] kappa_eff2=4.003 EM=near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 0.840 vs ('del', 1, -1) 0.840
+   DISAGREE: R=[[0.566, -0.553], [-0.553, 0.566]] s=[2, 0] kappa_eff2=2.477 EM=near-tie at ((1, -1), (2, 2)): ('swap', 0, -1, 1, -1) 1.408 vs ('swap', 1, 1, 1, -1) 1.408
+   DISAGREE: R=[[0.541, -0.348], [-0.348, 0.541]] s=[2, 0] kappa_eff2=1.195 EM=near-tie at ((1, -1), (2, 2)): ('swap', 0, -1, 1, -1) 1.488 vs ('swap', 1, 1, 1, -1) 1.488
+   DISAGREE: R=[[0.438, -0.287], [-0.287, 0.438]] s=[2, 0] kappa_eff2=1.738 EM=near-tie at ((1, -1), (2, 2)): ('swap', 0, -1, 1, -1) 1.336 vs ('swap', 1, 1, 1, -1) 1.336
+   DISAGREE: R=[[0.31, -0.055], [-0.055, 0.31]] s=[2, 0] kappa_eff2=2.259 EM=near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 0.661 vs ('del', 1, -1) 0.661
+   DISAGREE: R=[[0.593, 0.505], [0.505, 0.593]] s=[2, 0] kappa_eff2=1.485 EM=near-tie at ((1, -1), (2, -2)): ('swap', 1, -1, 1, 1) 1.511 vs ('swap', 0, -1, 1, 1) 1.511
+   DISAGREE: R=[[0.728, -0.669], [-0.669, 0.728]] s=[2, 0] kappa_eff2=1.294 EM=near-tie at ((1, -1), (2, 2)): ('swap', 1, 1, 1, -1) 1.610 vs ('swap', 0, -1, 1, -1) 1.610
+   DISAGREE: R=[[0.635, 0.559], [0.559, 0.635]] s=[2, 0] kappa_eff2=1.442 EM=near-tie at ((1, -1), (2, -2)): ('swap', 0, -1, 1, 1) 1.543 vs ('swap', 1, -1, 1, 1) 1.543
+   DISAGREE: R=[[0.628, 0.575], [0.575, 0.628]] s=[2, 0] kappa_eff2=1.673 EM=near-tie at ((1, -1), (2, -2)): ('swap', 0, -1, 1, 1) 1.513 vs ('swap', 1, -1, 1, 1) 1.513
+   DISAGREE: R=[[0.413, -0.146], [-0.146, 0.413]] s=[2, 0] kappa_eff2=1.534 EM=near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 0.664 vs ('del', 1, -1) 0.664
+   DISAGREE: R=[[0.695, 0.666], [0.666, 0.695]] s=[2, 0] kappa_eff2=1.768 EM=near-tie at ((1, -1), (2, -2)): ('swap', 0, -1, 1, 1) 1.537 vs ('swap', 1, -1, 1, 1) 1.537
+   DISAGREE: R=[[0.727, -0.716], [-0.716, 0.727]] s=[2, 0] kappa_eff2=2.045 EM=near-tie at ((1, -1), (2, 2)): ('swap', 0, -1, 1, -1) 1.520 vs ('swap', 1, 1, 1, -1) 1.520
+   DISAGREE: R=[[0.532, -0.513], [-0.513, 0.532]] s=[2, 0] kappa_eff2=2.478 EM=near-tie at ((1, -1), (2, 2)): ('swap', 0, -1, 1, -1) 1.387 vs ('swap', 1, 1, 1, -1) 1.387
+   DISAGREE: R=[[0.38, 0.195], [0.195, 0.38]] s=[2, 0] kappa_eff2=1.908 EM=near-tie at ((1, -1), (3, -1)): ('del', 0, -1) 0.787 vs ('del', 1, -1) 0.787
+   DISAGREE: R=[[0.541, -0.278], [-0.278, 0.541]] s=[2, 0] kappa_eff2=1.041 EM=near-tie at ((1, -1), (2, 2)): ('swap', 0, -1, 1, -1) 1.490 vs ('swap', 1, 1, 1, -1) 1.490
+   agreement of (EM) with 'kappa_eff(truth-free class) > 1' at a=1: 36/60

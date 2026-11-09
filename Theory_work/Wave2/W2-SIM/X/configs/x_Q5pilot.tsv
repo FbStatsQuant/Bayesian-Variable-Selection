@@ -1,0 +1,8 @@
+1	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits_1.jsonl $OUT/rds design=iidcs n=500 p=50 rho=0.5 rep=900 arm=mr1 hours=22 mem_gb=12 signs=mixed
+2	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits_2.jsonl $OUT/rds design=iidcs n=500 p=100 rho=0.5 rep=900 arm=mr1 hours=22 mem_gb=12 signs=mixed
+3	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits_3.jsonl $OUT/rds design=iidcs n=500 p=250 rho=0.5 rep=900 arm=mr1 hours=22 mem_gb=12 signs=mixed
+4	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits_4.jsonl $OUT/rds design=iidcs n=2000 p=100 rho=0.5 rep=900 arm=mr1 hours=22 mem_gb=12 signs=mixed
+5	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits_5.jsonl $OUT/rds design=iidcs n=2000 p=300 rho=0.5 rep=900 arm=mr1 hours=22 mem_gb=12 signs=mixed
+6	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits_6.jsonl $OUT/rds design=iidcs n=2000 p=1000 rho=0.5 rep=900 arm=mr1 hours=22 mem_gb=12 signs=mixed
+7	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits_7.jsonl $OUT/rds design=iidcs n=8000 p=100 rho=0.5 rep=900 arm=mr1 hours=22 mem_gb=12 signs=mixed
+8	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits_8.jsonl $OUT/rds design=iidcs n=8000 p=300 rho=0.5 rep=900 arm=mr1 hours=22 mem_gb=12 signs=mixed

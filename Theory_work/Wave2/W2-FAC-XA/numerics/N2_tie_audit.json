@@ -1,0 +1,36 @@
+[
+  {
+    "n": 100000000,
+    "p": 200,
+    "seed": 3,
+    "family": "unequal",
+    "kind": "exact",
+    "step": 7,
+    "candidate_count": 2,
+    "removed_variables": [
+      [
+        180
+      ],
+      [
+        151
+      ]
+    ],
+    "scan_scores": [
+      -850387520.9374607,
+      -850387520.9374607
+    ],
+    "direct_scores": [
+      -850387520.9374608,
+      -850387520.9374608
+    ],
+    "direct_score_spread": 0.0,
+    "production_choice_removed": [
+      180
+    ],
+    "direct_choice_removed": [
+      180
+    ],
+    "choices_agree": true,
+    "candidates_all_safe_null_deletions": true
+  }
+]

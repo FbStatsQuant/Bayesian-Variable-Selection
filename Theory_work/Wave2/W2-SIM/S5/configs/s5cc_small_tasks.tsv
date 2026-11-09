@@ -1,0 +1,380 @@
+1	python3 s5cc.py 2000 1e12 1 > $OUT/raw/cc_1.json
+2	python3 s5cc.py 2000 1e12 2 > $OUT/raw/cc_2.json
+3	python3 s5cc.py 2000 1e12 3 > $OUT/raw/cc_3.json
+4	python3 s5cc.py 2000 1e12 4 > $OUT/raw/cc_4.json
+5	python3 s5cc.py 2000 1e12 5 > $OUT/raw/cc_5.json
+6	python3 s5cc.py 2000 1e12 6 > $OUT/raw/cc_6.json
+7	python3 s5cc.py 2000 1e12 7 > $OUT/raw/cc_7.json
+8	python3 s5cc.py 2000 1e12 8 > $OUT/raw/cc_8.json
+9	python3 s5cc.py 2000 1e12 9 > $OUT/raw/cc_9.json
+10	python3 s5cc.py 2000 1e12 10 > $OUT/raw/cc_10.json
+11	python3 s5cc.py 2000 1e12 11 > $OUT/raw/cc_11.json
+12	python3 s5cc.py 2000 1e12 12 > $OUT/raw/cc_12.json
+13	python3 s5cc.py 2000 1e12 13 > $OUT/raw/cc_13.json
+14	python3 s5cc.py 2000 1e12 14 > $OUT/raw/cc_14.json
+15	python3 s5cc.py 2000 1e12 15 > $OUT/raw/cc_15.json
+16	python3 s5cc.py 2000 1e12 16 > $OUT/raw/cc_16.json
+17	python3 s5cc.py 2000 1e12 17 > $OUT/raw/cc_17.json
+18	python3 s5cc.py 2000 1e12 18 > $OUT/raw/cc_18.json
+19	python3 s5cc.py 2000 1e12 19 > $OUT/raw/cc_19.json
+20	python3 s5cc.py 2000 1e12 20 > $OUT/raw/cc_20.json
+21	python3 s5cc.py 2000 1e12 21 > $OUT/raw/cc_21.json
+22	python3 s5cc.py 2000 1e12 22 > $OUT/raw/cc_22.json
+23	python3 s5cc.py 2000 1e12 23 > $OUT/raw/cc_23.json
+24	python3 s5cc.py 2000 1e12 24 > $OUT/raw/cc_24.json
+25	python3 s5cc.py 2000 1e12 25 > $OUT/raw/cc_25.json
+26	python3 s5cc.py 2000 1e12 26 > $OUT/raw/cc_26.json
+27	python3 s5cc.py 2000 1e12 27 > $OUT/raw/cc_27.json
+28	python3 s5cc.py 2000 1e12 28 > $OUT/raw/cc_28.json
+29	python3 s5cc.py 2000 1e12 29 > $OUT/raw/cc_29.json
+30	python3 s5cc.py 2000 1e12 30 > $OUT/raw/cc_30.json
+31	python3 s5cc.py 2000 1e12 31 > $OUT/raw/cc_31.json
+32	python3 s5cc.py 2000 1e12 32 > $OUT/raw/cc_32.json
+33	python3 s5cc.py 2000 1e12 33 > $OUT/raw/cc_33.json
+34	python3 s5cc.py 2000 1e12 34 > $OUT/raw/cc_34.json
+35	python3 s5cc.py 2000 1e12 35 > $OUT/raw/cc_35.json
+36	python3 s5cc.py 2000 1e12 36 > $OUT/raw/cc_36.json
+37	python3 s5cc.py 2000 1e12 37 > $OUT/raw/cc_37.json
+38	python3 s5cc.py 2000 1e12 38 > $OUT/raw/cc_38.json
+39	python3 s5cc.py 2000 1e12 39 > $OUT/raw/cc_39.json
+40	python3 s5cc.py 2000 1e12 40 > $OUT/raw/cc_40.json
+41	python3 s5cc.py 2000 1e12 41 > $OUT/raw/cc_41.json
+42	python3 s5cc.py 2000 1e12 42 > $OUT/raw/cc_42.json
+43	python3 s5cc.py 2000 1e12 43 > $OUT/raw/cc_43.json
+44	python3 s5cc.py 2000 1e12 44 > $OUT/raw/cc_44.json
+45	python3 s5cc.py 2000 1e12 45 > $OUT/raw/cc_45.json
+46	python3 s5cc.py 2000 1e12 46 > $OUT/raw/cc_46.json
+47	python3 s5cc.py 2000 1e12 47 > $OUT/raw/cc_47.json
+48	python3 s5cc.py 2000 1e12 48 > $OUT/raw/cc_48.json
+49	python3 s5cc.py 2000 1e12 49 > $OUT/raw/cc_49.json
+50	python3 s5cc.py 2000 1e12 50 > $OUT/raw/cc_50.json
+51	python3 s5cc.py 2000 1e20 1 > $OUT/raw/cc_51.json
+52	python3 s5cc.py 2000 1e20 2 > $OUT/raw/cc_52.json
+53	python3 s5cc.py 2000 1e20 3 > $OUT/raw/cc_53.json
+54	python3 s5cc.py 2000 1e20 4 > $OUT/raw/cc_54.json
+55	python3 s5cc.py 2000 1e20 5 > $OUT/raw/cc_55.json
+56	python3 s5cc.py 2000 1e20 6 > $OUT/raw/cc_56.json
+57	python3 s5cc.py 2000 1e20 7 > $OUT/raw/cc_57.json
+58	python3 s5cc.py 2000 1e20 8 > $OUT/raw/cc_58.json
+59	python3 s5cc.py 2000 1e20 9 > $OUT/raw/cc_59.json
+60	python3 s5cc.py 2000 1e20 10 > $OUT/raw/cc_60.json
+61	python3 s5cc.py 2000 1e20 11 > $OUT/raw/cc_61.json
+62	python3 s5cc.py 2000 1e20 12 > $OUT/raw/cc_62.json
+63	python3 s5cc.py 2000 1e20 13 > $OUT/raw/cc_63.json
+64	python3 s5cc.py 2000 1e20 14 > $OUT/raw/cc_64.json
+65	python3 s5cc.py 2000 1e20 15 > $OUT/raw/cc_65.json
+66	python3 s5cc.py 2000 1e20 16 > $OUT/raw/cc_66.json
+67	python3 s5cc.py 2000 1e20 17 > $OUT/raw/cc_67.json
+68	python3 s5cc.py 2000 1e20 18 > $OUT/raw/cc_68.json
+69	python3 s5cc.py 2000 1e20 19 > $OUT/raw/cc_69.json
+70	python3 s5cc.py 2000 1e20 20 > $OUT/raw/cc_70.json
+71	python3 s5cc.py 2000 1e20 21 > $OUT/raw/cc_71.json
+72	python3 s5cc.py 2000 1e20 22 > $OUT/raw/cc_72.json
+73	python3 s5cc.py 2000 1e20 23 > $OUT/raw/cc_73.json
+74	python3 s5cc.py 2000 1e20 24 > $OUT/raw/cc_74.json
+75	python3 s5cc.py 2000 1e20 25 > $OUT/raw/cc_75.json
+76	python3 s5cc.py 2000 1e20 26 > $OUT/raw/cc_76.json
+77	python3 s5cc.py 2000 1e20 27 > $OUT/raw/cc_77.json
+78	python3 s5cc.py 2000 1e20 28 > $OUT/raw/cc_78.json
+79	python3 s5cc.py 2000 1e20 29 > $OUT/raw/cc_79.json
+80	python3 s5cc.py 2000 1e20 30 > $OUT/raw/cc_80.json
+81	python3 s5cc.py 2000 1e20 31 > $OUT/raw/cc_81.json
+82	python3 s5cc.py 2000 1e20 32 > $OUT/raw/cc_82.json
+83	python3 s5cc.py 2000 1e20 33 > $OUT/raw/cc_83.json
+84	python3 s5cc.py 2000 1e20 34 > $OUT/raw/cc_84.json
+85	python3 s5cc.py 2000 1e20 35 > $OUT/raw/cc_85.json
+86	python3 s5cc.py 2000 1e20 36 > $OUT/raw/cc_86.json
+87	python3 s5cc.py 2000 1e20 37 > $OUT/raw/cc_87.json
+88	python3 s5cc.py 2000 1e20 38 > $OUT/raw/cc_88.json
+89	python3 s5cc.py 2000 1e20 39 > $OUT/raw/cc_89.json
+90	python3 s5cc.py 2000 1e20 40 > $OUT/raw/cc_90.json
+91	python3 s5cc.py 2000 1e20 41 > $OUT/raw/cc_91.json
+92	python3 s5cc.py 2000 1e20 42 > $OUT/raw/cc_92.json
+93	python3 s5cc.py 2000 1e20 43 > $OUT/raw/cc_93.json
+94	python3 s5cc.py 2000 1e20 44 > $OUT/raw/cc_94.json
+95	python3 s5cc.py 2000 1e20 45 > $OUT/raw/cc_95.json
+96	python3 s5cc.py 2000 1e20 46 > $OUT/raw/cc_96.json
+97	python3 s5cc.py 2000 1e20 47 > $OUT/raw/cc_97.json
+98	python3 s5cc.py 2000 1e20 48 > $OUT/raw/cc_98.json
+99	python3 s5cc.py 2000 1e20 49 > $OUT/raw/cc_99.json
+100	python3 s5cc.py 2000 1e20 50 > $OUT/raw/cc_100.json
+101	python3 s5cc.py 10000 1e12 1 > $OUT/raw/cc_101.json
+102	python3 s5cc.py 10000 1e12 2 > $OUT/raw/cc_102.json
+103	python3 s5cc.py 10000 1e12 3 > $OUT/raw/cc_103.json
+104	python3 s5cc.py 10000 1e12 4 > $OUT/raw/cc_104.json
+105	python3 s5cc.py 10000 1e12 5 > $OUT/raw/cc_105.json
+106	python3 s5cc.py 10000 1e12 6 > $OUT/raw/cc_106.json
+107	python3 s5cc.py 10000 1e12 7 > $OUT/raw/cc_107.json
+108	python3 s5cc.py 10000 1e12 8 > $OUT/raw/cc_108.json
+109	python3 s5cc.py 10000 1e12 9 > $OUT/raw/cc_109.json
+110	python3 s5cc.py 10000 1e12 10 > $OUT/raw/cc_110.json
+111	python3 s5cc.py 10000 1e12 11 > $OUT/raw/cc_111.json
+112	python3 s5cc.py 10000 1e12 12 > $OUT/raw/cc_112.json
+113	python3 s5cc.py 10000 1e12 13 > $OUT/raw/cc_113.json
+114	python3 s5cc.py 10000 1e12 14 > $OUT/raw/cc_114.json
+115	python3 s5cc.py 10000 1e12 15 > $OUT/raw/cc_115.json
+116	python3 s5cc.py 10000 1e12 16 > $OUT/raw/cc_116.json
+117	python3 s5cc.py 10000 1e12 17 > $OUT/raw/cc_117.json
+118	python3 s5cc.py 10000 1e12 18 > $OUT/raw/cc_118.json
+119	python3 s5cc.py 10000 1e12 19 > $OUT/raw/cc_119.json
+120	python3 s5cc.py 10000 1e12 20 > $OUT/raw/cc_120.json
+121	python3 s5cc.py 10000 1e12 21 > $OUT/raw/cc_121.json
+122	python3 s5cc.py 10000 1e12 22 > $OUT/raw/cc_122.json
+123	python3 s5cc.py 10000 1e12 23 > $OUT/raw/cc_123.json
+124	python3 s5cc.py 10000 1e12 24 > $OUT/raw/cc_124.json
+125	python3 s5cc.py 10000 1e12 25 > $OUT/raw/cc_125.json
+126	python3 s5cc.py 10000 1e12 26 > $OUT/raw/cc_126.json
+127	python3 s5cc.py 10000 1e12 27 > $OUT/raw/cc_127.json
+128	python3 s5cc.py 10000 1e12 28 > $OUT/raw/cc_128.json
+129	python3 s5cc.py 10000 1e12 29 > $OUT/raw/cc_129.json
+130	python3 s5cc.py 10000 1e12 30 > $OUT/raw/cc_130.json
+131	python3 s5cc.py 10000 1e12 31 > $OUT/raw/cc_131.json
+132	python3 s5cc.py 10000 1e12 32 > $OUT/raw/cc_132.json
+133	python3 s5cc.py 10000 1e12 33 > $OUT/raw/cc_133.json
+134	python3 s5cc.py 10000 1e12 34 > $OUT/raw/cc_134.json
+135	python3 s5cc.py 10000 1e12 35 > $OUT/raw/cc_135.json
+136	python3 s5cc.py 10000 1e12 36 > $OUT/raw/cc_136.json
+137	python3 s5cc.py 10000 1e12 37 > $OUT/raw/cc_137.json
+138	python3 s5cc.py 10000 1e12 38 > $OUT/raw/cc_138.json
+139	python3 s5cc.py 10000 1e12 39 > $OUT/raw/cc_139.json
+140	python3 s5cc.py 10000 1e12 40 > $OUT/raw/cc_140.json
+141	python3 s5cc.py 10000 1e12 41 > $OUT/raw/cc_141.json
+142	python3 s5cc.py 10000 1e12 42 > $OUT/raw/cc_142.json
+143	python3 s5cc.py 10000 1e12 43 > $OUT/raw/cc_143.json
+144	python3 s5cc.py 10000 1e12 44 > $OUT/raw/cc_144.json
+145	python3 s5cc.py 10000 1e12 45 > $OUT/raw/cc_145.json
+146	python3 s5cc.py 10000 1e12 46 > $OUT/raw/cc_146.json
+147	python3 s5cc.py 10000 1e12 47 > $OUT/raw/cc_147.json
+148	python3 s5cc.py 10000 1e12 48 > $OUT/raw/cc_148.json
+149	python3 s5cc.py 10000 1e12 49 > $OUT/raw/cc_149.json
+150	python3 s5cc.py 10000 1e12 50 > $OUT/raw/cc_150.json
+151	python3 s5cc.py 10000 1e20 1 > $OUT/raw/cc_151.json
+152	python3 s5cc.py 10000 1e20 2 > $OUT/raw/cc_152.json
+153	python3 s5cc.py 10000 1e20 3 > $OUT/raw/cc_153.json
+154	python3 s5cc.py 10000 1e20 4 > $OUT/raw/cc_154.json
+155	python3 s5cc.py 10000 1e20 5 > $OUT/raw/cc_155.json
+156	python3 s5cc.py 10000 1e20 6 > $OUT/raw/cc_156.json
+157	python3 s5cc.py 10000 1e20 7 > $OUT/raw/cc_157.json
+158	python3 s5cc.py 10000 1e20 8 > $OUT/raw/cc_158.json
+159	python3 s5cc.py 10000 1e20 9 > $OUT/raw/cc_159.json
+160	python3 s5cc.py 10000 1e20 10 > $OUT/raw/cc_160.json
+161	python3 s5cc.py 10000 1e20 11 > $OUT/raw/cc_161.json
+162	python3 s5cc.py 10000 1e20 12 > $OUT/raw/cc_162.json
+163	python3 s5cc.py 10000 1e20 13 > $OUT/raw/cc_163.json
+164	python3 s5cc.py 10000 1e20 14 > $OUT/raw/cc_164.json
+165	python3 s5cc.py 10000 1e20 15 > $OUT/raw/cc_165.json
+166	python3 s5cc.py 10000 1e20 16 > $OUT/raw/cc_166.json
+167	python3 s5cc.py 10000 1e20 17 > $OUT/raw/cc_167.json
+168	python3 s5cc.py 10000 1e20 18 > $OUT/raw/cc_168.json
+169	python3 s5cc.py 10000 1e20 19 > $OUT/raw/cc_169.json
+170	python3 s5cc.py 10000 1e20 20 > $OUT/raw/cc_170.json
+171	python3 s5cc.py 10000 1e20 21 > $OUT/raw/cc_171.json
+172	python3 s5cc.py 10000 1e20 22 > $OUT/raw/cc_172.json
+173	python3 s5cc.py 10000 1e20 23 > $OUT/raw/cc_173.json
+174	python3 s5cc.py 10000 1e20 24 > $OUT/raw/cc_174.json
+175	python3 s5cc.py 10000 1e20 25 > $OUT/raw/cc_175.json
+176	python3 s5cc.py 10000 1e20 26 > $OUT/raw/cc_176.json
+177	python3 s5cc.py 10000 1e20 27 > $OUT/raw/cc_177.json
+178	python3 s5cc.py 10000 1e20 28 > $OUT/raw/cc_178.json
+179	python3 s5cc.py 10000 1e20 29 > $OUT/raw/cc_179.json
+180	python3 s5cc.py 10000 1e20 30 > $OUT/raw/cc_180.json
+181	python3 s5cc.py 10000 1e20 31 > $OUT/raw/cc_181.json
+182	python3 s5cc.py 10000 1e20 32 > $OUT/raw/cc_182.json
+183	python3 s5cc.py 10000 1e20 33 > $OUT/raw/cc_183.json
+184	python3 s5cc.py 10000 1e20 34 > $OUT/raw/cc_184.json
+185	python3 s5cc.py 10000 1e20 35 > $OUT/raw/cc_185.json
+186	python3 s5cc.py 10000 1e20 36 > $OUT/raw/cc_186.json
+187	python3 s5cc.py 10000 1e20 37 > $OUT/raw/cc_187.json
+188	python3 s5cc.py 10000 1e20 38 > $OUT/raw/cc_188.json
+189	python3 s5cc.py 10000 1e20 39 > $OUT/raw/cc_189.json
+190	python3 s5cc.py 10000 1e20 40 > $OUT/raw/cc_190.json
+191	python3 s5cc.py 10000 1e20 41 > $OUT/raw/cc_191.json
+192	python3 s5cc.py 10000 1e20 42 > $OUT/raw/cc_192.json
+193	python3 s5cc.py 10000 1e20 43 > $OUT/raw/cc_193.json
+194	python3 s5cc.py 10000 1e20 44 > $OUT/raw/cc_194.json
+195	python3 s5cc.py 10000 1e20 45 > $OUT/raw/cc_195.json
+196	python3 s5cc.py 10000 1e20 46 > $OUT/raw/cc_196.json
+197	python3 s5cc.py 10000 1e20 47 > $OUT/raw/cc_197.json
+198	python3 s5cc.py 10000 1e20 48 > $OUT/raw/cc_198.json
+199	python3 s5cc.py 10000 1e20 49 > $OUT/raw/cc_199.json
+200	python3 s5cc.py 10000 1e20 50 > $OUT/raw/cc_200.json
+201	python3 s5cc.py 50000 1e12 1 > $OUT/raw/cc_201.json
+202	python3 s5cc.py 50000 1e12 2 > $OUT/raw/cc_202.json
+203	python3 s5cc.py 50000 1e12 3 > $OUT/raw/cc_203.json
+204	python3 s5cc.py 50000 1e12 4 > $OUT/raw/cc_204.json
+205	python3 s5cc.py 50000 1e12 5 > $OUT/raw/cc_205.json
+206	python3 s5cc.py 50000 1e12 6 > $OUT/raw/cc_206.json
+207	python3 s5cc.py 50000 1e12 7 > $OUT/raw/cc_207.json
+208	python3 s5cc.py 50000 1e12 8 > $OUT/raw/cc_208.json
+209	python3 s5cc.py 50000 1e12 9 > $OUT/raw/cc_209.json
+210	python3 s5cc.py 50000 1e12 10 > $OUT/raw/cc_210.json
+211	python3 s5cc.py 50000 1e12 11 > $OUT/raw/cc_211.json
+212	python3 s5cc.py 50000 1e12 12 > $OUT/raw/cc_212.json
+213	python3 s5cc.py 50000 1e12 13 > $OUT/raw/cc_213.json
+214	python3 s5cc.py 50000 1e12 14 > $OUT/raw/cc_214.json
+215	python3 s5cc.py 50000 1e12 15 > $OUT/raw/cc_215.json
+216	python3 s5cc.py 50000 1e12 16 > $OUT/raw/cc_216.json
+217	python3 s5cc.py 50000 1e12 17 > $OUT/raw/cc_217.json
+218	python3 s5cc.py 50000 1e12 18 > $OUT/raw/cc_218.json
+219	python3 s5cc.py 50000 1e12 19 > $OUT/raw/cc_219.json
+220	python3 s5cc.py 50000 1e12 20 > $OUT/raw/cc_220.json
+221	python3 s5cc.py 50000 1e12 21 > $OUT/raw/cc_221.json
+222	python3 s5cc.py 50000 1e12 22 > $OUT/raw/cc_222.json
+223	python3 s5cc.py 50000 1e12 23 > $OUT/raw/cc_223.json
+224	python3 s5cc.py 50000 1e12 24 > $OUT/raw/cc_224.json
+225	python3 s5cc.py 50000 1e12 25 > $OUT/raw/cc_225.json
+226	python3 s5cc.py 50000 1e12 26 > $OUT/raw/cc_226.json
+227	python3 s5cc.py 50000 1e12 27 > $OUT/raw/cc_227.json
+228	python3 s5cc.py 50000 1e12 28 > $OUT/raw/cc_228.json
+229	python3 s5cc.py 50000 1e12 29 > $OUT/raw/cc_229.json
+230	python3 s5cc.py 50000 1e12 30 > $OUT/raw/cc_230.json
+231	python3 s5cc.py 50000 1e12 31 > $OUT/raw/cc_231.json
+232	python3 s5cc.py 50000 1e12 32 > $OUT/raw/cc_232.json
+233	python3 s5cc.py 50000 1e12 33 > $OUT/raw/cc_233.json
+234	python3 s5cc.py 50000 1e12 34 > $OUT/raw/cc_234.json
+235	python3 s5cc.py 50000 1e12 35 > $OUT/raw/cc_235.json
+236	python3 s5cc.py 50000 1e12 36 > $OUT/raw/cc_236.json
+237	python3 s5cc.py 50000 1e12 37 > $OUT/raw/cc_237.json
+238	python3 s5cc.py 50000 1e12 38 > $OUT/raw/cc_238.json
+239	python3 s5cc.py 50000 1e12 39 > $OUT/raw/cc_239.json
+240	python3 s5cc.py 50000 1e12 40 > $OUT/raw/cc_240.json
+241	python3 s5cc.py 50000 1e12 41 > $OUT/raw/cc_241.json
+242	python3 s5cc.py 50000 1e12 42 > $OUT/raw/cc_242.json
+243	python3 s5cc.py 50000 1e12 43 > $OUT/raw/cc_243.json
+244	python3 s5cc.py 50000 1e12 44 > $OUT/raw/cc_244.json
+245	python3 s5cc.py 50000 1e12 45 > $OUT/raw/cc_245.json
+246	python3 s5cc.py 50000 1e12 46 > $OUT/raw/cc_246.json
+247	python3 s5cc.py 50000 1e12 47 > $OUT/raw/cc_247.json
+248	python3 s5cc.py 50000 1e12 48 > $OUT/raw/cc_248.json
+249	python3 s5cc.py 50000 1e12 49 > $OUT/raw/cc_249.json
+250	python3 s5cc.py 50000 1e12 50 > $OUT/raw/cc_250.json
+251	python3 s5cc.py 50000 1e20 1 > $OUT/raw/cc_251.json
+252	python3 s5cc.py 50000 1e20 2 > $OUT/raw/cc_252.json
+253	python3 s5cc.py 50000 1e20 3 > $OUT/raw/cc_253.json
+254	python3 s5cc.py 50000 1e20 4 > $OUT/raw/cc_254.json
+255	python3 s5cc.py 50000 1e20 5 > $OUT/raw/cc_255.json
+256	python3 s5cc.py 50000 1e20 6 > $OUT/raw/cc_256.json
+257	python3 s5cc.py 50000 1e20 7 > $OUT/raw/cc_257.json
+258	python3 s5cc.py 50000 1e20 8 > $OUT/raw/cc_258.json
+259	python3 s5cc.py 50000 1e20 9 > $OUT/raw/cc_259.json
+260	python3 s5cc.py 50000 1e20 10 > $OUT/raw/cc_260.json
+261	python3 s5cc.py 50000 1e20 11 > $OUT/raw/cc_261.json
+262	python3 s5cc.py 50000 1e20 12 > $OUT/raw/cc_262.json
+263	python3 s5cc.py 50000 1e20 13 > $OUT/raw/cc_263.json
+264	python3 s5cc.py 50000 1e20 14 > $OUT/raw/cc_264.json
+265	python3 s5cc.py 50000 1e20 15 > $OUT/raw/cc_265.json
+266	python3 s5cc.py 50000 1e20 16 > $OUT/raw/cc_266.json
+267	python3 s5cc.py 50000 1e20 17 > $OUT/raw/cc_267.json
+268	python3 s5cc.py 50000 1e20 18 > $OUT/raw/cc_268.json
+269	python3 s5cc.py 50000 1e20 19 > $OUT/raw/cc_269.json
+270	python3 s5cc.py 50000 1e20 20 > $OUT/raw/cc_270.json
+271	python3 s5cc.py 50000 1e20 21 > $OUT/raw/cc_271.json
+272	python3 s5cc.py 50000 1e20 22 > $OUT/raw/cc_272.json
+273	python3 s5cc.py 50000 1e20 23 > $OUT/raw/cc_273.json
+274	python3 s5cc.py 50000 1e20 24 > $OUT/raw/cc_274.json
+275	python3 s5cc.py 50000 1e20 25 > $OUT/raw/cc_275.json
+276	python3 s5cc.py 50000 1e20 26 > $OUT/raw/cc_276.json
+277	python3 s5cc.py 50000 1e20 27 > $OUT/raw/cc_277.json
+278	python3 s5cc.py 50000 1e20 28 > $OUT/raw/cc_278.json
+279	python3 s5cc.py 50000 1e20 29 > $OUT/raw/cc_279.json
+280	python3 s5cc.py 50000 1e20 30 > $OUT/raw/cc_280.json
+281	python3 s5cc.py 50000 1e20 31 > $OUT/raw/cc_281.json
+282	python3 s5cc.py 50000 1e20 32 > $OUT/raw/cc_282.json
+283	python3 s5cc.py 50000 1e20 33 > $OUT/raw/cc_283.json
+284	python3 s5cc.py 50000 1e20 34 > $OUT/raw/cc_284.json
+285	python3 s5cc.py 50000 1e20 35 > $OUT/raw/cc_285.json
+286	python3 s5cc.py 50000 1e20 36 > $OUT/raw/cc_286.json
+287	python3 s5cc.py 50000 1e20 37 > $OUT/raw/cc_287.json
+288	python3 s5cc.py 50000 1e20 38 > $OUT/raw/cc_288.json
+289	python3 s5cc.py 50000 1e20 39 > $OUT/raw/cc_289.json
+290	python3 s5cc.py 50000 1e20 40 > $OUT/raw/cc_290.json
+291	python3 s5cc.py 50000 1e20 41 > $OUT/raw/cc_291.json
+292	python3 s5cc.py 50000 1e20 42 > $OUT/raw/cc_292.json
+293	python3 s5cc.py 50000 1e20 43 > $OUT/raw/cc_293.json
+294	python3 s5cc.py 50000 1e20 44 > $OUT/raw/cc_294.json
+295	python3 s5cc.py 50000 1e20 45 > $OUT/raw/cc_295.json
+296	python3 s5cc.py 50000 1e20 46 > $OUT/raw/cc_296.json
+297	python3 s5cc.py 50000 1e20 47 > $OUT/raw/cc_297.json
+298	python3 s5cc.py 50000 1e20 48 > $OUT/raw/cc_298.json
+299	python3 s5cc.py 50000 1e20 49 > $OUT/raw/cc_299.json
+300	python3 s5cc.py 50000 1e20 50 > $OUT/raw/cc_300.json
+301	python3 s5cc.py 10000 1e12 101 3 0.2 0.6 > $OUT/raw/cc_301.json
+302	python3 s5cc.py 10000 1e12 102 3 0.2 0.6 > $OUT/raw/cc_302.json
+303	python3 s5cc.py 10000 1e12 103 3 0.2 0.6 > $OUT/raw/cc_303.json
+304	python3 s5cc.py 10000 1e12 104 3 0.2 0.6 > $OUT/raw/cc_304.json
+305	python3 s5cc.py 10000 1e12 105 3 0.2 0.6 > $OUT/raw/cc_305.json
+306	python3 s5cc.py 10000 1e12 106 3 0.2 0.6 > $OUT/raw/cc_306.json
+307	python3 s5cc.py 10000 1e12 107 3 0.2 0.6 > $OUT/raw/cc_307.json
+308	python3 s5cc.py 10000 1e12 108 3 0.2 0.6 > $OUT/raw/cc_308.json
+309	python3 s5cc.py 10000 1e12 109 3 0.2 0.6 > $OUT/raw/cc_309.json
+310	python3 s5cc.py 10000 1e12 110 3 0.2 0.6 > $OUT/raw/cc_310.json
+311	python3 s5cc.py 10000 1e12 111 3 0.2 0.6 > $OUT/raw/cc_311.json
+312	python3 s5cc.py 10000 1e12 112 3 0.2 0.6 > $OUT/raw/cc_312.json
+313	python3 s5cc.py 10000 1e12 113 3 0.2 0.6 > $OUT/raw/cc_313.json
+314	python3 s5cc.py 10000 1e12 114 3 0.2 0.6 > $OUT/raw/cc_314.json
+315	python3 s5cc.py 10000 1e12 115 3 0.2 0.6 > $OUT/raw/cc_315.json
+316	python3 s5cc.py 10000 1e12 116 3 0.2 0.6 > $OUT/raw/cc_316.json
+317	python3 s5cc.py 10000 1e12 117 3 0.2 0.6 > $OUT/raw/cc_317.json
+318	python3 s5cc.py 10000 1e12 118 3 0.2 0.6 > $OUT/raw/cc_318.json
+319	python3 s5cc.py 10000 1e12 119 3 0.2 0.6 > $OUT/raw/cc_319.json
+320	python3 s5cc.py 10000 1e12 120 3 0.2 0.6 > $OUT/raw/cc_320.json
+321	python3 s5cc.py 10000 1e20 101 3 0.2 0.6 > $OUT/raw/cc_321.json
+322	python3 s5cc.py 10000 1e20 102 3 0.2 0.6 > $OUT/raw/cc_322.json
+323	python3 s5cc.py 10000 1e20 103 3 0.2 0.6 > $OUT/raw/cc_323.json
+324	python3 s5cc.py 10000 1e20 104 3 0.2 0.6 > $OUT/raw/cc_324.json
+325	python3 s5cc.py 10000 1e20 105 3 0.2 0.6 > $OUT/raw/cc_325.json
+326	python3 s5cc.py 10000 1e20 106 3 0.2 0.6 > $OUT/raw/cc_326.json
+327	python3 s5cc.py 10000 1e20 107 3 0.2 0.6 > $OUT/raw/cc_327.json
+328	python3 s5cc.py 10000 1e20 108 3 0.2 0.6 > $OUT/raw/cc_328.json
+329	python3 s5cc.py 10000 1e20 109 3 0.2 0.6 > $OUT/raw/cc_329.json
+330	python3 s5cc.py 10000 1e20 110 3 0.2 0.6 > $OUT/raw/cc_330.json
+331	python3 s5cc.py 10000 1e20 111 3 0.2 0.6 > $OUT/raw/cc_331.json
+332	python3 s5cc.py 10000 1e20 112 3 0.2 0.6 > $OUT/raw/cc_332.json
+333	python3 s5cc.py 10000 1e20 113 3 0.2 0.6 > $OUT/raw/cc_333.json
+334	python3 s5cc.py 10000 1e20 114 3 0.2 0.6 > $OUT/raw/cc_334.json
+335	python3 s5cc.py 10000 1e20 115 3 0.2 0.6 > $OUT/raw/cc_335.json
+336	python3 s5cc.py 10000 1e20 116 3 0.2 0.6 > $OUT/raw/cc_336.json
+337	python3 s5cc.py 10000 1e20 117 3 0.2 0.6 > $OUT/raw/cc_337.json
+338	python3 s5cc.py 10000 1e20 118 3 0.2 0.6 > $OUT/raw/cc_338.json
+339	python3 s5cc.py 10000 1e20 119 3 0.2 0.6 > $OUT/raw/cc_339.json
+340	python3 s5cc.py 10000 1e20 120 3 0.2 0.6 > $OUT/raw/cc_340.json
+341	python3 s5cc.py 50000 1e12 101 3 0.2 0.6 > $OUT/raw/cc_341.json
+342	python3 s5cc.py 50000 1e12 102 3 0.2 0.6 > $OUT/raw/cc_342.json
+343	python3 s5cc.py 50000 1e12 103 3 0.2 0.6 > $OUT/raw/cc_343.json
+344	python3 s5cc.py 50000 1e12 104 3 0.2 0.6 > $OUT/raw/cc_344.json
+345	python3 s5cc.py 50000 1e12 105 3 0.2 0.6 > $OUT/raw/cc_345.json
+346	python3 s5cc.py 50000 1e12 106 3 0.2 0.6 > $OUT/raw/cc_346.json
+347	python3 s5cc.py 50000 1e12 107 3 0.2 0.6 > $OUT/raw/cc_347.json
+348	python3 s5cc.py 50000 1e12 108 3 0.2 0.6 > $OUT/raw/cc_348.json
+349	python3 s5cc.py 50000 1e12 109 3 0.2 0.6 > $OUT/raw/cc_349.json
+350	python3 s5cc.py 50000 1e12 110 3 0.2 0.6 > $OUT/raw/cc_350.json
+351	python3 s5cc.py 50000 1e12 111 3 0.2 0.6 > $OUT/raw/cc_351.json
+352	python3 s5cc.py 50000 1e12 112 3 0.2 0.6 > $OUT/raw/cc_352.json
+353	python3 s5cc.py 50000 1e12 113 3 0.2 0.6 > $OUT/raw/cc_353.json
+354	python3 s5cc.py 50000 1e12 114 3 0.2 0.6 > $OUT/raw/cc_354.json
+355	python3 s5cc.py 50000 1e12 115 3 0.2 0.6 > $OUT/raw/cc_355.json
+356	python3 s5cc.py 50000 1e12 116 3 0.2 0.6 > $OUT/raw/cc_356.json
+357	python3 s5cc.py 50000 1e12 117 3 0.2 0.6 > $OUT/raw/cc_357.json
+358	python3 s5cc.py 50000 1e12 118 3 0.2 0.6 > $OUT/raw/cc_358.json
+359	python3 s5cc.py 50000 1e12 119 3 0.2 0.6 > $OUT/raw/cc_359.json
+360	python3 s5cc.py 50000 1e12 120 3 0.2 0.6 > $OUT/raw/cc_360.json
+361	python3 s5cc.py 50000 1e20 101 3 0.2 0.6 > $OUT/raw/cc_361.json
+362	python3 s5cc.py 50000 1e20 102 3 0.2 0.6 > $OUT/raw/cc_362.json
+363	python3 s5cc.py 50000 1e20 103 3 0.2 0.6 > $OUT/raw/cc_363.json
+364	python3 s5cc.py 50000 1e20 104 3 0.2 0.6 > $OUT/raw/cc_364.json
+365	python3 s5cc.py 50000 1e20 105 3 0.2 0.6 > $OUT/raw/cc_365.json
+366	python3 s5cc.py 50000 1e20 106 3 0.2 0.6 > $OUT/raw/cc_366.json
+367	python3 s5cc.py 50000 1e20 107 3 0.2 0.6 > $OUT/raw/cc_367.json
+368	python3 s5cc.py 50000 1e20 108 3 0.2 0.6 > $OUT/raw/cc_368.json
+369	python3 s5cc.py 50000 1e20 109 3 0.2 0.6 > $OUT/raw/cc_369.json
+370	python3 s5cc.py 50000 1e20 110 3 0.2 0.6 > $OUT/raw/cc_370.json
+371	python3 s5cc.py 50000 1e20 111 3 0.2 0.6 > $OUT/raw/cc_371.json
+372	python3 s5cc.py 50000 1e20 112 3 0.2 0.6 > $OUT/raw/cc_372.json
+373	python3 s5cc.py 50000 1e20 113 3 0.2 0.6 > $OUT/raw/cc_373.json
+374	python3 s5cc.py 50000 1e20 114 3 0.2 0.6 > $OUT/raw/cc_374.json
+375	python3 s5cc.py 50000 1e20 115 3 0.2 0.6 > $OUT/raw/cc_375.json
+376	python3 s5cc.py 50000 1e20 116 3 0.2 0.6 > $OUT/raw/cc_376.json
+377	python3 s5cc.py 50000 1e20 117 3 0.2 0.6 > $OUT/raw/cc_377.json
+378	python3 s5cc.py 50000 1e20 118 3 0.2 0.6 > $OUT/raw/cc_378.json
+379	python3 s5cc.py 50000 1e20 119 3 0.2 0.6 > $OUT/raw/cc_379.json
+380	python3 s5cc.py 50000 1e20 120 3 0.2 0.6 > $OUT/raw/cc_380.json

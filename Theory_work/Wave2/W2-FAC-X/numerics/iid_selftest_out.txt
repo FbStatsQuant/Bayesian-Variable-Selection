@@ -1,0 +1,7 @@
+trial 0 n=200 p=30: max |incremental - direct| gain = 2.132e-13
+trial 1 n=5000 p=60: max |incremental - direct| gain = 6.402e-12
+trial 2 n=1000000 p=40: max |incremental - direct| gain = 1.717e-09
+trial 3 n=10000000 p=25: max |incremental - direct| gain = 1.987e-08
+WORST over all steps: 4.447e-08
+law check (sample corr): Bartlett mean 0.3954 sd 0.1201 | explicit mean 0.3962 sd 0.1204
+xi: mean 0.055 sd 0.995 (iid N(0,1) by construction)

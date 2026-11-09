@@ -1,0 +1,16 @@
+100000 0.51 1 0 True 21/21 margin 5.43 M 0.912 drift 0.0015 xT0 0.051 mu 0.049 truth -32314
+100000 0.51 1 1 True 21/21 margin 4.88 M 0.898 drift 0.0015 xT0 0.048 mu 0.049 truth -31966
+100000 0.51 2 0 True 22/22 margin 5.09 M 0.904 drift 0.0015 xT0 0.046 mu 0.049 truth -32115
+100000 0.51 2 1 True 22/22 margin 4.89 M 0.898 drift 0.0015 xT0 0.046 mu 0.049 truth -31715
+100000 0.99 1 0 True 21/21 margin 4.56 M 0.608 drift 0.0019 xT0 0.791 mu 0.790 truth -23713
+100000 0.99 1 1 True 21/21 margin 4.96 M 0.608 drift 0.0018 xT0 0.793 mu 0.790 truth -23869
+100000 0.99 2 0 True 22/22 margin 4.07 M 0.609 drift 0.0019 xT0 0.790 mu 0.790 truth -23514
+100000 0.99 2 1 True 22/22 margin 4.87 M 0.613 drift 0.0019 xT0 0.785 mu 0.790 truth -23668
+1000000 0.51 1 0 True 24/24 margin 6.85 M 0.906 drift 0.0002 xT0 0.048 mu 0.049 truth -322966
+1000000 0.51 1 1 True 24/24 margin 6.71 M 0.908 drift 0.0002 xT0 0.047 mu 0.049 truth -323921
+1000000 0.51 2 0 True 25/25 margin 7.46 M 0.906 drift 0.0002 xT0 0.046 mu 0.049 truth -322253
+1000000 0.51 2 1 True 25/25 margin 6.43 M 0.905 drift 0.0002 xT0 0.049 mu 0.049 truth -322314
+1000000 0.99 1 0 True 24/24 margin 6.44 M 0.611 drift 0.0002 xT0 0.793 mu 0.790 truth -236824
+1000000 0.99 1 1 True 24/24 margin 6.81 M 0.612 drift 0.0002 xT0 0.789 mu 0.790 truth -238402
+1000000 0.99 2 0 True 25/25 margin 6.28 M 0.611 drift 0.0002 xT0 0.788 mu 0.790 truth -238000
+1000000 0.99 2 1 True 25/25 margin 6.26 M 0.611 drift 0.0002 xT0 0.789 mu 0.790 truth -237813

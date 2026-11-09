@@ -1,0 +1,422 @@
+[
+ {
+  "n": 200,
+  "p": 150,
+  "s0": 1,
+  "seed": 0,
+  "truth_in_start": true,
+  "ell": 9,
+  "cap": 109,
+  "moves": 104,
+  "first_L0_all_NN": false,
+  "n_swapNN": 5,
+  "n_del": 99,
+  "first_nonNN": 5,
+  "minsize": 1,
+  "S0_found": true,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 200,
+  "p": 150,
+  "s0": 1,
+  "seed": 1,
+  "truth_in_start": true,
+  "ell": 9,
+  "cap": 109,
+  "moves": 109,
+  "first_L0_all_NN": false,
+  "n_swapNN": 10,
+  "n_del": 99,
+  "first_nonNN": 10,
+  "minsize": 1,
+  "S0_found": true,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 200,
+  "p": 150,
+  "s0": 1,
+  "seed": 2,
+  "truth_in_start": true,
+  "ell": 9,
+  "cap": 109,
+  "moves": 109,
+  "first_L0_all_NN": false,
+  "n_swapNN": 10,
+  "n_del": 99,
+  "first_nonNN": 10,
+  "minsize": 1,
+  "S0_found": true,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 200,
+  "p": 150,
+  "s0": 1,
+  "seed": 3,
+  "truth_in_start": true,
+  "ell": 9,
+  "cap": 109,
+  "moves": 109,
+  "first_L0_all_NN": false,
+  "n_swapNN": 11,
+  "n_del": 98,
+  "first_nonNN": 11,
+  "minsize": 2,
+  "S0_found": true,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 200,
+  "p": 150,
+  "s0": 2,
+  "seed": 0,
+  "truth_in_start": true,
+  "ell": 9,
+  "cap": 109,
+  "moves": 103,
+  "first_L0_all_NN": false,
+  "n_swapNN": 5,
+  "n_del": 98,
+  "first_nonNN": 5,
+  "minsize": 2,
+  "S0_found": true,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 200,
+  "p": 150,
+  "s0": 2,
+  "seed": 1,
+  "truth_in_start": true,
+  "ell": 9,
+  "cap": 109,
+  "moves": 108,
+  "first_L0_all_NN": false,
+  "n_swapNN": 10,
+  "n_del": 98,
+  "first_nonNN": 10,
+  "minsize": 2,
+  "S0_found": true,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 200,
+  "p": 150,
+  "s0": 2,
+  "seed": 2,
+  "truth_in_start": true,
+  "ell": 9,
+  "cap": 109,
+  "moves": 107,
+  "first_L0_all_NN": false,
+  "n_swapNN": 9,
+  "n_del": 98,
+  "first_nonNN": 9,
+  "minsize": 2,
+  "S0_found": true,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 200,
+  "p": 150,
+  "s0": 2,
+  "seed": 3,
+  "truth_in_start": true,
+  "ell": 9,
+  "cap": 109,
+  "moves": 108,
+  "first_L0_all_NN": false,
+  "n_swapNN": 11,
+  "n_del": 97,
+  "first_nonNN": 11,
+  "minsize": 3,
+  "S0_found": true,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 800,
+  "p": 600,
+  "s0": 1,
+  "seed": 0,
+  "truth_in_start": true,
+  "ell": 11,
+  "cap": 411,
+  "moves": 411,
+  "first_L0_all_NN": true,
+  "n_swapNN": 23,
+  "n_del": 388,
+  "first_nonNN": 23,
+  "minsize": 12,
+  "S0_found": false,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 800,
+  "p": 600,
+  "s0": 1,
+  "seed": 1,
+  "truth_in_start": true,
+  "ell": 11,
+  "cap": 411,
+  "moves": 411,
+  "first_L0_all_NN": true,
+  "n_swapNN": 16,
+  "n_del": 395,
+  "first_nonNN": 16,
+  "minsize": 5,
+  "S0_found": false,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 800,
+  "p": 600,
+  "s0": 1,
+  "seed": 2,
+  "truth_in_start": true,
+  "ell": 11,
+  "cap": 411,
+  "moves": 411,
+  "first_L0_all_NN": true,
+  "n_swapNN": 23,
+  "n_del": 388,
+  "first_nonNN": 23,
+  "minsize": 12,
+  "S0_found": false,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 800,
+  "p": 600,
+  "s0": 1,
+  "seed": 3,
+  "truth_in_start": true,
+  "ell": 11,
+  "cap": 411,
+  "moves": 411,
+  "first_L0_all_NN": true,
+  "n_swapNN": 33,
+  "n_del": 378,
+  "first_nonNN": 33,
+  "minsize": 22,
+  "S0_found": false,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 800,
+  "p": 600,
+  "s0": 2,
+  "seed": 0,
+  "truth_in_start": true,
+  "ell": 11,
+  "cap": 411,
+  "moves": 411,
+  "first_L0_all_NN": true,
+  "n_swapNN": 23,
+  "n_del": 388,
+  "first_nonNN": 23,
+  "minsize": 12,
+  "S0_found": false,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 800,
+  "p": 600,
+  "s0": 2,
+  "seed": 1,
+  "truth_in_start": true,
+  "ell": 11,
+  "cap": 411,
+  "moves": 411,
+  "first_L0_all_NN": true,
+  "n_swapNN": 16,
+  "n_del": 395,
+  "first_nonNN": 16,
+  "minsize": 5,
+  "S0_found": false,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 800,
+  "p": 600,
+  "s0": 2,
+  "seed": 2,
+  "truth_in_start": true,
+  "ell": 11,
+  "cap": 411,
+  "moves": 411,
+  "first_L0_all_NN": true,
+  "n_swapNN": 23,
+  "n_del": 388,
+  "first_nonNN": 23,
+  "minsize": 12,
+  "S0_found": false,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 800,
+  "p": 600,
+  "s0": 2,
+  "seed": 3,
+  "truth_in_start": true,
+  "ell": 11,
+  "cap": 411,
+  "moves": 411,
+  "first_L0_all_NN": true,
+  "n_swapNN": 33,
+  "n_del": 378,
+  "first_nonNN": 33,
+  "minsize": 22,
+  "S0_found": false,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 2000,
+  "p": 1500,
+  "s0": 1,
+  "seed": 0,
+  "truth_in_start": true,
+  "ell": 12,
+  "cap": 1012,
+  "moves": 1012,
+  "first_L0_all_NN": true,
+  "n_swapNN": 45,
+  "n_del": 967,
+  "first_nonNN": 45,
+  "minsize": 33,
+  "S0_found": false,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 2000,
+  "p": 1500,
+  "s0": 1,
+  "seed": 1,
+  "truth_in_start": true,
+  "ell": 12,
+  "cap": 1012,
+  "moves": 1012,
+  "first_L0_all_NN": true,
+  "n_swapNN": 39,
+  "n_del": 973,
+  "first_nonNN": 39,
+  "minsize": 27,
+  "S0_found": false,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 2000,
+  "p": 1500,
+  "s0": 2,
+  "seed": 0,
+  "truth_in_start": true,
+  "ell": 12,
+  "cap": 1012,
+  "moves": 1012,
+  "first_L0_all_NN": true,
+  "n_swapNN": 45,
+  "n_del": 967,
+  "first_nonNN": 45,
+  "minsize": 33,
+  "S0_found": false,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ },
+ {
+  "n": 2000,
+  "p": 1500,
+  "s0": 2,
+  "seed": 1,
+  "truth_in_start": true,
+  "ell": 12,
+  "cap": 1012,
+  "moves": 1012,
+  "first_L0_all_NN": true,
+  "n_swapNN": 38,
+  "n_del": 974,
+  "first_nonNN": 38,
+  "minsize": 26,
+  "S0_found": false,
+  "last_kinds": [
+   "del_N",
+   "del_N",
+   "del_N"
+  ]
+ }
+]

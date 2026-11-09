@@ -1,0 +1,249 @@
+{
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "n": 100000000,
+  "p": 64,
+  "rho": 0.5,
+  "perturbation": 0.001,
+  "scans": 1260,
+  "safe_deletions": 1240,
+  "swaps": 0,
+  "additions": 0,
+  "truth_losses": 0,
+  "endpoints_S0": 20,
+  "finite_certificates_checked": 1240,
+  "finite_certificate_failures": 0,
+  "aa_checks": 1240,
+  "aa_failures": 0,
+  "reordered_deletions": 48,
+  "max_direct_gain_error": 9.167106227891963e-06,
+  "balance_checks": 2000,
+  "balance_failures": 0,
+  "fuzzy_gap_checks": 2000,
+  "fuzzy_gap_failures": 0,
+  "majority_checks": 1730,
+  "majority_failures": 0,
+  "weighted_checks": 400,
+  "max_weighted_identity_error": 8.659739592076221e-15,
+  "geometry_not_proved": true,
+  "iid_gain_coupling_not_tested": true,
+  "oracle_errors_need_not_integrate_to_model_scores": true,
+  "runs": [
+    {
+      "seed": 0,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 9.03242990283992
+    },
+    {
+      "seed": 1,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 8.814199521829043
+    },
+    {
+      "seed": 2,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 8.362433773001063
+    },
+    {
+      "seed": 3,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 5.232639216023027
+    },
+    {
+      "seed": 4,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 9.208839571341475
+    },
+    {
+      "seed": 5,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 8.10304795360893
+    },
+    {
+      "seed": 6,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 7.2002194990520225
+    },
+    {
+      "seed": 7,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 9.209212659509568
+    },
+    {
+      "seed": 8,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 6.477266803310404
+    },
+    {
+      "seed": 9,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 9.152660363345076
+    },
+    {
+      "seed": 10,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 9.20897763658341
+    },
+    {
+      "seed": 11,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 9.209337666754212
+    },
+    {
+      "seed": 12,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 9.18247447053862
+    },
+    {
+      "seed": 13,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 9.209111529408418
+    },
+    {
+      "seed": 14,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 6.0792417846049265
+    },
+    {
+      "seed": 15,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 9.209335153130509
+    },
+    {
+      "seed": 16,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 9.148977941490916
+    },
+    {
+      "seed": 17,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 9.209211618354987
+    },
+    {
+      "seed": 18,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 7.90640448382333
+    },
+    {
+      "seed": 19,
+      "moves": 62,
+      "endpoint": [
+        0,
+        1
+      ],
+      "min_certificate_slack": 9.209331506816573
+    }
+  ],
+  "source_hashes": {
+    "cs_core.py": "14b14cfd277bd2b52f0c16cf1404ebf83c3e05a158078dba5b89567302d3f074"
+  },
+  "source_hashes_unchanged": true,
+  "exact_hole_counterexample": {
+    "x": 0.0,
+    "kept": [
+      0.1,
+      0.1001,
+      2.0
+    ],
+    "epsilon": 0.001,
+    "allowed_deleted": 0.1001,
+    "retained_in_deleted_hull": 0.1,
+    "meaning": "deleted interval containing x and .1001 must contain retained .1"
+  }
+}

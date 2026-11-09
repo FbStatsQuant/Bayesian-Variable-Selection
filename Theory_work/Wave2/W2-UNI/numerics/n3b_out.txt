@@ -1,0 +1,5 @@
+design A: pairs=25600 identity_err=1.11e-15 ineq_viol=0 LOCL_var_identity_err=2.22e-16 kappa'=2.247 c_G(single)=0.096 kappa(single)=7.270 alpha0=0.0074 | c_G(groups)=0.096 kappa(groups)=7.270 alpha0=0.0074
+design B: pairs=25600 identity_err=1.78e-15 ineq_viol=0 LOCL_var_identity_err=2.22e-16 kappa'=1.745 c_G(single)=0.105 kappa(single)=5.390 alpha0=0.0126 | c_G(groups)=0.105 kappa(groups)=5.390 alpha0=0.0126
+design C: pairs=25600 identity_err=1.33e-15 ineq_viol=0 LOCL_var_identity_err=2.22e-16 kappa'=1.888 c_G(single)=0.115 kappa(single)=5.560 alpha0=0.0119 | c_G(groups)=0.115 kappa(groups)=5.560 alpha0=0.0119
+design D: pairs=25600 identity_err=1.33e-15 ineq_viol=0 LOCL_var_identity_err=0.00e+00 kappa'=1.120 c_G(single)=0.114 kappa(single)=3.317 alpha0=0.0284 | c_G(groups)=0.114 kappa(groups)=3.317 alpha0=0.0284
+S5-type block CS (rho_b=.3, rho_w=.7, groups of 5): c_G(groups)=0.4286 (FACA c_min=0.3/0.7=0.4286), kappa'=0.6547, kappa=1.0000

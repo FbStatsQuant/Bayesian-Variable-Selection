@@ -1,0 +1,5 @@
+1	python3 s5cc.py 10000 1e12 1 > $OUT/raw/cc_1.json
+2	python3 s5cc.py 10000 1e20 1 > $OUT/raw/cc_2.json
+3	python3 time_steps.py 50000 1e12 2000 > $OUT/raw/time_3.json
+4	python3 time_steps.py 200000 1e12 1000 > $OUT/raw/time_4.json
+5	python3 s5cc.py 2000 1e12 1 > $OUT/raw/cc_5.json

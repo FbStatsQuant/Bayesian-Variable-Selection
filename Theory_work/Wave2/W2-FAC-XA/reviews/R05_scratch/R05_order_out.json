@@ -1,0 +1,32 @@
+[
+ {
+  "seed": 0,
+  "same_order": true,
+  "max_monotone_fit_resid": 0.0005832273219592565,
+  "gain_range": 2.8270988735839637
+ },
+ {
+  "seed": 1,
+  "same_order": true,
+  "max_monotone_fit_resid": 0.00023045748907790653,
+  "gain_range": 1.714268416786581
+ },
+ {
+  "seed": 2,
+  "same_order": true,
+  "max_monotone_fit_resid": 0.00018672926591811745,
+  "gain_range": 1.9365411956296157
+ },
+ {
+  "seed": 3,
+  "same_order": true,
+  "max_monotone_fit_resid": 0.00035766450552277007,
+  "gain_range": 3.440123218761073
+ },
+ {
+  "seed": 4,
+  "same_order": true,
+  "max_monotone_fit_resid": 0.0003832031782495804,
+  "gain_range": 4.666333628092616
+ }
+]

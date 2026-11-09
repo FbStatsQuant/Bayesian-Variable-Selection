@@ -1,0 +1,77 @@
+== (A) partition
+PASS PART PT 1.5 adj n=400 q s=1 p=100 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART PT 1.5 adj n=400 q s=2 p=100 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART PT 0.5 spread n=800 q s=1 p=200 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART PT 0.5 spread n=800 q s=2 p=200 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART PT 10.0 spread n=600 q s=1 p=150 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART PT 10.0 spread n=600 q s=2 p=150 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART AF 0.4 adj n=1000 q s=1 p=250 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART AF 0.4 adj n=1000 q s=2 p=250 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART AF 0.25 spread n=2000 s s=1 p=96 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART AF 0.25 spread n=2000 s s=2 p=96 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART PT 4.0 adj n=2000 q s=1 p=500 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART PT 4.0 adj n=2000 q s=2 p=500 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART CSG (0.5, 0.8) two n=2000 q s=1 p=495 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART CSG (0.5, 0.8) two n=2000 q s=2 p=495 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART CSG (0.35, 0.5) one4 n=1600 q s=1 p=392 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART CSG (0.35, 0.5) one4 n=1600 q s=2 p=392 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART CSG (0.2, 0.8) twoM n=800 q s=1 p=200 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART CSG (0.2, 0.8) twoM n=800 q s=2 p=200 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART PT 0.8 adj n=4000 q s=1 p=1000 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART PT 0.8 adj n=4000 q s=2 p=1000 | {'certified': True, 'n_flag': 0, 'fallback': False}
+PASS PART R01 near-tie counterexample | [[0, 1], [2]] {'certified': False, 'n_flag': 1, 'fallback': True}
+PASS PART duplicate column | {'certified': True, 'n_flag': 0, 'fallback': False}
+== (B) local search paths
+PASS LS PT 1.5 adj n=400 p=100 start | |c|=3 cap=12 moves=0 types= cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS PT 1.5 adj n=400 p=100 empty | |c|=0 cap=9 moves=3 types=aaa cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS PT 1.5 adj n=400 p=100 start-minus-truth | |c|=2 cap=11 moves=1 types=a cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS PT 1.5 adj n=400 p=100 start+3nulls | |c|=6 cap=15 moves=3 types=ddd cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS PT 1.5 adj n=400 p=100 cap0 | |c|=6 cap=0 moves=0 types= cert=False lim=True t_bc=0.0s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS PT 1.5 adj n=400 p=100 cap2 | |c|=6 cap=2 moves=2 types=dd cert=False lim=True t_bc=0.0s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS PT 1.5 adj n=400 p=100 K=|centre| | |c|=6 cap=15 moves=3 types=ddd cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS PT 0.5 spread n=800 p=200 start | |c|=12 cap=22 moves=9 types=ddddddddd cert=True lim=False t_bc=0.2s t_fast=0.0s
+PASS LS PT 0.5 spread n=800 p=200 empty | |c|=0 cap=10 moves=3 types=aaa cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS PT 0.5 spread n=800 p=200 start-minus-truth | |c|=11 cap=21 moves=9 types=sdddddddd cert=True lim=False t_bc=0.1s t_fast=0.0s
+PASS LS PT 0.5 spread n=800 p=200 start+3nulls | |c|=15 cap=25 moves=12 types=dddddddddddd cert=True lim=False t_bc=1.0s t_fast=0.1s
+PASS LS PT 0.5 spread n=800 p=200 cap0 | |c|=15 cap=0 moves=0 types= cert=False lim=True t_bc=0.1s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS PT 0.5 spread n=800 p=200 cap2 | |c|=15 cap=2 moves=2 types=dd cert=False lim=True t_bc=0.1s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS PT 0.5 spread n=800 p=200 K=|centre| | |c|=15 cap=25 moves=12 types=dddddddddddd cert=True lim=False t_bc=0.6s t_fast=0.0s
+PASS LS AF 0.4 adj n=1000 p=250 start | |c|=49 cap=60 moves=47 types=sdddddddddddddddddddddddddddddddddddddddddddddd cert=True lim=False t_bc=80.1s t_fast=0.1s
+PASS LS AF 0.4 adj n=1000 p=250 empty | |c|=0 cap=11 moves=3 types=aaa cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS AF 0.4 adj n=1000 p=250 start-minus-truth | |c|=48 cap=59 moves=47 types=ssddddddddddddddddddddddddddddddddddddddddddddd cert=True lim=False t_bc=35.1s t_fast=0.5s
+PASS LS AF 0.4 adj n=1000 p=250 start+3nulls | |c|=52 cap=63 moves=50 types=sddddddddddddddddddddddddddddddddddddddddddddddddd cert=True lim=False t_bc=66.5s t_fast=0.2s
+PASS LS AF 0.4 adj n=1000 p=250 cap0 | |c|=52 cap=0 moves=0 types= cert=False lim=True t_bc=0.1s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS AF 0.4 adj n=1000 p=250 cap2 | |c|=52 cap=2 moves=2 types=sd cert=False lim=True t_bc=0.4s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS AF 0.4 adj n=1000 p=250 K=|centre| | |c|=52 cap=63 moves=50 types=sddddddddddddddddddddddddddddddddddddddddddddddddd cert=True lim=False t_bc=60.0s t_fast=0.2s
+PASS LS CSG (0.5, 0.8) twoM n=1200 p=280 start | |c|=14 cap=25 moves=11 types=sdddddddddd cert=True lim=False t_bc=0.6s t_fast=0.0s
+PASS LS CSG (0.5, 0.8) twoM n=1200 p=280 empty | |c|=0 cap=11 moves=4 types=aaaa cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS CSG (0.5, 0.8) twoM n=1200 p=280 start-minus-truth | |c|=14 cap=25 moves=11 types=sdddddddddd cert=True lim=False t_bc=0.1s t_fast=0.0s
+PASS LS CSG (0.5, 0.8) twoM n=1200 p=280 start+3nulls | |c|=17 cap=28 moves=14 types=sddddddddddddd cert=True lim=False t_bc=1.0s t_fast=0.1s
+PASS LS CSG (0.5, 0.8) twoM n=1200 p=280 cap0 | |c|=17 cap=0 moves=0 types= cert=False lim=True t_bc=0.0s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS CSG (0.5, 0.8) twoM n=1200 p=280 cap2 | |c|=17 cap=2 moves=2 types=sd cert=False lim=True t_bc=0.1s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS CSG (0.5, 0.8) twoM n=1200 p=280 K=|centre| | |c|=17 cap=28 moves=14 types=sddddddddddddd cert=True lim=False t_bc=1.3s t_fast=0.0s
+PASS LS CSG (0.5, 0.8) two n=1200 p=280 start | |c|=12 cap=23 moves=8 types=dddddddd cert=True lim=False t_bc=0.2s t_fast=0.0s
+PASS LS CSG (0.5, 0.8) two n=1200 p=280 empty | |c|=0 cap=11 moves=4 types=aaaa cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS CSG (0.5, 0.8) two n=1200 p=280 start-minus-truth | |c|=11 cap=22 moves=8 types=sddddddd cert=True lim=False t_bc=0.1s t_fast=0.0s
+PASS LS CSG (0.5, 0.8) two n=1200 p=280 start+3nulls | |c|=15 cap=26 moves=11 types=ddddddddddd cert=True lim=False t_bc=0.6s t_fast=0.0s
+PASS LS CSG (0.5, 0.8) two n=1200 p=280 cap0 | |c|=15 cap=0 moves=0 types= cert=False lim=True t_bc=0.0s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS CSG (0.5, 0.8) two n=1200 p=280 cap2 | |c|=15 cap=2 moves=2 types=dd cert=False lim=True t_bc=0.0s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS CSG (0.5, 0.8) two n=1200 p=280 K=|centre| | |c|=15 cap=26 moves=11 types=ddddddddddd cert=True lim=False t_bc=0.5s t_fast=0.0s
+PASS LS PT 10.0 adj n=600 p=150 start | |c|=3 cap=13 moves=0 types= cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS PT 10.0 adj n=600 p=150 empty | |c|=0 cap=10 moves=3 types=aaa cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS PT 10.0 adj n=600 p=150 start-minus-truth | |c|=2 cap=12 moves=1 types=a cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS PT 10.0 adj n=600 p=150 start+3nulls | |c|=6 cap=16 moves=3 types=ddd cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS PT 10.0 adj n=600 p=150 cap0 | |c|=6 cap=0 moves=0 types= cert=False lim=True t_bc=0.0s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS PT 10.0 adj n=600 p=150 cap2 | |c|=6 cap=2 moves=2 types=dd cert=False lim=True t_bc=0.0s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS PT 10.0 adj n=600 p=150 K=|centre| | |c|=6 cap=16 moves=3 types=ddd cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS AF 0.25 spread n=2000 p=96 start | |c|=11 cap=23 moves=8 types=dddddddd cert=True lim=False t_bc=0.1s t_fast=0.1s
+PASS LS AF 0.25 spread n=2000 p=96 empty | |c|=0 cap=12 moves=3 types=aaa cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS AF 0.25 spread n=2000 p=96 start-minus-truth | |c|=10 cap=22 moves=8 types=sddddddd cert=True lim=False t_bc=0.1s t_fast=0.0s
+PASS LS AF 0.25 spread n=2000 p=96 start+3nulls | |c|=14 cap=26 moves=11 types=ddddddddddd cert=True lim=False t_bc=0.2s t_fast=0.1s
+PASS LS AF 0.25 spread n=2000 p=96 cap0 | |c|=14 cap=0 moves=0 types= cert=False lim=True t_bc=0.0s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS AF 0.25 spread n=2000 p=96 cap2 | |c|=14 cap=2 moves=2 types=dd cert=False lim=True t_bc=0.0s t_fast=0.0s returned_prod==exhaustive_best:True
+PASS LS AF 0.25 spread n=2000 p=96 K=|centre| | |c|=14 cap=26 moves=11 types=ddddddddddd cert=True lim=False t_bc=0.1s t_fast=0.0s
+PASS LS exact-tie dup(102,106) centre=(99, 100, 101) | |c|=3 cap=13 moves=0 types= cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS exact-tie dup(102,106) centre=(99, 100, 101, 102) | |c|=4 cap=14 moves=1 types=d cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS exact-tie dup(102,106) centre=(99, 100, 101, 106) | |c|=4 cap=14 moves=1 types=d cert=True lim=False t_bc=0.0s t_fast=0.0s
+PASS LS exact-tie dup(102,106) centre=() | |c|=0 cap=10 moves=3 types=aaa cert=True lim=False t_bc=0.0s t_fast=0.0s

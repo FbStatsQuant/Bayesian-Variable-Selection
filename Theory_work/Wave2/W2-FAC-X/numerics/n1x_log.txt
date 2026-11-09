@@ -1,0 +1,179 @@
+120 jobs
+0.3 10000 1000 4 mixed 1 moves 996 {'delN': 996} S0 dhat 1.053 ratio 2.54 defect 452 band 1.387 rank 294 t 171
+0.3 10000 1000 4 aligned 1 moves 996 {'delN': 996} S0 dhat 1.053 ratio 2.54 defect 452 band 1.387 rank 294 t 166
+0.3 10000 1000 4 aligned 0 moves 996 {'delN': 996} S0 dhat 1.038 ratio 2.67 defect 516 band 1.374 rank 437 t 179
+0.3 10000 1000 1 mixed 1 moves 999 {'delN': 999} S0 dhat 1.054 ratio 2.74 defect 454 band 1.387 rank 296 t 178
+0.3 10000 1000 1 mixed 0 moves 999 {'delN': 999} S0 dhat 1.036 ratio 2.65 defect 518 band 1.374 rank 439 t 180
+0.3 10000 1000 4 mixed 0 moves 996 {'delN': 996} S0 dhat 1.038 ratio 2.67 defect 516 band 1.374 rank 437 t 196
+0.3 100000 1000 4 mixed 0 moves 996 {'delN': 996} S0 dhat 0.328 ratio 2.46 defect 154 band 0.402 rank 134 t 188
+0.3 100000 1000 4 aligned 0 moves 996 {'delN': 996} S0 dhat 0.328 ratio 2.46 defect 154 band 0.402 rank 134 t 96
+0.3 100000 1000 4 mixed 1 moves 996 {'delN': 996} S0 dhat 0.316 ratio 2.29 defect 205 band 0.502 rank 235 t 99
+0.3 100000 1000 1 mixed 1 moves 999 {'delN': 999} S0 dhat 0.316 ratio 2.28 defect 205 band 0.502 rank 235 t 92
+0.3 100000 1000 1 mixed 0 moves 999 {'delN': 999} S0 dhat 0.330 ratio 2.72 defect 156 band 0.402 rank 131 t 95
+0.3 100000 1000 4 aligned 1 moves 996 {'delN': 996} S0 dhat 0.316 ratio 2.29 defect 205 band 0.502 rank 235 t 100
+0.3 1000000 1000 4 mixed 0 moves 996 {'delN': 996} S0 dhat 0.105 ratio 2.84 defect 68 band 0.140 rank 54 t 93
+0.3 1000000 1000 4 mixed 1 moves 996 {'delN': 996} S0 dhat 0.100 ratio 2.11 defect 62 band 0.142 rank 51 t 97
+0.3 1000000 1000 4 aligned 0 moves 996 {'delN': 996} S0 dhat 0.105 ratio 2.84 defect 68 band 0.140 rank 54 t 89
+0.3 1000000 1000 4 aligned 1 moves 996 {'delN': 996} S0 dhat 0.100 ratio 2.11 defect 62 band 0.142 rank 51 t 91
+0.3 1000000 1000 1 mixed 0 moves 999 {'delN': 999} S0 dhat 0.105 ratio 3.09 defect 69 band 0.140 rank 46 t 90
+0.3 1000000 1000 1 mixed 1 moves 999 {'delN': 999} S0 dhat 0.100 ratio 2.47 defect 62 band 0.142 rank 45 t 89
+0.7 10000 1000 4 mixed 0 moves 996 {'delN': 996} S0 dhat 1.030 ratio 2.70 defect 518 band 1.374 rank 437 t 90
+0.7 10000 1000 4 mixed 1 moves 996 {'delN': 996} S0 dhat 1.054 ratio 2.58 defect 452 band 1.387 rank 281 t 89
+0.7 10000 1000 4 aligned 0 moves 996 {'delN': 996} S0 dhat 1.030 ratio 2.70 defect 518 band 1.374 rank 437 t 91
+0.7 10000 1000 4 aligned 1 moves 996 {'delN': 996} S0 dhat 1.054 ratio 2.58 defect 452 band 1.387 rank 281 t 97
+0.7 10000 1000 1 mixed 0 moves 999 {'delN': 999} S0 dhat 1.036 ratio 2.66 defect 520 band 1.374 rank 439 t 104
+0.7 10000 1000 1 mixed 1 moves 999 {'delN': 999} S0 dhat 1.055 ratio 2.75 defect 454 band 1.387 rank 282 t 100
+0.7 100000 1000 4 mixed 0 moves 996 {'delN': 996} S0 dhat 0.328 ratio 2.47 defect 154 band 0.402 rank 114 t 100
+0.7 100000 1000 4 mixed 1 moves 996 {'delN': 996} S0 dhat 0.317 ratio 2.29 defect 205 band 0.502 rank 235 t 102
+0.7 100000 1000 4 aligned 0 moves 996 {'delN': 996} S0 dhat 0.328 ratio 2.47 defect 154 band 0.402 rank 114 t 105
+0.7 100000 1000 4 aligned 1 moves 996 {'delN': 996} S0 dhat 0.317 ratio 2.29 defect 205 band 0.502 rank 235 t 100
+0.7 100000 1000 1 mixed 0 moves 999 {'delN': 999} S0 dhat 0.330 ratio 2.73 defect 156 band 0.402 rank 131 t 96
+0.7 100000 1000 1 mixed 1 moves 999 {'delN': 999} S0 dhat 0.316 ratio 2.34 defect 205 band 0.502 rank 235 t 95
+0.7 1000000 1000 4 mixed 0 moves 996 {'delN': 996} S0 dhat 0.105 ratio 2.46 defect 68 band 0.145 rank 54 t 94
+0.7 1000000 1000 4 mixed 1 moves 996 {'delN': 996} S0 dhat 0.100 ratio 2.11 defect 62 band 0.142 rank 46 t 95
+0.3 1000000 501 4 mixed 0 moves 497 {'delN': 497} S0 dhat 0.076 ratio 2.15 defect 18 band 0.087 rank 22 t 8
+0.7 1000000 1000 4 aligned 0 moves 996 {'delN': 996} S0 dhat 0.105 ratio 2.46 defect 68 band 0.145 rank 54 t 95
+0.3 1000000 501 4 mixed 1 moves 497 {'delN': 497} S0 dhat 0.067 ratio 2.17 defect 26 band 0.081 rank 13 t 8
+0.7 1000000 1000 4 aligned 1 moves 996 {'delN': 996} S0 dhat 0.100 ratio 2.11 defect 62 band 0.142 rank 46 t 90
+0.3 1000000 501 4 aligned 0 moves 497 {'delN': 497} S0 dhat 0.076 ratio 2.15 defect 18 band 0.087 rank 22 t 8
+0.3 1000000 501 4 aligned 1 moves 497 {'delN': 497} S0 dhat 0.067 ratio 2.17 defect 26 band 0.081 rank 13 t 9
+0.3 1000000 501 1 mixed 0 moves 500 {'delN': 500} S0 dhat 0.076 ratio 2.17 defect 18 band 0.087 rank 22 t 8
+0.3 1000000 501 1 mixed 1 moves 500 {'delN': 500} S0 dhat 0.067 ratio 2.10 defect 25 band 0.081 rank 25 t 8
+0.7 1000000 501 4 mixed 0 moves 497 {'delN': 497} S0 dhat 0.076 ratio 2.16 defect 18 band 0.087 rank 22 t 7
+0.7 1000000 501 4 mixed 1 moves 497 {'delN': 497} S0 dhat 0.067 ratio 2.18 defect 24 band 0.081 rank 15 t 8
+0.3 10000 251 4 mixed 0 moves 247 {'delN': 247} S0 dhat 0.482 ratio 2.31 defect 58 band 0.706 rank 57 t 1
+0.3 10000 251 4 mixed 1 moves 247 {'delN': 247} S0 dhat 0.496 ratio 2.58 defect 64 band 0.628 rank 53 t 1
+0.7 1000000 1000 1 mixed 0 moves 999 {'delN': 999} S0 dhat 0.105 ratio 3.10 defect 69 band 0.145 rank 38 t 95
+0.7 1000000 501 4 aligned 0 moves 497 {'delN': 497} S0 dhat 0.076 ratio 2.16 defect 18 band 0.087 rank 22 t 8
+0.3 10000 251 4 aligned 0 moves 247 {'delN': 247} S0 dhat 0.482 ratio 2.31 defect 58 band 0.706 rank 57 t 1
+0.3 10000 251 4 aligned 1 moves 247 {'delN': 247} S0 dhat 0.496 ratio 2.58 defect 64 band 0.628 rank 53 t 1
+0.3 10000 251 1 mixed 0 moves 250 {'delN': 250} S0 dhat 0.495 ratio 2.49 defect 59 band 0.706 rank 60 t 1
+0.7 1000000 501 4 aligned 1 moves 497 {'delN': 497} S0 dhat 0.067 ratio 2.18 defect 24 band 0.081 rank 15 t 8
+0.3 10000 251 1 mixed 1 moves 250 {'delN': 250} S0 dhat 0.515 ratio 2.68 defect 65 band 0.628 rank 54 t 1
+0.7 10000 251 4 mixed 0 moves 247 {'delN': 247} S0 dhat 0.490 ratio 2.33 defect 58 band 0.706 rank 69 t 1
+0.7 10000 251 4 mixed 1 moves 247 {'delN': 247} S0 dhat 0.524 ratio 2.64 defect 64 band 0.628 rank 52 t 1
+0.7 10000 251 4 aligned 1 moves 247 {'delN': 247} S0 dhat 0.524 ratio 2.64 defect 64 band 0.628 rank 52 t 1
+0.7 10000 251 4 aligned 0 moves 247 {'delN': 247} S0 dhat 0.490 ratio 2.33 defect 58 band 0.706 rank 69 t 1
+0.3 100000 178 4 mixed 0 moves 174 {'delN': 174} S0 dhat 0.122 ratio 2.85 defect 11 band 0.133 rank 13 t 0
+0.7 10000 251 1 mixed 0 moves 250 {'delN': 250} S0 dhat 0.495 ratio 2.51 defect 59 band 0.706 rank 41 t 1
+0.7 1000000 501 1 mixed 0 moves 500 {'delN': 500} S0 dhat 0.076 ratio 2.17 defect 18 band 0.087 rank 22 t 8
+0.7 10000 251 1 mixed 1 moves 250 {'delN': 250} S0 dhat 0.514 ratio 2.67 defect 65 band 0.628 rank 53 t 1
+0.3 100000 178 4 aligned 0 moves 174 {'delN': 174} S0 dhat 0.122 ratio 2.85 defect 11 band 0.133 rank 13 t 0
+0.3 100000 178 4 aligned 1 moves 174 {'delN': 174} S0 dhat 0.095 ratio 1.61 defect 11 band 0.120 rank 18 t 0
+0.3 100000 178 4 mixed 1 moves 174 {'delN': 174} S0 dhat 0.095 ratio 1.61 defect 11 band 0.120 rank 18 t 0
+0.3 100000 178 1 mixed 1 moves 177 {'delN': 177} S0 dhat 0.096 ratio 1.78 defect 11 band 0.120 rank 18 t 0
+0.7 100000 178 4 mixed 0 moves 174 {'delN': 174} S0 dhat 0.122 ratio 2.87 defect 11 band 0.133 rank 11 t 0
+0.3 100000 178 1 mixed 0 moves 177 {'delN': 177} S0 dhat 0.122 ratio 2.77 defect 11 band 0.133 rank 13 t 0
+0.7 100000 178 4 mixed 1 moves 174 {'delN': 174} S0 dhat 0.095 ratio 1.61 defect 11 band 0.120 rank 11 t 0
+0.3 10000 63 4 mixed 0 moves 59 {'delN': 59} S0 dhat 0.256 ratio 1.74 defect 8 band 0.298 rank 11 t 0
+0.3 10000 63 4 mixed 1 moves 59 {'delN': 59} S0 dhat 0.210 ratio 1.59 defect 5 band 0.227 rank 6 t 0
+0.7 100000 178 4 aligned 1 moves 174 {'delN': 174} S0 dhat 0.095 ratio 1.61 defect 11 band 0.120 rank 11 t 0
+0.7 100000 178 4 aligned 0 moves 174 {'delN': 174} S0 dhat 0.122 ratio 2.87 defect 11 band 0.133 rank 11 t 0
+0.3 10000 63 4 aligned 0 moves 59 {'delN': 59} S0 dhat 0.256 ratio 1.74 defect 8 band 0.298 rank 11 t 0
+0.3 10000 63 1 mixed 0 moves 62 {'delN': 62} S0 dhat 0.258 ratio 1.76 defect 8 band 0.298 rank 11 t 0
+0.7 100000 178 1 mixed 0 moves 177 {'delN': 177} S0 dhat 0.122 ratio 2.80 defect 11 band 0.150 rank 14 t 0
+0.3 10000 63 4 aligned 1 moves 59 {'delN': 59} S0 dhat 0.210 ratio 1.59 defect 5 band 0.227 rank 6 t 0
+0.3 10000 63 1 mixed 1 moves 62 {'delN': 62} S0 dhat 0.199 ratio 1.59 defect 5 band 0.227 rank 6 t 0
+0.7 1000000 501 1 mixed 1 moves 500 {'delN': 500} S0 dhat 0.067 ratio 2.48 defect 25 band 0.081 rank 23 t 7
+0.3 1000000 63 4 mixed 1 moves 59 {'delN': 59} S0 dhat 0.021 ratio 1.56 defect 1 band 0.016 rank 2 t 0
+0.3 1000000 63 4 mixed 0 moves 59 {'delN': 59} S0 dhat 0.026 ratio 1.88 defect 2 band 0.018 rank 2 t 0
+0.3 1000000 63 4 aligned 0 moves 59 {'delN': 59} S0 dhat 0.026 ratio 1.88 defect 2 band 0.018 rank 2 t 0
+0.3 1000000 63 4 aligned 1 moves 59 {'delN': 59} S0 dhat 0.021 ratio 1.56 defect 1 band 0.016 rank 2 t 0
+0.3 1000000 63 1 mixed 1 moves 62 {'delN': 62} S0 dhat 0.020 ratio 1.57 defect 1 band 0.016 rank 1 t 0
+0.3 1000000 63 1 mixed 0 moves 62 {'delN': 62} S0 dhat 0.026 ratio 1.91 defect 2 band 0.018 rank 2 t 0
+0.7 10000 63 4 mixed 0 moves 59 {'delN': 59} S0 dhat 0.254 ratio 1.82 defect 6 band 0.298 rank 9 t 0
+0.7 10000 63 4 mixed 1 moves 59 {'delN': 59} S0 dhat 0.209 ratio 1.61 defect 5 band 0.227 rank 6 t 0
+0.7 10000 63 4 aligned 0 moves 59 {'delN': 59} S0 dhat 0.254 ratio 1.82 defect 6 band 0.298 rank 9 t 0
+0.7 100000 178 1 mixed 1 moves 177 {'delN': 177} S0 dhat 0.096 ratio 1.77 defect 11 band 0.120 rank 11 t 0
+0.7 10000 63 4 aligned 1 moves 59 {'delN': 59} S0 dhat 0.209 ratio 1.61 defect 5 band 0.227 rank 6 t 0
+0.7 10000 63 1 mixed 0 moves 62 {'delN': 62} S0 dhat 0.255 ratio 1.84 defect 6 band 0.298 rank 9 t 0
+0.7 10000 63 1 mixed 1 moves 62 {'delN': 62} S0 dhat 0.198 ratio 1.62 defect 5 band 0.227 rank 5 t 0
+0.7 1000000 63 4 mixed 1 moves 59 {'delN': 59} S0 dhat 0.021 ratio 1.63 defect 1 band 0.016 rank 1 t 0
+0.7 1000000 63 4 mixed 0 moves 59 {'delN': 59} S0 dhat 0.025 ratio 1.86 defect 2 band 0.018 rank 2 t 0
+0.7 1000000 63 4 aligned 1 moves 59 {'delN': 59} S0 dhat 0.021 ratio 1.63 defect 1 band 0.016 rank 1 t 0
+0.7 1000000 63 1 mixed 0 moves 62 {'delN': 62} S0 dhat 0.026 ratio 1.89 defect 2 band 0.018 rank 2 t 0
+0.3 100000 32 4 mixed 0 moves 28 {'delN': 28} S0 dhat 0.035 ratio 1.19 defect 1 band 0.006 rank 1 t 0
+0.7 1000000 63 4 aligned 0 moves 59 {'delN': 59} S0 dhat 0.025 ratio 1.86 defect 2 band 0.018 rank 2 t 0
+0.3 100000 32 4 aligned 0 moves 28 {'delN': 28} S0 dhat 0.035 ratio 1.19 defect 1 band 0.006 rank 1 t 0
+0.3 100000 32 4 aligned 1 moves 28 {'delN': 28} S0 dhat 0.036 ratio 1.16 defect 1 band 0.021 rank 1 t 0
+0.3 100000 32 4 mixed 1 moves 28 {'delN': 28} S0 dhat 0.036 ratio 1.16 defect 1 band 0.021 rank 1 t 0
+0.3 100000 32 1 mixed 1 moves 31 {'delN': 31} S0 dhat 0.036 ratio 1.47 defect 1 band 0.025 rank 1 t 0
+0.7 100000 32 4 mixed 0 moves 28 {'delN': 28} S0 dhat 0.034 ratio 1.20 defect 1 band 0.006 rank 2 t 0
+0.7 1000000 63 1 mixed 1 moves 62 {'delN': 62} S0 dhat 0.019 ratio 1.57 defect 1 band 0.016 rank 1 t 0
+0.7 100000 32 4 mixed 1 moves 28 {'delN': 28} S0 dhat 0.037 ratio 1.21 defect 1 band 0.021 rank 2 t 0
+0.3 100000 32 1 mixed 0 moves 31 {'delN': 31} S0 dhat 0.035 ratio 1.28 defect 1 band 0.006 rank 2 t 0
+0.3 10000 16 4 mixed 1 moves 12 {'delN': 12} S0 dhat 0.085 ratio 1.37 defect 1 band 0.045 rank 1 t 0
+0.3 10000 16 4 mixed 0 moves 12 {'delN': 12} S0 dhat 0.061 ratio 1.29 defect 0 band 0.000 rank 1 t 0
+0.3 10000 16 4 aligned 1 moves 12 {'delN': 12} S0 dhat 0.085 ratio 1.37 defect 1 band 0.045 rank 1 t 0
+0.3 10000 16 4 aligned 0 moves 12 {'delN': 12} S0 dhat 0.061 ratio 1.29 defect 0 band 0.000 rank 1 t 0
+0.3 10000 16 1 mixed 0 moves 15 {'delN': 15} S0 dhat 0.083 ratio 1.64 defect 1 band 0.081 rank 2 t 0
+0.7 100000 32 1 mixed 0 moves 31 {'delN': 31} S0 dhat 0.034 ratio 1.30 defect 1 band 0.006 rank 2 t 0
+0.7 100000 32 4 aligned 0 moves 28 {'delN': 28} S0 dhat 0.034 ratio 1.20 defect 1 band 0.006 rank 2 t 0
+0.3 10000 16 1 mixed 1 moves 15 {'delN': 15} S0 dhat 0.088 ratio 1.53 defect 1 band 0.045 rank 1 t 0
+0.7 100000 32 4 aligned 1 moves 28 {'delN': 28} S0 dhat 0.037 ratio 1.21 defect 1 band 0.021 rank 2 t 0
+0.7 10000 16 4 mixed 0 moves 12 {'delN': 12} S0 dhat 0.063 ratio 1.35 defect 0 band 0.000 rank 0 t 0
+0.7 10000 16 4 mixed 1 moves 12 {'delN': 12} S0 dhat 0.086 ratio 1.38 defect 1 band 0.045 rank 1 t 0
+0.7 10000 16 4 aligned 0 moves 12 {'delN': 12} S0 dhat 0.063 ratio 1.35 defect 0 band 0.000 rank 0 t 0
+0.7 10000 16 4 aligned 1 moves 12 {'delN': 12} S0 dhat 0.086 ratio 1.38 defect 1 band 0.045 rank 1 t 0
+0.7 100000 32 1 mixed 1 moves 31 {'delN': 31} S0 dhat 0.037 ratio 1.48 defect 2 band 0.025 rank 2 t 0
+0.7 10000 16 1 mixed 1 moves 15 {'delN': 15} S0 dhat 0.089 ratio 1.54 defect 1 band 0.045 rank 2 t 0
+0.7 10000 16 1 mixed 0 moves 15 {'delN': 15} S0 dhat 0.085 ratio 1.72 defect 1 band 0.081 rank 1 t 0
+0.7 1000000 1000 1 mixed 1 moves 999 {'delN': 999} S0 dhat 0.100 ratio 2.46 defect 62 band 0.142 rank 46 t 62
+done
+multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\pool.py", line 136, in worker
+    put((job, i, (False, wrapped)))
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\queues.py", line 394, in put
+    self._writer.send_bytes(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 205, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 294, in _send_bytes
+    ov, err = _winapi.WriteFile(self._handle, buf, overlapped=True)
+              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [WinError 232] The pipe is being closed
+Process SpawnPoolWorker-2:
+Traceback (most recent call last):
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\pool.py", line 131, in worker
+    put((job, i, result))
+    ~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\queues.py", line 394, in put
+    self._writer.send_bytes(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 205, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 294, in _send_bytes
+    ov, err = _winapi.WriteFile(self._handle, buf, overlapped=True)
+              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [WinError 232] The pipe is being closed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 313, in _bootstrap
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\pool.py", line 136, in worker
+    put((job, i, (False, wrapped)))
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\queues.py", line 394, in put
+    self._writer.send_bytes(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 205, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 294, in _send_bytes
+    ov, err = _winapi.WriteFile(self._handle, buf, overlapped=True)
+              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [WinError 232] The pipe is being closed
+1 jobs
+0.7 1000000 1000 1 mixed 1 moves 999 {'delN': 999} S0 dhat 0.100 ratio 2.46 defect 62 band 0.142 rank 46 t 40
+done

@@ -1,0 +1,12 @@
+1	python3 loc_validate.py > $OUT/raw/validation_out.txt 2>&1
+2	python3 loc_batch.py $OUT/raw/port 20000 AF:0.4:spread:16000:q:1
+3	python3 loc_batch.py $OUT/raw/port 20000 PT:0.5:adj:16000:q:1
+4	python3 loc_batch.py $OUT/raw/port 20000 AF:0.4:adj:32000:q:1
+5	python3 loc_batch.py $OUT/raw/port 20000 CSG:0.5,0.8:two:32000:q:1
+6	python3 loc_batch.py $OUT/raw/port 20000 PT:1.5:spread:64000:s:1
+7	python3 loc_batch.py $OUT/raw/port 20000 AF:0.4:spread:64000:s:1
+8	python3 loc_batch.py $OUT/raw/port 20000 PT:8.5:adj:16000:q:1
+9	mkdir -p $OUT/data $OUT/raw/prodport && LOC_EXPORT=$OUT/data/C1_n500_s1 python3 loc_run.py $OUT/raw/prodport/C1_n500_s1.json PT 1.5 spread 500 q 1 && Rscript --vanilla loc_prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/prod_C1_n500_s1.jsonl $OUT/rds design=file dfile=$OUT/data/C1_n500_s1 n=500 p=125 rep=1 seedoff=100003 hours=1e+07 mem_gb=12 tag=_C1_n500_s1; rc=$?; rm -f $OUT/data/C1_n500_s1.X.bin $OUT/data/C1_n500_s1.y.bin; exit $rc
+10	mkdir -p $OUT/data $OUT/raw/prodport && LOC_EXPORT=$OUT/data/C4_n500_s1 python3 loc_run.py $OUT/raw/prodport/C4_n500_s1.json CSG 0.5,0.8 two 500 q 1 && Rscript --vanilla loc_prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/prod_C4_n500_s1.jsonl $OUT/rds design=file dfile=$OUT/data/C4_n500_s1 n=500 p=115 rep=1 seedoff=400012 hours=1e+07 mem_gb=12 tag=_C4_n500_s1; rc=$?; rm -f $OUT/data/C4_n500_s1.X.bin $OUT/data/C4_n500_s1.y.bin; exit $rc
+11	mkdir -p $OUT/data $OUT/raw/prodport && LOC_EXPORT=$OUT/data/C2_n2000_s1 python3 loc_run.py $OUT/raw/prodport/C2_n2000_s1.json AF 0.25 spread 2000 q 1 && Rscript --vanilla loc_prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/prod_C2_n2000_s1.jsonl $OUT/rds design=file dfile=$OUT/data/C2_n2000_s1 n=2000 p=500 rep=1 seedoff=200006 hours=1e+07 mem_gb=12 tag=_C2_n2000_s1; rc=$?; rm -f $OUT/data/C2_n2000_s1.X.bin $OUT/data/C2_n2000_s1.y.bin; exit $rc
+12	mkdir -p $OUT/data $OUT/raw/prodport && LOC_EXPORT=$OUT/data/C3_n2000_s1 python3 loc_run.py $OUT/raw/prodport/C3_n2000_s1.json CSG 0.5,0.8 one 2000 q 1 && Rscript --vanilla loc_prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/prod_C3_n2000_s1.jsonl $OUT/rds design=file dfile=$OUT/data/C3_n2000_s1 n=2000 p=495 rep=1 seedoff=300009 hours=1e+07 mem_gb=12 tag=_C3_n2000_s1; rc=$?; rm -f $OUT/data/C3_n2000_s1.X.bin $OUT/data/C3_n2000_s1.y.bin; exit $rc

@@ -1,0 +1,22 @@
+{"test": "partition", "p": 40, "B": 4, "equal": true, "nblocks": 10}
+{"test": "partition", "p": 100, "B": 10, "equal": true, "nblocks": 10}
+{"test": "partition", "p": 257, "B": 16, "equal": true, "nblocks": 17}
+{"test": "partition", "p": 500, "B": 16, "equal": true, "nblocks": 32}
+{"test": "partition", "p": 777, "B": 16, "equal": true, "nblocks": 49}
+{"test": "start_mode", "n": 64, "p": 40, "K": 32, "B": 6, "equal": true, "size": 14, "zdiff": 0.0}
+{"test": "path", "n": 64, "p": 40, "moves_gen": 13, "moves_pk": 13, "same_final": true, "same_types": true, "t": 0.0}
+{"test": "start_mode", "n": 64, "p": 40, "K": 32, "B": 6, "equal": true, "size": 15, "zdiff": 0.0}
+{"test": "path", "n": 64, "p": 40, "moves_gen": 13, "moves_pk": 13, "same_final": true, "same_types": true, "t": 0.0}
+{"test": "start_mode", "n": 100, "p": 70, "K": 50, "B": 8, "equal": true, "size": 23, "zdiff": 0.0}
+{"test": "path", "n": 100, "p": 70, "moves_gen": 26, "moves_pk": 26, "same_final": true, "same_types": true, "t": 0.0}
+{"test": "start_mode", "n": 144, "p": 100, "K": 72, "B": 10, "equal": true, "size": 30, "zdiff": 0.0}
+{"test": "path", "n": 144, "p": 100, "moves_gen": 31, "moves_pk": 31, "same_final": true, "same_types": true, "t": 0.0}
+{"test": "start_mode", "n": 64, "p": 60, "K": 32, "B": 7, "equal": true, "size": 18, "zdiff": 0.0}
+{"test": "path", "n": 64, "p": 60, "moves_gen": 17, "moves_pk": 17, "same_final": true, "same_types": true, "t": 0.0}
+{"test": "start_mode", "n": 100, "p": 99, "K": 50, "B": 9, "equal": true, "size": 32, "zdiff": 0.0}
+{"test": "path", "n": 100, "p": 99, "moves_gen": 32, "moves_pk": 32, "same_final": true, "same_types": true, "t": 0.1}
+{"test": "start_mode", "n": 144, "p": 130, "K": 72, "B": 11, "equal": true, "size": 46, "zdiff": 0.0}
+{"test": "path", "n": 144, "p": 130, "moves_gen": 52, "moves_pk": 52, "same_final": true, "same_types": true, "t": 0.0}
+{"test": "start_mode", "n": 196, "p": 190, "K": 98, "B": 13, "equal": true, "size": 59, "zdiff": 0.0}
+{"test": "path", "n": 196, "p": 190, "moves_gen": 68, "moves_pk": 68, "same_final": true, "same_types": true, "t": 0.1}
+{"test": "N2_repro", "start": 300, "has_S0": true, "moves": 315, "final_is_S0": true, "summ": {"counts": {"sN": 19, "-N": 296}, "first_del": 19, "lead_swaps": 19, "swaps_after_first_del": 0}, "k_hit": 314, "cap_MR1": 311}

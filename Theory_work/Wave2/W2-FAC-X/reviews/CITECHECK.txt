@@ -1,0 +1,23 @@
+OK    [lemmas\X1_representation.md] 04_theory.tex:69-74
+      \par\smallskip\noindent\textbf{Shared definition.}\enspace Exact scope | \par\smallskip\noindent\textbf{D0: data/target.}\enspace \(n\ge3,p\ge1\); nonconstant columns and response, centered and standardized. \(K=\min(p,\lfloor n/2\rfloor)\), \ | \par\smallskip\noindent\textbf{Score.}\enspace \(G_U=X_U^\top X_U,\ z_U=X_U^\top y,\ H_U=(n+1)G_U+I,\ Q_U=y^\top y-nz_U^\top H_U^{-1}z_U,\ \nu=.01+n/2\). \(m(U)=c_n[\det  | \par\smallskip\noindent\textbf{Prior.}\enspace \(w(k)=[2\binom{2p-1}{k}]^{-1}\), \(W_K=\sum_{k\le K}\binom pk w(k)\), \(\varpi(S)=w(|S|)/W_K\).
+OK    [lemmas\X6_assembly.md] 04_theory.tex:492-492
+      \par\noindent\rid{TH05.0} (M5(0) Composition at every n, any X): \status{T38-(0) "PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))"; N200 "PROVED (elementary, eve
+OK    [lemmas\X6_assembly.md] s3_posterior.tex:20-20
+      \textbf{Random designs.} T03♯ is a fixed-design theorem. Random-design versions used below: (a) W1-PXN (P) on LH-iid, $1-\pi(S_0)=O_P(\sqrt{\log n/n})$ under the joint la
+OK    [lemmas\X6_assembly.md] Theory_work/Wave1C/HQ_AUDIT/A2_propF_GROW.md:55-67
+      **3. Replace D′'s statistical inputs by GROW's data events.** Define 𝒦_n to mean that deterministic LS0 with cap a_n scores S₀, whether or not a run delivers. Put E_n = S |  | P(𝒦_nᶜ) ≤ P(Sand_nᶜ)+P(NA(𝓛)ᶜ)+P(TL(𝓛)ᶜ) → 0. | 
+OK    [lemmas\X6_assembly.md] A2_propF_GROW.md:37-47
+      ## Proof |  | **1. Lemma S extends.** For fixed GROW designs, raw columns are finite and nonconstant by G, and standardisation gives centred columns with squared norm n−1 (`GROW/STATEM | 
+
+TOTAL ok=5 miss=0
+
+## Status-string / file-level citation check
+OK   Wave1/W1-PXN/lemmas/CR_corr_tails.md  ::  PROVED (by this seat); XF VERIFIED (R19, Codex gpt-6.1-sol)
+OK   State_of_Project/sections/04_theory.tex  ::  T38-(0) "PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))"
+OK   Wave2/W2-FAC-B/STATEMENT.md  ::  S-T/T03♯ "PROVED; SF VERIFIED (W2-VT03R);
+OK   Wave2/W2-FAC-B/STATEMENT.md  ::  [OP] "PROVED (by this seat, unchecked)" inside Theorem GEN "PROVED-CHECKED"
+OK   Wave1C/FINAL/sections/s6_delivery.tex  ::  PROVED (A2), checked by A3
+OK   Wave2/W2-FAC-B/REPORT.md  ::  **PROVED-CHECKED** — Theorem FAC-CS
+OK   Wave2/W2-FAC-A/REPORT.md  ::  **PROVED-CHECKED** (for the narrowed, flagged target
+OK   Wave1C/FINAL/sections/s3_posterior.tex  ::  Random designs.
+STATUS TOTAL ok=8 miss=0

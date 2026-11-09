@@ -1,0 +1,32 @@
+[
+  {
+    "path": "Theory_work/Wave2/W2-FAC-B/REPORT.md",
+    "line": 30,
+    "quote": "**PROVED-CHECKED** \u2014 Theorem FAC-CS (claims (C1)\u2013(C4) of STATEMENT v3.1, plus the flagged (C1-M)). Statement lock"
+  },
+  {
+    "path": "Theory_work/Wave2/W2-FAC-A/REPORT.md",
+    "line": 20,
+    "quote": "**PROVED-CHECKED** (for the narrowed, flagged target STATEMENT.md v1.2) \u2014 Theorem FAC-L (Part I: (L1)\u2013(L5), delivery"
+  },
+  {
+    "path": "Theory_work/Wave2/W2-FAC-B/STATEMENT.md",
+    "line": 157,
+    "quote": "XF VERIFIED (A-REV2)\"; [OP] \"PROVED (by this seat, unchecked)\" inside Theorem GEN \"PROVED-CHECKED\"; Lemma CAP (FINAL s7)"
+  },
+  {
+    "path": "Theory_work/Wave2/W2-FAC-B/STATEMENT.md",
+    "line": 159,
+    "quote": "addition checked in A4 \"OK-WITH-FIXES\") and F-GROW (A2 \"PROVED (A2), checked by A3\")."
+  },
+  {
+    "path": "Theory_work/Wave2/PROTOCOL.md",
+    "line": 21,
+    "quote": "**Scope rule (Felipe, binding):** all target results are asymptotic. Do not treat \"asymptotic only / not at n = 200\""
+  },
+  {
+    "path": "Theory_work/Wave1/PROTOCOL.md",
+    "line": 44,
+    "quote": "- Mid-point REDIRECT/STOP \u2192 report."
+  }
+]

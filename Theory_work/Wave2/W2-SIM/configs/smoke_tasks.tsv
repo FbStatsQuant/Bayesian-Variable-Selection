@@ -1,0 +1,2 @@
+1	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=iidcs n=100 p=60 rep=1 arm=mr1 hours=2
+2	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=excs n=100 p=80 rep=1 arm=dbl hours=2000

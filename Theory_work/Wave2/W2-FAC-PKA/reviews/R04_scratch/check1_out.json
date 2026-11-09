@@ -1,0 +1,58 @@
+{
+ "identity_errors": {
+  "Fclosed": 9.996862517183342e-15,
+  "zrep": 2.398329826179633e-15,
+  "s2rep": 5.463436405840723e-16,
+  "Lk": 8.526512829121202e-14,
+  "del_id": 9.74855535877971e-15,
+  "swap_id": 1.0817309329905425e-14,
+  "QRSS_viol": 0,
+  "Qpos_viol": 0
+ },
+ "paths": [
+  {
+   "s0": 1,
+   "start": 1,
+   "K": 20,
+   "startK": false,
+   "topz": true,
+   "brute_len": 0,
+   "fast_len": 0,
+   "identical": true,
+   "final_truth": true
+  },
+  {
+   "s0": 2,
+   "start": 20,
+   "K": 20,
+   "startK": true,
+   "topz": true,
+   "brute_len": 19,
+   "fast_len": 19,
+   "identical": true,
+   "final_truth": true
+  },
+  {
+   "s0": 1,
+   "start": 12,
+   "K": 20,
+   "startK": false,
+   "topz": true,
+   "brute_len": 13,
+   "fast_len": 13,
+   "identical": true,
+   "final_truth": false
+  },
+  {
+   "s0": 2,
+   "start": 20,
+   "K": 20,
+   "startK": true,
+   "topz": true,
+   "brute_len": 21,
+   "fast_len": 21,
+   "identical": true,
+   "final_truth": true
+  }
+ ]
+}

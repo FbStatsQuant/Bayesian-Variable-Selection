@@ -1,0 +1,139 @@
+W2-UNI CITECHECK: 107 path:line citations, 0 misses; 12 token checks, 0 misses; 12 status strings, 0 misses.
+Scope: location/token/status check only; it does not re-verify mathematics.
+OK   STATEMENT.md:74 -> lemmas/L3_LOC.md:28-28 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   C_corollaries.md:19 -> L3_LOC.md:27-27 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   C_corollaries.md:19 -> L3_LOC.md:28-28 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   C_corollaries.md:20 -> lemmas/L3_LOC.md:62-64 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   C_corollaries.md:20 -> STATEMENT.md:146-146 [Theory_work\Wave1C\C-GROW\STATEMENT.md] AMBIGUOUS:Theory_work\Wave2\W2-UNI\STATEMENT.md
+OK   C_corollaries.md:21 -> Scripts/Data_generators/gen_dev_data.R:18-28 [Scripts\Data_generators\gen_dev_data.R]
+OK   C_corollaries.md:21 -> gen_dev_data.R:32-41 [Scripts\Data_generators\gen_dev_data.R] AMBIGUOUS:Scripts\SMC_BVS\reference\gen_dev_data.R,Scripts\SMC_BVS\smoke\reference\gen_dev_data.R
+OK   C_corollaries.md:26 -> gen_dev_data.R:26-26 [Scripts\Data_generators\gen_dev_data.R] AMBIGUOUS:Scripts\SMC_BVS\reference\gen_dev_data.R,Scripts\SMC_BVS\smoke\reference\gen_dev_data.R
+OK   L1_metric.md:5 -> W2-UNI/STATEMENT.md:132-140 [Theory_work\Wave2\W2-UNI\STATEMENT.md]
+OK   L1_metric.md:5 -> reviews/R01_statement_lock_sol.md:63-77 [Theory_work\Wave2\W2-UNI\reviews\R01_statement_lock_sol.md]
+OK   L1_metric.md:7 -> W2-LOC2/REPORT.md:3-3 [Theory_work\Wave2\W2-LOC2\REPORT.md]
+OK   L1_metric.md:15 -> STATEMENT.md:48-51 [Theory_work\Wave2\W2-UNI\STATEMENT.md]
+OK   L1_metric.md:25 -> L3_CTd.md:15-21 [Theory_work\Wave2\W2-LOC2\lemmas\L3_CTd.md]
+OK   L1_metric.md:61 -> L3_CTd.md:23-43 [Theory_work\Wave2\W2-LOC2\lemmas\L3_CTd.md]
+OK   L1_metric.md:66 -> STATEMENT.md:48-51 [Theory_work\Wave2\W2-UNI\STATEMENT.md]
+OK   L1_metric.md:85 -> L3_CTd.md:50-65 [Theory_work\Wave2\W2-LOC2\lemmas\L3_CTd.md]
+OK   L1_metric.md:99 -> L3_CTd.md:67-75 [Theory_work\Wave2\W2-LOC2\lemmas\L3_CTd.md]
+OK   L1_metric.md:115 -> L3_CTd.md:77-85 [Theory_work\Wave2\W2-LOC2\lemmas\L3_CTd.md]
+OK   L1_metric.md:120 -> reviews/R01_statement_lock_sol.md:73-73 [Theory_work\Wave2\W2-UNI\reviews\R01_statement_lock_sol.md]
+OK   L1_metric.md:149 -> L4_LOCd.md:51-53 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L1_metric.md:151 -> STATEMENT.md:146-150 [Theory_work\Wave2\W2-UNI\STATEMENT.md]
+OK   L1_metric.md:161 -> STATEMENT.md:20-21 [Theory_work\Wave2\W2-UNI\STATEMENT.md]
+OK   L2_k0.md:5 -> STATEMENT.md:96-103 [Theory_work\Wave2\W2-UNI\STATEMENT.md]
+OK   L2_k0.md:6 -> STATEMENT.md:141-143 [Theory_work\Wave2\W2-UNI\STATEMENT.md]
+OK   L2_k0.md:6 -> reviews/R01_statement_lock_sol.md:136-140 [Theory_work\Wave2\W2-UNI\reviews\R01_statement_lock_sol.md]
+OK   L2_k0.md:7 -> L4_LOCd.md:9-66 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:16 -> W2-LOC2/REPORT.md:3-3 [Theory_work\Wave2\W2-LOC2\REPORT.md]
+OK   L2_k0.md:16 -> HQ_AUDIT/B4_loc2_redteam.md:1-1 [Theory_work\Wave2\HQ_AUDIT\B4_loc2_redteam.md]
+OK   L2_k0.md:18 -> W2-APP/REPORT.md:3-3 [Theory_work\Wave2\W2-APP\REPORT.md]
+OK   L2_k0.md:26 -> STATEMENT.md:20-23 [Theory_work\Wave2\W2-UNI\STATEMENT.md]
+OK   L2_k0.md:28 -> STATEMENT.md:48-51 [Theory_work\Wave2\W2-UNI\STATEMENT.md]
+OK   L2_k0.md:28 -> STATEMENT.md:72-74 [Theory_work\Wave2\W2-UNI\STATEMENT.md]
+OK   L2_k0.md:29 -> STATEMENT.md:24-33 [Theory_work\Wave2\W2-UNI\STATEMENT.md]
+OK   L2_k0.md:32 -> L3_LOC.md:15-17 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   L2_k0.md:42 -> L3_CTd.md:15-21 [Theory_work\Wave2\W2-LOC2\lemmas\L3_CTd.md]
+OK   L2_k0.md:43 -> L3_CTd.md:37-38 [Theory_work\Wave2\W2-LOC2\lemmas\L3_CTd.md]
+OK   L2_k0.md:44 -> L3_CTd.md:34-36 [Theory_work\Wave2\W2-LOC2\lemmas\L3_CTd.md]
+OK   L2_k0.md:45 -> L3_CTd.md:58-65 [Theory_work\Wave2\W2-LOC2\lemmas\L3_CTd.md]
+OK   L2_k0.md:46 -> L4_LOCd.md:11-13 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:47 -> L4_LOCd.md:14-16 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:48 -> L4_LOCd.md:21-21 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:49 -> L4_LOCd.md:25-27 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:50 -> L4_LOCd.md:27-31 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:51 -> L4_LOCd.md:38-43 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:52 -> L4_LOCd.md:46-49 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:53 -> L4_LOCd.md:50-55 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:54 -> L3_LOC.md:51-52 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   L2_k0.md:55 -> L3_LOC.md:30-32 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   L2_k0.md:56 -> L3_LOC.md:98-156 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   L2_k0.md:57 -> L6_random_AR1.md:171-177 [Theory_work\Wave1C\C-GROW\lemmas\L6_random_AR1.md]
+OK   L2_k0.md:57 -> L3_LOC.md:45-50 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   L2_k0.md:58 -> L6_random_AR1.md:108-112 [Theory_work\Wave1C\C-GROW\lemmas\L6_random_AR1.md]
+OK   L2_k0.md:58 -> L1_toolkit.md:9-59 [Theory_work\Wave2\W2-LOC2\lemmas\L1_toolkit.md]
+OK   L2_k0.md:67 -> L4_LOCd.md:14-14 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:74 -> L1_toolkit.md:57-59 [Theory_work\Wave2\W2-LOC2\lemmas\L1_toolkit.md]
+OK   L2_k0.md:75 -> L5_assembly.md:24-24 [Theory_work\Wave2\W2-LOC2\lemmas\L5_assembly.md]
+OK   L2_k0.md:79 -> L4_LOCd.md:21-22 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:79 -> L3_LOC.md:54-72 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   L2_k0.md:79 -> L6_random_AR1.md:84-167 [Theory_work\Wave1C\C-GROW\lemmas\L6_random_AR1.md]
+OK   L2_k0.md:81 -> L1_toolkit.md:45-59 [Theory_work\Wave2\W2-LOC2\lemmas\L1_toolkit.md]
+OK   L2_k0.md:82 -> L6_random_AR1.md:85-104 [Theory_work\Wave1C\C-GROW\lemmas\L6_random_AR1.md]
+OK   L2_k0.md:84 -> L1_toolkit.md:48-50 [Theory_work\Wave2\W2-LOC2\lemmas\L1_toolkit.md]
+OK   L2_k0.md:87 -> L3_LOC.md:63-66 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   L2_k0.md:87 -> L6_random_AR1.md:128-141 [Theory_work\Wave1C\C-GROW\lemmas\L6_random_AR1.md]
+OK   L2_k0.md:89 -> L6_random_AR1.md:143-155 [Theory_work\Wave1C\C-GROW\lemmas\L6_random_AR1.md]
+OK   L2_k0.md:91 -> L1_toolkit.md:54-56 [Theory_work\Wave2\W2-LOC2\lemmas\L1_toolkit.md]
+OK   L2_k0.md:93 -> L1_toolkit.md:28-32 [Theory_work\Wave2\W2-LOC2\lemmas\L1_toolkit.md]
+OK   L2_k0.md:95 -> L4_LOCd.md:24-31 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:95 -> L3_LOC.md:74-83 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   L2_k0.md:95 -> L6_random_AR1.md:171-212 [Theory_work\Wave1C\C-GROW\lemmas\L6_random_AR1.md]
+OK   L2_k0.md:112 -> L6_random_AR1.md:203-212 [Theory_work\Wave1C\C-GROW\lemmas\L6_random_AR1.md]
+OK   L2_k0.md:116 -> L4_LOCd.md:33-36 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:116 -> L3_LOC.md:85-91 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   L2_k0.md:116 -> L6_random_AR1.md:223-310 [Theory_work\Wave1C\C-GROW\lemmas\L6_random_AR1.md]
+OK   L2_k0.md:125 -> L4_LOCd.md:38-43 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:125 -> L3_LOC.md:93-96 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   L2_k0.md:125 -> L6_random_AR1.md:313-388 [Theory_work\Wave1C\C-GROW\lemmas\L6_random_AR1.md]
+OK   L2_k0.md:129 -> L6_random_AR1.md:366-378 [Theory_work\Wave1C\C-GROW\lemmas\L6_random_AR1.md]
+OK   L2_k0.md:131 -> L6_random_AR1.md:380-388 [Theory_work\Wave1C\C-GROW\lemmas\L6_random_AR1.md]
+OK   L2_k0.md:135 -> L4_LOCd.md:45-56 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:135 -> L2_NAR.md:23-36 [Theory_work\Wave2\W2-LOC2\lemmas\L2_NAR.md]
+OK   L2_k0.md:150 -> L2_NAR.md:38-41 [Theory_work\Wave2\W2-LOC2\lemmas\L2_NAR.md]
+OK   L2_k0.md:151 -> L1_toolkit.md:37-42 [Theory_work\Wave2\W2-LOC2\lemmas\L1_toolkit.md]
+OK   L2_k0.md:153 -> L4_LOCd.md:58-58 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:154 -> L1_toolkit.md:33-36 [Theory_work\Wave2\W2-LOC2\lemmas\L1_toolkit.md]
+OK   L2_k0.md:155 -> L3_LOC.md:158-160 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   L2_k0.md:157 -> L5_assembly.md:13-33 [Theory_work\Wave2\W2-LOC2\lemmas\L5_assembly.md]
+OK   L2_k0.md:161 -> STATEMENT.md:43-43 [Theory_work\Wave2\W2-APP\STATEMENT.md] AMBIGUOUS:Theory_work\Wave2\W2-LOC2\STATEMENT.md,Theory_work\Wave2\W2-UNI\STATEMENT.md
+OK   L2_k0.md:164 -> L7_delivery.md:7-35 [Theory_work\Wave2\W2-LOC2\lemmas\L7_delivery.md] AMBIGUOUS:Theory_work\Wave2\W2-FAC-A\lemmas\L7_delivery.md
+OK   L2_k0.md:164 -> L7_delivery.md:7-49 [Theory_work\Wave2\W2-FAC-A\lemmas\L7_delivery.md]
+OK   L2_k0.md:166 -> L7_delivery.md:14-15 [Theory_work\Wave2\W2-LOC2\lemmas\L7_delivery.md] AMBIGUOUS:Theory_work\Wave2\W2-FAC-A\lemmas\L7_delivery.md
+OK   L2_k0.md:167 -> L7_delivery.md:21-25 [Theory_work\Wave2\W2-LOC2\lemmas\L7_delivery.md] AMBIGUOUS:Theory_work\Wave2\W2-FAC-A\lemmas\L7_delivery.md
+OK   L2_k0.md:168 -> L7_delivery.md:26-34 [Theory_work\Wave2\W2-LOC2\lemmas\L7_delivery.md] AMBIGUOUS:Theory_work\Wave2\W2-FAC-A\lemmas\L7_delivery.md
+OK   L2_k0.md:171 -> L7_delivery.md:26-28 [Theory_work\Wave2\W2-FAC-A\lemmas\L7_delivery.md]
+OK   L2_k0.md:175 -> Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md:65-77 [Theory_work\Wave1C\C-DLV\lemmas\L4_delivery.md]
+OK   L2_k0.md:176 -> L7_delivery.md:32-32 [Theory_work\Wave2\W2-LOC2\lemmas\L7_delivery.md]
+OK   L2_k0.md:178 -> L7_delivery.md:37-39 [Theory_work\Wave2\W2-LOC2\lemmas\L7_delivery.md]
+OK   L2_k0.md:186 -> L3_LOC.md:183-184 [Theory_work\Wave2\W2-APP\lemmas\L3_LOC.md]
+OK   L2_k0.md:189 -> L2_NAR.md:31-31 [Theory_work\Wave2\W2-LOC2\lemmas\L2_NAR.md]
+OK   L2_k0.md:190 -> STATEMENT.md:20-21 [Theory_work\Wave2\W2-UNI\STATEMENT.md]
+OK   L2_k0.md:204 -> STATEMENT.md:26-29 [Theory_work\Wave2\W2-LOC2\STATEMENT.md] AMBIGUOUS:Theory_work\Wave2\W2-FAC-A\STATEMENT.md,Theory_work\Wave2\W2-UNI\STATEMENT.md
+OK   L2_k0.md:209 -> L4_LOCd.md:6-7 [Theory_work\Wave2\W2-LOC2\lemmas\L4_LOCd.md]
+OK   L2_k0.md:215 -> STATEMENT.md:24-33 [Theory_work\Wave2\W2-UNI\STATEMENT.md]
+OK   L2_k0.md:223 -> STATEMENT.md:96-103 [Theory_work\Wave2\W2-FAC-A\STATEMENT.md] AMBIGUOUS:Theory_work\Wave2\W2-UNI\STATEMENT.md
+OK   L2_k0.md:226 -> L3_CTd.md:17-20 [Theory_work\Wave2\W2-LOC2\lemmas\L3_CTd.md]
+OK   L2_k0.md:227 -> STATEMENT.md:55-55 [Theory_work\Wave2\W2-APP\STATEMENT.md] AMBIGUOUS:Theory_work\Wave2\W2-LOC2\STATEMENT.md,Theory_work\Wave2\W2-UNI\STATEMENT.md
+OK   L5_delivery.md:33 -> lemmas/L4_delivery.md:65-77 [Theory_work\Wave1C\C-DLV\lemmas\L4_delivery.md]
+OK   TOKEN Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:28-28 'PTV(a₀)'
+OK   TOKEN Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:62-64 'PTV gives it directly'
+OK   TOKEN Theory_work/Wave1C/C-GROW/STATEMENT.md:146-146 'satisfy separation for every signal scale'
+OK   TOKEN Scripts/Data_generators/gen_dev_data.R:18-28 '0.3*matrix(1,p,p)+0.4*H+0.3*I'
+OK   TOKEN Scripts/Data_generators/gen_dev_data.R:32-41 'step <- c(`30` = 1L, `500` = 7L, `1000` = 13L)'
+OK   TOKEN Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md:65-77 'S₀'
+OK   TOKEN Theory_work/Wave2/W2-FAC-A/lemmas/L3_NA_TL.md:1-200 'On E_n, Corollary U gives |Z_{T,l}| ≤ √(2P) + κ̄√(2x_k) + ε_'
+OK   TOKEN Theory_work/Wave2/W2-FAC-A/lemmas/L1_uniform_add.md:1-400 'Lemma U(d).'
+OK   TOKEN Theory_work/Wave2/W2-FAC-A/lemmas/L5_random_instances.md:1-400 'Lemma κ (block compound symmetry)'
+OK   TOKEN Theory_work/Wave2/W2-LOC2/lemmas/L4_LOCd.md:1-200 '|θ*_j|Var(W_j | W_U) ≥ c_Bθ_lo'
+OK   TOKEN Theory_work/Wave2/W2-LOC2/lemmas/L3_CTd.md:1-200 'Packing fact.'
+OK   TOKEN Theory_work/Wave2/W2-FAC-A/lemmas/L4_assembly.md:1-200 'only S₀ ⊆ Q, |Q| ≤ K (no bound on |Q|)'
+OK   STATUS Theory_work/Wave2/W2-FAC-A/REPORT.md: 'PROVED-CHECKED'
+OK   STATUS Theory_work/Wave2/W2-FAC-A/REPORT.md: 'for the narrowed, flagged target'
+OK   STATUS Theory_work/Wave2/W2-FAC-B/REPORT.md: 'PROVED-CHECKED'
+OK   STATUS Theory_work/Wave2/W2-LOC2/REPORT.md: 'PROVED-CHECKED'
+OK   STATUS Theory_work/Wave2/W2-APP/REPORT.md: 'PROVED-CHECKED'
+OK   STATUS Theory_work/Wave2/W2-APP/lemmas/L1_POST.md: 'PROVED (by this seat, unchecked)'
+OK   STATUS Theory_work/Wave2/W2-FAC-A/lemmas/L7_delivery.md: 'R04 (Sol high): VERIFIED-WITH-AMENDMENTS'
+OK   STATUS Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md: 'PROVED (by this seat, unchecked)'
+OK   STATUS Theory_work/Wave2/W2-FAC-A/lemmas/L4_assembly.md: 'VERIFIED'
+OK   STATUS Theory_work/Wave1C/C-GROW/REPORT.md: 'PROVED-CHECKED'
+OK   STATUS Theory_work/Wave1/W1-GEN/REPORT.md: 'PROVED-CHECKED'
+OK   STATUS Theory_work/Wave2/W2-FAC-A/lemmas/L1_uniform_add.md: 'VERIFIED-WITH-AMENDMENTS'
+
+MANUAL RESOLUTION OF AMBIGUOUS ENTRIES (lead, 2026-11-09): L2_k0.md:161/204/223/227 cite this ticket's STATEMENT.md
+(v1.1) — lines 43 (LSF sufficient condition), 26-29 (method premises), 96-103 (claim (ii)), 55 (block pseudometric
+example): checked, content matches. L2_k0.md:164-168: LOC2 L7_delivery.md:14-15 (classes), :21-25 (Step 1) and FACA
+L7_delivery.md:26-34 (Step 1): checked, content matches. C_corollaries.md:20 -> C-GROW STATEMENT.md:146 (token check
+passes). gen_dev_data.R -> Scripts/Data_generators/gen_dev_data.R (the copies under Scripts/SMC_BVS/ are references).

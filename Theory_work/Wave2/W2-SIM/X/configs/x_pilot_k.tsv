@@ -1,0 +1,4 @@
+1	python3 -B x_paths_k.py $OUT/raw/p1.jsonl load=k2glob n=100000 p=2000 seeds=900 start=both
+2	python3 -B x_paths_k.py $OUT/raw/p2.jsonl load=k3gen n=1000000 p=1000 seeds=900 start=both
+3	python3 -B x_paths_k.py $OUT/raw/p3.jsonl load=real:riboflavin n=100000 p=4088 seeds=900 start=both datadir=/scratch/fb31/theory_w2/fam_X/scripts/data
+4	python3 -B x_paths_k.py $OUT/raw/p4.jsonl load=real:fred_qd n=1000 p=170 seeds=900 start=both datadir=/scratch/fb31/theory_w2/fam_X/scripts/data

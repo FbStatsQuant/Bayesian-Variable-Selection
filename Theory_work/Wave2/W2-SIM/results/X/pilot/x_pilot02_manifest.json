@@ -1,0 +1,21 @@
+{
+ "run_id": "x_pilot02",
+ "slurm_job_id": "2633071",
+ "submitted_utc": "2026-11-09T16:15:09.059339+00:00",
+ "sbatch_args": "--parsable --job-name=w2sim_x_pilot02 --account=commons --partition=commons --qos=nots_commons --nodes=1 --ntasks=1 --cpus-per-task=1 --mem=16G --time=12:00:00 --export=NONE --no-requeue --array=1-7%7 --output=/scratch/fb31/theory_w2/x_pilot02/slurm/%A_%a.out --error=/scratch/fb31/theory_w2/x_pilot02/slurm/%A_%a.err",
+ "code_commit": "11dc9b73416dacb9f159846d39902d4b57b49a57",
+ "config": {
+  "RUN_ID": "x_pilot02",
+  "OUT": "/scratch/fb31/theory_w2/x_pilot02",
+  "CODE": "/home/fb31/projects/BVS/theory_w2/code/main_11dc9b7/repo",
+  "TICKETS": "/home/fb31/projects/BVS/theory_w2/code/tickets_20261109T0943"
+ },
+ "files_sha256": {
+  "config.env": "b971ad9ff3b67a093b5d86813fa3f94170fce233c0dd0e4b717142b18082f632",
+  "env_sim.sh": "a7fce02547e42c387a719b982268ee601964c4668587ee2f449960d7abe6ceca",
+  "run_table.sh": "d029b534d2c7f6cb98fb21711c2cdf7095813aebbda47e0c4cf71191cab4511d",
+  "tasks.tsv": "7f1e478f51de80ba7ada98b44f8056b5e2c082e61ec3f64d296daa04f40654b9",
+  "scripts/x_paths.py": "9d84d0c76e65edbce52d1fec8a8989c6f698dc1061de3370b65a4e8a021587ae"
+ },
+ "modules": "GCC/14.3.0 R/4.5.2 SciPy-bundle/2025.07 (Python 3.13.5, numpy 2.3.2, scipy 1.16.1)"
+}

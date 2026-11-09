@@ -1,0 +1,7 @@
+{
+  "arithmetic": "exact Fraction",
+  "rational_shadow_steps": 7,
+  "deterministic_end_states": 460,
+  "failures": 0,
+  "scope": "fixed finite algebraic checks, not an asymptotic probability test"
+}

@@ -1,0 +1,17 @@
+{
+  "inclusion": {
+    "partitions": 203,
+    "cases": 8323,
+    "contained": 2298,
+    "failures": 0
+  },
+  "transfer": {
+    "designs": 60,
+    "transfer_cases": 446,
+    "transfer_failures": 0,
+    "contained_low_pi": 489,
+    "contained_low_pi_hpm_wrong": 349,
+    "uncontained": 1465,
+    "uncontained_truth_in_table": 0
+  }
+}

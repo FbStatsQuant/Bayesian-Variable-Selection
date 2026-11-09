@@ -1,0 +1,5 @@
+1	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=0.25 ls0=0 design=excs n=100 p=80 rep=1 arm=mr1
+2	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=0.25 ls0=0 design=excs n=200 p=190 rep=1 arm=mr1
+3	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=0.25 ls0=0 design=iidcs n=200 p=500 rep=1 arm=mr1
+4	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=0.25 ls0=0 design=excs n=200 p=90 rep=1 arm=mr1
+5	Rscript --vanilla prod_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds savefull=1 hours=0.25 ls0=0 design=iidcs n=200 p=90 rep=1 arm=mr1

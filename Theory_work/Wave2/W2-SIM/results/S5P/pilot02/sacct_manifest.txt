@@ -1,0 +1,40 @@
+2634031_1     COMPLETED   00:06:35            
+2634031_1.b+  COMPLETED   00:06:35    271916K 
+2634031_1.e+  COMPLETED   00:06:35            
+2634031_2     COMPLETED   00:01:24            
+2634031_2.b+  COMPLETED   00:01:24    131144K 
+2634031_2.e+  COMPLETED   00:01:24            
+2634031_3     COMPLETED   00:01:16            
+2634031_3.b+  COMPLETED   00:01:16     59384K 
+2634031_3.e+  COMPLETED   00:01:16            
+2634031_4     COMPLETED   00:00:11            
+2634031_4.b+  COMPLETED   00:00:11    153456K 
+2634031_4.e+  COMPLETED   00:00:11            
+2634031_5     COMPLETED   00:01:46            
+2634031_5.b+  COMPLETED   00:01:46    470856K 
+2634031_5.e+  COMPLETED   00:01:47            
+2634031_6     COMPLETED   00:16:19            
+2634031_6.b+  COMPLETED   00:16:19   1826040K 
+2634031_6.e+  COMPLETED   00:16:19            
+{
+ "run_id": "s5_pilot02",
+ "slurm_job_id": "2634031",
+ "submitted_utc": "2026-11-09T16:39:01.650636+00:00",
+ "sbatch_args": "--parsable --job-name=w2sim_s5_pilot02 --account=commons --partition=commons --qos=nots_commons --nodes=1 --ntasks=1 --cpus-per-task=1 --mem=12G --time=08:00:00 --export=NONE --no-requeue --array=1-6%6 --output=/scratch/fb31/theory_w2/s5_pilot02/slurm/%A_%a.out --error=/scratch/fb31/theory_w2/s5_pilot02/slurm/%A_%a.err",
+ "code_commit": "11dc9b73416dacb9f159846d39902d4b57b49a57",
+ "config": {
+  "RUN_ID": "s5_pilot02",
+  "OUT": "/scratch/fb31/theory_w2/s5_pilot02",
+  "CODE": "/home/fb31/projects/BVS/theory_w2/code/main_11dc9b7/repo",
+  "TICKETS": "/home/fb31/projects/BVS/theory_w2/code/tickets_20261109T0943"
+ },
+ "files_sha256": {
+  "tasks.tsv": "e73eda21728c5444ef31658dc619f4cea2f45c3abf807632c5602a9ceadf4524",
+  "config.env": "88e768f7c33c9a2bffbf6235da35042d3e90eb8f0bab4e97d39b6ac338eb1238",
+  "run_table.sh": "d029b534d2c7f6cb98fb21711c2cdf7095813aebbda47e0c4cf71191cab4511d",
+  "env_sim.sh": "a7fce02547e42c387a719b982268ee601964c4668587ee2f449960d7abe6ceca",
+  "scripts/s5p_iid.py": "8e328f1b2257de006c7e82d6b65241d433ef330f6774fb3c6f0ab6e0560bd1b7",
+  "scripts/s5p_exact.py": "7fc2d4397c27fcd606940141c0be2103d0f589d5a273310e0e66a70ae66fbe9c"
+ },
+ "modules": "GCC/14.3.0 R/4.5.2 SciPy-bundle/2025.07 (Python 3.13.5, numpy 2.3.2, scipy 1.16.1)"
+}

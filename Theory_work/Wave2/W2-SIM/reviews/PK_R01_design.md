@@ -1,0 +1,31 @@
+# PK_R01_design — Codex gpt-6.1-sol (reasoningEffort high), fresh delegate_task, 2026-11-09 ~10:23–10:40. Reply verbatim:
+
+Paths below are relative to `Theory_work/Wave2/`. Repository files were kept read-only.
+
+1. **MAJOR — The design draws conclusions that its statistics do not imply.**  
+   **Evidence:** `W2-SIM/PK/DESIGN.md:38–40,69` says unsaturated starts or small leading-swap counts imply MR1 suffices, and an endpoint different from S₀ implies larger caps cannot help. Neither implication holds: later swaps/additions can delay `k_hit`, and a path can score S₀ without ending there. The pilot already demonstrates interrupted swap phases: `results/FAC-PK/pilot/pk_pilot01/t4.jsonl:1` records 58 leading swaps, another 10 swaps after deletion, and excess 51. Also, `DESIGN.md:57–58` describes individual finite-n outcomes as contradicting asymptotic probability statements.  
+   **Fix:** Base cap conclusions exclusively on observed `k_hit` and cap comparisons; distinguish scoring, arrival, and certified endpoint. Describe finite-n exceptions as diagnostic evidence requiring investigation, not theorem contradictions.
+
+2. **MAJOR — The S5 partition validation evidence is misstated, and validation failures do not stop execution.**  
+   **Evidence:** `W2-SIM/PK/DESIGN.md:73–75` claims three failures, confined to B=14, with agreement at B=16. The saved `results/FAC-PK/pilot/pk_pilot01/validate_s5_partition.jsonl:28` reports **22/27**, with failures at lines 11, 17, 23, 26 **and 27**; line 27 is `(p=3001,B=16)`. The current shortcut differs from the pilot’s frozen script. My direct checks confirm the revised shortcut fixes `(77,14)`, `(333,14)` and `(1001,14)`, but that does not establish the complete revised validation. Both validators merely print disagreement summaries and exit successfully (`scripts/validate_general.py:48–58`; `scripts/validate_s5_partition.py:21–28`). Production task tables contain no validation prerequisites.  
+   **Fix:** Correct the historical account, save a complete validation of the revised frozen scripts, and make any disagreement return nonzero. Require successful validation before releasing the production arrays.
+
+3. **MAJOR — Safety-limit termination is reported as an uncapped path, with an extra move in its diagnostics.**  
+   **Evidence:** `W2-FAC-PK/numerics/fac_core.py:234–243` records the proposed move before testing `len(steps) > max_moves`. At the limit, that move is recorded but never executed. A small check with `max_moves=0` returned `moves=0` while recording `swN>T`. Both general drivers count these proposed moves (`r3_iid.py:71–84`; `s5_exact.py:62–71`). `summarize.py:60–78` includes limited runs in endpoint, cap, and m* statistics; listing them afterward does not remove the contamination. R1 has a separate 10⁷-move limit with no recorded termination flag (`pk_core.py:253–261`; `r1_cs.py:39–49`).  
+   **Fix:** Record executed moves separately from scan proposals, expose certified/limited termination in every driver, and treat limited paths as censored. Do not report their terminal centre as an uncapped endpoint or an unresolved cap miss as definitive.
+
+4. **MAJOR — Numerical validation does not protect the large-K conclusions against silent numerical termination.**  
+   **Evidence:** `fac_core.py:137–171` explicitly forms inverses and evaluates cancellation-sensitive Schur expressions without finite-value/positivity checks. `best_move`, at lines 183–206, can interpret unusable score arrays as “no improvement.” Validation covers only K≤50 (`validate_general.py:17`), checks direct scores only at visited centres (`:42`), and neither enforces an error threshold nor explicitly rejects nonfinite discrepancies (`:48`). Production reaches K=2000. This is a validation gap, not evidence that the formulas are algebraically wrong.  
+   **Fix:** Fail explicitly on nonfinite scores and invalid Schur/log arguments. Add representative large-K scan checks against direct scoring for selected neighbours, including the winner and close competitors. Record score discrepancies and winner margins; independently verify every exceptional endpoint.
+
+5. **MAJOR — Summary ingestion can silently retain conflicting reruns and pool incompatible implementations.**  
+   **Evidence:** `summarize.py:45–52` retains the first record for `(cell,rep,seed)` without checking completeness, certification, module hashes, or agreement with later records. Cell grouping at `:34–35` ignores code provenance. Consequently, a limited first attempt can suppress a successful retry, or outputs from different implementations can enter one cell. Missing tasks are accepted without reconciliation against the planned ten replicates.  
+   **Fix:** Reconcile records against the frozen task manifest; validate expected replicate/seed identities and provenance. Collapse identical duplicates, reject conflicting duplicates, and select successful retries only through an explicit recorded rule. Report missing, failed and censored units separately.
+
+6. **MINOR — Several promised diagnostics are absent or misleadingly labelled.**  
+   **Evidence:** R1 does not record scan ties, arrival, or limit status (`r1_cs.py:39–49`), although the common plan promises them; its callback could observe candidate ties but currently records only first-deletion information (`:28–31`; `pk_core.py:223–228`). `summarize.py:69–70,76–77` reports numbers of runs containing swaps/additions/ties, rather than the event counts promised in `DESIGN.md:80–84`. The promised log–log slopes are not implemented. `med_rng` silently excludes never-hit excesses (`summarize.py:25–31,75`), so the displayed excess distribution has an unstated conditional denominator.  
+   **Fix:** Add the missing fields and slopes, distinguish event counts from run counts, and display the number of finite `k_hit` observations alongside excess summaries.
+
+Checks that passed: the generators match the stated CS/S5 covariances, truths, standardisation, σ=1 and K definitions. The Schur formulas use the full Gram matrix and do not require exact-Gram data. All **1,292 dataset task seeds**, including pilots, were distinct. The cap comparison has **no off-by-one error**: both reference and production loops scan before checking the move cap; a small boundary test confirmed `k_hit ≤ a`.
+
+**VERDICT: GO-WITH-FIXES**

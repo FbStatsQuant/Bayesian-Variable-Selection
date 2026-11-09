@@ -1,0 +1,198 @@
+{
+  "scope": "falsification only; no empirical theorem probability claim",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "gaussian_paths": 480,
+  "deterministic_configurations": [
+    {
+      "case": "deterministic-0-c1.5-eps0.0",
+      "history_nodes": 29
+    },
+    {
+      "case": "deterministic-0-c1.5-eps0.01",
+      "history_nodes": 29
+    },
+    {
+      "case": "deterministic-0-c1.5-eps0.5",
+      "history_nodes": 29
+    },
+    {
+      "case": "deterministic-0-c1.5-eps1.0",
+      "history_nodes": 229
+    },
+    {
+      "case": "deterministic-0-c3.0-eps0.0",
+      "history_nodes": 29
+    },
+    {
+      "case": "deterministic-0-c3.0-eps0.01",
+      "history_nodes": 29
+    },
+    {
+      "case": "deterministic-0-c3.0-eps0.5",
+      "history_nodes": 29
+    },
+    {
+      "case": "deterministic-0-c3.0-eps1.0",
+      "history_nodes": 249
+    },
+    {
+      "case": "deterministic-1-c1.5-eps0.0",
+      "history_nodes": 8
+    },
+    {
+      "case": "deterministic-1-c1.5-eps0.01",
+      "history_nodes": 8
+    },
+    {
+      "case": "deterministic-1-c1.5-eps0.5",
+      "history_nodes": 214
+    },
+    {
+      "case": "deterministic-1-c1.5-eps1.0",
+      "history_nodes": 905
+    },
+    {
+      "case": "deterministic-1-c3.0-eps0.0",
+      "history_nodes": 8
+    },
+    {
+      "case": "deterministic-1-c3.0-eps0.01",
+      "history_nodes": 15
+    },
+    {
+      "case": "deterministic-1-c3.0-eps0.5",
+      "history_nodes": 220
+    },
+    {
+      "case": "deterministic-1-c3.0-eps1.0",
+      "history_nodes": 817
+    },
+    {
+      "case": "deterministic-2-c1.5-eps0.0",
+      "history_nodes": 4
+    },
+    {
+      "case": "deterministic-2-c1.5-eps0.01",
+      "history_nodes": 7
+    },
+    {
+      "case": "deterministic-2-c1.5-eps0.5",
+      "history_nodes": 7
+    },
+    {
+      "case": "deterministic-2-c1.5-eps1.0",
+      "history_nodes": 7
+    },
+    {
+      "case": "deterministic-2-c3.0-eps0.0",
+      "history_nodes": 4
+    },
+    {
+      "case": "deterministic-2-c3.0-eps0.01",
+      "history_nodes": 7
+    },
+    {
+      "case": "deterministic-2-c3.0-eps0.5",
+      "history_nodes": 7
+    },
+    {
+      "case": "deterministic-2-c3.0-eps1.0",
+      "history_nodes": 7
+    },
+    {
+      "case": "deterministic-3-c1.5-eps0.0",
+      "history_nodes": 3
+    },
+    {
+      "case": "deterministic-3-c1.5-eps0.01",
+      "history_nodes": 3
+    },
+    {
+      "case": "deterministic-3-c1.5-eps0.5",
+      "history_nodes": 3
+    },
+    {
+      "case": "deterministic-3-c1.5-eps1.0",
+      "history_nodes": 5
+    },
+    {
+      "case": "deterministic-3-c3.0-eps0.0",
+      "history_nodes": 3
+    },
+    {
+      "case": "deterministic-3-c3.0-eps0.01",
+      "history_nodes": 3
+    },
+    {
+      "case": "deterministic-3-c3.0-eps0.5",
+      "history_nodes": 3
+    },
+    {
+      "case": "deterministic-3-c3.0-eps1.0",
+      "history_nodes": 5
+    },
+    {
+      "case": "deterministic-4-c1.5-eps0.0",
+      "history_nodes": 9
+    },
+    {
+      "case": "deterministic-4-c1.5-eps0.01",
+      "history_nodes": 9
+    },
+    {
+      "case": "deterministic-4-c1.5-eps0.5",
+      "history_nodes": 2559
+    },
+    {
+      "case": "deterministic-4-c1.5-eps1.0",
+      "history_nodes": 34340
+    },
+    {
+      "case": "deterministic-4-c3.0-eps0.0",
+      "history_nodes": 9
+    },
+    {
+      "case": "deterministic-4-c3.0-eps0.01",
+      "history_nodes": 9
+    },
+    {
+      "case": "deterministic-4-c3.0-eps0.5",
+      "history_nodes": 2667
+    },
+    {
+      "case": "deterministic-4-c3.0-eps1.0",
+      "history_nodes": 28268
+    }
+  ],
+  "checks": {
+    "steps": 147555,
+    "midpoint_checks": 95099,
+    "jump_checks": 65747,
+    "failures": [],
+    "max_midpoint_residual": 0.0,
+    "max_center_bound_residual": 1.1102230246251565e-16,
+    "max_width_bound_residual": 0.0,
+    "actual_center_outside_shadow_gap": 4350
+  }
+}

@@ -1,0 +1,7 @@
+500 1000000000000 1 original fields identical: True | r_bulk 0.0438 r_mid 0.1621 r_end 0.1903 I30/10/5 2/0/1
+500 10000 3 original fields identical: True | r_bulk 0.0406 r_mid 0.1377 r_end 0.2991 I30/10/5 2/2/1
+2000 1000000 2 original fields identical: True | r_bulk 0.0497 r_mid 0.1370 r_end 0.1681 I30/10/5 0/0/-1
+1000 100000000000000000000 5 original fields identical: True | r_bulk 0.0498 r_mid 0.1162 r_end 0.1461 I30/10/5 0/0/-1
+600 1000000000000 1 original fields identical: True | r_bulk 0.0565 r_mid 0.1236 r_end 0.1410 I30/10/5 0/0/-1
+1200 100000000 4 original fields identical: True | r_bulk 0.0419 r_mid 0.1577 r_end 0.1613 I30/10/5 -2/0/1
+ALL IDENTICAL: True cases: 6

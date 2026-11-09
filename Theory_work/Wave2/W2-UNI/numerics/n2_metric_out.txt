@@ -1,0 +1,83 @@
+== cluster2d(m=11,jit=0.45,cl<=3) [Sigma-branch] p=235 spec=[0.163,8.592] diag=[0.36,1.96] K=1.174 a=1.000 d0=2 C0=4.555; zero-dist pairs=300, 0<dist<1 pairs=884; envelope holds: True
+   constants: t1=0.0005142 K1=12.3 t2=1.213e-17 K2=17.2 t'=0.0005142 B=105 L0=7.064e+12
+   CT_M  (Psi, alpha=0.163, t*=0.0005142): max |inv_ij|/((2/alpha)e^(-t* d)) over 12 principal submatrices = 0.424
+   CT_M Schur step: max (row or column sum of |E|)/S(t) over t in (.05,.2,.5,.8)*a and 15 centres j = 0.133
+   CD_M  max |Cov(j,k|U)|/(K2 e^(-t2 d)) = 0.112;  conditional spectra in [0.163,3.565] vs [c,C]=[0.163,8.592]
+   RB_M  max |beta_v|/(B e^(-t' d)) = 0.00958; max ||beta||_1 = 1.563 (L0 = 7.064e+12); min (B^-1)_ll = 0.528 vs 1/C = 0.116 (a value < 1 shows the unit-diagonal shortcut would be wrong)
+   LOCL  chain violations (||D||_1 > (1+||Psi_UU^-1 Psi_UV||_11)||beta_TV||_1, or VarD > C eps^2) = 0; ||Psi_UU^-1 Psi_UV||_11 != max_w ||beta_U(w)||_1 or > L0: 0
+     r=   0: max||beta_T-beta_U||_1=1.403e+00  max ratio to eps(r)=2.81e-26 (eps=4.99e+25)  id-resid=2.4e-15  var-id resid=8.8e-16  max VarD/kappa(r)=4.63e-55
+     r= 0.3: max||beta_T-beta_U||_1=1.403e+00  max ratio to eps(r)=2.81e-26 (eps=4.99e+25)  id-resid=2.4e-15  var-id resid=8.8e-16  max VarD/kappa(r)=3.66e-55
+     r= 0.7: max||beta_T-beta_U||_1=1.403e+00  max ratio to eps(r)=2.81e-26 (eps=4.99e+25)  id-resid=2.7e-15  var-id resid=8.8e-16  max VarD/kappa(r)=3.12e-55
+     r=   1: max||beta_T-beta_U||_1=1.192e+00  max ratio to eps(r)=2.39e-26 (eps=4.99e+25)  id-resid=2.4e-15  var-id resid=8.8e-16  max VarD/kappa(r)=1.44e-55
+     r= 1.5: max||beta_T-beta_U||_1=7.755e-01  max ratio to eps(r)=1.55e-26 (eps=4.99e+25)  id-resid=2.9e-15  var-id resid=1.0e-15  max VarD/kappa(r)=6.83e-56
+     r=   2: max||beta_T-beta_U||_1=4.804e-01  max ratio to eps(r)=9.63e-27 (eps=4.99e+25)  id-resid=2.0e-15  var-id resid=8.4e-16  max VarD/kappa(r)=1.15e-56
+     r=   3: max||beta_T-beta_U||_1=1.198e-01  max ratio to eps(r)=2.40e-27 (eps=4.99e+25)  id-resid=2.0e-15  var-id resid=1.1e-15  max VarD/kappa(r)=2.38e-57
+     r=   5: max||beta_T-beta_U||_1=5.114e-03  max ratio to eps(r)=1.03e-28 (eps=4.99e+25)  id-resid=2.2e-15  var-id resid=1.1e-15  max VarD/kappa(r)=4.06e-60
+     r=   8: max||beta_T-beta_U||_1=1.177e-04  max ratio to eps(r)=2.36e-30 (eps=4.99e+25)  id-resid=2.0e-15  var-id resid=1.2e-15  max VarD/kappa(r)=1.56e-63
+== cluster2d(m=11,jit=0.45,cl<=3) [Theta-branch] p=235 spec=[0.112,2.249] diag=[0.13,1.73] K=0.802 a=1.000 d0=2 C0=4.555; zero-dist pairs=300, 0<dist<1 pairs=884; envelope holds: True
+   constants: t1=1 K1=0.802 t2=0.002048 K2=4.5 t'=7.969e-15 B=40.3 L0=7.251e+44
+   CT_M  (Theta, alpha=0.445, t*=0.002048): max |inv_ij|/((2/alpha)e^(-t* d)) over 12 principal submatrices = 0.384
+   CT_M Schur step: max (row or column sum of |E|)/S(t) over t in (.05,.2,.5,.8)*a and 15 centres j = 0.050
+   CD_M  max |Cov(j,k|U)|/(K2 e^(-t2 d)) = 0.376;  conditional spectra in [0.114,1.830] vs [c,C]=[0.112,2.249]
+   RB_M  max |beta_v|/(B e^(-t' d)) = 0.00806; max ||beta||_1 = 1.275 (L0 = 7.251e+44); min (B^-1)_ll = 0.712 vs 1/C = 0.445 (a value < 1 shows the unit-diagonal shortcut would be wrong)
+   LOCL  chain violations (||D||_1 > (1+||Psi_UU^-1 Psi_UV||_11)||beta_TV||_1, or VarD > C eps^2) = 0; ||Psi_UU^-1 Psi_UV||_11 != max_w ||beta_U(w)||_1 or > L0: 0
+     r=   0: max||beta_T-beta_U||_1=1.174e+00  max ratio to eps(r)=2.23e-90 (eps=5.26e+89)  id-resid=2.8e-16  var-id resid=2.2e-16  max VarD/kappa(r)=3.44e-12
+     r= 0.3: max||beta_T-beta_U||_1=1.124e+00  max ratio to eps(r)=2.14e-90 (eps=5.26e+89)  id-resid=2.8e-16  var-id resid=2.2e-16  max VarD/kappa(r)=3.44e-12
+     r= 0.7: max||beta_T-beta_U||_1=1.117e+00  max ratio to eps(r)=2.12e-90 (eps=5.26e+89)  id-resid=2.8e-16  var-id resid=1.0e-16  max VarD/kappa(r)=3.44e-12
+     r=   1: max||beta_T-beta_U||_1=1.082e+00  max ratio to eps(r)=2.06e-90 (eps=5.26e+89)  id-resid=2.8e-16  var-id resid=9.9e-17  max VarD/kappa(r)=1.71e-12
+     r= 1.5: max||beta_T-beta_U||_1=9.283e-01  max ratio to eps(r)=1.77e-90 (eps=5.26e+89)  id-resid=3.3e-16  var-id resid=9.7e-17  max VarD/kappa(r)=1.31e-12
+     r=   2: max||beta_T-beta_U||_1=6.832e-01  max ratio to eps(r)=1.30e-90 (eps=5.26e+89)  id-resid=3.3e-16  var-id resid=1.0e-16  max VarD/kappa(r)=2.88e-13
+     r=   3: max||beta_T-beta_U||_1=2.008e-01  max ratio to eps(r)=3.82e-91 (eps=5.26e+89)  id-resid=3.3e-16  var-id resid=1.9e-16  max VarD/kappa(r)=4.56e-14
+     r=   5: max||beta_T-beta_U||_1=2.670e-02  max ratio to eps(r)=5.08e-92 (eps=5.26e+89)  id-resid=3.3e-16  var-id resid=1.1e-16  max VarD/kappa(r)=9.81e-16
+     r=   8: max||beta_T-beta_U||_1=2.402e-03  max ratio to eps(r)=4.57e-93 (eps=5.26e+89)  id-resid=4.7e-16  var-id resid=1.4e-16  max VarD/kappa(r)=7.00e-18
+== line_gaps(p=260,P0=0.3,gap~Exp(0.6)) [Sigma-branch] p=260 spec=[0.183,7.853] diag=[0.36,1.96] K=0.979 a=0.667 d0=1 C0=7.610; zero-dist pairs=234, 0<dist<1 pairs=1226; envelope holds: True
+   constants: t1=0.0007086 K1=10.9 t2=1.364e-13 K2=15.7 t'=0.0007086 B=85.6 L0=1.299e+09
+   CT_M  (Psi, alpha=0.183, t*=0.0007086): max |inv_ij|/((2/alpha)e^(-t* d)) over 12 principal submatrices = 0.420
+   CT_M Schur step: max (row or column sum of |E|)/S(t) over t in (.05,.2,.5,.8)*a and 15 centres j = 0.083
+   CD_M  max |Cov(j,k|U)|/(K2 e^(-t2 d)) = 0.124;  conditional spectra in [0.183,5.844] vs [c,C]=[0.183,7.853]
+   RB_M  max |beta_v|/(B e^(-t' d)) = 0.00873; max ||beta||_1 = 1.408 (L0 = 1.299e+09); min (B^-1)_ll = 0.528 vs 1/C = 0.127 (a value < 1 shows the unit-diagonal shortcut would be wrong)
+   LOCL  chain violations (||D||_1 > (1+||Psi_UU^-1 Psi_UV||_11)||beta_TV||_1, or VarD > C eps^2) = 0; ||Psi_UU^-1 Psi_UV||_11 != max_w ||beta_U(w)||_1 or > L0: 0
+     r=   0: max||beta_T-beta_U||_1=1.414e+00  max ratio to eps(r)=8.37e-19 (eps=1.69e+18)  id-resid=1.1e-15  var-id resid=4.4e-16  max VarD/kappa(r)=4.41e-30
+     r= 0.3: max||beta_T-beta_U||_1=1.235e+00  max ratio to eps(r)=7.32e-19 (eps=1.69e+18)  id-resid=1.1e-15  var-id resid=3.9e-16  max VarD/kappa(r)=3.31e-30
+     r= 0.7: max||beta_T-beta_U||_1=9.766e-01  max ratio to eps(r)=5.79e-19 (eps=1.69e+18)  id-resid=1.1e-15  var-id resid=3.7e-16  max VarD/kappa(r)=1.83e-30
+     r=   1: max||beta_T-beta_U||_1=9.766e-01  max ratio to eps(r)=5.79e-19 (eps=1.69e+18)  id-resid=1.2e-15  var-id resid=3.9e-16  max VarD/kappa(r)=1.68e-30
+     r= 1.5: max||beta_T-beta_U||_1=6.435e-01  max ratio to eps(r)=3.81e-19 (eps=1.69e+18)  id-resid=1.2e-15  var-id resid=3.9e-16  max VarD/kappa(r)=7.08e-31
+     r=   2: max||beta_T-beta_U||_1=4.916e-01  max ratio to eps(r)=2.91e-19 (eps=1.69e+18)  id-resid=1.3e-15  var-id resid=3.9e-16  max VarD/kappa(r)=2.85e-31
+     r=   3: max||beta_T-beta_U||_1=9.104e-02  max ratio to eps(r)=5.39e-20 (eps=1.69e+18)  id-resid=1.1e-15  var-id resid=4.1e-16  max VarD/kappa(r)=3.05e-32
+     r=   5: max||beta_T-beta_U||_1=1.741e-02  max ratio to eps(r)=1.03e-20 (eps=1.69e+18)  id-resid=1.0e-15  var-id resid=5.8e-16  max VarD/kappa(r)=4.41e-34
+     r=   8: max||beta_T-beta_U||_1=1.585e-03  max ratio to eps(r)=9.39e-22 (eps=1.69e+18)  id-resid=1.1e-15  var-id resid=5.4e-16  max VarD/kappa(r)=1.70e-35
+== line_gaps(p=260,P0=0.3,gap~Exp(0.6)) [Theta-branch] p=260 spec=[0.121,2.545] diag=[0.15,2.24] K=0.832 a=1.000 d0=1 C0=7.610; zero-dist pairs=234, 0<dist<1 pairs=1226; envelope holds: True
+   constants: t1=1 K1=0.832 t2=0.003913 K2=5.09 t'=4.646e-11 B=42.1 L0=1.484e+23
+   CT_M  (Theta, alpha=0.393, t*=0.003913): max |inv_ij|/((2/alpha)e^(-t* d)) over 12 principal submatrices = 0.440
+   CT_M Schur step: max (row or column sum of |E|)/S(t) over t in (.05,.2,.5,.8)*a and 15 centres j = 0.061
+   CD_M  max |Cov(j,k|U)|/(K2 e^(-t2 d)) = 0.44;  conditional spectra in [0.124,2.540] vs [c,C]=[0.121,2.545]
+   RB_M  max |beta_v|/(B e^(-t' d)) = 0.0113; max ||beta||_1 = 1.210 (L0 = 1.484e+23); min (B^-1)_ll = 0.483 vs 1/C = 0.393 (a value < 1 shows the unit-diagonal shortcut would be wrong)
+   LOCL  chain violations (||D||_1 > (1+||Psi_UU^-1 Psi_UV||_11)||beta_TV||_1, or VarD > C eps^2) = 0; ||Psi_UU^-1 Psi_UV||_11 != max_w ||beta_U(w)||_1 or > L0: 0
+     r=   0: max||beta_T-beta_U||_1=1.312e+00  max ratio to eps(r)=5.95e-47 (eps=2.2e+46)  id-resid=2.5e-16  var-id resid=2.8e-16  max VarD/kappa(r)=7.21e-09
+     r= 0.3: max||beta_T-beta_U||_1=1.164e+00  max ratio to eps(r)=5.28e-47 (eps=2.2e+46)  id-resid=2.8e-16  var-id resid=2.8e-16  max VarD/kappa(r)=7.21e-09
+     r= 0.7: max||beta_T-beta_U||_1=1.051e+00  max ratio to eps(r)=4.77e-47 (eps=2.2e+46)  id-resid=2.8e-16  var-id resid=2.8e-16  max VarD/kappa(r)=4.30e-09
+     r=   1: max||beta_T-beta_U||_1=7.896e-01  max ratio to eps(r)=3.58e-47 (eps=2.2e+46)  id-resid=2.8e-16  var-id resid=2.8e-16  max VarD/kappa(r)=4.30e-09
+     r= 1.5: max||beta_T-beta_U||_1=5.779e-01  max ratio to eps(r)=2.62e-47 (eps=2.2e+46)  id-resid=2.8e-16  var-id resid=2.9e-16  max VarD/kappa(r)=1.20e-09
+     r=   2: max||beta_T-beta_U||_1=3.655e-01  max ratio to eps(r)=1.66e-47 (eps=2.2e+46)  id-resid=3.9e-16  var-id resid=2.9e-16  max VarD/kappa(r)=6.77e-10
+     r=   3: max||beta_T-beta_U||_1=7.522e-02  max ratio to eps(r)=3.41e-48 (eps=2.2e+46)  id-resid=3.3e-16  var-id resid=2.2e-16  max VarD/kappa(r)=1.39e-10
+     r=   5: max||beta_T-beta_U||_1=1.076e-02  max ratio to eps(r)=4.88e-49 (eps=2.2e+46)  id-resid=3.1e-16  var-id resid=2.2e-16  max VarD/kappa(r)=8.94e-13
+     r=   8: max||beta_T-beta_U||_1=3.531e-04  max ratio to eps(r)=1.60e-50 (eps=2.2e+46)  id-resid=4.9e-16  var-id resid=2.2e-16  max VarD/kappa(r)=1.88e-15
+== blocks(p=240,g<=4) [Sigma-branch] p=240 spec=[0.161,4.830] diag=[0.37,1.96] K=1.246 a=1.000 d0=1 C0=4.000; zero-dist pairs=478, 0<dist<1 pairs=0; envelope holds: True
+   constants: t1=0.002035 K1=12.4 t2=8.738e-12 K2=9.66 t'=0.002035 B=60.1 L0=5.828e+07
+   CT_M  (Psi, alpha=0.161, t*=0.002035): max |inv_ij|/((2/alpha)e^(-t* d)) over 12 principal submatrices = 0.434
+   CT_M Schur step: max (row or column sum of |E|)/S(t) over t in (.05,.2,.5,.8)*a and 15 centres j = 0.000
+   CD_M  max |Cov(j,k|U)|/(K2 e^(-t2 d)) = 0.203;  conditional spectra in [0.161,3.810] vs [c,C]=[0.161,4.830]
+   RB_M  max |beta_v|/(B e^(-t' d)) = 0.0152; max ||beta||_1 = 1.871 (L0 = 5.828e+07); min (B^-1)_ll = 0.513 vs 1/C = 0.207 (a value < 1 shows the unit-diagonal shortcut would be wrong)
+   LOCL  chain violations (||D||_1 > (1+||Psi_UU^-1 Psi_UV||_11)||beta_TV||_1, or VarD > C eps^2) = 0; ||Psi_UU^-1 Psi_UV||_11 != max_w ||beta_U(w)||_1 or > L0: 0
+     r=   0: max||beta_T-beta_U||_1=1.665e-16  max ratio to eps(r)=4.90e-32 (eps=3.4e+15)  id-resid=1.1e-16  var-id resid=2.2e-16  max VarD/kappa(r)=1.78e-57
+     r= 0.3: max||beta_T-beta_U||_1=1.665e-16  max ratio to eps(r)=4.90e-32 (eps=3.4e+15)  id-resid=1.1e-16  var-id resid=2.2e-16  max VarD/kappa(r)=1.78e-57
+     r= 0.7: max||beta_T-beta_U||_1=1.665e-16  max ratio to eps(r)=4.90e-32 (eps=3.4e+15)  id-resid=1.1e-16  var-id resid=2.2e-16  max VarD/kappa(r)=1.78e-57
+     r=   1: max||beta_T-beta_U||_1=1.665e-16  max ratio to eps(r)=4.90e-32 (eps=3.4e+15)  id-resid=1.1e-16  var-id resid=2.2e-16  max VarD/kappa(r)=1.78e-57
+     r= 1.5: max||beta_T-beta_U||_1=1.665e-16  max ratio to eps(r)=4.90e-32 (eps=3.4e+15)  id-resid=1.1e-16  var-id resid=2.2e-16  max VarD/kappa(r)=1.78e-57
+     r=   2: max||beta_T-beta_U||_1=1.665e-16  max ratio to eps(r)=4.90e-32 (eps=3.4e+15)  id-resid=1.1e-16  var-id resid=2.2e-16  max VarD/kappa(r)=1.78e-57
+     r=   3: max||beta_T-beta_U||_1=1.665e-16  max ratio to eps(r)=4.90e-32 (eps=3.4e+15)  id-resid=1.1e-16  var-id resid=2.2e-16  max VarD/kappa(r)=1.78e-57
+     r=   5: max||beta_T-beta_U||_1=1.665e-16  max ratio to eps(r)=4.90e-32 (eps=3.4e+15)  id-resid=1.1e-16  var-id resid=2.2e-16  max VarD/kappa(r)=1.78e-57
+     r=   8: max||beta_T-beta_U||_1=1.665e-16  max ratio to eps(r)=4.90e-32 (eps=3.4e+15)  id-resid=1.1e-16  var-id resid=2.2e-16  max VarD/kappa(r)=1.78e-57
+== exhaustive LOCL / variance identity at p=10 (line with zero gaps; non-unit diagonal), every l and every T
+   Sigma: 56320 (l,T,r) triples; zero-dist pairs=8; max identity resid=4.4e-16; max variance-identity resid=5.0e-16; chain violations=0
+   Theta: 56320 (l,T,r) triples; zero-dist pairs=8; max identity resid=1.4e-16; max variance-identity resid=2.4e-16; chain violations=0

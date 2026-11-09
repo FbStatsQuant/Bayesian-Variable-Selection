@@ -1,0 +1,10 @@
+{
+  "partitions": 203,
+  "subset_inclusion_cases": 8323,
+  "contained_cases": 2298,
+  "inclusion_failures": 0,
+  "posterior_truth": 0.7954670621885958,
+  "hpm_controls": 52,
+  "hpm_failures": 0,
+  "qualification": "mathematical enumeration control; production fidelity is source-reviewed separately"
+}

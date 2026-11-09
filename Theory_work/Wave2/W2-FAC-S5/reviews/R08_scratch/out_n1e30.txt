@@ -1,0 +1,3 @@
+{'seed': 0, 'pure': True, 'end_is_S0': True, 'steps': 18, 'del_min': 0.4869620547745934, 'add_minus_best': -0.992962471937467, 'swapnull_minus_best': -0.4992327918593765, 'truthmove_over_n': -0.10503122357488069, 'CCmargin': 0.5976881394315778}
+{'seed': 1, 'pure': True, 'end_is_S0': True, 'steps': 18, 'del_min': 0.4994611783598615, 'add_minus_best': -0.9999603109968518, 'swapnull_minus_best': -0.5005869054084565, 'truthmove_over_n': -0.10503122357488104, 'CCmargin': 0.6518586420459132}
+{'seed': 2, 'pure': True, 'end_is_S0': True, 'steps': 18, 'del_min': 0.4930410876239745, 'add_minus_best': -0.9942196691879719, 'swapnull_minus_best': -0.5014325470259242, 'truthmove_over_n': -0.10503122357488086, 'CCmargin': 0.5806830196399362}

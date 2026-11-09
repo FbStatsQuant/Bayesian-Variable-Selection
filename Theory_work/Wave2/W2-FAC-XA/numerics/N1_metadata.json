@@ -1,0 +1,43 @@
+{
+  "started_utc": "2026-11-09T15:30:00.559665+00:00",
+  "finished_utc": "2026-11-09T15:30:22.135512+00:00",
+  "python": "3.12.4",
+  "numpy": "1.26.4",
+  "scipy": "1.13.1",
+  "source_hashes": {
+    "fac_core.py": "e06d7dc50e132dcf40061b32383385a518ba9482cf6d9efca63ee77af1521f24",
+    "cs_core.py": "14b14cfd277bd2b52f0c16cf1404ebf83c3e05a158078dba5b89567302d3f074",
+    "bvs_core.py": "e8283f5600f203a7f6016d62c55d07fd56bd9bbad4b7af1b9a9c87e05e0cc603"
+  },
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "n": [
+    512,
+    2048
+  ],
+  "p": [
+    16,
+    32,
+    64,
+    128
+  ],
+  "runs": 320,
+  "validation_cases": 16,
+  "dont_write_bytecode": true,
+  "source_hashes_after": {
+    "fac_core.py": "e06d7dc50e132dcf40061b32383385a518ba9482cf6d9efca63ee77af1521f24",
+    "cs_core.py": "14b14cfd277bd2b52f0c16cf1404ebf83c3e05a158078dba5b89567302d3f074",
+    "bvs_core.py": "e8283f5600f203a7f6016d62c55d07fd56bd9bbad4b7af1b9a9c87e05e0cc603"
+  },
+  "source_hashes_unchanged": true
+}

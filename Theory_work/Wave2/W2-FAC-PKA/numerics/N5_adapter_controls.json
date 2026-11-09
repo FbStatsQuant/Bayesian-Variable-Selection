@@ -1,0 +1,330 @@
+[
+  {
+    "n": 24,
+    "p": 20,
+    "rho": 0.3,
+    "seed": 0,
+    "start": 0,
+    "K": 12,
+    "moves": 2,
+    "final": [
+      0,
+      1
+    ],
+    "matched": true
+  },
+  {
+    "n": 24,
+    "p": 20,
+    "rho": 0.3,
+    "seed": 0,
+    "start": 11,
+    "K": 12,
+    "moves": 12,
+    "final": [
+      0,
+      1
+    ],
+    "matched": true
+  },
+  {
+    "n": 24,
+    "p": 20,
+    "rho": 0.3,
+    "seed": 0,
+    "start": 12,
+    "K": 12,
+    "moves": 12,
+    "final": [
+      0,
+      1
+    ],
+    "matched": true
+  },
+  {
+    "n": 24,
+    "p": 20,
+    "rho": 0.3,
+    "seed": 1,
+    "start": 0,
+    "K": 12,
+    "moves": 0,
+    "final": [],
+    "matched": true
+  },
+  {
+    "n": 24,
+    "p": 20,
+    "rho": 0.3,
+    "seed": 1,
+    "start": 11,
+    "K": 12,
+    "moves": 11,
+    "final": [],
+    "matched": true
+  },
+  {
+    "n": 24,
+    "p": 20,
+    "rho": 0.3,
+    "seed": 1,
+    "start": 12,
+    "K": 12,
+    "moves": 14,
+    "final": [],
+    "matched": true
+  },
+  {
+    "n": 24,
+    "p": 20,
+    "rho": 0.3,
+    "seed": 2,
+    "start": 0,
+    "K": 12,
+    "moves": 1,
+    "final": [
+      0
+    ],
+    "matched": true
+  },
+  {
+    "n": 24,
+    "p": 20,
+    "rho": 0.3,
+    "seed": 2,
+    "start": 11,
+    "K": 12,
+    "moves": 12,
+    "final": [
+      0
+    ],
+    "matched": true
+  },
+  {
+    "n": 24,
+    "p": 20,
+    "rho": 0.3,
+    "seed": 2,
+    "start": 12,
+    "K": 12,
+    "moves": 12,
+    "final": [
+      0
+    ],
+    "matched": true
+  },
+  {
+    "n": 24,
+    "p": 20,
+    "rho": 0.3,
+    "seed": 3,
+    "start": 0,
+    "K": 12,
+    "moves": 0,
+    "final": [],
+    "matched": true
+  },
+  {
+    "n": 24,
+    "p": 20,
+    "rho": 0.3,
+    "seed": 3,
+    "start": 11,
+    "K": 12,
+    "moves": 13,
+    "final": [],
+    "matched": true
+  },
+  {
+    "n": 24,
+    "p": 20,
+    "rho": 0.3,
+    "seed": 3,
+    "start": 12,
+    "K": 12,
+    "moves": 12,
+    "final": [],
+    "matched": true
+  },
+  {
+    "n": 40,
+    "p": 39,
+    "rho": 0.7,
+    "seed": 0,
+    "start": 0,
+    "K": 20,
+    "moves": 2,
+    "final": [
+      0,
+      1
+    ],
+    "matched": true
+  },
+  {
+    "n": 40,
+    "p": 39,
+    "rho": 0.7,
+    "seed": 0,
+    "start": 19,
+    "K": 20,
+    "moves": 20,
+    "final": [
+      0,
+      1
+    ],
+    "matched": true
+  },
+  {
+    "n": 40,
+    "p": 39,
+    "rho": 0.7,
+    "seed": 0,
+    "start": 20,
+    "K": 20,
+    "moves": 23,
+    "final": [
+      0,
+      1
+    ],
+    "matched": true
+  },
+  {
+    "n": 40,
+    "p": 39,
+    "rho": 0.7,
+    "seed": 1,
+    "start": 0,
+    "K": 20,
+    "moves": 0,
+    "final": [],
+    "matched": true
+  },
+  {
+    "n": 40,
+    "p": 39,
+    "rho": 0.7,
+    "seed": 1,
+    "start": 19,
+    "K": 20,
+    "moves": 9,
+    "final": [
+      0,
+      2,
+      3,
+      4,
+      11,
+      14,
+      15,
+      16,
+      19,
+      23,
+      26,
+      28,
+      29,
+      34,
+      35,
+      36
+    ],
+    "matched": true
+  },
+  {
+    "n": 40,
+    "p": 39,
+    "rho": 0.7,
+    "seed": 1,
+    "start": 20,
+    "K": 20,
+    "moves": 9,
+    "final": [
+      0,
+      2,
+      3,
+      4,
+      11,
+      14,
+      15,
+      16,
+      19,
+      23,
+      26,
+      28,
+      29,
+      34,
+      35,
+      36
+    ],
+    "matched": true
+  },
+  {
+    "n": 40,
+    "p": 39,
+    "rho": 0.7,
+    "seed": 2,
+    "start": 0,
+    "K": 20,
+    "moves": 1,
+    "final": [
+      0
+    ],
+    "matched": true
+  },
+  {
+    "n": 40,
+    "p": 39,
+    "rho": 0.7,
+    "seed": 2,
+    "start": 19,
+    "K": 20,
+    "moves": 19,
+    "final": [
+      0
+    ],
+    "matched": true
+  },
+  {
+    "n": 40,
+    "p": 39,
+    "rho": 0.7,
+    "seed": 2,
+    "start": 20,
+    "K": 20,
+    "moves": 28,
+    "final": [
+      0
+    ],
+    "matched": true
+  },
+  {
+    "n": 40,
+    "p": 39,
+    "rho": 0.7,
+    "seed": 3,
+    "start": 0,
+    "K": 20,
+    "moves": 0,
+    "final": [],
+    "matched": true
+  },
+  {
+    "n": 40,
+    "p": 39,
+    "rho": 0.7,
+    "seed": 3,
+    "start": 19,
+    "K": 20,
+    "moves": 24,
+    "final": [],
+    "matched": true
+  },
+  {
+    "n": 40,
+    "p": 39,
+    "rho": 0.7,
+    "seed": 3,
+    "start": 20,
+    "K": 20,
+    "moves": 24,
+    "final": [],
+    "matched": true
+  }
+]

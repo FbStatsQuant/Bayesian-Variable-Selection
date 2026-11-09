@@ -1,0 +1,6 @@
+500 1000000 1 5 moves 496 pure True S0 True | all agree: True 
+200 10000 3 5 moves 196 pure True S0 True | all agree: True 
+1000 2000 2 5 moves 996 pure True S0 True | all agree: True 
+400 1000 1 5 moves 396 pure True S0 True | all agree: True 
+300 1000 2 3 moves 296 pure True S0 True | all agree: True 
+ALL AGREE: True cases: 5
