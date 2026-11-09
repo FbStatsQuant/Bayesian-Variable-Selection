@@ -8,8 +8,10 @@ Writes CITECHECK.txt next to this script. Usage: python -I citecheck.py
 """
 import os
 import re
+import subprocess
 import sys
 
+BRANCH = "origin/w1c/ls0-merge"
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 ALIASES = {
@@ -88,18 +90,26 @@ def main():
                 continue  # macro definition
             ref = arg.strip()
             if kind == "path":
-                if not any(ref.startswith(k) for k in ALIASES) and not ref.startswith(("Theory_work/", "Scripts/")):
+                if not any(ref.startswith(k) for k in ALIASES) and not ref.startswith(("Theory_work/", "Scripts/", "BR/")):
                     continue  # bare file names next to an earlier full path
                 path, spec = ref.rstrip("/"), None
             else:
                 mm = re.match(r"^(.*?):([0-9,\- ]+)$", ref)
                 path, spec = (mm.group(1), mm.group(2)) if mm else (ref, None)
-            full = os.path.join(ROOT, expand(path))
             status, note = "OK", ""
-            if not os.path.exists(full):
+            if path.startswith("BR/"):
+                # read-only: the file as committed on branch origin/w1c/ls0-merge
+                r = subprocess.run(["git", "-C", ROOT, "show", BRANCH + ":" + path[3:]], capture_output=True)
+                exists = r.returncode == 0
+                content = r.stdout.decode("utf-8", errors="replace") if exists else ""
+            else:
+                full = os.path.join(ROOT, expand(path))
+                exists = os.path.exists(full)
+                content = open(full, encoding="utf-8", errors="replace").read() if exists and os.path.isfile(full) else ""
+            if not exists:
                 status, note = "MISSING-FILE", expand(path)
             elif spec is not None:
-                lines = open(full, encoding="utf-8", errors="replace").read().split("\n")
+                lines = content.split("\n")
                 rngs = parse_lines(spec)
                 if any(a < 1 or b > len(lines) or a > b for a, b in rngs):
                     status, note = "BAD-LINES", f"file has {len(lines)} lines"
