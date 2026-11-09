@@ -5,7 +5,7 @@ You are a **fresh** council seat: you have not seen this chapter before. Do not 
 round-1 findings were really fixed (report any that were not).
 
 **Object.** `Theory_work/Wave1C/FINAL/consistency.tex` (+ `sections/*.tex`, compiled `consistency.pdf`, 25 pp,
-"draft v3"), committed at COMMIT_PLACEHOLDER. Final product of Theory Waves 1 + 1C for the SMC-BVS paper.
+"draft v3"), committed at d315c1e (brief committed in the next commit). Final product of Theory Waves 1 + 1C for the SMC-BVS paper.
 
 **Sources it must match.** As in `COUNCIL_BRIEF.md` (same folder), plus: `Theory_work/Wave1C/HQ_AUDIT/A1_propF_redteam.md`,
 `A2_propF_GROW.md`, `A3_check_A2.md`; and the engineering branch `origin/w1c/ls0-merge` (head 8a27652; read with
