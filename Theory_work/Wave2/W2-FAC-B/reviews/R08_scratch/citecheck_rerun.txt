@@ -1,0 +1,30 @@
+OK    [STATEMENT.md] 02_method.tex:167-170
+      \textbf{Exact branch} (M \S6.2): if $E=\sum_{k\le K}\binom pk\le(5H_0+4N_0)\,p$ (saturating integer arithmetic), score every | model with $|S|\le K$ in a streaming pass (running best in the strict HPM order; log-sum-exp for $Z$ and PIP numerators); | status \texttt{exact} \src{Docs/Methodology/METHODOLOGY_v3.md:156-160}. ``Because the threshold grows with N₀ ≥ n, every | fixed-p problem is eventually enumerated as n grows.'' v3.1 corrects ``all p ≤ 3,000 at n ≤ 5'' to ``all p at n ≤ 5'' (w2)
+OK    [STATEMENT.md] 04_theory.tex:69-74
+      \par\smallskip\noindent\textbf{Shared definition.}\enspace Exact scope | \par\smallskip\noindent\textbf{D0: data/target.}\enspace \(n\ge3,p\ge1\); nonconstant columns and response, centered and standardized. \(K=\min(p,\lfloor n/2\rfloor)\), \ | \par\smallskip\noindent\textbf{Score.}\enspace \(G_U=X_U^\top X_U,\ z_U=X_U^\top y,\ H_U=(n+1)G_U+I,\ Q_U=y^\top y-nz_U^\top H_U^{-1}z_U,\ \nu=.01+n/2\). \(m(U)=c_n[\det  | \par\smallskip\noindent\textbf{Prior.}\enspace \(w(k)=[2\binom{2p-1}{k}]^{-1}\), \(W_K=\sum_{k\le K}\binom pk w(k)\), \(\varpi(S)=w(|S|)/W_K\).
+OK    [STATEMENT.md] Theory_work/Wave1/W1-GEN/STATEMENT.md:29-30
+      * **G**: fixed raw design X^r (n × p, nonconstant columns), y^r = α1 + X^rβ + ε, ε ~ N_n(0, σ²I), σ² > 0 fixed; | X = CX^rD_x⁻¹ (‖x_j‖² = n − 1), μ := CX^rβ = Xθ*, θ* := D_xβ, S₀ := supp β, s₀ := |S₀| ≥ 1 fixed, p = p_n ≤ n^A
+OK    [STATEMENT.md] 02_method.tex:187-211
+      \item \textbf{Clustering:} complete linkage on the distance $1-|r_{jl}|$ computed from $X$; ties between candidate merges broken | lexicographically on the sorted original-index lists. | \item \textbf{Cut:} top-down from the root; any node with more than $B$ members is split into its two children (visited smallest | index first) until every retained cluster has at most $B$ members.
+OK    [STATEMENT.md] 02_method.tex:463-470
+      \item \textbf{Local search:} from the current best scored model (the centre), scan every feasible flip and swap (additions beyond $K$ | excluded) with the centre frozen during the scan; move to the best strict improvement (lexicographic ties); at most $\ell$ moves, | then one further scan; stop earlier when a scan finds no improvement. Every evaluated model updates the global best. If the | last scan still improves, set \texttt{local\_limit} (no restart). \texttt{local\_certified} only when the returned model is a scanned
+OK    [STATEMENT.md] 02_method.tex:483-483
+      neighbour is chosen by $F$, exact ties by plain lexicographic order (not size first), and a move needs a strict $F$ increase
+OK    [STATEMENT.md] 04_theory.tex:84-84
+      \par\noindent Shared implementation premises (named once, used by both cards): \textbf{EX-A} exact scores and arithmetic; \textbf{EX-S} fresh independent ideal uniforms (
+OK    [STATEMENT.md] s6_delivery.tex:37-44
+      \texttt{allocation\$mem\_gb} $\ge\mathrm{mem}_n/2^{30}$, \texttt{allocation\$hours} $\ge\mathrm{time}_n/3600$, where $P_0,P_1,\bar{P}_t$ are Corollary R's preflight bound | \[ | \begin{aligned} | \hat s_K&\le(\tau U_K+\tau_0)/200,\\
+OK    [lemmas\L5_assembly.md] 04_theory.tex:492-492
+      \par\noindent\rid{TH05.0} (M5(0) Composition at every n, any X): \status{T38-(0) "PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))"; N200 "PROVED (elementary, eve
+OK    [lemmas\L5_assembly.md] 04_theory.tex:84-84
+      \par\noindent Shared implementation premises (named once, used by both cards): \textbf{EX-A} exact scores and arithmetic; \textbf{EX-S} fresh independent ideal uniforms (
+OK    [lemmas\L5_assembly.md] Theory_work/Wave1/W1-GEN/STATEMENT.md:169-169
+      * Operational closure [OP] 𝒪̄ ∩ {S₀ ∉ 𝒮̄⁺} ⊆ {LS0 from S̃₀ does not score S₀}: PROVED (by this seat, unchecked)
+OK    [lemmas\L5_assembly.md] Theory_work/Wave1C/C-GROW/lemmas/L4_assembly.md:12-14
+      there "PROVED (by this seat, unchecked)" from the named premises, inside Theorem GEN "PROVED-CHECKED"). Its argument | uses only GUARD-W, OP-LS0, e4 and the fact that LS0 is deterministic given the data; it does not depend on the cap | value, so it holds verbatim for LS0 with the cap of MR1.
+OK    [lemmas\L5_assembly.md] Theory_work/Wave1C/HQ_AUDIT/A2_propF_GROW.md:55-67
+      **3. Replace D′'s statistical inputs by GROW's data events.** Define 𝒦_n to mean that deterministic LS0 with cap a_n scores S₀, whether or not a run delivers. Put E_n = S |  | P(𝒦_nᶜ) ≤ P(Sand_nᶜ)+P(NA(𝓛)ᶜ)+P(TL(𝓛)ᶜ) → 0. | 
+OK    [lemmas\L5_assembly.md] A2_propF_GROW.md:37-47
+      ## Proof |  | **1. Lemma S extends.** For fixed GROW designs, raw columns are finite and nonconstant by G, and standardisation gives centred columns with squared norm n−1 (`GROW/STATEM | 
+
+TOTAL ok=14 miss=0

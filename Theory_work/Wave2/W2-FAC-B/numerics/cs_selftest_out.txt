@@ -1,0 +1,5 @@
+0 moves cs/gen 57 57 final equal True final=S0 True
+1 moves cs/gen 77 77 final equal True final=S0 True
+2 moves cs/gen 47 47 final equal True final=S0 True
+3 moves cs/gen 60 60 final equal True final=S0 False
+max |F_cs - F_general| = 5.047768354415894e-07  paths agree: 4 /4

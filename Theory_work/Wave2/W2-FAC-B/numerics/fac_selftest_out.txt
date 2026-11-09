@@ -1,0 +1,2 @@
+(a) max |F_direct - F_exactgram| = 4.263256414560601e-14
+(b) max |scan - direct| over all neighbours of 30 random T = 1.3642420526593924e-12

@@ -1,0 +1,16 @@
+{
+  "counts": {
+    "data_sets": 24,
+    "models": 1728,
+    "gains": 28224,
+    "paths": 48,
+    "masked_starts": 24,
+    "interval_configurations": 3900
+  },
+  "maximum_absolute_errors": {
+    "score": 1.7881393432617188e-07,
+    "gain": 6.146728992462158e-08,
+    "centre": 5.53290746552193e-12
+  },
+  "result": "PASS"
+}
