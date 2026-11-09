@@ -53,10 +53,13 @@ static List event_to_list(const EventCtx& e, int mech) {
 static std::string hex64(uint64_t x) { char b[17]; snprintf(b, sizeof b, "%016llx", (unsigned long long)x); return b; }
 static int phase_index(const std::string& s) { for (int a = 0; a < N_PHASE; ++a) if (s == phase_name(a)) return a; stop("unknown phase %s", s); }
 static int mech_index(const std::string& s) { for (int a = 0; a < N_MECH; ++a) if (s == mech_name(a)) return a; stop("unknown mechanism %s", s); }
-static NumericMatrix counter_matrix(const uint64_t c[N_PHASE][N_MECH]) {
-  NumericMatrix M(N_PHASE, N_MECH);
-  CharacterVector rn(N_PHASE), cn(N_MECH);
-  for (int a = 0; a < N_PHASE; ++a) { rn[a] = phase_name(a); for (int b = 0; b < N_MECH; ++b) M(a, b) = (double)c[a][b]; }
+// Score counters by phase x mechanism. The ls0 row (PH_LS0, last phase) is serialised only when LS0 is enabled
+// (final run with ls0 on), so ledgers of v3 runs and of calibration keep the v3 layout (LS0 never runs in calibration).
+static NumericMatrix counter_matrix(const uint64_t c[N_PHASE][N_MECH], bool include_ls0 = false) {
+  int nph = include_ls0 ? N_PHASE : PH_LS0;
+  NumericMatrix M(nph, N_MECH);
+  CharacterVector rn(nph), cn(N_MECH);
+  for (int a = 0; a < nph; ++a) { rn[a] = phase_name(a); for (int b = 0; b < N_MECH; ++b) M(a, b) = (double)c[a][b]; }
   for (int b = 0; b < N_MECH; ++b) cn[b] = mech_name(b);
   M.attr("dimnames") = List::create(rn, cn);
   return M;
@@ -357,13 +360,13 @@ static List store_to_list(const TopStore& s, const Data& D) {
   for (auto& e : s.s) { M[i] = to_orig(D, e.S); v[i] = e.v; ++i; }
   return List::create(_["models"] = M, _["value"] = v, _["capacity"] = (double)s.cap, _["full"] = s.s.size() >= s.cap);
 }
-static List ledger_to_list(const Ledger& L, const Data& D) {
+static List ledger_to_list(const Ledger& L, const Data& D, bool include_ls0 = false) {
   List hpm = L.has_hpm ? List::create(_["model"] = to_orig(D, L.hpmS), _["F"] = L.hpmF, _["log_m"] = L.hpm_logm,
                                       _["provenance"] = event_to_list(L.hpm_ev, L.hpm_mech)) : List();
   List out = List::create(_["hpm"] = hpm, _["top"] = store_to_list(L.top, D), _["leaders_gamma0"] = store_to_list(L.lead0, D),
                           _["leaders_gamma1"] = store_to_list(L.lead1, D),
                           _["island_best"] = NumericVector(L.island_best.begin() + 1, L.island_best.end()),
-                          _["logical"] = counter_matrix(L.logical), _["fresh"] = counter_matrix(L.fresh));
+                          _["logical"] = counter_matrix(L.logical, include_ls0), _["fresh"] = counter_matrix(L.fresh, include_ls0));
   return out;
 }
 static void ingest_tables(Ledger& led, const Holder& h) {
@@ -388,11 +391,17 @@ static void ingest_tables(Ledger& led, const Holder& h) {
 List cpp_final_run(SEXP setup, NumericVector grid, List ro, double seed, SEXP inherited, SEXP runtime) {
   HPtr h = get_holder(setup); const Data& D = *h->D; const Start& st = *h->st;
   if (!h->has_graph) stop("setup required");
-  struct RunOpts { int N, L, Hm, islands, tier, ell; double cache_capacity; };
+  struct RunOpts { int N, L, Hm, islands, tier, ell; double cache_capacity; bool ls0, ls0_tie_dp, ls0_cap_plus_mode; int ls0_ell; };
   RunOpts o;
   o.N = as<int>(ro["N"]); o.L = as<int>(ro["L"]); o.Hm = as<int>(ro["measured_rounds"]); o.islands = as<int>(ro["islands"]);
   o.tier = as<int>(ro["tier"]); o.ell = as<int>(ro["ell"]);
   o.cache_capacity = as<double>(ro["cache_capacity"]);
+  // v3.1 LS0 (METHOD_v3.1_FINAL #8). Absent fields = v3 behaviour (no LS0): the switch lives in v3_run_settings.
+  o.ls0 = ro.containsElementNamed("ls0") && as<bool>(ro["ls0"]);
+  o.ls0_tie_dp = !ro.containsElementNamed("ls0_tie_dp") || as<bool>(ro["ls0_tie_dp"]);
+  o.ls0_ell = ro.containsElementNamed("ls0_ell") ? as<int>(ro["ls0_ell"]) : o.ell;
+  // C-GROW MR1: LS0 move cap = ell_n + |S~0| (default); ls0_cap = "ell_n" keeps ell_n. The final local search keeps ell_n.
+  o.ls0_cap_plus_mode = !ro.containsElementNamed("ls0_cap") || as<std::string>(ro["ls0_cap"]) != "ell_n";
   std::vector<double> g(grid.begin(), grid.end());
   auto t_all = Clock::now();
   Ledger led(&D, o.islands);
@@ -402,8 +411,8 @@ List cpp_final_run(SEXP setup, NumericVector grid, List ro, double seed, SEXP in
   E.cache = &cache; E.led = &led; E.guard = runtime_ptr(runtime);
   List islands(o.islands);
   std::string status = "completed", message;
-  List local, hpm_before;
-  double sec_local = 0;
+  List local, hpm_before, ls0, hpm_before_ls0, smode;
+  double sec_local = 0, sec_ls0 = 0;
   std::vector<IslandResult> res;
   try {
     // inherited state (frozen calibration): offered to the stores and the HPM with provenance "inherited"
@@ -448,6 +457,28 @@ List cpp_final_run(SEXP setup, NumericVector grid, List ro, double seed, SEXP in
     sec_local = secs_since(t0);
     local = local_to_list(A, D);
     if (E.guard && E.guard->check(sec_local, "local_search", local_event(o.tier, -1))) status = "resource_limit";
+    // LS0 (v3.1 #8): after the final local search, one local search with the same rules (ell, tier) from the start
+    // mode S~0 = argmax pi_0 (exact block DP; e4 tie DP on truncation), centre emitted, on the same ledger and cache,
+    // so every model it scores joins the all-scored set and the stores. Reads no uniforms. Not started on a stopped
+    // run. GUARD-W (#6): an LS0 stop (guard below, or a NumericalFailure inside it) leaves status != completed, i.e.
+    // no output; a completed LS0 that ends on its move cap is not a stop.
+    if (o.ls0 && status == "completed") {
+      hpm_before_ls0 = List::create(_["model"] = to_orig(D, led.hpmS), _["F"] = led.hpmF,
+                                    _["provenance"] = event_to_list(led.hpm_ev, led.hpm_mech));
+      auto t1 = Clock::now();
+      ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+      smode = List::create(_["model"] = to_orig(D, m.S), _["log_gamma0"] = m.lg0, _["log_pi0"] = m.lg0 - st.logZbar0,
+                           _["ties"] = (double)m.ties, _["truncated"] = m.truncated, _["tie_dp_used"] = m.tie_dp_used,
+                           _["tie_rule"] = o.ls0_tie_dp ? "enumeration (cap 1e6), e4 tie-aware DP on truncation" : "enumeration (cap 1e6), v3 rule");
+      long long cap_ll = (long long)o.ls0_ell + (o.ls0_cap_plus_mode ? (long long)m.S.size() : 0LL);  // checked (R05 #2)
+      if (o.ls0_ell < 0 || cap_ll > (long long)std::numeric_limits<int>::max()) stop("LS0 move cap out of range");
+      int ls0_cap = (int)cap_ll;
+      LocalArchive A0 = E.local_search(m.S, ls0_cap, o.tier, true, -1, PH_LS0);
+      sec_ls0 = secs_since(t1);
+      ls0 = local_to_list(A0, D);
+      ls0["move_cap"] = ls0_cap; ls0["move_cap_rule"] = o.ls0_cap_plus_mode ? "ell_n + |start mode|" : "ell_n";
+      if (E.guard && E.guard->check(sec_ls0, "ls0", local_event(o.tier, -1, PH_LS0))) status = "resource_limit";
+    }
     }
   } catch (NumericalFailure& e) {
     status = "numerical_failure"; message = e.what();
@@ -476,12 +507,13 @@ List cpp_final_run(SEXP setup, NumericVector grid, List ro, double seed, SEXP in
     }
   }
   List out = List::create(_["status"] = status, _["message"] = message, _["islands"] = islands, _["local_search"] = local,
-                          _["hpm_before_local"] = hpm_before, _["ledger"] = ledger_to_list(led, D),
+                          _["hpm_before_local"] = hpm_before, _["ledger"] = ledger_to_list(led, D, o.ls0),
                           _["cache"] = NumericVector::create(_["capacity"] = (double)cache.capacity, _["hits"] = (double)cache.hits,
                                                              _["misses"] = (double)cache.misses, _["inserts"] = (double)cache.inserts,
                                                              _["clears"] = (double)cache.clears, _["entries_at_end"] = (double)cache.count),
                           _["seconds_local"] = sec_local, _["seconds_total"] = secs_since(t_all),
                           _["log_m0"] = D.logm0, _["log_Zbar0"] = st.logZbar0);
+  if (o.ls0) { out["ls0"] = ls0; out["hpm_before_ls0"] = hpm_before_ls0; out["start_mode"] = smode; out["seconds_ls0"] = sec_ls0; }
   return out;
 }
 

@@ -1,0 +1,11 @@
+C-ENG test_ls0.R variant = numfail  date = 2026-11-08 23:22:34 
+core = C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\t3-68de3711\Scripts\SMC_BVS\core 
+
+GUARD-W: NumericalFailure inside LS0
+  [PASS] status numerical_failure
+  [PASS] message names the injection
+  [PASS] estimates unavailable, every estimate field NA by exact name
+  [PASS] HPM labelled incomplete
+  [PASS] same copy with ls0 = FALSE: completed
+
+TOTAL: 5 PASS, 0 FAIL

@@ -1,0 +1,57 @@
+C-ENG test_ls0.R variant = normal  date = 2026-11-08 23:20:25 
+core = C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\t3-68de3711\Scripts\SMC_BVS\core 
+
+F1: start mode unscored before LS0, exact event count, centre provenance
+  dataset seed 1001 : start mode { 3 7 14 } ties 1 ; HPM { 3 7 14 16 25 } provenance final_bridge ; LS0 termination no_improvement moves 2 
+  local-max start mode found at dataset seed 5003 : { 3 7 14 16 25 }
+  [PASS] found a start mode that is a strict local maximum (LS0 0 moves, no_improvement)
+  [PASS] emitted: standalone LS0 HPM == centre, provenance ls0 stage 0 position 0
+  [PASS] not emitted: the centre is never scored, so the HPM differs from the centre
+  [PASS] status completed, LS0 archive present, centre == start mode
+  [PASS] MR1: LS0 centre == start_mode(st, 1e6).S recomputed independently on the run's own Start (setup)
+  [PASS] MR2: cap = 1 with the fallback is rejected
+  [PASS] logical ls0 events == 1 (emitted centre) + n_evaluated
+  [PASS] all LS0 events are mechanism local_scan
+  [PASS] standalone LS0 (own ledger, no cache) has the same path/termination/n_evaluated
+  [PASS] standalone fresh ls0 count == n_evaluated + 1 (centre emitted as a fresh score)
+  [PASS] emit_centre = FALSE gives one event fewer (omission is observable)
+  [PASS] ls0_improved == (HPM F after LS0 > before)
+  [PASS] E3 computed from the HPM before LS0 (final search only)
+  [PASS] other counter rows unchanged by the ls0 row (row layout: v3 rows + ls0)
+
+F2: LS0 capped at ell = 0 with a strict improving neighbour
+  [PASS] found a fixture where LS0 makes >= 1 strict move
+  dataset seed 2001 : LS0 moves at ell = 8 : 1 ; at ell = 0: termination move_limit 
+  [PASS] ell = 0: termination move_limit, ls0_local_limit TRUE
+  [PASS] ell = 0: status completed, estimates available (a capped LS0 is not a stop)
+  [PASS] public local_limit = final OR ls0 cap; flags carry attribution
+  [PASS] capped LS0 contributes no certificate
+  [PASS] ls0_ell recorded in the archive
+
+F3: equal-F tie change by LS0 (columns 6 := 7, 15 := 16; inherited HPM {3,7,14,16,25})
+  dataset seed 3070 
+  F of {3,7,14,16,25}, {3,6,14,16,25}, {3,7,14,15,25}, {3,6,14,15,25}: -56.139585010924904 -56.139585010924904 -56.139585010924904 -56.139585010924904 
+  HPM before local { 3 7 14 16 20 25 } after final search { 3 6 14 16 20 25 } start mode { 3 14 15 } final HPM { 3 6 14 15 20 25 } provenance ls0 
+  ls0_improved FALSE  ls0_hpm_changed TRUE  E3 FALSE  local_certified TRUE by ls0 
+  [PASS] four duplicate-swap models have bitwise-equal F
+  [PASS] LS0 changed the HPM through the tie rule without raising F (ls0_hpm_changed TRUE, ls0_improved FALSE)
+  [PASS] tie change: new HPM is hpm_better than the HPM before LS0, provenance ls0
+  [PASS] E3 not fired by LS0 (E3 == final-search increase only)
+  final search returned { 3 7 14 16 20 25 } LS0 returned { 3 6 14 15 20 25 }
+  [PASS] local_certified == (final certified & HPM == final endpoint) OR (LS0 certified & HPM == LS0 endpoint)
+  [PASS] final-search HPM tie change: HPM after final search differs from the final search's returned model
+
+F4: ls0 = FALSE on the F3 fixture
+  [PASS] no LS0 fields in raw or fit
+  [PASS] counter matrices have the v3 layout (10 phases, no ls0 row)
+  [PASS] islands identical with LS0 on/off
+  [PASS] off HPM == on HPM before LS0
+  [PASS] E3 identical on/off
+
+F5: public v3_fit
+  [PASS] SMC branch, completed, LS0 archive and flags present
+  [PASS] runtime guard has an ls0 checkpoint after the local_search checkpoint
+  [PASS] invalid seed (no output): log_Z NA by exact name and via $
+  [PASS] ls0 = FALSE: v3 behaviour (no NA estimate fields added)
+
+TOTAL: 35 PASS, 0 FAIL

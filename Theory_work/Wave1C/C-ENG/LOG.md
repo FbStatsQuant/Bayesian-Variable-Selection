@@ -1,0 +1,36 @@
+# C-ENG LOG
+
+- 2026-11-08 21:22 CST: branch `w1c/ls0-merge` created from f16ce15. Read Wave1/Wave1C protocols, CORE, SPEC #6/#8-#10/#15/#26, SoP 02_method LS0 rows, W1-N3 STATEMENT/L7, O-LS0 prototype (`origin/theory/O-LS0`, ls0_exports.cpp, ls0_core.R).
+- 21:24: `diff -rq --strip-trailing-cr Scripts/SMC_BVS/core STUDY/`: CORE = STUDY minus plain PIP and scored-set registry; start/score/blocks/calib/runtime/holder/Makevars identical. Decision: implement in CORE only.
+- 21:25: local toolchain: R 4.6.1 ucrt + Rtools45; installed Rcpp 1.1.2 to user library; baseline CORE copy compiles via v3.R in 26 s.
+- 21:27: PLAN.md v1.0 committed (71ecd37); sent to Codex gpt-6.1-sol (high) plan review R01.
+- 21:30: timing: one old-core v3_fit at n = 100, p = 30 (S3) = 6.9 s wall. Old-core regression baseline (48 fits) started in background.
+- 21:34: R01 received: REJECT as written, 1 BLOCKER (NA fields on LS0 stop), 4 MAJOR, 2 MINOR; all accepted (reviews/R01_disposition.md). PLAN v1.1; TDP_E.md hypotheses added. R02 (fresh plan re-check) launched in parallel with coding.
+- 21:40-21:52: implementation (9b9d234): v3_start.h (mode_dp, mode_tight, mode_tie_dp, start_mode tie_dp), v3_ledger.h PH_LS0, v3_engine.h local_search phase arg, v3_runtime.h local_event phase arg, v3_core.cpp (LS0 block in cpp_final_run, counter_matrix ls0 row only when on), v3_run.R/v3_fit.R (switch ls0, E3, certificate, local_limit, ls0 flags, NA helper), study/adapter.R (smcbvs_estimate).
+- 21:48: first TDP run found two TEST bugs (Windows `long` is 32-bit so "uncapped" cap 1e15 overflowed; data.frame name mangling); fixed the test (cap 2e9). Core unchanged.
+- 21:51-21:58: test_tdp.R, seeds 20261108 and 7, 3000 instances each: 0 failures (numerics/out_test_tdp_seed*.txt). p = 44 counterexample: old returns {..,41,42}, new returns S* {..,40,43}.
+- 21:52: parallel workers sharing one sourceCpp cache fail on Windows (47/48 old fits failed to load); switched to one R process per core variant (run_batch.R).
+- 22:05-22:10: test_ls0 stop 9/9 PASS, numfail 5/5 PASS; normal: 27/31 (4 fixture-construction failures: tiny sampler already scored the targets) -> fixtures redesigned (1 island, 1 particle, final ell = 0); final 33/33 PASS (numerics/out_test_ls0_normal.txt).
+- 22:17: R02 (plan re-check) REJECT on plan text: adapter (already fixed in 9b9d234), public-path forced-stop gate, 2 wording items. R03 (code review of 9b9d234) APPROVE, no findings.
+- 22:19: test variant `paths` (R02 #2): 10 forced stops + all early returns, 10/10 PASS (numerics/out_test_ls0_paths.txt).
+- 22:22: regression p = 30, 48 datasets x {old, off, on, proto}: off == old 48/48; on: sampler/final search/E3 identical 48/48, HPM unchanged 48/48, prototype replay identical 48/48 (numerics/out_regress_p30.txt).
+- 22:28: p = 500 replay designs (dev S1 r001, S4 r001, S5 r002; on vs proto) launched. Existing-suite helper (Sonnet) running.
+- 22:33: PLAN v1.2, R02 disposition, TDP_E.md (4) wording.
+- 22:46: HQ forwarded C-PACK MR1-MR3. MR1 already satisfied (test added); MR2 implemented: start_mode throws for tie_dp && cap < 2 (36c0cfe); MR3 documented. Tests moved to caps >= 2; [MR2] checks added.
+- 22:50: accidentally committed the helper's existing_suite tree (11 MB evidence, kept; no force-push).
+- 22:55: existing-suite helper report: A 28/28 x3 seeds; B/C only expected interface failures. Harness assertions updated (ls0 formal; ls0 row dropped only if all zero; NULL or NA = unavailable).
+- 22:58: R04 (MR2 delta + harness edits) APPROVE, no findings. Harness rerun with v3.1 assertions: B2/C2 28/28 x3 seeds PASS.
+- 22:58: all tests rerun on the MR2 core: TDP 0 failures (MR2 checks pass), xcheck 600/600, LS0 normal 35/35, stop 9/9, numfail 5/5, paths 10/10.
+- 22:58: p = 500 replays (started 22:28 on the pre-MR2 binary; MR2 cannot change behaviour at cap 1e6) still running on a shared CPU.
+- 23:00: HQ wave-2 requirements (C-GROW MR1 LS0 cap; C-DLV A.2 TDP-IMPL; C-DLV B calibration fallback) + HQ_AUDIT precision. Implemented (bf093a8): cpp_final_run LS0 cap ell_n + |S~0| (v3.ls0_cap = "ell_n" switch); v3_cal_tier/v3_calibrate tier-1 fallback grid (last successful tier-1 construction, else completed tier-1 pilot schedule; v3_check_grid; ordinary v3_frozen; flags$grid_fallback) behind v3.grid_fallback and ls0. TDP-IMPL bounds checked by reading (REPORT §1c).
+- 23:10: test_ls0 wave2 13/13 PASS (injected grid failures via a v3_build_grid wrapper). Study results: 0 schedule_limit fits (reconciliation.csv: 2394 completed + 6 resource_limit).
+- 23:12: R05 (fresh Codex review of the wave-2 diff) launched; p = 30 regression rerun with the final code (off, on) launched.
+- 23:14: R05 APPROVE-WITH-FIXES (2 MINOR); fixed in 0638af9 (flag only when fallback fires; checked cap). Stale regression batches killed and relaunched on the final code.
+- 23:20: R06 APPROVE (both fixes RESOLVED; C-GROW MR1, C-DLV A.2, C-DLV B MET). Harness on final code: B3/C3 28/28 x3 seeds PASS; 0 schedule_limit in harness raw results.
+- 23:27: final-code fixtures 35+5+10+9+14 PASS; p = 30 regression (final code) identical on all checks, no fallback flag 48/48, move_cap = ell_n + |S0| 48/48.
+- 23:30: p = 500 replays: S1/S4 new-core fits completed (HPM unchanged by LS0); prototype fits and S5 running. REPORT updated to final state.
+- 23:40: HQ: preflight must charge the LS0 worst case under the C-GROW cap. Implemented (ef33f91) behind v3.ls0_cap / ls0; test_preflight 7/7; 0 fits newly refused at p = 30 and p = 500/1000 (8 GiB/24 h, 2 GiB/24 h).
+- 00:00: R07 REJECT (2 MAJOR: archive allowance below conversion peak; benchmark before memory rejection). Fixed (98fac03); R08 APPROVE-WITH-FIXES (MINOR: test used a copied formula) -> test reads production allowance; +4096 fixed bytes (72785fe); test 14/14; R09 APPROVE.
+- 00:10: p = 500 replay S1 r001 and S4 r001: new core == O-LS0 prototype on all 16 checks; S5 r002 prototype fit running.
+- 00:50: p = 500 replay complete: 3 designs x 16 checks PASS (48/48). S5 LS0 binding at ell_n: final-core standalone check with cap ell_n + |S~0| (11 moves, best F below the fit HPM). REPORT final.
+- 00:51: existing harness on head code: B4/C4 28/28 x3 seeds PASS. REPORT final.

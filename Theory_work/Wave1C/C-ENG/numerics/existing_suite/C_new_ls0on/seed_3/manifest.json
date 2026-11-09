@@ -1,0 +1,104 @@
+{
+  "created_utc": "2026-11-09T04:49:03.550939+00:00",
+  "command": [
+    "C:/Users/felip/.t3/worktrees/Bayesian-Variable-Selection/t3-68de3711/Scripts/SMC_BVS/tests/prepare.py",
+    "prepare",
+    "C:/Users/felip/.t3/worktrees/Bayesian-Variable-Selection/t3-68de3711/Theory_work/Wave1C/C-ENG/numerics/existing_suite/C_new_ls0on/seed_3",
+    "--prototype",
+    "C:/Users/felip/.t3/worktrees/Bayesian-Variable-Selection/t3-68de3711/Scripts/SMC_BVS/reference/prototype_core",
+    "--production",
+    "C:/Users/felip/AppData/Local/Temp/claude/7f4deb75538d3cf7/03611146-335e-4730-9f01-d3ebd88e845b/scratchpad/suite/coreC/core",
+    "--tests",
+    "C:/Users/felip/.t3/worktrees/Bayesian-Variable-Selection/t3-68de3711/Scripts/SMC_BVS/tests",
+    "--index",
+    "3"
+  ],
+  "index": 3,
+  "seed": 3,
+  "source_snapshots": {
+    "prototype": {
+      "path": "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\t3-68de3711\\Scripts\\SMC_BVS\\reference\\prototype_core",
+      "sha256": {
+        "BUILD_NOTES.md": "f27270690521a50d9328d47d7f54750c9a74f6bff5104f00f2a29a5bd8eac7e4",
+        "cpp/Makevars.v3": "2ade7a4209d81938623bbc4bbce5e9b71183b96c2d24fc9a313e2ff2e0ec1c7b",
+        "cpp/v3_blocks.h": "8c68d4ac134463935121c1641c4c6c90c9ad25b590d3d1a340d058b55e291303",
+        "cpp/v3_calib.h": "e9ad470bfe82548bdcdef11c57ec4bbff48401ba57d82468ca294c41c4ec2c7e",
+        "cpp/v3_core.cpp": "7ad69daae3a8f273740032dc19a6ff8767c0be827cf3cfeb7037439b49947ca0",
+        "cpp/v3_engine.h": "7852fad6529e5c5df1e9c792e1de2780abb6b5b7a36c903fb9668397c0c562f1",
+        "cpp/v3_ledger.h": "6353f3e19b22d7b4692b5f3bf25a7128f24e554101bbc9a8cd809120ca6a0c41",
+        "cpp/v3_observer.h": "09c18da76cd89b973ebdf3f8c3f49118a19862d800798d22c0d619805f5c30ad",
+        "cpp/v3_score.h": "b7707f56b54465dfe6fb7b6536c4bb2b8ebf3d6e474944b12f77dfeb8ff77758",
+        "cpp/v3_start.h": "0926735067d46009fc558ec9776993a4bc80692151629fa88c720d03ad92b4ca",
+        "cpp/v3_util.h": "1841122ef2ad6d963b1e0f1d622e1bc154f23fd9e5d347e2b7e02890334d2e15",
+        "v3.R": "1025f173f46545a9c7f79058deb6d4dde66a60756521baf80675e42a8cf76543",
+        "v3_calib.R": "48a1bb4ea6867481ee78fde3e9b33a8a7ec767df73b020dc8e1e22e7aa6a1054",
+        "v3_exact.R": "b61a9a8150136a793cb9ea622a83dea5a71992519fc4ff79698ebc3dc6eb1d05",
+        "v3_fit.R": "aebc87bc0a6c52d5f9de97fdfb99f6e885302739053df3212136fb37ce9e91e8",
+        "v3_observer.R": "c6ff61081b8ba5c8b88e719fd08cf2e5b6c790e1051cb76da34ae2ed80a08934",
+        "v3_preprocess.R": "efd23b2bef3c5eada3d486e3d93d6d93037f62217e9ced6630b78a4f8aa6ee66",
+        "v3_run.R": "7518306dab4a2a55fa888ded8fff5105939bde2a9852c1f2f6ce119c00fad207",
+        "v3_setup.R": "74f2c70f537965488f23040b264950106c176e4405c34ed20fb0a2ac2c5d8bbb"
+      }
+    },
+    "production": {
+      "path": "C:\\Users\\felip\\AppData\\Local\\Temp\\claude\\7f4deb75538d3cf7\\03611146-335e-4730-9f01-d3ebd88e845b\\scratchpad\\suite\\coreC\\core",
+      "sha256": {
+        "cpp/Makevars.v3": "2ade7a4209d81938623bbc4bbce5e9b71183b96c2d24fc9a313e2ff2e0ec1c7b",
+        "cpp/v3_blocks.h": "8c68d4ac134463935121c1641c4c6c90c9ad25b590d3d1a340d058b55e291303",
+        "cpp/v3_calib.h": "e9ad470bfe82548bdcdef11c57ec4bbff48401ba57d82468ca294c41c4ec2c7e",
+        "cpp/v3_core.cpp": "12a71caa6f0d68cc381628b668998aa90c66271f4837fdac45693990938e9b81",
+        "cpp/v3_engine.h": "b2dd4847272df205b74ed0d88787936bfda56189966166e6c442e859198772ba",
+        "cpp/v3_holder.h": "87c5174e01ee411dbc7ee32a709fa75f39b84f11f978581f0fece4266483a583",
+        "cpp/v3_ledger.h": "129ee8aebc3796b96a8f4185de8f9566e7ebfed3be261f5d85880b4cee1ece98",
+        "cpp/v3_runtime.h": "95720a7ac8bcf3fabc689baa1f3a1dda13c8c533572143691ea49ecc985ce7e8",
+        "cpp/v3_score.h": "c306e4979fa41d499c17376990fce6cff1d9165a602beef7f788ff40ecbb0968",
+        "cpp/v3_start.h": "3bf6832690a338979647988bb0875d74fbd01590e9cfd61a872a8248552710f2",
+        "cpp/v3_util.h": "1841122ef2ad6d963b1e0f1d622e1bc154f23fd9e5d347e2b7e02890334d2e15",
+        "README.md": "f7407b918bc8d8778e0ef2e11196d25c15c0be91469c0c34cab2cbc96922a459",
+        "source_manifest.json": "addfae035781bbfbf503d1b2fbd8f4d9fc5d92795276a83f28777fdb51b7de2b",
+        "v3.R": "b94f5755dc95c24e5216a34abe0db62ca4aed9e1129984d246cb80f83679e18b",
+        "v3_calib.R": "6cf8d9eb0ec4f79bf0f69514f8a951ff00451454f7eb0c72b27fc42ff7fe3b75",
+        "v3_exact.R": "6bd5adbcfe478363ff6244e5faab671e112057f4dfdcc07afe70b8cccc10687b",
+        "v3_fit.R": "406ef588a8ca3348a33a270504ac36fe50fa7a39a98fa0425789e894e1e41b0c",
+        "v3_preprocess.R": "758d97e0f02c01e6b4f6ca824805ee1e9fda55a8214f668d8947b9e1a0e929be",
+        "v3_run.R": "6f652087de62ac428664f9295d2a7fe8afb0101e26007b17eb9f35d4d43d3b5d",
+        "v3_setup.R": "e05dd22a1f60e2aa8e892fa2feabfdbdf8a95863c71fad033f18d1b19675489c"
+      }
+    },
+    "tests": {
+      "path": "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\t3-68de3711\\Scripts\\SMC_BVS\\tests",
+      "sha256": {
+        "changed_units.R": "c97fea09ba03e0db3089f1930eaa8dd0092383821a3553cf5ba1d9b8332c73db",
+        "common.R": "0d34ee8fc9d73c4249b89f4cc6a17b7d58e7797bb3b36839fa9c2e513ab6e649",
+        "compare.R": "326962c8399a8a170329993f30bdb68a61d0658458558833633c552edd8c9d17",
+        "metadata_units.R": "3fc0b1dbc88058a11c1684932d43b32654ed1d5a2d8bf6a9a052b541d401a901",
+        "prepare.py": "53c8ce6618e3cd07e5305669b33add9117b9af1851a8a4a6f09773f306fb0365",
+        "README.md": "a16a37f1762640fdea66d26f262e284afc54f6a2b0bca028a6c8a037a6083bf7",
+        "run_all_seeds.sh": "b4b1341e6bdb90f1666674adafee8e4230969553826f4d061c47b396376aebc1",
+        "run_suite.sh": "c21e35bf5a7d7ebb7e308f382054ae9ffe0071bdc28cc8407356300302d99105",
+        "seeds.tsv": "b322e87073514393730f9946d8604a645ccf4c712672807cb92734e78f3d5778",
+        "summarize.py": "17e0eb307d618d1f7f7aa0e7bc66e6091786bd803b56045cb9c1c7bcdd7c338c",
+        "v2_preprocess_units.R": "3389039d32a6b43dc170a1e8ee7303a6021b61c3e9694e98bbcc586a9823d348",
+        "v2_runtime_exports.h": "73f9b523f2d2996189b3367a1eac19f817d5296c2de4bedecf8d5773e604013e",
+        "v2_runtime_units.R": "93fe8689cc28bb3b8c991d5f3ec56effcd50d3cf62cf534d08a371bbbb63d358",
+        "v2_suite_notes.md": "7320d14368d98dc41d2678505782f7e25a5c48203494ce2117b4ebae05de00cb",
+        "worker.R": "ff230533bd9c52136543acf49826804c429474c1045ef65d0b2a0ca7404a8484",
+        "wrappers.cpp": "fbe90e9ba22ad70e03ad771cf284ddc7b1e81e5f3aa3124fbf8a7ecb6e187de6"
+      }
+    }
+  },
+  "platform": "Windows-10-10.0.19045-SP0",
+  "pid": 16128,
+  "priority": 0,
+  "execution": "Owls sequential persistent runner (AMENDMENT 1)",
+  "environment": {
+    "LOADEDMODULES": null,
+    "CC": null,
+    "CXX": null,
+    "CXX17": null,
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "R_LIBS_USER": null
+  }
+}

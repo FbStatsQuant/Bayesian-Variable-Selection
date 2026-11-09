@@ -1,6 +1,7 @@
 # Loaded in the production worker only, after raw regression outputs are saved.
 add("production_api_has_no_test_controls", {
-  exact(names(formals(v3_fit)), c("X", "y", "seed", "allocation"))
+  # v3.1 (C-ENG): the documented switch `ls0` (default TRUE; FALSE = v3) is the only extra formal
+  exact(names(formals(v3_fit)), c("X", "y", "seed", "allocation", "ls0"))
   forbidden <- c("v3_trace", "v3_step_sample", "v3_round_sample", "v3_resample_sample",
     "v3_replicate_final", "v3_observer_prepare", "v3_observer_report", "v3_pilot_schedule", "v3_reference")
   need(!any(vapply(forbidden, exists, TRUE, envir = globalenv(), inherits = FALSE)), "excluded R profiling interface remains")

@@ -1,0 +1,40 @@
+C-ENG test_ls0.R variant = paths  date = 2026-11-08 23:23:47 
+core = C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\t3-68de3711\Scripts\SMC_BVS\core 
+
+Forced stops (allocation hours = 0.05 / 3600), 10 fits
+ id         status estimates_available hpm_incomplete all_fields_NA
+  1 resource_limit               FALSE           TRUE          TRUE
+  2 resource_limit               FALSE           TRUE          TRUE
+  3 resource_limit               FALSE           TRUE          TRUE
+  4 resource_limit               FALSE           TRUE          TRUE
+  5 resource_limit               FALSE           TRUE          TRUE
+  6 resource_limit               FALSE           TRUE          TRUE
+  7 resource_limit               FALSE           TRUE          TRUE
+  8 resource_limit               FALSE           TRUE          TRUE
+  9 resource_limit               FALSE           TRUE          TRUE
+ 10 resource_limit               FALSE           TRUE          TRUE
+ dollar_log_Z_is_NA log_Zbar0_finite adapter_ok   checkpoint phase
+               TRUE             TRUE       TRUE bridge_stage pilot
+               TRUE             TRUE       TRUE bridge_stage pilot
+               TRUE             TRUE       TRUE bridge_stage pilot
+               TRUE             TRUE       TRUE bridge_stage pilot
+               TRUE             TRUE       TRUE bridge_stage pilot
+               TRUE             TRUE       TRUE bridge_stage pilot
+               TRUE             TRUE       TRUE bridge_stage pilot
+               TRUE             TRUE       TRUE bridge_stage pilot
+               TRUE             TRUE       TRUE bridge_stage pilot
+               TRUE             TRUE       TRUE bridge_stage pilot
+  [PASS] 10/10 forced stops: resource_limit, estimates unavailable, hpm_incomplete
+  [PASS] 10/10: every estimate field NA by exact name; fit$log_Z is NA (not log_Zbar0)
+  [PASS] 10/10: study adapter maps the stop to unavailable PIPs without error
+
+Early public returns
+  [PASS] y constant: status y_constant, NA fields, adapter ok
+  [PASS] no predictors: status no_predictors, NA fields, adapter ok
+  [PASS] preflight memory: status resource_limit, NA fields, adapter ok
+  [PASS] invalid seed: status invalid_input, NA fields
+  [PASS] exact branch (p = 8): status exact, estimates present and finite, no LS0
+  [PASS] completed SMC fit: estimates finite, adapter available, MPM == PIP > .5
+  [PASS] switch off: forced stop keeps the v3 output (no log_Z field; log_Zbar0 present)
+
+TOTAL: 10 PASS, 0 FAIL

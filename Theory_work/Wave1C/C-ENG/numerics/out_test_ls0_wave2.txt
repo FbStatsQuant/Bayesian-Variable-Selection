@@ -1,0 +1,25 @@
+C-ENG test_ls0.R variant = wave2  date = 2026-11-08 23:17:05 
+core = C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\t3-68de3711\Scripts\SMC_BVS\core 
+
+C-GROW MR1: LS0 move cap
+  [PASS] default fit: LS0 move_cap == ell_n + |S~0| (8 + 3), rule recorded
+  [PASS] switch v3.ls0_cap = 'ell_n': move_cap == ell_n; final search, islands, Zhat identical to default
+  dataset seed 2001 : |S~0| = 3  moves (production cap): 1 ; base 0, rule ell_n: move_limit ; base 0, rule ell_n + |S~0|: no_improvement moves 1 
+  [PASS] binding fixture found (1 <= LS0 moves <= |S~0|)
+  [PASS] base cap 0, rule ell_n: move_limit; rule ell_n + |S~0|: completes the same descent as with the production cap
+
+C-DLV B: calibration fallback grid (grid construction failures injected by wrapping v3_build_grid)
+  [PASS] no failure: no grid_fallback flag (R05 #1); calibration identical with/without the switch
+  all constructions fail: status completed ; tiers 2 ; grid_fallback pilot_schedule 
+  [PASS] all constructions fail: fit completed, estimates finite, flags$grid_fallback == 'pilot_schedule'
+  [PASS] frozen grid == the tier-1 pilot schedule (strictly increasing 0 -> 1), tier 1, rho_V NULL, label pilot_schedule
+  [PASS] calibration checks reported as not passed (grid_failure trigger kept)
+  [PASS] switch ls0 = FALSE: v3 behaviour, status schedule_limit, no fallback fields
+  [PASS] switch v3.grid_fallback = FALSE (LS0 on): schedule_limit, estimate fields NA
+  tier-0 preliminary and tier-1 rebuild_1 fail: status completed ; grid_fallback last_successful_construction 
+  [PASS] tier-1 rebuild fails after a successful tier-1 construction: fallback 'last_successful_construction' = that grid
+  [PASS] tier-0 failure only (v3 escalates and succeeds): no fallback, calibration and frozen grid identical to v3
+  [PASS] R05 #2: invalid v3.ls0_ell override rejected
+  [PASS] LS0 reads no uniforms: final stream endpoints identical with LS0 on and off
+
+TOTAL: 14 PASS, 0 FAIL

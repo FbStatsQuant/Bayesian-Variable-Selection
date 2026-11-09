@@ -1,0 +1,92 @@
+C-ENG regression comparison, 2026-11-08 23:27:03 
+runs: C:\Users\felip\AppData\Local\Temp\claude\7f4deb75538d3cf7\03611146-335e-4730-9f01-d3ebd88e845b\scratchpad\regress2 
+datasets: 48 
+
+        tag status_old status_on off_identical
+ S1_r1_c0.5  completed completed          TRUE
+   S1_r1_c1  completed completed          TRUE
+ S1_r2_c0.5  completed completed          TRUE
+   S1_r2_c1  completed completed          TRUE
+ S1_r3_c0.5  completed completed          TRUE
+   S1_r3_c1  completed completed          TRUE
+ S1_r4_c0.5  completed completed          TRUE
+   S1_r4_c1  completed completed          TRUE
+ S2_r1_c0.5  completed completed          TRUE
+   S2_r1_c1  completed completed          TRUE
+ S2_r2_c0.5  completed completed          TRUE
+   S2_r2_c1  completed completed          TRUE
+ S2_r3_c0.5  completed completed          TRUE
+   S2_r3_c1  completed completed          TRUE
+ S2_r4_c0.5  completed completed          TRUE
+   S2_r4_c1  completed completed          TRUE
+ S3_r1_c0.5  completed completed          TRUE
+   S3_r1_c1  completed completed          TRUE
+ S3_r2_c0.5  completed completed          TRUE
+   S3_r2_c1  completed completed          TRUE
+ S3_r3_c0.5  completed completed          TRUE
+   S3_r3_c1  completed completed          TRUE
+ S3_r4_c0.5  completed completed          TRUE
+   S3_r4_c1  completed completed          TRUE
+ S4_r1_c0.5  completed completed          TRUE
+   S4_r1_c1  completed completed          TRUE
+ S4_r2_c0.5  completed completed          TRUE
+   S4_r2_c1  completed completed          TRUE
+ S4_r3_c0.5  completed completed          TRUE
+   S4_r3_c1  completed completed          TRUE
+ S4_r4_c0.5  completed completed          TRUE
+   S4_r4_c1  completed completed          TRUE
+ S5_r1_c0.5  completed completed          TRUE
+   S5_r1_c1  completed completed          TRUE
+ S5_r2_c0.5  completed completed          TRUE
+   S5_r2_c1  completed completed          TRUE
+ S5_r3_c0.5  completed completed          TRUE
+   S5_r3_c1  completed completed          TRUE
+ S5_r4_c0.5  completed completed          TRUE
+   S5_r4_c1  completed completed          TRUE
+ S6_r1_c0.5  completed completed          TRUE
+   S6_r1_c1  completed completed          TRUE
+ S6_r2_c0.5  completed completed          TRUE
+   S6_r2_c1  completed completed          TRUE
+ S6_r3_c0.5  completed completed          TRUE
+   S6_r3_c1  completed completed          TRUE
+ S6_r4_c0.5  completed completed          TRUE
+   S6_r4_c1  completed completed          TRUE
+
+off_identical                    TRUE in 48 / 48 (NA 0)
+sampler_identical                TRUE in 48 / 48 (NA 0)
+final_local_identical            TRUE in 48 / 48 (NA 0)
+E3_identical                     TRUE in 48 / 48 (NA 0)
+E2_lowESS_identical              TRUE in 48 / 48 (NA 0)
+local_limit_identical            TRUE in 48 / 48 (NA 0)
+hpm_ok                           TRUE in 48 / 48 (NA 0)
+ls0_flag_consistent              TRUE in 48 / 48 (NA 0)
+ls0_centre_is_mode               TRUE in 48 / 48 (NA 0)
+ls0_logical_matches_archive      TRUE in 48 / 48 (NA 0)
+counts_other_rows_identical      TRUE in 48 / 48 (NA 0)
+top_newonly_from_ls0             TRUE in 48 / 48 (NA 0)
+top_old_retained                 TRUE in 48 / 48 (NA 0)
+proto_status_same                TRUE in 48 / 48 (NA 0)
+proto_islands_same               TRUE in 48 / 48 (NA 0)
+proto_hpm_same                   TRUE in 48 / 48 (NA 0)
+proto_stores_same                TRUE in 48 / 48 (NA 0)
+proto_ls0_same                   TRUE in 48 / 48 (NA 0)
+proto_mode_same                  TRUE in 48 / 48 (NA 0)
+proto_counts_same                TRUE in 48 / 48 (NA 0)
+proto_cache_same                 TRUE in 48 / 48 (NA 0)
+proto_hpm_before_ls0_same        TRUE in 48 / 48 (NA 0)
+proto_E3_explained               TRUE in 48 / 48 (NA 0)
+
+HPM changed by LS0: 0 ; ls0_improved: 0 ; E1 changed: 0 ; LS0 move_limit: 0 ; start-mode truncated: 0 
+local_certified old -> new:
+      new
+old    TRUE
+  TRUE   48
+certificate source:
+
+ both final 
+   47     1 
+LS0 termination:
+
+no_improvement 
+            48 
+final-code LS0-on fits: 48 ; no grid_fallback flag: 48 ; no calibration fallback field: 48 ; move_cap == ell_n + |start mode|: 48 ; LS0 moves < ell_n (cap rule not binding): 48 

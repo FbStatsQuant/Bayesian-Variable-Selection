@@ -1,0 +1,33 @@
+{
+  "complete": true,
+  "ok": true,
+  "rows": [
+    {
+      "index": 1,
+      "seed": 1,
+      "ok": true,
+      "pid": 31832,
+      "checks": 28,
+      "problems": [],
+      "path": "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\t3-68de3711\\Theory_work\\Wave1C\\C-ENG\\numerics\\existing_suite\\B3_final_ls0off\\seed_1"
+    },
+    {
+      "index": 2,
+      "seed": 2,
+      "ok": true,
+      "pid": 2488,
+      "checks": 28,
+      "problems": [],
+      "path": "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\t3-68de3711\\Theory_work\\Wave1C\\C-ENG\\numerics\\existing_suite\\B3_final_ls0off\\seed_2"
+    },
+    {
+      "index": 3,
+      "seed": 3,
+      "ok": true,
+      "pid": 34440,
+      "checks": 28,
+      "problems": [],
+      "path": "C:\\Users\\felip\\.t3\\worktrees\\Bayesian-Variable-Selection\\t3-68de3711\\Theory_work\\Wave1C\\C-ENG\\numerics\\existing_suite\\B3_final_ls0off\\seed_3"
+    }
+  ]
+}

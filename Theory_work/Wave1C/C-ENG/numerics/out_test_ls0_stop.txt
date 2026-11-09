@@ -1,0 +1,15 @@
+C-ENG test_ls0.R variant = stop  date = 2026-11-08 23:21:22 
+core = C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\t3-68de3711\Scripts\SMC_BVS\core 
+
+GUARD-W: guard reports exceeded at checkpoint ls0
+  [PASS] status resource_limit
+  [PASS] estimates_available FALSE, partial_results TRUE
+  [PASS] fit[['log_Z', exact = TRUE]] is NA and fit$log_Z is NA (no partial match to log_Zbar0)
+  [PASS] every estimate field NA by exact name
+  [PASS] the guard record shows checkpoint ls0 exceeded
+  [PASS] LS0 archive kept (labelled), HPM labelled incomplete
+  [PASS] same copy with ls0 = FALSE: completed (no ls0 checkpoint)
+  [PASS] study adapter smcbvs_outputs accepts the stopped fit (estimates unavailable, PIPs NA)
+  [PASS] study adapter on the completed fit: available, MPM = PIP > .5
+
+TOTAL: 9 PASS, 0 FAIL

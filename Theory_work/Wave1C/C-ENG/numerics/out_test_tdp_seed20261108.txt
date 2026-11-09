@@ -1,0 +1,92 @@
+C-ENG test_tdp.R  seed = 20261108  instances = 3000  date = 2026-11-08 22:51:45 
+core = C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\t3-68de3711\Scripts\SMC_BVS\core 
+
+instances by kind:
+
+flat  int real 
+1000 1000 1000 
+
+N (number of smallest-size ghat-maximisers) summary by kind:
+$flat
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   1.000   1.000   3.617   4.000  84.000 
+
+$int
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   1.000   1.000   2.587   3.000  53.000 
+
+$real
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   1.000   1.000   1.231   1.000  21.000 
+
+
+[A] TDP-E == uncapped enumeration (lex-min E), all kinds: 3000 / 3000 
+[B] uncapped enumeration == brute force (ghat), int+flat (exact binary64 sums): 2000 / 2000 
+    real-valued kind (FP rounding ties possible; informational): 1000 / 1000 
+[C] TDP-E == brute force, int+flat: 2000 / 2000 
+
+cap = 2: truncated in 1048 instances
+  [D] new start_mode == lex-min E (all): 3000 / 3000 
+  [E] new == old bit-for-bit (S, ties, no tie_dp) when not truncated: 3000 / 3000 
+  [F] lg0 == brute max and log_gamma0(S) == max, |S| == k*: 3000 / 3000 
+  old (frozen rule) wrong on truncated instances: 117 / 1048 
+
+cap = 3: truncated in 672 instances
+  [D] new start_mode == lex-min E (all): 3000 / 3000 
+  [E] new == old bit-for-bit (S, ties, no tie_dp) when not truncated: 3000 / 3000 
+  [F] lg0 == brute max and log_gamma0(S) == max, |S| == k*: 3000 / 3000 
+  old (frozen rule) wrong on truncated instances: 68 / 672 
+
+cap = 4: truncated in 480 instances
+  [D] new start_mode == lex-min E (all): 3000 / 3000 
+  [E] new == old bit-for-bit (S, ties, no tie_dp) when not truncated: 3000 / 3000 
+  [F] lg0 == brute max and log_gamma0(S) == max, |S| == k*: 3000 / 3000 
+  old (frozen rule) wrong on truncated instances: 48 / 480 
+
+cap = 5: truncated in 318 instances
+  [D] new start_mode == lex-min E (all): 3000 / 3000 
+  [E] new == old bit-for-bit (S, ties, no tie_dp) when not truncated: 3000 / 3000 
+  [F] lg0 == brute max and log_gamma0(S) == max, |S| == k*: 3000 / 3000 
+  old (frozen rule) wrong on truncated instances: 29 / 318 
+
+cap = 17: truncated in 47 instances
+  [D] new start_mode == lex-min E (all): 3000 / 3000 
+  [E] new == old bit-for-bit (S, ties, no tie_dp) when not truncated: 3000 / 3000 
+  [F] lg0 == brute max and log_gamma0(S) == max, |S| == k*: 3000 / 3000 
+  old (frozen rule) wrong on truncated instances: 6 / 47 
+
+cap = 1e+06: truncated in 0 instances
+  [D] new start_mode == lex-min E (all): 3000 / 3000 
+  [E] new == old bit-for-bit (S, ties, no tie_dp) when not truncated: 3000 / 3000 
+  [F] lg0 == brute max and log_gamma0(S) == max, |S| == k*: 3000 / 3000 
+  old (frozen rule) wrong on truncated instances: 0 / 0 
+
+[MR2] cap = 1 with tie_dp rejected (error): 3000 / 3000 ; instances with |E| = 1: 1952 ; fallback used on them (any cap >= 2): 0 ; returned set != the unique maximiser: 0 
+
+FAILURES: 0 
+
+---- W1-N3 counterexample (p = 44, K = 22, cap = 1e6) ----
+old start_mode: S = 0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 41 42 
+  lg0 = 25  ties = 1e+06  truncated = TRUE  time = 1.47 s
+old == predicted {0,2,..,38,41,42}: TRUE ; old == S*: FALSE 
+new start_mode: S = 0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 43 
+  lg0 = 25  ties = 1e+06  truncated = TRUE  tie_dp_used = TRUE  time = 1.64 s
+new == S* = {0,2,..,38,40,43}: TRUE ; TDP-E alone == S*: TRUE  ( 0 s)
+log_gamma0(new S) == 25: TRUE 
+
+---- family: m inner pairs + last block, caps 2..2^(m+1) ----
+family checks: new != brute in 0 of 1022 (m, cap) pairs
+
+---- rounding fixtures (contract = lex-min E, not lex-min over all rounded ghat-maximisers) ----
+R01#2 prior rounding: block {0,1}, K=1, lambda(1)=2^54, rho=(1,2) 
+  brute(ghat) S = { 0 } N = 2 ; uncapped E-enumeration S = { 1 }; new (cap 2) S = { 1 } tie_dp_used = FALSE ; new == lex-min E: TRUE ; same value: TRUE 
+prefix rounding: blocks {0},{1}, K=2, rho0=2^53, rho1=1 
+  brute(ghat) S = { 0 } N = 1 ; uncapped E-enumeration S = { 0 }; new (cap 2) S = { 0 } tie_dp_used = FALSE ; new == lex-min E: TRUE ; same value: TRUE 
+block-sum rounding: blocks {1},{0}, K=2, rho({1})=2^53, rho({0})=1, lambda=0 
+  brute(ghat) S = { 1 } N = 1 ; uncapped E-enumeration S = { 1 }; new (cap 2) S = { 1 } tie_dp_used = FALSE ; new == lex-min E: TRUE ; same value: TRUE 
+
+---- boundary fixtures ----
+K = 0                                                        brute S = {}  N = 1  new == brute at caps 2,3,4: TRUE,TRUE,TRUE  TDP-E == brute: TRUE
+K binding inside a block (|C|=3, K=1, all singletons tie)    brute S = {0}  N = 3  new == brute at caps 2,3,4: TRUE,TRUE,TRUE  TDP-E == brute: TRUE
+interleaved blocks {1,3},{0,2}, all pairs tie                brute S = {0,1}  N = 4  new == brute at caps 2,3,4: TRUE,TRUE,TRUE  TDP-E == brute: TRUE
+empty optimum (all rho < 0)                                  brute S = {}  N = 1  new == brute at caps 2,3,4: TRUE,TRUE,TRUE  TDP-E == brute: TRUE

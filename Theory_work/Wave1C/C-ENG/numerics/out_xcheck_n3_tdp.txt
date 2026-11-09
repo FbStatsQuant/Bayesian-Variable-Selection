@@ -1,0 +1,4 @@
+W1-N3 reference TDP (exact) vs new core start_mode on 600 integer-table instances
+  cap 2 (TDP-E fallback when |E| >= 2) != reference S*: 0
+  cap 1e6 (enumeration)   != reference S*: 0
+  lg0 != reference V*: 0
