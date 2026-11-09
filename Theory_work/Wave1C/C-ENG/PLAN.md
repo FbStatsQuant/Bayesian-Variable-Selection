@@ -1,7 +1,8 @@
 # C-ENG — PLAN: merge LS0 and the e4 tie-aware DP into the production core
 
 Ticket C-ENG, Theory Wave 1C. Branch `w1c/ls0-merge`. Lead: Claude Opus 5.5 (Claude Work). Written 2026-11-08 ~21:45 CST.
-Status: DRAFT v1.0 for plan review (Codex gpt-6.1-sol high), before any code edit.
+Status: v1.1 (2026-11-08 21:45 CST) = v1.0 + all fixes of plan review R01 (`reviews/R01_plan_review_raw.md`, verdict REJECT as
+written; disposition `reviews/R01_disposition.md`). v1.1 sent to a fresh reviewer (R02) in parallel with implementation.
 
 Path aliases: `CORE/` = `Scripts/SMC_BVS/core/`; `STUDY/` = `Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/`;
 `SPEC` = `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md`;
@@ -67,8 +68,10 @@ R9. **Certificate on the returned Ŝ (#10).** "`local_certified` and card item L
     LS0 that ends on its move cap (`local_limit`) gives L1 = 'n/a'; the fit's output is still returned": reported as
     `ls0_local_limit` (fit and flags) and `local_certified` stays whatever the rule above gives (the LS0 branch
     contributes FALSE at a cap, because `local_certified` is false at `move_limit`). The certificate card L1 itself is
-    not implemented in production (spec-only POST HOC item, SoP/02_method.tex:802), so no L1 field is added.
-    `local_limit` (fit and flags) keeps its v3 meaning (final search) — **interpretation point for the reviewer** (see §5 Q1).
+    not implemented in production (spec-only POST HOC item, SoP/02_method.tex:802), so no L1 field is added; the L1
+    rule "capped LS0 ⇒ L1 = n/a" is documented and exposed as `ls0_local_limit`.
+    **v1.1 (R01 #4, Q1):** public `local_limit` (fit and flags) = final search capped OR LS0 capped; attribution in
+    `final_local_limit` and `ls0_local_limit`. With LS0 off, `local_limit` keeps its v3 value and the new fields are absent.
 R10. **Other flags recomputed for the returned model (#9).** near ties, `near_tie_truncated` (from the top store after
     LS0), E1 (`island_best < hpm_F − 1`, island bests are not touched by LS0 because LS0 events have island 0) use the
     final HPM after LS0. `checks_passed_final` keeps its formula !(E1||E2||E3||lowESS).
@@ -80,8 +83,12 @@ R11. **GUARD-W (#6).** "Any worker stop, LS0 stop or guard stop ⇒ no output. �
     no-estimate branch (`v3_run.R:111-116`: `estimates_available = FALSE`, `partial_results = TRUE`, no log_Z/PIP/MPM
     fields assigned). (b) A `NumericalFailure` inside LS0 ⇒ status `numerical_failure` ⇒ same branch. (c) LS0 is not
     started if the run is already stopped (`status != "completed"`). (d) `local_limit` at the LS0 cap is not a stop.
-    (e) The serial core has no workers. Not in scope: #15 "every estimate field NA by exact name" (a separate
-    interface item); we only guarantee that an LS0 stop takes the existing no-output path.
+    (e) The serial core has no workers. **v1.1 (R01 #1, BLOCKER):** #15 is implemented in v3.1 mode (switch on): a
+    shared helper `v3_unavailable_estimates()` sets every estimate field to NA **by exact name** (`log_Z`, `log_Z_r`,
+    `log_Z_lower95`, `log_Z_rel_m0`, `log_Z_r_rel_m0`, `pip_primary`, `pip_r`, `mpm`) on every public `v3_fit` return
+    with `estimates_available` not TRUE (all statuses), so `fit$log_Z` can no longer partial-match `log_Zbar0`.
+    Partial island values stay only in labelled archives (`partial_final`, `stage_record`). Tested with both
+    `fit[["log_Z", exact = TRUE]]` and `fit$log_Z`. Switch off ⇒ old behaviour (fields absent).
 R12. **e4.** "Start-mode ties: keep the enumeration fast path (cap 10⁶, `cpp/v3_start.h:183`). On truncation, use a
     deterministic tie-aware DP that returns the prescribed smallest-size, lexicographically smallest maximiser without
     enumerating ties." W1-N3 proved (N3/STATEMENT.md §3(b)-(d)) that the enumeration visits the ≺_DFS-first min(N, cap)
@@ -107,7 +114,9 @@ would return with cap = ∞), greedily, without enumerating E:
   O(Σ_b (K+1)(t_b+1))).
 * For i = 0..p−1 (internal index order = original order, N3/STATEMENT §1): if feasible(IN ∪ {i}, OUT) then IN ∪= {i}
   else OUT ∪= {i} (only block blk[i]'s allowed row changes; recompute that row). Return IN.
-* Claim (to be reviewed; proof sketch in `lemmas/TDP_E.md`): TDP-E returns lex_min(E). Invariant IN = S_E ∩ {0..i−1} with
+* Claim (proof and hypotheses in `lemmas/TDP_E.md`; contract bounded per R01 #2/#6: lex_min(E) in binary64, = S* under
+  EX-A; NOT lexicographic optimality over all rounded ĝ-maximisers, which neither the fast path nor the fallback
+  provides — see the 2⁵⁴ example of R01 #2): TDP-E returns lex_min(E). Invariant IN = S_E ∩ {0..i−1} with
   S_E := lex_min E; same argument as L7, with 𝒜* replaced by E and Φ = V* replaced by "E ∩ 𝒮(IN, OUT) ≠ ∅", which the
   reachability DP decides exactly (E is a product of per-block code sets over tight size paths; IN/OUT constraints are
   per element hence per block). No arithmetic is done by TDP-E beyond reusing M and mb, so the claim holds in binary64.
@@ -150,8 +159,10 @@ would return with cap = ∞), greedily, without enumerating E:
 ## 4. Tests (all local, Windows R 4.6.1 + Rtools45; outputs in `numerics/` and `tests/`)
 
 (a) TDP unit tests: random small instances (integer and real tables; K binding; duplicates/ties) — new `start_mode` with
-    small caps (1, 2, 3, …) vs brute force over Ω_K using `log_gamma0` (lex-min of the smallest-size ĝ-maximisers) and vs
-    `start_mode(cap = ∞)`; N3's p = 44, K = 22 counterexample tables at cap = 10⁶ (old returns ≠ S*, new returns S*), and
+    small caps (1, 2, 3, …) vs uncapped enumeration (lex_min E) for ALL kinds; vs brute force over Ω_K (lex-min of the
+    smallest-size maximisers) ONLY for integer-valued tables (exact binary64 sums); for real tables only value lg0 and
+    size |S| are compared with brute force (R01 #2); explicit rounding-tie fixtures (R01 #2 2⁵⁴ example; prefix and
+    prior rounding); boundary fixtures (K binding, interleaved blocks, j = 0, NaN beyond K) (R01 #6); N3's p = 44, K = 22 counterexample tables at cap = 10⁶ (old returns ≠ S*, new returns S*), and
     the family D_m at small caps; cross-check with `N3/numerics/tdp.py` on integer tables.
 (b) LS0 behaviour: centre emitted (logical count of phase ls0 ≥ 1, centre in the scanned list, centre score fresh when
     not previously scored); every LS0-scored model offered to the ledger (top store ∋ best LS0 neighbour when it
@@ -161,14 +172,34 @@ would return with cap = ∞), greedily, without enumerating E:
     the guard trips at the ls0 checkpoint ⇒ status resource_limit, estimates_available FALSE, no log_Z/pip fields;
     (ii) LS0 capped (`ls0_ell = 0` via ro) ⇒ completed output with ls0_local_limit TRUE.
 (c) Regression on S1–S6 (small n/p, a few seeds) with the study generator (or a local equivalent): `v3_fit` old core vs new
-    core with ls0 = FALSE (expect byte-identical modulo timings) and new core with ls0 = TRUE (expect: islands, Ẑ, PIPs,
+    core with ls0 = FALSE (expect identical deterministic outputs: every field except the named operational
+    measurements timings/seconds/elapsed/peak memory, on completed runs with ample allocation — R01 #7) and new core with ls0 = TRUE (expect: islands, Ẑ, PIPs,
     stage tables, stream endpoints identical; HPM either identical or hpm_better than the old; stores = top_c(old ∪ added)
     checked where the scored set is small; E3 identical; report every change).
+(c2) **Merged-LS0 replay (R01 #3, SPEC:399):** new core (LS0 on) vs the O-LS0 prototype `cpp_final_run_ls0`
+    (export appended to a testing copy of the OLD core, `ls0_enable_integrated()`), same data/seed: islands, Ẑ, PIPs,
+    HPM, stores, flags, E3, stream endpoints, LS0 archive and counters must agree after normalising the intended
+    metadata differences (prototype: phase `local`, iter −2, counted in the `local` row; new: phase `ls0`, iter −1,
+    own row). On all p = 30 regression datasets, and on the 3 replay designs (S1 r001, S4 r001, S5 r002) with the dev
+    generator at p = 500, c100, if local runtime allows; otherwise recorded as an unmet gate.
+(c3) **Deterministic fixtures (R01 #5):** low-N direct `cpp_final_run` runs (testing copy) chosen so that the start mode
+    is unscored before LS0 (exact LS0 event count = 1 + n_evaluated, fresh centre event, centre wins HPM so omission
+    is observable); a case with a strict improving neighbour and `ls0_ell = 0` (⇒ `ls0_local_limit`, output returned);
+    an equal-F HPM tie change by LS0 (duplicated column); a returned HPM different from both endpoints; store eviction;
+    forced guard stop at checkpoint "ls0" and forced NumericalFailure inside LS0 (test injection in the testing copy) ⇒
+    no estimates, NA fields; every fixture asserts `branch_run == "smc"` / LS0 archive present.
 (d) Existing tests: `Scripts/SMC_BVS/tests` (prototype-vs-production bit comparison harness, Owls-oriented) and
     `build/check_smokes.R` (inspects saved Owls smoke records) — run what can run locally; record exactly what cannot
     and why.
 
-## 5. Questions for the plan reviewer
+## 4b. Switch-off branch (R01 #7)
+`ls0 = FALSE`: `ro` carries no LS0 fields; `cpp_final_run` runs no LS0 and serialises ledgers without the `ls0` counter
+row; `v3_assemble_final` keeps the v3 E3 (`out$hpm_F > hb$F`), certificate, `local_limit`, flags and field layout and
+emits no LS0 metadata; `v3_fit` adds no NA fields. Calibration ledgers never carry the `ls0` row (LS0 never runs in
+calibration) in either mode. `mode_tie_dp` checks its root feasibility and stops with an error (never an empty model)
+if the invariant fails (R01 #6).
+
+## 5. Questions for the plan reviewer (answered in R01: Q1 public local_limit = either cap; Q2 yes; Q3 yes under EX-A, bounded binary64 claim; Q4 yes)
 
 Q1. Should the fit-level `local_limit` flag become "local_limit of the search that ended on Ŝ" or stay = final search,
     with LS0's cap in a separate `ls0_local_limit`? (Plan: separate field.)
