@@ -41,6 +41,10 @@ seat), use gpt-6-astra at high. Parallel provers: Codex gpt-6.1-sol or Opus suba
 leads hard proof tickets and takes the final Claude council seat when HQ assigns it. Helpers: Sonnet/Haiku on your own provider. Subagents may spawn
 subagents; the lead stays responsible.
 
+**Providers (Felipe, 2026-11-09, binding):** every Claude Fable 5.2 agent on Claude Personal (`claude-personal`); Opus,
+Sonnet and Haiku agents (including your subagents) ≈1/3 on Claude Personal and ≈2/3 on Claude Work (`claudeAgent`);
+OpenAI agents on `codex`.
+
 ## Tickets
 | ID | Lead | Target |
 |---|---|---|
