@@ -3,7 +3,8 @@
 Ticket C-ENG, Theory Wave 1C. Lead: Claude Opus 5.5 (Claude Work). Branch **`w1c/ls0-merge`** (pushed to origin; head commit
 in the final message). Base: `f16ce15` (main). Not merged; main untouched.
 
-**RESULT: DONE (implemented, tested, code review APPROVE).** Open: see §6.
+**RESULT: DONE (implemented, tested, code reviews APPROVE).** HQ-forwarded method requirements C-PACK MR1–MR3 implemented
+and tested (§1b). Open: see §6.
 
 ## 1. What changed (production code; `git diff f16ce15 HEAD -- Scripts/SMC_BVS`)
 
@@ -13,7 +14,7 @@ Switch: `v3_fit(X, y, seed, allocation, ls0 = getOption("v3.ls0", TRUE))`. **Def
 
 | file | lines (new numbering) | change |
 |---|---|---|
-| `Scripts/SMC_BVS/core/cpp/v3_start.h` | 178–300 | `start_mode` refactored into `mode_dp` (identical arithmetic) + enumeration fast path (unchanged); new `mode_tight`, `mode_tie_dp` (**TDP-E**, e4 fallback); `start_mode(st, cap = 1e6, tie_dp = true)`: on truncation (count ≥ cap) and `tie_dp`, result := TDP-E; `ModeResult.tie_dp_used`; root-feasibility check throws instead of returning an empty model |
+| `Scripts/SMC_BVS/core/cpp/v3_start.h` | 178–304 | `start_mode` refactored into `mode_dp` (identical arithmetic) + enumeration fast path (unchanged); new `mode_tight`, `mode_tie_dp` (**TDP-E**, e4 fallback); `start_mode(st, cap = 1e6, tie_dp = true)`: on truncation (count ≥ cap) and `tie_dp`, result := TDP-E; `ModeResult.tie_dp_used`; root-feasibility check throws instead of returning an empty model |
 | `Scripts/SMC_BVS/core/cpp/v3_ledger.h` | 8–18 | phase `PH_LS0` ("ls0") appended last (no index shift) |
 | `Scripts/SMC_BVS/core/cpp/v3_engine.h` | 376–381 | `local_search(..., iter, phase = PH_LOCAL)` — phase label argument |
 | `Scripts/SMC_BVS/core/cpp/v3_runtime.h` | 32–33 | `local_event(tier, iter, phase = PH_LOCAL)` |
@@ -22,6 +23,16 @@ Switch: `v3_fit(X, y, seed, allocation, ls0 = getOption("v3.ls0", TRUE))`. **Def
 | `Scripts/SMC_BVS/core/v3_fit.R` | 49–51, 63, 137 | `ls0` argument; NA estimate fields on every return with `estimates_available` not TRUE (v3.1 mode) |
 | `Scripts/SMC_BVS/study/adapter.R` | 185–190, 198, 202, 209 | `smcbvs_estimate()`: a scalar NA estimate marker = unavailable (pre-v3.1 cores omit the field) |
 | `Scripts/SMC_BVS/core/README.md` | 37–60 | v3.1 merge section |
+
+## 1b. Method requirements forwarded by HQ (C-PACK, `Theory_work/Wave1C/C-PACK/METHOD_REQUIREMENTS.md`, council-passed)
+
+| MR | requirement (short) | implementation | test / evidence |
+|---|---|---|---|
+| MR1 | integrated LS0 starts from and emits `start_mode(st, cap).S` computed on the run's own `Start`; a replacement routine must return the maximiser when it is unique | `cpp_final_run`: `start_mode(st, 1000000, tie_dp)` on the setup's `Start` (built by `build_tables`/`build_start` in `cpp_setup`), then `local_search(m.S, …, emit_centre = true, …, PH_LS0)` (`cpp/v3_core.cpp:467–471`). LS0 exists only on the SMC branch (the exact branch enumerates and has no `Start`/LS0). TDP-E returns S* under exact arithmetic, hence the unique maximiser when it is unique | `numerics/out_test_ls0_normal.txt` "MR1" (centre == independent `start_mode(st, 1e6).S` on the same setup, same log γ₀) and the exact LS0 event count = 1 + n_evaluated; p = 30 regression `ls0_centre_is_mode` 48/48 |
+| MR2 | if the fallback is triggered by `truncated`, keep cap ≥ 2 | `start_mode(st, cap, tie_dp = true)` throws `std::invalid_argument` for cap < 2 (`cpp/v3_start.h:272`); production cap 10⁶. With cap ≥ 2 a unique maximiser (\|E\| = 1) always returns through the enumeration path (count 1 < cap), so Lemma UM-FP's code path is unchanged | `numerics/out_test_tdp_seed*.txt` "[MR2]": cap 1 rejected 3000/3000 per seed; on the 1952 + 2009 instances with \|E\| = 1 the fallback was used 0 times at every cap ≥ 2 and the returned set was the maximiser in all; `out_test_ls0_normal.txt` "MR2" on a production setup |
+| MR3 | no consistency result needs the size-then-lex rule; choose it for reproducibility | rule kept (spec #8) for reproducibility; documented in `cpp/v3_start.h:185–187` and the core README | — |
+
+R04 (fresh Codex review of the MR2 delta and the harness edits): APPROVE, no findings (`reviews/R04_delta_review_raw.md`).
 
 Spec mapping (`NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md`): #8 LS0 (when, centre, rules, no uniforms, all scored
 models join the stores, provenance `ls0`, `ls0_improved`, no E3, e4); #6 GUARD-W (LS0 stop / numerical failure in LS0 ⇒ no
@@ -44,9 +55,11 @@ truncated the legacy result fields (S, lg0, ties, truncated) are unchanged.
 | R01 | PLAN v1.0 vs spec/code | Codex gpt-6.1-sol high (fresh) | REJECT (1 BLOCKER, 4 MAJOR, 2 MINOR) | `R01_plan_review_raw.md`; all accepted → PLAN v1.1 (`R01_disposition.md`) |
 | R02 | PLAN v1.1 + TDP_E.md re-check | Codex gpt-6.1-sol high (fresh) | REJECT on plan text; R01 #1–#7 all RESOLVED; 2 MAJOR, 2 MINOR | `R02_plan_recheck_raw.md`; adapter already fixed in code; public-path gate added; wording fixed → PLAN v1.2 (`R02_disposition.md`) |
 | R03 | code diff f16ce15..9b9d234 | Codex gpt-6.1-sol high (fresh) | **APPROVE, no findings** | `R03_code_review_raw.md` (source review + in-memory R checks; did not rebuild) |
+| R04 | post-R03 deltas: MR2 guard (9b9d234..36c0cfe) + harness assertion edits | Codex gpt-6.1-sol high (fresh) | **APPROVE, no findings** | `R04_delta_review_raw.md` (MR1/MR2 checked against C-PACK text) |
 
-No production-code change was made after R03 (later commits touch only tests, docs, the README line-ending fix). Per the
-brief, a second code review was required only if the first found something major; it did not.
+After R03 the only production-code change is the MR2 guard (4 lines in `cpp/v3_start.h`), reviewed in R04. The harness edits
+(two assertions in `Scripts/SMC_BVS/tests`) were reviewed in R04. Per the brief a second full review was required only if the
+first found something major; it did not.
 
 ## 3. Tests and results (scripts in `tests/`, outputs in `numerics/`; local Windows, R 4.6.1, Rtools45, Rcpp 1.1.2)
 
@@ -99,7 +112,20 @@ new core LS0 off vs new core LS0 on vs O-LS0 prototype (`cpp_final_run_ls0`, `or
 (c2) **Replay designs at production size** (SPEC §6 item 2; dev generator, p = 500, n = 200, c100: S1 r001, S4 r001,
 S5 r002) — `tests/run_replay.R`, `tests/compare_replay.R`, `numerics/out_replay_p500.txt`: PENDING (filled below).
 
-(d) **Existing tests** — PENDING (filled below).
+(d) **Existing tests** — `Scripts/SMC_BVS/tests` (prototype-vs-production bit-comparison harness), run locally on Windows
+for seed indices 1–3 by a Sonnet helper (`numerics/existing_suite/REPORT_suite.md`; substitutions: no Owls hostname/nice
+check, `python` for `python3`, `prepare.py` wrapped for `os.getpriority`/`lscpu`, short compile-cache path for MAX_PATH;
+same Windows toolchain for both sides). Original core (A): 28/28 compare checks per seed, summarize PASS. New core,
+original harness: B (ls0 off) and C (ls0 on) fail only `production_api_has_no_test_controls` (new formal `ls0`) and, in C,
+`v2_inherited_rescore_failure_…` (new `ls0` counter row and NA estimate markers on a failed return) — both expected v3.1
+interface changes; all 26 bit-for-bit checks pass. Harness assertions updated minimally for the v3.1 interface
+(`Scripts/SMC_BVS/tests/changed_units.R:2–5`, `v2_runtime_units.R:120–135`; the `ls0` row is dropped only after checking it
+is all zero; NULL or scalar NA accepted as "unavailable"; R04 APPROVE). Rerun with the updated harness on the MR2 core:
+**B2 (ls0 off) 28/28 and C2 (ls0 on) 28/28 on each of seeds 1–3, summarize PASS** (`numerics/existing_suite/rerun_v31.log`,
+`B2_new_ls0off_v31harness/`, `C2_new_ls0on_v31harness/`). Caveat (helper): the harness builds `ro` by hand without `ls0`, so
+it does not execute LS0 itself; LS0 is covered by (b), (c), (c2). Only 3 of the 32 seed indices; not the Owls 32-seed gate.
+`build/check_smokes.R` inspects saved Owls smoke records (`runs/*/exit_status.txt`, adapter outputs) that do not exist
+locally, so it was not run; the public-path tests in (b) `paths` exercise the same adapter contract on local fits.
 
 ## 4. Files produced
 `PLAN.md` (v1.2), `LOG.md`, `CHECKPOINT.md`, `REPORT.md`, `lemmas/TDP_E.md`, `reviews/R01_*`, `R02_*`, `R03_*`,
@@ -121,6 +147,7 @@ o_ls0_exports.cpp [verbatim prototype], run_replay.R, compare_replay.R, xcheck_n
   port is mechanical (same hunks; it additionally has plain PIPs and the scored-set registry).
 - The original API-AUDIT 10 forced-stop fits are not replayed (their inputs/scripts are not in the repository); a local
   analogue is in (b) `paths`.
+- `build/check_smokes.R` and the 32-seed harness gate on Owls: not run (local only); seeds 1–3 run locally (§3d).
 - The certificate card (L1 etc.), stacking/c₄ search, concurrency layer and NA fields for `schedule_limit` statuses not
   produced by this core are outside this ticket.
 - Owls/NOTS execution (production-size timing, `build/check_smokes.R` on saved smoke records) not done (local only).

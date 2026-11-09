@@ -16,3 +16,9 @@
 - 22:22: regression p = 30, 48 datasets x {old, off, on, proto}: off == old 48/48; on: sampler/final search/E3 identical 48/48, HPM unchanged 48/48, prototype replay identical 48/48 (numerics/out_regress_p30.txt).
 - 22:28: p = 500 replay designs (dev S1 r001, S4 r001, S5 r002; on vs proto) launched. Existing-suite helper (Sonnet) running.
 - 22:33: PLAN v1.2, R02 disposition, TDP_E.md (4) wording.
+- 22:46: HQ forwarded C-PACK MR1-MR3. MR1 already satisfied (test added); MR2 implemented: start_mode throws for tie_dp && cap < 2 (36c0cfe); MR3 documented. Tests moved to caps >= 2; [MR2] checks added.
+- 22:50: accidentally committed the helper's existing_suite tree (11 MB evidence, kept; no force-push).
+- 22:55: existing-suite helper report: A 28/28 x3 seeds; B/C only expected interface failures. Harness assertions updated (ls0 formal; ls0 row dropped only if all zero; NULL or NA = unavailable).
+- 22:58: R04 (MR2 delta + harness edits) APPROVE, no findings. Harness rerun with v3.1 assertions: B2/C2 28/28 x3 seeds PASS.
+- 22:58: all tests rerun on the MR2 core: TDP 0 failures (MR2 checks pass), xcheck 600/600, LS0 normal 35/35, stop 9/9, numfail 5/5, paths 10/10.
+- 23:05: p = 500 replays (started 22:28 on the pre-MR2 binary; MR2 cannot change behaviour at cap 1e6) still running on a shared CPU.
