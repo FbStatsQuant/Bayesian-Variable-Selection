@@ -37,8 +37,8 @@ counterexample or a proof that a condition is necessary counts as closing the qu
 Leads as assigned by HQ. **Effort cap (Felipe, 2026-11-09, binding, overrides every earlier protocol): every agent —
 Claude or OpenAI — runs at effort/reasoningEffort `high` at most; never xhigh, max, ultrathink or ultra.** Cross-family
 reviewers: Codex gpt-6.1-sol at high; where a stronger OpenAI reviewer is needed (key lemma, mid-point, sweep, council
-seat), use gpt-6-astra at high. Parallel provers: Codex gpt-6.1-sol or Opus subagents. gpt-6-astra and Claude Fable 5.1: short hard
-steps only, ≤ 3 calls per ticket, reason logged. Helpers: Sonnet/Haiku on your own provider. Subagents may spawn
+seat), use gpt-6-astra at high. Parallel provers: Codex gpt-6.1-sol or Opus subagents. Claude Fable 5.2 (replaces Fable 5.1, retired)
+leads hard proof tickets and takes the final Claude council seat when HQ assigns it. Helpers: Sonnet/Haiku on your own provider. Subagents may spawn
 subagents; the lead stays responsible.
 
 ## Tickets
