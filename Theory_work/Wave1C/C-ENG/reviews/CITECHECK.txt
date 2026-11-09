@@ -1,0 +1,61 @@
+CITECHECK Sun Nov  8 22:45:07 CST 2026: every file:line cited in REPORT.md §1 opened; grep of the quoted identifiers with line numbers (new numbering at HEAD)
+Scripts/SMC_BVS/core/cpp/v3_start.h:178: // Start mode S~_0 = argmax pi_0 (M §6.3; CORE_SPEC §3): max-plus convolution of per-block per-size maxima, summed
+Scripts/SMC_BVS/core/cpp/v3_start.h:185: struct ModeResult { std::vector<int> S; double lg0 = NEG_INF; long ties = 0; bool truncated = false; bool tie_dp_used = false; };
+Scripts/SMC_BVS/core/cpp/v3_start.h:192: inline ModeDP mode_dp(const Start& st) {
+Scripts/SMC_BVS/core/cpp/v3_start.h:226: inline bool mode_tight(const ModeDP& dp, int b, int r, int j) {
+Scripts/SMC_BVS/core/cpp/v3_start.h:234: inline std::vector<int> mode_tie_dp(const Start& st, const ModeDP& dp) {
+Scripts/SMC_BVS/core/cpp/v3_start.h:258:   if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (invalid tables)");
+Scripts/SMC_BVS/core/cpp/v3_start.h:268: inline ModeResult start_mode(const Start& st, long cap = 1000000, bool tie_dp = true) {
+Scripts/SMC_BVS/core/cpp/v3_start.h:299:   if (trunc && tie_dp) { res.S = mode_tie_dp(st, dp); res.tie_dp_used = true; }
+Scripts/SMC_BVS/core/cpp/v3_ledger.h:9: // PH_LS0 (v3.1 #8): the local search from the start mode after the final local search; provenance "ls0". Appended last
+Scripts/SMC_BVS/core/cpp/v3_ledger.h:11: enum Phase { PH_TABLE = 0, PH_PILOT, PH_DIAG, PH_FINAL_INIT, PH_FINAL_BRIDGE, PH_BURN_IN, PH_MEASURED, PH_LOCAL, PH_INHERITED, PH_TEST, PH_LS0, N_PHAS
+Scripts/SMC_BVS/core/cpp/v3_ledger.h:18: }
+Scripts/SMC_BVS/core/cpp/v3_engine.h:376:   // Scan order: flips j = 1..p, then swaps (j in S ascending) x (l outside S ascending).
+Scripts/SMC_BVS/core/cpp/v3_engine.h:378:   // phase ls0 for LS0, v3.1 #8: the same rules from the start mode, centre emitted).
+Scripts/SMC_BVS/core/cpp/v3_engine.h:381:     ev = EventCtx(); ev.phase = phase; ev.tier = tier; ev.island = 0; ev.phi = 1.0; ev.iter = iter;
+Scripts/SMC_BVS/core/cpp/v3_runtime.h:32: inline EventCtx local_event(int tier, int iter, int phase = PH_LOCAL) {
+Scripts/SMC_BVS/core/cpp/v3_runtime.h:33:   EventCtx e; e.phase = phase; e.tier = tier; e.iter = iter; e.phi = 1;
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:58: static NumericMatrix counter_matrix(const uint64_t c[N_PHASE][N_MECH], bool include_ls0 = false) {
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:59:   int nph = include_ls0 ? N_PHASE : PH_LS0;
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:363: static List ledger_to_list(const Ledger& L, const Data& D, bool include_ls0 = false) {
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:369:                           _["logical"] = counter_matrix(L.logical, include_ls0), _["fresh"] = counter_matrix(L.fresh, include_ls0));
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:394:   struct RunOpts { int N, L, Hm, islands, tier, ell; double cache_capacity; bool ls0, ls0_tie_dp; int ls0_ell; };
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:400:   o.ls0 = ro.containsElementNamed("ls0") && as<bool>(ro["ls0"]);
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:402:   o.ls0_ell = ro.containsElementNamed("ls0_ell") ? as<int>(ro["ls0_ell"]) : o.ell;
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:412:   List local, hpm_before, ls0, hpm_before_ls0, smode;
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:413:   double sec_local = 0, sec_ls0 = 0;
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:463:     if (o.ls0 && status == "completed") {
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:467:       ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:471:       LocalArchive A0 = E.local_search(m.S, o.ls0_ell, o.tier, true, -1, PH_LS0);
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:474:       if (E.guard && E.guard->check(sec_ls0, "ls0", local_event(o.tier, -1, PH_LS0))) status = "resource_limit";
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:504:                           _["hpm_before_local"] = hpm_before, _["ledger"] = ledger_to_list(led, D, o.ls0),
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:510:   if (o.ls0) { out["ls0"] = ls0; out["hpm_before_ls0"] = hpm_before_ls0; out["start_mode"] = smode; out["seconds_ls0"] = sec_ls0; }
+Scripts/SMC_BVS/core/v3_run.R:88: v3_run_settings <- function(setup, frozen, ls0 = getOption("v3.ls0", TRUE)) {
+Scripts/SMC_BVS/core/v3_run.R:104: V3_ESTIMATE_FIELDS <- c("log_Z", "log_Z_r", "log_Z_lower95", "log_Z_rel_m0", "log_Z_r_rel_m0", "pip_primary", "pip_r", "mpm")
+Scripts/SMC_BVS/core/v3_run.R:105: v3_unavailable_estimates <- function(fit) {
+Scripts/SMC_BVS/core/v3_run.R:128:   v31 <- isTRUE(ro$ls0)
+Scripts/SMC_BVS/core/v3_run.R:142:     if (v31) out <- v3_unavailable_estimates(out)
+Scripts/SMC_BVS/core/v3_run.R:186:     E3 <- hl$F > hb$F
+Scripts/SMC_BVS/core/v3_run.R:189:     out$local_certified <- cert_final || cert_ls0
+Scripts/SMC_BVS/core/v3_run.R:192:     out$local_limit <- out$final_local_limit || out$ls0_local_limit
+Scripts/SMC_BVS/core/v3_run.R:193:     out$ls0_improved <- out$hpm_F > hl$F                                          # LS0 raised the best score (strict)
+Scripts/SMC_BVS/core/v3_run.R:194:     out$ls0_hpm_changed <- !identical(as.integer(out$hpm), as.integer(hl$model))  # includes equal-F tie-rule changes
+Scripts/SMC_BVS/core/v3_run.R:201:   if (v31) out$flags <- c(out$flags, list(final_local_limit = out$final_local_limit, ls0_local_limit = out$ls0_local_limit,
+Scripts/SMC_BVS/core/v3_run.R:211:   if (v31) out$timings$ls0 <- raw$seconds_ls0
+Scripts/SMC_BVS/core/v3_run.R:218: v3_final_run <- function(setup, frozen, seed, runtime = NULL, ls0 = getOption("v3.ls0", TRUE)) {
+Scripts/SMC_BVS/core/v3_fit.R:51: v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = getOption("v3.ls0", TRUE)) {
+Scripts/SMC_BVS/core/v3_fit.R:63:     if (isTRUE(ls0) && !isTRUE(fit$estimates_available)) fit <- v3_unavailable_estimates(fit)
+Scripts/SMC_BVS/core/v3_fit.R:137:   t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, ls0 = ls0)
+Scripts/SMC_BVS/study/adapter.R:187: smcbvs_estimate <- function(fit, name) {
+Scripts/SMC_BVS/study/adapter.R:198:   mpm <- smcbvs_check_support(smcbvs_estimate(fit, "mpm"), p, "MPM")
+Scripts/SMC_BVS/study/adapter.R:202:   if (available || !is.null(smcbvs_estimate(fit, "pip_primary"))) {
+Scripts/SMC_BVS/study/adapter.R:209:     q <- smcbvs_estimate(fit, "pip_primary")
+Scripts/SMC_BVS/core/README.md:37: ## v3.1 merge: LS0, e4 tie-aware DP, GUARD-W NA fields (C-ENG, branch `w1c/ls0-merge`, 2026-11-08)
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:136: | 6 | **GUARD-W semantics** | §2 statuses, §8.6, §6.1 | "Any worker stop, LS0 stop or guard stop ⇒ no output. The fit returns the corresponding u
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:150: | 8 | **LS0: local search from the start mode** | §6.10, §6.1, §7, §2 (provenance) | <ul><li>"After the final local search (and after the extra se
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:151: | 9 | **D3c wording for LS0** | paper / §12 | "Appending LS0 preserves the preceding sampler computation. Island outputs, Ẑ and PIPs are unchanged.
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:152: | 10 | **Certificate attaches to the returned Ŝ** | §6.10, card | "`local_certified` and card item L1 are evaluated on the finally returned Ŝ, from
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:162: | 15 | **Unavailable output = explicit NA** | §2 statuses, §7 | "On every return without complete output (`resource_limit`, `schedule_limit`, `numer
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:183: | 26 | e4 | LS0 start-mode tie cap | §6.10 (LS0) | as in #8. The invariant "DP output = the prescribed choice" is an OPEN obligation (N3). A and B sk
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:399: | 2 | **Merged-LS0 replay**: integrated core versus the O-LS0 export on the 3 designs. Covers HPM, stores, flags, E3 unchanged, `ls0_improved`, stream
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:400: | 3 | **GUARD-W audit**: code audit that the v3.1 worker, merge and LS0 paths satisfy "any worker stop, LS0 stop or guard stop ⇒ no output" (OP-LS0 
