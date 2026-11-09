@@ -1,4 +1,4 @@
-C-ENG test_ls0.R variant = stop  date = 2026-11-08 22:56:08 
+C-ENG test_ls0.R variant = stop  date = 2026-11-08 23:21:22 
 core = C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\t3-68de3711\Scripts\SMC_BVS\core 
 
 GUARD-W: guard reports exceeded at checkpoint ls0
