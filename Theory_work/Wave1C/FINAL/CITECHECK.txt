@@ -1,4 +1,4 @@
-citecheck.py: 180 citations checked, 0 problems
+citecheck.py: 186 citations checked, 0 problems
 OK            consistency.tex:18  \srcq{W1C/PROTOCOL.md:35}  [PROVED-CHECKED]
 OK            consistency.tex:19  \path{W1C/FINAL/reviews/F1_fidelity_sol.md}
 OK            consistency.tex:19  \path{W1C/FINAL/reviews/C1_disposition.md}
@@ -122,6 +122,8 @@ OK            sections\s6_delivery.tex:55  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.m
 OK            sections\s6_delivery.tex:55  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:33}  [LS0, workers, merge, certificates, return allocation]
 OK            sections\s6_delivery.tex:55  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:54}  [last successful tier-1 construction]
 OK            sections\s6_delivery.tex:55  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:62-64}  [Not counted]
+OK            sections\s6_delivery.tex:55  \srcq{BRH/Theory_work/Wave1C/C-ENG/REPORT.md:63-81}  [now charges this worst case]
+OK            sections\s6_delivery.tex:55  \srcq{BRH/Scripts/SMC_BVS/core/v3_fit.R:43-65}  [ls0_worst_case]
 OK            sections\s7_impl.tex:4  \srcq{W1C/PROTOCOL.md:40-47}  [Method-side changes]
 OK            sections\s7_impl.tex:6  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:3-8}  [DONE (implemented, tested, all code reviews APPROVE)]
 OK            sections\s7_impl.tex:8  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:12-16}  [reproduces the v3 fit entirely]
@@ -129,6 +131,8 @@ OK            sections\s7_impl.tex:9  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.m
 OK            sections\s7_impl.tex:9  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:73-78}  [TDP-E]
 OK            sections\s7_impl.tex:10  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:52}  [applied only to the LS0]
 OK            sections\s7_impl.tex:10  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:62-64}  [Not counted]
+OK            sections\s7_impl.tex:10  \srcq{BRH/Theory_work/Wave1C/C-ENG/REPORT.md:63-81}  [now charges this worst case]
+OK            sections\s7_impl.tex:10  \srcq{BRH/Scripts/SMC_BVS/core/v3_fit.R:43-65}  [ls0_worst_case]
 OK            sections\s7_impl.tex:11  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:54}  [last successful tier-1 construction]
 OK            sections\s7_impl.tex:12  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:56-60}  [0 fits with status]
 OK            sections\s7_impl.tex:13  \srcq{BR/Theory_work/Wave1C/C-ENG/REPORT.md:80-92}  [APPROVE]
@@ -147,6 +151,8 @@ OK            sections\s7_impl.tex:40  \srcq{BR/Scripts/SMC_BVS/core/cpp/v3_engi
 OK            sections\s7_impl.tex:64  \srcq{W1C/FINAL/reviews/F1_fidelity_sol.md:1-12}  [VERIFIED-WITH-AMENDMENTS]
 OK            sections\s7_impl.tex:64  \srcq{W1C/FINAL/reviews/C1_council_sol.md:22-30}  [115,500]
 OK            sections\s7_impl.tex:64  \srcq{W1C/FINAL/reviews/C1_council_opus.md:21}  [Lemma CAP (a)–(c) is correct]
+OK            sections\s7_impl.tex:64  \path{W1C/FINAL/reviews/C2_disposition.md}
+OK            sections\s7_impl.tex:64  \srcq{W1C/FINAL/reviews/C3_council_sol.md:3}  [ACCEPT]
 OK            sections\s7_impl.tex:64  \srcq{W1C/HQ_AUDIT/A1_propF_redteam.md:56}  [greedy scans/path are identical up to the smaller cap]
 OK            sections\s7_impl.tex:78  \srcq{W1C/C-DLV/lemmas/L1_resources.md:24-25}  [LS0 (spec)]
 OK            sections\s7_impl.tex:78  \srcq{SoP/04_theory.tex:708}  [ℓ = ⌈log₂(n + p + 1)⌉]

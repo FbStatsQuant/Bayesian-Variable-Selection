@@ -11,7 +11,8 @@ import re
 import subprocess
 import sys
 
-BRANCH = "8a27652"  # C-ENG head cited by the chapter (origin/w1c/ls0-merge has since advanced)
+BRANCH = "8a27652"  # BR/: C-ENG head reviewed in the chapter (historical claims)
+BRANCH_HEAD = "493579a"  # BRH/: current head of origin/w1c/ls0-merge (LS0 preflight charge)
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 ALIASES = {
@@ -90,16 +91,17 @@ def main():
                 continue  # macro definition
             ref = arg.strip()
             if kind == "path":
-                if not any(ref.startswith(k) for k in ALIASES) and not ref.startswith(("Theory_work/", "Scripts/", "BR/")):
+                if not any(ref.startswith(k) for k in ALIASES) and not ref.startswith(("Theory_work/", "Scripts/", "BR/", "BRH/")):
                     continue  # bare file names next to an earlier full path
                 path, spec = ref.rstrip("/"), None
             else:
                 mm = re.match(r"^(.*?):([0-9,\- ]+)$", ref)
                 path, spec = (mm.group(1), mm.group(2)) if mm else (ref, None)
             status, note = "OK", ""
-            if path.startswith("BR/"):
-                # read-only: the file as committed on branch origin/w1c/ls0-merge
-                r = subprocess.run(["git", "-C", ROOT, "show", BRANCH + ":" + path[3:]], capture_output=True)
+            if path.startswith(("BR/", "BRH/")):
+                # read-only: the file as committed on branch origin/w1c/ls0-merge (pinned commit)
+                rev, rel_path = (BRANCH_HEAD, path[4:]) if path.startswith("BRH/") else (BRANCH, path[3:])
+                r = subprocess.run(["git", "-C", ROOT, "show", rev + ":" + rel_path], capture_output=True)
                 exists = r.returncode == 0
                 content = r.stdout.decode("utf-8", errors="replace") if exists else ""
             else:

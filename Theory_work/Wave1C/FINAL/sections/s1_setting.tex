@@ -19,7 +19,7 @@ the shipped $g=n$ ridge score with IG$(0.01,0.01)$ and the capped BB$(1,p)$ size
 
 \paragraph{LS0.} After the final local search (and after the extra search from $c_4$ when $R'>4$), one local search with the §6.10 rules from the start mode $\tilde{S}_0$; LS0 reads no uniforms, every model it scores joins the all-scored set and the stores, its centre is scored (emitted); a completed LS0 capped at \texttt{local\_limit} still returns output \srcq{SoP/02_method.tex:490-501}{LS0: local search from the start mode}. LS0 is \textbf{not} in the frozen production core (which calls only the search from the global best, \srcq{PROD/cpp/v3_core.cpp:447}{final local search from the global best}); C-ENG implemented it on branch \texttt{w1c/ls0-merge} (default on, switch \texttt{ls0}; not merged to main; §\ref{sec:impl}).
 
-\paragraph{Reported HPM.} $\Shat$ is the maximum of the all-scored set $\mathcal S^{+}$ (every model ever scored, including LS0) for the strict total order $(F(S),-|S|,\text{lex})$ \srcq{SoP/02_method.tex:468-473}{HPM:}.
+\paragraph{Reported HPM.} $\Shat$ is the maximum of the all-scored set $\mathcal S^{+}$ (every model scored by the fit up to and including LS0, post-hoc certificate evaluations excluded) for the strict total order $(F(S),-|S|,\text{lex})$ \srcq{SoP/02_method.tex:468-473}{HPM:}.
 
 \paragraph{Output event and potential run.} $\Ocal$ is the event that the fit returns estimates (status \texttt{exact} or \texttt{completed}); $U_n:=\Ocal^c$. Guarantees are stated for the potential uninterrupted run and as $\PP(\Ocal\cap\cdot)$, never as $\PP(\cdot\mid\Ocal)$ \srcq{SoP/02_method.tex:579-583}{Output convention}. Bars denote potential-run objects; the never-scored term is
 \[
