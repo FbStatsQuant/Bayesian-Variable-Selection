@@ -1,0 +1,17 @@
+QUOTE-NOTFOUND SONG_LIANG_MAP.md:18 -> SoP/04b_supplement.tex:[(1276, 1276)]: "No completed prior-tail/contraction route; p ≤ n^A stays in "
+QUOTE-NOTFOUND SONG_LIANG_MAP.md:21 -> SoP/04_theory.tex:[(782, 782)]: "π(t ⊂ ξ_q) →_p 1"
+QUOTE-NOTFOUND SONG_LIANG_MAP.md:22 -> SoP/04_theory.tex:[(491, 491), (500, 500)]: "Theorem S in the on-line supplementary material establishes "
+QUOTE-NOTFOUND SONG_LIANG_MAP.md:22 -> SoP/04_theory.tex:[(491, 491), (500, 500)]: "| M5(b1-LH):"
+QUOTE-NOTFOUND SONG_LIANG_MAP.md:22 -> SoP/04_theory.tex:[(491, 491), (500, 500)]: "→ item 1 e4′ (integration retained); W1-PXN, W1-GEN"
+QUOTE-NOTFOUND SONG_LIANG_MAP.md:23 -> SoP/04_theory.tex:[(111, 111), (117, 117), (130, 130), (410, 412)]: "PROVED under the same premises"
+QUOTE-ELSEWHERE lemmas/I1_e4_replacement.md:40 -> SoP/04_theory.tex:[(505, 505)]: "the e4 tie-DP invariant N3 is OPEN"
+QUOTE-NOTFOUND lemmas/I4_SL_corollaries.md:91 -> SoP/04_theory.tex:[(400, 400)]: "(SoP/04_theory.tex:400); (β) M4(c):"
+QUOTE-NOTFOUND lemmas/I4_SL_corollaries.md:108 -> SoP/04_theory.tex:[(787, 787)]: "(:824) — a historical disclosure for the exhibited families,"
+QUOTE-NOTFOUND patches/P_e4_consumers.md:24 -> lemmas/L5_assembly.md:[(13, 13)]: "; :41-45 Note (0) — replace by (R39 #3 text)"
+QUOTE-NOTFOUND patches/P_e4_consumers.md:30 -> lemmas/L6_instances.md:[(42, 42)]: "premises (incl. e4′)"
+QUOTE-NOTFOUND patches/P_e4_consumers.md:36 -> T38_PROOF.md:[(254, 254)]: "The coded routine returns S° on this event by C-PACK Lemma U"
+QUOTE-NOTFOUND patches/P_SEL_L6d.md:19 -> STATEMENT.md:[(138, 138)]: "fixed scale c"
+MISS-FILE item5_PXN_consolidated/00_statement_and_conventions.md:173 -> STATEMENTS.md
+MISS-FILE item5_PXN_consolidated/00_statement_and_conventions.md:173 -> 04_theory.tex
+QUOTE-NOTFOUND item5_PXN_consolidated/00_statement_and_conventions.md:177 -> NBH/branch_snapshots/W2-BOOK/PROOF.md:[(75, 95)]: "SF/XF-reviewed"
+SUMMARY citations ok=142 miss=2; quotes near-cite ok=63 flagged=14

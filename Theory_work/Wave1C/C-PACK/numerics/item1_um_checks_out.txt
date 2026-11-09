@@ -1,0 +1,124 @@
+item1_um_checks_out.txt -- numerical checks of Lemma UM and Lemma UM-FP (I1_e4_replacement.md) against the frozen start_mode
+script: item1_um_checks.py   python: 3.13.17  numpy 2.3.0  mpmath 1.3.0   total time 90.3s
+harness: Theory_work/Wave1/W1-N3/numerics/sm_harness.exe (existing, ran as is; not rebuilt) driving v2_2_1 v3_start.h:183-240
+seeds: A=20261109 (numpy default_rng); B=20261110 (+1 for sampling); C=default_rng([20261111, n, s]), n in {50,200,800}, s=0..19
+
+CONTRADICTIONS WITH THE LEMMAS: NONE (A: 0 violations, B: 0, C: 0)
+
+[A] generated 7700 instances ({'wide': 1500, 'mid': 1500, 'small': 1500, 'tiny': 800, 'planted': 2400}); unique exact maximiser: 5712; excluded (non-unique argmax f): 1988; gen+exact time 21.7s
+
+(A) Lemma UM, exact arithmetic (integer tables |v|<=1000, <=13 terms/sum => all sums exact in binary64)
+  instances with unique exact maximiser R: 5712   (x3 caps = 17136 harness runs)
+  by family and pi0(R)>1/2: mid:le=18, mid:gt=1323, planted:le=383, planted:gt=1259, small:le=283, small:gt=633, tiny:le=86, tiny:gt=227, wide:gt=1500
+  unique-max instances with pi0(R) > 1/2: 4942;  with pi0(R) <= 1/2: 770
+  pi0(R) over the pi0>1/2 group: min/5%/25%/50%/75%/max = 0.500393 / 0.609944 / 0.894590 / 1.000000 / 1.000000 / 1.000000
+  pi0(R) in (0.5,0.6]: 222, (0.6,0.8]: 640, (0.8,0.99]: 822, >0.99: 3258
+
+  category        cap      runs   S==R   lg0==max f   ties==1   truncated=1   truncated=0   trunc==[N>=cap]
+  pi0>1/2               1   4942   4942       4942      4942         4942             0          4942
+  pi0>1/2               2   4942   4942       4942      4942            0          4942          4942
+  pi0>1/2         1000000   4942   4942       4942      4942            0          4942          4942
+  pi0<=1/2              1    770    770        770       770          770             0           770
+  pi0<=1/2              2    770    770        770       770            0           770           770
+  pi0<=1/2        1000000    770    770        770       770            0           770           770
+  among instances with pi0(R)>1/2: N==1 (code ties==1 at cap 1e6) in 4942/4942 (100.0%)
+  VIOLATIONS (any of S!=R, lg0!=max f, ties!=1, truncated != [1>=cap]): 0
+
+[B] generated 2600 instances in 31.7s
+
+(B) Lemma UM-FP, binary64 random double tables (|v| spread over 1..2^45, signs random), eta = 0 (stored doubles = truth)
+  instances: 2600; f-hat has non-unique maximiser (excluded from the margin table): 13; used: 2587
+  construction: 'natural' random tables, or one stored double moved (<=12 steps) so that margin Delta ~ c*eps (c in [0.05, 0.25, 0.5, 1.0, 1.5, 1.9, 2.05, 2.5, 3.0, 5.0, 10.0, 100.0]) or ~ k ulps of |f-hat(R)| (k in [1, 2, 4, 8, 16, 64])
+  Delta = f-hat(R) - max_{S!=R} f-hat(S) (exact),  eps = max_S gamma_{m(S)} (|lam-hat|+sum|rho-hat|) (exact, u=2^-53)
+
+  Delta/eps bin              runs   code S==R   code S!=R
+  <0.5                         483         457          26
+  0.5-1                        183         181           2
+  1-2                          375         375           0
+  2-3 (>2: lemma applies)      355         355           0
+  3-10                         377         377           0
+  >=10                         814         814           0
+  runs with Delta > 2 eps: 1546;  VIOLATIONS (Delta>2eps and code S != R): 0
+  runs with Delta <= 2 eps: 1041;  of which code S != R: 28 (2.7%)  (non-vacuous: failures occur there; allowed by the lemma)
+  runs with 2 < Delta/eps <= 2.5 (just above the threshold): 223, code S==R in 223
+  sanity (clause (e), native binary64): g-hat(code S) == lg0 == max g-hat failed in 0/2600 runs; unique g-hat maximiser != code S in 0 runs
+  sanity (fold bound |g-hat(S)-f-hat(S)| <= gamma_m sum|terms|, up to 600 sampled sets/instance): violations 0
+
+[C] harness DATA runs: 60 in 1.2s
+
+(C) DATA mode (frozen scorer + real prior), LH-like designs: groups of equicorrelated columns (within corr 0.4-0.7), sparse beta, B=4
+    p<=12 (K=min(p,n/2)=p), full enumeration of Omega_K; f-hat = exact sum of the code's own doubles; scorer error eta NOT assessed (out of scope)
+
+ n    s  p  K  J  N  pi0(R)      ties trunc S==R  Lam-hat    T-hat       eps          Delta        Delta/(2eps)   eps<=crude  (e)
+ 50   0  12 12 3  1  0.633872142  1    0     True  14.81      18.22       1.4471e-14   1.785        6.1674e+13     True       True
+ 50   1  9  9  3  1  0.769896051  1    0     True  10.79      7.979       9.3316e-15   2.8376       1.5205e+14     True       True
+ 50   2  8  8  2  1  0.768888897  1    0     True  9.463      6.119       4.6253e-15   2.955        3.1943e+14     True       True
+ 50   3  12 12 3  1  0.405752883  1    0     True  14.81      10.48       1.1776e-14   0.54752      2.3247e+13     True       True
+ 50   4  12 12 4  1  0.611891706  1    0     True  14.81      5.097       1.3791e-14   0.97604      3.5387e+13     True       True
+ 50   5  6  6  2  1  0.441767104  1    0     True  6.829      11.92       4.6661e-15   0.49969      5.3545e+13     True       True
+ 50   6  8  8  2  1  0.593232546  1    0     True  9.463      19.42       7.9415e-15   1.3322       8.3879e+13     True       True
+ 50   7  9  9  3  1  0.382099791  1    0     True  10.79      14.58       1.1601e-14   0.3789       1.633e+13      True       True
+ 50   8  12 12 4  1  0.533841371  1    0     True  14.81      4.739       1.3269e-14   1.6392       6.1765e+13     True       True
+ 50   9  12 12 3  1  0.609197020  1    0     True  14.81      5.796       1.0047e-14   1.6153       8.0388e+13     True       True
+ 50   10 8  8  2  1  0.837114595  1    0     True  9.463      17.54       7.3887e-15   3.3653       2.2774e+14     True       True
+ 50   11 12 12 4  1  0.659032525  1    0     True  14.81      13.84       1.8006e-14   1.8203       5.0549e+13     True       True
+ 50   12 12 12 3  1  0.432466658  1    0     True  14.81      16.01       1.3711e-14   0.33201      1.2107e+13     True       True
+ 50   13 12 12 3  1  0.373306072  1    0     True  14.81      13.75       1.1229e-14   0.79472      3.5388e+13     True       True
+ 50   14 8  8  2  1  0.601921622  1    0     True  9.463      21.54       8.4952e-15   1.8598       1.0946e+14     True       True
+ 50   15 6  6  2  1  0.782558924  1    0     True  6.829      8.901       4.6259e-15   2.7663       2.99e+14       True       True
+ 50   16 9  9  3  1  0.727032667  1    0     True  10.79      9.025       1.0129e-14   2.6855       1.3257e+14     True       True
+ 50   17 12 12 3  1  0.453724966  1    0     True  14.81      11.22       1.1678e-14   0.97821      4.1884e+13     True       True
+ 50   18 12 12 4  1  0.696741320  1    0     True  14.81      8.01        1.7226e-14   3.2333       9.385e+13      True       True
+ 50   19 12 12 4  1  0.582246614  1    0     True  14.81      6.029       1.5138e-14   1.9262       6.3622e+13     True       True
+ 200  0  8  8  2  1  0.833905635  1    0     True  9.463      111.4       2.8698e-14   2.6444       4.6074e+13     True       True
+ 200  1  12 12 4  1  0.700334312  1    0     True  14.81      52.19       4.0268e-14   1.9569       2.4298e+13     True       True
+ 200  2  12 12 4  1  0.889469534  1    0     True  14.81      72.74       4.7752e-14   3.7548       3.9315e+13     True       True
+ 200  3  12 12 4  1  0.798938752  1    0     True  14.81      89.94       5.4736e-14   2.9815       2.7235e+13     True       True
+ 200  4  12 12 3  1  0.866673822  1    0     True  14.81      51.14       2.7078e-14   3.223        5.9514e+13     True       True
+ 200  5  12 12 4  1  0.742787290  1    0     True  14.81      50.36       5.1221e-14   2.1401       2.0891e+13     True       True
+ 200  6  12 12 3  1  0.752252963  1    0     True  14.81      74.58       3.5893e-14   2.7316       3.8052e+13     True       True
+ 200  7  12 12 3  1  0.848009941  1    0     True  14.81      44.48       2.5905e-14   2.7803       5.3663e+13     True       True
+ 200  8  12 12 3  1  0.901044556  1    0     True  14.81      54.13       2.9036e-14   4.0925       7.0474e+13     True       True
+ 200  9  12 12 3  1  0.895066948  1    0     True  14.81      37.42       2.5482e-14   4.3321       8.5004e+13     True       True
+ 200  10 12 12 3  1  0.652102650  1    0     True  14.81      46.51       3.0028e-14   1.4823       2.4682e+13     True       True
+ 200  11 12 12 3  1  0.839507555  1    0     True  14.81      27.44       2.2395e-14   3.3841       7.5554e+13     True       True
+ 200  12 6  6  2  1  0.814672343  1    0     True  6.829      57.16       1.5343e-14   2.4018       7.8271e+13     True       True
+ 200  13 9  9  3  1  0.503412860  1    0     True  10.79      53.83       2.4540e-14   0.96439      1.9649e+13     True       True
+ 200  14 9  9  3  1  0.918753355  1    0     True  10.79      29.13       1.8086e-14   4.1367       1.1436e+14     True       True
+ 200  15 9  9  3  1  0.889752417  1    0     True  10.79      52.91       2.5587e-14   3.7592       7.346e+13      True       True
+ 200  16 9  9  3  1  0.311042847  1    0     True  10.79      60.68       2.9766e-14   0.025695     4.3161e+11     True       True
+ 200  17 9  9  3  1  0.861238335  1    0     True  10.79      84.66       3.5274e-14   3.0804       4.3663e+13     True       True
+ 200  18 9  9  3  1  0.819558221  1    0     True  10.79      25.4        2.3216e-14   2.8116       6.0555e+13     True       True
+ 200  19 12 12 4  1  0.911359862  1    0     True  14.81      73.89       4.8702e-14   4.1918       4.3035e+13     True       True
+ 800  0  9  9  3  1  0.928397836  1    0     True  10.79      179.9       8.9243e-14   4.158        2.3296e+13     True       True
+ 800  1  12 12 4  1  0.851957441  1    0     True  14.81      128.2       8.9231e-14   3.3942       1.9019e+13     True       True
+ 800  2  8  8  2  1  0.952593377  1    0     True  9.463      156         3.9136e-14   4.0687       5.1983e+13     True       True
+ 800  3  12 12 4  1  0.943121359  1    0     True  14.81      314.8       1.5733e-13   4.3475       1.3816e+13     True       True
+ 800  4  9  9  3  1  0.891340126  1    0     True  10.79      184.9       1.1088e-13   3.566        1.6081e+13     True       True
+ 800  5  8  8  2  1  0.924256504  1    0     True  9.463      523.7       1.2088e-13   3.793        1.5689e+13     True       True
+ 800  6  8  8  2  1  0.926233199  1    0     True  9.463      236.3       6.2503e-14   3.8977       3.118e+13      True       True
+ 800  7  9  9  3  1  0.741356046  1    0     True  10.79      189.1       1.1020e-13   1.544        7.0054e+12     True       True
+ 800  8  12 12 3  1  0.902481991  1    0     True  14.81      157.5       1.0129e-13   3.2294       1.5941e+13     True       True
+ 800  9  8  8  2  1  0.913702307  1    0     True  9.463      173.9       7.8043e-14   3.743        2.398e+13      True       True
+ 800  10 12 12 3  1  0.881936085  1    0     True  14.81      207.4       9.8938e-14   3.1832       1.6087e+13     True       True
+ 800  11 8  8  2  1  0.904944125  1    0     True  9.463      151.5       6.0990e-14   3.5535       2.9132e+13     True       True
+ 800  12 8  8  2  1  0.815465167  1    0     True  9.463      210.8       5.8147e-14   1.9376       1.6661e+13     True       True
+ 800  13 12 12 4  1  0.941707745  1    0     True  14.81      143.2       1.3772e-13   4.8061       1.7449e+13     True       True
+ 800  14 12 12 4  1  0.922806683  1    0     True  14.81      258.5       1.3576e-13   3.6168       1.3321e+13     True       True
+ 800  15 9  9  3  1  0.901186657  1    0     True  10.79      347.2       1.2463e-13   3.4201       1.3721e+13     True       True
+ 800  16 8  8  2  1  0.914500610  1    0     True  9.463      174.4       5.3081e-14   3.725        3.5088e+13     True       True
+ 800  17 12 12 4  1  0.904409709  1    0     True  14.81      165.1       1.4811e-13   3.6166       1.2209e+13     True       True
+ 800  18 12 12 4  1  0.896845870  1    0     True  14.81      124.3       1.4000e-13   3.4147       1.2195e+13     True       True
+ 800  19 8  8  2  1  0.622289543  1    0     True  9.463      141.7       3.5526e-14   1.3003       1.8301e+13     True       True
+
+  runs: 60; N (exact maximisers of f-hat) != 1: 0; truncated==1: 0; clause (e) native check failed: 0
+  runs with pi0(R) > 1/2: 53;  code S == R in 53/53  (all runs: S==R in 60/60)
+  n=50: runs 20, pi0>1/2: 14, S==R 14/14; Delta/(2eps) min/median/max = 3.539e+13 / 9.385e+13 / 3.194e+14
+        pi0<=1/2 runs: 6, S==R 6/6
+  n=200: runs 20, pi0>1/2: 19, S==R 19/19; Delta/(2eps) min/median/max = 1.965e+13 / 4.607e+13 / 1.144e+14
+        pi0<=1/2 runs: 1, S==R 1/1
+  n=800: runs 20, pi0>1/2: 20, S==R 20/20; Delta/(2eps) min/median/max = 7.005e+12 / 1.666e+13 / 5.198e+13
+  ALL pi0>1/2 runs: Delta/(2eps) min/median/max = 7.00537e+12 / 3.93149e+13 / 3.19433e+14; runs with ratio <= 1 (lemma condition would fail at eta=0): 0
+  eps (exact lemma definition) over all runs: min/max = 4.625e-15 / 1.573e-13; crude bound gamma_K(Lam+K T) >= exact eps in 60/60
+  Lam-hat range 6.829..14.81;  T-hat range 4.739..523.7
+  NOT assessed: the scorer's table error eta (|f-hat - f*|); eta is out of scope here, so the lemma's FP-TAB premise is untested.

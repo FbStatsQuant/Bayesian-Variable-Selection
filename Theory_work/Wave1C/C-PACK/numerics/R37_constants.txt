@@ -1,0 +1,9 @@
+sum beta^2 = 616/25 = 24.64
+M = 49.28*c^2 + 1
+W active coefficient = theta*(1 + epsilon/3)
+W signal-block small energy / ((n-1)*theta^2*epsilon^2) = 22/9
+W null-block energy / ((n-1)*theta^2*epsilon^2) = 12
+eta threshold for A=1 = 0.101020514434
+epsilon_0 upper bound for eta=0.1,A=1 = 0.012500000000
+eta=0.1,A=1,epsilon_0=1: exponent=0.682455532034, kappa_max=-0.182455532034
+eta=0.1,A=1,epsilon_0=0.001: exponent=0.497437146424, kappa_max=0.002562853576

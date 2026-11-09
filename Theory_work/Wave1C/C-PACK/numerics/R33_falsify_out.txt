@@ -1,0 +1,33 @@
+R33 independent UM-FP falsification attempt
+Python: 3.15.2; seed=33082026
+Harness: Theory_work\Wave1\W1-N3\numerics\sm_harness.exe
+Harness SHA256: 31d662d95b1aeb89c82f12e4c8b34735a7f5bc495616fe44ca73fd047fb548c9
+Frozen header SHA256: 19e0a0bd0e47949025ead4c7d7df0a521980454f010ec0b0d7a2176e64b701a7
+Harness TABLE input; all stored finite values transferred losslessly as hex floats.
+All feasible subsets enumerated (p<=8). Exact Fraction oracle for f*, eta, epsilon, Delta.
+Independent mathematical-table perturbations included; no scorer-error guarantee inferred.
+Every set checked against the recursive-summation bound, including subnormals and cancellation.
+K=0 tested with explicit Delta=+infinity convention (missing from reviewed text).
+Unread above-K entries are NaN. Block order shuffled. Caps 1, 2, 1000000.
+
+family: total / satisfying strict UM-FP condition / unique-exact mismatch outside condition
+K0: 1 / 1 / 0
+cancellation: 400 / 275 / 1
+empty: 1 / 1 / 0
+integer: 400 / 348 / 0
+negative_control: 1 / 0 / 1
+order_control: 2 / 0 / 0
+subnormal: 402 / 354 / 0
+table_error: 400 / 363 / 18
+ulp: 400 / 223 / 12
+wide: 400 / 347 / 0
+
+TOTAL=2407; CONDITION_PASSED=1912
+FAILURES=0
+Negative control:
+case=4 R=(0, 2) got=(0,) Delta=1e-14 2(eta+eps)=4.4408920985006272e-13 condition=False
+Failure details:
+Order controls: cap=1, same unordered singleton partition/objective, outputs=[(0,), (1,)].
+These are tied objectives; they refute order-invariance off uniqueness, not UM-FP.
+Conclusion: no counterexample with Delta > 2(eta+epsilon) found.
+This finite abstract-table test is not a proof and does not validate FP-TAB for the coded scorer.

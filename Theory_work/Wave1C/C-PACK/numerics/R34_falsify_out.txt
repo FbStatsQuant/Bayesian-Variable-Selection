@@ -1,0 +1,29 @@
+R34 independent SL0 falsification; no posterior sampling; NumPy 2.3.0
+Absolute numerical tolerance = 8e-12; deterministic seeds embedded in script.
+D0 exhaustive designs: 216 posteriors; 64476 feasible model scores; 84096 truth-law pairs.
+n = 6,12,24,60; p = 4,7,10; signals = 0,.7,5; 6 correlation structures.
+Every truth subset and every joint-inclusion A checked, including empty/full/infeasible truths.
+Singular duplicate columns and p > n included. Empty maxima use ZERO by explicit convention.
+Attainment: 80 two-point probability laws satisfy max-sum = 2*delta.
+These laws have zero off-pair masses and are NOT finite-data D0 posteriors.
+Negative control: delta=.5, truth={0}, masses({0},{1})=(.5,.5): HPM ties and MPM empty.
+Negative controls: q=1-delta=.75 loses a true variable; q=.24<delta includes the false variable.
+At q=delta=.25 the strict > rule excludes the tied false variable (the sufficient condition is conservative).
+Full-support law p=2,K=1: pi(empty)=.125, pi({0})=.625, pi({1})=.25; max-sum=0.625, 2delta=0.75.
+General obstruction: for a nonempty proper truth and full support, pi(empty)>0 gives max_false < delta, so equality is impossible.
+Empty/full truth boundary truth_mask=0: max-sum=0.625; delta=0.875; universal 2delta-attainment false for this truth.
+Empty/full truth boundary truth_mask=3: max-sum=0.5; delta=0.75; universal 2delta-attainment false for this truth.
+CHECK COUNTS AND MAX POSITIVE RESIDUALS:
+  D0 normalization: checks=216, max_excess=6.661e-16
+  SL0(i) coordinate: checks=84190, max_excess=1.332e-15
+  SL0(i) max sum: checks=84190, max_excess=2.776e-17
+  SL0(ii) all joint inclusions: checks=84190, max_excess=4.441e-16
+  SL0(ii) bounded h: checks=193701, max_excess=0.000e+00
+  SL0(iii) strict threshold implication: checks=464, max_excess=0.000e+00
+  SL0(iv) unique HPM: checks=188, max_excess=0.000e+00
+  SL0(v) size concentration: checks=84190, max_excess=5.551e-17
+  SL0(vi) arbitrary-law attainment: checks=80, max_excess=2.776e-17
+  SL1(d) finite TV identity: checks=64567, max_excess=4.441e-16
+PASS: SL0(i)-(v), h/TV identities, and qualified arbitrary-law attainment; all negative controls detected.
+NOT ESTABLISHED BY NUMERICS: asymptotic rates, Song-Liang theorems, code integration, or D0 exact attainment.
+Script SHA256: 45c9f6f2de531087212aa14c79b435cd351468491de0be5d6a23c954638ae23b

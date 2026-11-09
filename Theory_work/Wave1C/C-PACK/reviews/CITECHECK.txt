@@ -1,0 +1,39 @@
+QUOTE-NOTFOUND SONG_LIANG_MAP.md:18 -> SoP/04b_supplement.tex:[(1276, 1276)]: "No completed prior-tail/contraction route; p ≤ n^A stays in "
+QUOTE-NOTFOUND SONG_LIANG_MAP.md:21 -> SoP/04_theory.tex:[(782, 782)]: "π(t ⊂ ξ_q) →_p 1"
+QUOTE-NOTFOUND SONG_LIANG_MAP.md:22 -> SoP/04_theory.tex:[(491, 491), (500, 500)]: "Theorem S in the on-line supplementary material establishes "
+QUOTE-NOTFOUND SONG_LIANG_MAP.md:22 -> SoP/04_theory.tex:[(491, 491), (500, 500)]: "| M5(b1-LH):"
+QUOTE-NOTFOUND SONG_LIANG_MAP.md:22 -> SoP/04_theory.tex:[(491, 491), (500, 500)]: "→ item 1 e4′ (integration retained); W1-PXN, W1-GEN"
+QUOTE-NOTFOUND SONG_LIANG_MAP.md:23 -> SoP/04_theory.tex:[(111, 111), (117, 117), (130, 130), (410, 412)]: "PROVED under the same premises"
+QUOTE-ELSEWHERE lemmas/I1_e4_replacement.md:40 -> SoP/04_theory.tex:[(505, 505)]: "the e4 tie-DP invariant N3 is OPEN"
+QUOTE-NOTFOUND lemmas/I4_SL_corollaries.md:91 -> SoP/04_theory.tex:[(400, 400)]: "(SoP/04_theory.tex:400); (β) M4(c):"
+QUOTE-NOTFOUND lemmas/I4_SL_corollaries.md:108 -> SoP/04_theory.tex:[(787, 787)]: "(:824) — a historical disclosure for the exhibited families,"
+QUOTE-NOTFOUND patches/P_e4_consumers.md:24 -> lemmas/L5_assembly.md:[(13, 13)]: "; :41-45 Note (0) — replace by (R39 #3 text)"
+QUOTE-NOTFOUND patches/P_e4_consumers.md:30 -> lemmas/L6_instances.md:[(42, 42)]: "premises (incl. e4′)"
+QUOTE-NOTFOUND patches/P_e4_consumers.md:36 -> T38_PROOF.md:[(254, 254)]: "The coded routine returns S° on this event by C-PACK Lemma U"
+QUOTE-NOTFOUND patches/P_SEL_L6d.md:19 -> STATEMENT.md:[(138, 138)]: "fixed scale c"
+MISS-FILE item5_PXN_consolidated/00_statement_and_conventions.md:173 -> STATEMENTS.md
+MISS-FILE item5_PXN_consolidated/00_statement_and_conventions.md:173 -> 04_theory.tex
+QUOTE-NOTFOUND item5_PXN_consolidated/00_statement_and_conventions.md:177 -> NBH/branch_snapshots/W2-BOOK/PROOF.md:[(75, 95)]: "SF/XF-reviewed"
+SUMMARY citations ok=142 miss=2; quotes near-cite ok=63 flagged=14
+
+## Lead's manual disposition of every flagged item (regenerated after sweep R39, 2026-11-08 ~22:25 CST; scope now includes
+## item5_PXN_consolidated/ and section-aware resolution of P_e4_consumers.md)
+- MISS-FILE item5 00:173 `STATEMENTS.md:51-52`, `04_theory.tex:788` — bare short forms of the full paths given earlier in the
+  same cell (`NBH/branch_snapshots/W6-FIXREV2/STATEMENTS.md`, `Theory_work/State_of_Project/sections/04_theory.tex`); checked by
+  hand: STATEMENTS.md:51-52 contains "Status: PROVED (S03 §6; changed steps C1–C10 written in full there); V03 and A-REV2:
+  VERIFIED under exactly these hypotheses."; 04_theory.tex:788 contains "T03♯: \textbf{PROVED; SF VERIFIED (W2-VT03R); XF
+  VERIFIED (A-REV2)}" (bold markup only). OK.
+- SONG_LIANG_MAP:18 FW18 quote — present at 04b_supplement.tex:1276 modulo TeX math ("p ≤ $n^A$"). OK.
+- SONG_LIANG_MAP:21 "π(t ⊂ ξ_q) →_p 1", :22 "Theorem S in the on-line supplementary material establishes …" — quotes of the
+  Song–Liang PDF p. 956 (checked on the page images), not of the SoP file cited for our analog. OK.
+- SONG_LIANG_MAP:22 "| M5(b1-LH):", "→ item 1 e4′ …"; I4:91; I4:108; P_e4:24 — regex artefacts (text between two separate
+  quotations / own text), not quotations.
+- SONG_LIANG_MAP:23 "PROVED under the same premises" — Theory_work/Wave1/W1-N1/REPORT.md:47 (cited in the same row). OK.
+- I1:40 "the e4 tie-DP invariant N3 is OPEN" — at 04_theory.tex:521, which the same row also cites. OK.
+- P_e4:30, :36 — new replacement text, not quotations. OK.
+- P_SEL:19 "fixed scale c" — L6_instances.md:117 has "fixed scale c"; GEN STATEMENT.md:138 has "fixed signal scale c"; the
+  patch quotes both. OK.
+- item5 00:177 "SF/XF-reviewed" — quotation of Theory_work/Wave1/W1-PXN/reviews/C1_council_codex.md:22 ("with its PROVED and
+  SF/XF-reviewed status"), not of W2-BOOK. OK (R36 Q4 confirms).
+Result: 142 range-existence checks pass; 2 short-form misses and 14 quote flags all resolved by hand; 0 unresolved.
+Range existence is not semantic support; semantic/status checks were done by reviewers R33–R39 and the lead.

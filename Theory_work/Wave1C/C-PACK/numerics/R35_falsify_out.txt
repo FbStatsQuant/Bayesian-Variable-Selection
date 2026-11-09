@@ -1,0 +1,51 @@
+R35 falsification: LH-iid partition and sparse eigenvalues
+Python 3.12.4; NumPy 1.26.4; SciPy 1.13.1
+Seeds: 0..5 (6 sequential RNG streams); n=200,800,3200; g=9,10,11,12; c=1,2; G=24; v=0; rho=.7; psi=.5; A=2.
+p=24g (216..288), including p>n at n=200; SIZE checked at every configuration.
+lambda0=(1-.5)(1-.7)=.15; target=lambda0/2=.075.
+L=min(p,msharp+s0+j0+g*s0+1), s0=2c, j0=ceil((2A+1)s0)+1.
+Probes: every whole group, all signal-unit columns, first L columns,
+plus 12 random subsets at each of sizes min(p,16), min(p,ceil(log n)), L.
+A full-Gram eigenvalue >=.075 certifies ALL subsets by interlacing;
+otherwise finite probes do NOT certify the universal statement.
+delta_n and the stated onset are computed literally; failures before onset are not theorem counterexamples.
+All partitions are hypothetical make_blocks functions even if production dispatch would be exact.
+Deterministic checks: population recovery at B=14,16; nonrecovery at B=20=2g: PASS.
+Deterministic tie fixture: identity correlation, p=4,B=2 -> [(0,1),(2,3)]: PASS.
+
+n g c p B L | recovery/6 strict-margin/6 eig-probe-fail/6 full-cert/6 | min-probe min-full max-entry-error delta onset/6
+Completed seed 0; elapsed 31.1s
+Completed seed 1; elapsed 54.8s
+Completed seed 2; elapsed 85.1s
+Completed seed 3; elapsed 110.8s
+Completed seed 4; elapsed 131.6s
+Completed seed 5; elapsed 148.9s
+200 9 1 216 14 63 | 6/6 6/6 6/6 0/6 | 0.05606646 -0.00000000 0.30077679 12.78992653 0/6
+200 9 2 216 14 111 | 6/6 4/6 6/6 0/6 | 0.02000904 -0.00000000 0.29845725 12.78992653 0/6
+200 10 1 240 14 65 | 6/6 5/6 6/6 0/6 | 0.05425525 -0.00000000 0.32559152 12.78992653 0/6
+200 10 2 240 14 116 | 6/6 5/6 6/6 0/6 | 0.01637567 -0.00000000 0.29334284 12.78992653 0/6
+200 11 1 264 14 67 | 6/6 5/6 6/6 0/6 | 0.05476240 -0.00000000 0.34425028 12.78992653 0/6
+200 11 2 264 14 121 | 6/6 4/6 6/6 0/6 | 0.01245145 -0.00000000 0.30876342 12.78992653 0/6
+200 12 1 288 14 70 | 6/6 6/6 6/6 0/6 | 0.05134553 -0.00000000 0.32950958 12.78992653 0/6
+200 12 2 288 14 126 | 6/6 5/6 6/6 0/6 | 0.01295080 -0.00000000 0.32675416 12.78992653 0/6
+800 9 1 216 14 66 | 6/6 6/6 0/6 5/6 | 0.15489063 0.07254646 0.15434288 7.16952374 0/6
+800 9 2 216 14 116 | 6/6 6/6 0/6 2/6 | 0.11766288 0.07233589 0.15654787 7.16952374 0/6
+800 10 1 240 15 69 | 6/6 6/6 0/6 0/6 | 0.14637604 0.06667581 0.15174093 7.16952374 0/6
+800 10 2 240 15 121 | 6/6 6/6 0/6 0/6 | 0.11077197 0.06413586 0.15720776 7.16952374 0/6
+800 11 1 264 16 71 | 6/6 6/6 0/6 0/6 | 0.15137347 0.05608040 0.15695693 7.16952374 0/6
+800 11 2 264 16 126 | 6/6 6/6 0/6 0/6 | 0.11003303 0.05606585 0.17751723 7.16952374 0/6
+800 12 1 288 16 73 | 6/6 6/6 0/6 0/6 | 0.14588076 0.05153025 0.16233622 7.16952374 0/6
+800 12 2 288 16 131 | 6/6 6/6 0/6 0/6 | 0.10790089 0.04959585 0.15935536 7.16952374 0/6
+3200 9 1 216 14 70 | 6/6 6/6 0/6 6/6 | 0.20092312 0.16788924 0.08034833 3.93712887 0/6
+3200 9 2 216 14 121 | 6/6 6/6 0/6 6/6 | 0.19246116 0.16814706 0.08016611 3.93712887 0/6
+3200 10 1 240 15 72 | 6/6 6/6 0/6 6/6 | 0.20261107 0.16196371 0.07411778 3.93712887 0/6
+3200 10 2 240 15 126 | 6/6 6/6 0/6 6/6 | 0.19255709 0.15921542 0.07913524 3.93712887 0/6
+3200 11 1 264 16 75 | 6/6 6/6 0/6 6/6 | 0.20971146 0.15387284 0.08631470 3.93712887 0/6
+3200 11 2 264 16 131 | 6/6 6/6 0/6 6/6 | 0.18623848 0.15583868 0.07613380 3.93712887 0/6
+3200 12 1 288 16 77 | 6/6 6/6 0/6 6/6 | 0.20363328 0.14740019 0.07920861 3.93712887 0/6
+3200 12 2 288 16 136 | 6/6 6/6 0/6 6/6 | 0.18289645 0.15017266 0.08719377 3.93712887 0/6
+
+TOTAL draws=144; recovery=144; strict margins=136; eigen-probe failures=48; full-Gram certificates=55; onset met=0.
+No failed assertion: no deterministic recovery/Weyl-implication counterexample found.
+No asymptotic or high-probability theorem is proved by this small simulation.
+Elapsed seconds: 148.93

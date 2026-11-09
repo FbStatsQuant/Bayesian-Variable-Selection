@@ -1,0 +1,19 @@
+C1 Sol independent checks: PASS
+Python 3.13; seed 90117 for finite tables/laws; 12 Gaussian-design seeds 90117..90128.
+No source or git mutation. Only this script and its adjacent output are written.
+Pre-existing compiled W1-N3 harness used; not rebuilt in this review.
+Table domains p<=8, arbitrary shuffled ordered partitions, K=0..p, cap=1/2/1000000.
+FP-TAB tests here take eta=0; nonzero encoding-error cases are in the existing R33 evidence.
+L8_VIS_subsets: 576
+L8_epsilon_negative_and_positive_controls: 2
+L8_leakage_pairs: 384
+SL0_integer_truth_law_pairs: 1792
+SL2_truth_containing_stores: 1014
+compiled_FP_TAB_eta_zero: 423
+compiled_UM_unique_exact: 277
+compiled_rounded_value_membership: 600
+compiled_unique_rounded_mode: 468
+exact_fraction_fold_bounds: 20221
+L8 largest positive VIS excess: 0
+L8 largest positive leakage excess: 0
+Finite tests are falsification evidence, not proofs of asymptotic probability statements.

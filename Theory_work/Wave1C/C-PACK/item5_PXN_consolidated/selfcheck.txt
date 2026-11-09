@@ -1,0 +1,48 @@
+SELF-CHECK of the proof files 00_..06_ (run 2026-11-09)
+Allowed hits: external-citation pointers (W7-PART, W2-BOOK, W3-PXN files and verbatim external statuses). Any other hit would be a defect.
+
+### grep -nE 'PROOF:' 00_*.md 01_*.md 02_*.md 03_*.md 04_*.md 05_*.md 06_*.md
+(no matches)
+
+### grep -nE 'line ' 00_*.md 01_*.md 02_*.md 03_*.md 04_*.md 05_*.md 06_*.md
+(no matches)
+
+### grep -nE 'E-[0-9]' 00_*.md 01_*.md 02_*.md 03_*.md 04_*.md 05_*.md 06_*.md
+(no matches)
+
+### grep -nE 'E-' 00_*.md 01_*.md 02_*.md 03_*.md 04_*.md 05_*.md 06_*.md
+(no matches)
+
+### grep -nE 'lemmas/' 00_*.md 01_*.md 02_*.md 03_*.md 04_*.md 05_*.md 06_*.md
+(no matches)
+
+### grep -nE 'ERRATA' 00_*.md 01_*.md 02_*.md 03_*.md 04_*.md 05_*.md 06_*.md
+(no matches)
+
+### grep -nE 'FINAL_PROOF' 00_*.md 01_*.md 02_*.md 03_*.md 04_*.md 05_*.md 06_*.md
+(no matches)
+
+### grep -nE 'see line' 00_*.md 01_*.md 02_*.md 03_*.md 04_*.md 05_*.md 06_*.md
+(no matches)
+
+### grep -nE 'R[0-9][0-9]([^0-9]|$)' 00_*.md 01_*.md 02_*.md 03_*.md 04_*.md 05_*.md 06_*.md
+(no matches)
+
+### grep -nE 'C1 (Codex|Opus)' 00_*.md 01_*.md 02_*.md 03_*.md 04_*.md 05_*.md 06_*.md
+(no matches)
+
+### grep -nE 'PROOF' 00_*.md 01_*.md 02_*.md 03_*.md 04_*.md 05_*.md 06_*.md
+00_statement_and_conventions.md:158:| W7 Theorem B / Corollary B | pair-tail union bound and the closed form S(t*) ≤ K_n of §2.3 (Hotelling density, Lemma 2, Corollary 1) | `NBH/branch_snapshots/W7-PART/PROOF.md` | "PROVED (W7-PART); Theorem B XF VERIFIED* 
+00_statement_and_conventions.md:161:| Lemma RO | replay inclusion under GUARD | `NBH/branch_snapshots/W2-BOOK/PROOF.md:75-95` | "PROVED" and "SF/XF-reviewed" (as recorded in the council review of the ticket; not adopted) |
+00_statement_and_conventions.md:162:| W3-PXN | the F2–F5 population computations and the heuristic threshold of §4.4 | `NBH/branch_snapshots/W3-PXN/PROOF.md` | cited for computations only |
+04_search.md:128:w_n := 2 log((2p−s₀−1)/(s₀+1)) + log(n+1) (W3-PXN, PROOF.md, 330–331; about 2.5% at (n, p, s₀) = (200, 750, 3)); the proof gives only P((L) fails) → 0.
+
+### additional: 'lines' (word), 'lemma file', 'above (' pointers
+00_statement_and_conventions.md:158:| W7 Theorem B / Corollary B | pair-tail union bound and the closed form S(t*) ≤ K_n of §2.3 (Hotelling density, Lemma 2, Corollary 1) | `NBH/branch_snapshots/W7-PART/PROOF.md` | "PROVED (W7-PART); Theorem B XF VERIFIED* 
+00_statement_and_conventions.md:161:| Lemma RO | replay inclusion under GUARD | `NBH/branch_snapshots/W2-BOOK/PROOF.md:75-95` | "PROVED" and "SF/XF-reviewed" (as recorded in the council review of the ticket; not adopted) |
+00_statement_and_conventions.md:162:| W3-PXN | the F2–F5 population computations and the heuristic threshold of §4.4 | `NBH/branch_snapshots/W3-PXN/PROOF.md` | cited for computations only |
+04_search.md:128:w_n := 2 log((2p−s₀−1)/(s₀+1)) + log(n+1) (W3-PXN, PROOF.md, 330–331; about 2.5% at (n, p, s₀) = (200, 750, 3)); the proof gives only P((L) fails) → 0.
+
+### verdict
+Internal references to the old candidate proof (PROOF:nnn, line nnn, errata numbers, lemmas/ pointers): none.
+Remaining hits of 'PROOF' are only the external files W7-PART (PROOF.md), W2-BOOK (PROOF.md), W3-PXN (PROOF.md) cited as external results.
