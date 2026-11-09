@@ -33,3 +33,4 @@
 - 00:00: R07 REJECT (2 MAJOR: archive allowance below conversion peak; benchmark before memory rejection). Fixed (98fac03); R08 APPROVE-WITH-FIXES (MINOR: test used a copied formula) -> test reads production allowance; +4096 fixed bytes (72785fe); test 14/14; R09 APPROVE.
 - 00:10: p = 500 replay S1 r001 and S4 r001: new core == O-LS0 prototype on all 16 checks; S5 r002 prototype fit running.
 - 00:50: p = 500 replay complete: 3 designs x 16 checks PASS (48/48). S5 LS0 binding at ell_n: final-core standalone check with cap ell_n + |S~0| (11 moves, best F below the fit HPM). REPORT final.
+- 00:51: existing harness on head code: B4/C4 28/28 x3 seeds PASS. REPORT final.

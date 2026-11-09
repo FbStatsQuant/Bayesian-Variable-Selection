@@ -72,7 +72,7 @@ archive, the allowance read from actual `v3_preflight` calls, for (n, p) = (60, 
 bookkeeping constant for cache lookup/insert and ledger/store offers — the "C" of W_G; an operational estimate, not a
 rigorous runtime bound), checked against the allocation's hours in `exceeds` for the initial and the escalation preflight.
 The memory estimate is evaluated first and the timing benchmark runs only if memory fits (R07 #2). Switch: `options(v3.ls0_cap = "ell_n")` or `ls0 = FALSE` ⇒ the shipped preflight exactly.
-Test (`tests/test_preflight.R`, `numerics/out_test_preflight.txt`, **13/13 PASS** after the R07 fixes): p = 30 regression design (n = 100) and
+Test (`tests/test_preflight.R`, `numerics/out_test_preflight.txt`, **14/14 PASS** after the R07/R08 fixes): p = 30 regression design (n = 100) and
 the study sizes (dev generator S1–S6, n = 200, p = 500 and 1000) at 8 GiB/24 h and 2 GiB/24 h: **0 fits newly refused**
 (all pass both preflights); LS0 worst case ≈ 1.2–1.9 h at p = 500 and 4.8–6.7 h at p = 1000 (this Windows machine, shared
 CPU; actual LS0 time in the replay fits is seconds), extra memory ≈ 0.33 MiB; with `v3.ls0_cap = "ell_n"` / `ls0 = FALSE`
@@ -128,7 +128,8 @@ Cross-check vs W1-N3's exact reference `tdp.py` (`tests/xcheck_n3_tdp.*`, `numer
 instances, 0 mismatches (cap 2 — fallback whenever \|E\| ≥ 2 —, cap 10⁶ enumeration, lg0).
 
 (b) **LS0 behaviour** — `tests/test_ls0.R`:
-Final code (0638af9): normal 35/35, stop 9/9, numfail 5/5, paths 10/10, wave2 14/14 — 0 FAIL.
+Run on 0638af9 (later commits change only the preflight term, which is tested in §1c `test_preflight`): normal 35/35,
+stop 9/9, numfail 5/5, paths 10/10, wave2 14/14 — 0 FAIL.
 - `normal` (`numerics/out_test_ls0_normal.txt`, **35/35 PASS**; incl. C-PACK MR1/MR2 checks): integrated LS0 event count = 1 (emitted centre) +
   n_evaluated, all mechanism `local_scan`; standalone LS0 equals the integrated one; emitting vs not emitting a
   local-maximum start mode changes the standalone HPM (provenance ls0, stage 0, position 0) — omission is observable;
@@ -198,13 +199,16 @@ is all zero; NULL or scalar NA accepted as "unavailable"; R04 APPROVE). Rerun wi
 **B2 (ls0 off) 28/28 and C2 (ls0 on) 28/28 on each of seeds 1–3, summarize PASS** (`numerics/existing_suite/rerun_v31.log`,
 `B2_new_ls0off_v31harness/`, `C2_new_ls0on_v31harness/`). **Final code (0638af9): B3 (ls0 off) and C3 (ls0 on) 28/28 on
 seeds 1–3, summarize PASS** (`rerun_final.log`, `B3_final_ls0off/`, `C3_final_ls0on/`); no harness calibration reached the
-former `schedule_limit` branch (0 occurrences in the raw results of A and C3), so the C-DLV B fallback did not fire there. Caveat (helper): the harness builds `ro` by hand without `ls0`, so
+former `schedule_limit` branch (0 occurrences in the raw results of A and C3), so the C-DLV B fallback did not fire there.
+**Head code (72785fe, incl. the preflight term): B4 (ls0 off) and C4 (ls0 on) 28/28 on seeds 1–3, summarize PASS**
+(`rerun_head.log`, `B4_head_ls0off/`, `C4_head_ls0on/`); the harness's SMC-preflight unit calls `v3_preflight` directly with
+the LS0 term at its default (off), so its "SMC never calls the timer" check still holds. Caveat (helper): the harness builds `ro` by hand without `ls0`, so
 it does not execute LS0 itself; LS0 is covered by (b), (c), (c2). Only 3 of the 32 seed indices; not the Owls 32-seed gate.
 `build/check_smokes.R` inspects saved Owls smoke records (`runs/*/exit_status.txt`, adapter outputs) that do not exist
 locally, so it was not run; the public-path tests in (b) `paths` exercise the same adapter contract on local fits.
 
 ## 4. Files produced
-`PLAN.md` (v1.3), `LOG.md`, `CHECKPOINT.md`, `REPORT.md`, `lemmas/TDP_E.md`, `reviews/R01_*` … `R06_*`, `reviews/CITECHECK.txt`,
+`PLAN.md` (v1.4), `LOG.md`, `CHECKPOINT.md`, `REPORT.md`, `lemmas/TDP_E.md`, `reviews/R01_*` … `R09_*`, `reviews/CITECHECK.txt`,
 `tests/` (ceng_load.R, ceng_exports.cpp, test_tdp.R, test_ls0.R, run_batch.R, compare_regress.R, proto_load.R,
 o_ls0_exports.cpp [verbatim prototype], run_replay.R, compare_replay.R, xcheck_n3_tdp.R/.py, check_final_flags.R, replay_s5_cap.R,
 test_preflight.R),
