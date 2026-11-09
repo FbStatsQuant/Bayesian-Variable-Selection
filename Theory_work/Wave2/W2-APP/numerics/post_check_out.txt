@@ -1,0 +1,38 @@
+iid          n=200 p=2000 k= 3 eps=0.355 pop_floor=1.000 search_worst(UPPER bd)=0.573 rigorous_LB(floor-k*eps)=-0.065 consistent=True
+iid          n=200 p=2000 k= 7 eps=0.355 pop_floor=1.000 search_worst(UPPER bd)=0.383 rigorous_LB(floor-k*eps)=-1.484 consistent=True
+iid          n=200 p=2000 k= 6 eps=0.355 pop_floor=1.000 search_worst(UPPER bd)=0.417 rigorous_LB(floor-k*eps)=-1.129 consistent=True
+iid          n=200 p=2000 k=11 eps=0.355 pop_floor=1.000 search_worst(UPPER bd)=0.288 rigorous_LB(floor-k*eps)=-2.904 consistent=True
+AR1 r=0.8    n=200 p=2000 k= 3 eps=0.351 pop_floor=0.111 search_worst(UPPER bd)=0.114 rigorous_LB(floor-k*eps)=-0.941 consistent=True
+AR1 r=0.8    n=200 p=2000 k= 7 eps=0.351 pop_floor=0.111 search_worst(UPPER bd)=0.067 rigorous_LB(floor-k*eps)=-2.343 consistent=True
+AR1 r=0.8    n=200 p=2000 k= 6 eps=0.351 pop_floor=0.111 search_worst(UPPER bd)=0.069 rigorous_LB(floor-k*eps)=-1.993 consistent=True
+AR1 r=0.8    n=200 p=2000 k=11 eps=0.351 pop_floor=0.111 search_worst(UPPER bd)=0.056 rigorous_LB(floor-k*eps)=-3.746 consistent=True
+equi r=0.7   n=200 p=2000 k= 3 eps=0.195 pop_floor=0.300 search_worst(UPPER bd)=0.172 rigorous_LB(floor-k*eps)=-0.285 consistent=True
+equi r=0.7   n=200 p=2000 k= 7 eps=0.195 pop_floor=0.300 search_worst(UPPER bd)=0.114 rigorous_LB(floor-k*eps)=-1.065 consistent=True
+equi r=0.7   n=200 p=2000 k= 6 eps=0.195 pop_floor=0.300 search_worst(UPPER bd)=0.127 rigorous_LB(floor-k*eps)=-0.870 consistent=True
+equi r=0.7   n=200 p=2000 k=11 eps=0.195 pop_floor=0.300 search_worst(UPPER bd)=0.085 rigorous_LB(floor-k*eps)=-1.845 consistent=True
+factor3      n=200 p=2000 k= 3 eps=nan pop_floor=0.296 search_worst(UPPER bd)=0.240 rigorous_LB(floor-k*eps)=nan consistent=True
+factor3      n=200 p=2000 k= 7 eps=nan pop_floor=0.296 search_worst(UPPER bd)=0.191 rigorous_LB(floor-k*eps)=nan consistent=True
+factor3      n=200 p=2000 k= 6 eps=nan pop_floor=0.296 search_worst(UPPER bd)=0.210 rigorous_LB(floor-k*eps)=nan consistent=True
+factor3      n=200 p=2000 k=11 eps=nan pop_floor=0.296 search_worst(UPPER bd)=0.151 rigorous_LB(floor-k*eps)=nan consistent=True
+n=200 p=2000 s0=1: m_sharp=24  m_bar(L1_POST, A=max(1,A_hat)=1.43)=42  (need m_sharp <= max(s0,m_bar))
+n=200 p=2000 s0=3: m_sharp=52  m_bar(L1_POST, A=max(1,A_hat)=1.43)=96  (need m_sharp <= max(s0,m_bar))
+iid          n=800 p=4000 k= 3 eps=0.185 pop_floor=1.000 search_worst(UPPER bd)=0.772 rigorous_LB(floor-k*eps)=0.445 consistent=True
+iid          n=800 p=4000 k= 7 eps=0.185 pop_floor=1.000 search_worst(UPPER bd)=0.637 rigorous_LB(floor-k*eps)=-0.295 consistent=True
+iid          n=800 p=4000 k= 7 eps=0.185 pop_floor=1.000 search_worst(UPPER bd)=0.636 rigorous_LB(floor-k*eps)=-0.295 consistent=True
+iid          n=800 p=4000 k=14 eps=0.185 pop_floor=1.000 search_worst(UPPER bd)=0.518 rigorous_LB(floor-k*eps)=-1.590 consistent=True
+AR1 r=0.8    n=800 p=4000 k= 3 eps=0.192 pop_floor=0.111 search_worst(UPPER bd)=0.142 rigorous_LB(floor-k*eps)=-0.465 consistent=True
+AR1 r=0.8    n=800 p=4000 k= 7 eps=0.192 pop_floor=0.111 search_worst(UPPER bd)=0.110 rigorous_LB(floor-k*eps)=-1.233 consistent=True
+AR1 r=0.8    n=800 p=4000 k= 7 eps=0.192 pop_floor=0.111 search_worst(UPPER bd)=0.117 rigorous_LB(floor-k*eps)=-1.233 consistent=True
+AR1 r=0.8    n=800 p=4000 k=14 eps=0.192 pop_floor=0.111 search_worst(UPPER bd)=0.099 rigorous_LB(floor-k*eps)=-2.577 consistent=True
+equi r=0.7   n=800 p=4000 k= 3 eps=0.073 pop_floor=0.300 search_worst(UPPER bd)=0.218 rigorous_LB(floor-k*eps)=0.082 consistent=True
+equi r=0.7   n=800 p=4000 k= 7 eps=0.073 pop_floor=0.300 search_worst(UPPER bd)=0.188 rigorous_LB(floor-k*eps)=-0.209 consistent=True
+equi r=0.7   n=800 p=4000 k= 7 eps=0.073 pop_floor=0.300 search_worst(UPPER bd)=0.183 rigorous_LB(floor-k*eps)=-0.209 consistent=True
+equi r=0.7   n=800 p=4000 k=14 eps=0.073 pop_floor=0.300 search_worst(UPPER bd)=0.149 rigorous_LB(floor-k*eps)=-0.719 consistent=True
+factor3      n=800 p=4000 k= 3 eps=nan pop_floor=0.322 search_worst(UPPER bd)=0.308 rigorous_LB(floor-k*eps)=nan consistent=True
+factor3      n=800 p=4000 k= 7 eps=nan pop_floor=0.322 search_worst(UPPER bd)=0.279 rigorous_LB(floor-k*eps)=nan consistent=True
+factor3      n=800 p=4000 k= 7 eps=nan pop_floor=0.322 search_worst(UPPER bd)=0.279 rigorous_LB(floor-k*eps)=nan consistent=True
+factor3      n=800 p=4000 k=14 eps=nan pop_floor=0.322 search_worst(UPPER bd)=0.251 rigorous_LB(floor-k*eps)=nan consistent=True
+n=800 p=4000 s0=1: m_sharp=28  m_bar(L1_POST, A=max(1,A_hat)=1.24)=49  (need m_sharp <= max(s0,m_bar))
+n=800 p=4000 s0=3: m_sharp=61  m_bar(L1_POST, A=max(1,A_hat)=1.24)=110  (need m_sharp <= max(s0,m_bar))
+Note: at these n the rigorous lower bound floor-k*eps is often negative (uninformative) — the lemma is asymptotic (k*eps = O((log n)^{3/2}/sqrt n) -> 0); the search values show the actual sample sparse floor stays near the population floor.
+ALL ASSERTIONS PASSED.

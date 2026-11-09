@@ -1,0 +1,60 @@
+OK         STATEMENT.md -> Theory_work/Wave1C/FINAL/sections/s3_posterior.tex:5-15 token «theorem}[S-T»
+OK         STATEMENT.md -> Theory_work/Wave1C/FINAL/sections/s3_posterior.tex:6-15 token «SE$_\lambda(j_0)$»
+OK         STATEMENT.md -> Theory_work/Wave1C/FINAL/sections/s5_hpm.tex:42-56 token «Canonical certificate»
+OK         STATEMENT.md -> Theory_work/Wave1C/FINAL/sections/s5_hpm.tex:62-74 token «(G4-χ)»
+OK         L3_LOC.md -> Theory_work/Wave1C/FINAL/sections/s5_hpm.tex:16-16 token «some maximiser»
+OK         L1_POST.md -> Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md:57-60 token «diagonal tightness transfer»
+OK         EMPIRICAL.md -> Theory_work/State_of_Project/sections/06_open_and_plan.tex:279-279 token «Real data»
+OK         L4_families.md -> Theory_work/Wave1/W1-GEN/lemmas/L6_instances.md:177-177 token «Not covered: S2»
+OK         L4_families.md -> Theory_work/Wave1C/C-GROW/STATEMENT.md:150-156 token «Frontier»
+OK         L3_LOC.md -> Scripts/SMC_BVS/core/cpp/v3_core.cpp:473-473 token «o.ls0_ell + (o.ls0_cap_plus_mode ? (long long)m.S.size()»
+OK         L6_ENUM.md -> Scripts/SMC_BVS/core/v3_preprocess.R:18-18 token «exact-branch decision (M §6.2): sum_{k<=K} C(p,k) <= (5 H0 + 4 N0) p»
+OK         L6_ENUM.md -> Scripts/SMC_BVS/core/v3_fit.R:120-125 token «mechanism = "enumeration"»
+OK         L3_LOC.md -> Theory_work/Wave1C/C-GROW/lemmas/L2_NA_TL.md:38-38 token «c_n := log(n + 1) + 2 log p»
+OK         L5_VN.md -> Theory_work/Wave1C/C-GROW/lemmas/L0_toolkit.md:45-50 token «Score differences»
+OK         L4_families.md -> Theory_work/Wave1C/FINAL/sections/s3_posterior.tex:40-52 token «Neighbour rule»
+OK         L2_CT.md (AR1 spectrum) -> Theory_work/Wave1C/C-GROW/lemmas/L5_instances.md:23-24 token «Spectrum»
+OK         L4_families.md (F3iii) -> Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:130-140 token «a0=(theta_min/2)(1-r^2)/(1+r^2)»
+OK         status «PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)» in Theory_work/Wave1C/FINAL/sections/s3_posterior.tex
+OK         status «PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))» in Theory_work/Wave1C/FINAL/sections/s1_setting.tex
+OK         status «W1-GEN: \st{PROVED-CHECKED}» in Theory_work/Wave1C/FINAL/sections/s5_hpm.tex
+OK         status «C-GROW: \st{PROVED-CHECKED}» in Theory_work/Wave1C/FINAL/sections/s5_hpm.tex
+OK         status «W1-PXN: \st{PROVED-CHECKED}» in Theory_work/Wave1C/FINAL/sections/s5_hpm.tex
+OK         status «C-MIS: \st{PROVED-CHECKED}» in Theory_work/Wave1C/FINAL/sections/s3_posterior.tex
+OK         status «Lemma SEL and L8 (C1′) each \st{VERIFIED-WITH-AMENDMENTS}» in Theory_work/Wave1C/FINAL/sections/s5_hpm.tex
+OK         qualification «p − s₀ ≤ (1 − δ₀) log n» in STATEMENT.md
+OK         qualification «p − s₀ ≤ (1 − δ₀) log n» in lemmas/L4_families.md
+OK         qualification «post-enlargement bound» in REPORT.md
+OK         qualification «≤ 1 truth per block» in REPORT.md
+OK         qualification «≤1 truth per block» in lemmas/L4_families.md
+OK         qualification «min(K, |𝒩_n|)/log n → ∞» in REPORT.md
+OK         qualification «Zero-mean reduction» in lemmas/L3_LOC.md
+OK         qualification «component port» in REPORT.md
+OK         qualification «(EXB) holds eventually» in REPORT.md
+OK         qualification «(EXB) holds eventually» in lemmas/L4_families.md
+OK         qualification «(EXB)» in STATEMENT.md
+OK         qualification «SUPERSESSION NOTICE» in numerics/NUMERICS_LOC_VN.md
+OK         deliverable STATEMENT.md
+OK         deliverable PLAN.md
+OK         deliverable LOG.md
+OK         deliverable CHECKPOINT.md
+OK         deliverable EMPIRICAL.md
+OK         deliverable REPORT.md
+OK         deliverable lemmas/L1_POST.md
+OK         deliverable lemmas/L2_CT.md
+OK         deliverable lemmas/L3_LOC.md
+OK         deliverable lemmas/L4_families.md
+OK         deliverable lemmas/L5_VN.md
+OK         deliverable lemmas/L6_ENUM.md
+OK         deliverable numerics/LEAD_READING.md
+OK         deliverable numerics/vn_bound_recheck.py
+OK         deliverable numerics/vn_bound_recheck_out.txt
+OK         deliverable numerics/ct_check_out.txt
+OK         deliverable numerics/post_check_out.txt
+OK         deliverable numerics/n3_merged.csv
+OK         deliverable numerics/n2_results.csv
+OK         deliverable numerics/n1_results.csv
+OK         deliverable numerics/NUMERICS_LOC_VN.md
+OK         deliverable data_diag/SUMMARY.md
+OK         deliverable data_diag/summary_table.csv
+TOTAL MISSES: 0

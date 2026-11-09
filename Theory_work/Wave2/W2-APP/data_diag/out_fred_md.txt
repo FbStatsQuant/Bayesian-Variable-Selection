@@ -1,0 +1,98 @@
+
+==============================================================================
+DESIGN: fred_md
+==============================================================================
+Source: BVAR 1.0.5 (R 4.4 library; data/Rdata.rdb md5 e8a6695491a756245ea9cf99f02d03d8; fred_trans.csv md5 3c729ac3b865bcb93934ab5e2c3506ee): fred_md, 19 NA-columns dropped of 118, 0 columns non-finite after transform dropped; transformed by BVAR code table (fred_md) re-implemented; rows 4..778 
+raw: n=775, p0=99; dropped constant=0, duplicate(|r|>1-1e-10)=0; used p=99
+(a) n=775 p=99 A_hat=log p/log n=0.6907
+
+==============================================================================
+(b) correlation spectrum
+==============================================================================
+top eigenvalues: 21.104  8.758 5.7968  5.362 4.0324 3.2924 2.8914 2.5754 2.1829  2.071 
+trace share top1/3/5/10: 0.2132 / 0.3602 / 0.4551 / 0.5865 
+lambda_1/p = 0.2132
+ratios lambda_k/lambda_{k+1}, k=1..9:  2.41 1.511 1.081  1.33 1.225 1.139 1.123  1.18 1.054 
+Ahn-Horenstein ER argmax k = 1 (ratio 2.410)
+smallest eigenvalue of R (only if p<n): 4.182e-05
+
+==============================================================================
+(c) pairwise structure
+==============================================================================
+max|r_jk| = 0.9852 ; fraction of pairs with |r|>0.3 = 0.14595
+strong partners per variable (before factor removal):
+     tau median  q90 max
+[1,] 0.3     10 35.0  37
+[2,] 0.5      4 23.2  28
+[3,] 0.7      1 10.2  17
+[4,] 0.9      0  2.0   5
+after removing top-1 PCs: columns kept 99/99 (residual variance share > 1e-8; median share 0.9454, min 1.61e-01)
+residual max|r| = 0.9775 ; fraction pairs |r|>0.3 = 0.05999
+     tau median q90 max
+[1,] 0.3      5  15  21
+[2,] 0.5      2   9  11
+[3,] 0.7      1   4   7
+[4,] 0.9      0   1   2
+
+==============================================================================
+m_sharp (capped beta-binomial prior)
+==============================================================================
+s0=1: m_sharp=21 (K=99, log R_m=-10.58) ; j0=ceil((2A+1)s0)+1=4 (A=1.000)
+s0=2: m_sharp=30 (K=99, log R_m=-13.72) ; j0=ceil((2A+1)s0)+1=7 (A=1.000)
+s0=3: m_sharp=38 (K=99, log R_m=-16.99) ; j0=ceil((2A+1)s0)+1=10 (A=1.000)
+s0=5: m_sharp=52 (K=99, log R_m=-24.15) ; j0=ceil((2A+1)s0)+1=16 (A=1.000)
+
+==============================================================================
+(d) sparse minimum eigenvalues phi^2(k) = min_{|S|=k} lambda_min(R_S)
+==============================================================================
+requested k: 2=2; 3=3; 5=5; 7=7; 10=10; ceil(log n)=7; ceil(2 log n)=14; m#(s0=1)+1=22; m#(s0=3)+1=39; j0(s0=1)=4; j0(s0=3)=10 
+greedy chains used: 203 (1 from the most correlated pair + 200 random restarts requested); time 84.6s
+Legend: EXACT = true phi^2(k); UPPER = a witness set's lambda_min (phi^2(k) <= value); LOWER = rigorous lower bound.
+        gersh_simple = 1-(k-1)max|r|; gersh_refined = 1-max_j(sum of k-1 largest |r_jl|); lambda_min(R) (Cauchy interlacing, p<n only).
+  k        labels     exact            exact_method upper_best upper_method
+  2             2 1.479e-02         exact: 1-max|r|  1.479e-02      = exact
+  3             3 9.066e-05 exact: full enumeration  9.066e-05      = exact
+  4      j0(s0=1)        NA                    <NA>  8.047e-05       greedy
+  5             5        NA                    <NA>  7.680e-05       greedy
+  7 7/ceil(log n)        NA                    <NA>  7.012e-05       greedy
+ 10   10/j0(s0=3)        NA                    <NA>  5.984e-05 greedy+1swap
+ 14 ceil(2 log n)        NA                    <NA>  5.395e-05 greedy+1swap
+ 22    m#(s0=1)+1        NA                    <NA>  4.777e-05 greedy+1swap
+ 39    m#(s0=3)+1        NA                    <NA>  4.359e-05 greedy+1swap
+ upper_greedy gersh_simple gersh_refined lambda_minR_lower
+    1.479e-02      0.01479       0.01479         4.182e-05
+    9.066e-05     -0.97043      -0.94511         4.182e-05
+    8.047e-05     -1.95564      -1.87605         4.182e-05
+    7.680e-05     -2.94085      -2.77871         4.182e-05
+    7.012e-05     -4.91128      -4.56070         4.182e-05
+    6.199e-05     -7.86692      -7.07656         4.182e-05
+    5.494e-05    -11.80777     -10.05078         4.182e-05
+    4.874e-05    -19.68948     -15.32914         4.182e-05
+    4.419e-05    -36.43811     -22.77159         4.182e-05
+
+Witness sets (upper bounds; original column indices in the raw X below, positions in the cleaned design above):
+  k=2: lambda_min=0.014787  set(cleaned idx)=6,7 ; names: IPFPNSS,IPFINAL
+  k=3: lambda_min=9.0664e-05  set(cleaned idx)=33,34,35 ; names: MANEMP,DMANEMP,NDMANEMP
+  k=4: lambda_min=8.0475e-05  set(cleaned idx)=33,35,34,38 ; names: MANEMP,NDMANEMP,DMANEMP,USWTRADE
+  k=5: lambda_min=7.6796e-05  set(cleaned idx)=34,38,33,35,11 ; names: DMANEMP,USWTRADE,MANEMP,NDMANEMP,IPBUSEQ
+  k=7: lambda_min=7.0122e-05  set(cleaned idx)=33,34,35,38,11,12,62 ; names: MANEMP,DMANEMP,NDMANEMP,USWTRADE,IPBUSEQ,IPMAT,TB6MS
+  k=10: lambda_min=5.984e-05  set(cleaned idx)=29,33,36,30,34,35,52,61,11,15 ; names: PAYEMS,MANEMP,SRVPRD,USGOOD,DMANEMP,NDMANEMP,M1SL,TB3MS,IPBUSEQ,IPMANSICS
+  k=14: lambda_min=5.395e-05  set(cleaned idx)=29,33,36,30,38,34,35,52,11,12,4,60,41,66 ; names: PAYEMS,MANEMP,SRVPRD,USGOOD,USWTRADE,DMANEMP,NDMANEMP,M1SL,IPBUSEQ,IPMAT,RETAILx,FEDFUNDS
+  k=22: lambda_min=4.7766e-05  set(cleaned idx)=29,33,36,38,40,34,35,52,11,21,4,32,41,31,66,60,97,48,46,51,13,47 ; names: PAYEMS,MANEMP,SRVPRD,USWTRADE,USFIRE,DMANEMP,NDMANEMP,M1SL,IPBUSEQ,UNRATE,RETAILx,USCONS
+  k=39: lambda_min=4.3585e-05  set(cleaned idx)=34,33,35,38,52,12,41,18,66,60,10,51,97,90,36,29,40,32,31,21,4,46,45,14,84,71,69,54,3,37,53,25,96,7,9,78,65,63,16 ; names: DMANEMP,MANEMP,NDMANEMP,USWTRADE,M1SL,IPMAT,USGOVT,CUMFNS,TB3SMFFM,FEDFUNDS,IPNCONGD,AMDMUOx
+  k=2 EXACT=0.014787 (exact: 1-max|r|) minimiser(cleaned idx)=6,7
+  k=3 EXACT=9.0664e-05 (exact: full enumeration) minimiser(cleaned idx)=33,34,35
+check: exact <= upper bound wherever exact is available: OK
+
+==============================================================================
+(e) production block partition (core_copy/v3.R == Scripts/SMC_BVS/core/v3.R, SHA256 verified)
+==============================================================================
+B = min(floor(sqrt n), floor(sqrt p), 16) = 9 ; number of blocks = 13 ; time 2.5s ; compiled-core key fbe85b0a26ca
+block-size histogram (size: count):
+
+5 7 8 9 
+3 2 2 6 
+between-block leakage (max |r| to any variable outside own block): median 0.4565, 90% 0.7958, max 0.8774
+median within-block max|r| = 0.8028 ; pairs with |r|>0.5: 385 ; fraction split across blocks: 0.5844
+
+[done] total 88.2 s

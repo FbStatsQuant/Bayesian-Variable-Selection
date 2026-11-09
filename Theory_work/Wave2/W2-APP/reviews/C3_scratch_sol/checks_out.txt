@@ -1,0 +1,17 @@
+Citation checker: TOTAL MISSES 0 (output redirected to C3 scratch).
+CD exhaustive MA(2): 1023 conditioning sets; c=0.11530729, C=1.4549751, t2=4.6108091e-06; max bound ratio=0.16439485; conditional variances=[0.43520442,1].
+L3.6 exact projection identities: 128 T sets, max absolute error 2.44e-15.
+VN Schur formulas: equicorrelation and one-factor, u=0,...,15, max equicorrelation error 5.55e-17.
+ENUM n=10000: both prior-review examples covered, p=12/16.
+ENUM n=1000000: both prior-review examples covered, p=18/23.
+ENUM n=10000000000: both prior-review examples covered, p=32/38.
+ENUM n=100000000000000000000: both prior-review examples covered, p=66/72.
+ENUM n=10000000000000000000000000000000000000000: both prior-review examples covered, p=132/139.
+ENUM n=1000000000000000000000000000000000000000000000000000000000000: both prior-review examples covered, p=198/206.
+Local-design totals: 96/96 truth included, scored, certified; 94/96 endpoints equal truth.
+VN port totals: 40/40 endpoints; 24 complete-scan, 16 screened; 12/12 complete-scan controls. Corrected bound tallies: {('V1', '800', '200'): [4, 4], ('V1', '3200', '200'): [4, 4], ('V1', '12800', '200'): [4, 4], ('V2', '800', '200'): [0, 4], ('V2', '3200', '200'): [0, 4], ('V2', '12800', '200'): [0, 4], ('V2', '12800', '400'): [0, 4], ('V3a', '800', '200'): [0, 4], ('V3a', '3200', '200'): [0, 4], ('V3a', '12800', '200'): [4, 4]}.
+All 8 diagnostic master rows agree with saved spectrum shares, variable/block counts and median leakages.
+digits independently reconstructed: n,p=(1797, 61); lambda_min=0.0503464076339; exact triple minimum=0.0594308128064; 35990 triples.
+diabetes_quad independently reconstructed: n,p=(442, 64); lambda_min=3.60108427207e-07; exact triple minimum=0.0118193893755; 41664 triples.
+All 17 copied .R/.h/.cpp production sources match byte-for-byte.
+ALL INDEPENDENT CHECKS PASSED.

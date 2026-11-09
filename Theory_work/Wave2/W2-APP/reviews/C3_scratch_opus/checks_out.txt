@@ -1,0 +1,10 @@
+(1) crude sqrt(2logN/n) = 0.670; median max|r| = 0.585; ~99% quantile = 0.646; P(max>0.67) ~ 0.0014
+(2) cases with 2^p <= 4np but (EXB) false: 0
+(3) iclaims        p=   10: exact branch for all n >= 2^p/(4p) = 10^1.4
+(3) spam           p=   57: exact branch for all n >= 2^p/(4p) = 10^14.8
+(3) digits         p=   61: exact branch for all n >= 2^p/(4p) = 10^16.0
+(3) diabetes_quad  p=   64: exact branch for all n >= 2^p/(4p) = 10^16.9
+(3) fred_md        p=   99: exact branch for all n >= 2^p/(4p) = 10^27.2
+(3) tecator        p=  100: exact branch for all n >= 2^p/(4p) = 10^27.5
+(3) fred_qd        p=  170: exact branch for all n >= 2^p/(4p) = 10^48.3
+(3) riboflavin     p= 4088: exact branch for all n >= 2^p/(4p) = 10^1226.4

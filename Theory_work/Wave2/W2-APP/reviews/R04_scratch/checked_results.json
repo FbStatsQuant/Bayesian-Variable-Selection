@@ -1,0 +1,24 @@
+{
+  "counts": {
+    "STAR": 1200,
+    "blocks": 1200,
+    "equicorrelation": 1200,
+    "factor": 1179
+  },
+  "max_covariance_variance_error": {
+    "STAR": 4.440892098500626e-16,
+    "blocks": 8.881784197001252e-16,
+    "equicorrelation": 8.881784197001252e-16,
+    "factor": 1.7763568394002505e-15
+  },
+  "min_exact_corr_squared_over_floor": {
+    "STAR": 1.0000000000000002,
+    "blocks": 8.28981062944823,
+    "equicorrelation": 1.0447300913595892,
+    "factor": 31.199257604544297
+  },
+  "shipped_score_checks": 600,
+  "max_abs_remainder_difference": 1.0207129172604255,
+  "min_likelihood_lower_bound_margin": 1.1720388538652426e-06,
+  "seed": 20261109
+}

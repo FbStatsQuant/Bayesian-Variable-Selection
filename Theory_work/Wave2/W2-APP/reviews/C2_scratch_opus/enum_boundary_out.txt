@@ -1,0 +1,9 @@
+n=1e4: max p on exact branch=19, log2 n=13.29, pmax/log n=2.0629, 1/log2=1.4427, p=floor(log2 n)+floor(log2 log2 n) exact? True
+n=1e6: max p on exact branch=27, log2 n=19.93, pmax/log n=1.9543, 1/log2=1.4427, p=floor(log2 n)+floor(log2 log2 n) exact? True
+n=1e8: max p on exact branch=33, log2 n=26.58, pmax/log n=1.7915, 1/log2=1.4427, p=floor(log2 n)+floor(log2 log2 n) exact? True
+n=1e10: max p on exact branch=40, log2 n=33.22, pmax/log n=1.7372, 1/log2=1.4427, p=floor(log2 n)+floor(log2 log2 n) exact? True
+n=1e15: max p on exact branch=58, log2 n=49.83, pmax/log n=1.6793, 1/log2=1.4427, p=floor(log2 n)+floor(log2 log2 n) exact? True
+n=1e20: max p on exact branch=74, log2 n=66.44, pmax/log n=1.6069, 1/log2=1.4427, p=floor(log2 n)+floor(log2 log2 n) exact? True
+n=1e30: max p on exact branch=108, log2 n=99.66, pmax/log n=1.5635, 1/log2=1.4427, p=floor(log2 n)+floor(log2 log2 n) exact? True
+n=1e40: max p on exact branch=142, log2 n=132.88, pmax/log n=1.5417, 1/log2=1.4427, p=floor(log2 n)+floor(log2 log2 n) exact? True
+n=1e60: max p on exact branch=209, log2 n=199.32, pmax/log n=1.5128, 1/log2=1.4427, p=floor(log2 n)+floor(log2 log2 n) exact? True

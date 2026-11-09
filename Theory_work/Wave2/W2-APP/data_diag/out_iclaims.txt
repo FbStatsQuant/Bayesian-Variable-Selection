@@ -1,0 +1,94 @@
+
+==============================================================================
+DESIGN: iclaims
+==============================================================================
+Source: bsts 0.9.10 (R 4.4 library, data/iclaims.RData md5 e96e68697531b9dbeffbded63b4ee8a2): initial.claims[,-1] (10 Google-Trends columns), weekly 2004-01-04..2012-09-23, predictor columns only 
+raw: n=456, p0=10; dropped constant=0, duplicate(|r|>1-1e-10)=0; used p=10
+(a) n=456 p=10 A_hat=log p/log n=0.3761
+
+==============================================================================
+(b) correlation spectrum
+==============================================================================
+top eigenvalues: 8.2628 0.49041 0.32832 0.24953 0.17622 0.13173 0.11384 0.1017 0.081098 0.064385 
+trace share top1/3/5/10: 0.8263 / 0.9081 / 0.9507 /     1 
+lambda_1/p = 0.8263
+ratios lambda_k/lambda_{k+1}, k=1..9: 16.85 1.494 1.316 1.416 1.338 1.157 1.119 1.254  1.26 
+Ahn-Horenstein ER argmax k = 1 (ratio 16.849)
+smallest eigenvalue of R (only if p<n): 0.064385
+
+==============================================================================
+(c) pairwise structure
+==============================================================================
+max|r_jk| = 0.8987 ; fraction of pairs with |r|>0.3 = 1.00000
+strong partners per variable (before factor removal):
+     tau median q90 max
+[1,] 0.3      9   9   9
+[2,] 0.5      9   9   9
+[3,] 0.7      9   9   9
+[4,] 0.9      0   0   0
+after removing top-1 PCs: columns kept 10/10 (residual variance share > 1e-8; median share 0.1694, min 1.22e-01)
+residual max|r| = 0.5770 ; fraction pairs |r|>0.3 = 0.31111
+     tau median q90 max
+[1,] 0.3    2.5 4.1   5
+[2,] 0.5    0.0 1.0   1
+[3,] 0.7    0.0 0.0   0
+[4,] 0.9    0.0 0.0   0
+
+==============================================================================
+m_sharp (capped beta-binomial prior)
+==============================================================================
+s0=1: m_sharp=10 (K=10, log R_m= -Inf) ; j0=ceil((2A+1)s0)+1=4 (A=1.000)
+s0=2: m_sharp=10 (K=10, log R_m= -Inf) ; j0=ceil((2A+1)s0)+1=7 (A=1.000)
+s0=3: m_sharp=10 (K=10, log R_m= -Inf) ; j0=ceil((2A+1)s0)+1=10 (A=1.000)
+s0=5: m_sharp=10 (K=10, log R_m= -Inf) ; j0=ceil((2A+1)s0)+1=16 (A=1.000)
+
+==============================================================================
+(d) sparse minimum eigenvalues phi^2(k) = min_{|S|=k} lambda_min(R_S)
+==============================================================================
+requested k: 2=2; 3=3; 5=5; 7=7; 10=10; ceil(log n)=7; ceil(2 log n)=13; m#(s0=1)+1=11; m#(s0=3)+1=11; j0(s0=1)=4; j0(s0=3)=10 
+k > p skipped (NA): 13,11 
+greedy chains used: 51 (1 from the most correlated pair + 200 random restarts requested); time 4.2s
+Legend: EXACT = true phi^2(k); UPPER = a witness set's lambda_min (phi^2(k) <= value); LOWER = rigorous lower bound.
+        gersh_simple = 1-(k-1)max|r|; gersh_refined = 1-max_j(sum of k-1 largest |r_jl|); lambda_min(R) (Cauchy interlacing, p<n only).
+  k        labels   exact            exact_method upper_best upper_method
+  2             2 0.10128         exact: 1-max|r|    0.10128      = exact
+  3             3 0.09639 exact: full enumeration    0.09639      = exact
+  4      j0(s0=1) 0.07722 exact: full enumeration    0.07722      = exact
+  5             5 0.07081 exact: full enumeration    0.07081      = exact
+  7 7/ceil(log n) 0.06631 exact: full enumeration    0.06631      = exact
+ 10   10/j0(s0=3) 0.06439 exact: full enumeration    0.06439      = exact
+ upper_greedy gersh_simple gersh_refined lambda_minR_lower
+      0.10128       0.1013        0.1013           0.06439
+      0.09639      -0.7974       -0.7916           0.06439
+      0.07722      -1.6962       -1.6604           0.06439
+      0.07081      -2.5949       -2.5124           0.06439
+      0.06631      -4.3923       -4.1883           0.06439
+      0.06439      -7.0885       -6.5070           0.06439
+
+Witness sets (upper bounds; original column indices in the raw X below, positions in the cleaned design above):
+  k=2: lambda_min=0.10128  set(cleaned idx)=1,3 ; names: michigan.unemployment,pennsylvania.unemployment
+  k=3: lambda_min=0.096389  set(cleaned idx)=1,5,6 ; names: michigan.unemployment,new.jersey.unemployment,department.of.unemployment
+  k=4: lambda_min=0.077223  set(cleaned idx)=4,7,1,9 ; names: unemployment.filing,illinois.unemployment,michigan.unemployment,unemployment.office
+  k=5: lambda_min=0.070807  set(cleaned idx)=7,8,9,4,1 ; names: illinois.unemployment,rhode.island.unemployment,unemployment.office,unemployment.filing,michigan.unemployment
+  k=7: lambda_min=0.066305  set(cleaned idx)=5,7,2,4,9,1,8 ; names: new.jersey.unemployment,illinois.unemployment,idaho.unemployment,unemployment.filing,unemployment.office,michigan.unemployment,rhode.island.unemployment
+  k=10: lambda_min=0.064385  set(cleaned idx)=5,7,2,4,9,1,8,6,3,10 ; names: new.jersey.unemployment,illinois.unemployment,idaho.unemployment,unemployment.filing,unemployment.office,michigan.unemployment,rhode.island.unemployment,department.of.unemployment,pennsylvania.unemployment,filing.unemployment
+  k=2 EXACT=0.10128 (exact: 1-max|r|) minimiser(cleaned idx)=1,3
+  k=3 EXACT=0.096389 (exact: full enumeration) minimiser(cleaned idx)=1,5,6
+  k=4 EXACT=0.077223 (exact: full enumeration) minimiser(cleaned idx)=1,4,7,9
+  k=5 EXACT=0.070807 (exact: full enumeration) minimiser(cleaned idx)=1,4,7,8,9
+  k=7 EXACT=0.066305 (exact: full enumeration) minimiser(cleaned idx)=1,2,4,5,7,8,9
+  k=10 EXACT=0.064385 (exact: full enumeration) minimiser(cleaned idx)=1,2,3,4,5,6,7,8,9,10
+check: exact <= upper bound wherever exact is available: OK
+
+==============================================================================
+(e) production block partition (core_copy/v3.R == Scripts/SMC_BVS/core/v3.R, SHA256 verified)
+==============================================================================
+B = min(floor(sqrt n), floor(sqrt p), 16) = 3 ; number of blocks = 4 ; time 2.0s ; compiled-core key fbe85b0a26ca
+block-size histogram (size: count):
+
+2 3 
+2 2 
+between-block leakage (max |r| to any variable outside own block): median 0.8579, 90% 0.8724, max 0.8724
+median within-block max|r| = 0.8653 ; pairs with |r|>0.5: 45 ; fraction split across blocks: 0.8222
+
+[done] total 7.0 s

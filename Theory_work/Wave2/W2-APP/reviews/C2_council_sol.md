@@ -1,0 +1,46 @@
+Gate verdicts
+
+- **G1 — FAIL.** I found no mathematical defect in POST, CT/CD, the LOC delta proof and its new window-innovation NA argument, LOC-B with the enlarged-Q hypothesis, VN/V1–V4, or Lemma ENUM itself. The applicability map still labels an already-proved enumeration subregion “unproved” (issue 1). The cited numerical summary also retains superseded certificate/bound claims (issue 2).
+- **G2 — PASS.** The proof hypotheses match the statements: LSF and its two floors; fixed LOC constants and PTV; LOC-B's post-enlargement size bound; F16 and the quantitative VNF condition. The polynomial-tail summary now states the lower-tail qualification and the dimension condition needed for non-membership in LOC. ENUM's strict-c hypothesis is sufficient, as claimed in its positive statement.
+- **G3 — PASS.** Gaussian rows, independent Gaussian noise, fixed sparsity and coefficient/noise bounds, population correlation normalisation, and the implementation premises remain explicit. The proofs do not silently infer PTV or conditional visibility from marginal correlations. The conclusions consistently concern correctness jointly with output; they do not establish delivery.
+- **G4 — PASS.** The substantive inputs have adequate recorded checks and retain their source status qualifications: T03♯, M5(0), GEN/GROW/PXN/MIS, SL0/SL1, GROW L6, and [OP]. I checked these against the chapter and underlying files. The new ENUM proof is elementary and independently verified in this review. The citation-location/status script reproduces TOTAL MISSES: 0; that script is not a mathematical verification, and is described accordingly.
+- **G5 — PASS.** The posterior cutoff and Weyl error, explicit CT/CD constants, logarithmic relevance sets, polylogarithmic window count, uniform innovation error, NA threshold margin, and VN's nκ_n/log n → ∞ requirement track correctly. ENUM's c < 1/log 2 calculation is correct; the problem is using that sufficient shortcut to delimit the remaining frontier, rather than its constants or proof.
+- **G6 — FAIL for the delivered map.** The positive proofs faithfully use the shipped LS0 cap ℓ_n + |S̃₀|, complete scans, blocks of size at most 16, and the coded exact-branch rule. However, the map still omits an applicable part of that exact branch when declaring cases unproved (issue 1). The screened-search disclosure in REPORT and LEAD_READING is now accurate; the older cited numerical summary remains inconsistent with it (issue 2).
+
+**Score: 8.8/10. Council verdict: NOT PASSED, because G1 and G6 fail.** This is an uncapped score: the core mathematics is strong, and the blocking defect is a remaining false frontier claim, repairable using the new lemma already present.
+
+1. **MAJOR — `lemmas/L6_ENUM.md:25`, especially :27; `lemmas/L4_families.md:7` and :127; `REPORT.md:63`, :66 and :79. The strict-c shortcut is still being treated as the whole enumeration override.**
+
+   The requested p_n ≤ c log n, c < 1/log 2 subregion has been added correctly. But L6:27 says “Outside this sub-regime the earlier statuses stand,” L4:8–9 restricts its override to that subregion and assigns the old statuses to its complement, and REPORT's remaining “unproved” region expressly excludes only that shortcut. These claims are false even for the same growing-block family that motivated round 1.
+
+   Take g_n = floor(log n/(2 log 2)), p_n = 2g_n, two independent equicorrelated blocks of size g_n with ρ = 1/2, one truth of coefficient 1 in the first block, and σ² = 1. The population correlation floor is 1/2 and PTV holds with a₀ = 1/2, so POST applies. Q⁰ is the first block. The enlargement rule always gives Q = [p_n], since p_n = 2|Q⁰| < 2|Q⁰| + 33. Therefore
+
+   - (p_n − s₀)/log n → 1/log 2 > 1: the enlarged-Q LOC-B bound fails for every δ₀ > 0;
+   - g_n/log n → 1/(2 log 2): the superlogarithmic VN obstruction to the GROW/LOC sandwich does not apply;
+   - p_n/log n → 1/log 2: no fixed c < 1/log 2 bounds p_n/log n eventually, so this sequence is outside the newly declared override.
+
+   Nevertheless K = p_n eventually and
+
+   2^{p_n} ≤ n < (5H₀ + 4N₀)p_n,
+
+   because N₀ ≥ n. The actual coded inequality therefore selects enumeration for all sufficiently large n. Lemma ENUM(ii), which is already correctly proved, plus POST gives P(𝒪 ∩ {Ŝ⁺ ≠ S₀}) → 0. This is an asymptotic counterexample to the remaining “unproved” cell, not a request for a sharper finite-n bound.
+
+   **Fix:** state the general override first: under POST, every sequence satisfying the actual coded counting inequality eventually is covered. Present p_n ≤ c log n, c < 1/log 2 as a convenient sufficient subregion only. Restrict all remaining unproved/frontier wording to cases not covered by that general override, and remove L6:27's blanket assertion. No sharp analysis of the enumeration boundary and no new LS0 theorem are needed. Carry this through the L4 header/body/table, STATEMENT's override, and REPORT's table/frontier. Independent integer arithmetic is recorded in `reviews/C2_scratch_sol/checks_out.txt`.
+
+2. **MINOR — `numerics/NUMERICS_LOC_VN.md:14`, :28, :233 and :234. The cited supporting summary still presents superseded numerical conclusions as current.**
+
+   REPORT:33–34 and LEAD_READING correctly distinguish 24 complete-scan VN-example endpoints from 16 screened-search endpoints whose flags are not complete-scan certificates. But NUMERICS_LOC_VN still calls the screened implementation “exact-decision,” describes it as the same search rule, and states that all 52 endpoints were certified. Its VN discussion also compares against |vis| − 16s₀ instead of the stated |𝒩| − 15s₀ and includes cancellation controls in that comparison. The corrected lead reading and vn_bound_recheck output supersede those interpretations, but this file is still cited as active supporting evidence without an erratum. The source code's “same search rule”/“EXACT” wording in `numerics/n3b_fastls.py:3`–:7 has the same qualification problem: exact rescoring of retained candidates does not establish screening completeness.
+
+   **Fix:** add a prominent supersession notice or update the interpretation sections to match LEAD_READING: separate full-scan certificates from screened flags; distinguish the three validated trajectories from the remaining unverified decisions; use the stated VN bound; mark V3b as a no-claim control. Historical CSV values can remain, with their old columns explicitly labelled. This does not require rerunning the searches and does not weaken the asymptotic proofs.
+
+3. **NIT — `REPORT.md:7`, :44 and :126; `STATEMENT.md:3`. Version and deliverable inventory lag the actual revision.**
+
+   REPORT still identifies the proved statement as v1.2.1, says there are no changes beyond the earlier lock changes, and omits L6_ENUM from its file inventory; STATEMENT's leading status still says v1.2 although its parenthesis records v1.3. The new enumeration result is a substantive documented addition, already correctly discussed elsewhere.
+
+   **Fix:** consistently identify the current statement revision as v1.3, mention the ENUM addition in the statement-change account, and include L6_ENUM in the inventory. Leave the provisional RESULT/council outcome pending this round as instructed.
+
+Round-1 audit: Sol issue 1's original 0.6 log n-per-block example is now covered, and the new ENUM proof is correct; issue 1 above identifies the residual overstatement outside the shortcut. Sol issue 2 / Opus issue 2 (polynomial-tail qualifications) are fixed. Sol issue 3 is fixed in REPORT and LEAD_READING, with the supporting-file residue described in issue 2 above. Sol issue 4's missing evidence filename is fixed. Opus issues 1, 3, 4, 5, 6, 7 and 8 are fixed in their requested locations: method-failure wording, headline premises/no delivery, block splitting versus conditional visibility, conditioning heading, route-specific frontier wording, spam clusters, and K′ normalisation. Opus issue 9 is deliberately pending the council and is not scored.
+
+Part 2: I accept the conclusions as descriptive resemblance statements. The current text does not infer population floors, Gaussian sampling, PTV or VNF from the observed designs. It retains the needed digits/growing-2D distinction and leaves tecator's asymptotic model undecided. The master eigenvalue/partner/leakage summaries agree with the saved outputs I checked. I independently reconstructed the digits and diabetes spectra from their saved CSV designs, and compared all 17 copied .R/.h/.cpp files with current production sources: all match byte for byte. I also reproduced the 96-run local-design totals and the 40 VN-example / 12 control totals, including the 24/16 full-scan/screened split. An independent exhaustive CD check on a non-Markov MA(2) matrix passed for all 1,023 proper conditioning sets. Scripts and outputs are in `reviews/C2_scratch_sol/`; no production files or existing deliverables were changed.
+
+**Which issues would change my score:** correcting issue 1 throughout the map would remove the gate failures and support approximately 9.0/10. Correcting issue 2 as well would support approximately 9.1/10, subject to checking the revision. Issue 3 alone would not change my score. I found no reason to demand a change to the underlying POST, CT/CD, LOC, LOC-B, VN or ENUM proofs.

@@ -1,0 +1,101 @@
+
+==============================================================================
+DESIGN: spam
+==============================================================================
+Source: kernlab 0.9-33 (R 4.4 library, data/spam.rda md5 9d87dc369ed3c41bf2ad51a18a1ac544): spam[,1:57] raw (no transformation); y = type=='spam' (not used) 
+raw: n=4601, p0=57; dropped constant=0, duplicate(|r|>1-1e-10)=0; used p=57
+(a) n=4601 p=57 A_hat=log p/log n=0.4794
+
+==============================================================================
+(b) correlation spectrum
+==============================================================================
+top eigenvalues: 6.5919 3.2674 2.0032 1.6132 1.5462 1.4625  1.414 1.3749 1.2953 1.2769 
+trace share top1/3/5/10: 0.1156 / 0.2081 / 0.2635 / 0.3833 
+lambda_1/p = 0.1156
+ratios lambda_k/lambda_{k+1}, k=1..9: 2.017 1.631 1.242 1.043 1.057 1.034 1.028 1.061 1.014 
+Ahn-Horenstein ER argmax k = 1 (ratio 2.017)
+smallest eigenvalue of R (only if p<n): 0.0038548
+
+==============================================================================
+(c) pairwise structure
+==============================================================================
+max|r_jk| = 0.9961 ; fraction of pairs with |r|>0.3 = 0.04135
+strong partners per variable (before factor removal):
+     tau median q90 max
+[1,] 0.3      0  10  11
+[2,] 0.5      0   7   8
+[3,] 0.7      0   0   4
+[4,] 0.9      0   0   1
+after removing top-1 PCs: columns kept 57/57 (residual variance share > 1e-8; median share 0.9895, min 2.00e-01)
+residual max|r| = 0.9806 ; fraction pairs |r|>0.3 = 0.01003
+     tau median q90 max
+[1,] 0.3      0 1.4   4
+[2,] 0.5      0 0.0   1
+[3,] 0.7      0 0.0   1
+[4,] 0.9      0 0.0   1
+
+==============================================================================
+m_sharp (capped beta-binomial prior)
+==============================================================================
+s0=1: m_sharp=22 (K=57, log R_m=-13.32) ; j0=ceil((2A+1)s0)+1=4 (A=1.000)
+s0=2: m_sharp=30 (K=57, log R_m=-17.74) ; j0=ceil((2A+1)s0)+1=7 (A=1.000)
+s0=3: m_sharp=36 (K=57, log R_m=-21.53) ; j0=ceil((2A+1)s0)+1=10 (A=1.000)
+s0=5: m_sharp=46 (K=57, log R_m=-30.73) ; j0=ceil((2A+1)s0)+1=16 (A=1.000)
+
+==============================================================================
+(d) sparse minimum eigenvalues phi^2(k) = min_{|S|=k} lambda_min(R_S)
+==============================================================================
+requested k: 2=2; 3=3; 5=5; 7=7; 10=10; ceil(log n)=9; ceil(2 log n)=17; m#(s0=1)+1=23; m#(s0=3)+1=37; j0(s0=1)=4; j0(s0=3)=10 
+greedy chains used: 203 (1 from the most correlated pair + 200 random restarts requested); time 76.9s
+Legend: EXACT = true phi^2(k); UPPER = a witness set's lambda_min (phi^2(k) <= value); LOWER = rigorous lower bound.
+        gersh_simple = 1-(k-1)max|r|; gersh_refined = 1-max_j(sum of k-1 largest |r_jl|); lambda_min(R) (Cauchy interlacing, p<n only).
+  k        labels    exact            exact_method upper_best upper_method
+  2             2 0.003934         exact: 1-max|r|   0.003934      = exact
+  3             3 0.003901 exact: full enumeration   0.003901      = exact
+  4      j0(s0=1)       NA                    <NA>   0.003888       greedy
+  5             5       NA                    <NA>   0.003880       greedy
+  7             7       NA                    <NA>   0.003873       greedy
+  9   ceil(log n)       NA                    <NA>   0.003869       greedy
+ 10   10/j0(s0=3)       NA                    <NA>   0.003868       greedy
+ 17 ceil(2 log n)       NA                    <NA>   0.003861       greedy
+ 23    m#(s0=1)+1       NA                    <NA>   0.003858       greedy
+ 37    m#(s0=3)+1       NA                    <NA>   0.003855       greedy
+ upper_greedy gersh_simple gersh_refined lambda_minR_lower
+     0.003934     0.003934      0.003934          0.003855
+     0.003901    -0.992132     -0.844087          0.003855
+     0.003888    -1.988198     -1.581642          0.003855
+     0.003880    -2.984264     -2.311391          0.003855
+     0.003873    -4.976396     -3.531025          0.003855
+     0.003869    -6.968528     -4.593690          0.003855
+     0.003868    -7.964594     -4.959907          0.003855
+     0.003861   -14.937057     -6.017551          0.003855
+     0.003858   -20.913453     -6.287482          0.003855
+     0.003855   -34.858378     -6.772584          0.003855
+
+Witness sets (upper bounds; original column indices in the raw X below, positions in the cleaned design above):
+  k=2: lambda_min=0.0039339  set(cleaned idx)=32,34 ; names: num857,num415
+  k=3: lambda_min=0.0039011  set(cleaned idx)=32,34,55 ; names: num857,num415,capitalAve
+  k=4: lambda_min=0.0038881  set(cleaned idx)=32,34,55,40 ; names: num857,num415,capitalAve,direct
+  k=5: lambda_min=0.0038805  set(cleaned idx)=32,34,55,40,1 ; names: num857,num415,capitalAve,direct,make
+  k=7: lambda_min=0.0038731  set(cleaned idx)=34,36,32,55,40,1,53 ; names: num415,technology,num857,capitalAve,direct,make,charDollar
+  k=9: lambda_min=0.0038695  set(cleaned idx)=32,34,55,40,1,36,53,21,52 ; names: num857,num415,capitalAve,direct,make,technology,charDollar,your,charExclamation
+  k=10: lambda_min=0.0038682  set(cleaned idx)=21,32,34,55,40,1,53,36,52,31 ; names: your,num857,num415,capitalAve,direct,make,charDollar,technology,charExclamation,telnet
+  k=17: lambda_min=0.003861  set(cleaned idx)=32,34,55,40,1,36,53,21,52,31,24,23,50,37,30,2,29 ; names: num857,num415,capitalAve,direct,make,technology,charDollar,your,charExclamation,telnet,money,num000
+  k=23: lambda_min=0.0038584  set(cleaned idx)=23,36,32,34,55,40,1,53,52,21,31,24,50,37,30,2,29,20,43,9,45,49,7 ; names: num000,technology,num857,num415,capitalAve,direct,make,charDollar,charExclamation,your,telnet,money
+  k=37: lambda_min=0.0038555  set(cleaned idx)=32,34,55,40,1,36,53,21,52,31,24,23,50,37,30,2,29,20,43,9,45,49,7,13,57,3,27,12,46,5,56,15,17,6,35,33,14 ; names: num857,num415,capitalAve,direct,make,technology,charDollar,your,charExclamation,telnet,money,num000
+  k=2 EXACT=0.0039339 (exact: 1-max|r|) minimiser(cleaned idx)=32,34
+  k=3 EXACT=0.0039011 (exact: full enumeration) minimiser(cleaned idx)=32,34,55
+check: exact <= upper bound wherever exact is available: OK
+
+==============================================================================
+(e) production block partition (core_copy/v3.R == Scripts/SMC_BVS/core/v3.R, SHA256 verified)
+==============================================================================
+B = min(floor(sqrt n), floor(sqrt p), 16) = 7 ; number of blocks = 10 ; time 2.9s ; compiled-core key fbe85b0a26ca
+block-size histogram (size: count):
+
+3 4 5 6 7 
+1 1 2 2 4 
+between-block leakage (max |r| to any variable outside own block): median 0.1605, 90% 0.5353, max 0.5652
+median within-block max|r| = 0.2373 ; pairs with |r|>0.5: 31 ; fraction split across blocks: 0.4516
+
+[done] total 80.1 s

@@ -1,0 +1,109 @@
+
+==============================================================================
+DESIGN: diabetes_quad
+==============================================================================
+Source: scikit-learn 1.4.2 load_diabetes(scaled=True) (diabetes_data_raw.csv.gz md5 5a4dae33d045eae5db445e5260a3287c), quadratic model of Efron et al. 2004: 10 main effects + 45 pairwise products + 9 squares (no sex^2), built by prep_sklearn.py from unit-variance main effects 
+raw: n=442, p0=64; dropped constant=0, duplicate(|r|>1-1e-10)=0; used p=64
+(a) n=442 p=64 A_hat=log p/log n=0.6828
+
+==============================================================================
+(b) correlation spectrum
+==============================================================================
+top eigenvalues: 10.774  5.874 5.1339 4.1443 3.2826 2.9022 2.5403 2.4683 2.1276 1.9019 
+trace share top1/3/5/10: 0.1683 / 0.3403 / 0.4564 / 0.643 
+lambda_1/p = 0.1683
+ratios lambda_k/lambda_{k+1}, k=1..9: 1.834 1.144 1.239 1.263 1.131 1.142 1.029  1.16 1.119 
+Ahn-Horenstein ER argmax k = 1 (ratio 1.834)
+smallest eigenvalue of R (only if p<n): 3.6011e-07
+
+==============================================================================
+(c) pairwise structure
+==============================================================================
+max|r_jk| = 0.9591 ; fraction of pairs with |r|>0.3 = 0.14980
+strong partners per variable (before factor removal):
+     tau median  q90 max
+[1,] 0.3      8 17.0  19
+[2,] 0.5      2  6.0   9
+[3,] 0.7      1  1.7   4
+[4,] 0.9      0  1.0   2
+after removing top-1 PCs: columns kept 64/64 (residual variance share > 1e-8; median share 0.8734, min 4.12e-01)
+residual max|r| = 0.9420 ; fraction pairs |r|>0.3 = 0.09474
+     tau median q90 max
+[1,] 0.3    5.0  10  18
+[2,] 0.5    1.0   3   4
+[3,] 0.7    0.5   1   4
+[4,] 0.9    0.0   0   2
+
+==============================================================================
+m_sharp (capped beta-binomial prior)
+==============================================================================
+s0=1: m_sharp=18 (K=64, log R_m=-9.202) ; j0=ceil((2A+1)s0)+1=4 (A=1.000)
+s0=2: m_sharp=26 (K=64, log R_m=-12.53) ; j0=ceil((2A+1)s0)+1=7 (A=1.000)
+s0=3: m_sharp=33 (K=64, log R_m=-16.22) ; j0=ceil((2A+1)s0)+1=10 (A=1.000)
+s0=5: m_sharp=43 (K=64, log R_m=-22.2) ; j0=ceil((2A+1)s0)+1=16 (A=1.000)
+
+==============================================================================
+(d) sparse minimum eigenvalues phi^2(k) = min_{|S|=k} lambda_min(R_S)
+==============================================================================
+requested k: 2=2; 3=3; 5=5; 7=7; 10=10; ceil(log n)=7; ceil(2 log n)=13; m#(s0=1)+1=19; m#(s0=3)+1=34; j0(s0=1)=4; j0(s0=3)=10 
+greedy chains used: 203 (1 from the most correlated pair + 200 random restarts requested); time 72.1s
+Legend: EXACT = true phi^2(k); UPPER = a witness set's lambda_min (phi^2(k) <= value); LOWER = rigorous lower bound.
+        gersh_simple = 1-(k-1)max|r|; gersh_refined = 1-max_j(sum of k-1 largest |r_jl|); lambda_min(R) (Cauchy interlacing, p<n only).
+  k        labels   exact            exact_method upper_best upper_method
+  2             2 0.04085         exact: 1-max|r|  4.085e-02      = exact
+  3             3 0.01182 exact: full enumeration  1.182e-02      = exact
+  4      j0(s0=1)      NA                    <NA>  2.806e-03       greedy
+  5             5      NA                    <NA>  6.122e-04       greedy
+  7 7/ceil(log n)      NA                    <NA>  8.079e-05 greedy+1swap
+ 10   10/j0(s0=3)      NA                    <NA>  1.812e-06       greedy
+ 13 ceil(2 log n)      NA                    <NA>  1.735e-06       greedy
+ 19    m#(s0=1)+1      NA                    <NA>  3.734e-07 greedy+1swap
+ 34    m#(s0=3)+1      NA                    <NA>  3.642e-07 greedy+1swap
+ upper_greedy gersh_simple gersh_refined lambda_minR_lower
+    4.085e-02      0.04085       0.04085         3.601e-07
+    1.182e-02     -0.91830      -0.90746         3.601e-07
+    2.806e-03     -1.87745      -1.67794         3.601e-07
+    6.122e-04     -2.83659      -2.45170         3.601e-07
+    3.974e-04     -4.75489      -3.49057         3.601e-07
+    1.812e-06     -7.63234      -5.20304         3.601e-07
+    1.735e-06    -10.50978      -6.68714         3.601e-07
+    3.745e-07    -16.26468      -9.09403         3.601e-07
+    3.643e-07    -30.65191     -12.17550         3.601e-07
+
+Witness sets (upper bounds; original column indices in the raw X below, positions in the cleaned design above):
+  k=2: lambda_min=0.040851  set(cleaned idx)=41,60 ; names: s1:s2,s2^2
+  k=3: lambda_min=0.011819  set(cleaned idx)=41,60,59 ; names: s1:s2,s2^2,s1^2
+  k=4: lambda_min=0.0028062  set(cleaned idx)=48,60,41,46 ; names: s2:s5,s2^2,s1:s2,s2:s3
+  k=5: lambda_min=0.00061223  set(cleaned idx)=5,6,7,9,63 ; names: s1,s2,s3,s5,s5^2
+  k=7: lambda_min=8.0794e-05  set(cleaned idx)=5,6,7,9,48,44,51 ; names: s1,s2,s3,s5,s2:s5,s1:s5,s3:s5
+  k=10: lambda_min=1.8119e-06  set(cleaned idx)=5,6,7,9,63,48,44,51,33,26 ; names: s1,s2,s3,s5,s5^2,s2:s5,s1:s5,s3:s5,bmi:s5,sex:s5
+  k=13: lambda_min=1.7348e-06  set(cleaned idx)=5,6,7,9,63,48,44,51,33,26,2,20,8 ; names: s1,s2,s3,s5,s5^2,s2:s5,s1:s5,s3:s5,bmi:s5,sex:s5,sex,sex:bmi
+  k=19: lambda_min=3.7344e-07  set(cleaned idx)=5,59,41,60,63,61,51,9,48,44,53,6,7,46,42,1,39,38,45 ; names: s1,s1^2,s1:s2,s2^2,s5^2,s3^2,s3:s5,s5,s2:s5,s1:s5,s4:s5,s2
+  k=34: lambda_min=3.6417e-07  set(cleaned idx)=6,47,43,50,48,51,5,63,44,39,41,42,59,60,46,61,7,9,1,38,45,2,14,20,10,18,15,16,62,56,54,28,19,26 ; names: s2,s2:s4,s1:s4,s3:s4,s2:s5,s3:s5,s1,s5^2,s1:s5,bp:s5,s1:s2,s1:s3
+  k=2 EXACT=0.040851 (exact: 1-max|r|) minimiser(cleaned idx)=41,60
+  k=3 EXACT=0.011819 (exact: full enumeration) minimiser(cleaned idx)=41,59,60
+check: exact <= upper bound wherever exact is available: OK
+
+==============================================================================
+(e) production block partition (core_copy/v3.R == Scripts/SMC_BVS/core/v3.R, SHA256 verified)
+==============================================================================
+B = min(floor(sqrt n), floor(sqrt p), 16) = 8 ; number of blocks = 11 ; time 2.9s ; compiled-core key fbe85b0a26ca
+block-size histogram (size: count):
+
+4 5 6 7 8 
+2 2 4 2 1 
+between-block leakage (max |r| to any variable outside own block): median 0.5581, 90% 0.6776, max 0.8351
+median within-block max|r| = 0.7132 ; pairs with |r|>0.5: 85 ; fraction split across blocks: 0.5294
+
+==============================================================================
+(f) PLUG-IN, NOT VERIFICATION: 5-step orthogonal matching pursuit on the real response
+==============================================================================
+  step 1: add bmi ; R^2 = 0.344
+  step 2: add s5 ; R^2 = 0.459
+  step 3: add bp ; R^2 = 0.480
+  step 4: add age:sex ; R^2 = 0.496
+  step 5: add bmi:bp ; R^2 = 0.507
+  lambda_min(R_S) of the OMP support (|S|=2..5): 0.5538 0.5538 0.5521 0.5476
+  blocks of OMP support: 1,1,1,2,7 ; max|r| of each OMP variable with variables outside its block: 0.414,0.618,0.258, 0.3,0.411 
+
+[done] total 75.5 s

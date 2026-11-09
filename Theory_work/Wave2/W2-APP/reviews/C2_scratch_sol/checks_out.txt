@@ -1,0 +1,14 @@
+ENUM boundary counterexample: p=2*floor(log2(n)/2), rho=1/2, s0=1
+m=20, p=20, |Omega|/threshold=0.0099522233, (p-s0)/ln(n)=1.3705603, g/ln(n)=0.72134752
+m=40, p=40, |Omega|/threshold=0.0049761146, (p-s0)/ln(n)=1.4066277, g/ln(n)=0.72134752
+m=80, p=80, |Omega|/threshold=0.0024880573, (p-s0)/ln(n)=1.4246614, g/ln(n)=0.72134752
+m=160, p=160, |Omega|/threshold=0.0012440287, (p-s0)/ln(n)=1.4336782, g/ln(n)=0.72134752
+m=320, p=320, |Omega|/threshold=0.00062201433, (p-s0)/ln(n)=1.4381866, g/ln(n)=0.72134752
+Limits: p/ln(n)=1/ln(2), (p-s0)/ln(n)->1/ln(2)>1, g/ln(n)->1/(2ln(2)); LSF floor=1/2; PTV floor=|theta|/2.
+CD MA(2): 1023 conditioning sets, max off-diagonal ratio=0.133336061, min var=0.502223971, c=0.138696724
+n2: 96/96 scored S0 and certification flags; 94 endpoints=S0, 95 moves=extras
+n3: 40 VN examples, 24 full scan, 16 screened; 12 full-scan cancellation controls; all endpoints=S0
+diabetes_quad: n,p=(442, 64); min eigenvalue=3.60108427863e-07; top1 share=0.168348347293
+digits: n,p=(1797, 61); min eigenvalue=0.0503464076339; top1 share=0.120339160977
+Core executable/source copy: 17 files byte-identical
+All independent assertions passed.

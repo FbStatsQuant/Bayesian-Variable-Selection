@@ -1,0 +1,112 @@
+
+==============================================================================
+DESIGN: riboflavin
+==============================================================================
+Source: hdi 0.1-10 (https://cran.r-project.org/src/contrib/Archive/hdi/hdi_0.1-10.tar.gz, tarball md5 e7cf1f703e575b5ac3acfdef79b2aa84), data/riboflavin.RData (md5 2ea5489eabefbaa5ff1fe91d28b2b509); X=riboflavin$x, y=riboflavin$y 
+raw: n=71, p0=4088; dropped constant=0, duplicate(|r|>1-1e-10)=0; used p=4088
+(a) n=71 p=4088 A_hat=log p/log n=1.9508
+
+==============================================================================
+(b) correlation spectrum
+==============================================================================
+top eigenvalues: 1488.2 466.54 217.55 181.51 154.36 133.17 127.04 108.73  92.78 81.511 
+trace share top1/3/5/10: 0.364 / 0.5314 / 0.6135 / 0.7464 
+lambda_1/p = 0.3640
+ratios lambda_k/lambda_{k+1}, k=1..9:  3.19 2.145 1.199 1.176 1.159 1.048 1.168 1.172 1.138 
+Ahn-Horenstein ER argmax k = 1 (ratio 3.190)
+smallest eigenvalue of R (only if p<n): NA (p>=n, R singular)
+
+==============================================================================
+(c) pairwise structure
+==============================================================================
+max|r_jk| = 0.9906 ; fraction of pairs with |r|>0.3 = 0.52502
+strong partners per variable (before factor removal):
+     tau median    q90  max
+[1,] 0.3 2484.5 3044.0 3199
+[2,] 0.5  982.5 2053.0 2418
+[3,] 0.7   57.5  657.3 1220
+[4,] 0.9    0.0    4.0   69
+after removing top-1 PCs: columns kept 4088/4088 (residual variance share > 1e-8; median share 0.6367, min 9.79e-02)
+residual max|r| = 0.9904 ; fraction pairs |r|>0.3 = 0.22755
+     tau median    q90  max
+[1,] 0.3    854 1607.6 2165
+[2,] 0.5     89  431.0  976
+[3,] 0.7      2   29.0  153
+[4,] 0.9      0    0.0   15
+
+==============================================================================
+m_sharp (capped beta-binomial prior)
+==============================================================================
+s0=1: m_sharp=23 (K=35, log R_m=-6.968) ; j0=ceil((2A+1)s0)+1=6 (A=1.951)
+s0=2: m_sharp=35 (K=35, log R_m= -Inf) ; j0=ceil((2A+1)s0)+1=11 (A=1.951)
+s0=3: m_sharp=35 (K=35, log R_m= -Inf) ; j0=ceil((2A+1)s0)+1=16 (A=1.951)
+s0=5: m_sharp=35 (K=35, log R_m= -Inf) ; j0=ceil((2A+1)s0)+1=26 (A=1.951)
+
+==============================================================================
+(d) sparse minimum eigenvalues phi^2(k) = min_{|S|=k} lambda_min(R_S)
+==============================================================================
+requested k: 2=2; 3=3; 5=5; 7=7; 10=10; ceil(log n)=5; ceil(2 log n)=9; m#(s0=1)+1=24; m#(s0=3)+1=36; j0(s0=1)=6; j0(s0=3)=16 
+[sparse_eigs] time cap hit after 2 greedy chains
+greedy chains used: 2 (1 from the most correlated pair + 60 random restarts requested); time 1286.9s
+Legend: EXACT = true phi^2(k); UPPER = a witness set's lambda_min (phi^2(k) <= value); LOWER = rigorous lower bound.
+        gersh_simple = 1-(k-1)max|r|; gersh_refined = 1-max_j(sum of k-1 largest |r_jl|); lambda_min(R) (Cauchy interlacing, p<n only).
+  k        labels    exact    exact_method upper_best upper_method upper_greedy
+  2             2 0.009399 exact: 1-max|r|  9.399e-03      = exact    9.399e-03
+  3             3       NA            <NA>  6.597e-03       greedy    6.597e-03
+  5 5/ceil(log n)       NA            <NA>  3.919e-03       greedy    3.919e-03
+  6      j0(s0=1)       NA            <NA>  3.142e-03 greedy+1swap    3.232e-03
+  7             7       NA            <NA>  2.598e-03       greedy    2.598e-03
+  9 ceil(2 log n)       NA            <NA>  1.887e-03 greedy+1swap    2.061e-03
+ 10            10       NA            <NA>  1.633e-03       greedy    1.633e-03
+ 16      j0(s0=3)       NA            <NA>  5.812e-04 greedy+1swap    6.278e-04
+ 24    m#(s0=1)+1       NA            <NA>  1.459e-04 greedy+1swap    1.552e-04
+ 36    m#(s0=3)+1       NA            <NA>  4.431e-06 greedy+1swap    5.174e-06
+ gersh_simple gersh_refined lambda_minR_lower
+     0.009399      0.009399                NA
+    -0.981203     -0.977876                NA
+    -2.962406     -2.923707                NA
+    -3.953007     -3.877035                NA
+    -4.943608     -4.775210                NA
+    -6.924811     -6.676283                NA
+    -7.915413     -7.621961                NA
+   -13.859021    -13.259008                NA
+   -21.783832    -20.713230                NA
+   -33.671049    -31.742301                NA
+
+Witness sets (upper bounds; original column indices in the raw X below, positions in the cleaned design above):
+  k=2: lambda_min=0.0093986  set(cleaned idx)=710,3153 ; names: NADA_at,YRBA_at
+  k=3: lambda_min=0.0065973  set(cleaned idx)=710,3153,666 ; names: NADA_at,YRBA_at,MOAB_at
+  k=5: lambda_min=0.0039191  set(cleaned idx)=710,3153,666,2602,1404 ; names: NADA_at,YRBA_at,MOAB_at,YOBS_at,YBCT_at
+  k=6: lambda_min=0.0031417  set(cleaned idx)=710,3153,666,2602,2920,3584 ; names: NADA_at,YRBA_at,MOAB_at,YOBS_at,YPSA_at,YVAI_at
+  k=7: lambda_min=0.0025978  set(cleaned idx)=710,3153,666,2602,1404,2920,3596 ; names: NADA_at,YRBA_at,MOAB_at,YOBS_at,YBCT_at,YPSA_at,YVAZ_at
+  k=9: lambda_min=0.0018872  set(cleaned idx)=710,3153,666,2602,1404,2920,3596,1231,1233 ; names: NADA_at,YRBA_at,MOAB_at,YOBS_at,YBCT_at,YPSA_at,YVAZ_at,TRER_at,TRMD_at
+  k=10: lambda_min=0.0016334  set(cleaned idx)=710,3153,666,2602,1404,2920,3596,3721,1231,1227 ; names: NADA_at,YRBA_at,MOAB_at,YOBS_at,YBCT_at,YPSA_at,YVAZ_at,YVQA_at,TRER_at,TOPB_at
+  k=16: lambda_min=0.00058119  set(cleaned idx)=710,3153,666,2602,1404,2920,3596,3721,1231,1227,3006,3635,2514,223,3792,632 ; names: NADA_at,YRBA_at,MOAB_at,YOBS_at,YBCT_at,YPSA_at,YVAZ_at,YVQA_at,TRER_at,TOPB_at,YQEZ_at,YVDJ_at
+  k=24: lambda_min=0.00014587  set(cleaned idx)=710,3153,666,2602,1404,2920,3596,3721,1231,1227,3006,547,3635,2514,3814,223,1128,1880,1061,3266,925,566,998,585 ; names: NADA_at,YRBA_at,MOAB_at,YOBS_at,YBCT_at,YPSA_at,YVAZ_at,YVQA_at,TRER_at,TOPB_at,YQEZ_at,ILVN_at
+  k=36: lambda_min=4.4313e-06  set(cleaned idx)=710,3153,666,2602,1404,2920,3596,3721,1231,1227,3006,547,3635,2514,3814,223,1128,1880,1061,3266,3059,925,3670,566,1127,2677,3469,534,2546,749,1898,2950,929,2845,3319,1856 ; names: NADA_at,YRBA_at,MOAB_at,YOBS_at,YBCT_at,YPSA_at,YVAZ_at,YVQA_at,TRER_at,TOPB_at,YQEZ_at,ILVN_at
+  k=2 EXACT=0.0093986 (exact: 1-max|r|) minimiser(cleaned idx)=710,3153
+check: exact <= upper bound wherever exact is available: OK
+
+==============================================================================
+(e) production block partition (core_copy/v3.R == Scripts/SMC_BVS/core/v3.R, SHA256 verified)
+==============================================================================
+B = min(floor(sqrt n), floor(sqrt p), 16) = 8 ; number of blocks = 683 ; time 24.5s ; compiled-core key fbe85b0a26ca
+block-size histogram (size: count):
+
+  2   3   4   5   6   7   8 
+ 17  45  71 106 146 155 143 
+between-block leakage (max |r| to any variable outside own block): median 0.8199, 90% 0.9107, max 0.9747
+median within-block max|r| = 0.8285 ; pairs with |r|>0.5: 2066732 ; fraction split across blocks: 0.9952
+
+==============================================================================
+(f) PLUG-IN, NOT VERIFICATION: 5-step orthogonal matching pursuit on the real response
+==============================================================================
+  step 1: add XHLA_at ; R^2 = 0.422
+  step 2: add YXLG_at ; R^2 = 0.627
+  step 3: add YOAB_at ; R^2 = 0.745
+  step 4: add ARGF_at ; R^2 = 0.836
+  step 5: add YHDZ_at ; R^2 = 0.881
+  lambda_min(R_S) of the OMP support (|S|=2..5): 0.7837 0.5814 0.4713 0.3936
+  blocks of OMP support: 59,53,261,106,116 ; max|r| of each OMP variable with variables outside its block: 0.947,0.911,0.722,0.845,0.638 
+
+[done] total 1328.5 s

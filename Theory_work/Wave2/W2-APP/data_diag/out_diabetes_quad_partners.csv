@@ -1,0 +1,9 @@
+"stage","tau","median","q90","max"
+"raw",0.3,8,17,19
+"raw",0.5,2,6,9
+"raw",0.7,1,1.7,4
+"raw",0.9,0,1,2
+"minus_top1_PC",0.3,5,10,18
+"minus_top1_PC",0.5,1,3,4
+"minus_top1_PC",0.7,0.5,1,4
+"minus_top1_PC",0.9,0,0,2

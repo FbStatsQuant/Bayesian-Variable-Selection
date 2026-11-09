@@ -1,0 +1,1 @@
+run1: restarts=60, tlimit_total=240, swap_tlimit=20, maxvisit=1.5e9; pruned exact-k3 scan aborted at cap; only 2 greedy chains fit; total 1328 s on a machine at 100% CPU load

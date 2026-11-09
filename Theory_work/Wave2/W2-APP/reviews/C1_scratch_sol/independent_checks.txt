@@ -1,0 +1,11 @@
+s0=1; rho=1/2; g=floor(0.6 log n), p=2g, Q0=one block, Q=[p].
+Asymptotic: (p-1)/log n ->1.2>1, so no LOC-B enlarged-Q delta works; g/log n ->0.6, so not VN GROW obstruction.
+2^p / ((5 H0+4 N0)p) ->0 because 1.2 log(2)-1 = -0.168223383328 <0.
+n=1000000 g=8 p=16 exact_count=65536 threshold=80384000 exact_branch=True
+n=1000000000000 g=16 p=32 exact_count=4294967296 threshold=160768000000000 exact_branch=True
+n=1000000000000000000000000 g=33 p=66 exact_count=73786976294838206464 threshold=331584000000000000000000000 exact_branch=True
+CD independent check, MA(2), p=9, all 512 conditioning subsets: min conditional eigenvalue=0.156161027264, population floor=0.156161027264, max offdiagonal bound ratio=0.131863835217; PASS.
+n2_results.csv: 96 rows; ls_certified=96, ls_S0_scored=96, ls_final_eq_S0=94
+n3_merged.csv: 52 rows; ls_certified=52, ls_S0_scored=52, ls_final_eq_S0=52
+Production core-copy check: 20 source files, mismatches=['README.md', 'source_manifest.json'].
+AR(1) rho=1/2 has an h^-2 upper envelope: sup_{h>=1}(h+1)^2*2^-h=2.25 (maximum h=2), yet it is LOC. Thus an upper polynomial envelope alone does not imply non-LOC.

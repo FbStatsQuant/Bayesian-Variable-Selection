@@ -1,0 +1,9 @@
+Provenance (W2-APP data_diag), recorded 2026-11-09
+riboflavin : hdi 0.1-10, https://cran.r-project.org/src/contrib/Archive/hdi/hdi_0.1-10.tar.gz (CRAN Archive; hdi was archived 2026-07-10), tarball md5 e7cf1f703e575b5ac3acfdef79b2aa84; extracted only hdi/data/riboflavin.RData md5 2ea5489eabefbaa5ff1fe91d28b2b509 and hdi/data/datalist (in downloads/hdi/)
+tecator    : fds 1.8 (R 4.4.3 library C:/Users/felip/AppData/Local/R/win-library/4.4), data/Rdata.rdb, object Fatspectrum
+iclaims    : bsts 0.9.10 (same library), data/iclaims.RData -> initial.claims
+fred_qd/md : BVAR 1.0.5 (same library), data/Rdata.rdb ; transformation table BVAR/fred_trans.csv
+spam       : kernlab 0.9-33 (same library), data/spam.rda
+diabetes   : scikit-learn 1.4.2 (anaconda), sklearn/datasets/data/diabetes_data_raw.csv.gz md5 5a4dae33d045eae5db445e5260a3287c (load_diabetes(scaled=True))
+digits     : scikit-learn 1.4.2, sklearn/datasets/data/digits.csv.gz md5 9b335364a7bfd63947c7480a5bd51f2d (load_digits)
+md5 of the R-library data files are inside each data/<name>.rds$prov string.

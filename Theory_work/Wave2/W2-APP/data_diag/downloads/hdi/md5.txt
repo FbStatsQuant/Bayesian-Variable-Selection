@@ -1,0 +1,2 @@
+e7cf1f703e575b5ac3acfdef79b2aa84 *hdi_0.1-10.tar.gz
+2ea5489eabefbaa5ff1fe91d28b2b509 *downloads/hdi/hdi/data/riboflavin.RData

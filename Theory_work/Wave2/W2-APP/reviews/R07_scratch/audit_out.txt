@@ -1,0 +1,26 @@
+﻿CITECHECK: TOTAL MISSES: 0
+CORE COPY 18 source files compared; mismatches []
+n2_results.csv rows 96 fields ['design', 'seed', 'S0', 'n', 'p', 'B', 'K', 'nblocks', 'blk_min', 'blk_max', 'blk_mean', 'blk_hist', 'truths_in_distinct_blocks', 'mode', 'mode_size', 'S0_in_mode', 'n_missing', 'n_extra', 'extras', 'maxdist_extra', 'start_truncated', 'n_optimal_start', 'ell', 'ls_moves', 'ls_certified', 'ls_limit', 'ls_timed_out', 'ls_S0_scored', 'ls_S0_on_path', 'ls_final_eq_S0', 'ls_final_size', 'ls_final_symdiff', 't_part', 't_start', 't_ls', 'secs']
+L1 runs 24 n,p [(800, 200), (800, 400), (3200, 200), (3200, 400)] mode sizes 3 13 S0 endpoint 24 extras 0 10
+L2 runs 24 n,p [(800, 200), (800, 400), (3200, 200), (3200, 400)] mode sizes 6 13 S0 endpoint 23 extras 3 10
+L3 runs 24 n,p [(800, 200), (800, 400), (3200, 200), (3200, 400)] mode sizes 7 16 S0 endpoint 24 extras 4 13
+L4 runs 24 n,p [(800, 200), (800, 400), (3200, 200), (3200, 400)] mode sizes 3 6 S0 endpoint 23 extras 0 3
+n3_merged.csv rows 52 fields ['design', 'seed', 's0', 'S0', 'n_visible', 'n_visible_in_mode', 'K', 'lemma_bound', 'bound_met', 'frac_visible_in_mode', 'n', 'p', 'B', 'nblocks', 'blk_min', 'blk_max', 'blk_mean', 'blk_hist', 'truths_in_distinct_blocks', 'mode', 'mode_size', 'S0_in_mode', 'n_missing', 'n_extra', 'extras', 'maxdist_extra', 'start_truncated', 'n_optimal_start', 'ell', 'ls_moves', 'ls_certified', 'ls_limit', 'ls_timed_out', 'ls_S0_scored', 'ls_S0_on_path', 'ls_final_eq_S0', 'ls_final_size', 'ls_final_symdiff', 't_part', 't_start', 't_ls', 'secs']
+V1 runs 12 n,p [(800, 200), (3200, 200), (12800, 200)] mode sizes 1 23 S0 endpoint 12 extras 0 22
+V2 runs 16 n,p [(800, 200), (3200, 200), (12800, 200), (12800, 400)] mode sizes 13 221 S0 endpoint 16 extras 10 218
+V3a runs 12 n,p [(800, 200), (3200, 200), (12800, 200)] mode sizes 59 192 S0 endpoint 12 extras 56 189
+V3b runs 12 n,p [(800, 200), (3200, 200), (12800, 200)] mode sizes 5 23 S0 endpoint 12 extras 2 20
+riboflavin iid Gaussian null tau 0.3 pair probability 0.011027848624066671 expected pairs 92124.75061548964
+riboflavin iid Gaussian null tau 0.5 pair probability 9.011946075195574e-06 expected pairs 75.28424745745889
+riboflavin iid Gaussian null tau 0.7 pair probability 1.0986521230083168e-11 expected pairs 9.177950867446322e-05
+V1 kappa_E 19.72 twice 39.44 corrected optimistic margin at n12800 p200 -32.769999999999996
+tecator positive observed floor, repeated fixed-p sequence has constant c=1.69874931695267e-11
+Missing onset script True
+Empirical table cell counts [(24, 11), (25, 10), (26, 9), (27, 9), (28, 9), (29, 9), (30, 9), (31, 9), (32, 9), (33, 9)]
+Marginal-vs-partial counterexample spectrum [0.34934070115027055, 0.7068784730048625, 1.9437808258448657] Cov(W1,W2 | W3) 0.0
+Missing PTV counterexample, theta=(1,-2): Sigma theta [ 0.  -1.5]
+SPOT out_diabetes_quad_sparse_eig.csv [('2', '0.0408512899609512', '0.0408512899609512', '3.60108427280233e-07'), ('3', '0.0118193893754694', '0.011819389375469', '3.60108427280233e-07'), ('7', 'NA', '8.0794023218011e-05', '3.60108427280233e-07')]
+SPOT out_spam_sparse_eig.csv [('2', '0.00393394906855948', '0.00393394906855943', '0.00385484951813398'), ('3', '0.0039010626886557', '0.0039010626886557', '0.00385484951813398'), ('7', 'NA', '0.00387309285953334', '0.00385484951813398'), ('9', 'NA', '0.0038694928535221', '0.00385484951813398')]
+SPOT out_digits_sparse_eig.csv [('2', '0.0623773775673591', '0.062377377567359', '0.0503464076338989'), ('3', '0.0594308128064148', '0.0594308128064138', '0.0503464076338989'), ('7', 'NA', '0.0553823737465553', '0.0503464076338989'), ('8', 'NA', '0.0549876120428988', '0.0503464076338989')]
+SPOT out_fred_qd_sparse_eig.csv [('2', '0.00395641742199138', '0.00395641742199138', '2.29476376166968e-06'), ('3', '1.86585338824842e-05', '1.86585338824842e-05', '2.29476376166968e-06'), ('7', 'NA', '1.7275907812606e-05', '2.29476376166968e-06')]
+n2 checks: inclusion 96 scored 96 certified 96 moves=extras 95

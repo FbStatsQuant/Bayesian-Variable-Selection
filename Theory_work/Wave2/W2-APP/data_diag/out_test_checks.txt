@@ -1,0 +1,3 @@
+fred_qd p=170: full triple scan best=1.865853e-05 ; Gershgorin-pruned best=1.865853e-05 (visited 1.58e+05 of 8.04e+05 triples)
+secular argmin value 3.195960e-02 vs brute-force min 3.195960e-02 (argmin match: TRUE)
+closed-form 3x3 vs eigen: max abs error over 2000 random triples (via scan of 3x3 matrix) = 1.55e-15
