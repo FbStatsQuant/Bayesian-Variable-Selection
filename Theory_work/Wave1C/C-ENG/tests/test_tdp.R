@@ -40,7 +40,9 @@ rand_instance <- function(kind) {
 }
 
 set.seed(seed)
-caps <- c(1, 2, 3, 5, 17, 1e6)
+# C-PACK MR2: the fallback (tie_dp = TRUE) requires cap >= 2; cap 1 is checked separately below
+caps <- c(2, 3, 4, 5, 17, 1e6)
+mr2 <- list(cap1_rejected = 0, n1_instances = 0, n1_tie_dp_used = 0, n1_not_mode = 0)
 tab <- list()
 fails <- list()
 for (it in seq_len(n_inst)) {
@@ -63,6 +65,14 @@ for (it in seq_len(n_inst)) {
     if (!rec[[paste0(key, "_new_eq_uncapped")]] || !rec[[paste0(key, "_new_eq_old_when_untrunc")]] || !rec[[paste0(key, "_lg0_ok")]])
       fails[[length(fails) + 1]] <- list(it = it, cap = cap, inst = inst, new = nw, old = od, unc = unc, bf = bf)
   }
+  # MR2: cap = 1 with the fallback is rejected; a unique maximiser (|E| = 1) never takes the fallback at cap >= 2
+  if (inherits(tryCatch(.v3cpp$t_start_mode(xp, 1, TRUE), error = function(e) e), "error")) mr2$cap1_rejected <- mr2$cap1_rejected + 1
+  if (.v3cpp$t_start_mode(xp, 2e9, FALSE)$ties == 1) {
+    mr2$n1_instances <- mr2$n1_instances + 1
+    for (cap in caps) { nw1 <- .v3cpp$t_start_mode(xp, cap, TRUE)
+      if (nw1$tie_dp_used) mr2$n1_tie_dp_used <- mr2$n1_tie_dp_used + 1
+      if (!same(nw1$S, unc$S)) mr2$n1_not_mode <- mr2$n1_not_mode + 1 }
+  }
   if (!rec$tdp_eq_uncapped || (kind != "real" && !rec$uncapped_eq_brute))
     fails[[length(fails) + 1]] <- list(it = it, inst = inst, td = td, unc = unc, bf = bf)
   tab[[it]] <- as.data.frame(rec, check.names = FALSE)
@@ -84,6 +94,9 @@ for (cap in caps) {
   cat("  [F] lg0 == brute max and log_gamma0(S) == max, |S| == k*:", sum(tab[[paste0(key, "_lg0_ok")]]), "/", nrow(tab), "\n")
   cat("  old (frozen rule) wrong on truncated instances:", sum(tr & !tab[[paste0(key, "_old_eq_uncapped")]]), "/", sum(tr), "\n")
 }
+cat("\n[MR2] cap = 1 with tie_dp rejected (error):", mr2$cap1_rejected, "/", nrow(tab),
+    "; instances with |E| = 1:", mr2$n1_instances, "; fallback used on them (any cap >= 2):", mr2$n1_tie_dp_used,
+    "; returned set != the unique maximiser:", mr2$n1_not_mode, "\n")
 cat("\nFAILURES:", length(fails), "\n")
 if (length(fails)) { saveRDS(fails, sub("\\.txt$", "_failures.rds", out)); str(fails[[1]], max.level = 2) }
 
@@ -102,8 +115,8 @@ cat("new start_mode: S =", nw$S, "\n  lg0 =", nw$lg0, " ties =", nw$ties, " trun
 cat("new == S* = {0,2,..,38,40,43}:", same(nw$S, Sstar), "; TDP-E alone == S*:", same(td, Sstar), " (", t_td, "s)\n")
 cat("log_gamma0(new S) == 25:", nw$lg0_direct == 25, "\n")
 
-# ---- family D_m at small caps (N3 L6): 2^m+... ties; check new == brute for m = 0..8 and caps 1..2^m ----
-cat("\n---- family: m inner pairs + last block, caps 1..2^(m+1) ----\n")
+# ---- family D_m at small caps (N3 L6): 2^m+... ties; check new == brute for m = 0..8 and caps 2..2^m ----
+cat("\n---- family: m inner pairs + last block, caps 2..2^(m+1) ----\n")
 bad <- 0; tot <- 0
 for (m in 0:8) {
   p <- 2 * m + 4; K <- m + 2
@@ -111,7 +124,7 @@ for (m in 0:8) {
   logr <- c(lapply(seq_len(m), function(i) c(0, 1, 1, -10)), list({ v <- rep(-3, 16); v[1] <- 0; v[10] <- 5; v[7] <- 5; v }))
   xp <- .v3cpp$t_make_start(as.integer(p), as.integer(K), rep(0, K + 1), blocks, logr)
   bf <- .v3cpp$t_brute_mode(xp)
-  for (cap in 1:(2^(m + 1) + 1)) {
+  for (cap in 2:(2^(m + 1) + 1)) {
     nw <- .v3cpp$t_start_mode(xp, cap, TRUE); tot <- tot + 1
     if (!same(nw$S, bf$S)) bad <- bad + 1
   }
@@ -130,9 +143,9 @@ fx <- list(
        blocks = list(1L, 0L), logr = list(c(0, 2^53), c(0, 1))))
 for (f in fx) {
   xp <- .v3cpp$t_make_start(f$p, f$K, f$lambda, f$blocks, f$logr)
-  bf <- .v3cpp$t_brute_mode(xp); unc <- .v3cpp$t_start_mode(xp, 2e9, FALSE); nw <- .v3cpp$t_start_mode(xp, 1, TRUE)
+  bf <- .v3cpp$t_brute_mode(xp); unc <- .v3cpp$t_start_mode(xp, 2e9, FALSE); nw <- .v3cpp$t_start_mode(xp, 2, TRUE)
   cat(f$name, "
-  brute(ghat) S = {", bf$S, "} N =", bf$N, "; uncapped E-enumeration S = {", unc$S, "}; new (cap 1, tie DP) S = {", nw$S,
+  brute(ghat) S = {", bf$S, "} N =", bf$N, "; uncapped E-enumeration S = {", unc$S, "}; new (cap 2) S = {", nw$S,
       "} tie_dp_used =", nw$tie_dp_used, "; new == lex-min E:", same(nw$S, unc$S), "; same value:", identical(nw$lg0_direct, bf$lg0), "
 ")
 }
@@ -150,8 +163,8 @@ bx <- list(
        logr = list(c(0, -1, -1, -2), c(0, -1, -1, -2))))
 for (f in bx) {
   xp <- .v3cpp$t_make_start(f$p, f$K, f$lambda, f$blocks, f$logr)
-  bf <- .v3cpp$t_brute_mode(xp); res <- vapply(c(1, 2, 3), function(cap) same(.v3cpp$t_start_mode(xp, cap, TRUE)$S, bf$S), TRUE)
-  cat(sprintf("%-60s brute S = {%s}  N = %d  new == brute at caps 1,2,3: %s  TDP-E == brute: %s
+  bf <- .v3cpp$t_brute_mode(xp); res <- vapply(c(2, 3, 4), function(cap) same(.v3cpp$t_start_mode(xp, cap, TRUE)$S, bf$S), TRUE)
+  cat(sprintf("%-60s brute S = {%s}  N = %d  new == brute at caps 2,3,4: %s  TDP-E == brute: %s
 ", f$name,
       paste(bf$S, collapse = ","), as.integer(bf$N), paste(res, collapse = ","), same(.v3cpp$t_tdp(xp), bf$S)))
 }

@@ -18,7 +18,7 @@ for k, d in enumerate(inst):
     if list(d["new_cap1e6"]) != list(S): bad6 += 1
     if float(V) != float(d["lg0"]): badv += 1
 lines = ["W1-N3 reference TDP (exact) vs new core start_mode on %d integer-table instances" % len(inst),
-         "  cap 1 (TDP-E fallback) != reference S*: %d" % bad1,
+         "  cap 2 (TDP-E fallback when |E| >= 2) != reference S*: %d" % bad1,
          "  cap 1e6 (enumeration)   != reference S*: %d" % bad6,
          "  lg0 != reference V*: %d" % badv]
 open(sys.argv[2], "w").write("\n".join(lines) + "\n")

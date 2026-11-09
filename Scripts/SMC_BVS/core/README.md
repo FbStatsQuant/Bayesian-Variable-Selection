@@ -55,5 +55,6 @@ Authority: `METHOD_v3.1_FINAL.md` rows #6, #8, #9, #10, #15, #26. Plan, reviews,
 - **#15** (`v3_unavailable_estimates`): on every public return without estimates, `log_Z`, `log_Z_r`, `log_Z_lower95`,
   `log_Z_rel_m0`, `log_Z_r_rel_m0`, `pip_primary`, `pip_r`, `mpm` are NA by exact name (`fit$log_Z` no longer partially
   matches `log_Zbar0`). The study adapter reads these scalar NA markers as unavailable.
+- C-PACK method requirements (`Theory_work/Wave1C/C-PACK/METHOD_REQUIREMENTS.md`): MR1 the LS0 centre is `start_mode(st, 1e6).S` on the run's own setup `Start`, emitted; MR2 the fallback (`tie_dp`) requires cap >= 2 (`start_mode` throws otherwise), so a unique maximiser is always returned by the enumeration path; MR3 the size-then-lex tie rule is kept for reproducibility only.
 - `source_manifest.json` was NOT refreshed (its updater targets the deployment layout and LF checkouts); refresh it on a
   LF checkout before any deployment.

@@ -76,6 +76,10 @@ if (variant == "normal") {
         identical(a2$ledger$hpm$provenance$phase, "ls0") && a2$ledger$hpm$provenance$stage == 0 && a2$ledger$hpm$provenance$position == 0)
   check("not emitted: the centre is never scored, so the HPM differs from the centre", !same(b2$ledger$hpm$model, m2$model))
   check("status completed, LS0 archive present, centre == start mode", f$status == "completed" && length(l0) > 0 && same(l0$centre, f$start_mode$model))
+  sm_ind <- .v3cpp$t_setup_start_mode(st$ptr, 1e6, TRUE)
+  check("MR1: LS0 centre == start_mode(st, 1e6).S recomputed independently on the run's own Start (setup)", same(l0$centre, sm_ind$model) &&
+        identical(f$start_mode$log_gamma0, sm_ind$lg0))
+  check("MR2: cap = 1 with the fallback is rejected", inherits(tryCatch(.v3cpp$t_setup_start_mode(st$ptr, 1, TRUE), error = function(e) e), "error"))
   check("logical ls0 events == 1 (emitted centre) + n_evaluated", sum(lg["ls0", ]) == l0$n_evaluated + 1)
   check("all LS0 events are mechanism local_scan", sum(lg["ls0", ]) == lg["ls0", "local_scan"])
   sa <- .v3cpp$t_local_search(st$ptr, f$start_mode$model, st$budgets$ell, TRUE, TRUE)

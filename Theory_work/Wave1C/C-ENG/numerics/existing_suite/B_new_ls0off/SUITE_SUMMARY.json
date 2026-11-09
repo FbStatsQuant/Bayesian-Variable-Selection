@@ -1,0 +1,42 @@
+{
+  "complete": true,
+  "ok": false,
+  "rows": [
+    {
+      "index": 1,
+      "seed": 1,
+      "ok": false,
+      "pid": 4868,
+      "checks": 28,
+      "problems": [
+        "nonzero/missing exit status: {'prototype': '0', 'production': '1', 'comparison': '1'}",
+        "comparison/unit failure"
+      ],
+      "path": "B_new_ls0off\\seed_1"
+    },
+    {
+      "index": 2,
+      "seed": 2,
+      "ok": false,
+      "pid": 31984,
+      "checks": 28,
+      "problems": [
+        "nonzero/missing exit status: {'prototype': '0', 'production': '1', 'comparison': '1'}",
+        "comparison/unit failure"
+      ],
+      "path": "B_new_ls0off\\seed_2"
+    },
+    {
+      "index": 3,
+      "seed": 3,
+      "ok": false,
+      "pid": 33744,
+      "checks": 28,
+      "problems": [
+        "nonzero/missing exit status: {'prototype': '0', 'production': '1', 'comparison': '1'}",
+        "comparison/unit failure"
+      ],
+      "path": "B_new_ls0off\\seed_3"
+    }
+  ]
+}

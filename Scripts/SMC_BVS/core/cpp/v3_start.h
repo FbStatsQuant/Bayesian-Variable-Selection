@@ -182,6 +182,9 @@ inline void draw_pi0(const Start& st, VariateSource& vs, std::vector<int>& S, st
 // #26): when the enumeration is truncated (count >= cap) and tie_dp is set, the result is replaced by the tie-aware
 // DP mode_tie_dp, which returns lex-min E without enumerating E (Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md). Hence the
 // result is lex-min E for every cap; tie_dp = false reproduces the v3 routine exactly.
+// C-PACK MR2: `truncated` is also set at count == cap (at cap = 1 even when the maximiser is unique), so the fallback
+// requires cap >= 2; then a unique maximiser (|E| = 1) is always returned by the enumeration path (count 1 < cap).
+// C-PACK MR3: no consistency result relies on the size-then-lex tie rule; it is kept (spec #8) for reproducibility.
 struct ModeResult { std::vector<int> S; double lg0 = NEG_INF; long ties = 0; bool truncated = false; bool tie_dp_used = false; };
 struct ModeDP {
   std::vector<std::vector<double>> mb;                 // mb[b][j]: max log r_b over size-j codes
@@ -266,6 +269,7 @@ inline std::vector<int> mode_tie_dp(const Start& st, const ModeDP& dp) {
   return S;
 }
 inline ModeResult start_mode(const Start& st, long cap = 1000000, bool tie_dp = true) {
+  if (tie_dp && cap < 2) throw std::invalid_argument("start_mode: the e4 tie-aware fallback requires cap >= 2 (C-PACK MR2)");
   int J = st.J;
   ModeDP dp = mode_dp(st);
   const auto& mb = dp.mb; const auto& arg = dp.arg; const auto& M = dp.M;

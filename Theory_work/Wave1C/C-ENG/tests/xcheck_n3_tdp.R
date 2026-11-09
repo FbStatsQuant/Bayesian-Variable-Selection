@@ -18,7 +18,7 @@ for (it in seq_len(n_inst)) {
     v <- if (flat) rep(sample(c(-1, 0, 1), 1), 2^length(b)) else as.numeric(sample(-3:3, 2^length(b), replace = TRUE)); v[1] <- 0
     sz <- vapply(0:(2^length(b) - 1), function(c) sum(bitwAnd(c, 2^(0:(length(b) - 1))) > 0), 0); v[sz > K] <- NaN; v })
   xp <- .v3cpp$t_make_start(p, K, lambda, blocks, logr)
-  r1 <- .v3cpp$t_start_mode(xp, 1, TRUE); r6 <- .v3cpp$t_start_mode(xp, 1e6, TRUE)
+  r1 <- .v3cpp$t_start_mode(xp, 2, TRUE); r6 <- .v3cpp$t_start_mode(xp, 1e6, TRUE)
   inst[[it]] <- list(p = p, K = K, blocks = lapply(blocks, as.list), lam = as.list(as.integer(lambda)),
     rho = lapply(logr, function(v) as.list(ifelse(is.nan(v), 0L, as.integer(v)))),
     new_cap1 = as.list(r1$S), new_cap1e6 = as.list(r6$S), lg0 = r6$lg0)

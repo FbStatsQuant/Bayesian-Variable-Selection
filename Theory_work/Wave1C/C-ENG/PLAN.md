@@ -217,3 +217,10 @@ Q3. Is TDP-E (lex-min of the enumeration's tie set) an acceptable reading of e4 
     lexicographically smallest maximiser"? It equals S* under EX-A and keeps the fast path and fallback consistent in
     binary64.
 Q4. ℓ for LS0 = production ℓ (same as final search)?
+
+## 6. v1.3 (22:50 CST): HQ-forwarded method requirements (C-PACK, `Theory_work/Wave1C/C-PACK/METHOD_REQUIREMENTS.md`)
+- MR1 (LS0 centre = coded start mode on the run's own Start, emitted): already the design (R2, R3); add an explicit test
+  that the integrated LS0 centre equals an independent `start_mode(st, 1e6).S` call on the same setup.
+- MR2 (fallback triggered by `truncated` ⇒ cap ≥ 2): `start_mode(st, cap, tie_dp = true)` throws for cap < 2; production
+  uses cap 10⁶. Tests move to caps ≥ 2 and check that |E| = 1 never takes the fallback and that cap 1 is rejected.
+- MR3 (no consistency result needs the tie rule): documented; the size-then-lex rule is kept for reproducibility (spec #8).
