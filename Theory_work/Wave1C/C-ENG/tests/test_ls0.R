@@ -283,7 +283,8 @@ if (variant == "wave2") {
   d <- make_data(1, 8001)
   ref <- v3_fit(d$X, d$y, 8001)                                   # no failure
   ref_off <- v3_fit(d$X, d$y, 8001, ls0 = FALSE)
-  check("no failure: grid_fallback 'none'; calibration identical with/without the switch", identical(ref$flags$grid_fallback, "none") &&
+  check("no failure: no grid_fallback flag (R05 #1); calibration identical with/without the switch", is.null(ref$flags$grid_fallback) &&
+        identical(names(ref$flags)[!names(ref$flags) %in% c("final_local_limit", "ls0_local_limit", "ls0_improved", "ls0_hpm_changed")], names(ref_off$flags)) &&
         identical(strip_cal(ref$calibration), strip_cal(ref_off$calibration)) && identical(ref$frozen, ref_off$frozen))
   inject("all"); fa <- v3_fit(d$X, d$y, 8001); restore()
   t1 <- fa$calibration$tiers[[length(fa$calibration$tiers)]]
@@ -309,9 +310,12 @@ if (variant == "wave2") {
   inject(1); fc <- v3_fit(d$X, d$y, 8001); restore()
   inject(1); fc0 <- v3_fit(d$X, d$y, 8001, ls0 = FALSE); restore()
   check("tier-0 failure only (v3 escalates and succeeds): no fallback, calibration and frozen grid identical to v3",
-        fc$status == "completed" && identical(fc$flags$grid_fallback, "none") && identical(strip_cal(fc$calibration), strip_cal(fc0$calibration)) &&
+        fc$status == "completed" && is.null(fc$flags$grid_fallback) && identical(strip_cal(fc$calibration), strip_cal(fc0$calibration)) &&
         identical(fc$frozen, fc0$frozen) && identical(fc$log_Z, fc0$log_Z))
 
+  check("R05 #2: invalid v3.ls0_ell override rejected", {
+    options(v3.ls0_ell = .Machine$integer.max); e <- tryCatch(v3_fit(d$X, d$y, 8001), error = function(e) e); options(v3.ls0_ell = NULL)
+    inherits(e, "error") })
   # ---- C-DLV A.2 (TDP-IMPL): GUARD-W and no uniforms for LS0 + e4 ----
   check("LS0 reads no uniforms: final stream endpoints identical with LS0 on and off", identical(ref$streams, ref_off$streams))
 }

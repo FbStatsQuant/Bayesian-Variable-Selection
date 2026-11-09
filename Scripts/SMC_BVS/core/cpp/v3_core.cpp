@@ -470,7 +470,9 @@ List cpp_final_run(SEXP setup, NumericVector grid, List ro, double seed, SEXP in
       smode = List::create(_["model"] = to_orig(D, m.S), _["log_gamma0"] = m.lg0, _["log_pi0"] = m.lg0 - st.logZbar0,
                            _["ties"] = (double)m.ties, _["truncated"] = m.truncated, _["tie_dp_used"] = m.tie_dp_used,
                            _["tie_rule"] = o.ls0_tie_dp ? "enumeration (cap 1e6), e4 tie-aware DP on truncation" : "enumeration (cap 1e6), v3 rule");
-      int ls0_cap = o.ls0_ell + (o.ls0_cap_plus_mode ? (int)m.S.size() : 0);
+      long long cap_ll = (long long)o.ls0_ell + (o.ls0_cap_plus_mode ? (long long)m.S.size() : 0LL);  // checked (R05 #2)
+      if (o.ls0_ell < 0 || cap_ll > (long long)std::numeric_limits<int>::max()) stop("LS0 move cap out of range");
+      int ls0_cap = (int)cap_ll;
       LocalArchive A0 = E.local_search(m.S, ls0_cap, o.tier, true, -1, PH_LS0);
       sec_ls0 = secs_since(t1);
       ls0 = local_to_list(A0, D);

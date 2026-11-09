@@ -92,7 +92,10 @@ v3_run_settings <- function(setup, frozen, ls0 = getOption("v3.ls0", TRUE)) {
        cache_capacity = as.numeric(500 * setup$ctx$p))
   if (isTRUE(ls0)) {
     ro$ls0 <- TRUE
-    ro$ls0_ell <- as.integer(getOption("v3.ls0_ell", b$ell))
+    le <- getOption("v3.ls0_ell", b$ell)   # testing override of the LS0 base cap (R05 #2: validated)
+    if (!is.numeric(le) || length(le) != 1 || !is.finite(le) || le < 0 || le != round(le) || le > 1e6)
+      stop("option v3.ls0_ell must be a whole number in [0, 1e6]")
+    ro$ls0_ell <- as.integer(le)
     ro$ls0_tie_dp <- isTRUE(getOption("v3.ls0_tie_dp", TRUE))
     # C-GROW MR1 (adopted by HQ): LS0 move cap ell_n + |S~0| (default "ell_n_plus_mode"); "ell_n" = cap ell_n
     ro$ls0_cap <- if (identical(getOption("v3.ls0_cap", "ell_n_plus_mode"), "ell_n")) "ell_n" else "ell_n_plus_mode"
