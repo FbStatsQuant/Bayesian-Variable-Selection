@@ -25,3 +25,7 @@
 - 23:00: HQ wave-2 requirements (C-GROW MR1 LS0 cap; C-DLV A.2 TDP-IMPL; C-DLV B calibration fallback) + HQ_AUDIT precision. Implemented (bf093a8): cpp_final_run LS0 cap ell_n + |S~0| (v3.ls0_cap = "ell_n" switch); v3_cal_tier/v3_calibrate tier-1 fallback grid (last successful tier-1 construction, else completed tier-1 pilot schedule; v3_check_grid; ordinary v3_frozen; flags$grid_fallback) behind v3.grid_fallback and ls0. TDP-IMPL bounds checked by reading (REPORT §1c).
 - 23:10: test_ls0 wave2 13/13 PASS (injected grid failures via a v3_build_grid wrapper). Study results: 0 schedule_limit fits (reconciliation.csv: 2394 completed + 6 resource_limit).
 - 23:12: R05 (fresh Codex review of the wave-2 diff) launched; p = 30 regression rerun with the final code (off, on) launched.
+- 23:14: R05 APPROVE-WITH-FIXES (2 MINOR); fixed in 0638af9 (flag only when fallback fires; checked cap). Stale regression batches killed and relaunched on the final code.
+- 23:20: R06 APPROVE (both fixes RESOLVED; C-GROW MR1, C-DLV A.2, C-DLV B MET). Harness on final code: B3/C3 28/28 x3 seeds PASS; 0 schedule_limit in harness raw results.
+- 23:27: final-code fixtures 35+5+10+9+14 PASS; p = 30 regression (final code) identical on all checks, no fallback flag 48/48, move_cap = ell_n + |S0| 48/48.
+- 23:30: p = 500 replays: S1/S4 new-core fits completed (HPM unchanged by LS0); prototype fits and S5 running. REPORT updated to final state.

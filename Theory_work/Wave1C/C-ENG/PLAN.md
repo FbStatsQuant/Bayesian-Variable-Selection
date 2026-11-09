@@ -224,3 +224,5 @@ Q4. ℓ for LS0 = production ℓ (same as final search)?
 - MR2 (fallback triggered by `truncated` ⇒ cap ≥ 2): `start_mode(st, cap, tie_dp = true)` throws for cap < 2; production
   uses cap 10⁶. Tests move to caps ≥ 2 and check that |E| = 1 never takes the fallback and that cap 1 is rejected.
 - MR3 (no consistency result needs the tie rule): documented; the size-then-lex rule is kept for reproducibility (spec #8).
+
+## 7. v1.4 (23:00 CST): HQ wave 2 (C-GROW MR1 LS0 cap ell_n+|S0~| behind v3.ls0_cap; C-DLV A.2 TDP-IMPL bound check; C-DLV B tier-1 calibration fallback with the HQ_AUDIT precision behind v3.grid_fallback and ls0). Tests: test_ls0.R variant wave2; p = 30 regression rerun; harness rerun. Reviews R05 (wave-2 diff) and R06 (fix check).

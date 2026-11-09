@@ -59,3 +59,54 @@ Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v
 Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:183: | 26 | e4 | LS0 start-mode tie cap | §6.10 (LS0) | as in #8. The invariant "DP output = the prescribed choice" is an OPEN obligation (N3). A and B sk
 Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:399: | 2 | **Merged-LS0 replay**: integrated core versus the O-LS0 export on the 3 designs. Covers HPM, stores, flags, E3 unchanged, `ls0_improved`, stream
 Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:400: | 3 | **GUARD-W audit**: code audit that the v3.1 worker, merge and LS0 paths satisfy "any worker stop, LS0 stop or guard stop ⇒ no output" (OP-LS0 
+
+Additional citations (REPORT §1c/§1, final code 0638af9), Sun Nov  8 23:29:26 CST 2026:
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:403:   // C-GROW MR1: LS0 move cap = ell_n + |S~0| (default); ls0_cap = "ell_n" keeps ell_n. The final local search keeps ell_n.
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:404:   o.ls0_cap_plus_mode = !ro.containsElementNamed("ls0_cap") || as<std::string>(ro["ls0_cap"]) != "ell_n";
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:473:       long long cap_ll = (long long)o.ls0_ell + (o.ls0_cap_plus_mode ? (long long)m.S.size() : 0LL);  // checked (R05 #2)
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:474:       if (o.ls0_ell < 0 || cap_ll > (long long)std::numeric_limits<int>::max()) stop("LS0 move cap out of range");
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:475:       int ls0_cap = (int)cap_ll;
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:476:       LocalArchive A0 = E.local_search(m.S, ls0_cap, o.tier, true, -1, PH_LS0);
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:477:       sec_ls0 = secs_since(t1);
+Scripts/SMC_BVS/core/cpp/v3_core.cpp:478:       ls0 = local_to_list(A0, D);
+Scripts/SMC_BVS/core/v3_run.R:93:   if (isTRUE(ls0)) {
+Scripts/SMC_BVS/core/v3_run.R:95:     le <- getOption("v3.ls0_ell", b$ell)   # testing override of the LS0 base cap (R05 #2: validated)
+Scripts/SMC_BVS/core/v3_run.R:96:     if (!is.numeric(le) || length(le) != 1 || !is.finite(le) || le < 0 || le != round(le) || le > 1e6)
+Scripts/SMC_BVS/core/v3_run.R:97:       stop("option v3.ls0_ell must be a whole number in [0, 1e6]")
+Scripts/SMC_BVS/core/v3_run.R:100:     # C-GROW MR1 (adopted by HQ): LS0 move cap ell_n + |S~0| (default "ell_n_plus_mode"); "ell_n" = cap ell_n
+Scripts/SMC_BVS/core/v3_run.R:101:     ro$ls0_cap <- if (identical(getOption("v3.ls0_cap", "ell_n_plus_mode"), "ell_n")) "ell_n" else "ell_n_plus_mode"
+Scripts/SMC_BVS/core/v3_calib.R:28: v3_cal_tier <- function(state, setup, tier, runtime = NULL, grid_fallback = FALSE) {
+Scripts/SMC_BVS/core/v3_calib.R:120:   # C-DLV B (v3.1, adopted by HQ): on a grid failure, record a valid fallback grid for v3_calibrate: the last successful
+Scripts/SMC_BVS/core/v3_calib.R:122:   if (isTRUE(grid_fallback) && trig$grid_failure && tier == 1) {   # tier 0 failures escalate as in v3
+Scripts/SMC_BVS/core/v3_calib.R:123:     out$fallback_grid <- if (isTRUE(g$ok)) list(grid = g$grid, rho_V = g$rho_appended, grid_label = g$label, source = "last_successful_const
+Scripts/SMC_BVS/core/v3_calib.R:124:                          else list(grid = pil$schedule, rho_V = NULL, grid_label = "pilot_schedule", source = "pilot_schedule")
+Scripts/SMC_BVS/core/v3_calib.R:144: v3_calibrate <- function(setup, seed, tier = 0, preflight = NULL, runtime = NULL, grid_fallback = getOption("v3.grid_fallback", TRUE)) {
+Scripts/SMC_BVS/core/v3_calib.R:151:     a <- v3_cal_tier(state, setup, e, runtime, grid_fallback = grid_fallback)
+Scripts/SMC_BVS/core/v3_calib.R:163:   if (status == "ok" && is.null(last$grid) && e == 1 && isTRUE(grid_fallback) && !is.null(last$fallback_grid) &&
+Scripts/SMC_BVS/core/v3_calib.R:164:       isTRUE(tryCatch(v3_check_grid(last$fallback_grid$grid), error = function(err) FALSE))) {
+Scripts/SMC_BVS/core/v3_calib.R:165:     fallback <- last$fallback_grid$source
+Scripts/SMC_BVS/core/v3_calib.R:166:     last$grid <- last$fallback_grid$grid; last$rho_V <- last$fallback_grid$rho_V; last$grid_label <- last$fallback_grid$grid_label
+Scripts/SMC_BVS/core/v3_calib.R:167:     last$grid_source <- paste("fallback:", fallback)
+Scripts/SMC_BVS/core/v3_calib.R:183:   if (!is.null(fallback)) { out$grid_fallback <- fallback; out$flags$grid_fallback <- fallback }
+Scripts/SMC_BVS/core/v3_fit.R:126:   cal <- v3_calibrate(setup, seed, preflight = pf_fun, runtime = runtime,
+Scripts/SMC_BVS/core/v3_fit.R:127:                       grid_fallback = isTRUE(ls0) && isTRUE(getOption("v3.grid_fallback", TRUE)))
+Scripts/SMC_BVS/core/v3_fit.R:145:   # C-DLV B: present only when the fallback fired ("last_successful_construction" or "pilot_schedule"; R05 #1)
+Scripts/SMC_BVS/core/v3_fit.R:146:   if (!is.null(cf$grid_fallback)) fr$flags$grid_fallback <- cf$grid_fallback
+Scripts/SMC_BVS/core/cpp/v3_start.h:185: // C-PACK MR2: `truncated` is also set at count == cap (at cap = 1 even when the maximiser is unique), so the fallback
+Scripts/SMC_BVS/core/cpp/v3_start.h:186: // requires cap >= 2; then a unique maximiser (|E| = 1) is always returned by the enumeration path (count 1 < cap).
+Scripts/SMC_BVS/core/cpp/v3_start.h:187: // C-PACK MR3: no consistency result relies on the size-then-lex tie rule; it is kept (spec #8) for reproducibility.
+Scripts/SMC_BVS/core/cpp/v3_start.h:272:   if (tie_dp && cap < 2) throw std::invalid_argument("start_mode: the e4 tie-aware fallback requires cap >= 2 (C-PACK MR2)");
+Scripts/SMC_BVS/tests/changed_units.R:2: add("production_api_has_no_test_controls", {
+Scripts/SMC_BVS/tests/changed_units.R:4:   exact(names(formals(v3_fit)), c("X", "y", "seed", "allocation", "ls0"))
+Scripts/SMC_BVS/tests/changed_units.R:5:   forbidden <- c("v3_trace", "v3_step_sample", "v3_round_sample", "v3_resample_sample",
+Scripts/SMC_BVS/tests/v2_runtime_units.R:120:     # v3.1 (C-ENG): with LS0 enabled the final ledger also serialises an `ls0` counter row; LS0 never ran here (zero row)
+Scripts/SMC_BVS/tests/v2_runtime_units.R:121:     no_ls0 <- function(m) { if ("ls0" %in% rownames(m)) { need(all(m["ls0", ] == 0), "LS0 ran after a failed inheritance"); m[rownames(m) !=
+Scripts/SMC_BVS/tests/v2_runtime_units.R:122:     exact(no_ls0(z$ledger$logical), injected$ledger_before$logical)
+Scripts/SMC_BVS/tests/v2_runtime_units.R:133:     # RAII fault restoration: the formerly failing singleton scores normally again.
+Scripts/SMC_BVS/tests/v2_runtime_units.R:134:     need(is.finite(.v3cpp$cpp_score(ctx, injected$failure_model)$log_m), "test corruption was not restored")
+Scripts/SMC_BVS/tests/v2_runtime_units.R:135:     evidence[[if (after_hpm) "after_hpm" else "before_hpm"]] <- list(injection = injected, assembled = a)
+Results/2026-10-28_New_Campaign/H_existing_20261030/tables/reconciliation.csv:1: p,scale_key,fits,completed,resource_limit,status_ok,status_failed,expected,missing
+Results/2026-10-28_New_Campaign/H_existing_20261030/tables/reconciliation.csv:2: 500,c050,600,600,0,600,0,600,0
+Results/2026-10-28_New_Campaign/H_existing_20261030/tables/reconciliation.csv:3: 500,c100,600,599,1,599,1,600,0
+Results/2026-10-28_New_Campaign/H_existing_20261030/tables/reconciliation.csv:4: 1000,c050,600,598,2,598,2,600,0
+Results/2026-10-28_New_Campaign/H_existing_20261030/tables/reconciliation.csv:5: 1000,c100,600,597,3,597,3,600,0

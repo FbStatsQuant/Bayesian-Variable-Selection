@@ -89,3 +89,4 @@ LS0 termination:
 
 no_improvement 
             48 
+final-code LS0-on fits: 48 ; no grid_fallback flag: 48 ; no calibration fallback field: 48 ; move_cap == ell_n + |start mode|: 48 ; LS0 moves < ell_n (cap rule not binding): 48 

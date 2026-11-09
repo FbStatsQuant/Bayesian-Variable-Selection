@@ -3,14 +3,17 @@
 Ticket C-ENG, Theory Wave 1C. Lead: Claude Opus 5.5 (Claude Work). Branch **`w1c/ls0-merge`** (pushed to origin; head commit
 in the final message). Base: `f16ce15` (main). Not merged; main untouched.
 
-**RESULT: DONE (implemented, tested, code reviews APPROVE).** HQ-forwarded method requirements C-PACK MR1–MR3 implemented
-and tested (§1b). Open: see §6.
+**RESULT: DONE (implemented, tested, all code reviews APPROVE).** HQ-forwarded method requirements implemented, tested and
+reviewed: C-PACK MR1–MR3 (§1b); C-GROW MR1, C-DLV A.2 (TDP-IMPL), C-DLV B with the HQ_AUDIT precision (§1c). Study outputs:
+0 `schedule_limit` fits (§1c). Open: see §6.
 
 ## 1. What changed (production code; `git diff f16ce15 HEAD -- Scripts/SMC_BVS`)
 
 Switch: `v3_fit(X, y, seed, allocation, ls0 = getOption("v3.ls0", TRUE))`. **Default = v3.1 (LS0 on).** `ls0 = FALSE`
-(or `options(v3.ls0 = FALSE)`) reproduces the v3 fit (checked 48/48, §3c). Test-only options: `v3.ls0_tie_dp = FALSE`
-(v3 start-mode rule inside LS0), `v3.ls0_ell` (LS0 move cap; hook for an HQ ℓ_n schedule — none received).
+(or `options(v3.ls0 = FALSE)`) reproduces the v3 fit entirely — no LS0, no NA fields, no calibration fallback (checked 48/48
+on the final code, §3c). Per-item switches inside v3.1 mode: `v3.ls0_cap = "ell_n"` (LS0 cap ℓ_n instead of ℓ_n + |S̃₀|),
+`v3.grid_fallback = FALSE` (v3 `schedule_limit`), `v3.ls0_tie_dp = FALSE` (v3 start-mode rule); test-only `v3.ls0_ell`
+(LS0 base cap, validated whole number in [0, 10⁶]).
 
 | file | lines (new numbering) | change |
 |---|---|---|
@@ -22,7 +25,11 @@ Switch: `v3_fit(X, y, seed, allocation, ls0 = getOption("v3.ls0", TRUE))`. **Def
 | `Scripts/SMC_BVS/core/v3_run.R` | 84–108, 128–135, 142, 180–195, 201–202, 211, 218–221 | `v3_run_settings(..., ls0)`; `V3_ESTIMATE_FIELDS`, `v3_unavailable_estimates()` (#15); assembly: `ls0` archive, `start_mode`, `hpm_before_ls0`; **E3 from the HPM before LS0**; `local_certified` = final-certified ∧ HPM = final endpoint, OR LS0-certified ∧ HPM = LS0 endpoint (`local_certified_by`); `local_limit` = final OR LS0 cap (`final_local_limit`, `ls0_local_limit`); flags `ls0_improved` (strict F increase), `ls0_hpm_changed`; NA fields on the no-output branch; `timings$ls0` |
 | `Scripts/SMC_BVS/core/v3_fit.R` | 49–51, 63, 137 | `ls0` argument; NA estimate fields on every return with `estimates_available` not TRUE (v3.1 mode) |
 | `Scripts/SMC_BVS/study/adapter.R` | 185–190, 198, 202, 209 | `smcbvs_estimate()`: a scalar NA estimate marker = unavailable (pre-v3.1 cores omit the field) |
-| `Scripts/SMC_BVS/core/README.md` | 37–60 | v3.1 merge section |
+| `Scripts/SMC_BVS/core/v3_calib.R` | 28, 120–126, 141–190 | C-DLV B tier-1 fallback grid (§1c) |
+| `Scripts/SMC_BVS/tests/changed_units.R`, `v2_runtime_units.R` | 2–5; 120–135 | harness assertions for the v3.1 interface (§3d) |
+| `Scripts/SMC_BVS/core/README.md` | 37–61 | v3.1 merge section |
+(Line numbers of `v3_core.cpp`/`v3_run.R`/`v3_fit.R` in this table refer to the first implementation commit 9b9d234; the
+later wave-2 hunks are listed in §1b/§1c with HEAD numbering.)
 
 ## 1b. Method requirements forwarded by HQ (C-PACK, `Theory_work/Wave1C/C-PACK/METHOD_REQUIREMENTS.md`, council-passed)
 
@@ -42,9 +49,9 @@ Every item is behind a switch; default = new behaviour; `v3_fit(..., ls0 = FALSE
 
 | req. | implementation | switch (old behaviour) | test / evidence |
 |---|---|---|---|
-| **C-GROW MR1** LS0 move cap ℓ^{LS0} = ℓ_n + \|S̃₀\| | `cpp_final_run`: `ls0_cap = ls0_ell + |m.S|` with `ls0_ell` = ℓ_n (`ro$ell`), applied only to the LS0 `local_search`; the final local search keeps ℓ_n; archive `ls0$move_cap`, `ls0$move_cap_rule` (`cpp/v3_core.cpp:403–404, 473–477`; `v3_run.R` `ro$ls0_cap`) | `options(v3.ls0_cap = "ell_n")` | `numerics/out_test_ls0_wave2.txt`: default fit move_cap = 8 + 3; switch gives 8 with identical final search/Ẑ/PIPs; binding fixture (base cap 0): rule ℓ_n stops at `move_limit`, rule ℓ_n + \|S̃₀\| completes the same descent/HPM as the production run |
+| **C-GROW MR1** LS0 move cap ℓ^{LS0} = ℓ_n + \|S̃₀\| | `cpp_final_run`: `ls0_cap = ls0_ell + \|m.S\|` (64-bit checked addition, R05 #2) with `ls0_ell` = ℓ_n (`ro$ell`), applied only to the LS0 `local_search`; the final local search keeps ℓ_n; archive `ls0$move_cap`, `ls0$move_cap_rule` (`cpp/v3_core.cpp:403–404, 473–479`; `v3_run.R:93–101`) | `options(v3.ls0_cap = "ell_n")` | `numerics/out_test_ls0_wave2.txt`: default fit move_cap = 8 + 3; switch gives 8 with identical final search/Ẑ/PIPs; binding fixture (base cap 0): rule ℓ_n stops at `move_limit`, rule ℓ_n + \|S̃₀\| completes the same descent/HPM as the production run |
 | **C-DLV A.2 TDP-IMPL** | unchanged `mode_tie_dp` (TDP-E). Same maximiser: under EX-A, E = 𝒜* (W1-N3 (b)), so TDP-E = lex-min 𝒜* = S* = W1-N3 TDP's output (checked: `out_xcheck_n3_tdp.txt` 600/600, `out_test_tdp_*` [C]). **Operations:** `mode_dp` O(Σ_b 2^{\|C_b\|} + J(K+1)(B+1)); per index i: one row refresh O(2^{\|C_{b(i)}\|}) (twice on rejection) + one reachability pass O(Σ_b (K+1)(t_b+1)) ≤ O(J(K+1)²); total O(p·(2^B + J(K+1)²)) ⊆ O(p·Σ_b(2^{\|C_b\|}+(K+1)²)). **Storage:** `mb` Σ_b(t_b+1), `arg` ≤ Σ_b 2^{\|C_b\|} codes, `M` and `reach` (J+1)(K+1), `allowed` Σ_b(t_b+1), masks J: O(Σ_b 2^{\|C_b\|} + J(K+1)). The preceding enumeration fast path stores O(J + p) (choice vector, recursion depth J, best set) and costs ≤ cap · O(J(B+1) + p log p) (every visited tight node completes to a leaf, so no dead branches; cap = 10⁶ is a constant). GUARD-W: start mode + LS0 are timed as one operation and checked at checkpoint `ls0`; no uniforms (final stream endpoints identical with LS0 on/off, `out_test_ls0_wave2.txt`; p = 30 regression `streams` identical 48/48) | `options(v3.ls0_tie_dp = FALSE)` | see (a), (b) |
-| **C-DLV B** tier-1 calibration fallback (HQ precision) | `v3_cal_tier`: at tier 1, on a grid failure (the tier already stops at its first failed construction: no diagnostics after a failed preliminary, `break` after a failed rebuild — unchanged), record `fallback_grid` = the last successful tier-1 construction `g` if `g$ok` (never the failed `gn` or its partial grid), else the completed tier-1 pilot schedule (`pil$schedule`; a stopped pilot returns earlier through `fail`). `v3_calibrate`: if the run would return `schedule_limit` (status ok, no grid, tier 1), validate the fallback with `v3_check_grid` and freeze it through the ordinary `v3_frozen` (tier-1 N, L, inherited scored state; sha256) before the final run; metadata `calibration$grid_fallback`, `tiers[[2]]$grid_source = "fallback: …"`, `fit$flags$grid_fallback` ∈ {"none", "last_successful_construction", "pilot_schedule"}; the `grid_failure` trigger and `checks_passed_calibration = FALSE` are kept. Other branches (tier-0 failure → escalation, blocked escalation → `resource_limit`, stops, numerical failures) unchanged (`v3_calib.R:28, 120–126, 141–183`; `v3_fit.R:126–127, 145`) | `options(v3.grid_fallback = FALSE)`; `ls0 = FALSE` | `out_test_ls0_wave2.txt` (failures injected by wrapping `v3_build_grid`): all constructions fail ⇒ completed fit, finite estimates, `grid_fallback = "pilot_schedule"`, frozen grid = tier-1 pilot schedule (strictly increasing 0→1), tier 1; tier-0 preliminary + tier-1 rebuild fail ⇒ `"last_successful_construction"`, frozen grid = tier-1 preliminary grid with its ρ_V/label; tier-0-only failure (v3 escalates and succeeds) and no failure ⇒ calibration, frozen record and Ẑ identical to v3, flag `"none"`; switches ⇒ `schedule_limit` as in v3. p = 30 regression rerun with the final code (§3c2′) |
+| **C-DLV B** tier-1 calibration fallback (HQ precision) | `v3_cal_tier`: at tier 1, on a grid failure (the tier already stops at its first failed construction: no diagnostics after a failed preliminary, `break` after a failed rebuild — unchanged), record `fallback_grid` = the last successful tier-1 construction `g` if `g$ok` (never the failed `gn` or its partial grid), else the completed tier-1 pilot schedule (`pil$schedule`; a stopped pilot returns earlier through `fail`). `v3_calibrate`: if the run would return `schedule_limit` (status ok, no grid, tier 1), validate the fallback with `v3_check_grid` and freeze it through the ordinary `v3_frozen` (tier-1 N, L, inherited scored state; sha256) before the final run; metadata (only when the fallback fires) `calibration$grid_fallback`, `tiers[[2]]$grid_source = "fallback: …"`, `fit$flags$grid_fallback` ∈ {"last_successful_construction", "pilot_schedule"} (the failed construction stays archived in `tiers[[2]]$grids` with `ok = FALSE` and its `reason`); the `grid_failure` trigger and `checks_passed_calibration = FALSE` are kept. Other branches (tier-0 failure → escalation, blocked escalation → `resource_limit`, stops, numerical failures) unchanged (`v3_calib.R:28, 120–126, 141–190`; `v3_fit.R:126–127, 145–146`) | `options(v3.grid_fallback = FALSE)`; `ls0 = FALSE` | `out_test_ls0_wave2.txt` (failures injected by wrapping `v3_build_grid`): all constructions fail ⇒ completed fit, finite estimates, `grid_fallback = "pilot_schedule"`, frozen grid = tier-1 pilot schedule (strictly increasing 0→1), tier 1; tier-0 preliminary + tier-1 rebuild fail ⇒ `"last_successful_construction"`, frozen grid = tier-1 preliminary grid with its ρ_V/label; tier-0-only failure (v3 escalates and succeeds) and no failure ⇒ calibration, frozen record and Ẑ identical to v3 and **no** `grid_fallback` flag (flag set only when the fallback fires — R05 #1 fix); switches ⇒ `schedule_limit` as in v3. 14/14 PASS on the final code. p = 30 regression on the final code: calibration and frozen record identical to the old core 48/48, no fallback flag 48/48 (§3c) |
 
 **Study outputs and `schedule_limit`:** `Results/2026-10-28_New_Campaign/H_existing_20261030/tables/reconciliation.csv`
 lists the 2,400 study fits as 2,394 `completed` + 6 `resource_limit` (p = 500: 1199 + 1; p = 1000: 1195 + 5), i.e.
@@ -78,30 +85,34 @@ truncated the legacy result fields (S, lg0, ties, truncated) are unchanged.
 | R02 | PLAN v1.1 + TDP_E.md re-check | Codex gpt-6.1-sol high (fresh) | REJECT on plan text; R01 #1–#7 all RESOLVED; 2 MAJOR, 2 MINOR | `R02_plan_recheck_raw.md`; adapter already fixed in code; public-path gate added; wording fixed → PLAN v1.2 (`R02_disposition.md`) |
 | R03 | code diff f16ce15..9b9d234 | Codex gpt-6.1-sol high (fresh) | **APPROVE, no findings** | `R03_code_review_raw.md` (source review + in-memory R checks; did not rebuild) |
 | R04 | post-R03 deltas: MR2 guard (9b9d234..36c0cfe) + harness assertion edits | Codex gpt-6.1-sol high (fresh) | **APPROVE, no findings** | `R04_delta_review_raw.md` (MR1/MR2 checked against C-PACK text) |
+| R05 | HQ wave-2 diff 95be87e..bf093a8 (C-GROW MR1, C-DLV A.2, C-DLV B + HQ precision) | Codex gpt-6.1-sol high (fresh) | APPROVE-WITH-FIXES (2 MINOR: `grid_fallback = "none"` flag on no-failure fits; unchecked cap addition via the test override) | `R05_wave2_review_raw.md` (incl. disposition); both fixed in 0638af9 |
+| R06 | R05 fix check bf093a8..0638af9 | Codex gpt-6.1-sol high (fresh) | **APPROVE, no new findings; C-GROW MR1, C-DLV A.2, C-DLV B all MET** | `R06_fix_check_raw.md` |
 
-After R03 the only production-code change is the MR2 guard (4 lines in `cpp/v3_start.h`), reviewed in R04. The harness edits
-(two assertions in `Scripts/SMC_BVS/tests`) were reviewed in R04. Per the brief a second full review was required only if the
-first found something major; it did not.
+Every production-code change is covered by a review: f16ce15..9b9d234 (R03), the MR2 guard (R04), the wave-2 diff (R05) and
+its fixes (R06). No production code changed after 0638af9.
 
 ## 3. Tests and results (scripts in `tests/`, outputs in `numerics/`; local Windows, R 4.6.1, Rtools45, Rcpp 1.1.2)
 
 (a) **TDP unit tests** — `tests/test_tdp.R`; `numerics/out_test_tdp_seed20261108.txt`, `numerics/out_test_tdp_seed7.txt`:
-2 × 3000 random instances (integer, flat-tie and real tables; random block order; K binding; NaN above K), caps 1, 2, 3,
-5, 17, 10⁶: new `start_mode` == lex-min E (uncapped enumeration) 6000/6000 at every cap; == brute-force S* on all 4000
-exact-arithmetic (integer/flat) instances; TDP-E alone == S* 4000/4000; legacy fields unchanged whenever not truncated
-6000/6000; lg0 and |S| == brute force 6000/6000. The old rule is wrong on 190/3000 and 169/3000 instances at cap 1.
+2 × 3000 random instances (integer, flat-tie and real tables; random block order; K binding; NaN above K), caps 2, 3, 4,
+5, 17, 10⁶ (cap 1 is rejected with the fallback, C-PACK MR2): new `start_mode` == lex-min E (uncapped enumeration)
+6000/6000 at every cap; == brute-force S* on all 4000 exact-arithmetic (integer/flat) instances; TDP-E alone == S*
+4000/4000; legacy fields unchanged whenever not truncated 6000/6000; lg0 and |S| == brute force 6000/6000. The old rule is
+wrong on 117/1048 and 96/991 truncated instances at cap 2 (seeds 20261108 / 7). (The first run, before MR2, also used cap
+1: 190/3000 and 169/3000 old-rule errors, all corrected by the fallback.)
 **W1-N3 counterexample (p = 44, K = 22, cap 10⁶):** old returns {0,2,…,38,41,42} (≠ S*), new returns S* =
 {0,2,…,38,40,43}, `tie_dp_used = TRUE`, log γ₀ = 25 (TDP-E < 0.01 s; total 6–7.5 s incl. the 10⁶-set enumeration).
 Family of W1-N3 L6 at all caps ≤ 2^{m+1}+1, m ≤ 8: 0/1031 mismatches. Rounding fixtures (R01 #2 2⁵⁴ example, prefix, block
 sum) and boundary fixtures (K = 0, K binding inside a block, interleaved blocks, empty optimum): all as specified.
 Cross-check vs W1-N3's exact reference `tdp.py` (`tests/xcheck_n3_tdp.*`, `numerics/out_xcheck_n3_tdp.txt`): 600 integer
-instances, 0 mismatches (cap 1 fallback, cap 10⁶ enumeration, lg0).
+instances, 0 mismatches (cap 2 — fallback whenever \|E\| ≥ 2 —, cap 10⁶ enumeration, lg0).
 
 (b) **LS0 behaviour** — `tests/test_ls0.R`:
-- `normal` (`numerics/out_test_ls0_normal.txt`, **33/33 PASS**): integrated LS0 event count = 1 (emitted centre) +
+Final code (0638af9): normal 35/35, stop 9/9, numfail 5/5, paths 10/10, wave2 14/14 — 0 FAIL.
+- `normal` (`numerics/out_test_ls0_normal.txt`, **35/35 PASS**; incl. C-PACK MR1/MR2 checks): integrated LS0 event count = 1 (emitted centre) +
   n_evaluated, all mechanism `local_scan`; standalone LS0 equals the integrated one; emitting vs not emitting a
   local-maximum start mode changes the standalone HPM (provenance ls0, stage 0, position 0) — omission is observable;
-  `ls0_improved`/E3 formulas; ℓ_LS0 = 0 with a strict improving neighbour ⇒ `move_limit`, `ls0_local_limit`, public
+  `ls0_improved`/E3 formulas; LS0 cap exactly 0 (rule `"ell_n"`, base 0) with a strict improving neighbour ⇒ `move_limit`, `ls0_local_limit`, public
   `local_limit` TRUE, status completed with estimates; **equal-F HPM tie change by LS0** (duplicated columns 6:=7,
   15:=16; four models with bitwise-equal F): `ls0_hpm_changed` TRUE, `ls0_improved` FALSE, provenance `ls0`, E3 not fired,
   final-search tie change leaves the HPM ≠ the final search's endpoint, certificate from LS0 (`local_certified_by = "ls0"`);
@@ -116,9 +127,15 @@ instances, 0 mismatches (cap 1 fallback, cap 10⁶ enumeration, lg0).
   8/8 fields NA, `fit$log_Z` NA (not `log_Zbar0`), adapter OK; y_constant, no_predictors, preflight stop, invalid seed:
   NA fields (+ adapter); exact branch: finite estimates, no LS0; completed fit: adapter MPM = PIP > .5; switch-off stop =
   v3 output.
+- `wave2` (`numerics/out_test_ls0_wave2.txt`, **14/14 PASS**): C-GROW MR1 cap rule and its switch; binding fixture; invalid
+  `v3.ls0_ell` rejected; C-DLV B fallback with injected construction failures (both fallback sources, both switches,
+  tier-0-only failure and no failure identical to v3, no flag); final stream endpoints identical with LS0 on/off.
 
-(c) **Regression, S1–S6** — `tests/run_batch.R`, `tests/compare_regress.R`; `numerics/out_regress_p30.txt`, logs
-`numerics/regress_logs/`: study covariances S1–S6 and the generator's p = 30 truth pattern, n = 100, replicates 1–4,
+(c) **Regression, S1–S6** — `tests/run_batch.R`, `tests/compare_regress.R`; first run (code 9b9d234)
+`numerics/out_regress_p30.txt` + `regress_logs/`; **rerun on the final code (0638af9) for LS0 off/on**
+`numerics/out_regress_p30_final.txt` + `regress_logs_final/` (old and prototype fits reused; identical results on every
+check below; plus: no `grid_fallback` flag/field 48/48, LS0 `move_cap` = ℓ_n + |S̃₀| 48/48, LS0 moves < ℓ_n 48/48 so the
+C-GROW cap never binds and the prototype comparison stays exact): study covariances S1–S6 and the generator's p = 30 truth pattern, n = 100, replicates 1–4,
 scales 1 and 0.5 (48 datasets; local inputs, not study data), all on the SMC branch, all completed. Old core (f16ce15) vs
 new core LS0 off vs new core LS0 on vs O-LS0 prototype (`cpp_final_run_ls0`, `origin/theory/O-LS0` 02348e2):
 - LS0 off == old, every field except timings/peak memory: **48/48**.
@@ -144,18 +161,27 @@ interface changes; all 26 bit-for-bit checks pass. Harness assertions updated mi
 (`Scripts/SMC_BVS/tests/changed_units.R:2–5`, `v2_runtime_units.R:120–135`; the `ls0` row is dropped only after checking it
 is all zero; NULL or scalar NA accepted as "unavailable"; R04 APPROVE). Rerun with the updated harness on the MR2 core:
 **B2 (ls0 off) 28/28 and C2 (ls0 on) 28/28 on each of seeds 1–3, summarize PASS** (`numerics/existing_suite/rerun_v31.log`,
-`B2_new_ls0off_v31harness/`, `C2_new_ls0on_v31harness/`). Caveat (helper): the harness builds `ro` by hand without `ls0`, so
+`B2_new_ls0off_v31harness/`, `C2_new_ls0on_v31harness/`). **Final code (0638af9): B3 (ls0 off) and C3 (ls0 on) 28/28 on
+seeds 1–3, summarize PASS** (`rerun_final.log`, `B3_final_ls0off/`, `C3_final_ls0on/`); no harness calibration reached the
+former `schedule_limit` branch (0 occurrences in the raw results of A and C3), so the C-DLV B fallback did not fire there. Caveat (helper): the harness builds `ro` by hand without `ls0`, so
 it does not execute LS0 itself; LS0 is covered by (b), (c), (c2). Only 3 of the 32 seed indices; not the Owls 32-seed gate.
 `build/check_smokes.R` inspects saved Owls smoke records (`runs/*/exit_status.txt`, adapter outputs) that do not exist
 locally, so it was not run; the public-path tests in (b) `paths` exercise the same adapter contract on local fits.
 
 ## 4. Files produced
-`PLAN.md` (v1.2), `LOG.md`, `CHECKPOINT.md`, `REPORT.md`, `lemmas/TDP_E.md`, `reviews/R01_*`, `R02_*`, `R03_*`,
+`PLAN.md` (v1.3), `LOG.md`, `CHECKPOINT.md`, `REPORT.md`, `lemmas/TDP_E.md`, `reviews/R01_*` … `R06_*`, `reviews/CITECHECK.txt`,
 `tests/` (ceng_load.R, ceng_exports.cpp, test_tdp.R, test_ls0.R, run_batch.R, compare_regress.R, proto_load.R,
-o_ls0_exports.cpp [verbatim prototype], run_replay.R, compare_replay.R, xcheck_n3_tdp.R/.py), `numerics/` (outputs above).
+o_ls0_exports.cpp [verbatim prototype], run_replay.R, compare_replay.R, xcheck_n3_tdp.R/.py, check_final_flags.R),
+`numerics/` (outputs above; `existing_suite/` = harness evidence, 11+ MB).
 
 ## 5. Notes for HQ
-- The ls0 switch also gates the #15 NA fields, so `ls0 = FALSE` is exactly v3 (including stop outputs).
+- The ls0 switch also gates the #15 NA fields and the C-DLV B fallback, so `ls0 = FALSE` is exactly v3 (including stop
+  outputs and `schedule_limit`).
+- C-DLV B changes a shipped component (calibration) on the former `schedule_limit` event only, by HQ decision; 0 study fits
+  were in that event.
+- The existing harness calls `v3_calibrate` directly; with the default `grid_fallback = TRUE` a former `schedule_limit`
+  seed would now continue to the calibrated final run (R05 note). Seeds 1–3 never reach it; for a v3 baseline pass
+  `grid_fallback = FALSE` (or `options(v3.grid_fallback = FALSE)`).
 - Windows note: `long` is 32-bit on Windows; production cap 10⁶ fits, but a cap above 2³¹−1 would overflow there (Linux
   production unaffected).
 - Parallel R processes sharing one sourceCpp cache fail to load on Windows (observed); the core's cache logic is unchanged
