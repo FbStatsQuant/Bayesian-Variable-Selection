@@ -11,7 +11,7 @@ import re
 import subprocess
 import sys
 
-BRANCH = "origin/w1c/ls0-merge"
+BRANCH = "8a27652"  # C-ENG head cited by the chapter (origin/w1c/ls0-merge has since advanced)
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 ALIASES = {

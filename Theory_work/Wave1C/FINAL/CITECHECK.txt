@@ -1,14 +1,14 @@
-citecheck.py: 179 citations checked, 0 problems
-OK            consistency.tex:16  \srcq{W1C/PROTOCOL.md:35}  [PROVED-CHECKED]
-OK            consistency.tex:17  \path{W1C/FINAL/reviews/F1_fidelity_sol.md}
-OK            consistency.tex:17  \path{W1C/FINAL/reviews/C1_disposition.md}
-OK            consistency.tex:18  \path{Theory_work/Wave1/}
-OK            consistency.tex:18  \path{Theory_work/Wave1C/}
-OK            consistency.tex:18  \path{Theory_work/State_of_Project/sections/}
-OK            consistency.tex:18  \path{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/}
-OK            consistency.tex:18  \path{Scripts/SMC_BVS/core/}
-OK            consistency.tex:18  \path{W1C/FINAL/citecheck.py}
-OK            consistency.tex:18  \path{W1C/FINAL/CITECHECK.txt}
+citecheck.py: 180 citations checked, 0 problems
+OK            consistency.tex:18  \srcq{W1C/PROTOCOL.md:35}  [PROVED-CHECKED]
+OK            consistency.tex:19  \path{W1C/FINAL/reviews/F1_fidelity_sol.md}
+OK            consistency.tex:19  \path{W1C/FINAL/reviews/C1_disposition.md}
+OK            consistency.tex:20  \path{Theory_work/Wave1/}
+OK            consistency.tex:20  \path{Theory_work/Wave1C/}
+OK            consistency.tex:20  \path{Theory_work/State_of_Project/sections/}
+OK            consistency.tex:20  \path{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/}
+OK            consistency.tex:20  \path{Scripts/SMC_BVS/core/}
+OK            consistency.tex:20  \path{W1C/FINAL/citecheck.py}
+OK            consistency.tex:20  \path{W1C/FINAL/CITECHECK.txt}
 OK            sections\s1_setting.tex:4  \path{SoP/02_method.tex}
 OK            sections\s1_setting.tex:4  \path{SoP/A_notation.tex}
 OK            sections\s1_setting.tex:7  \srcq{SoP/04_theory.tex:70-74}  [G: sampling model]
@@ -140,6 +140,7 @@ OK            sections\s7_impl.tex:26  \srcq{W1C/C-DLV/METHOD_REQUIREMENTS.md:17
 OK            sections\s7_impl.tex:38  \srcq{SoP/02_method.tex:490-494}  [After the final local search]
 OK            sections\s7_impl.tex:38  \srcq{BR/Scripts/SMC_BVS/core/cpp/v3_core.cpp:443-481}  [LS0 (v3.1 #8): after the final local search]
 OK            sections\s7_impl.tex:39  \srcq{BR/Scripts/SMC_BVS/core/cpp/v3_core.cpp:469-476}  [ls0_cap_plus_mode]
+OK            sections\s7_impl.tex:39  \srcq{BR/Scripts/SMC_BVS/core/cpp/v3_core.cpp:474}  [LS0 move cap out of range]
 OK            sections\s7_impl.tex:40  \srcq{CORE/cpp/v3_engine.h:385-425}  [if (A.moves >= ell)]
 OK            sections\s7_impl.tex:40  \srcq{PROD/cpp/v3_engine.h:378-418}  [if (A.moves >= ell)]
 OK            sections\s7_impl.tex:40  \srcq{BR/Scripts/SMC_BVS/core/cpp/v3_engine.h:379-414}  [if (A.moves >= ell)]
