@@ -54,19 +54,25 @@ check("scans = ell + K + 1; requests = scans (p + p^2/4)",
 # local_to_list builds it (measured with object.size) plus an upper estimate of the live C++ LocalArchive (each model a
 # std::vector<int> of capacity <= 2K: 24 + 8K bytes + 16 allocator; parallel vectors of capacity <= 2 scans).
 cat("\nR07 #1: archive allowance vs a constructed worst-case archive (R copy measured + C++ upper estimate)\n")
-for (cfg in list(c(K = 100, ell = 10, p = 500), c(K = 100, ell = 11, p = 1000), c(K = 30, ell = 8, p = 30), c(K = 1000, ell = 15, p = 2000))) {
-  K <- cfg[["K"]]; ell <- cfg[["ell"]]; pp <- cfg[["p"]]; scans <- ell + K + 1; W <- ceiling(pp / 64)
+# R08: the allowance is read from an actual v3_preflight call (production formula), not a copy of it.
+for (cfg in list(c(n = 60, p = 30), c(n = 200, p = 500), c(n = 200, p = 1000), c(n = 2000, p = 2000), c(n = 6, p = 40))) {
+  nn <- cfg[["n"]]; pp <- cfg[["p"]]; bb0 <- v3_budgets(nn, pp); K <- bb0$K; ell <- bb0$ell; scans <- ell + K + 1; W <- ceiling(pp / 64)
+  allowance <- v3_preflight(nn, pp, bb0, "smc", list(mem_gb = 1e6, hours = 1e6), time_fun = function(k) 1e-9,
+                            ls0_worst_case = TRUE)$memory_components[["ls0_archive"]]
   mods <- function(m) lapply(seq_len(m), function(i) sample.int(pp, K))
   Rarch <- list(centre = sample.int(pp, K), centre_F = 0, path = mods(scans - 1), path_F = numeric(scans - 1),
                 scanned_centres = mods(scans), scanned_F = numeric(scans), scan_complete = integer(scans), scan_size = integer(scans),
-                termination = "move_limit", local_limit = TRUE, local_certified = FALSE, returned = sample.int(pp, K), returned_F = 0,
+                termination = "no_improvement", local_limit = TRUE, local_certified = FALSE, returned = sample.int(pp, K), returned_F = 0,
                 moves = as.integer(scans - 1), n_evaluated = 1e9, move_cap = as.integer(scans - 1), move_cap_rule = "ell_n + |start mode|")
   r_bytes <- as.numeric(object.size(Rarch))
-  cpp_bytes <- (2 * scans + 2) * (24 + 8 * K + 16) + 2 * scans * (8 + 8 + 4 + 4) + 4 * (8 * W + 4 * K + 96 + 24 * 2)
-  allowance <- (2 * scans + 4) * (12 * K + 256) + 96 * scans + 4 * (8 * W + 4 * K + 96)
-  cat(sprintf("  K = %d, ell = %d, p = %d: R archive %d B + C++ estimate %d B = %d B; allowance %d B\n", K, ell, pp,
-              as.integer(r_bytes), as.integer(cpp_bytes), as.integer(r_bytes + cpp_bytes), as.integer(allowance)))
-  check(sprintf("archive allowance covers the conversion peak (K = %d, p = %d)", K, pp), allowance >= r_bytes + cpp_bytes)
+  # live C++ LocalArchive: (2 scans + 2) models as std::vector<int> with capacity <= 2K (24 + 8K + 16 allocator bytes);
+  # outer vectors path/scanned with spare capacity (2 x 2 scans slots of 24 bytes); parallel F/scan vectors with capacity
+  # 2 scans; 4 particles; plus 2 KiB for the temporary shallow list extensions (move_cap, move_cap_rule) and names.
+  cpp_bytes <- (2 * scans + 2) * (24 + 8 * K + 16) + 2 * (2 * scans) * 24 + 2 * scans * (8 + 8 + 4 + 4) +
+               4 * (8 * W + 4 * K + 96 + 24 * 2) + 2048
+  cat(sprintf("  n = %d, p = %d (K = %d, ell = %d, scans = %d): R archive %d B + C++/conversion estimate %d B = %d B; preflight allowance %d B\n",
+              nn, pp, K, ell, scans, as.integer(r_bytes), as.integer(cpp_bytes), as.integer(r_bytes + cpp_bytes), as.integer(allowance)))
+  check(sprintf("production archive allowance covers the conversion peak (n = %d, p = %d)", nn, pp), is.finite(allowance) && allowance >= r_bytes + cpp_bytes)
 }
 # R07 #2: memory is checked before the timing benchmark
 calls <- 0; tf_spy <- function(k) { calls <<- calls + 1; 1e-4 }

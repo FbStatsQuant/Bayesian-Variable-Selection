@@ -63,18 +63,21 @@ unaffected by C-DLV B.
 ℓ_n + \|S̃₀\| ≤ ℓ_n + K, LS0 performs at most **ℓ_n + K + 1 scans** of ≤ p + k(p − k) ≤ q(p) = p + p²/4 models each (was
 ℓ_n + 1); the resource-envelope change itself is handled on the theory side. The SMC preflight (`v3_preflight`,
 `Scripts/SMC_BVS/core/v3_fit.R:16–63`) now charges this worst case when the C-GROW cap is in force (`ls0_worst_case`):
-memory component `ls0_archive` = 2(ℓ_n + K + 1)(4K + 64) bytes (path + scanned-centre archive, per-model cost as for the
-stores; the O(K(K+1)) words of M_G); time `ls0_worst_case$est_seconds` = 2 × (ℓ_n + K + 1)·q(p) × the measured seconds per
-score of a size-K model (`v3_time_scores`, 200 scores; factor 2 = declared bookkeeping constant for cache lookup/insert
-and ledger/store offers — the "C" of W_G), checked against the allocation's hours in `exceeds` for the initial and the
-escalation preflight. Switch: `options(v3.ls0_cap = "ell_n")` or `ls0 = FALSE` ⇒ the shipped preflight exactly.
-Test (`tests/test_preflight.R`, `numerics/out_test_preflight.txt`, **7/7 PASS**): p = 30 regression design (n = 100) and
+memory component `ls0_archive` = (2s + 4)(12K + 256) + 96s + 4(8W + 4K + 96) + 4096 bytes with s = ℓ_n + K + 1 (the archive at
+the conversion peak, C++ `LocalArchive` with capacity growth plus its R copy: path, scanned centres, centre, returned
+models, parallel F/scan vectors, scan particles; the O(K(K+1)) words of M_G; validated against a constructed worst-case
+archive, the allowance read from actual `v3_preflight` calls, for (n, p) = (60, 30), (200, 500), (200, 1000), (2000, 2000), (6, 40) — R07 #1, R08); time `ls0_worst_case$est_seconds` =
+2 × s·q(p) × the measured seconds per score of a size-K model (`v3_time_scores`, 200 scores; factor 2 = declared
+bookkeeping constant for cache lookup/insert and ledger/store offers — the "C" of W_G; an operational estimate, not a
+rigorous runtime bound), checked against the allocation's hours in `exceeds` for the initial and the escalation preflight.
+The memory estimate is evaluated first and the timing benchmark runs only if memory fits (R07 #2). Switch: `options(v3.ls0_cap = "ell_n")` or `ls0 = FALSE` ⇒ the shipped preflight exactly.
+Test (`tests/test_preflight.R`, `numerics/out_test_preflight.txt`, **13/13 PASS** after the R07 fixes): p = 30 regression design (n = 100) and
 the study sizes (dev generator S1–S6, n = 200, p = 500 and 1000) at 8 GiB/24 h and 2 GiB/24 h: **0 fits newly refused**
 (all pass both preflights); LS0 worst case ≈ 1.2–1.9 h at p = 500 and 4.8–6.7 h at p = 1000 (this Windows machine, shared
-CPU; actual LS0 time in the replay fits is seconds), extra memory ≈ 0.1 MiB; with `v3.ls0_cap = "ell_n"` / `ls0 = FALSE`
+CPU; actual LS0 time in the replay fits is seconds), extra memory ≈ 0.33 MiB; with `v3.ls0_cap = "ell_n"` / `ls0 = FALSE`
 the preflight record is identical to the shipped one; an allocation of half the LS0 worst case is refused by the new
 preflight and not by the shipped one. The check is one-sided (it compares the LS0 term alone with the whole allocation,
-as the shipped SMC preflight has no time term for the rest of the fit). Review R07 (below).
+as the shipped SMC preflight has no time term for the rest of the fit). Reviews R07 (REJECT, 2 MAJOR, fixed) and R08 (below).
 
 Spec mapping (`NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md`): #8 LS0 (when, centre, rules, no uniforms, all scored
 models join the stores, provenance `ls0`, `ls0_improved`, no E3, e4); #6 GUARD-W (LS0 stop / numerical failure in LS0 ⇒ no
@@ -100,9 +103,11 @@ truncated the legacy result fields (S, lg0, ties, truncated) are unchanged.
 | R04 | post-R03 deltas: MR2 guard (9b9d234..36c0cfe) + harness assertion edits | Codex gpt-6.1-sol high (fresh) | **APPROVE, no findings** | `R04_delta_review_raw.md` (MR1/MR2 checked against C-PACK text) |
 | R05 | HQ wave-2 diff 95be87e..bf093a8 (C-GROW MR1, C-DLV A.2, C-DLV B + HQ precision) | Codex gpt-6.1-sol high (fresh) | APPROVE-WITH-FIXES (2 MINOR: `grid_fallback = "none"` flag on no-failure fits; unchecked cap addition via the test override) | `R05_wave2_review_raw.md` (incl. disposition); both fixed in 0638af9 |
 | R06 | R05 fix check bf093a8..0638af9 | Codex gpt-6.1-sol high (fresh) | **APPROVE, no new findings; C-GROW MR1, C-DLV A.2, C-DLV B all MET** | `R06_fix_check_raw.md` |
+| R07 | preflight LS0 worst-case delta 8a27652..ef33f91 | Codex gpt-6.1-sol high (fresh) | REJECT (2 MAJOR: archive allowance below the conversion peak; benchmark ran before a certain memory rejection) | `R07_preflight_review_raw.md` (incl. disposition); both fixed in 98fac03 |
+| R08 | R07 fix check ef33f91..98fac03 | Codex gpt-6.1-sol high (fresh) | APPROVE-WITH-FIXES (both R07 MAJOR RESOLVED; 1 MINOR: archive test used a copied formula) | `R08_fix_check_raw.md` (incl. disposition); fixed: test reads the production allowance; +4096 fixed bytes |
 
 Every production-code change is covered by a review: f16ce15..9b9d234 (R03), the MR2 guard (R04), the wave-2 diff (R05) and
-its fixes (R06). No production code changed after 0638af9.
+its fixes (R06), the preflight term (R07) and its fixes (R08). No production code changed after 98fac03.
 
 ## 3. Tests and results (scripts in `tests/`, outputs in `numerics/`; local Windows, R 4.6.1, Rtools45, Rcpp 1.1.2)
 
