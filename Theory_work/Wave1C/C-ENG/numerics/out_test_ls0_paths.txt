@@ -1,4 +1,4 @@
-C-ENG test_ls0.R variant = paths  date = 2026-11-08 22:19:40 
+C-ENG test_ls0.R variant = paths  date = 2026-11-08 22:57:37 
 core = C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\t3-68de3711\Scripts\SMC_BVS\core 
 
 Forced stops (allocation hours = 0.05 / 3600), 10 fits

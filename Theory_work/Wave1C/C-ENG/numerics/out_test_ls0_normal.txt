@@ -1,4 +1,4 @@
-C-ENG test_ls0.R variant = normal  date = 2026-11-08 22:15:18 
+C-ENG test_ls0.R variant = normal  date = 2026-11-08 22:55:15 
 core = C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\t3-68de3711\Scripts\SMC_BVS\core 
 
 F1: start mode unscored before LS0, exact event count, centre provenance
@@ -8,6 +8,8 @@ F1: start mode unscored before LS0, exact event count, centre provenance
   [PASS] emitted: standalone LS0 HPM == centre, provenance ls0 stage 0 position 0
   [PASS] not emitted: the centre is never scored, so the HPM differs from the centre
   [PASS] status completed, LS0 archive present, centre == start mode
+  [PASS] MR1: LS0 centre == start_mode(st, 1e6).S recomputed independently on the run's own Start (setup)
+  [PASS] MR2: cap = 1 with the fallback is rejected
   [PASS] logical ls0 events == 1 (emitted centre) + n_evaluated
   [PASS] all LS0 events are mechanism local_scan
   [PASS] standalone LS0 (own ledger, no cache) has the same path/termination/n_evaluated
@@ -52,4 +54,4 @@ F5: public v3_fit
   [PASS] invalid seed (no output): log_Z NA by exact name and via $
   [PASS] ls0 = FALSE: v3 behaviour (no NA estimate fields added)
 
-TOTAL: 33 PASS, 0 FAIL
+TOTAL: 35 PASS, 0 FAIL

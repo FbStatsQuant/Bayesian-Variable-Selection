@@ -1,4 +1,4 @@
-C-ENG test_ls0.R variant = numfail  date = 2026-11-08 22:07:55 
+C-ENG test_ls0.R variant = numfail  date = 2026-11-08 22:56:53 
 core = C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\t3-68de3711\Scripts\SMC_BVS\core 
 
 GUARD-W: NumericalFailure inside LS0
