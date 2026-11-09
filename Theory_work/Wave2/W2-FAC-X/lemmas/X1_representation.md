@@ -57,7 +57,7 @@ g_Tᵀe₁ = √(1 − ρ)ṽ1_T, so ‖P_Te₁‖² = ṽ1ᵀ(ṽ1ṽ1ᵀ + A)�
 vᵀA⁻¹v − v_{−j}ᵀ(A_{−j,−j})⁻¹v_{−j} = (A⁻¹v)_j²/(A⁻¹)_jj for positive definite A, with A_{T∖j} = (A_T)_{−j,−j}.
 (c) For a null j ∈ T ⊇ S₀ also T ∖ j ⊇ S₀; subtract the two instances of (a). ∎
 
-## X1.3 Reference statistic (W = NI, a = 0) — FACB's one-dimensional scan
+## X1.3 Reference statistic (W = NI, a = 0) — FACB's reference statistic (radial ordering for null deletions/additions; swaps via V_{jl}, R14 item 3)
 
 Put κ := N/(ℓ²φ²), ϱ := Nη/(ℓφ²) (random, **T-independent**, independent of ξ), γ_k := 1/(k + κ), and for S₀ ⊆ T:
 x_T := (Σ_{j∈T}ξ_j − ϱ)/(k + κ), which satisfies the **exact drift identity** x_{T∖j} = x_T − (ξ_j − x_T)/(k − 1 + κ)
@@ -132,6 +132,6 @@ quantity (L4.0(b)). Hence, whenever |τ_j|, |τ_l|, |τ̂| ≤ 3H̄:
   |V̂_{jl} − V_{jl}| ≤ 12H̄(|δ_j(T)| + |δ_l(T′)|) + 4(δ_j² + δ_l²) + C H̄⁴ max(ω²) + C n^{−3/2}(1 + H̄²).
 Truth moves (deletion of j ∈ S₀, or a swap removing a truth) are not covered by (g2) and are treated in X4 directly.
 
-**Remark (what changes vs FACB).** FACB's scan is the case δ ≡ 0, e¹ ≡ r ≡ 0. X2 shows that on the relevant sets
+**Remark (what changes vs FACB).** FACB's reference statistic is the case δ ≡ 0, e¹ ≡ r ≡ 0 (radial ordering applies to null deletions/additions only; swaps are compared through the signed-pair quantity V_{jl} of (g5), as in X4 — HQ audit B3, F1; R14 item 3). X2 shows that on the relevant sets
 |δ_j(T)| ≤ ϖ_n ≤ n^{−c} (with the band-count absorption of X4); X3–X4 show that FACB's L4 survives ϖ_n-perturbations of
 the null partial statistics; truth moves are treated separately (X4.6).

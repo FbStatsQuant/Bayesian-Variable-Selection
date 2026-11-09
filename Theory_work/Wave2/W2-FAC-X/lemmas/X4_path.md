@@ -57,7 +57,7 @@ E7 gives ≥ 1 point of 𝒩* per cell); E5 transfers to 𝒩* with errors ≤ 1
 ## X4.1 The gain-ordering slack (from X1.4)
 
 On 𝔊_n, for every T ⊇ S₀ with k ≥ s₀ + 1 and nulls j, j′ ∈ T: if G_del(j; T) ≥ G_del(j′; T) and |τ̂_j|, |τ̂_{j′}| ≤ 3H̄,
-then |τ̂_j(T)| ≤ |τ̂_{j′}(T)| + C_g n^{−1/2}.
+then |τ̂_j(T)| ≤ |τ̂_{j′}(T)| + C_g n^{−1/2}, with C_g := 2C₁^{1/2} (R14 item 4).
 *Proof.* With u_j := (1 + γ_{k−1})M_T(1 + ε^d_j)τ̂_j²/ν + r_j/ψ_T (X1.4 (g3)), G_del(j) ≥ G_del(j′) gives
 ν log((1 + u_j)/(1 + u_{j′})) ≤ ½(e¹_{j′} − e¹_j) ≤ 3/(c₀n), so u_j ≤ u_{j′} + 7(1 + u_j)/(c₀νn); multiply by
 ν/((1 + γ_{k−1})M_T) ≤ 4ν (M_T ≥ ¼; 1 + u_j ≤ 2): with ε^d_j ≥ 0, ε^d_{j′} ≤ 2ω_{j′}² = 2τ̂_{j′}²/(N(1 − γ_k)) ≤ Cτ̂_{j′}²/n
@@ -65,8 +65,8 @@ and |νr/ψ| ≤ Cn^{−3/2}(1 + τ̂²) (X1.4 (g3)),
   τ̂_j² ≤ τ̂_{j′}² + E,  E := C₁/n + C₁|τ̂_{j′}|⁴/n
 (the determinant errors give C/n, the ε^d term C|τ̂_{j′}|⁴/n, the ridge terms are smaller; R02 item 4). With a := |τ̂_{j′}|
 and √(x + y) ≤ √x + y/(2√x) applied to x := a² + C₁/n ≥ a², y := C₁a⁴/n:
-|τ̂_j| ≤ a + √(C₁/n) + C₁a³/n ≤ |τ̂_{j′}| + C₁^{1/2}n^{−1/2} + 27C₁H̄³/n =: |τ̂_{j′}| + C_g n^{−1/2}(1 + H̄³n^{−1/2}),
-and the last factor is ≤ 2 for n ≥ n₀. ∎
+|τ̂_j| ≤ a + √(C₁/n) + C₁a³/n ≤ |τ̂_{j′}| + C₁^{1/2}n^{−1/2}(1 + 27C₁^{1/2}H̄³n^{−1/2}) ≤ |τ̂_{j′}| + 2C₁^{1/2}n^{−1/2} = |τ̂_{j′}| + C_g n^{−1/2},
+since 27C₁^{1/2}H̄³n^{−1/2} ≤ 1 for n ≥ n₀. ∎
 
 **Corollary X4.1 (rule R_ϖ).** If moreover T is (a, b; w)-structured with exceptional set 𝔫 (|𝔫| ≤ 15) and #Band ≤
 2(2e²pw + 3 log n + 1), then the best deletion j° := argmax_{j∈T∖S₀}G_del(j; T) satisfies
@@ -202,6 +202,12 @@ and k + 1 ≤ p:
   G_add(l; T) ≤ log((k + 1)(2p + 2)/(2p − k − 1)) + 2.2ε_b log(2p + 2) + O(L_n) − ½log n
              ≤ (A₁(1 + 2.2ε_b) − ½)log n + O(L_n) ≤ −0.7(½ − A₁)log n
 (2p − k − 1 ≥ p − 1; ε_b ≤ (½ − A₁)/5 gives 2.2ε_bA₁ ≤ 0.22(½ − A₁)).
+**Remark (R14 item 1).** The binding margin of the uniform-in-𝔫 claim is this bulk addition bound (and its use at T ∖ j for
+swaps), whose margin is ½log n − log(2p + 2) − O(L_n) up to the ε_b terms; adversarial 𝔫 (the 15 largest positive ξ excluded
+and offered back as additions) is the worst case. Numerically (reviews/R14_scratch/adv_n0_out.txt, adv_fail_out.txt):
+23/24 adversarial-𝔫 paths clean at n ∈ {10⁵, 10⁶}; the single failure (n = 10⁵, p = 180) occurs where this margin is still
+negative (½log n = 5.76 < log(2p + 2) + L_n = 8.34) and disappears at n ∈ {10⁷, 10⁹} (8/8 clean) — a finite-n effect, consistent
+with the asymptotic claim.
 *Null-out swaps* (j ∈ T null, l ∉ T null): G_sw(j, l) = G_del(j; T) + G_add(l; T ∖ j) ≤ G_del(j°; T) + G_add(l; T ∖ j), and
 the addition bound holds at T ∖ j (R04 item 4: T ∖ j has exceptional set 𝔫 ∪ {j} (size ≤ 16) and its addition
 statistic is taken at T ∖ j ∪ l (size ≤ 17); the absorption calculation of Corollary X4.1 with #Band + 17 unchanged
@@ -213,7 +219,8 @@ gives |δ| ≤ ϖ there; |x_{T∖j}| ≤ |x_T| + 3H̄/(m₁ − 1) ≤ 1.01ε_bH
 
 Let i_e := i*. **Entry:** |x_{i_e}| ≤ ε_bH + (H̄ + ε_bH)/(m₁ − 2) ≤ 2ε_bH (drift identity and (B3) at i_e − 1).
 
-**Exact structure from i_e on.** At i_e, (4.1) holds (X3 (viii) with I = i_e) and a_{i_e} < 0 < b_{i_e} (Case B is
+**Exact structure from i_e on.** At i_e, (4.1) holds (X3 (viii) with I = i_e) and a_{i_e} < 0 < b_{i_e} (B1 also holds at i = i* by the same wide-phase argument, since N₊ ≥ m₁ − 1 there — R20 item 5;
+one-sided states are in any case covered by the sign/separation invariant below; Case B is
 impossible: it forces m ≥ m₀/4 > m₁). Kept positives include every positive of 𝒩* ≥ b + w, so
 #{l ∈ 𝒩* : ξ_l ≥ b + w} ≤ m < m₁; by D7, #{l ∈ 𝒩_all : ξ_l ∈ [b, b + w)} ≤ ε′(m₁ + 15) + T₀; so #{l ∈ 𝒩_all : ξ_l > b} ≤ m₁ + ε′(m₁ + 15) + T₀ + 15 ≤ 2m₁, i.e. b is among the 2m₁ + 1 largest positive values
 of 𝒩_all, and by D8 no other null lies in [b, b + c₁ϖ] ⊇ [b, b + w); so no deleted null lies in [b, b + w), and
@@ -267,7 +274,7 @@ quadratic quantities by O(ϖH̄ + ϖ² + H̄⁶/n + 1/n) = o(1) (the H̄⁶/n fr
 | (E-swap) swaps | ≤ 8ε_b log n + o vs G_del ≥ (½ − o(1))log n when |I| ≥ 2; o(log n) vs G_del ≥ (c_D − o(1))log n when |I| ≤ 1 (R13 item 1) | |V̂ − V| = O(ϖH̄ + ϖ² + H̄⁶/n + 1/n) = o(1) |
 All four margins are of order log n (or ≫ ϖ for (E-side)); all errors are o(1).
 
-So for i ≥ i_e with m_i ≥ 1 the best move is the edge deletion j°_i; after m₁ − 1 further moves T = S₀, where every
+So for i ≥ i_e with m_i ≥ 1 the best move is the edge deletion j°_i; after m_{i_e} (≤ m₁ − 1) further moves (total exactly m₀(𝔫), (C2)(iv); R20 item 3) T = S₀, where every
 addition has G_add ≤ −½log n + o(log n), every truth deletion and truth-out swap is negative, and there are no null-out
 swaps (S₀ has no nulls): S₀ has no improving feasible neighbour. ∎(L)
 

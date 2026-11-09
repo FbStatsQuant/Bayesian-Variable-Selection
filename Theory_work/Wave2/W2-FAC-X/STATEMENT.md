@@ -96,11 +96,15 @@ Under model R, (CS-R), (P-½), (θ), (FS), there are events of probability → 1
 
 ## 5. Not claimed / frontier (evidence only)
 
-* limsup log p/log n ≥ 1/2. In the proof the band term of the perturbation is ≤ C·H̄·#Band·√(log n/n) with
+* limsup log p/log n ≥ 1/2. **(Added after the final council, R20 item 1; no claim changed.)** Beyond ½ the uniform-in-𝔫
+  form of (C2)(ii) is itself false: for 𝔫 = the 15 largest positive null ξ, re-adding l ∈ 𝔫 at T₀ = [p] ∖ 𝔫 has gain
+  ≈ ½ξ_max² − ½log n + O(1) ≈ log p − ½log n − ½log log p + O(1) → +∞ (exact check reviews/R20_scratch/r20_addmargin_out.txt).
+  Going beyond ½ therefore needs both a band decoupling and a replacement for the uniformity over 𝔫 (e.g. control of
+  the actual N₀, whose ξ are not extreme w.h.p.). Further, in the proof the band term of the perturbation is ≤ C·H̄·#Band·√(log n/n) with
   #Band ≤ C(p·ϖ_n + log n), so its ratio to the error budget ϖ_n is at most C·p·H̄·√(log n/n) + C·H̄(log n)^{3/2}/(√n ϖ_n);
   the second term → 0 by the n^{−1/3} floor and the first → 0 under (P-½). This is a sufficient absorption criterion
-  (it also holds e.g. for p = ⌊√n/log²n⌋), not an equivalence (R01 item 6, R02 item 5). This is an obstruction of the proof technique (worst-case control of band
-  membership against the Wishart row); N1X shows the method's path unchanged at log p/log n up to 0.75. A leave-one-out
+  (it also holds e.g. for p = ⌊√n/log²n⌋), not an equivalence (R01 item 6, R02 item 5). The band term and the second-order resolvent term p^{3/2}/n (needs p ≤ √n, X2) are obstructions of the proof technique (worst-case control of band
+  membership against the Wishart row); N1X shows the method's path from [p] (production-type start, not adversarial 𝔫) unchanged at log p/log n up to 0.75. A leave-one-out
   decoupling of band membership from W_{j·} is a possible approach (not attempted, no claim).
 * (FS′) (masked truths) for random partitions; non-Gaussian rows; general loadings (§6); k ≥ 2 (ticket W2-FAC-K2); S5; p > n/2.
 
@@ -111,9 +115,12 @@ Under model R, (CS-R), (P-½), (θ), (FS), there are events of probability → 1
 
 ## 7. Dependencies (statuses verbatim)
 
-FACB Theorem FAC-CS and lemmas L1–L5: "PROVED-CHECKED" (council R08 9.3 / R09 9.0) — used as an argument template
+FACB Theorem FAC-CS: "PROVED-CHECKED" (council R08 9.3 / R09 9.0; W2-FAC-B/REPORT.md:30); lemmas L1–L5 are its proof, individual
+headers "PROVED (by this seat, unchecked)" + lemma checks R03–R05; HQ audit B3 (Theory_work/Wave2/HQ_AUDIT/B3_facB_redteam.md):
+"HOLDS-WITH-AMENDMENTS" (F1, wording: swaps are not ordered radially — handled via V_{jl}; R14 item 2, status quotation only) — used as an argument template
 (L4's constants and case analysis) and for L2/L5; FACA Proposition L5.1 (random-design de-randomisation) and F-FAC:
-inside Theorem FAC-L "PROVED-CHECKED"; M5(0)/T38-(0) "PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))";
+inside Theorem FAC-L "PROVED-CHECKED (for the narrowed, flagged target STATEMENT.md v1.2)" (W2-FAC-A/REPORT.md:20; only
+L5.1's de-randomisation pattern is used, which the narrowing does not affect — R20 item 4); M5(0)/T38-(0) "PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))";
 S-T/T03♯ "PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)"; [OP] "PROVED (by this seat, unchecked)" inside Theorem
 GEN "PROVED-CHECKED"; Lemma CAP "PROVED (by this seat)", council-checked; Proposition F (A1 corrected statement) and
 F-GROW (A2 "PROVED (A2), checked by A3").

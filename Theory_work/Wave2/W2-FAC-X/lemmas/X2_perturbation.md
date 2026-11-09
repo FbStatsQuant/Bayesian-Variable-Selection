@@ -8,7 +8,7 @@ maxima of the ratio range from 1.48 to 3.10 (n ≤ 10⁶, p ≤ 1000); exact-δ 
 Setting: X1 (Υ_n = I, the rotation representation, notation ξ, a, η, φ, W, ṽ1, ṽ2, κ, ϱ, x_T, τ̂, δ). Let A₁ ∈ (0, ½)
 with p ≤ n^{A₁} for n ≥ n₀ ((P-½)). 𝒩_all := [p] ∖ S₀ (all nulls; deterministic). m_all := p − s₀,
 H̄² := 2 log(2m_all + 2) + 2L_n (one definition throughout X2–X4 and STATEMENT §3; note H̄ ≥ √(2L_n) for every p,
-R02 item 2). Constants C, C_X depend on ρ (and, where stated, on σ, ϑ, s₀) only.
+R02 item 2). The constant C_X of Proposition X2 depends on ρ only (Proposition X2 involves only W, ξ, a, η, φ, D3/D4, κ and ℓ); other constants C depend on ρ only unless stated; only the onset n₀ depends on (σ, ϑ, s₀, A₁) as well (R14 item 5).
 
 ## X2.1 The event 𝔈_n
 

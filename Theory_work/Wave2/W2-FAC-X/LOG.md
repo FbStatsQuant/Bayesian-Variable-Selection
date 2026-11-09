@@ -75,3 +75,26 @@
   loadings, and → 0 generically for continuous loadings (sign change of a truth's partial covariance over conditioning
   sets) — so (FS-G) is restrictive for continuous loadings; to be flagged in REPORT §5 with the fix route (G2 holds from
   any start ⊇ S₀; only sure screening of the start mode is needed).
+* 2026-11-09 (pause) — Ticket paused by HQ mid-pipeline. State at pause (from files): council round 2 R13 Sol xhigh 9.2 all
+  PASS and R14 Opus high 9.0 all PASS (returned, not dispositioned); T2 council R17 Sol xhigh 9.2 all PASS, Claude seat R18
+  not completed (scratch only, no review file).
+* 15:00 — **Successor lead (Claude Opus 5.5, high) takes over** per HQ brief: (1) fresh Target-1 council under the updated
+  protocol (effort cap high; seats gpt-6-astra high + Opus 5.5 high on claude-personal; max 3 rounds); (2) Target 2: no new
+  proof work, report proved/checked parts and exact obstruction; (3) citation check; (4) final REPORT incl. §6 ingredients.
+  Read Wave2/Wave1C/Wave1 PROTOCOLs, CHECKPOINT, LOG, REPORT, STATEMENT(_T2), R08–R17.
+* 15:02 — R13/R14 recommendations applied (reviews/R13_R14_disposition.md): X4.4 binding-margin remark + R14 adversarial-𝔫
+  evidence; STATEMENT §7 FACB status quotation (Theorem vs lemma headers; HQ audit B3 HOLDS-WITH-AMENDMENTS) — quotation only,
+  no claim changed; X1.3/X1.4 radial-ordering wording (B3 F1); X4.1 C_g := 2C₁^{1/2}; X2 constants preamble; REPORT §6 growth
+  row complete. Brief reviews/COUNCIL_BRIEF_FINAL.md (earlier council seats withheld from the new seats for independence).
+* 15:03 — Final council round 1 launched: R19 gpt-6-astra (high, codex), R20 Claude Opus 5.5 (high, claude-personal).
+* 15:10 — Citation check reviews/citecheck_final.py → CITECHECK_FINAL.txt: 6/6 path:line, 11/11 status strings (incl. T2
+  files); one REPORT placeholder name "R0x_disposition.md" to be fixed in the final REPORT. W2-SIM family X: Q2_visibility
+  (c₀ → 0 for continuous loadings) read; items A/B batch submitted on NOTS 10:40, results not yet in results/X/.
+* 15:20 — Final council round 1 returned: **R19 gpt-6-astra high 9.2, all six gates PASS; R20 Opus 5.5 high (claude-personal)
+  8.9, all six gates PASS; no REQUIRED items → PASS, Theorem FAC-CS-iid PROVED-CHECKED.** Recommendations applied
+  (reviews/R19_R20_disposition.md): REPORT §6 Ψ row; R20-1 third cause of the ½ frontier (uniform-in-𝔫 (C2)(ii) false beyond ½ —
+  STATEMENT §5 remark, no claim changed; REPORT flag 5, §6); review trail lists all rounds; X4.5 move count and B1 at i*;
+  STATEMENT §7 FAC-A status quoted in full.
+* 15:30 — REPORT.md finalised (Target 1 PROVED-CHECKED; Target 2 PARTIAL with proved/checked table and exact obstruction;
+  §6 ingredients incl. the uniform-over-sets profile). CITECHECK_FINAL.txt rerun. No git state changes; nothing written
+  outside W2-FAC-X/. Ticket closed by the successor lead.

@@ -1,0 +1,12 @@
+{"n": 10000, "p": 50, "logratio": 0.425, "max_add": -1.851, "best_del": 5.22, "half_xi2_minus_half_logn": -2.263}
+{"n": 10000, "p": 50, "logratio": 0.425, "max_add": -2.083, "best_del": 5.224, "half_xi2_minus_half_logn": -2.649}
+{"n": 10000, "p": 300, "logratio": 0.619, "max_add": 1.399, "best_del": 4.705, "half_xi2_minus_half_logn": 1.088}
+{"n": 10000, "p": 300, "logratio": 0.619, "max_add": -1.316, "best_del": 4.705, "half_xi2_minus_half_logn": -1.746}
+{"n": 10000, "p": 1500, "logratio": 0.794, "max_add": 2.197, "best_del": 4.625, "half_xi2_minus_half_logn": 3.45}
+{"n": 10000, "p": 1500, "logratio": 0.794, "max_add": 3.861, "best_del": 4.625, "half_xi2_minus_half_logn": 2.972}
+{"n": 100000, "p": 300, "logratio": 0.495, "max_add": 0.14, "best_del": 5.857, "half_xi2_minus_half_logn": -0.063}
+{"n": 100000, "p": 300, "logratio": 0.495, "max_add": -2.521, "best_del": 5.857, "half_xi2_minus_half_logn": -2.897}
+{"n": 100000, "p": 1500, "logratio": 0.635, "max_add": 1.746, "best_del": 5.776, "half_xi2_minus_half_logn": 2.298}
+{"n": 100000, "p": 1500, "logratio": 0.635, "max_add": 2.265, "best_del": 5.776, "half_xi2_minus_half_logn": 1.821}
+{"n": 100000, "p": 3000, "logratio": 0.695, "max_add": 0.492, "best_del": 5.766, "half_xi2_minus_half_logn": 0.187}
+{"n": 100000, "p": 3000, "logratio": 0.695, "max_add": 0.144, "best_del": 5.766, "half_xi2_minus_half_logn": -0.268}
