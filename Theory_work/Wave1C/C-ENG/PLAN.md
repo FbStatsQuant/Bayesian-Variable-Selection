@@ -3,6 +3,8 @@
 Ticket C-ENG, Theory Wave 1C. Branch `w1c/ls0-merge`. Lead: Claude Opus 5.5 (Claude Work). Written 2026-11-08 ~21:45 CST.
 Status: v1.1 (2026-11-08 21:45 CST) = v1.0 + all fixes of plan review R01 (`reviews/R01_plan_review_raw.md`, verdict REJECT as
 written; disposition `reviews/R01_disposition.md`). v1.1 sent to a fresh reviewer (R02) in parallel with implementation.
+v1.2 (22:30 CST): R02 findings (REJECT on plan text; R01 all RESOLVED) dispositioned in `reviews/R02_disposition.md`:
+study-adapter compatibility (already in code 9b9d234), public-path forced-stop gate (test variant `paths`), wording.
 
 Path aliases: `CORE/` = `Scripts/SMC_BVS/core/`; `STUDY/` = `Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/`;
 `SPEC` = `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md`;
@@ -169,7 +171,8 @@ would return with cap = ∞), greedily, without enumerating E:
     qualifies; HPM after LS0 = hpm_better-max of HPM before LS0 and all LS0-scored F); provenance "ls0" on an HPM first
     found by LS0 (constructed case: inherited/grid settings where LS0 finds a better model, or a synthetic setup where the
     start mode is far from where the islands go); E3 unaffected by LS0; `ls0_improved`; GUARD-W: (i) allocation set so
-    the guard trips at the ls0 checkpoint ⇒ status resource_limit, estimates_available FALSE, no log_Z/pip fields;
+    the guard trips at the ls0 checkpoint ⇒ status resource_limit, estimates_available FALSE, every estimate field present
+    with NA by exact name and `fit$log_Z` NA (v1.2, R02 #3);
     (ii) LS0 capped (`ls0_ell = 0` via ro) ⇒ completed output with ls0_local_limit TRUE.
 (c) Regression on S1–S6 (small n/p, a few seeds) with the study generator (or a local equivalent): `v3_fit` old core vs new
     core with ls0 = FALSE (expect identical deterministic outputs: every field except the named operational
@@ -188,6 +191,12 @@ would return with cap = ∞), greedily, without enumerating E:
     an equal-F HPM tie change by LS0 (duplicated column); a returned HPM different from both endpoints; store eviction;
     forced guard stop at checkpoint "ls0" and forced NumericalFailure inside LS0 (test injection in the testing copy) ⇒
     no estimates, NA fields; every fixture asserts `branch_run == "smc"` / LS0 archive present.
+(c4) **Public-path gate (v1.2, R02 #2; SPEC:400):** 10 public `v3_fit` forced stops (allocation 0.05 s; local analogue of
+    API-AUDIT's table, whose inputs are not in the repository) and every early return (invalid seed, y_constant,
+    no_predictors, preflight stop, exact branch, completed), each with the 8 NA fields / finite estimates as appropriate
+    and consumed by the study adapter.
+(c5) **Study adapter (v1.2, R02 #1):** `smcbvs_outputs` reads a scalar NA estimate marker as absent
+    (`smcbvs_estimate()`), keeps validating supplied values; tested on stopped, early-return, exact and completed fits.
 (d) Existing tests: `Scripts/SMC_BVS/tests` (prototype-vs-production bit comparison harness, Owls-oriented) and
     `build/check_smokes.R` (inspects saved Owls smoke records) — run what can run locally; record exactly what cannot
     and why.

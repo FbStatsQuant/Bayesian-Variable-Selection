@@ -33,3 +33,27 @@ v1 was rejected by B; it remains frozen. v2 fixes near-constant centring/scaling
 Execution follows BRIEF Amendments 1/2 and RULINGS_LEAD R-3/R-4: development validation on Owls R4.6.0/GCC11.5.0, nice19, A at most4cores (2 during C batch), within deployment caps. Root is the sole SSH funnel. NOTS GCC14.3.0/R4.5.2 build and full regression are separately required before any NOTS fit; no NOTS use until the lead opens runs. A's prepared validation scripts do not grant production GO.
 
 Validation evidence belongs to HANDOFF_v2.md and the saved per-job manifests. Source_manifest.json pins source/prototype identity; it is not a numerical-equivalence certificate. B independently re-verifies the frozen v2 before G1 may open.
+
+## v3.1 merge: LS0, e4 tie-aware DP, GUARD-W NA fields (C-ENG, branch `w1c/ls0-merge`, 2026-11-08)
+
+Authority: `METHOD_v3.1_FINAL.md` rows #6, #8, #9, #10, #15, #26. Plan, reviews, tests and report:
+`Theory_work/Wave1C/C-ENG/`. Switch: `v3_fit(..., ls0 = getOption("v3.ls0", TRUE))`; `ls0 = FALSE` reproduces v3.
+
+- **LS0** (`cpp_final_run`): after the final local search and its guard check, on a completed run, one
+  `Engine::local_search` from the start mode S~0 (`start_mode`, cap 1e6) with the production ell and tier, centre emitted,
+  on the final run's ledger and cache (every scored model enters the HPM and stores), events in the new phase `ls0`
+  (provenance `ls0`; the `ls0` counter row is serialised only when LS0 is on). No uniforms are read. Guard checkpoint
+  `ls0` after LS0; an LS0 stop or a NumericalFailure inside LS0 leaves the run without output (GUARD-W).
+- **Assembly** (`v3_run.R`): E3 from the HPM before LS0 (LS0 does not fire E3); `local_certified` on the returned HPM
+  from whichever search ended on it (`local_certified_by`); `local_limit` = final OR LS0 cap (`final_local_limit`,
+  `ls0_local_limit`); flags `ls0_improved` (strict F increase) and `ls0_hpm_changed`; fields `ls0`, `start_mode`,
+  `hpm_before_ls0`, `timings$ls0`.
+- **e4** (`cpp/v3_start.h`): `start_mode(st, cap, tie_dp = true)`; the enumeration fast path is unchanged; on truncation
+  `mode_tie_dp` returns the lexicographic minimum of the enumeration's tie set without enumerating it (equal to the
+  prescribed S* under exact arithmetic; proof `Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md`). `tie_dp = false` is the v3 routine.
+  `v3_start.h` and `v3_runtime.h` (phase argument of `local_event`) are therefore no longer byte-identical to the reference.
+- **#15** (`v3_unavailable_estimates`): on every public return without estimates, `log_Z`, `log_Z_r`, `log_Z_lower95`,
+  `log_Z_rel_m0`, `log_Z_r_rel_m0`, `pip_primary`, `pip_r`, `mpm` are NA by exact name (`fit$log_Z` no longer partially
+  matches `log_Zbar0`). The study adapter reads these scalar NA markers as unavailable.
+- `source_manifest.json` was NOT refreshed (its updater targets the deployment layout and LF checkouts); refresh it on a
+  LF checkout before any deployment.

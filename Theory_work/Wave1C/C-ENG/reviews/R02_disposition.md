@@ -1,0 +1,10 @@
+# R02 disposition (fresh plan re-check, Codex gpt-6.1-sol high; raw reply `R02_plan_recheck_raw.md`)
+
+Verdict received: REJECT as written (plan text at 5c14c4e). R01 #1–#7 all judged RESOLVED. New findings:
+
+| # | sev | finding | disposition |
+|---|---|---|---|
+| 1 | MAJOR | default-on NA fields break the study adapter (`smcbvs_check_support(NA)`, non-NULL `pip_primary`) | ACCEPTED; already fixed in code commit 9b9d234 (`smcbvs_estimate()` reads a scalar NA marker as absent; `Scripts/SMC_BVS/study/adapter.R`), which the reviewer did not see (it reviewed the plan text). Tested: `numerics/out_test_ls0_stop.txt` (adapter on a stopped and on a completed fit), `numerics/out_test_ls0_paths.txt` (adapter on 10 forced stops, y_constant, no_predictors, preflight stop, exact branch, completed fit). Code review R03 (APPROVE) checked the adapter change. PLAN v1.2 records it. |
+| 2 | MAJOR | API-AUDIT forced-stop gate (SPEC:400, 10 fits after the NA fix) and early public returns not exercised | ACCEPTED. New test variant `paths` (`tests/test_ls0.R`): 10 public `v3_fit` forced stops at allocation 0.05 s (local analogue: the API-AUDIT datasets/scripts are not in the repository — `origin/theory/API-AUDIT` holds only results), all 10 `resource_limit`, estimates unavailable, `hpm_incomplete`, all 8 fields NA by exact name, `fit$log_Z` NA, adapter OK; plus y_constant, no_predictors, preflight stop, invalid seed, exact branch (estimates finite, no LS0), completed fit, switch-off stop. 10/10 checks PASS (`numerics/out_test_ls0_paths.txt`). The original 10 API-AUDIT fits are not replayed (inputs not available locally): recorded as not done in REPORT. |
+| 3 | MINOR | PLAN:172 guard-stop expectation says "no log_Z/pip fields" | ACCEPTED. PLAN v1.2 wording: fields present with NA by exact name; the test asserts exactly that (`out_test_ls0_stop.txt`). |
+| 4 | MINOR | TDP_E.md overclaims byte identity (new `tie_dp_used` field; fallback runs at N = cap) | ACCEPTED. TDP_E.md (4) restated: equality of the legacy fields S, lg0, ties, truncated; `tie_dp_used` documented separately. |

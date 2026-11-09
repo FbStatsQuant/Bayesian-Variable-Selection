@@ -53,9 +53,11 @@ S and S_E agree below i and i ∈ S ∖ S_E; both have size k̂, so lex_less(S, 
 vectors, the one containing min(S Δ S') is lex-smaller), contradicting minimality. So i joins OUT. Inv(p): IN = S_E. ∎
 
 (4) Consequence for the new `start_mode`: the enumeration fast path is unchanged; if it ends with count < cap
-(`truncated` false) the result is lex_min E as before; if count ≥ cap, the result is replaced by TDP-E = lex_min E. So
-the new `start_mode` returns lex_min E = the uncapped enumeration's result for every cap ≥ 1, and is byte-identical to the
-old one whenever the old one was not truncated (and also when N = cap exactly).
+(`truncated` false) the result is lex_min E exactly as before; if count ≥ cap, the result is replaced by TDP-E = lex_min E.
+So the new `start_mode` returns lex_min E = the uncapped enumeration's result for every cap ≥ 1. The legacy result fields
+(S, lg0, ties, truncated) equal the old function's whenever the old one was not truncated, and also when N = cap exactly
+(then the fallback runs and returns the same S). The new field `tie_dp_used` is TRUE exactly when the fallback ran
+(truncated and tie_dp); it has no counterpart in the old result (R02 #4).
 
 ## Cost
 Each feasible() call: O(Σ_b (K+1)(t_b+1)) boolean work; each IN/OUT change re-evaluates allowed for one block: O(2^{|C_b|}).

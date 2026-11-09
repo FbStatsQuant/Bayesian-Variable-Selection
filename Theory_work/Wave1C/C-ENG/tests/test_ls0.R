@@ -37,9 +37,10 @@ setup_of <- function(d) {
   v3_setup(ctx)
 }
 # direct final run with a tiny sampler (testing settings: N particles, L burn-in, grid (0, 1)); LS0 on
-low_run <- function(setup, N = 2L, L = 0L, seed = 11, inherited = NULL, ls0_ell = NULL, ls0 = TRUE) {
+low_run <- function(setup, N = 2L, L = 0L, seed = 11, inherited = NULL, ls0_ell = NULL, ls0 = TRUE, islands = 4L, ell = NULL) {
   b <- setup$budgets
-  ro <- list(N = as.integer(N), L = as.integer(L), measured_rounds = 4L, islands = 4L, tier = 0L, ell = as.integer(b$ell),
+  ro <- list(N = as.integer(N), L = as.integer(L), measured_rounds = 4L, islands = as.integer(islands), tier = 0L,
+             ell = as.integer(ell %||% b$ell),
              cache_capacity = as.numeric(500 * setup$ctx$p))
   if (ls0) { ro$ls0 <- TRUE; ro$ls0_ell <- as.integer(ls0_ell %||% b$ell); ro$ls0_tie_dp <- TRUE }
   fr <- v3_frozen(c(0, 1), tier = 0, N = N, L = L, inherited = inherited)
@@ -50,16 +51,30 @@ low_run <- function(setup, N = 2L, L = 0L, seed = 11, inherited = NULL, ls0_ell 
 if (variant == "normal") {
   # ---------------- F1: centre emitted; exact LS0 event count; centre first scored by LS0 and the HPM ----------------
   cat("F1: start mode unscored before LS0, exact event count, centre provenance\n")
+  # integrated run (testing settings: 1 island, 1 particle, final search ell = 0, LS0 at the production ell)
+  sd <- 1; d <- make_data(1, 1001, scale = 0.6); st <- setup_of(d)
+  r <- low_run(st, N = 1L, seed = sd, islands = 1L, ell = 0L, ls0_ell = st$budgets$ell)
+  f <- r$fit; l0 <- f$ls0; lg <- f$score_counts$logical; fr <- f$score_counts$fresh
+  cat("  dataset seed 1001 : start mode {", f$start_mode$model, "} ties", f$start_mode$ties, "; HPM {", f$hpm, "} provenance",
+      f$hpm_provenance$phase, "; LS0 termination", l0$termination, "moves", l0$moves, "
+")
+  # R01 #5 observability: a start mode that is a strict local maximum is the HPM of a standalone LS0 ledger iff emitted.
+  # (In 200 integrated low-N fixtures the start mode never beat the sampler's HPM, so the integrated provenance case is
+  #  not constructible this way; the exact integrated event count below is the integrated evidence.)
   found <- FALSE
-  for (sd in 1:40) {
-    d <- make_data(1, 1000 + sd); st <- setup_of(d)
-    r <- low_run(st, seed = sd)
-    f <- r$fit; l0 <- f$ls0; lg <- f$score_counts$logical; fr <- f$score_counts$fresh
-    if (identical(f$hpm_provenance$phase, "ls0") && f$hpm_provenance$stage == 0 && same(f$hpm, l0$centre)) { found <- TRUE; break }
+  for (sd2 in 1:200) {
+    d2 <- make_data(c(1, 3, 4)[(sd2 %% 3) + 1], 5000 + sd2, scale = 0.6); st2 <- setup_of(d2)
+    m2 <- .v3cpp$t_setup_start_mode(st2$ptr, 1e6, TRUE)
+    a2 <- .v3cpp$t_local_search(st2$ptr, m2$model, st2$budgets$ell, TRUE, TRUE)
+    if (a2$moves == 0 && identical(a2$termination, "no_improvement")) { found <- TRUE; break }
   }
-  cat("  dataset seed", 1000 + sd, ": start mode {", f$start_mode$model, "} ties", f$start_mode$ties, "; HPM {", f$hpm, "} provenance",
-      f$hpm_provenance$phase, "stage", f$hpm_provenance$stage, "; LS0 termination", l0$termination, "moves", l0$moves, "\n")
-  check("found a fixture where the start mode is first scored by LS0 and is the final HPM (provenance ls0, stage 0)", found)
+  b2 <- .v3cpp$t_local_search(st2$ptr, m2$model, st2$budgets$ell, FALSE, TRUE)
+  cat("  local-max start mode found at dataset seed", 5000 + sd2, ": {", m2$model, "}
+")
+  check("found a start mode that is a strict local maximum (LS0 0 moves, no_improvement)", found)
+  check("emitted: standalone LS0 HPM == centre, provenance ls0 stage 0 position 0", same(a2$ledger$hpm$model, m2$model) &&
+        identical(a2$ledger$hpm$provenance$phase, "ls0") && a2$ledger$hpm$provenance$stage == 0 && a2$ledger$hpm$provenance$position == 0)
+  check("not emitted: the centre is never scored, so the HPM differs from the centre", !same(b2$ledger$hpm$model, m2$model))
   check("status completed, LS0 archive present, centre == start mode", f$status == "completed" && length(l0) > 0 && same(l0$centre, f$start_mode$model))
   check("logical ls0 events == 1 (emitted centre) + n_evaluated", sum(lg["ls0", ]) == l0$n_evaluated + 1)
   check("all LS0 events are mechanism local_scan", sum(lg["ls0", ]) == lg["ls0", "local_scan"])
@@ -93,9 +108,14 @@ if (variant == "normal") {
 
   # ---------------- F3: equal-F HPM tie change by LS0 (two duplicated column pairs) ----------------
   cat("\nF3: equal-F tie change by LS0 (columns 6 := 7, 15 := 16; inherited HPM {3,7,14,16,25})\n")
-  d <- make_data(1, 3001, scale = 1, dup = list(c(6, 7), c(15, 16))); st <- setup_of(d)
   inh <- list(models = list(c(3L, 7L, 14L, 16L, 25L)))
-  r <- low_run(st, seed = 5, inherited = inh); f <- r$fit
+  for (sd in 1:100) {
+    d <- make_data(1, 3000 + sd, scale = 1, dup = list(c(6, 7), c(15, 16))); st <- setup_of(d)
+    r <- low_run(st, N = 1L, seed = sd, inherited = inh, islands = 1L, ell = 0L, ls0_ell = st$budgets$ell); f <- r$fit
+    if (isTRUE(f$flags$ls0_hpm_changed) && !isTRUE(f$flags$ls0_improved)) break
+  }
+  cat("  dataset seed", 3000 + sd, "
+")
   Fs <- vapply(list(c(3,7,14,16,25), c(3,6,14,16,25), c(3,7,14,15,25), c(3,6,14,15,25)), function(S) v3_score(st$ctx, as.integer(S))$F, 0)
   cat("  F of {3,7,14,16,25}, {3,6,14,16,25}, {3,7,14,15,25}, {3,6,14,15,25}:", format(Fs, digits = 17), "\n")
   cat("  HPM before local {", r$raw$hpm_before_local$model, "} after final search {", r$raw$hpm_before_ls0$model, "} start mode {",
@@ -118,7 +138,7 @@ if (variant == "normal") {
 
   # ---------------- F4: switch off on the same fixture: v3 behaviour ----------------
   cat("\nF4: ls0 = FALSE on the F3 fixture\n")
-  r_off <- low_run(st, seed = 5, inherited = inh, ls0 = FALSE); g <- r_off$fit
+  r_off <- low_run(st, N = 1L, seed = sd, inherited = inh, islands = 1L, ell = 0L, ls0 = FALSE); g <- r_off$fit
   check("no LS0 fields in raw or fit", is.null(r_off$raw$ls0) && is.null(g$ls0) && is.null(g$start_mode) && is.null(g$flags$ls0_improved))
   check("counter matrices have the v3 layout (10 phases, no ls0 row)", nrow(g$score_counts$logical) == 10 && !"ls0" %in% rownames(g$score_counts$logical))
   check("islands identical with LS0 on/off", identical(lapply(r$raw$islands, function(x) x[names(x) != "seconds"]),
@@ -174,6 +194,49 @@ if (variant == "numfail") {
   check("HPM labelled incomplete", isTRUE(fit$hpm_incomplete))
   fit0 <- v3_fit(d$X, d$y, 4001, ls0 = FALSE)
   check("same copy with ls0 = FALSE: completed", identical(fit0$status, "completed"))
+}
+if (variant == "paths") {
+  # Local analogue of the API-AUDIT forced-stop table (10 fits, allocation 0.05 s; METHOD_v3.1_FINAL section 6 item 3),
+  # after the NA fix, plus every early public return of v3_fit, each consumed by the study adapter.
+  source(file.path(here, "..", "..", "..", "..", "Scripts", "SMC_BVS", "study", "adapter.R"))
+  na_ok <- function(fit) all(vapply(V3_ESTIMATE_FIELDS, function(nm) length(fit[[nm, exact = TRUE]]) == 1 && is.na(fit[[nm, exact = TRUE]]), TRUE)) &&
+    is.na(fit$log_Z) && is.na(fit$pip_primary) && is.na(fit$mpm)
+  adapter_ok <- function(fit, p) { o <- tryCatch(smcbvs_outputs(fit, p), error = function(e) conditionMessage(e)); is.list(o) && identical(o$estimates_available, FALSE) && all(is.na(o$pip)) }
+  cat("Forced stops (allocation hours = 0.05 / 3600), 10 fits\n")
+  rows <- list()
+  for (i in 1:10) {
+    d <- make_data(((i - 1) %% 6) + 1, 6000 + i)
+    fit <- v3_fit(d$X, d$y, 6000 + i, allocation = list(mem_gb = 8, hours = 0.05 / 3600))
+    hit <- Filter(function(x) isTRUE(x$exceeded), fit$runtime_guard$checkpoints)
+    rows[[i]] <- data.frame(id = i, status = fit$status, estimates_available = !identical(fit$estimates_available, FALSE),
+      hpm_incomplete = isTRUE(fit$hpm_incomplete), all_fields_NA = na_ok(fit), dollar_log_Z_is_NA = is.na(fit$log_Z),
+      log_Zbar0_finite = is.finite(fit$log_Zbar0 %||% NA), adapter_ok = adapter_ok(fit, 30L),
+      checkpoint = if (length(hit)) hit[[1]]$checkpoint else NA, phase = if (length(hit)) hit[[1]]$phase else NA)
+  }
+  tab <- do.call(rbind, rows); print(tab, row.names = FALSE)
+  check("10/10 forced stops: resource_limit, estimates unavailable, hpm_incomplete", all(tab$status == "resource_limit") && !any(tab$estimates_available) && all(tab$hpm_incomplete))
+  check("10/10: every estimate field NA by exact name; fit$log_Z is NA (not log_Zbar0)", all(tab$all_fields_NA) && all(tab$dollar_log_Z_is_NA))
+  check("10/10: study adapter maps the stop to unavailable PIPs without error", all(tab$adapter_ok))
+  cat("\nEarly public returns\n")
+  d <- make_data(1, 7001)
+  f1 <- v3_fit(d$X, rep(1, 100), 7001)
+  check(sprintf("y constant: status %s, NA fields, adapter ok", f1$status), f1$status == "y_constant" && na_ok(f1) && adapter_ok(f1, 30L))
+  f2 <- v3_fit(matrix(1, 100, 30), d$y, 7001)
+  check(sprintf("no predictors: status %s, NA fields, adapter ok", f2$status), f2$status == "no_predictors" && na_ok(f2) && adapter_ok(f2, 30L))
+  f3 <- v3_fit(d$X, d$y, 7001, allocation = list(mem_gb = 1e-6, hours = 24))
+  check(sprintf("preflight memory: status %s, NA fields, adapter ok", f3$status), f3$status == "resource_limit" && isTRUE(f3$preflight$exceeds) && na_ok(f3) && adapter_ok(f3, 30L))
+  f4 <- v3_fit(d$X, d$y, -5)
+  check(sprintf("invalid seed: status %s, NA fields", f4$status), f4$status == "invalid_input" && na_ok(f4))
+  f5 <- v3_fit(d$X[, 1:8], d$y, 7001)
+  o5 <- smcbvs_outputs(f5, 8L)
+  check(sprintf("exact branch (p = 8): status %s, estimates present and finite, no LS0", f5$status), f5$status == "exact" &&
+        isTRUE(f5$estimates_available) && is.finite(f5$log_Z) && all(is.finite(f5$pip_primary)) && is.null(f5$ls0) && isTRUE(o5$estimates_available))
+  f6 <- v3_fit(d$X, d$y, 7001)
+  o6 <- smcbvs_outputs(f6, 30L)
+  check("completed SMC fit: estimates finite, adapter available, MPM == PIP > .5", f6$status == "completed" &&
+        is.finite(f6$log_Z) && isTRUE(o6$estimates_available) && identical(o6$mpm, unname(which(o6$pip > 0.5))))
+  f7 <- v3_fit(d$X, d$y, 7001, allocation = list(mem_gb = 8, hours = 0.05 / 3600), ls0 = FALSE)
+  check("switch off: forced stop keeps the v3 output (no log_Z field; log_Zbar0 present)", f7$status == "resource_limit" && !("log_Z" %in% names(f7)))
 }
 cat(sprintf("\nTOTAL: %d PASS, %d FAIL\n", n_pass, n_fail))
 sink()

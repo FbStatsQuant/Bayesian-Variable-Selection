@@ -6,3 +6,13 @@
 - 21:27: PLAN.md v1.0 committed (71ecd37); sent to Codex gpt-6.1-sol (high) plan review R01.
 - 21:30: timing: one old-core v3_fit at n = 100, p = 30 (S3) = 6.9 s wall. Old-core regression baseline (48 fits) started in background.
 - 21:34: R01 received: REJECT as written, 1 BLOCKER (NA fields on LS0 stop), 4 MAJOR, 2 MINOR; all accepted (reviews/R01_disposition.md). PLAN v1.1; TDP_E.md hypotheses added. R02 (fresh plan re-check) launched in parallel with coding.
+- 21:40-21:52: implementation (9b9d234): v3_start.h (mode_dp, mode_tight, mode_tie_dp, start_mode tie_dp), v3_ledger.h PH_LS0, v3_engine.h local_search phase arg, v3_runtime.h local_event phase arg, v3_core.cpp (LS0 block in cpp_final_run, counter_matrix ls0 row only when on), v3_run.R/v3_fit.R (switch ls0, E3, certificate, local_limit, ls0 flags, NA helper), study/adapter.R (smcbvs_estimate).
+- 21:48: first TDP run found two TEST bugs (Windows `long` is 32-bit so "uncapped" cap 1e15 overflowed; data.frame name mangling); fixed the test (cap 2e9). Core unchanged.
+- 21:51-21:58: test_tdp.R, seeds 20261108 and 7, 3000 instances each: 0 failures (numerics/out_test_tdp_seed*.txt). p = 44 counterexample: old returns {..,41,42}, new returns S* {..,40,43}.
+- 21:52: parallel workers sharing one sourceCpp cache fail on Windows (47/48 old fits failed to load); switched to one R process per core variant (run_batch.R).
+- 22:05-22:10: test_ls0 stop 9/9 PASS, numfail 5/5 PASS; normal: 27/31 (4 fixture-construction failures: tiny sampler already scored the targets) -> fixtures redesigned (1 island, 1 particle, final ell = 0); final 33/33 PASS (numerics/out_test_ls0_normal.txt).
+- 22:17: R02 (plan re-check) REJECT on plan text: adapter (already fixed in 9b9d234), public-path forced-stop gate, 2 wording items. R03 (code review of 9b9d234) APPROVE, no findings.
+- 22:19: test variant `paths` (R02 #2): 10 forced stops + all early returns, 10/10 PASS (numerics/out_test_ls0_paths.txt).
+- 22:22: regression p = 30, 48 datasets x {old, off, on, proto}: off == old 48/48; on: sampler/final search/E3 identical 48/48, HPM unchanged 48/48, prototype replay identical 48/48 (numerics/out_regress_p30.txt).
+- 22:28: p = 500 replay designs (dev S1 r001, S4 r001, S5 r002; on vs proto) launched. Existing-suite helper (Sonnet) running.
+- 22:33: PLAN v1.2, R02 disposition, TDP_E.md (4) wording.
