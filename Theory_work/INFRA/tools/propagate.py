@@ -27,14 +27,19 @@ Strength (better theorems)
               dependents REBASE-NEEDED (still true, should be rebuilt on Y), one issue each with the exact diff.
             internal-only and not free -> refused: use `remark`.   incomparable -> refused: use `coexist`.
             After freeze (config freeze=yes) only free supersessions are allowed.
-  coexist   X --with Y --reason R             incomparable: both kept (X as corollary / special case)
+  coexist   X --with Y --reason R             incomparable: both kept as parallel theorems (needs proved
+                                               incomparability on the declared axes and gate parity)
   decline   X --by Y --reason R               decision not to adopt Y (logged)
   remark    X --by Y --reason R               internal-only improvement, not free: logged as a remark, no rebuild
   confirm-repoint D --from X --to Y --checked-by WHO   apply a PROPOSED re-point after the cheap check
   reject-repoint  D --from X --to Y --checked-by WHO   the used fact does not survive: keep D on X
   fail-route X --assumption A --route TEXT --reason R   a failed attempt to remove/weaken A (weak necessity
                                                evidence): sharpness row FAILED-REMOVAL + DECISIONS.md + FAILED_ROUTES.md
-Flags: --dry-run, --issues-dir D, --gh (create the issues with gh), --actor A (default HQ)
+Flags: --dry-run, --issues-dir D, --gh (create the issues), --actor A (default HQ),
+       --status S --status-source path:line (downgrade / retract / deprecate only: the new verbatim status must
+       occur at that source, and it can never be stronger than the current one)
+Version policy: retract / narrow = major; patch / downgrade / supersede (of X) / deprecate / clear = minor;
+coverage corrections (spans, premises) = patch (registry.py).
 """
 from __future__ import annotations
 
@@ -73,6 +78,59 @@ def decision(kind, x, y, axes, reason, actor, extra=""):
 def gh_issue(title, body_file, labels):
     from ghapi import issue  # gh CLI if installed, else the REST API with git's stored credential
     return issue(title, body_file, labels)
+
+
+def passed_gates(row: dict) -> set:
+    """Gate names recorded as PASS WITH evidence: `name:PASS(evidence)`."""
+    return {k for k, ev in re.findall(r"(\w+):PASS\(([^)]+)\)", row.get("gates", "")) if ev.strip()}
+
+
+def status_ok_at(status: str, source: str) -> bool:
+    norm = lambda t: re.sub(r"\s+", " ", re.sub(r"[*`]", "", t or "")).strip().lower()  # noqa: E731
+    path, _, ln = (source or "").rpartition(":")
+    lines = R.read_lines(path) if path else None
+    n = int(ln.split("-")[0]) if ln.split("-")[0].isdigit() else 0
+    return bool(lines) and n >= 1 and norm(status) in norm(" ".join(lines[n - 1: n + 3]))
+
+
+def plan_reverts(cid, rows, ids, aliases, by):
+    """For a retraction of cid: which confirmed re-points to cid are undone, and onto what. A re-point is undone
+    only if the dependent STILL uses cid through it (a later re-point may have moved it on). The restore target is
+    the latest VALID source in that dependent's re-point chain; if none is valid, the dependent keeps its edge to
+    cid (and is invalidated with it). Returns [(rp, restore_item or None)] and the set of skipped (moved-on) rps."""
+    rps = R.load_repoints()
+    plan, moved = [], []
+    for rp in rps:
+        if rp["to"] != cid or rp["state"] != "CONFIRMED":
+            continue
+        d = by[rp["dependent"]]
+        after = rp.get("after") or f"{cid}@{rp['use']}"
+        if after not in R.split_list(d["depends_on"]):
+            moved.append(rp)
+            continue
+        src, use, seen = rp["from"], rp["use"], set()
+        while src and by.get(src, {}).get("state") not in R.VALID and src not in seen:
+            seen.add(src)
+            prev = [q for q in rps if q["dependent"] == d["id"] and q["use"] == use and q["to"] == src
+                    and q["state"] in ("CONFIRMED", "REVERTED", "MOVED-ON")]
+            src = prev[-1]["from"] if prev else None
+        restore = f"{src}@{use}" if src and by.get(src, {}).get("state") in R.VALID else None
+        plan.append((rp, restore))
+    return plan, moved
+
+
+def apply_revert(d: dict, rp: dict, restore) -> None:
+    """Undo one confirmed re-point onto `restore` (an `id@use` item) or, if None, leave the edge to the retracted
+    claim in place. An independent pre-existing edge to the retracted claim is always kept."""
+    if restore is None:
+        return
+    items = R.split_list(d["depends_on"])
+    after = rp.get("after") or f"{rp['to']}@{rp['use']}"
+    if rp.get("preexisting") != "yes":
+        items = [it for it in items if it != after]
+    if restore not in items:
+        items.append(restore)
+    d["depends_on"] = R.join_list(items)
 
 
 def revert_edge(d: dict, rp: dict) -> None:
@@ -126,6 +184,7 @@ def main():
     ap.add_argument("id")
     ap.add_argument("--reason", default="")
     ap.add_argument("--status")
+    ap.add_argument("--status-source", default="")
     ap.add_argument("--still-covers", default="")
     ap.add_argument("--by")
     ap.add_argument("--with", dest="with_")
@@ -223,6 +282,8 @@ def main():
     if a.op == "fail-route":
         if not (a.assumption and a.route):
             sys.exit("fail-route needs --assumption and --route")
+        if R.span_lines(a.route.split()[0]) is None:
+            sys.exit("--route must start with a readable path:line documenting the failed attempt")
         print("\n".join(report + [f"- failed removal of {a.assumption}: {a.route}"]))
         if a.dry_run:
             return
@@ -247,8 +308,12 @@ def main():
         if a.op == "coexist":
             if x["state"] != "ACTIVE" or y["state"] != "ACTIVE":
                 problems.append(f"both must be ACTIVE ({cid} {x['state']}, {yid} {y['state']})")
-            if R.verdict(axes) in ("dominates", "dominated", "equal"):
-                problems.append(f"comparable ({R.verdict(axes)}): use supersede or decline, not coexist")
+            if R.verdict(axes) != "incomparable":
+                problems.append(f"verdict is {R.verdict(axes)}, not incomparable: declare every axis with --axes "
+                                "(coexist needs a proved trade-off), or use supersede / decline")
+            gap = sorted(passed_gates(x) - passed_gates(y))
+            if gap:
+                problems.append(f"assurance parity: {yid} lacks gates {gap} that {cid} passed")
             if R.config().get("freeze") == "yes" and "yes" in (x.get("headline"), y.get("headline")):
                 problems.append("FROZEN: coexist changes the headline set")
         if yid == cid:
@@ -274,11 +339,13 @@ def main():
         if not a.parity_with and not a.no_reference:
             sys.exit("promote needs --parity-with <the claim it would replace> (or --no-reference REASON for a "
                      "genuinely new result)")
+        have = passed_gates(x)
         if a.parity_with:
-            xp = by[need(a.parity_with, "--parity-with")]
-            need_gates += [s.split(":")[0].strip() for s in R.split_list(xp.get("gates", "")) if ":PASS" in s]
-        have = {k for k, ev in re.findall(r"(\w+):PASS\(([^)]+)\)", x.get("gates", "")) if ev.strip()}
+            need_gates += sorted(passed_gates(by[need(a.parity_with, "--parity-with")]))
         missing = sorted({k for k in need_gates if k not in have})
+        if R.config().get("freeze") == "yes" and x.get("headline") == "yes" and not (
+                a.parity_with and need(a.parity_with, "--parity-with") in R.implies_closure(rows, cid, aliases)):
+            sys.exit("FROZEN: a new headline may only enter as a free replacement (it must imply --parity-with)")
         print("\n".join(report + [f"- gates required: {sorted(set(need_gates))}; missing: {missing or 'none'}"]))
         if missing:
             sys.exit("assurance parity not reached: Y stays CANDIDATE; keep working on X")
@@ -309,8 +376,7 @@ def main():
             problems.append(f"X is {x['state']}: only an ACTIVE claim can be superseded")
         if y["state"] != "ACTIVE":
             problems.append(f"Y is {y['state']}: it must pass the same gates as X first (promote); keep working on X")
-        missing = [s.split(":")[0].strip() for s in R.split_list(x.get("gates", "")) if ":PASS" in s
-                   and s.split(":")[0].strip() + ":PASS" not in y.get("gates", "")]
+        missing = sorted(passed_gates(x) - passed_gates(y))
         if missing:
             problems.append(f"assurance parity: Y lacks {missing}")
         if free:
@@ -349,7 +415,7 @@ def main():
                 sys.exit("supersede refused (see Blocking)")
             print("\n(dry run: registry unchanged)")
             return
-        x["state"], x["superseded_by"] = "SUPERSEDED-VALID", yid
+        x["state"], x["superseded_by"], x["version"] = "SUPERSEDED-VALID", yid, R.bump(x["version"], "minor")
         x["state_reason"] = f"SUPERSEDED-VALID {stamp} by {yid} ({mode}): {a.reason}"
         R.log_event("supersede", cid, "ACTIVE", f"SUPERSEDED-VALID by {yid}", a.reason, a.actor)
         decision("supersede", cid, yid, axes, a.reason, a.actor,
@@ -388,31 +454,45 @@ def main():
         # ------------------------------------------------ correctness rollbacks
         if a.op == "downgrade" and not a.status:
             sys.exit("downgrade needs --status")
-        if a.op == "downgrade":
+        if a.status:
+            if a.op not in ("downgrade", "retract", "deprecate"):
+                sys.exit(f"--status is not accepted for {a.op}")
+            if not status_ok_at(a.status, a.status_source):
+                sys.exit("--status must occur verbatim at --status-source path:line (± 3 lines)")
             so, sn = R.status_strength(x["status"]), R.status_strength(a.status)
             if isinstance(so, int) and isinstance(sn, int) and sn > so:
-                sys.exit(f"downgrade refused: new status is stronger ({sn} > {so}); upgrades need a ticket result")
-        if a.op == "clear" and x["state"] not in ("SUSPECT", "REBASE-NEEDED", "NARROWED"):
-            sys.exit(f"{cid} is {x['state']}; clear lifts SUSPECT / REBASE-NEEDED / NARROWED only")
+                sys.exit(f"refused: the new status is stronger ({sn} > {so}); upgrades need a ticket result")
+        if a.op == "clear":
+            if x["state"] not in ("SUSPECT", "REBASE-NEEDED", "NARROWED"):
+                sys.exit(f"{cid} is {x['state']}; clear lifts SUSPECT / REBASE-NEEDED / NARROWED only")
+            acks = set(R.split_list(x.get("acks", "")))
+            bad_in = [d for d in g.deps.get(cid, []) if by[d]["state"] in
+                      ("SUSPECT", "NARROWED", "RETRACTED", "DEPRECATED", "CANDIDATE") and d not in acks]
+            if bad_in:
+                sys.exit(f"clear refused: inputs still invalid {bad_in} (repair them, re-point, or record an ack)")
+            open_rp = [rp for rp in R.load_repoints() if rp["dependent"] == cid and rp["state"] == "PROPOSED"]
+            if open_rp:
+                sys.exit(f"clear refused: {len(open_rp)} re-point proposal(s) still open for {cid}")
         covered = set(R.split_list(a.still_covers))
         hop = {"patch": lambda uses: any(u.startswith("proof:") for u in uses),
                "narrow": lambda uses: not uses <= covered}.get(a.op, lambda uses: True)
         restored, reverted = [], []
         if a.op == "retract":  # reversibility: restore what this claim superseded, revert confirmed re-points
             restored = [r for r in rows if r.get("superseded_by") == cid]
-            reverted = [rp for rp in R.load_repoints() if rp["to"] == cid and rp["state"] == "CONFIRMED"]
+            reverted, moved = plan_reverts(cid, rows, ids, aliases, by)
         if a.op == "clear":
             paths = {}
         else:
-            if reverted:  # recompute the graph as it will be after the reverts
+            if reverted:  # the impact is computed on the graph AS IT WILL BE after the reverts (transitive)
                 tmp = {r["id"]: dict(r) for r in rows}
-                for rp in reverted:
-                    revert_edge(tmp[rp["dependent"]], rp)
+                for rp, restore in reverted:
+                    apply_revert(tmp[rp["dependent"]], rp, restore)
                 g = R.Graph(list(tmp.values()), aliases)
             paths = {d: p for d, p in g.dependents(cid, hop).items() if by[d]["state"] not in INERT}
         direct = sorted(d for d, p in paths.items() if len(p) == 2)
         report += [f"- restored (were superseded by {cid}): {', '.join(r['id'] for r in restored)}" if restored else "",
-                   f"- re-points reverted: {', '.join(rp['dependent'] for rp in reverted)}" if reverted else "",
+                   (f"- re-points reverted: " + ", ".join(f"{rp['dependent']} -> {rs or 'kept on ' + cid}"
+                                                           for rp, rs in reverted)) if reverted else "",
                    "", "## Impact", ""] + cost(paths, direct, by, False)
         if paths:
             report += ["", "| dependent | uses | becomes | path |", "|---|---|---|---|"]
@@ -424,7 +504,11 @@ def main():
             return
         before = f"{x['state']} v{x['version']}"
         if a.op == "clear":
-            x["state"], x["version"] = "ACTIVE", R.bump(x["version"], "minor")
+            sb = x.get("superseded_by", "")
+            back = "SUPERSEDED-VALID" if sb and by.get(sb, {}).get("state") in R.VALID else "ACTIVE"
+            if back == "ACTIVE":
+                x["superseded_by"] = ""
+            x["state"], x["version"] = back, R.bump(x["version"], "minor")
             x["state_reason"] = f"cleared {stamp}: {a.reason}"
         elif a.op == "patch":
             x["version"] = R.bump(x["version"], "minor")
@@ -437,6 +521,8 @@ def main():
             x["state"], x["state_reason"] = st, f"{st} {stamp}: {a.reason}"
             if a.op in ("retract", "narrow"):
                 x["version"] = R.bump(x["version"], "major")
+            elif a.op == "deprecate":
+                x["version"] = R.bump(x["version"], "minor")
             if a.status:
                 x["status"] = a.status
         R.log_event(a.op, cid, before, f"{x['state']} v{x['version']}", a.reason, a.actor)
@@ -456,16 +542,22 @@ def main():
                 if rp["to"] == cid and rp["state"] == "PROPOSED":
                     rp["state"], rp["notes"] = "OBSOLETE", f"{stamp}: {cid} retracted before the check"
             R.save_repoints(rps)
-        if reverted:
+        if a.op == "retract" and (reverted or moved):
             rps = R.load_repoints()
+            key = lambda q: (q["dependent"], q["from"], q["to"], q["use"], q.get("date", ""))  # noqa: E731
+            plan = {key(rp): rs for rp, rs in reverted}
+            moved_keys = {key(rp) for rp in moved}
             for rp in rps:
-                if rp["to"] == cid and rp["state"] == "CONFIRMED":
+                k = key(rp)
+                if k in plan:
                     d = by[rp["dependent"]]
-                    revert_edge(d, rp)
-                    rp["state"], rp["notes"] = "REVERTED", f"{stamp}: {cid} retracted"
-                    R.log_event("revert-repoint", d["id"], cid, rp["from"], f"{cid} retracted", a.actor)
-                    if by[rp["from"]]["state"] not in R.VALID and d["id"] not in paths:  # restored onto a dead input
-                        paths[d["id"]] = [rp["from"], d["id"]]
+                    apply_revert(d, rp, plan[k])
+                    rp["state"] = "REVERTED" if plan[k] else "CONFIRMED-DEAD"
+                    rp["notes"] = f"{stamp}: {cid} retracted; " + (f"restored onto {plan[k]}" if plan[k] else
+                                                                     "no valid predecessor, edge kept")
+                    R.log_event("revert-repoint", d["id"], cid, plan[k] or "-", f"{cid} retracted", a.actor)
+                elif k in moved_keys:
+                    rp["state"], rp["notes"] = "MOVED-ON", f"{stamp}: {cid} retracted after a later re-point"
             R.save_repoints(rps)
         for d, path in paths.items():
             r = by[d]

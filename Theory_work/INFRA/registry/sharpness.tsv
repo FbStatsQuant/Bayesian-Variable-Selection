@@ -90,12 +90,7 @@ W2-FAC-A:Prop-F-FAC	A:FIXED-S0	NONE		no necessity evidence recorded for this pai
 W2-LOC2:F-LOC2	A:DELIVERY-ALLOC	NONE		no necessity evidence recorded for this pair
 W2-LOC2:F-LOC2	A:OP	NONE		no necessity evidence recorded for this pair
 W2-LOC2:F-LOC2	A:MR1-CAP	NONE		no necessity evidence recorded for this pair
-W2-LOC2:F-LOC2	A:LOC-DECAY	NONE		no necessity evidence recorded for this pair
-W2-LOC2:F-LOC2	A:PTV	NONE		no necessity evidence recorded for this pair
-W2-LOC2:F-LOC2	A:POLY-DECAY	NONE		no necessity evidence recorded for this pair
 W2-LOC2:F-LOC2	A:IID-GAUSS-ROWS	NONE		no necessity evidence recorded for this pair
-W2-LOC2:F-LOC2	A:RELEVANCE-SIZE	NONE		no necessity evidence recorded for this pair
-W2-LOC2:F-LOC2	A:BETAMIN	NONE		no necessity evidence recorded for this pair
 W2-LOC2:F-LOC2	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
 W2-UNI:F-UNI	A:DELIVERY-ALLOC	NONE		no necessity evidence recorded for this pair
 W2-UNI:F-UNI	A:IID-GAUSS-ROWS	WEAKENABLE	Theory_work/Wave2/W2-UNI/STATEMENT.md:38	setting (E) approximate-Gram fixed design is an alternative to iid rows
@@ -123,7 +118,7 @@ W2-LOC2:PLR	A:RELEVANCE-SIZE	WEAKENABLE	W2-LOC2:LOC-BF	group sizes up to (log n)
 W2-LOC2:PLR	A:NA-FRAME	NONE		no necessity evidence recorded for this pair
 W2-LOC2:PLR	A:LSF	NONE		no necessity evidence recorded for this pair
 W2-LOC2:PLR	A:IID-GAUSS-ROWS	NONE		no necessity evidence recorded for this pair
-W2-LOC2:PLR	A:BETAMIN	NONE		no necessity evidence recorded for this pair
+W2-LOC2:PLR	A:COEF-BOUNDED	NONE		no necessity evidence recorded for this pair
 W2-LOC2:PLR	A:P-POLY	NONE		no necessity evidence recorded for this pair
 W2-LOC2:PLR	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
 W2-LOC2:PLR	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair

@@ -92,6 +92,9 @@ def block(by, cid, deps):
     L = [f"% generated from registry claim {cid} (v{by[cid]['version']}); edit the registry, not this file"]
     if chain:
         L.append(f"% {cid} is SUPERSEDED; rendering {r['id']} (chain: {' -> '.join(chain + [r['id']])})")
+    if lines and (not r.get("tex_sha256") or R.text_hash(lines) != r["tex_sha256"]):
+        L.append("\\regflag{LaTeX transcription of " + esc(r["id"]) + " not reviewed against the registered "
+                 "statement (registry.py rehash ID --tex after checking)}")
     if lines:
         body, title = body_of(lines)
         title = title or r["name"]

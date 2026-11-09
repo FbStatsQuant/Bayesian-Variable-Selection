@@ -30,9 +30,12 @@ audit verdict / implementation claim, or an **external anchor** `SOP:<row>` (Sta
 - `file` + `lines` + `premises` + `sha256`: the statement text plus the spans it relies on (setting, hypotheses,
   event/threshold definitions written elsewhere); all are hashed together, so a silent change to a hypothesis is
   caught. `check.py` fails if the hash changes without a `rehash`. A LaTeX transcription (`tex`) is hashed
-  separately (`tex_sha256`) when someone has compared it with the statement (`registry.py rehash ID --tex`).
-- `version` (semver): **major** = the claim changed (narrowed, strengthened, retracted), **minor** = proof or
-  status changed, **patch** = editorial.
+  separately (`tex_sha256`) when someone has compared it with the statement (`registry.py rehash ID --tex`); a
+  changed transcription is a check ERROR, and an unreviewed one is flagged inside the generated paper block.
+- `version` (semver), one policy for every tool: **major** = the claim changed (retract, narrow, a re-registered
+  statement that changed in substance); **minor** = proof / status / lifecycle changed (patch, downgrade, supersede
+  of X, deprecate, clear, a new ticket status); **patch** = coverage or transcription corrections (spans, premises,
+  status source) and editorial changes.
 - `status`: the ticket's status words **verbatim**, copied from ONE place (`status_source`, checked by C10).
   Never upgraded by tools: `registry.py set` cannot touch it; `registry.py correct-status` fixes a transcription
   error only if the new text occurs verbatim at the given source line; `propagate.py downgrade` refuses a stronger
@@ -50,7 +53,9 @@ audit verdict / implementation claim, or an **external anchor** `SOP:<row>` (Sta
 interface property (what proofs actually use). Each has a version and an implication lattice (`implies`).
 - **Interface rule (key rule).** Every *shared* assumption A has exactly one **bridge lemma** A ⇒ P (`bridge`).
   Theorems and lemmas *consume P* (`consumes`), never A directly; only headline statements and the bridge itself
-  name A. Weakening A then means re-proving one bridge, not every theorem.
+  name A. Weakening A then means re-proving one bridge, not every theorem. A consumer binds the bridge it actually
+  uses — family / clause specific — as `P:X@<claim id>` in `consumes`; that creates a `proof:P:X` edge to that claim
+  (so retracting it propagates, and a supersession can propose re-pointing it). A plain `P:X` is informational.
 - **Polarity.** A claim lists an assumption as a hypothesis (`A:X`), in a necessity result / counterexample
   (`A:X~nec`), or both directions (`A:X~iff`). Weakening an assumption globally is safe only where it has hypothesis
   polarity: `registry.py assumption-impact A:X` says whether to weaken or to **split** (keep A for the necessity
@@ -194,10 +199,13 @@ that dependent is resolved.
 
 **Freeze.** When every headline hypothesis is settled (NECESSARY or ≥ 2 documented failed removal routes) and the
 latest strategy review + adversarial round produced no headline-changing candidate, Felipe sets the freeze with
-`registry.py freeze --set --reason …`, which refuses unless the criterion holds (failed routes count by distinct
-evidence; `config.tsv` keys `last_strategy_review` and `last_adversarial_round` must name existing review files).
-`check.py` raises an ERROR if `freeze=yes` while the criterion fails. Failed routes are procedural stopping
-evidence, not mathematical necessity.
+`registry.py freeze --set --reason …`, which refuses unless the criterion holds: each unsettled hypothesis needs
+≥ 2 FAILED-REMOVAL rows whose evidence is a readable `path:line` (distinct by path:line; `propagate.py fail-route`
+enforces the format), and `config.tsv` keys `last_strategy_review` and `last_adversarial_round` must name review
+files containing the attested line `FREEZE-OUTCOME: no headline-changing candidate`. The outcome itself remains a
+human attestation (HQ / Felipe); the tool only checks that it is recorded. `check.py` raises an ERROR if
+`freeze=yes` while the criterion fails. Failed routes are procedural stopping evidence, not mathematical necessity.
+While frozen, a new headline can only be promoted as a free replacement (it implies its reference claim).
 After freeze only correctness rollbacks and free supersessions are allowed (`propagate.py` enforces it).
 `check.py` reports the freeze criterion per headline (S8).
 
@@ -206,11 +214,16 @@ Every supersede / coexist / decline / remark decision and every failed sharpenin
 (`propagate.py` appends automatically; add the human rationale in the PR).
 
 ## 5.5 What the tools enforce vs what people attest
-Machine-enforced: statement + premise hashes; verbatim status at its source; no status upgrade through tools;
-use-level propagation (including bridge lemmas: consuming a property P is an edge to P's bridge lemma); lifecycle
-invariants (no valid claim on an invalid input without an ack); CANDIDATE → ACTIVE only against a reference claim and
-with evidence-bearing `k:PASS(evidence)` gates; supersede / coexist validity, strict dominance and freeze; re-point
-confirmation only against the versions it was proposed for; freeze criterion. Attested by HQ / Felipe in the PR
+Machine-enforced: statement + premise hashes; verbatim status at its source line (+3 lines; a status negated at its
+source, e.g. "Not PROVED-CHECKED", is an ERROR); no status upgrade through any tool (`--status` only on
+downgrade / retract / deprecate, source-backed and never stronger); use-level propagation, including explicitly bound
+bridges (`P:X@id`) and transitive invalidation after reverts; lifecycle invariants (no valid claim on an invalid
+input without an ack; `clear` refuses while an input is invalid or a re-point proposal is open, and returns a
+replaced claim to SUPERSEDED-VALID); CANDIDATE → ACTIVE only against a reference claim with evidence-bearing
+`k:PASS(evidence)` gates (one parser for every operation); supersede / coexist validity, strict dominance, gate
+parity, proved incomparability (all axes declared) for coexist, freeze; re-point confirmation only against the
+versions it was proposed for; retraction restores each dependent onto the latest VALID source in its re-point chain
+(or leaves it on the retracted claim and invalidates it); freeze evidence format. Attested by HQ / Felipe in the PR
 (with the review files linked): that the reviews named in `gates` examined the current statement version; reviewer
 independence; that an `implies` edge is mathematically right; that a narrowing still covers the listed uses; the
 binding-map mechanisms. The binding map and sharpness rows seeded on 2026-11-09 are DRAFTS until a headline's

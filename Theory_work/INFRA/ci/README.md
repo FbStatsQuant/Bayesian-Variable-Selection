@@ -3,7 +3,11 @@
 `run_ci.py` is a local, read-only audit: every ticket script (falsification numerics, citecheck) runs inside a
 disposable DETACHED git worktree of HEAD in a temp directory (stdout to a file, the whole process tree killed on
 timeout, the sandbox reset after each script and removed at the end), so the working checkout is never touched. CI
-therefore audits the COMMITTED state. It schedules nothing by
+therefore audits the COMMITTED state.
+Sandboxes live under `<temp>/bvs-ci-sandboxes/` with an owner file (pid); a later run removes only sandboxes under
+that root whose owner process is dead. After every script the whole process tree (including orphaned
+multiprocessing workers, found by parent pid) is killed and the sandbox reset is verified; a failed reset aborts the
+step. This isolates relative writes; it is not a security sandbox against scripts that write to absolute paths. It schedules nothing by
 itself: **HQ schedules it with T3 scheduled tasks**. Rules behind each step: `../LIFECYCLE.md`.
 
 ## Steps
@@ -50,7 +54,9 @@ violated), `script` (repo-relative), `args`, `timeout_s`, `runtime_s`, `cheap`, 
 compare, `;`-separated), `expect` (regex that must appear in stdout), `notes`.
 - Seeded from the registry's `falsification` column (every script a lemma file / review names as its falsification
   check). Re-time all entries after adding scripts: `python Theory_work/INFRA/ci/run_ci.py --calibrate`
-  (120 s cap per script; sets `cheap`).
+  (120 s cap per script; sets `cheap`). Calibration is resumable (it persists after every script and skips rows
+  already timed; `--recalibrate-all` re-times everything). Run it on an otherwise idle machine: under load
+  (parallel ticket numerics) runtimes are pessimistic and fewer scripts qualify as cheap.
 - Tickets add their own entries in their PR (one row per script; boundary-violation numerics with
   `kind=boundary` and the `assumption` id).
 - A boundary script must end by printing exactly one line `BOUNDARY-RESULT: HOLDS` (the conclusion still held just

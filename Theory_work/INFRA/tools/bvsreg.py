@@ -364,12 +364,17 @@ class Graph:
                     self.self_edges.append((r["id"], item))
                     continue
                 self._add(r["id"], t, use)
-            # interface rule: consuming a property P is a proof use of P's bridge lemma(s)
-            for p in split_list(r.get("consumes", "")):
-                for b in split_list(asm.get(p, {}).get("bridge", "")):
-                    t = resolve(b, ids, aliases) if b != "MISSING" else None
-                    if t and t != r["id"]:
-                        self._add(r["id"], t, f"proof:{p}")
+            # interface rule: a consumer that binds the bridge it uses ("P:X@<claim id>") gets a proof-use edge to
+            # that bridge (family/clause-specific; a plain "P:X" is informational and creates no edge)
+            for item in split_list(r.get("consumes", "")):
+                p, _, b = item.partition("@")
+                if not b:
+                    continue
+                t = resolve(b, ids, aliases)
+                if t is None:
+                    self.dangling.append((r["id"], item))
+                elif t != r["id"]:
+                    self._add(r["id"], t, f"proof:{p.strip()}")
 
     def _add(self, u, t, use):
         if t not in self.deps[u]:

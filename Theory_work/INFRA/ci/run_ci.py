@@ -4,8 +4,9 @@ Steps (each can be selected with --steps, default all):
   check      tools/check.py (registry vs files, SoP registry, FINAL chapter); ERRORs fail the run
   paper      tools/assemble.py --check (generated paper blocks current)
   falsify    re-run the cheap saved falsification scripts listed in ci/falsification.tsv (cheap = calibrated
-             runtime < 120 s); compares regenerated output files with the committed ones; restores the tree
-  cite       re-run every ticket's citecheck.py (same snapshot/restore) and compare MISS counts with the
+             runtime < 120 s) inside a disposable git worktree of HEAD (see Sandbox); reports regenerated outputs
+             that differ from the committed ones
+  cite       re-run every ticket's citecheck.py in the same kind of sandbox and compare MISS counts with the
              committed CITECHECK.txt
   reaudit    pick one random ACTIVE PROVED-CHECKED claim and write the brief for a fresh adversarial
              (Astra-high) re-audit
@@ -51,35 +52,106 @@ def git(*a, cwd=None):
                           encoding="utf-8", errors="replace").stdout
 
 
+def git_ok(*a, cwd=None):
+    p = subprocess.run(["git", "-C", cwd or R.ROOT, *a], capture_output=True, text=True, encoding="utf-8",
+                       errors="replace")
+    if p.returncode != 0:
+        raise RuntimeError(f"git {' '.join(a)} failed in {cwd or R.ROOT}: {p.stderr.strip()[:300]}")
+    return p.stdout
+
+
+SANDBOX_ROOT = os.path.join(__import__("tempfile").gettempdir(), "bvs-ci-sandboxes")
+
+
+def _process_table():
+    """{pid: ppid} for every process. Windows: Toolhelp32 snapshot via ctypes (fast, no extra packages)."""
+    if os.name != "nt":
+        out = subprocess.run(["ps", "-eo", "pid=,ppid="], capture_output=True, text=True).stdout
+        return {int(a): int(b) for a, b in (ln.split() for ln in out.splitlines() if len(ln.split()) == 2)}
+    import ctypes
+    from ctypes import wintypes
+
+    class PE(ctypes.Structure):
+        _fields_ = [("dwSize", wintypes.DWORD), ("cntUsage", wintypes.DWORD), ("th32ProcessID", wintypes.DWORD),
+                    ("th32DefaultHeapID", ctypes.c_size_t), ("th32ModuleID", wintypes.DWORD),
+                    ("cntThreads", wintypes.DWORD), ("th32ParentProcessID", wintypes.DWORD),
+                    ("pcPriClassBase", ctypes.c_long), ("dwFlags", wintypes.DWORD), ("szExeFile", ctypes.c_char * 260)]
+
+    k32 = ctypes.windll.kernel32
+    k32.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
+    snap = k32.CreateToolhelp32Snapshot(0x2, 0)  # TH32CS_SNAPPROCESS
+    table, e = {}, PE()
+    e.dwSize = ctypes.sizeof(PE)
+    try:
+        ok = k32.Process32First(snap, ctypes.byref(e))
+        while ok:
+            table[e.th32ProcessID] = e.th32ParentProcessID
+            ok = k32.Process32Next(snap, ctypes.byref(e))
+    finally:
+        k32.CloseHandle(snap)
+    return table
+
+
+def pid_alive(pid: int) -> bool:
+    return pid > 0 and pid in _process_table()
+
+
+def _inside(path, root):
+    path, root = os.path.normcase(os.path.realpath(path)), os.path.normcase(os.path.realpath(root))
+    return os.path.commonpath([path, root]) == root
+
+
 class Sandbox:
-    """A disposable DETACHED git worktree of HEAD in a temp directory. Every script runs there, never in the
-    real checkout, so nothing tracked or untracked in the user's tree can be modified or deleted. After each run
-    the sandbox is reset (checkout + clean); on exit it is removed (`git worktree remove --force` + prune), also
-    on errors and interrupts. CI therefore audits the COMMITTED state (HEAD), not uncommitted work."""
+    """A disposable DETACHED git worktree of HEAD under SANDBOX_ROOT (a temp directory owned by this tool). Ticket
+    scripts run only there, never in a working checkout. Each sandbox has an owner file (pid); stale-sandbox cleanup
+    touches ONLY worktrees under SANDBOX_ROOT whose owner process is dead. After each script the sandbox is reset
+    (checked: a failed reset aborts the step); it is removed on exit (errors and interrupts included).
+    Isolation boundary: relative writes land in the sandbox; this is NOT a security sandbox against scripts that
+    write to absolute paths or through git metadata. CI audits the COMMITTED state (HEAD)."""
 
     def __enter__(self):
-        import tempfile
-        # remove sandboxes left by a run that was killed before its cleanup could run
+        import json, shutil, tempfile
+        os.makedirs(SANDBOX_ROOT, exist_ok=True)
         for ln in git("worktree", "list", "--porcelain").splitlines():
-            if ln.startswith("worktree ") and "bvs-ci-" in ln:
-                subprocess.run(["git", "-C", R.ROOT, "worktree", "remove", "--force", ln[9:].strip()],
-                               capture_output=True)
+            if not ln.startswith("worktree "):
+                continue
+            wt = ln[9:].strip()
+            if not _inside(wt, SANDBOX_ROOT):
+                continue  # never touch worktrees outside the tool's own root
+            owner = wt.rstrip("/\\") + ".owner"
+            try:
+                pid = json.load(open(owner)).get("pid", -1)
+            except (OSError, ValueError):
+                pid = -1
+            if not pid_alive(pid):
+                subprocess.run(["git", "-C", R.ROOT, "worktree", "remove", "--force", wt], capture_output=True)
+                shutil.rmtree(wt, ignore_errors=True)
+                try:
+                    os.remove(owner)
+                except OSError:
+                    pass
         git("worktree", "prune")
-        self.path = tempfile.mkdtemp(prefix="bvs-ci-")
+        self.path = tempfile.mkdtemp(prefix="sb-", dir=SANDBOX_ROOT)
         os.rmdir(self.path)  # git worktree add wants to create it
+        self.owner = self.path + ".owner"
+        with open(self.owner, "w") as fh:
+            json.dump({"pid": os.getpid(), "created": time.time()}, fh)
         r = subprocess.run(["git", "-C", R.ROOT, "worktree", "add", "--detach", self.path, "HEAD"],
                            capture_output=True, text=True)
         if r.returncode != 0:
+            os.remove(self.owner)
             raise RuntimeError(f"cannot create CI sandbox: {r.stderr.strip()[:300]}")
         return self
 
     def reset(self):
-        git("checkout", "--", ".", cwd=self.path)
-        git("clean", "-fdqx", cwd=self.path)
+        git_ok("checkout", "--", ".", cwd=self.path)
+        git_ok("clean", "-fdqx", cwd=self.path)
+        if git_ok("status", "--porcelain", cwd=self.path).strip():
+            raise RuntimeError("sandbox not clean after reset")
 
     def changed(self, prefix):
         """Tracked files modified and files created under prefix since HEAD (repo-relative)."""
-        out = git("status", "--porcelain", "--untracked-files=all", "--", prefix, cwd=self.path)
+        out = git_ok("status", "--porcelain", "--untracked-files=all", "--", prefix, cwd=self.path)
         return [ln[3:].strip().strip('"') for ln in out.splitlines() if ln.strip()]
 
     def __exit__(self, *exc):
@@ -87,49 +159,82 @@ class Sandbox:
         subprocess.run(["git", "-C", R.ROOT, "worktree", "remove", "--force", self.path], capture_output=True)
         subprocess.run(["git", "-C", R.ROOT, "worktree", "prune"], capture_output=True)
         shutil.rmtree(self.path, ignore_errors=True)
+        try:
+            os.remove(self.owner)
+        except OSError:
+            pass
         return False
 
 
-def kill_tree(pid):
+def descendants(pid: int) -> list[int]:
+    """All live descendants of pid (by parent pid, which survives the parent's death)."""
+    kids = {}
+    for c, par in _process_table().items():
+        kids.setdefault(par, []).append(c)
+    seen, stack = [], [pid]
+    while stack:
+        for c in kids.get(stack.pop(), []):
+            if c not in seen and c != pid:
+                seen.append(c)
+                stack.append(c)
+    return seen
+
+
+def kill_tree(pid: int) -> None:
+    """Kill pid and every descendant; raise if anything survives (a surviving child could hold the sandbox)."""
     if os.name == "nt":
-        subprocess.run(["taskkill", "/T", "/F", "/PID", str(pid)], capture_output=True)
+        victims = [v for v in [pid] + descendants(pid) if pid_alive(v)]
+        for v in victims:
+            subprocess.run(["taskkill", "/T", "/F", "/PID", str(v)], capture_output=True)
+        if victims:
+            time.sleep(0.5)
+        table = _process_table()
+        alive = [v for v in victims if v in table]
+        if alive:
+            raise RuntimeError(f"could not kill processes {alive}")
     else:
         import signal
         try:
-            os.killpg(os.getpgid(pid), signal.SIGKILL)
+            os.killpg(pid, signal.SIGKILL)  # start_new_session: pgid == pid, valid even after the leader exits
         except OSError:
             pass
 
 
-def run_in(sb, script_rel, args, timeout, logdir):
-    """Run one script inside the sandbox; stdout/stderr go to a file (no pipe a stray child could hold open);
-    on timeout the whole process tree is killed. Returns (rc, secs, text, changed_files)."""
-    sdir = os.path.dirname(os.path.join(sb.path, script_rel))
+def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
+    """Run one script inside the sandbox. The script path must resolve inside the sandbox. stdout/stderr go to a
+    file; whatever happens (timeout, error, interrupt, normal exit), the process tree is killed in `finally` and the
+    sandbox is reset. Returns (rc, secs, text, changed_files); text = the report file if given, else the output."""
+    script = os.path.join(sb.path, script_rel)
+    if os.path.isabs(script_rel) or ".." in script_rel.replace("\\", "/").split("/") or not _inside(script, sb.path):
+        return "REFUSED (script path outside the sandbox)", 0.0, "", []
+    sdir = os.path.dirname(script)
     logf = os.path.join(logdir, "_run.log")
     t0 = time.time()
     kw = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt" else {"start_new_session": True}
-    with open(logf, "w", encoding="utf-8", errors="replace") as fh:
-        try:
-            p = subprocess.Popen([*PYNUM, os.path.basename(script_rel), *args], cwd=sdir, stdout=fh,
-                                 stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
-                                 env={**os.environ, "PYTHONHASHSEED": "0", "MPLBACKEND": "Agg"}, **kw)
-        except OSError as e:
-            return f"LAUNCH-ERROR {e}", 0.0, "", []
-        try:
-            rc = p.wait(timeout=timeout)
-        except subprocess.TimeoutExpired:
-            kill_tree(p.pid)
+    p, rc = None, None
+    try:
+        with open(logf, "w", encoding="utf-8", errors="replace") as fh:
             try:
-                p.wait(timeout=30)
+                p = subprocess.Popen([*PYNUM, os.path.basename(script), *args], cwd=sdir, stdout=fh,
+                                     stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+                                     env={**os.environ, "PYTHONHASHSEED": "0", "MPLBACKEND": "Agg"}, **kw)
+            except OSError as e:
+                return f"LAUNCH-ERROR {e}", 0.0, "", []
+            try:
+                rc = p.wait(timeout=timeout)
             except subprocess.TimeoutExpired:
-                pass
-            rc = "TIMEOUT"
-    secs = time.time() - t0
-    with open(logf, encoding="utf-8", errors="replace") as fh:
-        text = fh.read()
-    ticket_dir = "/".join(script_rel.replace("\\", "/").split("/")[:3])
-    changed = sb.changed(ticket_dir)
-    sb.reset()
+                rc = "TIMEOUT"
+        secs = time.time() - t0
+        rp = os.path.join(sb.path, report_path) if report_path else None
+        src = rp if rp and os.path.exists(rp) else logf
+        with open(src, encoding="utf-8", errors="replace") as fh:
+            text = fh.read()
+        ticket_dir = "/".join(script_rel.replace("\\", "/").split("/")[:3])
+        changed = sb.changed(ticket_dir)
+    finally:
+        if p is not None:
+            kill_tree(p.pid)  # also after a normal exit: orphaned workers must not outlive the run
+        sb.reset()
     return rc, secs, text, changed
 
 
@@ -219,39 +324,14 @@ def step_cite(out):
                      os.path.join(os.path.dirname(d), "CITECHECK.txt")]
             committed = next((c for c in cands if os.path.exists(c)), None)
             before = open(committed, encoding="utf-8", errors="replace").read() if committed else ""
-            rc, secs, txt, changed = None, 0.0, "", []
-            # run, read the regenerated report BEFORE the sandbox reset, then reset
-            sdir_rel = os.path.relpath(cc, sb.path)
-            rc, secs, txt, changed = run_in_keep(sb, sdir_rel, CAP, out, committed)
+            rep_rel = os.path.relpath(committed, sb.path) if committed else None
+            rc, secs, txt, changed = run_in(sb, rel, [], CAP, out, report_path=rep_rel)
             after = txt
             b, a = miss_count(before), miss_count(after)
             good = rc in (0, 1) and a <= b
             ok &= good
             lines.append(f"- {'PASS' if good else 'FAIL'} `{rel}`: MISS {b} committed -> {a} now (rc={rc})")
     return ok, "\n".join(lines)
-
-
-def run_in_keep(sb, script_rel, timeout, logdir, report_path):
-    """Like run_in, but returns the regenerated report (or stdout if the script writes none) before resetting."""
-    sdir = os.path.dirname(os.path.join(sb.path, script_rel))
-    logf = os.path.join(logdir, "_cite.log")
-    kw = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt" else {"start_new_session": True}
-    t0 = time.time()
-    with open(logf, "w", encoding="utf-8", errors="replace") as fh:
-        p = subprocess.Popen([*PYNUM, os.path.basename(script_rel)], cwd=sdir, stdout=fh, stderr=subprocess.STDOUT,
-                             stdin=subprocess.DEVNULL, **kw)
-        try:
-            rc = p.wait(timeout=timeout)
-        except subprocess.TimeoutExpired:
-            kill_tree(p.pid)
-            rc = "TIMEOUT"
-    secs = time.time() - t0
-    if report_path and os.path.exists(report_path):
-        text = open(report_path, encoding="utf-8", errors="replace").read()
-    else:
-        text = open(logf, encoding="utf-8", errors="replace").read()
-    sb.reset()
-    return rc, secs, text, []
 
 
 def proof_files(r):
@@ -321,7 +401,9 @@ def step_optimize(out, rng, event="", note=""):
     by = R.index(rows)
     g = R.Graph(rows)
     asm, sharp, binding = R.load_assumptions(), R.load_sharpness(), R.load_binding()
-    pool = [b for b in binding if by.get(b["headline"], {}).get("headline") == "yes"
+    pool = [b for b in binding if not b.get("notes", "").startswith("DRAFT")
+            and "TO BE DETERMINED" not in b.get("mechanism", "")
+            and by.get(b["headline"], {}).get("headline") == "yes"
             and by[b["headline"]]["state"] == "ACTIVE" and not R.settled(b["headline"], b["assumption"], sharp)]
     if not pool:
         return True, "no binding claim for an unsettled headline hypothesis (seed binding.tsv / sharpness.tsv)"

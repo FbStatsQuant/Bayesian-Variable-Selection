@@ -8,7 +8,7 @@ C-MIS:Thm-MIS(i)	blocks/C-MIS_Thm-MIS_i_.tex	Theory_work/Wave1C/FINAL/sections/s
 C-MIS:Thm-MIS(ii)	blocks/C-MIS_Thm-MIS_ii_.tex	Theory_work/Wave1C/FINAL/sections/s3_posterior.tex:43-47	c7142232e0a44555	ACTIVE
 C-GROW:Thm-GROW	blocks/C-GROW_Thm-GROW.tex	Theory_work/Wave1C/FINAL/sections/s5_hpm.tex:68-70	73d33d3362fc216f	ACTIVE
 C-DLV:Prop-F	blocks/C-DLV_Prop-F.tex	Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:28-47	9cb1d6ee5cee91b6	ACTIVE
-W2-APP:POST	blocks/W2-APP_POST.tex	Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-35	f69883ed5e0738e9	ACTIVE
+W2-APP:POST	blocks/W2-APP_POST.tex	Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-33	5633a76f9486022b	ACTIVE
 W2-APP:Thm-LOC	blocks/W2-APP_Thm-LOC.tex	Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md:34-38	e94bfa164ccda31a	ACTIVE
 W2-FAC-A:Thm-FAC-L	blocks/W2-FAC-A_Thm-FAC-L.tex	Theory_work/Wave2/W2-FAC-A/STATEMENT.md:102-152	88e789bd4dc30d96	ACTIVE
 W2-FAC-A:Prop-F-FAC	blocks/W2-FAC-A_Prop-F-FAC.tex	Theory_work/Wave2/W2-FAC-A/lemmas/L7_delivery.md:22-24	121f77a08b76663a	ACTIVE

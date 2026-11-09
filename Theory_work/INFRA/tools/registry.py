@@ -2,7 +2,8 @@
 
   show ID                          one claim (all fields) + necessity verdicts of its hypotheses
   deps ID | rdeps ID               transitive dependencies / dependents, with the use of each edge
-  add ID --file F --lines a-b --kind K --name N --status S [--state CANDIDATE] [--field k=v ...] --reason R
+  add ID --file F --lines a-b --kind K --name N --status S --source path:line [--state CANDIDATE]
+      [--field k=v ...] --reason R    (the status must occur verbatim at --source)
                                    register a claim (new results from improvement tickets enter as CANDIDATE)
   set ID k=v [k=v ...] --reason R  edit fields (not state/sha/version: propagate.py / rehash); logged
   rehash ID [--lines a-b] --bump none|patch|minor|major --reason R
@@ -110,6 +111,14 @@ def main():
             if k not in R.COLUMNS or k in PROTECTED:
                 sys.exit(f"field {k!r} not settable")
             r[k] = v
+        if a.status:
+            import re as _re
+            norm = lambda t: _re.sub(r"\s+", " ", _re.sub(r"[*`]", "", t)).strip().lower()  # noqa: E731
+            path, _, ln = (a.source or "").rpartition(":")
+            lines, n = (R.read_lines(path) if path else None), (int(ln) if ln.isdigit() else 0)
+            if not lines or n < 1 or norm(a.status) not in norm(" ".join(lines[n - 1: n + 3])):
+                sys.exit("add: --status must occur verbatim at --source path:line (± 3 lines)")
+            r["status_source"] = a.source
         r["sha256"] = R.claim_hash(r) or sys.exit("cannot hash the statement/premise spans")
         r["improvable"] = R.improvable(r, sharp)
         rows.append(r)
@@ -126,7 +135,7 @@ def main():
                 sys.exit(f"field {k!r} not settable here (state: propagate.py; sha/version: rehash)")
             R.log_event("set", r["id"], f"{k}={r.get(k, '')[:80]}", f"{k}={v[:80]}", a.reason, a.actor)
             r[k] = v
-            if k == "premises":  # the hashed statement now covers different text: re-hash, minor bump
+            if k == "premises":  # coverage correction: re-hash, PATCH bump (the claim itself did not change)
                 h = R.claim_hash(r)
                 if h is None:
                     sys.exit("premise span unreadable; nothing saved")

@@ -17,28 +17,28 @@ falsify	W1-N3:L1		Theory_work/Wave1/W1-N3/numerics/check_union_order.py		30	2.0	
 falsify	W1-N3:L2; W1-N3:L3; W1-N3:L5		Theory_work/Wave1/W1-N3/numerics/lemma_probes.py		120	3.2	no			calibration rc=1: FileNotFoundError: [WinError 2] The system cannot find the file specified
 falsify	W1-GEN:L1		Theory_work/Wave1/W1-GEN/numerics/e1_unit_tests.py		120	37.0	yes			
 falsify	W1-GEN:L2; W1-GEN:L4; W1-GEN:Thm-GEN(C5a)		Theory_work/Wave1/W1-GEN/numerics/e2_lh_exact.py		120	84.9	yes			
-falsify	W1-GEN:L3; W1-GEN:L4		Theory_work/Wave1/W1-GEN/numerics/e4_adversarial.py		120					
-falsify	W1-GEN:Thm-GEN(C5b)		Theory_work/Wave1/W1-GEN/numerics/e3_lh_iid.py		120					
-falsify	W1-GEN:Thm-GEN(C5d-S1346); W1-GEN:Obs-GEN-S2S5		Theory_work/Wave1/W1-GEN/numerics/e6_study.py		120					
-falsify	W1-GEN:Obs-GEN-S2S5		Theory_work/Wave1/W1-GEN/numerics/e5_outside.py		120					
-falsify	W1-GEN:Cex-GEN(C6)		Theory_work/Wave1/W1-GEN/numerics/e7_proxy_flood.py		120					
-falsify	C-PACK:I1-audit; C-PACK:I1-UM		Theory_work/Wave1C/C-PACK/numerics/item1_um_checks.py		120					
-falsify	C-PACK:I1-audit; C-PACK:I1-UM-FP; C-PACK:I1-PXNrepair		Theory_work/Wave1C/C-PACK/numerics/R33_falsify.py		120					
-falsify	C-PACK:I2		Theory_work/Wave1C/C-PACK/numerics/R35_falsify.py		120					
-falsify	C-PACK:SEL-check		Theory_work/Wave1C/C-PACK/numerics/item3_SEL_falsify.py		120					
-falsify	C-PACK:L8-check		Theory_work/Wave1C/C-PACK/numerics/item3_L8_falsify.py		120					
-falsify	C-PACK:SL0; C-PACK:SL1; C-PACK:SL1'; C-PACK:SL2		Theory_work/Wave1C/C-PACK/numerics/R34_falsify.py		120					
-falsify	C-MIS:Thm-F; C-MIS:Cor-F(b)		Theory_work/Wave1C/C-MIS/numerics/check_L4.py		120					
-falsify	C-GROW:L2.2; C-GROW:L2.3		Theory_work/Wave1C/C-GROW/numerics/f1x_run.py		120					
-falsify	C-GROW:L3		Theory_work/Wave1C/C-GROW/numerics/f1_run.py		120					
-falsify	C-GROW:L3		Theory_work/Wave1C/C-GROW/numerics/f3_run.py		120					
-falsify	C-GROW:C5b		Theory_work/Wave1C/C-GROW/numerics/f2_exact_tau0.py		120					
-falsify	C-GROW:C5c		Theory_work/Wave1C/C-GROW/numerics/g1_run.py		120					
-falsify	C-GROW:C6		Theory_work/Wave1C/C-GROW/numerics/d123_run400.py		120					
-falsify	C-DLV:L3-3.1; C-DLV:L3-3.2; C-DLV:Cor-3.2p; C-DLV:L3-3.3; C-DLV:L3-3.4; C-DLV:L3-3.5a; C-DLV:L3-3.5b		Theory_work/Wave1C/C-DLV/numerics/n2_grid_lemmas.py		120					
-falsify	C-DLV:L3-3.1; C-DLV:L3-3.2; C-DLV:Cor-3.2p; C-DLV:L3-3.3; C-DLV:L3-3.4; C-DLV:L3-3.5a; C-DLV:L3-3.5b		Theory_work/Wave1C/C-DLV/numerics/n2b_pilot_and_counts.py		120					
-falsify	C-DLV:L5-5.0; C-DLV:L5-5.1; C-DLV:L5-5.2; C-DLV:L5-5.2p; C-DLV:Cor-5.3		Theory_work/Wave1C/C-DLV/numerics/n3_twomodel.py		120					
-falsify	W2-APP:POST		Theory_work/Wave2/W2-APP/numerics/post_check.py		120					
+falsify	W1-GEN:L3; W1-GEN:L4		Theory_work/Wave1/W1-GEN/numerics/e4_adversarial.py		120	108.7	yes			
+falsify	W1-GEN:Thm-GEN(C5b)		Theory_work/Wave1/W1-GEN/numerics/e3_lh_iid.py		120	>120	no			calibration rc=TIMEOUT: concurrent.futures.process.BrokenProcessPool: A process in the process pool was terminated abruptly while the future was
+falsify	W1-GEN:Thm-GEN(C5d-S1346); W1-GEN:Obs-GEN-S2S5		Theory_work/Wave1/W1-GEN/numerics/e6_study.py		120	>120	no			calibration rc=TIMEOUT: concurrent.futures.process.BrokenProcessPool: A process in the process pool was terminated abruptly while the future was
+falsify	W1-GEN:Obs-GEN-S2S5		Theory_work/Wave1/W1-GEN/numerics/e5_outside.py		120	1.0	no			calibration rc=1: SyntaxError: unexpected character after line continuation character
+falsify	W1-GEN:Cex-GEN(C6)		Theory_work/Wave1/W1-GEN/numerics/e7_proxy_flood.py		120	>120	no			calibration rc=TIMEOUT: concurrent.futures.process.BrokenProcessPool: A process in the process pool was terminated abruptly while the future was
+falsify	C-PACK:I1-audit; C-PACK:I1-UM		Theory_work/Wave1C/C-PACK/numerics/item1_um_checks.py		120	51.2	yes			
+falsify	C-PACK:I1-audit; C-PACK:I1-UM-FP; C-PACK:I1-PXNrepair		Theory_work/Wave1C/C-PACK/numerics/R33_falsify.py		120	15.5	no			calibration rc=1: FileNotFoundError: [WinError 2] The system cannot find the file specified
+falsify	C-PACK:I2		Theory_work/Wave1C/C-PACK/numerics/R35_falsify.py		120	115.7	yes			
+falsify	C-PACK:SEL-check		Theory_work/Wave1C/C-PACK/numerics/item3_SEL_falsify.py		120	>120	no			calibration rc=TIMEOUT: S4 800 1000 13 31007 16 93 True 11.923429 0.97217049 50.871113 1.9874864 0.75021838 3164416 7.11e-15 5.29
+falsify	C-PACK:L8-check		Theory_work/Wave1C/C-PACK/numerics/item3_L8_falsify.py		30	6.1	yes			
+falsify	C-PACK:SL0; C-PACK:SL1; C-PACK:SL1'; C-PACK:SL2		Theory_work/Wave1C/C-PACK/numerics/R34_falsify.py		120	63.0	yes			
+falsify	C-MIS:Thm-F; C-MIS:Cor-F(b)		Theory_work/Wave1C/C-MIS/numerics/check_L4.py		120	>120	no			calibration rc=TIMEOUT:
+falsify	C-GROW:L2.2; C-GROW:L2.3		Theory_work/Wave1C/C-GROW/numerics/f1x_run.py		120	98.6	yes			
+falsify	C-GROW:L3		Theory_work/Wave1C/C-GROW/numerics/f1_run.py		120	>120	no			calibration rc=TIMEOUT:
+falsify	C-GROW:L3		Theory_work/Wave1C/C-GROW/numerics/f3_run.py		120	>120	no			calibration rc=TIMEOUT:
+falsify	C-GROW:C5b		Theory_work/Wave1C/C-GROW/numerics/f2_exact_tau0.py		112	34.1	yes			
+falsify	C-GROW:C5c		Theory_work/Wave1C/C-GROW/numerics/g1_run.py		120	>120	no			calibration rc=TIMEOUT: OSError: [WinError 87] The parameter is incorrect
+falsify	C-GROW:C6		Theory_work/Wave1C/C-GROW/numerics/d123_run400.py		120	>120	no			calibration rc=TIMEOUT: done 93
+falsify	C-DLV:L3-3.1; C-DLV:L3-3.2; C-DLV:Cor-3.2p; C-DLV:L3-3.3; C-DLV:L3-3.4; C-DLV:L3-3.5a; C-DLV:L3-3.5b		Theory_work/Wave1C/C-DLV/numerics/n2_grid_lemmas.py		120	>120	no			calibration rc=TIMEOUT:
+falsify	C-DLV:L3-3.1; C-DLV:L3-3.2; C-DLV:Cor-3.2p; C-DLV:L3-3.3; C-DLV:L3-3.4; C-DLV:L3-3.5a; C-DLV:L3-3.5b		Theory_work/Wave1C/C-DLV/numerics/n2b_pilot_and_counts.py		120	>120	no			calibration rc=TIMEOUT:
+falsify	C-DLV:L5-5.0; C-DLV:L5-5.1; C-DLV:L5-5.2; C-DLV:L5-5.2p; C-DLV:Cor-5.3		Theory_work/Wave1C/C-DLV/numerics/n3_twomodel.py		120	>120	no			calibration rc=TIMEOUT:
+falsify	W2-APP:POST		Theory_work/Wave2/W2-APP/numerics/post_check.py		120	>120	no			calibration rc=TIMEOUT:
 falsify	W2-APP:CT; W2-APP:CD		Theory_work/Wave2/W2-APP/numerics/ct_check.py		120					
 falsify	W2-APP:VN		Theory_work/Wave2/W2-APP/numerics/vn_bound_recheck.py		120					
 falsify	W2-FAC-A:Thm-FAC-L; W2-FAC-A:L1		Theory_work/Wave2/W2-FAC-A/numerics/fu_check.py		120					
