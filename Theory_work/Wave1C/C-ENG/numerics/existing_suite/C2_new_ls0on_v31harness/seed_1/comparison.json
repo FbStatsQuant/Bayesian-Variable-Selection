@@ -1,0 +1,142 @@
+{
+  "R5_cache_capacity_expected_difference_before_normalization": {
+    "test": "R5_cache_capacity_expected_difference_before_normalization",
+    "ok": true,
+    "utc": "2026-11-09 04:54:45 UTC"
+  },
+  "required_certificate_labels_before_normalization": {
+    "test": "required_certificate_labels_before_normalization",
+    "ok": true,
+    "utc": "2026-11-09 04:54:45 UTC"
+  },
+  "R5_cache_projection_preserves_every_counter": {
+    "test": "R5_cache_projection_preserves_every_counter",
+    "ok": true,
+    "utc": "2026-11-09 04:54:45 UTC"
+  },
+  "bits_pre": {
+    "test": "bits_pre",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_budgets": {
+    "test": "bits_budgets",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_blocks": {
+    "test": "bits_blocks",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_tables": {
+    "test": "bits_tables",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_neighbours": {
+    "test": "bits_neighbours",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_start": {
+    "test": "bits_start",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_scores": {
+    "test": "bits_scores",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_locals": {
+    "test": "bits_locals",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_exact": {
+    "test": "bits_exact",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_rng": {
+    "test": "bits_rng",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_resampling": {
+    "test": "bits_resampling",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_micro": {
+    "test": "bits_micro",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_pilot_micro": {
+    "test": "bits_pilot_micro",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_cal_rules": {
+    "test": "bits_cal_rules",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_calibration_raw": {
+    "test": "bits_calibration_raw",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_raw_final": {
+    "test": "bits_raw_final",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_final_inherited": {
+    "test": "bits_final_inherited",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_calibration_full": {
+    "test": "bits_calibration_full",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_calibrated_final": {
+    "test": "bits_calibrated_final",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "bits_final_outputs_and_flags": {
+    "test": "bits_final_outputs_and_flags",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "inputs_and_seed_identity": {
+    "test": "inputs_and_seed_identity",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "prototype_all_units": {
+    "test": "prototype_all_units",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "prototype_unit_and_source_inventory": {
+    "test": "prototype_unit_and_source_inventory",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "production_all_units": {
+    "test": "production_all_units",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  },
+  "production_unit_and_source_inventory": {
+    "test": "production_unit_and_source_inventory",
+    "ok": true,
+    "utc": "2026-11-09 04:54:46 UTC"
+  }
+}

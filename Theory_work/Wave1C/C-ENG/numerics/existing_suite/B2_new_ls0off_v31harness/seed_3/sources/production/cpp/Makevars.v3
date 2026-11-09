@@ -1,0 +1,10 @@
+# Makevars.v3 -- compiler flags of the v3 build (passed to R CMD SHLIB through R_MAKEVARS_USER by v3_compile; it
+# overrides the site flags of R's Makeconf, which on NOTS contain -march=native).
+# -ffp-contract=off : no fused multiply-add contraction, so a*b + c is rounded twice exactly as written (bit-for-bit
+#                     replicable by independent implementations of the rules);
+# -march=x86-64-v2  : a portable instruction set, so one cached binary runs on every node type of the partition.
+CXXFLAGS = -O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2
+CXX11FLAGS = $(CXXFLAGS)
+CXX14FLAGS = $(CXXFLAGS)
+CXX17FLAGS = $(CXXFLAGS)
+CXX20FLAGS = $(CXXFLAGS)

@@ -1,0 +1,1 @@
+run_cfg.sh /c/Users/felip/AppData/Local/Temp/claude/7f4deb75538d3cf7/03611146-335e-4730-9f01-d3ebd88e845b/scratchpad/suite/coreB2/core /c/Users/felip/.t3/worktrees/Bayesian-Variable-Selection/t3-68de3711/Theory_work/Wave1C/C-ENG/numerics/existing_suite/B2_new_ls0off_v31harness/seed_1 1 
