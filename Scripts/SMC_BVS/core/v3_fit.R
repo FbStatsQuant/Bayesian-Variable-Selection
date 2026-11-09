@@ -14,7 +14,12 @@ v3_time_scores <- function(Xs, ys, kbar) {
 }
 
 # Lead rulings RULINGS_2 G1 / RULINGS_3 N4-N5. SMC preflight is memory only.
-v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL) {
+# v3.1 (C-GROW MR1 cap; HQ_AUDIT A1 finding 1): with ls0_worst_case = TRUE the SMC preflight also charges LS0 at its worst
+# case under the cap ell_n + |S~0| <= ell_n + K: at most ell_n + K + 1 complete scans of at most q(p) = p + p^2/4 models
+# each, timed at the measured seconds per score of a size-K model times a declared bookkeeping factor 2 (cache lookup and
+# insert, ledger/store offers), and its path/scanned-centre archive (2 (ell_n + K + 1) models of 4K + 64 bytes, as for the
+# stores). The LS0 time counts against the allocation's hours. ls0_worst_case = FALSE is the shipped preflight.
+v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL, ls0_worst_case = FALSE) {
   K <- b$K; B <- b$B; N <- b$tiers$N[tier + 1]; C_cache <- 500 * p
   mem_gb <- allocation[["mem_gb"]] %||% 8; hours <- allocation[["hours"]] %||% 24
   W <- ceiling(p / 64)
@@ -31,9 +36,14 @@ v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL)
               stores = (80 * p + 1) * (4 * K + 64),
               populations = 2 * N * (8 * W + 4 * K + 96))
     s <- scores <- seconds <- NA_real_
+    if (isTRUE(ls0_worst_case)) {
+      ls0_scans <- b$ell + K + 1; ls0_requests <- ls0_scans * (p + p^2 / 4)
+      ls0_s <- time_fun(K); ls0_seconds <- 2 * ls0_requests * ls0_s
+      comp <- c(comp, ls0_archive = 2 * ls0_scans * (4 * K + 64))
+    }
   }
   bytes <- sum(comp)
-  list(branch = branch, tier = tier, est_bytes = bytes, memory_components = comp,
+  out <- list(branch = branch, tier = tier, est_bytes = bytes, memory_components = comp,
        est_seconds = seconds, seconds_per_score = s, score_count = scores,
        score_components = if (branch == "exact") c(enumeration = scores) else NULL,
        timing_procedure = if (branch == "exact") list(label = "operational measurement, not a statistical setting",
@@ -43,6 +53,13 @@ v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL)
        label = "lead ruling 2026-10-22: operational guard, not a statistical setting",
        allocation = list(mem_gb = mem_gb, hours = hours),
        exceeds = bytes > mem_gb * 2^30 || (branch == "exact" && seconds > hours * 3600))
+  if (branch != "exact" && isTRUE(ls0_worst_case)) {
+    out$ls0_worst_case <- list(label = "v3.1 LS0 worst case (cap ell_n + |S~0| <= ell_n + K); operational estimate",
+      scans = ls0_scans, requests = ls0_requests, model_size_timed = K, seconds_per_score = ls0_s,
+      bookkeeping_factor = 2, est_seconds = ls0_seconds, archive_bytes = comp[["ls0_archive"]])
+    out$exceeds <- out$exceeds || ls0_seconds > hours * 3600
+  }
+  out
 }
 
 # Public production interface. Callers own persistence and the study adapter.
@@ -88,7 +105,9 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
     if (is.null(tcache[[key]])) tcache[[key]] <<- v3_time_scores(pre$X, pre$y, k)
     tcache[[key]]
   }
-  pf <- v3_preflight(n, p, b, fit$branch_run, allocation, time_fun = time_fun)
+  # v3.1: charge LS0's worst case under the C-GROW cap; options(v3.ls0_cap = "ell_n") or ls0 = FALSE: shipped preflight
+  ls0_wc <- isTRUE(ls0) && !identical(getOption("v3.ls0_cap", "ell_n_plus_mode"), "ell_n")
+  pf <- v3_preflight(n, p, b, fit$branch_run, allocation, time_fun = time_fun, ls0_worst_case = ls0_wc)
   fit$preflight <- pf
   if (pf$exceeds) { fit$status <- "resource_limit"; return(finish(fit)) }
   ctx <- v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE)
@@ -118,7 +137,7 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
   fit$cut_group <- cg$cut_group; fit$cut_group_count <- cg$count; fit$cut_group_components <- cg$components
   fit$cut_group_graph <- cg[c("threshold", "graph")]
   pf_fun <- function(e) {
-    pf <- v3_preflight(n, p, b, "smc", allocation, tier = e)
+    pf <- v3_preflight(n, p, b, "smc", allocation, tier = e, time_fun = time_fun, ls0_worst_case = ls0_wc)
     fit$preflight_escalation <<- pf
     pf$exceeds
   }

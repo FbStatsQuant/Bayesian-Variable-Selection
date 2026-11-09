@@ -1,0 +1,80 @@
+C-ENG test_preflight.R 2026-11-08 23:59:43 
+core = C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\t3-68de3711\Scripts\SMC_BVS\core 
+
+1. p = 30 regression design (n = 100, S1-S6, replicate 1; the 48 regression datasets share n, p)
+2. study sizes, dev generator (Scripts/SMC_BVS/smoke/reference/gen_dev_data.R), n = 200, c100
+     case   n    p   K ell mem_gb hours old_GiB new_GiB ls0_scans ls0_requests
+   p30 S1 100   30  30   8      8    24  0.0041  0.0041        39         9945
+   p30 S2 100   30  30   8      8    24  0.0041  0.0041        39         9945
+   p30 S3 100   30  30   8      8    24  0.0041  0.0041        39         9945
+   p30 S4 100   30  30   8      8    24  0.0041  0.0041        39         9945
+   p30 S5 100   30  30   8      8    24  0.0041  0.0041        39         9945
+   p30 S6 100   30  30   8      8    24  0.0041  0.0041        39         9945
+  p500 S1 200  500 100  10      8    24  0.1442  0.1443       111      6993000
+  p500 S1 200  500 100  10      2    24  0.1442  0.1443       111      6993000
+  p500 S2 200  500 100  10      8    24  0.1442  0.1443       111      6993000
+  p500 S2 200  500 100  10      2    24  0.1442  0.1443       111      6993000
+  p500 S3 200  500 100  10      8    24  0.1442  0.1443       111      6993000
+  p500 S3 200  500 100  10      2    24  0.1442  0.1443       111      6993000
+  p500 S4 200  500 100  10      8    24  0.1442  0.1443       111      6993000
+  p500 S4 200  500 100  10      2    24  0.1442  0.1443       111      6993000
+  p500 S5 200  500 100  10      8    24  0.1442  0.1443       111      6993000
+  p500 S5 200  500 100  10      2    24  0.1442  0.1443       111      6993000
+  p500 S6 200  500 100  10      8    24  0.1442  0.1443       111      6993000
+  p500 S6 200  500 100  10      2    24  0.1442  0.1443       111      6993000
+ p1000 S1 200 1000 100  11      8    24  0.2973  0.2974       112     28112000
+ p1000 S1 200 1000 100  11      2    24  0.2973  0.2974       112     28112000
+ p1000 S2 200 1000 100  11      8    24  0.2973  0.2974       112     28112000
+ p1000 S2 200 1000 100  11      2    24  0.2973  0.2974       112     28112000
+ p1000 S3 200 1000 100  11      8    24  0.2973  0.2974       112     28112000
+ p1000 S3 200 1000 100  11      2    24  0.2973  0.2974       112     28112000
+ p1000 S4 200 1000 100  11      8    24  0.2973  0.2974       112     28112000
+ p1000 S4 200 1000 100  11      2    24  0.2973  0.2974       112     28112000
+ p1000 S5 200 1000 100  11      8    24  0.2973  0.2974       112     28112000
+ p1000 S5 200 1000 100  11      2    24  0.2973  0.2974       112     28112000
+ p1000 S6 200 1000 100  11      8    24  0.2973  0.2974       112     28112000
+ p1000 S6 200 1000 100  11      2    24  0.2973  0.2974       112     28112000
+ s_per_score ls0_est_hours old_exceeds new_exceeds
+    1.82e-05      1.01e-04       FALSE       FALSE
+    1.23e-05      6.79e-05       FALSE       FALSE
+    1.41e-05      7.82e-05       FALSE       FALSE
+    1.00e-05      5.55e-05       FALSE       FALSE
+    9.95e-06      5.50e-05       FALSE       FALSE
+    1.10e-05      6.06e-05       FALSE       FALSE
+    4.20e-04      1.63e+00       FALSE       FALSE
+    4.93e-04      1.91e+00       FALSE       FALSE
+    3.70e-04      1.44e+00       FALSE       FALSE
+    3.69e-04      1.43e+00       FALSE       FALSE
+    3.62e-04      1.41e+00       FALSE       FALSE
+    3.66e-04      1.42e+00       FALSE       FALSE
+    4.26e-04      1.65e+00       FALSE       FALSE
+    3.56e-04      1.38e+00       FALSE       FALSE
+    4.52e-04      1.76e+00       FALSE       FALSE
+    3.71e-04      1.44e+00       FALSE       FALSE
+    3.33e-04      1.29e+00       FALSE       FALSE
+    2.97e-04      1.15e+00       FALSE       FALSE
+    3.51e-04      5.48e+00       FALSE       FALSE
+    3.31e-04      5.17e+00       FALSE       FALSE
+    3.52e-04      5.50e+00       FALSE       FALSE
+    3.23e-04      5.05e+00       FALSE       FALSE
+    4.25e-04      6.64e+00       FALSE       FALSE
+    4.16e-04      6.50e+00       FALSE       FALSE
+    3.65e-04      5.71e+00       FALSE       FALSE
+    4.07e-04      6.36e+00       FALSE       FALSE
+    3.64e-04      5.69e+00       FALSE       FALSE
+    4.19e-04      6.54e+00       FALSE       FALSE
+    4.26e-04      6.66e+00       FALSE       FALSE
+    3.05e-04      4.76e+00       FALSE       FALSE
+
+Fits passing the shipped preflight that the v3.1 preflight would refuse: 0 
+  [PASS] p = 30 regression design: preflight passes in both modes at 8 GiB / 24 h
+  [PASS] study sizes p = 500 / 1000 at the default allocation 8 GiB / 24 h: passes in both modes (none newly refused)
+  [PASS] LS0 archive term = 2 (ell + K + 1)(4K + 64) bytes; scans = ell + K + 1; requests = scans (p + p^2/4)
+
+3. public v3_fit: preflight record and switches
+  [PASS] default: preflight carries ls0_worst_case and the ls0_archive memory component; fit completed
+  [PASS] v3.ls0_cap = 'ell_n' and ls0 = FALSE: preflight identical to the shipped preflight (no LS0 term)
+  [PASS] the LS0 term does not change the fit outputs (Zhat, PIPs, HPM identical to the ell_n preflight run)
+  [PASS] hours = half the LS0 worst case (0.126 s): refused at preflight (resource_limit, preflight exceeds); not by the shipped preflight
+
+TOTAL: 7 PASS, 0 FAIL
