@@ -374,10 +374,11 @@ class Engine {
   // local_limit iff that scan still finds a strict F improvement. Every scanned model still updates the HPM running
   // best through the ledger (HPM tie rule), so an exact-tie neighbour can become the HPM without being a move.
   // Scan order: flips j = 1..p, then swaps (j in S ascending) x (l outside S ascending).
-  // The search never alters particles. Every evaluated model is a score event (phase local, mechanism local_scan).
-  LocalArchive local_search(const std::vector<int>& centre, int ell, int tier, bool emit_centre, int iter = -1) {
+  // The search never alters particles. Every evaluated model is a score event (phase local, mechanism local_scan;
+  // phase ls0 for LS0, v3.1 #8: the same rules from the start mode, centre emitted).
+  LocalArchive local_search(const std::vector<int>& centre, int ell, int tier, bool emit_centre, int iter = -1, int phase = PH_LOCAL) {
     LocalArchive A;
-    ev = EventCtx(); ev.phase = PH_LOCAL; ev.tier = tier; ev.island = 0; ev.phi = 1.0; ev.iter = iter;
+    ev = EventCtx(); ev.phase = phase; ev.tier = tier; ev.island = 0; ev.phi = 1.0; ev.iter = iter;
     Particle C; set_model(C, centre); eval(C, ME_LOCAL, emit_centre);
     A.centre = C.S; A.centre_F = C.F;
     int p = D.p, K = D.K;

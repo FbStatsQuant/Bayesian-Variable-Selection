@@ -1,0 +1,3 @@
+C-ENG test_tdp.R  seed = 7  instances = 3000  date = 2026-11-08 21:56:26 
+core = C:\Users\felip\.t3\worktrees\Bayesian-Variable-Selection\t3-68de3711\Scripts\SMC_BVS\core 
+

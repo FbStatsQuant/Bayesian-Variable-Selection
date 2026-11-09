@@ -48,13 +48,13 @@ for (it in seq_len(n_inst)) {
   inst <- rand_instance(kind)
   xp <- mk(inst)
   bf <- .v3cpp$t_brute_mode(xp)
-  unc <- .v3cpp$t_start_mode(xp, 1e15, FALSE)        # uncapped enumeration = lex-min of E
+  unc <- .v3cpp$t_start_mode(xp, 2e9, FALSE)         # uncapped enumeration = lex-min of E (cap < 2^31: `long` is 32-bit on Windows)
   td <- .v3cpp$t_tdp(xp)
   rec <- list(kind = kind, p = inst$p, K = inst$K, N = bf$N,
               tdp_eq_uncapped = same(td, unc$S), uncapped_eq_brute = same(unc$S, bf$S), tdp_eq_brute = same(td, bf$S))
   for (cap in caps) {
     nw <- .v3cpp$t_start_mode(xp, cap, TRUE); od <- .v3cpp$t_start_mode(xp, cap, FALSE)
-    key <- paste0("cap", cap)
+    key <- paste0("cap", format(cap, scientific = FALSE))
     rec[[paste0(key, "_trunc")]] <- nw$truncated
     rec[[paste0(key, "_new_eq_uncapped")]] <- same(nw$S, unc$S)
     rec[[paste0(key, "_old_eq_uncapped")]] <- same(od$S, unc$S)
@@ -65,7 +65,7 @@ for (it in seq_len(n_inst)) {
   }
   if (!rec$tdp_eq_uncapped || (kind != "real" && !rec$uncapped_eq_brute))
     fails[[length(fails) + 1]] <- list(it = it, inst = inst, td = td, unc = unc, bf = bf)
-  tab[[it]] <- as.data.frame(rec)
+  tab[[it]] <- as.data.frame(rec, check.names = FALSE)
 }
 tab <- do.call(rbind, tab)
 cat("instances by kind:\n"); print(table(tab$kind))
@@ -76,7 +76,7 @@ cat("[B] uncapped enumeration == brute force (ghat), int+flat (exact binary64 su
 cat("    real-valued kind (FP rounding ties possible; informational):", sum(tab$uncapped_eq_brute[tab$kind == "real"]), "/", sum(tab$kind == "real"), "\n")
 cat("[C] TDP-E == brute force, int+flat:", sum(tab$tdp_eq_brute[tab$kind != "real"]), "/", sum(tab$kind != "real"), "\n")
 for (cap in caps) {
-  key <- paste0("cap", cap)
+  key <- paste0("cap", format(cap, scientific = FALSE))
   tr <- tab[[paste0(key, "_trunc")]]
   cat(sprintf("\ncap = %g: truncated in %d instances\n", cap, sum(tr)))
   cat("  [D] new start_mode == lex-min E (all):", sum(tab[[paste0(key, "_new_eq_uncapped")]]), "/", nrow(tab), "\n")
@@ -117,4 +117,42 @@ for (m in 0:8) {
   }
 }
 cat("family checks: new != brute in", bad, "of", tot, "(m, cap) pairs\n")
+# ---- rounding fixtures (R01 #2): binary64 rounding ties at the prior and prefix additions ----
+cat("
+---- rounding fixtures (contract = lex-min E, not lex-min over all rounded ghat-maximisers) ----
+")
+fx <- list(
+  list(name = "R01#2 prior rounding: block {0,1}, K=1, lambda(1)=2^54, rho=(1,2)", p = 2L, K = 1L, lambda = c(0, 2^54),
+       blocks = list(0:1), logr = list(c(0, 1, 2, NaN))),
+  list(name = "prefix rounding: blocks {0},{1}, K=2, rho0=2^53, rho1=1", p = 2L, K = 2L, lambda = c(0, 0, 0),
+       blocks = list(0L, 1L), logr = list(c(0, 2^53), c(0, 1))),
+  list(name = "block-sum rounding: blocks {1},{0}, K=2, rho({1})=2^53, rho({0})=1, lambda=0", p = 2L, K = 2L, lambda = c(0, 0, 0),
+       blocks = list(1L, 0L), logr = list(c(0, 2^53), c(0, 1))))
+for (f in fx) {
+  xp <- .v3cpp$t_make_start(f$p, f$K, f$lambda, f$blocks, f$logr)
+  bf <- .v3cpp$t_brute_mode(xp); unc <- .v3cpp$t_start_mode(xp, 2e9, FALSE); nw <- .v3cpp$t_start_mode(xp, 1, TRUE)
+  cat(f$name, "
+  brute(ghat) S = {", bf$S, "} N =", bf$N, "; uncapped E-enumeration S = {", unc$S, "}; new (cap 1, tie DP) S = {", nw$S,
+      "} tie_dp_used =", nw$tie_dp_used, "; new == lex-min E:", same(nw$S, unc$S), "; same value:", identical(nw$lg0_direct, bf$lg0), "
+")
+}
+# ---- boundary fixtures (R01 #6): K = 0, K binding inside a block, interleaved blocks, size-0 optimum ----
+cat("
+---- boundary fixtures ----
+")
+bx <- list(
+  list(name = "K = 0", p = 3L, K = 0L, lambda = 0, blocks = list(c(0L, 2L), 1L), logr = list(c(0, NaN, NaN, NaN), c(0, NaN))),
+  list(name = "K binding inside a block (|C|=3, K=1, all singletons tie)", p = 3L, K = 1L, lambda = c(-5, 0),
+       blocks = list(0:2), logr = list(c(0, 7, 7, NaN, 7, NaN, NaN, NaN))),
+  list(name = "interleaved blocks {1,3},{0,2}, all pairs tie", p = 4L, K = 2L, lambda = c(0, 0, 0),
+       blocks = list(c(1L, 3L), c(0L, 2L)), logr = list(c(0, 1, 1, 0), c(0, 1, 1, 0))),
+  list(name = "empty optimum (all rho < 0)", p = 4L, K = 4L, lambda = rep(0, 5), blocks = list(0:1, 2:3),
+       logr = list(c(0, -1, -1, -2), c(0, -1, -1, -2))))
+for (f in bx) {
+  xp <- .v3cpp$t_make_start(f$p, f$K, f$lambda, f$blocks, f$logr)
+  bf <- .v3cpp$t_brute_mode(xp); res <- vapply(c(1, 2, 3), function(cap) same(.v3cpp$t_start_mode(xp, cap, TRUE)$S, bf$S), TRUE)
+  cat(sprintf("%-60s brute S = {%s}  N = %d  new == brute at caps 1,2,3: %s  TDP-E == brute: %s
+", f$name,
+      paste(bf$S, collapse = ","), as.integer(bf$N), paste(res, collapse = ","), same(.v3cpp$t_tdp(xp), bf$S)))
+}
 sink()

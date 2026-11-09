@@ -12,7 +12,7 @@ CENG_TESTS <- local({
   if (is.na(this)) getwd() else dirname(this)
 })
 
-ceng_load <- function(core_src, work_dir, exports = TRUE, force_stop = NULL, reuse = FALSE) {
+ceng_load <- function(core_src, work_dir, exports = TRUE, force_stop = NULL, reuse = FALSE, numfail_ls0 = FALSE) {
   core_src <- normalizePath(core_src)
   # reuse = TRUE: a testing copy prepared earlier (READY stamp) is loaded as is (parallel workers share one build)
   if (reuse && file.exists(file.path(work_dir, "CENG_READY"))) { source(file.path(work_dir, "v3.R")); return(invisible(work_dir)) }
@@ -29,6 +29,12 @@ ceng_load <- function(core_src, work_dir, exports = TRUE, force_stop = NULL, reu
     stopifnot(length(i) == 1L)
     x[i] <- sprintf('    bool stop = (now + operation > allocation) || checkpoint == "%s";  // C-ENG TEST INJECTION', force_stop)
     writeLines(x, rt)
+  }
+  if (numfail_ls0) {   # the COPY's Engine::eval throws a NumericalFailure at the 5th scored model of LS0 (test injection)
+    en <- file.path(work_dir, "cpp", "v3_engine.h"); x <- readLines(en)
+    i <- grep("double lm; bool fresh = false;", x, fixed = TRUE); stopifnot(length(i) == 1L)
+    x[i] <- paste(x[i], 'if (ev.phase == PH_LS0 && ev.position == 5) throw NumericalFailure("C-ENG TEST INJECTION in LS0");')
+    writeLines(x, en)
   }
   source(file.path(work_dir, "v3.R"))
   writeLines(core_src, file.path(work_dir, "CENG_READY"))

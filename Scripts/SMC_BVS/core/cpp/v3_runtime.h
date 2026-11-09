@@ -29,8 +29,8 @@ struct RuntimeGuard {
 inline RuntimeGuard* runtime_ptr(SEXP x) {
   return Rf_isNull(x) ? nullptr : Rcpp::XPtr<RuntimeGuard>(x).get();
 }
-inline EventCtx local_event(int tier, int iter) {
-  EventCtx e; e.phase = PH_LOCAL; e.tier = tier; e.iter = iter; e.phi = 1;
+inline EventCtx local_event(int tier, int iter, int phase = PH_LOCAL) {
+  EventCtx e; e.phase = phase; e.tier = tier; e.iter = iter; e.phi = 1;
   return e;
 }
 }  // namespace v3

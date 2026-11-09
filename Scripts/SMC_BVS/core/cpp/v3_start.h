@@ -178,13 +178,23 @@ inline void draw_pi0(const Start& st, VariateSource& vs, std::vector<int>& S, st
 // Start mode S~_0 = argmax pi_0 (M §6.3; CORE_SPEC §3): max-plus convolution of per-block per-size maxima, summed
 // in block order exactly as Start::comp sums, so DP values equal the direct log gamma_0 bits. Ties: smallest size,
 // then the lexicographically smallest index set among all sets whose per-block choices attain the DP maxima
-// exactly (enumerated; capped at `cap` sets, flag returned).
-struct ModeResult { std::vector<int> S; double lg0 = NEG_INF; long ties = 0; bool truncated = false; };
-inline ModeResult start_mode(const Start& st, long cap = 1000000) {
+// exactly (the set E). Fast path: enumerate E, capped at `cap` sets (flag returned). v3.1 e4 (METHOD_v3.1_FINAL #8,
+// #26): when the enumeration is truncated (count >= cap) and tie_dp is set, the result is replaced by the tie-aware
+// DP mode_tie_dp, which returns lex-min E without enumerating E (Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md). Hence the
+// result is lex-min E for every cap; tie_dp = false reproduces the v3 routine exactly.
+struct ModeResult { std::vector<int> S; double lg0 = NEG_INF; long ties = 0; bool truncated = false; bool tie_dp_used = false; };
+struct ModeDP {
+  std::vector<std::vector<double>> mb;                 // mb[b][j]: max log r_b over size-j codes
+  std::vector<std::vector<std::vector<uint32_t>>> arg; // codes attaining mb[b][j] exactly, increasing code order
+  std::vector<std::vector<double>> M;                  // M[b][k]: max-plus convolution of blocks 0..b-1
+  int kbest = -1; double vbest = NEG_INF;
+};
+inline ModeDP mode_dp(const Start& st) {
   const Data& D = *st.D;
   int J = st.J, K = D.K;
-  std::vector<std::vector<double>> mb(J);
-  std::vector<std::vector<std::vector<uint32_t>>> arg(J);
+  ModeDP dp;
+  auto& mb = dp.mb; auto& arg = dp.arg; auto& M = dp.M;
+  mb.assign(J, {}); arg.assign(J, {});
   for (int b = 0; b < J; ++b) {
     int top = (int)st.logprof[b].size() - 1;
     mb[b].assign(top + 1, NEG_INF); arg[b].assign(top + 1, {});
@@ -195,7 +205,7 @@ inline ModeResult start_mode(const Start& st, long cap = 1000000) {
         else if (v == mb[b][j]) arg[b][j].push_back(c);
       }
   }
-  std::vector<std::vector<double>> M(J + 1, std::vector<double>(K + 1, NEG_INF));
+  M.assign(J + 1, std::vector<double>(K + 1, NEG_INF));
   M[0][0] = 0.0;
   for (int b = 1; b <= J; ++b)
     for (int k = 0; k <= K; ++k)
@@ -204,13 +214,63 @@ inline ModeResult start_mode(const Start& st, long cap = 1000000) {
         double v = (j == 0) ? M[b - 1][k - j] : M[b - 1][k - j] + mb[b - 1][j];  // empty block adds exact 0
         if (v > M[b][k]) M[b][k] = v;
       }
-  int kbest = -1; double vbest = NEG_INF;
   for (int k = 0; k <= K; ++k) {
     if (M[J][k] == NEG_INF) continue;
     double v = D.logprior[k] + M[J][k];
-    if (v > vbest) { vbest = v; kbest = k; }  // strict: ties keep the smaller size
+    if (v > dp.vbest) { dp.vbest = v; dp.kbest = k; }  // strict: ties keep the smaller size
   }
-  ModeResult res; res.lg0 = vbest;
+  return dp;
+}
+// Tight edge of the enumeration: block b-1 (1-based level b) takes size j from remaining r (same expression and
+// exact equality as the enumeration below).
+inline bool mode_tight(const ModeDP& dp, int b, int r, int j) {
+  if (j >= (int)dp.mb[b - 1].size() || j > r || dp.M[b - 1][r - j] == NEG_INF) return false;
+  double v = (j == 0) ? dp.M[b - 1][r - j] : dp.M[b - 1][r - j] + dp.mb[b - 1][j];
+  return v == dp.M[b][r];
+}
+// e4 tie-aware DP (TDP-E): lex-min of E. Index by index (internal order = original order), include i iff some set of
+// E contains IN u {i} and avoids OUT; feasibility = reachability of (0, 0) from (J, kbest) over tight edges whose
+// block size j has a code in arg[b][j] consistent with IN/OUT. No element of E is listed.
+inline std::vector<int> mode_tie_dp(const Start& st, const ModeDP& dp) {
+  const Data& D = *st.D;
+  int J = st.J, K = D.K, p = D.p;
+  std::vector<uint32_t> inm(J, 0), outm(J, 0);                  // IN / OUT as per-block position masks
+  std::vector<std::vector<char>> allowed(J);
+  auto refresh = [&](int b) {
+    allowed[b].assign(dp.arg[b].size(), 0);
+    for (size_t j = 0; j < dp.arg[b].size(); ++j)
+      for (uint32_t c : dp.arg[b][j]) if ((c & inm[b]) == inm[b] && (c & outm[b]) == 0) { allowed[b][j] = 1; break; }
+  };
+  for (int b = 0; b < J; ++b) refresh(b);
+  std::vector<std::vector<char>> reach(J + 1, std::vector<char>(K + 1, 0));
+  auto feasible = [&]() {
+    for (int r = 0; r <= K; ++r) reach[0][r] = (r == 0);
+    for (int b = 1; b <= J; ++b)
+      for (int r = 0; r <= K; ++r) {
+        char ok = 0;
+        for (int j = 0; j < (int)dp.mb[b - 1].size() && j <= r && !ok; ++j)
+          if (allowed[b - 1][j] && reach[b - 1][r - j] && mode_tight(dp, b, r, j)) ok = 1;
+        reach[b][r] = ok;
+      }
+    return reach[J][dp.kbest] != 0;
+  };
+  // E is never empty for valid tables (lemma TDP_E (2)); a failed root check is an invariant violation, never an empty model
+  if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (invalid tables)");
+  std::vector<int> S;
+  for (int i = 0; i < p; ++i) {
+    int b = st.blk[i]; uint32_t bit = 1u << st.pos[i];
+    inm[b] |= bit; refresh(b);
+    if (feasible()) { S.push_back(i); continue; }
+    inm[b] &= ~bit; outm[b] |= bit; refresh(b);
+  }
+  return S;
+}
+inline ModeResult start_mode(const Start& st, long cap = 1000000, bool tie_dp = true) {
+  int J = st.J;
+  ModeDP dp = mode_dp(st);
+  const auto& mb = dp.mb; const auto& arg = dp.arg; const auto& M = dp.M;
+  int kbest = dp.kbest;
+  ModeResult res; res.lg0 = dp.vbest;
   // enumerate all optimal choices backward; keep lexicographically smallest set
   std::vector<uint32_t> choice(J, 0);
   bool have = false; std::vector<int> bestS; long count = 0; bool trunc = false;
@@ -236,6 +296,7 @@ inline ModeResult start_mode(const Start& st, long cap = 1000000) {
   };
   rec(J, kbest);
   res.S = bestS; res.ties = count; res.truncated = trunc;
+  if (trunc && tie_dp) { res.S = mode_tie_dp(st, dp); res.tie_dp_used = true; }
   return res;
 }
 

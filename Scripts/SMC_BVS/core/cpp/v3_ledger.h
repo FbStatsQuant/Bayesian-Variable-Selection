@@ -6,12 +6,14 @@
 namespace v3 {
 
 // PH_TEST: events of the step/round testing samplers (v3_step_sample, v3_round_sample; code review S-2).
-enum Phase { PH_TABLE = 0, PH_PILOT, PH_DIAG, PH_FINAL_INIT, PH_FINAL_BRIDGE, PH_BURN_IN, PH_MEASURED, PH_LOCAL, PH_INHERITED, PH_TEST, N_PHASE };
+// PH_LS0 (v3.1 #8): the local search from the start mode after the final local search; provenance "ls0". Appended last
+// so every other phase keeps its index; ledgers serialise its counter row only when LS0 is enabled (v3_core.cpp).
+enum Phase { PH_TABLE = 0, PH_PILOT, PH_DIAG, PH_FINAL_INIT, PH_FINAL_BRIDGE, PH_BURN_IN, PH_MEASURED, PH_LOCAL, PH_INHERITED, PH_TEST, PH_LS0, N_PHASE };
 // Gibbs events are split (lead ruling R15): gibbs_held = the current state counted as scored under SR (not
 // re-evaluated); gibbs_flip = the other feasible configuration S u j or S \ j (scored).
 enum Mech { ME_TABLE = 0, ME_INIT, ME_GIBBS_HELD, ME_GIBBS_FLIP, ME_USWAP, ME_NSWAP, ME_INDEP, ME_LOCAL, ME_INHERITED, N_MECH };
 inline const char* phase_name(int ph) {
-  static const char* nm[] = {"table", "pilot", "diag", "final_init", "final_bridge", "burn_in", "measured", "local", "inherited", "test"};
+  static const char* nm[] = {"table", "pilot", "diag", "final_init", "final_bridge", "burn_in", "measured", "local", "inherited", "test", "ls0"};
   return nm[ph];
 }
 inline const char* mech_name(int me) {

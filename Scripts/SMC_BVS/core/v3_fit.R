@@ -46,7 +46,9 @@ v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL)
 }
 
 # Public production interface. Callers own persistence and the study adapter.
-v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24)) {
+# ls0 (default TRUE = v3.1): LS0 after the final local search and exact-name NA estimate fields on every return without
+# complete output (GUARD-W, #15). ls0 = FALSE (or options(v3.ls0 = FALSE)) reproduces the v3 fit.
+v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = getOption("v3.ls0", TRUE)) {
   t_start <- proc.time()[["elapsed"]]
   runtime <- ctx <- NULL
   fit <- list(seed = seed, allocation = allocation, local_certified = FALSE, global_certified = FALSE,
@@ -58,6 +60,7 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24)) {
     if (!is.null(runtime)) fit$runtime_guard <- .v3cpp$cpp_runtime_report(runtime)
     if (!is.null(ctx)) fit$numerical_routes <- .v3cpp$cpp_numerical_routes(ctx)
     if (identical(fit$status, "resource_limit")) fit$partial_results <- TRUE
+    if (isTRUE(ls0) && !isTRUE(fit$estimates_available)) fit <- v3_unavailable_estimates(fit)
     fit
   }
   valid_seed <- tryCatch({ if (length(seed) != 1) stop("seed must be a single integer"); v3_check_seed(seed); TRUE }, error = function(e) conditionMessage(e))
@@ -131,7 +134,7 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24)) {
     return(finish(fit))
   }
   frozen <- cal$frozen; fit$frozen <- frozen
-  t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime)
+  t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, ls0 = ls0)
   fr$stage_table <- v3_bind_records(list(cal$stage_table, fr$stage_table))
   fit$timings$final <- proc.time()[["elapsed"]] - t0; fit$timings$final_detail <- fr$timings; fr$timings <- NULL
   cf <- cal$flags

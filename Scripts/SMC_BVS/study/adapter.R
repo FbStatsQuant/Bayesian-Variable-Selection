@@ -182,6 +182,12 @@ smcbvs_check_support <- function(x, p, name) {
 }
 # Full original-index vector: dropped columns are zero only when retained PIPs were computed.
 # Unavailable PIPs remain NA, including in no_predictors/y_constant fits.
+# v3.1 GUARD-W/#15: a core return without complete output carries every estimate field as a scalar NA by exact name.
+# Such a marker means "unavailable" and is read here as an absent field (pre-v3.1 cores omit the field).
+smcbvs_estimate <- function(fit, name) {
+  x <- fit[[name, exact = TRUE]]
+  if (length(x) == 1L && !is.list(x) && is.na(x)) NULL else x
+}
 smcbvs_outputs <- function(fit, p) {
   if (!is.list(fit) || !is.character(fit$status) || length(fit$status) != 1L ||
       !fit$status %in% setdiff(smcbvs_native_statuses, "adapter_error")) stop("core returned an invalid native status")
@@ -189,18 +195,18 @@ smcbvs_outputs <- function(fit, p) {
   hpm <- smcbvs_check_support(fit$hpm, p, "HPM")
   available <- fit$status %in% c("exact", "completed") && !identical(fit$estimates_available, FALSE)
   pip <- setNames(rep(NA_real_, p), as.character(seq_len(p)))
-  mpm <- smcbvs_check_support(fit$mpm, p, "MPM")
+  mpm <- smcbvs_check_support(smcbvs_estimate(fit, "mpm"), p, "MPM")
   if (available && is.null(hpm)) stop("completed core fit is missing HPM")
   # Failed fits can still supply primary PIPs and supports. Preserve them for audit,
   # independently of estimates_available and benchmark selection eligibility.
-  if (available || !is.null(fit$pip_primary)) {
+  if (available || !is.null(smcbvs_estimate(fit, "pip_primary"))) {
     keep <- fit$preprocessing$kept
     drop <- fit$preprocessing$dropped
     if (is.null(keep) || is.null(drop)) stop("completed fit missing preprocessing index map")
     keep <- smcbvs_check_support(keep, p, "kept columns")
     drop <- smcbvs_check_support(drop, p, "dropped columns")
     if (!identical(sort(c(keep, drop)), seq_len(p))) stop("preprocessing map does not partition original columns")
-    q <- fit$pip_primary
+    q <- smcbvs_estimate(fit, "pip_primary")
     if (!is.numeric(q) || is.null(names(q)) || anyDuplicated(names(q)) ||
         !setequal(names(q), as.character(keep)) || any(!is.finite(q)) || any(q < 0 | q > 1))
       stop("primary PIPs must be finite, named by every retained original index")

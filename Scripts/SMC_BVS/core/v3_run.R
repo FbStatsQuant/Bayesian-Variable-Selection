@@ -82,11 +82,30 @@ v3_check_grid <- function(grid) {
 }
 
 # Fixed production settings. The frozen tier is selected by calibration, before final randomness.
-v3_run_settings <- function(setup, frozen) {
+# ls0 (v3.1 #8, default on): append LS0 after the final local search. ls0 = FALSE reproduces v3 (no LS0 fields in the
+# settings, the run or the fit). LS0 uses the production ell and the e4 tie DP of the start mode; the options
+# v3.ls0_tie_dp = FALSE (v3 start-mode rule) and v3.ls0_ell (move cap override) exist for testing only.
+v3_run_settings <- function(setup, frozen, ls0 = getOption("v3.ls0", TRUE)) {
   b <- setup$budgets; tier <- frozen[["tier"]] %||% 0L
-  list(N = as.integer(b$tiers$N[tier + 1]), L = as.integer(b$L), measured_rounds = 4L,
+  ro <- list(N = as.integer(b$tiers$N[tier + 1]), L = as.integer(b$L), measured_rounds = 4L,
        islands = 4L, tier = as.integer(tier), ell = as.integer(b$ell),
        cache_capacity = as.numeric(500 * setup$ctx$p))
+  if (isTRUE(ls0)) {
+    ro$ls0 <- TRUE
+    ro$ls0_ell <- as.integer(getOption("v3.ls0_ell", b$ell))
+    ro$ls0_tie_dp <- isTRUE(getOption("v3.ls0_tie_dp", TRUE))
+  }
+  ro
+}
+
+# GUARD-W / v3.1 #15: on every return without complete output, every estimate field is NA by exact name, so no
+# consumer can read a partial value (e.g. fit$log_Z partially matching log_Zbar0). Partial island values stay only in
+# their labelled archives (partial_final, stage_record, calibration). Used in v3.1 mode (ls0 on) only.
+V3_ESTIMATE_FIELDS <- c("log_Z", "log_Z_r", "log_Z_lower95", "log_Z_rel_m0", "log_Z_r_rel_m0", "pip_primary", "pip_r", "mpm")
+v3_unavailable_estimates <- function(fit) {
+  for (nm in V3_ESTIMATE_FIELDS) fit[nm] <- list(NA)
+  fit$estimates_available <- FALSE
+  fit
 }
 
 v3_model_key <- function(S) paste(S, collapse = ",")
@@ -106,12 +125,21 @@ v3_assemble_final <- function(raw, setup, frozen, ro, seed) {
     out$local_search$phase <- "final"; out$local_search$tier <- ro$tier
     out$local_search$iter <- -1L; out$local_search$island <- "final"
   }
+  v31 <- isTRUE(ro$ls0)
+  if (v31) {
+    out$start_mode <- raw$start_mode; out$hpm_before_ls0 <- raw$hpm_before_ls0
+    if (length(raw$ls0)) {
+      out$ls0 <- raw$ls0
+      out$ls0$phase <- "ls0"; out$ls0$tier <- ro$tier; out$ls0$iter <- -1L; out$ls0$island <- "final"; out$ls0$ell <- ro$ls0_ell
+    }
+  }
   led <- raw$ledger
   out$hpm <- led$hpm$model; out$hpm_F <- led$hpm$F; out$hpm_provenance <- led$hpm$provenance
   if (raw$status != "completed") {   # numerical_failure: best scored model so far, labelled incomplete (M §2)
     out$ledger <- led; out$hpm_incomplete <- TRUE; out$estimates_available <- FALSE
     out$partial_results <- TRUE; out$partial_final <- raw
     out$local_certified <- FALSE; out$global_certified <- FALSE
+    if (v31) out <- v3_unavailable_estimates(out)
     return(out)
   }
   logZr <- vapply(isl, function(r) r$log_Z, 0)
@@ -149,11 +177,29 @@ v3_assemble_final <- function(raw, setup, frozen, ro, seed) {
   E1 <- any(led$island_best < out$hpm_F - 1)
   E2 <- R >= 2 && stats::sd(logZr) > 1
   E3 <- out$hpm_F > hb$F   # strict F increase of the global best in the final local search (ruling RC-1, M §6.9)
+  if (v31) {
+    # v3.1 #8: an LS0 improvement does not fire E3 (E3 = the final local search only, measured before LS0).
+    # #10: local_certified attaches to the returned HPM, from whichever search ended on it (final search or LS0).
+    # #6/#10: a completed LS0 capped at its move limit returns output; local_limit reports a cap of either search
+    # (attribution in final_local_limit / ls0_local_limit); L1 = "n/a" for a capped LS0 (card not implemented).
+    hl <- raw$hpm_before_ls0; l0 <- out$ls0
+    E3 <- hl$F > hb$F
+    cert_final <- out$local_certified
+    cert_ls0 <- isTRUE(l0$local_certified) && identical(as.integer(out$hpm), as.integer(l0$returned))
+    out$local_certified <- cert_final || cert_ls0
+    out$local_certified_by <- if (cert_final && cert_ls0) "both" else if (cert_final) "final" else if (cert_ls0) "ls0" else "none"
+    out$final_local_limit <- isTRUE(ls$local_limit); out$ls0_local_limit <- isTRUE(l0$local_limit)
+    out$local_limit <- out$final_local_limit || out$ls0_local_limit
+    out$ls0_improved <- out$hpm_F > hl$F                                          # LS0 raised the best score (strict)
+    out$ls0_hpm_changed <- !identical(as.integer(out$hpm), as.integer(hl$model))  # includes equal-F tie-rule changes
+  }
   lowESS <- any(out$stage_table$ess < 0.5 * ro$N)
   out$flags <- list(E1 = E1, E2 = E2, E3 = E3, low_empirical_ESS = lowESS, local_limit = out$local_limit,
                     near_tie_truncated = out$near_tie_truncated, checks_passed_final = !(E1 || E2 || E3 || lowESS),
                     escalated = (frozen[["tier"]] %||% 0) == 1, grid_unconverged = NA, forced_pilot_steps = NA,
                     checks_passed_calibration = NA)
+  if (v31) out$flags <- c(out$flags, list(final_local_limit = out$final_local_limit, ls0_local_limit = out$ls0_local_limit,
+                                          ls0_improved = out$ls0_improved, ls0_hpm_changed = out$ls0_hpm_changed))
   out$island_best <- led$island_best
   out$hpm_before_local <- hb
   out$leaders_gamma0 <- led$leaders_gamma0; out$leaders_gamma1 <- led$leaders_gamma1; out$top_store <- led$top
@@ -162,16 +208,17 @@ v3_assemble_final <- function(raw, setup, frozen, ro, seed) {
   out$rb <- lapply(isl, function(r) list(rb_acc = r$rb_acc, rb_round = r$rb_round))
   out$timings <- list(islands = do.call(rbind, lapply(isl, function(r) r$seconds)), local = raw$seconds_local,
                       final_total = raw$seconds_total)
+  if (v31) out$timings$ls0 <- raw$seconds_ls0
   out$log_m0 <- raw$log_m0; out$log_Zbar0 <- raw$log_Zbar0
   out$estimates_available <- TRUE
   out
 }
 
 # Fresh production final run. The runtime pointer shares the complete-fit clock with calibration.
-v3_final_run <- function(setup, frozen, seed, runtime = NULL) {
+v3_final_run <- function(setup, frozen, seed, runtime = NULL, ls0 = getOption("v3.ls0", TRUE)) {
   stopifnot(inherits(setup, "v3_setup"), inherits(frozen, "v3_frozen"))
   v3_check_grid(frozen[["grid"]]); v3_check_seed(seed)
-  ro <- v3_run_settings(setup, frozen)
+  ro <- v3_run_settings(setup, frozen, ls0)
   raw <- .v3cpp$cpp_final_run(setup$ptr, frozen[["grid"]], ro, as.numeric(seed), frozen[["inherited"]], runtime)
   v3_assemble_final(raw, setup, frozen, ro, seed)
 }
