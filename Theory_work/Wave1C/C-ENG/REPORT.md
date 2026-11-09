@@ -169,7 +169,22 @@ new core LS0 off vs new core LS0 on vs O-LS0 prototype (`cpp_final_run_ls0`, `or
   archive, start mode, counters, cache statistics, HPM before LS0: identical **48/48**.
 
 (c2) **Replay designs at production size** (SPEC §6 item 2; dev generator, p = 500, n = 200, c100: S1 r001, S4 r001,
-S5 r002) — `tests/run_replay.R`, `tests/compare_replay.R`, `numerics/out_replay_p500.txt`: PENDING (filled below).
+S5 r002) — `tests/run_replay.R`, `tests/compare_replay.R`, `numerics/out_replay_p500.txt`: production settings, default
+allocation, new core (commit 9b9d234 binary: LS0 cap ℓ_n, before C-GROW) vs the O-LS0 prototype integration
+(`cpp_final_run_ls0` on the old core), same data and seed (generator SHA-256 equals the pinned
+36b03c8c…a8c6). **All 3 designs: 16/16 checks PASS each (48/48)** — status, islands/Ẑ/PIPs/MPM, final streams,
+calibration + frozen record, final local search, HPM + provenance, all three stores, near ties, LS0 archive, start mode,
+counters (prototype `local` row = new `local` + `ls0`), cache statistics, HPM before LS0, E1/E2/low-ESS, E3 = final search
+only. All completed; start mode unique (ties 1, not truncated) in all 3; LS0 never changed the HPM (`ls0_improved` FALSE,
+consistent with O-LS0's 0/2,394). LS0: S1 no_improvement after 10 moves (59,290 scores), S4 no_improvement after 7 (51,297),
+**S5 move_limit at 10** (start mode {74}, 37,994 scores) — so in S5 the fit reports `ls0_local_limit`/`local_limit` TRUE
+with output returned (#6/#10), and the certificate comes from the final search. Wall time per fit 30–86 min on this shared
+Windows machine. **C-GROW cap on the binding design** (`tests/replay_s5_cap.R`, `numerics/out_replay_s5_cap.txt`; final
+core, standalone LS0, whose path equals the integrated one): cap ℓ_n reproduces the replay fit's LS0 path exactly; cap
+ℓ_n + |S̃₀| = 11 makes one more move (still `move_limit`, 43,873 scores), best LS0 model F = −185.95 < the fit's HPM
+F = −124.71 ⇒ with the default C-GROW cap the reported HPM of this fit is unchanged. The full replay was not re-run on the
+final binary (the post-9b9d234 changes are the cap rule just checked, the MR2 guard, the tier-1 fallback which did not
+fire, and the preflight term).
 
 (d) **Existing tests** — `Scripts/SMC_BVS/tests` (prototype-vs-production bit-comparison harness), run locally on Windows
 for seed indices 1–3 by a Sonnet helper (`numerics/existing_suite/REPORT_suite.md`; substitutions: no Owls hostname/nice
@@ -191,7 +206,7 @@ locally, so it was not run; the public-path tests in (b) `paths` exercise the sa
 ## 4. Files produced
 `PLAN.md` (v1.3), `LOG.md`, `CHECKPOINT.md`, `REPORT.md`, `lemmas/TDP_E.md`, `reviews/R01_*` … `R06_*`, `reviews/CITECHECK.txt`,
 `tests/` (ceng_load.R, ceng_exports.cpp, test_tdp.R, test_ls0.R, run_batch.R, compare_regress.R, proto_load.R,
-o_ls0_exports.cpp [verbatim prototype], run_replay.R, compare_replay.R, xcheck_n3_tdp.R/.py, check_final_flags.R,
+o_ls0_exports.cpp [verbatim prototype], run_replay.R, compare_replay.R, xcheck_n3_tdp.R/.py, check_final_flags.R, replay_s5_cap.R,
 test_preflight.R),
 `numerics/` (outputs above; `existing_suite/` = harness evidence, 11+ MB).
 
@@ -217,6 +232,8 @@ test_preflight.R),
 - The original API-AUDIT 10 forced-stop fits are not replayed (their inputs/scripts are not in the repository); a local
   analogue is in (b) `paths`.
 - `build/check_smokes.R` and the 32-seed harness gate on Owls: not run (local only); seeds 1–3 run locally (§3d).
+- The merged-LS0 replay used the dev generator's S1 r001, S4 r001, S5 r002 at p = 500, c100 (the study's production
+  datasets are not in the repository), on the 9b9d234 binary; the full replay on the final binary and at p = 1000 is not done.
 - The certificate card (L1 etc.), stacking/c₄ search, concurrency layer and NA fields for `schedule_limit` statuses not
   produced by this core are outside this ticket.
 - Owls/NOTS execution (production-size timing, `build/check_smokes.R` on saved smoke records) not done (local only).

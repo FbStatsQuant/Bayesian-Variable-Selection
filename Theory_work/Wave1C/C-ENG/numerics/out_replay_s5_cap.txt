@@ -1,0 +1,5 @@
+dev_p0500_S5_r002: start mode { 74 } (fit: 74 ), ell_n = 10 
+cap ell_n          : move_limit moves 10 n_eval 37994 best F -201.760884213352 ; same path as the replay fit's LS0: TRUE 
+cap ell_n + |S~0|  : move_limit moves 11 n_eval 43873 best F -185.945470367334 ; best { 3 37 74 106 178 213 247 284 316 388 423 457 }
+replay fit HPM F   : -124.706685011988 { 3 37 74 106 145 178 213 247 284 316 355 388 423 457 }
+with the C-GROW cap, LS0's best beats the fit's HPM: FALSE ; equals it: FALSE 

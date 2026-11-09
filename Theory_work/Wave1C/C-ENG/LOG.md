@@ -32,3 +32,4 @@
 - 23:40: HQ: preflight must charge the LS0 worst case under the C-GROW cap. Implemented (ef33f91) behind v3.ls0_cap / ls0; test_preflight 7/7; 0 fits newly refused at p = 30 and p = 500/1000 (8 GiB/24 h, 2 GiB/24 h).
 - 00:00: R07 REJECT (2 MAJOR: archive allowance below conversion peak; benchmark before memory rejection). Fixed (98fac03); R08 APPROVE-WITH-FIXES (MINOR: test used a copied formula) -> test reads production allowance; +4096 fixed bytes (72785fe); test 14/14; R09 APPROVE.
 - 00:10: p = 500 replay S1 r001 and S4 r001: new core == O-LS0 prototype on all 16 checks; S5 r002 prototype fit running.
+- 00:50: p = 500 replay complete: 3 designs x 16 checks PASS (48/48). S5 LS0 binding at ell_n: final-core standalone check with cap ell_n + |S~0| (11 moves, best F below the fit HPM). REPORT final.

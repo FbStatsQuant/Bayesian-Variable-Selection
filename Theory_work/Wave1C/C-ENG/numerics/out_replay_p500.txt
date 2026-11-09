@@ -1,4 +1,4 @@
-C-ENG merged-LS0 replay (p = 500, n = 200, c100, dev generator), new core vs O-LS0 prototype, 2026-11-09 00:00:43 
+C-ENG merged-LS0 replay (p = 500, n = 200, c100, dev generator), new core vs O-LS0 prototype, 2026-11-09 00:49:20 
 
 dev_p0500_S1_r001  status completed  wall on 2286s proto 1797s  HPM {3,37,74,106,145,178,213,235,247,284,316,355,388,423,457}  start mode {74,284,316,388,423} ties 1 trunc FALSE  LS0 no_improvement moves 10 n_eval 59290  ls0_improved FALSE  ls0_hpm_changed FALSE  cert TRUE (both)
   [PASS] status_same
@@ -34,4 +34,20 @@ dev_p0500_S4_r001  status completed  wall on 2372s proto 1852s  HPM {3,37,74,106
   [PASS] E1_E2_lowESS_same
   [PASS] E3_new_is_final_search_only
   [PASS] E3_diff_explained
-dev_p0500_S5_r002 : missing proto 
+dev_p0500_S5_r002  status completed  wall on 5158s proto 3198s  HPM {3,37,74,106,145,178,213,247,284,316,355,388,423,457}  start mode {74} ties 1 trunc FALSE  LS0 move_limit moves 10 n_eval 37994  ls0_improved FALSE  ls0_hpm_changed FALSE  cert TRUE (final)
+  [PASS] status_same
+  [PASS] islands_Z_pips_same
+  [PASS] streams_same
+  [PASS] calibration_frozen_same
+  [PASS] final_local_same
+  [PASS] hpm_same
+  [PASS] stores_same
+  [PASS] near_ties_same
+  [PASS] ls0_archive_same
+  [PASS] start_mode_same
+  [PASS] counts_same
+  [PASS] cache_same
+  [PASS] hpm_before_ls0_same
+  [PASS] E1_E2_lowESS_same
+  [PASS] E3_new_is_final_search_only
+  [PASS] E3_diff_explained
