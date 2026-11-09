@@ -1,0 +1,6 @@
+F-U1 exact decomposition: tests 53003, max |Z_direct - Z_formula| = 8.882e-15
+F-U2 deterministic bound (U2): violations 0 / 53003
+F-U3 CS p=2000 kappa=1.0000: max over one-sided sets of |Z|/envelope = 0.885 (envelope w/o loglog slack)
+F-U3 BCS p=2000 kappa=1.0000: max over one-sided sets of |Z|/envelope = 0.736 (envelope w/o loglog slack)
+F-U4 CS p=30 n=20000: ||R-Sigma||op=0.0919, max|Z^R - Z^Sigma| = 0.0685, ratio to delta*sqrt(p) = 0.136
+F-U4 BCS p=40 n=20000: ||R-Sigma||op=0.1315, max|Z^R - Z^Sigma| = 0.0711, ratio to delta*sqrt(p) = 0.086

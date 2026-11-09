@@ -1,0 +1,8 @@
+CS a=0.1 kappa=1.000000 cmin=0.1111 alpha0=0.16667
+CS a=0.3 kappa=1.000000 cmin=0.4286 alpha0=0.16667
+CS a=0.5 kappa=1.000000 cmin=1.0000 alpha0=0.16667
+CS a=0.9 kappa=1.000000 cmin=9.0000 alpha0=0.16667
+BCS rb=0.3 rw=0.7 g=5 kappa=1.000000 cmin=0.4286 alpha0=0.16667
+BCS rb=0.1 rw=0.8 g=5 kappa=1.000000 cmin=0.1111 alpha0=0.16667
+BCS rb=0.5 rw=0.6 g=3 kappa=1.000000 cmin=1.0000 alpha0=0.16667
+BCS rb=0.2 rw=0.9 g=4 kappa=1.000000 cmin=0.2500 alpha0=0.16667

@@ -1,0 +1,5 @@
+rows 60 secs 223.5
+rows 60 secs 125.2
+rows 60 secs 164.8
+rows 60 secs 239.2
+rows 60 secs 285.7

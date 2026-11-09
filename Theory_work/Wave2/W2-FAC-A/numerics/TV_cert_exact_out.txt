@@ -1,0 +1,14 @@
+closed form vs direct float computation (3000 random S5 configurations): max |diff| = 3.775e-15
+S5 layout s0=4 step=5: 11060 configurations; exact min tau = 2023/32500 = 0.06224615 (unit scale c=1; truth #1, u0=0, other groups [(1, '-6/5', '-6/5')])
+S5 layout s0=14 step=7: 612710 configurations; exact min tau = 7/2080 = 0.00336538 (unit scale c=1; truth #1, u0=0, other groups [(1, '-8/5', '-8/5'), (1, '-8/5', '-8/5')])
+S5 layout s0=14 step=13: 612710 configurations; exact min tau = 7/2080 = 0.00336538 (unit scale c=1; truth #1, u0=0, other groups [(1, '-8/5', '-8/5'), (1, '-8/5', '-8/5')])
+CS a=1/10 s0=4 (study pattern): exact min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 39/50 = 0.780000
+CS a=1/10 s0=14 (study pattern): exact min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 7/25 = 0.280000
+CS a=3/10 s0=4 (study pattern): exact min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 17/50 = 0.340000
+CS a=3/10 s0=14 (study pattern): exact min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 1/125 = 0.008000
+CS a=1/2 s0=4 (study pattern): exact min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 0 = 0.000000
+CS a=1/2 s0=14 (study pattern): exact min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 0 = 0.000000
+CS a=7/10 s0=4 (study pattern): exact min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 8/85 = 0.094118
+CS a=7/10 s0=14 (study pattern): exact min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 1/295 = 0.003390
+CS a=9/10 s0=4 (study pattern): exact min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 4/95 = 0.042105
+CS a=9/10 s0=14 (study pattern): exact min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 1/95 = 0.010526

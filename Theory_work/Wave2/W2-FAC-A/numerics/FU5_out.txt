@@ -1,0 +1,1 @@
+F-U5 adversarial members (tiny loadings, sign changes, negative within-group corr, p<=20): tests 39895, max identity error 2.89e-15, bound violations 0

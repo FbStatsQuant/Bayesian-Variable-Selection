@@ -1,0 +1,40 @@
+concurrent.futures.process._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\process.py", line 255, in _process_worker
+    r = call_item.fn(*call_item.args, **call_item.kwargs)
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\process.py", line 204, in _process_chunk
+    return [fn(*args) for args in chunk]
+            ~~^^^^^^^
+  File "C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave2\W2-FAC-A\numerics\d_run.py", line 14, in run
+    X, y, S0, th = fc.build(design, p, n, c, seed, mode)
+                   ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave2\W2-FAC-A\numerics\fac_common.py", line 69, in build
+    assert act.max() < p
+           ^^^^^^^^^^^^^
+AssertionError
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave2\W2-FAC-A\numerics\d_run.py", line 101, in <module>
+    rows = list(ex.map(run, jobs, chunksize=1))
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\process.py", line 621, in _chain_from_iterable_of_lists
+    for element in iterable:
+                   ^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py", line 625, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py", line 318, in _result_or_cancel
+    return fut.result(timeout)
+           ~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py", line 460, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py", line 402, in __get_result
+    raise self._exception
+AssertionError
+rows 36 secs 32.1
+rows 4 secs 38.2
+rows 4 secs 48.1

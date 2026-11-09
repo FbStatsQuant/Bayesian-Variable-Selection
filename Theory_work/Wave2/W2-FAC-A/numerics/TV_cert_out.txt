@@ -1,0 +1,13 @@
+S5 layout s0=4 step=5: configurations 11060, min tau(U,j) = 0.062246 (c=1; scales with c^2) at j=26, |U|=1
+S5 layout s0=14 step=7: configurations 612710, min tau(U,j) = 0.003365 (c=1; scales with c^2) at j=36, |U|=2
+S5 layout s0=14 step=13: configurations 612710, min tau(U,j) = 0.003365 (c=1; scales with c^2) at j=456, |U|=2
+CS a=0.1 layout s0=4: min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 0.780000
+CS a=0.1 layout s0=14: min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 0.280000
+CS a=0.3 layout s0=4: min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 0.340000
+CS a=0.3 layout s0=14: min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 0.008000
+CS a=0.5 layout s0=4: min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 0.000000
+CS a=0.5 layout s0=14: min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 0.000000
+CS a=0.7 layout s0=4: min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 0.094118
+CS a=0.7 layout s0=14: min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 0.003390
+CS a=0.9 layout s0=4: min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 0.042105
+CS a=0.9 layout s0=14: min |theta_j + a(Theta-Theta_V)/(1-a+au)| = 0.010526
