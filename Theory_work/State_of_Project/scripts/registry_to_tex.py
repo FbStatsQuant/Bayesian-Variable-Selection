@@ -17,6 +17,7 @@ GROUPS = [
      {"history-result", "refuted", "counterexample"}),
     ("empirical", "Empirical results", {"empirical"}),
     ("open", "Pending decisions, engineering items and the frontier", {"decision-pending", "engineering", "frontier"}),
+    ("wave", "Theory loop (Waves 1 and 1C, v1.1): ticket results, audits and status changes", {"wave-result"}),
 ]
 
 

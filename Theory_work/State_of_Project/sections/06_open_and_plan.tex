@@ -80,6 +80,9 @@ Each frontier item states the gap, why it matters (which objective or card), wha
 \textbf{Candidate routes (sources).} The report's own list of items needing an independent check: Lemma Tr-J(c) constants; Lemma E (E2), (E3); Lemma $\Lambda$(a) Haar-span step; Theorem R (= W7 Theorem B); the operational closure OP-LS0 + GUARD; Lean-readiness of Lemma LS and (C) \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:133-144}. Lemma E ``could replace the W1-EXP citations in W3/W4/W5'' \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:152-154}.
 
 \textbf{Done when.} The candidate's own card: ``Confidence it is provable at reasonable cost: high --- it is written; what remains is cross-family review'' \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:164}. A cross-family VERIFIED on PROOF §§1--10 with the six items above, then the generic standard. Whether and where it enters the list is a loop output: ``Future demotions/reformulations/additions are outputs of the theory loop'' \src{Theory_work/State_of_Project/AUTHORING.md:32}.
+% v1.1 update (FR01)
+\paragraph{Update v1.1 (\S\ref{sec:loop:pxn}).} First half answered at ticket level: W1-PXN \status{PROVED-CHECKED} — ``cross-family VERIFIED on PROOF §§1–10 by Codex gpt-6.1-sol, and the council passed in round 1 (Codex 8.6, Opus 8.3, all gates PASS)''; not adopted by HQ \src{W1/W1-PXN/REPORT.md:4-8}. Out of scope and unchanged: superpolynomial $p$, groups of 5, delivery, finite-$n$ margins \src{W1/W1-PXN/REPORT.md:91-92}.
+
 \end{card}
 
 \begin{card}{FR02}{Covering the study's own design (groups of 5; dilution masking)}
@@ -92,6 +95,9 @@ Each frontier item states the gap, why it matters (which objective or card), wha
 \textbf{Candidate route (sources).} ``The right object for the study regime is a different family (dilution masking, PXN §14, CONJECTURE)'' \src{NBH/branch_snapshots/API-PXNGAP/REPORT.md:126-127}; the dilution identity \rid{TH172} and the finite-$n$ formula \rid{TH177} (PROOF SKETCH) are the existing inputs (M3, \rid{TH03}).
 
 \textbf{Done when.} \rid{CJ25} is future work: ``Items here get no per-theorem HQ for paper 1'' \src{NBH/05_open_questions_and_next_steps.md:43}. No acceptance criterion beyond the generic standard is stated in the sources.
+% v1.1 update (FR02)
+\paragraph{Update v1.1 (\S\ref{sec:loop:gen}, \S\ref{sec:loop:grow}).} Asymptotic coverage of the study generator, as sequences extending the study's layouts (not the study's $n=200$): S1, S3, S4, S6 by Theorem GEN (C5)(d) (favourable case) \src{W1/W1-GEN/REPORT.md:67}; S2 (AR(1), iid rows, $p\le n^A$) by Theorem GROW (C5)(c), under the method requirement MR1 (C-GROW) \src{W1C/C-GROW/REPORT.md:26-30}; S5 and factor designs with growing $p$ remain frontier \src{W1C/C-GROW/REPORT.md:86-90}. Groups of 5 still violate W1-PXN's SIZE \src{W1/W1-PXN/STATEMENT.md:72-73}. At the study's size the visibility margins are 0.16–0.94 (< 1): ``the σ²-dilution masking of the study is exactly VIS failing at finite n'' \src{W1/W1-GEN/REPORT.md:12-14}.
+
 \end{card}
 
 \begin{card}{FR03}{From explicit exhibits (LH, W) to classes of designs}
@@ -104,6 +110,9 @@ Each frontier item states the gap, why it matters (which objective or card), wha
 \textbf{Candidate routes (sources).} M2's charter: if the general $D_*$ matrix route stalls, ``prove on W directly'' (fallback), and ``§5.3 escalates'' only if both the $D_*$ route and the correlated-family route fail \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M2.md:83}, \src{NBH/02_theory.md:835}. The general $D_*$ decomposition (M2(a1)) is Seat C's PROOF SKETCH and is the charter's first lemma \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M2.md:117}.
 
 \textbf{Done when.} For M2: per charter, cross-family proofs of (a1) and (b2)--(b7), $\le20$ seeds on W \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M2.md:119-121}. A theorem for a class of designs beyond the exhibits is not chartered for paper 1.
+% v1.1 update (FR03)
+\paragraph{Update v1.1 (\S\ref{sec:loop:gen}, \S\ref{sec:loop:grow}).} Theorem GEN (\status{PROVED-CHECKED}) is a reported-HPM theorem ``on a general, checkable class of correlated fixed designs (masking allowed, p ≤ n\textasciicircum{}A with any A)'', with LH, LH-iid, W and study scenarios as instances \src{W1/W1-GEN/REPORT.md:20-23}; Theorem GROW (\rid{C-GROW}) adds growing relevance sets. Both are M5-type (reported HPM, jointly with output); no wave ticket addressed this card's M2 items.
+
 \end{card}
 
 \begin{card}{FR04}{N1: the measured-round island identity for general bounded $h$ (binding §13.1)}
@@ -114,6 +123,9 @@ Each frontier item states the gap, why it matters (which objective or card), wha
 \textbf{Route (charter).} ``First lemma: N1 (measured-endpoint identity $E[\hat Z_r H_r(h)\mid\mathcal{C}]=Z\cdot\pi(h)$) via the terminal-round prefix identity; then (e) as its corollary on $1\{S\neq S_0\}$''; Lean target T12Core \texttt{unbiased\_of\_step} with \texttt{hstep} for multinomial resampling \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M1.md:114-115}. The card's route text locates the identity: ``N1: finite-state resample–move recursion; the state before each measured record is Zπ-weighted because the prefix of a uniformly random order is state-independent (terminal-round prefix identity, N9 §3)'' \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:119}. The N9 text it refers to (the RB-PIP case): ``\textbf{PIP identities} (RB marginal PIP, primary estimator): need only that every step is γ₁-invariant and that the order is independent of the state. Then the state just before each Gibbs step j is π-distributed, and E[o\_j] = π(j ∈ S). Both hold.'' \src{NBH/branch_snapshots/N9-KERNEL/REPORT.md:47-49}; full proofs of the moves and the round in \path{NBH/branch_snapshots/N9-KERNEL/PROOF.md} §1--§2. The proof text behind it: ``\emph{Invariance is weaker and is what the estimators use.} Each step is γ\_φ-invariant (reversible ⇒ invariant), so every realised order is γ\_φ-invariant, and so is the round. The state immediately before any Gibbs step j of a round started from γ\_φ is γ\_φ-distributed, whatever the order (the order is independent of the state); this is what the RB identity E[o\_j] = π\_φ(j ∈ S) needs.'' \src{NBH/branch_snapshots/N9-KERNEL/PROOF.md:241-244}; state independence of the order: ``the m−1 uniforms are independent of P's state (they are read before any step of the round, at a stopping time of the stream), and Fisher–Yates maps the (m−1)-tuple of choices bijectively onto the m! permutations [\ldots]. So σ is uniform on S\_m and independent of the state.'' \src{NBH/branch_snapshots/N9-KERNEL/PROOF.md:218-220}. The route sketch from the method meeting (Seat C): ``The proof route is concrete. Conditional on calibration, the finite-state resample–move recursion gives $E[\widehat Z_r\eta_{r,T}(f)]=Z\pi(f)$. Terminal rounds preserve $\pi$, so this identity extends to each measured endpoint and their average. This is a \textbf{PROOF SKETCH} pending the implementation-level recursion check.'' \src{NBH/branch_snapshots/MEET-v31/R2_C.md:200-204}; Seat A, explicitly as its own reading: ``(a2) for the plain average is the base case of the same terminal-round unbiasedness that the RB identity rests on ($E[\hat Z_r\eta_r(f)] = Z\pi(f)$ for a bounded f at a φ = 1 round), so N1 should be a short extension of the locked lemma rather than new theory; its status stays PROOF SKETCH until checked'' \src{NBH/branch_snapshots/MEET-v31/R3_A.md:38}. Lead's reading, comparing the two cited statements: N9's text covers the per-step RB marginal record; N1 (M1(b), \src{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:111}) asks for $E[\hat Z_r H_r(h)\mid\mathcal C]=Z\cdot\pi(h)$ with $H_r$ the plain measured-endpoint average of a general bounded $h$.
 
 \textbf{Done when.} Cross-family check of the N1 proof by PC1 (Codex Sol); the Lean file to the registrar; a $p\le8$ coded-grid replica of $E[\hat Z_r H_r(h)]$ (10 seeds) by PC2. Fallback: marginal PIPs only (locked identity) for (e)--(i); one HQ wave on N1. Escalation: ``N1 refuted or unclosed after one wave (→ §13.1 unmet, HQ)'' \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M1.md:116-118}. Wave 1; ``the longest pole and starts first'' \src{NBH/05_open_questions_and_next_steps.md:203}.
+% v1.1 update (FR04)
+\paragraph{Update v1.1 (\S\ref{sec:loop:n1}).} Closed at ticket level: W1-N1 \status{PROVED-CHECKED} (cross-family checked by Codex Sol; council 9.3 / 8.9) for a statement stronger than the card \src{W1/W1-N1/REPORT.md:11-12}; the coded-grid companion was run (worst N1 residual 9.3e-15) \src{W1/W1-N1/REPORT.md:56}; the Lean item of ``Done when'' was not supplied \src{W1/W1-N1/REPORT.md:86-88}. ``binding goal §13.1 no longer needs the marginal-PIP fallback'' \src{W1/W1-N1/REPORT.md:102}.
+
 \end{card}
 
 \begin{card}{FR05}{N3: the e4 tie-DP invariant}
@@ -124,6 +136,9 @@ Each frontier item states the gap, why it matters (which objective or card), wha
 \textbf{Route (charter).} ``the DP returns the prescribed smallest-size, lexicographically smallest start-mode maximiser (W1PC2 D9: TRUE on 400 random instances, DESIGN-ASSERTED)''; in parallel the merged-LS0 replay (\rid{ENG02}) \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M5.md:101}; engineering companion \rid{ENG10}.
 
 \textbf{Done when.} Cross-family check of the assembly; Thm5-LH (SAME-FAMILY-ONLY) and T38-(a) (XF none) to a cross-family check; $\le20$-seed LH replica with LS0. Fallback: ``(b1-LH) becomes `conditional on N3' after one unproductive HQ cycle; (0) + (a) + (b2-LH) always ship''. Escalation: a counterexample to T38-b1-LH on LH, the integrated LS0 differing from the specified one, or N3 failing outright \src{NBH/branch_snapshots/MEET-THM/HQ_CHARTERS/M5.md:103-105}. Wave 3.
+% v1.1 update (FR05)
+\paragraph{Update v1.1 (\S\ref{sec:loop:n3}, \S\ref{sec:loop:pack}).} W1-N3 \status{PROVED-CHECKED} for the true statement about the coded routine; N3 as an unconditional property of the frozen code is false (counterexample above the cap $10^6$); ``e4 for integrated LS0 stays OPEN'' \src{W1/W1-N3/REPORT.md:12-13}. C-PACK item~1 then showed that no positive consistency result needs the lexicographic tie rule or the truncation fallback (e4 → e4′) \src{W1C/C-PACK/REPORT.md:4-6}. The LH replica with a merged LS0 (\rid{ENG02}) is not done: LS0 exists only on the unmerged C-ENG branch (\S\ref{sec:loop:eng}).
+
 \end{card}
 
 \begin{card}{FR06}{The Song--Liang separation (analytic)}
@@ -181,6 +196,9 @@ Each frontier item states the gap, why it matters (which objective or card), wha
 \textbf{Tried.} The YWJ/ZYVR transfer route ``blocked as stated'' (\rid{CJ04}); ``start mass + bridge mass + exit control ⇒ delivery'' false (\rid{RF199}).
 
 \textbf{Done when.} Future work for paper 1.
+% v1.1 update (FR11)
+\paragraph{Update v1.1 (\S\ref{sec:loop:dlv}, \S\ref{sec:loop:hq}).} Delivery: C-DLV \status{PARTIAL} — every no-output path except \texttt{schedule\_limit} is excluded under a declared polynomial allocation, and \texttt{schedule\_limit} is reduced to an explicit failure event (O) of the tier-1 grid construction, which stays \status{OPEN} for the shipped calibration \src{W1C/C-DLV/REPORT.md:24-28}; ``The pilot stage count is the CJ06 / Conjecture P question'' \src{W1C/C-DLV/REPORT.md:58}. With a tier-1 fallback (a change to a shipped component) P(no output) = 0 on an ideal machine: Proposition F \status{PROVED-CHECKED for the patched calibration law (R04; council round 2)} \src{W1C/C-DLV/REPORT.md:70}, corrected for the C-GROW LS0 cap and extended to the GROW class by the HQ audits A1--A3 (\S\ref{sec:loop:hq}). The mixing items of this card are unchanged.
+
 \end{card}
 
 \begin{card}{FR12}{No MCMC-slow / SMC-fast separation}

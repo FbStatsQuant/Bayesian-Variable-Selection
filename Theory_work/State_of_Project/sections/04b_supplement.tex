@@ -903,6 +903,9 @@ Lean: T12(i.a) is partially formalised. ``The resample–move recursion \texttt{
 \textbf{Attempts recorded.} Only the route sketch above (R2C, R3A, unchecked). The numerical checks (W1PC2:101, W2PC2 §0) ``are statement-sanity only'' and do not upgrade N1 \src{NBH/branch_snapshots/MEET-THM/REGISTRY_PAPER1.md:1902}.
 \end{card}
 
+% v1.1 update (OB01)
+\paragraph{Update v1.1 (\S\ref{sec:loop:n1}).} Discharged at ticket level by W1-N1: \status{PROVED-CHECKED}; N1 \status{PROVED under the named premises — cross-family checked, council-passed (round 1)} \src{W1/W1-N1/REPORT.md:11}, \src{W1/W1-N1/REPORT.md:46}. The cross-family check (Codex Sol) and a coded-grid numerical companion were done; the Lean file was ``Not supplied. HQ should either waive it or open a registrar task'' \src{W1/W1-N1/REPORT.md:86-88}. Not yet adopted by HQ; the registry row is unchanged.
+
 % ---------------------------------------------------------------- OB02
 \begin{card}{OB02}{N2 · Integrated v3.1 core: Prop W, W-cal, LS0, stacking, GUARD-W}
 Status (REG-A, verbatim): \status{Lemma S PROVED. (a) PROVED by code reading, executed on smoke + 3/3 designs. (b) PROVED by code reading, not executed. (c) not in the production core. (d) PROVED (PC1 claim 6, deterministic). (e) not audited} \src{NBH/ID_REGISTRY.md:146}
@@ -959,6 +962,9 @@ Status (REG-A, verbatim): \status{(b1-LH) PROVED (candidate), XF VERIFIED (A-REV
 
 \textbf{Attempts recorded.} R3A and R3B sketched the greedy max-plus route (unchecked). W1PC2 D9 found it TRUE on 400 random instances (DESIGN-ASSERTED, not a proof).
 \end{card}
+
+% v1.1 update (OB03)
+\paragraph{Update v1.1 (\S\ref{sec:loop:n3}, \S\ref{sec:loop:pack}, \S\ref{sec:loop:eng}).} DP sub-obligation: W1-N3 \status{PROVED-CHECKED} for the true version — the coded routine returns the prescribed maximiser when the number N of smallest-size maximisers is ≤ cap ($10^6$) and can return a different maximiser above it (explicit family; for cap $10^6$: p = 44, K = 22); the reference algorithm TDP returns it in exact arithmetic without enumerating ties \src{W1/W1-N3/REPORT.md:16-29}. ``e4 for integrated LS0 stays OPEN'' \src{W1/W1-N3/REPORT.md:12-13}. C-PACK item~1: no positive consistency proof needs e4's tie rule (e4 → e4′, \S\ref{sec:loop:pack}). Bridge to code: LS0 and the TDP-E fallback exist only on the unmerged C-ENG branch (\S\ref{sec:loop:eng}), so (b1-LH) as a theorem about the shipped method is still not done.
 
 % ---------------------------------------------------------------- OB04
 \begin{card}{OB04}{N4 · Finite-R accuracy of the Ẑ-weighted PIP and μ̂(h); the constant M under masking (V11)}

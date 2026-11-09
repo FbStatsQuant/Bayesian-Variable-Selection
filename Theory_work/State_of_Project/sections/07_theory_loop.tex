@@ -1,0 +1,1147 @@
+% =====================================================================
+% v1.1 (2026-11-09): results of Theory Waves 1 and 1C. Sources: W1/ = Theory_work/Wave1/, W1C/ = Theory_work/Wave1C/
+% at repo commit \wavecommit. Sections 1-6 keep the v1.0 (archive, 21ebc28) record; this section adds the new state.
+% =====================================================================
+\section{Theory loop: Waves 1 and 1C (v1.1)}\label{sec:loop}
+
+\begin{agentnote}[read this first]
+\begin{itemize}
+\item \textbf{What this section is.} The results of the first two waves of the agentic theory loop, added on top of the v1.0 record: Theory Wave~1 (2026-11-08; tickets W1-PXN, W1-N1, W1-N3, W1-GEN) and Theory Wave~1C (closure, 2026-11-08/09; tickets C-PACK, C-MIS, C-GROW, C-DLV, C-ENG, the HQ audits A1--A3 and the final consistency chapter). Sources are the wave folders at repo commit \texttt{\wavecommit}: \texttt{W1/} = \path{Theory_work/Wave1/}, \texttt{W1C/} = \path{Theory_work/Wave1C/} (Appendix~\ref{app:files}). Sections~\ref{sec:problem}--\ref{sec:open} are unchanged and record the archive state (commit \texttt{\sourcecommit}); every affected v1.0 card carries a short ``Update v1.1'' paragraph pointing here.
+\item \textbf{Status vocabulary.} Wave statuses are copied verbatim from the ticket files. ``PROVED-CHECKED'' is a ticket status defined by the Wave~1C protocol: ``proof file + cross-family lemma checks + mid-point CONTINUE + sweep fixed + council passed (both ≥ 8.0, all gates, same round)'' \src{W1C/PROTOCOL.md:35-36}; the council is a Codex \texttt{gpt-6.1-sol} seat and a Claude Opus~5.5 seat, ``Pass = both ≥ 8.0 with all gates passing in the same round'' \src{W1/PROTOCOL.md:28}. Ticket results are ``not yet adopted by HQ into the frozen registry'' \src{W1C/FINAL/consistency.tex:18}. Therefore the archive statuses of the v1.0 IDs (column \texttt{status\_exact}, Appendix~\ref{app:registry}) are \emph{not} changed; the wave results are new registry rows of kind \texttt{wave-result} (Appendix~\ref{app:registry}, last table).
+\item \textbf{Final product.} The integrated statement document is \path{Theory_work/Wave1C/FINAL/consistency.pdf} (``Consistency theory of SMC-BVS (Wave 1 closure)''). Its final council passed in round~3: Sol 9.3 \src{W1C/FINAL/reviews/C3_council_sol.md:90}, Opus 8.6 \src{W1C/FINAL/reviews/C3_council_opus.md:171}, all six gates PASS in both seats; reviews in \path{W1C/FINAL/reviews/} (\S\ref{sec:loop:final}).
+\item \textbf{How to use it.} For a paper statement, cite the ticket statement transcribed here and its status; for the regime, keep the qualifiers of each box (fixed vs random design, $p\le n^A$, asymptotic, ``jointly with output'', the named implementation premises). The open frontier after the two waves is \S\ref{sec:loop:frontier}.
+\end{itemize}
+\end{agentnote}
+
+\subsection{Overview}\label{sec:loop:overview}
+{\small
+\begin{xltabular}{\linewidth}{@{}>{\RaggedRight}p{1.6cm}>{\RaggedRight}p{2.4cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight}p{2.6cm}>{\RaggedRight\arraybackslash}p{2.2cm}@{}}
+\toprule
+Ticket & v1.0 IDs touched & result & status (verbatim) & council (Codex/Sol · Opus) \\
+\midrule\endhead
+\rid{W1-PXN} & \rid{FR01}, \rid{TH161}, \rid{TH163}, \rid{TH05} & p ≫ n masked reported-HPM theorem on LH-iid (repaired API-PXNGAP) & PROVED-CHECKED \src{W1/W1-PXN/REPORT.md:4} & 8.6 · 8.3, round 1 \src{W1/W1-PXN/REPORT.md:81} \\
+\rid{W1-N1} & \rid{FR04}, \rid{OB01}, \rid{TH01.b}, \rid{TH01.e} (PC1c3) & Lemma N1 for every bounded $h$, each measured round; Corollary E with constant δ₁ & PROVED-CHECKED \src{W1/W1-N1/REPORT.md:11} & 9.3 · 8.9, round 1 \src{W1/W1-N1/REPORT.md:79} \\
+\rid{W1-N3} & \rid{FR05}, \rid{OB03}, \rid{TH05} (e4) & what the coded \texttt{start\_mode} returns; counterexample above the cap; reference algorithm TDP & PROVED-CHECKED (for the locked target); ``e4 for integrated LS0 stays OPEN'' \src{W1/W1-N3/REPORT.md:12-13} & 9.3 · 8.6, round 1 \src{W1/W1-N3/REPORT.md:62} \\
+\rid{W1-GEN} & \rid{FR02}, \rid{FR03}, \rid{TH05} & Theorem GEN: reported HPM on a general correlated class, bounded relevance set & PROVED-CHECKED \src{W1/W1-GEN/REPORT.md:20} & 9.0 · 8.9, round 1 \src{W1/W1-GEN/REPORT.md:82} \\
+\rid{C-PACK} & \rid{TH05}, \rid{TH09}, \rid{TH163}, \rid{W1-GEN}, \rid{W1-PXN} & e4 not needed (e4′); LH-iid without candidate inputs; SEL/L8 checks; Song--Liang corollaries SL0--SL2; PXN supplement & PROVED-CHECKED (items 1--4); item 5 FAITHFUL-WITH-FIXES \src{W1C/C-PACK/REPORT.md:20-21} & 9.0 · 8.7, round 1 \src{W1C/C-PACK/REPORT.md:77} \\
+\rid{C-MIS} & \rid{TH09} (consumer) & misspecified candidate sets: Song--Liang Thm~4 / Cor.~2 analog & PROVED-CHECKED \src{W1C/C-MIS/REPORT.md:23} & 9.2 · 9.0, round 1 \src{W1C/C-MIS/REPORT.md:126} \\
+\rid{C-GROW} & \rid{FR02}, \rid{TH05}, \rid{OB11} & Theorem GROW: growing relevance sets, incl.\ study S2 (AR(1)), method requirement MR1 & PROVED-CHECKED \src{W1C/C-GROW/REPORT.md:26} & 9.2 · 9.0, round 1 \src{W1C/C-GROW/REPORT.md:79} \\
+\rid{C-DLV} & \rid{FR11}, \rid{CJ13}, \rid{CJ06} & delivery: exact reduction to one calibration event; Proposition F (fallback) & PARTIAL \src{W1C/C-DLV/REPORT.md:24} & round 1 7.6 · 8.6 (not passed); round 2 9.0 · 8.9 \src{W1C/C-DLV/REPORT.md:81-83} \\
+\rid{C-ENG} & \rid{ENG02}, \rid{ENG10} & LS0, TDP-E, MR1 cap, tier-1 fallback on an unmerged branch & ``DONE (implemented, tested, all code reviews APPROVE)'' (as quoted by the chapter) \src{W1C/FINAL/sections/s7_impl.tex:6} & — (engineering) \\
+\rid{HQ-A1}, \rid{HQ-A2}, \rid{HQ-A3}, \rid{HQ-A4} & \rid{FR11} & Proposition F corrected for the C-GROW cap (A1); extended to the GROW class (A2), checked (A3) & A1 HOLDS-WITH-AMENDMENTS \src{W1C/HQ_AUDIT/A1_propF_redteam.md:3}; A2 EXTENDS \src{W1C/HQ_AUDIT/A2_propF_GROW.md:1-5}; A3 VERIFIED-WITH-AMENDMENTS \src{W1C/HQ_AUDIT/A3_check_A2.md:5}; A4 OK-WITH-FIXES \src{W1C/HQ_AUDIT/A4_postcouncil_check.md:1} & audits (see \S\ref{sec:loop:hq}) \\
+\rid{W1C-FINAL} & all of the above & the consistency chapter (statement document) and Lemma CAP & final council PASSED, round 3 \src{W1C/FINAL/reviews/C3_disposition.md:3-6} & round 3: 9.3 · 8.6; round 1: 7.4 · 8.5, round 2: 7.9 · 8.8, not passed \src{W1C/FINAL/reviews/C1_council_sol.md:106}, \src{W1C/FINAL/reviews/C1_council_opus.md:195}, \src{W1C/FINAL/reviews/C2_council_sol.md:128}, \src{W1C/FINAL/reviews/C2_council_opus.md:194} \\
+\bottomrule
+\end{xltabular}
+}
+
+\begin{plain}[the two waves in one paragraph]
+Wave~1 settled four v1.0 obligations: the p ≫ n masked theorem on LH-iid (\rid{FR01}), Lemma N1 (\rid{FR04}/\rid{OB01}), what the coded start-mode routine returns (\rid{FR05}/\rid{OB03}, with e4 for the integrated LS0 still open), and a first theorem on a general correlated design class (\rid{FR03}). Wave~1C showed that e4's tie rule is not needed for consistency, removed GEN's candidate inputs on LH-iid, added the Song--Liang corollaries, a misspecification theorem, a growing-relevance-set theorem that covers the study's AR(1) design S2 asymptotically, and an exact reduction of delivery; delivery itself is proved only for a patched calibration (fallback) on an ideal machine. The selection-consistency conclusions are asymptotic under their stated polynomial-dimension hypotheses; the reported-HPM conclusions are joint with output unless the fallback delivery proposition applies. N1/Corollary E retain their fixed-data, potential-run scope \src{W1/W1-N1/STATEMENT.md:20-23}; SL0, M5(0) and CAP retain their deterministic finite-$n$ scope, and fallback delivery holds for every admissible $n\ge3$ \src{W1C/FINAL/sections/s8_scope.tex:6}. No quantitative finite-$n$ selection-consistency guarantee covers the study at $n=200$ \src{W1C/FINAL/sections/s8_scope.tex:6}.
+\end{plain}
+
+% ---------------------------------------------------------------------
+\subsection{W1-PXN: the p ≫ n masked theorem on LH-iid}\label{sec:loop:pxn}
+\begin{card}{W1-PXN}{Theorem PXN (repaired API-PXNGAP = TH161; ticket FR01)}
+\textbf{Status (verbatim):} \status{PROVED-CHECKED} — ``the p ≫ n masked reported-HPM theorem (TH161, as repaired here) is cross-family VERIFIED on PROOF §§1–10 by Codex gpt-6.1-sol, and the council passed in round 1 (Codex 8.6, Opus 8.3, all gates PASS)''. Proposed status wording, HQ's call: \status{PROVED (API-PXNGAP candidate + W1-PXN repairs); XF VERIFIED (Codex gpt-6.1-sol: R11–R17, R19, R21, sweep R30, council C1); council C1 Claude Opus 8.3; under (OP); not adopted} \src{W1/W1-PXN/REPORT.md:4-8}. Statement: \path{W1/W1-PXN/STATEMENT.md} (locked v2; its §5 takes precedence) \src{W1/W1-PXN/REPORT.md:17}; definitive proof map \path{W1/W1-PXN/FINAL_PROOF.md}; consolidated self-contained proof \path{W1C/C-PACK/item5_PXN_consolidated/} (\rid{C-PACK} item~5).
+
+Setting (family LH-iid, SIZE, method v3 + LS0, operational premises (OP)): \src{W1/W1-PXN/STATEMENT.md:11-48}.
+% W1-PXN §2 target theorem (R),(S),(E),(T),(P),(C),(K)
+\begin{stmt}{W1/W1-PXN/STATEMENT.md:50-69}
+\textbf{2. Target theorem}
+
+Under LH-iid + (SIZE) + (OP), as n → ∞ (conclusions (S), (E), (T), (P) concern the data (X, ε) and the deterministic
+LS0 of R̄⁺; only (C) involves the actual run):
+\begin{itemize}
+\item \textbf{(R)} P(𝒜$_{n}$ᶜ) → 0 with Σ$_{n}$ P(𝒜$_{n}$ᶜ) < ∞ and P(𝒜$_{n}$ᶜ) ≤ p$^{-C}$ for n ≥ max\{n₁, n₀(A, C, ρ, ψ̄)\} (n₁ = the SIZE onset of the sequence), where 𝒜$_{n}$ := \{blocks = groups\}.
+  Explicit form claimed by the candidate (\texttt{PROOF.md:79-85}; D2 resolved: VERIFIED by R14 with the display split of \texttt{lemmas/R\_branch\_repair.md} §1): for n ≥ 5 with SIZE at n,
+  P(𝒜$_{n}$ᶜ) ≤ (2/(√π(1−ρ))) p²√n e$^{-(n-4)I*}$, with I(t; r) := −½ log[(1−r²)(1−t²)/(1−rt)²],
+  q := √((1−ψ̄²)/(1−ρ²)), t* := (q−1)/(qρ−ψ̄) ∈ (ψ̄, ρ), I* := I(t*; ψ̄) = I(t*; ρ) > 0.
+\item \textbf{(S)} 1 − π₀(S°) = O$_{P}$(√(log n/n)), with the explicit truncated-moment and tail bounds of P3′ (\texttt{PROOF.md:240-244}:
+  E[q̃ 1$_{\mathcal{G}_{n}}$] ≤ C$_{q}$√(log n/n), P(q > x) ≤ C$_{q}$√(log n/n)/x + P(𝒢$_{n}$ᶜ)); π₀(S₀) = p$^{-c}$n$^{-c/2}$e$^{O_{P}(1)}$ → 0, more precisely
+  log π₀(S₀) + c log p + (c/2) log n →$_{d}$ Σ$_{i\le c}$ log((s+i)/2) + ½χ²$_{c}$ (P4, \texttt{PROOF.md:277}): masked regime.
+\item \textbf{(E)} P(S̃₀ = S°) → 1; S° ⊆ S₀ has no extras and Φ(S°) = c (it is a lattice reference in the sense of W6's Lat(S°)).
+\item \textbf{(T)} P(LS0 of R̄⁺ scores S₀) → 1 and P(LS0 of R̄⁺ returns S₀ with local\_certified) → 1.
+\item \textbf{(P)} δ₁ := 1 − π(S₀) = O$_{P}$(√(log n/n)) under the joint law of (X$^{r}$, ε); hence E₀δ₁ → 0 (E₀ = joint expectation).
+\item \textbf{(C)} For every n: P(𝒪 ∩ \{Ŝ⁺ ≠ S₀\}) ≤ 2E₀[δ₁] + D$_{n}$, D$_{n}$ := P(𝒪̄ ∩ \{S₀ ∉ 𝒮̄⁺\}) ≤ P(LS0 of R̄⁺ does not score S₀),
+  and D$_{n}$ → 0. Hence P(𝒪 ∩ \{Ŝ⁺ ≠ S₀\}) → 0, P(𝒪 ∩ \{Ŝ⁺ = S₀\}) − (1 − P(U)) → 0, liminf$_{n}$ P(𝒪 ∩ \{Ŝ⁺ = S₀\}) =
+  1 − limsup$_{n}$ P(U), and P(𝒪 ∩ \{Ŝ⁺ = S₀\}) → 1 − u whenever P(U) → u.
+\item \textbf{(K)} LS0 costs ≤ 1 + (ℓ$_{n}$+1) max$_{k\le K}$[p + k(p−k)] = O(p² log(n+p)) scores; on the joint event 𝒯$_{n}$ of \texttt{lemmas/LS\_P6\_repair.md} (lattice arrival + (L) + ℓ$_{n}$ ≥ c), c + 1 scans
+  and ≤ 1 + (c+1)(p + s₀p) scores. [v2.1: wording corrected after R15; no change of content beyond the source's error.]
+\end{itemize}
+\end{stmt}
+% W1-PXN headline (what "done" certifies)
+\begin{stmt}{W1/W1-PXN/STATEMENT.md:70-71}
+\textbf{Headline (what ``done'' certifies).} On the masked correlated design LH-iid with p ≤ n$^{A}$ (A > 1 allowed), for v3 + LS0:
+P(𝒪 ∩ \{Ŝ⁺ ≠ S₀\}) → 0, i.e. P(𝒪 ∩ \{Ŝ⁺ = S₀\}) − (1 − P(U$_{n}$)) → 0, so liminf P(𝒪 ∩ \{Ŝ⁺ = S₀\}) = 1 − limsup P(U$_{n}$).
+\end{stmt}
+% W1-PXN not claimed
+\begin{stmt}{W1/W1-PXN/STATEMENT.md:72-75}
+\textbf{Not claimed:} P(U) → 0 (delivery); the method without LS0; masked PIP/evidence accuracy; the study's own design (groups
+of 5 violate SIZE); superpolynomial p; no quantitative finite-n consistency guarantee, in particular none at n = 200 (the
+proven margins are vacuous there, PROOF §11 (O5)); (C) itself holds at every n and (K) is deterministic; no uniformity in A.
+\end{stmt}
+% W1-PXN §5 changes after item reviews
+\begin{stmt}{W1/W1-PXN/STATEMENT.md:102-112}
+\textbf{5. Changes after item reviews (v2.2, 2026-11-08; none changes a conclusion of §2)}
+\begin{itemize}
+\item \textbf{Exact-branch convention (R14 \#3; \texttt{lemmas/R\_branch\_repair.md} §3).} ``blocks'', π₀, S̃₀ and ``LS0 of R̄⁺'' denote the
+  deterministic make\_blocks / block-table / start-mode / local-search functions of the data on every branch (hypothetical
+  when the run dispatches to exact enumeration, which can happen for very slowly growing p); on the exact branch the run
+  scores all of Ω, so that branch contributes nothing to D$_{n}$. No lower growth bound on p is introduced.
+\item \textbf{(R)} is stated as (R-a) S(t) for every t ∈ (ψ̄, ρ), (R-b) S(t*) ≤ K$_{n}$ (the explicit constant, VERIFIED by R14), (R-c)
+  p$^{-C}$ onset and summable form; D2 resolved. Independent cruder route (R′) in \texttt{lemmas/CR\_corr\_tails.md}.
+\item \textbf{(P)} rests on T03♯ (theorem of record TH128) via \texttt{lemmas/P8\_T03sharp.md}, not on locked T03; D1 resolved.
+\item \textbf{(T)/(K)}: arrival after exactly c moves and certification need ℓ$_{n}$ ≥ c (eventual); c + 1 scans and the O(p) cost hold
+  on the joint event 𝒯$_{n}$ (\texttt{lemmas/LS\_P6\_repair.md}).
+\item \textbf{(S)}: the ``sharp in order'' remark of the source is not claimed.
+\end{itemize}
+\end{stmt}
+
+\textbf{What changed versus v1.0.} The v1.0 row of \rid{TH161} reads ``PROVED (candidate, API-PXNGAP) given T22(i),(ii), T03, CONC, W7 Thm B; no SF/XF review in the archive'' \src{NBH/ID_REGISTRY.md:309}. W1-PXN supplies the cross-family review that \rid{FR01} asked for. Flagged statement changes, ``none weakening the headline'': (a) the input of (P) changed from locked T03 (which needs the unproved H-T02) to T03♯ (TH128) plus a new random-design step; (b) (R)'s display split, ``because the source's `for every t' chain is false''; (c) an exact-branch convention for very slowly growing $p$; (d) (T)'s ``exactly c moves'' and (K)'s sharp cost hold on an explicit joint event with $\ell_n\ge c$; (e) the source's ``sharp in order'' and failure-rate remarks are not claimed \src{W1/W1-PXN/REPORT.md:10-14}. [CONC] was replaced by the self-contained [CONC′] \src{W1/W1-PXN/REPORT.md:62-63}. For \rid{TH163} (W7 Theorem B / Corollary B, v1.0 status ``Corollary B XF GAP (A-REV9, L2 constants)'') ``The Corollary B constant is now independently XF VERIFIED (R14, re-derived by R21 and both council seats); the registry row itself is HQ's to update'' \src{W1/W1-PXN/REPORT.md:66-68}. ``A > 1: confirmed. No step uses p ≤ n or a lower growth bound on p'' \src{W1/W1-PXN/REPORT.md:29}. Later addenda by \rid{C-PACK}, kept separate: e4 → e4′ and the replaced off-event centre identity of Lemma T(i) \src{W1C/C-PACK/REPORT.md:29-32}; and a correction of a non-headline remark: the finite-$n$ centring rate ``O\_P(√(log n/n))'' added after the council ``fails for slowly growing p; corrected in the consolidated supplement to O\_P(√(log n/n) + 1/p)'' \src{W1C/C-PACK/REPORT.md:10-12}.
+
+\begin{plain}On the masked LH-iid family with $p$ up to any fixed power of $n$ ($p\gg n$ allowed), for v3 + LS0 under the operational premises, the probability that the fit returns output and reports a wrong HPM tends to 0. It is not a delivery statement and it is asymptotic.\end{plain}
+\begin{notproved}
+``Not claimed: delivery P(U) → 0; the method without LS0; the production core as shipped (LS0 is not merged); the study's groups of 5; superpolynomial p; any finite-n guarantee (vacuous at n = 200)'' \src{W1/W1-PXN/REPORT.md:26-27}. ``No uniformity over growing A'' \src{W1/W1-PXN/REPORT.md:34}. Open items: the production bridge (merge LS0 and replay: OB02(c), OB03, DF16, ENG02) \src{W1/W1-PXN/REPORT.md:88-89}; the registry updates of TH161 and TH163 are HQ's \src{W1/W1-PXN/REPORT.md:90}; Lean: ``assessment only'', probability layer not Lean-ready \src{W1/W1-PXN/REPORT.md:45}.
+\end{notproved}
+\end{card}
+
+% ---------------------------------------------------------------------
+\subsection{W1-N1: Lemma N1 and Corollary E}\label{sec:loop:n1}
+\begin{card}{W1-N1}{Lemma N1 (clause M1(b) of TH01) and Corollary E (M1(e)); ticket FR04 / OB01}
+\textbf{Status (verbatim):} \status{PROVED-CHECKED} \src{W1/W1-N1/REPORT.md:11}. Per clause: M1(b) = N1 (OB01): \status{PROVED under the named premises — cross-family checked, council-passed (round 1)}; ``It inherits START/KERNEL (N9: `PROVED (candidate), code-checked'; CHK\_INHERITED `VERIFIED WITH AMENDMENT') and T12 (`PROVED-LOCKED')''. M1(e) Corollary E: \status{PROVED under the same premises}, constant δ₁ (implies the card's 2δ₁). PC1c3 premise ``E[W\_r ĥ\_r] = π(h)'' used by M1(f), (g), (i): \status{Discharged islandwise} (given 𝓒, on 𝒜 ∩ \{r ≤ R′\}) for every bounded declared h; ``Those clauses keep their own statuses and remaining premises (IND-T extension for R′ > 4, GUARD-W, stacking, T03♯)'' \src{W1/W1-N1/REPORT.md:46-48}. Council: Codex 9.3, Opus 8.9 \src{W1/W1-N1/REPORT.md:79}.
+% W1-N1 §2 premises
+\begin{stmt}{W1/W1-N1/STATEMENT.md:68-91}
+\textbf{2. Premises (named, as on the card)}
+\begin{itemize}
+\item \textbf{EX-A} exact scores and arithmetic (TLF:72).
+\item \textbf{EX-S / H-U} fresh independent ideal U[0,1) uniforms within each stream; streams independent (TLF:86). The coded
+  uniforms are on the 2⁻⁵³ grid (\texttt{CODE/cpp/v3\_util.h:60}); H-U idealises this. \emph{[Post-lock exposition note, MP1: the proof
+  uses EX-S only for the within-stream law (iid U[0,1) on stream 9 + r); the only cross-stream property it uses is SI
+  below. The card's full EX-S/IND-T is stronger than needed and is not discharged here.]}
+\item \textbf{START} \texttt{draw\_pi0} returns exact π₀ draws and the reported Z̄₀ = Σ$_{\Omega}$ γ₀ (N9 Claims S, Z; status PROVED (candidate)).
+\item \textbf{KERNEL} the four coded step functions and the order realise the T12 §1 kernels and a uniform state-independent order
+  (N9 rows 1–5, \texttt{NBH/branch\_snapshots/N9-KERNEL/REPORT.md} §2; status PROVED (candidate), code-checked; CHK\_INHERITED
+  VERIFIED WITH AMENDMENT).
+\item \textbf{CAL} 𝓒 is a function of the (fixed) data and streams 0–9.
+\item \textbf{SI (single-island independence; a sufficient premise for N1, weaker than the card's IND-T).} Final stream 9 + r is
+  independent of streams 0–9, for each r. For r ≤ 4 this is part of T12's CAL; for r > 4 it is implied by IND-T, whose
+  extension audit is pending and is \textbf{not} discharged by this ticket. N1 uses no independence between islands.
+\item \textbf{MEAS} the realisation map (c, u) ↦ Φ(c, u) from (calibration value, stream) to the island record (including the four
+  measured populations) is jointly measurable with values in a Polish space (as in T12 STATEMENT §2, EX-S); discharged for
+  the coded island in the code bridge (Lemma B).
+\item \textbf{Potential run.} The identity is about the potential uninterrupted island record (no guard stop at \texttt{:336-339});
+  delivered records are identified with potential ones on 𝒪 by GUARD-W (TLF:86; audit open, not discharged here). No
+  statement conditional on completion is made (clause (c), CEX-guard, \texttt{04\_theory.tex:117,124}).
+\item \textbf{Worker equivalence (v3.1 only).} For v3.1's concurrent island workers, island r's record is the one \texttt{run\_island}
+  computes on stream 9 + r (K63 / Prop W, named premise). The frozen core is serial.
+\end{itemize}
+\end{stmt}
+% W1-N1 §3 Statement N1
+\begin{stmt}{W1/W1-N1/STATEMENT.md:92-105}
+\textbf{3. Statement N1 (target)}
+
+\emph{[Post-lock exposition note, council C1: island-r quantities are defined only on E₀ := 𝒜 ∩ \{r ≤ R′\} ∈ σ(𝓒);
+``a.s. on E₀'' means the localised form E[1$_{E_{0}}$Y | 𝓒] = 1$_{E_{0}}$·(right side) a.s., Y the island-r integrand
+(\texttt{lemmas/L3\_freezing.md}). No change of claim.]}
+
+Under §2, for every fixed index r ≥ 1, every q ∈ \{1, …, 4\} and every h as in §1, almost surely on 𝒜 ∩ \{r ≤ R′\}
+(outside this event island r is not run and nothing is asserted):
+
+\medskip
+\noindent (N1-q) E[Ẑ$_{r}$ · (1/N$_{e}$)Σ$_{i}$ h(S$_{rqi}$) | 𝓒] = Z · π(h);\\
+\noindent (N1) E[Ẑ$_{r}$ · H$_{r}$(h) | 𝓒] = Z · π(h).
+\medskip
+
+In particular, with W$_{r}$ := Ẑ$_{r}$/Z, E[W$_{r}$ | 𝓒] = 1 and E[W$_{r}$ H$_{r}$(h) | 𝓒] = π(h). No regime assumption on X is made.
+\end{stmt}
+% W1-N1 §4 Corollary E
+\begin{stmt}{W1/W1-N1/STATEMENT.md:106-115}
+\textbf{4. Corollary E (clause M1(e))}
+
+Let S₀ ⊆ [p] be any fixed model (the true model), δ₁ := 1 − π(S₀) (π(S₀) := 0 if |S₀| > K), and let h take values in
+[0, 1], be as in §1 and be defined on Ω ∪ \{S₀\}. Under §2, a.s. on 𝒜 ∩ \{r ≤ R′\}:
+
+\medskip
+\noindent E[W$_{r}$ · |H$_{r}$(h) − h(S₀)| | 𝓒] ≤ E[W$_{r}$ · H$_{r}$(1\{S ≠ S₀\}) | 𝓒] = δ₁ ≤ 2δ₁.
+\medskip
+
+(The card prints the bound 2δ₁, \texttt{THEOREM\_LIST\_FINAL.md:111}; the plain-average version δ₁ is the NEW-SYNTH form,
+\texttt{NBH/ID\_REGISTRY.md} TH412 (a).)
+\end{stmt}
+
+\textbf{What changed versus v1.0.} v1.0 records \rid{TH01.b} as \status{N1: PROOF SKETCH} and \rid{TH01.e} as resting on ``PC1c3: PROVED (PC1 claim 3), `E[W$_{r}$ ĥ$_{r}$] = π(h) is still a premise'\,'' (\S\ref{sec:th01}); \rid{OB01} is ``PROOF SKETCH; PC1 claim 3 takes it as a premise''. The ticket proves a statement ``\emph{stronger} than the card in three places'': any jointly measurable $h$ with a fixed bound; each measured round $q$ separately; Corollary E with constant δ₁ \src{W1/W1-N1/REPORT.md:3-5}. Card updates proposed to HQ: TH01.b ``N1: PROOF SKETCH'' → the status above; TH01.e ``carry the constant as `δ₁ (hence the printed 2δ₁)'\,''; the PC1c3 note → ``premise discharged islandwise by W1-N1'' \src{W1/W1-N1/REPORT.md:96-101}. Recommended next step: ``binding goal §13.1 no longer needs the marginal-PIP fallback'' \src{W1/W1-N1/REPORT.md:102}.
+
+\begin{plain}For fixed admissible data, under the named premises, almost surely on successful calibration with island $r$ present, the conditional expectation given 𝓒 of that island's evidence-weighted plain average equals $Z\pi(h)$, for each measured round and each declared jointly measurable $h$ with a deterministic uniform bound \src{W1/W1-N1/STATEMENT.md:62-65}, \src{W1/W1-N1/STATEMENT.md:94-105}; no assumption on the design. It is an identity in expectation over the algorithm's randomness for fixed data, for the potential run.\end{plain}
+\begin{notproved}
+\textbf{Not Lean-certified}: ``Lean (FR04 `Done when'). Not supplied. HQ should either waive it or open a registrar task'' \src{W1/W1-N1/REPORT.md:86-88}. Inherited premises not discharged: N9 START/KERNEL remain PROVED (candidate); EX-A and H-U are idealisations; the GUARD-W audit is open; the IND-T extension is needed for $R'>4$; worker equivalence for v3.1 concurrency is open; ``The general-h accumulator is spec-only in the frozen core; only the marginal plain PIP is coded'' \src{W1/W1-N1/REPORT.md:89-95}. The statement's own ``Not claimed'' list: \src{W1/W1-N1/STATEMENT.md:116-125}. No in-probability statement for the pooled shipped $R'=4$ PIPs follows (\rid{C-PACK}).
+\end{notproved}
+\end{card}
+
+% ---------------------------------------------------------------------
+\subsection{W1-N3: the start-mode routine as coded (the e4 tie-DP invariant)}\label{sec:loop:n3}
+\begin{card}{W1-N3}{Theorem N3-code (a)–(e) and the reference algorithm TDP (f); ticket FR05 / OB03}
+\textbf{Status (verbatim):} \status{PROVED-CHECKED} — ``for the locked target \texttt{STATEMENT.md} v1.3 (Theorem N3-code (a)–(e) + supplementary (f)); N3 as an unconditional property of the frozen code is \textbf{false} (counterexample, clause (d)); e4 for integrated LS0 stays OPEN'' \src{W1/W1-N3/REPORT.md:12-13}. Every lemma \status{PROVED; XF-checked}; council round~1 Sol 9.3, Opus 8.6, all 6 gates PASS \src{W1/W1-N3/REPORT.md:37-44}.
+% N3 §2 heading and (H1) Encoding
+\begin{stmt}{W1/W1-N3/STATEMENT.md:90-98}
+\textbf{2. Hypotheses}
+
+\begin{itemize}
+\item (H1) \textbf{Encoding.} I is an instance as in §1 and \texttt{start\_mode(st, cap)} is called with: \texttt{st.D} a valid pointer to a
+\texttt{Data} with \texttt{D->K = K} and \texttt{D->logprior} of length K+1 equal to λ; \texttt{st.J = J}; \texttt{st.blocks[b]} = C$_{b}$ (increasing);
+\texttt{st.logr[b]} of length 2$^{|C_b|}$ with \texttt{st.logr[b][code(U)] = ρ\_b(U)} for |U| ≤ min(|C$_{b}$|,K) and \texttt{st.logr[b][0] = 0};
+\texttt{st.logprof[b]} of length min(|C$_{b}$|,K)+1 (only its length is read); \texttt{st.codes\_by\_size[b][j]}, j ≤ min(|C$_{b}$|,K), the
+size-j codes in increasing numeric order. These are exactly the fields set by \texttt{build\_tables}/\texttt{build\_start}
+(\texttt{CODE/cpp/v3\_start.h:76-151}). For (e) additionally \texttt{st.blk}, \texttt{st.pos} are the inverse of \texttt{st.blocks}
+(x = \texttt{blocks[blk[x]][pos[x]]}), as set at \texttt{CODE/cpp/v3\_start.h:79-80}, because \texttt{comp} reads them.
+\end{itemize}
+\end{stmt}
+% N3 (H2) EX-A for start_mode
+\begin{stmt}{W1/W1-N3/STATEMENT.md:99-101}
+\begin{itemize}
+\item (H2) \textbf{EX-A for start\_mode's arithmetic}: every addition and comparison on \texttt{double}s inside \texttt{start\_mode} is read as
+exact real arithmetic on the reals λ, ρ; NEG\_INF (\texttt{CODE/cpp/v3\_util.h:22}) is −∞ with −∞ + x = −∞ and −∞ < x for real x.
+(Clause (e) replaces (H2) by (H2-FP).)
+\end{itemize}
+\end{stmt}
+% N3 (H2-FP)
+\begin{stmt}{W1/W1-N3/STATEMENT.md:102-104}
+\begin{itemize}
+\item (H2-FP) (for (e) only) IEEE-754 binary64 arithmetic with round-to-nearest-even, each source-level \texttt{+} and comparison
+executed as written (no extended precision, no reassociation/contraction/fast-math), all λ(k) and read ρ$_{b}$(U)
+finite, and \textbf{every intermediate sum formed by \texttt{start\_mode} and by \texttt{log\_gamma0} finite} (no overflow).
+\end{itemize}
+\end{stmt}
+% N3 (H3)
+\begin{stmt}{W1/W1-N3/STATEMENT.md:105-105}
+\begin{itemize}
+\item (H3) cap ≥ 1 (the method uses the default cap = 10⁶).
+\end{itemize}
+\end{stmt}
+% N3 (H4) Execution
+\begin{stmt}{W1/W1-N3/STATEMENT.md:106-109}
+\begin{itemize}
+\item (H4) \textbf{Execution} (for the claims about the frozen C++ only): cap is representable as a positive \texttt{long}; K + 1,
+J + 1 and the loop counters of \texttt{start\_mode} are representable as \texttt{int}; |C$_{b}$| ≤ 31; all allocations succeed and the
+recursion (depth J) and enumeration complete. (Integer arithmetic is not covered by (H2).) The mathematical
+statements about the algorithm, the family D$_{m}$ and TDP (f) do not need (H4).
+\end{itemize}
+\end{stmt}
+% N3 §3 heading and (a)
+\begin{stmt}{W1/W1-N3/STATEMENT.md:111-116}
+\textbf{3. Theorem N3-code (what the frozen \texttt{start\_mode} returns)}
+
+Let \texttt{res = start\_mode(st, cap)}. Under (H1), (H2), (H3), (H4):
+
+\begin{itemize}
+\item \textbf{(a) Value and membership.} \texttt{res.lg0} = max$_{\Omega_K}$ f, and \texttt{res.S} ∈ 𝒜*: the returned set is always a maximiser of π₀
+of the smallest maximising size, truncated or not.
+\end{itemize}
+\end{stmt}
+% N3 (b)
+\begin{stmt}{W1/W1-N3/STATEMENT.md:117-119}
+\begin{itemize}
+\item \textbf{(b) Counting and flag.} The enumeration visits elements of 𝒜* only, in increasing ≺$_{\mathrm{DFS}}$ order, each at most once,
+and it visits exactly the ≺$_{\mathrm{DFS}}$-first min(N, cap) elements of 𝒜*. \texttt{res.ties} = min(N, cap) and
+\texttt{res.truncated} = [N ≥ cap] (true also at N = cap, when every element has been visited).
+\end{itemize}
+\end{stmt}
+% N3 (c)
+\begin{stmt}{W1/W1-N3/STATEMENT.md:120-122}
+\begin{itemize}
+\item \textbf{(c) Invariant N3 for the code (conditional).} If N ≤ cap, then \texttt{res.S} = S*. In particular \texttt{res.truncated == false}
+⇒ \texttt{res.S} = S*. With the default cap this holds whenever the start has fewer than 10⁶ + 1 smallest-size maximisers
+(N ≤ C(p, k*) ≤ max$_{k\le K}$ C(p, k); so always when max$_{k\le K}$ C(p, k) ≤ 10⁶, in particular for p ≤ 22).
+\end{itemize}
+\end{stmt}
+% N3 (d)
+\begin{stmt}{W1/W1-N3/STATEMENT.md:123-127}
+\begin{itemize}
+\item \textbf{(d) Deviation under truncation.} If N > cap, \texttt{res.S} = the lex\_less-minimum of the ≺$_{\mathrm{DFS}}$-first cap elements of 𝒜*,
+which in general differs from S*. For every cap ≥ 1 there is an instance (abstract tables) with N > cap on which the
+algorithm returns a set ≠ S* (the family D$_{m}$ of L6 with any cap ≤ 2$^{m}$; the frozen code returns that set whenever (H4)
+holds for (D$_{m}$, cap)); for cap = 10⁶ an explicit instance has p = 44, K = 22. The frozen code has no tie-aware fallback, so the
+specification's e4 sentence ``On truncation, use a deterministic tie-aware DP …'' is not implemented.
+\end{itemize}
+\end{stmt}
+% N3 (e)
+\begin{stmt}{W1/W1-N3/STATEMENT.md:128-132}
+\begin{itemize}
+\item \textbf{(e) Floating point.} Under (H1), (H2-FP), (H3), (H4), with ĝ(S) := \texttt{st.log\_gamma0(S)} (the code's own evaluation,
+\texttt{CODE/cpp/v3\_start.h:54-69}): \texttt{res.lg0} = max$_{\Omega_K}$ ĝ, ĝ(\texttt{res.S}) = \texttt{res.lg0} exactly, and
+|\texttt{res.S}| = min\{|S| : ĝ(S) = max ĝ\}. The lexicographic part of (c) can fail in floating point relative to ĝ (explicit
+examples), because rounding can create ĝ-ties that the enumeration, which follows per-block exact maximisers and exact
+prefix equalities, does not visit.
+\end{itemize}
+\end{stmt}
+% N3 §4 Supplementary result (f)
+\begin{stmt}{W1/W1-N3/STATEMENT.md:134-140}
+\textbf{4. Supplementary result (the e4 fallback as specified; reference algorithm, not frozen code)}
+
+\begin{itemize}
+\item \textbf{(f) Tie-aware DP.} The algorithm TDP of \texttt{lemmas/L7\_tie\_aware\_dp.md} (fix V* and k* by the max-plus DP; then for
+i = 0,…,p−1 force i in if some element of 𝒜* is consistent with the decisions so far plus i ∈ S, else force i out;
+feasibility by a constrained max-plus DP) returns S* for every instance under exact arithmetic, without enumerating
+ties, using O(p · Σ$_{b}$ (2$^{|C_b|}$ + (K+1)²)) arithmetic operations and comparisons. It is not implemented in any code
+path of the method; integrating it is engineering work (ENG10/ENG02).
+\end{itemize}
+\end{stmt}
+
+\textbf{What changed versus v1.0.} v1.0's \rid{OB03}/\rid{FR05} sub-obligation asks that ``the DP returns the prescribed smallest-size, lexicographically smallest start-mode maximiser''. W1-N3 flags: ``The DP \textbf{as coded} (\ldots) does so \textbf{only when the number N of smallest-size maximisers is ≤ cap (10⁶)}'', the specified truncation fallback ``has \textbf{no code}'', and ``\textbf{Premise e4 for an integrated LS0 centre is not discharged}'' \src{W1/W1-N3/REPORT.md:3-9}. Clause (a) gives ``a smallest-size maximiser of π₀'' unconditionally, which suggested the check later done by \rid{C-PACK} item~1 \src{W1/W1-N3/REPORT.md:73-77}: the positive consistency proofs need only e4′. \rid{C-ENG} implemented the fallback as TDP-E on an unmerged branch (\S\ref{sec:loop:eng}).
+
+\begin{notproved}
+``e4 for the integrated LS0 centre remains OPEN (needs LS0 in the production core, N2(c)/ENG02 replay)'' \src{W1/W1-N3/REPORT.md:67}. In native doubles ``neither the current enumeration nor a truncation-triggered fallback guarantees the rounded lexicographic choice'' \src{W1/W1-N3/REPORT.md:69-71}. ``Whether ≥ 10⁶ exact smallest-size ties can arise from data (duplicated columns are the known mechanism) is undecided'' \src{W1/W1-N3/REPORT.md:78}. The deviation ``is not shown on data or LH (it is not a counterexample to T38-b1-LH)'' \src{W1/W1-N3/REPORT.md:8-9}.
+\end{notproved}
+\end{card}
+
+% ---------------------------------------------------------------------
+\subsection{W1-GEN: a general correlated design class}\label{sec:loop:gen}
+\begin{card}{W1-GEN}{Theorem GEN (reported-HPM consistency, bounded relevance set, masking allowed)}
+\textbf{Status (verbatim):} \status{PROVED-CHECKED} — ``Theorem GEN (STATEMENT.md v2.3, lemmas/00\_MAIN.md): on a general, checkable class of correlated fixed designs (masking allowed, p ≤ n\textasciicircum{}A with any A), P(𝒪 ∩ \{Ŝ⁺ ≠ S₀\}) → 0''; council round~1 Sol 9.0, Opus 8.9, all gates PASS \src{W1/W1-GEN/REPORT.md:20-25}. Per-clause evidence and input statuses (e.g. (C5)(a) input ``SAME-FAMILY-ONLY''; (C5)(b) originally ``conditional on W7-PART Theorem B (candidate)'', removed by \rid{C-PACK} item~2): \src{W1/W1-GEN/REPORT.md:55-69}. Setting and premises: \src{W1/W1-GEN/STATEMENT.md:24-45}.
+% GEN §2 heading and (H0)
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:46-54}
+\textbf{2. Hypotheses}
+
+\textbf{(H0) = the hypotheses of S-T/T03♯} (SoP \texttt{04\_theory.tex} TH09 card, from NBH TLF:448-451), written out:
+\begin{itemize}
+\item R1: fixed s₀ ≥ 1, p ≤ n$^{A}$, s₀ ≤ K eventually; G;
+\item R: ‖μ‖² ≤ Mn for a fixed M; λ$_{\mathrm{min}}$(R̂$_{S_0}$) ≥ φ₀² for a fixed φ₀ > 0;
+\item SE$_{\lambda}$(j₀), j₀ := ⌈(2A + 1)s₀⌉ + 1: λ$_{\mathrm{min}}$(R̂$_{S_0\cup J}$) ≥ φ₀² for every J with |J| ≤ j₀ (normalized);
+\item SE$_{w}$(m♯$_{n}$; g₀): λ$_{\mathrm{min}}$(X$_{S_0\cup J}$ᵀX$_{S_0\cup J}$) ≥ g₀ for every |J| ≤ m♯$_{n}$ (unnormalized; fixed g₀ > 0), where
+m♯$_{n}$ := min\{m ≥ s₀ : R$_{m}$ ≤ n$^{-(s_0+2)/2}$\}, R$_{m}$ := Σ$_{k=\max(m+1,0)}^{K}$ C(p,k) w(k)/w(s₀) (deterministic, data-free);
+\item BM-∞: θ*²$_{\mathrm{min}}$ n φ₀²/(σ² log n) → ∞. (BM(c > c₀) is not used.)
+\end{itemize}
+\end{stmt}
+% GEN (H1) Bounded, separated relevance set
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:56-62}
+\textbf{(H1) Bounded, separated relevance set (descent).} Deterministic sets 𝒱$_{n}$ ⊇ S₀ with |𝒱$_{n}$| ≤ v̄ (fixed) such that
+\begin{itemize}
+\item (H1a) SE on 𝒱: λ$_{\mathrm{min}}$(R̂$_{\mathcal{V}\cup\{l\}}$) ≥ φ₀² for every l ∈ [p];
+\item (H1b) SEP(c$_{S}$): ζ$_{n}$ := max\{Λ$_{S}$ − Λ$_{S\cup\{l\}}$ : S ⊆ 𝒱, l ∉ 𝒱\} ≤ c$_{S}$ (n − 1) φ₀⁴ θ*²$_{\mathrm{min}}$ eventually, for a fixed
+c$_{S}$ ∈ [0, 1). Convention: ζ$_{n}$ := 0 if 𝒱 = [p].
+Variables outside 𝒱 may be correlated among themselves (subject only to (H0)'s anchored sparse-eigenvalue
+conditions and (H2a)); they only must not carry, given any subset of
+𝒱, more partial signal than the fixed fraction c$_{S}$ of the guaranteed best-truth decrement (n − 1)φ₀⁴θ*²$_{\mathrm{min}}$.
+\end{itemize}
+\end{stmt}
+% GEN (H2) Centre
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:64-75}
+\textbf{(H2) Centre (on the actual blocks).} A deterministic reference S* ⊆ 𝒱 (S* ∈ Ω, s* := |S*| ≤ v̄,
+U*$_{b}$ := S* ∩ C$_{b}$) such that
+\begin{itemize}
+\item (H2a) within-block SE: λ$_{\mathrm{min}}$(R̂$_{T}$) ≥ φ₀² for every nonempty T ⊆ C$_{b}$, every b;
+\item (H2b) VIS(S*): for a deterministic M$_{n}$ → ∞, g$_{b,U}$ := ‖(P$_{U\cup U*_b}$ − P$_{U}$)μ‖² ≥ M$_{n}$ v$_{U}$ log n for every b and every
+U ⊆ C$_{b}$ with U*$_{b}$ ⊄ U;
+\item (H2c) NL(S*): with the leakage family 𝓛(S*) := \{(b, T, l) : l ∈ C$_{b}$ ∖ U*$_{b}$, U*$_{b}$ ⊆ T ⊆ C$_{b}$ ∖ \{l\}\},
+(i) δ²$_{T,l}$ ≤ C$_{L}$ σ² log n on 𝓛(S*) for a fixed C$_{L}$ < ∞, and
+(ii) NL$_{\mathrm{avg}}$(κ) for a fixed κ > 0: if p > s*, eventually
+(p − s*)⁻¹ Σ$_{l\notin S*}$ max$_{T:(b(l),T,l)\in\mathcal{L}(S*)}$ exp(E$_{T,l}$) ≤ n$^{1/2-\kappa}$, where, for a fixed ε₀ > 0 and
+h$_{n}$ := √(2(A + ε₀) log n), E$_{T,l}$ := min\{δ²$_{T,l}$/(2Δ$_{T}$), δ²$_{T,l}$/(2v$_{T}$) + |δ$_{T,l}$|σh$_{n}$/v$_{T}$\}, with E$_{T,l}$ := 0
+when δ$_{T,l}$ = 0 (in particular when Δ$_{T}$ = 0); the average is omitted when p = s*.
+(NL$_{\eta}$(S*): δ²$_{T,l}$ ≤ ησ² log n on 𝓛(S*) with 0 ≤ η < (√(2A+1) − √(2A))², implies (i) and (ii), as in T22iii §2.)
+\end{itemize}
+\end{stmt}
+% GEN existential-certificate paragraph (end of §2)
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:77-80}
+S* is an \textbf{existential certificate} depending on (X, β, σ², partition): it is not required to be the exact minimiser
+of Λ in each block (exact minimisers can contain nulls with negligible gain and violate VIS; R01 item 2). Masking is
+allowed: true variables with no block-level signal given U*$_{b}$ are omitted from S* (they lie in 𝓛(S*)), and S* may
+contain nulls (block-level proxies).
+\end{stmt}
+% GEN §3 heading and (C1)
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:82-87}
+\textbf{3. Claims}
+
+\textbf{(C1) Centre law (generalized T22(iii)).} [G, R (bounded energy only), p ≤ n$^{A}$, (H2), s* ≤ v̄]: 1 − π₀(S*) → 0 in
+probability; on \{π₀(S*) > ½\} the maximiser of γ₀ is unique, so S̃₀ = S*; hence P(S̃₀ = S*) → 1. The proof re-runs
+the locked T22(iii) argument (reference S₀) with reference S*, with (H2c) in place of NL$_{\eta}$, and with EXP′ \textbf{proved}
+(uniform score expansion, L1) instead of assumed.
+\end{stmt}
+% GEN (C1')
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:89-97}
+\textbf{(C1′) Canonical certificate (added after R05, v2.2; sufficient condition for (H2b)–(H2c), no hypothesis changed).}
+Under (H2a), let γ$_{b}$ be the coefficients of the projection of μ on span X$_{C_b}$ (the regression of μ on the block's own
+columns). Assume also ‖μ‖² ≤ Mn. If every γ$_{b}$ = γ$^{L}_{b}$ + γ$^{S}_{b}$ (disjoint supports) with, for a fixed
+η ∈ [0, (√(2A+1) − √(2A))²) and some M$_{n}$ → ∞, (i) ‖X$_{C_b}$γ$^{S}_{b}$‖² ≤ ησ² log n and (ii)
+√((n − 1)φ₀²)·min$_{j\in \mathrm{supp}\,\gamma^L_b}$|γ$^{L}_{b,j}$| ≥ √(ησ² log n) + √(M$_{n}$(σ² + 2M) log n) whenever supp γ$^{L}_{b}$ ≠ ∅,
+then S* := ∪$_{b}$ supp γ$^{L}_{b}$
+satisfies (H2b) and NL$_{\eta}$(S*) (\texttt{lemmas/L8\_certificate.md}). Masked truths = truths with zero (or negligible) block
+coefficient. Checkability: the hypotheses are explicit inequalities in (X, β, σ², partition) — oracle quantities —
+not an observable test from X alone; (H1)–(H2) are polynomial-size checks for given bounded certificates.
+\end{stmt}
+% GEN (C2) Descent
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:99-106}
+\textbf{(C2) Descent.} For C ⊆ 𝒱, C ∈ Ω, let τ(C) ∈ ℕ ∪ \{∞\} be the number of moves of the \textbf{uncapped} greedy path
+(M §6.10 without the cap) from C before it first reaches S₀. [G, R, s₀ fixed, p ≤ n$^{A}$, BM-∞, (H1)]: there are events
+Ω$_{n}$ with P(Ω$_{n}$) → 1 such that on Ω$_{n}$, simultaneously for every such C: every \textbf{centre} of the uncapped path lies in
+2$^{\mathcal{V}}$ (scanned neighbours may lie outside 𝒱), τ(C) ≤ 2$^{\bar{v}}$ − 1, and S₀ has no strictly improving feasible neighbour.
+Consequently the capped production search from C scores S₀ whenever ℓ ≥ τ(C) − 1 (S₀ is the emitted centre if
+C = S₀) and, whenever ℓ ≥ τ(C), its search endpoint is S₀, reached with a completed scan that finds no strict
+improvement and without \texttt{local\_limit} (wording clarified after R04: the public flag \texttt{local\_certified} is evaluated on
+the finally reported HPM, SoP \texttt{02\_method.tex:505-506}).
+\end{stmt}
+% GEN (C3) Main theorem
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:108-111}
+\textbf{(C3) Main theorem.} [(H0), (H1), (H2), premises of §1]. For all n ≥ n₀ (the onset of L3, which includes
+⌊n/2⌋ ≥ v̄ + 1, the BM-∞ and SEP onsets) with ℓ$_{n}$ ≥ 2$^{\bar{v}}$ − 2: D$_{n}$ ≤ P(S̃₀ ≠ S*) + P(Ω$_{n}$ᶜ), where
+P(Ω$_{n}$ᶜ) = O(1/log n) (wording aligned with L5.1 after council R12). Hence D$_{n}$ → 0, P(𝒪 ∩ \{Ŝ⁺ ≠ S₀\}) → 0 and
+liminf$_{n}$ P(𝒪 ∩ \{Ŝ⁺ = S₀\}) = 1 − limsup$_{n}$ P(U$_{n}$). No delivery claim.
+\end{stmt}
+% GEN (C3-fav)
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:112-114}
+\textbf{(C3-fav)} If S* = S₀: under (H0), (H2) and the premises (no (H1)), D$_{n}$ ≤ P(S̃₀ ≠ S₀) → 0 and the same conclusions
+hold (BM-∞ enters only through (H0)).
+\end{stmt}
+% GEN (C4) Random designs
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:115-120}
+\textbf{(C4) Random designs.} Let X$^{r}$ be random, independent of ε; β may be X-measurable (as when a generator scales
+signal on sample-standardized columns). Let 𝒜$_{n}$ be X-measurable events with P(𝒜$_{n}$) → 1, and let 𝒱$_{n}$, S*$_{n}$ be
+X-measurable. Suppose that every deterministic sequence x$_{n}$ ∈ 𝒜$_{n}$ satisfies (H0)–(H2) (resp. (H0), (H2) with
+S* = S₀) with the \textbf{same} fixed constants (A, M, φ₀, g₀, v̄, c$_{S}$, C$_{L}$, κ, ε₀) and the \textbf{same} deterministic
+envelope sequences (a sequence b$_{n}$ → ∞ lower-bounding θ*²$_{\mathrm{min}}$ n φ₀²/(σ² log n), and M$_{n}$ → ∞ in VIS). Then the
+conclusions of (C3) (resp. (C3-fav)) hold under the joint law of (X, ε).
+\end{stmt}
+% GEN (C5) heading and instance (a) LH exact Gram
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:122-128}
+\textbf{(C5) Instances} (each an explicit proof obligation).
+(a) \emph{LH, exact Gram} (BS/W4-T38FULL/T38\_PROOF.md:217-235): X'X = (n − 1)Σ$_{\mathrm{LH}}$, p ≤ n − 1; groups of size g, within
+equicorrelation ρ$_{h}$ ∈ [ρ₋, ρ₊] ⊂ (0, 1); c linked pairs (a$_{i}$, b$_{i}$, ψ$_{i}$), 0 < |ψ$_{i}$| < min(ρ$_{a_i}$, ρ$_{b_i}$), cross-group
+correlation only inside pair units via the hubs (rank-one), as in T38\_PROOF.md:224-235; θ$_{a_i}$ = β$_{i}$ ≠ 0,
+θ$_{b_i}$ = −ψ$_{i}$β$_{i}$, visible hubs θ$_{h}$ ≠ 0, fixed c, number of visible groups and coefficients; SIZE g ≤ B$_{n}$ < 2g. Claim:
+(H0)–(H2) hold with S* = S₀ ∖ M, 𝒱 = union of the signal units (pair unions and visible groups), c$_{S}$ = 0, η = 0.
+Input used: blocks = groups under SIZE (W1-EXP Lemma 4.2, cited with its status).
+\end{stmt}
+% GEN (C5)(b) LH-iid
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:129-131}
+(b) \emph{LH-iid} (BS/API-PXNGAP/PROOF.md:36-60) with SIZE, p ≤ n$^{A}$: (C4) applies with 𝒜$_{n}$ built from partition recovery
+(W7-PART Theorem B, candidate) and [CONC]; (H1), (H2) to be \textbf{verified directly} on 𝒜$_{n}$ (deterministic envelopes),
+not inferred from API-PXNGAP's start result. Conditional on the candidate inputs; labelled so.
+\end{stmt}
+% GEN (C5)(c) W
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:132-134}
+(c) \emph{W} (exact Gram, groups of 9 at ¼, cross ε$_{n}$ = 1/(np), two n$^{-1/4}$ signals in different groups, σ² = 1; BS/MEET-THM
+TLF:71,178, R1\_C.md:362-363): (H0) verified directly (no S-T row exists for W, SoP \texttt{04\_theory.tex:846}), and
+(C3-fav) with S* = S₀.
+\end{stmt}
+% GEN (C5)(d) Study generator
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:135-143}
+(d) \emph{Study generator} (Scripts/Data\_generators/gen\_dev\_data.R:18-42). Asymptotic sequence: groups of 5; p$_{n}$ = 5G$_{n}$ → ∞,
+p$_{n}$ ≤ n$^{A}$; (v2.3, after sweep R10 item 6) s₀ = 14 with one of the study's two high-p layouts at fixed indices (step 7
+or step 13, the R code's positions), extended as a theoretical sequence (the R function defines truth only for
+p ∈ \{30, 500, 1000\}); the 14-entry β pattern (1.4, −1.0, 1.8, −1.2, 0.8, −1.6 cycled) and fixed signal scale c; iid N(0, Σ$_{s}$) rows,
+σ² = 1; signal formed on sample-standardized columns (β X-measurable, (C4)). Claim to be proved or refuted per
+scenario: S1, S3, S4, S6 covered by (C3-fav) via (C4); S2 (AR(1)) and S5 (between-group 0.3) not covered (to be
+explained, with the failing hypothesis). The partition is checked as it is (unions of whole groups for S3/S4/S6 on a
+margin event), not assumed to equal groups. At n = 200 nothing quantitative is claimed; M5(0) remains the every-n
+statement.
+\end{stmt}
+% GEN (C6) Boundedness of relevance set
+\begin{stmt}{W1/W1-GEN/STATEMENT.md:145-154}
+\textbf{(C6) Boundedness of the relevance set cannot be dropped from the LS0 route.} (v2.1 after R06, see LOG.) An
+explicit exact-Gram design (s₀ ≥ 17 mutually orthogonal truths, so no block table scores S₀; one truth x₀ carries
+d$_{n}$ ≍ log n weak, nearly orthogonal proxies x$_{i}$ = (a/√d$_{n}$)x₀ + √(1 − a²/d$_{n}$) z$_{i}$; other nulls orthogonal) satisfies
+(H0), (H1a), (H1b) with 𝒱 = S₀ ∪ proxies, (H2a), and VIS/NL for the growing reference S* = S₀ ∪ (proxies outside
+x₀'s block) — every hypothesis except the two size bounds |𝒱$_{n}$| ≤ v̄ and s* ≤ v̄ — and with probability → 1,
+|S̃₀ Δ S₀| ≥ ⌈d$_{n}$/B⌉ − 1 > 2(ℓ$_{n}$ + 1). Since each move changes at most two memberships, LS0 (ℓ$_{n}$ moves plus a final
+scan) scores only models within symmetric-difference distance 2(ℓ$_{n}$ + 1) of S̃₀, so P(LS0 from S̃₀ misses S₀) → 1.
+Conclusion: no universal LS0-discovery guarantee survives removal of both size bounds (the inclusion
+D$_{n}$ ≤ P(LS0 misses S₀) stays true; its right side tends to one). Not claimed: that the full method's D$_{n}$ fails to
+vanish (the SMC or the final local search may score S₀). Growth slower than the cap is not excluded.
+\end{stmt}
+
+\textbf{What changed versus v1.0.} v1.0 has the correlated-design guarantees only on explicit families (LH, W; \rid{FR03}) and does not cover the study's own generator (\rid{FR02}). Theorem GEN is ``the per-block analogue of Song–Liang's Condition 5, with violations allowed'' \src{W1/W1-GEN/REPORT.md:47-49}; its instances (C5) cover LH (exact Gram), LH-iid, W (``new: W layer (iii) was `not covered'\,'') and, as asymptotic sequences, the study scenarios S1/S3/S4/S6 \src{W1/W1-GEN/REPORT.md:64-67}. Statement changes after lock, ``none weakens the main theorem'': \src{W1/W1-GEN/REPORT.md:3-8}. Lemma SEL and L8 (C1′) later received dedicated cross-family checks (\rid{C-PACK} item~3).
+
+\begin{notproved}
+``\textbf{(C6) is a counterexample for the LS0 route, not for the full method}'' \src{W1/W1-GEN/REPORT.md:9-11}. ``\textbf{Everything is asymptotic.} At the study's own size (n = 200, p = 500) the visibility margins of the covered scenarios are 0.16–0.94 (< 1)'' \src{W1/W1-GEN/REPORT.md:12-14}. The result is about ``\textbf{v3.1 + LS0 as specified} (LS0 is not in production code), under the named implementation premises, incl. e4'' \src{W1/W1-GEN/REPORT.md:15-16}. Not claimed: \src{W1/W1-GEN/STATEMENT.md:158-161}. Frontier left: growing relevance sets (fixed-ρ AR(1) = study S2, common-factor designs = S5) \src{W1/W1-GEN/REPORT.md:88-91}, taken up by \rid{C-GROW}.
+\end{notproved}
+\end{card}
+
+% ---------------------------------------------------------------------
+\subsection{C-PACK: closure of the Wave~1 residuals}\label{sec:loop:pack}
+\begin{card}{C-PACK}{e4 → e4′; LH-iid without candidate inputs; SEL/L8 checks; Song–Liang corollaries SL0–SL2; PXN consolidated supplement}
+\textbf{Status (verbatim):} \status{PROVED-CHECKED} — ``items 1–4 (council round 1 passed: Codex gpt-6.1-sol xhigh 9.0, Claude Opus 5.5 high 8.7, all six gates PASS for both); item 5 delivered with its fidelity check FAITHFUL-WITH-FIXES (all fixes applied)'' \src{W1C/C-PACK/REPORT.md:20-21}. Per item: 1 \status{PROVED; XF-checked (R33 GAP → 7 fixes), re-read R38/R39, council}; 2 \status{PROVED; XF-checked (R35 V-W-A, 3 fixes), R38/R39, council}; 3 SEL and L8 (C1′) \status{dedicated XF check VERIFIED-WITH-AMENDMENTS; patch re-checked}; 4 \status{PROVED; XF-checked (R34 ERROR-as-written → 9 fixes; core re-derived valid), R38/R39, council}; 5 \status{fidelity FAITHFUL-WITH-FIXES (0/0/4/2), all applied} \src{W1C/C-PACK/REPORT.md:58-63}. The corollary file itself labels SL0, SL1, SL1′, SL2 \status{PROVED (by this seat, unchecked)} with R34's re-derivation \src{W1C/C-PACK/lemmas/I4_SL_corollaries.md:3-7}.
+% C-PACK Item 1 heading + T1.a (audit)
+\begin{stmt}{W1C/C-PACK/STATEMENT.md:9-16}
+\textbf{Item 1 — N3-USE (e4 is not needed for consistency)}
+
+T1.a (audit) Catalogue every occurrence and substantive use of e4, N3 and start-mode tie selection in W1-PXN, W1-GEN and
+M5(b1-LH), including T38 Theorem b1 and Corollary b1-LH (\texttt{NBH/branch\_snapshots/W6-FIXREV1/T38\_PROOF.md}). Distinguish
+method definitions and premise lists from deductions, and distinguish start-mode ties from LS0 move ties and
+reported-HPM ties. The target audit conclusion is that the consistency deductions requiring identification of the LS0
+centre with a reference R use that identification only on \{π₀(R) > 1/2\}, where R is feasible and deterministic given X
+(and the fixed model parameters). Any use outside this event must be listed and resolved or retained explicitly as an
+obligation.
+\end{stmt}
+% C-PACK T1.b (Lemma UM)
+\begin{stmt}{W1C/C-PACK/STATEMENT.md:18-21}
+T1.b (Lemma UM) Use the instance, feasible set Ω$_{K}$, objective f and normalized start law π₀ of \texttt{W1/W1-N3/STATEMENT.md}
+§1. Under its (H1), (H2), (H3), (H4), if argmax$_{S\in\Omega_{K}}$ f(S) = \{R\}, then \texttt{start\_mode(st, cap).S = R}. In particular this
+holds on \{π₀(R) > 1/2\}. The implication follows from N3(c) with N = 1 (also from N3(a)); it requires cap ≥ 1 and does not
+require a false truncation flag.
+\end{stmt}
+% C-PACK T1.c (Lemma UM-FP)
+\begin{stmt}{W1C/C-PACK/STATEMENT.md:23-29}
+T1.c (Lemma UM-FP) Under W1-N3 (H1), (H2-FP), (H3), (H4), let ĝ(S) be the coded \texttt{st.log\_gamma0(S)}. If
+argmax$_{S\in\Omega_{K}}$ ĝ(S) = \{R\}, then \texttt{start\_mode(st, cap).S = R}, by N3(e). To relate this to the mathematical objective f*,
+let f̂ be the exact-real evaluation of the stored double tables, η = max$_{\Omega_{K}}$|f̂−f*|, and let ε be a finite uniform bound
+on |ĝ−f̂|. For feasible R, define Δ(R) = f*(R) − max$_{S\in\Omega_{K}\setminus\{R\}}$ f*(S), with maximum of an empty set equal to −∞. The
+sufficient condition FP-TAB is Δ(R) > 2(η+ε). If ε is supplied by the recursive-summation γ$_{k}$ formula in I1 §3,
+explicitly assume every index used satisfies ku < 1, where u = 2$^{-53}$. No claim is made that FP-TAB holds for the coded
+scorer, or with probability tending to one under fixed binary64 precision.
+\end{stmt}
+% C-PACK T1.d (premise replacement)
+\begin{stmt}{W1C/C-PACK/STATEMENT.md:31-37}
+T1.d (premise replacement) Supply a source-by-source replacement of the mathematical e4 obligation by W1-N3(c) +
+uniqueness, together with the retained integration premise: LS0 starts from and emits the coded \texttt{start\_mode(st, cap).S},
+on correctly encoded tables (H1), with cap ≥ 1 and execution hypothesis (H4). Under the consumers' existing EX-A, their
+events \{π₀(R) > 1/2\} give uniqueness and T1.b identifies that centre with R. Supply the replacement text and affected
+locations as patches inside C-PACK. LS0 integration remains an implementation obligation for C-ENG. T1.c is a separate
+conditional native-binary64 start-mode result; it does not replace EX-A elsewhere in PXN, GEN or M5(b1-LH), and does not
+establish those theorems for floating-point execution.
+\end{stmt}
+% C-PACK Item 2 (T2 LH-iid)
+\begin{stmt}{W1C/C-PACK/STATEMENT.md:39-53}
+\textbf{Item 2 — LH-iid without the two candidate inputs}
+
+T2 (LH-iid without the two candidate inputs) Work in precisely the common LH-iid family of \texttt{W1/W1-PXN/STATEMENT.md} §1 and
+\texttt{W1/W1-GEN/lemmas/L6\_instances.md} (b): fixed g, c, v, ρ, ψ$_{i}$, nonzero signal coefficients and σ² with the restrictions in
+PXN §1; iid Gaussian raw design rows, independent Gaussian noise; 18 ≤ p$_{n}$ = gG$_{n}$ ≤ n$^{A}$, p$_{n}$ → ∞, fixed A ≥ 1; and
+eventual SIZE g ≤ B$_{n}$ < 2g for the actual method's B$_{n}$ and complete-linkage/top-down-cut/next-fit partition. Retain GEN's
+method, implementation and random-design hypotheses, including its uniform constants and deterministic envelopes.
+Compare Theorem B as used by GEN with PXN's repaired Theorem R, including partition definitions, parameter domain, SIZE
+onset and exact-branch convention. Prove that repaired (R-c), or the independently checked route (R′), supplies
+P(blocks ≠ groups) → 0. Replace the [CONC] correlation-rate use by [CONC′]'s δ$_{n}$ = 32√(2(A+1)log n/(n−1)), giving uniform
+operator error O(log n)δ$_{n}$ = o(1). Combine this with GEN's fixed-signal SLLN arguments for the remaining components of 𝒞$_{n}$
+and retain GEN's separate verification of its other X-event components. Conclude GEN (C5)(b) under the joint law of
+(X,ε), without assuming candidate Theorem B or [CONC] as additional inputs. "Unconditional" means removal of these two
+input conditions, not removal of GEN's remaining assumptions or a delivery claim. Record any domain mismatch explicitly
+and prove an extension or state the resulting common-domain restriction. Deliver Lemma I2 and exact citation/replacement
+patches.
+\end{stmt}
+% C-PACK Item 3 (T3)
+\begin{stmt}{W1C/C-PACK/STATEMENT.md:55-58}
+\textbf{Item 3 — dedicated checks of W1-GEN Lemma SEL (L6(d)) and L8 (C1′)}
+
+T3 One fresh Codex gpt-6.1-sol (xhigh) line-by-line check of each, plus falsification numerics; fixes as patches in
+\texttt{patches/} referencing the original files (Wave1 files are not edited); any repair is independently re-checked; an actual
+counterexample triggers the protocol's stop-and-report rule.
+\end{stmt}
+% C-PACK Item 4 heading + T4.a
+\begin{stmt}{W1C/C-PACK/STATEMENT.md:60-66}
+\textbf{Item 4 — Song–Liang corollaries}
+
+T4.a \texttt{SONG\_LIANG\_MAP.md} maps Song \& Liang (2015) Thm 1–2, Cor 1, Thm 3, thresholded ξ$_{q}$, Thm S, Thm 4/Cor 2, Conditions
+3/5 and §6 to our corresponding result or explicit gap. Each entry records the original conclusion and hypotheses actually
+inspected, our regime, important differences, verbatim status and source location. Inspect the online supplement for
+Thm S if accessible; otherwise mark its exact statement/hypotheses NOT INSPECTED and compare only the MAP-consistency
+description in the main paper. Selection consistency does not supply their Hellinger/predictive theorem, exponential
+probability rates, exponential-p regime, or algorithmic equivalence. Thm 4/Cor 2 is referred to C-MIS.
+\end{stmt}
+% C-PACK T4.b (posterior error bounds), first paragraph
+\begin{stmt}{W1C/C-PACK/STATEMENT.md:68-74}
+T4.b Define π to be the exact D0 posterior, PIP$_{j}$ = π(j∈S), and δ$_{n}$ = 1−π(S₀), with π(S₀)=0 outside Ω. For every n, prove
+max$_{j}$|PIP$_{j}$−1\{j∈S₀\}| ≤ δ$_{n}$ and max$_{j\in S_{0}}$(1−PIP$_{j}$)+max$_{j\notin S_{0}}$PIP$_{j}$ ≤ 2δ$_{n}$ (maxima over empty index sets are zero). Any
+attainment example must state its feasible support and is a sharpness example among probability laws on Ω, not a claim
+that a D0 posterior generated by data attains equality. When S₀∈Ω, prove the uniform bound sup$_{h:\Omega\to[0,1]}$|π(h)−h(S₀)| ≤
+δ$_{n}$. If δ$_{n}$ = O$_{P}$(r$_{n}$), r$_{n}$→0, then these posterior errors are O$_{P}$(r$_{n}$); \{j:PIP$_{j}$>q$_{n}$\}=S₀ with probability tending to one
+when r$_{n}$=o(min(q$_{n}$,1−q$_{n}$)); exact MPM and every exact-posterior MAP/HPM are consistent. Here HPM in this clause means the
+posterior maximiser, distinct from the method's best-scored reported model.
+\end{stmt}
+% C-PACK T4.b instantiation paragraph
+\begin{stmt}{W1C/C-PACK/STATEMENT.md:76-80}
+Instantiate r$_{n}$=√(log n/n) only under all T03♯ hypotheses R1, G, R, SE$_{\lambda}$(j₀), SE$_{w}$(m♯$_{n}$;g₀), and BM-∞ or BM(c>c₀), as
+defined in the TH09 card, under its fixed-design noise law; or under all W1-PXN (P) hypotheses with its joint data law.
+Any further random-design instance must exhibit the required uniform design events and envelopes. Without beta-min,
+retain the other hypotheses of T03♯'s large-signal clause and obtain only max$_{j\in J_{n}(c)}$(1−PIP$_{j}$) ≤ π(S⊉J$_{n}$(c)) =
+O$_{P}$(√(log n/n)), with J$_{n}$(c) and c>c₀ as in TH09; no specificity or full-support recovery follows from that clause alone.
+\end{stmt}
+% C-PACK T4 reported summaries paragraph
+\begin{stmt}{W1C/C-PACK/STATEMENT.md:82-88}
+Reported summaries retain their own premises and statuses. Quote M1(i)'s status verbatim, "(h), (i): PROVED (by this seat,
+unchecked)"; retain its T03♯ hypotheses, osc d ≤ D*=O$_{P}$(1), declared summaries, implementation premises and pending IND-T
+extension audit. Its logarithmic stacking R′$_{n}$=4⌈log₂(n+p+1)⌉ is for a fixed finite declared list, and does not assert
+simultaneous sure screening over growing p$_{n}$ reported PIPs. Quote separately the card's larger stacking configuration if
+used for a growing declared list. W1-N1 gives the islandwise evidence-weighted bound under its named premises on the
+successful-calibration/island-existence event; it does not establish consistency of pooled shipped R′=4 PIPs.
+Reported-HPM consistency remains joint with output, with no delivery claim.
+\end{stmt}
+% C-PACK T4 SL2 paragraph
+\begin{stmt}{W1C/C-PACK/STATEMENT.md:90-94}
+SL2 is conditional on M4(b),(c), exact score ordering, a positive-capacity store updated as top$_{c}$(T$_{old}$∪S$_{added}$), truth
+discovery with output, and δ$_{n}$=O$_{P}$(r$_{n}$) under the chosen law: P(O∩\{max$_{j}$|PIP$^{T}_{j}$−1\{j∈S₀\}|>2δ$_{n}$\})→0; consequently the same
+probability with threshold t$_{n}$ tends to zero whenever r$_{n}$=o(t$_{n}$). State the input statuses verbatim; store-restricted PIPs
+are distinct from the sampler's reported PIPs. Misspecification (Song–Liang Thm 4/Cor 2) is routed to C-MIS and is not
+proved here.
+\end{stmt}
+
+\textbf{What changed versus v1.0.} (i) \rid{TH05} and its consumers: e4 is replaced by e4′ (``LS0 must start from and emit the coded \texttt{start\_mode(st, cap).S} \ldots{} no result needs the lex rule'') \src{W1C/C-PACK/REPORT.md:4-6}; ``M5(b1-LH)'s `conditional on N3' fallback label becomes unnecessary'' (on adoption of the patches by HQ) \src{W1C/C-PACK/REPORT.md:84-85}. (ii) \rid{W1-GEN} (C5)(b) ``holds \textbf{without} the two candidate inputs'' (W7 Thm B = \rid{TH163}, [CONC]); ``TH163 registry row stays HQ's call'' \src{W1C/C-PACK/REPORT.md:33-37}, \src{W1C/C-PACK/REPORT.md:85}. (iii) New exact-posterior corollaries of \rid{TH09} and its random-design analogs (SL0, SL1, SL1′) and a store-restricted PIP result (SL2); a 13-row Song--Liang map \src{W1C/C-PACK/REPORT.md:41-50}. (iv) A non-headline W1-PXN remark corrected (\S\ref{sec:loop:pxn}).
+
+\begin{notproved}
+\src{W1C/C-PACK/STATEMENT.md:107-109}: ``No delivery claim (P(𝒪) → 1); no floating-point guarantee for the coded scorer; no Hellinger/predictive contraction; no exponential-p result; no consistency theorem for the shipped (R′ = 4) pooled reported PIPs; no status upgrade of any input.'' The binary64 lemma covers the start-mode identification step only (FP-TAB untested); ``GEN (C6) and the T38 data-dependent-centre sketch are outside the replacement'' \src{W1C/C-PACK/REPORT.md:7-9}. Item 2 is ``Asymptotic only (onset ≈ 10¹⁰, council estimate)'' \src{W1C/C-PACK/REPORT.md:37}. ``Song–Liang Theorem S supplement not obtained (publisher access failed, R38)'' \src{W1C/C-PACK/REPORT.md:87}. Until \rid{C-ENG}'s merge, ``e4′'s integration clauses remain implementation premises'' \src{W1C/C-PACK/REPORT.md:82-83}.
+\end{notproved}
+\end{card}
+
+% ---------------------------------------------------------------------
+\subsection{C-MIS: misspecified candidate sets}\label{sec:loop:mis}
+\begin{card}{C-MIS}{Theorem MIS, Theorem F, Corollaries H, D, D′, N; Lemma Z (Song–Liang Thm 4 / Cor 2 analog)}
+\textbf{Status (verbatim):} \status{PROVED-CHECKED} — ``the narrowed form in §2: Theorem MIS (i)–(iii) with Proposition P, Lemma DR and Lemma GD(a)/(b); Corollaries H, D and D′; Theorem F with Corollaries F(a) and F(b) and Lemma T; Lemma Z; Corollary N; and Examples E1–E3. Lemmas O1 and O2 are frontier statements about the proof technique'' \src{W1C/C-MIS/REPORT.md:23-25}; council round~1 Sol 9.2, Opus 9.0, all six gates PASS \src{W1C/C-MIS/REPORT.md:126-127}. Setting (candidate set re-run with the shipped prior and score): \src{W1C/C-MIS/STATEMENT.md:37-50}.
+% C-MIS §2 heading, (GR), Definitions, reduced model
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:52-58}
+2. Theorem MIS (Gaussian-residual omitted part)
+
+\textbf{(GR).} Conditionally on X$^{r}$\_𝒞 (for a fixed candidate design: unconditionally), ω = a1 + X$^{r}$\_𝒞γ + ξ with
+ξ \textasciitilde{} N$_{n}$(0, τ²I$_{n}$), (a, γ) measurable functions of X$^{r}$\_𝒞, τ² ≥ 0 fixed; conditionally on X$^{r}$\_𝒞, ξ and ε are independent
+and ε \textasciitilde{} N$_{n}$(0, σ²I). The method's uniforms are independent of (X$^{r}$, ε, ξ).
+\textbf{Definitions.} β\^{}𝒞 := β\_𝒞 + γ; \textbf{S₀\^{}𝒞 := supp β\^{}𝒞}; s₀\^{}𝒞 := |S₀\^{}𝒞|; σ\_𝒞² := σ² + τ²; θ\^{}𝒞 := D$_{x}$β\^{}𝒞; μ\^{}𝒞 := X\_𝒞θ\^{}𝒞.
+Then y$^{r}$ = (α + a)1 + X$^{r}$\_𝒞β\^{}𝒞 + ε′, ε′ := ε + ξ, and ε′ | X$^{r}$\_𝒞 \textasciitilde{} N$_{n}$(0, σ\_𝒞²I) (so ε′ is independent of X$^{r}$\_𝒞).
+\end{stmt}
+% C-MIS (H-MIS)
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:59-63}
+\textbf{(H-MIS)} = the T03♯ hypotheses (SoP \texttt{04\_theory.tex:774-782}) for the candidate problem, i.e. with
+(p, S₀, s₀, θ*, μ, σ*²) := (p\_𝒞, S₀\^{}𝒞, s₀\^{}𝒞, θ\^{}𝒞, μ\^{}𝒞, σ\_𝒞²), eigenvalue conditions on subsets of 𝒞, and in particular
+\textbf{s₀\^{}𝒞 ≥ 1 fixed} (the empty-support case is excluded; not claimed), p\_𝒞 ≤ n$^{A}$, ‖μ\^{}𝒞‖² ≤ Mn, λ$_{\mathrm{min}}$(R̂\_\{S₀\^{}𝒞\}) ≥ φ₀²,
+SE$_{\lambda}$(j₀), SE$_{w}$(m♯$_{n}$; g₀), and BM-∞ or BM(c > c₀) \textbf{with σ\_𝒞²}.
+\end{stmt}
+% C-MIS Theorem MIS (i)
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:64-72}
+\textbf{Theorem MIS.}
+\begin{itemize}
+\item[(i)] \emph{Fixed candidate design.} For a deterministic array (X$^{r}$\_𝒞)$_{n}$ with GR and (H-MIS): 1 − π\_𝒞(S₀\^{}𝒞 | y) = O$_{P}$(r$_{n}$);
+max$_{j}$|PIP$_{j}$ − 1\{j ∈ S₀\^{}𝒞\}| ≤ 1 − π\_𝒞(S₀\^{}𝒞 | y) (every data set, s₀\^{}𝒞 ≤ K); P(MPM\_𝒞 ≠ S₀\^{}𝒞) → 0;
+P(S†\_𝒞 ≠ S₀\^{}𝒞) ≤ 2E[1 − π\_𝒞(S₀\^{}𝒞 | y)] → 0 (no expectation rate is claimed); without beta-min, for fixed c > c₀,
+π\_𝒞(S ⊉ J$_{n}$\^{}𝒞(c) | y) = O$_{P}$(r$_{n}$), J$_{n}$\^{}𝒞(c) := \{j ∈ S₀\^{}𝒞 : θ\^{}𝒞$_{j}$² ≥ cσ\_𝒞² log n/(nφ₀²)\}.
+Consequences: a candidate j ∈ S₀\^{}𝒞 ∖ S₀ (null in the full model, carrying omitted signal) has PIP$_{j}$ → 1; a true
+candidate with β$_{j}$ + γ$_{j}$ = 0 (cancellation) has PIP$_{j}$ → 0. \textbf{Corollary N (L1):} every T ≠ S₀\^{}𝒞 has
+π\_𝒞(T | y) ≤ 1 − π\_𝒞(S₀\^{}𝒞 | y); in particular π\_𝒞(S₀ ∩ 𝒞 | y) → 0 when S₀ ∩ 𝒞 ≠ S₀\^{}𝒞, and the (a.s. dense when
+τ² > 0 and the centred candidate matrix has full column rank) sample-projection support gets vanishing mass.
+\end{itemize}
+\end{stmt}
+% C-MIS Theorem MIS (ii), (ii')
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:73-78}
+\begin{itemize}
+\item[(ii)] \emph{Random candidate design, envelope form.} X$^{r}$\_𝒞 random, GR conditionally, fixed constants (A, s, M, φ₀, g₀, σ\_𝒞²)
+and a fixed c > c₀ or a deterministic M$_{n}$ → ∞, and measurable sets 𝒜$_{n}$ with P(X$^{r}$\_𝒞 ∈ 𝒜$_{n}$) → 1 such that every
+x ∈ 𝒜$_{n}$ satisfies, at that n, the finite-n inequalities of (H-MIS) with these constants, s₀\^{}𝒞(x) = s ≥ 1, and
+BM(c) (resp. θ\^{}𝒞$_{\mathrm{min}}$(x)²nφ₀²/(σ\_𝒞² log n) ≥ M$_{n}$). Then every deterministic sequence x$_{n}$ ∈ 𝒜$_{n}$ is a T03♯ array,
+and the conclusions of (i) hold under the joint law (diagonal argument for tightness, Lemma DR). (ii′): dropping the
+beta-min requirement from 𝒜$_{n}$, the inclusion clause π\_𝒞(S ⊉ J$_{n}$\^{}𝒞(c) | y) = O$_{P}$(r$_{n}$) holds under the joint law.
+\end{itemize}
+\end{stmt}
+% C-MIS Theorem MIS (iii) jointly Gaussian rows incl. Lemma GD
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:79-96}
+\begin{itemize}
+\item[(iii)] \emph{Jointly Gaussian rows.} Convention: 𝓜 := S₀ ∖ 𝒞 (the \textbf{active} omitted columns; inactive omitted columns are
+marginalised out, which can create precision-graph edges — R04 finding 1). Rows (x$^{r}$\_\{𝒞,i\}, x$^{r}$\_\{𝓜,i\}) iid N(m, Σ)
+(m, Σ may depend on n), Σ\_𝒞𝒞 ≻ 0, independent of ε. Then \textbf{at each n} the GR decomposition holds with
+γ = Σ\_𝒞𝒞⁻¹Σ\_𝒞𝓜β\_𝓜, a = m\_𝓜ᵀβ\_𝓜 − m\_𝒞ᵀγ, τ² = β\_𝓜ᵀ(Σ\_𝓜𝓜 − Σ\_𝓜𝒞Σ\_𝒞𝒞⁻¹Σ\_𝒞𝓜)β\_𝓜; β\^{}𝒞 = Σ\_𝒞𝒞⁻¹cov(x\_𝒞, y) (slope with an
+intercept); for centred rows (m = 0) this is SL's β₀ and S₀\^{}𝒞 = SL's s̃ (Proposition P(a)–(b)). \textbf{GR as used by Theorem MIS additionally requires τ$_{n}$² ≡ τ² fixed in n}
+(Gaussianity alone gives a possibly n-dependent τ$_{n}$²; e.g. an independent omitted column of variance n² gives
+τ$_{n}$² = n²); MIS (i)–(ii) is applied only under this fixed-variance requirement. If Σ ≻ 0, Θ = Σ⁻¹: γ = −Θ\_𝒞𝓜Θ\_𝓜𝓜⁻¹β\_𝓜,
+τ² = β\_𝓜ᵀΘ\_𝓜𝓜⁻¹β\_𝓜 (P(c)).
+\textbf{One active omitted variable k (β$_{k}$ ≠ 0), Θ the precision of the marginal vector (x\_𝒞, x$_{k}$):} γ$_{j}$ = −β$_{k}$Θ$_{jk}$/Θ$_{kk}$, so a candidate j that is null in the full model is
+in S₀\^{}𝒞 iff Θ$_{jk}$ ≠ 0 (nonzero partial correlation with x$_{k}$ given the other candidates), whatever its marginal
+correlation; a true candidate j leaves S₀\^{}𝒞 iff β$_{j}$ = β$_{k}$Θ$_{jk}$/Θ$_{kk}$ (cancellation) (P(d)). With several omitted
+variables, contributions can cancel; only supp γ ⊆ \{j : Θ$_{jk}$ ≠ 0 for some k ∈ 𝓜\} is claimed. Membership in S₀\^{}𝒞 gives
+selection only together with (H-MIS), in particular beta-min.
+\textbf{Design hypotheses with probability → 1 (Lemma GD).} (a) p\_𝒞 fixed, m, Σ, β fixed in n, Σ\_𝒞𝒞 ≻ 0, β\^{}𝒞 ≠ 0: (ii)
+applies; here J$_{n}$\^{}𝒞(c) = S₀\^{}𝒞 eventually, so the inclusion clause recovers, in the jointly Gaussian special case,
+SL's Corollary 2 conclusion (π(S₀\^{}𝒞 ⊆ S) → 1; S₀\^{}𝒞 = s̃ for m = 0, its intercept-adjusted analogue otherwise) — in general triangular arrays the no-beta-min clause screens only J$_{n}$\^{}𝒞(c). (b) \emph{(optional, conditional)} growing p\_𝒞 ≤ n$^{A}$ under stated population restricted-eigenvalue, variance,
+projected-energy and projected beta-min assumptions; projection sparsity (fixed s) is \textbf{assumed}, never inferred from
+Gaussianity (one omitted variable can have a growing number of graph neighbours, e.g. a one-factor design).
+\end{itemize}
+\end{stmt}
+% C-MIS Example E1
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:97-100}
+\textbf{Example E1 (analytic target separation; L2).} x₁, x₂, x₃, z iid N(0,1), 𝒞 = \{1,2,3\}, omitted x$_{k}$ = −x₁ + x₂ + z,
+y = x₁ + x$_{k}$ + ε. Full truth \{1, k\}; S₀ ∩ 𝒞 = \{1\}; β\^{}𝒞 = (0,1,0), S₀\^{}𝒞 = \{2\}; σ\_𝒞² = σ² + 1. By GD(a), π\_𝒞(\{2\} | y) → 1:
+candidate 2 is a proxy, the true candidate 1 is cancelled, and both π\_𝒞(\{1\} | y) and the posterior mass of the
+(almost surely dense) sample-projection support \{1,2,3\} tend to 0.
+\end{stmt}
+% C-MIS Null projection (Lemma Z, L6)
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:101-105}
+\textbf{Null projection (Lemma Z, L6).} If s₀\^{}𝒞 = 0 (β\^{}𝒞 = β\_𝒞 + γ = 0: the candidate coefficients and the projected omitted
+contribution cancel coordinatewise, so the aggregate candidate regression slope vanishes; this may result from cancellation and does
+not require independence of individual omitted predictors; under EP:
+P\_𝒞μ$_{c}$ = 0) and p\_𝒞 is bounded with λ$_{\mathrm{min}}$(X\_𝒞ᵀX\_𝒞) ≥ g₀ eventually: 1 − π\_𝒞(∅ | y) = O$_{P}$(n\^\{−1/2\})
+(fixed design under GR; also under EP with θ\^{}𝒞 = 0). The general growing-p null case is not claimed.
+\end{stmt}
+% C-MIS §3 Corollary H
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:107-113}
+3. Reported HPM (M5(0)) and the never-scored term
+
+\textbf{Corollary H.} At every n, for any candidate design and any law of the data supported on valid inputs, for any
+T ∈ Ω\_𝒞 (deterministic or a measurable function of the candidate design), with D$_{n}$(T) := P(𝒪̄ ∩ \{T ∉ 𝒮̄⁺\}) (potential-run
+notation and premises of M5(0)): P(𝒪 ∩ \{Ŝ⁺ ≠ T\}) ≤ 2E[1 − π\_𝒞(T | y)] + D$_{n}$(T). With T = S₀\^{}𝒞, D$_{n}$\^{}𝒞 := D$_{n}$(S₀\^{}𝒞), the
+first term → 0 under Theorem MIS or Theorem F. (Input: T38-(0) "PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))".)
+No discovery or delivery claim.
+\end{stmt}
+% C-MIS Corollary D
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:114-120}
+\textbf{Corollary D.} Under GR with a fixed candidate design, method v3.1 + LS0 with GEN's premises (LS0 as specified; not in
+production code — GEN REPORT flag 4), and GEN's (H0)–(H2)
+(GEN \texttt{STATEMENT.md} v2.3 §2; (H0) includes \textbf{BM-∞}) — or (H0), (H2) with S* = S₀\^{}𝒞 — for the candidate problem with
+σ² := σ\_𝒞² \textbf{everywhere in GEN} (v$_{T}$, leakage exponents, NL, VIS, BM) and μ := μ\^{}𝒞 (so GEN's Δ$_{T}$ is the residual energy
+of μ\^{}𝒞; τ² is not added again), on the actual candidate-only partition: D$_{n}$\^{}𝒞 → 0, P(𝒪 ∩ \{Ŝ⁺ ≠ S₀\^{}𝒞\}) → 0, and
+liminf P(𝒪 ∩ \{Ŝ⁺ = S₀\^{}𝒞\}) = 1 − limsup P(U$_{n}$). Random candidate designs: GEN (C4) with all GEN envelope conditions and
+measurable candidate coefficients/certificates. \textbf{Optional:} an explicit proxy instance on GEN's W family (Corollary D′).
+\end{stmt}
+% C-MIS §4 heading, coordinates, (EP)
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:122-129}
+4. Theorem F (fixed design, exact sparse projection)
+
+Everything deterministic except ε. \textbf{Coordinates:} contrast coordinates throughout: μ$_{c}$ := UᵀX$^{r}$β (full mean),
+X\_\{c,𝒞\} := UᵀX\_𝒞, e := Uᵀε \textasciitilde{} N$_{N}$(0, σ²I), y$_{c}$ = μ$_{c}$ + e.
+\textbf{(EP).} There are S₀\^{}𝒞 ⊆ 𝒞 and θ\^{}𝒞 with supp θ\^{}𝒞 = S₀\^{}𝒞 such that r := μ$_{c}$ − X\_\{c,𝒞\}θ\^{}𝒞 satisfies X\_\{c,𝒞\}ᵀr = 0.
+(The projected mean P\_𝒞μ$_{c}$ = X\_\{c,𝒞\}θ\^{}𝒞 is the fixed-design least-squares/KL mean target; S₀\^{}𝒞 is its sparse
+coefficient support, distinguished by the hypotheses below, not by KL alone: SE$_{\lambda}$(j₀) makes θ\^{}𝒞 the unique
+representation of P\_𝒞μ$_{c}$ among coefficient vectors with support T, |T ∖ S₀\^{}𝒞| ≤ j₀.) Δ$_{n}$ := ‖r‖²/N, σ²\_\{𝒞,n\} := σ² + Δ$_{n}$ ∈ [σ², σ² + 2M].
+\end{stmt}
+% C-MIS Theorem F hypotheses
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:130-133}
+\textbf{Hypotheses.} s₀\^{}𝒞 ≥ 1 fixed, p\_𝒞 ≤ n$^{A}$, s₀\^{}𝒞 ≤ K eventually; G; R\^{}𝒞: ‖μ$_{c}$‖² ≤ Mn, λ$_{\mathrm{min}}$(R̂\_\{S₀\^{}𝒞\}) ≥ φ₀²;
+SE$_{\lambda}$(j₀) and SE$_{w}$(m$_{n}$; g₀) anchored at S₀\^{}𝒞 on subsets of 𝒞, for a deterministic cutoff m$_{n}$ with
+s₀\^{}𝒞 ≤ m$_{n}$ ≤ min(K, C log n) (default m$_{n}$ = m♯$_{n}$); BM\^{}𝒞: BM-∞ (θ\^{}𝒞²$_{\mathrm{min}}$ nφ₀²/log n → ∞) or BM(c), c > c₀, with
+σ²\_\{𝒞,n\}: θ\^{}𝒞²$_{\mathrm{min}}$ ≥ cσ²\_\{𝒞,n\} log n/(nφ₀²); \textbf{TAIL\^{}𝒞(m$_{n}$):} π\_𝒞(|S| > m$_{n}$ | y) = O$_{P}$(r$_{n}$).
+\end{stmt}
+% C-MIS Theorem F
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:134-137}
+\textbf{Theorem F.} Then 1 − π\_𝒞(S₀\^{}𝒞 | y) = O$_{P}$(r$_{n}$), and the deterministic consequences hold for S₀\^{}𝒞
+(max$_{j}$|PIP$_{j}$ − 1\{j ∈ S₀\^{}𝒞\}| ≤ 1 − π\_𝒞(S₀\^{}𝒞 | y); P(MPM\_𝒞 ≠ S₀\^{}𝒞) → 0; P(S†\_𝒞 ≠ S₀\^{}𝒞) ≤ 2E[1 − π\_𝒞(S₀\^{}𝒞 | y)] → 0 —
+T03R conclusions (ii)–(iii)); without beta-min
+(keeping TAIL\^{}𝒞), π\_𝒞(S ⊉ J$_{n}$\^\{𝒞,F\}(c) | y) = O$_{P}$(r$_{n}$) with J$_{n}$\^\{𝒞,F\}(c) := \{j ∈ S₀\^{}𝒞 : θ\^{}𝒞$_{j}$² ≥ cσ²\_\{𝒞,n\} log n/(nφ₀²)\}.
+\end{stmt}
+% C-MIS Corollary F(a)
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:138-138}
+\textbf{Corollary F(a).} p\_𝒞 bounded ⇒ m♯$_{n}$ = K eventually ⇒ TAIL\^{}𝒞(m♯$_{n}$) holds; F holds without TAIL\^{}𝒞.
+\end{stmt}
+% C-MIS Corollary F(b)
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:139-141}
+\textbf{Corollary F(b)} (added in v1.1). If d$_{n}$ := rank X\_\{c,𝒞\} and, for a fixed κ ∈ (0,1),
+(TL) σ²/(Δ$_{n}$ + σ²(1 − d$_{n}$/N)) ≤ (3/4)(1 − κ) eventually, then TAIL\^{}𝒞 holds at m$^{T}$$_{n}$ := s₀\^{}𝒞 + ⌈C\_\{κ,s,A\} log n⌉
+(Lemma T, no eigenvalue condition beyond S₀\^{}𝒞), so F holds with m$_{n}$ := min(K, max(m♯$_{n}$, m$^{T}$$_{n}$)) without TAIL\^{}𝒞.
+\end{stmt}
+% C-MIS Changed steps
+\begin{stmt}{W1C/C-MIS/STATEMENT.md:142-146}
+\textbf{Changed steps} (lemmas/L4): new event (G5) on rᵀe; lem:ongood(b) with δ$_{n}$\^{}𝒞 := δ$_{n}$ + 2 log n/N, propagated through
+(C4)'s υ$_{n}$, (C5)'s ε$_{n}$ and q$_{n}$, and (C8); lem:ongood(c) with E$_{n}$\^{}𝒞 := 2b + ‖r + e‖² + (2/(n+1))‖y$_{c}$‖²
+≤ Nσ²\_\{𝒞,n\}(1 + δ''\^{}𝒞$_{n}$); lem:SvsSp second inequality and lem:signalgain with σ²\_\{𝒞,n\}; lem:signal / Δ$_{S}$ with μ\^{}𝒞
+(not μ$_{c}$); [P3]'s P\_\{S′\}μ = μ step replaced by (P\_\{S′\} − P$_{S}$)r = 0; Step 0 → TAIL\^{}𝒞. The actual response-dependent IG
+rate b = b₀‖y$_{c}$‖²/N is kept (it is common to all models); no raw-likelihood substitution.
+\end{stmt}
+
+\textbf{What changed versus v1.0.} New: v1.0 has no misspecification result. ``Theorem MIS is an exact reduction to T03♯: under GR the candidate-only problem \emph{is} a well-specified model'' (\rid{TH09}); the new technical content is Lemma DR and Theorem F with Lemma T \src{W1C/C-MIS/REPORT.md:10-12}. Scope versus Song--Liang: their Corollary~2 is support inclusion and Theorem~4 density consistency for a fixed-size candidate set; C-MIS gives exact-model concentration ``under \emph{stronger} hypotheses'' \src{W1C/C-MIS/REPORT.md:4-9}. Corollary D (reported HPM) ``inherits GEN's premises'' including e4 and BM-∞; ``There is no delivery claim'' \src{W1C/C-MIS/REPORT.md:16-17}.
+
+\begin{notproved}
+Open items: fixed-design EP with growing $p_{\mathcal C}$ and small omitted residual (TAIL$^{\mathcal C}$ not proved there); approximate projection; outside GR; growing-$p$ null projection, random-design EP and $n$-dependent $\tau_n^2$ \src{W1C/C-MIS/REPORT.md:133-140}. No density-contraction analog \src{W1C/C-MIS/REPORT.md:8}. ``Everything is asymptotic \ldots{} TH09's ≈ 2·10⁶ illustration is not transferred'' \src{W1C/C-MIS/REPORT.md:18-19}. Frontier as characterised in the statement: \src{W1C/C-MIS/STATEMENT.md:148-167}.
+\end{notproved}
+\end{card}
+
+% ---------------------------------------------------------------------
+\subsection{C-GROW: growing relevance sets, including study S2}\label{sec:loop:grow}
+\begin{card}{C-GROW}{Theorem GROW (reported HPM with a growing relevance set, under MR1 (C-GROW))}
+\textbf{Status (verbatim):} \status{PROVED-CHECKED} — ``Theorem GROW (reported-HPM consistency with a growing relevance set, under MR1) and its instances (C5)(a) AR(1) exact Gram, (C5)(c) \textbf{AR(1) with iid rows = study S2, p ≤ n\textasciicircum{}A incl. p ≫ n}, (C5)(b) S5 population covariance at fixed p (illustration only \ldots)''; council round~1 Sol 9.2, Opus 9.0, all six gates PASS \src{W1C/C-GROW/REPORT.md:26-30}. Per-clause evidence (L6, the random AR(1) instance, by a parallel Codex prover, checked by R07 Sol \status{VERIFIED} and R06 Opus \status{V-W-A}): \src{W1C/C-GROW/REPORT.md:59-70}.
+
+\textbf{Method requirement MR1 (C-GROW)}: ``LS0 must run with move cap \textbf{ℓ\textasciicircum{}\{LS0\} = ℓ\_n + |S̃₀|} (instead of the production ℓ\_n = ⌈log₂(n + p + 1)⌉) \ldots{} Without MR1 the theorem holds only under (G4-χ) (relevance set ≤ (1 − δ₀) log n), where the production cap suffices'' \src{W1C/C-GROW/REPORT.md:4-7}.
+% C-GROW §2 heading and (H0)
+\begin{stmt}{W1C/C-GROW/STATEMENT.md:82-88}
+2. Hypotheses
+\begin{itemize}
+\item \textbf{(H0)} = the hypotheses of S-T/T03♯ (SoP \texttt{04\_theory.tex} TH09 card), with fixed constants A ≥ 1, M, φ₀ ∈ (0, 1],
+g₀ > 0: R1 (G; fixed s₀; p ≤ n$^{A}$; s₀ ≤ K eventually); R (‖μ‖² ≤ Mn; λ$_{\mathrm{min}}$(R̂\_\{S₀\})  ≥ φ₀²); SE$_{\lambda}$(j₀),
+j₀ := ⌈(2A + 1)s₀⌉ + 1 (λ$_{\mathrm{min}}$(R̂\_\{S₀∪J\}) ≥ φ₀² for |J| ≤ j₀); SE$_{w}$(m♯$_{n}$; g₀) (λ$_{\mathrm{min}}$(X\_\{S₀∪J\}ᵀX\_\{S₀∪J\}) ≥ g₀ for
+|J| ≤ m♯$_{n}$, m♯$_{n}$ := min\{m ≥ s₀ : R$_{m}$ ≤ n\^\{−(s₀+2)/2\}\}, R$_{m}$ := Σ$_{k=\mathrm{max}(m+1,0)}$$^{K}$ C(p,k)w(k)/w(s₀)); BM-∞
+(θ*²$_{\mathrm{min}}$ nφ₀²/(σ² log n) → ∞).
+\end{itemize}
+\end{stmt}
+% C-GROW (G1)
+\begin{stmt}{W1C/C-GROW/STATEMENT.md:89-90}
+\begin{itemize}
+\item \textbf{(G1) growing relevance set.} Deterministic 𝒫$_{n}$ ⊆ [p] ∖ S₀ with |Q| ≤ C$_{Q}$ log n (C$_{Q}$ fixed), |Q| ≤ K, and
+\textbf{either} Q = [p] \textbf{or} K ≥ 2|Q| + 32s₀ + 1, for n ≥ n₀ (this implies min(p, |Q| + 1) ≤ K).
+\end{itemize}
+\end{stmt}
+% C-GROW (G2)
+\begin{stmt}{W1C/C-GROW/STATEMENT.md:91-91}
+\begin{itemize}
+\item \textbf{(G2) Gram floor on the lattice.} λ$_{\mathrm{min}}$(R̂\_\{Q∪\{l\}\}) ≥ φ₀² for every l ∈ [p].
+\end{itemize}
+\end{stmt}
+% C-GROW (G3)
+\begin{stmt}{W1C/C-GROW/STATEMENT.md:92-95}
+\begin{itemize}
+\item \textbf{(G3) centre conditions (on the actual blocks).} (G3a) within-block SE: λ$_{\mathrm{min}}$(R̂$_{T}$) ≥ φ₀² for every nonempty
+T ⊆ C$_{b}$, every b. (G3b) TV: for a deterministic M$_{n}$ → ∞, every j ∈ S₀ and every U ⊆ C$_{b(j)}$ ∖ \{j\}:
+δ²$_{U,j}$ ≥ M$_{n}$ log n. (G3c) NEG(η): for a fixed η ∈ [0, η$_{A}$), η$_{A}$ := (√(2A + 1) − √(2A))², every l ∉ Q and every
+U with S₀ ∩ C$_{b(l)}$ ⊆ U ⊆ C$_{b(l)}$ ∖ \{l\}: δ²$_{U,l}$ ≤ ησ² log n.
+\end{itemize}
+\end{stmt}
+% C-GROW (G4)
+\begin{stmt}{W1C/C-GROW/STATEMENT.md:96-98}
+\begin{itemize}
+\item \textbf{(G4)} either \textbf{(G4-χ)} |𝒫$_{n}$| ≤ (1 − δ₀) log n for a fixed δ₀ ∈ (0, 1) (no further correlation assumption), or
+\textbf{(G4-dir)} the set of add directions 𝒰$_{n}$ := \{u$_{T,l}$ : T ∈ 𝓛, l ∉ T\} satisfies |𝒰$_{n}$| ≤ pN$_{n}$ with
+log N$_{n}$ = o(log n).
+\end{itemize}
+\end{stmt}
+% C-GROW §3 heading and (C1)
+\begin{stmt}{W1C/C-GROW/STATEMENT.md:100-106}
+3. Claims
+\begin{itemize}
+\item \textbf{(C1) Deterministic lattice descent.} Events NA(𝓛) := \{F(T ∪ \{l\}) < F(T) for all T ∈ 𝓛 with |T| < K and all
+l ∉ T\} and TL(𝓛) := \{every feasible neighbour A of every T ∈ 𝓛 with S₀ ⊄ A has F(A) < F(T)\}. On NA ∩ TL, from
+every centre C ∈ 𝓛 the uncapped §6.10 greedy path deletes one element of C ∖ S₀ per move, stays in 𝓛, reaches S₀
+after exactly |C ∖ S₀| moves and stops there; the capped search scores S₀ if ℓ ≥ |C ∖ S₀| − 1 and has certified
+endpoint S₀ without \texttt{local\_limit} if ℓ ≥ |C ∖ S₀|.
+\end{itemize}
+\end{stmt}
+% C-GROW (C2)
+\begin{stmt}{W1C/C-GROW/STATEMENT.md:107-110}
+\begin{itemize}
+\item \textbf{(C2) Descent events.} Under G, ‖μ‖² ≤ Mn, p ≤ n$^{A}$, |Q| ≤ C$_{Q}$ log n, |Q| ≤ K, (G2) and BM-∞: P(TL(𝓛)) → 1. Under
+the same without BM-∞, plus (G4-χ) or (G4-dir): P(NA(𝓛)) → 1. ((H0) and (G1) imply these lists; R08 item 9.) (Uniform null-add expansion with the exact BB ratio: 2[F(T ∪ \{l\}) − F(T)] ≤ Z²$_{T,l}$ − log(n + 1)
+− 2 log((2p − 1 − k)/(k + 1)) + O(1) uniformly on a high-probability event; separate arguments for (G4-χ)
+(Pythagorean bound with one common χ²) and (G4-dir) (direction count).)
+\end{itemize}
+\end{stmt}
+% C-GROW (C3)
+\begin{stmt}{W1C/C-GROW/STATEMENT.md:111-113}
+\begin{itemize}
+\item \textbf{(C3) Centre sandwich.} Under ‖μ‖² ≤ Mn, p ≤ n$^{A}$, (G1), (G3): P(S₀ ⊆ S̃ ⊆ Q for every maximiser S̃ of γ₀ on Ω)
+→ 1. Explicit proof obligation: a \textbf{global size ladder} (all maximisers simultaneously, including near-saturated
+ones with |S̃| close to K), then truth inclusion (TV) and exclusion of outside variables (NEG).
+\end{itemize}
+\end{stmt}
+% C-GROW (C4) Theorem GROW
+\begin{stmt}{W1C/C-GROW/STATEMENT.md:114-117}
+\begin{itemize}
+\item \textbf{(C4) Main theorem (Theorem GROW).} Under (H0), (G1)–(G4), the premises of §1 and MR1:
+D$_{n}$ ≤ P(sandwich fails) + P(NA(𝓛)ᶜ) + P(TL(𝓛)ᶜ) → 0; hence P(𝒪 ∩ \{Ŝ⁺ ≠ S₀\}) → 0 and
+liminf P(𝒪 ∩ \{Ŝ⁺ = S₀\}) = 1 − limsup P(U$_{n}$). (b) Under (G4-χ) the same holds with the production cap ℓ$_{n}$ in place
+of MR1. No delivery claim.
+\end{itemize}
+\end{stmt}
+% C-GROW (C5) heading and (a) AR(1) exact Gram
+\begin{stmt}{W1C/C-GROW/STATEMENT.md:118-126}
+\begin{itemize}
+\item \textbf{(C5) Instances.}
+\begin{itemize}
+\item[(a)] \textbf{AR(1), exact Gram.} XᵀX = (n − 1)Σ, Σ$_{ij}$ = ρ\^\{|i−j|\}, fixed ρ ∈ (−1, 1) ∖ \{0\}, any p = p$_{n}$ ≤ n − 1 (fixed or
+growing), fixed s₀ and nonzero θ*, σ² fixed, separation Σ\_\{k∈S₀∖\{j\}\}|θ*$_{k}$||ρ|\^\{|j−k|\} ≤ ½|θ*$_{j}$|(1 − ρ²)/(1 + ρ²)
+for every j ∈ S₀; any block partition with blocks of size ≤ 16. Then, with the explicit radius
+d$_{n}$ := ⌈log n/(2 log(1/|ρ|))⌉, 𝒫⁰$_{n}$ := \{l ∉ S₀ : min\_\{k∈S₀\}|l − k| ≤ d$_{n}$\}, Q⁰$_{n}$ := S₀ ∪ 𝒫⁰$_{n}$, and 𝒫$_{n}$ := 𝒫⁰$_{n}$
+if Q⁰$_{n}$ = [p] or p ≥ 2|Q⁰$_{n}$| + 32s₀ + 1, else 𝒫$_{n}$ := [p] ∖ S₀ (v2.1), the hypotheses (H0), (G1)–(G3), (G4-dir) hold and (C4) applies (with MR1). |Q| ≤
+4s₀d$_{n}$ + 34s₀ + 1 = O(log n) and |𝒫$_{n}$| ≥ min(d$_{n}$, p − s₀) − s₀, so 𝒫$_{n}$ grows like log n whenever p$_{n}$ ≥ d$_{n}$ + 2s₀ —
+a growing relevance \textbf{envelope} (what is proved is S₀ ⊆ S̃₀ ⊆ Q; it is not claimed that the start mode itself
+has an unbounded number of extras on this instance).
+\end{itemize}
+\end{itemize}
+\end{stmt}
+% C-GROW (C5)(b) S5 population covariance
+\begin{stmt}{W1C/C-GROW/STATEMENT.md:127-138}
+\begin{itemize}
+\item[] \begin{itemize}
+\item[(b)] \textbf{S5 population covariance, fixed p (illustration).} Exact Gram with Σ = 0.3·11ᵀ + 0.4·H + 0.3I (H = block
+diagonal of 1₅1₅ᵀ; within 0.7, between 0.3), p = 100, diagnostic layout s₀ = 4 (truth indices and coefficients
+c·(1.4, −1.0, 1.8, −1.2), c ∈ \{0.5, 1\}, exactly as in numerics/d\_common.py and GEN/numerics/study\_common.py at
+p = 100, s₀ = 4, step 5 — \textbf{not} the production generator's declared truth, which exists only at p ∈ \{30, 500,
+1000\}), σ² = 1, coded partition. With 𝒫 = [p] ∖ S₀ (Q = [p]): (H0), (G1), (G2), (G3a), (G3c) (vacuous) and (G4-χ)
+hold for n large; (G3b) holds iff the finite quantity τ₀ (minimal partial signal over truths and within-block
+conditioning sets, independent of n) is > 0; τ₀ = 4/25 (c = 1), 1/25 (c = 0.5) by an exact rational certificate
+written out in lemmas/L5\_instances.md (b) (v2.2 wording, after R05); then (C4) applies. \textbf{Caveat (v2.5, R10 F1):}
+for fixed p the production run enumerates all models (SoP \texttt{02\_method.tex:167}) from n ≳ 2.5·10²⁷ on, before the
+(G4-χ) onset, so there S₀ is scored by enumeration and T03♯ alone gives the conclusion; (b) shows only that the
+hypotheses hold, not that LS0 is the operative mechanism. The same applies to fixed-p sequences in (a) and (c);
+Theorem GROW adds content beyond T03♯ + enumeration in the regime p ≫ log n.
+\end{itemize}
+\end{itemize}
+\end{stmt}
+% C-GROW (C5)(c) AR(1) iid rows
+\begin{stmt}{W1C/C-GROW/STATEMENT.md:139-149}
+\begin{itemize}
+\item \textbf{(C5)(c) (v2.3 extension) AR(1), iid rows (study S2).} Raw rows iid N(0, Σ), Σ$_{ij}$ = ρ\^\{|i−j|\}, fixed
+ρ ∈ (−1, 1) ∖ \{0\}, columns centred and standardized, p ≤ n$^{A}$ (any fixed A ≥ 1; p ≫ n allowed), fixed s₀ and fixed
+nonzero θ* on the standardized scale: Y = Xθ* + Cε with ε \textasciitilde{} N(0, σ²I$_{n}$) \textbf{independent of the raw design} (as in
+the generator), and y = Y/(‖Y‖/√(n − 1)) inside the score (R08 item 2), σ² fixed, separation as in (a); any
+X-measurable partition with blocks of size ≤ 16 (in particular the coded one); relevance set as in (a). Then under
+the joint law of (X, ε): P(S₀ ⊆ S̃ ⊆ Q for every maximiser) → 1, P(NA(𝓛)) → 1, P(TL(𝓛)) → 1, and with the
+premises of §1 and MR1, D$_{n}$ → 0, P(𝒪 ∩ \{Ŝ⁺ ≠ S₀\}) → 0, liminf P(𝒪 ∩ \{Ŝ⁺ = S₀\}) = 1 − limsup P(U$_{n}$). The
+generator's S2 layouts (p = 500, 1000; 14 truths; ρ = 0.5) satisfy separation for every signal scale c > 0, so the
+result covers asymptotic sequences extending them (not the generator's fixed n = 200). Proof: lemmas/L6 (the
+fixed-design hypotheses NEG and (G4-dir) are NOT verified; the three events are proved directly under the joint
+law).
+\end{itemize}
+\end{stmt}
+% C-GROW (C6) Frontier
+\begin{stmt}{W1C/C-GROW/STATEMENT.md:150-156}
+\begin{itemize}
+\item \textbf{(C6) Frontier (with evidence, not proved).} iid-row S5 / factor designs; factor designs with p → ∞ faster than
+log n (observed, not proved: at c = 1, n = 3200 the median start size is 23, 43, 74 at p = 100, 200, 400; a growth
+law for |S̃₀| is a conjecture, and |S̃₀| ≤ K ≤ n/2 always; with MR1, LS0 scored S₀ in 47/47 S5 p = 400 runs and
+reached it as a search state in 45/47 (all 27 runs at n ≥ 800); numerics/D2\_summary.md, D3\_summary.md — component
+observations, not a guarantee); finite-n onsets (all statements are asymptotic; violations of the asymptotic events
+occur at tested finite sizes: numerics/SUMMARY\_FALSIF.md incl. S5 NA failures in 10/20 runs at n = 12800 despite
+successful MR1 searches; G1\_summary.md for iid AR(1) at n ≤ 800; successful LS0 paths are not NA validation).
+\end{itemize}
+\end{stmt}
+
+\textbf{What changed versus v1.0.} The study's AR(1) design S2 was outside every v1.0 result and outside \rid{W1-GEN}; ``S2 was a proof gap (closed, incl. random design)'' \src{W1C/C-GROW/REPORT.md:12}. GROW's descent uses ``\textbf{exactly |S̃₀ ∖ S₀| moves}'' (GEN used the bound $2^{\bar v}-1$) \src{W1C/C-GROW/REPORT.md:40-42}, which is why the LS0 cap had to grow with the start mode (MR1; cf.\ \rid{OB11} ``ℓ versus the moves needed''). The proof uses e4 only as ``the emitted LS0 centre is some maximiser of γ₀'' \src{W1C/C-GROW/REPORT.md:93-96}.
+
+\begin{notproved}
+Not claimed: \src{W1C/C-GROW/STATEMENT.md:160-161}. ``\textbf{Everything is asymptotic.} Falsification numerics show the asymptotic events failing at tested finite n'' \src{W1C/C-GROW/REPORT.md:16-18}. For fixed $p$ ``the production run eventually enumerates all models \ldots{} and T03♯ alone gives the conclusion'' \src{W1C/C-GROW/REPORT.md:50-52}. S5 / factor designs with growing $p$ and random-design S5 are not proved (frontier) \src{W1C/C-GROW/REPORT.md:86-90}. Conditional on the named premises, [OP] and MR1; ``No delivery claim'' \src{W1C/C-GROW/REPORT.md:19-20}.
+\end{notproved}
+\end{card}
+
+% ---------------------------------------------------------------------
+\subsection{C-DLV: delivery}\label{sec:loop:dlv}
+\begin{card}{C-DLV}{Theorem D (exact reduction of delivery), Corollary D′, Proposition F (fallback), open event (O)}
+\textbf{Status (verbatim):} \status{PARTIAL} \src{W1C/C-DLV/REPORT.md:24-28}. ``\textbf{The ticket target is NOT proved.} (T) `P(no output) → 0 on LH, LH-iid and the W1-GEN class for v3.1 + LS0 under a declared polynomial allocation' remains open for the shipped calibration'' \src{W1C/C-DLV/REPORT.md:3-6}. ``\textbf{Council PASSED in round 2} (Codex gpt-6.1-sol 9.0, Claude Opus 5.5 8.9; all six gates PASS for both). The pass certifies the reduction package (P1–P5, C1–C2, F1, the statement of O), not the target (T)'' \src{W1C/C-DLV/REPORT.md:27-28}. Per clause: P1 \status{AUDITED (code reading)}; P2 Lemma R \status{PROVED-CHECKED (council round 2)}; P3 \status{S.1, S.2 PROVED-CHECKED; S.3 AUDITED (code reading)}; P4 Theorem D \status{PROVED-CHECKED (relative to the P1/P3 audits)}; P5 \status{PROVED-CHECKED}; C2 Corollary D′ \status{PROVED-CHECKED}; F1 Proposition F \status{PROVED-CHECKED for the patched calibration law (R04; council round 2)}; O \status{OPEN} \src{W1C/C-DLV/REPORT.md:64-71}.
+% C-DLV §1 Premises
+\begin{stmt}{W1C/C-DLV/STATEMENT.md:21-46}
+\textbf{1. Premises}
+
+From the cards: EX-A, EX-S, SR, OP-LS0, e4, GUARD-W, IND-T (R′ > 4; not used by this ticket's proofs). \textbf{CAL is not assumed} (calibration success is
+part of the question). New, flagged, class (d):
+\begin{itemize}
+\item \textbf{IDEAL-W}: an abstract unbounded-word/address machine: integer, index, stream-id and allocation arithmetic never
+  overflow (the RNG's intentional modular arithmetic is kept), so \texttt{unsupported\_size} (spec e7) never fires.
+\item \textbf{EX-A as a cost model}: unit-cost exact real arithmetic, including exp and log (used by ρ$_{V}$, log-sum-exp and the
+  pilot ESS); no bit complexity is charged.
+\item \textbf{MACH(τ, τ₀, β, β₀)}: wall time ≤ τ·(operation count) + τ₀; peak bytes ≤ β·(words held) + β₀; every heap, stack
+  and worker allocation succeeds whenever the live bytes stay within the declared memory (R06 \#3: this is an
+  operational premise, not a consequence of counting words); the build, its lock/cache and runtime dependencies
+  (Rcpp, digest) succeed; no user/external interruption, no worker crash.
+\item \textbf{CONFIG} (the computational configuration covered, R06 \#1–\#2): the production core plus LS0 (cap ℓ) and the e4
+  fallback (TDP-IMPL); the general-h accumulator with the default list 𝓗 only (size indicators, neighbour-edge pairs
+  ≤ 2pB, and d; O(1) evaluation each; user-declared functions are NOT covered — council C1 Codex \#1); certificate
+  computations with declared envelopes Cert(n,p) operations and Cert$_{M}$(n,p) words, both polynomial and carried
+  explicitly in the allocation (no claim that they are dominated by the core terms); serial execution or a fixed number w of concurrent workers/scorers
+  (memory envelope multiplied by w).
+\item \textbf{TDP-IMPL} (method requirement for a not-yet-shipped component; METHOD\_REQUIREMENTS A.2): the e4 tie-aware
+  fallback is implemented as W1-N3's reference algorithm TDP (Theory\_work/Wave1/W1-N3/lemmas/L7\_tie\_aware\_dp.md), with
+  O(p·Σ$_{b}$(2$^{|C_{b}|}$ + (K+1)²)) operations (W1-N3 L7:20), implemented with O(Σ$_{b}$ 2$^{|C_{b}|}$ + J(K+1)) storage (the
+  (block, size) DP table plus the block tables; a requirement on the implementation, since L7 states no storage bound). e4 itself only fixes WHICH maximiser is
+  emitted; TDP-IMPL fixes HOW (its cost). Used by P2, P4 (Theorem D), C2 and F1.
+\item \textbf{Valid declared inputs}: integer seed in [1, 2³¹−1]; allocation a list with named finite positive scalar fields
+  \texttt{mem\_gb} and \texttt{hours} (the core silently substitutes 8 GiB / 24 h for missing names, \texttt{v3\_fit.R:19, :66-71}).
+\item \textbf{Declared allocation} 𝒜$_{n}$: \texttt{allocation\$mem\_gb} ≥ mem$_{n}$/2³⁰ and \texttt{allocation\$hours} ≥ time$_{n}$/3600, with (mem$_{n}$,
+  time$_{n}$) the polynomial envelopes of Corollary R (explicit polynomial shapes; implementation-dependent constants).
+\end{itemize}
+\end{stmt}
+% C-DLV §2 Target (T)
+\begin{stmt}{W1C/C-DLV/STATEMENT.md:48-49}
+\textbf{2. Target (T) — the ticket's theorem, kept as the goal, NOT claimed}
+
+On LH, LH-iid and the W1-GEN class, for 𝔐 under 𝒜$_{n}$: P(𝒰$_{n}$) → 0, hence P(Ŝ⁺ = S₀) → 1.
+\end{stmt}
+% C-DLV §3 heading + (P1) Inventory
+\begin{stmt}{W1C/C-DLV/STATEMENT.md:51-53}
+\textbf{3. Claims}
+
+\textbf{(P1) Inventory} (INVENTORY.md v2) — AUDITED (code reading; R01, R02, R05, R06, council): every exit of \texttt{v3\_fit}
+without estimates is one of the listed sites.
+\end{stmt}
+% C-DLV (P2) Lemma R
+\begin{stmt}{W1C/C-DLV/STATEMENT.md:54-56}
+\textbf{(P2) Lemma R} (L1; uses TDP-IMPL): for valid inputs (n ≥ 3, raw dimension p$_{\mathrm{raw}}$), every seed and uniform realisation, the
+operation count, words held, preflight bytes and exact-branch preflight seconds are bounded by polynomials (explicit shapes, implementation-dependent constants; within CONFIG) in
+(n, p$_{\mathrm{raw}}$); hence under MACH and 𝒜$_{n}$ no resource path fires.
+\end{stmt}
+% C-DLV (P3) Lemma S
+\begin{stmt}{W1C/C-DLV/STATEMENT.md:57-58}
+\textbf{(P3) Lemma S} (L2): under model G on the classes (n ≥ 3), the input/degenerate paths have probability 0 and p$_{\mathrm{raw}}$ = p
+a.s.; under EX-A no scorer call fails; the remaining internal error sites are unreachable on the \texttt{v3\_fit} call graph (this last part AUDITED by code reading, L2 S.3).
+\end{stmt}
+% C-DLV (P4) Theorem D
+\begin{stmt}{W1C/C-DLV/STATEMENT.md:59-61}
+\textbf{(P4) Theorem D} (L4; uses P2, hence TDP-IMPL, and holds relative to the audits P1 and L2 S.3): 𝒰$_{n}$ ⊆ 𝒮ℒ$_{n}$ ∪ (null set), 𝒮ℒ$_{n}$ = \{escalation to tier 1 and some tier-1 grid construction
+fails\}, and a construction fails iff (α) its interval count exceeds T$_{e}$, or (β) \texttt{non\_progress}, or (γ) a point snapped
+to 1 fails validation. P(𝒰$_{n}$) → 0 ⟺ P(𝒮ℒ$_{n}$) → 0.
+\end{stmt}
+% C-DLV (P5) Grid lemmas
+\begin{stmt}{W1C/C-DLV/STATEMENT.md:62-67}
+\textbf{(P5) Grid lemmas} (L3, L5): exact identity ρ$_{V}$(u,v) = q$_{u}$(M)q$_{2v-u}$(M)/q$_{v}$(M)² (any M ∈ V); pilot schedules have
+≤ T$_{e}$ strictly increasing stages ending at 1; success criteria: (a) dominance (one M with q$_{t}^{V}$(M) ≥ √0.9 at t = 0
+and t = 2) or sup$_{[0,2]}$ Var < c₀ ⇒ the construction succeeds with ≤ (pilot count) intervals; (b) two-model family with
+ε-remainder on [0, 2] ⇒ N$_{b}$ ≤ N̄$_{b}$ = 22 + ⌈log$_{4/3}$ max\{1, (−x₀ − λ$_{\theta}$)/(2s$_{\theta}$)\}⌉ (ε = 0.01, exact constants in L5)
+bisection-limited trials; with the remainder only on [0, 1+η] add ⌈log$_{4/3}$((1+η)/η)⌉ (Lemma 5.2′); no
+\texttt{non\_progress} if D ≤ s$_{\theta}$2⁶⁰; post-snap validation (γ) not excluded.
+\end{stmt}
+% C-DLV (C1) Conditional delivery
+\begin{stmt}{W1C/C-DLV/STATEMENT.md:68-74}
+\textbf{(C1) Conditional delivery}: P(𝒰$_{n}$) ≤ P(E$_{n}$ ∩ ∪$_{\mbox{tier-1 constructions}}$ \{(α) ∨ (β) ∨ (γ)\}), E$_{n}$ = \{some tier-0 trigger
+fires\}; in particular P(𝒰$_{n}$) → 0 on any design sequence where, w.p. → 1, either no tier-0 trigger fires, or every
+tier-1 candidate set satisfies (P5)(a), or satisfies (P5)(b) with pilot count ≤ T₁ − N̄ (N̄ the applicable bound),
+D ≤ s$_{\theta}$2⁶⁰ and no (γ). Measured status (Opus C1 \#2): no design sequence is known to satisfy the (P5) hypotheses; at the
+tested sizes, since (P5)(a) forces N$_{b}$ = 0 (Prop 3.5(a)), (P5)(a) fails in every construction with N$_{b}$ > 0 (220/236
+in the 80-fit runs, 146/146 in N4; the other 16 were not tested for dominance) and (P5)(b) fails with the selected pair (other pairs not
+searched); in all 134 production fits no tier-0 trigger fired, so tier 1 was never reached.
+\end{stmt}
+% C-DLV (C2) Joint consistency
+\begin{stmt}{W1C/C-DLV/STATEMENT.md:75-76}
+\textbf{(C2) Joint consistency with the delivery term}: P(𝒪 ∩ \{Ŝ⁺ = S₀\}) ≥ 1 − o(1) − P(𝒮ℒ$_{n}$) on the classes, from W1-GEN
+(C1)+(C2) and T03♯ (GEN class, incl. LH exact Gram) and W1-PXN (T), (P) (LH-iid), under their hypotheses (L4 D′).
+\end{stmt}
+% C-DLV (F1) Finding
+\begin{stmt}{W1C/C-DLV/STATEMENT.md:77-78}
+\textbf{(F1) Finding} (shipped component): freezing the tier-1 pilot schedule when a tier-1 construction fails makes
+P(𝒰$_{n}$) = 0 under the premises, hence (T) for the patched method.
+\end{stmt}
+% C-DLV (O) Open obstruction
+\begin{stmt}{W1C/C-DLV/STATEMENT.md:79-84}
+\textbf{(O) Open obstruction (exact form, Opus C1 \#1)}: P(𝒮ℒ$_{n}$) → 0 on the classes, i.e. P(E$_{n}$ ∩ F¹$_{n}$) → 0 with
+F¹$_{n}$ = \{some tier-1 construction fails through (α), (β) or (γ)\}. Two sufficient routes: (O-a) P(E$_{n}$) → 0 — no tier-0
+trigger (E1–E3, forced pilot steps, grid failure/unconvergence, local\_limit) w.p. → 1; (O-b) P(E$_{n}$ ∩ F¹$_{n}$) → 0 via
+(α)–(γ) for the realised tier-1 candidate sets and pilot schedule — to be proved jointly with (or conditionally on) the
+triggering event, not for an unconditioned tier-1 run (E$_{n}$ includes forced pilot steps, and fully forced pilots attain
+k = T$_{e}$ exactly, N2b). The pilot stage count is the CJ06 / Conjecture P question.
+\end{stmt}
+
+\textbf{What changed versus v1.0.} v1.0's \rid{FR11} / \rid{CJ13} record ``No route; output theorems stated jointly with 𝒪 in liminf form''. C-DLV reduces delivery exactly to one event of the tier-1 calibration (the open (O), whose pilot stage count is the \rid{CJ06} / Conjecture~P question) and reports, as a finding on a shipped component, that a pilot-schedule fallback makes P(no output) = 0 \src{W1C/C-DLV/REPORT.md:7-10}. New idealisation premises IDEAL-W, MACH, CONFIG; ``CAL is NOT assumed'' \src{W1C/C-DLV/REPORT.md:13-16}. The fallback was later corrected and extended by the HQ audits (\S\ref{sec:loop:hq}) and implemented by \rid{C-ENG}.
+
+\begin{notproved}
+(O) open: routes (a) a particle-system bound on the pilot stage count, (b) a data-only remainder bound, (c) a multi-model generalisation of Lemma 5.2 \src{W1C/C-DLV/REPORT.md:88-91}. ``No design sequence is known to satisfy the (P5) sufficient conditions; at the tested sizes they fail'' \src{W1C/C-DLV/REPORT.md:49-50}. The numerics bear on route (O-a) only: ``no fit escalated: tier 1 never reached'' \src{W1C/C-DLV/REPORT.md:72}. Implementation obligations unchanged: GUARD-W audit, merged-LS0 replay, TDP implementation \src{W1C/C-DLV/REPORT.md:94}. The calibration contract's other half and mixing (\rid{FR11}) are untouched.
+\end{notproved}
+\end{card}
+
+% ---------------------------------------------------------------------
+\subsection{C-ENG: implementation (reported through the final chapter)}\label{sec:loop:eng}
+\begin{card}{C-ENG}{LS0, TDP-E, MR1 (C-GROW) cap and tier-1 fallback on branch w1c/ls0-merge}
+\textbf{Status (as quoted by the final chapter):} \status{DONE (implemented, tested, all code reviews APPROVE)}. There is no \path{W1C/C-ENG/} folder on \texttt{main}: the ticket worked in a worktree and its report is on the branch \texttt{origin/w1c/ls0-merge} (head \texttt{8a27652} as cited; ``\textbf{not merged to main}''). Everything below is taken from the final chapter's account, which cites that branch report; this document did not read the branch \src{W1C/FINAL/sections/s7_impl.tex:6}.
+\begin{itemize}
+\item Behind switches, default = new behaviour; \texttt{ls0 = FALSE} reproduces the v3 fit (48/48); per-item switches restore the old rules \src{W1C/FINAL/sections/s7_impl.tex:8}.
+\item LS0 after the final local search and its guard check, only on a completed SMC run, centre emitted; the e4 truncation fallback is TDP-E \src{W1C/FINAL/sections/s7_impl.tex:9}.
+\item MR1 (C-GROW): LS0 cap $\ell_n+|\tilde S_0|$, LS0 only \src{W1C/FINAL/sections/s7_impl.tex:10}; tier-1 fallback as in Proposition F (A1's form) \src{W1C/FINAL/sections/s7_impl.tex:11}; 0 of the 2,400 study fits had status \texttt{schedule\_limit} \src{W1C/FINAL/sections/s7_impl.tex:12}.
+\item Code reviews R03, R04, R06 APPROVE; R05 APPROVE-WITH-FIXES; out of scope: the frozen study core, the certificate card, stacking / the $c_4$ search, the concurrency layer, Owls-scale runs \src{W1C/FINAL/sections/s7_impl.tex:13}.
+\end{itemize}
+\textbf{What changed versus v1.0.} \rid{ENG02} (``LS0 merge into the production core plus merged-LS0 replay'') and \rid{ENG10} (e4 fallback) were OPEN; both components now exist on an unmerged branch.
+\begin{notproved}
+LS0 is still not in the frozen core or on \texttt{main}; ``Nothing in this chapter asserts that the branch code satisfies EX-A, GUARD-W or the other named premises; C-ENG's evidence is tests and code review'' \src{W1C/FINAL/sections/s7_impl.tex:30}. The branch moved after the reviewed head \texttt{8a27652}: the current head \texttt{493579a} ``adds only the LS0 worst-case preflight charge'' \src{W1C/FINAL/sections/s7_impl.tex:6}, i.e.\ an archive memory component and a measured-time estimate checked against \texttt{allocation\$hours} \src{W1C/FINAL/sections/s7_impl.tex:10}; Proposition~F's allocation carries a matching post-council addition (\rid{HQ-A1}, \rid{HQ-A4}).
+\end{notproved}
+\end{card}
+
+% ---------------------------------------------------------------------
+\subsection{HQ audits A1--A4: Proposition F corrected, extended and re-checked}\label{sec:loop:hq}
+\begin{card}{HQ-A1}{A1 · red-team audit of Proposition F; corrected statement with the C-GROW cap}
+\textbf{Verdict (verbatim):} \status{HOLDS-WITH-AMENDMENTS} — ``No counterexample found to Proposition F with its stated LS0 cap \texttt{ell\_n}. \ldots{} The requested combination with C-GROW needs an amended resource bound and allocation; the current quantitative Lemma R does not cover that combination verbatim. No FATAL finding'' \src{W1C/HQ_AUDIT/A1_propF_redteam.md:3}. Its one MAJOR finding: C-GROW's cap allows up to $\ell_n+K+1$ LS0 scans, so the score count and the work/memory envelopes must be amended \src{W1C/HQ_AUDIT/A1_propF_redteam.md:7-19}. Status as recorded in the final chapter after the round-3 relabelling: A1's corrected form \status{HOLDS-WITH-AMENDMENTS, no FATAL finding; checked in full by the final council, round 3 PASSED (Sol 9.3, Opus 8.6)}, with ``The full round-3 check applies to the \texttt{d315c1e} statements'' \src{W1C/FINAL/sections/s6_delivery.tex:49}.
+\begin{stmt}{W1C/HQ_AUDIT/A1_propF_redteam.md:9-19; W1C/HQ_AUDIT/A1_propF_redteam.md:60-75}
+Let q(p) = p + p\textasciicircum{}2/4. A sufficient correction is\\
+\texttt{score\_requests\_G <= Sigma\_bar + K q(p),}\\
+\texttt{W\_G := W\_bar + C K q(p) [n\textasciicircum{}3 + p(n+2)],}\\
+\texttt{M\_G := M\_bar + C K(K+1),}\\
+with a sufficiently large implementation-dependent constant \texttt{C}, using raw dimension in the envelopes as in L1 R.4. [\ldots]
+
+\textbf{Exact corrected statement}
+
+\textbf{Proposition F (total tier-1 fallback, with the C-GROW cap).} Consider the specified v3.1 method with deterministic LS0 from the exact e4 start mode, complete scans, emitted centre and scored-set HPM retention. Let \texttt{ell\_n=ceil(log2(n+p+1))}, \texttt{K=min(p,floor(n/2))}, and set LS0's move cap to \texttt{a\_n=ell\_n+|S\_tilde\_0|}; all other local-search caps remain \texttt{ell\_n}. Keep fixed declared \texttt{R'=4k} and fixed worker count, and the other CONFIG restrictions of C-DLV. Assume EX-A with its unit-cost interpretation, IDEAL-W, EX-S, SR, e4, GUARD-W, TDP-IMPL and MACH as stated in C-DLV, and OP-LS0 with the cap replaced by \texttt{a\_n}, with valid declared seed/allocation and model G on the stated classes.
+
+At the first failed tier-1 grid construction, terminate that tier and select its last successful construction if one exists, otherwise its completed pilot schedule. Preserve the tier-1 budgets and inherited scored state, freeze the selected complete grid through the normal frozen-record construction before final randomness, and continue with the prescribed final run and LS0. Retain the failure/fallback metadata; make no further calibration attempts and do not promote a partial failed grid to a fallback. Leave other branches unchanged.
+
+Use \texttt{W\_G} and \texttt{M\_G} defined in finding 1, with constants large enough for the fixed implementation and concurrency, and choose allocations satisfying\\
+\texttt{mem\_n  >= max\{ beta M\_G(n,p\_raw)+beta\_0, P\_0, P\_1 \},}\\
+\texttt{time\_n >= max\{ 2[tau W\_G(n,p\_raw)+tau\_0], P\_t\_bar \},}\\
+\texttt{allocation\$mem\_gb >= mem\_n/2\textasciicircum{}30,}\\
+\texttt{allocation\$hours  >= time\_n/3600,}\\
+where \texttt{P\_0,P\_1,P\_t\_bar} are Corollary R's preflight bounds, and certificate budgets remain included. Then for every admissible \texttt{n>=3}, \texttt{P(no output)=0}. On LH exact Gram, LH-iid and the W1-GEN class, under the respective statistical hypotheses and inherited dependency qualifications used in Corollary D-prime, \texttt{P(HPM=S\_0)->1} under the original unconditioned data law. CAL, restricted-ESS success, and any bound on the probability of triggering the fallback are unnecessary. With the original LS0 cap \texttt{a\_n=ell\_n}, the original Lemma R envelopes suffice.
+
+\textit{[abridged: of A1's finding~1 (lines 9--19) only the definitions of q, the score count, W\_G and M\_G and the constant are transcribed; the remainder of the finding is its justification and the required amendment.]}
+\end{stmt}
+\textbf{Post-council addition (not part of A1).} For the C-ENG head code \texttt{493579a}, whose preflight also charges LS0's worst case, the final chapter adds to Proposition~F's allocation $\mathrm{time}_n\ge\bar P_{\rm LS0}:=(\ell_n+K+1)q(p)(\tau U_K+\tau_0)/100$ and $\mathrm{mem}_n\ge P_e+A$ ($e=0,1$, $A$ the \texttt{ls0\_archive} bytes), ``hence the new preflight adds no no-output event under this allocation'' \src{W1C/FINAL/sections/s6_delivery.tex:37-44}. This addition ``was made after that council and is checked separately in HQ audit A4 (OK-WITH-FIXES, fixes applied)'' \src{W1C/FINAL/sections/s6_delivery.tex:49}.
+\begin{plain}With a fallback that freezes the last good tier-1 grid instead of returning \texttt{schedule\_limit}, and an allocation that grows polynomially in $(n,p)$, an idealised machine always returns output; on LH, LH-iid and the GEN class the reported HPM is then consistent without the ``jointly with output'' qualifier. This is a statement about the patched method on an abstract machine.\end{plain}
+\begin{notproved}
+``The claim is not an unconditional reliability statement about the shipped binary or fixed default 8-GiB/24-hour allocation''; MACH's allocation-success and environmental clauses ``are essential additional premises'' \src{W1C/HQ_AUDIT/A1_propF_redteam.md:58}. The exclusion of the other no-output paths is relative to the P1 inventory and Lemma S.3 (code-reading audits); the LS0, worker and fallback paths are covered by premises \src{W1C/FINAL/sections/s6_delivery.tex:62}. The shipped calibration is unchanged; the fallback is a change to a shipped component, implemented only on the unmerged C-ENG branch (\S\ref{sec:loop:eng}).
+\end{notproved}
+\end{card}
+
+\begin{card}{HQ-A2}{A2 · Proposition F on the GROW class (checked by A3)}
+\textbf{Verdicts (verbatim):} A2 (Codex prover) \status{EXTENDS} \src{W1C/HQ_AUDIT/A2_propF_GROW.md:1}; A3 (cross-family check, Claude Opus~5.5) \status{VERIFIED-WITH-AMENDMENTS} — ``I found no gap and no error. All five amendments below are MINOR'' \src{W1C/HQ_AUDIT/A3_check_A2.md:5}; A3's recommended label ``PROVED (A2), checked by A3, not council-passed'' \src{W1C/HQ_AUDIT/A3_check_A2.md:39}. Status in the final chapter after the round-3 relabelling: \status{PROVED (A2), checked by A3}; checked in full by the final council, round 3 PASSED (Sol 9.3, Opus 8.6); ``The full round-3 check applies to the \texttt{d315c1e} statements'' \src{W1C/FINAL/sections/s6_delivery.tex:58}.
+\begin{stmt}{W1C/HQ_AUDIT/A2_propF_GROW.md:7-33}
+\textbf{Exact extended statement}
+
+Use the method and premises of \texttt{A1:62–75}: v3.1 with deterministic, complete-scan LS0 from the exact e4 start-mode maximiser, emitted centre and all-scored HPM retention; EX-A (unit-cost exact reals), IDEAL-W, EX-S, SR, e4, GUARD-W, TDP-IMPL, MACH, valid declared seed/allocation, fixed declared R′ = 4k and worker count, and CONFIG with OP-LS0 amended to the cap\\
+\hspace*{2em}ℓ$_{n}$ = ceil(log₂(n+p+1)),\ \ K = min(p,floor(n/2)),\\
+\hspace*{2em}a$_{n}$ = ℓ$_{n}$ + |S̃₀|.
+
+Other local-search caps remain ℓ$_{n}$. At the first failed tier-1 construction, terminate that tier, select its last successful complete grid or, if none exists, its completed pilot grid; preserve tier-1 budgets and inherited scored state, freeze through the normal record/hash construction before final randomness, retain fallback metadata, and make no further calibration attempts. Never use a partial failed grid (\texttt{A1:62–64}).
+
+With q(p) = p+p²/4, use\\
+\hspace*{2em}W$_{G}$ = W̄ + C K q(p)[n³+p(n+2)],\ \ \ M$_{G}$ = M̄ + C K(K+1),\\
+\hspace*{2em}mem$_{n}$ ≥ max\{β M$_{G}$(n,p$_{raw}$)+β₀, P₀, P₁\},\\
+\hspace*{2em}time$_{n}$ ≥ max\{2[τ W$_{G}$(n,p$_{raw}$)+τ₀], P̄$_{t}$\},\\
+\hspace*{2em}allocation\$mem\_gb ≥ mem$_{n}$/2³⁰,\ \ allocation\$hours ≥ time$_{n}$/3600,\\
+with sufficiently large implementation/concurrency constants, the Lemma R envelopes W̄, M̄, its preflight bounds, and its included polynomial certificate budgets (\texttt{A1:9–19,66–75}; \texttt{DLV/lemmas/L1\_resources.md:70–81,118–137}).
+
+\textbf{Add to Proposition F's classes:} (i) fixed designs under GROW's G, (H0), (G1)–(G4), with MR1, including exact-Gram AR(1) under all the hypotheses of (C5)(a); (ii) iid-row AR(1) under all the hypotheses of (C5)(c), including independent Gaussian noise and the separation condition. Precisely these hypotheses are \texttt{GROW/STATEMENT.md:51–98,119–126,139–149} (the iid instance uses its joint-law event theorem, not fixed-design NEG or G4-dir).
+
+Then, for every admissible n ≥ 3,\\
+\hspace*{2em}P(no output) = 0,\\
+and along each such sequence,\\
+\hspace*{2em}P(Ŝ⁺ = S₀) → 1.
+\end{stmt}
+A3's five MINOR amendments (score-count replacement in C-DLV L4:38 and L1:25, 43; S5 / fixed-$p$ scope; $p_{\rm raw}$ wording; inherited statuses; citation range) \src{W1C/HQ_AUDIT/A3_check_A2.md:25-41} are applied in the chapter's version (Proposition F-GROW) \src{W1C/FINAL/sections/s6_delivery.tex:54}, which adds: ``Class (i) contains the fixed-$p$ illustration (C5)(b); for every fixed-$p$ sequence the conclusion is eventually delivered by enumeration plus T03♯. Random-row S5 (study S5) and the (C6) frontier are not covered.''
+\begin{notproved}
+Inherited qualifications listed by A3: A1's corrected statement had not been councilled at the time of A3; GROW's L4 and L6 are ``PROVED (by this seat, unchecked)'' with checks R04 and R06/R07; [OP] is ``PROVED (by this seat, unchecked)''; e4 rests on N3, which is OPEN; S.3 is a code-reading audit; LS0 is not shipped and the fallback is an unmade change to a shipped component \src{W1C/HQ_AUDIT/A3_check_A2.md:31-38}. Not covered: the C-MIS candidate-rerun setting, random-row S5, factor designs with growing $p$ \src{W1C/FINAL/sections/s6_delivery.tex:62}.
+\end{notproved}
+\end{card}
+
+\begin{card}{HQ-A3}{A3 · cross-family check of A2}
+\textbf{Verdict (verbatim):} \status{VERIFIED-WITH-AMENDMENTS} \src{W1C/HQ_AUDIT/A3_check_A2.md:5}; line-by-line table of the checked steps \src{W1C/HQ_AUDIT/A3_check_A2.md:9-21}; findings 1--5 (all MINOR) \src{W1C/HQ_AUDIT/A3_check_A2.md:25-41}. Its object and result are part of \rid{HQ-A2}.
+\end{card}
+
+\begin{card}{HQ-A4}{A4 · post-council spot-check of the round-3 editorial changes}
+\textbf{Verdict (verbatim):} \status{OK-WITH-FIXES} \src{W1C/HQ_AUDIT/A4_postcouncil_check.md:1} — a ``Targeted review of \texttt{d315c1e..c32b67f} in \texttt{FINAL/sections/} and \texttt{FINAL/consistency.tex}, against engineering head \texttt{493579a}'' \src{W1C/HQ_AUDIT/A4_postcouncil_check.md:3}. Findings: the current-head preflight is correctly described and the allocation addition suffices under MACH (one MINOR precision fix on $U_K$) \src{W1C/HQ_AUDIT/A4_postcouncil_check.md:5-25}; the council relabelling is ``supported, with a scope qualification'' (the full round-3 check applies to the \texttt{d315c1e} statements) \src{W1C/HQ_AUDIT/A4_postcouncil_check.md:27-35}; ``Apart from the explicit stronger allocation (also inherited by F-GROW), theorem conclusions are unchanged'' \src{W1C/HQ_AUDIT/A4_postcouncil_check.md:39}. The chapter records both fixes as applied \src{W1C/FINAL/sections/s6_delivery.tex:49}.
+\end{card}
+
+% ---------------------------------------------------------------------
+\subsection{The final consistency chapter and Lemma CAP}\label{sec:loop:final}
+\begin{card}{W1C-FINAL}{Consistency theory of SMC-BVS (Wave 1 closure) — the final product}
+\textbf{File:} \path{Theory_work/Wave1C/FINAL/consistency.pdf} (source \path{W1C/FINAL/consistency.tex} and \path{W1C/FINAL/sections/s1_setting.tex}--\path{s9_prov.tex}). It is ``a \emph{statement} document: every theorem is transcribed from the proof package named in its status box; proofs are \textbf{not} reproduced'' \src{W1C/FINAL/consistency.tex:17}. Contents: §1 setting, method v3.1 + LS0, named implementation premises; §2 the Song--Liang (2015) map; §3 posterior level (S-T/T03♯, SL0--SL1′, C-MIS); §4 sampler level (N1, Corollary E, the four PIP objects, SL2); §5 reported-HPM consistency (e4′, PXN, GEN, GROW, C-MIS Cor.~D, study coverage); §6 delivery (Theorem D, Proposition F, F-GROW); §7 implementation status and Lemma CAP; §8 scope and frontier; §9 provenance \src{W1C/FINAL/consistency.tex:27-35}.
+
+\textbf{Council (verbatim scores).} Round~1: Sol 7.4 (G1, G6 FAIL) \src{W1C/FINAL/reviews/C1_council_sol.md:106}, Opus 8.5 \src{W1C/FINAL/reviews/C1_council_opus.md:195} — not passed. Round~2: Sol 7.9 (G1, G6 FAIL) \src{W1C/FINAL/reviews/C2_council_sol.md:128}, Opus 8.8 \src{W1C/FINAL/reviews/C2_council_opus.md:194} — not passed. Round~3: Sol 9.3, ``\textbf{Verdict: ACCEPT.} The chapter passes G1–G6'' \src{W1C/FINAL/reviews/C3_council_sol.md:3}, \src{W1C/FINAL/reviews/C3_council_sol.md:90}; Opus 8.6, all six gates PASS \src{W1C/FINAL/reviews/C3_council_opus.md:171}: \textbf{PASSED} \src{W1C/FINAL/reviews/C3_disposition.md:3-4}. Rounds 2 and 3 were briefed to check Lemma CAP, Proposition F (A1's form) and F-GROW in full \src{W1C/FINAL/reviews/C3_disposition.md:28-29}.
+
+\textbf{After the vote.} A post-council editorial pass applied Opus's round-3 findings 1--6; ``no hypothesis or conclusion of any transcribed theorem changed. The one substantive addition (finding 1) is an extra allocation condition for the C-ENG head code'' \src{W1C/FINAL/reviews/C3_disposition.md:4-6}. Opus's finding~1 (MAJOR, non-gate) was that the C-ENG branch had moved to \texttt{493579a}, whose preflight now charges the LS0 worst case \src{W1C/FINAL/reviews/C3_council_opus.md:104-112}. By HQ decision, every ``not councilled'' / ``not council-passed'' label of Lemma CAP, Proposition F (A1) and F-GROW was replaced by the original audit verdict followed by ``; checked in full by the final council, round 3 PASSED (Sol 9.3, Opus 8.6)'' \src{W1C/FINAL/reviews/C3_disposition.md:27-31}; the post-council allocation addition is ``\textbf{outside what round 3 checked}'' \src{W1C/FINAL/reviews/C3_disposition.md:41-43} and was spot-checked by HQ audit A4 (\rid{HQ-A4}).
+\begin{agentnote}[status words of the chapter]
+The chapter's own statuses are those of the tickets (copied in the cards above); the chapter adds no new status except for Lemma CAP and the relabelled audit results. ``These ticket results are \emph{not yet adopted by HQ into the frozen registry}'' \src{W1C/FINAL/consistency.tex:18}. The chapter's ``Recommended next steps'' still list (i) council scrutiny of Lemma CAP and (ii) a council pass for the corrected Proposition~F and its GROW extension \src{W1C/FINAL/sections/s8_scope.tex:19}; the round-3 pass and the relabelling above postdate that list. The remaining steps are in \S\ref{sec:loop:frontier}.
+\end{agentnote}
+\end{card}
+
+\begin{card}{W1C-CAP}{Lemma CAP · LS0-cap monotonicity (the chapter's only new mathematics)}
+\textbf{Status (verbatim):} \status{PROVED (by this seat)}; checked in full by the final council, round 3 PASSED (Sol 9.3, Opus 8.6); cross-family check by the fidelity reviewer F1 (Codex gpt-6.1-sol, high): \status{VERIFIED-WITH-AMENDMENTS}, all applied; rounds 1 and 2 did not pass overall \src{W1C/FINAL/sections/s7_impl.tex:64}. ``The only new mathematics in this chapter is Lemma CAP'' \src{W1C/FINAL/consistency.tex:19}.
+\begin{stmt}{W1C/FINAL/sections/s7_impl.tex:36; W1C/FINAL/sections/s7_impl.tex:43-56}
+\textbf{Setting.} For a finite-integer-valued deterministic measurable function $a=a(X,y)\ge\ell_n$ of the admissible data (the coded cap is an \texttt{int}), let $\mathfrak M(a)$ be the method that differs from the specified v3.1 + LS0 only in LS0's move cap, which is $a$. Structural facts used, from the specification and checked on the C-ENG branch: [\ldots]
+
+Let $N(C)$ be the feasible flip/swap neighbourhood of $C$, and let $C_0=\tilde{S}_0,C_1,\dots$ be the \emph{uncapped} greedy path ($C_{k+1}$ = best scanned neighbour of $C_k$ when it strictly improves $F$); $m^*$ = the number of its moves. Since $F$ strictly increases along the path and $\Omega$ is finite, $m^*<\infty$.
+
+\textbf{Lemma (CAP: LS0-cap monotonicity).} Let $a,a'$ be finite-integer-valued measurable functions of the admissible data with $\ell_n\le a\le a'$; couple $\mathfrak M(a)$ and $\mathfrak M(a')$ through the same valid seed and ideal uniforms. The deterministic LS0 search is defined on every admissible data set, also on branches that do not execute it (exact-branch convention); its scored set is distinguished from the set actually scored by the fit. For every data set, seed and uniform realisation:
+\begin{enumerate}
+\item[(a)] \emph{Prefix.} LS0 with cap $a$ makes $\min(a,m^*)$ moves along $C_0,C_1,\dots$, scans exactly $C_0,\dots,C_{\min(a,m^*)}$, and its scored set is $\mathcal S_{\rm LS0}(a)=\{C_0\}\cup\bigcup_{k\le\min(a,m^*)}N(C_k)$. It terminates certified at $C_{m^*}$ iff $m^*\le a$; otherwise with \texttt{local\_limit}. Hence $\mathcal S_{\rm LS0}(a)\subseteq\mathcal S_{\rm LS0}(a')$, and if the cap-$a$ search ends certified, the cap-$a'$ search is identical (same moves, scans, scored set, return value and flags).
+\item[(b)] \emph{Potential run.} The potential runs of $\mathfrak M(a)$ and $\mathfrak M(a')$ coincide up to LS0, $\bar{\mathcal O}$ does not depend on the cap, $\bar{\mathcal S}^{+}(a)\subseteq\bar{\mathcal S}^{+}(a')$, $\{\text{LS0}(a')\text{ misses }S_0\}\subseteq\{\text{LS0}(a)\text{ misses }S_0\}$, and $D_n(a')\le D_n(a)$.
+\item[(c)] \emph{Reported HPM.} For $\mathfrak M(a)$ with any $a\ge\ell_n$:
+$\ \mathcal O(a)\cap\{\hat S(a)\ne S_0\}\subseteq\{\pi(S_0)\le\tfrac12\}\cup\bigl(\bar{\mathcal O}\cap\{S_0\notin\bar{\mathcal S}^{+}(\ell_n)\}\bigr)$, hence
+\[
+P\bigl(\mathcal O(a)\cap\{\hat S(a)\ne S_0\}\bigr)\le2\,E_0[1-\pi(S_0)]+D_n(\ell_n)\le2\,E_0[1-\pi(S_0)]+P(\text{LS0}(\ell_n)\text{ misses }S_0).
+\]
+\end{enumerate}
+\textit{[abridged: the structural facts (L1)--(L4), lines 37--42, are not transcribed: LS0 is the last search; it reads no uniforms and its centre does not depend on the cap; the cap enters the coded local search only in the move-count test; EX-A, GUARD-W and the reported HPM as the maximum of the all-scored set. Macros \textbackslash PP, \textbackslash EE, \textbackslash Ocal, \textbackslash Shat expanded.]}
+\end{stmt}
+\textbf{Consequences recorded by the chapter.} Under MR1 (C-GROW), every conclusion obtained by bounding $P(\text{LS0}(\ell_n)\text{ misses }S_0)$ or $D_n(\ell_n)$ and $E_0[1-\pi(S_0)]$ holds verbatim for the larger cap: PXN (C) and (T), GEN (C2)--(C5), C-MIS Cor.~D and D′, M5(b1-LH) ``with its own statuses unchanged'', the pathwise part of C-DLV Cor.~D′ and the consistency clause of Proposition~F \src{W1C/FINAL/sections/s7_impl.tex:67-74}. Not transferred verbatim: worst-case costs (PXN (K), C-DLV's Lemma R, M8's accounting), flags and metadata, the negative statement GEN (C6), and the actual no-output event \src{W1C/FINAL/sections/s7_impl.tex:76-82}.
+\begin{notproved}
+The transfers require $a\ge\ell_n$ \src{W1C/FINAL/sections/s7_impl.tex:74}. GEN (C6) ``is \textbf{not established for MR1 (C-GROW)}'' \src{W1C/FINAL/sections/s7_impl.tex:80}. ``Nothing in this chapter asserts that the branch code satisfies EX-A, GUARD-W or the other named premises'' \src{W1C/FINAL/sections/s7_impl.tex:30}.
+\end{notproved}
+\end{card}
+
+
+% ---------------------------------------------------------------------
+\subsection{Frontier after Waves 1 and 1C}\label{sec:loop:frontier}
+The final chapter's §8 lists ``what the paper must not claim'' \src{W1C/FINAL/sections/s8_scope.tex:4-17}; each item below is that list's item (abridged, with the ticket that owns it), followed by the next steps the ticket reports recommend. These are the open targets for the next wave; the v1.0 frontier cards \rid{FR01}--\rid{FR14} keep their own text, with the v1.1 updates above.
+\begin{enumerate}[label=F\arabic*.]
+\item \textbf{Asymptotic only.} ``No quantitative finite-$n$ selection-consistency guarantee is proved, in particular none for the study''; onsets: TH09 near $n\approx2\cdot10^6$ (illustration), LH-iid $\approx10^{10}$, PXN vacuous at $n=200$, GEN margins 0.16--0.94, GROW's events fail at tested $n$, S5 needs $\log n\gtrsim96$; ``\textbf{The study ($n=200$) is not covered} by any asymptotic result'' \src{W1C/FINAL/sections/s8_scope.tex:6} (\rid{FR07}). Suggested: ``a sharper NA restricted to \{T : |T ∖ S₀| ≤ |S̃₀ ∖ S₀|\}'' for GROW \src{W1C/C-GROW/REPORT.md:91-93}; path-wise instead of worst-case union bounds for GEN \src{W1/W1-GEN/REPORT.md:92-93}.
+\item \textbf{Polynomial dimension only}: $p\le n^A$ for fixed $A$, no uniformity in growing $A$; exponential $p$ open (CJ18) \src{W1C/FINAL/sections/s8_scope.tex:7} (\rid{FR01}).
+\item \textbf{Factor-type growing relevance sets}: S5 / common-factor designs with growing $p$ and random-design S5 not proved; growing $s_0$ not covered anywhere \src{W1C/FINAL/sections/s8_scope.tex:8}. Suggested route: ``NA with a low-rank common component (Pythagorean split along the residual factor direction), and a sandwich with a growing Q but a polynomial ladder'' \src{W1C/C-GROW/REPORT.md:89-90} (\rid{FR02}).
+\item \textbf{Delivery for the shipped calibration}: event (O) open; delivery proved only for the fallback calibration, under IDEAL-W, MACH, CONFIG and the amended allocation, on LH, LH-iid, the GEN class and the GROW class; not for the C-MIS rerun setting, random-row S5 or factor designs \src{W1C/FINAL/sections/s8_scope.tex:9}. Routes: a particle-system bound on the pilot stage count (CJ06), a data-only remainder bound, a multi-model generalisation of Lemma 5.2 \src{W1C/C-DLV/REPORT.md:88-91} (\rid{FR11}).
+\item \textbf{Reported pooled PIPs}: no in-probability sure-screening theorem for the shipped $R'=4$ pooled PIPs; only the islandwise bound, M1(i) under stacking and the store-restricted SL2 \src{W1C/FINAL/sections/s8_scope.tex:10} (\rid{TH01}).
+\item \textbf{Misspecification}: EP with growing $p_{\mathcal C}$ and small residual without a proved size tail, approximate projection, outside GR, random-design EP, $n$-dependent $\tau_n^2$ open; no density-contraction analog of Song--Liang Thm~4 \src{W1C/FINAL/sections/s8_scope.tex:11}. Suggested: ``a sufficient-statistic reduction to (P\_V y, ‖(I − P\_V)y‖²), conjectured to lose only e\textasciicircum{}\{−c·rank\}'' \src{W1C/C-MIS/REPORT.md:133-135}.
+\item \textbf{Hellinger/predictive contraction and exponential rates} (Song--Liang Thms 1--2): not attempted (CJ20) \src{W1C/FINAL/sections/s8_scope.tex:12}.
+\item \textbf{Memory}: the sufficient envelope is $O((n+p)^2+\mathrm{Cert}_M)$ words; the shipped scorer is Gram-based; no sub-quadratic bound \src{W1C/FINAL/sections/s8_scope.tex:13}.
+\item \textbf{Floating point}: the full-method selection-consistency theorems retain EX-A. The binary64 start-mode results are N3-code(e) \src{W1/W1-N3/STATEMENT.md:101}, \src{W1/W1-N3/STATEMENT.md:128-132} and its UM-FP consequence \src{W1C/C-PACK/STATEMENT.md:23-29}; they do not establish floating-point consistency of the full method, and FP-TAB is untested for the coded scorer. (The chapter's wording ``The only binary64 statement is Lemma UM-FP'' \src{W1C/FINAL/sections/s8_scope.tex:14} is a chapter summary, not an exhaustive inventory of the Wave-1 results.)
+\item \textbf{Implementation premises}: GUARD-W audit, integrated-LS0 replay, worker equivalence, IND-T extension ($R'>4$), N9 START/KERNEL (candidate), e4 for the integrated LS0 centre (W1-N3: OPEN); LS0, TDP-E, MR1 (C-GROW) and the fallback exist only on the unmerged C-ENG branch; Song--Liang's Theorem~S hypotheses were not inspected \src{W1C/FINAL/sections/s8_scope.tex:15} (\rid{ENG02}, \rid{ENG10}, \rid{OB02}).
+\item \textbf{Registry adoption (HQ)}: ``N1 card status, TH161/TH163 rows, the patches of C-PACK'' \src{W1C/FINAL/sections/s8_scope.tex:19}; Lean for N1 (waive or registrar task) \src{W1/W1-N1/REPORT.md:86-88}. Until then the archive statuses in Appendix~\ref{app:registry} stand and the wave results are the \texttt{wave-result} rows.
+\end{enumerate}
+

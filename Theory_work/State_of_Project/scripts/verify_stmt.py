@@ -47,8 +47,10 @@ def span_text(spec):
         if not m:
             continue
         path = m.group(1)
-        if path.startswith("NBH/"):
-            path = NBH + path[4:]
+        for pre, full in (("NBH/", NBH), ("W1/", "Theory_work/Wave1/"), ("W1C/", "Theory_work/Wave1C/")):
+            if path.startswith(pre):
+                path = full + path[len(pre):]
+                break
         full = os.path.join(REPO, path)
         if not os.path.exists(full):
             return None

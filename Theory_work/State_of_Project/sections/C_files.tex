@@ -84,6 +84,24 @@ Paths are relative to the repository root (\texttt{FbStatsQuant/Bayesian-Variabl
 \end{xltabular}
 }
 
+\subsection{Theory-loop folders (v1.1): \texttt{W1/} and \texttt{W1C/}}\label{app:files:loop}
+Added in v1.1. Path prefixes used in \verb|\src{...}|: \texttt{W1/} = \path{Theory_work/Wave1/} (Theory Wave~1) and \texttt{W1C/} = \path{Theory_work/Wave1C/} (Theory Wave~1C); these citations refer to repo commit \texttt{\wavecommit} of \texttt{main} (\texttt{scripts/check.py} verifies them against that commit; all other citations against \texttt{\sourcecommit}). Each ticket folder holds \texttt{STATEMENT.md} (locked target statement), \texttt{PLAN.md}, \texttt{LOG.md}, \texttt{REPORT.md} (result, statement as proved, status per clause, review trail, open items), \texttt{lemmas/} (proofs), \texttt{numerics/} and \texttt{reviews/} (verbatim reviewer outputs and dispositions).
+{\small
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{6.2cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Path} & \textbf{Purpose} \\
+\midrule
+\endhead
+\path{W1/PROTOCOL.md}, \path{W1C/PROTOCOL.md} & Wave rules: review pipeline, council pass rule, status vocabulary (``PROVED-CHECKED''), method-side changes \\
+\path{W1/W1-PXN/}, \path{W1/W1-N1/}, \path{W1/W1-N3/}, \path{W1/W1-GEN/} & Wave~1 tickets (\S\ref{sec:loop:pxn}--\S\ref{sec:loop:gen}) \\
+\path{W1C/C-PACK/}, \path{W1C/C-MIS/}, \path{W1C/C-GROW/}, \path{W1C/C-DLV/} & Wave~1C tickets (\S\ref{sec:loop:pack}--\S\ref{sec:loop:dlv}); \path{W1C/C-PACK/item5_PXN_consolidated/} is the self-contained PXN proof; \texttt{METHOD\_REQUIREMENTS.md} files hold the method requirements forwarded to C-ENG \\
+\path{W1C/HQ_AUDIT/} & HQ audits A1--A4 (\S\ref{sec:loop:hq}) \\
+\path{W1C/FINAL/consistency.pdf} & \textbf{The final product}: the consistency chapter (source \path{W1C/FINAL/consistency.tex}, \path{W1C/FINAL/sections/}); council reviews and dispositions in \path{W1C/FINAL/reviews/} (\S\ref{sec:loop:final}) \\
+branch \texttt{origin/w1c/ls0-merge} & Ticket C-ENG (implementation; not on \texttt{main}, not merged); reported here only through the final chapter (\S\ref{sec:loop:eng}) \\
+\bottomrule
+\end{xltabular}
+}
+
 \subsection{Data locations, machines and branches}\label{app:files:data}
 {\small
 \begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{6.2cm}>{\raggedright\arraybackslash}X@{}}

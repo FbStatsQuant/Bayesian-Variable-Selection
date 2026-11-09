@@ -179,6 +179,9 @@ For any admissible data set (any correlation) and any successful calibration fro
 \par\noindent \textbullet~Fallback and stop: marginal PIPs only (locked identity) for (e)–(i); one HQ wave on N1.
 \par\noindent \textbullet~Escalation evidence: N1 refuted or unclosed after one wave (→ §13.1 unmet, HQ); GUARD-W or IND-T extension audit failing (→ (c),(d) revert to potential-run statements and N2 reopens).
 
+% v1.1 update (TH01)
+\paragraph{Update v1.1 (Theory Wave 1; \S\ref{sec:loop:n1}).} Clause \rid{TH01.b} (Lemma N1): ticket W1-N1 reports \status{PROVED under the named premises — cross-family checked, council-passed (round 1)}, for a statement stronger than the card (any jointly measurable $h$ with a fixed bound; each measured round separately). Clause \rid{TH01.e}: Corollary E \status{PROVED under the same premises}, with constant δ₁ (which implies the printed 2δ₁). PC1c3's premise ``E[W$_{r}$ ĥ$_{r}$] = π(h)'' used by M1(f), (g), (i) is \status{Discharged islandwise} (given 𝓒, on 𝒜 ∩ \{r ≤ R′\}); ``Those clauses keep their own statuses and remaining premises (IND-T extension for R′ > 4, GUARD-W, stacking, T03♯)'' \src{W1/W1-N1/REPORT.md:46-48}. Ticket result \status{PROVED-CHECKED} (council 9.3 / 8.9) \src{W1/W1-N1/REPORT.md:11-12}; not Lean-certified \src{W1/W1-N1/REPORT.md:86-88}; not yet adopted by HQ, so the registry statuses above are unchanged. No in-probability statement for the pooled shipped $R'=4$ PIPs follows (\S\ref{sec:loop:pack}).
+
 % ---------------------------------------------------------------- M2
 \subsubsection{TH02 · M2 · Theorem WS, the §5.3 package}\label{sec:th02}
 \begin{card}{TH02}{M2 · Theorem WS (the §5.3 package): (a) discrepancy; (b) bridge-form stability with Q5 content; (c) Proposition ONE-SHOT}
@@ -535,6 +538,9 @@ At every sample size and for any design, under the named implementation premises
 \par\noindent \textbullet~Fallback and stop: as the card; (b1-LH) becomes "conditional on N3" after one unproductive HQ cycle; (0) + (a) + (b2-LH) always ship.
 \par\noindent \textbullet~Escalation evidence: a counterexample to T38-b1-LH on LH; the integrated LS0 differing from the specified LS0; N3 failing outright. Each changes objective (3) coverage and the §5.4 masked statement (M4(e)), so HQ decides.
 
+% v1.1 update (TH05)
+\paragraph{Update v1.1 (Theory Waves 1 and 1C; \S\ref{sec:loop}).} \emph{N3 / e4 premise.} W1-N3 proves what the coded start-mode routine returns (\status{PROVED-CHECKED}); ``N3 as an unconditional property of the frozen code is \textbf{false} (counterexample, clause (d)); e4 for integrated LS0 stays OPEN'' \src{W1/W1-N3/REPORT.md:12-13}. C-PACK item~1 finds that the positive consistency proofs of W1-PXN, W1-GEN and M5(b1-LH) use the LS0 centre only to identify it with a deterministic reference R on \{π₀(R) > ½\}, so e4 is replaced by the weaker premise e4′ (item status \status{PROVED; XF-checked (R33 GAP → 7 fixes), re-read R38/R39, council}) \src{W1C/C-PACK/REPORT.md:25-32}, \src{W1C/C-PACK/REPORT.md:58}; on HQ's adoption of the patches ``M5(b1-LH)'s `conditional on N3' fallback label becomes unnecessary'' \src{W1C/C-PACK/REPORT.md:84-85}. \emph{(b1-LH) and beyond LH.} Reported-HPM consistency jointly with output now also has ticket results with status PROVED-CHECKED beyond LH: LH-iid with $p\gg n$ (\rid{W1-PXN}), a general correlated class (\rid{W1-GEN}), growing relevance sets including study S2 under the LS0 cap MR1 (C-GROW) (\rid{C-GROW}), misspecified candidate sets (\rid{C-MIS}); all are about v3/v3.1 + LS0 as specified and make no delivery claim. Under the larger LS0 cap the conclusions proved with cap $\ell_n$ transfer (Lemma CAP, \S\ref{sec:loop:final}). The registry statuses above are unchanged (results not adopted by HQ).
+
 % ---------------------------------------------------------------- M6
 \subsubsection{TH06 · M6 · Theorem SEP + Lemma KL}\label{sec:th06}
 \begin{card}{TH06}{M6 · Theorem SEP + Lemma KL}
@@ -817,6 +823,9 @@ For a fixed design sequence with fixed sparsity $s_0$, $p\le n^A$, Gaussian nois
 
 
 % =====================================================================
+% v1.1 update (TH09)
+\paragraph{Update v1.1 (\S\ref{sec:loop}).} T03♯'s status is unchanged. It is the posterior-level input of the wave results: W1-PXN's clause (P) now rests on T03♯ (TH128) ``plus a new random-design step'' instead of locked T03 \src{W1/W1-PXN/REPORT.md:10-11}; C-PACK's corollaries SL0, SL1, SL1′ turn $1-\pi(S_0)=O_P(\sqrt{\log n/n})$ into PIP (sensitivity and specificity, uniformly in $j$), thresholded-model, MPM and exact-HPM consistency, with instances T03♯ (fixed design), W1-PXN (P) (LH-iid, joint law), GEN (C4) and LH exact Gram \src{W1C/C-PACK/REPORT.md:41-45}; C-MIS's Theorem MIS ``is an exact reduction to T03♯'' for misspecified candidate sets \src{W1C/C-MIS/REPORT.md:10-11}. ``TH09's ≈ 2·10⁶ illustration is not transferred'' to the new results \src{W1C/C-MIS/REPORT.md:18-19}.
+
 \subsection{Consistency and regime map}\label{sec:theory-regime}
 
 This subsection answers, for the loop, three different questions that are easy to conflate: \textbf{(i)} is the \emph{exact} posterior $\pi$ concentrated on the true model $S_0$? \textbf{(ii)} does the \emph{sampler's output} converge to $\pi$ (or to $h(S_0)$)? \textbf{(iii)} is the \emph{reported} HPM $\hat{S}^{+}$ equal to $S_0$? A result for one layer says nothing about another unless the card composes them explicitly (M1(i) composes (i)+(ii); M5 composes (i)+(iii); M4(f) composes (i)+(iii)+store retention).

@@ -3,7 +3,7 @@
 
 Checks
   C1  every \\src{...} path exists (NBH/ prefix expanded) and cited line numbers exist
-  C2  every cited file is unchanged since the frozen source commit
+  C2  every cited file is unchanged since the frozen source commit (21ebc28; Wave 1/1C folders: 25492e4)
   C3  every \\rid{X} resolves to a \\defid / card in the .tex or to a registry row
   C4  every ID is defined at most once in the .tex
   C5  registry status_exact equals the status column of NBH/ID_REGISTRY.md (for archive IDs)
@@ -24,9 +24,15 @@ DOC = os.path.dirname(HERE)
 REPO = os.path.abspath(os.path.join(DOC, "..", ".."))
 NBH = "Theory_work/Old_Projects/New_BVS_Headquarters/"
 FROZEN = "21ebc28"
+# v1.1: Theory-loop sources (Waves 1 and 1C) are cited at the v1.1 source commit, with path prefixes W1/ and W1C/.
+WAVE_FROZEN = "8722b8d"
+PREFIXES = {"NBH/": NBH, "W1/": "Theory_work/Wave1/", "W1C/": "Theory_work/Wave1C/"}
+# Also frozen at WAVE_FROZEN: the document's own post-21ebc28 source files (committed with v1.0 in fc1d5e1).
+WAVE_DIRS = ("Theory_work/Wave1/", "Theory_work/Wave1C/", "Theory_work/State_of_Project/sources/",
+             "Theory_work/State_of_Project/AUTHORING.md")
 KINDS = {"main-card", "supp-card", "clause", "remark", "obligation", "future-work", "drop", "limitation",
          "definition", "ruling", "method-decision", "dissent", "cited-lemma", "history-result", "refuted",
-         "counterexample", "decision-pending", "engineering", "frontier", "empirical"}
+         "counterexample", "decision-pending", "engineering", "frontier", "empirical", "wave-result"}
 COLS = ["id", "native", "kind", "short", "status_exact", "checked_by", "regime", "depends_on", "used_by",
         "open_items", "tex_label", "sources"]
 ARCHIVE_ID = re.compile(r"^(TH|LM|CJ|RF|CE|OB|DR|LIM|DF|RL|MD|DS|CL)\d{2,3}(\.[A-Za-z0-9]+)?$")
@@ -99,8 +105,10 @@ def parse_src(s):
     m = re.match(r"^(.*?)(?::([0-9][0-9,\-–\s]*))?(?:\s+(§|sec|lines?).*)?$", s)
     path, lines = m.group(1).strip(), m.group(2)
     path = path.split(" ")[0]
-    if path.startswith("NBH/"):
-        path = NBH + path[4:]
+    for pre, full in PREFIXES.items():
+        if path.startswith(pre):
+            path = full + path[len(pre):]
+            break
     spans = []
     if lines:
         for part in re.split(r"[,\s]+", lines.strip()):
@@ -129,11 +137,16 @@ def nlines(p):
 
 
 def git_changed(paths):
-    if not paths:
-        return set()
-    out = subprocess.run(["git", "-C", REPO, "diff", "--name-only", FROZEN, "--"] + sorted(paths),
-                         capture_output=True, text=True)
-    return set(x.strip() for x in out.stdout.splitlines() if x.strip())
+    """Cited files changed since their frozen commit (archive/repo: FROZEN; Wave 1/1C folders: WAVE_FROZEN)."""
+    out_set = set()
+    for commit, group in ((FROZEN, [p for p in paths if not p.startswith(WAVE_DIRS)]),
+                          (WAVE_FROZEN, [p for p in paths if p.startswith(WAVE_DIRS)])):
+        if not group:
+            continue
+        out = subprocess.run(["git", "-C", REPO, "diff", "--name-only", commit, "--"] + sorted(group),
+                             capture_output=True, text=True)
+        out_set |= set(x.strip() for x in out.stdout.splitlines() if x.strip())
+    return out_set
 
 
 def main():
@@ -211,7 +224,7 @@ def main():
                     cited_paths.add(path)
     changed = git_changed(cited_paths)
     for p in sorted(changed):
-        errors.append(f"C2 cited file changed since {FROZEN}: {p}")
+        errors.append(f"C2 cited file changed since its frozen commit ({FROZEN}; wave files {WAVE_FROZEN}): {p}")
 
     # C3/C4 ids
     for i, n in defined.items():
