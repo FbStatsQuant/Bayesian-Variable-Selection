@@ -34,6 +34,28 @@ Switch: `v3_fit(X, y, seed, allocation, ls0 = getOption("v3.ls0", TRUE))`. **Def
 
 R04 (fresh Codex review of the MR2 delta and the harness edits): APPROVE, no findings (`reviews/R04_delta_review_raw.md`).
 
+## 1c. HQ wave-2 requirements (C-GROW MR1, C-DLV A.2 TDP-IMPL, C-DLV B + HQ_AUDIT precision)
+
+Sources: `Theory_work/Wave1C/C-GROW/METHOD_REQUIREMENTS.md`, `Theory_work/Wave1C/C-DLV/METHOD_REQUIREMENTS.md` (§A, §B),
+`Theory_work/Wave1C/HQ_AUDIT/A1_propF_redteam.md` ("Pilot-grid and failure-branch attack", "Exact corrected statement").
+Every item is behind a switch; default = new behaviour; `v3_fit(..., ls0 = FALSE)` still reproduces v3 entirely.
+
+| req. | implementation | switch (old behaviour) | test / evidence |
+|---|---|---|---|
+| **C-GROW MR1** LS0 move cap ℓ^{LS0} = ℓ_n + \|S̃₀\| | `cpp_final_run`: `ls0_cap = ls0_ell + |m.S|` with `ls0_ell` = ℓ_n (`ro$ell`), applied only to the LS0 `local_search`; the final local search keeps ℓ_n; archive `ls0$move_cap`, `ls0$move_cap_rule` (`cpp/v3_core.cpp:403–404, 473–477`; `v3_run.R` `ro$ls0_cap`) | `options(v3.ls0_cap = "ell_n")` | `numerics/out_test_ls0_wave2.txt`: default fit move_cap = 8 + 3; switch gives 8 with identical final search/Ẑ/PIPs; binding fixture (base cap 0): rule ℓ_n stops at `move_limit`, rule ℓ_n + \|S̃₀\| completes the same descent/HPM as the production run |
+| **C-DLV A.2 TDP-IMPL** | unchanged `mode_tie_dp` (TDP-E). Same maximiser: under EX-A, E = 𝒜* (W1-N3 (b)), so TDP-E = lex-min 𝒜* = S* = W1-N3 TDP's output (checked: `out_xcheck_n3_tdp.txt` 600/600, `out_test_tdp_*` [C]). **Operations:** `mode_dp` O(Σ_b 2^{\|C_b\|} + J(K+1)(B+1)); per index i: one row refresh O(2^{\|C_{b(i)}\|}) (twice on rejection) + one reachability pass O(Σ_b (K+1)(t_b+1)) ≤ O(J(K+1)²); total O(p·(2^B + J(K+1)²)) ⊆ O(p·Σ_b(2^{\|C_b\|}+(K+1)²)). **Storage:** `mb` Σ_b(t_b+1), `arg` ≤ Σ_b 2^{\|C_b\|} codes, `M` and `reach` (J+1)(K+1), `allowed` Σ_b(t_b+1), masks J: O(Σ_b 2^{\|C_b\|} + J(K+1)). The preceding enumeration fast path stores O(J + p) (choice vector, recursion depth J, best set) and costs ≤ cap · O(J(B+1) + p log p) (every visited tight node completes to a leaf, so no dead branches; cap = 10⁶ is a constant). GUARD-W: start mode + LS0 are timed as one operation and checked at checkpoint `ls0`; no uniforms (final stream endpoints identical with LS0 on/off, `out_test_ls0_wave2.txt`; p = 30 regression `streams` identical 48/48) | `options(v3.ls0_tie_dp = FALSE)` | see (a), (b) |
+| **C-DLV B** tier-1 calibration fallback (HQ precision) | `v3_cal_tier`: at tier 1, on a grid failure (the tier already stops at its first failed construction: no diagnostics after a failed preliminary, `break` after a failed rebuild — unchanged), record `fallback_grid` = the last successful tier-1 construction `g` if `g$ok` (never the failed `gn` or its partial grid), else the completed tier-1 pilot schedule (`pil$schedule`; a stopped pilot returns earlier through `fail`). `v3_calibrate`: if the run would return `schedule_limit` (status ok, no grid, tier 1), validate the fallback with `v3_check_grid` and freeze it through the ordinary `v3_frozen` (tier-1 N, L, inherited scored state; sha256) before the final run; metadata `calibration$grid_fallback`, `tiers[[2]]$grid_source = "fallback: …"`, `fit$flags$grid_fallback` ∈ {"none", "last_successful_construction", "pilot_schedule"}; the `grid_failure` trigger and `checks_passed_calibration = FALSE` are kept. Other branches (tier-0 failure → escalation, blocked escalation → `resource_limit`, stops, numerical failures) unchanged (`v3_calib.R:28, 120–126, 141–183`; `v3_fit.R:126–127, 145`) | `options(v3.grid_fallback = FALSE)`; `ls0 = FALSE` | `out_test_ls0_wave2.txt` (failures injected by wrapping `v3_build_grid`): all constructions fail ⇒ completed fit, finite estimates, `grid_fallback = "pilot_schedule"`, frozen grid = tier-1 pilot schedule (strictly increasing 0→1), tier 1; tier-0 preliminary + tier-1 rebuild fail ⇒ `"last_successful_construction"`, frozen grid = tier-1 preliminary grid with its ρ_V/label; tier-0-only failure (v3 escalates and succeeds) and no failure ⇒ calibration, frozen record and Ẑ identical to v3, flag `"none"`; switches ⇒ `schedule_limit` as in v3. p = 30 regression rerun with the final code (§3c2′) |
+
+**Study outputs and `schedule_limit`:** `Results/2026-10-28_New_Campaign/H_existing_20261030/tables/reconciliation.csv`
+lists the 2,400 study fits as 2,394 `completed` + 6 `resource_limit` (p = 500: 1199 + 1; p = 1000: 1195 + 5), i.e.
+**0 fits with status `schedule_limit`**; no stored result file under `Results/` or `Scripts/Campaigns/2026-10-28_New_Campaign`
+contains the string `schedule_limit` (only code, schemas and review documents do). The published outputs are therefore
+unaffected by C-DLV B.
+
+**Resource note (C-GROW MR1):** with cap ℓ_n + \|S̃₀\| ≤ ℓ_n + K, LS0 performs at most ℓ_n + K + 1 scans of
+≤ p + k*(p − k*) models each (was ℓ_n + 1); the resource-envelope change is handled on the theory side (HQ). Not counted
+in the shipped preflight formula (unchanged).
+
 Spec mapping (`NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md`): #8 LS0 (when, centre, rules, no uniforms, all scored
 models join the stores, provenance `ls0`, `ls0_improved`, no E3, e4); #6 GUARD-W (LS0 stop / numerical failure in LS0 ⇒ no
 output; capped LS0 is not a stop); #9 (flags/near ties recomputed on the returned model; store = top_c(old ∪ added)); #10
