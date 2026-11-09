@@ -3,8 +3,9 @@
 Ticket C-ENG, Theory Wave 1C. Lead: Claude Opus 5.5 (Claude Work). Branch **`w1c/ls0-merge`** (pushed to origin; head commit
 in the final message). Base: `f16ce15` (main). Not merged; main untouched.
 
-**RESULT: DONE (implemented, tested, all code reviews APPROVE).** HQ-forwarded method requirements implemented, tested and
-reviewed: C-PACK MR1–MR3 (§1b); C-GROW MR1, C-DLV A.2 (TDP-IMPL), C-DLV B with the HQ_AUDIT precision (§1c). Study outputs:
+**RESULT: DONE (implemented, tested, every production change reviewed; final reviews APPROVE).** HQ-forwarded method
+requirements implemented, tested and reviewed: C-PACK MR1–MR3 (§1b); C-GROW MR1, C-DLV A.2 (TDP-IMPL), C-DLV B with the
+HQ_AUDIT precision, and the LS0 worst-case preflight term (§1c). Study outputs:
 0 `schedule_limit` fits (§1c). Open: see §6.
 
 ## 1. What changed (production code; `git diff f16ce15 HEAD -- Scripts/SMC_BVS`)
@@ -190,7 +191,8 @@ locally, so it was not run; the public-path tests in (b) `paths` exercise the sa
 ## 4. Files produced
 `PLAN.md` (v1.3), `LOG.md`, `CHECKPOINT.md`, `REPORT.md`, `lemmas/TDP_E.md`, `reviews/R01_*` … `R06_*`, `reviews/CITECHECK.txt`,
 `tests/` (ceng_load.R, ceng_exports.cpp, test_tdp.R, test_ls0.R, run_batch.R, compare_regress.R, proto_load.R,
-o_ls0_exports.cpp [verbatim prototype], run_replay.R, compare_replay.R, xcheck_n3_tdp.R/.py, check_final_flags.R),
+o_ls0_exports.cpp [verbatim prototype], run_replay.R, compare_replay.R, xcheck_n3_tdp.R/.py, check_final_flags.R,
+test_preflight.R),
 `numerics/` (outputs above; `existing_suite/` = harness evidence, 11+ MB).
 
 ## 5. Notes for HQ
