@@ -1,0 +1,16 @@
+## D4: production core WITHOUT LS0 (R 4.4.1, `v3_fit`, allocation 8 GB / 1 h), same (X, y) as the Python runs
+
+Scripts: `d4_export.py` (writes X, y from the Python generator) -> `d4_run.R` / `d4_batch.py` (fits; the core was copied to `d4_core/` and compiled there, 28 s) -> `d4_post.py` (this table, `D4_raw.csv`). Fields used: `hpm` (reported HPM), `top_store` (top 4001 scored models by F), `local_search` (final local-search archive), `instrumentation$scored` (distinct-model count, HLL), `hpm_before_local`, `hpm_provenance`.
+
+**Is the scored set observable?** Not exactly. `v3_fit` exports the per-model scored set (`cpp_registry_scored_set`) only for p <= 32; at p = 100 the registry is in HLL mode (`n_distinct_hll` = approximate number of distinct scored models, no model list). What is exact: (i) the HPM (best F over all scored models, so F(S0) > F(HPM) would prove that S0 was never scored); (ii) the top store (the 4001 best scored models; full in every fit); (iii) the final local-search archive (centre, path, scanned centres, `scan_size`). 'S0 in scored set (decided)': scored if HPM = S0, or S0 in the top store, or S0 adjacent to a final-LS centre; not scored if F(S0) is above the top-store minimum yet S0 is absent; otherwise undecidable (count shown). The R scores equal the Python F up to one additive constant per data set (last column), so F(S0) is taken from the Python scorer. R seed = 1000 + data seed. c = 1, p = 100.
+
+| design | fits | HPM = S0 | HPM contains S0 | HPM before final LS = S0 | S0 in scored set (decided) | S0 in top store | extras in HPM (total, max) | HPM first scored in (phase/mechanism) | final LS from global best certified | secs med (min-max) | max dev. of R-vs-Python score offset (top-40) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| S2 p=100 c=1 n=200 (seeds 0-4) | 5 | 5/5 | 5/5 | 5/5 | 5 scored / 0 not / 0 undecidable | 5/5 | 0 (max 0) | pilot/gibbs_flip x2, pilot/init_draw x3 | 5/5 | 57 (20-95) | 1.1e-12 |
+| S2 p=100 c=1 n=200 (targeted seed (Python best model != S0)) | 1 | 0/1 | 1/1 | 0/1 | 1 scored / 0 not / 0 undecidable | 1/1 | 1 (max 1) | pilot/init_draw x1 | 1/1 | 141 (141-141) | 6.8e-13 |
+| S2 p=100 c=1 n=800 (seeds 0-4) | 5 | 5/5 | 5/5 | 5/5 | 5 scored / 0 not / 0 undecidable | 5/5 | 0 (max 0) | pilot/gibbs_flip x5 | 5/5 | 69 (40-176) | 1.8e-12 |
+| S2 p=100 c=1 n=3200 (seeds 0-4) | 4 | 4/4 | 4/4 | 4/4 | 4 scored / 0 not / 0 undecidable | 4/4 | 0 (max 0) | pilot/gibbs_flip x4 | 4/4 | 94 (70-116) | 9.1e-12 |
+| S5 p=100 c=1 n=200 (seeds 0-4) | 5 | 5/5 | 5/5 | 5/5 | 5 scored / 0 not / 0 undecidable | 5/5 | 0 (max 0) | pilot/gibbs_flip x2, pilot/init_draw x3 | 5/5 | 112 (39-160) | 1.1e-12 |
+| S5 p=100 c=1 n=200 (targeted seed (Python best model != S0)) | 1 | 0/1 | 1/1 | 0/1 | 1 scored / 0 not / 0 undecidable | 1/1 | 1 (max 1) | pilot/gibbs_flip x1 | 1/1 | 262 (262-262) | 8.0e-13 |
+| S5 p=100 c=1 n=800 (seeds 0-4) | 4 | 4/4 | 4/4 | 4/4 | 4 scored / 0 not / 0 undecidable | 4/4 | 0 (max 0) | pilot/gibbs_flip x4 | 4/4 | 632 (504-670) | 1.8e-12 |
+| S5 p=100 c=1 n=3200 (seeds 0-4) | 2 | 2/2 | 2/2 | 2/2 | 2 scored / 0 not / 0 undecidable | 2/2 | 0 (max 0) | pilot/gibbs_flip x2 | 2/2 | 2053 (1820-2285) | 9.1e-12 |

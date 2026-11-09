@@ -1,0 +1,25 @@
+# F_aggregates.txt -- pooled counts from F1_raw.csv, F1X_raw.csv, F2_raw.csv (script f_aggregate.py)
+
+## F1_raw.csv: 180 runs
+n=200: runs 60; NA violated (max add gain >= 0) 60/60; largest max-gain 12.11, median per-run max-gain 4.61; runs with some tested Z^2 > c*_n(k): 55/60; TL largest swap diff -8.6, deletion diff -6.4; S0 in start 60; start in Q 60; extras in P 60; |extras| min/median/max 0/0/3
+n=800: runs 60; NA violated (max add gain >= 0) 49/60; largest max-gain 6.93, median per-run max-gain 1.37; runs with some tested Z^2 > c*_n(k): 44/60; TL largest swap diff -63.2, deletion diff -58.9; S0 in start 60; start in Q 60; extras in P 60; |extras| min/median/max 0/2/6
+n=3200: runs 60; NA violated (max add gain >= 0) 35/60; largest max-gain 7.87, median per-run max-gain 0.46; runs with some tested Z^2 > c*_n(k): 34/60; TL largest swap diff -283.4, deletion diff -279.4; S0 in start 60; start in Q 60; extras in P 60; |extras| min/median/max 1/2/9
+rho-0.5: NA violated 47/60; |extras| 0-2
+rho0.5: NA violated 40/60; |extras| 0-2
+rho0.8: NA violated 57/60; |extras| 1-9
+TL: largest swap diff over all runs -8.60; largest deletion diff -6.38
+incremental-vs-bvs_core verification (worst NA pair): max abs diff 8.04e-12; (worst TL swap) 1.21e-11
+
+## F1X_raw.csv: 120 runs
+n=200: runs 40; NA violated (max add gain >= 0) 4/40; largest max-gain 1.45, median per-run max-gain -2.42; runs with some tested Z^2 > c*_n(k): 3/40; TL largest swap diff -8.2, deletion diff -6.2; S0 in start 40; start in Q 18; extras in P 18; |extras| min/median/max 0/2/2
+n=800: runs 40; NA violated (max add gain >= 0) 0/40; largest max-gain -0.07, median per-run max-gain -2.65; runs with some tested Z^2 > c*_n(k): 1/40; TL largest swap diff -55.7, deletion diff -55.0; S0 in start 40; start in Q 0; extras in P 0; |extras| min/median/max 2/5/6
+n=3200: runs 40; NA violated (max add gain >= 0) 0/40; largest max-gain -0.87, median per-run max-gain -3.60; runs with some tested Z^2 > c*_n(k): 0/40; TL largest swap diff -269.0, deletion diff -264.0; S0 in start 40; start in Q 0; extras in P 0; |extras| min/median/max 2/7/9
+TL: largest swap diff over all runs -8.23; largest deletion diff -6.19
+incremental-vs-bvs_core verification (worst NA pair): max abs diff 6.90e-12; (worst TL swap) 1.23e-11
+
+## F2_raw.csv: 60 runs
+n=800: runs 20; NA violated (max add gain >= 0) 18/20; largest max-gain 6.11, median per-run max-gain 2.40; runs with some tested Z^2 > c*_n(k): 16/20; TL largest swap diff -16.8, deletion diff -18.0; S0 in start 19; start in Q 20; extras in P 20; |extras| min/median/max 1/5/8
+n=3200: runs 20; NA violated (max add gain >= 0) 16/20; largest max-gain 2.31, median per-run max-gain 0.95; runs with some tested Z^2 > c*_n(k): 16/20; TL largest swap diff -112.4, deletion diff -111.7; S0 in start 20; start in Q 20; extras in P 20; |extras| min/median/max 15/19/20
+n=12800: runs 20; NA violated (max add gain >= 0) 10/20; largest max-gain 3.15, median per-run max-gain 0.08; runs with some tested Z^2 > c*_n(k): 8/20; TL largest swap diff -495.2, deletion diff -493.3; S0 in start 20; start in Q 20; extras in P 20; |extras| min/median/max 24/40/42
+TL: largest swap diff over all runs -16.82; largest deletion diff -17.95
+incremental-vs-bvs_core verification (worst NA pair): max abs diff 2.26e-11; (worst TL swap) 3.98e-11

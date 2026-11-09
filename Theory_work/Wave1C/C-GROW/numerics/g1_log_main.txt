@@ -1,0 +1,183 @@
+jobs: 60
+done (0.5, 200, 1000, 1) t=14s start 5 viol_in True True naF -4.17 4.27 h 12.3/16.5
+done (0.5, 200, 1000, 0) t=20s start 4 viol_in True True naF -3.85 0.66 h 15.3/16.5
+done (0.5, 200, 1000, 2) t=19s start 4 viol_in True True naF -5.01 0.98 h 18.5/16.5
+done (0.5, 200, 1000, 3) t=25s start 4 viol_in True True naF -3.77 0.90 h 15.6/16.5
+done (0.5, 200, 1000, 5) t=19s start 3 viol_in False True naF -1.93 2.40 h 10.3/16.5
+done (0.5, 200, 1000, 4) t=28s start 4 viol_in True True naF -4.45 0.53 h 11.0/16.5
+done (0.5, 200, 1000, 6) t=21s start 3 viol_in False True naF -2.86 3.98 h 12.9/16.5
+done (0.5, 200, 1000, 7) t=21s start 3 viol_in False True naF -1.96 0.98 h 15.8/16.5
+done (0.5, 200, 1000, 8) t=16s start 3 viol_in False True naF -3.40 0.49 h 15.5/16.5
+done (0.5, 200, 1000, 9) t=32s start 5 viol_in True True naF -2.34 4.47 h 14.8/16.5
+done (0.8, 200, 1000, 1) t=25s start 5 viol_in True True naF 1.40 11.69 h 14.0/16.5
+done (0.8, 200, 1000, 0) t=38s start 4 viol_in True True naF 0.42 4.62 h 19.7/16.5
+done (0.8, 200, 1000, 2) t=33s start 5 viol_in True True naF 0.30 8.44 h 13.3/16.5
+done (0.8, 200, 1000, 3) t=31s start 7 viol_in False True naF 0.68 7.29 h 13.6/16.5
+done (0.8, 200, 1000, 5) t=29s start 5 viol_in True True naF 2.05 3.41 h 13.9/16.5
+done (0.8, 200, 1000, 6) t=23s start 4 viol_in True True naF -0.66 4.49 h 16.8/16.5
+done (0.8, 200, 1000, 4) t=35s start 5 viol_in True True naF 4.12 6.46 h 15.0/16.5
+done (0.8, 200, 1000, 7) t=23s start 5 viol_in True True naF 2.22 5.31 h 16.0/16.5
+done (0.8, 200, 1000, 8) t=28s start 6 viol_in True True naF 12.55 5.05 h 15.0/16.5
+done (0.8, 200, 1000, 9) t=38s start 5 viol_in False True naF 0.17 5.23 h 12.4/16.5
+done (0.5, 400, 2000, 0) t=201s start 5 viol_in True True naF -4.84 -0.21 h 19.3/18.2
+done (0.5, 400, 2000, 2) t=187s start 4 viol_in True True naF -3.28 -0.67 h 16.7/18.2
+done (0.5, 400, 2000, 1) t=260s start 4 viol_in True True naF -1.65 -1.13 h 15.0/18.2
+done (0.5, 400, 2000, 3) t=244s start 6 viol_in True True naF -5.82 -1.29 h 16.2/18.2
+done (0.5, 400, 2000, 4) t=189s start 5 viol_in True True naF -1.45 1.57 h 19.3/18.2
+done (0.5, 400, 2000, 5) t=212s start 5 viol_in True True naF -3.49 0.76 h 16.9/18.2
+done (0.5, 400, 2000, 7) t=186s start 5 viol_in True True naF 2.13 0.27 h 15.4/18.2
+done (0.5, 400, 2000, 6) t=241s start 4 viol_in True True naF -4.43 2.19 h 15.0/18.2
+done (0.5, 400, 2000, 9) t=186s start 7 viol_in True True naF -3.08 0.93 h 17.5/18.2
+done (0.5, 400, 2000, 8) t=230s start 4 viol_in True True naF -2.58 0.62 h 14.3/18.2
+Process SpawnPoolWorker-1:
+Traceback (most recent call last):
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\pool.py", line 131, in worker
+    put((job, i, result))
+    ~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\queues.py", line 394, in put
+    self._writer.send_bytes(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 205, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 294, in _send_bytes
+    ov, err = _winapi.WriteFile(self._handle, buf, overlapped=True)
+              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [WinError 232] The pipe is being closed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 313, in _bootstrap
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\pool.py", line 136, in worker
+    put((job, i, (False, wrapped)))
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\queues.py", line 394, in put
+    self._writer.send_bytes(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 205, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 294, in _send_bytes
+    ov, err = _winapi.WriteFile(self._handle, buf, overlapped=True)
+              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [WinError 232] The pipe is being closed
+Process SpawnPoolWorker-2:
+Traceback (most recent call last):
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\pool.py", line 131, in worker
+    put((job, i, result))
+    ~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\queues.py", line 394, in put
+    self._writer.send_bytes(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 205, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 294, in _send_bytes
+    ov, err = _winapi.WriteFile(self._handle, buf, overlapped=True)
+              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [WinError 232] The pipe is being closed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 313, in _bootstrap
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\pool.py", line 136, in worker
+    put((job, i, (False, wrapped)))
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\queues.py", line 394, in put
+    self._writer.send_bytes(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 205, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 294, in _send_bytes
+    ov, err = _winapi.WriteFile(self._handle, buf, overlapped=True)
+              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [WinError 232] The pipe is being closed
+Process SpawnPoolWorker-4:
+Traceback (most recent call last):
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\pool.py", line 131, in worker
+    put((job, i, result))
+    ~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\queues.py", line 394, in put
+    self._writer.send_bytes(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 205, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 294, in _send_bytes
+    ov, err = _winapi.WriteFile(self._handle, buf, overlapped=True)
+              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [WinError 232] The pipe is being closed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 313, in _bootstrap
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\pool.py", line 136, in worker
+    put((job, i, (False, wrapped)))
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\queues.py", line 394, in put
+    self._writer.send_bytes(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 205, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 294, in _send_bytes
+    ov, err = _winapi.WriteFile(self._handle, buf, overlapped=True)
+              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [WinError 232] The pipe is being closed
+Process SpawnPoolWorker-3:
+Traceback (most recent call last):
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\pool.py", line 131, in worker
+    put((job, i, result))
+    ~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\queues.py", line 394, in put
+    self._writer.send_bytes(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 205, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 294, in _send_bytes
+    ov, err = _winapi.WriteFile(self._handle, buf, overlapped=True)
+              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [WinError 232] The pipe is being closed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 313, in _bootstrap
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\pool.py", line 136, in worker
+    put((job, i, (False, wrapped)))
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\queues.py", line 394, in put
+    self._writer.send_bytes(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 205, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\felip\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\connection.py", line 294, in _send_bytes
+    ov, err = _winapi.WriteFile(self._handle, buf, overlapped=True)
+              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [WinError 232] The pipe is being closed

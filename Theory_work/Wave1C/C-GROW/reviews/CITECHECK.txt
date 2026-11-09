@@ -1,0 +1,38 @@
+OK    [STATEMENT.md] 04_theory.tex:489-489
+      \par\noindent\rid{TH05.0} (M5(0) Composition at every n, any X): \status{T38-(0) "PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))"; N200 "PROVED (eleme
+OK    [STATEMENT.md] Scripts/Data_generators/gen_dev_data.R:53-61
+      Sigma <- scenario_covariance(scenario, p) | raw_X <- matrix(rnorm(N * p), nrow = N) %*% chol(Sigma)      # X first | X <- scale(raw_X, center = TRUE, scale = TRUE)                # sd with n - 1
+OK    [STATEMENT.md] 04_theory.tex:69-74
+      \par\smallskip\noindent\textbf{Shared definition.}\enspace Exact scope | \par\smallskip\noindent\textbf{D0: data/target.}\enspace \(n\ge3,p\ge1\); nonconstant columns and response, centered and standardized. \(K=\min(p,\lfloor n/2\rf | \par\smallskip\noindent\textbf{Score.}\enspace \(G_U=X_U^\top X_U,\ z_U=X_U^\top y,\ H_U=(n+1)G_U+I,\ Q_U=y^\top y-nz_U^\top H_U^{-1}z_U,\ \nu=.01+n/2\). \(m(U)
+OK    [STATEMENT.md] 02_method.tex:187-211
+      \item \textbf{Clustering:} complete linkage on the distance $1-|r_{jl}|$ computed from $X$; ties between candidate merges broken | lexicographically on the sorted original-index lists. | \item \textbf{Cut:} top-down from the root; any node with more than $B$ members is split into its two children (visited smallest
+OK    [STATEMENT.md] 02_method.tex:490-506
+      \textbf{LS0: local search from the start mode.} | \begin{itemize} | \item ``After the final local search (and after the extra search from $c_4$ when $R'>4$), run one local search with the \S6.10 rules from
+OK    [STATEMENT.md] 02_method.tex:463-467
+      \item \textbf{Local search:} from the current best scored model (the centre), scan every feasible flip and swap (additions beyond $K$ | excluded) with the centre frozen during the scan; move to the best strict improvement (lexicographic ties); at most $\ell$ moves, | then one further scan; stop earlier when a scan finds no improvement. Every evaluated model updates the global best. If the
+OK    [STATEMENT.md] 02_method.tex:505-506
+      \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:151}. \#10: \texttt{local\_certified} and card item L1 are evaluated on | the finally returned $\hat S$, from whichever search ended on it \src{NBH/branch_snapshots/MEET-v31/METHOD_v3.1_FINAL.md:152}.
+OK    [STATEMENT.md] 04_theory.tex:84-84
+      \par\noindent Shared implementation premises (named once, used by both cards): \textbf{EX-A} exact scores and arithmetic; \textbf{EX-S} fresh independent ideal 
+OK    [STATEMENT.md] 02_method.tex:167-167
+      \textbf{Exact branch} (M \S6.2): if $E=\sum_{k\le K}\binom pk\le(5H_0+4N_0)\,p$ (saturating integer arithmetic), score every
+OK    [METHOD_REQUIREMENTS.md] 02_method.tex:413-413
+      scan size $p+k^*(p-k^*)$ with $k^*=\min(K,\lfloor p/2\rfloor)$, times $(\ell+1)$ scans
+OK    [lemmas\00_MAIN.md] 02_method.tex:167-167
+      \textbf{Exact branch} (M \S6.2): if $E=\sum_{k\le K}\binom pk\le(5H_0+4N_0)\,p$ (saturating integer arithmetic), score every
+OK    [lemmas\L1_descent.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T37R/PROOF.md:103-115
+       | (a) Progress moves map Lat(S) into Lat(S); R_{a,d} is closed under progress moves; Φ ≤ m(S) + e(S) on Lat(S). | (b) On NA_d ∩ TL_d: M(S₀) = ⊥, and for every S = S₀ ∪ P with 1 ≤ |P| ≤ d, M(S) is the deletion of an extra
+OK    [lemmas\L1_descent.md] 02_method.tex:463-467
+      \item \textbf{Local search:} from the current best scored model (the centre), scan every feasible flip and swap (additions beyond $K$ | excluded) with the centre frozen during the scan; move to the best strict improvement (lexicographic ties); at most $\ell$ moves, | then one further scan; stop earlier when a scan finds no improvement. Every evaluated model updates the global best. If the
+OK    [lemmas\L1_descent.md] 02_method.tex:490-499
+      \textbf{LS0: local search from the start mode.} | \begin{itemize} | \item ``After the final local search (and after the extra search from $c_4$ when $R'>4$), run one local search with the \S6.10 rules from
+OK    [lemmas\L4_assembly.md] 04_theory.tex:489-489
+      \par\noindent\rid{TH05.0} (M5(0) Composition at every n, any X): \status{T38-(0) "PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))"; N200 "PROVED (eleme
+OK    [lemmas\L4_assembly.md] 02_method.tex:413-413
+      scan size $p+k^*(p-k^*)$ with $k^*=\min(K,\lfloor p/2\rfloor)$, times $(\ell+1)$ scans
+OK    [lemmas\L5_instances.md] 02_method.tex:167-167
+      \textbf{Exact branch} (M \S6.2): if $E=\sum_{k\le K}\binom pk\le(5H_0+4N_0)\,p$ (saturating integer arithmetic), score every
+OK    [lemmas\L6_random_AR1.md] 02_method.tex:167-167
+      \textbf{Exact branch} (M \S6.2): if $E=\sum_{k\le K}\binom pk\le(5H_0+4N_0)\,p$ (saturating integer arithmetic), score every
+
+TOTAL ok=18 miss=0

@@ -1,0 +1,2 @@
+(2, 200, 19) 0 ['S2 n=200 seed=19 status=completed branch=smc secs=140.9', 'hpm: 1 3 27 54 76  F: -106.7171']
+(5, 200, 12) 0 ['S5 n=200 seed=12 status=completed branch=smc secs=261.6', 'hpm: 3 27 54 62 76  F: -139.6601']
