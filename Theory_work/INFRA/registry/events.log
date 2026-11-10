@@ -768,3 +768,128 @@ utc	actor	action	id	before	after	reason
 2026-11-10T00:07:54Z	INFRA	set	W2-FAC-XA:L1	notes=No council; ticket in progress (no REPORT). Line range is L1a only; L1b at 35-42	notes=No council; ticket in progress (no REPORT). Line range is L1a only; L1b at 35-42	R03 Astra per-id table
 2026-11-10T00:25:08Z	INFRA	set	W2-FAC-S5:L1	premises=Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:16; Theory_work/Wave2/W2-	premises=Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:16; Theory_work/Wave2/W2-	R04 Sol: hash the remaining definitions
 2026-11-10T00:25:10Z	INFRA	set	W1-GEN:L8	premises=Theory_work/Wave1/W1-GEN/lemmas/L8_certificate.md:7-13; Theory_work/Wave1/W1-GEN	premises=Theory_work/Wave1/W1-GEN/lemmas/L8_certificate.md:7-13; Theory_work/Wave1/W1-GEN	R04 Sol: hash the remaining definitions
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5:L1.L1.1	W2-FAC-S5:L1	UNSPLIT-STATUS: PROVED-CHECKED	split from W2-FAC-S5:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5:L1.L1.2	W2-FAC-S5:L1	UNSPLIT-STATUS: PROVED-CHECKED	split from W2-FAC-S5:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5:L1.L1.3	W2-FAC-S5:L1	UNSPLIT-STATUS: PROVED-CHECKED	split from W2-FAC-S5:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5:L1.L1.4	W2-FAC-S5:L1	UNSPLIT-STATUS: PROVED-CHECKED	split from W2-FAC-S5:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5:L5.C3-R	W2-FAC-S5:L5	UNSPLIT-STATUS: PROVED-CHECKED	split from W2-FAC-S5:L5 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5:L5.C4-R	W2-FAC-S5:L5	UNSPLIT-STATUS: PROVED-CHECKED	split from W2-FAC-S5:L5 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-X:X1.X1.1	W2-FAC-X:X1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-X:X1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-X:X1.X1.2	W2-FAC-X:X1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-X:X1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-X:X1.X1.3	W2-FAC-X:X1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-X:X1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-X:X6.X6.3	W2-FAC-X:X6	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-X:X6 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-X:X6.X6.4	W2-FAC-X:X6	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-X:X6 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-XA:L1.L1a	W2-FAC-XA:L1	UNSPLIT-STATUS: PROVED (by this seat); cross-family R02b ver	split from W2-FAC-XA:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-XA:L1.L1b	W2-FAC-XA:L1	UNSPLIT-STATUS: PROVED (by this seat); cross-family R02b ver	split from W2-FAC-XA:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-XA:L1.L1c	W2-FAC-XA:L1	UNSPLIT-STATUS: PROVED (by this seat); cross-family R02b ver	split from W2-FAC-XA:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L0.L0.1	W2-FAC-S5F:L0	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L0 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L0.L0.2	W2-FAC-S5F:L0	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L0 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L0.L0.3	W2-FAC-S5F:L0	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L0 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L0.L0.4	W2-FAC-S5F:L0	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L0 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L0.L0.5	W2-FAC-S5F:L0	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L0 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L0.L0.6	W2-FAC-S5F:L0	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L0 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L0.L0.7	W2-FAC-S5F:L0	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L0 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L1.L1.0	W2-FAC-S5F:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L1.L1.1	W2-FAC-S5F:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L1.L1.2	W2-FAC-S5F:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L1.L1.3	W2-FAC-S5F:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L1.L1.4	W2-FAC-S5F:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L1.L1.5	W2-FAC-S5F:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L1.L1.6	W2-FAC-S5F:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-FAC-S5F:L1.L1.7	W2-FAC-S5F:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-S5F:L1 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-LOC2:PLR.C-i	W2-LOC2:PLR	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-LOC2:PLR (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-LOC2:PLR.C-ii	W2-LOC2:PLR	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-LOC2:PLR (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-LOC2:F-LOC2.exp	W2-LOC2:F-LOC2	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-LOC2:F-LOC2 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split	W2-LOC2:F-LOC2.poly	W2-LOC2:F-LOC2	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-LOC2:F-LOC2 (s2.tsv)
+2026-11-10T02:00:17Z	INFRA	split-repoint	W2-FAC-S5:L5	W2-FAC-S5:L1@proof:L1.2(a)	W2-FAC-S5:L1.L1.2@stmt	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:17
+2026-11-10T02:00:17Z	INFRA	split-repoint	W2-FAC-X:X7	W2-FAC-X:X1@proof:X1.1,X1.2,X1.4	W2-FAC-X:X1.X1.1@stmt	Theory_work/Wave2/W2-FAC-X/lemmas/X7_near_cs_loadings.md:32
+2026-11-10T02:00:17Z	INFRA	split-repoint	W2-FAC-X:X9	W2-FAC-X:X1@proof:X1.2,X1.4	W2-FAC-X:X1.X1.2@stmt	Theory_work/Wave2/W2-FAC-X/lemmas/X9_iid_general.md:14-15
+2026-11-10T02:00:17Z	INFRA	split-repoint	W2-FAC-XA:L4	W2-FAC-XA:L1@proof:L1b projection-difference identity	W2-FAC-XA:L1.L1b@proof:projection-difference identity	Theory_work/Wave2/W2-FAC-XA/lemmas/L4_score_transfer.md:10
+2026-11-10T02:00:17Z	INFRA	split-repoint	W2-LOC2:F-LOC2	W2-LOC2:PLR@proof:(c) posterior E[1-pi(S0)]->0	W2-LOC2:PLR.C-ii@proof:(c) posterior E[1-pi(S0)]->0	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:32 ('L5 (c)')
+2026-11-10T02:00:38Z	INFRA	set	W2-FAC-S5:L5.C3-R	kind=clause	kind=lemma	split part takes the parent's kind
+2026-11-10T02:00:39Z	INFRA	set	W2-FAC-S5:L5.C4-R	kind=clause	kind=lemma	split part takes the parent's kind
+2026-11-10T02:00:42Z	INFRA	set	W2-FAC-X:X6.X6.4	kind=claim	kind=lemma	split part takes the parent's kind
+2026-11-10T02:00:43Z	INFRA	set	W2-LOC2:F-LOC2.exp	kind=class-claim	kind=proposition	split part takes the parent's kind
+2026-11-10T02:00:44Z	INFRA	set	W2-LOC2:F-LOC2.poly	kind=class-claim	kind=proposition	split part takes the parent's kind
+2026-11-10T02:00:46Z	INFRA	set	W2-LOC2:PLR.C-i	kind=clause	kind=theorem	split part takes the parent's kind
+2026-11-10T02:00:47Z	INFRA	set	W2-LOC2:PLR.C-ii	kind=clause	kind=theorem	split part takes the parent's kind
+2026-11-10T02:01:34Z	INFRA	split	W1-GEN:L1.L1.1	W1-GEN:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W1-GEN:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W1-GEN:L1.L1.2	W1-GEN:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W1-GEN:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W1-GEN:L1.L1.3	W1-GEN:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W1-GEN:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W1-GEN:L1.L1.4	W1-GEN:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W1-GEN:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W1-PXN:CR.Lemma	W1-PXN:CR	XF VERIFIED R19	split from W1-PXN:CR (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W1-PXN:CR.CONC-prime	W1-PXN:CR	XF VERIFIED R19	split from W1-PXN:CR (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W1-PXN:CR.R-prime	W1-PXN:CR	independent cruder route (R′) XF VERIFIED	split from W1-PXN:CR (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W1-PXN:Lemma-LS.LS(i)	W1-PXN:Lemma-LS	repaired (i) XF VERIFIED R21	split from W1-PXN:Lemma-LS (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W1-PXN:Lemma-LS.LS(ii)	W1-PXN:Lemma-LS	Unchanged; R15: VERIFIED.	split from W1-PXN:Lemma-LS (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W1-PXN:Lemma-LS.LS(iii)	W1-PXN:Lemma-LS	Unchanged; R15: VERIFIED.	split from W1-PXN:Lemma-LS (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W1-PXN:Lemma-LS.P6-prime	W1-PXN:Lemma-LS	UNSPLIT-STATUS: repair by this seat (wording largely propose	split from W1-PXN:Lemma-LS (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	C-PACK:SL1.core	C-PACK:SL1	UNSPLIT-STATUS: PROVED; XF-checked (R34 ERROR-as-written → 9	split from C-PACK:SL1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	C-PACK:SL1.I-a	C-PACK:SL1	UNSPLIT-STATUS: PROVED; XF-checked (R34 ERROR-as-written → 9	split from C-PACK:SL1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	C-PACK:SL1.I-b	C-PACK:SL1	UNSPLIT-STATUS: PROVED; XF-checked (R34 ERROR-as-written → 9	split from C-PACK:SL1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	C-PACK:SL1.I-c	C-PACK:SL1	UNSPLIT-STATUS: PROVED; XF-checked (R34 ERROR-as-written → 9	split from C-PACK:SL1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	C-PACK:SL1.I-d	C-PACK:SL1	UNSPLIT-STATUS: PROVED; XF-checked (R34 ERROR-as-written → 9	split from C-PACK:SL1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-A:L1.U(a)	W2-FAC-A:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-A:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-A:L1.U(b)	W2-FAC-A:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-A:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-A:L1.U(c)	W2-FAC-A:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-A:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-A:L1.U(d)	W2-FAC-A:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-A:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-A:L1.Cor-U	W2-FAC-A:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-A:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-B:L1.L1.0	W2-FAC-B:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-B:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-B:L1.L1.1	W2-FAC-B:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-B:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-B:L1.L1.2	W2-FAC-B:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-B:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-B:L1.L1.3	W2-FAC-B:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-B:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-B:L1.L1.4	W2-FAC-B:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-B:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-B:L1.L1.5	W2-FAC-B:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-B:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-B:L1.L1.5(a)	W2-FAC-B:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-B:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-B:L1.L1.5(b)	W2-FAC-B:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-B:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split	W2-FAC-B:L1.L1.5(c)	W2-FAC-B:L1	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	split from W2-FAC-B:L1 (s1.tsv)
+2026-11-10T02:01:34Z	INFRA	split-repoint	W1-GEN:L3	W1-GEN:L1@proof:L1.1,L1.2,L1.4	W1-GEN:L1.L1.1@proof:L1.1	Theory_work/Wave1/W1-GEN/lemmas/L3_descent.md:30 (events D1-D3 from L1)
+2026-11-10T02:01:34Z	INFRA	split-repoint	W1-GEN:Cex-GEN(C6)	W1-GEN:L1@proof:L1.1,L1.2	W1-GEN:L1.L1.1@proof:L1.1	Theory_work/Wave1/W1-GEN/STATEMENT.md:145-154 (registry edge; no part label located in span)
+2026-11-10T02:01:34Z	INFRA	split-repoint	C-GROW:L0.2	W1-GEN:L1@proof:L1.2(a)	W1-GEN:L1.L1.2@proof:L1.2(a)	Theory_work/Wave1C/C-GROW/lemmas/L0_toolkit.md:34
+2026-11-10T02:01:34Z	INFRA	split-repoint	C-GROW:L2.1	W1-GEN:L1@proof:L1.4(a)-(c)	W1-GEN:L1.L1.4@proof:L1.4(a)-(c)	Theory_work/Wave1C/C-GROW/lemmas/L2_NA_TL.md:30
+2026-11-10T02:01:34Z	INFRA	split-repoint	C-GROW:L3	W1-GEN:L1@proof:L1.4(b)	W1-GEN:L1.L1.4@proof:L1.4(b)	Theory_work/Wave1C/C-GROW/lemmas/L3_sandwich.md:19
+2026-11-10T02:01:34Z	INFRA	split-repoint	C-GROW:L6.2	W1-GEN:L1@proof:L1.2,L1.4(b)	W1-GEN:L1.L1.2@proof:L1.2	Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:158
+2026-11-10T02:01:34Z	INFRA	split-repoint	C-GROW:L6.5	W1-GEN:L1@proof:L1.4(b)	W1-GEN:L1.L1.4@proof:L1.4(b)	Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md:372
+2026-11-10T02:01:34Z	INFRA	split-repoint	W1-PXN:P8	W1-PXN:CR@proof:[CONC-prime] corollary	W1-PXN:CR.CONC-prime@proof:[CONC-prime] corollary	Theory_work/Wave1/W1-PXN/lemmas/P8_T03sharp.md:42
+2026-11-10T02:01:34Z	INFRA	split-repoint	C-PACK:I2	W1-PXN:CR@stmt	W1-PXN:CR.CONC-prime@stmt	Theory_work/Wave1C/C-PACK/lemmas/I2_LHiid_unconditional.md:32,48,65
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-A:L5	W1-PXN:CR	W1-PXN:CR.CONC-prime@stmt	Theory_work/Wave2/W2-FAC-A/lemmas/L5_random_instances.md:31-33
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-A:Prop-SHARP	W2-FAC-A:L1@proof:U(a) eq (1.1)	W2-FAC-A:L1.U(a)@proof:eq (1.1)	Theory_work/Wave2/W2-FAC-A/STATEMENT.md:154-159 (registry edge; no label located in span)
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-A:Lemma-TVF	W2-FAC-A:L1@proof:U(a) eq (1.1)	W2-FAC-A:L1.U(a)@proof:eq (1.1)	Theory_work/Wave2/W2-FAC-A/lemmas/L5_random_instances.md:130
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-UNI:U-LOC	W2-FAC-A:L1@proof:U(a)-(c) decomposition	W2-FAC-A:L1.U(a)@proof:decomposition	Theory_work/Wave2/W2-UNI/lemmas/L3_ULOC.md:10 ("Lemma U(a)-(c), Corollary U"); Theory_work/Wave2/W2-UNI/STATEMENT.md:156
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-UNI:UNI-1	W2-FAC-A:L1@proof:U(d) perturbation	W2-FAC-A:L1.U(d)@proof:perturbation	Theory_work/Wave2/W2-UNI/STATEMENT.md:112-131 (registry edge; no label in span; cf. :168 "FACA U(d)")
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-UNI:U-LOC-Cor	W2-FAC-A:L1@proof:U(d) sample coupling	W2-FAC-A:L1.U(d)@proof:sample coupling	Theory_work/Wave2/W2-UNI/lemmas/L3_ULOC.md:120,130
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-B:L2	W2-FAC-B:L1@proof:L1.1,L1.2,L1.5(b)	W2-FAC-B:L1.L1.1@proof:L1.1	Theory_work/Wave2/W2-FAC-B/lemmas/L2_start.md:21
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-B:L4	W2-FAC-B:L1@proof:L1.1,L1.4,L1.5	W2-FAC-B:L1.L1.1@proof:L1.1	Theory_work/Wave2/W2-FAC-B/lemmas/L4_path.md:32
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-B:L5	W2-FAC-B:L1@proof:L1.0	W2-FAC-B:L1.L1.0@proof:L1.0	Theory_work/Wave2/W2-FAC-B/lemmas/L5_assembly.md:21
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-PK:P1	W2-FAC-B:L1@proof:L1.2	W2-FAC-B:L1.L1.1@proof:L1.1	Theory_work/Wave2/W2-FAC-PK/STATEMENT.md:60 (names "FACB L1.1 coordinates")
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-S5:Thm-FAC-BCS-R	W2-FAC-B:L1@proof:L1.5 pattern	W2-FAC-B:L1.L1.5@proof:pattern	Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:148 ("algebra of L1.5 (Q vs RSS)")
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-S5:L1	W2-FAC-B:L1@proof:L1.0,L1.1	W2-FAC-B:L1.L1.0@proof:L1.0	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:19
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-S5:L1	W2-FAC-B:L1@proof:L1.5(b)	W2-FAC-B:L1.L1.5(b)@proof:L1.5(b)	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:93
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-S5F:L0	W2-FAC-B:L1@proof:L1.5(b)	W2-FAC-B:L1.L1.5(b)@proof:L1.5(b)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:17,20
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-S5F:L1	W2-FAC-B:L1@proof:L1.0,L1.1	W2-FAC-B:L1.L1.0@proof:L1.0	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:14
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-X:X1	W2-FAC-B:L1@proof:L1.0	W2-FAC-B:L1.L1.0@proof:L1.0	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:9
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-X:L4r-S	W2-FAC-B:L1@proof:L1.0,L1.1	W2-FAC-B:L1.L1.0@proof:L1.0	Theory_work/Wave2/W2-FAC-X/T2/STATEMENT_T2.md:28
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-X:L4r-S	W2-FAC-B:L1@proof:L1.5(b)	W2-FAC-B:L1.L1.5(b)@proof:L1.5(b)	Theory_work/Wave2/W2-FAC-X/T2/STATEMENT_T2.md:41-57 (registry edge; label not located in span)
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-X:X8	W2-FAC-B:L1@proof:L1.0	W2-FAC-B:L1.L1.0@proof:L1.0	Theory_work/Wave2/W2-FAC-X/lemmas/X8_start_general.md:6
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-XA:L2	W2-FAC-B:L1@proof:L1.3	W2-FAC-B:L1.L1.3@proof:L1.3	Theory_work/Wave2/W2-FAC-XA/lemmas/L2_robust_path_attempt.md:28
+2026-11-10T02:01:34Z	INFRA	split-repoint	W2-FAC-XA:L2	W2-FAC-B:L1@proof:L1.5	W2-FAC-B:L1.L1.5@proof:L1.5	Theory_work/Wave2/W2-FAC-XA/lemmas/L2_robust_path_attempt.md:183
+2026-11-10T02:01:58Z	INFRA	add-external	SOP:TH03		ACTIVE	alias target for Thm5-LH (carried in card TH03, M3 START)
+2026-11-10T02:03:05Z	INFRA	ingest	W3-POST:Lemma-1a		v1.0.0 T02(i♯), T02(ii♯): PROVED; SF/XF VERIFIED	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-POST:Lemma-1a'		v1.0.0 PROVED (by this seat, unchecked)	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-POST:Thm-1		v1.0.0 T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-POST:Thm-1(5-spec)		v1.0.0 COUNTEREXAMPLE (numerical, E5; leading-order analytic sketch	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-POST:Prop-LB		v1.0.0 PROVED (by this seat, unchecked)	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-POST:Cor-1R		v1.0.0 PROVED (by this seat, unchecked)	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-SAMP:CC		v1.0.0 PROVED (code-checked by lead); LC1 VERIFIED WITH AMENDMENTS,	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-SAMP:PC		v1.0.0 PROVED; LC1 VERIFIED	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-SAMP:MR		v1.0.0 PROVED; LC1 VERIFIED WITH AMENDMENTS, fixed	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-SAMP:ST		v1.0.0 PROVED; LC1 VERIFIED WITH AMENDMENTS, fixed	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-SAMP:D		v1.0.0 PROVED; LC1 VERIFIED WITH AMENDMENTS, LC2 VERIFIED, fixed	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-SAMP:LT#		v1.0.0 PROVED; LC1 VERIFIED (a–e), LC2 VERIFIED WITH AMENDMENTS (b′	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-SAMP:LT#(f)		v1.0.0 OPEN (downgraded to illustrations after LC1 issue 3)	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-SAMP:C		v1.0.0 PROVED; LC1 checked v1 (stopped sum) VERIFIED; LC2 checked v	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-SAMP:TR		v1.0.0 PROVED; LC2 VERIFIED WITH AMENDMENTS, fixed	ingested from b7_wave3.jsonl
+2026-11-10T02:03:05Z	INFRA	ingest	W3-SAMP:Pkg		v1.0.0 mid-point CONTINUE (MP1); sweep and council not run	ingested from b7_wave3.jsonl
+2026-11-10T02:04:12Z	INFRA	set	W3-POST:Thm-1	gates=	gates=correct:PASS(council C3: Astra 8.8 / Opus 8.7, all six gates; Theory_work/Wave3/	W3-POST council passed (REPORT.md:6)
+2026-11-10T02:04:16Z	INFRA	set	W3-POST:Lemma-1a'	gates=	gates=correct:PASS(council C3: Astra 8.8 / Opus 8.7, all six gates; Theory_work/Wave3/	W3-POST council passed (REPORT.md:6)
+2026-11-10T02:04:19Z	INFRA	set	W3-POST:Prop-LB	gates=	gates=correct:PASS(council C3: Astra 8.8 / Opus 8.7, all six gates; Theory_work/Wave3/	W3-POST council passed (REPORT.md:6)

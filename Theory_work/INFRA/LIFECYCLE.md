@@ -40,6 +40,10 @@ audit verdict / implementation claim, or an **external anchor** `SOP:<row>` (Sta
   Never upgraded by tools: `registry.py set` cannot touch it; `registry.py correct-status` fixes a transcription
   error only if the new text occurs verbatim at the given source line; `propagate.py downgrade` refuses a stronger
   status; an upgrade needs a new ticket result (PR).
+  A part split out of a bundled claim whose ticket gives no per-clause status carries
+  `UNSPLIT-STATUS: <parent status verbatim>` (checked at the parent's source, strength inherited, WARN C10-unsplit);
+  the parent depends on all its parts and implies each. From Wave 3 on, tickets state per-clause statuses and fill
+  the REPORT registry block (`templates/ASSUMPTION_MAP.md`); `tools/ingest.py claims` imports it.
 - `state` (lifecycle, added by INFRA): `ACTIVE`, `CANDIDATE` (new result not yet at assurance parity),
   `SUSPECT` (an input is in doubt), `REBASE-NEEDED` (still true, but built on a superseded input and scheduled to be
   rebuilt), `NARROWED` (statement narrowed in place, dependents being checked), `RETRACTED`, `DEPRECATED`,
@@ -93,7 +97,7 @@ SUSPECT / REBASE-NEEDED --clear or confirm-repoint--> ACTIVE
 
 ## 3. Correctness rollbacks
 
-Always run the operation with `--dry-run` first and attach its impact report to the issue / PR.
+`propagate.py` is DRY-RUN BY DEFAULT: it prints the impact report and writes nothing; add `--apply` to write (registry, DECISIONS.md, FAILED_ROUTES.md, issues/ — all under Theory_work/INFRA). Attach the dry-run report to the issue / PR first.
 
 | level | trigger | statement | command | who |
 |---|---|---|---|---|
@@ -269,7 +273,8 @@ show a visible flag. A claim gets a LaTeX statement by setting `tex=<path>:<a-b>
 ```
 python Theory_work/INFRA/tools/check.py [--quiet] [--only C,M,S]
 python Theory_work/INFRA/tools/registry.py show|deps|rdeps|compare|sets|assumption-impact|stats ...
-python Theory_work/INFRA/tools/propagate.py <op> ID ... --dry-run
+python Theory_work/INFRA/tools/propagate.py <op> ID ...          # dry run (default)
+python Theory_work/INFRA/tools/propagate.py <op> ID ... --apply  # write
 python Theory_work/INFRA/tools/assemble.py [--check]
 python Theory_work/INFRA/ci/run_ci.py [--steps ...] [--event wave-boundary --note "..."]
 ```

@@ -23,3 +23,5 @@ W2-LOC2	Wave2	Theory_work/Wave2/W2-LOC2	PROVED-CHECKED — council round 1 PASSE
 W2-UNI	Wave2	Theory_work/Wave2/W2-UNI	PROVED-CHECKED — STATEMENT v1.1.4: Theorem UNI-0 (ii), Theorem UNI-1 (iii), reduction lemmas R1–R4	Theory_work/Wave2/W2-UNI/REPORT.md:21	UNI-0;UNI-1;F-UNI				closed on main c9b3403 (council Astra 9.0 / Opus 8.9); re-registered 2026-11-09
 W2-FAC-K2	Wave2	Theory_work/Wave2/W2-FAC-K2							in progress (LOG only)
 HQ_AUDIT-W2	Wave2	Theory_work/Wave2/HQ_AUDIT			B1;B2;B3;B4				
+W3-POST	Wave3	Theory_work/Wave3/W3-POST		Theory_work/Wave3/W3-POST/REPORT.md	Thm-1;Prop-LB;Lemma-1a'		theory/W3-POST		council C3 Astra 8.8 / Opus 8.7 (commit e268098); per-clause statuses in STATEMENT
+W3-SAMP	Wave3	Theory_work/Wave3/W3-SAMP	PARTIAL	Theory_work/Wave3/W3-SAMP/REPORT.md	D;LT#;C;TR		theory/W3-SAMP		partial: sweep cancelled, council not run (commit 2ac3896)

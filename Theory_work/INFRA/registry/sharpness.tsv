@@ -187,3 +187,31 @@ W2-FAC-PK:Thm-PATH	A:FIXED-S0	NONE		no necessity evidence recorded for this pair
 W2-FAC-PK:Thm-PATH	A:GAUSS-NOISE	NONE		no necessity evidence recorded for this pair
 W2-FAC-PK:Thm-PATH	A:BLOCK-LE-16	NONE		no necessity evidence recorded for this pair
 W2-FAC-PK:Thm-PATH	A:OP	NONE		no necessity evidence recorded for this pair
+W3-POST:Lemma-1a'	A:GAUSS-NOISE	NONE	Theory_work/Wave3/W3-POST/ASSUMPTION_MAP.md:14: open; not probed	ingested
+W3-POST:Lemma-1a'	A:ENERGY	NONE	Theory_work/Wave3/W3-POST/ASSUMPTION_MAP.md:15: improvable to sub-linear growth? open	ingested
+W3-POST:Lemma-1a'	A:COEF-REP	NONE	Theory_work/Wave3/W3-POST/ASSUMPTION_MAP.md:16: open; L1a′(e) outside the hypothesis max_seeds max Θ ≤ 1.5e-5, conclusion survived	ingested
+W3-POST:Thm-1	A:GAUSS-NOISE	NONE	Theory_work/Wave3/W3-POST/ASSUMPTION_MAP.md:14: open; not probed	ingested
+W3-POST:Thm-1	A:ENERGY	NONE	Theory_work/Wave3/W3-POST/ASSUMPTION_MAP.md:15: open (sub-linear growth?)	ingested
+W3-POST:Thm-1	A:SPARSE-EIG	WEAKENABLE	Theory_work/Wave3/W3-POST/ASSUMPTION_MAP.md:18: (F_λ) E3 null-only duplicates harmless (HPM=S0 in ≥95% of seeds)	ingested
+W3-POST:Thm-1	A:SPARSE-EIG	FAILED-REMOVAL	Theory_work/Wave3/W3-POST/ASSUMPTION_MAP.md:18: (F_λ) anchored part, E4 near-duplicate of a truth (1-corr²=n^-γ): γ=1 no convergence (HPM wrong 25-30%)	ingested
+W3-POST:Thm-1	A:SPARSE-EIG	WEAKENABLE	Theory_work/Wave3/W3-POST/ASSUMPTION_MAP.md:19: (F_w) E2 exact dependence among 5 null columns, still consistent (HPM=S0 in 100% of seeds); numerics, not proved	ingested
+W3-POST:Thm-1	A:BETAMIN	FAILED-REMOVAL	Theory_work/Wave3/W3-POST/ASSUMPTION_MAP.md:20: E1 c≤1 and θ²=loglog n/n fail at fixed p; deletion obstruction c≤2a+1-η (heuristic, not proved)	ingested
+W3-POST:Thm-1	A:BETAMIN	FAILED-REMOVAL	Theory_work/Wave3/W3-POST/ASSUMPTION_MAP.md:21: no beta-min => specificity counterexample (W3-POST:Thm-1(5-spec), E5)	ingested
+W3-POST:Thm-1	A:BETAMIN	ARTEFACT	Theory_work/Wave3/W3-POST/ASSUMPTION_MAP.md:20: constant c0=128 at s0=A=1 is 32-64x the rate obstruction; order necessary by numerics, constant improvable	ingested
+W3-POST:Thm-1	A:FIXED-S0	NONE	Theory_work/Wave3/W3-POST/ASSUMPTION_MAP.md:23: open for Theorem 1; not needed for Lemma 1a′	ingested
+W3-POST:Thm-1	A:P-POLY	NECESSARY-FOR-ROUTE	Theory_work/Wave3/W3-POST/ASSUMPTION_MAP.md:22: open (technique); enters via j0 and (C8) rate; E3/Prop D barrier concerns the size-tail technique only	ingested
+W3-POST:Prop-LB	A:EXT-FEAS	NECESSARY	Theory_work/Wave3/W3-POST/REPORT.md:73-74: without such an extension the bound can fail (p=s0=2 orthogonal columns, δ≈6.5e-10 at n=20; numerics/lb_domain_out.txt)	ingested
+W3-SAMP:D	A:P-OVL	NECESSARY-FOR-ROUTE	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:16: equality for the draw mechanism (sharp); only sufficient for the reported HPM (S0 reached as particle endpoint in 94-97% of islands with no draw hit)	ingested
+W3-SAMP:D	A:IND-T	WEAKENABLE	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:17: not needed for D-i or any other claim; optional	ingested
+W3-SAMP:D	A:P-MAP	NONE	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:41: weakened from δ<1/2 to the MAP condition; no necessity evidence recorded	ingested
+W3-SAMP:D	A:N1-KERNEL	NONE	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:8: rest are idealisations of the code (KERNEL itself is not used by D)	ingested
+W3-SAMP:LT#	P:POST-CONC	NECESSARY	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:11: κ0 term attained exactly (RB PIPs need κ0→0); sharp in form	ingested
+W3-SAMP:LT#	A:NC-R	NONE	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:12-13: finite-n illustrations only (trap: W<0.01 in 100% of islands and MPM wrong; near: success despite collapse); necessity open	ingested
+W3-SAMP:LT#	A:NC-R	WEAKENABLE	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:38-39: complemented by Theorem TR and weakened to a vanishing threshold (LT-e′)	ingested
+W3-SAMP:LT#	A:BLOCK-LE-16	ARTEFACT	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:10: constant 19=B+3 loose (λ0 1.37 vs 13.6), harmless	ingested
+W3-SAMP:LT#	A:N1-KERNEL	NECESSARY-FOR-ROUTE	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:8: KERNEL invariance necessary for MR (N1 control NC1 breaks it)	ingested
+W3-SAMP:C	A:P-START	FAILED-REMOVAL	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:15: some start condition necessary in kind (trap example π0(S0)=1.5e-8 with P-CONC true fails at fixed small L; finite-n only)	ingested
+W3-SAMP:C	A:P-START	ARTEFACT	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:14,35-37: the T·δ̄ factor is not needed (E|W-1| decreases in T), removed in v3; remaining linear δ̄ natural at N_e=1	ingested
+W3-SAMP:C	P:POST-CONC	NONE	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:11: no necessity evidence beyond the κ0 term of LT♯	ingested
+W3-SAMP:TR	A:P-OVL-INF	WEAKENABLE	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:38-39: sufficient, not necessary: in the 'near' example M=1.3e6 (TR vacuous) while local moves repair the PIPs	ingested
+W3-SAMP:TR	A:P-OVL-INF	NONE	Theory_work/Wave3/W3-SAMP/STATEMENT.md:161-163: not implied by π0(S0)→1 (three-state example) and does not imply it	ingested

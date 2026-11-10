@@ -15,9 +15,10 @@ superseded (when a better theorem is found), with consequences propagated mechan
 | `registry/repoints.tsv`, `method_components.tsv`, `config.tsv`, `events.log` | proposed re-points, method pin components, freeze/caps, audit trail |
 | `registry/fragments/` | seed transcriptions (helper output) and their briefs; not used after seeding |
 | `tools/check.py` | registry ↔ repository consistency audit |
-| `tools/propagate.py` | lifecycle operations + propagation + repair issues (`--dry-run` prices a change) |
+| `tools/propagate.py` | lifecycle operations + propagation + repair issues (dry run by default prices a change; `--apply` writes) |
 | `tools/registry.py` | show / deps / rdeps / add / set / rehash / compare / sets / assumption-impact / stats / dot |
 | `tools/assemble.py` | generates the paper's theorem blocks and provenance / dependency / strength tables from the registry |
+| `tools/ingest.py` | add a new ticket's claims (fragment JSONL / Wave 3 REPORT registry block) or split bundled claims into parts, validated; dry run by default |
 | `tools/build_registry.py` | one-off seeding from fragments (refuses to overwrite a live registry) |
 | `ci/run_ci.py`, `ci/README.md`, `ci/falsification.tsv` | continuous audit and how HQ schedules it |
 | `templates/ASSUMPTION_MAP.md` | one-page map each ticket writes before heavy proving |

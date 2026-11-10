@@ -49,3 +49,12 @@ P:CS-1D-REDUCTION	property	no	CS exact one-dimensional reduction	under exact com
 P:NO-OUTPUT-ZERO	property	yes	Total fallback: P(no output)=0	with tier-1 fallback freezing the pilot schedule P(U_n)=0 for all n>=3; P(S+=S0)->1 via P(LS0 scores S0)->1 and delta1->0 (pathwise, no CAL)	Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md:79		C-DLV:Prop-F	1.0.0	Consumed by F-FAC, F-LOC2, F-UNI, FAC-CS (C4), FAC-CS-iid (C4). C-DLV:O (P(SL_n)->0 without patch) is OPEN.
 A:COEF-BOUNDED	assumption	no	Coefficients bounded above and below	theta*_j in [theta_lo, theta_hi] in absolute value on S0 (fixed constants)	Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:11	A:BETAMIN		1.0.0	POST setting; implies a fixed beta-min
 A:RELEVANCE-POLY	assumption	no	Polynomial relevance set Q	Q of radius ceil(D n^{1/(2 alpha)}) around S0, |Q| = O(n^{1/(2 alpha)}) (polynomial, not log/polylog)	Theory_work/Wave2/W2-LOC2/STATEMENT.md:91-93			1.0.0	distinct from A:RELEVANCE-SIZE (bounded/log/polylog)
+A:COEF-REP	assumption	no	COEF-REP	exists T in Omega, theta: X_T theta=mu, ||theta||^2<=nM' (L1a' only; implied by A:SPARSE-EIG at S0 and A:ENERGY with M'=1.5M/phi0^2)				1.0.0	added by ingest from b7_wave3.jsonl
+A:EXT-FEAS	assumption	no	EXT-FEAS	1<=s0<p and s0+1<=K (a feasible one-variable extension of S0 exists)				1.0.0	added by ingest from b7_wave3.jsonl
+A:EX-A-HU	assumption	no	EX-A-HU	exact arithmetic (EX-A) and iid U[0,1) stream (H-U)				1.0.0	added by ingest from b7_wave3.jsonl
+A:P-MAP	assumption	no	P-MAP	P(S†≠S0)→0, S† the hpm_better-maximum of Omega (implied by P:POST-CONC)				1.0.0	added by ingest from b7_wave3.jsonl
+A:P-OVL	assumption	no	P-OVL	1_A·D_r·π0(S0)→∞ in probability				1.0.0	added by ingest from b7_wave3.jsonl
+A:IND-T	assumption	no	IND-T	streams 10-13 mutually independent and independent of streams 0-9 (D-ii only)				1.0.0	added by ingest from b7_wave3.jsonl
+A:NC-R	assumption	no	NC-R	lim_{eta->0} limsup_n P(A ∩ {W_r<eta})=0 (computational non-collapse; LT-e′: sigma(data,C)-measurable eta_n with 1_A·o1/eta_n→0)				1.0.0	added by ingest from b7_wave3.jsonl
+A:P-START	assumption	no	P-START	1_A·o0→0, i.e. π0(S0)→1 on A, no rate (input, PROGRAM item 2)				1.0.0	added by ingest from b7_wave3.jsonl
+A:P-OVL-INF	assumption	no	P-OVL-INF	P(A ∩ {L/M<=c})→0 for every c>0, M=max_S π(S)/π0(S) (global overlap relative to executed L)				1.0.0	added by ingest from b7_wave3.jsonl

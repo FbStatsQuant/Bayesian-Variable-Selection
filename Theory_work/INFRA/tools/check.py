@@ -182,7 +182,12 @@ def run():
         if lines is None or sp is None:
             add("ERROR", "C10-verbatim", r["id"], f"status_source {src!r} is not a readable path:line (no provenance)")
             continue
-        res = R.status_at(r.get("status", ""), src)
+        stx = r.get("status", "")
+        if stx.startswith("UNSPLIT-STATUS: "):
+            add("WARN", "C10-unsplit", r["id"], "split part without its own status: inherits the parent's verbatim "
+                "status (the ticket should state per-clause statuses)")
+            stx = stx[len("UNSPLIT-STATUS: "):]
+        res = R.status_at(stx, src)
         if res == "ok":
             continue
         msg = {"negated": "status is NEGATED at its source (e.g. 'not', 'not yet', 'pending' precedes it)",

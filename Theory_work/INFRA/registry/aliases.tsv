@@ -71,3 +71,12 @@ Lemma U-(D_S)	SOP:TH161	API-PXNGAP proof lemma
 Lemma Tr-J	SOP:TH161	API-PXNGAP proof lemma
 Lemma B(i),(iii)	SOP:TH161	API-PXNGAP proof lemma (B(ii) repaired in W1-PXN:B-ii)
 Lemma RO	SOP:TH04	LemmaRO is carried in card TH04 (M4) status, no own SoP row
+Laurent-Massart	-	literature (chi-square tail bound)
+W7-PART Theorem A	SOP:TH11	PART-ThmA is carried in card TH11
+SOP:Thm5-LH	SOP:TH03	Thm5-LH status is carried in card TH03 (M3)
+Thm5-LH	SOP:TH03	as above
+[P1] PROOF_v3	SOP:TH09	T03 proof archive (PROOF_v3 lemmas)
+[P1] lem:prior(b), lem:spec(d)	SOP:TH09	T03 proof archive lemmas
+T02(ii♯)	SOP:TH09	T02 belongs to the T01-T03 package behind T03♯
+R03 §5A construction	-	review-internal construction (W3-POST reviews/R03), not a registered claim
+PROGRAM item 2	-	Wave 3 program premise (assumption A:P-START), not a claim

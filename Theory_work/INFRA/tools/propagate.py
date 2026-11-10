@@ -1,7 +1,7 @@
 """propagate.py — lifecycle operations on claims, with use-level propagation, decision log and repair issues.
 
-Rules and who may run what: Theory_work/INFRA/LIFECYCLE.md. Every operation supports --dry-run (impact report,
-nothing changed). Every applied operation is written to registry/events.log; decisions also to DECISIONS.md.
+Rules and who may run what: Theory_work/INFRA/LIFECYCLE.md. DRY RUN IS THE DEFAULT: without --apply an operation only
+prints its impact report and writes nothing. Every applied operation is written to registry/events.log; decisions also to DECISIONS.md.
 
 Correctness rollbacks
   patch     ID --reason R                      proof changed, statement stands (minor bump): only dependents that
@@ -203,11 +203,20 @@ def main():
     ap.add_argument("--checked-by", default="")
     ap.add_argument("--assumption")
     ap.add_argument("--route", default="")
-    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--dry-run", action="store_true", help="(default) print the impact report, write nothing")
+    ap.add_argument("--apply", action="store_true",
+                    help="actually write: registry/, DECISIONS.md, FAILED_ROUTES.md, issues/ (all under Theory_work/INFRA)")
     ap.add_argument("--issues-dir")
     ap.add_argument("--gh", action="store_true")
     ap.add_argument("--actor", default="HQ")
     a = ap.parse_args()
+    a.dry_run = a.dry_run or not a.apply  # nothing is ever written without --apply
+    if a.issues_dir:  # issue files may only go under Theory_work/INFRA/issues
+        root = os.path.realpath(os.path.join(R.INFRA, "issues"))
+        if os.path.commonpath([os.path.realpath(a.issues_dir), root]) != root:
+            sys.exit("--issues-dir must be inside Theory_work/INFRA/issues")
+    if a.gh and not a.apply:
+        sys.exit("--gh needs --apply")
     if not a.reason and a.op not in ("confirm-repoint", "reject-repoint"):
         sys.exit("--reason is required")
 
@@ -436,7 +445,7 @@ def main():
         if a.dry_run or problems:
             if problems and not a.dry_run:
                 sys.exit("supersede refused (see Blocking)")
-            print("\n(dry run: registry unchanged)")
+            print("\n(dry run: nothing written; add --apply to write)")
             return
         x["state"], x["superseded_by"], x["version"] = "SUPERSEDED-VALID", yid, R.bump(x["version"], "minor")
         x["state_reason"] = f"SUPERSEDED-VALID {stamp} by {yid} ({mode}): {a.reason}"
@@ -523,7 +532,7 @@ def main():
                        for d, p in sorted(paths.items())]
         print("\n".join(l for l in report if l is not None))
         if a.dry_run:
-            print("\n(dry run: registry unchanged)")
+            print("\n(dry run: nothing written; add --apply to write)")
             return
         before = f"{x['state']} v{x['version']}"
         if a.op == "clear":

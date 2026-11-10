@@ -22,7 +22,8 @@ assert R.ROOT == os.path.abspath(TMP), (R.ROOT, TMP)
 
 
 def run(*a, ok=True):
-    p = subprocess.run([sys.executable, os.path.join(INFRA, "tools", a[0]), *a[1:], "--actor", "TEST"],
+    extra = ["--apply"] if a[0] == "propagate.py" else []
+    p = subprocess.run([sys.executable, os.path.join(INFRA, "tools", a[0]), *a[1:], *extra, "--actor", "TEST"],
                        capture_output=True, text=True, encoding="utf-8", errors="replace", cwd=TMP)
     if ok and p.returncode != 0:
         print("UNEXPECTED FAILURE", a, p.stdout[-600:], p.stderr[-600:])
@@ -169,6 +170,27 @@ try:
     results.append(("R04-F8 confirm keeps one binding to YB (no duplicate)", after_confirm == ["P:SAND@TEST:YB"]))
     results.append(("R04-F8 revert restores X and keeps the independent YB binding; D SUSPECT",
                     f"P:SAND@{XB}" in cons and "P:SAND@TEST:YB" in cons and st(DB)["state"] == "SUSPECT"))
+    # ---------------- R05 (HQ): nothing is written without --apply ----------------
+    import hashlib
+    def tree_digest():
+        h = hashlib.sha256()
+        for base in (R.REG, os.path.join(INFRA, "DECISIONS.md"), os.path.join(INFRA, "FAILED_ROUTES.md")):
+            paths = [base] if os.path.isfile(base) else sorted(os.path.join(dp, f) for dp, _, fs in os.walk(base)
+                                                                for f in fs)
+            for pth in paths:
+                h.update(pth.encode()); h.update(open(pth, "rb").read())
+        return h.hexdigest(), sorted(os.listdir(os.path.join(INFRA, "issues"))) if os.path.isdir(
+            os.path.join(INFRA, "issues")) else []
+    before = tree_digest()
+    for args in (["retract", "C-GROW:Thm-GROW", "--reason", "t"], ["suspect", "W1-GEN:L1", "--reason", "t"],
+                 ["fail-route", "W2-LOC2:PLR", "--assumption", "A:P-POLY", "--route",
+                  "Theory_work/INFRA/README.md:1 t", "--reason", "t"]):
+        subprocess.run([sys.executable, os.path.join(INFRA, "tools", "propagate.py"), *args, "--actor", "TEST"],
+                       capture_output=True, text=True, cwd=TMP)
+    results.append(("R05 propagate without --apply writes nothing", tree_digest() == before))
+    rc_ = subprocess.run([sys.executable, os.path.join(INFRA, "tools", "propagate.py"), "suspect", "W1-GEN:L1",
+                          "--reason", "t", "--apply", "--issues-dir", TMP], capture_output=True, cwd=TMP).returncode
+    results.append(("R05 --issues-dir outside INFRA/issues refused", rc_ != 0))
 finally:
     subprocess.run(["git", "-C", LIVE_ROOT, "worktree", "remove", "--force", TMP], capture_output=True)
     subprocess.run(["git", "-C", LIVE_ROOT, "worktree", "prune"], capture_output=True)

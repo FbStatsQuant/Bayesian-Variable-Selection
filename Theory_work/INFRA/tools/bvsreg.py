@@ -334,7 +334,10 @@ _RULES = [
 
 
 def _norm_status(status: str) -> str:
-    return (status or "").strip().lstrip("*_`\"'([ ").upper()
+    s = (status or "").strip()
+    if s.upper().startswith("UNSPLIT-STATUS:"):  # a split part inherits its parent's status, never more
+        s = s.split(":", 1)[1]
+    return s.strip().lstrip("*_`\"'([ ").upper()
 
 
 def status_token(status: str) -> str:

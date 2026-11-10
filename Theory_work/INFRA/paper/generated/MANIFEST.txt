@@ -20,3 +20,10 @@ W2-LOC2:PLR	blocks/W2-LOC2_PLR.tex	Theory_work/Wave2/W2-LOC2/STATEMENT.md:61-65	
 W2-LOC2:Thm-Poly	blocks/W2-LOC2_Thm-Poly.tex	Theory_work/Wave2/W2-LOC2/STATEMENT.md:87-93	52c125364358a827	ACTIVE
 W2-LOC2:F-LOC2	blocks/W2-LOC2_F-LOC2.tex	Theory_work/Wave2/W2-LOC2/STATEMENT.md:100-102	cc1dcf3b5a1baeab	ACTIVE
 W2-UNI:F-UNI	blocks/W2-UNI_F-UNI.tex	Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md:15-21	b0a0f3c2cf20d781	ACTIVE
+W3-POST:Lemma-1a'	blocks/W3-POST_Lemma-1a_.tex	Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md:9-19	cdd93620523557b4	ACTIVE
+W3-POST:Thm-1	blocks/W3-POST_Thm-1.tex	Theory_work/Wave3/W3-POST/STATEMENT.md:61-100	c88f9ddc0fb6709c	ACTIVE
+W3-POST:Prop-LB	blocks/W3-POST_Prop-LB.tex	Theory_work/Wave3/W3-POST/lemmas/LB_rate_lower_bound.md:9-17	088d4c5bcdc16485	ACTIVE
+W3-SAMP:D	blocks/W3-SAMP_D.tex	Theory_work/Wave3/W3-SAMP/STATEMENT.md:90-97	d26ff9a15e00d459	ACTIVE
+W3-SAMP:LT#	blocks/W3-SAMP_LT_.tex	Theory_work/Wave3/W3-SAMP/STATEMENT.md:116-129	ebee13ddc3a62ca2	ACTIVE
+W3-SAMP:C	blocks/W3-SAMP_C.tex	Theory_work/Wave3/W3-SAMP/STATEMENT.md:136-150	02035e2e2c6b0d3e	ACTIVE
+W3-SAMP:TR	blocks/W3-SAMP_TR.tex	Theory_work/Wave3/W3-SAMP/STATEMENT.md:152-163	021d3f918daca240	ACTIVE

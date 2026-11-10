@@ -8,4 +8,4 @@ labels: [theory, retraction]
 **Evidence** (counterexample / review file / failed gate): 
 **Operation**: retract / narrow (`--still-covers` which uses?) / downgrade (new verbatim status)
 **Impact report** (`propagate.py <op> <id> --reason ... --dry-run`, paste): 
-**Headline?** if yes add `major-claim`; Felipe approves before `propagate.py` runs without --dry-run.
+**Headline?** if yes add `major-claim`; Felipe approves before `propagate.py` runs with `--apply`.

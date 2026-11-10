@@ -1,0 +1,357 @@
+kind_of_row	parent	id	field	value	evidence
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.1	local_id	L1.1	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:22-27
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.1	kind	lemma	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:22-27
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.1	name	Data representation (g, r, z; h + y_j decomposition of g)	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:22-27
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.1	file	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:22-27
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.1	lines	22-27	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:22-27
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.1	premises	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:16;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:51-52;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:61-67;Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:18-20	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:22-27
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.1	status	UNSPLIT-STATUS: PROVED-CHECKED	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:22-27
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.1	status_source	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:3	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:22-27
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.1	depends_on	W2-FAC-B:L1@proof:L1.1	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:22-27
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.1	notes	Statement and proof inline (as FACB L1.1 with Sigma). L1.0 (18-20) not split here: parent edge W2-FAC-B:L1@proof:L1.0 belongs to L1.0.	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:22-27
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.2	local_id	L1.2	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:29-42
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.2	kind	lemma	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:29-42
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.2	name	Algebra of Sigma_TT ((a) lambda_min>=d, (b) inverse M-matrix + conditional covariance >0, (c) Sigma~ BCS form)	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:29-42
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.2	file	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:29-42
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.2	lines	29-42	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:29-42
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.2	premises	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:16;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:51-52;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:61-67;Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:22-27	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:29-42
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.2	status	UNSPLIT-STATUS: PROVED-CHECKED	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:29-42
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.2	status_source	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:3	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:29-42
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.2	depends_on		Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:29-42
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.2	notes	Sub-clauses (a) 31-33, (b) 34-40 (proof of Cov>0 inline 37-40), (c) 41-42. L5 uses (a) only.	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:29-42
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.3	local_id	L1.3	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:44-67
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.3	kind	lemma	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:44-67
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.3	name	Gaussian conditioning identities (global error e_R; residual decomposition; |tau|<=|A|+k0|e_R|; rotation identity)	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:44-67
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.3	file	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:44-67
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.3	lines	44-67	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:44-67
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.3	premises	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:16;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:51-52;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:61-67;Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:22-27	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:44-67
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.3	status	UNSPLIT-STATUS: PROVED-CHECKED	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:44-67
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.3	status_source	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:3	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:44-67
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.3	depends_on	W2-FAC-S5:L1.L1.1	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:44-67
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.3	notes	(i) 47-49, (ii) 53-54, (iii) 61-64 incl. (L1.3.1) |tau_j(T)|<=|A_j(U)|+k0|e_R|, (iv) rotation identity 65-67 recorded 'Not used in the Tier-1 proofs; recorded for the frontier'. Proofs inline at 50-52, 55-60. numerics l1_identities.py tests L1.3 only (L1_bcs_reduction.md:6-7). Used separately by L3, L4.	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:44-67
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.4	local_id	L1.4	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:69-101
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.4	kind	lemma	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:69-101
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.4	name	Exact score increments (Schur increments, gains, size term (L1.4.1), signal/regularisation eps_j, multiplier (L1.4.2), elementary bounds)	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:69-101
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.4	file	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:69-101
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.4	lines	69-101	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:69-101
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.4	premises	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:16;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:51-52;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:61-67;Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:22-27;Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:29-42;Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:44-67	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:69-101
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.4	status	UNSPLIT-STATUS: PROVED-CHECKED	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:69-101
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.4	status_source	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:3	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:69-101
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.4	depends_on	W2-FAC-S5:L1.L1.1;W2-FAC-S5:L1.L1.2;W2-FAC-S5:L1.L1.3;W2-FAC-B:L1@proof:L1.5(b)	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:69-101
+part	W2-FAC-S5:L1	W2-FAC-S5:L1.L1.4	notes	Parent registered range (69-101) is L1.4 only. (L1.4.2) holds on the event E2 of L3 (line 95): forward reference to S5:L3 (L3 depends on L1) recorded here, NOT added to depends_on (would be cyclic). Line 102 'All later lemmas use only L1.2-L1.4'. numerics l1_leak.py (8-10).	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:69-101
+repoint		W2-FAC-S5:L5	edge	W2-FAC-S5:L1@proof:L1.2(a) => W2-FAC-S5:L1.L1.2@stmt	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:17
+repoint		W2-FAC-S5:L2	edge	W2-FAC-S5:L1@stmt => W2-FAC-S5:L1.L1.4@stmt	Theory_work/Wave2/W2-FAC-S5/lemmas/L2_start.md:12,15,50
+repoint		W2-FAC-S5:L2	edge	W2-FAC-S5:L1@stmt => W2-FAC-S5:L1.L1.2@stmt	Theory_work/Wave2/W2-FAC-S5/lemmas/L2_start.md:12,22 (L1.2(b))
+repoint		W2-FAC-S5:L3	edge	W2-FAC-S5:L1@stmt => W2-FAC-S5:L1.L1.1@stmt	Theory_work/Wave2/W2-FAC-S5/lemmas/L3_event.md:9
+repoint		W2-FAC-S5:L3	edge	W2-FAC-S5:L1@stmt => W2-FAC-S5:L1.L1.3@stmt	Theory_work/Wave2/W2-FAC-S5/lemmas/L3_event.md:22,32,33
+repoint		W2-FAC-S5:L3	edge	W2-FAC-S5:L1@stmt => W2-FAC-S5:L1.L1.4@stmt	Theory_work/Wave2/W2-FAC-S5/lemmas/L3_event.md:17,30,34
+repoint		W2-FAC-S5:L4	edge	W2-FAC-S5:L1@stmt => W2-FAC-S5:L1.L1.4@stmt	Theory_work/Wave2/W2-FAC-S5/lemmas/L4_path.md:26,41,46,51,55,66,68
+repoint		W2-FAC-S5:L4	edge	W2-FAC-S5:L1@stmt => W2-FAC-S5:L1.L1.2@stmt	Theory_work/Wave2/W2-FAC-S5/lemmas/L4_path.md:61 (L1.2(a))
+repoint		W2-FAC-S5:Thm-FAC-BCS-R	edge	W2-FAC-S5:L1@stmt => W2-FAC-S5:L1.L1.3@stmt	Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:91 ('the exact identity (L1.3)')
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C3-R	local_id	C3-R	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:33-36
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C3-R	kind	clause	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:33-36
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C3-R	name	(C3-R) Consistency up to the centre condition (L5.3): D_n and P(O and S+!=S0) <= P~(CC_n^c)+o(1)	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:33-36
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C3-R	file	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:33-36
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C3-R	lines	33-36	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:33-36
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C3-R	premises	Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:51-57;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:61-77;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:97-108;Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:8-13;Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:15-19;Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:21-31	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:33-36
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C3-R	status	UNSPLIT-STATUS: PROVED-CHECKED	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:33-36
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C3-R	status_source	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:3	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:33-36
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C3-R	depends_on	W2-FAC-S5:L2;W2-FAC-S5:L3;W2-FAC-S5:L4;W2-FAC-S5:L1.L1.2;W2-FAC-B:L5@proof:L5.1;EXT:T38-(0);EXT:T03♯;EXT:[OP];EXT:Lemma CAP	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:33-36
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C3-R	notes	Heading L5.3 at 33, proof at 37. Proof steps: [OP]; L5.2 (LS0 scores S0 on E_n and CC_n, uses CAP(a)); [M5-0] with L5.1. STATEMENT claim at STATEMENT.md:121-122.	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:33-36
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C4-R	local_id	C4-R	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:39-47
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C4-R	kind	clause	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:39-47
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C4-R	name	(C4-R) Delivery (L5.4): P(no output)=0 and P(S+!=S0) <= P~(CC_n^c)+o(1)	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:39-47
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C4-R	file	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:39-47
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C4-R	lines	39-43	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:39-47
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C4-R	premises	Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:51-57;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:61-77;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:97-108;Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:8-13;Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:15-19;Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:21-31;Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:48-51	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:39-47
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C4-R	status	UNSPLIT-STATUS: PROVED-CHECKED	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:39-47
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C4-R	status_source	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:3	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:39-47
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C4-R	depends_on	W2-FAC-S5:L2;W2-FAC-S5:L3;W2-FAC-S5:L4;W2-FAC-S5:L1.L1.2;W2-FAC-B:L5@proof:L5.4;W2-FAC-B:L5@proof:L5.1;EXT:T03♯;EXT:[OP];EXT:Lemma CAP;EXT:Proposition F;EXT:F-GROW	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:39-47
+part	W2-FAC-S5:L5	W2-FAC-S5:L5.C4-R	notes	Statement and justification interleaved in 40-47; imported premises list 48-51. Qualification at 46-47 (not a status label, copied for the record): 'This is a new class extension of Proposition F's delivery machinery to fixed exact-Gram BCS designs under model G; it inherits no council approval.' L5.1 enters via 2E0[1-pi(S0)]->0 (line 43, implicit); T38-(0) not used in L5.4. STATEMENT claim at STATEMENT.md:123-124. Per-clause table (REPORT.md:70) is one row for both clauses -> no separate status.	Theory_work/Wave2/W2-FAC-S5/lemmas/L5_assembly.md:39-47
+repoint		W2-FAC-S5:Thm-FAC-BCS-R	edge	W2-FAC-S5:L5@stmt => W2-FAC-S5:L5.C3-R@stmt	Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:121-122
+repoint		W2-FAC-S5:Thm-FAC-BCS-R	edge	W2-FAC-S5:L5@stmt => W2-FAC-S5:L5.C4-R@stmt	Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:123-124
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.1	local_id	X1.1	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:22-24
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.1	kind	lemma	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:22-24
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.1	name	Lemma X1.1 (exact rotation representation: ||e||, eta, phi, xi, a mutually independent; W ~ Wishart independent)	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:22-24
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.1	file	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:22-24
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.1	lines	22-24	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:22-24
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.1	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:8-11;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:36-39;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:48-50;Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:15-20	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:22-24
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.1	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:22-24
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.1	status_source	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:3	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:22-24
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.1	depends_on	W2-FAC-B:L1@proof:L1.0	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:22-24
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.1	notes	Label line is 'Lemma X1.1.' at 22; construction/definitions 15-20 are premises; heading 13; proof 26-35; coordinates 37-38. Parent row span 15-24 = construction + lemma.	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:22-24
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.2	local_id	X1.2	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:51-53
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.2	kind	lemma	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:51-53
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.2	name	Lemma X1.2 (RSS and partial-regression statistics for T containing S0: ||P_T e1||^2=q_T/(1+q_T), q_T-q_{T-j}=omega_j^2, RSS differences)	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:51-53
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.2	file	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:51-53
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.2	lines	51-53	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:51-53
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.2	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:8-11;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:36-39;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:48-50;Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:43-49	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:51-53
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.2	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:51-53
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.2	status_source	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:3	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:51-53
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.2	depends_on	W2-FAC-X:X1.X1.1	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:51-53
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.2	notes	Heading 43; definitions A_T, q_T 45-49 (premises); proof 55-58. Needs event lambda_min(W)>0 of X2 for A_T positive definite (line 49; forward ref, not a dependency edge).	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:51-53
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.3	local_id	X1.3	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:66-67
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.3	kind	lemma	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:66-67
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.3	name	Lemma X1.3 (reference statistic: with W=NI, a=0, A_T^{-1} v1 = N^{-1}(xi_j - x_T), sqrt(N)sqrt(1-gamma_k) omega_j = xi_j - x_T)	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:66-67
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.3	file	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:66-67
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.3	lines	66-67	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:66-67
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.3	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:8-11;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:36-39;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:48-50;Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:60-64	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:66-67
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.3	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:66-67
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.3	status_source	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:3	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:66-67
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.3	depends_on	W2-FAC-X:X1.X1.1;W2-FAC-X:X1.X1.2	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:66-67
+part	W2-FAC-X:X1	W2-FAC-X:X1.X1.3	notes	Heading 60; definitions kappa, varrho, x_T, drift identity 62-64 (premises; drift identity is stated outside the lemma label); proof 69-70; remarks 72-79. Used by X2 (lines 75,81).	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:66-67
+repoint		W2-FAC-X:X2	edge	W2-FAC-X:X1@stmt => W2-FAC-X:X1.X1.1@stmt	Theory_work/Wave2/W2-FAC-X/lemmas/X2_perturbation.md:30,38
+repoint		W2-FAC-X:X2	edge	W2-FAC-X:X1@stmt => W2-FAC-X:X1.X1.3@stmt	Theory_work/Wave2/W2-FAC-X/lemmas/X2_perturbation.md:75,81
+repoint		W2-FAC-X:X7	edge	W2-FAC-X:X1@proof:X1.1,X1.2,X1.4 => W2-FAC-X:X1.X1.1@stmt	Theory_work/Wave2/W2-FAC-X/lemmas/X7_near_cs_loadings.md:32
+repoint		W2-FAC-X:X7	edge	W2-FAC-X:X1@proof:X1.1,X1.2,X1.4 => W2-FAC-X:X1.X1.2@stmt	Theory_work/Wave2/W2-FAC-X/lemmas/X7_near_cs_loadings.md:34
+repoint		W2-FAC-X:X9	edge	W2-FAC-X:X1@proof:X1.2,X1.4 => W2-FAC-X:X1.X1.2@stmt	Theory_work/Wave2/W2-FAC-X/lemmas/X9_iid_general.md:14-15
+repoint		W2-FAC-X:X9	edge	W2-FAC-X:X1@proof:X1.2,X1.4 => W2-FAC-X:X1.X1.1@stmt	Theory_work/Wave2/W2-FAC-X/lemmas/X9_iid_general.md:12,14 (new edge: cited in text, not in old edge list)
+repoint		W2-FAC-X:Thm-FAC-CS-iid	edge	W2-FAC-X:X1@stmt => W2-FAC-X:X1.X1.1@stmt	Theory_work/Wave2/W2-FAC-X/STATEMENT.md:62-63 ('lemmas/X1, Lemma X1.1')
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.3	local_id	X6.3	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:48-50
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.3	kind	theorem	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:48-50
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.3	name	Theorem FAC-CS-iid (C3): (H0) on A_n, D_n->0, P(O and S+!=S0)->0, liminf P(O and S+=S0) = 1 - limsup P(U_n)	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:48-50
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.3	file	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:48-50
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.3	lines	48-50	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:48-50
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.3	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:6-8;Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:10-21;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:36-39;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:48-56;Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:23-44	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:48-50
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.3	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:48-50
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.3	status_source	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:3	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:48-50
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.3	depends_on	W2-FAC-X:X4;W2-FAC-X:X5;W2-FAC-X:X5@proof:X5.1 design event A_n;W2-FAC-B:L5@proof:L5.2;EXT:T38-(0);EXT:T03♯;EXT:[OP];EXT:Lemma CAP	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:48-50
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.3	notes	Heading 46, proof 51-54. Uses X6.1 (23-34, H0 / E[1-pi]->0 via T03#) and X6.2 (36-44, K_n scores S0 via X4, X5, CAP(a)) as in-file inputs (premise spans). B:L5.2 attached via X6.2 (line 44 cites FACB L5.2 only for the legacy-cap remark): uncertain, inherited from parent edge. STATEMENT (C3) at STATEMENT.md:87-88.	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:48-50
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.4	local_id	X6.4	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:56-61
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.4	kind	claim	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:56-61
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.4	name	Delivery (C4): Proposition F's delivery extended to model R/(CS-R): P(no output)=0 and P(S+=S0)->1	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:56-61
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.4	file	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:56-61
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.4	lines	58-61	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:56-61
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.4	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:6-8;Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:10-21;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:36-39;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:48-56;Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:23-44;Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:62-70	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:56-61
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.4	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:56-61
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.4	status_source	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:3	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:56-61
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.4	depends_on	W2-FAC-X:X4;W2-FAC-X:X5;W2-FAC-X:X5@proof:X5.1 design event A_n;W2-FAC-B:L5@proof:L5.4;EXT:T03♯;EXT:[OP];EXT:Lemma CAP;EXT:Proposition F;EXT:F-GROW	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:56-61
+part	W2-FAC-X:X6	W2-FAC-X:X6.X6.4	notes	Heading 56; claim 58-61; proof steps (1)-(3) 62-70 (quantitative conclusion P(S+!=S0) <= 2E[1-pi]+P(K_n^c)->0 at 66-68). Qualification 68-70 (copied for record): 'the extension does not inherit council approval from the reused inputs.' T38-(0) not used. STATEMENT (C4) at STATEMENT.md:91-93 (P(S+=S0)->1).	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:56-61
+repoint		W2-FAC-X:X10	edge	W2-FAC-X:X6@proof:X6.3 => W2-FAC-X:X6.X6.3@stmt	Theory_work/Wave2/W2-FAC-X/lemmas/X10_assembly_T2.md:17
+repoint		W2-FAC-X:X10	edge	W2-FAC-X:X6@proof:X6.4 => W2-FAC-X:X6.X6.4@stmt	Theory_work/Wave2/W2-FAC-X/lemmas/X10_assembly_T2.md:21
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1a	local_id	L1a	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:11-14
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1a	kind	lemma	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:11-14
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1a	name	L1a: sufficient random Gram rate e=O_P(p/sqrt n)	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:11-14
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1a	file	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:11-14
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1a	lines	11-14	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:11-14
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1a	premises	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:6-9	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:11-14
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1a	status	UNSPLIT-STATUS: PROVED (by this seat); cross-family R02b verdict PASS-WITH-FIXES (minor), F1–F6 applied.	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:11-14
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1a	status_source	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:3	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:11-14
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1a	depends_on		Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:11-14
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1a	notes	Heading 11; proof 16-27; explicit uniform constants (R02b F1) 29-33 are a quantitative supplement to the statement. Header 3-5: 'Not a path or score theorem'.	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:11-14
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1b	local_id	L1b	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:35-42
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1b	kind	lemma	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:35-42
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1b	name	L1b: deterministic simultaneous residual-direction comparison ||q_B-q_A||<=10e/sqrt(c)	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:35-42
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1b	file	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:35-42
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1b	lines	35-42	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:35-42
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1b	premises	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:6-9	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:35-42
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1b	status	UNSPLIT-STATUS: PROVED (by this seat); cross-family R02b verdict PASS-WITH-FIXES (minor), F1–F6 applied.	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:35-42
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1b	status_source	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:3	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:35-42
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1b	depends_on		Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:35-42
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1b	notes	Heading 35; deterministic given e<=1/4; proof 44-54 (contains the projection-difference identity P_U-P_V, 46-47).	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:35-42
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1c	local_id	L1c	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:56-77
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1c	kind	lemma	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:56-77
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1c	name	L1c: conditional noise coupling for all subsets, sup|Z_B-Z_A| = O_P(p^{3/2}/sqrt n)	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:56-77
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1c	file	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:56-77
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1c	lines	56-77	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:56-77
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1c	premises	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:6-9;Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:11-14;Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:35-42	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:56-77
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1c	status	UNSPLIT-STATUS: PROVED (by this seat); cross-family R02b verdict PASS-WITH-FIXES (minor), F1–F6 applied.	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:56-77
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1c	status_source	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:3	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:56-77
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1c	depends_on	W2-FAC-XA:L1.L1a;W2-FAC-XA:L1.L1b	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:56-77
+part	W2-FAC-XA:L1	W2-FAC-XA:L1.L1c	notes	Heading 56; statement and proof interleaved 57-77 (lines 73-74 have a dangling 'On the event {e<=1/4}...' sentence); further justification and scope 79-89 (hashed with parent premises 56-77).	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:56-77
+repoint		W2-FAC-XA:L4	edge	W2-FAC-XA:L1@proof:L1b projection-difference identity => W2-FAC-XA:L1.L1b@proof:projection-difference identity	Theory_work/Wave2/W2-FAC-XA/lemmas/L4_score_transfer.md:10
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.1	local_id	L0.1	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:17-19
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.1	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:17-19
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.1	name	Q versus RSS: RSS_A/s^2 <= Q_A <= RSS_A/s^2 + 1 + 1/((n-1)c_min)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:17-19
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.1	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:17-19
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.1	lines	17-19	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:17-19
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.1	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:7-16	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:17-19
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.1	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:17-19
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.1	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:17-19
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.1	depends_on	W2-FAC-B:L1@proof:L1.5(b)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:17-19
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.1	notes	Proof 20-21.	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:17-19
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.2	local_id	L0.2	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:23-30
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.2	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:23-30
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.2	name	Probability event E0_n and the multiplier M_A	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:23-30
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.2	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:23-30
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.2	lines	23-30	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:23-30
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.2	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:7-16	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:23-30
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.2	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:23-30
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.2	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:23-30
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.2	depends_on	W2-FAC-B:L3@proof:E2;W2-FAC-B:L4@proof:L4.0(d)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:23-30
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.2	notes	E2 analogue line 26; multiplier 'As FAC-B L4.0(d)' line 30. No separate proof.	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:23-30
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.3	local_id	L0.3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:32-42
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.3	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:32-42
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.3	name	Every gain = size term + likelihood term in exact RSS increment, up to O(1)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:32-42
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.3	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:32-42
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.3	lines	32-42	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:32-42
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.3	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:7-16	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:32-42
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.3	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:32-42
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.3	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:32-42
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.3	depends_on	W2-FAC-S5F:L0.L0.1;W2-FAC-S5F:L0.L0.2	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:32-42
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.3	notes	Proof 44-55. Corollary L0.3' (standardized form) at 57-61 is part of this part (used by L0.7).	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:32-42
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.4	local_id	L0.4	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:63-68
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.4	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:63-68
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.4	name	Pythagoras identity (P), jump inequality (J), monotonicity (M)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:63-68
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.4	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:63-68
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.4	lines	63-68	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:63-68
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.4	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:7-16;Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:71-74	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:63-68
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.4	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:63-68
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.4	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:63-68
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.4	depends_on		Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:63-68
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.4	notes	Proof 69-70. Ridge version 71-74 and Corollary L0.4' (sum of levels) 76-81 belong to this part. L1.3(iii) cites L0.4 and L0.4'.	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:63-68
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.5	local_id	L0.5	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:84-91
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.5	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:84-91
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.5	name	Swap domination through the one-below sets	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:84-91
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.5	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:84-91
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.5	lines	84-91	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:84-91
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.5	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:7-16	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:84-91
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.5	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:84-91
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.5	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:84-91
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.5	depends_on		Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:84-91
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.5	notes	Exact; proof inline (91).	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:84-91
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.6	local_id	L0.6	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:93-101
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.6	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:93-101
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.6	name	Truth moves are negative by order n (given residual-noise bounds (TR),(TR'))	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:93-101
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.6	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:93-101
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.6	lines	93-101	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:93-101
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.6	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:7-16	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:93-101
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.6	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:93-101
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.6	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:93-101
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.6	depends_on	W2-FAC-S5F:L0.L0.2;W2-FAC-S5F:L0.L0.3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:93-101
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.6	notes	Proof 102-114; Remark 117-119. Hypotheses (TR),(TR') are verified for (BCS) in S5F L1.6 (forward reference; L1 depends on L0): recorded, not added as edge.	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:93-101
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.7	local_id	L0.7	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:121-129
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.7	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:121-129
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.7	name	Size-term bounds used downstream (Delta_k, thresholds Theta-/Theta+)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:121-129
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.7	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:121-129
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.7	lines	121-129	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:121-129
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.7	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:7-16	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:121-129
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.7	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:121-129
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.7	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:121-129
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.7	depends_on	W2-FAC-S5F:L0.L0.2;W2-FAC-S5F:L0.L0.3;W2-FAC-B:L4@proof:L4.0(c)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:121-129
+part	W2-FAC-S5F:L0	W2-FAC-S5F:L0.L0.7	notes	'as FAC-B L4.0(c)' line 124. File ends at line 129.	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:121-129
+repoint		W2-FAC-S5F:L1	edge	W2-FAC-S5F:L0@stmt => W2-FAC-S5F:L0.L0.4@stmt	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:63,65
+repoint		W2-FAC-S5F:L1	edge	W2-FAC-S5F:L0@stmt => W2-FAC-S5F:L0.L0.2@stmt	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:110
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.0	local_id	L1.0	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:13-15
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.0	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:13-15
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.0	name	Sign flips (Upsilon_n = I)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:13-15
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.0	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:13-15
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.0	lines	13-15	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:13-15
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.0	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:9-11;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:37-45	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:13-15
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.0	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:13-15
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.0	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:13-15
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.0	depends_on	W2-FAC-B:L1@proof:L1.0	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:13-15
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.0	notes		Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:13-15
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.1	local_id	L1.1	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:17-21
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.1	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:17-21
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.1	name	Noise representation and Gram-level fit (g = sqrt(a) eta 1 + sqrt(b) zeta + sqrt(c) xi; Phi(T), RSS_T, Z^2)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:17-21
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.1	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:17-21
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.1	lines	17-21	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:17-21
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.1	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:9-11;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:37-45	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:17-21
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.1	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:17-21
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.1	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:17-21
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.1	depends_on	W2-FAC-B:L1@proof:L1.1	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:17-21
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.1	notes	Uses L0 notation (line 21; L0 setting 7-16, no part edge).	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:17-21
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.2	local_id	L1.2	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:23-32
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.2	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:23-32
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.2	name	Inverse and the exact ANOVA split of Phi(T)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:23-32
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.2	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:23-32
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.2	lines	23-32	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:23-32
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.2	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:9-11;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:37-45	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:23-32
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.2	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:23-32
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.2	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:23-32
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.2	depends_on	W2-FAC-S5F:L1.L1.1	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:23-32
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.2	notes	Sherman-Morrison twice; derivation 34-36.	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:23-32
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.3	local_id	L1.3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:38-71
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.3	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:38-71
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.3	name	Every statistic in closed form: local configuration part + global centre (r_l(T), var_l(T), Z^2 = r^2/var; local statistics (i)-(iv))	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:38-71
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.3	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:38-71
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.3	lines	38-71	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:38-71
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.3	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:9-11;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:37-45	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:38-71
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.3	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:38-71
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.3	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:38-71
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.3	depends_on	W2-FAC-S5F:L1.L1.2;W2-FAC-S5F:L1.L1.1;W2-FAC-S5F:L0.L0.4	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:38-71
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.3	notes	Statement 39-43; proof 44-50; deletion 51; local statistics (i)-(iv) 53-71 (proof of (iv) 70-71). (iii) cites L0.4 and L0.4' (63-65).	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:38-71
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.4	local_id	L1.4	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:73-89
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.4	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:73-89
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.4	name	The global centre: trivial bound (a), drift identity (b), oscillation bound (c)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:73-89
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.4	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:73-89
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.4	lines	73-89	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:73-89
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.4	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:9-11;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:37-45	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:73-89
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.4	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:73-89
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.4	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:73-89
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.4	depends_on	W2-FAC-S5F:L1.L1.3;W2-FAC-S5F:L1.L1.2	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:73-89
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.4	notes	Definition 74-75; (a) 78-79; (b) 80-81 (proof 82-85); (c) 87-89. Remark 76-77 'not used'.	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:73-89
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.5	local_id	L1.5	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:91-95
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.5	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:91-95
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.5	name	Configuration families and the size of each	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:91-95
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.5	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:91-95
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.5	lines	91-95	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:91-95
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.5	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:9-11;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:37-45	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:91-95
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.5	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:91-95
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.5	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:91-95
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.5	depends_on	W2-FAC-S5F:L1.L1.3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:91-95
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.5	notes		Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:91-95
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.6	local_id	L1.6	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:97-103
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.6	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:97-103
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.6	name	Path-free uniform bounds on E^loc_n (used for (TR),(TR') of L0.6)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:97-103
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.6	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:97-103
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.6	lines	97-103	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:97-103
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.6	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:9-11;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:37-45	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:97-103
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.6	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:97-103
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.6	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:97-103
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.6	depends_on	W2-FAC-S5F:L1.L1.3;W2-FAC-S5F:L1.L1.4;W2-FAC-S5F:L1.L1.5;W2-FAC-S5F:L0.L0.2	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:97-103
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.6	notes	Heading 97; statement 98-103; Remark 104-106. Establishes hypotheses (TR),(TR') of L0.6 (L0.6 consumes this; no L0.6 edge here).	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:97-103
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.7	local_id	L1.7	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:108-110
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.7	kind	lemma	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:108-110
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.7	name	The multiplier on the class (M_T <= 1/2(1+2/log n) for |T| <= n/log^3 n)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:108-110
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.7	file	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:108-110
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.7	lines	108-110	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:108-110
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.7	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:9-11;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:37-45	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:108-110
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.7	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:108-110
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.7	status_source	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:3	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:108-110
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.7	depends_on	W2-FAC-S5F:L0.L0.2;W2-FAC-S5F:L1.L1.6	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:108-110
+part	W2-FAC-S5F:L1	W2-FAC-S5F:L1.L1.7	notes	File ends at line 110.	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:108-110
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-i	local_id	C-i	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:17
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-i	kind	clause	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:17
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-i	name	Theorem PLR (C-i) discovery: P(NA(L))->1, P(TL(L))->1, D_n->0 (shipped cap) under P(Sand_n)->1, Q polylog, floor, (R1)-(R3)	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:17
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-i	file	Theory_work/Wave2/W2-LOC2/STATEMENT.md	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:17
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-i	lines	61-63	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:17
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-i	premises	Theory_work/Wave2/W2-LOC2/STATEMENT.md:19-31;Theory_work/Wave2/W2-LOC2/STATEMENT.md:35-59;Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:13-16	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:17
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-i	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:17
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-i	status_source	Theory_work/Wave2/W2-LOC2/REPORT.md:60	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:17
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-i	depends_on	W2-LOC2:NA-R;W2-LOC2:L0';C-GROW:L2.1;C-GROW:L2.2;C-GROW:L1.2;EXT:[OP]	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:17
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-i	notes	Statement line 63 is shared with the start of (C-ii) (clause boundary mid-line). Lemma-file form L5_assembly.md:17 (hypotheses 13-16); proof (a) Events 22-25, (b) Path 26-29. REPORT status table is one row for (C) PLR (REPORT.md:60): no separate status.	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:17
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-ii	local_id	C-ii	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:18-19
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-ii	kind	clause	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:18-19
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-ii	name	Theorem PLR (C-ii) posterior/output: with LSF, 1-pi(S0)=O_P(sqrt(log n/n)), P(O and S+!=S0)->0, P(O and S+=S0)=1-P(U_n)-o(1)	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:18-19
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-ii	file	Theory_work/Wave2/W2-LOC2/STATEMENT.md	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:18-19
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-ii	lines	63-65	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:18-19
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-ii	premises	Theory_work/Wave2/W2-LOC2/STATEMENT.md:19-31;Theory_work/Wave2/W2-LOC2/STATEMENT.md:35-59;Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:13-16;Theory_work/Wave2/W2-LOC2/STATEMENT.md:63-64	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:18-19
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-ii	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:18-19
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-ii	status_source	Theory_work/Wave2/W2-LOC2/REPORT.md:60	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:18-19
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-ii	depends_on	W2-APP:POST;EXT:M5(0);W2-LOC2:PLR.C-i	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:18-19
+part	W2-LOC2:PLR	W2-LOC2:PLR.C-ii	notes	Lemma-file form L5_assembly.md:18-19; proof (c) Posterior 30-33 (uses L1_POST, M5(0) integrated, D_n->0 from (C-i)). LSF is an extra hypothesis of this clause only (STATEMENT.md:63-64; L5:20).	Theory_work/Wave2/W2-LOC2/lemmas/L5_assembly.md:18-19
+repoint		W2-LOC2:F-LOC2	edge	W2-LOC2:PLR@proof:(c) posterior E[1-pi(S0)]->0 => W2-LOC2:PLR.C-ii@proof:(c) posterior E[1-pi(S0)]->0	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:32 ('L5 (c)')
+repoint		W2-UNI:UNI-0	edge	W2-LOC2:PLR@stmt => W2-LOC2:PLR.C-i@stmt	Theory_work/Wave2/W2-UNI/lemmas/L2_k0.md:159-160 (UNI-0 assembly names (C-i) and (C-ii))
+repoint		W2-UNI:UNI-0	edge	W2-LOC2:PLR@stmt => W2-LOC2:PLR.C-ii@stmt	Theory_work/Wave2/W2-UNI/lemmas/L2_k0.md:159-160
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.exp	local_id	exp	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:14-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.exp	kind	class-claim	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:14-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.exp	name	Delivery on the exponential-decay / block classes (D1 LOC-d, D2 LOC-BF) with polylogarithmic Q	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:14-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.exp	file	Theory_work/Wave2/W2-LOC2/STATEMENT.md	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:14-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.exp	lines	100-102	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:14-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.exp	premises	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:7-12;Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:17-19;Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:14;Theory_work/Wave2/W2-LOC2/STATEMENT.md:67-85;Theory_work/Wave2/W2-LOC2/STATEMENT.md:19-31	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:14-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.exp	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:14-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.exp	status_source	Theory_work/Wave2/W2-LOC2/REPORT.md:62	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:14-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.exp	depends_on	W2-LOC2:LOC-d;W2-LOC2:LOC-BF;W2-FAC-A:Prop-F-FAC@proof:FACA L7 Steps 1-3;W2-LOC2:PLR.C-ii@proof:(c) posterior E[1-pi(S0)]->0;C-GROW:L1.2;C-DLV:Cor-Dp	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:14-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.exp	notes	Same statement span as parent (the class is an ALTERNATIVE selected by premises); class list at L7_delivery.md:14-15 (LOC-d = L4 Part A, LOC-BF = L4 Part B). Status row REPORT.md:62 is for (E) as a whole; REPORT (D3) row (61) is the L6 theorem, not delivery.	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:14-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.poly	local_id	poly	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:15-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.poly	kind	class-claim	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:15-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.poly	name	Delivery on the polynomial-decay class (D3, alpha>17/2) with polynomial Q	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:15-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.poly	file	Theory_work/Wave2/W2-LOC2/STATEMENT.md	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:15-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.poly	lines	100-102	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:15-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.poly	premises	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:7-12;Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:17-19;Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:15;Theory_work/Wave2/W2-LOC2/STATEMENT.md:87-98;Theory_work/Wave2/W2-LOC2/STATEMENT.md:19-31	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:15-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.poly	status	UNSPLIT-STATUS: PROVED (by this seat, unchecked)	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:15-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.poly	status_source	Theory_work/Wave2/W2-LOC2/REPORT.md:62	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:15-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.poly	depends_on	W2-LOC2:Thm-Poly;W2-FAC-A:Prop-F-FAC@proof:FACA L7 Steps 1-3;W2-LOC2:PLR.C-ii@proof:(c) posterior E[1-pi(S0)]->0;C-GROW:L1.2;C-DLV:Cor-Dp	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:15-19
+part	W2-LOC2:F-LOC2	W2-LOC2:F-LOC2.poly	notes	Same statement span as parent; class added after R06a/R06b (STATEMENT.md:97-98). L7:32 cites L5(c) uniformly; for D3 the PLR assembly is the polynomial-size re-run (L6_poly.md:55-65). (D3) is flagged NOT locked (STATEMENT.md:87-88): its failure withdraws only this part. No part-specific status exists.	Theory_work/Wave2/W2-LOC2/lemmas/L7_delivery.md:15-19
