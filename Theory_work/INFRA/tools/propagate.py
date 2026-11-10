@@ -120,11 +120,14 @@ def apply_revert(d: dict, rp: dict, restore) -> None:
     claim in place. An independent pre-existing edge to the retracted claim is always kept."""
     if restore is None:
         return
-    if "consumes" in rp.get("notes", ""):  # a bound bridge in `consumes`: swap the binding back
-        before = rp.get("before") or ""
-        cons = [before if c == rp.get("after") else c for c in R.split_list(d.get("consumes", ""))]
-        if before and before.partition("@")[2] != restore.partition("@")[0]:
-            cons = [f"{before.partition('@')[0]}@{restore.partition('@')[0]}" if c == before else c for c in cons]
+    if "consumes" in rp.get("notes", ""):  # a bound bridge in `consumes`
+        prop = (rp.get("before") or "").partition("@")[0].strip()
+        restore_item = f"{prop}@{restore.partition('@')[0]}"
+        cons = R.split_list(d.get("consumes", ""))
+        if rp.get("preexisting") != "yes":  # the binding to the retracted claim came only from this re-point
+            cons = [c for c in cons if c != rp.get("after")]
+        if restore_item not in cons:
+            cons.append(restore_item)
         d["consumes"] = R.join_list(cons)
         return
     items = R.split_list(d["depends_on"])
@@ -273,10 +276,14 @@ def main():
                         "@" in c and R.resolve(c.partition("@")[2], ids, aliases, x["ticket"]) == src and
                         "proof:" + c.partition("@")[0].strip() == rp["use"] for c in cons):
                     p_ = rp["use"][len("proof:"):]
-                    before = next(c for c in cons if c.partition("@")[0].strip() == p_)
+                    before = next(c for c in cons if c.partition("@")[0].strip() == p_ and
+                                  R.resolve(c.partition("@")[2], ids, aliases, x["ticket"]) == src)
                     after = f"{p_}@{dst}"
-                    cons = [after if c == before else c for c in cons]
-                    rp.update(before=before, after=after, preexisting="no", notes=(rp.get("notes", "") + " consumes"))
+                    pre = any(c.partition("@")[0].strip() == p_ and
+                              R.resolve(c.partition("@")[2], ids, aliases, x["ticket"]) == dst for c in cons)
+                    cons = [c for c in cons if c != before] + ([] if pre else [after])
+                    rp.update(before=before, after=after, preexisting="yes" if pre else "no",
+                              notes=(rp.get("notes", "") + " consumes"))
                     continue
                 before = next(it for it in items if R.resolve(it, ids, aliases, x["ticket"]) == src
                               and R.parse_dep(it)[1] == rp["use"])

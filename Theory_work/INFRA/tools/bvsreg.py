@@ -242,11 +242,11 @@ def status_at(status: str, source: str) -> str:
         return "missing"
     first = _norm_status_text(lines[sp[0] - 1])
     window = _norm_status_text(" ".join(lines[sp[0] - 1: sp[1] + 3]))
-    pos = window.find(st)
-    while pos >= 0 and pos > len(first):  # occurrences that start after the stated line do not count
-        pos = -1
+    tok = re.compile(r"(?<![\w-])" + re.escape(st) + r"(?![\w-])")  # whole token: not NOT-X, not X-NESS
+    m = tok.search(window)
+    pos = m.start() if m and m.start() <= len(first) else -1  # must start on the stated line
     if pos < 0:
-        return "elsewhere" if st in _norm_status_text(" ".join(lines)) else "missing"
+        return "elsewhere" if tok.search(_norm_status_text(" ".join(lines))) else "missing"
     return "negated" if _NEGATION.search(window[:pos]) else "ok"
 
 

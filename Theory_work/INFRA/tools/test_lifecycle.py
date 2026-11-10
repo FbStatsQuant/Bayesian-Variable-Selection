@@ -149,6 +149,26 @@ try:
     # F10: the same route written two ways counts once
     results.append(("R03-F10 canonical span keys", R.span_key("Theory_work/INFRA/README.md:1") ==
                     R.span_key("Theory_work/INFRA/README.md:01")))
+    # ---------------- R04 scenarios ----------------
+    open(fx, "w", encoding="utf-8").write("A: NOT-PROVED-CHECKED\nB: PROVED-CHECKEDNESS\nC: PROVED-CHECKED.\n")
+    results.append(("R04 'NOT-PROVED-CHECKED' is not PROVED-CHECKED", R.status_at("PROVED-CHECKED", "neg_fixture.md:1") != "ok"))
+    results.append(("R04 'PROVED-CHECKEDNESS' is not PROVED-CHECKED", R.status_at("PROVED-CHECKED", "neg_fixture.md:2") != "ok"))
+    results.append(("R04 plain token still accepted", R.status_at("PROVED-CHECKED", "neg_fixture.md:3") == "ok"))
+    # R04-F8: D binds the same property to X and (independently) to YB; supersede X by YB, confirm, retract YB:
+    # D must end with BOTH bindings back (X restored, independent YB kept) and be invalidated by YB's retraction
+    XB, DB = "C-GROW:L1.1", "C-GROW:L6.6"
+    run("registry.py", "add", "TEST:YB", "--file", STM, "--lines", "13-15", "--kind", "lemma", "--name", "YB",
+        "--status", "PROVED-CHECKED", "--source", "Theory_work/Wave2/W2-FAC-A/REPORT.md:20",
+        "--field", f"implies={XB}", "--field", f"gates={st(XB)['gates']}", "--reason", "t")
+    run("registry.py", "set", DB, f"consumes=P:SAND@{XB}; P:SAND@TEST:YB", "--reason", "t")
+    run("propagate.py", "supersede", XB, "--by", "TEST:YB", "--reason", "free")
+    run("propagate.py", "confirm-repoint", DB, "--from", XB, "--to", "TEST:YB", "--checked-by", "t", "--reason", "t")
+    after_confirm = R.split_list(st(DB)["consumes"])
+    run("propagate.py", "retract", "TEST:YB", "--reason", "t")
+    cons = R.split_list(st(DB)["consumes"])
+    results.append(("R04-F8 confirm keeps one binding to YB (no duplicate)", after_confirm == ["P:SAND@TEST:YB"]))
+    results.append(("R04-F8 revert restores X and keeps the independent YB binding; D SUSPECT",
+                    f"P:SAND@{XB}" in cons and "P:SAND@TEST:YB" in cons and st(DB)["state"] == "SUSPECT"))
 finally:
     subprocess.run(["git", "-C", LIVE_ROOT, "worktree", "remove", "--force", TMP], capture_output=True)
     subprocess.run(["git", "-C", LIVE_ROOT, "worktree", "prune"], capture_output=True)

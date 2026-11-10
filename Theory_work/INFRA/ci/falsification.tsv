@@ -49,21 +49,21 @@ falsify	W2-FAC-A:Lemma-kappa		Theory_work/Wave2/W2-FAC-A/numerics/kappa.py		30	2
 falsify	W2-FAC-A:Lemma-CS-1D; W2-FAC-A:Lemma-GAP; W2-FAC-A:Conj-PATH-CS		Theory_work/Wave2/W2-FAC-A/numerics/cs1d.py		120	8.0	no			calibration rc=1: IndexError: list index out of range
 falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L1		Theory_work/Wave2/W2-FAC-B/numerics/cs_selftest.py		39	9.8	yes			
 falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L2		Theory_work/Wave2/W2-FAC-B/numerics/n4_start.py		120	>120	no			calibration rc=TIMEOUT: {"rho": 0.3, "p": 400, "n": 100000000, "layout": "spread", "seed": 2, "fs_min": 0.0571, "nblocks": 25, "N0": 0, "start_s
-falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L4		Theory_work/Wave2/W2-FAC-B/numerics/n3_cs.py		120					
-falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L4		Theory_work/Wave2/W2-FAC-B/numerics/n3b_corners.py		120					
-falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L4		Theory_work/Wave2/W2-FAC-B/numerics/n6_gap.py		120					
-falsify	W2-FAC-B:Thm-FAC-CS(C1-M); W2-FAC-B:Cor-M		Theory_work/Wave2/W2-FAC-B/numerics/n7_masked.py		120					
-falsify	W2-FAC-B:L3		Theory_work/Wave2/W2-FAC-B/numerics/n5_invariants.py		120					
-falsify	W2-FAC-PK:P1		Theory_work/Wave2/W2-FAC-PK/numerics/n2_diag.py		120					
-falsify	W2-FAC-PK:P1; W2-FAC-PK:L2.2		Theory_work/Wave2/W2-FAC-PK/numerics/l12_check.py		120					
-falsify	W2-FAC-PK:Thm-NEG		Theory_work/Wave2/W2-FAC-PK/numerics/n1_scale.py		120					
-falsify	W2-FAC-PK:Thm-NEG; W2-FAC-PK:L2.3		Theory_work/Wave2/W2-FAC-PK/numerics/n3_robust.py		120					
-falsify	W2-FAC-PK:Thm-NEG; W2-FAC-PK:L2.2; W2-FAC-PK:L2.3		Theory_work/Wave2/W2-FAC-PK/numerics/l2_chain.py		120					
-falsify	W2-FAC-PK:Thm-PATH; W2-FAC-PK:L3.3		Theory_work/Wave2/W2-FAC-PK/numerics/l3_static.py		120					
-falsify	W2-FAC-PK:Thm-PATH; W2-FAC-PK:L3.3; W2-FAC-PK:L3.4		Theory_work/Wave2/W2-FAC-PK/numerics/l3_trend.py		120					
-falsify	W2-FAC-PK:Thm-PATH; W2-FAC-PK:L3.3		Theory_work/Wave2/W2-FAC-PK/numerics/l3_small.py		120					
-falsify	W2-FAC-PK:L0		Theory_work/Wave2/W2-FAC-PK/numerics/pk_selftest.py		120					
-falsify	W2-FAC-PKA:L0; W2-FAC-PKA:L1		Theory_work/Wave2/W2-FAC-PKA/numerics/n2_checks.py		120					
+falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L4		Theory_work/Wave2/W2-FAC-B/numerics/n3_cs.py		120	>120	no			calibration rc=TIMEOUT: 468 jobs
+falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L4		Theory_work/Wave2/W2-FAC-B/numerics/n3b_corners.py		120	>120	no			calibration rc=TIMEOUT:
+falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L4		Theory_work/Wave2/W2-FAC-B/numerics/n6_gap.py		120	>120	no			calibration rc=TIMEOUT:
+falsify	W2-FAC-B:Thm-FAC-CS(C1-M); W2-FAC-B:Cor-M		Theory_work/Wave2/W2-FAC-B/numerics/n7_masked.py		120	>120	no			calibration rc=TIMEOUT: {"rho": 0.5, "p": 400, "n": 100000000, "seed": 1, "masked_truth_index": 2, "masked": true, "start_full": true, "start_ha
+falsify	W2-FAC-B:L3		Theory_work/Wave2/W2-FAC-B/numerics/n5_invariants.py		120	>120	no			calibration rc=TIMEOUT: {"rho": 0.3, "n": 100000, "p": 5000, "s0": 1, "c": 1.0, "seed": 0, "m1": 20, "H": 4.291932052578694, "final_is_S0": true
+falsify	W2-FAC-PK:P1		Theory_work/Wave2/W2-FAC-PK/numerics/n2_diag.py		120	27.4	no			calibration rc=1: IndexError: list index out of range
+falsify	W2-FAC-PK:P1; W2-FAC-PK:L2.2		Theory_work/Wave2/W2-FAC-PK/numerics/l12_check.py		120	31.0	no			calibration rc=1: IndexError: list index out of range
+falsify	W2-FAC-PK:Thm-NEG		Theory_work/Wave2/W2-FAC-PK/numerics/n1_scale.py		120	22.4	no			calibration rc=1: IndexError: list index out of range
+falsify	W2-FAC-PK:Thm-NEG; W2-FAC-PK:L2.3		Theory_work/Wave2/W2-FAC-PK/numerics/n3_robust.py		120	39.2	no			calibration rc=1: IndexError: list index out of range
+falsify	W2-FAC-PK:Thm-NEG; W2-FAC-PK:L2.2; W2-FAC-PK:L2.3		Theory_work/Wave2/W2-FAC-PK/numerics/l2_chain.py		120	23.8	no			calibration rc=1: IndexError: list index out of range
+falsify	W2-FAC-PK:Thm-PATH; W2-FAC-PK:L3.3		Theory_work/Wave2/W2-FAC-PK/numerics/l3_static.py		120	19.5	no			calibration rc=1: IndexError: list index out of range
+falsify	W2-FAC-PK:Thm-PATH; W2-FAC-PK:L3.3; W2-FAC-PK:L3.4		Theory_work/Wave2/W2-FAC-PK/numerics/l3_trend.py		110	33.6	yes			
+falsify	W2-FAC-PK:Thm-PATH; W2-FAC-PK:L3.3		Theory_work/Wave2/W2-FAC-PK/numerics/l3_small.py		120	24.6	no			calibration rc=1: IndexError: list index out of range
+falsify	W2-FAC-PK:L0		Theory_work/Wave2/W2-FAC-PK/numerics/pk_selftest.py		120	54.9	yes			
+falsify	W2-FAC-PKA:L0; W2-FAC-PKA:L1		Theory_work/Wave2/W2-FAC-PKA/numerics/n2_checks.py		85	25.3	yes			
 falsify	W2-FAC-PKA:L1		Theory_work/Wave2/W2-FAC-PKA/numerics/n5_review_repairs.py		120					
 falsify	W2-FAC-PKA:L2		Theory_work/Wave2/W2-FAC-PKA/numerics/n3_singletons.py		120					
 falsify	W2-FAC-PKA:L2		Theory_work/Wave2/W2-FAC-PKA/numerics/n4_singleton_controls.py		120					

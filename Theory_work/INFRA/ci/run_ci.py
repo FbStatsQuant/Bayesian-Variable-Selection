@@ -66,8 +66,11 @@ SANDBOX_ROOT = os.path.join(__import__("tempfile").gettempdir(), "bvs-ci-sandbox
 def _process_table():
     """{pid: ppid} for every process. Windows: Toolhelp32 snapshot via ctypes (fast, no extra packages)."""
     if os.name != "nt":
-        out = subprocess.run(["ps", "-eo", "pid=,ppid="], capture_output=True, text=True).stdout
-        return {int(a): int(b) for a, b in (ln.split() for ln in out.splitlines() if len(ln.split()) == 2)}
+        p = subprocess.run(["ps", "-eo", "pid=,ppid="], capture_output=True, text=True)
+        table = {int(a): int(b) for a, b in (ln.split() for ln in p.stdout.splitlines() if len(ln.split()) == 2)}
+        if p.returncode != 0 or not table:
+            raise RuntimeError("process enumeration failed")
+        return table
     import ctypes
     from ctypes import wintypes
 
@@ -91,6 +94,8 @@ def _process_table():
             ok = k32.Process32Next(snap, ctypes.byref(e))
     finally:
         k32.CloseHandle(snap)
+    if not table:
+        raise RuntimeError("process enumeration returned nothing")
     return table
 
 
@@ -242,6 +247,15 @@ class Job:
         if self.h and not self.k32.AssignProcessToJobObject(self.h, int(popen._handle)):
             raise RuntimeError("AssignProcessToJobObject failed")
 
+    def resume(self, popen):
+        if os.name != "nt":
+            return
+        import ctypes
+        nt = ctypes.WinDLL("ntdll")
+        nt.NtResumeProcess.argtypes = [ctypes.c_void_p]
+        if nt.NtResumeProcess(ctypes.c_void_p(int(popen._handle))) != 0:
+            raise RuntimeError("NtResumeProcess failed")
+
     def active(self) -> int:
         import ctypes
         a = self.ACCT()
@@ -298,7 +312,8 @@ def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
     sdir = os.path.dirname(script)
     logf = os.path.join(logdir, "_run.log")
     t0 = time.time()
-    kw = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt" else {"start_new_session": True}
+    kw = ({"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP | 0x4}  # CREATE_SUSPENDED: assign to job first
+          if os.name == "nt" else {"start_new_session": True})
     p, rc, job = None, None, Job()
     try:
         with open(logf, "w", encoding="utf-8", errors="replace") as fh:
@@ -309,6 +324,7 @@ def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
             except OSError as e:
                 return f"LAUNCH-ERROR {e}", 0.0, "", []
             job.add(p)
+            job.resume(p)  # only now can it run (and spawn children, which inherit the job)
             try:
                 rc = p.wait(timeout=timeout)
             except subprocess.TimeoutExpired:
