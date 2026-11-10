@@ -1,0 +1,15 @@
+C:\Users\felip\Bayesian-Variable-Selection\Theory_work\Wave3\W3-POST\reviews\R02_scratch\post_checks.py:47: RuntimeWarning: divide by zero encountered in scalar divide
+  worstr=min(worstr,I/lb)
+identity spread (should be 0): 2.4869e-14
+den ratio min (>=1 ok) n=20 eta=0.01: 16.6972
+L1a Q-bound max excess (<=0 ok) n=20: -0.0386806
+den ratio min (>=1 ok) n=40 eta=0.0001: 2.38587e+09
+L1a Q-bound max excess (<=0 ok) n=40: -35.5753
+den ratio min (>=1 ok) n=60 eta=1e-06: inf
+L1a Q-bound max excess (<=0 ok) n=60: -2986.91
+C4 n=30: g0=2.237 detgap(>=0) : 1.35102
+C4 n=30: (B3) excess (<=0): -0.00251428
+C4 n=100: g0=2.241 detgap(>=0) : 1.44164
+C4 n=100: (B3) excess (<=0): -0.000331695
+C4 n=400: g0=2.270 detgap(>=0) : 1.4522
+C4 n=400: (B3) excess (<=0): -2.49469e-05

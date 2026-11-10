@@ -1,0 +1,2697 @@
+arXiv:1505.07925v1 [math.ST] 29 May 2015            On the Computational Complexity of
+                                              High-Dimensional Bayesian Variable Selection
+
+                                                            Yun Yang1 Martin J. Wainwright1,2 Michael I. Jordan1,2
+
+                                                                            University of California, Berkeley
+
+                                          1Department of Electrical Engineering and Computer Science 2Department of Statistics
+
+                                                                                               June 1, 2015
+
+                                                                                                      Abstract
+                                                      We study the computational complexity of Markov chain Monte Carlo (MCMC) meth-
+                                                  ods for high-dimensional Bayesian linear regression under sparsity constraints. We first
+                                                  show that a Bayesian approach can achieve variable-selection consistency under relatively
+                                                  mild conditions on the design matrix. We then demonstrate that the statistical criterion
+                                                  of posterior concentration need not imply the computational desideratum of rapid mixing
+                                                  of the MCMC algorithm. By introducing a truncated sparsity prior for variable selection,
+                                                  we provide a set of conditions that guarantee both variable-selection consistency and rapid
+                                                  mixing of a particular Metropolis-Hastings algorithm. The mixing time is linear in the
+                                                  number of covariates up to a logarithmic factor. Our proof controls the spectral gap of
+                                                  the Markov chain by constructing a canonical path ensemble that is inspired by the steps
+                                                  taken by greedy algorithms for variable selection.
+
+                                          1 Introduction
+
+                                          In many areas of science and engineering, it is common to collect a very large number of
+                                          covariates X1, . . . , Xp in order predict a response variable Y . We are thus led to instances
+                                          of high-dimensional regression, in which the number of covariates p exceed the sample size
+                                          n. A large literature has emerged to address problems in the regime p n, where the ill-
+                                          posed nature of the problem is addressed by imposing sparsity conditions--namely, that the
+                                          response Y depends only on a small subset of the covariates. Much of this literature is based on
+                                          optimization methods, where penalty terms are incorporated that yield both convex [33] and
+                                          nonconvex [9, 39] optimization problems. Theoretical analysis is based on general properties
+                                          of the design matrix and the penalty function.
+
+                                              Alternatively, one can take a Bayesian point of view on high-dimensional regression, plac-
+                                          ing a prior on the model space and performing the necessary integration so as to obtain a
+                                          posterior distribution [12, 16, 5]. Obtaining such a posterior allows one to report a subset of
+                                          possible models along with their posterior probabilities as opposed to a single model. One
+                                          can also report the marginal posterior probability of including each covariate. Some recent
+                                          work has provided some theoretical understanding of the performance of Bayesian approaches
+                                          to variable selection. In the moderate-dimension scenario (in which p is allowed to grow with
+                                          n but p  n), Shang and Clayton [28] establish posterior consistency for variable selection
+
+                                                                                                      1
+in a Bayesian linear model, meaning that the posterior probability of the true model that
+contains all influential covariates tends to one as n grows. Narisetty and He [26] consider a
+high-dimensional scenario in which p can grow nearly exponentially with n; in this setting,
+they show the Bayesian spike-and-slab variable-selection method achieves variable-selection
+consistency. Since this particular Bayesian method resembles a randomized version of 0-
+penalized methods, it could have better performance than 1-penalized methods for variable
+selection under high-dimensional settings [26, 29]. Empirical evidence for this conjecture is
+provided by Guan et al. [13] for SNP selection in genome-wide association studies, but it has
+not been confirmed theoretically.
+
+    The most widely used tool for fitting Bayesian models are sampling techniques based on
+Markov chain Monte Carlo (MCMC), in which a Markov chain is designed over the param-
+eter space so that its stationary distribution matches the posterior distribution. Despite its
+popularity, the theoretical analysis of the computational efficiency of MCMC algorithms lags
+that of optimization-based methods. In particular, the central object of interest is the mixing
+time of the Markov chain, which characterizes the number of iterations required to converge
+to an -distance of stationary distribution from any initial configuration. In order for MCMC
+algorithms to be controlled approximations, one must provide meaningful bounds on the mix-
+ing time as a function of problem parameters such as the number of observations and the
+dimensionality. Of particular interest is determining whether the chain is rapidly mixing--
+meaning that the mixing time grows at most polynomially in the problem parameters--or
+slowly mixing meaning that the mixing time grows exponentially in the problem parameters.
+In the latter case, one cannot hope to obtain approximate samples from the posterior in any
+reasonable amount of time for large models.
+
+    Unfortunately, theoretical analysis of mixing time is comparatively rare in the Bayesian
+literature, with a larger number of negative results. On the positive side, Jones and Hobert [17]
+consider a Bayesian hierarchical version of the one-way random effects model, and obtain
+upper bounds on the mixing time of Gibbs and block Gibbs samplers as a function of the initial
+values, data and hyperparameters. Belloni and Chernozhukov [4] show that a Metropolis
+random walk is rapidly mixing in the dimension for regular parametric models in which the
+posterior converges to a normal limit. It is more common to find negative results in the
+literature. Examples include Mossel and Vigoda [25], who show that the MCMC algorithm
+for Bayesian phylogenetics takes exponentially long to reach the stationary distribution as
+data accumulates, and Woodard and Rosenthal [37], who analyze a Gibbs sampler used for
+genomic motif discovery and show that the mixing time increases exponentially as a function
+of the length of the DNA sequence.
+
+    The goal of the current paper is to study the computational complexity of Metropolis-
+Hastings procedures for high-dimensional Bayesian variable selection. For concreteness, we
+focus our analysis on a specific hierarchical Bayesian model for sparse linear regression, and
+an associated Metropolis-Hastings random walk, but these choices should be viewed as rep-
+resentative of a broader family of methods. In particular, we study the well-known Zellner
+g-prior for linear regression [38]. The main advantage of this prior is the simple expression
+that it yields for the marginal likelihood, which is convenient in our theoretical investigations.
+As in past analyses [26], we consider the marginal probability of including each covariate into
+the model as being on the order of p-O(1). Moreover, we restrict the support of the prior
+to rule out unrealistically large models. As a specific computational methodology, we focus
+on an iterative, local-move and neighborhood-based procedure for sampling from the model
+space, which is motivated by the shotgun stochastic search [14].
+
+    Our main contribution is to provide conditions under which Bayesian posterior consistency
+
+                                                            2
+holds, and moreover, the mixing time grows linearly in p (up to logarithmic factor), implying
+that the chain is rapidly mixing. As a by-product, we provide conditions on the hyper-
+parameter g to achieve model-selection consistency. We also provide a counter-example to
+illustrate that although ruling out unrealistically large models is not necessary for achieving
+variable-selection consistency, it is necessary in order that the Metropolis-Hastings random
+walk is rapidly mixing. To be clear, while our analysis applies to a fully Bayesian procedure
+for variable selection, it is based on a frequentist point of view in assuming that the data are
+generated according to a true model.
+
+    There are a number of challenges associated with characterizing the computational com-
+plexity of Markov chain methods for Bayesian models. First, the posterior distribution of a
+Bayesian model is usually a much more complex object than the highly structured distribu-
+tions in statistical physics for which meaningful bounds on the Markov chain mixing times are
+often obtained (e.g. [6], [23], [21]). Second, the transition probabilities of the Markov chain
+are themselves stochastic, since they depend on the underlying data-generating process. In
+order to address these challenges, our analysis exploits asymptotic properties of the Bayesian
+model to characterize the typical behavior of the Markov chain. We show that under con-
+ditions leading to Bayesian variable-selection consistency, the Markov chain over the model
+space has a global tendency of moving towards the true data-generating model, even though
+the posterior distribution can be highly irregular. In order to bound the mixing time, we make
+use of the canonical path technique developed by Sinclair [31, 30] and Diaconis and Stroock
+[8]. More precisely, the particular canonical path construction used in our proof is motivated
+by examining the solution path of stepwise regression procedures for linear model selection
+(e.g., [40, 2]), where a greedy criterion is used to decide at each step whether a covariate is
+to be included or deleted from the curent model.
+
+    Overall, our results reveal that there is a delicate interplay between the statistical and
+computational properties of Bayesian models for variable selection. On the one hand, we
+show that concentration of the posterior is not only useful in guaranteeing desirable statistical
+properties such as parameter estimation or model-selection consistency, but they also have
+algorithmic benefits in certifying the rapid mixing of the Markov chain methods designed to
+draw samples from the posterior. On the other hand, we show that posterior consistency on
+its own is not sufficient for rapid mixing, so that algorithmic efficiency requires somewhat
+stronger conditions.
+
+    The remainder of this paper is organized as follows. Section 2 provides background on
+the Bayesian approach to variable selection, as well as Markov chain algorithms for sampling
+and techniques for analysis of mixing times. In Section 3, we state our two main results
+(Theorems 1 and 2) for a class of Bayesian models for variable selection, along with simulations
+that illustrate the predictions of our theory. Section 4 is devoted to the proofs of our results,
+with many of the technical details deferred to the appendices. We conclude in Section 5 with
+a discussion.
+
+2 Background and problem formulation
+
+In this section, we introduce some background on the Bayesian approach to variable selec-
+tion, as well some background on Markov chain algorithms for sampling, and techniques for
+analyzing their mixing times.
+
+                                                            3
+2.1 Variable selection in the Bayesian setting
+
+Consider a response vector Y  Rn and a design matrix X  Rn×p that are linked by the
+standard linear model
+
+                       Y = X + w, where w  N (0, 2In),                                      (1)
+
+and   Rp is the unknown regression vector. Based on observing the pair (Y, X), our goal
+is to recover the support set of --that is, to select the subset of covariates with non-zero
+
+regression weights, or more generally, a subset of covariates with absolute regression weights
+
+above some threshold.
+
+In generic terms, a Bayesian approach to variable selection is based on first imposing a
+
+prior over the set of binary indicator vectors, and then using the induced posterior (denoted
+
+by ( | Y )) to perform variable selection. Here each binary vector   {0, 1}p should be
+
+thought of as indexing the model which involves only the covariates indexed by . We make
+
+use of the shorthand || =  p    j  corresponding  to  the  number    of  non-zero  entries  in  ,
+                           j=1
+
+or the number of active covariates in the associated model. It will be convenient to adopt a
+
+dualistic view of  as both a binary indicator vector, and as a subset of {1, . . . , p}. Under this
+
+identification, the expression    for a pair of inclusion vectors (,  ) can be understood
+
+as that the subset of variables selected by  is contained in the subset of variables selected
+
+by  . Similarly, it will be legitimate to use set operators on those indicator vectors, such as
+
+   ,    and  \  . Using the set interpretation, we let X  Rn×|| denote the submatrix
+formed of the columns indexed by , and we define the subvector   R|| in an analogous
+
+manner. We make use of this notation in defining the specific hierarchical Bayesian model
+
+analyzed in this paper, defined precisely in Section 3.1 to follow.
+
+2.2 MCMC algorithms for Bayesian variable selection
+
+Past work on MCMC algorithms for Bayesian variable selection can be divided into two main
+classes--Gibbs samplers (e.g., [12, 16, 26]) and Metropolis-Hastings random walks (e.g. [14,
+13]). In this paper, we focus on a particular form of Metropolis-Hastings updates.
+
+    In general terms, a Metropolis-Hastings random walk is an iterative and local-move based
+procedure involving three steps:
+
+Step 1: Use the current state  to define a neighborhood N () of proposal states.
+
+Step 2: Choose a proposal state  in N () according to some probability distribution S(, ·)
+       over the neighborhood, e.g. the uniform distribution.
+
+Step 3: Move to the new state  with probability R(,  ), and stay in the original state 
+       with probability 1 - R(,  ), where the acceptance ratio is given by
+
+                           R(,  ) : = min 1, n( | Y ) S( , ) .                              (2)
+                                      n( | Y ) S(,  )
+
+In this way, for any fixed choice of the neighborhood structure N (), we obtain a Markov
+chain with transition probability given by
+
+                                                  if   N (),
+                 S(,  ) R(,  )                    if  / N ()  {}, and
+                                                  if  = .
+PMH(,  ) = 0
+
+                 
+                 1 -  = PMH(,  )
+
+                                   4
+    The specific form of Metropolis-Hastings update analyzed in this paper is obtained by
+randomly selecting one of the following two schemes to update , each with probability 0.5.
+
+Single flip update: Choose an index j  [p] uniformly at random, and form the new state
+        by setting j = 1 - j.
+
+Double flip update: Define the subsets S() = {j  [p] | j = 1} and let Sc() = {j 
+       [p] | j = 0}. Choose an index pair (k, )  S() × Sc() uniformly at random, and
+       form the new state  by flipping k from 1 to 0 and  from 0 to 1. (If the set S() is
+       empty, then we do nothing.)
+
+This scheme can be understood as a particular of the general Metropolis-Hastings scheme in
+
+terms of a neighborhood N () to be all models  that can be obtained from  by either
+
+changing one component to its opposite (i.e., from 0 to 1, or from 1 to 0) or switching the
+
+values of two components with different values.
+
+Letting dH (,  ) =     p    I(j  =  j )  denote  the  Hamming   distance  between     and    .  the
+                       j=1
+
+overall neighborhood is given by the union N () : = N1()  N2(), where
+
+N1() : =  | dH ( , ) = 1 , and
+N2() : =  | dH ( , ) = 2, and (k, )  S() × Sc() s.t. k = 1 - k and  = 1 -  .
+
+    With these definitions, the transition matrix of the previously described Metropolis-
+Hastings scheme takes the form
+
+                       1       min  1,  n( |Y )  ,              if   N1()
+                                        n(|Y )
+                         2  p
+                       
+
+                                 1       min  1,    n( |Y )  ,  if   N2()
+                                                    n(|Y )
+                         2 |S()| |Sc()|
+
+PMH(,   )           =                                                                           (3)
+
+                       0                                        if dH ( , ) > 2, and
+                       
+
+                       
+
+                       1 -  = PMH(,  ),                         if  = .
+
+2.3 Background on mixing times
+
+Let C be an irreducible, aperiodic Markov chain on the discrete state space M , and de-
+scribed by the transition probability matrix P  R|M |×|M | with stationary distribution .
+We assume throughout that C is reversible; i.e., it satisfies the detailed balance condition
+()P(,  ) = ( )P( , ) for all ,   M . It is easy to see that the previously described
+Metropolis-Hastings matrix PMH satisfies this reversibility condition. It is convenient to iden-
+tify a reversible chain with a weighted undirected graph G on the vertex set M , where two
+vertices  and  are connected if and only if the edge weight Q(,  ) : = ()P(,  ) is
+strictly positive.
+
+    For   M and any subset S  M , we write P(, S) =  S P(,  ). If  is the
+initial state of the chain, then the total variation distance to the stationary distribution after
+t iterations is
+
+                        (t) = Pn(, ·) - (·) T V : = max Pn(, S) - (S) .
+
+                                                                                            SM
+
+The -mixing time is given by
+
+         : = max min t  N | (t )  for all t  t ,                                                (4)
+                         M
+
+                                              5
+which measures the number of iterations required for the chain to be within distance  (0, 1)
+of stationarity. The efficiency of the Markov chain can be measured by the dependence of 
+on the difficulty of the problem, for example, the dimension of the parameter space and the
+sample size. In our case, we are interesed in the dependence of  on the covariate dimension p
+and the sample size n. Of particular interest is whether the chain is rapidly mixing, meaning
+that the mixing time grows at most polynomially in the pair (p, n), or slowly mixing, meaning
+that the mixing time grows exponentially.
+
+3 Main results and their consequences
+
+The analysis of this paper applies to a particular family of hierarchical Bayes models for
+variable selection. Accordingly, we begin by giving a precise description of this family of
+models, before turning to statements of our main results and a discussion of their consequences.
+Our first result (Theorem 1) provides sufficient conditions for posterior concentration, whereas
+our second result (Theorem 2) provides sufficient conditions for rapid mixing of the Metropolis-
+Hastings updates.
+
+3.1 Bayesian hierarchical model for variable selection
+
+In addition to the standard linear model (1), the Bayesian hierarchical model analyzed in this
+paper involves three other ingredients: a prior over the precision parameter  (or inverse noise
+variance) in the linear observation model, a prior on the regression coefficients, and a prior
+over the binary indicator vectors. More precisely, it is given by
+
+M :  Linear model: Y = X + w, w  N (0, -1In)            (5a)
+
+     Precision prior ()   1                             (5b)
+
+                          
+
+     Regression prior      |   N (0, g -1(XT X)-1)      (5c)
+
+     Sparsity prior       1 ||        I[||  s0].        (5d)
+                       () 
+                                   p
+
+For each model M, there are three parameters to be specified: the integer s0 < n is a
+prespecified upper bound on the maximum number of important covariates, the hyperpa-
+
+rameter g > 0 controls the degree of dispersion in the regression prior, and the hyperpa-
+
+rameter  > 0 penalizes models with large size. For a given integer s0  {1, . . . , p}, we let
+M (s0) = {M | ||  s0} the class of all models involving at most s0 covariates.
+
+    Let us make a few remarks on our choice of Bayesian model. First, the choice of covariance
+matrix in the regression prior--namely, involving XT X--is made for analytical convenience,
+in particular in simplifying the posterior. A more realistic choice would be the independent
+
+prior
+
+      |   N (0, g -1I||).
+
+However, the difference between these choices will be negligible when g n, which, as shown
+by our theoretical analysis, is the regime under which the posterior is well-behaved. Another
+popular choice for the prior of  is the spike-and-slab prior [16], where for each covariate Xj,
+one specifies the marginal prior for j as a mixture of two normal distributions, one with a
+substantially larger variance than the other, and j can be viewed as the latent class indicator
+
+                       6
+for this mixture prior. Our primary motivation in imposing Zellner's g-prior is in order to
+streamline the theoretical analysis: it leads to an especially simple form of the marginal
+likelihood function. However, we note that our conclusions remain valid under essentially
+the same conditions when the independent prior or the spike-and-slab prior is used, but with
+much longer proofs. The sparsity prior on  is similar to the prior considered by Narisetty and
+He [26] and Castillo et al. [7]. The p- decay rate for the marginal probability of including
+each covariate imposes a vanishing prior probability on the models of diverging sizes. The only
+difference is that we put a constraint ||  s0 to rule out models with too many covariates.
+As will be clarified in the sequel, while this additional constraint is not needed for Bayesian
+variable-selection consistency, it is necessary for rapid mixing of the MCMC algorithm that
+we analyze.
+
+    Recall from our earlier set-up that the response vector Y  Rn is generated from the stan-
+dard linear model Y = X + w, where w  N (0, 02In),   Rp is the unknown regression
+vector, and 0 the unknown noise standard deviation. In rough terms, the goal of variable
+selection is to determine the subset S of "influential" covariates. In order to formalize this
+notion, let us fix a constant C > 0 depending on (0, n, p) that quantifies the minimal signal
+size requirement for a covariate to be "influential". We then define S = S(C) to consist of
+the indices with relatively large signal--namely
+
+S : = j  [p] | |j|  C ,                                             (6)
+
+and our goal is to recover this subset. Thus, the "non-influential" coefficients Sc are allowed
+to be non-zero, but their magnitudes are constrained.
+
+    We let  be the indicator vector that selects the influential covariates, and let s : = ||
+
+be the size of the corresponding "true" model M. Without loss of generality, we may assume
+that the first s components of  are ones, and the rest are zeros. We assume throughout this
+
+section that we are in the high-dimensional regime where p  n, since the low-dimensional
+
+regime where n < p is easier to analyze. For any symmetric matrix Q, let min(Q) and max(Q)
+denote its smallest and largest eigenvalues. Our analysis involves the following assumptions:
+
+Assumption A (Conditions on ): The true regression vector has components  = (S , Sc)
+that satisfy the bounds
+
+Full  condition:              1 X       2       g  02  log p
+                                n       2                n
+
+                              1                            log  p   (7a)
+                                n                            n   ,
+Off-support Sc condition:          XSc  S c  2     L   02
+                                             2
+
+for some universal constant L.
+    In the simplest case, the true regression vector  is S-sparse (meaning that Sc = 0), so
+
+that the off-support condition holds trivially. As for the full  condition, it is known [28] that
+some form of upper bound on the norm  2 in terms of the g-hyperparameter is required
+in order to prove Bayesian model selection consistency [28]. The necessity of such a condition
+
+is a manifestation of the so-called information paradox of g-priors [22].
+
+    Our next assumption involves an integer parameter s, which is set either to a multiple of
+the true sparsity s (in order to prove posterior concentration) or the truncated sparsity s0
+(in order to prove rapid mixing).
+
+                           7
+Assumption B (Conditions on the design matrix): The design matrix has been nor-
+
+malized so that  Xj  2  =n  for   all j  = 1, . . . , p;  moreover,          letting  Z   N (0, In),  there  exist
+                     2
+
+constants  > 0 and L <  such that
+
+Lower restricted eigenvalue (RE(s)):           min min             1  XT  X   , and
+ Sparse projection condition (SI(s)):                              n          I -  Xk, Z
+                                               ||s
+
+                                                                          1                          1
+                                                     max max                                       L log p,
+                                               EZ    ||s k[p]\ n
+                                                                                                     2
+                                                                                                            (7b)
+
+where  denotes projection onto the span of {Xj, j  }. The lower restricted eigenvalue
+
+condition is a mild requirement, and one that plays a role in the information-theoretic limita-
+
+tions of variable selection [34]. On the other hand, the sparse projection condition can always
+
+be satisfied by choosing L = O(s0).      To see this, notice that            1       (I - )Xk      1 and there
+                                                                               n
+
+are at most ps0 different choice of distinct pair (, k). Therefore, by the Gaussianity of gG,
+
+the sparse projection condition always holds with L = 4-1s0. On the other extreme, if the
+
+design matrix X has orthogonal columns, then I -  Xk = Xk. As a consequence, due
+to the same argument, the sparse projection condition holds with L = 4-1, which depends
+
+neither on s nor on s0.
+
+Assumption C (Choices of prior hyperparameters): The noise hyperparameter g and
+sparsity penalty hyperparameter  > 0 are chosen such that
+
+                                        g p2 for some  > 0, and
+                                                                                                                     (7c)
+
+                    +   C1(L + L) + 2 for some universal constant C1 > 0.
+
+In the low-dimensional regime p = o(n), the g-prior with either the unit information prior
+g = n, or the choice g = max{n, p2} have been recommended [18, 10, 32]. In the intermediate
+regime where p = O(n), Sparks et al. [32] show that g must grow faster than p n-1 log p for
+the Bayesian linear model without variable selection to achieve posterior consistency. These
+considerations motivate us to choose the hyperparameter for the high-dimensional setting as
+g p2 for some  > 0, and our theory establishes the utility of this choice.
+
+Assumption D (Sparsity control): For a constant C0 > 4, one of the two following
+conditions holds:
+
+Version D(s): We set s0 : = p in the sparsity prior (5d), and the true sparsity s is
+
+bounded as s                1    n    -  16L02       for some constant K  4 +  + cL.
+                         8C0K  log p
+
+Version D(s0): The sparsity parameter s0 in the prior (5d) satisfies the sandwich relation
+
+                        2-2 (X) + 1 s              s0                 1        n  p  -  16L02  ,             (7d)
+                                                                   8C0 K     log
+
+where  (X )      :=  max  |||(XT  X   )-1  XT  X     \  |||2op  .
+
+                     M
+
+    Assumptions A, B, C and D are a common set of conditions assumed in the existing
+
+literature (e.g., [28, 26]) for establishing Bayesian variable-selection consistency; i.e., that the
+posterior probability of the true model n(|Y )  1 as n  .
+
+                                                     8
+3.2 Sufficient conditions for posterior consistency
+
+Our first result characterizes the behavior of the (random) posterior n(· | Y ). As we men-
+tioned in Section 2.1, Bayesian variable-selection consistency does not require that the sparsity
+
+prior (5d) be truncated at some sparsity level much less than p, so that we analyze the hier-
+archical model with s0 = p, and use the milder Assumption D(s). The reader should recall
+from equation (6) the threshold parameter C that defines the subset S = S(C) of influential
+covariates.
+
+Theorem 1 (Posterior concentration). Suppose that Assumption A, Assumption B with
+s = Ks, Assumption C, and Assumption D(s) hold. If the threshold C satisfies
+
+                        C2            c0(L   +  L  +     +  )  02  log  p                                        (8)
+                                                                     n   ,
+
+then we have n( | Y )  1 - c1 p-1 with probability at least 1 - c2 p-c3.
+
+    The threshold condition (8) requires the set of influential covariates to have reasonably
+
+large magnitudes; this type of signal-to-noise condition is needed for establishing variable
+
+selection consistency of any procedure [34]. We refer to it as the min-condition in the rest of
+the paper. Due to the mildness of Assumption A (conditions on ), the claim in the theorem
+holds even when the true model is not exactly sparse: Assumption A allows the residual Sc
+to be nonzero as long as it has small magnitude.
+
+    It is worth noting that the result of Theorem 1 covers two regimes, corresponding to
+
+different levels of signal-to-noise ratio. More precisely, it is useful to isolate the following two
+
+mutually exclusive possibilities:
+
+High SNR:          S = j  [p] | j = 0           and      min   |j|2       c0(  +        +     L)    02  log  p   (9a)
+Low SNR:                                                                                                  n   ,
+                                                         jS
+
+                   S =  and         1 X         2        +-2                   02  log  p  .                     (9b)
+                                      n         2                     -L             n
+
+                                                             C1
+
+In terms of the parameter L in Assumption A, The high SNR regime corresponds to L = 0,
+
+whereas  the  low  SNR  regime  corresponds     to    L  =  +-2      -    L.   The intuition for the low
+                                                               C1
+
+SNR setting is that the signal in every component is so weak that the "penalty" induced by
+
+hyperparameters (g, ) completely overwhelms it. Theorem 1 guarantees that the posterior
+
+concentrates around the model M under the high SNR condition, and under the null model
+
+M0 under the low SNR condition. More precisely, we have:
+
+Corollary 1. Under the conditions of Theorem 1, with probability at least 1 - c2 p-c3:
+
+(a) Under the high SNR condition (9a), we have n( | Y )  1 - c1 p-1.
+
+(b) Conversely, under the low SNR condition (9b), we have n(0 | Y )  1 - c1 p-1.
+
+    Corollary 1 provides a complete characterization of the high or low SNR regimes, but it
+does not cover the intermediate regime, in which some component j of  is sandwiched as
+
+                   +-2              02  log  p   |j|2         c0(  +        +  L)  02  log    p  .               (10)
+                                -L        n                                              n
+
+                       C1
+
+On one hand, Theorem 1 still guarantees a form of Bayesian variable selection consistency
+in this regime. However, the MCMC algorithm for sampling from the posterior can exhibit
+
+                                                   9
+slow mixing due to multimodality in the posterior. In Appendix A.2, we provide a simple
+example that satisfies the conditions of Theorem 1, so that posterior consistency holds, but
+the Metropolis-Hastings updates have mixing time growing exponentially in p. This example
+reveals a phenomenon that might seem counter-intuitive at first sight: sharp concentration of
+the posterior distribution need not lead to rapid mixing of the MCMC algorithm.
+
+3.3 Sufficient conditions for rapid mixing
+
+With this distinction in mind, we now turn to developing sufficient conditions for Metropolis-
+Hastings scheme (3) to be rapidly mixing. As discussed in Section 2, this rapid mixing ensures
+that the number of iterations required to converge to an -ball of the stationary distribution
+grows only polynomially in the problem parameters. The main difference in the conditions
+is that we now require Assumption B--the RE and sparse projection conditions--to hold
+with parameter s = s0, as opposed to with the smaller parameter s = Ks s0 involved in
+Theorem 1.
+
+Theorem 2 (Rapid mixing guarantee). Suppose that Assumption A, Assumption B with
+s = s0, Assumption C, and Assumption D(s0) all hold. Then under either the high SNR
+condition (9a) or the low SNR condition (9b), there are universal constants c1, c2 such that,
+for any  (0, 1), the -mixing time of the Metropolis-Hastings chain (3) is upper bounded as
+
+  c1 ps02 c2 (n + s0) log p + log(1/ ) + 2                                             (11)
+
+with probability at least 1 - 4p-c1.
+
+    According to our previous definition (4) of the mixing time, Theorem 2 characterizes
+
+the worst case mixing time, meaning the number of iterations when starting from the worst
+
+possible initialization. If we start with a good intial state--for example, the true model
+ would be a nice though impractical choice--then we can remove the n term in the upper
+bound (11). In this way, the term c1c2 nps20 log p can be understood as the worst-case number
+of iterations required in the burn-in period of the MCMC algorithm.
+
+    Theorem 1 and Theorem 2 lead to the following corollary, stating that after O( nps02 log p)
+iterations, the MCMC algorithm will output  with high probability.
+
+Corollary 2. Under the conditions of Theorem 2, for any fixed iterate t such that
+
+                                  t  c1 ps02 c2 (n + s0) log p + log p + 2 ,
+the iterate t from the MCMC algorithm matches  with probability at least 1 - c2 p-c3.
+
+    As with Corollary 1, Theorem 2 does not characterize the intermediate regime in which
+some component j of  satisfies the sandwich inequality (10). Based on our simulations,
+we suspect that the Markov chain might be slowly mixing in this regime, but we do not have
+
+a proof of this statement.
+
+3.4 Illustrative simulations
+
+In order to illustrate the predictions of Theorem 2, we conducted some simulations. We also
+provide an example for which a frequentist method such as the Lasso fails to perform correct
+variable selection while our Bayesian method succeeds.
+
+                                      10
+3.4.1 Comparison of mixing times
+
+In order to study mixing times and their dependence on the model structure, we performed
+
+simulations for linear models with random design matrices, formed by choosing row xi  Rp
+i.i.d. from a multivariate Gaussian distribution. In detail, setting the noise variance 2 = 1,
+
+we considered two classes of linear models with random design matrices X  Rn×p, in each
+case formed with i.i.d. rows xi  Rp:
+
+Independent design:  Y  N (X, 2In) with xi  N (0, Ip) i.i.d.;
+Correlated design:   Y  N (X, 2In) with xi  N (0, ) i.i.d. and jk = e-|j-k|.
+
+In all cases, we choose a design vector   Rp with true sparsity s = 10, taking the form
+
+ = SNR               2 log p  2, -3, 2, 2, -3, 3, -2, 3, -2, 3, 0, · · · , 0  T   Rp,
+                        n
+
+where SNR > 0 is a signal-to-noise parameter. Varying the parameter SNR allows us
+to explore the behavior of the chains when the model lies on the boundary of the min-
+condition. We performed simulations for the SNR parameter SNR  {0.5, 1, 2, 3}, sample
+sizes n  {300, 900}, and number of covariates p  {500, 5000}. In all cases, we specify our
+prior model by setting the dispersion hyperparameter g = p3 and the expected maximum
+model size s0 = 100.
+
+    Figure 1 plots the typical trajectories of log-posterior probability versus the number of
+iterations of the Markov chain under the independent design. In the strong signal regime
+(SNR = 3), the true model receives the highest posterior probability, and moreover the
+Metropolis-Hastings chain converges rapidly to stationarity, typically within 3p iterations.
+This observation is confirmation of our theoretical prediction of the behavior when all nonzero
+components in  have relative high signal-to-noise ratio (S = {j : j = 0}). In the interme-
+diate signal regime (SNR = 1), Bayesian variable-selection consistency typically fails to hold,
+and here, we find that the chain converges even more quickly to stationarity, typically within
+1.5p iterations. This observation cannot be fully explained by our theory. A simulation to
+follow using a correlated design shows that it is not a robust phenomenon: the chain can have
+poor mixing performance in this intermediate signal regime when the design is sufficiently
+correlated.
+
+    In order to gain further insight into the algorithm's performance, for each pair {X, Y } we
+ran the Metropolis-Hastings random walk based on six initializations: the first three of them
+are random perturbations of the null model, whereas the remaining three are the true model.
+We made these choices of initialization because our empirical observations suggest that the
+null model and the true model tend to be near local modes of the posterior distribution. We
+run the Markov chain for 20p iterations and use the Gelman-Rubin (GR) scale factor [11]
+to detect whether the chains have reached stationarity. More precisely, we calculate the GR
+scale factor for the coefficient of determination summary statistics
+
+                     R2       =  Y  T  Y  ,      for   {0, 1}p,
+
+                                    Y  2
+                                       2
+
+where  denotes the projection matrix onto the span of {Xj, j  }. Since the typical failing
+of convergence to stationarity is due to the multimodality of the posterior distribution, the
+GR scale factor can effectively detect the problem. If the chains fail to converge, then the
+GR scale factor will be much larger than 2; otherwise, the scale factor should be close to 1.
+
+                                             11
+-5200                                                                                                        -4800
+                                                                                                             -5000
+-5400                                                                                                        -5200
+                                                                                                             -5400
+log-posterior-5600                                                                                           -5600
+                                                                                              log-posterior  -5800
+                                                                                                             -6000
+-5800            true model                                                                                                   true model
+                 null model                                                                                          0        null model
+-6000            highest probability model                                                                                    highest probability model
+        0
+           1  2    3  4                          5                                                                      1  2    3  4                          5
+
+           iterations over number of covariates                                                                         iterations over number of covariates
+
+              (a)                                                                                                          (b)
+
+Figure 1. Log-posterior probability versus the number of iterations (divided by the num-
+ber of covariates p) of 100 randomly initialized Markov chains with n = 500, p = 1000 and
+SNR  {1, 3} in the independent design. In all cases, each grey curve corresponds to one tra-
+jectory of the chain (100 chains in total). Half of the chains are initialized at perturbations of
+the null model and half the true model. (a) Weak signal case: SNR = 1. (b) Strong signal
+case: SNR = 3 (the posterior probability of the true model coincides with that of the highest
+probability model).
+
+Convergence of the chain within at most 20p iterations provides empirical confirmation of our
+theoretical prediction that the mixing time grows at most linearly in the covariate dimension
+p. (As will be seen in our empirical studies, the sample size n and s0 have little impact on
+the mixing time, as long as s0 remains small compared to n.)
+
+    We report the percentage of simulated datasets for which the GR scale factor from six
+Markov chains is less than 1.5 (success). Moreover, to see whether the variable-selection
+procedure based on the posterior is consistent, we also compute the difference between the
+highest posterior probability found during the Markov chain iterations and the posterior
+probability of the true model (H-T) and the difference in posterior probabilities between
+the null model and the true model (N-T). If the true model receives the highest posterior
+probability, then H-T would be 0; if the null model receives the highest posterior probability,
+then N-T would be the same as H-T.
+
+    Table 1 shows the results for design matrices drawn from the independent ensemble. In
+this case, the Markov chain method has fast convergence in all settings (it converges within
+20p iterations). From the table, the setting SNR = 0.5 (respectively SNR  2) corresponds
+to the weak (respectively strong) signal regime, while SNR = 1 is in the intermediate regime
+where neither the null model nor the true model receives the highest posterior probability.
+Table 2 shows the results for design matrices drawn from the correlated ensemble. Now the
+Markov chain method exhibits poor convergence behavior in the intermediate regime SNR = 1
+with n = 500, but still has fast convergence in the weak and strong signal regimes. However,
+with larger sample size n = 1000, the Markov chain has fast convergence in all settings on p
+and SNR. Comparing the results under the two different designs, we find that correlations
+among the covariates increases the difficulty of variable-selection tasks when Markov chain
+methods are used. Moreover, the results under the correlated design suggest that there exists
+a regime, characterized by n, p and SNR, in which the Markov chain is slowly mixing. It
+would be interesting to see whether or not this regime characterizes some type of fundamental
+
+                                                           12
+(n, p)      SNR = 0.5   SNR = 1          SNR = 2  SNR = 3
+                           100              100      100
+        SP  100            24.6               0        0
+                           11.4           -210.9   -383.6
+(500, 1000) H-T 113.4      100              100      100
+                           33.2               0        0
+        N-T 113.4          17.4           -216.6   -395.9
+                           100              100      100
+        SP  100            34.8               0        0
+                           -6.9           -342.4   -649.5
+(500, 5000) H-T 148.7      100              100      100
+                           32.8               0        0
+        N-T 148.7          -4.2           -377.6   -743.4
+
+        SP  100
+
+(1000, 1000) H-T 117.1
+
+        N-T 117.1
+
+        SP  100
+
+(1000, 5000) H-T 160.4
+
+        N-T 160.4
+
+Table 1. Convergence behaviors of the Markov chain methods with sample sizes
+n  {500, 1000}, ambient dimensions p  {1000, 5000}, and SNR  {0.5, 1, 2, 3} in the inde-
+pendent design. SP: proportion of successful trials (in which GR 1.5); H-T: log posterior
+probability difference between the highest probability model and the true model; N-T: log
+posterior probability difference between the null model and the true model. Each quantity is
+computed based on 20 simulated datasets.
+
+limit on computationally efficient procedures for variable selection. We leave this question
+open as a possible future direction.
+
+3.4.2 Bayesian methods versus the Lasso
+
+Our analysis reveals one possible benefit of a Bayesian approach as opposed to 1-based
+approaches such as the Lasso. It is well known that the performance of the Lasso and related
+ 1-relaxations depends critically on fairly restrictive incoherence conditions on the design
+matrix. Here we provide an example of an ensemble of linear regression problems for which
+the Lasso fails to perform correct variable selection whereas the Bayesian approach succeeds
+with high probability.
+
+    For Lasso-based methods, the irrepresentable condition
+
+            max max     XkT X (XT X )-1  1<1               (12)
+
+            ||=s k/
+
+is both sufficient and necessary for variable-selection consistency [24, 41, 35]. In our theory for
+the Bayesian approach, the analogous conditions are the upper bound in Assumption D(s0)
+on the maximum model size, namely
+
+            s0  2-2 (X) + 1 s,                             (13)
+
+as well as the sparse projection condition in Assumption B. Roughly speaking, the first con-
+
+dition is needed to ensure that saturated models, i.e., models with size s0, receive negligible
+posterior probability, such that if too many unimportant covariates are included the removal
+
+of some of them does not hurt the goodness of fit (see Lemma 8 in the Appendix). This
+
+condition is weaker than the irrepresentable condition since we can always choose s0 large
+enough so that s0  2-2 (X) + 1 s holds, as long as Assumption B is not violated.
+
+                        13
+                (n, p)              SNR = 0.5            SNR = 1               SNR = 2          SNR = 3
+                                                             95                    80              100
+                         SP             100                 75.2                    0                0
+                                                            71.2                                 -275.8
+           (500, 1000) H-T 123.4                             15                 -107.3             100
+                                                            81.0                  100                0
+                         N-T 123.4                          78.7                                 -288.9
+                                                            100                     0              100
+                         SP             100                 75.1                -102.1               0
+                                                           -67.0                  100            -431.7
+           (500, 5000) H-T 170.0                            100                                    100
+                                                            61.9                    0                0
+                         N-T 170.0                         -58.8                -180.8           -445.4
+                                                                                  100
+                         SP             100
+                                                                                    0
+           (1000, 1000) H-T 138.7                                               -204.2
+
+                         N-T 138.7
+
+                         SP             100
+
+           (1000, 5000) H-T 161.8
+
+                         N-T 161.8
+
+     Table 2. Convergence behavior of the Markov chain methods with sample size n  {500, 1000},
+     ambient dimension p  {1000, 5000}, and parameter SNR  {0.5, 1, 2, 3} for the case of corre-
+     lated design. SP: proportion of successful trials (in which GR  1.5); H-T: log posterior
+     probability difference between the highest probability model and the true model; N-T: log
+     posterior probability difference between the null model and the true model. Each quantity is
+     computed based on 20 simulated datasets.
+
+     As an example, consider a design matrix X  Rn×p that satisfies
+
+                                             1 µ µ · · · · · · µ
+
+                         1 XT X              µ 1 0 · · · · · · 0
+                         n
+                                             µ                                      
+                                                    0    1    ···        ···   0         Rp×p,
+                                 =  bad  :=         ...  ...   ...        ...         
+                                               ...                             ...  
+                                                                                    
+                                                                                    
+
+                                             µ 0 0 ··· ··· 1
+
+with µ = (2p)-1. (When p > n, we may consider instead a random design X where the rows
+
+of X are generated i.i.d. from the p-variate normal distribution N (0, bad).) This example
+was previously analyzed by Wainwright [34], who shows that it is an interesting case in which
+
+there is a gap between the performance of 1-based variable-selection recovery and that of an
+
+optimal (but computationally intractable) method based on searching over all subsets. For
+
+a design matrix of this form,    we  have  max||=s, k/ XkT X (XT X )-1 1                        sµ, so          that the
+irrepresentable condition fails  if  s >   2 p. Consequently, by known results                  on the          necessity
+
+of the irrepresentable condition for Lasso [41, 35], it will fail in performing variable selection
+
+for this ensemble.
+
+     On the other hand, for this example, it can be verified that Assumption D(s0) is satisfied
+
+with s0  13s, and moreover, that the the RE(s) condition in Assumption B holds with
+
+  =  1/2,  whereas  the  sparse  projection  condition   is   satisfied        with   L  =  16(1 + s02  µ2)  =  16 +  4s20  .
+                                                                                                                       p
+
+The only consequence for taking larger values of L is in the min-condition: in particular,
+
+the  threshold  C   is  always   lower  bounded     by   L    log  p  .  Consequently, our theory shows that
+                                                                n
+
+the Bayesian procedure will perform correct variable selection with high probability for this
+
+ensemble.
+
+     To compare the performance of the Bayesian approach and the Lasso under this setup,
+
+we generate our design matrix from a Gaussian version of this ensemble; i.e., the rows
+
+of X are generated i.i.d. from the p-variate normal distribution N (0, bad). We choose
+(n, p, s) = (300, 80, 20) so that sµ = 10/ 80  1.1 > 1, i.e. the irrepresentable condition
+
+                                                    14
+log marginal likelihood difference       0
+                                     -50
+                                    -100
+                                    -150
+                                    -200
+
+                                            BVS  LASSO
+
+    Figure 2. Boxplots indicating variable-selection performance of the Bayesian approach (BVS)
+    and the Lasso. The boxplots are based on the logarithms of the ratio between the posterior
+    probability of the selected model and the true model over 100 replicates. The model selected
+    by the Bayesian approach is the median probability model [3] and the regularization parameter
+    of the Lasso is chosen by cross-validation.
+
+fails. Figure 2 shows the variable-selection performance for the Bayesian approach and the
+Lasso over 100 replicates. We report the logarithm of the ratio between the posterior proba-
+bility (see equation (42)) of the selected model and the true model, where we use the median
+probability model [3] as the selected model of the Bayesian approach. If a variable-selection
+approach has good performance, then we will expect this logarithm to be close to zero. Fig-
+ure 2 shows that the Bayesian approach almost always selects the true model while the Lasso
+fails most of the time, which is consistent with the theory.
+
+4 Proofs
+
+We now turn to the proofs of our main results, beginning with the rapid mixing guarantee
+in Theorem 2, which is the most involved technically. We then use some of the machinery
+developed in Theorem 2 to prove the posterior consistency guarantee in Theorem 1. Finally,
+by combining these two theorems we prove Corollary 2. In order to promote readability, we
+defer the proofs of certain more technical results to the appendices.
+
+4.1 Proof of Theorem 2
+
+For the purposes of this proof, let P denote the transition matrix of the original Metropolis-Hastings
+sampler (3). Now consider instead the transition matrix P : = P/2 + I/2, corresponding to
+a lazy random walk that has a probability of at least 1/2 in staying in its current state. By
+construction, the smallest eigenvalue of P will always be nonnegative, and as a consequence,
+the mixing time of the Markov chain C is completely determined by the second largest eigen-
+value 2 of P. The difference Gap(P) : = 1 - 2 is known as the spectral gap, and for any
+
+                                                           15
+lazy Markov chain, we have the sandwich relation
+
+            1 (1 - Gap(P))                                 log 1/ min () + log(1/ )
+                                 log 1/(2 )                             M
+                                                                                            .  (14)
+            2 Gap(P)                                                    Gap(P)
+
+See the papers [30, 37] for bounds of this form.
+
+    Using this sandwich relation, we claim that it suffices to show that there are universal
+constants (c1, c2) such that with probability at least 1 - 4p-c1, the spectral gap of the lazy
+transition matrix P is lower bounded as
+
+                                                 Gap(P)     c2    .                            (15)
+                                                           p s02
+
+To establish the sufficiency of this intermediate claim, we apply Theorem 1 and make use
+of the expression (42) for the posterior distribution, thereby obtaining that for   M , the
+posterior probability is lower bounded as
+
+                 n(        |  Y  )  =  n(  |  Y  )  ·  n( | Y )
+                                                       n( | Y )
+
+                                     e-2/p · (p 1 + g)-(||-||) ·        1 + g(1 - R2 ) n/2
+                                                                        1 + g(1 - R2 ) n/2
+
+                                     e-2/p · p-(1+/2)s0 · p-n/2
+
+with probability at least 1 - 4p-c1. Combining the above two displays with the sandwich
+relation (14), we obtain that there exist constants (c1, c2) such that for  (0, 1),
+
+                                  c1 ps20 c2 (n + s0) log p + log(1/ ) + 2
+with probability at least 1 - 4p-c1.
+
+    Accordingly, the remainder of our proof is devoted to establishing the spectral gap bound (15),
+and we do so via a version of the canonical path argument [30]. Let us begin by describing
+the idea of a canonical path ensemble associated with a Markov chain. Given a Markov chain
+C with state space M , consider the weighted directed graph G(C) = (V, E) with vertex set
+V = M and edge set E in which an ordered pair e = (,  ) is included as an edge with
+weight Q(e) = Q(,  ) = ()P(,  ) if and only if P(,  ) > 0. A canonical path ensemble
+T for C is a collection of paths that contains, for each ordered pair (,  ) of distinct vertices,
+a unique simple path T, in the graph that connects  and  . We refer to any path in the
+ensemble T as a canonical path.
+
+    In terms of this notation, Sinclair [30] shows that for any reversible Markov chain and any
+choice of canonical path T , the spectral gap of P is lower bounded as
+
+                                              Gap(P)       1         ,                         (16)
+
+                                                         (T ) (T )
+
+                                                 1-2
+
+where (T ) corresponds to the length of a longest path in the ensemble T , and the quantity
+
+(T )  :  =  max    1           ()( ) is known as the path congestion parameter.
+                 Q(e)
+            eE         T,     e
+
+    In order to apply this approach to our problem, we need to construct a suitable canonical
+path ensemble T . To begin with, let us introduce some notation for operations on simple
+paths. For two given paths T1 and T2:
+
+                                                       16
+    · Their intersection T1  T2 corresponds to the subset of overlapping edges. (For instance,
+       if T1 = (1, 1, 1)  (0, 1, 1)  (0, 0, 1)  (0, 0, 0) and T2 = (0, 0, 1)  (0, 0, 0), then
+       T1  T2 = (0, 0, 1)  (0, 0, 0).)
+
+    · If T2  T1, then T1 \ T2 denotes the path obtained by removing all edges in T2 from
+       T1. (With the same specific choices of (T1, T2) as above, we have T1 \ T2 = (1, 1, 1) 
+       (0, 1, 1)  (0, 0, 1).)
+
+    · We use T¯1 to denote the reverse of T1. (With the choice of T1 as above, we have
+       T¯1 = (0, 0, 0)  (0, 0, 1)  (0, 1, 1)  (1, 1, 1).)
+
+    · If the endpoint of T1 and the starting point of T2 are the same, then we define the union
+       T1  T2 as the path that connects T1 and T2 together. (If T1 = (0, 0, 0)  (0, 0, 1) and
+       T2 = (0, 0, 1)  (0, 1, 1), then their union is given by T1  T2 = (0, 0, 0)  (0, 0, 1) 
+       (0, 1, 1).)
+
+    We now turn to the construction of our canonical path ensemble. At a high level, our
+construction is inspired by the variable-selection paths carved out by greedy stepwise variable-
+selection procedures (e.g., [40, 2]).
+
+Canonical path ensemble construction for M : First, we construct the canonical path
+T, from any   M to the true model . The following construction will prove helpful.
+We call a set R of canonical paths memoryless with respect to the central state  if: (1) for
+any state   M satisfying  = , there exists a unique simple path T, in R that connects
+ and ; (2) for any intermediate state   M on any path T, in R, the unique path
+T, in R that connects  and  is the sub-path of T, starting from  and ending at .
+Intuitively, this memoryless property means that for any intermediate state on any canonical
+path towards the central state, the next move from this intermediate state towards the central
+state does not depend on the history. A memoryless canonical path ensemble has the property
+that in order to specify the canonical path connecting any state   M and the central state
+, we only need to specify which state to move to from any  =  in M ; i.e., we need a
+transition function G : M \ {}  M that maps the current state   M to a next state
+G()  M . For simplicity, we define G() =  to make M as the domain of G. Clearly,
+each memoryless canonical path ensemble with respect to a central state  corresponds to
+a transition function G with G() = , but the converse is not true. For example, if there
+exist two states  and  so that G() =  and G( ) = , then G is not the transition
+function corresponding to any memoryless canonical path ensemble. However, every valid
+transition function G gives rise to a unique memoryless canonical path set consisting of paths
+connecting any   M to , with  corresponding to the fixed point of G. We call function
+G a valid transition function if there exists a memoryless canonical path set for which G is
+the corresponding transition function. The next lemma provides a suffcient condition for a
+function G : M \ {}  M to be valid, which motivates our construction to follow. Recall
+that dH denotes the Hamming metric between a pair of binary strings.
+
+Lemma 1. If a function G : M \ {}  M satisfies that for any state   M \ , the
+Hamming distance between G() and  is strictly less than the Hamming distance between 
+and , then G is a valid transition function.
+
+Proof. Based on this function G, we can construct the canonical path T, from any state
+  M to  by defining T, as   G()  G2()  . . .  Gk (), where Gk : = G  . . .  G
+
+                                                           17
+denotes the k-fold self-composition of G for any k  N and k : = mink{Gk() = }. In order
+to show that the set {T, :   M ,  = } is a memoryless canonical path set, we only
+
+need to verify two things:
+
+  (a) for any  = , T, is a well-defined path; i.e., it has finite length and ends at , and
+
+  (b) for any  = , T, is a simple path.
+
+By our assumption, the function F : M  R defined by F () = dH (, ) is strictly decreasing
+along the path T, for  = . Because F only attains a finite number of values, there exists
+a smallest k such that Gk+1() = Gk() for each k  k, implying that Gk () is a fixed point
+of G. Since  is the unique fixed point of G, we must have Gk () = , which proves the first
+claim. The second claim is obvious since the function F defined above is strictly decreasing
+along the path T,, which means that the states on the path T, are all distinct.
+
+    Equiped with this lemma, we start constructing a memoryless set of canonical paths from
+any state   M to  by specifying a valid G function. First, we introduce some definitions
+on the states. A state  =  is called saturated if || = s0 and unsaturated if || < s0. We call
+a state  =  overfitted if it contains all influential covariates, i.e.   , and underfitted if
+
+it does not contain at least one influential covariate. Recall the two updating schemes in our
+
+Metropolis-Hastings (MH) sampler: single flip and double flips. We accordingly construct the
+
+transition function G as follows.
+
+(i) If  =  is overfitted, then we define G() to be  , which is formed by deleting the
+    least influential covariate from , i.e. j = j for any j =  and   = 0, where  is
+    the index from the set  \  of uninfluential covariates that minimizes the difference
+
+     X   2  -  \{ }X                       2  ,
+         2                                 2
+
+where  denotes the projection onto the span of {Xj, j  }. This transition remsem-
+
+bles the backward deletion step in the stepwise variable-selection procedure and involves
+the single flip updating scheme of the MH algorithm. By construction, if  =  is over-
+fitted, then dH (G(), ) = dH (G(), ) - 1.
+
+(ii) If  =  is underfitted and unsaturated, then we define G() to be  , which is formed
+     by adding the influential covariate from  \ that explains the most signal variation, i.e.
+     j = j for any j = j and j = 1, where j is defined as the j   \  that maximizes
+     the quantity {j}X 22. This transition remsembles the forward selection step
+     in the stepwise variable selection procedure and involves the single flip updating scheme
+     of the MH algorithm. By construction, if  =  is underfitted and unsaturated, then
+     dH (G(), ) = dH (G(), ) - 1.
+
+(iii) If  =  is underfitted and saturated, then we define G() to be  , which is formed
+
+by replacing the least influential unimportant covariate in  with the most influential
+
+covariate from  \ , i.e. j = j for any j  {j, k}, j = 1 and k = 0, where j
+
+is defined in case 2 and k   \  minimizes  {j}X   2  -  {j}\{k}X  22.
+                                                  2
+
+This transition step involves the double-flip updating scheme of the MH algorithm. By
+
+construction, if  =  is underfitted and saturated, then dH (G(), ) = dH (G(), )-
+
+2.
+
+         18
+Figure 3. Illustration of the construction of the canonical path ensemble. In the plot,  is
+the central state, G is the transition function and solid blue arrows indicate canonical paths
+T2, and T3,4 .
+
+By Lemma 1, this transition function G is valid and gives rise to a unique memoryless set of
+canonical paths from any state   M to . For example, Fig 3 shows such a memoryless set
+
+of canonical paths for M consisting of 14 states, where T2, corresponds to the canonical
+path from state 2 to the central state .
+
+    Based on this memoryless canonical path set, we can finish constructing the canonical
+
+path ensemble T by specifying the path T, connecting any distinct pair (,  )  M × M .
+More specifically, by the memoryless property, the two simple paths T, and T , share an
+identical subpath towards  from their first common intermediate state. Let T denote
+this common subpath T,  T ,, and T\ : = T, \ T denote the remaining path of
+T, after removing the segment T . We define T \ in a similar way as T , \ T .
+Then it is easy to see that the two remaining paths T\ and T \ share the same endpoint.
+Therefore, it is valid to define the path T, as T\  T¯ \. To understand this construction,
+let us consider an example where T, = (0, 1, 1, 1)  (1, 1, 0, 1)  (1, 1, 0, 0) and T , =
+(1, 0, 0, 1)  (1, 1, 0, 1)  (1, 1, 0, 0). Their intersection is T = (1, 1, 0, 1)  (1, 1, 0, 0)
+and the two remaining paths are T\ = (0, 1, 1, 1)  (1, 1, 0, 1) and T \ = (1, 0, 0, 1) 
+(1, 1, 0, 1). Consequently, the path T, from  to  is (0, 1, 1, 1)  (1, 1, 0, 1)  (1, 0, 0, 1)
+by our construction. For example, path T3,4 in Fig 3 illustrates the construction of the path
+connecting (3, 4) when M is composed of 14 states.
+
+    We call  a precedent of  if  is on the canonical path T,  T , and a pair of states
+,  adjacent if the canonical path T, is e, , the edge in E connecting  and  . For
+  M , let
+
+() : = {¯ |   T¯,}  (17)
+
+denote the set of all its precedents. Use the notation |T | to denote the length of a path T .
+The following lemma provides some important properties of the contructed canonical path
+ensemble that will be used later.
+
+19
+Lemma 2. For any distinct pair (,  )  M × M :                                             (18a)
+                                                                                          (18b)
+  (a) We have
+
+                                       |T, |  dH (, )  s0, and
+                                        |T, |  dH (, ) + dH ( , )  2s0.
+
+(b) If  and  are adjacent (joined by edge e, ) and  is a precedent of  , then
+                                       {(¯, ¯ ) | T¯,¯ e, }  () × M ,
+
+Proof. The first claim follows since the function F : M  R defined by F () = dH (, ) is
+strictly decreasing along the path T, for  = . Now we prove the second claim. For any
+
+pair (¯, ¯ ) such that T¯,¯ e, , either e,  T¯\¯ or e ,  T¯ \¯ should be satisfied since
+T¯,¯ = T¯\¯  T¯¯ ,¯ by our construction. Because  is a precedent of  , we can only have
+e,  T¯\¯ . This shows that  is on the path T¯, and ¯  ().
+
+    According to Lemma 2 (b), the path congestion parameter (T ) of the canonical path T
+satisfies
+
+(T )  max       1                            (¯)(¯ ) = max               [()]  ,             (19)
+
+(, ) Q(,  )                ¯(), ¯ M                     (, ) Q(,  )
+
+where the maximum is taken over the set
+
+ : = (,  )  M × M | T, = e, and   ( ) .
+
+Here we used the fact that the weight function Q of a reversible chain satisfies Q(,  ) = Q( , )
+so as to be able to restrict the range of the maximum to pairs (,  ) where   ( ).
+
+    For the lazy form of the Metropolis-Hastings walk (3), given any pair (,  ) such that
+P(,  ) > 0, we have
+
+              1
+Q(,  ) = 2 n( | Y )P(,  )
+
+      1                    1, n( | Y )       =  1       min  n(          | Y ), n( | Y )  .
+ 2 p s0 n( | Y ) min          n( | Y )
+                                                2 p s0
+
+Substituting this lower bound into our upper bound (19) on the path congestion parameter
+yields
+
+(T )    2 p s0    max      min             n[() | Y ]   |Y)
+                                         n( | Y ), n(
+                (, )
+
+      = 2 p s0 max         max 1, n( | Y )              · n[() | Y ] .                       (20)
+                                      n( | Y )             n( | Y )
+                     (, )
+
+In order to prove that (T ) = O(ps0) with high probability, it suffices to show that the two
+terms inside the maximum are O(1) with high probability. In order to do so, we make use of
+two auxiliary lemmas.
+
+                                         20
+    Given the constant C0  4 and the noise vector w  N (0, 02In), consider the following
+events
+
+             An : =            max       wT (1 - 2 )w                       L02 log p    ,                      (21a)
+             Bn : =                          |1| - |2|                                                          (21b)
+             Cn : =       (1,2)M ×M                                                                             (21c)
+                             21
+
+                          max  wT w            r02  log p  ,          and
+                                  ||
+                          M
+
+                          w    2   -  1     1  ,    and    Dn : =               Y   2       5n02  .
+                               2                                                 g  2        s
+
+                          n02               2
+
+    Our first auxiliary lemma guarantees that, under the stated assumptions of our theorem,
+the intersection of these events holds with high probability:
+
+Lemma 3. Under the conditions of Theorem 2, we have
+
+                             P(An  Bn  Cn  Dn)  1 - 6p-c.                                                       (22)
+
+We prove this lemma in Section 4.2 to follow.
+
+    Our second auxiliary lemma ensures that when these four events hold, then the two terms
+on the right-hand side of the upper bound (20) are controlled.
+
+Lemma 4. Suppose that, in addition to the conditions of Theorem 2, the compound event
+An  Bn  Cn  Dn holds. Then for all  = , we have
+
+                            n( | Y )  p-2, if  is overfitted,                                                   (23a)
+                          n(G() | Y ) p-3, if  is underfitted,
+
+and moreover, for all ,
+
+                    n[() | Y ]  c              for some universal constant c.                                   (23b)
+                     n( | Y )
+
+We prove this lemma in Section 4.3 to follow.
+
+Combining Lemmas 3 and 4 with our earlier bound (20), we conclude that (T )  2 c p s0. By
+
+Lemma 2 (a), our path ensemble T has maximal length (T )  2s0, and hence the canonical
+
+path  lower  bound  (16)  implies  that  Gap(P)               1  s20  ,     as  claimed  in  inequality  (15).  This
+                                                           4cp
+
+completes the proof of the theorem.
+
+    The only remaining detail is to prove Lemmas 3 and 4, and we do so in the following two
+subsections.
+
+4.2 Proof of Lemma 3
+
+We split the proof up into separate parts, one for each of the events An, Bn, Cn and Dn.
+
+Bound on P[Cn]: Since w 22/02  n2 , a standard tail bound for the 2n distribution
+(e.g., [19], Lemma 1) yields
+
+                                         P Cn       1  -  2e-    n       .                                      (24)
+                                                                 25
+
+                                                    21
+Bound on P[Bn]: For each state   M , the random variable wT w/02 follows a chi-
+
+squared distribution with || degrees of freedom. For each integer  {1, . . . , s0}, the model
+space M contains p models of size . Therefore, by a union bound, we find that
+
+                       s0       p                                                  s0
+
+P[Bn]  1 -                            P(2  C0 log p)  1 - e-(C0/4-1) log p
+
+                          =1                                          l=1
+
+                                                              1 - 2e-(C0/4-1) log p
+
+                                                             = 1 - 2p-(C0/4-1).               (25)
+
+Bound on P[Dn]: Given the linear observation model, we have
+
+                          Y  2  =     X + w       2    2  X       2+2      w     2  .
+                             2                    2                              2
+
+Combining this with inequality (24), we obtain
+
+                P      Y  2     2  X     2  +  3n02          2e-  n    p-s0(r/4-1)
+                          2              2                        25
+
+for large n and some constant C > 0, where we have used Assumption D. By Assumptions A
+
+and D, we have  X  2      2n02g/s,       implying    that
+                   2
+
+                P Dnc     P        Y  2    2  X        2  +  3n02      p-s0(r/4-1).           (26)
+                                      2                2
+
+Bound on P[An]: To control this probability, we require two auxiliary lemmas.
+
+Lemma 5. Under Assumption B, for any distinct pair (, ¯)  M × M satisfying   ¯, we
+have
+
+                             min      1  X¯T\ (In  -    )X¯\           .
+                                      n
+
+Proof. By partitioning the matrix X¯ into a block form (X, X¯\) and using the formula for
+the inverse of block matrices, one can show that the lower right corner of n-1X¯T X¯ -1 is
+ n-1X¯T\(In - )X¯\ -1, which implies the claimed bound.
+
+Lemma 6. For   M and k / , we have
+
+                          {k}      -     =    (I  -       )XkXkT (I -         )  .
+                                                    XkT   (I - )Xk
+
+Proof. By the block matrix inversion formula [15], we have
+
+                XT X   XT Xk       -1      B + aBXT XkXkT XB               -aBXT Xk        ,
+                XkT X  XkT Xk                    -aXkT XB                        a
+                                      =
+
+where B = (XT X)-1  R||×|| and a = (XkT (I - )Xk)-1  R. Then simple linear algebra
+yields
+
+                {k} -  = X Xk                     XT X       XT Xk -1         XT       - 
+                                                  XkT X      XkT Xk           XkT
+
+                                = a(I - )XkXkT (I - ),
+
+which is the claimed decomposition.
+
+                                                   22
+Returning to our main task, let us define the event
+
+                        An : =         max      wT ({k} - )w  L02 log p .
+
+                                M , k{1,...,p}
+
+                                       s.t. k/
+
+By construction, we have An  An so that it suffices to lower bound P(An). Lemma 6 implies
+that
+
+                              wT ({k} -  )w =             I-        Xk ,  w     2/n  .                         (27)
+                                                          XkT   I-        Xk   /n
+
+Now we show that with probability at least 1 - p-c, the above quantity is uniformly bounded
+by L02 log p over all (, k)  M × {1, . . . , p} satisfying ||  s0 and k / , which yields the
+intermediate result
+
+                                       P(An)  P(An)  1 - p-c.                                                  (28)
+
+Now   Lemma  5 implies        that  1  XkT  I -   Xk        ,   and therefore,       if  we  define  the random
+                                    n
+
+variable
+
+                                          1     I -  Xk, Z ,                where Z  N (0, In),
+          V (Z) : = max 
+
+                      M , k{1,...,p} n
+                          s.t. k/
+
+then  it  suffices  to  show  that  V (Z)                 with  probability    at  least  1 - p-c.   For  any  two
+                                                 L log p
+
+vectors Z, Z  Rn, we have
+
+                    |V (Z) - V (Z )|  max 1                     I -  Xk, Z - Z
+                                            M , k{1,...,p} n
+                                                s.t. k/
+
+                                            1
+                                                I -  Xk 2 Z - Z 2                    Z - Z 2,
+                                             n
+
+where we have used the normalization condition of Assumption B in the last inequality. Con-
+sequently, by concentration of measure for Lipschitz functions of Gaussian random variables
+[20], we have
+
+                                       P V (Z)  E[V (Z)] + t        e-  t2  .                                  (29)
+                                                                        2
+
+By the sparse projection condition in Assumption B, the expectation satisfies E[V (Z)] 
+  L log p /2, which combined with (29) yields the claimed bound (28) with c  L/8.
+
+4.3 Proof of Lemma 4
+
+We defer the proof of the claim (23a) to Appendix B, as it is somewhat technically involved.
+It is worth mentioning that its proof uses some auxiliary results in Lemma 8 in Appendix B,
+which characterizes some key properties of the state G() selected by the transition function
+G via the greedy criterion.
+
+    It remains to prove the second bound (23b) in Lemma 4, and we split our analysis into
+two cases, depending on whether  is underfitted or overfitted.
+
+                                                  23
+4.3.1 Case  is underfitted
+
+In  this  case,  the  bound  (23a)  implies  that    n(|Y )      p-3.  For    each  ¯    (),  where   ()  is
+                                                   n(G()|Y )
+
+defined in Lemma 2(e), we know   T¯,  T¯,. Let the path T¯, be 0  1  · · ·  s,
+
+where s = |T¯,| is the length of T¯,, and 0 = ¯ and s =  are the two endpoints. Since
+
+any intermediate state  on path T¯, is also underfitted, inequality (23a) ensures that
+
+                      n(¯ | Y ) = s n( -1 | Y )  p-3s = p-3 |T¯,|.
+                      n( | Y ) =1 n(l | Y )
+
+Now for each s  {0, . . . , s}, we count the total number of states ¯ in () that satisfies
+
+|T¯,| = s. By construction, at each intermediate state in a canonical path, we either add a
+new influential covariate by the single flip updating scheme of the MH algorithm, or add a new
+
+influential covariate and delete an unimportant covariate by the double-flip updating scheme.
+As a consequence, any state in M has at most (s + 1) p adjacent precedents, imlying that the
+total number of states ¯ in () with path length |T¯,| = s is upper bounded by (s + 1)s ps.
+Consequently, we have by the preceding display that under the event An  Bn  Cn  Dn
+
+          n[()|Y ] =                n(¯ | Y )  s ps (s + 1)s p-3s   p-s                       1       (30)
+                                                                                                   .
+          n( | Y ) ¯() n(|Y ) s=0                                                          1 - 1/p
+
+                                                                              s=0
+
+The above argument is also valid for  = .
+
+4.3.2 Case  is overfitted
+
+In  this  case,  we   bound  the  ratio  n[()|Y ]  by  dividing  the  set  ()    into  two  subsets:
+                                           n(|Y )
+
+(a) Overfitted models: M1 = {  () :   }, all models in () that include all
+     influential covariates.
+
+(b) Underfitted models: M2 = {  () :   }, all models in () that miss at least
+     one influential covariate.
+
+First, we consider the ratio n(M1 | Y )/n( | Y ). For each model ¯  M1, according to our
+construction of the canonical path, all intermediate states on path T¯, = 0  1  · · ·  k
+correspond to overfitted models (only involve the first flipping updating scheme of the MH
+
+algorithm), where endpoints 0 = ¯ and k = , and k denotes the length of path T¯,. As a
+consequence, inequality (23a) implies that
+
+                                  n(¯ | Y ) = k n(s-1 | Y )  p-2k.
+                                  n( | Y ) s=1 n(s | Y )
+
+Since there are at most pk states ¯ in M1 satisfying |¯| - || = k, we obtain that under the
+event An  Bn  Cn  Dn
+
+                      n(M1 | Y )         p-||                              1
+
+                      n( | Y )                 pk p-2k        p-k                 2.                  (31)
+                                                                        1 - 1/p
+                                         k=0
+                                                           k=0
+
+    Second, we consider the ratio n(M2 | Y )/n( | Y ). For fixed ¯  M2, let f (¯) be the first
+state along the path T¯, that contains all influential covariates. Since the overfitted state 
+
+                                                       24
+contains all influential covariates, f (¯) exists and is well-defined. Moreover, this construction
+ensure that f (¯)  M1 and ¯  (f (¯)) \ {f (¯)}. Applying inequality (23a) then yields
+
+n(M2 | Y ) =  n(¯ | Y ) =     n(f (¯) | Y ) · n(¯ | Y )
+n( | Y ) ¯M2 n( | Y ) ¯M2 n( | Y ) n(f (¯) | Y )
+
+                                               n( | Y )             n(¯ | Y )
+
+                               ¯M2             n( | Y ) ¯()\{} n( | Y )
+
+                              such that =f(¯)
+
+                           =                   n( | Y ) ·    n[() | Y ] - 1 .
+                                               n( | Y )       n( | Y )
+                               ¯M2
+
+                              such that =f(¯)
+
+Then by treating  = f (¯)  M1 as the  in inequality (30) and inequality (31), we obtain
+that under the event An  Bn  Cn  Dn
+
+              n(M2 | Y )               n( | Y ) ·         1
+              n( | Y )         ¯M2 n( | Y )                     -1
+
+                                                      1 - 1/p
+
+                           s.t. =f(¯)
+
+                           2  n( | Y )
+                        
+                           p M1 n( | Y )                                       (32)
+
+                        = 2 n(M1 | Y )
+                           p n( | Y )
+                           4
+
+                        
+                           p
+
+Combining inequality (31) and inequality (32), we obtain that that under the event An  Bn 
+Cn  Dn, the posterior ratio is upper bounded as
+
+              n[() | Y ] = n(M1 | Y ) + n(M2 | Y )  6.                         (33)
+              n( | Y )        n( | Y ) n( | Y )
+
+The above argument is also valid for  = , and this completes the proof of inequality (23b).
+
+4.4 Proof of Theorem 1
+
+We divide the analysis into two steps. In the first step, we show that the total posterior
+probability assigned to models with size O(s) other than  is small. In the second step, we
+use the fact that all large models receive small prior probabilities to show that the remaining
+models should also receive small posterior probability.
+
+Step 1: Let MS : = {  {0, 1}p : ||  Ks,  = } denote the set of all models with
+moderate sizes, where K  1 some constant to be determined in step 2. Consider the quantity
+
+              n(MS | Y )      =            n(      |  Y)  .                    (34)
+              n( | Y )                     n(      |  Y)
+                                       MS
+
+    Similar to Lemma 3, we modify the definition of the four events An, Bn, Cn and Dn by
+replacing M with MS. Following the proof of Lemma 3, it is straightforward to show that
+
+                                       25
+these four events satisfy
+
+                               P An  Bn  Cn  Dn  1 - 6p-c.                                  (35)
+
+The following auxiliary lemma ensures that when these four events hold, then the posterior
+ratios on the right hand side of equation (34) are well controlled.
+
+Lemma 7. Under Assumptions A­D and under the event An  Bn  Cn  Dn, the posterior
+ratio of any  (= ) in MS is bounded as
+
+                  n( | Y )                 p-2|\|,         if  is overfitted,
+                  n( | Y )                 p-2||-2,        if  is underfitted.
+
+We prove this lemma in Appendix C.
+    Equipped with this lemma, a simple counting argument yields that under the event An 
+
+Bn  Cn  Dn,
+
+           n(MS | Y )                 (i)               +  
+           n( | Y )
+                                               pk p-2k        plp-2l-2  3p-1,
+
+                                           k=1             =0
+
+where in step (i), we used the fact that there are at most pk overfitted models  with |\| = k
+
+and at most p underfitted models  with || = . Combining this with inequality (35), we
+obtain that with probability at least 1 - 6p-c,
+
+                               n(MS | Y )  3p-1 n( | Y )  3p-1.                             (36)
+
+Step 2: Let ML : = {  {0, 1}p : ||  Ks + 1} denote the set of large models. By Bayes'
+theorem, we can express the posterior probability of ML as
+
+                                             ML    ,    dP,,   (Y  )  n(d, d, )
+                                           {0,1}p         dP0         ) n(d, d, )
+           n(ML | Y ) =                                                            ,        (37)
+                                                        dP,,
+                                                   ,      dP0  (Y
+
+where P,, and P0 stand for probability distribution of Y under parameters (, , ) and
+the true data generating model, respectively. We bound the numerator and denominator
+separately.
+
+    First consider the numerator. According to our specification of the sparsity prior (5d) for
+the binary indicator vector , the prior probability of ML satisfies
+
+                               n(ML) =                  n()  p-Ks-1.
+
+                                           : ||>Ks+1
+
+By Fubini's theorem we have the following bound for the expectation of the numerator:
+
+E0         dP,,            (Y  )n(d,  d,   )  =               E0      dP,, (Y )  n(d, d, )
+             dP0                                                        dP0
+    ML  ,                                         ML       ,
+
+                                              =                n(d, d, ) = n(ML)  p-Ks-1,
+
+                                                   ML ,
+
+                                                   26
+where  we  have  used   the   fact  that  E0  dP,,     (Y  )     = 1.  Therefore, by applying Markov's
+                                                dP0
+
+inequality we have
+
+           P0                 dP,,    (Y  )n(d,     d,  )        p-K s /2-1         1 - p-Ks/2.                    (38)
+                                dP0
+                 ML        ,
+
+    By the expression (41) of the marginal likelihood function, we can bound the denominator
+from below by
+
+                           dP,, (Y     ) n(d, d, )            =  Ln(Y | ) n()
+                             dP0                                       dP0(Y )
+                        ,
+
+                        n    (1 + g)n/2             (1 + g)-s/2                    ·  c p-2s
+                 =      2                                                                      ,
+                                                                                      dP0(Y )
+                             n/2          (Y  2  +  g  (I - ) w~          2  )n/2
+                                              2                           2
+
+where w~ = w + XScSc  N (XScSc, 02). Under the true data-generating model P0,
+the density for Y is 0-n(2)-n/2 exp{-(202)-1 w 22}. By applying the the lower bound
+(n/2)  (2)1/2 (n/2 - 1)n/2-1/2e-n/2+1 and using the fact that the projection operator
+I -  is non-expansive, we obtain
+
+          dP,,   (Y  )  n(d,  d,    )     c   p-2s (1  +   g)-s/2(1    +     g-1)n/2
+            dP0
+       ,
+
+                           · exp (202)-1      w  2  -  w~     2  -  Y  22/g        u-n/2eu/2          nn/2e-n/2
+                                                 2            2
+                                                                                                          1/f (n)
+                                                                                      f (u)
+
+where u = 0-2( w~    2  +  Y  22/g). Since g-1         n-1 and the function f (u) = u-n/2eu/2 attains
+                     2
+
+its minimum at u = n, we further obtain
+
+   dP,, (Y       ) n(d, d, )          c p-2s (1  +  g)-s/2       exp   (202)-1        w  2   -    w~  2  -  Y  22/g  ,
+     dP0                                                                                 2            2
+
+,
+
+with a different universal constant c.
+    The off-support Sc condition in Assumption A and the high probability bound for the
+
+event Cn  Dn in Lemma 3 imply that the last exponential term is of order p-c1L for some
+universal constant c with probability at least 1 - p-c2. Therefore, for K  4 +  + 2c1L, we
+have
+
+                                 dP,,     (Y  )  n(d,   d,       )     c  p-Ks/2.                                  (39)
+                                   dP0
+                              ,
+
+Combining equations (37), (38) and (39), we obtain that
+
+                                          n(ML | Y )  c p-1                                                        (40)
+
+holds with probability at least 1 - 2 p-c .
+    Finally, inequalities (36) and (40) in steps 1 and 2 together yield that
+
+                 n( | Y ) = 1 - n(MS | Y ) - n(ML | Y )  1 - c3 p-1,
+
+holds with probability at least 1 - 8 p-c , which completes the proof.
+
+                                                    27
+4.5 Proof of Corollary 2
+
+Let Pt denote the probability distribution of iterate t in the MCMC algorithm. According to
+
+the definition of  -mixing time, for any t  1/p, we are guaranteed that  Pt() - n()    1  .
+                                                                                       p
+
+By Theorem 1, the posterior probability of  satisfies n()  1 - c1 p-1 with probability
+
+at least 1 - c2 p-c3. By Theorem 2, the p-1-mixing time 1/p satisfies
+
+                   1/p  c1 ps02 c2 (n + s0) log p + log p + 2
+
+with probability at least 1 - 4p-c1. Combining the three preceding displays, we find that
+Pt()  1 - (c1 + 1) p-1, as claimed.
+
+5 Discussion
+
+In this paper, we studied the computational complexity of MCMC methods for high-dimensional
+Bayesian linear regression under a sparsity constraint. We show that under a set of conditions
+that guarantees Bayesian variable-selection consistency, the corresponding MCMC algorithm
+achieves rapid mixing. Our result on the computational complexity of Bayesian variable-
+selection example provides insight into the dynamics of the Markov chain methods applied to
+statistical models with good asymptotic properties. It suggests that contraction properties of
+the posterior distribution are useful not only in guaranteeing desirable statistical properties
+such as parameter estimation or model selection consistency, but they also have algorithmic
+benefits in certifying the rapid mixing of the Markov chain methods designed to draw samples
+from the posterior.
+
+    As a future direction, it is interesting to investigate the mixing behavior of the MCMC
+algorithm when Bayesian variable selection fails. For example, slow mixing behavior is ob-
+served empirically in the intermediate SNR regime in our simulated example and it would be
+interesting to understand this result theoretically. Another interesting direction is to consider
+the computational complexity of MCMC methods for models more complex than linear re-
+gression, for example, high-dimensional nonparametric additive regression. A third direction
+is to investigate whether the upper bound on mixing time provided in Theorem 2 is sharp up
+to constants.
+
+Acknowledgements
+
+Authors YY, MJW and MIJ were partially supported by Office of Naval Research MURI
+grant N00014-11-1-0688. YY and MJW were additionally supported by National Science
+Foundation Grants CIF-31712-23800 and DMS-1107000.
+
+A Further details on Metropolis-Hastings
+
+In Appendix A, we show that under the specified model, the maximum a posteriori solution
+(MAP) of the Bayesian variable-selection problem is equivalent to the following optimizatio
+problem with 0-penalty
+
+                    = arg min          n      1+g  1  -  Y  T  Y  + || ,
+                                         log
+                                 ||s0                       Y  2
+                                       2                       2
+
+                                              28
+where  = X(XT X)-1XT is the projection onto the column space of X, and the regular-
+
+ization  parameter        :=    1  log(1  +  g)  +   log p.  Here      the  penalty  ||     comes      from  two  sources:
+                                2
+                                                                               1
+the  penalty    log  p  ||  on     and  the   Occam's     razor     penalty    2  log(1+g)  ||  due    to  the  integration
+
+over the model parameter . Therefore, choosing an appropriate hyperparameter  in the
+
+Bayesian approach is equivalent to choosing a corresponding regularization parameter  in
+
+the penalization method: a small  could make the posterior include uninfluential covariates
+
+due to noise; a large  requires the signal-to-noise ratio j/ of influential covariates to be
+large enough so that they can be selected out by the posterior.
+
+A.1 Connections to MAP estimates
+
+Under the Bayesian model specified by equation (5), we can obtain a closed-form expression
+for the marginal likelihood of the indicator vector  by integrating out  and :
+
+                     Ln(Y | ) : = n(Y | ) = dP,,(Y ) n(d, d | )
+
+                                                          n  (1     +  g)n/2         (1 + g)-||/2      ,            (41)
+                                                    =     2         Y                + g(1 - R2 ))n/2
+                                                                         n
+                                                          n/2            2     (1
+
+where (·) the Gamma function, P,, is the distribution of Y under parameters (, , ),
+and R2 is the coefficient of determination for the model M
+
+                                                    R2    =  Y T Y      ,
+
+                                                                 Y  2
+                                                                    2
+
+with  = X(XT X)-1XT the projection onto the column space of X. When there is
+no confusion, we identify the variable inclusion vector  and the linear model M associated
+with it. Let M : = { : ||  s0} denote the entire model space, which is a subset of
+the p-dimensional hypercube {0, 1}p under our identification. Then, by Bayes' theorem the
+
+posterior probability of  is given by
+
+                                                    1        (1 + g)-||/2
+                          n( | Y ) = C · p|| · (1 + g(1 - R2))n/2 I[  M ],                                          (42)
+
+where C is a normalization constant.
+    According to the preceeding display, the maximum a posteriori (MAP) solution of the
+
+Bayesian variable-selection problem is equivalent to the following penalized optimization prob-
+lem 0-penalty
+
+                           = arg min             n        1+g    1  -   Y   T  Y     + || ,
+                                                   log
+                                        ||s0                                Y     2
+                                                 2                                2
+
+where  the  regularization      parameter        :=    1  log(1  +  g)  +    log p.  Conversely,  if   we  have  a  variable-
+                                                       2
+
+selection procedure based on the penalization method with 0-penalty
+
+                                         = arg min f (Y, ) + || ,
+
+                                                      : ||s0
+
+where f (Y, ) is some function reflecting the goodness of fit by using model M, then we can
+construct a pseudo-posterior distribution
+
+                                   n(|Y ) = C · e-|| · e-f(Y,) I ||  s0
+
+                                                             29
+with C is a normalization constant, and conduct Bayesian inference based on n. For example,
+
+when  f (Y, )  is  the  negative  profile  log-likelihood  n  log  1  (I - )Y       2  ,    where the regression
+                                                           2       n                2
+
+coefficient  and the precision parameter  have been profiled out from the log-likelihood
+
+given  by maximization, then the choice of  = 1 corresponds to the Akaike information
+
+criterion, or AIC for short [1]),  = log n/2 the Bayesian information criterion, or BIC for
+
+short [27]), and  =  log p (  1) the high-dimensional BIC [36]. Our conclusion on the
+
+MCMC complexity of Bayesian variable selection with Zellner's g-prior applies to BIC in the
+
+low-dimensional regime where p = o(n), and to high-dimensional BIC in the high-dimensional
+
+regime where p  n. Because of the Bayesian interpretation for n(|Y ) in equation (42), we
+
+will focus on this posterior distribution over the model space M .
+
+A.2 Example of slow mixing
+
+Suppose p = n and g = p2 with  > 1. Let Y = w  N (0, In). We claim that if
+we use the untruncated distribution n() = Cp-|| as the prior for the variable-selection
+indicator vector over the entire space {0, 1}p, then the mixing time of the Markov chain with
+transition probability specified by formula (3) grows exponentially in n with probability at
+least 1/2 with respect to the randomness of w. Moreover, it is easy to check that this example
+satisfies the conditions in Theorem 1, which imply Bayesian variable-selection consistency.
+As a consequence, this example suggests that although a size constraint ||  s0 such as the
+one in the sparsity prior (5d) is not needed for Bayesian model selection consistency, it is
+necessary for MCMC to mix rapidly.
+
+Proof of slow mixing: We use the following conductance argument: for any reversible
+Markov chain C over a finite state space, the spectral gap is upper bounded as
+
+                                                1 - 2  2C,                                             (43)
+
+where the quantity
+
+               C : =       min             C (A),    where C(A) : =            A ()P (,Ac)             (44)
+                                                                                 (A) (Ac)
+                         AM : 0<(B)<1
+
+is called the conductance of C [30].
+    Now we analyze the mixing time of the Markov chain in the previous example. Use the
+
+notation 1 to denote the full model. Under the prior choice in the theorem, the posterior has
+an expression as
+
+                                       1        (1 + g)-||/2          for   {0, 1}p.
+                        n(|Y )  p|| · (1 + g(1 - R2 ))n/2                                              (45)
+
+Now we apply inequality (43) and equation (44) with B = {1} to obtain
+
+               1   -  2    2C       2      n    n(1 | Y )P (1, 1-j)   =  2     n    P  (1,  1-j  )  ,
+                                           i=1  Y ) (1 - n(1 | Y ))            i=1
+
+                                    n(1 |                                   1  - n(1 | Y )
+
+where we have used the fact that under the transition probability specification (3), the only
+"neighbor" of 1 is 1-j for j = 1, . . . , n, i.e.  (= 1) satisfies P (1, ) > 0 if and only if  = 1-j
+for some j  {1, . . . , n}. Using (3) and the last display, we can further obtain
+
+                                                n    min   1,  n(1-j |Y  )
+                                                i=1             n(1|Y )
+                                  1 - 2                                     .                          (46)
+                                                n(1 - n(1 | Y ))
+
+                                                     30
+    We consider the numerator of the right-hand side in equation (46) first. Since the true
+model is the null model, we have
+
+n(1-j | Y ) =                                         n(1 + g)1/2                     (47)
+                                                                                   ,
+                        n(1 | Y )        1 + gwT (I - P-j)w/(wT w) n/2
+
+where P-j is the projection onto X-j. Since {wT (I - P-j)w}jn=1 are 2 random variables,
+by the union bound and the tail probability of 2 distribution, we have that for constant c1
+
+sufficiently small,
+
+P                        min wT (I      - P-j)w       c1               13
+                                                      n2  1-n· = .
+                        j=1,...,n
+                                                                      4n 4
+
+Moreover, by a standard tail bound for the n2 distribution ([19], Lemma 1) we have
+
+                                    P    wT  w     3         3
+                                                    n     .
+                                                   2
+                                                             4
+
+Combining the last two displays, we obtain
+
+                               min       wT (I  - P-j)w     c2       1
+                                                            n3    ,
+                           P  j=1,...,n         w  2
+                                                   2                 2
+
+where c2 = 2c1/3. Combining the above with equation (47), we obtain
+
+                        P      min n(1-j | Y )  e-c3gn-2                1             (48)
+                              j=1,...,n n(1 | Y )                    ,
+
+                                                                        2
+
+where we have used the inequality 1 + x  ex for x  R and c3 is some universal constant.
+    Now we consider the denominator of the right-hand side in (46). Recall that 0 denotes
+
+the indicator vector in {0, 1}p associated with the null model. By equation (45), we have
+
+n(1                     |  Y  )  =  (1  + g)-n/2           1      = n-n        1
+n(0                     |  Y  )          nn           (1 + g)n/2                ,
+
+                                                                               2
+
+for n  2. This implies
+
+                        n(1|Y ) =        n(1 | Y )          n(1   |  Y  )    1        (49)
+                                                                              .
+                                        M n( | Y ) n(0 | Y ) 2
+
+Combining equations (46), (48) and (49) yields
+
+                                 P 1 - 2  2e-c3gn-2            1
+                                                            ,
+
+                                                               2
+
+which completes the proof of the claimed result.
+
+B Proof of inequality (23a) in Lemma 4
+
+Since  = , we know that  : = G() = . We divide the proof into the following three
+disjoint cases:
+
+    · model  is overfitted,
+    · model  is underfitted and unsaturated,
+    · model  is underfitted and saturated.
+
+                                                31
+B.1 Case  is overfitted
+
+Let  be the index selected from the set  \  of uninfluential covariates in our construction
+of the transition function G, i.e.  =  \ { }. We can express the posterior probability ratio
+as
+
+                                 n(   |Y)   =          1   +     g  ·   1 + g(1 - R2 ) n/2
+                                 n(   |Y)         p1                    1 + g(1 - R2)
+
+                                                    1                  1  +      R2    - R2             n/2
+                                            = p1 + g ·                        g-1 +    (1 - R2 )
+                                                                                                           .
+
+Since all influential covariates are included in models M and M , we have
+
+1 - R2 =    (I -  )(X()c ()c + w)                          2              1 - R2 =               (I -   )(X()c ()c                + w)  2
+                                                           2                                                                            2
+                                                                 and
+                                   Y  2                                                                         Y  2                     .
+                                      2                                                                            2
+
+Applying the Cauchy-Schwarz inequality yields
+
+                              1  (I - )w       2  -     (I -  )X()c ()c                    2
+                                               2                                           2
+            1 - R2  2
+                                                        Y     2
+                                                              2
+
+                 (i)             (I - )w    2  -  2     X()c ()c              2  (ii)  (I  - )w         2  -    2L~02  log  p
+                                            2                                 2                    2    2
+                                                                                                             2                 ,
+                                            2Y       2                                                  Y    2
+                                                     2
+
+where in step (i) we used the fact that the projection is a non-expansive mapping and in step
+
+(ii) we used the assumption              X()c ()c                2      L~02 log p.    Similarly, since             , we obtain
+                                                                 2
+
+the following inequality for the quantity R2 - R2
+
+        R2 - R2 =                ( -     )(X()c ()c                 + w)  2         2  ( -         )w      2  +  2L02  log     p
+                                                                          2                         Y      2
+                                                                                                                                  .
+                                               Y     2                                                     2
+                                                     2                                                     2
+
+On the event An  Bn  Cn, we have
+
+(I - )w     2         1                        3n       and            ( -  )w                2    (||  -  |    |)L02  log  p     =  L02  log  p,
+            2         2 n - rs0 log p             ,                                           2
+
+                                               8
+
+where we have used the assumption 4r s0 log p  n. Combining these two inequalities with the
+preceding two displays, we obtain that the posterior probability ratio on the event An Bn Cn
+is bounded as
+
+            n(   |Y)                 1   ·     1 + 2(L + L) log p )n/2
+            n(   |Y)               pg                      n/8
+
+                                 (i) 1               16(L + L) log p n                                                (ii)              (50)
+                                  pg · exp
+                                                                    n            2     = p8(L+L)-1--  p-2,
+
+whgere  in  step (i)  we used         the inquality 1 + x                 ex  for      xR        and the last step follows since
+        p   with       8(L +          L~) + 1 -  according                to  our      choice    of the hyperparameter, which
+
+completes the proof of the overfitted case.
+
+                                                                    32
+B.2 Case  is underfitted and unsaturated
+
+This case happens only when s  1. Let j be the index in our construction of the transition
+
+function G, i.e. the index from the set  \  that maximizes                                 {j}X              2  over   j        \  .
+                                                                                                             2
+
+Then we have  =   {j}, implying that  -  is a projection operator. Therefore, we
+
+can write
+
+1  -  R2  -  (1  -  R2  )  =  Y  T ( - )Y
+
+                                      Y    2
+                                           2
+
+                           =  (       -  )X  + (                   -  )X()c ()c + (                      - )w          2
+                                                                                                                       2
+
+                                                                         Y     2
+                                                                               2
+
+                                 (    -  )X                 2-     (        -  )X()c ()c                2-   ( - )w 2 2
+                                                                                                                                   .
+                                                                                  Y  2
+                                                                                     2
+
+By the min-condition and Lemma 8 at the end of this appendix, we have
+
+          (      -  )X             2          I -  X                  2              \         2                                (51)
+                                   2               | \ |                               s
+                                                                         n2                    2  2C02 log p,
+
+where C : = c0(L+L++) denotes the coefficient in the min-condition of the theorem. The
+last display shows that at least an amount of 2C02 log p variation in the true signal X
+can be explained by adding the influential covariate Xj into the current model . Combining
+
+the above two displays, we obtain that for n sufficiently large, so that  C  2 L + L, the
+following holds under the event An
+
+                                      1 - R2     - (1 - R2      )       n2 \               2
+                                                                                           2
+                                                                         4s Y           2
+                                                                                        2   .
+
+Similarly, we have that under the event Cn,
+
+          1  -  R2  =   Y  T (I -   )Y
+                               Y
+                                   2
+                                   2
+
+                           (I -  )X  2 + ( -  )X()c ()c 2 + (I -  )w 2 2
+
+                                                                     Y   2
+                                                                         2
+
+                       2   (I -  )X              2    +  4  (      -  )X()c ()c                2  +  4   (I - )w          2
+                                                 2                                             2                          2
+
+                                                                      Y     2
+                                                                            2
+
+                    (i) 2  (I -  )X                2  +  4L~02  log  p   +  3n02        4      (I -  )X             2           (52)
+                                                   2                                                                2
+
+                                                 Y    2                                               Y  2
+                                                      2                                                  2
+
+where in step (i) we have used Assumption A, the fact that                                 (I - )w       2      w 22, and the
+                                                                                                         2
+
+last step uses 2    (I -  )X                  2    2n       \      2        4L02     log p  +  3n02     for  C      (4L      +  3)/.
+                                              2                    2
+
+Combining the above two displayed inequalities, we obtain that for C sufficiently large, so
+
+that   2 C       64 (++3),         the   posterior    probability        ratio    n(|Y )       under  the    event  An Cn Dn
+                                                                                  n( |Y )
+
+                                                            33
+satisfies
+
+                 n( | Y ) = p                             Y 22(1 - R2 - (1 - R2 ))                 n/2
+                 n( | Y )                                  Y 22/g + Y T (I - )Y
+                                            1+g·    1-
+                                p
+                                                              I -               X  2/(4s)                  n/2
+                                                          4n02/s + 4             I -  X 
+                                            1+g·    1  -                                                2
+
+                                    (i)                                      2C log p           n/2
+                                                                    32s ,        32n
+                                     p      1 + g · 1 - min
+
+                                    (ii)                                            2 n/2
+                                            1 + g · 1 - ( +  + 3) log p ·
+                                     p                                                 n
+
+                                     p · p · p-(++3)
+
+                                    = p-3,                                                                                   (53)
+
+where in step (i) we have used the inequality a/(b + a)  min{1/2, a/(2b)} for any a, b > 0
+and inequality (51), and step (ii) follows by our assumption on C and Assumption D on s.
+
+B.3 Case  is underfitted and saturated
+
+This case happens only when s  1. Let j and k be the indices defined in the construction
+
+of G() in the underfitted and saturated case. Then we have  =   {j} \ {k}. Let
+v1 = ({j} -  )X  and v2 = ({j} -  )X  . Then Lemma 8, stated and
+proved in Appendix B.4, guarantees that
+
+                 v1    2            I -  X             2               \     2         and
+                       2                 | \ |                           s   2
+                                                          n2
+
+                                          \    2                \         2            I -  X                 2              (54)
+                                               2                  s       2                 | \ |
+                 v2    2    n (X)                      1 n2                     1                              ,
+                       2                 s0 - s        2                         
+                                                                                2
+
+under Assumption D on s0. This inequality shows that a larger proportion of the true signal
+X can be explained when the unimportant covariate Xk is replaced with the influential
+covariate Xj in the current model . By letting w~ = w + X()c()c be the effective noise,
+we have
+
+1-         R2  - (1 - R2         )  =  Y T ( - )Y         =  Y  T ({j }         -    )Y      -  Y  T ({j }        -      )Y
+                                                                                             Y
+                                            Y    2                                              2
+                                                 2                                              2
+
+   v1      2  +  2v1T  w~  +  w~T   ({j }   -   )w~    -        v2  2  +  2v2T  w~  +  w~T ({j}         -      )w~
+           2                                                        2
+=
+                                                          Y  2
+                                                             2
+
+   1             v1 2 ( v1 2 - 2 ({j} -  )w~ 2) - v2 2 · ( v2 2 + 2 ({j} -  )w~ 2)
+
+   Y       2
+           2
+
+                                                                             -  ({j} -  )w~                2   ,             (55)
+                                                                                                           2
+
+where in the last step we applied the Cauchy-Schwarz inequality to the two cross terms
+v1T w = v1T ({j} - )w and v2T w = v1T ({j} -  )w. Note that under the event An,
+the Cauchy-Schwarz inequality guarantees that
+
+({j} -  )w~                   2     2  ({j} -  )w            2  +   2  X()c ()c           2    2(L   +  L~)02  log   p,  and
+                              2                              2                            2
+
+({j} -  )w~                   2     2  ({j} -  )w            2  +   2  X()c ()c           2     2(L  +  L~)02  log   p.
+                              2                              2                            2
+
+                                                             34
+Let A2 : =   I- X       2      n2 minj |j|2           2C02 log p.
+                   |\|
+                                                                            Then,   for   C      large  enough
+
+so that 2C  32(L + L~), we have, by the min-condition and the preceding display, that
+
+under the event An
+
+                                      A                                                A                    (56)
+             ({j} -  )w~ 2  4 and                       ({j} -              )w~     2      .
+                                                                                         4
+
+By the definition of A, we can also write inequality (54) as
+
+                                                                  A
+                                v1  A and               v2      .                                           (57)
+                                                                     2
+
+By plugging in the bounds (56) and (57) into inequality (55), we obtain
+
+1 - R2 - (1 - R2 )  A · (A - A/4) - (A/              2) · (A/        2 + A/4) - A2/16 A2
+
+                                                        Y   2                                           2,
+                                                            2                                    8Y
+                                                                                                        2
+
+Combining this with inequality (52), we obtain that for C sufficiently large so that 2C 
+192, the following holds under the event An  Cn  Dn
+
+             n( | Y ) =               Y 22(1 - R2 - (1 - R2 ))              n/2
+             n( | Y )
+                                1-    Y    2  /g  +  Y  T  (I  -     )Y
+                                           2
+
+                                          I -           X            22/(8s)        n/2
+                                      4n02/s + 4        I -          X 
+                                1  -                                             2
+                                                                                 2
+
+                                     3 log p  n/2  p-3,
+                                1-
+                                      n/2
+
+where the last two steps follows by the same argument as for the steps (i) and (ii) in inequal-
+ity (62).
+
+B.4 Lemma 8 and its proof
+
+Recall the definition of j, k and  in the construction of the transition function G after
+Lemma 1. The first result in following lemma shows that at least an amount of n2 \ 22/s
+variation in the true signal X can be explained by adding Xj into the current model
+. The second result shows that removing Xk from the model   {j} incurs a loss in
+the explained variation of at most n (X) \ 22/(s0 - s). As a result, if s0 satisfies
+the condition s0  (2-2(X) + 1)s in Assumption D, then it is favorable to replace the
+unimportant covariate Xk with the influential covariate Xj in the current model .
+
+Lemma 8. Under the conditions and notation of Lemma 4, we have:
+
+(a) If  is underfitted, then
+
+                    {j }X             2  -     X                  2     n2  \       2
+                                      2                           2           s     2
+
+                                                                                     .
+
+(b) If  is underfitted and saturated, then
+
+             {j }X              2  -  {j }\{k }X                     2    n (X)     \         2  .
+                                2                                    2                        2
+
+                                                                                    s0 - s
+
+                                              35
+Proof. For each   \ , Lemma 6 yields
+
+{ }X                 2  -   X       2     =  ( )T XT            { } -  X 
+                     2              2
+
+                                          = ( )T XT             I -  X XT I -                     X 
+                                                                  XT I -  X
+
+                                           ( )T XT              I -      X XT    I -              X  ,
+                                                                            n
+
+where the first step follows by the idempotence of projection matrices and the last step follows
+
+by the normalization condition in Assumption B. By summing the preceding inequality over
+    \ , we obtain
+
+                              { }X              2  -         X        2
+                                                2                     2
+
+                  \
+
+                   ( )T XT          I -   X\ XT\                I -      X 
+                                                n
+
+                  = ( )T XT         I -   X XT                  I -      X 
+                                                 n
+
+                  (i)
+
+                   ( )T XT I -  X 
+
+                                                                                       (ii)
+
+                  = (\ )T XT\ I -  X\ \  n2 \ 22,
+
+where in step (i) we used the fact that the vector I -  X belongs to the column
+
+space of X and applied Lemma 5, and step (ii) follows by applying Lemma 5. Since j
+
+maximizes  { }X            2  over    \ , the preceding inequality implies
+                           2
+
+           {j }X              2  -   X             2        n2  \        2   n2  \                2
+                              2                    2                     2         s              2
+
+                                                                | \ |                              .
+
+This proves the first claimed inequality.
+    Denote the subset   {j} by . For any   M , denote by ( ) the least-squares
+
+solution to the problem
+
+                                    min      X - X\ \ 22.                                               (58)
+
+                              Rp, j =0, j/
+
+Given this definition, some simple linear algebra leads to
+
+                  X( ) - X\ \                2     =     (I -  )X\ \ 22.                                (59)
+                                             2
+
+Since k / , we have
+
+                   X          2  -  \{k }X                  2
+                              2                             2
+
+           =      ( - \{k }) X               2
+                                             2
+
+           (i)    ( - \{k }) X\ \                     2
+                                                      2
+           =
+
+           =      (I - \{k })X\ \               2  -        (I -  )X\ \          2
+                                                2                                2
+
+           (=ii)  X( \ {k }) - X\ \                      2  -  X() - X\ \                    22,
+                                                         2
+
+                                                36
+where in step (i) we used the fact that for k / , X = \{k}X, and step (ii)
+follows by equation (59). This shows that the second claimed inequality is equivalent to
+
+          X( \ {k }) - X\ \       2     -   X() - X\ \                  2       n(X )    \              2  .
+                                  2                                     2                               2
+
+                                                                                         s0 - s
+
+We use j() to denote the jth component of (). By the optimality of () for the least-
+squares problem (58), we have
+
+                    XkT (X () - X\\) = 0, for all k  .
+
+Therefore, for each k  , we have
+
+              X( \ {k}) - X\ \          2   =  X() - X\ \ - Xkk()                           2
+                                        2                                                   2
+
+                                            =  X() - X\ \                    2  +  Xk k ( )          2
+                                                                             2                       2
+
+                                               X() - X\ \                    2  +  n|k   (  )|2   ,
+                                                                             2
+
+where in the last step we used the optimality of ( \ {k}) and the normalization assumption
+
+Xk  2  =  n.  Then, by the definition of k  as the index k in  \  that minimizes                        X     2  -
+    2                                                                                                         2
+
+\{k}X         2  =  X( \ {k}) - X\ \               2  ,  we    have
+              2                                    2
+
+          X( \ {k }) - X\ \       2     =    min         X( \ {k}) - X\ \                   2
+                                  2                                                         2
+                                            k\
+
+                                               X() - X\ \               2    +  n   min     |k()|2
+                                                                        2
+                                                                                   k\
+
+                                               X() - X\ \               2    +  n  ()       2
+                                                                        2                   2
+
+                                                                                   | \ |
+
+                                        =      X() - X\ \               2    +  n  ()       2  ,
+                                                                        2                   2
+
+                                                                                   s0 - s
+
+where last step follows since | \ | = s0 - s by the saturation of . By our definition and
+Assumption D,
+
+          ()  2  =  (XT X )-1XT X\ \               2        |||(XT  X )-1XT  X\ |||o2p      \           2
+              2                                    2                                                    2
+
+                                                       (X) \ 22.
+
+Combining the last two displays yields the second claimed inequality.
+
+C Proof of Lemma 7
+
+We divide the proof into two cases:  is overfitted and underfitted.
+
+Case  is overfitted: Let k = | \ | be the number of unimportant covariates selected
+by . Since  = , we have k  1. Then, we can express the posterior probability ratio as
+
+                    n( | Y )  =         1          ·     1 + g(1 - R2 ) n/2
+                    n( | Y )            +
+                                 pk (1      g)k/2        1 + g(1 - R2)
+
+                                         1               1  +     R2 - R2          n/2
+                              = pk(1 + g)k/2 ·                 g-1 + (1 - R2 )
+                                                                                      .
+
+                                               37
+Since all influential covariates are included in models M and M, we have
+
+1 - R2 =   (I -  )(X()c ()c + w)                              2     and  1 - R2 =              (I -  )(X()c ()c + w)                    2
+                                                              2
+                                                                                                                                        2.
+                                     Y  2                                                                      Y    2
+                                        2                                                                           2
+
+Applying the Cauchy-Schwarz inequality yields
+
+                             1  (I - )w           2  -     (I -  )X()c ()c                  2
+                                                  2                                         2
+           1 - R2  2
+                                                           Y     2
+                                                                 2
+
+           (i)                  (I - )w        2  -  2     X()c ()c         2    (ii)   (I  - )w       2  -    2L~02   log  p
+                                               2                            2                       2  2
+                                                                                                            2                  ,
+                                               2Y       2                                              Y    2
+                                                        2
+
+where in step (i) we used the fact the projection is a non-expansive mapping and in step (ii)
+
+we used the assumption                  X()c ()c           2        L~02 log p.   Similarly, since   , we can obtain
+                                                           2
+
+the following inequality for the quantity R2 - R2
+
+     R2 - R2 =                  ( -  )(X()c ()c + w)                     2           2   ( -  )w          2    +  2L02    log     p  .
+                                                                         2                             Y  2
+                                                                                                          2
+                                                  Y     2                                                 2
+                                                        2
+
+Under the event An  Bn  Cn, we have                              (I  - )w         2      1  n  -  rK  s  log   p      3n  and           ( -
+                                                                                  2      2                            8
+        2   kL02 log p, where we have used the assumption 4r Ks log p  n.
+ )w     2                                                                                                         Combining these
+
+two inequalities with the preceding two displays, we obtain that the posterior probability ratio
+
+under the event An  Bn  Cn is bounded as
+
+           n( | Y )                  pk (1  1  g)k/2       ·     1 + 2(L + L) log p )n/2
+           n( | Y )                         +                                n/8
+
+                                (i)         1              · exp 16(L + L) log p n = p8(L+L)-k(+)                                       (60)
+
+                                     pk(1 + g)k/2                              n               2
+
+                                (ii)
+
+                                 p-2k,
+
+where in step (i) we used the inquality 1 + x  ex for x  R and step (ii) follows since g p
+with   8(L + L~) + 2 -  according to our choice of the hyperparameter. This proves the
+
+first part. Now we consider the underfitted case.
+
+Case  is underfitted: This case happens only when s  1. Let  =   . Denote
+k = | \ | and = ||, then | \ | = k, | \ | = k + - s, and || = k +  (K + 1)s.
+
+Since   , we can write
+
+1 - R2  - (1 - R2)  =           Y T ( - )Y
+
+                                        Y   2
+                                            2
+
+                    =           ( -  )X  + ( -  )X()c ()c + ( -  )w                                                       2
+                                                                                                                          2
+
+                                                                         Y       2
+                                                                                 2
+
+                                     ( -  )X                        2-   ( -  )X()c ()c                   2-      ( - )w                   2
+                                                                                                                                        2
+                                                                                     Y   2
+                                                                                         2                                                  .
+
+By the min-condition and Lemma 5, we have
+
+           ( -  )X                      2  =   (I -  )X                  2        n2        \     2       2 C     k02  log     p,       (61)
+                                        2                                2                        2
+
+                                                                     38
+where C : = c0(L + L +  + ) denotes the coefficient in the min-condition of the theorem.
+
+Consequently, as long as c0 is sufficiently large, we can ensure that  C  4 L + L, and
+hence, under the event An, we find that
+
+                           1 - R2 - (1 - R2 )            I -  X                   2
+
+                                                                   4Y  2           .
+                                                                       2
+
+Similarly, under the event Cn, we have
+
+1          -  R2  =  Y   T (I -   )Y
+                             Y
+                                 2
+                                 2
+
+                         (I -  )X  2 + ( -  )X()c ()c 2 + (I -  )w 2 2
+
+                                                         Y     2
+                                                               2
+
+                     2   (I -  )X        2  +   4  (     -  )X()c ()c             2   +  4  (I - )w             2
+                                         2                                        2                             2
+
+                                                            Y  2
+                                                               2
+
+                  (i) 2  I -     X       2 + 4L~02 log p + 3n02             4     I -  X                    2
+                  
+                                         Y  2                                              Y     2           ,
+                                            2                                                    2
+
+where in step (i) we have used Assumption A, the fact that                  (I - )w              2     w 22, and the
+                                                                                                 2
+
+last step uses 2     I -   X             2  2n     \     2     4L02    log  p  +  3n02      for  C       (4L       +  3)/.
+                                                         2
+
+Consequently, as long as C is large enough so that 2C  64  +  + 8(L + L~) + 2 , the
+
+posterior  probability   ratio   n(|Y )  under  the  event  An  Cn  Dn         is    upper      bounded     as
+                                 n(|Y )
+
+           n( | Y ) = pk(1 + g)k/2 ·                 Y 22(1 - R2 - (1 - R2 ))              n/2
+           n( | Y )                                   Y 22/g + Y T (I - )Y
+                                            1-
+
+                          pk(1 + g)k/2 ·                    I  -       X  2/4                       n/2
+                                                   4n02/s      +4      I -  X 
+                                            1   -                                                2
+
+                         (i)                                1 , Cs log p              n/2
+
+                          pk(1 + g)k/2 · 1 - min         32 32n
+
+                         (ii)                   1 - ( +  + 8(L + L~) + 2)s log p · 2                   n/2
+
+                          pk(1 + g)k/2 ·                                                            n
+
+                          pk · pk · p-s(++8(L+L~)+2)  p(+)(k-s)-8(L+L~)-2.                                            (62)
+
+where in step (i) we have used the inequality a/(b + a)  min{1/2, a/(2b)} for any a, b > 0
+and inequality (61), and step (ii) follows by our assumption on C and the assumption s  1
+made at the beginning of this underfitted case.
+
+    Since model M is overfitted, by the intermediate result (60), we have that under the event
+An  Bn  Cn
+
+                     n( | Y )         p8(L+L~)-(+) |\|      =  p8(L+L~)-(+) (k+          -s).
+                     n( | Y )
+
+Combining the last two displays, we obtain that under the event An  Bn  Cn  Dn
+
+                                 n( | Y )        p-(+)         -2   p-2   -2,
+                                 n( | Y )
+
+where in the last step we have used Assumption C.
+
+                                                     39
+References
+
+ [1] H. Akaike. A new look at the statistical model identification. IEEE Transactions on
+      Automatic Control, 19:716­723, 1974.
+
+ [2] H. An, D. Huang, Q. Yao, and C. Zhang. Stepwise searching for feature variables in
+      high-dimensional linear regression. Technical report, Department of Statistics, London
+      School of Economics, 2008.
+
+ [3] M. Barbieri and J. Berger. Optimal predictive model selection. Annals of Statistics,
+      32:870­897, 2004.
+
+ [4] A. Belloni and V. Chernozhukov. On the computational complexity of MCMC-based
+      estimators in large samples. Annals of Statistics, 37:2011­2055, 2009.
+
+ [5] A. Bhattacharya, D. Pati, N. Pillai, and D. Dunson. Dirichlet-Laplace priors for optimal
+      shrinkage. Journal of the American Statistical Association, 2015, in press.
+
+ [6] C. Borgs, J. Chayes, A. Frieze, J. Kim, P. Tetali, E. Vigoda, and V. Vu. Torpid mixing of
+      some MCMC algorithms in statistical physics. In FOCS, pages 218­229. IEEE Computer
+      Society, 1999.
+
+ [7] I. Castillo, J. Schmidt-Hieber, and A. van der Vaart. Bayesian linear regression with
+      sparse priors. Annals of Statistics. To appear., 2015.
+
+ [8] P. Diaconis and D. Stroock. Geometric bounds for eigenvalues of Markov chains. Annals
+      of Applied Probability, 1:36­61, 1991.
+
+ [9] J. Fan and R. Li. Variable selection via non-concave penalized likelihood and its oracle
+      properties. Journal of the American Statistical Association, 96(456):1348­1360, Decem-
+      ber 2001.
+
+[10] C. Ferna´ndez, E. Ley, and M. Steel. Benchmark priors for Bayesian model averaging.
+      Journal of Econometrics, 100:381 ­ 427, 2001.
+
+[11] A. Gelman and D. Rubin. Inference from iterative simulation using multiple sequences.
+      Statistical Science, 7:457­472, 1992.
+
+[12] E. George and R. McCulloch. Variable selection via Gibbs sampling. Journal of the
+      American Statistical Association, 88(423):881­889, 1993.
+
+[13] Y. Guan and M. Stephens. Bayesian variable selection regression for genome-wide asso-
+      ciation studies and other large-scale problems. Annals of Applied Statistics, 5:1780­1815,
+      09 2011.
+
+[14] C. Hans, A. Dobra, and M. West. Shotgun stochastic search for "large p" regression.
+      Journal of the American Statistical Association, 102:507­516, 2007.
+
+[15] R. Horn and C. Johnson. Matrix Analysis. Cambridge University Press, Cambridge,
+      1985.
+
+[16] H. Ishwaran and J. Rao. Spike and slab variable selection: frequentist and Bayesian
+      strategies. Annals of Statistics, 33:730­773, 2005.
+
+                                                           40
+[17] G. Jones and J. Hobert. Sufficient burn-in for Gibbs samplers for a hierarchical random
+      effects model. Annals of Statistics, 32:784­817, 2004.
+
+[18] R. Kass and L. Wasserman. A reference Bayesian test for nested hypotheses and its
+      relationship to the Schwarz criterion. Journal of the American Statistical Association,
+      90:928­934, 1995.
+
+[19] B. Laurent and P. Massart. Adaptive estimation of a quadratic functional by model
+      selection. Annals of Statistics, 28(5):1302­1338, 2000.
+
+[20] M. Ledoux. The Concentration of Measure Phenomenon. Mathematical Surveys and
+      Monographs. American Mathematical Society, Providence, RI, 2001.
+
+[21] D. Levin, M. Luczak, and Y. Peres. Glauber dynamics for the mean-field Ising model:
+      cut-off, critical power law, and metastability. Probability Theory and Related Fields,
+      146:223­265, 2010.
+
+[22] F. Liang, R. Paulo, G. Molina, M. Clyde, and J. Berger. Mixtures of g-priors for Bayesian
+      variable selection. Journal of the American Statistical Association, 103:410­423, 2008.
+
+[23] F. Martinelli and A. Sinclair. Mixing time for the solid-on-solid model. Annals of Applied
+      Probability, 22:1136­1166, 2012.
+
+[24] N. Meinshausen and P. B´'uhlmann. High-dimensional graphs and variable selection with
+      the Lasso. Annals of Statistics, 34:1436­1462, 2006.
+
+[25] E. Mossel and E. Vigoda. Limitations of Markov chain Monte Carlo algorithms for
+      Bayesian inference of phylogeny. Annals of Applied Probability, 16:2215­2234, 2006.
+
+[26] N. Narisetty and X. He. Bayesian variable selection with shrinking and diffusing priors.
+      Annals of Statistics, 42:789­817, 2014.
+
+[27] G. Schwarz. Estimating the dimension of a model. Annals of Statistics, 6:461­464, 1978.
+
+[28] Z. Shang and M. Clayton. Consistency of Bayesian linear model selection with a growing
+      number of parameters. Journal of Statistical Planning and Inference, 141:3463­3474,
+      2011.
+
+[29] X. Shen, W. Pan, and Y. Zhu. Likelihood-based selection and sharp parameter estimation.
+      Journal of the American Statistical Association, 107:223­232, 2012.
+
+[30] A. Sinclair. Improved bounds for mixing rates of Markov chains and multicommodity
+      flow. Combinatorics, Probability and Computing, 1:351­370, 1992.
+
+[31] A. Sinclair. Algorithms for random generation and counting: a Markov chain approach.
+      Ph.D thesis, University of Edinburgh, June 1988.
+
+[32] D. Sparks, K. Khare, and M. Ghosh. Necessary and sufficient conditions for high-
+      dimensional posterior consistency under g -priors. Bayesian Analysis, Advance Publi-
+      cation, 2015.
+
+[33] R. Tibshirani. Regression shrinkage and selection via the Lasso. Journal of the Royal
+      Statistical Society (Series B), 58:267­288, 1996.
+
+                                                           41
+[34] M. Wainwright. Information-theoretic limits on sparsity recovery in the high-dimensional
+      and noisy setting. IEEE Transactions on Information Theory, 55:5728­5741, 2009.
+
+[35] M. J. Wainwright. Sharp thresholds for high-dimensional and noisy sparsity recovery
+      using 1-constrained quadratic programming (Lasso). IEEE Trans. Information Theory,
+      55:2183­2202, May 2009.
+
+[36] T. Wang and L. Zhu. Consistent tuning parameter selection in high dimensional sparse
+      linear regression. Journal of Multivariate Analysis, 102:1141­1151, 2011.
+
+[37] D. Woodard and J. Rosenthal. Convergence rate of Markov chain methods for genomic
+      motif discovery. Annals of Statistics, 41:91­124, 2013.
+
+[38] A. Zellner. On assessing prior distributions and Bayesian regression analysis with g-prior
+      distributions. In Bayesian Inference and Decision Techniques: Essays in Honor of Bruno
+      de Finetti, (eds. P. K. Goel and A. Zellner), pages 233­243. North-Holland/Elsevier,
+      1986.
+
+[39] C. Zhang. Nearly unbiased variable selection under minimax concave penalty. Annals of
+      Statistics, 38(2):894­942, 2012.
+
+[40] T. Zhang. Adaptive forward-backward greedy algorithm for learning sparse representa-
+      tions. IEEE Transactions on Information Theory, 57:4689­4708, 2011.
+
+[41] P. Zhao and B. Yu. On model selection consistency of Lasso. Journal of Machine Learning
+      Research, 7:2541­2567, 2006.
+
+                                                           42
+

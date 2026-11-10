@@ -1,0 +1,54 @@
+W3-POST citecheck: 53 checks, 0 failures
+ok  STATEMENT.md:18 -> Scripts/SMC_BVS/core/v3_preprocess.R:111-127
+ok  STATEMENT.md:23 -> ARC/main@c4ef0dc/Docs/Theory/theorems/00_COMMON.md:9-14
+ok  STATEMENT.md:24 -> Scripts/SMC_BVS/core/cpp/v3_score.h:40-71
+ok  STATEMENT.md:24 -> Scripts/SMC_BVS/core/cpp/v3_score.h:196-224
+ok  STATEMENT.md:37 -> T03R:15-17
+ok  STATEMENT.md:37 -> T03R:44-47
+ok  STATEMENT.md:38 -> T03R:50-54
+ok  STATEMENT.md:42 -> T03R:79-85
+ok  STATEMENT.md:43 -> Theory_work/State_of_Project/sections/04_theory.tex:771-771
+ok  STATEMENT.md:58 -> Theory_work/Wave2/SR/BLIND_fable.md:92-93
+ok  STATEMENT.md:62 -> T03R:9-9
+ok  STATEMENT.md:76 -> Theory_work/State_of_Project/sections/04_theory.tex:780-788
+ok  STATEMENT.md:76 -> T03R:162-168
+ok  STATEMENT.md:77 -> Theory_work/State_of_Project/sections/04_theory.tex:771-771
+ok  STATEMENT.md:87 -> T03R:149-149
+ok  STATEMENT.md:109 -> POST:12-18
+ok  STATEMENT.md:111 -> POST:23-33
+ok  STATEMENT.md:120 -> SL:20-63
+ok  ASSUMPTION_MAP.md:23 -> Theory_work/State_of_Project/sections/04_theory.tex:816-816
+ok  ASSUMPTION_MAP.md:31 -> T03R:134-134
+ok  lemmas\L1a_size_tail.md:14 -> T03R:77-77
+ok  lemmas\L1a_size_tail.md:22 -> T03R:93-97
+ok  lemmas\L1a_size_tail.md:24 -> T03R:89-91
+ok  lemmas\L1a_size_tail.md:39 -> T03R:93-97
+ok  lemmas\L1a_size_tail.md:63 -> T03R:103-121
+ok  TOKEN T03R:79-85 contains 'Theorem T02(i♯)'
+ok  TOKEN T03R:149-149 contains 'SE$_w(m^\\sharp_n;g_0)$'
+ok  TOKEN T03R:162-168 contains 'BM-∞'
+ok  TOKEN T03R:103-121 contains 'Proposition D'
+ok  TOKEN T03R:50-54 contains '\\omega\\ge0'
+ok  TOKEN T03R:15-17 contains 'R_m'
+ok  TOKEN T03R:44-47 contains 'm^\\sharp_n(\\omega)'
+ok  TOKEN T03R:89-91 contains 'Lemma den′'
+ok  TOKEN T03R:93-97 contains 'Proof of T02(i♯)'
+ok  TOKEN T03R:77-77 contains 'c^\\sharp'
+ok  TOKEN T03R:134-134 contains 'SE$_w(m^\\sharp_n;\\varphi_0^2)$'
+ok  TOKEN POST:23-33 contains 'Hypothesis LSF'
+ok  TOKEN POST:12-18 contains 'Raw-scale convention'
+ok  TOKEN SL:20-63 contains 'Lemma SL0'
+ok  TOKEN UNI:87-91 contains 'Theorem UNI-P'
+ok  TOKEN Theory_work/State_of_Project/sections/04_theory.tex:771-771 contains 'T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)'
+ok  TOKEN Theory_work/State_of_Project/sections/04_theory.tex:771-771 contains 'T02(i♯), T02(ii♯): PROVED; SF/XF VERIFIED'
+ok  TOKEN Theory_work/State_of_Project/sections/04_theory.tex:780-788 contains 'BM\\((c)\\)'
+ok  TOKEN Theory_work/State_of_Project/sections/04_theory.tex:816-816 contains 'CJ18'
+ok  TOKEN Theory_work/Wave2/SR/BLIND_fable.md:92-93 contains 'Lemma A (design-free size reduction)'
+ok  TOKEN Scripts/SMC_BVS/core/cpp/v3_score.h:40-71 contains 'D.nu = D.a0 + n / 2.0'
+ok  TOKEN Scripts/SMC_BVS/core/cpp/v3_score.h:40-71 contains '-M_LN2 - lchoose_d(2.0 * p - 1.0, k)'
+ok  TOKEN Scripts/SMC_BVS/core/cpp/v3_score.h:196-224 contains 'double Q = D->yty - D->n * quad'
+ok  TOKEN Scripts/SMC_BVS/core/v3_preprocess.R:111-127 contains 'kept'
+ok  TOKEN ARC/main@c4ef0dc/Docs/Theory/theorems/00_COMMON.md:9-14 contains 'w(k) = ½/C(2p−1, k)'
+ok  STATUS 'T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)' in Theory_work/State_of_Project/sections/04_theory.tex
+ok  STATUS 'T02(i♯), T02(ii♯): PROVED; SF/XF VERIFIED' in Theory_work/State_of_Project/sections/04_theory.tex
+ok  STATUS 'PROVED (by this seat, unchecked)' in Theory_work/Wave2/W2-APP/lemmas/L1_POST.md

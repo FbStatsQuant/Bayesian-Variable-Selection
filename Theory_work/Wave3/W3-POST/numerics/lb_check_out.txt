@@ -1,0 +1,1 @@
+LB check: 34920 (data set, S0) pairs; min (1-pi(S0))*(1+sqrt(n+1)) = 1.012988 (must be >= 1) at (40, 3, 'iid', 'sig', (0, 1))

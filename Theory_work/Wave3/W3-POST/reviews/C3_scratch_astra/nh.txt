@@ -1,0 +1,1526 @@
+                                          The Annals of Statistics
+                                          2014, Vol. 42, No. 2, 789–817
+                                          DOI: 10.1214/14-AOS1207
+                                           c Institute of Mathematical Statistics, 2014
+
+
+                                              BAYESIAN VARIABLE SELECTION WITH SHRINKING AND
+arXiv:1405.6545v1 [math.ST] 26 May 2014
+
+
+
+
+                                                             DIFFUSING PRIORS1
+
+                                                           By Naveen Naidu Narisetty and Xuming He
+                                                                                 University of Michigan
+                                                            We consider a Bayesian approach to variable selection in the pres-
+                                                       ence of high dimensional covariates based on a hierarchical model that
+                                                       places prior distributions on the regression coefficients as well as on
+                                                       the model space. We adopt the well-known spike and slab Gaussian
+                                                       priors with a distinct feature, that is, the prior variances depend on
+                                                       the sample size through which appropriate shrinkage can be achieved.
+                                                       We show the strong selection consistency of the proposed method in
+                                                       the sense that the posterior probability of the true model converges to
+                                                       one even when the number of covariates grows nearly exponentially
+                                                       with the sample size. This is arguably the strongest selection consis-
+                                                       tency result that has been available in the Bayesian variable selection
+                                                       literature; yet the proposed method can be carried out through pos-
+                                                       terior sampling with a simple Gibbs sampler. Furthermore, we argue
+                                                       that the proposed method is asymptotically similar to model selec-
+                                                       tion with the L0 penalty. We also demonstrate through empirical
+                                                       work the fine performance of the proposed approach relative to some
+                                                       state of the art alternatives.
+
+
+                                             1. Introduction. We consider the linear regression setup with high di-
+                                          mensional covariates where the number of covariates p can be large relative
+                                          to the sample size n. When p > n, the estimation problem is ill-posed without
+                                          performing variable selection. A natural assumption to limit the number of
+                                          parameters in high dimensional settings is that the regression function (i.e.,
+                                          the conditional mean) is sparse in the sense that only a small number of
+                                          covariates (called active covariates) have nonzero coefficients. We aim to de-
+                                          velop a new Bayesian methodology for selecting the active covariates that is
+                                          asymptotically consistent and computationally convenient. A large number
+
+                                             Received May 2013; revised January 2014.
+                                             1
+                                              Supported in part by the NSF Grants DMS-12-37234 and DMS-13-07566, and by the
+                                          National Natural Science Foundation of China Grant 11129101.
+                                             AMS 2000 subject classifications. 62J05, 62F12, 62F15.
+                                             Key words and phrases. Bayes factor, hierarchical model, high dimensional data,
+                                          shrinkage, variable selection.
+
+                                           This is an electronic reprint of the original article published by the
+                                           Institute of Mathematical Statistics in The Annals of Statistics,
+                                           2014, Vol. 42, No. 2, 789–817. This reprint differs from the original in pagination
+                                           and typographic detail.
+                                                                                     1
+2                        N. N. NARISETTY AND X. HE
+
+of methods have been proposed for variable selection in the literature from
+both frequentist and Bayesian viewpoints. Many frequentist methods based
+on penalization have been proposed following the well-known least absolute
+shrinkage and selection operator [LASSO, Tibshirani (1996)]. We mention
+the smoothly clipped absolute deviation [SCAD, Fan and Li (2001)], adap-
+tive LASSO [Zou (2006)], octagonal shrinkage and clustering algorithm for
+regression [OSCAR, Bondell and Reich (2008)] and the Dantzig selector
+[Candes and Tao (2007); James, Radchenko and Lv (2009)] just to name
+a few. Fan and Lv (2010) provided a selective overview of high dimen-
+sional variable selection methods. Various authors reported inconsistency
+of LASSO and its poor performance for variable selection under high di-
+mensional settings; see Zou (2006) and Johnson and Rossell (2012). On the
+other hand, several penalization based methods were shown to have the ora-
+cle property [Fan and Li (2001)] under some restrictions on p. For example,
+Fan and Peng (2004) and Huang and Xie (2007) showed the oracle prop-
+erty for some nonconcave penalized likelihood methods when p = O(n1/3 )
+and p = o(n), respectively. Shen, Pan and Zhu (2012) showed that L0 pe-
+nalized likelihood method has the oracle property under exponentially large
+p = eo(n) .
+   Many Bayesian methods have also been proposed for variable selection
+including the stochastic search variable selection [George and McCulloch
+(1993)], empirical Bayes variable selection [George and Foster (2000)], spike
+and slab selection method [Ishwaran and Rao (2005)], penalized credible
+regions [Bondell and Reich (2012)], nonlocal prior method [Johnson and
+Rossell (2012)], among others. We shall describe the typical framework used
+for Bayesian variable selection methods before discussing their theoretical
+properties.
+   We use the standard notation Yn×1 = Xn×p βp×1 + εn×1 to represent the
+linear regression model. Bayesian variable selection methods usually intro-
+duce latent binary variables for each of the covariates to be denoted by
+Z = (Z1 , . . . , Zp ). The idea is that each Zi would indicate whether the ith
+covariate is active in the model or not. For this reason, the prior distribution
+on the regression coefficient βi under Zi = 0 is usually a point mass at zero,
+but a diffused (noninformative) prior under Zi = 1. The concentrated prior
+of βi under Zi = 0 is referred to as the spike prior, and the diffused prior
+under Zi = 1 is called the slab prior. Further, a prior distribution on the
+binary random vector Z is assumed, which can be interpreted as a prior dis-
+tribution on the space of models. A Bayesian variable selection method then
+selects the model with the highest posterior probability. Various selection
+procedures with this structure have been proposed; they essentially differ
+in the form of the spike and slab priors, or in the form of the prior on the
+model space.
+     VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                   3
+
+   Mitchell and Beauchamp (1988) considered a uniform distribution for the
+slab prior. George and McCulloch (1993) used the Gaussian distribution with
+a zero mean and a small but fixed variance as the spike prior, and another
+Gaussian distribution with a large variance as the slab prior. This allowed the
+use of a Gibbs sampler to explore the posterior distribution of Z. However,
+as we argue in Section 3, this prior specification does not guarantee model
+selection consistency at any fixed prior. Ishwaran and Rao (2005) also used
+Gaussian spike and slab priors, but with continuous bimodal priors for the
+variance of β to alleviate the difficulty of choosing specific prior parameters.
+More recently, Ishwaran and Rao (2011) established the oracle property for
+the posterior mean as n converges to infinity (but p is fixed) under certain
+conditions on the prior variances. They noted that in the orthogonal design
+case, a uniform complexity prior leads to correct complexity recovery (i.e.,
+the expected size of the posterior model size converges to the true model size)
+under weaker conditions on the prior variances. In another development,
+Yang and He (2012) used shrinking priors to explore commonality across
+quantiles in the context of Bayesian quantile regression, but the use of such
+priors for achieving model selection consistency has not been explored. In
+this paper, we continue to work with the framework where both the spike
+and slab priors are Gaussian, but our prior parameters depend explicitly on
+the sample size through which appropriate shrinkage is achieved. We shall
+establish model selection consistency properties for general design matrices
+while allowing p to grow with n at a nearly exponential rate. In particular,
+the strong selection consistency property we establish is a stronger result for
+model selection than complexity recovery.
+   One of the most commonly usedQ       priors on the model space is the inde-
+pendent prior given by P [Z = z] = pi=1 wizi (1 − wi )zi , where the marginal
+probabilities wi are usually taken to be the same constant. However, when
+p is diverging, this implies that the prior probability on models with sizes of
+order less than p goes to zero, which is against model sparsity. We consider
+marginal probabilities wi in the order of p−1 , which will impose vanishing
+prior probability on models of diverging size. Yuan and Lin (2005) used a
+prior that depends on the Gram matrix to penalize models with unneces-
+sary covariates at the prior level. The vanishing prior probability in our case
+achieves similar prior penalization.
+   A common notion of consistency for Bayesian variable selection is defined
+in terms of pairwise Bayes factors, that is, the Bayes factor of any under-
+or over-fitted model with respect to the true model goes to zero. Moreno,
+Girón and Casella (2010) proved that intrinsic priors give pairwise consis-
+tency when p = O(n), and similar consistency of the Bayesian information
+criterion [BIC, Schwarz (1978)] when p = O(nα ), α < 1. Another notion of
+consistency for both frequentist and Bayesian methods is that the selected
+4                       N. N. NARISETTY AND X. HE
+
+model equals the true model with probability converging to one. We re-
+fer to this as selection consistency. Bondell and Reich (2012) proposed a
+method based on penalized credible regions that is shown to be selection
+consistent when log p = O(nc ), c < 1. Johnson and Rossell (2012) proposed a
+stronger consistency for Bayesian methods under which the posterior prob-
+ability of the true model converges to one, which we shall refer to as strong
+selection consistency. The authors used nonlocal distributions (distributions
+with small probability mass close to zero) as slab priors, and proved strong
+selection consistency when p < n. However, apart from the limitation p < n,
+their method involves approximations of the posterior distributions and an
+application of MCMC methods, which are computationally intensive if at
+all feasible for modest size problems.
+   We make the following contributions to variable selection in this article.
+We introduce shrinking and diffusing priors as spike and slab priors, and
+establish strong selection consistency of the approach for p = eo(n) . This ap-
+proach is computationally advantageous because a standard Gibbs sampler
+can be used to sample from the posterior. In addition, we find that the
+resultant selection on the model space is closely related to the L0 penal-
+ized likelihood function. The merits of the L0 penalty for variable selection
+have been discussed by many authors including Schwarz (1978), Liu and
+Wu (2007), Dicker, Huang and Lin (2013), Kim, Kwon and Choi (2012) and
+Shen, Pan and Zhu (2012).
+   We now outline the remaining sections of the paper as follows. The first
+part of Section 2 describes the model, conditions on the prior parameters
+and motivation for these conditions. The latter part describes our proposed
+methodology for variable selection based on the proposed model. Section 3
+motivates the use of sample size dependent prior parameters by considering
+orthogonal design matrices, and provides insight into the variable selection
+mechanism using those priors. Section 4 presents our main results on the
+convergence of the posterior distribution of the latent vector Z, and the
+strong selection consistency of our model selection methodology. Section 5
+provides an asymptotic connection between the proposed method and the L0
+penalization. Section 6 provides a discussion on the conditions assumed for
+proving the results of Section 4. Some computational aspects of the proposed
+method are noted in Section 7. We present simulation studies in Section 8 to
+illustrate how the proposed method compares with some existing methods.
+Application to a gene expression data set is given in Section 9, followed by
+a conclusion in Section 10. Section 11 provides proofs of some results not
+given in the earlier sections.
+
+   2. The model. From now on, we use pn to denote the number of covari-
+ates to indicate that it grows with n. Consider the n × 1 response vector
+Y , and the n × pn design matrix X corresponding to the pn covariates of
+      VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                  5
+
+interest. Let β be the regression vector, that is, the conditional mean of Y
+given X is given by Xβ. We assume that β is sparse in the sense that only
+a few components of β are nonzero; this sparsity assumption can be relaxed
+as in Condition 4.3. Our goal is to identify the nonzero coefficients to learn
+about the active covariates. We describe our working model as follows:
+                          Y |(X, β, σ 2 ) ∼ N (Xβ, σ 2 I),
+                                                       2
+                       βi |(σ 2 , Zi = 0) ∼ N (0, σ 2 τ0,n ),
+(1)                                                    2
+                       βi |(σ 2 , Zi = 1) ∼ N (0, σ 2 τ1,n ),
+                       P (Zi = 1) = 1 − P (Zi = 0) = qn ,
+                       σ 2 ∼ IG(α1 , α2 ),
+where i runs from 1 to pn , qn , τ0,n , τ1,n are constants that depend on n, and
+IG(α1 , α2 ) is the Inverse Gamma distribution with shape parameter α1 and
+scale parameter α2 .
+   The intuition behind this set-up is that the covariates with zero or very
+small coefficients will be identified with zero Z values, and the active co-
+variates will be classified as Z = 1. We use the posterior probabilities of the
+latent variables Z to identify the active covariates.
+   Notation: We now introduce the following notation to be used throughout
+the paper.
+   Rates: For sequences an and bn , an ∼ bn means abnn → c for some constant
+c > 0, an  bn (or bn  an ) means bn = O(an ), and an ≻ bn (or bn ≺ an )
+means bn = o(an ).
+                                                                P
+   Convergence: Convergence in probability is denoted by −→, and equiva-
+                                     d
+lence in distribution is denoted by =.
+   Models: We use k to index an arbitrary model which is viewed as a pn × 1
+binary vector. The ith entry ki of k indicates whether the ith covariate is
+active (1) or not (0). We use Xk as the design matrix corresponding to
+the model k, and βk to denote the corresponding regression coefficients. In
+addition, t is used to represent the true model.
+   Model operations: We use |k| to represent the size of the model k. For two
+models k and j, the operations k ∨ j and k ∧ j denote entry-wise maximum
+and minimum, respectively. Similarly, kc = 1 − k is entrywise operation,
+where 1 is the vector of 1’s. We also use the notation k ⊃ j (or k ≥ j) to
+denote that the model k includes all the covariates in model j, and k 6⊃ j
+otherwise.
+   Eigenvalues: We use φmin (A) and φmax (A) to denote the minimum and
+maximum eigenvalues, respectively, and φ#   min (A) to denote the minimum
+nonzero eigenvalue (MNEV) of the matrix A. Moreover, we use λnM to be
+6                        N. N. NARISETTY AND X. HE
+
+the maximum eigenvalue of the Gram matrix X ′ X/n, and for ν > 0, we
+define
+                                                            ′    
+                        n             n                  #  Xk Xk
+    mn (ν) = pn ∧                and λm (ν) := inf φmin             .
+                  (2 + ν) log pn              |k|≤mn (ν)     n
+   Matrix inequalities: For square matrices A and B of the same order, A ≥ B
+or (A − B) ≥ 0 means that (A − B) is positive semidefinite.
+   Residual sum of squares: We define R̃k = Y ′ (I − X(Dk + X ′ X)−1 X ′ )Y ,
+                      −2             −2
+where Dk = Diag(kτ1n       + (1 − k)τ0n ). R̃k approximates the usual residual
+                  ∗      ′
+sum of squares Rk = Y (I − Pk )Y , where Pk is the projection matrix corre-
+sponding to the model k.
+   Generic constants: We use c′ and w′ to denote generic positive constants
+that can take different values each time they appear.
+                                       2 → 0 and τ 2 → ∞ as n goes to
+   2.1. Prior parameters. We consider τ0,n         1,n
+∞, where the rates of convergence depend on n and pn . To be specific, we
+assume that for some ν > 0, and δ > 0,
+                2 n                      2 n
+              nτ0n λM = o(1)     and   nτ1n λm (ν) ∼ (n ∨ p2+2δ
+                                                           n    ).
+As will be seen later, these rates ensure desired model selection consistency
+for any δ > 0, where larger values of δ will correspond to higher penalization
+and vice versa.
+                            2 depends on the sample size n and the scale of
+   Note that the variance τ0n
+the Gram matrix. Since the prior distribution of a coefficient under Z = 0 is
+mostly concentrated in
+                                                
+                                   3σ       3σ
+                              −p n , p n ,
+                                   nλM      nλM
+one can view this as the shrinking neighborhood around 0 that is being
+treated as the region of inactive coefficients. The variance     2
+                                                              √ τ1n 2increases to
+∞, where the rate depends on pn . However, when pn ≺ n, τ1n can be of
+constant order [if λnm (ν) is bounded away from zero].
+   Now consider the prior probability that a coefficient is nonzero (denoted
+by qn ). The following calculation gives insight into the choice of qn . Let Kn
+be a sequence going to ∞, then
+                   pn
+                               !                           
+                  X                         Kn − pn qn
+             P        Zi > Kn ≈ 1 − Φ p                       −→ 0,
+                  i=1
+                                            pn qn (1 − qn )
+
+if pn qn is bounded. Therefore, we typically choose qn such that qn ∼ p−1    n .
+This can be viewed as a priori penalization of the models with large size
+in the sense that the prior probability on models with diverging number of
+covariates goes to zero. To this respect, if K is an initial upper bound for the
+     VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                   7
+                                                                √
+size of the model t, by choosing qn = c/pn such that Φ((K − c)/ c) ≈ 1 − α,
+our prior probability on the models with sizes greater than K will be α.
+   We would like to note that the hierarchical model considered by George
+and McCulloch (1993) is similar to our model (1), but their prior parameters
+are fixed and, therefore, do not satisfy our conditions. In Section 3, we
+give an example illustrating model selection inconsistency under fixed prior
+parameters.
+
+   2.2. Methodology for variable selection. We use the posterior distribution
+of the latent variables Zi to select the active covariates. Note that the sample
+space of Z, denoted by M , has 2pn points, each of which corresponds to
+a model. For this reason, we call M the model space. To find the model
+with the highest posterior probability is computationally challenging for
+large pn . In this paper, we use a simpler alternative, that is, we use the
+pn marginal posterior probabilities P (Zi = 1|Y, X), and select the covariates
+with the corresponding probability more than a fixed threshold p ∈ (0, 1).
+A threshold probability of 0.5 is a natural choice for p. This corresponds to
+what Barbieri and Berger (2004) call the median probability model. In the
+orthogonal design case, Barbieri and Berger (2004) showed that the median
+probability model is an optimal predictive model. The median probability
+model may not be the same as the maximum a posteriori (MAP) model in
+general, but the two models are the same with probability converging to one
+under strong selection consistency.
+   On the other hand, Dey, Ishwaran and Rao (2008) argued that the me-
+dian probability model tends to underfit in finite samples. We also consider
+an alternative by first ranking the variables based on the marginal posterior
+probabilities and then using BIC to choose among different model sizes. This
+option avoids the need to specify a threshold. In either case, it is compu-
+tationally advantageous to use the marginal posterior probabilities, because
+we need fewer Gibbs iterations to estimate only pn of them. The proposed
+methods based on marginal posteriors achieve model selection consistency
+because the results in Section 4 assure that (i) the posterior probability of
+the true model converges to 1, and (ii) the marginal posterior based vari-
+able selection selects the true model with probability going to 1. We now
+motivate these results and the necessity of sample size dependent priors in
+a simple but illustrative case with orthogonal designs.
+
+  3. Orthogonal design. In this section, we consider the case where the
+number of covariates pn < n, and assume that the design matrix X is or-
+thogonal, that is, X ′ X = nI. We also assume σ 2 to be known. Though this
+may not be a realistic set-up, this simple case provides motivation for the
+necessity of sample size dependent prior parameters as well as an insight into
+the mechanism of model selection using these priors. At this moment, we do
+8                            N. N. NARISETTY AND X. HE
+
+not impose any assumptions on the prior parameters. All the probabilities
+used in the rest of the paper are conditional on X. Under this simple set-up,
+the joint posterior of β and Z can be written as
+ P (β, Z|σ 2 , Y )
+                          pn
+                          Y
+                    1   2
+      ∝ exp − 2 kY − Xβk2     ((1 − qn )π0 (βi ))1−Zi (qn π1 (βi ))Zi
+                   2σ
+                                         i=1
+                                       Y pn
+              1    ′ ′
+      ∝ exp − 2 (β X Xβ − 2β X Y )′ ′
+                                              ((1 − qn )π0 (βi ))1−Zi (qn π1 (βi ))Zi
+             2σ
+                                          i=1
+                  p
+           (                     ) pn
+              n X
+                                      ((1 − qn )π0 (βi ))1−Zi (qn π1 (βi ))Zi ,
+                                   Y
+      ∝ exp − 2     (βi − β̂i )2
+             2σ
+                       i=1                 i=1
+                                           2 ) is the probability density func-
+where for k = 0, 1, πk (x) = φ(x, 0, σ 2 τk,n
+tion (p.d.f.) of the normal distribution with mean zero and variance σ 2 τk,n     2
+
+evaluated at x, and β̂i is the OLS estimator of βi , that is, β̂i = Xi′ Y /n.
+   The product form of the joint posterior of (Zi , βi ) implies that (Zi , βi ) and
+{(Zj , βj ), j 6= i} are independent given data. Hence, the marginal posterior
+of Zi is given by
+                                          
+                                n
+                     Z
+  P (Zi |σ , Y ) ∝ exp − 2 (b − β̂i ) ((1 − qn )π0 (b))1−Zi (qn π1 (b))Zi db.
+            2                            2
+                               2σ
+Therefore,
+                                               (1 − qn )Eβ̂i (π0 (B))
+(2)          P (Zi = 0|σ 2 , Y ) =                                               ,
+                                     (1 − qn )Eβ̂i (π0 (B)) + qn Eβ̂i (π1 (B))
+where Eβ̂i is the expectation under B following the normal distribution with
+mean β̂i and variance σ 2 /n. These expectations can be calculated explicitly,
+that is, for k = 0 and 1,
+                             √
+                                                           b2
+                                                               
+                                n               n
+                                   Z
+                                                        2
+           Eβ̂i (πk (B)) =            exp − 2 (b − β̂i ) − 2      db
+                           2πστk,n            2σ          2τk,n
+
+                                             β̂i2
+                                                 
+                               1
+                         =√         exp − 2        ,
+                             2πak,n         2ak,n
+                 q
+where ak,n = σ 2 /n + τk,n  2 .
+
+  This simple calculation gives much insight into the role of our priors
+and the influence of the prior parameters on variable selection, which we
+explain in some detail below. In the following subsections, we assume that
+      VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                       9
+
+the ith covariate is identified as active if and only if P (Zi = 1|σ 2 , Y ) > 0.5
+for simplicity, and similar arguments can be produced for threshold values
+other than 0.5.
+
+   3.1. Fixed parameters. Let us first consider the case of fixed parameters
+ 2 = τ 2 < τ 2 = τ 2 and q = q = 0.5. We then have for k = 0, 1,
+τ0n     0   1n      1      n
+
+                                    βi2
+                                       
+                         P 1
+(3)       Eβ̂i (πk (B)) −→ exp − 2            as n → ∞ for βi 6= 0.
+                           τk       2τk
+Now for βi = τ0 6= 0, we have exp{−βi2 /2τ02 }/τ0 > exp{−βi2 /2τ12 }/τ1 for any
+τ1 6= τ0 . Therefore, the limiting value of P (Zi = 1|σ 2 , Y ) will be less than
+0.5 (with high probability) as n → ∞. This implies that even as n → ∞, we
+would not be able to identify the active coefficient in this case.
+                   2 , fixed τ 2 and q . Now consider the prior parameters
+   3.2. Shrinking τ0,n        1,n         n
+              2
+such that τ1,n and qn are fixed, but τ0,n   2 goes to 0 with n. If β = 0, √nβ̂
+                                                                    i         i
+converges in distribution to the standard normal distribution, and we have,
+for k = 0, 1,
+                                     β̂i2
+                                               
+                      exp −                   2   = OP (1).
+                             2(σ 2 /n) + 2τk,n
+                                                                               P
+In this case, (3) will imply that Eβ̂i (π1 (B)) = Op (1), while Eβ̂i (π0 (B)) −→
+                                                             P
+∞. Therefore, from (2), we have P (Zi = 0|σ 2 , Y ) −→ 1. For βi 6= 0, using
+     P                                    2
+β̂i2 −→ βi2 and the fact that xe−rx → 0 as x → ∞ (for fixed r > 0), we
+obtain Eβ̂i (π0 (B)) → 0. As Eβ̂i (π1 (B)) ∼ c′ , for some c′ > 0, we have P (Zi =
+           P
+1|σ 2 , Y ) −→ 1.
+                                                                 P
+   To summarize, we have argued that P (Zi = 0|σ 2 , Y ) −→ I(βi = 0), where
+I(·) is the indicator function. That is, for orthogonal design matrices, the
+marginal posterior probability of including an active covariate or excluding
+                                                                         2 ,
+an inactive covariate converges to one under shrinking prior parameter τ0,n
+                         2 and q . However, it should be noted that this
+with fixed parameters τ1,n        n
+statement is restricted to the convergence of marginals of Z, and does not
+assure consistency of overall model selection. To achieve this, we will need
+           2 , q to depend on the sample size, too.
+to allow τ1,n   n
+
+    3.3. Shrinking and diffusing priors. Note that the ith covariate is iden-
+tified as active if and only if
+         P (Zi = 1|σ 2 , Y ) > 0.5
+               ⇔ qn Eβ̂i (π1 (B)) > (1 − qn )Eβ̂i (π0 (B))
+10                          N. N. NARISETTY AND X. HE
+
+               ⇔ β̂i2 (a−2     −2
+                        0,n − a1,n ) > 2(log(1 − qn )a1,n − log qn a0,n )
+
+               ⇔ β̂i2 > 2(log(1 − qn )a1,n − log qn a0,n )/(a−2     −2
+                                                             0,n − a1,n ) := ϕn .
+
+  In particular, when τ0,n 2 = o(1/n), but the other parameters τ 2 and q
+                                                                    1,n      n
+                             2
+are fixed, we have ϕn ∼ σ log n/n. Without loss of generality, assume that
+the first |t| coefficients of β are nonzero. For i > |t|, βi = 0 which implies
+           d
+that nβ̂i2 = χ21 . Therefore,
+                        σ 2 log n
+                                 
+                    2
+               P β̂i >              = P [χ21 > log n]
+                            n
+                                                           
+                                            1           1     −log n/2
+                                    ≥ √          −√        3 e
+                                          log n       log n
+                                     ≥ n−1/2−ε ,
+for ε > 0 and sufficiently large n. Therefore, we have
+                                            σ 2 log n
+                                                               
+                            2           2
+                 P [Z = t|σ , Y ] ≤ P β̂i ≤           , ∀i > |t|
+                                                n
+                                     ≤ (1 − n−1/2−ε )pn −|t|
+                                     →0        if pn > n1/2+2ε .
+The above argument shows that having τ1,n   2 and q fixed leads to incon-
+                                                     n
+                                                                        √
+sistency of selection if the number of covariates is much greater than n.
+In this case, the threshold ϕn should be larger to bound the magnitude of
+all the inactive covariates simultaneously. By using the diffusing prior pa-
+rameters Section 2.1, the threshold will be (2 + δ)σ 2 log pn /n in place of
+σ 2 log n/n. Model selection consistency with this threshold can be proved
+using similar arguments in the orthogonal design case. We will defer the
+rigorous arguments to the next section.
+
+  4. Main results. In this section, we consider our model given by (1) and
+general design matrices. Because the model selection consistency holds easily
+with pn = O(1), we assume throughout the paper that pn → ∞ as n → ∞.
+
+     4.1. Conditions. We first state the main conditions we use.
+
+ Condition 4.1 (On dimension pn ).               pn = endn for some dn → 0 as n →
+∞, that is, log pn = o(n).
+
+  Condition 4.2 (Prior parameters).               2 = o(1), nτ 2 ∼ (n ∨ p2+3δ ), for
+                                                nτ0n          1n         n
+some δ > 0, and qn ∼ p−1
+                      n .
+     VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                           11
+
+   Condition 4.3 (On true model). Y |X ∼ N (Xt βt + Xtc βtc , σ 2 I) where
+the size of the true model |t| is fixed. The coefficients corresponding to the
+inactive covariates can be nonzero but satisfy b0 := kXtc βtc k2 = O(1).
+
+  For any fixed K, define
+                  ∆n (K) :=          inf       k(I − Pk )Xt βt k22 ,
+                               {k:|k|<K|t|,k6⊃t}
+
+where Pk is the projection matrix onto the column space of Xk .
+
+  Condition 4.4 (Identifiability).
+                          √                There is K > 1+8/δ such that ∆n (K) >
+γn := 5σ 2 |t|(1 + δ) log( n ∨ pn ).
+
+  Condition 4.5 (Regularity of the design). For some ν < δ, κ < (K −
+1)δ/2,
+                                              n ∨ p2+2δ
+                                                             
+        n       2 −1     2           n             n       −κ
+       λM ≺ ((nτ0n ) ∧ nτ1n ) and λm (ν)          2    ∨ pn .
+                                                nτ1n
+
+  The moderateness of these conditions will be examined in some detail in
+Section 6.
+
+   4.2. Results for fixed σ 2 . We suppress ν and K from the notation of
+λnm (ν), mn (ν) and ∆n (K) for stating the results for convenience. In addition,
+we introduce the following notation. The posterior ratio of model k with
+respect to the true model t is defined as
+                 PR(k, t) := P (Z = k|Y, σ 2 )/P (Z = t|Y, σ 2 ).
+The following lemma gives an upper bound on the posterior ratio.
+
+  Lemma 4.1.       Under Conditions 4.2 and 4.5, for any model k 6= t, we
+have
+                                               
+                 Qk |k|−|t|       1
+      PR(k, t) =   s        exp − 2 (R̃k − R̃t )
+                 Qt n            2σ
+                                                   ∗                     c
+               ≤ w′ (nτ1n
+                       2 n
+                          λm (1 − φn ))−(1/2)(rk −rt ) (λnm )−(1/2)|t∧k | sn|k|−|t|
+                                          
+                              1
+                 × exp − 2 (R̃k − R̃t ) ,
+                            2σ
+where Qk = |I + XDk−1 X ′ |−1/2 , sn = qn /(1 − qn ) ∼ p−1   ′
+                                                        n , w > 0 is a constant,
+rk = rank(Xk ), rk∗ = rk ∧ mn , φn = o(1), R̃k = Y ′ (I − X(Dk + X ′ X)−1 X ′ )Y ,
+                    −2            −2
+and Dk = Diag(kτ1n     + (1 − k)τ0n  ).
+12                          N. N. NARISETTY AND X. HE
+
+   The following arguments give some heuristics for the convergence of pair-
+wise posterior ratio. Note that R̃k is the residual sum of squares from a
+shrinkage estimator of β, and the term LRn := exp{−(R̃k − R̃t )/2σ 2 } corre-
+sponds to the usual likelihood ratio of the two models k and t. Consider a
+model k that does not include one or more active covariates, then (R̃k − R̃t )
+goes to ∞ at the same rate as n, because it is (approximately) the difference
+in the residual sums of squares of model k and model t. We then have the pos-
+terior ratio converging to zero since LRn ∼ e−cn for some c > 0, and due to
+Conditions 4.1–4.5, Pn := (nτ1n   2 λn (1 − φ ))(rt −rk∗ )/2 (λn )−|t∧k c |/2 s|k|−|t| (1 −
+                                     m       n                 m               n
+φn )−|t|/2       cn
+           = o(e ). On the other hand, if the model k includes all the ac-
+tive covariates and one or more inactive covariates, we have |k| > |t|, but
+(R̃k − R̃t ) is probabilistically bounded. The posterior ratio in this case also
+converges to zero because Pn goes to zero. Note that when rk > rt , larger
+values of τ1n 2 will imply smaller P . That is, the posterior ratio for large
+                                       n
+sized models go to zero faster for larger values of τ1n    2 . A similar observation
+
+is made by Ishwaran and Rao (2011). To state our main result, we first
+consider the posterior distributions of the models Z, assuming the variance
+parameter σ 2 to be known. We consider the case with the prior on σ 2 in
+Theorem 4.2.
+
+     Theorem 4.1.       Assume Conditions 4.1–4.5. Under model (1), we have
+                   P
+P (Z = t|Y, σ 2 ) −→ 1 as n → ∞, that is, the posterior probability of the true
+model goes to 1 as the sample size increases to ∞.
+
+     Remark 1.      The statement of Theorem 4.1 is equivalent to
+                     1 − P (Z = t|Y, σ 2 ) X           P
+(4)                                 2
+                                          =  PR(k, t) −→ 0.
+                       P (Z = t|Y, σ )
+                                               k6=t
+
+   Remark 2. It is worth noting that for Theorem 4.1 to hold, we do not
+actually need the true σ 2 to be known. Even for a misspecified σ̃ 2 6= σ 2 ,
+                    P
+P (Z = t|Y, σ̃ 2 ) −→ 1 under the conditions ∆n > σ̃ 2 γn /σ 2 and 2(1 + δ)σ̃ 2 >
+        2
+(2 + δ)σ . The same proof for Theorem 4.1 works.
+
+   To see why (4) holds, we provide specific rates of convergence of individual
+posterior ratio summed over subsets of the model space. We divide the set
+of models (excluding the model t) into the following subsets:
+   1. Unrealistically large models: M1 = {k : rk > mn }, all the models with
+dimension (i.e., the rank) greater than mn .
+   2. Over-fitted models: M2 = {k : k ⊃ t, rk ≤ mn }, that is, the models of
+dimension smaller than mn which include all the active covariates plus one
+or more inactive covariates.
+     VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                 13
+
+  3. Large models: M3 = {k : k 6⊃ t, K|t| < rk ≤ mn }, the models which do
+not include one or more active covariates, and dimension greater than K|t|
+but smaller than mn .
+  4. Under-fitted models: M4 = {k : k 6⊃ t, rk ≤ K|t|}, the models of moder-
+ate dimension which miss an active covariate.
+The proof of Theorem 4.1 shows the following results.
+
+   Lemma 4.2 (Rates of convergence). For some constants c′ , w′ > 0 (which
+may depend on δ), we have
+   1. The sum of posterior ratio k∈M1 PR(k, t)  exp{−w′ n}, with proba-
+                                  P
+bility at least 1 − 2 exp{−c′ n}.
+                                                   1+δ/2
+                                          −δ/2
+   2. The sum k∈M2 PR(k, t)  vn := (pn ∧ pn√n ), with probability greater
+                 P
+
+than 1 − exp{−c′ log pn }.
+                 P                  (K−1)|t|/2+1
+   3. The sum k∈M3 PR(k, t)  νn                 , with probability greater than
+             ′
+1 − exp{−c K|t| log pn }.
+   4. For some w′′ < 1, we have k∈M4 PR(k, t)  exp{−w′ (∆n − w′′ γn )},
+                                   P
+with probability greater than 1 − exp{−c′ ∆n }.
+
+  4.3. Results with prior on σ 2 . We now consider the case with the inverse
+Gamma prior on the variance parameter σ 2 . Define the constant w as w :=
+δ/8(1 + δ)2 in the rest of the section.
+
+  Theorem 4.2. Under the same conditions as in Theorem 4.1, if we
+only consider models of dimension at most |t| + wn/ log pn , we have P (Z =
+      P
+t|Y ) −→ 1 as n → ∞.
+
+  Remark 3. Note that the dimension of the models that need to be
+excluded for Theorem 4.2 to hold is in the order of n/ log pn . These are
+unrealistically large models that are uninteresting to us. From now on, we
+implicitly assume this restriction when a prior distribution is used for σ 2 .
+
+  The following corollary ensures that the variable selection procedure based
+on the marginal posterior probabilities finds the right model with probability
+tending to 1. It is a direct consequence of Theorems 4.1 and 4.2, but is
+particularly useful for computations because it ensures that the marginal
+posterior probabilities can be used for selecting the active covariates.
+
+  Corollary 4.1. Under the conditions of Theorem 4.2, we have for any
+0 < p < 1, P [P (Zi = ti |Y ) > p for all i = 1, . . . , pn ] → 1 as n → ∞.
+14                         N. N. NARISETTY AND X. HE
+
+   Proof. Let Ei be the event that the marginal posterior   S n probability
+of ith covariate P (Zi = ti |Y ) > p. We shall show that P [ pi=1 Eic ] → 0 as
+n → ∞. For each i = 1, . . . , pn , we have
+                                          X
+                     P (Zi 6= ti |Y ) =     P (Z = k|Y )
+                                            k:ki 6=ti
+                                            X
+                                        ≤          P (Z = k|Y )
+                                            k6=t
+
+                                      = 1 − P (Z = t|Y ).
+            Sp n c
+   Then P [ i=1 Ei ] = P [P (Zi = ti |Y ) ≤ p for some i = 1, . . . , pn ] ≤ P [P (Z =
+t|Y ) ≤ p] → 0, due to Theorem 4.2. 
+
+   5. Connection with penalization methods. Due to Lemma 4.1, the max-
+imum aposteriori (MAP) estimate of the model using our Bayesian set-up
+is equivalent to minimizing the objective function
+              B(k) := R̃k + 2σ 2 (−(|k| − |t|) log sn − log(Qk /Qt ))
+(5)
+                     = R̃k + (|k| − |t|)ψn,k ,
+where
+                                                         
+                                             log(Qk /Qt )
+                      ψn,k = 2σ 2 − log sn −                .
+                                              (|k| − |t|)
+Lemma 4.2 implies that with exponentially small probability, the sum of
+posterior ratio of the models with dimension greater than mn goes to zero
+(exponentially) for the fixed σ case. We therefore focus on all the mod-
+els with dimension less than mn in this section. In addition, assume that
+the maximum and minimum nonzero eigenvalues of models of size 2|t| are
+bounded away from ∞ and 0, respectively. Then, due to Condition 4.5 and
+the proof of Lemma 11.1(iii), we have
+                                      log(Qk /Qt )
+(6)              c log(n ∨ pn ) ≤ −                ≤ C log(n ∨ pn ),
+                                        (rk − rt )
+for some 0 < c ≤ C < ∞.
+   In particular, if the models with dimension less than mn are of full rank,
+that is, |k| = rk , then due to (6), we have
+(7)              2σ 2 c′ log(n ∨ pn ) ≤ ψn,k ≤ 2σ 2 C ′ log(n ∨ pn ),
+                             2 λn → 0, and nτ 2 λn → ∞,
+where 0 < c′ ≤ C ′ < ∞. As nτ0n M            1n m
+
+         R̃k ∼ Y ′ (I − X(1/τ1n
+                             2
+                                + X ′ X)−1 X ′ )Y = kY − Ŷk k2 + O(1).
+      VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                15
+
+Therefore, the MAP estimate can be (asymptotically) described as the model
+corresponding to minimizing the following objective function:
+(8)                m(β) := kY − Xβk22 + ψn,k (kβk0 − |t|).
+Due to the bounds (7) on ψn,k , any inactive covariate will be penalized
+in the order of log(n ∨ pn ) irrespective of the size of the coeffecient. This
+is however not the case with the L1 penalty or SCAD penalty, which are
+directly proportional to the magnitude of the coefficient in some interval
+around zero.
+   The commonly used model selection criteria AIC and BIC are special
+cases of L0 penalization. The objective functions of AIC and BIC are simi-
+lar to m(β), which have the quotient of penalty equal to 2 and log n in place
+of ψn,k . Due to the results in Section 4 and the above arguments, selection
+properties of our proposed method are similar to those of the L0 penalty.
+In particular, it attempts to find the model with the least possible size that
+could explain the conditional mean of the response variable. A salient feature
+of our approach is that the L0 -type penalization is implied by the hierar-
+chical model. The tuning parameters are more transparent than those in
+penalization methods. Another feature to note is that our model allows high
+(or even perfect) correlations among inactive covatiates. This is practically
+very useful in high dimensional problems because the number of inactive co-
+variates is often large and the singularity of the design matrix is a common
+occurrence. Also, high correlations between active and inactive covariates is
+not as harmful to the proposed method as they are to the L1 -type penalties.
+This point is illustrated in Table 4 of our simulation studies in Section 8.
+
+   6. Discussion of the conditions. The purpose of this section is to demon-
+strate that Conditions 4.1–4.5 that we use in Section 4 are quite mild. Condi-
+tion 4.1 restricts the number of covariates to be no greater than exponential
+in n, and Condition 4.2 provides the shrinking and diffusing rates for the
+spike and slab priors, respectively. We note that Conditions 4.3–4.5 allow
+β to depend on n. For instance, consider pn < n and the design matrix
+X with X ′ X/n → D, where D is a positive definite matrix. Ishwaran and
+Rao (2005), Zou (2006), Bondell and Reich (2012) and Johnson and Rossell
+(2012) assumed this condition on the design under which Conditions 4.3 and
+4.4 only require β to be such that
+                                  
+                                  1                   log n
+                    kβtc k22 = O     and kβt k22 > c′       ,
+                                  n                     n
+for some c′ > 0. Condition 4.5 is also satisfied in this case, so Conditions
+4.3–4.5 allow a wider class of design matrices.
+   In general, Condition 4.4 is a mild regularity condition that allows us to
+identify the true model. It serves to restrict the magnitude of the correlation
+16                       N. N. NARISETTY AND X. HE
+
+between active and inactive covariates, and also to bound the signal to noise
+ratio from below. The following two remarks provide some insight into the
+role of Condition 4.4 in these aspects.
+
+ Remark 4. Consider the case where the active coefficients βt are fixed.
+We then have some w′ > 0, such that
+              ∆n (K) ≥ kβt k22           inf          φmin (Xt′ (I − Pk )Xt )
+                                 {k:|k|<K|t|,k6⊃t}
+                                                               ′ X
+                                                               Xk∨t
+                                                                        
+                          ′                                         k∨t
+                      ≥wn               inf         φmin                  ,
+                              {k:|k|<K|t|,k6⊃t}                   n
+where we have used the fact that φmin (Xk∨t   ′ X                 ′
+                                                   k∨t ) ≤ φmin (Xt (I − Pk )Xt ).
+To see this, we just need to consider the cases where Xk∨t is of full rank.
+Then it follows from the observation that (Xt′ (I − Pk )Xt )−1 is a subma-
+            ′ X
+trix of (Xk∨t       −1
+               k∨t ) . Therefore, Condition 4.4 is satisfied if the minimum
+eigenvalues of the submatrices of X ′ X/n with size smaller than (K + 1)|t|
+are uniformly larger than c′ log(n ∨ pn )/n. In the other end of the spectrum,
+where the inactive covariates can be perfectly correlated, Condition 4.4 could
+still hold.
+
+  Remark 5. If the infimum of φmin (Xt′ (I −Pk )Xt /n) is uniformly bounded
+away from zero, then ∆n (K) ≥ w′ nkβt k22 . Then Condition 4.4 is satisfied if
+                                    2
+                              βt              c′ log(n ∨ pn )
+                                        ≥                     .
+                              σ     2                n
+
+   Condition 4.5 provides conditions on the eigenvalues of the Gram matrix
+in terms of the prior parameters. The condition is weaker than the assump-
+tion that the maximum and minimum nonzero eigenvalues of the Gram
+matrix are bounded away from infinity and zero, respectively. In Condition
+              2 )−1 will be satisfied if τ 2 is small enough. However, the as-
+4.5, λnM ≺ (nτ0n                          0n
+sumption on λnm (ν) is nontrivial as it needs to be greater than p−κ
+                                                                  n . We now
+show that this requirement is satisfied with high probability if the design
+matrix consists of independent sub-Gaussian rows.
+
+   Lemma 6.1 (MNEV for sub-Gaussian random matrices). Suppose that
+the rows of Xn×pn are independent isotropic sub-Gaussian random vectors
+in Rpn . Then there exists a ν > 0 such that, with probability greater than
+1 − exp(−w′ n),
+                                     ′     
+                                      Xk Xk
+                           inf φmin           > 0.
+                       |k|≤mn (ν)       n
+
+  A proof of Lemma 6.1 is provided in Section 11. Lemma 6.1 implies that
+the Gram matrix of a sub-Gaussian design matrix has the minimum eigen-
+values of all the mn (ν) dimensional submatrices to be uniformly bounded
+     VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                             17
+
+away from zero. This clearly is stronger than Condition 4.5, which only re-
+quires the minimum nonzero eigenvalues to be uniformly greater than p−κn .
+In particular, unlike the restricted isometry conditions which control the
+minimum eigenvalue, Condition 4.5 allows the minimum eigenvalue to be
+exactly zero to allow even perfect correlation among inactive (or active)
+covariates.
+
+   7. Computation. The implementation of our proposed method involves
+using the Gibbs sampler to draw samples from the posterior of Z. The full
+conditionals are standard distributions due to the use of conjugate priors.
+The conditional distribution of β is given by
+                                                pn
+                                                Y
+                 2              1             2
+        f (β|Z, σ , Y ) ∝ exp − 2 kY − Xβk2         φ(βi , 0, σ 2 τZ2 i ,n ),
+                               2σ
+                                                          i=1
+
+where φ(x, 0, τ 2 ) is the p.d.f. of the normal distribution with mean zero, and
+variance τ 2 evaluated at x. This can be rewritten as
+                                                             
+              2               1    ′ ′         ′ ′        1 ′
+ f (β|Z = k, σ , Y ) ∝ exp − 2 (β X Xβ − 2β X Y ) exp − 2 β Dk β ,
+                             2σ                          2σ
+where Dk = Diag(τk−2i ,n
+                         ). Hence, the conditional distribution of β is given by
+            2
+β ∼ N (m, σ V ), where V = (X ′ X + Dk )−1 , and m = V X ′ Y . Furthermore,
+the conditional distribution of Zi is
+                                                                2 )
+                                              qn φ(βi , 0, σ 2 τ1,n
+        P (Zi = 1|β, σ 2 ) =                     2 ) + (1 − q )φ(β , 0, σ 2 τ 2 )   .
+                               qn φ(βi , 0, σ 2 τ1,n         n    i          0,n
+
+The conditional of σ 2 is the inverse Gamma distribution IG(a, b) with a =
+α1 + n/2 + pn /2, and b = α2 + β ′ Dk β/2 + (Y − Xβ)′ (Y − Xβ)/2.
+   The only possible computational difficulty in the Gibbs sampling algo-
+rithm is the step of drawing from the conditional distribution of β, which is
+a high dimensional normal distribution for large values of pn . However, due
+to the structure of the covariance matrix (X ′ X + Dk )−1 , it can be efficiently
+sampled using block updating that only requires drawing from smaller di-
+mensional normal distributions. Details of the block updating can be found
+in Ishwaran and Rao (2005).
+
+   8. Simulation study. In this section, we study performance of the pro-
+posed method in several experimental settings, and compare it with some
+existing variable selection methods. We will refer to the proposed method
+as BASAD for BAyesian Shrinking And Diffusing priors.
+   The proposed BASAD method has three tuning parameters. In all our
+empirical work, we use
+                        σ̂ 2
+                                              2.1         
+                  2              2      2      pn
+                 τ0n =       ,  τ1n = σ̂ max        , log n ,
+                       10n                    100n
+18                       N. N. NARISETTY AND X. HE
+
+where σ̂P2 is the sample variance of Y , and we choose q = P [Z = 1] such
+                                                            n      i
+that P [ pi=1
+            n
+               Zi = 1 > K] = 0.1, for a prespecified value of K. Our default
+value is K = max(10, log(n)), unless otherwise specified in anticipation of a
+less sparse model. The purpose of using σ̂ 2 is to provide appropriate scaling.
+If a preliminary model is available, it is better to use as σ̂ 2 the residual
+variance from such a model. It is clear that those choices are not optimized
+for any given problem, but they provide a reasonable assessment on how
+well BASAD can do. In the simulations, we use 1000 burn-in iterations for
+the Gibbs sampler followed by 5000 updates for estimating the posterior
+probabilities. As mentioned in Section 2, we consider both the median prob-
+ability model (denoted by BASAD) and the BIC-based model (denoted by
+BASAD.BIC) where the threshold for marginal posterior probability is cho-
+sen by the BIC. The R function used for obtaining the results in this section
+is publicly available on the authors’ website.
+   In this paper, we report our simulation results for six cases under several
+(n, p) combinations, varied correlations, signal strengths and sparsity levels.
+• Case 1: In the first case, we use the set-up of Johnson and Rossell (2012)
+  with p = n. Two sample sizes, n = 100 and n = 200, are considered, and
+  the covariates are generated from the multivariate normal distributions
+  with zero mean and unit variance. The compound symmetric covari-
+  ance with pairwise covariance of ρ = 0.25 is used to represent correla-
+  tion between covariates. Five covariates are taken active with coefficients
+  βt = (0.6, 1.2, 1.8, 2.4, 3.0). This is a simple setting with moderate correla-
+  tion between covariates and strong signal strength.
+• Case 2: We consider the p > n scenario with (n, p) = (100, 500) and (n, p) =
+  (200, 1000), but the other parameters are same as in case 1.
+     For the next three cases (cases 3–5), we keep (n, p) = (100, 500) but
+  vary model sparsity, signal strength and correlation among covariates.
+• Case 3: We keep ρ = 0.25 and |t| = 5 but have low signals βt = (0.6, 0.6, 0.6,
+  0.6, 0.6).
+• Case 4: We consider a block covariance setting where the active covariates
+  have common correlation (ρ1 ) equal to 0.25, the inactive covariates have
+  common correlation (ρ3 ) equal to 0.75 and each pair of active and inactive
+  covariate has correlation (ρ2 ) 0.50. The other aspects of the model are the
+  same as in case 1.
+• Case 5: We consider a less sparse true model with |t| = 25 and βt is the
+  vector containing 25 equally spaced values between 1 and 3 (inclusive of
+  1 and 3).
+• Case 6: We consider the more classical case of n > p with (n, p) = (100, 50)
+  and (n, p) = (200, 50). Following Bondell and Reich (2012), the covariates
+  are drawn from a normal distribution with the covariance matrix dis-
+  tributed as the Wishart distribution centered at the identity matrix with
+      VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                              19
+
+                                            Table 1
+ Performance of BASAD for case 1: n = p. The methods under comparison are piMOM
+   with nonlocal priors of Johnson and Rossell (2012), BCR.Joint of Bondell and Reich
+   (2012), SpikeSlab of Ishwaran and Rao (2005) and three penalization methods Lasso,
+   elastic net (EN), and SCAD tuned by the BIC. The other columns of the table are as
+ follows: pp0 and pp1 (when applicable) are the average posterior probabilities of inactive
+     and active variables, respectively; Z = t is the proportion that the exact models is
+selected; Z ⊃ t is the proportion that the selected model contains all the active covatiates;
+  FDR is the false discovery rate, and MSPE is the mean squared prediction error of the
+                                        selected models
+
+                     pp0          pp1         Z=t            Z ⊃t           FDR       MSPE
+
+                                      (n, p) = (100, 100); ρ = 0.25; |t| = 5
+BASAD               0.016        0.985         0.866         0.954           0.015     1.092
+BASAD.BIC           0.016        0.985         0.066         0.996           0.256     1.203
+piMOM               0.012        0.991         0.836         0.982           0.030     1.083
+BCR.Joint                                      0.442         0.940           0.157     1.165
+SpikeSlab                                      0.005         0.216           0.502     1.660
+Lasso.BIC                                      0.010         0.992           0.430     1.195
+EN.BIC                                         0.398         0.982           0.154     1.134
+SCAD.BIC                                       0.356         0.990           0.160     1.157
+                                      (n, p) = (200, 200); ρ = 0.25; |t| = 5
+BASAD               0.002        1.000         0.944         1.000           0.009     1.037
+BASAD.BIC           0.002        1.000         0.090         1.000           0.187     1.087
+piMOM               0.003        1.000         0.900         1.000           0.018     1.038
+BCR.Joint                                      0.594         0.994           0.102     1.064
+SpikeSlab                                      0.008         0.236           0.501     1.530
+Lasso.BIC                                      0.014         1.000           0.422     1.101
+EN.BIC                                         0.492         1.000           0.113     1.056
+SCAD.BIC                                       0.844         1.000           0.029     1.040
+
+
+
+  p degrees of freedom. Three of the 50 covariates are taken to be active with
+  their coefficients drawn from the uniform distribution U (0, 3) to imply a
+  mix of weak and strong signals.
+   The summary of our results are presented in Tables 1–6. In those ta-
+bles, BASAD denotes the median probability model, BASAD.BIC denotes
+the model obtained by using the threshold probability chosen by the BIC.
+Three competing Bayesian model selection methods are: (1) piMOM, the
+nonlocal prior method proposed by Johnson and Rossell (2012) but only
+when p ≤ n; (2) BCR.Joint, the Bayesian joint credible region method of
+Bondell and Reich (2012) (using the default priors followed by an applica-
+tion of BIC); (3) SpikeSlab, the generalized elastic net model obtained using
+the R package spikeslab [Ishwaran, Kogalur and Rao (2010)] for the spike
+and slab method of Ishwaran and Rao (2005). Three penalization methods
+under consideration are: (1) LASSO; (2) Elastic Net (EN); and (3) SCAD,
+20                      N. N. NARISETTY AND X. HE
+
+                                   Table 2
+                    Performance of BASAD for case 2: p > n
+
+                 pp0        pp1           Z=t            Z ⊃t            FDR      MSPE
+
+                                 (n, p) = (100, 500); ρ = 0.25; |t| = 5
+BASAD           0.001       0.948         0.730         0.775           0.011     1.130
+BASAD.BIC       0.001       0.948         0.190         0.915           0.146     1.168
+BCR.Joint                                 0.070         0.305           0.268     1.592
+SpikeSlab                                 0.000         0.040           0.626     3.351
+Lasso.BIC                                 0.005         0.845           0.466     1.280
+EN.BIC                                    0.135         0.835           0.283     1.223
+SCAD.BIC                                  0.045         0.980           0.328     1.260
+                                (n, p) = (200, 1000); ρ = 0.25; |t| = 5
+BASAD           0.000       0.986        0.930          0.950          0.000      1.054
+BASAD.BIC       0.000       0.986        0.720          0.990          0.046      1.060
+BCR.Joint                                0.090          0.250          0.176      1.324
+SpikeSlab                                0.000          0.050          0.574      1.933
+Lasso.BIC                                0.020          1.000          0.430      1.127
+EN.BIC                                   0.325          1.000          0.177      1.077
+SCAD.BIC                                 0.650          1.000          0.091      1.063
+
+
+
+all tuned by the BIC. Our simulation experiment used 500 data sets from
+each model when n ≥ p, but used 200 data sets when p > n to aggregate the
+results.
+   The columns of the tables show the average marginal posterior proba-
+bility assigned to inactive covariates and active covariates (pp0 and pp1 ,
+resp.), proportion of choosing the true model (Z = t), proportion of includ-
+ing the true model (Z ⊃ t) and false discovery rate (FDR). The last column
+(MSPE) gives the average test mean squared prediction error based on n
+new observations as testing data. From our simulation experiment, we have
+the following findings:
+
+                                 Table 3
+              Performance of BASAD for case 3: (n, p) = (100, 500)
+
+                 pp0        pp1           Z=t            Z ⊃t            FDR      MSPE
+
+                             ρ = 0.25; |t| = 5; βt = (0.6, 0.6, 0.6, 0.6, 0.6)
+BASAD           0.002       0.622          0.185         0.195            0.066   2.319
+BASAD.BIC       0.002       0.622          0.160         0.375            0.193   1.521
+BCR.Joint                                  0.030         0.315            0.447   1.501
+SpikeSlab                                  0.000         0.000            0.857   2.466
+Lasso.BIC                                  0.000         0.520            0.561   1.555
+EN.BIC                                     0.040         0.345            0.478   1.552
+SCAD.BIC                                   0.045         0.340            0.464   1.561
+     VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                             21
+
+                                   Table 4
+                Performance of BASAD for case 4: (n, p) = (100, 500)
+
+                   pp0         pp1          Z =t          Z ⊃t           FDR      MSPE
+
+                                       ρ1 = 0.25, ρ2 = 0.50, ρ3 = 0.75
+BASAD             0.002        0.908         0.505         0.530         0.012     1.199
+BASAD.BIC         0.002        0.908         0.165         0.815         0.179     1.210
+BCR.Joint                                    0.000         0.000         0.515     2.212
+SpikeSlab                                    0.000         0.000         0.995    10.297
+Lasso.BIC                                   0.000          0.015         0.869     8.579
+EN.BIC                                       0.000         0.000         0.898     8.360
+SCAD.BIC                                     0.000         0.000         0.899     8.739
+
+
+
+    (i) The Bayesian model selection methods BASAD and piMOM (when-
+ever available) tend to perform better then the other methods in terms of
+selecting the true model and controlling the false discovery rate in variable
+selection, and our proposed BASAD stands out in this regard. The penal-
+ization methods often have higher probabilities of selecting all the active
+
+                                    Table 5
+  Performance of BASAD for case 5: (n, p) = (100, 500). In this case, two versions of
+   BASAD are included, where BASAD.K10 uses our default value of K = 10, and
+               BASAD.K50 uses a less sparse specification of K = 50
+
+                       pp0        pp1         Z =t         Z ⊃t          FDR     MSPE
+
+                                               ρ = 0.25; |t| = 25
+BASAD.K50             0.020      0.988        0.650         0.950        0.036     3.397
+BASAD.BIC.K50         0.020      0.988        0.005         0.960        0.283     4.019
+BASAD.K10             0.003      0.548        0.405         0.420        0.011   170.862
+BASAD.BIC.K10         0.003      0.548        0.035         0.430        0.076    88.881
+BCR.Joint                                     0.000         0.000        0.622    49.299
+SpikeSlab                                     0.000         0.000        0.816   111.911
+Lasso.BIC                                     0.000         0.005        0.685    58.664
+EN.BIC                                        0.000         0.000        0.693    59.058
+SCAD.BIC                                      0.000         0.000        0.666    72.122
+                                               ρ = 0.75; |t| = 25
+BASAD.K50             0.048      0.914        0.005         0.355        0.289     6.103
+BASAD.BIC.K50         0.048      0.914        0.000         0.445        0.498     6.611
+BASAD.K10             0.003      0.298        0.025         0.030        0.018   349.992
+BASAD.BIC.K10         0.003      0.298        0.000         0.060        0.087    61.709
+BCR.Joint                                     0.000         0.000        0.772    34.113
+SpikeSlab                                     0.000         0.000        0.899    48.880
+Lasso.BIC                                     0.000         0.000        0.734    24.310
+EN.BIC                                        0.000         0.000        0.754    29.171
+SCAD.BIC                                      0.000         0.000        0.736    27.236
+22                       N. N. NARISETTY AND X. HE
+
+                                    Table 6
+                     Performance of BASAD for case 6: n > p
+
+                  pp0        pp1       Z=t           Z ⊃t      FDR        MSPE
+
+                                         (n, p) = (100, 50)
+BASAD            0.037      0.899       0.654         0.714    0.026      1.086
+BASAD.BIC        0.037      0.899       0.208         0.778    0.267      1.151
+piMOM            0.011      0.892       0.656         0.708    0.021      1.066
+SpikeSlab                               0.064         0.846    0.567      1.226
+BCR.Joint                               0.336         0.650    0.216      1.124
+Lasso.BIC                               0.076         0.744    0.397      1.152
+EN.BIC                                  0.378         0.742    0.194      1.110
+SCAD.BIC                                0.186         0.772    0.284      1.147
+                                         (n, p) = (200, 50)
+BASAD            0.026      0.926       0.738         0.784    0.017      1.029
+BASAD.BIC        0.026      0.926       0.338         0.842    0.193      1.055
+piMOM            0.005      0.908       0.694         0.740    0.020      1.036
+BCR.Joint                               0.484         0.770    0.133      1.045
+SpikeSlab                               0.038         0.900    0.629      1.121
+Lasso.BIC                               0.082         0.752    0.378      1.059
+EN.BIC                                  0.428         0.748    0.165      1.039
+SCAD.BIC                                0.358         0.812    0.193      1.046
+
+
+covariates at the cost of overfitting and false discoveries. In terms of the
+prediction error, however, BASAD does not always outperform its competi-
+tors, but remains competitive.
+    (ii) When the signals are low (case 3), all the methods under considera-
+tion have trouble finding the right model, and BASAD.BIC results in lower
+prediction error than BASAD with 0.5 as the threshold for posterior prob-
+abilities. In most cases, BASAD.BIC leads to slightly higher false positive
+rates than BASAD with similar prediction errors.
+   (iii) In case 4, there is a moderate level of correlation among inactive co-
+variates and some level of correlation between active and inactive covariates.
+This is where BASAD outperforms the other methods under consideration
+because BASAD is similar to the L0 penalty and is able to accommodate
+such correlations well. Please refer to our discussion in Sections 5 and 6.
+   (iv) When the true model is not so sparse and has |t| = 25 active covari-
+ates (case 5), our default choice of K = 10 in BASAD did not perform well,
+which is not surprising. In fact, no other methods under consideration did
+well in this case, highlighting the difficulty of finding a nonsparse model with
+a limited sample size. On the other hand, there is some promising news. If we
+anticipate a less sparse model with K = 50, the proposed method BASAD
+improved the performance considerably. Our empirical experience suggests
+that if we are uncertain about the level of sparsity of our model, we may use
+a generous choice of K or use BIC to choose between different values of K.
+     VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                23
+
+   9. Real data example. In this section, we apply our variable selection
+method to a real data set to examine how it works in practice. We consider
+the data from an experiment conducted by Lan et al. (2006) to study the
+genetics of two inbred mouse populations (B6 and BTBR). The data include
+expression levels of 22,575 genes of 31 female and 29 male mice resulting in
+a total of 60 arrays. Some physiological phenotypes, including the numbers
+of phosphoenopyruvate carboxykinase (PEPCK) and glycerol-3-phosphate
+acyltransferase (GPAT) were also measured by quantitative real-time PCR.
+The gene expression data and the phenotypic data are available at GEO
+(http://www.ncbi.nlm.nih.gov/geo; accession number GSE3330). Zhang,
+Lin and Zhang (2009) used orthogonal components regression to predict each
+phenotype based on the gene expression data. Bondell and Reich (2012) used
+the Bayesian credible region method for variable selection on the same data.
+   Because this is an ultra-high dimensional problem with pn = 22,575, we
+prefer to perform simple screenings of the genes first based on the magnitude
+of marginal correlations with the response. The power of marginal screening
+has been recognized by Fan and Lv (2008). After the screening, the dataset
+for each of the responses consisted of p = 200 and 400 predictors (including
+the intercept and gender) by taking 198 and 398 genes based on marginal
+screening. We performed variable selection with BASAD along with LASSO,
+SCAD and the BCR method. Following Bondell and Reich (2012), we ran-
+domly split the sample into a training set of 55 observations and a test set
+with the remaining five observations. The fitted models using the training set
+were used to predict the response in the test set. This process was repeated
+100 times to estimate the prediction error.
+   In Figure 1, we plot the average mean square prediction error (MSPE)
+for models of various sizes chosen by BASAD, BCR and SCAD methods for
+the two responses PEPCK and GPAT. We find that the MSPE of BASAD
+is mostly smaller than that for other methods across different model sizes.
+In particular, BASAD chooses less correlated variables and achieves low
+MSPE with fewer predictive genes than the other methods. We also note
+that the 10-covariate models chosen by BASAD is very different (with the
+overlap of just one covariate for PEPCK and three covariates for GPAT)
+from those of SCAD which chose mostly the same covariates as LASSO.
+There are four common covariates identified by both BASAD and BCR
+methods. When we perform a linear regression by including the covariates
+chosen by BASAD and SCAD, we noticed that majority of the covariates
+chosen by BASAD are significant, which indicates that those genes chosen
+by BASAD are significant in explaining the response even in the presence
+of those chosen using SCAD. Most of the genes selected by SCAD, however,
+are not significant in the presence of those chosen by BASAD. Despite the
+evidence in favor of the genes selected by BASAD in this example, we must
+add that the ultimate assessment of a chosen model would need to be made
+24                       N. N. NARISETTY AND X. HE
+
+
+
+
+Fig. 1. Mean squared prediction error (MSPE) versus model size for analyzing PEPCK
+and GPAT in the upper and lower panel, respectively, (a) p = 200 and (b) p = 400.
+
+
+by additional information from the subject matter science and/or additional
+experiment.
+
+   10. Conclusion. In this paper, we consider a Bayesian variable selection
+method for high dimensional data based on the spike and slab priors with
+shrinking and diffusing priors. We show under mild conditions that this
+approach achieves strong selection consistency in the sense that the poste-
+rior probability of the true model converges to one. The tuning parameters
+needed for the prior specifications are transparent, and a standard Gibbs
+sampler can be used for posterior sampling. We also provide the asymptotic
+relationship between the proposed approach and the L0 penalty for model
+selection. Simulation studies in Section 8 and real data example in Section 9
+show evidence that the method performs well in a variety of settings even
+though we do not attempt to optimize the tuning parameters in the proposed
+method.
+     VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                       25
+
+   The strong selection consistency of Bayesian methods has not been estab-
+lished in the cases of p > n until very recently. For higher dimensional cases,
+we just became aware of Liang, Song and Yu (2013), which provided the
+strong selection consistency for Bayesian subset selection based on the the-
+ory developed by Jiang (2007) for posterior density consistency. However, to
+translate density consistency into selection consistency, Liang, Song and Yu
+(2013) imposed a condition on the posterior distribution itself, which is not
+verifiable directly. The techniques we use in this paper might also be used
+to complete the development of their theory on strong selection consistency.
+   Throughout the paper, we assume Gaussian errors in the regression model,
+but this assumption is not necessary to obtain selection consistency. For
+proving Lemma 4.1, we did not need assumptions on the error distribu-
+tion, and to prove Theorem 4.2, we just need deviation inequalities of the
+quadratic forms ε′ Pk ε, which follow the chi-squared distribution for normal
+errors. Similar proofs with an application of deviation inequalities for other
+error distributions would work. For instance, Hsu, Kakade and Zhang (2012)
+provide deviation inequalities for quadratic forms of sub-Gaussian random
+variables.
+   The primary focus of our paper is model selection consistency. The model
+is selected by averaging over the latent indicator variables drawn from the
+posterior distributions. The strengths of different model selection methods
+need to be evaluated differently if prediction accuracy is the goal. In our
+empirical work, we have included comparisons of the mean squared predic-
+tion errors, and found that our proposed method based on default tuning
+parameters is highly competitive in terms of prediction. However, improve-
+ments are possible, mainly in the cases of low signals, if the parameters are
+tuned by BIC or cross-validation, or if model-averaging is used instead of
+the predictions from a single model.
+
+   11. Proofs. In this section, we prove Lemmas 4.1 and 6.1. Please refer
+to Narisetty and He (2014) for proofs of the remaining results.
+
+   Proof of Lemma 4.1.          The joint posterior of β, σ 2 , Z under model (1)
+is given by
+    P (β, Z = k, σ 2 |Y )
+                                             
+                      1
+(9)                         2    ′
+         ∝ exp − 2 (kY − Xβk2 − β Dk β − 2α2 ) σ −2(n/2+pn /2+α1 +1)
+                     2σ
+             × |Dk |1/2 s|k|
+                         n ,
+                      −2             −2
+where Dk = Diag(kτ1n     + (1 − k)τ0n   ), sn = qn /(1 − qn ), α1 , α2 are the param-
+eters of IG prior, and |k| is the size of the model k. By a simple rearrangement
+26                         N. N. NARISETTY AND X. HE
+
+of terms in the above expression, we obtain
+P (β, Z = k|Y, σ 2 )
+                                                           
+             1        ′       ′               ′       ′
+   ∝ exp − 2 ((β − β̃) (Dk + X X)(β − β̃) − β̃ (Dk + X X)β̃) |Dk |1/2 s|k|
+                                                                       n ,
+            2σ
+where β̃ = (Dk + X ′ X)−1 X ′ Y . Note that β̃ is a shrinkage estimator of the
+regression vector β. Shrinkage of β̃ depends on Dk , which is the precision
+matrix of β given Z = k. The components of β̃i corresponding to ki = 0
+are shrunk towards zero while the shrinkage of coefficients corresponding to
+                          −2
+ki = 1 is negligible (as τ1n   is small).
+                                                                 
+                  2        |k|          1 ′       ′        ′
+   P (Z = k|Y, σ ) ∝ Qk sn exp − 2 (Y Y − β̃ (Dk + X X)β̃)
+                                      2σ
+                                                                        
+                           |k|          1 ′        ′          ′   −1 ′
+(10)                = Qk sn exp − 2 (Y Y − Y X(Dk + X X) X Y )
+                                      2σ
+                                         
+                           |k|          1
+                    = Qk sn exp − 2 R̃k ,
+                                      2σ
+where Qk = |Dk + X ′ X|−1/2 |Dk |1/2 . Next, we obtain bounds on Qk .
+
+  Lemma 11.1. Let A be an invertible matrix, and B be any matrix with
+appropriate dimension. Further, let k and j be any pair of models. Then,
+     (i) |(A + B ′ B)−1 A| = |I + BA−1 B ′ |−1 ,
+               2 X X ′ + τ 2 X X ′ )−1 ≥ (I + τ 2 X X ′ )−1 (1 − ξ ),
+    (ii) (I + τ1n   k k     0n j j                  1n k k                n
+   where ξn = nτ0n 2 λn = o(1), and
+                      M
+   (iii) Qk ≤ w′ (nτ1n2 λn (1 − φ ))−(1/2)(rk∗ −rt ) (λn )−(1/2)|t∧k c | Q , where w ′ >
+                         m       n                     m                  t
+0, rk = rank(Xk ), rk∗ = rk ∧ mn , and φn = o(1).
+
+   Proof. (i) We use the Sylvester’s determinant theorem, and the multi-
+plicative property of the determinant to obtain
+                   |(A + B ′ B)−1 A| = |I + A−1/2 B ′ BA−1/2 |−1
+                                      = |I + BA−1 B ′ |−1 .
+  (ii) By the Sherman–Morrison–Woodbury (SMW) identity, assuming A, C
+and (C −1 + DA−1 B) to be nonsingular,
+(11)       (A + BCD)−1 = A−1 − A−1 B(C −1 + DA−1 B)−1 DA−1 ,
+we have, for any vector a,
+              a′ (I + τ1n
+                       2            2
+                          Xk Xk′ + τ0n Xj Xj′ )−1 a = a′ G−1 a − τ0n
+                                                                  2
+                                                                     H,
+       VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                        27
+
+               2 X X ′ and H = a′ G−1 X (I + τ 2 X ′ G−1 X )−1 X ′ G−1 a.
+where G = I + τ1n k k                  j      0n j        j     j
+Note that
+                              2       2 ′ −1
+                         0 ≤ τ0n H ≤ τ0n a G Xj Xj′ G−1 a
+(12)
+                                           2 n ′ −1
+                                       ≤ nτ0n λM a G a,
+where λnM is the maximum eigenvalue of the Gram matrix X ′ X/n. Therefore,
+            2
+   a′ (I + τ1n Xk Xk′ )−1 a(1 − nτ0n
+                                  2 n
+                                     λM ) ≤ a′ (I + τ1n
+                                                     2            2
+                                                        Xk Xk′ + τ0n Xj Xj′ )−1 a,
+and hence (ii) is proved.
+  (iii) From part (i) of the lemma, we have
+
+                     Qk = |I + XDk−1 X ′ |−1/2
+(13)
+                                 2
+                         = |I + τ1n           2
+                                    Xk Xk′ + τ0n Xkc Xk′ c |−1/2 .
+                2 X
+Define A = I + τ1n      ′      2            ′
+                   k∧t Xk∧t + τ0n Xk c ∨tc Xk c ∨tc . Then, by (ii) we have
+
+                         2
+          (1 − ξn )(I + τ1n       ′−1
+                            Xk∧t Xk∧t ) ≤ A−1 ≤ (I + τ1n
+                                                      2        ′
+                                                         Xk∧t Xk∧t )−1 .
+  This, along with Condition 4.5 implies
+  Qk           2
+       = |I + τ1n           2
+                  Xk Xk′ + τ0n Xkc Xk′ c |−1/2 |A|1/2
+  Qk∧t
+                  2     2          ′    −1/2
+         = |A + (τ1n − τ0n )Xk∧tc Xk∧tc|     |A|1/2
+                  2
+         = |I + (τ1n    2
+                     − τ0n   ′
+                           )Xk∧tcA
+                                  −1
+                                     Xk∧tc |−1/2
+                                                                −1
+                  2
+         ≤ |I + (τ1n    2
+                     − τ0n            ′
+                           )(1 − ξn )Xk∧t        2        ′
+                                         c (I + τ1n Xk∧t Xk∧t )    Xk∧tc |−1/2
+                                                      −1/2
+                 2
+         = |I + τ1n           2
+                    Xt Xt′ + τ1n                 ′
+                                 (1 − φn )Xk∧tc Xk∧tc|
+                                                                 2
+                                                           |I + τ1n       ′
+                                                                    Xk∧t Xk∧t |1/2
+                 2
+         ≤ |I + τ1n (1 − φn )Xk Xk′ |−1/2 |I + τ1n
+                                                2        ′
+                                                   Xk∧t Xk∧t |1/2
+                                   ∗
+              2 n
+         ≤ (nτ1n λm (1 − φn ))−(rk −rt∧k )/2 (1 − φn )−|t∧k|/2 ,
+where (1−φn ) = (τ1n2 −τ 2 )(1−ξ )/τ 2 → 1. Similarly, let A = I +τ 2 X X ′ +
+                        0n      n   1n                             1n t t
+ 2       ′
+τ0n Xtc Xtc to obtain
+                 Qk∧t          2     2          ′    −1/2
+                      = |A − (τ1n − τ0n )Xk∧tc Xk∧tc|     |A|1/2
+                  Qt
+                               2
+                       ≤ |I + τ1n       ′
+                                  Xk∧t Xk∧t |−1/2 |I + τ1n
+                                                        2
+                                                           Xt Xt′ |1/2
+                               2         ′     1/2
+                       ≤ |I + τ1n Xt∧kc Xt∧k c|
+
+                                         c
+                            2 ′ |t∧k |/2
+                       ≤ (nτ1n c)        .
+28                          N. N. NARISETTY AND X. HE
+
+The above two inequalities give
+               Qk                            ∗                    c
+                  ≤ w′ (nτ1n
+                          2 n
+                             λm (1 − φn ))−(rk −rt )/2 (λnm )−|t∧k |/2 .   
+               Qt
+
+     Due to (10), we have
+                                                          
+                            Qk |k|−|t|       1
+                 PR(k, t) =   s        exp − 2 (R̃k − R̃t ) .
+                            Qt n            2σ
+Therefore, Lemma 11.1(iii) implies Lemma 4.1. 
+
+   Proof of Lemma 6.1. The rows of Xk are n independent sub-Gaussian
+random isotropic random vectors in R|k| . Note that |k| ≤ mn implies |k| =
+o(n). Due to Theorem 5.39 of Vershynin (2012), with probability at least
+1 − 2 exp(−cs), we have
+                       ′              r       r 2
+                        Xk Xk              |k|     s
+(14)             φmin          > 1−C           −        ,
+                         n                  n      n
+where c and C are absolute constants that depend only on the sub-Gaussian
+norms of the rows of the matrix Xk .
+  Let us fix s = n(1 − φ) for some φ > 0, and define the event given by
+equation (14) as Ak . We then have P [Ack ] < 2 exp(−c(1 − φ)n) for all k. By
+taking an union bound over {k : |k| ≤ mn }, we obtain
+                 [        
+              P         Ack ≤ pm
+                               n exp(−c(1 − φ)n)
+                                 n
+
+                   |k|≤mn
+                                                      
+                                        n
+                                = exp       − c(1 − φ)n → 0,
+                                      2+ν
+            1                                 T
+if ν > ( c(1−φ) − 2). Therefore, in the event |k|≤mn Ak , whose probability
+goes to 1, we have φmin (Xk′ Xk /n) ≥ φ2 /4 − O( mn /n) > 0, for all k. 
+                                                p
+
+
+  Acknowledgments. The authors are grateful to anonymous referees and
+an Associate Editor for their encouraging and helpful comments on an earlier
+version of the paper. The authors would also like to thank Professors Howard
+Bondell, Val Johnson and Faming Liang for sharing with us their code to
+perform Bayesian model selection.
+
+                       SUPPLEMENTARY MATERIAL
+  Supplement to “Bayesian variable selection with shrinking and diffusing
+priors” (DOI: 10.1214/14-AOS1207SUPP; .pdf). This supplement contains
+the proofs of Theorems 4.1, 4.2 and Lemma 4.2.
+      VARIABLE SELECTION WITH SHRINKING AND DIFFUSING PRIORS                            29
+
+                                   REFERENCES
+Barbieri, M. M. and Berger, J. O. (2004). Optimal predictive model selection. Ann.
+   Statist. 32 870–897. MR2065192
+Bondell, H. D. and Reich, B. J. (2008). Simultaneous regression shrinkage, variable
+   selection, and supervised clustering of predictors with OSCAR. Biometrics 64 115–123,
+   322–323. MR2422825
+Bondell, H. D. and Reich, B. J. (2012). Consistent high-dimensional Bayesian vari-
+   able selection via penalized credible regions. J. Amer. Statist. Assoc. 107 1610–1624.
+   MR3036420
+Candes, E. and Tao, T. (2007). The Dantzig selector: Statistical estimation when p is
+   much larger than n. Ann. Statist. 35 2313–2351. MR2382644
+Dey, T., Ishwaran, H. and Rao, J. S. (2008). An in-depth look at highest posterior
+   model selection. Econometric Theory 24 377–403. MR2391616
+Dicker, L., Huang, B. and Lin, X. (2013). Variable selection and estimation with the
+   seamless-L0 penalty. Statist. Sinica 23 929–962. MR3086661
+Fan, J. and Li, R. (2001). Variable selection via nonconcave penalized likelihood and its
+   oracle properties. J. Amer. Statist. Assoc. 96 1348–1360. MR1946581
+Fan, J. and Lv, J. (2008). Sure independence screening for ultrahigh dimensional feature
+   space. J. R. Stat. Soc. Ser. B Stat. Methodol. 70 849–911. MR2530322
+Fan, J. and Lv, J. (2010). A selective overview of variable selection in high dimensional
+   feature space. Statist. Sinica 20 101–148. MR2640659
+Fan, J. and Peng, H. (2004). Nonconcave penalized likelihood with a diverging number
+   of parameters. Ann. Statist. 32 928–961. MR2065194
+George, E. I. and Foster, D. P. (2000). Calibration and empirical Bayes variable
+   selection. Biometrika 87 731–747. MR1813972
+George, E. I. and McCulloch, R. E. (1993). Variable selection via Gibbs sampling. J.
+   Amer. Statist. Assoc. 88 881–889.
+Hsu, D., Kakade, S. M. and Zhang, T. (2012). A tail inequality for quadratic forms of
+   subgaussian random vectors. Electron. Commun. Probab. 17 6. MR2994877
+Huang, J. and Xie, H. (2007). Asymptotic oracle properties of SCAD-penalized least
+   squares estimators. In Asymptotics: Particles, Processes and Inverse Problems. Institute
+   of Mathematical Statistics Lecture Notes—Monograph Series 55 149–166. IMS, Beach-
+   wood, OH. MR2459937
+Ishwaran, H., Kogalur, U. B. and Rao, J. S. (2010). spikeslab: Prediction and variable
+   selection using spike and slab regression. The R Journal 2 68–73.
+Ishwaran, H. and Rao, J. S. (2005). Spike and slab variable selection: Frequentist and
+   Bayesian strategies. Ann. Statist. 33 730–773. MR2163158
+Ishwaran, H. and Rao, J. S. (2011). Consistency of spike and slab regression. Statist.
+   Probab. Lett. 81 1920–1928. MR2845909
+James, G. M., Radchenko, P. and Lv, J. (2009). DASSO: Connections between
+   the Dantzig selector and lasso. J. R. Stat. Soc. Ser. B Stat. Methodol. 71 127–142.
+   MR2655526
+Jiang, W. (2007). Bayesian variable selection for high dimensional generalized linear mod-
+   els: Convergence rates of the fitted densities. Ann. Statist. 35 1487–1511. MR2351094
+Johnson, V. E. and Rossell, D. (2012). Bayesian model selection in high-dimensional
+   settings. J. Amer. Statist. Assoc. 107 649–660. MR2980074
+Kim, Y., Kwon, S. and Choi, H. (2012). Consistent model selection criteria on high
+   dimensions. J. Mach. Learn. Res. 13 1037–1057. MR2930632
+Lan, H., Chen, M., Flowers, J. B., Yandell, B. S., Stapleton, D. S., Mata, C. M.,
+   Mui, E. T., Flowers, M. T., Schueler, K. L., Manly, K. F., Williams, R. W.,
+30                          N. N. NARISETTY AND X. HE
+
+  Kendziorski, K. and Attie, A. D. (2006). Combined expression trait correlations and
+  expression quantitative trait locus mapping. PLoS Genetics 2 e6.
+Liang, F., Song, Q. and Yu, K. (2013). Bayesian subset modeling for high-dimensional
+  generalized linear models. J. Amer. Statist. Assoc. 108 589–606. MR3174644
+Liu, Y. and Wu, Y. (2007). Variable selection via a combination of the L0 and L1 penal-
+  ties. J. Comput. Graph. Statist. 16 782–798. MR2412482
+Mitchell, T. J. and Beauchamp, J. J. (1988). Bayesian variable selection in linear
+  regression. J. Amer. Statist. Assoc. 83 1023–1036. MR0997578
+Moreno, E., Girón, F. J. and Casella, G. (2010). Consistency of objective Bayes
+  factors as the model dimension grows. Ann. Statist. 38 1937–1952. MR2676879
+Narisetty, N. N. and He, X. (2014). Supplement to “Bayesian variable selection with
+  shrinking and diffusing priors.” DOI:10.1214/14-AOS1207SUPP.
+Schwarz, G. (1978). Estimating the dimension of a model. Ann. Statist. 6 461–464.
+  MR0468014
+Shen, X., Pan, W. and Zhu, Y. (2012). Likelihood-based selection and sharp parameter
+  estimation. J. Amer. Statist. Assoc. 107 223–232. MR2949354
+Tibshirani, R. (1996). Regression shrinkage and selection via the lasso. J. R. Stat. Soc.
+  Ser. B Stat. Methodol. 58 267–288. MR1379242
+Vershynin, R. (2012). Introduction to the non-asymptotic analysis of random matrices.
+  In Compressed Sensing 210–268. Cambridge Univ. Press, Cambridge. MR2963170
+Yang, Y. and He, X. (2012). Bayesian empirical likelihood for quantile regression. Ann.
+  Statist. 40 1102–1131. MR2985945
+Yuan, M. and Lin, Y. (2005). Efficient empirical Bayes variable selection and estimation
+  in linear models. J. Amer. Statist. Assoc. 100 1215–1225. MR2236436
+Zhang, D., Lin, Y. and Zhang, M. (2009). Penalized orthogonal-components regression
+  for large p small n data. Electron. J. Stat. 3 781–796. MR2534201
+Zou, H. (2006). The adaptive lasso and its oracle properties. J. Amer. Statist. Assoc. 101
+  1418–1429. MR2279469
+
+                                                             Department of Statistics
+                                                             University of Michigan
+                                                             Ann Arbor, Michigan 48109
+                                                             USA
+                                                             E-mail: naveennn@umich.edu
+                                                                     xmhe@umich.edu
+
