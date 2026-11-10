@@ -1,6 +1,6 @@
 # Theorem C — the concentrated bridge (v2, T-free evidence bound)
 
-Status: PROVED (by this seat, unchecked). v2, 2026-11-09 (v1 → v2: sharpness-gate amendment BT1 §1, §4: the evidence bound
+Status: PROVED-CHECKED (lemma checks LC1/LC2 Codex Sol; mid-point MP1 CONTINUE; sweep SW1 fixed; council C1 PASSED round 1 (gpt-6-astra 9.1, Claude Opus 5.5 8.8; all six gates PASS on both seats); C1 non-blocking edits applied). Text history: v2, 2026-11-09 (v1 → v2: sharpness-gate amendment BT1 §1, §4: the evidence bound
 no longer depends on T; uniform RB error in expectation; bias and log-evidence corollaries; `reviews/BT1_disposition.md`).
 Statement: STATEMENT.md v3 §2 "Theorem C". Uses Lemma MR (MR-a, MR-b, MR-c), Lemma ST, `LT_theorem.md` Steps 1, 2′, 4,
 Lemma PC.
@@ -17,13 +17,13 @@ X^{(t)}, W := W_r, q_t := q_{φ_t}.
 
 ## Step 2 (C-i, deterministic product bound)
 
-For s ≥ 1 the stage factor is q̂_{s−1}(e^{Δ_s d}) ≥ A_{s−1}e^{Δ_s d(s)}; multiplying, Ẑ_{r,t} ≥ Z₀e^{φ_t d(s)}Π_{u<t}A_u, and
+For k ≥ 1 the stage-k factor is q̂_{k−1}(e^{Δ_k d}) ≥ A_{k−1}e^{Δ_k d(s)}; multiplying over k = 1..t, Ẑ_{r,t} ≥ Z₀e^{φ_t d(s)}Π_{u<t}A_u, and
 Z₀e^{φ_t d(s)}/Z_t = q_t(s)/π₀(s). So W_t := Ẑ_{r,t}/Z_t ≥ (q_t(s)/π₀(s))Π_{u<t}A_u ≥ q_t(s)(1 − Σ_{u<t}x_u)⁺, and at t = T,
 W ≥ (π(s)/π₀(s))Π_{t<T}A_t. ∎(C-i)
 
 ## Step 3 (C-ii, bridge occupation; T-dependent, kept as a separate statistic)
 
-Fix u ∈ (0,1), V_{t−1} := Σ_{v<t}x_v, Y := Σ_{t=0}^{T}x_t1{V_{t−1} ≤ u}. Pointwise min(U, u) ≤ Y (if U ≤ u, Y = U; else with
+Fix u ∈ (0,1); put V_{−1} := 0 and V_t := Σ_{v=0}^{t}x_v for t = 0..T (C1 Astra #2); Y := Σ_{t=0}^{T}x_t1{V_{t−1} ≤ u}. Pointwise min(U, u) ≤ Y (if U ≤ u, Y = U; else with
 τ := min{t : V_t > u}, Y ≥ V_τ > u). On {V_{t−1} ≤ u}, Step 2 and Step 1 give W_t ≥ (1 − u)/(1 + δ̄), so
 x_t1{V_{t−1} ≤ u} ≤ ((1 + δ̄)/(1 − u))W_t x_t pointwise; MR-a with h = 1{S ≠ s} gives E[W_t x_t] = 1 − q_t(s) ≤ δ̄/(1 + δ̄).
 Hence E[Y] ≤ (T + 1)δ̄/(1 − u); with u = ½ and min(U,1) ≤ 2min(U,½): E[min(U, 1)] ≤ 4(T + 1)δ̄. (Only deterministic-index
@@ -79,18 +79,22 @@ L¹ rates under the joint law). Reported fields: Lemma PC. ∎
 
 ## Remarks
 
-- Honest label: the regime in which the start already concentrates (π₀(S₀) → 1); the bridge has no mass to transport.
+- Honest label: the regime in which the start already concentrates (π₀(S₀) → 1 on 𝒜); the bridge has no mass to transport.
   No rate for the start mass and no relation to the schedule length are needed (the locked v2 needed T·δ̄ → 0; the source
   BLIND_fable Thm 4(b) needed T²δ̄ → 0). Valid for N_e = 1.
-- Linear dependence on δ̄ is natural for N_e = 1, T = 1: one non-truth initial draw already gives an O(1) evidence error
-  with probability ≈ δ₀.
+- Linear dependence on δ̄ is *possible*: for N_e = 1, T = 1 a non-truth initial draw (probability δ₀) can give an O(1)
+  evidence error when d varies (if d ≡ 0 then W ≡ 1). No lower-bound family is claimed (SW1 #15).
 - The occupation sum U of C-ii genuinely grows with T (numerics: E min(U,1) → 1 at large T while W → 1); only the evidence
   bound is T-free.
 
 ## Numerical falsification
 
-`numerics/RESULTS_v3.txt` (run_checks_v3.py, seed 31): five targets (three artificial incl. cap K = 2; two
-regression-realisable with the T12 §0 score/prior and block start) × (T, N) ∈ {(1,1), (4,2), (32,2), (128,1)}: the
-telescoping budget E Σ(V_{t−1} − V_t)⁺ ≤ b₋ (nearly attained, e.g. 0.0647 vs 0.0648), E|W − 1| ≤ β, β ≤ 2max(δ, (1−δ)o₀),
-E E_r ≤ g + β/2 and max_j bias ≤ β/2 hold in all 20 cells; E|W − 1| decreases in T at fixed target (T-free bound
-consistent). C-i and the stopped-sum (C-ii) were tested pointwise in `RESULTS_v2.txt` (all islands). 0 violations.
+Falsification attempts; no violation detected (SW1 #25, #26):
+- `numerics/RESULTS_v3.txt` (run_checks_v3.py, seed 31): five targets (three artificial incl. cap K = 2; two
+  regression-score component targets — T12 §0 score/prior with prescribed blocks, B and a ring neighbour graph, not
+  production preprocessing; SW1 #17) × (T, N) ∈ {(1,1), (4,2), (32,2), (128,1)} (T and N vary together there): telescoping
+  budget, E|W − 1| ≤ β, β ≤ 2max(δ, (1−δ)o₀), E E_r ≤ g + β/2, bias ≤ β/2. Tolerance: 3 Monte Carlo standard errors; some
+  sample loss means exceed b₋ within that tolerance (the budget is nearly attained).
+- `numerics/RESULTS_v4.txt` (run_checks_v4.py, seed 404): **N fixed at 2**, T ∈ {1, 4, 32, 128}, two targets; loss ≤ b₋ and
+  E|W − 1| ≤ β within 3 s.e.; E|W − 1| decreases in T at fixed N (0.177 → 0.017).
+- C-i and the stopped sum (C-ii): pointwise in every island (`RESULTS_v2.txt`).

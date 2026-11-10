@@ -1,4 +1,4 @@
-seed 20261109
+seed 20261109; sections [1, 2, 3, 4, 5]; near-L [5]
 
 ======== 1. Lemma MR identities (Monte Carlo) and Lemma ST (exact) ========
 [mid] |Omega|=31 delta=0.7308 o1=2.7140 o0=16.2695 inv_err=5.55e-17
@@ -33,7 +33,7 @@ eps=0.1 eta=0.3: LT-b 0.0000 <= 11.2244 (with 19o1: 69.2114); LT-a 0.6732 <= 8.2
 eps=0.1 eta=0.5: LT-b 0.0000 <= 8.1475 (with 19o1: 66.1344); LT-a 0.6732 <= 5.1541
 delta=0.2430 o1=0.3209 kappa0=0.0706; violations (tol .01): 0
 LT-c: P(S0 never a measured/entering endpoint) = 0.0000 <= delta/eta+P(W<eta) at eta=.5: 0.7807
-kappa0 sharpness: islands with all measured endpoints at S0 have RB error = 6.7458e-02 vs kappa0 7.0626e-02
+kappa0 good-path check: 93 islands with every particle at S0 throughout the measured rounds; RB error min/max = 7.062579e-02/7.062579e-02 vs kappa0 7.062579e-02
 
 ======== 3. Theorem C: E|W-1| <= 2 o1 + 8 (T+1) dbar ; E min(U,1) <= 4 (T+1) dbar ========
 a=4.0 b=3.0 dbar=1.676e-01 T=  1 T*dbar=0.168: E|W-1|=0.1141 (bound 2.8473, ok=True); E min(U,1)=0.2137 (bound 1.3404); P(RB err>.1)=0.0000; P(W<.5)=0.0089
@@ -49,10 +49,10 @@ a=2.5 b=2.0 dbar=9.037e-01 T=  4 T*dbar=3.615: E|W-1|=0.1151 (bound 37.9572, ok=
 a=2.5 b=2.0 dbar=9.037e-01 T= 16 T*dbar=14.460: E|W-1|=0.0580 (bound 124.7165, ok=True); E min(U,1)=1.0000 (bound 61.4545); P(RB err>.1)=0.9995; P(W<.5)=0.0000
 a=2.5 b=2.0 dbar=9.037e-01 T= 64 T*dbar=57.840: E|W-1|=0.0287 (bound 471.7538, ok=True); E min(U,1)=1.0000 (bound 234.9732); P(RB err>.1)=0.9995; P(W<.5)=0.0000
 
-======== 4. NC_r: necessity probes ========
-trap: delta=0.0099 pi0(S0)=1.52e-08; P(W<0.01)=1.000; P(RB err >= .5)=1.000; P(MPM wrong)=1.000  -> P-CONC holds, NC fails, outputs wrong
-near: delta=0.0214 pi0(S0)=4.24e-05; P(W<0.01)=0.000; P(RB err >= .1)=0.007  -> NC fails, yet the terminal rounds repair the RB PIPs (NC not necessary)
+======== 4. finite-target collapsed-evidence probes (illustrations; NOT asymptotic witnesses for NC_r) ========
+trap: delta=0.0099 pi0(S0)=1.52e-08; P(W<0.01)=1.000; P(RB err >= .5)=1.000; P(MPM wrong)=1.000  -> finite target: small delta, collapsed W, wrong outputs
+near (L=5): delta=0.0039 pi0(S0)=7.76e-07; P(W<0.01)=0.750; median W=3.58e-04; P(RB err >= .1)=0.236  -> finite target: collapsed W; RB error rate as shown (repair grows with L)
 
 ======== 5. Theorem D: P(no pi_0 draw equals S0) = (1 - pi0(S0))^D_r ========
-pi0(S0)=0.0598 D_r=16: empirical 0.3754 vs exact 0.3728 (z=1.07); P(S0 never a particle endpoint) = 0.0608
-pi0(S0)=0.0149 D_r=16: empirical 0.7876 vs exact 0.7861 (z=0.74); P(S0 never a particle endpoint) = 0.0271
+pi0(S0)=0.0598 D_r=16: empirical 0.3754 vs exact 0.3728 (z=1.07); P(S0 never a terminal endpoint) = 0.0608 (unconditional); P(S0 a terminal endpoint | no draw hit S0) = 13773/15015
+pi0(S0)=0.0149 D_r=16: empirical 0.7876 vs exact 0.7861 (z=0.74); P(S0 never a terminal endpoint) = 0.0271 (unconditional); P(S0 a terminal endpoint | no draw hit S0) = 30559/31505

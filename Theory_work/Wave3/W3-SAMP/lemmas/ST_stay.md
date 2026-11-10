@@ -1,11 +1,11 @@
 # Lemma ST — staying at S₀ under π-invariant kernels
 
-Status: PROVED (by this seat, unchecked). v1, 2026-11-09. Statement: STATEMENT.md v2 §2 "Lemma ST".
+Status: PROVED-CHECKED (lemma checks LC1/LC2 Codex Sol; mid-point MP1 CONTINUE; sweep SW1 fixed; council C1 PASSED round 1 (gpt-6-astra 9.1, Claude Opus 5.5 8.8; all six gates PASS on both seats); C1 non-blocking edits applied). Text history: v1, 2026-11-09. Statement: STATEMENT.md v3 §2 "Lemma ST".
 
 Setting: fixed data, φ = 1, the labelled elementary kernels of T12 §1 (`Docs/Theory/proofs/T12_T8_frozen_run_identities/
-STATEMENT.md:28-34`): Gibbs G_j (j ∈ [p]), uniform swap U, B copies of the neighbour swap N, independence I. KERNEL: the
+STATEMENT.md:25-31`): Gibbs G_j (j ∈ [p]), uniform swap U, B copies of the neighbour swap N, independence I. KERNEL: the
 coded steps realise these kernels (W1-N1 Lemma B; N9) and each is π-invariant (in fact π-reversible) at φ = 1 (T12
-"invariance", `PROOF_v6.tex:54-81`, as re-stated at `W1-N1/lemmas/L2_post_terminal.md:18-19`). S₀ ∈ Ω, π(S₀) > 0,
+"invariance", `PROOF_v6.tex:54-81`, as re-stated at `W1-N1/lemmas/L2_post_terminal.md:18-20`). S₀ ∈ Ω, π(S₀) > 0,
 o₁ = π(Ω∖S₀)/π(S₀).
 
 ## (ST-a) Any π-invariant kernel leaves S₀ with probability at most o₁
@@ -29,6 +29,9 @@ The models S₀ ⊕ j, j ∈ [p], are pairwise distinct and different from S₀,
 (and even Σ_j |o_j(S₀) − 1{j ∈ S₀}| ≤ o₁). ∎
 
 ## (ST-c) One round
+
+Hypothesis (stated in ST-c, SW1 #14): the round path law of T12 (R3), realised by the code under EX-A, H-U and KERNEL
+(W1-N1 Lemma B (B-b)).
 
 Let a particle enter a round at φ = 1 in state X_{[0]} = S₀; the order σ (a bijection from positions {1..m} to the m labels,
 m = p + B + 2) has any law, independent of the entering state; given σ, the within-round path X_{[0]}, …, X_{[m]} is a

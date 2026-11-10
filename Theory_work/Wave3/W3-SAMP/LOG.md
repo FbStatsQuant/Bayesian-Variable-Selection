@@ -46,3 +46,18 @@ that ran ahead of the real clock. Order of events unchanged.)
   rule not to start replacements for externally stopped work, the lead did not relaunch it. Citation check re-run on the
   final text; REPORT.md written (status: proofs cross-family checked at lemma level + mid-point CONTINUE; sweep and
   council NOT run).
+- 17:26 — HQ: SW1 was cancelled by a T3 server restart; v3 strengthening accepted (no revert); continue with a
+  fresh SW1, fixes, council; P-START stays a named input (item-2 ticket); BT1 optional strengthenings skipped.
+  SW1 relaunched (fresh gpt-6.1-sol high).
+- 18:12 — SW1 (rerun, Sol high): 0 CRITICAL / 4 MAJOR / 16 MINOR / 8 EXPOSITION; central inequalities and constants
+  confirmed. All 28 fixed (`reviews/SW1_disposition.md`); numerics v1 regenerated from one source with a hash manifest,
+  new `run_checks_v4.py` → `RESULTS_v4.txt` (non-vacuous LT cells, fixed-N T sweep; 0 violations); citecheck rewritten
+  (83/83 in range). **Incident:** while removing `numerics/sec4.py` I ran `git rm --cached` assuming the folder was
+  untracked; it was tracked (HQ commit 2ac3896), so a deletion got staged. Detected immediately and undone with
+  `git restore --staged` on that one path; index verified empty of staged changes. Working-tree deletion of sec4.py
+  remains (intended; superseded by run_checks.py --sections). Next: council round 1.
+- 18:44 — Council C1: gpt-6-astra high **9.1**, Claude Opus 5.5 high (claudeAgent, native subagent) **8.8**; all six
+  gates PASS on both seats; no blocking issue → **council passed, round 1**. Verified the Opus seat modified no package
+  file (mtimes). 11 non-blocking items applied (`reviews/C1_disposition.md`); statuses updated; citecheck re-run.
+  Next: final REPORT.md.
+- 18:45 — REPORT.md finalised (PROVED-CHECKED; council passed round 1). Index has no staged changes.

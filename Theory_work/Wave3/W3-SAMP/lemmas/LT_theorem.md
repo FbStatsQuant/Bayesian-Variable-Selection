@@ -1,6 +1,6 @@
 # Theorem LT♯ — corrected lower-tail transfer for the coded outputs
 
-Status: PROVED (by this seat, unchecked). v2, 2026-11-09 (v1 → v2: Step 2′ weighted uniform bound and LT-b′, LT-e′ with a
+Status: PROVED-CHECKED (lemma checks LC1/LC2 Codex Sol; mid-point MP1 CONTINUE; sweep SW1 fixed; council C1 PASSED round 1 (gpt-6-astra 9.1, Claude Opus 5.5 8.8; all six gates PASS on both seats); C1 non-blocking edits applied). Text history: v2, 2026-11-09 (v1 → v2: Step 2′ weighted uniform bound and LT-b′, LT-e′ with a
 vanishing threshold, from BT1 §4.1, §5, re-derived). Statement: STATEMENT.md v3 §2 "Theorem LT♯". Uses Lemma MR
 (`MR_identities.md`), Lemma ST (`ST_stay.md`), Lemma PC (`PC_completed.md`), CC3 (`CC_code_check.md`).
 
@@ -63,7 +63,7 @@ P(‖p̂_r − 1_{S₀}‖_∞ ≥ ½ | 𝓒) ≤ 8δ/η + 152·o₁ + P(W_r < �
 
 Assume P-CONC and NC_r for r ≤ 4. Fix ε > 0 and η > 0. The conditional bounds are 𝓒-measurable random variables ≤ 1 after
 truncation, so integrating over 𝓒 and the data:
-- PIPs: {‖pip_primary − 1‖_∞ > ε} ⊆ {κ₀ > ε/3} ∪ ∪_r{‖p̂_r − 1‖_∞ ≥ κ₀ + 2ε/3}; hence
+- PIPs (using κ₀ ≤ o₁, so {κ₀ > ε/3} ⊆ {o₁ > ε/3}; C1 Opus #6): {‖pip_primary − 1‖_∞ > ε} ⊆ {κ₀ > ε/3} ∪ ∪_r{‖p̂_r − 1‖_∞ ≥ κ₀ + 2ε/3}; hence
   P(𝒜 ∩ {‖pip_primary − 1‖_∞ > ε}) ≤ P(o₁ > ε/3) + Σ_r E[1_𝒜 min(1, 3δ/(εη) + 57·o₁/ε)] + Σ_r P(𝒜 ∩ {W_r < η}).
   As n → ∞, o₁ = δ/(1 − δ) → 0 and δ → 0 in probability (P-CONC), so the first two terms → 0 (bounded convergence);
   then limsup_n ≤ Σ_r limsup_n P(𝒜 ∩ {W_r < η}), which → 0 as η ↓ 0 by NC_r. So the limit is 0.
@@ -74,11 +74,13 @@ truncation, so integrating over 𝓒 and the data:
 By Lemma PC the reported fields on {completed} equal the potential quantities, so the same limits hold for
 P(completed ∩ {reported error}). Nothing depends on N_e, T, L, the grid or a rate for δ. ∎(LT-e)
 
-(LT-e′, vanishing threshold.) NC_r may be replaced by: there are σ(data, 𝓒)-measurable η_n > 0 with
-1_𝒜·o₁/η_n → 0 and P(𝒜 ∩ {W_r < η_n}) → 0. Then by (LT-b′), P(𝒜 ∩ {E_r > u}) ≤ E[1_𝒜 min(1, 21o₁/(uη_n))] +
-P(𝒜 ∩ {W_r < η_n}) → 0 for every u > 0, and the PIP and pooled conclusions follow as above; for the MPM take u = ¼:
+(LT-e′, vanishing threshold.) For **every** r ≤ 4, NC_r may be replaced by: there are σ(data, 𝓒)-measurable η_{n,r} > 0
+with 1_𝒜·o₁/η_{n,r} → 0 and P(𝒜 ∩ {W_r < η_{n,r}}) → 0 (island-specific thresholds; SW1 #27). Then for each r, by (LT-b′),
+P(𝒜 ∩ {E_r ≥ u}) ≤ E[1_𝒜 min(1, 21o₁/(uη_{n,r}))] + P(𝒜 ∩ {W_r < η_{n,r}}) → 0 for every u > 0; the pooled PIP conclusion
+follows by the union over the four islands (‖pip_primary − 1‖_∞ ≤ max_r E_r); the endpoint conclusion follows from (LT-a)
+with η = η_{n,r} (P(𝒜 ∩ {1 − A_{r,q} ≥ ε}) ≤ E[1_𝒜 min(1, δ/(εη_{n,r}))] + P(𝒜 ∩ {W_r < η_{n,r}}) → 0, δ ≤ o₁); for the MPM take u = ¼:
 {MPM ≠ S₀} ⊆ {‖pip_primary − 1‖_∞ ≥ ½} ⊆ ∪_r{E_r > ¼} (MP1 issue 3, the tie at ½); for the HPM use
-(LT-c) with η = η_n (δ ≤ o₁). This allows W_r → 0 provided the collapse is slower than the posterior error. ∎(LT-e′)
+(LT-c) with η = η_{n,1} (δ ≤ o₁). This allows W_r → 0 provided the collapse is slower than the posterior error. ∎(LT-e′)
 
 ## Step 6 (LT-f: the status of NC_r)
 
@@ -90,14 +92,19 @@ P(𝒜 ∩ {W_r < η_n}) → 0 for every u > 0, and the PIP and pooled conclusio
   L = 20 — collapsed evidence with repaired outputs (local moves; Theorem TR is vacuous there, M = 1.3e6). Asymptotic
   witnesses (triangular arrays) are left open.
 - *Discharged* by Theorem C (C-iii ⇒ P(𝒜 ∩ {W_r < ½}) → 0).
-- *One-sided falsifier.* Under EX-A, Z = Σ_Ω e^{F} (CC2) ≥ Σ_{S ∈ 𝒯} e^{F(S)} for the ledger's top store 𝒯 (a set of
+- *Observable sufficient condition for the finite-run event {W_r < η}* (not evidence against the sequence-level NC_r;
+  SW1 #6). Under EX-A, Z = Σ_Ω e^{F} (CC2) ≥ Σ_{S ∈ 𝒯} e^{F(S)} for the ledger's top store 𝒯 (a set of
   distinct models, `cpp/v3_ledger.h:43-57`, offered only distinct models in Ω, CC5). Hence Ẑ_r < η·Σ_{𝒯}e^F ⇒ W_r < η.
-  No output certifies W_r ≥ η (Z is not computed).
+  In general no output certifies W_r ≥ η, because the top store (40p + 1 models, `cpp/v3_ledger.h:78`) is a strict subset
+  of Ω; if the store holds all of Ω (small component runs), Z and W_r are reconstructible exactly (SW1 #5).
 - LT♯ gives no statement about Ẑ/Z: a mean-one W can stay non-degenerate while bounded away from 0 (ADJ_astra §1(d)).
 
 ## Numerical falsification
 
-`numerics/RESULTS_v1.txt` §2: empirical left sides of LT-a/LT-b never exceed the right sides (0 violations over 9 (ε, η)
-pairs; the bounds are loose there because δ = 0.24). The κ₀ term cannot be removed: deterministically, a measured path that
+`numerics/RESULTS_v1.txt` §2: 9 (ε, η) cells at δ = 0.24 — all right sides exceed 1, so these cells are **vacuous** (SW1 #18).
+`numerics/RESULTS_v4.txt`: 18 non-vacuous cells (right side < 1): 8 of LT-a, 3 of LT-b′ and 7 of LT-b **with the exact λ₀** (the form proved in Step 3
+before the relaxation λ₀ ≤ 19o₁; with 19o₁ those 7 cells are vacuous — C1 Astra #1), on two concentrated targets
+(δ = 0.029, 0.010), and E[W E_r] ≤ g directly; no violation detected. The κ₀ good-path check (`RESULTS_v1.txt` §2, corrected
+filter incl. A_0 = 1): 93 islands with every particle at S₀ throughout the measured rounds, RB error = κ₀ = 7.062579e-02 exactly. The κ₀ term cannot be removed: deterministically, a measured path that
 stays at S₀ throughout records o_j(S₀) at every Gibbs-j step, so its RB error equals κ₀ exactly (ST-b). (The v1 numerical
-"sharpness" filter omitted A_0 = 1 and is withdrawn, LC1 issue 6.)
+"sharpness" filter omitted A_0 = 1; it was corrected and re-run, LC1 issue 6 — see the next paragraph.)

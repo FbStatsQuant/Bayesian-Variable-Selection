@@ -1,6 +1,6 @@
 # Theorem TR — terminal repair under global overlap (alternative to NC_r)
 
-Status: PROVED (by this seat, unchecked). v1, 2026-11-09. Source: BT1 §2 (`reviews/BT1_better_theorem_astra.md`),
+Status: PROVED-CHECKED (lemma checks LC1/LC2 Codex Sol; mid-point MP1 CONTINUE; sweep SW1 fixed; council C1 PASSED round 1 (gpt-6-astra 9.1, Claude Opus 5.5 8.8; all six gates PASS on both seats); C1 non-blocking edits applied). Text history: v1, 2026-11-09. Source: BT1 §2 (`reviews/BT1_better_theorem_astra.md`),
 re-derived by the lead. Statement: STATEMENT.md v3 §2 "Theorem TR". Uses KERNEL, Lemma ST, T12 (R3), Lemma PC, CC1–CC3.
 
 ## Setting
@@ -33,7 +33,9 @@ K₁ = M⁻¹π + (1 − M⁻¹)Q with Q a Markov kernel (Q := (K₁ − M⁻¹�
 already). Since πK₁ = π, for any law μ: μK₁ − π = (1 − M⁻¹)(μQ − πQ), and ‖μQ − πQ‖_TV ≤ ‖μ − π‖_TV. Induction gives
 ‖μK₁^L − π‖_TV ≤ (1 − 1/M)^L‖μ − π‖_TV ≤ e_L.
 
-(TR-b) Fix c. Let 𝓗 be everything up to the end of the bridge (stage-T round) and 𝓗′ everything before measured round 1.
+(TR-b) Fix c. Work island by island: let 𝓗 be island r's own history up to the end of its bridge (stage-T round) and 𝓗′
+island r's history before its measured round 1 (conditioning on other islands' histories is not used; under SI alone it
+could carry information about island r's stream — SW1 #28). The displayed bounds are the averages of the conditional ones.
 For a particle, let φ_i := ¼Σ_{q=1}^{4}1{(q, i) bad} with "bad" as in `LT_theorem.md` Step 1 (enters round q away from S₀,
 or enters at S₀ and leaves during it). By (1) of `LT_theorem.md`, ‖p̂_r − 1_{S₀}‖_∞ ≤ min{1, κ₀ + (1/N_e)Σ_iφ_i}.
 *Per-particle chain.* By T12 (R3) (W1-N1 Lemma B (B-b)), given 𝓗′ each particle's subsequent rounds form a Markov chain
@@ -44,8 +46,8 @@ with probability ≤ π(Ω∖S₀) + π(S₀)λ₀ = δ + (1 − δ)λ₀ (ST-c 
 before). So π(ψ) ≤ δ + (1 − δ)λ₀.
 *Burn-in.* Given 𝓗, X_i′ ~ K₁^L(X_i^{(T)}, ·) (L rounds at φ = 1, R3), so E[ψ(X_i′) | 𝓗] = (K₁^Lψ)(X_i^{(T)}) ≤ π(ψ) + e_L by
 (TR-a), since ψ ∈ [0, 1]. Hence E[(1/N_e)Σ_iφ_i] ≤ δ + (1 − δ)λ₀ + e_L, and by concavity of min{1, ·},
-E‖p̂_r − 1_{S₀}‖_∞ ≤ min{1, κ₀ + δ + (1 − δ)λ₀ + e_L} ≤ g + e_L. The same argument with ψ(x) := K₁^q(x, Ω∖S₀) gives
-E[1 − A_{r,q}] ≤ δ + e_{L+q}. These are bounded measurable functionals of the record, so the freezing lemma transfers them to
+E‖p̂_r − 1_{S₀}‖_∞ ≤ min{1, κ₀ + δ + (1 − δ)λ₀ + e_L} ≤ g + e_L. For the endpoints apply (TR-a) to K₁^{L+q} directly:
+E[1 − A_{r,q} | 𝓗] = (1/N_e)Σ_i K₁^{L+q}(X_i^{(T)}, Ω∖S₀) ≤ π(Ω∖S₀) + e_{L+q} = δ + e_{L+q} ≤ δ + e_L (C1 Opus #3). These are bounded measurable functionals of the record, so the freezing lemma transfers them to
 "given 𝓒" in localised form (as in `MR_identities.md` Step 4). No weighting by W and no independence across particles are
 used.
 
@@ -60,14 +62,20 @@ E[1_𝒜 min(1, δ + e_L)] → 0, where S† := the hpm_better-maximiser of F ov
 
 - P-OVL∞ involves no final-particle statistic; it is a condition on (π, π₀) relative to the executed burn-in L (on (π, π₀)
   alone once L is the production budget; MP1 issue 2). It is a **global overlap** condition: M is a
-  maximum over all of Ω, not computed by the method. Since M ≥ w(S₀) = π(S₀)/π₀(S₀), P-OVL∞ forces π₀(S₀) ≥ π(S₀)/M, i.e. π₀(S₀)·L → ∞ (π(S₀) → 1).
-- Start mass alone does not control M (BT1 §2): with π(s) = π₀(s) = 1 − ε, a second state of posterior mass ε/2 and start
-  mass εe^{−H}, M ≥ e^{H}/2 for any H. So TR and C are not nested: C needs π₀(S₀) → 1, TR needs M = o(L).
+  maximum over all of Ω, not computed by the method. Since M ≥ w(S₀) = π(S₀)/π₀(S₀), on 𝒜 P-OVL∞ forces π₀(S₀) ≥ π(S₀)/M, i.e. localised to 𝒜, π₀(S₀)·L → ∞ in probability under P-CONC (SW1 #11).
+- Abstract positive-target example (BT1 §2; **not** a realisation of the coded regression target — on a coded 3-state
+  space p = 2, K = 1 and d ≡ 0, so π₀ = π; SW1 #2): with π(s) = π₀(s) = 1 − ε, a second state of posterior mass ε/2 and
+  start mass εe^{−H}, M ≥ e^{H}/2 for any H. So, for abstract targets, start mass alone does not control M and the
+  conditions of C (π₀(S₀) → 1) and TR (M = o(L)) are not nested. Converse (abstract; C1 Opus #9): given π, M_n → ∞ with
+  M_n = o(L) and δ < 1, put π₀(s) := (1 − δ)/M_n and π₀(S) := c·π(S) for S ≠ s with c := (1 − (1 − δ)/M_n)/δ; then
+  w(s) = M_n, w(S) = 1/c ≤ 1 elsewhere, so M = M_n = o(L) while π₀(s) → 0. Whether coded regression targets separate them is open.
 - TR does not repair W: the evidence is not updated in the terminal rounds. In the "near" example
   (`numerics/RESULTS_v1_sec4b.txt`) the PIPs are repaired while W stays collapsed.
 - Improves BLIND_astra2 Thm 5 in the concentrating regime: no log(p+1)/N_e → 0 condition and no union over coordinates.
 
 ## Numerical falsification
 
-`numerics/RESULTS_v3.txt` (run_checks_v3.py): exact minorization check min_{x,y} K_σ(x, y)/π(y) ≥ 1/M for random fixed orders σ on the test targets and
-E‖p̂_r − 1‖_∞ ≤ g + e_L by simulation, including collapsed-W runs.
+`numerics/RESULTS_v3.txt` (run_checks_v3.py): exact minorization min_{x,y} K_σ(x, y)/π(y) ≥ 1/M for 200 random fixed orders
+σ on three targets (no violation); E‖p̂_r − 1‖_∞ ≤ min(1, g + e_L) by simulation. In the "near" case the tested bound is
+vacuous (min(1, g + e_L) = 1, M = 1.3e6): it shows repair **outside** TR's sufficient regime, not a validation of TR with
+collapsed W (SW1 #19). LC2's reviewer additionally enumerated all orders (up to 720) on 12 small targets.

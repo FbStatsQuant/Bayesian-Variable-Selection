@@ -1,6 +1,6 @@
-seed 4
+seed 4; sections [4]; near-L [5, 20]
 
-======== 4. NC_r: necessity probes ========
-trap: delta=0.0099 pi0(S0)=1.52e-08; P(W<0.01)=1.000; P(RB err >= .5)=1.000; P(MPM wrong)=1.000  -> P-CONC holds, NC fails, outputs wrong
-near: delta=0.0039 pi0(S0)=7.76e-07; P(W<0.01)=0.760; median W=3.58e-04; P(RB err >= .1)=0.235  -> NC fails, yet the terminal rounds repair the RB PIPs (NC not necessary)
-near: delta=0.0039 pi0(S0)=7.76e-07; P(W<0.01)=0.755; median W=3.58e-04; P(RB err >= .1)=0.009  -> NC fails, yet the terminal rounds repair the RB PIPs (NC not necessary)
+======== 4. finite-target collapsed-evidence probes (illustrations; NOT asymptotic witnesses for NC_r) ========
+trap: delta=0.0099 pi0(S0)=1.52e-08; P(W<0.01)=1.000; P(RB err >= .5)=1.000; P(MPM wrong)=1.000  -> finite target: small delta, collapsed W, wrong outputs
+near (L=5): delta=0.0039 pi0(S0)=7.76e-07; P(W<0.01)=0.760; median W=3.58e-04; P(RB err >= .1)=0.235  -> finite target: collapsed W; RB error rate as shown (repair grows with L)
+near (L=20): delta=0.0039 pi0(S0)=7.76e-07; P(W<0.01)=0.758; median W=3.58e-04; P(RB err >= .1)=0.009  -> finite target: collapsed W; RB error rate as shown (repair grows with L)

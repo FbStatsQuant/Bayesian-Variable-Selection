@@ -1,6 +1,6 @@
 # Lemma MR — measured identities given 𝓒 (bridge stages, terminal endpoints, pre-step states)
 
-Status: PROVED (by this seat, unchecked). v1, 2026-11-09. Statement: STATEMENT.md v2 §2 "Lemma MR".
+Status: PROVED-CHECKED (lemma checks LC1/LC2 Codex Sol; mid-point MP1 CONTINUE; sweep SW1 fixed; council C1 PASSED round 1 (gpt-6-astra 9.1, Claude Opus 5.5 8.8; all six gates PASS on both seats); C1 non-blocking edits applied). Text history: v1, 2026-11-09. Statement: STATEMENT.md v3 §2 "Lemma MR".
 
 ## Sources used (with statuses, verbatim as in STATEMENT §1)
 
@@ -14,7 +14,8 @@ Status: PROVED (by this seat, unchecked). v1, 2026-11-09. Statement: STATEMENT.m
   (`L1_bridge.md:14-20`); jointly measurable (B-d). Lemma B was written for the frozen v2.2.1 core; on main the engine
   differs, **in the island computation**, only by the removed write-only plain-PIP lines; the other differences (the
   local-search `phase` argument, `PH_LS0`, the removed registry hook) are outside the island (`lemmas/CC_code_check.md`
-  header; LC1 issue 4). Lemma B already lists the plain-PIP lines
+  header; LC1 issue 4); `v3_start.h` is identical through `draw_pi0` and `v3_runtime.h` differs only in LS0 event labels
+  (CC header, SW1 #12). Lemma B already lists the plain-PIP lines
   as statistically inert (`L1_bridge.md:29-31`). So Lemma B applies to main verbatim (its `pip_plain` sentence excepted).
 - W1-N1 Lemma F (`L3_freezing.md`): the freezing step for terminal endpoints, with the localisation convention and the
   deterministic evidence bound Ẑ ∈ [Z₀e^{min_Ω d}, Z₀e^{max_Ω d}], Z₀ = m(∅)Z̄₀ (`L3_freezing.md:34-36`).
@@ -33,7 +34,8 @@ Almost surely:
 
 ## Proof
 
-**Step 1 (fixed c).** Fix c ∈ A₀ (the σ(𝓒)-measurable success set of L3, `L3_freezing.md:28-30`) and run the island on an
+**Step 1 (fixed c).** Fix c ∈ A₀ (the set of calibration values of L3, `L3_freezing.md:27-29`, whose pullback E₀ = {𝓒 ∈ A₀} ∈ σ(𝓒) is the
+localisation event; SW1 #21) and run the island on an
 iid stream U. By Lemma B (B-a, B-b) the run is T12's I(c) with N = N_e(c), M = 4, L′ = L(c), flag unset, and satisfies
 (R1)–(R3). Put f := h(·; c) : Ω → ℝ (bounded). Then:
 - (MR-a) at fixed c is T12 (i.a) for t ≤ T(c): E_c[Ẑ_t q̂_t(f)] = Z_t q_t(f); divide by the constant Z_t > 0.

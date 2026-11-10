@@ -1,6 +1,6 @@
 # Lemma CC — code facts used by W3-SAMP (code check)
 
-Status: CODE-CHECKED BY THE LEAD; SL1 audit (Sol) confirmed CC1–CC7 with text corrections. v2, 2026-11-09 (SL1 item 5).
+Status: CODE-CHECKED (lead; re-checked against the code by SL1, LC1, SW1 and both council seats; council C1 PASSED round 1 (gpt-6-astra 9.1, Claude Opus 5.5 8.8; all six gates PASS on both seats)). History: v2, 2026-11-09 (SL1 item 5).
 
 Code of record: the production core on main, `Scripts/SMC_BVS/core/` (= commit 4676af6: `git diff --stat 4676af6 HEAD --
 Scripts/SMC_BVS/core` is empty). Paths below are relative to that folder. Line numbers are those of the working tree on
@@ -12,8 +12,12 @@ Scripts/SMC_BVS/core` is empty). Paths below are relative to that folder. Line n
 `plain_acc`, `plain_round` removed); (2) `local_search` takes a `phase` argument (LS0); (3) comments. The elementary steps,
 the round, resampling and `draw_start` are byte-identical up to line shifts; `run_island_s` differs only by the removed
 plain-PIP accumulator writes, with no change to its statistical transitions, weights or evidence increments. `cpp/v3_ledger.h` differs only
-by the added phase `PH_LS0` and the removed registry hook. Consequence: N1's code bridge (W1-N1 `lemmas/L1_bridge.md`)
-applies to main's island verbatim, **except** for its sentence identifying `pip_plain`; on main the only coded PIP is the
+by the added phase `PH_LS0` and the removed registry hook. Other headers (SW1 #12; `diff --strip-trailing-cr` against the v2.2.1 tree, 2026-11-09): `cpp/v3_score.h`,
+`cpp/v3_util.h`, `cpp/v3_blocks.h`, `cpp/v3_calib.h` identical; `cpp/v3_start.h` identical up to and including `draw_pi0`
+(the text before `draw_pi0` and the function itself have equal SHA-256), its differences (from v2.2.1 line 181 on) being the
+start-mode / tie-aware DP used only by LS0; `cpp/v3_runtime.h` differs in 4 lines of `local_event` (event labelling for
+LS0). So every island-reachable sampler, table, scoring and start-draw function is unchanged, and N1's code bridge (W1-N1
+`lemmas/L1_bridge.md`) applies to main's island verbatim, **except** for its sentence identifying `pip_plain`; on main the only coded PIP is the
 Rao–Blackwell PIP.
 
 ## CC1 — every π₀ draw is scored and reaches the ledger before its accept decision
@@ -103,4 +107,4 @@ Note (SL1 item 3, LC1 issue 1): CC6 and the D_r lower bound concern production c
 finite strictly increasing grid from 0 to 1 with no T_e ceiling (`v3_run.R:68-82`), and that grid reaches the engine
 (`cpp/v3_core.cpp:446`); but `v3_run_settings` always takes N_e and L from `setup$budgets` (`v3_run.R:88-92`), so
 `frozen$N`/`frozen$L` are not executed by the public wrapper. Arbitrary (N_e, L) are reachable only through the engine
-component `Engine::run_island` (`cpp/v3_engine.h:269-273`).
+component `Engine::run_island(r, N_e, grid, L, 4, tier, nullptr)` (`cpp/v3_engine.h:269-273`); `init_states = nullptr` is required for the N_e initial π₀ draws (SW1 #13).

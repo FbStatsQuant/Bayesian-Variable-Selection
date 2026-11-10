@@ -1,6 +1,6 @@
 # Theorem D — draw discovery
 
-Status: PROVED (by this seat, unchecked). v2, 2026-11-09 (v1 → v2: MAP premise S† = S₀ replaces δ < ½, BT1 §3.1).
+Status: PROVED-CHECKED (lemma checks LC1/LC2 Codex Sol; mid-point MP1 CONTINUE; sweep SW1 fixed; council C1 PASSED round 1 (gpt-6-astra 9.1, Claude Opus 5.5 8.8; all six gates PASS on both seats); C1 non-blocking edits applied). Text history: v2, 2026-11-09 (v1 → v2: MAP premise S† = S₀ replaces δ < ½, BT1 §3.1).
 Statement: STATEMENT.md v3 §2 "Theorem D".
 
 ## §1 The draws are iid π₀ given 𝓒 (D-i)
@@ -14,8 +14,8 @@ exactly n uniforms is a function of U₁..U_n (W1-N1 Lemma B (B-b): the control 
 operation reads are decided by values already read, the data and c), so τ_k is an (𝓕_n)-stopping time, finite since each
 operation reads a bounded number of uniforms (`L1_bridge.md:77-88`). By the strong Markov property of iid sequences,
 V^{(k)} := (U_{τ_k+1}, U_{τ_k+2}, …) is iid U[0,1) and independent of 𝓕_{τ_k}. Draw k equals Ψ(V^{(k)}) for the measurable
-map Ψ realised by `draw_pi0` (it reads 1 + (number of nonzero block sizes considered) + (number of nonempty blocks)
-uniforms, a number determined by the values it reads, `cpp/v3_start.h:158-176`). By START, Ψ(V) ~ π₀ for V iid uniform.
+map Ψ realised by `draw_pi0` (it reads 1 + (number of iterations of the remaining-size loop, which includes blocks assigned size 0) + (number of
+positive-size blocks) ≤ 1 + 2J uniforms (SW1 #9), a number determined by the values it reads, `cpp/v3_start.h:158-176`). By START, Ψ(V) ~ π₀ for V iid uniform.
 Draws 1..k−1 are 𝓕_{τ_k}-measurable (they end before draw k begins). Hence draw k ~ π₀ independently of draws 1..k−1, for
 every k: the D_r draws are iid π₀. Therefore P_c(no draw equals S₀) = (1 − π₀(S₀))^{D_r(c)} exactly.
 
