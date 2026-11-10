@@ -1,0 +1,15 @@
+W3-SCR N1: production fits stopped by the lead at 20:40 on 2026-11-09 without having finished (no output record).
+All other fits of the same cells finished in 6-24 min (strong) under the same load (8 processes on 8 cores).
+task  design          bscale rep  minutes running when stopped
+41    cs(0.5)         1      1    ~186 (started 17:33)
+42    cs(0.5)         1      2    186
+47    cs(0.5)         1      7    186
+49    cs(0.5)         1      9    186
+50    cs(0.5)         1      10   186
+62    fac(k=3)        1      2    167
+69    fac(k=3)        1      9    108
+70    fac(k=3)        1      10   46
+72    fac(k=3)        0.35   2    107
+Reproduce: Rscript --vanilla scr_fit.R core_copy OUT.jsonl <line of n1_tasks.txt> (deterministic seeds).
+The fits print no progress; the two slowest finished fits of these designs (1464 s and 1616 s) include one with
+flags$escalated = TRUE, so calibration escalation is the likely cause, but this was not verified for the stopped fits.

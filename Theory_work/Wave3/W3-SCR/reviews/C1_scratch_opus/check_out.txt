@@ -1,0 +1,2 @@
+{'onestep': np.float64(4.8183679268731794e-14), 'Dlow': 0, 'Dhigh': 0, 'L40': np.float64(-0.07437499729573016), 'B2o': np.float64(-0.7637122159124936), 'facta': np.float64(9.70310050157138e-16), 'omega': np.float64(-0.00477882257844886), 'dual': 0}
+L6 criterion mismatches 0

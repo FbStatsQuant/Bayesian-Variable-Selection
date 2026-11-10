@@ -1,0 +1,53 @@
+ok   STATEMENT.md:9  Theory_work/Wave3/PROGRAM.md:26-27 -> Theory_work\Wave3\PROGRAM.md
+ok   STATEMENT.md:10  Theory_work/Wave2/SR/BLIND_fable.md:154-164 -> Theory_work\Wave2\SR\BLIND_fable.md
+ok   STATEMENT.md:10  Theory_work/Wave2/SR/CRITIQUE_fable.md:67-70 -> Theory_work\Wave2\SR\CRITIQUE_fable.md
+ok   STATEMENT.md:10  Theory_work/Wave2/SR/CRITIQUE_fable.md:245 -> Theory_work\Wave2\SR\CRITIQUE_fable.md
+ok   STATEMENT.md:19  Theory_work/Wave1C/FINAL/sections/s1_setting.tex:7-24 -> Theory_work\Wave1C\FINAL\sections\s1_setting.tex
+ok   CODE_CHECK.md:7  cpp/v3_engine.h:379-419 -> Scripts\SMC_BVS\core\cpp\v3_engine.h
+ok   CODE_CHECK.md:23  cpp/v3_core.cpp:453-481 -> Scripts\SMC_BVS\core\cpp\v3_core.cpp
+ok   CODE_CHECK.md:27  v3_run.R:143-149 -> Scripts\SMC_BVS\core\v3_run.R
+ok   CODE_CHECK.md:27  v3_run.R:174-200 -> Scripts\SMC_BVS\core\v3_run.R
+ok   CODE_CHECK.md:30  v3_fit.R:76 -> Scripts\SMC_BVS\core\v3_fit.R
+ok   CODE_CHECK.md:36  v3_exact.R:15 -> Scripts\SMC_BVS\core\v3_exact.R
+ok   CODE_CHECK.md:44  tests/changed_units.R:56-72 -> Scripts\SMC_BVS\tests\changed_units.R
+ok   CODE_CHECK.md:54  cpp/v3_score.h:223 -> Scripts\SMC_BVS\core\cpp\v3_score.h
+ok   CODE_CHECK.md:54  cpp/v3_score.h:14 -> Scripts\SMC_BVS\core\cpp\v3_score.h
+ok   CODE_CHECK.md:54  cpp/v3_score.h:57 -> Scripts\SMC_BVS\core\cpp\v3_score.h
+ok   CODE_CHECK.md:55  cpp/v3_score.h:64-70 -> Scripts\SMC_BVS\core\cpp\v3_score.h
+ok   CODE_CHECK.md:56  v3_preprocess.R:37-68 -> Scripts\SMC_BVS\core\v3_preprocess.R
+ok   CODE_CHECK.md:56  v3_preprocess.R:118-123 -> Scripts\SMC_BVS\core\v3_preprocess.R
+ok   CODE_CHECK.md:57  Theory_work/Wave1C/FINAL/sections/s1_setting.tex:9-13 -> Theory_work\Wave1C\FINAL\sections\s1_setting.tex
+ok   CODE_CHECK.md:58  cpp/v3_score.h:218-219 -> Scripts\SMC_BVS\core\cpp\v3_score.h
+ok   CODE_CHECK.md:58  cpp/v3_score.h:231-234 -> Scripts\SMC_BVS\core\cpp\v3_score.h
+ok   CODE_CHECK.md:62  cpp/v3_engine.h:391 -> Scripts\SMC_BVS\core\cpp\v3_engine.h
+ok   CODE_CHECK.md:62  v3_engine.h:89-99 -> Scripts\SMC_BVS\core\cpp\v3_engine.h
+ok   CODE_CHECK.md:63  cpp/v3_ledger.h:84-95 -> Scripts\SMC_BVS\core\cpp\v3_ledger.h
+ok   CODE_CHECK.md:63  cpp/v3_ledger.h:99-112 -> Scripts\SMC_BVS\core\cpp\v3_ledger.h
+ok   CODE_CHECK.md:64  v3_ledger.h:96-98 -> Scripts\SMC_BVS\core\cpp\v3_ledger.h
+ok   CODE_CHECK.md:66  cpp/v3_core.cpp:395-481 -> Scripts\SMC_BVS\core\cpp\v3_core.cpp
+ok   CODE_CHECK.md:70  cpp/v3_core.cpp:351-353 -> Scripts\SMC_BVS\core\cpp\v3_core.cpp
+ok   CODE_CHECK.md:71  v3_engine.h:407 -> Scripts\SMC_BVS\core\cpp\v3_engine.h
+ok   CODE_CHECK.md:72  v3_engine.h:408-410 -> Scripts\SMC_BVS\core\cpp\v3_engine.h
+ok   REPORT.md:154  Theory_work/Wave2/SR/CRITIQUE_fable.md:50 -> Theory_work\Wave2\SR\CRITIQUE_fable.md
+ok   token 'continue' at cpp/v3_engine.h:397
+ok   token 'best.F > C.F' at cpp/v3_engine.h:408
+ok   token 'move_limit' at cpp/v3_engine.h:410
+ok   token 'local_certified = true' at cpp/v3_engine.h:414
+ok   token 'eval(q, ME_LOCAL)' at cpp/v3_engine.h:391
+ok   token 'scan_complete' at cpp/v3_engine.h:407
+ok   token 'local_search(led.hpmS' at cpp/v3_core.cpp:456
+ok   token 'PH_LS0' at cpp/v3_core.cpp:476
+ok   token 'scanned_centres' at cpp/v3_core.cpp:352
+ok   token 'local_certified <- FALSE' at v3_run.R:146
+ok   token 'identical(as.integer(out$hpm)' at v3_run.R:179
+ok   token 'cert_final || cert_ls0' at v3_run.R:194
+ok   token 'final_local_limit || out$ls0_local_limit' at v3_run.R:197
+ok   token 'status == "exact"' at v3_exact.R:15
+ok   token 'local_certified = FALSE' at v3_fit.R:76
+ok   token 'D->nu * std::log(arg)' at cpp/v3_score.h:223
+ok   token 'lchoose_d(2.0 * p - 1.0, k)' at cpp/v3_score.h:65
+ok   token 'hpm_better' at cpp/v3_ledger.h:85
+ok   token 'offer_stores' at cpp/v3_ledger.h:112
+ok   token 'length(x) - 1' at v3_preprocess.R:66
+
+SUMMARY: 31 citations in 11 files, 20/20 content tokens verified, 0 failures

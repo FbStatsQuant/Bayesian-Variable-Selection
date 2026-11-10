@@ -1,0 +1,11 @@
+{"rep": 0, "S0_is_LO": true, "n_pair_candidates": 0, "n_LO_pairs": 0, "n_LO_singles": 0, "LO_pairs": []}
+{"rep": 1, "S0_is_LO": true, "n_pair_candidates": 0, "n_LO_pairs": 0, "n_LO_singles": 0, "LO_pairs": []}
+{"rep": 2, "S0_is_LO": true, "n_pair_candidates": 0, "n_LO_pairs": 0, "n_LO_singles": 0, "LO_pairs": []}
+{"rep": 3, "S0_is_LO": true, "n_pair_candidates": 0, "n_LO_pairs": 0, "n_LO_singles": 0, "LO_pairs": []}
+{"rep": 4, "S0_is_LO": true, "n_pair_candidates": 0, "n_LO_pairs": 0, "n_LO_singles": 0, "LO_pairs": []}
+{"rep": 5, "S0_is_LO": true, "n_pair_candidates": 0, "n_LO_pairs": 0, "n_LO_singles": 0, "LO_pairs": []}
+{"rep": 6, "S0_is_LO": true, "n_pair_candidates": 0, "n_LO_pairs": 0, "n_LO_singles": 0, "LO_pairs": []}
+{"rep": 7, "S0_is_LO": true, "n_pair_candidates": 0, "n_LO_pairs": 0, "n_LO_singles": 0, "LO_pairs": []}
+{"rep": 8, "S0_is_LO": true, "n_pair_candidates": 0, "n_LO_pairs": 0, "n_LO_singles": 0, "LO_pairs": []}
+{"rep": 9, "S0_is_LO": true, "n_pair_candidates": 0, "n_LO_pairs": 0, "n_LO_singles": 0, "LO_pairs": []}
+SUMMARY {"scenario": "pairs_cs20", "n": 100, "p": 400, "reps": 10, "draws_with_LO_missing_q8": 0, "draws_with_LO_missing_q16": 0, "draws_with_LO_missing_any_size": 0, "draws_with_LO_strict_superset": 0, "draws_S0_is_LO": 10, "endpoint_sizes": {}, "n_endpoints": 0, "endpoints_missing": 0, "LO_pair_supersets": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}

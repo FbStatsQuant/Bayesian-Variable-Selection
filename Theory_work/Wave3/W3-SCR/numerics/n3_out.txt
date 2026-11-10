@@ -1,0 +1,27 @@
+== L1: score algebra ==
+trials 2400; worst |q_S - Q| 2.03e-13; one-step F / Q identity 5.25e-13; augmented identities 2.46e-13
+Q bounds violations (should be <= 0): lower 0.00e+00 upper 2.13e-14;  D bounds: lower 1.42e-14 upper 0.00e+00
+L1.5 D-add: 104 cases with g_y >= T_n, failures 0;  L1.5deg: 194 cases, failures 0;  L1.6 D-del: 325 cases, failures 0
+== L4: bridges ==
+L4.0: 2108 cases, worst (lower bound - gamma)/gamma = -9.862e-02 (must be <= 0)
+B2 (per-model anchored floor): 1549 cases, worst relative excess = -1.427e-01 (must be <= 0)
+B2deg (normalised visibility): 1423 cases, worst relative excess = -7.597e-01 (must be <= 0)
+== L5 step 2: sum of excess gains vs projected norm ==
+240 cases; worst [sum_j (u_j'v)^2 - |P_W v|^2/phi] = -8.101e-06; with omega(S) in place of 1/phi: 7.105e-15 (both must be <= ~1e-9)
+== L6: exact criterion at the empty model ==
+6507 singletons: exact criterion mismatches 0; sufficient condition (star) violations 0
+== L2: Monte Carlo frequencies of the events against their bounds ==
+x=1.0: P(E4^c) 0.0024 (bound 0.3679); SCR-Adeg step-1 violations on E2+ and E4: 0
+x=1.0: P(E1^c) 0.0069 (bound 0.3679); P(E2+^c) 0.0014, P(E2-^c) 0.0000 (bound 0.7358); P(E3a^c, OLS part) 0.0034 (bound 2.2073)
+x=2.0: P(E4^c) 0.0007 (bound 0.1353); SCR-Adeg step-1 violations on E2+ and E4: 0
+x=2.0: P(E1^c) 0.0025 (bound 0.1353); P(E2+^c) 0.0000, P(E2-^c) 0.0000 (bound 0.2707); P(E3a^c, OLS part) 0.0006 (bound 0.8120)
+x=3.0: P(E4^c) 0.0003 (bound 0.0498); SCR-Adeg step-1 violations on E2+ and E4: 0
+x=3.0: P(E1^c) 0.0011 (bound 0.0498); P(E2+^c) 0.0000, P(E2-^c) 0.0000 (bound 0.0996); P(E3a^c, OLS part) 0.0004 (bound 0.2987)
+== SCR-A / SCR-Adeg end to end on small problems (full enumeration of sparse models) ==
+iid n=40 bscale=3.0: sqrt(Gamma)=13.14 sqrt(Psi)=3.60 tau_n=3.83 sqrt(T_n)=3.14; MC up to x=None (bound None); MCdeg up to x=None (bound None); draws with an LO model of size <= 2 missing a truth: 0/200
+iid n=400 bscale=1.0: sqrt(Gamma)=18.77 sqrt(Psi)=11.06 tau_n=1.70 sqrt(T_n)=3.45; MC up to x=38.3 (bound 0.0); MCdeg up to x=15.8 (bound 1e-06); draws with an LO model of size <= 2 missing a truth: 0/200
+cs n=400 bscale=1.0: sqrt(Gamma)=6.95 sqrt(Psi)=5.34 tau_n=1.30 sqrt(T_n)=3.45; MC up to x=None (bound None); MCdeg up to x=None (bound None); draws with an LO model of size <= 2 missing a truth: 0/200
+iid n=400 bscale=0.25: sqrt(Gamma)=4.89 sqrt(Psi)=4.62 tau_n=1.06 sqrt(T_n)=3.45; MC up to x=None (bound None); MCdeg up to x=None (bound None); draws with an LO model of size <= 2 missing a truth: 16/200
+cs n=400 bscale=0.25: sqrt(Gamma)=1.29 sqrt(Psi)=1.27 tau_n=1.02 sqrt(T_n)=3.45; MC up to x=None (bound None); MCdeg up to x=None (bound None); draws with an LO model of size <= 2 missing a truth: 197/200
+iid n=40 bscale=0.8: sqrt(Gamma)=4.63 sqrt(Psi)=3.44 tau_n=1.54 sqrt(T_n)=3.14; MC up to x=None (bound None); MCdeg up to x=None (bound None); draws with an LO model of size <= 2 missing a truth: 4/200
+cs n=40 bscale=0.8: sqrt(Gamma)=1.40 sqrt(Psi)=1.20 tau_n=1.17 sqrt(T_n)=3.14; MC up to x=None (bound None); MCdeg up to x=None (bound None); draws with an LO model of size <= 2 missing a truth: 198/200

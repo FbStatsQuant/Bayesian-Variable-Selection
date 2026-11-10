@@ -1,0 +1,4 @@
+n=100 p=400 K=50 (core K=50)  ||x_j||^2 range [99.000000,99.000000]  y'y=99.000000
+F_py - F_core on 16004 core-scored models: max |difference| = 5.969e-13 (median -2.984e-13)
+vectorised additions vs direct F: max abs diff = 8.527e-14
+core HPM [2, 26, 53, 75] certified under the Python scan (tol 1e-9): True

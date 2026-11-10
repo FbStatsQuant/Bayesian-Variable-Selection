@@ -1,0 +1,14 @@
+iid n=30 p=8 q=2 bscale=1.0 x=1.0: |H^-|=36, event held in 345/400 draws (bound >= 0.000); min delta_S = -3.77; MC False, MCdeg False, all delta_S > 0: False
+cs n=30 p=8 q=2 bscale=2.0 x=1.0: |H^-|=36, event held in 338/400 draws (bound >= 0.000); min delta_S = -3.00; MC False, MCdeg False, all delta_S > 0: False
+dup n=30 p=8 q=2 bscale=1.5 x=2.0: |H^-|=36, event held in 385/400 draws (bound >= 0.459); min delta_S = -3.01; MC False, MCdeg False, all delta_S > 0: False
+iid n=200 p=7 q=2 bscale=0.6 x=3.0: |H^-|=28, event held in 396/400 draws (bound >= 0.801); min delta_S = -2.75; MC False, MCdeg False, all delta_S > 0: False
+cs n=200 p=7 q=2 bscale=0.8 x=3.0: |H^-|=28, event held in 392/400 draws (bound >= 0.801); min delta_S = -2.99; MC False, MCdeg False, all delta_S > 0: False
+iid n=400 p=6 q=1 bscale=0.5 x=4.0: |H^-|=7, event held in 399/400 draws (bound >= 0.927); min delta_S = -0.28; MC False, MCdeg False, all delta_S > 0: False
+iid n=30 p=8 q=2 bscale=0.2 x=1.0: |H^-|=36, event held in 342/400 draws (bound >= 0.000); min delta_S = -4.41; MC False, MCdeg False, all delta_S > 0: False
+iid n=400 p=6 q=1 bscale=1.5 x=3.0: |H^-|=7, event held in 389/400 draws (bound >= 0.801); min delta_S = 67.19; MC True, MCdeg True, all delta_S > 0: True
+iid n=1000 p=6 q=2 bscale=1.0 x=3.0: |H^-|=21, event held in 397/400 draws (bound >= 0.801); min delta_S = 104.90; MC True, MCdeg True, all delta_S > 0: True
+cs n=1000 p=6 q=2 bscale=1.5 x=3.0: |H^-|=21, event held in 386/400 draws (bound >= 0.801); min delta_S = 106.59; MC True, MCdeg True, all delta_S > 0: True
+iid n=1500 p=7 q=2 bscale=3.0 x=4.0: |H^-|=28, event held in 399/400 draws (bound >= 0.927); min delta_S = 611.91; MC True, MCdeg True, all delta_S > 0: True
+TOTAL: 4168/4400 draws on the event; 105955 gap checks, violations 0, min (dF - delta_S) = 0.0000
+M3: 4 configurations with MC or MCdeg true, of which delta_S <= 0 for some S: 0
+M5: 2721 moves from a centre containing S0 to a model of size <= q (on the event, all delta_S > 0), truth dropped: 0
