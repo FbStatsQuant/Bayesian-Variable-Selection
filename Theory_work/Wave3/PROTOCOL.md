@@ -22,3 +22,6 @@ OpenAI seat + one Claude seat, both ≥ 8.0 with all six gates in the same round
 6. Token efficiency: grep and targeted reads; summarise; do not paste long files into replies.
 7. Final report as before, plus: assumptions list with ids, `implies` relations to existing results, and the
    sharpness record (for the registry being built in `Theory_work/INFRA/`).
+8. **Registry block (from 2026-11-10):** every REPORT.md ends with the registry block from
+   `Theory_work/INFRA/templates/ASSUMPTION_MAP.md` (on branch `theory/infra` / PR #6 until merged), with per-clause
+   statuses — one status per claim, never one status for a bundle of results.
