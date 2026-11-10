@@ -221,6 +221,44 @@ def parse_span(s: str) -> tuple[int, int] | None:
     return (a, b) if 1 <= a <= b else None
 
 
+_NEGATION = re.compile(r"\b(not|no|never|un|pending|without)\b(\s+\w+){0,2}\s*$")
+
+
+def _norm_status_text(t: str) -> str:
+    return re.sub(r"\s+", " ", re.sub(r"[*`_|;,]", " ", t or "")).strip().lower()
+
+
+def status_at(status: str, source: str) -> str:
+    """Locate a verbatim status at `path:line`: 'ok' | 'negated' | 'elsewhere' (later lines / other place in the
+    file) | 'missing' | 'unreadable'. The match must START on the stated line (it may continue on the next 3), and
+    must not be preceded by a negation ("not", "not yet", "no", "pending", ...)."""
+    path, _, ln = (source or "").rpartition(":")
+    lines = read_lines(path) if path else None
+    sp = parse_span(ln.split(",")[0]) if lines else None
+    if lines is None or sp is None or sp[0] > len(lines):
+        return "unreadable"
+    st = _norm_status_text(status)
+    if not st:
+        return "missing"
+    first = _norm_status_text(lines[sp[0] - 1])
+    window = _norm_status_text(" ".join(lines[sp[0] - 1: sp[1] + 3]))
+    pos = window.find(st)
+    while pos >= 0 and pos > len(first):  # occurrences that start after the stated line do not count
+        pos = -1
+    if pos < 0:
+        return "elsewhere" if st in _norm_status_text(" ".join(lines)) else "missing"
+    return "negated" if _NEGATION.search(window[:pos]) else "ok"
+
+
+def span_key(spec: str):
+    """Canonical (path, a, b) for a 'path:a-b' span (path normalised, numbers as ints), or None."""
+    path, _, sp = (spec or "").strip().split()[0].rpartition(":") if (spec or "").strip() else ("", "", "")
+    s = parse_span(sp)
+    if not path or s is None or span_lines(f"{path}:{sp}") is None:
+        return None
+    return (os.path.normcase(os.path.normpath(path)).replace("\\", "/"), s[0], s[1])
+
+
 def text_hash(lines: list[str]) -> str:
     """sha256 of the span with trailing whitespace stripped per line and LF joins (CRLF/editor-proof)."""
     return hashlib.sha256("\n".join(l.rstrip() for l in lines).encode("utf-8")).hexdigest()
@@ -370,10 +408,12 @@ class Graph:
                 p, _, b = item.partition("@")
                 if not b:
                     continue
-                t = resolve(b, ids, aliases)
+                t = resolve(b, ids, aliases, r.get("ticket", ""))
                 if t is None:
                     self.dangling.append((r["id"], item))
-                elif t != r["id"]:
+                elif t == r["id"]:
+                    self.self_edges.append((r["id"], item))  # a claim cannot be its own bridge
+                else:
                     self._add(r["id"], t, f"proof:{p.strip()}")
 
     def _add(self, u, t, use):

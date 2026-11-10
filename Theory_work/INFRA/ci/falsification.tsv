@@ -39,16 +39,16 @@ falsify	C-DLV:L3-3.1; C-DLV:L3-3.2; C-DLV:Cor-3.2p; C-DLV:L3-3.3; C-DLV:L3-3.4; 
 falsify	C-DLV:L3-3.1; C-DLV:L3-3.2; C-DLV:Cor-3.2p; C-DLV:L3-3.3; C-DLV:L3-3.4; C-DLV:L3-3.5a; C-DLV:L3-3.5b		Theory_work/Wave1C/C-DLV/numerics/n2b_pilot_and_counts.py		120	>120	no			calibration rc=TIMEOUT:
 falsify	C-DLV:L5-5.0; C-DLV:L5-5.1; C-DLV:L5-5.2; C-DLV:L5-5.2p; C-DLV:Cor-5.3		Theory_work/Wave1C/C-DLV/numerics/n3_twomodel.py		120	>120	no			calibration rc=TIMEOUT:
 falsify	W2-APP:POST		Theory_work/Wave2/W2-APP/numerics/post_check.py		120	>120	no			calibration rc=TIMEOUT:
-falsify	W2-APP:CT; W2-APP:CD		Theory_work/Wave2/W2-APP/numerics/ct_check.py		120					
-falsify	W2-APP:VN		Theory_work/Wave2/W2-APP/numerics/vn_bound_recheck.py		120					
-falsify	W2-FAC-A:Thm-FAC-L; W2-FAC-A:L1		Theory_work/Wave2/W2-FAC-A/numerics/fu_check.py		120					
-falsify	W2-FAC-A:Thm-FAC-L; W2-FAC-A:L1		Theory_work/Wave2/W2-FAC-A/numerics/fu5_check.py		120					
-falsify	W2-FAC-A:Thm-FAC-L; W2-FAC-A:Prop-SHARP; W2-FAC-A:L3.1; W2-FAC-A:L3.2		Theory_work/Wave2/W2-FAC-A/numerics/fna_check.py		120					
-falsify	W2-FAC-A:Thm-FAC-L; W2-FAC-A:L5; W2-FAC-A:Lemma-TVF		Theory_work/Wave2/W2-FAC-A/numerics/tv_cert_exact.py		120					
-falsify	W2-FAC-A:Lemma-kappa		Theory_work/Wave2/W2-FAC-A/numerics/kappa.py		120					
-falsify	W2-FAC-A:Lemma-CS-1D; W2-FAC-A:Lemma-GAP; W2-FAC-A:Conj-PATH-CS		Theory_work/Wave2/W2-FAC-A/numerics/cs1d.py		120					
-falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L1		Theory_work/Wave2/W2-FAC-B/numerics/cs_selftest.py		120					
-falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L2		Theory_work/Wave2/W2-FAC-B/numerics/n4_start.py		120					
+falsify	W2-APP:CT; W2-APP:CD		Theory_work/Wave2/W2-APP/numerics/ct_check.py		120	44.0	yes			
+falsify	W2-APP:VN		Theory_work/Wave2/W2-APP/numerics/vn_bound_recheck.py		30	2.2	yes			
+falsify	W2-FAC-A:Thm-FAC-L; W2-FAC-A:L1		Theory_work/Wave2/W2-FAC-A/numerics/fu_check.py		120	112.3	yes			
+falsify	W2-FAC-A:Thm-FAC-L; W2-FAC-A:L1		Theory_work/Wave2/W2-FAC-A/numerics/fu5_check.py		120	37.6	yes			
+falsify	W2-FAC-A:Thm-FAC-L; W2-FAC-A:Prop-SHARP; W2-FAC-A:L3.1; W2-FAC-A:L3.2		Theory_work/Wave2/W2-FAC-A/numerics/fna_check.py		120	82.6	yes			
+falsify	W2-FAC-A:Thm-FAC-L; W2-FAC-A:L5; W2-FAC-A:Lemma-TVF		Theory_work/Wave2/W2-FAC-A/numerics/tv_cert_exact.py		120	>120	no			calibration rc=TIMEOUT:
+falsify	W2-FAC-A:Lemma-kappa		Theory_work/Wave2/W2-FAC-A/numerics/kappa.py		30	2.8	yes			
+falsify	W2-FAC-A:Lemma-CS-1D; W2-FAC-A:Lemma-GAP; W2-FAC-A:Conj-PATH-CS		Theory_work/Wave2/W2-FAC-A/numerics/cs1d.py		120	8.0	no			calibration rc=1: IndexError: list index out of range
+falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L1		Theory_work/Wave2/W2-FAC-B/numerics/cs_selftest.py		39	9.8	yes			
+falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L2		Theory_work/Wave2/W2-FAC-B/numerics/n4_start.py		120	>120	no			calibration rc=TIMEOUT: {"rho": 0.3, "p": 400, "n": 100000000, "layout": "spread", "seed": 2, "fs_min": 0.0571, "nblocks": 25, "N0": 0, "start_s
 falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L4		Theory_work/Wave2/W2-FAC-B/numerics/n3_cs.py		120					
 falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L4		Theory_work/Wave2/W2-FAC-B/numerics/n3b_corners.py		120					
 falsify	W2-FAC-B:Thm-FAC-CS; W2-FAC-B:L4		Theory_work/Wave2/W2-FAC-B/numerics/n6_gap.py		120					

@@ -191,9 +191,7 @@ incomparable → coexist; worse → decline. `propagate.py` enforces (1)–(3), 
 **Reversibility.** A SUPERSEDED-VALID claim is still a true claim: correctness changes upstream reach it like any
 other claim (it can become SUSPECT while keeping `superseded_by`). If Y is later retracted, every claim it
 superseded that is still SUPERSEDED-VALID is restored automatically (→ ACTIVE); one invalidated meanwhile is not.
-Confirmed re-points to Y are reverted exactly (the recorded `before` edge is put back; an edge to Y that existed
-independently before the re-point is kept, so that dependent is still invalidated by Y's retraction); a dependent
-restored onto an input that is no longer valid becomes SUSPECT. Re-point proposals record the versions of X and Y;
+Confirmed re-points to Y are undone onto the latest VALID source in that dependent's re-point chain (normally the X it came from); a link that a later re-point already moved on is left alone; if no source in the chain is valid, the dependent keeps its edge to Y and is invalidated with it (transitively). An edge to Y that existed independently before the re-point is always kept. Re-point proposals record the versions of X and Y;
 a confirmation against changed versions is refused, and REBASE-NEEDED is lifted only when every open proposal for
 that dependent is resolved.
 

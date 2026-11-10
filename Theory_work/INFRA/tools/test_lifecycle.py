@@ -126,6 +126,29 @@ try:
     # F4: clear refuses while an input is invalid
     rc, _ = run("propagate.py", "clear", Wd, "--reason", "t", ok=False)
     results.append(("R02-F4 clear refused while an input is retracted/suspect", rc != 0))
+    # ---------------- R03 scenarios ----------------
+    # N1: a validated status change persists its new source
+    src_line = next(i for i, l in enumerate(open(os.path.join(TMP, "Theory_work/Wave2/W2-FAC-PK/REPORT.md"),
+                                                 encoding="utf-8").read().splitlines(), 1) if "PARTIAL" in l)
+    run("propagate.py", "downgrade", "W2-FAC-PK:Thm-PATH", "--status", "PARTIAL", "--status-source",
+        f"Theory_work/Wave2/W2-FAC-PK/REPORT.md:{src_line}", "--reason", "t")
+    t = st("W2-FAC-PK:Thm-PATH")
+    results.append(("R03-N1 downgrade persists status_source with the status",
+                    t["status"] == "PARTIAL" and t["status_source"].endswith(f":{src_line}")))
+    # N2: a self-bound consumes is reported as a self-edge
+    run("registry.py", "set", "W2-LOC2:PLR", "consumes=P:SAND@W2-LOC2:PLR", "--reason", "t")
+    g_ = R.Graph(R.load_claims())
+    results.append(("R03-N2 self-bound property recorded as self-edge",
+                    any(c == "W2-LOC2:PLR" for c, _ in g_.self_edges)))
+    # F6 variants: negated / borrowed statuses
+    fx = os.path.join(TMP, "neg_fixture.md")
+    open(fx, "w", encoding="utf-8").write("Status: Not yet PROVED-CHECKED.\nX: OPEN\nY: PROVED-CHECKED\n")
+    results.append(("R03-F6 'Not yet' is negated", R.status_at("PROVED-CHECKED", "neg_fixture.md:1") == "negated"))
+    results.append(("R03-F6 status starting on a later line is not borrowed",
+                    R.status_at("PROVED-CHECKED", "neg_fixture.md:2") != "ok"))
+    # F10: the same route written two ways counts once
+    results.append(("R03-F10 canonical span keys", R.span_key("Theory_work/INFRA/README.md:1") ==
+                    R.span_key("Theory_work/INFRA/README.md:01")))
 finally:
     subprocess.run(["git", "-C", LIVE_ROOT, "worktree", "remove", "--force", TMP], capture_output=True)
     subprocess.run(["git", "-C", LIVE_ROOT, "worktree", "prune"], capture_output=True)

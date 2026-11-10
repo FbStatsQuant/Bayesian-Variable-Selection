@@ -182,17 +182,14 @@ def run():
         if lines is None or sp is None:
             add("ERROR", "C10-verbatim", r["id"], f"status_source {src!r} is not a readable path:line (no provenance)")
             continue
-        window = norm(" ".join(lines[sp[0] - 1: sp[1] + 3]))  # the stated line and the 3 after it
-        pos = window.find(st)
-        if pos >= 0:
-            before = window[max(0, pos - 12): pos]
-            if re.search(r"\b(not|no|never|un)\s*$", before):
-                add("ERROR", "C10-verbatim", r["id"], f"status is NEGATED at its source ({before.strip()!r} precedes it)")
+        res = R.status_at(r.get("status", ""), src)
+        if res == "ok":
             continue
-        if st in norm(" ".join(lines)):
-            add("ERROR", "C10-verbatim", r["id"], f"status found in {path} but not at line {ln} (+3): fix status_source")
-        else:
-            add("ERROR", "C10-verbatim", r["id"], f"status {r['status'][:80]!r} not found verbatim in {path}")
+        msg = {"negated": "status is NEGATED at its source (e.g. 'not', 'not yet', 'pending' precedes it)",
+               "elsewhere": f"status does not start on {src} (it occurs elsewhere in {path}): fix status_source",
+               "missing": f"status {r['status'][:80]!r} not found verbatim in {path}",
+               "unreadable": f"status_source {src!r} unreadable"}[res]
+        add("ERROR", "C10-verbatim", r["id"], msg)
     # M1 method pinning
     comps, cache = R.load_components(), {}
     for r in rows:
@@ -353,9 +350,9 @@ def freeze_violations(rows, sharp, cfg):
                 docs = set()
                 for s in sharp:
                     if s["claim"] == r["id"] and s["assumption"] == a and s["verdict"] == "FAILED-REMOVAL":
-                        ev = s.get("evidence", "").strip()
-                        if R.span_lines(ev) is not None:
-                            docs.add(ev)
+                        k = R.span_key(s.get("evidence", ""))  # first token = path:line, canonicalised
+                        if k is not None:
+                            docs.add(k)
                 if len(docs) < 2:
                     out.append(f"{r['id']} {a}: fewer than 2 failed removal routes with readable path:line evidence")
     # the two reviews must exist and carry an explicit (human-attested) outcome line

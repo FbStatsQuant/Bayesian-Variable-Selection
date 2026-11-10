@@ -116,8 +116,8 @@ def main():
             norm = lambda t: _re.sub(r"\s+", " ", _re.sub(r"[*`]", "", t)).strip().lower()  # noqa: E731
             path, _, ln = (a.source or "").rpartition(":")
             lines, n = (R.read_lines(path) if path else None), (int(ln) if ln.isdigit() else 0)
-            if not lines or n < 1 or norm(a.status) not in norm(" ".join(lines[n - 1: n + 3])):
-                sys.exit("add: --status must occur verbatim at --source path:line (± 3 lines)")
+            if R.status_at(a.status, a.source or "") != "ok":
+                sys.exit("add: --status must start verbatim (not negated) on --source path:line")
             r["status_source"] = a.source
         r["sha256"] = R.claim_hash(r) or sys.exit("cannot hash the statement/premise spans")
         r["improvable"] = R.improvable(r, sharp)
@@ -229,8 +229,8 @@ def main():
         norm = lambda t: _re.sub(r"\s+", " ", _re.sub(r"[*`]", "", t)).strip()  # noqa: E731
         path, _, ln = a.source.rpartition(":")
         lines, n = R.read_lines(path), int(ln) if ln.isdigit() else 0
-        if not lines or n < 1 or norm(a.status) not in norm(" ".join(lines[n - 1: n + 3])):
-            sys.exit("the status is not found verbatim at --source (± 3 lines); nothing changed")
+        if R.status_at(a.status, a.source) != "ok":
+            sys.exit("the status does not start verbatim (and un-negated) on --source; nothing changed")
         R.log_event("correct-status", r["id"], f"{r['status'][:80]} @ {r['status_source']}",
                     f"{a.status[:80]} @ {a.source}", a.reason, a.actor)
         r["status"], r["status_source"] = a.status, a.source

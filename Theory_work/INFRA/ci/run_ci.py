@@ -80,6 +80,8 @@ def _process_table():
     k32 = ctypes.windll.kernel32
     k32.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
     snap = k32.CreateToolhelp32Snapshot(0x2, 0)  # TH32CS_SNAPPROCESS
+    if not snap or snap == wintypes.HANDLE(-1).value:
+        raise RuntimeError("process snapshot failed")
     table, e = {}, PE()
     e.dwSize = ctypes.sizeof(PE)
     try:
@@ -156,7 +158,10 @@ class Sandbox:
 
     def __exit__(self, *exc):
         import shutil
-        subprocess.run(["git", "-C", R.ROOT, "worktree", "remove", "--force", self.path], capture_output=True)
+        r = subprocess.run(["git", "-C", R.ROOT, "worktree", "remove", "--force", self.path], capture_output=True,
+                           text=True)
+        if r.returncode != 0:
+            print(f"warning: could not remove sandbox {self.path}: {r.stderr.strip()[:200]}", file=sys.stderr)
         subprocess.run(["git", "-C", R.ROOT, "worktree", "prune"], capture_output=True)
         shutil.rmtree(self.path, ignore_errors=True)
         try:
@@ -180,16 +185,99 @@ def descendants(pid: int) -> list[int]:
     return seen
 
 
+class Job:
+    """Windows Job Object holding every process a script spawns (children, grandchildren, orphaned multiprocessing
+    workers: membership is inherited, so an exited intermediate parent does not hide its descendants).
+    KILL_ON_JOB_CLOSE guarantees the whole job dies when the handle is closed, even if this tool is killed.
+    No-op on POSIX (process groups are used there)."""
+
+    def __init__(self):
+        self.h = None
+        if os.name != "nt":
+            return
+        import ctypes
+        from ctypes import wintypes
+        k32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        k32.CreateJobObjectW.restype = wintypes.HANDLE
+        k32.CreateJobObjectW.argtypes = [ctypes.c_void_p, wintypes.LPCWSTR]
+        k32.SetInformationJobObject.argtypes = [wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD]
+        k32.AssignProcessToJobObject.argtypes = [wintypes.HANDLE, wintypes.HANDLE]
+        k32.TerminateJobObject.argtypes = [wintypes.HANDLE, wintypes.UINT]
+        k32.QueryInformationJobObject.argtypes = [wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD,
+                                                  ctypes.c_void_p]
+        k32.CloseHandle.argtypes = [wintypes.HANDLE]
+        self.k32 = k32
+
+        class BASIC(ctypes.Structure):
+            _fields_ = [("PerProcessUserTimeLimit", ctypes.c_int64), ("PerJobUserTimeLimit", ctypes.c_int64),
+                        ("LimitFlags", wintypes.DWORD), ("MinimumWorkingSetSize", ctypes.c_size_t),
+                        ("MaximumWorkingSetSize", ctypes.c_size_t), ("ActiveProcessLimit", wintypes.DWORD),
+                        ("Affinity", ctypes.c_size_t), ("PriorityClass", wintypes.DWORD),
+                        ("SchedulingClass", wintypes.DWORD)]
+
+        class IOC(ctypes.Structure):
+            _fields_ = [(n, ctypes.c_uint64) for n in ("r", "w", "o", "rb", "wb", "ob")]
+
+        class EXT(ctypes.Structure):
+            _fields_ = [("Basic", BASIC), ("Io", IOC), ("ProcessMemoryLimit", ctypes.c_size_t),
+                        ("JobMemoryLimit", ctypes.c_size_t), ("PeakProcessMemoryUsed", ctypes.c_size_t),
+                        ("PeakJobMemoryUsed", ctypes.c_size_t)]
+
+        class ACCT(ctypes.Structure):
+            _fields_ = [("TotalUserTime", ctypes.c_int64), ("TotalKernelTime", ctypes.c_int64),
+                        ("ThisPeriodTotalUserTime", ctypes.c_int64), ("ThisPeriodTotalKernelTime", ctypes.c_int64),
+                        ("TotalPageFaultCount", wintypes.DWORD), ("TotalProcesses", wintypes.DWORD),
+                        ("ActiveProcesses", wintypes.DWORD), ("TotalTerminatedProcesses", wintypes.DWORD)]
+
+        self.ACCT = ACCT
+        self.h = k32.CreateJobObjectW(None, None)
+        if not self.h:
+            raise RuntimeError("CreateJobObject failed")
+        info = EXT()
+        info.Basic.LimitFlags = 0x2000  # JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+        if not k32.SetInformationJobObject(self.h, 9, ctypes.byref(info), ctypes.sizeof(info)):
+            raise RuntimeError("SetInformationJobObject failed")
+
+    def add(self, popen):
+        if self.h and not self.k32.AssignProcessToJobObject(self.h, int(popen._handle)):
+            raise RuntimeError("AssignProcessToJobObject failed")
+
+    def active(self) -> int:
+        import ctypes
+        a = self.ACCT()
+        ok = self.k32.QueryInformationJobObject(self.h, 1, ctypes.byref(a), ctypes.sizeof(a), None)
+        if not ok:
+            raise RuntimeError("QueryInformationJobObject failed")
+        return a.ActiveProcesses
+
+    def close(self, wait=20.0):
+        """Terminate every process in the job and wait until none is active (bounded); raise if they survive."""
+        if not self.h:
+            return
+        try:
+            self.k32.TerminateJobObject(self.h, 1)
+            t0 = time.time()
+            while self.active() and time.time() - t0 < wait:
+                time.sleep(0.2)
+            left = self.active()
+        finally:
+            self.k32.CloseHandle(self.h)  # KILL_ON_JOB_CLOSE: closing also kills anything left
+            self.h = None
+        if left:
+            raise RuntimeError(f"{left} process(es) of the job survived termination")
+
+
 def kill_tree(pid: int) -> None:
     """Kill pid and every descendant; raise if anything survives (a surviving child could hold the sandbox)."""
     if os.name == "nt":
         victims = [v for v in [pid] + descendants(pid) if pid_alive(v)]
-        for v in victims:
-            subprocess.run(["taskkill", "/T", "/F", "/PID", str(v)], capture_output=True)
-        if victims:
+        alive, t0 = list(victims), time.time()
+        while alive and time.time() - t0 < 20:  # bounded retries: termination can take seconds under load
+            for v in alive:
+                subprocess.run(["taskkill", "/T", "/F", "/PID", str(v)], capture_output=True)
             time.sleep(0.5)
-        table = _process_table()
-        alive = [v for v in victims if v in table]
+            table = _process_table()
+            alive = [v for v in alive if v in table]
         if alive:
             raise RuntimeError(f"could not kill processes {alive}")
     else:
@@ -211,7 +299,7 @@ def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
     logf = os.path.join(logdir, "_run.log")
     t0 = time.time()
     kw = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt" else {"start_new_session": True}
-    p, rc = None, None
+    p, rc, job = None, None, Job()
     try:
         with open(logf, "w", encoding="utf-8", errors="replace") as fh:
             try:
@@ -220,6 +308,7 @@ def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
                                      env={**os.environ, "PYTHONHASHSEED": "0", "MPLBACKEND": "Agg"}, **kw)
             except OSError as e:
                 return f"LAUNCH-ERROR {e}", 0.0, "", []
+            job.add(p)
             try:
                 rc = p.wait(timeout=timeout)
             except subprocess.TimeoutExpired:
@@ -232,9 +321,12 @@ def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
         ticket_dir = "/".join(script_rel.replace("\\", "/").split("/")[:3])
         changed = sb.changed(ticket_dir)
     finally:
-        if p is not None:
-            kill_tree(p.pid)  # also after a normal exit: orphaned workers must not outlive the run
-        sb.reset()
+        try:
+            job.close()  # every process the script spawned (Windows Job Object)
+        finally:
+            if p is not None:
+                kill_tree(p.pid)  # belt and braces (and the POSIX path): orphaned workers must not outlive the run
+            sb.reset()
     return rc, secs, text, changed
 
 

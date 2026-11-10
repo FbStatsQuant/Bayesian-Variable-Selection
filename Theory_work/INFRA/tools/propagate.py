@@ -86,11 +86,7 @@ def passed_gates(row: dict) -> set:
 
 
 def status_ok_at(status: str, source: str) -> bool:
-    norm = lambda t: re.sub(r"\s+", " ", re.sub(r"[*`]", "", t or "")).strip().lower()  # noqa: E731
-    path, _, ln = (source or "").rpartition(":")
-    lines = R.read_lines(path) if path else None
-    n = int(ln.split("-")[0]) if ln.split("-")[0].isdigit() else 0
-    return bool(lines) and n >= 1 and norm(status) in norm(" ".join(lines[n - 1: n + 3]))
+    return R.status_at(status, source) == "ok"  # same negation-aware locator as check.py C10
 
 
 def plan_reverts(cid, rows, ids, aliases, by):
@@ -105,7 +101,7 @@ def plan_reverts(cid, rows, ids, aliases, by):
             continue
         d = by[rp["dependent"]]
         after = rp.get("after") or f"{cid}@{rp['use']}"
-        if after not in R.split_list(d["depends_on"]):
+        if after not in R.split_list(d["depends_on"]) + R.split_list(d.get("consumes", "")):
             moved.append(rp)
             continue
         src, use, seen = rp["from"], rp["use"], set()
@@ -123,6 +119,13 @@ def apply_revert(d: dict, rp: dict, restore) -> None:
     """Undo one confirmed re-point onto `restore` (an `id@use` item) or, if None, leave the edge to the retracted
     claim in place. An independent pre-existing edge to the retracted claim is always kept."""
     if restore is None:
+        return
+    if "consumes" in rp.get("notes", ""):  # a bound bridge in `consumes`: swap the binding back
+        before = rp.get("before") or ""
+        cons = [before if c == rp.get("after") else c for c in R.split_list(d.get("consumes", ""))]
+        if before and before.partition("@")[2] != restore.partition("@")[0]:
+            cons = [f"{before.partition('@')[0]}@{restore.partition('@')[0]}" if c == before else c for c in cons]
+        d["consumes"] = R.join_list(cons)
         return
     items = R.split_list(d["depends_on"])
     after = rp.get("after") or f"{rp['to']}@{rp['use']}"
@@ -246,6 +249,8 @@ def main():
                                     f"{rp.get('to_version')}->{by[dst]['version']}); re-run supersede --dry-run")
             uses_now = {R.parse_dep(it)[1] for it in R.split_list(x["depends_on"])
                         if R.resolve(it, ids, aliases, x["ticket"]) == src}
+            uses_now |= {"proof:" + it.partition("@")[0].strip() for it in R.split_list(x.get("consumes", ""))
+                         if "@" in it and R.resolve(it.partition("@")[2], ids, aliases, x["ticket"]) == src}
             for rp in hit:
                 if rp["use"] not in uses_now:
                     problems.append(f"{cid} no longer uses {src}@{rp['use']}")
@@ -262,7 +267,17 @@ def main():
                       date=stamp)
         if a.op == "confirm-repoint":
             items = R.split_list(x["depends_on"])
+            cons = R.split_list(x.get("consumes", ""))
             for rp in hit:
+                if rp["use"].startswith("proof:") and any(
+                        "@" in c and R.resolve(c.partition("@")[2], ids, aliases, x["ticket"]) == src and
+                        "proof:" + c.partition("@")[0].strip() == rp["use"] for c in cons):
+                    p_ = rp["use"][len("proof:"):]
+                    before = next(c for c in cons if c.partition("@")[0].strip() == p_)
+                    after = f"{p_}@{dst}"
+                    cons = [after if c == before else c for c in cons]
+                    rp.update(before=before, after=after, preexisting="no", notes=(rp.get("notes", "") + " consumes"))
+                    continue
                 before = next(it for it in items if R.resolve(it, ids, aliases, x["ticket"]) == src
                               and R.parse_dep(it)[1] == rp["use"])
                 after = f"{dst}@{rp['use']}"
@@ -271,6 +286,7 @@ def main():
                 items = [it for it in items if it != before] + ([] if pre else [after])
                 rp.update(before=before, after=after, preexisting="yes" if pre else "no")
             x["depends_on"] = R.join_list(items)
+            x["consumes"] = R.join_list(cons)
         open_left = [rp for rp in rps if rp["dependent"] == cid and rp["state"] == "PROPOSED"]
         if x["state"] == "REBASE-NEEDED" and not open_left:
             x["state"], x["state_reason"] = "ACTIVE", f"rebase obligations resolved {stamp} (last: {src} -> {dst}, " \
@@ -515,7 +531,7 @@ def main():
             x["state_reason"] = (f"patched {stamp}: {a.reason}. " + x.get("state_reason", "")).strip()
         elif a.op == "downgrade":
             x["state_reason"] = f"downgraded {stamp} from `{x['status'][:100]}`: {a.reason}"
-            x["status"], x["version"] = a.status, R.bump(x["version"], "minor")
+            x["status"], x["status_source"], x["version"] = a.status, a.status_source, R.bump(x["version"], "minor")
         else:
             st = {"retract": "RETRACTED", "narrow": "NARROWED", "deprecate": "DEPRECATED", "suspect": "SUSPECT"}[a.op]
             x["state"], x["state_reason"] = st, f"{st} {stamp}: {a.reason}"
@@ -524,7 +540,7 @@ def main():
             elif a.op == "deprecate":
                 x["version"] = R.bump(x["version"], "minor")
             if a.status:
-                x["status"] = a.status
+                x["status"], x["status_source"] = a.status, a.status_source
         R.log_event(a.op, cid, before, f"{x['state']} v{x['version']}", a.reason, a.actor)
         for r in restored:
             old = r["state"]
