@@ -64,43 +64,43 @@ falsify	W2-FAC-PK:Thm-PATH; W2-FAC-PK:L3.3; W2-FAC-PK:L3.4		Theory_work/Wave2/W2
 falsify	W2-FAC-PK:Thm-PATH; W2-FAC-PK:L3.3		Theory_work/Wave2/W2-FAC-PK/numerics/l3_small.py		120	24.6	no			calibration rc=1: IndexError: list index out of range
 falsify	W2-FAC-PK:L0		Theory_work/Wave2/W2-FAC-PK/numerics/pk_selftest.py		120	54.9	yes			
 falsify	W2-FAC-PKA:L0; W2-FAC-PKA:L1		Theory_work/Wave2/W2-FAC-PKA/numerics/n2_checks.py		85	25.3	yes			
-falsify	W2-FAC-PKA:L1		Theory_work/Wave2/W2-FAC-PKA/numerics/n5_review_repairs.py		120					
-falsify	W2-FAC-PKA:L2		Theory_work/Wave2/W2-FAC-PKA/numerics/n3_singletons.py		120					
-falsify	W2-FAC-PKA:L2		Theory_work/Wave2/W2-FAC-PKA/numerics/n4_singleton_controls.py		120					
-falsify	W2-FAC-PKA:L3		Theory_work/Wave2/W2-FAC-PKA/numerics/n6_initial_phase.py		120					
-falsify	W2-FAC-PKA:L4		Theory_work/Wave2/W2-FAC-PKA/numerics/n7_table_discovery.py		120					
-falsify	W2-FAC-S5:Thm-FAC-BCS-R; W2-FAC-S5:L2		Theory_work/Wave2/W2-FAC-S5/numerics/s4_start.py		120					
-falsify	W2-FAC-S5:Obs-Lattice-S5		Theory_work/Wave2/W2-FAC-S5/lemmas/KL_attempt_sol2/numerics.py		120					
-falsify	W2-FAC-S5:L1		Theory_work/Wave2/W2-FAC-S5/numerics/l1_identities.py		120					
-falsify	W2-FAC-S5:L1		Theory_work/Wave2/W2-FAC-S5/numerics/l1_leak.py		120					
-falsify	W2-FAC-S5:L1		Theory_work/Wave2/W2-FAC-S5/numerics/bcs_selftest.py		120					
-falsify	W2-FAC-S5:L3; W2-FAC-S5:L4		Theory_work/Wave2/W2-FAC-S5/numerics/s3_cc.py		120					
-falsify	W2-FAC-S5F:C1; W2-FAC-S5F:C2; W2-FAC-S5F:C3; W2-FAC-S5F:C4; W2-FAC-S5F:L0; W2-FAC-S5F:L1		Theory_work/Wave2/W2-FAC-S5F/numerics/n3_tools.py		120					
-falsify	W2-FAC-X:Thm-FAC-CS-iid		Theory_work/Wave2/W2-FAC-X/numerics/n1x_iid_cs.py	(121/121)	120					
-falsify	W2-FAC-X:Thm-FAC-CS-iid; W2-FAC-X:X3; W2-FAC-X:X4		Theory_work/Wave2/W2-FAC-X/numerics/n3x_softgap.py		120					
-falsify	W2-FAC-X:Thm-FAC-CS-iid; W2-FAC-X:X5		Theory_work/Wave2/W2-FAC-X/numerics/n5x_start.py		120					
-falsify	W2-FAC-X:Thm-FAC-CS-iid; W2-FAC-X:X1		Theory_work/Wave2/W2-FAC-X/numerics/iid_selftest.py		120					
-falsify	W2-FAC-X:X4		Theory_work/Wave2/W2-FAC-X/numerics/n1x_iid_cs.py		120					
-falsify	W2-FAC-X:Thm-FAC-GL		Theory_work/Wave2/W2-FAC-X/T2/numerics/run_t2.py	(366/366)	120					
-falsify	W2-FAC-X:Thm-FAC-GL		Theory_work/Wave2/W2-FAC-X/numerics/n2x_loadings.py	(64/64)	120					
-falsify	W2-FAC-X:Cor-FAC-NCS		Theory_work/Wave2/W2-FAC-X/numerics/n2x_loadings.py		120					
-falsify	W2-FAC-X:L4r-S; W2-FAC-X:X9		Theory_work/Wave2/W2-FAC-X/T2/numerics/run_t2.py		120					
-falsify	W2-FAC-X:L4r-S		Theory_work/Wave2/W2-FAC-X/T2/numerics/adversarial_T.py		120					
-falsify	W2-FAC-XA:L1		Theory_work/Wave2/W2-FAC-XA/numerics/N4_geometry.py		120					
-falsify	W2-FAC-XA:L1		Theory_work/Wave2/W2-FAC-XA/reviews/R01_scratch/gram_norms.py		120					
-falsify	W2-FAC-XA:L2		Theory_work/Wave2/W2-FAC-XA/numerics/N3_robust_path.py		120					
-falsify	W2-FAC-XA:L2		Theory_work/Wave2/W2-FAC-XA/reviews/R03_scratch/R03_adversary.py		120					
-falsify	W2-FAC-XA:L3		Theory_work/Wave2/W2-FAC-XA/numerics/N5_fuzzy.py		120					
-falsify	W2-FAC-XA:L3		Theory_work/Wave2/W2-FAC-XA/numerics/N5_verify.py		120					
-falsify	W2-FAC-XA:L4		Theory_work/Wave2/W2-FAC-XA/numerics/N6_score_transfer.py		120					
-falsify	W2-FAC-XA:L4		Theory_work/Wave2/W2-FAC-XA/reviews/R04_scratch/R04_l4_checks.py		120					
-falsify	W2-FAC-XA:L5; W2-FAC-XA:L6		Theory_work/Wave2/W2-FAC-XA/numerics/N7_transfer.py		120					
-falsify	W2-FAC-XA:L7		Theory_work/Wave2/W2-FAC-XA/numerics/N8_shadow_midpoint.py		120					
-falsify	W2-FAC-XA:L8-T; W2-FAC-XA:L8-S		Theory_work/Wave2/W2-FAC-XA/numerics/N9_truth_start.py		120					
-falsify	W2-LOC2:NA-R; W2-LOC2:CT_d; W2-LOC2:CD_d; W2-LOC2:LOC-d		Theory_work/Wave2/W2-LOC2/numerics/n4_nar_check.py		120					
-falsify	W2-LOC2:LOC-d; W2-LOC2:LOC-BF		Theory_work/Wave2/W2-LOC2/numerics/d1_diag.py		120					
-falsify	W2-LOC2:Thm-Poly; W2-LOC2:Lemma-BC; W2-LOC2:Lemma-IR		Theory_work/Wave2/W2-LOC2/numerics/poly_check.py		120					
-falsify	W2-UNI:CT_M; W2-UNI:CD_M; W2-UNI:UNI-0		Theory_work/Wave2/W2-UNI/numerics/n1_metric.py		120					
-falsify	W2-UNI:CD_M; W2-UNI:RB_M; W2-UNI:TAIL_M; W2-UNI:LOCL; W2-UNI:UNI-0		Theory_work/Wave2/W2-UNI/numerics/n2_metric.py		120					
-falsify	W2-UNI:U-LOC; W2-UNI:UNI-1		Theory_work/Wave2/W2-UNI/numerics/n3_uloc.py		120					
-falsify	W2-UNI:U-LOC		Theory_work/Wave2/W2-UNI/numerics/n3b_exhaustive.py		120					
+falsify	W2-FAC-PKA:L1		Theory_work/Wave2/W2-FAC-PKA/numerics/n5_review_repairs.py		120	>120	no			calibration rc=TIMEOUT: {"n": 20000, "p": 17000, "K": 10000, "seed": 1, "design": "aligned", "theta_bar": 2.6999999999999997, "partition": "cont
+falsify	W2-FAC-PKA:L2		Theory_work/Wave2/W2-FAC-PKA/numerics/n3_singletons.py		120	37.7	yes			
+falsify	W2-FAC-PKA:L2		Theory_work/Wave2/W2-FAC-PKA/numerics/n4_singleton_controls.py		42	10.7	yes			
+falsify	W2-FAC-PKA:L3		Theory_work/Wave2/W2-FAC-PKA/numerics/n6_initial_phase.py		38	9.6	yes			
+falsify	W2-FAC-PKA:L4		Theory_work/Wave2/W2-FAC-PKA/numerics/n7_table_discovery.py		31	7.1	yes			
+falsify	W2-FAC-S5:Thm-FAC-BCS-R; W2-FAC-S5:L2		Theory_work/Wave2/W2-FAC-S5/numerics/s4_start.py		120	115.0	yes			
+falsify	W2-FAC-S5:Obs-Lattice-S5		Theory_work/Wave2/W2-FAC-S5/lemmas/KL_attempt_sol2/numerics.py		76	22.3	yes			
+falsify	W2-FAC-S5:L1		Theory_work/Wave2/W2-FAC-S5/numerics/l1_identities.py		30	2.5	yes			
+falsify	W2-FAC-S5:L1		Theory_work/Wave2/W2-FAC-S5/numerics/l1_leak.py		30	1.2	yes			
+falsify	W2-FAC-S5:L1		Theory_work/Wave2/W2-FAC-S5/numerics/bcs_selftest.py		30	5.1	yes			
+falsify	W2-FAC-S5:L3; W2-FAC-S5:L4		Theory_work/Wave2/W2-FAC-S5/numerics/s3_cc.py		120	5.0	no			calibration rc=1: IndexError: list index out of range
+falsify	W2-FAC-S5F:C1; W2-FAC-S5F:C2; W2-FAC-S5F:C3; W2-FAC-S5F:C4; W2-FAC-S5F:L0; W2-FAC-S5F:L1		Theory_work/Wave2/W2-FAC-S5F/numerics/n3_tools.py		96	28.9	yes			
+falsify	W2-FAC-X:Thm-FAC-CS-iid		Theory_work/Wave2/W2-FAC-X/numerics/n1x_iid_cs.py	(121/121)	120	106.5	no			calibration rc=1: FileNotFoundError: [Errno 2] No such file or directory: '(121/121)'
+falsify	W2-FAC-X:Thm-FAC-CS-iid; W2-FAC-X:X3; W2-FAC-X:X4		Theory_work/Wave2/W2-FAC-X/numerics/n3x_softgap.py		120	>120	no			calibration rc=TIMEOUT:
+falsify	W2-FAC-X:Thm-FAC-CS-iid; W2-FAC-X:X5		Theory_work/Wave2/W2-FAC-X/numerics/n5x_start.py		92	27.4	yes			
+falsify	W2-FAC-X:Thm-FAC-CS-iid; W2-FAC-X:X1		Theory_work/Wave2/W2-FAC-X/numerics/iid_selftest.py		41	10.5	yes			
+falsify	W2-FAC-X:X4		Theory_work/Wave2/W2-FAC-X/numerics/n1x_iid_cs.py		120	6.0	no			calibration rc=1: IndexError: list index out of range
+falsify	W2-FAC-X:Thm-FAC-GL		Theory_work/Wave2/W2-FAC-X/T2/numerics/run_t2.py	(366/366)	120	24.6	no			calibration rc=1: FileNotFoundError: [Errno 2] No such file or directory: '(366/366)'
+falsify	W2-FAC-X:Thm-FAC-GL		Theory_work/Wave2/W2-FAC-X/numerics/n2x_loadings.py	(64/64)	120	19.3	no			calibration rc=1: FileNotFoundError: [Errno 2] No such file or directory: '(64/64)'
+falsify	W2-FAC-X:Cor-FAC-NCS		Theory_work/Wave2/W2-FAC-X/numerics/n2x_loadings.py		120	7.2	no			calibration rc=1: IndexError: list index out of range
+falsify	W2-FAC-X:L4r-S; W2-FAC-X:X9		Theory_work/Wave2/W2-FAC-X/T2/numerics/run_t2.py		120	8.7	no			calibration rc=1: IndexError: list index out of range
+falsify	W2-FAC-X:L4r-S		Theory_work/Wave2/W2-FAC-X/T2/numerics/adversarial_T.py		34	8.1	yes			
+falsify	W2-FAC-XA:L1		Theory_work/Wave2/W2-FAC-XA/numerics/N4_geometry.py		30	5.2	yes			
+falsify	W2-FAC-XA:L1		Theory_work/Wave2/W2-FAC-XA/reviews/R01_scratch/gram_norms.py		120	>120	no			calibration rc=TIMEOUT:
+falsify	W2-FAC-XA:L2		Theory_work/Wave2/W2-FAC-XA/numerics/N3_robust_path.py		91	27.3	yes			
+falsify	W2-FAC-XA:L2		Theory_work/Wave2/W2-FAC-XA/reviews/R03_scratch/R03_adversary.py		120	>120	no			calibration rc=TIMEOUT: {"unsafe": null, "max_bulk_x_over_H": 0.019833868490523206, "min_relaxed_margin_over_logn": 0.5000180924107742, "entry":
+falsify	W2-FAC-XA:L3		Theory_work/Wave2/W2-FAC-XA/numerics/N5_fuzzy.py		120	69.0	yes			
+falsify	W2-FAC-XA:L3		Theory_work/Wave2/W2-FAC-XA/numerics/N5_verify.py		30	0.5	yes			
+falsify	W2-FAC-XA:L4		Theory_work/Wave2/W2-FAC-XA/numerics/N6_score_transfer.py		30	2.1	yes			
+falsify	W2-FAC-XA:L4		Theory_work/Wave2/W2-FAC-XA/reviews/R04_scratch/R04_l4_checks.py		46	12.1	yes			
+falsify	W2-FAC-XA:L5; W2-FAC-XA:L6		Theory_work/Wave2/W2-FAC-XA/numerics/N7_transfer.py		38	9.4	yes			
+falsify	W2-FAC-XA:L7		Theory_work/Wave2/W2-FAC-XA/numerics/N8_shadow_midpoint.py		120	36.7	yes			
+falsify	W2-FAC-XA:L8-T; W2-FAC-XA:L8-S		Theory_work/Wave2/W2-FAC-XA/numerics/N9_truth_start.py		30	3.5	yes			
+falsify	W2-LOC2:NA-R; W2-LOC2:CT_d; W2-LOC2:CD_d; W2-LOC2:LOC-d		Theory_work/Wave2/W2-LOC2/numerics/n4_nar_check.py		120	>120	no			calibration rc=TIMEOUT:
+falsify	W2-LOC2:LOC-d; W2-LOC2:LOC-BF		Theory_work/Wave2/W2-LOC2/numerics/d1_diag.py		120	>120	no			calibration rc=TIMEOUT: design=TP15 n=51200 p=400 seed=2 mode_size=9 n_extra=6 S0_in_mode=True max_extra_dist=8.0 extras_by_dist={"3": 1, "4": 3
+falsify	W2-LOC2:Thm-Poly; W2-LOC2:Lemma-BC; W2-LOC2:Lemma-IR		Theory_work/Wave2/W2-LOC2/numerics/poly_check.py		120	9.3	no			calibration rc=1: UnicodeEncodeError: 'charmap' codec can't encode character '\u2265' in position 1499: character maps to <undefined>
+falsify	W2-UNI:CT_M; W2-UNI:CD_M; W2-UNI:UNI-0		Theory_work/Wave2/W2-UNI/numerics/n1_metric.py		77	22.6	yes			
+falsify	W2-UNI:CD_M; W2-UNI:RB_M; W2-UNI:TAIL_M; W2-UNI:LOCL; W2-UNI:UNI-0		Theory_work/Wave2/W2-UNI/numerics/n2_metric.py		120	>120	no			calibration rc=TIMEOUT:
+falsify	W2-UNI:U-LOC; W2-UNI:UNI-1		Theory_work/Wave2/W2-UNI/numerics/n3_uloc.py		115	35.0	yes			
+falsify	W2-UNI:U-LOC		Theory_work/Wave2/W2-UNI/numerics/n3b_exhaustive.py		120	41.0	yes			
