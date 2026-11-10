@@ -142,8 +142,31 @@ def read_tsv(path: str) -> tuple[list[str], list[dict]]:
     return header, rows
 
 
+def safe_dest(path: str) -> str:
+    """Refuse a write destination unless it resolves strictly inside Theory_work/INFRA and no component from INFRA
+    down to the file is a symlink or junction (so a planted link cannot redirect a write outside)."""
+    infra = os.path.realpath(INFRA)
+    if os.path.realpath(INFRA) != os.path.abspath(INFRA) and os.path.islink(INFRA):
+        raise SystemExit(f"refusing to write: {INFRA} is a link")
+    p = os.path.abspath(path)
+    rp = os.path.realpath(p)
+    if os.path.commonpath([os.path.normcase(rp), os.path.normcase(infra)]) != os.path.normcase(infra) or \
+            os.path.normcase(rp) == os.path.normcase(infra):
+        raise SystemExit(f"refusing to write outside Theory_work/INFRA: {path}")
+    cur = p
+    while os.path.normcase(cur) != os.path.normcase(os.path.abspath(INFRA)):
+        if os.path.islink(cur) or (hasattr(os.path, "isjunction") and os.path.isjunction(cur)):
+            raise SystemExit(f"refusing to write through a link: {cur}")
+        nxt = os.path.dirname(cur)
+        if nxt == cur:
+            raise SystemExit(f"refusing to write outside Theory_work/INFRA: {path}")
+        cur = nxt
+    return p
+
+
 def write_tsv(path: str, header: list[str], rows: list[dict]) -> None:
-    tmp = path + ".tmp"
+    path = safe_dest(path)
+    tmp = safe_dest(path + ".tmp")
     with open(tmp, "w", encoding="utf-8", newline="\n") as fh:
         fh.write("\t".join(header) + "\n")
         for r in rows:
@@ -197,7 +220,7 @@ def config() -> dict[str, str]:
 
 def log_event(action: str, cid: str, before: str, after: str, reason: str, actor: str = "HQ") -> None:
     new = not os.path.exists(EVENTS)
-    with open(EVENTS, "a", encoding="utf-8", newline="\n") as fh:
+    with open(safe_dest(EVENTS), "a", encoding="utf-8", newline="\n") as fh:
         if new:
             fh.write("utc\tactor\taction\tid\tbefore\tafter\treason\n")
         ts = _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")

@@ -4,10 +4,14 @@
 disposable DETACHED git worktree of HEAD in a temp directory (stdout to a file, the whole process tree killed on
 timeout, the sandbox reset after each script and removed at the end), so the working checkout is never touched. CI
 therefore audits the COMMITTED state.
-Sandboxes live under `<temp>/bvs-ci-sandboxes/` with an owner file (pid); a later run removes only sandboxes under
-that root whose owner process is dead. After every script the whole process tree (including orphaned
-multiprocessing workers, found by parent pid) is killed and the sandbox reset is verified; a failed reset aborts the
-step. This isolates relative writes; it is not a security sandbox against scripts that write to absolute paths. It schedules nothing by
+Sandboxes are created only as strict `sb-*` children of `<temp>/bvs-ci-sandboxes/`. Ownership is a lock, not a pid:
+the creating process holds an exclusive lock on `<sandbox>.lock` (manifest line + sandbox path) for the sandbox's
+whole life. A later run removes a stale sandbox only if it is such a child, its lock file carries the manifest for
+exactly that path, and the lock can be acquired (owner gone); anything else is left untouched. No global
+`git worktree prune` is run. On Windows each script starts suspended inside a Job Object and the Job is terminated
+on every exit path (all and only that run's processes; no recycled-pid killing). On POSIX the session group is
+killed on timeout while its leader is unreaped; orphans of a normally exiting script are not tracked there. This
+isolates relative writes; it is not a security sandbox against scripts that write to absolute paths. It schedules nothing by
 itself: **HQ schedules it with T3 scheduled tasks**. Rules behind each step: `../LIFECYCLE.md`.
 
 ## Steps

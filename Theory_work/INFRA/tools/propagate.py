@@ -48,6 +48,7 @@ import os
 import re
 import sys
 
+sys.dont_write_bytecode = True  # never write __pycache__ (tools must not write outside their outputs)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bvsreg as R  # noqa: E402
 
@@ -66,7 +67,7 @@ PRICE = {"proof": "1 proof session", "check": "1 cross-family lemma check", "swe
 
 def decision(kind, x, y, axes, reason, actor, extra=""):
     new = not os.path.exists(DECISIONS)
-    with open(DECISIONS, "a", encoding="utf-8", newline="\n") as fh:
+    with open(R.safe_dest(DECISIONS), "a", encoding="utf-8", newline="\n") as fh:
         if new:
             fh.write("# Decision log\n\n")
         ax = ", ".join(f"{k}={v}" for k, v in (axes or {}).items())
@@ -288,8 +289,11 @@ def main():
                     before = next(c for c in cons if c.partition("@")[0].strip() == p_ and
                                   R.resolve(c.partition("@")[2], ids, aliases, x["ticket"]) == src)
                     after = f"{p_}@{dst}"
-                    pre = any(c.partition("@")[0].strip() == p_ and
-                              R.resolve(c.partition("@")[2], ids, aliases, x["ticket"]) == dst for c in cons)
+                    kept = next((c for c in cons if c.partition("@")[0].strip() == p_ and
+                                 R.resolve(c.partition("@")[2], ids, aliases, x["ticket"]) == dst), None)
+                    pre = kept is not None
+                    if pre:
+                        after = kept  # the exact item that stays, whatever alias / local spelling it uses
                     cons = [c for c in cons if c != before] + ([] if pre else [after])
                     rp.update(before=before, after=after, preexisting="yes" if pre else "no",
                               notes=(rp.get("notes", "") + " consumes"))
@@ -325,7 +329,7 @@ def main():
         R.write_tsv(R.SHARPNESS, R.SHARPNESS_COLUMNS, sh)
         decision("failed sharpening", cid, a.assumption, None, f"{a.route} — {a.reason}", a.actor,
                  f"failed removal routes for this pair now: {R.necessity(cid, a.assumption, sh)[1]}")
-        with open(ROUTES, "a", encoding="utf-8", newline="\n") as fh:
+        with open(R.safe_dest(ROUTES), "a", encoding="utf-8", newline="\n") as fh:
             fh.write(f"\n| {stamp} | {cid} | remove/weaken {a.assumption}: {a.route} | {a.reason} | "
                      f"DECISIONS.md {stamp} |\n")
         x["improvable"] = R.improvable(x, sh)
@@ -603,7 +607,7 @@ def main():
             decision(a.op, cid, None, None, a.reason, a.actor, f"{len(paths)} dependents SUSPECT; restored: "
                      f"{', '.join(r['id'] for r in restored) or '—'}")
         if a.op == "deprecate":
-            with open(ROUTES, "a", encoding="utf-8", newline="\n") as fh:
+            with open(R.safe_dest(ROUTES), "a", encoding="utf-8", newline="\n") as fh:
                 fh.write(f"\n| {stamp} | {cid} | target deprecated | {a.reason} | events.log {stamp} |\n")
         R.save_claims(rows)
         groups = {}
@@ -618,13 +622,13 @@ def main():
                            LABELS["dependent"]))
     # ------------------------------------------------ issues
     idir = a.issues_dir or os.path.join(R.INFRA, "issues", f"{stamp}_{a.op}_{R.safe(cid)}")
-    os.makedirs(idir, exist_ok=True)
-    with open(os.path.join(idir, "00_impact.md"), "w", encoding="utf-8") as fh:
+    os.makedirs(R.safe_dest(idir), exist_ok=True)
+    with open(R.safe_dest(os.path.join(idir, "00_impact.md")), "w", encoding="utf-8") as fh:
         fh.write("\n".join(l for l in report if l is not None) + "\n")
     issues.insert(0, (f"[{a.op}] {cid}: {a.reason[:70]}", "00_impact.md", None, LABELS.get(a.op, ["theory"])))
     for title, fn, body, labels in issues:
         if body is not None:
-            with open(os.path.join(idir, fn), "w", encoding="utf-8") as fh:
+            with open(R.safe_dest(os.path.join(idir, fn)), "w", encoding="utf-8") as fh:
                 fh.write(body)
     print(f"\nwrote {len(issues)} issue file(s) to {os.path.relpath(idir, R.ROOT)}")
     if a.gh:

@@ -33,6 +33,7 @@ import sys
 import time
 
 CI = os.path.dirname(os.path.abspath(__file__))
+sys.dont_write_bytecode = True  # never write __pycache__ (tools must not write outside their outputs)
 sys.path.insert(0, os.path.join(os.path.dirname(CI), "tools"))
 import bvsreg as R  # noqa: E402
 
@@ -61,94 +62,92 @@ def git_ok(*a, cwd=None):
 
 
 SANDBOX_ROOT = os.path.join(__import__("tempfile").gettempdir(), "bvs-ci-sandboxes")
+MARK = "bvs-ci-sandbox v1"  # first line of every lock file this tool writes
 
 
-def _process_table():
-    """{pid: ppid} for every process. Windows: Toolhelp32 snapshot via ctypes (fast, no extra packages)."""
-    if os.name != "nt":
-        p = subprocess.run(["ps", "-eo", "pid=,ppid="], capture_output=True, text=True)
-        table = {int(a): int(b) for a, b in (ln.split() for ln in p.stdout.splitlines() if len(ln.split()) == 2)}
-        if p.returncode != 0 or not table:
-            raise RuntimeError("process enumeration failed")
-        return table
-    import ctypes
-    from ctypes import wintypes
+def _real(p):
+    return os.path.normcase(os.path.realpath(p))
 
-    class PE(ctypes.Structure):
-        _fields_ = [("dwSize", wintypes.DWORD), ("cntUsage", wintypes.DWORD), ("th32ProcessID", wintypes.DWORD),
-                    ("th32DefaultHeapID", ctypes.c_size_t), ("th32ModuleID", wintypes.DWORD),
-                    ("cntThreads", wintypes.DWORD), ("th32ParentProcessID", wintypes.DWORD),
-                    ("pcPriClassBase", ctypes.c_long), ("dwFlags", wintypes.DWORD), ("szExeFile", ctypes.c_char * 260)]
 
-    k32 = ctypes.windll.kernel32
-    k32.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
-    snap = k32.CreateToolhelp32Snapshot(0x2, 0)  # TH32CS_SNAPPROCESS
-    if not snap or snap == wintypes.HANDLE(-1).value:
-        raise RuntimeError("process snapshot failed")
-    table, e = {}, PE()
-    e.dwSize = ctypes.sizeof(PE)
+def _strict_child(path, root):
+    """True iff path is strictly below root (never root itself), after resolving links."""
+    p, r = _real(path), _real(root)
+    return p != r and os.path.commonpath([p, r]) == r
+
+
+def _lock(fh) -> bool:
+    """Non-blocking exclusive lock on byte 4096 of an open file (beyond the readable manifest line)."""
     try:
-        ok = k32.Process32First(snap, ctypes.byref(e))
-        while ok:
-            table[e.th32ProcessID] = e.th32ParentProcessID
-            ok = k32.Process32Next(snap, ctypes.byref(e))
-    finally:
-        k32.CloseHandle(snap)
-    if not table:
-        raise RuntimeError("process enumeration returned nothing")
-    return table
-
-
-def pid_alive(pid: int) -> bool:
-    return pid > 0 and pid in _process_table()
-
-
-def _inside(path, root):
-    path, root = os.path.normcase(os.path.realpath(path)), os.path.normcase(os.path.realpath(root))
-    return os.path.commonpath([path, root]) == root
+        if os.name == "nt":
+            import msvcrt
+            fh.seek(4096)
+            msvcrt.locking(fh.fileno(), msvcrt.LK_NBLCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        return True
+    except OSError:
+        return False
 
 
 class Sandbox:
-    """A disposable DETACHED git worktree of HEAD under SANDBOX_ROOT (a temp directory owned by this tool). Ticket
-    scripts run only there, never in a working checkout. Each sandbox has an owner file (pid); stale-sandbox cleanup
-    touches ONLY worktrees under SANDBOX_ROOT whose owner process is dead. After each script the sandbox is reset
-    (checked: a failed reset aborts the step); it is removed on exit (errors and interrupts included).
-    Isolation boundary: relative writes land in the sandbox; this is NOT a security sandbox against scripts that
-    write to absolute paths or through git metadata. CI audits the COMMITTED state (HEAD)."""
+    """A disposable DETACHED git worktree of HEAD, created ONLY as a strict child `sb-*` of SANDBOX_ROOT.
+    Ownership is a lock, not a pid: the creating process writes `<sandbox>.lock` (manifest line + sandbox path) and
+    holds an exclusive lock on it for the sandbox's whole life; the OS releases it when the process dies. A later run
+    removes a stale sandbox only if ALL hold: the worktree is a strict `sb-*` child of the root, its lock file exists,
+    carries the manifest line and names exactly that path, and the lock can be acquired (owner gone). Anything else
+    is left untouched (and reported). No global `git worktree prune` is ever run.
+    Isolation boundary: relative writes land in the sandbox; this is not a security sandbox against scripts that
+    write to absolute paths. CI audits the COMMITTED state (HEAD)."""
 
     def __enter__(self):
-        import json, shutil, tempfile
+        import tempfile
         os.makedirs(SANDBOX_ROOT, exist_ok=True)
+        self.skipped = []
         for ln in git("worktree", "list", "--porcelain").splitlines():
-            if not ln.startswith("worktree "):
-                continue
-            wt = ln[9:].strip()
-            if not _inside(wt, SANDBOX_ROOT):
-                continue  # never touch worktrees outside the tool's own root
-            owner = wt.rstrip("/\\") + ".owner"
-            try:
-                pid = json.load(open(owner)).get("pid", -1)
-            except (OSError, ValueError):
-                pid = -1
-            if not pid_alive(pid):
-                subprocess.run(["git", "-C", R.ROOT, "worktree", "remove", "--force", wt], capture_output=True)
-                shutil.rmtree(wt, ignore_errors=True)
-                try:
-                    os.remove(owner)
-                except OSError:
-                    pass
-        git("worktree", "prune")
+            if ln.startswith("worktree "):
+                self._maybe_remove_stale(ln[9:].strip())
         self.path = tempfile.mkdtemp(prefix="sb-", dir=SANDBOX_ROOT)
         os.rmdir(self.path)  # git worktree add wants to create it
-        self.owner = self.path + ".owner"
-        with open(self.owner, "w") as fh:
-            json.dump({"pid": os.getpid(), "created": time.time()}, fh)
+        self.lockpath = self.path + ".lock"
+        self.lockfh = open(self.lockpath, "w+", encoding="utf-8")
+        self.lockfh.write(f"{MARK}\n{_real(self.path)}\npid {os.getpid()} created {time.time():.0f}\n")
+        self.lockfh.flush()
+        if not _lock(self.lockfh):
+            raise RuntimeError("could not lock the sandbox owner file")
         r = subprocess.run(["git", "-C", R.ROOT, "worktree", "add", "--detach", self.path, "HEAD"],
                            capture_output=True, text=True)
         if r.returncode != 0:
-            os.remove(self.owner)
+            self._release()
             raise RuntimeError(f"cannot create CI sandbox: {r.stderr.strip()[:300]}")
         return self
+
+    def _maybe_remove_stale(self, wt):
+        import shutil
+        if not _strict_child(wt, SANDBOX_ROOT) or not os.path.basename(wt.rstrip("/\\")).startswith("sb-"):
+            return  # not ours: never touched
+        lockpath = wt.rstrip("/\\") + ".lock"
+        if not _strict_child(lockpath, SANDBOX_ROOT) or os.path.islink(lockpath) or not os.path.isfile(lockpath):
+            self.skipped.append((wt, "no lock file"))
+            return
+        try:
+            with open(lockpath, "r+", encoding="utf-8") as fh:
+                head = fh.read(512).splitlines()
+                if len(head) < 2 or head[0] != MARK or head[1] != _real(wt):
+                    self.skipped.append((wt, "lock file not a valid manifest for this path"))
+                    return
+                if not _lock(fh):
+                    return  # owner alive
+                r = subprocess.run(["git", "-C", R.ROOT, "worktree", "remove", "--force", wt], capture_output=True)
+                if r.returncode == 0 or not os.path.exists(wt):
+                    shutil.rmtree(wt, ignore_errors=True)
+        except OSError as e:
+            self.skipped.append((wt, f"lock check failed: {e}"))
+            return
+        try:
+            os.remove(lockpath)
+        except OSError:
+            pass
 
     def reset(self):
         git_ok("checkout", "--", ".", cwd=self.path)
@@ -161,33 +160,27 @@ class Sandbox:
         out = git_ok("status", "--porcelain", "--untracked-files=all", "--", prefix, cwd=self.path)
         return [ln[3:].strip().strip('"') for ln in out.splitlines() if ln.strip()]
 
+    def _release(self):
+        try:
+            self.lockfh.close()
+        finally:
+            try:
+                os.remove(self.lockpath)
+            except OSError:
+                pass
+
     def __exit__(self, *exc):
         import shutil
-        r = subprocess.run(["git", "-C", R.ROOT, "worktree", "remove", "--force", self.path], capture_output=True,
-                           text=True)
-        if r.returncode != 0:
-            print(f"warning: could not remove sandbox {self.path}: {r.stderr.strip()[:200]}", file=sys.stderr)
-        subprocess.run(["git", "-C", R.ROOT, "worktree", "prune"], capture_output=True)
-        shutil.rmtree(self.path, ignore_errors=True)
         try:
-            os.remove(self.owner)
-        except OSError:
-            pass
+            if _strict_child(self.path, SANDBOX_ROOT):
+                r = subprocess.run(["git", "-C", R.ROOT, "worktree", "remove", "--force", self.path],
+                                   capture_output=True, text=True)
+                if r.returncode != 0:
+                    print(f"warning: could not remove sandbox {self.path}: {r.stderr.strip()[:200]}", file=sys.stderr)
+                shutil.rmtree(self.path, ignore_errors=True)
+        finally:
+            self._release()
         return False
-
-
-def descendants(pid: int) -> list[int]:
-    """All live descendants of pid (by parent pid, which survives the parent's death)."""
-    kids = {}
-    for c, par in _process_table().items():
-        kids.setdefault(par, []).append(c)
-    seen, stack = [], [pid]
-    while stack:
-        for c in kids.get(stack.pop(), []):
-            if c not in seen and c != pid:
-                seen.append(c)
-                stack.append(c)
-    return seen
 
 
 class Job:
@@ -281,33 +274,17 @@ class Job:
             raise RuntimeError(f"{left} process(es) of the job survived termination")
 
 
-def kill_tree(pid: int) -> None:
-    """Kill pid and every descendant; raise if anything survives (a surviving child could hold the sandbox)."""
-    if os.name == "nt":
-        victims = [v for v in [pid] + descendants(pid) if pid_alive(v)]
-        alive, t0 = list(victims), time.time()
-        while alive and time.time() - t0 < 20:  # bounded retries: termination can take seconds under load
-            for v in alive:
-                subprocess.run(["taskkill", "/T", "/F", "/PID", str(v)], capture_output=True)
-            time.sleep(0.5)
-            table = _process_table()
-            alive = [v for v in alive if v in table]
-        if alive:
-            raise RuntimeError(f"could not kill processes {alive}")
-    else:
-        import signal
-        try:
-            os.killpg(pid, signal.SIGKILL)  # start_new_session: pgid == pid, valid even after the leader exits
-        except OSError:
-            pass
-
 
 def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
     """Run one script inside the sandbox. The script path must resolve inside the sandbox. stdout/stderr go to a
-    file; whatever happens (timeout, error, interrupt, normal exit), the process tree is killed in `finally` and the
-    sandbox is reset. Returns (rc, secs, text, changed_files); text = the report file if given, else the output."""
+    file. Windows: the process starts SUSPENDED, joins a Job Object, then resumes; on every exit path the Job is
+    terminated (all and only the processes of this run — Job membership is a kernel identity, never a recycled pid).
+    POSIX: own session; on timeout the group is killed while its leader is still unreaped (so its id cannot have been
+    recycled); orphans that outlive a normally exiting leader are not tracked on POSIX (documented limitation).
+    Returns (rc, secs, text, changed_files); text = the report file if given, else the output."""
     script = os.path.join(sb.path, script_rel)
-    if os.path.isabs(script_rel) or ".." in script_rel.replace("\\", "/").split("/") or not _inside(script, sb.path):
+    if os.path.isabs(script_rel) or ".." in script_rel.replace("\\", "/").split("/") or \
+            not _strict_child(script, sb.path):
         return "REFUSED (script path outside the sandbox)", 0.0, "", []
     sdir = os.path.dirname(script)
     logf = os.path.join(logdir, "_run.log")
@@ -329,6 +306,13 @@ def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
                 rc = p.wait(timeout=timeout)
             except subprocess.TimeoutExpired:
                 rc = "TIMEOUT"
+                if os.name != "nt":
+                    import signal
+                    try:
+                        os.killpg(p.pid, signal.SIGKILL)  # leader not yet reaped: its group id is still ours
+                    except OSError:
+                        pass
+                    p.wait()
         secs = time.time() - t0
         rp = os.path.join(sb.path, report_path) if report_path else None
         src = rp if rp and os.path.exists(rp) else logf
@@ -338,10 +322,8 @@ def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
         changed = sb.changed(ticket_dir)
     finally:
         try:
-            job.close()  # every process the script spawned (Windows Job Object)
+            job.close()  # Windows: every process this run spawned, and nothing else
         finally:
-            if p is not None:
-                kill_tree(p.pid)  # belt and braces (and the POSIX path): orphaned workers must not outlive the run
             sb.reset()
     return rc, secs, text, changed
 

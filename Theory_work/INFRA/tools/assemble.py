@@ -28,6 +28,7 @@ import shutil
 import sys
 import tempfile
 
+sys.dont_write_bytecode = True  # never write __pycache__ (tools must not write outside their outputs)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bvsreg as R  # noqa: E402
 
