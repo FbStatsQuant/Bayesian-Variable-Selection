@@ -1,0 +1,599 @@
+"""run_ci.py — continuous audit of the theory program (local, read-only on tracked files).
+
+Steps (each can be selected with --steps, default all):
+  check      tools/check.py (registry vs files, SoP registry, FINAL chapter); ERRORs fail the run
+  paper      tools/assemble.py --check (generated paper blocks current)
+  falsify    re-run the cheap saved falsification scripts listed in ci/falsification.tsv (cheap = calibrated
+             runtime < 120 s) inside a disposable git worktree of HEAD (see Sandbox); reports regenerated outputs
+             that differ from the committed ones
+  cite       re-run every ticket's citecheck.py in the same kind of sandbox and compare MISS counts with the
+             committed CITECHECK.txt
+  reaudit    pick one random ACTIVE PROVED-CHECKED claim and write the brief for a fresh adversarial
+             (Astra-high) re-audit
+  optimize   EVENT-TRIGGERED only (--event wave-boundary|technique|strategy-review [--note ...]): pick one
+             BINDING claim of an unsettled headline hypothesis (binding.tsv; more early sub-par signals first)
+             and write an improvement-ticket brief priced in re-proof + re-review
+Default steps: check,paper,falsify,cite,reaudit. falsification.tsv entries with kind=boundary simulate just
+outside an assumption: if the conclusion still holds, that is reported as an "improvable" SIGNAL, not a failure.
+Options: --seed N (default: today's date, so a day's picks are reproducible), --calibrate (time every
+falsification entry with a 120 s cap and rewrite runtime_s/cheap in falsification.tsv), --out DIR.
+Output: ci/out/<YYYY-MM-DD>/SUMMARY.md (+ check.json, briefs, logs). Exit 1 if check ERROR, a falsification
+script fails, or a citecheck MISS count increases.
+Nothing here schedules itself; see ci/README.md.
+"""
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import os
+import random
+import re
+import subprocess
+import sys
+import time
+
+CI = os.path.dirname(os.path.abspath(__file__))
+sys.dont_write_bytecode = True  # never write __pycache__ (tools must not write outside their outputs)
+sys.path.insert(0, os.path.join(os.path.dirname(CI), "tools"))
+import bvsreg as R  # noqa: E402
+
+MANIFEST = os.path.join(CI, "falsification.tsv")
+MAN_COLS = ["kind", "claims", "assumption", "script", "args", "timeout_s", "runtime_s", "cheap", "outputs",
+            "expect", "notes"]  # kind: falsify | boundary
+CAP = 120
+PY = sys.executable
+RECAL_ALL = "--recalibrate-all" in sys.argv
+import shlex  # noqa: E402
+# interpreter for the tickets' numerics (needs numpy/scipy/mpmath): config.tsv `numerics_python`, env BVS_NUMERICS_PY
+PYNUM = shlex.split(os.environ.get("BVS_NUMERICS_PY") or R.config().get("numerics_python") or "") or [PY]
+
+
+def git(*a, cwd=None):
+    return subprocess.run(["git", "-C", cwd or R.ROOT, *a], capture_output=True, text=True,
+                          encoding="utf-8", errors="replace").stdout
+
+
+def git_ok(*a, cwd=None):
+    p = subprocess.run(["git", "-C", cwd or R.ROOT, *a], capture_output=True, text=True, encoding="utf-8",
+                       errors="replace")
+    if p.returncode != 0:
+        raise RuntimeError(f"git {' '.join(a)} failed in {cwd or R.ROOT}: {p.stderr.strip()[:300]}")
+    return p.stdout
+
+
+SANDBOX_ROOT = os.path.join(__import__("tempfile").gettempdir(), "bvs-ci-sandboxes")
+MARK = "bvs-ci-sandbox v1"  # first line of every lock file this tool writes
+
+
+def _real(p):
+    return os.path.normcase(os.path.realpath(p))
+
+
+def _strict_child(path, root):
+    """True iff path is strictly below root (never root itself), after resolving links."""
+    p, r = _real(path), _real(root)
+    return p != r and os.path.commonpath([p, r]) == r
+
+
+def _lock(fh) -> bool:
+    """Non-blocking exclusive lock on byte 4096 of an open file (beyond the readable manifest line)."""
+    try:
+        if os.name == "nt":
+            import msvcrt
+            fh.seek(4096)
+            msvcrt.locking(fh.fileno(), msvcrt.LK_NBLCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        return True
+    except OSError:
+        return False
+
+
+class Sandbox:
+    """A disposable DETACHED git worktree of HEAD, created ONLY as a strict child `sb-*` of SANDBOX_ROOT.
+    Ownership is a lock, not a pid: the creating process writes `<sandbox>.lock` (manifest line + sandbox path) and
+    holds an exclusive lock on it for the sandbox's whole life; the OS releases it when the process dies. A later run
+    removes a stale sandbox only if ALL hold: the worktree is a strict `sb-*` child of the root, its lock file exists,
+    carries the manifest line and names exactly that path, and the lock can be acquired (owner gone). Anything else
+    is left untouched (and reported). No global `git worktree prune` is ever run.
+    Isolation boundary: relative writes land in the sandbox; this is not a security sandbox against scripts that
+    write to absolute paths. CI audits the COMMITTED state (HEAD)."""
+
+    def __enter__(self):
+        import tempfile
+        os.makedirs(SANDBOX_ROOT, exist_ok=True)
+        self.skipped = []
+        for ln in git("worktree", "list", "--porcelain").splitlines():
+            if ln.startswith("worktree "):
+                self._maybe_remove_stale(ln[9:].strip())
+        self.path = tempfile.mkdtemp(prefix="sb-", dir=SANDBOX_ROOT)
+        os.rmdir(self.path)  # git worktree add wants to create it
+        self.lockpath = self.path + ".lock"
+        self.lockfh = open(self.lockpath, "w+", encoding="utf-8")
+        self.lockfh.write(f"{MARK}\n{_real(self.path)}\npid {os.getpid()} created {time.time():.0f}\n")
+        self.lockfh.flush()
+        if not _lock(self.lockfh):
+            raise RuntimeError("could not lock the sandbox owner file")
+        r = subprocess.run(["git", "-C", R.ROOT, "worktree", "add", "--detach", self.path, "HEAD"],
+                           capture_output=True, text=True)
+        if r.returncode != 0:
+            self._release()
+            raise RuntimeError(f"cannot create CI sandbox: {r.stderr.strip()[:300]}")
+        return self
+
+    def _maybe_remove_stale(self, wt):
+        import shutil
+        if not _strict_child(wt, SANDBOX_ROOT) or not os.path.basename(wt.rstrip("/\\")).startswith("sb-"):
+            return  # not ours: never touched
+        lockpath = wt.rstrip("/\\") + ".lock"
+        if not _strict_child(lockpath, SANDBOX_ROOT) or os.path.islink(lockpath) or not os.path.isfile(lockpath):
+            self.skipped.append((wt, "no lock file"))
+            return
+        try:
+            with open(lockpath, "r+", encoding="utf-8") as fh:
+                head = fh.read(512).splitlines()
+                if len(head) < 2 or head[0] != MARK or head[1] != _real(wt):
+                    self.skipped.append((wt, "lock file not a valid manifest for this path"))
+                    return
+                if not _lock(fh):
+                    return  # owner alive
+                r = subprocess.run(["git", "-C", R.ROOT, "worktree", "remove", "--force", wt], capture_output=True)
+                if r.returncode == 0 or not os.path.exists(wt):
+                    shutil.rmtree(wt, ignore_errors=True)
+        except OSError as e:
+            self.skipped.append((wt, f"lock check failed: {e}"))
+            return
+        try:
+            os.remove(lockpath)
+        except OSError:
+            pass
+
+    def reset(self):
+        git_ok("checkout", "--", ".", cwd=self.path)
+        git_ok("clean", "-fdqx", cwd=self.path)
+        if git_ok("status", "--porcelain", cwd=self.path).strip():
+            raise RuntimeError("sandbox not clean after reset")
+
+    def changed(self, prefix):
+        """Tracked files modified and files created under prefix since HEAD (repo-relative)."""
+        out = git_ok("status", "--porcelain", "--untracked-files=all", "--", prefix, cwd=self.path)
+        return [ln[3:].strip().strip('"') for ln in out.splitlines() if ln.strip()]
+
+    def _release(self):
+        try:
+            self.lockfh.close()
+        finally:
+            try:
+                os.remove(self.lockpath)
+            except OSError:
+                pass
+
+    def __exit__(self, *exc):
+        import shutil
+        try:
+            if _strict_child(self.path, SANDBOX_ROOT):
+                r = subprocess.run(["git", "-C", R.ROOT, "worktree", "remove", "--force", self.path],
+                                   capture_output=True, text=True)
+                if r.returncode != 0:
+                    print(f"warning: could not remove sandbox {self.path}: {r.stderr.strip()[:200]}", file=sys.stderr)
+                shutil.rmtree(self.path, ignore_errors=True)
+        finally:
+            self._release()
+        return False
+
+
+class Job:
+    """Windows Job Object holding every process a script spawns (children, grandchildren, orphaned multiprocessing
+    workers: membership is inherited, so an exited intermediate parent does not hide its descendants).
+    KILL_ON_JOB_CLOSE guarantees the whole job dies when the handle is closed, even if this tool is killed.
+    No-op on POSIX (process groups are used there)."""
+
+    def __init__(self):
+        self.h = None
+        if os.name != "nt":
+            return
+        import ctypes
+        from ctypes import wintypes
+        k32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        k32.CreateJobObjectW.restype = wintypes.HANDLE
+        k32.CreateJobObjectW.argtypes = [ctypes.c_void_p, wintypes.LPCWSTR]
+        k32.SetInformationJobObject.argtypes = [wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD]
+        k32.AssignProcessToJobObject.argtypes = [wintypes.HANDLE, wintypes.HANDLE]
+        k32.TerminateJobObject.argtypes = [wintypes.HANDLE, wintypes.UINT]
+        k32.QueryInformationJobObject.argtypes = [wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD,
+                                                  ctypes.c_void_p]
+        k32.CloseHandle.argtypes = [wintypes.HANDLE]
+        self.k32 = k32
+
+        class BASIC(ctypes.Structure):
+            _fields_ = [("PerProcessUserTimeLimit", ctypes.c_int64), ("PerJobUserTimeLimit", ctypes.c_int64),
+                        ("LimitFlags", wintypes.DWORD), ("MinimumWorkingSetSize", ctypes.c_size_t),
+                        ("MaximumWorkingSetSize", ctypes.c_size_t), ("ActiveProcessLimit", wintypes.DWORD),
+                        ("Affinity", ctypes.c_size_t), ("PriorityClass", wintypes.DWORD),
+                        ("SchedulingClass", wintypes.DWORD)]
+
+        class IOC(ctypes.Structure):
+            _fields_ = [(n, ctypes.c_uint64) for n in ("r", "w", "o", "rb", "wb", "ob")]
+
+        class EXT(ctypes.Structure):
+            _fields_ = [("Basic", BASIC), ("Io", IOC), ("ProcessMemoryLimit", ctypes.c_size_t),
+                        ("JobMemoryLimit", ctypes.c_size_t), ("PeakProcessMemoryUsed", ctypes.c_size_t),
+                        ("PeakJobMemoryUsed", ctypes.c_size_t)]
+
+        class ACCT(ctypes.Structure):
+            _fields_ = [("TotalUserTime", ctypes.c_int64), ("TotalKernelTime", ctypes.c_int64),
+                        ("ThisPeriodTotalUserTime", ctypes.c_int64), ("ThisPeriodTotalKernelTime", ctypes.c_int64),
+                        ("TotalPageFaultCount", wintypes.DWORD), ("TotalProcesses", wintypes.DWORD),
+                        ("ActiveProcesses", wintypes.DWORD), ("TotalTerminatedProcesses", wintypes.DWORD)]
+
+        self.ACCT = ACCT
+        self.h = k32.CreateJobObjectW(None, None)
+        if not self.h:
+            raise RuntimeError("CreateJobObject failed")
+        info = EXT()
+        info.Basic.LimitFlags = 0x2000  # JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+        if not k32.SetInformationJobObject(self.h, 9, ctypes.byref(info), ctypes.sizeof(info)):
+            raise RuntimeError("SetInformationJobObject failed")
+
+    def add(self, popen):
+        if self.h and not self.k32.AssignProcessToJobObject(self.h, int(popen._handle)):
+            raise RuntimeError("AssignProcessToJobObject failed")
+
+    def resume(self, popen):
+        if os.name != "nt":
+            return
+        import ctypes
+        nt = ctypes.WinDLL("ntdll")
+        nt.NtResumeProcess.argtypes = [ctypes.c_void_p]
+        if nt.NtResumeProcess(ctypes.c_void_p(int(popen._handle))) != 0:
+            raise RuntimeError("NtResumeProcess failed")
+
+    def active(self) -> int:
+        import ctypes
+        a = self.ACCT()
+        ok = self.k32.QueryInformationJobObject(self.h, 1, ctypes.byref(a), ctypes.sizeof(a), None)
+        if not ok:
+            raise RuntimeError("QueryInformationJobObject failed")
+        return a.ActiveProcesses
+
+    def close(self, wait=20.0):
+        """Terminate every process in the job and wait until none is active (bounded); raise if they survive."""
+        if not self.h:
+            return
+        try:
+            self.k32.TerminateJobObject(self.h, 1)
+            t0 = time.time()
+            while self.active() and time.time() - t0 < wait:
+                time.sleep(0.2)
+            left = self.active()
+        finally:
+            self.k32.CloseHandle(self.h)  # KILL_ON_JOB_CLOSE: closing also kills anything left
+            self.h = None
+        if left:
+            raise RuntimeError(f"{left} process(es) of the job survived termination")
+
+
+
+def run_in(sb, script_rel, args, timeout, logdir, report_path=None):
+    """Run one script inside the sandbox. The script path must resolve inside the sandbox. stdout/stderr go to a
+    file. Windows: the process starts SUSPENDED, joins a Job Object, then resumes; on every exit path the Job is
+    terminated (all and only the processes of this run — Job membership is a kernel identity, never a recycled pid).
+    POSIX: own session; on timeout the group is killed while its leader is still unreaped (so its id cannot have been
+    recycled); orphans that outlive a normally exiting leader are not tracked on POSIX (documented limitation).
+    Returns (rc, secs, text, changed_files); text = the report file if given, else the output."""
+    script = os.path.join(sb.path, script_rel)
+    if os.path.isabs(script_rel) or ".." in script_rel.replace("\\", "/").split("/") or \
+            not _strict_child(script, sb.path):
+        return "REFUSED (script path outside the sandbox)", 0.0, "", []
+    sdir = os.path.dirname(script)
+    logf = os.path.join(logdir, "_run.log")
+    t0 = time.time()
+    kw = ({"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP | 0x4}  # CREATE_SUSPENDED: assign to job first
+          if os.name == "nt" else {"start_new_session": True})
+    p, rc, job = None, None, Job()
+    try:
+        with open(logf, "w", encoding="utf-8", errors="replace") as fh:
+            try:
+                p = subprocess.Popen([*PYNUM, os.path.basename(script), *args], cwd=sdir, stdout=fh,
+                                     stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+                                     env={**os.environ, "PYTHONHASHSEED": "0", "MPLBACKEND": "Agg"}, **kw)
+            except OSError as e:
+                return f"LAUNCH-ERROR {e}", 0.0, "", []
+            job.add(p)
+            job.resume(p)  # only now can it run (and spawn children, which inherit the job)
+            try:
+                rc = p.wait(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                rc = "TIMEOUT"
+                if os.name != "nt":
+                    import signal
+                    try:
+                        os.killpg(p.pid, signal.SIGKILL)  # leader not yet reaped: its group id is still ours
+                    except OSError:
+                        pass
+                    p.wait()
+        secs = time.time() - t0
+        rp = os.path.join(sb.path, report_path) if report_path else None
+        src = rp if rp and os.path.exists(rp) else logf
+        with open(src, encoding="utf-8", errors="replace") as fh:
+            text = fh.read()
+        ticket_dir = "/".join(script_rel.replace("\\", "/").split("/")[:3])
+        changed = sb.changed(ticket_dir)
+    finally:
+        try:
+            job.close()  # Windows: every process this run spawned, and nothing else
+        finally:
+            sb.reset()
+    return rc, secs, text, changed
+
+
+# ------------------------------------------------------------------ steps
+def step_check(out):
+    p = subprocess.run([PY, os.path.join(R.TOOLS, "check.py"), "--json", os.path.join(out, "check.json")],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    with open(os.path.join(out, "check.txt"), "w", encoding="utf-8") as fh:
+        fh.write(p.stdout + p.stderr)
+    last = (p.stdout.strip().splitlines() or ["?"])[-2:]
+    return p.returncode == 0, "check.py: " + " | ".join(last) + " (full list: check.txt)"
+
+
+def step_paper(out):
+    p = subprocess.run([PY, os.path.join(R.TOOLS, "assemble.py"), "--check"], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
+    return p.returncode == 0, p.stdout.strip() or p.stderr.strip()
+
+
+def load_manifest():
+    return R.read_tsv(MANIFEST)[1] if os.path.exists(MANIFEST) else []
+
+
+BOUNDARY = re.compile(r"^BOUNDARY-RESULT:\s*(HOLDS|FAILS)\b", re.M)
+
+
+def step_falsify(out, calibrate=False):
+    man = load_manifest()
+    # calibration resumes: rows already timed (runtime_s set) are skipped unless --recalibrate-all
+    todo = [m for m in man if (calibrate and (RECAL_ALL or not m.get("runtime_s"))) or
+            (not calibrate and m.get("cheap") == "yes")]
+    if not todo:
+        return True, "0 script(s) run (manifest empty or nothing cheap)"
+    lines, ok = [], True
+    with Sandbox() as sb:
+        for m in todo:
+            timeout = CAP if calibrate else int(float(m.get("timeout_s") or CAP))
+            rc, secs, txt, changed = run_in(sb, m["script"], m.get("args", "").split(), timeout, out)
+            exp = m.get("expect", "")
+            good = rc == 0 and ((not exp) or re.search(exp, txt) is not None)
+            if calibrate:
+                m["runtime_s"] = f"{secs:.1f}" if rc != "TIMEOUT" else f">{CAP}"
+                m["cheap"] = "yes" if rc == 0 and secs < CAP else "no"
+                m["timeout_s"] = str(min(CAP, max(30, int(secs * 3) + 10))) if m["cheap"] == "yes" else str(CAP)
+                last = txt.strip().splitlines()[-1][:120] if txt.strip() else ""
+                m["notes"] = "" if rc == 0 else f"calibration rc={rc}: {last}"
+            tag = "PASS" if good else ("TIMEOUT" if rc == "TIMEOUT" else "FAIL")
+            if m.get("kind") == "boundary":
+                # only a COMPLETED experiment that prints `BOUNDARY-RESULT: HOLDS|FAILS` is a scientific outcome;
+                # crashes / import errors / timeouts are execution failures
+                b = BOUNDARY.search(txt) if rc == 0 else None
+                if b and b.group(1) == "HOLDS":
+                    tag = f"SIGNAL improvable (conclusion held outside {m.get('assumption', '?')})"
+                elif b:
+                    tag = "boundary: conclusion failed outside the assumption (consistent with necessity)"
+                else:
+                    tag, good = f"FAIL (boundary experiment did not complete: rc={rc})", False
+            ok &= good or calibrate
+            outs = set(R.split_list(m.get("outputs", "")))
+            diff = [c for c in changed if c in outs]
+            note = (f"; regenerated output differs from committed: {', '.join(diff)}" if diff else "") + \
+                   (f"; also wrote {len(changed) - len(diff)} other file(s)" if len(changed) > len(diff) else "")
+            lines.append(f"- {tag} `{m['script']}` ({secs:.1f}s; claims {m['claims']}){note}")
+            if calibrate:  # persist after every script, so an interrupted calibration loses nothing
+                R.write_tsv(MANIFEST, MAN_COLS, man)
+            with open(os.path.join(out, "falsify.log"), "a", encoding="utf-8") as fh:
+                fh.write(f"===== {m['script']} {m.get('args', '')} rc={rc} {secs:.1f}s changed={changed}\n"
+                         f"{txt[-4000:]}\n")
+    if calibrate:
+        R.write_tsv(MANIFEST, MAN_COLS, man)
+    return ok, f"{len(lines)} script(s) run in a disposable worktree of HEAD\n" + "\n".join(lines)
+
+
+def miss_count(text):
+    return sum(1 for ln in text.splitlines() if re.match(r"\s*(MISS|BAD|FAIL)", ln))
+
+
+def step_cite(out):
+    import glob
+    lines, ok = [], True
+    with Sandbox() as sb:
+        for cc in sorted(glob.glob(os.path.join(sb.path, "Theory_work", "Wave*", "*", "**", "citecheck.py"),
+                                   recursive=True)):
+            rel = os.path.relpath(cc, sb.path).replace("\\", "/")
+            d = os.path.dirname(cc)
+            cands = [os.path.join(d, "CITECHECK.txt"), os.path.join(d, "reviews", "CITECHECK.txt"),
+                     os.path.join(os.path.dirname(d), "CITECHECK.txt")]
+            committed = next((c for c in cands if os.path.exists(c)), None)
+            before = open(committed, encoding="utf-8", errors="replace").read() if committed else ""
+            rep_rel = os.path.relpath(committed, sb.path) if committed else None
+            rc, secs, txt, changed = run_in(sb, rel, [], CAP, out, report_path=rep_rel)
+            after = txt
+            b, a = miss_count(before), miss_count(after)
+            good = rc in (0, 1) and a <= b
+            ok &= good
+            lines.append(f"- {'PASS' if good else 'FAIL'} `{rel}`: MISS {b} committed -> {a} now (rc={rc})")
+    return ok, "\n".join(lines)
+
+
+def proof_files(r):
+    t = next((t for t in R.load_tickets() if t["ticket"] == r["ticket"]), None)
+    if not t:
+        return []
+    d = os.path.join(R.ROOT, t["folder"], "lemmas")
+    return sorted(os.path.relpath(os.path.join(d, f), R.ROOT).replace("\\", "/") for f in os.listdir(d)) \
+        if os.path.isdir(d) else []
+
+
+def step_reaudit(out, rng):
+    rows = R.load_claims()
+    by = R.index(rows)
+    deps = R.Graph(rows).deps
+    pool = [r for r in rows if r["state"] == "ACTIVE" and r["kind"] != "external" and
+            R.status_strength(r["status"]) == 3 and r["kind"] in ("theorem", "proposition", "lemma", "corollary")]
+    if not pool:
+        return True, "no eligible PROVED-CHECKED claim"
+    r = rng.choice(sorted(pool, key=lambda x: x["id"]))
+    dl = "\n".join(f"- {d}: {by[d]['name']} — status `{by[d]['status'][:160]}` [{by[d]['state']}]"
+                   for d in deps.get(r["id"], [])) or "- (none recorded)"
+    brief = f"""# Adversarial re-audit brief — {r['id']} ({R.today()})
+
+Reviewer: Codex gpt-6-astra, reasoningEffort high (fresh thread, no prior context). Read-only on the repository
+(git worktree of main at the current commit). Write your reply to
+`Theory_work/INFRA/audits/{R.today()}_{r['id'].replace(':', '_')}_astra.md` and nothing else.
+
+## Your job
+Break this result. You are not asked whether the ticket's reviewers were careful; you are asked whether the
+statement below is TRUE as stated and whether its proof is COMPLETE. Do not use the ticket's reviews or council
+verdicts as evidence (you may read them only after forming your own verdict, to report disagreements).
+
+## The claim
+- {r['name']} — `{r['file']}:{r['lines']}` (registry v{r['version']}, sha256 {r['sha256'][:16]}…)
+- verbatim status: `{r['status']}`; council: {r.get('council') or '—'}
+- scope: {r.get('scope') or 'see statement'}; assumptions: {r.get('assumptions') or 'see statement'}
+- proof files: {', '.join(proof_files(r)) or 'see ticket folder'}
+- saved falsification scripts: {r.get('falsification') or 'none recorded'}
+
+## Inputs it relies on (statuses verbatim; check that each is used within its stated scope)
+{dl}
+
+## Attacks to run (at least these)
+1. Hypotheses used vs hypotheses stated, step by step; any hidden uniformity, measurability, or growth condition.
+2. Every cited input: is the cited version's statement strong enough for the use made of it (scope, constants,
+   law: fixed design vs joint)?
+3. Boundary cases of every parameter (p near its upper range, s₀ = 0/1, ties, rank deficiency, a = 1/2 type
+   degeneracies) — try to build a counterexample; run a small exact computation if it helps (p ≤ 10).
+4. Quantifier order and o(1) terms that may depend on the sequence.
+
+## Reply format
+First line exactly one of: HOLDS / HOLDS-WITH-AMENDMENTS / GAP / FALSE. Then findings as FATAL / MAJOR / MINOR /
+EDITORIAL with file:line, each with a concrete repair or counterexample. Last section: the exact registry action
+you recommend (none / PATCH / downgrade / narrow / retract — see Theory_work/INFRA/LIFECYCLE.md).
+"""
+    f = os.path.join(out, f"reaudit_{r['id'].replace(':', '_')}.md")
+    with open(f, "w", encoding="utf-8") as fh:
+        fh.write(brief)
+    return True, f"picked {r['id']} from {len(pool)} eligible; brief: {os.path.relpath(f, R.ROOT)}"
+
+
+def step_optimize(out, rng, event="", note=""):
+    """Event-triggered (wave boundary, newly landed technique, new strategy-review proposal) — never scheduled.
+    Targets only BINDING claims: the claim whose proof forces a not-yet-settled headline hypothesis."""
+    rows = R.load_claims()
+    by = R.index(rows)
+    g = R.Graph(rows)
+    asm, sharp, binding = R.load_assumptions(), R.load_sharpness(), R.load_binding()
+    pool = [b for b in binding if not b.get("notes", "").startswith("DRAFT")
+            and "TO BE DETERMINED" not in b.get("mechanism", "")
+            and by.get(b["headline"], {}).get("headline") == "yes"
+            and by[b["headline"]]["state"] == "ACTIVE" and not R.settled(b["headline"], b["assumption"], sharp)]
+    if not pool:
+        return True, "no binding claim for an unsettled headline hypothesis (seed binding.tsv / sharpness.tsv)"
+    rng.shuffle(pool)
+    pool.sort(key=lambda b: -len(R.split_list(b.get("signals", ""))))  # most early sub-par signals first
+    b = pool[0]
+    h = by[b["headline"]]
+    bc = R.resolve(b.get("binding_claim", ""), set(by), R.load_aliases()) or h["id"]
+    bcr = by.get(bc, {})
+    paths = {d: p for d, p in g.dependents(h["id"]).items() if by[d]["state"] in R.VALID}
+    direct = sorted(d for d, p in paths.items() if len(p) == 2)
+    heads = sorted(d for d in paths if by[d].get("headline") == "yes")
+    tickets = sorted({by[d]["ticket"] for d in paths})
+    v, fails = R.necessity(h["id"], b["assumption"], sharp)
+    ar = asm.get(b["assumption"], {})
+    others = "\n".join(f"- {x}: {R.necessity(h['id'], x, sharp)[0]}" for x in R.hypotheses(h))
+    slug = R.safe(b["assumption"].split(":", 1)[-1])
+    brief = f"""# Improvement-ticket brief — weaken {b['assumption']} in {h['id']} ({R.today()})
+
+Trigger: {event or 'manual'}{(' — ' + note) if note else ''}. Generated by the optimizer step of
+Theory_work/INFRA/ci/run_ci.py. **HQ decides whether to launch**; Felipe approves if the headline statement changes.
+Suggested ticket `W?-IMP-{slug}` on branch `theory/W?-IMP-{slug}`.
+**Kill budget (required; HQ sets it before launch, e.g. 3 proof attempts or one wave).** On expiry record the
+attempt with `propagate.py fail-route {h['id']} --assumption {b['assumption']} --route ...` (a failed removal route
+is weak necessity evidence) and stop.
+
+## Target
+- headline: {h['name']} — `{h['file']}:{h['lines']}`; status `{h['status'][:160]}`
+- conclusion: {h.get('conclusion') or '—'}; rate: {h.get('rate') or '—'}; scope: {h.get('scope') or '—'}
+- assumption {b['assumption']} — {ar.get('name', '?')}: {ar.get('statement', '')[:200]}
+  (bridge: {ar.get('bridge') or '—'}; necessity so far: {v}; failed removal routes: {fails})
+- **binding claim** (where it is forced): {bc} — {bcr.get('name', '')} `{bcr.get('file', '')}:{bcr.get('lines', '')}`
+- mechanism: {b.get('mechanism') or '—'}
+- early sub-par signals: {b.get('signals') or 'none recorded'} {('— ' + b['notes']) if b.get('notes') else ''}
+
+## Other hypotheses of the headline (necessity)
+{others}
+
+## Directions (lock one in STATEMENT.md; the new theorem enters the registry as CANDIDATE)
+1. Weaken {b['assumption']} at the binding step (replace the crude bound). If the assumption is also used with
+   necessity polarity, SPLIT it rather than weakening it globally (`registry.py assumption-impact {b['assumption']}`).
+2. Or prove necessity: a counterexample just outside the assumption (closes the flag as NECESSARY).
+3. First, boundary-violation numerics: simulate just outside {b['assumption']}; if the conclusion still holds,
+   that supports direction 1 (add the script to ci/falsification.tsv with kind=boundary).
+
+## Price (assurance parity: the candidate must pass the gates {h['id']} passed: {h.get('gates') or '—'})
+- the candidate: statement lock + lemma checks + mid-point + sweep + council + strength gate
+- if it implies {h['id']} (free supersession): {len(direct)} cheap re-point check(s), nothing else
+- if not (headline-changing): {len(direct)} × (1 proof session + 1 lemma check) for the direct dependents
+  ({', '.join(direct) or '—'}), {len(tickets)} sweep(s), {len(heads)} council(s) + strength gate(s) for the
+  dependent headlines ({', '.join(heads) or '—'}); paper regeneration is free (assemble.py)
+- exact numbers once the candidate exists: `propagate.py supersede {h['id']} --by <Y> --reason ... --dry-run`
+"""
+    f = os.path.join(out, f"improve_{R.safe(h['id'])}_{slug}.md")
+    with open(f, "w", encoding="utf-8") as fh:
+        fh.write(brief)
+    return True, (f"picked {h['id']} / {b['assumption']} (binding {bc}) from {len(pool)} candidate pairs; "
+                  f"brief: {os.path.relpath(f, R.ROOT)}")
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--steps", default="check,paper,falsify,cite,reaudit")
+    ap.add_argument("--event", default="", help="optimizer trigger: wave-boundary | technique | strategy-review")
+    ap.add_argument("--note", default="", help="what happened (quoted in the optimizer brief)")
+    ap.add_argument("--seed", type=int)
+    ap.add_argument("--calibrate", action="store_true")
+    ap.add_argument("--recalibrate-all", action="store_true", help="with --calibrate: re-time rows already timed")
+    ap.add_argument("--out")
+    a = ap.parse_args()
+    day = dt.date.today().isoformat()
+    out = a.out or os.path.join(CI, "out", day)
+    os.makedirs(out, exist_ok=True)
+    rng = random.Random(a.seed if a.seed is not None else int(day.replace("-", "")))
+    if a.calibrate:
+        ok, msg = step_falsify(out, calibrate=True)
+        print(msg)
+        return
+    results = []
+    steps = {"check": step_check, "paper": step_paper, "falsify": step_falsify, "cite": step_cite,
+             "reaudit": lambda o: step_reaudit(o, rng), "optimize": lambda o: step_optimize(o, rng, a.event, a.note)}
+    if a.event and "optimize" not in a.steps.split(","):
+        a.steps += ",optimize"
+    for s in a.steps.split(","):
+        t0 = time.time()
+        try:
+            ok, msg = steps[s](out)
+        except Exception as e:  # a broken step must not hide the others
+            ok, msg = False, f"step crashed: {e!r}"
+        results.append((s, ok, msg, time.time() - t0))
+    head = git("rev-parse", "--short", "HEAD").strip()
+    lines = [f"# Theory CI — {day} (HEAD {head})", ""]
+    for s, ok, msg, secs in results:
+        lines += [f"## {s}: {'PASS' if ok else 'FAIL'} ({secs:.0f}s)", "", msg, ""]
+    summ = os.path.join(out, "SUMMARY.md")
+    with open(summ, "w", encoding="utf-8") as fh:
+        fh.write("\n".join(lines))
+    print("\n".join(lines))
+    sys.exit(0 if all(ok for _, ok, _, _ in results) else 1)
+
+
+if __name__ == "__main__":
+    main()

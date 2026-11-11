@@ -1,0 +1,114 @@
+id	field	new_value	evidence
+W1-GEN:Thm-GEN	premises	Theory_work/Wave1/W1-GEN/STATEMENT.md:24-44;Theory_work/Wave1/W1-GEN/STATEMENT.md:48-54;Theory_work/Wave1/W1-GEN/STATEMENT.md:56-62;Theory_work/Wave1/W1-GEN/STATEMENT.md:64-75	Theory_work/Wave1/W1-GEN/STATEMENT.md:108 "[(H0),(H1),(H2), premises of §1]"
+W1-GEN:Thm-GEN	depends_on	W1-GEN:L5;EXT:M5(0);EXT:T03♯	Theory_work/Wave1/W1-GEN/lemmas/L5_assembly.md:31-38 proof = L5.1 (L2-L4 enter via L5)
+W1-GEN:Thm-GEN(C3-fav)	lines	112-113	blank line 114 dropped
+W1-GEN:Thm-GEN(C3-fav)	premises	Theory_work/Wave1/W1-GEN/STATEMENT.md:24-44;Theory_work/Wave1/W1-GEN/STATEMENT.md:48-54;Theory_work/Wave1/W1-GEN/STATEMENT.md:64-75	Theory_work/Wave1/W1-GEN/STATEMENT.md:112 "under (H0),(H2) and the premises (no (H1))"
+W1-GEN:Thm-GEN(C3-fav)	depends_on	W1-GEN:L5@proof:Corollary L5.2;W1-GEN:L2;EXT:M5(0);EXT:T03♯	Theory_work/Wave1/W1-GEN/lemmas/L5_assembly.md:51-53
+W1-GEN:Thm-GEN(C4)	lines	115-120	line 121 is blank
+W1-GEN:Thm-GEN(C4)	premises	Theory_work/Wave1/W1-GEN/STATEMENT.md:24-44;Theory_work/Wave1/W1-GEN/STATEMENT.md:48-54;Theory_work/Wave1/W1-GEN/STATEMENT.md:56-62;Theory_work/Wave1/W1-GEN/STATEMENT.md:64-75	Theory_work/Wave1/W1-GEN/STATEMENT.md:117 "(H0)-(H2) (resp. (H0),(H2) with S*=S0)"
+W1-GEN:Thm-GEN(C4)	depends_on	W1-GEN:Thm-GEN;W1-GEN:Thm-GEN(C3-fav);W1-GEN:L5@proof:L5.3,L5.4	Theory_work/Wave1/W1-GEN/lemmas/L5_assembly.md:57-77 (L5.3 de-randomisation, L5.4 uses L5.1/L5.2)
+W1-GEN:L1	lines	57-72	Lemma L1.3 (Lemma E, EXP') statement; old 30-96 spans L1.1-L1.4 plus proofs
+W1-GEN:L1	premises	Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md:8-15;Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md:19-28;Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md:54-55	Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md:18 events D1-D3 / family F, D0 notation 54-55
+W1-GEN:L1	depends_on	NONE	Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md:5-6 re-proved here; no T03# use (grep)
+W1-GEN:L1	notes	split-needed: L3 uses L1.1 (events), L1.2 (RSS floor), L1.4 (contrasts) separately; lines cover only L1.3	Theory_work/Wave1/W1-GEN/lemmas/L3_descent.md:33,63-65
+W1-GEN:L2	kind	theorem	Theory_work/Wave1/W1-GEN/lemmas/L2_centre.md:12 "Theorem L2"
+W1-GEN:L2	premises	Theory_work/Wave1/W1-GEN/STATEMENT.md:29-38;Theory_work/Wave1/W1-GEN/STATEMENT.md:64-75	Theory_work/Wave1/W1-GEN/lemmas/L2_centre.md:12 "Assume G; ...; (H2)"
+W1-GEN:L2	depends_on	W1-GEN:L1;EXT:T22(i);EXT:T22(iii)@proof:PROOF_v2 argument [P]	Theory_work/Wave1/W1-GEN/lemmas/L2_centre.md:5-8,22-24 proof re-runs T22(iii) text
+W1-GEN:L3	kind	corollary	Theory_work/Wave1/W1-GEN/lemmas/L3_descent.md:120 "Corollary L3.4"
+W1-GEN:L3	premises	Theory_work/Wave1/W1-GEN/lemmas/L3_descent.md:6-11;Theory_work/Wave1/W1-GEN/lemmas/L3_descent.md:13-30;Theory_work/Wave1/W1-GEN/lemmas/L3_descent.md:32-33;Theory_work/Wave1/W1-GEN/STATEMENT.md:56-62	Theory_work/Wave1/W1-GEN/lemmas/L3_descent.md:30 Omega_n, :32 n0, :6 hypotheses
+W1-GEN:L3	depends_on	W1-GEN:L1;W1-GEN:L1@proof:L1.1,L1.2,L1.4	Theory_work/Wave1/W1-GEN/lemmas/L3_descent.md:33,63-65 (L1.2-L1.4 used)
+W1-GEN:L4	premises	Theory_work/Wave1/W1-GEN/lemmas/L4_search.md:7-16	Theory_work/Wave1/W1-GEN/lemmas/L4_search.md:7-16 search semantics and uncapped path
+W1-GEN:L5	kind	theorem	Theory_work/Wave1/W1-GEN/lemmas/L5_assembly.md:21 "Theorem L5.1"
+W1-GEN:L5	premises	Theory_work/Wave1/W1-GEN/STATEMENT.md:24-44;Theory_work/Wave1/W1-GEN/STATEMENT.md:48-54;Theory_work/Wave1/W1-GEN/STATEMENT.md:56-62;Theory_work/Wave1/W1-GEN/STATEMENT.md:64-75	Theory_work/Wave1/W1-GEN/lemmas/L5_assembly.md:21 "Under (H0),(H1),(H2) and premises of §1"
+W1-GEN:L5	depends_on	W1-GEN:L2;W1-GEN:L3;W1-GEN:L3@proof:L3.0 event Omega_n and P(Omega_n^c) rate;W1-GEN:L4@proof:L4.1(iii);EXT:M5(0);EXT:T03♯;EXT:OP-closure	Theory_work/Wave1/W1-GEN/lemmas/L5_assembly.md:11-16,31-38
+W1-GEN:L8	premises	Theory_work/Wave1/W1-GEN/lemmas/L8_certificate.md:7-13	Theory_work/Wave1/W1-GEN/lemmas/L8_certificate.md:7-13 setting, (H2a), ||mu||^2<=Mn
+W1-GEN:L8	depends_on	NONE	Theory_work/Wave1/W1-GEN/lemmas/L8_certificate.md:25-31,42-44 proof uses only (H2a), Schur complement; no L2
+W1-GEN:Thm-GEN(C5a)	premises	Theory_work/Wave1/W1-GEN/STATEMENT.md:48-54;Theory_work/Wave1/W1-GEN/STATEMENT.md:56-62;Theory_work/Wave1/W1-GEN/STATEMENT.md:64-75	Theory_work/Wave1/W1-GEN/STATEMENT.md:127 "(H0)-(H2) hold with S*=S0\M"
+W1-GEN:Thm-GEN(C5a)	depends_on	W1-GEN:Thm-GEN;W1-EXP:Lemma4.2;W1-EXP:Lemma4.1(a)	Theory_work/Wave1/W1-GEN/lemmas/L6_instances.md:21-24,41 (T38-(0) only a comparison; 4.1(a) eigenvalue)
+W1-GEN:Thm-GEN(C5b)	premises	Theory_work/Wave1/W1-GEN/STATEMENT.md:48-54;Theory_work/Wave1/W1-GEN/STATEMENT.md:56-62;Theory_work/Wave1/W1-GEN/STATEMENT.md:64-75	Theory_work/Wave1/W1-GEN/STATEMENT.md:130 "(H1),(H2) verified directly on A_n"
+W1-GEN:Thm-GEN(C5b)	depends_on	W1-GEN:Thm-GEN(C4);W7-PART:Thm-B;EXT:CONC;EXT:API-PXNGAP:P2	Theory_work/Wave1/W1-GEN/lemmas/L6_instances.md:68-73,83 ([CONC], Lemma P2)
+W1-GEN:Thm-GEN(C5c)	premises	Theory_work/Wave1/W1-GEN/STATEMENT.md:24-44;Theory_work/Wave1/W1-GEN/STATEMENT.md:48-54;Theory_work/Wave1/W1-GEN/STATEMENT.md:64-75	Theory_work/Wave1/W1-GEN/STATEMENT.md:133-134 "(H0) verified directly, (C3-fav) S*=S0"
+W1-GEN:Thm-GEN(C5c)	depends_on	W1-GEN:Thm-GEN(C3-fav);EXT:T22(iii)@proof:NL_eta to NL_avg arithmetic	Theory_work/Wave1/W1-GEN/lemmas/L6_instances.md:105-107
+W1-GEN:Thm-GEN(C5d-S1346)	lines	135-143	line 144 blank
+W1-GEN:Thm-GEN(C5d-S1346)	premises	Theory_work/Wave1/W1-GEN/STATEMENT.md:48-54;Theory_work/Wave1/W1-GEN/STATEMENT.md:64-75	Theory_work/Wave1/W1-GEN/STATEMENT.md:140-141 "(C3-fav) via (C4)"
+W1-GEN:Thm-GEN(C5d-S1346)	depends_on	W1-GEN:Thm-GEN(C3-fav);W1-GEN:Thm-GEN(C4);EXT:CONC;EXT:API-PXNGAP:P1(a)	Theory_work/Wave1/W1-GEN/lemmas/L6_instances.md:123,128,168-171
+W1-GEN:Obs-GEN-S2S5	lines	135-143	line 144 blank
+W1-GEN:Obs-GEN-S2S5	premises	Theory_work/Wave1/W1-GEN/STATEMENT.md:56-62;Theory_work/Wave1/W1-GEN/STATEMENT.md:64-75	Theory_work/Wave1/W1-GEN/lemmas/L6_instances.md:177-193 failure of (H2c)(i) for any S*
+W1-GEN:Obs-GEN-S2S5	depends_on	EXT:CONC	Theory_work/Wave1/W1-GEN/lemmas/L6_instances.md:178-193 uses G_n event and H2c(i); not Thm-GEN
+W1-GEN:Cex-GEN(C6)	lines	145-154	line 155 blank
+W1-GEN:Cex-GEN(C6)	premises	Theory_work/Wave1/W1-GEN/STATEMENT.md:24-44;Theory_work/Wave1/W1-GEN/STATEMENT.md:48-75	Theory_work/Wave1/W1-GEN/STATEMENT.md:147-150 hypotheses (H0),(H1a),(H1b),(H2a),VIS/NL
+W1-GEN:Cex-GEN(C6)	depends_on	W1-GEN:L1@proof:L1.1,L1.2	Theory_work/Wave1/W1-GEN/lemmas/L7_counterexample.md:65,72 (L1, L1.2)
+W1-PXN:Thm-PXN	premises	Theory_work/Wave1/W1-PXN/STATEMENT.md:13-20;Theory_work/Wave1/W1-PXN/STATEMENT.md:45-48;Theory_work/Wave1/W1-PXN/STATEMENT.md:52-53	Theory_work/Wave1/W1-PXN/STATEMENT.md:52 "Under LH-iid + (SIZE) + (OP)"
+W1-PXN:Thm-PXN	depends_on	W1-PXN:Thm-PXN(C)	Theory_work/Wave1/W1-PXN/STATEMENT.md:70-71 headline is the (C) conclusion; (S),(E),(R) enter via (C)
+W1-PXN:Thm-PXN(R)	premises	Theory_work/Wave1/W1-PXN/STATEMENT.md:13-20;Theory_work/Wave1/W1-PXN/STATEMENT.md:52-53	Theory_work/Wave1/W1-PXN/STATEMENT.md:54-57 SIZE, LH-iid
+W1-PXN:Thm-PXN(R)	depends_on	W1-PXN:Thm-R;EXT:TH163;EXT:TH162	Theory_work/Wave1/W1-PXN/lemmas/R_branch_repair.md:16 CR route (R-prime) is an independent fallback
+W1-PXN:Thm-PXN(S)	premises	Theory_work/Wave1/W1-PXN/STATEMENT.md:13-20;Theory_work/Wave1/W1-PXN/STATEMENT.md:29-33	Theory_work/Wave1/W1-PXN/STATEMENT.md:58-60 pi_0 defined by method block start
+W1-PXN:Thm-PXN(S)	depends_on	EXT:T22(i);EXT:T22(ii);W1-PXN:Thm-PXN(R);W1-PXN:P8@proof:step 2 design event E#_n;EXT:Lemma E;EXT:Lemma Tr-J;EXT:Lemma B(i),(iii)	Theory_work/Wave1/W1-PXN/FINAL_PROOF.md:44-50 P3-prime and P4 inputs
+W1-PXN:Thm-PXN(E)	premises	Theory_work/Wave1/W1-PXN/STATEMENT.md:13-20;Theory_work/Wave1/W1-PXN/STATEMENT.md:29-33	Theory_work/Wave1/W1-PXN/STATEMENT.md:61
+W1-PXN:Thm-PXN(E)	depends_on	W1-PXN:Thm-PXN(S);W1-PXN:Lemma-LS@proof:P5 qualifications	Theory_work/Wave1/W1-PXN/FINAL_PROOF.md:51-53; Theory_work/Wave1/W1-PXN/lemmas/LS_P6_repair.md:38-42
+W1-PXN:Thm-PXN(T)	premises	Theory_work/Wave1/W1-PXN/STATEMENT.md:13-20;Theory_work/Wave1/W1-PXN/STATEMENT.md:29-37;Theory_work/Wave1/W1-PXN/STATEMENT.md:39-43	Theory_work/Wave1/W1-PXN/STATEMENT.md:62 LS0, R-bar+, local_certified
+W1-PXN:Thm-PXN(T)	depends_on	W1-PXN:Lemma-LS;W1-PXN:Lemma-L;W1-PXN:Thm-PXN(E);W1-PXN:Thm-PXN(R)	Theory_work/Wave1/W1-PXN/FINAL_PROOF.md:62-65 (T on T_n); no W1-GEN use in W1-PXN (grep)
+W1-PXN:Thm-PXN(P)	premises	Theory_work/Wave1/W1-PXN/STATEMENT.md:13-20;Theory_work/Wave1/W1-PXN/STATEMENT.md:22-27	Theory_work/Wave1/W1-PXN/STATEMENT.md:63 pi, delta_1 defined by v3 score
+W1-PXN:Thm-PXN(P)	depends_on	W1-PXN:P8	Theory_work/Wave1/W1-PXN/FINAL_PROOF.md:68-72 (P) = P8-sharp; T03-sharp and CR enter via P8
+W1-PXN:Thm-PXN(C)	premises	Theory_work/Wave1/W1-PXN/STATEMENT.md:29-37;Theory_work/Wave1/W1-PXN/STATEMENT.md:39-43;Theory_work/Wave1/W1-PXN/STATEMENT.md:45-48	Theory_work/Wave1/W1-PXN/STATEMENT.md:64 D_n, O, U, S-hat+, OP
+W1-PXN:Thm-PXN(C)	depends_on	W1-PXN:Thm-PXN(P);W1-PXN:Thm-PXN(T);EXT:M5(0);EXT:Lemma RO;W1-PXN:Thm-R@proof:exact-branch convention §3	Theory_work/Wave1/W1-PXN/FINAL_PROOF.md:74-80; Theory_work/Wave1/W1-PXN/lemmas/LS_P6_repair.md:44-48
+W1-PXN:Thm-PXN(K)	premises	Theory_work/Wave1/W1-PXN/STATEMENT.md:29-37;Theory_work/Wave1/W1-PXN/lemmas/LS_P6_repair.md:30-31	Theory_work/Wave1/W1-PXN/STATEMENT.md:67-68 refers to event T_n
+W1-PXN:Thm-PXN(K)	depends_on	W1-PXN:Lemma-LS	Theory_work/Wave1/W1-PXN/lemmas/LS_P6_repair.md:30-36 N_scores bound on T_n
+W1-PXN:P8	premises	Theory_work/Wave1/W1-PXN/STATEMENT.md:13-20	Theory_work/Wave1/W1-PXN/lemmas/P8_T03sharp.md:23 "On LH-iid (STATEMENT §1)"
+W1-PXN:P8	depends_on	EXT:T03♯;W1-PXN:CR@proof:[CONC-prime] corollary	Theory_work/Wave1/W1-PXN/lemmas/P8_T03sharp.md:42 uses [CONC-prime] of CR
+W1-PXN:CR	lines	12-15	Lemma CR proper; [CONC'] 33-35 and (R') 42-51 are separate corollaries
+W1-PXN:CR	notes	split-needed: [CONC'] (33-35, used by P8) and (R') fallback (42-51) are distinct claims under one row	Theory_work/Wave1/W1-PXN/lemmas/CR_corr_tails.md:32-51
+W1-PXN:Lemma-L	lines	25-26	conclusion (L); 10-24 is the derivation (proof); starts mid-sentence at 25
+W1-PXN:Lemma-L	premises	Theory_work/Wave1/W1-PXN/lemmas/L_strict_localmax.md:10-11;Theory_work/Wave1/W1-PXN/FINAL_PROOF.md:58-61	Theory_work/Wave1/W1-PXN/lemmas/L_strict_localmax.md:10 Omega_n, Z_n, family F_n
+W1-PXN:Lemma-LS	lines	30-35	Theorem P6-prime statement (used by T, K); Lemma LS 14-21 separate
+W1-PXN:Lemma-LS	kind	theorem	Theory_work/Wave1/W1-PXN/lemmas/LS_P6_repair.md:29 "Theorem P6-prime (repaired)"
+W1-PXN:Lemma-LS	premises	Theory_work/Wave1/W1-PXN/lemmas/LS_P6_repair.md:14-15;Theory_work/Wave1/W1-PXN/FINAL_PROOF.md:58-61;Theory_work/Wave1/W1-PXN/STATEMENT.md:29-37	Theory_work/Wave1/W1-PXN/lemmas/LS_P6_repair.md:30 T_n, Omega_n, Z_n
+W1-PXN:Lemma-LS	depends_on	W1-PXN:Lemma-L;W1-PXN:Thm-PXN(R);W1-PXN:Thm-PXN(E);EXT:Lemma E;EXT:Lemma Λ;EXT:Lemma U-(D_S)	Theory_work/Wave1/W1-PXN/lemmas/LS_P6_repair.md:30-31 "(Theorem R, Lemma E, Lemma Λ, (L), P5)"
+W1-PXN:Lemma-LS	notes	split-needed: Lemma LS (i)-(iii) at LS_P6_repair.md:14-21 is a separate claim used in the proof of P6-prime	Theory_work/Wave1/W1-PXN/lemmas/LS_P6_repair.md:13-27
+W1-PXN:Thm-R	kind	theorem	Theory_work/Wave1/W1-PXN/lemmas/R_branch_repair.md:9 "Repaired Theorem R"
+W1-PXN:Thm-R	premises	Theory_work/Wave1/W1-PXN/STATEMENT.md:13-20;Theory_work/Wave1/W1-PXN/STATEMENT.md:56-57	Theory_work/Wave1/W1-PXN/STATEMENT.md:56-57 I*, t*, q defined
+W1-PXN:Thm-R	depends_on	EXT:TH163;EXT:TH162	Theory_work/Wave1/W1-PXN/lemmas/R_branch_repair.md:14-16,20-26 (W7 Thm B, Thm A); CR route only fallback
+W1-N1:Thm-N1	premises	Theory_work/Wave1/W1-N1/STATEMENT.md:20-25;Theory_work/Wave1/W1-N1/STATEMENT.md:29-33;Theory_work/Wave1/W1-N1/STATEMENT.md:47-66;Theory_work/Wave1/W1-N1/STATEMENT.md:70-90	Theory_work/Wave1/W1-N1/STATEMENT.md:98 "Under §2 ... every h as in §1"
+W1-N1:Thm-N1	depends_on	W1-N1:B;W1-N1:P;W1-N1:F	Theory_work/Wave1/W1-N1/lemmas/N1_theorem.md:19-25 proof cites Lemma F, B, P only
+W1-N1:Cor-E	lines	108-111	113-114 parenthetical comparison note
+W1-N1:Cor-E	premises	Theory_work/Wave1/W1-N1/STATEMENT.md:20-25;Theory_work/Wave1/W1-N1/STATEMENT.md:47-66;Theory_work/Wave1/W1-N1/STATEMENT.md:70-90	Theory_work/Wave1/W1-N1/STATEMENT.md:108 "Under §2", h as in §1
+W1-N1:Cor-E	depends_on	W1-N1:Thm-N1;W1-N1:F@proof:localisation convention	Theory_work/Wave1/W1-N1/lemmas/E_corollary.md:17-21
+W1-N1:B	lines	33-43	clauses (B-a)-(B-d); old 8-44 included header and code-version note
+W1-N1:B	premises	Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:10-25;Theory_work/Wave1/W1-N1/STATEMENT.md:70-78	Theory_work/Wave1/W1-N1/lemmas/L1_bridge.md:33 "Under EX-A, START and KERNEL"
+W1-N1:P	lines	26-27	old 24-28 included header/blank
+W1-N1:P	premises	Theory_work/Wave1/W1-N1/lemmas/L2_post_terminal.md:10-15	Theory_work/Wave1/W1-N1/lemmas/L2_post_terminal.md:10-15 setting
+W1-N1:F	lines	21-23	old 19-23 included header
+W1-N1:F	premises	Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:8-17	Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:8-17 setting, localisation
+W1-N1:F	depends_on	W1-N1:B;EXT:T12@proof:freezing lemma	Theory_work/Wave1/W1-N1/lemmas/L3_freezing.md:11-12,30,37
+W1-N3:Thm-N3-code(a-d)	lines	113-127	include lead-in "Let res=...Under (H1)-(H4)"
+W1-N3:Thm-N3-code(a-d)	premises	Theory_work/Wave1/W1-N3/STATEMENT.md:44-58;Theory_work/Wave1/W1-N3/STATEMENT.md:66-70;Theory_work/Wave1/W1-N3/STATEMENT.md:79-88;Theory_work/Wave1/W1-N3/STATEMENT.md:92-109;Theory_work/Wave1/W1-N3/lemmas/L6_assembly_and_deviation.md:10-14	Theory_work/Wave1/W1-N3/STATEMENT.md:113 hypotheses; (d) uses D_m of L6
+W1-N3:Thm-N3-code(a-d)	depends_on	W1-N3:L6;W1-N3:Cex-N3-Dm	Theory_work/Wave1/W1-N3/lemmas/L6_assembly_and_deviation.md:16-26
+W1-N3:Thm-N3-code(e)	lines	128-132	blank 133 dropped
+W1-N3:Thm-N3-code(e)	premises	Theory_work/Wave1/W1-N3/STATEMENT.md:44-58;Theory_work/Wave1/W1-N3/STATEMENT.md:66-70;Theory_work/Wave1/W1-N3/STATEMENT.md:92-98;Theory_work/Wave1/W1-N3/STATEMENT.md:102-109	Theory_work/Wave1/W1-N3/STATEMENT.md:128 (H1),(H2-FP),(H3),(H4)
+W1-N3:Thm-N3-code(e)	depends_on	W1-N3:LFP	Theory_work/Wave1/W1-N3/lemmas/LFP_floating_point.md:3-4 does not use L2-L5
+W1-N3:Thm-N3-code(f)	premises	Theory_work/Wave1/W1-N3/STATEMENT.md:44-58;Theory_work/Wave1/W1-N3/STATEMENT.md:66-70;Theory_work/Wave1/W1-N3/STATEMENT.md:79-83;Theory_work/Wave1/W1-N3/lemmas/L7_tie_aware_dp.md:8-15	Theory_work/Wave1/W1-N3/STATEMENT.md:136 TDP defined in L7:8-15
+W1-N3:Thm-N3-code(f)	depends_on	W1-N3:L7	Theory_work/Wave1/W1-N3/lemmas/L7_tie_aware_dp.md:19-21 statement = (f)
+W1-N3:L1	lines	8-24	header 7 and blank 25 dropped
+W1-N3:L1	premises	Theory_work/Wave1/W1-N3/STATEMENT.md:44-58;Theory_work/Wave1/W1-N3/STATEMENT.md:66-70;Theory_work/Wave1/W1-N3/STATEMENT.md:79-83;Theory_work/Wave1/W1-N3/STATEMENT.md:92-98	Theory_work/Wave1/W1-N3/lemmas/L1_reduction.md:8-15
+W1-N3:L2	lines	21-24	header 20 dropped
+W1-N3:L2	premises	Theory_work/Wave1/W1-N3/STATEMENT.md:44-58;Theory_work/Wave1/W1-N3/STATEMENT.md:92-100;Theory_work/Wave1/W1-N3/STATEMENT.md:106-109	Theory_work/Wave1/W1-N3/lemmas/L2_block_maxima.md:21 "Under (H1),(H2),(H4)"
+W1-N3:L2	depends_on	NONE	Theory_work/Wave1/W1-N3/lemmas/L2_block_maxima.md:26-44 proof cites no other lemma
+W1-N3:L3	lines	30-31	header 29 and blank 32 dropped
+W1-N3:L3	premises	Theory_work/Wave1/W1-N3/lemmas/L3_L4_dp_and_size.md:25-27;Theory_work/Wave1/W1-N3/STATEMENT.md:44-58;Theory_work/Wave1/W1-N3/STATEMENT.md:92-100;Theory_work/Wave1/W1-N3/STATEMENT.md:106-109	Theory_work/Wave1/W1-N3/lemmas/L3_L4_dp_and_size.md:25-27 Ch_b, V_b
+W1-N3:L3	depends_on	W1-N3:L2	Theory_work/Wave1/W1-N3/lemmas/L3_L4_dp_and_size.md:40,43 uses L2 only (L1 not cited)
+W1-N3:L4	lines	49-49	header 48, blank 50 dropped
+W1-N3:L4	premises	Theory_work/Wave1/W1-N3/STATEMENT.md:79-83;Theory_work/Wave1/W1-N3/STATEMENT.md:92-100;Theory_work/Wave1/W1-N3/STATEMENT.md:106-109	Theory_work/Wave1/W1-N3/lemmas/L3_L4_dp_and_size.md:49 k* defined at STATEMENT:81
+W1-N3:L5	lines	38-50	header 37 and blank 51 dropped
+W1-N3:L5	premises	Theory_work/Wave1/W1-N3/lemmas/L5_enumeration.md:35-35;Theory_work/Wave1/W1-N3/STATEMENT.md:79-88;Theory_work/Wave1/W1-N3/STATEMENT.md:92-109	Theory_work/Wave1/W1-N3/lemmas/L5_enumeration.md:38 hypotheses; :35 notation
+W1-N3:L6	lines	6-6	L6 assembles STATEMENT (a)-(d); D_m split to Cex-N3-Dm
+W1-N3:L6	premises	Theory_work/Wave1/W1-N3/STATEMENT.md:44-58;Theory_work/Wave1/W1-N3/STATEMENT.md:66-70;Theory_work/Wave1/W1-N3/STATEMENT.md:79-88;Theory_work/Wave1/W1-N3/STATEMENT.md:92-109	Theory_work/Wave1/W1-N3/lemmas/L6_assembly_and_deviation.md:6
+W1-N3:L6	depends_on	W1-N3:L1;W1-N3:L4;W1-N3:L5;W1-N3:Cex-N3-Dm	Theory_work/Wave1/W1-N3/lemmas/L6_assembly_and_deviation.md:17-26 (L2,L3 only via L4,L5)
+W1-N3:L7	lines	19-21	header 18, blank 22 dropped
+W1-N3:L7	premises	Theory_work/Wave1/W1-N3/lemmas/L7_tie_aware_dp.md:8-15;Theory_work/Wave1/W1-N3/STATEMENT.md:44-58;Theory_work/Wave1/W1-N3/STATEMENT.md:66-70;Theory_work/Wave1/W1-N3/STATEMENT.md:79-83	Theory_work/Wave1/W1-N3/lemmas/L7_tie_aware_dp.md:8-15 TDP definition
+W1-N3:L7	depends_on	W1-N3:L1;W1-N3:L3@proof:DP recursion argument;W1-N3:L4	Theory_work/Wave1/W1-N3/lemmas/L7_tie_aware_dp.md:5,26-29,37 (L2 not cited)
+W1-N3:LFP	lines	24-28	header 23, blank 29 dropped
+W1-N3:LFP	premises	Theory_work/Wave1/W1-N3/lemmas/LFP_floating_point.md:7-21;Theory_work/Wave1/W1-N3/STATEMENT.md:44-58;Theory_work/Wave1/W1-N3/STATEMENT.md:92-98;Theory_work/Wave1/W1-N3/STATEMENT.md:102-109	Theory_work/Wave1/W1-N3/lemmas/LFP_floating_point.md:24 "Under (H1),(H2-FP),(H3),(H4)"
+W1-N3:LFP	depends_on	NONE	Theory_work/Wave1/W1-N3/lemmas/LFP_floating_point.md:3-4 and 59 do not use L2-L5
+W1-N3:Cex-N3-Dm	lines	7-14	family D_m claim and instance; L6 row now line 6
+W1-N3:Cex-N3-Dm	premises	Theory_work/Wave1/W1-N3/STATEMENT.md:44-58;Theory_work/Wave1/W1-N3/STATEMENT.md:66-70;Theory_work/Wave1/W1-N3/STATEMENT.md:79-88;Theory_work/Wave1/W1-N3/STATEMENT.md:92-109	Theory_work/Wave1/W1-N3/lemmas/L6_assembly_and_deviation.md:7
+W1-N3:Cex-N3-Dm	depends_on	W1-N3:L1;W1-N3:L5	Theory_work/Wave1/W1-N3/lemmas/L6_assembly_and_deviation.md:34-41 (L1(iii), L5 (B),(C),(D))

@@ -1,0 +1,4 @@
+ci/out/
+__pycache__/
+*.tmp
+!registry/events.log

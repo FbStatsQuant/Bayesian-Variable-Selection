@@ -1,0 +1,92 @@
+id	field	new_value	evidence
+W2-FAC-S5:Thm-FAC-BCS-R	premises	Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:51-57;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:61-77;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:97-108	STATEMENT.md:51-77,96-108 setting/hyps/CC def
+W2-FAC-S5:KL	premises	Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:61-77;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:97-108	STATEMENT.md:125 (C5) uses CC_n(delta) defined 96-108
+W2-FAC-S5:Obs-Lattice-S5	depends_on		02_lattice_obstruction.md:1-14 cites only 01 (no FAC-A); "sharp" is its own word
+W2-FAC-S5:KL-sol2-terminal	premises	Theory_work/Wave2/W2-FAC-S5/lemmas/KL_attempt_sol2/05_conditional_terminal.md:3-6	05_conditional_terminal.md:3-6 (s0=4, exact argmin assumptions)
+W2-FAC-S5:L1	lines	69-101	L1_bcs_reduction.md:69-101 L1.4 gains/size/multiplier L1.4.1-L1.4.2
+W2-FAC-S5:L1	premises	Theory_work/Wave2/W2-FAC-S5/lemmas/L1_bcs_reduction.md:16;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:51-52;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:61-67	L1_bcs_reduction.md:16 setting
+W2-FAC-S5:L1	depends_on	W2-FAC-B:L1@proof:L1.0,L1.1;W2-FAC-B:L1@proof:L1.5(b)	L1_bcs_reduction.md:19,23,93 (as FACB L1.0/L1.1/L1.5(b))
+W2-FAC-S5:L1	notes	split-needed: L1.3 (44-67, |tau|<=|A|+k0|e|, A~N(0,1)) is used separately by L3/L4	L3_event.md:33; L4_path.md:35
+W2-FAC-S5:L2	premises	Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:51-52;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:61-77;Theory_work/Wave2/W2-FAC-S5/lemmas/L3_event.md:11-17	L2_start.md:10-12; E_n def L3_event.md:11-17
+W2-FAC-S5:L2	depends_on	W2-FAC-S5:L1;W2-FAC-S5:L3;W2-FAC-B:L2@proof:L2.4	L2_start.md:56 (word for word FACB L2.4)
+W2-FAC-S5:L3	premises	Theory_work/Wave2/W2-FAC-S5/lemmas/L3_event.md:7-17;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:51-52;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:61-67	L3_event.md:7-17 E_n definition
+W2-FAC-S5:L3	depends_on	W2-FAC-S5:L1;W2-FAC-B:L3@proof:E2	L3_event.md:20 (E2 as FACB L3); L3_event.md:34 uses L1.4
+W2-FAC-S5:L4	premises	Theory_work/Wave2/W2-FAC-S5/lemmas/L4_path.md:9-14;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:51-52;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:61-67	L4_path.md:9-14 CC_n(delta) definition and setting
+W2-FAC-S5:L4	depends_on	W2-FAC-S5:L1;W2-FAC-S5:L3;W2-FAC-S5:L3@proof:consequences (c1')-(c4)	L4_path.md:35,38-39 use L3 (c3),(c4),(c1')
+W2-FAC-S5:L5	premises	Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:51-57;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:61-77;Theory_work/Wave2/W2-FAC-S5/STATEMENT.md:97-108	L5_assembly.md:34-36 hypotheses of C3-R
+W2-FAC-S5:L5	depends_on	W2-FAC-S5:L2;W2-FAC-S5:L3;W2-FAC-S5:L4;W2-FAC-S5:L1@proof:L1.2(a);W2-FAC-B:L5@proof:L5.1;W2-FAC-B:L5@proof:L5.4;EXT:T38-(0);EXT:T03♯;EXT:[OP];EXT:Lemma CAP;EXT:Proposition F;EXT:F-GROW	L5_assembly.md:17,19,31,40 (L5.1 FACB, L1.2(a), L3.1, FACB L5.4)
+W2-FAC-S5:L5	notes	split-needed: C4-R delivery (L5.4, 39-51) is a distinct claim from C3-R (33-37)	L5_assembly.md:39-43
+W2-FAC-S5F:C1	premises	Theory_work/Wave2/W2-FAC-B/STATEMENT.md:39-70;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:30-50	STATEMENT.md:30-33,37-50 setting by reference to FAC-B s1, BCS, P, theta, FS-B
+W2-FAC-S5F:C1	depends_on	W2-FAC-S5F:L0;W2-FAC-S5F:L1;W2-FAC-B:L2@proof:L2.4	STATEMENT.md:77 (FAC-B L2 with block-CS increments)
+W2-FAC-S5F:C2	premises	Theory_work/Wave2/W2-FAC-B/STATEMENT.md:39-70;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:30-50;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:56-69	STATEMENT.md:56-69 definitions used by (C2)
+W2-FAC-S5F:C2	notes	proof files for C2/C3 (L2..L5) not yet in lemmas/; only L0,L1 exist	lemmas/ contains only L0_general_tools.md, L1_bcs_structure.md
+W2-FAC-S5F:C3	premises	Theory_work/Wave2/W2-FAC-B/STATEMENT.md:39-70;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:30-50;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:56-72	STATEMENT.md:70-72 (CC_theta) and 56-69
+W2-FAC-S5F:C4	premises	Theory_work/Wave2/W2-FAC-B/STATEMENT.md:39-70;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:30-50;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:56-72	STATEMENT.md:96-99 uses (CC_theta) 70-72
+W2-FAC-S5F:C4	depends_on	W2-FAC-S5F:L0;W2-FAC-S5F:L1;W2-FAC-B:L5@proof:L5.3-L5.4;EXT:T38-(0);EXT:T03♯;EXT:[OP];EXT:Lemma CAP;EXT:Proposition F;EXT:F-GROW	STATEMENT.md:98 (exactly as FAC-B L5.3-L5.4)
+W2-FAC-S5F:L0	lines	17-129	L0_general_tools.md:17-129 L0.1-L0.7 (1-16 is title/status/setting)
+W2-FAC-S5F:L0	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L0_general_tools.md:7-16	L0_general_tools.md:7-16 (EG) setting, notation
+W2-FAC-S5F:L0	depends_on	W2-FAC-B:L1@proof:L1.5(b);W2-FAC-B:L3@proof:E2;W2-FAC-B:L4@proof:L4.0(c),(d)	L0_general_tools.md:17,26,30,124
+W2-FAC-S5F:L0	notes	split-needed: L0.1-L0.7 distinct sub-lemmas under one row	L0_general_tools.md:17-129
+W2-FAC-S5F:L1	lines	13-110	L1_bcs_structure.md:13-110 L1.0-L1.7 (1-12 is title/status/setting)
+W2-FAC-S5F:L1	premises	Theory_work/Wave2/W2-FAC-S5F/lemmas/L1_bcs_structure.md:9-11;Theory_work/Wave2/W2-FAC-S5F/STATEMENT.md:37-45	L1_bcs_structure.md:9-11 setting
+W2-FAC-S5F:L1	depends_on	W2-FAC-S5F:L0;W2-FAC-B:L1@proof:L1.0,L1.1	L1_bcs_structure.md:14,18 (as FAC-B L1.0/L1.1)
+W2-FAC-S5F:L1	notes	split-needed: L1.0-L1.7 distinct sub-lemmas under one row	L1_bcs_structure.md:13-110
+W2-FAC-X:Thm-FAC-CS-iid	lines	76-95	STATEMENT.md:76 "Under model R,... events" belongs to the statement
+W2-FAC-X:Thm-FAC-CS-iid	premises	Theory_work/Wave2/W2-FAC-X/STATEMENT.md:36-44;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:48-56;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:60-72	STATEMENT.md:36-44 model R, 48-56 hyps, 60-72 definitions
+W2-FAC-X:X1	lines	15-24	X1_representation.md:15-24 setup + Lemma X1.1
+W2-FAC-X:X1	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X1_representation.md:8-11;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:36-39;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:48-50	X1_representation.md:8-11 setting
+W2-FAC-X:X1	depends_on	W2-FAC-B:L1@proof:L1.0	X1_representation.md:9 (FACB L1.0 verbatim)
+W2-FAC-X:X1	notes	split-needed: X1.2 (48-53) and X1.3 (62-67) statements lie outside the span; used separately by X2/X4	X1_representation.md:51-53,66-67
+W2-FAC-X:X2	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X2_perturbation.md:8-11;Theory_work/Wave2/W2-FAC-X/lemmas/X2_perturbation.md:17-24;Theory_work/Wave2/W2-FAC-X/lemmas/X2_perturbation.md:61-65;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:70-72	X2_perturbation.md:17-24 event D1-D6; 61-65 structured sets
+W2-FAC-X:X3	lines	26-43	X3_softgap.md:26-43 claims (i)-(ix); 24-25 header only
+W2-FAC-X:X3	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X3_softgap.md:14-22	X3_softgap.md:14-22 Setting
+W2-FAC-X:X4	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X4_path.md:17-33	X4_path.md:17-33 constants and event G_n
+W2-FAC-X:X4	depends_on	W2-FAC-X:X1;W2-FAC-X:X1@proof:X1.4;W2-FAC-X:X2;W2-FAC-X:X2@proof:X2.1 event E_n;W2-FAC-X:X3;W2-FAC-B:L3@proof:E3-E7;W2-FAC-B:L4@proof:L4.1(i);W2-FAC-B:L4@proof:L4.1(iii);W2-FAC-B:L4@proof:L4.2;W2-FAC-B:L4@proof:L4.4;W2-FAC-B:L4@proof:L4.5	X4_path.md:9,22-23,57 (X1.4 gains), FACB L3 E3-E7, L4.x refs
+W2-FAC-X:X5	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X5_start.md:15-16;Theory_work/Wave2/W2-FAC-X/lemmas/X5_start.md:41-45;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:48-56	X5_start.md:15-16 A_n; 41-45 E^Z_1-3
+W2-FAC-X:X5	depends_on	W2-FAC-X:X1;W2-FAC-X:X1@proof:X1.4;W2-FAC-X:X2@proof:X2.1 lambda_min;W2-FAC-B:L2@proof:L2.4	X5_start.md:66 FACB L2.4 verbatim; X1.4, X2.1 cited
+W2-FAC-X:X6	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X6_assembly.md:6-8;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:36-39;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:48-56	X6_assembly.md:6-8 conditioning on raw design
+W2-FAC-X:X6	depends_on	W2-FAC-X:X4;W2-FAC-X:X5;W2-FAC-X:X5@proof:X5.1 design event A_n;W2-FAC-B:L5@proof:L5.2;W2-FAC-B:L5@proof:L5.4;EXT:T38-(0);EXT:T03♯;EXT:[OP];EXT:Lemma CAP;EXT:Proposition F;EXT:F-GROW	X6_assembly.md:44,53 (FACB L5.2, X6.1/X6.2), X5.1
+W2-FAC-X:X6	notes	split-needed: X6.4 delivery (C4, 56-) is a distinct claim from X6.3 (48-50)	X6_assembly.md:56-61
+W2-FAC-X:Thm-FAC-GL	premises	Theory_work/Wave2/W2-FAC-X/STATEMENT_T2.md:22-45	STATEMENT_T2.md:22-45 setting, (1F), hypotheses
+W2-FAC-X:Cor-FAC-NCS	premises	Theory_work/Wave2/W2-FAC-X/STATEMENT_T2.md:26-31;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:36-39;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:48-56	STATEMENT_T2.md:64-67 refers to (1F), STATEMENT.md (theta),(P-1/2),(FS)
+W2-FAC-X:L4r-S	lines	41-57	T2/STATEMENT_T2.md:41-57 lemma + consequences; 64-79 are partial results/not proved
+W2-FAC-X:L4r-S	premises	Theory_work/Wave2/W2-FAC-X/T2/STATEMENT_T2.md:7-24;Theory_work/Wave2/W2-FAC-X/T2/STATEMENT_T2.md:28-38	T2/STATEMENT_T2.md:7-24 setting (P-S); 28-38 reference statistic
+W2-FAC-X:L4r-S	depends_on	W2-FAC-B:L1@proof:L1.0,L1.1;W2-FAC-B:L1@proof:L1.5(b);W2-FAC-B:L3@proof:E-events (L3.1 proofs);W2-FAC-B:L4@proof:L4.5(1)	T2/L4r_path.md:8,23,81,89,93,164
+W2-FAC-X:L4r.4	lines	180-184	T2/L4r_path.md:180-184 Lemma L4r.4 (a)-(c); proof from 186
+W2-FAC-X:L4r.4	premises	Theory_work/Wave2/W2-FAC-X/T2/L4r_path.md:173-178	T2/L4r_path.md:173-178 class setup
+W2-FAC-X:L4r.4	depends_on	W2-FAC-X:L4r-S@proof:L4r.0;W2-FAC-B:L4@proof:L4.1(i)	T2/L4r_path.md:187-190 (L4r.0(b), induction as FACB L4.1(i))
+W2-FAC-X:L4r.5	lines	213-216	T2/L4r_path.md:213-216 statement; 217 blank
+W2-FAC-X:L4r.5	premises	Theory_work/Wave2/W2-FAC-X/T2/L4r_path.md:208-211	T2/L4r_path.md:208-211 assumptions
+W2-FAC-X:L4r.5	depends_on	W2-FAC-X:L4r-S@proof:L4r.0;W2-FAC-B:L3@proof:E5;W2-FAC-B:L4@proof:L4.3 (B3 Case A)	T2/L4r_path.md:208-209,219-220
+W2-FAC-X:X7	lines	19-20	X7_near_cs_loadings.md:19-20 statement; 21-24 reasons/proof text
+W2-FAC-X:X7	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X7_near_cs_loadings.md:10-17;Theory_work/Wave2/W2-FAC-X/STATEMENT.md:48-56	X7_near_cs_loadings.md:10-17 setting, (NCS)
+W2-FAC-X:X7	depends_on	W2-FAC-X:X1@proof:X1.1,X1.2,X1.4;W2-FAC-X:X2;W2-FAC-X:X3;W2-FAC-X:X4;W2-FAC-X:X5;W2-FAC-X:X6;W2-FAC-B:L5@proof:L5.4	X7_near_cs_loadings.md:30 "Proof (modifications of X1-X6)"; Thm-FAC-CS-iid edge removed
+W2-FAC-X:X8	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X8_start_general.md:6-15;Theory_work/Wave2/W2-FAC-X/STATEMENT_T2.md:26-31;Theory_work/Wave2/W2-FAC-X/STATEMENT_T2.md:35-45	X8_start_general.md:6-15 setting; STATEMENT_T2 (1F),(theta),(FS-G)
+W2-FAC-X:X8	depends_on	W2-FAC-X:X5;W2-FAC-X:X7@proof:general-loading rotation representation;W2-FAC-X:X2@proof:X2.1 lambda_min;EXT:Lemma CR;W2-FAC-B:L1@proof:L1.0	X8_start_general.md:6,21-23
+W2-FAC-X:X9	premises	Theory_work/Wave2/W2-FAC-X/lemmas/X9_iid_general.md:7-8;Theory_work/Wave2/W2-FAC-X/lemmas/X9_iid_general.md:29-30	X9_iid_general.md:7-8 setting; 29-30 event
+W2-FAC-X:X9	depends_on	W2-FAC-X:L4r-S;W2-FAC-X:X2;W2-FAC-X:X2@proof:X2.1 D1-D4;W2-FAC-X:X1@proof:X1.2,X1.4;W2-FAC-X:X7@proof:representation paragraph;W2-FAC-B:L3@proof:L3.1	X9_iid_general.md:12,15,30,36
+W2-FAC-X:X10	lines	1-1	X10_assembly_T2.md:1 title states the claim; 8-22 is proof (claim text in STATEMENT_T2.md:61-62)
+W2-FAC-X:X10	premises	Theory_work/Wave2/W2-FAC-X/STATEMENT_T2.md:26-31;Theory_work/Wave2/W2-FAC-X/STATEMENT_T2.md:35-45;Theory_work/Wave2/W2-FAC-X/STATEMENT_T2.md:49-52;Theory_work/Wave2/W2-FAC-X/STATEMENT_T2.md:61-62	STATEMENT_T2.md:61-62 (G3),(G4)
+W2-FAC-X:X10	depends_on	W2-FAC-X:X8;W2-FAC-X:X9;W2-FAC-X:L4r-S;W2-FAC-X:X6@proof:X6.1,X6.3,X6.4;W2-FAC-B:L5@proof:L5.3;W2-FAC-B:L5@proof:L5.4;EXT:T38-(0);EXT:T03♯;EXT:[OP];EXT:Lemma CAP;EXT:Proposition F;EXT:F-GROW	X10_assembly_T2.md:15,17,20,21-22
+W2-FAC-XA:X1	premises	Theory_work/Wave2/W2-FAC-XA/STATEMENT.md:9-22;Theory_work/Wave2/W2-FAC-XA/STATEMENT.md:24-29;Theory_work/Wave2/W2-FAC-XA/STATEMENT.md:50-72	STATEMENT.md:9-29,50-72 setting, C1/C2, visibility V, N0
+W2-FAC-XA:X2	premises	Theory_work/Wave2/W2-FAC-XA/STATEMENT.md:9-22;Theory_work/Wave2/W2-FAC-XA/STATEMENT.md:24-29;Theory_work/Wave2/W2-FAC-XA/STATEMENT.md:50-72	STATEMENT.md:9-29,50-72 setting, C1/C2, visibility V, N0
+W2-FAC-XA:X3	premises	Theory_work/Wave2/W2-FAC-XA/STATEMENT.md:9-22;Theory_work/Wave2/W2-FAC-XA/STATEMENT.md:24-29;Theory_work/Wave2/W2-FAC-XA/STATEMENT.md:50-72	STATEMENT.md:9-29,50-72 setting, C1/C2, visibility V, N0
+W2-FAC-XA:X4	premises	Theory_work/Wave2/W2-FAC-XA/STATEMENT.md:9-22;Theory_work/Wave2/W2-FAC-XA/STATEMENT.md:24-29;Theory_work/Wave2/W2-FAC-XA/STATEMENT.md:50-72	STATEMENT.md:9-29,50-72 setting, C1/C2, visibility V, N0
+W2-FAC-XA:L1	premises	Theory_work/Wave2/W2-FAC-XA/lemmas/L1_geometry.md:6-9	L1_geometry.md:6-9
+W2-FAC-XA:L1	notes	split-needed: L1b (35-42) and L1c (56-) statements outside span 11-14; L4/L2 use them separately	L1_geometry.md:35-42,56-61
+W2-FAC-XA:L2	lines	179-200	L2_robust_path_attempt.md:179-200; 201 is editorial
+W2-FAC-XA:L2	premises	Theory_work/Wave2/W2-FAC-XA/lemmas/L2_robust_path_attempt.md:15-36;Theory_work/Wave2/W2-FAC-XA/lemmas/L2_robust_path_attempt.md:38-45	L2:15-36 reference; 38-45 UP(zeta)
+W2-FAC-XA:L2	depends_on	W2-FAC-B:L1@proof:L1.3;W2-FAC-B:L1@proof:L1.5;W2-FAC-B:L3@proof:E_n;W2-FAC-B:L4@proof:L4.0;W2-FAC-B:L4@proof:L4.1;W2-FAC-A:L1;W2-FAC-A:L3.2;W2-FAC-A:L5	L2:3-8 "No other XA lemma is an input"; FAC-B/FAC-A sources listed
+W2-FAC-XA:L3	lines	13-22	L3_fuzzy_attempt.md:13-22 result (1); 24-27 counterexample remark
+W2-FAC-XA:L3	premises	Theory_work/Wave2/W2-FAC-XA/lemmas/L3_fuzzy_attempt.md:31-34;Theory_work/Wave2/W2-FAC-XA/lemmas/L3_fuzzy_attempt.md:203-215	L3:31-34 shadow setup; 203-215 controlling definitions
+W2-FAC-XA:L4	lines	25-33	L4_score_transfer.md:25-33 statement (ST) and consequences
+W2-FAC-XA:L4	premises	Theory_work/Wave2/W2-FAC-XA/lemmas/L4_score_transfer.md:6-24	L4_score_transfer.md:6-24 setting
+W2-FAC-XA:L4	depends_on	W2-FAC-XA:L1@proof:L1b projection-difference identity	L4_score_transfer.md:10-11 derivation re-included, independent of L1 probabilistic result
+W2-FAC-XA:L5	lines	5-10	L5_relative_norm.md:5-10 (line 4 blank)
+W2-FAC-XA:L6	depends_on	W2-FAC-XA:L4@proof:exact ridge decomposition	L6_ordering_transfer.md:22-23
+W2-FAC-XA:L7	lines	34-47	L7_shadow_midpoint_attempt.md:34-47 claim; 10-29 is setup
+W2-FAC-XA:L7	premises	Theory_work/Wave2/W2-FAC-XA/lemmas/L7_shadow_midpoint_attempt.md:12-32	L7:12-32 setup (AN),(T)
+W2-FAC-XA:L7	depends_on	W2-FAC-XA:L2;W2-FAC-XA:L3;W2-FAC-B:L3@proof:E_n and H;W2-FAC-B:L4@proof:L4 path	L7:5-8,39,49-51,58-59
+W2-FAC-XA:L8-T	kind	theorem	L8_truth_start.md:72 "Theorem T"
+W2-FAC-XA:L8-T	premises	Theory_work/Wave2/W2-FAC-XA/lemmas/L8_truth_start.md:27-45	L8_truth_start.md:27-45 section 0 setting
+W2-FAC-XA:L8-S	premises	Theory_work/Wave2/W2-FAC-XA/lemmas/L8_truth_start.md:27-45;Theory_work/Wave2/W2-FAC-XA/lemmas/L8_truth_start.md:142-154	L8:27-45; V_R 142-154
