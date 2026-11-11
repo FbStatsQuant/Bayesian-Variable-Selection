@@ -54,3 +54,12 @@
   branch theory/W3-START), W3-MEMO-SCR-RM complete (Fable CP + blind Astra), pipeline reconciliation R03 (Sol). W3-P6 lead
   (Opus CW) starts only if R03 finds no open CRITICAL, and stops at CP0 (smoke manifest; nothing submitted on NOTS in
   leg A). Leg A ends → report to Felipe → wait.
+- 2026-11-11 Pipeline R03 (Sol reconciliation): NOT-READY. F1, F3–F7, R02–R04, R07–R09, Sol-2–6 and toolfix2 R1–R6 RESOLVED.
+  Open: N2 CRITICAL (a review "binds" by quoting a digest, without a bound outcome), N1/N3/N4 MAJOR (transitive assurance,
+  disposition evidence, crash-safe journal) → INFRA tool fixes round 3 (Opus CW, worktree, own Sol review). N5 MAJOR and
+  F9 MINOR fixed by HQ (2ab1dca): fail-closed hold file `Wave3/HOLDS.md`; watchdog, daily CI and weekly re-audit prompts
+  now append holds; leads told. Per the launch rule, **W3-P6 stays held** until round 3 merges and a narrow Sol re-check
+  finds no CRITICAL. CP3 hold (rule 16) unchanged. START and memo unaffected (no CP3 in leg A).
+- 2026-11-11 Console API credits (owner; ≈ $113, expire 11-15): key `bvs-audit` stored outside the repo. Proposed use:
+  Message Batches Fable 5.2 blind audit of all 109 PROVED-CHECKED claims (≈ $50), then needed PROVED claims (≈ $40);
+  findings → HQ triage → Sol confirmation → rule 11. Awaiting owner go.
