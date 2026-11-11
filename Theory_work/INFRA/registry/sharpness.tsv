@@ -215,3 +215,13 @@ W3-SAMP:C	A:P-START	ARTEFACT	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:14,35-3
 W3-SAMP:C	P:POST-CONC	NONE	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:11: no necessity evidence beyond the κ0 term of LT♯	ingested
 W3-SAMP:TR	A:P-OVL-INF	WEAKENABLE	Theory_work/Wave3/W3-SAMP/ASSUMPTION_MAP.md:38-39: sufficient, not necessary: in the 'near' example M=1.3e6 (TR vacuous) while local moves repair the PIPs	ingested
 W3-SAMP:TR	A:P-OVL-INF	NONE	Theory_work/Wave3/W3-SAMP/STATEMENT.md:161-163: not implied by π0(S0)→1 (three-state example) and does not imply it	ingested
+W3-POST2:A1	A:POST2-OS	WEAKENABLE	Theory_work/Wave3/W3-POST2/REPORT.md:184: R03b A+ gives a strictly weaker (OS); its unweighted feasible part is necessary (A2, REPORT.md:147)	ingested
+W3-POST2:B	A:POST2-AR	ARTEFACT	Theory_work/Wave3/W3-POST2/REPORT.md:164: bounded cost is sufficient, not necessary (N6b: Θ″ bounded with B = n−1; S01 item 1)	ingested
+W3-POST2:E	A:POST2-IDM	ARTEFACT	Theory_work/Wave3/W3-POST2/REPORT.md:156-159: margin constant c1 ≈ 161 is a proof artefact (N4; R03b proposes c1 ≈ 54)	ingested
+W3-POST2:E	A:POST2-F0	WEAKENABLE	Theory_work/Wave3/W3-POST2/REPORT.md:155: (F0) still assumed but looks improvable (N8; R03b E-floor+)	ingested
+W3-RM:RM-F	A:RM-V	WEAKENABLE	Theory_work/Wave3/W3-RM/REPORT.md:131-132: (V) sufficient; not necessary for masked designs covered by GEN/PXN; conclusion in 296/300 with population visibility zero	ingested
+W3-RM:RM-F	A:RM-L	NONE	Theory_work/Wave3/W3-RM/REPORT.md:133-138: η_A sufficient, converse heuristic only; polylog size is the engines' range	ingested
+W3-RM:RM-F	A:RM-N	NONE	Theory_work/Wave3/W3-RM/REPORT.md:139-140: (N) sufficient; not established from (V)+(L); open	ingested
+W3-SCR:SCR-A	A:SCR-SV	NECESSARY	Theory_work/Wave3/W3-SCR/REPORT.md:156: visibility threshold sharp at q = 0 with constant 1 (Proposition SCR-N, proved, for the statement about LO models; q = 0 only)	ingested
+W3-SCR:A1	A:SCR-DF	NONE	Theory_work/Wave3/W3-SCR/REPORT.md:158-159: ID/DF/AF/NF are sufficient, not shown necessary	ingested
+W3-SCR:SCR-C	A:SCR-NF	NONE	Theory_work/Wave3/W3-SCR/REPORT.md:158-159: NF sufficient, not shown necessary; with growing s0 the floor is not sufficient (STATEMENT.md:190-192)	ingested

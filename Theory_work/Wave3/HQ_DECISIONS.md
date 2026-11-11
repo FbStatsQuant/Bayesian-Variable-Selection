@@ -17,3 +17,13 @@
   kill budget. Claims A-E PROVED-CHECKED (council C1 8.6 / 8.6).
 - 2026-11-11 W3-RM2 lead upgraded to Fable 5.2 (hardest open proof; sub-par theorem risk).
 - 2026-11-11 registry ingest of W3-RM, W3-SCR, W3-POST2 via tools/ingest.py after PR #6 merges (rule 8 post-dates them).
+- 2026-11-11 CORRECTION to this morning's labels (following pipeline review R01, rule 15): W3-SAMP:CC keeps its
+  REPORT status (CODE-CHECKED); HQ does not upgrade it. The PROVED-CHECKED labels for W3-RM, W3-SAMP and W3-POST2 are
+  **on hold** until a Sol diff check confirms that the edits made after each council (RM C2_disposition, SAMP C1 "11
+  items applied", POST2 C1 disposition) are editorial or correct. Until then, registry statuses stay verbatim from
+  each REPORT. W3-POST2 strength stays `better:PENDING` (four R03b proposals open).
+- 2026-11-11 Headline flags: all 43 `headline=yes` rows were set by tools (ingest.py marks any claim with strength
+  fields); none is an owner decision. They are treated as headline (changes need Felipe) until Felipe confirms the
+  headline set at chapter v2.0. W3-SAMP:D and W3-SAMP:TR were registered from a mid-ticket draft; their final, council-
+  reviewed statements are narrower (D: KERNEL hypothesis added; TR: the non-nesting label holds only for abstract
+  targets). Recorded as NARROW+CLEAR, no dependent became SUSPECT. **Awaiting Felipe's approval.**

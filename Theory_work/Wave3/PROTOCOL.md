@@ -29,3 +29,105 @@ OpenAI seat + one Claude seat, both ≥ 8.0 with all six gates in the same round
 8. **Registry block (from 2026-11-10):** every REPORT.md ends with the registry block from
    `Theory_work/INFRA/templates/ASSUMPTION_MAP.md` (on branch `theory/infra` / PR #6 until merged), with per-clause
    statuses — one status per claim, never one status for a bundle of results.
+
+## Resume rules (binding from 2026-11-11; HQ; revised after pipeline review R01, `PIPELINE_REVIEW/`)
+Everything above still applies. Rollback, supersession and who-decides are in `Theory_work/INFRA/LIFECYCLE.md` (now on
+main); this section wires them into the ticket workflow. Where this section and an older rule differ, this section wins.
+
+9. **One branch per ticket, revertable.** Each ticket runs in its own worktree on branch `theory/<TICKET>`, made by HQ.
+   Workers still change no git state. HQ commits on the ticket branch at every checkpoint and before every review round
+   (restore points), and merges to `main` with a merge commit (no squash). Rolling back a merged ticket follows
+   LIFECYCLE §3. Claim rows are never deleted: retracted or deprecated claims stay as tombstones, so propagation still
+   reaches their dependents.
+10. **Hard checkpoints (HQ gates).** At each checkpoint the lead writes `CHECKPOINT_<k>.md` and **ends its run** with
+    that content as its final message. HQ reviews it, commits, records its decision in the ticket LOG together with the
+    checkpoint commit hash, and either continues the lead (same thread) or redirects it. No work past a checkpoint
+    without HQ's go. So if HQ is unavailable, proof work stops rather than running on.
+    - **CP1: target fixed.** After the statement lock and the sharpness gate (ASSUMPTION_MAP, boundary-violation numerics,
+      "better theorem" review). Report the locked statement, each assumption's necessity reading, and the better-theorem
+      proposal, with a disposition for each credible improvement (adopt / reject with evidence / defer as a named open
+      item). HQ decides whether to strengthen the target before heavy proving.
+    - **CP2: key lemma proved.** After the independent mid-point review, whatever its verdict. Report the verdict, what is
+      proved and checked (with review files), and what is left, with an honest estimate.
+    - **CP3: final.** Two outcomes, never mixed:
+      - **CP3-PASS.** Requires both council seats ≥ 8.0 with all gates passing in the same round, on the **same frozen
+        manifest** (rule 15). Then comes HQ's acceptance audit, run on the **proposed merged tree**: merge current `main`
+        into the ticket branch first. The audit checks:
+        - the consumed claims are still valid on current `main` (rule 11);
+        - the REPORT registry block goes through the staged ingest, on a copy of the registry, with 0 problems;
+        - `check.py` (with `--acceptance <claims>` once available) shows 0 ERROR on the staged registry and again after
+          the apply;
+        - the citecheck is re-run, with 0 MISS;
+        - every "checked" sentence names a review file;
+        - `manifest.py verify` passes, or each diff since the freeze went through rule 15.
+
+        Only then: PROVED-CHECKED labels, ingest, `council-pass`, merge.
+      - **CP3-EXHAUSTED.** The council did not pass within 3 rounds. The result keeps its actual status: no
+        `council-pass`, and no PROVED-CHECKED for any clause that failed a gate. It may be committed on its branch as a
+        record. A narrowed statement is a new target: it goes through CP1 again and passes its own council.
+    - **Headline strength (finding R05).** A claim enters the paper headline only if its strength gates (`lit:`,
+      `necessity:`, `better:`) are recorded and every credible better-theorem proposal has an evidence-backed
+      disposition. If the statement changed materially after CP1, the better-theorem review is repeated on the final
+      statement. Otherwise the claim can still be accepted as a checked result, labelled `headline-strength pending`.
+    - **Compute tickets (W3-P6).**
+      - CP0 is HQ's approval of a **representative smoke manifest**: the smallest set that covers both driver versions
+        (b1 v2, b2 v3), each n level, and the most expensive calibration regimes (largest p per n).
+      - CP1 is the smoke gate: outputs read back, invariants pass, and measured time per cell is reported.
+      - The remaining tasks are then released in batches whose projected cost (measured per-cell times) fits within the
+        **aggregate ceiling of 1,400 core-hours** for the whole P6 resume, smoke included. Nothing beyond the smoke
+        manifest is queued before CP1.
+      - A projected overrun stops further releases and returns to HQ. Invariant failures (wrong HPM bookkeeping,
+        corrupt output) stop everything; resource-limit outcomes (time limit, preflight refusal) are logged, follow the
+        DESIGN policy, and are not counted as failures.
+      - CP2 = all released tasks done, before the analysis. CP3 = REPORT + council, as above.
+11. **Consumed claims: validity and assurance.**
+    - A ticket uses only claims that are ACTIVE in `INFRA/registry`, cited by registry id with version.
+    - A consumed premise below PROVED-CHECKED (author-only, PARTIAL, OPEN, UNSPLIT-STATUS) may be used only if it is
+      stated as an explicit hypothesis of the new result and carried into its status text ("conditional on …"). A
+      checked descendant never upgrades it silently.
+    - Before every continuation and every merge, HQ compares the state and version of each consumed claim on current
+      `main` against the ticket's base.
+    - When any reviewer, CI run or re-audit raises a finding against an ACTIVE claim, HQ:
+      - prices it with `propagate.py --dry-run`;
+      - marks it per LIFECYCLE §3;
+      - notifies **every running ticket that consumes it**, recording the notification and the lead's acknowledgement in
+        that ticket's LOG.
+
+      A lead that hits such a finding stops using the claim and reports at once (an early checkpoint). Felipe approves any
+      change to a headline claim.
+12. **Heartbeat and watchdog.**
+    - `LOG.md` gets a timestamped entry at every step, recording the agents started so far (model, provider, role).
+    - HQ checks every ticket's last LOG entry every 3 h while the wave runs.
+    - A separate **watchdog** scheduled task, not bound to the HQ thread, runs every 6 h. It reads the ticket LOGs and
+      `HQ_DECISIONS.md`, plus the P6 core-hours used so far (NOTS, read-only). It flags:
+      - a checkpoint unanswered for more than 6 h;
+      - a ticket with no LOG entry for more than 3 h and no report;
+      - P6 spending above its ceiling.
+
+      It writes its findings to the HQ thread and to `Theory_work/Wave3/WATCHDOG.md`, for Felipe.
+    - The IDs and next run times of the heartbeat, watchdog and CI tasks are recorded in `HQ_DECISIONS.md` **before**
+      launch.
+13. **Continuous audit.** `INFRA/ci/run_ci.py --steps check,paper,falsify,cite` runs daily, scheduled by HQ. One random
+    PROVED-CHECKED claim is re-audited weekly by a fresh Astra (high). Any ERROR or failure opens an issue and follows
+    rule 11.
+14. **Kill budgets and waivers.**
+    - Path-level condition: one Fable attempt and one Astra break review, then stop unless a sketch survives.
+    - W3-RM2: 3 failed proof attempts on its key lemma → STUCK at CP2.
+    - Council not passed after 3 rounds → CP3-EXHAUSTED.
+    - **No review layer may be skipped or replaced without Felipe's explicit approval**, recorded in `HQ_DECISIONS.md`.
+15. **Frozen review content and blind first reads.**
+    - Before each review round (council, sweep, mid-point), run
+      `python Theory_work/Wave3/tools/manifest.py freeze <ticket dir> reviews/MANIFEST_<round>.txt`. HQ commits it on the
+      ticket branch.
+    - Each reviewer quotes the manifest digest in its reply. Nothing in the manifest is edited while that round runs.
+    - After a round, a substantive change (any change to a statement, a proof step, a premise or a code pin) needs a
+      fresh review of the change and of what depends on it. An editorial-only change needs a diff check by an
+      independent Sol reviewer, attesting "editorial only".
+    - Every scored review is a **blind first read**: the reviewer gets the frozen statement, proofs and the sources it
+      needs, and never earlier reviews, dispositions or scores. In rounds ≥ 2, a separate **reconciliation** reviewer
+      checks each earlier finding against the new manifest and gives a verdict per finding. Passing a round needs both:
+      the blind scores, and every earlier CRITICAL or MAJOR finding resolved.
+16. **Interim, until the INFRA tool fixes for findings R02–R06 are merged and reviewed:**
+    - no CP3 ingest or merge;
+    - no `propagate.py --apply` on a claim introduced by a merged ticket;
+    - every bridge or interface property a claim uses is written as an explicit `depends_on` edge.

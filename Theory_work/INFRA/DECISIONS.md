@@ -36,3 +36,27 @@ the registry change. Newest entries at the bottom. Format:
 - decided by: HQ (delivery results proved per design class)
 - reason: the Proposition F family is proved class by class (GROW class via HQ audit A2; FAC-A; LOC2; UNI); none
   implies the others, all are kept
+
+## 2026-11-11 — NARROW W3-SAMP:PC
+
+- decided by: HQ
+- reason: W3-SAMP sweep SW1 #1 (MAJOR): clause (ii) no longer says the reported HPM is a function of the island records (it is the hpm_better-maximum of the final ledger's offered set M, which also holds tables, inherited models, final local search and LS0); also strengthened: (i) now includes the evaluated-model sets M_r (C1 Opus #1). All dependent uses (completed records, M contains the union of M_r, S-hat = max of M) are still covered; the corrected text passed SW1 and council C1
+- 0 dependents SUSPECT; restored: —
+
+## 2026-11-11 — NARROW W3-SAMP:ST
+
+- decided by: HQ
+- reason: SW1 #14: ST-c now assumes explicitly the T12 (R3) round path law, realised by the code under EX-A, H-U, KERNEL (W1-N1 Lemma B (B-b)); before, only KERNEL was named. The dependents (C, LT#, TR) all run under the N1 premises, which include EX-A, H-U, KERNEL, so their uses stay covered
+- 0 dependents SUSPECT; restored: —
+
+## 2026-11-11 — NARROW W3-SAMP:D
+
+- decided by: HQ
+- reason: C1 Opus #2: KERNEL added to Theorem D's hypotheses (used only through the control-flow clause of W1-N1 Lemma B (B-b)); the registry's assumption list already held A:N1-KERNEL. HEADLINE: LIFECYCLE §0 requires Felipe's approval of this NARROW (pending)
+- 0 dependents SUSPECT; restored: —
+
+## 2026-11-11 — NARROW W3-SAMP:TR
+
+- decided by: HQ
+- reason: SW1 #2 (MAJOR): the honest label's non-nesting claim (TR's premise is neither implied by nor implies pi0(S0)->1) is now stated only for abstract positive targets (three-state example and its converse; not a realisation of the coded target; coded separation open); SW1 #28: the conditioning is island by island on the island's own bridge history. TR-a to TR-d are otherwise unchanged. HEADLINE: LIFECYCLE §0 requires Felipe's approval of this NARROW (pending)
+- 0 dependents SUSPECT; restored: —

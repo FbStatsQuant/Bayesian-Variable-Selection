@@ -1,0 +1,21 @@
+kind_of_row	parent	id	field	value	evidence
+part	W3-POST2:D	W3-POST2:D.D(a)	local_id	D.D(a)	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(a)	kind	corollary	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(a)	name	Corollary H D(a) (with selection: oracle rate)	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(a)	file	Theory_work/Wave3/W3-POST2/STATEMENT.md	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(a)	lines	107-111	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(a)	premises	Theory_work/Wave3/W3-POST2/STATEMENT.md:15-25; Theory_work/Wave3/W3-POST2/STATEMENT.md:27-38; Theory_work/Wave3/W3-POST2/STATEMENT.md:101-106; Theory_work/Wave3/W3-POST2/STATEMENT.md:117-119	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(a)	status		Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(a)	status_source		Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(a)	depends_on	W3-POST2:A1@proof:(G3′),(C5′) superset bounds; SOP:TH09@proof:[P1] thm:T01i, prop:closed, lem:spec	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(a)	notes	Given δ_n→0 in probability (e.g. under W3-POST Theorem 1, A1 or E with BM), under G,(E),(F0): posterior mass of ‖μ̂−μ‖²>M_n, |v/σ*²−1|>M_n/√n, S≠S0, ‖θ−θ*‖>M_n/√n vanishes. The ticket gives one status for Claim D (lemmas/D_hellinger.md:3).	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(b)	local_id	D.D(b)	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(b)	kind	corollary	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(b)	name	Corollary H D(b) (no beta-min, no floor away from S0: rate log n / n)	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(b)	file	Theory_work/Wave3/W3-POST2/STATEMENT.md	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(b)	lines	112-116	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(b)	premises	Theory_work/Wave3/W3-POST2/STATEMENT.md:15-25; Theory_work/Wave3/W3-POST2/STATEMENT.md:27-38; Theory_work/Wave3/W3-POST2/STATEMENT.md:101-106; Theory_work/Wave3/W3-POST2/STATEMENT.md:117-119	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(b)	status		Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(b)	status_source		Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(b)	depends_on	W3-POST2:A1@proof:(G3′),(C5′) superset bounds; W3-POST2:E@proof:event 𝒢⁵_n; SOP:TH09@proof:[P1] thm:T01i, prop:closed, lem:spec	Theory_work/Wave3/W3-POST2/REPORT.md:97-100
+part	W3-POST2:D	W3-POST2:D.D(b)	notes	Under G,(E),(F0),(OS), no beta-min: Π(‖μ̂−μ‖²>C_H log n or |v/σ*²−1|>M_n/√n | y)→0, so h̄_n² = O(log n/n). The ticket gives one status for Claim D (lemmas/D_hellinger.md:3).	Theory_work/Wave3/W3-POST2/REPORT.md:97-100

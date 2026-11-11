@@ -58,3 +58,26 @@ A:IND-T	assumption	no	IND-T	streams 10-13 mutually independent and independent o
 A:NC-R	assumption	no	NC-R	lim_{eta->0} limsup_n P(A ∩ {W_r<eta})=0 (computational non-collapse; LT-e′: sigma(data,C)-measurable eta_n with 1_A·o1/eta_n→0)				1.0.0	added by ingest from b7_wave3.jsonl
 A:P-START	assumption	no	P-START	1_A·o0→0, i.e. π0(S0)→1 on A, no rate (input, PROGRAM item 2)				1.0.0	added by ingest from b7_wave3.jsonl
 A:P-OVL-INF	assumption	no	P-OVL-INF	P(A ∩ {L/M<=c})→0 for every c>0, M=max_S π(S)/π0(S) (global overlap relative to executed L)				1.0.0	added by ingest from b7_wave3.jsonl
+A:POST2-FLAMBDA	assumption	no	POST2-FLAMBDA	(F_λ) of W3-POST §2: λ_min(R_{S0∪J}) ≥ φ0² for |J| ≤ j0 (the SE_λ part of A:SPARSE-EIG, without (F_w))				1.0.0	added by ingest from b8_w3_post2.jsonl
+A:POST2-OS	assumption	no	POST2-OS	(OS; C_OS) superset Occam sum: 𝒪_n^{>0} ≤ C_OS r_n and (2p)^{s0}(n+1)^{s0/2}𝒪_n^{>j0} ≤ C_OS r_n (STATEMENT.md:35-36); implied by (F_w) via (DG), (ADG) (Lemma A0)				1.0.0	added by ingest from b8_w3_post2.jsonl
+A:POST2-GP	assumption	no	POST2-GP	G′: Gaussian noise with an arbitrary centred mean f (μ = Cf, f ∉ col X allowed) (STATEMENT.md:70)				1.0.0	added by ingest from b8_w3_post2.jsonl
+A:POST2-AR	assumption	no	POST2-AR	bounded reference cost B_T(ϑ) ≤ B for a deterministic reference (T, ϑ) (STATEMENT.md:44, 72-73)				1.0.0	added by ingest from b8_w3_post2.jsonl
+A:POST2-F0	assumption	no	POST2-F0	(F0) λ_min(X_{S0}ᵀX_{S0}/(n−1)) ≥ φ0² (S0 part of the floor; implied by (F_λ)) (STATEMENT.md:25)				1.0.0	added by ingest from b8_w3_post2.jsonl
+A:POST2-C-ALT	assumption	no	POST2-C-ALT	at that n, one of (i) (F_λ), (F_w), BM(c), c>c0; (ii) (F_λ), (OS), BM(c), c>c0; (iii) (OS), (ID^M; c), c>c1 (STATEMENT.md:86-88)				1.0.0	added by ingest from b8_w3_post2.jsonl
+A:POST2-IDM	assumption	no	POST2-IDM	(ID^M; c): L_S = μ_cᵀ(I−M_S)μ_c ≥ cσ*² log n for every S ∈ Ω with S0 ⊄ S, |S∖S0| ≤ j0, c > c1 (STATEMENT.md:40-41, 128-130); implied by (ID; c)				1.0.0	added by ingest from b8_w3_post2.jsonl
+A:RM-FL	assumption	no	RM-FL	(FL-16) λ_min(R̂_T) ≥ φ0² for 1≤|T|≤16 and (FL-Q) λ_min(R̂_{Q∪{l}}) ≥ φ0² for every l (W3-RM STATEMENT.md:93-94)				1.0.0	added by ingest from b9_w3_rm.jsonl
+A:RM-V	assumption	no	RM-V	(V) visibility: δ²_{U,j} ≥ M_n log n, M_n→∞, for every truth j and U∌j, |U|≤15 (W3-RM STATEMENT.md:95-96)				1.0.0	added by ingest from b9_w3_rm.jsonl
+A:RM-L	assumption	no	RM-L	(L) bounded leakage: deterministic Q ⊇ S0 with (L-size) |Q| ≤ (log n)^κ, (L-feas), (L-gain) δ²_{U,l} ≤ ητ²_U log n for l ∉ Q, |U|≤15, η<η_A (W3-RM STATEMENT.md:97-102)				1.0.0	added by ingest from b9_w3_rm.jsonl
+A:RM-N	assumption	no	RM-N	(N) lattice condition: (N-χ) |Q∖S0| ≤ (1−δ0) log n, or (N-D) direction complexity log|𝒰_n| ≤ log p + h log n (h<½), ρ_n²(|Q|+log n)=o(log n), with (BM-Q) (W3-RM STATEMENT.md:103-117)				1.0.0	added by ingest from b9_w3_rm.jsonl
+A:RM-FLR	assumption	no	RM-FLR	(FL-R) λ_min(Σ_{n,S}) ≥ c for |S| ≤ 16+s0 and for S = Q∪{l} (W3-RM STATEMENT.md:134)				1.0.0	added by ingest from b9_w3_rm.jsonl
+A:RM-LR	assumption	no	RM-LR	(L-R) localised bounded leakage: (L-size), (L-feas), neighbourhoods H_l of polylog size, (L-gain-R) |Cov(W_l,W_j|W_{U0})| ≤ C_L n^{−1/2}, (L-loc-R) rate r_n(n log n)^{1/4}→0 (W3-RM STATEMENT.md:137-145)				1.0.0	added by ingest from b9_w3_rm.jsonl
+A:EX-A	assumption	no	EX-A	exact scores and arithmetic (named idealisation; the coded flags apply no numerical error margin)				1.0.0	added by ingest from b10_w3_scr.jsonl
+A:SCR-SV	assumption	no	SCR-SV	SV(q,x): sparse visibility margin MC(q,x): √Γ_n(q) > τ̄_n(x)√T_n + σ r_n(q,x) (W3-SCR STATEMENT.md:66)				1.0.0	added by ingest from b10_w3_scr.jsonl
+A:SCR-SVo	assumption	no	SCR-SVo	SV°(q,x): normalised visibility margin MC°(q,x): √Ψ_n(q) > √(T_n(1+ϑ°_n(q,x))) + r_n(q,x) (W3-SCR STATEMENT.md:67)				1.0.0	added by ingest from b10_w3_scr.jsonl
+A:SCR-DF	assumption	no	SCR-DF	DF(q_n): directional floor φ^d_n(q_n) ≥ κ > 0 (implied by the anchored floor AF and by a sparse eigenvalue floor SF on sets of size ≤ q_n+s0) (W3-SCR STATEMENT.md:72-73)				1.0.0	added by ingest from b10_w3_scr.jsonl
+A:SCR-A1-COND	assumption	no	SCR-A1-COND	θ_min ≥ b > 0, ‖θ*‖₁ ≤ M, κ, b, M, σ fixed, q_n ≤ K−1 and (q_n+1) log p + log n ≤ c1 n, c1 = κ²b²/(200(M²+σ²)) (W3-SCR STATEMENT.md:158-161)				1.0.0	added by ingest from b10_w3_scr.jsonl
+A:SCR-G-GROWTH	assumption	no	SCR-G-GROWTH	(q_n+1) log p + log n = o(n) (SCR-G, W3-SCR STATEMENT.md:133)				1.0.0	added by ingest from b10_w3_scr.jsonl
+A:SCR-A1o-COND	assumption	no	SCR-A1o-COND	𝐋_n=(q_n+1) log p+log n = o(n), θ_min ≥ 16σκ⁻¹√(𝐋_n/n), s0𝐋_n ≤ κn/576, ‖θ*‖₂ ≤ ½√(κ(n²−1))θ_min, ‖μ‖ = o(nσ) (W3-SCR STATEMENT.md:165-167)				1.0.0	added by ingest from b10_w3_scr.jsonl
+A:SCR-SVINF	assumption	no	SCR-SVINF	hypothesis of (A∞) or (A°∞): liminf √Γ_n(q_n)/[τ_n√(2 log p+log n)+σ√(2q_n log p)] > 1 (or its normalised form with q_n log p = o(n), ‖μ‖ = o(nσ)) (W3-SCR STATEMENT.md:87-88, 96)				1.0.0	added by ingest from b10_w3_scr.jsonl
+A:SCR-NF	assumption	no	SCR-NF	NF(q_n): superset floor φ_n(q_n) ≥ 2 log p/(2 log p + log n) + ε on supersets of S0 of size ≤ q_n (W3-SCR STATEMENT.md:174)				1.0.0	added by ingest from b10_w3_scr.jsonl
+A:SCR-C-SIG	assumption	no	SCR-C-SIG	‖θ*‖₂ = O(σ√n) and q_n log p = o(n) (SCR-C, W3-SCR STATEMENT.md:172-173)				1.0.0	added by ingest from b10_w3_scr.jsonl
