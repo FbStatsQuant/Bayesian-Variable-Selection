@@ -17,6 +17,15 @@ Correctness rollbacks
   deprecate ID --reason R                      wrong target: DEPRECATED; dependents SUSPECT; FAILED_ROUTES.md entry
   suspect   ID --reason R                      possible gap found: SUSPECT; dependents SUSPECT
   clear     ID --reason R                      repaired: SUSPECT / REBASE-NEEDED / NARROWED -> ACTIVE (minor bump)
+  retract|deprecate ID ... --archive REF       also mark the row a TOMBSTONE: `archive:REF` in its evidence (REF =
+                                               tag / commit where its statement + evidence stay readable after its
+                                               ticket's files are reverted; the statement hash must match at REF)
+  rollback-ticket TICKET --archive REF --reason R [--as retract|deprecate]
+                                               the registry part of rolling back a MERGED ticket, atomically: every
+                                               live claim of TICKET is retracted (or deprecated) as a tombstone on
+                                               REF, on the CURRENT graph (later dependents become SUSPECT), in a
+                                               staged copy; the full check.py runs on that copy; only if it adds no
+                                               ERROR is the staged state written (--apply). Dry run: the priced report.
 Strength (better theorems)
   promote   Y [--parity-with X] --reason R     CANDIDATE -> ACTIVE once Y passed the gates (all `k:PASS` of X)
   supersede X --by Y [--axes scope=better,rate=equal] [--key-step-checked EVIDENCE] --reason R
@@ -82,8 +91,8 @@ def gh_issue(title, body_file, labels):
 
 
 def passed_gates(row: dict) -> set:
-    """Gate names recorded as PASS WITH evidence: `name:PASS(evidence)`."""
-    return {k for k, ev in re.findall(r"(\w+):PASS\(([^)]+)\)", row.get("gates", "")) if ev.strip()}
+    """Gate names recorded as PASS WITH evidence: `name:PASS(evidence)` (anchored parser, shared with check.py)."""
+    return R.passed_gates(row.get("gates", ""))
 
 
 def status_ok_at(status: str, source: str) -> bool:
@@ -183,11 +192,115 @@ def cost(paths, direct, by, rebase):
     return lines
 
 
+def archive_problems(row: dict, ref: str) -> list[str]:
+    """A tombstone's archive must be a commit/tag at which the claim's statement (+ premises) still hashes to its
+    registered sha256."""
+    if R.git("rev-parse", "--verify", "--quiet", ref + "^{commit}")[0] != 0:
+        return [f"archive {ref!r} is not a commit or tag in this repository"]
+    with R.at_ref(ref):
+        h = R.claim_hash(row)
+    if h != row.get("sha256"):
+        return [f"{row['id']}: statement {row['file']}:{row['lines']} " + ("unreadable" if h is None else
+                "does not match its sha256") + f" at {ref} (tag the commit that holds the current text)"]
+    return []
+
+
+def topo_dependents_first(ids_, g):
+    """Order claims so that a claim comes before the claims (in the same set) it depends on."""
+    seen, order = set(), []
+
+    def visit(c):
+        if c in seen:
+            return
+        seen.add(c)
+        for d in g.deps.get(c, []):
+            if d in ids_:
+                visit(d)
+        order.append(c)
+
+    for c in sorted(ids_):
+        visit(c)
+    return order[::-1]
+
+
+def rollback_ticket(a):
+    """R02: the registry part of rolling back a merged ticket, done on a staged copy and written all at once."""
+    rows = R.load_claims()
+    by = R.index(rows)
+    g = R.Graph(rows)
+    mine = [r["id"] for r in rows if r["ticket"] == a.id]
+    if not mine:
+        sys.exit(f"no registry claims of ticket {a.id!r}")
+    op = a.as_
+    todo = topo_dependents_first({c for c in mine if by[c]["state"] not in R.DEAD}, g)
+    already = [c for c in mine if by[c]["state"] in R.DEAD and not R.archive_ref(by[c])]
+    blocking = []
+    if not a.archive:
+        blocking.append("--archive <tag or commit> is required: where the ticket's statements and evidence stay "
+                        "readable after the revert (e.g. git tag -a retracted/<ticket> <current main>)")
+    else:
+        for c in mine:
+            blocking += archive_problems(by[c], a.archive)
+    outside = sorted({d for c in mine for d in g.dependents(c) if by[d]["ticket"] != a.id
+                      and by[d]["state"] not in R.DEAD})
+    print(f"# rollback-ticket {a.id} ({op}, archive {a.archive or '—'})\n\n- reason: {a.reason}\n"
+          f"- claims of {a.id}: {len(mine)} ({len(todo)} to {op}; {len(mine) - len(todo)} already dead, "
+          f"{len(already)} of them to be marked as tombstones)\n- dependents outside the ticket on the CURRENT graph: "
+          f"{len(outside)} ({', '.join(outside[:12])}{' …' if len(outside) > 12 else ''})")
+    stage = R.make_stage()
+    try:
+        steps = [("propagate.py", op, c, "--reason", f"rollback of ticket {a.id}: {a.reason}", "--apply",
+                  "--actor", a.actor, *(["--archive", a.archive] if a.archive and not blocking else []))
+                 for c in todo]
+        steps += [("registry.py", "set", c, "evidence=" + R.join_list(R.split_list(by[c].get("evidence", ""))
+                                                                       + [R.ARCHIVE_PREFIX + a.archive]),
+                   "--reason", f"tombstone of ticket {a.id} rollback") for c in already if a.archive and not blocking]
+        for st_ in steps:
+            rc, out = R.run_staged(stage, *st_)
+            if rc != 0:
+                sys.exit(f"rollback-ticket refused: step {' '.join(st_[:3])} failed (nothing written):\n"
+                         f"{out[-1500:]}")
+        new_rows = R.index(R.read_tsv(os.path.join(stage, "registry", "claims.tsv"))[1])
+        changed = [(c, by[c]["state"], new_rows[c]["state"]) for c in sorted(by)
+                   if c in new_rows and new_rows[c]["state"] != by[c]["state"]]
+        lost = sorted(set(by) - set(new_rows))
+        _, live, _ = R.check_findings()
+        rc_st, staged_f, summary = R.check_findings(stage)
+        new_err = sorted(f for f in staged_f - live if f[0] == "ERROR")
+        print("\n## State changes (staged)\n\n| claim | before | after |\n|---|---|---|")
+        print("\n".join(f"| {c} | {b} | {n} |" for c, b, n in changed) or "| — | | |")
+        print(f"\n## Staged check.py\n\n- {summary.replace('check.py: ', '')}\n- ERROR introduced by the rollback: "
+              f"{len(new_err)}" + "".join(f"\n  - {f[1]} {f[2]}: {f[3]}" for f in new_err))
+        if lost:
+            blocking.append(f"rows lost: {lost}")
+        if new_err:
+            blocking.append(f"{len(new_err)} new check ERROR(s) on the staged registry")
+        if blocking:
+            print("\n## Blocking\n\n" + "\n".join(f"- {b}" for b in blocking))
+        if a.dry_run:
+            print("\n(dry run: nothing written; add --apply. Then revert the ticket's non-registry files, keeping "
+                  "these rows: LIFECYCLE §3)")
+            return
+        if blocking:
+            sys.exit("rollback-ticket refused (see Blocking); nothing written")
+        with open(os.path.join(stage, "registry", "events.log"), "a", encoding="utf-8", newline="\n") as fh:
+            fh.write(R.event_line("rollback-ticket", a.id, "", f"{len(todo)} {op}", f"archive {a.archive}: "
+                                  f"{a.reason}", a.actor))  # the summary event is part of the same transaction
+        moved = R.commit_stage(stage)
+        print(f"\nwritten: {len(moved)} file(s) ({', '.join(os.path.basename(m) for m in moved[:8])}"
+              f"{' …' if len(moved) > 8 else ''})\nnext (LIFECYCLE §3): git revert -m 1 --no-commit <merge>; "
+              "git checkout HEAD -- Theory_work/INFRA/registry Theory_work/INFRA/DECISIONS.md "
+              "Theory_work/INFRA/FAILED_ROUTES.md Theory_work/INFRA/issues; python Theory_work/INFRA/tools/check.py")
+    finally:
+        import shutil
+        shutil.rmtree(stage, ignore_errors=True)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("op", choices=["patch", "downgrade", "narrow", "retract", "deprecate", "suspect", "clear",
                                    "promote", "supersede", "coexist", "decline", "remark", "confirm-repoint",
-                                   "reject-repoint", "fail-route"])
+                                   "reject-repoint", "fail-route", "rollback-ticket"])
     ap.add_argument("id")
     ap.add_argument("--reason", default="")
     ap.add_argument("--status")
@@ -210,6 +323,9 @@ def main():
     ap.add_argument("--issues-dir")
     ap.add_argument("--gh", action="store_true")
     ap.add_argument("--actor", default="HQ")
+    ap.add_argument("--archive", default="", help="retract / deprecate / rollback-ticket: tombstone archive ref")
+    ap.add_argument("--as", dest="as_", default="retract", choices=["retract", "deprecate"],
+                    help="rollback-ticket: retract (default) or deprecate the ticket's claims")
     a = ap.parse_args()
     a.dry_run = a.dry_run or not a.apply  # nothing is ever written without --apply
     if a.issues_dir:  # issue files may only go under Theory_work/INFRA/issues
@@ -220,6 +336,10 @@ def main():
         sys.exit("--gh needs --apply")
     if not a.reason and a.op not in ("confirm-repoint", "reject-repoint"):
         sys.exit("--reason is required")
+    if a.archive and a.op not in ("retract", "deprecate", "rollback-ticket"):
+        sys.exit(f"--archive is not accepted for {a.op}")
+    if a.op == "rollback-ticket":
+        return rollback_ticket(a)
 
     rows = R.load_claims()
     aliases = R.load_aliases()
@@ -498,6 +618,11 @@ def main():
             so, sn = R.status_strength(x["status"]), R.status_strength(a.status)
             if isinstance(so, int) and isinstance(sn, int) and sn > so:
                 sys.exit(f"refused: the new status is stronger ({sn} > {so}); upgrades need a ticket result")
+        if a.archive:  # tombstone: the statement must stay readable (and unchanged) at the archive ref
+            probs = archive_problems(x, a.archive)
+            if probs:
+                sys.exit("refused: " + "; ".join(probs))
+            report.append(f"- tombstone: row kept, statement + evidence archived at `{a.archive}`")
         if a.op == "clear":
             if x["state"] not in ("SUSPECT", "REBASE-NEEDED", "NARROWED"):
                 sys.exit(f"{cid} is {x['state']}; clear lifts SUSPECT / REBASE-NEEDED / NARROWED only")
@@ -561,6 +686,9 @@ def main():
                 x["version"] = R.bump(x["version"], "minor")
             if a.status:
                 x["status"], x["status_source"] = a.status, a.status_source
+            if a.archive:
+                x["evidence"] = R.join_list(dict.fromkeys(R.split_list(x.get("evidence", ""))
+                                                          + [R.ARCHIVE_PREFIX + a.archive]))
         R.log_event(a.op, cid, before, f"{x['state']} v{x['version']}", a.reason, a.actor)
         for r in restored:
             old = r["state"]

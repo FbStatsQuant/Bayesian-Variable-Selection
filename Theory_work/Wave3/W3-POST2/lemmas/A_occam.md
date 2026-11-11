@@ -30,7 +30,8 @@ Remark (compatibility, not a proved example) [K-AE-3]. If the last column u of S
 u = X_{S}a with a of minimal norm, the Schur factor is [1 + (n+1)aᵀG(I+(n+1)G)⁻¹a]/[1 + aᵀG(I+G)⁻¹a] ≤ 1 + ‖a‖²; so
 exact rank loss at |J| = j is not *excluded* by (DG) as long as c_D^j(n+1) ≤ 1 + ‖a‖² (whether (DG) then holds depends on
 the other factors; no explicit design is claimed). (ADG) allows a vanishing fraction of dependent J at
-every j; (OS) allows, at fixed p, e.g. an exactly duplicated null pair (numerics N2).
+every j; (OS) appears to allow, at fixed p, e.g. an exactly duplicated null pair: finite-n evidence only (numerics N2); no
+asymptotic proof is given for this example.
 
 ## A1. Sufficiency (Theorem 1-OS)
 

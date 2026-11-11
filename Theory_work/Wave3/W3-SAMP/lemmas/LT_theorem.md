@@ -45,7 +45,7 @@ needs only one Markov step and no κ₀ offset; LT-b and LT-b′ are both valid 
 
 For ε, η > 0: on {B̄ ≥ ε, W ≥ η}, W·B̄ ≥ εη. Markov (conditional on 𝓒) with Step 2(a):
 P(B̄ ≥ ε, W ≥ η | 𝓒) ≤ δ/(εη), so P(B̄ ≥ ε | 𝓒) ≤ δ/(εη) + P(W < η | 𝓒). The same argument with 1 − A_{r,q} in place of B̄
-is (LT-a). Markov with Step 2(b): P(Λ̄ ≥ ε | 𝓒) ≤ 19·o₁/ε. By (1), {max_j |p̂_r(j) − 1{j ∈ S₀}| ≥ κ₀ + 2ε} ⊆ {B̄ ≥ ε} ∪
+is (LT-a). Markov with Step 2(b): P(Λ̄ ≥ ε | 𝓒) ≤ λ₀/ε ≤ 19·o₁/ε. By (1), {max_j |p̂_r(j) − 1{j ∈ S₀}| ≥ κ₀ + 2ε} ⊆ {B̄ ≥ ε} ∪
 {Λ̄ ≥ ε}; the union bound gives (LT-b).
 (LT-c): every particle state is an evaluated model (initial draws and every accepted move were evaluated, CC1–CC2), so
 {S₀ ∉ 𝓜_r} ⊆ {A_{r,0} = 0} = {1 − A_{r,0} ≥ 1}; apply (LT-a) with q = 0, ε = 1.

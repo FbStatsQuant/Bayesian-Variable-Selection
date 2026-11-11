@@ -37,6 +37,9 @@ Two conventions run through every claim:
   𝒜 = {SMC branch and calibration status "ok", including the tier-1 fallback}.
 - Asymptotic claims are under the joint law, always intersected with 𝒜 (potential quantities) or with
   {completed} ⊆ 𝒜 (reported outputs). P(𝒜) → 1 is never assumed.
+- Joint-law idealisation (STATEMENT.md §0): the final streams 10–13 are idealised as independent of the data as well
+  as of streams 0–9 (the ideal stream law given the data and the pilot information). Every joint-law integration in
+  D, LT, C and TR relies on this idealisation, not on separate marginal-independence claims.
 
 Results:
 
@@ -98,7 +101,7 @@ Results:
 | Clause | Status | Evidence |
 |---|---|---|
 | CC | CODE-CHECKED (lead; SL1, LC1, SW1, both council seats) | `lemmas/CC_code_check.md` |
-| PC, MR, ST, D, LT♯ (a–e, b′, e′), C, TR | PROVED-CHECKED | `lemmas/*.md`; `reviews/LC1_*`, `LC2_*`, `MP1_*`, `SW1_*`, `C1_*` |
+| PC, MR, ST, D, LT♯ (a–e, b′, e′), C, TR | PROVED-CHECKED | `lemmas/*.md`; `reviews/LC1_*`, `LC2_*`, `MP1_*`, `SW1_*`, `C1_*` (votes on the pre-edit text); the substantive post-C1 edits were verified by `reviews/PC1_postcouncil_diff_sol.md` (HQ note, 2026-11-11) |
 | LT♯-f (is NC_r necessary?) | OPEN; nothing claimed (finite-target illustrations only) | `LT_theorem.md` Step 6; `ASSUMPTION_MAP.md` |
 
 Inherited statuses, verbatim:

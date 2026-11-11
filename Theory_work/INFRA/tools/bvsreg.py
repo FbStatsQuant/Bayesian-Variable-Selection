@@ -40,6 +40,27 @@ for _s in ("stdout", "stderr"):  # Windows consoles default to cp1252; statuses 
 TOOLS = os.path.dirname(os.path.abspath(__file__))
 INFRA = os.path.dirname(TOOLS)
 ROOT = os.path.abspath(os.path.join(INFRA, "..", ".."))  # repository root
+# STAGED mode (ingest.py --staged, propagate.py rollback-ticket): BVS_STAGE_INFRA names a disposable copy of the
+# INFRA state (registry/, DECISIONS.md, FAILED_ROUTES.md, issues/). Every registry read and write goes there;
+# statement files are still read from ROOT (the repository). Writes stay confined to that copy (safe_dest).
+STAGE_MARK = ".bvs-stage"  # written by make_stage(); a stage must carry it
+
+
+def _valid_stage(d: str) -> bool:
+    """Only a tool-created disposable stage may replace INFRA: an existing directory named bvs-stage-* directly in
+    the system temp directory, carrying the STAGE_MARK file, and outside the repository."""
+    import tempfile
+    rd, tmp, root = (os.path.normcase(os.path.realpath(x)) for x in (d, tempfile.gettempdir(), ROOT))
+    return (os.path.isdir(rd) and os.path.basename(rd).startswith("bvs-stage-") and os.path.dirname(rd) == tmp
+            and os.path.isfile(os.path.join(rd, STAGE_MARK))
+            and os.path.commonpath([rd, root]) != root)
+
+
+if os.environ.get("BVS_STAGE_INFRA"):
+    if not _valid_stage(os.environ["BVS_STAGE_INFRA"]):
+        raise SystemExit(f"refusing BVS_STAGE_INFRA={os.environ['BVS_STAGE_INFRA']!r}: not a disposable stage made "
+                         "by make_stage() (temp dir bvs-stage-* with its marker, outside the repository)")
+    INFRA = os.path.realpath(os.environ["BVS_STAGE_INFRA"])
 REG = os.path.join(INFRA, "registry")
 P = lambda f: os.path.join(REG, f)  # noqa: E731
 CLAIMS, TICKETS, ALIASES, EVENTS = P("claims.tsv"), P("tickets.tsv"), P("aliases.tsv"), P("events.log")
@@ -174,6 +195,81 @@ def write_tsv(path: str, header: list[str], rows: list[dict]) -> None:
     os.replace(tmp, path)
 
 
+def replace_all(pairs) -> None:
+    """Transaction over prepared files: [(tmp, dest)]. Each existing dest is first copied to dest.bak; then every tmp
+    replaces its dest. On ANY failure every completed replacement is undone (from .bak, or removed if dest was new)
+    and the exception re-raised; .tmp / .bak files are removed in every case."""
+    import shutil
+    done, baks, failed = [], [], []
+    try:
+        for tmp, dest in pairs:
+            if os.path.exists(dest):
+                bak = safe_dest(dest + ".bak")
+                shutil.copyfile(dest, bak)
+                baks.append(bak)
+        for tmp, dest in pairs:
+            existed = os.path.exists(dest)
+            os.replace(tmp, dest)
+            done.append((dest, existed))
+    except BaseException:
+        for dest, existed in reversed(done):
+            try:
+                if existed:
+                    os.replace(dest + ".bak", dest)
+                else:
+                    os.remove(dest)
+            except OSError:
+                failed.append(dest + ".bak")
+                print(f"ROLLBACK FAILED for {dest} (backup {dest}.bak kept)", file=sys.stderr)
+        raise
+    finally:
+        for tmp, _ in pairs:
+            if os.path.exists(tmp):
+                os.remove(tmp)
+        for bak in baks:
+            if os.path.exists(bak) and bak not in failed:
+                os.remove(bak)
+
+
+def write_many(items) -> None:
+    """All-or-nothing write of several files: [(path, header, rows)] for TSVs or [(path, text)] for raw text (e.g. the
+    events log with its new lines). All are written to .tmp siblings first, then replaced as one transaction
+    (replace_all): a failure at any point leaves every file as it was."""
+    staged = []
+    try:
+        for it in items:
+            path = safe_dest(it[0])
+            tmp = safe_dest(path + ".tmp")
+            with open(tmp, "w", encoding="utf-8", newline="\n") as fh:
+                if len(it) == 2:
+                    fh.write(it[1])
+                else:
+                    fh.write("\t".join(it[1]) + "\n")
+                    for r in it[2]:
+                        fh.write("\t".join(_clean(r.get(c, "")) for c in it[1]) + "\n")
+            staged.append((tmp, path))
+    except BaseException:
+        for tmp, _ in staged:
+            if os.path.exists(tmp):
+                os.remove(tmp)
+        raise
+    replace_all(staged)
+
+
+def events_text(new_events) -> str:
+    """The events log with these (action, id, before, after, reason, actor) entries appended (for write_many)."""
+    old = open(EVENTS, encoding="utf-8", newline="").read() if os.path.exists(EVENTS) else \
+        "utc\tactor\taction\tid\tbefore\tafter\treason\n"
+    if old and not old.endswith("\n"):
+        old += "\n"
+    return old + "".join(event_line(*e) for e in new_events)
+
+
+def event_line(action, cid, before, after, reason, actor="HQ") -> str:
+    ts = _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return "\t".join(_clean(x) for x in (ts, actor, action, cid, before, after, reason)) + "\n"
+
+
 def load_claims() -> list[dict]:
     return read_tsv(CLAIMS)[1]
 
@@ -228,12 +324,61 @@ def log_event(action: str, cid: str, before: str, after: str, reason: str, actor
 
 
 # ---------------------------------------------------------------- statement hashing
+_READ_REF = None  # set by at_ref(): read files from this git commit-ish instead of the working tree (tombstones)
+
+
 def read_lines(relpath: str) -> list[str] | None:
+    if _READ_REF:
+        return read_lines_at(relpath, _READ_REF)
     fp = os.path.join(ROOT, relpath)
     if not relpath or not os.path.isfile(fp):
         return None
     with open(fp, encoding="utf-8", errors="replace") as fh:
         return fh.read().splitlines()
+
+
+def read_lines_at(relpath: str, ref: str) -> list[str] | None:
+    """The lines of `relpath` as committed at `ref` (a tag / commit), or None."""
+    if not relpath or not ref:
+        return None
+    try:
+        p = subprocess.run(["git", "-C", ROOT, "show", f"{ref}:{relpath}"], capture_output=True, timeout=60)
+    except Exception:  # pragma: no cover
+        return None
+    if p.returncode != 0:
+        return None
+    return p.stdout.decode("utf-8", errors="replace").splitlines()
+
+
+class at_ref:
+    """`with at_ref(ref):` every read_lines (hashes, status lookups, spans) reads the files as committed at ref."""
+
+    def __init__(self, ref):
+        self.ref = ref
+
+    def __enter__(self):
+        global _READ_REF
+        self.old, _READ_REF = _READ_REF, self.ref
+        return self
+
+    def __exit__(self, *exc):
+        global _READ_REF
+        _READ_REF = self.old
+        return False
+
+
+ARCHIVE_PREFIX = "archive:"
+
+
+def archive_ref(row: dict) -> str:
+    """TOMBSTONES (LIFECYCLE §3): a RETRACTED / DEPRECATED claim whose ticket files were reverted keeps its registry
+    row; `archive:<tag or commit>` in its evidence says where its statement and evidence stay readable."""
+    if row.get("state") not in DEAD:
+        return ""
+    for it in split_list(row.get("evidence", "")):
+        if it.startswith(ARCHIVE_PREFIX):
+            return it[len(ARCHIVE_PREFIX):].strip()
+    return ""
 
 
 def parse_span(s: str) -> tuple[int, int] | None:
@@ -620,3 +765,136 @@ def today() -> str:
 
 def safe(cid: str) -> str:
     return re.sub(r"[^A-Za-z0-9._-]+", "_", cid)
+
+
+# ---------------------------------------------------------------- staged copies (validate before writing)
+STAGE_FILES = ("registry", "DECISIONS.md", "FAILED_ROUTES.md")
+
+
+def make_stage() -> str:
+    """A disposable copy of the INFRA state (registry/ without the seed fragments, DECISIONS.md, FAILED_ROUTES.md)
+    in a fresh temporary directory. Tools run on it with BVS_STAGE_INFRA=<dir> (see run_staged)."""
+    import shutil
+    import tempfile
+    d = tempfile.mkdtemp(prefix="bvs-stage-")
+    for f in STAGE_FILES:
+        s = os.path.join(INFRA, f)
+        if os.path.isdir(s):
+            shutil.copytree(s, os.path.join(d, f), ignore=shutil.ignore_patterns("fragments", "*.tmp"))
+        elif os.path.isfile(s):
+            shutil.copy2(s, os.path.join(d, f))
+    os.makedirs(os.path.join(d, "registry"), exist_ok=True)
+    open(os.path.join(d, STAGE_MARK), "w").write("disposable registry stage (bvsreg.make_stage)\n")
+    return d
+
+
+def run_staged(stage: str, script: str, *args: str):
+    """Run tools/<script> with every registry read/write redirected to the staged copy. -> (returncode, output)."""
+    env = dict(os.environ, BVS_STAGE_INFRA=stage, PYTHONDONTWRITEBYTECODE="1")
+    p = subprocess.run([sys.executable, os.path.join(TOOLS, script), *args], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", env=env, cwd=ROOT)
+    return p.returncode, p.stdout + p.stderr
+
+
+def check_findings(stage: str | None = None):
+    """Run check.py (on the live registry, or on a staged copy) -> (returncode, {(severity, check, id, message)},
+    printed summary line)."""
+    import json
+    import tempfile
+    fd, out = tempfile.mkstemp(suffix=".json", prefix="bvs-check-")
+    os.close(fd)
+    try:
+        env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
+        env.pop("BVS_STAGE_INFRA", None)
+        if stage:
+            env["BVS_STAGE_INFRA"] = stage
+        p = subprocess.run([sys.executable, os.path.join(TOOLS, "check.py"), "--quiet", "--json", out],
+                           capture_output=True, text=True, encoding="utf-8", errors="replace", env=env, cwd=ROOT)
+        with open(out, encoding="utf-8") as fh:
+            data = json.load(fh)
+    finally:
+        os.remove(out)
+    summary = next((l for l in p.stdout.splitlines() if l.startswith("check.py:")), "")
+    return p.returncode, {(o["severity"], o["check"], o["id"], o["message"]) for o in data["findings"]}, summary
+
+
+def commit_stage(stage: str) -> list[str]:
+    """Copy a validated staged state back into the live INFRA: every top-level registry file, DECISIONS.md,
+    FAILED_ROUTES.md and new issues/ folders that differ, as ONE transaction (replace_all): a failure restores
+    every file already replaced and removes the new ones."""
+    import filecmp
+    import shutil
+    pairs = []
+    sreg = os.path.join(stage, "registry")
+    for f in sorted(os.listdir(sreg)):
+        if os.path.isfile(os.path.join(sreg, f)) and not f.endswith(".tmp"):
+            pairs.append((os.path.join(sreg, f), os.path.join(REG, f)))
+    for f in ("DECISIONS.md", "FAILED_ROUTES.md"):
+        if os.path.isfile(os.path.join(stage, f)):
+            pairs.append((os.path.join(stage, f), os.path.join(INFRA, f)))
+    sis = os.path.join(stage, "issues")
+    if os.path.isdir(sis):
+        for dp, _, fs in os.walk(sis):
+            for f in fs:
+                s = os.path.join(dp, f)
+                pairs.append((s, os.path.join(INFRA, "issues", os.path.relpath(s, sis))))
+    pairs = [(s, d) for s, d in pairs if not (os.path.isfile(d) and filecmp.cmp(s, d, shallow=False))]
+    prepared, made = [], []
+    try:
+        for s, d in pairs:
+            d = safe_dest(d)
+            dd = os.path.dirname(d)
+            if not os.path.isdir(dd):
+                os.makedirs(dd)
+                made.append(dd)
+            shutil.copyfile(s, safe_dest(d + ".tmp"))
+            prepared.append((d + ".tmp", d))
+        replace_all(prepared)
+    except BaseException:
+        for tmp, _ in prepared:
+            if os.path.exists(tmp):
+                os.remove(tmp)
+        for dd in reversed(made):
+            shutil.rmtree(dd, ignore_errors=True)
+        raise
+    return [os.path.relpath(d, ROOT) for _, d in prepared]
+
+
+# ---------------------------------------------------------------- gates
+_GATE = re.compile(r"^([A-Za-z][\w-]*):([^\s()]+)(?:\s*\((.*)\))?$", re.S)
+
+
+def split_gates(gts: str) -> list[str]:
+    """Split a `gates` cell at ';' outside parentheses (evidence may contain ';')."""
+    out, depth, cur = [], 0, ""
+    for c in gts or "":
+        depth += (c == "(") - (c == ")" and depth > 0)
+        if c == ";" and depth == 0:
+            out.append(cur)
+            cur = ""
+        else:
+            cur += c
+    out.append(cur)
+    return [x.strip() for x in out if x.strip()]
+
+
+def parse_gates(gts: str):
+    """`gates` -> ([(name, result, evidence)], [unparsable entries]). Each entry is anchored: `name:RESULT(evidence)`
+    with the name the WHOLE token before ':' (so `not-lit:PASS(x)` is gate `not-lit`, never `lit`)."""
+    ok, bad = [], []
+    for e in split_gates(gts):
+        m = _GATE.match(e)
+        if m:
+            ok.append((m.group(1), m.group(2), (m.group(3) or "").strip()))
+        else:
+            bad.append(e)
+    return ok, bad
+
+
+def passed_gates(gts: str) -> set:
+    """Gate names whose ONLY recorded result is PASS with evidence (a contradictory FAIL/PENDING entry for the same
+    gate, or an evidence-less PASS, does not count)."""
+    res = {}
+    for n, r, ev in parse_gates(gts)[0]:
+        res.setdefault(n, []).append((r, ev))
+    return {n for n, rs in res.items() if all(r == "PASS" and ev for r, ev in rs)}

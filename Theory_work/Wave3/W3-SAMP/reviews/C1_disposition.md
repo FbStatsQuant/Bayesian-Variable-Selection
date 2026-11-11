@@ -7,6 +7,9 @@
 
 **Council PASSED in round 1** (both ≥ 8.0, all six gates PASS in the same round). Non-blocking items, all applied after the
 vote (no claim changed; no re-vote needed under the protocol):
+[HQ correction 2026-11-11: inaccurate. Several of the edits below are substantive (PC conclusion, D premise list,
+LT-b display, among others). They were verified after the fact by `PC1_postcouncil_diff_sol.md`. The C1 scores are votes on
+the pre-edit text.]
 
 | Item | Disposition |
 |---|---|

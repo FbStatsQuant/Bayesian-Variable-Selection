@@ -14,11 +14,11 @@ superseded (when a better theorem is found), with consequences propagated mechan
 | `registry/assumptions.tsv`, `sharpness.tsv`, `binding.tsv` | strength layer: assumptions/properties with bridges, necessity evidence, binding map |
 | `registry/repoints.tsv`, `method_components.tsv`, `config.tsv`, `events.log` | proposed re-points, method pin components, freeze/caps, audit trail |
 | `registry/fragments/` | seed transcriptions (helper output) and their briefs; not used after seeding |
-| `tools/check.py` | registry ↔ repository consistency audit |
-| `tools/propagate.py` | lifecycle operations + propagation + repair issues (dry run by default prices a change; `--apply` writes) |
+| `tools/check.py` | registry ↔ repository consistency audit (tombstones checked at their archive tag); `--acceptance ID…` = HQ's blocking CP3 gate (strength gates, better-proposal dispositions, assurance of inputs) |
+| `tools/propagate.py` | lifecycle operations + propagation + repair issues (dry run by default prices a change; `--apply` writes); `rollback-ticket T --archive TAG` = the registry part of reverting a merged ticket (LIFECYCLE §3) |
 | `tools/registry.py` | show / deps / rdeps / add / set / rehash / compare / sets / assumption-impact / stats / dot |
 | `tools/assemble.py` | generates the paper's theorem blocks and provenance / dependency / strength tables from the registry |
-| `tools/ingest.py` | add a new ticket's claims (fragment JSONL / Wave 3 REPORT registry block) or split bundled claims into parts, validated; dry run by default |
+| `tools/ingest.py` | add a new ticket's claims (fragment JSONL, or a Wave 3 REPORT.md read directly: `convert` shows the JSONL) or split bundled claims into parts; full schema, unknown fields rejected, all-or-nothing (exit 1 on any problem); dry run by default, `--staged` checks the result on a copy, `--apply` writes |
 | `tools/build_registry.py` | one-off seeding from fragments (refuses to overwrite a live registry) |
 | `ci/run_ci.py`, `ci/README.md`, `ci/falsification.tsv` | continuous audit and how HQ schedules it |
 | `templates/ASSUMPTION_MAP.md` | one-page map each ticket writes before heavy proving |

@@ -11,7 +11,7 @@ not probe polynomially growing p, and are finite-n observations, not limits [S01
 | id | statement | enters | necessary? |
 |---|---|---|---|
 | POST2-OS | superset Occam sum (OS; C_OS) | A1: (C5′)(b) E Υ′_n, (C8′) the > j₀ term; C (cases ii–iii); D(b); E | its unweighted feasible counterpart 𝒪⁰_n is **necessary** (A2: δ_n ≥ 𝒪⁰_n/(1+𝒪⁰_n), deterministic); the weights, the infeasible comparison unions and the amplified j > j₀ inequality are proof envelopes |
-| POST2-ADG / DG | averaged / pointwise determinant ratio | ⇒ (OS) (Lemma A0) | sufficient only; (ADG) improvable to (OS) (N2) |
+| POST2-ADG / DG | averaged / pointwise determinant ratio | ⇒ (OS) (Lemma A0) | sufficient only; (ADG) improvable to (OS) (N2: finite-n evidence only, no asymptotic proof) |
 | POST2-F0 | floor λ_min(R_{S₀}) ≥ φ₀² | coefficient bound (tail; C1); (B3) in (C4′); R_n, L_{S₀} in E1, D | **looks improvable** (N8: rate holds as λ_min(R_{S₀}) → 0); R03b E-floor+ (bounded ridge cost L_{S₀}) recorded, not proved |
 | POST2-ID / ID^M | margin on bounded-excess underfits: Δ_S (projection) or L_S ≥ Δ_S (ridge) ≥ cσ*² log n | E: Lemma E1 only; D(b) uses E1 at c₁ + 1 to discard far underfits (no hypothesis) | no converse proved; small-margin obstructions illustrated (N1 κ = 1, N4 c ≤ 2); c₁ ≈ 161 a proof artefact |
 | POST2-GP | G′: Gaussian noise, arbitrary centred mean μ = Cf | B | the arbitrary mean is free (N6b); Gaussianity enters through the explicit f₀ exponent, the χ² fluctuation and the Gaussian cross term in the denominator, and the scale event ([P1] `thm:T01iii`); `lem:num` needs only a positive density f₀ [S01-15]. Non-Gaussian noise: not tested (the whole inherited chain assumes G; outside this ticket) |
@@ -56,7 +56,8 @@ the floor (F₀) on S₀ is the only eigenvalue condition left in Claim E and in
 - **Expectation rate:** E δ_n = O(r_n) (Claim C); and, **when 1 ≤ s₀ < p and s₀ + 1 ≤ K** (LB's domain), E δ_n ≥
   (1 + √(n+1))⁻¹; so on that domain sharp up to √(log n) [S01-10]. (For p = s₀ the lower bound can fail; W3-POST
   `lb_domain_out.txt`.)
-- **Predictive rate:** D(a) 1/n scale cannot be improved for the mean part (χ²_{s₀}-type conditional spread); D(b)
+- **Predictive rate:** D(a) 1/n scale is argued, not proved, to be unimprovable for the mean part (χ²_{s₀}-type conditional spread; no lower
+bound proved); D(b)
   log n/n: numerics consistent, no lower bound proved.
 - **Reference cost (Claim B):** a bounded cost is sufficient for this proof's uniform constant; growing cost gives an
   exp(O_P(B_n)) upper payment; boundedness is **not** necessary (N6b; S01-1).

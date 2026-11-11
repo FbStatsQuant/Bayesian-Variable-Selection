@@ -50,7 +50,8 @@ above form (with M_n/√2 and 2σ*²M_n² → ∞). ∎
 Assume R1, G, (E), (F₀), (OS). Fix c₂ := c₁ + 1 (c₁ of Claim E) and let 𝔉 := {S ∈ Ω : S₀ ⊄ S, |S∖S₀| ≤ j₀} and
   𝒮_n := {S₀} ∪ 𝒰_near,  𝒰_near := {S ∈ 𝔉 : L_S < c₂σ*² log n}.
 **Mass outside 𝒮_n.** Ω∖𝒮_n ⊆ {|S| > m♯_n} ∪ {S ⊋ S₀, |S| ≤ m♯_n} ∪ 𝒰_far, 𝒰_far := {S ∈ Ω underfitting, |S| ≤ m♯_n,
-S ∉ 𝒰_near} (an underfit S ∈ 𝔉 has |S| ≤ s₀ + j₀ − 1 ≤ min(s₀ + j₀, K) ≤ m♯_n for n ≥ n₀, by Lemma E0 of
+S ∉ 𝒰_near} (an underfit S ∈ 𝔉 has |S| ≤ s₀ + j₀ − 1, as S₀ ⊄ S and |S∖S₀| ≤ j₀, and |S| ≤ K, as S ∈ Ω; so
+|S| ≤ min(s₀ + j₀ − 1, K) ≤ min(s₀ + j₀, K) ≤ m♯_n for n ≥ n₀ [HQ repair 2026-11-11, PC1 P1], by Lemma E0 of
 `E_visibility.md` with B = s₀ + j₀) [C1B-5]. The first two sets have mass
 O_P(n^{−1/2}) (T02(i♯)) and O_P(r_n) (Claim A1 5(a); uses (E), (F₀), (OS)). For 𝒰_far, run the assembly of
 `E_visibility.md` E2 with 𝒰 := 𝒰_far: an S ∈ 𝒰_far with |S∖S₀| ≤ j₀ is in 𝔉 with L_S ≥ c₂σ*² log n, so Lemma E1(b)
@@ -93,8 +94,8 @@ Neither (F_λ), (ID), (G4) nor beta-min is used; the only eigenvalue condition i
    probability; rate ε_n² = log n/n with no beta-min and no floor away from S₀ (D(b)), ε_n = M_n/√n with selection (D(a)). Random designs enter
    through [W3P] item 6; an integrated (out-of-sample) version would need a design law and is not claimed.
 2. **Scale (no lower bound proved) [S01-8].** D(a): given S₀ the posterior law of ‖μ̂ − μ‖² has a non-degenerate
-   χ²_{s₀}-type spread (posterior covariance trace v·tr(M_{S₀}) ≍ s₀σ*²), so the 1/n scale cannot be improved for the mean
-   part. D(b): numerics are consistent with the log n/n scale (`../numerics/post2_checks_out.txt` N7, two weak truths with
+   χ²_{s₀}-type spread (posterior covariance trace v·tr(M_{S₀}) ≍ s₀σ*²), which argues (no lower bound is proved) that the 1/n
+   scale cannot be improved for the mean part. D(b): numerics are consistent with the log n/n scale (`../numerics/post2_checks_out.txt` N7, two weak truths with
    θ² = 0.5 log n/n: posterior E‖μ̂ − μ‖²/log n ≈ 1.0 for n = 400 … 6400, where the posterior drops the weak truths); this
    is a posterior expectation of an upper bound, not a proved lower bound. With beta-min (N7, D(a) design): n·E[h̄² bound]
    ≈ 4–5, flat in n.

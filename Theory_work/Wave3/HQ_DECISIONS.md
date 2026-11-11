@@ -27,3 +27,15 @@
   headline set at chapter v2.0. W3-SAMP:D and W3-SAMP:TR were registered from a mid-ticket draft; their final, council-
   reviewed statements are narrower (D: KERNEL hypothesis added; TR: the non-nesting label holds only for abstract
   targets). Recorded as NARROW+CLEAR, no dependent became SUSPECT. **Awaiting Felipe's approval.**
+- 2026-11-11 W3-RM post-council diff check PC1 (Sol): CLEAN. Four substantive edits (B1, B2, B4, B5), each verified
+  correct. The review notes that the disposition called some of them editorial, inaccurately. PROVED-CHECKED labels for
+  W3-RM are restored (RM-0, RM-F, RM-R, E4, examples), with evidence = council C2 + PC1.
+- 2026-11-11 W3-SAMP PC1 (Sol): math CLEAN (8 substantive post-C1 edits verified), record NOT-CLEAN. HQ record fixes made
+  (LT Step 3 shows the λ₀ display; REPORT states the joint-law idealisation; provenance notes corrected). PC2 check running.
+  Labels stay on hold until PC2.
+- 2026-11-11 W3-POST2 PC1 (Sol): NOT-CLEAN. A post-council edit introduced a false inequality in the D(b) proof
+  (D_hellinger.md:53; the intended bound is valid). Rollback: `propagate.py suspect W3-POST2:D.D(b)` applied (D becomes
+  SUSPECT; repair issue opened). Repaired by HQ per PC1 P1; P2/P3 qualifications propagated. PC2 repair check running;
+  then `propagate.py patch` and `clear`. This shows R01 was a real failure mode, not a theoretical one.
+- 2026-11-11 W3-SAMP PC2 (Sol): RESOLVED. PROVED-CHECKED labels restored for PC, MR, ST, D, LT♯ (a–e, b′, e′), C and TR
+  (evidence: C1 pre-edit votes + PC1 + PC2). CC stays CODE-CHECKED; LT♯(f) stays OPEN.

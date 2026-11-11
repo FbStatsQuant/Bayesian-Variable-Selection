@@ -27,11 +27,28 @@ Strength layer (headline theorems + shared assumptions)
   S7 binding     [WARN]  headline hypothesis without a binding-map row
   S8 freeze      [INFO]  freeze criterion per headline (every hypothesis NECESSARY or ≥ 2 failed removals)
   S9 repoints    [INFO]  PROPOSED re-pointings awaiting a check
+Tombstones (LIFECYCLE §3): a RETRACTED / DEPRECATED claim with `archive:<tag or commit>` in its evidence is hashed,
+  status-checked and evidence-checked AS COMMITTED AT THAT REF (its ticket files may have been reverted); a missing
+  or mismatching archive is an ERROR (C2-tombstone).
+Acceptance mode (HQ, CP3):  check.py --acceptance ID [ID ...]   runs every check above plus, for each named claim:
+  A0 accept      [ERROR] unknown id; claim not ACTIVE
+  A1 gates       [ERROR] headline (headline=yes) without correct:PASS(ev), lit:PASS(ev), necessity:PASS(ev), and
+                          better:PASS(ev) or every better-theorem proposal disposed
+  A2 better      [ERROR] `better-proposal:<label>(ev)` without `better-disposition:<label>=<declined|adopted|ticket|
+                          remark>(ev)`; better:PASS whose evidence mentions a proposal not recorded that way
+  A3 assurance   [ERROR] a checked status (PROVED-CHECKED class) whose direct input (depends_on or bound bridge) is
+                          below that assurance (author-only / unchecked, PARTIAL / SKETCH / CONDITIONAL, OPEN / GAP,
+                          or unclassified), unless the input is a DECLARED hypothesis of the statement: every edge to
+                          it is `ID@hyp` AND its id, an alias or its name occurs (as a whole token) in the hashed
+                          statement / premise text. Acks do not waive it.
+  Gates are parsed per entry (`name:RESULT(evidence)`, ';'-separated outside parentheses); a gate counts as passed
+  only if all its entries are PASS with evidence; unparsable or contradictory entries are A1 ERRORs.
 Exit code 1 if any ERROR (or any WARN with --strict).
 """
 from __future__ import annotations
 
 import argparse
+import contextlib
 import glob
 import json
 import os
@@ -43,9 +60,16 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bvsreg as R  # noqa: E402
 
 BLOCKING = {"SUSPECT", "NARROWED", "RETRACTED", "DEPRECATED", "CANDIDATE"}  # REBASE-NEEDED is still true
+DISPOSITIONS = ("declined", "adopted", "ticket", "remark")  # recorded outcomes of a better-theorem proposal
+ASSURANCE = {2: "proved but unchecked / author-only", 1: "partial / sketch / conditional", 0: "open / gap",
+             None: "unclassified status"}
 
 
-def run():
+def ref_ok(ref: str) -> bool:
+    return R.git("rev-parse", "--verify", "--quiet", ref + "^{commit}")[0] == 0
+
+
+def run(acceptance=None):
     out = []
 
     def add(sev, chk, cid, msg):
@@ -73,8 +97,21 @@ def run():
     # C2
     for r in rows:
         cid, f, span = r["id"], r.get("file", ""), R.parse_span(r.get("lines", ""))
+        ref = R.archive_ref(r)
+        if ref:  # tombstone: the statement as committed at the archive ref
+            if not ref_ok(ref):
+                add("ERROR", "C2-tombstone", cid, f"archive ref {ref!r} is not a commit/tag in this repository")
+            else:
+                with R.at_ref(ref):
+                    h = R.claim_hash(r)
+                if h != r.get("sha256"):
+                    add("ERROR", "C2-tombstone", cid, f"statement {f}:{r.get('lines')} (+ premises) "
+                        f"{'unreadable' if h is None else 'does not match its sha256'} at archive {ref}")
+            continue
         if R.read_lines(f) is None:
-            add("ERROR", "C2-hash", cid, f"statement file missing: {f!r}")
+            add("ERROR", "C2-hash", cid, f"statement file missing: {f!r}" + (
+                " (a retracted / deprecated claim whose files were reverted needs `archive:<tag>` in its evidence: "
+                "propagate.py retract|deprecate --archive, or rollback-ticket)" if r.get("state") in R.DEAD else ""))
             continue
         if span is None:
             add("ERROR", "C2-hash", cid, f"bad line span {r.get('lines')!r}")
@@ -164,7 +201,11 @@ def run():
                 continue
             base = folder.get(r["ticket"], "")
             cands = [p] + ([os.path.join(base, p), os.path.join(os.path.dirname(base), p)] if base else [])
-            if not any(os.path.exists(os.path.join(R.ROOT, c)) for c in cands):
+            ref = R.archive_ref(r)
+            if ref:  # tombstone: evidence must stay reachable through the archive ref
+                if not any(R.git("cat-file", "-e", f"{ref}:{c.replace(os.sep, '/')}")[0] == 0 for c in cands):
+                    add("WARN", "C9-evidence", r["id"], f"evidence file not found at archive {ref}: {p}")
+            elif not any(os.path.exists(os.path.join(R.ROOT, c)) for c in cands):
                 add("WARN", "C9-evidence", r["id"], f"evidence file not found: {p}")
     # C10 verbatim status: the status string must occur at status_source (± 3 lines), else anywhere in that file
     def norm(s):
@@ -178,17 +219,21 @@ def run():
             add("WARN", "C10-verbatim", r["id"], "empty status (no own status written in the ticket files)")
             continue
         path, _, ln = src.rpartition(":")
-        lines = R.read_lines(path) if path else None
-        sp = R.parse_span(ln.split(",")[0]) if lines else None
-        if lines is None or sp is None:
-            add("ERROR", "C10-verbatim", r["id"], f"status_source {src!r} is not a readable path:line (no provenance)")
-            continue
-        stx = r.get("status", "")
-        if stx.startswith("UNSPLIT-STATUS: "):
-            add("WARN", "C10-unsplit", r["id"], "split part without its own status: inherits the parent's verbatim "
-                "status (the ticket should state per-clause statuses)")
-            stx = stx[len("UNSPLIT-STATUS: "):]
-        res = R.status_at(stx, src)
+        ref = R.archive_ref(r)  # tombstone: read the status source at the archive when it is there
+        ctx = R.at_ref(ref) if ref and path and R.read_lines_at(path, ref) is not None else contextlib.nullcontext()
+        with ctx:
+            lines = R.read_lines(path) if path else None
+            sp = R.parse_span(ln.split(",")[0]) if lines else None
+            if lines is None or sp is None:
+                add("ERROR", "C10-verbatim", r["id"], f"status_source {src!r} is not a readable path:line (no "
+                    "provenance)")
+                continue
+            stx = r.get("status", "")
+            if stx.startswith("UNSPLIT-STATUS: "):
+                add("WARN", "C10-unsplit", r["id"], "split part without its own status: inherits the parent's "
+                    "verbatim status (the ticket should state per-clause statuses)")
+                stx = stx[len("UNSPLIT-STATUS: "):]
+            res = R.status_at(stx, src)
         if res == "ok":
             continue
         msg = {"negated": "status is NEGATED at its source (e.g. 'not', 'not yet', 'pending' precedes it)",
@@ -271,7 +316,10 @@ def run():
         if sb and r.get("state") in ("ACTIVE", "CANDIDATE", "REBASE-NEEDED"):
             add("ERROR", "S1-schema", cid, f"superseded_by set but state {r['state']}")
         if r.get("tex"):
-            tl = R.span_lines(r["tex"])
+            ref = R.archive_ref(r)  # tombstone: its LaTeX transcription may live only at the archive
+            tpath = r["tex"].rpartition(":")[0]
+            with (R.at_ref(ref) if ref and R.read_lines_at(tpath, ref) is not None else contextlib.nullcontext()):
+                tl = R.span_lines(r["tex"])
             if tl is None:
                 add("ERROR", "C11-tex", cid, f"tex span {r['tex']!r} unreadable")
             elif r.get("tex_sha256") and R.text_hash(tl) != r["tex_sha256"]:
@@ -333,9 +381,97 @@ def run():
         if rp.get("state") == "PROPOSED":
             add("INFO", "S9-repoints", rp["dependent"], f"PROPOSED re-point {rp['from']} -> {rp['to']} "
                 f"(use {rp.get('use')}) awaiting a check")
+    if acceptance:
+        acceptance_checks(acceptance, rows, by, ids, aliases, g, add)
     e = sum(o["severity"] == "ERROR" for o in out)
     w = sum(o["severity"] == "WARN" for o in out)
     return out, e, w, len(rows)
+
+
+def statement_text(r) -> str:
+    """The hashed text of a claim (statement span + premise spans), whitespace-normalised."""
+    parts = [R.span_lines(f"{r.get('file', '')}:{r.get('lines', '')}") or []]
+    parts += [R.span_lines(s) or [] for s in R.split_list(r.get("premises", ""))]
+    return re.sub(r"\s+", " ", " ".join(l for p in parts for l in p))
+
+
+def acceptance_checks(names, rows, by, ids, aliases, g, add):
+    """CP3 acceptance (LIFECYCLE §4, §5.5): strength gates block headline admission (R05), and a checked status may
+    not rest on a less-assured input unless that input is an explicit hypothesis of the statement (R06)."""
+    rev = {}
+    for al, t in aliases.items():
+        rev.setdefault(t, []).append(al)
+    for ref in names:
+        cid = R.resolve(ref, ids, aliases)
+        if cid is None:
+            add("ERROR", "A0-accept", ref, "unknown claim id")
+            continue
+        r = by[cid]
+        if r["state"] != "ACTIVE":
+            add("ERROR", "A0-accept", cid, f"state {r['state']}: only an ACTIVE claim can be accepted")
+        gts = r.get("gates", "")
+        entries, unparsable = R.parse_gates(gts)
+        passed = R.passed_gates(gts)
+        props = [(res, ev) for n, res, ev in entries if n == "better-proposal"]
+        disp = {}
+        for n, res, ev in entries:
+            if n == "better-disposition":
+                lab, _, d = res.partition("=")
+                disp[lab] = (d, ev)
+        if r.get("headline") == "yes":
+            for e_ in unparsable:
+                add("ERROR", "A1-gates", cid, f"unparsable gate entry {e_[:80]!r} (expected name:RESULT(evidence))")
+            seen = {}
+            for n, res, ev in entries:
+                seen.setdefault(n, set()).add(res)
+            for n, rs in sorted(seen.items()):
+                if n not in ("better-proposal", "better-disposition") and len(rs) > 1:
+                    add("ERROR", "A1-gates", cid, f"gate {n} has contradictory results {sorted(rs)}")
+            for k in ("correct", "lit", "necessity"):
+                if k not in passed:
+                    add("ERROR", "A1-gates", cid, f"headline without {k}:PASS(<evidence>) (gates: {gts[:120]!r})")
+            if "better" not in passed and not props:
+                add("ERROR", "A1-gates", cid, "headline without better:PASS(<evidence>) and without a disposed "
+                    "better-theorem proposal")
+            for lab, ev in props:
+                d = disp.get(lab)
+                if d is None:
+                    add("ERROR", "A2-better", cid, f"better-theorem proposal {lab} ({ev}) has no recorded disposition "
+                        f"(better-disposition:{lab}=<{'|'.join(DISPOSITIONS)}>(<evidence>))")
+                elif d[0] not in DISPOSITIONS or not d[1].strip():
+                    add("ERROR", "A2-better", cid, f"proposal {lab}: disposition {d[0]!r} must be one of "
+                        f"{'|'.join(DISPOSITIONS)} with evidence (a deferral is not a disposition)")
+            for lab in sorted(set(disp) - {lab for lab, _ in props}):
+                add("WARN", "A2-better", cid, f"disposition for an unrecorded proposal {lab!r}")
+            if not props and any(n == "better" and re.search(r"propos", ev, re.I) for n, _, ev in entries):
+                add("ERROR", "A2-better", cid, "better:PASS evidence mentions a proposal: record each credible "
+                    "proposal as better-proposal:<label>(<review>) with better-disposition:<label>=...(<evidence>)")
+        else:
+            add("INFO", "A1-gates", cid, "not a headline (headline != yes): strength gates not required")
+        if R.status_strength(r.get("status", "")) != 3:
+            continue
+        text = None
+        for d in g.deps.get(cid, []):
+            dr = by[d]
+            s_d = R.status_strength(dr.get("status", ""))
+            if s_d == 3 or s_d == "NEG":
+                continue
+            uses = g.uses[(cid, d)]
+            us = ",".join(sorted(uses))
+            hit = None
+            if uses == {"hyp"}:  # declared conditional premise: every use of d must be `@hyp`
+                text = statement_text(r) if text is None else text
+                names_d = [d] + rev.get(d, []) + ([dr["name"]] if len(dr.get("name", "")) >= 4 else [])
+                hit = next((n for n in names_d if n and re.search(
+                    r"(?<![\w-])" + re.escape(re.sub(r"\s+", " ", n)) + r"(?![\w-])", text)), None)
+            if hit:
+                add("INFO", "A3-assurance", cid, f"uses {d}@hyp ({ASSURANCE.get(s_d, s_d)}) as a declared "
+                    f"hypothesis named in its statement ({hit!r}); HQ attests it is stated as a hypothesis")
+                continue
+            add("ERROR", "A3-assurance", cid, f"status {R.status_token(r['status'])!r} but uses {d}@{us}, whose "
+                f"assurance is below it ({ASSURANCE.get(s_d, s_d)}: {dr.get('status', '')[:80]!r}); check that "
+                "input, or make it an explicit hypothesis: depend on it ONLY as `" + d + "@hyp` AND name it (id, "
+                "alias or name) in the hashed statement / premise text; acks do not waive this")
 
 
 def freeze_violations(rows, sharp, cfg):
@@ -378,14 +514,16 @@ def main():
     ap.add_argument("--quiet", action="store_true", help="summary + ERRORs only")
     ap.add_argument("--strict", action="store_true", help="exit 1 on WARN too")
     ap.add_argument("--only", help="comma-separated check prefixes, e.g. C2,C4,S")
+    ap.add_argument("--acceptance", nargs="+", metavar="CLAIM",
+                    help="CP3 acceptance: also run A0-A3 for these claims (blocking strength gates + assurance)")
     a = ap.parse_args()
-    out, e, w, n = run()
+    out, e, w, n = run(a.acceptance)
     if a.only:
         keep = tuple(a.only.split(","))
         out = [o for o in out if o["check"].startswith(keep)]
     order = {"ERROR": 0, "WARN": 1, "INFO": 2}
     for o in sorted(out, key=lambda o: (order[o["severity"]], o["check"], o["id"])):
-        if a.quiet and o["severity"] != "ERROR":
+        if a.quiet and o["severity"] != "ERROR" and not o["check"].startswith("A"):
             continue
         print(f"{o['severity']:5} {o['check']:17} {o['id']:30} {o['message']}")
     counts = {s: sum(o["severity"] == s for o in out) for s in order}
@@ -394,6 +532,10 @@ def main():
         by_check.setdefault(f"{o['severity']}:{o['check']}", 0)
         by_check[f"{o['severity']}:{o['check']}"] += 1
     print(f"\ncheck.py: {n} claims; {counts['ERROR']} ERROR, {counts['WARN']} WARN, {counts['INFO']} INFO")
+    if a.acceptance:
+        acc = sum(o["severity"] == "ERROR" and o["check"].startswith("A") for o in out)
+        print(f"acceptance ({', '.join(a.acceptance)}): {'REFUSED' if counts['ERROR'] else 'PASS'}; {acc} "
+              f"acceptance ERROR, {counts['ERROR'] - acc} other ERROR")
     print("by check: " + ", ".join(f"{k}={v}" for k, v in sorted(by_check.items())))
     if a.json:
         with open(a.json, "w", encoding="utf-8") as fh:
