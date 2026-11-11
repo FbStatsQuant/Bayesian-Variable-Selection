@@ -44,3 +44,17 @@ misspecification — no rate and no statement about an aggregate block-product s
 compute block-diagonal posteriors exactly (orthogonal blocks) — the start here is that object for non-orthogonal
 blocks, and the rate, the leakage functional and the floor are not in either. The `lit:` gate is a headline gate
 (LIFECYCLE §4.2) and stays PENDING until CP3.
+
+## 3. Update for STATEMENT v1.3 (2026-11-11)
+The map above was written for v1.2. Changes in v1.3, by row:
+* **A:START-FL → A:START-GF.** (FL-16) is replaced by the constant unnormalised Gram floor (GF-16),
+  λ_min(X_TᵀX_T) ≥ g_* for 1 ≤ |T| ≤ 16. It enters only Lemma TK (bridge (B-TK)): the determinant ratio and the
+  difference Q_U − RSS^y_U. Reading: route assumption; improvable only by a rank-sensitive aggregation (open item
+  W3-START-O2). Numerics (e) (near-twin nulls, λ_min(X_TᵀX_T) ≈ 1) are now inside the hypothesis.
+* **A:START-AL with level vectors.** (AL) asks for a level vector h (1 ≤ h_l ≤ z_n, tail budget b_n(h) → 0) with
+  ϱ_n(Q; h) → 0; the default h ≡ z_n is the v1.2 condition. Reading: the flag "improvable for isolated leakers"
+  (numerics (c)) is addressed by Corollary F4, which reaches every constant level below 1 + 2A̲ — the threshold of (N2).
+* **Transfer.** (T3)(a) and the random-candidate clause of (T6) allow coefficients, support, Q and h measurable in the
+  design. Response-selected targets stay outside.
+* **Consumed claims: none** (the toolkit is re-proved locally; C-GROW:L0.1/L0.2 are sources of the argument only).
+* Open items: O1 (Gaussian rows with a population leakage level), O2 (no Gram floor), O3 (growing s₀).
