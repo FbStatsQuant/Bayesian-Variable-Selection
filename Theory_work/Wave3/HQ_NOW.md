@@ -9,7 +9,7 @@ out or a key owner decision is needed; no bursts. HQ answers checkpoints itself.
 - INFRA R04 fix (Opus CW, BVS-wt/INFRA-R04) + Sol review → report to HQ; HQ merges; lifts rule 16 when fixed.
 - W3-P6 smoke S1–S5 on NOTS (jobs 2689422/3); heartbeat re-wakes the P6 lead when done → CP1 (stage-1 plan).
 - API audit (Console credits, not CW): pass 2 final 79 OK / 13 MINOR / 0 GAP (pass2b done); pass3 (50
-  factor-design PROVED claims) done: 42 OK / 5 MINOR / 3 GAP (stopped tickets, no consumers) → Sol R-AUD2 running.
+  factor-design PROVED claims) done: 42 OK / 5 MINOR / 3 GAP (stopped tickets, no consumers) → R-AUD2 confirmed; SUSPECT marks applied (no checked/chapter impact). Audit plan complete.
 
 ## Next (HQ self-approves, in order as slots free)
 1. Each lead's next checkpoint (CP1 → CP2 → CP3) after HQ acceptance audit.

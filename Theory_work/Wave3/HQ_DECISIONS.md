@@ -117,3 +117,6 @@
 - 2026-11-11 W3-START CP2 (branch @ b469719): START-F proved (L1–L5), LC1 line checks + MP1 Astra
   CONTINUE, audit OK. GO to CP3; STATEMENT v1.3.1 (necessity on the actual partition; partition-free only s₀ ≥ 16) +
   Sol diff check; (B-R) kill budget one Fable attempt + one Astra break review, else narrow (T3)(b) via CP1.
+- 2026-11-11 API audit pass 3: 42 OK / 5 MINOR / 3 GAP (≈ $16; audit total ≈ $64, ≈ $49 credit left). R-AUD2 Sol
+  confirmed the GAPs (S5F:L0, S5F:L1, FAC-X:L4r.5; one wording-only); no PROVED-CHECKED or chapter impact. Rule 11:
+  SUSPECT on the three lemmas (+ S5F C1–C4 dependents); repairs not scheduled (stop list).
