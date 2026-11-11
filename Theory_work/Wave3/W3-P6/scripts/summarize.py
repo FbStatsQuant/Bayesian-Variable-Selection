@@ -1,5 +1,7 @@
-"""W3-P6 summary v2 (R01 fixes 1, 2, 5, 6, 7, 9).
-Usage: python summarize.py OUT_MD --run TAG DERIVED_JSONL TASKS_TSV [--run TAG DERIVED_JSONL TASKS_TSV ...] [--group A|B per run via TAG prefix]
+"""W3-P6 summary v3 (v2 = R01 fixes 1, 2, 5, 6, 7, 9; v3 = rerun-aware loader, CP0 risk 4).
+Usage: python summarize.py OUT_MD --run TAG DERIVED_JSONL TASKS_TSV [--run ...] [--rerun TAG DERIVED_JSONL TASKS_TSV ...]
+       [--group A|B per run via TAG prefix]. A --rerun key must belong to exactly one --run with no record there; it is
+       counted once, from the rerun (see load()).
 
 Inputs per run: rederive.R output (one line per fit RDS) and the frozen task table. Every scheduled task is accounted for:
 scheduled = tasks in the table; records = derived lines matching a task key; missing = scheduled without a record
@@ -51,40 +53,64 @@ def rkey(r):
     return (r["design"], round(float(r["rho"]), 3), r["n"], r["p"], r["s0"], r["rep"], r["arm"])
 
 
+def group(tag):
+    return "B" if tag.startswith("B") else "A"
+
+
+def table_keys(tt):
+    for l in open(tt):
+        if "\t" not in l: continue
+        kv = dict(x.split("=", 1) for x in l.strip().split("\t", 1)[1].split() if "=" in x and not x.startswith("$"))
+        yield tkey(kv)
+
+
 def load(args):
-    runs = []
+    # --run TAG DJ TT: a run's own tasks. --rerun TAG DJ TT (v3, resume 2026-11-11): DESIGN §5 policy "Slurm failures are
+    # rerun once with the same seeds (new RUN_ID)". Every rerun key must be scheduled by exactly one --run, have no record
+    # there, be rerun at most once, and stay in the same group; its schedule then moves to the rerun tag, so the key is
+    # counted once and only a record from the rerun is accepted. All task tables are read before any record (order-free).
+    runs = []; reruns = []
     i = 0
     while i < len(args):
-        assert args[i] == "--run", args[i]
-        runs.append((args[i + 1], args[i + 2], args[i + 3])); i += 4
-    sched = {}; recs = {}; problems = []
+        assert args[i] in ("--run", "--rerun"), args[i]
+        (runs if args[i] == "--run" else reruns).append((args[i + 1], args[i + 2], args[i + 3])); i += 4
+    sched = {}; recs = {}; problems = []; origin = {}
     for tag, dj, tt in runs:
-        for l in open(tt):
-            if "\t" not in l: continue
-            kv = dict(x.split("=", 1) for x in l.strip().split("\t", 1)[1].split() if "=" in x and not x.startswith("$"))
-            k = tkey(kv)
+        for k in table_keys(tt):
             if k in sched: problems.append(f"task key scheduled twice: {k} ({sched[k]} and {tag})")
             sched[k] = tag
+    for tag, dj, tt in reruns:
+        for k in table_keys(tt):
+            if k not in sched: problems.append(f"rerun key not scheduled by any --run: {k} ({tag})"); continue
+            if k in origin: problems.append(f"key rerun twice: {k} ({sched[k]} and {tag})"); continue
+            if group(sched[k]) != group(tag): problems.append(f"rerun changes group: {k} ({sched[k]} -> {tag})"); continue
+            origin[k] = sched[k]; sched[k] = tag
+    for tag, dj, tt in runs + reruns:
         for l in open(dj):
             l = l.strip()
             if not l: continue
             r = json.loads(l)
             if r.get("read_error"): problems.append(f"unreadable RDS {r['file']} in {tag}"); continue
             k = rkey(r)
+            if k in origin and origin[k] == tag:
+                problems.append(f"record in {tag} for a key rerun as {sched[k]}: {k} (a rerun needs no record in its origin)"); continue
             if k not in sched or sched[k] != tag: problems.append(f"record not in task table of {tag}: {k}"); continue
             if k in recs: problems.append(f"duplicate record {k}"); continue
             r["_run"] = tag; recs[k] = r
-    return sched, recs, problems
+    return sched, recs, problems, origin
 
 
 def main():
-    out = sys.argv[1]; sched, recs, problems = load(sys.argv[2:])
+    out = sys.argv[1]; sched, recs, problems, origin = load(sys.argv[2:])
     L = []
     if problems:
         L += ["**RECONCILIATION FAILED (fail closed):**"] + [f"* {p}" for p in problems[:50]]
         open(out, "w", encoding="utf-8").write("\n".join(L) + "\n"); print("\n".join(L)); sys.exit(1)
     missing = sorted(k for k in sched if k not in recs)
     L.append(f"Reconciliation: {len(sched)} scheduled tasks, {len(recs)} records, {len(missing)} without a record (not finished or failed before writing).")
+    if origin:
+        rr = Counter((o, sched[k]) for k, o in origin.items())
+        L.append("Reruns (DESIGN §5, same seeds, new RUN_ID; counted once): " + "; ".join(f"{o} -> {t}: {c}" for (o, t), c in sorted(rr.items())) + ".")
     L.append("")
     # ---- validation pairs (exact identity, fail closed) ----
     pairs = [(recs[k], recs.get(k[:-1] + ("wide",))) for k in recs if k[-1] == "mr1"]
