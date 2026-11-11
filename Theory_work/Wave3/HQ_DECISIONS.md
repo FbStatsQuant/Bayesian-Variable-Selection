@@ -100,3 +100,6 @@
   exception is withdrawn (consultant thread now CW Fable 5.1 high); no Claude Personal use at all. Launched: W3-RM2 lead
   (CW Fable 5.2, worktree BVS-wt/W3-RM2 @ 9700e17) to CP1; INFRA R04 fix (CW Opus, worktree BVS-wt/INFRA-R04 @ 3d6d84d)
   + one Sol check; W3-START lead resumed (CW Fable 5.2) to CP2; W3-P6 lead resumed (CW Opus) to submit the smoke S1–S5.
+- 2026-11-11 API audit pass 1: 86 OK / 19 MINOR / 1 GAP (C-DLV:Prop-F) / 3 requests re-run at 128k (pass1b). R-AUD1 Sol:
+  CONFIRMED-WORDING — scope clarification only, no consumer relies on the strong reading; no registry mark. Wording fix +
+  MINORs → editorial pass with chapter v2.0 (API_AUDIT/pass1/TRIAGE.md).

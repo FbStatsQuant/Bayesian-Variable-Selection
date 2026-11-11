@@ -19,3 +19,10 @@ result. → Sol confirmation (R-AUD1), then rule 11 (correction as a new version
 
 ## MINOR (no action now; batch for a later editorial pass with the chapter v2.0 work)
 W1-N1:Thm-N1, C-DLV:Cor-R, C-DLV:L1-R, C-DLV:L3-3.3, C-DLV:Thm-D, C-GROW:Thm-GROW, C-GROW:L3, W2-APP:Thm-APP, W2-FAC-PK:Thm-FAC-PK, W2-FAC-PK:Thm-PATH, W2-FAC-S5:L4, W2-UNI:U-LOC, W2-UNI:UNI-1, W2-UNI:F-UNI, W3-RM:Examples, W3-RM:RM-R, W3-SAMP:Pkg, W3-SCR:L5.1, W3-SCR:SCR-M
+
+## Disposition (HQ, after R-AUD1 Sol: CONFIRMED-WORDING)
+C-DLV:Prop-F is **not** a mathematical gap: "on the classes above" imports Corollary D′'s statistical hypotheses, STATEMENT
+C2 and the registry row carry them, and the chapter (`FINAL/sections/s6_delivery.tex:46`) and generated block state them
+explicitly. No consumer relies on the over-strong reading (R-AUD1 consumer table). No LIFECYCLE §3 mark, no
+propagation, no ticket notification. The standalone sentence at `C-DLV/lemmas/L4_delivery.md:83-84` gets Sol's minimal
+restatement in the editorial pass with the 19 MINORs (chapter v2.0 work), as a wording-only version bump.
