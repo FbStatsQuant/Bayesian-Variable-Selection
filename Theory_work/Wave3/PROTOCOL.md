@@ -108,6 +108,16 @@ main); this section wires them into the ticket workflow. Where this section and 
       - P6 spending above its ceiling.
 
       It writes its findings to the HQ thread and to `Theory_work/Wave3/WATCHDOG.md`, for Felipe.
+    - **Fail-closed holds (R03 N5).** Containment does not wait for HQ. Any scheduled task (watchdog, daily CI, weekly
+      re-audit) that finds a check ERROR, a failed falsification script, or a reviewer finding against an ACTIVE claim, or
+      P6 spending above 1,200 core-hours, appends one line to the **hold file**
+      `C:/Users/felip/Bayesian-Variable-Selection/Theory_work/Wave3/HOLDS.md` (main checkout, absolute path):
+      `HOLD <claim id | P6> <UTC time> <source> <one-line finding>`. Holds never edit the registry.
+      - Every lead reads the hold file before each step. If a held claim is among its consumed claims (transitively), or
+        it is the P6 lead and P6 is held, it stops using that claim (P6: submits nothing more), writes an early
+        checkpoint and ends its run.
+      - Only HQ lifts a hold, by appending `LIFT <id> <time> <disposition>` after the rule-11 triage (propagate dry-run,
+        LIFECYCLE §3 action, or "no finding"), recorded in `HQ_DECISIONS.md`.
     - The IDs and next run times of the heartbeat, watchdog and CI tasks are recorded in `HQ_DECISIONS.md` **before**
       launch.
 13. **Continuous audit.** `INFRA/ci/run_ci.py --steps check,paper,falsify,cite` runs daily, scheduled by HQ. One random
@@ -120,7 +130,8 @@ main); this section wires them into the ticket workflow. Where this section and 
     - **No review layer may be skipped or replaced without Felipe's explicit approval**, recorded in `HQ_DECISIONS.md`.
 15. **Frozen review content and blind first reads.**
     - Before each review round (council, sweep, mid-point), run
-      `python Theory_work/Wave3/tools/manifest.py freeze <ticket dir> reviews/MANIFEST_<round>.txt --extra reviews/INPUTS.txt`,
+      `python Theory_work/Wave3/tools/manifest.py freeze Theory_work/Wave3/<T> Theory_work/Wave3/<T>/reviews/MANIFEST_<round>.txt --extra Theory_work/Wave3/<T>/reviews/INPUTS.txt`
+      (from the repo root; all paths repo-relative — R03 F9),
       where INPUTS.txt lists every external input the proof relies on: premise sources, inherited proofs, pinned code.
       HQ commits it on the ticket branch.
     - Each reviewer quotes the manifest digest in its reply. At CP3, `manifest.py bind` must pass on both council
