@@ -1,0 +1,135 @@
+# SUMMARY_SHARPNESS -- W3-RM boundary-violation numerics (V1, L1, L2, N1)
+
+**Generated programmatically by `build_summary.py` from the raw CSVs listed with each table; every number below comes from a CSV written by the named script.  Falsification / sharpness probes: observations only, never proofs; all theorems are asymptotic; no claim about asymptotics is made.**  Python: `py -3.13` (numpy 2.3.0, scipy 1.15.3; the `python` on PATH is 3.15 without numpy).
+
+Common pipeline (`rm_common.py`, importing the port `Theory_work/Wave1C/C-GROW/numerics/bvs_core.py`): sigma = 1, columns centred/standardised, y via `make_y_std`; start mode `bc.start_mode` (tie tolerance 1e-12, enumeration cap 20000); LS0 = `bc.local_search` with COMPLETE scans, shipped cap ell_cap(n,p)+|start| (the 'old cap' ell_cap(n,p) result is derived exactly from the same deterministic path). Definitions (move types, endpoint, certified, S0 scored, S0_is_max): `rm_common.py` docstring; design and per-column definitions: docstring of each script.
+`conclusion held` := LS0 from the start mode (shipped cap) ends at S0 and the last complete scan finds no strict improvement.
+
+## 0. Start-mode tie enumeration (port `start_mode`: tie tolerance 1e-12, `enum_cap` = 20000)
+
+| CSV | runs with start_mode truncated (info.truncated) | max info.n_optimal over runs |
+|---|---|---|
+| v1_results.csv | 0/300 | 1.0 |
+| l1_results.csv | 0/180 | 1.0 |
+| l2_results.csv | 0/660 | 1.0 |
+| n1_results.csv | 0/240 | 1.0 |
+
+## 1. V1 -- visibility violated (truth j masked inside its block)
+
+Script `v1_masked.py`, CSV `v1_results.csv` (runs: 300).  Cells: V1a (15 decoys per truth; p=200 has B=14 < 16 so groups cannot fit one block), V1a13 (variant: 13 decoys per truth, p=200 only: group size 14 = B), V1b (no decoys).  Column definitions in the script docstring.  `j,k same block` = realised blocks of j and k coincide; `block(j) holds k or k-decoys` = number of runs in which j's realised block contains k or a decoy of k; `min|cov_j| noK` = maximum over runs of the min over U subset block(j)\{j,k} of |Cov(W_j, m | W_U)| (all-U minimum is exactly 0 at U = empty in every run, so (V) and (V_b) fail in every run by construction; see the script docstring); `masked U frac` = mean over runs of the fraction of U subset block(j)\{j} with |Cov| < 1e-9.
+
+| cell | p | n | runs | j,k same block | block(j) holds k or k-decoys | block(j) size | j in start | k in start | S0 in start | j enters: in_start/add/swap/never | conclusion held | held AND j added by addition move | old cap -> S0 | F(S0) max of scored | max min|cov_j| noK | masked U frac (noK) | max |extras| |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| V1a | 200 | 400 | 20 | 0/20 | 4 | 7-14 | 3/20 | 20/20 | 3/20 | 3/0/17/0 | 20/20 | 0/20 | 20/20 | 20/20 | 0 | 0.828 | 3 |
+| V1a | 200 | 1600 | 20 | 0/20 | 1 | 4-14 | 1/20 | 20/20 | 1/20 | 1/0/19/0 | 20/20 | 0/20 | 20/20 | 20/20 | 0 | 0.956 | 6 |
+| V1a | 200 | 6400 | 20 | 0/20 | 1 | 8-14 | 1/20 | 20/20 | 1/20 | 1/0/19/0 | 20/20 | 0/20 | 20/20 | 20/20 | 0 | 0.963 | 9 |
+| V1a | 400 | 400 | 20 | 0/20 | 0 | 16-16 | 0/20 | 20/20 | 0/20 | 0/19/1/0 | 18/20 | 17/20 | 18/20 | 18/20 | 0 | 1.000 | 1 |
+| V1a | 400 | 1600 | 20 | 0/20 | 0 | 16-16 | 0/20 | 20/20 | 0/20 | 0/20/0/0 | 20/20 | 20/20 | 20/20 | 20/20 | 0 | 1.000 | 0 |
+| V1a | 400 | 6400 | 20 | 0/20 | 0 | 16-16 | 0/20 | 20/20 | 0/20 | 0/20/0/0 | 20/20 | 20/20 | 20/20 | 20/20 | 0 | 1.000 | 0 |
+| V1a13 | 200 | 400 | 20 | 0/20 | 0 | 14-14 | 0/20 | 20/20 | 0/20 | 0/20/0/0 | 20/20 | 20/20 | 20/20 | 20/20 | 0 | 1.000 | 0 |
+| V1a13 | 200 | 1600 | 20 | 0/20 | 0 | 14-14 | 0/20 | 20/20 | 0/20 | 0/20/0/0 | 20/20 | 20/20 | 20/20 | 20/20 | 0 | 1.000 | 0 |
+| V1a13 | 200 | 6400 | 20 | 0/20 | 0 | 14-14 | 0/20 | 20/20 | 0/20 | 0/20/0/0 | 20/20 | 20/20 | 20/20 | 20/20 | 0 | 1.000 | 0 |
+| V1b | 200 | 400 | 20 | 20/20 | 20 | 7-14 | 20/20 | 20/20 | 20/20 | 20/0/0/0 | 20/20 | 0/20 | 20/20 | 20/20 | 0 | 1.000 | 0 |
+| V1b | 200 | 1600 | 20 | 20/20 | 20 | 6-14 | 20/20 | 20/20 | 20/20 | 20/0/0/0 | 20/20 | 0/20 | 20/20 | 20/20 | 0 | 1.000 | 0 |
+| V1b | 200 | 6400 | 20 | 20/20 | 20 | 6-14 | 20/20 | 20/20 | 20/20 | 20/0/0/0 | 20/20 | 0/20 | 20/20 | 20/20 | 0 | 1.000 | 0 |
+| V1b | 400 | 400 | 20 | 20/20 | 20 | 7-16 | 20/20 | 20/20 | 20/20 | 20/0/0/0 | 19/20 | 0/20 | 19/20 | 19/20 | 0 | 1.000 | 0 |
+| V1b | 400 | 1600 | 20 | 20/20 | 20 | 8-16 | 20/20 | 20/20 | 20/20 | 20/0/0/0 | 19/20 | 0/20 | 19/20 | 19/20 | 0 | 1.000 | 1 |
+| V1b | 400 | 6400 | 20 | 20/20 | 20 | 8-16 | 20/20 | 20/20 | 20/20 | 20/0/0/0 | 20/20 | 0/20 | 20/20 | 20/20 | 0 | 1.000 | 0 |
+
+- V1 / (V) cell V1a: conclusion held in 118/120 runs outside the assumption (all runs have min_U |Cov(W_j, m | W_U)| = 0 at U = empty).
+- V1 / (V) cell V1a13: conclusion held in 60/60 runs outside the assumption (all runs have min_U |Cov(W_j, m | W_U)| = 0 at U = empty).
+- V1 / (V) cell V1b: conclusion held in 118/120 runs outside the assumption (all runs have min_U |Cov(W_j, m | W_U)| = 0 at U = empty).
+- V1 / (V), all cells pooled: conclusion held in 296/300 runs outside the assumption.
+- V1a with intent achieved (j,k in different blocks AND block(j) holds neither k nor k-decoys): conclusion held in 172/174 runs.
+
+## 2. L1 -- leakage far beyond log n (count of visible nulls = g - 1)
+
+Script `l1_groupsize.py`, CSV `l1_results.csv` (runs: 180).  `outside (N-chi)` := g-1 > log n (the number of visible nulls exceeds log n).  `all del` = LS0 shipped-cap path consists only of deletions of non-truths (and the run has >= 1 move or none needed).
+
+| g | n | log n | outside (N-chi) | runs | |S~\S0| range | |S~\S0| <= log n | |S~\S0| <= ell_cap | S0 in start | held (shipped cap) | held (old cap) | all moves = del of extra | F(S0) max of scored | max moves |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 8 | 400 | 5.99 | yes | 20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0.0 |
+| 8 | 1600 | 7.38 | no | 20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0.0 |
+| 8 | 6400 | 8.76 | no | 20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0.0 |
+| 32 | 400 | 5.99 | yes | 20 | 1-3 (median 2) | 20/20 | 20/20 | 20/20 | 18/20 | 18/20 | 18/20 | 18/20 | 3.0 |
+| 32 | 1600 | 7.38 | yes | 20 | 2-6 (median 5) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 6.0 |
+| 32 | 6400 | 8.76 | yes | 20 | 5-12 (median 10) | 7/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 12.0 |
+| 128 | 400 | 5.99 | yes | 20 | 8-21 (median 10) | 0/20 | 11/20 | 20/20 | 20/20 | 11/20 | 17/20 | 20/20 | 22.0 |
+| 128 | 1600 | 7.38 | yes | 20 | 20-31 (median 27) | 0/20 | 0/20 | 20/20 | 20/20 | 0/20 | 16/20 | 20/20 | 31.0 |
+| 128 | 6400 | 8.76 | yes | 20 | 49-64 (median 57) | 0/20 | 0/20 | 20/20 | 20/20 | 0/20 | 18/20 | 20/20 | 64.0 |
+
+- L1 / (N-chi), runs with g-1 > log n: conclusion held in 138/140 runs outside the assumption (shipped cap); with the OLD cap in 89/140.
+- L1, all runs: conclusion held in 178/180 runs (shipped cap).
+
+## 3. L2 -- population proxy strength n r^2 = eta log n (exploratory; NOT a certified violation of (L-gain))
+
+Script `l2_eta.py`, CSV `l2_results.csv` (runs: 660).  EVERY non-truth column is a proxy with n r^2 = eta log n.  `proxies in start` = |S~ \ {j}| (the sandwich S0 <= S~ <= Q with Q = S0 fails iff > 0).  **What eta is and is not (council C1, seat A, finding 1):** eta is the NOMINAL POPULATION proxy strength (rows are Gaussian; r is the population correlation of every non-truth column with the truth).  The column `eta_A` is the nominal cellwise value (sqrt(2A+1) - sqrt(2A))^2 with A := log p / log n of that cell (often below 1, whereas the theorems fix A >= 1, for which eta_A <= 0.1010).  The runs do NOT measure the fixed-design condition (L-gain) of STATEMENT v1.2 (realised delta^2_{U,l} <= eta tau_U^2 log n uniformly over l and |U| <= 15): the sample quantity was not stored, it fluctuates over the p columns, and with theta = sigma = 1 the residual-variance normalisation gives tau^2 = 2 at U = empty, so the nominal tau-normalised strength is eta/2.  Hence no run is certified to be inside or outside (L-gain); `eta > eta_A` below is a label of the nominal population strength only.  In Form R terms every eta > 0 sequence has n r^2 -> infinity and is outside the leak rate of (L-gain-R) asymptotically.  **Seeds: 20 per cell; 10 for eta = 2.0 with p = 200 and n >= 1600; the cells eta = 2.0, p = 400, n in {1600, 6400} were not run (see `nseeds_cell` in the script).**
+
+| eta label | eta | eta_A | p | n | runs | n r^2 | start has a proxy (sandwich fails) | proxies in start | j in start | held (shipped cap) | held (old cap) | all moves = del of extra | F(S0) max of scored | moves |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0.0 | 0.0000 | 0.1116 | 200 | 400 | 20 | 0.00 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 0.0 | 0.0000 | 0.1313 | 200 | 1600 | 20 | 0.00 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 0.0 | 0.0000 | 0.1495 | 200 | 6400 | 20 | 0.00 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 0.0 | 0.0000 | 0.1010 | 400 | 400 | 20 | 0.00 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 0.0 | 0.0000 | 0.1194 | 400 | 1600 | 20 | 0.00 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 0.0 | 0.0000 | 0.1364 | 400 | 6400 | 20 | 0.00 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 0.5etaA | 0.0558 | 0.1116 | 200 | 400 | 20 | 0.33 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 0.5etaA | 0.0657 | 0.1313 | 200 | 1600 | 20 | 0.48 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 0.5etaA | 0.0748 | 0.1495 | 200 | 6400 | 20 | 0.66 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 0.5etaA | 0.0505 | 0.1010 | 400 | 400 | 20 | 0.30 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 0.5etaA | 0.0597 | 0.1194 | 400 | 1600 | 20 | 0.44 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 0.5etaA | 0.0682 | 0.1364 | 400 | 6400 | 20 | 0.60 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 2etaA | 0.2231 | 0.1116 | 200 | 400 | 20 | 1.34 | 1/20 | 0-1 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-1 |
+| 2etaA | 0.2627 | 0.1313 | 200 | 1600 | 20 | 1.94 | 2/20 | 0-1 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-1 |
+| 2etaA | 0.2991 | 0.1495 | 200 | 6400 | 20 | 2.62 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 2etaA | 0.2020 | 0.1010 | 400 | 400 | 20 | 1.21 | 2/20 | 0-1 (median 0) | 20/20 | 19/20 | 19/20 | 19/20 | 19/20 | 0-1 |
+| 2etaA | 0.2387 | 0.1194 | 400 | 1600 | 20 | 1.76 | 0/20 | 0-0 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-0 |
+| 2etaA | 0.2727 | 0.1364 | 400 | 6400 | 20 | 2.39 | 2/20 | 0-1 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-1 |
+| 0.5 | 0.5000 | 0.1116 | 200 | 400 | 20 | 3.00 | 6/20 | 0-1 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-1 |
+| 0.5 | 0.5000 | 0.1313 | 200 | 1600 | 20 | 3.69 | 4/20 | 0-3 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-3 |
+| 0.5 | 0.5000 | 0.1495 | 200 | 6400 | 20 | 4.38 | 4/20 | 0-2 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-2 |
+| 0.5 | 0.5000 | 0.1010 | 400 | 400 | 20 | 3.00 | 10/20 | 0-2 (median 1) | 20/20 | 19/20 | 19/20 | 20/20 | 19/20 | 0-2 |
+| 0.5 | 0.5000 | 0.1194 | 400 | 1600 | 20 | 3.69 | 4/20 | 0-5 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-5 |
+| 0.5 | 0.5000 | 0.1364 | 400 | 6400 | 20 | 4.38 | 5/20 | 0-1 (median 0) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-1 |
+| 1.0 | 1.0000 | 0.1116 | 200 | 400 | 20 | 5.99 | 16/20 | 0-8 (median 3) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-8 |
+| 1.0 | 1.0000 | 0.1313 | 200 | 1600 | 20 | 7.38 | 16/20 | 0-9 (median 4) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-9 |
+| 1.0 | 1.0000 | 0.1495 | 200 | 6400 | 20 | 8.76 | 18/20 | 0-10 (median 4) | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 0-10 |
+| 1.0 | 1.0000 | 0.1010 | 400 | 400 | 20 | 5.99 | 19/20 | 0-23 (median 5) | 20/20 | 20/20 | 18/20 | 19/20 | 20/20 | 0-23 |
+| 1.0 | 1.0000 | 0.1194 | 400 | 1600 | 20 | 7.38 | 20/20 | 1-22 (median 6) | 20/20 | 20/20 | 19/20 | 20/20 | 20/20 | 1-22 |
+| 1.0 | 1.0000 | 0.1364 | 400 | 6400 | 20 | 8.76 | 20/20 | 1-14 (median 5) | 20/20 | 20/20 | 19/20 | 20/20 | 20/20 | 1-14 |
+| 2.0 | 2.0000 | 0.1116 | 200 | 400 | 20 | 11.98 | 20/20 | 11-40 (median 23) | 20/20 | 20/20 | 0/20 | 18/20 | 20/20 | 11-40 |
+| 2.0 | 2.0000 | 0.1313 | 200 | 1600 | 10 | 14.76 | 10/10 | 32-49 (median 44) | 10/10 | 10/10 | 0/10 | 10/10 | 10/10 | 32-49 |
+| 2.0 | 2.0000 | 0.1495 | 200 | 6400 | 10 | 17.53 | 10/10 | 31-69 (median 46) | 10/10 | 10/10 | 0/10 | 10/10 | 10/10 | 31-69 |
+| 2.0 | 2.0000 | 0.1010 | 400 | 400 | 20 | 11.98 | 20/20 | 21-65 (median 48) | 20/20 | 20/20 | 0/20 | 18/20 | 20/20 | 21-65 |
+
+- L2, runs with nominal eta > nominal eta_A (population strength; not a certified violation of (L-gain)): conclusion held in 418/420 runs (shipped cap); old cap: 354/420.
+- L2, runs with nominal eta <= nominal eta_A (eta = 0, 0.5 eta_A): conclusion held in 240/240 runs.
+- L2, runs with nominal eta > nominal eta_A and a proxy in the start mode (sandwich with Q = S0 fails): conclusion held in 208/209.
+
+## 4. N1 -- the lattice condition (N): whole-lattice NA versus the greedy path
+
+Script `n1_lattice.py`, CSV `n1_results.csv` (runs: 240).  Exact-Gram design (`gram_err` max over runs: 2.22e-15; min over runs of lam_min(Sigma): 0.001715 -- Sigma = V V' is positive definite in every run, so no sin(a) adjustment was needed).  `maxZ2 > c_n'` = lattice proxy of NA fails; `NA(F) fails` = some searched (T, l), l not in Q, has F(T u l) > F(T) by the port's F; `outside (N-chi)` := |Q \ S0| = m > log n.  LS0 columns: from Q, from the 3 adversarial centres T_tau (A1-A3), and from the coded start mode; `->S0` = shipped-cap endpoint == S0; `del-only` = endpoint == S0 AND every move a deletion of a non-truth.
+
+| C | n | m | outside (N-chi) | runs | max Z2 adv | max Z2 rand | c_n' | lattice proxy fails (Z2>c_n') | Z2 > 2 log p | max F-gain over searched (T,l) | NA(F) fails | Q->S0 (cert.) | Q del-only | Q->S0 (old cap) | A1->S0 | A2->S0 | A3->S0 | A1 del-only | start->S0 (cert.) | start == S0 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0.5 | 400 | 3 | no | 20 | 15.2 | 15.2 | 13.8 | 2/20 | 6/20 | -0.19 | 0/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 |
+| 0.5 | 1600 | 4 | no | 20 | 14.3 | 14.3 | 14.9 | 0/20 | 8/20 | -1.28 | 0/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 |
+| 0.5 | 6400 | 5 | no | 20 | 20.9 | 20.9 | 16.0 | 2/20 | 9/20 | 1.66 | 1/20 | 20/20 | 19/20 | 20/20 | 20/20 | 20/20 | 20/20 | 19/20 | 20/20 | 20/20 |
+| 1.0 | 400 | 6 | yes | 20 | 18.5 | 18.5 | 13.0 | 5/20 | 10/20 | 1.37 | 4/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 17/20 | 20/20 | 20/20 |
+| 1.0 | 1600 | 8 | yes | 20 | 20.7 | 20.7 | 14.0 | 1/20 | 10/20 | 2.20 | 1/20 | 20/20 | 19/20 | 20/20 | 20/20 | 20/20 | 20/20 | 19/20 | 20/20 | 20/20 |
+| 1.0 | 6400 | 9 | yes | 20 | 15.6 | 15.6 | 15.2 | 1/20 | 8/20 | -0.81 | 0/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 | 20/20 |
+| 2.0 | 400 | 12 | yes | 20 | 17.0 | 17.0 | 12.0 | 14/20 | 16/20 | 1.81 | 7/20 | 20/20 | 20/20 | 0/20 | 20/20 | 20/20 | 20/20 | 14/20 | 20/20 | 20/20 |
+| 2.0 | 1600 | 15 | yes | 20 | 19.9 | 19.3 | 13.0 | 16/20 | 18/20 | 2.03 | 9/20 | 20/20 | 20/20 | 0/20 | 20/20 | 20/20 | 20/20 | 13/20 | 20/20 | 20/20 |
+| 2.0 | 6400 | 18 | yes | 20 | 20.3 | 19.1 | 14.1 | 16/20 | 20/20 | 2.06 | 9/20 | 20/20 | 20/20 | 0/20 | 20/20 | 20/20 | 20/20 | 12/20 | 20/20 | 20/20 |
+| 4.0 | 400 | 24 | yes | 10 | 22.8 | 19.4 | 10.8 | 10/10 | 10/10 | 5.66 | 10/10 | 10/10 | 9/10 | 0/10 | 10/10 | 10/10 | 10/10 | 0/10 | 10/10 | 10/10 |
+| 4.0 | 1600 | 30 | yes | 10 | 28.9 | 21.4 | 11.8 | 10/10 | 10/10 | 7.45 | 10/10 | 10/10 | 10/10 | 0/10 | 10/10 | 10/10 | 10/10 | 0/10 | 10/10 | 10/10 |
+| 4.0 | 6400 | 36 | yes | 10 | 41.8 | 31.4 | 12.8 | 10/10 | 10/10 | 13.06 | 10/10 | 9/10 | 8/10 | 0/10 | 9/10 | 9/10 | 9/10 | 0/10 | 9/10 | 10/10 |
+| 8.0 | 400 | 48 | yes | 10 | 36.5 | 20.6 | 9.5 | 10/10 | 10/10 | 13.35 | 10/10 | 9/10 | 7/10 | 0/10 | 9/10 | 9/10 | 9/10 | 0/10 | 10/10 | 10/10 |
+| 8.0 | 1600 | 60 | yes | 10 | 48.2 | 27.6 | 10.5 | 10/10 | 10/10 | 18.63 | 10/10 | 10/10 | 8/10 | 0/10 | 10/10 | 0/0 | 0/0 | 0/10 | 10/10 | 10/10 |
+| 8.0 | 6400 | 71 | yes | 10 | 39.5 | 19.6 | 11.6 | 10/10 | 10/10 | 13.65 | 10/10 | 10/10 | 10/10 | 0/10 | 10/10 | 0/0 | 0/0 | 0/10 | 10/10 | 10/10 |
+
+- N1 / (N-chi), runs with m > log n: whole-lattice NA (F) conclusion held (NO searched (T,l) with F(T u l) > F(T)) in 90/180 runs outside the assumption.
+- N1 / (N-chi), runs with m > log n: LS0 from centre Q ends at S0 in 178/180 runs; with deletions only in 171/180; from the best adversarial centre A1 in 178/180.
+- N1, runs with m > log n: conclusion held (LS0 from the start mode, shipped cap) in 179/180 runs.
+- N1 / (N-chi), runs with m <= log n (inside the assumption): NA(F) held in 59/60; Q->S0 in 60/60.
+

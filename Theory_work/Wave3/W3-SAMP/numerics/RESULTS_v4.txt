@@ -1,0 +1,37 @@
+seed 404
+==== LT tail bounds on concentrated targets (only cells with right side < 1 count as non-vacuous) ====
+[a=5.0 b=1.0] delta=2.886e-02 o1=2.971e-02 kappa0=7.702e-03 lambda0=3.425e-02 g=6.982e-02; E[W E_r]=7.699e-03 <= g (+3se): True
+   eps=0.2 eta=0.25 LT-b: 0.0000 <= 0.9960 ok
+   eps=0.2 eta=0.25 LT-a: 0.1112 <= 0.8248 ok
+   eps=0.2 eta=0.5 LT-b: 0.0000 <= 0.9204 ok
+   eps=0.2 eta=0.5 LT-a: 0.1112 <= 0.7492 ok
+[a=6.0 b=2.0] delta=1.023e-02 o1=1.034e-02 kappa0=2.415e-03 lambda0=1.489e-02 g=2.739e-02; E[W E_r]=2.427e-03 <= g (+3se): True
+   eps=0.05 eta=0.25 LT-a: 0.0405 <= 0.9119 ok
+   eps=0.05 eta=0.5 LT-b: 0.0000 <= 0.8288 ok
+   eps=0.05 eta=0.5 LT-a: 0.0405 <= 0.5309 ok
+   eps=0.1 eta=0.25 LT-b: 0.0000 <= 0.6515 ok
+   eps=0.1 eta=0.25 LT-a: 0.0405 <= 0.5026 ok
+   eps=0.1 eta=0.5 LT-b: 0.0000 <= 0.4752 ok
+   eps=0.1 eta=0.5 LT-a: 0.0405 <= 0.3262 ok
+   eps=0.1 eta=0.5 LT-b': 0.0000 <= 0.6694 ok
+   eps=0.2 eta=0.25 LT-b: 0.0000 <= 0.3724 ok
+   eps=0.2 eta=0.25 LT-a: 0.0405 <= 0.2979 ok
+   eps=0.2 eta=0.25 LT-b': 0.0000 <= 0.6410 ok
+   eps=0.2 eta=0.5 LT-b: 0.0000 <= 0.2984 ok
+   eps=0.2 eta=0.5 LT-a: 0.0405 <= 0.2239 ok
+   eps=0.2 eta=0.5 LT-b': 0.0000 <= 0.3955 ok
+non-vacuous LT cells: 18
+
+==== C (T-free) with N fixed (N=2), T varied; tolerance = 3 Monte Carlo standard errors ====
+[a=4.0 b=3.0] delta=1.023e-01 o0=2.751e-01 b-=0.1264 beta=0.2893
+   T=  1: E loss=0.1255 (3se 0.0052) <= b-=0.1264: True; E|W-1|=0.1769 (3se 0.0028) <= beta=0.2893: True
+   T=  4: E loss=0.1262 (3se 0.0031) <= b-=0.1264: True; E|W-1|=0.0940 (3se 0.0021) <= beta=0.2893: True
+   T= 32: E loss=0.1259 (3se 0.0011) <= b-=0.1264: True; E|W-1|=0.0344 (3se 0.0008) <= beta=0.2893: True
+   T=128: E loss=0.1266 (3se 0.0010) <= b-=0.1264: True; E|W-1|=0.0172 (3se 0.0007) <= beta=0.2893: True
+[a=2.5 b=1.5] delta=3.351e-01 o0=1.730e+00 b-=0.4491 beta=1.6303
+   T=  1: E loss=0.4537 (3se 0.0076) <= b-=0.4491: True; E|W-1|=0.3838 (3se 0.0077) <= beta=1.6303: True
+   T=  4: E loss=0.4479 (3se 0.0042) <= b-=0.4491: True; E|W-1|=0.2027 (3se 0.0045) <= beta=1.6303: True
+   T= 32: E loss=0.4493 (3se 0.0015) <= b-=0.4491: True; E|W-1|=0.0726 (3se 0.0017) <= beta=1.6303: True
+   T=128: E loss=0.4489 (3se 0.0014) <= b-=0.4491: True; E|W-1|=0.0364 (3se 0.0015) <= beta=1.6303: True
+
+OVERALL violations = 0

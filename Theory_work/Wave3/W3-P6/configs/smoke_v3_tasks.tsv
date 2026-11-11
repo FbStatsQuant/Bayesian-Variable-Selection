@@ -1,0 +1,2 @@
+1	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=40 p=40 s0=4 rep=902 arm=wide hours=1 mem_gb=4 savefull=0 rho=0.5
+2	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=40 p=100 s0=4 rep=902 arm=wide hours=1 mem_gb=4 savefull=0

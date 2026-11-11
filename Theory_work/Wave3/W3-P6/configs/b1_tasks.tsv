@@ -1,0 +1,320 @@
+1	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+2	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+3	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+4	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+5	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+6	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+7	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+8	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+9	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+10	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+11	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+12	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+13	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+14	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+15	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+16	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+17	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+18	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+19	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+20	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+21	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+22	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+23	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+24	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+25	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+26	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+27	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+28	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+29	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+30	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+31	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+32	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+33	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+34	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+35	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+36	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+37	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+38	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+39	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+40	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+41	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+42	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+43	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+44	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+45	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+46	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+47	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+48	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+49	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+50	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+51	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+52	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+53	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+54	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+55	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+56	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+57	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+58	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+59	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+60	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+61	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+62	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+63	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+64	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+65	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+66	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+67	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+68	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+69	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+70	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+71	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+72	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+73	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+74	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+75	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+76	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+77	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+78	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+79	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+80	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=500 s0=4 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+81	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+82	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+83	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+84	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+85	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+86	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+87	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+88	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+89	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+90	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+91	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+92	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+93	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+94	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+95	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+96	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+97	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+98	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+99	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+100	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+101	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+102	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+103	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+104	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+105	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+106	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+107	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+108	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+109	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+110	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+111	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+112	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+113	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+114	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+115	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+116	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+117	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+118	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+119	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+120	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+121	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0
+122	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0
+123	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0
+124	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0
+125	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0
+126	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0
+127	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0
+128	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0
+129	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0
+130	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0
+131	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0
+132	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0
+133	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0
+134	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0
+135	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0
+136	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0
+137	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0
+138	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0
+139	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0
+140	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=50 s0=4 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0
+141	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0
+142	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0
+143	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0
+144	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0
+145	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0
+146	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0
+147	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0
+148	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0
+149	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0
+150	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0
+151	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0
+152	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0
+153	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0
+154	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0
+155	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0
+156	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0
+157	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0
+158	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0
+159	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0
+160	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=50 s0=4 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0
+161	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+162	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+163	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+164	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+165	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+166	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+167	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+168	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+169	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+170	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+171	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+172	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+173	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+174	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+175	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+176	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+177	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+178	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+179	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+180	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=8 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+181	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+182	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+183	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+184	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+185	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+186	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+187	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+188	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+189	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+190	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+191	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+192	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+193	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+194	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+195	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+196	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+197	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+198	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+199	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+200	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.3
+201	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+202	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+203	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+204	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+205	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+206	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+207	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+208	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+209	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+210	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+211	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+212	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+213	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+214	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+215	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+216	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+217	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+218	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+219	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+220	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=4 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.7
+221	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0
+222	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0
+223	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0
+224	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0
+225	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0
+226	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0
+227	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0
+228	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0
+229	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0
+230	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0
+231	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0
+232	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0
+233	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0
+234	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0
+235	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0
+236	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0
+237	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0
+238	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0
+239	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0
+240	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=fac2 n=50 p=250 s0=4 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0
+241	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0
+242	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0
+243	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0
+244	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0
+245	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0
+246	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0
+247	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0
+248	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0
+249	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0
+250	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0
+251	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0
+252	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0
+253	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0
+254	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0
+255	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0
+256	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0
+257	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0
+258	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0
+259	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0
+260	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=s5 n=50 p=250 s0=4 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0
+261	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=1 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+262	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=2 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+263	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=3 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+264	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=4 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+265	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=5 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+266	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+267	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+268	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+269	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+270	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+271	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=11 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+272	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=12 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+273	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=13 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+274	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=14 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+275	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=15 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+276	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=16 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+277	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=17 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+278	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=18 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+279	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=19 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+280	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=250 s0=8 rep=20 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+281	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=1 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+282	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=2 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+283	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=3 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+284	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=4 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+285	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=5 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+286	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=6 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+287	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=7 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+288	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=8 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+289	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=9 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+290	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=10 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+291	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=11 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+292	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=12 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+293	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=13 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+294	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=14 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+295	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=15 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+296	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=16 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+297	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=17 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+298	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=18 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+299	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=19 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+300	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=50 s0=4 rep=20 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+301	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=1 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+302	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=2 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+303	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=3 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+304	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=4 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+305	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=5 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+306	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=6 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+307	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=7 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+308	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=8 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+309	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=9 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+310	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=10 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+311	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=11 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+312	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=12 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+313	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=13 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+314	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=14 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+315	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=15 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+316	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=16 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+317	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=17 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+318	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=18 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+319	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=19 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5
+320	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=50 p=125 s0=4 rep=20 arm=mr1 hours=22.5 mem_gb=12 savefull=0 rho=0.5

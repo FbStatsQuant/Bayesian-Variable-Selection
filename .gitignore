@@ -44,3 +44,11 @@ __pycache__/
 !Scripts/Campaigns/2026-10-28_New_Campaign/**/*.log
 !Scripts/Campaigns/2026-10-28_New_Campaign/**/*.out
 !Scripts/Campaigns/2026-10-28_New_Campaign/bench_audit/jobs/BENCH_F3_PROD/tests/fixtures/**/*.rds
+
+# binaries and vendored scratch dependencies
+*.exe
+**/deps/
+
+# full-text copies of copyrighted papers (keep local only; repo is public)
+**/song_liang.txt
+Papers/Core_bibliography/32_2015_Song_Liang_*.pdf

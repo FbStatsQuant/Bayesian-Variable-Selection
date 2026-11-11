@@ -1,0 +1,2 @@
+C1: min F=-0.292384456612; max |Fsecond|/N=1.5; PASS
+D1/E1: 768 models; max decomposition error=8.52651282912e-14; min gain slack=0.0010753541585; PASS

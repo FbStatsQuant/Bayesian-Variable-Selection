@@ -137,3 +137,9 @@ Downloaded: 29 of 31 papers; arXiv: 24.
     Source: https://arxiv.org/abs/2407.20580
     File: 31_2026_Hou_Atchade_Laplace_approximation_for_Bayesian_variable_selection_via_Le_Cam_s_one_step_procedure.pdf
     Note: arXiv preprint authors include Tianrui Hou, Liwei Wang, and Yves Atchade; the cited 2026 proceedings version lists Hou and Atchade.
+
+32. A split-and-merge Bayesian variable selection approach for ultrahigh dimensional regression (2015)
+    Status: downloaded (provided by owner 2026-11-10)
+    Source: J. R. Statist. Soc. B 77(5), 947-972. Song, Q. and Liang, F.
+    File: 32_2015_Song_Liang_A_split_and_merge_Bayesian_variable_selection_approach_for_ultrahigh_dimensional_regression.pdf
+    Note: main guideline for the consistency story (Thms 1-4, Conditions 1-5). Online supplement (proofs, Theorem S on MAP consistency) not yet in the repo.

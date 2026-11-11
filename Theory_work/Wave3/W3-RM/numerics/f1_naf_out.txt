@@ -1,0 +1,61 @@
+iid  seed= 0 pairs=4416 rho_max=0.3185 maxZ2=6.773 boundC=12.954 min_slack_B=7.374e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed= 1 pairs=4416 rho_max=0.3366 maxZ2=9.260 boundC=19.696 min_slack_B=3.309e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed= 2 pairs=4416 rho_max=0.3044 maxZ2=6.213 boundC=12.898 min_slack_B=5.880e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed= 3 pairs=4416 rho_max=0.3224 maxZ2=5.929 boundC=13.053 min_slack_B=1.092e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed= 4 pairs=4416 rho_max=0.3140 maxZ2=5.302 boundC=12.628 min_slack_B=4.465e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed= 5 pairs=4416 rho_max=0.3349 maxZ2=7.309 boundC=15.898 min_slack_B=1.197e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed= 6 pairs=4416 rho_max=0.3712 maxZ2=6.158 boundC=20.762 min_slack_B=1.387e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed= 7 pairs=4416 rho_max=0.3473 maxZ2=9.708 boundC=16.210 min_slack_B=1.316e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed= 8 pairs=4416 rho_max=0.4020 maxZ2=4.853 boundC=10.903 min_slack_B=1.515e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed= 9 pairs=4416 rho_max=0.3685 maxZ2=8.289 boundC=18.725 min_slack_B=2.237e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed=10 pairs=4416 rho_max=0.3075 maxZ2=5.989 boundC=12.128 min_slack_B=7.236e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed=11 pairs=4416 rho_max=0.3465 maxZ2=6.065 boundC=14.589 min_slack_B=1.127e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed=12 pairs=4416 rho_max=0.4336 maxZ2=7.559 boundC=21.277 min_slack_B=3.826e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed=13 pairs=4416 rho_max=0.3529 maxZ2=14.455 boundC=29.567 min_slack_B=3.282e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed=14 pairs=4416 rho_max=0.3823 maxZ2=6.412 boundC=15.213 min_slack_B=4.940e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed=15 pairs=4416 rho_max=0.3417 maxZ2=11.619 boundC=25.653 min_slack_B=5.299e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed=16 pairs=4416 rho_max=0.3425 maxZ2=3.851 boundC=9.441 min_slack_B=5.442e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed=17 pairs=4416 rho_max=0.3779 maxZ2=4.051 boundC=12.086 min_slack_B=2.326e-02 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed=18 pairs=4416 rho_max=0.3244 maxZ2=7.770 boundC=17.456 min_slack_B=1.111e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+iid  seed=19 pairs=4416 rho_max=0.3466 maxZ2=5.631 boundC=14.204 min_slack_B=4.096e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed= 0 pairs=4416 rho_max=0.3543 maxZ2=3.838 boundC=8.715 min_slack_B=2.678e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed= 1 pairs=4416 rho_max=0.3510 maxZ2=9.304 boundC=19.150 min_slack_B=1.363e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed= 2 pairs=4416 rho_max=0.3663 maxZ2=6.742 boundC=16.127 min_slack_B=7.056e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed= 3 pairs=4416 rho_max=0.3444 maxZ2=4.374 boundC=10.236 min_slack_B=1.444e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed= 4 pairs=4416 rho_max=0.3198 maxZ2=5.090 boundC=11.673 min_slack_B=1.801e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed= 5 pairs=4416 rho_max=0.4177 maxZ2=10.438 boundC=26.365 min_slack_B=1.756e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed= 6 pairs=4416 rho_max=0.3909 maxZ2=5.991 boundC=15.117 min_slack_B=9.714e-05 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed= 7 pairs=4416 rho_max=0.3540 maxZ2=7.664 boundC=15.548 min_slack_B=3.870e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed= 8 pairs=4416 rho_max=0.3392 maxZ2=10.043 boundC=22.344 min_slack_B=5.567e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed= 9 pairs=4416 rho_max=0.3373 maxZ2=9.564 boundC=21.846 min_slack_B=2.818e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed=10 pairs=4416 rho_max=0.3724 maxZ2=4.476 boundC=12.936 min_slack_B=7.991e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed=11 pairs=4416 rho_max=0.3681 maxZ2=8.114 boundC=18.012 min_slack_B=2.885e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed=12 pairs=4416 rho_max=0.3415 maxZ2=6.858 boundC=14.427 min_slack_B=3.290e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed=13 pairs=4416 rho_max=0.3683 maxZ2=4.935 boundC=11.114 min_slack_B=2.371e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed=14 pairs=4416 rho_max=0.3381 maxZ2=3.031 boundC=5.940 min_slack_B=2.778e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed=15 pairs=4416 rho_max=0.3462 maxZ2=7.689 boundC=15.087 min_slack_B=3.575e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed=16 pairs=4416 rho_max=0.3475 maxZ2=3.249 boundC=6.888 min_slack_B=1.543e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed=17 pairs=4416 rho_max=0.4297 maxZ2=7.549 boundC=18.411 min_slack_B=1.105e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed=18 pairs=4416 rho_max=0.5486 maxZ2=3.971 boundC=14.034 min_slack_B=7.539e-04 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+ar1  seed=19 pairs=4416 rho_max=0.3405 maxZ2=4.322 boundC=10.484 min_slack_B=1.318e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed= 0 pairs=4416 rho_max=0.6807 maxZ2=7.209 boundC=26.079 min_slack_B=1.297e-02 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed= 1 pairs=4416 rho_max=0.6413 maxZ2=5.256 boundC=18.452 min_slack_B=1.283e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed= 2 pairs=4416 rho_max=0.6635 maxZ2=6.115 boundC=18.258 min_slack_B=5.617e-02 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed= 3 pairs=4416 rho_max=0.6702 maxZ2=5.142 boundC=18.176 min_slack_B=1.504e-02 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed= 4 pairs=4416 rho_max=0.5883 maxZ2=7.191 boundC=25.531 min_slack_B=9.391e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed= 5 pairs=4416 rho_max=0.7024 maxZ2=12.905 boundC=38.962 min_slack_B=4.284e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed= 6 pairs=4416 rho_max=0.6519 maxZ2=5.940 boundC=16.207 min_slack_B=1.598e-02 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed= 7 pairs=4416 rho_max=0.6880 maxZ2=5.311 boundC=25.146 min_slack_B=1.820e-02 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed= 8 pairs=4416 rho_max=0.7177 maxZ2=11.523 boundC=37.964 min_slack_B=6.388e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed= 9 pairs=4416 rho_max=0.6550 maxZ2=3.599 boundC=11.319 min_slack_B=1.577e-01 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed=10 pairs=4416 rho_max=0.6134 maxZ2=8.302 boundC=31.766 min_slack_B=5.205e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed=11 pairs=4416 rho_max=0.6771 maxZ2=4.841 boundC=14.291 min_slack_B=3.651e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed=12 pairs=4416 rho_max=0.6624 maxZ2=4.993 boundC=15.553 min_slack_B=1.448e-02 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed=13 pairs=4416 rho_max=0.7376 maxZ2=9.537 boundC=38.586 min_slack_B=2.692e-02 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed=14 pairs=4416 rho_max=0.6624 maxZ2=3.463 boundC=12.388 min_slack_B=2.436e-02 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed=15 pairs=4416 rho_max=0.7026 maxZ2=10.508 boundC=30.845 min_slack_B=6.459e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed=16 pairs=4416 rho_max=0.7052 maxZ2=6.303 boundC=28.103 min_slack_B=2.132e-02 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed=17 pairs=4416 rho_max=0.6405 maxZ2=6.640 boundC=29.491 min_slack_B=2.246e-01 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed=18 pairs=4416 rho_max=0.6781 maxZ2=8.219 boundC=30.253 min_slack_B=3.798e-02 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+fac  seed=19 pairs=4416 rho_max=0.6823 maxZ2=7.421 boundC=24.190 min_slack_B=3.874e-03 violations={'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
+TOTAL violations over 60 runs: {'A_orth': 0, 'A_ident': 0, 'A_bound': 0, 'B': 0, 'C': 0}
