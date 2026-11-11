@@ -8,7 +8,7 @@ out or a key owner decision is needed; no bursts. HQ answers checkpoints itself.
 - W3-START lead (Fable CW, BVS-wt/W3-START) → CP2, reports to HQ (re-launching LC1-A/B/C line checks).
 - INFRA R04 fix (Opus CW, BVS-wt/INFRA-R04) + Sol review → report to HQ; HQ merges; lifts rule 16 when fixed.
 - W3-P6 smoke S1–S5 on NOTS (jobs 2689422/3); heartbeat re-wakes the P6 lead when done → CP1 (stage-1 plan).
-- API audit (Console credits, not CW): pass2b (W1-GEN f00 re-run) msgbatch_01LdKmUTWmgyQC7CpVR8VvmV; pass3 (50
+- API audit (Console credits, not CW): pass 2 final 79 OK / 13 MINOR / 0 GAP (pass2b done); pass3 (50
   factor-design PROVED claims) msgbatch_017Qeq255ojPUvhjEePbobwf. Collect: `audit_batch.py wait <outdir>`.
 
 ## Next (HQ self-approves, in order as slots free)
