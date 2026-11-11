@@ -76,6 +76,9 @@ main); this section wires them into the ticket workflow. Where this section and 
       - The remaining tasks are then released in batches whose projected cost (measured per-cell times) fits within the
         **aggregate ceiling of 1,400 core-hours** for the whole P6 resume, smoke included. Nothing beyond the smoke
         manifest is queued before CP1.
+      - **Hard backstop (worst-case admission):** a batch is submitted only if Σ over all queued and running
+        w3p6_ tasks of (time limit × cores) + core-hours already used ≤ 1,400. Slurm time limits then make the
+        ceiling hold even if no agent or HQ is watching. The lead logs this ledger in LOG.md at every release.
       - A projected overrun stops further releases and returns to HQ. Invariant failures (wrong HPM bookkeeping,
         corrupt output) stop everything; resource-limit outcomes (time limit, preflight refusal) are logged, follow the
         DESIGN policy, and are not counted as failures.
@@ -117,9 +120,15 @@ main); this section wires them into the ticket workflow. Where this section and 
     - **No review layer may be skipped or replaced without Felipe's explicit approval**, recorded in `HQ_DECISIONS.md`.
 15. **Frozen review content and blind first reads.**
     - Before each review round (council, sweep, mid-point), run
-      `python Theory_work/Wave3/tools/manifest.py freeze <ticket dir> reviews/MANIFEST_<round>.txt`. HQ commits it on the
-      ticket branch.
-    - Each reviewer quotes the manifest digest in its reply. Nothing in the manifest is edited while that round runs.
+      `python Theory_work/Wave3/tools/manifest.py freeze <ticket dir> reviews/MANIFEST_<round>.txt --extra reviews/INPUTS.txt`,
+      where INPUTS.txt lists every external input the proof relies on: premise sources, inherited proofs, pinned code.
+      HQ commits it on the ticket branch.
+    - Each reviewer quotes the manifest digest in its reply. At CP3, `manifest.py bind` must pass on both council
+      replies of the passing round, and `manifest.py verify` on the final tree; a corrupted manifest fails. Nothing in
+      the manifest is edited while that round runs.
+    - HQ writes every blind brief to `reviews/BRIEF_<round>_<seat>.md` before launching. That file is the reviewer's
+      whole brief and lists the files it may read; listing a prior review, disposition or score in a blind brief is a
+      protocol breach.
     - After a round, a substantive change (any change to a statement, a proof step, a premise or a code pin) needs a
       fresh review of the change and of what depends on it. An editorial-only change needs a diff check by an
       independent Sol reviewer, attesting "editorial only".
