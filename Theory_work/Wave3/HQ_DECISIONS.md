@@ -63,3 +63,10 @@
 - 2026-11-11 Console API credits (owner; ≈ $113, expire 11-15): key `bvs-audit` stored outside the repo. Proposed use:
   Message Batches Fable 5.2 blind audit of all 109 PROVED-CHECKED claims (≈ $50), then needed PROVED claims (≈ $40);
   findings → HQ triage → Sol confirmation → rule 11. Awaiting owner go.
+- 2026-11-11 W3-MEMO-SCR-RM done (branch theory/W3-MEMO-SCR-RM @ 20bf513; Astra B1 blind review of v1: REJECT as written,
+  8 findings all accepted; v2 not re-reviewed). HQ adopts recommendation (a): SCR-C enters chapter v2.0 as the
+  exact-recovery corollary of Theorem 5, plus a certificate column in the examples table; headline unchanged; no RM
+  supersession claimed. W3-RM2 keeps its polynomial-leakage target (PL does not give its key lemma). The two PL sketches
+  and Corollary CERT go to the path-level ticket / chapter v2.0 as inputs, each needing its own review before any claim
+  enters the registry; memo v2 is scoping input only. A new ticket (c) only if W3-P6 shows Ŝ = S₀ at frequency ≈ 1 on
+  dense-leak designs. Memo branch merges with the other Wave 3 work after rule 16 lifts.
