@@ -85,3 +85,14 @@
   Findings → HQ triage → Sol confirmation → rule 11 (holds via HOLDS.md if confirmed CRITICAL/ERROR).
 - 2026-11-11 (owner): the HQ consultant runs on Claude Personal, Fable 5.1, effort high — the one exception to the
   all-CW rule. Consulted on the W3-P6 ceiling basis and S3.
+- 2026-11-11 ~18:20 CT W3-P6 CP0 (owner delegated to HQ + consultant, CP Fable 5.1): ceiling basis (B) — 1,400 core-h
+  counted from the resume = **1,896 total** since 2026-11-09 (worst-case admission against 1,896); watchdog HOLD at
+  1,700 total. Smoke manifest approved **with S3** (S1–S5, worst +200 → 695.88). Release plan replaced by the
+  consultant's staged design, pre-declared before any outcome is seen: stage 1 = reps 1–10 on all kept cells; stage 2 =
+  reps 11–20 on the D1 cells (75,750), (100,1000), (75,188), (100,250) cs ρ=.5 and on any cell with 1–3 failures in
+  stage 1. Kept cells: b1 remainder, (75,75), (100,100), (75,188), (75,750), (100,250) cs .5, (100,1000); at (100,250)
+  breadth only cs ρ=.7 and s₀=8 at 10 seeds. Deferred: (150,150) (smoke seed only). Dropped: n=200, (50,2500).
+  Scheduled seeds stay in the denominator; cells stopped at 10 are budget cuts. Admission: measured max × 1.5 × 2 for
+  costed cells, worst case for uncosted; (100,1000) and (150,150) in sub-batches of 5; longest first. Expected ≈ 1,500
+  from resume; stop after stage 1 if the ceiling binds (stage 1 is decision-grade for persisting search failures).
+  Execution waits for the owner's leg-B go.

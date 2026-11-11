@@ -77,10 +77,12 @@ main); this section wires them into the ticket workflow. Where this section and 
         (b1 v2, b2 v3), each n level, and the most expensive calibration regimes (largest p per n).
       - CP1 is the smoke gate: outputs read back, invariants pass, and measured time per cell is reported.
       - The remaining tasks are then released in batches whose projected cost (measured per-cell times) fits within the
-        **aggregate ceiling of 1,400 core-hours** for the whole P6 resume, smoke included. Nothing beyond the smoke
+        **aggregate ceiling of 1,400 core-hours counted from the resume** (HQ 2026-11-11: NOTS bills 2 CPUs per task; the
+        495.88 core-h spent before the pause are sunk), i.e. **1,896 core-hours in total** for all w3p6_ jobs since
+        2026-11-09 (sacct CPUTimeRAW), smoke included. Nothing beyond the smoke
         manifest is queued before CP1.
       - **Hard backstop (worst-case admission):** a batch is submitted only if Σ over all queued and running
-        w3p6_ tasks of (time limit × cores) + core-hours already used ≤ 1,400. Slurm time limits then make the
+        w3p6_ tasks of (time limit × cores) + core-hours already used (since 2026-11-09) ≤ 1,896. Slurm time limits then make the
         ceiling hold even if no agent or HQ is watching. The lead logs this ledger in LOG.md at every release.
       - A projected overrun stops further releases and returns to HQ. Invariant failures (wrong HPM bookkeeping,
         corrupt output) stop everything; resource-limit outcomes (time limit, preflight refusal) are logged, follow the
@@ -113,7 +115,7 @@ main); this section wires them into the ticket workflow. Where this section and 
       It writes its findings to the HQ thread and to `Theory_work/Wave3/WATCHDOG.md`, for Felipe.
     - **Fail-closed holds (R03 N5).** Containment does not wait for HQ. Any scheduled task (watchdog, daily CI, weekly
       re-audit) that finds a check ERROR, a failed falsification script, or a reviewer finding against an ACTIVE claim, or
-      P6 spending above 1,200 core-hours, appends one line to the **hold file**
+      P6 spending above 1,700 core-hours in total (since 2026-11-09), appends one line to the **hold file**
       `C:/Users/felip/Bayesian-Variable-Selection/Theory_work/Wave3/HOLDS.md` (main checkout, absolute path):
       `HOLD <claim id | P6> <UTC time> <source> <one-line finding>`. Holds never edit the registry.
       - Every lead reads the hold file before each step. If a held claim is among its consumed claims (transitively), or
