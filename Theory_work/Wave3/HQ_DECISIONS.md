@@ -48,3 +48,9 @@
 - 2026-11-11 W3-POST2 PC2 (Sol): REPAIRED. `propagate.py patch` + `clear` on W3-POST2:D.D(b) and W3-POST2:D; both
   ACTIVE. PROVED-CHECKED labels for W3-POST2 claims A–E restored (evidence: C1 + PC1 + PC2); strength `better:PENDING`.
   First full use of the rollback path (suspect → repair → check → patch → clear): it worked end to end.
+- 2026-11-11 11:40 Owner (Felipe): deploy now, in owner-gated legs ("checkpoints"); HQ reports at each and waits for the
+  owner's greenlight. The 13:00 one-shot launch task is deleted (superseded). INFRA tool fixes round 2 merged (d6da494;
+  103/103 scenarios; Sol review breaks R1–R6 fixed); tag `theory-v2.0-pre` pushed. **Leg A**: W3-START to CP1 (Fable CP,
+  branch theory/W3-START), W3-MEMO-SCR-RM complete (Fable CP + blind Astra), pipeline reconciliation R03 (Sol). W3-P6 lead
+  (Opus CW) starts only if R03 finds no open CRITICAL, and stops at CP0 (smoke manifest; nothing submitted on NOTS in
+  leg A). Leg A ends → report to Felipe → wait.
