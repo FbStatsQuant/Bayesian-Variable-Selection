@@ -14,6 +14,8 @@ OpenAI seat + one Claude seat, both ≥ 8.0 with all six gates in the same round
    OpenAI agents on `codex`.
    **Amended 2026-11-10 (owner):** about 2/3 of all Claude inference on Claude Personal and 1/3 on Claude Work;
    Fable 5.2 still only on Claude Personal. Leads keep a running tally in LOG.md.
+   **Amended 2026-11-11 (owner), supersedes the 2026-11-10 line until further notice:** Claude Personal runs **only
+   Fable 5.2**; every other Claude agent (Opus/Sonnet/Haiku, incl. subagents and council seats) on **Claude Work**.
 3. **Sharpness gate (before heavy proving):** after the statement lock, write `ASSUMPTION_MAP.md` — one page: where
    each assumption enters the proof sketch and whether it looks necessary; run **boundary-violation numerics** (simulate
    just outside each assumption; if the conclusion still holds, flag the assumption `improvable`); and get one fresh
