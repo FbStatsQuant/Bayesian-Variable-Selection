@@ -76,3 +76,6 @@
   W3-P6 cleared to start: lead Opus CW, leg A = CP0 only (smoke manifest; NOTS read-only).
 - 2026-11-11 W3-START CP1 (branch @ 58309da): adopt P1, P3; P2 with a one-attempt kill budget; OVL inequality kept,
   corollary if cheap; O1–O3 deferred. Continuation waits for the owner's leg-B go.
+- 2026-11-11 ~17:40 CT (owner): all Claude threads on Claude Work, Fable 5.2 included; Claude Personal unused
+  (PROTOCOL item 2 amended). Switched: W3-START lead thread → CW Fable 5.2 high; watchdog thread → CW Opus high.
+  HQ thread moves to CW Opus high at the end of this turn (memory copied to the CW config).
