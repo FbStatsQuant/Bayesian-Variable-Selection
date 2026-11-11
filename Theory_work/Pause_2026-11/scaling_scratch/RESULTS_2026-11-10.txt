@@ -1,0 +1,43 @@
+Micro-benchmarks for SCALING_DESIGN_v0.md (2026-11-10). Local PC: Intel i7-6700 @ 3.4 GHz (4C/8T, AVX2), Windows 10,
+GCC 14.3.0 (Rtools45, x86_64), single thread. Harness: bench.cpp in this directory (includes the production headers
+Scripts/SMC_BVS/core/cpp/*.h read-only; no production file was edited). Build (production flags of Makevars.v3):
+  g++ -std=gnu++17 -O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2 -I<core/cpp> bench.cpp -o bench.exe
+  (bench_v3.exe: same with -O3 -march=x86-64-v3, AVX2, still -ffp-contract=off)
+Synthetic design: n = 200, groups of 5 columns sharing a latent factor (within-group r ~ 0.6), y from 10 columns + N(0,1).
+Total CPU used by all runs: about 1.5 minutes.
+
+[gram] data_init Gram (production, sequential) vs lane-parallel Gram (each entry the same sequential sum over i)
+gram n=200 p=1000 data_init_s=0.122 lane_gram_s=0.054 speedup=2.3 mismatched_entries=0 of 1000000
+gram n=200 p=2000 data_init_s=0.451 lane_gram_s=0.272 speedup=1.7 mismatched_entries=0 of 4000000
+gram n=200 p=4000 data_init_s=1.828 lane_gram_s=1.182 speedup=1.5 mismatched_entries=0 of 16000000
+gram (x86-64-v3 build) n=200 p=4000 data_init_s=1.628 lane_gram_s=0.470 speedup=3.5 mismatched_entries=0 of 16000000
+(data_init times include generating the synthetic X, a few ms.)
+
+[score] Scorer::score with the stored Gram vs Gram-free columns recomputed from X (try_chol(S, from_X = true)), random S
+score n=200 p=5000 k=1   gram_us=0.434   gramfree_us=0.734    mismatches=0/20000
+score n=200 p=5000 k=5   gram_us=1.119   gramfree_us=4.370    mismatches=0/20000
+score n=200 p=5000 k=10  gram_us=3.063   gramfree_us=14.472   mismatches=0/20000
+score n=200 p=5000 k=20  gram_us=6.975   gramfree_us=53.688   mismatches=0/20000
+score n=200 p=5000 k=50  gram_us=67.244  gramfree_us=317.620  mismatches=0/2000
+score n=200 p=5000 k=100 gram_us=374.551 gramfree_us=1346.542 mismatches=0/400
+(Gram-free here recomputes all k(k+1)/2 dot products sequentially: the worst case; an incremental Gram-free flip needs k.)
+
+[tables] build_tables (production) vs DFS bordered-Cholesky table scorer (prefix factor reused, one row appended)
+tables n=200 B=14 blocks=20 scores=327680 ref 1.13 us/score  dfs 0.18 us/score speedup=6.1 fallback=0 mismatches=0
+tables n=200 B=16 blocks=6  scores=393216 ref 1.56 us/score  dfs 0.19 us/score speedup=8.2 fallback=0 mismatches=0
+tables n=200 B=10 blocks=40 scores=40960  ref 0.98 us/score  dfs 0.19 us/score speedup=5.2 fallback=0 mismatches=0
+
+[setup] clustering and neighbour graph (B = 14); partial-selection neighbour graph (nth_element, same total order)
+setup p=1000 complete_linkage_s=0.040 make_blocks_s=0.040 J=106 neighbour_graph_s=0.099 partial_sel_s=0.013 nb_equal=1
+setup p=2000 complete_linkage_s=0.235 make_blocks_s=0.270 J=212 neighbour_graph_s=0.552 partial_sel_s=0.047 nb_equal=1
+setup p=4000 complete_linkage_s=1.146 make_blocks_s=1.180 J=420 neighbour_graph_s=2.685 partial_sel_s=0.193 nb_equal=1
+(complete linkage grows ~p^2.3 over 1k-4k; neighbour graph ~p^2 log p; partial selection 8-14x faster, identical output)
+
+[engine] one real Engine::run_island (B = 10 override, N = 64, T = 8 uniform grid, L = 2, Hm = 1), cache 500p
+engine p=1000 J=111 tables_s=0.11 nb_s=0.17 island_s=2.23 us/step=3.135 ms/particle_round=3.17  hit_rate=0.470
+engine p=2000 J=213 tables_s=0.22 nb_s=0.62 island_s=5.55 us/step=3.919 ms/particle_round=7.89  hit_rate=0.331
+engine p=4000 J=411 tables_s=0.46 nb_s=3.28 island_s=8.73 us/step=3.090 ms/particle_round=12.40 hit_rate=0.462
+micro p=1000 W=16 particle_copy_us=0.044 comp_us=0.099 flip_eval_miss_us=2.769 flip_eval_hit_us=0.265
+micro p=2000 W=32 particle_copy_us=0.058 comp_us=0.150 flip_eval_miss_us=4.310 flip_eval_hit_us=0.321
+micro p=4000 W=63 particle_copy_us=0.061 comp_us=0.062 flip_eval_miss_us=2.800 flip_eval_hit_us=0.237
+("step" = one elementary step of the round m = p + B + 2; flips at a model of size 10.)
