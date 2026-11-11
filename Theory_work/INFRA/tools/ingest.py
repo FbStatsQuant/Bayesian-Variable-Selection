@@ -21,9 +21,12 @@ ALL OR NOTHING: any problem (unknown field, unresolvable reference, unreadable s
 id, ...) is printed, NOTHING is written and the exit code is 1 — with or without --apply.
   (default)   dry run: validate and print what would change.
   --apply     validate, then write every registry file through .tmp siblings (all or none).
-  --staged    validate, apply to a disposable COPY of the registry (BVS_STAGE_INFRA), run the full check.py on that
-              copy and print its result (ERROR findings the fragment introduces are listed separately); the live
-              registry is never touched. Exit code = check.py's on the staged copy (1 on any ERROR).
+  --staged    validate, apply to a disposable COPY of the registry (BVS_STAGE_INFRA), run the full
+              `check.py --acceptance <every id it ingests>` on that copy and print its result (ERROR findings the
+              fragment introduces and the acceptance findings are listed separately); the live registry is never
+              touched. Exit code = check.py's on the staged copy (1 on any ERROR, acceptance included).
+REGISTRY blocks: fields are `name:` + zero or more spaces + value (one grammar). Inside a fenced block every
+non-blank line must be fields (anything else is a problem, never a silent end of the block).
 """
 from __future__ import annotations
 
@@ -122,20 +125,37 @@ def convert_report(path: str):
         return rel(m.group(1)), m.group(2)
 
     lines = open(path, encoding="utf-8").read().splitlines()
-    blocks, i = [], 0
+    fence_rx = re.compile(r"^(`{3,}|~{3,})")  # Markdown code fences: ``` or ~~~, length >= 3
+
+    def closes(t_, fence):  # a closing fence: same character, at least as long, nothing else on the line
+        m_ = fence_rx.match(t_)
+        return bool(m_) and m_.group(1)[0] == fence[0] and len(m_.group(1)) >= len(fence) and \
+            not t_[len(m_.group(1)):].strip()
+
+    blocks, i, fenced = [], 0, ""
     while i < len(lines):
-        if lines[i].strip() == "REGISTRY":
-            # the block runs to a closing fence, a heading or the next REGISTRY; blank lines inside it are skipped,
-            # and after a blank line the block continues while lines look like `field:` (an unknown field is then
-            # reported, never dropped); other prose after a blank line ends it
+        t0 = lines[i].strip()
+        if fenced and closes(t0, fenced):
+            fenced = ""
+            i += 1
+        elif not fenced and fence_rx.match(t0):
+            fenced = fence_rx.match(t0).group(1)
+            i += 1
+        elif lines[i].strip() == "REGISTRY":
+            # one grammar for fields: `name:` followed by zero or more spaces (Sol-4). Blank lines inside a block are
+            # skipped. In a FENCED block (the template) the block runs to the closing fence or the next REGISTRY,
+            # and every other non-blank line is parsed as fields, so a non-field line is reported, never a silent
+            # end. An unfenced block ends at a fence, a heading or the next REGISTRY, or at the first non-field line
+            # after a blank line.
             body, j, gap = [], i + 1, False
             while j < len(lines):
                 t_ = lines[j].strip()
-                if t_.startswith(("```", "#")) or t_ == "REGISTRY":
+                if t_ == "REGISTRY" or (closes(t_, fenced) if fenced else bool(fence_rx.match(t_))) or \
+                        (not fenced and t_.startswith("#")):
                     break
                 if not t_:
                     gap = True
-                elif gap and not re.match(r"^[a-z_]+:\s", t_):
+                elif gap and not fenced and not re.match(r"^[a-z_]+:", t_):
                     break
                 else:
                     body.append((j + 1, t_))
@@ -619,15 +639,25 @@ def staged(what, path):
         if rc != 0:
             print("\nSTAGED: ingest refused; nothing written anywhere")
             return 1
+        live_ids = {r["id"] for r in R.load_claims()}
+        new_ids = [r["id"] for r in R.read_tsv(os.path.join(stage, "registry", "claims.tsv"))[1]
+                   if r["id"] not in live_ids]
         rc_live, live, _ = R.check_findings()
-        rc_st, st, summary = R.check_findings(stage)
-        new = sorted(f for f in st - live if f[0] == "ERROR")
-        print(f"\nSTAGED check.py on the proposed registry: {summary.replace('check.py: ', '')}")
+        rc_st, st, summary = R.check_findings(stage, acceptance=new_ids)  # F3 / R04: CP3 acceptance on the stage
+        acc = sorted(f for f in st if f[1].startswith("A") and f[0] == "ERROR")
+        new = sorted(f for f in st - live if f[0] == "ERROR" and not f[1].startswith("A"))
+        print(f"\nSTAGED check.py on the proposed registry (with --acceptance on the {len(new_ids)} ingested id(s)): "
+              f"{summary.replace('check.py: ', '')}")
         print(f"  ERROR introduced by this {what} fragment: {len(new)}; ERROR already in the live registry: "
-              f"{sum(1 for f in st if f[0] == 'ERROR') - len(new)}")
+              f"{sum(1 for f in st if f[0] == 'ERROR' and not f[1].startswith('A')) - len(new)}")
         for f in new:
             print(f"  NEW {f[0]:5} {f[1]:17} {f[2]:30} {f[3]}")
-        print("(staged copy discarded; the live registry was not touched. Apply with --apply, then run check.py.)")
+        print(f"  acceptance ({', '.join(new_ids[:8])}{' …' if len(new_ids) > 8 else ''}): "
+              f"{'REFUSED' if acc else 'PASS'}; {len(acc)} acceptance ERROR")
+        for f in acc:
+            print(f"  ACC {f[0]:5} {f[1]:17} {f[2]:30} {f[3]}")
+        print("(staged copy discarded; the live registry was not touched. Apply with --apply only if this passed, "
+              "then run check.py --acceptance <ids> again.)")
         return rc_st
     finally:
         shutil.rmtree(stage, ignore_errors=True)

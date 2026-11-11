@@ -32,17 +32,38 @@ Tombstones (LIFECYCLE §3): a RETRACTED / DEPRECATED claim with `archive:<tag or
   or mismatching archive is an ERROR (C2-tombstone).
 Acceptance mode (HQ, CP3):  check.py --acceptance ID [ID ...]   runs every check above plus, for each named claim:
   A0 accept      [ERROR] unknown id; claim not ACTIVE
+  A0 inputs      [ERROR] a consumed claim is not ACTIVE: every claim reached through stmt / proof / bound-bridge
+                          edges (transitively), whatever its status text or acks; a direct `@hyp` input that is not
+                          ACTIVE unless the status is `conditional on` it (F1)
   A1 gates       [ERROR] headline (headline=yes) without correct:PASS(ev), lit:PASS(ev), necessity:PASS(ev), and
                           better:PASS(ev) or every better-theorem proposal disposed
+  A1 evidence    [ERROR] any claim: a `name:PASS(ev)` whose evidence does not resolve to an existing repository file
+                          (first token of ev, plus every later path-like token; `path[:a-b][@commit]`, relative to the
+                          repo root, the ticket folder, or the statement / status-source folder; a pinned commit must
+                          contain it) (F2)
+  A1 correct     [ERROR] checked status (PROVED-CHECKED class) with neither correct:PASS(resolving ev) nor a valid
+                          council record (F2: every checked claim, not only headlines)
   A2 better      [ERROR] `better-proposal:<label>(ev)` without `better-disposition:<label>=<declined|adopted|ticket|
                           remark>(ev)`; better:PASS whose evidence mentions a proposal not recorded that way
-  A3 assurance   [ERROR] a checked status (PROVED-CHECKED class) whose direct input (depends_on or bound bridge) is
-                          below that assurance (author-only / unchecked, PARTIAL / SKETCH / CONDITIONAL, OPEN / GAP,
-                          or unclassified), unless the input is a DECLARED hypothesis of the statement: every edge to
-                          it is `ID@hyp` AND its id, an alias or its name occurs (as a whole token) in the hashed
-                          statement / premise text. Acks do not waive it.
+  A3 assurance   [ERROR] a checked status whose direct input (depends_on or bound bridge) is below that assurance
+                          (author-only / unchecked, PARTIAL / SKETCH / CONDITIONAL, OPEN / GAP, or unclassified), unless
+                          the input is a DECLARED hypothesis: every edge to it is `ID@hyp`, its id / alias / name occurs
+                          (as a whole token) in the hashed statement / premise text, AND the status says
+                          `conditional on <its id or name>`. Acks do not waive it.
+  A3 condition   [ERROR] a checked claim consuming (stmt / proof, transitively) a conditional result does not carry
+                          its condition (`conditional on <W>`) in its status; on accepting the conditional result, each
+                          existing checked descendant without it (R06 / Sol-2)
+  A4 council     [ERROR] a checked claim without a CP3-PASS council record: `council` =
+                          `R<k>; MANIFEST <64-hex>; <seat>=<score> PASS(<review>); <seat>=<score> PASS(<review>)`,
+                          two distinct seats and review files, each score >= 8.0 with all gates PASS, and each review
+                          file quoting the digest (the `manifest.py bind` rule) (R10)
   Gates are parsed per entry (`name:RESULT(evidence)`, ';'-separated outside parentheses); a gate counts as passed
   only if all its entries are PASS with evidence; unparsable or contradictory entries are A1 ERRORs.
+Merge / continuation audit:  check.py --consumed-vs GIT_REF --tickets T [T ...]   (rule 11, R07)
+  R7 consumed    [ERROR] a claim consumed by T is not ACTIVE here, absent from / not ACTIVE in the registry at GIT_REF
+                          (read with `git show GIT_REF:Theory_work/INFRA/registry/claims.tsv`), or at a higher major
+                          version there; [WARN] other version / text difference
+Refuses to run while registry/.TXN_FAILED exists (a failed transaction restore; `bvsreg.py recover`).
 Exit code 1 if any ERROR (or any WARN with --strict).
 """
 from __future__ import annotations
@@ -69,7 +90,8 @@ def ref_ok(ref: str) -> bool:
     return R.git("rev-parse", "--verify", "--quiet", ref + "^{commit}")[0] == 0
 
 
-def run(acceptance=None):
+def run(acceptance=None, consumed=None):
+    R.txn_guard()
     out = []
 
     def add(sev, chk, cid, msg):
@@ -205,7 +227,7 @@ def run(acceptance=None):
             if ref:  # tombstone: evidence must stay reachable through the archive ref
                 if not any(R.git("cat-file", "-e", f"{ref}:{c.replace(os.sep, '/')}")[0] == 0 for c in cands):
                     add("WARN", "C9-evidence", r["id"], f"evidence file not found at archive {ref}: {p}")
-            elif not any(os.path.exists(os.path.join(R.ROOT, c)) for c in cands):
+            elif not any(R.repo_file_exists(c) for c in cands):
                 add("WARN", "C9-evidence", r["id"], f"evidence file not found: {p}")
     # C10 verbatim status: the status string must occur at status_source (± 3 lines), else anywhere in that file
     def norm(s):
@@ -383,6 +405,8 @@ def run(acceptance=None):
                 f"(use {rp.get('use')}) awaiting a check")
     if acceptance:
         acceptance_checks(acceptance, rows, by, ids, aliases, g, add)
+    if consumed:
+        consumed_vs(consumed[0], consumed[1], rows, by, g, add)
     e = sum(o["severity"] == "ERROR" for o in out)
     w = sum(o["severity"] == "WARN" for o in out)
     return out, e, w, len(rows)
@@ -391,16 +415,17 @@ def run(acceptance=None):
 def statement_text(r) -> str:
     """The hashed text of a claim (statement span + premise spans), whitespace-normalised."""
     parts = [R.span_lines(f"{r.get('file', '')}:{r.get('lines', '')}") or []]
-    parts += [R.span_lines(s) or [] for s in R.split_list(r.get("premises", ""))]
+    parts += [R.premise_lines(s) or [] for s in R.split_list(r.get("premises", ""))]
     return re.sub(r"\s+", " ", " ".join(l for p in parts for l in p))
 
 
 def acceptance_checks(names, rows, by, ids, aliases, g, add):
-    """CP3 acceptance (LIFECYCLE §4, §5.5): strength gates block headline admission (R05), and a checked status may
-    not rest on a less-assured input unless that input is an explicit hypothesis of the statement (R06)."""
-    rev = {}
-    for al, t in aliases.items():
-        rev.setdefault(t, []).append(al)
+    """CP3 acceptance (LIFECYCLE §4, §5.5): every consumed claim ACTIVE (F1); gate evidence resolvable (F2); every
+    checked claim with correctness evidence and a CP3-PASS council record (F2, R10); strength gates block headline
+    admission (R05); a checked status may not rest on a less-assured input unless that input is an explicit,
+    status-carried hypothesis, inherited by every consumer (R06)."""
+    folder = {t["ticket"]: t.get("folder", "") for t in R.load_tickets()}
+    memo = {}
     for ref in names:
         cid = R.resolve(ref, ids, aliases)
         if cid is None:
@@ -409,9 +434,22 @@ def acceptance_checks(names, rows, by, ids, aliases, g, add):
         r = by[cid]
         if r["state"] != "ACTIVE":
             add("ERROR", "A0-accept", cid, f"state {r['state']}: only an ACTIVE claim can be accepted")
+        for d, path, why in R.invalid_inputs(cid, by, g, aliases):
+            add("ERROR", "A0-inputs", cid, f"consumes {d}, which is {why} (via {' -> '.join(path)}); repair it, or "
+                "remove / re-point the edge; acks and status text do not waive this")
+        fold = folder.get(r["ticket"], "")
         gts = r.get("gates", "")
         entries, unparsable = R.parse_gates(gts)
         passed = R.passed_gates(gts)
+        bad_ev = set()
+        for n, res, ev in entries:
+            if res != "PASS":
+                continue
+            for tok in R.evidence_refs(ev):
+                prob = R.resolve_evidence(tok, r, fold)[2]
+                if prob:
+                    bad_ev.add(n)
+                    add("ERROR", "A1-evidence", cid, f"gate {n}:PASS: {prob}")
         props = [(res, ev) for n, res, ev in entries if n == "better-proposal"]
         disp = {}
         for n, res, ev in entries:
@@ -450,28 +488,96 @@ def acceptance_checks(names, rows, by, ids, aliases, g, add):
             add("INFO", "A1-gates", cid, "not a headline (headline != yes): strength gates not required")
         if R.status_strength(r.get("status", "")) != 3:
             continue
+        # F2 / R10: correctness evidence and a CP3-PASS council record for EVERY checked claim
+        cprobs = R.council_problems(r, fold)
+        for p_ in cprobs:
+            add("ERROR", "A4-council", cid, f"council: {p_}")
+        if cprobs and ("correct" not in passed or "correct" in bad_ev):
+            add("ERROR", "A1-correct", cid, f"checked status {R.status_token(r['status'])!r} without correctness "
+                "evidence: neither correct:PASS(<existing review file>) nor a valid council record")
+        # R06: assurance of direct inputs; declared hypotheses must be carried by the status, and inherited
         text = None
+        st = r.get("status", "")
         for d in g.deps.get(cid, []):
             dr = by[d]
+            uses = g.uses[(cid, d)]
             s_d = R.status_strength(dr.get("status", ""))
+            if uses == {"hyp"}:
+                if not R.weak_or_invalid(dr):
+                    continue
+                text = statement_text(r) if text is None else text
+                names_d = R.claim_names(d, by, aliases)
+                hit, cond = R.name_hit(text, names_d), R.conditional_on(st, names_d)
+                if hit and cond:
+                    add("INFO", "A3-assurance", cid, f"uses {d}@hyp ({ASSURANCE.get(s_d, s_d)}, {dr['state']}) as a "
+                        f"declared hypothesis named in its statement ({hit!r}) and its status is conditional on it "
+                        f"({cond!r}); HQ attests it is stated as a hypothesis")
+                    continue
+                add("ERROR", "A3-assurance", cid, f"uses {d}@hyp ({ASSURANCE.get(s_d, s_d)}, {dr['state']}) but "
+                    + ("" if hit else "does not name it in the hashed statement / premise text")
+                    + (" and " if not hit and not cond else "")
+                    + ("" if cond else f"its status {st[:60]!r} is not 'conditional on <{d} or its name>'")
+                    + "; a conditional result must say so in its status")
+                continue
             if s_d == 3 or s_d == "NEG":
                 continue
-            uses = g.uses[(cid, d)]
-            us = ",".join(sorted(uses))
-            hit = None
-            if uses == {"hyp"}:  # declared conditional premise: every use of d must be `@hyp`
-                text = statement_text(r) if text is None else text
-                names_d = [d] + rev.get(d, []) + ([dr["name"]] if len(dr.get("name", "")) >= 4 else [])
-                hit = next((n for n in names_d if n and re.search(
-                    r"(?<![\w-])" + re.escape(re.sub(r"\s+", " ", n)) + r"(?![\w-])", text)), None)
-            if hit:
-                add("INFO", "A3-assurance", cid, f"uses {d}@hyp ({ASSURANCE.get(s_d, s_d)}) as a declared "
-                    f"hypothesis named in its statement ({hit!r}); HQ attests it is stated as a hypothesis")
+            add("ERROR", "A3-assurance", cid, f"status {R.status_token(st)!r} but uses {d}@"
+                f"{','.join(sorted(uses))}, whose assurance is below it ({ASSURANCE.get(s_d, s_d)}: "
+                f"{dr.get('status', '')[:80]!r}); check that input, or make it an explicit hypothesis: depend on it "
+                "ONLY as `" + d + "@hyp`, name it in the hashed statement / premise text, and write 'conditional on "
+                "<it>' in the status; acks do not waive this")
+        own = R.conditions(cid, by, g, memo)
+        for w, path in sorted(own.items()):
+            if len(path) == 2:
+                continue  # a direct @hyp condition: checked above
+            if not R.conditional_on(st, R.claim_names(w, by, aliases)):
+                add("ERROR", "A3-condition", cid, f"consumes the conditional result {path[1]}, which rests on {w} "
+                    f"(via {' -> '.join(path)}); its status {st[:60]!r} must carry the condition: 'conditional on "
+                    f"<{w} or its name>'")
+        for e_, path in sorted(R.consumers(cid, g).items()):
+            er = by[e_]
+            if er["state"] in R.DEAD or R.status_strength(er.get("status", "")) != 3:
                 continue
-            add("ERROR", "A3-assurance", cid, f"status {R.status_token(r['status'])!r} but uses {d}@{us}, whose "
-                f"assurance is below it ({ASSURANCE.get(s_d, s_d)}: {dr.get('status', '')[:80]!r}); check that "
-                "input, or make it an explicit hypothesis: depend on it ONLY as `" + d + "@hyp` AND name it (id, "
-                "alias or name) in the hashed statement / premise text; acks do not waive this")
+            for w in sorted(own):
+                if not R.conditional_on(er.get("status", ""), R.claim_names(w, by, aliases)):
+                    add("ERROR", "A3-condition", cid, f"descendant {e_} (via {' -> '.join(path)}) has the "
+                        f"unconditional status {er.get('status', '')[:50]!r} but rests on {cid}'s condition {w}; it "
+                        f"must carry 'conditional on <{w} or its name>'")
+
+
+def consumed_vs(ref, tickets, rows, by, g, add):
+    """R07 / rule 11: each claim the given ticket(s) consume, compared with the registry committed at `ref`
+    (e.g. origin/main): ERROR if it is absent there, not ACTIVE there, or at a higher major version there."""
+    rc, txt = R.git("show", f"{ref}:Theory_work/INFRA/registry/claims.tsv")
+    if rc != 0:
+        add("ERROR", "R7-consumed", "-", f"cannot read the registry at {ref!r}: {txt[:120]}")
+        return
+    there = R.index(R.read_tsv_text(txt))
+    mine = [r["id"] for r in rows if r["ticket"] in tickets]
+    if not mine:
+        add("ERROR", "R7-consumed", "-", f"no claims of ticket(s) {', '.join(tickets)} here")
+    major = lambda v: int(v.split(".")[0]) if R.SEMVER.match(v or "") else -1  # noqa: E731
+    seen = set()
+    for c in mine:
+        for d in g.deps.get(c, []):
+            if by[d]["ticket"] in tickets or (c, d) in seen:
+                continue
+            seen.add((c, d))
+            here, t = by[d], there.get(d)
+            pre = f"{c} consumes {d} (here {here['state']} v{here['version']})"
+            if here["state"] != "ACTIVE":
+                add("ERROR", "R7-consumed", c, f"{pre}: not ACTIVE here")
+            if t is None:
+                add("ERROR", "R7-consumed", c, f"{pre}: absent from the registry at {ref}")
+                continue
+            if t.get("state") != "ACTIVE":
+                add("ERROR", "R7-consumed", c, f"{pre}: {t.get('state')} at {ref} ({t.get('state_reason', '')[:80]})")
+            if major(t.get("version", "")) > major(here["version"]):
+                add("ERROR", "R7-consumed", c, f"{pre}: v{t.get('version')} at {ref} (the claim changed: re-check "
+                    "the use, then rebase onto it)")
+            elif t.get("version") != here["version"] or t.get("sha256") != here.get("sha256"):
+                add("WARN", "R7-consumed", c, f"{pre}: v{t.get('version')} at {ref} (proof / status / text "
+                    "changed: re-check a proof-level use)")
 
 
 def freeze_violations(rows, sharp, cfg):
@@ -515,9 +621,15 @@ def main():
     ap.add_argument("--strict", action="store_true", help="exit 1 on WARN too")
     ap.add_argument("--only", help="comma-separated check prefixes, e.g. C2,C4,S")
     ap.add_argument("--acceptance", nargs="+", metavar="CLAIM",
-                    help="CP3 acceptance: also run A0-A3 for these claims (blocking strength gates + assurance)")
+                    help="CP3 acceptance: also run A0-A4 for these claims (inputs ACTIVE, evidence, council, "
+                    "strength gates, assurance)")
+    ap.add_argument("--consumed-vs", metavar="GIT_REF",
+                    help="rule 11 / R07: compare each claim consumed by --tickets with the registry at GIT_REF")
+    ap.add_argument("--tickets", nargs="+", metavar="TICKET", help="the ticket(s) for --consumed-vs")
     a = ap.parse_args()
-    out, e, w, n = run(a.acceptance)
+    if bool(a.consumed_vs) != bool(a.tickets):
+        ap.error("--consumed-vs and --tickets go together")
+    out, e, w, n = run(a.acceptance, (a.consumed_vs, a.tickets) if a.consumed_vs else None)
     if a.only:
         keep = tuple(a.only.split(","))
         out = [o for o in out if o["check"].startswith(keep)]
@@ -536,6 +648,10 @@ def main():
         acc = sum(o["severity"] == "ERROR" and o["check"].startswith("A") for o in out)
         print(f"acceptance ({', '.join(a.acceptance)}): {'REFUSED' if counts['ERROR'] else 'PASS'}; {acc} "
               f"acceptance ERROR, {counts['ERROR'] - acc} other ERROR")
+    if a.consumed_vs:
+        r7 = [o for o in out if o["check"] == "R7-consumed"]
+        print(f"consumed-vs {a.consumed_vs} ({', '.join(a.tickets)}): "
+              f"{sum(o['severity'] == 'ERROR' for o in r7)} ERROR, {sum(o['severity'] == 'WARN' for o in r7)} WARN")
     print("by check: " + ", ".join(f"{k}={v}" for k, v in sorted(by_check.items())))
     if a.json:
         with open(a.json, "w", encoding="utf-8") as fh:

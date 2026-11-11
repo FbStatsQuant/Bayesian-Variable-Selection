@@ -31,4 +31,14 @@ implies: <existing registry ids this statement implies, each with a one-line rea
 sharpness: A:… = NECESSARY|NECESSARY-FOR-ROUTE|FAILED-REMOVAL|ARTEFACT|WEAKENABLE|NONE (evidence: file:line)
 binding: A:… forced by <claim id> via <mechanism> [signals]
 gates: correct:PASS(<council files>) ; lit:… ; necessity:… ; better:PASS(<review file>)
+council: R<k>; MANIFEST <64-hex digest>; sol=<score> PASS(reviews/<sol review>.md); opus=<score> PASS(reviews/<opus review>.md)
 ```
+
+Rules the CP3 acceptance check enforces on this block (LIFECYCLE §4, §4.1):
+- Fields are `name:` followed by zero or more spaces. Every non-blank line inside the fence must be fields.
+- Every `PASS(<evidence>)` names an existing file (paths relative to this folder or the repository root;
+  `file@<commit>` pins it).
+- A PROVED-CHECKED status needs the `council:` line of the ONE passing round: both seats ≥ 8.0 with all gates PASS,
+  the frozen manifest digest, and two review files that each quote `MANIFEST <digest>`.
+- A premise below PROVED-CHECKED is used only as `depends_on: <id>@hyp`, named in the statement, with
+  `conditional on <id or name>` in the status; every checked result that uses this one carries the same condition.

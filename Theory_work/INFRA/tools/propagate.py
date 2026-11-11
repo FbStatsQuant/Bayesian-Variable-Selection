@@ -16,7 +16,10 @@ Correctness rollbacks
                                                to it are reverted; remaining dependents SUSPECT
   deprecate ID --reason R                      wrong target: DEPRECATED; dependents SUSPECT; FAILED_ROUTES.md entry
   suspect   ID --reason R                      possible gap found: SUSPECT; dependents SUSPECT
-  clear     ID --reason R                      repaired: SUSPECT / REBASE-NEEDED / NARROWED -> ACTIVE (minor bump)
+  clear     ID --reason R                      repaired: SUSPECT / REBASE-NEEDED / NARROWED -> ACTIVE (minor bump);
+                                               refused while any consumed claim (stmt / proof edges, transitively)
+                                               is not ACTIVE, or a direct @hyp input is not ACTIVE and the status is
+                                               not `conditional on` it; acks never suffice (F1)
   retract|deprecate ID ... --archive REF       also mark the row a TOMBSTONE: `archive:REF` in its evidence (REF =
                                                tag / commit where its statement + evidence stay readable after its
                                                ticket's files are reverted; the statement hash must match at REF)
@@ -26,6 +29,10 @@ Correctness rollbacks
                                                REF, on the CURRENT graph (later dependents become SUSPECT), in a
                                                staged copy; the full check.py runs on that copy; only if it adds no
                                                ERROR is the staged state written (--apply). Dry run: the priced report.
+                                               F6: a surviving claim whose premise span lies in the ticket's files reads
+                                               it at REF (`path:a-b@archive:REF`), and check.py also runs on the
+                                               proposed POST-REVERT tree (the ticket's files removed; exact set with
+                                               --merge M: the files M changed, as at M^1); a new ERROR there refuses
 Strength (better theorems)
   promote   Y [--parity-with X] --reason R     CANDIDATE -> ACTIVE once Y passed the gates (all `k:PASS` of X)
   supersede X --by Y [--axes scope=better,rate=equal] [--key-step-checked EVIDENCE] --reason R
@@ -223,8 +230,64 @@ def topo_dependents_first(ids_, g):
     return order[::-1]
 
 
+KEPT_BY_REVERT = ("Theory_work/INFRA/registry/", "Theory_work/INFRA/DECISIONS.md", "Theory_work/INFRA/FAILED_ROUTES.md",
+                  "Theory_work/INFRA/issues/")  # LIFECYCLE §3 step 3 checks these out again after the revert
+
+
+def ticket_files(a, by, mine) -> dict[str, str]:
+    """F6: the repository files the documented revert changes -> {path: '-' (removed) | ref (content as at ref)}.
+    With --merge M: exactly the files M changed (as at M^1 after the revert, or removed if M added them).
+    Without it: every file under the ticket's folder (tickets.tsv) and the statement files of its claims, removed."""
+    out = {}
+    if a.merge:
+        rc, txt = R.git("diff", "--name-only", f"{a.merge}^1", a.merge)
+        if rc != 0:
+            sys.exit(f"--merge {a.merge!r}: not a merge commit of this repository ({txt[:200]})")
+        for p in txt.splitlines():
+            if p and not p.startswith(KEPT_BY_REVERT):
+                ok = R.git("cat-file", "-e", f"{a.merge}^1:{p}")[0] == 0
+                out[R._pkey(p)] = f"{a.merge}^1" if ok else "-"
+        return out
+    folder = next((t.get("folder", "") for t in R.load_tickets() if t["ticket"] == a.id), "")
+    if folder and os.path.isdir(os.path.join(R.ROOT, folder)):
+        for dp, dn, fs in os.walk(os.path.join(R.ROOT, folder)):
+            dn[:] = [d for d in dn if d not in (".git", "__pycache__")]
+            out.update({R._pkey(os.path.relpath(os.path.join(dp, f), R.ROOT)): "-" for f in fs})
+    out.update({R._pkey(by[c]["file"]): "-" for c in mine if by[c].get("file")})
+    return out
+
+
+def archive_premises(a, removed, steps_rows) -> tuple[list, list]:
+    """F6: surviving claims (not of the ticket, not dead) whose premise spans lie in the reverted files keep reading
+    them as committed at the archive (`path:a-b@archive:<ref>`), provided the text there equals the current text.
+    -> (registry.py set steps, blocking problems)."""
+    steps, probs = [], []
+    for r in steps_rows:
+        if r["ticket"] == a.id or r["state"] in R.DEAD:
+            continue
+        items, changed = [], False
+        for it in R.split_list(r.get("premises", "")):
+            s, ref = R.split_premise(it)
+            if not ref and R._pcase(s.rpartition(":")[0]) in {R._pcase(k) for k in removed}:
+                it, changed = f"{s}@{R.ARCHIVE_PREFIX}{a.archive}", True
+            items.append(it)
+        if not changed:
+            continue
+        now = R.claim_hash(r)
+        if now is None or now != r.get("sha256") or R.claim_hash(dict(r, premises=R.join_list(items))) != now:
+            probs.append(f"{r['id']}: its premise spans lie in the reverted files but the statement + premises "
+                         f"{'do not hash to its sha256 now' if now != r.get('sha256') else 'read differently at ' + a.archive}"
+                         "; fix its provenance before the rollback")
+            continue
+        steps.append(("registry.py", "set", r["id"], "premises=" + R.join_list(items), "--reason",
+                      f"rollback of ticket {a.id}: premise span(s) in its reverted files kept at archive {a.archive}"))
+    return steps, probs
+
+
 def rollback_ticket(a):
-    """R02: the registry part of rolling back a merged ticket, done on a staged copy and written all at once."""
+    """R02: the registry part of rolling back a merged ticket, done on a staged copy and written all at once.
+    F6: dependents' premise spans in the ticket's files move to the archive, and the staged registry is checked
+    twice: as written (before the revert) and on the proposed post-revert tree (the ticket's files removed)."""
     rows = R.load_claims()
     by = R.index(rows)
     g = R.Graph(rows)
@@ -260,17 +323,44 @@ def rollback_ticket(a):
             if rc != 0:
                 sys.exit(f"rollback-ticket refused: step {' '.join(st_[:3])} failed (nothing written):\n"
                          f"{out[-1500:]}")
+        removed = ticket_files(a, by, mine)
+        if a.archive and not blocking:
+            psteps, pprobs = archive_premises(a, removed,
+                                              R.read_tsv(os.path.join(stage, "registry", "claims.tsv"))[1])
+            blocking += pprobs
+            for st_ in psteps:
+                rc, out = R.run_staged(stage, *st_, "--actor", a.actor)
+                if rc != 0:
+                    sys.exit(f"rollback-ticket refused: step {' '.join(st_[:3])} failed (nothing written):\n"
+                             f"{out[-1500:]}")
         new_rows = R.index(R.read_tsv(os.path.join(stage, "registry", "claims.tsv"))[1])
         changed = [(c, by[c]["state"], new_rows[c]["state"]) for c in sorted(by)
                    if c in new_rows and new_rows[c]["state"] != by[c]["state"]]
+        moved_p = [c for c in sorted(by) if c in new_rows and new_rows[c].get("premises") != by[c].get("premises")]
         lost = sorted(set(by) - set(new_rows))
         _, live, _ = R.check_findings()
         rc_st, staged_f, summary = R.check_findings(stage)
         new_err = sorted(f for f in staged_f - live if f[0] == "ERROR")
+        with open(os.path.join(stage, R.POST_REVERT_FILE), "w", encoding="utf-8", newline="\n") as fh:
+            fh.write("".join(f"{p}\t{ref}\n" for p, ref in sorted(removed.items())))
+        _, post_f, summary_pr = R.check_findings(stage)  # the proposed post-revert tree
+        new_post = sorted(f for f in post_f - live - staged_f if f[0] == "ERROR")
         print("\n## State changes (staged)\n\n| claim | before | after |\n|---|---|---|")
         print("\n".join(f"| {c} | {b} | {n} |" for c, b, n in changed) or "| — | | |")
+        if moved_p:
+            print("\n## Premise spans kept at the archive (F6)\n\n" + "\n".join(
+                f"- {c}: `{new_rows[c]['premises']}`" for c in moved_p))
         print(f"\n## Staged check.py\n\n- {summary.replace('check.py: ', '')}\n- ERROR introduced by the rollback: "
               f"{len(new_err)}" + "".join(f"\n  - {f[1]} {f[2]}: {f[3]}" for f in new_err))
+        print(f"\n## Post-revert check.py (staged registry; {len(removed)} file(s) of {a.id} "
+              f"{'as at ' + a.merge + '^1 or removed' if a.merge else 'removed'})\n\n"
+              f"- {summary_pr.replace('check.py: ', '')}\n- further ERROR after the revert: {len(new_post)}"
+              + "".join(f"\n  - {f[1]} {f[2]}: {f[3]}" for f in new_post)
+              + ("" if a.merge else "\n- (file set guessed from the ticket folder and statement files: pass "
+                 "--merge <merge commit> for the exact set)"))
+        if new_post:
+            blocking.append(f"{len(new_post)} new check ERROR(s) on the post-revert tree (a surviving claim reads a "
+                            "file the revert removes: move its statement / status source, or fix it first)")
         if lost:
             blocking.append(f"rows lost: {lost}")
         if new_err:
@@ -326,6 +416,8 @@ def main():
     ap.add_argument("--archive", default="", help="retract / deprecate / rollback-ticket: tombstone archive ref")
     ap.add_argument("--as", dest="as_", default="retract", choices=["retract", "deprecate"],
                     help="rollback-ticket: retract (default) or deprecate the ticket's claims")
+    ap.add_argument("--merge", default="", help="rollback-ticket: the ticket's merge commit (exact set of files the "
+                    "revert changes, for the post-revert check)")
     a = ap.parse_args()
     a.dry_run = a.dry_run or not a.apply  # nothing is ever written without --apply
     if a.issues_dir:  # issue files may only go under Theory_work/INFRA/issues
@@ -338,6 +430,8 @@ def main():
         sys.exit("--reason is required")
     if a.archive and a.op not in ("retract", "deprecate", "rollback-ticket"):
         sys.exit(f"--archive is not accepted for {a.op}")
+    if a.merge and a.op != "rollback-ticket":
+        sys.exit(f"--merge is not accepted for {a.op}")
     if a.op == "rollback-ticket":
         return rollback_ticket(a)
 
@@ -626,11 +720,13 @@ def main():
         if a.op == "clear":
             if x["state"] not in ("SUSPECT", "REBASE-NEEDED", "NARROWED"):
                 sys.exit(f"{cid} is {x['state']}; clear lifts SUSPECT / REBASE-NEEDED / NARROWED only")
-            acks = set(R.split_list(x.get("acks", "")))
-            bad_in = [d for d in g.deps.get(cid, []) if by[d]["state"] in
-                      ("SUSPECT", "NARROWED", "RETRACTED", "DEPRECATED", "CANDIDATE") and d not in acks]
+            # F1: every consumed claim (transitively through stmt / proof edges) must be ACTIVE; a non-ACTIVE @hyp
+            # input only if the status is `conditional on` it (R06). Acks never suffice.
+            bad_in = R.invalid_inputs(cid, by, g, aliases)
             if bad_in:
-                sys.exit(f"clear refused: inputs still invalid {bad_in} (repair them, re-point, or record an ack)")
+                sys.exit("clear refused: consumed claims not ACTIVE: " + "; ".join(
+                    f"{d} {why} via {' -> '.join(p_)}" for d, p_, why in bad_in) + " (repair them first, or remove / "
+                    "re-point the edge, or declare it `@hyp` with a 'conditional on' status; an ack is not enough)")
             open_rp = [rp for rp in R.load_repoints() if rp["dependent"] == cid and rp["state"] == "PROPOSED"]
             if open_rp:
                 sys.exit(f"clear refused: {len(open_rp)} re-point proposal(s) still open for {cid}")

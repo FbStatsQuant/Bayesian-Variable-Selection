@@ -63,6 +63,44 @@ if os.environ.get("BVS_STAGE_INFRA"):
     INFRA = os.path.realpath(os.environ["BVS_STAGE_INFRA"])
 REG = os.path.join(INFRA, "registry")
 P = lambda f: os.path.join(REG, f)  # noqa: E731
+# Sol-1: a multi-file transaction whose own restore failed leaves this lock (backup locations + recovery steps).
+# Every tool refuses to run while it exists (import-time guard below, and safe_dest), until `bvsreg.py recover`.
+TXN_LOCK = P(".TXN_FAILED")
+
+
+def txn_guard() -> None:
+    if os.path.exists(TXN_LOCK):
+        raise SystemExit(f"REGISTRY LOCKED: {TXN_LOCK} exists (a multi-file write failed AND its restore failed, so "
+                         "the registry may be inconsistent). Read it, then run `python Theory_work/INFRA/tools/"
+                         "bvsreg.py recover` (restores every listed file from its backup), then check.py.")
+
+
+if __name__ != "__main__":  # `python bvsreg.py recover` is the one entry point that runs while locked
+    txn_guard()
+
+# F6 (rollback-ticket): in a STAGE only, `.post_revert.tsv` in the stage root lists repository files as they will be
+# after the documented `git revert` of a ticket: "<path>\t-" (removed) or "<path>\t<ref>" (content as at <ref>).
+# read_lines honours it, so check.py on the stage validates the proposed post-revert tree.
+POST_REVERT_FILE = ".post_revert.tsv"
+POST_REVERT = {}
+
+
+def _pkey(relpath: str) -> str:
+    return os.path.normpath(relpath or "").replace("\\", "/")
+
+
+def _pcase(relpath: str) -> str:
+    """Lookup key into POST_REVERT: normalised, case-folded on case-insensitive (Windows) file systems."""
+    k = _pkey(relpath)
+    return k.lower() if os.name == "nt" else k
+
+
+if INFRA != os.path.dirname(TOOLS) and os.path.isfile(os.path.join(INFRA, POST_REVERT_FILE)):
+    with open(os.path.join(INFRA, POST_REVERT_FILE), encoding="utf-8") as _fh:
+        for _ln in _fh.read().splitlines():
+            if "\t" in _ln:
+                _p, _r = _ln.split("\t", 1)
+                POST_REVERT[_pcase(_p)] = _r.strip() or "-"
 CLAIMS, TICKETS, ALIASES, EVENTS = P("claims.tsv"), P("tickets.tsv"), P("aliases.tsv"), P("events.log")
 ASSUMPTIONS, SHARPNESS, BINDING = P("assumptions.tsv"), P("sharpness.tsv"), P("binding.tsv")
 REPOINTS, COMPONENTS, CONFIG = P("repoints.tsv"), P("method_components.tsv"), P("config.tsv")
@@ -163,9 +201,12 @@ def read_tsv(path: str) -> tuple[list[str], list[dict]]:
     return header, rows
 
 
-def safe_dest(path: str) -> str:
+def safe_dest(path: str, guard: bool = True) -> str:
     """Refuse a write destination unless it resolves strictly inside Theory_work/INFRA and no component from INFRA
-    down to the file is a symlink or junction (so a planted link cannot redirect a write outside)."""
+    down to the file is a symlink or junction (so a planted link cannot redirect a write outside). No write at all
+    while the transaction lock exists (Sol-1)."""
+    if guard:
+        txn_guard()
     infra = os.path.realpath(INFRA)
     if os.path.realpath(INFRA) != os.path.abspath(INFRA) and os.path.islink(INFRA):
         raise SystemExit(f"refusing to write: {INFRA} is a link")
@@ -198,7 +239,9 @@ def write_tsv(path: str, header: list[str], rows: list[dict]) -> None:
 def replace_all(pairs) -> None:
     """Transaction over prepared files: [(tmp, dest)]. Each existing dest is first copied to dest.bak; then every tmp
     replaces its dest. On ANY failure every completed replacement is undone (from .bak, or removed if dest was new)
-    and the exception re-raised; .tmp / .bak files are removed in every case."""
+    and the exception re-raised; .tmp / .bak files are removed in every case, except the backups of a restore that
+    itself failed: those are kept and listed in the lock file TXN_LOCK, which blocks every tool until
+    `bvsreg.py recover` (Sol-1). A process killed mid-transaction is not covered."""
     import shutil
     done, baks, failed = [], [], []
     try:
@@ -211,7 +254,8 @@ def replace_all(pairs) -> None:
             existed = os.path.exists(dest)
             os.replace(tmp, dest)
             done.append((dest, existed))
-    except BaseException:
+    except BaseException as exc:
+        todo = []
         for dest, existed in reversed(done):
             try:
                 if existed:
@@ -220,7 +264,11 @@ def replace_all(pairs) -> None:
                     os.remove(dest)
             except OSError:
                 failed.append(dest + ".bak")
+                todo.append({"dest": dest, "backup": dest + ".bak" if existed else "",
+                             "action": "restore-from-backup" if existed else "remove-new-file"})
                 print(f"ROLLBACK FAILED for {dest} (backup {dest}.bak kept)", file=sys.stderr)
+        if todo:
+            write_txn_lock(todo, exc)
         raise
     finally:
         for tmp, _ in pairs:
@@ -229,6 +277,54 @@ def replace_all(pairs) -> None:
         for bak in baks:
             if os.path.exists(bak) and bak not in failed:
                 os.remove(bak)
+
+
+def write_txn_lock(todo, exc) -> None:
+    """Record a failed restore (Sol-1): what to put back, from where, and how. Written directly (no guard)."""
+    import json
+    info = {"utc": _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "argv": sys.argv,
+            "error": repr(exc), "restore": todo,
+            "recovery": ["python Theory_work/INFRA/tools/bvsreg.py recover   # puts every 'backup' back over its "
+                         "'dest' (or removes a 'remove-new-file' dest), then deletes this lock",
+                         "by hand, if recover fails: copy each backup over its dest, delete each remove-new-file "
+                         "dest, delete this file",
+                         "python Theory_work/INFRA/tools/check.py   # then re-run the failed command"]}
+    try:
+        with open(TXN_LOCK, "w", encoding="utf-8", newline="\n") as fh:
+            json.dump(info, fh, indent=1)
+    except OSError as e:  # pragma: no cover - last resort: tell the operator
+        print(f"COULD NOT WRITE THE LOCK {TXN_LOCK} ({e}); restore by hand: {todo}", file=sys.stderr)
+    print(f"REGISTRY LOCKED: {TXN_LOCK} (run bvsreg.py recover)", file=sys.stderr)
+
+
+def recover(dry_run: bool = False) -> int:
+    """`bvsreg.py recover`: undo a failed transaction from the lock file's backups, then remove the lock."""
+    import json
+    if not os.path.exists(TXN_LOCK):
+        print(f"no lock ({TXN_LOCK}): nothing to recover")
+        return 0
+    info = json.load(open(TXN_LOCK, encoding="utf-8"))
+    problems = []
+    for it in info.get("restore", []):
+        dest, bak = it.get("dest", ""), it.get("backup", "")
+        print(f"{'would ' if dry_run else ''}{it.get('action')}: {dest}" + (f" <- {bak}" if bak else ""))
+        if dry_run:
+            continue
+        try:
+            dest = safe_dest(dest, guard=False)
+            if it.get("action") == "restore-from-backup":
+                os.replace(safe_dest(bak, guard=False), dest)
+            elif os.path.exists(dest):
+                os.remove(dest)
+        except (OSError, SystemExit) as e:
+            problems.append(f"{dest}: {e}")
+    if problems or dry_run:
+        print("\n".join(f"PROBLEM {p}" for p in problems) or "(dry run: nothing changed)")
+        return 1 if problems else 0
+    os.remove(TXN_LOCK)
+    print(f"recovered {len(info.get('restore', []))} file(s); lock removed. Next: python "
+          "Theory_work/INFRA/tools/check.py, then re-run the failed command")
+    return 0
 
 
 def write_many(items) -> None:
@@ -330,6 +426,9 @@ _READ_REF = None  # set by at_ref(): read files from this git commit-ish instead
 def read_lines(relpath: str) -> list[str] | None:
     if _READ_REF:
         return read_lines_at(relpath, _READ_REF)
+    if POST_REVERT and _pcase(relpath) in POST_REVERT:  # staged post-revert tree (rollback-ticket)
+        ref = POST_REVERT[_pcase(relpath)]
+        return None if ref == "-" else read_lines_at(relpath, ref)
     fp = os.path.join(ROOT, relpath)
     if not relpath or not os.path.isfile(fp):
         return None
@@ -449,19 +548,43 @@ def span_lines(spec: str):
     return lines[span[0] - 1: span[1]]
 
 
+def split_premise(spec: str) -> tuple[str, str]:
+    """A premise item is `path:a-b`, or `path:a-b@archive:<ref>` when its file was reverted with a rolled-back ticket
+    (F6): the span is then read as committed at <ref>. -> (path:a-b, ref or '')."""
+    s, sep, ref = (spec or "").partition("@" + ARCHIVE_PREFIX)
+    return (s.strip(), ref.strip()) if sep else ((spec or "").strip(), "")
+
+
+def premise_lines(spec: str):
+    s, ref = split_premise(spec)
+    if ref:
+        with at_ref(ref):
+            return span_lines(s)
+    return span_lines(s)
+
+
 def claim_hash(row: dict, span=None) -> str | None:
-    """sha256 over the statement span plus every premise span (in order). None if any span is unreadable."""
+    """sha256 over the statement span plus every premise span (in order). None if any span is unreadable. An
+    archive-backed premise (`@archive:<ref>`) hashes exactly as the plain span did."""
     span = span or parse_span(row.get("lines", ""))
     lines = read_lines(row.get("file", ""))
     if lines is None or span is None or span[1] > len(lines):
         return None
     parts = [lines[span[0] - 1: span[1]]]
     for spec in split_list(row.get("premises", "")):
-        pl = span_lines(spec)
+        pl = premise_lines(spec)
         if pl is None:
             return None
-        parts.append(["--premise " + spec.rpartition(":")[0] + "--"] + pl)
+        parts.append(["--premise " + split_premise(spec)[0].rpartition(":")[0] + "--"] + pl)
     return text_hash([l for part in parts for l in part])
+
+
+def repo_file_exists(relpath: str) -> bool:
+    """A repository file exists (in the staged post-revert tree, when one is set)."""
+    k, kc = _pkey(relpath), _pcase(relpath)
+    if POST_REVERT and kc in POST_REVERT:
+        return POST_REVERT[kc] != "-" and git("cat-file", "-t", f"{POST_REVERT[kc]}:{k}") == (0, "blob")
+    return bool(relpath) and os.path.isfile(os.path.join(ROOT, relpath))
 
 
 def relocate(relpath: str, sha: str, length: int) -> tuple[int, int] | None:
@@ -796,9 +919,9 @@ def run_staged(stage: str, script: str, *args: str):
     return p.returncode, p.stdout + p.stderr
 
 
-def check_findings(stage: str | None = None):
-    """Run check.py (on the live registry, or on a staged copy) -> (returncode, {(severity, check, id, message)},
-    printed summary line)."""
+def check_findings(stage: str | None = None, acceptance=None):
+    """Run check.py (on the live registry, or on a staged copy; with `--acceptance <ids>` if given) ->
+    (returncode, {(severity, check, id, message)}, printed summary line)."""
     import json
     import tempfile
     fd, out = tempfile.mkstemp(suffix=".json", prefix="bvs-check-")
@@ -808,10 +931,14 @@ def check_findings(stage: str | None = None):
         env.pop("BVS_STAGE_INFRA", None)
         if stage:
             env["BVS_STAGE_INFRA"] = stage
-        p = subprocess.run([sys.executable, os.path.join(TOOLS, "check.py"), "--quiet", "--json", out],
+        p = subprocess.run([sys.executable, os.path.join(TOOLS, "check.py"), "--quiet", "--json", out,
+                            *(["--acceptance", *acceptance] if acceptance else [])],
                            capture_output=True, text=True, encoding="utf-8", errors="replace", env=env, cwd=ROOT)
-        with open(out, encoding="utf-8") as fh:
-            data = json.load(fh)
+        try:
+            with open(out, encoding="utf-8") as fh:
+                data = json.load(fh)
+        except (OSError, ValueError):
+            raise SystemExit(f"check.py did not run: {(p.stdout + p.stderr)[-800:]}")
     finally:
         os.remove(out)
     summary = next((l for l in p.stdout.splitlines() if l.startswith("check.py:")), "")
@@ -898,3 +1025,245 @@ def passed_gates(gts: str) -> set:
     for n, r, ev in parse_gates(gts)[0]:
         res.setdefault(n, []).append((r, ev))
     return {n for n, rs in res.items() if all(r == "PASS" and ev for r, ev in rs)}
+
+
+# ---------------------------------------------------------------- evidence references (F2 / R05)
+def _pathlike(t: str) -> bool:
+    """A later evidence token is a file reference if it has a path separator, a commit pin, or a file extension
+    (any length), and contains a letter or digit."""
+    if not re.search(r"[A-Za-z0-9]", t):
+        return False
+    return bool(re.search(r"[/\\@]", t) or re.search(r"\.[A-Za-z][A-Za-z0-9_]*(?::\d+(?:-\d+)?)?$", t))
+
+
+def evidence_refs(ev: str) -> list[str]:
+    """The file references in an evidence text: its first token (always a reference), plus every later token that
+    looks like a file path (`x.md`, `dir/x`, `x.longext`, `dir/x.md:12-30`, `x.md@<commit>`, `C:\\x`). Tokens are
+    separated by ',' or blanks."""
+    toks = [t.strip("`'\"") for t in re.split(r"[\s,]+", ev or "") if t.strip("`'\"")]
+    return toks[:1] + [t for t in toks[1:] if _pathlike(t)]
+
+
+def evidence_bases(row: dict, folder: str = "") -> list[str]:
+    """Directories an evidence path may be relative to: the repo root, the ticket folder (and its parent), the
+    folder of the statement file and of the status source."""
+    out = [""]
+    for d in (folder, os.path.dirname(folder) if folder else "", os.path.dirname(row.get("file", "")),
+              os.path.dirname((row.get("status_source", "") or "").rpartition(":")[0])):
+        if d and d not in out:
+            out.append(d)
+    return out
+
+
+def resolve_evidence(tok: str, row: dict, folder: str = ""):
+    """`path[:a-b][@commit]` -> (repo path, commit or '', None) or (None, '', problem). The file must exist in the
+    repository (and, when pinned, at that commit); a line span must be readable."""
+    path, pin = tok, ""
+    if "@" in tok:
+        path, _, pin = tok.rpartition("@")
+        if git("rev-parse", "--verify", "--quiet", pin + "^{commit}")[0] != 0:
+            return None, "", f"evidence {tok!r}: pinned commit {pin!r} is not a commit in this repository"
+    m = re.match(r"^(.*?):(\d+(?:-\d+)?)$", path)
+    span = m.group(2) if m else ""
+    path = m.group(1) if m else path
+    tried = []
+    for b in evidence_bases(row, folder):
+        c = _pkey(os.path.join(b, path) if b else path)
+        if c.startswith("../") or c == ".." or os.path.isabs(c) or c in tried:
+            continue
+        tried.append(c)
+        ok = git("cat-file", "-t", f"{pin}:{c}") == (0, "blob") if pin else repo_file_exists(c)
+        if not ok:
+            continue
+        if span:
+            lines = read_lines_at(c, pin) if pin else read_lines(c)
+            sp = parse_span(span)
+            if lines is None or sp is None or sp[1] > len(lines):
+                return None, "", f"evidence {tok!r}: span {span} not readable in {c}"
+        return c, pin, None
+    where = f" at commit {pin}" if pin else ""
+    return None, "", f"evidence {tok!r} resolves to no file{where} (tried: {', '.join(tried) or '-'})"
+
+
+def evidence_text(path: str, pin: str = "") -> str:
+    lines = read_lines_at(path, pin) if pin else read_lines(path)
+    return "\n".join(lines or [])
+
+
+# ---------------------------------------------------------------- council record (R10)
+# `council` cell, one machine-readable format (LIFECYCLE §4.1):
+#   R<k>; MANIFEST <64-hex>; <seat>=<score> PASS(<review file>); <seat>=<score> PASS(<review file>)
+# one passing round: its number, the frozen manifest digest both seats reviewed, and per seat the score and whether
+# ALL that seat's gates passed (PASS | FAIL), with the seat's review file (which must quote the digest).
+_C_ROUND = re.compile(r"^R(\d+)$")
+_C_MAN = re.compile(r"^MANIFEST ([0-9a-f]{64})$")
+_C_SEAT = re.compile(r"^([A-Za-z][\w.-]*)=(\d+(?:\.\d+)?) (PASS|FAIL)\((.+)\)$")
+COUNCIL_MIN = 8.0
+
+
+def council_problems(row: dict, folder: str = "") -> list[str]:
+    """[] iff the claim's council record is a CP3-PASS: two seats (distinct names, distinct review files), each
+    >= 8.0 with all gates PASS, in one round, on one MANIFEST digest that every seat's review file quotes (the
+    `manifest.py bind` rule)."""
+    cell = (row.get("council") or "").strip()
+    if not cell:
+        return ["no council record (format: R<k>; MANIFEST <64-hex>; <seat>=<score> PASS(<review>); "
+                "<seat>=<score> PASS(<review>))"]
+    rounds, mans, seats, probs = [], [], [], []
+    for e in split_gates(cell):
+        if _C_ROUND.match(e):
+            rounds.append(e)
+        elif _C_MAN.match(e):
+            mans.append(_C_MAN.match(e).group(1))
+        elif _C_SEAT.match(e):
+            seats.append(_C_SEAT.match(e).groups())
+        else:
+            probs.append(f"unparsable council entry {e[:60]!r}")
+    if len(rounds) != 1:
+        probs.append(f"needs exactly one round entry R<k> (found {len(rounds)})")
+    if len(mans) != 1:
+        probs.append(f"needs exactly one `MANIFEST <64-hex>` digest (found {len(mans)})")
+    names = {s[0].lower() for s in seats}
+    if len(seats) < 2 or len(names) != len(seats):
+        probs.append(f"needs two (or more) distinct seats (found {[s[0] for s in seats]})")
+    files = []
+    for name, score, res, ev in seats:
+        if float(score) < COUNCIL_MIN or float(score) > 10:
+            probs.append(f"seat {name}: score {score} not in [{COUNCIL_MIN}, 10]")
+        if res != "PASS":
+            probs.append(f"seat {name}: not all gates PASS ({res})")
+        refs = evidence_refs(ev)
+        if len(refs) != 1:
+            probs.append(f"seat {name}: give exactly one review file (got {ev[:60]!r})")
+            continue
+        path, pin, prob = resolve_evidence(refs[0], row, folder)
+        if prob:
+            probs.append(f"seat {name}: {prob}")
+            continue
+        if _pcase(path) in files:  # same repository file, whatever its case or commit pin (two seats = two reviews)
+            probs.append(f"seat {name}: review file {path} is also another seat's (two seats = two reviews)")
+        files.append(_pcase(path))
+        if len(mans) == 1 and mans[0] not in evidence_text(path, pin):
+            probs.append(f"seat {name}: review {path} does not quote MANIFEST {mans[0][:12]}... (manifest.py bind)")
+    return probs
+
+
+# ---------------------------------------------------------------- consumed claims: validity and conditions
+def claim_names(cid: str, by: dict, aliases: dict) -> list[str]:
+    """Ways a claim can be named in text: its id, its aliases, its name (if >= 4 characters)."""
+    nm = (by.get(cid) or {}).get("name", "")
+    return [cid] + [a for a, t in aliases.items() if t == cid] + ([nm] if len(nm) >= 4 else [])
+
+
+def name_hit(text: str, names) -> str | None:
+    """The first name occurring in text as a whole token (whitespace-normalised), or None."""
+    t = re.sub(r"\s+", " ", text or "")
+    return next((n for n in names if n and re.search(
+        r"(?<![\w-])" + re.escape(re.sub(r"\s+", " ", n)) + r"(?![\w-])", t)), None)
+
+
+def conditional_on(status: str, names) -> str | None:
+    """R06: the status text says `conditional on <one of names>` (the name inside the clause that follows
+    'conditional on', up to ';' or the end)."""
+    s = status or ""
+    want = {re.sub(r"\s+", " ", n).strip().lower(): n for n in names if n}
+    for m in re.finditer(r"(?<![\w-])conditional on\b", s, re.I):
+        if re.search(r"\b(not|no longer|never|without)\s*$", s[:m.start()], re.I):
+            continue  # "not conditional on X" is the opposite claim
+        # the clause: up to the end of the sentence ('. ' / end), ';' or a closing ')'; a list of condition names
+        clause = re.split(r"\.(?:\s|$)|;|\)", s[m.end():], maxsplit=1)[0]
+        for item in re.split(r",|\band\b|&", clause):
+            item = re.sub(r"\s*\(.*$", "", item)  # "Lemma W (see §3" -> "Lemma W"
+            item = re.sub(r"\s+", " ", item).strip(" \t:`*_\"'").lower()
+            if item in want:  # the COMPLETE name: "Lemma Weak Extra" is not "Lemma Weak"
+                return want[item]
+    return None
+
+
+def weak_or_invalid(dr: dict) -> bool:
+    """An @hyp input needs the conditional-result treatment if it is below checked assurance or not ACTIVE."""
+    s = status_strength(dr.get("status", ""))
+    return (s != 3 and s != "NEG") or dr.get("state") != "ACTIVE"
+
+
+def invalid_inputs(cid: str, by: dict, g, aliases: dict) -> list[tuple[str, list[str], str]]:
+    """F1: consumed claims that are not ACTIVE -> [(id, path, why)]. Every claim reached from cid through edges that
+    are not @hyp-only (stmt / proof / bound bridges, transitively), plus each DIRECT @hyp input that is not ACTIVE
+    unless cid's status is `conditional on` it. Status text and acks never waive this."""
+    out, seen, q = [], {cid}, deque([(cid, [cid])])
+    st = by[cid].get("status", "")
+    while q:
+        u, path = q.popleft()
+        for d in g.deps.get(u, []):
+            if g.uses[(u, d)] == {"hyp"}:
+                if u == cid and by[d]["state"] != "ACTIVE" and not conditional_on(st, claim_names(d, by, aliases)):
+                    out.append((d, path + [d], f"{by[d]['state']} (@hyp, but the status is not 'conditional on' it)"))
+                continue
+            if d in seen:
+                continue
+            seen.add(d)
+            if by[d]["state"] != "ACTIVE":
+                out.append((d, path + [d], by[d]["state"]))
+            q.append((d, path + [d]))
+    return out
+
+
+def conditions(cid: str, by: dict, g, _memo=None, _stack=None) -> dict[str, list[str]]:
+    """R06: the conditions a claim's truth rests on -> {condition id: path}. A direct @hyp input that is weak or not
+    ACTIVE is a condition; conditions of inputs used through stmt / proof edges are inherited (transitively). A claim
+    used @hyp is assumed wholesale, so its own conditions are not inherited."""
+    memo = {} if _memo is None else _memo
+    stack = set() if _stack is None else _stack
+    if cid in memo:
+        return memo[cid]
+    stack.add(cid)
+    res = {}
+    for d in g.deps.get(cid, []):
+        if g.uses[(cid, d)] == {"hyp"}:
+            if weak_or_invalid(by[d]):
+                res.setdefault(d, [cid, d])
+        elif d not in stack:
+            for w, p in conditions(d, by, g, memo, stack).items():
+                res.setdefault(w, [cid] + p)
+    stack.discard(cid)
+    memo[cid] = res
+    return res
+
+
+def consumers(cid: str, g) -> dict[str, list[str]]:
+    """Transitive dependents of cid through edges that are not @hyp-only -> {id: path} (they inherit its
+    conditions)."""
+    paths, q = {cid: [cid]}, deque([cid])
+    while q:
+        u = q.popleft()
+        for v in sorted(g.rdeps.get(u, [])):
+            if v not in paths and g.uses[(v, u)] != {"hyp"}:
+                paths[v] = paths[u] + [v]
+                q.append(v)
+    paths.pop(cid)
+    return paths
+
+
+def read_tsv_text(text: str) -> list[dict]:
+    lines = (text or "").splitlines()
+    if not lines:
+        return []
+    header = lines[0].split("\t")
+    out = []
+    for ln in lines[1:]:
+        if not ln.strip() or ln.startswith("#"):
+            continue
+        cells = ln.split("\t")
+        cells += [""] * (len(header) - len(cells))
+        out.append(dict(zip(header, cells)))
+    return out
+
+
+if __name__ == "__main__":
+    import argparse
+    _ap = argparse.ArgumentParser(description="bvsreg.py recover [--dry-run]: undo a transaction whose own restore "
+                                  "failed (the lock file registry/.TXN_FAILED), then remove the lock")
+    _ap.add_argument("cmd", choices=["recover"])
+    _ap.add_argument("--dry-run", action="store_true")
+    _a = _ap.parse_args()
+    sys.exit(recover(_a.dry_run))

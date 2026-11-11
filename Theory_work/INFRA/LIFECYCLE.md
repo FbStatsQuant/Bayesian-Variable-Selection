@@ -48,7 +48,12 @@ audit verdict / implementation claim, or an **external anchor** `SOP:<row>` (Sta
   Ingestion round-trips the registry schema (bound `consumes`, `method_commit`, `method_components`, binding-map
   rows, strength fields), rejects unknown fields and unresolvable references, and is all-or-nothing: any problem →
   nothing written, exit 1. At CP3: `ingest.py claims REPORT.md --staged` (applies to a disposable copy, runs the
-  full `check.py` there and prints it), then `--apply`, then `check.py` again before labelling or merging.
+  full `check.py --acceptance <every ingested id>` there and prints it, acceptance findings separately; exit 1 on
+  any ERROR), then `--apply` only if that passed, then `check.py --acceptance <ids>` again before labelling or
+  merging. REGISTRY-block fields are `name:` followed by zero or more spaces; inside a fenced block every non-blank
+  line must be fields (anything else is reported, it never ends the block silently).
+- `premises`: spans `path:a-b`; `path:a-b@archive:<ref>` reads the span as committed at `<ref>` (set by
+  `rollback-ticket` when the file is reverted with a rolled-back ticket; the hash is unchanged).
 - `state` (lifecycle, added by INFRA): `ACTIVE`, `CANDIDATE` (new result not yet at assurance parity),
   `SUSPECT` (an input is in doubt), `REBASE-NEEDED` (still true, but built on a superseded input and scheduled to be
   rebuilt), `NARROWED` (statement narrowed in place, dependents being checked), `RETRACTED`, `DEPRECATED`,
@@ -113,7 +118,7 @@ SUSPECT / REBASE-NEEDED --clear or confirm-repoint--> ACTIVE
 | **NARROW** | statement too strong; a narrower one holds | edited in place | edit the statement → `propagate.py narrow ID --still-covers "stmt:(a);proof:E_n" --reason R` (owns the major bump) → `registry.py rehash ID --bump none --reason "narrowed text"` | Felipe (headline) / HQ |
 | **RETRACT** | statement false | kept for history | `propagate.py retract ID --reason R` | Felipe (headline) / HQ |
 | **DEPRECATE** | wrong target / dead route | kept, archived | `propagate.py deprecate ID --reason R` + archive branch + tag | Felipe (headline) / HQ |
-| SUSPECT / CLEAR | possible gap / repair done | — | `propagate.py suspect ID` / `propagate.py clear ID` | HQ |
+| SUSPECT / CLEAR | possible gap / repair done | — | `propagate.py suspect ID` / `propagate.py clear ID` (refused while any consumed claim — through stmt / proof edges, transitively — is not ACTIVE; a non-ACTIVE `@hyp` input only with a `conditional on <it>` status; an `ack` never suffices) | HQ |
 
 An OPEN proof gap (not yet repaired) is not a PATCH: mark the claim `suspect` (statement users become SUSPECT
 too) or `downgrade` it, and PATCH only once the repair is checked.
@@ -135,8 +140,8 @@ upstream claim; PATCH and `clear` if it survives, else narrow/retract and propag
    ```
    git switch -c theory/T-rollback origin/main
    git tag -a retracted/T -m "rollback of T: <reason>" HEAD          # archive = current main (current text)
-   python Theory_work/INFRA/tools/propagate.py rollback-ticket T --archive retracted/T --reason R     # 1. price
-   python Theory_work/INFRA/tools/propagate.py rollback-ticket T --archive retracted/T --reason R --apply  # 2.
+   python Theory_work/INFRA/tools/propagate.py rollback-ticket T --archive retracted/T --merge M --reason R  # 1. price
+   python Theory_work/INFRA/tools/propagate.py rollback-ticket T --archive retracted/T --merge M --reason R --apply  # 2.
    git add Theory_work/INFRA; git commit -m "rollback T: registry (tombstones + propagation)"   # incl. issues/
    git revert -m 1 --no-commit M                                     # 3. revert T's non-registry files ...
    git checkout HEAD -- Theory_work/INFRA/registry Theory_work/INFRA/DECISIONS.md \
@@ -146,8 +151,12 @@ upstream claim; PATCH and `clear` if it survives, else narrow/retract and propag
    ```
    Step 1 prices the rollback on the CURRENT graph (dependents added after the merge included) and writes nothing.
    Step 2 retracts (`--as deprecate` for a dead route) every live claim of T in a staged copy, propagates SUSPECT to
-   all later dependents (transitively), runs the full `check.py` on the copy and writes the whole staged state only
-   if it adds no ERROR. If the revert conflicts with later work on T's files, resolve in favour of the later work and
+   all later dependents (transitively), and moves every surviving claim's premise span that lies in a file the revert
+   changes to the archive (`path:a-b@archive:retracted/T`, refused if the text there differs). It then runs the full
+   `check.py` on the copy twice — as written, and on the proposed POST-REVERT tree (the files merge `M` changed, as
+   at `M^1` or removed; without `--merge`, the ticket folder and its claims' statement files are taken as removed)
+   — and writes the whole staged state only if neither adds an ERROR (a surviving claim whose statement or status
+   source the revert removes must be moved first). If the revert conflicts with later work on T's files, resolve in favour of the later work and
    re-run step 4. A single claim can be tombstoned with `propagate.py retract|deprecate ID --archive <tag>`. Do not
    hand-edit `claims.tsv` state fields — use `propagate.py`.
 4. DEPRECATE: `git branch archive/<ticket> <last commit of the route>` and `git tag -a deprecated/<ticket> …`, push
@@ -160,20 +169,52 @@ upstream claim; PATCH and `clear` if it survives, else narrow/retract and propag
 
 A claim enters the paper headline only after BOTH gates; they are separate reviews with separate reviewers.
 **Acceptance (HQ, CP3)** is mechanical and blocking: `check.py --acceptance <claim ids>` exits 1 (REFUSED) on any
-ERROR, including A1 (a headline without `correct:`, `lit:`, `necessity:` PASS with evidence, and without
-`better:PASS(evidence)` or a disposition for every better-theorem proposal; gates are parsed per `;`-entry
-`name:RESULT(evidence)`, and an unparsable entry or contradictory results for one gate are errors), A2 (a
-`better-proposal` with no evidence-backed disposition; a deferral is not a disposition) and A3 (a
-PROVED-CHECKED-class status resting on a direct input of lower assurance — author-only / unchecked, PARTIAL /
-CONDITIONAL, OPEN, or unclassified — unless that input is a DECLARED hypothesis: every edge to it is `ID@hyp` and
-its id, an alias or its name occurs as a whole token in the hashed statement / premise text; an `ack` does not
-waive it). A checked intermediate result that is not a headline is
-accepted without the strength gates; its headline admission stays pending.
+ERROR, including
+- A0: the claim is not ACTIVE, or a claim it consumes is not ACTIVE — every claim reached through `stmt` / `proof`
+  / bound-bridge edges, transitively, whatever its status text or `acks`; a direct `@hyp` input that is not ACTIVE
+  only if the status is `conditional on <it>`;
+- A1: a headline without `correct:`, `lit:`, `necessity:` PASS with evidence, and without `better:PASS(evidence)` or
+  a disposition for every better-theorem proposal (gates are parsed per `;`-entry `name:RESULT(evidence)`; an
+  unparsable entry or contradictory results for one gate are errors); for ANY claim, a `PASS(evidence)` whose
+  evidence does not resolve to an existing repository file (`A1-evidence`: the first token of the evidence, and every
+  later path-like token, as `path[:a-b][@commit]`, relative to the repository root, the ticket folder, or the folder
+  of the statement / status source; `@commit` pins it, and the file must then exist at that commit); and for EVERY
+  checked claim, headline or not, neither `correct:PASS(<existing file>)` nor a valid council record
+  (`A1-correct`);
+- A2: a `better-proposal` with no evidence-backed disposition (a deferral is not a disposition);
+- A3: a PROVED-CHECKED-class status resting on a direct input of lower assurance — author-only / unchecked, PARTIAL
+  / CONDITIONAL, OPEN, or unclassified — unless that input is a DECLARED hypothesis: every edge to it is `ID@hyp`,
+  its id, an alias or its name occurs as a whole token in the hashed statement / premise text, AND the status text
+  says `conditional on <its id or name>` (an incidental mention plus `@hyp` fails; the clause after "conditional on",
+  up to the end of its sentence, `;` or `)`, is a `,` / `and` list of COMPLETE ids or names, and "not / no longer
+  conditional on" does not count); every checked claim that consumes
+  a conditional result (through `stmt` / `proof` edges, transitively) must carry the same `conditional on <W>` in its
+  own status (`A3-condition`, checked on the consumer and, for existing consumers, on the conditional result); an
+  `ack` never waives A0 or A3;
+- A4: a checked claim without a CP3-PASS council record (§4.1).
+
+A checked intermediate result that is not a headline is accepted without the strength gates (but with A0, A1
+evidence / correct, A3 and A4); its headline admission stays pending. Before every continuation and merge,
+`check.py --consumed-vs origin/main --tickets <T>` compares each claim T consumes with the registry on current main
+(`git show <ref>:Theory_work/INFRA/registry/claims.tsv`): ERROR if it is absent or not ACTIVE there, or at a higher
+major version there (rule 11).
 
 ### 4.1 Correctness gate (`correct:PASS(...)`)
 The wave protocol: statement lock → lemma-by-lemma falsification numerics + cross-family line check → mid-point →
 exhaustive sweep → council (Codex Sol high + Claude Opus high, both ≥ 8.0, all gates PASS). On GitHub, the council
 pass is the PR approval (§9).
+
+**Council record** (`council` field; one machine-readable format; required at acceptance for every checked claim):
+```
+R<k>; MANIFEST <64-hex digest>; <seat>=<score> PASS(<review file>); <seat>=<score> PASS(<review file>)
+e.g.  R2; MANIFEST 3f9a…c1; sol=8.6 PASS(reviews/R2_council_sol.md); opus=8.3 PASS(reviews/R2_council_opus.md)
+```
+One record = the ONE passing round: its number, the digest of the frozen manifest both seats reviewed
+(`manifest.py freeze`), and per seat its score and `PASS` (all of that seat's gates passed) or `FAIL`, with its
+review file. Acceptance (A4) requires: exactly one `R<k>` and one `MANIFEST`; at least two seats with distinct names
+and distinct review files; every seat ≥ 8.0 and `PASS`; every review file resolving like gate evidence and quoting
+the digest (the `manifest.py bind` rule). Anything else — a failed or exhausted council, scores from different
+rounds, free text — is an A4 ERROR. Pre-Wave-3 rows keep their free-text council history; they are not re-accepted.
 
 ### 4.2 Strength gate (sharpness gate) — `lit:`, `necessity:`, `better:`
 (a) **Literature comparison** (`lit:PASS(file)`): each assumption and the conclusion compared with Song–Liang (2015)
@@ -260,15 +301,21 @@ Machine-enforced: statement + premise hashes; verbatim status at its source line
 source, e.g. "Not PROVED-CHECKED", is an ERROR); no status upgrade through any tool (`--status` only on
 downgrade / retract / deprecate, source-backed and never stronger); use-level propagation, including explicitly bound
 bridges (`P:X@id`) and transitive invalidation after reverts; lifecycle invariants (no valid claim on an invalid
-input without an ack; `clear` refuses while an input is invalid or a re-point proposal is open, and returns a
-replaced claim to SUPERSEDED-VALID); CANDIDATE → ACTIVE only against a reference claim with evidence-bearing
+input without an ack in the routine check; `clear` refuses while a consumed claim is not ACTIVE — an ack never
+suffices — or a re-point proposal is open, and returns a replaced claim to SUPERSEDED-VALID); CANDIDATE → ACTIVE only against a reference claim with evidence-bearing
 `k:PASS(evidence)` gates (one parser for every operation); supersede / coexist validity, strict dominance, gate
 parity, proved incomparability (all axes declared) for coexist, freeze; re-point confirmation only against the
 versions it was proposed for; retraction restores each dependent onto the latest VALID source in its re-point chain
 (or leaves it on the retracted claim and invalidates it); freeze evidence format; all-or-nothing ingestion with the
-full schema and a staged check; tombstones verified at their archive tag; atomic `rollback-ticket`; CP3 acceptance
-(A0–A3: strength gates, proposal dispositions, assurance of direct inputs). Attested by HQ / Felipe in the PR
-(with the review files linked): that the reviews named in `gates` examined the current statement version; reviewer
+full schema and a staged check that includes acceptance; tombstones verified at their archive tag; atomic
+`rollback-ticket`, validated on the proposed post-revert tree, with dependents' premise spans kept at the archive;
+CP3 acceptance (A0–A4: consumed claims ACTIVE, gate evidence files exist, correctness evidence and a dual-pass
+council record bound to one manifest digest for every checked claim, strength gates, proposal dispositions,
+assurance of direct inputs, conditional statuses carried downstream); `--consumed-vs` comparison with main; a
+multi-file write whose restore fails locks every tool (`registry/.TXN_FAILED`) until `bvsreg.py recover`.
+Attested by HQ / Felipe in the PR (with the review files linked): that the reviews named in `gates` / `council`
+examined the current statement version and say what the record claims (the tools check that the files exist and
+quote the digest, not their content); reviewer
 independence; that an `implies` edge is mathematically right; that a narrowing still covers the listed uses; the
 binding-map mechanisms; that a premise declared `@hyp` (A3 exemption) is really stated as a hypothesis in the statement text;
 that a proposal disposition is justified. The binding map and sharpness rows seeded on 2026-11-09 are DRAFTS until a headline's
@@ -316,8 +363,10 @@ show a visible flag. A claim gets a LaTeX statement by setting `tex=<path>:<a-b>
 ```
 python Theory_work/INFRA/tools/check.py [--quiet] [--only C,M,S]
 python Theory_work/INFRA/tools/check.py --acceptance ID [ID ...]           # CP3: blocking gates + assurance
-python Theory_work/INFRA/tools/ingest.py claims REPORT.md|F.jsonl [--staged | --apply]
-python Theory_work/INFRA/tools/propagate.py rollback-ticket T --archive TAG --reason R [--apply]
+python Theory_work/INFRA/tools/check.py --consumed-vs origin/main --tickets T   # continuation / merge (rule 11)
+python Theory_work/INFRA/tools/ingest.py claims REPORT.md|F.jsonl [--staged | --apply]   # --staged runs acceptance
+python Theory_work/INFRA/tools/propagate.py rollback-ticket T --archive TAG --merge M --reason R [--apply]
+python Theory_work/INFRA/tools/bvsreg.py recover [--dry-run]    # only if registry/.TXN_FAILED exists (tools refuse)
 python Theory_work/INFRA/tools/registry.py show|deps|rdeps|compare|sets|assumption-impact|stats ...
 python Theory_work/INFRA/tools/propagate.py <op> ID ...          # dry run (default)
 python Theory_work/INFRA/tools/propagate.py <op> ID ... --apply  # write

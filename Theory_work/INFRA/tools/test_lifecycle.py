@@ -277,7 +277,11 @@ try:
 
         def findings(*extra):
             out_json = os.path.join(TMP, "chk.json")
-            tool("check.py", "--quiet", "--json", out_json, *extra)
+            if os.path.exists(out_json):
+                os.remove(out_json)  # never read a stale result
+            rc_, out_ = tool("check.py", "--quiet", "--json", out_json, *extra)
+            if not os.path.exists(out_json):
+                return [("ERROR", "TOOL-FAILED", "-", out_[-300:])]
             return [(o["severity"], o["check"], o["id"], o["message"])
                     for o in _json.load(open(out_json, encoding="utf-8"))["findings"]]
 
@@ -295,7 +299,8 @@ try:
         put(f"{FIX}/STATEMENT.md", "## Lemma BR\nLemma BR. Property SAND holds.\n## Theorem THM\nTheorem THM. Under "
             "P:SAND the posterior concentrates.\n## Lemma W\nLemma W-hyp. A weak lemma.\n## Theorem H\nTheorem H. "
             "Then Z holds.\n## Theorem H2\nTheorem H2. Assume Lemma W-hyp holds. Then Z holds.\n## Other\nOther.\n")
-        put(f"{FIX}/REPORT.md", "# Fixture report\nPROVED-CHECKED\n\nPROVED (by this seat, unchecked)\n")
+        put(f"{FIX}/REPORT.md", "# Fixture report\nPROVED-CHECKED\n\nPROVED (by this seat, unchecked)\n"
+            "PROVED-CHECKED conditional on Lemma W-hyp\n")
         TRA = "Theory_work/WaveT/TR-A"
         put(f"{TRA}/STATEMENT.md", "## Lemma L\nLemma L. X holds.\n")
         put(f"{TRA}/REPORT.md", "# TR-A report\nPROVED-CHECKED\n")
@@ -482,10 +487,332 @@ try:
         results.append(("Sol-2 named in the statement but not declared @hyp (incidental mention): ERROR",
                         len(acc_err("AC:H2", "A3-assurance")) == 1))
         run("registry.py", "set", "AC:H2", "depends_on=AC:W@hyp", "--reason", "t")
-        results.append(("R06 input declared @hyp and stated as a hypothesis in the statement: no ERROR",
+        # since R02 item 5 the waiver also needs the status to carry the condition ("conditional on ...")
+        run("registry.py", "correct-status", "AC:H2", "--status", "PROVED-CHECKED conditional on Lemma W-hyp",
+            "--source", f"{FIX}/REPORT.md:5", "--reason", "t")
+        results.append(("R06 input declared @hyp, stated as a hypothesis in the statement, status 'conditional on' "
+                        "it: no ERROR",
                         not acc_err("AC:H2", "A3-assurance")))
         rc, out = tool("check.py", "--quiet", "--acceptance", "AC:H")
         results.append(("R05/R06 acceptance exits 1 and says REFUSED", rc != 0 and "REFUSED" in out))
+
+        # ---------------- pipeline review R02 (Wave 3): F1 F2 F3 F6, R04-R07, R10, Sol-1 Sol-2 Sol-4 ----------------
+        def git_commit(paths, msg):
+            subprocess.run(["git", "-C", TMP, "add", "-f", *paths], capture_output=True)
+            subprocess.run(["git", "-C", TMP, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", msg],
+                           capture_output=True)
+            return subprocess.run(["git", "-C", TMP, "rev-parse", "HEAD"], capture_output=True,
+                                  text=True).stdout.strip()
+
+        def acc_errs(cid, *more):
+            return [f for f in findings("--acceptance", cid, *more) if f[0] == "ERROR" and f[2] == cid
+                    and (f[1].startswith("A") or f[1] == "TOOL-FAILED")]
+
+        Q = "Theory_work/WaveT/Q"
+        DG = hashlib.sha256(b"q-fixture").hexdigest()
+        put(f"{Q}/STATEMENT.md", "## Lemma X\nLemma QX. X holds.\n## Lemma Y\nLemma QY. Y holds.\n## Lemma Weak\n"
+            "Lemma Weak. A weak lemma.\n## Theorem H\nUnlike Lemma Weak, this result assumes nothing.\n## Theorem E\n"
+            "Theorem QE. Then E holds.\n## Other\nOther text.\n")
+        put(f"{Q}/REPORT.md", "# Q report\nPROVED-CHECKED\nPARTIAL\nPROVED-CHECKED conditional on Lemma Weak\n"
+            "PROVED-CHECKED not conditional on Lemma Weak\n"
+            "PROVED-CHECKED conditional on Other. Unlike Lemma Weak, no assumption is needed.\n"
+            "PROVED-CHECKED conditional on Lemma Weak Extra\n")
+        for s_ in ("sol", "opus"):
+            put(f"{Q}/reviews/R1_{s_}.md", f"Council round 1 ({s_}).\nReviewed MANIFEST {DG}\nScore 8.5, all gates PASS\n")
+        put(f"{Q}/reviews/R1_stale.md", "Council round 1 on another snapshot.\nMANIFEST " + "0" * 64 + "\n")
+        put(f"{Q}/reviews/gate.md", "gate review\n")
+        qsha = git_commit([Q], "Q fixture")
+        COUNCIL = f"R1; MANIFEST {DG}; sol=8.5 PASS(reviews/R1_sol.md); opus=8.2 PASS(reviews/R1_opus.md)"
+        qck = dict(status="PROVED-CHECKED", status_source=f"{Q}/REPORT.md:2")
+        qpart = dict(status="PARTIAL", status_source=f"{Q}/REPORT.md:3")
+        qcond = dict(status="PROVED-CHECKED conditional on Lemma Weak", status_source=f"{Q}/REPORT.md:4")
+
+        def qrow(loc, lines, **kw):
+            return dict(ticket=kw.pop("ticket", "Q"), local_id=loc, kind=kw.pop("kind", "lemma"),
+                        file=f"{Q}/STATEMENT.md", lines=lines, **kw)
+
+        # F1: an ack must not restore acceptance (or allow CLEAR) while a consumed claim is not ACTIVE
+        rc, out = tool("ingest.py", "claims", frag("q1", [
+            qrow("X", [1, 2], name="Lemma QX", council=COUNCIL, **qck),
+            qrow("Y", [3, 4], name="Lemma QY", depends_on=["Q:X@stmt"], council=COUNCIL, **qck)]), "--apply")
+        results.append(("R10 valid council record (R<k>, MANIFEST, 2 seats >= 8.0 PASS, reviews quote it): accepted",
+                        rc == 0 and not acc_errs("Q:X", "Q:Y")))
+        run("propagate.py", "suspect", "Q:X", "--reason", "known gap")
+        run("registry.py", "set", "Q:Y", "acks=Q:X", "--reason", "ack gap")
+        rc, out = run("propagate.py", "clear", "Q:Y", "--reason", "ack permits clear", ok=False)
+        results.append(("F1 clear refused while an input is SUSPECT, even with an ack",
+                        rc != 0 and st("Q:Y")["state"] == "SUSPECT"))
+        results.append(("F1 acceptance of the dependent refused", bool(acc_errs("Q:Y"))))
+        rc, out = tool("ingest.py", "claims", frag("q2", [
+            qrow("Z", [3, 4], depends_on=["Q:X@stmt"], council=COUNCIL, **qck),
+            qrow("Z2", [3, 4], depends_on=["Q:Z@proof:E_n"], council=COUNCIL, **qck)]), "--apply")
+        run("registry.py", "set", "Q:Z", "acks=Q:X", "--reason", "t")
+        results.append(("F1 acceptance: ACTIVE claim on a SUSPECT (acked) input refused (A0-inputs)",
+                        rc == 0 and any(f[1] == "A0-inputs" for f in acc_errs("Q:Z"))))
+        results.append(("F1 acceptance: SUSPECT input reached transitively through @proof refused",
+                        any(f[1] == "A0-inputs" and "Q:X" in f[3] for f in acc_errs("Q:Z2"))))
+        run("propagate.py", "clear", "Q:X", "--reason", "repaired")
+        rc, _ = run("propagate.py", "clear", "Q:Y", "--reason", "input repaired")
+        results.append(("F1 clear allowed once the input is ACTIVE again", rc == 0 and st("Q:Y")["state"] == "ACTIVE"))
+
+        # R06 / Sol-2: @hyp needs a conditional status, carried by every descendant
+        rc, out = tool("ingest.py", "claims", frag("q3", [
+            qrow("W", [5, 6], name="Lemma Weak", **qpart),
+            qrow("H", [7, 8], kind="theorem", depends_on=["Q:W@hyp"], council=COUNCIL, **qck),
+            qrow("HC", [7, 8], kind="theorem", depends_on=["Q:W@hyp"], council=COUNCIL, **qcond)]
+            + [qrow(f"HN{k}", [7, 8], kind="theorem", depends_on=["Q:W@hyp"], council=COUNCIL,
+                    status=stx, status_source=f"{Q}/REPORT.md:{k + 4}")
+               for k, stx in ((1, "PROVED-CHECKED not conditional on Lemma Weak"),
+                              (2, "PROVED-CHECKED conditional on Other. Unlike Lemma Weak, no assumption is needed."),
+                              (3, "PROVED-CHECKED conditional on Lemma Weak Extra"))]), "--apply")
+        results.append(("Sol-R1 negated / other-sentence / longer-name 'conditional on' does not carry the condition "
+                        "(A3 ERROR each)", all(any(f[1] == "A3-assurance" for f in acc_errs(f"Q:HN{k}"))
+                                               for k in (1, 2, 3))))
+        results.append(("R06/Sol-2 'Unlike Lemma Weak, this result assumes nothing.' + @hyp + unconditional "
+                        "PROVED-CHECKED: ERROR", rc == 0 and any(f[1] == "A3-assurance" for f in acc_errs("Q:H"))))
+        results.append(("R06 @hyp + named + status 'conditional on Lemma Weak': no A3 ERROR",
+                        not [f for f in acc_errs("Q:HC") if f[1].startswith("A3")]))
+        rc, out = tool("ingest.py", "claims", frag("q4", [
+            qrow("E", [9, 10], kind="corollary", depends_on=["Q:HC@stmt"], council=COUNCIL, **qck),
+            qrow("EC", [9, 10], kind="corollary", depends_on=["Q:HC@stmt"], council=COUNCIL, **qcond)]), "--apply")
+        results.append(("R06 descendant of a conditional result with an unconditional status: ERROR",
+                        rc == 0 and any(f[1] == "A3-condition" for f in acc_errs("Q:E"))))
+        results.append(("R06 descendant carrying 'conditional on Lemma Weak': no A3 ERROR",
+                        not [f for f in acc_errs("Q:EC") if f[1].startswith("A3")]))
+        results.append(("R06 accepting the conditional result flags its unconditional descendant",
+                        any(f[1] == "A3-condition" and "Q:E" in f[3] for f in acc_errs("Q:HC"))))
+        run("propagate.py", "suspect", "Q:W", "--reason", "t")
+        rc_hc, _ = run("propagate.py", "clear", "Q:HC", "--reason", "conditional result stands", ok=False)
+        rc_h, _ = run("propagate.py", "clear", "Q:H", "--reason", "t", ok=False)
+        results.append(("R06 clear over a non-ACTIVE @hyp input: allowed only with a conditional status",
+                        rc_hc == 0 and st("Q:HC")["state"] == "ACTIVE" and rc_h != 0 and st("Q:H")["state"] == "SUSPECT"))
+        run("registry.py", "set", "Q:HN1", "acks=Q:W", "--reason", "t")
+        rc_n = [run("propagate.py", "clear", f"Q:HN{k}", "--reason", "t", ok=False)[0] for k in (1, 2, 3)]
+        results.append(("Sol-R1 clear over a SUSPECT @hyp input refused for the negated / misplaced / longer-name "
+                        "conditions (ack included)", all(rc_ != 0 for rc_ in rc_n)
+                        and all(st(f"Q:HN{k}")["state"] == "SUSPECT" for k in (1, 2, 3))))
+
+        # F2 / R05: gate evidence must resolve; correctness evidence for every checked claim; R10 council format
+        G4 = "; ".join(f"{k}:PASS(does-not-exist.md)" for k in ("correct", "lit", "necessity", "better"))
+        rc, out = tool("ingest.py", "claims", frag("q5", [
+            qrow("QH", [11, 12], kind="theorem", headline="yes", strength=dict(conclusion="posterior: z", gates=G4),
+                 **qck),
+            qrow("QL", [11, 12], **qck)]), "--apply")
+        e = acc_errs("Q:QH")
+        results.append(("F2 headline gates citing a nonexistent file: one ERROR per gate",
+                        rc == 0 and len([f for f in e if f[1] == "A1-evidence"]) == 4))
+        results.append(("R10 checked headline without a council record: ERROR", any(f[1] == "A4-council" for f in e)))
+        e = acc_errs("Q:QL")
+        results.append(("F2 non-headline checked lemma without correctness evidence: ERROR",
+                        any(f[1] == "A1-correct" for f in e) and any(f[1] == "A4-council" for f in e)))
+        run("registry.py", "set", "Q:QL", f"gates=correct:PASS(reviews/gate.md@{base})", "--reason", "t")
+        e_pin_bad = [f for f in acc_errs("Q:QL") if f[1] == "A1-evidence"]
+        run("registry.py", "set", "Q:QL", f"gates=correct:PASS(reviews/gate.md@{qsha})", "--reason", "t")
+        e_pin_ok = [f for f in acc_errs("Q:QL") if f[1] == "A1-evidence"]
+        results.append(("F2 evidence pinned to a commit must exist at that commit", bool(e_pin_bad) and not e_pin_ok))
+        later_ok = []
+        for gv in (f"Theory_work/WaveT/Q/reviews/gate.md missing@name.md", "reviews/gate.md missing.longextension",
+                   f"reviews/gate.md@{qsha}", f"reviews@{qsha}"):
+            run("registry.py", "set", "Q:QL", f"gates=correct:PASS({gv})", "--reason", "t")
+            if not [f for f in acc_errs("Q:QL") if f[1] == "A1-evidence"]:
+                later_ok.append(gv)
+        results.append(("Sol-R3/R4 later path-like tokens (x@y.md, x.longextension) and a pinned directory are "
+                        "validated", later_ok == [f"reviews/gate.md@{qsha}"]))
+        run("registry.py", "set", "Q:QL", f"gates=correct:PASS(reviews/gate.md@{qsha})", "--reason", "t")
+        bad_councils = {
+            "seat below 8.0": f"R1; MANIFEST {DG}; sol=7.9 PASS(reviews/R1_sol.md); opus=8.2 PASS(reviews/R1_opus.md)",
+            "a seat with a failed gate": f"R1; MANIFEST {DG}; sol=8.5 FAIL(reviews/R1_sol.md); "
+                                         "opus=8.2 PASS(reviews/R1_opus.md)",
+            "no MANIFEST": "R1; sol=8.5 PASS(reviews/R1_sol.md); opus=8.2 PASS(reviews/R1_opus.md)",
+            "review not quoting the digest": f"R1; MANIFEST {DG}; sol=8.5 PASS(reviews/R1_sol.md); "
+                                             "opus=8.2 PASS(reviews/R1_stale.md)",
+            "one seat": f"R1; MANIFEST {DG}; sol=8.5 PASS(reviews/R1_sol.md)",
+            "same review file for both seats": f"R1; MANIFEST {DG}; sol=8.5 PASS(reviews/R1_sol.md); "
+                                               "opus=8.5 PASS(reviews/R1_sol.md)",
+            "legacy free text": "Codex 8.6 / Opus 8.3, round 1",
+            "missing review file": f"R1; MANIFEST {DG}; sol=8.5 PASS(reviews/nope.md); opus=8.2 PASS(reviews/R1_opus.md)",
+            "same file in another case (Sol-R2)": f"R1; MANIFEST {DG}; sol=8.5 PASS(reviews/R1_sol.md); "
+                                                  "opus=8.5 PASS(reviews/R1_SOL.md)",
+            "same file once pinned (Sol-R2)": f"R1; MANIFEST {DG}; sol=8.5 PASS(reviews/R1_sol.md); "
+                                              f"opus=8.5 PASS(reviews/R1_sol.md@{qsha})",
+        }
+        bad_ok = []
+        for lab, cval in bad_councils.items():
+            run("registry.py", "set", "Q:QL", f"council={cval}", "--reason", "t")
+            if not any(f[1] == "A4-council" for f in acc_errs("Q:QL")):
+                bad_ok.append(lab)
+        results.append(("R10 malformed / failing council records are ERRORs: " + ", ".join(bad_councils),
+                        not bad_ok))
+        run("registry.py", "set", "Q:QL", f"council={COUNCIL}", "--reason", "t")
+        results.append(("R10 valid council alone supplies the correctness evidence of a lemma",
+                        not acc_errs("Q:QL")))
+
+        # F3 / R04: --staged also runs acceptance on the ids it ingests
+        d0 = reg_digest()
+        rc, out = tool("ingest.py", "claims", frag("q_nogates", [
+            qrow("NOGATES", [11, 12], kind="theorem", headline="yes", strength=dict(conclusion="posterior: z"),
+                 **qck)]), "--staged")
+        results.append(("F3 --staged runs --acceptance on the ingested ids: A1 ERRORs printed, exit 1, live untouched",
+                        rc != 0 and "A1-gates" in out and "Q:NOGATES" in out and "acceptance" in out
+                        and reg_digest() == d0))
+
+        # Sol-4: one grammar inside a REGISTRY block
+        g0 = put(f"{Q}/gap0.md", "REGISTRY\nclaim: T:X | kind: theorem | statement: STATEMENT.md:1-1\n\n"
+                 "gates:correct:PASS(c.md)\nshade: grey\n")
+        rc, out = tool("ingest.py", "convert", g0)
+        try:
+            conv = _json.loads(out.splitlines()[0])
+        except (ValueError, IndexError):
+            conv = {}
+        results.append(("Sol-4 zero-space field after a blank line kept; unknown field after it reported",
+                        rc != 0 and "shade" in out and (conv.get("strength") or {}).get("gates") == "correct:PASS(c.md)"))
+        g1 = put(f"{Q}/gap1.md", "```\nREGISTRY\nclaim: T:X | kind: theorem | statement: STATEMENT.md:1-1\n\n"
+                 "Some prose inside the fence.\ngates: correct:PASS(c.md)\n```\n")
+        rc, out = tool("ingest.py", "convert", g1)
+        try:
+            conv = _json.loads(out.splitlines()[0])
+        except (ValueError, IndexError):
+            conv = {}
+        results.append(("Sol-4 a non-field line inside a fenced block is an error and does not end the block",
+                        rc != 0 and "Some prose" in out and (conv.get("strength") or {}).get("gates") == "correct:PASS(c.md)"))
+
+        g2 = put(f"{Q}/gap2.md", "~~~\nREGISTRY\nclaim: T:X | kind: theorem | statement: STATEMENT.md:1-1\n\n"
+                 "# heading\nshade:grey\n~~~\n")
+        rc, out = tool("ingest.py", "convert", g2)
+        results.append(("Sol-R6 tilde-fenced block: a heading inside it and an unknown zero-space field are reported",
+                        rc != 0 and "heading" in out and "shade" in out))
+        g3 = put(f"{Q}/gap3.md", "````\nREGISTRY\nclaim: T:X | kind: theorem | statement: STATEMENT.md:1-1\n```\n"
+                 "gates:correct:PASS(c.md)\n````\n")
+        rc, out = tool("ingest.py", "convert", g3)
+        results.append(("Sol-R6 a shorter inner fence does not close a longer fence (reported, block continues)",
+                        rc != 0 and "```" in out and "correct:PASS(c.md)" in out))
+        # self-review hardening: negated / embedded "conditional on"; pinned evidence must be a file; path case
+        nm_ = ["Q:W", "Lemma Weak"]
+        results.append(("R06 'unconditional on X' / 'not conditional on X' do not carry the condition; the plain "
+                        "clause does", not R.conditional_on("PROVED-CHECKED, unconditional on Lemma Weak", nm_)
+                        and not R.conditional_on("PROVED-CHECKED (not conditional on Lemma Weak)", nm_)
+                        and R.conditional_on("PROVED-CHECKED conditional on Lemma Weak", nm_) == "Lemma Weak"))
+        qrow_ = {"file": f"{Q}/STATEMENT.md", "status_source": f"{Q}/REPORT.md:2"}
+        results.append(("F2 pinned evidence naming a directory (git tree) does not resolve; a pinned file does",
+                        R.resolve_evidence(f"reviews@{qsha}", qrow_)[2] is not None
+                        and R.resolve_evidence(f"reviews/gate.md@{qsha}", qrow_)[2] is None))
+        results.append(("F6 post-revert path keys ignore case on Windows",
+                        os.name != "nt" or R._pcase("Theory_work\\WaveT\\A.md") == R._pcase("theory_work/wavet/a.md")))
+
+        # F6: a surviving dependent whose premise span lives in the rolled-back ticket's files
+        F6, F6D, F6U = "Theory_work/WaveT/F6T", "Theory_work/WaveT/F6D", "Theory_work/WaveT/F6U"
+        put(f"{F6}/STATEMENT.md", "## Lemma F6X\nLemma F6X. X holds.\n## Setting\nThe setting S used by Y.\n")
+        put(f"{F6}/REPORT.md", "# F6T report\nPROVED-CHECKED\n")
+        put(f"{F6D}/STATEMENT.md", "## Lemma F6Y\nLemma F6Y. Y holds in setting S.\n")
+        put(f"{F6D}/REPORT.md", "# F6D report\nPROVED-CHECKED\n")
+        put(f"{F6U}/STATEMENT.md", "## Lemma F6UX\nLemma F6UX. X holds.\n## Lemma F6Z\nLemma F6Z (another ticket).\n")
+        put(f"{F6U}/REPORT.md", "# F6U report\nPROVED-CHECKED\n")
+        f6sha = git_commit([F6, F6D, F6U], "F6 fixture")
+        rc, out = tool("ingest.py", "claims", frag("f6", [
+            dict(ticket="F6T", local_id="X", kind="lemma", file=f"{F6}/STATEMENT.md", lines=[1, 2],
+                 status="PROVED-CHECKED", status_source=f"{F6}/REPORT.md:2"),
+            dict(ticket="F6D", local_id="Y", kind="lemma", file=f"{F6D}/STATEMENT.md", lines=[1, 2],
+                 premises=[f"{F6}/STATEMENT.md:3-4"], depends_on=["F6T:X@stmt"], status="PROVED-CHECKED",
+                 status_source=f"{F6D}/REPORT.md:2"),
+            dict(ticket="F6U", local_id="X", kind="lemma", file=f"{F6U}/STATEMENT.md", lines=[1, 2],
+                 status="PROVED-CHECKED", status_source=f"{F6U}/REPORT.md:2"),
+            dict(ticket="F6E", local_id="Z", kind="lemma", file=f"{F6U}/STATEMENT.md", lines=[3, 4],
+                 depends_on=["F6U:X@stmt"], status="PROVED-CHECKED", status_source=f"{F6U}/REPORT.md:2")]), "--apply")
+        rc, out = run("propagate.py", "rollback-ticket", "F6T", "--archive", f6sha, "--reason", "t")
+        y_ = st("F6D:Y")
+        results.append(("F6 rollback-ticket: dependent SUSPECT, its premise span re-read at the archive (provenance)",
+                        rc == 0 and y_["state"] == "SUSPECT" and f"@archive:{f6sha}" in y_["premises"]
+                        and "Post-revert" in out))
+        shutil.rmtree(os.path.join(TMP, F6))  # = the documented revert of the ticket's files
+        F = findings()
+        results.append(("F6 after the revert the final check has no ERROR for the ticket or its dependent",
+                        not [f for f in F if f[0] == "ERROR" and f[2].startswith(("F6T:", "F6D:"))]))
+        d1 = reg_digest()
+        rc, out = run("propagate.py", "rollback-ticket", "F6U", "--archive", f6sha, "--reason", "t", ok=False)
+        results.append(("F6 rollback refused when the post-revert tree breaks a surviving claim (statement in the "
+                        "ticket's files); nothing written", rc != 0 and "F6E:Z" in out and reg_digest() == d1
+                        and st("F6U:X")["state"] == "ACTIVE"))
+
+        if os.name == "nt":  # Sol-R5: the same file spelled in another case (Windows file systems ignore case)
+            F6C = "Theory_work/WaveT/F6C"
+            put(f"{F6C}/STATEMENT.md", "## Lemma F6CX\nLemma F6CX. X holds.\n## Lemma F6K\nLemma F6K (another ticket).\n")
+            put(f"{F6C}/REPORT.md", "# F6C report\nPROVED-CHECKED\n")
+            f6c = git_commit([F6C], "F6C fixture")
+            tool("ingest.py", "claims", frag("f6c", [
+                dict(ticket="F6C", local_id="X", kind="lemma", file=f"{F6C}/STATEMENT.md", lines=[1, 2],
+                     status="PROVED-CHECKED", status_source=f"{F6C}/REPORT.md:2"),
+                dict(ticket="F6K", local_id="Z", kind="lemma", file="Theory_work/WaveT/f6c/STATEMENT.md", lines=[3, 4],
+                     depends_on=["F6C:X@stmt"], status="PROVED-CHECKED", status_source=f"{F6C}/REPORT.md:2")]),
+                 "--apply")
+            d2 = reg_digest()
+            rc, out = run("propagate.py", "rollback-ticket", "F6C", "--archive", f6c, "--reason", "t", ok=False)
+            results.append(("Sol-R5 rollback refused when a survivor's statement is the ticket's file in another case",
+                            "F6K:Z" in R.index(R.load_claims()) and rc != 0 and "F6K:Z" in out and reg_digest() == d2))
+
+        # Sol-1: a failed restore locks the registry until `bvsreg.py recover`
+        f1, f2 = os.path.join(R.REG, "zz_l1.tsv"), os.path.join(R.REG, "zz_l2.tsv")
+        for f_ in (f1, f2):
+            open(f_, "w", encoding="utf-8").write("h\nold\n")
+        lock = os.path.join(R.REG, ".TXN_FAILED")
+        real_replace = R.os.replace
+
+        def fail(src, dst):  # the reviewers' probe: replacement of the 2nd file AND the restore both fail
+            if str(dst) == str(f2) or str(src).endswith(".bak"):
+                raise OSError("injected replacement/rollback failure")
+            return real_replace(src, dst)
+        R.os.replace = fail
+        try:
+            R.write_many([(f1, ["h"], [{"h": "new"}]), (f2, ["h"], [{"h": "new"}])])
+        except OSError:
+            pass
+        finally:
+            R.os.replace = real_replace
+        try:
+            lk = _json.load(open(lock, encoding="utf-8"))
+        except (OSError, ValueError):
+            lk = {}
+        results.append(("Sol-1 failed restore writes .TXN_FAILED with the backup locations and recovery steps",
+                        any(x.get("backup", "").endswith("zz_l1.tsv.bak") and os.path.exists(x["backup"])
+                            for x in lk.get("restore", [])) and "recover" in " ".join(lk.get("recovery", []))))
+        rc_c, out_c = tool("check.py", "--quiet")
+        rc_s, out_s = run("registry.py", "set", "Q:X", "notes=x", "--reason", "t", ok=False)
+        rc_p, out_p = run("propagate.py", "suspect", "Q:X", "--reason", "t", ok=False)
+        rc_i, out_i = tool("ingest.py", "claims", frag("lk", [qrow("LK", [11, 12], **qck)]), "--apply")
+        results.append(("Sol-1 check.py and every writing tool refuse while the lock exists",
+                        all(rc_ != 0 and "TXN_FAILED" in o_ for rc_, o_ in ((rc_c, out_c), (rc_s, out_s),
+                                                                            (rc_p, out_p), (rc_i, out_i)))))
+        rc_r, out_r = tool("bvsreg.py", "recover")
+        results.append(("Sol-1 bvsreg.py recover restores the backup and removes the lock",
+                        rc_r == 0 and not os.path.exists(lock) and open(f1).read() == "h\nold\n"
+                        and open(f2).read() == "h\nold\n" and tool("check.py", "--quiet")[1].find("TXN_FAILED") < 0))
+        if os.path.exists(lock):
+            os.remove(lock)
+        for f_ in (f1, f2, f1 + ".bak", f2 + ".bak"):
+            if os.path.exists(f_):
+                os.remove(f_)
+
+        # R07: consumed claims compared with the registry at another ref (current main)
+        rc, out = tool("ingest.py", "claims", frag("cv", [
+            qrow("A", [1, 2], ticket="CVX", council=COUNCIL, **qck),
+            qrow("B", [3, 4], ticket="CVX", council=COUNCIL, **qck),
+            qrow("C", [11, 12], ticket="CV", depends_on=["CVX:A@stmt", "CVX:B@stmt"], council=COUNCIL, **qck)]),
+            "--apply")
+        orig = open(R.CLAIMS, encoding="utf-8", newline="").read()
+        same = git_commit([R.CLAIMS], "registry as here")
+        rows_ = R.load_claims()
+        by_ = R.index(rows_)
+        by_["CVX:A"].update(state="SUSPECT", state_reason="suspected on main")
+        by_["CVX:B"]["version"] = "2.0.0"
+        R.save_claims(rows_)
+        ahead = git_commit([R.CLAIMS], "main moved on")
+        open(R.CLAIMS, "w", encoding="utf-8", newline="").write(orig)
+        F_same = [f for f in findings("--consumed-vs", same, "--tickets", "CV") if f[0] == "ERROR"
+                  and f[1].startswith(("R7", "TOOL"))]
+        F_main = [f for f in findings("--consumed-vs", ahead, "--tickets", "CV") if f[0] == "ERROR"
+                  and f[1].startswith("R7")]
+        results.append(("R07 --consumed-vs: identical registry at the ref gives no ERROR", rc == 0 and not F_same))
+        results.append(("R07 --consumed-vs: consumed claim non-ACTIVE at the ref, or at a higher major there: ERROR",
+                        any("CVX:A" in f[3] for f in F_main) and any("CVX:B" in f[3] for f in F_main)))
 
 finally:
     SB.__exit__(None, None, None)
