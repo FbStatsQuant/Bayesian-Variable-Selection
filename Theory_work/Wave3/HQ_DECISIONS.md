@@ -79,3 +79,9 @@
 - 2026-11-11 ~17:40 CT (owner): all Claude threads on Claude Work, Fable 5.2 included; Claude Personal unused
   (PROTOCOL item 2 amended). Switched: W3-START lead thread → CW Fable 5.2 high; watchdog thread → CW Opus high.
   HQ thread moves to CW Opus high at the end of this turn (memory copied to the CW config).
+- 2026-11-11 ~18:00 CT (owner): API audit GO. Pass 1 submitted: Message Batches `msgbatch_0148MUMvKUm8r1au3Y6W7Xpk`,
+  Fable 5.2 effort high, 39 requests (one per claim file), 109 PROVED-CHECKED claims, blind (reviews/ withheld).
+  Input 2.13 M tokens (≈ $8.5 at batch rate); worst-case output $50. Tool + inputs: Theory_work/Wave3/API_AUDIT/.
+  Findings → HQ triage → Sol confirmation → rule 11 (holds via HOLDS.md if confirmed CRITICAL/ERROR).
+- 2026-11-11 (owner): the HQ consultant runs on Claude Personal, Fable 5.1, effort high — the one exception to the
+  all-CW rule. Consulted on the W3-P6 ceiling basis and S3.
