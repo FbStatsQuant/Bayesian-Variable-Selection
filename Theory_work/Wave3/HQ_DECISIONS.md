@@ -114,3 +114,6 @@
 - 2026-11-11 API audit pass 2: 72 OK / 12 MINOR / 0 GAP/ERROR (≈ $14); f00 (8 W1-GEN headline claims) hit 64k → pass2b
   at 128k. Pass 3 (plan item 3, credit remains): msgbatch_017Qeq255ojPUvhjEePbobwf, 40 requests, 50 author-only PROVED
   W2-FAC-* claims; input ≈ $9, worst-case output $51 (balance ≈ $67, expires 2026-11-15).
+- 2026-11-11 W3-START CP2 (branch @ b469719): START-F proved (L1–L5), LC1 line checks + MP1 Astra
+  CONTINUE, audit OK. GO to CP3; STATEMENT v1.3.1 (necessity on the actual partition; partition-free only s₀ ≥ 16) +
+  Sol diff check; (B-R) kill budget one Fable attempt + one Astra break review, else narrow (T3)(b) via CP1.
