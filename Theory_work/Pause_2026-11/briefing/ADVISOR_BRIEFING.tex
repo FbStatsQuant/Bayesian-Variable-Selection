@@ -1,0 +1,227 @@
+% ADVISOR_BRIEFING.tex -- briefing for the advisor meeting (Friday 2026-11-13).
+% Every number and every status below carries a source comment "% SRC: path:line" (paths relative to the repo root).
+% Verification log: VERIFY.md in this folder.
+\documentclass[10pt]{article}
+\usepackage[a4paper,margin=1.9cm,top=1.7cm,bottom=1.8cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx,array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage[compact]{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{8pt}{3pt}
+\titlespacing*{\subsection}{0pt}{6pt}{2pt}
+\setlist{nosep,leftmargin=1.4em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\st}[1]{\textsf{\small[#1]}}
+\newcommand{\SL}{\textit{vs.\ Song--Liang:}~}
+\newcommand{\Shat}{\hat S}
+\renewcommand{\arraystretch}{1.08}
+\pagestyle{plain}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries SMC-BVS: method, evidence, theory, and next steps}\\[2pt]
+{\small Briefing for the advisor meeting \quad·\quad Felipe Bedoya \quad·\quad November 2026}
+\end{center}
+
+\vspace{-4pt}
+
+\textbf{Status words.} \st{proved, checked}: proof written and independently checked line by line.
+\st{proved, sign-off pending}: proof written and independently checked; final sign-off on the statement not yet recorded.
+\st{proved, unchecked}: proof written, independent check not yet done. \st{in progress}, \st{open}: as stated.
+All theorems are asymptotic in $n$, with $p=p_n\le n^A$ for an arbitrary fixed $A$ (so $p\gg n$ is included) unless said otherwise;
+conditions are on $(X,\theta^*)$ only; named design families appear only as examples.
+
+%=====================================================================
+\section{The method}
+
+\textbf{Target.} Gaussian linear model on standardised data with a $g$/ridge prior $\beta_S\mid\sigma^2\sim N(0,n\sigma^2(X_S^\top X_S+I)^{-1})$
+($g=n$), $\sigma^2\sim\mathrm{IG}(0.01,0.01)$, and a Beta-Binomial$(1,p)$ size prior truncated at $K=\min(p,\lfloor n/2\rfloor)$; the score of a model is
+$F(S)=\log\varpi(S)+\log m(S)$ and $\pi(S\mid y)\propto e^{F(S)}$ on $\Omega=\{|S|\le K\}$.
+% SRC: Theory_work/State_of_Project/sections/02_method.tex:78-102 (statement from Docs/Methodology/METHODOLOGY_v3.md:97-108); cap K: 02_method.tex:132
+The sampler is a sequential Monte Carlo sampler over model space that starts from an \emph{exactly sampled} block-product law and tempers towards $\pi$:
+\begin{enumerate}
+\item \textbf{Blocks and exact start law $\pi_0$.} Cluster columns (complete linkage on $1-|r_{jl}|$) into blocks of size $\le B$ ($B\le16$); score every sub-model of every block against the full $y$;
+ $\pi_0(S)\propto\varpi(S)\prod_b m(S\cap C_b)/m(\varnothing)$. Its normaliser $\bar Z_0$ is computed exactly (convolution of block size profiles) and $\pi_0$ is sampled exactly and iid.
+ % SRC: 02_method.tex:185-203 (METHODOLOGY_v3.md:164-177); B rule 02_method.tex:149 and :205
+\item \textbf{Bridge.} $\gamma_\varphi(S)=\gamma_0(S)\,e^{\varphi d(S)}$, $d(S)=\log\mathrm{BF}(S)-\sum_b\log r_b(S\cap C_b)$, $\varphi:0\to1$; $\gamma_1\propto\pi$.
+ % SRC: 02_method.tex:200-201
+\item \textbf{Grid calibration.} A pilot SMC chooses temperatures by population ESS $\ge0.90$; the final grid is rebuilt from the scored models with a restricted-ESS criterion (escalation tier if diagnostics fail).
+ % SRC: 02_method.tex:304-327 (METHODOLOGY_v3.md:205-227); ESS 0.90 at :309
+\item \textbf{Islands.} $R$ independent islands ($R=4$ in the study), each: reweight by $e^{(\varphi_t-\varphi_{t-1})d}$, resample (multinomial, every stage), move (a round of $p$ Gibbs coordinate updates, swaps, and one independence proposal from $\pi_0$; each step $\gamma_\varphi$-reversible). Evidence
+ $\hat Z_r=m(\varnothing)\,\bar Z_0\prod_t N^{-1}\sum_i e^{(\varphi_t-\varphi_{t-1})d(S_i^{(t-1)})}$.
+ % SRC: R=4 02_method.tex:155; moves 02_method.tex:264-281; resampling 02_method.tex:306; Zhat_r 02_method.tex:422
+\item \textbf{Outputs.} $\hat Z$ (mean of $\hat Z_r$); Rao--Blackwell PIPs (conditional inclusion probabilities recorded before each Gibbs draw, averaged over islands); MPM $=\{\mathrm{PIP}>\tfrac12\}$;
+ \textbf{HPM = best model scored anywhere} (a ledger of every model scored: tables, pilot, islands, independence proposals, searches).
+ % SRC: Theory_work/Wave3/W3-SAMP/REPORT.md:43-53 (Lemma CC :43-51, Lemma PC :52-53); RB PIP recording 02_method.tex:270-271
+\item \textbf{Final local search with certificate.} A greedy search (also run from the mode of $\pi_0$) ends with a flag \texttt{local\_certified}: no single deletion, addition or swap of the reported model scores higher.
+ % SRC: Theory_work/Wave3/W3-SCR/REPORT.md:13-18 (code check CC1-CC6)
+\end{enumerate}
+
+\textbf{What is unusual.} (i) SMC over model space with an \emph{exact} start law, so the bridge starts at a law we can sample and normalise exactly; (ii) each island's $\hat Z_r$ is unbiased for $Z$ (Thm~S1 below); (iii) the reported model is a \emph{search result} over everything scored, returned with a local-optimality certificate, and the theory is about that reported object, not only about the posterior.
+
+%=====================================================================
+\section{Empirical evidence (simulation study, \texorpdfstring{$p\gg n$}{p >> n})}
+
+\textbf{Design.} $n=200$, $p\in\{500,1000\}$; six covariance designs S1--S6 (independent; AR(1) 0.5; equicorrelation 0.7 and 0.85 within groups of 5; groups plus a global factor; heterogeneous groups);
+$|S_0|=14$ true variables with $|\beta|\in[0.8,1.8]$; two signal scales $c\in\{1,0.5\}$; 100 replicates per cell: $2\times6\times2\times100=2{,}400$ fits.
+Recovery means the selected set equals $S_0$ exactly; the 6 fits that hit the run-time limit count as misses.
+% SRC: Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md:3 (n, p, S1-S6, 100/cell, 14 truths, exact-recovery rule, failed = miss)
+% SRC: designs Theory_work/State_of_Project/sections/03_empirics.tex:38-45; beta pattern 03_empirics.tex:50-52; scales c in {1,0.5} 03_empirics.tex:29
+% SRC: 2,394 completed + 6 resource_limit HEADLINE_H.md:140-144
+% NOTE: the brief mentioned "14 signal settings"; the source has 14 true variables (|S0| = 14), not 14 settings.
+
+\begin{center}\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+ & \multicolumn{2}{c}{$c=1$ (strong)} & \multicolumn{2}{c}{$c=0.5$ (weak)}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Exact recovery, out of 600 & $p=500$ & $p=1000$ & $p=500$ & $p=1000$\\
+\midrule
+
+\textbf{SMC-BVS, HPM} & \textbf{559} (93.2\%) & \textbf{560} (93.3\%) & \textbf{370} (61.7\%) & \textbf{340} (56.7\%)\\
+SMC-BVS, MPM (RB PIP $>0.5$) & 559 & 561 & 338 & 321\\
+SuSiE & 585 & 582 & 220 & 205\\
+Spike-and-slab lasso & 569 & 582 & 303 & 255\\
+Horseshoe (95\% CI) & 574 & 575 & 185 & 136\\
+Adaptive lasso (EBIC, $k\le37$) & 493 & 512 & 253 & 197\\
+MCP (pre-registered EBIC rule) & 377 & 235 & 240 & 192\\
+ABESS (pre-registered EBIC rule) & 365 & 323 & 256 & 214\\
+Lasso / elastic net (EBIC, $k\le37$) & 111 / 61 & 89 / 50 & 24 / 14 & 15 / 10\\
+\bottomrule
+\end{tabular}
+\end{center}
+% SRC (all counts): Results/2026-10-28_New_Campaign/H2_20261102/HEADLINE_H.md
+%   c=1: HPM :44; MPM RB :45; SuSiE :47; SSL :49; horseshoe :50; MCP ebic1 :51; ABESS ebic1 :53; lasso K37 :55; EN K37 :56; aLasso K37 :57
+%   c=0.5: HPM :63; MPM RB :64; SuSiE :66; SSL :68; horseshoe :69; MCP ebic1_K37 :70; ABESS ebic1_K37 :72; lasso K37 :74; EN K37 :75; aLasso K37 :76
+%   percentages :116-119; MCP/ABESS primary rule (ebic1 at c=1, ebic1_K37 at c=0.5, pre-registered) :30
+\vspace{-6pt}
+{\small
+\begin{itemize}
+\item \textbf{Weak signal ($c=0.5$):} SMC-BVS is first or tied-first in 11 of 12 design cells and recovers 67 ($p=500$) and 85 ($p=1000$) more data sets than the best competitor (spike-and-slab lasso).
+ % SRC: HEADLINE_H.md:132
+\item \textbf{Strong signal ($c=1$):} 4th of 9, behind SuSiE, spike-and-slab lasso and the horseshoe (about 93\% vs 95--97\%); almost every miss adds variables to $S_0$. It beats the lasso family, MCP and ABESS (their EBIC rules with $k\le37$) in all 24 cells.
+ % SRC: HEADLINE_H.md:133-136
+\item \textbf{Where the misses come from.} In every one of the 565 completed misses the reported model has a strictly higher posterior score than $S_0$ (smallest gap 0.0049 nats): the error is the posterior's, not the search's; 0 detected search misses.
+ % SRC: Results/2026-10-28_New_Campaign/H2_20261102/EVIDENCE_H.md:136-145 (table :138-141, min gap :143, "Shown" :147)
+\item \textbf{Against the exact posterior} (companion study, $n=200$, $p\in\{20,30\}$, 2,400 cases, full enumeration): SMC HPM $=$ exact HPM in 2,400/2,400 primary and 12,000/12,000 repeat fits; $\log\hat Z-\log Z$ has bias $-0.0002$, RMSE 0.012; mean per-fit max $|\mathrm{PIP}-\mathrm{PIP}^{\rm exact}|$ is 0.0005 (RB).
+ % SRC: Docs/HQ/STATUS.md:29; Results/2026-10-28_New_Campaign/L_20261102/HEADLINE_L.md:3,7,9
+\item \textbf{Cost.} Median run time per fit 565--607\,s at $p=500$ and 1,550--1,616\,s at $p=1000$; 906 core-hours for all 2,400 fits; median run time grows by about $2^{1.4}$ when $p$ doubles.
+ % SRC: Results/2026-10-28_New_Campaign/H2_20261102/tables/ev_cost.csv:2-5 (runtime_s_median 564.9/607.2/1549.5/1616.1)
+ % SRC: Scripts/Campaigns/2026-10-28_New_Campaign/ops/PRODH_COMPLETION_20261102.md:32 (906.49 elapsed core-h)
+ % SRC: EVIDENCE_H.md:115 (x2^1.4 runtime); exact exponents 1.456 / 1.412 in Theory_work/State_of_Project/tables/emp_highp_cost.tex
+\end{itemize}}
+
+%=====================================================================
+\section{Theory: headline results}
+
+Notation: $\delta_n=1-\pi(S_0\mid y)$, $r_n=\sqrt{\log n/n}$, $s_0=|S_0|$ fixed, $\Shat$ = reported model, $\mathcal O$ = the run completes with output.
+% SRC: r_n, delta_n Theory_work/Wave3/W3-POST/STATEMENT.md:32
+Song \& Liang (2015, JRSS-B) = SL below; their theorems are about the posterior of the regression density (Hellinger), with $p$ up to $\exp(Cn^\alpha)$.
+% SRC: Papers/Core_bibliography/32_2015_Song_Liang_*.pdf pp. 952-958 (Thm 1 p.952, Thm 2 p.953, Cor 1 p.954, Thm 3 p.956, Thm 4 p.957, Cond 5 p.958); map Theory_work/Wave1C/FINAL/sections/s2_map.tex:12-24
+
+\subsection*{A. Posterior concentration and selection}
+\textbf{Thm P1 (concentration).} If $\|X\theta^*\|^2\le Mn$, sparse-eigenvalue floors hold on the sets $S_0\cup J$ with $|J|\le j_0$ (fixed) and $|J|\le m^\sharp_n=O(\log n)$, and beta-min $\theta^{*2}_{\min}\ge c\,\sigma^2\log n/(n\phi_0^2)$ ($c>c_0$), then
+$\delta_n=O_P(r_n)$; exact HPM $=$ MPM $=S_0$ w.p.\ $\to1$; $\max_j|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}|\le\delta_n$; without beta-min, no mass on strict supersets of $S_0$. Random designs via an interface (e.g.\ Gaussian rows with a sparse eigenvalue floor; pervasive factors allowed for this result).
+\st{proved, checked}
+% SRC: Theory_work/Wave3/W3-POST/REPORT.md:52-71 (Theorem 1, hypotheses E, F_lambda, F_w, BM); BM(c) W3-POST/STATEMENT.md:74
+% SRC status: Theory_work/Wave3/HQ_DECISIONS.md:6 ("PROVED-CHECKED (W3-POST re-check)")
+% SRC random-design interface: W3-POST/REPORT.md:70-79 (item 6, Cor. 1R)
+% SRC random design incl. factors: Theory_work/Wave2/W2-UNI/REPORT.md:29-30,40-41 (A1; UNI-P, any k, any p <= n^A)
+
+\textbf{Design-free size tail.} With no eigenvalue condition: models larger than $m^\sharp_n=O(\log n)$ carry mass $O_P(n^{-1/2})$, uniformly over all $X$ with $\|X\theta^*\|^2\le nM$. \st{proved, checked}
+
+\textbf{Rate lower bound.} For every design and data set with $1\le s_0<p$, $s_0+1\le K$: $\delta_n\ge 1/(1+\sqrt{n+1})$; so $r_n$ is sharp up to $\sqrt{\log n}$.
+\st{proved, checked}
+% SRC: W3-POST/REPORT.md:46-50 (Lemma 1a'), :72-74 and :23-24 (Prop. LB); status HQ_DECISIONS.md:6-7
+
+\textbf{Strengthenings.} (a) The eigenvalue floors away from $S_0$ can be replaced by an identifiability margin (every underfit $S$ with $|S\setminus S_0|\le j_0$ leaves residual mean energy $\ge c\sigma^2\log n$) plus a determinant-type (Occam-sum) condition on supersets: no eigenvalue condition on any set other than $S_0$.
+(b) $E\,\delta_n\le C r_n$ uniformly over designs. (c) In-sample Hellinger contraction $\bar h_n^2=O(\log n/n)$ without beta-min.
+\st{proved, sign-off pending}
+% SRC: Theory_work/Wave3/W3-POST2/REPORT.md:103-111 (E, Theorem 1-VIS; Occam sum :46-55), :82-92 (C, Prop. ER), :94-101 (D, Corollary H)
+% SRC status: W3-POST2/REPORT.md:6-20 (passed; label left to HQ, :19-20); Theory_work/Pause_2026-11/RESUME_PLAN.md:18,72-79
+
+\textbf{Limit of selection.} Specificity without beta-min fails: a numerical counterexample (null proxy with PIP $\to1$).
+\st{counterexample, numerical; analytic sketch unchecked}
+% SRC: W3-POST/REPORT.md:69 and :158-162
+
+\SL their Thm 1--2 give Hellinger consistency with exponential rates for $p$ up to $\exp(Cn^\alpha)$; ours is model-level concentration with a rate and a matching lower bound, for $p\le n^A$, plus their in-sample analog (c). Their Thm 3 (sure screening) controls sensitivity only; ours gives sensitivity and specificity uniformly in $j$ and exact HPM/MPM recovery. Our cap $K=\lfloor n/2\rfloor$ violates their condition (10) when $p\ge n/2$; the size-tail lemma replaces it.
+% SRC: W3-POST/REPORT.md:171-176 (condition (10) at :174); s2_map.tex:12-17
+
+\subsection*{B. Misspecification and the start law}
+\textbf{Thm M1 (misspecified candidate set).} Run the method on a candidate subset $\mathcal C$, $|\mathcal C|\le n^A$, with omitted variables. If the omitted part is Gaussian given $X_{\mathcal C}$ (condition GR), the candidate posterior concentrates on the support $S_0^{\mathcal C}$ of the projection, at rate $r_n$; boundary examples show GR's content is needed.
+\st{proved, checked} \SL Thm 4 gives a.s.\ Hellinger consistency at the KL projection under their Condition 4; ours is exact-model concentration with a rate, under the stronger GR.
+% SRC: Theory_work/Wave1C/FINAL/sections/s3_posterior.tex:36-54 (Theorem MIS, status line :52 "C-MIS PROVED-CHECKED"); s2_map.tex:21-22
+
+\textbf{Start law.} The coded sampler draws $\pi_0$ exactly and computes $\bar Z_0$ exactly \st{proved, unchecked; matched to code}. Under visibility/leakage conditions every mode $\tilde S$ of $\pi_0$ satisfies $S_0\subseteq\tilde S\subseteq Q$, $|Q|=O(\log n)$ \st{proved, checked}. A rate $\pi_0(S_0)\ge1-n^{-c}$ in no-leakage designs \st{open; next}.
+% SRC: START "PROVED (candidate), code-checked" W3-SAMP/REPORT.md:106; s4_sampler.tex:7
+% SRC: sandwich (C3) Theory_work/Wave1C/FINAL/sections/s5_hpm.tex:69; status C-GROW PROVED-CHECKED s5_hpm.tex:73
+% SRC: start-mass rate open: Theory_work/Wave3/PROGRAM.md:16; RESUME_PLAN.md:142-146
+
+\subsection*{C. The reported model}
+\textbf{Thm C1 (certified screening; design-free).} Fixed design, Gaussian errors; no condition on the start, blocks, leakage or calibration. If the sparse visibility $\Gamma_n(q)$ (noiseless gain of the best missing truth, minimised over models of size $\le q$ that miss a truth) satisfies $\sqrt{\Gamma_n(q_n)}\ge(1+\delta)[\tau_n\sqrt{2\log p+\log n}+\sigma\sqrt{2q_n\log p}]$, $\tau_n^2=\sigma^2+\|X\theta^*\|^2/(n-1)$, then every locally optimal model of size $\le q$ contains $S_0$; hence $P(\mathcal O\cap\{\text{certified}\}\cap\{|\Shat|\le q_n\}\cap\{S_0\not\subseteq\Shat\})\to0$. Sufficient: a sparse eigenvalue floor on sets of size $q_n+s_0$ with $(q_n+1)\log p+\log n\le c_1n$. With $s_0$ bounded and a near-orthogonality floor $\phi\ge 2A/(2A+1)+\varepsilon$, a sparse certified model \emph{equals} $S_0$. The constant 1 in the threshold cannot be lowered.
+\st{proved, checked}
+% SRC: Theory_work/Wave3/W3-SCR/REPORT.md:20-47 (SCR-A :22, A-infinity :26, A1 :27-29, SCR-C :41-43, SCR-N :45-46); status table :56-66; RESULT :7-9; Gamma_n, tau_n: Theory_work/Wave3/W3-SCR/STATEMENT.md:58-59
+
+\textbf{Thm C2 (reported model under visibility and bounded leakage).} Fixed design, Thm P1's conditions, eigenvalue floors on all sets of size $\le16$, and a deterministic $Q\supseteq S_0$ with $|Q|\le(\log n)^\kappa$. Write $\delta^2_{U,l}=\|(P_{U\cup\{l\}}-P_U)X\theta^*\|^2$ (gain in explained mean when $l$ joins $U$). 
+(V) $\delta^2_{U,j}\ge M_n\log n$, $M_n\to\infty$, for every truth $j$ and every $U\not\ni j$, $|U|\le15$ (no truth is masked by $\le15$ variables); (L) $\delta^2_{U,l}\le\eta\,\tau_U^2\log n$ for every $l\notin Q$ and such $U$ ($\tau_U^2$ = residual variance left by $U$); (N) a lattice condition, automatic when $|Q\setminus S_0|\le(1-\delta_0)\log n$.
+Then $P(\mathcal O\cap\{\Shat\ne S_0\})\to0$ for every seed, number of particles and islands, and calibration outcome. Gaussian-row version with a localisation clause. Examples: metric-local covariances at any $p\le n^A$ (including $p\gg n$), AR(1).
+\st{proved, sign-off pending}; dropping (N) \st{open}.
+% SRC: Theory_work/Wave3/W3-RM/REPORT.md:3-12 (flags 1-2), :37-43 (RM-0), :44-54 (RM-F), :55-60 (RM-R), :61-65 (examples); conditions verbatim Theory_work/Wave3/W3-RM/STATEMENT.md:90-106 (FL :93, V :96, L :97-100, N :103); delta_{T,l} definition STATEMENT.md:39
+% SRC status: RESUME_PLAN.md:16,51-60 (council passed, HQ label pending); open (N): W3-RM/REPORT.md:4-8; RESULT :25-31
+
+\SL their MAP-model result is in an online supplement we could not obtain; their theorems concern the posterior, not the output of an algorithm. Their Condition 5 ($|\mathrm{cov}(x_t,y)|>0$, which keeps true predictors in their screened set) is a marginal analogue of our conditional visibility (V).
+% SRC: s2_map.tex:4,18,23; W3-POST/REPORT.md:110
+
+\subsection*{D. Sampler outputs (the method as coded)}
+\textbf{Thm S1 (unbiasedness).} For every island, every measured round and every bounded $h$: $E[\hat Z_r\,N^{-1}\textstyle\sum_i h(S_i)\mid\text{calibration}]=Z\,\pi(h)$; in particular $E[\hat Z_r\mid\text{calibration}]=Z$. No condition on $X$.
+\st{proved, checked}
+% SRC: Theory_work/Wave1C/FINAL/sections/s4_sampler.tex:10-15 (Lemma N1; status :21 "W1-N1 PROVED-CHECKED")
+
+\textbf{Thm S2 (draw discovery).} $P(\text{no draw of an island equals }S_0)=(1-\pi_0(S_0))^{D_r}$ exactly ($D_r$ = draws per island), so $P(\mathcal O\cap\{\Shat\ne S_0\})\le P(\text{exact HPM}\ne S_0)+E(1-\pi_0(S_0))^{D_r}$; it suffices that $\max(n,p)\log_2(n+1)\,\pi_0(S_0)\to\infty$, with no condition on mixing or the bridge.
+
+\textbf{Thm S3 (concentrated bridge).} For any grid and particle number, $E|\hat Z_r/Z-1|\le 2\bar\delta$, $\bar\delta$ = the larger of the off-$S_0$ odds under $\pi$ and $\pi_0$; with concentration of $\pi$ and $\pi_0$: $\hat Z/Z\to1$ and consistent PIPs, MPM and HPM.
+
+\textbf{Thm S4 (terminal repair).} The $\varphi=1$ move kernel is minorised by $\pi/M$, $M=\max\pi/\pi_0$; with posterior concentration and $L/M\to\infty$ ($L$ = burn-in rounds) the PIPs and MPM are consistent with no condition on $\hat Z$, the bridge or $N$.
+\st{S2--S4: proved, sign-off pending}; whether the non-collapse condition in the PIP theorem is necessary \st{open}.
+% SRC: Theory_work/Wave3/W3-SAMP/REPORT.md:54-57 (D), :79-87 (C), :88-94 (TR), :65-78 (LT#, NC_r open); delta-bar W3-SAMP/STATEMENT.md:26-27
+% SRC status: W3-SAMP/REPORT.md:17 and :96-102 (NC_r necessity OPEN :102); RESUME_PLAN.md:17,63-70
+
+\subsection*{E. Limits (proved negative results)}
+\begin{itemize}
+\item The greedy search from the start mode alone can fail: (i) an explicit design satisfying all other hypotheses gives $P(\text{search misses }S_0)\to1$ while $\pi(S_0)\to1$ (older move cap); (ii) on exact-Gram compound symmetry with $K<p\le n-1$, $\liminf p/K>16/15$, the shipped search never scores $S_0$. Both concern that search route, not the full method. \st{proved, checked}
+ % SRC: (i) Theory_work/Wave1C/FINAL/sections/s5_hpm.tex:54 "(C6)"; Theory_work/Wave3/PROGRAM.md:28; (ii) Theory_work/Wave2/W2-FAC-PK/REPORT.md:29-30 (Theorem NEG), :9 (16/15), :17-21 (PROVED-CHECKED on exact-Gram stage)
+\item Route-level obstructions: for compound symmetry (one factor) with $\liminf\log p/\log n>1/6$ the no-addition event the deletion route needs fails (Prop.\ SHARP); for $\ge2$ factors the uniform subset information the current technique needs does not exist (OBS-$k$). \st{proved, checked}
+ % SRC: Theory_work/Wave2/W2-FAC-A/REPORT.md:44-46 (SHARP), status :20; Theory_work/Wave2/W2-UNI/REPORT.md:20-22 (OBS-k in PROVED-CHECKED package); Theory_work/Wave2/SR/CRITIQUE_fable.md:104,166
+\item Sharpness: rate lower bound (A), specificity counterexample (A), threshold constant in C1.
+\end{itemize}
+
+%=====================================================================
+\section{Open questions and next steps}
+\begin{enumerate}
+\item \textbf{Strong factors at $p\gg n$.} Experiment (paused, resumes with the project) running the full method on factor and equicorrelation designs with $p>K$, $p/n$ up to 10. So far: the $n=50$ batch is nearly complete (298 of 320 fits); $n=75$--$150$ not yet run. No conclusion yet. The outcome decides whether the paper claims recovery or only screening plus the limits above for this class.
+ % SRC: Theory_work/Wave3/PROGRAM.md:32-35 (Decision D1); RESUME_PLAN.md:81-94, :123-137
+\item \textbf{Confirmation rerun} of the 2,400-fit study on the final frozen version, about 910 core-hours. Islands are unchanged, so $\hat Z$, island $\hat Z$, RB PIPs and MPM are expected bit-identical and the HPM score can only rise.
+ % SRC: Theory_work/Pause_2026-11/RERUN_SPEC.md:24 (bit-identical expectation), :242 (~910 core-h)
+\item \textbf{Scaling programme.} Make the method feasible where sequential samplers break ($p$ in the thousands to tens of thousands): many independent islands on a cluster, parallel block tables, on-demand Gram computation; merge islands by evidence weights $\sum_r\hat Z_r\hat h_r/\sum_r\hat Z_r$ (each island unbiased by S1), HPM from the union of scored models. Theory for the parallel method is part of the plan; \emph{weight degeneracy of the island evidences at high $p$ is open}.
+\item \textbf{Remaining proofs:} start-mass rate; polynomial-size leakage sets $|Q|\le n^b$ in C2; removing the lattice condition (N).
+ % SRC: RESUME_PLAN.md:142-153
+\item \textbf{Longer term:} the same machinery (exact decomposable start law, island SMC with evidence merging, certified search output) for other huge discrete model spaces: graphical models, trees.
+\end{enumerate}
+
+\section{Questions for the advisor}
+\begin{enumerate}
+\item Which result should be the paper's headline: posterior concentration with the matching lower bound, the reported-model theorem (C2), or design-free certified screening (C1)?
+\item Should the parallel many-island method and its theory go in this paper or in a second paper?
+\item Is the lattice condition (N) acceptable as a stated hypothesis, or should it be removed before submission?
+\item Target journal (e.g.\ JRSS-B, Annals, JASA Theory \& Methods), given the mix of method, simulation and theory?
+\end{enumerate}
+
+\end{document}
