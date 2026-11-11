@@ -70,3 +70,9 @@
   and Corollary CERT go to the path-level ticket / chapter v2.0 as inputs, each needing its own review before any claim
   enters the registry; memo v2 is scoping input only. A new ticket (c) only if W3-P6 shows Ŝ = S₀ at frequency ≈ 1 on
   dense-leak designs. Memo branch merges with the other Wave 3 work after rule 16 lifts.
+- 2026-11-11 Pipeline R04 (Sol, narrow): READY — no open CRITICAL; R03 N1–N4 and toolfix3 defects resolved; 127/127.
+  Two MAJOR open (R04-N1 accepted-input evidence/verdict changes do not stale its accept record; R04-N2 statement-file
+  relocation not in the fingerprint) → small tool fix in leg B. Rule 16 (no CP3 ingest/merge) stays until they are fixed.
+  W3-P6 cleared to start: lead Opus CW, leg A = CP0 only (smoke manifest; NOTS read-only).
+- 2026-11-11 W3-START CP1 (branch @ 58309da): adopt P1, P3; P2 with a one-attempt kill budget; OVL inequality kept,
+  corollary if cheap; O1–O3 deferred. Continuation waits for the owner's leg-B go.
