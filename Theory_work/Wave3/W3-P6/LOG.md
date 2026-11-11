@@ -41,3 +41,4 @@
 * ~19:50 — b2 submitted (job 2652199, 240 tasks, scripts_v3: p6_fit.R ba5299fb…, p6_common.R 2bf08d62…, rederive.R a94098bc…,
   make_tasks.py fe11d63f…, summarize.py 8011253e…; commons 24 h, 8G, throttle 34 → to be raised to ≤ 150 total as b1 drains).
   Long cells first: (100,1000), (150,150), (75,750), (100,250), variants at (100,250), then (100,100), (75,188), (75,75).
+* * 2026-11-11 13:54 CT — HQ: resume on branch theory/W3-P6. Pipeline R04 READY (no CRITICAL). BRIEF_RESUME.md: leg A = CP0 only, nothing submitted on NOTS. Lead Opus 5.5 CW to be started.
