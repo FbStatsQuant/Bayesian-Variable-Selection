@@ -26,3 +26,8 @@ C2 and the registry row carry them, and the chapter (`FINAL/sections/s6_delivery
 explicitly. No consumer relies on the over-strong reading (R-AUD1 consumer table). No LIFECYCLE §3 mark, no
 propagation, no ticket notification. The standalone sentence at `C-DLV/lemmas/L4_delivery.md:83-84` gets Sol's minimal
 restatement in the editorial pass with the 19 MINORs (chapter v2.0 work), as a wording-only version bump.
+
+## pass1b (re-run of f17, f18, f26 at 128k; msgbatch_01CAKzGyfNsvvsGNnuf3x6ja, ≈ $5)
+All three completed: W2-FAC-B:Thm-FAC-CS MINOR; W2-FAC-PK P1, Thm-NEG, Thm-PATH OK, Thm-FAC-PK, P5 MINOR;
+W2-FAC-X:Thm-FAC-CS-iid MINOR. **Final pass-1 tally over all 109 PROVED-CHECKED claims: 87 OK, 21 MINOR, 1 wording
+(C-DLV:Prop-F), 0 ERROR.** (pass1b supersedes pass1 for f17/f18/f26.)

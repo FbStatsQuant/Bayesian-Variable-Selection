@@ -103,3 +103,8 @@
 - 2026-11-11 API audit pass 1: 86 OK / 19 MINOR / 1 GAP (C-DLV:Prop-F) / 3 requests re-run at 128k (pass1b). R-AUD1 Sol:
   CONFIRMED-WORDING — scope clarification only, no consumer relies on the strong reading; no registry mark. Wording fix +
   MINORs → editorial pass with chapter v2.0 (API_AUDIT/pass1/TRIAGE.md).
+- 2026-11-11 API audit: pass 1 final 87 OK / 21 MINOR / 1 wording / 0 ERROR over 109 PROVED-CHECKED (≈ $32 incl. re-run).
+  Pass 2 submitted (plan's second item): msgbatch_01JERwr2jhDAFhxUhuLk2vmG, 48 requests, 92 author-only PROVED claims
+  of the tickets feeding running work and the headline (W3-RM, W3-POST2, W3-POST, W2-LOC2, W1-GEN, W1-PXN, W1-N1,
+  W1-N3, C-PACK, W2-UNI, C-ENG, W2-APP); input ≈ $10, worst-case output $61 (balance ≈ $80). Remaining factor-design
+  PROVED claims (W2-FAC-*) only if credit remains.

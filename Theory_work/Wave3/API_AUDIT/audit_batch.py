@@ -5,6 +5,7 @@ files as context (reviews/, numerics/, LOG, PLAN, CHECKPOINT excluded so the rea
 effort high (never above). The API key is read from C:/Users/felip/.anthropic/bvs_audit_key and is never printed.
 
   python Theory_work/Wave3/API_AUDIT/audit_batch.py build  <outdir>     # write requests.json + MANIFEST (no API call)
+  python Theory_work/Wave3/API_AUDIT/audit_batch.py build2 <outdir>     # pass 2: author-only PROVED claims (priority tickets)
   python Theory_work/Wave3/API_AUDIT/audit_batch.py count  <outdir>     # token count (free endpoint), cost estimate
   python Theory_work/Wave3/API_AUDIT/audit_batch.py submit <outdir>     # create the batch, write batch_id.txt
   python Theory_work/Wave3/API_AUDIT/audit_batch.py wait   <outdir>     # poll until ended, then write results/
@@ -85,9 +86,20 @@ def ticket_files(ticket_dir: Path, claim_files):
     return files
 
 
-def build(outdir: Path):
+PASS2_TICKETS = ["W3-RM", "W3-POST2", "W3-POST", "W2-LOC2", "W1-GEN", "W1-PXN", "W1-N1", "W1-N3", "C-PACK", "W2-UNI",
+                 "C-ENG", "W2-APP"]
+
+
+def select(rows, mode):
+    if mode == "pass2":  # author-only PROVED claims of the tickets feeding running work and the headline (HQ priority)
+        return [r for r in rows if r["status"].startswith("PROVED") and "PROVED-CHECKED" not in r["status"]
+                and r["ticket"] in PASS2_TICKETS and r["file"].endswith(".md")]
+    return [r for r in rows if "PROVED-CHECKED" in r["status"]]
+
+
+def build(outdir: Path, mode="pass1"):
     rows, byid = load_claims()
-    pc = [r for r in rows if "PROVED-CHECKED" in r["status"]]
+    pc = select(rows, mode)
     byfile = collections.defaultdict(list)
     for r in pc:
         byfile[r["file"]].append(r)
@@ -216,4 +228,7 @@ def wait(outdir: Path):
 
 if __name__ == "__main__":
     cmd, out = sys.argv[1], Path(sys.argv[2])
-    {"build": build, "count": count, "submit": submit, "wait": wait}[cmd](out)
+    if cmd == "build2":
+        build(out, "pass2")
+    else:
+        {"build": build, "count": count, "submit": submit, "wait": wait}[cmd](out)
