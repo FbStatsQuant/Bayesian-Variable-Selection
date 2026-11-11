@@ -1,7 +1,7 @@
 # HQ now (resume card; HQ keeps this current)
 
 Mode (owner, 2026-11-11 ~18:45 CT): **continuous** — keep work running on Claude Work (effort ≤ high) until CW runs
-out or a key owner decision is needed; no bursts. HQ answers checkpoints itself. HQ thread 647bfd65-83bc-403a-b3b0-0a8352044e7f.
+out or a key owner decision is needed; no bursts. HQ answers checkpoints itself. HQ thread 647bfd65-83bc-403a-b3b0-0a8352044e7f. Meta-HQ watcher (Sol, every 30 min): thread 600e6dcd-e2bf-4ef8-9a4b-0e00d46a1c68.
 
 ## Running
 - W3-RM2 lead (Fable CW, BVS-wt/W3-RM2) → CP1, reports to HQ.
