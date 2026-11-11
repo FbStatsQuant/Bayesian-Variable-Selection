@@ -6,6 +6,7 @@ effort high (never above). The API key is read from C:/Users/felip/.anthropic/bv
 
   python Theory_work/Wave3/API_AUDIT/audit_batch.py build  <outdir>     # write requests.json + MANIFEST (no API call)
   python Theory_work/Wave3/API_AUDIT/audit_batch.py build2 <outdir>     # pass 2: author-only PROVED claims (priority tickets)
+  python Theory_work/Wave3/API_AUDIT/audit_batch.py build3 <outdir>     # pass 3: author-only PROVED factor-design claims
   python Theory_work/Wave3/API_AUDIT/audit_batch.py count  <outdir>     # token count (free endpoint), cost estimate
   python Theory_work/Wave3/API_AUDIT/audit_batch.py submit <outdir>     # create the batch, write batch_id.txt
   python Theory_work/Wave3/API_AUDIT/audit_batch.py wait   <outdir>     # poll until ended, then write results/
@@ -94,6 +95,9 @@ def select(rows, mode):
     if mode == "pass2":  # author-only PROVED claims of the tickets feeding running work and the headline (HQ priority)
         return [r for r in rows if r["status"].startswith("PROVED") and "PROVED-CHECKED" not in r["status"]
                 and r["ticket"] in PASS2_TICKETS and r["file"].endswith(".md")]
+    if mode == "pass3":  # remaining author-only PROVED claims of the factor-design tickets
+        return [r for r in rows if r["status"].startswith("PROVED") and "PROVED-CHECKED" not in r["status"]
+                and r["ticket"].startswith("W2-FAC") and r["file"].endswith(".md")]
     return [r for r in rows if "PROVED-CHECKED" in r["status"]]
 
 
@@ -228,7 +232,7 @@ def wait(outdir: Path):
 
 if __name__ == "__main__":
     cmd, out = sys.argv[1], Path(sys.argv[2])
-    if cmd == "build2":
-        build(out, "pass2")
+    if cmd in ("build2", "build3"):
+        build(out, "pass" + cmd[-1])
     else:
         {"build": build, "count": count, "submit": submit, "wait": wait}[cmd](out)

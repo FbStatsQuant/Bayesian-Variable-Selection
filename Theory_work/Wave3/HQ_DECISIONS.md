@@ -108,3 +108,9 @@
   of the tickets feeding running work and the headline (W3-RM, W3-POST2, W3-POST, W2-LOC2, W1-GEN, W1-PXN, W1-N1,
   W1-N3, C-PACK, W2-UNI, C-ENG, W2-APP); input ≈ $10, worst-case output $61 (balance ≈ $80). Remaining factor-design
   PROVED claims (W2-FAC-*) only if credit remains.
+- 2026-11-11 ~18:45 CT (owner): **continuous mode** — CW has ~20 h of weekly capacity before reset; do not stop and do
+  not burst; effort ≤ high; HQ answers checkpoints itself and asks the owner only key decisions. A meta-HQ Sol thread
+  (owner's) resumes HQ after any 5-h limit. Resume card: Wave3/HQ_NOW.md.
+- 2026-11-11 API audit pass 2: 72 OK / 12 MINOR / 0 GAP/ERROR (≈ $14); f00 (8 W1-GEN headline claims) hit 64k → pass2b
+  at 128k. Pass 3 (plan item 3, credit remains): msgbatch_017Qeq255ojPUvhjEePbobwf, 40 requests, 50 author-only PROVED
+  W2-FAC-* claims; input ≈ $9, worst-case output $51 (balance ≈ $67, expires 2026-11-15).
