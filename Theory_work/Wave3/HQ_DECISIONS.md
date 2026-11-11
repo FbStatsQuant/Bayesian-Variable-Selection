@@ -39,3 +39,12 @@
   then `propagate.py patch` and `clear`. This shows R01 was a real failure mode, not a theoretical one.
 - 2026-11-11 W3-SAMP PC2 (Sol): RESOLVED. PROVED-CHECKED labels restored for PC, MR, ST, D, LT♯ (a–e, b′, e′), C and TR
   (evidence: C1 pre-edit votes + PC1 + PC2). CC stays CODE-CHECKED; LT♯(f) stays OPEN.
+- 2026-11-11 Schedules (rule 12/13), all T3 scheduled tasks:
+  - daily CI audit 06:00 CT, `scheduled-task:1ddaffb6-3203-45be-b086-bb1f3cc65280`, next 2026-11-12 06:00;
+  - watchdog every 6 h, not bound to HQ, `scheduled-task:e3816541-adbf-4337-901d-3d9e1a36cf1a`, next 2026-11-11 15:01;
+  - weekly re-audit Monday 07:00, `scheduled-task:e9c81940-591c-4d95-bd6c-8a07e10409d3`, next 2026-11-16;
+  - HQ heartbeat every 3 h, `scheduled-task:c88adcb5-a968-4746-8b46-791d062f57b9`, next 2026-11-11 12:01;
+  - launch once at 13:00, `scheduled-task:bddb093c-41e5-4a57-ade9-f3a3eb910f23`.
+- 2026-11-11 W3-POST2 PC2 (Sol): REPAIRED. `propagate.py patch` + `clear` on W3-POST2:D.D(b) and W3-POST2:D; both
+  ACTIVE. PROVED-CHECKED labels for W3-POST2 claims A–E restored (evidence: C1 + PC1 + PC2); strength `better:PENDING`.
+  First full use of the rollback path (suspect → repair → check → patch → clear): it worked end to end.
