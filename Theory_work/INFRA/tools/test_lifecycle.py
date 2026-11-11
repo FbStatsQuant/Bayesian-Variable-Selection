@@ -22,6 +22,9 @@ try:
     INFRA = os.path.join(TMP, "Theory_work", "INFRA")
     shutil.rmtree(INFRA, ignore_errors=True)
     shutil.copytree(LIVE_INFRA, INFRA, ignore=shutil.ignore_patterns("out", "issues", "__pycache__", "*.tmp"))
+    # the manifest tool (Wave 3 rule 15) is part of the acceptance path: test the working copy, not HEAD's
+    shutil.copy2(os.path.join(LIVE_ROOT, "Theory_work", "Wave3", "tools", "manifest.py"),
+                 os.path.join(TMP, "Theory_work", "Wave3", "tools", "manifest.py"))
     _spec = importlib.util.spec_from_file_location("bvsreg_test", os.path.join(INFRA, "tools", "bvsreg.py"))
     R = importlib.util.module_from_spec(_spec)
     _spec.loader.exec_module(R)
@@ -509,7 +512,15 @@ try:
                     and (f[1].startswith("A") or f[1] == "TOOL-FAILED")]
 
         Q = "Theory_work/WaveT/Q"
-        DG = hashlib.sha256(b"q-fixture").hexdigest()
+        MANP = os.path.join(TMP, "Theory_work", "Wave3", "tools", "manifest.py")
+
+        def man(*a):  # the Wave 3 manifest tool (freeze / verify / bind), run from the sandbox root
+            p = subprocess.run([sys.executable, MANP, *map(str, a)], capture_output=True, text=True,
+                               encoding="utf-8", errors="replace", cwd=TMP)
+            return p.returncode, p.stdout + p.stderr
+
+        def vline(d, seat, score="8.5", res="PASS", rnd="R1"):  # the council verdict line (LIFECYCLE 4.1)
+            return f"COUNCIL-VERDICT round={rnd} manifest={d} seat={seat} score={score} gates={res}\n"
         put(f"{Q}/STATEMENT.md", "## Lemma X\nLemma QX. X holds.\n## Lemma Y\nLemma QY. Y holds.\n## Lemma Weak\n"
             "Lemma Weak. A weak lemma.\n## Theorem H\nUnlike Lemma Weak, this result assumes nothing.\n## Theorem E\n"
             "Theorem QE. Then E holds.\n## Other\nOther text.\n")
@@ -517,8 +528,12 @@ try:
             "PROVED-CHECKED not conditional on Lemma Weak\n"
             "PROVED-CHECKED conditional on Other. Unlike Lemma Weak, no assumption is needed.\n"
             "PROVED-CHECKED conditional on Lemma Weak Extra\n")
-        for s_ in ("sol", "opus"):
-            put(f"{Q}/reviews/R1_{s_}.md", f"Council round 1 ({s_}).\nReviewed MANIFEST {DG}\nScore 8.5, all gates PASS\n")
+        os.makedirs(os.path.join(TMP, Q, "reviews"), exist_ok=True)
+        man("freeze", Q, f"{Q}/reviews/MANIFEST_R1.txt")  # R03-N2: a real frozen manifest of the ticket folder
+        DG = open(os.path.join(TMP, Q, "reviews", "MANIFEST_R1.txt"), encoding="utf-8").readline().split()[1]
+        for s_, sc_ in (("sol", "8.5"), ("opus", "8.2")):
+            put(f"{Q}/reviews/R1_{s_}.md", f"Council round 1 ({s_}).\nReviewed MANIFEST {DG}\nScore {sc_}, all gates "
+                f"PASS\n\n{vline(DG, s_, sc_)}")
         put(f"{Q}/reviews/R1_stale.md", "Council round 1 on another snapshot.\nMANIFEST " + "0" * 64 + "\n")
         put(f"{Q}/reviews/gate.md", "gate review\n")
         qsha = git_commit([Q], "Q fixture")
@@ -757,7 +772,7 @@ try:
         real_replace = R.os.replace
 
         def fail(src, dst):  # the reviewers' probe: replacement of the 2nd file AND the restore both fail
-            if str(dst) == str(f2) or str(src).endswith(".bak"):
+            if str(dst) == str(f2) or str(src).endswith((".bak", ".rst")):  # .rst: restore copies the backup
                 raise OSError("injected replacement/rollback failure")
             return real_replace(src, dst)
         R.os.replace = fail
@@ -813,6 +828,301 @@ try:
         results.append(("R07 --consumed-vs: identical registry at the ref gives no ERROR", rc == 0 and not F_same))
         results.append(("R07 --consumed-vs: consumed claim non-ACTIVE at the ref, or at a higher major there: ERROR",
                         any("CVX:A" in f[3] for f in F_main) and any("CVX:B" in f[3] for f in F_main)))
+
+        # ---------------- pipeline review R03 (Sol reconciliation): N1 N2 N3 N4 ----------------
+        # Fixtures follow the reviewer's probes (probes.py / more.py / cycle.py in the R03 scratch root). The section
+        # starts from a fresh copy of the live registry (0 ERROR), as HQ would: an acceptance PASS (and --record)
+        # needs 0 ERROR in the whole registry, and the earlier scenarios deliberately leave ERRORs behind.
+        shutil.rmtree(R.REG)
+        shutil.copytree(os.path.join(LIVE_INFRA, "registry"), R.REG, ignore=shutil.ignore_patterns("*.tmp"))
+        N = "Theory_work/WaveT/R03"
+        STM_N = ("Lemma Weak. W holds.\nTheorem Y. Y follows from W.\nLemma W2. W2 holds.\n"
+                 "Theorem Y2. Y2 follows from W2.\nTheorem Y3. Y3 follows from a legacy claim.\nTheorem D. D holds.\n")
+        put(f"{N}/STATEMENT.md", STM_N)
+        put(f"{N}/REPORT.md", "PROVED-CHECKED\nPARTIAL\n")
+        EXT = "Theory_work/WaveT/R03-external.md"
+        put(EXT, "old external premise\n")
+        put(f"{N}/reviews/INPUTS.txt", EXT + "\n")
+        MAN1, MAN2 = f"{N}/reviews/MANIFEST_R1.txt", f"{N}/reviews/MANIFEST_R2.txt"
+        REV = (f"{N}/reviews/sol.md", f"{N}/reviews/opus.md")
+
+        def freeze(out=MAN1):
+            man("freeze", N, out, "--extra", f"{N}/reviews/INPUTS.txt")
+            return open(os.path.join(TMP, out), encoding="utf-8").readline().split()[1]
+
+        def reviews(sol_text, opus_text):
+            put(REV[0], sol_text)
+            put(REV[1], opus_text)
+
+        def cn(d, sol="8.5", opus="8.5"):
+            return f"R1; MANIFEST {d}; sol={sol} PASS(reviews/sol.md); opus={opus} PASS(reviews/opus.md)"
+
+        def nrow(loc, line, **kw):
+            base_ = dict(status="PROVED-CHECKED", status_source=f"{N}/REPORT.md:1")
+            base_.update(kw)
+            return dict(ticket="R03", local_id=loc, kind=base_.pop("kind", "lemma"), file=f"{N}/STATEMENT.md",
+                        lines=[line, line], **base_)
+
+        def a_set(errs):
+            return {f[1] for f in errs}
+        A4C = {"A4-council", "A1-correct"}  # an invalid council also leaves a checked claim without correctness evidence
+
+        dgA = freeze()
+        reviews("Council R1 (sol). Score 8.5, all gates PASS.\n\n" + vline(dgA, "sol"),
+                "Council R1 (opus). Score 8.5, all gates PASS.\n\n" + vline(dgA, "opus"))
+
+        # N1: Y -> W (checked-labelled, never accepted) -> V (PARTIAL)
+        rc, out = tool("ingest.py", "claims", frag("n1", [
+            nrow("W", 1, name="Lemma Weak"),
+            nrow("Y", 2, kind="theorem", depends_on=["R03:W@stmt"], council=cn(dgA))]), "--apply")
+        e_w = acc_errs("R03:W")
+        e_y = acc_errs("R03:Y")
+        results.append(("N1 fixture: the unaccepted checked-labelled W is refused on its own (A1-correct, A4-council)",
+                        rc == 0 and {"A1-correct", "A4-council"} <= a_set(e_w)))
+        results.append(("N1 Y consuming the never-accepted checked W is refused: A5-accepted on Y naming W (and "
+                        "nothing else)", any(f[1] == "A5-accepted" and "R03:W" in f[3] for f in e_y)
+                        and a_set(e_y) == {"A5-accepted"}))
+        rc, out = tool("ingest.py", "claims", frag("n1v", [
+            nrow("V", 1, status="PARTIAL", status_source=f"{N}/REPORT.md:2")]), "--apply")
+        run("registry.py", "set", "R03:W", "depends_on=R03:V@stmt", "--reason", "probe")
+        e_y = acc_errs("R03:Y")
+        results.append(("N1 Y -> W (unaccepted, checked-labelled) -> V (PARTIAL): Y refused (A5-accepted)",
+                        rc == 0 and any(f[1] == "A5-accepted" and "R03:W" in f[3] for f in e_y)))
+        # the durable record: check.py --acceptance ... --record writes `accept` events only on a PASS
+        rc, out = tool("ingest.py", "claims", frag("n1r", [
+            nrow("W2", 3, council=cn(dgA)),
+            nrow("Y2", 4, kind="theorem", depends_on=["R03:W2@stmt"], council=cn(dgA))]), "--apply")
+        before_y2 = a_set(acc_errs("R03:Y2"))
+        rc_bad, _ = tool("check.py", "--quiet", "--acceptance", "R03:W", "--record")
+        rc_rec, out_rec = tool("check.py", "--quiet", "--acceptance", "R03:W2", "--record")
+        evs = [e_ for e_ in R.read_tsv(R.EVENTS)[1] if e_.get("action") == "accept"]
+        results.append(("N1 --record: a refused acceptance writes no accept event; a PASS writes one with the id, "
+                        "version and fingerprint",
+                        rc_bad != 0 and not any(e_["id"] == "R03:W" for e_ in evs) and rc_rec == 0
+                        and any(e_["id"] == "R03:W2" and e_["after"].startswith(f"v{st('R03:W2')['version']} fp:")
+                                for e_ in evs)))
+        rc_only, _ = tool("check.py", "--quiet", "--acceptance", "R03:W", "--only", "A5", "--record")
+        ev_only = [e_ for e_ in R.read_tsv(R.EVENTS)[1] if e_.get("action") == "accept" and e_.get("id") == "R03:W"]
+        results.append(("Sol-toolfix3 N1.a --only with --acceptance / --record is refused: no accept event, the "
+                        "consumer stays refused", rc_only != 0 and not ev_only
+                        and any(f[1] == "A5-accepted" for f in acc_errs("R03:Y"))))
+        results.append(("N1 the consumer passes once its checked input carries a valid accept record",
+                        before_y2 == {"A5-accepted"} and not acc_errs("R03:Y2")))
+        run("registry.py", "set", "R03:W2", "depends_on=R03:V@stmt", "--reason", "edge added after acceptance")
+        stale = acc_errs("R03:Y2")
+        run("registry.py", "set", "R03:W2", "depends_on=", "--reason", "edge removed again")
+        results.append(("N1 an accept record goes stale when the input changes after acceptance (consumer refused); "
+                        "valid again once the accepted content is restored",
+                        any(f[1] == "A5-accepted" and "R03:W2" in f[3] for f in stale) and not acc_errs("R03:Y2")))
+        # the frozen legacy boundary (claims PROVED-CHECKED on main at tag theory-v2.0-pre)
+        LEG = os.path.join(INFRA, "LEGACY_ACCEPTED.tsv")
+        leg_txt = open(LEG, encoding="utf-8").read() if os.path.exists(LEG) else ""
+        legacy = R.load_legacy()[2] if hasattr(R, "load_legacy") else set()
+        cur_ = R.index(R.load_claims())
+        g_ = R.Graph(R.load_claims(), R.load_aliases())
+        leaf = next((i for i, v, h in sorted(legacy) if i in cur_ and cur_[i]["state"] == "ACTIVE"
+                     and cur_[i]["version"] == v and cur_[i]["sha256"] == h and not g_.deps.get(i)), None)
+        rc, out = tool("ingest.py", "claims", frag("n1l", [
+            nrow("Y3", 5, kind="theorem", depends_on=[f"{leaf}@stmt"], council=cn(dgA))]), "--apply")
+        results.append(("N1 a checked input inside the frozen legacy boundary needs no accept event",
+                        leaf is not None and rc == 0 and not acc_errs("R03:Y3")))
+        w_ = st("R03:W")
+        if leg_txt:
+            open(LEG, "a", encoding="utf-8", newline="\n").write(f"R03:W\t{w_['version']}\t{w_['sha256']}\n")
+        forged_chk = [f for f in findings() if f[0] == "ERROR" and f[1] == "L1-legacy"]
+        forged_acc = acc_errs("R03:Y")
+        if leg_txt:
+            open(LEG, "w", encoding="utf-8", newline="\n").write(leg_txt)
+        results.append(("N1 a hand-added legacy-boundary row is an ERROR (recomputed from the tag) and admits nothing",
+                        bool(leg_txt) and bool(forged_chk) and any(f[1] == "A5-accepted" for f in forged_acc)))
+        # Sol toolfix3 N1.b: a self-consistent boundary regenerated from a LATER commit (that contains the
+        # never-accepted W) must not be trusted: the boundary is the registry at theory-v2.0-pre only
+        later = git_commit([R.CLAIMS], "registry with the never-accepted R03 claims")
+        rows_l, _ = R.legacy_rows_at(later)
+        if leg_txt:
+            open(LEG, "w", encoding="utf-8", newline="\n").write(
+                "".join(l_ + "\n" for l_ in leg_txt.splitlines() if l_.startswith("#"))
+                + f"tag\t{later}\t{later}\nid\tversion\tsha256\n" + "".join(f"{i}\t{v}\t{h}\n" for i, v, h in sorted(rows_l)))
+        sub_chk = [f for f in findings() if f[0] == "ERROR" and f[1] == "L1-legacy"]
+        sub_acc = acc_errs("R03:Y")
+        if leg_txt:
+            open(LEG, "w", encoding="utf-8", newline="\n").write(leg_txt)
+        results.append(("Sol-toolfix3 N1.b a boundary regenerated from another (later) commit is an L1-legacy ERROR "
+                        "and admits nothing", bool(leg_txt) and any(r_[0] == "R03:W" for r_ in rows_l or ())
+                        and bool(sub_chk) and any(f[1] == "A5-accepted" for f in sub_acc)))
+
+        # N3: every better-proposal / better-disposition reference, and every gate reference whatever its result,
+        # must resolve (staged acceptance, as in the reviewer's probe)
+        G3 = "; ".join(f"{k}:PASS(reviews/sol.md)" for k in ("correct", "lit", "necessity"))
+
+        def disp(loc, tail, headline="yes"):
+            return tool("ingest.py", "claims", frag(f"n3{loc}", [
+                nrow(loc, 6, kind="theorem", council=cn(dgA), headline=headline,
+                     strength=dict(conclusion="posterior: probe", gates=f"{G3}; {tail}"))]), "--staged")
+
+        def acc_line(out_, cid):
+            return next((l_ for l_ in out_.splitlines() if l_.strip().startswith(f"acceptance ({cid}")), "")
+        rc_d, out_d = disp("D", "better-proposal:P(reviews/sol.md); "
+                                "better-disposition:P=declined(reviews/DOES_NOT_EXIST.md)")
+        rc_p, out_p = disp("DP", "better-proposal:P(reviews/NOPE.md); better-disposition:P=declined(reviews/sol.md)")
+        rc_f, out_f = disp("DF", "better:FAIL(reviews/NOPE2.md); better-proposal:P(reviews/sol.md); "
+                                 "better-disposition:P=declined(reviews/opus.md)")
+        rc_n, out_n = disp("DN", "lit:PENDING(reviews/NOPE3.md)", headline="")
+        rc_ok, out_ok = disp("DOK", "better-proposal:P(reviews/sol.md); better-disposition:P=declined(reviews/opus.md)")
+        results.append(("N3 declined(reviews/DOES_NOT_EXIST.md): staged acceptance REFUSED with A1-evidence",
+                        rc_d != 0 and "REFUSED" in acc_line(out_d, "R03:D") and "DOES_NOT_EXIST" in out_d
+                        and "A1-evidence" in out_d))
+        results.append(("N3 a better-proposal citing a missing file, and FAIL / PENDING gates citing missing files, are "
+                        "A1-evidence ERRORs", all("REFUSED" in acc_line(o_, c_) and m_ in o_ for o_, c_, m_ in (
+                            (out_p, "R03:DP", "NOPE.md"), (out_f, "R03:DF", "NOPE2.md"), (out_n, "R03:DN", "NOPE3.md")))))
+        results.append(("N3 control: the same headline with existing disposition evidence passes staged acceptance",
+                        "PASS" in acc_line(out_ok, "R03:DOK") and "REFUSED" not in acc_line(out_ok, "R03:DOK")))
+
+        # N2: a review must bind an OUTCOME to the digest. M fixture (more.py): stronger statement, fresh freeze,
+        # replies say the new digest is NOT REVIEWED, the cell says 8.5 PASS on it.
+        run("registry.py", "set", "R03:Y", "depends_on=", "--reason", "isolate N2 from N1")
+        put(f"{N}/STATEMENT.md", STM_N.replace("Theorem Y. Y follows from W.",
+                                               "Theorem Y. A strictly stronger Y holds for all parameters."))
+        run("registry.py", "rehash", "R03:Y", "--bump", "major", "--reason", "stronger statement fixture")
+        dgM = freeze()
+        reviews(f"Scored OLD text: 8.5 PASS.\nMANIFEST {dgM}: new stronger text NOT REVIEWED; gates FAIL pending "
+                "review.\n", f"Scored OLD text: 8.5 PASS.\nMANIFEST {dgM}: new stronger text NOT REVIEWED; gates "
+                "FAIL pending review.\n")
+        run("registry.py", "set", "R03:Y", "council=" + cn(dgM), "--reason", "probe record")
+        rc_v, _ = man("verify", N, MAN1)
+        rc_b, out_b = man("bind", MAN1, *REV)
+        e_m = acc_errs("R03:Y")
+        results.append(("N2 M fixture (current digest quoted only as NOT REVIEWED): verify OK, bind REFUSED, "
+                        "acceptance A4-council", rc_v == 0 and rc_b != 0 and "A4-council" in a_set(e_m) <= A4C))
+        bad_verdicts = {
+            "gates=FAIL for the digest": vline(dgM, "sol", res="FAIL"),
+            "two verdict lines for the digest (PASS and FAIL)": vline(dgM, "sol") + vline(dgM, "sol", res="FAIL"),
+            "the same verdict line twice": vline(dgM, "sol") * 2,
+            "verdict only for another digest": vline(dgA, "sol"),
+            "a contradictory verdict line for another digest": vline(dgM, "sol") + vline(dgA, "sol", res="FAIL"),
+            "seat differs from the cell": vline(dgM, "opus"),
+            "score differs from the cell": vline(dgM, "sol", score="8.1"),
+            "round differs from the cell": vline(dgM, "sol", rnd="R2"),
+            "malformed verdict line": vline(dgM, "sol").replace("gates=PASS", "gates=PASS extra"),
+            "verdict line inside prose": "As agreed, " + vline(dgM, "sol"),
+        }
+        bad_left = []
+        for lab, txt in bad_verdicts.items():
+            reviews("Council R1 (sol).\n" + txt, "Council R1 (opus).\n" + vline(dgM, "opus"))
+            rc_b, _ = man("bind", MAN1, *REV, "--council", cn(dgM))
+            if rc_b == 0 or "A4-council" not in a_set(acc_errs("R03:Y")):
+                bad_left.append(lab)
+        results.append(("N2 verdict-line violations refuse both bind and acceptance: " + ", ".join(bad_verdicts),
+                        not bad_left))
+        run("registry.py", "set", "R03:Y", "council=" + cn(dgM, sol="7.5", opus="7.5"), "--reason", "t")
+        reviews(vline(dgM, "sol", score="7.5"), vline(dgM, "opus", score="7.5"))
+        low_b = man("bind", MAN1, *REV)[0]
+        low_a = a_set(acc_errs("R03:Y"))
+        run("registry.py", "set", "R03:Y", "council=" + cn(dgM), "--reason", "t")
+        reviews("Council R1 (sol). Score 8.5.\n\n" + vline(dgM, "sol"), "Council R1 (opus).\n" + vline(dgM, "opus"))
+        rc_b, out_b = man("bind", MAN1, *REV, "--council", cn(dgM))
+        rc_bx, _ = man("bind", MAN1, *REV, "--council", cn(dgM, opus="8.6"))
+        results.append(("N2 consistent verdicts below 8.0 refused; the matching PASS verdicts bind (bind prints the "
+                        "cell) and pass acceptance; a cell that differs from the verdicts is refused by bind",
+                        low_b != 0 and "A4-council" in low_a and rc_b == 0 and cn(dgM) in out_b
+                        and not acc_errs("R03:Y") and rc_bx != 0))
+        # Sol toolfix3 N3.a: a malformed gate entry on a NON-headline cannot hide a missing evidence file
+        run("registry.py", "set", "R03:Y", "gates=lit:PENDING(reviews/DOES_NOT_EXIST.md) trailing", "--reason", "t")
+        e_mal = acc_errs("R03:Y")
+        run("registry.py", "set", "R03:Y", "gates=", "--reason", "t")
+        results.append(("Sol-toolfix3 N3.a an unparsable gate entry on a non-headline is an A1-gates ERROR (the "
+                        "well-formed claim passes again)", any(f[1] == "A1-gates" and "unparsable" in f[3] for f in e_mal)
+                        and not acc_errs("R03:Y")))
+        # the verified manifest must cover the claim itself: a statement outside the ticket folder, not in INPUTS.txt
+        hdr_t, trows = R.read_tsv(R.TICKETS)
+        for t_ in trows:
+            if t_["ticket"] == "R03":
+                t_["folder"] = N
+        R.write_tsv(R.TICKETS, hdr_t, trows)
+        put("Theory_work/WaveT/R03-outside.md", "Theorem Z. Z holds (text outside the ticket folder).\n")
+        rc, out = tool("ingest.py", "claims", frag("n2z", [dict(
+            ticket="R03", local_id="Z", kind="theorem", file="Theory_work/WaveT/R03-outside.md", lines=[1, 1],
+            status="PROVED-CHECKED", status_source=f"{N}/REPORT.md:1", council=cn(dgM))]), "--apply")
+        e_z = acc_errs("R03:Z")
+        results.append(("N2 a verified manifest that does not cover the claim's statement file (outside the ticket, not "
+                        "in INPUTS.txt) is refused (A4); the in-folder claim still passes",
+                        rc == 0 and any(f[1] == "A4-council" and "does not cover" in f[3] for f in e_z)
+                        and not acc_errs("R03:Y")))
+        # P fixture (probes.py): the content changes after the round; the council keeps the reviewed digest while a
+        # NEW digest is frozen, verified and quoted (as unreviewed) in the same files
+        put(EXT, "changed external premise\n")
+        e_p1 = a_set(acc_errs("R03:Y"))
+        dgP = freeze(MAN2)
+        reviews(vline(dgM, "sol") + f"New MANIFEST {dgP} is unreviewed; FAIL pending review.\n",
+                vline(dgM, "opus") + f"New MANIFEST {dgP} is unreviewed; FAIL pending review.\n")
+        rc_vP, _ = man("verify", N, MAN2)
+        rc_bP, _ = man("bind", MAN2, *REV)
+        e_p2 = a_set(acc_errs("R03:Y"))
+        os.remove(os.path.join(TMP, MAN2))
+        freeze(MAN1)  # the reviewer's exact variant: re-frozen over the same file; no manifest with the cell digest
+        e_p3 = a_set(acc_errs("R03:Y"))
+        results.append(("N2 P fixture: content changed after the round -> A4 (manifest no longer verifies); new digest "
+                        "verified but bind REFUSED (no verdict for it); old manifest kept -> A4; re-frozen in place "
+                        "-> A4 (no MANIFEST_*.txt with the cell digest)",
+                        all("A4-council" in e_ <= A4C for e_ in (e_p1, e_p2, e_p3)) and rc_vP == 0 and rc_bP != 0))
+
+        # N4: crash-safe transactions (journal registry/.TXN_INPROGRESS; recover rolls back, restartably)
+        c1, c2 = os.path.join(R.REG, "zz_c1.tsv"), os.path.join(R.REG, "zz_c2.tsv")
+        for f_ in (c1, c2):
+            open(f_, "w", encoding="utf-8", newline="\n").write("old\n")
+        JOURNAL = os.path.join(R.REG, ".TXN_INPROGRESS")
+        TOOLS_SB = os.path.join(INFRA, "tools")
+        kid = put("crash_child.py", "import os, sys\nsys.dont_write_bytecode = True\n"
+                  f"sys.path.insert(0, {TOOLS_SB!r})\nimport bvsreg as R\nreal = os.replace\n"
+                  f"def kill(src, dst):\n    if str(dst) == {c2!r}:\n        os._exit(73)\n    return real(src, dst)\n"
+                  f"os.replace = kill\nR.write_many([({c1!r}, 'new\\n'), ({c2!r}, 'new\\n')])\n")
+        rc_k = subprocess.run([sys.executable, kid], cwd=TMP, capture_output=True).returncode
+        mixed = (open(c1, encoding="utf-8").read(), open(c2, encoding="utf-8").read())
+        try:
+            jr = _json.load(open(JOURNAL, encoding="utf-8"))
+        except (OSError, ValueError):
+            jr = {}
+        baks = [x.get("backup", "") for x in jr.get("restore", [])]
+        results.append(("N4 a process killed between two replacements leaves the journal registry/.TXN_INPROGRESS "
+                        "(written before the first replacement, with the backup locations)",
+                        rc_k == 73 and mixed == ("new\n", "old\n") and len(baks) == 2
+                        and all(b_ and os.path.exists(b_) for b_ in baks)))
+        rc_c, out_c = tool("check.py", "--quiet")
+        rc_s, out_s = run("registry.py", "set", "Q:X", "notes=x", "--reason", "t", ok=False)
+        rc_p, out_p = run("propagate.py", "suspect", "Q:X", "--reason", "t", ok=False)
+        rc_i, out_i = tool("ingest.py", "claims", frag("lk2", [qrow("LK2", [11, 12], **qck)]), "--apply")
+        results.append(("N4 check.py and every writing tool refuse while the journal exists",
+                        all(rc_ != 0 and "TXN_INPROGRESS" in o_ for rc_, o_ in ((rc_c, out_c), (rc_s, out_s),
+                                                                               (rc_p, out_p), (rc_i, out_i)))))
+        locked_man = [man("verify", N, MAN1), man("bind", MAN1, *REV),
+                      man("freeze", N, f"{N}/reviews/MANIFEST_LOCKED.txt")]
+        results.append(("Sol-toolfix3 N4.a manifest.py freeze / verify / bind refuse while the journal exists",
+                        all(rc_ != 0 and "TXN_INPROGRESS" in o_ for rc_, o_ in locked_man)
+                        and not os.path.exists(os.path.join(TMP, N, "reviews", "MANIFEST_LOCKED.txt"))))
+        BVS_SB = os.path.join(TOOLS_SB, "bvsreg.py")
+        kid2 = put("crash_recover.py", "import os, sys, runpy\nsys.dont_write_bytecode = True\n"
+                   "def kill(src, dst):\n    os._exit(74)\nos.replace = kill\n"
+                   f"sys.argv = [{BVS_SB!r}, 'recover']\nrunpy.run_path({BVS_SB!r}, run_name='__main__')\n")
+        rc_k2 = subprocess.run([sys.executable, kid2], cwd=TMP, capture_output=True).returncode
+        still = os.path.exists(JOURNAL) and tool("check.py", "--quiet")[0] != 0
+        rc_r, out_r = tool("bvsreg.py", "recover")
+        left = [f_ for f_ in os.listdir(R.REG) if f_.startswith("zz_c") and f_.endswith((".tmp", ".bak", ".rst"))]
+        results.append(("N4 a crash during recover leaves the journal (tools still refuse); recover restarts, rolls "
+                        "both files back, removes the journal and the leftovers",
+                        rc_k2 == 74 and still and rc_r == 0 and not os.path.exists(JOURNAL)
+                        and open(c1, encoding="utf-8").read() == "old\n" and open(c2, encoding="utf-8").read() == "old\n"
+                        and not left and "TXN_" not in tool("check.py", "--quiet")[1]))
+        rc_w = 0
+        try:
+            R.write_many([(c1, "new\n"), (c2, "new\n")])
+        except BaseException:
+            rc_w = 1
+        results.append(("N4 a normal transaction commits both files and leaves no journal or backups",
+                        rc_w == 0 and open(c1, encoding="utf-8").read() == "new\n" and not os.path.exists(JOURNAL)
+                        and not [f_ for f_ in os.listdir(R.REG) if f_.startswith("zz_c") and not f_.endswith(".tsv")]))
+        for f_ in (c1, c2):
+            if os.path.exists(f_):
+                os.remove(f_)
 
 finally:
     SB.__exit__(None, None, None)

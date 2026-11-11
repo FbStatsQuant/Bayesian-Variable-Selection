@@ -14,15 +14,17 @@ superseded (when a better theorem is found), with consequences propagated mechan
 | `registry/assumptions.tsv`, `sharpness.tsv`, `binding.tsv` | strength layer: assumptions/properties with bridges, necessity evidence, binding map |
 | `registry/repoints.tsv`, `method_components.tsv`, `config.tsv`, `events.log` | proposed re-points, method pin components, freeze/caps, audit trail |
 | `registry/fragments/` | seed transcriptions (helper output) and their briefs; not used after seeding |
-| `tools/check.py` | registry ↔ repository consistency audit (tombstones checked at their archive tag); `--acceptance ID…` = HQ's blocking CP3 gate (consumed claims ACTIVE, evidence files exist, council record bound to a manifest digest, strength gates, better-proposal dispositions, assurance and conditional statuses); `--consumed-vs REF --tickets T` = consumed claims vs main |
+| `tools/check.py` | registry ↔ repository consistency audit (tombstones checked at their archive tag); `--acceptance ID… [--record]` = HQ's blocking CP3 gate (consumed claims ACTIVE, every gate / proposal / disposition evidence file exists, council record whose digest is the ticket's frozen manifest that still verifies and whose reviews each carry one matching PASS `COUNCIL-VERDICT` line, strength gates, better-proposal dispositions, assurance and conditional statuses, a durable accept record or legacy-boundary row for every checked claim consumed transitively; `--record` writes the accept events on a PASS); `--consumed-vs REF --tickets T` = consumed claims vs main |
 | `tools/propagate.py` | lifecycle operations + propagation + repair issues (dry run by default prices a change; `--apply` writes); `rollback-ticket T --archive TAG --merge M` = the registry part of reverting a merged ticket, validated on the post-revert tree (LIFECYCLE §3) |
 | `tools/registry.py` | show / deps / rdeps / add / set / rehash / compare / sets / assumption-impact / stats / dot |
 | `tools/assemble.py` | generates the paper's theorem blocks and provenance / dependency / strength tables from the registry |
-| `tools/ingest.py` | add a new ticket's claims (fragment JSONL, or a Wave 3 REPORT.md read directly: `convert` shows the JSONL) or split bundled claims into parts; full schema, unknown fields rejected, all-or-nothing (exit 1 on any problem); dry run by default, `--staged` checks the result (acceptance included) on a copy, `--apply` writes |
-| `tools/bvsreg.py` | shared library; `bvsreg.py recover` undoes a multi-file write whose own restore failed (`registry/.TXN_FAILED`; every tool refuses to run while it exists) |
+| `tools/ingest.py` | add a new ticket's claims (fragment JSONL, or a Wave 3 REPORT.md read directly: `convert` shows the JSONL) or split bundled claims into parts; full schema, unknown fields rejected, all-or-nothing (exit 1 on any problem); dry run by default, `--staged` checks the result (acceptance included) on a copy, `--staged --record` also commits it with accept events on a PASS, `--apply` writes |
+| `tools/bvsreg.py` | shared library; multi-file writes are journalled transactions (`registry/.TXN_INPROGRESS`, written and fsynced before the first replacement); `bvsreg.py recover` rolls back a transaction that did not finish (killed writer) or whose restore failed (`registry/.TXN_FAILED`) — every tool refuses to run while either exists; recover is safe to re-run. `bvsreg.py legacy-boundary` wrote `LEGACY_ACCEPTED.tsv` (once) |
+| `LEGACY_ACCEPTED.tsv` | the frozen legacy acceptance boundary: claims PROVED-CHECKED on main at tag `theory-v2.0-pre` (id, version, statement hash); check.py recomputes it from the tag (never edit) |
 | `tools/build_registry.py` | one-off seeding from fragments (refuses to overwrite a live registry) |
 | `ci/run_ci.py`, `ci/README.md`, `ci/falsification.tsv` | continuous audit and how HQ schedules it |
-| `templates/ASSUMPTION_MAP.md` | one-page map each ticket writes before heavy proving |
+| `templates/ASSUMPTION_MAP.md` | one-page map each ticket writes before heavy proving (with the REPORT registry block) |
+| `templates/COUNCIL_BRIEF.md` | the section every council blind brief must contain: the machine-readable `COUNCIL-VERDICT` line |
 | `../../.github/` | PR template and issue templates |
 
 Start with `python Theory_work/INFRA/tools/check.py --quiet` and `python Theory_work/INFRA/tools/registry.py stats`.

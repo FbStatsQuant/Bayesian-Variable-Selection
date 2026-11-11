@@ -39,6 +39,14 @@ Rules the CP3 acceptance check enforces on this block (LIFECYCLE §4, §4.1):
 - Every `PASS(<evidence>)` names an existing file (paths relative to this folder or the repository root;
   `file@<commit>` pins it).
 - A PROVED-CHECKED status needs the `council:` line of the ONE passing round: both seats ≥ 8.0 with all gates PASS,
-  the frozen manifest digest, and two review files that each quote `MANIFEST <digest>`.
+  the digest of the round's frozen manifest `reviews/MANIFEST_R<k>.txt` (which must still pass `manifest.py verify`
+  on the final tree), and two review files that each contain exactly one line
+  `COUNCIL-VERDICT round=R<k> manifest=<digest> seat=<seat> score=<x.y> gates=PASS` matching this `council:` line
+  (and no other COUNCIL-VERDICT line). `manifest.py bind reviews/MANIFEST_R<k>.txt <both reviews>` prints the
+  `council:` value to copy. Quoting the digest in prose is not a verdict.
+- Every gate evidence — FAIL / PENDING entries, `better-proposal` and `better-disposition` included — names an
+  existing file.
+- Every PROVED-CHECKED claim this result consumes (transitively) must itself have been accepted
+  (`check.py --acceptance <id> --record`) or be in `INFRA/LEGACY_ACCEPTED.tsv`.
 - A premise below PROVED-CHECKED is used only as `depends_on: <id>@hyp`, named in the statement, with
   `conditional on <id or name>` in the status; every checked result that uses this one carries the same condition.

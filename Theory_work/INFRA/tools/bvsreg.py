@@ -64,11 +64,20 @@ if os.environ.get("BVS_STAGE_INFRA"):
 REG = os.path.join(INFRA, "registry")
 P = lambda f: os.path.join(REG, f)  # noqa: E731
 # Sol-1: a multi-file transaction whose own restore failed leaves this lock (backup locations + recovery steps).
-# Every tool refuses to run while it exists (import-time guard below, and safe_dest), until `bvsreg.py recover`.
+# R03-N4: every multi-file transaction first writes (and fsyncs) the journal TXN_JOURNAL with its backup locations and
+# removes it only after every replacement succeeded, so a process killed between replacements leaves it behind.
+# Every tool refuses to run while either exists (import-time guard below, and safe_dest), until `bvsreg.py recover`.
 TXN_LOCK = P(".TXN_FAILED")
+TXN_JOURNAL = P(".TXN_INPROGRESS")
 
 
 def txn_guard() -> None:
+    if os.path.exists(TXN_JOURNAL):
+        raise SystemExit(f"REGISTRY LOCKED: {TXN_JOURNAL} exists (a multi-file transaction did not finish: the process "
+                         "was killed or its restore failed, so the registry may be a mix of old and new files)"
+                         + (f" and {TXN_LOCK} exists" if os.path.exists(TXN_LOCK) else "") + ". Run `python "
+                         "Theory_work/INFRA/tools/bvsreg.py recover` (rolls every journalled file back to its backup; "
+                         "safe to re-run), then check.py, then re-run the interrupted command.")
     if os.path.exists(TXN_LOCK):
         raise SystemExit(f"REGISTRY LOCKED: {TXN_LOCK} exists (a multi-file write failed AND its restore failed, so "
                          "the registry may be inconsistent). Read it, then run `python Theory_work/INFRA/tools/"
@@ -236,76 +245,160 @@ def write_tsv(path: str, header: list[str], rows: list[dict]) -> None:
     os.replace(tmp, path)
 
 
-def replace_all(pairs) -> None:
-    """Transaction over prepared files: [(tmp, dest)]. Each existing dest is first copied to dest.bak; then every tmp
-    replaces its dest. On ANY failure every completed replacement is undone (from .bak, or removed if dest was new)
-    and the exception re-raised; .tmp / .bak files are removed in every case, except the backups of a restore that
-    itself failed: those are kept and listed in the lock file TXN_LOCK, which blocks every tool until
-    `bvsreg.py recover` (Sol-1). A process killed mid-transaction is not covered."""
+def _fsync_file(path: str) -> None:
+    with open(path, "r+b") as fh:  # write access: FlushFileBuffers on Windows needs it
+        os.fsync(fh.fileno())
+
+
+def _fsync_dir(d: str) -> None:
+    """Make a rename / removal in directory d durable (POSIX). Windows cannot open a directory for fsync; NTFS
+    journals its metadata."""
+    if os.name == "nt":
+        return
+    try:
+        fd = os.open(d, os.O_RDONLY)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+    except OSError:
+        pass
+
+
+def _restore(dest: str, backup: str) -> None:
+    """Put `backup` back over `dest` (copy to dest.rst, fsync, atomic replace), or remove a dest that did not exist
+    before (backup ''). The backup itself is kept, so an interrupted restore can simply be repeated."""
     import shutil
-    done, baks, failed = [], [], []
+    if backup:
+        shutil.copyfile(backup, dest + ".rst")
+        _fsync_file(dest + ".rst")
+        os.replace(dest + ".rst", dest)
+    elif os.path.exists(dest):
+        os.remove(dest)
+
+
+_RECOVERY = ["python Theory_work/INFRA/tools/bvsreg.py recover   # puts every 'backup' back over its 'dest' (removes a "
+             "'remove-new-file' dest), then deletes the journal / lock; safe to re-run if it is interrupted",
+             "by hand, if recover fails: copy each backup over its dest, delete each remove-new-file dest, delete "
+             "registry/.TXN_INPROGRESS and registry/.TXN_FAILED",
+             "python Theory_work/INFRA/tools/check.py   # then re-run the interrupted command"]
+
+
+def _write_journal(items) -> None:
+    """R03-N4: the durable in-progress journal, written (tmp + fsync + atomic rename) BEFORE the first replacement."""
+    import json
+    info = {"utc": _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "argv": sys.argv,
+            "state": "in-progress: no replacement is committed until this file is removed", "restore": items,
+            "recovery": _RECOVERY}
+    tmp = TXN_JOURNAL + ".tmp"
+    with open(tmp, "w", encoding="utf-8", newline="\n") as fh:
+        json.dump(info, fh, indent=1)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, TXN_JOURNAL)
+    _fsync_dir(os.path.dirname(TXN_JOURNAL))
+
+
+def _cleanup(items) -> None:
+    for it in items:
+        for f in (it.get("tmp", ""), it.get("backup", ""), it.get("dest", "") + ".rst"):
+            if f and f != it.get("dest") and os.path.exists(f):
+                try:
+                    os.remove(f)
+                except OSError:
+                    pass
+
+
+def replace_all(pairs) -> None:
+    """Crash-safe transaction over prepared files: [(tmp, dest)] (R03-N4, Sol-1).
+    1. every tmp is fsynced; every existing dest is copied to dest.bak (fsynced);
+    2. the journal registry/.TXN_INPROGRESS (each dest, its backup, the action that undoes it) is written and fsynced;
+    3. every tmp replaces its dest (atomic rename);
+    4. only then the journal is removed (= commit), then the backups.
+    On an exception every completed replacement is restored from its backup (or removed if the dest was new) and the
+    journal removed; if a restore itself fails, the journal stays and the lock TXN_LOCK is added. A process killed at
+    any point after step 2 leaves the journal. While the journal or the lock exists every tool refuses to run;
+    `bvsreg.py recover` rolls every journalled file back (restartable: backups are copied, never moved)."""
+    import shutil
+    txn_guard()
+    items = []
     try:
         for tmp, dest in pairs:
+            _fsync_file(tmp)
             if os.path.exists(dest):
-                bak = safe_dest(dest + ".bak")
+                bak = safe_dest(dest + ".bak", guard=False)
                 shutil.copyfile(dest, bak)
-                baks.append(bak)
-        for tmp, dest in pairs:
-            existed = os.path.exists(dest)
-            os.replace(tmp, dest)
-            done.append((dest, existed))
+                _fsync_file(bak)
+                items.append({"dest": dest, "backup": bak, "action": "restore-from-backup", "tmp": tmp})
+            else:
+                items.append({"dest": dest, "backup": "", "action": "remove-new-file", "tmp": tmp})
+        for d in sorted({os.path.dirname(it["dest"]) for it in items}):
+            _fsync_dir(d)  # the backups' directory entries are durable before the journal names them
+        _write_journal(items)
+    except BaseException:
+        if os.path.exists(TXN_JOURNAL):  # nothing was replaced yet
+            os.remove(TXN_JOURNAL)
+        _cleanup(items + [{"tmp": t} for t, _ in pairs])
+        raise
+    done = []
+    try:
+        for it in items:
+            os.replace(it["tmp"], it["dest"])
+            done.append(it)
+        for d in sorted({os.path.dirname(it["dest"]) for it in items}):
+            _fsync_dir(d)
     except BaseException as exc:
         todo = []
-        for dest, existed in reversed(done):
+        for it in reversed(done):
             try:
-                if existed:
-                    os.replace(dest + ".bak", dest)
-                else:
-                    os.remove(dest)
+                _restore(it["dest"], it["backup"])
             except OSError:
-                failed.append(dest + ".bak")
-                todo.append({"dest": dest, "backup": dest + ".bak" if existed else "",
-                             "action": "restore-from-backup" if existed else "remove-new-file"})
-                print(f"ROLLBACK FAILED for {dest} (backup {dest}.bak kept)", file=sys.stderr)
+                todo.append(it)
+                print(f"ROLLBACK FAILED for {it['dest']} (backup {it['backup'] or '-'} kept)", file=sys.stderr)
         if todo:
-            write_txn_lock(todo, exc)
+            write_txn_lock(todo, exc)  # the journal stays too: `recover` rolls the whole transaction back
+        else:
+            os.remove(TXN_JOURNAL)
+            _cleanup(items)
         raise
-    finally:
-        for tmp, _ in pairs:
-            if os.path.exists(tmp):
-                os.remove(tmp)
-        for bak in baks:
-            if os.path.exists(bak) and bak not in failed:
-                os.remove(bak)
+    os.remove(TXN_JOURNAL)  # commit point
+    _fsync_dir(os.path.dirname(TXN_JOURNAL))
+    _cleanup(items)
 
 
 def write_txn_lock(todo, exc) -> None:
     """Record a failed restore (Sol-1): what to put back, from where, and how. Written directly (no guard)."""
     import json
     info = {"utc": _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "argv": sys.argv,
-            "error": repr(exc), "restore": todo,
-            "recovery": ["python Theory_work/INFRA/tools/bvsreg.py recover   # puts every 'backup' back over its "
-                         "'dest' (or removes a 'remove-new-file' dest), then deletes this lock",
-                         "by hand, if recover fails: copy each backup over its dest, delete each remove-new-file "
-                         "dest, delete this file",
-                         "python Theory_work/INFRA/tools/check.py   # then re-run the failed command"]}
+            "error": repr(exc), "restore": todo, "recovery": _RECOVERY}
     try:
         with open(TXN_LOCK, "w", encoding="utf-8", newline="\n") as fh:
             json.dump(info, fh, indent=1)
+            fh.flush()
+            os.fsync(fh.fileno())
     except OSError as e:  # pragma: no cover - last resort: tell the operator
         print(f"COULD NOT WRITE THE LOCK {TXN_LOCK} ({e}); restore by hand: {todo}", file=sys.stderr)
     print(f"REGISTRY LOCKED: {TXN_LOCK} (run bvsreg.py recover)", file=sys.stderr)
 
 
 def recover(dry_run: bool = False) -> int:
-    """`bvsreg.py recover`: undo a failed transaction from the lock file's backups, then remove the lock."""
+    """`bvsreg.py recover`: roll an unfinished transaction back from its journal (registry/.TXN_INPROGRESS: killed
+    process or failed restore), or, without a journal, undo a failed restore listed in the lock TXN_LOCK; then remove
+    the journal and the lock. Restartable: backups are copied over their destinations (never moved) and the journal
+    is removed only after every file is back, so a recover killed half-way is simply run again."""
     import json
-    if not os.path.exists(TXN_LOCK):
-        print(f"no lock ({TXN_LOCK}): nothing to recover")
+    src = TXN_JOURNAL if os.path.exists(TXN_JOURNAL) else TXN_LOCK if os.path.exists(TXN_LOCK) else ""
+    if not src:
+        print(f"no journal or lock ({TXN_JOURNAL}, {TXN_LOCK}): nothing to recover")
         return 0
-    info = json.load(open(TXN_LOCK, encoding="utf-8"))
+    try:
+        info = json.load(open(src, encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        print(f"PROBLEM cannot read {src} ({e}); restore by hand (see LIFECYCLE §5.5) and delete it")
+        return 1
+    items = info.get("restore", [])
     problems = []
-    for it in info.get("restore", []):
+    for it in items:
         dest, bak = it.get("dest", ""), it.get("backup", "")
         print(f"{'would ' if dry_run else ''}{it.get('action')}: {dest}" + (f" <- {bak}" if bak else ""))
         if dry_run:
@@ -313,24 +406,34 @@ def recover(dry_run: bool = False) -> int:
         try:
             dest = safe_dest(dest, guard=False)
             if it.get("action") == "restore-from-backup":
-                os.replace(safe_dest(bak, guard=False), dest)
-            elif os.path.exists(dest):
-                os.remove(dest)
+                bak = safe_dest(bak, guard=False)
+                if not os.path.isfile(bak):
+                    raise OSError(f"backup {bak} is missing")
+                _restore(dest, bak)
+            elif it.get("action") == "remove-new-file":
+                _restore(dest, "")
+            else:
+                raise OSError(f"unknown action {it.get('action')!r}")
         except (OSError, SystemExit) as e:
             problems.append(f"{dest}: {e}")
     if problems or dry_run:
         print("\n".join(f"PROBLEM {p}" for p in problems) or "(dry run: nothing changed)")
         return 1 if problems else 0
-    os.remove(TXN_LOCK)
-    print(f"recovered {len(info.get('restore', []))} file(s); lock removed. Next: python "
-          "Theory_work/INFRA/tools/check.py, then re-run the failed command")
+    for f in (TXN_JOURNAL, TXN_LOCK):  # every file is back: now (and only now) end the transaction
+        if os.path.exists(f):
+            os.remove(f)
+    _fsync_dir(os.path.dirname(TXN_JOURNAL))
+    _cleanup(items)
+    print(f"recovered {len(items)} file(s) from {os.path.basename(src)}; journal / lock removed. Next: python "
+          "Theory_work/INFRA/tools/check.py, then re-run the interrupted command")
     return 0
 
 
 def write_many(items) -> None:
-    """All-or-nothing write of several files: [(path, header, rows)] for TSVs or [(path, text)] for raw text (e.g. the
-    events log with its new lines). All are written to .tmp siblings first, then replaced as one transaction
-    (replace_all): a failure at any point leaves every file as it was."""
+    """All-or-nothing, crash-safe write of several files: [(path, header, rows)] for TSVs or [(path, text)] for raw
+    text (e.g. the events log with its new lines). All are written to .tmp siblings first, then replaced as one
+    journalled transaction (replace_all): an exception leaves every file as it was; a killed process leaves the
+    journal, which blocks every tool until `bvsreg.py recover` rolls the files back."""
     staged = []
     try:
         for it in items:
@@ -903,7 +1006,8 @@ def make_stage() -> str:
     for f in STAGE_FILES:
         s = os.path.join(INFRA, f)
         if os.path.isdir(s):
-            shutil.copytree(s, os.path.join(d, f), ignore=shutil.ignore_patterns("fragments", "*.tmp"))
+            shutil.copytree(s, os.path.join(d, f), ignore=shutil.ignore_patterns("fragments", "*.tmp", "*.bak",
+                                                                               "*.rst", ".TXN_*"))
         elif os.path.isfile(s):
             shutil.copy2(s, os.path.join(d, f))
     os.makedirs(os.path.join(d, "registry"), exist_ok=True)
@@ -954,7 +1058,8 @@ def commit_stage(stage: str) -> list[str]:
     pairs = []
     sreg = os.path.join(stage, "registry")
     for f in sorted(os.listdir(sreg)):
-        if os.path.isfile(os.path.join(sreg, f)) and not f.endswith(".tmp"):
+        if os.path.isfile(os.path.join(sreg, f)) and not f.endswith((".tmp", ".bak", ".rst")) \
+                and not f.startswith(".TXN_"):
             pairs.append((os.path.join(sreg, f), os.path.join(REG, f)))
     for f in ("DECISIONS.md", "FAILED_ROUTES.md"):
         if os.path.isfile(os.path.join(stage, f)):
@@ -1101,10 +1206,87 @@ _C_SEAT = re.compile(r"^([A-Za-z][\w.-]*)=(\d+(?:\.\d+)?) (PASS|FAIL)\((.+)\)$")
 COUNCIL_MIN = 8.0
 
 
+MANIFEST_TOOL = os.path.join(ROOT, "Theory_work", "Wave3", "tools", "manifest.py")
+_MANIFEST_MOD = None
+
+
+def manifest_tool():
+    """The Wave 3 manifest tool (freeze / verify / verdict-line grammar), loaded as a library: ONE grammar for
+    `manifest.py bind` and CP3 acceptance (R03-N2)."""
+    global _MANIFEST_MOD
+    if _MANIFEST_MOD is None:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("bvs_manifest_tool", MANIFEST_TOOL)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _MANIFEST_MOD = mod
+    return _MANIFEST_MOD
+
+
+def ticket_dir(row: dict, folder: str = "") -> str:
+    """The ticket folder whose reviews/MANIFEST_*.txt holds a claim's council manifest: tickets.tsv `folder`, else the
+    folder of the claim's statement file."""
+    return _pkey(folder or os.path.dirname(row.get("file", "")) or "")
+
+
+def manifest_problems(row: dict, folder: str, dg: str) -> list[str]:
+    """R03-N2: the council digest must be the header of an existing `<ticket>/reviews/MANIFEST_*.txt`, and
+    `manifest.py verify` of that manifest must pass on the CURRENT tree (content changed after the round -> refused)."""
+    import glob
+    d = ticket_dir(row, folder)
+    if not d or d == ".":
+        return [f"no ticket folder for {row.get('id')} (tickets.tsv folder / statement file): cannot find the frozen "
+                "manifest of the round"]
+    try:
+        M = manifest_tool()
+    except Exception as e:  # pragma: no cover - the tool is part of the repository
+        return [f"cannot load {MANIFEST_TOOL}: {e}"]
+    found = []
+    for mp in sorted(glob.glob(os.path.join(ROOT, d, "reviews", "MANIFEST_*.txt"))):
+        try:
+            with open(mp, encoding="utf-8") as fh:
+                head = fh.readline().strip()
+        except OSError:
+            continue
+        if head == f"MANIFEST {dg}":
+            found.append(mp)
+    if not found:
+        return [f"no {d}/reviews/MANIFEST_*.txt has the header `MANIFEST {dg[:12]}...`: the council digest must be the "
+                "round's frozen manifest of this ticket (manifest.py freeze), still present"]
+    probs = []
+    for mp in found:
+        rel = os.path.relpath(mp, ROOT).replace(os.sep, "/")
+        try:
+            _, diffs = M.verify_problems(os.path.join(ROOT, d), mp, ROOT)
+        except M.ManifestError as e:
+            diffs = [str(e)]
+        if diffs:
+            probs.append(f"`manifest.py verify {d} {rel}` fails on the current tree ({len(diffs)} difference(s): "
+                         f"{'; '.join(diffs[:3])}{' ...' if len(diffs) > 3 else ''}): the reviewed content changed after "
+                         "the round (rule 15: a fresh review of the change is needed)")
+            continue
+        # the manifest must cover what the claim IS: its statement file, premise files and status source (a file
+        # outside the ticket folder must be listed in reviews/INPUTS.txt), else a verified digest proves nothing
+        covered = set()
+        for ln in M.read_manifest(mp)[2]:
+            p_ = ln[66:]
+            covered.add(_pcase(p_[4:] if p_.startswith("EXT:") else f"{d}/{p_}"))
+        need = [row.get("file", ""), (row.get("status_source", "") or "").rpartition(":")[0]]
+        need += [split_premise(x)[0].rpartition(":")[0] for x in split_list(row.get("premises", ""))
+                 if not split_premise(x)[1]]  # an archived premise span is frozen in git
+        for f_ in dict.fromkeys(x for x in need if x):
+            if _pcase(f_) not in covered:
+                probs.append(f"the frozen manifest {rel} does not cover {f_} (statement / premise / status source of "
+                             f"{row.get('id')}): list it in reviews/INPUTS.txt before the freeze")
+    return probs
+
+
 def council_problems(row: dict, folder: str = "") -> list[str]:
     """[] iff the claim's council record is a CP3-PASS: two seats (distinct names, distinct review files), each
-    >= 8.0 with all gates PASS, in one round, on one MANIFEST digest that every seat's review file quotes (the
-    `manifest.py bind` rule)."""
+    >= 8.0 with all gates PASS, in one round, on one MANIFEST digest; that digest is the header of the ticket's
+    reviews/MANIFEST_*.txt, which still verifies on the current tree; and every seat's review file contains exactly one
+    `COUNCIL-VERDICT` line for that digest matching the cell (round, seat, score, gates=PASS) and no contradictory
+    verdict line (R03-N2: an outcome bound to the digest, not a mention of it)."""
     cell = (row.get("council") or "").strip()
     if not cell:
         return ["no council record (format: R<k>; MANIFEST <64-hex>; <seat>=<score> PASS(<review>); "
@@ -1126,6 +1308,9 @@ def council_problems(row: dict, folder: str = "") -> list[str]:
     names = {s[0].lower() for s in seats}
     if len(seats) < 2 or len(names) != len(seats):
         probs.append(f"needs two (or more) distinct seats (found {[s[0] for s in seats]})")
+    if len(mans) == 1:
+        probs += manifest_problems(row, folder, mans[0])
+    rnd = int(_C_ROUND.match(rounds[0]).group(1)) if len(rounds) == 1 else None
     files = []
     for name, score, res, ev in seats:
         if float(score) < COUNCIL_MIN or float(score) > 10:
@@ -1143,9 +1328,156 @@ def council_problems(row: dict, folder: str = "") -> list[str]:
         if _pcase(path) in files:  # same repository file, whatever its case or commit pin (two seats = two reviews)
             probs.append(f"seat {name}: review file {path} is also another seat's (two seats = two reviews)")
         files.append(_pcase(path))
-        if len(mans) == 1 and mans[0] not in evidence_text(path, pin):
-            probs.append(f"seat {name}: review {path} does not quote MANIFEST {mans[0][:12]}... (manifest.py bind)")
+        if len(mans) == 1:
+            try:
+                _, vp = manifest_tool().verdict_problems(evidence_text(path, pin), mans[0], rnd, name, score)
+            except Exception as e:  # pragma: no cover
+                vp = [f"cannot check the verdict line ({e})"]
+            probs += [f"seat {name}: review {path}: {p}" for p in vp]
     return probs
+
+
+# ---------------------------------------------------------------- durable acceptance records (R03-N1)
+# A checked (PROVED-CHECKED-class) claim consumed by an accepted claim must itself have been accepted: an `accept`
+# event written by `check.py --acceptance ... --record` (or `ingest.py ... --staged --record`) for its CURRENT content,
+# or membership in the frozen legacy boundary (claims PROVED-CHECKED on main at tag LEGACY_TAG).
+ACCEPT_FIELDS = ("version", "sha256", "status", "depends_on", "consumes", "gates", "council", "headline")
+LEGACY_TAG = "theory-v2.0-pre"
+LEGACY_FILE = os.path.join(os.path.dirname(TOOLS), "LEGACY_ACCEPTED.tsv")  # the repository file, never a stage copy
+
+
+def accept_stamp(row: dict) -> str:
+    """`v<version> fp:<16 hex>`: what an accept event records. The fingerprint covers every field acceptance read
+    (statement hash, status, edges, bound bridges, gates, council, headline), so ANY later change makes it stale."""
+    fp = hashlib.sha256("\x1f".join((row.get(k) or "") for k in ACCEPT_FIELDS).encode()).hexdigest()[:16]
+    return f"v{row.get('version', '')} fp:{fp}"
+
+
+def accept_records() -> dict[str, set]:
+    """{claim id: {accept stamps}} from the events log."""
+    out = defaultdict(set)
+    for e in read_tsv(EVENTS)[1]:
+        if e.get("action") == "accept":
+            out[e.get("id", "")].add(e.get("after", ""))
+    return out
+
+
+def legacy_rows_at(tag: str):
+    """{(id, version, sha256)} of the claims with a PROVED-CHECKED-class status in a VALID state in the registry
+    committed at `tag` -> (set, commit) or (None, problem)."""
+    rc, commit = git("rev-parse", "--verify", "--quiet", tag + "^{commit}")
+    if rc != 0:
+        return None, f"tag {tag!r} is not a commit in this repository"
+    rc, txt = git("show", f"{commit}:Theory_work/INFRA/registry/claims.tsv")
+    if rc != 0:
+        return None, f"cannot read the registry at {tag}"
+    return {(r["id"], r.get("version", ""), r.get("sha256", "")) for r in read_tsv_text(txt)
+            if status_strength(r.get("status", "")) == 3 and r.get("state") in VALID}, commit
+
+
+def load_legacy():
+    """The legacy boundary file -> (tag, commit, {(id, version, sha256)}, [format problems]); empty if absent."""
+    if not os.path.isfile(LEGACY_FILE):
+        return "", "", set(), []
+    tag, commit, rows, probs = "", "", set(), []
+    for n, ln in enumerate(open(LEGACY_FILE, encoding="utf-8").read().splitlines(), 1):
+        if not ln.strip() or ln.startswith("#") or ln == "id\tversion\tsha256":
+            continue
+        c = ln.split("\t")
+        if c[0] == "tag" and len(c) == 3 and not tag:
+            tag, commit = c[1], c[2]
+        elif len(c) == 3 and c[0] != "tag":
+            rows.add(tuple(c))
+        else:
+            probs.append(f"line {n}: unparsable {ln[:80]!r}")
+    if not tag:
+        probs.append("no `tag<TAB><name><TAB><commit>` line")
+    return tag, commit, rows, probs
+
+
+_LEGACY = None
+
+
+def legacy_boundary():
+    """-> ({(id, version, sha256)} that may be trusted as accepted, [problems]). The file is trusted only if it is
+    exactly what `bvsreg.py legacy-boundary` derives from its tag, and the tag still names the recorded commit; any
+    hand edit empties the boundary (fail closed) and is reported (L1-legacy)."""
+    global _LEGACY
+    if _LEGACY is None:
+        tag, commit, rows, probs = load_legacy()
+        if not tag and not rows and not probs:
+            _LEGACY = (set(), [])
+        elif probs:
+            _LEGACY = (set(), [f"{os.path.basename(LEGACY_FILE)}: {p}" for p in probs])
+        elif tag != LEGACY_TAG:  # Sol toolfix3 N1.b: the file may not choose its own (later) source
+            _LEGACY = (set(), [f"{os.path.basename(LEGACY_FILE)}: names tag {tag!r}; the legacy boundary is the "
+                               f"registry at {LEGACY_TAG} only"])
+        else:
+            want, got = legacy_rows_at(tag)
+            if want is None:
+                _LEGACY = (set(), [f"{os.path.basename(LEGACY_FILE)}: {got}: the boundary cannot be verified"])
+            elif got != commit:
+                _LEGACY = (set(), [f"{os.path.basename(LEGACY_FILE)}: tag {tag} now names {got[:12]}, not the recorded "
+                                   f"{commit[:12]}"])
+            elif rows != want:
+                extra, miss = sorted(rows - want), sorted(want - rows)
+                _LEGACY = (set(), [f"{os.path.basename(LEGACY_FILE)} differs from the registry at {tag}: "
+                                   f"{len(extra)} row(s) not there (e.g. {', '.join(r[0] for r in extra[:3]) or '-'}), "
+                                   f"{len(miss)} missing (e.g. {', '.join(r[0] for r in miss[:3]) or '-'}); the "
+                                   "boundary is frozen: regenerate nothing, revert the edit"])
+            else:
+                _LEGACY = (rows, [])
+    return _LEGACY
+
+
+def write_legacy_boundary() -> int:
+    """`bvsreg.py legacy-boundary`: write LEGACY_ACCEPTED.tsv ONCE, from tag LEGACY_TAG (refuses if it exists)."""
+    tag = LEGACY_TAG
+    if os.path.exists(LEGACY_FILE):
+        print(f"refused: {LEGACY_FILE} exists (the legacy boundary is generated once and frozen)")
+        return 1
+    rows, commit = legacy_rows_at(tag)
+    if rows is None:
+        print(f"refused: {commit}")
+        return 1
+    with open(safe_dest(LEGACY_FILE), "w", encoding="utf-8", newline="\n") as fh:
+        fh.write("# LEGACY_ACCEPTED.tsv: the frozen legacy acceptance boundary (LIFECYCLE §4 A5; R03 finding N1).\n"
+                 f"# Claims with a PROVED-CHECKED-class status in a valid state in the registry at tag {tag}, which\n"
+                 "# predate CP3 acceptance records. Generated ONCE by `python Theory_work/INFRA/tools/bvsreg.py\n"
+                 "# legacy-boundary`; never edit it: check.py recomputes it from the tag (L1-legacy ERROR on any\n"
+                 "# difference) and a row counts only while the claim's id, version and statement hash are unchanged.\n"
+                 f"tag\t{tag}\t{commit}\nid\tversion\tsha256\n"
+                 + "".join(f"{i}\t{v}\t{h}\n" for i, v, h in sorted(rows)))
+    print(f"wrote {LEGACY_FILE}: {len(rows)} claim(s) at {tag} ({commit[:12]})")
+    return 0
+
+
+def unaccepted_inputs(cid: str, by: dict, g, aliases: dict, now: set, records=None, legacy=None):
+    """R03-N1: checked claims cid consumes (stmt / proof / bound-bridge edges, transitively; an @hyp edge too unless
+    the consuming claim's status is `conditional on` it) that have neither an accept event for their CURRENT content
+    nor a legacy-boundary row for their current id + version + statement hash -> [(id, path, why)]. Claims accepted
+    in this same run (`now`) count as accepted (the run refuses as a whole on any ERROR)."""
+    records = accept_records() if records is None else records
+    legacy = legacy_boundary()[0] if legacy is None else legacy
+    out, seen, q = [], {cid}, deque([(cid, [cid])])
+    while q:
+        u, path = q.popleft()
+        for d in g.deps.get(u, []):
+            if d in seen or d not in by:
+                continue
+            if g.uses[(u, d)] == {"hyp"} and conditional_on(by[u].get("status", ""), claim_names(d, by, aliases)):
+                continue  # a declared condition is assumed, not consumed
+            seen.add(d)
+            q.append((d, path + [d]))
+            dr = by[d]
+            if dr.get("state") not in VALID or status_strength(dr.get("status", "")) != 3 or d in now:
+                continue
+            if accept_stamp(dr) in records.get(d, ()) or (d, dr.get("version", ""), dr.get("sha256", "")) in legacy:
+                continue
+            why = ("its accept record is stale: the claim changed after acceptance" if records.get(d) else
+                   "it has no accept event and is not in the legacy boundary")
+            out.append((d, path + [d], why))
+    return out
 
 
 # ---------------------------------------------------------------- consumed claims: validity and conditions
@@ -1261,9 +1593,14 @@ def read_tsv_text(text: str) -> list[dict]:
 
 if __name__ == "__main__":
     import argparse
-    _ap = argparse.ArgumentParser(description="bvsreg.py recover [--dry-run]: undo a transaction whose own restore "
-                                  "failed (the lock file registry/.TXN_FAILED), then remove the lock")
-    _ap.add_argument("cmd", choices=["recover"])
+    _ap = argparse.ArgumentParser(description="bvsreg.py recover [--dry-run]: roll back an unfinished transaction "
+                                  "(journal registry/.TXN_INPROGRESS, or lock registry/.TXN_FAILED), then remove the "
+                                  "journal / lock (restartable). bvsreg.py legacy-boundary [--tag T]: write the frozen "
+                                  "legacy acceptance boundary INFRA/LEGACY_ACCEPTED.tsv once, from tag theory-v2.0-pre (R03-N1)")
+    _ap.add_argument("cmd", choices=["recover", "legacy-boundary"])
     _ap.add_argument("--dry-run", action="store_true")
     _a = _ap.parse_args()
+    if _a.cmd == "legacy-boundary":
+        txn_guard()
+        sys.exit(write_legacy_boundary())
     sys.exit(recover(_a.dry_run))

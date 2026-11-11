@@ -25,6 +25,10 @@ id, ...) is printed, NOTHING is written and the exit code is 1 — with or witho
               `check.py --acceptance <every id it ingests>` on that copy and print its result (ERROR findings the
               fragment introduces and the acceptance findings are listed separately); the live registry is never
               touched. Exit code = check.py's on the staged copy (1 on any ERROR, acceptance included).
+  --staged --record   as --staged; if the staged check (acceptance included) has 0 ERROR, also record an `accept`
+              event per ingested id on the copy (check.py --acceptance ... --record) and commit the copy to the live
+              registry as ONE journalled transaction: the ingest and its durable acceptance record (LIFECYCLE §4 A5,
+              R03-N1). Refused -> nothing written anywhere.
 REGISTRY blocks: fields are `name:` + zero or more spaces + value (one grammar). Inside a fenced block every
 non-blank line must be fields (anything else is a problem, never a silent end of the block).
 """
@@ -630,8 +634,9 @@ def ingest_splits(path, apply):
 
 
 # ---------------------------------------------------------------- staged
-def staged(what, path):
-    """Apply to a disposable copy of the registry, run the full check.py on it, print the result."""
+def staged(what, path, record=False):
+    """Apply to a disposable copy of the registry, run the full check.py on it, print the result. With record: on a
+    PASS, write the accept events on the copy and commit the copy to the live registry (one transaction)."""
     stage = R.make_stage()
     try:
         rc, out = R.run_staged(stage, "ingest.py", what, os.path.abspath(path), "--apply")
@@ -656,8 +661,20 @@ def staged(what, path):
               f"{'REFUSED' if acc else 'PASS'}; {len(acc)} acceptance ERROR")
         for f in acc:
             print(f"  ACC {f[0]:5} {f[1]:17} {f[2]:30} {f[3]}")
+        if record and rc_st == 0:
+            rc_r, out_r = R.run_staged(stage, "check.py", "--quiet", "--acceptance", *new_ids, "--record")
+            print(out_r.rstrip())
+            if rc_r != 0:
+                print("STAGED --record: the recording run was refused; nothing written to the live registry")
+                return rc_r
+            moved = R.commit_stage(stage)
+            print(f"STAGED --record: committed {len(moved)} file(s) to the live registry (ingest + accept events): "
+                  + ", ".join(moved))
+            return 0
+        if record:
+            print("STAGED --record: acceptance REFUSED; nothing recorded, nothing written to the live registry")
         print("(staged copy discarded; the live registry was not touched. Apply with --apply only if this passed, "
-              "then run check.py --acceptance <ids> again.)")
+              "then run check.py --acceptance <ids> --record.)")
         return rc_st
     finally:
         shutil.rmtree(stage, ignore_errors=True)
@@ -670,7 +687,11 @@ def main():
     g = ap.add_mutually_exclusive_group()
     g.add_argument("--apply", action="store_true")
     g.add_argument("--staged", action="store_true")
+    ap.add_argument("--record", action="store_true", help="with --staged: on a PASS, commit the stage with accept "
+                    "events (R03-N1)")
     a = ap.parse_args()
+    if a.record and not a.staged:
+        ap.error("--record goes with --staged (or use check.py --acceptance <ids> --record after --apply)")
     if a.what == "convert":
         objs, problems = convert_report(a.path)
         for o in objs:
@@ -679,7 +700,7 @@ def main():
             print("PROBLEM", p, file=sys.stderr)
         sys.exit(1 if problems else 0)
     if a.staged:
-        sys.exit(staged(a.what, a.path))
+        sys.exit(staged(a.what, a.path, a.record))
     (ingest_claims if a.what == "claims" else ingest_splits)(a.path, a.apply)
 
 

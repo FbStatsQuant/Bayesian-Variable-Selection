@@ -134,7 +134,9 @@ main); this section wires them into the ticket workflow. Where this section and 
       (from the repo root; all paths repo-relative — R03 F9),
       where INPUTS.txt lists every external input the proof relies on: premise sources, inherited proofs, pinned code.
       HQ commits it on the ticket branch.
-    - Each reviewer quotes the manifest digest in its reply. At CP3, `manifest.py bind` must pass on both council
+    - Each council reviewer ends its reply with exactly one `COUNCIL-VERDICT round=R<k> manifest=<digest> seat=<seat>
+      score=<x.y> gates=PASS|FAIL` line (template `Theory_work/INFRA/templates/COUNCIL_BRIEF.md`; LIFECYCLE §4.1); mid-point
+      and sweep reviewers quote the digest. At CP3, `manifest.py bind` must pass on both council
       replies of the passing round, and `manifest.py verify` on the final tree; a corrupted manifest fails. Nothing in
       the manifest is edited while that round runs.
     - HQ writes every blind brief to `reviews/BRIEF_<round>_<seat>.md` before launching. That file is the reviewer's

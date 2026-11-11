@@ -175,13 +175,16 @@ ERROR, including
   only if the status is `conditional on <it>`;
 - A1: a headline without `correct:`, `lit:`, `necessity:` PASS with evidence, and without `better:PASS(evidence)` or
   a disposition for every better-theorem proposal (gates are parsed per `;`-entry `name:RESULT(evidence)`; an
-  unparsable entry or contradictory results for one gate are errors); for ANY claim, a `PASS(evidence)` whose
+  unparsable entry or contradictory results for one gate are errors); for ANY claim, an unparsable gate entry
+  (`A1-gates`: malformed syntax never hides an evidence reference), and a gate entry — whatever its
+  result (PASS, FAIL, PENDING, …), every `better-proposal` and `better-disposition` included — whose
   evidence does not resolve to an existing repository file (`A1-evidence`: the first token of the evidence, and every
   later path-like token, as `path[:a-b][@commit]`, relative to the repository root, the ticket folder, or the folder
   of the statement / status source; `@commit` pins it, and the file must then exist at that commit); and for EVERY
   checked claim, headline or not, neither `correct:PASS(<existing file>)` nor a valid council record
   (`A1-correct`);
-- A2: a `better-proposal` with no evidence-backed disposition (a deferral is not a disposition);
+- A2: a `better-proposal` without its review file, or with no evidence-backed disposition (a deferral is not a
+  disposition; the disposition's evidence must resolve like any gate evidence, A1-evidence);
 - A3: a PROVED-CHECKED-class status resting on a direct input of lower assurance — author-only / unchecked, PARTIAL
   / CONDITIONAL, OPEN, or unclassified — unless that input is a DECLARED hypothesis: every edge to it is `ID@hyp`,
   its id, an alias or its name occurs as a whole token in the hashed statement / premise text, AND the status text
@@ -191,10 +194,28 @@ ERROR, including
   a conditional result (through `stmt` / `proof` edges, transitively) must carry the same `conditional on <W>` in its
   own status (`A3-condition`, checked on the consumer and, for existing consumers, on the conditional result); an
   `ack` never waives A0 or A3;
-- A4: a checked claim without a CP3-PASS council record (§4.1).
+- A4: a checked claim without a CP3-PASS council record (§4.1): the record, its frozen manifest (still verifying
+  on the current tree) and one matching `COUNCIL-VERDICT` line in each seat's review file;
+- A5 (transitive assurance): a claim that consumes — through `stmt` / `proof` / bound-bridge edges, transitively, and
+  through an `@hyp` edge unless the consumer is `conditional on` it — a PROVED-CHECKED-class claim that carries no
+  durable acceptance record: an `accept` event in `events.log` for its CURRENT content (written only by a PASS of
+  `check.py --acceptance <ids> --record`, or `ingest.py claims F --staged --record`; it stores the version and a
+  fingerprint of the statement hash, status, edges, bound bridges, gates, council and headline, so any later change
+  makes it stale), or a row of the frozen **legacy boundary** `INFRA/LEGACY_ACCEPTED.tsv` (the claims that were
+  PROVED-CHECKED on main at tag `theory-v2.0-pre` — that tag only: a file naming any other tag or commit is not
+  trusted — generated once by `bvsreg.py legacy-boundary`; a row counts only
+  while the claim's id, version and statement hash are unchanged; `check.py` recomputes the file from the tag and
+  reports any difference as an `L1-legacy` ERROR, which empties the boundary). Claims named in the same acceptance
+  run count as accepted (the run refuses as a whole on any ERROR). So an intermediate admitted with `ingest --apply`
+  but never accepted cannot carry a checked label into an accepted consumer.
+
+**Recording.** Run acceptance with `--record` (`check.py --acceptance <ids> --record`): on a PASS — 0 ERROR in the
+whole run — one `accept` event per named claim is appended; on REFUSED nothing is written. `--only` (a display
+filter) is refused together with `--acceptance`, so no filtered run can print or record a PASS. A claim changed after
+its acceptance (patch, new edge, new gates, …) must be accepted again before an accepted claim may consume it.
 
 A checked intermediate result that is not a headline is accepted without the strength gates (but with A0, A1
-evidence / correct, A3 and A4); its headline admission stays pending. Before every continuation and merge,
+evidence / correct, A3, A4 and A5, recorded with `--record`); its headline admission stays pending. Before every continuation and merge,
 `check.py --consumed-vs origin/main --tickets <T>` compares each claim T consumes with the registry on current main
 (`git show <ref>:Theory_work/INFRA/registry/claims.tsv`): ERROR if it is absent or not ACTIVE there, or at a higher
 major version there (rule 11).
@@ -210,11 +231,31 @@ R<k>; MANIFEST <64-hex digest>; <seat>=<score> PASS(<review file>); <seat>=<scor
 e.g.  R2; MANIFEST 3f9a…c1; sol=8.6 PASS(reviews/R2_council_sol.md); opus=8.3 PASS(reviews/R2_council_opus.md)
 ```
 One record = the ONE passing round: its number, the digest of the frozen manifest both seats reviewed
-(`manifest.py freeze`), and per seat its score and `PASS` (all of that seat's gates passed) or `FAIL`, with its
-review file. Acceptance (A4) requires: exactly one `R<k>` and one `MANIFEST`; at least two seats with distinct names
-and distinct review files; every seat ≥ 8.0 and `PASS`; every review file resolving like gate evidence and quoting
-the digest (the `manifest.py bind` rule). Anything else — a failed or exhausted council, scores from different
-rounds, free text — is an A4 ERROR. Pre-Wave-3 rows keep their free-text council history; they are not re-accepted.
+(`manifest.py freeze <ticket> <ticket>/reviews/MANIFEST_R<k>.txt --extra <ticket>/reviews/INPUTS.txt`), and per seat
+its score and `PASS` (all of that seat's gates passed) or `FAIL`, with its review file.
+
+**Council verdict line** (finding R03-N2: a review binds an OUTCOME to the digest; a mention of the digest is not a
+verdict). Every council review file contains, on a line of its own (optionally in backticks), exactly once:
+```
+COUNCIL-VERDICT round=R<k> manifest=<64-hex digest> seat=<seat> score=<x.y> gates=PASS|FAIL
+e.g.  COUNCIL-VERDICT round=R2 manifest=3f9a…c1 seat=sol score=8.6 gates=PASS
+```
+`gates=PASS` means every gate of that seat passed on exactly that manifest. A review file is one seat's verdict in one
+round on one manifest: a second verdict line — for the same digest, another digest or another round — is a
+contradiction, and a line naming `COUNCIL-VERDICT` that does not match the grammar exactly is malformed. Blind briefs
+require the line (`templates/COUNCIL_BRIEF.md`).
+
+Acceptance (A4) requires: exactly one `R<k>` and one `MANIFEST`; at least two seats with distinct names and distinct
+review files; every seat ≥ 8.0 and `PASS`; every review file resolving like gate evidence; the digest equal to the
+header of an existing `reviews/MANIFEST_*.txt` of the ticket (tickets.tsv `folder`, else the statement file's folder)
+and `manifest.py verify` of that manifest passing on the CURRENT tree (content changed after the round → refused);
+and in every review file exactly one `COUNCIL-VERDICT` line for that digest, matching the cell's round, seat and
+score, with `gates=PASS` and score ≥ 8.0, and no malformed or contradictory verdict line. `manifest.py bind
+<manifest> <reviews…> [--council "<cell>"]` applies the same verdict rule (one round, distinct seats; with
+`--council`, the cell must match the verdicts) and prints the council cell to record. Anything else — a failed or
+exhausted council, scores from different rounds, free text, a digest quoted as "not reviewed" — is an A4 ERROR.
+Pre-Wave-3 rows keep their free-text council history; they are not re-accepted (their claims sit in the legacy
+boundary, A5).
 
 ### 4.2 Strength gate (sharpness gate) — `lit:`, `necessity:`, `better:`
 (a) **Literature comparison** (`lit:PASS(file)`): each assumption and the conclusion compared with Song–Liang (2015)
@@ -309,13 +350,20 @@ versions it was proposed for; retraction restores each dependent onto the latest
 (or leaves it on the retracted claim and invalidates it); freeze evidence format; all-or-nothing ingestion with the
 full schema and a staged check that includes acceptance; tombstones verified at their archive tag; atomic
 `rollback-ticket`, validated on the proposed post-revert tree, with dependents' premise spans kept at the archive;
-CP3 acceptance (A0–A4: consumed claims ACTIVE, gate evidence files exist, correctness evidence and a dual-pass
-council record bound to one manifest digest for every checked claim, strength gates, proposal dispositions,
-assurance of direct inputs, conditional statuses carried downstream); `--consumed-vs` comparison with main; a
-multi-file write whose restore fails locks every tool (`registry/.TXN_FAILED`) until `bvsreg.py recover`.
+CP3 acceptance (A0–A5: consumed claims ACTIVE, every gate / proposal / disposition evidence file exists,
+correctness evidence and a dual-pass council record for every checked claim whose digest is a frozen manifest of the
+ticket that still verifies and whose review files each carry one matching PASS `COUNCIL-VERDICT` line, strength
+gates, proposal dispositions, assurance of direct inputs, conditional statuses carried downstream, a durable
+acceptance record — or legacy-boundary row — for every checked claim consumed transitively); the legacy boundary
+recomputed from its tag; `--consumed-vs` comparison with main; crash-safe multi-file transactions: the journal
+`registry/.TXN_INPROGRESS` (backup locations) is written and fsynced before the first replacement and removed only
+after the last, so a killed writer — or a failed restore (`registry/.TXN_FAILED`) — locks every tool (`manifest.py` included) and check.py
+until `bvsreg.py recover` rolls the files back (restartable). (Single-file writes — `save_claims` followed by an
+events.log append — are each atomic but not one transaction.)
 Attested by HQ / Felipe in the PR (with the review files linked): that the reviews named in `gates` / `council`
-examined the current statement version and say what the record claims (the tools check that the files exist and
-quote the digest, not their content); reviewer
+examined the current statement version and say what the record claims (the tools check the files exist,
+the frozen manifest still verifies, and each review's machine-readable verdict line matches the record — not that the
+prose supports the verdict); that the manifest's INPUTS list is complete; reviewer
 independence; that an `implies` edge is mathematically right; that a narrowing still covers the listed uses; the
 binding-map mechanisms; that a premise declared `@hyp` (A3 exemption) is really stated as a hypothesis in the statement text;
 that a proposal disposition is justified. The binding map and sharpness rows seeded on 2026-11-09 are DRAFTS until a headline's
@@ -362,11 +410,15 @@ show a visible flag. A claim gets a LaTeX statement by setting `tex=<path>:<a-b>
 ## 11. Quick reference
 ```
 python Theory_work/INFRA/tools/check.py [--quiet] [--only C,M,S]
-python Theory_work/INFRA/tools/check.py --acceptance ID [ID ...]           # CP3: blocking gates + assurance
+python Theory_work/INFRA/tools/check.py --acceptance ID [ID ...] [--record]  # CP3: blocking gates + assurance
+                                                                           # --record: accept events on a PASS
 python Theory_work/INFRA/tools/check.py --consumed-vs origin/main --tickets T   # continuation / merge (rule 11)
-python Theory_work/INFRA/tools/ingest.py claims REPORT.md|F.jsonl [--staged | --apply]   # --staged runs acceptance
+python Theory_work/INFRA/tools/ingest.py claims REPORT.md|F.jsonl [--staged [--record] | --apply]   # --staged
+                                     # runs acceptance; --staged --record commits ingest + accept events on a PASS
+python Theory_work/Wave3/tools/manifest.py bind <ticket>/reviews/MANIFEST_R<k>.txt <reviews...> [--council "<cell>"]
 python Theory_work/INFRA/tools/propagate.py rollback-ticket T --archive TAG --merge M --reason R [--apply]
-python Theory_work/INFRA/tools/bvsreg.py recover [--dry-run]    # only if registry/.TXN_FAILED exists (tools refuse)
+python Theory_work/INFRA/tools/bvsreg.py recover [--dry-run]    # only if registry/.TXN_INPROGRESS or .TXN_FAILED
+                                                                 # exists (tools refuse); safe to re-run
 python Theory_work/INFRA/tools/registry.py show|deps|rdeps|compare|sets|assumption-impact|stats ...
 python Theory_work/INFRA/tools/propagate.py <op> ID ...          # dry run (default)
 python Theory_work/INFRA/tools/propagate.py <op> ID ... --apply  # write
