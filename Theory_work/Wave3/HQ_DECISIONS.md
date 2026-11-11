@@ -96,3 +96,7 @@
   costed cells, worst case for uncosted; (100,1000) and (150,150) in sub-batches of 5; longest first. Expected ≈ 1,500
   from resume; stop after stage 1 if the ceiling binds (stage 1 is decision-grade for persisting search failures).
   Execution waits for the owner's leg-B go.
+- 2026-11-11 ~18:35 CT (owner): **leg B GO, full version**; "lean fully on CW until further notice" — the consultant
+  exception is withdrawn (consultant thread now CW Fable 5.1 high); no Claude Personal use at all. Launched: W3-RM2 lead
+  (CW Fable 5.2, worktree BVS-wt/W3-RM2 @ 9700e17) to CP1; INFRA R04 fix (CW Opus, worktree BVS-wt/INFRA-R04 @ 3d6d84d)
+  + one Sol check; W3-START lead resumed (CW Fable 5.2) to CP2; W3-P6 lead resumed (CW Opus) to submit the smoke S1–S5.
