@@ -1,0 +1,1 @@
+1	Rscript --vanilla check_env.R $CODE && Rscript --vanilla profile_fit.R --core-dir $CODE --design s3gen --p 70 --seed 11 --mode full --hours 0.4 --out $OUT/res/smoke_p70.rds
