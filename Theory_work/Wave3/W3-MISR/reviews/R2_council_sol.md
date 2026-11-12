@@ -1,0 +1,59 @@
+# Council R2 — seat sol
+
+Reviewed STATEMENT v1.3 and its three proof files against the permitted inputs, with the diff from `2f360ed` examined first. This review concerns the content identified in the brief as manifest `217d6708dfee945fa0416171268e08e359e0e7a3fde5bd169756431143c51103`. W3-POST2 inputs are declared hypotheses; their proofs were consulted for their literal interfaces, not re-audited. No other reviewer reports were consulted. REPORT §2 is excluded from the merits assessment.
+
+## Six gates
+
+1. **Correctness: PASS.** R_reduction.md:10–37,61–87 establishes invariance, parameter equivariance, equality in law, measurable projective factorisation and the total-variation inequality directly. The score is quadratic in the standardised response; positive scaling gives the required parameter image. M_misr.md:23–45 correctly applies the per-n Claim C interface and deterministic posterior inequalities. The expectation assemblies at :77–129 charge large models to the size tail, use only the first Occam sum for strict supersets, and use the amplified tail sum for underfits. The localisation size implication at :126–127 is correct, including equality at s+j₀. The jointly measurable freezing argument and finite slicing/tightness arguments at :133–164 are valid. G_corollaries.md:26–61 correctly obtains Gaussian residual independence and the population-envelope event; :69–113 transfers parameter contraction and all SNR claims by scaling. Its :117–154 checks the variance-dependent hypotheses of C-MIS, including BM-∞ and TL, and :158–162 proves support uniqueness. No substantive proof defect found.
+
+2. **Hypotheses used = hypotheses stated: PASS.** STATEMENT.md:45–64 defines per-n classes with the two distinct OS interfaces. The larger class in :129–130 is exactly the class used in M_misr.md:77–88. POST2 STATEMENT.md:85–89 and C_expectation.md:9–15 explicitly permit hypotheses at the current n; no array-onset uniformity is silently inferred. Coordinate margins are applied only to models omitting that coordinate (M_misr.md:90–108). G(b) assumes projected sparsity and a relative population beta-min envelope; neither follows from Gaussianity alone (STATEMENT.md:171–173; G_corollaries.md:38–59).
+
+3. **No hidden assumptions: PASS.** The response is non-constant a.s. under GR^c (R_reduction.md:61–62), and configuration measurability, null-set extension and independence needed for conditioning are explicit (STATEMENT.md:28–31,144–149; G_corollaries.md:32–34). Projective extension is restricted to model-space conclusions; H is not extended to PR (STATEMENT.md:101–106). The fitted reference law is distinguished from the centred observed response and the realised-omitted-design projection (:187–197). The C-MIS null lemma is used only at bounded p with a spectral floor (G_corollaries.md:149–154).
+
+4. **Cited inputs and conditionality: PASS.** The status quotations in STATEMENT.md:224–245 match the corresponding registry status fields, including the explicitly labelled prefixes for SOP:TH128 and SOP:TH09. Lemma status headers retain the applicable W3-POST2 conditionality; G(b)'s conservative full dependency list is explained (G_corollaries.md:3–13). Literal source interfaces support I1–I6: C_expectation.md:31–42; A_occam.md:53–74; E_visibility.md:23–27; locked T03R PROOF.md:187–197. The older proof extends comparison weights outside Ω (locked P3 PROOF_v2.tex:39–41,227–229), so comparison unions exceeding the cap introduce no extra assumption. CITECHECK.txt reports 177 checks and zero failures; this is supplementary evidence only.
+
+5. **Constants, rates and thresholds: PASS.** Unit-noise evaluation removes v from constants (R_reduction.md:94–109; M_misr.md:23–31). Clause (a) has its own c-independent threshold n₁ᵃ and constant C′_a, supplied at M_misr.md:77–85; the common larger threshold used for (b)–(d) may depend on c. The factor c″≥cn/(n−1) correctly compensates N/n (:110–114). G(b)'s beta-min onset is sequence-dependent and declared (:54–59). H uses C_H(s,A,1) and yields squared Hellinger rate log n/n, versus distance rate M_n/√n with selection (G_corollaries.md:71–87; POST2 STATEMENT.md:107–116). The two editorial findings below do not change these constants or conclusions.
+
+6. **Fidelity to the coded method: PASS.** The pinned files have no diff against `16a7f85`. v3_preprocess.R:37–68,123–130 produces the standardised response and stores scale/anchoring metadata; v3_fit.R:97–118 passes only pre$X and pre$y to the scoring context; v3_setup.R:7–10 and cpp/v3_score.h:39–60,217–223 confirm the statistics, fixed b₀ and score. The anchored branch has the same real-arithmetic value. N0_out.txt:15–48 supports the 21 exact and four SMC transformed fits, unchanged status/HPM and maxima 1.304e−10 and 1.037e−11. Empty HPM cases are now disclosed. No floating-point or sampler theorem is inferred.
+
+## Diff verdict
+
+The mathematical revision is sound. It does change the formally quantified domain of §3(a): K⁰′ replaces K⁰ for that clause, dispensing with the second OS inequality, with a separate c-independent threshold. This is a valid strengthening of the literal domain, proved using I1–I4 only; it should not be dismissed as merely typography. No other theorem hypothesis, conclusion or mathematical proof step is substantively changed. Code pins remain unchanged. The added source dependencies and status quotations accurately expose existing inputs.
+
+The corrected N5 premise is substantive and correct. For G=NI and n=N+1, the ridge smoother eigenvalue is N/n. With θ₁=n, the model keeping coordinate 1 has loss Nn+200N log(n)/n; the other underfits have loss at least Nn². Thus every underfit exceeds any fixed ridge-margin constant times log n eventually, independently of 200 being below c₁(2,1). F₀ holds and OS is empty. The control arms are appropriately separated from that verification. The remaining contradictory comparison in their description is finding 2.
+
+The variance-regime, raw-versus-standardised coefficient and nominal-ratio corrections match the numerical scripts. Their changed output labels do not change numerical results. All numerical summaries checked against N0_out.txt, N5_out.txt and misr_numerics_out.txt agree to the quoted rounding: N1 maximum 4.74e−14 and ratios 1.068–1.418; N2 terminal ratios 1.242/1.216 and poor-recovery arms; N3 heteroscedastic ratios 1.458/1.711/2.038/2.588 and HPM 0.92–0.95; random-slope masses; N4 all-arm ratios 0.465–1.506 and HPM≥0.97, versus positive-b arms 0.465–1.223 and HPM≥0.98; N5 masses 0.8702 through 0.0031 and control masses printed 1.0000. These are finite-sample observations, not asymptotic proofs.
+
+The comparison with Song–Liang is properly limited by STATEMENT.md:174,187–197,249–266 and C-MIS STATEMENT.md:17–32: population centring for identification, coordinate-margin inclusion rather than unrestricted screening for triangular arrays, in-sample rather than integrated Hellinger distance, convergence in probability rather than almost surely. The main “Not claimed” list is honest. Its qualification of N5's evidential status should also be used in the auxiliary summaries (finding 1).
+
+## Findings and exact fixes
+
+1. **MINOR — auxiliary summaries still promote the energy obstruction beyond its stated assurance.** ASSUMPTION_MAP.md:17 says “cannot be dropped” and “confirmed by N5”, :41 says “the conclusion fails”, and :54 says “needed in some form”; REPORT.md:76 likewise says “cannot be dropped”. In contrast, STATEMENT.md:260–264 and REPORT.md:62 correctly call this numerical evidence with an analytic sketch, not a checked proof. Checking the other premises analytically does not turn finitely many posterior-mass estimates into a proved asymptotic failure. **Exact fix:** change these auxiliary conclusions to “evidence that it cannot simply be dropped (finite-sample N5 observations with an analytic sketch, not a checked asymptotic proof)”; replace “confirmed by N5” with “illustrated numerically by N5” and “the conclusion fails” with “posterior target mass deteriorates over the sampled n”. This is an assurance-wording defect outside the theorem/proof chain, not an invalidation of MIS-R.
+
+2. **NIT — contradictory inequality remains in the corrected N5 docstring.** numerics/N5_energy_obstruction.py:10 still says “with c = 200 > c_1”, whereas :5 correctly gives c₁(2,1)≈258.9. The surrounding sentence denies verification of the controls, so this does not enter a proof, but the displayed comparison is false. **Exact fix:** replace :9–10's final clause by “not verified instances of the ridge-margin class at any claimed margin constant above c_1(2,1); the coefficient constant 200 is below c_1(2,1).” Keep the separate obstruction-arm ridge-loss argument unchanged.
+
+Counts: **0 FATAL / 0 MAJOR / 1 MINOR / 1 NIT**.
+
+Overall score: **9.2 / 10.0**. All six gates PASS for the reviewed package, conditional on its expressly declared W3-POST2 inputs. No source, theorem, numerical output or git state was changed; only this review was written.
+
+COUNCIL-VERDICT round=R2 manifest=217d6708dfee945fa0416171268e08e359e0e7a3fde5bd169756431143c51103 seat=sol score=9.2 gates=PASS
+
+## Addendum — per-claim decisions (seat sol, round R2; 2026-11-12; same seat model, fresh thread; no rescoring)
+
+| id | decision |
+|---|---|
+| W3-MISR:R' | ACCEPT |
+| W3-MISR:MIS(i) | ACCEPT |
+| W3-MISR:MIS(i') | ACCEPT |
+| W3-MISR:MIS(ii) | ACCEPT |
+| W3-MISR:Cor-G(a) | ACCEPT |
+| W3-MISR:Cor-G(b) | ACCEPT |
+| W3-MISR:Cor-H | ACCEPT |
+
+Where examined: W3-MISR:R': Gate 1 examines R_reduction.md:10–37,61–87 (invariance, equivariance, equality in law, projective factorisation and total variation); Gate 3 checks the projective scope restriction. No blocking finding against this claim is raised.
+W3-MISR:MIS(i): Gate 1 examines M_misr.md:23–45 (per-n Claim C and posterior inequalities); Gates 2 and 5 check the per-n hypotheses and variance-free constants. No blocking finding against this claim is raised.
+W3-MISR:MIS(i'): Gate 1 examines M_misr.md:77–129 (size-tail, strict-superset, coordinate and localisation assemblies); Gates 2 and 5 check the larger class, coordinate margins and separate threshold; Diff verdict explicitly examines the strengthened clause (a). No blocking finding against this claim is raised.
+W3-MISR:MIS(ii): Gate 1 examines M_misr.md:133–164 (jointly measurable freezing, finite slicing and tightness); Gate 3 checks configuration measurability and conditioning. No blocking finding against this claim is raised.
+W3-MISR:Cor-G(a): Gate 1 examines G_corollaries.md:26–61 (Gaussian residual independence); Gate 3 checks the null-set and conditioning conventions. No blocking finding against this claim is raised.
+W3-MISR:Cor-G(b): Gate 1 examines G_corollaries.md:26–61 (population-envelope event); Gate 2 explicitly checks projected sparsity and the relative population beta-min envelope; Gate 5 checks its declared sequence-dependent onset. No blocking finding against this claim is raised.
+W3-MISR:Cor-H: Gate 1 examines G_corollaries.md:69–113 (parameter contraction by scaling); Gate 5 explicitly checks Hellinger rates and unit-noise constants; Gate 3 checks that H is not extended to PR. No blocking finding against this claim is raised.
