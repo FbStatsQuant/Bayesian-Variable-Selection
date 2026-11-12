@@ -151,13 +151,17 @@ table, or if serial-equivalent totals are reported that match exactly); reserved
 
 | # | time (CT) | job | tasks x limit | worst case (h) | cumulative: actual of finished + worst case of open (h) | actual (sacct, h) |
 |---|---|---|---|---|---|---|
-| B1 | 11-12 04:24 | 2697743 `w3scale_bench_D` (20G) | 3 x 0.67 h | 2.0 | 2.0 | |
-| B2 | 11-12 04:24 | 2697744 `w3scale_bitid_supp_D` | 5 x 1.5 h | 7.5 | 9.5 | |
-| B3 | 11-12 04:24 | 2697745 `w3scale_setup_cmp_D` (48G) | 6 x 0.5 h | 3.0 | 12.5 | |
-| B4 | 11-12 04:24 | 2697746 `w3scale_bitid_p500_D` | 10 x 0.75 h | 7.5 | 20.0 | |
-| B5 | 11-12 04:24 | 2697747 `w3scale_bitid_p500_S5_D` | 2 x 0.75 h | 1.5 | 21.5 | |
-| B6 | 11-12 04:24 | 2697748 `w3scale_bitid_p1000_D` | 10 x 1 h | 10.0 | 31.5 | |
-| B7 | 11-12 04:24 | 2697749 `w3scale_bitid_p1000_S5_D` | 2 x 2 h | 4.0 | 35.5 | |
+| B1 | 11-12 04:24 | 2697743 `w3scale_bench_D` (20G) | 3 x 0.67 h | 2.0 | 2.0 | 0.501 |
+| B2 | 11-12 04:24 | 2697744 `w3scale_bitid_supp_D` | 5 x 1.5 h | 7.5 | 9.5 | 1.497 |
+| B3 | 11-12 04:24 | 2697745 `w3scale_setup_cmp_D` (48G) | 6 x 0.5 h | 3.0 | 12.5 | 0.089 |
+| B4 | 11-12 04:24 | 2697746 `w3scale_bitid_p500_D` | 10 x 0.75 h | 7.5 | 20.0 | 1.227 |
+| B5 | 11-12 04:24 | 2697747 `w3scale_bitid_p500_S5_D` | 2 x 0.75 h | 1.5 | 21.5 | 0.351 |
+| B6 | 11-12 04:24 | 2697748 `w3scale_bitid_p1000_D` | 10 x 1 h | 10.0 | 31.5 | 2.619 |
+| B7 | 11-12 04:24 | 2697749 `w3scale_bitid_p1000_S5_D` | 2 x 2 h | 4.0 | 35.5 | 0.890 |
+| B8 | 11-12 07:31 | 2698177 `w3scale_b3_p2000` (12G) | 1 x 9 h | 9.0 | 7.17 + 9 = 16.2 | |
+| B9 | 11-12 07:31 | 2698178 `w3scale_b3_p5000` (16G) | 1 x 16 h | 16.0 | 32.2 | |
+| B10 | 11-12 07:31 | 2698179 `w3scale_b3_p10000` (20G) | 1 x 11 h | 11.0 | 43.2 | |
+| B11 | 11-12 07:31 | 2698180 `w3scale_b3_p20000` (36G) | 1 x 16 h | 16.0 | 59.2 | |
 
 ### Leg B entries
 
@@ -190,3 +194,23 @@ table, or if serial-equivalent totals are reported that match exactly); reserved
 - 04:33 — B3 driver `scripts/census_measure.R` (measurement only: tier-0 calibration at the fixed-size budget
   N0 = 2,500 / H0 = 512, frozen grid, then R islands per N on that grid); local smoke passed. To be submitted after
   the gate verdict (B3 after B1).
+- 11-12 07:27 — Resumed on Claude Personal (Opus 5.5, high) after the Claude Work limit; HOLDS read in the main
+  checkout (none). HQ: change no git state in this run (files edited, nothing committed).
+- 07:30 — **Gate round D: PASS.** All 38 round-D tasks rc = 0 (sacct COMPLETED). Records pulled read-only; fail-closed
+  comparison (fingerprint version 2), v3.1 records of round A vs revision D (core dd37d323a353): PROD-H 24 of 24
+  IDENTICAL, 0 DIFFERENT / ADMISSION_DIFFERS / INVALID / MISSING; supplementary units (both cores in round D) 10 of 10
+  IDENTICAL (the tie-DP v3.1 run finished this time). Setup comparison at 5k / 10k / 20k: tables, setup objects, Gram,
+  routes identical; v3.2 setup 1.05 / 5.41 / 22.8 s vs v3.1 4.27 / 16.8 / 85.8 s. Engine benchmark p = 20k: v3.1
+  1.756-1.766 us per step, revision D 1.257-1.287 (dumps identical, same HPM and F); p = 2k as at 04:29. Preflight B4
+  tests passed on NOTS. Tables: `results/bitid_prodh_v31_vs_v32D.tsv`, `results/bitid_supp_v31_vs_v32D.tsv`,
+  `results/leg_b_setup_compare_roundD.tsv`. Leg B actual so far 7.17 task-hours (ledger B1-B7 filled).
+- 07:31 — HOLDS read (none); W3-P6 has one job running (2689423_4), B3 is 4 single tasks. B3 submitted on revision D
+  (bit-identical to v3.1, so the measurement is the v3.1 measurement, faster), staged as `stage/s8` from HEAD 1da2ff6:
+  ledger B8-B11, worst case 52 h (CP1 estimate 50; Slurm limit = driver budget + 0.5 h), cumulative 59.2 of 150.
+- 07:32 — Submitted: 2698177-2698180 (B3 at 2k, 5k, 10k, 20k; one task each, commons, sapphirerapids), pending on
+  priority. The 5k profile 2692690 has been in its final run since 00:53 CT; job wall 12.0 h of a 24 h limit (ends by
+  about 19:30 CT). Neither finishes within an hour, so the run ends here (HQ rule). Open for CP2: B3 read-back and
+  tables (sigma-hat against p and N); 5k fold-in (CHECKPOINT_1 / DESIGN_v1 §5); B2 options under O17 (DESIGN_v1 §4.1
+  "Counters"); ledger actuals for B8-B11. Nothing committed in this run (HQ: change no git state).
+- 07:34 — All four B3 tasks RUNNING (started 07:32 CT on Sapphire Rapids); no stderr and no end record. Their logs stay
+  empty until the tier-0 calibration ends (the driver's first line is printed then), which is expected.
