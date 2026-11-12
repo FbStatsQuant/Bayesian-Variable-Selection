@@ -8,3 +8,6 @@ E2 / E3 (W3-RM2:Ex-PolyR, Ex-PolyF: not examined by the Opus seat in R1; recorde
 
 STATEMENT.md, REPORT.md, SHARPNESS.md, ASSUMPTION_MAP.md, lemmas/L2_width.md, lemmas/L3_assemblyF.md,
 numerics/RESULTS.md (same relative paths as in the ticket folder).
+
+For the next round (HQ, 2026-11-12): write NA-R Step 3 out in L5 (about 5 lines), so that the D->W proof no longer
+relies on W2-LOC2 `lemmas/L2_NAR.md:79-85, 102-105` as pinned proof text.
