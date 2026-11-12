@@ -59,3 +59,13 @@ Claude-inference tally: all on Claude Work (claudeAgent); claude-personal not us
 - 04:18. While KSA/KBC run: `citecheck.py` → `reviews/CITECHECK.txt` (42 checks, 0 MISS); `REPORT.md` drafted
   (placeholders for the line-check verdicts and statement line numbers); `reviews/INPUTS.txt`; council brief template
   (gates G1–G6, verdict line). Lead waiting for the two line checks (wake on completion).
+- 04:20. [step 8] Line checks returned. KSA: S, A **VERIFIED**, 0 findings. KBC: B **VERIFIED**, C
+  **VERIFIED-WITH-AMENDMENTS** (0/0/3 MINOR/1 NIT, commentary only). All applied (`reviews/KSA_KBC_disposition.md`);
+  STATEMENT v1.2.1 (one remark sentence made exact; no claim changed). REPORT.md completed; registry blocks pass
+  `ingest.py claims REPORT.md` dry run (4 claims, 0 problems; nothing written). citecheck 42 checks, 0 MISS.
+- 04:21. [step 9] `manifest.py freeze` → `reviews/MANIFEST_R1.txt`, digest
+  ce522b1f5ea1ec7ae390559678e4e58eb35a38d6248e59bd590148739a0ebb6a (29 files + 8 external inputs); verify OK. Council
+  briefs `reviews/BRIEF_R1_sol.md`, `BRIEF_R1_opus.md` (blind; gates G1–G6; verdict line). Committed, then launching
+  council R1: seat sol = gpt-6.1-sol (codex, high); seat opus = Claude Opus 5.5 (claudeAgent, high).
+  Agents so far: lead Fable 5.2 (claudeAgent, high); L01, KSA, KBC, council-sol gpt-6.1-sol (codex, high); K01
+  gpt-6-astra (codex, high); council-opus Claude Opus 5.5 (claudeAgent, high). Claude inference: all on Claude Work.

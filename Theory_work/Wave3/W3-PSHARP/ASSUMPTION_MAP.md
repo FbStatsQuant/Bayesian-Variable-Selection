@@ -1,6 +1,6 @@
 # ASSUMPTION_MAP.md — W3-PSHARP (Wave 3 protocol item 3; written after the statement lock L01, before the lemma files)
 
-Target statement: `STATEMENT.md` v1.2 (locked), claims `W3-PSHARP:S`, `W3-PSHARP:A`, `W3-PSHARP:B`, `W3-PSHARP:C`.
+Target statement: `STATEMENT.md` v1.2.1 (locked), claims `W3-PSHARP:S`, `W3-PSHARP:A`, `W3-PSHARP:B`, `W3-PSHARP:C`.
 These are sharpness records: their "hypotheses" are the conditions of a witness / lower bound, so the question for
 each is not "is it necessary for an upper bound" but "does the record survive without it".
 
@@ -15,7 +15,7 @@ each is not "is it necessary for an upper bound" but "does the record survive wi
 | N_n → ∞ | A, Chebyshev | variance/mean² = O(1/√log N_n) | weak law | NECESSARY for the log factor (bounded N: only Claim B's constant) | none |
 | (log N_n)² = o(n) (W-sph) | A, Lemma W(ii) | sphere density vs normal on t² ≤ 2 log N | density ratio → 1 | ARTEFACT-threshold of the route (beyond it the sphere law is lighter than Gaussian and the constant changes); outside regime R1 anyway (p ≤ n^A) | artefact-threshold (harmless) |
 | (r₀ + 1) log N_n = o(n), r₀ = rank X_{S₀} (W-sph) [K01-P2: was s₀] | A, κ′_n ≥ 1 − O_P((r₀+1)/n) | Q_{S₀} − ‖ρ̃‖² ≤ 1 + (2M′ + ½σ*²χ²_{r₀})/s_y² | exponent coefficient → 1 faster than 1/log N | ARTEFACT of the crude bound e(1−e) ≤ ¼; trivially true for bounded rank | single-use bound |
-| design 𝔇_n, k = ⌈12 log n⌉, η = n⁻², n b_n² ≥ 1200(σ*² + b̄²)(log n)² (Claim C) | C items 2–3 | cutoff ≤ k/2; fit loss e^{−c n b²} against prior × Occam × count ≤ e^{12 log² n} | reference with exact fit but ridge cost ≍ n b_n² | constants are ARTEFACTS; the record is "cost ≫ (log n)² breaks the conclusion; O(1) suffices"; the gap is open | artefact-threshold (the constants 12, 1200) |
+| design 𝔇_n, k = ⌈12 log n⌉, η = n⁻², n b_n² ≥ 1200(σ*² + b̄²)(log n)² (Claim C) | C items 2–3 | cutoff ≤ k/2; fit loss e^{−c n b²} against prior × Occam × count ≤ e^{12 log² n} | reference with exact fit but ridge cost ≍ n b_n² | constants are ARTEFACTS; the record is "a cost allowance of a large constant times (log n)² (or more) breaks the conclusion; O(1) suffices"; allowances o((log n)²) are open [KBC-3] | artefact-threshold (the constants 12, 1200) |
 
 Conclusion level: negative / lower bound (sharpness records) for posterior-level claims; rate: (s₀+1)√(log p/(πn))
 (A), (s₀+1)/(2√n) (B); scope: A — witness classes (orthogonal block, p ≤ n − 1; spherical block, (log p)² = o(n));

@@ -1,9 +1,9 @@
-# BRIEF R1 — council seat `@@SEAT@@` (blind first read) — W3-PSHARP
+# BRIEF R1 — council seat `sol` (blind first read) — W3-PSHARP
 
-You are one of two independent council seats (@@WHO@@). You decide whether the frozen content below is correct and
+You are one of two independent council seats (gpt-6.1-sol, reasoning effort high). You decide whether the frozen content below is correct and
 honestly reported. Be adversarial: a pass from you means you re-derived the mathematics, not that it read well.
 
-## Content under review (frozen as `MANIFEST @@DIGEST@@`, file `Theory_work/Wave3/W3-PSHARP/reviews/MANIFEST_R1.txt`)
+## Content under review (frozen as `MANIFEST ce522b1f5ea1ec7ae390559678e4e58eb35a38d6248e59bd590148739a0ebb6a`, file `Theory_work/Wave3/W3-PSHARP/reviews/MANIFEST_R1.txt`)
 Everything in `Theory_work/Wave3/W3-PSHARP/` **except** `reviews/`, `LOG.md`, `CHECKPOINT_*.md`:
 `STATEMENT.md` (v1.2), `lemmas/S_one_step.md`, `lemmas/A_log_factor.md`, `lemmas/B_sparsity.md`,
 `lemmas/C_counterexample.md`, `REPORT.md`, `ASSUMPTION_MAP.md`, `PLAN.md`, `BRIEF.md` (the ticket's task),
@@ -15,7 +15,7 @@ External inputs (definitions and the statements being sharpened; listed in `revi
 target: `Scripts/SMC_BVS/core/cpp/v3_score.h` (lines 40-71, 196-224).
 **Do not read** anything else under `Theory_work/Wave3/W3-PSHARP/reviews/` (no other brief, review, disposition,
 scratch or score), nor `LOG.md`, nor `CHECKPOINT_*.md`. You may write and run code (`py -3.13 -I`; numpy, scipy,
-mpmath); keep it under `Theory_work/Wave3/W3-PSHARP/reviews/R1_scratch_@@SEAT@@/`. Change no other file; do not commit;
+mpmath); keep it under `Theory_work/Wave3/W3-PSHARP/reviews/R1_scratch_sol/`. Change no other file; do not commit;
 start no subagents.
 
 ## What the ticket claims
@@ -39,17 +39,17 @@ reading, conditional on parent results for the upper bound); Claim B (Corollary 
   they say (re-run or re-implement what you doubt) and the REPORT describes their scope honestly.
 
 ## Output
-Write your review to `Theory_work/Wave3/W3-PSHARP/reviews/R1_council_@@SEAT@@.md`: the six gate verdicts with reasons;
+Write your review to `Theory_work/Wave3/W3-PSHARP/reviews/R1_council_sol.md`: the six gate verdicts with reasons;
 findings labelled FATAL / MAJOR / MINOR / NIT with exact place (file:line) and exact correction; an overall score
 (0.0–10.0, one decimal; ≥ 8.0 means "correct and honestly reported; remaining findings are minor").
 
 ## Verdict line (mandatory, machine-checked)
 
-You are reviewing the content frozen as `MANIFEST @@DIGEST@@` (round R1, seat `@@SEAT@@`). End your review with
+You are reviewing the content frozen as `MANIFEST ce522b1f5ea1ec7ae390559678e4e58eb35a38d6248e59bd590148739a0ebb6a` (round R1, seat `sol`). End your review with
 exactly ONE line of its own, in exactly this form (no other text on the line; backticks around it are allowed):
 
 ```
-COUNCIL-VERDICT round=R1 manifest=@@DIGEST@@ seat=@@SEAT@@ score=<x.y> gates=PASS|FAIL
+COUNCIL-VERDICT round=R1 manifest=ce522b1f5ea1ec7ae390559678e4e58eb35a38d6248e59bd590148739a0ebb6a seat=sol score=<x.y> gates=PASS|FAIL
 ```
 
 - `score` is your overall score (one decimal, 0.0–10.0); `gates=PASS` only if EVERY gate passes on exactly this

@@ -50,7 +50,9 @@ For [1a″]: D_T = det((n+1)G_T + I)/det(G_T + I) = [1 + (n+1)tr G_T + (n+1)²de
 tr G_T = 2(n−1) and det G_T = (n−1)²(1 − c²) = (n−1)²η²k/(1 + η²k) ≤ k/n². Numerator ≤ 1 + 2(n²−1) + (n+1)²k/n² ≤ 2n² + 2k,
 denominator ≥ 2n − 1, so D_T ≤ (2n² + 2k)/(2n − 1) ≤ 2n (⟸ 2k ≤ 2n² − 2n). Hence
 A^T_{m_n} = R^T_{m_n}√(D_T)√n ≤ n⁻²·√2·n ≤ 2/n ≤ n^{−1/2}.
-(Exact values: `../numerics/c_counter_out.txt` E2 — n²R^T_{m_n} = 3.6·10⁻⁴ at n = 200, decreasing.)
+(Exact values: `../numerics/c_counter_out.txt` E2 — n²R^T_{m_n} = 3.6·10⁻⁴ at n = 200; the selected larger n give smaller
+values. The exact quantity is not monotone in n (ceiling/floor steps); the decreasing upper envelope above is what
+proves the bound for every n ≥ 200.) [KBC-1]
 
 ## 3. Item 3 (the posterior leaves the small models)
 Let 𝒮_n := {S ⊆ [p] : |S| ≤ m_n}. For S ∈ 𝒮_n: |S ∩ T′| ≤ m_n ≤ k/2, so d = |T′∖S| ≥ k/2.
@@ -96,15 +98,17 @@ P(F_n) → 1 and n b² ≥ 1200V₀(log n)² → ∞: π(|S| ≤ m_n) → 0 in p
   tight when (σ*², M, M′) are fixed, and π(|S| > m^T_n(½ log n)) = O_P(n^{−1/2}). On 𝔇_n with t = 2, on F_n:
   Θ^T_{n,m_n} = π(|S| > m_n)/(R^T_{m_n}(n+1)√n) ≥ (1 − e^{−c₁nb²}) n²/((n+1)√n) → ∞, and π(|S| > m^T_n(½ log n)) → 1.
   So no bound of that form with constants free of M′ can hold: the coefficient bound cannot be dropped. (For each n
-  the lemma does apply with M′ = M′_n := ‖θ‖²/n ≍ b²n³/k; its bound is then vacuous unless log L ≫ n³b²/k. No
-  contradiction.)
+  the lemma does apply with M′ = M′_n := ‖θ‖²/n ≍ b²n³/k; for fixed L its bound is eventually vacuous, and to make
+  the right side tend to zero with a growing threshold L = L_n one needs log L_n ≫ n³b²/k [KBC-2]. No contradiction.)
 - **[1a″]** (lines 7-14) asserts, for a deterministic ϑ with B_T(ϑ) ≤ B, that π(|S| > m) = A^T_mΘ″_{n,m} with Θ″ tight
   for fixed (M, B). On 𝔇_n, on F_n, Θ″_{n,m_n} ≥ (1 − e^{−c₁nb²})·n/2 → ∞, although the approximation error ‖μ − X_Tϑ‖
   can be made 0. So the bounded-cost hypothesis cannot be replaced by a bound on the approximation error alone. Nor
   by a growing cost allowance B_n with B_n/(log n)² → ∞: fix any b̄ > 0 and put b_n² := C_bV₀(log n)²/n. For all large n,
   b_n ≤ b̄ and n b_n² = C_bV₀(log n)² ≤ B_n, so 𝔇_n is admissible, min_ϑ B_T(ϑ) ≤ b_n²(n−1) ≤ B_n, and the conclusion fails.
-- Not shown: that a cost of order (log n)² or smaller breaks the conclusion. The gap between O(1) (sufficient,
-  `W3-POST2:B`) and (log n)² is open. W3-POST2's numerics N6b (T = ∅, cost n − 1, conclusion intact) show that a large
+- Shown [KBC-3]: a sufficiently large constant multiple of (log n)² already breaks the conclusion (with
+  b_n² = C_bV₀(log n)²/n, §1 gives 600V₀(1 − 1/n)(log n)² ≤ min_ϑ B_T(ϑ) ≤ 1200V₀(1 − 1/n)(log n)²). Not shown: whether an
+  allowance B_n = o((log n)²) can break it, nor the sharp constant at order (log n)². Bounded cost is sufficient
+  (`W3-POST2:B`); the intermediate regime is open. W3-POST2's numerics N6b (T = ∅, cost n − 1, conclusion intact) show that a large
   cost does not always break it; here it does, because the signal needs ≍ log n columns that T does not contain.
 
 ## 5. Numerics
@@ -112,4 +116,4 @@ P(F_n) → 1 and n b² ≥ 1200V₀(log n)² → ∞: π(|S| ≤ m_n) → 0 in p
 η = 0.05, all models: 2·10⁻¹³; mpmath 60 digits at η = n⁻²: 1·10⁻¹⁵). E2: exact cutoffs at k = ⌈12 log n⌉. E1 (exact
 enumeration at scaled-down k = 16–22, with the cutoffs computed exactly from their definitions; 20 seeds per row): on
 the counterexample arm π(|S| > m′) has median 0.997 at n = 50 and 1.000 for n ≥ 100 (b = 3), posterior mean size ≈ k,
-while on the control arm (μ = (b/2)(x₁ + x₂): bounded coefficients on T) it is ≤ 3·10⁻¹³ in every seed.
+while on the control arm (μ = (b/2)(x₁ + x₂): bounded coefficients on T) it is ≤ 3.2·10⁻¹³ in every seed [KBC-4].

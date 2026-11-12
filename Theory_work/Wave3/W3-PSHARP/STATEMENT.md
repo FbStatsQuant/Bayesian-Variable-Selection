@@ -1,4 +1,4 @@
-# W3-PSHARP — STATEMENT (v1.2, 2026-11-11; lead: Claude Fable 5.2, claudeAgent, high; v1.1 = statement-lock amendments [L01-#]; v1.2 = break-review K01: wording [K01-F3] and two adopted strengthenings [K01-P1, K01-P2]; **locked**)
+# W3-PSHARP — STATEMENT (v1.2, 2026-11-11; lead: Claude Fable 5.2, claudeAgent, high; v1.1 = statement-lock amendments [L01-#]; v1.2 = break-review K01: wording [K01-F3] and two adopted strengthenings [K01-P1, K01-P2]; v1.2.1 = one remark sentence made exact after line check KBC [KBC-3], no claim changed; **locked**)
 
 Ticket T3 of `Theory_work/Wave3/API_AUDIT/sharp1/TRIAGE.md`: three **sharpness records** (lower bounds / necessity)
 for the posterior theorem. No new upper bound is claimed. All results are about the exact coded target π. Statuses are
@@ -140,7 +140,9 @@ Hence the conclusions of [L1a′] and [1a″] for the reference T — π(|S| > m
   representation by T plus (E) is not enough ([L1a′] Remark 2, recorded as open, is settled: **necessary in kind**);
 - in `W3-POST2:B` the bounded reference cost cannot be weakened to "small (even zero) approximation error" nor to any
   cost bound B_n with B_n/(log n)² → ∞: some control of the ridge cost is necessary. (It is not necessary that the
-  cost be bounded for every reference: W3-POST2 numerics N6b. The gap between O(1) and (log n)² is open.)
+  cost be bounded for every reference: W3-POST2 numerics N6b. A large enough constant multiple of (log n)² already fails — with
+  b_n² = C_b(σ*² + b̄²)(log n)²/n the cost of T is between 600 and 1200 times (σ*² + b̄²)(log n)² (up to 1 − 1/n). Open:
+  allowances B_n = o((log n)²), and the sharp constant [KBC-3].)
 
 ## 5. What is not claimed
 - No upper bound. No statement about the sampler. No exact constant on general designs: Proposition A is a lower
