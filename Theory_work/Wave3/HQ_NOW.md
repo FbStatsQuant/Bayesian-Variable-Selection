@@ -3,7 +3,8 @@
 Mode (owner, 2026-11-11 ~18:45 CT): **continuous** — keep work running on Claude Work (effort ≤ high) until CW runs
 out or a key owner decision is needed; no bursts. HQ answers checkpoints itself. HQ thread 647bfd65-83bc-403a-b3b0-0a8352044e7f. Meta-HQ watcher (Sol, every 30 min): thread 600e6dcd-e2bf-4ef8-9a4b-0e00d46a1c68.
 
-## RESTART NOTE (2026-11-12 01:05 UTC) — read first after a T3 restart
+## RESTART DONE (2026-11-12 01:05 UTC): T3 restarted; all Claude sessions on .claude-work (Team); both leads resumed fresh-context; MP1 output existed (no relaunch); SC5 relaunch delegated to W3-START lead.
+## (old) RESTART NOTE (2026-11-12 01:05 UTC) — read first after a T3 restart
 Account fix: T3 was still launching Claude sessions with config `.claude` (Personal login). HQ copied memory, CLAUDE.md,
 settings.json and skills into `.claude-work` (Team). Both leads were cancelled to stop Personal use; their files are on
 disk. To resume after T3 restarts: (1) confirm new sessions write under `C:/Users/felip/.claude-work/projects`
