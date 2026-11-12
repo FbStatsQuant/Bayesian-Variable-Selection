@@ -306,7 +306,20 @@ then also requires:
 review file after its `COUNCIL-VERDICT` line as a dated addendum (same seat model, fresh thread, the frozen manifest
 and the seat's own review; rows `ACCEPT` / `NOT-EXAMINED` only, no rescoring). The verdict line stays the one binding
 outcome: an addendum with a second `COUNCIL-VERDICT` line (same or another digest) makes the review contradictory and
-refuses A4. An id listed in the body and the addendum with different decisions is not accepted. When ANY seat's review
+refuses A4. *Addendum supersedes body* (INFRA R07, HQ + consultant 2026-11-12): when a seat's review carries a
+VALID addendum — at least one per-claim table after its first `COUNCIL-VERDICT` line, each with the exact header and
+delimiter row of item 2 — the addendum, read by the strict rules of item 2, IS that seat's decision table. The body
+table(s) before the verdict line are then read only for negatives: a body row whose DECISION column (the header's
+second cell; never a `Basis` / remarks column) contains, case-insensitively, `not accepted`, `reject`, `withdraw`,
+`not examined`, `not-examined`, `refus` or `fail` refuses that id (contradiction); a body id absent from the addendum
+is not accepted; free text, extra columns and otherwise unreadable body rows are ignored. For this test only, the
+cell is normalised fail-closed (NFKC, invisible format characters dropped, emphasis / code marks, every Unicode dash
+or connector (categories Pd, Pc), underscores and any whitespace read as one space; a term also matches with its spaces
+removed); in the body, LF and every line / paragraph separator end a line alike (header, blank line, rows); a body line that is not a row with an id (continued or split) is scanned whole and a hit refuses the
+previous row's id. So `accepted with non-blocking remarks (Issue 3)` or a `Basis` column in the body + addendum
+`ACCEPT` → accepted; body `accepted (withdrawn)` or `rejected` + addendum `ACCEPT` → refused. Without a valid
+addendum (none, a malformed addendum header, or no verdict line before it) the whole review is read by item 2 alone,
+unchanged: such body cells are refused. When ANY seat's review
 of the round has a per-claim table, a checked claim whose status source is NOT its own checkpoint must also be accepted
 in a table of EVERY seat's review (a NOT-EXAMINED, unreadable, missing or contradictory id is refused); a council without any table
 keeps the cell-only rule. `ingest.py claims <carrier>` reads REGISTRY blocks (`.md`, paths relative to its folder unless

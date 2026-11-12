@@ -29,6 +29,7 @@ import os
 import re
 import subprocess
 import sys
+import unicodedata
 from collections import defaultdict, deque
 
 for _s in ("stdout", "stderr"):  # Windows consoles default to cp1252; statuses contain ♯, ⊂, 𝔉 ...
@@ -1357,8 +1358,10 @@ def decision_accepts(cell: str) -> bool:
     return decision_value(cell) == "accept"
 
 
-def seat_table(text: str, ticket: str):
-    """A council review's per-claim table(s) -> ({full claim id: accepted?}, [problems], number of tables). A
+def _seat_table_strict(text: str, ticket: str):
+    """The R06 strict reading of every per-claim table in `text` (seat_table applies it to the whole review when it
+    has no valid addendum, and to the addendum part when it has one). Returns ({full claim id: accepted?}, [problems],
+    number of tables). A
     per-claim table starts at a header line whose first two cells read (leniently: emphasis, extra pipes and Unicode
     spaces ignored) `id` / `claim` / `claim id` and `decision` / `disposition`, anywhere in the file: in the review
     body or in a dated addendum appended after its COUNCIL-VERDICT line (the verdict line stays the one binding
@@ -1452,6 +1455,119 @@ def seat_table(text: str, ticket: str):
         probs.append(f"malformed per-claim table ({bad_table or 'no delimiter row after its header'}): its rows read "
                      "as NOT accepted")
     return dec, probs, tables
+
+
+# INFRA R07 (HQ + consultant 2026-11-12): ADDENDUM SUPERSEDES BODY. When a seat's review carries a VALID per-claim
+# addendum (at least one per-claim table after its first COUNCIL-VERDICT line, every such table with an exact header
+# and delimiter row, i.e. no table-level malformation under the strict R06 rules), the addendum tables, read by the
+# strict R06 rules, ARE that seat's decision table. The per-claim table(s) before the verdict line (the body) are then
+# read only for NEGATIVES: a body row whose DECISION column (the header's second cell; never a Basis / remarks column)
+# contains, case-insensitively, one of the closed list below refuses its id (contradiction); a body id absent from the
+# addendum is refused; anything else in the body (free text, extra columns, malformed rows) is ignored. Fail-closed
+# normalisation for the substring test only: NFKC, invisible format characters (Cf) dropped, Markdown emphasis /
+# code marks, backslashes, every Unicode dash / connector (categories Pd, Pc; U+2212) and all Unicode whitespace read
+# as one space, case folded; a term also hits with its spaces removed (`notaccepted`). In the body, LF and the line /
+# paragraph separators (CR, VT, FF, FS/GS/RS, NEL, U+2028/9) all end a logical line (header detection, the blank line
+# ending a table, rows); a body line that is not a row with an id (continuation) is scanned whole and a hit refuses the
+# previous row's id and the line's own first segment. Without a valid addendum the whole review is read by R06 alone.
+_BODY_NEG_TERMS = ("not accepted", "reject", "withdraw", "not examined", "not-examined", "refus", "fail")
+_BODY_SPACE = "*_`~\\-‐‑‒–—―−"
+
+
+def _neg_norm(s: str) -> str:
+    s = unicodedata.normalize("NFKC", s or "")
+    s = "".join(" " if (ch.isspace() or ch in _BODY_SPACE or unicodedata.category(ch) in ("Pd", "Pc")) else ch
+                for ch in s if unicodedata.category(ch) != "Cf")
+    return re.sub(" +", " ", s).casefold()
+
+
+_NEG_TERMS_N = tuple(dict.fromkeys(_neg_norm(t).strip() for t in _BODY_NEG_TERMS))
+
+
+def _neg_hit(s: str):
+    """The first closed-list negative term in `s` (normalised as above), or None."""
+    n = _neg_norm(s)
+    flat = n.replace(" ", "")
+    for t in _NEG_TERMS_N:
+        if t in n or t.replace(" ", "") in flat:
+            return t
+    return None
+
+
+def _split_at_verdict(text: str):
+    """(body, addendum part, found): the raw text split at its FIRST COUNCIL-VERDICT line (a line whose text, after an
+    optional opening backtick, starts with COUNCIL-VERDICT; its form is checked by manifest.verdict_problems)."""
+    lines = (text or "").replace("\r\n", "\n").split("\n")
+    for i, ln in enumerate(lines):
+        t = ln.strip()
+        t = t[1:].lstrip() if t.startswith("`") else t
+        if t.startswith("COUNCIL-VERDICT"):
+            return "\n".join(lines[:i]), "\n".join(lines[i + 1:]), True
+    return text or "", "", False
+
+
+def _body_scan(text: str, ticket: str):
+    """Body per-claim tables (lenient header) -> ({full id: negative term or None}, number of tables)."""
+    ids, tables, in_tab, last = {}, 0, False, None
+
+    def full(cid):
+        return cid if ":" in cid else f"{ticket}:{cid}"
+
+    def mark(cid, hit):
+        if cid:
+            ids[cid] = ids.get(cid) or hit
+
+    # logical lines: LF and every line / paragraph separator end a line, for header detection, the blank line that
+    # ends a table and rows alike (Sol R07 rule-2 F1, F3)
+    for ln in _ROW_BREAK.split((text or "").replace("\n", "\r")):
+        if not in_tab:
+            cs = _cells(ln)
+            if len(cs) >= 2 and _plain(cs[0]).lower() in _ID_HEAD and _plain(cs[1]).lower() in _DECISION_HEAD:
+                tables, in_tab, last = tables + 1, True, None
+            continue
+        if not ln.strip():
+            in_tab, last = False, None
+            continue
+        t = ln.strip()
+        body = t[1:] if t.startswith("|") else t
+        body = body[:-1] if body.endswith("|") and not body.endswith("\\|") else body
+        cells = re.split(r"(?<!\\)\|", body)
+        if all(_DELIM_CELL.fullmatch(c.strip()) for c in cells):
+            continue  # delimiter row
+        own = _plain(cells[0])
+        if t.startswith("|") and own:
+            cid = full(own)
+            mark(cid, _neg_hit(cells[1]) if len(cells) > 1 else None)
+            last = cid
+        else:  # continuation / split row: scan the whole line
+            hit = _neg_hit(t)
+            if hit:
+                mark(last, hit)
+                mark(full(own) if own else None, hit)
+    return ids, tables
+
+
+def seat_table(text: str, ticket: str):
+    """A council review's per-claim decisions -> ({full claim id: accepted?}, [problems], number of tables). With a
+    valid addendum after the COUNCIL-VERDICT line, the addendum is the decision table and the body is read only for
+    negatives (INFRA R07, comment above); otherwise every table is read by the strict R06 rules (_seat_table_strict).
+    A problem about one claim starts with `claim <id>: `. Pass the RAW text (evidence_raw_text)."""
+    body, add, found = _split_at_verdict(text)
+    if found:
+        dec, probs, n_add = _seat_table_strict(add, ticket)
+        if n_add and not any(p.startswith("malformed per-claim table (") for p in probs):
+            neg, n_body = _body_scan(body, ticket)
+            for cid, hit in neg.items():
+                if hit:
+                    probs.append(f"claim {cid}: listed with contradictory decisions: the body table's decision column "
+                                 f"reads as a negative ({hit!r}) against the seat's addendum: read as NOT accepted")
+                    dec[cid] = False
+                elif cid not in dec:
+                    probs.append(f"claim {cid}: listed in the body table but not in the seat's addendum: read as NOT "
+                                 "accepted")
+                    dec[cid] = False
+            return dec, probs, n_add + n_body
+    return _seat_table_strict(text, ticket)
 
 
 def seat_decisions(text: str, ticket: str):
