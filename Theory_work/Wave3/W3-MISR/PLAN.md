@@ -1,4 +1,4 @@
-# W3-MISR — PLAN (v1.0, 2026-11-11)
+# W3-MISR — PLAN (v1.1, 2026-11-11; v1.1 = claims table updated after the statement lock and the better-theorem review)
 
 Ticket T1 of `Theory_work/Wave3/API_AUDIT/sharp1/TRIAGE.md`: C-MIS v2, the misspecified-subset theorem without fixed
 variances. Brief: `BRIEF.md`. Legs CP1 → CP2 pre-approved when reviews are clean (no open FATAL/MAJOR; council ≥ 8.0).
@@ -16,9 +16,9 @@ random-design clause follows by conditioning.
 |---|---|---|
 | R′ | (a) invariance of π under y ↦ a1 + c·y; equivariance of the parameter posterior; code pin. (b) contrast-law reduction to a unit-noise G-model | direct; code read + compiled-code run (N0) |
 | MIS(i) | fixed design: sup over the class 𝒦_n of E[1 − π_𝒞(S₀^𝒞)] ≤ C r_n, constants free of σ²_𝒞; HPM/MPM/PIP rates | R′(b) + W3-POST2:C |
-| MIS(i′) | without the margin: supersets, strong coordinates (O_P, arrays) | R′(b) + W3-POST2:A1 item 5, W3-POST2:E (5b′) |
+| R′(c) | projective form of the law condition; total-variation stability (v1.2, BT1-A1) | direct |
+| MIS(i′) | without the margin: supersets, strong coordinates, localisation — in expectation, per n (v1.2: (d), BT1-A3) | R′(b) + proof steps of W3-POST2:C, A1, E |
 | MIS(ii) | conditional form: E[δ_n ∣ 𝓕_n] ≤ C r_n on 𝒜_n; design-measurable σ²_𝒞(x); s-slicing; tight constants | MIS(i) + conditioning + Markov |
-| MIS(ii′) | no-margin clauses, uniformly over 𝒜_n | MIS(i′) + C-MIS:LemDR |
 | Cor-G | Gaussian rows with n-dependent (Σ, σ², τ²): GR^c holds; growing-p envelope without fixed σ²_𝒞 (example) | C-MIS:Prop-P, C-MIS:GD(b) proof steps |
 | Cor-H | density (average Hellinger) contraction around the projected law — Song–Liang Thm 4 analog | R′ + W3-POST2:D |
 | Rem-SNR | W3-POST Theorem 1 and W3-POST2 A1, B, C, E hold with σ*²_n in SNR form; C-MIS Theorem F likewise | R′(a) |
@@ -45,6 +45,7 @@ not clean after one fix round → stop and report.
 
 ## Consumed claims (registry id @ version, state on base main 16a7f85)
 W3-POST2:C@1.0.0, W3-POST2:E@1.0.0, W3-POST2:A1@1.0.0, W3-POST2:D@1.1.0 (with D.D(a)@1.0.0, D.D(b)@1.2.0),
-W3-POST2:B@1.0.0 and W3-POST:Thm-1@1.0.0 (remark only), C-MIS:LemDR@1.0.0, C-MIS:Prop-P@1.0.0, C-MIS:GD(b)@1.0.0
-(proof steps), C-MIS:Thm-F@1.0.0 (remark only). All ACTIVE. The W3-POST2 rows carry the verbatim status
+W3-POST2:A0@1.0.0, W3-POST2:B@1.0.0 and W3-POST:Thm-1@1.0.0 (remark only), C-MIS:Prop-P@1.0.0, C-MIS:GD(b)@1.0.0
+(proof steps), C-MIS:Thm-MIS(i)/(ii)@1.0.0, C-MIS:Thm-F@1.0.0, C-MIS:LemZ@1.0.0 (remark only). (C-MIS:LemDR is no longer
+consumed: the no-margin clauses are per-n expectation bounds, so no diagonal argument is needed.) All ACTIVE. The W3-POST2 rows carry the verbatim status
 "PROVED (by this seat, unchecked)" in the registry ⇒ treated as declared hypotheses (`@hyp`, "conditional on …").

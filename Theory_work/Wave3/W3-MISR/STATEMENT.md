@@ -1,9 +1,11 @@
-# W3-MISR — STATEMENT (v1.1, 2026-11-11; lead: Claude Fable 5.2, claudeAgent, high; v1.1 = statement-lock amendments [L01-#])
+# W3-MISR — STATEMENT (v1.2, 2026-11-11; lead: Claude Fable 5.2, claudeAgent, high; v1.1 = statement-lock amendments [L01-#], locked by L02; v1.2 = sharpness-gate adoptions [BT1-A1, BT1-A3])
 
 Ticket W3-MISR (T1 of `Theory_work/Wave3/API_AUDIT/sharp1/TRIAGE.md`): C-MIS v2, the misspecified-subset theorem
-without fixed variances. Status of this file: **v1.1, targets — nothing below is proved or checked yet** (v1.0 reviewed
-by `reviews/L01_statement_lock_sol.md`; changes in `reviews/L01_disposition.md`). Each claim
-gets its own status in its proof file (`lemmas/`). Inherited statuses are quoted verbatim in §8.
+without fixed variances. Statuses are verbatim: each claim carries the status of its proof file (`lemmas/R_reduction.md`,
+`M_misr.md`, `G_corollaries.md`). History: v1.0 reviewed by `reviews/L01_statement_lock_sol.md` (changes in
+`reviews/L01_disposition.md`); v1.1 locked by `reviews/L02_statement_recheck_sol.md`; v1.2 adds §1(c), §3(d) and trims
+the hypothesis of §3(a), from `reviews/BT1_better_theorem_astra.md` (`reviews/BT1_disposition.md`). Inherited
+statuses are quoted verbatim in §8.
 
 **Aliases.** [W3P] = `Theory_work/Wave3/W3-POST/STATEMENT.md` (v1.4); [POST2] = `Theory_work/Wave3/W3-POST2/STATEMENT.md`
 (v1.2.1) with its proof files `Theory_work/Wave3/W3-POST2/lemmas/{A_occam,C_expectation,D_hellinger,E_visibility}.md`;
@@ -86,6 +88,17 @@ max |ΔPIP| ≤ 1.4·10⁻¹⁰.
 ε̃ ~ N_n(0, I_n); in that model S₀ = S₀(κ), θ* = θ(κ)/√v, μ = μ(κ)/√v. The same holds for the law of the image of
 Π(· | x, y^r) under (S, θ, v′) ↦ (S, θ/√v, v′/v).
 
+**(c) Projective form and stability [BT1-A1].** For non-constant y^r put z := Uᵀy^r and T(y^r) := zzᵀ/‖z‖² (the
+projection onto the contrast direction). There is a measurable map F_x with π_𝒞(· | x, y^r) = F_x(T(y^r)) for every
+non-constant y^r. For a configuration κ let T_G(κ) := T(xβ + √v·ε̃), ε̃ ~ N_n(0, I_n). Then for every law of y^r with
+y^r non-constant a.s. and every measurable h from the probabilities on Ω to [0, 1]:
+  |E h(π_𝒞(· | x, y^r)) − E_κ h(π_𝒞(· | x, y^r))| ≤ d_TV(Law(T(y^r)), Law(T_G(κ))).
+In particular, if Law(T(y^r)) = Law(T_G(κ)) — condition **(PR) at κ**, implied by GR^c — the law of π_𝒞 is that of (b).
+Example: Uᵀy^r = R·(Uᵀxβ + √v·W) with W ~ N_N(0, I) and any random R > 0, possibly dependent on W (a response
+recorded in random units; the contrasts are then neither Gaussian nor of scalar covariance in general). Under (PR)
+alone, β is a reference target, not necessarily a conditional-mean coefficient. (c) concerns the model-space
+posterior only: the parameter posterior of (a′) is not a function of T, and Corollary H is not extended.
+
 ## 2. Theorem MIS-R (i): fixed candidate design, uniform expectation rate
 
 Fix s ≥ 1, A ≥ 1, M, φ₀, C_OS and c > c₁(s, A). Let (n₀, C) be the constants of [POST2] Claim C (case iii) at σ*² = 1.
@@ -93,6 +106,9 @@ Then for every n ≥ n₀:
   **sup_{κ ∈ 𝒦_n(s, A, M, φ₀, C_OS, c)} E_κ[1 − π_𝒞(S₀(κ) | x, y^r)] ≤ C·r_n.**
 The same holds on 𝒦^λ_n(s, A, M, φ₀, C_OS, c) for c > c₀(s, A), with the constants of case (ii).
 The constants do not depend on v: the residual variance may be any positive number at each n (fixed, → 0, → ∞).
+**Stability [BT1-A1].** By R′(c), for any law of y^r (non-constant a.s.), any n ≥ n₀ and any κ in the class:
+E[1 − π_𝒞(S₀(κ) | x, y^r)] ≤ C r_n + d_TV(Law(T(y^r)), Law(T_G(κ))); so GR^c may be replaced by (PR) in this section and
+in §3, and an approximate (PR) costs its total-variation error.
 Consequences, for the same n and κ, with δ := 1 − π_𝒞(S₀(κ) | x, y^r):
 1. max_j |PIP_j − 1{j ∈ S₀(κ)}| ≤ δ and sup_{T ≠ S₀(κ)} π_𝒞(T) ≤ δ for every data set; so both have E_κ ≤ C r_n.
 2. P_κ(HPM ≠ S₀(κ)) ≤ 2C r_n; P_κ(MPM ≠ S₀(κ)) ≤ 2C r_n; P_κ(ξ_q ≠ S₀(κ)) ≤ C r_n/min(q, 1 − q) for q ∈ (0, 1).
@@ -104,12 +120,18 @@ Consequences, for the same n and κ, with δ := 1 − π_𝒞(S₀(κ) | x, y^r)
 
 Fix s ≥ 1, A ≥ 1, M, φ₀, C_OS and c > c₁(s, A). There are n₀′, C′ depending only on (s, A, M, φ₀, C_OS, c) such that
 for every n ≥ n₀′ and every κ ∈ 𝒦⁰_n(s, A, M, φ₀, C_OS):
-(a) **No strict-superset mass.** E_κ π_𝒞(S ⊋ S₀(κ)) ≤ C′ r_n.
+(a) **No strict-superset mass.** E_κ π_𝒞(S ⊋ S₀(κ)) ≤ C′ r_n. (This clause uses only the first inequality of (OS),
+    𝒪_n^{>0} ≤ C_OS r_n [BT1-A3].)
 (b) **Strong coordinates.** For every j ∈ S₀(κ) with (ID^{M,σ}_j; c): E_κ π_𝒞(S ∌ j) ≤ C′ r_n. Hence, with
     J^M_n(κ; c) := {j ∈ S₀(κ) : (ID^{M,σ}_j; c) holds}: E_κ π_𝒞(S ⊉ J^M_n(κ; c)) ≤ s·C′ r_n.
 (c) **Beta-min form.** If also (F_λ; φ₀), then J^M_n(κ; c) ⊇ {j ∈ S₀(κ) : θ_j(κ)² ≥ c″·v·log n/(nφ₀²)} for every
     c″ ≥ c·n/(n − 1); so the right-hand set is included with the bound of (b). (This is the counterpart of SL's
     Corollary 2 and of [MIS1]'s inclusion clause, in expectation, relative to v.)
+(d) **Localisation [BT1-A3].** Let 𝒩_n(κ; c) := {S₀(κ)} ∪ {S ∈ 𝔉(κ) : L_S(κ) < c·v·log n} (the target and the
+    bounded-excess underfits with small ridge loss). Then E_κ π_𝒞(Ω∖𝒩_n(κ; c)) ≤ C′ r_n. In particular
+    E_κ π_𝒞(|S| ≥ s + j₀) ≤ C′ r_n: without any margin, all but O(r_n) of the posterior mass is on models of bounded
+    size that are either the target or near-equivalent to it in ridge loss. (Not a false-positive exclusion:
+    small-loss proxies may keep posterior mass.)
 
 ## 4. Theorem MIS-R (ii): random designs and design-dependent variance (conditional form)
 
@@ -197,8 +219,9 @@ representations lie in different classes), then supp β = supp β′. (Nothing i
   §§2–7 reads "conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:D" (as applicable) until HQ's acceptance
   record exists.
 - W3-POST:Thm-1@1.0.0 (Remark SNR only) — "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)".
+- W3-POST2:A0@1.0.0 (Corollary G(b): the bridge (F_w) ⇒ (OS)) — same status and council as the other W3-POST2 rows.
 - C-MIS:Prop-P@1.0.0, C-MIS:GD(b)@1.0.0 (Corollary G), C-MIS:Thm-MIS(i)@1.0.0, C-MIS:Thm-MIS(ii)@1.0.0,
-  C-MIS:Thm-F@1.0.0 (Remark P) — council R07/R08 PASS (registry).
+  C-MIS:Thm-F@1.0.0, C-MIS:LemZ@1.0.0 (Remark P) — council R07/R08 PASS (registry).
 
 ## 9. Relation to [MIS1] and non-claims
 
@@ -209,10 +232,13 @@ by Remark P.
 **New relative to [MIS1].** (1) no fixed variance: any σ²_{𝒞,n} > 0, design-measurable in the random case;
 (2) GR only on the contrast law; (3) hypotheses (OS), (ID^M) instead of (F_w), (F_λ), beta-min; (4) expectation rate,
 uniform over a configuration class, so rates for HPM/MPM/PIPs; (5) random designs by conditioning: conditional and
-uniform conclusion, slices in s, tight constants, any σ-field 𝓕_n; (6) no-margin clauses in expectation; (7) a
-density-contraction corollary; (8) Gaussian rows with n-dependent parameters.
-**Not claimed.** Non-Gaussian or non-scalar contrast residuals (Example E2 of [MIS1] `L5_frontier.md:80-88` shows the
-target changes under a common random slope unless it is put in 𝓕_n); s(κ) = 0; growing s; p > n^A; anything about
+uniform conclusion, slices in s, tight constants, any σ-field 𝓕_n; (6) no-margin clauses in expectation, with a
+localisation statement; (7) a density-contraction corollary; (8) Gaussian rows with n-dependent parameters; (9) the
+law condition can be weakened to the law of the contrast direction, with a total-variation stability bound.
+**Not claimed.** Non-Gaussian or non-scalar contrast residuals beyond R′(c) (Example E2 of [MIS1] `L5_frontier.md:80-88`
+shows the target changes under a common random slope unless it is put in 𝓕_n); removal of (E^σ) (it cannot simply be
+dropped: with p = 2 orthogonal columns, θ₁ = n and θ₂² = c·log n/n the other hypotheses hold and π_𝒞(S₀) → 0 —
+`reviews/BT1_better_theorem_astra.md`, "Limits"; `numerics/N5_out.txt`); s(κ) = 0; growing s; p > n^A; anything about
 the sampler or the reported HPM beyond [MIS1] Corollary H (whose first term now has the rate 2C r_n); an out-of-sample
 (integrated) Hellinger statement; sharp constants (c₁, c₀ are proof artefacts).
 

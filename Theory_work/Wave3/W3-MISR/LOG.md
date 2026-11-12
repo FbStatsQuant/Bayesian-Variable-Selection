@@ -36,6 +36,18 @@ Agents started so far (model, provider, role) are listed at each step. Claude-in
 - 23:05 L01 returned: **REJECT**, 0 FATAL / 1 MAJOR / 3 MINOR. MAJOR = Remark P (Theorem F's BM-∞ not normalised;
   analytic counterexample). No counterexample to R′, MIS-R (i), (i′), (ii), Cor G, Cor H. All four accepted and
   applied → STATEMENT v1.1 (`reviews/L01_disposition.md`). This is the one fix round.
-- 23:35 ASSUMPTION_MAP.md written. Briefs written: `reviews/BRIEF_L02_sol.md` (re-check of L01, sees L01 + diff) and
+- 23:04 ASSUMPTION_MAP.md written. Briefs written: `reviews/BRIEF_L02_sol.md` (re-check of L01, sees L01 + diff) and
   `reviews/BRIEF_BT1_astra.md` (better theorem, blind). Commit, then launch [agent 2] L02 gpt-6.1-sol (codex, high) and
   [agent 3] BT1 gpt-6-astra (codex, high).
+  (Clock note: the two entries above were written at 23:03–23:04; earlier drafts of this log guessed later times.)
+- 23:08 [agent 2] L02 returned: **LOCK**, 0/0/0/0; every L01 finding RESOLVED (full scale audit of Theorem F in the
+  review). STATEMENT v1.1 locked. [agent 3] BT1 (Astra) returned: 3 class-A, 2 class-B proposals + an obstruction to
+  dropping (E^σ).
+- 23:10 Proof files drafted: `lemmas/R_reduction.md`, `lemmas/M_misr.md`, `lemmas/G_corollaries.md`. `citecheck.py`
+  written → `reviews/CITECHECK.txt`: 0 failures.
+- 23:15 BT1 dispositions (`reviews/BT1_disposition.md`): A1 (projective law + TV stability) and A3 (localisation;
+  first (OS) inequality for the superset clause) ADOPTED → STATEMENT v1.2, proofs R.5 and M.2(d); A2, B1, B2
+  recommended as tickets (upstream, need new lemmas); the (E^σ) obstruction confirmed by numerics N5
+  (`numerics/N5_out.txt`: E π(S₀) 0.87 → 0.003) and recorded. citecheck: 170 checks, 0 failures.
+- 23:20 HOLDS.md re-read: empty. CHECKPOINT_1.md written; commit. Legs CP1 → CP2 are pre-approved and the reviews are
+  clean after the one fix round (L02 LOCK), so the run continues to CP2: lemma line checks, then council.
