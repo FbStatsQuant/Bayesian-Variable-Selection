@@ -1,0 +1,3 @@
+p	dataset	node	cpu	core	H_cal	cal_rebuilds	T	N	islands	status	sd_log_Z_r	R_eff	max_W	island_s_median	island_s_max	hpm_equals_truth	max_abs_pip_Z_minus_eq	sd_pip_r_max	pip_max_null
+2000	s3gen_p2000_seed7061111	bb2u24c1	Intel Xeon Platinum 8468 (sapphirerapids)	dd37d323a353	512	8	33	2500	16	completed	0.0863	15.89	0.0729	225.8	230.5	TRUE	1.15e-05	0.000581	0.1154
+2000	s3gen_p2000_seed7061111	bb2u24c1	Intel Xeon Platinum 8468 (sapphirerapids)	dd37d323a353	512	8	33	10000	16	completed	0.0293	15.99	0.0658	904.6	918.3	TRUE	4.8e-06	0.000327	0.1157

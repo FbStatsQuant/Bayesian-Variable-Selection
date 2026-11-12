@@ -8,7 +8,7 @@ the method. The two questions reserved for the owner are framed in §7 and **not
 **Evidence base, and its limits.** One thread on NOTS sapphirerapids nodes (Xeon Platinum 8468), GCC 14.3.0, R 4.5.2,
 pinned flags; n = 200. Three profiles of v3.1 (p = 1k: PROD-H `p1000_S3_r001_c100`; p = 2k: one S3-type dataset; p = 20k:
 one S3-type dataset, one pilot island and one final island with N = 2,500); p = 5k: one S3-type dataset, calibration
-complete (it escalated), final run still running when this was written (`CHECKPOINT_1.md` §1); 24 PROD-H fits (one replicate per p × S × c cell) and one tie design. One seed each, R = 4
+escalated to tier 1, completed in leg B (12.2 h on one Sapphire Rapids node; folded in 2026-11-12); 24 PROD-H fits (one replicate per p × S × c cell) and one tie design. One seed each, R = 4
 islands per fit. Every statement below that goes beyond these runs is marked. Source tables: `results/*.tsv`
 (scripts in `analysis/`). Memory is in GiB (2³⁰ bytes).
 
@@ -39,7 +39,8 @@ All numbers in this section use the formula above with T = 35 unless marked meas
 1. **Sequential depth under the N_e = max(2500, n, p) rule.** One island: 0.39 h at 5k, 1.57 h at 10k, 6.3 h at 20k.
    A fit with I = 8 … 13 rebuilds (10.8–14.9 islands): 4.2–5.9 h at 5k, 17–23 h at 10k, 68–94 h at 20k, all in
    sequence in v3.1. Measured at 5k: calibration alone took 5.40 h (tier 0 with 11 rebuilds: 3.68 h; the E2 trigger then
-   fired and the tier-1 calibration took 1.72 h), and the tier-1 final run (N = 20,000) was still running after 3 h.
+   fired and the tier-1 calibration took 1.72 h), and the tier-1 final run (N = 20,000, T = 33) took 6.82 h (one island 1.71 h), so the whole fit took 12.2 h
+   (Sapphire Rapids node bb4u17c1; HPM = truth; sd(log Z_r) of the 4 final islands 0.77, R_eff share 0.56).
    The 24 h commons limit is reached near 10k without an escalation, and before it with one. An
    escalation reruns calibration with four times the particles and then runs final islands four times as large.
    Leg A's changes do not touch this.

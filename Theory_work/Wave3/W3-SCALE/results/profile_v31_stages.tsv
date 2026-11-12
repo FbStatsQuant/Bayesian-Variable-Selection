@@ -1,5 +1,5 @@
 p	mode	ell	J	tier_final	escalated	T_pilot	rebuilds_I	converged	T_final	V_size	grid_build_s	sd_log_Z_r	hpm_equals_truth
  1000	full	11	 107	 0	FALSE	20	5	TRUE	26	4e+04	0.4031	0.70312	TRUE
  2000	full	12	 210	 0	FALSE	28	8	TRUE	33	8e+04	0.7228	0.04218	TRUE
- 5000	full	13	 530	 1	 TRUE	23/23	11/1	TRUE/TRUE	NA	2e+05	2.5646	     NA	  NA
+ 5000	full	13	 530	 1	 TRUE	23/23	11/1	TRUE/TRUE	33	2e+05	2.5646	0.76584	TRUE
 20000	island	15	2061	NA	   NA	22	NA	NA	29	8e+05	8.0709	     NA	TRUE

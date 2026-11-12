@@ -158,7 +158,7 @@ table, or if serial-equivalent totals are reported that match exactly); reserved
 | B5 | 11-12 04:24 | 2697747 `w3scale_bitid_p500_S5_D` | 2 x 0.75 h | 1.5 | 21.5 | 0.351 |
 | B6 | 11-12 04:24 | 2697748 `w3scale_bitid_p1000_D` | 10 x 1 h | 10.0 | 31.5 | 2.619 |
 | B7 | 11-12 04:24 | 2697749 `w3scale_bitid_p1000_S5_D` | 2 x 2 h | 4.0 | 35.5 | 0.890 |
-| B8 | 11-12 07:31 | 2698177 `w3scale_b3_p2000` (12G) | 1 x 9 h | 9.0 | 7.17 + 9 = 16.2 | |
+| B8 | 11-12 07:31 | 2698177 `w3scale_b3_p2000` (12G) | 1 x 9 h | 9.0 | 7.17 + 9 = 16.2 | 5.403 (bb2u24c1) |
 | B9 | 11-12 07:31 | 2698178 `w3scale_b3_p5000` (16G) | 1 x 16 h | 16.0 | 32.2 | |
 | B10 | 11-12 07:31 | 2698179 `w3scale_b3_p10000` (20G) | 1 x 11 h | 11.0 | 43.2 | |
 | B11 | 11-12 07:31 | 2698180 `w3scale_b3_p20000` (36G) | 1 x 16 h | 16.0 | 59.2 | |
@@ -214,3 +214,18 @@ table, or if serial-equivalent totals are reported that match exactly); reserved
   "Counters"); ledger actuals for B8-B11. Nothing committed in this run (HQ: change no git state).
 - 07:34 — All four B3 tasks RUNNING (started 07:32 CT on Sapphire Rapids); no stderr and no end record. Their logs stay
   empty until the tier-0 calibration ends (the driver's first line is printed then), which is expected.
+- 15:04 — HQ note: commons mixes Sapphire Rapids (bb*) and Cascade Lake (bc12*, about 1.7-2x slower) nodes; the node
+  of every measurement is recorded and timings are never pooled across node types. All B3 tasks were submitted with
+  `--constraint=sapphirerapids` and run on bb* nodes; the leg A profiles at 2k, 5k and 20k and round D as well.
+- 15:05 — **5k profile folded in** (2692690 COMPLETED, rc 0, 44,030 s, bb4u17c1): tier-1 final run N = 20,000, T = 33,
+  6.82 h (one island 1.71 h, 1.19 us per bridge step, hit rate 0.31, 4,977 cache clears); whole fit 12.2 h; HPM =
+  truth; log Z = -114.89; sd(log Z_r) of the 4 final islands 0.77 (R_eff share 0.56); peak 1.62 GB. Tables
+  regenerated from all profile records and round-A v3.1 fits (`results/profile_v31_*.tsv`, `results/sd_logZ_*.tsv`:
+  the only new rows are the 5k final run; the long table is re-printed at full precision); DESIGN_v1 §0 and item 1
+  updated. CHECKPOINT_1.md is left as committed (historical).
+- 15:06 — **B3 p = 2k read back** (2698177 COMPLETED, rc 0, 5.40 h, bb2u24c1, Xeon Platinum 8468): fixed-size tier-0
+  calibration H = 512, 8 rebuilds, converged, T = 33 (candidate grid), 1,475 s. Frozen grid, 16 islands each:
+  N = 2,500: sd(log Z_r) 0.086, R_eff 15.89 of 16, max W 0.073, 226 s per island (median); N = 10,000: sd 0.029,
+  R_eff 15.99, max W 0.066, 905 s per island. HPM = truth both; max |PIP_Z - PIP_eq| 1e-5 / 5e-6. Table
+  `results/b3_census.tsv` (node and CPU columns). 2698178-80 (5k, 10k, 20k) RUNNING 7.6 h on bb*; ledger: actual
+  12.57 + open worst case 43 = 55.6 of 150. Run ends here (HQ re-wakes when they end). No git state changed.
