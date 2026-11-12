@@ -15,6 +15,7 @@ CHECKPOINT_3; W3-RM2: CP2 leg per LOG HQ CP1 decision; its MP1 Astra review was 
 output in reviews/); (3) P6 smoke still on NOTS — heartbeat re-wakes the P6 lead when done.
 
 ## Running
+- W3-SCALE lead (Fable 5.2 CW, leg A → CP1; cap 150 task-h on NOTS).
 - W3-RM2 lead (Fable CW, BVS-wt/W3-RM2) → CP2 (CP1 passed; v1.3, Form F key lemma).
 - W3-START lead (Fable CW, BVS-wt/W3-START) → CP3 again: R1 council PASSED (9.1/8.8) but acceptance refused (wave docs in INPUTS changed on main) → v1.3.4 + Sol diff check + council R2 + reconciliation + Astra BT2. After R2: HQ acceptance audit, ingest 21 claims, merge; then blind Fable API audit of the package (credits).
 - INFRA R04 fix MERGED 656982a; rule 16 lifted.
@@ -29,5 +30,5 @@ output in reviews/); (3) P6 smoke still on NOTS — heartbeat re-wakes the P6 le
 4. Chapter v2.0 once D1 (P6) and W3-START land.
 
 ## Waiting on Felipe (key decisions)
-- Track 1 (v3.2 freeze + 910 core-h rerun) and track 3 (scaling) greenlights.
-- W3-SAMP D/TR narrows.
+- (decided by HQ + consultant 2026-11-12, see HQ_DECISIONS) track 3 leg A launched; SAMP D/TR approved; track 1 not ready.
+- For Felipe: p = 1M fixed-N islands; primary PIP switch; TR sharpness (coded target); track 1 may shrink to a gate-0 sample.

@@ -137,3 +137,12 @@
   of wave documents/registry tables) + Sol diff check v1.3.3→v1.3.4; Astra better-theorem review BT2 on the final
   statement in parallel (statement changed materially after CP1 → headline gate). PROTOCOL rule 15 amended: INPUTS
   never lists wave documents or registry tables.
+- 2026-11-12 ~01:30 UTC (Felipe away; delegated owner decisions to HQ with the CW Fable 5.2 consultant).
+  W3-SAMP D/TR narrows APPROVED (consultant concurs): wider statements were never proved; the council reviewed the narrow
+  ones; headline flags were tool-set; no dependents. Open sharpness item for Felipe: TR separation from π₀(S₀) → 1 is
+  open for the coded target ("method as coded" goal).
+  Track 3 scaling leg A LAUNCHED (W3-SCALE, BRIEF.md): profile-first, bit-identical speedups (no Gram-free scoring),
+  bit-identity on NOTS PROD-H (= track 1 gate 0), sd(log Ẑ_r) table, DESIGN_v1 last; cap 150 task-h (≈300 core-h);
+  P6 keeps priority. Reserved for Felipe: p = 1M fixed-N islands; primary PIP switch.
+  Track 1 NOT ready (v3.2 comes from track 3). Note for Felipe: on v3.1 the rerun is a deterministic identity check;
+  if v3.2 stays bit-identical, a gate-0-size sample may replace the full 910 core-h rerun.
