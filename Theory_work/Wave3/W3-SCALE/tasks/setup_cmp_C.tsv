@@ -1,0 +1,6 @@
+1	Rscript --vanilla profile_fit.R --core-dir /scratch/fb31/w3scale/code/v31_613f063/Scripts/SMC_BVS/core --design s3gen --p 5000 --seed 20261111 --mode setup --mem-gb 12 --hours 1 --out $OUT/res/setup_p5000_v31.rds
+2	Rscript --vanilla profile_fit.R --core-dir /scratch/fb31/w3scale/code/v32dev_bbdfea0/Scripts/SMC_BVS/core_v32dev --design s3gen --p 5000 --seed 20261111 --mode setup --mem-gb 12 --hours 1 --out $OUT/res/setup_p5000_v32.rds
+3	Rscript --vanilla profile_fit.R --core-dir /scratch/fb31/w3scale/code/v31_613f063/Scripts/SMC_BVS/core --design s3gen --p 10000 --seed 20261111 --mode setup --mem-gb 16 --hours 1 --out $OUT/res/setup_p10000_v31.rds
+4	Rscript --vanilla profile_fit.R --core-dir /scratch/fb31/w3scale/code/v32dev_bbdfea0/Scripts/SMC_BVS/core_v32dev --design s3gen --p 10000 --seed 20261111 --mode setup --mem-gb 16 --hours 1 --out $OUT/res/setup_p10000_v32.rds
+5	Rscript --vanilla profile_fit.R --core-dir /scratch/fb31/w3scale/code/v31_613f063/Scripts/SMC_BVS/core --design s3gen --p 20000 --seed 20261111 --mode setup --mem-gb 32 --hours 1 --out $OUT/res/setup_p20000_v31.rds
+6	Rscript --vanilla profile_fit.R --core-dir /scratch/fb31/w3scale/code/v32dev_bbdfea0/Scripts/SMC_BVS/core_v32dev --design s3gen --p 20000 --seed 20261111 --mode setup --mem-gb 32 --hours 1 --out $OUT/res/setup_p20000_v32.rds
