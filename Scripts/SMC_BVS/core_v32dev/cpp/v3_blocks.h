@@ -57,8 +57,18 @@ inline Dendrogram complete_linkage(const Data& D) {
   {
     std::vector<double> sdev(p);
     for (int j = 0; j < p; ++j) sdev[j] = std::sqrt(D.Gat(j, j));
-    for (int b = 0; b < p; ++b) for (int a = 0; a < p; ++a)
-      dist[(size_t)b * p + a] = 1.0 - std::fabs(D.Gat(a, b) / (sdev[a] * sdev[b]));
+    bool any_nan = false;
+    for (int b = 0; b < p; ++b) for (int a = 0; a < p; ++a) {
+      double v = 1.0 - std::fabs(D.Gat(a, b) / (sdev[a] * sdev[b]));
+      dist[(size_t)b * p + a] = v;
+      if (v != v) any_nan = true;
+    }
+    // A NaN distance (a zero, NaN or infinite Gram diagonal; never in v3_fit, whose columns are standardised) is
+    // outside the finite domain of the bitwise argument (NaN payloads; review R01): redo the v3.1 two-step computation.
+    if (any_nan) {
+      std::vector<double> r = correlation_matrix(D);
+      for (size_t i = 0; i < dist.size(); ++i) dist[i] = 1.0 - std::fabs(r[i]);
+    }
   }
   std::vector<std::vector<int>> mem(p);
   std::vector<int> node(p);
@@ -189,6 +199,10 @@ inline std::vector<std::vector<int>> neighbour_graph_v31(const Data& D, int B) {
 //     run of the sorted list with |r| > r_n, which is the same number because the list is sorted by |r| descending);
 // (3) |r_jl| = |G_jl / (s_j s_l)| is computed per column j with the expression of correlation_matrix(), so no p x p
 //     correlation matrix is built.
+// Domain: all |r_jl| are numbers. With a NaN correlation (a zero, NaN or infinite Gram diagonal; never in v3_fit,
+// whose columns are standardised) the comparator is not a strict weak order, v3.1's leading-run count and sort
+// result depend on the sort's internals, and (1)-(2) do not apply (review R01 finding 2): the v3.1 routine is then
+// called unchanged, so the deployed behaviour is kept on that domain too.
 inline std::vector<std::vector<int>> neighbour_graph(const Data& D, int B) {
   int p = D.p;
   std::vector<std::vector<int>> N(p);
@@ -202,7 +216,10 @@ inline std::vector<std::vector<int>> neighbour_graph(const Data& D, int B) {
   for (int j = 0; j < p; ++j) {
     for (int l = 0; l < p; ++l) ar[l] = std::fabs(D.Gat(j, l) / (sdev[j] * sdev[l]));  // v3.1: fabs(r[(size_t)l * p + j])
     int c = 0, above = 0;
-    for (int l = 0; l < p; ++l) if (l != j) { cand[c++] = l; if (ar[l] > rn) ++above; }
+    for (int l = 0; l < p; ++l) if (l != j) {
+      if (ar[l] != ar[l]) return neighbour_graph_v31(D, B);   // NaN correlation: v3.1 routine, unchanged
+      cand[c++] = l; if (ar[l] > rn) ++above;
+    }
     int keep = std::min(B, std::max(1, above));
     std::partial_sort(cand.begin(), cand.begin() + keep, cand.end(), [&](int a, int b) {
       double ra = ar[a], rb = ar[b];

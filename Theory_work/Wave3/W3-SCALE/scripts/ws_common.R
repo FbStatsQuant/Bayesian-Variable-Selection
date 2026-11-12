@@ -73,40 +73,56 @@ ws_prodh <- function(p, s, r, scale = "c100", gen_dir, manifest = NULL) {
        design = "prodh", method_seed = inp$method_seed, manifest_match = match)
 }
 
-# ---- Fit fingerprint -------------------------------------------------------------------------------------------
-# Every output field of a fit, hashed (sha256 of R serialisation), after removing the fields that hold wall-clock
-# times, memory, or the operational preflight record. Two fits are "output identical" iff their fingerprints agree.
-WS_TIMING_NAMES <- c("seconds", "seconds_total", "timings", "runtime_guard", "peak_memory_kb", "seconds_per_score",
-                     "est_seconds", "preflight", "preflight_escalation", "allocation")
-ws_strip <- function(x) {
-  if (is.data.frame(x)) return(x)
-  if (is.list(x)) {
-    nm <- names(x)
-    if (!is.null(nm)) x <- x[!(nm %in% WS_TIMING_NAMES)]
-    a <- attributes(x)
-    x <- lapply(x, ws_strip)
-    attributes(x) <- a[intersect(names(a), c("names", "class"))]
-    return(x)
-  }
-  x
+# ---- Fit fingerprint (version 2, after review R01 finding 3) -----------------------------------------------------
+# Every output field of a fit, hashed (sha256 of R serialisation) after removing ONLY wall-clock and memory numbers:
+#  * list elements named seconds, seconds_total, seconds_local, seconds_ls0 (timing vectors of islands, tiers, grids,
+#    setup, raw final run), timings, peak_memory_kb -- at any depth;
+#  * inside runtime_guard: elapsed_seconds, and per checkpoint elapsed_seconds, operation_seconds, projected_seconds
+#    (the guard's label, decisions `exceeded`, allocation and the identity/order of every checkpoint are KEPT);
+#  * inside preflight / preflight_escalation: seconds_per_score, est_seconds, timing_procedure (timing benchmark),
+#    and the two fields that the v3.2-dev delivery change may alter by design: ls0_worst_case and exceeds. These two
+#    go to the separate `delivery` record, compared and reported on its own (equal-admission condition).
+# Everything else is kept: allocation, every attribute of every list, the memory part of the preflight.
+# Data frames are hashed whole (none of the fit's data frames holds a time).
+# Two fits are "output identical" iff fingerprint$all agrees.
+WS_FP_VERSION <- 2L
+WS_TIME_NAMES <- c("seconds", "seconds_total", "seconds_local", "seconds_ls0", "timings", "peak_memory_kb")
+ws_keep <- function(x, drop) { nm <- names(x); if (is.null(nm)) return(x); a <- attributes(x); k <- !(nm %in% drop); x <- unclass(x)[k]
+  a$names <- nm[k]; attributes(x) <- a; x }
+ws_strip <- function(x, ctx = "") {
+  if (is.data.frame(x) || !is.list(x)) return(x)
+  drop <- WS_TIME_NAMES
+  if (ctx == "guard") drop <- c(drop, "elapsed_seconds")
+  if (ctx == "checkpoint") drop <- c(drop, "elapsed_seconds", "operation_seconds", "projected_seconds")
+  if (ctx == "preflight") drop <- c(drop, "seconds_per_score", "est_seconds", "timing_procedure", "ls0_worst_case", "exceeds")
+  x <- ws_keep(x, drop)
+  a <- attributes(x); nm <- names(x)
+  y <- lapply(seq_along(x), function(i) {
+    ni <- if (is.null(nm)) "" else nm[i]
+    sub <- if (ni == "runtime_guard") "guard" else if (ctx == "guard" && ni == "checkpoints") "checkpoints" else if (ctx == "checkpoints") "checkpoint"
+           else if (ni %in% c("preflight", "preflight_escalation")) "preflight" else ""
+    ws_strip(x[[i]], sub)
+  })
+  attributes(y) <- a
+  y
 }
 ws_sha <- function(x) digest::digest(x, algo = "sha256")
+ws_delivery <- function(pf) {
+  if (is.null(pf)) return(NULL)
+  l <- pf$ls0_worst_case
+  list(exceeds = pf$exceeds, ls0_worst_case = if (is.null(l)) NULL else l[setdiff(names(l), c("seconds_per_score", "est_seconds", "timed"))])
+}
 ws_fingerprint <- function(fit) {
   f <- ws_strip(fit)
   top <- vapply(f, ws_sha, "")
   sub <- character(0)
-  for (nm in intersect(names(f), c("calibration", "flags", "frozen", "local_search", "ls0", "exact"))) {
+  for (nm in intersect(names(f), c("calibration", "flags", "frozen", "local_search", "ls0", "exact", "runtime_guard", "preflight"))) {
     if (is.list(f[[nm]]) && !is.null(names(f[[nm]]))) {
       s <- vapply(f[[nm]], ws_sha, ""); names(s) <- paste0(nm, "$", names(f[[nm]])); sub <- c(sub, s)
     }
   }
-  list(all = ws_sha(f), top = top, sub = sub,
-       delivery = list(preflight = ws_sha(ws_drop_times(fit$preflight)), preflight_escalation = ws_sha(ws_drop_times(fit$preflight_escalation))))
-}
-ws_drop_times <- function(x) {
-  if (!is.list(x)) return(x)
-  x <- x[!(names(x) %in% c("seconds_per_score", "est_seconds", "timing_procedure"))]
-  lapply(x, ws_drop_times)
+  list(version = WS_FP_VERSION, all = ws_sha(f), top = top, sub = sub,
+       delivery = list(preflight = ws_delivery(fit$preflight), preflight_escalation = ws_delivery(fit$preflight_escalation)))
 }
 
 # Human-readable scalars of a fit (for tables; the fingerprint is the identity test).

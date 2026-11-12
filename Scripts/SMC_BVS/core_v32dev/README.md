@@ -66,7 +66,13 @@ Plan, tests, NOTS runs and the checkpoint: `Theory_work/Wave3/W3-SCALE/`. Not a 
 `source_manifest.json` (removed here; make a new one before any deployment).
 
 Every change below leaves every output of `v3_fit` bit-identical to v3.1 for the same (X, y, seed, binary flags),
-except wall-clock fields and the preflight record (item 4). Files changed: `cpp/v3_score.h`, `cpp/v3_blocks.h`,
+except wall-clock fields and the preflight record (item 4), **on fits where both versions take the same admission
+decisions** (initial preflight, pre-escalation preflight, runtime guard). Item 4 changes admission by design: a fit
+that v3.1 refuses, or whose escalation v3.1 blocks, may run in v3.2-dev. Domain of the bitwise argument: finite
+inputs. The header routines fall back to the v3.1 code whenever a non-finite value appears (a non-finite entry of X
+in the Gram; a NaN correlation in the linkage distances or the neighbour graph), so the raw exports (`cpp_context`,
+`cpp_blocks`, `cpp_neighbours`, `cpp_tables`, `cpp_setup`) keep the deployed behaviour there too; `v3_fit` never
+reaches those cases (preprocessing rejects non-finite inputs, drops constant columns and standardises). Files changed: `cpp/v3_score.h`, `cpp/v3_blocks.h`,
 `cpp/v3_start.h`, `v3_fit.R`. Everything else is byte-identical to v3.1 after removing carriage returns.
 
 1. **Gram (`gram_fill`, `v3_score.h`).** Columns are taken in tiles copied row-major; sixteen entries of a Gram row
@@ -86,7 +92,15 @@ except wall-clock fields and the preflight record (item 4). Files changed: `cpp/
    scan bound p + k\*(p − k\*), k\* = min(K, ⌊p/2⌋), instead of p + p²/4. This changes only which fits are refused
    before any work (Lemma RO); `options(v3.ls0_scan_bound = "v31")` restores the v3.1 charge.
 
-Tests: `Theory_work/Wave3/W3-SCALE/tests/bitid_units.cpp` (one source compiled against each core; byte-identical dumps
-of the Gram, dendrogram, blocks, neighbour graph, tables, route counters, start, a small island and a local search,
-including the QR fallback, the numerical-failure path and the small-Q path) and the fit-level fingerprints of
-`scripts/bitid_fit.R` on NOTS (PROD-H units and supplementary units).
+Tests (all in `Theory_work/Wave3/W3-SCALE/`): `tests/bitid_units.cpp` (one source compiled against each core;
+byte-identical dumps of the Gram, dendrogram, blocks, neighbour graph, tables, route counters, start, a small island
+and a local search; cases assert that they reach the QR route, the refactor route, the Q recomputation, the
+numerical-failure path, sub-models above K, tile boundaries of the Gram and the non-finite fallbacks);
+`scripts/export_units.R` (the R exports on raw contexts, including the failure return of `cpp_setup`);
+`scripts/bitid_fit.R` + `scripts/bitid_compare.R` (fit-level fingerprints on NOTS: PROD-H units and supplementary
+units); `scripts/fingerprint_selftest.R` (mutation test of the fingerprint). Review: `reviews/R01_code_sol.md` and its
+disposition `reviews/R01_disposition.md`.
+
+Unreachable branch kept for fidelity: in `TableDFS::append_row` the pivot of A = G_S + I is tested after the pivot of
+H = (n+1) G_S + I, as in `try_chol`. A − H/(n+1) = (n/(n+1)) I is positive definite, so in exact arithmetic the A
+pivot cannot fail when the H pivot passes; no test reaches "A fails after H passes".

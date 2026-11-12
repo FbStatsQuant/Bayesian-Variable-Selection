@@ -40,6 +40,10 @@ struct Case {
   int B = 0;                     // block width (0: production rule min(isqrt n, isqrt p, 16))
   double z_scale = 1.0;          // tampering of z after data_init (drives the small-Q branch); 1 = none
   bool island = false;           // also run one small island and a local search
+  bool tamper_g00 = false;       // set G[0] = -1 after data_init: the stored-Gram Cholesky fails, the refactor route (Gram from X) succeeds
+  // branches the case must reach (the run fails otherwise): QR route, refactor route, Q recomputation, numerical
+  // failure in the tables, unscored codes (|U| > K), a NaN in the Gram (non-finite fallbacks)
+  bool need_qr = false, need_refactor = false, need_qrec = false, need_fail = false, need_unscored = false, need_nan_gram = false;
 };
 
 static void standardise(std::vector<double>& x, int n) {
@@ -94,7 +98,31 @@ static void scale_columns(Case& c, double factor, int every, int offset) {
 
 static int isqrt_i(int x) { int r = (int)std::floor(std::sqrt((double)x)); while ((r + 1) * (r + 1) <= x) ++r; while (r * r > x) --r; return r; }
 
-static long long N_REF_FAIL = 0;
+static long long N_REF_FAIL = 0, N_BRANCH_FAIL = 0;
+// Columns with NaN entries of distinct payloads (review R01 finding 1), an all-zero column next to constant columns and
+// a column whose sum of squares underflows to zero (finding 2): NaN Gram entries and NaN correlations.
+static Case make_nan_payload(int n, int p) {
+  Case c; c.name = "nan_payload_p" + std::to_string(p); c.n = n; c.p = p;
+  c.X.assign((size_t)n * p, 0); c.y.assign(n, 1.0);
+  for (int j = 0; j < p; ++j) { uint64_t bits = 0x7ff8000000000001ULL + (uint64_t)j; double v; std::memcpy(&v, &bits, 8); for (int i = 0; i < n; ++i) c.X[(size_t)j * n + i] = v; }
+  return c;
+}
+static Case make_zero_column(const std::string& name, int n, int p, bool underflow) {
+  Case c; c.name = name; c.n = n; c.p = p;
+  c.X.assign((size_t)n * p, 0); c.y.assign(n, 0);
+  for (int j = 1; j < p; ++j) for (int i = 0; i < n; ++i) c.X[(size_t)j * n + i] = underflow ? ((i / 2 + j) % 2 ? -1.0 : 1.0) : 1.0;
+  if (underflow) for (int i = 0; i < n; ++i) c.X[i] = (i % 2) ? 1e-200 : -1e-200;
+  for (int i = 0; i < n; ++i) c.y[i] = (double)(i % 3) - 1.0;
+  return c;
+}
+// Columns of an identity-type design (orthogonal 0/1 columns), y = ones: with G[0] tampered to -1 the first Cholesky
+// route fails for models containing column 0 and the refactor route succeeds.
+static Case make_identity(const std::string& name, int n, int p) {
+  Case c; c.name = name; c.n = n; c.p = p;
+  c.X.assign((size_t)n * p, 0); c.y.assign(n, 1.0);
+  for (int j = 0; j < p; ++j) for (int i = 0; i < n; ++i) if (i % p == j) c.X[(size_t)j * n + i] = 1.0;
+  return c;
+}
 
 static void run_case(const Case& c) {
   auto t_case = Clock::now();
@@ -111,6 +139,8 @@ static void run_case(const Case& c) {
     if (R.G.size() != D.G.size() || std::memcmp(R.G.data(), D.G.data(), D.G.size() * sizeof(double)) != 0) { ++N_REF_FAIL; printf("  REF MISMATCH gram %s\n", c.name.c_str()); } }
 #endif
   if (c.z_scale != 1.0) for (auto& v : D.z) v *= c.z_scale;
+  if (c.tamper_g00) D.G[0] = -1.0;
+  bool nan_gram = false; for (double v : D.G) if (v != v) { nan_gram = true; break; }
   put_vd(D.G); put_vd(D.z); put_d(D.yty); put_d(D.logCn); put_d(D.logm0); put_d(D.logWK); put_vd(D.logw); put_vd(D.logprior); put_i(D.K);
   int B = c.B > 0 ? c.B : std::min(std::min(isqrt_i(n), isqrt_i(p)), 16);
   put_i(B);
@@ -155,6 +185,11 @@ static void run_case(const Case& c) {
 #endif
   long long ncodes = 0, nnan = 0, nroute[3] = {0, 0, 0};
   for (auto& v : st.route_tab) for (int r : v) { ++ncodes; if (r < 0) ++nnan; else nroute[r]++; }
+  {
+    bool ok = (!c.need_qr || routes_now[2] > 0) && (!c.need_refactor || routes_now[1] > 0) && (!c.need_qrec || routes_now[3] > 0) &&
+              (!c.need_fail || routes_now[4] > 0) && (!c.need_unscored || (table_status == "ok" && nnan > 0)) && (!c.need_nan_gram || nan_gram);
+    if (!ok) { ++N_BRANCH_FAIL; printf("  BRANCH NOT REACHED in %s\n", c.name.c_str()); }
+  }
   double t_start = 0, t_isl = 0;
   if (table_status == "ok") {
     t0 = Clock::now();
@@ -208,8 +243,10 @@ int main(int argc, char** argv) {
   // tiny problems: p = 1, 2, 3, 7, 8, 9; n small so that K = n/2 is small
   for (int p : {1, 2, 3, 7, 8, 9, 17}) { Case c = make_generic("tiny_p" + std::to_string(p), 12, p, 20 + p, 0.5); cases.push_back(c); }
   // block width above K: sub-models larger than K are not scored (NaN entries)
-  { Case c = make_generic("B_above_K", 6, 40, 31, 0.5); c.B = 6; cases.push_back(c); }
-  { Case c = make_generic("B_above_K_dup", 8, 30, 32, 0.5); add_duplicates(c, 3); c.B = 7; cases.push_back(c); }
+  { Case c = make_generic("B_above_K", 6, 40, 31, 0.5); c.B = 6; c.need_unscored = true; cases.push_back(c); }
+  { Case c = make_generic("B_above_K_dup", 8, 30, 32, 0.5); add_duplicates(c, 3); c.B = 7; c.need_unscored = true; cases.push_back(c); }
+  // Gram tile and lane boundaries (tile 256, lanes 16, mirror block 64)
+  for (int p : {15, 16, 31, 33, 63, 64, 65, 255, 256, 257, 300}) { Case c = make_generic("tile_p" + std::to_string(p), 40, p, 300 + p, 0.4); cases.push_back(c); }
   // exact ties: duplicated and sign-flipped columns; integer designs
   { Case c = make_generic("duplicates_p300", 200, 300, 41, 0.6); add_duplicates(c, 4); c.island = true; cases.push_back(c); }
   { Case c = make_generic("duplicates_dense", 100, 128, 42, 0.2); add_duplicates(c, 2); cases.push_back(c); }
@@ -217,19 +254,31 @@ int main(int argc, char** argv) {
   { Case c = make_integer("integer_n16_p64", 16, 64, 44); cases.push_back(c); }
   // fallback routes (un-standardised data; these cases exist only to drive the branches):
   //  huge duplicated columns: the Cholesky pivot of a duplicate is lost to rounding -> refactor -> augmented QR
-  { Case c = make_generic("huge_dup_qr", 50, 90, 51, 0.5); add_duplicates(c, 3); scale_columns(c, 1e150, 1, 0); cases.push_back(c); }
-  { Case c = make_generic("huge_dup_qr_mixed", 50, 99, 52, 0.5); add_duplicates(c, 2); scale_columns(c, 1e140, 3, 1); c.island = true; cases.push_back(c); }
-  { Case c = make_generic("huge_dup_1e120", 30, 60, 55, 0.4); add_duplicates(c, 2); scale_columns(c, 1e120, 1, 0); cases.push_back(c); }
+  { Case c = make_generic("huge_dup_qr", 50, 90, 51, 0.5); add_duplicates(c, 3); scale_columns(c, 1e150, 1, 0); c.need_qr = true; c.need_qrec = true; cases.push_back(c); }
+  { Case c = make_generic("huge_dup_qr_mixed", 50, 99, 52, 0.5); add_duplicates(c, 2); scale_columns(c, 1e140, 3, 1); c.island = true; c.need_qr = true; cases.push_back(c); }
+  { Case c = make_generic("huge_dup_1e120", 30, 60, 55, 0.4); add_duplicates(c, 2); scale_columns(c, 1e120, 1, 0); c.need_qr = true; cases.push_back(c); }
   //  overflowing Gram: every route fails -> NumericalFailure while scoring the tables
-  { Case c = make_generic("overflow_fail", 30, 40, 53, 0.5); scale_columns(c, 1e160, 7, 3); cases.push_back(c); }
-  { Case c = make_generic("overflow_fail_late", 30, 60, 54, 0.5); scale_columns(c, 1e160, 1000, 57); cases.push_back(c); }
+  { Case c = make_generic("overflow_fail", 30, 40, 53, 0.5); scale_columns(c, 1e160, 7, 3); c.need_fail = true; cases.push_back(c); }
+  { Case c = make_generic("overflow_fail_late", 30, 60, 54, 0.5); scale_columns(c, 1e160, 1000, 57); c.need_fail = true; cases.push_back(c); }
+  //  a failure in a late block after QR successes and Q recomputations in earlier blocks (non-zero incoming counters)
+  { Case c = make_generic("qr_then_fail", 50, 96, 56, 0.5); add_duplicates(c, 3); scale_columns(c, 1e150, 1, 0); scale_columns(c, 1e12, 1000, 95);
+    c.need_qr = true; c.need_fail = true; cases.push_back(c); }
+  //  refactor route: stored Gram entry tampered, Gram recomputed from X is fine
+  { Case c = make_identity("refactor_identity", 8, 4); c.B = 3; c.tamper_g00 = true; c.need_refactor = true; cases.push_back(c); }
+  { Case c = make_generic("refactor_generic", 60, 50, 57, 0.5); c.tamper_g00 = true; c.need_refactor = true; c.island = true; cases.push_back(c); }
+  // non-finite domain (review R01 findings 1 and 2): NaN payloads in X; zero and underflowing columns (NaN correlations)
+  { Case c = make_nan_payload(3, 33); c.need_nan_gram = true; cases.push_back(c); }
+  { Case c = make_nan_payload(5, 300); c.need_nan_gram = true; cases.push_back(c); }
+  { Case c = make_zero_column("zero_column_p4", 20, 4, false); c.B = 2; cases.push_back(c); }
+  { Case c = make_zero_column("underflow_column_p9", 20, 9, true); c.B = 3; cases.push_back(c); }
+  { Case c = make_generic("inf_entry", 30, 40, 58, 0.5); c.X[5] = std::numeric_limits<double>::infinity(); c.X[77] = -std::numeric_limits<double>::infinity(); c.need_nan_gram = true; cases.push_back(c); }
   //  small Q: z inflated after data_init so that y'y - n z'H^{-1}z < 1e-8 y'y for good models (non-negative recomputation)
   { Case c = make_generic("smallQ_z1p002", 200, 150, 61, 0.6); c.z_scale = 1.002; cases.push_back(c); }
   { Case c = make_generic("smallQ_z1p01", 200, 150, 62, 0.6); c.z_scale = 1.01; c.island = true; cases.push_back(c); }
   { Case c = make_generic("smallQ_z1p05_dup", 120, 100, 63, 0.6); add_duplicates(c, 5); c.z_scale = 1.05; cases.push_back(c); }
   //  y exactly equal to one column (no noise) and z inflated: Q < 0 before the recomputation for every model with that column
-  { Case c = make_generic("smallQ_exact_1p003", 200, 150, 64, 0.6); for (int i = 0; i < c.n; ++i) c.y[i] = c.X[(size_t)3 * c.n + i]; c.z_scale = 1.003; c.island = true; cases.push_back(c); }
-  { Case c = make_generic("smallQ_exact_1p02_dup", 80, 96, 65, 0.6); add_duplicates(c, 4); for (int i = 0; i < c.n; ++i) c.y[i] = c.X[(size_t)10 * c.n + i]; c.z_scale = 1.02; cases.push_back(c); }
+  { Case c = make_generic("smallQ_exact_1p003", 200, 150, 64, 0.6); for (int i = 0; i < c.n; ++i) c.y[i] = c.X[(size_t)3 * c.n + i]; c.z_scale = 1.003; c.island = true; c.need_qrec = true; cases.push_back(c); }
+  { Case c = make_generic("smallQ_exact_1p02_dup", 80, 96, 65, 0.6); add_duplicates(c, 4); for (int i = 0; i < c.n; ++i) c.y[i] = c.X[(size_t)10 * c.n + i]; c.z_scale = 1.02; c.need_qrec = true; cases.push_back(c); }
   if (big) {
     { Case c = make_generic("generic_p2000", 200, 2000, 71, 0.6); cases.push_back(c); }
     { Case c = make_generic("generic_p4001_dup", 200, 4001, 72, 0.6); add_duplicates(c, 50); cases.push_back(c); }
@@ -237,6 +286,7 @@ int main(int argc, char** argv) {
   }
   for (auto& c : cases) run_case(c);
   fclose(OUT);
-  printf("cases %d  dump fnv %016llx  in-process reference mismatches %lld\n", (int)cases.size(), (unsigned long long)FNV, N_REF_FAIL);
-  return N_REF_FAIL == 0 ? 0 : 1;
+  printf("cases %d  dump fnv %016llx  in-process reference mismatches %lld  required branches not reached %lld\n",
+         (int)cases.size(), (unsigned long long)FNV, N_REF_FAIL, N_BRANCH_FAIL);
+  return (N_REF_FAIL == 0 && N_BRANCH_FAIL == 0) ? 0 : 1;
 }

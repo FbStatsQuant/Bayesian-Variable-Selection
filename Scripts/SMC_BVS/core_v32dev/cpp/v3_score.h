@@ -61,8 +61,13 @@ inline void gram_fill_v31(Data& D) {
 //    lanes never mix, and the entries left over at the end of a tile use the scalar v3.1 loop;
 //  * only G_ba for b >= a is computed (as in v3.1, which stores each sum twice); the other triangle is copied
 //    afterwards, tile by tile.
+// Domain: finite X. A NaN operand carries a payload, and which payload survives an operation with two NaN operands
+// depends on the operand order the compiler emits, so bit identity of NaN results cannot be argued from the order
+// of the reductions (review R01 finding 1). If any entry of X is not finite the v3.1 loop is used unchanged.
+// (v3_fit never reaches this case: preprocessing rejects non-finite inputs and standardised columns are finite.)
 inline void gram_fill(Data& D) {
   const int n = D.n, p = D.p;
+  for (double v : D.X) if (!std::isfinite(v)) { gram_fill_v31(D); return; }
   const int GRAM_TILE = 256, GRAM_BLOCK = 64;
   typedef double gram_v2 __attribute__((vector_size(16)));
   D.G.assign((size_t)p * p, 0.0);
