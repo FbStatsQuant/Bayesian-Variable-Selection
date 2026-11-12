@@ -1,6 +1,7 @@
 # R — Lemma R′: scale invariance of the coded posterior and the contrast-law reduction (W3-MISR)
 
-Status: **PROVED (by this seat, unchecked)**. Check record: none yet.
+Status: **PROVED (by this seat, unchecked)**. Check record: line check K1 (gpt-6.1-sol high, blind,
+`../reviews/K1_RM_check_sol.md`): R′(a), (a′), (a″), (b), (c) and table R.6 VERIFIED (no finding).
 Notation and aliases: `../STATEMENT.md` (v1.2) §0–§1. [W3P] = `Theory_work/Wave3/W3-POST/STATEMENT.md`; [POST2] =
 `Theory_work/Wave3/W3-POST2/STATEMENT.md`. The target π_𝒞 is the one defined in [W3P] lines 18-29 with X^r := x.
 

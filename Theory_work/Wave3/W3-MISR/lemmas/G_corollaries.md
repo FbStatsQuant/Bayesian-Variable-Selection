@@ -1,10 +1,20 @@
 # G — Corollary G, Corollary H, Remarks SNR, P, U (W3-MISR)
 
-Status (per claim): Corollary G(a) — **PROVED (by this seat, unchecked)**; Corollary G(b) — **PROVED (by this seat,
-unchecked), conditional on W3-POST2:C**; Corollary H — **PROVED (by this seat, unchecked), conditional on W3-POST2:D,
-W3-POST2:C**; Remark SNR — **PROVED (by this seat, unchecked)** (a transfer: each listed claim keeps its own status);
-Remark P — **PROVED (by this seat, unchecked)** (a transfer, likewise); Remark U — **PROVED (by this seat, unchecked),
-conditional on W3-POST2:C**. Check record: none yet.
+Status, one line per claim (verbatim source for the registry):
+- Corollary G(a): **PROVED (by this seat, unchecked)**
+- Corollary G(b): **PROVED (by this seat, unchecked), conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0**
+- Corollary H: **PROVED (by this seat, unchecked), conditional on W3-POST2:D, W3-POST2:C**
+- Remark SNR: **PROVED (by this seat, unchecked), conditional on W3-POST2:A1, W3-POST2:B, W3-POST2:C, W3-POST2:D, W3-POST2:E**
+- Remark P: **PROVED (by this seat, unchecked)**
+- Remark U: **PROVED (by this seat, unchecked), conditional on W3-POST2:C**
+
+(G(b) uses MIS-R (ii)(a) on 𝒦^λ_n, whose proof needs only W3-POST2:C and the bridge W3-POST2:A0; it carries the
+full condition of the claim MIS-R (ii) because it consumes that claim. Remarks SNR and P are transfers: each
+transferred claim keeps its own status; SNR is conditional on the transferred W3-POST2 claims.)
+
+Check record: line check K2 (gpt-6.1-sol high, blind, `../reviews/K2_G_check_sol.md`): G(a), H(a), H(b), reference law,
+SNR, P (all four parts), U VERIFIED; G(b) VERIFIED-WITH-AMENDMENTS (0 FATAL / 0 MAJOR / 2 MINOR, applied [K2-1, K2-2],
+`../reviews/K_disposition.md`).
 Notation: `../STATEMENT.md` (v1.2); `R_reduction.md` ((R1)–(R3), table R.6); `M_misr.md` ((M0), M.1–M.3). Sources:
 [POST2] = `Theory_work/Wave3/W3-POST2/STATEMENT.md`; [A] = `Theory_work/Wave3/W3-POST2/lemmas/A_occam.md`; [D] =
 `Theory_work/Wave3/W3-POST2/lemmas/D_hellinger.md`; [W3P] = `Theory_work/Wave3/W3-POST/STATEMENT.md`; [MIS1] =
@@ -31,8 +41,10 @@ Put φ₀² := c_pop/(8C₀), M := 2M₀ + 1, g₀ := 1, and (n_OS, C_OS) := tho
 Follow [L2] lines 88-105 (proof of Lemma GD(b)); W := UᵀX^r_𝒞 has iid N(0, Σ_𝒞𝒞) rows.
 1. *SDs* ([L2] lines 91-93; no variance of the response involved): with probability ≥ 1 − 2n^{−2}, ½Σ_jj ≤ σ̂_j² ≤ 2Σ_jj for
    all j ∈ 𝒞, for n ≥ n₀(A).
-2. *Sparse eigenvalues* ([L2] lines 94-100; design only): with probability ≥ 1 − 2k_n n^{−2}, for n ≥ n₀,
-   λ_min(R̂_T) ≥ φ₀² and λ_min(G_T) ≥ Nφ₀² ≥ 1 for all |T| ≤ k_n (the last for n ≥ 1 + 1/φ₀²). This gives (F₀; φ₀),
+2. *Sparse eigenvalues* ([L2] lines 94-100; design only) [K2-2]. Raw event: with probability ≥ 1 − 2k_n n^{−2}, for
+   n ≥ n₀, λ_min(W_TᵀW_T) ≥ c_popN/2 for every non-empty T ⊆ 𝒞 with |T| ≤ min(p_𝒞, k_n). On the intersection of this
+   event with that of step 1 (σ̂_j² ≤ 2Σ_jj ≤ 2C₀), standardisation gives λ_min(R̂_T) = λ_min(G_T)/N ≥ (c_pop/2)/(2C₀) =
+   c_pop/(4C₀) ≥ φ₀² and λ_min(G_T) ≥ Nφ₀² ≥ 1 for all such T (the last for n ≥ 1 + 1/φ₀²). This gives (F₀; φ₀),
    (F_λ; φ₀) (S₀ ∪ J with |J| ≤ j₀ has size ≤ k_n) and (F_w; 1) (S₀ ∪ J with |J| ≤ m♯_n), hence (OS; C_OS) for n ≥ n_OS.
 3. *Energy, in signal-to-noise form* (changed step of [L2] lines 101-102): Wβ^𝒞 ~ N_N(0, (β^𝒞ᵀΣ_𝒞𝒞β^𝒞)I_N) and
    β^𝒞ᵀΣ_𝒞𝒞β^𝒞 > 0 (β^𝒞 ≠ 0, Σ_𝒞𝒞 ≻ 0), so ‖Wβ^𝒞‖²/(β^𝒞ᵀΣ_𝒞𝒞β^𝒞) ~ χ²_N ≤ 2N with probability ≥ 1 − 1/n for n ≥ n₀
@@ -41,7 +53,8 @@ Follow [L2] lines 88-105 (proof of Lemma GD(b)); W := UᵀX^r_𝒞 has iid N(0, 
    min_j θ_j(κ_n)²·nφ₀²/(σ²_𝒞 log n) ≥ ½φ₀²ρ_n^{BM} ≥ c for all n ≥ n_BM (ρ_n^{BM} → ∞; n_BM depends on the sequence):
    (BM^σ; c).
 5. *Sizes*: 2 ≤ p_𝒞 ≤ n^A by hypothesis; s ≤ K = min(p_𝒞, ⌊n/2⌋) for n ≥ 2s (p_𝒞 ≥ s); s(κ_n) = s (β^𝒞 deterministic).
-Let 𝒜_n ∈ σ(X^r_𝒞) be the intersection of the events of steps 1–3. For n ≥ n* (the largest threshold above),
+Let 𝒜_n ∈ σ(X^r_𝒞) be the intersection of the SD event of step 1, the raw eigenvalue event of step 2 and the energy
+event of step 3. For n ≥ n* (the largest threshold above, n_OS, n_BM and the n₀ of MIS-R (i) for 𝒦^λ_n included),
 𝒜_n ⊆ {κ_n ∈ 𝒦^λ_n(s, A, M, φ₀, C_OS, c)} and P(𝒜_nᶜ) ≤ 2n^{−2} + 2k_n n^{−2} + n^{−1}, with k_n = O(log n) ([L2] lines 96-97, 105).
 By G.1, (GR^c | σ(X^r_𝒞)) holds. MIS-R (ii)(a) on 𝒦^λ_n (c > c₀(s, A)) gives E δ_n ≤ C r_n + P(𝒜_nᶜ) = O(r_n), and
 P(HPM ≠ supp β^𝒞) ≤ 2C r_n + P(𝒜_nᶜ) = O(r_n). ∎

@@ -1,8 +1,13 @@
 # M — Theorem MIS-R (i), (i′), (ii) (W3-MISR)
 
-Status (per claim): MIS-R (i) — **PROVED (by this seat, unchecked), conditional on W3-POST2:C**; MIS-R (i′) — **PROVED
-(by this seat, unchecked), conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1**; MIS-R (ii) — **PROVED (by this seat,
-unchecked), conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1**. Check record: none yet.
+Status, one line per claim (verbatim source for the registry):
+- MIS-R (i): **PROVED (by this seat, unchecked), conditional on W3-POST2:C**
+- MIS-R (i′): **PROVED (by this seat, unchecked), conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1**
+- MIS-R (ii): **PROVED (by this seat, unchecked), conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1**
+
+Check record: line check K1 (gpt-6.1-sol high, blind, `../reviews/K1_RM_check_sol.md`): MIS(i), (i′)(c), (ii)(a)–(c)
+VERIFIED; (i′)(a), (b), (d) VERIFIED-WITH-AMENDMENTS (0 FATAL / 0 MAJOR / 1 MINOR, applied [K1-1],
+`../reviews/K_disposition.md`).
 Notation: `../STATEMENT.md` (v1.2); `R_reduction.md` (Lemma R′, displays (R1)–(R3), R.5 for part (c), table R.6). Sources: [POST2] =
 `Theory_work/Wave3/W3-POST2/STATEMENT.md`; [C] = `Theory_work/Wave3/W3-POST2/lemmas/C_expectation.md`; [A] =
 `…/W3-POST2/lemmas/A_occam.md`; [E] = `…/W3-POST2/lemmas/E_visibility.md`; [W3P] = `Theory_work/Wave3/W3-POST/STATEMENT.md`;
@@ -46,7 +51,12 @@ Work in the unit-noise model at a fixed n, with the notation of [C], [A], [E] (�
 𝒢^sup_n, 𝒢⁵_n ([POST2] lines 18-21; [A] lines 46-53; [E] lines 23-24); Υ′_n, Υ′^{>j₁}_n ([A] lines 64-66);
 T₀ := π(|S| > m♯_n).
 
-**Inputs, each a bound at a single n** (the hypotheses named are those at that n; σ*² = 1):
+**Standing assumption for (I1)–(I6) [K1-1].** At the given n: s₀ = s ≥ 1 and A ≥ 1 are the fixed constants,
+2 ≤ p ≤ n^A and s₀ ≤ K (the per-n size conditions of regime R1, [W3P] lines 63-64; in the applications below they are
+(SZ)), and σ*² = 1. The sources state (I2)–(I5) "in R1" ([A] line 53: "under G, (E) and R1 alone"; [E] line 26); the
+asymptotic part of R1 enters them only through thresholds "n ≥ n₀", which here are the common threshold n₁ below.
+**Inputs, each a bound at a single n** (in addition to the standing assumption, the hypotheses named are those at
+that n):
 - (I1) [C] Lemma C2 with m = m♯_n ([C] lines 31-42), under G, (E), (F₀), s₀ ≤ K, n ≥ 16:
   Ẽ T₀ ≤ (κ²/c_den)(1 + 1/n)^{s₀/2} n^{−1/2} + (8 + 24M)/(n − 1) + e^{−N/8}, with κ²/c_den depending only on (M, φ₀).
 - (I2) [A] (G3′) ([A] lines 52-53; [E] lines 26, 31-33): P̃((𝒢^sup_n)ᶜ) ≤ 4/n and P̃((𝒢⁵_n)ᶜ) ≤ 1/n for n ≥ n₀, under

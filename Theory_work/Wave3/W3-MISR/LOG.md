@@ -51,3 +51,13 @@ Agents started so far (model, provider, role) are listed at each step. Claude-in
   (`numerics/N5_out.txt`: E π(S₀) 0.87 → 0.003) and recorded. citecheck: 170 checks, 0 failures.
 - 23:20 HOLDS.md re-read: empty. CHECKPOINT_1.md written; commit. Legs CP1 → CP2 are pre-approved and the reviews are
   clean after the one fix round (L02 LOCK), so the run continues to CP2: lemma line checks, then council.
+- 23:21 CP1 commit 1c97184. [agent 4] K1 (gpt-6.1-sol, codex, high, blind): line check of R_reduction + M_misr.
+  [agent 5] K2 (gpt-6.1-sol, codex, high, blind): line check of G_corollaries.
+- 23:24 K1 returned: 11 items VERIFIED, 3 VERIFIED-WITH-AMENDMENTS, 0 FATAL / 0 MAJOR / 1 MINOR. K2 returned: 10 items
+  VERIFIED, 1 VERIFIED-WITH-AMENDMENTS, 0 / 0 / 2 MINOR. All three applied (`reviews/K_disposition.md`); status headers
+  now one line per claim. No statement change.
+- 23:30 REPORT.md written (registry blocks parse with `ingest.py convert`: 10 claims, 0 problems). citecheck: 174
+  checks, 0 failures. `reviews/INPUTS.txt` written (21 external inputs; no wave documents, no registry tables).
+  HOLDS.md re-read: empty. Commit, normalise the working copies of the ticket folder to a fresh checkout (line
+  endings, so the frozen hashes match HQ's checkout), freeze MANIFEST_R1, then the council: [agent 6] seat sol =
+  gpt-6.1-sol (codex, high); [agent 7] seat opus = Claude Opus 5.5 (claudeAgent = Claude Work, high).
