@@ -272,11 +272,19 @@ then also requires:
    `status_sha256` (also `registry.py add / correct-status` and `propagate.py` status changes; never settable by
    `registry.py set`), committed with the ingest. The file must still have that digest: any later edit of an ingested
    checkpoint is a `check.py` C12-checkpoint ERROR (CI) and refuses acceptance. Corrections go to a new file.
-2. **Ids = what both seats accepted.** The claim ids the checkpoint carries (its REGISTRY blocks, plus every row
-   whose status source is that file) equal, for EACH council seat, the ids that seat accepted in its per-claim table
-   — a Markdown table with header `| id | decision |` (or `| Id | Disposition | … |`), a local id read in the ticket;
-   a row is accepted iff its decision starts with `accepted` (`accepted with non-blocking remarks` counts). No extra,
-   no missing id; a review without such a table is refused.
+2. **Ids = what both seats accepted.** Every claim id the checkpoint carries (its REGISTRY blocks, plus every row
+   whose status source is that file) with a checked label (any status not explicitly below checked — open, partial /
+   conditional, proved-unchecked — an empty status included) is accepted by EACH council seat in its per-claim table,
+   and every id a seat accepted is in the checkpoint — a Markdown table with header `| id | decision |` (or
+   `| Id | Disposition | … |`), a local id read in the ticket; a row is accepted iff its decision is the word
+   `accept`, `accepted` or `accepted with non-blocking remarks` (case-insensitive, emphasis ignored), optionally
+   followed by ONE parenthetical remark to the end of the cell that carries no disposition (no `not accepted` /
+   `not examined` / reject- / withdraw- / refus- / declin- / retract- / fail- / `pending` / `blocking`, and not
+   starting with a bare no / not / never / none); e.g. `ACCEPT`, `accepted (F-1, F-2 verified; AR(1) correctly not
+   claimed)`. Anything else is not an acceptance: `NOT-EXAMINED`, `not accepted`, `acceptable`, `ACCEPT=NO`,
+   `ACCEPT : NO`, `accepted, no`, `accepted (not accepted)`, `accepted with remarks; withdrawn`. No extra checked id, no missing id; a review without such a
+   table is refused. An id the seats did not accept may stay in the checkpoint only without a checked label (INFRA
+   R06: a NOT-EXAMINED claim that lost its label).
 3. **Cited rounds resolve and bind.** Each review round cited in the claim's status line (the line(s) of
    `status_source`, plus the recorded status text itself, which may continue past them) — written `<ROUND>:` or `<ROUND> (<note>):`, ROUND upper-case letters / digits / `-` with a digit,
    e.g. `LC1-A: VERIFIED` — resolves to exactly one file `reviews/<ROUND>_*` of the ticket (`-` read as `_`;
@@ -285,6 +293,28 @@ then also requires:
    to its own manifest, which need not match the current tree). The acceptance round `R<k>` of the council cell resolves to the council seats' review files, which bind to
    the acceptance manifest with a PASS verdict (≥ 8.0, gates PASS) as above. A round named in free text without that
    form is not a citation.
+
+**Seat tables by addendum; carrier files** (INFRA R06, HQ 2026-11-12). A per-claim table may be appended to a council
+review file after its `COUNCIL-VERDICT` line as a dated addendum (same seat model, fresh thread, the frozen manifest
+and the seat's own review; rows `ACCEPT` / `NOT-EXAMINED` only, no rescoring). The verdict line stays the one binding
+outcome: an addendum with a second `COUNCIL-VERDICT` line (same or another digest) makes the review contradictory and
+refuses A4. An id listed in the body and the addendum with different decisions is not accepted. When ANY seat's review
+of the round has a per-claim table, a checked claim whose status source is NOT its own checkpoint must also be accepted
+in a table of EVERY seat's review (a NOT-EXAMINED, missing or contradictory id is refused); a council without any table
+keeps the cell-only rule. `ingest.py claims <carrier>` reads REGISTRY blocks (`.md`, paths relative to its folder unless
+they start with `Theory_work/`) or JSONL (repo-relative paths) from a carrier file anywhere, including outside the
+frozen manifest (e.g. `reviews/` or `registry/fragments/`): the carrier itself is never a coverage input, but the
+statement, premise and status-source files its rows name are, exactly as above.
+
+**Line endings** (INFRA R06). A text file is the same input on an LF and on a CRLF checkout. `manifest.py freeze`
+records the SHA-256 of each file's LF-normalised content (CRLF → LF); `verify` (and so A4) accepts a recorded hash
+equal to the SHA-256 of the raw bytes, the LF-normalised or the CRLF-ised content, so manifests frozen earlier on mixed
+LF/CRLF trees verify on any uniform checkout with the same verdict as on the frozen tree. This applies only to
+EOL-normalisable text (no NUL byte, every CR part of a CRLF pair); any other file (binary, or with a lone CR such as
+CR CR LF) is hashed raw only, so no variant of it matches different content (Sol R06FIX F1). Any byte change beyond a
+CRLF ↔ LF conversion still fails. The registry fingerprints
+(`sha256`, `tex_sha256`, `status_sha256`, the `fp2` artifact digests) were line-wise from their introduction (files read
+in text mode and split into lines), so LF and CRLF clones give the same values and no raw-byte value exists to migrate.
 
 **Acceptance record** (finding R04-N1/N2; `events.log`, action `accept`, column `after`):
 ```

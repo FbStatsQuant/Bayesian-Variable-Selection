@@ -1203,7 +1203,8 @@ def evidence_text(path: str, pin: str = "") -> str:
 # exempt from manifest coverage (statement and premise files are NOT), and only under checkpoint_problems:
 #   (a) the row records the checkpoint's content digest (`status_sha256`, written at ingest) and the file still has it;
 #   (b) the claim ids of the checkpoint (its REGISTRY blocks, plus every registry row whose status source is that
-#       file) equal, for EACH council seat, the ids that seat accepted in its per-claim table;
+#       file) that carry a checked label are accepted by EACH council seat in its per-claim table, and each seat's
+#       accepted ids are in the checkpoint (INFRA R06: an unaccepted id may stay only without a checked label);
 #   (c) every review round cited in the claim's status line resolves to exactly one existing review file of the
 #       ticket, and that file quotes the digest of an existing frozen manifest of the ticket (an earlier round binds
 #       to its own manifest; the acceptance round R<k> of the council cell resolves to the council seats' review
@@ -1255,19 +1256,33 @@ def _ingest_tool():
     return _INGEST_MOD
 
 
-def checkpoint_claim_ids(path: str, rows: list[dict]) -> set:
-    """The claim ids a checkpoint carries: the ids of its REGISTRY blocks (ingest.py's grammar) and of every registry
-    row whose status source is that file."""
+def checkpoint_claim_statuses(path: str, rows: list[dict]) -> dict[str, set]:
+    """{claim id: {statuses}} a checkpoint carries: the ids of its REGISTRY blocks (ingest.py's grammar, with the
+    block's status) and of every registry row whose status source is that file (with the row's status)."""
     try:
         objs = _ingest_tool().convert_report(os.path.join(ROOT, path))[0]
     except Exception:  # pragma: no cover - an unreadable checkpoint fails (a) anyway
         objs = []
-    ids = {f"{o.get('ticket', '')}:{o.get('local_id', '')}" for o in objs if o.get("ticket") and o.get("local_id")}
+    out = defaultdict(set)
+    for o in objs:
+        if o.get("ticket") and o.get("local_id"):
+            out[f"{o['ticket']}:{o['local_id']}"].add(o.get("status", "") or "")
     for r in rows:
         raw = (r.get("status_source", "") or "").rpartition(":")[0]
         if raw and _pcase(raw) == _pcase(path):
-            ids.add(r["id"])
-    return ids
+            out[r["id"]].add(r.get("status", "") or "")
+    return dict(out)
+
+
+def checkpoint_claim_ids(path: str, rows: list[dict]) -> set:
+    """The claim ids a checkpoint carries (see checkpoint_claim_statuses)."""
+    return set(checkpoint_claim_statuses(path, rows))
+
+
+def labelled_checked(statuses) -> bool:
+    """INFRA R06: does a claim carry a checked label? Every status that is not explicitly below checked (strength 0,
+    1 or 2: open, partial / conditional, proved-unchecked) counts as checked, an empty or unknown status included."""
+    return any(status_strength(s) not in (0, 1, 2) for s in (statuses or {""}))
 
 
 def _cells(line: str) -> list[str]:
@@ -1279,14 +1294,49 @@ def _plain(c: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"[*`]", "", c)).strip()
 
 
-def seat_decisions(text: str, ticket: str):
-    """A council review's per-claim table(s) -> ({full claim id: accepted?}, [problems]). A per-claim table is a
-    Markdown table whose header's first cell is `id` (or `claim`, `claim id`) and second `decision` (or
-    `disposition`), case-insensitive; a row is accepted iff its decision starts with `accepted` (`accepted with
-    non-blocking remarks` counts, `not accepted` does not). A local id gets the ticket prefix. An id listed twice with
-    different decisions is not accepted."""
+# Sol R06FIX F2 / R2-F2: a CLOSED decision grammar. A decision accepts iff the whole cell (Markdown emphasis removed,
+# whitespace collapsed, case-insensitive) is `accept`, `accepted` or `accepted with non-blocking remarks`, optionally
+# followed by ONE parenthetical remark running to the end of the cell with balanced parentheses, and the remark contains
+# no disposition phrase (`not accepted`, `not examined`, reject-, withdraw-, refus-, declin-, retract-, fail-, `pending`,
+# a standalone `blocking`) and does not begin with a bare negation (`no`, `not`, `never`, `none`). Anything else -
+# `ACCEPT=NO`, `ACCEPT : NO`, `accepted, no`, `accepted with remarks; withdrawn`, `accepted (not accepted)` - is not.
+_ACCEPT_HEAD = re.compile(r"(?:accept|accepted|accepted with non-blocking remarks)(?: ?(\(.*\)))?")
+_REMARK_BAD = re.compile(r"(?<![\w-])(?:not[ -]+(?:accept\w*|examined)|unaccept\w*|reject\w*|withdr[ae]w\w*|refus\w*|"
+                         r"declin\w*|retract\w*|fail\w*|pending|blocking)(?![\w-])")
+_REMARK_NEG_START = re.compile(r"\(\s*(?:no|not|never|none)(?![\w-])")
+
+
+def decision_accepts(cell: str) -> bool:
+    """Is a per-claim table decision cell an acceptance? (closed grammar above)"""
+    d = _plain(cell).lower()
+    m = _ACCEPT_HEAD.fullmatch(d)
+    if not m:
+        return False
+    rem = m.group(1) or ""
+    if rem:
+        depth = 0
+        for k, ch in enumerate(rem):
+            depth += (ch == "(") - (ch == ")")
+            if depth < 0 or (depth == 0 and k != len(rem) - 1):
+                return False  # unbalanced, or text after the remark's closing parenthesis
+        if depth != 0 or _REMARK_BAD.search(rem) or _REMARK_NEG_START.match(rem):
+            return False
+    return True
+
+
+def seat_table(text: str, ticket: str):
+    """A council review's per-claim table(s) -> ({full claim id: accepted?}, [problems], number of tables). A
+    per-claim table is a Markdown table whose header's first cell is `id` (or `claim`, `claim id`) and second
+    `decision` (or `disposition`), case-insensitive, anywhere in the file: in the review body or in a dated addendum
+    appended after its COUNCIL-VERDICT line (INFRA R06; the verdict line stays the one binding outcome, and a second
+    verdict line is refused by manifest.verdict_problems). A row is accepted iff decision_accepts(its decision): `accept`,
+    `accepted` or `accepted with non-blocking remarks`, optionally with one parenthetical remark that carries no
+    disposition (`ACCEPT`, `accepted (F-1 verified)`); anything else (`NOT-EXAMINED`, `not accepted`, `acceptable`,
+    `ACCEPT=NO`, `ACCEPT : NO`, `accepted (not accepted)`, `accepted; withdrawn`) is not. Rows are split at LF only
+    (a Unicode line separator inside a row does not cut it short). A local id gets the ticket prefix. An id
+    listed twice with different decisions (e.g. body and addendum) is not accepted."""
     dec, probs, tables, in_t = {}, [], 0, False
-    for ln in text.splitlines():
+    for ln in (text or "").replace("\r\n", "\n").split("\n"):
         cs = _cells(ln)
         if not cs:
             in_t = False
@@ -1300,10 +1350,16 @@ def seat_decisions(text: str, ticket: str):
         if not cid:
             continue
         cid = cid if ":" in cid else f"{ticket}:{cid}"
-        ok = _plain(cs[1]).lower().startswith("accepted")
+        ok = decision_accepts(cs[1])
         if cid in dec and dec[cid] != ok:
             probs.append(f"{cid} is listed with contradictory decisions")
         dec[cid] = ok and dec.get(cid, True)
+    return dec, probs, tables
+
+
+def seat_decisions(text: str, ticket: str):
+    """seat_table -> ({full claim id: accepted?}, [problems]); a review without a per-claim table is a problem."""
+    dec, probs, tables = seat_table(text, ticket)
     if not tables:
         probs.append("no per-claim table (`| id | decision |`) found")
     return dec, probs
@@ -1364,7 +1420,11 @@ def checkpoint_problems(row: dict, folder: str, ck: str, rnd, seat_files, rows: 
                      f"{(cur or 'UNREADABLE')[:12]}...): an ingested checkpoint is frozen")
     # (b) the checkpoint's claim ids == the ids EACH council seat accepted
     rows = load_claims() if rows is None else rows
-    ck_ids = checkpoint_claim_ids(ck, rows)
+    ck_st = checkpoint_claim_statuses(ck, rows)
+    ck_ids = set(ck_st)
+    # INFRA R06: an id the checkpoint carries WITHOUT a checked label (e.g. a NOT-EXAMINED claim that lost its label)
+    # need not be accepted by the seats; every checked-labelled id must be
+    ck_checked = {i for i, ss in ck_st.items() if labelled_checked(ss)}
     ticket = row.get("ticket", "") or row.get("id", "").partition(":")[0]
     if not seat_files:
         probs.append(f"checkpoint {ck}: no council review file to compare its claim ids with")
@@ -1372,12 +1432,13 @@ def checkpoint_problems(row: dict, folder: str, ck: str, rnd, seat_files, rows: 
         dec, dp = seat_decisions(evidence_text(path, pin), ticket)
         probs += [f"seat {name}: review {path}: {p}" for p in dp]
         acc = {k for k, v in dec.items() if v}
-        for lab, ids_ in (("carries claim id(s) this seat did not accept", ck_ids - acc),
+        for lab, ids_ in (("carries checked-labelled claim id(s) this seat did not accept", ck_checked - acc),
                           ("lacks claim id(s) this seat accepted", acc - ck_ids)):
             if ids_:
                 ids_ = sorted(ids_)
                 probs.append(f"seat {name}: checkpoint {ck} {lab} in {path}: {', '.join(ids_[:8])}"
-                             f"{' ...' if len(ids_) > 8 else ''} (the checkpoint's ids must equal each seat's accepted ids)")
+                             f"{' ...' if len(ids_) > 8 else ''} (the checkpoint's checked-labelled ids must be "
+                             "accepted by each seat, and each seat's accepted ids must be in the checkpoint)")
     # (c) each review round cited in the status line -> exactly one review file, quoting a frozen manifest's digest
     d = ticket_dir(row, folder)
     sp = parse_span(((row.get("status_source", "") or "").rpartition(":")[2]).split(",")[0])
@@ -1553,6 +1614,36 @@ def council_problems(row: dict, folder: str = "", rows: list[dict] | None = None
     ck = own_checkpoint(row, folder)
     if ck:
         probs += checkpoint_problems(row, folder, ck, rnd, seat_files, rows)
+    else:
+        probs += seat_table_problems(row, seat_files)
+    return probs
+
+
+def seat_table_problems(row: dict, seat_files) -> list[str]:
+    """INFRA R06 (carrier route): a claim whose status source is NOT its own checkpoint, but whose council has a
+    per-claim table (`| id | decision |`, e.g. a dated addendum) in ANY seat's review, must be accepted (ACCEPT /
+    accepted) in a table of EVERY seat's review; a NOT-EXAMINED, missing or contradictory id is refused. A council
+    without any per-claim table keeps the earlier rule (the council cell alone)."""
+    ticket = row.get("ticket", "") or row.get("id", "").partition(":")[0]
+    tabs = []
+    for name, path, pin in seat_files:
+        dec, dp, n = seat_table(evidence_text(path, pin), ticket)
+        tabs.append((name, path, dec, dp, n))
+    if not any(n for *_, n in tabs):
+        return []
+    probs = []
+    for name, path, dec, dp, n in tabs:
+        if not n:
+            probs.append(f"seat {name}: review {path} has no per-claim table (`| id | decision |`), but another seat's "
+                         "has one: every seat must accept the claim in its own table")
+            continue
+        probs += [f"seat {name}: review {path}: {p}" for p in dp if row["id"] in p]
+        if not dec.get(row["id"]):
+            probs.append(f"seat {name}: review {path}: claim {row['id']} is "
+                         + ("not accepted (" + ("contradictory decisions" if any(row["id"] in p for p in dp) else
+                                                "decision is not ACCEPT / accepted") + ")" if row["id"] in dec
+                            else "missing from the per-claim table")
+                         + ": a checked label needs each seat's ACCEPT")
     return probs
 
 
