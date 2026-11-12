@@ -1,6 +1,7 @@
 # P3 — Proposition NEC (T4⁺): the partition-free leaking-null limit (N2⁺)
 
 Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket's final checkpoint file and `reviews/`).
+Citations: BASE `path:lines` is a file of the base ticket; a short citation `:a-b` continues the file cited last before it.
 Statement proved: `STATEMENT.md` §3.2 (T4⁺): clause (N2⁺), its scope paragraph (including the statement that its premise
 can hold together with (E) and (GF-16)), and the clauses (N1), (N3), (N4). BASE := `Theory_work/Wave3/W3-START/`.
 Uses: (C2)(i) (BASE `STATEMENT.md:221-224`; proved in BASE `lemmas/L7_NEC.md:14-26`), BASE `lemmas/L7_NEC.md:53-65`
@@ -35,8 +36,8 @@ actual partition with the null l_n and the same constant c > 1 + 2Ā; (C2)(i) gi
 uses 𝓔^blk and one Gaussian variable at the deterministic witness.) ∎
 
 **(N2⁺) and (N2).** For s₀ ≥ 16, r(s₀) = 1 and every V ⊆ S₀ with |V| ≤ 15 is proper, so the hypothesis and the
-conclusion of (N2⁺) are those of (N2) (BASE `STATEMENT.md:319-320`). For 1 ≤ s₀ ≤ 15 the premise of (N2) cannot hold
-(BASE `STATEMENT.md:321-322`), so (N2) asserts nothing there. Hence (T4⁺) implies (T4).
+conclusion of (N2⁺) are those of (N2) (BASE `STATEMENT.md:318-319`). For 1 ≤ s₀ ≤ 15 the premise of (N2) cannot hold
+(BASE `STATEMENT.md:320-321`), so (N2) asserts nothing there. Hence (T4⁺) implies (T4).
 
 ## P3.3 The premise of (N2⁺) can hold (1 ≤ s₀ ≤ 15)
 

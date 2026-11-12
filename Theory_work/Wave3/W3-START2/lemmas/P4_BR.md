@@ -1,6 +1,7 @@
 # P4 — Gaussian rows with a leakage set of any size ≤ K: bridge (B-R⁺) and Theorem START-R (T3⁺)(b)
 
 Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket's final checkpoint file and `reviews/`).
+Citations: BASE `path:lines` is a file of the base ticket; a short citation `:a-b` continues the file cited last before it.
 Statement proved: `STATEMENT.md` §2 (D2) (the remark "(L-R) implies (L-R⁺)"); §3.2 (B-R⁺) and (T3⁺)(b). BASE :=
 `Theory_work/Wave3/W3-START/`. Uses: BASE `lemmas/L9_BR.md` (L9.0–L9.6, every step; L9.7 is replaced by P4.2–P4.3 below),
 BASE `lemmas/L8_TRANSFER.md` (L8.0, Proposition L8.2), BASE `lemmas/L6_COROLLARIES.md` (Corollary L6.0′), and
@@ -12,7 +13,7 @@ so (L-R) implies (L-R⁺).
 
 ## P4.1 The bridge (B-R⁺): where BASE L9.1–L9.6 use the leakage set
 
-**Claim.** Every statement of BASE L9.1–L9.6 (`lemmas/L9_BR.md:22-152`) holds under (L-R⁺) in place of (L-R), with the
+**Claim.** Every statement of BASE L9.1–L9.6 (BASE `lemmas/L9_BR.md:22-152`) holds under (L-R⁺) in place of (L-R), with the
 same constants and the same thresholds; none of the thresholds depends on Q.
 
 *Proof.* (L-R) and (L-R⁺) differ only in the requirement |Q| ≤ (log n)^{κ_Q}. Each step of L9.1–L9.6 is listed with
@@ -52,14 +53,14 @@ By L9.1, L9.2 and (4.2): P(X^r ∉ 𝒳_n) → 0. Every design of 𝒳_n is admi
 `lemmas/L8_TRANSFER.md:22-25` (p ≤ n^A; s₀ < p; S₀ ⊆ Q and |Q| ≤ K by (L-R⁺); ‖μ‖² ≤ Mn; (GF-16); (V-c); θ*, Q, h
 deterministic). On 𝒳_n, by the definition of ϱ_n (BASE `STATEMENT.md:120`):
   ϱ_n(Q) = (|Q| + 1)·n^{−1/2}·𝔏_n(Q) ≤ (|Q| + 1)·n^{−1/2}·exp(C_B√log n) = a_n·e^{−√log n}.                                  (4.3)
-*Threshold.* Let c_{0,n}, C_n, n**(κ) be those of BASE Corollary L6.0′ (`lemmas/L6_COROLLARIES.md:19-26`; C_n = 43s₀′c_L log n,
+*Threshold.* Let c_{0,n}, C_n, n**(κ) be those of BASE Corollary L6.0′ (BASE `lemmas/L6_COROLLARIES.md:19-26`; C_n = 43s₀′c_L log n,
 1/c_{0,n} = 64s₀′c_L log n). Let n_R be such that for all n ≥ n_R: n ≥ n**(1), e^{−√log n} ≤ c_{0,n}, and
 C_n·e^{−√log n} + n^{−1/2} ≤ 1. n_R depends only on the fixed constants (not on the sequence Q_n).
 *Two cases at a fixed n ≥ n_R.*
 (i) a_n ≥ 1. Then {1 − π₀(𝓛(Q)) > a_n} is empty, because 1 − π₀(𝓛(Q)) ≤ 1 (also under the convention of BASE
 `lemmas/L8_TRANSFER.md:16-20`).
 (ii) a_n < 1. Put ϱ̄ := a_n·e^{−√log n} < e^{−√log n} ≤ c_{0,n}. By (4.3), ϱ_n(Q) ≤ ϱ̄ on 𝒳_n. BASE Proposition L8.2(i) in the form
-of Corollary L6.0′ with κ = 1 < κ_V (`lemmas/L8_TRANSFER.md:37-50`; an inequality at the fixed n) gives
+of Corollary L6.0′ with κ = 1 < κ_V (BASE `lemmas/L8_TRANSFER.md:37-50`; an inequality at the fixed n) gives
   P(1 − π₀(𝓛(Q)) > C_n·ϱ̄ + n^{−1}) ≤ 4/log n + 1/(32 log n) + P(X^r ∉ 𝒳_n).
 Since a_n ≥ n^{−1/2}: C_n·ϱ̄ + n^{−1} ≤ a_n·[C_n·e^{−√log n} + n^{−1/2}] ≤ a_n.
 In both cases, for every n ≥ n_R:

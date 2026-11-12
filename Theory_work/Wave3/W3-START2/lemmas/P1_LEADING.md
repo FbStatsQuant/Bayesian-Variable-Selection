@@ -1,6 +1,7 @@
 # P1 — the sharp leading functional: Lemma LEAK-0, (T1⁺), F2⁺, (T3⁺)(a), IF-START⁺
 
 Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket's final checkpoint file and `reviews/`).
+Citations: BASE `path:lines` is a file of the base ticket; a short citation `:a-b` continues the file cited last before it.
 Statement proved: `STATEMENT.md` §2 (D1) (the facts stated there); §3.1 Lemma LEAK-0; §3.2 (T1⁺), F2⁺, (T3⁺)(a),
 IF-START⁺. BASE := `Theory_work/Wave3/W3-START/`. Only the steps that change are proved here; every other step is a
 step of a BASE proof file and is cited by line. Notation of BASE `STATEMENT.md` §1–§2 and of the cited files:
@@ -13,7 +14,7 @@ step of a BASE proof file and is cited by line. Notation of BASE `STATEMENT.md` 
 Let s₀ ≥ 1, p > s₀, and h a level vector for S₀. For l ∉ S₀ put 𝒰 := {U ⊊ S₀ : |U| ≤ 15}; ∅ ∈ 𝒰 because s₀ ≥ 1, so the
 maximum in (D1) is over a non-empty finite family.
 * **(a) 𝔏^♯_n(h) ≥ (p − s₀)/(4p) ≥ 1/(4p).** Each J_{h_l}(δ_{U,l}, τ_U) is ≥ ¼·exp(δ²_{U,l}/(2τ²_U)) ≥ ¼ by (J0) (BASE
-  `lemmas/L3_LEAK.md:12-14`; h_l ≥ 1, τ_U ≥ σ), and there are p − s₀ ≥ 1 null columns. Hence **1/p ≤ 4𝔏^♯_n(h)**.
+  BASE `lemmas/L3_LEAK.md:12-14`; h_l ≥ 1, τ_U ≥ σ), and there are p − s₀ ≥ 1 null columns. Hence **1/p ≤ 4𝔏^♯_n(h)**.
 * **(b) 𝔏^♯_n(h) ≤ 𝔏_n(S₀; h).** For l ∉ S₀ every U ∈ 𝒰 satisfies U ⊆ [p] ∖ {l} and |U| ≤ 15, so it is one of the sets
   maximised over in 𝔏_n(S₀; h) (BASE `STATEMENT.md:110`).
 * **(c) 𝔏^♯_n(h) = 𝔏⁰_n(h) − 15√(2/π)z_n/p** (compare (D1) with BASE `STATEMENT.md:112-114`); in particular
@@ -79,7 +80,7 @@ of them; the argument does not apply, and (D1) keeps 𝔏⁰_n(h).
 ## P1.4 Theorem START-F, uniform form: (T1⁺)(d)
 
 **Proposition P1.4.** Fix the constants, ε ∈ (0, 1), κ ∈ (0, κ_V), and κ′, λ := 4c_L/ε, c₀ := 1/(64s₀′λ), C := 43s₀′λ and n₀
-exactly as in BASE Proposition L5.2 (`lemmas/L5_ASM_STARTF.md:39-50`; s₀′ := max(s₀, 1)). Put
+exactly as in BASE Proposition L5.2 (BASE `lemmas/L5_ASM_STARTF.md:39-50`; s₀′ := max(s₀, 1)). Put
   **C^♯ := 5λ(s₀ + 1) + ½(s₀ + 1)(s₀ + 2)(4/3)^{s₀+3}λ²**.
 Then for every n ≥ n₀ and every admissible (X, θ*, Q, h) of L5.2 (in particular ϱ_n(Q; h) ≤ c₀):
   (i) P(1 − π₀(𝓛(Q)) > C·ϱ_n(Q; h) + n^{−κ}) ≤ ε + b_n(h);
@@ -89,7 +90,7 @@ Then for every n ≥ n₀ and every admissible (X, θ*, Q, h) of L5.2 (in partic
 Q = S₀, n ≥ n₀ and (X, θ*, S₀, h) admissible.
 *Hypotheses of Lemma LEAK-0.* s₀ < K (n ≥ 2s₀ + 2 and p > s₀); n ≥ n₂; by P1.1(b),
 n^{−1/2}𝔏^♯_n(h) ≤ n^{−1/2}𝔏_n(S₀; h) = ϱ_n(S₀; h)/(s₀ + 1) ≤ c₀ ≤ 1; λ = 2^{17}e_κ/ε ≥ 15e_κ; and λ ≤ 15e_κ2^{21}p log n because n₀
-was chosen with 2e^{−n^{1/3}} + 2/n + 1/log n ≤ ε/2 (`lemmas/L5_ASM_STARTF.md:50`), so log n ≥ 2/ε and
+was chosen with 2e^{−n^{1/3}} + 2/n + 1/log n ≤ ε/2 (BASE `lemmas/L5_ASM_STARTF.md:50`), so log n ≥ 2/ε and
 2^{17}/ε ≤ 2^{16} log n ≤ 15·2^{21}·p·log n.
 *Events.* 𝓔^blk, 𝓧, 𝓩_h and 𝓜 := {U ≤ λn^{−1/2}𝔏^b_n(S₀; h)} as in the BASE proof (`:53-56`), and, in place of 𝓜₀,
   **𝓜^♯ := {T₁ ≤ 5λ(s₀ + 1)n^{−1/2}𝔏^♯_n(h)}**.
@@ -103,7 +104,7 @@ Now T₁ ≤ 5λ(s₀ + 1)n^{−1/2}𝔏^♯_n(h) (𝓜^♯); U ≤ λn^{−1/2}
 o₀ ≤ C^♯[n^{−1/2}𝔏^♯_n(h) + n^{−1}𝔏_n(S₀; h)²] + n^{−κ} on 𝒢^♯. ∎
 
 **Dependence of n₀ on ε, and the high-probability form.** The requirements on n₀ are those of BASE L5.2 (the range of
-λ follows from one of them), so BASE Lemma L6.0 (`lemmas/L6_COROLLARIES.md:11-17`) holds for Proposition P1.4 as it
+λ follows from one of them), so BASE Lemma L6.0 (BASE `lemmas/L6_COROLLARIES.md:11-17`) holds for Proposition P1.4 as it
 stands. BASE Corollary L6.0′ (`:19-26`) therefore holds with C′_n replaced by
 C^♯_n := 5λ_n(s₀ + 1) + ½(s₀ + 1)(s₀ + 2)(4/3)^{s₀+3}λ_n² and 𝔏⁰_n(h) replaced by 𝔏^♯_n(h) in its second display: there
 ε_n = 4/log n and λ_n = c_L log n, and 15e_κ ≤ 2^{15}e_κ log n ≤ 15e_κ2^{21}p log n for every n ≥ 3. Its first display is
@@ -112,7 +113,7 @@ unchanged.
 ## P1.5 Theorem START-F (T1⁺)(a)–(d)
 
 Setting F, (E), (GF-16), visibility with exponent κ_V, (AL) for Q with level vector h; κ ∈ (0, κ_V).
-**(a)** is BASE L5.3(a) (`lemmas/L5_ASM_STARTF.md:76-79`), unchanged.
+**(a)** is BASE L5.3(a) (BASE `lemmas/L5_ASM_STARTF.md:76-79`), unchanged.
 **(b)** Q = S₀. The argument of BASE L5.3(a)–(b) (`:76-80`) with Proposition P1.4(ii) in place of L5.2(ii): with
 κ″ := (κ + κ_V)/2 and X_n := o₀, for every ε ∈ (0, 1) and all n ≥ n₀(ε, κ″) with ϱ_n(S₀; h) ≤ c₀(ε),
 P(o₀ > C^♯(ε)[n^{−1/2}𝔏^♯_n(h) + n^{−1}𝔏_n(S₀; h)²] + n^{−κ″}) ≤ ε + b_n(h). With B_n := n^{−κ″} and A_n := (o₀ − B_n)₊:
@@ -143,7 +144,7 @@ s₀ < K for large n (p > s₀ by (E)). So o₀ is of exact order n^{−1/2}. �
 
 ## P1.7 Transfer (T3⁺)(a)
 
-BASE Proposition L8.2 (`lemmas/L8_TRANSFER.md:37-50`) holds with (ii) in the form: *if Q = S₀ on 𝒳 and
+BASE Proposition L8.2 (BASE `lemmas/L8_TRANSFER.md:37-50`) holds with (ii) in the form: *if Q = S₀ on 𝒳 and
 n^{−1/2}𝔏^♯_n(h) + n^{−1}𝔏_n(S₀; h)² ≤ r̄ for every x ∈ 𝒳, then P(o₀ > C^♯·r̄ + n^{−κ}) ≤ ε + b̄ + P(X^r ∉ 𝒳)*. The proof is the BASE
 proof (`:45-50`) with Proposition P1.4(ii) applied to each fixed design x ∈ 𝒳 in place of L5.2(ii); the constants of
 P1.4 depend only on (ε, κ) and the fixed constants, as the BASE argument requires (`:52-53`). (On designs with
@@ -157,4 +158,4 @@ o₀ = O_P(n^{−1/2}𝔏^♯_n(h) + n^{−1}𝔏_n(S₀; h)²) + o_P(n^{−κ�
 of BASE `lemmas/L10_INTERFACES.md:11-15` with (T1⁺)(b).
 (b) *Gaussian rows.* BASE `:16-18` with (T3⁺)(b) at Q = S₀ (`lemmas/P4_BR.md`; at Q = S₀ its display is that of
 version 1.3.4).
-(c) What the consumer gets: BASE `:19-24`, unchanged. ∎
+(c) What the consumer gets: BASE `lemmas/L10_INTERFACES.md:19-24`, unchanged. ∎

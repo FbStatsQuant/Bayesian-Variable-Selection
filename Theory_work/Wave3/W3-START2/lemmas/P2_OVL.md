@@ -1,6 +1,7 @@
 # P2 — Proposition OVL⁺ (start mass under a bounded leakage set, either visibility condition)
 
 Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket's final checkpoint file and `reviews/`).
+Citations: BASE `path:lines` is a file of the base ticket; a short citation `:a-b` continues the file cited last before it.
 Statement proved: `STATEMENT.md` §3.2 (T5⁺), Proposition OVL⁺ and its consequence for P-OVL. BASE :=
 `Theory_work/Wave3/W3-START/`. Uses: BASE `lemmas/L1_AGG_FLOOR.md` ((P3), (CH)), BASE `lemmas/L2_TK.md` (𝓔^blk,
 (TK-a), (TK-d), (TK-e), (TK-f)), BASE `lemmas/L10_INTERFACES.md` (steps (iii)–(iv) of L10.2), and (T1⁺)(a)
@@ -40,13 +41,13 @@ l ∈ Q ∖ S₀ and every U ⊆ [p] ∖ {l}, |U| ≤ 15.
 *Proof.* Fix ε > 0.
 *Events.* 𝓔^blk (P((𝓔^blk)ᶜ) → 0, BASE `lemmas/L2_TK.md:32`);
 𝓨 := {Z²_{T,l} ≤ 2 log log n for every l ∈ Q ∖ S₀ and T ⊆ C_{b(l)} ∖ {l}}, with P(𝓨ᶜ) ≤ q̄·2^{16}/log n (BASE
-`lemmas/L10_INTERFACES.md:38`); and **𝓐 := {π₀(𝓛(Q)) ≥ ½}**.
+`lemmas/L10_INTERFACES.md:38-39`); and **𝓐 := {π₀(𝓛(Q)) ≥ ½}**.
 *P(𝓐) → 1.* The hypotheses of (T1⁺)(a) hold — (E), (GF-16), visibility ((V-c), or (V-m) for Q), (AL) for Q with h —
 so, for any κ ∈ (0, κ_V), 1 − π₀(𝓛(Q)) = O_P(ϱ_n(Q; h)) + o_P(n^{−κ}), and ϱ_n(Q; h) → 0 by (AL). Hence 1 − π₀(𝓛(Q)) → 0 in
 probability. This is the only place where visibility and (AL) are used.
 *The columns of Q ∖ S₀.* If q̄ ≥ 1: on 𝓔^blk ∩ 𝓨 and for n large, for every l ∈ Q ∖ S₀,
   **m_l ≤ n^{(a_l−1)/2+ε/(3q̄)}**.
-This is step (iii) of the BASE proof of L10.2 (`lemmas/L10_INTERFACES.md:44-50`). It uses, for each T with
+This is step (iii) of the BASE proof of L10.2 (BASE `lemmas/L10_INTERFACES.md:44-50`). It uses, for each T with
 U*_b ⊆ T ⊆ C_b ∖ {l}: (TK-e) and 𝓨 for RSS_T − RSS_{T∪l} = (δ_{T,l} + σZ_{T,l})² ≤ τ²_TG_n (the assumed gain bound applies
 because |T| ≤ 15); (TK-a) for x ≤ G_n/((n − 1)(1 − ω̄_n)) → 0; and (TK-d), (f3). No visibility condition, no bound on
 e_n and no bound on U_Q enters that step. Then, as in step (iv) (`:51-52`), with |Q| ≤ s₀ + q̄:

@@ -14,3 +14,5 @@ Theory_work/Wave3/W3-START/lemmas
 Theory_work/Wave3/W3-RM/STATEMENT.md
 Theory_work/Wave3/W3-SAMP/STATEMENT.md
 Theory_work/Wave1/W1-PXN/STATEMENT.md
+# helper sourced by numerics/falsify_P.R (base ticket; read-only)
+Theory_work/Wave3/W3-START/numerics/lemmas/lem_common.R
