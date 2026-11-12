@@ -7,8 +7,8 @@ the method. The two questions reserved for the owner are framed in §7 and **not
 
 **Evidence base, and its limits.** One thread on NOTS sapphirerapids nodes (Xeon Platinum 8468), GCC 14.3.0, R 4.5.2,
 pinned flags; n = 200. Three profiles of v3.1 (p = 1k: PROD-H `p1000_S3_r001_c100`; p = 2k: one S3-type dataset; p = 20k:
-one S3-type dataset, one pilot island and one final island with N = 2,500); the p = 5k full fit is reported in
-`CHECKPOINT_1.md` §1; 24 PROD-H fits (one replicate per p × S × c cell) and one tie design. One seed each, R = 4
+one S3-type dataset, one pilot island and one final island with N = 2,500); p = 5k: one S3-type dataset, calibration
+complete (it escalated), final run still running when this was written (`CHECKPOINT_1.md` §1); 24 PROD-H fits (one replicate per p × S × c cell) and one tie design. One seed each, R = 4
 islands per fit. Every statement below that goes beyond these runs is marked. Source tables: `results/*.tsv`
 (scripts in `analysis/`). Memory is in GiB (2³⁰ bytes).
 
@@ -18,10 +18,10 @@ islands per fit. Every statement below that goes beyond these runs is marked. So
 |---|---|---|
 | elementary step ≈ 3 µs (local i7) | bridge stages 1.14 / 1.16 / 0.90 µs, rounds at φ = 1 1.64 / 1.90 / 1.80 µs at p = 1k / 2k / 20k (`profile_v31_step_cost.tsv`) | at T = 30 an island costs 51.6 µs per particle and predictor against v0's 126: 0.41 of v0's estimate |
 | T = 30, UNVERIFIED | final grids 26–40 stages over the 24 PROD-H units (median 32.5 at p = 500, 31 at p = 1000), 33 at 2k, 29 at 20k with N = 2,500; pilots 20–30 (`leg_a_units_calibration.tsv`, `profile_v31_stages.tsv`) | v0's 30 holds on these designs; how T moves with p beyond them is not established |
-| calibration ≈ 2.6 final-island equivalents (I = 3) | rebuilds I: 2–8 (median 4) at p = 500, 2–10 (median 6) at p = 1000, 8 at 2k; calibration / (calibration + final) time: median 0.45 at p = 500, 0.56 at p = 1000 (tier-0 units), 0.51 for the 1k profile, 0.62 at 2k | calibration is half of a fit or more, and it is sequential (§2) |
+| calibration ≈ 2.6 final-island equivalents (I = 3) | rebuilds I: 2–8 (median 4) at p = 500, 2–10 (median 6) at p = 1000, 8 at 2k, 11 at 5k (then an escalation); calibration / (calibration + final) time: median 0.45 at p = 500, 0.56 at p = 1000 (tier-0 units), 0.51 for the 1k profile, 0.62 at 2k | calibration is half of a fit or more, and it is sequential (§2) |
 | setup dominated by complete linkage | v3.1 at 20k: Gram 16.4 s, blocks 25.5 s, neighbour graph 59.1 s, tables 0.5 s; setup peak 9.24 GiB resident (the three dense p × p arrays are 24 p² = 8.94 GiB) (`leg_a_setup_compare_roundA.tsv`) | the neighbour graph was the largest setup cost; fixed bit for bit (§3) |
 | preflight refusal from p ≈ 2.3k (by reading) | v3.1's LS0 charge against 24 h: 11.2 h at 2k (admitted), 53–94 h at 5k, 231 h at 10k, 936–1,372 h at 20k (the charge is proportional to a timed score, which varied 135–237 µs between runs) | refusal confirmed from 5k; changed in v3.2-dev (admission only) |
-| σ̂ = sd(log Ẑ_r): no data | §4.4 | first numbers, p ≤ 2k only |
+| σ̂ = sd(log Ẑ_r): no data | §4.4 | first numbers: small at p ≤ 2k; 0.5–2.5 between diagnostic islands in the one 5k calibration |
 
 **Island cost.** With one set of constants, c_b = 1.0 µs (bridge) and c_1 = 1.8 µs (the 12 terminal rounds at n = 200),
 
@@ -38,11 +38,14 @@ All numbers in this section use the formula above with T = 35 unless marked meas
 
 1. **Sequential depth under the N_e = max(2500, n, p) rule.** One island: 0.39 h at 5k, 1.57 h at 10k, 6.3 h at 20k.
    A fit with I = 8 … 13 rebuilds (10.8–14.9 islands): 4.2–5.9 h at 5k, 17–23 h at 10k, 68–94 h at 20k, all in
-   sequence in v3.1. The 5k measurement is in CHECKPOINT_1 §1. The 24 h commons limit is reached near 10k. An
+   sequence in v3.1. Measured at 5k: calibration alone took 5.40 h (tier 0 with 11 rebuilds: 3.68 h; the E2 trigger then
+   fired and the tier-1 calibration took 1.72 h), and the tier-1 final run (N = 20,000) was still running after 3 h.
+   The 24 h commons limit is reached near 10k without an escalation, and before it with one. An
    escalation reruns calibration with four times the particles and then runs final islands four times as large.
    Leg A's changes do not touch this.
 2. **Calibration rebuild loop.** The cap is ℓ = ⌈log₂(n + p + 1)⌉ = 10, 11, 12, 13 at p = 500, 1k, 2k, 5k; observed
-   tier-0 maxima 8, 10 and 8 (one fit at 2k). A loop that reaches the cap unconverged fires the escalation trigger.
+   tier-0 maxima 8, 10, 8 and 11 (one fit each at 2k and 5k). A loop that reaches the cap unconverged fires the
+   escalation trigger.
    Whether I keeps growing with p is not established by one profile per p.
 3. **Setup memory.** v3.2-dev holds the Gram and the linkage distances: 16 p² bytes = 5.96 GiB at 20k (6.26 GiB
    resident, measured), 37 GiB at 50k, 149 GiB at 100k; commons nodes have about 251 GiB.
@@ -122,6 +125,10 @@ Write ω_r = Ẑ_r / Z (unnormalised; E[ω_r | V] = 1) and W_r = Ẑ_r / Σ_s �
   0.70), 0.042 at 2k (one fit). Escalated fits (N = 10,000): 1.00 (`p1000_S5_r001_c100`) and 0.82 (tie design).
 - Diagnostic islands, H = 512: median 0.15 (p = 500), 0.18 (p = 1000), 0.22 (2k); the tie design gave 5.7–6.1 at
   H = 512 and 4.2 at H = 2,048.
+- p = 5k (one S3-type dataset, calibration only): the four diagnostic islands at H = 1,024 gave σ̂ between 0.49 and
+  2.52 over the 11 rebuilds (median 1.39; E2 fired), and 1.56 at H = 4,096 after the escalation. This is the only
+  measurement above 2k, it is several times the p ≤ 2k values, and at σ = 1.4 the large-R′ approximation below gives
+  R_eff / R′ ≈ 0.14.
 - R = 4 weights on the 25 fits: R_eff / R between 0.597 and 1.00, at least 0.97 in 20; the largest weight 0.58.
 - The ratio of the diagnostic to the final medians (2.4 at p = 500, 2.1 at p = 1000) is compatible with 1/√N
   (√(2500/512) = 2.2) but does not establish it: the two sets use different grids and streams, fits with more rebuilds
@@ -134,7 +141,8 @@ Write ω_r = Ẑ_r / Z (unnormalised; E[ω_r | V] = 1) and W_r = Ẑ_r / Σ_s �
   with the E2 flag (σ̂ > 1 over the four final islands) at n = 50: 0/137, 2/40, 13/105, 6/16 at p = 50, 125, 250, 500.
   Designs, arms and tiers are pooled, and every flagged fit at p ≥ 250 was escalated; these counts show that large
   σ̂ occurs, not how it scales at fixed N.
-- **Not known:** σ̂ at fixed N beyond p = 2k; its dependence on the design beyond one replicate per cell; why the
+- **Not known:** σ̂ of final islands beyond p = 2k, and at fixed N (the 5k values are diagnostic islands of one
+  dataset); its dependence on the design beyond one replicate per cell; why the
   large values occur (no mode-occupancy record exists).
 
 ### 4.5 Diagnostics and census (to be specified; nothing is fixed here)

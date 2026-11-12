@@ -1,7 +1,8 @@
 # W3-SCALE leg A — log (times CT)
 
 Agents so far: lead = Claude Fable 5.2, effort high, Claude Work (`claudeAgent`). Reviewers: R01 = Codex gpt-6.1-sol,
-reasoningEffort high (code review, done); R02 = Codex gpt-6.1-sol, high (blind re-read of the final code, running).
+reasoningEffort high (code review, done); R02 = Codex gpt-6.1-sol, high (blind re-read of the final code, done);
+R03 = Codex gpt-6-astra, high (break review of DESIGN_v1, done).
 No Claude helper agents.
 
 ## NOTS admission ledger (hard cap 150 task-hours)
@@ -12,14 +13,15 @@ No Claude helper agents.
 | 2 | 11-11 19:27 | 2692676 `w3scale_smoke02` (scavenge) | 1 × 0.5 h | 0.5 | 1.0 | 0.02 |
 | 3 | 11-11 19:28 | 2692688 `w3scale_prof_p1k` (commons, 8G) | 1 × 2 h | 2 | 3.0 | 0.29 |
 | 4 | 11-11 19:28 | 2692689 `w3scale_prof_p2k` (commons, 8G) | 1 × 5 h | 5 | 8.0 | 0.92 |
-| 5 | 11-11 19:28 | 2692690 `w3scale_prof_p5k` (commons, 12G) | 1 × 24 h | 24 | 32.0 | running (3.8 h at 23:15) |
+| 5 | 11-11 19:28 | 2692690 `w3scale_prof_p5k` (commons, 12G) | 1 × 24 h | 24 | 32.0 | RUNNING: 8.58 h at 11-12 04:03 (limit 24 h) |
 | 6 | 11-11 19:28 | 2692691 `w3scale_prof_p20k` (commons, 40G) | 1 × 12 h | 12 | 44.0 | 1.31 |
-| 13 | 11-11 23:10 | 2695321 `w3scale_bitid_supp_C` (commons, 8G) | 5 × 1 h | 5 | 47.1 = 18.1 actual + 24 (p5k) + 5 | |
-| 14 | 11-11 23:10 | 2695332 `w3scale_setup_cmp_C` (commons, 48G) | 6 × 0.5 h | 3 | 50.1 | |
-| 15 | 11-11 23:11 | 2695333 `w3scale_bitid_p500_C` (commons, 4G) | 10 × 0.75 h | 7.5 | 57.6 | |
-| 16 | 11-11 23:11 | 2695334 `w3scale_bitid_p500_S5_C` (commons, 4G) | 2 × 0.75 h | 1.5 | 59.1 | |
-| 17 | 11-11 23:11 | 2695335 `w3scale_bitid_p1000_C` (commons, 4G) | 10 × 1 h | 10 | 69.1 | |
-| 18 | 11-11 23:11 | 2695336 `w3scale_bitid_p1000_S5_C` (commons, 4G) | 2 × 2 h | 4 | 73.1 | |
+| 13 | 11-11 23:10 | 2695321 `w3scale_bitid_supp_C` (commons, 8G) | 5 × 1 h | 5 | 47.1 = 18.1 actual + 24 (p5k) + 5 | 1.94 (one task TIMEOUT at 1 h: v3.1 run of the tie-DP unit) |
+| 14 | 11-11 23:10 | 2695332 `w3scale_setup_cmp_C` (commons, 48G) | 6 × 0.5 h | 3 | 50.1 | 0.11 |
+| 15 | 11-11 23:11 | 2695333 `w3scale_bitid_p500_C` (commons, 4G) | 10 × 0.75 h | 7.5 | 57.6 | 1.68 |
+| 16 | 11-11 23:11 | 2695334 `w3scale_bitid_p500_S5_C` (commons, 4G) | 2 × 0.75 h | 1.5 | 59.1 | 0.38 |
+| 17 | 11-11 23:11 | 2695335 `w3scale_bitid_p1000_C` (commons, 4G) | 10 × 1 h | 10 | 69.1 | 4.16 |
+| 18 | 11-11 23:11 | 2695336 `w3scale_bitid_p1000_S5_C` (commons, 4G) | 2 × 2 h | 4 | 73.1 | 1.39 |
+| 19 | 11-11 23:25 | 2695486 `w3scale_units_final` (commons, 4G) | 1 × 0.33 h | 0.33 | 73.4 | 0.01 |
 | 7 | 11-11 19:44 | 2693103 `w3scale_bitid_supp` (commons, 4G) | 3 × 1 h | 3 | 47.0 | 1.47 |
 | 8 | 11-11 19:44 | 2693104 `w3scale_setup_cmp` (commons, 40G) | 6 × 0.5 h | 3 | 50.0 | 0.08 |
 | 9 | 11-11 19:44 | 2693105 `w3scale_bitid_p500` (commons, 4G) | 20 × 0.75 h | 15 | 65.0 | 3.33 |
@@ -114,3 +116,26 @@ From row 13 on, "cumulative" = sacct actuals of finished jobs + worst case of th
   v3.1 records of round A are reused). Limits from round A's measured walls. Ledger: 73.1 of 150 task-hours.
 - 23:12 — Sol R02 started (Codex gpt-6.1-sol, high): blind first read of the final code and tests (told not to open
   `reviews/`).
+- 23:20 — DESIGN_v1.md revision 1 written from the measured numbers; analysis scripts and result tables
+  (`analysis/`, `results/`). Astra R03 started (Codex gpt-6-astra, high): break review of DESIGN_v1.
+- 23:22 — Sol R02 returned: NOT ESTABLISHED; no numerical mismatch (49 + 116 private cases, 20,000 Gram cases, exports,
+  four fits); the comparison script was not fail-closed, the NaN wording too strong, the "unreachable" A-pivot branch
+  reachable, the self-test counted inert mutations. All fixed in scripts, tests and README (`reviews/R02_disposition.md`,
+  commit 51cce67); no core file changed. Negative tests of `bitid_compare.R` run locally (version-1 records, wrong
+  count, same label twice, unpaired record, changed admission): all exit 1.
+- 23:25 — HOLDS read (none). Job 2695486: final unit harness with the NOTS compiler (50 cases): dumps identical
+  (sha256 964091b0...), 0 reference mismatches, 0 branches missed.
+- 23:28 — Astra R03 returned: DESIGN_v1 UNSOUND (18 findings). All accepted; DESIGN_v1 rewritten as revision 2 with
+  auditable source tables (`reviews/R03_disposition.md`, commit 7719b9e). Revision 2 is not re-reviewed.
+- ~00:41 (11-12) — Run interrupted again (Claude Work rate limit). Resumed 04:00 on HQ's note.
+- 11-12 04:03 — sacct: every job finished except the 5k profile (8.58 h, running). Round C records pulled. Fail-closed
+  comparisons, fingerprint version 2: round A v3.1 vs v3.2-dev e5afee7: 34 of 34 IDENTICAL; v3.1 vs v3.2-dev bbdfea0
+  on the 24 PROD-H units: 24 of 24 IDENTICAL; supplementary units vs bbdfea0: 10 of 10 IDENTICAL (the round-C v3.1
+  run of the tie-DP unit hit its 1 h limit, so its round-A v3.1 record is used). Exports identical (11 contexts),
+  self-test passed, setup objects and the whole Gram identical at 5k, 10k, 20k.
+- 04:05 — 5k profile so far: calibration 19,444 s; tier 0: pilot T = 23, 11 rebuilds (converged), sd(log Z_r) of the
+  diagnostic islands 0.49-2.52, E2 fired at the last rebuild -> escalation; tier 1: 1 rebuild, sd 1.56; the tier-1
+  final run (N = 20,000, T = 33) started 00:53 CT and is running. No 10k fit admitted. Tables regenerated; DESIGN_v1
+  updated with the 5k evidence.
+- 04:15 — CHECKPOINT_1.md written. Ledger: 27.77 task-hours by finished jobs; with the 5k job at its limit at most
+  51.8 of 150. Stop: end of leg A; the 5k result is reported as pending (HQ instruction).
