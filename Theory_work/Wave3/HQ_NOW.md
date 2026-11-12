@@ -1,5 +1,17 @@
 # HQ now (resume card; HQ keeps this current)
 
+## STRIKE PLAN week of 11-16 (owner: theory basically DONE by end of week, then p = 1M experiment)
+Definition of done: 11 main results recorded PROVED-CHECKED; D1 settled (theorem or stated limit); chapter v2.0
+council-passed and frozen; editorial pass merged. Anything else = named open problem in the paper.
+- Mon 16:00 (furnace): D1 from P6 stage 1 (Opus) · W3-PATH scoping→CP1 (Fable, ≤ 1 day) · T7 scoping (Opus) · RM2 riders
+  T2/T4/T6 as ONE Opus leg · chapter v2.0 assembly starts (Opus) on the recorded claims · Sun-API findings triaged.
+- Tue: W3-PATH proof leg only if CP1 = GO, kill budget 2 attempts on the key lemma, hard stop Wed 23:59 · T7: 1 attempt.
+- Wed: freeze theory content. Whatever is unproved → "open problem" section. Chapter v2.0 complete draft.
+- Thu (full reset): chapter v2.0 council (Sol + Opus) + fixes; final API audit of the chapter.
+- Fri: council pass → freeze, merge. Theory campaign closed; hand over to W3-SCALE / p = 1M.
+Parallel-SMC theorems: only what the p = 1M experiment needs (output-identical engine ⇒ inherited guarantees), as a
+short Opus note; the rest moves to the scaling paper.
+
 ## PLAN (owner, 2026-11-12 ~12:00 CT) — see HQ_DECISIONS same date
 - Now → weekend: finish current campaign on remaining CP fuel, NO resets. ≤ 1–2 Claude threads. R06 → record W3-START,
   START2, PSHARP, MISR (per-claim seat addenda), RM2 (R1 snapshot + carrier). P6 stage 1 on NOTS (watcher every 3 h).
