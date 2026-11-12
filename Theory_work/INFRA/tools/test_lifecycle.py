@@ -5,7 +5,7 @@ HEAD, a strict child of the tool's sandbox root, owned through a held lock file)
 Theory_work/INFRA folder (working copy) into it, runs real propagate.py / registry.py operations there, and removes
 the sandbox at the end (also on errors; a killed run leaves a stale sandbox that the next Sandbox cleans up).
 Run: python Theory_work/INFRA/tools/test_lifecycle.py   (exit code 1 if any scenario fails)"""
-import importlib.util, os, shutil, subprocess, sys
+import importlib.util, os, shutil, subprocess, sys, unicodedata
 sys.dont_write_bytecode = True  # never write __pycache__
 
 LIVE_INFRA = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -1665,6 +1665,97 @@ try:
         put(S6, r06_review("sol", "8.6", ADD6))
         results.append(("R06 4a: an addendum ACCEPT contradicting a body-table 'not accepted' is REFUSED (contradictory "
                         "decisions)", rc_c6 != 0 and "contradictory decisions" in out_c6 and "R06T:B" in out_c6))
+
+        # ---------------- INFRA R07: a valid addendum supersedes the body table (body read only for negatives) -------
+        R07_REAL = ["accepted with non-blocking remarks (Issue 5: the η = 0 sentence is read under the premise of F1(ii))",
+                    "accepted with non-blocking remarks (Issue 3)",
+                    "accepted with non-blocking remarks (Issue 2: wording of the P-OVL row in `STATEMENT.md` §4, not "
+                    "of OVL itself)",
+                    "accepted (F-1, F-2, F-3, G-1, G-2 verified; UNI-0 and AR(1) correctly not claimed)"]
+        H7 = "| id | decision |\n|---|---|\n"
+        V7 = "\n" + vline("a" * 64, "sol", "9.0") + "\n## Addendum\n\n"
+        A7 = H7 + "| A | ACCEPT |\n| B | ACCEPT |\n"
+
+        def r07(body, add=A7, cid="T:A"):
+            return R.seat_table(body + "\n" + V7 + add, "T")[0].get(cid)
+        # positives: the four real Opus cells, the Sol Basis column (negative words only there), free text, extra cols
+        R07_POS = [H7 + f"| A | {c_} |\n| B | accepted |\n" for c_ in R07_REAL] + [
+            "| Id | Disposition | Basis |\n|---|---|---|\n| A | accepted | an earlier draft failed; the gap was rejected "
+            "and withdrawn, then fixed |\n| B | accepted | x |\n",
+            H7 + "| A | looks fine (conditional on nothing) |\n| B | ok |\n",
+            H7 + "| A | accepted | stray |\n| B | accepted |\n", "", "No body table.\n"]
+        # negatives in the body decision column (any case / emphasis / dash / spacing / invisible-character variant)
+        R07_NEG = ["accepted (withdrawn)", "rejected", "Rejected", "REJECT", "not accepted", "**NOT** accepted",
+                   "not  accepted", "NOTACCEPTED", "not-accepted", "NOT-EXAMINED", "not examined", "Not_Examined",
+                   "refused", "Refusal", "failed", "proof fails", "withdraw", "with\u200bdrawn", "re\u00adject",
+                   "ＲＥＪＥＣＴ", "accepted, then withdrawn", "accepted (status: NOT\u2011EXAMINED)"]
+        r07_pos_bad = [i_ for i_, b_ in enumerate(R07_POS) if r07(b_) is not True]
+        r07_neg_bad = [d_ for d_ in R07_NEG if r07(H7 + f"| A | {d_} |\n| B | accepted |\n") is not False]
+        # structural: a negative split / continued into another line, after a separator, behind an escaped pipe
+        R07_STRUCT = {"split": H7 + "| A | accepted\nwithdrawn |\n", "continued": H7 + "| A | accepted |\n| | rejected |\n",
+                      "u2028": H7 + "| A | accepted |\u2028| | rejected |\n",
+                      "escaped": "| id | decision | basis |\n|---|---|---|\n| A | accepted \\| rejected | x |\n",
+                      "missing_from_addendum": H7 + "| A | accepted |\n| B | accepted |\n"}
+        # Sol R07 rule-2 F1: a separator before / inside the header line block; F2: any Unicode dash (Pd)
+        for sp_ in ["\r", "\x0b", "\x0c", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029"]:
+            R07_STRUCT[f"hdr_sep_{ord(sp_):x}"] = sp_.join(["| id | decision |", "|---|---|", "| A | reject |", ""])
+        R07_STRUCT["intro_u2028"] = "Intro\u2028" + H7 + "| A | reject |\n"
+        for dc_ in [chr(c_) for c_ in range(0x110000) if unicodedata.category(chr(c_)) == "Pd"]:
+            R07_STRUCT[f"dash_{ord(dc_):x}"] = H7 + f"| A | not{dc_}accepted |\n"
+        r07_struct_bad = [k_ for k_, b_ in R07_STRUCT.items()
+                          if r07(b_, add=(H7 + "| B | ACCEPT |\n" if k_ == "missing_from_addendum" else A7))]
+        # Sol R07 rule-2 F3: a blank line made of separators ends the body table like LF (later free text ignored)
+        R07_POS += [H7 + "| A | accepted |\n" + sp_ + sp_ + "rejected\n"
+                    for sp_ in ["\r", "\x0b", "\x0c", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029", "\n"]]
+        r07_pos_bad = [i_ for i_, b_ in enumerate(R07_POS) if r07(b_) is not True]
+        # no valid addendum: the strict R06 reading of the whole file, unchanged (form cells, Basis column refused)
+        r07_noadd = [c_ for c_ in R07_REAL + ["accepted (withdrawn)"]
+                     if R.seat_table(H7 + f"| A | {c_} |\n", "T")[0].get("T:A")]
+        r07_badadd = R.seat_table(H7 + "| A | accepted |\n" + V7 + "| **id** | decision |\n|---|---|\n| A | ACCEPT |\n",
+                                  "T")[0].get("T:A")
+        r07_noverd = R.seat_table(H7 + f"| A | {R07_REAL[1]} |\n\n## Addendum\n\n" + A7, "T")[0].get("T:A")
+        print(f"R07 addendum: positives refused {r07_pos_bad}; negatives accepted {r07_neg_bad}; structural accepted "
+              f"{r07_struct_bad}; no-addendum form cells accepted {r07_noadd}; malformed addendum {r07_badadd}; "
+              f"addendum without a verdict line {r07_noverd}")
+        results.append(("R07 addendum supersedes body: the four real Opus cells, a Basis column with negative words, "
+                        "free text and extra columns in the body + addendum ACCEPT -> accepted; a closed-list negative in "
+                        "the body decision column (case / emphasis / dash / spacing / invisible / full-width variants, "
+                        "split, continued, U+2028, escaped pipe) or a body id missing from the addendum -> NOT accepted",
+                        not r07_pos_bad and not r07_neg_bad and not r07_struct_bad))
+        results.append(("R07 without a valid addendum (none, malformed header, or no COUNCIL-VERDICT line before it) the "
+                        "strict R06 reading applies unchanged: remark-form body cells are NOT accepted",
+                        not r07_noadd and r07_badadd is False and r07_noverd is False))
+        # staged: Basis column body + addendum PASS; body 'accepted (withdrawn)' / 'rejected' / id missing -> REFUSED
+        BASIS7 = ("| Id | Disposition | Basis |\n|---|---|---|\n| A | accepted | the first attempt failed and was "
+                  "withdrawn |\n| B | accepted with non-blocking remarks (Issue 3) | ok |\n| C | accepted | x |\n\n")
+
+        def r07_review(seat, score, body, adds=ADD6):
+            return (f"Council R1 ({seat}). Score {score}, all gates PASS.\n\n" + body + vline(dg6, seat, score)
+                    + "\n## Addendum 2026-11-12\n\n| id | decision |\n|---|---|\n"
+                    + "".join(f"| {i} | {d_} |\n" for i, d_ in adds))
+        st7 = {}
+        for nm_, sb_, ob_, ad_ in (
+                ("basis_pass", BASIS7, H7 + f"| A | {R07_REAL[0]} |\n| B | {R07_REAL[3]} |\n\n", ADD6),
+                ("withdrawn", BASIS7, H7 + "| A | accepted (withdrawn) |\n| B | accepted |\n\n", ADD6),
+                ("rejected", BASIS7, H7 + "| A | accepted |\n| B | rejected |\n\n", ADD6),
+                ("missing", BASIS7, H7 + "| A | accepted |\n| B | accepted |\n\n",
+                 [("A", "ACCEPT"), ("C", "NOT-EXAMINED")])):
+            put(S6, r07_review("sol", "8.6", sb_))
+            put(O6, r07_review("opus", "8.4", ob_, ad_))
+            rc_v, out_v = tool("ingest.py", "claims", os.path.join(TMP, CK6), "--staged")
+            st7[nm_] = (rc_v, acc_l(out_v), out_v)
+        put(S6, r06_review("sol", "8.6", ADD6))
+        put(O6, r06_review("opus", "8.4", ADD6))
+        print("R07 staged:", {k_: (v_[0], v_[1].split(":")[-1].strip()[:30]) for k_, v_ in st7.items()})
+        results.append(("R07 staged checkpoint: Sol Basis-column body + Opus remark-form body + addenda -> PASS; body "
+                        "'accepted (withdrawn)' (A) or 'rejected' (B) + addendum ACCEPT -> REFUSED naming the claim; "
+                        "a body id missing from the addendum (B) -> REFUSED",
+                        st7["basis_pass"][0] == 0 and "PASS" in st7["basis_pass"][1]
+                        and all(st7[k_][0] != 0 and "REFUSED" in st7[k_][1] and c_ in st7[k_][2]
+                                for k_, c_ in (("withdrawn", "claim R06T:A: listed with contradictory decisions"),
+                                               ("rejected", "claim R06T:B: listed with contradictory decisions"),
+                                               ("missing", "claim R06T:B: listed in the body table but not in the "
+                                                           "seat's addendum")))))
 
         # ---------------- INFRA R06: registry blocks from a carrier file outside the frozen manifest ----------------
         CAR = f"{T6}/reviews/CARRIER_R1.jsonl"  # reviews/ is never in a manifest
