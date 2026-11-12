@@ -1,0 +1,4 @@
+p	N	m	steps_per_round	bridge_s_per_stage	burn_s_per_round	measured_s_per_round	us_per_step_bridge	us_per_step_phi1	island_s	cache_hit_rate	cache_clears
+ 1000	2500	 1016	 2540000	 2.885	 4.137	 4.205	1.1360	1.638	 124.9	0.3797	479
+ 2000	2500	 2016	 5040000	 5.865	 9.575	 9.569	1.1637	1.899	 308.4	0.3763	565
+20000	2500	20016	50040000	44.827	89.976	90.677	0.8958	1.803	2382.6	0.3812	127
