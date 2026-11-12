@@ -278,11 +278,11 @@ then also requires:
    a row is accepted iff its decision starts with `accepted` (`accepted with non-blocking remarks` counts). No extra,
    no missing id; a review without such a table is refused.
 3. **Cited rounds resolve and bind.** Each review round cited in the claim's status line (the line(s) of
-   `status_source`) — written `<ROUND>:` or `<ROUND> (<note>):`, ROUND upper-case letters / digits / `-` with a digit,
+   `status_source`, plus the recorded status text itself, which may continue past them) — written `<ROUND>:` or `<ROUND> (<note>):`, ROUND upper-case letters / digits / `-` with a digit,
    e.g. `LC1-A: VERIFIED` — resolves to exactly one file `reviews/<ROUND>_*` of the ticket (`-` read as `_`;
-   dispositions, briefs and manifests excluded), and that file quotes the digest of an existing frozen
-   `reviews/MANIFEST_*.txt` of the ticket (an earlier round binds to its own manifest, which need not verify any
-   more). The acceptance round `R<k>` of the council cell resolves to the council seats' review files, which bind to
+   dispositions, briefs and manifests excluded), and that file quotes the digest of an existing, internally valid
+   frozen `reviews/MANIFEST_*.txt` of the ticket (well-formed rows whose digest is the header; an earlier round binds
+   to its own manifest, which need not match the current tree). The acceptance round `R<k>` of the council cell resolves to the council seats' review files, which bind to
    the acceptance manifest with a PASS verdict (≥ 8.0, gates PASS) as above. A round named in free text without that
    form is not a citation.
 

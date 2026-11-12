@@ -1331,15 +1331,22 @@ def round_files(rid: str, d: str) -> list[str]:
 
 
 def manifest_digests(d: str) -> dict[str, str]:
-    """{digest: manifest path} of every `<d>/reviews/MANIFEST_*.txt` (its header line)."""
+    """{digest: manifest path} of every internally valid `<d>/reviews/MANIFEST_*.txt`: well-formed header, at least one
+    stored row, every row `<64-hex>  <path>`, and the header digest equal to the digest of the stored rows (Sol R05FIX
+    B2; a historical manifest is NOT compared with the current tree)."""
     import glob
     out = {}
+    try:
+        M = manifest_tool()
+    except Exception:  # pragma: no cover - the tool is part of the repository
+        return out
     for mp in sorted(glob.glob(os.path.join(ROOT, d, "reviews", "MANIFEST_*.txt"))):
-        rel = os.path.relpath(mp, ROOT).replace(os.sep, "/")
-        lines = read_lines(rel)
-        m = re.fullmatch(r"MANIFEST ([0-9a-f]{64})", lines[0].strip()) if lines else None
-        if m:
-            out[m.group(1)] = rel
+        try:
+            dg, _, rows_ = M.read_manifest(mp)
+        except Exception:
+            continue
+        if rows_ and all(re.fullmatch(r"[0-9a-f]{64}  \S.*", r_) for r_ in rows_) and M.digest(rows_) == dg:
+            out[dg] = os.path.relpath(mp, ROOT).replace(os.sep, "/")
     return out
 
 
@@ -1378,6 +1385,9 @@ def checkpoint_problems(row: dict, folder: str, ck: str, rnd, seat_files, rows: 
     text = " ".join(lines[sp[0] - 1: sp[1]]) if sp and sp[1] <= len(lines) else ""
     if not text:
         probs.append(f"status line {row.get('status_source')} unreadable")
+    # Sol R05FIX B1: a status may continue past the stated line(s) (status_at reads up to 3 more), so the citations of
+    # the accepted status text itself are scanned too (never the neighbouring claims' lines)
+    text += " " + (row.get("status") or "")
     mans = None
     for rid in cited_rounds(text):
         if rnd is not None and rid == f"R{rnd}":

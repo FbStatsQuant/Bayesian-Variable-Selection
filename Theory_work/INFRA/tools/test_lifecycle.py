@@ -1208,6 +1208,12 @@ try:
         rc_x, out_x = tool("ingest.py", "claims", os.path.join(TMP, CK), "--staged")
         put(CK, r05_ckpt(a_cite="LC9-A: VERIFIED."))
         rc_u, out_u = tool("ingest.py", "claims", os.path.join(TMP, CK), "--staged")
+        # Sol R05FIX B1: a citation carried by a status that continues past the stated line must be checked too
+        put(CK, "# R05T checkpoint 3\n\nPROVED-CHECKED\nLC9-A: VERIFIED\n"
+            "- R05T:B — PROVED-CHECKED — Lemma B. Line check: LC1-A: VERIFIED.\n\n"
+            + r05_blk("A", 1, 3).replace("status: PROVED-CHECKED |", "status: PROVED-CHECKED LC9-A: VERIFIED |")
+            + "\n" + r05_blk("B", 2, 5))
+        rc_c, out_c = tool("ingest.py", "claims", os.path.join(TMP, CK), "--staged")
         CK_TXT = r05_ckpt()
         put(CK, CK_TXT)
         rc_g, out_g = tool("ingest.py", "claims", os.path.join(TMP, CK), "--staged")
@@ -1215,6 +1221,9 @@ try:
                         rc_x != 0 and "REFUSED" in acc_l(out_x) and "did not accept" in out_x and "R05T:Z" in out_x))
         results.append(("R05 staged: a status line citing an unresolvable round id (LC9-A) is REFUSED (A4)",
                         rc_u != 0 and "REFUSED" in acc_l(out_u) and "LC9-A" in out_u and "resolves to no file" in out_u))
+        results.append(("R05FIX B1 staged: a round citation carried by a status continued past its stated line "
+                        "(LC9-A, unresolvable) is REFUSED (A4)",
+                        rc_c != 0 and "REFUSED" in acc_l(out_c) and "LC9-A" in out_c and "resolves to no file" in out_c))
         results.append(("R05 control (staged): own CHECKPOINT_3.md as status source, outside the manifest, passes "
                         "acceptance (0 ERROR)", rc_g == 0 and "PASS" in acc_l(out_g) and "REFUSED" not in acc_l(out_g)))
         rc_ap, _ = tool("ingest.py", "claims", os.path.join(TMP, CK), "--apply")
@@ -1260,10 +1269,15 @@ try:
         ub_e1 = r05_has("R05T:A", "quotes no digest")
         put(LC1, f"Line check LC1-A on MANIFEST {'0' * 64}: VERIFIED.\n")
         ub_e2 = r05_has("R05T:B", "quotes no digest")
+        # Sol R05FIX B2: a header-only / corrupted historical manifest is not a frozen manifest
+        BADM = put(f"{TD}/reviews/MANIFEST_corrupt.txt", f"MANIFEST {'0' * 64}\nnot a manifest row\n")
+        ub_e3 = r05_has("R05T:A", "quotes no digest")
+        os.remove(BADM)
         put(LC1, LC1_TXT)
         results.append(("R05 unbound reviews refused (A4): a council seat bound to another manifest; an earlier round "
                         "(LC1-A) quoting no digest, or a digest that is no frozen manifest of the ticket; restored -> "
-                        "clean", ub_c and ub_e1 and ub_e2 and r05_clean()))
+                        "clean; a corrupted historical manifest with that header does not count (Sol R05FIX B2)",
+                        ub_c and ub_e1 and ub_e2 and ub_e3 and r05_clean()))
         # (4) claim ids: a seat that did not accept B; a seat that accepted an id the checkpoint lacks
         put(SOLR, r05_review("sol", [("A", "accepted"), ("B", "not accepted (gap in step 2)")]))
         id_x = r05_has("R05T:A", "did not accept") and r05_has("R05T:B", "R05T:B")
