@@ -130,3 +130,10 @@
 - 2026-11-12 W3-RM2 CP1 (branch @ 81ff7d6): v1.2 locked (b < ½ via width condition (W)); adopt P1,
   P2/G1 → v1.3 + Sol check; P3 one attempt in Form R after CP2; Form R kept; RM2-F/R as candidates implying RM-F/R
   (supersession at CP3, owner informed). GO to CP2.
+- 2026-11-12 W3-START CP3-PASS (R1 sol 9.1 / opus 8.8, gates PASS; branch e2f2271, merged with main 29b3aab). HQ audit:
+  bind OK; staged ingest 21 claims / 0 problems, but acceptance REFUSED (A4): MANIFEST_R1 lists PROTOCOL.md,
+  LIFECYCLE.md, the ASSUMPTION_MAP template and claims.tsv as inputs, all edited on main after the round (HQ edits,
+  none a proof premise). Decision: council R2 on the merged tree (v1.3.4 with R1's non-blocking edits; INPUTS pruned
+  of wave documents/registry tables) + Sol diff check v1.3.3→v1.3.4; Astra better-theorem review BT2 on the final
+  statement in parallel (statement changed materially after CP1 → headline gate). PROTOCOL rule 15 amended: INPUTS
+  never lists wave documents or registry tables.
