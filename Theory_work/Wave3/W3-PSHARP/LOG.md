@@ -83,3 +83,4 @@ Claude-inference tally: all on Claude Work (claudeAgent); claude-personal not us
 - 07:27. [step 12] R2: sol 9.2 PASS, opus 9.3 PASS (both 0 FATAL/MAJOR/MINOR; 2 + 6 NIT); reconciliation ALL-RESOLVED.
   `manifest.py bind` OK; `verify` OK (MANIFEST 4513e05a…). NITs accepted and deferred (`reviews/R2_disposition.md`).
 - 07:30. **CP3-PASS** written (`CHECKPOINT_3.md`). No git state changed; run ends.
+* 2026-11-12 09:05 CT — **HQ decision on CHECKPOINT_3 (commit 11524d0):** CP3-PASS on the mathematics (council R2 sol 9.2 / opus 9.3, manifest 4513e05a…). Acceptance audit (HQ_DECISIONS 849dfb5): refused only on record-keeping (no per-claim seat table). Next, run by HQ: INFRA R06, then a seat addendum (per-claim ACCEPT / NOT-EXAMINED, no rescoring), then acceptance. Editorial batch E1–E9 after acceptance. Lead: no action.
