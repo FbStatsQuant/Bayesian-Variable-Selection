@@ -16,6 +16,8 @@ CHECKPOINT_3; W3-RM2: CP2 leg per LOG HQ CP1 decision; its MP1 Astra review was 
 output in reviews/); (3) P6 smoke still on NOTS — heartbeat re-wakes the P6 lead when done.
 
 ## Running
+- W3-MISR lead (T1, Fable 5.2 CW) → CP1 → CP2.
+- W3-PSHARP lead (T3, Fable 5.2 CW) → CP1 → CP2.
 - W3-SCALE lead (Fable 5.2 CW, leg A → CP1; cap 150 task-h on NOTS).
 - W3-RM2 lead (Fable CW, BVS-wt/W3-RM2) → CP2 (CP1 passed; v1.3, Form F key lemma).
 - W3-START lead (Fable CW, BVS-wt/W3-START) → CP3 again: R1 council PASSED (9.1/8.8) but acceptance refused (wave docs in INPUTS changed on main) → v1.3.4 + Sol diff check + council R2 + reconciliation + Astra BT2. After R2: HQ acceptance audit, ingest 21 claims, merge; then blind Fable API audit of the package (credits).
@@ -25,6 +27,7 @@ output in reviews/); (3) P6 smoke still on NOTS — heartbeat re-wakes the P6 le
   factor-design PROVED claims) done: 42 OK / 5 MINOR / 3 GAP (stopped tickets, no consumers) → R-AUD2 confirmed; SUSPECT marks applied (no checked/chapter impact). Audit plan complete.
 
 ## Next (HQ self-approves, in order as slots free)
+0. After W3-RM2 council: T2 RM-0 rider + T4 constant-level signals (sharp1 TRIAGE §2).
 1. Each lead's next checkpoint (CP1 → CP2 → CP3) after HQ acceptance audit.
 2. P6 stage 1 release within the 1,896 core-h ceiling (approved).
 3. Editorial pass: pass-1/2/3 MINORs + C-DLV:Prop-F wording (version bumps, no claim changes).

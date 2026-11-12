@@ -149,3 +149,6 @@
 - 2026-11-12 ~02:20 UTC (Felipe): next API grant (~$200, ≈11-15) allocated to theory: ~$100 blind audits of new
   results (W3-START, W3-RM2, parallel-SMC theorems, final chapter v2.0 pass), ~$50 sharpness follow-up, ~$50 reserve for
   Fable break reviews of risky scaling theory. The p = 1M campaign runs on NOTS + CW, decided at W3-SCALE CP1.
+- 2026-11-12 ~02:40 UTC sharp1 triage (consultant, API_AUDIT/sharp1/TRIAGE.md): A-list T1 MIS-R, T2 RM-0 rider (after
+  RM2 council), T3 POST-SHARP; B* T4 (constant-level signals, rider on RM2), T5 (Cor 1R v2, lowest). LAUNCHED W3-MISR (T1)
+  and W3-PSHARP (T3), Fable 5.2 CW leads, legs to CP2 pre-approved when reviews are clean. f01 handed to W3-SCALE.
