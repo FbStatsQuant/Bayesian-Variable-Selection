@@ -1,86 +1,73 @@
-# ASSUMPTION_MAP.md — W3-START (Wave 3 protocol item 3; written after the statement lock, before heavy proving)
+# ASSUMPTION_MAP.md — W3-START (Wave 3 protocol item 3)
 
-Target statement: `STATEMENT.md` v1.2 (LOCKED), claim ids `W3-START:AGG`, `W3-START:FLOOR`, `W3-START:START-F`,
-`W3-START:START-R`, `W3-START:NEC`, `W3-START:OVL`, `W3-START:MIS`. Rules: `Theory_work/INFRA/LIFECYCLE.md` §4.3.
-Numerics: `numerics/RESULTS.md` (production core, 1018 runs; observations, not proofs). Sections (a)–(i) below refer to it.
+Target statement: `STATEMENT.md` v1.3.4. Claim ids `W3-START:<id>` as listed in `REPORT.md` §3. Rules:
+`Theory_work/INFRA/LIFECYCLE.md` §4.3. This map describes the final statement; it replaces the map written before the
+proofs. Numerics: `numerics/RESULTS.md` (production core, 1018 runs; sections (a)–(i) below refer to it) and
+`numerics/lemmas/RESULTS_LEMMAS.md`; they are observations, not proofs.
 
 ## 1. Assumption entry map
 
-| hypothesis | where it enters (lemma / step) | how (bound or mechanism) | property actually used | necessity evidence so far | early sub-par signal? |
+| hypothesis | where it enters (lemma / step) | how (bound or mechanism) | property actually used | necessity evidence | signal |
 |---|---|---|---|---|---|
-| A:START-E, part ‖μ‖² ≤ Mn | (B-TK): toolkit constants C_R, c_E, κ_E | bounds ‖Y‖² ≤ C_Rn, so the O(1) remainder of the table expansion is uniform | [TK] | none; numerics (f) (θ ∝ n^{1/4}): o₀√n unchanged, T₁/pred ≈ 1 | boundary-numerics → **improvable** (route artefact of the toolkit) |
-| A:START-E, part p ≤ n^A | truncation z_n; visibility threshold 1 + 2A; counting of the block family | union bounds over ≤ 2²¹p Gaussians; the prior price log p of one variable | [TK], [VIS], [LEAK] | (N2), (N3); numerics (a), (c): both transitions sit at 1 + 2A_n ≈ 3.2 | none (the dependence on A is sharp in the thresholds) |
-| A:START-E, part s₀ fixed | (C1) constants; (B-V1) union over ≤ s₀ truth blocks | (s₀ + 1), 16s₀, c_s enter explicitly | — | numerics (g): o₀√n/(s₀ + 1) ≈ 1.4–1.9 for s₀ ≤ 4; for s₀ = 16, 32 the mass is lost at n ≤ 800 because visibility fails (τ² grows with ‖θ‖²), not because of the s₀-bookkeeping | unharvested-conclusion (bounds explicit in s₀; a growing-s₀ statement must carry the τ²-normalised visibility) |
-| A:START-E, part p > s₀ | (T0), (T1)(c) | T₁ > 0, f_n(s₀) > 0 | — | SL1 counterexamples (saturated models; p = s₀) | none: NECESSARY for the stated conclusions |
-| A:START-FL (FL-16) | (B-TK): Gram floor of the block family | log-determinant and Q ≈ RSS expansions (GEN L1.3 (E1), (E2)) | [TK] | none; numerics (e) (every second null a near-twin, λ_min ≈ 1/n): o₀√n ≈ 7 as in the baseline | boundary-numerics → **improvable** among nulls; single-use (toolkit) |
-| A:START-V, form (V-c) | (B-V1): e_n → (AGG-d) → Ξ | each truth-deletion step ≤ n^{½−c_V/2+o(1)}; price 2p per deleted truth | [VIS(κ)] | (N3): level 1 + 2A necessary at truth-only sets; numerics (a) | **improvable**: quantifies over every 15-set; fails with close correlates while Ξ is small (numerics (b): min level 0.3–1.6 < 3.2, e_n ≈ 10⁴, Ξ ≤ 2·10⁻³, π₀(S₀) = 0.91–0.96). Superseded in generality by (V-m) |
-| A:START-V, form (V-m) | (B-V2): each term of Ξ | two nested RSS comparisons through W = U ∪ D | [VIS(κ)] | (AGG-b): o₀ ≥ c_sΞ, so [VIS] itself is necessary; (N3) for D = {j}, N = ∅ | margin constants c_m, ε₀ are route constants; the form is close to the table functional it controls |
-| A:START-AL | (B-L): truncated expectation of each table step | Markov on E[step·1_event] = e^{O(1)}n^{−1/2}J_n | [LEAK(Q)] | (AGG-b): o₀ ≥ T₁ (the leading functional is exact); (N2); numerics (d): when all nulls leak the transition is where the functional puts it (η ≈ Δ/τ² = 2/3; T₁/pred ≈ 1), far above η_A ≈ 0.09 | **improvable for isolated leakers** (numerics (c)): the uniform truncation z_n makes 𝔏 overshoot a single leaking null by 10–10³, so (AL) at Q = S₀ rejects c ∈ (≈1.3, 3.2) where the conclusion holds; remedy: put isolated leakers in Q with the individual threshold 1 + 2A. The max over all 15-sets U in 𝔏_n(Q) is used only at second order |
-| Gaussian noise (model G) | Lemma J; toolkit χ² and Gaussian tails | exact Gaussian integral | [LEAK] | none | route (sub-Gaussian noise not attempted) |
-| A:START-R-FL, A:START-R-V | (B-R) | sample floors and sample visibility from population ones, uniformly over ≤ p¹⁶ sets | (FL-16), (V-c) w.p. → 1 | as for the fixed-design forms | none |
-| A:START-R-L, (L-gain-R) | (B-R): centring d of √n × sample partial correlation | E[e^{g²/2}; |g| ≤ h] with g ~ N(d, 1), d = O(C_L) | 𝔏_n(Q) ≤ e^{C√log n} | numerics (h): C_L = 1 converges; C_L = 2, 4 have U > 1 up to n = 1600 (U decreasing); just outside (ρ² = η log n/n) the behaviour is graded in η | **artefact-threshold**: C_L n^{−1/2} is not a threshold; a version with population leakage level η and an explicit exponent is the natural statement; the constant C_R decides the onset |
-| A:START-R-L, (L-loc-R) | (B-R): the partition is X-measurable, so the conditioning set is selected | second-order perturbation √n·r_n² of δ_{U,l} | reduces max over p¹⁵ sets to polylog many | none (inherited form of W3-RM) | route |
-| A:BLOCK-LE-16 | (C0) counting (2¹⁶ subsets; ≤ 15 partners) | constants only | — | true of the code | none |
-| EX-A | everywhere | exact π₀ | — | idealisation | none |
+| A:START-E, part ‖μ‖² ≤ Mn | Lemma TK, (TK-b) only (`lemmas/L2_TK.md`) | ‖Y‖² ≤ C_Rn, hence RSS^y_U ≥ c_En, which keeps the remainder of the score expansion bounded | [TK] | none. Numerics (f) (θ ∝ n^{1/4}): the conclusion is unchanged in that direction | route assumption; not removable outright with this toolkit (the scorer's fixed 0.02 and the ridge term are O(1) only relative to a residual of order n) |
+| A:START-E, part p ≤ n^A (any fixed A > 0) | sizes of t_n, q_n, z_n; the prior price log p of one variable | union bounds over ≤ 2^{24}pn events; thresholds 1 + 2A | [TK], [VIS], [LEAK] | (C2)(i), (C2)(ii): both one-column thresholds sit at 1 + 2A; numerics (a), (c) | none: the dependence on A is sharp in the thresholds |
+| A:START-E, part s₀ fixed | constants of (AGG), of L5.2, of the event 𝓧 | (s₀ + 1), 16s₀, c_s, s₀·3^{16} enter explicitly | — | numerics (g): for s₀ ≤ 4 the odds scale as (s₀ + 1) | unharvested: the table identities are explicit in s₀ (open item O3) |
+| A:START-E, part p > s₀ | (T0), (T1)(b), (c), (B-R), (T3)(b) | T₁ > 0, s₀ < K | — | at p = s₀ there is no null column and the ratio o₀/T₁ is undefined | NECESSARY for the stated conclusions |
+| A:START-GF (GF-16) | Lemma TK: (E1), (E2) and the rank of block sets | D_U/(n + 1)^{\|U\|} ∈ [(g_*/(g_* + 1))^{\|U\|}, 1]; 0 ≤ Q_U − RSS^y_U ≤ 1 + 1/g_* | [TK] | none. Numerics (e) (near-twin nulls) are inside the hypothesis | route assumption; dropping the floor altogether needs a rank-sensitive aggregation (open item O2) |
+| A:START-V, form (V-c) | (B-V1), `lemmas/L4_VIS.md` L4.2: e_n, then (AGG-d) | each truth-addition step gains at least c_V log n; price log(2p) + ½ log n per truth | [VIS(κ)], κ < (c_V − 1 − 2A)/2 | (C2)(ii): level 1 + 2A necessary on the actual partition; (N3) partition-free | WEAKENABLE: it asks the single-truth gain given every 15-set; example F-2 satisfies (V-m) and not (V-c) |
+| A:START-V, form (V-m) | (B-V2), `lemmas/L4_VIS.md` L4.1: each term of Ξ | two nested RSS comparisons through W = U ∪ D, with τ²_U on the left and τ²_W on the right | [VIS(κ)], κ < c_m/2 | (AGG-b): when s₀ + 16 ≤ K, π₀(S₀) → 1 forces Ξ → 0 in probability; this does not by itself force the polynomial-rate interface [VIS(κ)]. (C2)(ii) treats D = {j}, N = ∅. | the margin constants c_m, ε₀ are route constants; the form is close to the table functional it controls |
+| A:START-AL | (B-L), `lemmas/L3_LEAK.md` L3.3, L3.4 | small gains from (J0); step bound; truncated expectation and Markov | [LEAK(Q)] | **T₁ → 0 is necessary** (o₀ ≥ T₁). The functional itself is **sufficient for this route**: the bridge is an upper bound by Markov's inequality, not a converse; the necessity of the truncated expectation and of the maximum over all conditioning sets is not established | the level per column (tail budget) removes the overshoot for a bounded number of leaking columns (F4), up to the level 1 + 2A̲ of (C2)(i) |
+| Gaussian noise | Lemma TK tails; Lemma J | exact Gaussian integrals | [TK], [LEAK] | none | route |
+| A:START-R-FL (FL-R16) | `lemmas/L9_BR.md` L9.1 (c2)–(c4), L9.5 | population floor on sets of size ≤ 16 + s₀; sample floors by the pairwise covariance event | (GF-16), Schur bounds, τ_e² ≥ c_Σ | as for the fixed-design floor | none |
+| A:START-R-V (V-R) | `lemmas/L9_BR.md` L9.2 | sample visibility at every fixed level from the population conditional covariance | (V-c) | as for (V-c) | none |
+| A:START-R-L, (L-gain-R) | `lemmas/L9_BR.md` L9.5 | a bounded mean shift d̄ of a standard Gaussian at the critical exponential moment | 𝔏_n(Q) ≤ exp(C√log n) w.p. → 1; tightness if C_L = 0 | numerics (h): no cliff at the scale C_Ln^{−1/2}; graded in the leakage level | ARTEFACT-threshold: a population leakage level with an explicit exponent is the natural statement (open item O1) |
+| A:START-R-L, (L-loc-R) | `lemmas/L9_BR.md` L9.4 | columns outside H_l change √n × partial correlation by o(1/√log n) | reduces all 15-sets to ≤ (1 + (log n)^{κ_Q})^{15} reference sets per column | none | route |
+| A:BLOCK-LE-16 | (AGG) counting (2^{16} subsets; ≤ 15 partners) | constants only | — | true of the coded partition | none |
+| A:EX-A | everywhere | exact π₀ | — | idealisation | none |
 
 ## 2. Binding map (where each hypothesis is forced)
-* visibility ← forced by (AGG-b) lower bound o₀ ≥ c_sΞ (deterministic) and by (C2)(ii)/(N3) at level 1 + 2A.
-* averaged leakage ← forced by (AGG-b) lower bound o₀ ≥ T₁ (deterministic) and by (C2)(i)/(N2).
-* the exponent ½ ← forced by (T0) for every design.
-* (FL-16), ‖μ‖² ≤ Mn, Gaussian noise, (L-loc-R) ← forced only by the proof route (toolkit, Lemma J, localisation).
 
-Conclusion level: target (start distribution; an input of the sampler theorems, not a posterior or reported-model
-claim). Rate: n^{−1/2}𝔏⁰_n with 𝔏⁰_n between 1 and √log n when nothing leaks; n^{−1/2} is optimal (T0). Scope: p ≤ n^A
-(p ≫ n included), fixed s₀, fixed design (partition-free conditions) or Gaussian rows; any X-measurable partition with
-blocks ≤ 16.
+* **Visibility** ← Ξ → 0 in probability is necessary for concentration when s₀ + 16 ≤ K, by o₀ ≥ c_sΞ; the one-truth
+  failure threshold is given by (C2)(ii) on the actual partition and (N3) partition-free.
+* **T₁ → 0** ← forced by the deterministic lower bound o₀ ≥ T₁ of (AGG-b). The averaged leakage condition (AL) is a
+  sufficient condition for it on this proof route; the necessity of its particular functional is not established.
+* **Leak level 1 + 2A for one column** ← forced on the actual partition by (C2)(i). The partition-free form (N2) has an
+  empty premise for s₀ ≤ 15 (it includes V = S₀, where every null gain is zero) and has content only for s₀ ≥ 16.
+* **Exponent ½** ← forced by (T0) for every design with a null column.
+* **(GF-16), ‖μ‖² ≤ Mn, Gaussian noise, (L-loc-R)** ← forced only by the proof route (Lemma TK, Lemma J, localisation).
 
-Unharvested conclusions: (i) growing s₀ (table identities explicit in s₀); (ii) the first-order form identifies the
-limit object T₁ — a distributional limit of √n·o₀ in specific designs is not stated; (iii) the same floor argument
-gives 1 − π(S) ≥ c n^{−1/2} for the **posterior** of every unsaturated model (compare W3-POST:Prop-LB).
+## 3. Level, rate, scope
 
-Closest literature and how ours compares (recorded comparisons: SoP card TH03, `04_theory.tex:345, 350`): Song–Liang
-(2015) Theorem 4 / Corollary 2 give screening consistency of the posterior on a fixed-size candidate subset under
-misspecification — no rate and no statement about an aggregate block-product start; Papaspiliopoulos–Rossell (2017)
-compute block-diagonal posteriors exactly (orthogonal blocks) — the start here is that object for non-orthogonal
-blocks, and the rate, the leakage functional and the floor are not in either. The `lit:` gate is a headline gate
-(LIFECYCLE §4.2) and stays PENDING until CP3.
+Conclusion level: target (the start distribution: an input of the sampler theorems, not a posterior or
+reported-model claim). Rate: n^{−1/2} × leakage functional; with zero null gains (δ_{U,l} = 0 for all nulls) the leading
+functional is at most (1 + 15/p)·√(2/π)z_n = O(√log n); n^{−1/2} is optimal by (T0). The target "no leakage" of the statement
+is Q = S₀, and (AL) at Q = S₀ also allows functionals much larger than √log n. Scope: p ≤ n^A with any fixed A > 0
+(p ≫ n included), fixed s₀; fixed design under partition-free conditions, any design law through the transfer, or
+Gaussian rows; any partition that is a function of X with blocks of size ≤ 16.
 
-## 3. Update for STATEMENT v1.3 (2026-11-11)
-The map above was written for v1.2. Changes in v1.3, by row:
-* **A:START-FL → A:START-GF.** (FL-16) is replaced by the constant unnormalised Gram floor (GF-16),
-  λ_min(X_TᵀX_T) ≥ g_* for 1 ≤ |T| ≤ 16. It enters only Lemma TK (bridge (B-TK)): the determinant ratio and the
-  difference Q_U − RSS^y_U. Reading: route assumption; improvable only by a rank-sensitive aggregation (open item
-  W3-START-O2). Numerics (e) (near-twin nulls, λ_min(X_TᵀX_T) ≈ 1) are now inside the hypothesis.
-* **A:START-AL with level vectors.** (AL) asks for a level vector h (1 ≤ h_l ≤ z_n, tail budget b_n(h) → 0) with
-  ϱ_n(Q; h) → 0; the default h ≡ z_n is the v1.2 condition. Reading: the flag "improvable for isolated leakers"
-  (numerics (c)) is addressed by Corollary F4, which reaches every constant level below 1 + 2A̲ — the threshold of (N2).
-* **Transfer.** (T3)(a) and the random-candidate clause of (T6) allow coefficients, support, Q and h measurable in the
-  design. Response-selected targets stay outside.
-* **Consumed claims: none** (the toolkit is re-proved locally; C-GROW:L0.1/L0.2 are sources of the argument only).
-* Open items: O1 (Gaussian rows with a population leakage level), O2 (no Gram floor), O3 (growing s₀).
+Unharvested conclusions: (i) growing s₀ (the table identities are explicit in s₀); (ii) the first-order form
+identifies the limit object T₁ — a distributional limit of √n·o₀ in specific designs is not stated; (iii) the same
+floor argument gives 1 − π(S) ≥ c·n^{−1/2} for the **posterior** of every unsaturated model (compare W3-POST:Prop-LB);
+(iv) (AGG-a) holds in the stronger form 1 − 1/F (`lemmas/L1_AGG_FLOOR.md` L1.2).
 
-## 4. Update for STATEMENT v1.3.1 (2026-11-11)
-* **Leakage level, necessity reading.** The partition-free limit (N2) is vacuous for s₀ ≤ 15 (its premise includes
-  V = S₀, where every null gain is zero). The necessity of the level 1 + 2A for one leaking column is therefore read on
-  the actual partition, through (C2)(i); partition-free only for s₀ ≥ 16. Rows "A:START-AL" and "p ≤ n^A" above cite
-  (N2) for this reading: read "(C2)(i)". The binding map entry "averaged leakage ← … (C2)(i)/(N2)" stands with the
-  same proviso.
-* **[TK]** is used by the bridges in the quantitative form of Lemma TK (explicit event, envelope ω̄_n, constant κ_E).
-* **(B-R), clause C_L = 0:** a tightness statement for 𝔏_n(Q); (T3)(b) is unchanged (it was already an O_P statement).
-* **Examples:** verified families are listed separately from expected ones (UNI-0, exact-separation AR(1)).
+## 4. Numerics and what they do and do not show
 
-## 5. Corrections to the necessity readings (2026-11-11, after the exhaustive sweep)
-* **What is necessary and what is only sufficient.** The lower bound o₀ ≥ T₁ makes **T₁ → 0 necessary** for
-  π₀(S₀) → 1. It does not make the deterministic functional of (AL) necessary: bridge (B-L) is an upper bound obtained
-  by Markov's inequality, not a converse. Read the row "A:START-AL" of §1 and the line "averaged leakage ← forced by …"
-  of §2 as: T₁ → 0 is forced; **(AL) is sufficient for this proof route, and the necessity of its particular
-  functional (truncated expectation, maximum over all conditioning sets) is not established**.
-* **"When nothing leaks".** In the conclusion-level line of §2, "𝔏⁰_n between 1 and √log n when nothing leaks" means
-  zero gains (δ_{U,l} = 0 for all nulls). The target "no leakage" of the statement is Q = S₀, and (AL) at Q = S₀ allows
-  functionals much larger than √log n.
-* **Numerics and (AL).** The production scripts of `numerics/` compute block-relative functionals (𝔏^{b,0}); they do not
-  verify the partition-free (AL). The `leakall` η = 0 design (satellites at correlation 0.9 with truths of fixed
-  strength) is **outside** partition-free (AL) at Q = S₀; its good behaviour is block-relative. For Gaussian rows,
-  (AL) is delivered by bridge (B-R), not by a computation.
-* **OVL.** Proposition OVL is proved (`lemmas/L10_INTERFACES.md`) under a uniform bound ā on the levels of the columns
-  of Q ∖ S₀; it is a claim of the statement, no longer provisional.
+* The production scripts of `numerics/` compute block-relative functionals; they do not verify the partition-free
+  (AL). For Gaussian rows (AL) is delivered by bridge (B-R), not by a computation.
+* The design `leakall` with η = 0 (satellites at correlation 0.9 with truths of fixed strength) is outside
+  partition-free (AL) at Q = S₀; its good behaviour is block-relative (the satellites sit in the truths' blocks).
+* Boundary numerics by assumption: (a) visibility threshold; (b) (V-c) against Ξ; (c) one leaking null; (d) all nulls
+  leaking; (e) near-twin nulls; (f) energy; (g) s₀; (h) Gaussian rows with a population leak; (i) lattice form.
+* Lemma falsification: `numerics/lemmas/RESULTS_LEMMAS.md`.
+
+## 5. Closest literature
+
+Recorded comparisons (SoP card TH03, `04_theory.tex:345, 350`): Song–Liang (2015) Theorem 4 / Corollary 2 give
+screening consistency of the posterior on a fixed-size candidate subset under misspecification — no rate and no
+statement about an aggregate block-product start; Papaspiliopoulos–Rossell (2017) compute block-diagonal posteriors
+exactly (orthogonal blocks) — the start here is that object for non-orthogonal blocks, and the rate, the leakage
+functional and the floor are not in either. The `lit:` gate is a headline gate (LIFECYCLE §4.2) and is open.
+
+## 6. Open items named in the statement
+
+O1: Gaussian rows with a population leakage level and an explicit exponent. O2: no Gram floor at all. O3: growing s₀.

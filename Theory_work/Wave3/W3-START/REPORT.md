@@ -1,6 +1,6 @@
 # W3-START — REPORT (start-mass rate; PROGRAM item 2)
 
-Lead: Claude Fable 5.2 (effort high). Statement: `STATEMENT.md` v1.3.3. Proofs: `lemmas/L1_AGG_FLOOR.md` …
+Lead: Claude Fable 5.2 (effort high). Statement: `STATEMENT.md` v1.3.4. Proofs: `lemmas/L1_AGG_FLOOR.md` …
 `lemmas/L11_EXAMPLES.md`. This file is the technical report and is part of the frozen content that the council reads.
 It therefore contains **no review record**: the review trail, the council outcome, the final status of each claim
 and the registry blocks are in the ticket's final checkpoint file, which is written after the council and is not
@@ -24,7 +24,7 @@ In words:
   with explicit constants.
 * **Random design.** The uniform bound transfers to any design law with Gaussian noise given the design, with
   coefficients, support and leakage set that may depend on the design. For Gaussian rows under population visibility
-  and population no-leakage conditions, π₀(S₀) ≥ 1 − n^{−1/2}exp(C√log n) with probability → 1, for p ≤ n^A, p ≫ n
+  and population no-leakage conditions, π₀(S₀) ≥ 1 − n^{−1/2}exp(C√log n) with probability → 1 for some constant C, for p ≤ n^A, p ≫ n
   included.
 * **Limits.** On the actual partition, one null with normalised gain above (1 + 2Ā) log n given the truths of its
   block, or one truth with normalised gain below (1 + 2A̲) log n given the other truths of its block, sends π₀(S₀) → 0.
@@ -135,7 +135,7 @@ Gaussian-row bridge).
 | Ξ → 0 (visibility interface) | NECESSARY when s₀ + 16 ≤ K | (AGG-b): o₀ ≥ c_sΞ |
 | visibility level 1 + 2A | NECESSARY on the actual partition, and partition-free for a single truth | (C2)(ii), (N3), `lemmas/L7_NEC.md` |
 | leak level 1 + 2A for one column | NECESSARY on the actual partition; partition-free form vacuous for s₀ ≤ 15 | (C2)(i), `lemmas/L7_NEC.md` L7.3; reached from below by F4 |
-| A:START-AL (the functional itself) | NECESSARY-FOR-ROUTE: sufficient; the necessity of the truncated-expectation functional and of the maximum over all conditioning sets is not established | `ASSUMPTION_MAP.md` §5 |
+| A:START-AL (the functional itself) | NECESSARY-FOR-ROUTE: sufficient; the necessity of the truncated-expectation functional and of the maximum over all conditioning sets is not established | `ASSUMPTION_MAP.md` §2 |
 | A:START-V, form (V-c) | WEAKENABLE: superseded in generality by (V-m) | example F-2, `lemmas/L11_EXAMPLES.md` L11.3 |
 | A:START-GF | NECESSARY-FOR-ROUTE: enters only Lemma TK; a floor-free version needs a rank-sensitive aggregation | open item O2 |
 | A:START-E, energy part | NECESSARY-FOR-ROUTE: used only for RSS^y ≥ c_En in the score remainder | `lemmas/L2_TK.md` L2.3; numerics (f) of `numerics/RESULTS.md` |
@@ -173,7 +173,7 @@ does; present (T3)(b) as the p ≫ n statement; say plainly that the start needs
 
 ## 8. Files (all under `Theory_work/Wave3/W3-START/`)
 
-* Top level: `STATEMENT.md` (v1.3.3), `PLAN.md`, `ASSUMPTION_MAP.md`, `BRIEF.md`, `REPORT.md`, `citecheck.py`; `LOG.md` and
+* Top level: `STATEMENT.md` (v1.3.4), `PLAN.md`, `ASSUMPTION_MAP.md`, `BRIEF.md`, `REPORT.md`, `citecheck.py`; `LOG.md` and
   the checkpoint files are outside the frozen content.
 * Proofs: `lemmas/L1_AGG_FLOOR.md`, `lemmas/L2_TK.md`, `lemmas/L3_LEAK.md`, `lemmas/L4_VIS.md`, `lemmas/L5_ASM_STARTF.md`,
   `lemmas/L6_COROLLARIES.md`, `lemmas/L7_NEC.md`, `lemmas/L8_TRANSFER.md`, `lemmas/L9_BR.md`, `lemmas/L10_INTERFACES.md`,

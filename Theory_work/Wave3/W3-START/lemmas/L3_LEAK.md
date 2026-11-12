@@ -50,7 +50,9 @@ n ≥ n₂.
 
 **Lemma L3.3.** On 𝓔^blk, for n ≥ n₂, for every block b, T ⊆ C_b and l ∈ C_b ∖ T with
   δ²_{T,l} ≤ g⁰_n·τ²_T  and  |Z_{T,l}| ≤ z_n:
-  **r_b(T ∪ {l})/r_b(T) ≤ e^{2κ_E+1}·(n + 1)^{−1/2}·exp((δ_{T,l} + σZ_{T,l})²/(2τ²_T)).**
+  **r_b(T ∪ {l})/r_b(T) ≤ e^{2κ_E+ς_n}·(n + 1)^{−1/2}·exp((δ_{T,l} + σZ_{T,l})²/(2τ²_T)) ≤ e^{2κ_E+1}·(n + 1)^{−1/2}·exp((δ_{T,l} + σZ_{T,l})²/(2τ²_T)).**
+(Since ς_n → 0, the first bound is the form e^{2κ_E+o(1)} of bridge (B-L) in `STATEMENT.md`; the second, with the fixed
+constant, is the one used below.)
 *Proof.* By (TK-d), log[r_b(T ∪ l)/r_b(T)] ≤ −½ log(n + 1) + ν log(RSS_T/RSS_{T∪l}) + 2κ_E. By (TK-e),
 RSS_T − RSS_{T∪l} = (δ + σZ)² ≤ 2δ² + 2σ²Z² ≤ τ²_T(2g⁰_n + 2z_n²) ≤ τ²_Tg_n (σ² ≤ τ²_T; z_n ≤ z̄_n). By (TK-a),
 x := (RSS_T − RSS_{T∪l})/RSS_T ≤ g_n/((n − 1)(1 − ω_n)) ≤ x̄_n ≤ ½. By (TK-f)(f3),

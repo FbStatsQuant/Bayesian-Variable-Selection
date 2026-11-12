@@ -91,7 +91,8 @@ individual threshold 1 + 2A (candidate Corollary F4, see CHECKPOINT_1).
 | 1.0 | 2·10⁶ / 3·10¹⁴ / 2·10³⁹ / — | +55 | +0.25 (single additions only) | 0.87–0.98 |
 Reading: the transition is near η = 2/3, where the leakage functional predicts it (J1: 𝔏 ≍ n^{ητ²/(2Δ)}, so n^{−1/2}𝔏 → 0
 iff η < Δ/τ² = 2/3), **not** at η_A ≈ 0.09: the uniform (L-gain) condition with η < η_A is sufficient but far from
-necessary when the unexplained signal is strong; (AL) tracks the truth (T₁/pred ≈ 1 for every η). Past the threshold
+necessary when the unexplained signal is strong; in these runs the computed block-relative leading functional tracks
+T₁ (T₁/pred ≈ 1 for every η). Past the threshold
 U > 1 and the mass moves to very large models (the multi-addition terms of Lemma AGG), which is why the divergence is
 much faster than the single-addition exponent. The fitted slopes for η ≤ 0.4 are steeper than the asymptotic exponent
 because of the second-order terms at n = 200.
@@ -126,9 +127,10 @@ the level θ_j²n/(τ² log n) falls below 1 + 2A (c_truth 0.03–1.2); at s₀ 
 | √(0.25 log n/n) (outside) | 0.35 / 0.46 / 0.60 / — | 26 / 24 / 19 / — | 1.6 / 1.2 / 0.68 / — |
 | √(0.5 log n/n) (outside) | 0.12 / 0.14 / 0.28 / — | 103 / 126 / 76 / — | 3.7 / 2.9 / 1.6 / — |
 | √(1.0 log n/n) (outside) | 1·10⁻⁴ / 2·10⁻⁴ / 1·10⁻⁴ / — | — | 16 / 13 / 8.5 / — |
-Reading: for C_L = 1 the mass converges. For C_L = 2 and 4 the functional U decreases with n (as the theorem's
-n^{−1/2}e^{C_R√log n} says it must) but is still above 1 at these sizes, and while U > 1 the start mass sits on very
-large models (one leaking null per block): the constant C_R, which grows with C_L·θ/√Δ, decides where the asymptotic
+Reading: for C_L = 1 the observed mass increases with n. For C_L = 2, U fluctuates with n and is smaller at
+the largest size than at the smallest; for C_L = 4, U decreases over the sizes run. U remains above 1 in both cases.
+The theorem gives an asymptotic bound n^{−1/2}e^{C_R√log n}, not monotonicity at given sizes. While U > 1 the start
+mass sits on very large models (one leaking null per block): the constant C_R, which grows with C_L·θ/√Δ, decides where the asymptotic
 regime starts. Just outside the assumption (ρ² = η log n/n) the picture is graded in η, not a cliff at C_L n^{−1/2}:
 η = 0.25 behaves like C_L = 1. **The scale C_L n^{−1/2} of (L-gain-R) is not a threshold**; the natural statement
 has a population leakage level η with an explicit exponent (candidate extension, see CHECKPOINT_1).

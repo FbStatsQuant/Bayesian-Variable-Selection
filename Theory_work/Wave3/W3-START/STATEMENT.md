@@ -1,7 +1,7 @@
 # W3-START — STATEMENT (start-mass rate; PROGRAM item 2)
 
 Ticket W3-START, Theory Wave 3. Lead: Claude Fable 5.2 (effort high).
-Status of this file: **v1.3.3** (2026-11-11; record in `LOG.md`).
+Status of this file: **v1.3.4** (2026-11-11; record in `LOG.md`).
 Protocol: `Theory_work/Wave3/PROTOCOL.md`. All results are asymptotic (n → ∞) unless marked *deterministic*. This file
 states the claims; proofs are supplied in `lemmas/` (L1–L11), author-proved and awaiting independent acceptance. The
 status of each claim is recorded outside this file: the author status in `REPORT.md`, the check record and the final
@@ -26,7 +26,7 @@ O_P((|Q| + 1)n^{−1/2}𝔏_n(Q)) + o_P(n^{−κ}). The truncation level inside 
 column within a summable tail budget (§2); this makes the condition sharp for isolated leaking columns (F4).
 (iii) *Random designs:* the fixed-design bounds are uniform, so they transfer to random designs whose coefficients,
 support and leakage set are functions of the design. *Gaussian rows, p ≫ n allowed:* under population visibility and
-population no-leakage (W3-RM's (V-R), (L-R) with Q = S₀), π₀(S₀) ≥ 1 − n^{−1/2}e^{C√log n} with probability → 1, hence
+population no-leakage (W3-RM's (V-R), (L-R) with Q = S₀), π₀(S₀) ≥ 1 − n^{−1/2}e^{C√log n} with probability → 1 for some constant C, hence
 π₀(S₀) ≥ 1 − n^{−c} for every c < ½. (iv) *Limits:* on the actual partition (component diagnostics (C2)), one null with
 normalised gain above (1 + 2Ā) log n given the truths of its block, or one truth with normalised gain below
 (1 + 2A̲) log n given the other truths of its block, sends π₀(S₀) → 0; the partition-free forms are (N2), which is
@@ -43,8 +43,8 @@ response and at least one retained non-constant predictor (p ≥ 1); constant ra
 (CORE `v3_preprocess.R:111-127`). C := I − 11ᵀ/n; D_x := the diagonal matrix of the retained raw columns' sample
 standard deviations; X := CX^rD_x⁻¹ (centred, ‖x_j‖² = n − 1); Y := Cy^r; s_y² := ‖Y‖²/(n − 1); the scored response is
 y := Y/s_y (yᵀy = n − 1). G_S := X_SᵀX_S, z_S := X_Sᵀy.
-**The start, as coded** (EX-A: exact arithmetic). Pins at `main` = fe9a066 (the CORE tree is identical at the branch
-base d6da494; last commit touching CORE: 72785fe):
+**The start, as coded** (EX-A: exact arithmetic). Pins: the CORE tree as of commit 72785fe, the last commit touching CORE (the tree is unchanged since, in particular at the branch
+base d6da494):
 * score and prior: CORE `cpp/v3_score.h:39-72` (K = min(p, ⌊n/2⌋); w(k) = ½/C(2p − 1, k);
   W_K := Σ_{k=0}^{K} C(p, k)·w(k); ϖ(k) = w(k)/W_K),
   `cpp/v3_score.h:204-224` (log m(S) = log c_n − ½[log det H_S − log det(G_S + I)] − ν log(2b₀ + Q_S),
@@ -62,7 +62,8 @@ B ≤ K and every block table is fully scored. "π₀" denotes this deterministi
 component statement when the run dispatches to exact enumeration; PXN `STATEMENT.md:103-106`). Only two facts about
 the partition are used: it is a function of X alone, and |C_b| ≤ 16.
 
-**Setting F (fixed design)** = GROW `STATEMENT.md:51-64` (D0, model G), with s₀ ≥ 0 allowed: fixed raw design with
+**Setting F (fixed design)** = GROW `STATEMENT.md:51-64` (D0, model G), with s₀ ≥ 0 and any fixed A > 0 allowed (GROW has
+s₀ ≥ 1 and A ≥ 1; neither restriction is used here): fixed raw design with
 non-constant columns, y^r = α1 + X^rβ + ε, ε ~ N_n(0, σ²I), σ² > 0 fixed; hence Y = μ + Cε with μ := CX^rβ = Xθ*,
 θ* := D_xβ; S₀ := supp β, s₀ := |S₀| fixed; p = p_n ≤ n^A, A > 0 fixed. Probability is over ε.
 **Setting R (Gaussian rows)** = RM `STATEMENT.md:41-44`: raw rows iid N(m_n, Σ_n), Σ_n unit-diagonal, X as above,
@@ -313,7 +314,7 @@ levels in F1–F3).**
   does not (RM `STATEMENT.md:271-273`).
 
 **(T4) Proposition NEC (limits; Setting F, (E), (GF-16)).**
-* (N1) = (T0): the exponent ½ in (T1)–(T3) is optimal; under F2 with η′ = 0 the order is exact.
+* (N1) = (T0): the exponent ½ in (T1)–(T3) is optimal; under F2 with η′ = 0 and κ_V > ½ the order is exact.
 * (N2) **one leaking null.** If for all large n some null l = l_n has δ²_{V,l} ≥ c·τ²_V·log n for **every** V ⊆ S₀ with
   |V| ≤ 15, with a fixed c > 1 + 2Ā, then P(π₀(S₀) ≤ n^{−κ′}) → 1 for every κ′ < (c − 1 − 2Ā)/2.
   **Scope of (N2).** When s₀ ≤ 15 the premise cannot hold: V = S₀ is among the sets, and δ_{S₀,l} = 0 for every null

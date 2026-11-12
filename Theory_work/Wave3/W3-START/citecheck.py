@@ -11,9 +11,11 @@ Abbreviations of STATEMENT.md (the word just before the backtick selects the bas
   GEN  = Theory_work/Wave1/W1-GEN/
 A bare `cpp/...` or `v3_*.R` path is CORE; a bare `lemmas/...`, `numerics/...`, `reviews/...`, `STATEMENT.md`,
 `BRIEF.md`, `PLAN.md`, `ASSUMPTION_MAP.md`, `REPORT.md` is this ticket's.
-Usage (from the ticket folder): python citecheck.py
+Usage: python citecheck.py [OUTPUT_FILE]
+The default output is reviews/CITECHECK.txt in the ticket folder; give another path (for example a file in a
+temporary directory) to run the check without writing into the repository.
 """
-import re, os, glob, io, hashlib
+import re, os, glob, io, hashlib, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
@@ -61,6 +63,7 @@ for f in files:
         first = lines[a_i - 1].strip()[:90]; last = lines[b_i - 1].strip()[:90]
         out.write("OK %s [%s] %s -> %s\n      first: %s\n      last:  %s\n" % (h, tag, cite, rel, first, last))
 head = "W3-START CITECHECK: %d citations (%d with line ranges, %d path-only); MISSING/OUT-OF-RANGE: %d\n" % (n, n - nolines, nolines, bad)
-os.makedirs(os.path.join(HERE, "reviews"), exist_ok=True)
-io.open(os.path.join(HERE, "reviews", "CITECHECK.txt"), "w", encoding="utf-8", newline="\n").write(head + out.getvalue())
+OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "reviews", "CITECHECK.txt")
+os.makedirs(os.path.dirname(os.path.abspath(OUT)), exist_ok=True)
+io.open(OUT, "w", encoding="utf-8", newline="\n").write(head + out.getvalue())
 print(head.strip())
