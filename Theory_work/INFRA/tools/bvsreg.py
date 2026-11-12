@@ -1337,20 +1337,93 @@ def council_problems(row: dict, folder: str = "") -> list[str]:
     return probs
 
 
-# ---------------------------------------------------------------- durable acceptance records (R03-N1)
+# ---------------------------------------------------------------- durable acceptance records (R03-N1, R04-N1/N2)
 # A checked (PROVED-CHECKED-class) claim consumed by an accepted claim must itself have been accepted: an `accept`
-# event written by `check.py --acceptance ... --record` (or `ingest.py ... --staged --record`) for its CURRENT content,
-# or membership in the frozen legacy boundary (claims PROVED-CHECKED on main at tag LEGACY_TAG).
-ACCEPT_FIELDS = ("version", "sha256", "status", "depends_on", "consumes", "gates", "council", "headline")
+# event written by `check.py --acceptance ... --record` (or `ingest.py ... --staged --record`) for its CURRENT
+# acceptance identity, or membership in the frozen legacy boundary (claims PROVED-CHECKED on main at tag LEGACY_TAG).
+# The identity (R04-N1/N2) is the fingerprint of everything acceptance read: the row fields below (statement source
+# and span, provenance, status, edges, gates, council), the ticket folder that locates the frozen manifest, the
+# EFFECTIVE dependency graph (resolved inputs with their uses, version, statement hash and status: alias edits count),
+# the names the claim answers to, and the CONTENT of every referenced artifact (gate evidence files, council review
+# files, the round's frozen MANIFEST_*.txt); a missing artifact is part of the identity as MISSING. In addition, an
+# accepted input whose identity still matches is re-checked on the current tree (A5 revalidation, check.py).
+ACCEPT_FIELDS = ("id", "ticket", "kind", "name", "file", "lines", "premises", "sha256", "version", "status",
+                 "status_source", "depends_on", "consumes", "assumptions", "gates", "council", "headline")
+ACCEPT_FORMAT = "fp2"  # stamp format: `v<version> fp2:<24 hex>`; older `fp:` records are stale (re-accept)
 LEGACY_TAG = "theory-v2.0-pre"
 LEGACY_FILE = os.path.join(os.path.dirname(TOOLS), "LEGACY_ACCEPTED.tsv")  # the repository file, never a stage copy
 
 
-def accept_stamp(row: dict) -> str:
-    """`v<version> fp:<16 hex>`: what an accept event records. The fingerprint covers every field acceptance read
-    (statement hash, status, edges, bound bridges, gates, council, headline), so ANY later change makes it stale."""
-    fp = hashlib.sha256("\x1f".join((row.get(k) or "") for k in ACCEPT_FIELDS).encode()).hexdigest()[:16]
-    return f"v{row.get('version', '')} fp:{fp}"
+def ticket_folders() -> dict[str, str]:
+    """{ticket: tickets.tsv folder}."""
+    return {t["ticket"]: t.get("folder", "") for t in load_tickets()}
+
+
+def _digest(lines) -> str:
+    """Content digest of a file read line-wise (CRLF and LF checkouts give the same digest)."""
+    return hashlib.sha256("\n".join(lines).encode("utf-8", errors="replace")).hexdigest()
+
+
+def accept_artifacts(row: dict, folder: str = "") -> list[str]:
+    """The artifacts a claim's acceptance rests on, each as `<reference> -> <repo path>[@pin] <content digest>` (or
+    `<reference> MISSING`): every gate evidence reference (whatever the result), every council seat's review file and
+    each `<ticket>/reviews/MANIFEST_*.txt` whose header is the council digest."""
+    import glob
+    out = set()
+    refs = [ev for _, _, ev in parse_gates(row.get("gates", ""))[0] if ev.strip()]
+    mans = []
+    for e in split_gates(row.get("council", "")):
+        m = _C_SEAT.match(e)
+        if m:
+            refs.append(m.group(4))
+        m = _C_MAN.match(e)
+        if m:
+            mans.append(m.group(1))
+    for ev in refs:
+        for tok in evidence_refs(ev):
+            path, pin, prob = resolve_evidence(tok, row, folder)
+            if prob:
+                out.add(f"{tok} MISSING")
+                continue
+            lines = read_lines_at(path, pin) if pin else read_lines(path)
+            out.add(f"{tok} -> {_pcase(path)}{'@' + pin if pin else ''} "
+                    + (_digest(lines) if lines is not None else "UNREADABLE"))
+    d = ticket_dir(row, folder)
+    for dg in mans:
+        hit = False
+        if d and d != ".":
+            for mp in sorted(glob.glob(os.path.join(ROOT, d, "reviews", "MANIFEST_*.txt"))):
+                rel = os.path.relpath(mp, ROOT).replace(os.sep, "/")
+                lines = read_lines(rel)
+                if lines and lines[0].strip() == f"MANIFEST {dg}":
+                    out.add(f"MANIFEST {dg} -> {_pcase(rel)} {_digest(lines)}")
+                    hit = True
+        if not hit:
+            out.add(f"MANIFEST {dg} MISSING")
+    return sorted(out)
+
+
+def accept_identity(cid: str, by: dict, g, aliases: dict, folders: dict | None = None) -> list[str]:
+    """The acceptance identity of a claim (see above) as a list of lines; accept_stamp fingerprints it."""
+    row = by[cid]
+    folders = ticket_folders() if folders is None else folders
+    folder = folders.get(row.get("ticket", ""), "")
+    ident = [f"{k}={row.get(k) or ''}" for k in ACCEPT_FIELDS]
+    ident.append(f"ticket-folder={ticket_dir(row, folder)}")
+    ident.append("names=" + "|".join(sorted(claim_names(cid, by, aliases))))
+    for t in sorted(g.deps.get(cid, [])):
+        tr = by.get(t, {})
+        ident.append(f"input={t}@{','.join(sorted(g.uses[(cid, t)]))} v{tr.get('version', '')} "
+                     f"{tr.get('sha256', '')} {tr.get('status', '')}")
+    ident += [f"artifact={a}" for a in accept_artifacts(row, folder)]
+    return ident
+
+
+def accept_stamp(cid: str, by: dict, g, aliases: dict, folders: dict | None = None) -> str:
+    """`v<version> fp2:<24 hex>`: what an accept event records. The fingerprint covers the whole acceptance identity
+    (row fields, ticket folder, effective inputs, names, artifact contents), so ANY later change makes it stale."""
+    fp = hashlib.sha256("\x1f".join(accept_identity(cid, by, g, aliases, folders)).encode()).hexdigest()[:24]
+    return f"v{by[cid].get('version', '')} {ACCEPT_FORMAT}:{fp}"
 
 
 def accept_records() -> dict[str, set]:
@@ -1452,13 +1525,17 @@ def write_legacy_boundary() -> int:
     return 0
 
 
-def unaccepted_inputs(cid: str, by: dict, g, aliases: dict, now: set, records=None, legacy=None):
-    """R03-N1: checked claims cid consumes (stmt / proof / bound-bridge edges, transitively; an @hyp edge too unless
-    the consuming claim's status is `conditional on` it) that have neither an accept event for their CURRENT content
-    nor a legacy-boundary row for their current id + version + statement hash -> [(id, path, why)]. Claims accepted
-    in this same run (`now`) count as accepted (the run refuses as a whole on any ERROR)."""
+def unaccepted_inputs(cid: str, by: dict, g, aliases: dict, now: set, records=None, legacy=None, revalidate=None,
+                      folders=None):
+    """R03-N1 / R04-N1: checked claims cid consumes (stmt / proof / bound-bridge edges, transitively; an @hyp edge too
+    unless the consuming claim's status is `conditional on` it) that have neither an accept event for their CURRENT
+    acceptance identity (accept_stamp) nor a legacy-boundary row for their current id + version + statement hash, or
+    whose identity matches but which no longer pass acceptance on the current tree (`revalidate(id)` -> [problems];
+    memoised by the caller) -> [(id, path, why)]. Claims accepted in this same run (`now`) count as accepted (the run
+    refuses as a whole on any ERROR); legacy-boundary claims are not revalidated (they predate CP3 records)."""
     records = accept_records() if records is None else records
     legacy = legacy_boundary()[0] if legacy is None else legacy
+    folders = ticket_folders() if folders is None else folders
     out, seen, q = [], {cid}, deque([(cid, [cid])])
     while q:
         u, path = q.popleft()
@@ -1472,10 +1549,23 @@ def unaccepted_inputs(cid: str, by: dict, g, aliases: dict, now: set, records=No
             dr = by[d]
             if dr.get("state") not in VALID or status_strength(dr.get("status", "")) != 3 or d in now:
                 continue
-            if accept_stamp(dr) in records.get(d, ()) or (d, dr.get("version", ""), dr.get("sha256", "")) in legacy:
+            if (d, dr.get("version", ""), dr.get("sha256", "")) in legacy:
                 continue
-            why = ("its accept record is stale: the claim changed after acceptance" if records.get(d) else
-                   "it has no accept event and is not in the legacy boundary")
+            have = records.get(d, set())
+            if accept_stamp(d, by, g, aliases, folders) in have:
+                probs = revalidate(d) if revalidate else []
+                if probs:
+                    out.append((d, path + [d], "its accept record matches, but it no longer passes acceptance on the "
+                                f"current tree ({'; '.join(probs[:2])}{' ...' if len(probs) > 2 else ''})"))
+                continue
+            if not have:
+                why = "it has no accept event and is not in the legacy boundary"
+            elif not any(f" {ACCEPT_FORMAT}:" in h for h in have):
+                why = (f"its accept record predates the {ACCEPT_FORMAT} acceptance identity (R04): re-accept it on the "
+                       "current tree")
+            else:
+                why = ("its accept record is stale: the claim, its provenance, inputs or cited artifacts (evidence, "
+                       "council reviews, frozen manifest) changed after acceptance")
             out.append((d, path + [d], why))
     return out
 

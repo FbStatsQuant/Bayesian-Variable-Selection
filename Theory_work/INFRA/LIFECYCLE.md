@@ -198,10 +198,12 @@ ERROR, including
   on the current tree) and one matching `COUNCIL-VERDICT` line in each seat's review file;
 - A5 (transitive assurance): a claim that consumes — through `stmt` / `proof` / bound-bridge edges, transitively, and
   through an `@hyp` edge unless the consumer is `conditional on` it — a PROVED-CHECKED-class claim that carries no
-  durable acceptance record: an `accept` event in `events.log` for its CURRENT content (written only by a PASS of
-  `check.py --acceptance <ids> --record`, or `ingest.py claims F --staged --record`; it stores the version and a
-  fingerprint of the statement hash, status, edges, bound bridges, gates, council and headline, so any later change
-  makes it stale), or a row of the frozen **legacy boundary** `INFRA/LEGACY_ACCEPTED.tsv` (the claims that were
+  durable acceptance record: an `accept` event in `events.log` for its CURRENT acceptance identity (written only by
+  a PASS of `check.py --acceptance <ids> --record`, or `ingest.py claims F --staged --record`; it stores the version
+  and the `fp2` fingerprint of the whole acceptance identity — row fields, provenance, effective inputs and the
+  content of every cited artifact, §4.1 "Acceptance record" — so any later change makes it stale), and which still
+  passes its own acceptance checks (A0-inputs–A4) on the current tree (revalidation, R04-N1), or a row of the frozen
+  **legacy boundary** `INFRA/LEGACY_ACCEPTED.tsv` (the claims that were
   PROVED-CHECKED on main at tag `theory-v2.0-pre` — that tag only: a file naming any other tag or commit is not
   trusted — generated once by `bvsreg.py legacy-boundary`; a row counts only
   while the claim's id, version and statement hash are unchanged; `check.py` recomputes the file from the tag and
@@ -212,7 +214,8 @@ ERROR, including
 **Recording.** Run acceptance with `--record` (`check.py --acceptance <ids> --record`): on a PASS — 0 ERROR in the
 whole run — one `accept` event per named claim is appended; on REFUSED nothing is written. `--only` (a display
 filter) is refused together with `--acceptance`, so no filtered run can print or record a PASS. A claim changed after
-its acceptance (patch, new edge, new gates, …) must be accepted again before an accepted claim may consume it.
+its acceptance (patch, new edge, new gates, relocated statement, edited or deleted evidence, withdrawn council verdict,
+changed reviewed ticket content, a changed input, …) must be accepted again before an accepted claim may consume it.
 
 A checked intermediate result that is not a headline is accepted without the strength gates (but with A0, A1
 evidence / correct, A3, A4 and A5, recorded with `--record`); its headline admission stays pending. Before every continuation and merge,
@@ -256,6 +259,25 @@ score, with `gates=PASS` and score ≥ 8.0, and no malformed or contradictory ve
 exhausted council, scores from different rounds, free text, a digest quoted as "not reviewed" — is an A4 ERROR.
 Pre-Wave-3 rows keep their free-text council history; they are not re-accepted (their claims sit in the legacy
 boundary, A5).
+
+**Acceptance record** (finding R04-N1/N2; `events.log`, action `accept`, column `after`):
+```
+v<version> fp2:<24-hex>
+```
+The fingerprint (`bvsreg.accept_stamp`) is SHA-256 over the claim's acceptance identity: the row fields `id ticket
+kind name file lines premises sha256 version status status_source depends_on consumes assumptions gates council
+headline`; the ticket folder that locates the frozen manifest (tickets.tsv `folder`, else the statement file's
+folder); the names the claim answers to (id, aliases, name); the EFFECTIVE inputs (each resolved input with its uses,
+version, statement hash and status, so an alias edit or a changed input counts); and the content (read line-wise, so
+CRLF / LF checkouts agree) of every cited artifact — each gate evidence file (whatever the result), each council
+seat's review file and each `reviews/MANIFEST_*.txt` with the council digest — a missing one recorded as MISSING.
+At acceptance of a consumer, A5 requires every non-legacy checked input to match a recorded stamp AND to pass the
+per-claim acceptance checks (A0-inputs, A1, A2, A3, A4) again on the current tree (memoised), so a change outside
+the identity (e.g. reviewed ticket content that breaks the frozen manifest) also refuses the consumer. Legacy-boundary
+claims are not revalidated (unchanged boundary; they predate CP3 records).
+Migration: records in the earlier format `v<version> fp:<16-hex>` (row strings only) never match an `fp2` stamp; A5
+reports them as predating the identity and the input must be accepted again (`check.py --acceptance <id> --record`).
+No `accept` event existed on main when the format changed (80e6acd), so nothing needed migrating.
 
 ### 4.2 Strength gate (sharpness gate) — `lit:`, `necessity:`, `better:`
 (a) **Literature comparison** (`lit:PASS(file)`): each assumption and the conclusion compared with Song–Liang (2015)
