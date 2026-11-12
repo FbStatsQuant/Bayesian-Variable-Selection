@@ -14,6 +14,9 @@ OpenAI seat + one Claude seat, both ≥ 8.0 with all six gates in the same round
    OpenAI agents on `codex`.
    **Amended 2026-11-10 (owner):** about 2/3 of all Claude inference on Claude Personal and 1/3 on Claude Work;
    Fable 5.2 still only on Claude Personal. Leads keep a running tally in LOG.md.
+   **Amended 2026-11-11 evening (owner, supersedes the above):** every Claude agent — Fable 5.2 included, leads,
+   subagents, council seats, scheduled runs — runs on **Claude Work** (`claudeAgent`). Claude Personal is not used.
+   OpenAI agents stay on `codex`. (The Console API credits for the batch audit are a separate account, not a thread.)
    **Amended 2026-11-11 (owner), supersedes the 2026-11-10 line until further notice:** Claude Personal runs **only
    Fable 5.2**; every other Claude agent (Opus/Sonnet/Haiku, incl. subagents and council seats) on **Claude Work**.
 3. **Sharpness gate (before heavy proving):** after the statement lock, write `ASSUMPTION_MAP.md` — one page: where
@@ -74,10 +77,12 @@ main); this section wires them into the ticket workflow. Where this section and 
         (b1 v2, b2 v3), each n level, and the most expensive calibration regimes (largest p per n).
       - CP1 is the smoke gate: outputs read back, invariants pass, and measured time per cell is reported.
       - The remaining tasks are then released in batches whose projected cost (measured per-cell times) fits within the
-        **aggregate ceiling of 1,400 core-hours** for the whole P6 resume, smoke included. Nothing beyond the smoke
+        **aggregate ceiling of 1,400 core-hours counted from the resume** (HQ 2026-11-11: NOTS bills 2 CPUs per task; the
+        495.88 core-h spent before the pause are sunk), i.e. **1,896 core-hours in total** for all w3p6_ jobs since
+        2026-11-09 (sacct CPUTimeRAW), smoke included. Nothing beyond the smoke
         manifest is queued before CP1.
       - **Hard backstop (worst-case admission):** a batch is submitted only if Σ over all queued and running
-        w3p6_ tasks of (time limit × cores) + core-hours already used ≤ 1,400. Slurm time limits then make the
+        w3p6_ tasks of (time limit × cores) + core-hours already used (since 2026-11-09) ≤ 1,896. Slurm time limits then make the
         ceiling hold even if no agent or HQ is watching. The lead logs this ledger in LOG.md at every release.
       - A projected overrun stops further releases and returns to HQ. Invariant failures (wrong HPM bookkeeping,
         corrupt output) stop everything; resource-limit outcomes (time limit, preflight refusal) are logged, follow the
@@ -108,6 +113,16 @@ main); this section wires them into the ticket workflow. Where this section and 
       - P6 spending above its ceiling.
 
       It writes its findings to the HQ thread and to `Theory_work/Wave3/WATCHDOG.md`, for Felipe.
+    - **Fail-closed holds (R03 N5).** Containment does not wait for HQ. Any scheduled task (watchdog, daily CI, weekly
+      re-audit) that finds a check ERROR, a failed falsification script, or a reviewer finding against an ACTIVE claim, or
+      P6 spending above 1,700 core-hours in total (since 2026-11-09), appends one line to the **hold file**
+      `C:/Users/felip/Bayesian-Variable-Selection/Theory_work/Wave3/HOLDS.md` (main checkout, absolute path):
+      `HOLD <claim id | P6> <UTC time> <source> <one-line finding>`. Holds never edit the registry.
+      - Every lead reads the hold file before each step. If a held claim is among its consumed claims (transitively), or
+        it is the P6 lead and P6 is held, it stops using that claim (P6: submits nothing more), writes an early
+        checkpoint and ends its run.
+      - Only HQ lifts a hold, by appending `LIFT <id> <time> <disposition>` after the rule-11 triage (propagate dry-run,
+        LIFECYCLE §3 action, or "no finding"), recorded in `HQ_DECISIONS.md`.
     - The IDs and next run times of the heartbeat, watchdog and CI tasks are recorded in `HQ_DECISIONS.md` **before**
       launch.
 13. **Continuous audit.** `INFRA/ci/run_ci.py --steps check,paper,falsify,cite` runs daily, scheduled by HQ. One random
@@ -120,10 +135,13 @@ main); this section wires them into the ticket workflow. Where this section and 
     - **No review layer may be skipped or replaced without Felipe's explicit approval**, recorded in `HQ_DECISIONS.md`.
 15. **Frozen review content and blind first reads.**
     - Before each review round (council, sweep, mid-point), run
-      `python Theory_work/Wave3/tools/manifest.py freeze <ticket dir> reviews/MANIFEST_<round>.txt --extra reviews/INPUTS.txt`,
+      `python Theory_work/Wave3/tools/manifest.py freeze Theory_work/Wave3/<T> Theory_work/Wave3/<T>/reviews/MANIFEST_<round>.txt --extra Theory_work/Wave3/<T>/reviews/INPUTS.txt`
+      (from the repo root; all paths repo-relative — R03 F9),
       where INPUTS.txt lists every external input the proof relies on: premise sources, inherited proofs, pinned code.
       HQ commits it on the ticket branch.
-    - Each reviewer quotes the manifest digest in its reply. At CP3, `manifest.py bind` must pass on both council
+    - Each council reviewer ends its reply with exactly one `COUNCIL-VERDICT round=R<k> manifest=<digest> seat=<seat>
+      score=<x.y> gates=PASS|FAIL` line (template `Theory_work/INFRA/templates/COUNCIL_BRIEF.md`; LIFECYCLE §4.1); mid-point
+      and sweep reviewers quote the digest. At CP3, `manifest.py bind` must pass on both council
       replies of the passing round, and `manifest.py verify` on the final tree; a corrupted manifest fails. Nothing in
       the manifest is edited while that round runs.
     - HQ writes every blind brief to `reviews/BRIEF_<round>_<seat>.md` before launching. That file is the reviewer's
@@ -136,7 +154,7 @@ main); this section wires them into the ticket workflow. Where this section and 
       needs, and never earlier reviews, dispositions or scores. In rounds ≥ 2, a separate **reconciliation** reviewer
       checks each earlier finding against the new manifest and gives a verdict per finding. Passing a round needs both:
       the blind scores, and every earlier CRITICAL or MAJOR finding resolved.
-16. **Interim, until the INFRA tool fixes for findings R02–R06 are merged and reviewed:**
+16. **[LIFTED 2026-11-12 by HQ: R04 fix merged 656982a, Sol RESOLVED, 134/134 on main] Interim, until the INFRA tool fixes for findings R02–R06 are merged and reviewed:**
     - no CP3 ingest or merge;
     - no `propagate.py --apply` on a claim introduced by a merged ticket;
     - every bridge or interface property a claim uses is written as an explicit `depends_on` edge.

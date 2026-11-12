@@ -48,3 +48,85 @@
 - 2026-11-11 W3-POST2 PC2 (Sol): REPAIRED. `propagate.py patch` + `clear` on W3-POST2:D.D(b) and W3-POST2:D; both
   ACTIVE. PROVED-CHECKED labels for W3-POST2 claims A–E restored (evidence: C1 + PC1 + PC2); strength `better:PENDING`.
   First full use of the rollback path (suspect → repair → check → patch → clear): it worked end to end.
+- 2026-11-11 11:40 Owner (Felipe): deploy now, in owner-gated legs ("checkpoints"); HQ reports at each and waits for the
+  owner's greenlight. The 13:00 one-shot launch task is deleted (superseded). INFRA tool fixes round 2 merged (d6da494;
+  103/103 scenarios; Sol review breaks R1–R6 fixed); tag `theory-v2.0-pre` pushed. **Leg A**: W3-START to CP1 (Fable CP,
+  branch theory/W3-START), W3-MEMO-SCR-RM complete (Fable CP + blind Astra), pipeline reconciliation R03 (Sol). W3-P6 lead
+  (Opus CW) starts only if R03 finds no open CRITICAL, and stops at CP0 (smoke manifest; nothing submitted on NOTS in
+  leg A). Leg A ends → report to Felipe → wait.
+- 2026-11-11 Pipeline R03 (Sol reconciliation): NOT-READY. F1, F3–F7, R02–R04, R07–R09, Sol-2–6 and toolfix2 R1–R6 RESOLVED.
+  Open: N2 CRITICAL (a review "binds" by quoting a digest, without a bound outcome), N1/N3/N4 MAJOR (transitive assurance,
+  disposition evidence, crash-safe journal) → INFRA tool fixes round 3 (Opus CW, worktree, own Sol review). N5 MAJOR and
+  F9 MINOR fixed by HQ (2ab1dca): fail-closed hold file `Wave3/HOLDS.md`; watchdog, daily CI and weekly re-audit prompts
+  now append holds; leads told. Per the launch rule, **W3-P6 stays held** until round 3 merges and a narrow Sol re-check
+  finds no CRITICAL. CP3 hold (rule 16) unchanged. START and memo unaffected (no CP3 in leg A).
+- 2026-11-11 Console API credits (owner; ≈ $113, expire 11-15): key `bvs-audit` stored outside the repo. Proposed use:
+  Message Batches Fable 5.2 blind audit of all 109 PROVED-CHECKED claims (≈ $50), then needed PROVED claims (≈ $40);
+  findings → HQ triage → Sol confirmation → rule 11. Awaiting owner go.
+- 2026-11-11 W3-MEMO-SCR-RM done (branch theory/W3-MEMO-SCR-RM @ 20bf513; Astra B1 blind review of v1: REJECT as written,
+  8 findings all accepted; v2 not re-reviewed). HQ adopts recommendation (a): SCR-C enters chapter v2.0 as the
+  exact-recovery corollary of Theorem 5, plus a certificate column in the examples table; headline unchanged; no RM
+  supersession claimed. W3-RM2 keeps its polynomial-leakage target (PL does not give its key lemma). The two PL sketches
+  and Corollary CERT go to the path-level ticket / chapter v2.0 as inputs, each needing its own review before any claim
+  enters the registry; memo v2 is scoping input only. A new ticket (c) only if W3-P6 shows Ŝ = S₀ at frequency ≈ 1 on
+  dense-leak designs. Memo branch merges with the other Wave 3 work after rule 16 lifts.
+- 2026-11-11 Pipeline R04 (Sol, narrow): READY — no open CRITICAL; R03 N1–N4 and toolfix3 defects resolved; 127/127.
+  Two MAJOR open (R04-N1 accepted-input evidence/verdict changes do not stale its accept record; R04-N2 statement-file
+  relocation not in the fingerprint) → small tool fix in leg B. Rule 16 (no CP3 ingest/merge) stays until they are fixed.
+  W3-P6 cleared to start: lead Opus CW, leg A = CP0 only (smoke manifest; NOTS read-only).
+- 2026-11-11 W3-START CP1 (branch @ 58309da): adopt P1, P3; P2 with a one-attempt kill budget; OVL inequality kept,
+  corollary if cheap; O1–O3 deferred. Continuation waits for the owner's leg-B go.
+- 2026-11-11 ~17:40 CT (owner): all Claude threads on Claude Work, Fable 5.2 included; Claude Personal unused
+  (PROTOCOL item 2 amended). Switched: W3-START lead thread → CW Fable 5.2 high; watchdog thread → CW Opus high.
+  HQ thread moves to CW Opus high at the end of this turn (memory copied to the CW config).
+- 2026-11-11 ~18:00 CT (owner): API audit GO. Pass 1 submitted: Message Batches `msgbatch_0148MUMvKUm8r1au3Y6W7Xpk`,
+  Fable 5.2 effort high, 39 requests (one per claim file), 109 PROVED-CHECKED claims, blind (reviews/ withheld).
+  Input 2.13 M tokens (≈ $8.5 at batch rate); worst-case output $50. Tool + inputs: Theory_work/Wave3/API_AUDIT/.
+  Findings → HQ triage → Sol confirmation → rule 11 (holds via HOLDS.md if confirmed CRITICAL/ERROR).
+- 2026-11-11 (owner): the HQ consultant runs on Claude Personal, Fable 5.1, effort high — the one exception to the
+  all-CW rule. Consulted on the W3-P6 ceiling basis and S3.
+- 2026-11-11 ~18:20 CT W3-P6 CP0 (owner delegated to HQ + consultant, CP Fable 5.1): ceiling basis (B) — 1,400 core-h
+  counted from the resume = **1,896 total** since 2026-11-09 (worst-case admission against 1,896); watchdog HOLD at
+  1,700 total. Smoke manifest approved **with S3** (S1–S5, worst +200 → 695.88). Release plan replaced by the
+  consultant's staged design, pre-declared before any outcome is seen: stage 1 = reps 1–10 on all kept cells; stage 2 =
+  reps 11–20 on the D1 cells (75,750), (100,1000), (75,188), (100,250) cs ρ=.5 and on any cell with 1–3 failures in
+  stage 1. Kept cells: b1 remainder, (75,75), (100,100), (75,188), (75,750), (100,250) cs .5, (100,1000); at (100,250)
+  breadth only cs ρ=.7 and s₀=8 at 10 seeds. Deferred: (150,150) (smoke seed only). Dropped: n=200, (50,2500).
+  Scheduled seeds stay in the denominator; cells stopped at 10 are budget cuts. Admission: measured max × 1.5 × 2 for
+  costed cells, worst case for uncosted; (100,1000) and (150,150) in sub-batches of 5; longest first. Expected ≈ 1,500
+  from resume; stop after stage 1 if the ceiling binds (stage 1 is decision-grade for persisting search failures).
+  Execution waits for the owner's leg-B go.
+- 2026-11-11 ~18:35 CT (owner): **leg B GO, full version**; "lean fully on CW until further notice" — the consultant
+  exception is withdrawn (consultant thread now CW Fable 5.1 high); no Claude Personal use at all. Launched: W3-RM2 lead
+  (CW Fable 5.2, worktree BVS-wt/W3-RM2 @ 9700e17) to CP1; INFRA R04 fix (CW Opus, worktree BVS-wt/INFRA-R04 @ 3d6d84d)
+  + one Sol check; W3-START lead resumed (CW Fable 5.2) to CP2; W3-P6 lead resumed (CW Opus) to submit the smoke S1–S5.
+- 2026-11-11 API audit pass 1: 86 OK / 19 MINOR / 1 GAP (C-DLV:Prop-F) / 3 requests re-run at 128k (pass1b). R-AUD1 Sol:
+  CONFIRMED-WORDING — scope clarification only, no consumer relies on the strong reading; no registry mark. Wording fix +
+  MINORs → editorial pass with chapter v2.0 (API_AUDIT/pass1/TRIAGE.md).
+- 2026-11-11 API audit: pass 1 final 87 OK / 21 MINOR / 1 wording / 0 ERROR over 109 PROVED-CHECKED (≈ $32 incl. re-run).
+  Pass 2 submitted (plan's second item): msgbatch_01JERwr2jhDAFhxUhuLk2vmG, 48 requests, 92 author-only PROVED claims
+  of the tickets feeding running work and the headline (W3-RM, W3-POST2, W3-POST, W2-LOC2, W1-GEN, W1-PXN, W1-N1,
+  W1-N3, C-PACK, W2-UNI, C-ENG, W2-APP); input ≈ $10, worst-case output $61 (balance ≈ $80). Remaining factor-design
+  PROVED claims (W2-FAC-*) only if credit remains.
+- 2026-11-11 ~18:45 CT (owner): **continuous mode** — CW has ~20 h of weekly capacity before reset; do not stop and do
+  not burst; effort ≤ high; HQ answers checkpoints itself and asks the owner only key decisions. A meta-HQ Sol thread
+  (owner's) resumes HQ after any 5-h limit. Resume card: Wave3/HQ_NOW.md.
+- 2026-11-11 API audit pass 2: 72 OK / 12 MINOR / 0 GAP/ERROR (≈ $14); f00 (8 W1-GEN headline claims) hit 64k → pass2b
+  at 128k. Pass 3 (plan item 3, credit remains): msgbatch_017Qeq255ojPUvhjEePbobwf, 40 requests, 50 author-only PROVED
+  W2-FAC-* claims; input ≈ $9, worst-case output $51 (balance ≈ $67, expires 2026-11-15).
+- 2026-11-11 W3-START CP2 (branch @ b469719): START-F proved (L1–L5), LC1 line checks + MP1 Astra
+  CONTINUE, audit OK. GO to CP3; STATEMENT v1.3.1 (necessity on the actual partition; partition-free only s₀ ≥ 16) +
+  Sol diff check; (B-R) kill budget one Fable attempt + one Astra break review, else narrow (T3)(b) via CP1.
+- 2026-11-11 API audit pass 3: 42 OK / 5 MINOR / 3 GAP (≈ $16; audit total ≈ $64, ≈ $49 credit left). R-AUD2 Sol
+  confirmed the GAPs (S5F:L0, S5F:L1, FAC-X:L4r.5; one wording-only); no PROVED-CHECKED or chapter impact. Rule 11:
+  SUSPECT on the three lemmas (+ S5F C1–C4 dependents); repairs not scheduled (stop list).
+- 2026-11-11 ~18:15 CT (owner): HQ has discretion over the remaining API credits ($44.98, expire 2026-11-15; month
+  spend limit $195 leaves ≈ $40). Plan: blind Fable audit of W3-START and W3-RM2 at CP3 (in place of a Claude council
+  seat where the protocol allows), cap ≈ $35; keep ≈ $5 margin.
+- 2026-11-12 00:30 UTC INFRA R04 fix merged (656982a; Sol R04FIX RESOLVED for R04-N1, R04-N2; 134/134 on merged main;
+  check.py 0 ERROR). Rule 16 LIFTED: CP3 ingest/merge allowed again under rules 9–15.
+- 2026-11-12 ~00:21 UTC CW account incident (owner fixed: CW now the Team account). Runs cut off: W3-START lead (CP3 leg)
+  → resumed. W3-RM2 lead was already stopped at CP1 (waiting on HQ).
+- 2026-11-12 W3-RM2 CP1 (branch @ 81ff7d6): v1.2 locked (b < ½ via width condition (W)); adopt P1,
+  P2/G1 → v1.3 + Sol check; P3 one attempt in Form R after CP2; Form R kept; RM2-F/R as candidates implying RM-F/R
+  (supersession at CP3, owner informed). GO to CP2.
