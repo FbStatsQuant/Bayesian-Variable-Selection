@@ -195,7 +195,9 @@ ERROR, including
   own status (`A3-condition`, checked on the consumer and, for existing consumers, on the conditional result); an
   `ack` never waives A0 or A3;
 - A4: a checked claim without a CP3-PASS council record (§4.1): the record, its frozen manifest (still verifying
-  on the current tree) and one matching `COUNCIL-VERDICT` line in each seat's review file;
+  on the current tree, and covering the statement, premise and status-source files — a status source that is the
+  ticket's own `CHECKPOINT_<k>.md` only under the conditions of §4.1 "Checkpoint status source") and one matching
+  `COUNCIL-VERDICT` line in each seat's review file;
 - A5 (transitive assurance): a claim that consumes — through `stmt` / `proof` / bound-bridge edges, transitively, and
   through an `@hyp` edge unless the consumer is `conditional on` it — a PROVED-CHECKED-class claim that carries no
   durable acceptance record: an `accept` event in `events.log` for its CURRENT acceptance identity (written only by
@@ -260,13 +262,37 @@ exhausted council, scores from different rounds, free text, a digest quoted as "
 Pre-Wave-3 rows keep their free-text council history; they are not re-accepted (their claims sit in the legacy
 boundary, A5).
 
+**Checkpoint status source** (INFRA R05, HQ 2026-11-12). The frozen manifest must cover each claim's statement file,
+premise files and status-source file. Wave 3 tickets write their per-claim status lines (and REGISTRY blocks) in their
+own `CHECKPOINT_<k>.md`, which `manifest.py` never covers: a status line written after the council cannot be inside the
+manifest the council reviewed. So a status source that is the claim's OWN ticket's `CHECKPOINT_<k>.md` (directly in the
+ticket folder) is exempt from coverage — as status source only; statement and premise files stay covered — and A4
+then also requires:
+1. **Frozen at ingest.** `ingest.py` records the checkpoint's content digest (line-wise SHA-256) in the row's
+   `status_sha256` (also `registry.py add / correct-status` and `propagate.py` status changes; never settable by
+   `registry.py set`), committed with the ingest. The file must still have that digest: any later edit of an ingested
+   checkpoint is a `check.py` C12-checkpoint ERROR (CI) and refuses acceptance. Corrections go to a new file.
+2. **Ids = what both seats accepted.** The claim ids the checkpoint carries (its REGISTRY blocks, plus every row
+   whose status source is that file) equal, for EACH council seat, the ids that seat accepted in its per-claim table
+   — a Markdown table with header `| id | decision |` (or `| Id | Disposition | … |`), a local id read in the ticket;
+   a row is accepted iff its decision starts with `accepted` (`accepted with non-blocking remarks` counts). No extra,
+   no missing id; a review without such a table is refused.
+3. **Cited rounds resolve and bind.** Each review round cited in the claim's status line (the line(s) of
+   `status_source`, plus the recorded status text itself, which may continue past them) — written `<ROUND>:` or `<ROUND> (<note>):`, ROUND upper-case letters / digits / `-` with a digit,
+   e.g. `LC1-A: VERIFIED` — resolves to exactly one file `reviews/<ROUND>_*` of the ticket (`-` read as `_`;
+   dispositions, briefs and manifests excluded), and that file quotes the digest of an existing, internally valid
+   frozen `reviews/MANIFEST_*.txt` of the ticket (well-formed rows whose digest is the header; an earlier round binds
+   to its own manifest, which need not match the current tree). The acceptance round `R<k>` of the council cell resolves to the council seats' review files, which bind to
+   the acceptance manifest with a PASS verdict (≥ 8.0, gates PASS) as above. A round named in free text without that
+   form is not a citation.
+
 **Acceptance record** (finding R04-N1/N2; `events.log`, action `accept`, column `after`):
 ```
 v<version> fp2:<24-hex>
 ```
 The fingerprint (`bvsreg.accept_stamp`) is SHA-256 over the claim's acceptance identity: the row fields `id ticket
-kind name file lines premises sha256 version status status_source depends_on consumes assumptions gates council
-headline`; the ticket folder that locates the frozen manifest (tickets.tsv `folder`, else the statement file's
+kind name file lines premises sha256 version status status_source status_sha256 depends_on consumes assumptions gates
+council headline`; the ticket folder that locates the frozen manifest (tickets.tsv `folder`, else the statement file's
 folder); the names the claim answers to (id, aliases, name); the EFFECTIVE inputs (each resolved input with its uses,
 version, statement hash and status, so an alias edit or a changed input counts); and the content (read line-wise, so
 CRLF / LF checkouts agree) of every cited artifact — each gate evidence file (whatever the result), each council
@@ -277,7 +303,8 @@ the identity (e.g. reviewed ticket content that breaks the frozen manifest) also
 claims are not revalidated (unchanged boundary; they predate CP3 records).
 Migration: records in the earlier format `v<version> fp:<16-hex>` (row strings only) never match an `fp2` stamp; A5
 reports them as predating the identity and the input must be accepted again (`check.py --acceptance <id> --record`).
-No `accept` event existed on main when the format changed (80e6acd), so nothing needed migrating.
+No `accept` event existed on main when the format changed (80e6acd), so nothing needed migrating. The same held when
+`status_sha256` joined the identity (INFRA R05, main c8a970f); the claims.tsv column is added on the next write.
 
 ### 4.2 Strength gate (sharpness gate) — `lit:`, `necessity:`, `better:`
 (a) **Literature comparison** (`lit:PASS(file)`): each assumption and the conclusion compared with Song–Liang (2015)

@@ -154,6 +154,8 @@ COLUMNS = [
     "tex",           # LaTeX statement block for the paper, "path:a-b"
     "tex_sha256",    # hash of the tex span when its transcription was last reviewed against the statement
     "notes",
+    "status_sha256", # INFRA R05: content digest (line-wise) of the status source when it is a CHECKPOINT_<k>.md,
+                     # recorded at ingest / status change (empty otherwise); check.py C12 flags a later edit
 ]
 STATES = ["ACTIVE", "CANDIDATE", "SUSPECT", "REBASE-NEEDED", "NARROWED", "RETRACTED", "DEPRECATED",
           "SUPERSEDED-VALID"]
@@ -1195,6 +1197,214 @@ def evidence_text(path: str, pin: str = "") -> str:
     return "\n".join(lines or [])
 
 
+# ---------------------------------------------------------------- checkpoint status sources (INFRA R05)
+# Wave 3 tickets write their per-claim status lines in their own CHECKPOINT_<k>.md, which manifest.py never covers (a
+# status line written after the council cannot be inside the manifest the council reviewed). Such a status source is
+# exempt from manifest coverage (statement and premise files are NOT), and only under checkpoint_problems:
+#   (a) the row records the checkpoint's content digest (`status_sha256`, written at ingest) and the file still has it;
+#   (b) the claim ids of the checkpoint (its REGISTRY blocks, plus every registry row whose status source is that
+#       file) equal, for EACH council seat, the ids that seat accepted in its per-claim table;
+#   (c) every review round cited in the claim's status line resolves to exactly one existing review file of the
+#       ticket, and that file quotes the digest of an existing frozen manifest of the ticket (an earlier round binds
+#       to its own manifest; the acceptance round R<k> of the council cell resolves to the council seats' review
+#       files, which A4 binds to the acceptance manifest with a PASS verdict).
+_CKPT_NAME = re.compile(r"^CHECKPOINT_(\d+)\.md$")
+# a cited review round: `<ROUND>:` or `<ROUND> (<note>):` followed by a blank or the line end, where ROUND is upper-case
+# letters / digits with optional `-` parts and contains a digit (LC1-A, BR1, SW1, R2, RC-R2); `W3-START:AGG` is not one
+_ROUND_CITE = re.compile(r"(?<![\w:./-])([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*)(?:\s*\([^()]*\))?:(?=\s|$)")
+_HEX64 = re.compile(r"(?<![0-9a-fA-F])[0-9a-f]{64}(?![0-9a-fA-F])")
+_ID_HEAD = ("id", "claim", "claim id")
+_DECISION_HEAD = ("decision", "disposition")
+
+
+def status_sha(source: str) -> str:
+    """What `status_sha256` records for a status source: the content digest (line-wise, CRLF / LF stable) of its file
+    when that file is a CHECKPOINT_<k>.md; '' for any other source or an unreadable file."""
+    path = _pkey((source or "").rpartition(":")[0]) if (source or "").rpartition(":")[0] else ""
+    if not path or not _CKPT_NAME.match(os.path.basename(path)):
+        return ""
+    lines = read_lines(path)
+    return _digest(lines) if lines is not None else ""
+
+
+def own_checkpoint(row: dict, folder: str = "") -> str:
+    """The repository path of the claim's status source if it is its OWN ticket's CHECKPOINT_<k>.md (directly in the
+    ticket folder: tickets.tsv `folder`, else the statement file's folder) and exists; else ''."""
+    raw = (row.get("status_source", "") or "").rpartition(":")[0]
+    path = _pkey(raw) if raw else ""
+    d = ticket_dir(row, folder)
+    if not path or not d or d == "." or not _CKPT_NAME.match(os.path.basename(path)):
+        return ""
+    if _pcase(os.path.dirname(path)) != _pcase(d) or not repo_file_exists(path):
+        return ""
+    return path
+
+
+_INGEST_MOD = None
+
+
+def _ingest_tool():
+    """ingest.py as a library: one REGISTRY-block grammar for ingest and for the checkpoint's claim ids."""
+    global _INGEST_MOD
+    if _INGEST_MOD is None:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("bvs_ingest_tool", os.path.join(TOOLS, "ingest.py"))
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _INGEST_MOD = mod
+    return _INGEST_MOD
+
+
+def checkpoint_claim_ids(path: str, rows: list[dict]) -> set:
+    """The claim ids a checkpoint carries: the ids of its REGISTRY blocks (ingest.py's grammar) and of every registry
+    row whose status source is that file."""
+    try:
+        objs = _ingest_tool().convert_report(os.path.join(ROOT, path))[0]
+    except Exception:  # pragma: no cover - an unreadable checkpoint fails (a) anyway
+        objs = []
+    ids = {f"{o.get('ticket', '')}:{o.get('local_id', '')}" for o in objs if o.get("ticket") and o.get("local_id")}
+    for r in rows:
+        raw = (r.get("status_source", "") or "").rpartition(":")[0]
+        if raw and _pcase(raw) == _pcase(path):
+            ids.add(r["id"])
+    return ids
+
+
+def _cells(line: str) -> list[str]:
+    t = line.strip()
+    return [c.strip() for c in t.strip("|").split("|")] if t.startswith("|") else []
+
+
+def _plain(c: str) -> str:
+    return re.sub(r"\s+", " ", re.sub(r"[*`]", "", c)).strip()
+
+
+def seat_decisions(text: str, ticket: str):
+    """A council review's per-claim table(s) -> ({full claim id: accepted?}, [problems]). A per-claim table is a
+    Markdown table whose header's first cell is `id` (or `claim`, `claim id`) and second `decision` (or
+    `disposition`), case-insensitive; a row is accepted iff its decision starts with `accepted` (`accepted with
+    non-blocking remarks` counts, `not accepted` does not). A local id gets the ticket prefix. An id listed twice with
+    different decisions is not accepted."""
+    dec, probs, tables, in_t = {}, [], 0, False
+    for ln in text.splitlines():
+        cs = _cells(ln)
+        if not cs:
+            in_t = False
+            continue
+        if len(cs) >= 2 and _plain(cs[0]).lower() in _ID_HEAD and _plain(cs[1]).lower() in _DECISION_HEAD:
+            in_t, tables = True, tables + 1
+            continue
+        if not in_t or len(cs) < 2 or re.fullmatch(r"[\s:|-]*", ln.strip()):
+            continue
+        cid = _plain(cs[0])
+        if not cid:
+            continue
+        cid = cid if ":" in cid else f"{ticket}:{cid}"
+        ok = _plain(cs[1]).lower().startswith("accepted")
+        if cid in dec and dec[cid] != ok:
+            probs.append(f"{cid} is listed with contradictory decisions")
+        dec[cid] = ok and dec.get(cid, True)
+    if not tables:
+        probs.append("no per-claim table (`| id | decision |`) found")
+    return dec, probs
+
+
+def cited_rounds(text: str) -> list[str]:
+    """The review rounds cited in a status line (see _ROUND_CITE), in order, without repeats."""
+    return list(dict.fromkeys(m.group(1) for m in _ROUND_CITE.finditer(text or "")
+                              if any(ch.isdigit() for ch in m.group(1))))
+
+
+def round_files(rid: str, d: str) -> list[str]:
+    """Review files of round `rid` in `<d>/reviews/`: names starting with `<rid>_` (`-` also read as `_`);
+    dispositions, briefs and manifests excluded."""
+    import glob
+    pre = (rid + "_", rid.replace("-", "_") + "_")
+    out = []
+    for fp in sorted(glob.glob(os.path.join(ROOT, d, "reviews", "*"))):
+        b = os.path.basename(fp)
+        if not os.path.isfile(fp) or "disposition" in b.lower() or b.upper().startswith(("BRIEF", "MANIFEST")):
+            continue
+        if b.startswith(pre):
+            out.append(os.path.relpath(fp, ROOT).replace(os.sep, "/"))
+    return out
+
+
+def manifest_digests(d: str) -> dict[str, str]:
+    """{digest: manifest path} of every internally valid `<d>/reviews/MANIFEST_*.txt`: well-formed header, at least one
+    stored row, every row `<64-hex>  <path>`, and the header digest equal to the digest of the stored rows (Sol R05FIX
+    B2; a historical manifest is NOT compared with the current tree)."""
+    import glob
+    out = {}
+    try:
+        M = manifest_tool()
+    except Exception:  # pragma: no cover - the tool is part of the repository
+        return out
+    for mp in sorted(glob.glob(os.path.join(ROOT, d, "reviews", "MANIFEST_*.txt"))):
+        try:
+            dg, _, rows_ = M.read_manifest(mp)
+        except Exception:
+            continue
+        if rows_ and all(re.fullmatch(r"[0-9a-f]{64}  \S.*", r_) for r_ in rows_) and M.digest(rows_) == dg:
+            out[dg] = os.path.relpath(mp, ROOT).replace(os.sep, "/")
+    return out
+
+
+def checkpoint_problems(row: dict, folder: str, ck: str, rnd, seat_files, rows: list[dict] | None = None) -> list[str]:
+    """[] iff the claim's own CHECKPOINT_<k>.md `ck` may stand as its (uncovered) status source: (a), (b), (c) above.
+    `seat_files`: [(seat, review path, pin)] of the council cell; `rnd`: its round number."""
+    probs = []
+    # (a) the checkpoint is frozen at ingest
+    rec, cur = (row.get("status_sha256") or "").strip(), status_sha(row.get("status_source", ""))
+    if not rec:
+        probs.append(f"status source {ck} is the ticket's checkpoint, but the row records no status_sha256 (written "
+                     "at ingest): re-ingest, or put the status line in a file the frozen manifest covers")
+    elif rec != cur:
+        probs.append(f"checkpoint {ck} changed after ingest (status_sha256 {rec[:12]}... != current "
+                     f"{(cur or 'UNREADABLE')[:12]}...): an ingested checkpoint is frozen")
+    # (b) the checkpoint's claim ids == the ids EACH council seat accepted
+    rows = load_claims() if rows is None else rows
+    ck_ids = checkpoint_claim_ids(ck, rows)
+    ticket = row.get("ticket", "") or row.get("id", "").partition(":")[0]
+    if not seat_files:
+        probs.append(f"checkpoint {ck}: no council review file to compare its claim ids with")
+    for name, path, pin in seat_files:
+        dec, dp = seat_decisions(evidence_text(path, pin), ticket)
+        probs += [f"seat {name}: review {path}: {p}" for p in dp]
+        acc = {k for k, v in dec.items() if v}
+        for lab, ids_ in (("carries claim id(s) this seat did not accept", ck_ids - acc),
+                          ("lacks claim id(s) this seat accepted", acc - ck_ids)):
+            if ids_:
+                ids_ = sorted(ids_)
+                probs.append(f"seat {name}: checkpoint {ck} {lab} in {path}: {', '.join(ids_[:8])}"
+                             f"{' ...' if len(ids_) > 8 else ''} (the checkpoint's ids must equal each seat's accepted ids)")
+    # (c) each review round cited in the status line -> exactly one review file, quoting a frozen manifest's digest
+    d = ticket_dir(row, folder)
+    sp = parse_span(((row.get("status_source", "") or "").rpartition(":")[2]).split(",")[0])
+    lines = read_lines(ck) or []
+    text = " ".join(lines[sp[0] - 1: sp[1]]) if sp and sp[1] <= len(lines) else ""
+    if not text:
+        probs.append(f"status line {row.get('status_source')} unreadable")
+    # Sol R05FIX B1: a status may continue past the stated line(s) (status_at reads up to 3 more), so the citations of
+    # the accepted status text itself are scanned too (never the neighbouring claims' lines)
+    text += " " + (row.get("status") or "")
+    mans = None
+    for rid in cited_rounds(text):
+        if rnd is not None and rid == f"R{rnd}":
+            continue  # the acceptance round: the council seats' files, bound to the acceptance manifest (A4)
+        fs = round_files(rid, d)
+        if len(fs) != 1:
+            probs.append(f"the status line cites review round {rid}, which resolves to "
+                         + (f"{len(fs)} review files ({', '.join(fs[:4])})" if fs else f"no file {d}/reviews/{rid}_*")
+                         + ": a cited round must resolve to exactly one review file")
+            continue
+        mans = manifest_digests(d) if mans is None else mans
+        if not set(_HEX64.findall(evidence_text(fs[0]))) & set(mans):
+            probs.append(f"review {fs[0]} (round {rid}, cited in the status line) quotes no digest of a frozen "
+                         f"{d}/reviews/MANIFEST_*.txt")
+    return probs
+
+
 # ---------------------------------------------------------------- council record (R10)
 # `council` cell, one machine-readable format (LIFECYCLE §4.1):
 #   R<k>; MANIFEST <64-hex>; <seat>=<score> PASS(<review file>); <seat>=<score> PASS(<review file>)
@@ -1271,7 +1481,10 @@ def manifest_problems(row: dict, folder: str, dg: str) -> list[str]:
         for ln in M.read_manifest(mp)[2]:
             p_ = ln[66:]
             covered.add(_pcase(p_[4:] if p_.startswith("EXT:") else f"{d}/{p_}"))
-        need = [row.get("file", ""), (row.get("status_source", "") or "").rpartition(":")[0]]
+        # INFRA R05: a status source that is the ticket's OWN CHECKPOINT_<k>.md (excluded from every manifest by
+        # design) is exempt from coverage, as status source only; council_problems then runs checkpoint_problems
+        ck = own_checkpoint(row, folder)
+        need = [row.get("file", "")] + ([] if ck else [(row.get("status_source", "") or "").rpartition(":")[0]])
         need += [split_premise(x)[0].rpartition(":")[0] for x in split_list(row.get("premises", ""))
                  if not split_premise(x)[1]]  # an archived premise span is frozen in git
         for f_ in dict.fromkeys(x for x in need if x):
@@ -1281,12 +1494,14 @@ def manifest_problems(row: dict, folder: str, dg: str) -> list[str]:
     return probs
 
 
-def council_problems(row: dict, folder: str = "") -> list[str]:
+def council_problems(row: dict, folder: str = "", rows: list[dict] | None = None) -> list[str]:
     """[] iff the claim's council record is a CP3-PASS: two seats (distinct names, distinct review files), each
     >= 8.0 with all gates PASS, in one round, on one MANIFEST digest; that digest is the header of the ticket's
     reviews/MANIFEST_*.txt, which still verifies on the current tree; and every seat's review file contains exactly one
     `COUNCIL-VERDICT` line for that digest matching the cell (round, seat, score, gates=PASS) and no contradictory
-    verdict line (R03-N2: an outcome bound to the digest, not a mention of it)."""
+    verdict line (R03-N2: an outcome bound to the digest, not a mention of it). When the status source is the
+    ticket's own CHECKPOINT_<k>.md (exempt from manifest coverage), checkpoint_problems must also be empty (INFRA R05);
+    `rows`: the registry rows (default: claims.tsv), for the checkpoint's claim ids."""
     cell = (row.get("council") or "").strip()
     if not cell:
         return ["no council record (format: R<k>; MANIFEST <64-hex>; <seat>=<score> PASS(<review>); "
@@ -1311,7 +1526,7 @@ def council_problems(row: dict, folder: str = "") -> list[str]:
     if len(mans) == 1:
         probs += manifest_problems(row, folder, mans[0])
     rnd = int(_C_ROUND.match(rounds[0]).group(1)) if len(rounds) == 1 else None
-    files = []
+    files, seat_files = [], []
     for name, score, res, ev in seats:
         if float(score) < COUNCIL_MIN or float(score) > 10:
             probs.append(f"seat {name}: score {score} not in [{COUNCIL_MIN}, 10]")
@@ -1328,12 +1543,16 @@ def council_problems(row: dict, folder: str = "") -> list[str]:
         if _pcase(path) in files:  # same repository file, whatever its case or commit pin (two seats = two reviews)
             probs.append(f"seat {name}: review file {path} is also another seat's (two seats = two reviews)")
         files.append(_pcase(path))
+        seat_files.append((name, path, pin))
         if len(mans) == 1:
             try:
                 _, vp = manifest_tool().verdict_problems(evidence_text(path, pin), mans[0], rnd, name, score)
             except Exception as e:  # pragma: no cover
                 vp = [f"cannot check the verdict line ({e})"]
             probs += [f"seat {name}: review {path}: {p}" for p in vp]
+    ck = own_checkpoint(row, folder)
+    if ck:
+        probs += checkpoint_problems(row, folder, ck, rnd, seat_files, rows)
     return probs
 
 
@@ -1348,7 +1567,8 @@ def council_problems(row: dict, folder: str = "") -> list[str]:
 # files, the round's frozen MANIFEST_*.txt); a missing artifact is part of the identity as MISSING. In addition, an
 # accepted input whose identity still matches is re-checked on the current tree (A5 revalidation, check.py).
 ACCEPT_FIELDS = ("id", "ticket", "kind", "name", "file", "lines", "premises", "sha256", "version", "status",
-                 "status_source", "depends_on", "consumes", "assumptions", "gates", "council", "headline")
+                 "status_source", "status_sha256", "depends_on", "consumes", "assumptions", "gates", "council",
+                 "headline")
 ACCEPT_FORMAT = "fp2"  # stamp format: `v<version> fp2:<24 hex>`; older `fp:` records are stale (re-accept)
 LEGACY_TAG = "theory-v2.0-pre"
 LEGACY_FILE = os.path.join(os.path.dirname(TOOLS), "LEGACY_ACCEPTED.tsv")  # the repository file, never a stage copy

@@ -773,6 +773,7 @@ def main():
         elif a.op == "downgrade":
             x["state_reason"] = f"downgraded {stamp} from `{x['status'][:100]}`: {a.reason}"
             x["status"], x["status_source"], x["version"] = a.status, a.status_source, R.bump(x["version"], "minor")
+            x["status_sha256"] = R.status_sha(a.status_source)  # INFRA R05
         else:
             st = {"retract": "RETRACTED", "narrow": "NARROWED", "deprecate": "DEPRECATED", "suspect": "SUSPECT"}[a.op]
             x["state"], x["state_reason"] = st, f"{st} {stamp}: {a.reason}"
@@ -782,6 +783,7 @@ def main():
                 x["version"] = R.bump(x["version"], "minor")
             if a.status:
                 x["status"], x["status_source"] = a.status, a.status_source
+                x["status_sha256"] = R.status_sha(a.status_source)  # INFRA R05
             if a.archive:
                 x["evidence"] = R.join_list(dict.fromkeys(R.split_list(x.get("evidence", ""))
                                                           + [R.ARCHIVE_PREFIX + a.archive]))
