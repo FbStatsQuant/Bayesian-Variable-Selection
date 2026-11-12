@@ -187,3 +187,8 @@
   acceptance after R05. W3-START BT2 P1–P4 → ticket W3-START2 LAUNCHED (Fable 5.2 CW; branch from theory/W3-START).
   Queue INFRA R06: manifest hashes are EOL-dependent (CRLF-only verify; fails on an LF checkout) — normalise or pin
   .gitattributes; do after R05, without invalidating existing bound manifests.
+- 2026-11-12 ~07:30 CT (owner): Claude threads on **Claude Personal** for now (CW hit its 5-h limit twice). Model policy:
+  Opus leads by default; Fable only for new hard proofs (W3-START2 keeps Fable 5.2) or kill-budgeted consults on a stuck
+  key lemma. Switched: W3-SCALE → Opus, W3-PSHARP → Opus, W3-START2 stays Fable; consultant → CP Fable 5.2. Owner busy
+  today: HQ settles operational decisions with the consultant; owner only for big picture and token management. 09:05
+  auto-resume task disabled; leads resume on HQ's order after housekeeping (R05 merge, acceptances).
