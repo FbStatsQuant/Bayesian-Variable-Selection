@@ -1,0 +1,5 @@
+1	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=75 p=75 s0=4 rep=6 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+2	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=75 p=75 s0=4 rep=7 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+3	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=75 p=75 s0=4 rep=8 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+4	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=75 p=75 s0=4 rep=9 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
+5	Rscript --vanilla p6_fit.R $CODE/Scripts/SMC_BVS/core $OUT/raw/fits.jsonl $OUT/rds design=cs n=75 p=75 s0=4 rep=10 arm=wide hours=22.5 mem_gb=12 savefull=0 rho=0.5
