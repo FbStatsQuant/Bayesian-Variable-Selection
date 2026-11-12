@@ -101,9 +101,8 @@ P(F_n) → 1 and n b² ≥ 1200V₀(log n)² → ∞: π(|S| ≤ m_n) → 0 in p
 - **[1a″]** (lines 7-14) asserts, for a deterministic ϑ with B_T(ϑ) ≤ B, that π(|S| > m) = A^T_mΘ″_{n,m} with Θ″ tight
   for fixed (M, B). On 𝔇_n, on F_n, Θ″_{n,m_n} ≥ (1 − e^{−c₁nb²})·n/2 → ∞, although the approximation error ‖μ − X_Tϑ‖
   can be made 0. So the bounded-cost hypothesis cannot be replaced by a bound on the approximation error alone. Nor
-  by a growing cost allowance B_n with B_n/(log n)² → ∞: given such B_n, choose b_n ≤ b̄ with
-  C_bV₀(log n)² ≤ n b_n² ≤ B_n (possible for all large n, taking b̄ so that the choice b_n² = C_bV₀(log n)²/n ≤ b̄² is
-  admissible); then min_ϑ B_T(ϑ) ≤ b_n²(n−1) ≤ B_n and the conclusion fails.
+  by a growing cost allowance B_n with B_n/(log n)² → ∞: fix any b̄ > 0 and put b_n² := C_bV₀(log n)²/n. For all large n,
+  b_n ≤ b̄ and n b_n² = C_bV₀(log n)² ≤ B_n, so 𝔇_n is admissible, min_ϑ B_T(ϑ) ≤ b_n²(n−1) ≤ B_n, and the conclusion fails.
 - Not shown: that a cost of order (log n)² or smaller breaks the conclusion. The gap between O(1) (sufficient,
   `W3-POST2:B`) and (log n)² is open. W3-POST2's numerics N6b (T = ∅, cost n − 1, conclusion intact) show that a large
   cost does not always break it; here it does, because the signal needs ≍ log n columns that T does not contain.

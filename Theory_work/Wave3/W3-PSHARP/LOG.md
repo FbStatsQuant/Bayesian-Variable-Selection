@@ -52,4 +52,7 @@ Claude-inference tally: all on Claude Work (claudeAgent); claude-personal not us
 - 2026-11-12 04:13 CST. **Resumed** after a second Claude Work rate-limit stop (HQ message). On disk: everything of
   steps 1–6; `a_orth` had finished (E1 4501 s, E2 inside (E): odds/Λ_n 1.26–1.37, min 0.98). HOLDS.md: no holds.
   L01 and K01 were already dispositioned (steps 3, 6).
-- 04:20. **CP1** written (`CHECKPOINT_1.md`) and committed. Reviews clean after fixes → advancing to CP2 (pre-approved).
+- 04:14. **CP1** written (`CHECKPOINT_1.md`) and committed. Reviews clean after fixes → advancing to CP2 (pre-approved).
+- 04:15. [step 7] CP2 line checks launched in parallel (gpt-6.1-sol, codex, high, blind): KSA (`lemmas/S_one_step.md`,
+  `A_log_factor.md`; brief `reviews/BRIEF_KSA_sol.md`) and KBC (`B_sparsity.md`, `C_counterexample.md`;
+  `reviews/BRIEF_KBC_sol.md`). Restore point committed first.
