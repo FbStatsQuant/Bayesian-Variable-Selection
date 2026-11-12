@@ -12,7 +12,7 @@ local({
 })
 source(file.path(WS_DIR, "ws_common.R"))
 arg <- ws_args(list(core_dir = NA, design = "s3gen", p = "1000", seed = "20261111", mode = "full", n_island = "2500",
-                    mem_gb = "8", hours = "23", out = NA, save_fit = "0", gen_dir = WS_DIR,
+                    mem_gb = "8", hours = "23", out = NA, save_fit = "0", gen_dir = "/home/fb31/projects/BVS/Data_Generation/high_p",
                     manifest = "/home/fb31/projects/BVS/Data_Generation/manifests/high_p/inputs_manifest.csv", ls0 = "1"))
 stopifnot(!is.na(arg$core_dir), !is.na(arg$out))
 p_arg <- as.integer(arg$p); seed <- as.numeric(arg$seed); mem_gb <- as.numeric(arg$mem_gb); hours <- as.numeric(arg$hours)
