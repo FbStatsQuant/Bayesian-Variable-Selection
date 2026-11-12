@@ -4,7 +4,7 @@ Mode (owner, 2026-11-11 ~18:45 CT): **continuous** — keep work running on Clau
 out or a key owner decision is needed; no bursts. HQ answers checkpoints itself. HQ thread 647bfd65-83bc-403a-b3b0-0a8352044e7f. Meta-HQ watcher (Sol, every 30 min): thread 600e6dcd-e2bf-4ef8-9a4b-0e00d46a1c68.
 
 ## Running
-- W3-RM2 lead (Fable CW, BVS-wt/W3-RM2) → CP1, reports to HQ.
+- W3-RM2 lead (Fable CW, BVS-wt/W3-RM2) → CP2 (CP1 passed; v1.3, Form F key lemma).
 - W3-START lead (Fable CW, BVS-wt/W3-START) → CP3 (CP2 passed; v1.3.1, L6–L10, sweep, council).
 - INFRA R04 fix MERGED 656982a; rule 16 lifted.
 - W3-P6 smoke S1–S5 on NOTS (jobs 2689422/3); heartbeat re-wakes the P6 lead when done → CP1 (stage-1 plan).

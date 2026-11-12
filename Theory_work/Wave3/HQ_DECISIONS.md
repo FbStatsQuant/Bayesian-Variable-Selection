@@ -127,3 +127,6 @@
   check.py 0 ERROR). Rule 16 LIFTED: CP3 ingest/merge allowed again under rules 9–15.
 - 2026-11-12 ~00:21 UTC CW account incident (owner fixed: CW now the Team account). Runs cut off: W3-START lead (CP3 leg)
   → resumed. W3-RM2 lead was already stopped at CP1 (waiting on HQ).
+- 2026-11-12 W3-RM2 CP1 (branch @ 81ff7d6): v1.2 locked (b < ½ via width condition (W)); adopt P1,
+  P2/G1 → v1.3 + Sol check; P3 one attempt in Form R after CP2; Form R kept; RM2-F/R as candidates implying RM-F/R
+  (supersession at CP3, owner informed). GO to CP2.
