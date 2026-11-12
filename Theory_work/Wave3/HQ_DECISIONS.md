@@ -183,3 +183,7 @@
   without fixed σ², τ²; Song–Liang Thm 4 analog corollaries. Final leg: one Astra sweep on d3f5c91f (mid-point waived:
   council + line checks cover a ticket this size); wording fixes batched + Sol "editorial only" diff check; CHECKPOINT_3.
   Acceptance after INFRA R05; C-MIS → MIS-R supersession decided at acceptance (owner informed). Queue: BT1-A2, B1, B2.
+- 2026-11-12 10:34 UTC W3-MISR CP3 final (branch 4437ecd): sweep 0 FATAL/MAJOR; council R2 sol 9.2 / opus 8.9 (manifest 217d6708…);
+  acceptance after R05. W3-START BT2 P1–P4 → ticket W3-START2 LAUNCHED (Fable 5.2 CW; branch from theory/W3-START).
+  Queue INFRA R06: manifest hashes are EOL-dependent (CRLF-only verify; fails on an LF checkout) — normalise or pin
+  .gitattributes; do after R05, without invalidating existing bound manifests.
