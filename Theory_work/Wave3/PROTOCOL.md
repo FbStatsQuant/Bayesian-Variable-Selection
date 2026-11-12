@@ -154,7 +154,7 @@ main); this section wires them into the ticket workflow. Where this section and 
       needs, and never earlier reviews, dispositions or scores. In rounds ≥ 2, a separate **reconciliation** reviewer
       checks each earlier finding against the new manifest and gives a verdict per finding. Passing a round needs both:
       the blind scores, and every earlier CRITICAL or MAJOR finding resolved.
-16. **Interim, until the INFRA tool fixes for findings R02–R06 are merged and reviewed:**
+16. **[LIFTED 2026-11-12 by HQ: R04 fix merged 656982a, Sol RESOLVED, 134/134 on main] Interim, until the INFRA tool fixes for findings R02–R06 are merged and reviewed:**
     - no CP3 ingest or merge;
     - no `propagate.py --apply` on a claim introduced by a merged ticket;
     - every bridge or interface property a claim uses is written as an explicit `depends_on` edge.

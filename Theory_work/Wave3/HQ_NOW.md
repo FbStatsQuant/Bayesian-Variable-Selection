@@ -6,7 +6,7 @@ out or a key owner decision is needed; no bursts. HQ answers checkpoints itself.
 ## Running
 - W3-RM2 lead (Fable CW, BVS-wt/W3-RM2) → CP1, reports to HQ.
 - W3-START lead (Fable CW, BVS-wt/W3-START) → CP3 (CP2 passed; v1.3.1, L6–L10, sweep, council).
-- INFRA R04 fix (Opus CW, BVS-wt/INFRA-R04) + Sol review → report to HQ; HQ merges; lifts rule 16 when fixed.
+- INFRA R04 fix MERGED 656982a; rule 16 lifted.
 - W3-P6 smoke S1–S5 on NOTS (jobs 2689422/3); heartbeat re-wakes the P6 lead when done → CP1 (stage-1 plan).
 - API audit (Console credits, not CW): pass 2 final 79 OK / 13 MINOR / 0 GAP (pass2b done); pass3 (50
   factor-design PROVED claims) done: 42 OK / 5 MINOR / 3 GAP (stopped tickets, no consumers) → R-AUD2 confirmed; SUSPECT marks applied (no checked/chapter impact). Audit plan complete.

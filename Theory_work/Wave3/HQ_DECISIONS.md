@@ -123,3 +123,7 @@
 - 2026-11-11 ~18:15 CT (owner): HQ has discretion over the remaining API credits ($44.98, expire 2026-11-15; month
   spend limit $195 leaves ≈ $40). Plan: blind Fable audit of W3-START and W3-RM2 at CP3 (in place of a Claude council
   seat where the protocol allows), cap ≈ $35; keep ≈ $5 margin.
+- 2026-11-12 00:30 UTC INFRA R04 fix merged (656982a; Sol R04FIX RESOLVED for R04-N1, R04-N2; 134/134 on merged main;
+  check.py 0 ERROR). Rule 16 LIFTED: CP3 ingest/merge allowed again under rules 9–15.
+- 2026-11-12 ~00:21 UTC CW account incident (owner fixed: CW now the Team account). Runs cut off: W3-START lead (CP3 leg)
+  → resumed. W3-RM2 lead was already stopped at CP1 (waiting on HQ).
