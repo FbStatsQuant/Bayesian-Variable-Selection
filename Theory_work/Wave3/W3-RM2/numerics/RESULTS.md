@@ -93,3 +93,34 @@ still improving), not a wrong local optimum; nothing here is known about the ful
 * The probe tries 14 of the 2^m lattice sets, so "probe found no violation" is not "NA(𝓛) held".
 * The start mode and LS0 are re-implementations validated against production scores and start masses (`SPEC.md`),
   not the production routines themselves; ties are broken by first maximum.
+
+## 4. Addendum after the better-theorem round (2026-11-11; not seen by review BT1)
+
+Sections 1–3 above are the text frozen for the better-theorem review (207 runs). Afterwards:
+* **The 78th run of the n = 1600 layer** (B4, η = 1, seed 1) finished: start mode 743 columns (727 outside Q), 73
+  swaps, LS0 stopped at the move cap (756 moves) at a model of 60 columns, not S₀. The cell B4/η = 1/n = 1600 therefore
+  reads **2 of 6** (not 2/5), with start sizes 522–743 and 6, 12 (successes), 19, 24, 35, 73 (failures) swaps; the
+  overall count is **204 of 208**. `results_raw.csv` and `summary.csv` now contain all 208 runs.
+* The n = 3200 layer was started and stopped before any run finished (too slow locally): **not run**.
+* Scope reminder: every count in this file concerns the validated LS0 re-implementation started from the start
+  mode. The sampler, the posterior input and the full method's reported model were not tested.
+
+## 5. Lemma checks (falsification numerics for `lemmas/L0–L2`; `lemma_checks.R` → `lemma_checks_out.txt`; `check_identity.R` → `check_identity_out.txt`)
+
+Each block tries to break one deterministic step of a proof, or illustrates a probabilistic statement at small n.
+No violation was found.
+
+| id | lemma step | test | outcome |
+|---|---|---|---|
+| K1 | L0 (T3): score remainder R_A ∈ [−0.52/c_E, \|A\|/((n − 1)φ₀²)] | exact D0 score for random sets of size up to 400 (n = 1600) | holds in 120/120; R_A ∈ [−7.9, −0.01] while κ_E ≈ 77 (the constant is very conservative) |
+| K2 | L0 (E6-tab) on **production** block tables; L1 Fact 2 | 1428 nested pairs in 25 production blocks | remainder difference in [−0.28, 0.01] (allowed ±140); min RSS_U/((n − 1)τ²_U) = 0.94 at n = 400 |
+| K3 | L2 NA-conv and W-conv: the score increment of an addition at a lattice set equals (Z² − a⁰(k)²)/2 up to the proved constants | 9600 lattice pairs, set sizes up to 255, n = 1600, p = 3200, exact score | D := [F(T + l) − F(T)] − (Z² − a⁰²)/2 ∈ [−0.69, 0.34]; 0 pairs outside the proved bounds; 0 pairs with Z² ≤ c_n(k) and no decrease of F |
+| K4 | L2 (3.1): (u_{T,l}ᵀg)² ≤ (u_{Q_l,l}ᵀg)² + ‖(P_Q − P_{S₀})g‖² | 8704 directions of an enumerated lattice × 200 draws | max(lhs − rhs) = −0.76 ≤ 0 |
+| K5 | L2 §3(v): decomposition of u_{T,l} into a local reference and ℓ¹ atoms; variance ratio | 300 random (T, l, N_l) | reconstruction error 8e-16; variance-ratio bound holds |
+| K6 | L2 NA-W / W-conv, illustration at n = 240 | Monte Carlo width gap for three designs (orthogonal, iid, common-direction) | gaps −0.44, −0.39, +0.07; frequency of a level crossing 0.14, 0.18, 0.53 — ordered as the lemmas say; at this n all gaps are of order 1, so nothing asymptotic is tested |
+| K7 | L2 Lemma d: d_n ≤ √(q + 1) + √(2 log p) | 1080 truth-removal directions (deletions and swaps) | MC lower estimate 1.71 ≤ bound 6.03 |
+| — | L2 (4.1): the two-square identity for truth removal | 400 comparisons, correlated columns, signed coefficients | max relative error 1.2e-14 |
+
+Reading of K3: the lower end −0.69 ≈ −log 2 is the exact prior ratio (k + 1)/(2p − 1 − k) ≈ (k + 1)/(2p) against the
+level a⁰ defined with p; the remainders themselves are a fraction of a unit. So the level at which an addition
+starts to pay is a⁰_n(k) up to an additive O(1/√log n), as Lemmas NA-W and W-conv state.

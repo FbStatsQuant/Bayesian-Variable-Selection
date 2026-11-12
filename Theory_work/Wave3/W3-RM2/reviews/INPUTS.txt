@@ -1,14 +1,9 @@
 # W3-RM2 — external inputs the statement and the planned proofs rely on (rule 15). Repo-relative paths.
+# (PROTOCOL rule 15 as amended 2026-11-11, main e52382f: no wave documents and no registry tables in this list.)
 # pinned code (LS0 as coded)
 Scripts/SMC_BVS/core/cpp/v3_core.cpp
 Scripts/SMC_BVS/core/cpp/v3_engine.h
 Scripts/SMC_BVS/core/cpp/v3_start.h
-# wave documents
-Theory_work/Wave3/PROGRAM.md
-Theory_work/Wave3/PROTOCOL.md
-Theory_work/INFRA/LIFECYCLE.md
-Theory_work/INFRA/templates/ASSUMPTION_MAP.md
-Theory_work/INFRA/registry/claims.tsv
 # parent result (W3-RM)
 Theory_work/Wave3/W3-RM/STATEMENT.md
 Theory_work/Wave3/W3-RM/ASSUMPTION_MAP.md
