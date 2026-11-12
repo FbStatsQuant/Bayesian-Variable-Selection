@@ -158,3 +158,32 @@
   underfit-phase energy lemma; GEN/PXN become examples), kill-budgeted, after RM2 council. f18/f20/f21: redo per claim.
 - 2026-11-12 ~05:10 UTC W3-RM2 CP2 ACCEPTED (Form F key lemma, 1/3 attempts; LC1/RC3/RC4 clean; MP1 Astra no FATAL/MAJOR).
   GO Form R leg → CP3; P7 kill budget 2 then Form-F-alone fallback; MP1 witness to (C5); T6 rider one attempt in L4.
+- 2026-11-12 ~05:40 UTC W3-START CP3 acceptance REFUSED (delegate audit; branch 808ddd1, not merged): checks a, d, e, f
+  PASS; b/c FAIL — bvsreg.py coverage rule requires the status-source file in the frozen manifest, but status lines live
+  in CHECKPOINT_3.md (excluded by design): a tool defect affecting every CHECKPOINT-layout ticket. Decision (consultant
+  concurs): option (T), INFRA R05 tool fix, not council R3. Safeguards: (1) exempt only the ticket's own
+  CHECKPOINT_<k>.md and only as status source; statement/premise files still covered; (2) council files bind to the
+  acceptance manifest with PASS (earlier rounds bind to their own manifests); (3) record the checkpoint sha256 in the
+  registry row at ingest, CI flags later edits; (4) claim ids in the checkpoint == ids both council seats accepted;
+  (5) Sol review with negative tests (unbound review, arbitrary uncovered status file, uncovered statement, extra claim
+  id) + re-run on already-accepted tickets with no verdict change. Check (e) becomes tool-enforced: each cited round id
+  resolves to exactly one existing review file quoting a digest. Then re-run W3-START acceptance.
+- 2026-11-12 ~10:40 UTC W3-SCALE CP1 ACCEPTED (branch theory/W3-SCALE b2c0194): bit-identity PASS 24/24 PROD-H + 10/10
+  supplementary (two Sol reviews, no output difference on valid fits); setup 20k 85.6 → 23.1 s, peak 9.24 → 6.26 GiB;
+  profile 1k/2k/20k-island; sd(log Ẑ_r) table; NOTS 27.8 task-h used. DESIGN_v1 rev 2 unreviewed (Astra judged rev 1
+  UNSOUND, 18 findings applied). Leg B APPROVED (B1–B5, new cap 150 task-h, bit-identical only), order: B5 (second Astra
+  round on DESIGN_v1 rev 2) BEFORE B2 relies on §4.1; B4, B1 in parallel; B3 measurements after B1.
+  O17 RULING: "output-identical" covers every statistical output (estimates, PIPs, HPM, evidences, top store) AND every
+  quantity that enters a published table or theorem check (incl. the RERUN_SPEC / EVIDENCE §8 cost column). Diagnostic
+  counters (`fresh`, cache statistics) may differ only if (a) none feeds a published table, or (b) the island-only
+  worker also reports serial-equivalent totals that match the serial run exactly; B2 must show which holds.
+  5k profile (job 2692690): the lead folds it in at the start of leg B. Reserved items stay with Felipe.
+- 2026-11-12 10:17 UTC W3-MISR CP2 ACCEPTED (branch theory/W3-MISR ba2cd0c): council R1 PASS sol 9.3 / opus 8.7 (manifest d3f5c91f…);
+  Lemma R′ (exact affine invariance of the coded posterior, code-pinned 16a7f85, 25 rescaled fits |ΔPIP| ≤ 1.3e-10); MIS-R
+  without fixed σ², τ²; Song–Liang Thm 4 analog corollaries. Final leg: one Astra sweep on d3f5c91f (mid-point waived:
+  council + line checks cover a ticket this size); wording fixes batched + Sol "editorial only" diff check; CHECKPOINT_3.
+  Acceptance after INFRA R05; C-MIS → MIS-R supersession decided at acceptance (owner informed). Queue: BT1-A2, B1, B2.
+- 2026-11-12 10:34 UTC W3-MISR CP3 final (branch 4437ecd): sweep 0 FATAL/MAJOR; council R2 sol 9.2 / opus 8.9 (manifest 217d6708…);
+  acceptance after R05. W3-START BT2 P1–P4 → ticket W3-START2 LAUNCHED (Fable 5.2 CW; branch from theory/W3-START).
+  Queue INFRA R06: manifest hashes are EOL-dependent (CRLF-only verify; fails on an LF checkout) — normalise or pin
+  .gitattributes; do after R05, without invalidating existing bound manifests.
