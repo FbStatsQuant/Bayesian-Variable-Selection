@@ -137,3 +137,24 @@
   of wave documents/registry tables) + Sol diff check v1.3.3→v1.3.4; Astra better-theorem review BT2 on the final
   statement in parallel (statement changed materially after CP1 → headline gate). PROTOCOL rule 15 amended: INPUTS
   never lists wave documents or registry tables.
+- 2026-11-12 ~01:30 UTC (Felipe away; delegated owner decisions to HQ with the CW Fable 5.2 consultant).
+  W3-SAMP D/TR narrows APPROVED (consultant concurs): wider statements were never proved; the council reviewed the narrow
+  ones; headline flags were tool-set; no dependents. Open sharpness item for Felipe: TR separation from π₀(S₀) → 1 is
+  open for the coded target ("method as coded" goal).
+  Track 3 scaling leg A LAUNCHED (W3-SCALE, BRIEF.md): profile-first, bit-identical speedups (no Gram-free scoring),
+  bit-identity on NOTS PROD-H (= track 1 gate 0), sd(log Ẑ_r) table, DESIGN_v1 last; cap 150 task-h (≈300 core-h);
+  P6 keeps priority. Reserved for Felipe: p = 1M fixed-N islands; primary PIP switch.
+  Track 1 NOT ready (v3.2 comes from track 3). Note for Felipe: on v3.1 the rerun is a deterministic identity check;
+  if v3.2 stays bit-identical, a gate-0-size sample may replace the full 910 core-h rerun.
+- 2026-11-12 ~02:20 UTC (Felipe): next API grant (~$200, ≈11-15) allocated to theory: ~$100 blind audits of new
+  results (W3-START, W3-RM2, parallel-SMC theorems, final chapter v2.0 pass), ~$50 sharpness follow-up, ~$50 reserve for
+  Fable break reviews of risky scaling theory. The p = 1M campaign runs on NOTS + CW, decided at W3-SCALE CP1.
+- 2026-11-12 ~02:40 UTC sharp1 triage (consultant, API_AUDIT/sharp1/TRIAGE.md): A-list T1 MIS-R, T2 RM-0 rider (after
+  RM2 council), T3 POST-SHARP; B* T4 (constant-level signals, rider on RM2), T5 (Cor 1R v2, lowest). LAUNCHED W3-MISR (T1)
+  and W3-PSHARP (T3), Fable 5.2 CW leads, legs to CP2 pre-approved when reviews are clean. f01 handed to W3-SCALE.
+- 2026-11-12 ~03:00 UTC sharp1b triage (consultant, API_AUDIT/sharp1b/TRIAGE.md): 9 B, 1 C, new: T2(c) (RM-0(a) on any
+  deterministic down-closed sub-lattice ⊇ [S₀, S̃₀]); T6 product-form localisation (entrywise cross-term bound; polynomial
+  decay α > 17/2 → α > 2) as a rider on RM2's Form R leg next to P3; T7 masked truths at growing Q (separation via
+  underfit-phase energy lemma; GEN/PXN become examples), kill-budgeted, after RM2 council. f18/f20/f21: redo per claim.
+- 2026-11-12 ~05:10 UTC W3-RM2 CP2 ACCEPTED (Form F key lemma, 1/3 attempts; LC1/RC3/RC4 clean; MP1 Astra no FATAL/MAJOR).
+  GO Form R leg → CP3; P7 kill budget 2 then Form-F-alone fallback; MP1 witness to (C5); T6 rider one attempt in L4.
