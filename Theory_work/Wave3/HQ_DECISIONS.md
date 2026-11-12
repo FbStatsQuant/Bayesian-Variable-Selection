@@ -146,3 +146,6 @@
   P6 keeps priority. Reserved for Felipe: p = 1M fixed-N islands; primary PIP switch.
   Track 1 NOT ready (v3.2 comes from track 3). Note for Felipe: on v3.1 the rerun is a deterministic identity check;
   if v3.2 stays bit-identical, a gate-0-size sample may replace the full 910 core-h rerun.
+- 2026-11-12 ~02:20 UTC (Felipe): next API grant (~$200, ≈11-15) allocated to theory: ~$100 blind audits of new
+  results (W3-START, W3-RM2, parallel-SMC theorems, final chapter v2.0 pass), ~$50 sharpness follow-up, ~$50 reserve for
+  Fable break reviews of risky scaling theory. The p = 1M campaign runs on NOTS + CW, decided at W3-SCALE CP1.
