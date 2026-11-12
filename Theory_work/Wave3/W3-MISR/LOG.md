@@ -86,3 +86,4 @@ Agents started so far (model, provider, role) are listed at each step. Claude-in
   applied, content frozen; listed in CHECKPOINT_3.md). `manifest.py bind` OK; `verify` OK. **Council R2 PASSED.**
 - 04:35 CHECKPOINT_3.md written with the final registry blocks (10 claims; `ingest.py convert` 0 problems). Commit.
   End of run.
+* 2026-11-12 09:05 CT — **HQ decision on CHECKPOINT_3 (commit 4437ecd):** CP3-PASS on the mathematics (council R2 sol 9.2 / opus 8.9, manifest 217d6708…). Acceptance audit (HQ_DECISIONS 849dfb5): refused on record-keeping (no per-claim seat tables; 3 'remark' rows outside the schema). Next, run by HQ: INFRA R06, seat addendum, drop the 3 remark rows from the ingest carrier, acceptance; C-MIS → MIS-R supersession decided then. Lead: no action.
