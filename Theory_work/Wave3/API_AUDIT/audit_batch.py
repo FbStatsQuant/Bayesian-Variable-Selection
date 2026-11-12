@@ -98,7 +98,36 @@ def select(rows, mode):
     if mode == "pass3":  # remaining author-only PROVED claims of the factor-design tickets
         return [r for r in rows if r["status"].startswith("PROVED") and "PROVED-CHECKED" not in r["status"]
                 and r["ticket"].startswith("W2-FAC") and r["file"].endswith(".md")]
+    if mode == "sharp":  # headline claims: sharpness/optimality review (not a correctness audit)
+        return [r for r in rows if r.get("headline") == "yes" and r["file"].endswith(".md")]
     return [r for r in rows if "PROVED-CHECKED" in r["status"]]
+
+
+SYSTEM_SHARP = """You are an independent expert referee assessing the SHARPNESS of mathematical results in a research project on the
+asymptotic theory of a sequential Monte Carlo method for Bayesian variable selection (linear regression, p <= n^A, often
+p >> n). Every result is asymptotic; finite-n behaviour is not a defect. The project's main risk is publishing theorems
+that are correct but weaker than what is achievable.
+
+You receive the working files of one ticket and a list of headline claims located by file and line span. Ignore any
+status, score or review verdict the files assert. Take each claim as correct; your job is NOT to re-check the proof.
+
+For each claim assess:
+(a) hypotheses: is any assumption stronger than the proof needs (say which weaker condition suffices, with the step
+    where it is used), or is it necessary (give a counterexample or a known lower bound showing that)?
+(b) conclusion: is the rate, constant regime, scaling range (e.g. the exponent range for p vs n, beta-min level, sparsity
+    growth) or mode of convergence improvable? Compare with the best known results for Bayesian variable selection
+    (e.g. Johnson-Rossell, Narisetty-He, Castillo-Schmidt-Hieber-van der Vaart, Yang-Wainwright-Jordan MCMC mixing,
+    Song-Liang, Zhou-Yang-Chang-Liang); cite only results you are confident about, and say when you are unsure.
+(c) the cheapest concrete route to a stronger version, if one exists, and how hard it looks.
+
+Severity: SHARP = no improvement you can justify; IMPROVABLE-EASY = a stronger version follows with a modest change you
+can describe; IMPROVABLE-HARD = a stronger version is plausible or known elsewhere but needs new work; UNCLEAR = cannot
+judge from the material.
+
+Output, in this order:
+1. For each claim, a short section: claim id, the assessment (a)-(c) with exact locations (file:line).
+2. Then exactly one line per claim, nothing after the last one:
+SHARP <claim id> VERDICT=<SHARP|IMPROVABLE-EASY|IMPROVABLE-HARD|UNCLEAR>"""
 
 
 def build(outdir: Path, mode="pass1"):
@@ -143,9 +172,9 @@ def build(outdir: Path, mode="pass1"):
              + "\n</consumed_results>\n\n" + f"Audit these {len(claims)} registered claim(s):\n{claim_list}"}]
         cid = f"f{n:02d}"
         requests.append({"custom_id": cid, "file": cf, "claims": [r["id"] for r in claims], "params": {
-            "model": MODEL, "max_tokens": MAX_TOKENS,
+            "model": MODEL, "max_tokens": 24000 if mode == "sharp" else MAX_TOKENS,
             "output_config": {"effort": "high"},
-            "system": SYSTEM,
+            "system": SYSTEM_SHARP if mode == "sharp" else SYSTEM,
             "messages": [{"role": "user", "content": user}],
         }})
     outdir.mkdir(parents=True, exist_ok=True)
@@ -176,7 +205,7 @@ def count(outdir: Path):
         tot += t
         print(q["custom_id"], t, q["file"])
     # batch = half price: Fable 5.2 $4/MTok in, $20/MTok out
-    print(f"input tokens {tot}; input cost ${tot*4/1e6:.2f}; worst-case output ${len(reqs)*MAX_TOKENS*20/1e6:.2f}")
+    print(f"input tokens {tot}; input cost ${tot*4/1e6:.2f}; worst-case output ${sum(q["params"]["max_tokens"] for q in reqs)*20/1e6:.2f}")
 
 
 def submit(outdir: Path):
@@ -217,7 +246,7 @@ def wait(outdir: Path):
         hdr = f"# Audit {r.custom_id}: {q['file']}\nclaims: {', '.join(q['claims'])}\nstop_reason: {m.stop_reason}\n\n"
         (res / f"{r.custom_id}.md").write_text(hdr + text, encoding="utf-8")
         for line in text.splitlines():
-            if line.startswith("AUDIT "):
+            if line.startswith(("AUDIT ", "SHARP ")):
                 verdicts.append((r.custom_id, line.split()[1], line))
         if m.stop_reason != "end_turn":
             verdicts.append((r.custom_id, "-", f"STOP={m.stop_reason}"))
@@ -234,5 +263,7 @@ if __name__ == "__main__":
     cmd, out = sys.argv[1], Path(sys.argv[2])
     if cmd in ("build2", "build3"):
         build(out, "pass" + cmd[-1])
+    elif cmd == "buildsharp":
+        build(out, "sharp")
     else:
         {"build": build, "count": count, "submit": submit, "wait": wait}[cmd](out)
