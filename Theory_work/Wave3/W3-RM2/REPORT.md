@@ -33,10 +33,9 @@ lemma attempt 1 of 3; (P7) attempt 1 of 2; riders P3 and T6 one attempt each, bo
 energy-constant range in the examples; the wording of the width-stress probe B2) — 4 MINOR, 1 NIT, all applied. The
 better-theorem review on the final statement (BT2) found 5 adoptable refinements and 2 ticket-size ones, none
 changing the headline; the lead recommends adopting them in one revision v1.5 with the riders T2/T4, so the claims
-carry **headline-strength pending** (PROTOCOL rule 10) until HQ decides. **Council round R1 PASSED: gpt-6-astra 9.5, Claude Opus 5.5 8.8, all
-six gates PASS in both seats on the same frozen manifest (00bbeab8…), no REQUIRED finding** (CP3-PASS, subject to
-HQ's acceptance audit). Until that audit runs, every status below is "PROVED (by this seat, unchecked)" with its
-check record; the PROVED-CHECKED labels are HQ's to assign.
+carry **headline-strength pending** (PROTOCOL rule 10) until HQ decides. The council is recorded in §4 when it
+completes; until the council passes and HQ's acceptance audit runs, every status below is "PROVED (by this seat, unchecked)" with its
+check record — not PROVED-CHECKED.
 
 ## 2. The statement as proved (`STATEMENT.md` v1.4; proofs in `lemmas/`)
 
@@ -100,12 +99,11 @@ recorded statuses (STATEMENT §5). E1 (inherited examples) is (C4) applied to th
 | LC2-B | Sol, blind | L5 | VERIFIED (P9a with 2 MINOR); no FATAL/MAJOR |
 | LC2-C | Opus (Claude Work), blind | L6 | VERIFIED / V-W-A (3 MINOR, 3 NIT); no FATAL/MAJOR |
 | SC2 | Sol | v1.3 → v1.4 | ACCEPT WITH CHANGES (1 MAJOR notational, 3 MINOR), applied |
+Dispositions: `SL1_`, `RC1_`, `BT1_`, `SC1_`, `LC1_`, `MP1_`, `LC2_disposition.md`. No review layer skipped.
 | RC5 | Sol | diff check of the 13 LC2-round items | all RESOLVED; "editorial/record only" |
 | SW1 | Astra, blind | exhaustive sweep of the whole package | (C1)–(C4), (P0)–(P10) VERIFIED; (C5), (C6) V-W-A: 0 FATAL, 2 MAJOR (records), 4 MINOR, 1 NIT, applied (`SW1_disposition.md`) |
 | BT2 | Astra, blind | better theorem on the final statement v1.4 | 5 ADOPT NOW, 2 WORTH A TICKET, 0 SPECULATIVE; dispositions in `BT2_disposition.md` (recommended: v1.5 after the council) |
-| RC6 | Sol | diff check of the 7 sweep items (24 hunks) | all RESOLVED; "editorial/record only — the package stands as swept in round SW1" |
-| **Council R1** | **Astra; Opus (Claude Work)**, blind | the whole package, six gates | **PASSED: astra 9.5, opus 8.8, all six gates PASS in both seats**, no REQUIRED finding (`C_R1_council_astra.md`, `C_R1_council_opus.md`; `manifest.py bind` OK) |
-Dispositions: `SL1_`, `RC1_`, `BT1_`, `SC1_`, `LC1_`, `MP1_`, `LC2_`, `SW1_`, `BT2_`, `C1_disposition.md`. No review layer skipped.
+The council round is appended here when it completes.
 
 ## 5. Registry items (PROTOCOL item 7)
 
@@ -119,8 +117,7 @@ sufficient form), H-size-rho (|H_l| ≤ n^ρ, 15ρ + b < ½), W-R, D-R-b, D-loc-
 (L-R-b-loc) ⇒ (L-gain-R) ∧ (L-loc-R); parent's (L-R) ⇒ (L-R-b-loc); the polynomial-decay class of W2-LOC2:Thm-Poly
 (α > 17/2) ⊂ example E2 (α > 2).
 **Sharpness record** (`SHARPNESS.md`; observations only where numerics are quoted).
-* |Q| ≤ n^b: paid at one line of each sandwich proof (junk-exclusion margin); in Form R b < ½ is also used by the
-  sample floors and the lattice comparison (`lemmas/L5_formR.md` (S2), P9a Step 4); sufficient budget; observed b up to 0.75: LS0 at
+* |Q| ≤ n^b: enters one line of each proof (junk-exclusion margin); sufficient budget; observed b up to 0.75: LS0 at
   S₀ 48/48. ARTEFACT of the route; the conclusion beyond ½ is open (O1).
 * (W): sufficient (gap → −∞), obstructed for the route (gap → +∞), bounded gap undetermined; observed in a
   nominal width-stress design (improving additions found at probed lattice sets): LS0 at S₀ 48/48. Not derived from (V), (L). Open: O1, O5.
@@ -157,13 +154,12 @@ verbatim, dispositions, reviewed-text snapshots).
 
 Registry state at ingest (HQ CP1 decision): W3-RM2:RM2-F and W3-RM2:RM2-R enter as CANDIDATES that imply
 W3-RM:RM-F and W3-RM:RM-R; supersession is decided at CP3. One status per claim. `status_source` lines are the rows
-of §3. The `correct` gate and the `council` line are those of council round R1; `lit`, `necessity` and `better` stay
-PENDING with their evidence files (headline-strength pending, PROTOCOL rule 10): HQ decides at CP3.
+of §3. Gates and `council` are filled from the council round.
 
 ```
 REGISTRY
 claim: W3-RM2:RM2-F | kind: theorem | statement: STATEMENT.md:(C1) | premises: STATEMENT.md:§1,§3.1
-status: PROVED (by this seat, unchecked); LC1-B VERIFIED; MP1 CONTINUE WITH CHANGES (no FATAL/MAJOR); conditional on SOP:TH09@1.0.0 | status_source: REPORT.md:73
+status: PROVED (by this seat, unchecked); LC1-B VERIFIED; MP1 CONTINUE WITH CHANGES (no FATAL/MAJOR); conditional on SOP:TH09@1.0.0 | status_source: REPORT.md:68
 assumptions: A:T1-F ; A:FL-16 ; A:FL-Q ; A:V ; A:L-gain ; A:L-feas ; A:BM-W (new | signal floor at the truth-removal width | theta_min^2 (n-1) phi0^2 / (sigma^2 (d_n^2 + log n)) -> infinity | STATEMENT.md §1,§3.1 | shared yes | P2 TL-F^b) ; A:L-size-b (new | polynomial leakage size | |Q| <= n^b, b < beta(eta,A) | STATEMENT.md §3.1 | shared yes | P1 SAND-F^b) ; A:W (new | lattice width gap | w0_n -> -infinity | STATEMENT.md §1,§3.1 | shared yes | P3 NA-W)
 consumes: P:POST ; P:SAND(Q) ; P:TL(Q) ; P:NA(Q) ; P:E4
 conclusion: reported-model: one data event of probability -> 1 on which every admissible output run reports S0 | rate: none claimed | scope: fixed design; s0 fixed; p <= n^A (p >> n allowed); |Q| <= n^b
@@ -171,70 +167,70 @@ depends_on: W3-RM:RM-0@stmt ; W3-RM:E4@stmt ; SOP:TH09@hyp ; W3-RM2:Toolkit-b@st
 implies: W3-RM:RM-F (special case |Q| polylog, (W) from (N-chi) or (N-D)(i) through W3-RM2:W-suff; claim W3-RM2:Cont-F)
 sharpness: A:W = NECESSARY-FOR-ROUTE (evidence: lemmas/L2_width.md §2, Lemma W-conv: gap -> +infinity obstructs whole-lattice no-addition; not for reporting; bounded gap undetermined) ; A:L-size-b = ARTEFACT (evidence: lemmas/L1_sandF_b.md §3(b); sufficient budget of the junk-exclusion argument; necessity open) ; A:BM-W = NONE (sufficient; necessity not studied) ; A:V, A:L-gain, A:FL = as W3-RM
 binding: A:W route obstruction via W3-RM2:W-conv: gap -> +infinity forces P(NA(Q)) -> 0; gap -> -infinity is sufficient; bounded gap undetermined [whole-lattice route only] ; A:L-size-b enters P:SAND(Q) via the junk-exclusion margin [artefact-threshold]
-gates: correct:PASS(reviews/C_R1_council_astra.md, reviews/C_R1_council_opus.md) ; lit:PENDING(ASSUMPTION_MAP.md) ; necessity:PENDING(SHARPNESS.md) ; better:PENDING(reviews/BT2_disposition.md)
-council: R1; MANIFEST 00bbeab89433b2f65dbfb8eefddf5e1a88dcc5460cabe79cd7adc3c8d6515d4a; astra=9.5 PASS(reviews/C_R1_council_astra.md); opus=8.8 PASS(reviews/C_R1_council_opus.md)
+gates: correct:PENDING(reviews/LC1B_L2L3_check_sol.md) ; lit:PENDING(ASSUMPTION_MAP.md) ; necessity:PENDING(SHARPNESS.md) ; better:PENDING(reviews/BT1_better_theorem_astra.md)
+council: none yet
 
 claim: W3-RM2:RM2-R | kind: theorem | statement: STATEMENT.md:(C2) | premises: STATEMENT.md:§1,§3.2
-status: PROVED (by this seat, unchecked); LC2-B VERIFIED; conditional on W2-APP:POST@1.0.1 | status_source: REPORT.md:79
+status: PROVED (by this seat, unchecked); LC2-B VERIFIED; conditional on W2-APP:POST@1.0.1 | status_source: REPORT.md:74
 assumptions: A:T1-R ; A:FL-R ; A:V-R ; A:L-feas ; A:L-gain-R (new in this form | leak bound at every conditioning set | |Cov(W_l, W_j | W_U)| <= varpi_n = o(sqrt(log n/n)), l outside Q, |U| <= 15, truth j outside U | STATEMENT.md §3.2 | shared no | P7 SAND-R^b) ; A:L-loc-R (new in this form | localisation without rate | conditional covariances with columns outside H_l at most r_n -> 0 | STATEMENT.md §3.2 | shared no | P7 SAND-R^b) ; A:L-size-b-R (new | polynomial leakage size, Gaussian rows | |Q| <= n^b, b < 1/2 | STATEMENT.md §3.2 | shared no | P7 SAND-R^b) ; A:H-size-rho (new | reference neighbourhood size | |H_l| <= n^rho, 15 rho + b < 1/2 | STATEMENT.md §3.2 | shared no | P7 SAND-R^b) ; A:W-R (new | lattice width on the realised design | exists deterministic t_n -> infinity: P(W0_n intersect {w0_n <= -t_n}) -> 1 | STATEMENT.md §3.2 | shared yes | P8 F-to-R)
 consumes: P:POST ; P:SAND(Q) ; P:TL(Q) ; P:NA(Q) ; P:E4
 conclusion: reported-model: as RM2-F under the joint law of (X, eps) | rate: none claimed | scope: Gaussian rows; s0 fixed; p <= n^A (p >> n allowed); |Q| <= n^b, |H_l| <= n^rho
 depends_on: W3-RM:RM-0@stmt ; W3-RM:E4@stmt ; W2-APP:POST@hyp ; W3-RM2:SAND-R-b@stmt ; W3-RM2:F-to-R@stmt ; W3-RM2:POST-R@stmt ; W3-RM2:D-to-W@stmt ; W3-RM2:W-conv@stmt
 implies: W3-RM:RM-R (special case, (L-R) through the localised sufficient form, (W-R) from (D-R) through W3-RM2:D-to-W; claim W3-RM2:Cont-R)
-sharpness: A:W-R = NECESSARY-FOR-ROUTE (evidence: lemmas/L2_width.md §2 applied conditionally; positive diverging gaps obstruct whole-lattice no-addition; bounded gaps undetermined; no necessity for reporting claimed) ; A:H-size-rho = ARTEFACT (evidence: lemmas/L4_sandR_b.md §4; reference counting) ; A:L-size-b-R = ARTEFACT (evidence: lemmas/L4_sandR_b.md §6(b), lemmas/L5_formR.md (S2) and P9a Step 4; sufficient budget; necessity open) ; A:L-gain-R = WEAKENABLE (evidence: lemmas/L4_sandR_b.md §7 item 4; exact scale kappa sqrt(log n/n) not derived) ; A:L-loc-R = NONE (evidence: SHARPNESS.md §3; needed by this proof at r_n -> 0 only)
+sharpness: A:W-R = NECESSARY-FOR-ROUTE (evidence: lemmas/L2_width.md §2 applied conditionally; positive diverging gaps obstruct whole-lattice no-addition; bounded gaps undetermined; no necessity for reporting claimed) ; A:H-size-rho = ARTEFACT (evidence: lemmas/L4_sandR_b.md §4; reference counting) ; A:L-size-b-R = ARTEFACT (evidence: lemmas/L4_sandR_b.md §6(b); sufficient budget; necessity open) ; A:L-gain-R = WEAKENABLE (evidence: lemmas/L4_sandR_b.md §7 item 4; exact scale kappa sqrt(log n/n) not derived) ; A:L-loc-R = NONE (evidence: SHARPNESS.md §3; needed by this proof at r_n -> 0 only)
 binding: A:H-size-rho enters P:SAND(Q) via the reference count n^{15 rho} [artefact-threshold]
-gates: correct:PASS(reviews/C_R1_council_astra.md, reviews/C_R1_council_opus.md) ; lit:PENDING(ASSUMPTION_MAP.md) ; necessity:PENDING(SHARPNESS.md) ; better:PENDING(reviews/BT2_disposition.md)
-council: R1; MANIFEST 00bbeab89433b2f65dbfb8eefddf5e1a88dcc5460cabe79cd7adc3c8d6515d4a; astra=9.5 PASS(reviews/C_R1_council_astra.md); opus=8.8 PASS(reviews/C_R1_council_opus.md)
+gates: correct:PENDING(reviews/LC2B_L5_check_sol.md) ; lit:PENDING(ASSUMPTION_MAP.md) ; necessity:PENDING(SHARPNESS.md) ; better:PENDING(reviews/BT1_better_theorem_astra.md)
+council: none yet
 
 claim: W3-RM2:Toolkit-b | kind: lemma | statement: STATEMENT.md:(P0) | premises: STATEMENT.md:§1
-status: PROVED (by this seat, unchecked); LC1-A VERIFIED-WITH-AMENDMENTS, applied | status_source: REPORT.md:67
+status: PROVED (by this seat, unchecked); LC1-A VERIFIED-WITH-AMENDMENTS, applied | status_source: REPORT.md:62
 depends_on: C-GROW:L0.1@proof ; C-GROW:L0.2@proof
 claim: W3-RM2:SAND-F-b | kind: lemma | statement: STATEMENT.md:(P1) | premises: STATEMENT.md:§1,§3.1
-status: PROVED (by this seat, unchecked); LC1-A VERIFIED | status_source: REPORT.md:68
+status: PROVED (by this seat, unchecked); LC1-A VERIFIED | status_source: REPORT.md:63
 depends_on: C-GROW:L3@proof ; W3-RM2:Toolkit-b@stmt
 claim: W3-RM2:TL-F-b | kind: lemma | statement: STATEMENT.md:(P2) | premises: STATEMENT.md:§1,§3.1
-status: PROVED (by this seat, unchecked); LC1-B VERIFIED | status_source: REPORT.md:72
+status: PROVED (by this seat, unchecked); LC1-B VERIFIED | status_source: REPORT.md:67
 depends_on: C-GROW:L2.1@proof ; W3-RM2:Toolkit-b@stmt
 claim: W3-RM2:NA-W | kind: lemma | statement: STATEMENT.md:(C3)(a) | premises: STATEMENT.md:§1,§3.1
-status: PROVED (by this seat, unchecked); LC1-B VERIFIED | status_source: REPORT.md:69
+status: PROVED (by this seat, unchecked); LC1-B VERIFIED | status_source: REPORT.md:64
 depends_on: C-GROW:L2.2@proof ; W3-RM2:Toolkit-b@stmt
 claim: W3-RM2:W-conv | kind: lemma | statement: STATEMENT.md:(C3)(b) | premises: STATEMENT.md:§1,§3.1
-status: PROVED (by this seat, unchecked); LC1-B VERIFIED-WITH-AMENDMENTS, applied | status_source: REPORT.md:70
+status: PROVED (by this seat, unchecked); LC1-B VERIFIED-WITH-AMENDMENTS, applied | status_source: REPORT.md:65
 depends_on: W3-RM2:Toolkit-b@stmt
 claim: W3-RM2:W-suff | kind: lemma | statement: STATEMENT.md:(C3)(c) | premises: STATEMENT.md:§1,§3.1
-status: PROVED (by this seat, unchecked); LC1-B VERIFIED | status_source: REPORT.md:71
+status: PROVED (by this seat, unchecked); LC1-B VERIFIED | status_source: REPORT.md:66
 assumptions: A:W-delta (new) ; A:W-unif (new) ; A:W-chi ; A:W-ref (new) ; A:W-loc (new)  [alternatives, not a conjunction: each implies A:W]
 implies: A:W-delta => A:W ; A:W-unif => A:W-delta ; A:W-chi => A:W-delta ; A:W-ref => A:W-unif ; A:W-loc => A:W-ref ; A:BM-Q => A:BM-W
 depends_on: C-GROW:L2.3@proof
 claim: W3-RM2:Cont-F | kind: lemma | statement: STATEMENT.md:(C4) | premises: STATEMENT.md:§3.1
-status: PROVED (by this seat, unchecked); LC1-B VERIFIED | status_source: REPORT.md:74
+status: PROVED (by this seat, unchecked); LC1-B VERIFIED | status_source: REPORT.md:69
 depends_on: W3-RM2:RM2-F@stmt ; W3-RM2:W-suff@stmt ; W3-RM:RM-F@stmt
 claim: W3-RM2:SAND-R-b | kind: lemma | statement: STATEMENT.md:(P7) | premises: STATEMENT.md:§1,§3.2
-status: PROVED (by this seat, unchecked); LC2-A VERIFIED-WITH-AMENDMENTS, applied | status_source: REPORT.md:75
+status: PROVED (by this seat, unchecked); LC2-A VERIFIED-WITH-AMENDMENTS, applied | status_source: REPORT.md:70
 depends_on: C-GROW:L6.4@proof ; W3-RM:SAND-R@proof ; W3-RM2:Toolkit-b@stmt ; W3-RM2:SAND-F-b@proof:per-block optimality (1.1) and count (2.1)
 claim: W3-RM2:F-to-R | kind: lemma | statement: STATEMENT.md:(P8) | premises: STATEMENT.md:§1,§3.2
-status: PROVED (by this seat, unchecked); LC2-B VERIFIED | status_source: REPORT.md:76
+status: PROVED (by this seat, unchecked); LC2-B VERIFIED | status_source: REPORT.md:71
 depends_on: W3-RM2:Toolkit-b@stmt ; W3-RM2:TL-F-b@stmt ; W3-RM2:NA-W@stmt
 claim: W3-RM2:D-to-W | kind: lemma | statement: STATEMENT.md:(P9) | premises: STATEMENT.md:§1,§3.2
-status: PROVED (by this seat, unchecked); LC2-B VERIFIED-WITH-AMENDMENTS, applied | status_source: REPORT.md:77
+status: PROVED (by this seat, unchecked); LC2-B VERIFIED-WITH-AMENDMENTS, applied | status_source: REPORT.md:72
 assumptions: A:D-R-b (new) ; A:D-loc-b (new)  [alternatives: A:D-loc-b => A:D-R-b => A:W-R for every delta0 in (0, 1 - 2b)]
 depends_on: W2-LOC2:NA-R@proof ; W3-RM:D-loc@proof  [proof templates re-run at polynomial size; no conclusion of them is consumed outside its stated range]
 claim: W3-RM2:POST-R | kind: lemma | statement: STATEMENT.md:(P10) | premises: STATEMENT.md:§1,§3.2
-status: PROVED (by this seat, unchecked); LC2-B VERIFIED; conditional on W2-APP:POST@1.0.1 | status_source: REPORT.md:78
+status: PROVED (by this seat, unchecked); LC2-B VERIFIED; conditional on W2-APP:POST@1.0.1 | status_source: REPORT.md:73
 depends_on: W2-APP:POST@hyp
 claim: W3-RM2:Cont-R | kind: lemma | statement: STATEMENT.md:(C4) | premises: STATEMENT.md:§3.2
-status: PROVED (by this seat, unchecked); LC2-B VERIFIED | status_source: REPORT.md:80
+status: PROVED (by this seat, unchecked); LC2-B VERIFIED | status_source: REPORT.md:75
 depends_on: W3-RM2:RM2-R@stmt ; W3-RM2:SAND-R-b@proof:section 7 item 1 ; W3-RM2:D-to-W@stmt ; W3-RM:RM-R@stmt
 claim: W3-RM2:Ex-PolyR | kind: proposition | statement: STATEMENT.md:(C5) | premises: lemmas/L6_examples.md:E2
-status: PROVED (by this seat, unchecked); LC2-C VERIFIED-WITH-AMENDMENTS, applied; conditional on W2-APP:POST@1.0.1, W2-LOC2:Lemma-BC@1.0.0 and W2-LOC2:Lemma-IR@1.0.0 | status_source: REPORT.md:81
+status: PROVED (by this seat, unchecked); LC2-C VERIFIED-WITH-AMENDMENTS, applied; conditional on W2-APP:POST@1.0.1, W2-LOC2:Lemma-BC@1.0.0 and W2-LOC2:Lemma-IR@1.0.0 | status_source: REPORT.md:76
 depends_on: W3-RM2:RM2-R@stmt ; W3-RM2:D-to-W@stmt ; W2-LOC2:Lemma-BC@hyp ; W2-LOC2:Lemma-IR@hyp
 claim: W3-RM2:Ex-PolyF | kind: proposition | statement: STATEMENT.md:(C5) | premises: lemmas/L6_examples.md:E3
-status: PROVED (by this seat, unchecked); LC2-C VERIFIED-WITH-AMENDMENTS, applied; conditional on SOP:TH09@1.0.0, W2-LOC2:Lemma-BC@1.0.0 and W2-LOC2:Lemma-IR@1.0.0 | status_source: REPORT.md:82
+status: PROVED (by this seat, unchecked); LC2-C VERIFIED-WITH-AMENDMENTS, applied; conditional on SOP:TH09@1.0.0, W2-LOC2:Lemma-BC@1.0.0 and W2-LOC2:Lemma-IR@1.0.0 | status_source: REPORT.md:77
 depends_on: W3-RM2:RM2-F@stmt ; W3-RM2:W-suff@stmt ; W2-LOC2:Lemma-BC@hyp ; W2-LOC2:Lemma-IR@hyp
 claim: W3-RM2:Ex-Proxy | kind: proposition | statement: STATEMENT.md:(C5) | premises: lemmas/L6_examples.md:E4
-status: PROVED (by this seat, unchecked); LC2-C VERIFIED; conditional on SOP:TH09@1.0.0 | status_source: REPORT.md:83
+status: PROVED (by this seat, unchecked); LC2-C VERIFIED; conditional on SOP:TH09@1.0.0 | status_source: REPORT.md:78
 depends_on: W3-RM2:RM2-F@stmt ; W3-RM2:W-suff@stmt
 claim: W3-RM2:Ex-Equi | kind: proposition | statement: STATEMENT.md:(C5) | premises: lemmas/L6_examples.md:E5
-status: PROVED (by this seat, unchecked); LC2-C VERIFIED; conditional on SOP:TH09@1.0.0 | status_source: REPORT.md:84
+status: PROVED (by this seat, unchecked); LC2-C VERIFIED; conditional on SOP:TH09@1.0.0 | status_source: REPORT.md:79
 depends_on: W3-RM2:RM2-F@stmt ; W3-RM2:W-suff@stmt
 ```

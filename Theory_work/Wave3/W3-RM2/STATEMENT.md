@@ -253,7 +253,7 @@ size of Q is re-proved here, not cited outside its stated range):
 | (P6) POST-F | (T1-F) ⇒ [POST] | SOP:TH09 (T03♯) | none (inherited, §5) |
 | (P7) SAND-R^b | Setting R, (FL-R) on sets ≤ 16 + s₀, (V-R), (L-R^b), 15ρ + b < ½ ⇒ [SAND(Q)] for any X-measurable partition with blocks ≤ 16 | RM Lemmas SAND-R, SAND-R′ (polylog H_l, Q); LOC2 `lemmas/L6_poly.md` §§4–5 (a design family) | reference count n^{15ρ}; ladder needs 15ρ < ½, junk exclusion 15ρ + b < ½; the spherical tail C-GROW:L6.4 is used for all 0 ≤ t ≤ (2A + 3) log n (its proof gives this; re-proved); [v1.4] the cross term of selection removal equals the difference of the leak covariances at U₀ and at U (product form), the comparison is made on √h with an o(√log n) error, and the spherical tail carries a mean shift of norm o(√log n) |
 | (P8) F→R | Setting R, (FL-R) on Q ∪ {l}, \|Q\| ≤ n^b, b < ½, (W-R) ⇒ [NA(Q)], [TL(Q)] under the joint law | (P0), (P2), (P3) conditional on X | sample floors on Q ∪ {l} from the entrywise Gram event (q√(log n/n) → 0); energy and (BM-W) from the fixed θ_lo, θ_hi (d_n² = O(q + log n) = o(n)) |
-| (P9) D→W | (D-R^b) ⇒ P(𝒲⁰_n ∩ {𝔴_n(δ₀) ≤ 0}) → 1 for every fixed δ₀ ∈ (0, 1 − 2b) [SL1-1], hence (W-R); (D-loc^b) ⇒ (D-R^b) | W2-LOC2:NA-R (polylog); LOC2 `lemmas/L6_poly.md` §6 (a design family) | polynomial lattice: sample/population errors O((q + log n)/√n) → 0; passage from a joint-law bound on max\|Z_{T,l}\| to the conditional mean (a probability-≥ ½ event plus lower-tail concentration about the mean of a Lipschitz functional) [C1-F5] |
+| (P9) D→W | (D-R^b) ⇒ P(𝒲⁰_n ∩ {𝔴_n(δ₀) ≤ 0}) → 1 for every fixed δ₀ ∈ (0, 1 − 2b) [SL1-1], hence (W-R); (D-loc^b) ⇒ (D-R^b) | W2-LOC2:NA-R (polylog); LOC2 `lemmas/L6_poly.md` §6 (a design family) | polynomial lattice: sample/population errors O((q + log n)/√n) → 0; passage from a joint-law bound on max\|Z_{T,l}\| to the conditional mean (median–mean for a Lipschitz functional) |
 | (P10) POST-R | (T1-R) ⇒ [POST] | W2-APP:POST (p ≥ 2); the p = 1 endpoint is proved in `lemmas/L5_formR.md` §3 | none (inherited, §5) |
 
 **(C5) Examples table** [v1.4: `lemmas/L6_examples.md`, where each example carries its own status and conditions;
@@ -304,7 +304,7 @@ Consumed below PROVED-CHECKED — **explicit conditions of (C1)/(C2), carried in
   p = 1 endpoint itself (`lemmas/L5_formR.md` §3); W1-GEN:L1@1.0.0 — (P0) is proved self-contained
   (`lemmas/L0_toolkit_b.md`), the source is a template only. So (C1) is conditional on SOP:TH09@1.0.0 only, (C2) on
   W2-APP:POST@1.0.1 only, and (C3) has no remaining below-PROVED-CHECKED external condition [SC2-2].
-* W2-LOC2:NA-R@1.0.0, W2-LOC2:Thm-Poly@1.0.1, W2-LOC2:Lemma-IR@1.0.0, W2-LOC2:Lemma-BC@1.0.0 (LOC2 `lemmas/L6_poly.md:78-109`) [C1-F10], the RM lemma rows W3-RM:B2tau, B3, NA-F,
+* W2-LOC2:NA-R@1.0.0, W2-LOC2:Thm-Poly@1.0.1, W2-LOC2:Lemma-IR@1.0.0, W2-LOC2:Lemma-BC (LOC2 `lemmas/L6_poly.md:78-109`), the RM lemma rows W3-RM:B2tau, B3, NA-F,
   SAND-R, SAND-Rp, D-loc@1.0.0 [RC1-R4] (statuses "PROVED (by this seat, unchecked)"; each inside a PROVED-CHECKED ticket): used as
   **templates** for delta proofs; no conclusion of them is consumed outside its stated range. Lemma-IR and Lemma BC
   are consumed as stated by the examples (C5) only (E2, E3 of `lemmas/L6_examples.md`), which carry their status.

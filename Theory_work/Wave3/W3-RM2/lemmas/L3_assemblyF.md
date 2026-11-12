@@ -4,7 +4,7 @@ Status: **PROVED (by this seat, unchecked)**, given the cited inputs with their 
 LC1-B (Codex gpt-6.1-sol high, blind, `../reviews/LC1B_L2L3_check_sol.md`): Theorem RM2-F (assembly) VERIFIED,
 containment of RM-F VERIFIED. Independent mid-point MP1 (Codex gpt-6-astra high, blind, `../reviews/MP1_midpoint_astra.md`): CONTINUE WITH CHANGES — "the key lemma stands", no FATAL or MAJOR finding in L0–L3.
 Ticket W3-RM2;
-statement: `../STATEMENT.md` §4 (written for v1.3; unchanged for Form F in v1.4 [C1-F6]). No new mathematics: this file assembles `L1_sandF_b.md`, `L2_width.md` and the
+statement: `../STATEMENT.md` v1.3 §4. No new mathematics: this file assembles `L1_sandF_b.md`, `L2_width.md` and the
 consumed claims W3-RM:RM-0@1.0.0, W3-RM:E4@1.0.0 ("PROVED-CHECKED") and SOP:TH09@1.0.0 (Theorem 1; status in
 STATEMENT §5 — (C1) is **conditional on it**).
 

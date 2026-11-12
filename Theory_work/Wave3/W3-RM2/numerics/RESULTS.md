@@ -1,10 +1,5 @@
 # W3-RM2 numerics — RESULTS (sharpness gate; boundary-violation probes)
 
-> **Final counts (read first) [C1-A2].** 208 runs; the LS0 probe ended at S₀ in **204 of 208**; the four failures are
-> all in the cell B4, η = 1, n = 1600 (4 of 6 runs). Sections 1–3 below are the historical snapshot of 207 runs that
-> the better-theorem review BT1 read; §4 supersedes their totals. All counts concern the validated LS0
-> re-implementation started from the start mode, under a nominal classification (`SPEC.md`).
-
 **Observations only, never proofs.** All theorems are asymptotic; these counts say nothing about a limit. Design,
 objects, validation and column definitions: `SPEC.md`. Local machine, no NOTS. 207 runs, 0 failed
 (n = 400: 130 runs, 10 seeds per cell; n = 1600: 77 of 78 runs, 6 seeds per cell — one run of the cell

@@ -9,8 +9,7 @@ unchanged to (V), the floors and the Form F leak level and is not repeated.
 
 ## 1. The size of the leak set: |Q| ≤ n^b
 
-* **Proved.** In each sandwich proof b is paid at exactly one line, the junk-exclusion margin (in Form R, b < ½ is
-  also used by the sample floors (S2) and by P9a Step 4 — last sentence of this bullet) [C1-F7]. Form F: [β(η, A) − b] log n,
+* **Proved.** b enters each proof at exactly one line: the junk-exclusion margin. Form F: [β(η, A) − b] log n,
   β(η, A) = ½ − η/2 − √(2Aη) (`lemmas/L1_sandF_b.md` Step 2(b); LC1-A confirmed that the bound on log k̃ is the only
   use of |Q| in the sandwich). Form R: (ε*/2) log n with ε* = (1 − 2b − 30ρ)/2 (`lemmas/L4_sandR_b.md` §6(b)). The size
   ladder improves with |Q|; truth inclusion needs feasibility only; the toolkit and the lattice lemmas need
