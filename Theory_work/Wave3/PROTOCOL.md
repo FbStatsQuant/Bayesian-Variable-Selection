@@ -138,6 +138,8 @@ main); this section wires them into the ticket workflow. Where this section and 
       `python Theory_work/Wave3/tools/manifest.py freeze Theory_work/Wave3/<T> Theory_work/Wave3/<T>/reviews/MANIFEST_<round>.txt --extra Theory_work/Wave3/<T>/reviews/INPUTS.txt`
       (from the repo root; all paths repo-relative — R03 F9),
       where INPUTS.txt lists every external input the proof relies on: premise sources, inherited proofs, pinned code.
+      INPUTS.txt never lists wave documents (PROGRAM, PROTOCOL, LIFECYCLE, templates) or registry tables (`claims.tsv`
+      etc.): they are not proof premises and change on `main` between rounds (HQ 2026-11-12, after W3-START CP3).
       HQ commits it on the ticket branch.
     - Each council reviewer ends its reply with exactly one `COUNCIL-VERDICT round=R<k> manifest=<digest> seat=<seat>
       score=<x.y> gates=PASS|FAIL` line (template `Theory_work/INFRA/templates/COUNCIL_BRIEF.md`; LIFECYCLE §4.1); mid-point
