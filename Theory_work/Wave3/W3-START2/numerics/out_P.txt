@@ -1,0 +1,14 @@
+A: 3000 random tables, 300 scorer cases; max lhs/rhs = 1.000000 / 1.000000
+B: 60 designs checked: (p-s0)/(4p) <= L_sharp <= L_n(S0;h), 1/p <= 4 L_sharp
+C: 20000 partitions: |N_exc| <= max(0, 16 - s0); every I with 17 - s0 nulls has a null outside the block of S0
+D: s0=1 n=5000: lambda_min(G)=0.573; min over (V,l) of delta^2/(c tau^2 log n) = 1.000
+D: s0=1 n=20000: lambda_min(G)=0.770; min over (V,l) of delta^2/(c tau^2 log n) = 1.000
+D: s0=2 n=5000: lambda_min(G)=0.354; min over (V,l) of delta^2/(c tau^2 log n) = 1.242
+D: s0=2 n=20000: lambda_min(G)=0.652; min over (V,l) of delta^2/(c tau^2 log n) = 1.230
+D: s0=8 n=5000: G not yet positive definite (rho*sqrt(sr)=1.451); skipped
+D: s0=8 n=20000: lambda_min(G)=0.217; min over (V,l) of delta^2/(c tau^2 log n) = 2.736
+D: s0=9 n=5000: G not yet positive definite (rho*sqrt(sr)=1.514); skipped
+D: s0=9 n=20000: lambda_min(G)=0.184; min over (V,l) of delta^2/(c tau^2 log n) = 3.022
+D: s0=15 n=5000: G not yet positive definite (rho*sqrt(sr)=1.189); skipped
+D: s0=15 n=20000: lambda_min(G)=0.359; min over (V,l) of delta^2/(c tau^2 log n) = 30.814
+TOTAL VIOLATIONS: 0 (seed 20261112)

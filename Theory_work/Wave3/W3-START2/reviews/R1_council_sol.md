@@ -1,0 +1,84 @@
+Verdict summary: PASS on the frozen R1 content. All nine claims of REPORT.md section 3 are proved relative to the supplied base statements and proof steps, which this brief instructs me to take as given. I re-derived every new argument in P1-P4 and checked the cited base inputs, including BASE L9 in full. No blocking mathematical issue was found. Two report-level scope clarifications below can wait for a later version. This approves the mathematics of the delta; it does not certify HQ acceptance or registry ingestion of the base ticket.
+
+Gate table:
+
+| Gate | Result | Justification |
+|---|---|---|
+| G1 - correctness | PASS | Re-derived all new steps of P1.1-P1.8, P2.1-P2.2, P3.1-P3.4 and P4.1-P4.4. Checked the exceptional-column count, cutoff and admissible lambda range, small-gain premises, probability budget and constants 5 and 451. Checked the lattice identity/product, same-Q margin use, deterministic necessity witness, every formula in Example P3.3, the base bridge audit and both fixed-n case splits. |
+| G2 - hypotheses | PASS | Compared each section 3 claim with its proof. LEAK-0 states the positive-support, cap, threshold and small-functional conditions it needs. F2 retains the full-functional second-order assumption and truth Gram floor. OVL uses margin visibility for the same Q. P4 retains deterministic Q and reference sets, their polylogarithmic size, localisation, floors, visibility and the cap. |
+| G3 - hidden assumptions | PASS | The exceptional/proper split and smallest leaking witness are design-determined. Linearity of expectation, union bounds and Markov need no independence across columns or directions. Fixed support size is inherited from Setting F/E. No growth of p is used in F2. The zero-support case keeps the inherited functional. Neither the large-Q rate nor its oscillation must converge to zero for the stated P4 bounds. No response-selected target or conditioning on a nonmeasurable event enters. |
+| G4 - imports/interfaces | PASS | Opened cited base inputs and checked their hypotheses and uses; read BASE L9 in full. No theorem outside the base is a proof premise. Checked all eight supersession rows. The base status is attributed to the allowed BRIEF and acceptance explicitly deferred. The local registry has no W3-START rows; SAMP C@1.1.1 and D@2.1.1 have the quoted ACTIVE/PROVED-CHECKED statuses. Checked P-START, maximum odds, C-v and production P-OVL directly against SAMP. |
+| G5 - constants/rates | PASS | Checked the cutoff constants, lambda=2^17 exp(2*kappa_E+1)/epsilon, the epsilon/4 budget, unchanged c0 and n0, unchanged lattice C and enlarged odds C-sharp. Checked F2's constant and second-order absorption. BASE L9.1-L9.6 use only the reference-set count and at most p averaged columns. Checked C_R=C_B+1, C_n=O(log n), and T_epsilon=max(D_epsilon/c0,C*D_epsilon+1). The conditional bounds are pointwise in n and uniform in Q. |
+| G6 - coded method | PASS | Checked the pinned prior/cap, scorer, table, normaliser and partition citations in the allowed code. P2 uses the exact binomial prior and block products. P1/P3 require only response-independent blocks of size at most 16. No new calibration, sampling or floating-point property enters. Restricted mechanical citation check found zero missing/out-of-range references; access restrictions are detailed below. |
+
+Per-claim table (ids have prefix W3-START2:):
+
+| Claim | Decision | Reason |
+|---|---|---|
+| LEAK-0 | accepted | All proper columns satisfy the base small-gain premise; exceptional columns have zero gain. Union bound, Markov and absorption give the stated uniform bound and tightness. |
+| START-F (T1+) | accepted | P1.4 preserves the base lattice argument and replaces only the leading-term event in the odds argument. The asymptotic decomposition and first-order clause use valid inherited steps. |
+| F2 (F2+) | accepted with non-blocking remarks | J1 and the truth Gram floor bound each sharp-functional term without the old z_n/p remainder. The theorem correctly restricts exact order to eta'=0 and visibility exponent above 1/2; see issue 1 about report prose. |
+| TRANSFER (T3+)(a) | accepted | Conditional fixed-design bounds have constants uniform over all design-selected objects, with the probability outside the design set added explicitly. |
+| IF-START | accepted | The event indicator only decreases nonnegative odds. Posterior concentration supplies the other half of maximum odds. The base proof records a nonincreasing envelope if the consumer's rate notation requires one. |
+| OVL | accepted | The exact normalisation identity and the prior/table chains control mass inside the lattice; START-F(a) controls lattice mass under either admitted visibility assumption for this Q. |
+| NEC (T4+) | accepted | Counting forces a proper-conditioning witness for base C2(i) with the same exponent. The non-vacuity construction works for all support sizes 1 through 15. Inherited N1/N3/N4 remain covered. |
+| BR (B-R+) | accepted | The removed size bound on Q enters none of BASE L9.1-L9.6. The zero-leakage conclusion remains tightness rather than fixed-constant concentration. |
+| START-R (T3+)(b) | accepted | At every n the bound is either trivial or forces precisely the smallness needed for the conditional estimate; the separate zero-leakage split also works for arbitrary oscillating Q_n. |
+
+Issues:
+
+1. NON-BLOCKING - Theory_work/Wave3/W3-START2/REPORT.md:23. The summary says that for bounded p greater than s0 the order n^(-1/2) is exact without repeating eta'=0 and kappa_V>1/2. Those qualifications are explicit in STATEMENT.md:115-117 and P1.6(v). Bounded p alone does not yield the exact-order assertion from the general eta' result. Repair in a later version: append the two qualifications to this summary sentence. The formally stated F2+ claim is correct.
+
+2. NON-BLOCKING - Theory_work/Wave3/W3-START2/REPORT.md:89. The sharpness row correctly identifies the n^(-1/2) obstruction, but should distinguish sharpness of the leading contribution from exact order of the full odds. A bounded sharp functional alone does not control the second-order full-functional term or the visibility remainder at order n^(-1/2). The cited P1.6(v) imposes additional conditions. Repair in a later version: describe a sharpness obstruction for the leading contribution and reserve exact order of the full odds for F2+ with eta'=0 and kappa_V>1/2. This row is not a proof premise, and no theorem states the stronger unqualified conclusion.
+
+No BLOCKING issue must be fixed before mathematical acceptance of this manifest. The stated HQ prerequisite concerning acceptance of W3-START remains in force.
+
+Overall score: 9.1 / 10.
+
+Checks performed:
+
+- Verified MANIFEST 29e07311fc662cb546de2ee5ea090828669c4bc1034e0d5323c0184d9708117f with the authorised verifier: OK. Repeated verification after writing this report: OK.
+- Read the delta statement, report, all four proofs, permitted plan/brief, numerical source/output and numerical helper. Opened the cited base statement ranges and proof inputs L1-L10, including all of L9. Base proof validity itself was taken as given, as instructed.
+- P1: at most 16-s0 exceptional nulls occupy the unique block containing all truths. Put e=exp(2*kappa_E+1). The definition H^2=2 log(lambda/(15e)) gives 0<=H<=z_n exactly on the stated lambda interval. Each proper-column J is at most p times the sharp functional, hence at most p*sqrt(n); BASE L3:61-62 supplies its small gain. Exceptional gain is zero. Their union bound costs 450e/lambda, while Markov costs e/lambda. Their total contribution is at most lambda*(s0+1)/[p*sqrt(n)]; the inequality 1/p<=4 times the sharp functional gives factor 5. No independence is used.
+- P1 uniformity: 451e/lambda=451*epsilon/2^17<=epsilon/4. The original n0 condition gives log n>=2/epsilon, enough for lambda's upper endpoint. The original c0 and n0 remain valid; only the odds constant is enlarged. For s0=0 the new functional equals the old one and the enlarged constant dominates the base odds constant. F2 uses the Schur floor to bound unexplained mean energy below; J1 bounds the sharp functional by C_F*n^(eta'/2). The second-order assumption makes n^(-1) times the full functional squared o(n^(-1/2)). No p-growth premise is needed.
+- P2: for N contained in Q minus the truth, the prior ratio is at most (s0+1)_{|N|}/p^{|N|}, hence at most (|Q|/p)^{|N|}. Multiplying the chain bound and summing N gives the product. The bounded-column noise union has failure at most qbar*2^16/log n. The inherited table-step estimate uses only the toolkit, not constant-level visibility. Positive-part exponent multiplication gives E_n. The empty-product case is valid. Margin visibility is explicitly assumed for this same Q.
+- P3: the deterministic counting witness supplies the precise actual-block conditioning set required by base C2(i); for s0>=16 every null qualifies. In the example the Gram perturbation has eigenvalues plus/minus sqrt(s*r), with s*r<=72. The centred orthonormal construction realises the proposed Gram. For v truths conditioned on, unexplained energy is (s-v)*theta^2, residual null norm squared is (n-1)*(1-v*rho^2), and gain squared is (n-1)*theta^2*(s-v)^2*rho^2/(1-v*rho^2). Substitution gives the required lower bound for every proper V. An inline arithmetic check covered all 15 choices of s and every conditioning cardinality at n=10^7, with minimum Gram eigenvalue above 1/2. It wrote no file.
+- P4: inspected each step of BASE L9.1-L9.6, including covariance events, localisation, the conditional reference-pair law and averaged expectation. None uses the size of Q. The base thresholds may depend on the stipulated localisation sequence r_n; the extension introduces no dependence on the size or oscillation of Q_n. On the design set the leakage rate is at most a_n*exp(-sqrt(log n)). If a_n<1, this is at most c_{0,n} eventually, uniformly in Q, and C_n times that rate plus n^(-1) is at most a_n. For zero population leakage, T_epsilon*b_n^Q<1 implies D_epsilon*b_n^Q<=c0 and C*D_epsilon*b_n^Q+n^(-1)<=T_epsilon*b_n^Q. The complementary cases are trivial because the mass deficit is at most 1. These are fixed-n inequalities, so arbitrary alternation is covered.
+- Checked every supersession row: sharp-functional domination for START-F/TRANSFER/IF-START; hypothesis removal for F2; inclusion of constant visibility for OVL; identical large-support N2 and vacuous small-support old N2 for NEC; old leakage assumption implies new leakage assumption for BR/START-R.
+- Checked report claim locations, assumption ids, scope exclusions and relations. Base status is supported only as the allowed BRIEF's attribution; the package does not silently promote it to registry acceptance. Checked SAMP's odds definition, P-START, C-v and production D-iv, and quoted versions/statuses in the permitted registry context. RM and PXN provide definitions/scope, not additional theorem premises.
+- Inspected the scorer/prior/normaliser/partition code pins and the numerical transcription. The reported numerical counts and tested examples agree with source/output; indefinite finite-n example cases are explicitly skipped. The large-support example code samples conditioning subsets rather than establishing an exhaustive numerical proof. LEAK-0 and P4 are explicitly not simulated.
+- Ran citecheck.py's logic inline with one access-control modification: removed backticked LOG/CHECKPOINT references from scanned source text before resolution, preserving the blind-read prohibition. Output was directed to the system temporary directory outside the repository. Result: 212 permitted citations, 147 line ranges and 65 path-only references, zero missing/out-of-range. Mathematical uses were compared with opened base ranges; mechanical existence is not treated as semantic validation.
+
+Not checked:
+
+- No earlier review/disposition, LOG or CHECKPOINT file was read. No git history, diff, index, checkout or other git-state operation was used. No subagent was started. Only the authorised review file was written inside the repository.
+- Did not certify HQ acceptance of W3-START, registry ingestion or the state of another branch/main checkout. The allowed local registry confirms the consumer statuses and absence of base rows; the base's council status is only the BRIEF's attributed information.
+- Did not independently re-prove unchanged base mathematics, rerun the complete R falsification suite, audit every implementation branch or establish a binary64 theorem. Numerical observations are not used as proofs.
+- No claim is made beyond the stated scope: reference sets beyond polylogarithmic size, fewer designated leaking nulls, a sharper zero-support functional, response-selected targets and informative concentration when the asserted large-Q rate does not vanish remain open or excluded.
+
+COUNCIL-VERDICT round=R1 manifest=29e07311fc662cb546de2ee5ea090828669c4bc1034e0d5323c0184d9708117f seat=sol score=9.1 gates=PASS
+
+## Addendum — per-claim decisions (seat sol, round R1; 2026-11-12; same seat model, fresh thread; no rescoring)
+
+| id | decision |
+|---|---|
+| W3-START2:LEAK-0 | ACCEPT |
+| W3-START2:START-F | ACCEPT |
+| W3-START2:F2 | ACCEPT |
+| W3-START2:TRANSFER | ACCEPT |
+| W3-START2:IF-START | ACCEPT |
+| W3-START2:OVL | ACCEPT |
+| W3-START2:NEC | ACCEPT |
+| W3-START2:BR | ACCEPT |
+| W3-START2:START-R | ACCEPT |
+
+Where examined:
+W3-START2:LEAK-0 — Per-claim table, line 18; Checks performed, lines 42–43: proper/exceptional columns, probability budget, absorption and uniform bound.
+W3-START2:START-F — Per-claim table, line 19; G1/G5, lines 7 and 11; Checks performed, lines 43 and 47: lattice argument, sharp leading term, inherited asymptotics and supersession.
+W3-START2:F2 — Per-claim table, line 20; Checks performed, line 43; Issues, lines 30–32: sharp-functional bound, second-order absorption, removal of p growth and exact-order qualifications; remarks explicitly non-blocking.
+W3-START2:TRANSFER — Per-claim table, line 21; G3/G5, lines 9 and 11; Checks performed, line 47: conditional bounds uniform over design-selected objects, exceptional design probability and sharp-rate supersession.
+W3-START2:IF-START — Per-claim table, line 22; G4, line 10; Checks performed, lines 47–48: event indicator, maximum odds, deterministic rate envelope and P-START interface.
+W3-START2:OVL — Per-claim table, line 23; Checks performed, lines 44 and 48: normalisation/product bound, same-Q margin visibility, exponent and production P-OVL.
+W3-START2:NEC — Per-claim table, line 24; Checks performed, lines 45 and 47: counting witness, all small-support examples and inherited N1/N3/N4.
+W3-START2:BR — Per-claim table, line 25; G2/G5, lines 8 and 11; Checks performed, line 46: BASE L9.1–L9.6 audit, reference-set hypotheses, removal of the Q-size bound and zero-leakage tightness.
+W3-START2:START-R — Per-claim table, line 26; Checks performed, lines 46–47: pointwise trivial/small-rate splits, arbitrary oscillating Q, zero-leakage case and supersession.
