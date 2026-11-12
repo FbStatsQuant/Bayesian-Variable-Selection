@@ -1,6 +1,6 @@
 # L2 — Lemma TK: the toolkit under the constant unnormalised Gram floor — bridge (B-TK), interface [TK]
 
-Status: **PROVED (by this seat, unchecked)**.
+Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket's final checkpoint file and `reviews/`).
 Statement proved: `STATEMENT.md` §4 [TK] and §5.2 (B-TK). No registry claim is consumed. The argument follows
 `Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md` and `Theory_work/Wave1C/C-GROW/lemmas/L0_toolkit.md` (sources of the
 argument only); the two places where those files use a normalised Gram floor ((E1), (E2)) are redone, the RSS bounds

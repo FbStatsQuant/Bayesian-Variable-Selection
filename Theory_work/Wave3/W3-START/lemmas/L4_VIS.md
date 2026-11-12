@@ -1,6 +1,6 @@
 # L4 — Visibility bridges (B-V2), (B-V1) ⇒ [VIS(κ; Q)]
 
-Status: **PROVED (by this seat, unchecked)**.
+Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket's final checkpoint file and `reviews/`).
 Statement proved: `STATEMENT.md` §4 [VIS(κ; Q)]; §5.2 (B1) (visibility part), (B-V1), (B-V2).
 Uses `lemmas/L2_TK.md` (𝓔^blk, (TK-a), (TK-d)–(TK-f), κ_E, ω_n ≤ ω̄_n, ϑ_n, n₁) and `lemmas/L1_AGG_FLOOR.md` (AGG-d).
 

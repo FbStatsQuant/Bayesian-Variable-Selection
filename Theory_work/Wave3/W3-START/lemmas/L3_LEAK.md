@@ -1,6 +1,6 @@
 # L3 — Lemma J, bridge (B-L) ⇒ [LEAK(Q)], bridge (B1), level vectors and Corollary F4
 
-Status: **PROVED (by this seat, unchecked)**.
+Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket's final checkpoint file and `reviews/`).
 Statement proved: `STATEMENT.md` §2 (J0)–(J3); §4 [LEAK(Q)]; §5.2 (B1) (leakage part), (B-L); the arithmetic of
 Corollary F4 (§5.3 (T2)). Uses `lemmas/L2_TK.md` (event 𝓔^blk, (TK-a)–(TK-f), constants κ_E, ω_n, ϑ_n, n₁).
 

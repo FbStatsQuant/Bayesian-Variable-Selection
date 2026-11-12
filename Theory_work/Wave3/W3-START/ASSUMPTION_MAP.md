@@ -58,3 +58,29 @@ The map above was written for v1.2. Changes in v1.3, by row:
   design. Response-selected targets stay outside.
 * **Consumed claims: none** (the toolkit is re-proved locally; C-GROW:L0.1/L0.2 are sources of the argument only).
 * Open items: O1 (Gaussian rows with a population leakage level), O2 (no Gram floor), O3 (growing s₀).
+
+## 4. Update for STATEMENT v1.3.1 (2026-11-11)
+* **Leakage level, necessity reading.** The partition-free limit (N2) is vacuous for s₀ ≤ 15 (its premise includes
+  V = S₀, where every null gain is zero). The necessity of the level 1 + 2A for one leaking column is therefore read on
+  the actual partition, through (C2)(i); partition-free only for s₀ ≥ 16. Rows "A:START-AL" and "p ≤ n^A" above cite
+  (N2) for this reading: read "(C2)(i)". The binding map entry "averaged leakage ← … (C2)(i)/(N2)" stands with the
+  same proviso.
+* **[TK]** is used by the bridges in the quantitative form of Lemma TK (explicit event, envelope ω̄_n, constant κ_E).
+* **(B-R), clause C_L = 0:** a tightness statement for 𝔏_n(Q); (T3)(b) is unchanged (it was already an O_P statement).
+* **Examples:** verified families are listed separately from expected ones (UNI-0, exact-separation AR(1)).
+
+## 5. Corrections to the necessity readings (2026-11-11, after the exhaustive sweep)
+* **What is necessary and what is only sufficient.** The lower bound o₀ ≥ T₁ makes **T₁ → 0 necessary** for
+  π₀(S₀) → 1. It does not make the deterministic functional of (AL) necessary: bridge (B-L) is an upper bound obtained
+  by Markov's inequality, not a converse. Read the row "A:START-AL" of §1 and the line "averaged leakage ← forced by …"
+  of §2 as: T₁ → 0 is forced; **(AL) is sufficient for this proof route, and the necessity of its particular
+  functional (truncated expectation, maximum over all conditioning sets) is not established**.
+* **"When nothing leaks".** In the conclusion-level line of §2, "𝔏⁰_n between 1 and √log n when nothing leaks" means
+  zero gains (δ_{U,l} = 0 for all nulls). The target "no leakage" of the statement is Q = S₀, and (AL) at Q = S₀ allows
+  functionals much larger than √log n.
+* **Numerics and (AL).** The production scripts of `numerics/` compute block-relative functionals (𝔏^{b,0}); they do not
+  verify the partition-free (AL). The `leakall` η = 0 design (satellites at correlation 0.9 with truths of fixed
+  strength) is **outside** partition-free (AL) at Q = S₀; its good behaviour is block-relative. For Gaussian rows,
+  (AL) is delivered by bridge (B-R), not by a computation.
+* **OVL.** Proposition OVL is proved (`lemmas/L10_INTERFACES.md`) under a uniform bound ā on the levels of the columns
+  of Q ∖ S₀; it is a claim of the statement, no longer provisional.

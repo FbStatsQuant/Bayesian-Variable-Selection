@@ -1,6 +1,6 @@
 # L5 — Lemma ASM (C1) and Theorem START-F (T1)(a)–(d)
 
-Status: **PROVED (by this seat, unchecked)**.
+Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket's final checkpoint file and `reviews/`).
 Statement proved: `STATEMENT.md` §5.1 (C1) and §5.3 (T1). Uses: `lemmas/L1_AGG_FLOOR.md` ((AGG-a), (AGG-b), (T0));
 `lemmas/L2_TK.md` (𝓔^blk); `lemmas/L3_LEAK.md` (Proposition L3.4, (B1), n₂, c_L); `lemmas/L4_VIS.md` (𝓧, Propositions
 L4.1, L4.2, n₃, n₄). Notation: s₀′ := max(s₀, 1). "X_n = O_P(a_n) + o_P(n^{−κ})" means X_n ≤ A_n + B_n with A_n = O_P(a_n),

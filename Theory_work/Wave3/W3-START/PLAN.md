@@ -49,7 +49,7 @@ bounds, score expansion · L3 Lemma J and bridge (B-L) with column levels · L4 
 L5 assembly (C1) and Theorem START-F (T1)(a)–(d). Each lemma: falsification numerics (`numerics/lemmas/`) and a
 cross-family line check; then the independent mid-point review (CP2).
 After CP2 (to CP3): L6 corollaries F1–F4 · L7 necessity (C2), (T4) · L8 random-design transfer (T3)(a) · L9
-Gaussian-row bridge (B-R) · L10 interface, OVL and MIS corollaries · sweep · council.
+Gaussian-row bridge (B-R) · L10 interface, OVL and MIS corollaries · L11 examples (T7) · sweep · council · `REPORT.md`.
 
 ## 5. Consumed claims (registry id @ version)
 None. (C-GROW:L0.1@1.0.0, C-GROW:L0.2@1.0.0 are stated with the normalised Gram floor; the toolkit is re-proved locally

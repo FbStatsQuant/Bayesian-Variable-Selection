@@ -1,13 +1,15 @@
 # W3-START — STATEMENT (start-mass rate; PROGRAM item 2)
 
 Ticket W3-START, Theory Wave 3. Lead: Claude Fable 5.2 (effort high).
-Status of this file: **v1.3 — LOCKED** (2026-11-11; statement change check passed, record in `LOG.md`).
-Protocol: `Theory_work/Wave3/PROTOCOL.md`. All results are asymptotic (n → ∞) unless marked *deterministic*. Nothing
-here is proved yet: this file fixes the target. **No method change is requested.**
+Status of this file: **v1.3.3** (2026-11-11; record in `LOG.md`).
+Protocol: `Theory_work/Wave3/PROTOCOL.md`. All results are asymptotic (n → ∞) unless marked *deterministic*. This file
+states the claims; proofs are supplied in `lemmas/` (L1–L11), author-proved and awaiting independent acceptance. The
+status of each claim is recorded outside this file: the author status in `REPORT.md`, the check record and the final
+status in the ticket's final checkpoint file and in the registry. **No method change is requested.**
 
 Abbreviations. CORE = `Scripts/SMC_BVS/core/`; GROW = `Theory_work/Wave1C/C-GROW/`; RM = `Theory_work/Wave3/W3-RM/`;
 SAMP = `Theory_work/Wave3/W3-SAMP/`; MIS = `Theory_work/Wave1C/C-MIS/`; PXN = `Theory_work/Wave1/W1-PXN/`;
-T22 = `Docs/Theory/proofs/T22iii_T16_start_aggregation/STATEMENT.md` (registry SOP:TH116).
+GEN = `Theory_work/Wave1/W1-GEN/`; T22 = `Docs/Theory/proofs/T22iii_T16_start_aggregation/STATEMENT.md` (registry SOP:TH116).
 
 ## 0. What is claimed, in one paragraph
 
@@ -25,10 +27,12 @@ column within a summable tail budget (§2); this makes the condition sharp for i
 (iii) *Random designs:* the fixed-design bounds are uniform, so they transfer to random designs whose coefficients,
 support and leakage set are functions of the design. *Gaussian rows, p ≫ n allowed:* under population visibility and
 population no-leakage (W3-RM's (V-R), (L-R) with Q = S₀), π₀(S₀) ≥ 1 − n^{−1/2}e^{C√log n} with probability → 1, hence
-π₀(S₀) ≥ 1 − n^{−c} for every c < ½. (iv) *Limits:* under the hypotheses and quantifiers of (N2) and (N3) respectively, one null with
-normalised gain above (1 + 2Ā) log n, or one truth with normalised gain below (1 + 2A̲) log n, sends π₀(S₀) → 0
-(Ā, A̲ := limsup, liminf of log p/log n); masked truths and strong-factor designs are outside the hypotheses. (v) *Interfaces:* W3-SAMP's P-START with an explicit rate; a deterministic inequality for P-OVL and, provisionally
-(see (T5)), a primitive corollary; the misspecified-candidate form (C-MIS). No design family appears anywhere. The theorems'
+π₀(S₀) ≥ 1 − n^{−c} for every c < ½. (iv) *Limits:* on the actual partition (component diagnostics (C2)), one null with
+normalised gain above (1 + 2Ā) log n given the truths of its block, or one truth with normalised gain below
+(1 + 2A̲) log n given the other truths of its block, sends π₀(S₀) → 0; the partition-free forms are (N2), which is
+non-vacuous only for s₀ ≥ 16, and (N3)
+(Ā, A̲ := limsup, liminf of log p/log n); masked truths and strong-factor designs are outside the hypotheses. (v) *Interfaces:* W3-SAMP's P-START with an explicit rate; a deterministic inequality for P-OVL and a primitive
+corollary (Proposition OVL); the misspecified-candidate form (C-MIS). No design family appears anywhere. The theorems'
 hypotheses are partition-free conditions on (X, θ*) or (Σ_n, θ*); blocks appear only where they must — in the
 definition of the coded π₀ and in the component lemmas about its tables (§5.1), which are labelled as such.
 
@@ -41,7 +45,8 @@ standard deviations; X := CX^rD_x⁻¹ (centred, ‖x_j‖² = n − 1); Y := Cy
 y := Y/s_y (yᵀy = n − 1). G_S := X_SᵀX_S, z_S := X_Sᵀy.
 **The start, as coded** (EX-A: exact arithmetic). Pins at `main` = fe9a066 (the CORE tree is identical at the branch
 base d6da494; last commit touching CORE: 72785fe):
-* score and prior: CORE `cpp/v3_score.h:39-72` (K = min(p, ⌊n/2⌋); w(k) = ½/C(2p − 1, k); ϖ(k) = w(k)/W_K),
+* score and prior: CORE `cpp/v3_score.h:39-72` (K = min(p, ⌊n/2⌋); w(k) = ½/C(2p − 1, k);
+  W_K := Σ_{k=0}^{K} C(p, k)·w(k); ϖ(k) = w(k)/W_K),
   `cpp/v3_score.h:204-224` (log m(S) = log c_n − ½[log det H_S − log det(G_S + I)] − ν log(2b₀ + Q_S),
   c_n = (2b₀)^{a₀}Γ(ν)/(π^{n/2}Γ(a₀)), H_S = (n + 1)G_S + I,
   Q_S = yᵀy − n z_SᵀH_S⁻¹z_S, ν = a₀ + n/2, scorer constants a₀ = b₀ = 0.01);
@@ -50,7 +55,9 @@ base d6da494; last commit touching CORE: 72785fe):
 * tables: CORE `cpp/v3_start.h:76-98` (r_b(U) = m(U)/m(∅) for every U ⊆ C_b, scored against the full y);
 * start: CORE `cpp/v3_start.h:68-70` (log γ₀(S) = log ϖ(|S|) + Σ_b log r_b(S ∩ C_b); log π₀ = log γ₀ − log Z̄₀),
   `cpp/v3_start.h:101-137` (Z̄₀ = Σ_{k≤K} ϖ(k)F_J(k), size-profile convolution truncated at K).
-So on Ω = {S ⊆ [p] : |S| ≤ K}: **π₀(S) = γ₀(S)/Σ_{V∈Ω}γ₀(V), γ₀(S) = w(|S|)∏_b r_b(S ∩ C_b)** (W_K cancels). Since n ≥ 4,
+So on Ω = {S ⊆ [p] : |S| ≤ K}: **π₀(S) = γ₀(S)/Σ_{V∈Ω}γ₀(V), γ₀(S) := w(|S|)∏_b r_b(S ∩ C_b)**. From here on γ₀ denotes this
+weight: it is W_K times the coded γ₀ of the previous line (which uses ϖ), and the constant W_K cancels in π₀ and in
+every ratio used below. Since n ≥ 4,
 B ≤ K and every block table is fully scored. "π₀" denotes this deterministic function of the data on every branch (a
 component statement when the run dispatches to exact enumeration; PXN `STATEMENT.md:103-106`). Only two facts about
 the partition are used: it is a function of X alone, and |C_b| ≤ 16.
@@ -176,6 +183,12 @@ lemmas of §5.2 deliver them from the partition-free assumptions; the theorems o
 | **P-START** | 1_𝒜·o₀ → 0 in probability (SAMP `STATEMENT.md:76`) | START-F / START-R at Q = S₀ | SAMP Theorem C |
 | **P-OVL** | D_r·π₀(S₀) → ∞ in probability on 𝒜 (SAMP `STATEMENT.md:82`) | P-START; Proposition OVL | SAMP Theorem D |
 
+**Quantitative form of [TK].** The bridges (B-L), (B-V1), (B-V2) and the diagnostics (C2) use [TK] in the
+quantitative form that Lemma TK delivers under (E) and (GF-16): the event 𝓔^blk with an explicit failure probability,
+the deterministic envelope ω_n ≤ ω̄_n = O(n^{−1/3}) depending only on (n, A), the constant κ_E(g_*, M, σ²), and the
+log-ratio bounds that follow, uniformly over the designs and coefficient vectors satisfying (E) and (GF-16) with the
+same constants. Lemma ASM (C1) needs only the interface properties [LEAK(Q)] and [VIS(κ; Q)] as displayed.
+
 ## 5. Claims
 
 ### 5.1 Component lemmas (about the coded start and its block tables; blocks appear by necessity)
@@ -220,7 +233,7 @@ P(π₀(S₀) ≤ n^{−κ′}) → 1 for every κ′ < (1 + 2A̲ − c)/2.
 | (B-L) | [TK] ⇒ [LEAK(Q)]: on 𝓔^blk and {\|Z_{T,l}\| ≤ h_l for all block pairs (T, l) with l ∉ Q} (the complement has probability ≤ b_n(h): a column has at most 2¹⁵ conditioning sets inside its block), each step with small gain is ≤ e^{2κ_E+o(1)}(n + 1)^{−1/2}exp((δ_{T,l} + σZ_{T,l})²/(2τ²_T)); a truncated expectation gives J_{h_l} | new (τ-form RSS bounds; Lemma J; column levels) |
 | (B-V1) | (V-c), [TK], [LEAK(Q)], (AL) ⇒ P(e_n > n^{−κ}) → 0 and, by (AGG-d), [VIS(κ; Q)], every κ < (c_V − 1 − 2A)/2 | new (constant level; union over the ≤ s₀ truth blocks only) |
 | (B-V2) | (V-m), [TK] ⇒ [VIS(κ; Q)], every κ < c_m/2 | new |
-| (B-R) | Setting R, (FL-R16), (V-R), (L-R) ⇒ with probability → 1 the design satisfies (E), the normalised floor λ_min(R̂_T) ≥ φ₀² for 1 ≤ \|T\| ≤ 16 with a constant φ₀ > 0 (hence (GF-16)), (V-c) for every fixed c_V, and 𝔏_n(Q) ≤ exp(C√log n) (≤ C(log n)^{15κ_Q+1/2} if C_L = 0), default levels | new |
+| (B-R) | Setting R with p > s₀ for all large n, (FL-R16), (V-R), (L-R) ⇒ with probability → 1 the design satisfies (E) (its energy bound holds with M = s₀²θ_hi²; p ≤ n^A, s₀ fixed and p > s₀ are assumed, they are not consequences of the population conditions), the normalised floor λ_min(R̂_T) ≥ φ₀² for 1 ≤ \|T\| ≤ 16 with a constant φ₀ > 0 (hence (GF-16)), (V-c) for every fixed c_V, and 𝔏_n(Q) ≤ exp(C√log n), default levels. If C_L = 0: 𝔏_n(Q) = O_P((log n)^{15κ_Q+1/2}) (a tightness statement; a bound with a fixed constant and probability → 1 is not claimed) | new |
 
 ### 5.3 Theorems (partition-free hypotheses)
 
@@ -267,7 +280,7 @@ levels in F1–F3).**
   b_n(h) → 0 and ϱ_n(Q; h) ≤ ϱ^{−I}_n(Q) + (|Q| + 1)·n^{−(1+2A̲−c)/2+o(1)}, where ϱ^{−I}_n(Q) is ϱ_n(Q) with the columns of
   I_n left out of the sum. Hence (AL) holds, and (T1) applies with this h, whenever ϱ^{−I}_n(Q) → 0 and
   (|Q| + 1)n^{−κ₁} → 0 for some κ₁ < (1 + 2A̲ − c)/2. (A bounded number of columns may leak at any constant level below
-  1 + 2A̲; by (N2) one column leaking above 1 + 2Ā destroys the start mass. With the default levels, bound (J2) charges
+  1 + 2A̲; by (C2)(i) one column leaking above 1 + 2Ā given the truths of its block destroys the start mass. With the default levels, bound (J2) charges
   such a column n^{(c−1)/2+√(2Ac)+o(1)}/p when log p/log n → A; this upper bound tends to zero only for
   c < (√(4A + 1) − √(2A))², which is strictly below 1 + 2A. That is a threshold for the displayed upper bound, not a
   necessary threshold for the default functional.)
@@ -284,12 +297,18 @@ levels in F1–F3).**
   𝓛(Q) = {T : S₀(X^r) ⊆ T ⊆ Q(X^r)}; for Q = S₀, if moreover n^{−1/2}𝔏⁰_n(h) + n^{−1}𝔏_n(S₀; h)² ≤ r̄_n on 𝒳_n for a deterministic r̄_n ≥ 0:
   o₀ = O_P(r̄_n) + o_P(n^{−κ}), with o₀ the start odds against S₀(X^r). (Immediate from (T1)(d): given X^r the targets
   are fixed and the noise has Setting F's law; the constants of (T1)(d) depend only on the displayed bounds. Supports,
-  coefficients or sets Q selected using the response are not covered.)
-* (b) **Gaussian rows.** Setting R. Assume (FL-R16), (V-R), (L-R). Then there is C_R < ∞, depending only on the fixed
+  coefficients or sets Q selected using the response are not covered.) *Convention off the design sets.* The design
+  law is constrained only on 𝒳_n. On realisations where the start, the lattice or the odds are not defined as in §1
+  (no retained column, an invalid response, S₀ ∉ Ω, S₀ ⊄ Q or |Q| > K), the quantities 1 − π₀(𝓛(Q)) and o₀ are set to 0;
+  this is only a convention that makes the joint-law statements meaningful — nothing is claimed about a coded start
+  on invalid inputs. The same convention applies in (T3)(b) and in the random-candidate clause of (T6).
+* (b) **Gaussian rows.** Setting R with p > s₀ for all large n (at least one null, as in (E); nothing is claimed when
+  p = s₀, §6). Assume (FL-R16), (V-R), (L-R). Then there is C_R < ∞, depending only on the fixed
   constants, with **P(1 − π₀(𝓛(Q)) ≤ (|Q| + 1)·n^{−1/2}·exp(C_R√log n)) → 1**. In particular with Q = S₀ (no leakage):
   P(π₀(S₀) ≥ 1 − n^{−c}) → 1 for every c < ½, for p ≤ n^A including p ≫ n. If C_L = 0 (exactly zero population
   leakage): 1 − π₀(𝓛(Q)) = O_P((|Q| + 1)·n^{−1/2}·(log n)^{15κ_Q+1/2}).
-  Proof structure: (B-R), then (a). The averaged functional absorbs the Gaussian fluctuation of the off-block signal
+  Proof structure: (B-R), then the uniform bound (T1)(d) conditionally on the design, as in (a) (with a slowly
+  decreasing ε for the first display, and with the tightness of 𝔏_n(Q) for the clause C_L = 0). The averaged functional absorbs the Gaussian fluctuation of the off-block signal
   (δ_{U,l}/√Δ_U is a √n-scaled sample partial correlation), which a uniform bound δ²_{U,l} ≤ ητ²_U log n with η < η_A
   does not (RM `STATEMENT.md:271-273`).
 
@@ -297,6 +316,11 @@ levels in F1–F3).**
 * (N1) = (T0): the exponent ½ in (T1)–(T3) is optimal; under F2 with η′ = 0 the order is exact.
 * (N2) **one leaking null.** If for all large n some null l = l_n has δ²_{V,l} ≥ c·τ²_V·log n for **every** V ⊆ S₀ with
   |V| ≤ 15, with a fixed c > 1 + 2Ā, then P(π₀(S₀) ≤ n^{−κ′}) → 1 for every κ′ < (c − 1 − 2Ā)/2.
+  **Scope of (N2).** When s₀ ≤ 15 the premise cannot hold: V = S₀ is among the sets, and δ_{S₀,l} = 0 for every null
+  l because μ ∈ span X_{S₀}. So (N2) is a partition-free limit only for s₀ ≥ 16. For s₀ ≤ 15 the one-column failure
+  threshold is claimed on the actual partition only, by (C2)(i), whose conditioning set U*_{b(l)} can be a proper
+  subset of S₀. V = S₀ is not removed from (N2): a null whose block contains all the truths gains nothing given them
+  and does not destroy the start mass.
 * (N3) **one weakly visible truth.** If for all large n some truth j = j_n has δ²_{V,j} ≤ c·τ²_V·log n for **every**
   V ⊆ S₀ ∖ {j} with |V| ≤ 15, with a fixed c < 1 + 2A̲, then P(π₀(S₀) ≤ n^{−κ′}) → 1 for every κ′ < (1 + 2A̲ − c)/2.
   So the constant 1 + 2A of (V-c) and (V-m) cannot be lowered.
@@ -311,11 +335,10 @@ levels in F1–F3).**
   r_n := n^{−1/2}exp(C_R√log n). Hence P-START holds, and SAMP Theorem C (C-v)'s rate clause applies with
   1_𝒜δ̄ = O_P(max(r_n, r^{post}_n)) whenever P-CONC holds with a deterministic rate r^{post}_n. Only the start interface
   is supplied: P-CONC, P-MAP and SAMP's algorithm premises are not.
-* **Proposition OVL (start mass under a bounded leakage set).** (The deterministic inequality (AGG-c) is claimed in
-  any case; this proposition is kept in the target only if its proof is short, and is otherwise recorded as an open
-  item.) Setting F, (E), (GF-16), (V-c); Q ⊇ S₀ deterministic
-  with |Q ∖ S₀| ≤ q̄ fixed and (AL) for Q; and fixed a_l ≥ 0 with δ²_{U,l} ≤ a_l·τ²_U·log n for every l ∈ Q ∖ S₀ and every
-  U ⊆ [p] ∖ {l}, |U| ≤ 15. Then for every ε > 0: P(π₀(S₀) ≥ n^{−E_n−ε}) → 1, E_n := Σ_{l∈Q∖S₀}[(a_l − 1)/2 − log p/log n]₊.
+* **Proposition OVL (start mass under a bounded leakage set).** Setting F, (E), (GF-16), (V-c); Q = Q_n ⊇ S₀
+  deterministic with |Q ∖ S₀| ≤ q̄ fixed and (AL) for Q; and deterministic levels a_{n,l} with 0 ≤ a_{n,l} ≤ ā < ∞ for a
+  fixed ā, uniformly in n and l ∈ Q_n ∖ S₀, such that δ²_{U,l} ≤ a_{n,l}·τ²_U·log n for every l ∈ Q ∖ S₀ and every
+  U ⊆ [p] ∖ {l}, |U| ≤ 15. Then for every ε > 0: P(π₀(S₀) ≥ n^{−E_n−ε}) → 1, E_n := Σ_{l∈Q∖S₀}[(a_{n,l} − 1)/2 − log p/log n]₊.
   Hence P-OVL in SAMP Theorem D's production form (max(n, p)·log₂(n + 1)·π₀(S₀) → ∞) holds whenever
   limsup(E_n − max(1, log p/log n)) < 0 — also when the start mode is not S₀.
 
@@ -332,17 +355,23 @@ coefficients β^𝒞 = β_𝒞 + γ(X^r_𝒞), their support S₀^𝒞 and the s
 design, on the high-probability design sets of (T3)(a). Candidate sets, supports or coefficients selected using the
 response are not covered.
 
-**(T7) Examples table** (families verifying the hypotheses; `lemmas/` at CP3; none is a hypothesis). Fixed design:
-orthogonal-type designs with no leakage (F1 with η = 0; F2); truths with close correlates (covered by (V-m), not by
-(V-c)); near-duplicate null columns at distance of order 1 (covered by (GF-16), not by a normalised floor); an
-isolated leaking column in a regime where default-level (AL) fails but F4 applies. Gaussian rows: independent columns (C_L = 0, H_l = {l} ∪ S₀); block-diagonal Σ_n with the truths' blocks in
-Q; UNI-0 families and exact-separation AR(1) with their relevance sets Q (lattice form). Outside the hypotheses, with
-the reason: masked hubs (PXN: visibility fails); strong factors at p > K.
+**(T7) Examples table** (families verifying the hypotheses; none is a hypothesis). **Examples verified in**
+`lemmas/L11_EXAMPLES.md` **(author-verified, awaiting independent acceptance like the other proofs).** Fixed design,
+p ≤ n − 1:
+orthogonal designs with no leakage (F1 with η = 0, subject to visibility; F2 gives exact order n^{−1/2} for s₀ ≥ 1, fixed
+nonzero signal strengths bounded away from zero and bounded above, and p/√log n → ∞); near-duplicate null columns at
+distance of order 1 (covered by (GF-16), not by a normalised floor); one truth with fifteen nulls, each correlated
+with it at ρ² = 0.4, signal θ*₁² = 2(1 + 2A)σ² log n/(n − 1), p = min(⌊n^A⌋, n − 1), A ∈ [0.1, 1] (covered by (V-m), not by
+(V-c); default-level (AL) fails and F4 applies; this entry replaces the separate isolated-leaking-column entry of
+v1.3). Gaussian rows, p ≫ n allowed: independent columns (C_L = 0, H_l = {l} ∪ S₀); block-diagonal Σ_n with bounded
+groups, at most one truth per group and the truths' groups in Q (lattice form). **Expected, not verified in this
+ticket:** UNI-0 families and exact-separation AR(1) with their relevance sets Q (lattice form); their verification of
+(V-R), (L-R) is in sources of author-only status. Outside the hypotheses, with the reason: masked hubs (PXN:
+visibility fails); strong factors at p > K.
 
 ## 6. Not claimed
 * P(𝒜) → 1, delivery, anything about the sampler, the bridge, Ẑ or the reported model (SAMP, RM).
-* π₀(S₀) → 1 under leakage: with Q ≠ S₀ only the lattice mass and (provisionally, see (T5)) the lower bound of
-  Proposition OVL are claimed.
+* π₀(S₀) → 1 under leakage: with Q ≠ S₀ only the lattice mass and the lower bound of Proposition OVL are claimed.
 * A universal FLOOR bound for saturated reference models (|S| = K); any asymptotic claim when p = s₀.
 * Necessity of (GF-16) (the proof route uses it; whether the Gram floor can be dropped altogether is open item
   W3-START-O2), of the form of the level vectors in J_h, of (L-loc-R), or sharpness of the factor e^{C_R√log n} in
@@ -357,10 +386,10 @@ the reason: masked hubs (PXN: visibility fails); strong factors at p > K.
 * Consumed: **none**. C-GROW:L0.1@1.0.0 "PROVED-CHECKED" and C-GROW:L0.2@1.0.0 "PROVED-CHECKED" (toolkit: events
   𝒟₁–𝒟₃, RSS floor, score differences for block tables; GROW `lemmas/L0_toolkit.md:19-53`) are stated with the
   normalised Gram floor and for s₀ ≥ 1; they are **not consumed**. Lemma TK re-proves the toolkit in this ticket under
-  (GF-16) and for s₀ ≥ 0 (proof obligation); those files and GEN `lemmas/L1_lemmaE.md` are sources of the argument only.
+  (GF-16) and for s₀ ≥ 0 (`lemmas/L2_TK.md`); those files and GEN `lemmas/L1_lemmaE.md` are sources of the argument only.
 * Consumers: W3-SAMP:C@1.1.1 "PROVED-CHECKED", W3-SAMP:D@2.1.1 "PROVED-CHECKED" (their premises P-START, P-OVL).
 * Cited as a limit, not consumed: W1-PXN:Thm-PXN(S)@1.0.0 "XF VERIFIED".
 * Not consumed (lower or differently labelled assurance; re-proved here where needed): SOP:TH116@1.0.0 (T22(i), (iii));
   C-MIS:LemR@1.0.0 "R02 VERIFIED; council R07/R08 PASS" (Lemma R′ re-proves the reduction); W3-RM:B1@1.0.0,
   W3-RM:B2tau@1.0.0, W3-RM:SAND-R@1.0.0 "PROVED (by this seat, unchecked)" — the τ-form RSS bounds and the
-  Gaussian-row sample-level facts needed for (B-R) are proof obligations of this ticket.
+  Gaussian-row sample-level facts needed for (B-R) are proved in this ticket (`lemmas/L2_TK.md`, `lemmas/L9_BR.md`).

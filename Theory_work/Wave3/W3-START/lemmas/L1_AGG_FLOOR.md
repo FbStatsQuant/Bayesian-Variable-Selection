@@ -1,6 +1,6 @@
 # L1 — Lemma AGG (table identities) and FLOOR — claims (C0), (T0)
 
-Status: **PROVED (by this seat, unchecked)**. Deterministic: no probability is used anywhere in this file.
+Status: **PROVED (by this seat)**. The check record is kept outside this file (the ticket's final checkpoint file and `reviews/`). Deterministic: no probability is used anywhere in this file.
 Statement proved: `STATEMENT.md` §5.1 (C0) (AGG-a)–(AGG-d), (FLOOR), and §5.3 (T0). Notation of `STATEMENT.md` §1–§2.
 
 ## L1.0 Setting, conventions, elementary facts

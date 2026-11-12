@@ -5,7 +5,7 @@
 #   base_orth  inside the assumptions (Setting F, nulls orthogonal to the truth: exact zero leakage, strong signals)
 #   vis        boundary of (V-c): one truth with delta^2 = c tau^2 log n, c from below to above 1 + 2 log p/log n
 #   leak1      boundary of (AL): structured design gen_sat; ONE null with delta^2 = c tau^2 log n
-#   leakall    boundary of (AL): structured design gen_sat; ALL free nulls with delta^2 = eta tau^2 log n (eta = 0: inside)
+#   leakall    boundary of (AL): structured design gen_sat; ALL free nulls with delta^2 = eta tau^2 log n (eta = 0: zero leakage on the free nulls; the satellites still gain unconditionally, so partition-free (AL) at Q = S0 fails: block-relative behaviour)
 #   twin       outside (FL-16): every second null is a near-twin (corr 1 - 1/n) of another null
 #   energy     outside (E): theta = n^(1/4) (1,-1,1), so ||mu||^2/n is unbounded
 #   s0grow     outside "s0 fixed": s0 in {1,4,16,32}

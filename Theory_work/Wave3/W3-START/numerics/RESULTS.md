@@ -1,5 +1,8 @@
 # W3-START — sharpness-gate numerics: RESULTS (2026-11-11)
 
+*Note added with STATEMENT v1.3.1 (2026-11-11): where this file appeals to (N2) for designs with s₀ ≤ 15, read the
+component diagnostic (C2)(i) on the actual partition; (N2) is vacuous for s₀ ≤ 15. The observations are unchanged.*
+
 **Observations, not proofs; every theorem is asymptotic.** Production core (`Scripts/SMC_BVS/core`, compiled locally
 with Rcpp; no NOTS): π₀(S₀) is read from the coded start (`cpp_start_logmass`), the block tables from `cpp_setup`, and
 the lattice mass in `ar1` from 20000 draws of the coded sampler. Files: `start_common.R` (helpers, designs),
@@ -20,22 +23,23 @@ of δ²/(τ² log n) at U*_b ∖ {j}; c_vis,all := min over truths and **all** U
 | (T0)/(FLOOR): T₁ ≥ f_n(s₀) | holds in every run; min T₁/f_n = 1.10 |
 | (AGG-b): o₀ ≥ T₁ | holds in every run; min o₀/T₁ = 1.03 |
 | (AGG-b): T₁ ≤ (s₀ + 1)U | 0 violations |
-| (AGG-b) upper bound o₀ ≤ T₁ + R₂ + [∏(1 + Ξ_b) − 1](1 − U)^{−(16s₀+1)} (runs with U < 1: 629) | 0 violations; max o₀/bound = 0.90 |
-| (AGG-b) lower bound o₀ ≥ c_sΞ | 0 violations (very slack constant) |
+| (AGG-b) upper bound, checked in the **relaxed** form o₀ ≤ T₁ + R₂ + [exp(Σ_bΞ_b) − 1](1 − U)^{−(16s₀+1)} (∏(1 + Ξ_b) ≤ exp Σ_bΞ_b; the script clips the exponent at 700, so a run with Σ_bΞ_b > 700 is not a valid check; runs with U < 1: 629) | 0 violations; max o₀/relaxed bound = 0.90 |
+| (AGG-b) lower bound, checked in the **weaker** form o₀ ≥ c_s·(average over truth blocks of Ξ_b) (the CSV stores Σ_bΞ_b, not max_bΞ_b; the bound with max_b is checked exactly in `lemmas/falsify_L1.R`) | 0 violations (very slack constant) |
 
-## 2. Inside the assumptions
+## 2. Baselines (the first and third rows are inside the assumptions; the second is block-relative behaviour outside partition-free (AL))
 | design | n | π₀(S₀) | o₀·√n | o₀/T₁ | T₁/pred |
 |---|---|---|---|---|---|
 | `base_orth` (fixed design, nulls ⊥ truths: zero leakage, strong signals; F2 with η′ = 0), s₀ = 3 | 100 / 200 / 400 / 800 / 1600 | 0.79 / 0.85 / 0.89 / 0.92 / 0.94 | 2.62 / 2.56 / 2.51 / 2.45 / 2.39 | 1.16 / 1.11 / 1.08 / 1.05 / 1.04 | 0.97 / 0.93 / 0.98 / 1.00 / 0.99 |
-| `leakall` η = 0 (structured fixed design: each truth has B − 1 correlates at 0.9; zero leakage), s₀ = 2 | 200 / 400 / 800 / 1600 | 0.82 / 0.91 / 0.94 / 0.96 | 3.21 / 2.00 / 1.92 / 1.89 | 1.75 / 1.07 / 1.04 / 1.03 | 1.00 / 1.00 / 0.99 / 1.00 |
+| `leakall` η = 0 (structured fixed design: each truth has B − 1 correlates at 0.9; zero leakage is imposed on the **free** nulls only — the satellites have a strong unconditional gain, so partition-free (AL) at Q = S₀ fails for every level vector; the good behaviour is block-relative: the satellites sit in the truths' blocks and their table steps condition on the truth), s₀ = 2 | 200 / 400 / 800 / 1600 | 0.82 / 0.91 / 0.94 / 0.96 | 3.21 / 2.00 / 1.92 / 1.89 | 1.75 / 1.07 / 1.04 / 1.03 | 1.00 / 1.00 / 0.99 / 1.00 |
 | `base_iid` (Gaussian rows, independent columns; (T3)(b) with C_L = 0), s₀ = 3 | 100 / 200 / 400 / 800 / 1600 | 0.40 / 0.65 / 0.73 / 0.81 / 0.87 | 14.8 / 7.8 / 7.3 / 6.6 / 6.1 | 2.34 / 1.31 / 1.21 / 1.14 / 1.09 | 0.99 / 0.84 / 0.80 / 0.72 / 0.85 |
 
-Readings. (i) **Exact order n^{−1/2}** in the fixed zero-leakage designs: o₀√n is flat (slope of log o₀ on log n:
+Readings. (i) **Exact order n^{−1/2}** in the two fixed designs (`base_orth`, inside the assumptions; the satellite design, an observation on block-relative behaviour, not an instance of (T1) — it is not the weak-signal example of `lemmas/L11_EXAMPLES.md` L11.3): o₀√n is flat (slope of log o₀ on log n:
 −0.53) and sits just above the floor (T₁/f_n ≈ 1.13–1.2). (ii) **First-order form**: o₀/T₁ → 1 in all three designs.
 (iii) The leakage functional predicts T₁ within a few per cent in the fixed designs (T₁/pred ≈ 1), and within its
 truncation slack for Gaussian rows. (iv) For independent Gaussian columns the realised sample leakage level is
 c_null ≈ 1.3–1.6, far above η_A ≈ 0.09: a uniform bound δ² ≤ ητ² log n with η < η_A fails on every data set, the
-averaged condition holds, and π₀(S₀) → 1.
+block-relative functional 𝔏^{b,0} stays moderate, and π₀(S₀) → 1. (The scripts compute block-relative functionals only; they do
+not verify the partition-free (AL). For Gaussian rows (AL) is the content of bridge (B-R).)
 
 ## 3. Boundary violations
 **(a) Visibility, `vis`** (independent Gaussian columns, s₀ = 1, the truth's gain set to δ² = c·τ² log n).
