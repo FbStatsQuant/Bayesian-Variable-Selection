@@ -1,0 +1,8 @@
+V1 scan_at vs production v3_score: 306 scores compared, max |F difference| = 3.411e-13
+V2 start mode: size 5 (leak 1, outside 0); 1997 perturbations, 0 with larger production start mass, max log-mass gain = -4.924e-01
+V2 all 600 single flips of the DP mode: max production log-mass gain = -4.924e-01 (must be <= 0)
+V3 centre size 4: fast LS0 final size 4, moves 0; brute-force (production scores) final size 4, moves 0; identical = TRUE
+V3 centre size 12: fast LS0 final size 4, moves 10; brute-force (production scores) final size 4, moves 10; identical = TRUE
+V3 centre size 13: fast LS0 final size 4, moves 10; brute-force (production scores) final size 4, moves 10; identical = TRUE
+V3 centre size 0: fast LS0 final size 4, moves 4; brute-force (production scores) final size 4, moves 4; identical = TRUE
+VALIDATION PASSED
