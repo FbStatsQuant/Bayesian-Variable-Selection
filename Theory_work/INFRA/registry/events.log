@@ -1110,3 +1110,11 @@ utc	actor	action	id	before	after	reason
 2026-11-11T23:49:30Z	HQ	propagate	W2-FAC-S5F:C3	SUSPECT	SUSPECT	SUSPECT 2026-11-11: uses W2-FAC-S5F:C3 ← suspect W2-FAC-S5F:L1 (API audit pass3 GAP confirmed by Sol R-AUD2 (Wave3/API_AUDIT/pass3/R-AUD2_sol.md); local repairs specified; stopped ticket, repair not scheduled) via W2-FAC-S5F:L1 -> W2-FAC-S5F:C3
 2026-11-11T23:49:30Z	HQ	propagate	W2-FAC-S5F:C4	SUSPECT	SUSPECT	SUSPECT 2026-11-11: uses W2-FAC-S5F:C4 ← suspect W2-FAC-S5F:L1 (API audit pass3 GAP confirmed by Sol R-AUD2 (Wave3/API_AUDIT/pass3/R-AUD2_sol.md); local repairs specified; stopped ticket, repair not scheduled) via W2-FAC-S5F:L1 -> W2-FAC-S5F:C4
 2026-11-11T23:49:31Z	HQ	suspect	W2-FAC-X:L4r.5	ACTIVE v1.0.0	SUSPECT v1.0.0	API audit pass3 GAP confirmed by Sol R-AUD2 (Wave3/API_AUDIT/pass3/R-AUD2_sol.md); local repairs specified; stopped ticket, repair not scheduled
+2026-11-12T17:16:38Z	INFRA	ingest	W3-PSHARP:S		v1.0.0 PROVED-CHECKED; council R2, MANIFEST 4513e05a40ddc3bf8baeebf	ingested from CHECKPOINT_4.md
+2026-11-12T17:16:38Z	INFRA	ingest	W3-PSHARP:A		v1.0.0 PROVED-CHECKED; council R2, MANIFEST 4513e05a40ddc3bf8baeebf	ingested from CHECKPOINT_4.md
+2026-11-12T17:16:38Z	INFRA	ingest	W3-PSHARP:B		v1.0.0 PROVED-CHECKED; council R2, MANIFEST 4513e05a40ddc3bf8baeebf	ingested from CHECKPOINT_4.md
+2026-11-12T17:16:38Z	INFRA	ingest	W3-PSHARP:C		v1.0.0 PROVED-CHECKED; council R2, MANIFEST 4513e05a40ddc3bf8baeebf	ingested from CHECKPOINT_4.md
+2026-11-12T17:16:41Z	HQ	accept	W3-PSHARP:A		v1.0.0 fp2:8103b27c63ede7e0b6e92480	check.py --acceptance W3-PSHARP:S W3-PSHARP:A W3-PSHARP:B W3-PSHARP:C: PASS (0 ERROR)
+2026-11-12T17:16:41Z	HQ	accept	W3-PSHARP:B		v1.0.0 fp2:cb412a0bf0841a8cbb0da91a	check.py --acceptance W3-PSHARP:S W3-PSHARP:A W3-PSHARP:B W3-PSHARP:C: PASS (0 ERROR)
+2026-11-12T17:16:41Z	HQ	accept	W3-PSHARP:C		v1.0.0 fp2:8d8087ca1ec55d1c98ee4da9	check.py --acceptance W3-PSHARP:S W3-PSHARP:A W3-PSHARP:B W3-PSHARP:C: PASS (0 ERROR)
+2026-11-12T17:16:41Z	HQ	accept	W3-PSHARP:S		v1.0.0 fp2:50fd5c4b3345ee0aee7dfda9	check.py --acceptance W3-PSHARP:S W3-PSHARP:A W3-PSHARP:B W3-PSHARP:C: PASS (0 ERROR)

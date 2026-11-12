@@ -225,3 +225,8 @@ W3-RM:RM-F	A:RM-N	NONE	Theory_work/Wave3/W3-RM/REPORT.md:139-140: (N) sufficient
 W3-SCR:SCR-A	A:SCR-SV	NECESSARY	Theory_work/Wave3/W3-SCR/REPORT.md:156: visibility threshold sharp at q = 0 with constant 1 (Proposition SCR-N, proved, for the statement about LO models; q = 0 only)	ingested
 W3-SCR:A1	A:SCR-DF	NONE	Theory_work/Wave3/W3-SCR/REPORT.md:158-159: ID/DF/AF/NF are sufficient, not shown necessary	ingested
 W3-SCR:SCR-C	A:SCR-NF	NONE	Theory_work/Wave3/W3-SCR/REPORT.md:158-159: NF sufficient, not shown necessary; with growing s0 the floor is not sufficient (STATEMENT.md:190-192)	ingested
+W3-PSHARP:A	A:ENERGY	WEAKENABLE	Theory_work/Wave3/W3-PSHARP/ASSUMPTION_MAP.md:12	ingested
+W3-PSHARP:A	A:PSHARP-COEF	WEAKENABLE	Theory_work/Wave3/W3-PSHARP/ASSUMPTION_MAP.md:12	ingested
+W3-PSHARP:A	A:GAUSS-NOISE	NECESSARY-FOR-ROUTE	Theory_work/Wave3/W3-PSHARP/ASSUMPTION_MAP.md:11	ingested
+W3-PSHARP:B	A:EXT-FEAS	NECESSARY	Theory_work/Wave3/W3-PSHARP/ASSUMPTION_MAP.md:9	ingested
+W3-PSHARP:C	A:COEF-REP	FAILED-REMOVAL	Theory_work/Wave3/W3-PSHARP/lemmas/C_counterexample.md:100	ingested
