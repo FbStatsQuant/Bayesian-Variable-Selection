@@ -1,0 +1,10 @@
+# source: /scratch/fb31/theory_w3/*/raw/fits.jsonl; completed fits only; designs, arms and tiers pooled; lines read: 304
+n	p	completed	E2_sd_gt_1	E2_share	escalated	E2_and_escalated	runs	designs
+40	40	3	0	0.000	0	0	probe01=2,smoke_v3=1	cs=3
+40	100	1	0	0.000	1	0	smoke_v3=1	fac2=1
+50	50	137	0	0.000	14	0	b1=135,probe01=2	cs=98,fac2=20,s5=19
+50	125	40	2	0.050	16	0	b1=38,probe01=2	cs=40
+50	250	105	13	0.124	103	13	b1=104,probe01=1	cs=70,fac2=20,s5=15
+50	500	16	6	0.375	16	6	b1=14,probe01=1,smk1_v2=1	cs=16
+100	100	1	0	0.000	1	0	probe01=1	cs=1
+100	250	1	0	0.000	1	0	probe01=1	s5=1
