@@ -1572,7 +1572,7 @@ try:
         must6 = [("theory/W3-START", "Theory_work/Wave3/W3-START/reviews/MANIFEST_R2.txt"),
                  ("theory/W3-PSHARP", "Theory_work/Wave3/W3-PSHARP/reviews/MANIFEST_R2.txt"),
                  ("theory/W3-MISR", "Theory_work/Wave3/W3-MISR/reviews/MANIFEST_R2.txt"),
-                 ("theory/W3-RM2", "Theory_work/Wave3/W3-RM2/reviews/MANIFEST_PC1.txt"),
+                 ("theory/W3-RM2", "Theory_work/Wave3/W3-RM2/reviews/MANIFEST_R1.txt"),
                  ("theory/W3-START@freeze", "Theory_work/Wave3/W3-START/reviews/MANIFEST_BT1.txt"),
                  ("theory/W3-START@freeze", "Theory_work/Wave3/W3-START/reviews/MANIFEST_MP1.txt"),
                  ("theory/W3-START@freeze", "Theory_work/Wave3/W3-START/reviews/MANIFEST_R1.txt"),
@@ -1586,7 +1586,7 @@ try:
         for k_ in must6:
             if k_ not in ok_must:
                 print("  expected OK:", k_, (ver6.get(("LF",) + k_) or [])[:3], (ver6.get(("CRLF",) + k_) or [])[:3])
-        results.append(("R06 the council / acceptance manifests (START R2, PSHARP R2, MISR R2, RM2 PC1 at the branch "
+        results.append(("R06 the council / acceptance manifests (START R2, PSHARP R2, MISR R2, RM2 R1 at the branch "
                         "heads; START BT1/MP1/R1, PSHARP R1, MISR R1, RM2 BT1/RC4 where they were written) verify on "
                         "both clones; the pre-R06 raw-byte tool fails each of them on at least one clone",
                         ok_must == must6 and old_fail == must6))

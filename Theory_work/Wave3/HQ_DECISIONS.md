@@ -246,3 +246,12 @@
   check; no consumers), named in RM2's next council round; targeted Opus review first only if the owner's RM2
   supersession decision leans on the α > 2 polynomial-decay example. Recording of PSHARP and MISR delegated (Opus,
   authorized for main merges per ACCEPTANCE/RECORD_BRIEF.md).
+- 2026-11-12 afternoon: **all five council-passed tickets RECORDED on main** (Opus recorder for HQ; dry run first each time;
+  consultant on every judgment call): W3-PSHARP 4 (07ee8b0); W3-MISR 7, six conditional on unchecked inputs (alias
+  C-MIS:GDb, 81b0131); W3-START 21 (a3404b3; after INFRA R07 merged 526b84a: same-seat addendum = seat decision table,
+  body scanned for a closed negative list); W3-START2 9 (2d2b255; implies rows over START not recorded — owner);
+  W3-RM2 16 checked + Ex-PolyR/Ex-PolyF unchecked (223f8e4; on the restored R1 snapshot; post-council edits parked;
+  SAND-R/D-loc/NA-R note edges only, RM2 re-proves them; RM2-F/Cont-F/Ex-Proxy/Ex-Equi conditional on SOP:TH09;
+  RM2-R/POST-R/Cont-R conditional on W2-APP:POST; no supersession over RM-F/R — owner). test_lifecycle R06 entry
+  for RM2 now points at MANIFEST_R1. Owner decisions pending: supersessions RM-F/R→RM2, C-MIS→MIS-R, START→START2;
+  optional Sunday API audit of W2-APP:POST, SOP:TH09/TH128, C-MIS:Prop-P/GD(b) to lift conditions.
