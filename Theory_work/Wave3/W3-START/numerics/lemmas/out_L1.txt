@@ -1,0 +1,8 @@
+Part A: 4000 random-table cases; checks run: a=3298 b_up=2678 b_lo=3428 b_cs=1808 c=3298 d=1009 e2=508
+  tightness bound/actual (min / 10% / median / 90% / max):
+   AGG-a (1-1/F)/(1-piL): 1.01 / 1.55 / 3.36 / 10.1 / 1040 
+   AGG-b upper/o0: 1 / 1.12 / 6.28 / 5380000 / 2.37e+104 
+   AGG-c rhs*pi0: 1 / 1.05 / 2.42 / 93.3 / 5.73e+14 
+Part B: 400 data sets; checks run: step=63678 floor=16254 T1=400
+  min one-step ratio*sqrt(n+1) = 1.012466 (claim >= 1); min (1-pi0(S))/(f/(1+f)) = 1.0362 (claim >= 1)
+TOTAL VIOLATIONS: 0 

@@ -1,0 +1,22 @@
+# W3-START — external inputs the statement and the proofs rely on (PROTOCOL rule 15). Repo-relative paths.
+# No wave document and no registry table is listed (rule 15 as amended 2026-11-12).
+# pinned code (the start as coded)
+Scripts/SMC_BVS/core/cpp/v3_score.h
+Scripts/SMC_BVS/core/cpp/v3_start.h
+Scripts/SMC_BVS/core/cpp/v3_blocks.h
+Scripts/SMC_BVS/core/cpp/v3_core.cpp
+Scripts/SMC_BVS/core/v3_preprocess.R
+Scripts/SMC_BVS/core/v3_setup.R
+# premise sources (sources of arguments; none is consumed) and consumers' statements
+Theory_work/Wave1C/C-GROW/STATEMENT.md
+Theory_work/Wave1C/C-GROW/lemmas/L0_toolkit.md
+Theory_work/Wave1C/C-GROW/lemmas/L3_sandwich.md
+Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md
+Theory_work/Wave3/W3-RM/STATEMENT.md
+Theory_work/Wave3/W3-RM/lemmas/L1b_rss.md
+Theory_work/Wave3/W3-RM/lemmas/L3_SANDR.md
+Theory_work/Wave3/W3-SAMP/STATEMENT.md
+Theory_work/Wave1C/C-MIS/STATEMENT.md
+Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md
+Theory_work/Wave1/W1-PXN/STATEMENT.md
+Docs/Theory/proofs/T22iii_T16_start_aggregation/STATEMENT.md
