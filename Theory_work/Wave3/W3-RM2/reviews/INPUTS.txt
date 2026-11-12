@@ -1,0 +1,37 @@
+# W3-RM2 — external inputs the statement and the planned proofs rely on (rule 15). Repo-relative paths.
+# pinned code (LS0 as coded)
+Scripts/SMC_BVS/core/cpp/v3_core.cpp
+Scripts/SMC_BVS/core/cpp/v3_engine.h
+Scripts/SMC_BVS/core/cpp/v3_start.h
+# wave documents
+Theory_work/Wave3/PROGRAM.md
+Theory_work/Wave3/PROTOCOL.md
+Theory_work/INFRA/LIFECYCLE.md
+Theory_work/INFRA/templates/ASSUMPTION_MAP.md
+Theory_work/INFRA/registry/claims.tsv
+# parent result (W3-RM)
+Theory_work/Wave3/W3-RM/STATEMENT.md
+Theory_work/Wave3/W3-RM/ASSUMPTION_MAP.md
+Theory_work/Wave3/W3-RM/SHARPNESS.md
+Theory_work/Wave3/W3-RM/lemmas/L0_core.md
+Theory_work/Wave3/W3-RM/lemmas/L1_fixed.md
+Theory_work/Wave3/W3-RM/lemmas/L1b_rss.md
+Theory_work/Wave3/W3-RM/lemmas/L2_NAF.md
+Theory_work/Wave3/W3-RM/lemmas/L3_SANDR.md
+Theory_work/Wave3/W3-RM/lemmas/L3b_rate.md
+Theory_work/Wave3/W3-RM/lemmas/L4_formR.md
+# engines whose proofs are re-run at polynomial size
+Theory_work/Wave1C/C-GROW/STATEMENT.md
+Theory_work/Wave1C/C-GROW/lemmas/L0_toolkit.md
+Theory_work/Wave1C/C-GROW/lemmas/L1_descent.md
+Theory_work/Wave1C/C-GROW/lemmas/L2_NA_TL.md
+Theory_work/Wave1C/C-GROW/lemmas/L3_sandwich.md
+Theory_work/Wave1C/C-GROW/lemmas/L6_random_AR1.md
+Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md
+# polynomial-decay precedent and Gaussian-row lattice lemma
+Theory_work/Wave2/W2-LOC2/STATEMENT.md
+Theory_work/Wave2/W2-LOC2/lemmas/L1_toolkit.md
+Theory_work/Wave2/W2-LOC2/lemmas/L2_NAR.md
+Theory_work/Wave2/W2-LOC2/lemmas/L6_poly.md
+Theory_work/Wave2/W2-UNI/STATEMENT.md
+Theory_work/Wave2/W2-APP/lemmas/L1_POST.md
