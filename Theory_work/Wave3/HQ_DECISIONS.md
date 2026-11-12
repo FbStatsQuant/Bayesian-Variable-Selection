@@ -156,3 +156,5 @@
   deterministic down-closed sub-lattice ⊇ [S₀, S̃₀]); T6 product-form localisation (entrywise cross-term bound; polynomial
   decay α > 17/2 → α > 2) as a rider on RM2's Form R leg next to P3; T7 masked truths at growing Q (separation via
   underfit-phase energy lemma; GEN/PXN become examples), kill-budgeted, after RM2 council. f18/f20/f21: redo per claim.
+- 2026-11-12 ~05:10 UTC W3-RM2 CP2 ACCEPTED (Form F key lemma, 1/3 attempts; LC1/RC3/RC4 clean; MP1 Astra no FATAL/MAJOR).
+  GO Form R leg → CP3; P7 kill budget 2 then Form-F-alone fallback; MP1 witness to (C5); T6 rider one attempt in L4.
