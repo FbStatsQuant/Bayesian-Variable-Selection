@@ -1,0 +1,2 @@
+1	Rscript --vanilla bitid_fit.R --core-dir /scratch/fb31/w3scale/code/v32dev_6866f57/Scripts/SMC_BVS/core_v32dev --label v32 --units prodh:p0500_S5_r001_c100 --out-dir $OUT/res
+2	Rscript --vanilla bitid_fit.R --core-dir /scratch/fb31/w3scale/code/v32dev_6866f57/Scripts/SMC_BVS/core_v32dev --label v32 --units prodh:p0500_S5_r001_c050 --out-dir $OUT/res
