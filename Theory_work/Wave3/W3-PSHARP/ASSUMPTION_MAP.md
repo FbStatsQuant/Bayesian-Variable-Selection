@@ -1,6 +1,6 @@
 # ASSUMPTION_MAP.md — W3-PSHARP (Wave 3 protocol item 3; written after the statement lock L01, before the lemma files)
 
-Target statement: `STATEMENT.md` v1.2.1 (locked), claims `W3-PSHARP:S`, `W3-PSHARP:A`, `W3-PSHARP:B`, `W3-PSHARP:C`.
+Target statement: `STATEMENT.md` v1.2.2 (locked), claims `W3-PSHARP:S`, `W3-PSHARP:A`, `W3-PSHARP:B`, `W3-PSHARP:C`.
 These are sharpness records: their "hypotheses" are the conditions of a witness / lower bound, so the question for
 each is not "is it necessary for an upper bound" but "does the record survive without it".
 
@@ -9,7 +9,7 @@ each is not "is it necessary for an upper bound" but "does the record survive wi
 | none (Lemma S, Claim B): any design, any data, s₀ ≤ K − 1 | Lemma S(1)–(4); B | Schur complement; fit factor ≥ 1 | a feasible one-step superset exists (A:EXT-FEAS) | NECESSARY: at s₀ = K (or p = s₀) the bound can fail (`W3-POST/numerics/lb_domain_out.txt`) | none; equality attained (orthogonal X, y ⟂ col X: `numerics/b_check_out.txt` F2) |
 | s₀ ≤ p/2 (constant 1/3 in B1–B2) | B, constants | (p − s₀)/(2p − 1 − s₀) ≥ 1/3 | multiplicity ≍ p | cosmetic: c(p, s₀) is stated exactly | none |
 | A:GAUSS-NOISE (G) in Claim A | A, laws of the null scores | exact χ²₁ (W-orth) / independence of ε and the null block (W-sph); the constant 1/√π is the Gaussian truncated mean | iid scores with E[e^{ζ/2}; ζ ≤ 2 log N] ~ 2√(log N/π) | NECESSARY-FOR-ROUTE; the constant is noise-specific (lighter-tailed noise would change it). Same hypothesis as the upper bound it sharpens | none |
-| (E) ‖μ‖² ≤ nM, (C) ‖θ*‖² ≤ nM′ in Claim A | A, step κ_n ≥ 1 − c_n | variational form of Q_{S₀} at ϑ = θ*; s_y² = O_P(1) | 2b₀ + Q_{S₀} ≤ (‖Cε‖² + O(1))/s_y² | WEAKENABLE: the proof needs only (M + M′) log N_n = o(n) (W-orth: = o(√n)-free, see proof); kept fixed to match Theorem 1 | unharvested (growing M) — recorded, not stated |
+| (E) ‖μ‖² ≤ nM, (C) ‖θ*‖² ≤ nM′ in Claim A | A, step κ_n ≥ 1 − c_n | variational form of Q_{S₀} at ϑ = θ*; s_y² = O_P(1) | 2b₀ + Q_{S₀} ≤ (‖Cε‖² + O(1))/s_y² | WEAKENABLE: both witnesses need only (M + M′) log N_n = o(n); kept fixed to match Theorem 1 | unharvested (growing M) — recorded, not stated |
 | (W-orth) null block orthogonal, ⟂ col X_{S₀} | A, independence of scores | u_jᵀε iid N(0, σ*²) | independent null scores, D ratio = n | witness, not necessary: (W-sph) is a second witness. Evidence that the one-step mechanism need not retain the logarithmic enhancement under dependent null columns: on an equicorrelated null block the one-step odds L1 lose it (median L1/Λ_n 0.71, 0.72, 0.61 against ≈ 1.05 at ρ = 0; `numerics/a_boundary_out.txt`). The script computes only one-step odds (a lower bound): failure of Proposition A's full posterior conclusion without the witness condition is **not established** [K01-F2] | family-named? no: stated as a property of the null block |
 | (W-sph) spherical null directions, independent of ε | A, independence + sphere law | conditional iid (n−1)Beta(½,(n−2)/2) projections on the ridge residual | same | as above (same qualification: one-step evidence only); covers p ≫ n | none |
 | N_n → ∞ | A, Chebyshev | variance/mean² = O(1/√log N_n) | weak law | NECESSARY for the log factor (bounded N: only Claim B's constant) | none |
@@ -18,7 +18,7 @@ each is not "is it necessary for an upper bound" but "does the record survive wi
 | design 𝔇_n, k = ⌈12 log n⌉, η = n⁻², n b_n² ≥ 1200(σ*² + b̄²)(log n)² (Claim C) | C items 2–3 | cutoff ≤ k/2; fit loss e^{−c n b²} against prior × Occam × count ≤ e^{12 log² n} | reference with exact fit but ridge cost ≍ n b_n² | constants are ARTEFACTS; the record is "a cost allowance of a large constant times (log n)² (or more) breaks the conclusion; O(1) suffices"; allowances o((log n)²) are open [KBC-3] | artefact-threshold (the constants 12, 1200) |
 
 Conclusion level: negative / lower bound (sharpness records) for posterior-level claims; rate: (s₀+1)√(log p/(πn))
-(A), (s₀+1)/(2√n) (B); scope: A — witness classes (orthogonal block, p ≤ n − 1; spherical block, (log p)² = o(n));
+(A), c(p, s₀)/√n (B; → (s₀+1)/(2√n) as p → ∞, s₀/p → 0); scope: A — witness classes (orthogonal block, p ≤ n − 1; spherical block, (log p)² = o(n));
 B — every design, every data set; C — one design sequence.
 
 Unharvested conclusions: (i) Claim A with growing M, M′; (ii) null-PIP floors

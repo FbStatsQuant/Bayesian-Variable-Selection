@@ -10,7 +10,7 @@ necessity statements, not new upper bounds, and all are asymptotic statements ab
 claim of the registry is used in any proof (every proof starts from the definition of π), so nothing here is
 conditional on a parent's status. The parents are only what is sharpened.
 
-## 1. What is proved (`STATEMENT.md` v1.2.1)
+## 1. What is proved (`STATEMENT.md` v1.2.2)
 
 **Lemma S** (`lemmas/S_one_step.md`; deterministic, any design, any data). Adding one column j to a model S:
 D_{S∪{j}}/D_S ≤ n (equality iff x_j ⟂ col X_S — improves the n + 1 of Proposition LB), and
@@ -37,15 +37,19 @@ exactly 2√(log N/π) (re-derived; the brief's three moment formulas are confir
 **(b) Claim B — a sparsity obstruction on every design** (`lemmas/B_sparsity.md`). For every design, every data set and
 every S₀ with 0 ≤ s₀ ≤ K − 1 (no law, no truth):
 δ_n/(1 − δ_n) ≥ 𝒪^{lb}_n = Σ_{j≥1} C(s₀+j, j) n^{−j/2} Π_{i<j}(p−s₀−i)/(2p−1−s₀−i) ≥ c(p, s₀)/√n,
-c(p, s₀) = (s₀+1)(p−s₀)/(2p−1−s₀) ≥ (s₀+1)/3 for s₀ ≤ p/2 (→ (s₀+1)/2). Consequences:
-- π(S₀) ≤ [1 + (s₀+1)/(3√n)]⁻¹ surely: **π(S₀) → 1 needs s₀ = o(√n)**; at s₀ ~ λ√n, limsup π(S₀) ≤ e^{−λ/2}; if
-  s₀/√n → ∞, π(S₀) → 0 on every design and data set.
-- a rate δ_n = O_P(ρ_n) needs s₀ + 1 = O(√n ρ_n): the rate r_n needs s₀ = O(√log n) on every design, and — by (a) —
-  **bounded s₀ on the witness designs with log p ≍ log n**.
+c(p, s₀) = (s₀+1)(p−s₀)/(2p−1−s₀) ≥ (s₀+1)/3 for s₀ ≤ p/2 (and c/(s₀+1) → ½ when p → ∞, s₀/p → 0). Consequences,
+**for sequences with s₀ ≤ min(K − 1, p/2)**:
+- π(S₀) ≤ [1 + (s₀+1)/(3√n)]⁻¹ surely: **π(S₀) → 1 needs s₀ = o(√n)**; at s₀ ~ λ√n **with s₀/p → 0**,
+  limsup π(S₀) ≤ e^{−λ/2}; if s₀/√n → ∞, π(S₀) → 0 on every such design and data set.
+- a rate δ_n = O_P(ρ_n) needs s₀ + 1 = O(√n ρ_n): the rate r_n needs s₀ = O(√log n) on every such design, and — by
+  (a) — **bounded s₀ on the witness designs with log p ≍ log n**.
+- These consequences need s₀ ≤ p/2 (the multiplicity c(p, s₀) ≍ s₀ + 1): with p = s₀ + 1 there is a single superset,
+  c = 1, and π(S₀) → 1 is possible with s₀ ~ √n; and without s₀/p → 0 the critical-scale limit is weaker (p = 2s₀:
+  e^{−λ/3}). The inequality δ_n/(1 − δ_n) ≥ 𝒪^{lb}_n ≥ c(p, s₀)/√n itself holds for every 0 ≤ s₀ ≤ K − 1.
 - **Target correction (for HQ; §4).** "Growing s₀ = o(log n/log log n)" (W3-POST REPORT §4 item 8) cannot keep the
   rate r_n on the witness sequences with log p ≍ log n.
 
-Wording of the brief corrected: "rate r_n needs bounded s₀" holds on the witness designs; on every design the
+Wording of the brief corrected: "rate r_n needs bounded s₀" holds on the witness designs; on every design with s₀ ≤ p/2 the
 corollary gives s₀ = O(√log n) (Sol's lock review gave an example with log p = o(log n) where r_n survives s₀ → ∞).
 
 **(c) Claim C — ridge-cost control of the reference cannot be dropped** (`lemmas/C_counterexample.md`). On the design
@@ -53,7 +57,8 @@ corollary gives s₀ = O(√log n) (Sol's lock review gave an example with log p
 T = {1, 2} represents μ **exactly** and (E) holds, but ‖θ‖²/n → ∞ and every ϑ has ridge cost B_T(ϑ) ≥ b_n²(n−1)/2.
 The cutoff of Lemma 1a′ (t = 2, ω = ½ log n) is ≤ ⌊k/2⌋, and P(π(|S| ≤ ⌊k/2⌋) ≤ e^{−c₁nb_n²}) → 1: the posterior
 mass above the cutoff tends to 1 instead of being O_P(n^{−1/2}). So in Lemma 1a′ the coefficient bound (A:COEF-REP)
-is **necessary in kind** (its Remark 2, open, is settled), and in Lemma 1a″ the bounded reference cost cannot be
+**cannot be removed** (its Remark 2, open, is settled: some ridge-cost control of the reference is necessary; the
+particular bound ‖θ‖² ≤ nM′ is weakenable, e.g. to the bounded cost of Lemma 1a″), and in Lemma 1a″ the bounded reference cost cannot be
 weakened to small approximation error, nor to any allowance B_n with B_n/(log n)² → ∞ (n b_n² ≥ 1200(σ*²+b̄²)(log n)²
 suffices; so a large enough constant multiple of (log n)² already fails). Open: allowances B_n = o((log n)²).
 
@@ -66,7 +71,7 @@ suffices; so a large enough constant multiple of (log n)² already fails). Open:
 | Line check KSA (Lemma V, S; Claim A) | gpt-6.1-sol high (codex), blind | both files **VERIFIED**; 0 FATAL / 0 MAJOR / 0 MINOR / 0 NIT | `reviews/KSA_check_sol.md` | none needed (`reviews/KSA_KBC_disposition.md`) |
 | Line check KBC (Claims B, C) | gpt-6.1-sol high (codex), blind | B **VERIFIED**; C **VERIFIED-WITH-AMENDMENTS**; 0 / 0 / 3 MINOR / 1 NIT (commentary and one rounded number in C; no proof step) | `reviews/KBC_check_sol.md` | `reviews/KSA_KBC_disposition.md`: all applied → v1.2.1 |
 | Citation check | `citecheck.py` (cited ranges and quoted output numbers) | 42 checks, 0 MISS | `reviews/CITECHECK.txt` | — |
-| Council R1 | seat sol: gpt-6.1-sol high (codex); seat opus: Claude Opus 5.5 high (claudeAgent); blind | recorded in `CHECKPOINT_2.md` | `reviews/R1_council_sol.md`, `reviews/R1_council_opus.md` | `CHECKPOINT_2.md` |
+| Council | seat sol: gpt-6.1-sol high (codex); seat opus: Claude Opus 5.5 high (claudeAgent); blind | recorded in `CHECKPOINT_2.md` (this file is inside the frozen manifest) | `reviews/R<k>_council_sol.md`, `reviews/R<k>_council_opus.md` | `CHECKPOINT_2.md` |
 
 Layers used are those of the ticket brief (statement lock; numerics; break review; proofs; line checks; council).
 No separate mid-point or exhaustive sweep was run: the brief defines CP2 as proofs + Sol checks + council for this
@@ -78,9 +83,10 @@ re-read.
 
 ## 3. Numerics (local; `numerics/`, run with `py -3.13 -I`)
 
-- **(a) orthogonal witness** — `a_orth.py` → `a_orth_out.txt`. Odds δ_n/(1−δ_n) by a Gamma-integral /
-  elementary-symmetric DP: an exact formula evaluated by quadrature (brute-force agreement 1.4·10⁻¹³ at p ≤ 13; all
-  sizes ≤ K against sizes ≤ s₀ + 60: 3·10⁻¹³). Median of odds/Λ_n: 1.2–1.5 at n = 100, falling to 1.003 (s₀ = 1) and
+- **(a) orthogonal witness** — `a_orth.py` → `a_orth_out.txt`. Odds summed over |S| ≤ min(K, s₀ + 60) (s₀ + 80 in E2):
+  a lower bound for the full odds δ_n/(1−δ_n), before quadrature error. Computed by a Gamma-integral /
+  elementary-symmetric DP: an exact formula evaluated by quadrature, not a certified enclosure (brute-force agreement 1.4·10⁻¹³ at p ≤ 13; all
+  sizes ≤ K against sizes ≤ s₀ + 60: 3·10⁻¹³). Median of these restricted odds/Λ_n: 1.2–1.5 at n = 100, falling to 1.003 (s₀ = 1) and
   1.007 (s₀ = 3) at n = 25600, p = n − 1; P(odds ≥ 0.75Λ_n) ≥ 0.93 in every row. Growing s₀ = n^{0.3} inside (E), (C):
   1.26–1.37 (min 0.98).
 - **(a) spherical witness, p ≫ n** — `a_sph.py` → `a_sph_out.txt`. One-step odds (closed form of Lemma S; a lower
@@ -94,8 +100,9 @@ re-read.
   the cap on π(S₀) (λ = 4: 0.1353 = e^{−2}).
 - **(c)** — `c_counter.py` → `c_counter_out.txt`. Exact enumeration at scaled-down k = 16–22 with exact cutoffs
   (the theorem's k = ⌈12 log n⌉ cannot be enumerated; these runs show the mechanism, not every hypothesis):
-  π(|S| > cutoff) = 1.000 for n ≥ 100 on the counterexample arm against ≤ 3.2·10⁻¹³ on the control arm (bounded
-  coefficients on the same T). Cutoff bound of item 2 at the theorem's k: n²R^T_{m_n} = 3.6·10⁻⁴ at n = 200.
+  for b = 3 the median of π(|S| > cutoff) on the counterexample arm rounds to 1.000 for n ≥ 100 (0.997 at n = 50); at
+  b = 1 (n = 400) and b = 0.5 (n = 1600) the medians are 0.95 and 0.47. On the control arm (bounded coefficients on the
+  same T) the tail is ≤ 3.2·10⁻¹³ in every recorded seed. All rows are far below the theorem's signal constant C_b. Cutoff bound of item 2 at the theorem's k: n²R^T_{m_n} = 3.6·10⁻⁴ at n = 200.
 
 ## 4. Sharpness record and proposed corrections to recorded items (HQ applies; this ticket edits no other folder)
 
@@ -103,9 +110,9 @@ re-read.
 |---|---|
 | W3-POST Theorem 1 item 7 / REPORT §4 item 10: "whether the extra √(log n) is attained for p = n^A is a conjecture" | **Settled (attained)** on the witness classes of Claim A, for every p = n^a, a > 0, with constant (s₀+1)√(a/π). Open: an upper bound √((1 ∨ log p)/n) when log p = o(log n). |
 | W3-POST2 REPORT §6 item 6, first bullet: "does the √(log n) factor in E δ_n appear?" | **Yes** (lower bound, Corollary A1). |
-| W3-POST REPORT §4 item 8: "Growing s₀ = o(log n/log log n). Risk medium" | **Correct the target**: with s₀ → ∞ and log p ≍ log n the rate r_n is impossible on the witness designs; aim at (s₀+1)√(log p/n) for s₀ = o(√(n/log p)); beyond s₀ ≍ √n, π(S₀) ↛ 1 on every design, so only mode (HPM) consistency can be aimed at (TRIAGE T2(b)). |
+| W3-POST REPORT §4 item 8: "Growing s₀ = o(log n/log log n). Risk medium" | **Correct the target**: with s₀ → ∞ and log p ≍ log n the rate r_n is impossible on the witness designs; aim at (s₀+1)√(log p/n) for s₀ = o(√(n/log p)); beyond s₀ ≍ √n, π(S₀) ↛ 1 on every design with s₀ ≤ min(K − 1, p/2), so only mode (HPM) consistency can be aimed at (TRIAGE T2(b)). |
 | W3-POST:Prop-LB (δ ≥ 1/(1 + √(n+1)), 1 ≤ s₀) | Sharpened by Corollary B: n in place of n + 1; multiplicity kept; s₀ = 0 covered. |
-| Registry sharpness row `W3-POST:Lemma-1a'` / A:COEF-REP = NONE ("open") | **NECESSARY** (in kind): Proposition C. |
+| Registry sharpness row `W3-POST:Lemma-1a'` / A:COEF-REP = NONE ("open") | **FAILED-REMOVAL**: some ridge-cost control is necessary (Proposition C); the bound ‖θ‖² ≤ nM′ itself is weakenable to the bounded cost of Lemma 1a″. |
 | Registry sharpness row `W3-POST2:B` / A:POST2-AR = ARTEFACT ("bounded cost sufficient, not necessary") | Keep "boundedness not necessary" (N6b), add **FAILED-REMOVAL**: no control at all, or an allowance ≫ (log n)², fails (Proposition C). |
 
 Assumption readings: `ASSUMPTION_MAP.md`. New assumption ids: A:PSHARP-WORTH, A:PSHARP-WSPH (witness conditions),
@@ -117,7 +124,7 @@ weak-dependence condition on the nulls for the log factor (one-step evidence onl
 the sharp constant at order (log n)².
 
 ## 5. Files
-`STATEMENT.md` (v1.2.1), `PLAN.md`, `ASSUMPTION_MAP.md`, `REPORT.md`, `citecheck.py`; `lemmas/S_one_step.md`,
+`STATEMENT.md` (v1.2.2), `PLAN.md`, `ASSUMPTION_MAP.md`, `REPORT.md`, `citecheck.py`; `lemmas/S_one_step.md`,
 `A_log_factor.md`, `B_sparsity.md`, `C_counterexample.md`; `numerics/core.py`, `a_orth.py`, `a_sph.py`,
 `a_boundary.py`, `b_check.py`, `c_counter.py` and their `*_out.txt`; `reviews/` (briefs, reviewer replies, scratch,
 dispositions, manifests, CITECHECK); `LOG.md`, `CHECKPOINT_1.md`, `CHECKPOINT_2.md`.
@@ -130,7 +137,7 @@ claim: W3-PSHARP:S | kind: lemma | statement: STATEMENT.md:32-44 | premises: STA
 name: Lemma S (one-step supersets with the fit factor kept)
 status: PROVED (by this seat, unchecked) | status_source: lemmas/S_one_step.md:3
 conclusion: identity: D_{S+j}/D_S <= n (equality iff x_j orthogonal to col X_S); Q_S - Q_{S+j} = n (x_j'rho_S)^2/s_{S,j}; odds against S0 >= [(s0+1)/(2p-1-s0)] n^{-1/2} sum_j exp(nu gamma_j) | scope: any n >= 3, any design, any data, |S|+1 <= K
-gates: correct:PENDING(reviews/BRIEF_R1_sol.md)
+gates: correct:PENDING(reviews/BRIEF_R2_sol.md)
 
 REGISTRY
 claim: W3-PSHARP:A | kind: proposition | statement: STATEMENT.md:46-77 | premises: STATEMENT.md:16-30
@@ -140,26 +147,26 @@ assumptions: A:GAUSS-NOISE ; A:ENERGY ; A:PSHARP-COEF (new | coefficient bound o
 conclusion: negative: P(delta/(1-delta) >= (1-eps) Lambda_n) -> 1 under A:PSHARP-WORTH or A:PSHARP-WSPH; with all nulls and fixed s0, delta_n >= (1-o_P(1))(s0+1) sqrt(log p/(pi n)) and liminf E delta_n/that >= 1 | rate: (s0+1) sqrt(log p/(pi n)) (lower bound) | scope: witness designs; p <= n-1 (orthogonal) or (log p)^2 = o(n) (spherical, p >> n)
 depends_on: W3-PSHARP:S@proof:S(2),S(4)
 sharpness: A:ENERGY = WEAKENABLE (evidence: ASSUMPTION_MAP.md:12) ; A:PSHARP-COEF = WEAKENABLE (evidence: ASSUMPTION_MAP.md:12) ; A:GAUSS-NOISE = NECESSARY-FOR-ROUTE (evidence: ASSUMPTION_MAP.md:11)
-gates: correct:PENDING(reviews/BRIEF_R1_sol.md) ; better-proposal:P2(reviews/K01_break_astra.md) ; better-disposition:P2=adopted(reviews/K01_disposition.md)
+gates: correct:PENDING(reviews/BRIEF_R2_sol.md) ; better-proposal:P2(reviews/K01_break_astra.md) ; better-disposition:P2=adopted(reviews/K01_disposition.md)
 
 REGISTRY
 claim: W3-PSHARP:B | kind: corollary | statement: STATEMENT.md:90-114 | premises: STATEMENT.md:16-30
 name: Corollary B (sparsity obstruction on every design)
 status: PROVED (by this seat, unchecked) | status_source: lemmas/B_sparsity.md:3
-conclusion: negative: for every design and data set, delta/(1-delta) >= O_lb_n >= c(p,s0)/sqrt(n), c >= (s0+1)/3 for s0 <= p/2; pi(S0) -> 1 needs s0 = o(sqrt n); limsup pi(S0) <= exp(-lambda/2) at s0 ~ lambda sqrt n; rate r_n needs s0 = O(sqrt(log n)) | rate: (s0+1)/(2 sqrt n) (lower bound) | scope: any n >= 3, any design, any data, 0 <= s0 <= K-1
+conclusion: negative: for every design and data set with 0 <= s0 <= K-1, delta/(1-delta) >= O_lb_n >= c(p,s0)/sqrt(n); consequences for sequences with s0 <= min(K-1, p/2), where c >= (s0+1)/3: pi(S0) -> 1 needs s0 = o(sqrt n), and rate r_n needs s0 = O(sqrt(log n)); if in addition s0/p -> 0 and s0 ~ lambda sqrt n, limsup pi(S0) <= exp(-lambda/2) | rate: c(p,s0)/sqrt(n) (lower bound; equal to (1+o(1))(s0+1)/(2 sqrt n) when p -> infinity and s0/p -> 0) | scope: inequality: any n >= 3, any design, any data, 0 <= s0 <= K-1; consequences: s0 <= min(K-1, p/2)
 depends_on: W3-PSHARP:S@proof:S(1),S(2)
 implies: W3-POST:Prop-LB (j = 1 term with c(p,s0) >= 1 and n <= n+1, on LB's domain)
 sharpness: A:EXT-FEAS = NECESSARY (evidence: ASSUMPTION_MAP.md:9)
-gates: correct:PENDING(reviews/BRIEF_R1_sol.md) ; better-proposal:P1(reviews/K01_break_astra.md) ; better-disposition:P1=adopted(reviews/K01_disposition.md)
+gates: correct:PENDING(reviews/BRIEF_R2_sol.md) ; better-proposal:P1(reviews/K01_break_astra.md) ; better-disposition:P1=adopted(reviews/K01_disposition.md)
 
 REGISTRY
-claim: W3-PSHARP:C | kind: counterexample | statement: STATEMENT.md:116-145 | premises: STATEMENT.md:16-30
+claim: W3-PSHARP:C | kind: counterexample | statement: STATEMENT.md:116-149 | premises: STATEMENT.md:16-30
 name: Proposition C (ridge-cost control of the reference cannot be dropped)
 status: PROVED (by this seat, unchecked) | status_source: lemmas/C_counterexample.md:3
 conclusion: negative: on the design D_n the reference T = {1,2} represents mu exactly and (E) holds, but pi(|S| > m^T_n(log n/2)) -> 1; Lemma 1a' fails without the coefficient bound, Lemma 1a'' fails with any cost allowance B_n >> (log n)^2 | scope: one design sequence, n >= 200, n b_n^2 >= 1200 (sigma*^2 + bbar^2)(log n)^2
 depends_on: W3-PSHARP:S@proof:Lemma-V,S(1)
-sharpness: A:COEF-REP = NECESSARY (evidence: lemmas/C_counterexample.md:100)
-gates: correct:PENDING(reviews/BRIEF_R1_sol.md)
+sharpness: A:COEF-REP = FAILED-REMOVAL (evidence: lemmas/C_counterexample.md:100)
+gates: correct:PENDING(reviews/BRIEF_R2_sol.md)
 ```
 
 Notes for the ingest (HQ): the four claims are sharpness records (kind as above; `headline` no). Links to the

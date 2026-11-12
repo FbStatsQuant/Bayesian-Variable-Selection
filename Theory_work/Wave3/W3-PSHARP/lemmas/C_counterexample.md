@@ -69,8 +69,8 @@ and put v := μ − X_Sϑ ∈ 𝒳. Since v is centred and v ∈ 𝒳: vᵀCε =
 **Step 3 (fit of T′ from above).** By Lemma V with ϑ′ = (b/√k)1 (μ − X_{T′}ϑ′ = 0):
 s_y²Q_{T′} ≤ ‖Cε‖² + (‖μ‖² + ‖ϑ′‖²)/n = ‖Cε‖² + b².
 
-**Step 4 (the event).** E := ‖Cε‖²/σ*² ~ χ²_{n−1}; P := ‖P_𝒳ε‖²/σ*² ~ χ²_{k+1} by (F3). Let
-F_n := {E ≤ 2(n−1)} ∩ {P ≤ 2(k+1)}; by Chebyshev, P(F_nᶜ) ≤ 2/(n−1) + 2/(k+1) → 0. On F_n:
+**Step 4 (the event).** E := ‖Cε‖²/σ*² ~ χ²_{n−1}; E_𝒳 := ‖P_𝒳ε‖²/σ*² ~ χ²_{k+1} by (F3). Let
+F_n := {E ≤ 2(n−1)} ∩ {E_𝒳 ≤ 2(k+1)}; by Chebyshev, P(F_nᶜ) ≤ 2/(n−1) + 2/(k+1) → 0. On F_n:
 - a := 2b₀s_y² = 0.02‖μ + Cε‖²/(n−1) ≤ 0.04(‖μ‖² + ‖Cε‖²)/(n−1) ≤ 0.04(b² + 2σ*²);
 - Δ := (n−1)b²/8 − 2‖P_𝒳ε‖² − b² ≥ (n−1)b²/8 − 4σ*²(k+1) − b². Here 4σ*²(k+1) ≤ σ*²(48L + 8) ≤ n b²(48L + 8)/(C_bL²)
   ≤ 0.0078 n b² (using n b² ≥ C_bσ*²L² and L ≥ 5.298: 48/(1200·5.298) + 8/(1200·28.07) ≤ 0.0078); (n−1)b²/8 ≥ 0.1243 n b²;

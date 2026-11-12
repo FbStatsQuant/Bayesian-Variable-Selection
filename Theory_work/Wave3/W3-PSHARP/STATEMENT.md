@@ -1,4 +1,4 @@
-# W3-PSHARP — STATEMENT (v1.2, 2026-11-11; lead: Claude Fable 5.2, claudeAgent, high; v1.1 = statement-lock amendments [L01-#]; v1.2 = break-review K01: wording [K01-F3] and two adopted strengthenings [K01-P1, K01-P2]; v1.2.1 = one remark sentence made exact after line check KBC [KBC-3], no claim changed; **locked**)
+# W3-PSHARP — STATEMENT (v1.2, 2026-11-11; lead: Claude Fable 5.2, claudeAgent, high; v1.1 = statement-lock amendments [L01-#]; v1.2 = break-review K01: wording [K01-F3] and two adopted strengthenings [K01-P1, K01-P2]; v1.2.1 = one remark sentence made exact after line check KBC [KBC-3], no claim changed; v1.2.2 = three wording points from council round R1 [R1-#], no claim changed; **locked**)
 
 Ticket T3 of `Theory_work/Wave3/API_AUDIT/sharp1/TRIAGE.md`: three **sharpness records** (lower bounds / necessity)
 for the posterior theorem. No new upper bound is claimed. All results are about the exact coded target π. Statuses are
@@ -106,7 +106,7 @@ c(p, 0) > ½; and c(p, s₀)/(s₀ + 1) → ½ when p → ∞ and s₀/p → 0 [
   `Theory_work/Wave3/W3-POST/REPORT.md:190`) cannot retain the rate r_n when s₀ → ∞ on the witness sequences of
   Corollary A2 with log p ≍ log n [L01-M1]. On those sequences a concentration theorem must allow at least the rate
   (s₀ + 1)√(log p/n), and consistency (π(S₀) → 1) requires s₀ = o(√(n/log p)); for a general witness block use Λ_n of
-  Proposition A. (With log p = o(log n) the rate r_n can survive a slowly growing s₀; no obstruction is claimed there.)
+  Proposition A. (The obstruction does not apply when log p = o(log n); no claim is made there [R1-opus-N1].)
   On **every** design with s₀ ≤ min(K − 1, p/2), π(S₀) ↛ 1 once s₀ ≍ √n (B1): beyond that scale only mode (HPM)
   consistency can be aimed at, not π(S₀) → 1.
 
@@ -119,7 +119,9 @@ the multiplicity bounded below by 1 is [LB] with n in place of n + 1. It also co
 mutually orthogonal centred vectors in ℝⁿ with squared norm n − 1, u := Σ_{j=3}^{k+2} x_j,
 and x₂ := c(x₁ − ηu), c := (1 + η²k)^{−1/2} (so ‖x₂‖² = n − 1; X is standardised). T′ := {3, …, k + 2}, T := {1, 2}.
 Truth: G with X^r = X and β* = θ* := (b_n/√k)1_{T′}, i.e. μ = (b_n/√k)u (the law of the data depends on β* only through
-μ), where 0 < b_n ≤ b̄ and n b_n² ≥ C_b (σ*² + b̄²)(log n)², C_b := 1200 (e.g. b_n ≡ b̄ and n large).
+μ), where 0 < b_n ≤ b̄ and n b_n² ≥ C_b (σ*² + b̄²)(log n)², C_b := 1200 (e.g. b_n ≡ b̄ and n large). Since b_n ≤ b̄, this
+condition can hold only once n ≥ C_b(1 + σ*²/b̄²)(log n)²; n₀ = 200 only fixes the range of the elementary bounds
+[R1-opus-N6].
 
 **Proposition C.** On 𝔇_n:
 1. **(hypotheses of [L1a′] except the coefficient bound)** G holds; ‖μ‖² = b_n²(n − 1) ≤ n b̄² (so (E) with M = b̄²);
@@ -137,7 +139,9 @@ Truth: G with X^r = X and β* = θ* := (b_n/√k)1_{T′}, i.e. μ = (b_n/√k)u
 Hence the conclusions of [L1a′] and [1a″] for the reference T — π(|S| > m^T_n(½ log n)) = O_P(n^{−1/2}), resp.
 π(|S| > m_n) = O_P(n^{−1/2}) — **fail**: Θ^T_{n,m_n} → ∞ and Θ″_{n,m_n} → ∞ in probability. So:
 - in `W3-POST:Lemma-1a'` the coefficient bound (registry assumption A:COEF-REP) cannot be dropped: exact
-  representation by T plus (E) is not enough ([L1a′] Remark 2, recorded as open, is settled: **necessary in kind**);
+  representation by T plus (E) is not enough ([L1a′] Remark 2, recorded as open, is settled: removal fails — some ridge-cost
+  control of the reference is necessary; the particular bound ‖θ‖² ≤ nM′ is weakenable, e.g. to the bounded cost of
+  [1a″]) [R1-opus-M1];
 - in `W3-POST2:B` the bounded reference cost cannot be weakened to "small (even zero) approximation error" nor to any
   cost bound B_n with B_n/(log n)² → ∞: some control of the ridge cost is necessary. (It is not necessary that the
   cost be bounded for every reference: W3-POST2 numerics N6b. A large enough constant multiple of (log n)² already fails — with

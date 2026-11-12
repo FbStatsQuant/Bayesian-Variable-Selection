@@ -69,3 +69,12 @@ Claude-inference tally: all on Claude Work (claudeAgent); claude-personal not us
   council R1: seat sol = gpt-6.1-sol (codex, high); seat opus = Claude Opus 5.5 (claudeAgent, high).
   Agents so far: lead Fable 5.2 (claudeAgent, high); L01, KSA, KBC, council-sol gpt-6.1-sol (codex, high); K01
   gpt-6-astra (codex, high); council-opus Claude Opus 5.5 (claudeAgent, high). Claude inference: all on Claude Work.
+- 04:26–04:40. [step 10] Council R1 returned on MANIFEST ce522b1f…: **seat sol 7.6, gates FAIL** (G1, G2 PASS; G3–G6
+  FAIL on one reporting defect: REPORT/registry of Claim B dropped s₀ ≤ p/2 and s₀/p → 0; 0 FATAL / 1 MAJOR / 2 MINOR);
+  **seat opus 9.0, gates PASS** (0 / 0 / 2 MINOR / 6 NIT). Both seats: proofs and locked STATEMENT sound. R1 NOT PASSED.
+  One fix round: all findings applied (`reviews/R1_disposition.md`) — REPORT, ASSUMPTION_MAP, three wording points in
+  STATEMENT (v1.2.2; no claim changed), two symbol renames, `b_check.py` header (script re-run). citecheck 0 MISS;
+  ingest dry run 0 problems.
+- 04:42. [step 11] `manifest.py freeze` → `reviews/MANIFEST_R2.txt`, digest
+  4513e05a40ddc3bf8baeebf04d7156d3c0ac84442dbe0d9b2c6c59244afdac14. Launching council R2 (fresh blind seats: gpt-6.1-sol codex high; Claude Opus 5.5 claudeAgent high) and a
+  separate reconciliation reviewer (gpt-6.1-sol codex high; `reviews/BRIEF_R2_reconciliation_sol.md`).

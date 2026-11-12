@@ -62,10 +62,10 @@ s_y²Q_{S₀} ≤ ‖Cε‖² + (‖μ‖² + ‖θ*‖²)/n ≤ ‖Cε‖² + M
 ≤ 0.06M + 0.04‖Cε‖²/(n−1) (n ≥ 3). With E := ‖Cε‖²/σ*² ~ χ²_{n−1}:
   V ≤ σ*²E(1 + 0.04/(n−1)) + 1.06M + M′.
 By Chebyshev (Var E = 2(n−1)), P(E > (n−1) + x√(2(n−1))) ≤ 1/x² for x > 0. On the complement,
-  V/(σ*²(n−1)) ≤ (1 + x√(2/(n−1)))(1 + 0.04/(n−1)) + (1.06M + M′)/(σ*²(n−1)) =: 1 + r_n(x),
-and κ_n ≥ 1/(1 + r_n(x)) ≥ 1 − r_n(x). Take x = x_n := n^{1/4}: r_n(x_n) ≤ C_σ n^{−1/4} with C_σ depending only on
-(M + M′)/σ*². Since N ≤ n − 1 under (W-orth), r_n(x_n) · 2 log N ≤ 2C_σ n^{−1/4} log n → 0, so for n ≥ n(ϵ, C_σ):
-P(κ_n < 1 − ϵ/(2 log N)) ≤ P(κ_n < 1 − r_n(x_n)) ≤ n^{−1/2}.
+  V/(σ*²(n−1)) ≤ (1 + x√(2/(n−1)))(1 + 0.04/(n−1)) + (1.06M + M′)/(σ*²(n−1)) =: 1 + e_n(x),
+and κ_n ≥ 1/(1 + e_n(x)) ≥ 1 − e_n(x). Take x = x_n := n^{1/4}: e_n(x_n) ≤ C_σ n^{−1/4} with C_σ depending only on
+(M + M′)/σ*². Since N ≤ n − 1 under (W-orth), e_n(x_n) · 2 log N ≤ 2C_σ n^{−1/4} log n → 0, so for n ≥ n(ϵ, C_σ):
+P(κ_n < 1 − ϵ/(2 log N)) ≤ P(κ_n < 1 − e_n(x_n)) ≤ n^{−1/2}.
 **Conclusion.** Lemma R with ζ_j = g_j² (Lemma W(i): η = η′ = 0) gives, for n ≥ n(ϵ, C_σ),
   P( odds < (1−ϵ)Λ_n ) ≤ n^{−1/2} + 8√π/(ϵ²√(log N_n)) → 0.
 The bound depends on the problem only through (ϵ, (M+M′)/σ*², n, N_n): this is the uniformity claimed (N_n ≥ N̲_n → ∞).

@@ -1,4 +1,4 @@
-F1: Lemma S items 1-2 (Schur formulas, D ratio <= n, equality iff orthogonal)
+F1: Lemma S items 1-2 (Schur formulas, D ratio <= n)
   8064 (S, j) pairs: max rel error D-ratio formula 7.8e-13; max error of the Q-gain formula (rel. to Q_S) 1.2e-14; max of (D_Sj/D_S)/n = 1.000000000000 (must be <= 1)
   PASS
 F2: Corollary B falsification: min over cases of odds/O_lb and of odds/(c/sqrt n) (both must be >= 1)

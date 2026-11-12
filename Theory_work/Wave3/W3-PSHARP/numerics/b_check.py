@@ -1,7 +1,7 @@
 """W3-PSHARP numerics (b) + Lemma S: falsification search by exact enumeration on small designs, and tables.
 
 F1  Lemma S items 1-2 on random / correlated / rank-deficient designs: the Schur formulas for D_{S+j}/D_S and
-    Q_S - Q_{S+j} against generic linear algebra; D ratio <= n; equality iff x_j orthogonal to col X_S.
+    Q_S - Q_{S+j} against generic linear algebra; D ratio <= n (the equality case is not tested here).
 F2  Corollary B: for every S0 with 0 <= s0 <= K-1 (S0 need not be a true support) and adversarial data,
     odds := delta/(1-delta) >= O_lb >= c(p,s0)/sqrt(n). Reports the minimum of odds/O_lb (must be >= 1).
 T1  Table of the bound: sqrt(n) O_lb/(s0+1), c(p,s0)/(s0+1), and the cap on pi(S0) for s0 = lambda sqrt(n).
@@ -48,7 +48,7 @@ def make_y(kind, Xr, rng):
 
 
 def F1(rng):
-    print("F1: Lemma S items 1-2 (Schur formulas, D ratio <= n, equality iff orthogonal)")
+    print("F1: Lemma S items 1-2 (Schur formulas, D ratio <= n)")
     worst_f, worst_q, max_ratio, cnt = 0.0, 0.0, 0.0, 0
     for kind in ("iid", "corr", "dup", "near", "orth", "binary"):
         for n in (6, 9, 15, 40):
