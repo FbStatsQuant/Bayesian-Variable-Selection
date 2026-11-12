@@ -86,7 +86,9 @@ ws_prodh <- function(p, s, r, scale = "c100", gen_dir, manifest = NULL) {
 # Data frames are hashed whole (none of the fit's data frames holds a time).
 # Two fits are "output identical" iff fingerprint$all agrees.
 WS_FP_VERSION <- 2L
-WS_TIME_NAMES <- c("seconds", "seconds_total", "seconds_local", "seconds_ls0", "timings", "peak_memory_kb")
+# preflight_ls0 (v3.2-dev B4: the LS0 charge made after the setup) is an admission record that v3.1 does not have; it
+# is dropped from the whole-fit hash and reported in the delivery record.
+WS_TIME_NAMES <- c("seconds", "seconds_total", "seconds_local", "seconds_ls0", "timings", "peak_memory_kb", "preflight_ls0")
 ws_keep <- function(x, drop) { nm <- names(x); if (is.null(nm)) return(x); a <- attributes(x); k <- !(nm %in% drop); x <- unclass(x)[k]
   a$names <- nm[k]; attributes(x) <- a; x }
 ws_strip <- function(x, ctx = "") {
@@ -122,7 +124,8 @@ ws_fingerprint <- function(fit) {
     }
   }
   list(version = WS_FP_VERSION, all = ws_sha(f), top = top, sub = sub,
-       delivery = list(preflight = ws_delivery(fit$preflight), preflight_escalation = ws_delivery(fit$preflight_escalation)))
+       delivery = list(preflight = ws_delivery(fit$preflight), preflight_escalation = ws_delivery(fit$preflight_escalation),
+                       preflight_ls0 = fit$preflight_ls0[setdiff(names(fit$preflight_ls0), c("seconds_per_score", "est_seconds"))]))
 }
 
 # Human-readable scalars of a fit (for tables; the fingerprint is the identity test).

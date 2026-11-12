@@ -45,13 +45,19 @@ struct TopStore {
   TopCmp cmp{true};
   std::set<TopEntry, TopCmp> s{TopCmp{true}};
   void init(size_t c, bool hpm_order) { cap = c; cmp = TopCmp{hpm_order}; s = std::set<TopEntry, TopCmp>(cmp); }
-  // returns true if inserted
+  // cmp(TopEntry{v, S}, b) evaluated without building the entry (same three comparisons as TopCmp).
+  inline bool before(double v, const std::vector<int>& S, const TopEntry& b) const {
+    if (v != b.v) return v > b.v;
+    if (cmp.hpm_order && S.size() != b.S.size()) return S.size() < b.S.size();
+    return lex_less(S, b.S);
+  }
+  // returns true if inserted. v3.2-dev (B1, output-preserving): same decisions as the v3.1 routine (quick reject when
+  // full and not before the worst entry; no insertion of an entry already present; drop the worst when above cap),
+  // but the entry (a copy of S) is built only when it may enter, and presence is tested by the insertion itself.
   bool offer(double v, const std::vector<int>& S) {
     if (cap == 0) return false;
-    TopEntry e{v, S};
-    if (s.size() >= cap && !cmp(e, *s.rbegin())) return false;  // quick reject: not better than the worst
-    if (s.count(e)) return false;
-    s.insert(e);
+    if (s.size() >= cap && !before(v, S, *s.rbegin())) return false;  // quick reject: not better than the worst
+    if (!s.insert(TopEntry{v, S}).second) return false;               // already present
     if (s.size() > cap) s.erase(std::prev(s.end()));
     return true;
   }

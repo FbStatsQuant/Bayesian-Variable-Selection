@@ -107,3 +107,26 @@ Rare branch: in `TableDFS::append_row` the pivot of A = G_S + I is tested after 
 `try_chol`. In exact arithmetic the A pivot cannot fail when the H pivot passes (A − H/(n+1) is positive definite),
 but rounding can do it for huge un-standardised duplicated columns (review R02 finding 3); the unit case
 `a_pivot_after_h` asserts that it reaches this branch, and its dumps agree.
+
+## v3.2-dev, leg B (W3-SCALE, HQ-approved 2026-11-12): engine and LS0 preflight, output-preserving
+
+Same claim, domain and admission qualification as leg A. Files changed since leg A: `cpp/v3_score.h`,
+`cpp/v3_engine.h`, `cpp/v3_ledger.h`, `cpp/v3_holder.h`, `cpp/v3_core.cpp`, `v3_fit.R`.
+
+5. **Scorer (`v3_score.h`).** The sub-Gram goes to a member buffer; only the lower triangles of H and A are formed
+   (nothing reads the upper ones); the two Cholesky factorisations run together in `chol2_inplace`, entry by entry
+   with the expressions and operand order of `chol_inplace`, four independent subtraction chains per pass; the dead
+   copy `LH = bufH` is gone.
+6. **Engine (`v3_engine.h`).** Gibbs, uniform-swap and neighbour-swap proposals and the local-search neighbours are
+   formed in the particle and undone on rejection (no whole-particle copy); the round order, neighbour candidates
+   and independence draw reuse buffers. Events, uniforms and compared values are the v3.1 ones in the v3.1 order.
+7. **Stores (`v3_ledger.h`).** `TopStore::offer` takes the same decisions without building an entry before the
+   quick reject, and tests presence by the insertion itself.
+8. **LS0 preflight after the setup (`v3_fit.R`, `cpp_start_mode_size`), admission only.** By default the LS0 time is
+   charged after the setup with the actual start mode: at most ell + |S~0| + 1 scans of at most p + k*(p − k*)
+   models, k* = min(K, |S~0| + cap, ⌊p/2⌋). The memory verdict of the initial preflight is unchanged. A refusal now
+   comes after the setup (status `resource_limit`, record `preflight_ls0`). `options(v3.ls0_preflight = "worst_case")`
+   restores the pre-run worst-case charge of leg A. The start mode is computed once per setup and reused by LS0.
+
+Tests added: `tests/engine_bench.cpp` (two islands, both local searches, every output byte dumped; one source against
+each core), `tests/preflight_b4.R`.

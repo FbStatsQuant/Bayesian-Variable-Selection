@@ -66,6 +66,17 @@ class Engine {
   bool rb_on = false; std::vector<double> rb_acc;
   std::vector<std::pair<int,int>> scratch;
   Particle tmpQ;
+  // v3.2-dev (B1) reused buffers: round order, neighbour candidates, independence draw
+  std::vector<int> ord_buf, cand_buf, draw_buf;
+  // v3.2-dev (B1, output-preserving): the proposals of the Gibbs, uniform-swap and neighbour-swap steps and of the
+  // local-search scan are formed IN the particle and undone on rejection, instead of copying the whole particle
+  // (sorted members + p-bit set) to tmpQ and back. add_var / del_var are exact inverses on (S, bits, h); the four
+  // score fields are saved and restored. Events, uniforms and every compared value are the v3.1 ones in the v3.1
+  // order. If a score throws NumericalFailure the particle is left in the proposed state; the run is then abandoned
+  // and particles are never output, so nothing observable differs.
+  struct Saved { double logm, lg0, d, F; };
+  static inline Saved save(const Particle& q) { return Saved{q.logm, q.lg0, q.d, q.F}; }
+  static inline void restore(Particle& q, const Saved& v) { q.logm = v.logm; q.lg0 = v.lg0; q.d = v.d; q.F = v.F; }
 
   Engine(const Data& d, const Start& s, const std::vector<std::vector<int>>& nb, int B_) : D(d), st(s), Nb(nb), B(B_), sc(&d) {}
 
@@ -114,21 +125,24 @@ class Engine {
     MoveStats& m = ms; m.gibbs++;
     bool in = bit_get(P.bits, j);
     bool add_ok = in || (int)P.S.size() < D.K;
-    double oj = 0; bool has_other = false;
+    double oj = 0; bool flipped = false;
     held(P, ME_GIBBS_HELD);
+    Saved cur = save(P);
     if (in || add_ok) {
-      tmpQ = P;
-      if (in) del_var(tmpQ, j); else add_var(tmpQ, j);
-      eval(tmpQ, ME_GIBBS_FLIP);
-      has_other = true;
-      double lw = in ? P.lgphi(phi) : tmpQ.lgphi(phi);
-      double lo = in ? tmpQ.lgphi(phi) : P.lgphi(phi);
+      double lcur = P.lgphi(phi);                      // log gamma_phi of the current state
+      if (in) del_var(P, j); else add_var(P, j);
+      eval(P, ME_GIBBS_FLIP);                          // P now holds the other configuration and its score
+      flipped = true;
+      double loth = P.lgphi(phi);
+      double lw = in ? lcur : loth;                    // with j
+      double lo = in ? loth : lcur;                    // without j
       oj = plogis_log(lw - lo);
     }
     if (rb_on) rb_acc[j] += oj;  // R8: recorded before the draw
     double u = vs->u("gibbs");
     bool include = u < oj;
-    if (include != in) { P = tmpQ; m.gibbs_change++; }
+    if (include != in) { m.gibbs_change++; }           // keep the proposed state
+    else if (flipped) { if (in) add_var(P, j); else del_var(P, j); restore(P, cur); }
   }
   // m-th (0-based) non-member in increasing index order (word-level popcount skip).
   int nth_nonmember(const std::vector<uint64_t>& bits, int m) const {
@@ -149,39 +163,41 @@ class Engine {
     ms.us_exec++;
     int j = P.S[(int)std::floor(vs->u("uswap_j") * k)];
     int l = nth_nonmember(P.bits, (int)std::floor(vs->u("uswap_l") * (p - k)));
-    tmpQ = P; del_var(tmpQ, j); add_var(tmpQ, l);
-    eval(tmpQ, ME_USWAP);
-    double la = tmpQ.lgphi(phi) - P.lgphi(phi);
+    Saved cur = save(P); double lcur = P.lgphi(phi);
+    del_var(P, j); add_var(P, l);
+    eval(P, ME_USWAP);
+    double la = P.lgphi(phi) - lcur;
     double alpha = (la >= 0) ? 1.0 : std::exp(la);
     double u = vs->u("uswap_accept");
     bool acc = u < alpha;
-    if (acc) { P = tmpQ; ms.us_acc++; }
+    if (acc) { ms.us_acc++; } else { del_var(P, l); add_var(P, j); restore(P, cur); }
   }
   // Neighbour swap (label N<b>): self-loop at empty S; j uniform in S; reject without score if N(j)\S is empty;
   // l uniform in N(j)\S; accept w.p. 1 ^ [gamma_phi(S')/gamma_phi(S)] |N(j)\S| / |N(l)\S'|.
   void step_nswap(Particle& P, double phi, int b) {
     int k = (int)P.S.size();
-    std::string lab = "N" + std::to_string(b);
+    (void)b;
     if (k == 0) { ms.ns_self++; return; }
     ms.ns_exec++;
     int j = P.S[(int)std::floor(vs->u("nswap_j") * k)];
-    std::vector<int> cand;
+    std::vector<int>& cand = cand_buf; cand.clear();
     for (int l : Nb[j]) if (!bit_get(P.bits, l)) cand.push_back(l);
     if (cand.empty()) { ms.ns_noscore++; return; }
     int l = cand[(int)std::floor(vs->u("nswap_l") * cand.size())];
-    tmpQ = P; del_var(tmpQ, j); add_var(tmpQ, l);
-    int back = 0; for (int x : Nb[l]) if (!bit_get(tmpQ.bits, x)) ++back;  // |N(l) \ S'| >= 1 (j is in it)
-    eval(tmpQ, ME_NSWAP);
-    double la = tmpQ.lgphi(phi) - P.lgphi(phi) + std::log((double)cand.size()) - std::log((double)back);
+    Saved cur = save(P); double lcur = P.lgphi(phi);
+    del_var(P, j); add_var(P, l);
+    int back = 0; for (int x : Nb[l]) if (!bit_get(P.bits, x)) ++back;  // |N(l) \ S'| >= 1 (j is in it)
+    eval(P, ME_NSWAP);
+    double la = P.lgphi(phi) - lcur + std::log((double)cand.size()) - std::log((double)back);
     double alpha = (la >= 0) ? 1.0 : std::exp(la);
     double u = vs->u("nswap_accept");
     bool acc = u < alpha;
-    if (acc) { P = tmpQ; ms.ns_acc++; }
+    if (acc) { ms.ns_acc++; } else { del_var(P, l); add_var(P, j); restore(P, cur); }
   }
   // Independence proposal S' ~ pi_0 (exact draw), accepted w.p. 1 ^ exp{phi [d(S') - d(S)]}.
   void step_indep(Particle& P, double phi) {
     ms.in_exec++;
-    std::vector<int> S; draw_start(S);
+    std::vector<int>& S = draw_buf; draw_start(S);
     set_model(tmpQ, S);
     eval(tmpQ, ME_INDEP);
     double la = phi * (tmpQ.d - P.d);
@@ -200,7 +216,7 @@ class Engine {
   }
   // One round of the m = p + B + 2 labelled steps in a fresh random order (M §6.5).
   void one_round(Particle& P, int i, double phi) {
-    std::vector<int> ord; draw_order(ord);
+    std::vector<int>& ord = ord_buf; draw_order(ord);
     int p = D.p;
     for (size_t pos = 0; pos < ord.size(); ++pos) {
       ev.position = (int)pos + 1;
@@ -384,25 +400,27 @@ class Engine {
     int p = D.p, K = D.K;
     while (true) {
       ev.round = A.moves; ev.stage = (int)A.scanned.size() + 1;
-      bool have = false; Particle best, Q;
+      bool have = false; Particle best;
       int pos = 0;
       auto consider = [&](Particle& q) {
         ev.position = ++pos;
         eval(q, ME_LOCAL); A.n_eval++;
         if (!have || q.F > best.F || (q.F == best.F && lex_less(q.S, best.S))) { best = q; have = true; }
       };
+      // v3.2-dev (B1): each neighbour is formed in C and undone (C is the frozen centre between candidates)
+      const Saved c0 = save(C);
       for (int j = 0; j < p; ++j) {
-        Q = C;
-        if (bit_get(C.bits, j)) del_var(Q, j);
-        else { if ((int)C.S.size() >= K) continue; add_var(Q, j); }
-        consider(Q);
+        if (bit_get(C.bits, j)) { del_var(C, j); consider(C); add_var(C, j); }
+        else { if ((int)C.S.size() >= K) continue; add_var(C, j); consider(C); del_var(C, j); }
+        restore(C, c0);
       }
       std::vector<int> CS = C.S;
       for (int j : CS)
         for (int l = 0; l < p; ++l) {
           if (bit_get(C.bits, l)) continue;
-          Q = C; del_var(Q, j); add_var(Q, l);
-          consider(Q);
+          del_var(C, j); add_var(C, l);
+          consider(C);
+          del_var(C, l); add_var(C, j); restore(C, c0);
         }
       A.scanned.push_back(C.S); A.scanned_F.push_back(C.F); A.scan_complete.push_back(1); A.scan_size.push_back(pos);
       if (have && best.F > C.F) {  // strict F improvement only (R14)

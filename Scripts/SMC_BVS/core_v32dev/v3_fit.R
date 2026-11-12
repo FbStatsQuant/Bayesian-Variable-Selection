@@ -23,7 +23,10 @@ v3_time_scores <- function(Xs, ys, kbar) {
 # for the parallel F / scan_complete / scan_size vectors (both copies, capacity growth) plus 4 scan particles
 # (8W + 4K + 96), plus 4096 bytes of fixed list/name/string overhead (R08). Memory is checked first: the size-K timing benchmark runs only if the memory estimate already fits
 # (R07 #2). The LS0 time counts against the allocation's hours. ls0_worst_case = FALSE is the shipped preflight.
-v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL, ls0_worst_case = FALSE) {
+# v3.2-dev (B4, admission only): ls0_time = FALSE keeps the LS0 archive in the memory estimate (so the memory verdict
+# is the v3.1 one) but does not time or charge the LS0 worst case here; the charge is then made after the setup by
+# v3_preflight_ls0 with the actual size of the start mode.
+v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL, ls0_worst_case = FALSE, ls0_time = TRUE) {
   K <- b$K; B <- b$B; N <- b$tiers$N[tier + 1]; C_cache <- 500 * p
   mem_gb <- allocation[["mem_gb"]] %||% 8; hours <- allocation[["hours"]] %||% 24
   W <- ceiling(p / 64)
@@ -50,7 +53,7 @@ v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL,
       ls0_scans <- b$ell + K + 1; ls0_requests <- ls0_scans * ls0_scan
       comp <- c(comp, ls0_archive = (2 * ls0_scans + 4) * (12 * K + 256) + 96 * ls0_scans + 4 * (8 * W + 4 * K + 96) + 4096)
       ls0_s <- ls0_seconds <- NA_real_
-      if (sum(comp) <= mem_gb * 2^30) { ls0_s <- time_fun(K); ls0_seconds <- 2 * ls0_requests * ls0_s }  # R07 #2
+      if (isTRUE(ls0_time) && sum(comp) <= mem_gb * 2^30) { ls0_s <- time_fun(K); ls0_seconds <- 2 * ls0_requests * ls0_s }  # R07 #2
     }
   }
   bytes <- sum(comp)
@@ -73,6 +76,29 @@ v3_preflight <- function(n, p, b, branch, allocation, tier = 0, time_fun = NULL,
     out$exceeds <- out$exceeds || isTRUE(ls0_seconds > hours * 3600)
   }
   out
+}
+
+# v3.2-dev (B4, admission only; Lemma RO): LS0 charge after the setup, from the actual start mode S~0 (the LS0 centre).
+# LS0 makes at most cap = ell + |S~0| moves ("ell_n" rule: ell), hence at most cap + 1 scans; a move changes the model
+# size by at most one, so every scanned centre has size <= kmax = min(K, |S~0| + cap); a scan from a centre of size k
+# evaluates at most p + k (p - k) models, which is increasing in k up to p / 2, so one scan evaluates at most
+# p + k* (p - k*) models with k* = min(kmax, floor(p / 2)). The time is charged as in v3.1: the measured seconds per
+# score of a model of the largest reachable size, times the bookkeeping factor 2 (an operational estimate).
+# Compared with the pre-setup worst case (|S~0| replaced by K) this removes nothing that can happen.
+v3_preflight_ls0 <- function(p, b, allocation, mode_size, time_fun, ell = b$ell, cap_rule = "ell_n_plus_mode") {
+  K <- b$K; hours <- allocation[["hours"]] %||% 24
+  cap <- ell + (if (identical(cap_rule, "ell_n")) 0 else mode_size)
+  scans <- cap + 1
+  kmax <- min(K, mode_size + cap)
+  kstar <- min(kmax, p %/% 2)
+  scan <- p + kstar * (p - kstar)
+  requests <- scans * scan
+  s <- time_fun(kmax)
+  seconds <- 2 * requests * s
+  list(label = "v3.2-dev LS0 charge after setup (cap from the actual start mode); operational estimate",
+       start_mode_size = mode_size, move_cap = cap, cap_rule = cap_rule, scans = scans, max_model_size = kmax, scan_size = scan,
+       requests = requests, model_size_timed = kmax, seconds_per_score = s, bookkeeping_factor = 2, est_seconds = seconds,
+       allocation_hours = hours, exceeds = isTRUE(seconds > hours * 3600))
 }
 
 # Public production interface. Callers own persistence and the study adapter.
@@ -120,7 +146,10 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
   }
   # v3.1: charge LS0's worst case under the C-GROW cap; options(v3.ls0_cap = "ell_n") or ls0 = FALSE: shipped preflight
   ls0_wc <- isTRUE(ls0) && !identical(getOption("v3.ls0_cap", "ell_n_plus_mode"), "ell_n")
-  pf <- v3_preflight(n, p, b, fit$branch_run, allocation, time_fun = time_fun, ls0_worst_case = ls0_wc)
+  # v3.2-dev (B4): options(v3.ls0_preflight = "worst_case") charges the LS0 worst case before any work (as v3.1, with
+  # the v3.2-dev scan bound); the default "post_setup" charges it after the setup with the actual start mode.
+  ls0_post <- ls0_wc && !identical(getOption("v3.ls0_preflight", "post_setup"), "worst_case")
+  pf <- v3_preflight(n, p, b, fit$branch_run, allocation, time_fun = time_fun, ls0_worst_case = ls0_wc, ls0_time = !ls0_post)
   fit$preflight <- pf
   if (pf$exceeds) { fit$status <- "resource_limit"; return(finish(fit)) }
   ctx <- v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE)
@@ -149,8 +178,14 @@ v3_fit <- function(X, y, seed, allocation = list(mem_gb = 8, hours = 24), ls0 = 
   cg <- .v3cpp$cpp_cut_group(setup$ptr)
   fit$cut_group <- cg$cut_group; fit$cut_group_count <- cg$count; fit$cut_group_components <- cg$components
   fit$cut_group_graph <- cg[c("threshold", "graph")]
+  if (ls0_post) {
+    le <- getOption("v3.ls0_ell", b$ell)
+    sm <- .v3cpp$cpp_start_mode_size(setup$ptr, isTRUE(getOption("v3.ls0_tie_dp", TRUE)))
+    fit$preflight_ls0 <- v3_preflight_ls0(p, b, allocation, sm$size, time_fun, ell = le, cap_rule = "ell_n_plus_mode")
+    if (fit$preflight_ls0$exceeds) { fit$status <- "resource_limit"; return(finish(fit)) }
+  }
   pf_fun <- function(e) {
-    pf <- v3_preflight(n, p, b, "smc", allocation, tier = e, time_fun = time_fun, ls0_worst_case = ls0_wc)
+    pf <- v3_preflight(n, p, b, "smc", allocation, tier = e, time_fun = time_fun, ls0_worst_case = ls0_wc, ls0_time = !ls0_post)
     fit$preflight_escalation <<- pf
     pf$exceeds
   }

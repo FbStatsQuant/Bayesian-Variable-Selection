@@ -65,3 +65,12 @@ for p, mem in ((5000, 12), (10000, 16), (20000, 32)):
         setup.append(f"Rscript --vanilla profile_fit.R --core-dir {CORE[l]} --design s3gen --p {p} --seed 20261111 "
                      f"--mode setup --mem-gb {mem} --hours 1 --out $OUT/res/setup_p{p}_{l}.rds")
 write("setup_cmp.tsv", setup)
+if suffix:
+    bench = []
+    for p, n_isl, mem in ((2000, 300, 4), (20000, 300, 16)):
+        bench.append(f"g++ {FLAGS} -I{CORE['v31']}/cpp engine_bench.cpp -o $TMPDIR/b31 && g++ {FLAGS} -I{CORE['v32']}/cpp engine_bench.cpp -o $TMPDIR/b32 && "
+                     f"$TMPDIR/b31 $TMPDIR/e31.bin {p} {n_isl} 12 > $OUT/res/bench_p{p}_v31.txt && $TMPDIR/b32 $TMPDIR/e32.bin {p} {n_isl} 12 > $OUT/res/bench_p{p}_v32.txt && "
+                     f"$TMPDIR/b31 $TMPDIR/e31b.bin {p} {n_isl} 12 >> $OUT/res/bench_p{p}_v31.txt && $TMPDIR/b32 $TMPDIR/e32b.bin {p} {n_isl} 12 >> $OUT/res/bench_p{p}_v32.txt && "
+                     f"cmp $TMPDIR/e31.bin $TMPDIR/e32.bin && echo BENCH_DUMPS_IDENTICAL > $OUT/res/bench_p{p}_verdict.txt")
+    bench.append(f"Rscript --vanilla preflight_b4.R {CORE['v32']} > $OUT/res/preflight_b4.txt 2>&1")
+    write("bench.tsv", bench)

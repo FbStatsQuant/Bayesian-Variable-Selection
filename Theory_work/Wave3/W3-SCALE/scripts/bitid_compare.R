@@ -14,7 +14,8 @@ stem <- function(l) sub(paste0("__", l, "\\.rec\\.rds$"), "", list.files(dir, pa
 sa <- stem(la); sb <- stem(lb)
 valid_fp <- function(fp) is.list(fp) && identical(fp$version, 2L) && is.character(fp$all) && length(fp$all) == 1 && !is.na(fp$all) &&
   grepl("^[0-9a-f]{64}$", fp$all) && is.character(fp$top) && length(fp$top) >= 1 && !is.null(names(fp$top)) && is.list(fp$delivery)
-adm <- function(fp) list(fp$delivery$preflight$exceeds, fp$delivery$preflight_escalation$exceeds)
+# admission decisions: refused before the run, refused before an escalation, refused by the post-setup LS0 charge
+adm <- function(fp) list(fp$delivery$preflight$exceeds, fp$delivery$preflight_escalation$exceeds, isTRUE(fp$delivery$preflight_ls0$exceeds))
 rows <- list()
 for (s in sort(union(sa, sb))) {
   fa <- file.path(dir, paste0(s, "__", la, ".rec.rds")); fb <- file.path(dir, paste0(s, "__", lb, ".rec.rds"))

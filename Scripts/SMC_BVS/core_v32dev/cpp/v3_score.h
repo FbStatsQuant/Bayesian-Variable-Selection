@@ -159,6 +159,54 @@ inline bool chol_inplace(std::vector<double>& A, int k) {
   }
   return true;
 }
+// v3.2-dev (B1, output-preserving bit for bit): the Cholesky factors of two k x k matrices H and A at once, lower
+// triangles only. Every entry is computed by the expressions of chol_inplace with the same operand order:
+//   pivot  L_jj = sqrt(M_jj - sum_{t<j} L_jt^2),   below  L_ij = (M_ij - sum_{t<j} L_it L_jt) / L_jj,
+// the subtractions in the order t = 0..j-1. Only the schedule differs: for a column j the entries of two rows i of
+// both matrices are accumulated in the same pass over t (four independent accumulators), so their subtraction chains
+// overlap in time. Returns false iff chol_inplace(H) or chol_inplace(A) would return false (a non-positive or
+// non-finite pivot in either matrix); after a failure the contents are unspecified, as callers refill the buffers.
+inline bool chol2_inplace(std::vector<double>& Hm, std::vector<double>& Am, int k) {
+  double* H = Hm.data(); double* A = Am.data();
+  for (int j = 0; j < k; ++j) {
+    double* hj = H + (size_t)j * k; double* aj = A + (size_t)j * k;
+    double dh = hj[j], da = aj[j];
+    for (int t = 0; t < j; ++t) { dh -= hj[t] * hj[t]; da -= aj[t] * aj[t]; }
+    if (!(dh > 0) || !std::isfinite(dh)) return false;
+    if (!(da > 0) || !std::isfinite(da)) return false;
+    const double Lh = std::sqrt(dh), La = std::sqrt(da);
+    hj[j] = Lh; aj[j] = La;
+    int i = j + 1;
+    for (; i + 3 < k; i += 4) {
+      double* h0 = H + (size_t)i * k; double* h1 = h0 + k; double* h2 = h1 + k; double* h3 = h2 + k;
+      double* a0 = A + (size_t)i * k; double* a1 = a0 + k; double* a2 = a1 + k; double* a3 = a2 + k;
+      double s0 = h0[j], s1 = h1[j], s2 = h2[j], s3 = h3[j], q0 = a0[j], q1 = a1[j], q2 = a2[j], q3 = a3[j];
+      for (int t = 0; t < j; ++t) {
+        const double ht = hj[t], at = aj[t];
+        s0 -= h0[t] * ht; s1 -= h1[t] * ht; s2 -= h2[t] * ht; s3 -= h3[t] * ht;
+        q0 -= a0[t] * at; q1 -= a1[t] * at; q2 -= a2[t] * at; q3 -= a3[t] * at;
+      }
+      h0[j] = s0 / Lh; h1[j] = s1 / Lh; h2[j] = s2 / Lh; h3[j] = s3 / Lh;
+      a0[j] = q0 / La; a1[j] = q1 / La; a2[j] = q2 / La; a3[j] = q3 / La;
+    }
+    for (; i + 1 < k; i += 2) {
+      double* h0 = H + (size_t)i * k; double* h1 = h0 + k; double* a0 = A + (size_t)i * k; double* a1 = a0 + k;
+      double s0 = h0[j], s1 = h1[j], q0 = a0[j], q1 = a1[j];
+      for (int t = 0; t < j; ++t) {
+        const double ht = hj[t], at = aj[t];
+        s0 -= h0[t] * ht; s1 -= h1[t] * ht; q0 -= a0[t] * at; q1 -= a1[t] * at;
+      }
+      h0[j] = s0 / Lh; h1[j] = s1 / Lh; a0[j] = q0 / La; a1[j] = q1 / La;
+    }
+    for (; i < k; ++i) {
+      double* h0 = H + (size_t)i * k; double* a0 = A + (size_t)i * k;
+      double s0 = h0[j], q0 = a0[j];
+      for (int t = 0; t < j; ++t) { s0 -= h0[t] * hj[t]; q0 -= a0[t] * aj[t]; }
+      h0[j] = s0 / Lh; a0[j] = q0 / La;
+    }
+  }
+  return true;
+}
 // Solve L w = b (forward) with L lower-triangular row-major.
 inline void forward_solve(const std::vector<double>& L, int k, const double* b, double* w) {
   for (int i = 0; i < k; ++i) { double s = b[i]; for (int t = 0; t < i; ++t) s -= L[i * k + t] * w[t]; w[i] = s / L[i * k + i]; }
@@ -210,7 +258,7 @@ inline bool householder_lower(std::vector<double>& M, int m, int k, std::vector<
 class Scorer {
  public:
   const Data* D;
-  std::vector<double> bufH, bufA, w, beta, tmp;
+  std::vector<double> bufH, bufA, bufG, w, beta, tmp;   // bufG: v3.2-dev (B1) scratch for the sub-Gram (was a local vector)
   explicit Scorer(const Data* d) : D(d) {}
 
   // Q by the non-negative form (M §6.13): Q = ||y - X_S b||^2 + (||X_S b||^2 + ||b||^2)/n, b = n H^{-1} z_S.
@@ -230,30 +278,35 @@ class Scorer {
     return rss + (fit2 + b2) / n;
   }
 
-  // Fill Gs (row-major k x k) from the stored Gram (route chol) or recomputed from X (route chol_refactor).
+  // Fill the lower triangle of Gs (row-major k x k) from the stored Gram (route chol) or recomputed from X (route chol_refactor).
   void gram_sub(const std::vector<int>& S, bool from_X, std::vector<double>& Gs) {
     int k = (int)S.size(), n = D->n;
-    Gs.assign((size_t)k * k, 0.0);
+    Gs.resize((size_t)k * k);   // v3.2-dev (B1): lower triangle only (b <= a); the upper triangle is never read
     for (int a = 0; a < k; ++a)
       for (int b = 0; b <= a; ++b) {
         double g;
         if (!from_X) g = D->Gat(S[a], S[b]);
         else { const double* xa = D->col(S[a]); const double* xb = D->col(S[b]); g = 0; for (int i = 0; i < n; ++i) g += xa[i] * xb[i]; }
-        Gs[a * k + b] = g; Gs[b * k + a] = g;
+        Gs[a * k + b] = g;
       }
   }
 
   // Cholesky route: H = (n+1) G_S + I, A = G_S + I.
   bool try_chol(const std::vector<int>& S, bool from_X, ScoreOut& o, std::vector<double>& LH) {
     int k = (int)S.size(); double n1 = D->n + 1.0;
-    std::vector<double> Gs; gram_sub(S, from_X, Gs);
-    bufH.assign((size_t)k * k, 0.0); bufA.assign((size_t)k * k, 0.0);
-    for (int a = 0; a < k; ++a) for (int b = 0; b < k; ++b) {
+    // v3.2-dev (B1, output-preserving): the sub-Gram goes to the member scratch bufG (same values, no allocation per
+    // score), and the v3.1 copy "LH = bufH" is dropped: no caller reads LH after try_chol (finish_from_factors and
+    // q_nonneg are given bufH itself). The parameter LH is kept for the interface.
+    // Only the lower triangles of H and A are formed: chol_inplace, forward_solve, backward_solve and the diagonal
+    // reads of finish_from_factors never touch the upper triangle. The two factorisations run together (chol2_inplace).
+    std::vector<double>& Gs = bufG; gram_sub(S, from_X, Gs);
+    bufH.resize((size_t)k * k); bufA.resize((size_t)k * k);
+    for (int a = 0; a < k; ++a) for (int b = 0; b <= a; ++b) {
       bufH[a * k + b] = n1 * Gs[a * k + b] + (a == b ? 1.0 : 0.0);
       bufA[a * k + b] = Gs[a * k + b] + (a == b ? 1.0 : 0.0);
     }
-    if (!chol_inplace(bufH, k) || !chol_inplace(bufA, k)) return false;
-    LH = bufH;
+    if (!chol2_inplace(bufH, bufA, k)) return false;
+    (void)LH;
     finish_from_factors(S, bufH, bufA, o);
     return std::isfinite(o.logm);
   }

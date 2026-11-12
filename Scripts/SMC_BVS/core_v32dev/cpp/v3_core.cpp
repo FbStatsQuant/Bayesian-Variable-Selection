@@ -466,7 +466,7 @@ List cpp_final_run(SEXP setup, NumericVector grid, List ro, double seed, SEXP in
       hpm_before_ls0 = List::create(_["model"] = to_orig(D, led.hpmS), _["F"] = led.hpmF,
                                     _["provenance"] = event_to_list(led.hpm_ev, led.hpm_mech));
       auto t1 = Clock::now();
-      ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+      ModeResult m = h->start_mode_cached(o.ls0_tie_dp);   // = start_mode(st, 1000000, o.ls0_tie_dp)
       smode = List::create(_["model"] = to_orig(D, m.S), _["log_gamma0"] = m.lg0, _["log_pi0"] = m.lg0 - st.logZbar0,
                            _["ties"] = (double)m.ties, _["truncated"] = m.truncated, _["tie_dp_used"] = m.tie_dp_used,
                            _["tie_rule"] = o.ls0_tie_dp ? "enumeration (cap 1e6), e4 tie-aware DP on truncation" : "enumeration (cap 1e6), v3 rule");
@@ -757,6 +757,16 @@ List cpp_dup_components(SEXP ctx) {
   std::vector<std::vector<int>> out;
   for (auto& kv : comp) if (kv.second.size() >= 2) out.push_back(kv.second);
   return models_to_list(D, out);
+}
+
+// v3.2-dev (B4): size of the start mode (the LS0 centre) for the post-setup LS0 preflight. Reads no uniforms and
+// scores nothing; the mode is cached in the setup holder and reused by LS0.
+// [[Rcpp::export]]
+List cpp_start_mode_size(SEXP setup, bool tie_dp) {
+  HPtr h = get_holder(setup);
+  if (!h->has_start) stop("setup required");
+  const ModeResult& m = h->start_mode_cached(tie_dp);
+  return List::create(_["size"] = (int)m.S.size(), _["ties"] = (double)m.ties, _["truncated"] = m.truncated, _["tie_dp_used"] = m.tie_dp_used);
 }
 
 // One shared fit clock; no statistical setting or random draw is changed.
