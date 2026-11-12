@@ -1,0 +1,1 @@
+1	Rscript --vanilla profile_fit.R --core-dir $CODE --design s3gen --p 5000 --seed 20261111 --mode full --mem-gb 12 --hours 23 --out $OUT/res/prof_p5k.rds

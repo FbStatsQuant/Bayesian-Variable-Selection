@@ -1,0 +1,1 @@
+1	Rscript --vanilla profile_fit.R --core-dir $CODE --design s3gen --p 20000 --seed 20261111 --mode island --n-island 2500 --mem-gb 32 --hours 11 --out $OUT/res/prof_p20k.rds

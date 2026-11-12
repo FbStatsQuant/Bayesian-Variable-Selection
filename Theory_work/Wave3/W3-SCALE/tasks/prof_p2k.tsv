@@ -1,0 +1,1 @@
+1	Rscript --vanilla profile_fit.R --core-dir $CODE --design s3gen --p 2000 --seed 20261111 --mode full --mem-gb 8 --hours 4.75 --out $OUT/res/prof_p2k.rds
