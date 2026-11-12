@@ -198,7 +198,7 @@
 - 2026-11-12 W3-START2 CP1 ACCEPTED (branch 2c66e61): STATEMENT v1.4.1 (BT2 P1–P4) locked, SL1 + SC1 Sol clean. GO to
   CP2/final per the pre-approved brief; one repair attempt per broken step, else that P-item → open item. Council Opus seat
   and Claude helpers on claude-personal today (CW unavailable).
-- 2026-11-12 ~09:30 CT acceptance audit (Opus; clones): R05 MERGED to main (3ce2e27; 146/146; 0 ERROR). W3-START
+- 2026-11-12 ~07:50 CT acceptance audit (Opus; clones): R05 MERGED to main (3ce2e27; 146/146; 0 ERROR). W3-START
   ACCEPTABLE (21 claims); W3-MISR, W3-PSHARP, W3-RM2 refused on record-keeping only (no per-claim seat tables; MISR 3
   'remark' rows; RM2 malformed REPORT fence + 7 post-council edits inside MANIFEST_R1). Cross-cutting: manifests verify
   only on the frozen mixed-EOL tree. Decisions (consultant concurs, its advice adopted in full):
