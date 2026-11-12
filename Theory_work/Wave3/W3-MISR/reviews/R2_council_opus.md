@@ -116,3 +116,24 @@ match the output files, and the code pins match the code. The remaining items ar
 hygiene. **Score 8.9.**
 
 COUNCIL-VERDICT round=R2 manifest=217d6708dfee945fa0416171268e08e359e0e7a3fde5bd169756431143c51103 seat=opus score=8.9 gates=PASS
+
+## Addendum — per-claim decisions (seat opus, round R2; 2026-11-12; same seat model, fresh thread; no rescoring)
+
+| id | decision |
+|---|---|
+| W3-MISR:R' | ACCEPT |
+| W3-MISR:MIS(i) | ACCEPT |
+| W3-MISR:MIS(i') | ACCEPT |
+| W3-MISR:MIS(ii) | ACCEPT |
+| W3-MISR:Cor-G(a) | ACCEPT |
+| W3-MISR:Cor-G(b) | ACCEPT |
+| W3-MISR:Cor-H | ACCEPT |
+
+Where examined:
+- W3-MISR:R' — gate 1 (line 11: invariance R.1, reduction in law R.4, projective form and TV bound R.5); gate 5 (line 28, constants of (i) independent of v, table R.6); diff verdict "R′(c) caveat" (line 49) and "Code pins (a″), R.3" (line 52).
+- W3-MISR:MIS(i) — gate 1 (line 11, MIS-R (i), M.1); gate 5 (line 28); gate 4 (line 24, C-MIS / W3-POST2 inputs).
+- W3-MISR:MIS(i') — gate 1 (lines 11–17, per-n assemblies of (i′)(a)–(d), M.2, incl. the restated (a) over 𝒦⁰′_n); gate 2 (line 18); diff verdict "§3(a) / M.2(a)" (line 44); F1 (MINOR, statement wording) and F2 (MINOR, SOP status quotes) non-blocking.
+- W3-MISR:MIS(ii) — gate 1 (line 11, conditioning of (ii), M.3); gate 5 (line 28, c″ ≥ cn/(n − 1)).
+- W3-MISR:Cor-G(a) — gate 1 (line 11, "G … correct"); gate 3 (line 21, G.1 κ_n defined off the null event); diff verdict "G.1 null event" (line 53).
+- W3-MISR:Cor-G(b) — gate 1 (line 11, "G … correct"); gate 4 (line 24, C-MIS statuses and lemma-header inputs); diff verdict "G.4 rename t → a_n" (line 53).
+- W3-MISR:Cor-H — gate 1 (line 11, "H … correct"); gate 5 (line 30, C_H = C_H(s, A), C_H′ = 1 + C_H/4, G.3).

@@ -37,3 +37,23 @@ Counts: **0 FATAL / 0 MAJOR / 1 MINOR / 1 NIT**.
 Overall score: **9.2 / 10.0**. All six gates PASS for the reviewed package, conditional on its expressly declared W3-POST2 inputs. No source, theorem, numerical output or git state was changed; only this review was written.
 
 COUNCIL-VERDICT round=R2 manifest=217d6708dfee945fa0416171268e08e359e0e7a3fde5bd169756431143c51103 seat=sol score=9.2 gates=PASS
+
+## Addendum — per-claim decisions (seat sol, round R2; 2026-11-12; same seat model, fresh thread; no rescoring)
+
+| id | decision |
+|---|---|
+| W3-MISR:R' | ACCEPT |
+| W3-MISR:MIS(i) | ACCEPT |
+| W3-MISR:MIS(i') | ACCEPT |
+| W3-MISR:MIS(ii) | ACCEPT |
+| W3-MISR:Cor-G(a) | ACCEPT |
+| W3-MISR:Cor-G(b) | ACCEPT |
+| W3-MISR:Cor-H | ACCEPT |
+
+Where examined: W3-MISR:R': Gate 1 examines R_reduction.md:10–37,61–87 (invariance, equivariance, equality in law, projective factorisation and total variation); Gate 3 checks the projective scope restriction. No blocking finding against this claim is raised.
+W3-MISR:MIS(i): Gate 1 examines M_misr.md:23–45 (per-n Claim C and posterior inequalities); Gates 2 and 5 check the per-n hypotheses and variance-free constants. No blocking finding against this claim is raised.
+W3-MISR:MIS(i'): Gate 1 examines M_misr.md:77–129 (size-tail, strict-superset, coordinate and localisation assemblies); Gates 2 and 5 check the larger class, coordinate margins and separate threshold; Diff verdict explicitly examines the strengthened clause (a). No blocking finding against this claim is raised.
+W3-MISR:MIS(ii): Gate 1 examines M_misr.md:133–164 (jointly measurable freezing, finite slicing and tightness); Gate 3 checks configuration measurability and conditioning. No blocking finding against this claim is raised.
+W3-MISR:Cor-G(a): Gate 1 examines G_corollaries.md:26–61 (Gaussian residual independence); Gate 3 checks the null-set and conditioning conventions. No blocking finding against this claim is raised.
+W3-MISR:Cor-G(b): Gate 1 examines G_corollaries.md:26–61 (population-envelope event); Gate 2 explicitly checks projected sparsity and the relative population beta-min envelope; Gate 5 checks its declared sequence-dependent onset. No blocking finding against this claim is raised.
+W3-MISR:Cor-H: Gate 1 examines G_corollaries.md:69–113 (parameter contraction by scaling); Gate 5 explicitly checks Hellinger rates and unit-noise constants; Gate 3 checks that H is not extended to PR. No blocking finding against this claim is raised.
