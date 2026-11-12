@@ -61,3 +61,12 @@ Agents started so far (model, provider, role) are listed at each step. Claude-in
   HOLDS.md re-read: empty. Commit, normalise the working copies of the ticket folder to a fresh checkout (line
   endings, so the frozen hashes match HQ's checkout), freeze MANIFEST_R1, then the council: [agent 6] seat sol =
   gpt-6.1-sol (codex, high); [agent 7] seat opus = Claude Opus 5.5 (claudeAgent = Claude Work, high).
+- 23:31 (11-11) MANIFEST_R1 frozen: d3f5c91f…4c2d (36 files, 21 inputs); commit 2f360ed. Council launched.
+- 23:35 Seat sol returned: 9.3, six gates PASS, 0/0/0/1 NIT. Seat opus: the launch died on the Claude Work rate limit
+  (no output); the lead's run died with it.
+- 2026-11-12 04:02 CST Resumed by HQ. HOLDS.md empty; `manifest.py verify` OK; no opus output on disk. [agent 8] seat
+  opus relaunched on the same manifest: Claude Opus 5.5, claudeAgent (Claude Work), effort high, blind.
+- 04:12 Seat opus returned: 8.7, six gates PASS, 0 FATAL / 0 MAJOR / 5 MINOR / 8 NIT. `manifest.py bind`: OK (council
+  cell in `reviews/R1_disposition.md`). **Council R1 PASSED.** Findings are wording/bookkeeping; not applied (content
+  frozen) — listed with proposed fixes for the CP3 step. `manifest.py verify` OK.
+- 04:15 CHECKPOINT_2.md written; commit; end of run at CP2.
