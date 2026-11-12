@@ -80,3 +80,4 @@ Thm5-LH	SOP:TH03	as above
 T02(ii♯)	SOP:TH09	T02 belongs to the T01-T03 package behind T03♯
 R03 §5A construction	-	review-internal construction (W3-POST reviews/R03), not a registered claim
 PROGRAM item 2	-	Wave 3 program premise (assumption A:P-START), not a claim
+C-MIS:GDb	C-MIS:GD(b)	bracket-free alias (HQ 2026-11-12): the conditional-on parser cannot read ids with parentheses
