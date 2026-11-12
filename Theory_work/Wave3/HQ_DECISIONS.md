@@ -195,3 +195,6 @@
 - 2026-11-12 W3-PSHARP CP3-PASS (branch 11524d0; council R2 sol 9.2 / opus 9.3, manifest 4513e05a…, bind OK; reconciliation
   11/11 resolved). Claims S, A, B, C → acceptance audit (with W3-START, W3-MISR, W3-RM2). Editorial batch E1–E9 applied
   only after acceptance, with the pass-1/2/3 MINORs, under one Sol "editorial only" diff check (rule 15).
+- 2026-11-12 W3-START2 CP1 ACCEPTED (branch 2c66e61): STATEMENT v1.4.1 (BT2 P1–P4) locked, SL1 + SC1 Sol clean. GO to
+  CP2/final per the pre-approved brief; one repair attempt per broken step, else that P-item → open item. Council Opus seat
+  and Claude helpers on claude-personal today (CW unavailable).
