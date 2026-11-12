@@ -4,7 +4,38 @@ Implementer: Claude Opus 5.5 (claude-personal, effort high). Worktree `C:/Users/
 `infra/R06-eol` (HEAD 0d7e94c). **Uncommitted; no git state changed** (HQ commits). Reviewer: Sol (codex gpt-6.1-sol,
 high), 2 rounds: `R06FIX_review_sol.md`.
 
-## Result
+## Update 2026-11-12 (HQ ruling after Sol recheck 2: strict whitelist, fail closed)
+- **Decision reader replaced** (`bvsreg.py`: `DECISION_ACCEPT`, `decision_value`, `seat_table`, `_strict_cells`,
+  `evidence_raw_text`, `_row_problems`). The decision cell, trimmed of surrounding spaces / tabs and table pipes only,
+  must be exactly `ACCEPT` (legacy: exactly `accepted` / `Accepted` / `ACCEPTED`), or `NOT-EXAMINED` (not accepted).
+  Anything else is NOT accepted, and a problem names the claim. A row that is incomplete, split (CR, VT, FF, FS/GS/RS,
+  NEL, U+2028/9), continued (empty id), has an escaped pipe, a wrong width or a non-empty cell after the decision is
+  NOT accepted; a continuation also refuses the previous row's claim. The header must be exact and be followed
+  directly by a same-width delimiter row. A header-like line that fails this still counts as a table, but every row
+  in it is refused, so a bad header can't fall back to the cell-only rule. Review files are read raw (UTF-8, CRLF/LF
+  only), and table problems are attached to the claim they concern. LIFECYCLE §4.1 item 2 updated.
+- **(1) Sol recheck 2, 95 cases** (`R06FIX/decision_cases.json`): all 82 non-acceptance cases are read as Sol
+  expected (0 acceptance errors). 13 of Sol's positive controls are refused by the whitelist **by design**: #3 `accept`,
+  #4 `AcCePt`, #5 `aCcEpTeD`, #7 `**ACCEPT**`, #8 `` `accepted` ``, #9–#14 and #48 (remark forms), #94 (harmless
+  remarks column). Every refusal except an exact NOT-EXAMINED names the claim. Sol's five staged variants, plus a
+  pipe-less row and an escaped pipe, are REFUSED; plain ACCEPT passes.
+- **(4) Sol parser round** (`R06FIX_parser_sol.md`, codex gpt-6.1-sol high): 95/95; 116 new cases, of which 9 were
+  read as accepted against the spec, in three MAJOR groups: (i) separators erased by the text-mode file read; (ii)
+  delimiter-shaped lines skipped anywhere; (iii) lenient header. **All three fixed after that round:**
+  raw review reading; delimiter only directly below the header; exact header, a malformed one refusing its rows.
+  The 116 cases (`R06FIX/decision_cases_parser.json`) now read as Sol expected except #110 (a table with no delimiter
+  row is refused by design). File-level separator cases (9 characters) and 5 staged variants are refused. **These
+  round-4 fixes have not had a Sol round** (HQ ordered one Sol round; it is used).
+- **(2) Real tables** (only W3-START has per-claim tables; 84 decisions in 4 council reviews): **49 now read NOT
+  accepted**. R1_council_sol and R2_council_sol: all 21 claims each (non-empty `Reason / proof checked` / `Basis`
+  column). R1_council_opus: EX, F4, LEAK. R2_council_opus: BR, EX, F1, OVL (cells `accepted with non-blocking
+  remarks (…)` / `accepted (…)`). Consequence: W3-START staged acceptance on fresh LF / CRLF clones is now
+  **REFUSED** (67 A4 errors, all from the seat tables), where commit 4952705 passed it. Not loosened; per HQ, an
+  ACCEPT / NOT-EXAMINED addendum (R2 seats) will fix it.
+- **(3)** Suite **169/169 PASS, exit 0**; `check.py --quiet` 406 claims **0 ERROR**. Regression on HEAD: old vs new
+  tools give identical findings (401 check, 1,783 acceptance).
+
+## Result (before the update)
 - Suite `test_lifecycle.py`: **164/164 PASS, exit 0** (146 before + 18 new R06 results). `check.py --quiet`: 406 claims,
   **0 ERROR** (184 WARN, 217 INFO).
 - Sol round 1: 2 MAJOR (F1 CR-variant collision; F2 `ACCEPT=NO` read as acceptance), both fixed. Sol round 2: F1
@@ -41,9 +72,8 @@ whole checkpoint. Now:
   contradiction is not accepted.
 - A second `COUNCIL-VERDICT` line (same or another digest) refuses A4 and `bind`. This code is unchanged; it is now
   tested for addenda.
-- Closed decision grammar (`decision_accepts`): `accept` / `accepted` / `accepted with non-blocking remarks`, plus at
-  most one balanced parenthetical remark that carries no disposition phrase. All 84 real decision cells on the four
-  branches read the same as under the R05 parser (0 differences).
+- Decision reader: superseded by the strict whitelist (see the update at the top). The closed grammar described
+  in earlier rounds was replaced.
 - Safeguard 4 now requires each seat to accept every checkpoint id with a checked label, and every id a seat accepted
   to be in the checkpoint. A NOT-EXAMINED id may stay in the checkpoint only without a checked label.
 
@@ -60,11 +90,13 @@ Regression on HEAD: old vs new tools give identical `check.py --json` findings (
 `check.py --acceptance <all 406 ids> --json` findings (1,783).
 
 ## 4. Open for HQ
-- **R2-F2 fix is not Sol-reviewed.** It has regressions in the suite: the parser on Sol's 4 strings plus more, and a
-  staged checkpoint-path refusal of `accepted (not accepted)`. The real tables are unchanged (0/84 differences). HQ may
-  accept this, or order one narrow Sol check of `decision_accepts`.
-- The grammar is fail-closed: a seat writing e.g. `Accepted.` or `accepted unconditionally` is NOT accepted. Addendum
-  briefs should prescribe exactly `ACCEPT` / `NOT-EXAMINED`.
+- **The round-4 parser fixes have not had a Sol round** (regressions are in the suite). HQ may accept this, or order
+  one more narrow Sol run of `BRIEF_sol_parser.md`.
+- W3-START needs ACCEPT / NOT-EXAMINED addenda (both R2 seats) before `--record`. Addendum tables must be exactly
+  `| id | decision |`, then `|---|---|`, then rows `| <id> | ACCEPT |` or `| <id> | NOT-EXAMINED |`, with no other
+  columns, a blank line before and after, and remarks outside the table.
+- Every malformed table problem without a claim id (e.g. a broken header) refuses all of that seat's claims: fail
+  closed.
 - The clone test (`R06 every MANIFEST_*.txt …`) reads the local refs theory/W3-{START,PSHARP,MISR,RM2} (or
   origin/…). An absent branch is allowed only if HEAD carries its ticket folder (merged). It adds ~1–2 min to the
   suite. The count grew from 52 to 56 checks during this run as ticket branches moved, so the test is not pinned to
@@ -72,7 +104,7 @@ Regression on HEAD: old vs new tools give identical `check.py --json` findings (
 
 ## Files
 `Theory_work/Wave3/tools/manifest.py`; `Theory_work/INFRA/tools/bvsreg.py`; `Theory_work/INFRA/tools/test_lifecycle.py`
-(block "INFRA R06" at the end); `Theory_work/INFRA/LIFECYCLE.md` (§4.1); `Theory_work/INFRA/R06FIX/{BRIEF_sol.md,
+(block "INFRA R06" at the end); `Theory_work/INFRA/LIFECYCLE.md` (§4.1); `Theory_work/INFRA/R06FIX/{decision_cases.json, decision_cases_parser.json, BRIEF_sol_parser.md, R06FIX_parser_sol.md, R06FIX_recheck2_sol.md, BRIEF_sol.md,
 BRIEF_sol_recheck.md, R06FIX_review_sol.md, REPORT.md}`. Scratch: `C:/Users/felip/AppData/Local/Temp/claude/
 b6670484aa90e31a/67fe9880-b706-4152-ab57-f9faa4db5efd/scratchpad` (survey / dry-run scripts and logs). Sol's scratch:
 `C:/Users/felip/AppData/Local/Temp/r6s-7812`, `C:/Users/felip/AppData/Local/Temp/r6s2-112`.

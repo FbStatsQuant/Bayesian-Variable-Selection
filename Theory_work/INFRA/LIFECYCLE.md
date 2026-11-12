@@ -276,13 +276,21 @@ then also requires:
    whose status source is that file) with a checked label (any status not explicitly below checked — open, partial /
    conditional, proved-unchecked — an empty status included) is accepted by EACH council seat in its per-claim table,
    and every id a seat accepted is in the checkpoint — a Markdown table with header `| id | decision |` (or
-   `| Id | Disposition | … |`), a local id read in the ticket; a row is accepted iff its decision is the word
-   `accept`, `accepted` or `accepted with non-blocking remarks` (case-insensitive, emphasis ignored), optionally
-   followed by ONE parenthetical remark to the end of the cell that carries no disposition (no `not accepted` /
-   `not examined` / reject- / withdraw- / refus- / declin- / retract- / fail- / `pending` / `blocking`, and not
-   starting with a bare no / not / never / none); e.g. `ACCEPT`, `accepted (F-1, F-2 verified; AR(1) correctly not
-   claimed)`. Anything else is not an acceptance: `NOT-EXAMINED`, `not accepted`, `acceptable`, `ACCEPT=NO`,
-   `ACCEPT : NO`, `accepted, no`, `accepted (not accepted)`, `accepted with remarks; withdrawn`. No extra checked id, no missing id; a review without such a
+   `| Id | Disposition | … |`), a local id read in the ticket. Decisions are read by a **strict whitelist, fail
+   closed** (INFRA R06, HQ ruling after Sol recheck 2): the decision cell, trimmed of surrounding spaces / tabs and
+   the table pipes and nothing else (no case or Unicode folding, no emphasis removal), must be exactly `ACCEPT`
+   (legacy tables: exactly `accepted`, `Accepted` or `ACCEPTED`) to accept, or `NOT-EXAMINED`; any other content
+   (`accept`, `**ACCEPT**`, `ACCEPT.`, `accepted (F-1 verified)`, `accepted with non-blocking remarks`, …) is NOT
+   accepted and refused with a message naming the claim. The header must be exact (a complete `|`-bounded line, first
+   cell exactly `id` / `claim` / `claim id`, second exactly `decision` / `disposition`, case-insensitive, no emphasis or
+   extra pipes) and directly followed by a delimiter row (`|---|---|`, optional `:`) of the same width; a header-like
+   line that fails this still counts as a table, and all its rows read as NOT accepted. Review files are read raw
+   (UTF-8, CRLF and LF the only line ends), so a CR, NEL or U+2028 in the file stays inside the row it splits. The
+   table runs from its header to the first blank line and every other line in it must be a complete row: starts and ends with `|`, no escaped pipe, no line / paragraph separator
+   (CR, VT, FF, NEL, U+2028, U+2029, …), the header's number of cells, every cell after the decision EMPTY (remarks go
+   outside the table). A row continued or split (an incomplete line, a row without an id, a separator inside it)
+   makes that row's claim and the previous row's claim NOT accepted; an id listed twice with different readings is
+   NOT accepted. No extra checked id, no missing id; a review without such a
    table is refused. An id the seats did not accept may stay in the checkpoint only without a checked label (INFRA
    R06: a NOT-EXAMINED claim that lost its label).
 3. **Cited rounds resolve and bind.** Each review round cited in the claim's status line (the line(s) of
@@ -300,7 +308,7 @@ and the seat's own review; rows `ACCEPT` / `NOT-EXAMINED` only, no rescoring). T
 outcome: an addendum with a second `COUNCIL-VERDICT` line (same or another digest) makes the review contradictory and
 refuses A4. An id listed in the body and the addendum with different decisions is not accepted. When ANY seat's review
 of the round has a per-claim table, a checked claim whose status source is NOT its own checkpoint must also be accepted
-in a table of EVERY seat's review (a NOT-EXAMINED, missing or contradictory id is refused); a council without any table
+in a table of EVERY seat's review (a NOT-EXAMINED, unreadable, missing or contradictory id is refused); a council without any table
 keeps the cell-only rule. `ingest.py claims <carrier>` reads REGISTRY blocks (`.md`, paths relative to its folder unless
 they start with `Theory_work/`) or JSONL (repo-relative paths) from a carrier file anywhere, including outside the
 frozen manifest (e.g. `reviews/` or `registry/fragments/`): the carrier itself is never a coverage input, but the

@@ -1294,66 +1294,163 @@ def _plain(c: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"[*`]", "", c)).strip()
 
 
-# Sol R06FIX F2 / R2-F2: a CLOSED decision grammar. A decision accepts iff the whole cell (Markdown emphasis removed,
-# whitespace collapsed, case-insensitive) is `accept`, `accepted` or `accepted with non-blocking remarks`, optionally
-# followed by ONE parenthetical remark running to the end of the cell with balanced parentheses, and the remark contains
-# no disposition phrase (`not accepted`, `not examined`, reject-, withdraw-, refus-, declin-, retract-, fail-, `pending`,
-# a standalone `blocking`) and does not begin with a bare negation (`no`, `not`, `never`, `none`). Anything else -
-# `ACCEPT=NO`, `ACCEPT : NO`, `accepted, no`, `accepted with remarks; withdrawn`, `accepted (not accepted)` - is not.
-_ACCEPT_HEAD = re.compile(r"(?:accept|accepted|accepted with non-blocking remarks)(?: ?(\(.*\)))?")
-_REMARK_BAD = re.compile(r"(?<![\w-])(?:not[ -]+(?:accept\w*|examined)|unaccept\w*|reject\w*|withdr[ae]w\w*|refus\w*|"
-                         r"declin\w*|retract\w*|fail\w*|pending|blocking)(?![\w-])")
-_REMARK_NEG_START = re.compile(r"\(\s*(?:no|not|never|none)(?![\w-])")
+# INFRA R06 (HQ ruling 2026-11-12, after Sol R06FIX recheck 2): per-claim decision cells are read by a STRICT
+# WHITELIST and fail closed. The decision cell, trimmed of its surrounding spaces / tabs and table pipes and NOTHING else
+# (no case or Unicode folding, no Markdown emphasis removal), must equal exactly one of:
+#   ACCEPT                                   -> accepted
+#   accepted | Accepted | ACCEPTED           -> accepted (legacy tables; nothing else in the cell)
+#   NOT-EXAMINED                             -> not accepted
+# Any other content -> NOT accepted, with a problem naming the claim. A per-claim table runs from its header (exact,
+# see seat_table) and the delimiter row directly below it to the first blank line; every other line in between must be
+# a complete row: starts and ends with `|`, no escaped
+# pipe, no line / paragraph separator (CR, VT, FF, FS/GS/RS, NEL, U+2028, U+2029), as many cells as the header, every
+# cell after the decision empty (remarks are not read: put them outside the table). A malformed row, a row without an id
+# (continuation) or any other line inside the table makes the row's own id AND the previous row's id NOT accepted. An id
+# listed twice with different readings is NOT accepted.
+DECISION_ACCEPT = frozenset({"ACCEPT", "accepted", "Accepted", "ACCEPTED"})
+DECISION_NOT_ACCEPT = frozenset({"NOT-EXAMINED"})
+_ROW_BREAK = re.compile("[\r\x0b\x0c\x1c\x1d\x1e\x85  ]")
+_DELIM_CELL = re.compile(r":?-+:?")
+
+
+def _strict_cells(t: str):
+    """The cells of a complete table line (`t` already trimmed of spaces / tabs): it starts and ends with ONE `|`
+    boundary each, has no escaped pipe and no line / paragraph separator; cells trimmed of spaces / tabs only, empty
+    cells kept. None for anything else."""
+    if len(t) < 2 or not (t.startswith("|") and t.endswith("|")) or "\\|" in t or _ROW_BREAK.search(t):
+        return None
+    return [c.strip(" \t") for c in t[1:-1].split("|")]
+
+
+def evidence_raw_text(path: str, pin: str = "") -> str:
+    """A review file's text for per-claim table parsing: its raw bytes as UTF-8 (undecodable bytes -> U+FFFD), with NO
+    newline translation (Sol R06FIX parser test: a text-mode read turns CR, NEL, U+2028, ... into line breaks before
+    the row check sees them). Reads the pinned / staged / post-revert version like evidence_text."""
+    ref = pin or _READ_REF or ""
+    if not ref and POST_REVERT and _pcase(path) in POST_REVERT:
+        ref = POST_REVERT[_pcase(path)]
+        if ref == "-":
+            return ""
+    if ref:
+        try:
+            pr = subprocess.run(["git", "-C", ROOT, "show", f"{ref}:{path}"], capture_output=True, timeout=60)
+        except Exception:  # pragma: no cover
+            return ""
+        return pr.stdout.decode("utf-8", errors="replace") if pr.returncode == 0 else ""
+    fp = os.path.join(ROOT, path)
+    if not path or not os.path.isfile(fp):
+        return ""
+    with open(fp, "rb") as fh:
+        return fh.read().decode("utf-8", errors="replace")
+
+
+def decision_value(cell: str) -> str:
+    """'accept' | 'not-accept' (a known non-acceptance) | 'unknown' for one decision cell (whitelist above)."""
+    v = (cell or "").strip(" \t")
+    if v in DECISION_ACCEPT:
+        return "accept"
+    return "not-accept" if v in DECISION_NOT_ACCEPT else "unknown"
 
 
 def decision_accepts(cell: str) -> bool:
-    """Is a per-claim table decision cell an acceptance? (closed grammar above)"""
-    d = _plain(cell).lower()
-    m = _ACCEPT_HEAD.fullmatch(d)
-    if not m:
-        return False
-    rem = m.group(1) or ""
-    if rem:
-        depth = 0
-        for k, ch in enumerate(rem):
-            depth += (ch == "(") - (ch == ")")
-            if depth < 0 or (depth == 0 and k != len(rem) - 1):
-                return False  # unbalanced, or text after the remark's closing parenthesis
-        if depth != 0 or _REMARK_BAD.search(rem) or _REMARK_NEG_START.match(rem):
-            return False
-    return True
+    """Is a per-claim table decision cell an acceptance? (strict whitelist above)"""
+    return decision_value(cell) == "accept"
 
 
 def seat_table(text: str, ticket: str):
     """A council review's per-claim table(s) -> ({full claim id: accepted?}, [problems], number of tables). A
-    per-claim table is a Markdown table whose header's first cell is `id` (or `claim`, `claim id`) and second
-    `decision` (or `disposition`), case-insensitive, anywhere in the file: in the review body or in a dated addendum
-    appended after its COUNCIL-VERDICT line (INFRA R06; the verdict line stays the one binding outcome, and a second
-    verdict line is refused by manifest.verdict_problems). A row is accepted iff decision_accepts(its decision): `accept`,
-    `accepted` or `accepted with non-blocking remarks`, optionally with one parenthetical remark that carries no
-    disposition (`ACCEPT`, `accepted (F-1 verified)`); anything else (`NOT-EXAMINED`, `not accepted`, `acceptable`,
-    `ACCEPT=NO`, `ACCEPT : NO`, `accepted (not accepted)`, `accepted; withdrawn`) is not. Rows are split at LF only
-    (a Unicode line separator inside a row does not cut it short). A local id gets the ticket prefix. An id
-    listed twice with different decisions (e.g. body and addendum) is not accepted."""
-    dec, probs, tables, in_t = {}, [], 0, False
+    per-claim table starts at a header line whose first two cells read (leniently: emphasis, extra pipes and Unicode
+    spaces ignored) `id` / `claim` / `claim id` and `decision` / `disposition`, anywhere in the file: in the review
+    body or in a dated addendum appended after its COUNCIL-VERDICT line (the verdict line stays the one binding
+    outcome; a second verdict line is refused by manifest.verdict_problems). The header must ALSO be exact (a complete
+    line, first cell exactly one of those ids and second exactly decision / disposition, case-insensitive, spaces /
+    tabs trimmed only) and be followed directly by a delimiter row `|---|---|` of the same width; otherwise the table is
+    malformed and every row in it reads as NOT accepted. Rows are read by the strict whitelist above (fail closed); a
+    problem about one claim starts with `claim <id>: `; a problem about the table starts otherwise. Pass the RAW text
+    (evidence_raw_text); only CRLF is a line end besides LF. A local id gets the ticket prefix."""
+    dec, probs, tables = {}, [], 0
+    state, ncols, last, bad_table = None, 0, None, None
+
+    def full(cid):
+        return cid if ":" in cid else f"{ticket}:{cid}"
+
+    def refuse(cid, why):
+        probs.append(f"claim {cid}: {why}: read as NOT accepted")
+        dec[cid] = False
+
     for ln in (text or "").replace("\r\n", "\n").split("\n"):
-        cs = _cells(ln)
-        if not cs:
-            in_t = False
+        t = ln.strip(" \t")
+        if state is None:
+            cs = _cells(ln)
+            if len(cs) >= 2 and _plain(cs[0]).lower() in _ID_HEAD and _plain(cs[1]).lower() in _DECISION_HEAD:
+                tables += 1
+                sc = _strict_cells(t)
+                if sc is None or len(sc) < 2 or sc[0].lower() not in _ID_HEAD or sc[1].lower() not in _DECISION_HEAD:
+                    bad_table = ("its header is not exactly `| id | decision |` (first cell id / claim / claim id, "
+                                 "second decision / disposition; no emphasis, extra pipes or other characters)")
+                    ncols = len(sc) if sc else 0
+                else:
+                    bad_table, ncols = None, len(sc)
+                state, last = "delim", None
             continue
-        if len(cs) >= 2 and _plain(cs[0]).lower() in _ID_HEAD and _plain(cs[1]).lower() in _DECISION_HEAD:
-            in_t, tables = True, tables + 1
+        if not t:  # a blank line ends the table
+            if state == "delim" or bad_table:
+                probs.append(f"malformed per-claim table ({bad_table or 'no delimiter row after its header'}): its "
+                             "rows read as NOT accepted")
+            state, last, bad_table = None, None, None
             continue
-        if not in_t or len(cs) < 2 or re.fullmatch(r"[\s:|-]*", ln.strip()):
+        if state == "delim":
+            state = "rows"
+            sc = _strict_cells(t)
+            if sc is not None and len(sc) == ncols and all(_DELIM_CELL.fullmatch(c) for c in sc):
+                continue
+            bad_table = bad_table or "the line after its header is not a delimiter row `|---|---|` of the header's width"
+        rough = t[1:] if t.startswith("|") else t
+        own = _plain(rough.split("|")[0]) if "|" in t else ""
+        bad, cont = None, True  # cont: the fault may continue / split the PREVIOUS row too
+        if _ROW_BREAK.search(ln):
+            bad = "the row contains a line or paragraph separator (row split)"
+        elif not (t.startswith("|") and t.endswith("|") and len(t) >= 2):
+            bad = "a line inside the table is not a complete row (`| id | decision |`): continued or split row"
+        cells = None if bad else [c.strip(" \t") for c in t[1:-1].split("|")]
+        if cells is not None and not cells[0]:
+            bad = "a row without an id continues the previous row"
+        elif cells is not None:
+            cont = False
+            if "\\|" in t:
+                bad = "the row contains an escaped pipe"
+            elif len(cells) != ncols:
+                bad = f"the row has {len(cells)} cells, the table header {ncols}"
+            elif any(cells[2:]):
+                bad = "non-empty cell(s) after the decision (remarks are not read; write them outside the table)"
+            elif bad_table:
+                bad = f"the table is malformed: {bad_table}"
+        if bad:
+            hit = False
+            if cont and last:
+                refuse(last, bad + " (a line after this claim's row)")
+                hit = True
+            if own:
+                refuse(full(own), bad)
+                hit = True
+            if not hit:
+                probs.append(f"malformed per-claim table row {t[:60]!r}: {bad}")
+            if cont:
+                last = None
             continue
-        cid = _plain(cs[0])
-        if not cid:
-            continue
-        cid = cid if ":" in cid else f"{ticket}:{cid}"
-        ok = decision_accepts(cs[1])
+        cid = full(_plain(cells[0]))
+        v = decision_value(cells[1])
+        ok = v == "accept"
+        if v == "unknown":
+            probs.append(f"claim {cid}: decision cell {cells[1][:60]!r} is not exactly ACCEPT or NOT-EXAMINED (legacy: "
+                         "accepted / Accepted / ACCEPTED): read as NOT accepted")
         if cid in dec and dec[cid] != ok:
-            probs.append(f"{cid} is listed with contradictory decisions")
+            probs.append(f"claim {cid}: listed with contradictory decisions: read as NOT accepted")
         dec[cid] = ok and dec.get(cid, True)
+        last = cid
+    if state is not None and (state == "delim" or bad_table):
+        probs.append(f"malformed per-claim table ({bad_table or 'no delimiter row after its header'}): its rows read "
+                     "as NOT accepted")
     return dec, probs, tables
 
 
@@ -1363,6 +1460,11 @@ def seat_decisions(text: str, ticket: str):
     if not tables:
         probs.append("no per-claim table (`| id | decision |`) found")
     return dec, probs
+
+
+def _row_problems(dp, cid):
+    """The table problems that concern claim `cid` or the whole table (not other claims' rows)."""
+    return [p for p in dp if not p.startswith("claim ") or p.startswith(f"claim {cid}:")]
 
 
 def cited_rounds(text: str) -> list[str]:
@@ -1429,8 +1531,8 @@ def checkpoint_problems(row: dict, folder: str, ck: str, rnd, seat_files, rows: 
     if not seat_files:
         probs.append(f"checkpoint {ck}: no council review file to compare its claim ids with")
     for name, path, pin in seat_files:
-        dec, dp = seat_decisions(evidence_text(path, pin), ticket)
-        probs += [f"seat {name}: review {path}: {p}" for p in dp]
+        dec, dp = seat_decisions(evidence_raw_text(path, pin), ticket)
+        probs += [f"seat {name}: review {path}: {p}" for p in _row_problems(dp, row["id"])]
         acc = {k for k, v in dec.items() if v}
         for lab, ids_ in (("carries checked-labelled claim id(s) this seat did not accept", ck_checked - acc),
                           ("lacks claim id(s) this seat accepted", acc - ck_ids)):
@@ -1621,13 +1723,14 @@ def council_problems(row: dict, folder: str = "", rows: list[dict] | None = None
 
 def seat_table_problems(row: dict, seat_files) -> list[str]:
     """INFRA R06 (carrier route): a claim whose status source is NOT its own checkpoint, but whose council has a
-    per-claim table (`| id | decision |`, e.g. a dated addendum) in ANY seat's review, must be accepted (ACCEPT /
-    accepted) in a table of EVERY seat's review; a NOT-EXAMINED, missing or contradictory id is refused. A council
-    without any per-claim table keeps the earlier rule (the council cell alone)."""
+    per-claim table (`| id | decision |`, e.g. a dated addendum) in ANY seat's review, must be accepted (exactly
+    ACCEPT; legacy accepted / Accepted / ACCEPTED) in a table of EVERY seat's review; a NOT-EXAMINED, unreadable,
+    missing or contradictory id is refused. A council without any per-claim table keeps the earlier rule (the council
+    cell alone)."""
     ticket = row.get("ticket", "") or row.get("id", "").partition(":")[0]
     tabs = []
     for name, path, pin in seat_files:
-        dec, dp, n = seat_table(evidence_text(path, pin), ticket)
+        dec, dp, n = seat_table(evidence_raw_text(path, pin), ticket)
         tabs.append((name, path, dec, dp, n))
     if not any(n for *_, n in tabs):
         return []
@@ -1637,12 +1740,11 @@ def seat_table_problems(row: dict, seat_files) -> list[str]:
             probs.append(f"seat {name}: review {path} has no per-claim table (`| id | decision |`), but another seat's "
                          "has one: every seat must accept the claim in its own table")
             continue
-        probs += [f"seat {name}: review {path}: {p}" for p in dp if row["id"] in p]
+        probs += [f"seat {name}: review {path}: {p}" for p in _row_problems(dp, row["id"])]
         if not dec.get(row["id"]):
             probs.append(f"seat {name}: review {path}: claim {row['id']} is "
-                         + ("not accepted (" + ("contradictory decisions" if any(row["id"] in p for p in dp) else
-                                                "decision is not ACCEPT / accepted") + ")" if row["id"] in dec
-                            else "missing from the per-claim table")
+                         + ("not accepted (decision is not ACCEPT, or its row is unreadable / contradictory)"
+                            if row["id"] in dec else "missing from the per-claim table")
                          + ": a checked label needs each seat's ACCEPT")
     return probs
 

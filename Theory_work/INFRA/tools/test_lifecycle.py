@@ -1183,7 +1183,7 @@ try:
         def r05_review(seat, decisions, head_="| id | decision |", dg_=None):
             return (f"Council R1 ({seat}).\n\n{head_}\n|---|---|\n" + "".join(f"| {i} | {d_} |\n" for i, d_ in decisions)
                     + "\n" + vline(dg_ or dg5, seat))
-        GOOD_SOL = r05_review("sol", [("A", "accepted"), ("B", "**accepted** with non-blocking remarks")])
+        GOOD_SOL = r05_review("sol", [("A", "accepted"), ("B", "Accepted")])
         GOOD_OPUS = r05_review("opus", [("R05T:A", "accepted"), ("B", "accepted")], "| Id | Disposition |")
         put(SOLR, GOOD_SOL)
         put(OPUSR, GOOD_OPUS)
@@ -1725,24 +1725,66 @@ try:
                         and rc_n2 != 0 and "missing from the per-claim table" in out_n2
                         and rc_n3 != 0 and "has no per-claim table" in out_n3))
 
-        # Sol R06FIX F2: the decision grammar (token alone or followed by whitespace and non-negating words)
-        GOOD_D = ["ACCEPT", "accepted", "**accepted**", "accepted with non-blocking remarks (Issue 2)",
-                  "accepted (F-1, F-2 verified)",
-                  # real seat-table cells (theory/W3-START, W3-RM2 council reviews)
-                  "accepted with non-blocking remarks (Issue 2: F-2 is purely asymptotic; F-1, F-3, G-1, G-2 accepted "
-                  "as written; UNI-0/AR(1) correctly listed as not verified)",
-                  "accepted (F-1, F-2, F-3, G-1, G-2 verified; UNI-0 and AR(1) correctly not claimed)"]
+        # INFRA R06 decision reader: STRICT WHITELIST, fail closed (HQ ruling after Sol R06FIX recheck 2). Sol's 95
+        # cases (R06FIX/decision_cases.json: exact tables) are read as `expected`; Sol's 13 positive controls with
+        # remarks / other spellings are refused by design (`whitelist_refuses`); every refusal other than an exact
+        # NOT-EXAMINED carries a problem naming the claim
+        DCF = _json.load(open(os.path.join(INFRA, "R06FIX", "decision_cases.json"), encoding="utf-8"))
+        d_bad, d_silent = [], []
+        for c_ in DCF["cases"]:
+            dec_, pr_ = R.seat_decisions(c_["text"], "REV")
+            got_ = bool(dec_.get("REV:A"))
+            if got_ != c_["expected"]:
+                d_bad.append(c_["n"])
+            if not got_ and c_["input"] != "NOT-EXAMINED" and not any(p_.startswith("claim REV:A:") for p_ in pr_):
+                d_silent.append(c_["n"])
+        dev_ = sorted(c_["n"] for c_ in DCF["cases"] if c_["expected"] != c_["sol_expected"])
+        print(f"R06 decision cases: {len(DCF['cases'])}; mismatches {d_bad}; refused without a claim message {d_silent}; "
+              f"whitelist refuses Sol positives {dev_}")
+        results.append(("R06FIX decision reader (strict whitelist): Sol's 95 recheck-2 cases read as expected; all "
+                        "refusals but an exact NOT-EXAMINED name the claim; only the 13 listed Sol positive controls "
+                        "are refused by design",
+                        len(DCF["cases"]) == 95 and not d_bad and not d_silent and dev_ == DCF["whitelist_refuses"]
+                        and all(c_["sol_expected"] for c_ in DCF["cases"] if c_["n"] in dev_)))
+        GOOD_D = ["ACCEPT", "accepted", "Accepted", "ACCEPTED", " ACCEPT ", "\tACCEPT\t"]
         BAD_D = ["NOT-EXAMINED", "not accepted", "acceptable", "accepted-ish", "ACCEPT=NO", "ACCEPT/NOT-EXAMINED",
-                 "ACCEPT not", "accepted, no", "accepted no", "accept: no", "",
-                 # Sol R06FIX round 2 (R2-F2): punctuation / remark / Unicode-separator negations
+                 "ACCEPT not", "accepted, no", "accepted no", "accept: no", "", "accept", "Accept", "aCcEpTeD",
+                 "**ACCEPT**", "`accepted`", "ACCEPT.", "ACCEPT" + chr(0xA0), chr(0x2003) + "ACCEPT", "ＡＣＣＥＰＴ",
                  "accepted (not accepted)", "ACCEPT : NO", "accepted with remarks; withdrawn",
-                 "ACCEPT" + chr(0x2028) + "NOT-EXAMINED", "accepted (no)", "accepted (fine) no", "accepted ((x)",
-                 "accepted (pending fix)", "accepted (rejected)", "accepted (not examined)"]
+                 "ACCEPT" + chr(0x2028) + "NOT-EXAMINED", "accepted (no)", "accepted (conditional)",
+                 "accepted with non-blocking remarks (Issue 2)", "accepted (F-1, F-2 verified)"]
         dec_ok = lambda d_: R.seat_table(f"| id | decision |\n|---|---|\n| A | {d_} |\n", "T")[0].get("T:A")  # noqa: E731
-        results.append(("R06FIX F2 closed decision grammar: ACCEPT / accepted [with non-blocking remarks] [(remark)] "
-                        "incl. the real cells accepted; ACCEPT=NO, ACCEPT : NO, accepted (not accepted), ...; withdrawn, "
-                        "a U+2028-split row, NOT-EXAMINED not",
+        results.append(("R06FIX whitelist: exactly ACCEPT / accepted / Accepted / ACCEPTED (surrounding spaces and "
+                        "tabs trimmed) accept; other case, emphasis, punctuation, Unicode spaces / full-width, remarks "
+                        "and NOT-EXAMINED do not",
                         all(dec_ok(d_) for d_ in GOOD_D) and not any(dec_ok(d_) for d_ in BAD_D)))
+        # Sol recheck 2's five staged carrier variants (and two more structural ones) are REFUSED; ACCEPT passes
+        HDR6 = "| id | decision |\n|---|---|\n"
+        VAR6 = [("conditional", HDR6 + "| A | accepted (conditional) |\n"),
+                ("no_in_remark", HDR6 + "| A | accepted (decision: NO) |\n"),
+                ("line_split", HDR6 + "| A | ACCEPT\nNOT-EXAMINED |\n"),
+                ("continuation", HDR6 + "| A | ACCEPT |\n| | NOT-EXAMINED |\n"),
+                ("negative_remarks_column", "| id | decision | remarks |\n|---|---|---|\n| A | ACCEPT | withdrawn |\n"),
+                ("no_leading_pipe_row", HDR6 + "| A | ACCEPT |\nA | NOT-EXAMINED |\n"),
+                ("escaped_pipe", HDR6 + "| A | ACCEPT \\| NOT-EXAMINED |\n")]
+
+        def r06_tab_review(seat, score, table):
+            return f"Council R1 ({seat}). Score {score}, all gates PASS.\n\n" + vline(dg6, seat, score) + "\n" + table
+        carrier(CAR, [c6row("A", 1)])
+        var_res = {}
+        for nm_, tb_ in VAR6 + [("positive", HDR6 + "| A | ACCEPT |\n")]:
+            put(S6, r06_tab_review("sol", "8.6", tb_))
+            put(O6, r06_tab_review("opus", "8.4", tb_))
+            rc_v, out_v = tool("ingest.py", "claims", os.path.join(TMP, CAR), "--staged")
+            var_res[nm_] = (rc_v, acc_l(out_v), "R06T:A" in out_v and "not accepted" in out_v.lower())
+        put(S6, r06_review("sol", "8.6", ADD6))
+        put(O6, r06_review("opus", "8.4", ADD6))
+        print("R06 staged variants:", {k_: (v_[0], v_[1].split(":")[-1].strip()[:30]) for k_, v_ in var_res.items()})
+        results.append(("R06FIX staged carrier: Sol's five recheck-2 variants (conditional, decision: NO in a remark, "
+                        "line split, continuation row, negative remarks column) and a pipe-less / escaped-pipe row are "
+                        "REFUSED with a message naming the claim; a plain ACCEPT table passes",
+                        all(var_res[k_][0] != 0 and "REFUSED" in var_res[k_][1] and var_res[k_][2] for k_, _ in VAR6)
+                        and var_res["positive"][0] == 0 and "PASS" in var_res["positive"][1]))
         NO6 = [("A", "ACCEPT=NO"), ("B", "ACCEPT"), ("C", "NOT-EXAMINED")]
         put(S6, r06_review("sol", "8.6", NO6))
         put(O6, r06_review("opus", "8.4", NO6))
@@ -1762,6 +1804,48 @@ try:
                         rc_f1 != 0 and "REFUSED" in acc_l(out_f1) and rc_f2 != 0 and "REFUSED" in acc_l(out_f2)
                         and rc_f4 != 0 and "REFUSED" in acc_l(out_f4)
                         and "R06T:A" in out_f2 and rc_f3 == 0 and "PASS" in acc_l(out_f3)))
+
+        # Sol R06FIX parser test: 116 more direct cases (R06FIX/decision_cases_parser.json), review files read RAW (a
+        # text-mode read would turn CR / NEL / U+2028 ... into line breaks), strict header + delimiter row
+        DCP = _json.load(open(os.path.join(INFRA, "R06FIX", "decision_cases_parser.json"), encoding="utf-8"))
+        p_bad = [c_["n"] for c_ in DCP["cases"]
+                 if bool(R.seat_decisions(c_["text"], "REV")[0].get("REV:A")) != c_["expected"]]
+        p_dev = sorted(c_["n"] for c_ in DCP["cases"] if c_["expected"] != c_["sol_expected"])
+        print(f"R06 parser cases: {len(DCP['cases'])}; mismatches {p_bad}; refused by design {p_dev}")
+        results.append(("R06FIX parser test: Sol's 116 further cases read as expected (header aliases exact, delimiter "
+                        "row directly below the header, separator-shaped lines validated); only case 110 (no delimiter "
+                        "row) is refused by design", len(DCP["cases"]) == 116 and not p_bad
+                        and p_dev == DCP["whitelist_refuses"] == [110]))
+        SEPS = ["\r", "\x0b", "\x0c", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029"]
+        loaded = []
+        for k_, sp_ in enumerate(SEPS):
+            rel_ = f"{T6}/reviews/sepfile_{k_}.md"
+            putb(rel_, ("| id | decision |\n|---|---|\n| A | ACCEPT |" + sp_ + " \n").encode("utf-8"))
+            loaded.append(bool(R.seat_table(R.evidence_raw_text(rel_), "REV")[0].get("REV:A")))
+            os.remove(os.path.join(TMP, rel_))
+        putb(f"{T6}/reviews/crlf_ok.md", b"| id | decision |\r\n|---|---|\r\n| A | ACCEPT |\r\n")
+        crlf_ok = bool(R.seat_table(R.evidence_raw_text(f"{T6}/reviews/crlf_ok.md"), "REV")[0].get("REV:A"))
+        os.remove(os.path.join(TMP, T6, "reviews", "crlf_ok.md"))
+        results.append(("R06FIX parser test: review files are read raw: a row followed by CR, VT, FF, FS, GS, RS, NEL, "
+                        "U+2028 or U+2029 in the FILE reads as NOT accepted; a CRLF file still reads ACCEPT",
+                        not any(loaded) and len(loaded) == 9 and crlf_ok))
+        STG = [("file_u2028", HDR6 + "| A | ACCEPT |\u2028 \n"), ("file_lone_cr", HDR6 + "| A | ACCEPT |\r \n"),
+               ("bare_separator", HDR6 + "| A | ACCEPT |\n---\n"),
+               ("emphasis_header", "| **id** | decision |\n|---|---|\n| A | ACCEPT |\n"),
+               ("double_pipe_header", "|| id | decision ||\n|---|---|\n| A | ACCEPT |\n")]
+        carrier(CAR, [c6row("A", 1)])
+        stg_res = {}
+        for nm_, tb_ in STG:
+            for fp_, seat_, sc_ in ((S6, "sol", "8.6"), (O6, "opus", "8.4")):
+                putb(fp_, r06_tab_review(seat_, sc_, tb_).encode("utf-8"))
+            rc_v, out_v = tool("ingest.py", "claims", os.path.join(TMP, CAR), "--staged")
+            stg_res[nm_] = (rc_v, acc_l(out_v))
+        put(S6, r06_review("sol", "8.6", ADD6))
+        put(O6, r06_review("opus", "8.4", ADD6))
+        print("R06 parser staged:", {k_: (v_[0], v_[1].split(":")[-1].strip()[:30]) for k_, v_ in stg_res.items()})
+        results.append(("R06FIX parser test staged: separators in the review FILE (U+2028, lone CR), a bare '---' line "
+                        "after a row, an emphasized or double-pipe header: carrier acceptance REFUSED",
+                        all(v_[0] != 0 and "REFUSED" in v_[1] for v_ in stg_res.values()) and len(stg_res) == 5))
 
 finally:
     SB.__exit__(None, None, None)
