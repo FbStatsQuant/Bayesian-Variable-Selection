@@ -257,3 +257,11 @@
   optional Sunday API audit of W2-APP:POST, SOP:TH09/TH128, C-MIS:Prop-P/GD(b) to lift conditions.
 - 2026-11-12 15:10 CT CORRECTION (watchdog note): W3-PATH was NOT launched — only its brief exists (branch theory/W3-PATH);
   the 10:29 "LAUNCHED" line is superseded by the owner's 12:00 plan (scoping starts Mon 11-16 16:00 CT).
+- 2026-11-12 ~15:30 CT W3-P6 hardware (consultant concurs; no affected outcome seen): NOTS commons mixes sapphirerapids
+  (reference; smoke/limits costed there) and cascadelake (~1.7–2× slower). DESIGN_NOTES N2: any time-dependent stop
+  (guard, preflight, escalation refusal, Slurm time kill) on non-reference hardware = hardware rerun (new RUN_ID, same
+  seed; not censoring, not failure; does not use the rerun-once allowance); node type recorded for every fit. Cancel
+  s1_c, s1_b, s1_d1 tasks 4–5 → rerun on sapphirerapids; all further releases sapphirerapids-only; h1/h2 finish on
+  cascadelake. Stage-1 projection stop raised 1,700 → 1,896 ceiling (hardware loss logged); watchdog hold line 1,880;
+  PROTOCOL rule 12's 1,700 line is superseded for stage 1. Pre-declared cut order if still over: (75,75), (100,100),
+  h1b/h2b reps 6–10; never the four D1 cells.
