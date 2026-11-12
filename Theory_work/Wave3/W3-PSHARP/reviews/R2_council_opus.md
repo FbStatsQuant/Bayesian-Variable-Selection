@@ -203,3 +203,18 @@ accurate, and the numerics are faithful. The remaining points are wording NITs i
 STATEMENT corollary.
 
 COUNCIL-VERDICT round=R2 manifest=4513e05a40ddc3bf8baeebf04d7156d3c0ac84442dbe0d9b2c6c59244afdac14 seat=opus score=9.3 gates=PASS
+
+## Addendum — per-claim decisions (seat opus, round R2; 2026-11-12; same seat model, fresh thread; no rescoring)
+
+| id | decision |
+|---|---|
+| W3-PSHARP:S | ACCEPT |
+| W3-PSHARP:A | ACCEPT |
+| W3-PSHARP:B | ACCEPT |
+| W3-PSHARP:C | ACCEPT |
+
+Where examined:
+- W3-PSHARP:S — G1 "Lemma V" and "Lemma S" (1)–(4) (lines 22–29); G2 (line 84 ff., "Lemma S 1–4"); G3 domains (line 96 ff.).
+- W3-PSHARP:A — G1 "Lemma W", "Lemma R", "§3 (W-orth)", "§4 (W-sph)", "§5–§6" (lines 31–57); G2 (Prop. A, Cor. A1–A2, Remark A3); G5 (Λ_n, line 130 ff.); G6 (a_orth.py, a_sph.py); NIT N1 and N4 only (non-blocking).
+- W3-PSHARP:B — G1 "Claim B" (lines 59–64); G2 (Cor. B with B1–B3); G5 (c(p, s₀), 𝒪^{lb}_n); G6 (B: 55,740 cases).
+- W3-PSHARP:C — G1 "Claim C" (lines 66–82, incl. Lemma P, Items 2–3, Steps 1–5); G4 ("what fails" reading, line 109 ff.); G5 (C_b, c₁, cutoff, chk_C.py); G6 (c_counter.py).

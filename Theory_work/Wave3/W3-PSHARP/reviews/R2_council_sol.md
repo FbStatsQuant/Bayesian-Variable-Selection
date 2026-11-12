@@ -64,3 +64,17 @@ The expensive full Monte Carlo grids were inspected with their stored outputs, n
 No mathematical correction is required for acceptance. Neither nit changes a gate verdict.
 
 COUNCIL-VERDICT round=R2 manifest=4513e05a40ddc3bf8baeebf04d7156d3c0ac84442dbe0d9b2c6c59244afdac14 seat=sol score=9.2 gates=PASS
+
+## Addendum — per-claim decisions (seat sol, round R2; 2026-11-12; same seat model, fresh thread; no rescoring)
+
+| id | decision |
+|---|---|
+| W3-PSHARP:S | ACCEPT |
+| W3-PSHARP:A | ACCEPT |
+| W3-PSHARP:B | ACCEPT |
+| W3-PSHARP:C | ACCEPT |
+
+Where examined: W3-PSHARP:S: G1 — correctness, **Lemma V and S.** beginning at line 11; G2 confirms coverage of the stated clauses; Findings and exact corrections contains no blocking finding.
+W3-PSHARP:A: G1 — correctness, **Claim A.** beginning at line 17; G2 confirms coverage of the stated clauses; Findings and exact corrections contains no blocking finding.
+W3-PSHARP:B: G1 — correctness, **Claim B.** beginning at line 21; G2 confirms coverage of the stated clauses; Findings and exact corrections contains no blocking finding.
+W3-PSHARP:C: G1 — correctness, **Claim C.** beginning at line 23; G2 confirms coverage of the stated clauses; Findings and exact corrections contains no blocking finding.
