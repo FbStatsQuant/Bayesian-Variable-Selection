@@ -152,3 +152,7 @@
 - 2026-11-12 ~02:40 UTC sharp1 triage (consultant, API_AUDIT/sharp1/TRIAGE.md): A-list T1 MIS-R, T2 RM-0 rider (after
   RM2 council), T3 POST-SHARP; B* T4 (constant-level signals, rider on RM2), T5 (Cor 1R v2, lowest). LAUNCHED W3-MISR (T1)
   and W3-PSHARP (T3), Fable 5.2 CW leads, legs to CP2 pre-approved when reviews are clean. f01 handed to W3-SCALE.
+- 2026-11-12 ~03:00 UTC sharp1b triage (consultant, API_AUDIT/sharp1b/TRIAGE.md): 9 B, 1 C, new: T2(c) (RM-0(a) on any
+  deterministic down-closed sub-lattice ⊇ [S₀, S̃₀]); T6 product-form localisation (entrywise cross-term bound; polynomial
+  decay α > 17/2 → α > 2) as a rider on RM2's Form R leg next to P3; T7 masked truths at growing Q (separation via
+  underfit-phase energy lemma; GEN/PXN become examples), kill-budgeted, after RM2 council. f18/f20/f21: redo per claim.

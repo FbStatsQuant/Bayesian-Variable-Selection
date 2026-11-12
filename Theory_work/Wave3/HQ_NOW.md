@@ -27,7 +27,7 @@ output in reviews/); (3) P6 smoke still on NOTS — heartbeat re-wakes the P6 le
   factor-design PROVED claims) done: 42 OK / 5 MINOR / 3 GAP (stopped tickets, no consumers) → R-AUD2 confirmed; SUSPECT marks applied (no checked/chapter impact). Audit plan complete.
 
 ## Next (HQ self-approves, in order as slots free)
-0. After W3-RM2 council: T2 RM-0 rider + T4 constant-level signals (sharp1 TRIAGE §2).
+0. W3-RM2 next leg (after CP2): add T6 (product-form localisation) next to P3. After RM2 council: T2(a–c) + T4 riders; then T7 (kill-budgeted). (sharp1/sharp1b TRIAGE)
 1. Each lead's next checkpoint (CP1 → CP2 → CP3) after HQ acceptance audit.
 2. P6 stage 1 release within the 1,896 core-h ceiling (approved).
 3. Editorial pass: pass-1/2/3 MINORs + C-DLV:Prop-F wording (version bumps, no claim changes).
