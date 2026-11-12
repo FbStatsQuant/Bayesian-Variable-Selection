@@ -1,5 +1,10 @@
 # W3-RM2 numerics — RESULTS (sharpness gate; boundary-violation probes)
 
+> **Final counts (read first) [C1-A2].** 208 runs; the LS0 probe ended at S₀ in **204 of 208**; the four failures are
+> all in the cell B4, η = 1, n = 1600 (4 of 6 runs). Sections 1–3 below are the historical snapshot of 207 runs that
+> the better-theorem review BT1 read; §4 supersedes their totals. All counts concern the validated LS0
+> re-implementation started from the start mode, under a nominal classification (`SPEC.md`).
+
 **Observations only, never proofs.** All theorems are asymptotic; these counts say nothing about a limit. Design,
 objects, validation and column definitions: `SPEC.md`. Local machine, no NOTS. 207 runs, 0 failed
 (n = 400: 130 runs, 10 seeds per cell; n = 1600: 77 of 78 runs, 6 seeds per cell — one run of the cell
@@ -92,7 +97,14 @@ still improving), not a wrong local optimum; nothing here is known about the ful
 * p = 2n only; s₀ = 2; one leak mechanism (weak proxies of one truth); Gaussian rows.
 * The probe tries 14 of the 2^m lattice sets, so "probe found no violation" is not "NA(𝓛) held".
 * The start mode and LS0 are re-implementations validated against production scores and start masses (`SPEC.md`),
-  not the production routines themselves; ties are broken by first maximum.
+  not the production routines themselves; ties are broken by first maximum. [SW1-3] The LS0 re-implementation
+  departs from production in three boundary branches (improvement tolerance 1e-9; the current centre is returned
+  at the cap, so `final_size` of a capped probe is the current centre's size; first-maximum ties) — `SPEC.md`. The
+  four capped probes stopped at centres far from S₀ (sizes well above s₀ = 2), so one more production move could
+  not have reached S₀.
+* [SW1-2] B2 is a nominal width-stress design: (W) is not certified to fail on the realised designs, and its
+  leak is small but not exactly zero (`SPEC.md`). "NA violated" means an improving addition was found at a probed
+  lattice set.
 
 ## 4. Addendum after the better-theorem round (2026-11-11; not seen by review BT1)
 
@@ -124,3 +136,21 @@ No violation was found.
 Reading of K3: the lower end −0.69 ≈ −log 2 is the exact prior ratio (k + 1)/(2p − 1 − k) ≈ (k + 1)/(2p) against the
 level a⁰ defined with p; the remainders themselves are a fraction of a unit. So the level at which an addition
 starts to pay is a⁰_n(k) up to an additive O(1/√log n), as Lemmas NA-W and W-conv state.
+
+## 6. Form R and examples: lemma checks for `lemmas/L4–L6` (`formR_checks.R` → `formR_checks_out.txt`; 2026-11-11)
+
+Design for K8–K10: Gaussian rows, p = 80, Σ_jk = 0.35(1 + |j − k|)^{−2.5} off the diagonal, one truth, leak set of
+radius 12, reference neighbourhoods of radius 3. Falsification attempts at small n; nothing asymptotic is tested.
+No violation was found.
+
+| id | lemma step | test | outcome |
+|---|---|---|---|
+| K8 | L4 (★): Cov(W_l, W_j \| W_U) = Cov(W_l, W_j \| W_{U₀}) − c_lᵀS_VV⁻¹c_j (the product form) | 2000 random (l, U), \|U\| ≤ 15 | max error 5e-20 |
+| K9 | L4 Lemma 2: \|ẑ_U − ẑ_{U₀}\| ≤ C(ℓ + r h_n + h_n²) on the sample | n = 4000, 5 designs × 200 (l, U); ℓ, r = population leak and localisation levels of each tested pair | max ratio 0.95; max \|ẑ_{U₀}\|/h_n = 1.1. (At these sizes the ratio to the older norm-product scale r² + h_n² is 1.08, so the test does not separate the two forms; it only fails to break the bound) |
+| K10 | L4 Lemma 3: tail of h_{U₀,l} at a deterministic reference set | n = 300, 40 000 draws, t = 4, 8, 12 | P(h ≥ t)/P(χ²₁ ≥ t) = 1.04, 0.96, 1.17 (the leak of the tested pair is 4e-5, so the mean shift is not exercised) |
+| K11 | L5 §3: closed form of F({1}) − F(∅) at p = 1 | 200 random data sets, direct evaluation of the D0 definition | max difference 1.2e-13 |
+| K12 | L6 E4 (one truth, weak proxies): Gram floor; (W-loc) exact | n = 900, q = 15, p = 300; 500 (T, l) | min eigenvalue 0.72; regression of a proxy on any lattice set = (r, 0, …, 0) exactly (deviation 0) |
+| K13 | L6 E5 (equicorrelated group): regression coefficient A_t, residual norm v_t, bound (5.1) | a = 0.5, q = 15; 300 (T, l) | errors 2e-16; max(lhs − rhs) of (5.1) = −1.57 ≤ 0 |
+
+(A first run of K12–K13 reported spurious failures caused by R's `sample()` on a length-one vector in the test
+script — it drew l inside T; fixed with index sampling, re-run, results above.)

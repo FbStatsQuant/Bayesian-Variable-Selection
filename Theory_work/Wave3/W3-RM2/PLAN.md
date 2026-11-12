@@ -55,3 +55,9 @@ and a no-addition failure rate (BT1 P2 in the form G1). P3 (Form R scales): one 
 sandwich lemma after CP2, else open item O3. Form R stays in the ticket, after Form F's key lemma. Order to CP2:
 one fresh Sol check of the v1.3 change; L0 toolkit, L1 fixed-design sandwich, L2 width lemmas + truth removal (key
 lemma); Sol lemma checks with falsification numerics; Astra mid-point; CP2.
+
+## 6. After CP2 (HQ decision 2026-11-11, 23:10 CT)
+Form R leg: `lemmas/L4_sandR_b.md` (P7, with riders P3 and T6 — both succeeded, STATEMENT v1.4), `L5_formR.md`
+(P8–P10, (C2), containment of RM-R), `L6_examples.md` (parallel prover; (C5)), `SHARPNESS.md`, `REPORT.md`. (§3's file
+names for L3–L4 were provisional: L3 is the Form F assembly.) Then: exhaustive sweep, better-theorem review on v1.4,
+council, CP3.

@@ -4,7 +4,7 @@ Status: **PROVED (by this seat, unchecked)**; lemma check LC1-B (Codex gpt-6.1-s
 `../reviews/LC1B_L2L3_check_sol.md`): Lemma 0, NA-conv, NA-W, sufficient forms (i)–(v), Lemma d, TL-W VERIFIED;
 W-conv (+ corollary) VERIFIED-WITH-AMENDMENTS (1 MINOR on the wording of the "Reading" paragraph, applied [LC1B-1]);
 no FATAL, no MAJOR. Independent mid-point MP1 (Codex gpt-6-astra high, blind, `../reviews/MP1_midpoint_astra.md`): CONTINUE WITH CHANGES — "the key lemma stands", no FATAL or MAJOR finding in L0–L3.
-Ticket W3-RM2; statement: `../STATEMENT.md` v1.3, §1 (width
+Ticket W3-RM2; statement: `../STATEMENT.md` (written for v1.3; unchanged for Form F in v1.4 [C1-F6]), §1 (width
 functionals), §3.1 ((W), (W-δ), (W-unif), (W-χ), (W-ref), (W-loc), (BM-W)), §4 ((C3), (P2)–(P5)).
 Inputs: `L0_toolkit_b.md` (Lemma Toolkit-b, for the lattice family) and one classical fact — Gaussian concentration
 for Lipschitz functions: if f : ℝⁿ → ℝ is 1-Lipschitz and g ~ N(0, I_n), then E|f(g)| < ∞ and, for t ≥ 0,

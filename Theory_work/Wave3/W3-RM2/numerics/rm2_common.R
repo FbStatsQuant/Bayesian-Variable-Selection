@@ -6,7 +6,7 @@
 # the start-mode export was removed) and because the coded LS0 rescoring is too slow at |start mode| ~ 100-300:
 #   * start_mode_dp(): the start mode S~0 = argmax of gamma_0 on Omega, by the block DP over the production tables
 #     (ties broken by first maximum; ties have probability zero in these designs);
-#   * ls0_fast(): LS0 exactly as coded in cpp/v3_engine.h:379-419 (one scan = every single flip and every swap; move to
+#   * ls0_fast(): LS0 re-implemented after cpp/v3_engine.h:379-419 [SW1-3: three boundary departures, see SPEC.md] (one scan = every single flip and every swap; move to
 #     the best neighbour on a strict F improvement; cap = ell_n + |centre|), with every neighbour's score obtained
 #     from the centre's by exact rank-one updates of the production score
 #        log m(U) = -1/2 [log det((n+1) G_U + I) - log det(G_U + I)] - nu log(0.02 + y'y - n z_U' ((n+1)G_U + I)^-1 z_U).
@@ -108,7 +108,8 @@ scan_at <- function(P, S, swaps = TRUE) {
   list(FS = FS, Fadd = Fadd, Fdel = Fdel, Fsw = Fsw)
 }
 
-# LS0 as coded (complete scans; strict improvement; cap = moves allowed). Ties: first maximum (measure zero here).
+# LS0 re-implementation (complete scans; improvement > 1e-9; cap = moves allowed; at the cap the CURRENT CENTRE is
+# returned, production returns the best neighbour of the last scan). Ties: first maximum (measure zero here). [SW1-3]
 # Records, at every visited centre that lies in the lattice [S0, Q], the three path-level no-addition margins:
 #   naC = max_l F(T+l) - F(T)                    (an improving addition at the centre)
 #   naD = max_{e extra, l} F(T-e+l) - F(T-e)     (an addition improving a deletion child = a swap beating its deletion)

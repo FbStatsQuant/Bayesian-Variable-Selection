@@ -10,7 +10,12 @@ machine only (R 4.6.1 + Rcpp, 3–7 worker processes); no NOTS.
 * Re-implemented in `rm2_common.R`, because the core exports neither and its LS0 rescoring is too slow at start modes
   of 100–300 columns:
   * `start_mode_dp` — the start mode S̃₀ = argmax γ₀ on Ω by the block dynamic programme over the production tables;
-  * `ls0_fast` — LS0 as coded in `cpp/v3_engine.h:379-419` (one scan = every single flip and every swap; move to the
+  * `ls0_fast` — a re-implementation of the LS0 of `cpp/v3_engine.h:379-419` [SW1-3: with three departures from the
+    production routine — (i) a move needs an improvement > 1e-9, production any strict improvement (`v3_engine.h:408`);
+    (ii) at the cap it returns the current centre, production returns the best improving neighbour of the last
+    completed scan (`v3_engine.h:410`), so `final_size` of a capped probe is the size of the current centre at the
+    cap; (iii) ties go to the first maximum, production breaks them lexicographically. The validation runs do not
+    exercise these three branches] (one scan = every single flip and every swap; move to the
     best neighbour on a strict F improvement; cap ℓ_n + |centre|), all neighbour scores by exact rank-one updates of
     the production score.
 * **Validation against production** (`validate.R` → `validate_out.txt`): 306 scores (centres, additions, deletions,
@@ -31,7 +36,7 @@ n r² θ₁²/τ₀² = 3(log n + 2 log p), τ₀² = σ² + ‖θ‖². Q := S�
 | id | assumption probed | construction | inside / outside (nominal) |
 |---|---|---|---|
 | B1 | size of the leak set, (L-size^b): b < ½ (η = 0) | outside columns iid N(0,1); b ∈ {0.25, 0.375, 0.5, 0.625, 0.75} | b ≤ 0.375 inside; b = 0.5 at the boundary; b ≥ 0.625 outside. In this design the leak innovations are independent, so the lattice directions are nearly orthogonal and the width remainder is ≈ m²/n: (W) and the sandwich reach their limit together at b = ½ |
-| B2 | lattice width (W) | every outside column loads on the common direction of the leak innovations: x_l = √(1 − s) w_l + √s · m^{−1/2} Σ_t e_t, s = 0.5; b ∈ {0.25, 0.375, 0.5} | the heuristic design of W3-RM SHARPNESS §4: lattice width² ≈ 2 log p + c·m, so (W) fails once m ≫ log n while (V), (L) are untouched (outside columns are independent of the truths) |
+| B2 | lattice width (W) | every outside column loads on the common direction of the leak innovations: x_l = √(1 − s) w_l + √s · m^{−1/2} Σ_t e_t, s = 0.5; b ∈ {0.25, 0.375, 0.5} | the heuristic design of W3-RM SHARPNESS §4: lattice width² ≈ 2 log p + c·m, a heuristic width-stress design: (W) is expected to fail once m ≫ log n, but this is not certified on the realised designs. [SW1-2] Leakage is not exactly preserved either: outside columns are marginally independent of the truths, but given a proxy P_t = rH + √(1 − r²)E_t of a truth H, Cov(O, H \| P_t) = −r√(s(1 − r²)/m) ≠ 0 — a positive leak that vanishes as m grows. B2 is a nominal stress of (W), not an isolated violation |
 | B3 | a weak truth: (BM-Q) / finite-n visibility | B1 with θ₂ weak, nθ₂² = 12 log n; b ∈ {0.5, 0.625} | nθ₂² is below the lattice size at b = 0.625 and below the finite-n start-mode entry level (≈ τ²(log n + 2 log p)): BM-Q cannot be isolated from visibility at these n |
 | B4 | leak level η against the frontier b < β(η, A) | B1 at b = 0.375 with every outside column leaking from truth 1 at nominal τ-normalised level η ∈ {0.05, 0.2, 1} | β(η, A) = 0.375 at η ≈ 0.007 (A ≈ 1.1): all three cells are nominally outside the frontier |
 

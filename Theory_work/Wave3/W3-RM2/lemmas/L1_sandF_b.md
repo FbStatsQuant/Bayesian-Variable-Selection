@@ -18,7 +18,8 @@ u_{U,l} := (I − P_U)x_l/‖(I − P_U)x_l‖, δ_{U,l} := u_{U,l}ᵀμ, Z_{U,l
 RSS_U − RSS_{U∪{l}} = (u_{U,l}ᵀY)² = (δ_{U,l} + σZ_{U,l})² (u_{U,l} ⊥ 1, so u_{U,l}ᵀCε = u_{U,l}ᵀε) and
 Λ_U − Λ_{U∪{l}} = δ²_{U,l}. τ²_U := σ² + Λ_U/(n − 1); U ⊆ U′ ⇒ τ²_{U′} ≤ τ²_U; τ²_U ≥ σ².
 
-Hypotheses (fixed constants A ≥ 1, M, φ₀ ∈ (0, 1], s₀ ≥ 1, η ≥ 0, b > 0):
+Hypotheses (fixed constants A ≥ 1, M > 0, φ₀ ∈ (0, 1], s₀ ≥ 1, η ≥ 0, b > 0 [SW1-1: the range (0, 1] is that of φ₀
+only]):
 (S0) ‖μ‖² ≤ Mn; p ≤ n^A; S₀ = supp θ*, |S₀| = s₀.
 (S1) C₁, …, C_J is a partition of [p] with |C_b| ≤ 16 that is a deterministic function of X; b(j) is the block of j.
 (G3a) λ_min(R̂_T) ≥ φ₀² for every nonempty T contained in a block.

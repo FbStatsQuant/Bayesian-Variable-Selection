@@ -1,7 +1,14 @@
 # W3-RM2 — STATEMENT (Theorem 3 at polynomial leakage: the reported model under visibility, leakage of size n^b, and a lattice-width condition)
 
 Ticket W3-RM2, Theory Wave 3 (follow-up of PROGRAM item 3; W3-RM REPORT §6 item 1). Lead: Claude Fable 5.2 (Claude
-Work, effort high). Status of this file: **v1.3 (target statement — nothing in it is proved yet)** = v1.2 LOCKED plus
+Work, effort high). Status of this file: **v1.4** = v1.3 with the Form R leak hypothesis (L-R^b) weakened as proved in
+`lemmas/L4_sandR_b.md` (HQ CP1 item 2 and CP2 item 4: **[CP2-P3]** leak scale o(√(log n/n)); **[CP2-T6]** product-form
+localisation — the leak bound at every conditioning set, localisation at any rate r_n → 0; a generalisation of the v1.3
+hypothesis is retained as the sufficient form (L-R^b-loc) [SC2-4]), the examples (C5) as verified in `lemmas/L6_examples.md`, and the
+dependency record after the proofs (§5). No Form F hypothesis or conclusion of (C1)–(C4) changes; (C5) and the dependency records are
+updated. The change was checked by a fresh reviewer (`reviews/SC2_statement_change_sol.md`: ACCEPT WITH CHANGES — the
+implication v1.3 ⇒ v1.4 passes; four corrections, applied, markers [SC2-#]; `reviews/LC2_disposition.md`). Proof status of every
+claim: `REPORT.md` (proofs in `lemmas/L0`–`L6`). v1.3 (the target fixed after checkpoint 1) = v1.2 LOCKED plus
 the two improvements adopted by HQ at checkpoint 1 (HQ CP1 decision, 2026-11-11, ticket LOG; proposals P1 and P2 of
 the better-theorem review `reviews/BT1_better_theorem_astra.md`, P2 in the lead's constant-free form G1 of
 `reviews/BT1_disposition.md`): **[CP1-P1]** the signal floor (BM-Q) is replaced by the weaker (BM-W); **[CP1-P2]** the
@@ -104,9 +111,17 @@ Q ⊇ S₀ with |Q| ≤ K — no size bound on Q enters it — together with W3-
 
 Fixed constants [SL1-1: the two forms have separate constants]. Common: A ≥ 1, s₀; δ₀ ∈ (0, 1) for the
 fixed-fraction form (W-δ).
-**Form F:** M, φ₀ ∈ (0, 1], g₀ > 0, η ∈ [0, η_A), **b ∈ (0, β(η, A))**; for the sufficient forms h ≥ 0 with
-**h + b < ½**, m₀ ∈ ℕ, δ₁ ∈ (0, 1). **Form R:** c > 0, θ_lo, θ_hi, a₀ > 0, C_L, **b ∈ (0, ½)** (no η; not tied to
-β(η, A)), ρ ≥ 0 with **15ρ + b < ½**.
+**Form F:** M > 0, φ₀ ∈ (0, 1], g₀ > 0, η ∈ [0, η_A), **b ∈ (0, β(η, A))**; for the sufficient forms h ≥ 0 with
+**h + b < ½**, m₀ ∈ ℕ, δ₁ ∈ (0, 1). **Form R:** c > 0, θ_lo, θ_hi, a₀ > 0, **b ∈ (0, ½)** (no η; not tied to
+β(η, A)), ρ > 0 with **15ρ + b < ½** [v1.4: the constant C_L of v1.3 is replaced by the leak sequence ϖ_n].
+
+**Energy constant [SW1-1].** M is any fixed positive number; the range (0, 1] is that of φ₀ only. Theorem 1's
+hypothesis list (GROW `STATEMENT.md:84`) writes "M, φ₀ ∈ (0, 1]"; whichever way that is read, nothing is lost. If
+‖μ‖² ≤ Bn with B > 1, put a := B^{−1/2} and apply the result to (aY, aθ*, aσ): the method uses the response only
+through the standardised y = Y/s_y, so every score, block table, start mass, posterior probability and search path
+is unchanged; ‖aμ‖² ≤ n; the ratios θ*²_min/σ² and δ²_{U,l}/τ²_U are unchanged, so (BM-W), (L-gain) and the
+signal conditions of (T1-F) are unchanged; (V) holds with a²M_n → ∞ in place of M_n; conditions on X alone are
+untouched. (APP `lemmas/L1_POST.md:28` applies the same hypotheses with M := s₀²θ_hi² + 1.)
 
 ### 3.1 Fixed design (conditions on (X, θ*) and the deterministic set Q only)
 
@@ -158,11 +173,24 @@ fixed-fraction form (W-δ).
 
 * **(T1-R)**, **(FL-R)**, **(V-R)**: exactly as in RM `STATEMENT.md:129-136` ((FL-R): λ_min(Σ_{n,S}) ≥ c for
   |S| ≤ 16 + s₀ and for S = Q ∪ {l}, l ∈ [p]; (V-R) = PTV(a₀)).
-* **(L-R^b) Polynomial leakage, localised.** A deterministic Q ⊇ S₀ with (L-size^b) |Q| ≤ n^b and (L-feas); for
-  every l ∉ Q a deterministic H_l ⊇ {l} ∪ S₀ with **|H_l| ≤ n^ρ**, such that for every U ⊆ [p] ∖ {l} with |U| ≤ 15,
-  writing U₀ := U ∩ H_l: (L-gain-R) and (L-loc-R) exactly as in RM `STATEMENT.md:140-142`
-  (|Cov(W_l, W_j | W_{U₀})| ≤ C_L n^{−1/2} for j ∈ S₀ ∖ U₀; |Cov(W_l, W_v | W_{U₀})| ≤ r_n and
-  |Cov(W_j, W_v | W_{U₀})| ≤ r_n for v ∈ U ∖ H_l, j ∈ S₀ ∖ U₀, with r_n(n log n)^{1/4} → 0). Budget: 15ρ + b < ½.
+* **(L-R^b) Polynomial leakage, localised** [CP2-P3, CP2-T6: v1.4]. A deterministic Q ⊇ S₀ with (L-size^b)
+  |Q| ≤ n^b and (L-feas), and deterministic sequences ϖ_n, r_n ≥ 0 (ϖ_n is the leak sequence — written ℓ_n in
+  v1.4 as first drafted; the symbol ℓ_n is reserved for the LS0 move cap of §1 [SC2-1]) with **ϖ_n√(n/log n) → 0** and **r_n → 0** (no rate),
+  such that
+  **(L-gain-R)** for every l ∉ Q, every U ⊆ [p] ∖ {l} with |U| ≤ 15 and every j ∈ S₀ ∖ U:
+  |Cov(W_l, W_j | W_U)| ≤ ϖ_n;
+  **(L-loc-R)** for every l ∉ Q there is a deterministic H_l ⊇ {l} ∪ S₀ with **|H_l| ≤ n^ρ** such that for every
+  U ⊆ [p] ∖ {l} with |U| ≤ 15, writing U₀ := U ∩ H_l: |Cov(W_l, W_v | W_{U₀})| ≤ r_n and |Cov(W_j, W_v | W_{U₀})| ≤ r_n
+  for every v ∈ U ∖ H_l and j ∈ S₀ ∖ U₀. Budget: 15ρ + b < ½.
+  In words: outside Q, the conditional covariance of a column with a truth, given any 15 other columns, is below
+  the noise scale √(log n/n) (the Gaussian-row counterpart of (L-gain) with η → 0); and every column outside Q has
+  a neighbourhood H_l, with at most n^ρ members, outside which columns are asymptotically conditionally
+  uncorrelated with it and with the truths. H_l only has to capture correlations that do not vanish, so ρ may be
+  taken as small as the design allows.
+  **Sufficient — a generalisation of the v1.3 localised form, (L-R^b-loc)** [SC2-4], which contains RM's (L-R): the leak bound only at the localised sets,
+  |Cov(W_l, W_j | W_{U₀})| ≤ ϖ′_n for j ∈ S₀ ∖ U₀ with ϖ′_n√(n/log n) → 0 (RM: ϖ′_n = C_L n^{−1/2}), together with the
+  rate r_n(n/log n)^{1/4} → 0 (RM: r_n(n log n)^{1/4} → 0); then (L-gain-R) holds with ϖ_n = ϖ′_n + 15r_n²/c
+  (`lemmas/L4_sandR_b.md` §7, item 1 [SC2-3]).
 * **(W-R) Lattice width on the realised design** [CP1-P2]. Let 𝒲⁰_n := {λ_min(R̂_{Q∪{l}}) ≥ c/2 for every
   l ∈ [p]} (on it every u_{T,l}, (T, l) ∈ 𝔓, is defined, so 𝔴⁰_n and 𝔴_n(δ) are defined for the realised X)
   [SL1-opt3]. (W-R): there is a deterministic t_n → ∞ with P(𝒲⁰_n ∩ {𝔴⁰_n ≤ −t_n}) → 1.
@@ -208,7 +236,7 @@ P(NA(𝓛)) → 0" — is the special case of a gap ≥ c(δ₁, A)√log n.)
 **(C4) Containment.** RM-F is the special case of (C1) in which |Q| ≤ (log n)^κ and (W) is supplied by (W-χ) or by
 (N-D)(i) [⊂ (W-ref)] (take b < min(β(η, A), ½ − h)), and (BM-W) is supplied by BM-∞ under (N-χ) (then
 |Q| = O(log n)) and by (N-D)(ii) = (BM-Q) otherwise [CP1-P1]; RM-R is the special case of (C2) with
-|H_l| ≤ (log n)^κ and (W-R) supplied by (D-R) (for a δ₀ < 1 − 2b, with b and ρ small) [SL1-1]. So W3-RM2:RM2-F ⇒ W3-RM:RM-F and
+|H_l| ≤ (log n)^κ, (L-R^b) supplied by RM's (L-R) through the sufficient form (L-R^b-loc) [v1.4], and (W-R) supplied by (D-R) (for a δ₀ < 1 − 2b, with b and ρ small) [SL1-1]. So W3-RM2:RM2-F ⇒ W3-RM:RM-F and
 W3-RM2:RM2-R ⇒ W3-RM:RM-R at the level of hypotheses and conclusions.
 
 **Bridge lemmas** (each delivers one interface property; "delta" = the source proof is re-run and every use of the
@@ -223,22 +251,28 @@ size of Q is re-proved here, not cited outside its stated range):
 | (P4) W-suff | claim (C3)(c) | C-GROW:L2.3; RM Lemmas NA-F, N-loc | frames of dimension ≤ m₀, ℓ¹ atoms, (W-loc) |
 | (P5) W-conv | claim (C3)(b) | — | new; divergence form [CP1-P2] |
 | (P6) POST-F | (T1-F) ⇒ [POST] | SOP:TH09 (T03♯) | none (inherited, §5) |
-| (P7) SAND-R^b | Setting R, (FL-R) on sets ≤ 16 + s₀, (V-R), (L-R^b), 15ρ + b < ½ ⇒ [SAND(Q)] for any X-measurable partition with blocks ≤ 16 | RM Lemmas SAND-R, SAND-R′ (polylog H_l, Q); LOC2 `lemmas/L6_poly.md` §§4–5 (a design family) | reference count n^{15ρ}; ladder needs 15ρ < ½, junk exclusion 15ρ + b < ½; the spherical tail C-GROW:L6.4 is used for all 0 ≤ t ≤ (2A + 3) log n (its proof gives this; re-proved) |
+| (P7) SAND-R^b | Setting R, (FL-R) on sets ≤ 16 + s₀, (V-R), (L-R^b), 15ρ + b < ½ ⇒ [SAND(Q)] for any X-measurable partition with blocks ≤ 16 | RM Lemmas SAND-R, SAND-R′ (polylog H_l, Q); LOC2 `lemmas/L6_poly.md` §§4–5 (a design family) | reference count n^{15ρ}; ladder needs 15ρ < ½, junk exclusion 15ρ + b < ½; the spherical tail C-GROW:L6.4 is used for all 0 ≤ t ≤ (2A + 3) log n (its proof gives this; re-proved); [v1.4] the cross term of selection removal equals the difference of the leak covariances at U₀ and at U (product form), the comparison is made on √h with an o(√log n) error, and the spherical tail carries a mean shift of norm o(√log n) |
 | (P8) F→R | Setting R, (FL-R) on Q ∪ {l}, \|Q\| ≤ n^b, b < ½, (W-R) ⇒ [NA(Q)], [TL(Q)] under the joint law | (P0), (P2), (P3) conditional on X | sample floors on Q ∪ {l} from the entrywise Gram event (q√(log n/n) → 0); energy and (BM-W) from the fixed θ_lo, θ_hi (d_n² = O(q + log n) = o(n)) |
-| (P9) D→W | (D-R^b) ⇒ P(𝒲⁰_n ∩ {𝔴_n(δ₀) ≤ 0}) → 1 for every fixed δ₀ ∈ (0, 1 − 2b) [SL1-1], hence (W-R); (D-loc^b) ⇒ (D-R^b) | W2-LOC2:NA-R (polylog); LOC2 `lemmas/L6_poly.md` §6 (a design family) | polynomial lattice: sample/population errors O((q + log n)/√n) → 0; passage from a joint-law bound on max\|Z_{T,l}\| to the conditional mean (median–mean for a Lipschitz functional) |
-| (P10) POST-R | (T1-R) ⇒ [POST] | W2-APP:POST (through RM Lemma B9) | none (inherited, §5) |
+| (P9) D→W | (D-R^b) ⇒ P(𝒲⁰_n ∩ {𝔴_n(δ₀) ≤ 0}) → 1 for every fixed δ₀ ∈ (0, 1 − 2b) [SL1-1], hence (W-R); (D-loc^b) ⇒ (D-R^b) | W2-LOC2:NA-R (polylog); LOC2 `lemmas/L6_poly.md` §6 (a design family) | polynomial lattice: sample/population errors O((q + log n)/√n) → 0; passage from a joint-law bound on max\|Z_{T,l}\| to the conditional mean (a probability-≥ ½ event plus lower-tail concentration about the mean of a Lipschitz functional) [C1-F5] |
+| (P10) POST-R | (T1-R) ⇒ [POST] | W2-APP:POST (p ≥ 2); the p = 1 endpoint is proved in `lemmas/L5_formR.md` §3 | none (inherited, §5) |
 
-**(C5) Examples table** (families verifying the assumptions; verification is a proof obligation of the last leg; no
-family appears in (C1)–(C4)). Form F: every example of RM-F (by (C4)); exact-Gram designs whose Gram matrix has
-spectrum in [c, C] and polynomial off-diagonal decay of exponent α > 2 on a line (leakage radius
-≍ (n/log n)^{1/(2α)}, so any b > 1/(2α) works for large n, b < ¼ available; (W-loc) from the inverse-decay bound
-W2-LOC2:Lemma-IR applied to the Gram matrix; the truth-separation and coefficient conditions are to be specified with
-the verification [SL1-opt4]); **candidate, not verified**: exact-Gram designs with one equicorrelated leak group of
-size ≍ n^b around one truth ((W) by a direct width computation; heuristic range 8b < 2A + 1). Form R: UNI-0's class
-and LOC-BF's class (by (C4)); polynomial covariance decay α > 17/2 (the class of W2-LOC2:Thm-Poly). There the
-construction gives |Q| = O(n^{1/(2α)}) and |H_l| = O(n^{ρ*}) with multiplicative constants, for any ρ* > 1/(4α); take
-b > 1/(2α) and ρ > ρ* with 15ρ + b < ½ — possible exactly because α > 17/2 leaves strict slack [SL1-5]; (D-R^b) by
-its (P16)–(P17).
+**(C5) Examples table** [v1.4: `lemmas/L6_examples.md`, where each example carries its own status and conditions;
+cross-family check `reviews/LC2C_L6_check_opus.md`] (families verifying the assumptions; no family
+appears in (C1)–(C4)). **Form F:** every example of RM-F (by (C4)); exact-Gram designs whose Gram matrix has spectrum
+in [c, C] and polynomial off-diagonal decay of exponent **α > 2** on a line, with fixed signals and the explicit
+truth-separation condition (3.1) of `L6_examples.md` (automatic for s₀ = 1): Q a neighbourhood of S₀ of radius
+≍ (n/√log n)^{1/(2α)}, any b ∈ [1/(2α), ½), a small fixed η > 0, (W) through (W-loc) and the inverse-decay bound
+W2-LOC2:Lemma-IR applied to the Gram matrix; **one truth with n^b weak proxies** (squared correlation ≍ log n/n with
+the truth, orthogonal outside columns), every b ∈ (0, ½), η = 0, (W-loc) exact — a witness that (W) holds at
+genuinely polynomial |Q|; **one equicorrelated group of size n^b around one truth**, fixed correlation a ∈ (0, 1),
+**0 < b < 3/10**, (W) by a direct width computation through (W-unif) (for 3/10 ≤ b < ½: not verified — the v1.3
+heuristic range 8b < 2A + 1 is withdrawn; a reviewer's sketch puts the threshold of (W) for this design at b = 3/8,
+`SHARPNESS.md` §4). **Form R:** UNI-0's class and LOC-BF's class (by (C4)); polynomial
+covariance decay of exponent **α > 2** on a line with spectrum in [c, C] and PTV (the class of W2-LOC2:Thm-Poly,
+which needs α > 17/2): Q of radius ≍ (n/√log n)^{1/(2α)}, any b ∈ [1/(2α), ½), H_l of logarithmic radius (every ρ > 0
+admissible), (L-gain-R) at every conditioning set by Lemma BC of LOC2 `lemmas/L6_poly.md`, (W-R) through (D-loc^b)
+and Lemma-IR. In both forms the cutoff α > 2 is that of Lemma-IR (summable regression tails); the leak and size
+budgets alone need only α > 1.
 
 **(C6) Sharpness record** — `SHARPNESS.md` (written with the proofs; `ASSUMPTION_MAP.md` now): per assumption, what
 is proved, what is observed, what is open. In particular: b < ½ is where the size penalty log(p/k) + ½ log n of one
@@ -266,14 +300,14 @@ Consumed below PROVED-CHECKED — **explicit conditions of (C1)/(C2), carried in
   SAME-FAMILY-ONLY") — gives [POST] under (T1-F); (C1) is conditional on it.
 * W2-APP:POST@1.0.1 (full registry status [SL1-6]: "PROVED (by this seat, unchecked); R02 VERIFIED-WITH-AMENDMENTS,
   applied") — gives [POST] under (T1-R); (C2) is conditional on it.
-* W3-RM:B9@1.0.0 (RM Lemma B9, POST-R including the p = 1 endpoint; status "PROVED (by this seat, unchecked)") —
-  bridge (P10) uses it; (C2) is conditional on it unless (P10) is re-proved self-contained here [RC1-R4].
-* W1-GEN:L1@1.0.0 (score toolkit, status "PROVED (by this seat, unchecked)") — (P0) re-runs its proof at general
-  cardinalities; its statements at fixed set size are used through C-GROW:L0.1/L0.2. (C1)–(C3) are conditional on it
-  unless (P0) is written self-contained (planned).
-* W2-LOC2:NA-R@1.0.0, W2-LOC2:Thm-Poly@1.0.1, W2-LOC2:Lemma-IR@1.0.0, the RM lemma rows W3-RM:B2tau, B3, NA-F,
+* [v1.4] **Not conditions any more:** W3-RM:B9@1.0.0 — bridge (P10) uses W2-APP:POST for p ≥ 2 and proves the
+  p = 1 endpoint itself (`lemmas/L5_formR.md` §3); W1-GEN:L1@1.0.0 — (P0) is proved self-contained
+  (`lemmas/L0_toolkit_b.md`), the source is a template only. So (C1) is conditional on SOP:TH09@1.0.0 only, (C2) on
+  W2-APP:POST@1.0.1 only, and (C3) has no remaining below-PROVED-CHECKED external condition [SC2-2].
+* W2-LOC2:NA-R@1.0.0, W2-LOC2:Thm-Poly@1.0.1, W2-LOC2:Lemma-IR@1.0.0, W2-LOC2:Lemma-BC@1.0.0 (LOC2 `lemmas/L6_poly.md:78-109`) [C1-F10], the RM lemma rows W3-RM:B2tau, B3, NA-F,
   SAND-R, SAND-Rp, D-loc@1.0.0 [RC1-R4] (statuses "PROVED (by this seat, unchecked)"; each inside a PROVED-CHECKED ticket): used as
-  **templates** for delta proofs and for the examples; no conclusion of them is consumed outside its stated range.
+  **templates** for delta proofs; no conclusion of them is consumed outside its stated range. Lemma-IR and Lemma BC
+  are consumed as stated by the examples (C5) only (E2, E3 of `lemmas/L6_examples.md`), which carry their status.
 Implementation premises as RM §1 (named, not proved).
 
 ## 6. Not claimed
@@ -286,77 +320,18 @@ Implementation premises as RM §1 (named, not proved).
 * (W) from (V), (L) and the floors; necessity of (W), (BM-W), (V), the floors or the constant β(η, A) for the
   *conclusion* Ŝ⁺ = S₀ (only the route statement (C3)(b) is claimed); any statement when the width gap stays
   bounded; a failure rate for the reported model (the rate in (C3)(a) is for no-addition only).
-* An improvement of W2-LOC2:Thm-Poly's cutoff α > 17/2 (Form R reproduces it: 15ρ + b < ½ with b > 1/(2α) and
-  ρ > ρ* > 1/(4α), choosing both enlargements with strict slack as in (C5) [RC1-N1]); removing the localisation clause (L-loc-R).
+* [v1.4] A cutoff below α > 2 for the polynomial-decay examples (the leak and size budgets need only α > 1; the
+  regression-tail bound Lemma-IR needs α > 2); removing the localisation clause (L-loc-R) altogether (v1.4 needs it
+  only with r_n → 0, to control the sample error of the cross term); a leak at the exact scale κ√(log n/n) in Form R
+  (a Gaussian-row analogue of the frontier β(η, A)); a smaller exponent than 15 in the reference count n^{15ρ}; the
+  equicorrelated example for b ≥ 3/10.
 * Non-Gaussian rows or errors; growing s₀; θ*_min → 0 in Form R; masked truths; delivery P(U_n) → 0; finite-n
   statements; a binary64 theorem (everything is under EX-A); runs outside the configuration of §1; any change to
   shipped components.
 
-## 7. Registry block (draft; statuses are targets, nothing is proved) [SL1-4]
+## 7. Registry block
 
-Registry state at ingest (HQ CP1 decision): W3-RM2:RM2-F and W3-RM2:RM2-R enter as **CANDIDATES** that imply
-W3-RM:RM-F and W3-RM:RM-R (claim (C4)); supersession is decided at CP3.
-
-Headline rows list only the hypotheses the theorem assumes; the sufficient forms are registered as separate
-implication lemmas (W-suff, D-to-W). Every bridge is an explicit `depends_on` edge (PROTOCOL rule 16). The size
-budgets are recorded as sufficient budgets of the present arguments (ARTEFACT), not as necessary conditions.
-[RC1-R4] The edges added after RC1: W-suff, W-conv (RM2-F); D-to-W, W-conv, W3-RM:B9 (RM2-R; B9 is below
-PROVED-CHECKED, hence an `@hyp` edge and a condition in the status); the source engines of W-suff and D-to-W.
-
-```
-REGISTRY
-claim: W3-RM2:RM2-F | kind: theorem | statement: STATEMENT.md:(C1) | premises: STATEMENT.md:§1,§3.1
-status: TARGET (not proved); when proved: conditional on SOP:TH09@1.0.0 and on W1-GEN:L1@1.0.0 unless (P0) is self-contained | status_source: STATEMENT.md:4-10
-assumptions: A:T1-F ; A:FL-16 ; A:FL-Q ; A:V ; A:L-gain ; A:L-feas ; A:BM-W (new | signal floor at the truth-removal width | theta_min^2 (n-1) phi0^2 / (sigma^2 (d_n^2 + log n)) -> infinity | STATEMENT.md §1,§3.1 | shared yes | P2 TL-F^b) ; A:L-size-b (new | polynomial leakage size | |Q| <= n^b, b < beta(eta,A) | STATEMENT.md §3.1 | shared yes | P1 SAND-F^b) ; A:W (new | lattice width gap | w0_n -> -infinity | STATEMENT.md §1,§3.1 | shared yes | P3 NA-W)
-consumes: P:POST ; P:SAND(Q) ; P:TL(Q) ; P:NA(Q) ; P:E4
-conclusion: reported-model: one data event of probability -> 1 on which every admissible output run reports S0 | rate: none claimed | scope: fixed design; s0 fixed; p <= n^A (p >> n allowed); |Q| <= n^b
-depends_on: W3-RM:RM-0@stmt ; W3-RM:E4@stmt ; SOP:TH09@hyp ; W1-GEN:L1@hyp ; W3-RM2:Toolkit-b@stmt ; W3-RM2:SAND-F-b@stmt ; W3-RM2:TL-F-b@stmt ; W3-RM2:NA-W@stmt ; W3-RM2:W-suff@stmt ; W3-RM2:W-conv@stmt
-implies: W3-RM:RM-F (special case |Q| polylog, (W) from (N-chi) or (N-D)(i) through W3-RM2:W-suff; claim (C4))
-sharpness: A:W = NECESSARY-FOR-ROUTE (target: Lemma W-conv, gap -> +infinity; for whole-lattice no-addition, not for reporting; bounded gap undetermined) ; A:L-size-b = ARTEFACT (sufficient budget of the junk-exclusion argument; necessity open) ; A:BM-W = NONE (sufficient; necessity not studied) ; A:V, A:L-gain, A:FL = as W3-RM
-binding: A:W route obstruction via Lemma W-conv: gap -> +infinity forces P(NA(Q)) -> 0; gap -> -infinity is sufficient; bounded gap undetermined [whole-lattice route only] [SC1-4] ; A:L-size-b enters P:SAND(Q) via the junk-exclusion margin [artefact-threshold]
-gates: correct:PENDING ; lit:PENDING ; necessity:PENDING ; better:PENDING
-council: none yet
-
-claim: W3-RM2:RM2-R | kind: theorem | statement: STATEMENT.md:(C2) | premises: STATEMENT.md:§1,§3.2
-status: TARGET (not proved); when proved: conditional on W2-APP:POST@1.0.1 and on W1-GEN:L1@1.0.0 unless (P0) is self-contained; conditional on W3-RM:B9@1.0.0 for (P10) unless that bridge is re-proved self-contained here | status_source: STATEMENT.md:4-10
-assumptions: A:T1-R ; A:FL-R ; A:V-R ; A:L-gain-R ; A:L-loc-R ; A:L-feas ; A:L-size-b-R (new | polynomial leakage size, Gaussian rows | |Q| <= n^b, b < 1/2 | STATEMENT.md §3.2 | shared no | P7 SAND-R^b) ; A:H-size-rho (new | reference neighbourhood size | |H_l| <= n^rho, 15 rho + b < 1/2 | STATEMENT.md §3.2 | shared no | P7 SAND-R^b) ; A:W-R (new | lattice width on the realised design | exists deterministic t_n -> infinity: P(W0_n intersect {w0_n <= -t_n}) -> 1 | STATEMENT.md §3.2 | shared yes | P8 F-to-R) [SC1-3]
-consumes: P:POST ; P:SAND(Q) ; P:TL(Q) ; P:NA(Q) ; P:E4
-conclusion: reported-model: as RM2-F under the joint law of (X, eps) | rate: none claimed | scope: Gaussian rows; s0 fixed; p <= n^A (p >> n allowed); |Q| <= n^b, |H_l| <= n^rho
-depends_on: W3-RM:RM-0@stmt ; W3-RM:E4@stmt ; W2-APP:POST@hyp ; W1-GEN:L1@hyp ; W3-RM2:Toolkit-b@stmt ; W3-RM2:SAND-R-b@stmt ; W3-RM2:F-to-R@stmt ; W3-RM2:TL-F-b@stmt ; W3-RM2:NA-W@stmt ; W3-RM2:D-to-W@stmt ; W3-RM2:W-conv@stmt ; W3-RM:B9@hyp
-implies: W3-RM:RM-R (special case, (W-R) from (D-R) through W3-RM2:D-to-W; claim (C4))
-sharpness: A:W-R = ROUTE-OBSTRUCTION (target; conditional positive diverging width gaps obstruct whole-lattice no-addition; negative diverging gaps are sufficient; bounded gaps undetermined; no necessity for reporting claimed) [SC1-4] ; A:H-size-rho = ARTEFACT (reference counting; 17/2-type threshold) ; A:L-size-b-R = ARTEFACT (sufficient budget; necessity open)
-binding: A:H-size-rho enters P:SAND(Q) via the reference count n^{15 rho} [artefact-threshold]
-gates: correct:PENDING ; lit:PENDING ; necessity:PENDING ; better:PENDING
-council: none yet
-
-claim: W3-RM2:Toolkit-b | kind: lemma | statement: STATEMENT.md:(P0) | premises: STATEMENT.md:§1
-status: TARGET (not proved) | status_source: STATEMENT.md:4-10
-depends_on: W1-GEN:L1@hyp ; C-GROW:L0.1@proof ; C-GROW:L0.2@proof
-claim: W3-RM2:SAND-F-b | kind: lemma | statement: STATEMENT.md:(P1) | premises: STATEMENT.md:§1,§3.1
-status: TARGET (not proved) | status_source: STATEMENT.md:4-10
-depends_on: C-GROW:L3@proof ; W3-RM2:Toolkit-b@stmt
-claim: W3-RM2:TL-F-b | kind: lemma | statement: STATEMENT.md:(P2) | premises: STATEMENT.md:§1,§3.1
-status: TARGET (not proved) | status_source: STATEMENT.md:4-10
-depends_on: C-GROW:L2.1@proof ; W3-RM2:Toolkit-b@stmt
-claim: W3-RM2:NA-W | kind: lemma | statement: STATEMENT.md:(C3)(a) | premises: STATEMENT.md:§1,§3.1
-status: TARGET (not proved) | status_source: STATEMENT.md:4-10
-depends_on: C-GROW:L2.2@proof ; W3-RM2:Toolkit-b@stmt
-claim: W3-RM2:W-conv | kind: lemma | statement: STATEMENT.md:(C3)(b) | premises: STATEMENT.md:§1,§3.1
-status: TARGET (not proved) | status_source: STATEMENT.md:4-10
-depends_on: W3-RM2:Toolkit-b@stmt
-claim: W3-RM2:W-suff | kind: lemma | statement: STATEMENT.md:(C3)(c) | premises: STATEMENT.md:§1,§3.1
-status: TARGET (not proved) | status_source: STATEMENT.md:4-10
-assumptions: A:W-delta (new) ; A:W-chi ; A:W-ref (new) ; A:W-loc (new)  [alternatives, not a conjunction: each implies A:W]
-implies: A:W-delta => A:W ; A:W-chi => A:W-delta ; A:W-ref => A:W-delta ; A:W-loc => A:W-ref ; A:BM-Q => A:BM-W
-depends_on: C-GROW:L2.3@proof
-claim: W3-RM2:SAND-R-b | kind: lemma | statement: STATEMENT.md:(P7) | premises: STATEMENT.md:§1,§3.2
-status: TARGET (not proved) | status_source: STATEMENT.md:4-10
-depends_on: C-GROW:L6.4@proof ; W3-RM2:Toolkit-b@stmt
-claim: W3-RM2:F-to-R | kind: lemma | statement: STATEMENT.md:(P8) | premises: STATEMENT.md:§1,§3.2
-status: TARGET (not proved) | status_source: STATEMENT.md:4-10
-depends_on: W3-RM2:Toolkit-b@stmt ; W3-RM2:TL-F-b@stmt ; W3-RM2:NA-W@stmt
-claim: W3-RM2:D-to-W | kind: lemma | statement: STATEMENT.md:(P9) | premises: STATEMENT.md:§1,§3.2
-status: TARGET (not proved) | status_source: STATEMENT.md:4-10
-assumptions: A:D-R-b (new) ; A:D-loc-b (new)  [alternatives: A:D-loc-b => A:D-R-b => A:W-R for every delta0 in (0, 1 - 2b)]
-depends_on: W2-LOC2:NA-R@proof ; W3-RM:D-loc@proof  [proof templates re-run at polynomial size; no conclusion of them is consumed outside its stated range]
-```
+[v1.4] The registry block of record is at the end of `REPORT.md` (PROTOCOL item 8), with one status per claim after
+the proofs. The draft that stood here in v1.0–v1.3 (targets only) is kept in `reviews/STATEMENT_v1.3_CP2.md`; its
+content — assumption ids, `depends_on` edges [RC1-R4], sharpness and binding fields [SC1-3, SC1-4], the CANDIDATE
+note of the HQ CP1 decision — is carried into REPORT.md, updated for (L-R^b) v1.4 and for the dependencies of §5.

@@ -30,3 +30,6 @@ Theory_work/Wave2/W2-LOC2/lemmas/L2_NAR.md
 Theory_work/Wave2/W2-LOC2/lemmas/L6_poly.md
 Theory_work/Wave2/W2-UNI/STATEMENT.md
 Theory_work/Wave2/W2-APP/lemmas/L1_POST.md
+# examples (C5): inherited examples and the posterior/PTV definitions they cite
+Theory_work/Wave3/W3-RM/lemmas/L7_examples.md
+Theory_work/Wave2/W2-APP/lemmas/L3_LOC.md
