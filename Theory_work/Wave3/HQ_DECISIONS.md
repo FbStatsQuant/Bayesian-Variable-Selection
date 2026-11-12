@@ -223,3 +223,8 @@
   = infeasibility finding → return to HQ. Stage 2 conditional: reps 11–20 only on cells with 1–3 failures; within the
   remaining budget, else the owner is asked for that cell's measured cost. Pooled 0/40 is a gate statement only.
   summarize.py v4 (Sol R02 fixes + Group A header) with a fresh Sol review before any analysis.
+- 2026-11-12 ~11:40 CT (owner): **non-stop mode this week** on Claude Personal (owner has resets): keep working
+  continuously, no pacing pauses, no bursts — ≤ 4 Claude leads at once, effort ≤ high, Fable only where necessary
+  (new hard proofs). Plan to Sunday: record the 5 council-passed tickets; RM2 riders + T7 (Opus); P6 → D1; editorial
+  pass; chapter v2.0 + council + API audit. W3-PATH scoping LAUNCHED (Fable 5.2 CP lead, BVS-wt/W3-PATH) to CP1; proof
+  leg needs the owner's go after CP1.
