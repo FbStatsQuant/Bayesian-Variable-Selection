@@ -1157,6 +1157,152 @@ try:
                         "-> A4 (no MANIFEST_*.txt with the cell digest)",
                         all("A4-council" in e_ <= A4C for e_ in (e_p1, e_p2, e_p3)) and rc_vP == 0 and rc_bP != 0))
 
+        # ---------------- INFRA R05: a ticket's own CHECKPOINT_<k>.md as (uncovered) status source ----------------
+        # Ticket R05T: an earlier line-check round LC1 (own manifest), the acceptance round R1 (manifest, two seats
+        # with per-claim tables), status lines and REGISTRY blocks in CHECKPOINT_3.md (never in a manifest).
+        TD = "Theory_work/WaveT/R05T"
+        CK = f"{TD}/CHECKPOINT_3.md"
+        put(f"{TD}/STATEMENT.md", "Lemma A. A holds.\nLemma B. B holds.\nLemma Z. Z holds.\n")
+        put(f"{TD}/PROOF.md", "Proofs of A, B and Z (draft).\n")
+        put(f"{TD}/LOG.md", "Lemma A. A holds.\nPROVED-CHECKED\n")
+        os.makedirs(os.path.join(TMP, TD, "reviews"), exist_ok=True)
+
+        def mhead(rel):
+            return open(os.path.join(TMP, rel), encoding="utf-8").readline().split()[1]
+        man("freeze", TD, f"{TD}/reviews/MANIFEST_LC1.txt")
+        dgL = mhead(f"{TD}/reviews/MANIFEST_LC1.txt")
+        LC1 = f"{TD}/reviews/LC1_A_line_check.md"
+        LC1_TXT = f"Line check LC1-A on MANIFEST {dgL}: VERIFIED.\n"
+        put(LC1, LC1_TXT)
+        put(f"{TD}/PROOF.md", "Proofs of A, B and Z (final).\n")  # the round's content changes before the council
+        man("freeze", TD, f"{TD}/reviews/MANIFEST_R1.txt")
+        dg5 = mhead(f"{TD}/reviews/MANIFEST_R1.txt")
+        cell5 = f"R1; MANIFEST {dg5}; sol=8.5 PASS(reviews/R1_council_sol.md); opus=8.5 PASS(reviews/R1_council_opus.md)"
+        SOLR, OPUSR = f"{TD}/reviews/R1_council_sol.md", f"{TD}/reviews/R1_council_opus.md"
+
+        def r05_review(seat, decisions, head_="| id | decision |", dg_=None):
+            return (f"Council R1 ({seat}).\n\n{head_}\n|---|---|\n" + "".join(f"| {i} | {d_} |\n" for i, d_ in decisions)
+                    + "\n" + vline(dg_ or dg5, seat))
+        GOOD_SOL = r05_review("sol", [("A", "accepted"), ("B", "**accepted** with non-blocking remarks")])
+        GOOD_OPUS = r05_review("opus", [("R05T:A", "accepted"), ("B", "accepted")], "| Id | Disposition |")
+        put(SOLR, GOOD_SOL)
+        put(OPUSR, GOOD_OPUS)
+
+        def r05_blk(loc, ln, sl):
+            return ("```\nREGISTRY\n"
+                    f"claim: R05T:{loc} | kind: lemma | statement: STATEMENT.md:{ln} | premises: none\n"
+                    f"name: Lemma {loc}\nstatus: PROVED-CHECKED | status_source: CHECKPOINT_3.md:{sl}\n"
+                    f"council: {cell5}\n```\n")
+
+        def r05_ckpt(a_cite="LC1-A: VERIFIED.", z=False):
+            return ("# R05T checkpoint 3\n\n"
+                    f"- R05T:A — PROVED-CHECKED — Lemma A. Line check: {a_cite}\n"
+                    "- R05T:B — PROVED-CHECKED — Lemma B. Line check: LC1-A (arithmetic, L1.2): VERIFIED; R1: accepted.\n"
+                    + ("- R05T:Z — PROVED-CHECKED — Lemma Z. Line check: LC1-A: VERIFIED.\n" if z else "\n") + "\n"
+                    + r05_blk("A", 1, 3) + "\n" + r05_blk("B", 2, 4) + ("\n" + r05_blk("Z", 3, 5) if z else ""))
+
+        def acc_l(out_):
+            return next((l_ for l_ in out_.splitlines() if l_.strip().startswith("acceptance (")), "")
+        # staged: an extra claim id (Z: in the checkpoint, accepted by no seat) and an unresolvable round id are refused
+        put(CK, r05_ckpt(z=True))
+        rc_x, out_x = tool("ingest.py", "claims", os.path.join(TMP, CK), "--staged")
+        put(CK, r05_ckpt(a_cite="LC9-A: VERIFIED."))
+        rc_u, out_u = tool("ingest.py", "claims", os.path.join(TMP, CK), "--staged")
+        CK_TXT = r05_ckpt()
+        put(CK, CK_TXT)
+        rc_g, out_g = tool("ingest.py", "claims", os.path.join(TMP, CK), "--staged")
+        results.append(("R05 staged: a checkpoint carrying a claim id no seat accepted (extra id) is REFUSED (A4)",
+                        rc_x != 0 and "REFUSED" in acc_l(out_x) and "did not accept" in out_x and "R05T:Z" in out_x))
+        results.append(("R05 staged: a status line citing an unresolvable round id (LC9-A) is REFUSED (A4)",
+                        rc_u != 0 and "REFUSED" in acc_l(out_u) and "LC9-A" in out_u and "resolves to no file" in out_u))
+        results.append(("R05 control (staged): own CHECKPOINT_3.md as status source, outside the manifest, passes "
+                        "acceptance (0 ERROR)", rc_g == 0 and "PASS" in acc_l(out_g) and "REFUSED" not in acc_l(out_g)))
+        rc_ap, _ = tool("ingest.py", "claims", os.path.join(TMP, CK), "--apply")
+        sha_ok = all(st(c_)["status_sha256"] and st(c_)["status_sha256"] == R.status_sha(st(c_)["status_source"])
+                     for c_ in ("R05T:A", "R05T:B"))
+        r05_clean = lambda: not acc_errs("R05T:A", "R05T:B") and not acc_errs("R05T:B", "R05T:A")  # noqa: E731
+
+        def r05_has(cid, frag_, chk="A4-council"):
+            return any(f[1] == chk and frag_ in f[3] for f in acc_errs(cid))
+        results.append(("R05 ingest records the checkpoint's sha256 in status_sha256; both claims pass acceptance; "
+                        "status_sha256 is not settable by registry.py set",
+                        rc_ap == 0 and sha_ok and r05_clean()
+                        and run("registry.py", "set", "R05T:A", "status_sha256=" + "0" * 64, "--reason", "t", ok=False)[0] != 0))
+        # (3) a later edit of the checkpoint: check.py C12 ERROR (routine run and CI) and acceptance refused
+        put(CK, CK_TXT + "\nA late note.\n")
+        c12 = {f[2] for f in findings() if f[0] == "ERROR" and f[1] == "C12-checkpoint"}
+        ed = r05_has("R05T:A", "changed after ingest")
+        put(CK, CK_TXT)
+        results.append(("R05 checkpoint edited after ingest: check.py C12-checkpoint ERROR for both claims and A4 "
+                        "refusal; restored -> clean", c12 >= {"R05T:A", "R05T:B"} and ed and r05_clean()
+                        and not [f for f in findings() if f[1] == "C12-checkpoint"]))
+        # (3) no recorded checkpoint digest -> no exemption
+        rows_ = R.load_claims()
+        keep = next(r_ for r_ in rows_ if r_["id"] == "R05T:A")["status_sha256"]
+        for r_ in rows_:
+            if r_["id"] == "R05T:A":
+                r_["status_sha256"] = ""
+        R.save_claims(rows_)
+        nosha = r05_has("R05T:A", "records no status_sha256")
+        rows_ = R.load_claims()
+        for r_ in rows_:
+            if r_["id"] == "R05T:A":
+                r_["status_sha256"] = keep
+        R.save_claims(rows_)
+        results.append(("R05 a checkpoint status source without a recorded status_sha256 is refused (A4); restored -> "
+                        "clean", nosha and r05_clean()))
+        # (2) unbound reviews: a council seat whose verdict is bound to another manifest; an earlier round's review that
+        # quotes no frozen manifest digest (none at all, or a digest that is no MANIFEST_*.txt of the ticket)
+        put(OPUSR, r05_review("opus", [("A", "accepted"), ("B", "accepted")], dg_=dgL))
+        ub_c = r05_has("R05T:A", "no COUNCIL-VERDICT line for MANIFEST") and r05_has("R05T:B", "COUNCIL-VERDICT")
+        put(OPUSR, GOOD_OPUS)
+        put(LC1, "Line check LC1-A: VERIFIED (no digest quoted).\n")
+        ub_e1 = r05_has("R05T:A", "quotes no digest")
+        put(LC1, f"Line check LC1-A on MANIFEST {'0' * 64}: VERIFIED.\n")
+        ub_e2 = r05_has("R05T:B", "quotes no digest")
+        put(LC1, LC1_TXT)
+        results.append(("R05 unbound reviews refused (A4): a council seat bound to another manifest; an earlier round "
+                        "(LC1-A) quoting no digest, or a digest that is no frozen manifest of the ticket; restored -> "
+                        "clean", ub_c and ub_e1 and ub_e2 and r05_clean()))
+        # (4) claim ids: a seat that did not accept B; a seat that accepted an id the checkpoint lacks
+        put(SOLR, r05_review("sol", [("A", "accepted"), ("B", "not accepted (gap in step 2)")]))
+        id_x = r05_has("R05T:A", "did not accept") and r05_has("R05T:B", "R05T:B")
+        put(SOLR, GOOD_SOL)
+        put(OPUSR, r05_review("opus", [("A", "accepted"), ("B", "accepted"), ("Z", "accepted")]))
+        id_m = r05_has("R05T:A", "lacks claim id(s) this seat accepted")
+        put(OPUSR, "Council R1 (opus). All accepted.\n\n" + vline(dg5, "opus"))
+        id_t = r05_has("R05T:A", "no per-claim table")
+        put(OPUSR, GOOD_OPUS)
+        results.append(("R05 checkpoint ids must equal each seat's accepted ids: a not-accepted id, an accepted id "
+                        "missing from the checkpoint, and a review without a per-claim table are refused (A4); restored "
+                        "-> clean", id_x and id_m and id_t and r05_clean()))
+        # (5) ambiguous round id: two review files for LC1-A
+        put(f"{TD}/reviews/LC1_A_line_check_v2.md", LC1_TXT)
+        amb = r05_has("R05T:A", "resolves to 2 review files")
+        os.remove(os.path.join(TMP, TD, "reviews", "LC1_A_line_check_v2.md"))
+        results.append(("R05 a cited round id that resolves to two review files (ambiguous) is refused (A4); restored "
+                        "-> clean", amb and r05_clean()))
+        # (1) only the ticket's OWN CHECKPOINT_<k>.md is exempt: LOG.md, a CHECKPOINT in a sub-folder and another
+        # ticket's CHECKPOINT (all outside the manifest) as status source are refused for coverage
+        put(f"{TD}/sub/CHECKPOINT_3.md", CK_TXT)
+        put("Theory_work/WaveT/R05U/CHECKPOINT_3.md", CK_TXT)
+        arb = []
+        for src_ in (f"{TD}/LOG.md:2", f"{TD}/sub/CHECKPOINT_3.md:3", "Theory_work/WaveT/R05U/CHECKPOINT_3.md:3"):
+            rc_cs, _ = run("registry.py", "correct-status", "R05T:A", "--status", "PROVED-CHECKED", "--source", src_,
+                           "--reason", "R05 probe")
+            arb.append(rc_cs == 0 and r05_has("R05T:A", f"does not cover {src_.rpartition(':')[0]}"))
+        run("registry.py", "correct-status", "R05T:A", "--status", "PROVED-CHECKED", "--source", f"{CK}:3",
+            "--reason", "R05 restore")
+        results.append(("R05 an arbitrary uncovered status file (LOG.md, a sub-folder CHECKPOINT, another ticket's "
+                        "CHECKPOINT) is refused (A4 coverage); the own checkpoint restored -> clean",
+                        all(arb) and len(arb) == 3 and r05_clean()))
+        # (1) statement files stay covered: a statement relocated to an uncovered file (LOG.md, same text) is refused
+        run("registry.py", "set", "R05T:A", f"file={TD}/LOG.md", "--reason", "R05 probe")
+        unc = r05_has("R05T:A", f"does not cover {TD}/LOG.md")
+        run("registry.py", "set", "R05T:A", f"file={TD}/STATEMENT.md", "--reason", "R05 restore")
+        results.append(("R05 an uncovered statement file is still refused (A4) with a checkpoint status source; "
+                        "restored -> clean", unc and r05_clean()))
+
         # N4: crash-safe transactions (journal registry/.TXN_INPROGRESS; recover rolls back, restartably)
         c1, c2 = os.path.join(R.REG, "zz_c1.tsv"), os.path.join(R.REG, "zz_c2.tsv")
         for f_ in (c1, c2):

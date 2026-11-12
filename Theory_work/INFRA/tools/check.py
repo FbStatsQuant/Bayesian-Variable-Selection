@@ -13,6 +13,8 @@ Correctness layer
   C7 SoP         [WARN]  ticket result vs State_of_Project/registry/theory_loop.tsv; [INFO] no row (lag)
   C8 FINAL       [WARN]  ticket statuses quoted in Wave1C/FINAL/sections/*.tex vs ticket result
   C9 evidence    [WARN]  evidence file named in the registry does not exist
+  C12 checkpoint [ERROR] a status source that is a CHECKPOINT_<k>.md changed after ingest (`status_sha256`, the
+                          digest recorded at ingest / status change, no longer matches the file) (INFRA R05)
   M1 method pin  [WARN]  method component changed since the commit the claim is pinned to (rollback trigger);
                           [WARN] pin not a known commit
 Strength layer (headline theorems + shared assumptions)
@@ -64,7 +66,13 @@ Acceptance mode (HQ, CP3):  check.py --acceptance ID [ID ...]   runs every check
                           is the header of the ticket's reviews/MANIFEST_*.txt and `manifest.py verify` of it passes on
                           the current tree; each review file has exactly one line `COUNCIL-VERDICT round=R<k>
                           manifest=<digest> seat=<seat> score=<x.y> gates=PASS` matching the cell, and no other
-                          (malformed or contradictory) COUNCIL-VERDICT line (the `manifest.py bind` rule) (R03-N2)
+                          (malformed or contradictory) COUNCIL-VERDICT line (the `manifest.py bind` rule) (R03-N2);
+                          the manifest covers the statement, premise and status-source files, except that a status
+                          source that is the ticket's OWN CHECKPOINT_<k>.md is exempt from coverage only if its
+                          recorded status_sha256 still matches, its claim ids (REGISTRY blocks + rows sourced there)
+                          equal each seat's accepted ids (per-claim table `| id | decision |`), and every review round
+                          cited in the status line (`<ROUND>:` / `<ROUND> (<note>):`) resolves to exactly one
+                          reviews/<ROUND>_* file quoting a frozen MANIFEST_*.txt digest (INFRA R05)
   A5 accepted    [ERROR] the claim consumes (stmt / proof / bound-bridge edges, transitively; an @hyp edge unless the
                           consumer is `conditional on` it) a checked claim that has neither an `accept` event for its
                           current acceptance identity (`v<version> fp2:<hex>`: row fields, provenance, effective
@@ -281,6 +289,18 @@ def run(acceptance=None, consumed=None):
                "missing": f"status {r['status'][:80]!r} not found verbatim in {path}",
                "unreadable": f"status_source {src!r} unreadable"}[res]
         add("ERROR", "C10-verbatim", r["id"], msg)
+    # C12 (INFRA R05): a status source that is a CHECKPOINT_<k>.md is frozen at ingest: the digest recorded in
+    # status_sha256 must still match the file (any later edit of the checkpoint is flagged)
+    for r in rows:
+        rec = (r.get("status_sha256") or "").strip()
+        if not rec or r["state"] in R.DEAD:
+            continue
+        cur = R.status_sha(r.get("status_source", ""))
+        if cur != rec:
+            add("ERROR", "C12-checkpoint", r["id"], f"status source {r.get('status_source', '')!r} "
+                + ("is not a readable CHECKPOINT_<k>.md" if not cur else "changed after ingest")
+                + f" (status_sha256 {rec[:12]}..., now {(cur or '-')[:12]}...): an ingested checkpoint is frozen; "
+                "restore it, or record a status change with registry.py correct-status / propagate.py")
     # M1 method pinning
     comps, cache = R.load_components(), {}
     for r in rows:
@@ -509,7 +529,7 @@ def claim_checks(cid, r, fold, by, aliases, g, memo, add):
     if R.status_strength(r.get("status", "")) != 3:
         return
     # F2 / R10: correctness evidence and a CP3-PASS council record for EVERY checked claim
-    cprobs = R.council_problems(r, fold)
+    cprobs = R.council_problems(r, fold, list(by.values()))
     for p_ in cprobs:
         add("ERROR", "A4-council", cid, f"council: {p_}")
     if cprobs and ("correct" not in passed or "correct" in bad_ev):

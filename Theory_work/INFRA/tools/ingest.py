@@ -75,6 +75,7 @@ def new_row(cid, **kw):
     r.update({k: (R.join_list(v) if isinstance(v, list) else (v or "")) for k, v in kw.items()})
     r["sha256"] = R.claim_hash(r) or ""
     r["commit"] = R.git_last_commit(r["file"])
+    r["status_sha256"] = R.status_sha(r["status_source"])  # INFRA R05: a CHECKPOINT_<k>.md source is frozen here
     return r
 
 

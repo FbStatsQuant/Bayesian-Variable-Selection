@@ -34,7 +34,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bvsreg as R  # noqa: E402
 
 PROTECTED = {"id", "state", "superseded_by", "sha256", "version", "improvable", "status", "status_source",
-             "tex_sha256"}
+             "tex_sha256", "status_sha256"}
 
 
 def get(rows, ref):
@@ -120,6 +120,7 @@ def main():
             if R.status_at(a.status, a.source or "") != "ok":
                 sys.exit("add: --status must start verbatim (not negated) on --source path:line")
             r["status_source"] = a.source
+            r["status_sha256"] = R.status_sha(a.source)
         r["sha256"] = R.claim_hash(r) or sys.exit("cannot hash the statement/premise spans")
         r["improvable"] = R.improvable(r, sharp)
         rows.append(r)
@@ -235,6 +236,7 @@ def main():
         R.log_event("correct-status", r["id"], f"{r['status'][:80]} @ {r['status_source']}",
                     f"{a.status[:80]} @ {a.source}", a.reason, a.actor)
         r["status"], r["status_source"] = a.status, a.source
+        r["status_sha256"] = R.status_sha(a.source)  # INFRA R05: re-recorded with every status-source change
         r["version"] = R.bump(r["version"], "patch")
         R.save_claims(rows)
         print(f"{r['id']}: status corrected (transcription), v{r['version']}")
