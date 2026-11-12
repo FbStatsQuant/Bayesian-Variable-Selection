@@ -36,6 +36,20 @@ Claude-inference tally: all on Claude Work (claudeAgent); claude-personal not us
 - 23:25. [step 3] L01 returned: **LOCK-WITH-AMENDMENTS** (0 FATAL / 1 MAJOR / 2 MINOR / 0 NIT). All applied
   (`reviews/L01_disposition.md`) → STATEMENT v1.1 **locked**. Agents so far: lead Fable 5.2 (claudeAgent, high);
   L01 gpt-6.1-sol (codex, high, statement lock).
-- 23:35. [step 4] ASSUMPTION_MAP.md written; boundary experiment `numerics/a_boundary.py` (equicorrelated null
+- 23:26. [step 4] ASSUMPTION_MAP.md written; boundary experiment `numerics/a_boundary.py` (equicorrelated null
   block) started. Launching break review K01 (gpt-6-astra, codex, high, blind; `reviews/BRIEF_K01_astra.md`).
   Lemma files drafted in parallel.
+- 23:30. `a_boundary` finished (equicorrelated nulls, one-step odds: median L1/Λ_n 0.71, 0.72, 0.61). `a_sph` finished
+  (R1 up to n = 25600, p = 4.1·10⁶). The first `a_orth` run was stopped by the lead (projected > 3 h) and restarted
+  with fewer repetitions at large p (the two "failed, exit 127" background notices are these deliberate stops).
+- 23:33. [step 5] Lemma files drafted: `lemmas/S_one_step.md` (Lemma V, Lemma S), `B_sparsity.md`, `A_log_factor.md`
+  (Lemma W, Lemma R, both witnesses), `C_counterexample.md` (Lemma P; explicit constants c₁ = 1/(73(σ*²+b̄²))).
+- 23:40. [step 6] K01 returned: **no claim broken**; 0 FATAL / 2 MAJOR (numerical evidence: E2 outside (E);
+  ASSUMPTION_MAP overstated the boundary experiment) / 1 MINOR; proposals P1 (e^{−λ/2} cap), P2 (rank instead of s₀).
+  All findings applied; P1, P2 adopted (`reviews/K01_disposition.md`) → STATEMENT v1.2 (locked), ASSUMPTION_MAP,
+  lemma files B, A updated; `a_orth.py` E2 corrected and the script re-run in full.
+  Agents so far: lead Fable 5.2 (claudeAgent, high); L01 gpt-6.1-sol (codex, high); K01 gpt-6-astra (codex, high).
+- 2026-11-12 04:13 CST. **Resumed** after a second Claude Work rate-limit stop (HQ message). On disk: everything of
+  steps 1–6; `a_orth` had finished (E1 4501 s, E2 inside (E): odds/Λ_n 1.26–1.37, min 0.98). HOLDS.md: no holds.
+  L01 and K01 were already dispositioned (steps 3, 6).
+- 04:20. **CP1** written (`CHECKPOINT_1.md`) and committed. Reviews clean after fixes → advancing to CP2 (pre-approved).

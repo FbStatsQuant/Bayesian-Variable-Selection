@@ -23,3 +23,7 @@ R1: exact-in-law reduction, larger n and p
   R1 n=  6400 p=   512000 (log p/log n=1.50) s0=1 reps=100 | Lam=0.0511 | L1/Lam: median 1.004, quartiles 0.942 1.116, min 0.871 | P(>=0.9) 0.93, P(>=0.75) 1.00
   R1 n=  6400 p=   512000 (log p/log n=1.50) s0=3 reps=100 | Lam=0.1023 | L1/Lam: median 0.994, quartiles 0.926 1.134, min 0.850 | P(>=0.9) 0.85, P(>=0.75) 1.00
   R1 n=  6400 p= 40960000 (log p/log n=2.00) s0=1 reps= 30 | Lam=0.0591 | L1/Lam: median 0.989, quartiles 0.938 1.227, min 0.895 | P(>=0.9) 0.93, P(>=0.75) 1.00
+  R1 n=  6400 p= 40960000 (log p/log n=2.00) s0=3 reps= 30 | Lam=0.1181 | L1/Lam: median 1.016, quartiles 0.963 1.262, min 0.887 | P(>=0.9) 0.90, P(>=0.75) 1.00
+  R1 n= 25600 p=  4096000 (log p/log n=1.50) s0=1 reps= 30 | Lam=0.0275 | L1/Lam: median 0.981, quartiles 0.952 1.102, min 0.877 | P(>=0.9) 0.97, P(>=0.75) 1.00
+  R1 n= 25600 p=  4096000 (log p/log n=1.50) s0=3 reps= 30 | Lam=0.0550 | L1/Lam: median 1.009, quartiles 0.939 1.125, min 0.896 | P(>=0.9) 0.97, P(>=0.75) 1.00
+  [all done, 1216s]

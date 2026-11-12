@@ -124,7 +124,7 @@ def E1(rng):
             for s0 in (1, 3):
                 cfgs.append((n, p, s0))
     for (n, p, s0) in cfgs:
-        reps = 200 if p <= 2000 else (100 if p <= 7000 else 40)
+        reps = 200 if p <= 500 else (60 if p <= 2500 else (30 if p <= 7000 else 12))
         lam = Lambda(n, p, s0, p - s0)
         r, r1, ds = [], [], []
         for _ in range(reps):
@@ -138,13 +138,14 @@ def E1(rng):
 
 
 def E2(rng):
-    print("E2: growing s0 on the orthogonal witness (Corollary A2): s0 = round(n^0.3), p = n-1, theta = 1")
+    print("E2: growing s0 on the orthogonal witness (Corollary A2): s0 = round(n^0.3), p = n-1, theta_j = 1/sqrt(s0)"
+          " (so ||mu||^2 = n-1 and ||theta||^2 = 1: (E), (C) hold with M = M' = 1)")
     for n in (400, 1600, 6400):
         p, s0 = n - 1, int(round(n ** 0.3))
         lam = Lambda(n, p, s0, p - s0)
         r, pis = [], []
-        for _ in range(60):
-            z, g, sy2 = suff_stats(n, p, s0, 1.0, rng)
+        for _ in range(40 if n <= 1600 else 15):
+            z, g, sy2 = suff_stats(n, p, s0, 1.0 / math.sqrt(s0), rng)
             odds, one = exact_odds(n, p, s0, z, kextra=80)
             r.append(odds / lam); pis.append(1 / (1 + odds))
         print(f"  n={n} p={p} s0={s0} | Lam={lam:.4f} | median odds/Lam={np.median(r):.3f}, min={min(r):.3f} | median pi(S0)={np.median(pis):.3f}", flush=True)

@@ -1,4 +1,4 @@
-# W3-PSHARP — STATEMENT (v1.1, 2026-11-11; lead: Claude Fable 5.2, claudeAgent, high; v1.1 = statement-lock amendments [L01-#]; **locked**)
+# W3-PSHARP — STATEMENT (v1.2, 2026-11-11; lead: Claude Fable 5.2, claudeAgent, high; v1.1 = statement-lock amendments [L01-#]; v1.2 = break-review K01: wording [K01-F3] and two adopted strengthenings [K01-P1, K01-P2]; **locked**)
 
 Ticket T3 of `Theory_work/Wave3/API_AUDIT/sharp1/TRIAGE.md`: three **sharpness records** (lower bounds / necessity)
 for the posterior theorem. No new upper bound is claimed. All results are about the exact coded target π. Statuses are
@@ -54,7 +54,8 @@ arbitrary and may depend on everything):
 - **(W-orth)** *(fixed design)* the columns x_j, j ∈ 𝒩_n, are mutually orthogonal and orthogonal to col X_{S₀}.
   (Then N_n ≤ n − 1 − rank X_{S₀}.)
 - **(W-sph)** *(random null block)* X_{S₀} and θ* are deterministic; the directions ω_j := x_j/√(n − 1), j ∈ 𝒩_n, are
-  iid uniform on the unit sphere of 1^⊥ and independent of ε; and (log N_n)² = o(n), (s₀ + 1) log N_n = o(n).
+  iid uniform on the unit sphere of 1^⊥ and independent of ε; and (log N_n)² = o(n), (r₀ + 1) log N_n = o(n), where
+  r₀ := rank X_{S₀} ≤ s₀ [K01-P2].
   (Example: raw null columns with iid N(0, 1) entries, independent of X^r_{S₀} and ε; any p compatible with the two
   logarithmic restrictions, in particular p ≫ n [L01].)
 
@@ -91,12 +92,14 @@ order √((1 ∨ log p)/n) when log p = o(log n).
 **Corollary B.** For every n ≥ 3, every standardised design with p ≥ 2, every data set and every S₀ ⊆ [p] with
 0 ≤ s₀ ≤ K − 1 (deterministic; no law, no truth):
   δ_n/(1 − δ_n) ≥ 𝒪^{lb}_n := Σ_{j=1}^{K−s₀} C(s₀ + j, j) n^{−j/2} Π_{i=0}^{j−1} (p − s₀ − i)/(2p − 1 − s₀ − i) ≥ c(p, s₀)/√n,
-equivalently π(S₀) ≤ √n/(√n + c(p, s₀)). Here c(p, s₀) ≥ (s₀ + 1)/3 whenever s₀ ≤ p/2; c(p, s₀) ≥ 1 for s₀ ≥ 1;
+equivalently π(S₀) ≤ 1/(1 + 𝒪^{lb}_n), and in particular π(S₀) ≤ √n/(√n + c(p, s₀)) [K01-F3]. Here c(p, s₀) ≥ (s₀ + 1)/3 whenever s₀ ≤ p/2; c(p, s₀) ≥ 1 for s₀ ≥ 1;
 c(p, 0) > ½; and c(p, s₀)/(s₀ + 1) → ½ when p → ∞ and s₀/p → 0 [L01-m1].
 
 **Consequences** (any sequence with s₀ ≤ min(K − 1, p/2); any designs; any data, random or not):
 - **(B1)** π(S₀) ≤ [1 + (s₀ + 1)/(3√n)]⁻¹ surely. So π(S₀) → 1 (in probability, along any subsequence) forces
   s₀ = o(√n); if s₀ ≥ λ√n then π(S₀) ≤ 1/(1 + λ/3); and if s₀/√n → ∞ then π(S₀) → 0 surely.
+  **Critical scale [K01-P1]:** if s₀/√n → λ ∈ (0, ∞) and s₀/p → 0, then limsup π(S₀) ≤ e^{−λ/2}, surely (from the full
+  sum 𝒪^{lb}_n: liminf 𝒪^{lb}_n ≥ e^{λ/2} − 1).
 - **(B2)** δ_n = O_P(ρ_n) for a deterministic ρ_n → 0 forces s₀ + 1 = O(√n ρ_n). In particular the rate r_n forces
   s₀ = O(√(log n)) on every design, and — by Corollary A2 — s₀ = O(1) on witness designs with log p ≍ log n.
 - **(B3) Target correction.** The recorded growing-s₀ target "s₀ = o(log n/log log n)" (W3-POST REPORT §4 item 8,
