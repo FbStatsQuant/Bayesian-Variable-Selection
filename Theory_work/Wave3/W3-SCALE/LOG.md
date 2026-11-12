@@ -139,3 +139,54 @@ From row 13 on, "cumulative" = sacct actuals of finished jobs + worst case of th
   updated with the 5k evidence.
 - 04:15 — CHECKPOINT_1.md written. Ledger: 27.77 task-hours by finished jobs; with the 5k job at its limit at most
   51.8 of 150. Stop: end of leg A; the 5k result is reported as pending (HQ instruction).
+
+## Leg B (HQ-approved 2026-11-12 ~10:40 UTC; new cap 150 task-hours; bit-identical work only; stop at CP2)
+
+HQ decision recorded in `Wave3/HQ_DECISIONS.md` ("W3-SCALE CP1"): CP1 ACCEPTED; leg B = B1-B5; order: fold in 5k, B5
+before B2, B4 and B1 in parallel, B3 after B1; O17 ruling (output-identical covers every statistical output and every
+quantity in a published table or theorem check; `fresh`/cache counters may differ only if none feeds a published
+table, or if serial-equivalent totals are reported that match exactly); reserved items stay with Felipe.
+
+### Leg B admission ledger (cap 150 task-hours; leg A's 5k job 2692690 stays on leg A's ledger)
+
+| # | time (CT) | job | tasks x limit | worst case (h) | cumulative: actual of finished + worst case of open (h) | actual (sacct, h) |
+|---|---|---|---|---|---|---|
+| B1 | 11-12 04:24 | 2697743 `w3scale_bench_D` (20G) | 3 x 0.67 h | 2.0 | 2.0 | |
+| B2 | 11-12 04:24 | 2697744 `w3scale_bitid_supp_D` | 5 x 1.5 h | 7.5 | 9.5 | |
+| B3 | 11-12 04:24 | 2697745 `w3scale_setup_cmp_D` (48G) | 6 x 0.5 h | 3.0 | 12.5 | |
+| B4 | 11-12 04:24 | 2697746 `w3scale_bitid_p500_D` | 10 x 0.75 h | 7.5 | 20.0 | |
+| B5 | 11-12 04:24 | 2697747 `w3scale_bitid_p500_S5_D` | 2 x 0.75 h | 1.5 | 21.5 | |
+| B6 | 11-12 04:24 | 2697748 `w3scale_bitid_p1000_D` | 10 x 1 h | 10.0 | 31.5 | |
+| B7 | 11-12 04:24 | 2697749 `w3scale_bitid_p1000_S5_D` | 2 x 2 h | 4.0 | 35.5 | |
+
+### Leg B entries
+
+- 11-12 04:08 — Leg B started. HOLDS read (none). The 5k job is still running (final run at N = 20,000), so the fold-in
+  waits for it; the other items start. Agents: R04 = Codex gpt-6-astra, high (second break review of DESIGN_v1).
+- 04:10 — B5: Astra R04 started (blind first read of DESIGN_v1 revision 2, with the O17 ruling in the brief).
+- 04:20 — B1 (engine, bit-identical), in `core_v32dev`: joint Cholesky of H and A with the v3.1 operand order
+  (`chol2_inplace`), lower triangles only, sub-Gram in a member buffer, dead copy removed (`v3_score.h`); Gibbs / swap
+  proposals and local-search neighbours formed in the particle and undone on rejection, reused buffers
+  (`v3_engine.h`); `TopStore::offer` without an allocation on the quick reject (`v3_ledger.h`; an addition to the B1
+  list, same class). New test `tests/engine_bench.cpp` (two islands + both local searches, every output byte dumped).
+  Local: dump identical to v3.1 at every step; 4.16 -> about 2.7 us per step (noisy PC).
+- 04:22 — B4 (admission only): `v3_preflight_ls0` charges LS0 after the setup with the actual start mode;
+  `cpp_start_mode_size`; the start mode is cached in the setup holder and reused by LS0; the initial preflight keeps
+  its memory verdict. Option `v3.ls0_preflight = "worst_case"` restores leg A's rule. `tests/preflight_b4.R`: passed
+  locally (formula, exhaustive scan-bound check for p <= 40, refusal after setup, same estimates under both rules).
+  Fingerprint: the v3.2-only record `preflight_ls0` goes to the delivery record; the comparison counts it as an
+  admission decision. Unit harness (50 cases) against the new core: dumps identical to v3.1.
+- 04:24 — v3.2-dev revision D = 6866f57 deployed (`code/v32dev_6866f57`). HOLDS read (none). Gate round D submitted
+  (ledger B1-B7): engine benchmark at p = 2k and 20k, preflight tests, unit harness, exports, supplementary units,
+  setup comparison, and the 24 PROD-H units under revision D (v3.1 records of round A reused).
+- 04:27 — Astra R04 returned: DESIGN_v1 revision 2 UNSOUND as a build specification (4 CRITICAL, 5 MAJOR, 1 MINOR):
+  `fresh` counts feed published tables and cannot be rebuilt from worker summaries (shared cache cleared when full);
+  N1 does not cover the RB PIP; leader stores are outputs; merge memory bound wrong. Verified the first in
+  `evidence_h2.py:98-105,139-141`. All accepted: DESIGN_v1 revision 3 (worker-equivalence contract at R' = 4),
+  `reviews/R04_disposition.md`, commit 747cc6e. **B2 is not built**: under the O17 ruling case (a) fails and case (b)
+  needs a lookup-trace replay (about 6 GB at 1k, 15 GB at 2k for the final run); goes to HQ at CP2.
+- 04:29 — First NOTS results of round D: engine benchmark at p = 2k: v3.1 1.69 us per step, revision D 1.21-1.23
+  (dumps identical); preflight tests passed; unit harness dumps identical.
+- 04:33 — B3 driver `scripts/census_measure.R` (measurement only: tier-0 calibration at the fixed-size budget
+  N0 = 2,500 / H0 = 512, frozen grid, then R islands per N on that grid); local smoke passed. To be submitted after
+  the gate verdict (B3 after B1).

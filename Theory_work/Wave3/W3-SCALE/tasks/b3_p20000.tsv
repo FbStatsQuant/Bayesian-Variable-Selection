@@ -1,0 +1,1 @@
+1	Rscript --vanilla census_measure.R --core-dir /scratch/fb31/w3scale/code/v32dev_6866f57/Scripts/SMC_BVS/core_v32dev --p 20000 --seed 20261111 --n-cal 2500 --n-islands 2500 --islands 12 --mem-gb 32 --hours 15.5 --out $OUT/res/census_p20000.rds
