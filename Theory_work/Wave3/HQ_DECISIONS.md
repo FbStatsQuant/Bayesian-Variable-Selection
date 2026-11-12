@@ -255,3 +255,5 @@
   RM2-R/POST-R/Cont-R conditional on W2-APP:POST; no supersession over RM-F/R — owner). test_lifecycle R06 entry
   for RM2 now points at MANIFEST_R1. Owner decisions pending: supersessions RM-F/R→RM2, C-MIS→MIS-R, START→START2;
   optional Sunday API audit of W2-APP:POST, SOP:TH09/TH128, C-MIS:Prop-P/GD(b) to lift conditions.
+- 2026-11-12 15:10 CT CORRECTION (watchdog note): W3-PATH was NOT launched — only its brief exists (branch theory/W3-PATH);
+  the 10:29 "LAUNCHED" line is superseded by the owner's 12:00 plan (scoping starts Mon 11-16 16:00 CT).
