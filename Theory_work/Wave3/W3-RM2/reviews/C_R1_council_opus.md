@@ -176,3 +176,46 @@ threshold ≈ 3/8, sketched) is a natural instance where the route fails but not
 Settling O4′ rigorously first would give the cleanest motivation and test case for that ticket.
 
 COUNCIL-VERDICT round=R1 manifest=00bbeab89433b2f65dbfb8eefddf5e1a88dcc5460cabe79cd7adc3c8d6515d4a seat=opus score=8.8 gates=PASS
+
+## Addendum — per-claim decisions (seat opus, round R1; 2026-11-12; same seat model, fresh thread; no rescoring)
+
+| id | decision |
+|---|---|
+| W3-RM2:RM2-F | ACCEPT |
+| W3-RM2:RM2-R | ACCEPT |
+| W3-RM2:Toolkit-b | ACCEPT |
+| W3-RM2:SAND-F-b | ACCEPT |
+| W3-RM2:TL-F-b | ACCEPT |
+| W3-RM2:NA-W | ACCEPT |
+| W3-RM2:W-conv | ACCEPT |
+| W3-RM2:W-suff | ACCEPT |
+| W3-RM2:Cont-F | ACCEPT |
+| W3-RM2:SAND-R-b | ACCEPT |
+| W3-RM2:F-to-R | ACCEPT |
+| W3-RM2:D-to-W | ACCEPT |
+| W3-RM2:POST-R | ACCEPT |
+| W3-RM2:Cont-R | ACCEPT |
+| W3-RM2:Ex-PolyR | NOT-EXAMINED |
+| W3-RM2:Ex-PolyF | NOT-EXAMINED |
+| W3-RM2:Ex-Proxy | ACCEPT |
+| W3-RM2:Ex-Equi | ACCEPT |
+
+Where examined:
+- W3-RM2:RM2-F — G2 (lines 45–52, hypothesis map of (C1)); G4 (line 62 ff., conditional on SOP:TH09@1.0.0); G5 (line 73 ff., β(η, A)); §4 (line 158 ff.). F1 is a registry-pointer records item, not against the claim.
+- W3-RM2:RM2-R — G2 (lines 45–52, hypothesis map of (C2)); G4 (conditional on W2-APP:POST@1.0.1); G5 (ε* budget 15ρ + b < ½); §4 (line 158 ff.).
+- W3-RM2:Toolkit-b — G1 "L0 Toolkit-b" (lines 15–17).
+- W3-RM2:SAND-F-b — G1 "L1" (lines 18–19, ladder and junk exclusion); G5 (β(η, A)); F9 NIT only.
+- W3-RM2:TL-F-b — G1 "L2 … TL-W" (line 26, identity (4.1), (BM-W)); G2 (line 50).
+- W3-RM2:NA-W — G1 "L2 … NA-W" (line 21); G5 (exp(−s²/8), n^{−c*}).
+- W3-RM2:W-conv — G1 "L2 … W-conv" (line 22).
+- W3-RM2:W-suff — G1 "L2" (lines 23–25: (3.1), (W-ref) ⇒ (W-unif), (W-loc) ⇒ (W-ref)); G5 (δ, atom bound L_n/φ₀).
+- W3-RM2:Cont-F — §4 (line 161, `L3_assemblyF.md:40-56`, re-checked).
+- W3-RM2:SAND-R-b — G1 "L4 (new mathematics)" (lines 27–35: (★), sample perturbation, Lemmas 3–4, ladder, 6(b)).
+- W3-RM2:F-to-R — G1 "L5 … P8" (line 38); G3 (line 60).
+- W3-RM2:D-to-W — G1 "L5 … P9a Step 4, P9" (lines 39–40); F5 NIT only.
+- W3-RM2:POST-R — G1 "L5 … P10 at p = 1" (line 41); G4 (conditional on W2-APP:POST@1.0.1).
+- W3-RM2:Cont-R — §4 (line 161, `L5_formR.md:151-160`, re-checked).
+- W3-RM2:Ex-PolyR — not examined: E2 appears only in G4 (line 66, status carried) and as scope (lines 106, 155); G1's L6 item (line 42) covers E4 and E5 only.
+- W3-RM2:Ex-PolyF — not examined: E3 appears only in G4 (line 66, status carried) and as scope (line 154); G1's L6 item (line 42) covers E4 and E5 only.
+- W3-RM2:Ex-Proxy — G1 "L6" (line 42, E4's regression identity).
+- W3-RM2:Ex-Equi — G1 "L6" (lines 42–43, E5's v_t, A_t, (5.1), (5.2) ⇒ b < 3/10).

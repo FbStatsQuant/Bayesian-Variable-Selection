@@ -29,3 +29,46 @@ Reviewed STATEMENT v1.4 against the R1 manifest. All 57 SHA-256 entries (includi
 Yes: as a conditional reported-model theorem under the named execution premises, v1.4 is fit to replace the parent's Theorem 3. It contains the parent forms, genuinely admits polynomial leakage sets, and supplies both general width criteria and verified nontrivial examples. The paper must carry the posterior-input conditions and output-only qualification into its final theorem presentation; this review does not discharge those external inputs or decide HQ acceptance. The single most valuable missing strengthening is a path-level LS0 theorem that replaces whole-lattice no-addition by control of the states the greedy search actually visits, while counting non-deletion moves against the shipped cap. That addresses the substantive restriction in W and could extend the leakage-size range; the numerical successes alone do not establish it.
 
 COUNCIL-VERDICT round=R1 manifest=00bbeab89433b2f65dbfb8eefddf5e1a88dcc5460cabe79cd7adc3c8d6515d4a seat=astra score=9.5 gates=PASS
+
+## Addendum ? per-claim decisions (seat astra, round R1; 2026-11-12; same seat model, fresh thread; no rescoring)
+
+| id | decision |
+|---|---|
+| W3-RM2:RM2-F | ACCEPT |
+| W3-RM2:RM2-R | ACCEPT |
+| W3-RM2:Toolkit-b | ACCEPT |
+| W3-RM2:SAND-F-b | ACCEPT |
+| W3-RM2:TL-F-b | ACCEPT |
+| W3-RM2:NA-W | ACCEPT |
+| W3-RM2:W-conv | ACCEPT |
+| W3-RM2:W-suff | ACCEPT |
+| W3-RM2:Cont-F | ACCEPT |
+| W3-RM2:SAND-R-b | ACCEPT |
+| W3-RM2:F-to-R | ACCEPT |
+| W3-RM2:D-to-W | ACCEPT |
+| W3-RM2:POST-R | ACCEPT |
+| W3-RM2:Cont-R | ACCEPT |
+| W3-RM2:Ex-PolyR | ACCEPT |
+| W3-RM2:Ex-PolyF | ACCEPT |
+| W3-RM2:Ex-Proxy | ACCEPT |
+| W3-RM2:Ex-Equi | ACCEPT |
+
+Where examined:
+W3-RM2:RM2-F: Gate verdicts, G2 and G3 (fixed-design assumptions, all-maximiser sandwich, deterministic search and common posterior event); G6 (execution semantics and output qualification); Suitability and next strengthening (conditional reported-model theorem).
+W3-RM2:RM2-R: Gate verdicts, G1 (Form R product, counting, ladder and junk exclusion), G2 (full-U leakage, localisation, reference budget and posterior inputs), G3 (simultaneous Gaussian-row event and every-output-run quantifier), and G4 (C2 posterior dependency); Suitability and next strengthening.
+W3-RM2:Toolkit-b: Gate verdicts, G1, opening mathematical check (exponential lattice cardinality in the regularity error, citing L0_toolkit_b:135-147).
+W3-RM2:SAND-F-b: Gate verdicts, G1 (uniform ladder and final junk-exclusion margin, citing L1_sandF_b:109-150), and G2 (residual-variance normalisation and changes under junk removal).
+W3-RM2:TL-F-b: Gate verdicts, G1 (two-square truth-removal identity, citing L2_width:134-217), and G2 (BM-W deletion and swap directions and separately controlled added-column noise, citing L2_width:184-217).
+W3-RM2:NA-W: Gate verdicts, G1 (opposite tails of the 1-Lipschitz functional and score conversion, citing L2_width:58-109), and G5 (s_n squared over 8 exponent and preliminary size condition).
+W3-RM2:W-conv: Gate verdicts, G1 (opposite-tail argument and score conversion), G5 (bounded score/prior discrepancy absorbed by positive diverging gap), and G6 (whole-lattice obstruction distinguished from reporting necessity and bounded gaps).
+W3-RM2:W-suff: Gate verdicts, G1 (sufficient forms including refitted local regression, citing L2_width:134-217), and G5 (reference entropy margin h+b<1/2).
+W3-RM2:Cont-F: Gate verdicts, G2 (containment retains parent feasibility and signal requirements, citing L3_assemblyF:42-56); Suitability and next strengthening (contains the parent forms).
+W3-RM2:SAND-R-b: Gate verdicts, G1 (two-conditioning-set product bound, spherical conditioning, counting and junk exclusion, citing L4_sandR_b:109-241), G2 (exact assumptions), G3 (uniformity and deterministic references), and G5 (15rho+b margin).
+W3-RM2:F-to-R: Gate verdicts, G1 (P8 deterministic envelopes for conditional thresholds, citing L5_formR:30-46).
+W3-RM2:D-to-W: Gate verdicts, G1 (P9 conditional mean bound from lower-tail concentration, citing L5_formR:63-105), G3 (latent-extension independence), G4 (polynomial-size proof rerun), and G5 (sample/population error).
+W3-RM2:POST-R: Gate verdicts, G2 (posterior conditions remain separate inputs), G3 (common posterior event supports every admissible output run), and G4 (C2 explicitly retains the W2-APP:POST status, citing STATEMENT:297-306); Suitability and next strengthening (external posterior inputs remain conditional).
+W3-RM2:Cont-R: Gate verdicts, G2 (containment retains parent feasibility and signal requirements, citing L5_formR:151-160); Suitability and next strengthening (contains the parent forms).
+W3-RM2:Ex-PolyR: Gate verdicts, G4 (E2 individual BC/IR conditions retained), and G5 (E2/E3 logarithmic saving, b=1/(2alpha), feasibility enlargement and regression refitting error, citing L6_examples:75-102,176-246,283-325).
+W3-RM2:Ex-PolyF: Gate verdicts, G4 (E3 individual BC/IR conditions retained), and G5 (E2/E3 logarithmic saving, b=1/(2alpha), feasibility enlargement and regression refitting error, citing L6_examples:75-102,176-246,283-325).
+W3-RM2:Ex-Proxy: Gate verdicts, G5 (E4 full proxy Gram yields the claimed range, citing L6_examples:334-383).
+W3-RM2:Ex-Equi: Gate verdicts, G5 (E5 size-dependent level and conservative b<3/10 cutoff, citing L6_examples:417-473).
