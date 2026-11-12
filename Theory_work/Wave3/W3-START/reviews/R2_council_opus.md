@@ -153,3 +153,52 @@ loose P-OVL row (Issue 2).
 * I did not re-verify the Laurent–Massart and Gaussian tail inequalities themselves; they are standard.
 
 COUNCIL-VERDICT round=R2 manifest=5e26bb8b58f98718959378cff18789927c6a8a1e881e3d77af06ae1ccb2e9885 seat=opus score=8.9 gates=PASS
+
+## Addendum — per-claim decisions (seat opus, round R2; 2026-11-12; same seat model, fresh thread; no rescoring)
+
+| id | decision |
+|---|---|
+| W3-START:AGG | ACCEPT |
+| W3-START:FLOOR | ACCEPT |
+| W3-START:TK | ACCEPT |
+| W3-START:LEAK | ACCEPT |
+| W3-START:VIS-c | ACCEPT |
+| W3-START:VIS-m | ACCEPT |
+| W3-START:ASM | ACCEPT |
+| W3-START:START-F | ACCEPT |
+| W3-START:F1 | ACCEPT |
+| W3-START:F2 | ACCEPT |
+| W3-START:F3 | ACCEPT |
+| W3-START:F4 | ACCEPT |
+| W3-START:NEC-b | ACCEPT |
+| W3-START:NEC | ACCEPT |
+| W3-START:TRANSFER | ACCEPT |
+| W3-START:BR | ACCEPT |
+| W3-START:START-R | ACCEPT |
+| W3-START:IF-START | ACCEPT |
+| W3-START:OVL | ACCEPT |
+| W3-START:MIS | ACCEPT |
+| W3-START:EX | ACCEPT |
+
+Where examined:
+- W3-START:AGG — gate table G1 (line 28, "L1": (P1)–(P5), L1.1, (AGG-a)–(AGG-d)); per-claim table line 50.
+- W3-START:FLOOR — gate table G1 (line 28, "L1 … FLOOR", Schur identity); G2 (line 29, (T0)); per-claim table line 51.
+- W3-START:TK — gate table G1 (line 28, "L2": (2.1), (TK-a)–(TK-e), (E1)–(E4)); G2 (line 29); per-claim table line 52.
+- W3-START:LEAK — gate table G1 (line 28, "L3": (J0)–(J4), (B1), L3.3, L3.4); G3 (line 30); per-claim table line 53.
+- W3-START:VIS-c — gate table G1 (line 28, "L4": L4.2 exponent chain); G5 (line 32, κ_V); per-claim table line 54.
+- W3-START:VIS-m — gate table G1 (line 28, "L4": L4.1 Steps 2–6); G5 (line 32); per-claim table line 55.
+- W3-START:ASM — gate table G1 (line 28, "L5": (e1)–(e3)); G2 (line 29, (C1)); per-claim table line 56.
+- W3-START:START-F — gate table G1 (line 28, "L5": event 𝒢, C, C′, (d)⇒(a)–(c)); G2/G5 (lines 29, 32, (T1)(d) uniformity); per-claim table line 57.
+- W3-START:F1 — gate table G1 (line 28, "L6": F1 (i)–(iv)); per-claim table line 58; Issue 5 (non-blocking).
+- W3-START:F2 — gate table G1 (line 28, "L6": F2 Schur complement, (J1)); G2 (line 29); per-claim table line 59.
+- W3-START:F3 — gate table G1 (line 28, "L6": F3); per-claim table line 60.
+- W3-START:F4 — gate table G1 (line 28, "L3": F4's arithmetic and threshold); G5 (line 32, exponent (1 + 2A̲ − c)/2); per-claim table line 61.
+- W3-START:NEC-b — gate table G1 (line 28, "L7" chains); G2 (line 29, (C2)); per-claim table line 62.
+- W3-START:NEC — gate table G1 (line 28, "L7" chains, margin 3ϵ); G2 (line 29, (T4)); per-claim table line 63.
+- W3-START:TRANSFER — gate table G1 (line 28, "L8": Fubini version f_B); G3 (line 30); per-claim table line 64.
+- W3-START:BR — gate table G1 (line 28, "L9": L9.1–L9.6); per-claim table line 65; Issue 3 (non-blocking).
+- W3-START:START-R — gate table G1 (line 28, "L9": L9.7); G2 (line 29, (T3)(b)); per-claim table line 66.
+- W3-START:IF-START — gate table G1 (line 28, "L10: IF-START"); G4 (line 31, rate via δ̄); per-claim table line 67.
+- W3-START:OVL — gate table G1 (line 28, "L10: OVL (i)–(v)"); G2 (line 29); per-claim table line 68; Issue 2 (non-blocking, §4 table wording).
+- W3-START:MIS — gate table G1 (line 28, "L10: Lemma R′"); G2/G3 (lines 29–30, (T6)); per-claim table line 69.
+- W3-START:EX — gate table G1 (line 28, "L11: all five families"); per-claim table line 70 and the F-2 re-derivation (lines 72–79).

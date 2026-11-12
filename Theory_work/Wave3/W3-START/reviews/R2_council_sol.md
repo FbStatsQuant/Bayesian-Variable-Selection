@@ -76,3 +76,51 @@ Overall score: **9.2 / 10**.
 I did not rerun the full production R simulation campaign or the author's complete falsification scripts, validate every numerical CSV value, establish a binary64 theorem, or audit the literature novelty comparisons from their original publications. I did not independently establish the correctness of SAMP's sampler theorems: their stated interfaces and quoted assurance were checked, and their conclusions remain subject to their own premises. No finite-n informativeness threshold is scored as a defect. No prohibited source or earlier review was used.
 
 COUNCIL-VERDICT round=R2 manifest=5e26bb8b58f98718959378cff18789927c6a8a1e881e3d77af06ae1ccb2e9885 seat=sol score=9.2 gates=PASS
+
+## Addendum — per-claim decisions (seat sol, round R2; 2026-11-12; same seat model, fresh thread; no rescoring)
+
+| id | decision |
+|---|---|
+| W3-START:AGG | ACCEPT |
+| W3-START:FLOOR | ACCEPT |
+| W3-START:TK | ACCEPT |
+| W3-START:LEAK | ACCEPT |
+| W3-START:VIS-c | ACCEPT |
+| W3-START:VIS-m | ACCEPT |
+| W3-START:ASM | ACCEPT |
+| W3-START:START-F | ACCEPT |
+| W3-START:F1 | ACCEPT |
+| W3-START:F2 | ACCEPT |
+| W3-START:F3 | ACCEPT |
+| W3-START:F4 | ACCEPT |
+| W3-START:NEC-b | ACCEPT |
+| W3-START:NEC | ACCEPT |
+| W3-START:TRANSFER | ACCEPT |
+| W3-START:BR | ACCEPT |
+| W3-START:START-R | ACCEPT |
+| W3-START:IF-START | ACCEPT |
+| W3-START:OVL | ACCEPT |
+| W3-START:MIS | ACCEPT |
+| W3-START:EX | ACCEPT |
+
+Where examined: W3-START:AGG: Per-claim table, line 22 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:FLOOR: Per-claim table, line 23 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:TK: Per-claim table, line 24 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:LEAK: Per-claim table, line 25 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:VIS-c: Per-claim table, line 26 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:VIS-m: Per-claim table, line 27 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:ASM: Per-claim table, line 28 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:START-F: Per-claim table, line 29 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:F1: Per-claim table, line 30 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:F2: Per-claim table, line 31 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:F3: Per-claim table, line 32 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:F4: Per-claim table, line 33 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:NEC-b: Per-claim table, line 34 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:NEC: Per-claim table, line 35 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:TRANSFER: Per-claim table, line 36 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:BR: Per-claim table, line 37 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:START-R: Per-claim table, line 38 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:IF-START: Per-claim table, line 39 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:OVL: Per-claim table, line 40 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:MIS: Per-claim table, line 41 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
+W3-START:EX: Per-claim table, line 42 (explicit accepted disposition and claim-specific basis); Issues reports no blocking finding.
