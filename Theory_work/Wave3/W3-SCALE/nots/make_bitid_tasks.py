@@ -7,6 +7,7 @@ time limit; plus the supplementary units and the header-level unit harness; plus
 import sys, os
 
 v32_commit, out = sys.argv[1], sys.argv[2]
+suffix = sys.argv[3] if len(sys.argv) > 3 else ""   # e.g. "_B" for a later v3.2-dev revision
 BASE = "/scratch/fb31/w3scale"
 CORE = {"v31": f"{BASE}/code/v31_613f063/Scripts/SMC_BVS/core",
         "v32": f"{BASE}/code/v32dev_{v32_commit}/Scripts/SMC_BVS/core_v32dev"}

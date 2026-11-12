@@ -69,8 +69,10 @@ Every change below leaves every output of `v3_fit` bit-identical to v3.1 for the
 except wall-clock fields and the preflight record (item 4). Files changed: `cpp/v3_score.h`, `cpp/v3_blocks.h`,
 `cpp/v3_start.h`, `v3_fit.R`. Everything else is byte-identical to v3.1 after removing carriage returns.
 
-1. **Gram (`gram_fill`, `v3_score.h`).** Eight entries of a Gram row are accumulated in the same pass over the
-   observations, each in its own accumulator with the v3.1 order of additions. `gram_fill_v31` keeps the v3.1 loop.
+1. **Gram (`gram_fill`, `v3_score.h`).** Columns are taken in tiles copied row-major; sixteen entries of a Gram row
+   are accumulated in the same pass over the observations, each in its own accumulator (two-lane vectors, element-wise
+   multiply and add) with the v3.1 order of additions; one triangle is computed and the other copied block by block.
+   `gram_fill_v31` keeps the v3.1 loop.
 2. **Setup memory and neighbour graph (`v3_blocks.h`).** The complete-linkage distance is computed straight from the
    Gram (no correlation copy next to it: 16 p² bytes at the peak instead of 24 p²). `neighbour_graph` takes the first
    `keep` candidates of the v3.1 total order by `std::partial_sort`, with per-column correlations; no p × p correlation

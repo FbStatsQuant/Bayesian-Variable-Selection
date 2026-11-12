@@ -1,6 +1,7 @@
 // v3_score.h -- target posterior and scorer (CORE_SPEC v2 §2; M §5 and §6.13).
 #pragma once
 #include "v3_util.h"
+#include <cstring>
 
 namespace v3 {
 
@@ -51,36 +52,62 @@ inline void gram_fill_v31(Data& D) {
 }
 // v3.2-dev (G, output-preserving bit for bit): every entry G_ab is the same sum as in gram_fill_v31 -- one accumulator
 // per entry, started at 0, terms x_ia * x_ib added for i = 0..n-1 in this order, one rounded multiply and one rounded
-// add per term (no FMA: -ffp-contract=off; no reassociation: no fast-math). GRAM_LANES entries of row a (consecutive
-// columns b, contiguous in the column-major X) are accumulated in the same pass over i, each in its own accumulator,
-// so the additions of different entries overlap in time. The lanes never mix.
+// add per term (no FMA: -ffp-contract=off; no reassociation: no fast-math; IEEE multiplication is commutative, so
+// x_ia * x_ib and x_ib * x_ia are the same double). Only the schedule differs:
+//  * the columns b are taken in tiles of GRAM_TILE; a tile is copied row-major (n x tile), so that for a row i the
+//    values x_ib of consecutive b are adjacent in memory;
+//  * for a column a and 16 consecutive columns b of the tile, 16 accumulators (8 two-lane vectors, GCC vector
+//    extension: element-wise multiply and add, each lane rounded as a scalar operation) run over i together. The
+//    lanes never mix, and the entries left over at the end of a tile use the scalar v3.1 loop;
+//  * only G_ba for b >= a is computed (as in v3.1, which stores each sum twice); the other triangle is copied
+//    afterwards, tile by tile.
 inline void gram_fill(Data& D) {
   const int n = D.n, p = D.p;
-  const int GRAM_LANES = 8;
+  const int GRAM_TILE = 256, GRAM_BLOCK = 64;
+  typedef double gram_v2 __attribute__((vector_size(16)));
   D.G.assign((size_t)p * p, 0.0);
-  for (int a = 0; a < p; ++a) {
-    const double* xa = D.col(a);
-    int b = a;
-    for (; b + GRAM_LANES <= p; b += GRAM_LANES) {
-      const double* x0 = D.col(b);
-      const double* x1 = x0 + n; const double* x2 = x1 + n; const double* x3 = x2 + n;
-      const double* x4 = x3 + n; const double* x5 = x4 + n; const double* x6 = x5 + n; const double* x7 = x6 + n;
-      double s0 = 0, s1 = 0, s2 = 0, s3 = 0, s4 = 0, s5 = 0, s6 = 0, s7 = 0;
-      for (int i = 0; i < n; ++i) {
-        const double v = xa[i];
-        s0 += v * x0[i]; s1 += v * x1[i]; s2 += v * x2[i]; s3 += v * x3[i];
-        s4 += v * x4[i]; s5 += v * x5[i]; s6 += v * x6[i]; s7 += v * x7[i];
-      }
-      const double sv[GRAM_LANES] = {s0, s1, s2, s3, s4, s5, s6, s7};
-      for (int l = 0; l < GRAM_LANES; ++l) { D.G[(size_t)(b + l) * p + a] = sv[l]; D.G[(size_t)a * p + (b + l)] = sv[l]; }
+  std::vector<double> tile((size_t)n * GRAM_TILE);
+  for (int b0 = 0; b0 < p; b0 += GRAM_TILE) {
+    const int tb = std::min(GRAM_TILE, p - b0);
+    for (int c = 0; c < tb; ++c) {
+      const double* xb = D.col(b0 + c);
+      for (int i = 0; i < n; ++i) tile[(size_t)i * GRAM_TILE + c] = xb[i];
     }
-    for (; b < p; ++b) {
-      const double* xb = D.col(b);
-      double s = 0;
-      for (int i = 0; i < n; ++i) s += xa[i] * xb[i];
-      D.G[(size_t)b * p + a] = s; D.G[(size_t)a * p + b] = s;
+    const int a_end = b0 + tb;                       // columns a < b0 + tb have entries (a, b >= a) in this tile
+    for (int a = 0; a < a_end; ++a) {
+      const double* xa = D.col(a);
+      double* out = &D.G[(size_t)a * p + b0];         // G[(size_t)a * p + b] = Gat(b, a), b = b0 + c
+      int c = std::max(a - b0, 0);
+      for (; c + 16 <= tb; c += 16) {
+        gram_v2 s0 = {0, 0}, s1 = {0, 0}, s2 = {0, 0}, s3 = {0, 0}, s4 = {0, 0}, s5 = {0, 0}, s6 = {0, 0}, s7 = {0, 0};
+        const double* r = &tile[c];
+        for (int i = 0; i < n; ++i, r += GRAM_TILE) {
+          const double v = xa[i];
+          const gram_v2 vv = {v, v};
+          gram_v2 x0, x1, x2, x3, x4, x5, x6, x7;
+          std::memcpy(&x0, r, 16); std::memcpy(&x1, r + 2, 16); std::memcpy(&x2, r + 4, 16); std::memcpy(&x3, r + 6, 16);
+          std::memcpy(&x4, r + 8, 16); std::memcpy(&x5, r + 10, 16); std::memcpy(&x6, r + 12, 16); std::memcpy(&x7, r + 14, 16);
+          s0 += vv * x0; s1 += vv * x1; s2 += vv * x2; s3 += vv * x3;
+          s4 += vv * x4; s5 += vv * x5; s6 += vv * x6; s7 += vv * x7;
+        }
+        std::memcpy(out + c, &s0, 16); std::memcpy(out + c + 2, &s1, 16); std::memcpy(out + c + 4, &s2, 16); std::memcpy(out + c + 6, &s3, 16);
+        std::memcpy(out + c + 8, &s4, 16); std::memcpy(out + c + 10, &s5, 16); std::memcpy(out + c + 12, &s6, 16); std::memcpy(out + c + 14, &s7, 16);
+      }
+      for (; c < tb; ++c) {
+        const double* xb = D.col(b0 + c);
+        double s = 0;
+        for (int i = 0; i < n; ++i) s += xa[i] * xb[i];
+        out[c] = s;
+      }
     }
   }
+  // the other triangle: Gat(a, b) = Gat(b, a) for b > a, copied in GRAM_BLOCK x GRAM_BLOCK blocks
+  for (int a0 = 0; a0 < p; a0 += GRAM_BLOCK)
+    for (int b0 = a0; b0 < p; b0 += GRAM_BLOCK) {
+      const int a1 = std::min(a0 + GRAM_BLOCK, p), b1 = std::min(b0 + GRAM_BLOCK, p);
+      for (int a = a0; a < a1; ++a)
+        for (int b = std::max(b0, a + 1); b < b1; ++b) D.G[(size_t)b * p + a] = D.G[(size_t)a * p + b];
+    }
 }
 
 // Build the Data object: G, z, constants. M §5: C_n, w(k), W_K; log w(k) via lgamma; log W_K by log-sum-exp.

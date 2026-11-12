@@ -76,7 +76,8 @@ prof$preflight <- ph("preflight_record", {
 pf_mem <- v3_preflight(n, p, b, "smc", allocation, time_fun = time_fun, ls0_worst_case = FALSE)   # shipped: memory only
 if (pf_mem$exceeds) { prof$status <- "memory_preflight_refused"; save_prof(); quit(status = 3) }
 
-ctx <- ph("context_gram", v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE))
+ctx <- ph("context_gram", v3_context(pre$X, pre$y, orig = pre$kept, return_gram = (arg$mode == "setup")))
+if (arg$mode == "setup") { prof$gram_sha <- ph("gram_hash", ws_sha(ctx$G)); ctx$G <- NULL; invisible(gc()) }
 dup <- ph("dup_components", .v3cpp$cpp_dup_components(ctx))
 setup <- ph("setup_total", v3_setup(ctx))
 stopifnot(inherits(setup, "v3_setup"))
