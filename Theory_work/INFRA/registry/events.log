@@ -1118,3 +1118,17 @@ utc	actor	action	id	before	after	reason
 2026-11-12T17:16:41Z	HQ	accept	W3-PSHARP:B		v1.0.0 fp2:cb412a0bf0841a8cbb0da91a	check.py --acceptance W3-PSHARP:S W3-PSHARP:A W3-PSHARP:B W3-PSHARP:C: PASS (0 ERROR)
 2026-11-12T17:16:41Z	HQ	accept	W3-PSHARP:C		v1.0.0 fp2:8d8087ca1ec55d1c98ee4da9	check.py --acceptance W3-PSHARP:S W3-PSHARP:A W3-PSHARP:B W3-PSHARP:C: PASS (0 ERROR)
 2026-11-12T17:16:41Z	HQ	accept	W3-PSHARP:S		v1.0.0 fp2:50fd5c4b3345ee0aee7dfda9	check.py --acceptance W3-PSHARP:S W3-PSHARP:A W3-PSHARP:B W3-PSHARP:C: PASS (0 ERROR)
+2026-11-12T17:45:29Z	INFRA	ingest	W3-MISR:R'		v1.0.0 PROVED-CHECKED; council R2, MANIFEST 217d6708dfee945fa041617	ingested from CHECKPOINT_4.md
+2026-11-12T17:45:29Z	INFRA	ingest	W3-MISR:MIS(i)		v1.0.0 PROVED-CHECKED, conditional on W3-POST2:C; council R2, MANIF	ingested from CHECKPOINT_4.md
+2026-11-12T17:45:29Z	INFRA	ingest	W3-MISR:MIS(i')		v1.0.0 PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-PO	ingested from CHECKPOINT_4.md
+2026-11-12T17:45:29Z	INFRA	ingest	W3-MISR:MIS(ii)		v1.0.0 PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-PO	ingested from CHECKPOINT_4.md
+2026-11-12T17:45:29Z	INFRA	ingest	W3-MISR:Cor-G(a)		v1.0.0 PROVED-CHECKED, conditional on C-MIS:Prop-P; input versions	ingested from CHECKPOINT_4.md
+2026-11-12T17:45:29Z	INFRA	ingest	W3-MISR:Cor-G(b)		v1.0.0 PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-PO	ingested from CHECKPOINT_4.md
+2026-11-12T17:45:29Z	INFRA	ingest	W3-MISR:Cor-H		v1.0.0 PROVED-CHECKED, conditional on W3-POST2:D, W3-POST2:C; counc	ingested from CHECKPOINT_4.md
+2026-11-12T17:45:32Z	HQ	accept	W3-MISR:Cor-G(a)		v1.0.0 fp2:24c8f9a1ca76900c5bf89f60	check.py --acceptance W3-MISR:R' W3-MISR:MIS(i) W3-MISR:MIS(i') W3-MISR:MIS(ii) W3-MISR:Cor-G(a) W3-MISR:Cor-G(b) W3-MISR:Cor-H: PASS (0 ERROR)
+2026-11-12T17:45:32Z	HQ	accept	W3-MISR:Cor-G(b)		v1.0.0 fp2:497af73b64c7708cb76b4063	check.py --acceptance W3-MISR:R' W3-MISR:MIS(i) W3-MISR:MIS(i') W3-MISR:MIS(ii) W3-MISR:Cor-G(a) W3-MISR:Cor-G(b) W3-MISR:Cor-H: PASS (0 ERROR)
+2026-11-12T17:45:32Z	HQ	accept	W3-MISR:Cor-H		v1.0.0 fp2:a5f3e8a8acbdcf3177831732	check.py --acceptance W3-MISR:R' W3-MISR:MIS(i) W3-MISR:MIS(i') W3-MISR:MIS(ii) W3-MISR:Cor-G(a) W3-MISR:Cor-G(b) W3-MISR:Cor-H: PASS (0 ERROR)
+2026-11-12T17:45:32Z	HQ	accept	W3-MISR:MIS(i')		v1.0.0 fp2:da8f1e91fab1d652e7088c7b	check.py --acceptance W3-MISR:R' W3-MISR:MIS(i) W3-MISR:MIS(i') W3-MISR:MIS(ii) W3-MISR:Cor-G(a) W3-MISR:Cor-G(b) W3-MISR:Cor-H: PASS (0 ERROR)
+2026-11-12T17:45:32Z	HQ	accept	W3-MISR:MIS(i)		v1.0.0 fp2:86c38677ee141fe76f83676c	check.py --acceptance W3-MISR:R' W3-MISR:MIS(i) W3-MISR:MIS(i') W3-MISR:MIS(ii) W3-MISR:Cor-G(a) W3-MISR:Cor-G(b) W3-MISR:Cor-H: PASS (0 ERROR)
+2026-11-12T17:45:32Z	HQ	accept	W3-MISR:MIS(ii)		v1.0.0 fp2:16b99564465b001194b1f44f	check.py --acceptance W3-MISR:R' W3-MISR:MIS(i) W3-MISR:MIS(i') W3-MISR:MIS(ii) W3-MISR:Cor-G(a) W3-MISR:Cor-G(b) W3-MISR:Cor-H: PASS (0 ERROR)
+2026-11-12T17:45:32Z	HQ	accept	W3-MISR:R'		v1.0.0 fp2:b9c98a914dce396e8588c4d8	check.py --acceptance W3-MISR:R' W3-MISR:MIS(i) W3-MISR:MIS(i') W3-MISR:MIS(ii) W3-MISR:Cor-G(a) W3-MISR:Cor-G(b) W3-MISR:Cor-H: PASS (0 ERROR)
