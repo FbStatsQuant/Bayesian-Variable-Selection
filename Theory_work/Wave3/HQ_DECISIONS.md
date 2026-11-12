@@ -192,3 +192,6 @@
   key lemma. Switched: W3-SCALE → Opus, W3-PSHARP → Opus, W3-START2 stays Fable; consultant → CP Fable 5.2. Owner busy
   today: HQ settles operational decisions with the consultant; owner only for big picture and token management. 09:05
   auto-resume task disabled; leads resume on HQ's order after housekeeping (R05 merge, acceptances).
+- 2026-11-12 W3-PSHARP CP3-PASS (branch 11524d0; council R2 sol 9.2 / opus 9.3, manifest 4513e05a…, bind OK; reconciliation
+  11/11 resolved). Claims S, A, B, C → acceptance audit (with W3-START, W3-MISR, W3-RM2). Editorial batch E1–E9 applied
+  only after acceptance, with the pass-1/2/3 MINORs, under one Sol "editorial only" diff check (rule 15).
