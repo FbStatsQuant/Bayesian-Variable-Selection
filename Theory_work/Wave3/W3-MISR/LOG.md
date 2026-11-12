@@ -70,3 +70,19 @@ Agents started so far (model, provider, role) are listed at each step. Claude-in
   cell in `reviews/R1_disposition.md`). **Council R1 PASSED.** Findings are wording/bookkeeping; not applied (content
   frozen) — listed with proposed fixes for the CP3 step. `manifest.py verify` OK.
 - 04:15 CHECKPOINT_2.md written; commit; end of run at CP2.
+- 04:16 HQ CP2 decision received: ACCEPTED; one exhaustive sweep ordered (Astra, blind, frozen manifest d3f5c91f);
+  mid-point waived; then one batch of fixes + Sol diff check, or a short council re-round if the sweep finds anything
+  substantive; CHECKPOINT_3 with the registry block. HOLDS.md empty.
+- 04:17 [agent 9] SW1 sweep launched: gpt-6-astra, codex, high, blind (brief `reviews/BRIEF_SW1_astra.md`).
+- 04:20 SW1 returned: 0 FATAL / 0 MAJOR / 8 MINOR / 1 NIT; SWEEP-VERDICT SUBSTANTIVE (item 1: the N5 script's premise
+  description used a false comparison, c = 200 > c1(2,1) = 258.9; the obstruction itself stands).
+- 04:25 One batch applied -> STATEMENT v1.3 (`reviews/R1_SW1_disposition.md`): all council R1 items (except the optional
+  F13) and all SW1 items. 3(a) is now stated over the class it uses (first OS inequality only). `misr_numerics.py`
+  re-run for the corrected header strings: data lines identical, 7 header lines differ. citecheck 177 checks, 0 failures.
+  Commit 9c32b02. Working copies re-checked-out; MANIFEST_R2 frozen: 217d6708...1103; commit 0fd888a.
+- 04:27 Council R2 (short re-round, both seats, blind, diff-first): [agent 10] sol = gpt-6.1-sol (codex, high);
+  [agent 11] opus = Claude Opus 5.5 (claudeAgent = Claude Work, high).
+- 04:32 R2 returned: sol 9.2, opus 8.9, six gates PASS in both; 0 FATAL / 0 MAJOR / 3 MINOR / 4 NIT (wording; not
+  applied, content frozen; listed in CHECKPOINT_3.md). `manifest.py bind` OK; `verify` OK. **Council R2 PASSED.**
+- 04:35 CHECKPOINT_3.md written with the final registry blocks (10 claims; `ingest.py convert` 0 problems). Commit.
+  End of run.
