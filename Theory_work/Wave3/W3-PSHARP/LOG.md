@@ -78,3 +78,8 @@ Claude-inference tally: all on Claude Work (claudeAgent); claude-personal not us
 - 04:35. [step 11] `manifest.py freeze` → `reviews/MANIFEST_R2.txt`, digest
   4513e05a40ddc3bf8baeebf04d7156d3c0ac84442dbe0d9b2c6c59244afdac14. Launching council R2 (fresh blind seats: gpt-6.1-sol codex high; Claude Opus 5.5 claudeAgent high) and a
   separate reconciliation reviewer (gpt-6.1-sol codex high; `reviews/BRIEF_R2_reconciliation_sol.md`).
+- 2026-11-12 07:25 CST. **Resumed** on Claude Personal, Opus 5.5 high (HQ message; R2 outputs committed by HQ at
+  6472a2e). HOLDS.md (main checkout): no HOLD lines.
+- 07:27. [step 12] R2: sol 9.2 PASS, opus 9.3 PASS (both 0 FATAL/MAJOR/MINOR; 2 + 6 NIT); reconciliation ALL-RESOLVED.
+  `manifest.py bind` OK; `verify` OK (MANIFEST 4513e05a…). NITs accepted and deferred (`reviews/R2_disposition.md`).
+- 07:30. **CP3-PASS** written (`CHECKPOINT_3.md`). No git state changed; run ends.
