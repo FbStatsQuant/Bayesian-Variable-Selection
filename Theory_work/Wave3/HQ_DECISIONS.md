@@ -120,3 +120,6 @@
 - 2026-11-11 API audit pass 3: 42 OK / 5 MINOR / 3 GAP (≈ $16; audit total ≈ $64, ≈ $49 credit left). R-AUD2 Sol
   confirmed the GAPs (S5F:L0, S5F:L1, FAC-X:L4r.5; one wording-only); no PROVED-CHECKED or chapter impact. Rule 11:
   SUSPECT on the three lemmas (+ S5F C1–C4 dependents); repairs not scheduled (stop list).
+- 2026-11-11 ~18:15 CT (owner): HQ has discretion over the remaining API credits ($44.98, expire 2026-11-15; month
+  spend limit $195 leaves ≈ $40). Plan: blind Fable audit of W3-START and W3-RM2 at CP3 (in place of a Claude council
+  seat where the protocol allows), cap ≈ $35; keep ≈ $5 margin.
