@@ -2,7 +2,7 @@
 
 Status: **PROVED (by this seat, unchecked)**. Check record: line check K1 (gpt-6.1-sol high, blind,
 `../reviews/K1_RM_check_sol.md`): R′(a), (a′), (a″), (b), (c) and table R.6 VERIFIED (no finding).
-Notation and aliases: `../STATEMENT.md` (v1.2) §0–§1. [W3P] = `Theory_work/Wave3/W3-POST/STATEMENT.md`; [POST2] =
+Notation and aliases: `../STATEMENT.md` (v1.3) §0–§1. [W3P] = `Theory_work/Wave3/W3-POST/STATEMENT.md`; [POST2] =
 `Theory_work/Wave3/W3-POST2/STATEMENT.md`. The target π_𝒞 is the one defined in [W3P] lines 18-29 with X^r := x.
 
 ## R.0 The posterior as a function of the contrast vector
@@ -41,7 +41,7 @@ As in R.1: Π(· | x, y^r) = Ψ(x, Uᵀy^r) with Ψ(x, u) := Π(· | x, Uu), and
 | step | file:line | what happens to the response |
 |---|---|---|
 | entry | `v3_fit.R:97` | `pre <- v3_preprocess(X, y, …)` |
-| standardise | `v3_preprocess.R:123` with `:37-68` | `sy <- v3_standardise(y)`: divide by max\|y\|, centre, divide by the sample SD (n − 1); real-arithmetic value Cy/s_y (the anchored branch `:47-65` computes the same real number) |
+| standardise | `v3_preprocess.R:123` with `:37-68` | `sy <- v3_standardise(y)`: divide by max\|y\|, centre, divide by the sample SD (n − 1); real-arithmetic value Cy/s_y (the anchored branch `:47-65` computes the same real number; it also stores metadata `centering`, `:62-64`, kept as `stable_centering`, `:129-130`, and copied into `fit$preprocessing`, `v3_fit.R:98` — none reaches a score [R1-F6]) |
 | store | `v3_preprocess.R:124-127` | `y = sy$z` (standardised); `y_max`, `y_mean`, `y_sd_scaled`, `s_y` kept as metadata |
 | budgets | `v3_preprocess.R:19-33`, `v3_fit.R:104-116` | functions of (n, p) and of timings; no response scale |
 | context | `v3_fit.R:118`, `v3_setup.R:7-13` | `v3_context(pre$X, pre$y, …)` → C++ `data_init` |

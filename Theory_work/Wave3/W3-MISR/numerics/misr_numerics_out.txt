@@ -1,6 +1,6 @@
 W3-MISR numerics; p = 8, reps = 100, numpy 2.3.0
 
-N1  variance v_n varying with n, signal-to-noise held fixed  (target S0 = {0,1}; theta_j^2 = c v log n / n, c = 16)
+N1  variance v_n varying with n, signal-to-noise held fixed  (target S0 = {0,1}; raw beta_j^2 = 16 v log n / n; standardised theta_j^2 = sample_SD(x_j)^2 beta_j^2)
     model: y = x beta_C + x gamma + xi + eps;  beta_C = (b, 0, ...), gamma = (0, b, 0...) [candidate 1 is a proxy];
     xi ~ N(0, tau_n^2 I), eps ~ N(0, sigma^2 I);  v_n = sigma^2 + tau_n^2
   (i) common random numbers (same x, same standard normals): max over models of |pi - pi_ref|
@@ -30,7 +30,7 @@ N1  variance v_n varying with n, signal-to-noise held fixed  (target S0 = {0,1};
 
 N2  fixed raw coefficients, omitted independent column of variance n^(2a)  (tau_n^2 = n^(2a), sigma^2 = 1)
     y = 1*x_0 + 1*x_1 + x_k + eps, x_k ~ N(0, n^(2a)) independent of the candidates; target {0,1};
-    relative beta-min ratio  theta^2 n / (v log n) ~ n^(1-2a)/log n
+    nominal (population-SD) relative beta-min ratio  beta^2 n / (v log n) ~ n^(1-2a)/log n
   a=0.0                              n=100   E[delta]=0.3033 (se 0.0163)  E[delta]/r_n=1.413  P(HPM=target)=0.95  ratio=10.86
   a=0.0                              n=400   E[delta]=0.1647 (se 0.0129)  E[delta]/r_n=1.346  P(HPM=target)=0.97  ratio=33.38
   a=0.0                              n=1600  E[delta]=0.0798 (se 0.0057)  E[delta]/r_n=1.175  P(HPM=target)=1.00  ratio=108.43
@@ -56,7 +56,7 @@ N2  fixed raw coefficients, omitted independent column of variance n^(2a)  (tau_
   a=1.0                              n=1600  E[delta]=1.0000 (se 0.0000)  E[delta]/r_n=14.726  P(HPM=target)=0.00  ratio=0.00
   a=1.0                              n=6400  E[delta]=1.0000 (se 0.0000)  E[delta]/r_n=27.023  P(HPM=target)=0.00  ratio=0.00
 
-N3  outside GR^c  (target {0,1}; theta_j^2 = 16 v log n / n with v the residual variance)
+N3  outside GR^c  (target {0,1}; raw beta_j^2 = 16 v log n / n, v = 1 the residual variance; standardised theta_j^2 = sample_SD(x_j)^2 beta_j^2)
   (i) t_3 residual (iid, variance 1) n=100   E[delta]=0.2790 (se 0.0153)  E[delta]/r_n=1.300  P(HPM=target)=0.96 
   (i) t_3 residual (iid, variance 1) n=400   E[delta]=0.1747 (se 0.0126)  E[delta]/r_n=1.427  P(HPM=target)=0.97 
   (i) t_3 residual (iid, variance 1) n=1600  E[delta]=0.0741 (se 0.0056)  E[delta]/r_n=1.091  P(HPM=target)=1.00 
@@ -67,10 +67,10 @@ N3  outside GR^c  (target {0,1}; theta_j^2 = 16 v log n / n with v the residual 
   (ii) heteroscedastic: sd_i = |x_i2| (mean variance 1) n=6400  E[delta]=0.0958 (se 0.0166)  E[delta]/r_n=2.588  P(HPM=target)=0.95 
   (iii) common random slope (C-MIS Example E2): y = x_0 + Z x_1 + eps, Z ~ N(0,1) scalar, eps ~ N(0, I)
         mean-only target {0}; conditional (F_n contains Z) target {0,1}
-     n=100   E pi({0})=0.232  E pi({0,1})=0.490  [share of draws with Z^2 n/log n < 16 (conditional margin fails): 0.63]
-     n=400   E pi({0})=0.115  E pi({0,1})=0.760  [share of draws with Z^2 n/log n < 16 (conditional margin fails): 0.38]
-     n=1600  E pi({0})=0.034  E pi({0,1})=0.879  [share of draws with Z^2 n/log n < 16 (conditional margin fails): 0.20]
-     n=6400  E pi({0})=0.018  E pi({0,1})=0.929  [share of draws with Z^2 n/log n < 16 (conditional margin fails): 0.14]
+     n=100   E pi({0})=0.232  E pi({0,1})=0.490  [share of draws with Z^2 n/log n < 16 (nominal conditional margin below 16): 0.63]
+     n=400   E pi({0})=0.115  E pi({0,1})=0.760  [share of draws with Z^2 n/log n < 16 (nominal conditional margin below 16): 0.38]
+     n=1600  E pi({0})=0.034  E pi({0,1})=0.879  [share of draws with Z^2 n/log n < 16 (nominal conditional margin below 16): 0.20]
+     n=6400  E pi({0})=0.018  E pi({0,1})=0.929  [share of draws with Z^2 n/log n < 16 (nominal conditional margin below 16): 0.14]
 
 N4  outside (E^sigma): ||mu||^2/(n v) ~ n^b  (fixed raw coefficients 1 on {0,1}; v = n^-b; GR^c holds)
   b=0.0 (energy/(n v) ~ 2.6)         n=100   E[delta]=0.2481 (se 0.0115)  E[delta]/r_n=1.156  P(HPM=target)=0.99 

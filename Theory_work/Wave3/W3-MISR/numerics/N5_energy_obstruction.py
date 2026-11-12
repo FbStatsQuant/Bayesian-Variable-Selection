@@ -2,9 +2,14 @@
 reviews/BT1_better_theorem_astra.md, "Limits"). Local only.
 
 p = 2, exactly orthogonal centred columns (G = N I), v = 1, S0 = {0, 1}. theta_1 = n^a (a huge first signal when a = 1),
-theta_2 = sqrt(c log n / n) with c = 200 > c_1(1..2, 1) (the margin constant). All hypotheses of MIS-R(i) except
-(E^sigma) hold (p = s: no superset, (OS) is void; (F0) holds; every underfit has L_S >= c v log n).
-Claim: with a = 1 the posterior mass of S0 tends to 0 (it concentrates on {0}); with a = 0 (bounded energy) it tends to 1.
+theta_2 = sqrt(c log n / n), c = 200 > c_0(2, 1) = 192 (the beta-min threshold); c_1(2, 1) is approximately 258.9.
+In the obstruction arm a = 1, all hypotheses of MIS-R(i) except (E^sigma) hold eventually: p = s, so (OS) is void; (F0)
+holds; and every underfit has ridge loss exceeding any fixed multiple of log n: with h = (n-1)/n the smoother
+eigenvalue, L_{0} = (n-1) n + 200 (n-1) log(n)/n for the model keeping the huge signal, and the other two underfits
+have loss at least (n-1) n^2. The arms a = 0 and a = 1/2 are numerical controls, not verified instances of the
+ridge-margin class with c = 200 > c_1.
+Observation: with a = 1 the posterior mass of S0 decreases towards 0 over the sampled n (it moves to {0}); in the control
+arms it is 1.0000 at every sampled n.
 
 Run:  py -3.13 -I Theory_work/Wave3/W3-MISR/numerics/N5_energy_obstruction.py > Theory_work/Wave3/W3-MISR/numerics/N5_out.txt
 """

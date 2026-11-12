@@ -15,7 +15,7 @@ transferred claim keeps its own status; SNR is conditional on the transferred W3
 Check record: line check K2 (gpt-6.1-sol high, blind, `../reviews/K2_G_check_sol.md`): G(a), H(a), H(b), reference law,
 SNR, P (all four parts), U VERIFIED; G(b) VERIFIED-WITH-AMENDMENTS (0 FATAL / 0 MAJOR / 2 MINOR, applied [K2-1, K2-2],
 `../reviews/K_disposition.md`).
-Notation: `../STATEMENT.md` (v1.2); `R_reduction.md` ((R1)–(R3), table R.6); `M_misr.md` ((M0), M.1–M.3). Sources:
+Notation: `../STATEMENT.md` (v1.3); `R_reduction.md` ((R1)–(R3), table R.6); `M_misr.md` ((M0), M.1–M.3). Sources:
 [POST2] = `Theory_work/Wave3/W3-POST2/STATEMENT.md`; [A] = `Theory_work/Wave3/W3-POST2/lemmas/A_occam.md`; [D] =
 `Theory_work/Wave3/W3-POST2/lemmas/D_hellinger.md`; [W3P] = `Theory_work/Wave3/W3-POST/STATEMENT.md`; [MIS1] =
 `Theory_work/Wave1C/C-MIS/STATEMENT.md`; [L2] = `Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md`; [L4] =
@@ -30,7 +30,8 @@ n): ζ_i := x_{𝓜,i} − m_𝓜 − Σ_𝓜𝒞Σ_𝒞𝒞⁻¹(x_{𝒞,i} −
 X^r, hence of (X^r_𝒞, ξ). So y^r − X^r_𝒞β^𝒞 = (α + a)1 + ξ + ε with ξ + ε ~ N_n(0, σ²_𝒞 I) independent of X^r_𝒞, and
 (Uᵀ1 = 0) W_n = Uᵀ(ξ + ε)/σ_𝒞 ~ N_N(0, UᵀU) = N_N(0, I_N), independent of σ(X^r_𝒞), provided σ²_𝒞 = σ² + τ² > 0.
 (β^𝒞, σ²_𝒞) are deterministic, so κ_n = (X^r_𝒞, β^𝒞, σ²_𝒞) is σ(X^r_𝒞)-measurable on the event that all candidate columns
-are non-constant (probability one, since Σ_𝒞𝒞 ≻ 0 and n ≥ 2). This is (GR^c | σ(X^r_𝒞)). ∎
+are non-constant (probability one, since Σ_𝒞𝒞 ≻ 0 and n ≥ 2); off that null event κ_n is set to a fixed reference
+configuration, so that it is a random configuration in the sense of STATEMENT §4 [R1-F7]. This is (GR^c | σ(X^r_𝒞)). ∎
 
 ## G.2 Corollary G(b): a growing-p envelope without a fixed variance
 
@@ -91,25 +92,25 @@ whose diagonal entries are v(1 − 1/n). In the setting of Corollary G, G.1 show
 independently over i; this conditional density is a member of the family {N(a₀ + x_𝒞ᵀb, w)}, so it minimises the
 Kullback–Leibler divergence from the true conditional law over that family (the minimum is 0).
 
-## G.4 Remark SNR
+## G.4 Remark SNR (the scale is written a_n; in Claim B, t = |T| as in [POST2] [SW1-9])
 
 Take 𝒞 = [p] and the true model G with variance σ*²_n > 0 ([W3P] line 31), or G′ for Claim B ([POST2] line 70). Put
-t := σ*_n and ỹ^r := y^r/t = (α*/t)1 + X^r(β*/t) + ε/t (G′: f/t): model G (G′) with variance 1, coefficient β*/t, mean
-μ/t. By Lemma R′(a) the model-space posterior computed from ỹ^r is the one computed from y^r, and by R′(a′) the
-parameter posterior from ỹ^r is the image of the one from y^r under (S, θ, v) ↦ (S, θ/t, v/t²). Now go through the list.
+a_n := σ*_n and ỹ^r := y^r/a_n = (α*/a_n)1 + X^r(β*/a_n) + ε/a_n (G′: f/a_n): model G (G′) with variance 1, coefficient β*/a_n, mean
+μ/a_n. By Lemma R′(a) the model-space posterior computed from ỹ^r is the one computed from y^r, and by R′(a′) the
+parameter posterior from ỹ^r is the image of the one from y^r under (S, θ, v) ↦ (S, θ/a_n, v/a_n²). Now go through the list.
 - [W3P] Theorem 1 items 1–5 and [POST2] A1, C, E: hypotheses (E), (F₀), (F_λ), (F_w), (OS), (BM), (ID^M) for
-  (X, β*/t, 1) are (E) with ‖μ‖² ≤ nMt² and the others as stated relative to σ*² = t² (table R.6); every conclusion
+  (X, β*/a_n, 1) are (E) with ‖μ‖² ≤ nMa_n² and the others as stated relative to σ*² = a_n² (table R.6); every conclusion
   is about δ_n, PIPs, HPM, MPM, ξ_q, π(S ⊋ S₀), π(|S| = s₀), π(S ⊉ J_n(c)), π(S ∌ j) — functionals of the model-space
   posterior and of sets (S₀, J_n(c)) that are the same for both parametrisations (J_n(c) is defined by a relative
   inequality). So each conclusion for the unit-variance array is the conclusion for the original array.
 - [W3P] item 6 and the random-design clauses of A1, C, E: if σ*² is a measurable function of (X, θ*) and, given
   (X, θ*), ε ~ N_n(0, σ*²(X, θ*)I), then ε/σ*(X, θ*) is N_n(0, I) and independent of (X, θ*); the scaled problem
   satisfies the clause with θ*/σ*(X, θ*) and common constants.
-- [POST2] B (lines 68-77): design, T, t, D_T, R^T_m, A^T_m do not involve the response; π(|S| > m) is invariant, so
-  Θ″_{n,m} is unchanged. For the scaled problem ‖μ/t‖² ≤ nM iff ‖μ‖² ≤ nMt², and B_T(ϑ/t) = B_T(ϑ)/t² ([POST2] line 44:
-  every term is quadratic in (μ, ϑ)), so the reference ϑ/t has cost ≤ B iff B_T(ϑ) ≤ Bt². The bound of B at σ*² = 1 follows.
-- [POST2] D: as in G.3 (which is this transfer with t² = v_n): thresholds ‖μ̂ − μ‖² > C_H t² log n, resp. > M_n t²,
-  |v/t² − 1| > M_n n^{−1/2}, ‖θ − θ*‖ > M_n t n^{−1/2}; h̄_n against N(μ_i, t²) is invariant. ∎
+- [POST2] B (lines 68-77): design, T, |T|, D_T, R^T_m, A^T_m do not involve the response; π(|S| > m) is invariant, so
+  Θ″_{n,m} is unchanged. For the scaled problem ‖μ/a_n‖² ≤ nM iff ‖μ‖² ≤ nMa_n², and B_T(ϑ/a_n) = B_T(ϑ)/a_n² ([POST2] line 44:
+  every term is quadratic in (μ, ϑ)), so the reference ϑ/a_n has cost ≤ B iff B_T(ϑ) ≤ Ba_n². The bound of B at σ*² = 1 follows.
+- [POST2] D: as in G.3 (which is this transfer with a_n² = v_n): thresholds ‖μ̂ − μ‖² > C_H a_n² log n, resp. > M_n a_n²,
+  |v/a_n² − 1| > M_n n^{−1/2}, ‖θ − θ*‖ > M_n a_n n^{−1/2}; h̄_n against N(μ_i, a_n²) is invariant. ∎
 
 ## G.5 Remark P
 

@@ -8,7 +8,7 @@ Status, one line per claim (verbatim source for the registry):
 Check record: line check K1 (gpt-6.1-sol high, blind, `../reviews/K1_RM_check_sol.md`): MIS(i), (i′)(c), (ii)(a)–(c)
 VERIFIED; (i′)(a), (b), (d) VERIFIED-WITH-AMENDMENTS (0 FATAL / 0 MAJOR / 1 MINOR, applied [K1-1],
 `../reviews/K_disposition.md`).
-Notation: `../STATEMENT.md` (v1.2); `R_reduction.md` (Lemma R′, displays (R1)–(R3), R.5 for part (c), table R.6). Sources: [POST2] =
+Notation: `../STATEMENT.md` (v1.3); `R_reduction.md` (Lemma R′, displays (R1)–(R3), R.5 for part (c), table R.6). Sources: [POST2] =
 `Theory_work/Wave3/W3-POST2/STATEMENT.md`; [C] = `Theory_work/Wave3/W3-POST2/lemmas/C_expectation.md`; [A] =
 `…/W3-POST2/lemmas/A_occam.md`; [E] = `…/W3-POST2/lemmas/E_visibility.md`; [W3P] = `Theory_work/Wave3/W3-POST/STATEMENT.md`;
 [D] = `…/W3-POST2/lemmas/D_hellinger.md`; [T03R] = `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T03R/PROOF.md`; [P3] =
@@ -74,8 +74,9 @@ The thresholds "n ≥ n₀" in (I2)–(I5) are those inside the proof of [POST2]
 exactly (I1)–(I6)); by that claim they depend only on (s₀, A, M, φ₀, c, C_OS) (at σ*² = 1). Let n₁ be the largest of
 them, of 16, and of the first n with e^{ρ_n} ≤ 2 (i.e. N ≥ 8(M + 1)/(φ₀² log 2)); n₀′ := n₁.
 
-**(a) Supersets.** Let n ≥ n₀′ and κ ∈ 𝒦⁰_n(s, A, M, φ₀, C_OS); by table R.6 the unit-noise model satisfies G, (E),
-(F₀), (OS; C_OS) and the size conditions at n. Every S ∈ Ω with S ⊋ S₀ either has |S| > m♯_n or is S₀ ∪ J with
+**(a) Supersets.** Let κ ∈ 𝒦⁰′_n(s, A, M, φ₀, C_OS) (the class with the first (OS) inequality only [R1-F5]) and
+n ≥ n₁ᵃ := the largest of 16, the thresholds of (I1)–(I4) and the first n with e^{ρ_n} ≤ 2; none of these involves c, and
+n₁ᵃ ≤ n₁ = n₀′. By table R.6 the unit-noise model satisfies G, (E), (F₀), 𝒪_n^{>0} ≤ C_OS r_n and the size conditions at n. Every S ∈ Ω with S ⊋ S₀ either has |S| > m♯_n or is S₀ ∪ J with
 1 ≤ |J| ≤ m♯_n − s₀ ≤ min(m♯_n, p − s₀); so ([P3] lines 227-229; [A] line 85)
   π(S ⊋ S₀) ≤ T₀ + Σ_{j=1}^{min(m♯_n, p−s₀)} Ξ_j.
 On 𝒢^sup_n the sum is ≤ e^{ρ_n}Υ′_n ≤ 2Υ′_n by (I3) (j₁ = 0); off it use π ≤ 1. Since Υ′_n ≥ 0,
@@ -95,9 +96,9 @@ from at most 2^{s₀} − 1 models S (S = J′ ∪ (S ∩ S₀) with S ∩ S₀ 
 - If |J′| ≤ j₀: S ∈ 𝔉 (S ∈ Ω, S₀ ⊄ S, |S∖S₀| ≤ j₀) and j ∉ S, so L_S ≥ c log n, and (I5) gives ℓ(S)/ℓ(S′) ≤ n^{−2} on
   𝒢^sup_n ∩ 𝒢⁵_n.
 - If |J′| > j₀: (I6) gives ℓ(S)/ℓ(S′) ≤ (2p)^{s₀}(n + 1)^{s₀/2}.
-Summing over S ∈ 𝒰_j, grouped by J′ (J′ = ∅ contributes ℓ(S₀)/ℓ(S₀) = 1; |J′| = j ≥ 1 contributes to Ξ_j), on
+Summing over S ∈ 𝒰_j, grouped by J′ (J′ = ∅ contributes ℓ(S₀)/ℓ(S₀) = 1; |J′| = i ≥ 1 contributes to Ξ_i), on
 𝒢^sup_n ∩ 𝒢⁵_n, with (I3) for j₁ = 0 and j₁ = j₀:
-  Σ_{S∈𝒰_j} ℓ(S)/ℓ(S₀) ≤ 2^{s₀} n^{−2} (1 + Σ_{j=1}^{min(j₀, m♯_n, p−s₀)} Ξ_j) + 2^{s₀}(2p)^{s₀}(n + 1)^{s₀/2} Σ_{j=j₀+1}^{min(m♯_n, p−s₀)} Ξ_j
+  Σ_{S∈𝒰_j} ℓ(S)/ℓ(S₀) ≤ 2^{s₀} n^{−2} (1 + Σ_{i=1}^{min(j₀, m♯_n, p−s₀)} Ξ_i) + 2^{s₀}(2p)^{s₀}(n + 1)^{s₀/2} Σ_{i=j₀+1}^{min(m♯_n, p−s₀)} Ξ_i
             ≤ 2^{s₀} n^{−2} (1 + 2Υ′_n) + 2^{s₀}·2·(2p)^{s₀}(n + 1)^{s₀/2} Υ′^{>j₀}_n.
 (This is the display of [E] lines 61-65 with 𝒰 replaced by 𝒰_j, as [E] lines 67-68 notes; cf. [T03R] (C8) lines
 194-197.) Taking expectations on the event (the right side is non-negative) and using π ≤ 1 off it, with (I1), (I2), (I4):

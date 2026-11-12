@@ -3,7 +3,7 @@
 Exact posterior of the coded target on a small candidate design, by full enumeration (formulas of W3-POST STATEMENT §0;
 same implementation as Theory_work/Wave1C/C-MIS/numerics/mis_core.py, restated here so the file is self-contained).
 
-  N1  Lemma R'(b) / MIS-R(i): residual variance v_n varying with n (n^-1, 1, n, n^2; sigma^2 = 0 allowed), with the
+  N1  Lemma R'(b) / MIS-R(i): residual variance v_n varying with n (v_n = sigma^2 + tau_n^2 = 2, 1 + n, 1 + n^2, 2/n, n^-2; sigma^2 = 0 allowed), with the
       signal-to-noise hypotheses held fixed. (i) common random numbers: the posterior is identical across v_n;
       (ii) independent seeds: delta_n / r_n is stable in n and across v_n.
   N2  Boundary of the relative margin: FIXED raw coefficients, omitted independent Gaussian column of variance n^(2a)
@@ -93,7 +93,7 @@ def line(tag, n, deltas, hpm_ok, extra=""):
 
 # ----------------------------------------------------------------------------------------------------------------
 def n1():
-    print("N1  variance v_n varying with n, signal-to-noise held fixed  (target S0 = {0,1}; theta_j^2 = c v log n / n, c = 16)")
+    print("N1  variance v_n varying with n, signal-to-noise held fixed  (target S0 = {0,1}; raw beta_j^2 = 16 v log n / n; standardised theta_j^2 = sample_SD(x_j)^2 beta_j^2)")
     print("    model: y = x beta_C + x gamma + xi + eps;  beta_C = (b, 0, ...), gamma = (0, b, 0...) [candidate 1 is a proxy];")
     print("    xi ~ N(0, tau_n^2 I), eps ~ N(0, sigma^2 I);  v_n = sigma^2 + tau_n^2")
     regimes = [("sigma2=1, tau2=1 (fixed; v1 case)", lambda n: (1.0, 1.0)),
@@ -143,7 +143,7 @@ def n1():
 def n2():
     print("\nN2  fixed raw coefficients, omitted independent column of variance n^(2a)  (tau_n^2 = n^(2a), sigma^2 = 1)")
     print("    y = 1*x_0 + 1*x_1 + x_k + eps, x_k ~ N(0, n^(2a)) independent of the candidates; target {0,1};")
-    print("    relative beta-min ratio  theta^2 n / (v log n) ~ n^(1-2a)/log n")
+    print("    nominal (population-SD) relative beta-min ratio  beta^2 n / (v log n) ~ n^(1-2a)/log n")
     target = IDX[(0, 1)]
     for a in [0.0, 0.25, 0.4, 0.5, 0.6, 1.0]:
         for n in NS:
@@ -159,7 +159,7 @@ def n2():
 
 
 def n3():
-    print("\nN3  outside GR^c  (target {0,1}; theta_j^2 = 16 v log n / n with v the residual variance)")
+    print("\nN3  outside GR^c  (target {0,1}; raw beta_j^2 = 16 v log n / n, v = 1 the residual variance; standardised theta_j^2 = sample_SD(x_j)^2 beta_j^2)")
     target = IDX[(0, 1)]
     for name in ["(i) t_3 residual (iid, variance 1)", "(ii) heteroscedastic: sd_i = |x_i2| (mean variance 1)"]:
         for n in NS:
@@ -190,7 +190,7 @@ def n3():
             m0.append(post[t0]); m01.append(post[t01])
             weak += int(Z * Z * n / math.log(n) < 16)
         print(f"     n={n:<5d} E pi({{0}})={np.mean(m0):.3f}  E pi({{0,1}})={np.mean(m01):.3f}  "
-              f"[share of draws with Z^2 n/log n < 16 (conditional margin fails): {weak / REPS:.2f}]")
+              f"[share of draws with Z^2 n/log n < 16 (nominal conditional margin below 16): {weak / REPS:.2f}]")
 
 
 def n4():
