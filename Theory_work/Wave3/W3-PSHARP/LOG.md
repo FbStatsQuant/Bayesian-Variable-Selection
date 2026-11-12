@@ -56,3 +56,6 @@ Claude-inference tally: all on Claude Work (claudeAgent); claude-personal not us
 - 04:15. [step 7] CP2 line checks launched in parallel (gpt-6.1-sol, codex, high, blind): KSA (`lemmas/S_one_step.md`,
   `A_log_factor.md`; brief `reviews/BRIEF_KSA_sol.md`) and KBC (`B_sparsity.md`, `C_counterexample.md`;
   `reviews/BRIEF_KBC_sol.md`). Restore point committed first.
+- 04:18. While KSA/KBC run: `citecheck.py` → `reviews/CITECHECK.txt` (42 checks, 0 MISS); `REPORT.md` drafted
+  (placeholders for the line-check verdicts and statement line numbers); `reviews/INPUTS.txt`; council brief template
+  (gates G1–G6, verdict line). Lead waiting for the two line checks (wake on completion).
