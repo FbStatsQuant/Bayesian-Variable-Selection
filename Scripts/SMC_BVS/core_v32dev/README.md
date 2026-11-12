@@ -69,11 +69,13 @@ Every change below leaves every output of `v3_fit` bit-identical to v3.1 for the
 except wall-clock fields and the preflight record (item 4), **on fits where both versions take the same admission
 decisions** (initial preflight, pre-escalation preflight, runtime guard). Item 4 changes admission by design: a fit
 that v3.1 refuses, or whose escalation v3.1 blocks, may run in v3.2-dev. Domain of the bitwise argument: finite
-inputs. The header routines fall back to the v3.1 code whenever a non-finite value appears (a non-finite entry of X
-in the Gram; a NaN correlation in the linkage distances or the neighbour graph), so the raw exports (`cpp_context`,
-`cpp_blocks`, `cpp_neighbours`, `cpp_tables`, `cpp_setup`) keep the deployed behaviour there too; `v3_fit` never
-reaches those cases (preprocessing rejects non-finite inputs, drops constant columns and standardises). Files changed: `cpp/v3_score.h`, `cpp/v3_blocks.h`,
-`cpp/v3_start.h`, `v3_fit.R`. Everything else is byte-identical to v3.1 after removing carriage returns.
+inputs with numeric correlations (what `v3_fit` produces: preprocessing rejects non-finite inputs, drops constant
+columns and standardises). Outside it the header routines call the v3.1 code itself (a non-finite entry of X in the
+Gram; a NaN correlation in the linkage distances or the neighbour graph), so the raw exports (`cpp_context`,
+`cpp_blocks`, `cpp_neighbours`, `cpp_tables`, `cpp_setup`) run what v3.1 runs there. That is a same-code statement,
+checked on the test cases, not a guarantee: with NaN correlations the sort comparator of v3.1 is not a strict weak
+order, so the result of v3.1 is not defined by the language and could differ between two builds of v3.1 itself
+(review R02 finding 2).
 
 1. **Gram (`gram_fill`, `v3_score.h`).** Columns are taken in tiles copied row-major; sixteen entries of a Gram row
    are accumulated in the same pass over the observations, each in its own accumulator (two-lane vectors, element-wise
@@ -101,6 +103,7 @@ numerical-failure path, sub-models above K, tile boundaries of the Gram and the 
 units); `scripts/fingerprint_selftest.R` (mutation test of the fingerprint). Review: `reviews/R01_code_sol.md` and its
 disposition `reviews/R01_disposition.md`.
 
-Unreachable branch kept for fidelity: in `TableDFS::append_row` the pivot of A = G_S + I is tested after the pivot of
-H = (n+1) G_S + I, as in `try_chol`. A − H/(n+1) = (n/(n+1)) I is positive definite, so in exact arithmetic the A
-pivot cannot fail when the H pivot passes; no test reaches "A fails after H passes".
+Rare branch: in `TableDFS::append_row` the pivot of A = G_S + I is tested after the pivot of H = (n+1) G_S + I, as in
+`try_chol`. In exact arithmetic the A pivot cannot fail when the H pivot passes (A − H/(n+1) is positive definite),
+but rounding can do it for huge un-standardised duplicated columns (review R02 finding 3); the unit case
+`a_pivot_after_h` asserts that it reaches this branch, and its dumps agree.

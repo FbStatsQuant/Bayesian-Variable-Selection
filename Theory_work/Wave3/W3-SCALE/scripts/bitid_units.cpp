@@ -44,6 +44,8 @@ struct Case {
   // branches the case must reach (the run fails otherwise): QR route, refactor route, Q recomputation, numerical
   // failure in the tables, unscored codes (|U| > K), a NaN in the Gram (non-finite fallbacks)
   bool need_qr = false, need_refactor = false, need_qrec = false, need_fail = false, need_unscored = false, need_nan_gram = false;
+  bool need_a_pivot = false;     // for the model {0, 1}: chol_inplace of H = (n+1) G + I passes and chol_inplace of A = G + I fails
+  bool need_nan_corr = false;    // some correlation is NaN while another is a number (mixed NaN / numeric ranking keys)
 };
 
 static void standardise(std::vector<double>& x, int n) {
@@ -141,6 +143,18 @@ static void run_case(const Case& c) {
   if (c.z_scale != 1.0) for (auto& v : D.z) v *= c.z_scale;
   if (c.tamper_g00) D.G[0] = -1.0;
   bool nan_gram = false; for (double v : D.G) if (v != v) { nan_gram = true; break; }
+  bool a_pivot = false, nan_corr = false;
+  if (c.need_a_pivot && p >= 2) {
+    std::vector<double> H(4), A(4); double n1 = n + 1.0;
+    for (int a2 = 0; a2 < 2; ++a2) for (int b2 = 0; b2 < 2; ++b2) { double g = D.Gat(a2, b2); H[a2 * 2 + b2] = n1 * g + (a2 == b2 ? 1.0 : 0.0); A[a2 * 2 + b2] = g + (a2 == b2 ? 1.0 : 0.0); }
+    a_pivot = chol_inplace(H, 2) && !chol_inplace(A, 2);
+  }
+  if (c.need_nan_corr) {
+    bool any_nan = false, any_num = false;
+    for (int a2 = 0; a2 < p; ++a2) for (int b2 = 0; b2 < p; ++b2) if (a2 != b2) {
+      double r = D.Gat(a2, b2) / (std::sqrt(D.Gat(a2, a2)) * std::sqrt(D.Gat(b2, b2))); if (r != r) any_nan = true; else any_num = true; }
+    nan_corr = any_nan && any_num;
+  }
   put_vd(D.G); put_vd(D.z); put_d(D.yty); put_d(D.logCn); put_d(D.logm0); put_d(D.logWK); put_vd(D.logw); put_vd(D.logprior); put_i(D.K);
   int B = c.B > 0 ? c.B : std::min(std::min(isqrt_i(n), isqrt_i(p)), 16);
   put_i(B);
@@ -187,7 +201,8 @@ static void run_case(const Case& c) {
   for (auto& v : st.route_tab) for (int r : v) { ++ncodes; if (r < 0) ++nnan; else nroute[r]++; }
   {
     bool ok = (!c.need_qr || routes_now[2] > 0) && (!c.need_refactor || routes_now[1] > 0) && (!c.need_qrec || routes_now[3] > 0) &&
-              (!c.need_fail || routes_now[4] > 0) && (!c.need_unscored || (table_status == "ok" && nnan > 0)) && (!c.need_nan_gram || nan_gram);
+              (!c.need_fail || routes_now[4] > 0) && (!c.need_unscored || (table_status == "ok" && nnan > 0)) && (!c.need_nan_gram || nan_gram) &&
+              (!c.need_a_pivot || a_pivot) && (!c.need_nan_corr || nan_corr);
     if (!ok) { ++N_BRANCH_FAIL; printf("  BRANCH NOT REACHED in %s\n", c.name.c_str()); }
   }
   double t_start = 0, t_isl = 0;
@@ -269,8 +284,13 @@ int main(int argc, char** argv) {
   // non-finite domain (review R01 findings 1 and 2): NaN payloads in X; zero and underflowing columns (NaN correlations)
   { Case c = make_nan_payload(3, 33); c.need_nan_gram = true; cases.push_back(c); }
   { Case c = make_nan_payload(5, 300); c.need_nan_gram = true; cases.push_back(c); }
-  { Case c = make_zero_column("zero_column_p4", 20, 4, false); c.B = 2; cases.push_back(c); }
-  { Case c = make_zero_column("underflow_column_p9", 20, 9, true); c.B = 3; cases.push_back(c); }
+  { Case c = make_zero_column("zero_column_p4", 20, 4, false); c.B = 2; c.need_nan_corr = true; cases.push_back(c); }
+  { Case c = make_zero_column("underflow_column_p9", 20, 9, true); c.B = 3; c.need_nan_corr = true; cases.push_back(c); }
+  // review R02 finding 3: two equal huge finite columns for which the Cholesky pivot of H passes and that of A fails
+  { Case c; c.name = "a_pivot_after_h"; c.n = 4; c.p = 2; c.B = 2;
+    const double col[4] = {0x1.680d09f9e187p+24, 0x1.b18d40112a9edp+25, 0x1.598da0c86678ap+25, -0x1.19b4edbf0903p+26};
+    c.X.assign(8, 0.0); for (int j = 0; j < 2; ++j) for (int i = 0; i < 4; ++i) c.X[(size_t)j * 4 + i] = col[i];
+    c.y = {1.0, 2.0, 3.0, 4.0}; c.need_a_pivot = true; c.need_qr = true; cases.push_back(c); }
   { Case c = make_generic("inf_entry", 30, 40, 58, 0.5); c.X[5] = std::numeric_limits<double>::infinity(); c.X[77] = -std::numeric_limits<double>::infinity(); c.need_nan_gram = true; cases.push_back(c); }
   //  small Q: z inflated after data_init so that y'y - n z'H^{-1}z < 1e-8 y'y for good models (non-negative recomputation)
   { Case c = make_generic("smallQ_z1p002", 200, 150, 61, 0.6); c.z_scale = 1.002; cases.push_back(c); }
