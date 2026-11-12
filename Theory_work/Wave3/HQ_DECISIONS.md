@@ -228,3 +228,13 @@
   (new hard proofs). Plan to Sunday: record the 5 council-passed tickets; RM2 riders + T7 (Opus); P6 → D1; editorial
   pass; chapter v2.0 + council + API audit. W3-PATH scoping LAUNCHED (Fable 5.2 CP lead, BVS-wt/W3-PATH) to CP1; proof
   leg needs the owner's go after CP1.
+- 2026-11-12 ~12:00 CT (owner) **PLAN TO END OF CAMPAIGN.** (1) Now → weekend: let the current campaign run its course
+  on remaining CP fuel, no resets: R06, record W3-START/START2/PSHARP/MISR/RM2, P6 stage 1 on NOTS (3-hourly watcher).
+  W3-PATH not launched yet (brief ready, branch theory/W3-PATH). (2) Sun 11-15: $200 API credit (owner raises the Console
+  monthly limit) = precision strikes only: blind Fable batch audit + sharpness pass of the newly recorded tickets (~$50);
+  Mon–Wed break-reviews of PATH/T7 checkpoints (~$50); final chapter v2.0 audit (~$50); reserve (~$50). No API-run agent
+  leads. (3) Mon 11-16 16:00 CT: weekly reset → furnace on, non-stop: **Opus-driven volume**, Fable only as needed
+  reinforcement (W3-PATH lead; stuck key lemmas); ≤ high effort. Owner triggers the full reset mid-week (~Wed–Thu) when the
+  weekly budget runs out with high-value work in flight (HQ forecasts at ~80%; shared with the BNP Lean project).
+  (4) OpenAI (codex) account recovers without a reset: Sol/Astra reviews keep the same cadence and discipline — one
+  reviewer per gate, narrow rechecks, no redundant seats.
