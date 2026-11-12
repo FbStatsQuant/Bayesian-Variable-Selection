@@ -15,6 +15,8 @@ disk. To resume after T3 restarts: (1) confirm new sessions write under `C:/User
 CHECKPOINT_3; W3-RM2: CP2 leg per LOG HQ CP1 decision; its MP1 Astra review was cancelled with it → relaunch if no
 output in reviews/); (3) P6 smoke still on NOTS — heartbeat re-wakes the P6 lead when done.
 
+## 2026-11-12 05:15 UTC — resumed after CW 5-h limit (02:42–~04:00 UTC). SCALE/MISR/PSHARP re-woken; RM2 CP2 accepted → Form R leg; W3-START R2 PASS → acceptance audit delegated (Opus CW). Watchdog run 03:31 failed (rate limit) — next 09:01 UTC.
+
 ## Running
 - W3-MISR lead (T1, Fable 5.2 CW) → CP1 → CP2.
 - W3-PSHARP lead (T3, Fable 5.2 CW) → CP1 → CP2.
