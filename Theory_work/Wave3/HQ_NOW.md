@@ -3,6 +3,14 @@
 Mode (owner, 2026-11-11 ~18:45 CT): **continuous** — keep work running on Claude Work (effort ≤ high) until CW runs
 out or a key owner decision is needed; no bursts. HQ answers checkpoints itself. HQ thread 647bfd65-83bc-403a-b3b0-0a8352044e7f. Meta-HQ watcher (Sol, every 30 min): thread 600e6dcd-e2bf-4ef8-9a4b-0e00d46a1c68.
 
+## RESTART NOTE (2026-11-12 01:05 UTC) — read first after a T3 restart
+Account fix: T3 was still launching Claude sessions with config `.claude` (Personal login). HQ copied memory, CLAUDE.md,
+settings.json and skills into `.claude-work` (Team). Both leads were cancelled to stop Personal use; their files are on
+disk. To resume after T3 restarts: (1) confirm new sessions write under `C:/Users/felip/.claude-work/projects`
+(find -mmin -2); (2) re-send each lead its fresh-context resume message (W3-START: continue CP3 R2 plan in its LOG/
+CHECKPOINT_3; W3-RM2: CP2 leg per LOG HQ CP1 decision; its MP1 Astra review was cancelled with it → relaunch if no
+output in reviews/); (3) P6 smoke still on NOTS — heartbeat re-wakes the P6 lead when done.
+
 ## Running
 - W3-RM2 lead (Fable CW, BVS-wt/W3-RM2) → CP2 (CP1 passed; v1.3, Form F key lemma).
 - W3-START lead (Fable CW, BVS-wt/W3-START) → CP3 again: R1 council PASSED (9.1/8.8) but acceptance refused (wave docs in INPUTS changed on main) → v1.3.4 + Sol diff check + council R2 + reconciliation + Astra BT2. After R2: HQ acceptance audit, ingest 21 claims, merge; then blind Fable API audit of the package (credits).
