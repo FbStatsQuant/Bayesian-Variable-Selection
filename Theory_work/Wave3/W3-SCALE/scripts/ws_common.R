@@ -124,3 +124,40 @@ ws_scalars <- function(fit) {
        ls0_wc_requests = g(fit$preflight$ls0_worst_case$requests), runtime_s = g(fit$timings$total),
        peak_memory_kb = g(fit$peak_memory_kb))
 }
+
+# ---- Supplementary bit-identity units (not PROD-H): exact branch, ties, small-n budgets, status paths ------------
+# Each returns list(X, y, seed, allocation). Inputs are raw (not standardised): v3_fit preprocesses them.
+ws_supp <- function(name) {
+  RNGkind("Mersenne-Twister", "Inversion", "Rejection")
+  gen <- function(n, p, seed, rho = 0.5, s0 = 3) {
+    set.seed(seed)
+    G <- ceiling(p / 4); f <- matrix(rnorm(n * G), n)
+    X <- sqrt(rho) * f[, rep(seq_len(G), each = 4)[seq_len(p)], drop = FALSE] + sqrt(1 - rho) * matrix(rnorm(n * p), n)
+    act <- unique(pmin(p, round(seq(1, p, length.out = s0))))
+    y <- drop(X[, act, drop = FALSE] %*% rep(c(1.2, -1, 0.8), length.out = length(act))) + rnorm(n)
+    list(X = X, y = y)
+  }
+  dup <- function(d, pairs) { for (k in seq_len(nrow(pairs))) d$X[, pairs[k, 2]] <- pairs[k, 3] * d$X[, pairs[k, 1]]; d }
+  alloc <- list(mem_gb = 4, hours = 2)
+  d <- switch(name,
+    exact_p10 = c(gen(50, 10, 101), seed = 9101),
+    exact_p12_dup_const = { d <- gen(40, 12, 102); d <- dup(d, rbind(c(2, 3, 1), c(7, 8, -1))); d$X[, 5] <- 3.5; c(d, seed = 9102) },
+    exact_p14_integer = { set.seed(103); X <- matrix(sample(-1:1, 30 * 14, TRUE), 30); storage.mode(X) <- "integer"
+                          list(X = X, y = as.integer(X[, 2] - X[, 9] + sample(-2:2, 30, TRUE)), seed = 9103) },
+    smc_p40_dup = { d <- gen(60, 40, 104, 0.6, 4); d <- dup(d, rbind(c(1, 2, 1), c(13, 14, -1), c(27, 30, 1), c(39, 40, 1))); c(d, seed = 9104) },
+    smc_p60_n30 = c(gen(30, 60, 105, 0.4, 3), seed = 9105),
+    smc_p48_integer = { set.seed(106); X <- matrix(sample(-1:1, 80 * 48, TRUE), 80); X[, 48] <- X[, 1]
+                        list(X = X + 0, y = drop(X[, c(1, 20, 33)] %*% c(2, -2, 1.5)) + rnorm(80), seed = 9106) },
+    # 22 strong signals, each next to an exact copy: the start mode has about 2^22 exactly tied maximisers, so the
+    # enumeration is truncated at 1e6 and the e4 tie-aware DP returns the mode (LS0 centre).
+    tie_dp_p400 = { set.seed(107); n <- 200; p <- 400; X <- matrix(rnorm(n * p), n)
+                    sig <- seq(5, by = 18, length.out = 22); X[, sig + 1] <- X[, sig]
+                    list(X = X, y = drop(X[, sig] %*% rep(c(1.5, -1.5), 11)) + rnorm(n), seed = 9107) },
+    near_constant = { d <- gen(50, 30, 108); d$X[, 4] <- 1e8 + 1e-7 * d$X[, 4]; d$X[, 9] <- 1 + 2^-40 * round(d$X[, 9] * 8); c(d, seed = 9108) },
+    y_constant = { d <- gen(20, 8, 109); d$y <- rep(2, 20); c(d, seed = 9109) },
+    no_predictors = list(X = matrix(1, 10, 3), y = rnorm(10), seed = 9110),
+    stop("unknown supplementary unit ", name))
+  list(X = d$X, y = d$y, seed = d$seed, allocation = alloc, dataset_id = paste0("supp_", name), design = "supp")
+}
+WS_SUPP_UNITS <- c("exact_p10", "exact_p12_dup_const", "exact_p14_integer", "smc_p40_dup", "smc_p60_n30", "smc_p48_integer",
+                   "near_constant", "y_constant", "no_predictors", "tie_dp_p400")

@@ -2,7 +2,7 @@
 # The core in --core-dir is used unmodified. mode = full: the v3_fit flow, phase by phase (same calls, same order, same
 # arguments as v3_fit), except that only the shipped memory-only preflight gates the run; the LS0 worst-case preflight
 # verdict of the core is computed and recorded ("preflight bypassed in a copy", SCALING_DESIGN_v0 section 6.1).
-# mode = island: setup + one adaptive pilot island with H = --n-island particles + one fixed-grid island with
+# mode = setup: stops after the setup (hashes of blocks, tables, start, neighbour graph). mode = island: setup + one adaptive pilot island with H = --n-island particles + one fixed-grid island with
 # N = --n-island on the grid built from that pilot (for p where a full fit is out of reach).
 # Usage: Rscript --vanilla profile_fit.R --core-dir D --design prodh:p1000_S3_r001_c100 | s3gen --p P --seed S
 #          --mode full|island --n-island 2500 --mem-gb G --hours H --out FILE.rds [--save-fit 1]
@@ -135,6 +135,10 @@ if (arg$mode == "full") {
   prof$fingerprint <- ph("fingerprint", ws_fingerprint(fit))
   prof$tables_sha <- ph("tables_hash", ws_sha(setup$tables))
   if (arg$save_fit == "1") ph("save_fit", saveRDS(fit, sub("\\.rds$", "_fit.rds", arg$out)))
+} else if (arg$mode == "setup") {
+  # Setup only (data, Gram, blocks, tables, start, neighbour graph): times, memory and hashes of the setup objects.
+  prof$numerical_routes <- .v3cpp$cpp_numerical_routes(ctx)
+  prof$tables_sha <- ph("tables_hash", ws_sha(setup$tables))
 } else {
   # One adaptive pilot island with H particles, then one fixed-grid island with N particles on the grid built from it.
   Nisl <- as.integer(arg$n_island)
