@@ -214,3 +214,12 @@
   intermediates; headline supersession of RM-F/R → owner.
   (4) MISR: drop the 3 remark rows from the carrier (no consumer). Order: R06 → START --record → PSHARP addendum → MISR →
   RM2. Opus/Sol only, no Fable.
+- 2026-11-12 ~11:00 CT W3-P6 CP1 ACCEPTED (branch 703a6b2; consultant concurs): smoke 5/5 completed, HPM = S₀ in all,
+  invariants pass; 581.9 core-h. GO stage-1 wave 1 (d1, h1, h2, c, b, b1r); later waves self-released by the lead under the
+  ledger rule (finished core-h + Σ limit×2 of queued/running ≤ 1,896; stop if projected > 1,700; a 24:00 rerun reserves 48
+  core-h and passes the same check). b1 remainder: all 21. (100,100) at a 4:00 limit in a later wave (after b1r).
+  Pre-declared before any stage-1 outcome: failure = completed fit with HPM (MR1 cap, as coded) ≠ S₀; a fit stopped by the
+  22.5-h guard is censored (neither; stays in the denominator; reported by bounds per DESIGN §6); ≥ 3/10 censored in a cell
+  = infeasibility finding → return to HQ. Stage 2 conditional: reps 11–20 only on cells with 1–3 failures; within the
+  remaining budget, else the owner is asked for that cell's measured cost. Pooled 0/40 is a gate statement only.
+  summarize.py v4 (Sol R02 fixes + Group A header) with a fresh Sol review before any analysis.
