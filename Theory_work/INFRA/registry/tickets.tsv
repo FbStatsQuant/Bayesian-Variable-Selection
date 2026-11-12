@@ -30,3 +30,4 @@ W3-RM	Wave3	Theory_work/Wave3/W3-RM	PROVED-CHECKED	Theory_work/Wave3/W3-RM/REPOR
 W3-SCR	Wave3	Theory_work/Wave3/W3-SCR	PROVED-CHECKED	Theory_work/Wave3/W3-SCR/REPORT.md	SCR-A;SCR-Ao;SCR-G;A1;A1o;SCR-C		theory/W3-SCR		ingested 2026-11-11 (b10_w3_scr.jsonl) from REPORT §3/§7; council C1 gpt-6-astra 9.3 / Claude Opus 5.5 8.9 round 1
 W3-PSHARP	Wave3						theory/W3-PSHARP		added by ingest; fill folder/result
 W3-MISR	Wave3						theory/W3-MISR		added by ingest; fill folder/result
+W3-START	Wave3						theory/W3-START		added by ingest; fill folder/result
