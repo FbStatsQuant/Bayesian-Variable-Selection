@@ -198,3 +198,19 @@
 - 2026-11-12 W3-START2 CP1 ACCEPTED (branch 2c66e61): STATEMENT v1.4.1 (BT2 P1–P4) locked, SL1 + SC1 Sol clean. GO to
   CP2/final per the pre-approved brief; one repair attempt per broken step, else that P-item → open item. Council Opus seat
   and Claude helpers on claude-personal today (CW unavailable).
+- 2026-11-12 ~09:30 CT acceptance audit (Opus; clones): R05 MERGED to main (3ce2e27; 146/146; 0 ERROR). W3-START
+  ACCEPTABLE (21 claims); W3-MISR, W3-PSHARP, W3-RM2 refused on record-keeping only (no per-claim seat tables; MISR 3
+  'remark' rows; RM2 malformed REPORT fence + 7 post-council edits inside MANIFEST_R1). Cross-cutting: manifests verify
+  only on the frozen mixed-EOL tree. Decisions (consultant concurs, its advice adopted in full):
+  (1) INFRA R06 = one PR: manifest/registry hashes accept raw, LF-normalised or CRLF-ised text (NUL files raw); sha256,
+  status_sha256, fp2 normalised; tests on LF and CRLF checkouts; + confirm safeguard 4 reads a dated addendum table and
+  ingest from a carrier file outside the manifest. One Sol review. Before any `--record`.
+  (2) Seat tables by addendum: same seat models, fresh threads, frozen manifest + own review; rows cite where the review
+  examined the claim; ACCEPT / NOT-EXAMINED only; no rescoring, no second COUNCIL-VERDICT; NOT-EXAMINED loses the label
+  or gets a targeted review.
+  (3) RM2: accept on the restored R1 snapshot via a separate carrier (F.jsonl), Sol field-by-field match; post-council
+  edits inside the manifest parked for RM2's next council round (outside-manifest edits may go in now); fall back to
+  council R2 only if PC1 doesn't cover all 7 files or an edit touches a statement/proof line. RM2-F/R accepted as checked
+  intermediates; headline supersession of RM-F/R → owner.
+  (4) MISR: drop the 3 remark rows from the carrier (no consumer). Order: R06 → START --record → PSHARP addendum → MISR →
+  RM2. Opus/Sol only, no Fable.
