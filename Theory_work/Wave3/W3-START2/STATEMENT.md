@@ -1,16 +1,17 @@
 # W3-START2 — STATEMENT v1.4 (the four BT2 improvements of the start-mass rate)
 
 Ticket W3-START2, Theory Wave 3. Lead: Claude Fable 5.2 (effort high).
-Status of this file: **v1.4.0** (2026-11-12; record in `LOG.md`).
+Status of this file: **v1.4.1** (2026-11-12; record in `LOG.md`).
 Protocol: `Theory_work/Wave3/PROTOCOL.md`. All results are asymptotic (n → ∞) unless marked *deterministic*.
 
 **This is a delta statement.** BASE := `Theory_work/Wave3/W3-START/` is the frozen ticket W3-START; its statement
 BASE `STATEMENT.md` is version 1.3.4. This file states **in full** every definition, assumption and claim of version
 1.4 that differs from version 1.3.4, and takes everything else from BASE `STATEMENT.md` by line reference. Version 1.4
-of the start-mass statement is: BASE `STATEMENT.md` with the definitions (D1), (D2) of §2 added and with the eight
-claims of §3 in place of the claims of the same name. Proofs of the changed steps are supplied in `lemmas/`
-(P1–P4), author-proved and awaiting independent acceptance; the status of each claim is recorded outside this file
-(the ticket's final checkpoint file and the registry). **No method change is requested.**
+of the start-mass statement is: BASE `STATEMENT.md` with (D1) of §2 added, (L-R) replaced by (D2) of §2, the eight
+superseding claims of §3 in place of their base counterparts, and Lemma LEAK-0 added. **This file fixes target
+statements only and asserts no proof status.** The proofs of the changed steps belong in `lemmas/P1`–`P4` (sketches:
+`PLAN.md` §3); whether a proof is written, and whether it is checked, is recorded outside this file (`LOG.md`, the
+ticket's checkpoint files and the registry). **No method change is requested.**
 
 ## 0. What changes, in one table
 
@@ -22,7 +23,9 @@ claims of §3 in place of the claims of the same name. Proofs of the changed ste
 | P4 | (D2); bridge (B-R⁺); (T3⁺)(b) START-R | `:163-167`, `:237`, `:306-314` | no size restriction on the leakage set Q beyond \|Q\| ≤ K; the bound is informative up to \|Q\| = n^{1/2−ε} |
 
 Each claim of §3 implies the claim it replaces (§5). Nothing else of version 1.3.4 changes: the main clause (Q = S₀,
-p ≫ n allowed), its rate, Theorem FLOOR and every hypothesis other than (L-R) are as they were.
+p ≫ n allowed), its Gaussian-row rate and Theorem FLOOR are as they were. The hypotheses that change are exactly
+these: (L-R) becomes (L-R⁺); the growth condition of F2 is removed; OVL admits (V-m) as well as (V-c); the premise of
+(N2) is restated; and in the Q = S₀ clause of (T3)(a) the bound r̄_n is asked of the rate with 𝔏^♯_n(h).
 
 ## 1. Base (taken from BASE `STATEMENT.md` v1.3.4, unchanged)
 
@@ -52,9 +55,10 @@ p ≫ n allowed), its rate, Theorem FLOOR and every hypothesis other than (L-R) 
 * 𝔏^♯_n := 𝔏^♯_n(z_n) (default levels).
 
 (Only **proper** subsets of the truth are conditioned on. For s₀ ≥ 1 this is 𝔏⁰_n(h) of version 1.3.4 without its
-last term: 𝔏^♯_n(h) = 𝔏⁰_n(h) − 15√(2/π)z_n/p. Elementary facts, proved in `lemmas/P1_LEADING.md`: for s₀ ≥ 1 and
-p > s₀, **(p − s₀)/(4p) ≤ 𝔏^♯_n(h) ≤ 𝔏_n(S₀; h)**; hence 1/p ≤ 4𝔏^♯_n(h), so a functional "𝔏^♯_n(h) + 1/p" — the form
-proposed in review BT2-P1 — is between 𝔏^♯_n(h) and 5𝔏^♯_n(h) and gives the same statements.)
+last term: 𝔏^♯_n(h) = 𝔏⁰_n(h) − 15√(2/π)z_n/p. Elementary facts (proof file: `lemmas/P1_LEADING.md`): for s₀ ≥ 1 and
+p > s₀, **(p − s₀)/(4p) ≤ 𝔏^♯_n(h) ≤ 𝔏_n(S₀; h)**; hence, still for s₀ ≥ 1 and p > s₀, 1/p ≤ 4𝔏^♯_n(h), so a functional
+"𝔏^♯_n(h) + 1/p" — the form proposed in review BT2-P1 — is between 𝔏^♯_n(h) and 5𝔏^♯_n(h) and gives the same
+statements.)
 
 **(D2) (L-R⁺) [A:START2-R-L]** (Gaussian rows; replaces (L-R)). Fixed constants C_L ≥ 0 and κ_Q ≥ 1. There are a
 deterministic Q = Q_n ⊇ S₀ with **|Q| ≤ K** — no other restriction on the size of Q — and, for every l ∉ Q, a
@@ -133,9 +137,11 @@ be bounded, as long as p > s₀.)
   In particular with Q = S₀ (no leakage): P(π₀(S₀) ≥ 1 − n^{−c}) → 1 for every c < ½, for p ≤ n^A including p ≫ n; and
   if |Q| ≤ n^{1/2−ε_Q} for a fixed ε_Q ∈ (0, ½): P(π₀(𝓛(Q)) ≥ 1 − n^{−c}) → 1 for every c < ε_Q. If C_L = 0 (exactly zero
   population leakage): 1 − π₀(𝓛(Q)) = O_P((|Q| + 1)·n^{−1/2}·(log n)^{15κ_Q+1/2}).
-  (For a sequence Q_n along which (|Q| + 1)·n^{−1/2}·exp(C_R√log n) ≥ 1 the first display is trivially true, because
-  the left side is at most 1; the same holds for the O_P bound. The displays are informative exactly when the
-  right side is small — for example for |Q| ≤ n^{1/2−ε_Q}, where version 1.3.4 required |Q| ≤ (log n)^{κ_Q}.)
+  (At each n where the right side of the first display is ≥ 1 its event is sure, because the left side is at most 1.
+  For the clause C_L = 0 put b^Q_n := (|Q| + 1)·n^{−1/2}·(log n)^{15κ_Q+1/2}: the tail bound at a threshold C_ε·b^Q_n is
+  trivial at each n where C_ε·b^Q_n ≥ 1; at the other n, C_ε is taken so large that the bound on ϱ_n(Q) that holds on
+  the design set is below c₀(ε), and (T1⁺)(d) is used. The two bounds give concentration on 𝓛(Q) when their rates
+  tend to zero — for example when |Q| ≤ n^{1/2−ε_Q}, where version 1.3.4 required |Q| ≤ (log n)^{κ_Q}.)
   Proof structure: bridge (B-R⁺), then the uniform bound (T1⁺)(d) conditionally on the design, as in (a).
 
 **(B-R⁺) Bridge (Gaussian rows).** Setting R with p > s₀ for all large n, (FL-R16), (V-R), (L-R⁺) ⇒ with probability
@@ -152,11 +158,12 @@ claimed). (This is (B-R) of version 1.3.4 under (L-R⁺) instead of (L-R).)
   every **proper** subset V ⊊ S₀ with |V| ≤ 15, with a fixed c > 1 + 2Ā. Then P(π₀(S₀) ≤ n^{−κ′}) → 1 for every
   κ′ < (c − 1 − 2Ā)/2.
   **Scope of (N2⁺).** For s₀ ≥ 16 this is (N2) of version 1.3.4 (one null; every V ⊆ S₀ with |V| ≤ 15 is proper). For
-  1 ≤ s₀ ≤ 15 the premise asks 17 − s₀ leaking nulls and can hold (`lemmas/P3_NEC.md` gives a design that satisfies it
-  together with (E) and (GF-16)), whereas the premise of (N2) could not. One leaking null is **not** claimed to be
-  enough when s₀ ≤ 15: a block can hold all the truths and up to 16 − s₀ nulls, and a null in that block gains nothing
-  given the truths; among 17 − s₀ nulls at least one is outside it. The case s₀ = 0 is excluded (there is no proper
-  subset of S₀, and no null can leak when μ = 0). On the actual partition, the one-column threshold is (C2)(i).
+  1 ≤ s₀ ≤ 15 the premise asks 17 − s₀ leaking nulls and can hold together with (E) and (GF-16) (a design: sketched in
+  `PLAN.md` §3 under P3; proof file `lemmas/P3_NEC.md`), whereas the premise of (N2) could not. One leaking null is
+  **not** claimed to be enough when s₀ ≤ 15: a block can hold all the truths and up to 16 − s₀ nulls, and a null in
+  that block gains nothing given the truths; among 17 − s₀ nulls at least one is outside it. The case s₀ = 0 is
+  excluded (there is no proper subset of S₀, and no null can leak when μ = 0). On the actual partition, the
+  one-column threshold is (C2)(i).
 * (N3) **one weakly visible truth.** If for all large n some truth j = j_n has δ²_{V,j} ≤ c·τ²_V·log n for **every**
   V ⊆ S₀ ∖ {j} with |V| ≤ 15, with a fixed c < 1 + 2A̲, then P(π₀(S₀) ≤ n^{−κ′}) → 1 for every κ′ < (1 + 2A̲ − c)/2.
 * (N4) **outside the hypotheses.** As BASE `STATEMENT.md:329-331` (masked truths: PXN (S) is the law on PXN's
@@ -188,7 +195,8 @@ claimed). (This is (B-R) of version 1.3.4 under (L-R⁺) instead of (L-R).)
 * Added: an informative bound in (T3⁺)(b) for leakage sets with (|Q| + 1)·n^{−1/2}·exp(C_R√log n) not tending to 0; a
   reference set H_l beyond polylogarithmic size; a partition-free limit with fewer than 17 − s₀ leaking nulls when
   s₀ ≤ 15; a sharper leading functional when s₀ = 0; a fixed constant in place of the ε-dependent constant C of
-  (T1⁺)(d) (the leading term of the odds is tight but has no first moment).
+  (T1⁺)(d) (the probability cut-off used for the exceptional null columns depends on ε; its Gaussian envelope
+  exp(Z²/2), Z ~ N(0, 1), has infinite expectation).
 * Everything else on that list stays not claimed (in particular: a Gaussian-row bridge to (V-m); necessity of
   (GF-16); sharpness of exp(C_R√log n); growing s₀; non-Gaussian noise; response-selected targets).
 

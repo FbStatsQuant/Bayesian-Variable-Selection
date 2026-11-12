@@ -22,7 +22,7 @@ Each change re-proves only the steps it touches and cites BASE lemma lines for t
 
 **P1 — Lemma LEAK-0, (T1⁺)(b),(d), F2⁺, (T3⁺)(a), IF-START⁺.**
 1. Split the nulls: 𝒩_exc := {l ∉ S₀ : U*_{b(l)} = S₀} (the block of l contains every truth) and 𝒩_prop := the rest.
-   For s₀ ≥ 1 one block at most contains S₀ and it has ≤ 16 columns, so |𝒩_exc| ≤ 16 − s₀ ≤ 15 (empty if s₀ ≥ 16);
+   For s₀ ≥ 1 one block at most contains S₀ and it has ≤ 16 columns, so |𝒩_exc| ≤ max(0, 16 − s₀) ≤ 15 (empty if s₀ ≥ 16);
    both sets are functions of X.
 2. T₁ ≤ ((s₀ + 1)/p)·Σ_{l∉S₀} r_b(U*_b ∪ l)/r_b(U*_b) (BASE `lemmas/L3_LEAK.md:86`).
 3. Proper columns: U*_{b(l)} ⊊ S₀, |U*_{b(l)}| ≤ 15, so J_{h_l}(δ_{U*,l}, τ_{U*}) ≤ p𝔏^♯_n(h) ≤ p√n and the gain is small
