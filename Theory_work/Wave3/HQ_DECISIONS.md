@@ -238,3 +238,11 @@
   weekly budget runs out with high-value work in flight (HQ forecasts at ~80%; shared with the BNP Lean project).
   (4) OpenAI (codex) account recovers without a reset: Sol/Astra reviews keep the same cadence and discipline — one
   reviewer per gate, narrow rechecks, no redundant seats.
+- 2026-11-12 ~13:30 CT R06 MERGED (c3cc7d0; Sol parser re-check RESOLVED; 169/169). Seat addenda (same seat models,
+  no rescoring): START 21/21 + 21/21; PSHARP 4/4 + 4/4; MISR 7/7 + 7/7; RM2 astra 18/18, opus 16 + NOT-EXAMINED
+  Ex-PolyR, Ex-PolyF. Consultant-advised: (1) W3-START blocked only by 4 free-text Opus body cells → INFRA R07 adds ONE
+  anchored body form ("accepted [with non-blocking remarks] [(…)]"), tests + one narrow Sol check, then record all 21
+  (no split record; START2 depends on BR/OVL). (2) RM2 Ex-PolyR/Ex-PolyF recorded unchecked (Astra ACCEPT + LC2-C line
+  check; no consumers), named in RM2's next council round; targeted Opus review first only if the owner's RM2
+  supersession decision leans on the α > 2 polynomial-decay example. Recording of PSHARP and MISR delegated (Opus,
+  authorized for main merges per ACCEPTANCE/RECORD_BRIEF.md).
