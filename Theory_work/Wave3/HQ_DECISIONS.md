@@ -158,3 +158,13 @@
   underfit-phase energy lemma; GEN/PXN become examples), kill-budgeted, after RM2 council. f18/f20/f21: redo per claim.
 - 2026-11-12 ~05:10 UTC W3-RM2 CP2 ACCEPTED (Form F key lemma, 1/3 attempts; LC1/RC3/RC4 clean; MP1 Astra no FATAL/MAJOR).
   GO Form R leg → CP3; P7 kill budget 2 then Form-F-alone fallback; MP1 witness to (C5); T6 rider one attempt in L4.
+- 2026-11-12 ~05:40 UTC W3-START CP3 acceptance REFUSED (delegate audit; branch 808ddd1, not merged): checks a, d, e, f
+  PASS; b/c FAIL — bvsreg.py coverage rule requires the status-source file in the frozen manifest, but status lines live
+  in CHECKPOINT_3.md (excluded by design): a tool defect affecting every CHECKPOINT-layout ticket. Decision (consultant
+  concurs): option (T), INFRA R05 tool fix, not council R3. Safeguards: (1) exempt only the ticket's own
+  CHECKPOINT_<k>.md and only as status source; statement/premise files still covered; (2) council files bind to the
+  acceptance manifest with PASS (earlier rounds bind to their own manifests); (3) record the checkpoint sha256 in the
+  registry row at ingest, CI flags later edits; (4) claim ids in the checkpoint == ids both council seats accepted;
+  (5) Sol review with negative tests (unbound review, arbitrary uncovered status file, uncovered statement, extra claim
+  id) + re-run on already-accepted tickets with no verdict change. Check (e) becomes tool-enforced: each cited round id
+  resolves to exactly one existing review file quoting a digest. Then re-run W3-START acceptance.
