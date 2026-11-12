@@ -17,6 +17,8 @@ output in reviews/); (3) P6 smoke still on NOTS — heartbeat re-wakes the P6 le
 
 ## 2026-11-12 05:15 UTC — resumed after CW 5-h limit (02:42–~04:00 UTC). SCALE/MISR/PSHARP re-woken; RM2 CP2 accepted → Form R leg; W3-START R2 PASS → acceptance audit delegated (Opus CW). Watchdog run 03:31 failed (rate limit) — next 09:01 UTC.
 
+## 2026-11-12 10:05 UTC (04:05 CT) — 2nd CW 5-h limit hit ~06:05–06:41 UTC (6 leads + helpers burned the window in ~1 h). Throttled: resumed R05, RM2, MISR, SCALE only; PSHARP waits for R05 to finish (then resume it). Keep ≤ 4 Claude leads per window. P6 smoke: 3/4 done, task 4 running 11 h. Watchdog 09:31 failed (rate limit).
+
 ## Running
 - INFRA R05 fix (Opus CW, branch infra/R05-ckpt-status): CHECKPOINT status source + 5 safeguards + Sol review → then re-run W3-START acceptance (branch 808ddd1), merge, ingest 21; BT2 P1–P4 → W3-START2 ticket.
 - W3-MISR lead (T1, Fable 5.2 CW) → CP1 → CP2.
