@@ -1,0 +1,66 @@
+V1: validation of the reduction + DP against an explicit design and brute-force enumeration
+  n=30 p=12 s0=2 rep=0: brute odds=5.4862189040e-01 DP=5.4862189040e-01 rel=6.8e-14; one-step rel=2.2e-15
+  n=30 p=12 s0=2 rep=1: brute odds=3.6419463758e+00 DP=3.6419463758e+00 rel=3.0e-14; one-step rel=3.7e-15
+  n=30 p=12 s0=2 rep=2: brute odds=1.4719756918e+00 DP=1.4719756918e+00 rel=4.4e-14; one-step rel=3.2e-15
+  n=24 p=11 s0=1 rep=0: brute odds=6.9351945391e-01 DP=6.9351945391e-01 rel=7.0e-14; one-step rel=8.2e-16
+  n=24 p=11 s0=1 rep=1: brute odds=5.8864827962e-01 DP=5.8864827962e-01 rel=6.6e-14; one-step rel=2.5e-15
+  n=24 p=11 s0=1 rep=2: brute odds=6.7323307384e-01 DP=6.7323307384e-01 rel=4.9e-14; one-step rel=7.5e-15
+  n=40 p=13 s0=3 rep=0: brute odds=4.2383152804e+01 DP=4.2383152804e+01 rel=1.3e-14; one-step rel=4.9e-15
+  n=40 p=13 s0=3 rep=1: brute odds=1.0049125117e+00 DP=1.0049125117e+00 rel=4.1e-14; one-step rel=1.2e-14
+  n=40 p=13 s0=3 rep=2: brute odds=8.7604612987e-01 DP=8.7604612987e-01 rel=6.8e-14; one-step rel=1.2e-14
+  n=20 p=12 s0=0 rep=0: brute odds=2.4862049936e-01 DP=2.4862049936e-01 rel=1.4e-13; one-step rel=6.1e-15
+  n=20 p=12 s0=0 rep=1: brute odds=2.6067803402e-01 DP=2.6067803402e-01 rel=1.3e-13; one-step rel=8.4e-15
+  n=20 p=12 s0=0 rep=2: brute odds=2.4711470157e+00 DP=2.4711470157e+00 rel=4.2e-14; one-step rel=1.0e-14
+  worst relative difference: 1.37e-13  (PASS if < 1e-7): PASS
+  [V1 done, 5s]
+V2: sizes above kmax = s0 + 60 and quadrature: (i) all sizes up to K (kextra=None) vs kextra=60; (ii) kextra 60 vs 120 and nodes x2 on a large case
+  n=400 p=399 s0=3: kextra=60: 5.570534315078e-01; all sizes <= K: 5.570534315077e-01; rel diff 3.0e-13
+  n=1600 p=1599 s0=1: kextra=60: 3.995081581723e-01; all sizes <= K: 3.995081581723e-01; rel diff 1.2e-13
+  n=1600 p=200 s0=3: kextra=60: 3.387294553590e-01; all sizes <= K: 3.387294553589e-01; rel diff 3.5e-13
+  n=25600 p=25599 s0=3: kextra=60: 4.279279957680e-02; kextra=120, 1200 nodes: 4.279279957774e-02; rel diff 2.2e-11
+  [V2 done, 327s]
+E3: the truncated moments used in Lemma W (chi^2_1, tau = 2 log N): exact mean sqrt(2 tau/pi) = 2 sqrt(log N/pi);
+    second moment (2/sqrt(2 pi)) int_0^sqrt(tau) e^{z^2/2} dz vs sharp asymptote N/sqrt(pi log N) and crude bound 2 N sqrt(log N/pi);
+    tail P(e^{chi2/2} > w) vs 1/(w sqrt(pi log w))
+  N=1e+02: mean=2.421463 (formula 2.421463); second/N=0.30878, asymptote 0.26291, crude 2.4215; tail*N=0.24065 vs 0.26291
+  N=1e+04: mean=3.424466 (formula 3.424466); second/N=0.19846, asymptote 0.18590, crude 3.4245; tail*N=0.17713 vs 0.18590
+  N=1e+06: mean=4.194098 (formula 4.194098); second/N=0.15803, asymptote 0.15179, crude 4.1941; tail*N=0.14681 vs 0.15179
+  N=1e+08: mean=4.842927 (formula 4.842927); second/N=0.13536, asymptote 0.13145, crude 4.8429; tail*N=0.12814 vs 0.13145
+  [E3 done, 328s]
+E1: orthogonal witness. Columns: n p s0 | Lambda_n | medians of [odds/Lambda, one-step/Lambda, delta*sqrt(n)] | quartiles of odds/Lambda | P(odds >= 0.9 Lambda), P(odds >= 0.75 Lambda).  odds = sum over |S| <= s0+60 (lower bound for delta/(1-delta); see V2)
+  n=   100 p=    10 s0=1 reps=200 | Lam=0.1673 | 1.283 1.125 1.767 | 1.007 2.096 | 0.85 0.99
+  n=   100 p=    10 s0=3 reps=200 | Lam=0.2755 | 1.395 1.162 2.775 | 1.106 2.116 | 0.94 1.00
+  n=   100 p=    32 s0=1 reps=200 | Lam=0.2091 | 1.231 1.040 2.047 | 1.020 1.773 | 0.89 0.99
+  n=   100 p=    32 s0=3 reps=200 | Lam=0.4003 | 1.439 1.086 3.655 | 1.127 2.042 | 0.94 1.00
+  n=   100 p=    99 s0=1 reps=200 | Lam=0.2416 | 1.380 1.109 2.501 | 1.181 1.790 | 1.00 1.00
+  n=   100 p=    99 s0=3 reps=200 | Lam=0.4772 | 1.511 1.064 4.189 | 1.329 2.040 | 1.00 1.00
+  n=   400 p=    20 s0=1 reps=200 | Lam=0.0968 | 1.165 1.080 2.026 | 0.916 1.691 | 0.77 0.93
+  n=   400 p=    20 s0=3 reps=200 | Lam=0.1794 | 1.216 1.083 3.581 | 1.005 1.902 | 0.89 0.96
+  n=   400 p=    89 s0=1 reps=200 | Lam=0.1194 | 1.152 1.047 2.418 | 0.963 1.390 | 0.84 0.98
+  n=   400 p=    89 s0=3 reps=200 | Lam=0.2354 | 1.253 1.068 4.555 | 1.028 1.711 | 0.90 1.00
+  n=   400 p=   399 s0=1 reps=200 | Lam=0.1380 | 1.145 1.027 2.730 | 1.016 1.454 | 0.95 1.00
+  n=   400 p=   399 s0=3 reps=200 | Lam=0.2753 | 1.218 1.014 5.023 | 1.082 1.468 | 0.99 1.00
+  n=  1600 p=    40 s0=1 reps=200 | Lam=0.0540 | 1.153 1.104 2.344 | 0.913 1.517 | 0.77 0.95
+  n=  1600 p=    40 s0=3 reps=200 | Lam=0.1044 | 1.175 1.096 4.370 | 0.947 1.676 | 0.81 0.97
+  n=  1600 p=   253 s0=1 reps=200 | Lam=0.0663 | 1.114 1.057 2.753 | 0.964 1.445 | 0.86 0.98
+  n=  1600 p=   253 s0=3 reps=200 | Lam=0.1320 | 1.105 1.016 5.093 | 0.946 1.396 | 0.85 0.99
+  n=  1600 p=  1599 s0=1 reps= 60 | Lam=0.0766 | 1.141 1.073 3.216 | 0.997 1.346 | 0.93 1.00
+  n=  1600 p=  1599 s0=3 reps= 60 | Lam=0.1531 | 1.133 1.027 5.914 | 0.980 1.329 | 0.93 1.00
+  n=  6400 p=    80 s0=1 reps=200 | Lam=0.0295 | 1.065 1.042 2.435 | 0.915 1.349 | 0.76 0.96
+  n=  6400 p=    80 s0=3 reps=200 | Lam=0.0580 | 1.102 1.062 4.809 | 0.925 1.423 | 0.79 0.98
+  n=  6400 p=   716 s0=1 reps= 60 | Lam=0.0362 | 1.040 1.012 2.900 | 0.941 1.285 | 0.82 0.98
+  n=  6400 p=   716 s0=3 reps= 60 | Lam=0.0722 | 1.071 1.023 5.741 | 0.951 1.294 | 0.85 1.00
+  n=  6400 p=  6399 s0=1 reps= 30 | Lam=0.0418 | 1.050 1.017 3.359 | 0.975 1.180 | 0.93 1.00
+  n=  6400 p=  6399 s0=3 reps= 30 | Lam=0.0835 | 1.023 0.972 6.295 | 0.963 1.222 | 0.97 1.00
+  n= 25600 p=   160 s0=1 reps=200 | Lam=0.0159 | 1.027 1.015 2.568 | 0.920 1.313 | 0.77 0.97
+  n= 25600 p=   160 s0=3 reps=200 | Lam=0.0315 | 1.038 1.018 5.069 | 0.911 1.340 | 0.78 0.98
+  n= 25600 p=  2024 s0=1 reps= 60 | Lam=0.0195 | 1.010 0.996 3.085 | 0.929 1.197 | 0.83 1.00
+  n= 25600 p=  2024 s0=3 reps= 60 | Lam=0.0389 | 1.021 0.997 6.112 | 0.923 1.145 | 0.82 1.00
+  n= 25600 p= 25599 s0=1 reps= 12 | Lam=0.0225 | 1.003 0.987 3.527 | 0.944 1.151 | 1.00 1.00
+  n= 25600 p= 25599 s0=3 reps= 12 | Lam=0.0449 | 1.007 0.980 6.928 | 0.916 1.077 | 0.92 1.00
+  [E1 done, 4501s]
+E2: growing s0 on the orthogonal witness (Corollary A2): s0 = round(n^0.3), p = n-1, theta_j = 1/sqrt(s0) (so ||mu||^2 = n-1 and ||theta||^2 = 1: (E), (C) hold with M = M' = 1)
+  n=400 p=399 s0=6 | Lam=0.4796 | median odds/Lam=1.373, min=1.029 | median pi(S0)=0.603
+  n=1600 p=1599 s0=9 | Lam=0.3820 | median odds/Lam=1.275, min=0.983 | median pi(S0)=0.672
+  n=6400 p=6399 s0=14 | Lam=0.3128 | median odds/Lam=1.260, min=0.985 | median pi(S0)=0.717
+  [E2 done, 4774s]
