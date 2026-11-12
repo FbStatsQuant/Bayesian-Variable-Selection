@@ -1,7 +1,8 @@
-# W3-MISR — STATEMENT (v1.0, 2026-11-11; lead: Claude Fable 5.2, claudeAgent, high)
+# W3-MISR — STATEMENT (v1.1, 2026-11-11; lead: Claude Fable 5.2, claudeAgent, high; v1.1 = statement-lock amendments [L01-#])
 
 Ticket W3-MISR (T1 of `Theory_work/Wave3/API_AUDIT/sharp1/TRIAGE.md`): C-MIS v2, the misspecified-subset theorem
-without fixed variances. Status of this file: **v1.0, targets — nothing below is proved or checked yet**. Each claim
+without fixed variances. Status of this file: **v1.1, targets — nothing below is proved or checked yet** (v1.0 reviewed
+by `reviews/L01_statement_lock_sol.md`; changes in `reviews/L01_disposition.md`). Each claim
 gets its own status in its proof file (`lemmas/`). Inherited statuses are quoted verbatim in §8.
 
 **Aliases.** [W3P] = `Theory_work/Wave3/W3-POST/STATEMENT.md` (v1.4); [POST2] = `Theory_work/Wave3/W3-POST2/STATEMENT.md`
@@ -19,7 +20,12 @@ Code = `Scripts/SMC_BVS/core/` at commit 16a7f85 (last change to that folder: 72
   K = min(p, ⌊n/2⌋), prior w(k) = ½/C(2p − 1, k), score m(S) ∝ D_S^{−1/2}(2b₀ + Q_S)^{−ν}. It is defined when y^r is
   non-constant. PIP_j, HPM (any tie rule), MPM, ξ_q are the exact-posterior outputs of [W3P] §0. All statements are
   about this real-arithmetic target, not about the sampler or floating point.
-* **Contrasts.** N := n − 1; U is n × N with UᵀU = I_N, UUᵀ = C (centring); r_n := √(log n/n).
+* **Contrasts.** N := n − 1; U is a fixed (deterministic) n × N matrix at each n with UᵀU = I_N, UUᵀ = C (centring);
+  r_n := √(log n/n).
+* **Conventions [L01-Q1].** π_𝒞(T) := 0 for T ∉ Ω. HPM is a measurable selection of a posterior mode. Parameter
+  vectors θ_S are zero-padded to ℝ^p. The set of configurations (below) carries the Borel σ-field of the countable
+  disjoint union over p of the sets {x ∈ ℝ^{n×p} with non-constant columns} × ℝ^p × (0, ∞); p, S₀(κ) and the classes
+  below are then measurable.
 * **Configuration.** κ = (x, β, v): x as above, β ∈ ℝ^p, v ∈ (0, ∞). Derived objects: S₀(κ) := supp β,
   s(κ) := |S₀(κ)|, θ(κ) := D_xβ, μ(κ) := Cxβ = Xθ(κ), μ_c := Uᵀμ(κ); for S ⊆ [p], M_S and
   L_S(κ) := μ_cᵀ(I − M_S)μ_c as in [POST2] (lines 17, 40-41); j₀ := ⌈(2A + 1)s⌉ + 1; m♯_n as in [W3P] (lines 36-39)
@@ -36,8 +42,10 @@ Code = `Scripts/SMC_BVS/core/` at commit 16a7f85 (last change to that folder: 72
 - **(SZ)** 2 ≤ p ≤ n^A and 1 ≤ s(κ) ≤ K.
 - **(E^σ; M)** ‖μ(κ)‖² ≤ n·M·v.
 - **(F₀; φ₀)** λ_min(X_{S₀}ᵀX_{S₀}/(n − 1)) ≥ φ₀², S₀ = S₀(κ).
-- **(OS; C_OS)** the superset Occam-sum condition of [POST2] (lines 29-36) at this n, anchored at S₀(κ). (Design-only.
-  Implied by (F_w; g₀), (DG), (ADG): [POST2] line 46.)
+- **(OS; C_OS)** the superset Occam-sum condition of [POST2] (lines 29-36) at this n, anchored at S₀(κ): the two
+  inequalities themselves, at this n. (Design-only. Sufficient bridge, not part of the class definitions [L01-4]:
+  (F_w; g₀) ⇒ (DG; g₀/(1 + g₀)) ⇒ (ADG) ⇒ (OS; C_OS) for n ≥ n_OS, with (n_OS, C_OS) depending only on (s, A, g₀),
+  resp. (s, A, c_D): [POST2] lines 46-47, `A_occam.md` Lemma A0.)
 - **(ID^{M,σ}; c)** L_S(κ) ≥ c·v·log n for every S ∈ 𝔉(κ). Coordinate form **(ID^{M,σ}_j; c)**, j ∈ S₀(κ): the same
   for every S ∈ 𝔉(κ) with j ∉ S.
 - **(F_λ; φ₀)** of [W3P] (lines 68-70) anchored at S₀(κ); **(BM^σ; c)** min_{j∈S₀(κ)} θ_j(κ)² ≥ c·v·log n/(nφ₀²).
@@ -67,7 +75,12 @@ constant on that scale; the raw scale s_y is stored for reporting and enters no 
 (`v3_standardise`: centre, divide by the sample SD), `:123-127` (`y = sy$z`; `s_y` stored), `v3_fit.R:97, 118`
 (`pre <- v3_preprocess(X, y)`; `v3_context(pre$X, pre$y, …)`), `cpp/v3_score.h:14` (`b0 = 0.01`), `:55-60`
 (`z = Xᵀy`, `yty`, `logm0` from the standardised y), `:217-223` (`Q = yty − n·quad`, `logm = logCn − ½(ldH − ldA) − ν log(2b0 + Q)`).
-So the code's target is the invariant π_𝒞 of (a); in floating point the outputs agree up to rounding (numerics N0).
+So the code's real-arithmetic target is the invariant π_𝒞 of (a). Nothing is claimed about floating point [L01-2]: a
+shift or scale can change the supplied doubles themselves (y = (−1, 0, 1) + 2⁵⁵ is constant in binary64; overflow).
+Numerical observation only, for the inputs listed in the file: `numerics/N0_code_invariance.R` → `numerics/N0_out.txt`
+runs the compiled `v3_fit` on a + c·y: exact branch, three data sets, seven (a, c) with |c| from 10⁻¹⁵⁰ to 10¹⁵⁰ and
+c < 0 included; SMC branch, one data set, four (a, c), same seed. In all 25 runs status and HPM are unchanged and
+max |ΔPIP| ≤ 1.4·10⁻¹⁰.
 **(b) Reduction.** Let x be fixed and let the law of y^r satisfy GR^c at κ = (x, β, v). Then the law of
 π_𝒞(· | x, y^r) (a random probability on Ω) equals its law under the **unit-noise G-model** ỹ = xβ/√v + ε̃,
 ε̃ ~ N_n(0, I_n); in that model S₀ = S₀(κ), θ* = θ(κ)/√v, μ = μ(κ)/√v. The same holds for the law of the image of
@@ -127,7 +140,7 @@ X^r_𝓜β_𝓜 + ε with ε ~ N_n(0, σ²I) independent of X^r, σ² ≥ 0. Eve
     σ², τ² vary with n; [MIS1]'s requirement "τ_n² ≡ τ² fixed" (its lines 83-85) is not needed. (Example there: an
     independent omitted column of variance n² gives τ_n² = n²; the theorem then applies exactly when the hypotheses hold
     relative to σ²_𝒞 = σ² + n².)
-(b) (Growing p_𝒞 ≤ n^A, sufficient population conditions.) Assume s := |supp β^𝒞| ≥ 1 fixed, λ_min(Σ_TT) ≥ c_pop > 0
+(b) (2 ≤ p_𝒞 ≤ n^A, possibly growing; sufficient population conditions.) Assume σ²_𝒞 > 0, s := |supp β^𝒞| ≥ 1 fixed, λ_min(Σ_TT) ≥ c_pop > 0
     for T ⊆ 𝒞 with |T| ≤ s + max(j₀, m♯_n), max_j Σ_jj ≤ C₀, β^𝒞ᵀΣ_𝒞𝒞β^𝒞 ≤ M₀σ²_𝒞, and
     n·min_{j∈supp β^𝒞} Σ_jj(β^𝒞_j)²/(σ²_𝒞 log n) → ∞. Then E δ_n = O(r_n), so P(HPM ≠ supp β^𝒞) = O(r_n).
 With centred rows (m = 0), supp β^𝒞 is SL's s̃ ([MIS1] Proposition P(b)).
@@ -143,9 +156,17 @@ parameter posterior Π of R′(a′), the fitted centred mean μ̂ := X_Sθ and
 (a) (with the margin) if moreover κ_n ∈ 𝒦_n(…, c), c > c₁(s, A) (or 𝒦^λ_n, c > c₀(s, A)): for every M_n → ∞,
     Π(‖μ̂ − μ(κ_n)‖² > M_n v_n or |v′/v_n − 1| > M_n n^{−1/2} or S ≠ S₀(κ_n) or ‖θ − θ(κ_n)‖ > M_n √(v_n/n) | x, y^r) → 0
     in probability; hence Π(h̄_n > M_n n^{−1/2} | x, y^r) → 0 in probability.
-Under [MIS1]'s GR the reference N(μ_i(κ), v) is the (centred) conditional law of y_i given the candidates, i.e. the
-Kullback–Leibler projection of the full model on the candidate class. Differences from SL's Theorem 4: in-sample
-average distance, convergence in probability, the shipped prior, p_𝒞 ≤ n^A with s fixed; a rate is given.
+**The reference law [L01-3].** N(μ_i(κ), v) is the law of the i-th coordinate of μ(κ) + √v·ε̃, ε̃ ~ N_n(0, I_n): the
+unit-noise comparison model of R′(b) in response units. Under [MIS1]'s GR it is the conditional law, given the
+candidate design, of y^r_i − [α + a + n⁻¹Σ_l (xβ^𝒞)_l] (the response minus the sample average of its conditional
+mean); it is not the law of (Cy^r)_i, whose variance is v(1 − 1/n). The contraction statements need no further
+interpretation. **Kullback–Leibler reading, in the setting of Corollary G only:** there the conditional law of y_i
+given the candidate covariates x_{𝒞,i} (omitted covariates integrated out) is N(α′ + x_{𝒞,i}ᵀβ^𝒞, σ²_𝒞), which belongs to
+the candidate linear-Gaussian class and is therefore the Kullback–Leibler minimiser within it (SL's f₀, for centred
+rows); the reference is that law with its mean centred over the sample. No KL statement is made for fixed designs
+or for the projection given the realised omitted columns ([MIS1] `L1_reduction.md:69-74` keeps these apart).
+Differences from SL's Theorem 4: in-sample average distance, convergence in probability (not almost sure, not
+integrated over the design law), the shipped prior, p_𝒞 ≤ n^A with s fixed; a rate is given.
 
 ## 7. Remarks (each is a one-step consequence of Lemma R′)
 
@@ -156,10 +177,17 @@ Claim B's reference cost: B_T(ϑ) ≤ Bσ*²_n; beta-min, (ID), (ID^M) are alrea
 is evaluated at σ*² = 1; Claim D's thresholds become ‖μ̂ − μ‖² > C_Hσ*²_n log n, resp. > M_nσ*²_n, and
 ‖θ − θ*‖ > M_nσ*_n n^{−1/2}.
 **Remark P ([MIS1] in signal-to-noise form).** [MIS1] Theorem MIS (i), (ii), (ii′) hold with σ²_𝒞 replaced by any
-σ²_{𝒞,n} > 0 (in (ii): any measurable σ²_𝒞(x) > 0), with ‖μ^𝒞‖² ≤ Mnσ²_𝒞 in place of ‖μ^𝒞‖² ≤ Mn. [MIS1] Theorem F
-holds with σ² = σ²_n > 0 arbitrary and ‖μ_c‖² ≤ Mnσ²_n in place of ‖μ_c‖² ≤ Mn (so σ²_{𝒞,n}/σ²_n ∈ [1, 1 + 2M]).
+σ²_{𝒞,n} > 0 (in (ii): any measurable σ²_𝒞(x) > 0), with ‖μ^𝒞‖² ≤ Mnσ²_𝒞 in place of ‖μ^𝒞‖² ≤ Mn (their beta-min
+conditions and inclusion thresholds are already relative to σ²_𝒞). [MIS1] Theorem F holds with σ² = σ²_n > 0
+arbitrary, **every** variance-dependent hypothesis being read relative to σ²_n [L01-1]: ‖μ_c‖² ≤ Mnσ²_n in place of
+‖μ_c‖² ≤ Mn (so σ²_{𝒞,n}/σ²_n ∈ [1, 1 + 2M]); BM-∞ in the form θ^𝒞²_min nφ₀²/(σ²_n log n) → ∞ (the unnormalised form
+of [MIS1] line 132 is not available: with θ^𝒞 = (1, 0) on an orthogonal design and σ²_n = n² it holds while the
+posterior concentrates on ∅); BM(c) and the inclusion threshold with σ²_{𝒞,n} = σ²_n + Δ_n as written there; TAIL^𝒞
+imposed on the same (invariant) posterior; Corollary F(b)'s (TL) is unchanged (it is a ratio). In the proof, the EP
+coefficients θ^𝒞 and the residual r are divided by σ_n.
 **Remark U (uniqueness of the target).** If two representations (β, v), (β′, v′) of the same law at the same x both
-lie in 𝒦_n (or 𝒦^λ_n) with the same constants and n ≥ n₀ is so large that C r_n < ½, then supp β = supp β′.
+lie in 𝒦_n or 𝒦^λ_n, and n ≥ n₀ with C r_n < ½ for the applicable constants of §2 (their maxima if the two
+representations lie in different classes), then supp β = supp β′. (Nothing is said about β itself.)
 
 ## 8. Inputs (registry id @ version; state ACTIVE on base main 16a7f85) and their verbatim statuses
 

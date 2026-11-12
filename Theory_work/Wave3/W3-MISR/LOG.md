@@ -24,3 +24,18 @@ Agents started so far (model, provider, role) are listed at each step. Claude-in
      contraction claimed". The second closes by transferring W3-POST2:D through the same lemma (the parameter posterior
      is scale-equivariant). Added as a separately-statused corollary (beyond T1 items (a)–(d); flagged for HQ).
 - 19:50 LOG.md, PLAN.md written. Next: STATEMENT v1.0, then Sol statement lock (blind).
+- 20:05 STATEMENT v1.0 written; commit 197f557 (restore point). [agent 1] L01 statement lock launched: gpt-6.1-sol, codex,
+  reasoningEffort high, blind (brief `reviews/BRIEF_L01_sol.md`).
+- 20:10–20:40 Numerics started in the background: N0 (`numerics/N0_code_invariance.R`: compiles the core locally with
+  Rtools, runs `v3_fit` on rescaled responses) and N1–N4 (`numerics/misr_numerics.py`).
+- (run interrupted by the Claude Work 5-hour limit; resumed by HQ at 23:00 CST. HOLDS.md re-read: empty.)
+- 23:02 Results read. N0: status/HPM identical in 25 runs, max |ΔPIP| 1.3e-10. N1: posteriors agree to 5e-14 across
+  v_n ∈ {n⁻², 1/n, 1, n, n²}; δ/r_n ∈ [1.07, 1.42]. N2: relative margin is the right condition (a < ½ recovers, a ≥ ½
+  fails). N3: t₃ residual harmless; heteroscedastic residual degrades the rate; random slope changes the target.
+  N4: (E^σ) not needed numerically (improvable).
+- 23:05 L01 returned: **REJECT**, 0 FATAL / 1 MAJOR / 3 MINOR. MAJOR = Remark P (Theorem F's BM-∞ not normalised;
+  analytic counterexample). No counterexample to R′, MIS-R (i), (i′), (ii), Cor G, Cor H. All four accepted and
+  applied → STATEMENT v1.1 (`reviews/L01_disposition.md`). This is the one fix round.
+- 23:35 ASSUMPTION_MAP.md written. Briefs written: `reviews/BRIEF_L02_sol.md` (re-check of L01, sees L01 + diff) and
+  `reviews/BRIEF_BT1_astra.md` (better theorem, blind). Commit, then launch [agent 2] L02 gpt-6.1-sol (codex, high) and
+  [agent 3] BT1 gpt-6-astra (codex, high).

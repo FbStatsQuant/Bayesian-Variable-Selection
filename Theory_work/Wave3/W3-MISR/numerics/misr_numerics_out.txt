@@ -1,0 +1,93 @@
+W3-MISR numerics; p = 8, reps = 100, numpy 2.3.0
+
+N1  variance v_n varying with n, signal-to-noise held fixed  (target S0 = {0,1}; theta_j^2 = c v log n / n, c = 16)
+    model: y = x beta_C + x gamma + xi + eps;  beta_C = (b, 0, ...), gamma = (0, b, 0...) [candidate 1 is a proxy];
+    xi ~ N(0, tau_n^2 I), eps ~ N(0, sigma^2 I);  v_n = sigma^2 + tau_n^2
+  (i) common random numbers (same x, same standard normals): max over models of |pi - pi_ref|
+     n=100: max |pi - pi_ref| over 5 designs x 5 regimes = 9.44e-15
+     n=1600: max |pi - pi_ref| over 5 designs x 5 regimes = 4.74e-14
+  (ii) independent draws (eps and xi separately), random design each replicate
+  sigma2=1, tau2=1 (fixed; v1 case)  n=100   E[delta]=0.2665 (se 0.0147)  E[delta]/r_n=1.242  P(HPM=target)=0.95 
+  sigma2=1, tau2=1 (fixed; v1 case)  n=400   E[delta]=0.1451 (se 0.0089)  E[delta]/r_n=1.186  P(HPM=target)=0.99 
+  sigma2=1, tau2=1 (fixed; v1 case)  n=1600  E[delta]=0.0927 (se 0.0095)  E[delta]/r_n=1.365  P(HPM=target)=0.99 
+  sigma2=1, tau2=1 (fixed; v1 case)  n=6400  E[delta]=0.0395 (se 0.0033)  E[delta]/r_n=1.068  P(HPM=target)=1.00 
+  sigma2=1, tau2=n                   n=100   E[delta]=0.2620 (se 0.0123)  E[delta]/r_n=1.221  P(HPM=target)=0.99 
+  sigma2=1, tau2=n                   n=400   E[delta]=0.1580 (se 0.0128)  E[delta]/r_n=1.291  P(HPM=target)=0.98 
+  sigma2=1, tau2=n                   n=1600  E[delta]=0.0791 (se 0.0055)  E[delta]/r_n=1.165  P(HPM=target)=1.00 
+  sigma2=1, tau2=n                   n=6400  E[delta]=0.0525 (se 0.0056)  E[delta]/r_n=1.418  P(HPM=target)=1.00 
+  sigma2=1, tau2=n^2                 n=100   E[delta]=0.2579 (se 0.0119)  E[delta]/r_n=1.202  P(HPM=target)=0.98 
+  sigma2=1, tau2=n^2                 n=400   E[delta]=0.1477 (se 0.0094)  E[delta]/r_n=1.207  P(HPM=target)=1.00 
+  sigma2=1, tau2=n^2                 n=1600  E[delta]=0.0825 (se 0.0093)  E[delta]/r_n=1.215  P(HPM=target)=0.99 
+  sigma2=1, tau2=n^2                 n=6400  E[delta]=0.0494 (se 0.0042)  E[delta]/r_n=1.335  P(HPM=target)=1.00 
+  sigma2=1/n, tau2=1/n               n=100   E[delta]=0.2553 (se 0.0115)  E[delta]/r_n=1.190  P(HPM=target)=0.98 
+  sigma2=1/n, tau2=1/n               n=400   E[delta]=0.1578 (se 0.0143)  E[delta]/r_n=1.289  P(HPM=target)=0.97 
+  sigma2=1/n, tau2=1/n               n=1600  E[delta]=0.0833 (se 0.0082)  E[delta]/r_n=1.227  P(HPM=target)=0.99 
+  sigma2=1/n, tau2=1/n               n=6400  E[delta]=0.0486 (se 0.0062)  E[delta]/r_n=1.313  P(HPM=target)=1.00 
+  sigma2=0, tau2=n^-2 (no noise)     n=100   E[delta]=0.2794 (se 0.0138)  E[delta]/r_n=1.302  P(HPM=target)=0.96 
+  sigma2=0, tau2=n^-2 (no noise)     n=400   E[delta]=0.1504 (se 0.0111)  E[delta]/r_n=1.229  P(HPM=target)=0.97 
+  sigma2=0, tau2=n^-2 (no noise)     n=1600  E[delta]=0.0837 (se 0.0103)  E[delta]/r_n=1.232  P(HPM=target)=0.99 
+  sigma2=0, tau2=n^-2 (no noise)     n=6400  E[delta]=0.0431 (se 0.0059)  E[delta]/r_n=1.165  P(HPM=target)=0.99 
+
+N2  fixed raw coefficients, omitted independent column of variance n^(2a)  (tau_n^2 = n^(2a), sigma^2 = 1)
+    y = 1*x_0 + 1*x_1 + x_k + eps, x_k ~ N(0, n^(2a)) independent of the candidates; target {0,1};
+    relative beta-min ratio  theta^2 n / (v log n) ~ n^(1-2a)/log n
+  a=0.0                              n=100   E[delta]=0.3033 (se 0.0163)  E[delta]/r_n=1.413  P(HPM=target)=0.95  ratio=10.86
+  a=0.0                              n=400   E[delta]=0.1647 (se 0.0129)  E[delta]/r_n=1.346  P(HPM=target)=0.97  ratio=33.38
+  a=0.0                              n=1600  E[delta]=0.0798 (se 0.0057)  E[delta]/r_n=1.175  P(HPM=target)=1.00  ratio=108.43
+  a=0.0                              n=6400  E[delta]=0.0460 (se 0.0048)  E[delta]/r_n=1.242  P(HPM=target)=1.00  ratio=365.13
+  a=0.25                             n=100   E[delta]=0.8477 (se 0.0172)  E[delta]/r_n=3.950  P(HPM=target)=0.15  ratio=1.97
+  a=0.25                             n=400   E[delta]=0.5011 (se 0.0296)  E[delta]/r_n=4.094  P(HPM=target)=0.60  ratio=3.18
+  a=0.25                             n=1600  E[delta]=0.1046 (se 0.0107)  E[delta]/r_n=1.540  P(HPM=target)=0.99  ratio=5.29
+  a=0.25                             n=6400  E[delta]=0.0450 (se 0.0049)  E[delta]/r_n=1.216  P(HPM=target)=1.00  ratio=9.02
+  a=0.4                              n=100   E[delta]=0.9824 (se 0.0046)  E[delta]/r_n=4.578  P(HPM=target)=0.01  ratio=0.53
+  a=0.4                              n=400   E[delta]=0.9909 (se 0.0028)  E[delta]/r_n=8.097  P(HPM=target)=0.00  ratio=0.55
+  a=0.4                              n=1600  E[delta]=0.9840 (se 0.0056)  E[delta]/r_n=14.492  P(HPM=target)=0.01  ratio=0.59
+  a=0.4                              n=6400  E[delta]=0.9873 (se 0.0038)  E[delta]/r_n=26.679  P(HPM=target)=0.00  ratio=0.66
+  a=0.5                              n=100   E[delta]=0.9980 (se 0.0004)  E[delta]/r_n=4.651  P(HPM=target)=0.00  ratio=0.21
+  a=0.5                              n=400   E[delta]=0.9984 (se 0.0005)  E[delta]/r_n=8.158  P(HPM=target)=0.00  ratio=0.17
+  a=0.5                              n=1600  E[delta]=0.9997 (se 0.0001)  E[delta]/r_n=14.722  P(HPM=target)=0.00  ratio=0.14
+  a=0.5                              n=6400  E[delta]=0.9998 (se 0.0001)  E[delta]/r_n=27.018  P(HPM=target)=0.00  ratio=0.11
+  a=0.6                              n=100   E[delta]=0.9988 (se 0.0004)  E[delta]/r_n=4.654  P(HPM=target)=0.00  ratio=0.09
+  a=0.6                              n=400   E[delta]=0.9996 (se 0.0002)  E[delta]/r_n=8.168  P(HPM=target)=0.00  ratio=0.05
+  a=0.6                              n=1600  E[delta]=0.9999 (se 0.0000)  E[delta]/r_n=14.725  P(HPM=target)=0.00  ratio=0.03
+  a=0.6                              n=6400  E[delta]=1.0000 (se 0.0000)  E[delta]/r_n=27.023  P(HPM=target)=0.00  ratio=0.02
+  a=1.0                              n=100   E[delta]=0.9996 (se 0.0001)  E[delta]/r_n=4.658  P(HPM=target)=0.00  ratio=0.00
+  a=1.0                              n=400   E[delta]=0.9999 (se 0.0000)  E[delta]/r_n=8.170  P(HPM=target)=0.00  ratio=0.00
+  a=1.0                              n=1600  E[delta]=1.0000 (se 0.0000)  E[delta]/r_n=14.726  P(HPM=target)=0.00  ratio=0.00
+  a=1.0                              n=6400  E[delta]=1.0000 (se 0.0000)  E[delta]/r_n=27.023  P(HPM=target)=0.00  ratio=0.00
+
+N3  outside GR^c  (target {0,1}; theta_j^2 = 16 v log n / n with v the residual variance)
+  (i) t_3 residual (iid, variance 1) n=100   E[delta]=0.2790 (se 0.0153)  E[delta]/r_n=1.300  P(HPM=target)=0.96 
+  (i) t_3 residual (iid, variance 1) n=400   E[delta]=0.1747 (se 0.0126)  E[delta]/r_n=1.427  P(HPM=target)=0.97 
+  (i) t_3 residual (iid, variance 1) n=1600  E[delta]=0.0741 (se 0.0056)  E[delta]/r_n=1.091  P(HPM=target)=1.00 
+  (i) t_3 residual (iid, variance 1) n=6400  E[delta]=0.0457 (se 0.0051)  E[delta]/r_n=1.234  P(HPM=target)=1.00 
+  (ii) heteroscedastic: sd_i = |x_i2| (mean variance 1) n=100   E[delta]=0.3128 (se 0.0199)  E[delta]/r_n=1.458  P(HPM=target)=0.93 
+  (ii) heteroscedastic: sd_i = |x_i2| (mean variance 1) n=400   E[delta]=0.2093 (se 0.0183)  E[delta]/r_n=1.711  P(HPM=target)=0.92 
+  (ii) heteroscedastic: sd_i = |x_i2| (mean variance 1) n=1600  E[delta]=0.1384 (se 0.0191)  E[delta]/r_n=2.038  P(HPM=target)=0.94 
+  (ii) heteroscedastic: sd_i = |x_i2| (mean variance 1) n=6400  E[delta]=0.0958 (se 0.0166)  E[delta]/r_n=2.588  P(HPM=target)=0.95 
+  (iii) common random slope (C-MIS Example E2): y = x_0 + Z x_1 + eps, Z ~ N(0,1) scalar, eps ~ N(0, I)
+        mean-only target {0}; conditional (F_n contains Z) target {0,1}
+     n=100   E pi({0})=0.232  E pi({0,1})=0.490  [share of draws with Z^2 n/log n < 16 (conditional margin fails): 0.63]
+     n=400   E pi({0})=0.115  E pi({0,1})=0.760  [share of draws with Z^2 n/log n < 16 (conditional margin fails): 0.38]
+     n=1600  E pi({0})=0.034  E pi({0,1})=0.879  [share of draws with Z^2 n/log n < 16 (conditional margin fails): 0.20]
+     n=6400  E pi({0})=0.018  E pi({0,1})=0.929  [share of draws with Z^2 n/log n < 16 (conditional margin fails): 0.14]
+
+N4  outside (E^sigma): ||mu||^2/(n v) ~ n^b  (fixed raw coefficients 1 on {0,1}; v = n^-b; GR^c holds)
+  b=0.0 (energy/(n v) ~ 2.6)         n=100   E[delta]=0.2481 (se 0.0115)  E[delta]/r_n=1.156  P(HPM=target)=0.99 
+  b=0.0 (energy/(n v) ~ 2.6)         n=400   E[delta]=0.1443 (se 0.0127)  E[delta]/r_n=1.179  P(HPM=target)=0.97 
+  b=0.0 (energy/(n v) ~ 2.6)         n=1600  E[delta]=0.0904 (se 0.0121)  E[delta]/r_n=1.331  P(HPM=target)=0.99 
+  b=0.0 (energy/(n v) ~ 2.6)         n=6400  E[delta]=0.0557 (se 0.0096)  E[delta]/r_n=1.506  P(HPM=target)=0.99 
+  b=0.5 (energy/(n v) ~ 26)          n=100   E[delta]=0.2338 (se 0.0099)  E[delta]/r_n=1.089  P(HPM=target)=0.98 
+  b=0.5 (energy/(n v) ~ 52)          n=400   E[delta]=0.1363 (se 0.0081)  E[delta]/r_n=1.114  P(HPM=target)=1.00 
+  b=0.5 (energy/(n v) ~ 104)         n=1600  E[delta]=0.0771 (se 0.0082)  E[delta]/r_n=1.135  P(HPM=target)=0.99 
+  b=0.5 (energy/(n v) ~ 208)         n=6400  E[delta]=0.0452 (se 0.0047)  E[delta]/r_n=1.223  P(HPM=target)=1.00 
+  b=1.0 (energy/(n v) ~ 260)         n=100   E[delta]=0.1527 (se 0.0015)  E[delta]/r_n=0.712  P(HPM=target)=1.00 
+  b=1.0 (energy/(n v) ~ 1.04e+03)    n=400   E[delta]=0.0808 (se 0.0010)  E[delta]/r_n=0.660  P(HPM=target)=1.00 
+  b=1.0 (energy/(n v) ~ 4.16e+03)    n=1600  E[delta]=0.0386 (se 0.0003)  E[delta]/r_n=0.569  P(HPM=target)=1.00 
+  b=1.0 (energy/(n v) ~ 1.66e+04)    n=6400  E[delta]=0.0200 (se 0.0002)  E[delta]/r_n=0.540  P(HPM=target)=1.00 
+  b=2.0 (energy/(n v) ~ 2.6e+04)     n=100   E[delta]=0.1314 (se 0.0000)  E[delta]/r_n=0.612  P(HPM=target)=1.00 
+  b=2.0 (energy/(n v) ~ 4.16e+05)    n=400   E[delta]=0.0674 (se 0.0000)  E[delta]/r_n=0.551  P(HPM=target)=1.00 
+  b=2.0 (energy/(n v) ~ 6.66e+06)    n=1600  E[delta]=0.0341 (se 0.0000)  E[delta]/r_n=0.503  P(HPM=target)=1.00 
+  b=2.0 (energy/(n v) ~ 1.06e+08)    n=6400  E[delta]=0.0172 (se 0.0000)  E[delta]/r_n=0.465  P(HPM=target)=1.00 
+
+DONE
