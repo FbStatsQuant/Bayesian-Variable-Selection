@@ -57,3 +57,28 @@ Not checked:
 - No claim is made beyond the stated scope: reference sets beyond polylogarithmic size, fewer designated leaking nulls, a sharper zero-support functional, response-selected targets and informative concentration when the asserted large-Q rate does not vanish remain open or excluded.
 
 COUNCIL-VERDICT round=R1 manifest=29e07311fc662cb546de2ee5ea090828669c4bc1034e0d5323c0184d9708117f seat=sol score=9.1 gates=PASS
+
+## Addendum — per-claim decisions (seat sol, round R1; 2026-11-12; same seat model, fresh thread; no rescoring)
+
+| id | decision |
+|---|---|
+| W3-START2:LEAK-0 | ACCEPT |
+| W3-START2:START-F | ACCEPT |
+| W3-START2:F2 | ACCEPT |
+| W3-START2:TRANSFER | ACCEPT |
+| W3-START2:IF-START | ACCEPT |
+| W3-START2:OVL | ACCEPT |
+| W3-START2:NEC | ACCEPT |
+| W3-START2:BR | ACCEPT |
+| W3-START2:START-R | ACCEPT |
+
+Where examined:
+W3-START2:LEAK-0 — Per-claim table, line 18; Checks performed, lines 42–43: proper/exceptional columns, probability budget, absorption and uniform bound.
+W3-START2:START-F — Per-claim table, line 19; G1/G5, lines 7 and 11; Checks performed, lines 43 and 47: lattice argument, sharp leading term, inherited asymptotics and supersession.
+W3-START2:F2 — Per-claim table, line 20; Checks performed, line 43; Issues, lines 30–32: sharp-functional bound, second-order absorption, removal of p growth and exact-order qualifications; remarks explicitly non-blocking.
+W3-START2:TRANSFER — Per-claim table, line 21; G3/G5, lines 9 and 11; Checks performed, line 47: conditional bounds uniform over design-selected objects, exceptional design probability and sharp-rate supersession.
+W3-START2:IF-START — Per-claim table, line 22; G4, line 10; Checks performed, lines 47–48: event indicator, maximum odds, deterministic rate envelope and P-START interface.
+W3-START2:OVL — Per-claim table, line 23; Checks performed, lines 44 and 48: normalisation/product bound, same-Q margin visibility, exponent and production P-OVL.
+W3-START2:NEC — Per-claim table, line 24; Checks performed, lines 45 and 47: counting witness, all small-support examples and inherited N1/N3/N4.
+W3-START2:BR — Per-claim table, line 25; G2/G5, lines 8 and 11; Checks performed, line 46: BASE L9.1–L9.6 audit, reference-set hypotheses, removal of the Q-size bound and zero-leakage tightness.
+W3-START2:START-R — Per-claim table, line 26; Checks performed, lines 46–47: pointwise trivial/small-rate splits, arbitrary oscillating Q, zero-leakage case and supersession.

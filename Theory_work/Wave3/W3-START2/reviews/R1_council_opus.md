@@ -110,3 +110,28 @@ holds S₀); the trivial range of (T3⁺)(b) is stated; the C_L = 0 clause is ti
 * BASE `CHECKPOINT_3.md` was not read (forbidden for this blind read; see Issue 3).
 
 COUNCIL-VERDICT round=R1 manifest=29e07311fc662cb546de2ee5ea090828669c4bc1034e0d5323c0184d9708117f seat=opus score=9.1 gates=PASS
+
+## Addendum — per-claim decisions (seat opus, round R1; 2026-11-12; same seat model, fresh thread; no rescoring)
+
+| id | decision |
+|---|---|
+| W3-START2:LEAK-0 | ACCEPT |
+| W3-START2:START-F | ACCEPT |
+| W3-START2:F2 | ACCEPT |
+| W3-START2:TRANSFER | ACCEPT |
+| W3-START2:IF-START | ACCEPT |
+| W3-START2:OVL | ACCEPT |
+| W3-START2:NEC | ACCEPT |
+| W3-START2:BR | ACCEPT |
+| W3-START2:START-R | ACCEPT |
+
+Where examined:
+- W3-START2:LEAK-0 — per-claim table line 39; G1 (P1.1–P1.3, line 28); G2/G3 (lines 29–30); G5 (line 32); Issues 1, 5 (non-blocking).
+- W3-START2:START-F — per-claim table line 40; G1 (P1.4, (T1⁺), line 28); G5 (line 32); Issue 2 (non-blocking).
+- W3-START2:F2 — per-claim table line 41; G1 (P1.5–P1.6, F2⁺, line 28); G3 (bounded p, line 30); Issue 7 (non-blocking).
+- W3-START2:TRANSFER — per-claim table line 42; G1 (P1.7/P1.8, (T3⁺)(a), line 28); G4 (supersession rows, line 31).
+- W3-START2:IF-START — per-claim table line 43; G1 (P1.7/P1.8, line 28); G4 (line 31).
+- W3-START2:OVL — per-claim table line 44; G1 (P2.1–P2.2, OVL⁺, line 28); G2 (line 29).
+- W3-START2:NEC — per-claim table line 45; G1 (P3.1, Example P3.3, line 28); G2 ((N2⁺), line 29); Issue 4 (non-blocking).
+- W3-START2:BR — per-claim table line 46; G1 (P4.1, L9 read in full, line 28); G4 ((L-R) ⇒ (L-R⁺), line 31).
+- W3-START2:START-R — per-claim table line 47; G1 (P4.2–P4.3, (T3⁺)(b), line 28); G2/G5 (lines 29, 32); case checks (line 96).
