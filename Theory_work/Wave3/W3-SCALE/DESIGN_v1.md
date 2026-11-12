@@ -1,7 +1,7 @@
 # DESIGN_v1 — many-island SMC-BVS on NOTS, from measured numbers (W3-SCALE leg A)
 
-**Status:** design only, revision 2 (after the Astra break review R03, `reviews/R03_design_astra.md`; disposition in
-`reviews/R03_disposition.md`). It replaces the extrapolations of `Pause_2026-11/SCALING_DESIGN_v0.md` by leg A's
+**Status:** design only, revision 3 (after the Astra break reviews R03 and R04, `reviews/R03_design_astra.md`,
+`R04_design_astra.md`; dispositions `reviews/R03_disposition.md`, `R04_disposition.md`). Revision 3 is not re-reviewed. It replaces the extrapolations of `Pause_2026-11/SCALING_DESIGN_v0.md` by leg A's
 measurements and keeps v0's notation and tags ([OP-bit], [OP-law], [Δ𝒞], [Δlaw], UNVERIFIED). Nothing here changes
 the method. The two questions reserved for the owner are framed in §7 and **not decided**.
 
@@ -18,9 +18,9 @@ islands per fit. Every statement below that goes beyond these runs is marked. So
 |---|---|---|
 | elementary step ≈ 3 µs (local i7) | bridge stages 1.14 / 1.16 / 0.90 µs, rounds at φ = 1 1.64 / 1.90 / 1.80 µs at p = 1k / 2k / 20k (`profile_v31_step_cost.tsv`) | at T = 30 an island costs 51.6 µs per particle and predictor against v0's 126: 0.41 of v0's estimate |
 | T = 30, UNVERIFIED | final grids 26–40 stages over the 24 PROD-H units (median 32.5 at p = 500, 31 at p = 1000), 33 at 2k, 29 at 20k with N = 2,500; pilots 20–30 (`leg_a_units_calibration.tsv`, `profile_v31_stages.tsv`) | v0's 30 holds on these designs; how T moves with p beyond them is not established |
-| calibration ≈ 2.6 final-island equivalents (I = 3) | rebuilds I: 2–8 (median 4) at p = 500, 2–10 (median 6) at p = 1000, 8 at 2k, 11 at 5k (then an escalation); calibration / (calibration + final) time: median 0.45 at p = 500, 0.56 at p = 1000 (tier-0 units), 0.51 for the 1k profile, 0.62 at 2k | calibration is half of a fit or more, and it is sequential (§2) |
+| calibration ≈ 2.6 final-island equivalents (I = 3) | rebuilds I: 2–8 (median 4) at p = 500, 2–10 (median 6) at p = 1000, 8 at 2k, 11 at 5k (then an escalation); calibration / (calibration + final) time: median 0.45 at p = 500, 0.56 at p = 1000 (tier-0 units), 0.51 for the 1k profile, 0.62 at 2k | calibration is 30–69% of calibration + final time on these units (median 45% and 56%), and it is sequential (§2) |
 | setup dominated by complete linkage | v3.1 at 20k: Gram 16.4 s, blocks 25.5 s, neighbour graph 59.1 s, tables 0.5 s; setup peak 9.24 GiB resident (the three dense p × p arrays are 24 p² = 8.94 GiB) (`leg_a_setup_compare_roundA.tsv`) | the neighbour graph was the largest setup cost; fixed bit for bit (§3) |
-| preflight refusal from p ≈ 2.3k (by reading) | v3.1's LS0 charge against 24 h: 11.2 h at 2k (admitted), 53–94 h at 5k, 231 h at 10k, 936–1,372 h at 20k (the charge is proportional to a timed score, which varied 135–237 µs between runs) | refusal confirmed from 5k; changed in v3.2-dev (admission only) |
+| preflight refusal from p ≈ 2.3k (by reading) | v3.1's LS0 charge against 24 h: 11.2 h at 2k (admitted), 53–94 h at 5k, 231 h at 10k, 934–1,372 h at 20k (the charge is proportional to a timed score, which varied 134–237 µs between runs) | refusal confirmed from 5k; changed in v3.2-dev (admission only) |
 | σ̂ = sd(log Ẑ_r): no data | §4.4 | first numbers: small at p ≤ 2k; 0.5–2.5 between diagnostic islands in the one 5k calibration |
 
 **Island cost.** With one set of constants, c_b = 1.0 µs (bridge) and c_1 = 1.8 µs (the 12 terminal rounds at n = 200),
@@ -52,8 +52,8 @@ All numbers in this section use the formula above with T = 35 unless marked meas
 4. **LS0 preflight.** With the v3.2-dev charge a 24 h allocation admits 5k (5.8–7.0 h charged), 10k (9.2–13.7 h) and
    20k (18.8 h). Extrapolating the charge, refusal returns between 20k and 30k, depending on the timed score. The LS0
    that actually ran took 0.1–2.1 s. Admission only.
-5. **Per-step O(p) terms** (particle bitset copies, `v3_engine.h:120,152,172`): not visible up to 20k. UNVERIFIED
-   beyond.
+5. **Per-step O(p) terms** (particle bitset copies, `v3_engine.h:120,152,172`): the aggregate cost per step did not grow up to 20k, but
+   no separate measurement of the copy cost was made. UNVERIFIED beyond.
 
 ## 3. v3.2-dev after leg A (on the branch; all [OP-bit]; verification in CHECKPOINT_1 §3)
 
@@ -63,34 +63,75 @@ copying the Gram to R and ran on shared nodes). Islands unchanged; memory still 
 
 ## 4. The parallel unit: fixed-size islands, evidence-weighted merge
 
-### 4.1 Pipeline and what does not exist yet
-J0 build → J1 setup (once) → J2 calibration with census (once) → J3 final islands as a job array → J4 merge.
-None of J3/J4 exists in the code. To build:
-- **Island-only entry point.** `v3_run_settings` fixes 4 islands (`v3_run.R:89-93`) and `cpp_final_run` starts every
-  call at stream 10 and runs the final local search and LS0 itself (`v3_core.cpp:443-481`). A worker needs: the global
-  island id r (stream 9 + r), the frozen-calibration hash, setup and tables read-only, the ledger initialised as in
-  `cpp_final_run` (tables, inherited models), island execution only, and an output record (log Ẑ_r and per-stage
-  record, ĥ_r, RB accumulators, the island's HPM with provenance, its top store sorted in the store order, counters
-  by phase, `island_best`).
-- **Stream namespace.** Seeding is x = seed·2³² + stream with stream < 2³² (`v3_util.h:47`). Calibration keeps 0–9;
-  final islands 10 … 9 + R′; census islands take a disjoint high range (proposal: 2³¹ + c), so R′ ≤ 2³¹ − 10 and the
-  two ranges cannot meet whatever R′ is.
-- **Merge rules** (the ledger is not an all-score archive: it holds the top-(40p + 1) store, two leader stores, one
-  HPM provenance and aggregate counters, `v3_ledger.h:43-113`):
-  top store = top_c of the union of worker top-c stores, computed by a streaming k-way merge with deduplication that
-  holds c entries (exact by Lemma S; peak memory independent of R′); HPM = maximum of worker HPMs, table and inherited
-  HPM under `hpm_better`; its provenance = the first event in the canonical order "tables, inherited, islands by id"
-  (this is the serial provenance: a worker that scored the global HPM has it as its own HPM, with its own first event);
-  `island_best` per island; table and inherited counters taken once, island counters summed; leader stores are used
-  only by calibration and are not merged. Log-sum-exp in R double as today (`v3_run.R:4,154`).
-- **Output equivalence with a serial run of the same R′ islands:** estimates, stage records, HPM (model, F,
-  provenance), top store, `logical` counters and `island_best` are the same; `fresh` counters and cache statistics are
-  not (a model first scored by another island is a cache hit in the serial run). This needs a reporting ruling (O17).
-- **Serial tail of the merge.** The final local search and LS0 scan p + k(p − k) models per pass
-  (`v3_engine.h:379-419`): measured 0.94–1.0 µs per scanned model (109k models in 0.11 s at 1k; 2.2M in 2.06 s at 20k).
-  At p = 1M and k = 100 one pass is 1.0·10⁸ models. Not measured beyond 20k, nor without the Gram, nor on tie-DP
-  cases. Record I/O at large p must be budgeted too: R′ worker stores of 40p + 1 models (1.0·10¹⁰ entries at p = 1M,
-  R′ = 256, before deduplication), a p × R′ PIP matrix (1.9 GiB of doubles there) and five RB arrays (9.5 GiB).
+### 4.1 Pipeline, and the worker-equivalence contract to be built first
+J0 build → J1 setup (once) → J2 calibration with census (once) → J3 final islands as a job array → J4 merge and tail.
+None of J3/J4 exists in the code. First build, per R04: **R′ = 4, unchanged N, unchanged primary PIP, no census**,
+shown equivalent to the serial `v3_fit`; only then more islands. Ruling O17 (HQ, 2026-11-12): "identical" covers
+every statistical output and every quantity that enters a published table or theorem check.
+
+**Field by field** (R04's table, checked here against `v3_run.R`, `v3_core.cpp` and the study scripts):
+
+| output | feeds a published table or check | independent workers + merge reproduce it | needed |
+|---|---|---|---|
+| log Ẑ, log Ẑ_r, lower bound, PIPs, RB arrays, MPM, stage and terminal tables | yes | yes | full island records in island order; unchanged R arithmetic |
+| HPM (model, F, provenance), `hpm_before_local`, `hpm_before_ls0` | yes | yes, with the tail below | worker HPM with its event and mechanism; snapshots in the tail |
+| top store, near ties | yes | yes | sorted worker top-c; tail; near ties recomputed after LS0 |
+| leader stores γ₀, γ₁ (`v3_run.R:210`) | no consumer found, but returned outputs | yes if merged | each merged under its own order (they are **not** calibration-only) |
+| `island_best`, flags E1–E3, low ESS, local limits and certificates | yes | yes | global island id mapped to a ledger slot; E1 against the post-LS0 HPM, E3 before LS0 |
+| `score_counts$logical` | yes | yes | island matrices summed, tables once, tail events from the tail |
+| **`score_counts$fresh`** | **yes: `ev_cost.csv`, the cost exponent, the phase and mechanism shares (`evidence_h2.py:98-105,139-141`)** | **no** | see "Counters" |
+| cache statistics, numerical-route counters | no consumer found | no | follow from the same replay |
+| timings, status | runtime column; output event | no (physical times differ by nature) | parallel budgets and statuses defined separately |
+
+**Worker.** Inputs: an immutable manifest (hashes of the data and index map, setup and tables, binary and flags,
+frozen calibration and inherited state); the global island id r (stream 9 + r) and its ledger slot (`Ledger::event`
+updates `island_best` only for ids ≤ `islands`, `v3_ledger.h:108-111`); N, L, measured rounds and tier taken from
+the frozen object (`v3_run_settings` takes N from the budgets today and fixes 4 islands, `v3_run.R:89-93`;
+`cpp_final_run` starts every call at stream 10 and runs both searches itself, `v3_core.cpp:443-481`). Execution: the
+island only. Output: the full `IslandResult` (every stage and terminal record, RB arrays, stream positions, initial
+hash), the worker ledger (top store, both leader stores, HPM with event and mechanism, `island_best`, `logical` and
+`fresh` matrices of its own events) and a status.
+
+**Streams.** Seeding is x = seed·2³² + stream, stream < 2³² (`v3_util.h:47`). Calibration 0–9; final islands
+10 … 9 + R′; census islands 2³¹ + c with 0 ≤ c < 2³¹, c unique across census sizes and batches, no reseeding on a
+retry, the uint64 construction checked, and stream ids kept as doubles in R (they exceed the integer range). The
+reported stream map is generated from the manifest (`v3_randomness` hardcodes 0:13 today). Disjoint labels do not
+prove independence (O18).
+
+**Merge, then the tail, once, after every manifest island is present and validated.**
+- Top store: top_c of the union of the worker top-c stores under the store's comparator. Truncating each worker at c
+  is safe, ties across the cut included: a dropped model has c distinct better models in that worker. Deduplicate by
+  model identity, not by hash. Memory: O(c + R′) entries for an R′-way merge, or O(c) for a running pairwise union.
+- Leader stores: the same, each under its own comparator (γ₁ orders by F then lexicographically, unlike the top store).
+- HPM: maximum under `hpm_better` over the table models, the inherited HPM (calibration provenance restored as in
+  `v3_core.cpp:428-440`) and the worker HPMs; provenance = the earliest actual source in the order tables, inherited,
+  islands by id.
+- Tail, exactly `v3_core.cpp:453-481` on the merged ledger: snapshot `hpm_before_local`; final local search (cap ℓ)
+  from the merged HPM; snapshot `hpm_before_ls0`; start mode; LS0 (cap ℓ + |S̃₀|). A new best found in the tail takes
+  the tail event as provenance. Then near ties, certificates and flags as `v3_run.R:173-212`.
+
+**Counters: what O17 implies.** The serial run shares one score cache across the four islands and both searches,
+and clears it completely when it is full (479, 565 and 127 clears in the final runs of the 1k, 2k and 20k profiles).
+Whether a lookup is fresh therefore depends on the whole ordered history; the sets or counts of distinct models per
+island do not determine it (R04 finding 1). Since `fresh` feeds published tables, case (a) of the ruling fails. Case
+(b) — serial-equivalent totals that match exactly — needs an ordered trace of every cache lookup (model identity
+or a wide key, phase, mechanism; the non-emitting lookups such as the search centres included) replayed in island
+order through the serial cache rule and continued through the tail, with the route counters attached to the replayed
+misses. Size: 3.9·10⁸ lookups in the final run of the 1k profile and 9.1·10⁸ at 2k, i.e. about 6 and 15 GB at 16 bytes
+per lookup, written by the workers and read once. **Not built; the options are put to HQ in CHECKPOINT_2.**
+
+**Statuses.** To be declared before the build: task and whole-fit budgets (one runtime guard cannot span
+processes), retry policy, precedence of terminal statuses, missing or killed tasks, merge or tail failure, atomic
+publication. Never aggregate only the islands that succeeded. Every estimate field is NA on non-delivery, as
+`v3_run.R:106-116`. Equivalence is claimed for runs completed under both executions; wall-clock guard decisions need
+not coincide, and timings are physical.
+
+**Serial tail of the merge, and I/O.** One scan evaluates at most p + k(p − k) models (k + k(p − k) at k = K, where
+additions are skipped; `v3_engine.h:394-405`). Measured in the profiles' LS0: 108,999 models in 0.11 s at 1k and
+2,198,999 in 2.06 s at 20k (0.94–1.0 µs per model; `LOG.md`, profile records). At p = 1M and k = 100 one scan is
+1.0·10⁸ models. Not measured beyond 20k, nor without the Gram, nor on tie-DP cases. Record I/O at large p must be
+budgeted too: R′ worker stores of 40p + 1 models (1.0·10¹⁰ entries at p = 1M, R′ = 256, before deduplication), a
+p × R′ PIP matrix (1.9 GiB of doubles there) and five RB arrays (9.5 GiB).
 
 ### 4.2 Costs with N_isl = 2,500 (the law-changing choice of §7(i); numbers only; formula at T = 30)
 
@@ -113,9 +154,10 @@ Write ω_r = Ẑ_r / Z (unnormalised; E[ω_r | V] = 1) and W_r = Ẑ_r / Σ_s �
   `v3_run.R:162`); both always reported. Which is primary is §7(ii).
 - General declared h: μ̂(h) = Σ_r W_r H_r(h) = [R′⁻¹ Σ ω_r H_r] / [R′⁻¹ Σ ω_r], a ratio of two means.
 - Given the data and V, with conditionally iid islands: μ̂ → π(h) as R′ → ∞; √R′ (μ̂ − μ) → N(0, Var(ω(H − μ) | V));
-  the leading bias at finite R′ is −Cov(ω(H − μ), ω | V) / R′, in general not zero. The reported standard error
-  SE² = (R′/(R′ − 1)) Σ_r W_r² (ĥ_rj − PIP_Z,j)² is the first-order estimate of that variance; a minimum R′ for
-  reporting it has to be declared.
+  the bias at finite R′ is −Cov(ω(H − μ), ω | V) / R′ plus higher-order terms, in general not zero. The reported
+  SE² = (R′/(R′ − 1)) Σ_r W_r² (ĥ_rj − PIP_Z,j)² estimates Var(μ̂) ≈ E[ω²(H − μ)²]/R′ to first order; a minimum R′ for
+  reporting it has to be declared. These are asymptotic statements for conditionally iid islands; neither N1 nor f01
+  gives finite-R′ precision.
 - PIP_eq is consistent in R′ only if each island is itself unbiased for the PIP, which finite-N SMC does not give in
   general.
 
@@ -132,7 +174,8 @@ Write ω_r = Ẑ_r / Z (unnormalised; E[ω_r | V] = 1) and W_r = Ẑ_r / Σ_s �
 - R = 4 weights on the 25 fits: R_eff / R between 0.597 and 1.00, at least 0.97 in 20; the largest weight 0.58.
 - The ratio of the diagnostic to the final medians (2.4 at p = 500, 2.1 at p = 1000) is compatible with 1/√N
   (√(2500/512) = 2.2) but does not establish it: the two sets use different grids and streams, fits with more rebuilds
-  weigh more, per-fit ratios range from 0.3 to 13 (recomputed by the reviewer, R03 finding 6), the 2k ratio is 5.2, and in the escalated S5 fit the tier-1
+  weigh more, the ratio of the last same-tier diagnostic set to the final set ranges from 0.31 to 13.4 over the fits
+  (recomputed by the reviewer, R03 and R04), the 2k ratio is 5.2, and in the escalated S5 fit the tier-1
   diagnostic islands (H = 2,048) gave 0.31 while the final islands (N = 10,000) gave 1.00. A frozen-grid sweep over N
   with replicated islands is needed (leg B).
 - For log-normal Ẑ_r and many islands, R_eff / R′ ≈ exp(−σ²): 0.99 at σ = 0.09, 0.94 at 0.25, 0.61 at 0.70, 0.37 at
@@ -154,7 +197,9 @@ read) can feed a rule for (N_isl, R′) that is V-measurable. The rule itself is
 from census statistics to (N_isl, R′), a budget ceiling, a rule for failure, and it must be written before the runs.
 A census that looks benign can miss rare high-evidence modes, and one poor shared grid impairs every final island
 (conditional validity given V is unaffected; the alternative of several independent calibration groups at the same
-total work has not been compared). Cost of a measurement census at 20k: 32 islands of N = 2,500 ≈ 21 core-h.
+total work has not been compared). Also undefined: whether census models are inherited into the stores (v0 O3 assumed so, for the card items), with
+which provenance and counters. Cost of a measurement census at 20k: 32 islands of N = 2,500 ≈ 21 core-h (measured
+island time).
 
 ## 5. Memory: path to O(np)
 
@@ -176,19 +221,20 @@ IDs as in v0 §4. "f01" = `Wave3/API_AUDIT/sharp1/results/f01.md` (handed to thi
 
 | ID | obligation | route and qualifications |
 |---|---|---|
-| O1 | merge consistency and CLT of §4.3 at fixed N as R′ → ∞ | (a) Island identity E[ω_r H_r(h) \| V] = π(h), V = all calibration-side streams: f01 (b)(ii) gets it from the freezing lemma under SI by the independence argument (the 𝒞-conditional N1 then follows from it by the tower property, not the reverse). (b) Dropping the uniform bound B_h needs f01 (a)(1): integrability of max_S \|h(S; V)\| on the output event, or the regular-conditional-law reading. (c) The extension to all L + 5 post-terminal populations (f01 (b)(i)) is for population averages; the stage-t identities are about Z_t and q_φt; the shipped Rao–Blackwellised PIP is covered by N1 only for the four measured rounds, and any other use needs the Gibbs-step bridge stated. (d) The ratio limit needs: fixed data and V, a V-measurable sequence of budgets R′, final islands conditionally iid given V (IND-T on the enlarged stream map, O18), bounded Ẑ_r (true on a finite space). If N or p change with the budget it is a triangular-array statement, not covered. (e) Under IND-T, f01 (b)(iii) gives E[ω_r H_r(h) \| V, U_−r] = π(h) for h measurable in (V, U_−r), with the **unnormalised** ω_r. It does not make the normalised contributions W_r H_r orthogonal, nor leave-one-out errors that depend on each other's streams. |
+| O1 | merge consistency and CLT of §4.3 at fixed N as R′ → ∞ | (a) Island identity E[ω_r H_r(h) \| V] = π(h), V = all calibration-side streams: f01 (b)(ii) gets it from the freezing lemma under SI by the independence argument (the 𝒞-conditional N1 then follows from it by the tower property, not the reverse). (b) Dropping the uniform bound B_h needs f01 (a)(1): integrability of max_S \|h(S; V)\| on E₀ = {calibration succeeded} ∩ {r ≤ R′} (the potential-run event of the freezing lemma, not the delivered-output event), or the regular-conditional-law reading. (c) The extension to all L + 5 post-terminal populations (f01 (b)(i)) is for population averages; the stage-t identities are about Z_t and q_φt; **N1 does not cover the shipped Rao–Blackwellised PIP at all** (its H is the plain four-round average and its §5 excludes Rao–Blackwellised records; R04 finding 2): the merge theory needs the separate RB identity (each recorded Gibbs conditional integrates to the marginal under a kernel that preserves the target), to be located in the v3.1 theory or proved, with the exact-arithmetic and ideal-stream premises carried into §4.3. (d) The ratio limit needs: fixed data and V, a V-measurable sequence of budgets R′, final islands conditionally iid given V (IND-T on the enlarged stream map, O18), bounded Ẑ_r (true on a finite space). If N or p change with the budget it is a triangular-array statement, not covered. (e) Under IND-T, f01 (b)(iii) gives E[ω_r H_r(h) \| V, U_−r] = π(h) for h measurable in (V, U_−r), with the **unnormalised** ω_r. It does not make the normalised contributions W_r H_r orthogonal, nor leave-one-out errors that depend on each other's streams. |
 | O3 | census inside calibration | (N_isl, R′) from census islands is V-measurable if the census streams are calibration-side and disjoint from the final range (§4.1), so (a) applies with a V-measurable R′ (f01 (a)4). This protects first moments; it is not by itself an R′ → ∞ theorem (see (d)). The TH01(c) counterexample (R′ adapted to final outputs) does not apply. |
 | O2 | degeneracy at high p: bound E[ω_r² \| V], or a lower bound showing growth | open research; §4.4 is the only evidence |
 | O4 | N decoupled from p (reversal of "N_e is never split") | owner decision first (§7(i)); then restate TH01 (e)(f)(i), TH06, TH08 with general (N, R′) |
 | O5 | counter-based streams | not needed for island-level parallelism (each island keeps its serial stream); needed only for threads inside an island |
 | O6 | replay; output event | replayed tasks must validate their inputs (hashes) and be deduplicated atomically by island id; a deterministic numerical failure is not repaired by replay; "all R′ islands completed" is not enough if the merge, its local search or LS0 stop: then there is no output (GUARD-W) |
-| O10 | union store and HPM over R′ islands | Lemma S for the top store; the rest of the merge is the specification of §4.1 |
+| O10 | union stores and HPM over R′ islands | Lemma S for the top store and, with their own comparators, the leader stores; the rest of the merge is the specification of §4.1 |
 | O14 | preflight change is admission only | implemented and reviewed; it acts at the initial preflight and before an escalation; outputs are identical on equal admission decisions |
-| O17 (new) | output equivalence of process-parallel islands with the serial run | reporting ruling on `fresh` counters, cache statistics and leader stores (§4.1) |
+| O17 (new) | output equivalence of process-parallel islands with the serial run | ruled by HQ (2026-11-12): every statistical output and every quantity in a published table or theorem check. Met by the contract of §4.1 for everything except `fresh` counts, cache statistics and route counters, which need the lookup-trace replay or a decision on the cost column |
 | O18 (new) | independence of the final and census streams on the enlarged stream map | today an assumption about SplitMix64-seeded xoshiro256** streams (EX-S / IND-T); not discharged by relabelling |
 | O19 (new) | `log_Z_lower95` = log 0.05 + log Ẑ with R′ islands | Markov's inequality needs only E[Ẑ \| V] = Z and a V-measurable R′: no independence and no R′-dependent factor; it is a statement about the potential run, not conditional on delivery |
 | O20 (new) | flags E1, E2, E3 and the escalation rule when R′ ≠ 4 | E1 (any island) and E2 (σ̂ > 1) change their frequency with R′; E3 is the final search before LS0; final flags must not trigger reruns or change the frozen R′ |
 | O21 (new) | card items G1, G2, L3 and local certification on the merged HPM | re-audit with the union store; not implied by the pipeline |
+| inactive | v0 O7, O9, O12 | not triggered: scorer and kernel are unchanged and no screening is proposed |
 | deferred | v0 O8 (sparse partition), O11 (island-level resampling), O13 (smaller store capacity), O15 (calibration numerics), O16 (linkage algorithm) | unchanged from v0; O8 is triggered by §5's last row, O11 by the fallback of §8 |
 
 ## 7. Reserved for the owner — framing only; neither question is decided here, and leg A's measurements do not settle either
@@ -212,7 +258,7 @@ some p, fixed above) is a third option.
 |---|---|---|
 | on the 25 saved fits (R = 4, N ≥ 2,500) | — | max_j \|PIP_Z,j − PIP_eq,j\| at most 0.0023 (median over fits 0.00009), which is up to 1.3 equal-weight standard errors; same median-probability model in 25 of 25 |
 | bias | the per-island bias, for every R′ | −Cov(ω(H − μ), ω)/R′, vanishing as R′ grows |
-| variance | Var(ĥ_r)/R′ | Var(ω(H − μ))/R′; grows with the dispersion of ω |
+| variance (leading term) | Var(ĥ_r)/R′ | E[ω²(H − μ)²]/R′: depends on the joint law of the evidence and the island summary, not on the dispersion of ω alone |
 | failure mode | bias that more islands do not remove | few effective islands when σ̂ is large (R_eff / R = 0.60 in the worst of the 25 fits) |
 | consequence of switching | — | a reported estimate changes definition: registry and lifecycle; the published PROD-H study used equal-weight PIPs |
 
@@ -221,8 +267,8 @@ Both columns stay in the output whichever is primary.
 
 ## 8. After leg A
 
-Leg B proposal with costs: CHECKPOINT_1 §7. In short: bit-identical engine work and process-parallel islands (what
-makes 10k–20k fits deliverable under the present law), a measurement of σ̂ against p and N on frozen grids, then the
+Leg B proposal with costs: CHECKPOINT_1 §7. In short: bit-identical engine work and process-parallel islands (the
+route to delivering 10k–20k fits under the present law: a validation target, not a measured result), a measurement of σ̂ against p and N on frozen grids, then the
 O(np)-memory core. Alternatives kept on the list, none adopted: several independent calibration groups instead of
 one shared calibration; island-level resampling (v0 O11, [Δlaw]) as the fallback if the weights degenerate — it
 keeps an unbiased evidence estimate at the price of communication and of genealogy-aware variance theory, and it is
