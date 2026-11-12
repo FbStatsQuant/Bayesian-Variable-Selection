@@ -178,3 +178,8 @@
   counters (`fresh`, cache statistics) may differ only if (a) none feeds a published table, or (b) the island-only
   worker also reports serial-equivalent totals that match the serial run exactly; B2 must show which holds.
   5k profile (job 2692690): the lead folds it in at the start of leg B. Reserved items stay with Felipe.
+- 2026-11-12 10:17 UTC W3-MISR CP2 ACCEPTED (branch theory/W3-MISR ba2cd0c): council R1 PASS sol 9.3 / opus 8.7 (manifest d3f5c91f…);
+  Lemma R′ (exact affine invariance of the coded posterior, code-pinned 16a7f85, 25 rescaled fits |ΔPIP| ≤ 1.3e-10); MIS-R
+  without fixed σ², τ²; Song–Liang Thm 4 analog corollaries. Final leg: one Astra sweep on d3f5c91f (mid-point waived:
+  council + line checks cover a ticket this size); wording fixes batched + Sol "editorial only" diff check; CHECKPOINT_3.
+  Acceptance after INFRA R05; C-MIS → MIS-R supersession decided at acceptance (owner informed). Queue: BT1-A2, B1, B2.
