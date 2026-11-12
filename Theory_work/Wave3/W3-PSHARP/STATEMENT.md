@@ -1,4 +1,4 @@
-# W3-PSHARP — STATEMENT (v1.0, 2026-11-11; lead: Claude Fable 5.2, claudeAgent, high)
+# W3-PSHARP — STATEMENT (v1.1, 2026-11-11; lead: Claude Fable 5.2, claudeAgent, high; v1.1 = statement-lock amendments [L01-#]; **locked**)
 
 Ticket T3 of `Theory_work/Wave3/API_AUDIT/sharp1/TRIAGE.md`: three **sharpness records** (lower bounds / necessity)
 for the posterior theorem. No new upper bound is claimed. All results are about the exact coded target π. Statuses are
@@ -36,7 +36,7 @@ allowed), j ∉ S. Then:
 1. **(determinant)** D_{S∪{j}}/D_S = s_{S,j}/(n − g_{S,j}ᵀ(G_S + I)⁻¹g_{S,j}), 0 < s_{S,j} ≤ n², and
    D_{S∪{j}}/D_S ≤ n, with equality iff x_j ⟂ col X_S. Hence D_{S∪J}/D_S ≤ n^{|J|} for every J disjoint from S.
 2. **(fit)** Q_S − Q_{S∪{j}} = n (x_jᵀρ̃_S)²/s_{S,j} ≥ (x_jᵀρ̃_S)²/n ≥ 0, and 0 ≤ Q_{S∪{j}} ≤ Q_S.
-3. **(one model)** with S = S₀: γ_j ∈ [0, 1) and
+3. **(one model)** with S = S₀ (so s₀ + 1 ≤ K) [L01]: γ_j ∈ [0, 1) and
    π(S₀∪{j})/π(S₀) ≥ [(s₀ + 1)/(2p − 1 − s₀)] n^{−1/2} (1 − γ_j)^{−ν} ≥ [(s₀ + 1)/(2p − 1 − s₀)] n^{−1/2} e^{νγ_j}.
 4. **(sum)** for every 𝒩 ⊆ [p]∖S₀:
    δ_n/(1 − δ_n) ≥ [(s₀ + 1)/(2p − 1 − s₀)] n^{−1/2} Σ_{j∈𝒩} e^{νγ_j}.
@@ -55,7 +55,8 @@ arbitrary and may depend on everything):
   (Then N_n ≤ n − 1 − rank X_{S₀}.)
 - **(W-sph)** *(random null block)* X_{S₀} and θ* are deterministic; the directions ω_j := x_j/√(n − 1), j ∈ 𝒩_n, are
   iid uniform on the unit sphere of 1^⊥ and independent of ε; and (log N_n)² = o(n), (s₀ + 1) log N_n = o(n).
-  (Example: raw null columns with iid N(0, 1) entries, independent of X^r_{S₀} and ε; any p.)
+  (Example: raw null columns with iid N(0, 1) entries, independent of X^r_{S₀} and ε; any p compatible with the two
+  logarithmic restrictions, in particular p ≫ n [L01].)
 
 **Proposition A.** Put
   Λ_n := (s₀ + 1) · [2N_n/(2p − 1 − s₀)] · √(log N_n/(πn)).
@@ -76,12 +77,13 @@ s₀ = o(√(n/log p)), and δ_n = O_P(r_n) with log p ≍ log n requires s₀ =
 
 **Remark A3 (what this settles; reading with the upper bounds — not part of the claim).** Two sequences satisfy both
 Proposition A and the hypotheses of `W3-POST:Thm-1`@1.0.0 (regime R1, fixed s₀ ≥ 1, fixed nonzero coefficients):
-(i) the orthogonal design XᵀX = (n − 1)I_p with p = ⌊n^a⌋, 0 < a ≤ 1 (p ≤ n − 1): (E), (F_λ), (F_w), (BM) hold with
+(i) the orthogonal design XᵀX = (n − 1)I_p with p = min(n − 1, ⌊n^a⌋), 0 < a ≤ 1 [L01-m2]: (E), (F_λ), (F_w), (BM) hold with
 φ₀ = 1, g₀ = 1, A = 1; (ii) raw designs with iid N(0, 1) entries and p = ⌊n^a⌋, any fixed a > 0 — in particular
 **p ≫ n** — through `W3-POST:Cor-1R`@1.0.0 (Σ_n = I). On both, conditional on those two claims,
 (s₀ + 1)√(a/π)(1 − o_P(1)) ≤ δ_n/r_n = O_P(1): the rate √(log n/n) of Theorem 1 is exact whenever log p ≍ log n, and
 the conjecture at [W3P] line 104 ("whether the extra √(log n) is attained for p = n^A") is true. With
-`W3-POST2:C`@1.0.0, the same holds for E δ_n (open question 6 of W3-POST2 REPORT §6). Not settled: an upper bound of
+`W3-POST2:C`@1.0.0, the same holds for E δ_n on (i), and on (ii) provided the design-event term P(𝒜_nᶜ) of its
+random-design form is O(r_n) (not checked here) [L01] (open question 6 of W3-POST2 REPORT §6). Not settled: an upper bound of
 order √((1 ∨ log p)/n) when log p = o(log n).
 
 ## 3. Claim B — Corollary B: a sparsity obstruction on every design
@@ -90,7 +92,7 @@ order √((1 ∨ log p)/n) when log p = o(log n).
 0 ≤ s₀ ≤ K − 1 (deterministic; no law, no truth):
   δ_n/(1 − δ_n) ≥ 𝒪^{lb}_n := Σ_{j=1}^{K−s₀} C(s₀ + j, j) n^{−j/2} Π_{i=0}^{j−1} (p − s₀ − i)/(2p − 1 − s₀ − i) ≥ c(p, s₀)/√n,
 equivalently π(S₀) ≤ √n/(√n + c(p, s₀)). Here c(p, s₀) ≥ (s₀ + 1)/3 whenever s₀ ≤ p/2; c(p, s₀) ≥ 1 for s₀ ≥ 1;
-c(p, 0) > ½; and c(p, s₀)/(s₀ + 1) → ½ when s₀/p → 0.
+c(p, 0) > ½; and c(p, s₀)/(s₀ + 1) → ½ when p → ∞ and s₀/p → 0 [L01-m1].
 
 **Consequences** (any sequence with s₀ ≤ min(K − 1, p/2); any designs; any data, random or not):
 - **(B1)** π(S₀) ≤ [1 + (s₀ + 1)/(3√n)]⁻¹ surely. So π(S₀) → 1 (in probability, along any subsequence) forces
@@ -98,10 +100,12 @@ c(p, 0) > ½; and c(p, s₀)/(s₀ + 1) → ½ when s₀/p → 0.
 - **(B2)** δ_n = O_P(ρ_n) for a deterministic ρ_n → 0 forces s₀ + 1 = O(√n ρ_n). In particular the rate r_n forces
   s₀ = O(√(log n)) on every design, and — by Corollary A2 — s₀ = O(1) on witness designs with log p ≍ log n.
 - **(B3) Target correction.** The recorded growing-s₀ target "s₀ = o(log n/log log n)" (W3-POST REPORT §4 item 8,
-  `Theory_work/Wave3/W3-POST/REPORT.md:190`) cannot carry the rate r_n once s₀ → ∞ on designs containing the witnesses
-  of Claim A: there the rate is at least (s₀ + 1)√(log p/(πn)). A growing-s₀ theorem must aim at the rate
-  (s₀ + 1)√(log p/n) (possible only for s₀ = o(√(n/log p))), or — beyond s₀ ≍ √n, where π(S₀) ↛ 1 on **every** design —
-  at mode (HPM) consistency instead of π(S₀) → 1.
+  `Theory_work/Wave3/W3-POST/REPORT.md:190`) cannot retain the rate r_n when s₀ → ∞ on the witness sequences of
+  Corollary A2 with log p ≍ log n [L01-M1]. On those sequences a concentration theorem must allow at least the rate
+  (s₀ + 1)√(log p/n), and consistency (π(S₀) → 1) requires s₀ = o(√(n/log p)); for a general witness block use Λ_n of
+  Proposition A. (With log p = o(log n) the rate r_n can survive a slowly growing s₀; no obstruction is claimed there.)
+  On **every** design with s₀ ≤ min(K − 1, p/2), π(S₀) ↛ 1 once s₀ ≍ √n (B1): beyond that scale only mode (HPM)
+  consistency can be aimed at, not π(S₀) → 1.
 
 (Corollary B is `W3-POST2:A2` with D_{S₀∪J}/D_{S₀} ≤ n^{|J|} inserted and the multiplicity kept; its j = 1 term with
 the multiplicity bounded below by 1 is [LB] with n in place of n + 1. It also covers s₀ = 0.)

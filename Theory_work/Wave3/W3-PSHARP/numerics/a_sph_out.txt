@@ -1,0 +1,25 @@
+V1: closed form of pi(S0+j)/pi(S0) vs generic linear algebra
+  max relative difference 1.7e-13: PASS
+D1: direct simulation (full Gaussian design), beta = 1 on S0, sigma = 1
+  D1 n=   100 p=     1000 (log p/log n=1.50) s0=1 reps=100 | Lam=0.2965 | L1/Lam: median 1.026, quartiles 0.944 1.334, min 0.774 | P(>=0.9) 0.82, P(>=0.75) 1.00
+  D1 n=   100 p=     1000 (log p/log n=1.50) s0=3 reps=100 | Lam=0.5924 | L1/Lam: median 1.017, quartiles 0.896 1.242, min 0.785 | P(>=0.9) 0.74, P(>=0.75) 1.00
+  D1 n=   100 p=    10000 (log p/log n=2.00) s0=1 reps=100 | Lam=0.3424 | L1/Lam: median 1.078, quartiles 0.980 1.257, min 0.854 | P(>=0.9) 0.95, P(>=0.75) 1.00
+  D1 n=   100 p=    10000 (log p/log n=2.00) s0=3 reps=100 | Lam=0.6848 | L1/Lam: median 1.089, quartiles 0.960 1.357, min 0.839 | P(>=0.9) 0.88, P(>=0.75) 1.00
+  D1 n=   400 p=     8000 (log p/log n=1.50) s0=1 reps=100 | Lam=0.1691 | L1/Lam: median 0.968, quartiles 0.912 1.173, min 0.762 | P(>=0.9) 0.83, P(>=0.75) 1.00
+  D1 n=   400 p=     8000 (log p/log n=1.50) s0=3 reps=100 | Lam=0.3382 | L1/Lam: median 1.049, quartiles 0.950 1.170, min 0.788 | P(>=0.9) 0.85, P(>=0.75) 1.00
+  D1 n=   400 p=   160000 (log p/log n=2.00) s0=1 reps= 40 | Lam=0.1953 | L1/Lam: median 1.069, quartiles 0.965 1.344, min 0.874 | P(>=0.9) 0.95, P(>=0.75) 1.00
+  D1 n=   400 p=   160000 (log p/log n=2.00) s0=3 reps= 40 | Lam=0.3906 | L1/Lam: median 0.968, quartiles 0.928 1.108, min 0.831 | P(>=0.9) 0.85, P(>=0.75) 1.00
+  [D1 done, 132s]
+R0: reduction vs direct at the same configuration (two independent samples; compare the rows)
+  R0-direct  n=   100 p=    10000 (log p/log n=2.00) s0=3 reps=100 | Lam=0.6848 | L1/Lam: median 1.063, quartiles 0.963 1.232, min 0.800 | P(>=0.9) 0.89, P(>=0.75) 1.00
+  R0-reduced n=   100 p=    10000 (log p/log n=2.00) s0=3 reps=100 | Lam=0.6848 | L1/Lam: median 1.048, quartiles 0.940 1.232, min 0.800 | P(>=0.9) 0.87, P(>=0.75) 1.00
+  R0-direct  n=   400 p=     8000 (log p/log n=1.50) s0=1 reps=100 | Lam=0.1691 | L1/Lam: median 1.007, quartiles 0.921 1.117, min 0.741 | P(>=0.9) 0.86, P(>=0.75) 0.99
+  R0-reduced n=   400 p=     8000 (log p/log n=1.50) s0=1 reps=100 | Lam=0.1691 | L1/Lam: median 1.019, quartiles 0.936 1.231, min 0.776 | P(>=0.9) 0.81, P(>=0.75) 1.00
+R1: exact-in-law reduction, larger n and p
+  R1 n=  1600 p=    64000 (log p/log n=1.50) s0=1 reps=100 | Lam=0.0938 | L1/Lam: median 1.003, quartiles 0.931 1.158, min 0.842 | P(>=0.9) 0.84, P(>=0.75) 1.00
+  R1 n=  1600 p=    64000 (log p/log n=1.50) s0=3 reps=100 | Lam=0.1877 | L1/Lam: median 1.022, quartiles 0.943 1.184, min 0.808 | P(>=0.9) 0.85, P(>=0.75) 1.00
+  R1 n=  1600 p=  2560000 (log p/log n=2.00) s0=1 reps=100 | Lam=0.1084 | L1/Lam: median 0.994, quartiles 0.942 1.115, min 0.872 | P(>=0.9) 0.95, P(>=0.75) 1.00
+  R1 n=  1600 p=  2560000 (log p/log n=2.00) s0=3 reps=100 | Lam=0.2167 | L1/Lam: median 0.998, quartiles 0.944 1.082, min 0.874 | P(>=0.9) 0.96, P(>=0.75) 1.00
+  R1 n=  6400 p=   512000 (log p/log n=1.50) s0=1 reps=100 | Lam=0.0511 | L1/Lam: median 1.004, quartiles 0.942 1.116, min 0.871 | P(>=0.9) 0.93, P(>=0.75) 1.00
+  R1 n=  6400 p=   512000 (log p/log n=1.50) s0=3 reps=100 | Lam=0.1023 | L1/Lam: median 0.994, quartiles 0.926 1.134, min 0.850 | P(>=0.9) 0.85, P(>=0.75) 1.00
+  R1 n=  6400 p= 40960000 (log p/log n=2.00) s0=1 reps= 30 | Lam=0.0591 | L1/Lam: median 0.989, quartiles 0.938 1.227, min 0.895 | P(>=0.9) 0.93, P(>=0.75) 1.00

@@ -1,0 +1,44 @@
+V1: validation of the reduction + DP against an explicit design and brute-force enumeration
+  n=30 p=12 s0=2 rep=0: brute odds=5.4862189040e-01 DP=5.4862189040e-01 rel=6.8e-14; one-step rel=2.2e-15
+  n=30 p=12 s0=2 rep=1: brute odds=3.6419463758e+00 DP=3.6419463758e+00 rel=3.0e-14; one-step rel=3.7e-15
+  n=30 p=12 s0=2 rep=2: brute odds=1.4719756918e+00 DP=1.4719756918e+00 rel=4.4e-14; one-step rel=3.2e-15
+  n=24 p=11 s0=1 rep=0: brute odds=6.9351945391e-01 DP=6.9351945391e-01 rel=7.0e-14; one-step rel=8.2e-16
+  n=24 p=11 s0=1 rep=1: brute odds=5.8864827962e-01 DP=5.8864827962e-01 rel=6.6e-14; one-step rel=2.5e-15
+  n=24 p=11 s0=1 rep=2: brute odds=6.7323307384e-01 DP=6.7323307384e-01 rel=4.9e-14; one-step rel=7.5e-15
+  n=40 p=13 s0=3 rep=0: brute odds=4.2383152804e+01 DP=4.2383152804e+01 rel=1.3e-14; one-step rel=4.9e-15
+  n=40 p=13 s0=3 rep=1: brute odds=1.0049125117e+00 DP=1.0049125117e+00 rel=4.1e-14; one-step rel=1.2e-14
+  n=40 p=13 s0=3 rep=2: brute odds=8.7604612987e-01 DP=8.7604612987e-01 rel=6.8e-14; one-step rel=1.2e-14
+  n=20 p=12 s0=0 rep=0: brute odds=2.4862049936e-01 DP=2.4862049936e-01 rel=1.4e-13; one-step rel=6.1e-15
+  n=20 p=12 s0=0 rep=1: brute odds=2.6067803402e-01 DP=2.6067803402e-01 rel=1.3e-13; one-step rel=8.4e-15
+  n=20 p=12 s0=0 rep=2: brute odds=2.4711470157e+00 DP=2.4711470157e+00 rel=4.2e-14; one-step rel=1.0e-14
+  worst relative difference: 1.37e-13  (PASS if < 1e-7): PASS
+  [V1 done, 4s]
+V2: sizes above kmax = s0 + 60 and quadrature: (i) all sizes up to K (kextra=None) vs kextra=60; (ii) kextra 60 vs 120 and nodes x2 on a large case
+  n=400 p=399 s0=3: kextra=60: 5.570534315078e-01; all sizes <= K: 5.570534315077e-01; rel diff 3.0e-13
+  n=1600 p=1599 s0=1: kextra=60: 3.995081581723e-01; all sizes <= K: 3.995081581723e-01; rel diff 1.2e-13
+  n=1600 p=200 s0=3: kextra=60: 3.387294553590e-01; all sizes <= K: 3.387294553589e-01; rel diff 3.5e-13
+  n=25600 p=25599 s0=3: kextra=60: 4.279279957680e-02; kextra=120, 1200 nodes: 4.279279957774e-02; rel diff 2.2e-11
+  [V2 done, 349s]
+E3: the truncated moments used in Lemma W (chi^2_1, tau = 2 log N): exact mean sqrt(2 tau/pi) = 2 sqrt(log N/pi);
+    second moment (2/sqrt(2 pi)) int_0^sqrt(tau) e^{z^2/2} dz vs sharp asymptote N/sqrt(pi log N) and crude bound 2 N sqrt(log N/pi);
+    tail P(e^{chi2/2} > w) vs 1/(w sqrt(pi log w))
+  N=1e+02: mean=2.421463 (formula 2.421463); second/N=0.30878, asymptote 0.26291, crude 2.4215; tail*N=0.24065 vs 0.26291
+  N=1e+04: mean=3.424466 (formula 3.424466); second/N=0.19846, asymptote 0.18590, crude 3.4245; tail*N=0.17713 vs 0.18590
+  N=1e+06: mean=4.194098 (formula 4.194098); second/N=0.15803, asymptote 0.15179, crude 4.1941; tail*N=0.14681 vs 0.15179
+  N=1e+08: mean=4.842927 (formula 4.842927); second/N=0.13536, asymptote 0.13145, crude 4.8429; tail*N=0.12814 vs 0.13145
+  [E3 done, 350s]
+E1: orthogonal witness. Columns: n p s0 | Lambda_n | medians of [odds/Lambda, one-step/Lambda, delta*sqrt(n)] | quartiles of odds/Lambda | P(odds >= 0.9 Lambda), P(odds >= 0.75 Lambda).  odds = sum over |S| <= s0+60 (lower bound for delta/(1-delta); see V2)
+  n=   100 p=    10 s0=1 reps=200 | Lam=0.1673 | 1.283 1.125 1.767 | 1.007 2.096 | 0.85 0.99
+  n=   100 p=    10 s0=3 reps=200 | Lam=0.2755 | 1.395 1.162 2.775 | 1.106 2.116 | 0.94 1.00
+  n=   100 p=    32 s0=1 reps=200 | Lam=0.2091 | 1.231 1.040 2.047 | 1.020 1.773 | 0.89 0.99
+  n=   100 p=    32 s0=3 reps=200 | Lam=0.4003 | 1.439 1.086 3.655 | 1.127 2.042 | 0.94 1.00
+  n=   100 p=    99 s0=1 reps=200 | Lam=0.2416 | 1.380 1.109 2.501 | 1.181 1.790 | 1.00 1.00
+  n=   100 p=    99 s0=3 reps=200 | Lam=0.4772 | 1.511 1.064 4.189 | 1.329 2.040 | 1.00 1.00
+  n=   400 p=    20 s0=1 reps=200 | Lam=0.0968 | 1.165 1.080 2.026 | 0.916 1.691 | 0.77 0.93
+  n=   400 p=    20 s0=3 reps=200 | Lam=0.1794 | 1.216 1.083 3.581 | 1.005 1.902 | 0.89 0.96
+  n=   400 p=    89 s0=1 reps=200 | Lam=0.1194 | 1.152 1.047 2.418 | 0.963 1.390 | 0.84 0.98
+  n=   400 p=    89 s0=3 reps=200 | Lam=0.2354 | 1.253 1.068 4.555 | 1.028 1.711 | 0.90 1.00
+  n=   400 p=   399 s0=1 reps=200 | Lam=0.1380 | 1.145 1.027 2.730 | 1.016 1.454 | 0.95 1.00
+  n=   400 p=   399 s0=3 reps=200 | Lam=0.2753 | 1.218 1.014 5.023 | 1.082 1.468 | 0.99 1.00
+  n=  1600 p=    40 s0=1 reps=200 | Lam=0.0540 | 1.153 1.104 2.344 | 0.913 1.517 | 0.77 0.95
+  n=  1600 p=    40 s0=3 reps=200 | Lam=0.1044 | 1.175 1.096 4.370 | 0.947 1.676 | 0.81 0.97
