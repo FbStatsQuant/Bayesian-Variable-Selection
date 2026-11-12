@@ -899,7 +899,7 @@ try:
         results.append(("N1 --record: a refused acceptance writes no accept event; a PASS writes one with the id, "
                         "version and fingerprint",
                         rc_bad != 0 and not any(e_["id"] == "R03:W" for e_ in evs) and rc_rec == 0
-                        and any(e_["id"] == "R03:W2" and e_["after"].startswith(f"v{st('R03:W2')['version']} fp:")
+                        and any(e_["id"] == "R03:W2" and e_["after"].startswith(f"v{st('R03:W2')['version']} fp2:")
                                 for e_ in evs)))
         rc_only, _ = tool("check.py", "--quiet", "--acceptance", "R03:W", "--only", "A5", "--record")
         ev_only = [e_ for e_ in R.read_tsv(R.EVENTS)[1] if e_.get("action") == "accept" and e_.get("id") == "R03:W"]
@@ -950,6 +950,97 @@ try:
         results.append(("Sol-toolfix3 N1.b a boundary regenerated from another (later) commit is an L1-legacy ERROR "
                         "and admits nothing", bool(leg_txt) and any(r_[0] == "R03:W" for r_ in rows_l or ())
                         and bool(sub_chk) and any(f[1] == "A5-accepted" for f in sub_acc)))
+
+        # ---------------- pipeline review R04 (Sol reconciliation): N1 N2 ----------------
+        # An accepted checked input W (ticket R04W) and its consumer Y (ticket R04Y, own manifest and council). After
+        # W's acceptance, any change to W's cited evidence, council verdict, statement-file provenance or reviewed
+        # ticket content must refuse Y's acceptance (A5 naming W; --record writes nothing) until W is accepted again.
+        WD, YD = "Theory_work/WaveT/R04W", "Theory_work/WaveT/R04Y"
+        put(f"{WD}/STATEMENT.md", "Lemma R04W. W holds.\n")
+        put(f"{WD}/REPORT.md", "PROVED-CHECKED\n")
+        put(f"{WD}/PROOF.md", "Proof of W.\n")
+        put(f"{YD}/STATEMENT.md", "Theorem R04Y. Y follows from Lemma R04W.\n")
+        put(f"{YD}/REPORT.md", "PROVED-CHECKED\n")
+
+        def r04_council(d_):
+            os.makedirs(os.path.join(TMP, d_, "reviews"), exist_ok=True)
+            man("freeze", d_, f"{d_}/reviews/MANIFEST_R1.txt")
+            dg_ = open(os.path.join(TMP, d_, "reviews", "MANIFEST_R1.txt"), encoding="utf-8").readline().split()[1]
+            for s_ in ("sol", "opus"):
+                put(f"{d_}/reviews/{s_}.md", f"Council R1 ({s_}).\n\n" + vline(dg_, s_))
+            return f"R1; MANIFEST {dg_}; sol=8.5 PASS(reviews/sol.md); opus=8.5 PASS(reviews/opus.md)"
+        cW, cY = r04_council(WD), r04_council(YD)
+        EV_TXT = "Correctness review of W: PASS.\n"
+        WEV = put(f"{WD}/reviews/evidence.md", EV_TXT)
+        WSOL = os.path.join(TMP, WD, "reviews", "sol.md")
+        rc, out = tool("ingest.py", "claims", frag("r04", [
+            dict(ticket="R04W", local_id="W", kind="lemma", name="Lemma R04W", file=f"{WD}/STATEMENT.md",
+                 lines=[1, 1], status="PROVED-CHECKED", status_source=f"{WD}/REPORT.md:1", council=cW),
+            dict(ticket="R04Y", local_id="Y", kind="theorem", file=f"{YD}/STATEMENT.md", lines=[1, 1],
+                 status="PROVED-CHECKED", status_source=f"{YD}/REPORT.md:1", council=cY,
+                 depends_on=["R04W:W@stmt"])]), "--apply")
+        run("registry.py", "set", "R04W:W", "gates=correct:PASS(reviews/evidence.md)", "--reason", "R04 fixture")
+
+        def n_acc(cid):
+            return sum(1 for e_ in R.read_tsv(R.EVENTS)[1] if e_.get("action") == "accept" and e_.get("id") == cid)
+
+        def y_refused(why=""):
+            """Y's acceptance names only A5 on W (with `why` in the message), and Y's --record run is refused and
+            writes no accept event."""
+            e_ = acc_errs("R04Y:Y")
+            n0 = n_acc("R04Y:Y")
+            rc_, out_ = tool("check.py", "--quiet", "--acceptance", "R04Y:Y", "--record")
+            return (a_set(e_) == {"A5-accepted"} and all("R04W:W" in f[3] and why in f[3] for f in e_)
+                    and rc_ != 0 and "nothing recorded" in out_ and n_acc("R04Y:Y") == n0)
+        rc_w, out_w = tool("check.py", "--quiet", "--acceptance", "R04W:W", "--record")
+        results.append(("R04 control: W accepted and recorded with an fp2 identity; Y consuming it passes",
+                        rc == 0 and rc_w == 0 and " fp2:" in out_w and not acc_errs("R04Y:Y")))
+        # N1 evidence: W's cited gate evidence deleted, or its content changed
+        os.remove(WEV)
+        ev_del = (a_set(acc_errs("R04W:W")) >= {"A1-evidence"}, y_refused("stale"))
+        put(f"{WD}/reviews/evidence.md", EV_TXT)
+        ev_back = not acc_errs("R04Y:Y")
+        put(f"{WD}/reviews/evidence.md", "Correctness review of W: PASS (rewritten after acceptance).\n")
+        ev_edit = y_refused("stale")
+        rc_re, _ = tool("check.py", "--quiet", "--acceptance", "R04W:W", "--record")  # a fresh passing acceptance
+        ev_re = rc_re == 0 and not acc_errs("R04Y:Y")
+        put(f"{WD}/reviews/evidence.md", EV_TXT)
+        results.append(("R04-N1 evidence: W's gate evidence deleted -> W refused (A1-evidence) and Y refused (A5, "
+                        "--record writes nothing); restored -> Y passes", all(ev_del) and ev_back))
+        results.append(("R04-N1 evidence: W's evidence content changed -> Y refused (A5 stale); after a fresh "
+                        "passing acceptance of W, Y passes", ev_edit and ev_re and not acc_errs("R04Y:Y")))
+        # N1 verdict: W's council review withdraws its verdict (gates=FAIL)
+        sol_txt = open(WSOL, encoding="utf-8").read()
+        open(WSOL, "w", encoding="utf-8", newline="\n").write(sol_txt.replace("gates=PASS", "gates=FAIL"))
+        vd = (a_set(acc_errs("R04W:W")) >= {"A4-council"}, y_refused())
+        open(WSOL, "w", encoding="utf-8", newline="\n").write(sol_txt)
+        results.append(("R04-N1 verdict: W's council verdict withdrawn (gates=FAIL) -> W refused (A4) and Y refused "
+                        "(A5, --record writes nothing); restored -> Y passes", all(vd) and not acc_errs("R04Y:Y")))
+        # N1 revalidation: W's reviewed ticket content changes (identity fields unchanged): the frozen manifest no
+        # longer verifies, so W fails its own acceptance and Y is refused
+        put(f"{WD}/PROOF.md", "Proof of W (changed after the round).\n")
+        rv = (a_set(acc_errs("R04W:W")) >= {"A4-council"}, y_refused("no longer passes acceptance"))
+        put(f"{WD}/PROOF.md", "Proof of W.\n")
+        results.append(("R04-N1 revalidation: W's reviewed ticket content changed after acceptance -> Y refused (A5: "
+                        "W no longer passes acceptance); restored -> Y passes", all(rv) and not acc_errs("R04Y:Y")))
+        # N2: documented statement relocation (registry.py set file=...) of the accepted input, identical text
+        put("Theory_work/WaveT/r04-relocated.md", "Lemma R04W. W holds.\n")
+        rc_mv, _ = run("registry.py", "set", "R04W:W", "file=Theory_work/WaveT/r04-relocated.md", "--reason", "R04")
+        mv = (rc_mv == 0, bool(acc_errs("R04W:W")), y_refused("stale"))
+        run("registry.py", "set", "R04W:W", f"file={WD}/STATEMENT.md", "--reason", "R04 restore")
+        results.append(("R04-N2 relocation: W's statement file relocated via registry.py set file= -> W refused and Y "
+                        "refused (A5, --record writes nothing); restored -> Y passes", all(mv) and not acc_errs("R04Y:Y")))
+        # migration: a record in the pre-R04 stamp format (`fp:`) never matches; the message says to re-accept
+        ev_raw = open(R.EVENTS, "rb").read()
+        h_, evs_ = R.read_tsv(R.EVENTS)
+        for e_ in evs_:
+            if e_.get("action") == "accept" and e_.get("id") == "R04W:W":
+                e_["after"] = f"v{st('R04W:W')['version']} fp:0123456789abcdef"
+        R.write_tsv(R.EVENTS, h_, evs_)
+        old_fmt = y_refused("predates")
+        open(R.EVENTS, "wb").write(ev_raw)
+        results.append(("R04 an accept record in the old `fp:` format is not trusted (A5: re-accept on the current "
+                        "tree); the fp2 record restored -> Y passes", old_fmt and not acc_errs("R04Y:Y")))
 
         # N3: every better-proposal / better-disposition reference, and every gate reference whatever its result,
         # must resolve (staged acceptance, as in the reviewer's probe)
