@@ -1,0 +1,781 @@
+{
+ "source": "Sol R06FIX recheck 2 (R06FIX_recheck2_sol.md), 95 cases; `text` is the exact per-claim table, claim A of ticket REV",
+ "rule": "HQ ruling 2026-11-12: strict whitelist, fail closed. `expected` = reading under the whitelist; it equals `sol_expected` except for the positive controls listed in `whitelist_refuses`, which the whitelist refuses by design (only ACCEPT, legacy accepted / Accepted / ACCEPTED, NOT-EXAMINED; no remarks in or after the decision cell)",
+ "whitelist_refuses": [
+  3,
+  4,
+  5,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  48,
+  94
+ ],
+ "cases": [
+  {
+   "n": 1,
+   "group": "positive",
+   "input": "ACCEPT",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 2,
+   "group": "positive",
+   "input": "accepted",
+   "text": "| id | decision |\n|---|---|\n| A | accepted |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 3,
+   "group": "positive",
+   "input": "accept",
+   "text": "| id | decision |\n|---|---|\n| A | accept |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 4,
+   "group": "positive",
+   "input": "AcCePt",
+   "text": "| id | decision |\n|---|---|\n| A | AcCePt |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 5,
+   "group": "positive",
+   "input": "aCcEpTeD",
+   "text": "| id | decision |\n|---|---|\n| A | aCcEpTeD |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 6,
+   "group": "positive",
+   "input": " ACCEPT ",
+   "text": "| id | decision |\n|---|---|\n| A |  ACCEPT  |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 7,
+   "group": "positive",
+   "input": "**ACCEPT**",
+   "text": "| id | decision |\n|---|---|\n| A | **ACCEPT** |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 8,
+   "group": "positive",
+   "input": "`accepted`",
+   "text": "| id | decision |\n|---|---|\n| A | `accepted` |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 9,
+   "group": "positive",
+   "input": "accepted (F-1 verified)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (F-1 verified) |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 10,
+   "group": "positive",
+   "input": "accepted with non-blocking remarks",
+   "text": "| id | decision |\n|---|---|\n| A | accepted with non-blocking remarks |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 11,
+   "group": "positive",
+   "input": "accepted with non-blocking remarks (F-1 verified)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted with non-blocking remarks (F-1 verified) |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 12,
+   "group": "positive",
+   "input": "accepted (proof verified; no blocking issues)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (proof verified; no blocking issues) |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 13,
+   "group": "positive",
+   "input": "accepted (all checks pass)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (all checks pass) |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 14,
+   "group": "positive",
+   "input": "accepted (checked (details verified))",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (checked (details verified)) |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 15,
+   "group": "prior F2 / R2-F2",
+   "input": "ACCEPT=NO",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT=NO |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 16,
+   "group": "prior F2 / R2-F2",
+   "input": "ACCEPT/NOT-EXAMINED",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT/NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 17,
+   "group": "prior F2 / R2-F2",
+   "input": "accepted, no",
+   "text": "| id | decision |\n|---|---|\n| A | accepted, no |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 18,
+   "group": "prior F2 / R2-F2",
+   "input": "ACCEPT not",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT not |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 19,
+   "group": "prior F2 / R2-F2",
+   "input": "accepted (not accepted)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (not accepted) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 20,
+   "group": "prior F2 / R2-F2",
+   "input": "ACCEPT : NO",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT : NO |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 21,
+   "group": "prior F2 / R2-F2",
+   "input": "accepted with remarks; withdrawn",
+   "text": "| id | decision |\n|---|---|\n| A | accepted with remarks; withdrawn |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 22,
+   "group": "prior F2 / R2-F2",
+   "input": "ACCEPT\u2028NOT-EXAMINED",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u2028NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 23,
+   "group": "punctuation / negative / strict grammar",
+   "input": "NOT-EXAMINED",
+   "text": "| id | decision |\n|---|---|\n| A | NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 24,
+   "group": "punctuation / negative / strict grammar",
+   "input": "not-examined",
+   "text": "| id | decision |\n|---|---|\n| A | not-examined |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 25,
+   "group": "punctuation / negative / strict grammar",
+   "input": "NoT-ExAmInEd",
+   "text": "| id | decision |\n|---|---|\n| A | NoT-ExAmInEd |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 26,
+   "group": "punctuation / negative / strict grammar",
+   "input": "NO",
+   "text": "| id | decision |\n|---|---|\n| A | NO |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 27,
+   "group": "punctuation / negative / strict grammar",
+   "input": "NOT",
+   "text": "| id | decision |\n|---|---|\n| A | NOT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 28,
+   "group": "punctuation / negative / strict grammar",
+   "input": "rejected",
+   "text": "| id | decision |\n|---|---|\n| A | rejected |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 29,
+   "group": "punctuation / negative / strict grammar",
+   "input": "not accepted",
+   "text": "| id | decision |\n|---|---|\n| A | not accepted |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 30,
+   "group": "punctuation / negative / strict grammar",
+   "input": "acceptable",
+   "text": "| id | decision |\n|---|---|\n| A | acceptable |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 31,
+   "group": "punctuation / negative / strict grammar",
+   "input": "accepted-ish",
+   "text": "| id | decision |\n|---|---|\n| A | accepted-ish |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 32,
+   "group": "punctuation / negative / strict grammar",
+   "input": "ACCEPT.",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT. |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 33,
+   "group": "punctuation / negative / strict grammar",
+   "input": "ACCEPT!",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT! |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 34,
+   "group": "punctuation / negative / strict grammar",
+   "input": "accepted unconditionally",
+   "text": "| id | decision |\n|---|---|\n| A | accepted unconditionally |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 35,
+   "group": "punctuation / negative / strict grammar",
+   "input": "ACCEPT:",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT: |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 36,
+   "group": "punctuation / negative / strict grammar",
+   "input": "accepted; withdrawn",
+   "text": "| id | decision |\n|---|---|\n| A | accepted; withdrawn |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 37,
+   "group": "punctuation / negative / strict grammar",
+   "input": "ACCEPT (NO)",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT (NO) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 38,
+   "group": "punctuation / negative / strict grammar",
+   "input": "ACCEPT (NOT)",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT (NOT) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 39,
+   "group": "punctuation / negative / strict grammar",
+   "input": "ACCEPT ((not accepted))",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT ((not accepted)) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 40,
+   "group": "punctuation / negative / strict grammar",
+   "input": "accepted (later rejected)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (later rejected) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 41,
+   "group": "punctuation / negative / strict grammar",
+   "input": "accepted (pending review)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (pending review) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 42,
+   "group": "punctuation / negative / strict grammar",
+   "input": "accepted (withdrawn)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (withdrawn) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 43,
+   "group": "punctuation / negative / strict grammar",
+   "input": "accepted (blocking gap)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (blocking gap) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 44,
+   "group": "punctuation / negative / strict grammar",
+   "input": "accepted (not-examined)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (not-examined) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 45,
+   "group": "punctuation / negative / strict grammar",
+   "input": "accepted (status: not accepted)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (status: not accepted) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 46,
+   "group": "punctuation / negative / strict grammar",
+   "input": "accepted (retracted)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (retracted) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 47,
+   "group": "punctuation / negative / strict grammar",
+   "input": "accepted (failed proof)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (failed proof) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 48,
+   "group": "punctuation / negative / strict grammar",
+   "input": "accepted (no blocking issues)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (no blocking issues) |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 49,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (conditional)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (conditional) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 50,
+   "group": "hedged / disposition in remark",
+   "input": "ACCEPT (if lemma B holds)",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT (if lemma B holds) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 51,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (only if revised)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (only if revised) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 52,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (subject to verification)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (subject to verification) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 53,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (probably)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (probably) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 54,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (tentative)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (tentative) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 55,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (unless a counterexample appears)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (unless a counterexample appears) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 56,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (decision: NO)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (decision: NO) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 57,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (verdict: NOT)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (verdict: NOT) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 58,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (status: NOT-EXAMINED)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (status: NOT-EXAMINED) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 59,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (status: not: accepted)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (status: not: accepted) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 60,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (status: not/accepted)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (status: not/accepted) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 61,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (status: **NOT**-EXAMINED)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (status: **NOT**-EXAMINED) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 62,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (status: rejected)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (status: rejected) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 63,
+   "group": "hedged / disposition in remark",
+   "input": "accepted (decision: no, proof incomplete)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (decision: no, proof incomplete) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 64,
+   "group": "Unicode remark / whitespace",
+   "input": "accepted (proof\u2028not accepted)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (proof\u2028not accepted) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 65,
+   "group": "Unicode remark / whitespace",
+   "input": "accepted (proof\u2029not accepted)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (proof\u2029not accepted) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 66,
+   "group": "Unicode remark / whitespace",
+   "input": "ACCEPT\u00a0NOT",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u00a0NOT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 67,
+   "group": "Unicode remark / whitespace",
+   "input": "ACCEPT\u2003NOT",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u2003NOT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 68,
+   "group": "Unicode remark / whitespace",
+   "input": "accepted (status: NOT\u2011EXAMINED)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (status: NOT\u2011EXAMINED) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 69,
+   "group": "Unicode remark / whitespace",
+   "input": "accepted (status: NOT\u2028EXAMINED)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (status: NOT\u2028EXAMINED) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 70,
+   "group": "separator",
+   "input": "ACCEPT\u2028NOT-EXAMINED",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u2028NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 71,
+   "group": "separator",
+   "input": "ACCEPT\u2029NOT-EXAMINED",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u2029NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 72,
+   "group": "separator",
+   "input": "ACCEPT\u0085NOT-EXAMINED",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u0085NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 73,
+   "group": "separator",
+   "input": "ACCEPT\rNOT-EXAMINED",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\rNOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 74,
+   "group": "separator",
+   "input": "ACCEPT\nNOT-EXAMINED",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\nNOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 75,
+   "group": "separator",
+   "input": "ACCEPT\r\nNOT-EXAMINED",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\r\nNOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 76,
+   "group": "separator",
+   "input": "ACCEPT\u000bNOT-EXAMINED",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u000bNOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 77,
+   "group": "separator",
+   "input": "ACCEPT\fNOT-EXAMINED",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\fNOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 78,
+   "group": "markdown",
+   "input": "\\*ACCEPT\\*",
+   "text": "| id | decision |\n|---|---|\n| A | \\*ACCEPT\\* |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 79,
+   "group": "markdown",
+   "input": "\\`ACCEPT\\`",
+   "text": "| id | decision |\n|---|---|\n| A | \\`ACCEPT\\` |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 80,
+   "group": "markdown",
+   "input": "ACCEPT\\|NOT-EXAMINED",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\\|NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 81,
+   "group": "markdown",
+   "input": "accepted (status: \\*not accepted\\*)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (status: \\*not accepted\\*) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 82,
+   "group": "markdown",
+   "input": "ac`cept",
+   "text": "| id | decision |\n|---|---|\n| A | ac`cept |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 83,
+   "group": "markdown",
+   "input": "ac**cept",
+   "text": "| id | decision |\n|---|---|\n| A | ac**cept |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 84,
+   "group": "markdown",
+   "input": "**ACCEPT** (conditional)",
+   "text": "| id | decision |\n|---|---|\n| A | **ACCEPT** (conditional) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 85,
+   "group": "markdown",
+   "input": "__ACCEPT__",
+   "text": "| id | decision |\n|---|---|\n| A | __ACCEPT__ |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 86,
+   "group": "markdown",
+   "input": "accepted (status: NOT_EXAMINED)",
+   "text": "| id | decision |\n|---|---|\n| A | accepted (status: NOT_EXAMINED) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 87,
+   "group": "table structure",
+   "input": "third column negative remark",
+   "text": "| id | decision | remarks |\n|---|---|---|\n| A | ACCEPT | withdrawn |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 88,
+   "group": "table structure",
+   "input": "third column conditional remark",
+   "text": "| id | decision | remarks |\n|---|---|---|\n| A | ACCEPT | only if proof repaired |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 89,
+   "group": "table structure",
+   "input": "continuation row negative",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n| | NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 90,
+   "group": "table structure",
+   "input": "continuation row conditional",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n| | only if proof repaired |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 91,
+   "group": "table structure",
+   "input": "incomplete physical row",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\nNOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 92,
+   "group": "table structure",
+   "input": "duplicate contradictory row",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n| A | NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 93,
+   "group": "table structure",
+   "input": "duplicate reverse order",
+   "text": "| id | decision |\n|---|---|\n| A | NOT-EXAMINED |\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 94,
+   "group": "table structure",
+   "input": "third column harmless remark",
+   "text": "| id | decision | remarks |\n|---|---|---|\n| A | ACCEPT | proof verified |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 95,
+   "group": "table structure",
+   "input": "CRLF positive",
+   "text": "| id | decision |\r\n|---|---|\r\n| A | ACCEPT |\r\n",
+   "sol_expected": true,
+   "expected": true
+  }
+ ]
+}

@@ -1,0 +1,821 @@
+{
+ "source": "Sol R06FIX parser test (R06FIX_parser_sol.md), 116 new direct cases; `text` is the exact review text, claim A of ticket REV",
+ "rule": "strict whitelist, fail closed (LIFECYCLE 4.1). `expected` equals `sol_expected` except `whitelist_refuses`: a table without a delimiter row directly below its header is malformed",
+ "whitelist_refuses": [
+  110
+ ],
+ "cases": [
+  {
+   "n": 1,
+   "name": "decision 'ACCEPT'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 2,
+   "name": "decision 'accepted'",
+   "text": "| id | decision |\n|---|---|\n| A | accepted |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 3,
+   "name": "decision 'Accepted'",
+   "text": "| id | decision |\n|---|---|\n| A | Accepted |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 4,
+   "name": "decision 'ACCEPTED'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPTED |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 5,
+   "name": "decision ' ACCEPT '",
+   "text": "| id | decision |\n|---|---|\n| A |  ACCEPT  |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 6,
+   "name": "decision '\\tACCEPT\\t'",
+   "text": "| id | decision |\n|---|---|\n| A | \tACCEPT\t |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 7,
+   "name": "decision 'accept'",
+   "text": "| id | decision |\n|---|---|\n| A | accept |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 8,
+   "name": "decision 'Accept'",
+   "text": "| id | decision |\n|---|---|\n| A | Accept |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 9,
+   "name": "decision 'aCcEpT'",
+   "text": "| id | decision |\n|---|---|\n| A | aCcEpT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 10,
+   "name": "decision 'aCcEpTeD'",
+   "text": "| id | decision |\n|---|---|\n| A | aCcEpTeD |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 11,
+   "name": "decision 'NOT-EXAMINED'",
+   "text": "| id | decision |\n|---|---|\n| A | NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 12,
+   "name": "decision '**ACCEPT**'",
+   "text": "| id | decision |\n|---|---|\n| A | **ACCEPT** |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 13,
+   "name": "decision '_ACCEPT_'",
+   "text": "| id | decision |\n|---|---|\n| A | _ACCEPT_ |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 14,
+   "name": "decision '`ACCEPT`'",
+   "text": "| id | decision |\n|---|---|\n| A | `ACCEPT` |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 15,
+   "name": "decision '<b>ACCEPT</b>'",
+   "text": "| id | decision |\n|---|---|\n| A | <b>ACCEPT</b> |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 16,
+   "name": "decision 'ACCEPT<!-- -->'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT<!-- --> |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 17,
+   "name": "decision '&#65;CCEPT'",
+   "text": "| id | decision |\n|---|---|\n| A | &#65;CCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 18,
+   "name": "decision 'ACCEPT&nbsp;'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT&nbsp; |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 19,
+   "name": "decision 'ACCEPT\\\\'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\\ |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 20,
+   "name": "decision '\\\\ACCEPT'",
+   "text": "| id | decision |\n|---|---|\n| A | \\ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 21,
+   "name": "decision '\uff21\uff23\uff23\uff25\uff30\uff34'",
+   "text": "| id | decision |\n|---|---|\n| A | \uff21\uff23\uff23\uff25\uff30\uff34 |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 22,
+   "name": "decision '\u0410CCEPT'",
+   "text": "| id | decision |\n|---|---|\n| A | \u0410CCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 23,
+   "name": "decision 'ACCEPT\u0301'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u0301 |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 24,
+   "name": "decision '\\ufeffACCEPT'",
+   "text": "| id | decision |\n|---|---|\n| A | \ufeffACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 25,
+   "name": "decision 'ACCEPT\\u200b'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u200b |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 26,
+   "name": "decision 'ACCEPT\\u200d'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u200d |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 27,
+   "name": "decision '\\xa0ACCEPT'",
+   "text": "| id | decision |\n|---|---|\n| A | \u00a0ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 28,
+   "name": "decision 'ACCEPT\\xa0'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u00a0 |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 29,
+   "name": "decision '\\u2003ACCEPT'",
+   "text": "| id | decision |\n|---|---|\n| A | \u2003ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 30,
+   "name": "decision 'ACCEPT\\u202f'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u202f |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 31,
+   "name": "decision 'ACCEPT\\u2060'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u2060 |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 32,
+   "name": "decision 'ACCEPT\\x00'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u0000 |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 33,
+   "name": "decision 'ACCEPT.'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT. |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 34,
+   "name": "decision 'ACCEPT (yes)'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT (yes) |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 35,
+   "name": "decision 'ACCEPT \\\\| NOT-EXAMINED'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT \\| NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 36,
+   "name": "separator '\\r' cell",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\r |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 37,
+   "name": "separator '\\r' after-row",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\r\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 38,
+   "name": "separator '\\r' between-rows",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n\r\n| B | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 39,
+   "name": "separator '\\x0b' cell",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u000b |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 40,
+   "name": "separator '\\x0b' after-row",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\u000b\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 41,
+   "name": "separator '\\x0b' between-rows",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n\u000b\n| B | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 42,
+   "name": "separator '\\x0c' cell",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\f |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 43,
+   "name": "separator '\\x0c' after-row",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\f\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 44,
+   "name": "separator '\\x0c' between-rows",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n\f\n| B | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 45,
+   "name": "separator '\\x1c' cell",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u001c |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 46,
+   "name": "separator '\\x1c' after-row",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\u001c\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 47,
+   "name": "separator '\\x1c' between-rows",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n\u001c\n| B | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 48,
+   "name": "separator '\\x1d' cell",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u001d |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 49,
+   "name": "separator '\\x1d' after-row",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\u001d\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 50,
+   "name": "separator '\\x1d' between-rows",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n\u001d\n| B | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 51,
+   "name": "separator '\\x1e' cell",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u001e |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 52,
+   "name": "separator '\\x1e' after-row",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\u001e\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 53,
+   "name": "separator '\\x1e' between-rows",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n\u001e\n| B | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 54,
+   "name": "separator '\\x85' cell",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u0085 |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 55,
+   "name": "separator '\\x85' after-row",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\u0085\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 56,
+   "name": "separator '\\x85' between-rows",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n\u0085\n| B | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 57,
+   "name": "separator '\\u2028' cell",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u2028 |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 58,
+   "name": "separator '\\u2028' after-row",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\u2028\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 59,
+   "name": "separator '\\u2028' between-rows",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n\u2028\n| B | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 60,
+   "name": "separator '\\u2029' cell",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT\u2029 |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 61,
+   "name": "separator '\\u2029' after-row",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\u2029\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 62,
+   "name": "separator '\\u2029' between-rows",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n\u2029\n| B | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 63,
+   "name": "header | ID | DECISION |",
+   "text": "| ID | DECISION |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 64,
+   "name": "header | claim | disposition |",
+   "text": "| claim | disposition |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 65,
+   "name": "header | Claim Id | Decision |",
+   "text": "| Claim Id | Decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 66,
+   "name": "nonliteral header '| **id** | decision |'",
+   "text": "| **id** | decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 67,
+   "name": "nonliteral header '| id | `decision` |'",
+   "text": "| id | `decision` |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 68,
+   "name": "nonliteral header '|| id | decision ||'",
+   "text": "|| id | decision ||\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 69,
+   "name": "nonliteral header '| \\xa0id | decision |'",
+   "text": "| \u00a0id | decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 70,
+   "name": "nonliteral header '| claim\\tid | decision |'",
+   "text": "| claim\tid | decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 71,
+   "name": "following line 'A | NOT-EXAMINED |'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\nA | NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 72,
+   "name": "following line '| A | ACCEPT'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n| A | ACCEPT\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 73,
+   "name": "following line '| | NOT-EXAMINED |'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n| | NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 74,
+   "name": "following line '| A | ACCEPT ||'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n| A | ACCEPT ||\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 75,
+   "name": "following line '|| A | ACCEPT |'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n|| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 76,
+   "name": "following line '| A | ACCEPT | remarks |'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n| A | ACCEPT | remarks |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 77,
+   "name": "following line '| A | ACCEPT \\\\| |'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n| A | ACCEPT \\| |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 78,
+   "name": "following line 'paragraph'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\nparagraph\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 79,
+   "name": "following line '---'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n---\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 80,
+   "name": "following line '|---|'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n|---|\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 81,
+   "name": "following line '---|---'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n---|---\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 82,
+   "name": "following line '|---|---|---|'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n|---|---|---|\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 83,
+   "name": "following line '|:---|---:|'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n|:---|---:|\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 84,
+   "name": "blank ends table ''",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n\n| A | NOT-EXAMINED |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 85,
+   "name": "blank ends table ' '",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n \n| A | NOT-EXAMINED |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 86,
+   "name": "blank ends table '\\t'",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n\t\n| A | NOT-EXAMINED |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 87,
+   "name": "blank ends table ' \\t '",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n \t \n| A | NOT-EXAMINED |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 88,
+   "name": "duplicate ('ACCEPT', 'NOT-EXAMINED') full=False",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n| A | NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 89,
+   "name": "duplicate ('ACCEPT', 'NOT-EXAMINED') full=True",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n| REV:A | NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 90,
+   "name": "body/addendum ('ACCEPT', 'NOT-EXAMINED')",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n\n## Addendum 2026-11-12\n\n| id | decision |\n|---|---|\n| A | NOT-EXAMINED |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 91,
+   "name": "duplicate ('NOT-EXAMINED', 'ACCEPT') full=False",
+   "text": "| id | decision |\n|---|---|\n| A | NOT-EXAMINED |\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 92,
+   "name": "duplicate ('NOT-EXAMINED', 'ACCEPT') full=True",
+   "text": "| id | decision |\n|---|---|\n| A | NOT-EXAMINED |\n| REV:A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 93,
+   "name": "body/addendum ('NOT-EXAMINED', 'ACCEPT')",
+   "text": "| id | decision |\n|---|---|\n| A | NOT-EXAMINED |\n\n## Addendum 2026-11-12\n\n| id | decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 94,
+   "name": "duplicate ('ACCEPT', 'ACCEPT') full=False",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n| A | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 95,
+   "name": "duplicate ('ACCEPT', 'ACCEPT') full=True",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n| REV:A | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 96,
+   "name": "body/addendum ('ACCEPT', 'ACCEPT')",
+   "text": "| id | decision |\n|---|---|\n| A | ACCEPT |\n\n## Addendum 2026-11-12\n\n| id | decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 97,
+   "name": "duplicate ('accepted', 'ACCEPT') full=False",
+   "text": "| id | decision |\n|---|---|\n| A | accepted |\n| A | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 98,
+   "name": "duplicate ('accepted', 'ACCEPT') full=True",
+   "text": "| id | decision |\n|---|---|\n| A | accepted |\n| REV:A | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 99,
+   "name": "body/addendum ('accepted', 'ACCEPT')",
+   "text": "| id | decision |\n|---|---|\n| A | accepted |\n\n## Addendum 2026-11-12\n\n| id | decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 100,
+   "name": "duplicate ('garbage', 'ACCEPT') full=False",
+   "text": "| id | decision |\n|---|---|\n| A | garbage |\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 101,
+   "name": "duplicate ('garbage', 'ACCEPT') full=True",
+   "text": "| id | decision |\n|---|---|\n| A | garbage |\n| REV:A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 102,
+   "name": "body/addendum ('garbage', 'ACCEPT')",
+   "text": "| id | decision |\n|---|---|\n| A | garbage |\n\n## Addendum 2026-11-12\n\n| id | decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 103,
+   "name": "id REV:A",
+   "text": "| id | decision |\n|---|---|\n| REV:A | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 104,
+   "name": "id **A**",
+   "text": "| id | decision |\n|---|---|\n| **A** | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 105,
+   "name": "id `A`",
+   "text": "| id | decision |\n|---|---|\n| `A` | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 106,
+   "name": "quoted table",
+   "text": "> | id | decision |\n> |---|---|\n> | A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 107,
+   "name": "fenced table, blank before closing",
+   "text": "```markdown\n| id | decision |\n|---|---|\n| A | ACCEPT |\n\n```\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 108,
+   "name": "fenced table, closing inside run",
+   "text": "```markdown\n| id | decision |\n|---|---|\n| A | ACCEPT |\n```\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 109,
+   "name": "header without leading pipe",
+   "text": "id | decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 110,
+   "name": "no delimiter",
+   "text": "| id | decision |\n| A | ACCEPT |\n",
+   "sol_expected": true,
+   "expected": false
+  },
+  {
+   "n": 111,
+   "name": "CRLF control",
+   "text": "| id | decision |\r\n|---|---|\r\n| A | ACCEPT |\r\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 112,
+   "name": "empty extra column",
+   "text": "| id | decision | remarks |\n|---|---|---|\n| A | ACCEPT | \t |\n",
+   "sol_expected": true,
+   "expected": true
+  },
+  {
+   "n": 113,
+   "name": "leading double pipe header",
+   "text": "|| id | decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 114,
+   "name": "trailing double pipe header",
+   "text": "| id | decision ||\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 115,
+   "name": "lookalike header",
+   "text": "| \u0456d | decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  },
+  {
+   "n": 116,
+   "name": "BOM header",
+   "text": "\ufeff| id | decision |\n|---|---|\n| A | ACCEPT |\n",
+   "sol_expected": false,
+   "expected": false
+  }
+ ]
+}

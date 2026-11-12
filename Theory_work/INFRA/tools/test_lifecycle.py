@@ -1,4 +1,4 @@
-"""test_lifecycle.py — regression scenarios for the lifecycle tools (reviews R01-R05).
+"""test_lifecycle.py — regression scenarios for the lifecycle tools (reviews R01-R05, INFRA R05-R06).
 
 Never touches the live registry: it runs inside a CI Sandbox (ci/run_ci.py: a disposable detached git worktree of
 HEAD, a strict child of the tool's sandbox root, owned through a held lock file), copies the CURRENT
@@ -1183,7 +1183,7 @@ try:
         def r05_review(seat, decisions, head_="| id | decision |", dg_=None):
             return (f"Council R1 ({seat}).\n\n{head_}\n|---|---|\n" + "".join(f"| {i} | {d_} |\n" for i, d_ in decisions)
                     + "\n" + vline(dg_ or dg5, seat))
-        GOOD_SOL = r05_review("sol", [("A", "accepted"), ("B", "**accepted** with non-blocking remarks")])
+        GOOD_SOL = r05_review("sol", [("A", "accepted"), ("B", "Accepted")])
         GOOD_OPUS = r05_review("opus", [("R05T:A", "accepted"), ("B", "accepted")], "| Id | Disposition |")
         put(SOLR, GOOD_SOL)
         put(OPUSR, GOOD_OPUS)
@@ -1374,6 +1374,478 @@ try:
         for f_ in (c1, c2):
             if os.path.exists(f_):
                 os.remove(f_)
+
+        # ---------------- INFRA R06: line-ending-independent manifest hashes ----------------
+        import hashlib as _hl
+        import tempfile as _tf
+        _sm = importlib.util.spec_from_file_location("bvs_manifest_r06", MANP)
+        MT = importlib.util.module_from_spec(_sm)
+        _sm.loader.exec_module(MT)
+        TE = "Theory_work/WaveT/R06E"
+        EXT6 = "Theory_work/WaveT/R06E-ext.md"
+        os.makedirs(os.path.join(TMP, TE, "reviews"), exist_ok=True)
+
+        def putb(rel, data):
+            fp = os.path.join(TMP, rel)
+            os.makedirs(os.path.dirname(fp), exist_ok=True)
+            open(fp, "wb").write(data)
+            return fp
+
+        def getb(rel):
+            return open(os.path.join(TMP, rel), "rb").read()
+
+        def flip(rel):  # LF <-> CRLF of every line of a file
+            d_ = getb(rel)
+            putb(rel, d_.replace(b"\r\n", b"\n") if b"\r\n" in d_ else d_.replace(b"\n", b"\r\n"))
+        E_FILES = {f"{TE}/a.md": b"Lemma A. A holds.\nProof. Trivial.\n",
+                   f"{TE}/b.md": b"Lemma B. B holds.\r\nProof. Trivial.\r\n",
+                   f"{TE}/mixed.md": b"line one\r\nline two\nline three\r\n",
+                   f"{TE}/bin.dat": b"\x00\x01binary\r\nrow\n",
+                   EXT6: b"external premise\r\nsecond line\r\n"}
+        for k_, v_ in E_FILES.items():
+            putb(k_, v_)
+        put(f"{TE}/reviews/INPUTS.txt", EXT6 + "\n")
+        ME = f"{TE}/reviews/MANIFEST_R1.txt"
+        man("freeze", TE, ME, "--extra", f"{TE}/reviews/INPUTS.txt")
+        rows_e = {l_[66:]: l_[:64] for l_ in MT.read_manifest(os.path.join(TMP, ME))[2]}
+        lfh = lambda b_: _hl.sha256(b_.replace(b"\r\n", b"\n")).hexdigest()  # noqa: E731
+        results.append(("R06 freeze records the LF-normalised sha256 of a text file (CRLF, LF and mixed files) and the "
+                        "raw sha256 of a file with a NUL byte",
+                        rows_e.get("b.md") == lfh(E_FILES[f"{TE}/b.md"]) and rows_e.get("a.md") == lfh(E_FILES[f"{TE}/a.md"])
+                        and rows_e.get("mixed.md") == lfh(E_FILES[f"{TE}/mixed.md"])
+                        and rows_e.get(f"EXT:{EXT6}") == lfh(E_FILES[EXT6])
+                        and rows_e.get("bin.dat") == _hl.sha256(E_FILES[f"{TE}/bin.dat"]).hexdigest()))
+        for k_ in (f"{TE}/a.md", f"{TE}/b.md", f"{TE}/mixed.md", EXT6):
+            flip(k_)
+        rc_f, out_f = man("verify", TE, ME)
+        dg_flip = MT.digest(MT.ticket_entries(os.path.join(TMP, TE)) + MT.extra_entries(TMP, [EXT6]))
+        results.append(("R06 every text file's line endings flipped (LF <-> CRLF, a mixed file made uniform): verify OK, "
+                        "and a re-freeze gives the same digest", rc_f == 0 and "verify: OK" in out_f
+                        and dg_flip == MT.read_manifest(os.path.join(TMP, ME))[0]))
+        a_crlf = getb(f"{TE}/a.md")
+        putb(f"{TE}/a.md", a_crlf.replace(b"A holds", b"B holds"))
+        rc_1, out_1 = man("verify", TE, ME)
+        putb(f"{TE}/a.md", a_crlf.replace(b"\r\n", b"\r", 1))  # a lone CR is a content change, not an EOL variant
+        rc_2, out_2 = man("verify", TE, ME)
+        putb(f"{TE}/a.md", a_crlf + b"\r\n")  # one more (empty) line
+        rc_3, out_3 = man("verify", TE, ME)
+        putb(f"{TE}/a.md", a_crlf)
+        results.append(("R06 a one-byte content edit (CRLF checkout), a lone CR and an extra line still fail verify "
+                        "(CHANGED a.md)", all(rc_ != 0 and "CHANGED a.md" in o_ for rc_, o_ in
+                                              ((rc_1, out_1), (rc_2, out_2), (rc_3, out_3)))))
+        flip(f"{TE}/bin.dat")
+        rc_b, out_b = man("verify", TE, ME)
+        putb(f"{TE}/bin.dat", E_FILES[f"{TE}/bin.dat"])
+        rc_b0, _ = man("verify", TE, ME)
+        results.append(("R06 a file with a NUL byte is hashed raw: its CRLF -> LF conversion fails verify; restored -> OK",
+                        rc_b != 0 and "CHANGED bin.dat" in out_b and rc_b0 == 0))
+        # a legacy (pre-R06) manifest: raw-byte hashes of a mixed LF / CRLF tree
+        for k_, v_ in E_FILES.items():
+            putb(k_, v_)
+        legacy_rows = sorted(f"{_hl.sha256(getb(p_)).hexdigest()}  {n_}" for p_, n_ in
+                             [(f"{TE}/{x_}", x_) for x_ in ("a.md", "b.md", "bin.dat", "mixed.md")])
+        legacy_rows = [l_ for _, l_ in sorted((l_[66:], l_) for l_ in legacy_rows)]
+        legacy_rows.append(f"{_hl.sha256(getb(EXT6)).hexdigest()}  EXT:{EXT6}")
+        ML = f"{TE}/reviews/MANIFEST_LEG.txt"
+        put(ML, f"MANIFEST {MT.digest(legacy_rows)}\n#EXTRA {EXT6}\n" + "\n".join(legacy_rows) + "\n")
+        rc_l0, _ = man("verify", TE, ML)
+        for k_ in (f"{TE}/a.md", f"{TE}/b.md", EXT6):
+            flip(k_)
+        rc_l1, out_l1 = man("verify", TE, ML)
+        putb(f"{TE}/b.md", getb(f"{TE}/b.md").replace(b"B holds", b"C holds"))
+        rc_l2, out_l2 = man("verify", TE, ML)
+        results.append(("R06 a legacy raw-byte manifest of a mixed tree verifies on the frozen tree and after an LF <-> "
+                        "CRLF flip; a one-byte edit still fails", rc_l0 == 0 and rc_l1 == 0 and "verify: OK" in out_l1
+                        and rc_l2 != 0 and "CHANGED b.md" in out_l2))
+
+        # Sol R06FIX F1: a lone CR (CR CR LF) is content, never an EOL variant: legacy raw manifest and fresh freeze
+        TC = "Theory_work/WaveT/R06CR"
+        os.makedirs(os.path.join(TMP, TC, "reviews"), exist_ok=True)
+        putb(f"{TC}/a.md", b"a\r\n")
+        rows_c = [f"{_hl.sha256(b'a' + bytes([13, 10])).hexdigest()}  a.md"]
+        MC = f"{TC}/reviews/MANIFEST_LEG.txt"
+        put(MC, f"MANIFEST {MT.digest(rows_c)}\n" + "\n".join(rows_c) + "\n")
+        rc_c0, _ = man("verify", TC, MC)
+        putb(f"{TC}/a.md", b"a\r\r\n")
+        rc_c1, out_c1 = man("verify", TC, MC)
+        MC2 = f"{TC}/reviews/MANIFEST_R1.txt"
+        man("freeze", TC, MC2)
+        rec_c2 = MT.read_manifest(os.path.join(TMP, MC2))[2][0][:64]
+        rc_c2, _ = man("verify", TC, MC2)
+        putb(f"{TC}/a.md", b"a\n")
+        rc_c3, out_c3 = man("verify", TC, MC2)
+        putb(f"{TC}/a.md", b"a\r\n")
+        rc_c4, out_c4 = man("verify", TC, MC2)
+        results.append(("R06FIX F1 a lone CR is content: CR CR LF does not verify against a legacy raw CR LF hash; a "
+                        "fresh freeze of CR CR LF records the raw hash and refuses LF and CR LF",
+                        rc_c0 == 0 and rc_c1 != 0 and "CHANGED a.md" in out_c1
+                        and rec_c2 == _hl.sha256(bytes([97, 13, 13, 10])).hexdigest() and rc_c2 == 0
+                        and rc_c3 != 0 and "CHANGED a.md" in out_c3 and rc_c4 != 0 and "CHANGED a.md" in out_c4))
+
+        # every MANIFEST_*.txt of HEAD and of the ticket branches, on an LF and a CRLF clone (git -c core.autocrlf=...)
+        def lgit(*a, cwd=LIVE_ROOT, check=True):
+            p_ = subprocess.run(["git", "-C", cwd, *a], capture_output=True, text=True, encoding="utf-8",
+                                errors="replace")
+            if check and p_.returncode:
+                raise RuntimeError(f"git {a[:3]}: {p_.stderr[:300]}")
+            return p_.stdout
+        refs6 = {"HEAD": lgit("rev-parse", "HEAD").strip()}
+        missing6 = []
+        for b_ in ("theory/W3-START", "theory/W3-PSHARP", "theory/W3-MISR", "theory/W3-RM2"):
+            for full_ in (f"refs/heads/{b_}", f"refs/remotes/origin/{b_}"):
+                c_ = lgit("rev-parse", "--verify", "-q", full_ + "^{commit}", check=False).strip()
+                if c_:
+                    refs6[b_] = c_
+                    break
+            else:  # an absent branch counts only if HEAD carries its ticket folder (merged)
+                if not lgit("ls-tree", "-d", "--name-only", refs6["HEAD"], f"Theory_work/Wave3/{b_.split('/')[1]}/reviews").strip():
+                    missing6.append(b_)
+        jobs6 = []  # (label, commit, manifest path)
+        for lab_, c_ in refs6.items():
+            for f_ in lgit("ls-tree", "-r", "--name-only", c_, "--", "Theory_work").splitlines():
+                if "/reviews/MANIFEST_" in f_ and f_.endswith(".txt"):
+                    jobs6.append((lab_, c_, f_))
+                    last_ = lgit("log", "-1", "--format=%H", c_, "--", f_).strip()
+                    if last_ and last_ != c_:
+                        jobs6.append((lab_ + "@freeze", last_, f_))
+        pats6 = {"/.gitattributes", "/Theory_work/", "/Docs/", "/Scripts/SMC_BVS/"}
+        for _, c_, f_ in jobs6:
+            for ln_ in lgit("show", f"{c_}:{f_}").splitlines():
+                if ln_.startswith("#EXTRA "):
+                    pats6.add("/" + ln_[7:].strip())
+        old_src = lgit("show", "3ce2e27:Theory_work/Wave3/tools/manifest.py")  # the pre-R06 (raw-byte) tool
+        OLDP = put("r06_old_manifest.py", old_src)
+        _so = importlib.util.spec_from_file_location("bvs_manifest_pre_r06", OLDP)
+        MO = importlib.util.module_from_spec(_so)
+        _so.loader.exec_module(MO)
+        CROOT = _tf.mkdtemp(prefix="bvs_r06_")
+        ver6, old6, fp6 = {}, {}, {}
+        FP_SCRIPT = ("import os, sys\nsys.dont_write_bytecode = True\nsys.path.insert(0, sys.argv[1])\n"
+                     "import bvsreg as R\nrows = R.load_claims()\nby = R.index(rows)\ng = R.Graph(rows)\n"
+                     "al = R.load_aliases()\nf = R.ticket_folders()\nout = []\nfor r in rows:\n"
+                     "    out.append('\\t'.join([r['id'], R.claim_hash(r) or '-', R.status_sha(r.get('status_source', '')),"
+                     " R.accept_stamp(r['id'], by, g, al, f)]))\n"
+                     "open(sys.argv[2], 'w', encoding='utf-8').write('\\n'.join(out))\n")
+        try:
+            for mode_, ac_ in (("LF", "false"), ("CRLF", "true")):
+                d_ = os.path.join(CROOT, mode_)
+                subprocess.run(["git", "-c", f"core.autocrlf={ac_}", "clone", "-q", "--shared", "--no-checkout",
+                                "-c", f"core.autocrlf={ac_}", "-c", "core.longpaths=true", LIVE_ROOT, d_],
+                               check=True, capture_output=True)
+                lgit("config", "core.eol", "crlf" if ac_ == "true" else "lf", cwd=d_)
+                lgit("sparse-checkout", "set", "--no-cone", *sorted(pats6), cwd=d_)
+                for lab_, c_, f_ in jobs6:
+                    lgit("checkout", "-q", "--force", c_, cwd=d_)
+                    td_ = os.path.join(d_, os.path.dirname(os.path.dirname(f_)))
+                    mp_ = os.path.join(d_, f_)
+                    try:
+                        ver6[(mode_, lab_, f_)] = MT.verify_problems(td_, mp_, d_)[1]
+                    except MT.ManifestError as e_:
+                        ver6[(mode_, lab_, f_)] = [f"ERROR {e_}"]
+                    try:
+                        old6[(mode_, lab_, f_)] = MO.verify_problems(td_, mp_, d_)[1]
+                    except MO.ManifestError as e_:
+                        old6[(mode_, lab_, f_)] = [f"ERROR {e_}"]
+                # registry fingerprints (sha256, status_sha256, fp2) on this checkout of HEAD, with the working tools
+                lgit("checkout", "-q", "--force", refs6["HEAD"], cwd=d_)
+                for src_ in (os.path.join(INFRA, "tools"), os.path.join(TMP, "Theory_work", "Wave3", "tools")):
+                    rel_ = os.path.relpath(src_, TMP)
+                    for fn_ in os.listdir(src_):
+                        if fn_.endswith(".py"):
+                            shutil.copy2(os.path.join(src_, fn_), os.path.join(d_, rel_, fn_))
+                fpo_ = os.path.join(CROOT, f"fp_{mode_}.tsv")
+                subprocess.run([sys.executable, "-c", FP_SCRIPT, os.path.join(d_, "Theory_work", "INFRA", "tools"),
+                                fpo_], capture_output=True, cwd=d_)
+                fp6[mode_] = open(fpo_, encoding="utf-8").read() if os.path.exists(fpo_) else ""
+        finally:
+            shutil.rmtree(CROOT, ignore_errors=True)
+        keys6 = sorted({k_[1:] for k_ in ver6})
+        same6 = [k_ for k_ in keys6 if ver6.get(("LF",) + k_) == ver6.get(("CRLF",) + k_)]
+        print(f"R06 clones: {len(keys6)} (manifest, commit) checks on {len(refs6)} refs "
+              f"({', '.join(sorted(refs6))}); missing refs: {missing6 or 'none'}")
+        for k_ in keys6:
+            if k_ not in same6:
+                print("  LF/CRLF differ:", k_, ver6.get(("LF",) + k_)[:3], ver6.get(("CRLF",) + k_)[:3])
+        results.append((f"R06 every MANIFEST_*.txt of HEAD and the ticket branches ({len(keys6)} manifest x commit "
+                        "checks, branch heads and the commit that wrote each manifest) gives the same verify result "
+                        "on an LF and on a CRLF clone", len(keys6) >= 40 and same6 == keys6 and not missing6))
+        must6 = [("theory/W3-START", "Theory_work/Wave3/W3-START/reviews/MANIFEST_R2.txt"),
+                 ("theory/W3-PSHARP", "Theory_work/Wave3/W3-PSHARP/reviews/MANIFEST_R2.txt"),
+                 ("theory/W3-MISR", "Theory_work/Wave3/W3-MISR/reviews/MANIFEST_R2.txt"),
+                 ("theory/W3-RM2", "Theory_work/Wave3/W3-RM2/reviews/MANIFEST_PC1.txt"),
+                 ("theory/W3-START@freeze", "Theory_work/Wave3/W3-START/reviews/MANIFEST_BT1.txt"),
+                 ("theory/W3-START@freeze", "Theory_work/Wave3/W3-START/reviews/MANIFEST_MP1.txt"),
+                 ("theory/W3-START@freeze", "Theory_work/Wave3/W3-START/reviews/MANIFEST_R1.txt"),
+                 ("theory/W3-PSHARP@freeze", "Theory_work/Wave3/W3-PSHARP/reviews/MANIFEST_R1.txt"),
+                 ("theory/W3-MISR@freeze", "Theory_work/Wave3/W3-MISR/reviews/MANIFEST_R1.txt"),
+                 ("theory/W3-RM2@freeze", "Theory_work/Wave3/W3-RM2/reviews/MANIFEST_BT1.txt"),
+                 ("theory/W3-RM2@freeze", "Theory_work/Wave3/W3-RM2/reviews/MANIFEST_RC4.txt")]
+        must6 = [k_ for k_ in must6 if k_[0].split("@")[0] in refs6]  # a merged, deleted branch: covered via HEAD
+        ok_must = [k_ for k_ in must6 if ver6.get(("LF",) + k_) == [] and ver6.get(("CRLF",) + k_) == []]
+        old_fail = [k_ for k_ in must6 if old6.get(("LF",) + k_) or old6.get(("CRLF",) + k_)]
+        for k_ in must6:
+            if k_ not in ok_must:
+                print("  expected OK:", k_, (ver6.get(("LF",) + k_) or [])[:3], (ver6.get(("CRLF",) + k_) or [])[:3])
+        results.append(("R06 the council / acceptance manifests (START R2, PSHARP R2, MISR R2, RM2 PC1 at the branch "
+                        "heads; START BT1/MP1/R1, PSHARP R1, MISR R1, RM2 BT1/RC4 where they were written) verify on "
+                        "both clones; the pre-R06 raw-byte tool fails each of them on at least one clone",
+                        ok_must == must6 and old_fail == must6))
+        n_fp = len([l_ for l_ in fp6.get("LF", "").splitlines() if l_.strip()])
+        results.append((f"R06 registry fingerprints (sha256, status_sha256, fp2 accept stamp) of all {n_fp} claims are "
+                        "identical on the LF and the CRLF clone", n_fp > 100 and fp6.get("LF") == fp6.get("CRLF")))
+
+        # ---------------- INFRA R06: per-claim tables by dated addendum (R05 safeguard 4) ----------------
+        T6 = "Theory_work/WaveT/R06T"
+        CK6 = f"{T6}/CHECKPOINT_3.md"
+        put(f"{T6}/STATEMENT.md", "Lemma A. A holds.\nLemma B. B holds.\nLemma C. C holds.\n")
+        put(f"{T6}/PROOF.md", "Proofs of A, B and C.\n")
+        put(f"{T6}/REPORT.md", "# R06T report\nPROVED-CHECKED\nPROVED-CHECKED\n")
+        os.makedirs(os.path.join(TMP, T6, "reviews"), exist_ok=True)
+        man("freeze", T6, f"{T6}/reviews/MANIFEST_R1.txt")
+        dg6 = mhead(f"{T6}/reviews/MANIFEST_R1.txt")
+        cell6 = f"R1; MANIFEST {dg6}; sol=8.6 PASS(reviews/R1_council_sol.md); opus=8.4 PASS(reviews/R1_council_opus.md)"
+        S6, O6 = f"{T6}/reviews/R1_council_sol.md", f"{T6}/reviews/R1_council_opus.md"
+
+        def r06_review(seat, score, adds=(), body_table=None, extra=""):
+            txt = f"Council R1 ({seat}). Score {score}, all gates PASS.\n\n"
+            if body_table:
+                txt += "| id | decision |\n|---|---|\n" + "".join(f"| {i} | {d_} |\n" for i, d_ in body_table) + "\n"
+            txt += vline(dg6, seat, score)
+            if adds:
+                txt += ("\n## Addendum 2026-11-12: per-claim table (fresh thread, same seat model, frozen manifest and "
+                        "own review; no rescoring)\n\n| id | decision |\n|---|---|\n"
+                        + "".join(f"| {i} | {d_} |\n" for i, d_ in adds))
+            return txt + extra
+        ADD6 = [("A", "ACCEPT"), ("B", "ACCEPT"), ("C", "NOT-EXAMINED")]
+        put(S6, r06_review("sol", "8.6", ADD6))
+        put(O6, r06_review("opus", "8.4", ADD6))
+
+        def r06_blk(loc, ln, sl, status="PROVED-CHECKED", council=True):
+            return ("```\nREGISTRY\n"
+                    f"claim: R06T:{loc} | kind: lemma | statement: STATEMENT.md:{ln} | premises: none\n"
+                    f"name: Lemma {loc}\nstatus: {status} | status_source: CHECKPOINT_3.md:{sl}\n"
+                    + (f"council: {cell6}\n" if council else "") + "```\n")
+
+        def r06_ckpt(c_checked=False):
+            return ("# R06T checkpoint 3\n\n"
+                    "- R06T:A — PROVED-CHECKED — Lemma A. Council R1 (addendum): ACCEPT.\n"
+                    "- R06T:B — PROVED-CHECKED — Lemma B. Council R1 (addendum): ACCEPT.\n"
+                    + ("- R06T:C — PROVED-CHECKED — Lemma C.\n" if c_checked else
+                       "- R06T:C — PROVED (by this seat, unchecked) — Lemma C, NOT-EXAMINED by the council.\n") + "\n"
+                    + r06_blk("A", 1, 3) + "\n" + r06_blk("B", 2, 4) + "\n"
+                    + (r06_blk("C", 3, 5) if c_checked else
+                       r06_blk("C", 3, 5, "PROVED (by this seat, unchecked)", council=False)))
+        put(CK6, r06_ckpt())
+        rc_a1, out_a1 = tool("ingest.py", "claims", os.path.join(TMP, CK6), "--staged")
+        put(CK6, r06_ckpt(c_checked=True))
+        rc_a2, out_a2 = tool("ingest.py", "claims", os.path.join(TMP, CK6), "--staged")
+        put(CK6, r06_ckpt())
+        results.append(("R06 4a: per-claim tables appended as a dated addendum after the COUNCIL-VERDICT line (ACCEPT / "
+                        "NOT-EXAMINED) pass the checkpoint acceptance; the NOT-EXAMINED id stays in the checkpoint "
+                        "without a checked label",
+                        rc_a1 == 0 and "PASS" in acc_l(out_a1) and "REFUSED" not in acc_l(out_a1)))
+        results.append(("R06 4a: the NOT-EXAMINED id with a checked label in the checkpoint is REFUSED (A4: carries a "
+                        "checked-labelled id the seat did not accept)",
+                        rc_a2 != 0 and "REFUSED" in acc_l(out_a2) and "did not accept" in out_a2 and "R06T:C" in out_a2))
+        # a second verdict line in the addendum (same digest; another digest) is refused; the original line binds
+        put(O6, r06_review("opus", "8.4", ADD6, extra="\n" + vline(dg6, "opus", "9.5")))
+        rc_v1, out_v1 = tool("ingest.py", "claims", os.path.join(TMP, CK6), "--staged")
+        put(O6, r06_review("opus", "8.4", ADD6, extra="\n" + vline(dgL, "opus", "9.5")))
+        rc_v2, out_v2 = tool("ingest.py", "claims", os.path.join(TMP, CK6), "--staged")
+        rc_bd, out_bd = man("bind", f"{T6}/reviews/MANIFEST_R1.txt", S6, O6)
+        put(O6, r06_review("opus", "8.4", ADD6))
+        rc_bg, out_bg = man("bind", f"{T6}/reviews/MANIFEST_R1.txt", S6, O6, "--council", cell6)
+        results.append(("R06 4a: an addendum carrying a second COUNCIL-VERDICT line (same digest, new score; or another "
+                        "digest) is REFUSED (A4 and manifest.py bind); the original verdict binds (bind OK, cell match)",
+                        rc_v1 != 0 and "2 COUNCIL-VERDICT lines" in out_v1 and rc_v2 != 0
+                        and "contradictory COUNCIL-VERDICT" in out_v2 and rc_bd != 0 and rc_bg == 0))
+        # an addendum contradicting the body table (body: B not accepted) is refused
+        put(S6, r06_review("sol", "8.6", ADD6, body_table=[("A", "accepted"), ("B", "not accepted (gap)")]))
+        rc_c6, out_c6 = tool("ingest.py", "claims", os.path.join(TMP, CK6), "--staged")
+        put(S6, r06_review("sol", "8.6", ADD6))
+        results.append(("R06 4a: an addendum ACCEPT contradicting a body-table 'not accepted' is REFUSED (contradictory "
+                        "decisions)", rc_c6 != 0 and "contradictory decisions" in out_c6 and "R06T:B" in out_c6))
+
+        # ---------------- INFRA R06: registry blocks from a carrier file outside the frozen manifest ----------------
+        CAR = f"{T6}/reviews/CARRIER_R1.jsonl"  # reviews/ is never in a manifest
+        hdr_t6, trows6 = R.read_tsv(R.TICKETS)  # the ticket folder locates the frozen manifest (tickets.tsv folder)
+        if not any(t_["ticket"] == "R06T" for t_ in trows6):
+            trows6.append({**{h_: "" for h_ in hdr_t6}, "ticket": "R06T", "folder": T6})
+            R.write_tsv(R.TICKETS, hdr_t6, trows6)
+
+        def c6row(loc, line, **kw):
+            base_ = dict(ticket="R06T", local_id=loc, kind="lemma", name=f"Lemma {loc}", file=f"{T6}/STATEMENT.md",
+                         lines=[line, line], premises=[], status="PROVED-CHECKED",
+                         status_source=f"{T6}/REPORT.md:{1 + line}", council=cell6)
+            base_.update(kw)
+            return base_
+
+        def carrier(rel, objs):
+            return put(rel, "".join(_json.dumps(o, ensure_ascii=False) + "\n" for o in objs))
+        put(CK6, "# R06T checkpoint 3 (status lines only)\n\n- R06T:A — PROVED-CHECKED — Lemma A.\n"
+            "- R06T:B — PROVED-CHECKED — Lemma B.\n")
+        carrier(CAR, [c6row("A", 1), c6row("B", 2)])  # status lines in a covered file (REPORT.md)
+        rc_cv, _ = man("verify", T6, f"{T6}/reviews/MANIFEST_R1.txt")
+        rc_k1, out_k1 = tool("ingest.py", "claims", os.path.join(TMP, CAR), "--staged")
+        carrier(CAR, [c6row("A", 1, status_source=f"{CK6}:3"), c6row("B", 2, status_source=f"{CK6}:4")])
+        rc_k3, out_k3 = tool("ingest.py", "claims", os.path.join(TMP, CAR), "--staged")  # status lines: own checkpoint
+        MDC = f"{T6}/reviews/CARRIER_R1.md"  # the REGISTRY-block form, paths written from Theory_work/
+        put(MDC, "```\nREGISTRY\n"
+            f"claim: R06T:A | kind: lemma | statement: {T6}/STATEMENT.md:1 | premises: none\n"
+            f"name: Lemma A\nstatus: PROVED-CHECKED | status_source: {T6}/REPORT.md:2\ncouncil: {cell6}\n```\n")
+        rc_k2, out_k2 = tool("ingest.py", "claims", os.path.join(TMP, MDC), "--staged")
+        results.append(("R06 4b: ingest takes registry rows from a carrier outside the frozen manifest (reviews/*.jsonl; "
+                        "REGISTRY-block .md), status in a covered file or the own checkpoint: PASS; the manifest still "
+                        "verifies", rc_cv == 0 and rc_k1 == 0 and "PASS" in acc_l(out_k1) and "REFUSED" not in
+                        acc_l(out_k1) and rc_k2 == 0 and "PASS" in acc_l(out_k2) and rc_k3 == 0
+                        and "PASS" in acc_l(out_k3) and "REFUSED" not in acc_l(out_k3)))
+        put(f"{T6}/reviews/STATEMENT_extra.md", "Lemma A. A holds.\n")
+        carrier(CAR, [c6row("A", 1, file=f"{T6}/reviews/STATEMENT_extra.md")])
+        rc_u1, out_u1 = tool("ingest.py", "claims", os.path.join(TMP, CAR), "--staged")
+        carrier(CAR, [c6row("A", 1, premises=[f"{T6}/reviews/STATEMENT_extra.md:1-1"])])
+        rc_u2, out_u2 = tool("ingest.py", "claims", os.path.join(TMP, CAR), "--staged")
+        carrier(CAR, [c6row("A", 1, file=CAR, lines=[1, 1])])
+        rc_u3, out_u3 = tool("ingest.py", "claims", os.path.join(TMP, CAR), "--staged")
+        results.append(("R06 4b: a carrier row whose statement or premise file is outside the manifest (incl. the carrier "
+                        "itself) is REFUSED (A4 coverage)",
+                        rc_u1 != 0 and f"does not cover {T6}/reviews/STATEMENT_extra.md" in out_u1
+                        and rc_u2 != 0 and f"does not cover {T6}/reviews/STATEMENT_extra.md" in out_u2
+                        and rc_u3 != 0 and "REFUSED" in acc_l(out_u3) and f"does not cover {CAR}" in out_u3))
+        carrier(CAR, [c6row("C", 3, status_source=f"{T6}/REPORT.md:3")])
+        rc_n1, out_n1 = tool("ingest.py", "claims", os.path.join(TMP, CAR), "--staged")
+        carrier(CAR, [c6row("D", 3, status_source=f"{T6}/REPORT.md:3")])
+        rc_n2, out_n2 = tool("ingest.py", "claims", os.path.join(TMP, CAR), "--staged")
+        put(O6, r06_review("opus", "8.4"))  # one seat without any table, the other with one
+        carrier(CAR, [c6row("A", 1)])
+        rc_n3, out_n3 = tool("ingest.py", "claims", os.path.join(TMP, CAR), "--staged")
+        put(O6, r06_review("opus", "8.4", ADD6))
+        results.append(("R06 4b: through a carrier, a checked claim the seats marked NOT-EXAMINED, or that is missing from "
+                        "their tables, or lacks one seat's table, is REFUSED (A4)",
+                        rc_n1 != 0 and "R06T:C" in out_n1 and "decision is not ACCEPT" in out_n1
+                        and rc_n2 != 0 and "missing from the per-claim table" in out_n2
+                        and rc_n3 != 0 and "has no per-claim table" in out_n3))
+
+        # INFRA R06 decision reader: STRICT WHITELIST, fail closed (HQ ruling after Sol R06FIX recheck 2). Sol's 95
+        # cases (R06FIX/decision_cases.json: exact tables) are read as `expected`; Sol's 13 positive controls with
+        # remarks / other spellings are refused by design (`whitelist_refuses`); every refusal other than an exact
+        # NOT-EXAMINED carries a problem naming the claim
+        DCF = _json.load(open(os.path.join(INFRA, "R06FIX", "decision_cases.json"), encoding="utf-8"))
+        d_bad, d_silent = [], []
+        for c_ in DCF["cases"]:
+            dec_, pr_ = R.seat_decisions(c_["text"], "REV")
+            got_ = bool(dec_.get("REV:A"))
+            if got_ != c_["expected"]:
+                d_bad.append(c_["n"])
+            if not got_ and c_["input"] != "NOT-EXAMINED" and not any(p_.startswith("claim REV:A:") for p_ in pr_):
+                d_silent.append(c_["n"])
+        dev_ = sorted(c_["n"] for c_ in DCF["cases"] if c_["expected"] != c_["sol_expected"])
+        print(f"R06 decision cases: {len(DCF['cases'])}; mismatches {d_bad}; refused without a claim message {d_silent}; "
+              f"whitelist refuses Sol positives {dev_}")
+        results.append(("R06FIX decision reader (strict whitelist): Sol's 95 recheck-2 cases read as expected; all "
+                        "refusals but an exact NOT-EXAMINED name the claim; only the 13 listed Sol positive controls "
+                        "are refused by design",
+                        len(DCF["cases"]) == 95 and not d_bad and not d_silent and dev_ == DCF["whitelist_refuses"]
+                        and all(c_["sol_expected"] for c_ in DCF["cases"] if c_["n"] in dev_)))
+        GOOD_D = ["ACCEPT", "accepted", "Accepted", "ACCEPTED", " ACCEPT ", "\tACCEPT\t"]
+        BAD_D = ["NOT-EXAMINED", "not accepted", "acceptable", "accepted-ish", "ACCEPT=NO", "ACCEPT/NOT-EXAMINED",
+                 "ACCEPT not", "accepted, no", "accepted no", "accept: no", "", "accept", "Accept", "aCcEpTeD",
+                 "**ACCEPT**", "`accepted`", "ACCEPT.", "ACCEPT" + chr(0xA0), chr(0x2003) + "ACCEPT", "ＡＣＣＥＰＴ",
+                 "accepted (not accepted)", "ACCEPT : NO", "accepted with remarks; withdrawn",
+                 "ACCEPT" + chr(0x2028) + "NOT-EXAMINED", "accepted (no)", "accepted (conditional)",
+                 "accepted with non-blocking remarks (Issue 2)", "accepted (F-1, F-2 verified)"]
+        dec_ok = lambda d_: R.seat_table(f"| id | decision |\n|---|---|\n| A | {d_} |\n", "T")[0].get("T:A")  # noqa: E731
+        results.append(("R06FIX whitelist: exactly ACCEPT / accepted / Accepted / ACCEPTED (surrounding spaces and "
+                        "tabs trimmed) accept; other case, emphasis, punctuation, Unicode spaces / full-width, remarks "
+                        "and NOT-EXAMINED do not",
+                        all(dec_ok(d_) for d_ in GOOD_D) and not any(dec_ok(d_) for d_ in BAD_D)))
+        # Sol recheck 2's five staged carrier variants (and two more structural ones) are REFUSED; ACCEPT passes
+        HDR6 = "| id | decision |\n|---|---|\n"
+        VAR6 = [("conditional", HDR6 + "| A | accepted (conditional) |\n"),
+                ("no_in_remark", HDR6 + "| A | accepted (decision: NO) |\n"),
+                ("line_split", HDR6 + "| A | ACCEPT\nNOT-EXAMINED |\n"),
+                ("continuation", HDR6 + "| A | ACCEPT |\n| | NOT-EXAMINED |\n"),
+                ("negative_remarks_column", "| id | decision | remarks |\n|---|---|---|\n| A | ACCEPT | withdrawn |\n"),
+                ("no_leading_pipe_row", HDR6 + "| A | ACCEPT |\nA | NOT-EXAMINED |\n"),
+                ("escaped_pipe", HDR6 + "| A | ACCEPT \\| NOT-EXAMINED |\n")]
+
+        def r06_tab_review(seat, score, table):
+            return f"Council R1 ({seat}). Score {score}, all gates PASS.\n\n" + vline(dg6, seat, score) + "\n" + table
+        carrier(CAR, [c6row("A", 1)])
+        var_res = {}
+        for nm_, tb_ in VAR6 + [("positive", HDR6 + "| A | ACCEPT |\n")]:
+            put(S6, r06_tab_review("sol", "8.6", tb_))
+            put(O6, r06_tab_review("opus", "8.4", tb_))
+            rc_v, out_v = tool("ingest.py", "claims", os.path.join(TMP, CAR), "--staged")
+            var_res[nm_] = (rc_v, acc_l(out_v), "R06T:A" in out_v and "not accepted" in out_v.lower())
+        put(S6, r06_review("sol", "8.6", ADD6))
+        put(O6, r06_review("opus", "8.4", ADD6))
+        print("R06 staged variants:", {k_: (v_[0], v_[1].split(":")[-1].strip()[:30]) for k_, v_ in var_res.items()})
+        results.append(("R06FIX staged carrier: Sol's five recheck-2 variants (conditional, decision: NO in a remark, "
+                        "line split, continuation row, negative remarks column) and a pipe-less / escaped-pipe row are "
+                        "REFUSED with a message naming the claim; a plain ACCEPT table passes",
+                        all(var_res[k_][0] != 0 and "REFUSED" in var_res[k_][1] and var_res[k_][2] for k_, _ in VAR6)
+                        and var_res["positive"][0] == 0 and "PASS" in var_res["positive"][1]))
+        NO6 = [("A", "ACCEPT=NO"), ("B", "ACCEPT"), ("C", "NOT-EXAMINED")]
+        put(S6, r06_review("sol", "8.6", NO6))
+        put(O6, r06_review("opus", "8.4", NO6))
+        carrier(CAR, [c6row("A", 1)])
+        rc_f1, out_f1 = tool("ingest.py", "claims", os.path.join(TMP, CAR), "--staged")
+        put(CK6, r06_ckpt())
+        rc_f2, out_f2 = tool("ingest.py", "claims", os.path.join(TMP, CK6), "--staged")
+        NN6 = [("A", "accepted (not accepted)"), ("B", "ACCEPT"), ("C", "NOT-EXAMINED")]
+        put(S6, r06_review("sol", "8.6", NN6))
+        put(O6, r06_review("opus", "8.4", NN6))
+        rc_f4, out_f4 = tool("ingest.py", "claims", os.path.join(TMP, CK6), "--staged")
+        put(S6, r06_review("sol", "8.6", ADD6))
+        put(O6, r06_review("opus", "8.4", ADD6))
+        rc_f3, out_f3 = tool("ingest.py", "claims", os.path.join(TMP, CK6), "--staged")
+        results.append(("R06FIX F2 staged: both seats' 'ACCEPT=NO' for A is REFUSED on the carrier path and on the "
+                        "own-checkpoint path, 'accepted (not accepted)' on the checkpoint path; restored ACCEPT -> PASS",
+                        rc_f1 != 0 and "REFUSED" in acc_l(out_f1) and rc_f2 != 0 and "REFUSED" in acc_l(out_f2)
+                        and rc_f4 != 0 and "REFUSED" in acc_l(out_f4)
+                        and "R06T:A" in out_f2 and rc_f3 == 0 and "PASS" in acc_l(out_f3)))
+
+        # Sol R06FIX parser test: 116 more direct cases (R06FIX/decision_cases_parser.json), review files read RAW (a
+        # text-mode read would turn CR / NEL / U+2028 ... into line breaks), strict header + delimiter row
+        DCP = _json.load(open(os.path.join(INFRA, "R06FIX", "decision_cases_parser.json"), encoding="utf-8"))
+        p_bad = [c_["n"] for c_ in DCP["cases"]
+                 if bool(R.seat_decisions(c_["text"], "REV")[0].get("REV:A")) != c_["expected"]]
+        p_dev = sorted(c_["n"] for c_ in DCP["cases"] if c_["expected"] != c_["sol_expected"])
+        print(f"R06 parser cases: {len(DCP['cases'])}; mismatches {p_bad}; refused by design {p_dev}")
+        results.append(("R06FIX parser test: Sol's 116 further cases read as expected (header aliases exact, delimiter "
+                        "row directly below the header, separator-shaped lines validated); only case 110 (no delimiter "
+                        "row) is refused by design", len(DCP["cases"]) == 116 and not p_bad
+                        and p_dev == DCP["whitelist_refuses"] == [110]))
+        SEPS = ["\r", "\x0b", "\x0c", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029"]
+        loaded = []
+        for k_, sp_ in enumerate(SEPS):
+            rel_ = f"{T6}/reviews/sepfile_{k_}.md"
+            putb(rel_, ("| id | decision |\n|---|---|\n| A | ACCEPT |" + sp_ + " \n").encode("utf-8"))
+            loaded.append(bool(R.seat_table(R.evidence_raw_text(rel_), "REV")[0].get("REV:A")))
+            os.remove(os.path.join(TMP, rel_))
+        putb(f"{T6}/reviews/crlf_ok.md", b"| id | decision |\r\n|---|---|\r\n| A | ACCEPT |\r\n")
+        crlf_ok = bool(R.seat_table(R.evidence_raw_text(f"{T6}/reviews/crlf_ok.md"), "REV")[0].get("REV:A"))
+        os.remove(os.path.join(TMP, T6, "reviews", "crlf_ok.md"))
+        results.append(("R06FIX parser test: review files are read raw: a row followed by CR, VT, FF, FS, GS, RS, NEL, "
+                        "U+2028 or U+2029 in the FILE reads as NOT accepted; a CRLF file still reads ACCEPT",
+                        not any(loaded) and len(loaded) == 9 and crlf_ok))
+        STG = [("file_u2028", HDR6 + "| A | ACCEPT |\u2028 \n"), ("file_lone_cr", HDR6 + "| A | ACCEPT |\r \n"),
+               ("bare_separator", HDR6 + "| A | ACCEPT |\n---\n"),
+               ("emphasis_header", "| **id** | decision |\n|---|---|\n| A | ACCEPT |\n"),
+               ("double_pipe_header", "|| id | decision ||\n|---|---|\n| A | ACCEPT |\n")]
+        carrier(CAR, [c6row("A", 1)])
+        stg_res = {}
+        for nm_, tb_ in STG:
+            for fp_, seat_, sc_ in ((S6, "sol", "8.6"), (O6, "opus", "8.4")):
+                putb(fp_, r06_tab_review(seat_, sc_, tb_).encode("utf-8"))
+            rc_v, out_v = tool("ingest.py", "claims", os.path.join(TMP, CAR), "--staged")
+            stg_res[nm_] = (rc_v, acc_l(out_v))
+        put(S6, r06_review("sol", "8.6", ADD6))
+        put(O6, r06_review("opus", "8.4", ADD6))
+        print("R06 parser staged:", {k_: (v_[0], v_[1].split(":")[-1].strip()[:30]) for k_, v_ in stg_res.items()})
+        results.append(("R06FIX parser test staged: separators in the review FILE (U+2028, lone CR), a bare '---' line "
+                        "after a row, an emphasized or double-pipe header: carrier acceptance REFUSED",
+                        all(v_[0] != 0 and "REFUSED" in v_[1] for v_ in stg_res.values()) and len(stg_res) == 5))
 
 finally:
     SB.__exit__(None, None, None)
