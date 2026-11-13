@@ -265,3 +265,11 @@
   cascadelake. Stage-1 projection stop raised 1,700 → 1,896 ceiling (hardware loss logged); watchdog hold line 1,880;
   PROTOCOL rule 12's 1,700 line is superseded for stage 1. Pre-declared cut order if still over: (75,75), (100,100),
   h1b/h2b reps 6–10; never the four D1 cells.
+- 2026-11-13 W3-SCALE CP2 (leg B) ACCEPTED: engine revision D byte-identical (24/24 PROD-H, 10/10 supp), setup 3.7× and
+  step ~28% faster; B4 preflight admits 20k (10.4 h vs 969 h); DESIGN_v1 rev 3 (Astra R04 UNSOUND rev 2, all accepted;
+  rev 3 unreviewed); B3 census: σ̂(log Ẑ_r) at N = 2,500 is 0.09 at 2k but 0.76–1.15 at 5k–20k, and at 5k N×4 leaves a
+  right tail (one island 79% weight); PIPs agree across islands (≤ 5e-4). B2 under O17: B2-1 trace replay at p ≤ 2k +
+  B2-2 serial-only cost column for production (lead's recommendation). Leg C starts with Monday's furnace, after the
+  theory items; first a Sol code review of revision D. **For the owner (p = 1M planning):** B2-3 cost-column
+  redefinition; (i) p = 1M fixed N per island — the evidence dispersion at p ≥ 5k does not shrink with N at fixed
+  calibration; (ii) primary PIP — moot on current data (islands agree).
