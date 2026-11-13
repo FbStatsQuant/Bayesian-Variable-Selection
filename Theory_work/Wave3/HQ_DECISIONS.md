@@ -273,3 +273,9 @@
   theory items; first a Sol code review of revision D. **For the owner (p = 1M planning):** B2-3 cost-column
   redefinition; (i) p = 1M fixed N per island — the evidence dispersion at p ≥ 5k does not shrink with N at fixed
   calibration; (ii) primary PIP — moot on current data (islands agree).
+- 2026-11-13 ~10:30 CT W3-P6 stage 1: P6 release watcher and NOTS home guard had been left DISABLED by an HQ manual run
+  (~8 h stall); re-enabled. Lead woken: all 19 tasks read back clean; d2 ((100,1000) reps 7–10) released; ledger 1,731.4.
+  Outcomes so far (descriptive; failure = HPM ≠ S₀, MR1 cap): (100,1000) 6/6; (100,250) ρ=.5 10/10; (75,750) 8/10
+  (2 posterior failures → stage-2 eligible); breadth ρ=.7 5/5, s₀=8 5/5; no search failures. Decisions: (75,188) reps
+  1–5 at 10:00 now; breadth reps 6–10 CUT (pre-declared order); stage 2 of (75,750) (reps 11–20, ≈108 expected / ≈200
+  worst core-h) does not fit under 1,896 → owner asked for that cell's measured cost (per the 11-12 rule).
