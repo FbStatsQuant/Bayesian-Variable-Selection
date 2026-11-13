@@ -18,7 +18,7 @@ short Opus note; the rest moves to the scaling paper.
 - Sun 11-15: $200 API credit — precision strikes only (audit + sharpness of new tickets ~$50). Owner raises Console limit.
 - Mon 11-16 16:00 CT: furnace on (weekly reset): Opus volume; Fable only for W3-PATH lead + stuck key lemmas. Queue:
   D1 (P6), W3-PATH scoping→proof (brief ready, BVS-wt/W3-PATH), T7 + RM2 riders T2/T4/T6 (Opus), chapter v2.0 + council,
-  editorial pass (MINORs + Prop-F wording + PSHARP E1–E9 + MISR/START2 errata). Mid-week full reset (owner) when budget ends.
+  editorial pass (MINORs + Prop-F wording + PSHARP E1–E9 + MISR/START2 errata + C-MIS citecheck: 6 line-drifted cites into SoP 04_theory.tex, CI 11-13). Mid-week full reset (owner) when budget ends.
 - Codex: let it recover, no reset; one reviewer per gate.
 - Providers: everything on claude-personal (CP) for now; consultant = CP Fable 5.2 (operational decisions); owner = big
   picture + tokens, one daily batch. Pending owner calls: supersessions RM-F/R→RM2-F/R, C-MIS→MIS-R, 8 START claims→START2.
