@@ -185,9 +185,17 @@ Write ω_r = Ẑ_r / Z (unnormalised; E[ω_r | V] = 1) and W_r = Ẑ_r / Σ_s �
   with the E2 flag (σ̂ > 1 over the four final islands) at n = 50: 0/137, 2/40, 13/105, 6/16 at p = 50, 125, 250, 500.
   Designs, arms and tiers are pooled, and every flagged fit at p ≥ 250 was escalated; these counts show that large
   σ̂ occurs, not how it scales at fixed N.
-- **Not known:** σ̂ of final islands beyond p = 2k, and at fixed N (the 5k values are diagnostic islands of one
-  dataset); its dependence on the design beyond one replicate per cell; why the
-  large values occur (no mode-occupancy record exists).
+- **Leg B, B3 (frozen-grid sweep; `results/b3_census.tsv`, `analysis/b3_census_table.R`; revision D, bit-identical to
+  v3.1; all on Sapphire Rapids):** one S3-type dataset per p, tier-0 calibration at H = 512, then R islands per N on
+  that grid. σ̂ (robust 1.4826·MAD in brackets): 2k: 0.086 [0.15] at N = 2,500, 0.029 [0.05] at 10,000 (16 islands
+  each); 5k: 0.76 [1.00] at 2,500 (16), 1.35 [0.54] at 10,000 (14 of 16, budget); 10k: 1.15 [0.96] at 2,500 (6 of 16,
+  budget); 20k: 0.95 [0.72] at 2,500 (11 of 12, budget). R_eff / R: 0.99, 1.00, 0.56, 0.11, 0.33, 0.38. At 5k the bulk
+  narrows from N = 2,500 to 10,000 but a right tail remains (largest island 4.4 above the median at 10,000), so σ̂
+  does not fall as 1/√N there. Every island of every run found the same best model (= truth), per-island PIPs agree
+  (sd ≤ 0.001) and max_j |PIP_Z − PIP_eq| ≤ 0.0005: the dispersion is in the evidence estimates, not in which models
+  the islands find. The p effect is confounded with the dataset (one per p) and the seed (one).
+- **Not known:** σ̂ over datasets and seeds at p ≥ 5k; why the right tail occurs (no mode-occupancy record exists);
+  σ̂ at N > 2,500 beyond 5k.
 
 ### 4.5 Diagnostics and census (to be specified; nothing is fixed here)
 Reported, never used to switch estimators or to rerun: R_eff = 1/Σ W_r², R_eff / R′, max W_r, σ̂. A degeneracy flag
@@ -250,7 +258,10 @@ IDs as in v0 §4. "f01" = `Wave3/API_AUDIT/sharp1/results/f01.md` (handed to thi
 | what the theory has | TH01 and the delivered v3.1 theorems as they stand | needs O1, O3, O4, O18; PIP_eq keeps the island bias, PIP_Z has the ratio bias of §4.3 |
 | what is not known | σ̂ and bias at p ≥ 5k under either rule; whether I and T keep their size | σ̂ at fixed N beyond p = 2k (O2); the census rule; total cost with calibration, census, merge and failures |
 
-Everything at 100k and 1M is an extrapolation of a formula checked at three points up to 20k. A mixed rule (N = p up to
+Leg B, B3 (revision D, Sapphire Rapids, one dataset per p): one island of N = 2,500 measured 0.70 h at 10k (T = 28)
+and 0.82 h at 20k (T = 30; islands 0.55–0.88 h on one node), against the formula's 0.36 and 0.72 h; the fixed-size
+tier-0 calibration (H = 512) took 0.41, 1.89, 5.9 and 6.7 h at 2k, 5k, 10k, 20k; σ̂ at N = 2,500 was 0.76–1.15 for
+p ≥ 5k (§4.4). Everything at 100k and 1M is an extrapolation of a formula checked at three points up to 20k. A mixed rule (N = p up to
 some p, fixed above) is a third option.
 
 **(ii) Primary PIP: equal-weight (shipped, `v3_run.R:162`) or evidence-weighted (the v3.1 specification).**

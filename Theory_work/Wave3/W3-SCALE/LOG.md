@@ -159,9 +159,9 @@ table, or if serial-equivalent totals are reported that match exactly); reserved
 | B6 | 11-12 04:24 | 2697748 `w3scale_bitid_p1000_D` | 10 x 1 h | 10.0 | 31.5 | 2.619 |
 | B7 | 11-12 04:24 | 2697749 `w3scale_bitid_p1000_S5_D` | 2 x 2 h | 4.0 | 35.5 | 0.890 |
 | B8 | 11-12 07:31 | 2698177 `w3scale_b3_p2000` (12G) | 1 x 9 h | 9.0 | 7.17 + 9 = 16.2 | 5.403 (bb2u24c1) |
-| B9 | 11-12 07:31 | 2698178 `w3scale_b3_p5000` (16G) | 1 x 16 h | 16.0 | 32.2 | |
-| B10 | 11-12 07:31 | 2698179 `w3scale_b3_p10000` (20G) | 1 x 11 h | 11.0 | 43.2 | |
-| B11 | 11-12 07:31 | 2698180 `w3scale_b3_p20000` (36G) | 1 x 16 h | 16.0 | 59.2 | |
+| B9 | 11-12 07:31 | 2698178 `w3scale_b3_p5000` (16G) | 1 x 16 h | 16.0 | 32.2 | 15.500 (bb2u19c1) |
+| B10 | 11-12 07:31 | 2698179 `w3scale_b3_p10000` (20G) | 1 x 11 h | 11.0 | 43.2 | 10.488 (bb3u13c1) |
+| B11 | 11-12 07:31 | 2698180 `w3scale_b3_p20000` (36G) | 1 x 16 h | 16.0 | 59.2 | 15.497 (bb3u11c1) |
 
 ### Leg B entries
 
@@ -229,3 +229,11 @@ table, or if serial-equivalent totals are reported that match exactly); reserved
   R_eff 15.99, max W 0.066, 905 s per island. HPM = truth both; max |PIP_Z - PIP_eq| 1e-5 / 5e-6. Table
   `results/b3_census.tsv` (node and CPU columns). 2698178-80 (5k, 10k, 20k) RUNNING 7.6 h on bb*; ledger: actual
   12.57 + open worst case 43 = 55.6 of 150. Run ends here (HQ re-wakes when they end). No git state changed.
+- 11-13 01:10 — B3 2698178-80 COMPLETED (rc 0; bb2u19c1, bb3u13c1, bb3u11c1; Sapphire Rapids). 5k: N = 2,500 16 islands
+  σ̂ 0.755; N = 10,000 14 of 16 (budget) σ̂ 1.348, one island 4.4 above the median. 10k: 6 of 16 (budget) σ̂ 1.152.
+  20k: 11 of 12 (budget) σ̂ 0.954. Same best model (= truth) in every island; max |PIP_Z - PIP_eq| <= 0.0005. Table
+  `results/b3_census.tsv` from new `analysis/b3_census_table.R`; DESIGN_v1 §4.4 and §7 updated. Ledger B9-B11 filled:
+  leg B total 54.06 of 150 task-hours. No w3scale job running.
+- 01:12 — CHECKPOINT_2.md written (B2 options under O17 in §5). Stop: end of leg B. Nothing committed (HQ: change no
+  git state).
+* 2026-11-13 07:08 CT — **HQ decision on CHECKPOINT_2:** leg B ACCEPTED (gate D PASS 24/24 + 10/10; B4 done; B5 accepted → DESIGN_v1 rev 3; B3 census, 3 runs budget-cut; 54.06/150 task-h). B2: adopt the lead's recommendation — **B2-1 trace replay for the R′ = 4 equivalence build at p ≤ 2k** (the only path that proves the O17 contract) **+ B2-2 serial-only cost column for production runs at p ≥ 5k** (worker-local counters reported under a separate name, outside published tables). B2-3 (redefine the cost column) goes to the owner with reserved items (i) p = 1M fixed N and (ii) primary PIP, now framed with the B3 numbers (σ̂ 0.76–1.15 at 5k–20k, right tail at 5k). Leg C (B2-1 + B2-2 + gate, ≈ 40 task-h; first step a Sol code review of revision D) starts with the Mon 11-16 16:00 CT furnace, after the theory items. Lead: no action until then.
