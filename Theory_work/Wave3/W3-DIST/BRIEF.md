@@ -65,3 +65,27 @@ PDF (gitignored, copyright): `Papers/Core_bibliography/32_2015_Song_Liang_*.pdf`
 - Any Claude helper: provider **Claude Third** (`claudeAgent_claude_third`), Opus 5.5 preferred, effort high max.
   No other agents than item 4.
 - Stay in your run while the reviewer works; do not end your turn until CP1 is written.
+
+## ADDENDUM A1 (HQ, 2026-11-15 ~15:50 CT) — owner priority: distribution consistency is a MUST, at Song–Liang strength
+Owner: "Consistency for distribution is actually a more valuable target than for variable selection … the former needs to
+get done, pretty much as close as strong to Song results for their method." This overrides "(iii) optional" above.
+**Parity checklist** — CP1 must state, for each item, the candidate result and whether it matches, beats or falls
+short of Song–Liang (with the reason when short):
+- **P1 metric:** Hellinger between the **joint (x, y) laws**, x random (rows i.i.d.), integrated as in their d(f, f*), not
+  only the in-sample average.
+- **P2 mode of convergence:** their exponential form (15),
+  P*[Π(d > ε_n | D_n) > e^{−c n ε_n²}] < e^{−c n ε_n²}, under a sub-Gaussian / exponential-moment condition (their
+  Condition 1 or weaker); and the in-probability form (16) under second moments only (their Condition 2).
+- **P3 rate:** an explicit ε_n. Compare it with their Corollary 1 (n^{−(1−α)/2} log^{k/2} n, or n^{−min{1−α−q, 1−vq}/2}).
+  We expect ε_n² ≍ s₀ log p / n or better.
+- **P4 sparsity:** strict sparsity (their (4)) required. Approximate sparsity (their (3), Theorem 1) is a stretch item.
+- **P5 prior:** the prior **as coded** (BB(1, p) capped at K, the coded slab, IG(0.01, 0.01)). No extra prior tuning.
+  If their (8)–(14)-type prior conditions fail for the coded prior, say so and find the route that works for it.
+- **P6 the method as coded (beyond Song–Liang):** the distribution the coded SMC returns. They prove results only for
+  the exact posterior.
+- **Scope:** p ≤ n^A with p ≫ n (theirs is P_n < exp(C n^α)). Exponential p is a stretch item, not required.
+- **Design-agnostic:** primitive conditions only. Their Condition 3 is not needed for distribution consistency.
+
+**Proof leg:** pre-authorized by HQ, Fable lead on Claude Third. At CP1 give a GO plan that reaches parity on P1–P3 + P5
+(P6 next), with a kill budget per key lemma. Do not stop at the in-probability version if the exponential form is
+reachable.
