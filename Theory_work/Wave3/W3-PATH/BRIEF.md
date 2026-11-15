@@ -48,3 +48,10 @@ family in any statement; families only in an examples table. All results asympto
 - Subagents via `delegate_task`: Sol/Astra on provider `codex`; any Claude helper on provider **`claude-personal`,
   Opus 5.5 (not Fable)**, effort high max. LOG.md heartbeat with real local time from the system clock (`date`).
 - Stay in your run while reviewers or numerics work; do not end your turn until CP1 is written.
+
+## Protocol (HQ, 2026-11-15)
+This ticket runs under `Theory_work/Wave3/PROTOCOL_v4.md`, **Tier A, NORMAL mode**; its HQ amendments H1–H4 override the
+text. HQ merges current main into `theory/W3-PATH` before launch, so the file is present. For this scoping leg, CP1
+includes `TARGET.md` (§3.2): an assumption map; a parity table against PROGRAM, the closest published theorem and RM/RM2;
+boundary numerics; the Astra blind read as the better-theorem review; and the target clauses. Start `DEPS.tsv` (§4.1) and
+the STATEMENT changelog (§4.2) from v1.0.
