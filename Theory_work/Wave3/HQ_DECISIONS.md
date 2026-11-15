@@ -279,3 +279,11 @@
   (2 posterior failures → stage-2 eligible); breadth ρ=.7 5/5, s₀=8 5/5; no search failures. Decisions: (75,188) reps
   1–5 at 10:00 now; breadth reps 6–10 CUT (pre-declared order); stage 2 of (75,750) (reps 11–20, ≈108 expected / ≈200
   worst core-h) does not fit under 1,896 → owner asked for that cell's measured cost (per the 11-12 rule).
+
+## 2026-11-15 ~15:35 CT — W3-DIST opened (owner request: distribution-level consistency, Song–Liang Thm 1–2 analog)
+- Owner asked for consistency of distributions alongside selection. Gap per C-PACK SONG_LIANG_MAP rows 1–4, 8: we have
+  in-sample fixed-design Hellinger (W3-POST2 D, council-passed) and T04 contraction (legacy), but no random-design (x, y)
+  Hellinger theorem and no distribution-level result for what the coded SMC returns.
+- Ticket W3-DIST, scoping leg to CP1: lead Fable 5.2 high on the **Claude Third** account (new; Owls only; owner: ample
+  limits), brief `Theory_work/Wave3/W3-DIST/BRIEF.md` (1610990). One blind Astra read at CP1. Proof leg decided by HQ at CP1
+  (target: into chapter v2.0 this week). Song–Liang PDF copied to the Owls clone (gitignored).
