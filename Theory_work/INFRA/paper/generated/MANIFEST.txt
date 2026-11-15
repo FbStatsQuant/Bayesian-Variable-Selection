@@ -4,8 +4,6 @@ SOP:TH09	blocks/SOP_TH09.tex	Theory_work/Wave1C/FINAL/sections/s3_posterior.tex:
 W1-PXN:Thm-PXN	blocks/W1-PXN_Thm-PXN.tex	Theory_work/Wave1C/FINAL/sections/s5_hpm.tex:25-36	ff4d55742a8cb25a	ACTIVE
 W1-N1:Thm-N1	blocks/W1-N1_Thm-N1.tex	Theory_work/Wave1C/FINAL/sections/s4_sampler.tex:10-16	6e5de7ce0e6abfc7	ACTIVE
 W1-GEN:Thm-GEN	blocks/W1-GEN_Thm-GEN.tex	Theory_work/Wave1C/FINAL/sections/s5_hpm.tex:51-53	705a33de77ef3914	ACTIVE
-C-MIS:Thm-MIS(i)	blocks/C-MIS_Thm-MIS_i_.tex	Theory_work/Wave1C/FINAL/sections/s3_posterior.tex:43-47	ea3faa22001a2dcb	ACTIVE
-C-MIS:Thm-MIS(ii)	blocks/C-MIS_Thm-MIS_ii_.tex	Theory_work/Wave1C/FINAL/sections/s3_posterior.tex:43-47	c7142232e0a44555	ACTIVE
 C-GROW:Thm-GROW	blocks/C-GROW_Thm-GROW.tex	Theory_work/Wave1C/FINAL/sections/s5_hpm.tex:68-70	73d33d3362fc216f	ACTIVE
 C-DLV:Prop-F	blocks/C-DLV_Prop-F.tex	Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:28-47	9cb1d6ee5cee91b6	ACTIVE
 W2-APP:POST	blocks/W2-APP_POST.tex	Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-33	5633a76f9486022b	ACTIVE
@@ -40,5 +38,8 @@ W3-SCR:SCR-G	blocks/W3-SCR_SCR-G.tex	Theory_work/Wave3/W3-SCR/STATEMENT.md:132-1
 W3-SCR:A1	blocks/W3-SCR_A1.tex	Theory_work/Wave3/W3-SCR/STATEMENT.md:158-163	ebe949b727b00fed	ACTIVE
 W3-SCR:A1o	blocks/W3-SCR_A1o.tex	Theory_work/Wave3/W3-SCR/STATEMENT.md:165-169	7c685d49b577c87f	ACTIVE
 W3-SCR:SCR-C	blocks/W3-SCR_SCR-C.tex	Theory_work/Wave3/W3-SCR/STATEMENT.md:171-176	547f37d5c347c99b	ACTIVE
+W3-MISR:MIS(i)	blocks/W3-MISR_MIS_i_.tex	Theory_work/Wave3/W3-MISR/STATEMENT.md:110-123	3b4a582b2a33a6f1	ACTIVE
+W3-MISR:MIS(i')	blocks/W3-MISR_MIS_i_.tex	Theory_work/Wave3/W3-MISR/STATEMENT.md:127-140	91d89f3b42f0f392	ACTIVE
+W3-MISR:MIS(ii)	blocks/W3-MISR_MIS_ii_.tex	Theory_work/Wave3/W3-MISR/STATEMENT.md:144-160	160a6909428dcd71	ACTIVE
 W3-RM2:RM2-F	blocks/W3-RM2_RM2-F.tex	Theory_work/Wave3/W3-RM2/STATEMENT.md:206-214	0075acf64a9eaedf	ACTIVE
 W3-RM2:RM2-R	blocks/W3-RM2_RM2-R.tex	Theory_work/Wave3/W3-RM2/STATEMENT.md:216-218	4f6f1ee8a4049fad	ACTIVE
