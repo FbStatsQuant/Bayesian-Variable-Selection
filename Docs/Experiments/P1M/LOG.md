@@ -7,3 +7,5 @@
 - 2026-11-15 17:34 CST — Felipe ran NOTS read-only steps 1–4 (sinfo, scontrol node, sacctmgr qos/assoc). Facts in NOTS_FACTS.md: per-user cap 1,536 CPUs + 2,304 GB on commons; billing per hardware thread (HT on).
 - 2026-11-15 17:35 CST — Steps 6–7 read: billing 2 CPUs per single-thread task confirmed; 4,978 SPR CPUs idle, 934 pending.
 - 2026-11-15 17:35 CST — Step 8: home 99% full (10,159M/10,240M), allocation ea14 at its 16 TB limit, /scratch 127T free. Flagged to Felipe/HQ.
+- 2026-11-15 17:37 CST — Fragmentation read: 41 SPR nodes ≥ 64 free CPUs, 25 ≥ 96. Memory-per-node check pending.
+- 2026-11-15 17:50 CST — Owner Q 'how many CPUs': request unit 96-CPU tasks, ≤ 16 concurrent (= cap). Corrected calibration parallelism (1 node per task): single fit ≈ 6.5 h, pipelined ≈ 2.5–3 h per fit.

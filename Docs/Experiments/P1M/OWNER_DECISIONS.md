@@ -125,3 +125,12 @@ Felipe: about 1,000 concurrent CPUs on a quiet day; no multi-day runs. Under tha
 Option (a) (speculative, [OP-bit]) uses at most ≈ 16 threads per island, giving ≈ 1.5 days. Option (c) takes ≈ 10 days.
 **Recommendation updated to (b)**, pending the owner's confirmation. Variables are never split across CPUs: every
 particle sees all p (joint BVS). Splitting the variables would be split-and-merge, Song–Liang's category.
+
+### Note 2 (2026-11-15): request shape on NOTS (owner conversation; correction)
+A shared-memory process cannot span nodes, so one task is ≤ 1 node. Calibration therefore runs as 4 tasks × 96 CPUs,
+not 4 × 384 (corrected from the earlier answer). Proposed request unit: **tasks of 96 CPUs (48 cores), --mem ≈ 20G,
+--constraint=sapphirerapids, at most 16 at once = the 1,536-CPU cap** (memory ≈ 320 GB ≪ 2,304 GB).
+- One fit alone: setup 1 × 96 → calibration 4 × 96 (≈ 4.5 h) → islands 16 × 96 (≈ 1.5 h) → merge 1 × 96. ≈ 6.5 h.
+- Replicates pipelined (the next fit's calibration overlaps this fit's islands): the cap stays near full, so ≈ 2.5–3 h per fit
+  amortised. 5 fits ≈ 15 h.
+- Faster calibration (4 × 192 exclusive nodes, ≈ 2.5 h, or MPI across nodes) is optional.

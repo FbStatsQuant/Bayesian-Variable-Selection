@@ -26,3 +26,7 @@
   - /scratch (VAST, shared): 887T, 761T used, 127T free (86%); no per-user quota shown; purge policy unknown.
   - → All P1M I/O goes to /scratch. Nothing is written to home or the allocation. FLAG to HQ: home and allocation are full now
     (risk to any running job that writes logs or caches there).
+- Free CPUs per SPR node at reading: 41 nodes with ≥ 64 free, 25 with ≥ 96, 4 with ≥ 128, 7 with 0.
+  → 16 tasks × 64 CPUs (1,024) or 16 × 96 (1,536 = cap) would fit by CPU count today.
+  Caveat: bb2u24c1 showed 104 idle CPUs but AllocMem 253,952 of 257,124 MB → free CPUs can come with no free memory.
+  Memory per node to be checked (sinfo -O AllocMem).
