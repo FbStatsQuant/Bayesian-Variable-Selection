@@ -11,11 +11,29 @@ budget, CP reset use) → ask Felipe at once, framed as "needed for W3-DIST". Ta
 - Experiment p = 1M (Opus 5.5): mcp:launch:dac077c2… → EXP-CP1 (plan). REQUESTS.md = NOTS queries for HQ. Snapshot → exp/P1M.
 - PR #10 (Actions CI): merge after the editorial-pass citecheck fixes. Protocol: PROTOCOL_v4.md (NORMAL mode).
 
+## sharp2 riders (API sharpness batch 11-15, triage `API_AUDIT/sharp2/TRIAGE.md`; A 17 / B 11 / C 0 / D 2; ~8 real)
+Run under PROTOCOL_v4 (Tier B unless a new key lemma appears), Opus, after W3-DIST in priority:
+- START2 v1.5 (~8–10 h): T10 Gaussian-row rate √(log n/n) (2^{s₀} reference sets, |H_l| ≤ e^{κ√log n}) + T8
+  (visibility at log n + 2 log p; keep the (V-m) negative price term, L4_VIS Step 5). T9/T11 only if time allows
+  before the Wed freeze.
+- T12 PSHARP Prop A: expectation lower bound for every p, constant √((a+½)/π) (~3 h), before the chapter's sharpness
+  section.
+- T13 MISR Cor-G(a)/Cor-H restatements (~2–3 h).
+- Editorial pass: LEAK-0 "sharpens" wording (START2 STATEMENT:87-88); MISR ASSUMPTION_MAP:27 cross-cite PSHARP; do not
+  present START2-P1 as a p ≫ n gain.
+- Named open problems, no tickets: RM2-R aggregated leak; START MIS with a general μ; Ex-Equi b < 3/8; the START2-O1
+  count.
+- For W3-DIST after CP1 (not before): MISR Cor-G(a) makes a candidate run an exact DIST (RD) instance (a Song–Liang
+  Thm 4 analogue for free if β^𝒞 is strictly sparse); drop "σ*² fixed" via MISR Lemma R′; DIST-1 "sharp" needs a
+  written lower bound.
+- Headline statements that would change (stronger): START2 (T1⁺)/(T3⁺)(b) with IF-START⁺, PSHARP Cor A1, RM2-F
+  (via T4). HQ decides under v4 §8 and informs the owner.
+
 ## STRIKE PLAN week of 11-16 (owner: theory basically DONE by end of week, then p = 1M experiment)
 Definition of done: 11 main results recorded PROVED-CHECKED; D1 settled (theorem or stated limit); chapter v2.0
 council-passed and frozen; editorial pass merged. Anything else = named open problem in the paper.
 - Mon 16:00 (furnace): D1 from P6 stage 1 (Opus) · W3-PATH scoping→CP1 (Fable, ≤ 1 day) · T7 scoping (Opus) · RM2 riders
-  T2/T4/T6 as ONE Opus leg · chapter v2.0 assembly starts (Opus) on the recorded claims · Sun-API findings triaged.
+  T2 + T4 as ONE Opus leg (T6 already in RM2 v1.4; T4 enlarged by sharp2: additive BM-W floor + Ex-Proxy with decaying θ) · chapter v2.0 assembly starts (Opus) on the recorded claims · Sun-API findings triaged.
 - Tue: W3-PATH proof leg only if CP1 = GO, kill budget 2 attempts on the key lemma, hard stop Wed 23:59 · T7: 1 attempt.
 - Wed: freeze theory content. Whatever is unproved → "open problem" section. Chapter v2.0 complete draft.
 - Thu (full reset): chapter v2.0 council (Sol + Opus) + fixes; final API audit of the chapter.
@@ -28,7 +46,7 @@ short Opus note; the rest moves to the scaling paper.
   START2, PSHARP, MISR (per-claim seat addenda), RM2 (R1 snapshot + carrier). P6 stage 1 on NOTS (watcher every 3 h).
 - Sun 11-15: $200 API credit — precision strikes only (audit + sharpness of new tickets ~$50). Owner raises Console limit.
 - Mon 11-16 16:00 CT: furnace on (weekly reset): Opus volume; Fable only for W3-PATH lead + stuck key lemmas. Queue:
-  D1 (P6), W3-PATH scoping→proof (brief ready, BVS-wt/W3-PATH), T7 + RM2 riders T2/T4/T6 (Opus), chapter v2.0 + council,
+  D1 (P6), W3-PATH scoping→proof (brief ready, BVS-wt/W3-PATH), T7 + RM2 riders T2/T4 (Opus; T6 done in RM2 v1.4), chapter v2.0 + council,
   editorial pass (MINORs + Prop-F wording + PSHARP E1–E9 + MISR/START2 errata + C-MIS citecheck: 6 line-drifted cites into SoP 04_theory.tex, CI 11-13; W2-FAC-X reviews/citecheck.py 0→2: path prefixes miss W2-FAC-A/B REPORT cites, script fix + refresh CITECHECK.txt). Then merge PR #10 (Actions CI) once its run is green. Mid-week full reset (owner) when budget ends.
 - Codex: let it recover, no reset; one reviewer per gate.
 - Providers: everything on claude-personal (CP) for now; consultant = CP Fable 5.2 (operational decisions); owner = big
