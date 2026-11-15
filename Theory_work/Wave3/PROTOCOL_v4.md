@@ -13,6 +13,11 @@ Running tickets other than W3-DIST (W3-P6, W3-SCALE: compute tickets) finish und
     the old mid-point question (CONTINUE / REDIRECT / STOP, with reasons). That satisfies both rules. No layer is
     dropped.
   - (c) Supersession (§8): LIFECYCLE §0 / §5.3 as now (owner approves headline supersessions) until the owner answers.
+- **H5. Headline claim changes (owner, 2026-11-15: "the Fable consultant of yours ... you just run those things by him").**
+  Every supersession and every change to a headline statement goes from HQ to the HQ consultant (Fable 5.2) as a one-page
+  card: before/after in plain words, what it buys the paper, which assumptions moved, the evidence, HQ's recommendation.
+  On AGREE, HQ adopts. On OBJECT, HQ and the consultant settle it, and only an unresolved disagreement goes to Felipe.
+  Felipe is informed afterwards in the weekly owner digest. This replaces the owner veto of H2(c) in practice.
 - **H3. API batch proof attempts** (Fable via the Console key, run by HQ) are proof material handed to the lead. They
   are never reviews, never count toward a review layer, and are line-checked like any lemma before use.
 - **H4. Tooling.** HQ implements the remote snapshot changes (§8: 15-min cadence, one log line per run, RP labels,

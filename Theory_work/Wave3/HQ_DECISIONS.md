@@ -344,3 +344,8 @@ supersession by HQ with owner veto (owner approval only for an explicit headline
   NOTS access (host key), so cluster queries go through HQ via REQUESTS.md.
 - Restore points: branch `exp/P1M`, Owls worktree /home/fb31/BVS-wt/P1M, cron at :07/:22/:37/:52.
 - HQ commissions one Sol feasibility/budget review at EXP-CP1 before any launch.
+
+## 2026-11-15 ~18:10 CT — headline changes go to the HQ consultant (owner), PROTOCOL_v4 H5
+Owner: a veto is not useful without tracking the proofs; "the Fable consultant of yours ... you just run those things by
+him". Rule H5: HQ card → consultant AGREE / OBJECT → adopt; only an unresolved disagreement reaches Felipe, who is
+informed weekly. First cards sent: the three supersessions pending since 11-12 (RM→RM2, C-MIS→MISR, 8 START→START2).
