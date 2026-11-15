@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import filecmp
+import hashlib
 import os
 import re
 import shutil
@@ -59,6 +60,26 @@ def esc(s: str) -> str:
 safe = R.safe
 
 
+def block_names(ids) -> dict:
+    """Injective id -> block file / LaTeX label name. `safe()` is lossy ("MIS(i)" and "MIS(i')" both give "MIS_i_"),
+    so every member of a group of ids that share a sanitised name gets a short SHA-256 suffix of its exact id; ids
+    with a unique sanitised name keep it unchanged. Computed over ALL registry ids, so a name does not depend on which
+    claims are selected. Refuses (RuntimeError) rather than ever returning two ids with one name."""
+    ids = sorted(set(ids))
+    groups = {}
+    for cid in ids:
+        groups.setdefault(safe(cid), []).append(cid)
+    for k in (8, 12, 16, 64):
+        out = {}
+        for base, members in groups.items():
+            for cid in members:
+                out[cid] = base if len(members) == 1 else \
+                    f"{base}-{hashlib.sha256(cid.encode('utf-8')).hexdigest()[:k]}"
+        if len(set(out.values())) == len(out):
+            return out
+    raise RuntimeError("block_names: cannot make block names injective")
+
+
 def tex_span(spec: str):
     """`path:a-b` -> list of lines of the statement (the \\begin{env}..\\end{env} block or its body)."""
     if not spec or ":" not in spec:
@@ -86,7 +107,8 @@ def final_claim(by, cid, seen=None):
     return r, seen
 
 
-def block(by, cid, deps):
+def block(by, cid, deps, name=None):
+    name = name or block_names(by)[cid]
     r, chain = final_claim(by, cid)
     env = ENV.get(r["kind"], "theorem")
     lines = tex_span(r.get("tex", ""))
@@ -99,9 +121,9 @@ def block(by, cid, deps):
     if lines:
         body, title = body_of(lines)
         title = title or r["name"]
-        L += [f"\\begin{{{env}}}[{title}]\\label{{reg:{safe(cid)}}}", body, f"\\end{{{env}}}"]
+        L += [f"\\begin{{{env}}}[{title}]\\label{{reg:{name}}}", body, f"\\end{{{env}}}"]
     else:
-        L += [f"\\begin{{{env}}}[{esc(r['name'])}]\\label{{reg:{safe(cid)}}}",
+        L += [f"\\begin{{{env}}}[{esc(r['name'])}]\\label{{reg:{name}}}",
               f"\\regmissing{{\\regref{{{esc(r['id'])}}}}}", f"\\end{{{env}}}"]
     if chain:
         L.append(f"\\noindent\\emph{{This result supersedes {esc(', '.join(chain))} (registry).}}")
@@ -139,10 +161,11 @@ def generate(outdir, all_tex=False):
     with open(os.path.join(outdir, "regmacros.tex"), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(MACROS)
     man, idx = [], ["% generated: \\input every registry block", "\\input{regmacros}"]
+    names = block_names(by)
     for r in sel:
-        f = f"blocks/{safe(r['id'])}.tex"
+        f = f"blocks/{names[r['id']]}.tex"
         with open(os.path.join(outdir, f), "w", encoding="utf-8", newline="\n") as fh:
-            fh.write(block(by, r["id"], deps))
+            fh.write(block(by, r["id"], deps, names[r["id"]]))
         idx.append(f"\\input{{{f[:-4]}}}")
         man.append(f"{r['id']}\t{f}\t{r.get('tex') or r['file'] + ':' + r['lines']}\t{r['sha256'][:16]}\t{r['state']}")
     p = [(esc(r["id"]), esc(r["name"]), r["version"], r["state"], esc(r["status"][:200]), esc(r.get("council", "")),

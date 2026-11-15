@@ -1938,6 +1938,35 @@ try:
                         "after a row, an emphasized or double-pipe header: carrier acceptance REFUSED",
                         all(v_[0] != 0 and "REFUSED" in v_[1] for v_ in stg_res.values()) and len(stg_res) == 5))
 
+    if True:  # assemble.py block names (HQ 2026-11-15): "MIS(i)" and "MIS(i')" both sanitised to "MIS_i_"
+        BN = ("import sys, json; sys.path.insert(0, sys.argv[1]); import assemble as A, bvsreg as B\n"
+              "ids = [r['id'] for r in B.load_claims()]\n"
+              "pair = ['T:MIS(i)', \"T:MIS(i')\", 'T:MIS(i′)', 'T:MIS_i_', 'T:Plain-1']\n"
+              "n1 = A.block_names(pair); n2 = A.block_names(ids + pair)\n"
+              "print(json.dumps({'pair': n1, 'all_injective': len(set(n2.values())) == len(n2),"
+              " 'unique_kept': all(n2[i] == A.safe(i) for i in ids if sum(A.safe(j) == A.safe(i) for j in ids) == 1),"
+              " 'n': len(n2)}))\n")
+        p_bn = subprocess.run([sys.executable, "-c", BN, os.path.join(INFRA, "tools")], capture_output=True,
+                              text=True, encoding="utf-8", cwd=TMP)
+        import json as _json
+        try:
+            bn = _json.loads(p_bn.stdout.strip().splitlines()[-1])
+        except Exception:
+            bn = {}
+            print("block_names probe failed:", p_bn.stdout[-400:], p_bn.stderr[-400:])
+        pn = bn.get("pair", {})
+        results.append(("assemble block names are injective: MIS(i), MIS(i'), MIS(i′) and a literal MIS_i_ get "
+                        "four distinct names, an id with a unique sanitised name keeps it, and all registry ids map "
+                        "to distinct names", len(pn) == 5 and len(set(pn.values())) == 5 and pn.get("T:Plain-1")
+                        == "T_Plain-1" and bn.get("all_injective") is True and bn.get("unique_kept") is True))
+        rc_a = subprocess.run([sys.executable, os.path.join(INFRA, "tools", "assemble.py")], capture_output=True,
+                              text=True, encoding="utf-8", errors="replace", cwd=TMP).returncode
+        man_a = open(os.path.join(INFRA, "paper", "generated", "MANIFEST.txt"), encoding="utf-8").read().splitlines()[1:]
+        files_a = [ln.split("\t")[1] for ln in man_a if ln.strip()]
+        on_disk = os.listdir(os.path.join(INFRA, "paper", "generated", "blocks"))
+        results.append(("assemble writes one distinct block file per selected claim (no overwrite)",
+                        rc_a == 0 and len(files_a) == len(set(files_a)) == len(on_disk) > 0))
+
 finally:
     SB.__exit__(None, None, None)
 for name, ok in results:
