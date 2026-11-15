@@ -114,3 +114,14 @@ decision changes wall time, not feasibility.
 - This department builds G13 (generator, DIST evaluator, competitor harness, analysis) and specifies the acceptance tests.
 - HQ merges to `main` after Sol review.
 - If W3-SCALE capacity is short, EXP takes G2/G4/G12 under the same gates.
+
+---
+### Note added 2026-11-15 (owner conversation): OD-8 under a wall-time limit
+Felipe: about 1,000 concurrent CPUs on a quiet day; no multi-day runs. Under that limit only option (b) of OD-8
+(per-particle counter-based streams, [OP-law]) uses 1,000 CPUs. Estimated wall time for one 1M fit is ≈ 5–6 h:
+- calibration: 12 sequential rebuilds × ≈ 15–20 min, each rebuild 4 × 512 particles over ≈ 256 threads;
+- final run: 16 islands × 2,500 particles over ≈ 1,000 threads, ≈ 1.2 h.
+
+Option (a) (speculative, [OP-bit]) uses at most ≈ 16 threads per island, giving ≈ 1.5 days. Option (c) takes ≈ 10 days.
+**Recommendation updated to (b)**, pending the owner's confirmation. Variables are never split across CPUs: every
+particle sees all p (joint BVS). Splitting the variables would be split-and-merge, Song–Liang's category.
