@@ -182,3 +182,6 @@ W2-FAC-PK:Thm-PATH	A:OP	SOP:TH05.0	M5(0) pathwise composition needs exact arithm
 W2-APP:POST	A:COEF-BOUNDED	W2-APP:POST	theta_hi bounds the energy term in the T03♯ transfer		added in R01; DRAFT
 W3-START:VIS-m	A:START-V	W3-START:AGG	the deterministic lower bound of the start odds by c_s times Xi (Xi tending to 0 is necessary when s0 + 16 is at most K)		ingested
 W3-START:START-F	A:START-V	W3-START:NEC-b	one truth below the level 1 + 2A sends pi0(S0) to 0		ingested
+W3-RM2:RM2-F	A:RM2-W	W3-RM2:W-conv	route obstruction: gap → +∞ forces P(NA(Q)) → 0; gap → −∞ sufficient; bounded gap undetermined [whole-lattice route only] (REPORT.md:169)		HQ record 2026-11-15 (card 1), from the REPORT block; DRAFT binding (confirm at the strength gate)
+W3-RM2:RM2-F	A:RM2-LSIZE-B	W3-RM2:SAND-F-b	enters P:SAND(Q) via the junk-exclusion margin (REPORT.md:169)	artefact-threshold	HQ record 2026-11-15 (card 1), from the REPORT block; DRAFT binding (confirm at the strength gate)
+W3-RM2:RM2-R	A:RM2-HSIZE-RHO	W3-RM2:SAND-R-b	enters P:SAND(Q) via the reference count n^{15ρ} (REPORT.md:181)	artefact-threshold	HQ record 2026-11-15 (card 1), from the REPORT block; DRAFT binding (confirm at the strength gate)

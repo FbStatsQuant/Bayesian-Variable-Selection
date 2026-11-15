@@ -60,3 +60,17 @@ the registry change. Newest entries at the bottom. Format:
 - decided by: HQ
 - reason: SW1 #2 (MAJOR): the honest label's non-nesting claim (TR's premise is neither implied by nor implies pi0(S0)->1) is now stated only for abstract positive targets (three-state example and its converse; not a realisation of the coded target; coded separation open); SW1 #28: the conditioning is island by island on the island's own bridge history. TR-a to TR-d are otherwise unchanged. HEADLINE: LIFECYCLE §0 requires Felipe's approval of this NARROW (pending)
 - 0 dependents SUSPECT; restored: —
+
+## 2026-11-15 — SUPERSEDE W3-RM:RM-F / W3-RM2:RM2-F
+
+- decided by: HQ
+- reason: card 1 (W3-RM -> W3-RM2): W3-RM2:RM2-F implies W3-RM:RM-F (implies W3-RM:RM-F = claim W3-RM2:Cont-F ((C4), Theory_work/Wave3/W3-RM2/STATEMENT.md:236-240), accepted by both council seats: Theory_work/Wave3/W3-RM2/reviews/C_R1_council_astra.md:45 and Theory_work/Wave3/W3-RM2/reviews/C_R1_council_opus.md:192 (re-checked :212); (C4) covers both hypothesis routes of RM-F, (N-chi) and (N-D): Theory_work/Wave3/W3-RM2/reviews/LC1B_L2L3_check_sol.md:39 (item 14, containment of RM-F VERIFIED), Theory_work/Wave3/W3-RM2/reviews/SW1_sweep_astra.md:51). approver: HQ consultant (Fable 5.2) AGREE on card 1, 2026-11-15, under PROTOCOL_v4 H5 (replaces the owner approval of LIFECYCLE §0); recorded per Theory_work/Wave3/ACCEPTANCE/RECORD_BRIEF_2026-11-15.md. Conditions match in substance (TH09 / W2-APP:POST); W2-APP:POST@1.0.1 is unchecked (weak point). RM-0 and E4 stay ACTIVE.
+- axes (Y vs X): assumptions=incomparable, conclusion=equal, rate=unknown, scope=unknown
+- class free; key step check: —; dependents: 2 direct
+
+## 2026-11-15 — SUPERSEDE W3-RM:RM-R / W3-RM2:RM2-R
+
+- decided by: HQ
+- reason: card 1 (W3-RM -> W3-RM2): W3-RM2:RM2-R implies W3-RM:RM-R (implies W3-RM:RM-R = claim W3-RM2:Cont-R ((C4), Theory_work/Wave3/W3-RM2/STATEMENT.md:236-240), accepted by both council seats: Theory_work/Wave3/W3-RM2/reviews/C_R1_council_astra.md:50 and Theory_work/Wave3/W3-RM2/reviews/C_R1_council_opus.md:197 (re-checked :217); Theory_work/Wave3/W3-RM2/reviews/SW1_sweep_astra.md:51). approver: HQ consultant (Fable 5.2) AGREE on card 1, 2026-11-15, under PROTOCOL_v4 H5 (replaces the owner approval of LIFECYCLE §0); recorded per Theory_work/Wave3/ACCEPTANCE/RECORD_BRIEF_2026-11-15.md. Conditions match in substance (TH09 / W2-APP:POST); W2-APP:POST@1.0.1 is unchecked (weak point). RM-0 and E4 stay ACTIVE.
+- axes (Y vs X): assumptions=incomparable, conclusion=equal, rate=unknown, scope=unknown
+- class free; key step check: —; dependents: 2 direct
