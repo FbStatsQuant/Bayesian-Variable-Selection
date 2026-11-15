@@ -336,3 +336,11 @@
 
 ## 2026-11-15 ~17:30 CT — owner approves the three v4 items (H2 a–c): tiers, break review replacing the mid-point,
 supersession by HQ with owner veto (owner approval only for an explicit headline list, to be set with Felipe).
+
+## 2026-11-15 ~17:45 CT — Experiment department (p = 1M) opened (owner: "a specific department", HQ babysits)
+- Top-level thread "SMC BVS — Experiment p = 1M" on Owls, Opus 5.5 high, Claude Third
+  (mcp:launch:dac077c2…). Brief `Docs/Experiments/P1M/BRIEF.md` (daa08a3).
+- Leg 1 = planning to EXP-CP1 (EXPERIMENT_PLAN, OWNER_DECISIONS), owner discusses directly. No jobs. Owls has no
+  NOTS access (host key), so cluster queries go through HQ via REQUESTS.md.
+- Restore points: branch `exp/P1M`, Owls worktree /home/fb31/BVS-wt/P1M, cron at :07/:22/:37/:52.
+- HQ commissions one Sol feasibility/budget review at EXP-CP1 before any launch.
