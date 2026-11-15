@@ -353,7 +353,7 @@ informed weekly. First cards sent: the three supersessions pending since 11-12 (
 ## 2026-11-15 — recording run per ACCEPTANCE/RECORD_BRIEF_2026-11-15.md (HQ recorder, Opus 5.5, worktree hq/record-1115)
 Approver for every headline change: HQ consultant under PROTOCOL_v4 H5. Each task was dry-run in a disposable clone;
 real runs only on 0 problems.
-- **Card 1 (AGREE) — RECORDED, cb6effb.** `implies` W3-RM2:RM2-F ⇒ W3-RM:RM-F (Cont-F: C_R1_council_astra.md:45,
+- **Card 1 (AGREE) — RECORDED, ca74f54.** `implies` W3-RM2:RM2-F ⇒ W3-RM:RM-F (Cont-F: C_R1_council_astra.md:45,
   C_R1_council_opus.md:192; (C4) both routes (N-χ)/(N-D): LC1B_L2L3_check_sol.md:39) and RM2-R ⇒ RM-R (Cont-R: :50,
   :197). `propagate.py supersede` (class free): RM-F, RM-R → SUPERSEDED-VALID v1.1.0, rows kept and citable; 4 re-points
   PROPOSED (Cont-F, Cont-R, Examples ×2; dormant under v4 §8). Headline flag → RM2-F/RM2-R with assumptions (10 new
@@ -364,7 +364,7 @@ real runs only on 0 problems.
   W3-START:<X>: superseding would orphan the replacement's own proof" (each START2 row has an `@proof:` edge to its
   parent). `propagate.py patch W3-START:START-F --dry-run`: reaches 7 START2 rows (SUSPECT), so patch propagation does
   reach START2 today. HQ to decide: re-point the START2 proof edges, or record `implies` only and leave the parents ACTIVE.
-- **Card 2 (OBJECT → consultant's alternative) — RECORDED, c87ed1d.** Headline flag C-MIS:Thm-MIS(i)/(ii) →
+- **Card 2 (OBJECT → consultant's alternative) — RECORDED, f78b68d.** Headline flag C-MIS:Thm-MIS(i)/(ii) →
   W3-MISR:MIS(i), MIS(i′) (C-MIS's inclusion clause was headline), MIS(ii); no supersession. C-MIS rows ACTIVE,
   de-headlined, note per MISR STATEMENT.md:249-252. Tool bug (not fixed; v4 §7 freeze): `assemble.py` writes MIS(i) and
   MIS(i′) to the same block file `W3-MISR_MIS_i_.tex` (`safe()` collision), so the paper index shows MIS(i′) twice.
