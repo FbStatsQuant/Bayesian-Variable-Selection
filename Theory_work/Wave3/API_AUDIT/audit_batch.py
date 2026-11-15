@@ -91,6 +91,9 @@ PASS2_TICKETS = ["W3-RM", "W3-POST2", "W3-POST", "W2-LOC2", "W1-GEN", "W1-PXN", 
                  "C-ENG", "W2-APP"]
 
 
+SHARP2_TICKETS = ["W3-MISR", "W3-START", "W3-START2", "W3-RM2", "W3-PSHARP"]
+
+
 def select(rows, mode):
     if mode == "pass2":  # author-only PROVED claims of the tickets feeding running work and the headline (HQ priority)
         return [r for r in rows if r["status"].startswith("PROVED") and "PROVED-CHECKED" not in r["status"]
@@ -98,6 +101,9 @@ def select(rows, mode):
     if mode == "pass3":  # remaining author-only PROVED claims of the factor-design tickets
         return [r for r in rows if r["status"].startswith("PROVED") and "PROVED-CHECKED" not in r["status"]
                 and r["ticket"].startswith("W2-FAC") and r["file"].endswith(".md")]
+    if mode == "sharp2":  # 2026-11-15: main results of the tickets recorded 11-12/13 (sharpness, not correctness)
+        return [r for r in rows if r["ticket"] in SHARP2_TICKETS and "PROVED-CHECKED" in r["status"]
+                and r["kind"] in ("theorem", "proposition", "corollary") and r["file"].endswith(".md")]
     if mode == "sharp":  # headline claims: sharpness/optimality review (not a correctness audit)
         return [r for r in rows if r.get("headline") == "yes" and r["file"].endswith(".md")]
     return [r for r in rows if "PROVED-CHECKED" in r["status"]]
@@ -137,7 +143,10 @@ def build(outdir: Path, mode="pass1"):
     for r in pc:
         byfile[r["file"]].append(r)
     requests, manifest = [], []
-    for n, (cf, claims) in enumerate(sorted(byfile.items())):
+    items = sorted(byfile.items())
+    if mode == "sharp2":  # 2026-11-15: sharp2 v1 hit max_tokens 24000 on thinking; split to <= 4 claims per request
+        items = [(cf, cl[i:i + 4]) for cf, cl in items for i in range(0, len(cl), 4)]
+    for n, (cf, claims) in enumerate(items):
         tdir = (ROOT / cf).parent
         if tdir.name == "lemmas":
             tdir = tdir.parent
@@ -174,7 +183,7 @@ def build(outdir: Path, mode="pass1"):
         requests.append({"custom_id": cid, "file": cf, "claims": [r["id"] for r in claims], "params": {
             "model": MODEL, "max_tokens": 24000 if mode == "sharp" else MAX_TOKENS,
             "output_config": {"effort": "high"},
-            "system": SYSTEM_SHARP if mode == "sharp" else SYSTEM,
+            "system": SYSTEM_SHARP if mode.startswith("sharp") else SYSTEM,
             "messages": [{"role": "user", "content": user}],
         }})
     outdir.mkdir(parents=True, exist_ok=True)
@@ -265,5 +274,7 @@ if __name__ == "__main__":
         build(out, "pass" + cmd[-1])
     elif cmd == "buildsharp":
         build(out, "sharp")
+    elif cmd == "buildsharp2":
+        build(out, "sharp2")
     else:
         {"build": build, "count": count, "submit": submit, "wait": wait}[cmd](out)
