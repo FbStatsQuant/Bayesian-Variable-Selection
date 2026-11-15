@@ -304,3 +304,32 @@
   justified. Changes to review layers that need owner approval (rule 14) go to Felipe in one batch.
 - Monitoring note: heartbeat, watchdog, daily CI, P6 watcher and home guard are currently DISABLED (budget run-down to
   the Mon 16:00 reset). P6 has no jobs queued (stage 1 ended; 1,716 core-h). Re-enable at the furnace start.
+
+## 2026-11-15 ~17:10 CT — PROTOCOL v4 adopted (consultant review), with HQ amendments H1–H4
+- Consultant (Fable 5.2, Claude Third) reviewed the record of 32 tickets (~320 reviews, 43 council rounds):
+  `Theory_work/Wave3/PROTOCOL_REVIEW/` (EVIDENCE, MEMO, mining/, PROTOCOL_v4_PROPOSAL).
+  - Real catches come from the statement lock, lemma line checks, the sweep, council R1 and the better-theorem review.
+  - Noise comes from mid-points (25/25 CONTINUE), council R2/R3 (2 of 21 blocking MAJORs were proof errors) and the
+    acceptance-tooling loops.
+  - Largest late-error source: text edited after its last check.
+- Adopted as `Theory_work/Wave3/PROTOCOL_v4.md`, binding for W3-DIST (now) and every ticket opened after today. W3-P6 and
+  W3-SCALE finish under PROTOCOL.md. Highlights:
+  - DEPS.tsv with checked hashes, and a freeze rule;
+  - STATEMENT changelog with reviewer-confirmed tags;
+  - TARGET.md (parity table) at CP1;
+  - council blocks only on C/S/F, editorial goes to ERRATA, a diff round instead of blind re-rounds;
+  - REPORT restates nothing;
+  - restore points every 15 min, logged, with RP labels;
+  - NORMAL/EFFICIENT modes.
+- **Amendments:**
+  - H1: NORMAL mode (owner: keep codex as we are).
+  - H2: owner-gated items pending Felipe:
+    - (a) the W3-14 "no layer skipped without Felipe" rule stays, and tiers wait for his OK;
+    - (b) CP2 break review also asks the mid-point question;
+    - (c) supersession stays as now.
+  - H3: API attempts are proof material, never reviews.
+  - H4: HQ tooling.
+- **Done:**
+  - Owls snapshot script upgraded to v4 §8 (cron */15, log line per run, RP labels);
+  - W3-DIST steered (A4);
+  - W3-PATH brief to be amended before its Monday launch.
