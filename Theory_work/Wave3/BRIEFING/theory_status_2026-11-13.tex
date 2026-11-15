@@ -1,0 +1,451 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=2.0cm,top=1.8cm,bottom=2.0cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,tabularx,longtable,array,multirow}
+\usepackage[table]{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+
+% ---------- colours and status badges ----------
+\definecolor{done}{HTML}{1B7F3B}
+\definecolor{cond}{HTML}{2F6DB5}
+\definecolor{prog}{HTML}{C77700}
+\definecolor{left}{HTML}{B3261E}
+\definecolor{soft}{HTML}{F3F5F8}
+\definecolor{ink}{HTML}{333333}
+\newcommand{\badge}[2]{\colorbox{#1}{\textcolor{white}{\sffamily\scriptsize\bfseries\strut #2}}}
+\newcommand{\DONE}{\badge{done}{DONE}}
+\newcommand{\DONEC}{\badge{cond}{DONE-COND}}
+\newcommand{\PROG}{\badge{prog}{IN PROGRESS}}
+\newcommand{\LEFT}{\badge{left}{LEFT}}
+\newcommand{\cid}[1]{\texttt{\small #1}}
+
+% ---------- notation ----------
+\newcommand{\Szero}{S_0}
+\newcommand{\Shat}{\hat S^{+}}
+\newcommand{\Out}{\mathcal{O}}
+\newcommand{\rn}{r_n}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\OP}{O_{\mathbb{P}}}
+\newcommand{\pis}{\pi(\Szero\mid y)}
+
+\theoremstyle{definition}
+\newtheorem{res}{Result}
+\newsavebox{\pbox}
+\newenvironment{paperbox}{\par\smallskip\noindent\begin{lrbox}{\pbox}\begin{minipage}{\dimexpr\linewidth-2\fboxsep}\small\textbf{For the paper.}~}{\end{minipage}\end{lrbox}\colorbox{soft}{\usebox{\pbox}}\par\smallskip}
+\newcommand{\statusline}[1]{\par\noindent{\small\textsf{#1}}\par\smallskip}
+
+\titleformat{\section}{\large\bfseries\sffamily}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries\sffamily}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{1.2ex}{0.6ex}
+\titlespacing*{\subsection}{0pt}{1.0ex}{0.4ex}
+\setlist{itemsep=1pt,topsep=2pt,leftmargin=1.3em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+\pagestyle{fancy}\fancyhf{}
+\lhead{\small\sffamily SMC-BVS theory: status briefing}
+\rhead{\small\sffamily 13 Nov 2026}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\begin{document}
+
+% ---------------- page 0: the list of target theorems ----------------
+\begin{center}
+{\Large\bfseries\sffamily The theorems we aim at}\\[2pt]
+{\footnotesize Throughout: $p\le n^{A}$ (any fixed $A$, $p\gg n$ allowed), $s_0$ fixed, Gaussian noise, SMC-BVS as coded on
+\texttt{main}, all results asymptotic, conditions on $(X,\theta^*)$ only. Numbers match the status table on the next page.}
+\end{center}
+
+\begin{enumerate}[leftmargin=2em,itemsep=4pt,label=\textbf{\arabic*.}]
+\item \textbf{Posterior concentration.} $1-\pi(\Szero\mid y)=\OP(\sqrt{\log n/n})$ and HPM $=$ MPM $=\Szero$ w.p.\,$\to1$, for fixed and random Gaussian designs. \hfill{\footnotesize W3-POST, W2-APP}
+\item \textbf{Posterior refinements.} $\E_{\theta^*}[1-\pi(\Szero\mid y)]\le C\sqrt{\log n/n}$ (expectation over the noise, $y=\alpha^*\mathbf 1+X\beta^*+\varepsilon$, $\varepsilon\sim N_n(0,\sigma_*^2I)$, design fixed), with $C$ uniform over designs; Hellinger contraction of the posterior; no eigenvalue condition away from $\Szero$. \hfill{\footnotesize W3-POST2}
+\item \textbf{Rate optimality.} On every design, no rate $o(n^{-1/2})$ is possible; the $\sqrt{\log}$ factor is attained; $\pi(\Szero)\to1$ requires $s_0=o(\sqrt n)$. \hfill{\footnotesize W3-PSHARP}
+\item \textbf{Misspecification.} With omitted variables and any residual variance, the posterior concentrates on the projected model at the same rate. \hfill{\footnotesize W3-MISR}
+\item \textbf{Start-mass rate.} The start law gives $\pi_0(\Szero)\ge1-n^{-c}$ for every $c<\tfrac12$, and mass $1-n^{-c}$ on the leakage lattice for $|Q|\le n^{1/2-\epsilon}$; the exponent $\tfrac12$ is optimal. \hfill{\footnotesize W3-START, START2}
+\item \textbf{Search.} LS0 started from the start mode ends at $\Szero$. \hfill{\footnotesize W1-GEN, C-GROW}
+\item \textbf{Reported model (main theorem).} Under visibility (V), bounded leakage (L) with polylogarithmic $Q$ and a lattice condition (N): $\Prob(\Out\cap\{\Shat\ne\Szero\})\to0$ for every seed and calibration outcome. \hfill{\footnotesize W3-RM}
+\item \textbf{Reported model, polynomial leakage.} The same with $|Q|\le n^{b}$, $b<\tfrac12$, under a width condition (W). \hfill{\footnotesize W3-RM2}
+\item \textbf{Sampler outputs as coded.} $\hat Z$ is unbiased; the coded PIPs, MPM and HPM are consistent; $\hat Z/Z\to1$ when the start concentrates. \hfill{\footnotesize W3-SAMP, W1-N1}
+\item \textbf{Delivery.} The method always returns output, and $\Prob(\Shat=\Szero)\to1$. \hfill{\footnotesize C-DLV, W2-UNI}
+\item \textbf{Certified screening.} Every certified model of size $\le q_n$ contains $\Szero$, with no start or leakage condition; exact recovery under a near-orthogonality floor. \hfill{\footnotesize W3-SCR}
+\item \textbf{Strong factors at $p\gg n$ (D1).} The full method reports $\Szero$ on strong-factor designs with $p\gg n$, or else a stated limit. \hfill{\footnotesize W3-P6 $\to$ theory}
+\item \textbf{Reported model without the lattice condition.} Theorems 7--8 with (N)/(W) removed, via control of the LS0 path. \hfill{\footnotesize W3-PATH}
+\item \textbf{Masked truths at growing $Q$.} One theorem that covers both the general-design and masked-hub results. \hfill{\footnotesize ticket T7}
+\item \textbf{RM2 riders.} The core reduction holds on any down-closed sub-lattice; the theorem holds for constant-level signals. \hfill{\footnotesize T2, T4}
+\item \textbf{Parallel SMC.} An output-identical parallel engine inherits every guarantee above. \hfill{\footnotesize W3-SCALE}
+\end{enumerate}
+
+\vspace{2pt}
+{\small Theorems 1--11 are proved and council-passed. Theorems 12--16 are open or in progress. Design families
+(metric-local, one-factor, compound symmetry, masked hubs) appear only as examples, alongside the limit results (NEG,
+lower bounds).}
+
+\newpage
+
+
+% =====================================================================
+\begin{center}
+{\Large\bfseries\sffamily Asymptotic theory of SMC-BVS: where we stand}\\[2pt]
+{\footnotesize Briefing for Felipe Bedoya, 13 Nov 2026. Sources: \cid{claims.tsv} (465 claims), ticket
+\cid{STATEMENT.md}/\cid{REPORT.md}, \cid{HQ\_NOW.md}, \cid{HQ\_DECISIONS.md}, P6 \cid{LOG.md} (13 Nov, 12:04 CT).}
+\end{center}
+\vspace{-4pt}
+{\small\textbf{The paper's claim.} For $p\le n^{A}$ (any fixed $A$; $p\gg n$ is the case that matters), \textbf{SMC-BVS
+exactly as coded on \texttt{main} reports the true model $\Szero$ with probability $\to1$}. The conditions are stated
+on $(X,\theta^*)$ only: sparse eigenvalue floors, beta-min, visibility (V) and bounded leakage (L). No design family
+is assumed. The chain is: \textbf{(i)}~the posterior concentrates at the optimal rate $\sqrt{\log n/n}$;
+\textbf{(ii)}~the start law puts mass $1-n^{-c}$ near $\Szero$; \textbf{(iii)}~LS0 ends at $\Szero$; \textbf{(iv)}~the
+coded outputs (PIP, MPM, HPM, $\hat Z$) are consistent and output is always delivered. Around the chain we have
+misspecification, sharp lower bounds and certified screening; design families appear only as examples.\par}
+
+\smallskip
+\noindent\colorbox{soft}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep}\small
+\textbf{Bottom line.} All 11 main results are council-passed (two independent seats $\ge 8/10$); 7 carry the full
+PROVED-CHECKED label, and the other 4 (rows 1, 2, 4, 8) need registry bookkeeping only (\S1.1). The API audits found no mathematical error. Six
+items remain, and the only big risk is W3-PATH, which is optional for the paper. Theory freezes Wed 18 Nov, the
+chapter v2.0 council runs Thu 19 Nov and the freeze is Fri 20 Nov; then $p=1$M.\end{minipage}}
+
+\smallskip
+{\footnotesize
+\renewcommand{\arraystretch}{1.08}
+\begin{tabularx}{\linewidth}{@{}r >{\raggedright\arraybackslash}p{4.6cm} l >{\raggedright\arraybackslash}X@{}}
+\toprule
+\# & Target (ticket) & Status & What it buys the paper\\
+\midrule
+1 & Posterior concentration (W3-POST, T03$\sharp$) & \DONE$^{\ast}$ & Foundation: $1-\pi(\Szero)=\OP(\sqrt{\log n/n})$, HPM $=$ MPM $=\Szero$; Song--Liang-type.\\
+2 & Posterior refinements (W3-POST2) & \DONE$^{\ast}$ & $\E[1-\pi(\Szero)]\le C\rn$ uniformly over designs; Hellinger contraction (Song--Liang Thms 1--2); no eigenvalue condition off $\Szero$.\\
+3 & Rate optimality (W3-PSHARP) & \DONE & Lower bound on every design: no rate $o(n^{-1/2})$, and $\sqrt{\log}$ is attained; sparsity frontier $s_0=o(\sqrt n)$.\\
+4 & Misspecification (W3-MISR) & \DONEC & Omitted variables, \emph{no fixed variance}: same rate around the projected model (Song--Liang Thm 4).\\
+5 & Start-mass rate (W3-START, START2) & \DONE & $\pi_0(\Szero)\ge 1-n^{-c}$ for all $c<\tfrac12$ (exponent optimal); leakage sets up to $n^{1/2-\epsilon}$.\\
+6 & LS0 search (W1-GEN, C-GROW) & \DONE & LS0 reaches $\Szero$ on general correlated designs; growing relevance set.\\
+7 & Reported model, polylog leakage (W3-RM) & \DONE & \textbf{Main theorem}: $\Prob(\Out\cap\{\Shat\neq\Szero\})\to0$ for every seed and calibration outcome.\\
+8 & Reported model, polynomial leakage (W3-RM2) & \DONEC & Strengthens \#7: $|Q|\le n^{b}$, $b<\tfrac12$; polynomial decay now needs only $\alpha>2$ (was $17/2$).\\
+9 & Sampler outputs as coded (W3-SAMP, W1-N1) & \DONE & Unbiasedness; coded RB-PIP/MPM/HPM consistency; $\hat Z/Z\to1$ when concentrated.\\
+10 & Delivery (C-DLV, W2-UNI) & \DONE & Output is always delivered; $\Prob(\Shat=\Szero)\to1$.\\
+11 & Certified screening (W3-SCR) & \DONE & $\Szero\subseteq$ every certified model of size $\le q_n$; no start or leakage condition; exact-recovery corollary.\\
+\midrule
+12 & D1: strong factors, $p\gg n$ (W3-P6) & \PROG & Does the claim extend to strong factors? Stage 1 almost done: 0 search failures, and every miss is a posterior miss (\S4.1). Decide Mon.\\
+13 & Drop lattice condition (W3-PATH) & \LEFT & Would remove (N)/(W) from \#7--8. Open research: Mon scoping, Tue proof if GO, hard stop Wed.\\
+14 & T7: masked truths at growing $Q$ & \LEFT & GEN/PXN become examples of one theorem. One kill-budgeted attempt Tue.\\
+15 & RM2 riders T2, T4 (T6 done) & \LEFT & Sub-lattice RM-0; constant-level signals. One Opus leg Mon; low risk.\\
+16 & Parallel-SMC note (W3-SCALE) & \PROG & An output-identical engine inherits every theorem; the rest goes to the scaling paper.\\
+17 & Chapter v2.0, council, editorial pass & \LEFT & The frozen deliverable, Mon 16 to Fri 20 Nov.\\
+\bottomrule
+\end{tabularx}
+
+\smallskip
+\DONE{} PROVED-CHECKED. \DONEC{} council-passed, with some inputs not yet labelled PROVED-CHECKED in the registry.
+$^{\ast}$\,council-passed (W3-POST C3 8.8/8.7; W3-POST2 C1 8.6/8.6), but the registry label is not yet applied (\S1.1).}
+
+\newpage
+% =====================================================================
+\section{How solid is ``done''?}
+
+\subsection{What ``conditional'' really means (finding from this briefing)}
+Every \DONEC{} condition, and the $^{\ast}$ on \#1--2, traces to inputs that \emph{have passed a two-seat council} but
+whose registry label is not yet PROVED-CHECKED:
+\begin{itemize}
+\item \cid{SOP:TH09}/\cid{TH128} ($=$ T03$\sharp$, Result~1): same-family and cross-family verified. In W3-POST it was
+re-checked adversarially by two fresh reviewers and passed council round C3 (8.8/8.7). The registry still quotes
+the old input label.
+\item \cid{W3-POST2:A0--E} (Result~2): council C1 8.6/8.6, all gates PASS. HQ\_DECISIONS (11-11) says ``Claims A--E
+PROVED-CHECKED'', but the ticket files never received the label. The registry flags this conflict.
+\item \cid{W2-APP:POST} (input of RM2-R): council round 3, Sol 9.1 / Opus 9.1.
+\item \cid{C-MIS:Prop-P}, \cid{C-MIS:GD(b)} (inputs of MIS-R corollaries): council Sol 9.2 / Opus 9.0.
+\end{itemize}
+Genuinely unchecked mathematics is confined to side items: \cid{W3-RM2:Ex-PolyR}/\cid{Ex-PolyF} (the $\alpha>2$
+example; Astra seat accepted, Opus seat did not examine it) and \cid{W2-LOC2:Lemma-BC}/\cid{IR} (used by those
+examples). \cid{W3-POST:Prop-LB} is author-only, but the checked \cid{W3-PSHARP:B} implies it. \textbf{Lifting the
+labels is bookkeeping (HQ attestation and/or the Sunday API audit), not new proof work.}
+
+\subsection{Independent audits}
+Blind Fable 5.2 batch audits (API) of all checked claims and most author-only ones:
+pass~1+1b: 86 OK / 19 MINOR / 1 GAP. The GAP is wording only: \cid{C-DLV:Prop-F} imports Cor.~D$'$'s hypotheses
+implicitly; the fix is in the editorial pass. Pass~2+2b: 79 OK / 13 MINOR / 0 GAP. Pass~3 (stopped factor
+tickets): 42 OK / 5 MINOR / 3 GAP, each with a local repair and no consumers. \textbf{No mathematical error has been
+found in any claim used by the paper.} The tickets that are new this week (START, START2, RM2, MISR, PSHARP) are
+\emph{not} API-audited yet; that is Sunday's \$50 batch.
+
+% =====================================================================
+\section{The main results}
+Throughout: $s_0=|\Szero|$ fixed, $2\le p\le n^{A}$, Gaussian noise, $K$ the method's model-size cap,
+$\rn=\sqrt{\log n/n}$, $\pis$ the coded posterior, $\pi_0$ the start law, $\Out$ the event that a run produces output,
+$\Shat$ the reported model. ``As coded'' means the method on \texttt{main} under the named implementation premises
+(EX-A exact arithmetic, OP-LS0 shipped configuration, complete scans). These are part of every reported-model
+statement.
+
+\subsection*{A. The posterior}
+
+\begin{res}[Posterior concentration; \cid{W3-POST:Thm-1} $=$ \cid{SOP:TH09} (T03$\sharp$)]
+Under (R1), fixed design, energy (E), sparse eigenvalue floors (F$_\lambda$), (F$_w$) and beta-min (BM):
+\[1-\pis=\OP(\rn),\qquad \Prob(\mathrm{HPM}=\mathrm{MPM}=\Szero)\to1,\]
+with thresholded-model, PIP and size consequences, and a random-design interface (item 6). Without (BM), signals
+above the detection level are still included.
+\end{res}
+\statusline{Council W3-POST C3: Astra 8.8 / Opus 8.7 (C1 7.5/8.4 and C2 8.3/8.8 failed and were fixed); SF+XF verified. Random Gaussian rows: \cid{W2-APP:POST} (council 9.1/9.1).}
+\begin{paperbox}The foundation every other result consumes. It is the Song--Liang-type consistency the paper
+promises, stated design-agnostically. Result~3 shows the rate is optimal.\end{paperbox}
+
+\begin{res}[Posterior refinements; \cid{W3-POST2:A1, C, D, E}]
+(A1) The conclusions of Result~1 hold with (F$_w$) replaced by a weaker overfit-size condition (OS).
+(C) \emph{Expectation rate, uniform over designs:} $\E[1-\pis]\le C\rn$, where $\E$ is over the noise under the true model G, $y=\alpha^*\mathbf 1+X\beta^*+\varepsilon$, $\varepsilon\sim N_n(0,\sigma_*^2 I)$, with $X$ and $\theta^*$ fixed. $C$ depends only on $(s_0,A,\sigma_*^2,M,\varphi_0,c)$, not on the design. For random designs, $\E\le C\rn+\Prob(\mathcal A_n^c)$ under the joint law of $(X,\varepsilon)$. Hence $\Prob(\mathrm{HPM}\ne\Szero)\le 2\E\delta_n$.
+(D) \emph{In-sample Hellinger contraction} of the posterior on $(S,\theta,v)$: rate $M_n/\sqrt n$ given $\delta_n\to0$; squared
+rate $\log n/n$ under (OS) without beta-min.
+(E) Items 1--4 of Result~1 with \emph{no eigenvalue condition away from $\Szero$}, replaced by an identifiability margin (ID$^M$).
+\end{res}
+\statusline{Council W3-POST2 C1: Astra 8.6 / Opus 8.6, all gates PASS. The registry label is pending (\S1.1).}
+\begin{paperbox}Completes the Song--Liang package (their Thms 1--2: predictive/Hellinger). (E) is the most
+design-agnostic form of the foundation; (C) is the input the misspecification theorem uses.\end{paperbox}
+
+\begin{res}[Sharpness / lower bounds; \cid{W3-PSHARP:S, A, B, C}]
+(B) For \emph{every} design and data set with $0\le s_0\le K-1$: odds against $\Szero$ are $\ge c(p,s_0)/\sqrt n$ with
+$c\ge(s_0+1)/3$. Hence no rate $o(n^{-1/2})$ is possible, $\pi(\Szero)\to1$ needs $s_0=o(\sqrt n)$, and rate $\rn$ needs
+$s_0=O(\sqrt{\log n})$.
+(A) On witness designs (orthogonal, or spherical with $p\gg n$) $\delta_n\ge(1-o_{\mathbb P}(1))(s_0+1)\sqrt{\log p/(\pi n)}$,
+so the $\sqrt{\log}$ factor is attained.
+(C) The coefficient/ridge-cost control in the size-tail lemma cannot be dropped (explicit counterexample).
+\end{res}
+\statusline{PROVED-CHECKED, council R2: Sol 9.2 / Opus 9.3 (4 claims). Implies \cid{W3-POST:Prop-LB}.}
+\begin{paperbox}Answers the referee question ``is your rate optimal?'': yes, for $\log p\asymp\log n$. It also
+gives the honest sparsity frontier. This is the sharpness gate for the posterior layer.\end{paperbox}
+
+\begin{res}[Misspecification without fixed variance; \cid{W3-MISR:R$'$, MIS(i), MIS(ii), Cor-G, Cor-H}]
+(R$'$) The coded posterior is exactly invariant under affine maps of $y$ (code-pinned; 25 rescaled fits,
+$|\Delta\mathrm{PIP}|\le1.3\times10^{-10}$). (MIS(i)) For the candidate-only fit with omitted variables (law GR$^c$),
+\emph{any residual variance $v_n>0$}:
+$\sup\E[1-\pi_C(\Szero^C)]\le C\rn$, with constants free of $v_n$, plus HPM/MPM/PIP rates. (MIS(ii)) Random candidate
+designs. (Cor-G) Gaussian-row example. (Cor-H) Hellinger contraction around the projected law.
+\end{res}
+\statusline{PROVED-CHECKED, council R2: Sol 9.2 / Opus 8.9. R$'$ is unconditional; 6 of 7 are conditional on POST2 C/E/A1, TH09/TH128, C-MIS Prop-P/GD(b), all council-passed (\S1.1).}
+\begin{paperbox}The Song--Liang Thm~4 analogue, and stronger than our old \cid{C-MIS} (which fixed $\tau^2$). It is a
+candidate to \emph{supersede} C-MIS (decision~2).\end{paperbox}
+
+\subsection*{B. Start and search}
+
+\begin{res}[Start-mass rate; \cid{W3-START} (21 claims) $+$ \cid{W3-START2} (9 claims)]
+\emph{Fixed design} (START-F, sharp form): odds against $\Szero$ under $\pi_0$ are
+$\OP\!\big(n^{-1/2}L^{\sharp}_n(h)+n^{-1}L_n(\Szero;h)^2\big)+o_{\mathbb P}(n^{-\kappa})$, where $L$ is a leakage functional; the
+mass outside the lattice $\{\Szero\subseteq T\subseteq Q\}$ is $\OP(\rho_n(Q;h))$. \emph{Gaussian rows} (START-R(b)): w.p.\,$\to1$,
+\begin{gather*}
+1-\pi_0(\mathcal L(Q))\le(|Q|+1)\,n^{-1/2}e^{C_R\sqrt{\log n}},\\
+Q=\Szero\ \Rightarrow\ \pi_0(\Szero)\ge1-n^{-c}\ \ \forall c<\tfrac12;\qquad
+|Q|\le n^{1/2-\epsilon_Q}\ \Rightarrow\ \pi_0(\mathcal L(Q))\ge1-n^{-c}\ \ \forall c<\epsilon_Q.
+\end{gather*}
+Random-design transfer (TRANSFER). Limits (NEC): the exponent $\tfrac12$ is optimal and the visibility constant $1+2A$ cannot be lowered.
+\end{res}
+\statusline{PROVED-CHECKED, unconditional. START council R2 Sol 9.2 / Opus 8.9; START2 council R1 Sol 9.1 / Opus 9.1. ``Headline strength'' pending the literature gate.}
+\begin{paperbox}New this week. It discharges the start premise (P-START, P-OVL) of the sampler theorems
+(Result~9), so the start link of the chain is now proved, not assumed. START2 is a candidate to supersede 8 START
+claims (decision~3).\end{paperbox}
+
+\begin{res}[LS0 search; \cid{W1-GEN:Thm-GEN}, \cid{C-GROW:Thm-GROW}]
+On general correlated fixed designs with a bounded separated relevance set and a block-level centre certificate:
+search failure $D_n\to0$ and $\Prob(\Out\cap\{\Shat\ne\Szero\})\to0$ (GEN). The same holds with a growing relevance set
+$|Q|\le C_Q\log n$ under the MR1 cap (GROW).
+\end{res}
+\statusline{PROVED-CHECKED. GEN: Sol 9.0 / Opus 8.9; GROW: Sol 9.2 / Opus 9.0. Both are special cases of the RM line (Results 7--8).}
+\begin{paperbox}Historical route to the main theorem. In v2.0 it becomes a remark or special case of Result~7.\end{paperbox}
+
+\subsection*{C. The reported model (main consistency theorem)}
+
+\textbf{The three conditions in plain words.} \emph{(V) visibility:} no truth can be masked by conditioning on
+$\le15$ other variables (block size of the coded partition). \emph{(L) bounded leakage:} there is a deterministic set
+$Q\supseteq\Szero$, small, outside which no column gains more than $\eta\sigma^2\log n$ in fit. \emph{(N)/(W)
+lattice/width condition:} a deterministic condition on the residual directions of the lattice
+$\{\Szero\subseteq T\subseteq Q\}$. It is automatic when $|Q\setminus\Szero|\le(1-\delta_0)\log n$. Dropping it is W3-PATH.
+
+\begin{res}[Reported model $=\Szero$; \cid{W3-RM:RM-0, RM-F, RM-R}]
+(RM-0, any design) For deterministic $Q\supseteq\Szero$, $|Q|\le K$, pathwise for every seed, $N_e$, $R'$ and calibration outcome:
+\[\Out\cap\{\Shat\ne\Szero\}\subseteq\{\pi(\Szero)\le\tfrac12\}\cup\mathcal K_n^{c}.\]
+(RM-F, fixed design) Result~1's conditions $+$ floors (FL) $+$ (V) $+$ (L) with $|Q|\le(\log n)^{\kappa}$ $+$ (N) $\Rightarrow$
+$\Prob(\Out\cap\{\Shat\ne\Szero\})\to0$. (RM-R, Gaussian rows, $p\gg n$ allowed) the same under the joint law of
+$(X,\varepsilon)$ with (V-R)$=$PTV, localised leakage (L-R) and (D-R). Lemma E4 closes premise e4: \texttt{start\_mode}
+returns a maximiser of $\pi_0$ on every path.
+\end{res}
+\statusline{PROVED-CHECKED, council round 2: Astra 9.8 / Opus 9.1 (round 1 failed on the sharpness record and was fixed).}
+\begin{paperbox}\textbf{The paper's headline theorem} about the method as coded. RM-0 is a clean, design-free
+reduction: the reported model is wrong only if the posterior is not concentrated, or the search leaves a
+deterministic sandwich.\end{paperbox}
+
+\begin{res}[Reported model under polynomial leakage; \cid{W3-RM2:RM2-F, RM2-R} (18 claims)]
+(RM2-F) Result~1's conditions, (FL), (V), $|Q|\le n^{b}$ with $b<\beta(\eta,A)=\tfrac12-\tfrac\eta2-\sqrt{2A\eta}$, a
+signal floor (BM-W) (implied by $n\theta_{\min}^2\gg|Q|+\log n$) and the width condition (W) $\mathfrak w^0_n\to-\infty$
+$\Rightarrow$ one data event of probability $\to1$ on which \emph{every} admissible output run reports $\Szero$; LS0 makes
+$\le n^{b}$ deletions and the shipped cap never binds. (RM2-R) Gaussian rows: leak bound
+$|\mathrm{Cov}(W_l,W_j\mid W_U)|=o(\rn)$ at every conditioning set $|U|\le15$, localisation without rate, $15\rho+b<\tfrac12$
+$\Rightarrow$ the same under the joint law. RM2-F $\Rightarrow$ RM-F and RM2-R $\Rightarrow$ RM-R.
+Examples: polynomial decay $\alpha>2$; one truth with $n^b$ weak proxies; an equicorrelated group ($b<3/10$).
+\end{res}
+\statusline{PROVED-CHECKED, council R1: Astra 9.5 / Opus 8.8. Conditional: F-forms on TH09, R-forms on W2-APP:POST (both council-passed, \S1.1). Ex-PolyR/F are unchecked until RM2's next council round. Boundary probes (LS0 re-implementation): 202/202 end at $\Szero$, $b$ up to $0.75$; LS0 stalls only far outside the leak condition.}
+\begin{paperbox}Strictly stronger than Result~7. It is the natural new headline: leakage sets grow polynomially, and
+the decay frontier drops from $17/2$ to $2$. Decision~1 is whether RM2 becomes the headline with RM as its corollary.\end{paperbox}
+
+\subsection*{D. Sampler outputs, delivery, screening}
+
+\begin{res}[Sampler outputs as coded; \cid{W1-N1:Thm-N1}, \cid{W3-SAMP:D, LT$\sharp$, C, TR}]
+(N1) $\E[\hat Z_rH_r(h)\mid\mathcal C]=Z\,\pi(h)$ for every bounded summary $h$ (any $X$). (D) Draw discovery:
+$\Prob(\text{miss }\Szero)=(1-\pi_0(\Szero))^{D_r}$ exactly, and $\Prob(\text{completed}\cap\{\hat S\ne\Szero\})\to0$ under P-MAP, P-OVL.
+(LT$\sharp$) Coded Rao--Blackwell \texttt{pip\_primary}$\to\mathbf 1_{\Szero}$ in sup-norm, MPM $=$ HPM $=\Szero$, for any $N_e$ and frozen schedule,
+under posterior concentration and NC$_r$. (C) Concentrated bridge: $\E|W_r-1|\le2\bar\delta$, $T$-free; $\hat Z/Z\to1$ and
+PIP/MPM/HPM consistent when $\bar\delta\to0$. (TR) Terminal repair: PIP/MPM/HPM consistency with no condition on $\hat Z$, bridge or $N_e$.
+\end{res}
+\statusline{PROVED-CHECKED. SAMP council C1: Astra 9.1 / Opus 8.8; N1: Codex 9.3 / Opus 8.9. D and TR use HQ-approved narrow forms (11-12, under delegation); TR's separation from $\pi_0(\Szero)\to1$ is open for the coded target.}
+\begin{paperbox}Ties the theory to the numbers the software prints. With Result~5 the premises P-START/P-OVL are now
+theorems.\end{paperbox}
+
+\begin{res}[Delivery; \cid{C-DLV:Prop-F}, \cid{W2-UNI:F-UNI}]
+Freezing the tier-1 pilot schedule on construction failure gives $\Prob(\text{no output})=0$ and $\Prob(\Shat=\Szero)\to1$
+(pathwise, no calibration premise). This is implemented as \cid{C-ENG:Impl-DLV-B}.
+\end{res}
+\statusline{PROVED-CHECKED, council round 2: Sol 9.0 / Opus 8.9. The API audit found a wording gap only (editorial pass).}
+\begin{paperbox}Turns ``reports $\Szero$ \emph{when it outputs}'' into ``reports $\Szero$''.\end{paperbox}
+
+\begin{res}[Certified screening; \cid{W3-SCR:SCR-A, A1, SCR-G, SCR-C}]
+(SCR-A, non-asymptotic) W.p.\ $\ge1-3e^{-x}$ every locally optimal model of size $\le q$ contains $\Szero$, and
+$\Prob(\Out\cap\text{certified}\cap\{|\hat S|\le q\}\cap\{\Szero\not\subseteq\hat S\})\le3e^{-x}$. (A1) $\to0$ at $p\le n^{A}$
+with any $q_n=o(n/\log n)$. (SCR-G) Uncertified runs: near-best centres and capped-search endpoints cover $\Szero$.
+(SCR-C) Exact recovery from the certificate under a near-orthogonality floor $\varphi_n(q_n)\ge2A/(2A+1)+\epsilon$.
+\end{res}
+\statusline{PROVED-CHECKED, council C1: Astra 9.3 / Opus 8.9 (21 claims).}
+\begin{paperbox}A guarantee with \emph{no start, leakage or lattice condition}. It is the fallback claim wherever the
+reported-model conditions fail, notably strong factors (D1).\end{paperbox}
+
+\subsection*{E. Examples and limits (never hypotheses)}
+{\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.6cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.2cm}@{}}
+\toprule
+Family / limit & Result (claim id) & Status\\
+\midrule
+Metric-local $\Sigma$, PTV & reported HPM $=\Szero$, any $p\le n^A$ (\cid{W2-UNI:UNI-0}); exp.-local rows (\cid{W2-APP:Thm-LOC}) & checked 9.0/8.9; council 9.1/9.1\\
+One strong factor & reported model $+$ delivery, $\limsup\log p/\log n<1/6$ (\cid{W2-FAC-A:Thm-FAC-L}) & checked 9.2/8.9\\
+Compound symmetry & exact Gram, $p\le n/2$ (\cid{W2-FAC-B}); iid rows, $\log p/\log n<1/2$ (\cid{W2-FAC-X}) & checked\\
+Masked hubs & $\Prob(\Out\cap\{\Shat\neq\Szero\})\to0$ on LH-iid, $18\le p\le n^A$ (\cid{W1-PXN:Thm-PXN}) & checked 8.6/8.3\\
+Polynomial decay, proxies, equicorrelated group & RM2 examples (\cid{W3-RM2:Ex-*}) & Ex-PolyR/F unchecked\\
+\midrule
+LS0-route limit & strong factors: first $n^{\beta}$ LS0 moves are swaps, so LS0 alone with its cap never scores $\Szero$ (\cid{W2-FAC-PK:Thm-NEG}); this concerns \emph{LS0 only, not the full method} & checked 9.4/9.2\\
+Rate/sparsity limits & PSHARP A--C, START NEC (Results 3, 5) & checked\\
+\bottomrule
+\end{tabularx}}
+
+% =====================================================================
+\section{What changed this week (11--13 Nov)}
+Five council-passed tickets were \textbf{recorded on \texttt{main}} on 12 Nov (dry run first; seat addenda; INFRA R05--R07 tool fixes):
+\begin{itemize}
+\item \textbf{W3-START} (21 claims, a3404b3) and \textbf{W3-START2} (9 claims, 2d2b255): start-mass rate, Result~5.
+\item \textbf{W3-RM2} (16 checked $+$ 2 unchecked examples, 223f8e4): polynomial leakage, Result~8.
+\item \textbf{W3-MISR} (7, 81b0131): misspecification without fixed variance, Result~4.
+\item \textbf{W3-PSHARP} (4, 07ee8b0): rate lower bounds, Result~3.
+\end{itemize}
+Also: \textbf{W3-SCALE} CP1 and CP2 accepted (\S4.4). \textbf{W3-P6} stage 1 ran on NOTS (\S4.1). An 8-hour stall on
+11-13 (watcher left disabled) was caught by the watchdog and fixed. Registry: 465 claims, 0 ERROR in CI.
+
+% =====================================================================
+\section{Open targets: plan, risk, timeline}
+
+\subsection{D1 -- strong factors at $p\gg n$ (W3-P6, experiment) \hfill\PROG}
+\textbf{Question.} On strong-factor designs with $p>K=\lfloor n/2\rfloor$ and $p\gg n$ (where NEG blocks LS0 alone), does
+the \emph{full method as coded} recover $\Szero$? Design: compound symmetry $\rho=.5$ (one pervasive factor), aligned signs
+(the NEG regime), $s_0=4$, MR1 cap. Failure (pre-declared) $=$ completed fit with HPM $\ne\Szero$.
+
+{\small
+\begin{tabularx}{\linewidth}{@{}l l c c >{\raggedright\arraybackslash}X@{}}
+\toprule
+Cell $(n,p)$ & Design & Reps done & HPM $=\Szero$ & Notes\\
+\midrule
+$(100,1000)$ & cs $\rho=.5$ & 6 & \textbf{6/6} & reps 7--10 running (SR nodes, $\approx16.5$ h each)\\
+$(100,250)$ & cs $\rho=.5$ & 10 & \textbf{10/10} & complete\\
+$(75,750)$ & cs $\rho=.5$ & 10 & \textbf{8/10} & 2 \emph{posterior} misses ($F(\mathrm{HPM})>F(\Szero)$); stage-2 eligible\\
+$(75,188)$ & cs $\rho=.5$ & 5 & \textbf{5/5} & reps 6--10 submitted 12:04 CT\\
+$(100,250)$ & cs $\rho=.7$ & 5 & \textbf{5/5} & breadth; reps 6--10 cut (pre-declared order)\\
+$(100,250)$ & cs $\rho=.5$, $s_0=8$ & 5 & \textbf{5/5} & breadth; reps 6--10 cut\\
+\midrule
+$(50,500)$ & cs $\rho=.5$ & 5 & 1/5 & early batch b1; misses are posterior\\
+$(50,250)$ & cs $\rho=.5$, $s_0=8$ & 11 & 0/11 & early batch b1; misses are posterior\\
+$(50,250)$ & s5 (factor $+$ groups) & 5 & 5/5 & early batch b1\\
+\bottomrule
+\end{tabularx}}
+
+\textbf{Reading.} \emph{Search failures in stage 1: 0.} Every miss is a model the posterior prefers to $\Szero$. In
+every success, $\Szero$ was already the running HPM in the calibration pilot. So the \emph{search} gets past the
+NEG obstruction, and what remains at small $n$ is posterior concentration, the regime Results~1--3 describe.
+\textbf{Budget:} 1,562 of 1,896 core-h used; projected $\approx1{,}717$ after stage 1. Stage 2 of $(75,750)$ (reps
+11--20) costs $\approx111$ core-h expected and 200 worst case. The worst case passes the ceiling by $\approx20$ core-h, so it
+needs your go (decision~5).
+
+\textbf{Plan (Mon 11-16).} Opus leg: D1 settled as \emph{either} (a) a theorem ``full method recovers $\Szero$ on strong
+factors'' via the sampler route (Result~9 D/TR $+$ a start-mass bound on factor designs), \emph{or} (b) a stated
+limit: certified screening (Result~11) $+$ NEG $+$ P6 evidence as a documented experiment. \textbf{Risk:} (a) needs a
+start-mass/overlap bound under pervasive leakage, where $|Q|$ is not small, and is genuinely open. (b) is safe and
+honest. Recommendation: attempt (a) with a kill budget, and keep (b) as the default text.
+
+\subsection{W3-PATH -- drop the lattice condition (N)/(W) \hfill\LEFT}
+Goal: Result~7/8 without (N)/(W), by controlling the path LS0 actually follows from the start mode (inputs:
+START/START2). Brief ready (branch \texttt{theory/W3-PATH}). Mon: scoping to CP1 (Fable 5.2, $\le$1 day: candidate
+statement, key lemma, 2--3 routes, numerics, blind Astra read). Tue: proof leg only if CP1 $=$ GO, with a kill budget
+of 2 attempts on the key lemma and a \textbf{hard stop Wed 23:59}. \textbf{Risk: high} (open research; RM's report:
+``no proof, no counterexample''). If it fails, the paper states (N)/(W) explicitly. It is automatic for
+$|Q\setminus\Szero|\le(1-\delta_0)\log n$ and has primitive sufficient forms, so the main theorem stands either way.
+
+\subsection{T7 and RM2 riders \hfill\LEFT}
+\textbf{T7} (masked truths at growing $Q$; separation via an underfit-phase energy lemma; GEN/PXN become examples):
+Mon scoping, one attempt Tue. Medium-high risk, low cost if it fails (GEN/PXN stay as separate theorems).
+\textbf{RM2 riders} T2(a--c) (RM-0 on any deterministic down-closed sub-lattice) and T4 (constant-level signals): one Opus
+leg Mon. Low risk. T6 is already done inside RM2 ($\alpha>17/2\to\alpha>2$).
+
+\subsection{Parallel SMC (W3-SCALE) \hfill\PROG}
+Engine revision D is \textbf{byte-identical} to serial (24/24 PROD-H, 10/10 supplementary). Setup is $3.7\times$ faster
+and each step $\approx28\%$ faster; preflight admits $p=20$k (10.4 h vs 969 h). Evidence census at $N=2{,}500$:
+$\hat\sigma(\log\hat Z_r)$ is $0.09$ at $p=2$k but $0.76$--$1.15$ at $5$k--$20$k; at 5k, $N\times4$ still leaves a right
+tail (one island holds 79\% of the weight). PIPs agree across islands to $\le5\times10^{-4}$. \textbf{For this paper:} one short
+note: an output-identical engine inherits every theorem above. Do \emph{not} weight islands by $\hat Z$ at $p\ge5$k.
+Theorems on island combination go to the scaling paper (long-term line: parallel Bayes for huge model spaces).
+
+\subsection{Chapter v2.0 and freeze}
+{\small
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\toprule
+Sun 15 & API credit (\$200): blind audit $+$ sharpness of START/START2/RM2/MISR/PSHARP ($\approx$\$50); needs the Console limit raised.\\
+Mon 16, 16:00 CT & Weekly reset. D1, PATH scoping, T7 scoping, RM2 riders, chapter v2.0 assembly on recorded claims.\\
+Tue 17 & PATH proof leg (if GO, kill budget 2); T7 one attempt.\\
+Wed 18 & \textbf{Theory frozen.} Anything unproved goes to the ``open problems'' section. Full v2.0 draft.\\
+Thu 19 & Chapter v2.0 council (Sol $+$ Opus) and fixes; final API audit of the chapter.\\
+Fri 20 & Council pass $\Rightarrow$ freeze and merge. Theory campaign closed; hand over to $p=1$M (W3-SCALE).\\
+\bottomrule
+\end{tabularx}}
+
+% =====================================================================
+\section{Decisions needed from Felipe}
+{\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}r X X@{}}
+\toprule
+\# & Decision & HQ recommendation\\
+\midrule
+1 & \textbf{RM2 replaces RM-F/RM-R as headline?} & Yes. RM2 $\Rightarrow$ RM, so it is strictly stronger; state RM-F/R as the polylog special case. Ex-PolyR/F stay flagged until RM2's next council round.\\
+2 & \textbf{MIS-R replaces C-MIS?} & Yes. No fixed variance and Song--Liang Thm 4 form; its conditions are bookkeeping (\S1.1).\\
+3 & \textbf{START2 replaces the 8 overlapping START claims?} & Yes. Sharper leading functional, $|Q|$ up to $n^{1/2-\epsilon}$.\\
+4 & \textbf{Lift the conditional labels:} HQ attests POST2 A--E and W3-POST Thm-1 (council-passed), and the Sunday audit covers W2-APP:POST, TH09/TH128, C-MIS Prop-P/GD(b). & Yes, a small slice of the Sunday credit. It turns every \DONEC{} into \DONE.\\
+5 & \textbf{P6 stage 2 for $(75,750)$}: $\approx111$ core-h expected, 200 worst; worst case passes the 1,896 ceiling by $\approx20$ core-h. & Yes. It is the only D1 cell with failures, and 20 reps make the 2/10 interpretable.\\
+6 & \textbf{D1 framing in the paper}: attempt the strong-factor theorem (kill-budgeted) vs.\ screening $+$ limits only. & Attempt Mon with a kill budget; default text $=$ screening $+$ NEG $+$ P6.\\
+7 & Ratify the narrow SAMP headlines D and TR (HQ-approved 11-12 under delegation). & Ratify.\\
+8 & Raise the API Console monthly limit (month $\approx\$171$ of \$195) so Sunday's credit is usable. & Needed before Sun.\\
+9 & $p=1$M planning: fixed $N$ per island; cost-column definition (B2-3); primary-PIP switch. & Defer to Fri hand-over; the primary-PIP question is moot (islands agree).\\
+\bottomrule
+\end{tabularx}}
+
+\vfill
+{\footnotesize\textit{Traceability.} Statuses are quoted from \cid{Theory\_work/INFRA/registry/claims.tsv} (13 Nov). Council
+scores are from the registry \texttt{council} field or the ticket REPORT. P6 numbers are from \cid{theory/W3-P6} LOG
+(12:04 CT); the (100,1000) reps 7--10 and (75,188) reps 6--10 are still running. The definitions of (V), (L), (N)/(W) here
+paraphrase \cid{W3-RM/STATEMENT.md} v1.2.1 and \cid{W3-RM2/STATEMENT.md} v1.4.}
+
+\end{document}

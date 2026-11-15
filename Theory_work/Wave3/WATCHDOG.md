@@ -242,3 +242,65 @@ have used so far. Finished work is 1,307.83 core-h, and running tasks add 148.13
   assumed at 01:09 CT (≈ 25). That adds about 40 core-h. Re-running the 01:09 projection with the actuals gives about
   1,891, which is within 5 core-h of the 1,896 ceiling. h1b/h2b is the next item in the pre-declared cut order.
   This is not a flag, because spend is the trigger and spend is at 1,456.
+
+## 2026-11-13 15:04 UTC (09:04 CT) — FLAG (1)
+
+Thresholds: checkpoint unanswered > 6 h; ticket silent > 3 h unless idle by design; P6 > 1,880 core-h (stage-1 hold
+line, HQ 2026-11-12) / 1,896 (ceiling).
+
+**Flag 1 — W3-P6 silent 7 h 55 m and not idle by design.** The last LOG entry is 11-13 01:09 CT ("Next: h2b and g1
+as headroom frees"). Since then, every w3p6 task has ended and nothing was logged. s1_d1 1–3 and s1_h1 1–5 ended
+02:10–03:49 CT. s1_b_hw 1–9 ended 05:26–07:28 CT. s1_d1hw 1–2 ended 06:25 and 07:53 CT. All 19 are COMPLETED. NOTS now
+has **0 RUNNING and 0 PENDING** w3p6 jobs. Stage 1 is stalled: d2, h2b/h1b and g1 have not been released. The
+3-hourly watcher should have woken the lead at the first task end (02:10 CT), and it did not.
+
+**(a) Tickets**
+| ticket | branch @ head | last LOG entry | open checkpoint | status |
+|---|---|---|---|---|
+| W3-P6 | theory/W3-P6 @ 38f0163 (LOG.md modified, uncommitted; mtime 01:09 CT) | 11-13 01:09 CT (7 h 55 m), s1_b_hw submitted | none: CP0 and CP1 answered | **FLAG 1** |
+| W3-SCALE | theory/W3-SCALE @ 299cbc5 (clean) | 11-13 07:08 CT, HQ decision on CP2: "Lead: no action until then" (Mon 11-16 16:00 CT furnace) | none: CP2 answered at 07:08 CT (5 h 57 m after it was written, under 6 h) | OK, idle by design |
+| W3-PATH | theory/W3-PATH @ bd2b95c | no LOG (only BRIEF.md) | none | not active (scoping starts Mon 11-16) |
+
+**(b) HQ_DECISIONS.md:** the last entry is "2026-11-13 W3-SCALE CP2 (leg B) ACCEPTED", committed in d642efb at
+07:08:30 CT, 1 h 56 m ago.
+
+**(c) W3-P6 spending** (NOTS, read-only `sacct -u fb31 -S 2026-11-09 -X`, w3p6_, 15:02 UTC). There are 460 allocations
+(369 COMPLETED, 91 CANCELLED, 0 RUNNING), totalling **1,539.39 core-h**. All of it is finished work, so the worst case
+is the same number. That is below 1,880 and 1,896. No hold is set, and HOLDS.md has no `HOLD P6` line.
+- Since the 01:09 CT entry (finished 1,111.70), finished work grew by 427.69 core-h. Headroom is 356.6 core-h to
+  1,896, or 340.6 to the 1,880 hold line.
+- Against the lead's 01:09 projection (1,853.2): d1 1–3 (98.8 projected) and h1 (126 projected; actual ≈ 166, all five
+  on cascadelake at 16.3–17.3 h) are now known. The remaining stage-1 releases (d2 ≈ 131.8, h1b/h2b ≈ 170, g ≈ 30;
+  e and f already cut) should be re-projected against the 356.6 headroom before release. h1b/h2b is next in the cut
+  order.
+
+Flag sent to HQ (thread 647bfd65…).
+
+## 2026-11-13 21:03 UTC (15:03 CT) — OK
+
+Thresholds: checkpoint unanswered > 6 h; ticket silent > 3 h unless idle by design; P6 > 1,880 core-h (stage-1 hold
+line, HQ 2026-11-12) / 1,896 (ceiling).
+
+**(a) Tickets**
+| ticket | branch @ head | last LOG entry | open checkpoint | status |
+|---|---|---|---|---|
+| W3-P6 | theory/W3-P6 @ 38f0163 (LOG.md modified, uncommitted; mtime 12:04 CT) | 11-13 12:04 CT (2 h 59 m), g1 read back, s1_g2 submitted ("last stage-1 release; after d2 + g2 → CP2") | none: CP0 and CP1 answered; CP2 not yet written | OK (just under 3 h) |
+| W3-SCALE | theory/W3-SCALE @ 299cbc5 (clean) | 11-13 07:08 CT, HQ decision on CP2: "Lead: no action until then" (Mon 11-16 16:00 CT furnace) | none: CP2 answered | OK, idle by design |
+| W3-PATH | theory/W3-PATH @ bd2b95c | no LOG (only BRIEF.md) | none | not active (scoping starts Mon 11-16) |
+
+- Note (not a flag): s1_g2 2710546_1–5 all COMPLETED on sapphirerapids at 14:14–14:59 CT (24.76 core-h) and have not
+  been read back yet. The lead's 3-hourly watcher should wake about now (12:04 + 3 h). If there is no P6 LOG entry by
+  about 15:30 CT, the next watchdog run flags it.
+
+**(b) HQ_DECISIONS.md:** the last entry is "2026-11-13 ~10:30 CT W3-P6 stage 1" (watcher re-enabled; d2 released;
+breadth reps 6–10 cut; stage 2 of (75,750) sent to the owner). It was committed in ca91d44 at 09:06:04 CT, 5 h 57 m
+ago. (The entry's "~10:30" label is later than its commit time, so the label is off.)
+
+**(c) W3-P6 spending** (NOTS, read-only `sacct -u fb31 -S 2026-11-09 -X`, w3p6_, 21:02 UTC). There are 474
+allocations (379 COMPLETED, 91 CANCELLED, 4 RUNNING), totalling **1,634.60 core-h**. That includes 47.53 core-h so far
+on the running s1_d2 2708735_1–4 (SR, 5:56 of 24:00 wall). That is below 1,880 and 1,896. No hold is set, and HOLDS.md
+has no `HOLD P6` line.
+- Worst case: d2 hits its 24:00 limit, which adds 192 − 47.53 = 144.47 and gives **1,779.07 core-h**. That is below
+  1,880.
+- The lead's 12:04 projection was ≈ 1,717. g2 came in at 24.76 core-h against the 22.9 projected. d2's projection
+  (132.0) still holds.
