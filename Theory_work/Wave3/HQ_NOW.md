@@ -1,5 +1,35 @@
 # HQ now (resume card; HQ keeps this current)
 
+## TOP PRIORITY (owner 2026-11-15): W3-DIST — distribution consistency (Song–Liang Thm 1–2 parity)
+"It needs to happen." It outranks W3-PATH, T7 and the riders in every resource conflict. Lead: Fable 5.2 on Claude Third
+(Owls, thread mcp:launch:75635c1f…); team of Opus/Sonnet workers on Claude Third after CP1; parity checklist = BRIEF
+addendum A1 (P1–P6). Restore points: hourly cron → branch theory/W3-DIST. Any extra resource (2nd Fable, OpenAI review
+budget, CP reset use) → ask Felipe at once, framed as "needed for W3-DIST". Target: proved and in chapter v2.0 this week.
+
+## STRIKE PLAN week of 11-16 (owner: theory basically DONE by end of week, then p = 1M experiment)
+Definition of done: 11 main results recorded PROVED-CHECKED; D1 settled (theorem or stated limit); chapter v2.0
+council-passed and frozen; editorial pass merged. Anything else = named open problem in the paper.
+- Mon 16:00 (furnace): D1 from P6 stage 1 (Opus) · W3-PATH scoping→CP1 (Fable, ≤ 1 day) · T7 scoping (Opus) · RM2 riders
+  T2/T4/T6 as ONE Opus leg · chapter v2.0 assembly starts (Opus) on the recorded claims · Sun-API findings triaged.
+- Tue: W3-PATH proof leg only if CP1 = GO, kill budget 2 attempts on the key lemma, hard stop Wed 23:59 · T7: 1 attempt.
+- Wed: freeze theory content. Whatever is unproved → "open problem" section. Chapter v2.0 complete draft.
+- Thu (full reset): chapter v2.0 council (Sol + Opus) + fixes; final API audit of the chapter.
+- Fri: council pass → freeze, merge. Theory campaign closed; hand over to W3-SCALE / p = 1M.
+Parallel-SMC theorems: only what the p = 1M experiment needs (output-identical engine ⇒ inherited guarantees), as a
+short Opus note; the rest moves to the scaling paper.
+
+## PLAN (owner, 2026-11-12 ~12:00 CT) — see HQ_DECISIONS same date
+- Now → weekend: finish current campaign on remaining CP fuel, NO resets. ≤ 1–2 Claude threads. R06 → record W3-START,
+  START2, PSHARP, MISR (per-claim seat addenda), RM2 (R1 snapshot + carrier). P6 stage 1 on NOTS (watcher every 3 h).
+- Sun 11-15: $200 API credit — precision strikes only (audit + sharpness of new tickets ~$50). Owner raises Console limit.
+- Mon 11-16 16:00 CT: furnace on (weekly reset): Opus volume; Fable only for W3-PATH lead + stuck key lemmas. Queue:
+  D1 (P6), W3-PATH scoping→proof (brief ready, BVS-wt/W3-PATH), T7 + RM2 riders T2/T4/T6 (Opus), chapter v2.0 + council,
+  editorial pass (MINORs + Prop-F wording + PSHARP E1–E9 + MISR/START2 errata + C-MIS citecheck: 6 line-drifted cites into SoP 04_theory.tex, CI 11-13; W2-FAC-X reviews/citecheck.py 0→2: path prefixes miss W2-FAC-A/B REPORT cites, script fix + refresh CITECHECK.txt). Then merge PR #10 (Actions CI) once its run is green. Mid-week full reset (owner) when budget ends.
+- Codex: let it recover, no reset; one reviewer per gate.
+- Providers: everything on claude-personal (CP) for now; consultant = CP Fable 5.2 (operational decisions); owner = big
+  picture + tokens, one daily batch. Pending owner calls: supersessions RM-F/R→RM2-F/R, C-MIS→MIS-R, 8 START claims→START2.
+
+
 Mode (owner, 2026-11-11 ~18:45 CT): **continuous** — keep work running on Claude Work (effort ≤ high) until CW runs
 out or a key owner decision is needed; no bursts. HQ answers checkpoints itself. HQ thread 647bfd65-83bc-403a-b3b0-0a8352044e7f. Meta-HQ watcher (Sol, every 30 min): thread 600e6dcd-e2bf-4ef8-9a4b-0e00d46a1c68.
 

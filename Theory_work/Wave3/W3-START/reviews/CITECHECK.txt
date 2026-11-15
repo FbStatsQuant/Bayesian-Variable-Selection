@@ -1,0 +1,310 @@
+W3-START CITECHECK: 203 citations (53 with line ranges, 150 path-only); MISSING/OUT-OF-RANGE: 0
+EXISTS           [STATEMENT.md] LOG.md -> Theory_work/Wave3/W3-START/LOG.md
+EXISTS           [STATEMENT.md] Theory_work/Wave3/PROTOCOL.md -> Theory_work/Wave3/PROTOCOL.md
+EXISTS           [STATEMENT.md] REPORT.md -> Theory_work/Wave3/W3-START/REPORT.md
+EXISTS           [STATEMENT.md] Docs/Theory/proofs/T22iii_T16_start_aggregation/STATEMENT.md -> Docs/Theory/proofs/T22iii_T16_start_aggregation/STATEMENT.md
+OK 88fed73e7c7b [STATEMENT.md] CORE v3_preprocess.R:111-127 -> Scripts/SMC_BVS/core/v3_preprocess.R
+      first: constant <- apply(X, 2, function(x) all(x == x[1]))   # dropped only if all entries are ex
+      last:  s_y = sy$max * sy$sd,                  # s_y on the raw scale: s_y^2 = ||C y||^2 / (n - 1)
+OK 513ad1598d6f [STATEMENT.md] CORE cpp/v3_score.h:39-72 -> Scripts/SMC_BVS/core/cpp/v3_score.h
+      first: inline void data_init(Data& D, const double* X, const double* y, int n, int p, const std::
+      last:  }
+OK 678024aa9cf0 [STATEMENT.md] cpp/v3_score.h:204-224 -> Scripts/SMC_BVS/core/cpp/v3_score.h
+      first: void finish_from_factors(const std::vector<int>& S, const std::vector<double>& LH, const s
+      last:  }
+OK 425491de1eb2 [STATEMENT.md] CORE cpp/v3_blocks.h:124-144 -> Scripts/SMC_BVS/core/cpp/v3_blocks.h
+      first: inline std::vector<std::vector<int>> make_blocks(const Data& D, int B, Dendrogram* out_tre
+      last:  }
+OK 5c8543faedbb [STATEMENT.md] CORE v3_preprocess.R:22 -> Scripts/SMC_BVS/core/v3_preprocess.R
+      first: B <- min(v3_isqrt(n), v3_isqrt(p), 16)            # B* = 16 (implementation limit)
+      last:  B <- min(v3_isqrt(n), v3_isqrt(p), 16)            # B* = 16 (implementation limit)
+OK 565d2c2f3902 [STATEMENT.md] CORE cpp/v3_start.h:76-98 -> Scripts/SMC_BVS/core/cpp/v3_start.h
+      first: inline void build_tables(Start& st, Scorer& sc) {
+      last:  }
+OK c8c07f7ea122 [STATEMENT.md] CORE cpp/v3_start.h:68-70 -> Scripts/SMC_BVS/core/cpp/v3_start.h
+      first: // log gamma_0(S) = log varpi(|S|) + sum_b log r_b(S n C_b)  (M §6.3)
+      last:  double log_pi0(const std::vector<int>& S) const { return log_gamma0(S) - logZbar0; }
+OK d76ba6efb0b4 [STATEMENT.md] cpp/v3_start.h:101-137 -> Scripts/SMC_BVS/core/cpp/v3_start.h
+      first: inline void build_start(Start& st) {
+      last:  for (int k = 0; k <= K; ++k) st.size_logmass[k] = lk[k] - st.logZbar0;
+OK ccc85323b8b6 [STATEMENT.md] PXN STATEMENT.md:103-106 -> Theory_work/Wave1/W1-PXN/STATEMENT.md
+      first: - **Exact-branch convention (R14 #3; lemmas/R_branch_repair.md §3).** "blocks", π₀, S̃₀ an
+      last:  scores all of Ω, so that branch contributes nothing to D_n. No lower growth bound on p is 
+OK 1940e1c7354e [STATEMENT.md] GROW STATEMENT.md:51-64 -> Theory_work/Wave1C/C-GROW/STATEMENT.md
+      first: * **D0** (SoP `04_theory.tex:69-74`): shipped g = n score, a₀ = b₀ = 0.01: with G_A = X_Aᵀ
+      last:  Z_{T,l} := u_{T,l}ᵀε/σ (standard normal for fixed (T, l)).
+OK 62487f3b0cbe [STATEMENT.md] RM STATEMENT.md:41-44 -> Theory_work/Wave3/W3-RM/STATEMENT.md
+      first: * **Setting R (Gaussian rows)** = UNI `STATEMENT.md` §1 design (R) / LOC2 `STATEMENT.md` §
+      last:  population row.
+OK 9bb69ae1bd57 [STATEMENT.md] RM STATEMENT.md:134-145 -> Theory_work/Wave3/W3-RM/STATEMENT.md
+      first: * **(FL-R)** λ_min(Σ_{n,S}) ≥ c for every S with |S| ≤ 16 + s₀, and for S = Q ∪ {l}, l ∈ [
+      last:  polylogarithmic neighbourhood. It is needed because the partition is X-measurable: see ASS
+OK 8fff39b6ecd0 [STATEMENT.md] RM lemmas/L3_SANDR.md:42-44 -> Theory_work/Wave3/W3-RM/lemmas/L3_SANDR.md
+      first: [NEW] This is precisely the target as locked in STATEMENT v1.1 (localisation rate n^{-2}),
+      last:  U union S0 union {l} and their subsets); the Q union {l} floor is consumed by NA/TL only. 
+OK e3c287389cbe [STATEMENT.md] SAMP STATEMENT.md:76 -> Theory_work/Wave3/W3-SAMP/STATEMENT.md
+      first: - **P-START**: 1_𝒜·o₀ → 0 in probability, i.e. π₀(S₀) → 1 on 𝒜 — no rate (PROGRAM item 2's
+      last:  - **P-START**: 1_𝒜·o₀ → 0 in probability, i.e. π₀(S₀) → 1 on 𝒜 — no rate (PROGRAM item 2's
+OK 4cb566ab3f83 [STATEMENT.md] SAMP STATEMENT.md:82 -> Theory_work/Wave3/W3-SAMP/STATEMENT.md
+      first: - **P-OVL**: Q_D → ∞ in probability, where Q_D := D_r·π₀(S₀) on 𝒜 and Q_D := ∞ off 𝒜, D_r 
+      last:  - **P-OVL**: Q_D → ∞ in probability, where Q_D := D_r·π₀(S₀) on 𝒜 and Q_D := ∞ off 𝒜, D_r 
+OK cef0fb6973d0 [STATEMENT.md] RM STATEMENT.md:271-273 -> Theory_work/Wave3/W3-RM/STATEMENT.md
+      first: * Form R is not obtained from Form F by conditioning on X: under Gaussian rows the off-blo
+      last:  (an order-of-magnitude heuristic, not a proof: ASSUMPTION_MAP) [C1-B6].
+OK 2566462d2c29 [STATEMENT.md] PXN STATEMENT.md:58-60 -> Theory_work/Wave1/W1-PXN/STATEMENT.md
+      first: - **(S)** 1 − π₀(S°) = O_P(√(log n/n)), with the explicit truncated-moment and tail bounds
+      last:  log π₀(S₀) + c log p + (c/2) log n →_d Σ_{i≤c} log((s+i)/2) + ½χ²_c (P4, PROOF.md:277): ma
+OK 03b8bfa14b6d [STATEMENT.md] BRIEF.md:20-21 -> Theory_work/Wave3/W3-START/BRIEF.md
+      first: form (C-MIS) where it costs little. State honestly where it fails: W3-P6 shows that on str
+      last:  start mode excludes S₀ (W1-PXN(S) is the masked-regime law), so the theorem is for no-leak
+OK 4e1071a0896b [STATEMENT.md] MIS STATEMENT.md:39-58 -> Theory_work/Wave1C/C-MIS/STATEMENT.md
+      first: * **D0 (method).** The method is **re-run on the candidate data** (X^r_𝒞, y^r) only — not 
+      last:  Then y^r = (α + a)1 + X^r_𝒞β^𝒞 + ε′, ε′ := ε + ξ, and ε′ | X^r_𝒞 ~ N_n(0, σ_𝒞²I) (so ε′ is
+EXISTS           [STATEMENT.md] lemmas/L11_EXAMPLES.md -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+OK 6613d955b2b4 [STATEMENT.md] GROW lemmas/L0_toolkit.md:19-53 -> Theory_work/Wave1C/C-GROW/lemmas/L0_toolkit.md
+      first: **Lemma L0.1.** With this change, Lemmas L1.1–L1.4 of [GEN-L1] hold verbatim (same events 
+      last:  for 1 ≤ k ≤ p.
+EXISTS           [STATEMENT.md] lemmas/L2_TK.md -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+EXISTS           [STATEMENT.md] GEN lemmas/L1_lemmaE.md -> Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md
+EXISTS           [STATEMENT.md] lemmas/L2_TK.md -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+EXISTS           [STATEMENT.md] lemmas/L9_BR.md -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+EXISTS           [REPORT.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [REPORT.md] lemmas/L1_AGG_FLOOR.md -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+EXISTS           [REPORT.md] lemmas/L11_EXAMPLES.md -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+EXISTS           [REPORT.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [REPORT.md] BRIEF.md -> Theory_work/Wave3/W3-START/BRIEF.md
+EXISTS           [REPORT.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+OK 23075e22149c [REPORT.md] STATEMENT.md:196-210 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 
+      last:  Predecessor: T22(i) (SOP:TH116), re-proved here in lattice form with the leading term isol
+EXISTS           [REPORT.md] lemmas/L1_AGG_FLOOR.md -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+OK 77c09dc859ca [REPORT.md] STATEMENT.md:240-242 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 
+      last:  1 − π₀(S) ≥ f_n(|S|)/(1 + f_n(|S|)) ≥ ⅓(n + 1)^{−1/2}. In particular, whenever s₀ < K (tru
+EXISTS           [REPORT.md] lemmas/L1_AGG_FLOOR.md -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+OK 0de442d66a68 [REPORT.md] STATEMENT.md:232 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: | (B1) | (GF-16), (V-c), (V-m) and the functionals 𝔏_n(Q; h), 𝔏⁰_n(h) imply / dominate the
+      last:  | (B1) | (GF-16), (V-c), (V-m) and the functionals 𝔏_n(Q; h), 𝔏⁰_n(h) imply / dominate the
+EXISTS           [REPORT.md] lemmas/L2_TK.md -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+OK d0ce2aa8641e [REPORT.md] STATEMENT.md:233 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: | (B-TK) | Lemma TK: Setting F (s₀ ≥ 0), (E), (GF-16) ⇒ [TK]. The block family has ≤ 2¹⁶p 
+      last:  | (B-TK) | Lemma TK: Setting F (s₀ ≥ 0), (E), (GF-16) ⇒ [TK]. The block family has ≤ 2¹⁶p 
+EXISTS           [REPORT.md] lemmas/L3_LEAK.md -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+OK 4c95c8c1402b [REPORT.md] STATEMENT.md:234 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: | (B-L) | [TK] ⇒ [LEAK(Q)]: on 𝓔^blk and {\|Z_{T,l}\| ≤ h_l for all block pairs (T, l) wit
+      last:  | (B-L) | [TK] ⇒ [LEAK(Q)]: on 𝓔^blk and {\|Z_{T,l}\| ≤ h_l for all block pairs (T, l) wit
+EXISTS           [REPORT.md] lemmas/L4_VIS.md -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+OK 8bbf3a1bd9be [REPORT.md] STATEMENT.md:235 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: | (B-V1) | (V-c), [TK], [LEAK(Q)], (AL) ⇒ P(e_n > n^{−κ}) → 0 and, by (AGG-d), [VIS(κ; Q)]
+      last:  | (B-V1) | (V-c), [TK], [LEAK(Q)], (AL) ⇒ P(e_n > n^{−κ}) → 0 and, by (AGG-d), [VIS(κ; Q)]
+EXISTS           [REPORT.md] lemmas/L4_VIS.md -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+OK 04ce537919be [REPORT.md] STATEMENT.md:212-218 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 
+      last:  (c) if Q = S₀, κ > ½ and n^{−1/2}𝔏^b_n(S₀; h)² → 0: o₀/T₁ → 1 in probability.
+EXISTS           [REPORT.md] lemmas/L5_ASM_STARTF.md -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+OK fc41e975f343 [REPORT.md] STATEMENT.md:244-263 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 
+      last:  constant level or in margin form, the hypotheses are partition-free, and the leading term,
+EXISTS           [REPORT.md] lemmas/L5_ASM_STARTF.md -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+OK 67b35e8bfe69 [REPORT.md] STATEMENT.md:267-270 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: levels in F1–F3).**
+      last:  κ₁ < κ_L(η, A), then (AL) holds and P(1 − π₀(𝓛(Q)) ≤ (|Q| + 1)n^{−κ} + n^{−κ}) → 1 for eve
+EXISTS           [REPORT.md] lemmas/L6_COROLLARIES.md -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+OK 171f1b31b11d [REPORT.md] STATEMENT.md:271-274 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: With η = 0 (no column outside Q gains anything): 1 − π₀(𝓛(Q)) = O_P((|Q| + 1)√(log n/n)) +
+      last:  with |U| ≤ 15, with a fixed η′ ∈ [0, 1). Then o₀ = O_P(n^{−(1−η′)/2}) + o_P(n^{−κ}) for ev
+EXISTS           [REPORT.md] lemmas/L6_COROLLARIES.md -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+OK 2a1d8963a926 [REPORT.md] STATEMENT.md:275-276 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: κ_V > ½: **o₀ is of exact order n^{−1/2}** (o₀ = O_P(n^{−1/2}), and o₀ ≥ ½(n + 1)^{−1/2} b
+      last:  * **F3 (bounded gains).** If δ²_{U,l} ≤ C₀τ²_U for every l ∉ Q, |U| ≤ 15, and (|Q| + 1)n^{
+EXISTS           [REPORT.md] lemmas/L6_COROLLARIES.md -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+OK dac88e1a5eb7 [REPORT.md] STATEMENT.md:277-286 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: fixed C₁: P(1 − π₀(𝓛(Q)) ≤ (|Q| + 1)n^{−1/2}e^{C₂√log n} + n^{−κ}) → 1 for every κ < κ_V, 
+      last:  c < (√(4A + 1) − √(2A))², which is strictly below 1 + 2A. That is a threshold for the disp
+EXISTS           [REPORT.md] lemmas/L3_LEAK.md -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+EXISTS           [REPORT.md] lemmas/L6_COROLLARIES.md -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+OK 86be6605be7d [REPORT.md] STATEMENT.md:220-225 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 
+      last:  (ii) if for all large n some truth j = j_n has δ²_{U,j} ≤ c·τ²_U·log n at U = U*_{b(j)} ∖ 
+EXISTS           [REPORT.md] lemmas/L7_NEC.md -> Theory_work/Wave3/W3-START/lemmas/L7_NEC.md
+OK efbcef844f17 [REPORT.md] STATEMENT.md:315-330 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 
+      last:  (PXN `STATEMENT.md:58-60`), is the law on PXN's family; strong-factor designs at p > K (PR
+EXISTS           [REPORT.md] lemmas/L7_NEC.md -> Theory_work/Wave3/W3-START/lemmas/L7_NEC.md
+OK 414090968c30 [REPORT.md] STATEMENT.md:289-304 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **(T3) Theorem START-R (random design).**
+      last:  this is only a convention that makes the joint-law statements meaningful — nothing is clai
+EXISTS           [REPORT.md] lemmas/L8_TRANSFER.md -> Theory_work/Wave3/W3-START/lemmas/L8_TRANSFER.md
+OK 76ef4c6932c9 [REPORT.md] STATEMENT.md:236 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: | (B-V2) | (V-m), [TK] ⇒ [VIS(κ; Q)], every κ < c_m/2 | new |
+      last:  | (B-V2) | (V-m), [TK] ⇒ [VIS(κ; Q)], every κ < c_m/2 | new |
+EXISTS           [REPORT.md] lemmas/L9_BR.md -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+OK db25afba4d07 [REPORT.md] STATEMENT.md:305-313 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: on invalid inputs. The same convention applies in (T3)(b) and in the random-candidate clau
+      last:  (δ_{U,l}/√Δ_U is a √n-scaled sample partial correlation), which a uniform bound δ²_{U,l} ≤
+EXISTS           [REPORT.md] lemmas/L9_BR.md -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+OK 0d92958907e2 [REPORT.md] STATEMENT.md:333-337 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: **(T5) Interface corollaries.**
+      last:  1_𝒜δ̄ = O_P(max(r_n, r^{post}_n)) whenever P-CONC holds with a deterministic rate r^{post}
+EXISTS           [REPORT.md] lemmas/L10_INTERFACES.md -> Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md
+OK e8d8353930ce [REPORT.md] STATEMENT.md:338-343 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: is supplied: P-CONC, P-MAP and SAMP's algorithm premises are not.
+      last:  Hence P-OVL in SAMP Theorem D's production form (max(n, p)·log₂(n + 1)·π₀(S₀) → ∞) holds w
+EXISTS           [REPORT.md] lemmas/L10_INTERFACES.md -> Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md
+OK 0bc9aef01c26 [REPORT.md] STATEMENT.md:345-356 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 
+      last:  design, on the high-probability design sets of (T3)(a). Candidate sets, supports or coeffi
+EXISTS           [REPORT.md] lemmas/L10_INTERFACES.md -> Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md
+OK 4f6152932197 [REPORT.md] STATEMENT.md:358-370 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 
+      last:  (V-R), (L-R) is in sources of author-only status. Outside the hypotheses, with the reason:
+EXISTS           [REPORT.md] lemmas/L11_EXAMPLES.md -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+OK 7193225a5b2c [REPORT.md] STATEMENT.md:134 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: ### 3.1 Fixed design — partition-free conditions on (X, θ*)
+      last:  ### 3.1 Fixed design — partition-free conditions on (X, θ*)
+OK f2076f58c9d0 [REPORT.md] STATEMENT.md:135-138 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * **(E) [A:START-E]** ‖μ‖² ≤ Mn; p ≤ n^A; s₀ fixed; p > s₀ for all large n (at least one n
+      last:  (FL) — implies (GF-16) with g_* = φ₀² for every n ≥ 2. (GF-16) also allows correlation-mat
+OK ee689febc05f [REPORT.md] STATEMENT.md:139-150 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 1/n, for example two columns at Euclidean distance of order 1.)
+      last:  the single-truth gain at level c_V given **every** 15-set, including sets of close correla
+OK b505265fe496 [REPORT.md] STATEMENT.md:151-156 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: does not.) For Q = S₀, R = ∅.
+      last:  every l ∉ Q and |U| ≤ 15 — the small-gain regime in which the table steps can be linearise
+OK f1e19670065d [REPORT.md] STATEMENT.md:159-160 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: ### 3.2 Gaussian rows — conditions on (Σ_n, θ*) (from RM `STATEMENT.md:134-145`)
+      last:  * **(FL-R16) [A:START-R-FL]** λ_min(Σ_{n,S}) ≥ c_Σ for every S with |S| ≤ 16 + s₀ — the sm
+OK 9c1bb140e4ee [REPORT.md] STATEMENT.md:161 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: RM's floor on Q ∪ {l} is not needed here (it is unused by the start component: RM `lemmas/
+      last:  RM's floor on Q ∪ {l} is not needed here (it is unused by the start component: RM `lemmas/
+OK 18be65e66608 [REPORT.md] STATEMENT.md:162-166 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: * **(V-R) [A:START-R-V]** = PTV(a_V): |Cov(W_j, Σ_{k∈S₀}θ*_kW_k | W_U)| ≥ a_V for every j 
+      last:  (L-loc-R) |Cov(W_l, W_v | W_{U₀})| ≤ r_n and |Cov(W_j, W_v | W_{U₀})| ≤ r_n for v ∈ U ∖ H_
+OK ca45499fcf88 [REPORT.md] STATEMENT.md:168-171 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 
+      last:  [A:BLOCK-LE-16] the partition is a function of X alone with |C_b| ≤ 16 (true of the coded 
+OK ca45499fcf88 [REPORT.md] STATEMENT.md:168-171 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 
+      last:  [A:BLOCK-LE-16] the partition is a function of X alone with |C_b| ≤ 16 (true of the coded 
+OK 727568dd9e75 [REPORT.md] STATEMENT.md:173-190 -> Theory_work/Wave3/W3-START/STATEMENT.md
+      first: 
+      last:  log-ratio bounds that follow, uniformly over the designs and coefficient vectors satisfyin
+EXISTS           [REPORT.md] GEN lemmas/L1_lemmaE.md -> Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md
+EXISTS           [REPORT.md] lemmas/L1_AGG_FLOOR.md -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+EXISTS           [REPORT.md] lemmas/L7_NEC.md -> Theory_work/Wave3/W3-START/lemmas/L7_NEC.md
+EXISTS           [REPORT.md] lemmas/L7_NEC.md -> Theory_work/Wave3/W3-START/lemmas/L7_NEC.md
+EXISTS           [REPORT.md] ASSUMPTION_MAP.md -> Theory_work/Wave3/W3-START/ASSUMPTION_MAP.md
+EXISTS           [REPORT.md] lemmas/L11_EXAMPLES.md -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+EXISTS           [REPORT.md] lemmas/L2_TK.md -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+EXISTS           [REPORT.md] numerics/RESULTS.md -> Theory_work/Wave3/W3-START/numerics/RESULTS.md
+EXISTS           [REPORT.md] lemmas/L9_BR.md -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+EXISTS           [REPORT.md] lemmas/L9_BR.md -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+EXISTS           [REPORT.md] numerics/RESULTS.md -> Theory_work/Wave3/W3-START/numerics/RESULTS.md
+EXISTS           [REPORT.md] numerics/lemmas/RESULTS_LEMMAS.md -> Theory_work/Wave3/W3-START/numerics/lemmas/RESULTS_LEMMAS.md
+EXISTS           [REPORT.md] citecheck.py -> Theory_work/Wave3/W3-START/citecheck.py
+EXISTS           [REPORT.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [REPORT.md] PLAN.md -> Theory_work/Wave3/W3-START/PLAN.md
+EXISTS           [REPORT.md] ASSUMPTION_MAP.md -> Theory_work/Wave3/W3-START/ASSUMPTION_MAP.md
+EXISTS           [REPORT.md] BRIEF.md -> Theory_work/Wave3/W3-START/BRIEF.md
+EXISTS           [REPORT.md] REPORT.md -> Theory_work/Wave3/W3-START/REPORT.md
+EXISTS           [REPORT.md] citecheck.py -> Theory_work/Wave3/W3-START/citecheck.py
+EXISTS           [REPORT.md] LOG.md -> Theory_work/Wave3/W3-START/LOG.md
+EXISTS           [REPORT.md] lemmas/L1_AGG_FLOOR.md -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+EXISTS           [REPORT.md] lemmas/L2_TK.md -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+EXISTS           [REPORT.md] lemmas/L3_LEAK.md -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+EXISTS           [REPORT.md] lemmas/L4_VIS.md -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+EXISTS           [REPORT.md] lemmas/L5_ASM_STARTF.md -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+EXISTS           [REPORT.md] lemmas/L6_COROLLARIES.md -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+EXISTS           [REPORT.md] lemmas/L7_NEC.md -> Theory_work/Wave3/W3-START/lemmas/L7_NEC.md
+EXISTS           [REPORT.md] lemmas/L8_TRANSFER.md -> Theory_work/Wave3/W3-START/lemmas/L8_TRANSFER.md
+EXISTS           [REPORT.md] lemmas/L9_BR.md -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+EXISTS           [REPORT.md] lemmas/L10_INTERFACES.md -> Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md
+EXISTS           [REPORT.md] lemmas/L11_EXAMPLES.md -> Theory_work/Wave3/W3-START/lemmas/L11_EXAMPLES.md
+EXISTS           [REPORT.md] numerics/run_start.R -> Theory_work/Wave3/W3-START/numerics/run_start.R
+EXISTS           [REPORT.md] numerics/start_common.R -> Theory_work/Wave3/W3-START/numerics/start_common.R
+EXISTS           [REPORT.md] numerics/summarise.R -> Theory_work/Wave3/W3-START/numerics/summarise.R
+EXISTS           [REPORT.md] numerics/RESULTS.md -> Theory_work/Wave3/W3-START/numerics/RESULTS.md
+EXISTS           [REPORT.md] numerics/lemmas/lem_common.R -> Theory_work/Wave3/W3-START/numerics/lemmas/lem_common.R
+EXISTS           [REPORT.md] numerics/lemmas/falsify_L1.R -> Theory_work/Wave3/W3-START/numerics/lemmas/falsify_L1.R
+EXISTS           [REPORT.md] numerics/lemmas/falsify_L2_L3.R -> Theory_work/Wave3/W3-START/numerics/lemmas/falsify_L2_L3.R
+EXISTS           [REPORT.md] numerics/lemmas/falsify_L4_L5.R -> Theory_work/Wave3/W3-START/numerics/lemmas/falsify_L4_L5.R
+EXISTS           [REPORT.md] numerics/lemmas/falsify_L6_L11.R -> Theory_work/Wave3/W3-START/numerics/lemmas/falsify_L6_L11.R
+EXISTS           [REPORT.md] numerics/lemmas/RESULTS_LEMMAS.md -> Theory_work/Wave3/W3-START/numerics/lemmas/RESULTS_LEMMAS.md
+EXISTS           [REPORT.md] reviews/INPUTS.txt -> Theory_work/Wave3/W3-START/reviews/INPUTS.txt
+EXISTS           [REPORT.md] reviews/CITECHECK.txt -> Theory_work/Wave3/W3-START/reviews/CITECHECK.txt
+EXISTS           [lemmas/L10_INTERFACES.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L10_INTERFACES.md] lemmas/L1_AGG_FLOOR.md -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+EXISTS           [lemmas/L10_INTERFACES.md] lemmas/L2_TK.md -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+EXISTS           [lemmas/L10_INTERFACES.md] lemmas/L3_LEAK.md -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+EXISTS           [lemmas/L10_INTERFACES.md] lemmas/L4_VIS.md -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+EXISTS           [lemmas/L10_INTERFACES.md] lemmas/L5_ASM_STARTF.md -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+EXISTS           [lemmas/L10_INTERFACES.md] lemmas/L8_TRANSFER.md -> Theory_work/Wave3/W3-START/lemmas/L8_TRANSFER.md
+EXISTS           [lemmas/L10_INTERFACES.md] lemmas/L9_BR.md -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+EXISTS           [lemmas/L10_INTERFACES.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md -> Theory_work/Wave3/W3-SAMP/STATEMENT.md
+EXISTS           [lemmas/L10_INTERFACES.md] lemmas/L5_ASM_STARTF.md -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+OK e3c287389cbe [lemmas/L10_INTERFACES.md] SAMP STATEMENT.md:76 -> Theory_work/Wave3/W3-SAMP/STATEMENT.md
+      first: - **P-START**: 1_𝒜·o₀ → 0 in probability, i.e. π₀(S₀) → 1 on 𝒜 — no rate (PROGRAM item 2's
+      last:  - **P-START**: 1_𝒜·o₀ → 0 in probability, i.e. π₀(S₀) → 1 on 𝒜 — no rate (PROGRAM item 2's
+EXISTS           [lemmas/L10_INTERFACES.md] lemmas/L7_NEC.md -> Theory_work/Wave3/W3-START/lemmas/L7_NEC.md
+OK 4e1071a0896b [lemmas/L10_INTERFACES.md] Theory_work/Wave1C/C-MIS/STATEMENT.md:39-58 -> Theory_work/Wave1C/C-MIS/STATEMENT.md
+      first: * **D0 (method).** The method is **re-run on the candidate data** (X^r_𝒞, y^r) only — not 
+      last:  Then y^r = (α + a)1 + X^r_𝒞β^𝒞 + ε′, ε′ := ε + ξ, and ε′ | X^r_𝒞 ~ N_n(0, σ_𝒞²I) (so ε′ is
+EXISTS           [lemmas/L10_INTERFACES.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L10_INTERFACES.md] lemmas/L8_TRANSFER.md -> Theory_work/Wave3/W3-START/lemmas/L8_TRANSFER.md
+EXISTS           [lemmas/L11_EXAMPLES.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L11_EXAMPLES.md] lemmas/L3_LEAK.md -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+EXISTS           [lemmas/L11_EXAMPLES.md] lemmas/L6_COROLLARIES.md -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+EXISTS           [lemmas/L11_EXAMPLES.md] lemmas/L9_BR.md -> Theory_work/Wave3/W3-START/lemmas/L9_BR.md
+EXISTS           [lemmas/L11_EXAMPLES.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L11_EXAMPLES.md] Theory_work/Wave3/W3-RM/lemmas/L3_SANDR.md -> Theory_work/Wave3/W3-RM/lemmas/L3_SANDR.md
+EXISTS           [lemmas/L1_AGG_FLOOR.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L1_AGG_FLOOR.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L1_AGG_FLOOR.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L1_AGG_FLOOR.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L2_TK.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L2_TK.md] Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md -> Theory_work/Wave1/W1-GEN/lemmas/L1_lemmaE.md
+EXISTS           [lemmas/L2_TK.md] Theory_work/Wave1C/C-GROW/lemmas/L0_toolkit.md -> Theory_work/Wave1C/C-GROW/lemmas/L0_toolkit.md
+EXISTS           [lemmas/L2_TK.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L2_TK.md] lemmas/L3_LEAK.md -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+EXISTS           [lemmas/L2_TK.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L3_LEAK.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L3_LEAK.md] lemmas/L2_TK.md -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+EXISTS           [lemmas/L3_LEAK.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L3_LEAK.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L4_VIS.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L4_VIS.md] lemmas/L2_TK.md -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+EXISTS           [lemmas/L4_VIS.md] lemmas/L1_AGG_FLOOR.md -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+EXISTS           [lemmas/L4_VIS.md] lemmas/L3_LEAK.md -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+EXISTS           [lemmas/L4_VIS.md] lemmas/L5_ASM_STARTF.md -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+EXISTS           [lemmas/L5_ASM_STARTF.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L5_ASM_STARTF.md] lemmas/L1_AGG_FLOOR.md -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+EXISTS           [lemmas/L5_ASM_STARTF.md] lemmas/L2_TK.md -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+EXISTS           [lemmas/L5_ASM_STARTF.md] lemmas/L3_LEAK.md -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+EXISTS           [lemmas/L5_ASM_STARTF.md] lemmas/L4_VIS.md -> Theory_work/Wave3/W3-START/lemmas/L4_VIS.md
+EXISTS           [lemmas/L6_COROLLARIES.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L6_COROLLARIES.md] lemmas/L3_LEAK.md -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+EXISTS           [lemmas/L6_COROLLARIES.md] lemmas/L5_ASM_STARTF.md -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+EXISTS           [lemmas/L6_COROLLARIES.md] lemmas/L1_AGG_FLOOR.md -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+EXISTS           [lemmas/L6_COROLLARIES.md] lemmas/L5_ASM_STARTF.md -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+EXISTS           [lemmas/L6_COROLLARIES.md] lemmas/L3_LEAK.md -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+EXISTS           [lemmas/L6_COROLLARIES.md] lemmas/L7_NEC.md -> Theory_work/Wave3/W3-START/lemmas/L7_NEC.md
+EXISTS           [lemmas/L7_NEC.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L7_NEC.md] lemmas/L2_TK.md -> Theory_work/Wave3/W3-START/lemmas/L2_TK.md
+EXISTS           [lemmas/L7_NEC.md] lemmas/L1_AGG_FLOOR.md -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+EXISTS           [lemmas/L7_NEC.md] lemmas/L6_COROLLARIES.md -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+EXISTS           [lemmas/L7_NEC.md] lemmas/L1_AGG_FLOOR.md -> Theory_work/Wave3/W3-START/lemmas/L1_AGG_FLOOR.md
+EXISTS           [lemmas/L7_NEC.md] lemmas/L6_COROLLARIES.md -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+EXISTS           [lemmas/L7_NEC.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L8_TRANSFER.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L8_TRANSFER.md] lemmas/L5_ASM_STARTF.md -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+EXISTS           [lemmas/L8_TRANSFER.md] lemmas/L6_COROLLARIES.md -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+EXISTS           [lemmas/L8_TRANSFER.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L8_TRANSFER.md] lemmas/L5_ASM_STARTF.md -> Theory_work/Wave3/W3-START/lemmas/L5_ASM_STARTF.md
+EXISTS           [lemmas/L9_BR.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L9_BR.md] lemmas/L3_LEAK.md -> Theory_work/Wave3/W3-START/lemmas/L3_LEAK.md
+EXISTS           [lemmas/L9_BR.md] lemmas/L6_COROLLARIES.md -> Theory_work/Wave3/W3-START/lemmas/L6_COROLLARIES.md
+EXISTS           [lemmas/L9_BR.md] lemmas/L8_TRANSFER.md -> Theory_work/Wave3/W3-START/lemmas/L8_TRANSFER.md
+EXISTS           [lemmas/L9_BR.md] Theory_work/Wave3/W3-RM/lemmas/L3_SANDR.md -> Theory_work/Wave3/W3-RM/lemmas/L3_SANDR.md
+EXISTS           [lemmas/L9_BR.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L9_BR.md] STATEMENT.md -> Theory_work/Wave3/W3-START/STATEMENT.md
+EXISTS           [lemmas/L9_BR.md] lemmas/L8_TRANSFER.md -> Theory_work/Wave3/W3-START/lemmas/L8_TRANSFER.md

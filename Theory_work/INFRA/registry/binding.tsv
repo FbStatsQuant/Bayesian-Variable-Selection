@@ -180,3 +180,5 @@ W2-FAC-PK:Thm-PATH	A:GAUSS-NOISE	W1-GEN:L1	chi^2/Gaussian tails over a polynomia
 W2-FAC-PK:Thm-PATH	A:BLOCK-LE-16	W2-FAC-PK:L3.4	potential budget log C(2p-1,K)<=2.39K bounds path length m*<=(1+6eps)K+O(log^2 n)		DRAFT binding (helper, not verified; confirm at the strength gate).
 W2-FAC-PK:Thm-PATH	A:OP	SOP:TH05.0	M5(0) pathwise composition needs exact arithmetic, ideal streams, emitted LS0 centre, complete scans (premises named, not discharged)		DRAFT binding (helper, not verified; confirm at the strength gate). [OP] closure unchecked; e4 replaced by e4' in C-PACK:I1-e4prime
 W2-APP:POST	A:COEF-BOUNDED	W2-APP:POST	theta_hi bounds the energy term in the T03♯ transfer		added in R01; DRAFT
+W3-START:VIS-m	A:START-V	W3-START:AGG	the deterministic lower bound of the start odds by c_s times Xi (Xi tending to 0 is necessary when s0 + 16 is at most K)		ingested
+W3-START:START-F	A:START-V	W3-START:NEC-b	one truth below the level 1 + 2A sends pi0(S0) to 0		ingested

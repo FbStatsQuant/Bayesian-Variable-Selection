@@ -1,5 +1,8 @@
 # Theory Wave 3 — protocol (binding)
 
+> **2026-11-15: superseded for new tickets by `PROTOCOL_v4.md`** (adopted by HQ, with amendments H1–H4). This file stays binding for tickets started under it (W3-P6, W3-SCALE).
+
+
 Extends `Theory_work/Wave2/PROTOCOL.md` (which extends Wave1C and Wave1): three review layers (statement lock;
 lemma-by-lemma cross-family checks with falsification numerics; independent mid-point; exhaustive sweep; council of one
 OpenAI seat + one Claude seat, both ≥ 8.0 with all six gates in the same round, max 3 rounds), anti-hallucination rules

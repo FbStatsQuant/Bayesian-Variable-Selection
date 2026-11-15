@@ -1,0 +1,9 @@
+K8  product-form identity, 2000 (l,U): max abs error = 5.42e-20
+K9  sample selection removal, n = 4000, 5 designs x 200 (l,U): max |z_U - z_U0| / (ell + r h + h^2) = 0.954 ; max |z_U0| / h_n = 1.11 ; (ratio to the norm-product scale r^2 + h^2: 1.08)
+K10 spherical tail, n = 300, 40000 draws: P(h >= 4) = 0.0471 ; chi2_1 tail = 0.0455 ; ratio = 1.04
+K10 spherical tail, n = 300, 40000 draws: P(h >= 8) = 0.0045 ; chi2_1 tail = 0.00468 ; ratio = 0.962
+K10 spherical tail, n = 300, 40000 draws: P(h >= 12) = 0.000625 ; chi2_1 tail = 0.000532 ; ratio = 1.17
+K10 population leak of this pair: |Cov(W_l, W_j | W_U0)| = 3.89e-05 (sqrt(n)*leak = 0.000674)
+K11 p = 1 score difference, 200 cases: max |definition - closed form| = 1.21e-13
+K12 E4, n = 900, q = 15, p = 300: min eigenvalue of the Gram = 0.7201 ; max deviation of the proxy regression from (r, 0, ..., 0) over 500 (T, l) = 0
+K13 E5, a = 0.5, q = 15, 300 (T, l): max error in v_t and orthogonality = 2.22e-16 ; max(lhs - rhs) of (5.1) = -1.57 (must be <= 0)

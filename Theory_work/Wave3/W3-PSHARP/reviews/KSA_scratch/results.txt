@@ -1,0 +1,6 @@
+Sphere: 2424 pointwise bounds; Gamma ratios and 24 truncated moment pairs PASS (60 digits; includes d=3, tau=d/2).
+Reduction R: epsilon chain PASS on 100001 points, including near 0 and 1.
+V/S: 15360 one-step pairs (all subset sizes, including beyond K); 9280 admissible posterior-ratio bounds PASS.
+Max relative determinant error 6.302e-12; gain error/Q_or_1 2.387e-15; residual identity absolute error 3.064e-14.
+V, rank-only sphere bounds: 600 cases PASS, including empty truth, exact rank deficiency, near singular truth, and n=3.
+Existing F1, spherical V1, orthogonal V1 rerun; see stdout.txt for their printed errors.

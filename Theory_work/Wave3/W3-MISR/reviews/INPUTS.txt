@@ -1,0 +1,23 @@
+# W3-MISR: external inputs the proofs rely on (PROTOCOL rule 15). Premise sources, inherited proofs, pinned code.
+# No wave documents, no registry tables.
+Theory_work/Wave3/W3-POST/STATEMENT.md
+Theory_work/Wave3/W3-POST2/STATEMENT.md
+Theory_work/Wave3/W3-POST2/lemmas/A_occam.md
+Theory_work/Wave3/W3-POST2/lemmas/B_tail_approx.md
+Theory_work/Wave3/W3-POST2/lemmas/C_expectation.md
+Theory_work/Wave3/W3-POST2/lemmas/D_hellinger.md
+Theory_work/Wave3/W3-POST2/lemmas/E_visibility.md
+Theory_work/Wave1C/C-MIS/STATEMENT.md
+Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md
+Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md
+Theory_work/Wave1C/C-MIS/lemmas/L4_theoremF.md
+Theory_work/Wave1C/C-MIS/lemmas/L5_frontier.md
+Theory_work/Wave1C/C-MIS/lemmas/L6_null.md
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/W1-T03R/PROOF.md
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/main@c4ef0dc/Docs/Theory/proofs/T03_A2_selection_consistency/PROOF_v2.tex
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/main@c4ef0dc/Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex
+Scripts/SMC_BVS/core/v3_preprocess.R
+Scripts/SMC_BVS/core/v3_fit.R
+Scripts/SMC_BVS/core/v3_setup.R
+Scripts/SMC_BVS/core/cpp/v3_score.h
+Scripts/SMC_BVS/core/cpp/v3_core.cpp

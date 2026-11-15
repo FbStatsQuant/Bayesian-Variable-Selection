@@ -1,0 +1,22 @@
+K1  L0 (T3): R_A := log m(A) - c'_n + |A|/2 log(n+1) + nu log RSS_A must satisfy -0.52/c_E <= R_A <= |A|/((n-1)phi0^2)
+    n=400 p=300 sizes up to 60: R_A in [-6.5586, -0.0235]; kappa_E = 76.7; lower bound ok: TRUE; upper bound ok: TRUE
+    n=1600 p=600 sizes up to 200: R_A in [-6.5385, -0.0100]; kappa_E = 76.7; lower bound ok: TRUE; upper bound ok: TRUE
+    n=1600 p=600 sizes up to 400: R_A in [-7.9147, -0.0100]; kappa_E = 77.0; lower bound ok: TRUE; upper bound ok: TRUE
+K2  L0 (E6-tab) on PRODUCTION block tables: D := log r_b(U') - log r_b(U) + (|U'|-|U|)/2 log(n+1) + nu log(RSS_U'/RSS_U)
+    1428 nested pairs in 25 production blocks: D in [-0.2779, 0.0093]; allowed |D| <= 2 kappa_E = 140.4; ok: TRUE
+    L1 Fact 2 (tau-form RSS floor): min over these U of RSS_U/((n-1) tau_U^2) = 0.938 (the lemma needs it >= 1 - o(1))
+K3  L2 NA-conv / W-conv: D := [F(T+l) - F(T)] - [Z^2 - a0(k)^2]/2 must lie in [-log 2 - 2 kappa_E - 2 n^(-1/3) Z^2, 1/2 + 2 kappa_E]
+    n=1600 p=3200 b=0.50 (|Q|=42): 4800 lattice pairs, sizes up to 42; D in [-0.692, -0.420]; kappa_E = 70.2; outside the proved bounds: 0 above, 0 below; pairs with Z^2 <= c_n(k) and F(T+l) >= F(T): 0
+      (observed D is within [-0.69, -0.42]: the score increment equals (Z^2 - a0^2)/2 up to a bounded constant, as both lemmas use)
+    n=1600 p=3200 b=0.75 (|Q|=255): 4800 lattice pairs, sizes up to 255; D in [-0.692, 0.340]; kappa_E = 70.2; outside the proved bounds: 0 above, 0 below; pairs with Z^2 <= c_n(k) and F(T+l) >= F(T): 0
+      (observed D is within [-0.69, 0.34]: the score increment equals (Z^2 - a0^2)/2 up to a bounded constant, as both lemmas use)
+K4  L2 (3.1): (u_{T,l}'g)^2 <= (u_{Q_l,l}'g)^2 + |(P_Q - P_S0) g|^2 for every lattice pair (deterministic inequality)
+    8704 directions x 200 Gaussian draws: max of (lhs - rhs) = -7.608e-01 (must be <= 0 up to rounding)
+K5  L2 3(v): u_{T,l} = v - sum_t (lambda_t |x_t| / |a|) x_t/|x_t| with v = (I-P_B)x_l/|a|, B = T cap N_l (exact identity)
+    300 random (T,l,N_l): max |reconstruction - u_{T,l}| = 7.82e-16; max of |v|^2 - (1 + |lambda|_1^2/phi0^2) = 0.000e+00 (must be <= 0)
+K6  L2 Lemmas NA-W / W-conv at small n (illustration of the dichotomy; n = 240, p = 40, 8 extras, 256 lattice sets)
+    design 'orth': width gap w0 = -0.44 (MC, 3000 draws; sd of the maximum 0.43 <= 1); frequency of the event bounded by exp(-w0^2/8) = 0.976: 0.2753; frequency of {max_P (|Z| - a0) > 0}: 0.144
+    design 'iid': width gap w0 = -0.39 (MC, 3000 draws; sd of the maximum 0.44 <= 1); frequency of the event bounded by exp(-w0^2/8) = 0.981: 0.3077; frequency of {max_P (|Z| - a0) > 0}: 0.175
+    design 'wide': width gap w0 = +0.07 (MC, 3000 draws; sd of the maximum 0.50 <= 1); frequency of the event bounded by exp(-w0^2/8) = 0.999: 0.4973; frequency of {max_P (|Z| - a0) > 0}: 0.533
+K7  L2 Lemma d: d_n = E max over truth-removal directions (deletions and swaps) vs the bound sqrt(q+1) + sqrt(2 log p)
+    1080 sampled directions: MC d_n >= 1.71; bound = 6.03; ok: TRUE

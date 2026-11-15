@@ -1,0 +1,18 @@
+# W3-START2 — external inputs the statement and the proofs rely on (PROTOCOL rule 15). Repo-relative paths.
+# No wave document and no registry table is listed.
+# pinned code (the start as coded; pins in the base statement, section 1)
+Scripts/SMC_BVS/core/cpp/v3_score.h
+Scripts/SMC_BVS/core/cpp/v3_start.h
+Scripts/SMC_BVS/core/cpp/v3_blocks.h
+Scripts/SMC_BVS/core/cpp/v3_core.cpp
+Scripts/SMC_BVS/core/v3_preprocess.R
+Scripts/SMC_BVS/core/v3_setup.R
+# base ticket W3-START: statement v1.3.4 and the inherited proof files
+Theory_work/Wave3/W3-START/STATEMENT.md
+Theory_work/Wave3/W3-START/lemmas
+# sources of definitions and consumers' statements
+Theory_work/Wave3/W3-RM/STATEMENT.md
+Theory_work/Wave3/W3-SAMP/STATEMENT.md
+Theory_work/Wave1/W1-PXN/STATEMENT.md
+# helper sourced by numerics/falsify_P.R (base ticket; read-only)
+Theory_work/Wave3/W3-START/numerics/lemmas/lem_common.R

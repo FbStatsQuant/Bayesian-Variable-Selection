@@ -223,3 +223,113 @@
   = infeasibility finding → return to HQ. Stage 2 conditional: reps 11–20 only on cells with 1–3 failures; within the
   remaining budget, else the owner is asked for that cell's measured cost. Pooled 0/40 is a gate statement only.
   summarize.py v4 (Sol R02 fixes + Group A header) with a fresh Sol review before any analysis.
+- 2026-11-12 ~11:40 CT (owner): **non-stop mode this week** on Claude Personal (owner has resets): keep working
+  continuously, no pacing pauses, no bursts — ≤ 4 Claude leads at once, effort ≤ high, Fable only where necessary
+  (new hard proofs). Plan to Sunday: record the 5 council-passed tickets; RM2 riders + T7 (Opus); P6 → D1; editorial
+  pass; chapter v2.0 + council + API audit. W3-PATH scoping LAUNCHED (Fable 5.2 CP lead, BVS-wt/W3-PATH) to CP1; proof
+  leg needs the owner's go after CP1.
+- 2026-11-12 ~12:00 CT (owner) **PLAN TO END OF CAMPAIGN.** (1) Now → weekend: let the current campaign run its course
+  on remaining CP fuel, no resets: R06, record W3-START/START2/PSHARP/MISR/RM2, P6 stage 1 on NOTS (3-hourly watcher).
+  W3-PATH not launched yet (brief ready, branch theory/W3-PATH). (2) Sun 11-15: $200 API credit (owner raises the Console
+  monthly limit) = precision strikes only: blind Fable batch audit + sharpness pass of the newly recorded tickets (~$50);
+  Mon–Wed break-reviews of PATH/T7 checkpoints (~$50); final chapter v2.0 audit (~$50); reserve (~$50). No API-run agent
+  leads. (3) Mon 11-16 16:00 CT: weekly reset → furnace on, non-stop: **Opus-driven volume**, Fable only as needed
+  reinforcement (W3-PATH lead; stuck key lemmas); ≤ high effort. Owner triggers the full reset mid-week (~Wed–Thu) when the
+  weekly budget runs out with high-value work in flight (HQ forecasts at ~80%; shared with the BNP Lean project).
+  (4) OpenAI (codex) account recovers without a reset: Sol/Astra reviews keep the same cadence and discipline — one
+  reviewer per gate, narrow rechecks, no redundant seats.
+- 2026-11-12 ~13:30 CT R06 MERGED (c3cc7d0; Sol parser re-check RESOLVED; 169/169). Seat addenda (same seat models,
+  no rescoring): START 21/21 + 21/21; PSHARP 4/4 + 4/4; MISR 7/7 + 7/7; RM2 astra 18/18, opus 16 + NOT-EXAMINED
+  Ex-PolyR, Ex-PolyF. Consultant-advised: (1) W3-START blocked only by 4 free-text Opus body cells → INFRA R07 adds ONE
+  anchored body form ("accepted [with non-blocking remarks] [(…)]"), tests + one narrow Sol check, then record all 21
+  (no split record; START2 depends on BR/OVL). (2) RM2 Ex-PolyR/Ex-PolyF recorded unchecked (Astra ACCEPT + LC2-C line
+  check; no consumers), named in RM2's next council round; targeted Opus review first only if the owner's RM2
+  supersession decision leans on the α > 2 polynomial-decay example. Recording of PSHARP and MISR delegated (Opus,
+  authorized for main merges per ACCEPTANCE/RECORD_BRIEF.md).
+- 2026-11-12 afternoon: **all five council-passed tickets RECORDED on main** (Opus recorder for HQ; dry run first each time;
+  consultant on every judgment call): W3-PSHARP 4 (07ee8b0); W3-MISR 7, six conditional on unchecked inputs (alias
+  C-MIS:GDb, 81b0131); W3-START 21 (a3404b3; after INFRA R07 merged 526b84a: same-seat addendum = seat decision table,
+  body scanned for a closed negative list); W3-START2 9 (2d2b255; implies rows over START not recorded — owner);
+  W3-RM2 16 checked + Ex-PolyR/Ex-PolyF unchecked (223f8e4; on the restored R1 snapshot; post-council edits parked;
+  SAND-R/D-loc/NA-R note edges only, RM2 re-proves them; RM2-F/Cont-F/Ex-Proxy/Ex-Equi conditional on SOP:TH09;
+  RM2-R/POST-R/Cont-R conditional on W2-APP:POST; no supersession over RM-F/R — owner). test_lifecycle R06 entry
+  for RM2 now points at MANIFEST_R1. Owner decisions pending: supersessions RM-F/R→RM2, C-MIS→MIS-R, START→START2;
+  optional Sunday API audit of W2-APP:POST, SOP:TH09/TH128, C-MIS:Prop-P/GD(b) to lift conditions.
+- 2026-11-12 15:10 CT CORRECTION (watchdog note): W3-PATH was NOT launched — only its brief exists (branch theory/W3-PATH);
+  the 10:29 "LAUNCHED" line is superseded by the owner's 12:00 plan (scoping starts Mon 11-16 16:00 CT).
+- 2026-11-12 ~15:30 CT W3-P6 hardware (consultant concurs; no affected outcome seen): NOTS commons mixes sapphirerapids
+  (reference; smoke/limits costed there) and cascadelake (~1.7–2× slower). DESIGN_NOTES N2: any time-dependent stop
+  (guard, preflight, escalation refusal, Slurm time kill) on non-reference hardware = hardware rerun (new RUN_ID, same
+  seed; not censoring, not failure; does not use the rerun-once allowance); node type recorded for every fit. Cancel
+  s1_c, s1_b, s1_d1 tasks 4–5 → rerun on sapphirerapids; all further releases sapphirerapids-only; h1/h2 finish on
+  cascadelake. Stage-1 projection stop raised 1,700 → 1,896 ceiling (hardware loss logged); watchdog hold line 1,880;
+  PROTOCOL rule 12's 1,700 line is superseded for stage 1. Pre-declared cut order if still over: (75,75), (100,100),
+  h1b/h2b reps 6–10; never the four D1 cells.
+- 2026-11-13 W3-SCALE CP2 (leg B) ACCEPTED: engine revision D byte-identical (24/24 PROD-H, 10/10 supp), setup 3.7× and
+  step ~28% faster; B4 preflight admits 20k (10.4 h vs 969 h); DESIGN_v1 rev 3 (Astra R04 UNSOUND rev 2, all accepted;
+  rev 3 unreviewed); B3 census: σ̂(log Ẑ_r) at N = 2,500 is 0.09 at 2k but 0.76–1.15 at 5k–20k, and at 5k N×4 leaves a
+  right tail (one island 79% weight); PIPs agree across islands (≤ 5e-4). B2 under O17: B2-1 trace replay at p ≤ 2k +
+  B2-2 serial-only cost column for production (lead's recommendation). Leg C starts with Monday's furnace, after the
+  theory items; first a Sol code review of revision D. **For the owner (p = 1M planning):** B2-3 cost-column
+  redefinition; (i) p = 1M fixed N per island — the evidence dispersion at p ≥ 5k does not shrink with N at fixed
+  calibration; (ii) primary PIP — moot on current data (islands agree).
+- 2026-11-13 ~10:30 CT W3-P6 stage 1: P6 release watcher and NOTS home guard had been left DISABLED by an HQ manual run
+  (~8 h stall); re-enabled. Lead woken: all 19 tasks read back clean; d2 ((100,1000) reps 7–10) released; ledger 1,731.4.
+  Outcomes so far (descriptive; failure = HPM ≠ S₀, MR1 cap): (100,1000) 6/6; (100,250) ρ=.5 10/10; (75,750) 8/10
+  (2 posterior failures → stage-2 eligible); breadth ρ=.7 5/5, s₀=8 5/5; no search failures. Decisions: (75,188) reps
+  1–5 at 10:00 now; breadth reps 6–10 CUT (pre-declared order); stage 2 of (75,750) (reps 11–20, ≈108 expected / ≈200
+  worst core-h) does not fit under 1,896 → owner asked for that cell's measured cost (per the 11-12 rule).
+
+## 2026-11-15 ~15:35 CT — W3-DIST opened (owner request: distribution-level consistency, Song–Liang Thm 1–2 analog)
+- Owner asked for consistency of distributions alongside selection. Gap per C-PACK SONG_LIANG_MAP rows 1–4, 8: we have
+  in-sample fixed-design Hellinger (W3-POST2 D, council-passed) and T04 contraction (legacy), but no random-design (x, y)
+  Hellinger theorem and no distribution-level result for what the coded SMC returns.
+- Ticket W3-DIST, scoping leg to CP1: lead Fable 5.2 high on the **Claude Third** account (new; Owls only; owner: ample
+  limits), brief `Theory_work/Wave3/W3-DIST/BRIEF.md` (1610990). One blind Astra read at CP1. Proof leg decided by HQ at CP1
+  (target: into chapter v2.0 this week). Song–Liang PDF copied to the Owls clone (gitignored).
+
+## 2026-11-15 ~16:10 CT — review/trace/rollback hardening (owner request) + protocol consultant
+- Owner: protocols must review throughout the chain and at checkpoints, with strong trace/rollback for errors and
+  sub-par results; councils kept, but no nit-picking or complexity for its own sake.
+- **Done now (W3-DIST):**
+  - branch `theory/W3-DIST` with an Owls worktree `/home/fb31/BVS-wt/W3-DIST`;
+  - hourly cron restore point (`~/.config/bvs-hq/snap/snapshot_ticket.sh W3-DIST`, :17 every hour; commits and pushes
+    only on change);
+  - steer A2 to the lead: DEPS.md lemma DAG (versions; SUSPECT propagation; no lemma consumed before its line check),
+    and a STATEMENT changelog tagged STRONGER/WEAKER/EQUAL, where any WEAKER edit is an early checkpoint;
+  - rule 3 sharpness gate at CP1.
+- **Consultant:** Fable 5.2 high on Claude Third (Owls), brief `Theory_work/Wave3/PROTOCOL_REVIEW/BRIEF.md` (cef2c32).
+  It is to count evidence-based yield per review layer, propose council rules without nit-picking, embedded review,
+  trace/rollback and a sub-par guard, and deliver a SHORTER consolidated PROTOCOL v4 proposal. HQ adopts what is
+  justified. Changes to review layers that need owner approval (rule 14) go to Felipe in one batch.
+- Monitoring note: heartbeat, watchdog, daily CI, P6 watcher and home guard are currently DISABLED (budget run-down to
+  the Mon 16:00 reset). P6 has no jobs queued (stage 1 ended; 1,716 core-h). Re-enable at the furnace start.
+
+## 2026-11-15 ~17:10 CT — PROTOCOL v4 adopted (consultant review), with HQ amendments H1–H4
+- Consultant (Fable 5.2, Claude Third) reviewed the record of 32 tickets (~320 reviews, 43 council rounds):
+  `Theory_work/Wave3/PROTOCOL_REVIEW/` (EVIDENCE, MEMO, mining/, PROTOCOL_v4_PROPOSAL).
+  - Real catches come from the statement lock, lemma line checks, the sweep, council R1 and the better-theorem review.
+  - Noise comes from mid-points (25/25 CONTINUE), council R2/R3 (2 of 21 blocking MAJORs were proof errors) and the
+    acceptance-tooling loops.
+  - Largest late-error source: text edited after its last check.
+- Adopted as `Theory_work/Wave3/PROTOCOL_v4.md`, binding for W3-DIST (now) and every ticket opened after today. W3-P6 and
+  W3-SCALE finish under PROTOCOL.md. Highlights:
+  - DEPS.tsv with checked hashes, and a freeze rule;
+  - STATEMENT changelog with reviewer-confirmed tags;
+  - TARGET.md (parity table) at CP1;
+  - council blocks only on C/S/F, editorial goes to ERRATA, a diff round instead of blind re-rounds;
+  - REPORT restates nothing;
+  - restore points every 15 min, logged, with RP labels;
+  - NORMAL/EFFICIENT modes.
+- **Amendments:**
+  - H1: NORMAL mode (owner: keep codex as we are).
+  - H2: owner-gated items pending Felipe:
+    - (a) the W3-14 "no layer skipped without Felipe" rule stays, and tiers wait for his OK;
+    - (b) CP2 break review also asks the mid-point question;
+    - (c) supersession stays as now.
+  - H3: API attempts are proof material, never reviews.
+  - H4: HQ tooling.
+- **Done:**
+  - Owls snapshot script upgraded to v4 §8 (cron */15, log line per run, RP labels);
+  - W3-DIST steered (A4);
+  - W3-PATH brief to be amended before its Monday launch.

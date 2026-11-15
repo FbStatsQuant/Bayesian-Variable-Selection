@@ -14,6 +14,14 @@ The first line of OUT is `MANIFEST <digest>`, where digest = sha256 of the sorte
 from the stored rows (a corrupted or hand-edited header fails) and from the current files. Name the round's manifest
 `TICKET_DIR/reviews/MANIFEST_<round>.txt`: CP3 acceptance looks for the council digest there and verifies it.
 
+Line endings (INFRA R06). A text file is the same input on an LF and on a CRLF checkout. A file is EOL-normalisable
+iff it contains no NUL byte and every CR in it is the first half of a CRLF pair. For such a file `freeze` records the
+sha256 of its LF-normalised content (every CRLF -> LF) and `verify` accepts a recorded hash equal to the sha256 of its
+raw bytes, of its LF-normalised content or of its CRLF-ised content (LF-normalised, then every LF -> CRLF), so manifests
+frozen before R06 (raw bytes of a mixed LF/CRLF tree) verify on any uniform checkout. Any other file (a NUL byte:
+binary; a lone CR, e.g. CR CR LF) is hashed raw only, on freeze and on verify, so no variant of it can match another
+content (Sol R06FIX F1). Any byte change beyond a CRLF <-> LF conversion still fails.
+
 Council verdict line (LIFECYCLE §4.1). Every council review file contains, on a line of its own (optionally wrapped
 in backticks), exactly once:
     COUNCIL-VERDICT round=R<k> manifest=<64-hex digest> seat=<seat> score=<x.y> gates=PASS|FAIL
@@ -42,11 +50,39 @@ def repo_root(start):
     return out.stdout.strip()
 
 
+def _h(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def eol_text(data):
+    """INFRA R06: EOL-normalisable text = no NUL byte and every CR is the first half of a CRLF pair. Only such a file
+    is line-ending normalised; a binary file (NUL) or one with a lone CR is hashed raw only (Sol R06FIX F1: CR CR LF
+    normalised to CR LF would otherwise match the raw hash of a different file)."""
+    return b"\0" not in data and data.count(b"\r") == data.count(b"\r\n")
+
+
+def lf_normalised(data):
+    """Every CRLF pair -> LF for EOL-normalisable text; any other content unchanged."""
+    return data.replace(b"\r\n", b"\n") if eol_text(data) else data
+
+
 def sha(p):
-    return hashlib.sha256(open(p, "rb").read()).hexdigest()
+    """What `freeze` records for a file: sha256 of its LF-normalised content (raw bytes unless EOL-normalisable)."""
+    return _h(lf_normalised(open(p, "rb").read()))
 
 
-def ticket_entries(root):
+def accepted_hashes(p):
+    """The hashes `verify` accepts for an unchanged file: of its raw bytes, LF-normalised and CRLF-ised content
+    (EOL-normalisable text); of its raw bytes only (anything else)."""
+    data = open(p, "rb").read()
+    if not eol_text(data):
+        return {_h(data)}
+    lf = data.replace(b"\r\n", b"\n")
+    return {_h(data), _h(lf), _h(lf.replace(b"\n", b"\r\n"))}
+
+
+def ticket_files(root):
+    """[(path, manifest name)] of the covered files of the ticket folder."""
     out = []
     for d, dirs, files in os.walk(root):
         rel_d = os.path.relpath(d, root)
@@ -57,8 +93,12 @@ def ticket_entries(root):
             if f == "LOG.md" or (f.startswith("CHECKPOINT_") and f.endswith(".md")):
                 continue
             p = os.path.join(d, f)
-            out.append(f"{sha(p)}  {os.path.relpath(p, root).replace(os.sep, '/')}")
+            out.append((p, os.path.relpath(p, root).replace(os.sep, "/")))
     return out
+
+
+def ticket_entries(root):
+    return [f"{sha(p)}  {name}" for p, name in ticket_files(root)]
 
 
 def extra_paths(listfile):
@@ -70,7 +110,8 @@ def extra_paths(listfile):
     return paths
 
 
-def extra_entries(repo, paths):
+def extra_files(repo, paths):
+    """[(path, manifest name `EXT:<repo path>`)] of the listed external inputs (a directory: every file under it)."""
     out = []
     for rel in paths:
         p = os.path.join(repo, rel)
@@ -79,12 +120,16 @@ def extra_entries(repo, paths):
                 dirs[:] = sorted(x for x in dirs if x not in {"__pycache__", ".git"})
                 for f in sorted(files):
                     q = os.path.join(d, f)
-                    out.append(f"{sha(q)}  EXT:{os.path.relpath(q, repo).replace(os.sep, '/')}")
+                    out.append((q, f"EXT:{os.path.relpath(q, repo).replace(os.sep, '/')}"))
         elif os.path.isfile(p):
-            out.append(f"{sha(p)}  EXT:{rel}")
+            out.append((p, f"EXT:{rel}"))
         else:
             raise ManifestError(f"manifest: extra input not found: {rel}")
     return out
+
+
+def extra_entries(repo, paths):
+    return [f"{sha(p)}  {name}" for p, name in extra_files(repo, paths)]
 
 
 def digest(lines):
@@ -110,12 +155,14 @@ def verify_problems(root, out, repo=None):
     if digest(rows) != dg:
         return dg, ["header digest does not match the stored rows (corrupted or hand-edited manifest)"]
     try:
-        cur = ticket_entries(root) + extra_entries(repo or repo_root(root), extras)
+        cur = ticket_files(root) + extra_files(repo or repo_root(root), extras)
     except ManifestError as e:
         return dg, [str(e)]
     old_files = {l[66:]: l[:64] for l in rows}
-    new_files = {l[66:]: l[:64] for l in cur}
-    return dg, sorted([f"CHANGED {k}" for k in old_files if k in new_files and old_files[k] != new_files[k]]
+    new_files = {name: p for p, name in cur}
+    # INFRA R06: a recorded hash matches if it is the raw, LF-normalised or CRLF-ised hash of the current file
+    return dg, sorted([f"CHANGED {k}" for k in old_files if k in new_files
+                       and old_files[k] not in accepted_hashes(new_files[k])]
                       + [f"REMOVED {k}" for k in old_files if k not in new_files]
                       + [f"ADDED {k}" for k in new_files if k not in old_files])
 

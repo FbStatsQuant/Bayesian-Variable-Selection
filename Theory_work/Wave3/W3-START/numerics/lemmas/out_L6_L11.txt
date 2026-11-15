@@ -1,0 +1,21 @@
+== Part A: Gaussian-row bridge, identities ==
+60 random (l, U0, V): max relative errors  A1 2.4e-15 | A2 rho 1.7e-16, Delta 3.3e-16 | A3 5.8e-16 | A4 3.5e-13
+== Part B: (C2)(i), (ii) on orthogonal designs ==
+n= 200 leak: level c=3.89 (1+2A=2.39): exponent of the competing model's odds: median 1.06, min -0.61; limit value 0.75 (claim: pi0(S0) <= n^-kappa' w.p.->1 for kappa' below it)
+n= 200 weak: level c=1.19 (1+2A=2.39): exponent of the competing model's odds: median 0.58, min -0.24; limit value 0.60 (claim: pi0(S0) <= n^-kappa' w.p.->1 for kappa' below it)
+n= 800 leak: level c=3.60 (1+2A=2.10): exponent of the competing model's odds: median 0.56, min 0.11; limit value 0.75 (claim: pi0(S0) <= n^-kappa' w.p.->1 for kappa' below it)
+n= 800 weak: level c=0.90 (1+2A=2.10): exponent of the competing model's odds: median 0.67, min -0.07; limit value 0.60 (claim: pi0(S0) <= n^-kappa' w.p.->1 for kappa' below it)
+n=3200 leak: level c=3.41 (1+2A=1.91): exponent of the competing model's odds: median 0.92, min 0.25; limit value 0.75 (claim: pi0(S0) <= n^-kappa' w.p.->1 for kappa' below it)
+n=3200 weak: level c=0.71 (1+2A=1.91): exponent of the competing model's odds: median 0.63, min 0.25; limit value 0.60 (claim: pi0(S0) <= n^-kappa' w.p.->1 for kappa' below it)
+== Part C: Proposition OVL, one leaking null in Q ==
+n= 200: leaking null in Q at level a_l=2.0: log m_l/log n median 0.41, max 1.33 (limit (a_l-1)/2 = 0.50); (10.1) held in 30 of 30 draws
+n= 800: leaking null in Q at level a_l=2.0: log m_l/log n median 0.51, max 1.70 (limit (a_l-1)/2 = 0.50); (10.1) held in 29 of 29 draws
+n=3200: leaking null in Q at level a_l=2.0: log m_l/log n median 0.52, max 1.81 (limit (a_l-1)/2 = 0.50); (10.1) held in 29 of 29 draws
+== Part D: examples of L11 ==
+F-2 at n=400, A=1: lambda_min(B'B)=0.080 | (V-m) margins: N empty 2.004, N nonempty 0.000 (claim >= 0 for n large) | (V-c) level at the 15 correlates 0.55 < 1+2A=3 | largest correlate gain 2.40 <= 0.4c=2.40 < 1+2A | per-column charge n^-1/2 p^-1 J: default levels 2.45e+07, F4 levels 9.15e+01
+  n=1e+04 (p=n-1): log_n of the charge of one correlate in rho_n: default levels >= 2.73 (diverges), F4 levels <= 1.30 (limit -0.3)
+  n=1e+06 (p=n-1): log_n of the charge of one correlate in rho_n: default levels >= 2.50 (diverges), F4 levels <= 1.12 (limit -0.3)
+  n=1e+09 (p=n-1): log_n of the charge of one correlate in rho_n: default levels >= 2.29 (diverges), F4 levels <= 0.93 (limit -0.3)
+F-3: twin pair at distance 1.2: lambda_min(X_T'X_T)=0.7200 (= d^2/2 = 0.7200), normalised 1.80e-03
+G-2: max |Cov(W_l, W_j | W_U)| across groups over 300 draws = 0.0e+00 (claim 0)
+TOTAL VIOLATIONS: 0 

@@ -1,0 +1,50 @@
+core dir: C:/Users/felip/.t3/worktrees/Bayesian-Variable-Selection/t3-c2aa11df-8fc28a209b389288/Scripts/SMC_BVS/core 
+cpp key: fbe85b0a26cafc082182d54557e57a8d4741383cda2507c7d1d6893be358aea8 
+ R version 4.6.1 (2026-06-24 ucrt) 
+
+Part 1: v3_preprocess(X, a + c*y)$y against v3_preprocess(X, y)$y (expected: sign(c) * y up to rounding)
+  a=0        c=1        max|y' - sign(c) y| = 0.000e+00   s_y'/(|c| s_y) - 1 = 0.000e+00
+  a=5        c=3.7      max|y' - sign(c) y| = 4.441e-16   s_y'/(|c| s_y) - 1 = 2.220e-16
+  a=-2       c=1e-06    max|y' - sign(c) y| = 2.595e-10   s_y'/(|c| s_y) - 1 = 2.974e-11
+  a=1000     c=1e+08    max|y' - sign(c) y| = 4.441e-16   s_y'/(|c| s_y) - 1 = 2.220e-16
+  a=0        c=4        max|y' - sign(c) y| = 0.000e+00   s_y'/(|c| s_y) - 1 = 0.000e+00
+  a=0.3      c=-2.5     max|y' - sign(c) y| = 2.220e-16   s_y'/(|c| s_y) - 1 = 2.220e-16
+  a=0        c=1e-150   max|y' - sign(c) y| = 4.441e-16   s_y'/(|c| s_y) - 1 = 2.220e-16
+  a=0        c=1e+150   max|y' - sign(c) y| = 4.441e-16   s_y'/(|c| s_y) - 1 = 0.000e+00
+
+Part 2: v3_fit, exact branch (n = 60, p = 10; three data sets)
+ data 11: branch=exact status=exact hpm={1}
+exact  a=5        c=3.7      status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=1.110e-16 |dF(hpm)|=0.000e+00 |d logZ_rel|=0.000e+00
+exact  a=-2       c=1e-06    status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=5.107e-11 |dF(hpm)|=1.335e-10 |d logZ_rel|=1.252e-10
+exact  a=1000     c=1e+08    status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=1.110e-16 |dF(hpm)|=0.000e+00 |d logZ_rel|=0.000e+00
+exact  a=0        c=4        status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=0.000e+00 |dF(hpm)|=0.000e+00 |d logZ_rel|=0.000e+00
+exact  a=0.3      c=-2.5     status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=2.220e-15 |dF(hpm)|=1.421e-14 |d logZ_rel|=1.421e-14
+exact  a=0        c=1e-150   status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=0.000e+00 |dF(hpm)|=0.000e+00 |d logZ_rel|=0.000e+00
+exact  a=0        c=1e+150   status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=1.735e-17 |dF(hpm)|=0.000e+00 |d logZ_rel|=0.000e+00
+ data 12: branch=exact status=exact hpm={}
+exact  a=5        c=3.7      status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=1.305e-15 |dF(hpm)|=2.842e-14 |d logZ_rel|=1.421e-14
+exact  a=-2       c=1e-06    status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=1.568e-11 |dF(hpm)|=0.000e+00 |d logZ_rel|=3.637e-11
+exact  a=1000     c=1e+08    status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=8.882e-16 |dF(hpm)|=2.842e-14 |d logZ_rel|=1.421e-14
+exact  a=0        c=4        status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=0.000e+00 |dF(hpm)|=0.000e+00 |d logZ_rel|=0.000e+00
+exact  a=0.3      c=-2.5     status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=9.714e-16 |dF(hpm)|=2.842e-14 |d logZ_rel|=1.421e-14
+exact  a=0        c=1e-150   status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=1.360e-15 |dF(hpm)|=2.842e-14 |d logZ_rel|=1.421e-14
+exact  a=0        c=1e+150   status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=1.305e-15 |dF(hpm)|=2.842e-14 |d logZ_rel|=1.421e-14
+ data 13: branch=exact status=exact hpm={1}
+exact  a=5        c=3.7      status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=2.554e-15 |dF(hpm)|=0.000e+00 |d logZ_rel|=1.421e-14
+exact  a=-2       c=1e-06    status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=1.304e-10 |dF(hpm)|=5.373e-10 |d logZ_rel|=4.219e-10
+exact  a=1000     c=1e+08    status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=2.220e-15 |dF(hpm)|=1.421e-14 |d logZ_rel|=0.000e+00
+exact  a=0        c=4        status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=0.000e+00 |dF(hpm)|=0.000e+00 |d logZ_rel|=0.000e+00
+exact  a=0.3      c=-2.5     status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=2.776e-15 |dF(hpm)|=0.000e+00 |d logZ_rel|=2.842e-14
+exact  a=0        c=1e-150   status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=6.939e-18 |dF(hpm)|=0.000e+00 |d logZ_rel|=0.000e+00
+exact  a=0        c=1e+150   status=exact    same_status=TRUE same_hpm=TRUE max|dPIP|=6.939e-18 |dF(hpm)|=0.000e+00 |d logZ_rel|=0.000e+00
+ exact branch: all status/HPM equal = TRUE; max over runs of max|dPIP| = 1.304e-10
+
+Part 3: v3_fit, SMC branch (n = 80, p = 120), same seed
+ baseline: branch=smc status=completed hpm={} (8.9 s)
+smc    a=5        c=3.7      status=completed same_status=TRUE same_hpm=TRUE max|dPIP|=1.249e-16 |dF(hpm)|=0.000e+00 |d logZ_rel|=0.000e+00
+smc    a=-2       c=1e-06    status=completed same_status=TRUE same_hpm=TRUE max|dPIP|=1.037e-11 |dF(hpm)|=2.842e-14 |d logZ_rel|=8.610e-11
+smc    a=0        c=4        status=completed same_status=TRUE same_hpm=TRUE max|dPIP|=0.000e+00 |dF(hpm)|=0.000e+00 |d logZ_rel|=0.000e+00
+smc    a=0.3      c=-2.5     status=completed same_status=TRUE same_hpm=TRUE max|dPIP|=4.025e-16 |dF(hpm)|=0.000e+00 |d logZ_rel|=0.000e+00
+ SMC branch: all status/HPM equal = TRUE; max over runs of max|dPIP| = 1.037e-11
+
+DONE
