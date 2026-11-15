@@ -28,6 +28,9 @@ jobs:
     env:
       PYTHONUTF8: '1'
       BVS_NUMERICS_PY: python
+      # C-PACK/numerics/item1_um_checks.py hardcodes a Windows path (C:\\Users\\...\\W1-N3\\numerics) for `import n3lib`;
+      # on Linux the same committed module is found through PYTHONPATH (script directory still comes first).
+      PYTHONPATH: ${{ github.workspace }}/Theory_work/Wave1/W1-N3/numerics
     steps:
       - uses: actions/checkout@v4
         with:
