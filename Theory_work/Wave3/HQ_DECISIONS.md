@@ -287,3 +287,20 @@
 - Ticket W3-DIST, scoping leg to CP1: lead Fable 5.2 high on the **Claude Third** account (new; Owls only; owner: ample
   limits), brief `Theory_work/Wave3/W3-DIST/BRIEF.md` (1610990). One blind Astra read at CP1. Proof leg decided by HQ at CP1
   (target: into chapter v2.0 this week). Song–Liang PDF copied to the Owls clone (gitignored).
+
+## 2026-11-15 ~16:10 CT — review/trace/rollback hardening (owner request) + protocol consultant
+- Owner: protocols must review throughout the chain and at checkpoints, with strong trace/rollback for errors and
+  sub-par results; councils kept, but no nit-picking or complexity for its own sake.
+- **Done now (W3-DIST):**
+  - branch `theory/W3-DIST` with an Owls worktree `/home/fb31/BVS-wt/W3-DIST`;
+  - hourly cron restore point (`~/.config/bvs-hq/snap/snapshot_ticket.sh W3-DIST`, :17 every hour; commits and pushes
+    only on change);
+  - steer A2 to the lead: DEPS.md lemma DAG (versions; SUSPECT propagation; no lemma consumed before its line check),
+    and a STATEMENT changelog tagged STRONGER/WEAKER/EQUAL, where any WEAKER edit is an early checkpoint;
+  - rule 3 sharpness gate at CP1.
+- **Consultant:** Fable 5.2 high on Claude Third (Owls), brief `Theory_work/Wave3/PROTOCOL_REVIEW/BRIEF.md` (cef2c32).
+  It is to count evidence-based yield per review layer, propose council rules without nit-picking, embedded review,
+  trace/rollback and a sub-par guard, and deliver a SHORTER consolidated PROTOCOL v4 proposal. HQ adopts what is
+  justified. Changes to review layers that need owner approval (rule 14) go to Felipe in one batch.
+- Monitoring note: heartbeat, watchdog, daily CI, P6 watcher and home guard are currently DISABLED (budget run-down to
+  the Mon 16:00 reset). P6 has no jobs queued (stage 1 ended; 1,716 core-h). Re-enable at the furnace start.
