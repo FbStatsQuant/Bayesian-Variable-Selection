@@ -21,6 +21,11 @@ Run under PROTOCOL_v4 (Tier B unless a new key lemma appears), Opus, after W3-DI
 - T13 MISR Cor-G(a)/Cor-H restatements (~2–3 h).
 - Editorial pass: LEAK-0 "sharpens" wording (START2 STATEMENT:87-88); MISR ASSUMPTION_MAP:27 cross-cite PSHARP; do not
   present START2-P1 as a p ≫ n gain.
+- From consultant cards (11-15):
+  - **W2-APP:POST@1.0.1 check** (Tier B line check by Sol of `Wave2/W2-APP/lemmas/L1_POST.md`). This is the Gaussian-row
+    headline's weak point (RM2-R and MISR depend on it); priority right after W3-DIST.
+  - START MIS/EX/F1/F3/F4 restated under START2's hypotheses (cheap rider).
+  - C-MIS → MISR supersession later, once MIS(i′) reaches c > c₀ or Remark P becomes a checked row.
 - Named open problems, no tickets: RM2-R aggregated leak; START MIS with a general μ; Ex-Equi b < 3/8; the START2-O1
   count.
 - For W3-DIST after CP1 (not before): MISR Cor-G(a) makes a candidate run an exact DIST (RD) instance (a Song–Liang
