@@ -411,7 +411,8 @@ def step_cite(out):
             rel = os.path.relpath(cc, sb.path).replace("\\", "/")
             d = os.path.dirname(cc)
             cands = [os.path.join(d, "CITECHECK.txt"), os.path.join(d, "reviews", "CITECHECK.txt"),
-                     os.path.join(os.path.dirname(d), "CITECHECK.txt")]
+                     os.path.join(os.path.dirname(d), "CITECHECK.txt"),
+                     os.path.join(os.path.dirname(d), "reviews", "CITECHECK.txt")]  # <ticket>/numerics/ + <ticket>/reviews/
             committed = next((c for c in cands if os.path.exists(c)), None)
             before = open(committed, encoding="utf-8", errors="replace").read() if committed else ""
             rep_rel = os.path.relpath(committed, sb.path) if committed else None
