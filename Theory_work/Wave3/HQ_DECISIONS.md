@@ -349,3 +349,30 @@ supersession by HQ with owner veto (owner approval only for an explicit headline
 Owner: a veto is not useful without tracking the proofs; "the Fable consultant of yours ... you just run those things by
 him". Rule H5: HQ card → consultant AGREE / OBJECT → adopt; only an unresolved disagreement reaches Felipe, who is
 informed weekly. First cards sent: the three supersessions pending since 11-12 (RM→RM2, C-MIS→MISR, 8 START→START2).
+
+## 2026-11-15 — recording run per ACCEPTANCE/RECORD_BRIEF_2026-11-15.md (HQ recorder, Opus 5.5, worktree hq/record-1115)
+Approver for every headline change: HQ consultant under PROTOCOL_v4 H5. Each task was dry-run in a disposable clone;
+real runs only on 0 problems.
+- **Card 1 (AGREE) — RECORDED, cb6effb.** `implies` W3-RM2:RM2-F ⇒ W3-RM:RM-F (Cont-F: C_R1_council_astra.md:45,
+  C_R1_council_opus.md:192; (C4) both routes (N-χ)/(N-D): LC1B_L2L3_check_sol.md:39) and RM2-R ⇒ RM-R (Cont-R: :50,
+  :197). `propagate.py supersede` (class free): RM-F, RM-R → SUPERSEDED-VALID v1.1.0, rows kept and citable; 4 re-points
+  PROPOSED (Cont-F, Cont-R, Examples ×2; dormant under v4 §8). Headline flag → RM2-F/RM2-R with assumptions (10 new
+  A:RM2-* ids), 10 sharpness + 3 binding rows from the REPORT block, `headline-strength pending`. RM-0, E4 ACTIVE.
+  RM-F note: the (N-χ) old-cap ℓ_n remark is not carried to RM2.
+- **Card 3 (AGREE) — REFUSED, nothing written.** Dry run, all 8 rows (START-F, F2, TRANSFER, IF-START, OVL, NEC, BR,
+  START-R), with `implies` recorded (class free): `propagate.py supersede` Blocking — "W3-START2:<X> itself depends on
+  W3-START:<X>: superseding would orphan the replacement's own proof" (each START2 row has an `@proof:` edge to its
+  parent). `propagate.py patch W3-START:START-F --dry-run`: reaches 7 START2 rows (SUSPECT), so patch propagation does
+  reach START2 today. HQ to decide: re-point the START2 proof edges, or record `implies` only and leave the parents ACTIVE.
+- **Card 2 (OBJECT → consultant's alternative) — RECORDED, c87ed1d.** Headline flag C-MIS:Thm-MIS(i)/(ii) →
+  W3-MISR:MIS(i), MIS(i′) (C-MIS's inclusion clause was headline), MIS(ii); no supersession. C-MIS rows ACTIVE,
+  de-headlined, note per MISR STATEMENT.md:249-252. Tool bug (not fixed; v4 §7 freeze): `assemble.py` writes MIS(i) and
+  MIS(i′) to the same block file `W3-MISR_MIS_i_.tex` (`safe()` collision), so the paper index shows MIS(i′) twice.
+- **W3-POST2 acceptance — STOPPED (substance), nothing written.** citecheck 136 checks / 0 failures; `--consumed-vs
+  origin/main` 0 ERROR. But C1 has no frozen manifest (`reviews/MANIFEST_*` absent; `manifest.py bind`: "No such file
+  … MANIFEST_C1.txt"), no COUNCIL-VERDICT line and no `| id | decision |` table in either seat's review; and the
+  repaired D(b) (D_hellinger.md:53-55, PC1/PC2 2026-11-11) post-dates C1 (2026-11-09): it was checked by one seat (PC2
+  Sol), not by a council, and PC1 notes no byte snapshot of the C1-reviewed files exists. So no passing manifest
+  contains the repaired D(b). Staged ingest of the REPORT block: refused (ids already registered; block statuses
+  "PROVED (by this seat, unchecked)"). Needs a council diff round (v4 §5.5) on a frozen manifest, with per-claim tables.
+- After the runs: `check.py --quiet` 465 claims, 0 ERROR, 262 WARN, 238 INFO; `test_lifecycle.py` 171 PASS, 0 FAIL (exit 0).
