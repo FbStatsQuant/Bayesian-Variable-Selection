@@ -376,3 +376,4 @@ real runs only on 0 problems.
   contains the repaired D(b). Staged ingest of the REPORT block: refused (ids already registered; block statuses
   "PROVED (by this seat, unchecked)"). Needs a council diff round (v4 §5.5) on a frozen manifest, with per-claim tables.
 - After the runs: `check.py --quiet` 465 claims, 0 ERROR, 262 WARN, 238 INFO; `test_lifecycle.py` 171 PASS, 0 FAIL (exit 0).
+- 2026-11-15 follow-ups (HQ): card 3 revised — implies W3-START2:X ⇒ W3-START:X recorded for 8 rows with evidence, no supersession, START rows ACTIVE with an 'implied by' note, no headline flag to move (coexist refused: needs a trade-off), 0e8d07c; assemble.py block names made injective (1 collision group in 465 ids: W3-MISR:MIS(i)/MIS(i')), 2 regression tests, 91eac3f. check.py 0 ERROR; assemble --check current; test_lifecycle 173 PASS.
