@@ -6,7 +6,7 @@ Running tickets other than W3-DIST (W3-P6, W3-SCALE: compute tickets) finish und
 ## HQ amendments (these override the text below)
 - **H1. Mode.** NORMAL mode until the owner says otherwise. Owner, 11-15: "keep using codex model for review as we are, I
   will just let you know if we are running out of it". EFFICIENT mode (§2A) is defined and dormant.
-- **H2. Owner-gated items, pending Felipe's answer.** Until he answers:
+- **H2. Owner-gated items — APPROVED by Felipe 2026-11-15 (~17:30 CT, "ok").** (a) tiers adopted and the §10 cut of W3-14 stands (tiers and modes replace case-by-case waivers; any other skip still needs Felipe); (b) the CP2 break review replaces the mid-point (W3-DIST keeps the extra mid-point question already briefed); (c) supersession per §8: HQ decides with owner veto; owner approval for the explicit headline list (to be set with Felipe). Original interim text kept for the record:
   - (a) The old rule "no review layer skipped or replaced without Felipe's explicit approval" (W3-14) STAYS. The §10 cut
     is not adopted. Tier B (§2) is used only once the owner approves tiers; until then every proof ticket is Tier A.
   - (b) Mid-point → key-lemma break review (§3.4): the CP2 review is run as a break review, and its brief also asks

@@ -333,3 +333,6 @@
   - Owls snapshot script upgraded to v4 §8 (cron */15, log line per run, RP labels);
   - W3-DIST steered (A4);
   - W3-PATH brief to be amended before its Monday launch.
+
+## 2026-11-15 ~17:30 CT — owner approves the three v4 items (H2 a–c): tiers, break review replacing the mid-point,
+supersession by HQ with owner veto (owner approval only for an explicit headline list, to be set with Felipe).
