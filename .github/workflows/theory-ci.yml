@@ -28,7 +28,7 @@ jobs:
     env:
       PYTHONUTF8: '1'
       BVS_NUMERICS_PY: python
-      # C-PACK/numerics/item1_um_checks.py hardcodes a Windows path (C:\\Users\\...\\W1-N3\\numerics) for `import n3lib`;
+      # C-PACK/numerics/item1_um_checks.py hardcodes a Windows path (C:\Users\...\W1-N3\numerics) for `import n3lib`;
       # on Linux the same committed module is found through PYTHONPATH (script directory still comes first).
       PYTHONPATH: ${{ github.workspace }}/Theory_work/Wave1/W1-N3/numerics
     steps:
@@ -45,6 +45,11 @@ jobs:
 
       - name: Install dependencies
         run: python -m pip install -r Theory_work/INFRA/ci/requirements-ci.txt
+
+      - name: Build the W1-N3 start-mode harness
+        # sm_harness.exe is untracked; item1_um_checks.py drives it through n3lib (found via PYTHONPATH above).
+        working-directory: Theory_work/Wave1/W1-N3/numerics
+        run: sh build.sh
 
       - name: Theory CI (check, paper, falsify, cite)
         run: python Theory_work/INFRA/ci/run_ci.py --steps check,paper,falsify,cite --out ci_out
