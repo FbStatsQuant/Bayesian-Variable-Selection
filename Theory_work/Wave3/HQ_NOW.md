@@ -1,5 +1,11 @@
 # HQ now (resume card; HQ keeps this current)
 
+## TOP PRIORITY (owner 2026-11-15): W3-DIST — distribution consistency (Song–Liang Thm 1–2 parity)
+"It needs to happen." It outranks W3-PATH, T7 and the riders in every resource conflict. Lead: Fable 5.2 on Claude Third
+(Owls, thread mcp:launch:75635c1f…); team of Opus/Sonnet workers on Claude Third after CP1; parity checklist = BRIEF
+addendum A1 (P1–P6). Restore points: hourly cron → branch theory/W3-DIST. Any extra resource (2nd Fable, OpenAI review
+budget, CP reset use) → ask Felipe at once, framed as "needed for W3-DIST". Target: proved and in chapter v2.0 this week.
+
 ## STRIKE PLAN week of 11-16 (owner: theory basically DONE by end of week, then p = 1M experiment)
 Definition of done: 11 main results recorded PROVED-CHECKED; D1 settled (theorem or stated limit); chapter v2.0
 council-passed and frozen; editorial pass merged. Anything else = named open problem in the paper.
