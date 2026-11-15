@@ -1,0 +1,5 @@
+# P1M Experiment department — LOG (heartbeat; local time from `date`, CST)
+
+- 2026-11-15 17:07 CST — Leg 1 start. git pull --ff-only: already at daa08a3. Read BRIEF.md, HOLDS.md (empty), PROGRAM.md, W3-DIST/STATEMENT.md v1.0.2, W3-SCALE CHECKPOINT_2 and DESIGN_v1 rev 3 (§1–§6). Next: W3-P6 stage 1, theory status, lit review, code (Gram/tables/calibration), then draft.
+- 2026-11-15 17:19 CST — Code read (core v3: budgets, blocks/complete linkage, tables, engine steps, calibration triggers). Local Owls benchmark (scratchpad copy of core, nice 19, 4 runs ≤ 1 min each): block sizes n=200 → mean ≈ 9, ≈ 210 table codes/column; n=1000 → ≈ 2,200 codes/column. Findings: exact complete linkage is a hard O(p²) wall above ~150–250k ([Δlaw] needed); E2 escalation likely at large p (×4); B2-1 trace impossible at 1M (≈ 30 TB).
+- 2026-11-15 17:19 CST — Wrote EXPERIMENT_PLAN.md v0.1, OWNER_DECISIONS.md v0.1 (OD-1..OD-11), REQUESTS.md (R1–R5, read-only NOTS queries). No helpers started (0 of 2). No NOTS access, no git state change. EXP-CP1 reached.
