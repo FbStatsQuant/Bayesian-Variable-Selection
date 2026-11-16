@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.5 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.6 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -203,7 +203,9 @@ struct ThreadLedger : Tally {                // one per worker thread; NO stores
   stage / round / particle / position take v3's own EventCtx values (`core/cpp/v3_engine.h:274-372` islands, `:379-422` local search), so
   provenance exports to the v3 fingerprint unchanged; `xph` orders the phases of an island.
 
-  The inherited HPM keeps its calibration key (`core/cpp/v3_core.cpp:433-437`). Provenance = the smallest key among the
+  **Every inherited-step offer of the calibration HPM model carries that model's CALIBRATION EventCtx (its calibration
+  provenance), never an INHERITED key**, so the smallest-key rule reproduces v3's provenance replacement
+  (`core/cpp/v3_core.cpp:428-440`) instead of yielding "inherited"; all other inherited models carry INHERITED keys. Provenance = the smallest key among the
   winning model's events, which is its first event in the serial traversal.
 - **Logical events by mechanism (v0.1.5; `core/cpp/v3_engine.h:84-196`, `v3_core.cpp:372-427`).**
   | step / source | condition | events (mechanism) | uniforms |
@@ -344,7 +346,7 @@ all scorer/engine code calls `v4::pm::*` (`include/v4/pmath.h`), never `std::` d
 (no bundling)**; a correctly rounded libm would change the v3.1 bits.
 - **Bit form uses only `pm::log, exp, lgamma, sqrt`** and the x87 `pm::logl, expl` of `log_sum_exp` (→ log W_K → log ϖ →
   every F; WP2's `cumulative_from_logs`). The double functions are bit-equal on Owls and NOTS although the libm files
-  differ (MEASURED, `results/PMATH_NOTS.md`); the x87 rows are Owls references until the NOTS re-run.
+  differ, and so are the x87 rows (MEASURED, `results/PMATH_NOTS.md`, jobs 2747666 and 2747875).
 - **`log1p` / `expm1` never appear in bit-form paths.** They exist only as `pm::machine::log1p, expm1` for class A; their
   bits differ between Owls and NOTS, and their results never enter a fixture or a bit test. (`core/` never calls them:
   `log_add` and `log1mexp_v3` are unused.)
@@ -413,3 +415,6 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   mechanism (feasible G = 2 events; cap, self-loop and no-score cases); table counts once per table-ingesting ledger,
   inherited 0; I4 corrected (`i4_expected`). §5.3: `reference` (pinned core commit, file hashes, compiler, flags, libm).
   §2: neighbour graph ≤ pB selections / ≤ 2pB entries, no per-column maximum.
+- v0.1.6 (2026-11-15, WP1; PR15 review) — §4.2: the inherited calibration HPM is offered with its calibration EventCtx
+  (never an INHERITED key). `gen::generate_test_rows` (rows [a, b), same bits as the full test design). §6: the x87
+  rows are measured equal on NOTS (job 2747875); all 8 guarded rows match there.

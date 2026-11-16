@@ -68,7 +68,7 @@ std::string sha256_ld(const std::vector<long double>& y) {
 
 // SHA-256 of the 2·10^6 results per row: the values measured on Owls (tests/fixtures/pmath_owls_glibc234_fma.json) and
 // measured equal on NOTS (results/PMATH_NOTS.md, job 2747666). log1p / expm1 rows are not part of the guard (class A).
-// expl / logl (x87, v0.1.4): Owls values; the NOTS comparison is pending (fails closed on a difference).
+// expl / logl (x87, v0.1.4): Owls values, measured equal on NOTS (job 2747875, results/PMATH_NOTS.md).
 static const struct { const char* fn; const char* sha; } REF[] = {
   {"log", "164995feb48757a32cd1743916481ea7aad73c777c0b516cf5342b7a8399f10c"}, {"log_near1", "be4025e3d956faace7d3bbd5dda696268d53fd0b9ae2ce04992a5f52065d9c98"}, {"exp", "9c68e5b42ddc2763d0f039b7675098fb4c2e95ead26cb30ef2ee647cb375b673"}, {"exp_pos", "f24a4667ec96665b03b36aa0d5ff1a620f3802945603bed0943a573b792ed51f"},
   {"lgamma", "2e128c4aca69a2d64762dd560db3fd3bbfcebdc57a4e2ed295ce527a74a02c2c"}, {"lgamma_int", "3eff706a7b26e8e59c4f8ac0cbdaf21d462c24a1cad0f1081a275ec970f7cf85"},
