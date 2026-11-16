@@ -304,3 +304,4 @@
 - 07:57 — S4 on main b3153634: 21 patches verbose, 23/23 target sha = expected; 17 narrowed → 2.1.0 (UNI-1 3.1.0); F-UNI ACTIVE 2.1.0; Thm-APP cleared; 9 SUSPECT + X6/Examples blocked (post-freeze item 1); RM2 R1r; 0 ERROR; 117 ACTIVE accept PASS; 15/15. CITECHECK.txt not committed (editorial). → HQ.
 - 07:57 — HQ guard: U's gates re-run on current main (post-S4) before real run; any delta → stop + HQ. V dry-run on then-current main. Recorder steered.
 - 07:58 — Task U on main b48fd0a1 (recorder first said 6d0d50d4, nonexistent; corrected) (re-gated on b3153634: identical): 14 PC; row 3.3 masters → W3-START2-R START-R/IF-START (STRONGER); 14 coexist; 129 accept PASS; 16/16. READER signalled for row 3.3 swap. → HQ.
+- 07:59 — S4b on main a8a135d6 (verified on origin): s6:46 sentence verbatim; sha 2c677ae6 → c9baf52b expected; citecheck 6 pre-existing; C-DLV:Prop-F tex transcription faithful (note). Next V dry on a8a135d6.
