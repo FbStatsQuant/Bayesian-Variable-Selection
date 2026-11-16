@@ -124,3 +124,12 @@
   for good (ticket done, recorder tasks done, helper/reviewer done) the manager settles it; never settle department
   threads; never archive or delete. A lead waiting at a checkpoint is not finished. Digest helper re-settled. Leads may
   settle their own finished reviewers/helpers (settle only); they must not cancel or interrupt anything.
+
+## 2026-11-15 20:07 CT — recorder package C/D/E/F
+- F clean (44 cleared) but empties paper/generated (blocks only for headline rows): asked HQ for (a) assemble.py blocks
+  for HEADLINE_CANDIDATES rows (recommended) vs (b) Writing from READER_VERSIONS; F real run held until decided.
+- D clean (POST2 10/10) with two record fixes needing HQ OK; E clean (B(ii) CODE-CHECKED; D-7 placeholder).
+- C (W2-APP): PC1 Sol gates=FAIL 8.4 (Family-map REJECT; F1–F4 on post-C3 edits only; POST ACCEPT). Proposal to HQ:
+  record the 10 ACCEPT rows on the C3 snapshot (RM2 precedent), Family-map excluded; F1–F4 later diff round.
+- **D23.** A3 cascade (Ex-STAR/ENUM + 10 consumers): fix the root — recorder task H dry-runs W3-POST:Thm-1 (=SOP:TH09)
+  acceptance on its C3 council and checks C-PACK:SL0, SOP:TH05.0; fallback honest re-status. No "checked-class by fiat".
