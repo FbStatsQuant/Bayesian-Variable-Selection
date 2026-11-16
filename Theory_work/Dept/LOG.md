@@ -51,3 +51,4 @@
 - 20:12 — HQ approved recorder real runs D, E, F(+tool fix); C and H dry runs; recorder instructed.
 - 20:12 — HQ: D25 agreed (EQUAL, no H5); HQ_DECISIONS 19:10 entry corrected on main; Theorem B WEAKER goes in the next checkpoint; HQ awaits DIST CP2.
 - 20:15 — W3-EDIT triage: 20 (iii) (6 ★), 30 (ii), 9 (i). D27: adjudicator child launched; HQ escalated; recorder C held.
+- 20:15 — HQ: READER headline split → consultant (H5 card 5, provisional; abstract rows gated on gates PASS + PROVED-CHECKED masters; 2.1 after DIST CP3). Legs approved. Order D, E, F, C stands; C still goes dry run → HQ (my M57/M58 hold request crossed this message; no conflict).
