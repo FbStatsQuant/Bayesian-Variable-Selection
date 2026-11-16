@@ -11,8 +11,13 @@ BUILD="${V4_SETUP_BUILD:-$TMPDIR/build-setup}"
 echo "machine: $(hostname) | $(uname -r) | $(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2)"
 echo "compiler: $(g++ --version | head -1)"
 echo "flags: -O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2 (bit library and golden reference)"
-LIBM=$(ldd "$(command -v true)" | awk '/libm\.so/{print $3}'); [ -z "$LIBM" ] && LIBM=$(ls /lib64/libm.so.6 2>/dev/null || true)
-[ -n "$LIBM" ] && echo "libm: $LIBM sha256 $(sha256sum "$(readlink -f "$LIBM")" | cut -c1-16)"
+LIBM=$(ls /lib64/libm.so.6 /lib/x86_64-linux-gnu/libm.so.6 2>/dev/null | head -1 || true)
+if [ -n "$LIBM" ]; then echo "libm: $LIBM -> $(readlink -f "$LIBM") sha256 $(sha256sum "$(readlink -f "$LIBM")" | cut -c1-16)"; fi
 nice -n 19 cmake -S "$ENGINE/src/setup" -B "$BUILD" -DCMAKE_BUILD_TYPE=Release > "$BUILD.cmake.log" 2>&1 || { cat "$BUILD.cmake.log"; exit 1; }
 nice -n 19 make -C "$BUILD" -j3 v4_setup_tests v4_setup_bench 2>&1 | grep -E "error|warning" || true
+if command -v Rscript >/dev/null 2>&1; then
+  RG="$TMPDIR/r_golden"
+  nice -n 19 Rscript "$ENGINE/tools/golden_setup_ref.R" "$ENGINE/../core" "$RG" > "$TMPDIR/r_golden.log" 2>&1 \
+    && export V4_R_GOLDEN_DIR="$RG" || { echo "R golden generation failed (see $TMPDIR/r_golden.log)"; exit 1; }
+fi
 OMP_NUM_THREADS=$THREADS nice -n 19 "$BUILD/v4_setup_tests" $LEVEL --threads "$THREADS"
