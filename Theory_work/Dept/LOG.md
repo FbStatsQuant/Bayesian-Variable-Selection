@@ -156,3 +156,4 @@
 - 01:28 — recorder: SCR interim label recorded (main 38604282; notes + evidence; A4 sweep unchanged; 469/0). HQ told; recorder's SL0 queue note corrected (SL0 PC check running pre-freeze).
 - 01:30 — DIST: D3 VERIFIED (TC8 EQUAL confirmed; Cor C HPM verified); DEPS all OK; sweep manifest SW1 frozen (de9ccec7…), RP commit 05bc9ae0 made by running the snapshot script; Astra sweep launched 01:28. R1 freeze likely a few hours after 09:00. HQ told.
 - 01:33 — heartbeat: PSHARP-R R2 Opus seat PASS 9.2 (F-1/F-2 resolved), Sol seat pending; T03ACC SL1 locked (v1.1), line checks started; RM2-R council prep; MISR-R R1 seats running; START2-R last log 23:26 (2h07, < 3 h). No report.
+- 02:19 — SL0 PC = EDITORIAL-ONLY (D57); recorder task N staged; HQ GO asked.

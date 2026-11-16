@@ -374,3 +374,8 @@
   hunks + per-claim table for all 21 rows; Sol re-issued walk as a verdict; bind) — child coordinator launched, target Thu
   18:00 (review round, not a proof lead). Interim label for A1 and SCR-G recorded for real now (recorder). READER prepares
   row 3.7 (a) plain / (b) labelled or body. Coordinator also answers whether SCR-R1 is a short corollary of SCR-A.
+
+## 2026-11-16 02:19 CT — SL0 PC check: EDITORIAL-ONLY
+- **D57.** C-PACK:SL0's statement/conventions/proof = the C1 council-read text up to editorial changes. Recorder task N
+  (dry run): record SL0 on C1 + PC evidence; drop SL0 from all conditional statuses via new full checkpoints (D52) with
+  A4 sweeps; DIST staged acceptance check. HQ GO asked for the real run. Effect: rows 1.2/3.1/3.6 conditional on T03♯ only.
