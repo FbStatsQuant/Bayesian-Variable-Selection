@@ -1,4 +1,4 @@
-# W3-DIST — STATEMENT (v1.4.5, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
+# W3-DIST — STATEMENT (v1.4.6, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
 
 **Status: targets TC1–TC9 fixed by HQ at CP1; proofs are in `lemmas/` and `work/<stream>/`; the check state of every item is
 in `DEPS.tsv` (a statement here is checked only if its row says OK).** v1.4 = v1.3.1 with the dispositions of the blind read S2
@@ -230,9 +230,11 @@ with P*-probability at least 1 − n^{−cM} over the data, **every** completed 
     Π̂( d_H(f, f*) > √(M·log n / n) ) ≤ n^{−cM/2}.
 
 If a completed run scored the true model {j : β*_j ≠ 0} and the posterior probability of that model exceeds ½, then the
-list contains it, it is the model the method reports as most probable, and π(𝒯) > ½. In general, whether the list
-carries enough posterior probability is a property of the run: this corollary does not assert it, and the output does
-not certify it.
+list contains it, it is the model the method reports as most probable, and π(𝒯) > ½. More generally π(𝒯) is the total
+posterior probability of the listed models, and no single model needs to carry most of it: the posterior is in general
+a mixture over many models (typically the true model together with many models that add one predictor to it), and the
+condition above concerns the list as a whole. Whether the list carries enough posterior probability is a property of the
+run: this corollary does not assert it, and the output does not certify it.
 
 **Notation table.**
 | symbol | meaning |
@@ -298,6 +300,10 @@ statement and is not restated.
   W3-RM2:RM2-F/RM2-R — a **conditional alternative that no proof here uses** (two links unchecked: whether RM2's output
   event covers {completed}, and whether its reported model is `hpm`) [P3 D-01]. (β) Without beta-min:
   π(𝒯) ≥ e^{−λt} is a **premise (P-STORE)** about the run; the output does not certify it in general ([SAMP] LT-f).
+  (γ) Description, not a claim: π(𝒯) = Σ_{S∈𝒯}π(S), and (C-0), (C-i) need no model of posterior probability above ½. The store law
+  Π̂^𝒯 is in general **a mixture over many models** — typically S₀ and many supersets S₀ ∪ {j} — and (C-i) applies to it as
+  it is (measured by the Engineering Department at n = 200, p = 10⁴–10⁵: the one-extra-variable supersets together weigh
+  0.5–1.2 times S₀; `Docs/Experiments/P1M/DECISIONS.md` row D-17).
 - (C-iii) **HPM plug-in.** 𝔅_n := {S : Π(B_n | S, D_n) > ϱ_n^{1/2}} has π(𝔅_n) ≤ ϱ_n^{1/2} on the success event of DIST-1.
   If the final-run ledger contains a model S′ with π(S′) > ϱ_n^{1/2} (**premise P-HIT**; implied by S₀ ∈ 𝓜 and δ_n < ½),
   then Ŝ ∉ 𝔅_n and Π̂^H(B_n) ≤ ϱ_n^{1/2}. With selection ((α)), Ŝ = S₀ and Π̂^H = Π(· | S₀, D_n); **under the hypotheses of
@@ -479,6 +485,7 @@ posterior with the contrast model (locked T01, [P1] `thm:T01i`, `lem:spec`, `lem
 | 1.4.3 | §3, sentence on the applications of Lemma T: deterministic sparsity levels d₁, d₂ | EQUAL (Lemma T's statement unchanged; the application is now valid as written). The proof of (1.1), (1.2) from Lemmas H, T, X, X′ is `lemmas/DIST12.md` (with the intercept event and C′ = 33) | Lemma T needs a deterministic d | `reviews/BR1_astra_break.md` BR1-01..03 | pending |
 | 1.4.4 | §1R Remarks: the remark on the numerical size of the threshold n₀ removed from this file (owner's standing rule: all results are asymptotic and asymptotics are not framed as a limitation); the fact is kept as one internal line of REPORT.md, "explicit constants, not optimised" | EQUAL (a remark; no statement changes) | owner's rule | manager's note, 2026-11-15 | pending |
 | 1.4.5 | §3: Proposition NEC added (sharpness of Lemma X's hypothesis (ND); fixed design); stretch item S-FIT restated accordingly | NEW-CLAIM (non-target; touches no target clause: the design violates (ND)) | necessity gate for (ND) | API attempt F-b-r2; `reviews/P7_opus_precheck_NEC.md` | pending (line check L7) |
+| 1.4.6 | DIST-C (C-ii)(γ) added; Corollary C's closing sentences: the condition concerns the total posterior probability of the list, and the posterior is in general a mixture over many models | EQUAL (descriptive sentences; no statement relied on a point-mass posterior — (C-ii)(α) and the retention sentence use π(S₀) > ½ only as a sufficient condition) | cross-department finding: at moderate n the store law is a mixture over S₀ and many one-extra-variable supersets | Engineering via HQ and the manager (`Docs/Experiments/P1M/DECISIONS.md` D-17) | pending |
 Target clauses TC1–TC9 were fixed by HQ at CP1 (2026-11-15) in their v1.3 form; TC10 = companion results. **Relative to that
 baseline, no row of v1.4 weakens the mathematics of a target clause** (per S2: this sentence is about the CP1 baseline, not
 about the history before it — the pre-CP1 rows 1.0.1, 1.1 and 1.3 marked WEAKER did narrow ranges or add remainder events).

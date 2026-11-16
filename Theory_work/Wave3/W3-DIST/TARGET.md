@@ -167,9 +167,11 @@ with P*-probability at least 1 − n^{−cM} over the data, **every** completed 
     Π̂( d_H(f, f*) > √(M·log n / n) ) ≤ n^{−cM/2}.
 
 If a completed run scored the true model {j : β*_j ≠ 0} and the posterior probability of that model exceeds ½, then the
-list contains it, it is the model the method reports as most probable, and π(𝒯) > ½. In general, whether the list
-carries enough posterior probability is a property of the run: this corollary does not assert it, and the output does
-not certify it.
+list contains it, it is the model the method reports as most probable, and π(𝒯) > ½. More generally π(𝒯) is the total
+posterior probability of the listed models, and no single model needs to carry most of it: the posterior is in general
+a mixture over many models (typically the true model together with many models that add one predictor to it), and the
+condition above concerns the list as a whole. Whether the list carries enough posterior probability is a property of the
+run: this corollary does not assert it, and the output does not certify it.
 
 **Notation table.**
 | symbol | meaning |

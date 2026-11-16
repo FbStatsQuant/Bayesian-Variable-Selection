@@ -39,6 +39,9 @@ One check script's simulation was wrong and its claim is withdrawn (`work/C_size
   NEC contradicts no target clause (its design violates the interface). Whether the in-probability form holds without
   the interface is open (stretch S-FIT). The coefficient-cost interface cannot be dropped either (explicit design in
   `work/api_attempts/dist1/X-d-1.md` §3(a); unchecked).
+- **Description of the coded output.** The store law is in general a mixture over many models (the true model and many
+  one-extra-variable supersets; measured by the Engineering Department, `Docs/Experiments/P1M/DECISIONS.md` row D-17).
+  DIST-C (C-0), (C-i) apply to it as it is; no statement of this ticket assumes a posterior close to a point mass.
 - **Constants.** Explicit constants, not optimised.
 - **Stretch items not pursued in this leg:** S-APX (approximate sparsity), S-EXP (exponential p), S-FIT (in-probability
   sharp rate without the interface).

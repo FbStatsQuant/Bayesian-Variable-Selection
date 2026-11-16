@@ -284,3 +284,11 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   `reviews/P7_disposition.md`; STATEMENT v1.4.5 (Proposition NEC in §3; S-FIT text; NEW-CLAIM non-target); DEPS rows NEC,
   S-FIT. Line check L7 (Sol) launched (`reviews/BRIEF_L7_sol_NEC.md`). Running: L6 (Sol), L7 (Sol). HOLDS read: none.
 - 21:11 — REPORT.md generated (`mkreport.py` + `REPORT_extra.md`: §1 table pointing to STATEMENT lines, review trail, numerics, relations and sharpness, inputs and assurance with the three reviewer-unverified premises as "conditional on …", 20 registry blocks; internal line "Explicit constants, not optimised"). It is regenerated after any STATEMENT edit. Running: L6, L7 (Sol). HOLDS read: none.
+- 21:57 — Cross-department finding (Engineering via HQ and the manager; `Docs/Experiments/P1M/DECISIONS.md` D-17,
+  `reviews/PR12_review.md`, `PR12_disposition.md`, read only): at the planned (n, p) the posterior is spread over S₀ and
+  about p one-null supersets (π(S₀) ≈ 0.45–0.65 at n = 200). Search of STATEMENT, TARGET, REPORT, ROUTES, ASSUMPTION_MAP: **no
+  statement-level text relied on a point-mass posterior**; two conditional sentences use π(S₀) > ½ only as a sufficient
+  condition (DIST-C (C-ii)(α); Corollary C's retention sentence). Wording made explicit (STATEMENT v1.4.6, EQUAL): the
+  store law is in general a mixture over many models; the condition of Corollary C concerns the list as a whole;
+  (C-ii)(γ) added as a description; TARGET §6 synced; REPORT regenerated. Goes into the Sol diff check batch.
+  P7's completion notice arrived (already processed). HOLDS read: none. X.md sha re-verified (4c3a657742455bef).
