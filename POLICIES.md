@@ -60,10 +60,14 @@ PROGRAM Readability, with a fidelity check of every number.
 - **Models and escalation (owner, 2026-11-15, final).**
   - Departments are independent in using **Opus 5.5, Sonnet 5.5 and Haiku 5.5** (Claude Third unless their charter
     says otherwise; effort high max).
-  - **A new Fable 5.2 needs the owner's green light.** If a problem is big enough to need it, the manager reports to HQ:
-    the problem, why Opus is not enough, **how many Fables**, the expected size or duration, and the account. HQ passes
-    it to the owner, and the owner gives the green light. Fables already approved continue (the W3-DIST lead;
-    Engineering's feasibility expert).
+  - **A new Fable 5.2 needs HQ's approval** (owner delegated Fable allocation to HQ, 2026-11-16: "be efficient, we
+    need to save tokens for future tasks"). If a problem is big enough to need it, the manager reports to HQ: the
+    problem, why Opus is not enough, how many Fables, the expected size or duration, and the account. HQ decides,
+    with the consultant when it is significant.
+    - Fables go only to hard key proofs, creative or architect reviews, writing advice, and headline cards. They are
+      scoped with a kill budget and reused (the same thread across rounds) rather than re-spawned.
+    - Opus is the default everywhere else.
+    - HQ reports Fable use to the owner in the daily brief.
   - Big problems are reported to HQ at once.
   - Otherwise every department works on its own: the same repo, the same information, clear goals and resources (charters
     in §8). Technical decisions are the department's, confirmed by HQ.
@@ -110,7 +114,7 @@ a hold on a consumed claim, a budget overrun, or anything touching a headline cl
 
 | who | decides |
 |---|---|
-| Owner (Felipe) | direction, budget tiers, account and budget for every Fable, paper claims, framing and competitors, org changes |
+| Owner (Felipe) | direction, budget tiers, account allocation (Fable allocation delegated to HQ 11-16), paper claims, framing and competitors, org changes |
 | CEO (HQ) | priorities across departments, resource allocation inside the owner's budget, gates (CP3 acceptance, headline cards with the consultant), merges to main, API submission, launching and closing departments and tickets |
 | Department manager | technical decisions (HQ confirms), staffing with Opus/Sonnet inside the allowance, ticket planning and schedule, reviews per PROTOCOL_v4 |
 
