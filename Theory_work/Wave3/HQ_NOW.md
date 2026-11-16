@@ -11,6 +11,17 @@
 - When: BNP sends a "quiet window" (expected 11-16 early afternoon CST). HQ pauses SMC departments' leads, restarts, verifies, then messages BNP back. BNP launches nothing until confirmed.
 - BNP already moved its temp to /home/fb31/bnp_tmp and removed 73 stale sandboxes (11-15).
 
+## MORNING BRIEF 11-16 (items for the owner)
+- p = 1M schedule: with descope (c, approved) the first 1M fit is in the first week of January. Options for the owner:
+  - (b) Fable 5.2 architect for WP3, ≈ 3 days (HQ recommends yes);
+  - (a) 7 Opus builders, ≈ +40% Claude Third for ~3 wk (only with b, and only if the accounts allow);
+  - a+b+c → ≈ Dec 21–23, but no slack.
+
+  Card: Docs/Experiments/P1M/RECOVERY_OPTIONS.md.
+- The desktop storage path (D: has ~3 TB free) and the Task Scheduler OK for hourly pulls.
+- The Owls T3 restart in BNP's quiet window (early afternoon).
+- The pacing plan for the day (accounts, Codex level).
+
 ## USAGE NOTE (owner, 11-15 ~21:30 CT; all times Central)
 - Tonight: keep the rhythm. Tomorrow (11-16) probably pace down a bit: Claude Third is burning about a week of Ultra in
   about 2.5 days (new account, odd reset schedule). The two companies together used ~2B tokens in ~4 h; this pace is not
