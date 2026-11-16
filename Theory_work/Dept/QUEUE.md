@@ -52,6 +52,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | SL0 PC check (RUNNING, pre-freeze per HQ) | C-PACK:SL0: diff check of the 5 files changed since the C1 snapshot → record SL0 → drop SL0 from 11 conditional statuses | D48 |
 | accept-identity follow-ups | NB-3 sunset of the legacy Windows fallback; NB-4 compute identity once | CR_accept_identity_opus.md |
 | Cont-R TH05.0 condition | Cont-R still lists SOP:TH05.0 (inherited via the removed RM-R edge); drop via a new full RM2 checkpoint | recorder note 11-16; HQ 11-16: conservative (extra condition only), post-freeze package together with TH05.0's own acceptance |
+| Editorial batch: FINAL s6:29 | corrected-form Prop F called 'the specified v3.1 method' although (a)/(b) come from shipped validators | TEX46 re-check 11-16 |
 | Post-freeze tool list: test_lifecycle fixtures | legacy scenarios use live registry rows (broke when S3 made them SUSPECT); give the suite its own fixture rows | recorder 11-16 |
 | Post-freeze (Engineering): run_ci falsify FAIL | C-PACK/numerics/item1_um_checks.py hardcodes a Windows path (W1N3 = C:\\Users\\…), no n3lib on Linux; pre-existing | recorder task T 11-16 |
 | Post-freeze item 1 (first week): SUSPECT/NARROWED delivery dependents | W2-FAC-X X6.X6.4, X7, Cor-FAC-NCS, X8, X9, X6, Thm-FAC-GL (SUSPECT); Thm-FAC-CS-iid, X10 (NARROWED, clear pending); W2-FAC-S5F:C4; HQ_AUDIT-W2 B1/B3/B4; W3-RM:Examples (refused: input RM-F superseded): in-span narrowing to 𝔇 / A:IDEAL-W⁺ | HQ 11-16 (D79) |
