@@ -237,3 +237,9 @@
 - Post-freeze order (owner tie-break): **POST2-O3 (E-floor+) first**, then **POST2-R1 (N1) with POST2-O2 (E+)**, each
   kill-budgeted. O2 rider must price the MISR rebuild: if c₁ < c₀ (258.9 vs 192 at s = 2, A = 1) MIS(i′) covers C-MIS's
   whole inclusion range → C-MIS → MISR supersession possible (H5).
+
+## 2026-11-15 21:03 CT — W3-PSHARP-R CP1: GO
+- **D37.** Target clauses fixed (Prop A-E, Cor A1-E STRONGER/headline, Cor A2-E, A2C → open item if not a restatement,
+  readings A3′/B3′); hypothesis moves approved. Conditions: witness-only "sharp" scope (card 6), no extra displayed
+  constants. H5 input sent to HQ; READER_DELTA staged in READER row thm3 as pending until CP3. CP3 target Tue, latest Wed.
+- W3-DIST: BR1 (Astra break review) NOT BROKEN, 3 MINOR; L2 back — CP2 report expected from the lead.
