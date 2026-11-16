@@ -176,3 +176,10 @@
   clones go in an ignored `_scratch/` inside its own worktree (record-1115), one at a time, removed when done; its /tmp
   clones removed when no task needs them. W3-DIST arrays (~70 MB .npz) already git-ignored in work/numerics/arrays/;
   stay there. My own scratchpad temp files removed.
+
+## 2026-11-15 20:26 CT — HQ: 6th slot; Lean launch Thu 11-19
+- **D30.** W3-MISR-R launched as a child agent (6th lead until PSMC-S0 closes; then cap 5, 3 after Wed 18:00).
+- Lean department launches Thu 11-19 (HQ): inventory + Level-1 batch (SL0, LT♯ core, T01 prior counting, DIST Lemma H),
+  then the score base; Level 2 Mon 11-23 (DIST-1 if CP3 landed, else W3-POST:Thm-1). LEAN_READINESS.md stays current
+  (refresh after Wed rider CP3s and DIST CP2/CP3). Old sorry-free snapshot:
+  Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/L-LEAN/ (STATUS.md, REPORT.md).
