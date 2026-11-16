@@ -38,7 +38,9 @@ struct IslandConfig {
   double ckpt_every_s = 600;                // spec §6: at most every 10 min
   int stop_after_step = -1;                 // testing (T6): write a checkpoint after step s and return `interrupted`
   bool resume = true;
-  bool keep_terminal = false;
+  bool keep_terminal = true;               // terminal supports (N, after the last measured round) -> island_r.bin
+  uint32_t tier = 0;                        // frozen calibration tier (event key, INTERFACES v0.1.5 §4.2)
+  bool allow_test_kernels = false;          // tests only: the bit-form label-major kernel (manager Q1)
   // adaptive schedule (core's pilot rule: largest phi' with population ESS >= 0.9 H, floor 1/Te). Benchmarks and
   // pilot-like grids only; production islands use the frozen grid from calib.bin.
   bool adaptive = false; double adaptive_H = 0; int adaptive_Te = 30;

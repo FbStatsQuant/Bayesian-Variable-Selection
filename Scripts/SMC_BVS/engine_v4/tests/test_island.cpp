@@ -8,6 +8,8 @@
 #include "tk.h"
 #include "tutil_island.h"
 #include "v4/island/island.h"
+#include "v4/island/island_file.h"
+#include "v4/format.h"
 
 using namespace v4::island;
 
@@ -233,7 +235,7 @@ TEST(store_equals_wp1_reference_store) {
 static IslandConfig small_cfg() {
   IslandConfig c; c.seed = 42; c.island = 3; c.N = 48; c.L = 2; c.Hm = 2; c.B = 14;
   c.grid = {0.0, 0.05, 0.15, 0.35, 0.65, 1.0};
-  c.store_cap = 0; c.threads = 1;
+  c.store_cap = 0; c.threads = 1; c.allow_test_kernels = true;
   return c;
 }
 template <Arith A>
@@ -276,6 +278,11 @@ TEST(logical_counts_and_invariants) {
   CHECK(r.logical[PH_MEASURED][ME_GIBBS_HELD] == (uint64_t)c.N * F.D.p * c.Hm);
   CHECK(r.logical[PH_FINAL_INIT][ME_INIT] == (uint64_t)c.N);
   uint64_t g = 0; for (auto& s : r.stages) g += s.moves.gibbs; CHECK(g == held);
+  // I4 (INTERFACES v0.1.5 §4.2, records.h i4_holds): logical events by mechanism = i4_expected(moves), per phase
+  { MoveStats mb; for (auto& s : r.stages) add_moves(mb, s.moves);
+    MoveStats mt, mm; for (int t2 = 0; t2 < (int)r.terminal_moves.size(); ++t2) add_moves(t2 < c.L ? mt : mm, r.terminal_moves[t2]);
+    CHECK(v4::i4_holds(mb, r.logical[PH_FINAL_BRIDGE])); CHECK(v4::i4_holds(mt, r.logical[PH_BURN_IN])); CHECK(v4::i4_holds(mm, r.logical[PH_MEASURED]));
+    CHECK(r.logical[PH_FINAL_BRIDGE][ME_GIBBS_FLIP] > r.logical[PH_FINAL_BRIDGE][ME_GIBBS_HELD] / 2); }   // ~2 events per Gibbs step
   // every bridge stage: one U, B N-swaps and one I per particle
   for (auto& s : r.stages) { CHECK(s.moves.us_exec + s.moves.us_self == (uint64_t)c.N); CHECK(s.moves.in_exec == (uint64_t)c.N);
                              CHECK(s.moves.ns_exec + s.moves.ns_self == (uint64_t)c.N * c.B); }
@@ -321,3 +328,38 @@ TEST(t6_restart_bit_identical) {
   }
 }
 
+
+// island_r.bin: write, read back, compare with the run (record fields, store, HPM key, terminal supports); an
+// interrupted run writes no estimate section (GUARD-W).
+TEST(island_file_roundtrip_and_terminal_supports) {
+  Fixture F(100, 300, 24);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16;
+  for (int arith = 0; arith < 2; ++arith) {
+    IslandRun r = arith ? run_island<Arith::ClassA>(F.D, F.st, F.nb, c) : run_island<Arith::Bit>(F.D, F.st, F.nb, c);
+    CHECK(r.status == 0 && (int)r.terminal.size() == c.N);
+    std::string path = tmpdir() + "/wp3_island_rt.bin";
+    v4::Json inputs = v4::Json::object(); inputs["data.bin"] = "test";
+    write_island_file(path, r, arith ? Arith::ClassA : Arith::Bit, inputs);
+    IslandFile f = read_island_file(path);
+    const v4::IslandResult& o = f.rec;
+    bool ok = o.status == v4::Status::completed && o.r == r.r && o.N == r.N && o.T == r.T && same_bits(o.logZ, r.logZ) &&
+              o.stages.size() == r.stages.size() && o.rb_acc == r.rb_acc && o.pip == r.pip && o.rb_round == r.rb_round &&
+              o.terminal_distinct == r.terminal_distinct && f.grid == r.grid && f.terminal == r.terminal;
+    for (size_t i = 0; ok && i < r.stages.size(); ++i) ok = same_bits(o.stages[i].ess, r.stages[i].ess) && std::memcmp(&o.stages[i].moves, &r.stages[i].moves, sizeof(MoveStats)) == 0;
+    ok = ok && o.led.top.size() == r.top_v.size() && o.led.hpmS == r.hpm.S && same_bits(o.led.hpmF, r.hpm.F) && o.led.hpm_ev.key == r.hpm.key &&
+         same_bits(o.led.island_best[r.r], r.island_best) && std::memcmp(o.led.logical, r.logical, sizeof(r.logical)) == 0;
+    for (size_t i = 0; ok && i < r.top_v.size(); ++i) ok = same_bits(o.led.top.v[i], r.top_v[i]);
+    CHECKF(ok, "roundtrip arith %d", arith);
+    // the terminal supports are the particles after the last measured round, in particle order
+    CHECK(f.terminal.size() == (size_t)c.N && f.meta.at("mode").str() == (arith ? "V" : "law"));
+    std::remove(path.c_str());
+  }
+  // interrupted run (stop after a checkpoint): no logZ / rb / pip / terminal sections
+  IslandConfig a = c; a.ckpt_path = tmpdir() + "/wp3_island_rt_ck"; a.ckpt_every_s = 1e9; a.stop_after_step = 2;
+  std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
+  IslandRun ri = run_island<Arith::Bit>(F.D, F.st, F.nb, a);
+  std::string path = tmpdir() + "/wp3_island_rt_int.bin";
+  write_island_file(path, ri, Arith::Bit, v4::Json::object());
+  { v4::fmt::Reader rd(path); CHECK(!rd.has("logZ") && !rd.has("rb_acc") && !rd.has("pip_r") && !rd.has("terminal_S") && rd.has("st_phi")); }
+  std::remove(path.c_str()); std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
+}

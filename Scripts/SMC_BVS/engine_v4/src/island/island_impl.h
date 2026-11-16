@@ -13,7 +13,10 @@ using u128 = unsigned __int128;
 inline uint64_t fix63(double o) { return (uint64_t)(o * 0x1.0p63); }   // o in [0, 1]
 inline double unfix63(u128 a) { return (double)a * 0x1.0p-63; }
 
-constexpr uint32_t SLOT_ACCEPT = 0xFFFFFFFFu;
+// INTERFACES v0.1.5 §3 slot kinds (rng.h): SK_ORDER, SK_RESAMPLE, SK_PI0_*, SK_MOVE_J, SK_MOVE_L, SK_ACCEPT
+using v4::slot_of; using v4::SLOT_ACCEPT;
+static const uint32_t SLOT_MOVE_J = v4::slot_of(v4::SK_MOVE_J, 0), SLOT_MOVE_L = v4::slot_of(v4::SK_MOVE_L, 0),
+                      SLOT_RESAMPLE = v4::slot_of(v4::SK_RESAMPLE, 0);
 
 // core/cpp/v3_calib.h:11-46 (lse_cal, population_ess, pilot_next_phi), copied; used only by the adaptive schedule
 // option (benchmarks and pilot-like grids; the calibration itself is WP4's).
@@ -154,9 +157,16 @@ class IslandEngine {
     Address a; a.seed = cfg.seed; a.role = R_FINAL; a.tier = 0; a.iter = 0; a.island = cfg.island;
     a.xph = xph; a.stage = ustage; a.particle = particle1; a.position = position; a.slot = slot; return a;
   }
-  inline EventKey key(const RoundCtx& rc, uint32_t particle1, uint32_t position) const {
-    EventKey k; k.seg = SG_FINAL; k.unit = cfg.island; k.xph = rc.xph; k.stage = rc.ev_stage; k.round = rc.ev_round;
-    k.particle = particle1; k.position = position; return k;
+  // INTERFACES v0.1.5 §4.2: final island r: (FINAL, frozen tier, iter -1, r, xph, stage, round, particle, q, sub);
+  // sub = within-step ordinal: Gibbs held 0 (never offered), flip 1; U / N / I proposals and the initial draw 0.
+  inline EventKey key(const RoundCtx& rc, uint32_t particle1, uint32_t position, uint8_t sub = 0) const {
+    EventKey k; k.seg = SG_FINAL; k.tier = (uint8_t)cfg.tier; k.iter = -1; k.unit = cfg.island; k.xph = rc.xph;
+    k.stage = rc.ev_stage; k.round = rc.ev_round; k.particle = particle1; k.position = position; k.sub = sub; return k;
+  }
+  // Manager decision Q2b: every accepted state carries the full Bit score of its model (one value per model state;
+  // removes class-A path dependence of particle states). Bit form: the flip score already has these bits.
+  double canonical(BitScorer& sc, const Model& T, double lm) const {
+    if constexpr (A == Arith::Bit) return lm; else return sc.score(T).logm;
   }
   // core/cpp/v3_engine.h:89-101: log m, log gamma_0, d, F of a model
   void fill(Particle& q, const Model& S, double logm) {
@@ -177,43 +187,43 @@ class IslandEngine {
     if (lab == p) {   // U: uniform swap
       if (k == 0 || k == p) { L.ms.us_self++; return false; }
       L.ms.us_exec++;
-      int j = Pc.S[(int)std::floor(U(0) * k)];
-      int mth = (int)std::floor(U(1) * (p - k));
+      int j = Pc.S[(int)std::floor(U(SLOT_MOVE_J) * k)];
+      int mth = (int)std::floor(U(SLOT_MOVE_L) * (p - k));
       int l = mth; for (int s : Pc.S) { if (s <= l) ++l; else break; }   // mth non-member in increasing order
       Model T = Pc.S; sorted_erase(T, j); sorted_insert(T, l);
       fill(out, T, sc.score(T).logm);
       offer_particle(L, out, rc.phase, ME_USWAP, key(rc, i1, pos));
       double la = lgphi(out, rc.phi) - lgphi(Pc, rc.phi);
       double alpha = (la >= 0) ? 1.0 : pm::exp(la);
-      if (U(2) < alpha) { L.ms.us_acc++; return true; }
+      if (U(SLOT_ACCEPT) < alpha) { L.ms.us_acc++; return true; }
       return false;
     }
     if (lab <= p + cfg.B) {   // N_b: neighbour swap
       if (k == 0) { L.ms.ns_self++; return false; }
       L.ms.ns_exec++;
-      int j = Pc.S[(int)std::floor(U(0) * k)];
+      int j = Pc.S[(int)std::floor(U(SLOT_MOVE_J) * k)];
       std::vector<int> cand;
       for (int64_t e = nb.ptr[j]; e < nb.ptr[j + 1]; ++e) if (!contains(Pc.S, nb.idx[e])) cand.push_back(nb.idx[e]);
       if (cand.empty()) { L.ms.ns_noscore++; return false; }
-      int l = cand[(int)std::floor(U(1) * cand.size())];
+      int l = cand[(int)std::floor(U(SLOT_MOVE_L) * cand.size())];
       Model T = Pc.S; sorted_erase(T, j); sorted_insert(T, l);
       int back = 0; for (int64_t e = nb.ptr[l]; e < nb.ptr[l + 1]; ++e) if (!contains(T, nb.idx[e])) ++back;
       fill(out, T, sc.score(T).logm);
       offer_particle(L, out, rc.phase, ME_NSWAP, key(rc, i1, pos));
       double la = lgphi(out, rc.phi) - lgphi(Pc, rc.phi) + pm::log((double)cand.size()) - pm::log((double)back);
       double alpha = (la >= 0) ? 1.0 : pm::exp(la);
-      if (U(2) < alpha) { L.ms.ns_acc++; return true; }
+      if (U(SLOT_ACCEPT) < alpha) { L.ms.ns_acc++; return true; }
       return false;
     }
     // I: independence proposal from pi_0
     L.ms.in_exec++;
-    uint32_t slot = 0; Model T;
-    draw_pi0(st, [&]() { return U(slot++); }, T);
+    Model T;
+    draw_pi0(st, [&](uint32_t slot) { return U(slot); }, T);
     fill(out, T, sc.score(T).logm);
     offer_particle(L, out, rc.phase, ME_INDEP, key(rc, i1, pos));
     double la = rc.phi * (out.d - Pc.d);
     double alpha = (la >= 0) ? 1.0 : pm::exp(la);
-    if (U(SLOT_ACCEPT) < alpha) { L.ms.in_acc++; return true; }   // INTERFACES v0.1.2 §3: fixed accept slot
+    if (U(SLOT_ACCEPT) < alpha) { L.ms.in_acc++; return true; }
     return false;
   }
 
@@ -222,7 +232,7 @@ class IslandEngine {
     for (int t = 0; t < m; ++t) ord[t] = (uint32_t)t;
     uint32_t slot = 0;
     for (int t = m - 1; t >= 1; --t) {
-      int jj = (int)std::floor(uniform_at(addr(rc.xph, rc.ustage, (uint32_t)i + 1, 0, slot++)) * (t + 1));
+      int jj = (int)std::floor(uniform_at(addr(rc.xph, rc.ustage, (uint32_t)i + 1, 0, slot_of(v4::SK_ORDER, slot++))) * (t + 1));
       std::swap(ord[t], ord[jj]);
     }
   }
@@ -242,16 +252,17 @@ class IslandEngine {
         double lm = 0, o = 0;
         eval1<A>(D, st, sc, s, lab, lm, o);
         bool has_other = in || s.add_ok;
+        if (!has_other) L.ms.gibbs_cap++;   // addition refused at |S| = K: one event (held), INTERFACES v0.1.5 §4.2
         Model T;
         if (has_other) {
           T = Pi.S; if (in) sorted_erase(T, lab); else sorted_insert(T, lab);
           double F = D.logprior[T.size()] + lm;
-          L.scored(T.data(), (uint32_t)T.size(), Pi.h ^ D.zob.key[lab], F, lm, rc.phase, ME_GIBBS_FLIP, key(rc, i1, pos));
+          L.scored(T.data(), (uint32_t)T.size(), Pi.h ^ D.zob.key[lab], F, lm, rc.phase, ME_GIBBS_FLIP, key(rc, i1, pos, 1));
         }
         if (rb) (*rb)[lab] += fix63(o);
-        double u = uniform_at(addr(rc.xph, rc.ustage, i1, pos, 0));
+        double u = uniform_at(addr(rc.xph, rc.ustage, i1, pos, SLOT_ACCEPT));
         bool include = u < o;
-        if (include != in) { fill(Pi, T, lm); L.ms.gibbs_change++; cache_ok = false; }
+        if (include != in) { fill(Pi, T, canonical(sc, T, lm)); L.ms.gibbs_change++; cache_ok = false; }
       } else {
         if (step_nongibbs(lab, Pi, i, pos, rc, L, sc, tmp)) { Pi = tmp; cache_ok = false; }
       }
@@ -403,7 +414,7 @@ class IslandEngine {
               const uint32_t* inv = &gb.inv[(size_t)gi * m];
               const uint32_t qi = gb.q[gi]; uint32_t best = gb.fmin[gi].load(std::memory_order_relaxed);
               const uint32_t i1 = (uint32_t)(g0 + gi) + 1;
-              Address a0 = addr(rc.xph, rc.ustage, i1, 0, 0);
+              Address a0 = addr(rc.xph, rc.ustage, i1, 0, SLOT_ACCEPT);   // lanes set the position
               v4::Ctr4 ctr = v4::address_ctr(a0); v4::Key2 key = v4::address_key(a0);
               for (int v = 0; v < nbv; v += 8) {
                 uint32_t pos8[8]; unsigned need = 0;
@@ -476,13 +487,13 @@ class IslandEngine {
               if (rc.measured) rb_cur[j] += (u128)fx * ncons;
               L.logical[rc.phase][ME_GIBBS_HELD] += ncons; L.ms.gibbs += ncons;
               const double lm = lb[j];
-              if (std::isnan(lm)) continue;   // infeasible addition: no flip event (core/cpp/v3_engine.h:119)
+              if (std::isnan(lm)) { L.ms.gibbs_cap += ncons; continue; }   // infeasible addition: no flip event (core/cpp/v3_engine.h:119)
               const bool in = std::binary_search(c.S.begin(), c.S.end(), j);
               const double F = (in ? prior_del : prior_add) + lm;
               L.logical[rc.phase][ME_GIBBS_FLIP] += ncons - 1;   // + 1 inside scored()
               if (F >= top.tau.load(std::memory_order_relaxed) || F > L.island_best || F >= L.hpm.F) {
                 T = c.S; if (in) sorted_erase(T, j); else sorted_insert(T, j);
-                L.scored(T.data(), (uint32_t)T.size(), c.h ^ D.zob.key[j], F, lm, rc.phase, ME_GIBBS_FLIP, key(rc, (uint32_t)(g0 + first) + 1, fpos));
+                L.scored(T.data(), (uint32_t)T.size(), c.h ^ D.zob.key[j], F, lm, rc.phase, ME_GIBBS_FLIP, key(rc, (uint32_t)(g0 + first) + 1, fpos, 1));
               } else {
                 L.logical[rc.phase][ME_GIBBS_FLIP] += 1;
               }
@@ -500,7 +511,7 @@ class IslandEngine {
           const SupportCache& c = gb.sup[gb.sup_of[gi]];
           double lm = gb.lbuf[(size_t)gb.sup_of[gi] * p + j];
           Model T = c.S; if (std::binary_search(T.begin(), T.end(), j)) sorted_erase(T, j); else sorted_insert(T, j);
-          fill(x, T, lm);
+          fill(x, T, canonical(*scorers[0], T, lm));
           tl[0]->ms.gibbs_change++;
         } else if (gb.etype[gi] == 2) {
           x = gb.pending[gi];
@@ -550,7 +561,7 @@ class IslandEngine {
     for (int b = 0; b < N; ++b) { double boundary = (double)b / (double)N; while (k < N - 1 && W[k] < boundary) ++k; guide[b] = k; }
     std::vector<int> a(N);
     for (int i = 0; i < N; ++i) {
-      double u = uniform_at(addr(X_RESAMPLE, t, (uint32_t)i + 1, 0, 0));
+      double u = uniform_at(addr(X_RESAMPLE, t, (uint32_t)i + 1, 0, SLOT_RESAMPLE));
       double ue = (u > 0) ? u : std::numeric_limits<double>::denorm_min();
       int bucket = std::min(N - 1, (int)std::floor(ue * (double)N));
       int kk = guide[bucket];
@@ -657,10 +668,10 @@ class IslandEngine {
         P.assign(N, Particle());
         #pragma omp parallel for schedule(dynamic, 16) num_threads(NT)
         for (int i = 0; i < N; ++i) {
-          int th = omp_get_thread_num(); Model S; uint32_t slot = 0;
-          draw_pi0(st, [&]() { return uniform_at(addr(X_INIT, 0, (uint32_t)i + 1, 0, slot++)); }, S);
+          int th = omp_get_thread_num(); Model S;
+          draw_pi0(st, [&](uint32_t slot) { return uniform_at(addr(X_INIT, 0, (uint32_t)i + 1, 0, slot)); }, S);
           fill(P[i], S, scorers[th]->score(S).logm);
-          EventKey k; k.seg = SG_FINAL; k.unit = cfg.island; k.xph = X_INIT; k.particle = (uint32_t)i + 1;
+          EventKey k; k.seg = SG_FINAL; k.tier = (uint8_t)cfg.tier; k.iter = -1; k.unit = cfg.island; k.xph = X_INIT; k.particle = (uint32_t)i + 1;
           offer_particle(*tl[th], P[i], PH_FINAL_INIT, ME_INIT, k);
         }
         uint64_t hh = 0x243F6A8885A308D3ULL;
@@ -739,6 +750,8 @@ IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const
   if (!cfg.adaptive && (cfg.grid.size() < 2 || cfg.grid.front() != 0.0 || cfg.grid.back() != 1.0)) throw std::invalid_argument("run_island: grid must run from 0 to 1");
   for (size_t i = 1; i < cfg.grid.size(); ++i) if (!(cfg.grid[i] > cfg.grid[i - 1])) throw std::invalid_argument("run_island: grid not strictly increasing (I3)");
   if (cfg.adaptive && !cfg.ckpt_path.empty()) throw std::invalid_argument("run_island: the adaptive schedule has no checkpoints");
+  if (A == Arith::Bit && cfg.kernel == KernelKind::LabelMajor && !cfg.allow_test_kernels)
+    throw std::invalid_argument("run_island: the bit-form label-major kernel is test-only (D-21, manager Q1); theory mode runs particle-major");
   if (cfg.G < 1 || cfg.G > 256) throw std::invalid_argument("run_island: G must be in 1..256 (manager decision Q3; INTERFACES memory)");
   IslandEngine<A> E(D, st, nb, cfg);
   return E.run();

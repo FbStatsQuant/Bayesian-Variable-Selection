@@ -154,18 +154,19 @@ inline void build_start(Start& st, const Data& D, const std::vector<std::vector<
     }
   }
 }
-// core/cpp/v3_start.h:165-176. `nu()` returns the next uniform of the draw (slot 0, 1, ... of the caller's address).
+// core/cpp/v3_start.h:165-176. `nu(slot)` returns the uniform at the caller's address with that slot; slots follow
+// INTERFACES v0.1.5 §3: PI0_SIZE 0, PI0_BLOCKSIZE b (b = J-1 .. 0 while r > 0), PI0_SUBMODEL b (k_b > 0, b increasing).
 template <class NextU>
 inline void draw_pi0(const Start& st, NextU&& nu, Model& S) {
   int J = st.J;
-  int k = cat_draw_gt(st.size_cum, nu());
+  int k = cat_draw_gt(st.size_cum, nu(v4::slot_of(v4::SK_PI0_SIZE, 0)));
   std::vector<int> kb(J, 0);
   int r = k;
-  for (int b = J - 1; b >= 0 && r > 0; --b) { int j = cat_draw_gt(st.cond_cum[b][r], nu()); kb[b] = j; r -= j; }
+  for (int b = J - 1; b >= 0 && r > 0; --b) { int j = cat_draw_gt(st.cond_cum[b][r], nu(v4::slot_of(v4::SK_PI0_BLOCKSIZE, (uint32_t)b))); kb[b] = j; r -= j; }
   S.clear();
   for (int b = 0; b < J; ++b) {
     if (kb[b] == 0) continue;
-    int i = cat_draw_gt(st.sub_cum[b][kb[b]], nu());
+    int i = cat_draw_gt(st.sub_cum[b][kb[b]], nu(v4::slot_of(v4::SK_PI0_SUBMODEL, (uint32_t)b)));
     uint32_t code = (uint32_t)st.codes_by_size[b][kb[b]][i];
     for (size_t t = 0; t < st.blocks[b].size(); ++t) if (code & (1u << t)) S.push_back(st.blocks[b][t]);
   }

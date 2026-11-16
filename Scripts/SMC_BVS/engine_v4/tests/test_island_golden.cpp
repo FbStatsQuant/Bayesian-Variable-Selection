@@ -74,18 +74,20 @@ TEST(golden_flip_scores_vs_core_scorer) {
   CHECK(mism == 0);
 }
 
-// core's serial variate requests -> INTERFACES §3 addresses (reads the engine's event context)
+// core's serial variate requests -> INTERFACES v0.1.5 §3 addresses (reads the engine's event context). The pi_0
+// block indices are recovered by replaying core's own size draws (core/cpp/v3_start.h:158-176) on core's tables.
 struct AddrSource : public v3::VariateSource {
-  v3::Engine* E = nullptr; uint32_t seed = 0, island = 0;
-  std::tuple<int, int, int, int, int> last{-1, -1, -1, -1, -1}; uint32_t slot = 0;
+  v3::Engine* E = nullptr; const v3::Start* st3 = nullptr; uint32_t seed = 0, island = 0;
+  std::tuple<int, int, int, int, int> last{-1, -1, -1, -1, -1}; uint32_t order_d = 0;
   int res_stage = -1; uint32_t res_i = 0; uint64_t n = 0;
+  int pi_r = 0, pi_b = 0; std::vector<int> kb; size_t sub_next = 0;   // pi_0 replay state
   double u(const char* purpose) override {
     ++n;
     const auto& ev = E->ev;
     Address a; a.seed = seed; a.role = R_FINAL; a.island = island;
     if (std::strcmp(purpose, "resample") == 0) {
       if (ev.stage != res_stage) { res_stage = ev.stage; res_i = 0; }
-      a.xph = X_RESAMPLE; a.stage = (uint32_t)ev.stage; a.particle = ++res_i; a.position = 0; a.slot = 0;
+      a.xph = X_RESAMPLE; a.stage = (uint32_t)ev.stage; a.particle = ++res_i; a.position = 0; a.slot = v4::slot_of(v4::SK_RESAMPLE, 0);
       return uniform_at(a);
     }
     switch (ev.phase) {
@@ -96,10 +98,28 @@ struct AddrSource : public v3::VariateSource {
       default: throw std::runtime_error("unexpected phase");
     }
     auto cur = std::make_tuple(ev.phase, ev.stage, ev.round, ev.particle, ev.position);
-    if (cur != last) { last = cur; slot = 0; }
+    if (cur != last) { last = cur; order_d = 0; }
     a.particle = (uint32_t)ev.particle; a.position = (uint32_t)ev.position;
-    a.slot = std::strcmp(purpose, "indep_accept") == 0 ? 0xFFFFFFFFu : slot++;   // INTERFACES v0.1.2 §3
-    return uniform_at(a);
+    std::string pu = purpose; double val;
+    if (pu == "order") { a.slot = v4::slot_of(v4::SK_ORDER, order_d++); return uniform_at(a); }
+    if (pu == "gibbs" || pu == "uswap_accept" || pu == "nswap_accept" || pu == "indep_accept") { a.slot = v4::SLOT_ACCEPT; return uniform_at(a); }
+    if (pu == "uswap_j" || pu == "nswap_j") { a.slot = v4::slot_of(v4::SK_MOVE_J, 0); return uniform_at(a); }
+    if (pu == "uswap_l" || pu == "nswap_l") { a.slot = v4::slot_of(v4::SK_MOVE_L, 0); return uniform_at(a); }
+    if (pu == "pi0_size") {
+      a.slot = v4::slot_of(v4::SK_PI0_SIZE, 0); val = uniform_at(a);
+      pi_r = v3::cat_draw_gt(st3->size_cum, val); pi_b = st3->J - 1; kb.assign(st3->J, 0); sub_next = 0;
+      return val;
+    }
+    if (pu == "pi0_block_size") {
+      int b = pi_b--; a.slot = v4::slot_of(v4::SK_PI0_BLOCKSIZE, (uint32_t)b); val = uniform_at(a);
+      int j = v3::cat_draw_gt(st3->cond_cum[b][pi_r], val); kb[b] = j; pi_r -= j;
+      return val;
+    }
+    if (pu == "pi0_submodel") {
+      while (sub_next < kb.size() && kb[sub_next] == 0) ++sub_next;
+      a.slot = v4::slot_of(v4::SK_PI0_SUBMODEL, (uint32_t)sub_next++); return uniform_at(a);
+    }
+    throw std::runtime_error("unknown purpose " + pu);
   }
 };
 
@@ -158,12 +178,12 @@ TEST(golden_island_vs_core_engine) {
     // core
     v3::Engine E(W.D3, W.st3, W.Nb3, B);
     v3::Ledger L3(&W.D3, 4);
-    AddrSource src; src.E = &E; src.seed = seed; src.island = (uint32_t)r;
+    AddrSource src; src.E = &E; src.st3 = &W.st3; src.seed = seed; src.island = (uint32_t)r;
     E.led = &L3; E.vs = &src; E.cache = nullptr;
     v3::IslandResult R3 = E.run_island(r, N, grid, L, Hm, 0, nullptr);
     std::printf("  core island: logZ %.12f, %llu uniforms, store %zu, HPM |S| %zu\n", R3.logZ, (unsigned long long)src.n, L3.top.s.size(), L3.hpmS.size());
     // island
-    IslandConfig c; c.seed = seed; c.island = (uint32_t)r; c.N = N; c.grid = grid; c.L = L; c.Hm = Hm; c.B = B;
+    IslandConfig c; c.allow_test_kernels = true; c.seed = seed; c.island = (uint32_t)r; c.N = N; c.grid = grid; c.L = L; c.Hm = Hm; c.B = B;
     for (int kern = 0; kern < 2; ++kern) {
       c.kernel = kern ? KernelKind::LabelMajor : KernelKind::ParticleMajor; c.threads = kern ? 3 : 1; c.G = 8; c.tile = 64;
       IslandRun R = run_island<Arith::Bit>(W.D, W.st, W.nb, c);

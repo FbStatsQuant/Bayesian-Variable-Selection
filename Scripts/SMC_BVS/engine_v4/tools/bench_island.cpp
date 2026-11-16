@@ -115,7 +115,7 @@ static void bench_island(int p, int N, const std::vector<int>& thr, KernelKind k
   Start st; build_start(st, D, contiguous_blocks(p, 4));
   Neighbours nb = window_neighbours(D, 14, 8);
   std::printf("# data AR(0.6) n=%d p=%d (stand-in partition: blocks of 4; window neighbours, B=14): %.1f s wall\n", n, p, now() - t0);
-  IslandConfig c; c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
+  IslandConfig c; c.allow_test_kernels = true; c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
   if (gspec.rfind("geo:", 0) == 0) {
     int Tst = std::atoi(gspec.c_str() + 4);
     c.grid.push_back(0.0); for (int t = 1; t < Tst; ++t) c.grid.push_back(std::pow(10.0, -3.0 * (1.0 - (double)t / (Tst - 1))) * ((double)t / Tst));
