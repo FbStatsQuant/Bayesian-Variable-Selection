@@ -1,0 +1,138 @@
+# CREW — daily machines check (design; machines crew, leg 1)
+
+> **Scope rule (owner via HQ, 2026-11-15):** Engineering works only inside `SMC_Engineering_Department` on each machine
+> (plus its NOTS scratch link). Everything else in `/home/fb31` on Owls or NOTS is **out of scope**: not inventoried,
+> moved, cleaned or touched. The only exceptions are the HQ-approved SMC-BVS moves and the home guard. Out-of-scope rows
+> below are withdrawn.
+
+> For the daily crew this means: checks and cleanup **only inside the department folders**. Machine-wide metrics stay
+> (Owls `df -h /`, NOTS home quota line) as read-only numbers. The home guard keeps running as before. No scans of `/tmp`
+> or of other `/home/fb31` folders.
+
+
+SMC - Engineering, Opus 5.5 helper, 2026-11-15. **Design only, nothing is installed.** The crew script would live at
+`${ENG_ROOT_OWLS}/crews/daily_check.sh` and run from Owls. It writes its log to `${ENG_ROOT_OWLS}/crews/logs/daily_<date>.md`.
+Roots and terms are as in `REORG_PLAN.md` §0. Inventory baseline: `INVENTORY.md`.
+
+## 0. Conduct (owner rule, POLICIES §12 rule 7: "be chill, do not swarm")
+
+- NOTS sees calm, ordinary usage. **One `ssh nots` call per daily run** (the multiplexed ControlMaster connection),
+  never parallel, never backgrounded, never in a loop. All remote commands are batched into that one heredoc and run with `nice`.
+- At most one `du` at a time, each with `timeout 120`. No recursive `find` over all of scratch: only depth-limited
+  listings and `du -s` of known top-level folders.
+- `squeue`/`sacct` once per run (well under the 5-minute limit).
+- No unusual tools or scans on NOTS (no `lsof`, `ps` of other users, port or file-system scans). Anything that might look
+  odd to Rice IT is left out and reported instead.
+- Owls: `nice -n 19`, `ionice -c3`, `TMPDIR=${ENG_ROOT_OWLS}/tmp/<date>-crew-daily/`, removed at the end of the run.
+- Once a day, at a quiet hour (suggested 07:30 CT, before the morning brief). Started by HQ's scheduler, not a login loop.
+
+## 1. What the daily check runs
+
+### 1.1 NOTS (one ssh call, read-only except the deletions allowed in §2)
+
+| Check | Command (inside the single ssh call) | Report |
+|---|---|---|
+| Home quota | `quota -s \| grep -A1 export/nots/home \| tail -1` (exactly this line; the last line of plain `quota -s` is another filesystem) | MB used of 10,240; **WARN ≥ 7,000 MB; GUARD ≥ 8,192 MB → §3** |
+| Queue | `squeue -u fb31 -h -o '%i %j %T %Z'` | jobs and WorkDirs: these paths are IN USE today; nothing under them is touched |
+| Scratch tree vs INDEX | `ls -1 /scratch/fb31/SMC_Engineering_Department/{runs,archive,data,code}` (depth 2) compared with the path column of `~/SMC_Engineering_Department/INDEX.md` | folders on disk without an INDEX row, and INDEX rows whose folder is missing |
+| Stray folders (scratch) | `ls -1A /scratch/fb31` compared with the allowlist {`SMC_Engineering_Department`, plus old paths kept as symlinks or waiting rows in REORG_PLAN §3: `theory_w2`, `theory_w3`, `w3scale`, `home_holding_*`, `home_guard`, `qr_data`, `.claude-science`, the listed loose files} | any new name = **stray**: report with size, mtime, owner guess |
+| Stray folders (home) | `ls -1A ~` compared with the inventory list (INVENTORY §3.1) | new top-level names, and any SMC-BVS output in home (names matching `run*`, `out*`, `slurm*`, `*.rds`, `*.out`) |
+| Home growth | `timeout 120 nice du -s ~/.vscode-server ~/.t3 ~/.codex ~/.claude` one at a time, `sleep 5` between them | per-item MB and day-on-day change (app-build churn ≈ 0.4–0.9 GB/day when auto-update is on) |
+| Scratch size | `timeout 120 nice du -s /scratch/fb31/SMC_Engineering_Department` | total, and `tmp/` size |
+| Department tmp | `find /scratch/fb31/SMC_Engineering_Department/tmp -mindepth 1 -maxdepth 1 -mtime +7` | leftovers > 7 d (deleted under rule N-T1 when their job is gone) |
+| Home guard | `tail -3 ~/home_guard.log` | last guard run and its result |
+
+### 1.2 Owls
+
+| Check | Command | Report / threshold |
+|---|---|---|
+| **Root filesystem** | `df -h /` (and `df -h /home` for context) | **ALERT above 85% use** (on 11-15 at 20:30 CT it was already **87%**, 9.6 G free; `/` holds `/tmp` and filled up on 11-15 ~20:19). ALERT goes to HQ in the morning brief, at once if ≥ 95% |
+| Owls footprint | `du -sh` (nice 19) of `${ENG_ROOT_OWLS}/{tmp,bench,crews,logs,staging}`, `/home/fb31/BVS-wt/*` (`--exclude=.git`), the main checkout | sizes and day-on-day change; worktree branch and last commit (`git -C`) |
+| Strays in `/home/fb31` | `ls -1A /home/fb31` compared with the known list (INVENTORY §4) | new SMC-BVS-looking names (`p1m_*`, `*bvs*`, `*smc*`, `w3*`, `g0*`) = **stray**; the owner of the folder gets a note; Engineering strays go to `${ENG_ROOT_OWLS}` |
+| `bvs_tmp` | `find /home/fb31/bvs_tmp/{theory,ci,engineering} -mindepth 1 -maxdepth 1 -mtime +7` | report folders untouched > 7 d to their owners (Theory, CI). Engineering keeps nothing there any more: anything under `bvs_tmp/engineering/` is reported as an Engineering stray |
+| Department tmp | `find ${ENG_ROOT_OWLS}/tmp -mindepth 1 -maxdepth 1 -mtime +7` | leftovers > 7 d (rule O-T1) |
+| `/tmp` SMC-BVS items | §4 | report; remove only under rule T2 |
+| INDEX consistency | `ls -1 ${ENG_ROOT_OWLS}/{bench,staging}` compared with `${ENG_ROOT_OWLS}/INDEX.md` | missing rows or missing folders |
+
+## 2. What the crew may delete automatically, and what it only reports
+
+**Deletes automatically (only these, each logged with path, bytes, rule id and the check that cleared it):**
+
+| Rule | Where | What | Conditions (all must hold) |
+|---|---|---|---|
+| N-T1 | `/scratch/fb31/SMC_Engineering_Department/tmp/<entry>` | job TMPDIR leftovers | mtime > 7 d; the entry's name is a Slurm job id not in `squeue -u fb31`, or a dated job folder whose job is not running; not a symlink target of anything in `runs/` |
+| N-T2 | inside `/scratch/fb31/SMC_Engineering_Department/{code,runs}/**` | named compile caches only: `.cpp_cache/`, `__pycache__/`, `*.o` beside a built `.so` | parent run not in `squeue`; mtime > 7 d; frozen code trees under `code/` keep their sources (only the cache folder goes) |
+| O-T1 | `${ENG_ROOT_OWLS}/tmp/<entry>` | job TMPDIR leftovers | mtime > 7 d; no process has a file open or its cwd there (`lsof +D <entry>` empty, Owls only); entry is not today's crew folder |
+| O-T2 | `${ENG_ROOT_OWLS}/**` | named compile caches: `.cpp_cache/`, `__pycache__/`, `Rtmp*` inside `tmp/` | as O-T1 |
+| T2 | Owls `/tmp` | clearly BVS-named items (§4) | all §4 conditions |
+
+**Only reports (never deletes):** anything outside the department `tmp/` folders and the named caches; anything under an
+IN USE path; home files on NOTS (that is the guard's job, §3); `runs/`, `archive/`, `data/`, `results/`, `bench/`,
+`staging/` content; other departments' folders (`bvs_tmp/theory`, `bvs_tmp/ci`, worktrees); UNKNOWN items; anything in
+`~/projects/BVS`; the excluded `.../SMC_BVS_v3_history_Oct2026/deploy/` and `/projects/ml75` (never listed inside);
+strays (reported to their owner, moved only by a REORG step with HQ's go).
+
+A dry-run flag (`--dry-run`) prints the deletions without doing them; the first week runs in dry-run only.
+
+## 3. The 8 GB guard action (NOTS home)
+
+- **≥ 7,000 MB (WARN):** report the line and the per-item growth in the morning brief.
+- **≥ 8,192 MB (GUARD):** in the same single ssh call, run the existing guard: `~/bin/home_guard.sh` (it acts only above
+  8,192 MB, safe actions only, logged to `~/home_guard.log`; it never touches `~/.ssh`, credentials, `~/projects`, `~/R`,
+  run output, or anything a running fb31 process references). Then re-read the quota line once.
+  - If still ≥ 8,192 MB: **report to HQ at once** (not just in the brief) with the top items; the usual remaining live
+    items need a quiet window and a restart (NOTS_STORAGE.md §6: Codex `0.167.0`, old T3 runtime, second VS Code server
+    build, the `openai.chatgpt` extension). The crew does not restart services or delete live builds.
+  - **≥ 9,500 MB:** report at once as a big problem (the 10,240 MB hard quota breaks ssh, T3, VS Code server and Slurm
+    writes) and recommend that no new job be submitted until it is fixed.
+- The guard's holding path (`/scratch/fb31/home_holding_<date>/`) changes to
+  `${ENG_SCRATCH_NOTS}/archive/home_guard/holding_<date>/` when HQ applies REORG_PLAN step N4. The crew reports holdings older
+  than 14 days; deleting them (regenerable binaries only) needs HQ's OK.
+- The guard is not scheduled on NOTS (scrontab disabled, the self-resubmitting job never submitted). Running it from this
+  daily check, inside the one ssh call, is the schedule; nothing else is installed on NOTS.
+
+## 4. Owls `/tmp` check (SMC-BVS items)
+
+**Never touch:** the shared `/tmp/claude-*` folders and files (incl. `/tmp/claude-71711`, `claude-skill-*.zip`); BNP files
+(`bnp-*`, `bnp_*`, anything with `bnp` in the name); other users' files (`find -user fb31` only); anything not clearly
+BVS-named (e.g. `Rtmp*`, `fb31_strat_*`, `tmp*`, `v6bench_*`, `c5-*`, paper-review folders): those are reported only.
+
+**Report:** every top-level `/tmp` entry owned by fb31 whose name matches, case-insensitively,
+`^(smcbvs|smc-bvs|smc_bvs|bvs[-_]|p1m[-_]|psmc[-_]|w3[-_]?(scale|p6|dist)|g0[-_])` (the "clearly BVS-named" list; the
+pattern is in the crew script and extended only by a logged HQ/Engineering decision), with size, newest mtime inside,
+and the `lsof` result.
+
+**Remove (rule T2) only if all hold:**
+1. owned by fb31 and matches the BVS name pattern above, and does not match `claude-` or `bnp`;
+2. idle: the newest mtime of any file inside is older than 24 h (`find <entry> -newermt '-24 hours' -print -quit` empty);
+3. no process has it open or as cwd: `lsof +D <entry>` (or `lsof <file>` for a plain file) returns nothing, and no fb31
+   process has an argument containing the path (`pgrep -u fb31 -f <entry>` empty);
+4. not a lock: entries named `*.lock`, or folders that contain a `*.lock` file, are reported, never removed (a lock can
+   outlive its holder only by mistake; its owner decides);
+5. owner check: if the name points to a department that is not Engineering (e.g. `bvs-ci-*` → CI, `w3-*` → Theory), the
+   item is reported to that owner and removed only after its owner agrees or after 7 days idle with no answer and HQ's OK;
+6. command: `rm -rf --one-file-system -- "/tmp/<entry>"` after a `realpath` check that the target is a direct child of
+   `/tmp` and not a symlink; one entry per command; logged with bytes.
+
+At the 11-15 reading: `/tmp/bvs-ci-sandboxes` (303 MB) is **in use** by CI (lock held, cwd inside): report only.
+`/tmp/smcbvs_B_verify_20261022_dev` (24 KB, idle since 10-22) meets rules 1–4 and is Engineering's old B_verify venv:
+first candidate for T2, after the dry-run week.
+
+## 5. Morning brief section (format)
+
+```
+Machines (daily check <date> <time>):
+- NOTS home: <MB> / 10,240 MB (<pct>%) [OK|WARN|GUARD]; top growth: <item> +<MB>
+- NOTS scratch dept: <size>; tree vs INDEX: <n> unindexed, <n> missing; strays: <list or none>
+- NOTS queue: <n> jobs (<paths>)
+- Owls /: <pct>% [OK|ALERT >85%]; dept footprint <size>; strays: <list or none>
+- /tmp SMC-BVS: <n> items reported, <n> removed (<bytes>), <n> in use
+- Deleted today: <n> items, <bytes> (rules N-T1/N-T2/O-T1/O-T2/T2); log: crews/logs/daily_<date>.md
+- Needs a decision: <list>
+```
+
+## 6. Commands this leg used to calibrate the design
+
+`quota -s | grep -A1 export/nots/home | tail -1` → `6761M 10240M 10240M 90394`; `df -h /` (Owls) → `70G 61G 9.6G 87%`;
+`find /tmp -maxdepth 1 -user fb31 ! -name 'claude-*' -print0 | xargs -0 du -s` → 995 entries, 1,619,036 KB;
+`lsof +D /tmp/bvs-ci-sandboxes` → 2 python processes; `tail ~/home_guard.log` (NOTS) → last run 11-12, 8,333 → 6,704 MB.

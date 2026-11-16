@@ -48,3 +48,22 @@
     (≤ 150 tasks); no scans or unusual tools.
   - Owls: ramp gradually, ≤ 16 cores.
   - Anything that might look odd to Rice IT → ask HQ first.
+- **Scratch purge policy (Rice CRC KB, read 2026-11-15).**
+  - https://kb.rice.edu/147975 ("CRC Data and Quotas", updated 2026-11-09): `$SHARED_SCRATCH` = /scratch, quota None,
+    VAST, **purge policy 14 days**. "Staff may periodically delete files from the $SHARED_SCRATCH file system even if files
+    are less than 14 days old." "$SHARED_SCRATCH is to be used only for job I/O. Delete everything you do not need for
+    another run at the end of the job or move to $WORK for analysis."
+  - https://kb.rice.edu/147979 (2025-01-31): "may be subject to catastrophic data loss!" "A "cp" will update the access
+    time on files whereas a move "mv" will preserve the access time … our periodic cleaning mechanism may purge files where
+    the access time is maintained via the "mv" command." So the purge keys on **access time** (inferred), and a `mv`
+    keeps the old atime.
+  - https://kb.rice.edu/108229 (Retention, 2026-09-24): "Backup and archival of data remains the sole responsibility of the
+    end user." No backups of scratch.
+  - Observed: reading files does not refresh atime here (census_p5000.rds atime 2026-11-12 after reads on 11-15).
+  - **Consequences.**
+    - Scratch is for in-flight job I/O only. Nothing of record stays idle there longer than **7 days** (half the window,
+      HQ rule).
+    - The department `scratch/archive/` is **not** an archive. Results of record leave scratch within 7 days of creation
+      (to the laptop route, or interim staging on Owls).
+  - `$WORK` = /storage/hpc/work (256 TB, 13% used). No user directory exists for fb31; there is a group directory
+    `/storage/hpc/work/ml75` (group ml75). Not touched: it is the advisor group's space; HQ or the owner decides.
