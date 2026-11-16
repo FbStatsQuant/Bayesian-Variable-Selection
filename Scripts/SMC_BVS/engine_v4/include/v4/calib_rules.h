@@ -121,12 +121,16 @@ class FV {
   }
 
   // restricted ESS rho_V(u, v) = exp{2 F_V(v) - F_V(u) - F_V(2v - u)} (core/cpp/v3_calib.h:55-58, same expression order)
+  // F_V(u) is memoised for the last u (u is fixed during a bisection): F_V is a deterministic function, so the value
+  // and every decision are unchanged (class B); `evals` keeps counting 3 per rho as core does (F_V_evaluations).
   double rho(double u, double v) {
     evals += 3;
-    return std::exp(2 * (*this)(v) - (*this)(u) - (*this)(2 * v - u));
+    if (!(has_u_ && u == u_)) { Fu_ = (*this)(u); u_ = u; has_u_ = true; }
+    return std::exp(2 * (*this)(v) - Fu_ - (*this)(2 * v - u));
   }
 
  private:
+  bool has_u_ = false; double u_ = 0, Fu_ = 0;
   std::vector<double> buf_;
   std::vector<long double> part_;
 };

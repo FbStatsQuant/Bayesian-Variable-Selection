@@ -30,3 +30,9 @@ if [[ "$fixtures" == 1 ]]; then
 fi
 args=("${allow[@]}"); [[ "$mode" == full ]] && args+=(--full)
 nice -n 19 "$build/v4_tests" "${args[@]}"
+# WP4 golden bit tests against core/ (calibration coded rule, T9 merge, T10 paths); needs R with Rcpp.
+if command -v Rscript >/dev/null 2>&1; then
+  nice -n 19 Rscript "$here/tests/golden/wp4_golden.R" "$here/../core" "$here" "${TMPDIR:-$build}/wp4_golden" "$mode" "$threads"
+else
+  echo "R not found: WP4 golden tests NOT RUN"
+fi
