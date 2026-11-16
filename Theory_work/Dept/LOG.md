@@ -269,3 +269,4 @@
 - 05:57 — S2 conflicts with tool F1 (clear refused while inputs non-ACTIVE): F-UNI NARROWED 2.0.0 in S2, clear to 2.1.0 in S4 with Prop-F-FAC; SAND-R/SAND-Rp/RM-R/Examples stay SUSPECT until S4 (note: via UNI-0, not delivery). T tool-fix Opus review PASS. HQ told.
 - 05:59 — READER: card v1.3 (1cf2499f; SL fixes rows 1.1/1.4/2.2/3.1; FUNI-N), merged main (a0f0a266), Opus applied-lines check (98e1daf3: row 1.4 Cor 2 clause, row 3.1 SAMC clause corrected; note added to MISR-R CARD14 file). F9c fixes not yet applied (5 control chars remain) → resent.
 - 06:00 — READER F9c repairs 948d58fd (E1 control chars gone; F1 qualification; Cor 9C 'code-checked by independent reviewers'). F9d Sol diff check launched.
+- 06:02 — F9d Sol: FAITHFUL. Card-13 package final (948d58fd, A/B diffs) → HQ. READER S4 started (swaps thm3/4/8, card v1.3 SL fixes, FUNI-N, card-13 proposal).
