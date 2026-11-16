@@ -1,5 +1,7 @@
 # wp4_golden.R -- TEST CODE ONLY. WP4 golden bit tests against core/ (revision D), compat mode.
-#   Rscript wp4_golden.R <core_dir> <engine_v4_dir> <work_dir> [quick|full] [threads]
+#   Rscript wp4_golden.R <core_dir> <engine_v4_dir> <work_dir> [quick|full] [threads] [case id] [--keep]
+# <work_dir> is removed at exit unless --keep is given (clean-tmp rule, BUILD_COMMON); empty directories held by the
+# mapped module (NFS) are removed by run_tests.sh after R exits.
 # 1. Coded calibration (v4::calib::Driver, rule coded, SumMode::Serial) == core/v3_calib.R::v3_calibrate, bit for bit,
 #    with threads 1 and k (V re-scoring and F_V terms threaded).
 # 2. T9: final run as R' = 4 process islands + v4 merge + v4 threaded tail == core/v3_run.R::v3_final_run (v3.1, LS0
@@ -10,11 +12,18 @@
 # core/ is copied to <work_dir> and never written. Budgets are reduced through setup$budgets (the same object is given
 # to both implementations), as the core test suite does.
 args <- commandArgs(TRUE)
+keep <- "--keep" %in% args; args <- args[args != "--keep"]   # --keep: leave <work_dir> (cache, core copy, TU) for debugging
 core_dir <- normalizePath(args[1]); eng_dir <- normalizePath(args[2]); work <- args[3]
 level <- if (length(args) >= 4) args[4] else "quick"
 threads <- if (length(args) >= 5) as.integer(args[5]) else 3L
 only <- if (length(args) >= 6) args[6] else ""   # optional: run one case id only (debugging)
 dir.create(work, recursive = TRUE, showWarnings = FALSE); work <- normalizePath(work)
+# Clean-up: unload the module's shared objects first (an open mapping leaves NFS .nfs* files that block the rmdir).
+clean_work <- function() {
+  for (d in getLoadedDLLs()) { pth <- d[["path"]]; if (startsWith(normalizePath(pth, mustWork = FALSE), work)) try(dyn.unload(pth), silent = TRUE) }
+  unlink(work, recursive = TRUE, force = TRUE)
+}
+if (!keep) reg.finalizer(environment(), function(e) clean_work(), onexit = TRUE)
 `%||%` <- function(a, b) if (is.null(a)) b else a
 options(warn = 1)
 
@@ -329,4 +338,5 @@ tim <- do.call(rbind, timing)
 print(tim, row.names = FALSE)
 write.table(tim, file.path(work, "wp4_golden_timing.tsv"), sep = "\t", quote = FALSE, row.names = FALSE)
 cat(sprintf("\nWP4 golden: %d checks, %d failures\n", n_checks, length(failures)))
+if (!keep) clean_work()
 if (length(failures)) { cat(paste(" -", failures), sep = "\n"); quit(status = 1) }
