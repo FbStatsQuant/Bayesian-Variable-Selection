@@ -478,3 +478,9 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Envelope +1–5%; memory per task up (island ~24–32 GB, calibration ~48–64 GB), within the cap.
   - Schedule: 10⁴ pilot early Dec, 10⁵ mid-Dec, first 1M fit at risk for before the holidays. A recovery-options card is
     requested for the owner's morning brief.
+- (overnight) ~23:15 CT: Claude Third hit its 5-hour session limit. All SMC agents on it failed: both department threads'
+  children, the leads, the recorder; the Engineering Department thread too. The window resets at 05:20 UTC. HQ
+  scheduled a one-off resume (05:24 UTC) telling both managers to resume with a paced ramp-up. Account allocation is
+  unchanged (the owner wants Claude Third used today and tomorrow). Lesson for the morning pacing plan: with ~5 builders
+  + ~6 leads + reviewers, Claude Third's 5-hour window runs out in about 4–5 h. Consider a concurrency cap or a split to
+  Claude Work.
