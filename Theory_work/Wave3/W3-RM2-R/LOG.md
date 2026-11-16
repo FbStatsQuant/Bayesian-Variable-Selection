@@ -8,3 +8,5 @@
 - 2026-11-15 19:53 CST — manager: owner's final helper rule (POLICIES §4, §8): Opus/Sonnet/Haiku helpers free within brief; new Fable needs owner green light via manager. Noted.
 - 2026-11-15 19:59 CST — manager input on DLV-0 (R-AUD1 CONFIRMED-WORDING on C-DLV:Prop-F). Read API_AUDIT/pass1/TRIAGE.md:23-28 and R-AUD1_sol.md. STATEMENT edited while SL1 runs (v0.1 → v0.1.1, record only; no claim changes): (C-D) now lists the law-free C-DLV inputs and consumes only Prop F's delivery half in R-AUD1's restated form; dependency row narrowed. To be shown to the lock/disposition record.
 - 2026-11-15 20:01 CST — manager: POLICIES §9 (expensive-resource requests, ≤10 lines via manager). Noted; none needed so far.
+- 2026-11-15 20:03 CST — manager: POLICIES §10 (never shut down/cancel/settle any thread or agent; ignore and log instead). Noted.
+- 2026-11-15 20:04 CST — manager: FINAL POLICIES §10 (replaces previous): never cancel/interrupt running work; finished own reviewers/helpers may be settled (t3_thread_organize settle); never archive/delete. Noted.
