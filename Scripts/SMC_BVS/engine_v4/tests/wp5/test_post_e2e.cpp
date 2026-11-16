@@ -22,7 +22,21 @@ std::string tdir() {
   return d;
 }
 
-struct Synthetic { OwnedData O; std::vector<Model> models; std::vector<double> F; double logZ; std::vector<double> pip; };
+struct Synthetic { OwnedData O; std::vector<Model> models; std::vector<double> F; double logZ; std::vector<double> pip; int p = 0; };
+
+void enumerate(const EvalData& D, Synthetic& s) {
+  s.p = D.p;
+  for (uint32_t code = 0; code < (1u << D.p); ++code) {
+    Model S; for (int j = 0; j < D.p; ++j) if (code >> j & 1) S.push_back(j);
+    if ((int)S.size() > D.K) continue;
+    s.models.push_back(S); s.F.push_back(model_post(D, S).F);
+  }
+  double mx = *std::max_element(s.F.begin(), s.F.end()); long double z = 0;
+  for (double f : s.F) z += std::exp((long double)(f - mx));
+  s.logZ = mx + (double)std::log(z);
+  s.pip.assign(D.p, 0.0);
+  for (size_t m = 0; m < s.models.size(); ++m) for (int32_t j : s.models[m]) s.pip[j] += std::exp(s.F[m] - s.logZ);
+}
 
 Synthetic make_synthetic(uint64_t seed, double amp) {
   const int n = 100, p = 12;
@@ -33,18 +47,8 @@ Synthetic make_synthetic(uint64_t seed, double amp) {
     for (int j = 0; j < p; ++j) { double x = j ? 0.6 * prev + 0.8 * N(g) : prev; X[(size_t)j * n + i] = x; prev = x; }
     y[i] = amp * (1.0 * X[(size_t)1 * n + i] - 0.8 * X[(size_t)5 * n + i] + 0.9 * X[(size_t)9 * n + i]) + N(g);
   }
-  Synthetic s{standardise(X.data(), y.data(), n, p), {}, {}, 0, {}};
-  const EvalData& D = s.O.D;
-  for (uint32_t code = 0; code < (1u << p); ++code) {
-    Model S; for (int j = 0; j < p; ++j) if (code >> j & 1) S.push_back(j);
-    if ((int)S.size() > D.K) continue;
-    s.models.push_back(S); s.F.push_back(model_post(D, S).F);
-  }
-  double mx = *std::max_element(s.F.begin(), s.F.end()); long double z = 0;
-  for (double f : s.F) z += std::exp((long double)(f - mx));
-  s.logZ = mx + (double)std::log(z);
-  s.pip.assign(p, 0.0);
-  for (size_t m = 0; m < s.models.size(); ++m) for (int32_t j : s.models[m]) s.pip[j] += std::exp(s.F[m] - s.logZ);
+  Synthetic s{standardise(X.data(), y.data(), n, p), {}, {}, 0, {}, 0};
+  enumerate(s.O.D, s);
   return s;
 }
 
@@ -67,7 +71,7 @@ void write_data_bin(const OwnedData& O, const std::string& path) {
 // fit.bin: the top store = 40p + 1 best models (HPM order), exact PIPs as pip_eq/pip_Z, store-renormalised pip_T,
 // 16 "islands" with noise around the exact values. status overridable for the GUARD-W test.
 void write_fit_bin(const Synthetic& s, const std::string& path, const std::string& status, uint64_t seed) {
-  const EvalData& D = s.O.D; const int p = D.p, R = 16;
+  const int p = s.p, R = 16;
   std::vector<size_t> ord(s.models.size()); for (size_t i = 0; i < ord.size(); ++i) ord[i] = i;
   std::sort(ord.begin(), ord.end(), [&](size_t a, size_t b) {   // hpm_better (core/cpp/v3_util.h:121-126)
     if (s.F[a] != s.F[b]) return s.F[a] > s.F[b];
@@ -195,4 +199,23 @@ TEST(e2e_failure_paths) {
   // missing argument
   CHECK(call(v4::eval::run, {"--out", d + "/ev_noarg"}) == 13);
   CHECK(call(v4::post::run, {"--out", d + "/law_noarg"}) == 13);
+}
+
+#include "eval/io.h"
+// Cross-WP check (runs when V4_WP1_FILES names a directory with WP1's data.bin and truth.json from `smcbvs4 gen/prep`):
+// WP5 reads WP1's container, data.bin sections and truth.json; logprior bits must agree (load_data checks them).
+TEST(e2e_wp1_files) {
+  const char* dir = std::getenv("V4_WP1_FILES");
+  if (!dir) { std::printf("    skipped: V4_WP1_FILES not set\n"); return; }
+  const std::string d = dir, o = tdir();
+  v4::eval::io::DataFile df; v4::eval::io::load_data(d + "/data.bin", df);
+  Synthetic s; enumerate(df.D, s);
+  write_fit_bin(s, o + "/fit_wp1.bin", "completed", 9);
+  CHECK(call(v4::eval::run, {"--fit", o + "/fit_wp1.bin", "--data", d + "/data.bin", "--truth", d + "/truth.json", "--out", o + "/ev_wp1",
+                             "--n-draws", "1000", "--n-x", "200", "--n-test", "1000"}) == 0);
+  Json e = Json::parse_file(o + "/ev_wp1.json");
+  CHECK(e.at("status").str() == "completed");
+  std::printf("    WP1 files: p=%d, HPM=%s, outcome=%s, plug-in d_H^2 (H)=%.4g, seed=%g\n", df.D.p, e.at("selection").at("hpm").dump().c_str(),
+              e.at("selection").at("outcome_class").str().c_str(), e.at("dist").at("H").at("plugin").at("h2").num(), e.at("params").at("seed").num());
+  CHECK(e.at("params").at("seed").num() == 4242);
 }

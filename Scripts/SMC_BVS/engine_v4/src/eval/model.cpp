@@ -54,17 +54,24 @@ OwnedData standardise(const double* X, const double* y, int32_t n, int32_t p) {
 static std::string upper(std::string s) { for (auto& c : s) c = (char)std::toupper((unsigned char)c); return s; }
 
 Truth truth_from_json(const Json& j) {
+  // WP1 gen (src/common/gen.cpp truth_json): {generator, spec{design, n, p, seed, rho, b, a, s0, sigma}, S0, beta, sigma}.
+  // Also accepted: design/params at the top level (competitor fixtures, MIS arm params).
   Truth T;
-  T.design = upper(j.str_or("design", "IND"));
+  const Json* sp = j.find("spec");
+  const Json& top = sp ? *sp : j;
+  T.design = upper(top.str_or("design", j.str_or("design", "IND")));
   const Json* P = j.find("params");
-  const Json& prm = P ? *P : j;
-  T.rho = prm.num_or("rho", T.design == "AR" || T.design == "ADJ" || T.design == "ADJ-OPP" ? 0.6 : (T.design == "BLK" ? 0.5 : (T.design == "FAC" ? 0.3 : 0.0)));
-  T.block = (int32_t)prm.num_or("block", 20);
+  const Json& prm = P ? *P : top;
+  const double rdef = (T.design == "AR" || T.design == "ADJ" || T.design == "ADJ-OPP" || T.design == "ADJOPP") ? 0.6
+                      : (T.design == "BLK" ? 0.5 : (T.design == "FAC" ? 0.3 : 0.0));
+  T.rho = prm.num_or("rho", top.num_or("rho", rdef));
+  if (T.design == "ADJOPP") T.design = "ADJ-OPP";
+  T.block = (int32_t)prm.num_or("block", top.num_or("b", 20));
   T.alpha = prm.num_or("alpha", j.num_or("alpha", 0.0));
   T.extra_noise_var = prm.num_or("extra_noise_var", 0.0);
   if (const Json* mb = prm.find("mis_beta")) if (mb->is_num()) T.extra_noise_var += mb->num() * mb->num();   // MIS: omitted N(0,1) variable
+  T.seed = (uint64_t)top.num_or("seed", j.num_or("seed", 0));
   T.sigma = j.num_or("sigma", j.num_or("sigma_star", 1.0));
-  T.seed = (uint64_t)j.num_or("seed", 0);
   const Json& s0 = j.has("S0") ? j.at("S0") : j.at("S0_orig");
   const Json& bt = j.has("beta") ? j.at("beta") : j.at("beta_star");
   if (s0.size() != bt.size()) throw Error(Status::invalid_input, "truth.json: S0 and beta lengths differ");
