@@ -32,7 +32,7 @@
 ## CODEX PACING LEVEL (owner sets; POLICIES §14): **0 (normal)** since 2026-11-15
 
 ## ACCOUNT ALLOCATION (owner sets; HQ relays to all managers)
-- Current (2026-11-15): all new department agents on **Claude Third**; HQ and the Writing Department on Claude Personal.
+- Current (2026-11-15): department agents on **Claude Third**, except Engineering WP2 + WP5 builders/reviewers on **Claude Work** (HQ overnight 11-15 ~23:18, pending the owner's review); HQ and the Writing Department on Claude Personal.
 
 ## PRIORITY ORDER (owner 2026-11-15, evening)
 1. All consistency results (selection + distribution / W3-DIST) **and their Lean parts** come first.

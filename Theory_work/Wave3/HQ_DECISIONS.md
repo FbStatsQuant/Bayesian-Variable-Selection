@@ -484,3 +484,6 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   unchanged (the owner wants Claude Third used today and tomorrow). Lesson for the morning pacing plan: with ~5 builders
   + ~6 leads + reviewers, Claude Third's 5-hour window runs out in about 4–5 h. Consider a concurrency cap or a split to
   Claude Work.
+- (overnight) ~23:18 CT, account split: Engineering's WP2 and WP5 builders + their reviewers move to **Claude Work** (Opus,
+  high); the critical path (WP3/WP4) and the managers stay on Claude Third. Reason: Claude Third's 5-hour window binds at
+  the current concurrency, while Claude Work is ~82% of its week unused. For the owner's review in the morning pacing plan.
