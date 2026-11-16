@@ -20,7 +20,7 @@ find_package(OpenMP REQUIRED COMPONENTS CXX)
 set(V4_COMMON_SRC
   src/common/sha256.cpp src/common/format.cpp src/common/json.cpp src/common/data.cpp src/common/store.cpp
   src/common/ledger.cpp src/common/status.cpp src/common/score.cpp src/common/provenance.cpp src/common/gen.cpp src/common/prep.cpp src/common/pmath_info.cpp)
-set(V4_WP4_SRC src/merge/wp4_io.cpp)   # WP4: calib/island/fit files, merge command
+set(V4_WP4_SRC src/merge/wp4_io.cpp src/calib/calib_run.cpp)   # WP4: calib/island/fit files, merge command
 set(V4_STUB_SRC src/stubs/stubs.cpp)
 # WP5: evaluator and post (bit flags: they call BitScorer and must reproduce the stored F)
 set(V4_WP5_SRC src/eval/posterior.cpp src/eval/model.cpp src/eval/dist.cpp src/eval/metrics.cpp src/eval/io.cpp

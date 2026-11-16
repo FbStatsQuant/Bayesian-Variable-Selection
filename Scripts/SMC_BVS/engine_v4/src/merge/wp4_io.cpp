@@ -180,6 +180,25 @@ std::string write_calib(const std::string& path, const CalibWrite& c) {
   std::vector<Model> im; std::vector<double> iF, ilg0, ilogm;
   for (auto& m : c.inherited) { im.push_back(m.S); iF.push_back(m.F); ilg0.push_back(m.lg0); ilogm.push_back(m.logm); }
   add_models(W, "inh", im); add_vec_copy(W, "inh_F", iF); add_vec_copy(W, "inh_lg0", ilg0); add_vec_copy(W, "inh_logm", ilogm);
+  // stage records (spec §1 row 3): one row block per calibration island, in run order
+  if (!c.stages.empty()) {
+    std::vector<int32_t> sm; std::vector<int64_t> sp{0}; std::vector<double> lz, phi, inc, ess, cum; std::vector<int32_t> dr, dm; std::vector<uint64_t> mv;
+    for (auto& st : c.stages) {
+      sm.insert(sm.end(), {st.tier, st.iter, st.island, st.partial ? 1 : 0}); lz.push_back(st.logZ);
+      for (auto& row : st.stages) {
+        phi.push_back(row.phi); inc.push_back(row.inc); ess.push_back(row.ess); cum.push_back(row.cum);
+        dr.push_back(row.distinct_res); dm.push_back(row.distinct_moved);
+        const MoveStats& m = row.moves;
+        mv.insert(mv.end(), {m.gibbs, m.gibbs_change, m.us_exec, m.us_acc, m.us_self, m.ns_exec, m.ns_acc, m.ns_noscore, m.ns_self, m.in_exec, m.in_acc, m.gibbs_cap});
+      }
+      sp.push_back((int64_t)phi.size());
+    }
+    add_vec_copy(W, "stage_meta", sm, c.stages.size(), 4); add_vec_copy(W, "stage_logZ", lz); add_vec_copy(W, "stage_ptr", sp);
+    add_vec_copy(W, "stage_phi", phi); add_vec_copy(W, "stage_inc", inc); add_vec_copy(W, "stage_ess", ess); add_vec_copy(W, "stage_cum", cum);
+    add_vec_copy(W, "stage_distinct_res", dr); add_vec_copy(W, "stage_distinct_moved", dm); add_vec_copy(W, "stage_moves", mv, phi.size(), 12);
+    meta["stage_meta_columns"] = Json::array_of(std::vector<std::string>{"tier", "iter", "island", "partial"});
+  }
+  for (auto& [k, v] : c.extra.items()) meta[k] = v;
   meta["inputs"] = c.inputs; meta["binary"] = binary_block(); meta["mode"] = fmt::mode_name(c.mode);
   W.add_json("meta", meta);
   return W.write(path);

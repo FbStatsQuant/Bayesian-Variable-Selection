@@ -85,7 +85,26 @@ settings_for <- function(setup, rule = "coded", I_max = 3L, refine_m = 1L, sum_m
   b <- setup$budgets
   tiers <- lapply(0:1, function(e) list(H = b$tiers$H[e + 1], T_e = b$tiers$T[e + 1], L = b$L, Hm = 4L, ell = b$ell))
   list(rule = rule, tier0 = 0L, grid_fallback = TRUE, I_max = as.integer(I_max), refine_m = as.integer(refine_m),
-       sum_mode = sum_mode, threads = as.integer(th), tiers = tiers)
+       sum_mode = sum_mode, threads = as.integer(th), tiers = tiers, N0 = as.integer(b$tiers$N[1]), N1 = as.integer(b$tiers$N[2]))
+}
+# The calibration through the v4 backend (core islands via CoreRunner; calibration ledger, local searches, V and the
+# inherited export in v4 code; calib.bin written and read back): equal to v3_calibrate, the ledger included.
+ledger_calib <- function(r, setup, seed, tag, st = settings_for(setup), th = 1L) {
+  st$threads <- as.integer(th)
+  cp <- file.path(work, paste0("calib_", gsub("[^A-Za-z0-9]", "_", tag), ".bin"))
+  m <- .v3cpp$wp4_calibrate_ledger(setup$ptr, seed, st, cp)
+  compare_calib(r, m, paste(tag, "[v4 backend]"))
+  if (identical(r$status, "ok") && length(m$calib_bin)) {
+    cb <- m$calib_bin; tg <- paste(tag, "[calib.bin]")
+    same(cb$grid, r$frozen$grid, paste(tg, "frozen grid")); same(as.integer(cb$tier), r$frozen$tier, paste(tg, "tier"))
+    same(as.integer(cb$N), as.integer(r$frozen$N), paste(tg, "N"))
+    same(cb$inherited, r$frozen$inherited$models, paste(tg, "inherited models (order and content)"))
+    same(cb$hpm, r$hpm$model, paste(tg, "calibration HPM")); same(cb$hpm_provenance, r$hpm$provenance, paste(tg, "calibration HPM provenance"))
+    nt <- sum(vapply(r$tiers, function(t) 1L + 4L * length(t$iterations), 1L))
+    same(as.integer(cb$n_stage_islands), as.integer(nt), paste(tg, "stage records: one per calibration island"))
+    unlink(cp)
+  }
+  invisible(m)
 }
 
 # ---- 1. coded calibration vs v3_calibrate -----------------------------------------------------------------------------
@@ -207,6 +226,10 @@ coded_path <- function(setup, seed, tag, opts = list(), expect_status = NULL) {
 }
 extra_coded_paths <- function(setup, seed, id, r0) {
   coded_path(setup, seed, paste(id, "P2 tier-1 start"), list(tier0 = 1L))
+  { r2 <- v3_calibrate(setup, seed, tier = 1, grid_fallback = TRUE); st2 <- settings_for(setup); st2$tier0 <- 1L
+    ledger_calib(r2, setup, seed, paste(id, "P2 tier-1 start"), st2) }
+  for (el in c(1L, 0L)) { sb <- setup; sb$budgets$ell <- el
+    ledger_calib(v3_calibrate(sb, seed, tier = 0, grid_fallback = TRUE), sb, seed, paste0(id, " P", 5L - el, " ell=", el)) }
   sb <- setup; sb$budgets$ell <- 1L; coded_path(sb, seed, paste(id, "P4 ell=1"))
   sb$budgets$ell <- 0L; coded_path(sb, seed, paste(id, "P5 ell=0"))
   x <- coded_path(setup, seed, paste(id, "local_limit (forced)"), list(force_ll_pilot = TRUE))
@@ -263,6 +286,7 @@ for (cs in cases) {
   seed <- 1000L + cs$seed
   t0 <- proc.time()[["elapsed"]]; r <- v3_calibrate(setup, seed, tier = 0, preflight = NULL, runtime = NULL, grid_fallback = TRUE)
   t_ref <- proc.time()[["elapsed"]] - t0
+  for (th in unique(c(1L, threads))) ledger_calib(r, setup, seed, sprintf("%s calib[th=%d]", cs$id, th), th = th)
   for (th in unique(c(1L, threads))) {
     m <- .v3cpp$wp4_calibrate(setup$ptr, seed, settings_for(setup, th = th))
     compare_calib(r, m, sprintf("%s calib[th=%d]", cs$id, th))
@@ -271,7 +295,11 @@ for (cs in cases) {
   cat(sprintf("   calibration: status %s, tier %d, escalated %s, triggers {%s}, fallback %s\n", r$status, r$tier_final,
               r$escalated, paste(r$flags$triggers_fired, collapse = ","), r$flags$grid_fallback %||% "none"))
   if (cs$id == "AR0.6_n100_p40") extra_coded_paths(setup, seed, cs$id, r)
-  if (cs$id == "IND_n80_p60_Te3") coded_path(setup, seed, paste(cs$id, "P1 no fallback"), list(grid_fallback = FALSE), "schedule_limit")
+  if (cs$id == "IND_n80_p60_Te3") {
+    coded_path(setup, seed, paste(cs$id, "P1 no fallback"), list(grid_fallback = FALSE), "schedule_limit")
+    st1 <- settings_for(setup); st1$grid_fallback <- FALSE
+    ledger_calib(v3_calibrate(setup, seed, tier = 0, grid_fallback = FALSE), setup, seed, paste(cs$id, "P1 no fallback"), st1)
+  }
   if (cs$id == "AR0.9_n120_p120") coded_path(setup, seed, paste(cs$id, "P3 preflight blocks escalation"), list(preflight = TRUE), "resource_limit")
   if (r$status != "ok") next
   ro <- v3_run_settings(setup, r$frozen, ls0 = TRUE)
