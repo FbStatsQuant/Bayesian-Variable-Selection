@@ -16,6 +16,11 @@
 - Sent: Theory Dept, Engineering Dept and the consultant. Departments write resume cards: Theory_work/Dept/RESUME_2026-11-16.md and Docs/Experiments/P1M/RESUME_2026-11-16.md.
 - Scheduled tasks disabled by HQ: Theory Dept heartbeat (45 min), Theory daily report, W3-READER S4 ping. Builders 6–7 start: disabled. Left running (no tokens): snapshot crons, desktop offload, NOTS jobs in flight. BNP's own tasks (guard 10:13 and backup 11:13 installs) are theirs; HQ only verifies the crontab diffs.
 - BNP cancelled today's Owls slots (guard 10:13, backup 11:13); the SMC freezes are lifted; the crontab is verified unchanged against HQ's baseline. Both departments are STOPPED (resume cards: dept/theory db6bd259; Engineering Docs/Experiments/P1M/RESUME_2026-11-16.md). BNP is also paused; its T3-restart window comes after both resume.
+- **OWNER 11-16 (during the pause): 1M fast-track APPROVED, "but I want no delays either".** First message to Engineering on resume:
+  - produce, within its first working day, a fast-track plan for a **1M pilot fit before the advisor report (target Dec 1–4)**: 10⁵ and 10⁶ run side by side, the 1M pilot launches right after a short 10⁵ smoke test, and all 7 builders run at full speed from the resume;
+  - the pilot is labelled "pilot", with overlap validation after;
+  - **hard constraint:** the fast-track must not delay the main ladder or the January campaign. It runs as a side track; if the pilot fails, the main plan continues unchanged.
+  - The plan states the Claude usage, the NOTS core-h per attempt (≈ 1k), and the gates.
 - **On resume:** move the department threads to Claude Personal (t3_thread_configure), then send each manager "resume from RESUME card". Pending HQ items:
   - V (RM2-R) real-run GO after rule (b) and the dry run;
   - re-enable the 3 Theory scheduled tasks;
