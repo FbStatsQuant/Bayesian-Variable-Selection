@@ -44,8 +44,23 @@ Status: HQ-CONFIRMED decision D-8; implementation pending; (i) and (iii) conditi
 
 Status: CODE-CHECKED (Engineering file:line pins, REQUESTS.md THEORY-5; each pin verified by the HQ recorder): deterministic under EX-A; implementation pending
 
-## Check C (D-7): PLACEHOLDER, not a registry entry
+## Check C (D-7): final-run leader stores (verdict PSMC-S0 CHECKPOINT_1; accepted by Engineering, REQUESTS.md THEORY-7)
 
-Waits on the PSMC-S0 verdict (due Thu 12:00 CT). Only after it: an output-list change "final islands do not build
-leaders_gamma0 / leaders_gamma1 and the fit does not return them" is staged here as an implementation entry.
+Verbatim from REQUESTS.md THEORY-4 (Check C):
+
+**Check C: D-7, leader stores.** Please confirm that no theorem, claim or check consumes the **final-run** leader stores
+`leaders_gamma0` / `leaders_gamma1` (`v3_run.R:210`; built in `cpp/v3_ledger.h:72-78`).
+- Engineering's search:
+  - 0 hits for "leader" in `Theory_work/INFRA/registry/claims.tsv`;
+  - the only script reference is the study schema listing the field (`Scripts/SMC_BVS/study/SCHEMA.md:146, 148`);
+  - in calibration they feed the set V for the grid (`cpp/v3_core.cpp:703-716`), and that use is kept.
+- Proposed: final islands do not build them, and the fit does not return them. This is a change to the output list; the
+  registry entry follows your confirmation.
+
+> Verdict (PSMC-S0 `CHECKPOINT_1.md`:11, :31; `AUDIT_CAL.md` §3): SAFE TO DROP — final islands do not build
+> `leaders_gamma0` / `leaders_gamma1` and the fit does not return them — on condition that calibration keeps
+> feeding its leader stores into V (`cpp/v3_core.cpp:707-708`) and into the inherited models offered to the final
+> run (`cpp/v3_core.cpp:732-733` -> `:418-428`).
+
+Status: HQ-CONFIRMED decision D-7 (Engineering, REQUESTS.md THEORY-7); implementation pending; conditional on calibration feeding its leader stores into V and the inherited models
 
