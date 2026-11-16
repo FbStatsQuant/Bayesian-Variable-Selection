@@ -174,3 +174,15 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   L2 (Sol, D), L3 (Sol, B), L4 (Sol, E), L5 (Astra, S/V); blind read S2 (Sol) running. HOLDS read: none.
   Agent tally this leg: 11 Claude (Claude Third) + 6 codex.
 - 19:21 — HQ notes: organization (W3-DIST directly under HQ until CP3; lead = manager of the ticket and its team) and `POLICIES.md` (main dfbdf2c) read in full: access (may read everything, run tools, commit/push own branch theory/W3-DIST; shared root clone must not switch branch — the snapshot cron stays the restore mechanism for this folder, so no git by the lead beyond pulls), resources (Claude Third default; Codex shared, NORMAL mode), reporting (≤ 10 lines to HQ at checkpoints via t3_thread_send; escalate at once on a counterexample to a target, a WEAKER change to a target clause, a hold on a consumed claim, a budget overrun). HOLDS read: none.
+- 19:43 (from `date`) — **Clock correction (flagged, not rewritten).** The proof-leg entries above stamped 19:05, 19:15,
+  19:25, 19:35, 19:50, 19:52, 20:05 (×2), 20:20, 20:30, 20:45 and 21:00 are **mis-stamped**: the lead typed estimated times
+  instead of reading `date`. They were actually written between 18:55 and 19:21 CST, in the order listed (the entries
+  stamped 18:51, 18:56, 19:21 and this one are from `date`). In the scoping leg, the entries stamped 17:55 and 18:35
+  (CHECKPOINT_1 and its revision) were likewise typed by hand and are a few minutes late (`date` read 17:52 and 18:30).
+  From here on every stamp is taken from `date`.
+- 19:43 — Message received in this thread from the Theory Dept manager: W3-DIST moved under the SMC - Theory Department
+  (reporting to thread mcp:launch:21e33dae…, API cards via the department). **Not yet reflected in the records on main**
+  (34ce461): POLICIES.md §1 "Tickets directly under HQ: W3-DIST, W3-READER"; HQ_NOW.md "HQ keeps W3-DIST"; Dept/BRIEF.md
+  "Not yours (HQ keeps until done): W3-DIST"; HQ's own note of this evening said W3-DIST stays under HQ until CP3.
+  Action: the clock correction (above) is done; the reporting change is held until HQ confirms it; a one-line
+  confirmation request is sent to the HQ thread. Work continues unchanged. HOLDS read: none.
