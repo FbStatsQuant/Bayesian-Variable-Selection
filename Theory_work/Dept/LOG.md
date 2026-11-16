@@ -106,3 +106,4 @@
 - 21:57 — store-law wording row added to Docs/Writing/QUEUE.md.
 - 21:58 — DIST: D-17 folded in (v1.4.6, EQUAL): no statement-level point-mass reliance; π(S₀) > ½ only as sufficient conditions; Corollary C / DIST-C wording 'mixture over many models' (no caveat). L6 (since 21:05) + L7 (necessity prop) on Sol; counterexample pre-check passed (in-sample, touches no target). REPORT drafted (20 blocks). Freeze Mon 09:00 unchanged.
 - 21:59 — W3-EDIT-now pushed (03be454 on main 1810eca; 3 unlisted files + folder; only C2 on W1-PXN:CR.R-prime); recorder task K adds the patch rehash, verifies, pushes → HQ merge. W3-EDIT held rows route=POST-FREEZE (manifest) on theory/W3-EDIT.
+- 22:11 — status check for HQ (owner request) sent from records: check.py on main 1810eca 468/0 ERROR; tl rerun hit my 500 s timeout (recorder's 174/0 stands); dept folder 1.2 GB; stray tmp/union_log.py to trace.
