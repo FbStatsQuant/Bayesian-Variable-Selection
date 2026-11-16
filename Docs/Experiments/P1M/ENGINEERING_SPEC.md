@@ -1,4 +1,4 @@
-# ENGINEERING_SPEC v2 — large-p SMC-BVS engine ("v4") and the 1M variant V-1M
+# ENGINEERING_SPEC v3 (EXP-CP1 v2) — large-p SMC-BVS engine ("v4") and the 1M variant V-1M
 
 **Status: v2 DRAFT (EXP-CP1 v2), 2026-11-15.** SMC - Engineering Department. v2 adds §0-v2: the owner's scope change
 (the 1M run is an engineered variant validated on an overlap rung) and the feasibility study (`FEASIBILITY_fable.md`,
@@ -11,6 +11,32 @@
 - Reference engine: v3.1 / revision D (`Scripts/SMC_BVS/core/`).
 - Sizes use n = 200, N = 2,500, R′ = 16, K = 100, B = 14 and a mean block size of 9 (measured on Owls, plan §6.1).
 - **(guess)** marks an estimate that a gate must replace by a measurement.
+
+## 0-v3. Changes from the Sol review (EXP-CP1 v2; `REVIEW_disposition_sol.md`). §0-v3 wins over §0-v2 and §0–§7
+
+1. **Memory model** (F1, F2).
+   - Table memory comes from `setup --count-only` (production partition, exact byte accounting) at every design, never
+     from an assumed block size.
+   - V-1M caps blocks at B_V = 14 (D-19).
+   - Sampler sections are recomputed on demand (D-18).
+   - The table build is streamed.
+   - One store per process with bounded thread buffers (INTERFACES v0.1.2); G ≤ 256.
+   - Every command runs a `--mem-budget` admission check that refuses deterministically.
+   - Planned requests: island ≈ 24–32 GB, calibration ≈ 48–64 GB, merge ≈ 16 GB, at p = 10⁶ (to be confirmed by the
+     accounting).
+2. **Contracts** (F4, F10): INTERFACES v0.1.5 (injective RNG domain; event key with tier, iteration and ordinal; serial
+   reference provenance; logical events by mechanism; the pinned reference manifest, D-20). Invariant I4 is replaced by
+   "logical events = Σ over steps of the events of each mechanism" (a feasible Gibbs step = 2).
+3. **Gates** (F5): T1–T8 repaired as in the disposition table; **T5 = an end-to-end NOTS gate** with thresholds; T8 tests
+   E[Ẑ_r] = Z and the proved unnormalised RB moment, plus a finite-N bias ladder.
+4. **Precision** (F6): the 64-island precision study is mandatory before G-B; 1M precision claims are conditional on it.
+5. **Science manifest** (F7, F8): `MANIFEST_CELLS.md` lists every cell, seed and cost; competitor acceptance runs come
+   first; the PIP curve is a repeated-sampling diagnostic.
+6. **Evaluator** (F9, D-17): Z_𝒯 ≤ Z is the only bound; the omitted mass is reported as a sum; numerical tolerances are
+   absolute and pre-declared.
+7. **Schedule**: engineering reserve 4–6 weeks (Sol), so the first 1M fit is at risk for "before the holidays".
+
+---
 
 ## 0-v2. The 1M variant V-1M, the theory mode, and how they are validated (v2; supersedes §0.1–§0.3 where they conflict)
 

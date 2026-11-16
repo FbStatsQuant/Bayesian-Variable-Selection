@@ -55,3 +55,9 @@ staging S GB.`
 - **Owner OK needed for:** a scheduled task on the desktop, and on the laptop, that runs `pull.ps1` hourly (a Windows
   Task Scheduler entry is a settings change on his machines). Alternative: the crew triggers a pull through T3 when a run
   is ready.
+
+## Schedule constraints (HQ, overnight 11-15)
+- BNP's backups: desktop 03:00–03:15 CST; Owls 01:33 (nice/idle). Our hourly desktop pull **skips 03:00–03:15**, and our
+  Owls crew step (2) does not start between 01:30 and 01:50.
+- Desktop destination candidate: the **D: drive (≈ 3 TB free)**, e.g. `D:\SMC_Engineering_Department\` (BNP uses
+  `D:\BNP_backup\`). The owner confirms the path in the morning. The 70% guard is then computed on D: for our data.

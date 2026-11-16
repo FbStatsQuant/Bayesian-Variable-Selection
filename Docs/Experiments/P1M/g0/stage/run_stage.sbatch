@@ -9,7 +9,7 @@
 #   scontrol update JobId=<array job>_1 TimeLimit=07:00:00
 # (submit_g0.sh does both). Worst-case admission: 2 x 7 h + 2 x 17.5 h = 14 + 35 = 49 billed core-h.
 # The runtime guard (--hours) stops the run cleanly before the limit and the record is saved; an R-level timeout is not
-# needed. Task 1 also runs under `timeout 6h57m` so it cannot exceed 7 h even if the scontrol update was not applied.
+# needed. Task 1 also runs under `timeout 417m` (GNU timeout takes one unit; "6h57m" was invalid and failed task 1 of job 2747372) so it cannot exceed 7 h even if the scontrol update was not applied.
 #SBATCH --job-name=p1m_g0_stage
 #SBATCH --account=commons
 #SBATCH --partition=commons
@@ -32,7 +32,7 @@ CODE=/scratch/fb31/w3scale/code/v32dev_6866f57/Scripts/SMC_BVS/core_v32dev     #
 B3=/scratch/fb31/w3scale/out                                                    # B3 census records, read only
 RUN=$DEPT/scratch/runs/g0/stage_${SLURM_ARRAY_JOB_ID}
 case $SLURM_ARRAY_TASK_ID in
-  1) P=5000;  R=16; HOURS=6.70;  WRAP=(timeout 6h57m) ;;
+  1) P=5000;  R=16; HOURS=6.70;  WRAP=(timeout 417m) ;;
   2) P=10000; R=8;  HOURS=17.20; WRAP=() ;;
   *) echo "no task $SLURM_ARRAY_TASK_ID" >&2; exit 65 ;;
 esac
