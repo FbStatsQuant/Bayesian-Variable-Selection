@@ -83,7 +83,7 @@ Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
 
 ## 1. Theorem 1 — Posterior concentration (fixed design)
 <!-- ROW thm1 BEGIN -->
-**Card row** 1.1 · **Section version** 0.7 (2026-11-16) · **Pending delta** —
+**Card row** 1.1 · **Section version** 0.8 (2026-11-16) · **Pending delta** —
 
 
 ### Reader statement
@@ -195,14 +195,18 @@ in progress, recorder task D, 2026-11-16). Until recorded, the abstract cites Th
 ### Honest limits
 None for the statement: every assumption is primitive. The beta-min and margin constants are explicit but not
 optimised; the paper should say "a sufficiently large constant depending only on $(s_0,A,\varphi_0)$" in the statement
-and give the formulas in an appendix, without numerical values [H5-6]. Named open items attached to this row: O1
-(weaker Occam-sum interface), O2 (margin constant), O3 (floor on the truth) — `CARD_ROW11_R03b.md`.
+and give the formulas in an appendix, without numerical values [H5-6]. Theorem 1′ keeps the vanishing floor (A5), which
+still excludes exact linear dependence among $O(\log n)$ columns, duplicated null columns included; it is never to be
+called "the design-agnostic form" [H5-7.1]. Named open items attached to this row: O1 (a design-free sufficient
+condition for the Occam-sum condition; **whether (OS) holds without any eigenvalue condition is open**; ranks with O3
+as a post-freeze rider — it would make "no eigenvalue condition off $S_0$" literally true), O2 (margin constant), O3
+(floor on the truth) [H5-7.2] — `CARD_ROW11_R03b.md`.
 
 #### Update log (thm1)
 - v0.1 2026-11-15: first version (CP1).
 - v0.2 2026-11-15: S1 fixes [S1-F1] C_β>0 (STRONGER hypothesis, i.e. corrected); [S1-F9] statuses.
 - v0.3 2026-11-16: [H5-1] re-based on W3-POST2 C (uniform expectation rate; conclusion STRONGER, same hypotheses) with
-  Theorem 1′ (W3-POST2 E: identifiability margin, no floor off $S_0$, no beta-min) and remark (o) (W3-POST2 A1).
+  Theorem 1′ (W3-POST2 E: identifiability margin, no bounded-size floor off $S_0$, no beta-min) and remark (o) (W3-POST2 A1).
   Masters C/E/A1/A0 below PROVED-CHECKED until recorded.
 - v0.4 2026-11-16: [H5-6] consultant's conditions: "off $S_0$" wording for Theorem 1′; (A4′) floor line "sufficient;
   not known to be necessary (O3)"; no numerical constant values; rate-scope remark (vi) (EQUAL; wording).
@@ -211,6 +215,8 @@ and give the formulas in an appendix, without numerical values [H5-6]. Named ope
   description; HQ-accepted wording).
 - v0.7 2026-11-16: [S3-N4, N5] remark (vi): open item scoped to the expectation lower bound under a floor on
   $S_0\cup\{j\}$; "has been shown … on other designs it is not known" (EQUAL; tags confirmed by S3).
+- v0.8 2026-11-16: [H5-7] honest-limits paragraph: (A5) still excludes exact dependence (duplicated nulls); O1 ranked
+  with O3; "whether (OS) holds without any eigenvalue condition is open" (EQUAL; presentation).
 <!-- ROW thm1 END -->
 
 ---

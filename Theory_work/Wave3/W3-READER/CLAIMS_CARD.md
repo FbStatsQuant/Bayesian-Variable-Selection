@@ -1,6 +1,7 @@
-# Headline claims card — proposal v0.6, organised by five pillars (W3-READER, bridge leg, 2026-11-16)
+# Headline claims card — proposal v0.7, organised by five pillars (W3-READER, bridge leg, 2026-11-16)
 
-v0.6 = v0.5 with: row 3.5 credits Del Moral (GATES row 3.5) — EQUAL; H5 card 6 on rows 1.1 and 1.3 — 1.1 EQUAL, 1.3
+v0.7 = v0.6 with H5 card 7 consequences (abstract wording of rows 1.1 (Thm 1′), 3.1/3.2; row 3.6 to the body; open-items
+list with O1 ranked with O3) — EQUAL (presentation). v0.6 = v0.5 with: row 3.5 credits Del Moral (GATES row 3.5) — EQUAL; H5 card 6 on rows 1.1 and 1.3 — 1.1 EQUAL, 1.3
 **WEAKER** (the "optimal" claim narrowed to the witness designs, as `W3-PSHARP/STATEMENT.md:92-110`); Engineering D-17
 note — EQUAL; S2-F4/F5 on row 3.6 — **WEAKER** (localisation, not conditioning, `W3-SAMP/STATEMENT.md:158-162`; Theorem
 10's standardised-signal setting); S2-F6 and S3-N4/N7/N8 wording on rows 1.1, 1.3 and the D-17 note — EQUAL. Tags
@@ -33,7 +34,7 @@ marked · **long** = primitive but lengthy · **limit** = no primitive version; 
 
 | # | Result, in words | Master and status (verbatim) | Buys vs the literature | Reader version |
 |---|---|---|---|---|
-| 1.1 (Thm 1, 1′) | **Posterior concentration, fixed design** [H5-1]. With a sparse eigenvalue floor on sets of bounded size, no near-collinearity among $O(\log n)$ columns, bounded coefficients and beta-min at $\sqrt{\log n/n}$: $E[1-\pi(S_0\mid y)]\le C\sqrt{\log n/n}$ **uniformly over such designs**, HPM = MPM = $S_0$ w.p. $\ge1-4C\sqrt{\log n/n}$, every PIP within $1-\pi(S_0\mid y)$ of the truth. Variant (Thm 1′, no eigenvalue condition off $S_0$ beyond the vanishing floor on $O(\log n)$-sets): the bounded-size floor off $S_0$ and beta-min replaced by an identifiability margin (every small model missing a truth leaves residual signal $\ge c\,\sigma_*^2\log n$ with $c>c_1(s_0,A)$, an explicit constant, not optimised) [S3-N7]; the floor on $S_0$ is sufficient, not known to be necessary (open item O3) [H5-6]. | Expectation form and variant: `W3-POST2:C@1.0.0`, `W3-POST2:E@1.0.0` (with `A0`, `A1`): "PROVED (by this seat, unchecked)" — **recording in progress (recorder task D)**. $O_P$ form: `W3-POST:Thm-1@1.0.0` = `SOP:TH09@1.0.0`: "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)" (council C3 passed; label pending). | Song–Liang-type selection consistency for the shipped prior with an explicit, design-uniform expectation rate and exact HPM/MPM; no tuning; Thm 1′ uses a residual-signal identifiability condition (Narisetty–He style) instead of eigenvalue floors off the truth. Narrower in dimension ($n^A$ vs $e^{Cn^\alpha}$). | **clean** (both); NEW bridges: set-size arithmetic (R1) |
+| 1.1 (Thm 1, 1′) | **Posterior concentration, fixed design** [H5-1]. With a sparse eigenvalue floor on sets of bounded size, no near-collinearity among $O(\log n)$ columns, bounded coefficients and beta-min at $\sqrt{\log n/n}$: $E[1-\pi(S_0\mid y)]\le C\sqrt{\log n/n}$ **uniformly over such designs**, HPM = MPM = $S_0$ w.p. $\ge1-4C\sqrt{\log n/n}$, every PIP within $1-\pi(S_0\mid y)$ of the truth. Variant (Thm 1′, no eigenvalue condition off $S_0$ beyond the vanishing floor (A5) on $O(\log n)$-sets, which still excludes exact dependence among $O(\log n)$ columns, duplicated nulls included): the bounded-size floor off $S_0$ and beta-min replaced by an identifiability margin (every small model missing a truth leaves residual signal $\ge c\,\sigma_*^2\log n$ with $c>c_1(s_0,A)$, an explicit constant, not optimised) [S3-N7]; the floor on $S_0$ is sufficient, not known to be necessary (open item O3) [H5-6]. | Expectation form and variant: `W3-POST2:C@1.0.0`, `W3-POST2:E@1.0.0` (with `A0`, `A1`): "PROVED (by this seat, unchecked)" — **recording in progress (recorder task D)**. $O_P$ form: `W3-POST:Thm-1@1.0.0` = `SOP:TH09@1.0.0`: "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)" (council C3 passed; label pending). | Song–Liang-type selection consistency for the shipped prior with an explicit, design-uniform expectation rate and exact HPM/MPM; no tuning; Thm 1′ uses a residual-signal identifiability condition (Narisetty–He style) instead of eigenvalue floors off the truth. Narrower in dimension ($n^A$ vs $e^{Cn^\alpha}$). | **clean** (both); NEW bridges: set-size arithmetic (R1) |
 | 1.2 (Thm 2) | **Same for random Gaussian designs**: rows i.i.d. Gaussian, fixed nonzero coefficients, population sparse eigenvalues bounded below on $O(\log n)$-sets (no upper bound): $1-\pi(S_0\mid y)=O_P(\sqrt{\log n/n})$, HPM = MPM = $S_0$ w.p. $\to1$. | Thm-1 item 6 (as 1.1) + `W2-APP:POST@1.0.1`: "PROVED (by this seat, unchecked); R02 VERIFIED-WITH-AMENDMENTS, applied". | Song–Liang's random-design setting; $p\gg n$. | **clean**; **unchecked input** (HQ-queued Sol check) |
 | 1.3 (Thm 3) | **The rate cannot be improved.** On every design, for every model with $|S|\le\min(K-1,p/2)$, $\pi(S\mid y)\le(1+(|S|+1)/(3\sqrt n))^{-1}$; with orthogonal or i.i.d. Gaussian null columns, $1-\pi(S_0\mid y)\ge(1-o_P(1))(s_0+1)\sqrt{\log p/(\pi n)}$. | `W3-PSHARP:B@1.0.0`, `W3-PSHARP:A@1.0.0`: "PROVED-CHECKED; council R2, MANIFEST 4513e05a…, sol=9.2 PASS, opus=9.3 PASS; …". | "Is your rate optimal?" — on the witness designs (orthogonal or i.i.d. Gaussian null columns) yes for $\log p\asymp\log n$; on every design the proved lower bound is of order $n^{-1/2}$ (a matching expectation lower bound $\gtrsim\sqrt{\log n/n}$ under a floor on $S_0\cup\{j\}$ is open, rider POST2-R1) [H5-6, S3-N4]; the sparsity frontier $s_0=o(\sqrt n)$. | **clean**, no bridge |
 | 1.4 (Thm 4) | **Omitted variables** [H5-3]: fitting candidates only, with any residual variance (fixed, vanishing or growing with $n$), the posterior concentrates on the support of the best candidate predictor at rate $\sqrt{\log n/n}$ in expectation, uniformly over the residual variance (fixed candidate design); with Gaussian rows (reader version) the omitted part may be of any size and HPM error is $O(\sqrt{\log n/n})$. | Headline masters `W3-MISR:MIS(i)@1.0.0`: "PROVED-CHECKED, conditional on W3-POST2:C; …"; `W3-MISR:MIS(i')@1.0.0`, `W3-MISR:MIS(ii)@1.0.0`: "PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, SOP:TH09, SOP:TH128; …". Gaussian-row reader version `W3-MISR:Cor-G(b)@1.0.0`: "PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:Prop-P, SOP:TH09, SOP:TH128, C-MIS:GDb; …". Inputs `W3-POST2:C/E/A1/A0@1.0.0`: "PROVED (by this seat, unchecked)" (recording in progress). | Song–Liang Theorem 4 analogue with a rate and no fixed variance; the coded method is exactly invariant to shifts and rescaling of $y$. | **clean** (Cor-G(b)); conditional on POST2 |
@@ -75,17 +76,33 @@ marked · **long** = primitive but lengthy · **limit** = no primitive version; 
 
 ---
 
-## Abstract (provisional headline list; consultant AGREE, H5 card 5)
+## Abstract (provisional headline list; consultant AGREE, H5 card 5; consequences adopted by HQ, H5 card 7)
 Gate for every abstract row: strength gates PASS (`GATES.md`, Thu 11-19) **and** PROVED-CHECKED masters; an abstract row
 may carry an unchecked "conditional on" input only if the abstract states it [H5-6b].
-- **3.1** main theorem, common-data-event clause (delivery clause in the body until F-UNI's gate resolves) — states
-  "conditional on the random-design posterior lemma" until `W2-APP:POST` is checked.
+- **3.1** main theorem. The abstract leads with the clause that needs no delivery convention: *"on one data event of
+  probability tending to one, every admissible run that produces output reports $S_0$, for every seed"*; it states
+  "conditional on the random-design posterior lemma" until `W2-APP:POST` is checked. "Every run produces output" is a
+  body statement, with the delivery conventions (S4) of C-DLV [H5-7.3].
+- **3.2**, wherever it is cited (body by default): the same order of clauses as 3.1 [H5-7.3].
 - **1.1** posterior concentration (expectation form once POST2 is recorded; until then the $O_P$ form), **1.2**, **1.3**.
+  Theorem 1′ is never called "the design-agnostic form"; its exact description is: *it drops the fixed floor (A4) off
+  $S_0$ but keeps the vanishing floor (A5), which still excludes exact linear dependence among $O(\log n)$ columns,
+  duplicated null columns included* [H5-7.1].
 - **1.4** omitted variables — states its conditionality on the posterior refinements until they are recorded.
 - **3.7** certified screening, one clause [H5-5].
 - **2.1** only after W3-DIST CP3; fallback **2.2** if it slips [H5-5].
-- Candidate: **3.6**, once R4 is checked [H5-5].
-Body: 3.2, 3.3, 3.5 (remark). Pillars 4–5: honest-status rows.
+Body: 3.2, 3.3, 3.5 (remark), **3.6** (the consultant withdrew its promotion; its premises do not fit one abstract
+clause: Gaussian rows, population floor, visibility, no leakage, and the sampler conventions) [H5-7.4]. Pillars 4–5:
+honest-status rows.
+
+## Open items attached to headline rows (post-freeze riders)
+- **O1 and O3 rank together** [H5-7.2]: O1 — a design-free sufficient condition for the superset Occam-sum condition
+  (OS); **whether (OS) holds without any eigenvalue condition is open**, and O1 is what would make "no eigenvalue
+  condition off $S_0$" literally true for Theorem 1′; O3 — the floor on $S_0$ replaced by a bounded ridge cost (the
+  floor is sufficient, not known to be necessary).
+- O2 — the margin constant $c_1(s_0,A)$ (explicit, not optimised).
+- POST2-R1 — a matching expectation lower bound $\gtrsim\sqrt{\log n/n}$ under a floor on $S_0\cup\{j\}$.
+- SAMP-R1 (row 3.6) and SCR-R1 (row 3.7) — strengthenings from the SHARP3 triage.
 
 ## Notes for HQ and the consultant
 * **Placement of the omitted-variables theorem.** Row 1.4 (pillar 1), manager's CP1 decision 6. Row 3.4 left empty so

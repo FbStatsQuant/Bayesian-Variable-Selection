@@ -5,7 +5,7 @@ W3-READER:R2	lemmas/R2_local_regression.md	-	6f70b56635abab50	6f70b56635abab50	r
 W3-READER:R3	lemmas/R3_delivery_assembly.md	W2-UNI:F-UNI@1.1.0; W3-RM2:RM2-R/F@1.0.0	5df2d033cd436742	e52707a923e46fd6	reviews/S2_linecheck_sol.md (pending)	STALE
 W3-READER:R4	lemmas/R4_printed_outputs.md	W3-SAMP:C@1.1.1; W3-START2:IF-START@1.0.0; W2-APP:POST@1.0.1	4b8592da8c0d70f1	9f48e8421ee95559	reviews/S2_linecheck_sol.md (pending)	STALE
 NOTATION	NOTATION.md	code pins (Scripts/SMC_BVS/core)	ca6c6e516278521b	ca6c6e516278521b	reviews/S2_linecheck_sol.md (pending)	PENDING-CHECK
-RV/thm1	READER_VERSIONS.md ROW thm1	W3-POST:Thm-1@1.0.0; SOP:TH09@1.0.0; W3-POST2:C@1.0.0; W3-POST2:E@1.0.0; W3-POST2:A0@1.0.0; W3-POST2:A1@1.0.0; W3-READER:R1	460a1ef8c5ab051e	03c8fbb31d6bc715	reviews/S2_linecheck_sol.md (pending)	STALE
+RV/thm1	READER_VERSIONS.md ROW thm1	W3-POST:Thm-1@1.0.0; SOP:TH09@1.0.0; W3-POST2:C@1.0.0; W3-POST2:E@1.0.0; W3-POST2:A0@1.0.0; W3-POST2:A1@1.0.0; W3-READER:R1	343b4a41b1cd895b	03c8fbb31d6bc715	reviews/S2_linecheck_sol.md (pending)	STALE
 RV/thm2	READER_VERSIONS.md ROW thm2	W3-POST:Thm-1@1.0.0 item 6; W2-APP:POST@1.0.1; W3-READER:R1	d8840bb2f04fbf76	d8840bb2f04fbf76	reviews/S2_linecheck_sol.md (pending)	PENDING-CHECK
 RV/thm3	READER_VERSIONS.md ROW thm3	W3-PSHARP:A@1.0.0; W3-PSHARP:B@1.0.0; W3-READER:R1 (B3.2)	5a55b96bf990ab3e	5e52f08a3a976193	reviews/S2_linecheck_sol.md (pending)	STALE
 RV/thm4	READER_VERSIONS.md ROW thm4	W3-MISR:MIS(i)@1.0.0; MIS(i')@1.0.0; MIS(ii)@1.0.0; Cor-G(b)@1.0.0; W3-READER:R1 (B4.1)	3dbf8c5c4ecf4bc5	4f5bcff00c63edf8	reviews/S2_linecheck_sol.md (pending)	STALE
@@ -15,4 +15,4 @@ RV/thm7	READER_VERSIONS.md ROW thm7	W3-RM2:RM2-F@1.0.0; W3-RM2:W-suff@1.0.0; W3-
 RV/thm8	READER_VERSIONS.md ROW thm8	W3-SCR:A1@1.0.0	cfcae3fc04a35b49	cfcae3fc04a35b49	reviews/S2_linecheck_sol.md (pending)	PENDING-CHECK
 RV/thm9	READER_VERSIONS.md ROW thm9	(placeholder; W3-DIST)	fe9183d270dcb8e4	fe9183d270dcb8e4	reviews/S2_linecheck_sol.md (pending)	PENDING-CHECK
 RV/thm10	READER_VERSIONS.md ROW thm10	W3-SAMP:C@1.1.1; W3-START2:IF-START@1.0.0; W3-POST:Thm-1@1.0.0; W2-APP:POST@1.0.1; W3-READER:R4, PoolZ	1c304979c8dd6427	9728e269fdf67549	reviews/S2_linecheck_sol.md (pending)	STALE
-CARD	CLAIMS_CARD.md	RV/thm1-thm10	df8b98e652b4108e	8ccf947f42e8654a	reviews/S2_linecheck_sol.md (pending)	STALE
+CARD	CLAIMS_CARD.md	RV/thm1-thm10	af4a81d52ff15b4b	8ccf947f42e8654a	reviews/S2_linecheck_sol.md (pending)	STALE
