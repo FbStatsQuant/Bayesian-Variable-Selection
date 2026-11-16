@@ -10,3 +10,6 @@
 - 2026-11-15 19:23 CST read POLICIES.md (HQ merged main, 7c24a3d). Committed + pushed 121c25d on theory/W3-READER. HOLDS: none. Waiting on S1 (Sol); CP1 report to HQ via t3_thread_send (queue) after S1.
 - 2026-11-15 19:44 CST Now under SMC - Theory Dept manager (report there, queue, <=10 lines). Applied manager's faithfulness flag: equal-weight pooling (v3_run.R:154,162) explicit in NOTATION §5 + traceability, METHOD_INTUITION; READER_VERSIONS given per-row BEGIN/END markers, section versions, pending-delta lines (thm3 PSHARP A1, thm4 MISR G(a)/H, thm5 START2, thm7 RM2-F) and update logs. Waiting on S1.
 - 2026-11-15 19:47 CST OWNER MEMO (POLICIES 34ce461a) received: Fable needs permission via manager; big problems reported at once. Pooled-PIP fix already applied; cite range corrected to 02_method.tex:440-451, OD-4 noted. No reader statement names a weighted PIP.
+- 2026-11-15 19:53 CST Owner's final rule noted (Opus/Sonnet/Haiku helpers free; Fable via manager). Leg 2 heads-up: strength gates for five-pillar rows due Thu 11-19 18:00 CT, brief after CP1. Still waiting on S1.
+- 2026-11-15 20:01 CST POLICIES §9 noted (expensive-resource requests encouraged, <=10 lines via manager; nothing starts before the answer). No such need in W3-READER at CP1.
+- 2026-11-15 20:03 CST POLICIES §10 noted: never cancel/archive/interrupt any agent; ignore and log instead.
