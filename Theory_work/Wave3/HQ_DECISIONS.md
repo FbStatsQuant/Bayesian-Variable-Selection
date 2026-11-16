@@ -555,3 +555,11 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - GO for one HQ-ordered R3: diff only, fresh seats; it is the last round, and a failure comes back to HQ.
   - Deciding outside bind is refused.
   - The v1.1a WEAKER change (KL sentence) is flagged for H5 if any headline row or reader version quotes it.
+- 2026-11-16 ~04:00 CT, owner back. Decisions:
+  - (b) Fable 5.2 architect for WP3 APPROVED (CT, high, ~3 d).
+  - (a) 7 builders OK'd, phased by HQ: stay at 5 until the WP3 design lands, because the owner asked to pace down.
+  - Desktop offload destination D:\SMC_Engineering_Department\ (created); Task Scheduler hourly pulls OK, installed by HQ from Engineering's script.
+  - Codex level 0. Claude pacing down: no new tickets pre-freeze unless critical path, Sonnet/Haiku for routine helpers, no new Fables beyond (b).
+- 2026-11-16 ~03:55 CT Owls incident: load ~41k from a VS Code Remote extension host (fb31 pid 873283) spawning ~3,200 hung `rg --files` scans.
+  - HQ killed the extension host and the rg processes; the load is falling.
+  - Theory, Engineering and BNP HQ informed.
