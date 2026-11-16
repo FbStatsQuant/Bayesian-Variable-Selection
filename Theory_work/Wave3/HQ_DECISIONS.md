@@ -436,3 +436,17 @@ real runs only on 0 problems.
 - **Approved:** the "validated" definition; the evidence wording at 1M; competitors and framing ("not found in the literature";
   1M claims as posterior summaries).
 - G0 (≈ 57 core-h worst case) approved earlier; submitted by Engineering from Owls.
+
+## 2026-11-15 ~22:45 CT — H5 card 5 (provisional headline list): consultant AGREE with one OBJECT, adopted
+Abstract split adopted provisionally. Conditions:
+- masters PROVED-CHECKED; strength gates PASS; W3-DIST 2.1 only after CP3; the owner may re-order;
+- a fresh FAITHFUL fidelity read;
+- no unstated unchecked conditions;
+- pooled-Ẑ corollary 4.1 registered and checked.
+
+Changes:
+- row 1.1 re-based on W3-POST2 A1 + C (E as variant) or explicit "better" disposals;
+- F-UNI gate PENDING to be resolved before the 3.1 delivery clause;
+- MISR flag on MIS(i)/(ii), Cor-G(b) as the reader version;
+- setting line states the Gaussian rows;
+- add 3.7 certified screening to the abstract; 3.6 a candidate; 2.2 POST2:D the pillar-2 fallback.
