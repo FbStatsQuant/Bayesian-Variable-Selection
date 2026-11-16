@@ -15,3 +15,4 @@
 - 2026-11-15 20:03 CST POLICIES §10 noted: never cancel/archive/interrupt any agent; ignore and log instead.
 - 2026-11-15 20:05 CST POLICIES §10 final: may settle own finished reviewers/helpers; never cancel/archive/delete. S1 (Sol) report received: NOT-FAITHFUL AS WRITTEN (F1 FATAL C_beta>0; F5 FATAL card domain; F2,F3,F4,F7 MAJOR; F6,F8-F12 MINOR); arithmetic bridges + B6.3 pass. All accepted; applying fixes (v0.2).
 - 2026-11-15 20:06 CST S1 disposition written (12/12 accepted); READER_VERSIONS v0.2, NOTATION v0.2, CLAIMS_CARD v0.3; CP1 §4 filled. CP1 complete.
+- 2026-11-15 20:06 CST CP1 sent to Theory Dept manager (queue). Run ends at CP1; waiting for the manager's answer and the leg 2 brief.
