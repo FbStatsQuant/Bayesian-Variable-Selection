@@ -30,3 +30,7 @@
   → 16 tasks × 64 CPUs (1,024) or 16 × 96 (1,536 = cap) would fit by CPU count today.
   Caveat: bb2u24c1 showed 104 idle CPUs but AllocMem 253,952 of 257,124 MB → free CPUs can come with no free memory.
   Memory per node to be checked (sinfo -O AllocMem).
+- UPDATE (HQ, 18:52 CST): home = 6,770 MB of 10,240 MB (66%), from `quota -s | grep -A1 export/nots/home | tail -1`; guard 8,192 MB.
+  No action on home. Our earlier 10,159M was read from the `nfs1:/export/nots/home` row of the owner's screenshot, so it was the
+  home line at that moment. The ~3.4 GB difference is most likely space freed between the two readings, or quota reporting lag.
+  ea14 (16 TB, at limit) is a separate project allocation. Plan outputs go to /scratch only (unchanged).
