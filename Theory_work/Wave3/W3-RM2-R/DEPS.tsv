@@ -1,12 +1,12 @@
 id	file[:lines]	uses	sha	checked_sha	checked_by	state
-stmt:sec2	STATEMENT.md:52-115	-	ec407da996327240	ec407da996327240	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
-stmt:C0p	STATEMENT.md:118-143	stmt:sec2	66da571123e74d2b	66da571123e74d2b	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
-stmt:CD	STATEMENT.md:144-163	stmt:sec2	0372952b3decd561	0372952b3decd561	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
-stmt:C1p	STATEMENT.md:166-176	stmt:sec2;stmt:C0p;stmt:CD	73a0ac3a6833b97a	73a0ac3a6833b97a	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
-stmt:C2p	STATEMENT.md:177-182	stmt:C0p;stmt:CD	e9009dbe31e9fa2e	e9009dbe31e9fa2e	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
-stmt:bridges	STATEMENT.md:183-194	stmt:sec2	a0108fbf7c68628c	a0108fbf7c68628c	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
-stmt:C5p	STATEMENT.md:197-205	stmt:sec2	09dbd3db63764507	09dbd3db63764507	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
-stmt:C4p	STATEMENT.md:206-238	stmt:C0p;stmt:C1p;stmt:C2p	e91ddf1994bac1ba	e91ddf1994bac1ba	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
+stmt:sec2	STATEMENT.md:52-115	-	ec407da996327240	ec407da996327240	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	OK
+stmt:C0p	STATEMENT.md:118-143	stmt:sec2	66da571123e74d2b	66da571123e74d2b	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	OK
+stmt:CD	STATEMENT.md:144-163	stmt:sec2	0372952b3decd561	0372952b3decd561	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	OK
+stmt:C1p	STATEMENT.md:166-176	stmt:sec2;stmt:C0p;stmt:CD	73a0ac3a6833b97a	73a0ac3a6833b97a	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	OK
+stmt:C2p	STATEMENT.md:177-182	stmt:C0p;stmt:CD	e9009dbe31e9fa2e	e9009dbe31e9fa2e	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	OK
+stmt:bridges	STATEMENT.md:183-194	stmt:sec2	a0108fbf7c68628c	a0108fbf7c68628c	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	OK
+stmt:C5p	STATEMENT.md:197-205	stmt:sec2	09dbd3db63764507	09dbd3db63764507	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	OK
+stmt:C4p	STATEMENT.md:206-238	stmt:C0p;stmt:C1p;stmt:C2p	e91ddf1994bac1ba	e91ddf1994bac1ba	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	OK
 parent:L1_sandF_b.md	../W3-RM2/lemmas/L1_sandF_b.md	-	4a29eea6b2f2ac38	4a29eea6b2f2ac38	W3-RM2 council R1 (registry)	OK (parent, read-only)
 parent:L2_width.md	../W3-RM2/lemmas/L2_width.md	-	0fa63729eeac8c28	0fa63729eeac8c28	W3-RM2 council R1 (registry)	OK (parent, read-only)
 parent:L3_assemblyF.md	../W3-RM2/lemmas/L3_assemblyF.md	-	2a65ad0fcdd6b70d	2a65ad0fcdd6b70d	W3-RM2 council R1 (registry)	OK (parent, read-only)
@@ -17,5 +17,5 @@ lemma:Q1_sandF_c	lemmas/Q1_sandF_c.md	stmt:bridges;parent:L1_sandF_b.md	2726f961
 lemma:Q2_TL_c	lemmas/Q2_TL_c.md	stmt:bridges;parent:L2_width.md	6a3282368f400720	6a3282368f400720	reviews/LCA_line_check_sol.md	OK
 lemma:Q7_proxy_d	lemmas/Q7_proxy_d.md	stmt:C5p;parent:L6_examples.md	82bb402991fb6873	82bb402991fb6873	reviews/LCA_line_check_sol.md	OK
 lemma:Q4_core_plus	lemmas/Q4_core_plus.md	stmt:C0p;parent:RM-L0_core.md;lemma:Q5_dlv0	d89a356936ca2953	d89a356936ca2953	reviews/LCB_line_check_sol.md	OK
-lemma:Q5_dlv0	lemmas/Q5_dlv0.md	stmt:CD	23a4baf6e10f5648	8b23f9ef5bd348eb	reviews/LCB_line_check_sol.md (repair: RC1 pending)	STALE
+lemma:Q5_dlv0	lemmas/Q5_dlv0.md	stmt:CD	23a4baf6e10f5648	23a4baf6e10f5648	reviews/LCB_line_check_sol.md;reviews/RC1_recheck_sol.md	OK
 lemma:Q6_assembly	lemmas/Q6_assembly.md	stmt:C1p;stmt:C2p;stmt:C4p;lemma:Q1_sandF_c;lemma:Q2_TL_c;lemma:Q4_core_plus;lemma:Q5_dlv0;lemma:Q7_proxy_d	83b8f28a681fffba	83b8f28a681fffba	reviews/LCB_line_check_sol.md	OK

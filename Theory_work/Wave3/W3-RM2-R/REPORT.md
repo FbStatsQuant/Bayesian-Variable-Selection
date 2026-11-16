@@ -16,21 +16,23 @@
 
 Every claim of `STATEMENT.md` v1.0 has a proof in `lemmas/` (Q1, Q2, Q4, Q5, Q6, Q7). Review record: statement lock
 SL1 + statement-change check SC1 (Sol, `reviews/SL1_statement_lock_sol.md`, `reviews/SC1_statement_change_sol.md`);
-line checks LC-A (Q1, Q2, Q7) and LC-B (Q4, Q5, Q6) (Sol; files and dispositions in `reviews/`); council R1 (§4).
+line checks LC-A (Q1, Q2, Q7: `reviews/LCA_line_check_sol.md`) and LC-B (Q4, Q5, Q6: `reviews/LCB_line_check_sol.md`),
+the Q5 repair re-checked by RC1 (`reviews/RC1_recheck_sol.md`); all Sol (codex gpt-6.1-sol high), NORMAL mode; no C/S
+finding; three F findings on Q5, repaired and re-checked; one E finding in `ERRATA.md`. DEPS: every row OK. Council R1 (§4).
 Statuses below are as of this draft; the council result is recorded in §4 and in the REGISTRY block.
 
 ## 2. Claims and where they are (statements are in STATEMENT; this file restates nothing)
 
 | claim id | statement | proof | status |
 |---|---|---|---|
-| W3-RM2-R:RM0-plus | `STATEMENT.md:118-143` | `lemmas/Q4_core_plus.md` | PROVED (by this seat, unchecked); LC-B pending |
-| W3-RM2-R:DLV-0 | `STATEMENT.md:144-163` | `lemmas/Q5_dlv0.md` | PROVED (by this seat, unchecked), relative to the C-DLV P1/S.3 audits; LC-B pending |
-| W3-RM2-R:RM2-F-plus | `STATEMENT.md:166-176` | `lemmas/Q6_assembly.md` §1 | PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0; LC-B pending |
-| W3-RM2-R:RM2-R-plus | `STATEMENT.md:177-182` | `lemmas/Q6_assembly.md` §2 | PROVED (by this seat, unchecked); conditional on W2-APP:POST@1.0.1; LC-B pending |
-| W3-RM2-R:SAND-F-c | `STATEMENT.md:183-194` (Q1 row) | `lemmas/Q1_sandF_c.md` | PROVED (by this seat, unchecked); LC-A pending |
-| W3-RM2-R:TL-F-c | `STATEMENT.md:183-194` (Q2, Q3 rows) | `lemmas/Q2_TL_c.md` §4, §6 | PROVED (by this seat, unchecked); §6 conditional on SOP:TH09@1.0.0; LC-A pending |
-| W3-RM2-R:Ex-Proxy-d | `STATEMENT.md:197-205` | `lemmas/Q7_proxy_d.md` | PROVED (by this seat, unchecked); LC-A pending |
-| W3-RM2-R:Cont-plus | `STATEMENT.md:206-213` | `lemmas/Q6_assembly.md` §3 | PROVED (by this seat, unchecked); LC-B pending |
+| W3-RM2-R:RM0-plus | `STATEMENT.md:118-143` | `lemmas/Q4_core_plus.md` | PROVED (by this seat, unchecked); LC-B VERIFIED |
+| W3-RM2-R:DLV-0 | `STATEMENT.md:144-163` | `lemmas/Q5_dlv0.md` | PROVED (by this seat, unchecked), relative to the C-DLV P1/S.3 audits; LC-B VERIFIED-WITH-AMENDMENTS, applied; RC1 VERIFIED |
+| W3-RM2-R:RM2-F-plus | `STATEMENT.md:166-176` | `lemmas/Q6_assembly.md` §1 | PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0; LC-B VERIFIED |
+| W3-RM2-R:RM2-R-plus | `STATEMENT.md:177-182` | `lemmas/Q6_assembly.md` §2 | PROVED (by this seat, unchecked); conditional on W2-APP:POST@1.0.1; LC-B VERIFIED |
+| W3-RM2-R:SAND-F-c | `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:183-194` (Q1 row) | `lemmas/Q1_sandF_c.md` | PROVED (by this seat, unchecked); LC-A VERIFIED-WITH-AMENDMENTS (1 E → ERRATA E1) |
+| W3-RM2-R:TL-F-c | `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:183-194` (Q2, Q3 rows) | `lemmas/Q2_TL_c.md` §4, §6 | PROVED (by this seat, unchecked); §6 conditional on SOP:TH09@1.0.0; LC-A VERIFIED |
+| W3-RM2-R:Ex-Proxy-d | `STATEMENT.md:197-205` | `lemmas/Q7_proxy_d.md` | PROVED (by this seat, unchecked); LC-A VERIFIED |
+| W3-RM2-R:Cont-plus | `STATEMENT.md:206-213` | `lemmas/Q6_assembly.md` §3 | PROVED (by this seat, unchecked); LC-B VERIFIED |
 
 ## 3. Sharpness and open items (HEURISTIC where not proved)
 
@@ -45,61 +47,87 @@ Pending (R1: Sol seat + Opus 5.5 seat; manifest `reviews/MANIFEST_R1.txt`).
 
 ## 5. REGISTRY
 
+One block per claim. Cont-plus records its targets under `implies`, not `depends_on` (HQ ruling at CP1); its
+`depends_on` on W3-RM2:Cont-F/Cont-R is for clause (iv) (reported to the manager).
+
 ```
 REGISTRY
 claim: W3-RM2-R:RM2-F-plus | kind: theorem | statement: STATEMENT.md:166-176 | premises: STATEMENT.md:52-115
-status: PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0 | status_source: REPORT.md:28
-assumptions: A:T1-F-flat (new | Theorem 1's conditions with BM-inf or BM(c), c > c0(s0,A) | (H0) of GROW with the beta-min clause of SOP:TH09 | STATEMENT.md:95-99 | shared yes | Q2 §6) ; A:FL-16 ; A:FL-Q ; A:V-flat (new | visibility at a constant level | delta^2_{U,j} >= M_V log n, M_V > (sigma sqrt(2A) + sqrt((2A+1) C_R))^2 | STATEMENT.md:101-105 | shared no | Q1 SAND-F-c) ; A:L-gain ; A:L-feas ; A:L-size-b ; A:BM-W-plus (new | additive truth-removal floor at the constant level | sqrt(lambda_n) >= 2(d_n + sqrt(2 log n)), lambda_n >= c_TL log n, c_TL > 8(A+1) + 4(2A+1) C_R/sigma^2 | STATEMENT.md:107-112 | shared no | Q2 TL-F-c) ; A:W ; A:DELIV (new | delivery premises (D) incl. IDEAL-W-plus, for the unconditional clause only | STATEMENT.md:71-93 | shared yes | Q5 DLV-0)
-consumes: P:POST ; P:MODE ; P:SAND(Q) ; P:TL(Q) ; P:NA(Q) ; P:E4
-conclusion: reported-model+delivery: one data event of probability -> 1 on which every admissible output run reports S0; under (D) every run returns output and P(S-hat = S0) -> 1, P(S-hat != S0) <= P(mode failure) + P(search failure) | rate: none claimed | scope: fixed design; s0 fixed; p <= n^A; |Q| <= n^b
+status: PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0; LC-B VERIFIED | status_source: REPORT.md:30
+assumptions: A:T1F-FLAT (new | Theorem 1 conditions with BM-inf or BM(c) | (H0) of GROW with the beta-min clause BM-inf or BM(c), c > c0(s0,A), of SOP:TH09 | STATEMENT.md:95-99 | shared yes | bridge W3-RM2-R:TL-F-c) ; A:RM-FL ; A:RM2-V-FLAT (new | visibility at a constant level | delta^2_{U,j} >= M_V log n with fixed M_V > (sigma sqrt(2A) + sqrt((2A+1) C_R))^2, C_R = 3(M + sigma^2) | STATEMENT.md:101-105 | shared no | bridge W3-RM2-R:SAND-F-c) ; A:RM2-LFEAS-GAIN ; A:RM2-LSIZE-B ; A:RM2-BM-W-PLUS (new | additive truth-removal floor at the constant level | sqrt(lambda_n) >= 2(d_n + sqrt(2 log n)) and lambda_n >= c_TL log n, c_TL > 8(A+1) + 4(2A+1) C_R/sigma^2 | STATEMENT.md:107-112 | shared no | bridge W3-RM2-R:TL-F-c) ; A:RM2-W ; A:OP ; A:BLOCK-LE-16 ; A:DELIV-D (new | delivery premises (D) with IDEAL-W-plus, for the unconditional clause only | EX-A unit cost, IDEAL-W with two lifted upper-bound predicates, MACH, CONFIG at the shipped configuration, TDP-IMPL, declared allocation A_n, valid non-degenerate input | STATEMENT.md:71-93 | shared yes | bridge W3-RM2-R:DLV-0)
+conclusion: reported-model: one data event of probability -> 1 on which every admissible output run reports S0; under (D) every run returns output and P(S-hat = S0) -> 1 with P(S-hat != S0) <= P(mode failure) + P(search failure)
+rate: none claimed
+scope: fixed design; s0 fixed; p <= n^A (p >> n allowed); |Q| <= n^b
 depends_on: W3-RM2-R:RM0-plus@stmt ; W3-RM2-R:DLV-0@stmt ; W3-RM2-R:SAND-F-c@stmt ; W3-RM2-R:TL-F-c@stmt ; W3-RM2:NA-W@stmt ; W3-RM:E4@stmt ; SOP:TH09@hyp
-implies: W3-RM2:RM2-F (weaker hypotheses, conclusions contain; claim W3-RM2-R:Cont-plus)
-sharpness: A:V-flat = ARTEFACT (constant; order log n natural; evidence: lemmas/Q1_sandF_c.md Step 2(a)) ; A:BM-W-plus = ARTEFACT (constant; order d_n^2 + log n is what identity (4.1) needs; evidence: lemmas/Q2_TL_c.md §4) ; A:T1-F-flat = as SOP:TH09
-binding: A:BM-W-plus enters P:TL(Q) via identity (4.1) [artefact-threshold] ; A:V-flat enters P:SAND(Q) via truth inclusion [artefact-threshold]
-gates: correct:PENDING(reviews/BRIEF_LCA_sol.md) ; lit:PENDING(TARGET.md) ; necessity:PENDING(TARGET.md) ; better:PENDING(TARGET.md)
+implies: W3-RM2:RM2-F (weaker hypotheses, conclusions contain; proved in W3-RM2-R:Cont-plus)
+sharpness: A:RM2-V-FLAT = ARTEFACT (evidence: lemmas/Q1_sandF_c.md:128) ; A:RM2-BM-W-PLUS = ARTEFACT (evidence: lemmas/Q2_TL_c.md:103)
+gates: correct:PENDING(reviews/LCB_line_check_sol.md) ; lit:PENDING(TARGET.md) ; necessity:PENDING(TARGET.md) ; better:PENDING(TARGET.md)
 council: none yet
+```
 
+```
+REGISTRY
 claim: W3-RM2-R:RM2-R-plus | kind: theorem | statement: STATEMENT.md:177-182 | premises: STATEMENT.md:52-115
-status: PROVED (by this seat, unchecked); conditional on W2-APP:POST@1.0.1 | status_source: REPORT.md:29
-consumes: P:POST ; P:MODE ; P:SAND(Q) ; P:TL(Q) ; P:NA(Q) ; P:E4
-conclusion: reported-model+delivery: as RM2-F-plus under the joint law of (X, eps) | rate: none claimed | scope: Gaussian rows; s0 fixed; p <= n^A; |Q| <= n^b, |H_l| <= n^rho
+status: PROVED (by this seat, unchecked); conditional on W2-APP:POST@1.0.1; LC-B VERIFIED | status_source: REPORT.md:31
+assumptions: A:LSF ; A:IID-GAUSS-ROWS ; A:RM-FLR ; A:PTV ; A:RM2-LFEAS ; A:RM2-LGAIN-R ; A:RM2-LLOC-R ; A:RM2-LSIZE-B-R ; A:RM2-HSIZE-RHO ; A:RM2-W-R ; A:OP ; A:BLOCK-LE-16 ; A:DELIV-D
+conclusion: reported-model: as RM2-F-plus under the joint law of (X, eps)
+rate: none claimed
+scope: Gaussian rows; s0 fixed; p <= n^A; |Q| <= n^b, |H_l| <= n^rho
 depends_on: W3-RM2-R:RM0-plus@stmt ; W3-RM2-R:DLV-0@stmt ; W3-RM2:SAND-R-b@stmt ; W3-RM2:F-to-R@stmt ; W3-RM2:POST-R@stmt ; W3-RM:E4@stmt ; W2-APP:POST@hyp
-implies: W3-RM2:RM2-R (same hypotheses, conclusions contain; claim W3-RM2-R:Cont-plus)
-gates: correct:PENDING(reviews/BRIEF_LCB_sol.md) ; lit:PENDING(TARGET.md) ; necessity:PENDING(TARGET.md) ; better:PENDING(TARGET.md)
+implies: W3-RM2:RM2-R (same hypotheses, conclusions contain; proved in W3-RM2-R:Cont-plus)
+gates: correct:PENDING(reviews/LCB_line_check_sol.md) ; lit:PENDING(TARGET.md) ; necessity:PENDING(TARGET.md) ; better:PENDING(TARGET.md)
 council: none yet
+```
 
+```
+REGISTRY
 claim: W3-RM2-R:RM0-plus | kind: theorem | statement: STATEMENT.md:118-143 | premises: STATEMENT.md:52-93
-status: PROVED (by this seat, unchecked) | status_source: REPORT.md:26
+status: PROVED (by this seat, unchecked); LC-B VERIFIED | status_source: REPORT.md:28
 depends_on: W3-RM:RM-0@proof ; W3-RM:E4@stmt ; C-GROW:L1.1@proof ; C-GROW:L1.2@proof ; W3-RM2-R:DLV-0@stmt
-implies: W3-RM:RM-0 ({pi(S0) > 1/2} is contained in the mode event; (a) identical)
+implies: W3-RM:RM-0 (pi(S0) > 1/2 implies the mode event; part (a) identical)
 council: none yet
+```
 
+```
+REGISTRY
 claim: W3-RM2-R:DLV-0 | kind: lemma | statement: STATEMENT.md:144-163 | premises: STATEMENT.md:71-93
-status: PROVED (by this seat, unchecked), relative to the C-DLV P1/S.3 code-reading audits | status_source: REPORT.md:27
-depends_on: C-DLV:Thm-D@proof ; C-DLV:L2-S2@stmt ; C-DLV:L1-R@stmt ; C-DLV:Cor-R@stmt ; C-DLV:L3-3.3@stmt ; C-DLV:L3-3.4@stmt ; W2-UNI:F-UNI@proof:Step 2 ; W3-RM:E4@stmt
+status: PROVED (by this seat, unchecked), relative to the C-DLV P1/S.3 audits; LC-B VERIFIED-WITH-AMENDMENTS, applied; RC1 VERIFIED | status_source: REPORT.md:29
+depends_on: C-DLV:Thm-D@proof ; C-DLV:L2-S2@stmt ; C-DLV:L1-R@stmt ; C-DLV:Cor-R@stmt ; C-DLV:L3-3.3@stmt ; C-DLV:L3-3.4@stmt ; W2-UNI:F-UNI@proof ; W3-RM:E4@stmt
 council: none yet
+```
 
+```
+REGISTRY
 claim: W3-RM2-R:SAND-F-c | kind: lemma | statement: STATEMENT.md:183-194 | premises: STATEMENT.md:52-115
-status: PROVED (by this seat, unchecked) | status_source: REPORT.md:30
+status: PROVED (by this seat, unchecked); LC-A VERIFIED-WITH-AMENDMENTS (1 E → ERRATA E1) | status_source: REPORT.md:32
 depends_on: W3-RM2:SAND-F-b@proof ; W3-RM2:Toolkit-b@stmt
 implies: W3-RM2:SAND-F-b ((V_b) implies (V_b-flat))
 council: none yet
+```
 
+```
+REGISTRY
 claim: W3-RM2-R:TL-F-c | kind: lemma | statement: STATEMENT.md:183-194 | premises: STATEMENT.md:52-115
-status: PROVED (by this seat, unchecked); its §6 (POST/MODE-F) conditional on SOP:TH09@1.0.0 | status_source: REPORT.md:31
+status: PROVED (by this seat, unchecked); §6 conditional on SOP:TH09@1.0.0; LC-A VERIFIED | status_source: REPORT.md:33
 depends_on: W3-RM2:TL-F-b@proof ; W3-RM2:Toolkit-b@stmt ; W3-RM2:NA-W@stmt ; SOP:TH09@hyp
 implies: W3-RM2:TL-F-b ((BM-W) implies (BM-W-plus))
 council: none yet
+```
 
-claim: W3-RM2-R:Ex-Proxy-d | kind: example | statement: STATEMENT.md:197-205 | premises: STATEMENT.md:52-115
-status: PROVED (by this seat, unchecked); conclusions drawn through RM2-F / RM2-F-plus conditional on SOP:TH09@1.0.0 | status_source: REPORT.md:32
+```
+REGISTRY
+claim: W3-RM2-R:Ex-Proxy-d | kind: proposition | statement: STATEMENT.md:197-205 | premises: STATEMENT.md:52-115
+status: PROVED (by this seat, unchecked); LC-A VERIFIED | status_source: REPORT.md:34
 depends_on: W3-RM2:Ex-Proxy@proof
-implies: W3-RM2:Ex-Proxy (theta_n constant is a special case of (b))
+implies: W3-RM2:Ex-Proxy (constant theta is a special case of part (b))
 council: none yet
+```
 
+```
+REGISTRY
 claim: W3-RM2-R:Cont-plus | kind: lemma | statement: STATEMENT.md:206-213 | premises: STATEMENT.md:52-115
-status: PROVED (by this seat, unchecked) | status_source: REPORT.md:33
+status: PROVED (by this seat, unchecked); LC-B VERIFIED | status_source: REPORT.md:35
 depends_on: W3-RM2-R:RM2-F-plus@stmt ; W3-RM2-R:RM2-R-plus@stmt ; W3-RM2-R:RM0-plus@stmt ; W3-RM2-R:Ex-Proxy-d@stmt ; W3-RM2:Cont-F@stmt ; W3-RM2:Cont-R@stmt
-implies: W3-RM2:RM2-F ; W3-RM2:RM2-R ; W3-RM:RM-0 ; W3-RM:RM-F ; W3-RM:RM-R ; W3-RM2:Ex-Proxy  [targets of the implication lemma, recorded here and not in depends_on, per HQ ruling at CP1]
+implies: W3-RM2:RM2-F ; W3-RM2:RM2-R ; W3-RM:RM-0 ; W3-RM:RM-F ; W3-RM:RM-R ; W3-RM2:Ex-Proxy
 council: none yet
 ```
