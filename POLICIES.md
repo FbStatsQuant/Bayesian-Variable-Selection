@@ -302,5 +302,5 @@ level is recorded in `HQ_NOW.md`.
 
 **Unattended agents never wait on approvals (HQ, 2026-11-16; from Theory D62):**
 - A Codex or other unattended reviewer that triggers a sandbox approval request stalls forever, because no tool can answer it.
-- Briefs therefore never set TMPDIR or write outside the agent's own worktree or folder. Scratch goes in a git-ignored folder inside it (e.g. `.rc_tmp/`).
+- Briefs therefore never set TMPDIR or write outside the agent's own worktree or folder. Scratch goes in `<worktree>/.rc_tmp/` at the worktree root (git-ignored via the shared .git/info/exclude), never inside a ticket folder, because manifest.py walks ticket folders and stray files break freeze and bind. Never add a .gitignore inside a frozen folder.
 - Managers check pending requests when a review runs over 2 h.
