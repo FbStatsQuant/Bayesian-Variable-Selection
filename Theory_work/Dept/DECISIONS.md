@@ -367,3 +367,10 @@
   re-verified the current proof chain as valid (not a correctness issue; v3.3 snapshot missing). Proposed to HQ: honest
   record note (post-C1 WEAKER, proof re-verified by PC_SCR_sol.md); row 3.7 reader text states fixed-signal premises;
   SCR-R1 post-freeze restores n-dependent bounds. Awaiting HQ (H5 possible).
+
+## 2026-11-16 01:23 CT — H5 card 7 (row 3.7) verdict adopted
+- **D56.** A1 stays in the abstract (reader premise names κ and σ too; body carries SCR-A). A PC read is not enough:
+  **W3-SCR-R2** = second SCR council round on the current tree (manifest MANIFEST_R2; Opus seat confirming SUBSTANTIVE
+  hunks + per-claim table for all 21 rows; Sol re-issued walk as a verdict; bind) — child coordinator launched, target Thu
+  18:00 (review round, not a proof lead). Interim label for A1 and SCR-G recorded for real now (recorder). READER prepares
+  row 3.7 (a) plain / (b) labelled or body. Coordinator also answers whether SCR-R1 is a short corollary of SCR-A.
