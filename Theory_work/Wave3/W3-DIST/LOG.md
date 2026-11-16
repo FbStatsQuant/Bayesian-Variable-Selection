@@ -382,3 +382,8 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   chain in flight (sweep, repairs, R1 freeze, council), no new Fable, Sonnet/Haiku for routine helpers; Owls load spike
   03:40–04:00 (runaway process, killed). Nothing of mine ran in that window except a sleep timer; nothing failed.
   MANIFEST_SW1 verify: OK. Running: SW1 (Astra).
+- 04:19 — Manager's correctness check (HQ): W3-MISR Cor-H's "Kullback–Leibler reading" is false for a random intercept. Answer
+  sent: **none** in W3-DIST. The truth has a deterministic α* (STATEMENT:20-22, 174-175), no KL / projection /
+  omitted-column reading exists (grep over STATEMENT, TARGET and the proof files), the only MISR input is R′ (a), (a′)
+  in B0; the in-sample step conditions on the whole design (DIST12 D.4 Step 1) and the plug-in intercept is a parameter
+  of a posterior draw. (My note to the manager was headed 04:35; the clock read 04:19.) Running: SW1 (Astra).
