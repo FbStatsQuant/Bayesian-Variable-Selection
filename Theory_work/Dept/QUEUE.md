@@ -52,6 +52,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | SL0 PC check (RUNNING, pre-freeze per HQ) | C-PACK:SL0: diff check of the 5 files changed since the C1 snapshot → record SL0 → drop SL0 from 11 conditional statuses | D48 |
 | accept-identity follow-ups | NB-3 sunset of the legacy Windows fallback; NB-4 compute identity once | CR_accept_identity_opus.md |
 | Cont-R TH05.0 condition | Cont-R still lists SOP:TH05.0 (inherited via the removed RM-R edge); drop via a new full RM2 checkpoint | recorder note 11-16; HQ 11-16: conservative (extra condition only), post-freeze package together with TH05.0's own acceptance |
+| Post-freeze: C-DLV L2-S3 / P1-Inventory acceptance | do these code-reading audits have council-seat evidence for HQ-carrier acceptance under the CC rule? else stay honest conditions on rows 3.1/3.2 | HQ 11-16 |
 | Editorial batch: FINAL citecheck 6 TOKEN-MISS | s1:20 (v3_core 447→456), s1:35 (SoP 822→831), s3:16 ×2 (SoP 765/774-782), s7:78 (SoP 708→714), s8:6 (SoP 811→817): line drift, citation-only | 11-16 |
 | Editorial batch: FINAL s6:29 | corrected-form Prop F called 'the specified v3.1 method' although (a)/(b) come from shipped validators | TEX46 re-check 11-16 |
 | Post-freeze tool list: test_lifecycle fixtures | legacy scenarios use live registry rows (broke when S3 made them SUSPECT); give the suite its own fixture rows | recorder 11-16 |

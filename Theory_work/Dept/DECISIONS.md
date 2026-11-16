@@ -421,3 +421,4 @@
 - **D78.** (05:46) IDEAL-W⁺ correctness event: F-UNI + 17 delivery claims SUSPECT, then NARROWED before the freeze with registered assumption A:IDEAL-W⁺ (or (D)); C-DLV errata + FINAL s7:39 fix; no redefinition of IDEAL-W.
 - **D79.** (06:20) IDEAL-W⁺ batch scope: 19 registry claims + FINAL s6 erratum (Prop F corrected, F-GROW) + C-DLV errata + FINAL s7:39; 6 cascade dependents stay SUSPECT through the freeze, post-freeze package item 1 (first week).
 - **D80.** (07:46) Patch-application rule (HQ): repo root, --verbose, Skipped/0-hunk = failure, post-apply sha256 = expected; re-verification of today's applied patches (Cor-H S 213e2115, S2 4754e3e9, T re-anchors 6cd699dd, S4, READER swaps f12828fd/45a18748/30991734/ef7179da).
+- **D81.** (08:01) Legacy acceptance after NARROW (HQ, fail-closed): explicit Sol verdict line 'proved by own chain' + reviewed sha = current + unchanged council cell; NC Sol produces the lines for today's 15 narrowed rows.
