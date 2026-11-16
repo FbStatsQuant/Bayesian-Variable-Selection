@@ -645,3 +645,10 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - C-DLV errata (exit inventory + IDEAL-W amendment note) and the FINAL s7_impl:39 erratum.
   - No silent widening of IDEAL-W.
 - owls_guard: further BNP paths protected (bnp_quality, phaseB_inbox, ~/lean, ~/.elan).
+- 2026-11-16 ~08:00 CT. Engineering, WP3 architect design (day 1): late rounds ≈ 0.6× plan with the same bits (Owls 10⁶ round −40%, hash identical).
+  - **Budget risk R1:** early/bridge stages carry π₀-sized supports. At 10⁶ they cost ≈ 45× plan now and ≈ 10× with the prototype; at 10⁵ the bridge averages 3× the late rounds. The 1M block could be several times H-10.
+    - Engineering re-sizes per stage after WP2 gives the production π₀ size; > 30k comes back with ranked cuts (H-9).
+  - Measurement job (≈ 96–160 core-h): no objection.
+  - Builders 6–7 start Tue 11-17 ~08:00 CT on CT (owner pacing today).
+  - Endorsed: no FMA in class A; offer floor in V mode pending contract checks.
+- Theory: T2(i) lem:prior(e) and T2(ii) T02(ii♯) 5(a) both VERIFIED (Sol); 0 of 74 edges kept after T2. F-UNI NARROW: Sol DIFF PASS, every n under A:IDEAL-W⁺; batch now 19 claims; F-UNI clears at S4. Task W choices: R2r re-freeze, form carrier, CC accepted by HQ carrier only with council evidence. SL PDF check: card rows 1.4 and 1.1 corrected; full-card SL sweep before the freeze.
