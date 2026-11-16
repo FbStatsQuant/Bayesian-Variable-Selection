@@ -449,7 +449,7 @@ measured rounds \src{Docs/Methodology/METHODOLOGY_v3.md:271-272}.
 \end{itemize}
 \end{stmt}
 This \emph{swaps} v3's pooling, where the equal-weight mean was primary and the $\hat Z$-weighted one secondary
-\src{Docs/Methodology/METHODOLOGY_v3.md:272-275} (\rid{MD08}). Code (v2.2.1) also computes \emph{plain} PIPs: per island the
+\src{Docs/Methodology/METHODOLOGY_v3.md:272-275} (\rid{MD08}). As coded, the run keeps the equal-weight mean as primary and computes no $\hat Z$-weighted PIP, no $\mathrm{MPM}_{\hat Z}$ and no $R_{\mathrm{eff}}$: \texttt{pip\_primary} is the equal-weight mean of the island PIPs (\texttt{mpm} thresholds it at $\tfrac12$) and $\hat Z$ is the plain mean $R'^{-1}\sum_r\hat Z_r$, formed by log-sum-exp \src{Scripts/SMC_BVS/core/v3_run.R:154,162}; v2.2.1 is the same \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:121,129} (OD-4, 2026-11-15: equal-weight primary). Code (v2.2.1) also computes \emph{plain} PIPs: per island the
 fraction of particles containing $j$ at the end of each of the 4 measured rounds
 \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_engine.h:350-371}, pooled with equal weights as
 \texttt{pip\_plain}, \texttt{mpm\_plain} \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:167-169}.

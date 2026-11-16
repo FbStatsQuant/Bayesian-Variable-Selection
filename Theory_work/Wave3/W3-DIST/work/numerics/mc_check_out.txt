@@ -1,0 +1,2 @@
+n=100: MC d2 median 1.706e-02, closed-form median 1.714e-02; max |MC-exact| 4.81e-04; max relative err (d2>1e-4) 0.022; mean n*d2 MC 1.7957 exact 1.8049
+n=800: MC d2 median 2.205e-03, closed-form median 2.221e-03; max |MC-exact| 9.15e-05; max relative err (d2>1e-4) 0.019; mean n*d2 MC 1.8859 exact 1.8984

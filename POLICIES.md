@@ -60,10 +60,15 @@ PROGRAM Readability, with a fidelity check of every number.
 - **Models and escalation (owner, 2026-11-15, final).**
   - Departments are independent in using **Opus 5.5, Sonnet 5.5 and Haiku 5.5** (Claude Third unless their charter
     says otherwise; effort high max).
-  - **A new Fable 5.2 needs the owner's green light.** If a problem is big enough to need it, the manager reports to HQ:
-    the problem, why Opus is not enough, **how many Fables**, the expected size or duration, and the account. HQ passes
-    it to the owner, and the owner gives the green light. Fables already approved continue (the W3-DIST lead;
-    Engineering's feasibility expert).
+  - **A new Fable 5.2 needs HQ's approval** (owner delegated Fable allocation to HQ, 2026-11-16: "be efficient, we
+    need to save tokens for future tasks"). If a problem is big enough to need it, the manager reports to HQ: the
+    problem, why Opus is not enough, how many Fables, the expected size or duration, and the account. HQ decides,
+    with the consultant when it is significant.
+    - Fables are **precision tools, not volume tools** (owner, 11-16). They go only to hard key proofs, finding
+      improvement opportunities in core results, creative or architect reviews, writing advice, and headline cards. They are
+      scoped with a kill budget and reused (the same thread across rounds) rather than re-spawned.
+    - Opus is the default everywhere else.
+    - HQ reports Fable use to the owner in the daily brief.
   - Big problems are reported to HQ at once.
   - Otherwise every department works on its own: the same repo, the same information, clear goals and resources (charters
     in §8). Technical decisions are the department's, confirmed by HQ.
@@ -77,12 +82,16 @@ PROGRAM Readability, with a fidelity check of every number.
   - commit secrets, API keys, the owner's email in new files, or unpublished papers (`Papers/Own_work/` is
     gitignored, and so are copyrighted PDFs);
   - touch another department's folder or branch without HQ;
-  - touch `/home/fb31/projects/BVS/SMC_BVS_v3/deploy/` or `/projects/ml75` on NOTS.
+  - touch the SMC_BVS_v3 deploy folder (`/home/fb31/projects/BVS/Others/SMC_BVS_v3_history_Oct2026/deploy/`) or `/projects/ml75` on NOTS.
 - **Restore points:** HQ's snapshot cron commits each department or ticket folder every 15 min
   (`~/.config/bvs-hq/snap/`). Commit your own meaningful states too.
 - **Holds:** read `Theory_work/Wave3/HOLDS.md` before each checkpoint, launch or freeze.
 
 ## 5. Resources
+**Account allocation is set by the owner** (2026-11-15). Depending on which Claude account is running dry, he tells HQ
+which account (Claude Third, Claude Personal, Claude Work) or which proportions to use for new agents, and HQ relays it
+to every manager. Managers apply the current allocation, recorded in `HQ_NOW.md` "ACCOUNT ALLOCATION", to every new
+agent they start.
 - **Claude Third:** ample; the default for Owls departments; Opus default, Fable for hard proofs or creative reviews.
 - **Claude Personal:** HQ and the Writing Department; budget resets Monday 16:00 CT.
 - **Claude Work:** as HQ says.
@@ -106,7 +115,7 @@ a hold on a consumed claim, a budget overrun, or anything touching a headline cl
 
 | who | decides |
 |---|---|
-| Owner (Felipe) | direction, budget tiers, account and budget for every Fable, paper claims, framing and competitors, org changes |
+| Owner (Felipe) | direction, budget tiers, account allocation (Fable allocation delegated to HQ 11-16), paper claims, framing and competitors, org changes |
 | CEO (HQ) | priorities across departments, resource allocation inside the owner's budget, gates (CP3 acceptance, headline cards with the consultant), merges to main, API submission, launching and closing departments and tickets |
 | Department manager | technical decisions (HQ confirms), staffing with Opus/Sonnet inside the allowance, ticket planning and schedule, reviews per PROTOCOL_v4 |
 
@@ -190,3 +199,113 @@ HQ adds its recommendation and forwards it to the owner the same day. Nothing ex
   **non-department thread** (ticket lead, helper, reviewer, recorder task, expert) has **finished**, its manager
   **settles** it (`t3_thread_organize` action `settle`), so the sidebar shows only HQ, the departments and work in
   progress. Department threads and HQ are never settled. Nothing is archived or deleted unless the owner asks.
+
+- **Where threads and agents run (owner, 2026-11-15):** only on **Owls** or the **desktop (DESKTOP-955G53S)**, which are
+  always on, so work continues 24/7. Never on the laptop (Felipe_Bedoya): it goes on and off. The laptop is only a data
+  mirror, reached by its own scheduled pull or by a short, explicitly approved one-off.
+
+## 11. Overnight mode (owner, 2026-11-15; times in US Central)
+When the owner says he is going to bed or leaving HQ working overnight, **HQ is in charge of all decisions** until he
+says he is back. That includes the owner-reserved items (Fable requests, extra resources, account allocation), which HQ
+decides with its Fable consultant for anything important. Limits:
+- stay within the budget envelopes and accounts already in use;
+- nothing irreversible or outward-facing: no repo visibility change, no deletion, no external publication;
+- every decision is logged in `HQ_DECISIONS.md` with a "(overnight)" tag.
+
+When the owner is back, HQ gives a short morning brief: what was decided, what moved, and what needs him.
+
+## 12. Compute discipline on NOTS and Owls (owner, 2026-11-15): "military order and discipline"
+1. **Use NOTS as much as needed, 24/7**, professionally: every job batch is sized, logged (ids, actual core-h) and inside an
+   approved budget. Never touch the SMC_BVS_v3 deploy folder (now `/home/fb31/projects/BVS/Others/SMC_BVS_v3_history_Oct2026/deploy/`, moved 11-04; formerly `projects/BVS/SMC_BVS_v3/deploy/`) or `/projects/ml75`.
+2. **The home folder never clogs** (10 GB quota). Heavy data is never written to home; it goes to `/scratch/fb31/`. A cleaning
+   crew checks home every day (guard threshold 8 GB, target below 7 GB) and cleans caches, logs and temp files.
+3. **Heavy experiment data, when an experiment is done**, is downloaded to the owner's laptop (Felipe_Bedoya) at
+   `C:\Users\felip\Documents\<folder named by Engineering>`, then removed from NOTS scratch once the copy is verified
+   (checksums). HQ sets up the transfer route with the owner before the first heavy dataset. Until then, data stays in scratch.
+4. **One unified, indexed SMC-BVS tree on NOTS**, kept organized continuously. No stray or "flying" folders.
+   - The tree is in scratch, with home kept minimal. An `INDEX.md` at its root records what lives where and its provenance.
+   - Only idle data moves: nothing used by queued or running jobs. Old paths get a symlink or an index entry.
+   - The exclusions in rule 1 stay untouched.
+5. **Owls is fair game for small-scale computation.** It is a shared server: use `nice`, cap concurrent cores (≤ 16 unless
+   HQ approves more), and run nothing large or multi-day. Outputs live in the owning worktree or folder; no clutter in
+   `/home/fb31`.
+6. **NOTS and Owls must look squeaky clean 24/7.** Every file has an owner and a place, temp files are removed when a job
+   ends, and stray files are a defect reported in the daily report.
+
+Owner: the SMC - Engineering Department runs the crews (cleaning, transfer, organization). The Theory Department follows the
+same rules for anything it runs.
+7. **Be calm on the machines: no swarming** (owner, 2026-11-15; two weeks ago his NOTS account was flagged as possibly
+   hacked).
+   - SSH: one multiplexed connection per agent session (`ControlMaster auto`, `ControlPersist`), never bursts of
+     parallel logins. Polling every 5 minutes at most; prefer one `squeue`/`sacct` call that covers many jobs.
+   - Job submission: in planned batches (job arrays, not hundreds of separate `sbatch` calls in a burst), within the
+     150-task cap.
+   - No port scans, no unusual tools, no scripted login loops, no logins from unfamiliar hosts beyond Owls and HQ's desktop.
+   - Owls: no sudden spikes. Ramp up gradually and keep within the core cap.
+   - If anything looks like it could trigger a security alert, ask HQ first.
+8. **The Engineering Department works only inside its folders** (owner, 2026-11-15):
+   - **Owls:** `/home/fb31/SMC_Engineering_Department/`.
+   - **NOTS:** `/home/fb31/SMC_Engineering_Department/`, created by the owner, with heavy data under
+     `/home/fb31/SMC_Engineering_Department/scratch`, a symlink to `/scratch/fb31/SMC_Engineering_Department/`.
+
+   No Engineering file anywhere else: temp files, logs, job scripts, outputs and crews all live inside. The exceptions are
+   its git worktree on Owls (repo code only) and Slurm's own spool. Existing SMC-BVS material is moved in by the
+   reorganization plan (idle data only).
+9. **Every department gets its own folder on each machine** (owner, 2026-11-15), named `SMC_<Name>_Department` under
+   `/home/fb31/` (e.g. `SMC_Lean_Department` at its launch), with a `scratch` link on NOTS when it needs heavy data. Each
+   department works only inside its own folders.
+10. **Engineering uses NOTS heavily** (owner, 2026-11-15: "they are an engineering department, not theoreticians"). It
+    measures rather than estimates. It holds a standing authorization for exploratory batches up to ~200 core-h each inside
+    the approved budget, each logged and reported. Bigger batches and the gated stages go to HQ.
+11. **Owner preemption of NOTS** (owner to Engineering, 2026-11-15). The fb31 per-user cap (1,536 CPUs, 2,304 GB) is shared
+    with the owner's other projects. On his word, departments **clear the way**:
+    - no new submissions; pending tasks held;
+    - report the running jobs (ids, CPUs, expected end, checkpointed or not);
+    - if he needs the capacity now, cancel the blocking jobs (his explicit request);
+    - log it as "owner preemption", not a failure;
+    - resume when he says the way is clear.
+
+    Design consequence: jobs stay ≤ ~6 h and checkpoint at stage boundaries.
+12. **NOTS scratch is not storage** (CRC KB 147975): files untouched for **14 days** are purged (by access time; `mv` keeps
+    the old access time; staff may purge earlier; no backup). Nothing of record stays idle in scratch for more than 7 days.
+    Records of record are copied (rsync with checksums) to the department's Owls folder (NFS), and later to the owner's
+    laptop. `$WORK` `/storage/hpc/work/ml75` is the advisor's group space: never touch it.
+13. **Continuous offload** (owner, 2026-11-15): the desktop (always on; path from the owner) and the laptop each have
+    about 1 TB. Results of record are pumped off NOTS continuously, after each run or batch: checksummed to the desktop
+    (primary), mirrored to the laptop when it is online, then NOTS scratch is freed. Each PC stays under ~70% for our
+    data.
+
+## 13. Department protocols: tailored, but in order (owner, 2026-11-15)
+Each department may tailor the review, process and rollback protocols to its needs. Order is kept this way:
+- **One company baseline:** `Theory_work/Wave3/PROTOCOL_v4.md` and `Theory_work/INFRA/LIFECYCLE.md`. Anything a
+  department does not override follows the baseline.
+- **One written variant per department,** in its folder: `<dept folder>/PROTOCOL.md` (e.g.
+  `Docs/Experiments/P1M/PROTOCOL.md`, `Theory_work/Dept/PROTOCOL.md`). It lists each deviation from the baseline and
+  why. A variant that only exists in chat does not count.
+- **Company minimums that no variant may remove:**
+  - independent review before anything is called checked, validated or done;
+  - restore points and a rollback path for every deliverable;
+  - a decision log;
+  - honest status labels;
+  - the escalation rules (§4, §9);
+  - the compute discipline (§12).
+- **HQ approves each variant and each change to it**, with the consultant when the change is significant, and logs it
+  in `HQ_DECISIONS.md`. Until a variant is approved, the baseline applies.
+
+## 14. Codex pacing levels (owner, 2026-11-15)
+The owner says "pace to level N"; HQ relays it to every manager the same day. **A pacing level is not a reasoning effort:** Codex reviewers always run at effort high, at every level. Reviews already in flight finish as
+started.
+
+| level | Codex (Sol / Astra) used for | moves to Claude (Opus / Fable) |
+|---|---|---|
+| **0, normal** (default) | all independent reviews | none |
+| **1, light pacing** | statement locks, key-lemma line checks, council OpenAI seats, break reviews | line checks off the key path, re-checks of repairs, fidelity reads |
+| **2, efficient** (PROTOCOL_v4 §2A) | only locks, key lemmas, council seats; reviewer sessions reused where blind first reads don't matter | everything else |
+
+**No level drops a Codex check on what we call checked:** statement locks, key lemmas and the council OpenAI seat. The current
+level is recorded in `HQ_NOW.md`.
+
+**Unattended agents never wait on approvals (HQ, 2026-11-16; from Theory D62):**
+- A Codex or other unattended reviewer that triggers a sandbox approval request stalls forever, because no tool can answer it.
+- Briefs therefore never set TMPDIR or write outside the agent's own worktree or folder. Scratch goes in `<worktree>/.rc_tmp/` at the worktree root (git-ignored via the shared .git/info/exclude), never inside a ticket folder, because manifest.py walks ticket folders and stray files break freeze and bind. Never add a .gitignore inside a frozen folder.
+- Managers check pending requests when a review runs over 2 h.

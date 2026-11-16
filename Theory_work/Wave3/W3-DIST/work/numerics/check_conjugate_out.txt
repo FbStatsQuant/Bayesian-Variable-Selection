@@ -1,0 +1,10 @@
+n, kept p, K: 8 3 3 | ||x_j||^2 = [7. 7. 7.] | y'y = 7.0
+S=(): log m(S) formula -15.22773 brute -15.22773 | E[s2|S] formula 1.16611 brute 1.16610
+S=(0,): log m(S) formula -16.02988 brute -16.02988 | E[s2|S] formula 1.09904 brute 1.09903 | E[beta_1|S] formula 0.22467 brute 0.22467
+S=(1,): log m(S) formula -12.10404 brute -12.10404 | E[s2|S] formula 0.41289 brute 0.41289 | E[beta_1|S] formula -0.75286 brute -0.75286
+S=(0, 1): log m(S) formula -12.80462 brute -12.80462 | E[s2|S] formula 0.37948 brute 0.37948 | E[beta_1|S] formula 0.15918 brute 0.15918
+S=(0, 2): log m(S) formula -15.86723 brute -15.86723 | E[s2|S] formula 0.81432 brute 0.81431 | E[beta_1|S] formula 0.21873 brute 0.21873
+S=(1, 2): log m(S) formula -12.62072 brute -12.62072 | E[s2|S] formula 0.37428 brute 0.37428 | E[beta_1|S] formula -0.95503 brute -0.95503
+sampler (S=(0,1)): mean beta [ 0.1586 -0.7392]  formula [ 0.1592 -0.7388]
+sampler: E s2 0.3794 formula 0.3795
+sampler: Var(beta) (marginal over s2) row0 [0.0478 0.0041]  formula  n E[s2] H^-1 + Var(mean) = n E[s2] H^-1 row0: [0.0478 0.0042]

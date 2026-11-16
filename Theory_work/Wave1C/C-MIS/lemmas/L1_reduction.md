@@ -7,13 +7,13 @@ Notation of STATEMENT.md §§1–2.
 
 ## L1.0 What T03♯ assumes (read from its sources)
 
-T03♯ (TH09; SoP `04_theory.tex:776-782`; proof T03R §6, `PROOF.md:160-207`) is a statement about the exact posterior π
+T03♯ (TH09; SoP `04_theory.tex:782-788`; proof T03R §6, `PROOF.md:160-207`) is a statement about the exact posterior π
 of the shipped target computed from raw data (X^r, y^r) with p columns, under:
 * **G** (`Docs/Theory/theorems/00_COMMON.md:35`): fixed design; ε ~ N_n(0, σ*²I), σ*² > 0 fixed; intercept removed by
   contrasts. The statistical model is y^r = α*1 + X^rβ* + ε, μ = CX^rβ* = Xθ*, θ* = D_xβ*, S₀ = supp β*
   (`00_COMMON.md:14`).
 * R1, R, SE_λ(j₀), SE_w(m♯_n; g₀), BM-∞ or BM(c > c₀): conditions on (X, θ*, σ*², s₀, p) only
-  (SoP `04_theory.tex:776-779`; T03R `PROOF.md:129-134,162-164`).
+  (SoP `04_theory.tex:782-785`; T03R `PROOF.md:129-134,162-164`).
 * Its conclusions (T03R `PROOF.md:168`) are statements about the law of y ↦ π(· | X, y) (and functions of it: PIP, MPM,
   S†) under that model.
 
@@ -42,7 +42,7 @@ are independent of (ε, ξ). ∎
 
 Assume GR with fixed X^r_𝒞 and (H-MIS): the T03♯ hypotheses with (p, S₀, s₀, θ*, μ, σ*²) := (p_𝒞, S₀^𝒞, s₀^𝒞,
 θ^𝒞, μ^𝒞, σ_𝒞²), where S₀^𝒞 = supp β^𝒞 = supp θ^𝒞 (D_x is diagonal with positive entries) and s₀^𝒞 ≥ 1 fixed
-(TH09's R1 requires s₀ ≥ 1, SoP `04_theory.tex:775`).
+(TH09's R1 requires s₀ ≥ 1, SoP `04_theory.tex:781`).
 
 *Proof.* By Lemma R the posterior π_𝒞(· | y) has the law it has under the G-model (X^r_𝒞, β^𝒞, σ_𝒞²); in that model
 the truth is S₀^𝒞 and the T03♯ hypotheses hold by assumption. Each conclusion of T03♯ (T03R `PROOF.md:168`, (i)–(iv)) is
@@ -59,7 +59,7 @@ j ∈ (S₀ ∩ 𝒞) ∖ S₀^𝒞 then PIP_j ≤ 1 − π_𝒞(S₀^𝒞 | y) 
 **Remarks.** (a) The beta-min threshold is on the *projected* coefficients and scales with σ_𝒞² = σ² + τ²: omitted
 signal raises the detection threshold (dilution). Since σ_𝒞² is a fixed constant, BM-∞ for σ_𝒞² is equivalent to BM-∞
 for σ²; the difference matters for BM(c) and for J_n^𝒞(c). (b) All convergence claims are asymptotic, with thresholds depending on the stated constants and envelope/onset
-sequences; TH09's ≈ 2·10⁶ illustration (SoP `04_theory.tex:811`) is not a universal threshold and is not transferred. (c) If s₀^𝒞 = 0 (β^𝒞 = 0) the target is the empty model; TH09 as carded
+sequences; TH09's ≈ 2·10⁶ illustration (SoP `04_theory.tex:817`) is not a universal threshold and is not transferred. (c) If s₀^𝒞 = 0 (β^𝒞 = 0) the target is the empty model; TH09 as carded
 requires s₀ ≥ 1, so this case is not claimed here.
 
 **Corollary N (the naive targets are wrong whenever a proxy or a cancellation exists).** Under the hypotheses of (i):

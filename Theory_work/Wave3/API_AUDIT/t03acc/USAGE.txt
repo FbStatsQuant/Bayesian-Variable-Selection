@@ -1,0 +1,2 @@
+{'in': 502, 'out': 52005, 'cache_read': 99508}
+approx cost $1.04 (batch rates, cache reads billed lower)

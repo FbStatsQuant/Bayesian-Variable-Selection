@@ -1,0 +1,170 @@
+W3-T03ACC CITECHECK: 69 citations (50 with line ranges, 19 path-only); MISSING/OUT-OF-RANGE: 0
+OK 7dd4e18b392d [STATEMENT.md] BRIEF.md:12-21 -> Theory_work/Wave3/W3-T03ACC/BRIEF.md
+      first: but **no council record**, so every consumer is recorded "conditional on SOP:TH09". Card c
+      last:  **[P3]** `Docs/Theory/proofs/T03_A2_selection_consistency/PROOF_v2.tex` (with STATEMENT.md
+OK ad9075b0b14d [STATEMENT.md] BRIEF.md:6-7 -> Theory_work/Wave3/W3-T03ACC/BRIEF.md
+      first: here the statement is T03♯ as recorded, restated verbatim with sources), `POLICIES.md`, `P
+      last:  
+EXISTS           [STATEMENT.md] sources/PINS.md -> Theory_work/Wave3/W3-T03ACC/sources/PINS.md
+OK aa2a99ec81f6 [STATEMENT.md] sources/statement/W6-FIXREV2_STATEMENTS.md:15-61 -> Theory_work/Wave3/W3-T03ACC/sources/statement/W6-FIXREV2_STATEMENTS.md
+      first: ## 1. T03♯ — posterior selection consistency under anchored, size-restricted eigenvalue co
+      last:  5. Scale invariance as in the locked T03.
+OK 7e2207c11e18 [STATEMENT.md] sources/statement/SoP_04_theory_767-812.tex:14-23 -> Theory_work/Wave3/W3-T03ACC/sources/statement/SoP_04_theory_767-812.tex
+      first: \begin{stmt}{NBH/branch_snapshots/MEET-THM/THEOREM_LIST_FINAL.md:448-451}
+      last:  \end{stmt}
+EXISTS           [STATEMENT.md] sources/statement/registry_theory_main_L68.tsv -> Theory_work/Wave3/W3-T03ACC/sources/statement/registry_theory_main_L68.tsv
+OK cba07aea58f7 [STATEMENT.md] sources/W1-T03R/PROOF.md:160-168 -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+      first: ## 6. Theorem T03♯ (restated selection consistency; PROVED as a candidate: changed steps w
+      last:  **Conclusions.** (i) $1-\pi(S_0)=O_{P_0}(r_n)$. (ii) $\max_j|\mathrm{PIP}_j-\mathbf 1\{j\i
+OK ba356bbb141d [STATEMENT.md] sources/W1-T03R/PROOF.md:44-47 -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+      first: ### Definition (new size cutoff)
+      last:  The minimum exists and $m^\sharp_n(\omega)\le K$, because $R_K=0$. It is computable exactl
+OK 494161d52745 [STATEMENT.md] sources/W1-T03R/PROOF.md:127-132 -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+      first: ## 4. Restricted eigenvalue hypotheses and bookkeeping
+      last:  - **SE$_w(m;g_0)$** [anchored, unnormalised]: $\lambda_{\min}(G_{S_0\cup J})\ge g_0$ (equi
+OK 46d9a3c9ee30 [STATEMENT.md] sources/P3/STATEMENT.md:5-27 -> Theory_work/Wave3/W3-T03ACC/sources/P3/STATEMENT.md
+      first: ## 1. Data and target (00_COMMON §1; METHODOLOGY_v3 §5)
+      last:  Convention: a minimum over the empty set is $+\infty$ (so BM-C and BM-∞ hold when $s_0=0$)
+OK 1b54c46e8910 [STATEMENT.md] sources/common/00_COMMON.md:9-14 -> Theory_work/Wave3/W3-T03ACC/sources/common/00_COMMON.md
+      first: - Raw data (X^r, y^r), n ≥ 3, no constant column, non-constant y^r. C = I − 11ᵀ/n; D_x = d
+      last:  - Statistical model: y^r = α*1 + X^rβ* + ε; μ = CX^rβ* = Xθ*, θ* = D_xβ*; S₀ = supp β*, s₀
+OK 5d4c31e8e06c [STATEMENT.md] sources/P3/STATEMENT.md:7-14 -> Theory_work/Wave3/W3-T03ACC/sources/P3/STATEMENT.md
+      first: - Raw data $(X^r,y^r)$, $X^r\in\mathbb R^{n\times p}$, $n\ge3$, $p\ge1$, no constant colum
+      last:  - Regime R1: $n\to\infty$, $s_0$ fixed, $p=p_n\le n^A$; design, $\beta^\star$, $S_0$ may v
+OK bb93af312aea [STATEMENT.md] sources/P3/STATEMENT.md:51 -> Theory_work/Wave3/W3-T03ACC/sources/P3/STATEMENT.md
+      first: 1. $O_{P_0}(a_n)$ means $X_n/a_n$ is tight under $P_0$; "$\to$" for random quantities mean
+      last:  1. $O_{P_0}(a_n)$ means $X_n/a_n$ is tight under $P_0$; "$\to$" for random quantities mean
+OK 4460b3bebc42 [STATEMENT.md] sources/common/00_COMMON.md:38 -> Theory_work/Wave3/W3-T03ACC/sources/common/00_COMMON.md
+      first: | BM-C | min_{j∈S₀} θ*_j² ≥ M_*σ*² log n/(nφ₀²), M_* = 2L_*+1, L_* = max{4C_*, 32[s₀(A+1)+
+      last:  | BM-C | min_{j∈S₀} θ*_j² ≥ M_*σ*² log n/(nφ₀²), M_* = 2L_*+1, L_* = max{4C_*, 32[s₀(A+1)+
+OK 845bede68e0a [STATEMENT.md] sources/P3/STATEMENT.md:21 -> Theory_work/Wave3/W3-T03ACC/sources/P3/STATEMENT.md
+      first: - **Constants.** $j_*=\lceil(2A+1)s_0\rceil+1$; $C_*=2s_0+3[Aj_*+s_0+\log(j_*+1)+1]$; $L_*
+      last:  - **Constants.** $j_*=\lceil(2A+1)s_0\rceil+1$; $C_*=2s_0+3[Aj_*+s_0+\log(j_*+1)+1]$; $L_*
+OK 2e53ec8d17d7 [STATEMENT.md] sources/statement/W6-FIXREV2_STATEMENTS.md:19-35 -> Theory_work/Wave3/W3-T03ACC/sources/statement/W6-FIXREV2_STATEMENTS.md
+      first: - **R1.** Triangular array, n → ∞; X = X_n fixed (non-random); s₀ ≥ 1 fixed; p = p_n ≤ n^A
+      last:  fixed c > c₀(s₀, A) := L_* = max{4C_*, 32[s₀(A+1)+2]} (C_* of the locked T03 proof; a proo
+OK fcd3fcaf9549 [STATEMENT.md] sources/statement/W6-FIXREV2_STATEMENTS.md:51-61 -> Theory_work/Wave3/W3-T03ACC/sources/statement/W6-FIXREV2_STATEMENTS.md
+      first: **Theorem T03♯.** Status: PROVED (S03 §6; changed steps C1–C10 written in full there); V03
+      last:  5. Scale invariance as in the locked T03.
+OK 7a3309909c7a [STATEMENT.md] sources/W1-T03R/PROOF.md:168 -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+      first: **Conclusions.** (i) $1-\pi(S_0)=O_{P_0}(r_n)$. (ii) $\max_j|\mathrm{PIP}_j-\mathbf 1\{j\i
+      last:  **Conclusions.** (i) $1-\pi(S_0)=O_{P_0}(r_n)$. (ii) $\max_j|\mathrm{PIP}_j-\mathbf 1\{j\i
+OK a87176971590 [STATEMENT.md] sources/P3/STATEMENT.md:43 -> Theory_work/Wave3/W3-T03ACC/sources/P3/STATEMENT.md
+      first: - **(v)** If $s_0=0$, BM-C and BM-∞ hold vacuously. For every $c>0$, replacing $(\theta^\s
+      last:  - **(v)** If $s_0=0$, BM-C and BM-∞ hold vacuously. For every $c>0$, replacing $(\theta^\s
+OK 27e32570ee7c [STATEMENT.md] sources/P3/PROOF_v2.tex:380 -> Theory_work/Wave3/W3-T03ACC/sources/P3/PROOF_v2.tex
+      first: \paragraph{(v).} If $s_0=0$, the minimum in BM-C and BM-$\infty$ is over the empty set, he
+      last:  \paragraph{(v).} If $s_0=0$, the minimum in BM-C and BM-$\infty$ is over the empty set, he
+OK 5b1f13fd9d0b [STATEMENT.md] sources/statement/TLF_434-499.md:29 -> Theory_work/Wave3/W3-T03ACC/sources/statement/TLF_434-499.md
+      first: | Final statement | Under R1, G, R, SE\(_\lambda(j_0)\), SE\(_w(m_n^\sharp;g_0)\), and BM-
+      last:  | Final statement | Under R1, G, R, SE\(_\lambda(j_0)\), SE\(_w(m_n^\sharp;g_0)\), and BM-
+OK 4bc1eb547642 [STATEMENT.md] sources/statement/W6-FIXREV2_STATEMENTS.md:63-81 -> Theory_work/Wave3/W3-T03ACC/sources/statement/W6-FIXREV2_STATEMENTS.md
+      first: **Scope (must accompany the theorem).**
+      last:  to the integer.)
+OK 58ef28c4d95d [STATEMENT.md] sources/statement/TLF_434-499.md:30 -> Theory_work/Wave3/W3-T03ACC/sources/statement/TLF_434-499.md
+      first: | Repairs | PC1/PC2 statistical clauses: no expectation rate inferred from \(O_P\), no uni
+      last:  | Repairs | PC1/PC2 statistical clauses: no expectation rate inferred from \(O_P\), no uni
+OK 3813deb04b58 [STATEMENT.md] sources/W1-T03R/PROOF.md:162 -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+      first: **Hypotheses.** Regime R1 (triangular array, $n\to\infty$, $s_0$ fixed, $p=p_n\le n^A$); *
+      last:  **Hypotheses.** Regime R1 (triangular array, $n\to\infty$, $s_0$ fixed, $p=p_n\le n^A$); *
+OK 33ffdaa0ec47 [STATEMENT.md] PROOF.md:131-132 -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+      first: - **SE$_\lambda(j_0)$** [anchored, normalised, bounded size]: $\lambda_{\min}(R_{S_0\cup J
+      last:  - **SE$_w(m;g_0)$** [anchored, unnormalised]: $\lambda_{\min}(G_{S_0\cup J})\ge g_0$ (equi
+OK c027cd680907 [STATEMENT.md] sources/statement/W6-FIXREV2_STATEMENTS.md:19 -> Theory_work/Wave3/W3-T03ACC/sources/statement/W6-FIXREV2_STATEMENTS.md
+      first: - **R1.** Triangular array, n → ∞; X = X_n fixed (non-random); s₀ ≥ 1 fixed; p = p_n ≤ n^A
+      last:  - **R1.** Triangular array, n → ∞; X = X_n fixed (non-random); s₀ ≥ 1 fixed; p = p_n ≤ n^A
+OK c2724253b7be [STATEMENT.md] sources/statement/TLF_434-499.md:15 -> Theory_work/Wave3/W3-T03ACC/sources/statement/TLF_434-499.md
+      first: | R1, R | Fixed-design triangular array, fixed \(s_0\ge1\), \(p\le n^A\) for fixed \(A\), 
+      last:  | R1, R | Fixed-design triangular array, fixed \(s_0\ge1\), \(p\le n^A\) for fixed \(A\), 
+OK adf8cfe77c0d [STATEMENT.md] sources/common/00_COMMON.md:36 -> Theory_work/Wave3/W3-T03ACC/sources/common/00_COMMON.md
+      first: | R | s₀ fixed; p ≤ n^A, A ≥ 1; ‖μ‖²/n ≤ M; λ_min(R_{S₀}) ≥ φ₀² > 0; eventually s₀ ≤ K. | 
+      last:  | R | s₀ fixed; p ≤ n^A, A ≥ 1; ‖μ‖²/n ≤ M; λ_min(R_{S₀}) ≥ φ₀² > 0; eventually s₀ ≤ K. | 
+OK 617a202bf197 [STATEMENT.md] sources/P3/STATEMENT.md:19 -> Theory_work/Wave3/W3-T03ACC/sources/P3/STATEMENT.md
+      first: - **R.** $s_0$ fixed; $p\le n^A$ with fixed $A\ge1$; $\|\mu\|^2/n\le M$ (fixed $M$); $\lam
+      last:  - **R.** $s_0$ fixed; $p\le n^A$ with fixed $A\ge1$; $\|\mu\|^2/n\le M$ (fixed $M$); $\lam
+OK 1528faa75fe1 [STATEMENT.md] sources/W1-T03R/PROOF.md:9 -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+      first: Throughout: $N=n-1$, $K=\min(p,\lfloor n/2\rfloor)$, $w(k)=\tfrac12/\binom{2p-1}{k}$, $\va
+      last:  Throughout: $N=n-1$, $K=\min(p,\lfloor n/2\rfloor)$, $w(k)=\tfrac12/\binom{2p-1}{k}$, $\va
+OK 4460b3bebc42 [STATEMENT.md] 00_COMMON.md:38 -> Theory_work/Wave3/W3-T03ACC/sources/common/00_COMMON.md
+      first: | BM-C | min_{j∈S₀} θ*_j² ≥ M_*σ*² log n/(nφ₀²), M_* = 2L_*+1, L_* = max{4C_*, 32[s₀(A+1)+
+      last:  | BM-C | min_{j∈S₀} θ*_j² ≥ M_*σ*² log n/(nφ₀²), M_* = 2L_*+1, L_* = max{4C_*, 32[s₀(A+1)+
+OK 4c454dce2166 [STATEMENT.md] sources/W1-T03R/PROOF.md:170 -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+      first: **Proof.** We go through [P3] with $m_n:=m^\sharp_n$. The thresholds $n_0$ now depend on $
+      last:  **Proof.** We go through [P3] with $m_n:=m^\sharp_n$. The thresholds $n_0$ now depend on $
+OK e80e8ab9f5c3 [STATEMENT.md] sources/P3/STATEMENT.md:52 -> Theory_work/Wave3/W3-T03ACC/sources/P3/STATEMENT.md
+      first: 2. In (i)–(iii), $\pi(S_0)$ is defined once $s_0\le K$ (eventually, by R); before that, $\
+      last:  2. In (i)–(iii), $\pi(S_0)$ is defined once $s_0\le K$ (eventually, by R); before that, $\
+EXISTS           [STATEMENT.md] sources/W1-T03R/PROOF.md -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+OK 6a68acebc0bb [STATEMENT.md] sources/W1-T03R/PROOF.md:89-91 -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+      first: **Lemma den′** (= [P1] `lem:den` without its last factor). Under G, R and $s_0\le K$, with
+      last:  *Proof.* This is exactly what the paragraphs "Bound on $Q^c_{S_0}$", "Integral representat
+OK 65e4b35359ba [STATEMENT.md] sources/W1-T03R/PROOF.md:93-97 -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+      first: *Proof of T02(i♯).* Fix $n$ with $s_0\le K$ and an integer $m$ with $R_m>0$ (otherwise the
+      last:  by Markov's inequality ($\Theta^{(1)}\ge0$, $\Lambda_n\ge0$). $P_0(\mathcal B_n^c)\le(8+24
+OK 9cd30e350c91 [STATEMENT.md] PROOF_v3.tex:40-58 -> Theory_work/Wave3/W3-T03ACC/sources/P1/PROOF_v3.tex
+      first: \section{Setting and conventions}\label{sec:setting}
+      last:  \paragraph{Statistical model.} $y^r=\alpha^*\mathbf 1+X^r\beta^*+\eps$, $\eps\sim\N_n(0,\s
+EXISTS           [STATEMENT.md] sources/statement/registry_theory_main_L68.tsv -> Theory_work/Wave3/W3-T03ACC/sources/statement/registry_theory_main_L68.tsv
+EXISTS           [STATEMENT.md] Theory_work/Old_Projects/New_BVS_Headquarters/ID_REGISTRY.md -> Theory_work/Old_Projects/New_BVS_Headquarters/ID_REGISTRY.md
+EXISTS           [STATEMENT.md] PROOF.md -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+OK 48493b659c18 [STATEMENT.md] PROOF.md:166 -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+      first: No hypothesis H-T02: T02(i♯) (§2) is proved and used directly.
+      last:  No hypothesis H-T02: T02(i♯) (§2) is proved and used directly.
+EXISTS           [STATEMENT.md] reviews/SL1_statement_lock_sol.md -> Theory_work/Wave3/W3-T03ACC/reviews/SL1_statement_lock_sol.md
+EXISTS           [REPORT.md] STATEMENT.md -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+EXISTS           [REPORT.md] sources/W1-T03R/PROOF.md -> Theory_work/Wave3/W3-T03ACC/sources/W1-T03R/PROOF.md
+EXISTS           [REPORT.md] sources/P1/PROOF_v3.tex -> Theory_work/Wave3/W3-T03ACC/sources/P1/PROOF_v3.tex
+EXISTS           [REPORT.md] sources/P3/PROOF_v2.tex -> Theory_work/Wave3/W3-T03ACC/sources/P3/PROOF_v2.tex
+EXISTS           [REPORT.md] sources/PINS.md -> Theory_work/Wave3/W3-T03ACC/sources/PINS.md
+OK 902e4a2a9cee [REPORT.md] STATEMENT.md:64 -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+      first: 1. **`T03S.1`** $1-\pi(S_0)=O_{P_0}(r_n)$.
+      last:  1. **`T03S.1`** $1-\pi(S_0)=O_{P_0}(r_n)$.
+OK 1fc4c4ddc01d [REPORT.md] STATEMENT.md:43-60 -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+      first: - **R1.** Triangular array, $n\to\infty$; $X=X_n$ fixed (non-random); $s_0\ge1$ fixed; $p=
+      last:  
+OK 53aa60a32c97 [REPORT.md] STATEMENT.md:65 -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+      first: 2. **`T03S.2`** For every data set, $\max_j|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}|\le1-\pi(
+      last:  2. **`T03S.2`** For every data set, $\max_j|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}|\le1-\pi(
+OK 488531af6b44 [REPORT.md] STATEMENT.md:66-69 -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+      first: 3. **`T03S.3`** $P_0(S^\dagger\ne S_0)\le2E_0[1-\pi(S_0)]\to0$, where $S^\dagger$ is the g
+      last:  no tie rule is used.
+OK 6a426b2f3b7c [REPORT.md] STATEMENT.md:70-73 -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+      first: 4. **`T03S.4`** (No beta-min.) For fixed $c>c_0(s_0,A)$ let $J_n(c):=\{j\in S_0:\theta^{*2
+      last:  $J_n^\infty=\{j:\theta^{*2}_j\ge M_n\sigma_*^2\log n/(n\varphi_0^2)\}$ with any determinis
+OK d9d9e1b91f24 [REPORT.md] STATEMENT.md:43-56 -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+      first: - **R1.** Triangular array, $n\to\infty$; $X=X_n$ fixed (non-random); $s_0\ge1$ fixed; $p=
+      last:  $\lambda_{\min}(G_{S_0\cup J})\ge g_0$ for every $J\subseteq[p]\setminus S_0$ with $|J|\le
+OK af67bb242d94 [REPORT.md] STATEMENT.md:74-77 -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+      first: 5. **`T03S.5`** Scale invariance as in the locked T03: for every $d>0$, replacing $(\theta
+      last:  
+OK f83d353ed4db [REPORT.md] STATEMENT.md:22-41 -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+      first: ## 1. Setting (definitions; `sources/common/00_COMMON.md:9-14`, `sources/P3/STATEMENT.md:7
+      last:  
+OK 6f9a5c3b7047 [REPORT.md] STATEMENT.md:92-117 -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+      first: ## 4. Readings made explicit (forms of the record, not changes)
+      last:  
+OK 54372cd8d811 [REPORT.md] STATEMENT.md:118-131 -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+      first: ## 5. What the proof consumes (statuses verbatim)
+      last:  the changed steps, so that no consumed step stays below a cross-family check.
+EXISTS           [REPORT.md] reviews/SL1_statement_lock_sol.md -> Theory_work/Wave3/W3-T03ACC/reviews/SL1_statement_lock_sol.md
+EXISTS           [REPORT.md] reviews/SL1_disposition.md -> Theory_work/Wave3/W3-T03ACC/reviews/SL1_disposition.md
+EXISTS           [REPORT.md] reviews/LC_A_line_check_sol.md -> Theory_work/Wave3/W3-T03ACC/reviews/LC_A_line_check_sol.md
+EXISTS           [REPORT.md] reviews/LC_B_line_check_sol.md -> Theory_work/Wave3/W3-T03ACC/reviews/LC_B_line_check_sol.md
+EXISTS           [REPORT.md] reviews/LC_C_line_check_sol.md -> Theory_work/Wave3/W3-T03ACC/reviews/LC_C_line_check_sol.md
+EXISTS           [REPORT.md] DEPS.tsv -> Theory_work/Wave3/W3-T03ACC/DEPS.tsv
+OK 57e2f1828491 [REPORT.md] STATEMENT.md:98-102 -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+      first: 3. **$A$ (source discrepancy, SL1 required change 1).** The record/card specify $A$ fixed
+      last:  $\max(A,1)$ only gives a more restrictive sufficient condition.
+OK 7e647db7c73a [REPORT.md] STATEMENT.md:103-108 -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+      first: 4. **$p=1$ (no hypothesis added; SL1 ruling).** The proof assumes $p\ge2$ (`sources/W1-T03
+      last:  5. **$\sigma$ vs $\sigma_*$; $\theta^*_{\min}$.** The card's $\sigma^2$ is $\sigma_*^2$ of
+EXISTS           [REPORT.md] ERRATA.md -> Theory_work/Wave3/W3-T03ACC/ERRATA.md
+OK 93b05aaa48d2 [REPORT.md] STATEMENT.md:85-91 -> Theory_work/Wave3/W3-T03ACC/STATEMENT.md
+      first: **What the theorem is about.** The exact posterior $\pi$ (algorithm-free). It says nothing
+      last:  
+OK 4bc1eb547642 [REPORT.md] sources/statement/W6-FIXREV2_STATEMENTS.md:63-81 -> Theory_work/Wave3/W3-T03ACC/sources/statement/W6-FIXREV2_STATEMENTS.md
+      first: **Scope (must accompany the theorem).**
+      last:  to the integer.)
+OK 428ff2a688e7 [REPORT.md] REPORT.md:17-23 -> Theory_work/Wave3/W3-T03ACC/REPORT.md
+      first: ## 2. Checks (review files; verdicts verbatim)
+      last:  | line check LC-C | (C6)–(C10), Assembly (T03S.1–.5), completeness of the change lists; [P

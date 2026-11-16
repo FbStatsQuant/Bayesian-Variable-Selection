@@ -1,0 +1,9 @@
+# External inputs of W3-PSHARP-R: the parent ticket's checked statement and the proof files whose steps are consumed
+# (cited by line), the definition of the coded target, and the audit rows that motivated the change.
+Theory_work/Wave3/W3-PSHARP/STATEMENT.md
+Theory_work/Wave3/W3-PSHARP/lemmas/A_log_factor.md
+Theory_work/Wave3/W3-PSHARP/lemmas/S_one_step.md
+Theory_work/Wave3/W3-PSHARP/ASSUMPTION_MAP.md
+Theory_work/Wave3/W3-POST/STATEMENT.md
+Theory_work/Wave3/API_AUDIT/sharp2/TRIAGE.md
+Theory_work/Wave3/API_AUDIT/sharp2/results/f02.md

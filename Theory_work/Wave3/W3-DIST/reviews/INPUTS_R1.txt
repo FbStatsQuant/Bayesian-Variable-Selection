@@ -1,0 +1,28 @@
+# W3-DIST — external inputs of the sweep SW1 and of council round R1 (repo-relative; tracked files only;
+# no wave documents, no registry tables; PROTOCOL_v4 §4.1)
+# the one inherited premise of the master theorems: the coded posterior is the contrast-model posterior ([P1], locked T01)
+Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/main@c4ef0dc/Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex
+# consumed claims (statements) and the proof files whose computations are re-derived here
+Theory_work/Wave3/W3-MISR/STATEMENT.md
+Theory_work/Wave3/W3-POST/STATEMENT.md
+Theory_work/Wave3/W3-POST/lemmas/L1a_size_tail.md
+Theory_work/Wave3/W3-POST2/STATEMENT.md
+Theory_work/Wave3/W3-POST2/lemmas/A_occam.md
+Theory_work/Wave3/W3-POST2/lemmas/B_tail_approx.md
+Theory_work/Wave3/W3-POST2/lemmas/D_hellinger.md
+Theory_work/Wave3/W3-POST2/lemmas/E_visibility.md
+Theory_work/Wave2/W2-APP/lemmas/L1_POST.md
+Theory_work/Wave1/W1-N1/STATEMENT.md
+# coded-output inputs
+Theory_work/Wave3/W3-SAMP/STATEMENT.md
+Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md
+Theory_work/Wave3/W3-RM2/STATEMENT.md
+Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md
+# the comparison with Song–Liang (2015): the project's map of that paper
+Theory_work/Wave1C/C-PACK/SONG_LIANG_MAP.md
+# route guide only (not a premise)
+Docs/Theory/proofs/T04_A3_contraction/STATEMENT.md
+# pinned code
+Scripts/SMC_BVS/core/v3_run.R
+Scripts/SMC_BVS/core/cpp/v3_ledger.h
+Scripts/SMC_BVS/core/cpp/v3_core.cpp
