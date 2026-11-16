@@ -13,7 +13,7 @@ restore points + checkpoints); the owner may talk to any department directly; HQ
 - Lean (READY, not started; GO = owner + HQ): Lean/BRIEF.md, worktree /home/fb31/BVS-wt/LEAN.
 - Candidates next: Writing/Paper (chapter v2.0, paper, advisor report); Parallel-SMC theory + evidence variance (after the freeze).
 - W3-DIST lead (Fable 5.2): mcp:launch:75635c1f… → CP1 pending. API attempts after CP1. Snapshot cron */15 → theory/W3-DIST.
-- Experiment p = 1M (Opus 5.5): mcp:launch:dac077c2… → EXP-CP1 (plan). REQUESTS.md = NOTS queries for HQ. Snapshot → exp/P1M.
+- **SMC - Engineering Department** (was "Experiment p = 1M"; renamed by owner 11-15; Opus 5.5): mcp:launch:dac077c2… → EXP-CP1 (plan). REQUESTS.md = NOTS queries for HQ. Snapshot → exp/P1M.
 - PR #10 (Actions CI): merge after the editorial-pass citecheck fixes. Protocol: PROTOCOL_v4.md (NORMAL mode).
 
 ## sharp2 riders (API sharpness batch 11-15, triage `API_AUDIT/sharp2/TRIAGE.md`; A 17 / B 11 / C 0 / D 2; ~8 real)
