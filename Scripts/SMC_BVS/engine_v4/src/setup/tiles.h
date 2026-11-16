@@ -6,6 +6,7 @@
 // consumers (per-thread top-B lists, edge lists, a dense matrix) are order-free, so no result depends on the thread
 // count or the schedule (INTERFACES §7 rule 1).
 #pragma once
+#include <emmintrin.h>
 #include <omp.h>
 #include <atomic>
 #include <vector>
@@ -41,16 +42,32 @@ void tile_pass(const Data& D, int tile, int threads, Sink&& sink, const std::vec
         int j = j0;
         for (; j + 4 <= j1; j += 4) {
           double* a0 = acc.data(); double* a1 = a0 + TW; double* a2 = a1 + TW; double* a3 = a2 + TW;
-          for (int t = 0; t < w; ++t) { a0[t] = 0; a1[t] = 0; a2[t] = 0; a3[t] = 0; }
           const double *x0 = D.col(j), *x1 = D.col(j + 1), *x2 = D.col(j + 2), *x3 = D.col(j + 3);
-          for (int i = 0; i < n; ++i) {
-            const double* r = &RJ[(size_t)i * TW];
-            const double b0 = x0[i], b1 = x1[i], b2 = x2[i], b3 = x3[i];
-#pragma GCC ivdep
-            for (int t = 0; t < w; ++t) {
-              const double rt = r[t];
-              a0[t] += b0 * rt; a1[t] += b1 * rt; a2[t] += b2 * rt; a3[t] += b3 * rt;
+          int t = 0;
+          // 4 x 4 register block, SSE2 (x86-64 baseline): lane (q, t) carries one pair's sum s = 0; s = s + x_iq * x_it,
+          // i = 0..n-1; mul and add are separate instructions (no FMA), so each lane equals the scalar sum's bits.
+          for (; t + 4 <= w; t += 4) {
+            __m128d c00 = _mm_setzero_pd(), c01 = _mm_setzero_pd(), c10 = _mm_setzero_pd(), c11 = _mm_setzero_pd();
+            __m128d c20 = _mm_setzero_pd(), c21 = _mm_setzero_pd(), c30 = _mm_setzero_pd(), c31 = _mm_setzero_pd();
+            const double* r = &RJ[t];
+            for (int i = 0; i < n; ++i, r += TW) {
+              const __m128d r0 = _mm_loadu_pd(r), r1 = _mm_loadu_pd(r + 2);
+              __m128d b = _mm_set1_pd(x0[i]);
+              c00 = _mm_add_pd(c00, _mm_mul_pd(b, r0)); c01 = _mm_add_pd(c01, _mm_mul_pd(b, r1));
+              b = _mm_set1_pd(x1[i]);
+              c10 = _mm_add_pd(c10, _mm_mul_pd(b, r0)); c11 = _mm_add_pd(c11, _mm_mul_pd(b, r1));
+              b = _mm_set1_pd(x2[i]);
+              c20 = _mm_add_pd(c20, _mm_mul_pd(b, r0)); c21 = _mm_add_pd(c21, _mm_mul_pd(b, r1));
+              b = _mm_set1_pd(x3[i]);
+              c30 = _mm_add_pd(c30, _mm_mul_pd(b, r0)); c31 = _mm_add_pd(c31, _mm_mul_pd(b, r1));
             }
+            _mm_storeu_pd(a0 + t, c00); _mm_storeu_pd(a0 + t + 2, c01); _mm_storeu_pd(a1 + t, c10); _mm_storeu_pd(a1 + t + 2, c11);
+            _mm_storeu_pd(a2 + t, c20); _mm_storeu_pd(a2 + t + 2, c21); _mm_storeu_pd(a3 + t, c30); _mm_storeu_pd(a3 + t + 2, c31);
+          }
+          for (; t < w; ++t) {  // remainder columns: scalar, same operation order
+            double s0 = 0, s1 = 0, s2 = 0, s3 = 0;
+            for (int i = 0; i < n; ++i) { const double rt = RJ[(size_t)i * TW + t]; s0 += x0[i] * rt; s1 += x1[i] * rt; s2 += x2[i] * rt; s3 += x3[i] * rt; }
+            a0[t] = s0; a1[t] = s1; a2[t] = s2; a3[t] = s3;
           }
           for (int q = 0; q < 4; ++q) {
             const int jj = j + q;

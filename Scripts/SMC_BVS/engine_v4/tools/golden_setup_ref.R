@@ -1,12 +1,14 @@
 # golden_setup_ref.R -- reference outputs from core/ (revision D) through its own R entry points, for the WP2 golden
 # test `golden_R_reference` (tests/test_setup.cpp). Covers what exists only in the Rcpp layer (cpp_dup_components,
 # cpp_cut_group, cpp_setup) plus v3_preprocess standardisation.
-#   Rscript tools/golden_setup_ref.R <core dir> <out dir>
-# core/ is copied to <out dir>/core_copy first, so the compiled cache is never written inside the repository.
+#   Rscript tools/golden_setup_ref.R <core dir> <out dir> [<work dir>]
+# core/ is copied to <work dir>/core_copy first (default <out dir>/../core_copy_wp2), so the compiled cache is never
+# written inside core/ or the fixtures. Writes <out dir>/SHA256SUMS.
 args <- commandArgs(trailingOnly = TRUE)
 core <- normalizePath(args[1]); out <- args[2]
-dir.create(out, recursive = TRUE, showWarnings = FALSE)
-cc <- file.path(out, "core_copy")
+work <- if (length(args) >= 3) args[3] else file.path(dirname(out), "core_copy_wp2")
+dir.create(out, recursive = TRUE, showWarnings = FALSE); dir.create(work, recursive = TRUE, showWarnings = FALSE)
+cc <- file.path(work, "core_copy")
 unlink(cc, recursive = TRUE); dir.create(cc)
 file.copy(list.files(core, full.names = TRUE), cc, recursive = TRUE)
 source(file.path(cc, "v3.R"), chdir = TRUE)
@@ -48,4 +50,6 @@ for (cs in cases) {
   idx <- c(idx, tag)
 }
 writeLines(idx, file.path(out, "INDEX"))
+fs <- sort(setdiff(list.files(out, recursive = TRUE), "SHA256SUMS"))
+writeLines(paste0(vapply(fs, function(f) digest::digest(file = file.path(out, f), algo = "sha256"), ""), "  ./", fs), file.path(out, "SHA256SUMS"))
 cat("wrote", length(idx), "reference cases to", out, "\n")
