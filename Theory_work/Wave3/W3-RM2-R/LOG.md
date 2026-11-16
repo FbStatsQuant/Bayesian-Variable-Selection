@@ -5,3 +5,6 @@
 - 2026-11-15 19:39 CST — wrote STATEMENT.md v0.1 (delta), PLAN.md, TARGET.md, READER_DELTA.md (draft), reviews/BRIEF_SL1_sol.md (saved before launch).
 - 2026-11-15 19:40 CST — launched SL1 statement lock: delegate_task codex gpt-6.1-sol reasoningEffort high, fresh, blind (brief reviews/BRIEF_SL1_sol.md); DEPS.tsv started (statement rows UNCHECKED).
 - 2026-11-15 19:47 CST — received manager memo (owner memo via HQ, POLICIES.md 34ce461a): Opus/Sonnet helpers within brief; Fable expert needs permission; report big problems at once. Noted; SL1 still running.
+- 2026-11-15 19:53 CST — manager: owner's final helper rule (POLICIES §4, §8): Opus/Sonnet/Haiku helpers free within brief; new Fable needs owner green light via manager. Noted.
+- 2026-11-15 19:59 CST — manager input on DLV-0 (R-AUD1 CONFIRMED-WORDING on C-DLV:Prop-F). Read API_AUDIT/pass1/TRIAGE.md:23-28 and R-AUD1_sol.md. STATEMENT edited while SL1 runs (v0.1 → v0.1.1, record only; no claim changes): (C-D) now lists the law-free C-DLV inputs and consumes only Prop F's delivery half in R-AUD1's restated form; dependency row narrowed. To be shown to the lock/disposition record.
+- 2026-11-15 20:01 CST — manager: POLICIES §9 (expensive-resource requests, ≤10 lines via manager). Noted; none needed so far.

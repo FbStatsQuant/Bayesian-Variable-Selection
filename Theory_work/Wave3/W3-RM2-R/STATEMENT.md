@@ -1,8 +1,8 @@
 # W3-RM2-R — STATEMENT v0.1 (delta over W3-RM2 v1.4 and W3-RM RM-0: constant-level signals, the mode interface, delivery)
 
 Ticket W3-RM2-R (Tier B rider), Theory Wave 3. Lead: Claude Opus 5.5 (Claude Third, effort high). Protocol:
-`Theory_work/Wave3/PROTOCOL_v4.md` with `RIDER_RULES.md` of this folder. Status of this file: **v0.1, draft for the
-statement lock** (2026-11-15). All results are asymptotic (n → ∞) unless marked *deterministic*.
+`Theory_work/Wave3/PROTOCOL_v4.md` with `RIDER_RULES.md` of this folder. Status of this file: **v0.1.1, draft for the
+statement lock** (2026-11-15; v0.1.1 = v0.1 with the C-DLV law-free inputs listed in (C-D) after R-AUD1, record only). All results are asymptotic (n → ∞) unless marked *deterministic*.
 
 **This is a delta statement.** PARENT := `Theory_work/Wave3/W3-RM2/` (STATEMENT v1.4, recorded on main);
 RM := `Theory_work/Wave3/W3-RM/` (STATEMENT v1.2.1; claim W3-RM:RM-0@1.0.0 at RM `STATEMENT.md:160-176`).
@@ -125,10 +125,20 @@ valid and non-degenerate with probability one.
 **(C-D) Lemma DLV-0 (deterministic delivery).** Under the implementation premises and configuration of §1 and the
 delivery premises (D): for every valid non-degenerate input, every seed and every realisation of the method's
 uniform streams, the coded fit (`v3_fit`, core as pinned in §1) returns with `estimates_available = TRUE`. No data
-law, no model and no design class enters. (It restates the design-free delivery step of FACA `lemmas/L7_delivery.md`
-Step 2 / W2-UNI `lemmas/L5_delivery.md` Step 2, which rest on DLV Theorem D, Proposition F and Corollary R, as a
-statement about every input; the proof re-audits the exit walk, the fallback and the resource bounds against the code
-as pinned.) **Scope note:** DLV-0 refers to the core as pinned; Lemma R (DLV `lemmas/L1_resources.md:70-81`) and the
+law, no model and no design class enters. DLV-0 is a delivery statement only; it asserts nothing about Ŝ⁺.
+**Law-free inputs, cited (and only these):** the exit walk of Theorem D (DLV `lemmas/L4_delivery.md:13-42`), in which the
+data law enters only through Lemma S.1's null sets for A3–A5 (`lemmas/L2_degenerate.md:5-18`) — replaced here by the
+deterministic "valid non-degenerate input" condition; Lemma S.2 (scorer never fails under EX-A, for every input with
+yᵀy > 0; `L2_degenerate.md:20-35`); Lemma S.3 and the P1 inventory (AUDITED, code reading); Lemma R and Corollary R
+("for every valid input, every seed and every realisation", `lemmas/L1_resources.md:70-81, 129-143`); grid Lemmas 3.3,
+3.4 (`lemmas/L3_grid.md:30-56`); and the **delivery half only** of Proposition F, in the restated form of
+`Theory_work/Wave3/API_AUDIT/pass1/R-AUD1_sol.md:32-35` ("Under the premises of Theorem D, P(𝒰_n) = 0 for every
+n ≥ 3"). The standalone sentence of DLV `lemmas/L4_delivery.md:83-84` ("on the classes above … P(Ŝ⁺ = S₀) → 1
+unconditionally") is **not** consumed: it imports Corollary D′'s statistical hypotheses (HQ disposition,
+`API_AUDIT/pass1/TRIAGE.md:23-28`). Consistency in this file comes only from RM0-plus (b⁺)/(c⁺) with [MODE] and the
+lattice properties as explicit hypotheses. Templates (no conclusion consumed beyond their delivery step): FACA
+`lemmas/L7_delivery.md` Step 2, W2-UNI `lemmas/L5_delivery.md` Step 2. The proof re-audits the exit walk, the
+fallback and the resource bounds against the code as pinned. **Scope note:** DLV-0 refers to the core as pinned; Lemma R (DLV `lemmas/L1_resources.md:70-81`) and the
 allocation 𝒜_n must be re-audited when v3.2 freezes (the preflight charge changes).
 
 ## 4. Claims on the reported model (T4, T2)
@@ -186,7 +196,7 @@ PARENT (C4) (`STATEMENT.md:236-240`), RM2-F-plus ⇒ W3-RM:RM-F and RM2-R-plus �
 | new claim | ⇒ parent claim | why (one line) |
 |---|---|---|
 | W3-RM2-R:RM0-plus | W3-RM:RM-0@1.0.0 | {π(S₀) > ½} ⊆ 𝓜_n; (a) identical; (a′) with 𝓛′ = 𝓛 is (a) |
-| W3-RM2-R:DLV-0 | C-DLV:Prop-F@1.0.0 (delivery half, patched law) | every input ⇒ almost every input; the patched calibration law of Prop F is the shipped default |
+| W3-RM2-R:DLV-0 | C-DLV:Prop-F@1.0.0, **delivery half only** (R-AUD1 restatement, first sentence) | every input ⇒ almost every input; the patched calibration law of Prop F is the shipped default; Prop F's consistency sentence is not implied (and not consumed) |
 | W3-RM2-R:RM2-F-plus | W3-RM2:RM2-F@1.0.0 | (T1-F) ⇒ (T1-F♭), (V) ⇒ (V♭), (BM-W) ⇒ (BM-W⁺); conclusions ⊇ |
 | W3-RM2-R:RM2-R-plus | W3-RM2:RM2-R@1.0.0 | same hypotheses; conclusions ⊇ |
 | W3-RM2-R:SAND-F-c | W3-RM2:SAND-F-b@1.0.0 | (V_b) ⇒ (V_b♭) |
@@ -222,3 +232,4 @@ Implementation premises (named, not proved): §1 and (D).
 | version | clause | STRONGER / WEAKER / EQUAL / NEW-CLAIM | reason | trigger (review file) | check (review file) |
 |---|---|---|---|---|---|
 | v0.1 | all | — | draft for the statement lock | — | — |
+| v0.1.1 | (C-D), dependency row DLV-0 | EQUAL | consumed C-DLV steps listed; Prop F consistency sentence excluded (manager input, R-AUD1) | `Theory_work/Wave3/API_AUDIT/pass1/R-AUD1_sol.md` | SL1 disposition |
