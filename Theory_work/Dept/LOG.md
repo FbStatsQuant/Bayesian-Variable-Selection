@@ -134,3 +134,4 @@
 - 23:33 — HQ: blind Fable audit of T03♯ submitted (2 samples, 64k); results → W3-T03ACC/api/ (not a review layer; dispositions before council freeze; not given to blind seats) — lead told. TH05.0 post-freeze agreed.
 - 23:33 — HQ approved D-7 real run; recorder told (then F-UNI gate; Cont-F/R after CP3s).
 - 23:35 — recorder: F-UNI gate + D-7 real runs; format fix staged (RM-0, SCR:A1) → HQ; SCR PC check (Sol) launched (D50).
+- 23:36 — HQ approved format-fix real run (RM-0, SCR:A1); pre-Wave-3 council form failures fixed in the record at acceptance (v4 §7). Recorder told.
