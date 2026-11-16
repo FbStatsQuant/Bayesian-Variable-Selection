@@ -415,3 +415,4 @@
 - **D72.** (04:27) Cor-H NARROW 1.0.0→2.1.0 (narrow 2.0.0 + clear; LIFECYCLE major = narrow; HQ said 1.1.0, corrected 11-16) (correctness event): hold note now; Sol diff (WEAKER) → apply via recorder task S before DIST R1 freeze if Sol passes by 07:30, else after with carriers; no council round (v1.1a wording already council-passed).
 - **D73.** (04:35) SOP:TH09/TH128 root acceptance (card 12): conditions discharged per edge type only where LC-A/B/C verified the cited item; carrier scoped to T03♯.
 - **D74.** (05:31) Card 14: START2-R STRONGER (row 3.3); RM2-R MIXED (rows 3.2, 3.1). Prop-F/F-UNI method drift (LS0 cap ℓ_n vs shipped ℓ_n+|S̃₀|): consumers re-pointed to DLV-0; any headline reliance → HQ before recording.
+- **D75.** (05:34) W2-UNI:F-UNI method drift (row 3.1): SUSPECT + correctness event; Sol TR1 decides erratum/PATCH vs NARROW; row 3.1 card delivery clause under (D), IDEAL-W⁺ unless TR1 YES.
