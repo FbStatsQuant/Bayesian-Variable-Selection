@@ -338,7 +338,7 @@ TEST(wp4_io_chi2_and_inherited_provenance) {
 #define EXPECT_STR(a, b) do { const std::string a_ = (a), b_ = (b); CHECK_MSG(a_ == b_, "got " + a_ + ", want " + b_); } while (0)
 TEST(wp4_io_calib_refusals) {
   TmpGuard tmp_guard("cref");
-  Fx fv = make_fx("cref", 1, fmt::M_V), ft = make_fx("crft", 1, fmt::M_COMPAT);
+  Fx fv = make_fx("cref", 1, fmt::M_V), ft = make_fx("cref_t", 1, fmt::M_COMPAT);   // "cref_" prefix: removed by tmp_guard
   // outcome of writing + reading one variant: "ok", "w:<status>" (writer refused) or "r:<status>" (reader refused)
   auto outcome = [&](const Fx& f, const std::function<void(wp4io::CalibWrite&, calib::CalibOut&, calib::Settings&)>& mod,
                      const std::string& dh = "", const std::string& sh = "") -> std::string {
