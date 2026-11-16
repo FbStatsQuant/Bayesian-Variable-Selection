@@ -474,3 +474,7 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   log n·ℓ_n/n for DIST-2 in the written proof; RT1 steps 4–11) added to `reviews/UNHARVESTED_STRENGTH.md` (the two
   Opus items renumbered 10, 11; eleven rows). Nothing inside the manifest was edited. Recording by HQ waits for H5
   card 13 and the recorder's task T. Thread stays open until HQ records.
+- 2026-11-16 08:10 — **Owner order via the manager: stand down.** Per the manager, W3-DIST is recorded (cb642afd) and its reader swap
+  is applied (ef7179da); I have not read these commits back myself. Nothing of mine is in progress: no helper is
+  running, no background command is pending, no temp folder remains. I made no commit and no push at any point (the
+  15-minute snapshots carried the ticket branch); git state changes by me: pulls of main only. I start nothing new.
