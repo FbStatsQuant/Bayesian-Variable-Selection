@@ -31,6 +31,8 @@ TEST(status_precedence) {
   CHECK(fit_status({Status::io_error, Status::resource_limit}) == Status::resource_limit);
   CHECK(fit_status({Status::completed, Status::numerical_failure, Status::internal_error}) == Status::internal_error);
   CHECK(fit_status({Status::internal_error, Status::invalid_input}) == Status::invalid_input);
-  CHECK(exit_code(Status::completed) == 0 && exit_code(Status::io_error) == 14);
-  for (int i = 0; i <= 5; ++i) CHECK(status_from_name(status_name((Status)i)) == (Status)i);
+  CHECK(exit_code(Status::completed) == 0 && exit_code(Status::io_error) == 14 && exit_code(Status::schedule_limit) == 16);
+  CHECK(fit_status({Status::io_error, Status::schedule_limit}) == Status::schedule_limit);
+  CHECK(fit_status({Status::schedule_limit, Status::resource_limit}) == Status::resource_limit);
+  for (int i = 0; i <= 6; ++i) CHECK(status_from_name(status_name((Status)i)) == (Status)i);
 }
