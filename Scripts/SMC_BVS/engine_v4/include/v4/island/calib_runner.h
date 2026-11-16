@@ -36,9 +36,13 @@ class CalibIslandRunner final : public v4::calib::IslandRunner {
     c.seed = c_.seed; c.role = pilot ? IslandRole::Pilot : IslandRole::Diag; c.tier = (uint32_t)sp.tier; c.iter = (uint32_t)sp.iter;
     c.island = (uint32_t)sp.island; c.N = sp.H; c.L = sp.L; c.Hm = sp.Hm; c.B = c_.B;
     c.kernel = c_.kernel; c.threads = c_.threads; c.G = c_.G; c.tile = c_.tile; c.allow_test_kernels = c_.allow_test_kernels;
-    // memory (INTERFACES §7, WP4's IslandSpec): the budget left for this island after the calibration's resident state
-    // (spec.mem_budget, 0 = no admission); the island's plan adds its own setup inputs (inputs_bytes)
-    c.k_store = c_.k_store; c.inputs_bytes = c_.inputs_bytes; c.mem_budget = sp.mem_budget ? sp.mem_budget : c_.mem_budget;
+    // memory (INTERFACES §7, WP4's N-1 rule in IslandSpec): spec.mem_budget is the WHOLE calibration task's budget (0 = no
+    // admission); spec.resident_bytes is the calibration process's own state (calibration ledger at its staging peak +
+    // inherited export) WITHOUT X / z / diag(G) and the setup inputs, which the island's plan counts itself (its inputs
+    // term: X, z, diag(G) + inputs_bytes = the setup inputs). Admitted iff resident_bytes + plan <= mem_budget: the
+    // resident bytes join the plan's caller-supplied term, so no byte is counted twice.
+    c.k_store = c_.k_store; c.inputs_bytes = c_.inputs_bytes + (double)sp.resident_bytes;
+    c.mem_budget = sp.mem_budget ? sp.mem_budget : c_.mem_budget;
     c.keep_terminal = false; c.leaders = true;
     if (pilot) { c.adaptive = true; c.adaptive_H = sp.H; c.adaptive_Te = sp.Te; } else c.grid = sp.grid;
     if (c_.compat) {
