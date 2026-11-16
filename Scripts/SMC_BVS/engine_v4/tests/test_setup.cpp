@@ -217,7 +217,8 @@ TEST(unit_tables_fallback_paths) {
 
 // ---- golden against core/'s R/Rcpp entry points (tools/golden_setup_ref.R): v3_preprocess'd X, cpp_setup
 // (exact blocks, neighbours, tables, log Zbar0), cpp_dup_components and cpp_cut_group (core/cpp/v3_core.cpp:746-818).
-// Runs when V4_R_GOLDEN_DIR points at the script's output (tests/run_setup_tests.sh does this when R is present).
+// Fixtures: tests/fixtures/setup_wp2 (written by the script; regenerate with tests/run_tests.sh --fixtures). A missing
+// fixture is a FAIL (INTERFACES v0.1.2 §1). V4_R_GOLDEN_DIR overrides the directory.
 namespace {
 std::vector<std::vector<int>> read_rows(const std::string& f) {
   std::vector<std::vector<int>> r; FILE* fp = std::fopen(f.c_str(), "r"); if (!fp) return r;
@@ -236,8 +237,13 @@ std::vector<double> read_f64(const std::string& f) {
 }
 }  // namespace
 TEST(golden_R_reference) {
-  const char* dir = std::getenv("V4_R_GOLDEN_DIR");
-  if (!dir) { std::printf("    skipped: V4_R_GOLDEN_DIR not set (R reference not generated)\n"); return; }
+  const char* env = std::getenv("V4_R_GOLDEN_DIR");
+#ifdef V4_FIXTURE_DIR
+  const std::string dflt = std::string(V4_FIXTURE_DIR) + "/setup_wp2";
+#else
+  const std::string dflt = "tests/fixtures/setup_wp2";
+#endif
+  const char* dir = env ? env : dflt.c_str();
   FILE* fi = std::fopen((std::string(dir) + "/INDEX").c_str(), "r");
   SCHECK(fi != nullptr, "no INDEX in %s", dir);
   if (!fi) return;

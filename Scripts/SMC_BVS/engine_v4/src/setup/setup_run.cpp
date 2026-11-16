@@ -111,8 +111,9 @@ std::string write_setup_bin(const std::string& path, const Data& D, const SetupR
   mo["tie_dp_used"] = r.mode.tie_dp_used; mo["size"] = (int64_t)r.mode.S.size(); m["start_mode"] = mo;
   m["cut_group"] = r.cut.rows() > 0; m["cut_group_count"] = r.cut.rows(); m["dup_components"] = r.corr.dup.rows();
   m["table_codes"] = T.code_ptr.back();
-  Json ts = Json::object(); ts["scored"] = r.tstats.scored; ts["prefix"] = r.tstats.prefix_scored; ts["fallback"] = r.tstats.fallback_scored;
-  Json rt = Json::array(); for (int q = 0; q < 3; ++q) rt.push(Json(r.tstats.routes[q]));
+  auto hx = [](uint64_t x) { char b[24]; std::snprintf(b, sizeof b, "0x%llx", (unsigned long long)x); return std::string(b); };  // u64 -> hex (§5.1)
+  Json ts = Json::object(); ts["scored"] = hx(r.tstats.scored); ts["prefix"] = hx(r.tstats.prefix_scored); ts["fallback"] = hx(r.tstats.fallback_scored);
+  Json rt = Json::array(); for (int q = 0; q < 3; ++q) rt.push(Json(hx(r.tstats.routes[q])));
   ts["routes"] = rt; m["table_stats"] = ts;
   Json in = Json::object(); in["data.bin"] = data_hash; m["inputs"] = in;
   Json tm = Json::array();
