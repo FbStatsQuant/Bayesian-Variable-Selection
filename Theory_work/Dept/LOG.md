@@ -146,3 +146,4 @@
 - 00:09 — DIST D1: L6-01 repair VERIFIED, EQUAL on TC3 CONFIRMED; 4 MINOR/1 NIT; D1-04 Corollary C STRONGER HPM conclusion → HQ go asked (else revert that part at freeze). D3 next; freeze Mon 09:00 tight (report by 04:00 if slipping).
 - 00:09 — HQ GO: Corollary C STRONGER HPM conclusion stays for sweep + council (named in sweep and both seat briefs; changelog STRONGER, HQ go); H5 at CP3. Lead told.
 - 00:12 — DIST: HQ go recorded (Cor C STRONGER, named in sweep + seat briefs); D1 findings applied (v1.4.8); D3 Sol (≈60 lines) launched 00:10; DIST-C (C-i) event made explicit, tagged EQUAL on TC8, D3 to confirm (WEAKER → early checkpoint).
+- 00:13 — recorder: RM2 CHECKPOINT_5 repair + re-records + task L on main a2a9044c (all 5 gates passed in dry run; real: A4 0 on 18 rows, record PASS, 469/0). Only Cont-F/R stale (post-CP3s). HQ told.
