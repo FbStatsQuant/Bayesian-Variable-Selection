@@ -90,7 +90,7 @@ Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
 7. The reported model, fixed design — §7 (honest limits: sample-level conditions)
 8. Certified screening — §8
 9. Distribution-level consistency — §9 (placeholder; ticket in progress)
-10. The printed outputs are consistent (card row 3.6) — §10; with the pooled-evidence remark (row 3.5)
+10. The printed outputs are consistent, for designs with no leakage outside the true model such as independent predictors (card row 3.6) — §10; with the pooled-evidence remark (row 3.5)
 
 ---
 
@@ -1219,7 +1219,7 @@ enumeration branch are not covered. Status: the masters' statuses above, with th
 
 ## 10. Theorem 10 — The printed outputs are consistent (card row 3.6; row 3.5 as a remark)
 <!-- ROW thm10 BEGIN -->
-**Card row** 3.6 (and 3.5) · **Section version** 0.8 (2026-11-16) · **Pending delta** post-freeze rider SAMP-R1
+**Card row** 3.6 (and 3.5) · **Section version** 0.9 (2026-11-16) · **Pending delta** post-freeze rider SAMP-R1
 
 ### Reader statement
 **Theorem 10.** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m_n,\Sigma_n)$ with $\Sigma_n$ a correlation matrix, and
@@ -1228,6 +1228,12 @@ $y^{\mathrm r}=\alpha\mathbf 1+X\theta^*+\varepsilon$ with a deterministic $\the
 - **(A2) Sparsity and fixed signals.** $s_0\ge1$ fixed; $\theta_{\mathrm{lo}}\le|\theta^*_j|\le\theta_{\mathrm{hi}}$ on $S_0$.
 - **(A3) Population sparse eigenvalue floor.** $\lambda_{\min}(\Sigma_{n,S})\ge c>0$ for every $|S|\le5(A+1)(s_0+1)\log n$.
 - **(A4) Visibility** and **(A5) no leakage**: (A4) and (A5) of Theorem 5.
+
+*Which designs.* (A5) holds only for designs with no leakage outside the true model, such as independent predictors.
+AR and block designs, where a null is correlated with a truth at a fixed level, are **not** covered. For those designs
+Theorem 6 (row 3.1, the reported model is $S_0$) still applies under its own conditions, and the pooled evidence is
+unbiased for every design (row 3.5, remark below); consistency of the printed PIPs, MPM and $\hat Z$ is not claimed
+there [AUD-B11].
 
 This theorem concerns the sampler branch of the method (the model space is too large to enumerate; the exact branch is
 the scope note below) [S2-F3]. Let $\mathcal A$ be the event that the method takes the sampler branch and its calibration
@@ -1281,7 +1287,8 @@ route (remark): `W3-SAMP:TR@2.1.3`, "PROVED-CHECKED, conditional on SOP:TH09" [R
 ### Honest limits
 The conclusion is localised to calibration success $\mathcal A$ on the sampler branch (intersections, not conditioning);
 that $P(\mathcal A)\to1$ is not claimed here (under (S4)(i)–(iv), completion holds on $\mathfrak D$; under those conventions and
-A:IDEAL-W⁺ it holds for every admissible $n$; that link is not used here) [S4-S1]. The rate $\rho_n$ is the start law's rate,
+A:IDEAL-W⁺ it holds for every admissible $n$; that link is not used here) [S4-S1]. The theorem covers only designs with no leakage outside the true model (A5), such as independent predictors; AR and
+block designs are outside it (rows 3.1 and 3.5 apply there) [AUD-B11]. The rate $\rho_n$ is the start law's rate,
 slower than the posterior rate $\sqrt{\log n/n}$ by a factor $e^{C\sqrt{\log n}}$. Conditional on T03♯ (through `W3-SAMP:C`
 and `W2-APP:POST`) [REG-33e1].
 
@@ -1299,6 +1306,9 @@ and `W2-APP:POST`) [REG-33e1].
 - v0.8 2026-11-16: [REG-33e1] SL0 cleared: `W3-SAMP:C/TR` @1.1.3/2.1.3 and `W2-APP:POST@1.0.6` conditional on SOP:TH09 only (EQUAL).
 - S4 2026-11-16 [S4-S1]: the completion remark in the honest limits follows the F-UNI narrowing (on $\mathfrak D$ under
   (S4)(i)–(iv); every $n$ under A:IDEAL-W⁺; WEAKER, unused link).
+- v0.9 2026-11-16: [AUD-B11] (HQ 11-16, from W3-AUDIT CHECKPOINT_1, theory/W3-AUDIT 81291dd9, TRACK_B.md B11) scope of
+  (A5) stated plainly: no leakage outside the true model, such as independent predictors; AR and block designs not
+  covered; rows 3.1 and 3.5 named for them. Presentation only (EQUAL; the statement already names (A5)).
 <!-- ROW thm10 END -->
 
 ---

@@ -119,7 +119,7 @@ allocation it stops, returns the best model scored so far, and marks the estimat
 | local search from $\tilde S_0$ + reported model | does the software report $S_0$? | 6 (random design), 7 (fixed design) |
 | certificate | what does a certified small model guarantee without any structural condition? | 8 |
 | calibration freezing | does a run always produce output? | delivery result, used inside 6–7 |
-| SMC estimates | are the printed PIPs and $\hat Z$ consistent / unbiased? | sampler results (body of the paper; not on the headline card) |
+| SMC estimates | are the printed PIPs and $\hat Z$ consistent / unbiased? | sampler results (body of the paper; not on the headline card): consistency for designs with no leakage outside the true model, such as independent predictors (not AR or block designs; there, 6 for the reported model and unbiasedness of $\hat Z$, which holds for every design) |
 
 ## A toy example
 
