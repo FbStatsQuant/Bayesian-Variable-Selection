@@ -115,3 +115,4 @@
 - 22:26 — J real runs done (PSHARP/MISR/START/RM2 re-recorded; START & MISR manifests re-frozen); DIST + PSHARP-R unblocked; Cont-F/R edge question to HQ.
 - 22:27 — HQ approved Cont-F/R edge fix (D44, post-CP3s); PROTOCOL rule added; recorder told; W3-EDIT-now head to HQ after K.
 - 22:37 — READER S2: FAIL AS WRITTEN (5 MAJOR premise/scope omissions, no FATAL; math passed) → all repaired (4eae977); S3 Opus diff check running (overnight rule) with explicit tags; S2-F6 wording ('…off S₀ beyond the vanishing floor (A5)') sent to HQ for consultant; freeze after HQ confirms or in the morning.
+- 22:38 — HQ: S2-F6 accepted; Sol statement-change check on READER's S2 diff Mon after midday (D45); READER told.

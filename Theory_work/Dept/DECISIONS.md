@@ -304,3 +304,8 @@
 - **D44.** Replace depends_on RM-F/RM-R on Cont-F/R by a reference to the implies edges (RM2-F ⇒ RM-F, RM2-R ⇒ RM-R),
   note why, re-record — after the riders' CP3s. PROTOCOL §C: implication lemmas record their target in implies, never
   in depends_on.
+
+## 2026-11-15 22:38 CT — HQ on READER S2
+- **D45.** S2-F6 wording accepted ("no eigenvalue condition off S₀ beyond the vanishing floor (A5)"). Premise-adding repairs
+  to headline reader statements need a Sol statement-change check before the CP3 freeze (v4 §4.2): Opus S3 tonight, Sol
+  check on the S2 diff Mon 11-16 after ~midday (BNP push ends); then DEPS OK → freeze → council (Sol seat FIDELITY line).
