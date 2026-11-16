@@ -223,3 +223,145 @@ The C5 comparison should state both choices.
   - Removing the eval/post stubs from `stubs.cpp` is correct.
 - **32-bit limits.** Sizes use `size_t`/`int64` (model_ptr, LH_ptr i64; X buffers size_t). `(int)comps.size()` is fine
   up to 10⁶.
+
+---
+
+## Re-check (2026-11-16): head f596f27, WP5 changes 25e268b..f596f27 excluding the merged base (0502009 = merge of a4ca68c)
+
+Same reviewer, same rules: detached worktree, read only. TMPDIR `~/SMC_Engineering_Department/tmp/20261116-review-pr12b`,
+removed after. Disposition: `PR12_disposition.md` (D-17).
+
+### Verdict: **FIX FIRST**
+The fixes are small and confined to Sol F9. D-17 is implemented correctly and MINORs 1–10 are fixed; the scale
+blocker (MAJOR-1) is resolved. What is missing is the **Sol F9 items**, which REVIEW_disposition_sol assigns to "WP5
+(PR #12 fixes)":
+- π̂(𝒯) is still clipped;
+- the tolerances are not absolute;
+- the law truncation is neither propagated nor labelled.
+
+Each is a few lines (list below). After that, MERGE. No full re-review is needed: I would check only the F9 diff.
+
+### Tests run (Owls, nice 19, 3 threads)
+- `run_tests.sh --quick`: **52 test cases, 0 failed**. Slurm-driver tests OK (12). Competitor harness OK, including the
+  new mock run: all 9 package methods `completed` and their predictives scored.
+- `v4_tests --full`: **55 test cases, 0 failed**, in 3 min 52 s; peak RSS 0.85 GB for the whole run.
+  - T7: **46 / 46**. My `T7_result.tsv` is byte-identical to the committed table.
+  - The M = 5,000 agreement test: exact 0.005006, approximation 0.005006, tail SE 3.6e-6.
+  - T7′: M = 10⁵ in 12.1 s / 0.20 GB; M = 10⁶ in 14.2 s / 0.81 GB.
+- My own checks (bench programs linked against `libv4_bit.a`):
+  1. **Estimator bias and SE calibration.** Real-data laws of M = 6,000 models at p = 3,000 (IND gen), at two
+     temperatures (tail mass 0.64 and 0.75). I ran 8 independent tail draws against the exact full mixture
+     (`top_k = M`). Standardised errors (approx − exact)/SE_tail:
+     - tail mass 0.64: mean **−0.02**, rms 1.30; KL mean +0.00;
+     - tail mass 0.75: mean −0.38, rms 0.90.
+
+     There is no detectable bias from the √ / log of the estimated density. The rms is consistent with a 4-group SE
+     (t₃: expected rms √3). One |z| = 2.54 out of 16. The √τ bound held in all 16 runs.
+  2. **Memory of the real law path.** `ModelPost` + `Component` copies take **≈ 1.6 kB per model**, i.e. ≈ 1.6 GB at
+     M = 10⁶. That is twice T7′'s synthetic Law; see R-2.
+
+### (1) D-17 implementation
+- **Exact weighted closed forms** (dist.cpp:480-495). E_π[d_H²(f_{S,θ̄_S,v̄_S}, f*)] and E_π[prediction error] are
+  per-component closed forms, O(M · (k + s₀)); this is correct.
+  - `quad_form` (dist.cpp:22-47) is O(U). I re-derived it:
+    - AR uses S_l = (S_{l−1} + d_{l−1}) ρ^{c_l − c_{l−1}}, giving Σ_{i<l} d_i ρ^{c_l − c_i};
+    - BLK is Σ_b [ρ(Σ_b d)² + (1 − ρ)Σ_b d²];
+    - FAC is ρ(Σd)² + (1 − ρ)Σd².
+
+    `wp5_quad_form_matches_dense` checks it against the dense form, with AR gaps and BLK boundaries.
+- **Draws by binary search** (dist.cpp:233-244). `u·cum.back()` with `upper_bound` selects component c with probability
+  w_c; this is correct. law.bin draws are sparse (`draw_ptr`/`draw_b` over the model's own columns, law.cpp:102-116),
+  and the e2e test checks `draw_ptr` dims.
+- **Top-K + stratified tail** (dist.cpp:317-350, 405-446, 524-578). This is unbiased for f̄ at every node. In the
+  systematic sample, each point (r + u₀)/R_g · τ is marginally uniform on [0, τ), so each draw picks tail component c
+  with probability w_c/τ. Hence E[τ · mean_r f_{c_r}(y)] = Σ_tail w_c f_c(y), and the estimate f̂ = Σ_top w_c f_c + that
+  is unbiased (common random numbers across rows do not affect this).
+  - The G = 4 groups use independent offsets (address position g), so `sd(h2_g)/√G` is a valid between-group SE. The
+    x-noise cancels because the groups share the rows.
+  - **√τ bound.** f̄ = (1 − τ) f̄_K + τ f_T gives √(f̄ f̄_K) ≥ √(1 − τ) f̄_K pointwise in (x, y). Hence
+    H²(f̄, f̄_K) ≤ 1 − √(1 − τ) ≤ τ, and by the triangle inequality for the metric d_H,
+    |d_H(f̄, f*) − d_H(f̄_K, f*)| ≤ √τ. Here `out[G+1]` = exact part / (1 − τ) is the correctly normalised f̄_K.
+  - Note: at realistic tail masses (0.53–0.75) the bound is **vacuous** (0.73–0.87, against d_H ≈ 0.07). The reported
+    value rests on the tail estimate and its SE, as D-17 intends; the record should say so (R-3).
+- **Streamed rows** (dist.cpp:174-230). Rows come in blocks of 500, using only the columns of the top-K and the sampled
+  tail (max 2,003 columns at p = 10⁶). They are bit-equal to `gen::generate_test` (`wp5_make_rows_equal_gen_test`,
+  4 designs). `design_cov` is checked against gen-sampled covariances (`wp5_design_cov_matches_gen_rows`; this also
+  closes MINOR-6b).
+- **Agreement at M = 5,000.** Confirmed: the value matches the exact full mixture within 3 tail SE, for both d_H² and
+  KL. The exact comparator is the same `MixAt` path with every component exact, which was itself validated against
+  Simpson (5e-11). The test uses one fixed seed. My 8-seed run is the stronger evidence.
+
+### (2) Is T7′ honest about what it times? **Yes in its output and README; the headline numbers are not.**
+The test times only `dist_metrics` for the store object Π̂^𝒯 on a synthetic law. It prints "dist_metrics wall", and
+the law build is extrapolated and printed as an "ESTIMATE" (4.1 µs/model → ≈ 4 s at 10⁶). The README adds that reading
+the fit.bin and data.bin is not measured.
+
+Not covered:
+- the `eval` command end to end (mmapped 2.3 GB fit.bin and its content hash, a 1.6 GB data.bin, store_mass, store_find
+  over 4·10⁷ entries, writing eval.bin);
+- the H, M and oracle objects (cheap: one component each);
+- `post`.
+
+The synthetic Law is about half the memory of the real path (R-2). My estimate of the real eval peak at 10⁶ is
+≈ 1.6 GB (law) + 1.6 GB (data) + up to 2.3 GB of file-backed fit pages ≈ 5–6 GB, against 16 GB. Wall time is
+dominated by the measured 14 s plus a few seconds of I/O and hashing, against 1 h. The margins are large, so this does
+not block.
+
+Wording should still change: the commit message and LOG quote "M = 10⁵ in 12.0 s / 0.20 GB, M = 10⁶ in 13.2 s / 0.81 GB"
+as if for eval, and the README quotes different numbers (13.6 s / 0.09 GB, 14.9 s / 0.81 GB). (R-2)
+
+### (3) MINORs 1–11
+| # | status | evidence |
+|---|---|---|
+| 1 FMA guard, binary block | **fixed** | the CLI calls `require_fma_variant()` for every command except info/version (main.cpp:61); `binary_block()` goes into eval.bin meta (run.cpp:250) and law.bin meta (law.cpp:91) |
+| 2 fit.bin names | **routed** | to WP1 for INTERFACES v0.1.3 per the disposition; not WP5 code |
+| 3 law.bin mode | **fixed** | `write_law(..., ff.bin->mode())` (law.cpp:188); the e2e test asserts the mode |
+| 4 GUARD-W | **fixed** | missing `meta.status` → `invalid_input` in eval (run.cpp:120-122) and post (law.cpp:180); post on an incomplete fit writes no law; all tested |
+| 5 intercept, draw covariance | **fixed** | raw-scale identity at every row (≤ 1e-12); Cov(b) against s_y² n E[v] D⁻¹H⁻¹D⁻¹ within 5 SE |
+| 6 m-term, v ≠ σ²; Σ vs gen | **fixed** | 3 fixtures (|m| = 0.8–1.2, v/σ² ∈ {0.5, 2}) → T7 46/46; `design_cov` vs gen rows |
+| 7 kill-on-invalid-dep | **fixed** | in the header; asserted in the test |
+| 8 department guards | **fixed** | realpath + commonpath for `--dept` and `--out`; `P1M_TEST_ROOT` must lie inside `$TMPDIR`. The prefix-trick, `..` and `--out` cases are all tested. submit.sh and build.sh resolve `P1M_DEPT` |
+| 9 sbatch stub | **fixed** | `${SBATCH:-sbatch}`; the test uses an absolute stub path and a PATH of only `fbin:/usr/bin:/bin`, and asserts `which sbatch` is the stub |
+| 10 eval/post manifests | **fixed** | `eval.json` and `post.json` templates with fit.bin and data.bin inputs. eval refuses on a `truth_sha256` mismatch (tested) |
+| 11 competitor mock | **done (DEFER kept)** | the mocks exercise extraction and records for all 9 methods; records carry `version: "mock"`, and mocks load only via `P1M_COMPETITOR_MOCK`. Real APIs are still unverified (acknowledged) |
+
+### Sol F9 items (now in scope): **not done (the FIX FIRST items)**
+- **F9-a: Z_𝒯/Ẑ is still clipped.**
+  - `run.cpp:183`: `tgt = 0.01 + (1 − min(1, exp(logZ_T − logZ)))`. This silently clips π̂(𝒯) at 1, and
+    `eq_T_target_met` then acts as if the store mass were certified.
+  - `store.pi_T_hat` itself is reported unclipped (correct).
+  - Fix: base the target on the deterministic quantity only, or report `eq_T_target` from the unclipped ratio with a
+    flag `pi_T_hat_gt_1`. Label `pi_T_hat` "noisy diagnostic, not a bound on store mass". Add a record line that the
+    only deterministic bound is **log Z_𝒯 ≤ log Z**; `logZ_minus_logZ_T` exists but carries no label. `logZ_lower95`
+    is a Markov lower confidence bound (`core/v3_run.R:155`); keep it, but document that it gives no upper bound on Z.
+- **F9-b: the omitted mass is a sum, but it is not propagated and the law is not labelled.**
+  - `store.dropped_mass` is the directly summed Σ_dropped e^F / Σ_𝒯 e^F (law.cpp:28-30). That is the SUM F9 asks for.
+  - But nothing propagates it to the distance metrics, and nothing calls law.bin a truncated approximation.
+  - Fix: add `dH_bound_truncation = √dropped_mass` to each Π̂^𝒯 dist block. By the same argument as the √τ bound,
+    |d_H(f̄_store, f*) − d_H(f̄_law, f*)| ≤ √(1 − √(1 − δ)) ≤ √δ. Add the words "truncated approximation of the store
+    BMA" to the law.bin meta and the README.
+- **F9-c: tolerances are not absolute and pre-declared.**
+  - T7 still passes on "½ unit of the 3rd significant digit" (test_t7.cpp:64, `tol3`). Sol notes this threshold is
+    undefined near zero distance.
+  - There is no doubling check on GH order or n_x against a declared absolute tolerance for the predictive.
+  - Fix: declare absolute tolerances in README_WP5 before the run, e.g. |Δh2| ≤ 1e-5 and |Δpred_error| ≤ 1e-4, with MC
+    SE ≤ ⅓ tol. Apply them in T7 alongside or instead of `tol3`. Add one test that doubles n_gh (64 → 128) and n_x
+    (4,000 → 8,000) on a fixed law, and asserts the change is below the declared tolerance (the x-MC SE is reported
+    already).
+- **F9 fixture list.** Already covered: identical densities (`h2_normals` = 0), shifts and unequal scales (T7 20–22),
+  finite mixtures (Simpson and M = 5,000), centring (golden data with x = 3 + 2N). Not seen: **zero signal / empty
+  support** (S₀ = ∅ oracle, k = 0 component in dist_metrics), and the **near-constant (anchored) preprocessing branch**
+  through the raw-scale map. Add both; small tests.
+
+### Remaining minors (non-blocking; can go with the F9 fix)
+- **R-1.** The tail SE uses G = 4 groups (3 df). With a fixed seed, the M = 5,000 gate at 3 SE is deterministic, but
+  under t₃ about 6 % of seeds would fail. My 8-seed run had one |z| = 2.54. Use G = 8, or a t_{G−1} quantile, for
+  gates and confidence intervals.
+- **R-2.** Relabel T7′ as "dist_metrics(Π̂^𝒯) wall/RSS" in the commit and LOG, and reconcile the three sets of numbers
+  (commit 12.0 / 13.2 s; README 13.6 / 14.9 s; my run 12.1 / 14.2 s). State that the real law path is ≈ 1.6 kB/model
+  (≈ 1.6 GB at 10⁶), and that a full eval at 10⁶ is estimated at ≈ 5–6 GB peak, not measured. A one-off end-to-end
+  eval on the 10⁴ pilot will measure it.
+- **R-3.** In the `predictive` block, add a flag or note when `dH_bound` ≥ the estimate itself (vacuous), so the
+  analysis cites the estimate ± SE rather than the bound.
+
+Counts for the re-check: open items F9-a, F9-b, F9-c and the F9 fixtures (fix first; small); R-1 to R-3 (minor).

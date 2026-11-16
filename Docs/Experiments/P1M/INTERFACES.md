@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.3 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.6 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -60,14 +60,20 @@ struct Data {                                                 // read-only after
   bool q_recomputed; }`, routes `CHOL=0, REFACTOR=1, QR=2` as `core/cpp/v3_score.h:27`. Derived per model:
   `F = logprior[k] + logm`, `lg0 = logprior[k] + comp(S)`, `d = (logm − logm0) − comp(S)` (`core/cpp/v3_engine.h:89-97`).
 - **Neighbours** (WP2, `setup.h`): CSR `struct Neighbours { std::vector<int64_t> ptr; std::vector<int32_t> idx; }`,
-  `ptr.size() = p+1`, each row sorted ascending; content = `core/cpp/v3_blocks.h:149-170`.
+  `ptr.size() = p+1`, each row sorted ascending; content = `core/cpp/v3_blocks.h:149-170`. Size bound: at most pB
+  directed selections and at most 2pB adjacency entries in total after symmetrising; **no per-column maximum** (a hub
+  can have degree p − 1; tests include hubs). The uncapped threshold graph of the partition is a different object
+  with its own edge-count guard (WP2).
 - **Partition** (WP2): `struct Partition { int32_t J, B; std::vector<int64_t> bptr; std::vector<int32_t> members;
   std::vector<int32_t> blk, pos; }` — block b = `members[bptr[b]..bptr[b+1])`, sorted, packing order; `blk[j], pos[j]`
   as `core/cpp/v3_start.h:38`. Plus the duplicate components and the cut-group record (CSR each).
 - **Tables** (WP2): `struct Tables { std::vector<int64_t> code_ptr; std::vector<double> logr; ... }` — block b's
   `logr` for codes `0..2^{m_b}−1` at `logr[code_ptr[b] + code]`, NaN where |U| > K; code bit i ↔ i-th member
-  (`core/cpp/v3_start.h:76-98`). `logprof`, `logF` ((J+1)×(K+1) row-major), `size_logmass`, `size_cum`, `cond_cum`,
-  `codes_by_size`, `sub_cum`: flat arrays + offsets, same values as `core/cpp/v3_start.h:101-157`.
+  (`core/cpp/v3_start.h:76-98`). `logprof`, `logF` ((J+1)×(K+1) row-major), `size_logmass`, `size_cum`, `cond_cum`:
+  flat arrays + offsets, same values as `core/cpp/v3_start.h:101-157`. **`codes_by_size` and `sub_cum` are not stored
+  (D-18)**: they are recomputed on demand for each block a π₀ draw selects, with the same values and bits —
+  `codes_by_size[b][j]` = the codes of popcount j in increasing order, `sub_cum[b][j]` = `cumulative_from_logs` of
+  their `logr` (`core/cpp/v3_start.h:101-116`). Gate: draws identical with and without the stored sections.
 - **Start** (WP2): `struct Start { const Data* D; const Partition* P; const Tables* T; double logZbar0;
   double comp(ModelView) const; double log_gamma0(ModelView) const; void draw_pi0(UniformSource&, Address, Model&) const;
   ModeResult mode; }`. `comp` = the ordered block sum of `core/cpp/v3_start.h:54-66` (same bits).
@@ -91,20 +97,38 @@ struct Address { uint32_t seed; uint8_t role, tier, iter; uint32_t island;   // 
 inline double uniform_at(const Address&);
 struct UniformSource { virtual double u(const Address&) = 0; };   // AddressedSource (Philox), CompatSource (below)
 ```
-**Address assignment (production; fixed by control flow before the value is read; spec §3 rule 1).**
+**The address domain (production; v0.1.5).** Every uniform has an address fixed by the control flow before its value
+is read (spec §3 rule 1). Fields, widths and limits; the packing is a bijection onto (key, counter), so distinct
+addresses give distinct Philox inputs:
+| field | width | meaning | limit |
+|---|---|---|---|
+| seed | key[0], 32 b | fit seed (data seed for role GEN) | 1 … 2³¹−1 |
+| role | key[1] bits 28–31 | FINAL 0, PILOT 1, DIAG 2, POST 3, GEN 4, TEST 5 | < 16 |
+| tier | key[1] bits 26–27 | calibration tier e (FINAL: 0) | < 4 |
+| iter | key[1] bits 20–25 | rebuild iteration: 0 = pilot, k = rebuild k (FINAL: 0) | < 64 |
+| island | key[1] bits 0–19 | final island r = 1…R′, diagnostic island r = 1…4, pilot 0 | < 2²⁰ |
+| xph | ctr[3] bits 24–31 | INIT, RESAMPLE, BRIDGE, BURN, MEASURED, POST; GEN/TEST rows for gen | < 256 |
+| stage | ctr[3] bits 0–23 | bridge stage t (INIT 0); BURN: round l; MEASURED: round h | < 2²⁴ |
+| particle | ctr[2], 32 b | the **destination** particle i = 1…N (after resampling, never an inherited stream) | < 2³² |
+| position | ctr[1], 32 b | round position q = 1…m (m = p + B + 2); 0 for order draws, resampling, initial draws | < 2³² |
+| slot | ctr[0], 32 b | `(kind << 28) | index`, kinds below | index < 2²⁸ |
+
+Slot kinds (`SlotKind`, rng.h): `SK_ORDER` 0 (Fisher–Yates draw d = 0…m−2), `SK_RESAMPLE` 1, `SK_PI0_SIZE` 2 (total size
+k), `SK_PI0_BLOCKSIZE` 3 (index = block b), `SK_PI0_SUBMODEL` 4 (index = block b), `SK_MOVE_J` 5, `SK_MOVE_L` 6,
+`SK_ACCEPT` 7 (`SLOT_ACCEPT`). So J < 2²⁸ and m − 1 < 2²⁸.
 | draw | xph | stage | particle | position | slot |
 |---|---|---|---|---|---|
-| initial π₀ draw of particle i | INIT | 0 | i (1-based) | 0 | 0,1,… in the π₀ draw's order (`core/cpp/v3_start.h:158-176`) |
-| resampling uniform i at stage t | RESAMPLE | t | i | 0 | 0 |
-| round order (Fisher–Yates step i = m−1…1) | BRIDGE (stage t) / BURN (round l) / MEASURED (round h) | t / l / h | i | 0 | m−1−i (draw order 0,1,…) |
-| step at round position q (1-based) | same as its round | same | i | q | G: 0. U: 0 j, 1 l, 2 accept. N_b: 0 j, 1 l, 2 accept. I: slots 0…u−1 for the u uniforms the π₀ draw consumes (its documented order), accept at the fixed slot `SLOT_ACCEPT = 0xFFFFFFFF` |
-Unused slots (self-loops, empty N(j)\S) are simply not read. Calibration uses role PILOT/DIAG, `tier`, `iter`
-(0 = pilot, k = rebuild k), island = diagnostic island r (pilot 0); diagnostic islands of different iterations
-therefore get fresh addresses (law-equivalent to v3's continued streams; class L). Final islands: role FINAL, island r
-= 1…R′, tier/iter = 0. `post` draws: role POST, xph POST. Invariant I5 is checked by `CheckedSource` (rng.h, WP1):
-it wraps any source and asserts that each address is used once (production) or that addresses arrive strictly
-increasing in the serial order `serial_less` (compat; per stream). WP3/WP4 wrap their sources with it in tests, and
-always when `v4::kCheckAddresses` is true (CMake option `-DV4_CHECK_ADDRESSES=ON`, compile definition of that name).
+| initial π₀ draw of particle i | INIT | 0 | i | 0 | PI0_SIZE 0; PI0_BLOCKSIZE b for b = J−1…0 while r > 0; PI0_SUBMODEL b for k_b > 0 (`core/cpp/v3_start.h:158-176`) |
+| resampling uniform of destination i at stage t | RESAMPLE | t | i | 0 | RESAMPLE 0 |
+| round order of particle i | BRIDGE / BURN / MEASURED | t / l / h | i | 0 | ORDER d, d = 0…m−2 in draw order (`core/cpp/v3_engine.h:193-211`) |
+| step at round position q | as its round | as its round | i | q | G: ACCEPT. U, N_b: MOVE_J, MOVE_L, ACCEPT. I: the π₀ slots above, then ACCEPT |
+
+Unused slots (self-loops, empty N(j)\S) are simply not read. Diagnostic islands of different rebuild iterations get
+fresh addresses (law-equivalent to v3's continued streams; class L). `post` draws: role POST, xph POST. Role GEN uses
+slot = polar-method attempt number (no kinds). **I5** is checked by `CheckedSource` (rng.h): UNIQUE (production) or
+INCREASING in `serial_less` (compat, per stream). The test `i5_multi_rebuild_calibration_and_final` drives the full
+control flow of 2 tiers × (pilot + 3 rebuilds × 4 islands) + 16 final islands through it. WP3/WP4 wrap their
+sources with it in tests, and always when `v4::kCheckAddresses` is true (CMake `-DV4_CHECK_ADDRESSES=ON`).
 
 **Compat mode** (`CompatSource`): ignores the address and returns the next `Xoshiro256ss::uniform()` of the unit's v3
 stream (`core/cpp/v3_util.h:43-61`, copied), seeded `seed_stream(seed, stream)` with stream = 0 pilot tier 0, 1–4 diag
@@ -164,6 +188,44 @@ struct ThreadLedger : Tally {                // one per worker thread; NO stores
   // a full buffer is flushed into the island store at once (under the island ledger's lock)
 };
 ```
+- **EventKey assignment (v0.1.5).** Lexicographic key order = the serial reference traversal of `core/cpp/v3_core.cpp:
+  408-476`: tables → inherited → each island entirely, in order → final local search → LS0 (calibration: tables, then per
+  tier e: pilot, its local search, then per rebuild k: diagnostic islands 1–4 and their local search). `sub` is the
+  within-step event ordinal.
+  | event | seg | tier | iter | unit | xph | stage | round | particle | position | sub |
+  |---|---|---|---|---|---|---|---|---|---|---|
+  | table code c of block b | TABLE | 0 | −1 | 0 | 0 | b + 1 | 0 | 0 | c | 0 |
+  | inherited model i (input order) | INHERITED | 0 | −1 | 0 | 0 | 0 | 0 | i | 0 | 0 |
+  | final island r | FINAL | frozen tier | −1 | r | INIT / BRIDGE / BURN / MEASURED | INIT 0, BRIDGE t, BURN and MEASURED T | INIT 0, BRIDGE t, BURN l, MEASURED h | i | q (INIT 0) | G: held 0, flip 1; else 0 |
+  | calibration island (pilot r = 0, diagnostic r = 1–4) | CALIB | e | k | r | as above | as above | as above, MEASURED L + h | i | q | as above |
+  | local search | CALIB (unit `UNIT_LOCAL`), LOCAL, or LS0 | e / frozen tier | k / −1 | 0 or `UNIT_LOCAL` | 0 | scan s (centre 0) | moves so far | 0 | scan index (centre 0) | 0 |
+
+  stage / round / particle / position take v3's own EventCtx values (`core/cpp/v3_engine.h:274-372` islands, `:379-422` local search), so
+  provenance exports to the v3 fingerprint unchanged; `xph` orders the phases of an island.
+
+  **Every inherited-step offer of the calibration HPM model carries that model's CALIBRATION EventCtx (its calibration
+  provenance), never an INHERITED key**, so the smallest-key rule reproduces v3's provenance replacement
+  (`core/cpp/v3_core.cpp:428-440`) instead of yielding "inherited"; all other inherited models carry INHERITED keys. Provenance = the smallest key among the
+  winning model's events, which is its first event in the serial traversal.
+- **Logical events by mechanism (v0.1.5; `core/cpp/v3_engine.h:84-196`, `v3_core.cpp:372-427`).**
+  | step / source | condition | events (mechanism) | uniforms |
+  |---|---|---|---|
+  | initial draw | always | 1 INIT | π₀ |
+  | G at label j | j ∈ S or \|S\| < K | **2**: GIBBS_HELD (sub 0, not fresh) + GIBBS_FLIP (sub 1) | 1 |
+  | G at label j | j ∉ S and \|S\| = K (cap) | 1: GIBBS_HELD | 1 |
+  | U | \|S\| ∈ {0, p} (self-loop) | 0 | 0 |
+  | U | otherwise | 1 USWAP | 3 |
+  | N_b | S empty (self-loop) | 0 | 0 |
+  | N_b | N(j) \ S empty (no score) | 0 | 1 |
+  | N_b | otherwise | 1 NSWAP | 3 |
+  | I | always | 1 INDEP | π₀ + 1 |
+  | local search | each scanned neighbour; the centre only when emitted (LS0) | 1 LOCAL | 0 |
+  | tables | each code with \|U\| ≤ K, **once per ledger that ingests tables** (calibration ledger; the fit's merge ledger), never per island | 1 TABLE | 0 |
+  | inherited models | offered to stores and HPM only | 0 | 0 |
+
+  An unsaturated round therefore has ≈ 2Np Gibbs events, not Np. **I4** (replaces "events = steps", spec §5): per round
+  and phase, `logical` increments equal `i4_expected(MoveStats)` (records.h): held = G steps, flip = G steps − cap
+  steps, USWAP = executed U, NSWAP = executed N − no-score N, INDEP = I steps.
 - `event` counts `logical[phase][mech]`; updates `island_best[r]` for the island's own events exactly as
   `core/cpp/v3_ledger.h:104-113`; if `offer`, offers to HPM and stores. Production offers every consumed score
   (`offer = true`, no cache); compat offers on fresh evaluations exactly as v3. Rule (spec §3.2): scores of labels a
@@ -212,8 +274,10 @@ the binary block (§5.3), so the content hash changes with the binary. Three ide
   `y_sha256`) and `Xs_cm`, `ys`, `kept` of `data.bin`. Never used for setup, calib, island, fit or law files.
 - **Cross-machine bit identity (T2)** compares the section hashes of all sections except `meta`, or the fit fingerprint;
   never content hashes.
-- **Binary consistency**: the merge refuses islands whose binary blocks differ in libm self-test, flags or (theory mode,
-  T bit identity) git commit; a checkpoint restart refuses a different binary block.
+- **Binary consistency** (one helper, `binary_compatible(a, b, use)` / `require_binary_compatible`, provenance.h): merge
+  (V) needs both libm self-tests passed and equal flags and libm binding; merge (theory mode) also needs equal git
+  commits that are clean (no `-dirty`) and known; a checkpoint restart also needs the same executable (sha256) and git
+  commit. `git_commit` = 40-hex HEAD + `-dirty` when tracked files differ, refreshed at every build.
 JSON numbers are doubles: every u64 value (hashes, Zobrist keys, large counters) is written as a hex string `"0x…"`.
 Sections (names fixed; WPs may add sections, never rename):
 - `raw.bin` (gen): `X_cm` f64 n×p, `y` f64 n, `meta`. `truth.json`: design, params, seed, S₀ (1-based), β*, σ*.
@@ -221,7 +285,7 @@ Sections (names fixed; WPs may add sections, never rename):
   i32, `meta` {n, p_raw, p, K, yty, logCn, logm0, logWK, y_max, y_mean, y_sd_scaled, prep_class: "B"|"A"}, `logw`, `logprior`.
 - `setup.bin` (WP2): `nb_ptr` i64, `nb_idx` i32, `dup_ptr/dup_idx`, `cut_ptr/cut_idx`, `blk_ptr/blk_members`, `blk`,
   `pos`, `code_ptr`, `logr`, `logprof_ptr/logprof`, `logF`, `size_logmass`, `size_cum`, `cond_ptr/cond_cum`,
-  `cbs_ptr/codes_by_size`, `sub_ptr/sub_cum`, `mode_S`, table top stores `tstore_{top,lead0,lead1}_{v,off,len,hash,pool}`, `meta`.
+  `mode_S`, table top stores `tstore_{top,lead0,lead1}_{v,off,len,hash,pool}`, `meta`.
 - `calib.bin` (WP4): `grid`, `meta` {tier, N, L, Hm, I_used, flags, triggers}, `grids_all_ptr/grids_all`, stage
   records, calibration stores (as stores), HPM (`hpm_S`, `hpm_ev`), `logical` u64 N_PHASE×N_MECH.
 - `island_r.bin` (WP3): stage table (`st_phi, st_inc, st_ess, st_cum, st_distinct_res, st_distinct_moved`, moves
@@ -249,11 +313,17 @@ struct FitResult    { Status status; int32_t Rp; double logZ; std::vector<double
              "libm": {"path": "...", "sha256": "...", "glibc": "2.34", "fma_variant": true}},
   "inputs": {"data.bin": "<content sha256>", "setup.bin": "...", "calib.bin": "..."},
   "params": {"seed": 1, "island": 3, "Rp": 16, "N": 2500, "threads": 48, "...": "..."},
+  "reference": {"name": "...", "core_commit": "...", "core_files_sha256": {"cpp/v3_score.h": "...", "...": "..."},
+                "R": "...", "compiler": "...", "flags": "...", "libm": {"path": "...", "sha256": "...", "glibc": "..."}},
   "budget": {"task_seconds": 7200, "fit_core_h": 1000, "retries": 2},
   "machine": {"host": "...", "node_type": "...", "slurm_job_id": "..."},
   "outputs": {"island_3.bin": null} }
 ```
-The job fills `outputs` with content hashes and `status` in `<out>.json` when it ends. Every command writes the
+The job fills `outputs` with content hashes and `status` in `<out>.json` when it ends. **`reference`** (v0.1.5; Sol
+F10) names the exact reference that compat and T bit tests compare against: the `core/` commit and per-file SHA-256,
+R, compiler, flags and libm. It is the block written by `tools/make_fixtures.R` into `tests/fixtures/MANIFEST.json`,
+and the test `fixtures_pinned_reference_matches_core` fails if `core/` drifts from it. Compat runs copy it into their
+manifests; "revision D" alone is not an identifier. Every command writes the
 `binary` block (`v4::binary_block()`, `include/v4/provenance.h`) into its record and into the `meta` of each file.
 
 ## 6. Scorer, two arithmetic forms, one interface (`include/v4/score.h`)
@@ -274,14 +344,16 @@ against Bit; fallback to the Bit form whenever the class-A Cholesky pivot test f
 kernel (WP3) is templated on `Arith`; T always instantiates `Bit`, V `ClassA`. Pinned transcendental functions:
 all scorer/engine code calls `v4::pm::*` (`include/v4/pmath.h`), never `std::` directly. **Binding: glibc 2.34 libm
 (no bundling)**; a correctly rounded libm would change the v3.1 bits.
-- **Bit form uses only `pm::log, exp, lgamma, sqrt`** (and the x87 `pm::logl, expl` of `log_sum_exp`). Their bits are
-  equal on Owls and NOTS, although the libm files differ (MEASURED, `results/PMATH_NOTS.md`).
+- **Bit form uses only `pm::log, exp, lgamma, sqrt`** and the x87 `pm::logl, expl` of `log_sum_exp` (→ log W_K → log ϖ →
+  every F; WP2's `cumulative_from_logs`). The double functions are bit-equal on Owls and NOTS although the libm files
+  differ, and so are the x87 rows (MEASURED, `results/PMATH_NOTS.md`, jobs 2747666 and 2747875).
 - **`log1p` / `expm1` never appear in bit-form paths.** They exist only as `pm::machine::log1p, expm1` for class A; their
   bits differ between Owls and NOTS, and their results never enter a fixture or a bit test. (`core/` never calls them:
   `log_add` and `log1mexp_v3` are unused.)
 - **Guard**: every command except `info`/`version` calls `require_bit_libm()` (`provenance.h`; `require_fma_variant()`
-  is an alias). It runs `pm::self_test()`: log, exp and lgamma on the six fixed rows of `v4_pmath_check` (2·10⁶
-  arguments each) must reproduce the measured reference hashes, otherwise `invalid_input`. It keys on function results,
+  is an alias). It runs `pm::self_test()`: log, exp and lgamma on the six fixed rows of `v4_pmath_check`, plus the x87
+  rows `expl` ([−11000, 0]) and `logl` ([1, 1001), 64-bit mantissas; 80-bit results hashed), 2·10⁶ arguments each, must
+  reproduce the measured reference hashes, otherwise `invalid_input`. `info` skips it (`self_test: "not run"`). It keys on function results,
   not on the libm file hash. The binary block records the libm path, its SHA-256, the glibc version, `fma_variant` and
   the self-test result. Evidence: `engine_v4/tests/PMATH_REPORT.md`.
 
@@ -333,3 +405,16 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
   block. §3: CMake option `V4_CHECK_ADDRESSES` → `v4::kCheckAddresses`. §6: bit form uses only log/exp/lgamma/sqrt;
   log1p/expm1 are class A only (`pm::machine::`); the guard is `require_bit_libm()` = function-result self-test, not
   the libm file hash. Store/ThreadLedger refuse NaN values (internal_error).
+- v0.1.4 (2026-11-15, WP1; D-18; PR14 review F1–F3) — §5.1/§2: `setup.bin` no longer stores `codes_by_size` / `sub_cum`
+  (recomputed on demand per selected block, same bits). §6: x87 `expl`/`logl` rows in the self-test guard; `info` skips
+  the self-test. §5.1: `binary_compatible()` is the one binary-consistency rule; `git_commit` with `-dirty`.
+- v0.1.5 (2026-11-15, WP1; Sol review EXP_CP1 F4, F10, F11) — §3: the address domain made explicit and injective
+  (field widths and limits, destination particle, slot kinds ORDER / RESAMPLE / PI0_SIZE / PI0_BLOCKSIZE /
+  PI0_SUBMODEL / MOVE_J / MOVE_L / ACCEPT); I5 test over a full multi-rebuild calibration. §4.2: EventKey assignment
+  per event kind along the serial reference traversal (tier, iter, within-step ordinal `sub`); logical events by
+  mechanism (feasible G = 2 events; cap, self-loop and no-score cases); table counts once per table-ingesting ledger,
+  inherited 0; I4 corrected (`i4_expected`). §5.3: `reference` (pinned core commit, file hashes, compiler, flags, libm).
+  §2: neighbour graph ≤ pB selections / ≤ 2pB entries, no per-column maximum.
+- v0.1.6 (2026-11-15, WP1; PR15 review) — §4.2: the inherited calibration HPM is offered with its calibration EventCtx
+  (never an INHERITED key). `gen::generate_test_rows` (rows [a, b), same bits as the full test design). §6: the x87
+  rows are measured equal on NOTS (job 2747875); all 8 guarded rows match there.

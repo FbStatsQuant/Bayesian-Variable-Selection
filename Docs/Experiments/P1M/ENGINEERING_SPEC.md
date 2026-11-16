@@ -223,7 +223,7 @@ about 10× larger at n ≥ 256 (B = 16).
 |---|---|---|---|---|---|
 | Xs | f64, column-major, shared | 16 MB | 160 MB | 1.6 GB | exact |
 | z, diag(G), column statistics, maps | 6 arrays of p | 0.5 MB | 5 MB | 48 MB | exact |
-| neighbour lists | CSR, int32; ≤ 2B per column after symmetrising | ≤ 1.2 MB | ≤ 12 MB | ≤ 120 MB | bound for typical designs; hubs can exceed it |
+| neighbour lists | CSR, int32; ≤ pB directed selections and ≤ 2pB adjacency entries in total after symmetrising; **no per-column maximum** (a hub can have degree p − 1; Sol F11) | ≤ 1.2 MB | ≤ 12 MB | ≤ 120 MB | total bound exact; edge guard for the uncapped threshold graph (WP2) |
 | partition | `blk`, `pos` int32 | 0.1 MB | 0.8 MB | 8 MB | exact |
 | tables `logr` | f64 per code; 210 codes per column (measured, plan §6.1) | 17 MB | 170 MB | 1.7 GB | measured count |
 | sampler tables | `sub_cum` f64 + `codes_by_size` u32 per code; `cond_cum` ≈ 8 KB per block; `logF` (J + 1)(K + 1) f64 | 35 MB | 350 MB | 3.5 GB | **(guess ±30%)** |
@@ -320,7 +320,7 @@ Invariants checked at run time (cheap; a violation is `internal_error`, never a 
 - I2. log Z_𝒯 ≤ log Ẑ + a declared margin is **not** asserted (Ẑ is noisy); it is recorded. What is asserted: HPM F ≥ every
   store F; F(HPM) recomputed by `score` equals the stored value.
 - I3. Per stage: weights finite, ESS in [1, N], grid strictly increasing from 0 to 1.
-- I4. Logical counts per round equal the number of executed steps (N × (p + B + 2) minus recorded self-loops).
+- I4 (corrected per Sol F4c; INTERFACES v0.1.5): logical events are counted **by mechanism**. A feasible Gibbs step emits two events (held + flip), a capped or infeasible one emits held only, and U/N/I emit one per scored proposal (none on self-loops or no-score rejects). Tables are counted once per ingesting ledger; inherited models count 0. The expected count is `i4_expected()`, asserted per round.
 - I5. Each uniform address is used at most once (debug builds: address log on small cases).
 - I6. Every scanned centre of a local search has a complete scan or the search is marked incomplete.
 
