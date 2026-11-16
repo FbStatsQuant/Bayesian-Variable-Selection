@@ -157,3 +157,4 @@
 - 01:30 — DIST: D3 VERIFIED (TC8 EQUAL confirmed; Cor C HPM verified); DEPS all OK; sweep manifest SW1 frozen (de9ccec7…), RP commit 05bc9ae0 made by running the snapshot script; Astra sweep launched 01:28. R1 freeze likely a few hours after 09:00. HQ told.
 - 01:33 — heartbeat: PSHARP-R R2 Opus seat PASS 9.2 (F-1/F-2 resolved), Sol seat pending; T03ACC SL1 locked (v1.1), line checks started; RM2-R council prep; MISR-R R1 seats running; START2-R last log 23:26 (2h07, < 3 h). No report.
 - 02:19 — SL0 PC = EDITORIAL-ONLY (D57); recorder task N staged; HQ GO asked.
+- 02:19 — SL0 PC reviewer settled; side finding: SUBSTANTIVE post-C1 change in C-PACK I1 e4′(i) (outside SL0, not headline) → queued post-freeze targeted re-check (with M55).

@@ -47,6 +47,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | NARROW batch | 12 statement-precision narrowings (LIFECYCLE §3, priced) + H5 card for GEN C4 / FAC-CS C1 / SAMP:Pkg | ADJ_MINORS_iii.md (D31) |
 | W2-APP Family-map diff round | F1–F4 + M57/M58 patches | PC1, D31 |
 | errata batch | CHAPTER-ONLY errata held for riders (W3-EDIT CP1 groups) + F-UNI "eventually" (H5) | D19, D31 |
+| C-PACK e4′(i) re-check | SL0 PC found a SUBSTANTIVE post-C1 change outside SL0: I1_e4_replacement.md:145-147 (e4′(i) allows MR1 replacement routines, uses MR1's unique-maximiser property); targeted Sol/Opus check post-freeze; ties to NARROW item M55 (C-PACK:I1-e4prime). Not under an abstract row. | PC_SL0_sol.md:24 |
 | L1a′ + TH128 acceptance | W3-POST Lemma-1a′ and SOP:TH128: council acceptances → frees POST2:C (Thm 1′) for the abstract later; post-freeze unless T03ACC finishes early (D51) | D51 |
 | SL0 PC check (RUNNING, pre-freeze per HQ) | C-PACK:SL0: diff check of the 5 files changed since the C1 snapshot → record SL0 → drop SL0 from 11 conditional statuses | D48 |
 | accept-identity follow-ups | NB-3 sunset of the legacy Windows fallback; NB-4 compute identity once | CR_accept_identity_opus.md |
