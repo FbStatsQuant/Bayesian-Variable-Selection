@@ -1,0 +1,9 @@
+id	file[:lines]	uses (ids)	sha	checked_sha	checked_by (review file)	state
+PARENT:S	Theory_work/Wave3/W3-PSHARP/lemmas/S_one_step.md	-	261a72f734612e2bb1e227ec82bf202249225c40db0ddfe72e7d51538e540dda	261a72f734612e2bb1e227ec82bf202249225c40db0ddfe72e7d51538e540dda	Theory_work/Wave3/W3-PSHARP/reviews/R2_council_sol.md;Theory_work/Wave3/W3-PSHARP/reviews/R2_council_opus.md (W3-PSHARP:S@1.0.0, MANIFEST_R2)	OK
+PARENT:A-proof	Theory_work/Wave3/W3-PSHARP/lemmas/A_log_factor.md	PARENT:S	84ee2882ad7144c9e63d2a557bb29d758582982199ec0c6f9e6d9ec376e682e6	84ee2882ad7144c9e63d2a557bb29d758582982199ec0c6f9e6d9ec376e682e6	Theory_work/Wave3/W3-PSHARP/reviews/R2_council_sol.md;Theory_work/Wave3/W3-PSHARP/reviews/R2_council_opus.md (W3-PSHARP:A@1.0.0, MANIFEST_R2)	OK
+PARENT:STATEMENT	Theory_work/Wave3/W3-PSHARP/STATEMENT.md	-	89e6cb9e76c664cb5cc047cb6e82a290c71785ead8158a45fce844097dc87633	89e6cb9e76c664cb5cc047cb6e82a290c71785ead8158a45fce844097dc87633	Theory_work/Wave3/W3-PSHARP/reviews/R2_council_sol.md;Theory_work/Wave3/W3-PSHARP/reviews/R2_council_opus.md (MANIFEST_R2)	OK
+STMT	Theory_work/Wave3/W3-PSHARP-R/STATEMENT.md	PARENT:STATEMENT	c97c58848a952ec4e1e67a507dad1f4a66eddea3f25bbd5a24022dd3eb13032b	-	-	UNCHECKED
+AE	Theory_work/Wave3/W3-PSHARP-R/lemmas/AE_expectation.md	STMT;PARENT:S;PARENT:A-proof	(not written)	-	-	UNCHECKED
+A2C	Theory_work/Wave3/W3-PSHARP-R/lemmas/A2C_critical.md	STMT;PARENT:S;PARENT:A-proof	(not written)	-	-	UNCHECKED
+N1	Theory_work/Wave3/W3-PSHARP-R/numerics/ae_fixed_p.py	-	cae1af2234d9425c6ea9cedf45bb0c28f05edc72382b19c4e21a0a7e42cd7b2e	-	-	UNCHECKED (numerics; cited in STATEMENT §5 as observation only)
+READER_DELTA	Theory_work/Wave3/W3-PSHARP-R/READER_DELTA.md	STMT	3fd2e1146758228a1632c42899b2721cc60216edf523d6d2ac7fefb4b53f4fb5	-	-	UNCHECKED
