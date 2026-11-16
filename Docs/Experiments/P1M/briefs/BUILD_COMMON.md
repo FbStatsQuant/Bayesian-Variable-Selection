@@ -50,6 +50,9 @@ State in the PR which tests ran, on which machine, with what result. A PR withou
   submission). Never touch `/projects/ml75` or `projects/BVS/Others/`.
 - Labels: every performance number is MEASURED (machine, threads, command) or ESTIMATE. No unlabelled numbers.
 
+## Process hygiene (added 2026-11-16 after an incident)
+- **Never `pkill -f` / `killall` by pattern.** Several builders, reviewers and other departments run the same binaries on Owls. Stop only processes you started, by PID (record PIDs when you launch background runs).
+
 ## Company rules for agents
 - Solve technical problems yourself or with the manager. No Fable or other expensive resources.
 - Start no sub-agents.

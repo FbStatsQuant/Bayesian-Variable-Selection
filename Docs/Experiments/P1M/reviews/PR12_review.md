@@ -365,3 +365,37 @@ as if for eval, and the README quotes different numbers (13.6 s / 0.09 GB, 14.9 
   analysis cites the estimate ± SE rather than the bound.
 
 Counts for the re-check: open items F9-a, F9-b, F9-c and the F9 fixtures (fix first; small); R-1 to R-3 (minor).
+
+---
+
+## Final re-check (2026-11-16): head 85530b1, diff f596f27..85530b1. Scope: Sol F9 items, R-1, R-3, the T7′ wording, and WP5's switch to `gen::generate_test_rows`
+
+### Verdict: **MERGE**
+
+**Tests** (Owls, nice 19, 3 threads, TMPDIR `…/tmp/20261116-review-pr12c`, removed after):
+- quick: **61 test cases, 0 failed**; Slurm driver OK (12); competitor harness OK, including the mocks.
+- `--full`: **64 test cases, 0 failed**.
+  - T7: **46 / 46** under the new absolute criterion; my table matches the committed `T7_result_owls_20261116.tsv`.
+    Worst |closed − MC| / tol = 0.54.
+  - M = 5,000 agreement: 0.005008 vs exact 0.005006 (tail SE 2.3e-6, z ≈ 0.9); KL z ≈ 1.2.
+  - T7′: M = 10⁵ in 12.8 s / 0.20 GB; M = 10⁶ in 13.8 s / 0.81 GB.
+
+| item | status | evidence |
+|---|---|---|
+| F9-a: Z_𝒯/Ẑ unclipped and labelled | **done** | `store.pi_T_hat` is unclipped, with `pi_T_hat_gt_1`, `pi_T_hat_note` ("noisy diagnostic … never certifies P-STORE") and `deterministic_bound` ("log Z_T ≤ log Z … no deterministic upper bound") (run.cpp:169-176). The eq_T target uses the **unclipped** ratio and is labelled a diagnostic (run.cpp:190-192); the e2e test asserts the exact formula. `logZ_T_note` and `logZ_lower95_note` are in the evidence block (metrics.cpp:128, 149) |
+| F9-b: law labelled a truncated approximation; δ carried | **done** | law.bin `meta.label` and `meta.truncation` (law.cpp:86-87). `store.law_label`. The Π̂^𝒯 dist block has `law_truncation{label, omitted_mass = δ, dH_bound_truncation = √δ, weighted_h2_bound_truncation = δ}` (dist.cpp:456-466); e2e asserts the labels and that the bound equals √δ |
+| F9-c: absolute, pre-declared tolerances | **done** | T7 constants are declared in code and README before the run: SE ≤ 1e-5 (d_H²) / 2.5e-4 (prediction error), and |closed − MC| ≤ max(5·SE, 1e-6). MC doubles 2²⁰…2²⁸. The v1 relative criterion is printed for information only. This is well defined near zero |
+| F9-c: quadrature / x-draw doubling | **done** | `wp5_predictive_numerical_error_doubling`, with tolerances declared in the test header. GH 64 → 128 changes d_H² by **1.3e-15** and KL by 1.2e-16 (declared ≤ 1e-8). x 4,000 → 8,000 changes d_H² by 5.8e-5 against x-SE 1.3e-4, and KL by 2.2e-4 against 5.2e-4 (declared ≤ 5 SE) |
+| F9 fixture: empty support / zero signal | **done** | a = 0 gives S₀ = ∅. The k = 0 component's plug-in equals `h2_normals(ā, v̄, 0, σ²)` to 1e-15 with s² = 0; the weighted plug-in equals the plug-in. The predictive matches Simpson to 1e-9. Selection is "correct"; `min_true` = null |
+| F9 fixture: anchored near-constant branch + unequal scales | **done** | `prep::standardise` asserted anchored on x = 1 + 1e-9 e. Scales 3e4 and 2e-3 with centre 5. Max |(x − x̄)/ŝ − z| = 2.7e-8 and raw-vs-standardised predictor 1.4e-7, against declared 1e-6 / 1e-5 (the cancellation bound eps/1e-9 is stated) |
+| R-1: tail groups | **done** | default G = 8 (run.cpp:51); the note says to cite ± SE with t_{G−1} |
+| R-3: vacuous-bound flag | **done** | `predictive.dH_bound_vacuous` and `note` (dist.cpp:582-584) |
+| T7′ wording | **done** | README: "T7′ **times the store-law metrics only**"; "**A full `eval` at 10⁶ is NOT measured**". It gives the 1.6 kB/model real law path and the 5–6 GB estimate, and records the run-to-run spread with all three earlier timings. The commit message corrects f596f27's wording |
+| `generate_test_rows` switch | **OK** | the copied gen arithmetic is replaced by WP1's `gen::generate_test_rows` (PR #17, merged). `wp5_make_rows_equal_gen_test` (4 designs, bit-equal to `generate_test`) and `wp5_design_cov_matches_gen_rows` still pass. Non-gen designs are unchanged |
+
+**Non-blocking notes** (fix whenever convenient):
+- **N-1: the √δ claim is stated too broadly.** README_WP5 lines 44-46 and the comment at dist.cpp:457-459 say "every d_H of the law object is within √δ". The derivation covers the **mixture predictive** d_H(f̄, f*), and the δ bound covers the weighted d_H². For `post_dH`, the tail probabilities and quantile levels move by at most δ (total variation), not √δ. The posterior-mean plug-in is not covered by either bound. Restrict the wording to those cases.
+- **N-2: the x-doubling check is lenient.** The 8,000-row set contains the 4,000 rows, so the difference has SD ≈ SE₄₀₀₀/√2, and the 5-SE threshold is about 7 of its own SDs. The F9 requirement (reported x-MC SE, quadrature error ≪ tolerance) is met; just do not cite this check as tight.
+
+Final review counts: CRITICAL 0 · MAJOR 0 open (MAJOR-1 resolved by D-17) · MINOR 0 open (1–10 fixed; 11 mocked and DEFER) ·
+F9 done · 2 non-blocking notes.
