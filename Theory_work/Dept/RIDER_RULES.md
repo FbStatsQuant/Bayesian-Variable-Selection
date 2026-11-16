@@ -83,5 +83,6 @@ the new text, and the bridges it needs. The manager passes it to HQ for W3-READE
 - Temp work: `export TMPDIR=/home/fb31/SMC_Theory_Department/tmp/<YYYYMMDD>-<TICKET>-<what>` (CI runs: `/home/fb31/SMC_Theory_Department/ci`), never /tmp; remove when done (POLICIES §12 rules 8–9; /home/fb31/SMC_Theory_Department/INDEX.md).
   **Exception — Codex reviewers (Sol/Astra) are sandboxed:** a write outside their worktree raises an approval request nobody
   can answer, and the reviewer stalls forever (11-16, START2-R RC1). Their briefs must say: no TMPDIR, no writes outside
-  the worktree; scratch only in a git-ignored `.rc_tmp/` inside the worktree, deleted at the end.
+  the worktree; scratch only in `<worktree root>/.rc_tmp/` (git-ignored for all worktrees via the shared
+  `.git/info/exclude`; never inside the ticket folder, where manifest.py would count it), deleted at the end.
 - Do not touch: `Theory_work/Wave3/W3-DIST/`, `W3-READER/`, `PROTOCOL_REVIEW/`, `Docs/`, `Lean/`, `Theory_work/Dept/`.
