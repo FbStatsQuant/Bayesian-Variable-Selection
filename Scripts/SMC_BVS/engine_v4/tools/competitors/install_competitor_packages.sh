@@ -12,10 +12,13 @@
 #   CONFIRM=yes install_competitor_packages.sh --apply --from-dir DIR
 #                                                           install from those tarballs only (no network; DIR is indexed
 #                                                           as a local repository, so dependencies install first)
-# Options: --dept DIR (default $HOME/SMC_Engineering_Department), --snapshot YYYY-MM-DD (default below), --no-modules
+# Options: --dept DIR (default <home>/SMC_Engineering_Department), --snapshot YYYY-MM-DD (default below), --no-modules
 # (Owls / tests: use the R on PATH), --ncpus k (default 3), --list TSV (default competitor_packages.tsv; tests).
 # Guards (PR #19 MINOR-1): --dept, --download-only DIR and --from-dir DIR must resolve (realpath, symlinks followed) inside
-# $HOME/SMC_Engineering_Department, else exit 64; R's TMPDIR is a fresh folder under $DEPT/tmp, removed on exit; R runs
+# <home>/SMC_Engineering_Department, else exit 64. <home> is the passwd home of the calling uid (getent), and $HOME must
+# resolve to it, else exit 64 (PR #19 re-check R-1: HOME=... cannot move the guard). R's TMPDIR is a fresh folder under
+# $DEPT/tmp with --apply, else under <home>/SMC_Engineering_Department/tmp (a dry run creates no folder in $DEPT, R-2);
+# it is removed on exit. R runs
 # without the user library (R_LIBS_USER unset, .libPaths = target library + the R installation's own libraries).
 #
 # Pinning: every package this script installs comes from ONE dated CRAN snapshot (Posit Package Manager, source packages).
@@ -26,12 +29,19 @@
 # The list and the APIs the harness uses: competitor_packages.tsv (min_version = the API floor the harness needs).
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEPT="$HOME/SMC_Engineering_Department"; SNAPSHOT="2026-11-02"; MODE=dry; RESOLVE=0; FROM=""; DL=""; MODULES=1; NCPUS=3
+# the department root comes from the passwd database, never from the environment alone
+REAL_HOME=$(getent passwd "$(id -u)" | cut -d: -f6)
+[[ -n $REAL_HOME && -d $REAL_HOME ]] || { echo "refusing: no passwd home for uid $(id -u)" >&2; exit 64; }
+[[ $(realpath -m "${HOME:-}") == $(realpath -m "$REAL_HOME") ]] || {
+  echo "refusing: \$HOME (${HOME:-unset}) is not the passwd home of uid $(id -u) ($REAL_HOME)" >&2; exit 64; }
+DEPT="$REAL_HOME/SMC_Engineering_Department"; SNAPSHOT="2026-11-02"; MODE=dry; RESOLVE=0; FROM=""; DL=""; MODULES=1; NCPUS=3
 LIST="$here/competitor_packages.tsv"
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --apply) MODE=apply ;; --resolve) RESOLVE=1 ;; --from-dir) FROM="$2"; shift ;; --download-only) MODE=download; DL="$2"; shift ;;
-    --dept) DEPT="$2"; shift ;; --snapshot) SNAPSHOT="$2"; shift ;; --no-modules) MODULES=0 ;; --ncpus) NCPUS="$2"; shift ;;
+    --apply) MODE=apply ;; --resolve) RESOLVE=1 ;;
+    --from-dir|--download-only|--dept)   # a path value, never empty
+      [[ $# -ge 2 && -n $2 ]] || { echo "$1 needs a non-empty DIR" >&2; exit 2; }
+      case "$1" in --from-dir) FROM="$2" ;; --download-only) MODE=download; DL="$2" ;; --dept) DEPT="$2" ;; esac; shift ;; --snapshot) SNAPSHOT="$2"; shift ;; --no-modules) MODULES=0 ;; --ncpus) NCPUS="$2"; shift ;;
     --list) LIST="$2"; shift ;;
     *) echo "unknown option $1" >&2; exit 2 ;;
   esac; shift
@@ -39,7 +49,7 @@ done
 [[ $SNAPSHOT =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || { echo "bad --snapshot $SNAPSHOT" >&2; exit 2; }
 [[ $NCPUS =~ ^[1-3]$ ]] || { echo "bad --ncpus $NCPUS (1..3)" >&2; exit 2; }
 [[ -f $LIST ]] || { echo "no package list $LIST" >&2; exit 2; }
-ROOT=$(realpath -m "$HOME/SMC_Engineering_Department")
+ROOT=$(realpath -m "$REAL_HOME/SMC_Engineering_Department")
 inside_dept() {   # $1 resolves (symlinks followed) to the department folder or below it
   local p; p=$(realpath -m "$1"); [[ $p == "$ROOT" || $p == "$ROOT"/* ]]; }
 DEPT=$(realpath -m "$DEPT")
@@ -53,8 +63,9 @@ if [[ $MODE == apply && ${CONFIRM:-} != yes ]]; then
   echo "refusing: --apply installs into $DEPT; the Engineering manager runs it with CONFIRM=yes (run the dry run first)" >&2; exit 65
 fi
 # R's temporary files (package builds) stay in the department folder: never /tmp
-mkdir -p "$DEPT/tmp"
-RTMP=$(mktemp -d "$DEPT/tmp/r-install-$(date +%Y%m%d)-XXXXXX"); trap 'rm -rf "$RTMP"' EXIT
+if [[ $MODE == apply ]]; then TBASE="$DEPT/tmp"; else TBASE="$ROOT/tmp"; fi   # dry / download: nothing created in $DEPT
+mkdir -p "$TBASE"
+RTMP=$(mktemp -d "$TBASE/r-install-$(date +%Y%m%d)-XXXXXX"); trap 'rm -rf "$RTMP"' EXIT
 export TMPDIR="$RTMP" TMP="$RTMP" TEMP="$RTMP"
 if [[ $MODULES == 1 ]]; then   # NOTS toolchain (env_scale.sh of W3-SCALE / G0): GCC 14.3.0, R 4.5.2
   set +u
