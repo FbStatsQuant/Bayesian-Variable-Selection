@@ -6,7 +6,7 @@
   `W3START_CORE` at a byte-identical copy of the core in the temp folder (removed afterwards). Compilation succeeded.
 * `r_common.R` = verbatim copy of `W3-START/numerics/start_common.R`. π₀(S₀) and o₀ = (1−π₀)/π₀ come from the coded start (`cpp_start_logmass`);
   T₁ from the block tables (`start_stats`). New code: `gens.R` (designs), `run_numerics.R` (driver), `summarise.R`, `make_tables.R`.
-  Raw rows are in `out/` (git-ignored); `summary.csv` is the small tracked summary.
+  Raw rows (not in git, not in the frozen content) are kept in /home/fb31/SMC_Theory_Department/helpers/W3-START2-R-numerics-out/ until ticket close; the scripts write to a git-ignored `out/`; `summary.csv` is the small tracked summary.
 * Designs. Run 1: orthonormal frame of 1^⊥ (BASE L11.0), one truth e₁, null columns e_j, σ = 1, θ² = T/(N − T) so that δ²_{∅,1}/τ²_∅ = T = c log n + 2 log p;
   p = max(⌈n^A⌉, 17), nominal A ∈ {0.3, 0.9} (so p = 17 for A = 0.3 at all three n; the effective log p/log n there is 0.53, 0.42, 0.35).
   Run 2: BASE L11.3 (ρ² = 0.4, θ*₁² = 2(1+2A)σ² log n/(n−1), p = min(⌊n^A⌋, n−1), A = 0.9). Runs 3–4: Gaussian rows Σ = I, s₀ = 2, θ* = (1,1), σ = 1, p = 2n;

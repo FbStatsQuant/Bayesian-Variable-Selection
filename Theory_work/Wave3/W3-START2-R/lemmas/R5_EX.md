@@ -52,7 +52,7 @@ n^{−(1+2A)/10+o(1)}; n^{−1}𝔏_n(S₀; h)² ≤ n^{−(1+2A)/5+o(1)}. Take 
 and κ ∈ ((1 + 2A)/10, κ_V). (T1⁺⁺)(b) gives o₀ = O_P(n^{−(1+2A)/10+o(1)}) + o_P(n^{−κ}), i.e. **o₀ = O_P(n^{−(1+2A)/10+η})
 for every η > 0** (the o(1) is deterministic).
 *First-order form.* Take c_m ∈ (1, 1 + 2A), so κ_V > ½. Then n^{−1/2}𝔏_n(S₀; h)² = n^{1/2}·(n^{−1/2}𝔏_n(S₀; h))²
-≤ n^{1/2−(1+2A)/5+o(1)} = n^{3/10−2A/5+o(1)} → 0 iff A > 3/4. So for **A ∈ (3/4, 1]**, (T1⁺⁺)(c) applies: o₀/T₁ → 1 in
+≤ n^{1/2−(1+2A)/5+o(1)} = n^{3/10−2A/5+o(1)}, which tends to zero when A > 3/4. So for **A ∈ (3/4, 1]**, (T1⁺⁺)(c) applies: o₀/T₁ → 1 in
 probability. (For A ≤ 3/4 this upper bound does not give (c); nothing is claimed.) ∎
 
 ## R5.3 G-1 (Gaussian rows, Σ_n = I_p): o₀ = O_P(√(log n/n))

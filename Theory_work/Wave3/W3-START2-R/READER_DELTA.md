@@ -3,6 +3,8 @@
 Source of the current reader text (read only): `/home/fb31/BVS-wt/W3-READER/Theory_work/Wave3/W3-READER/READER_VERSIONS.md`
 §5 "Theorem 5 — The start law already concentrates" (`:267-324`, draft v0.1). Notation, (S1)–(S3): that file `:16-21`
 and `NOTATION.md`. Nothing here is written in W3-READER's folder.
+READER_VERSIONS row for this delta: **thm5** (manager, CP1 answer). Per the owner's rule, asymptotic statements carry no
+n₀ or constants caveats.
 
 ## 1. What changes in plain words
 1. **Faster start rate when nulls are uncorrelated with the truths (Gaussian rows).** If every null column is

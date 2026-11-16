@@ -290,7 +290,7 @@ consultant, PROTOCOL_v4 H5):
 | version | clause | STRONGER / WEAKER / EQUAL / NEW-CLAIM | reason | trigger (review file) | check (review file) |
 |---|---|---|---|---|---|
 | 1.5-draft0 | all | — | draft for the statement lock | — | — |
-| 1.5 | VIS-c, VIS-m, NEC-b: hypothesis [TK] (quantitative form) in place of (E), (GF-16); the explicit thresholds kept as refinements under (E), (GF-16) | STRONGER (hypothesis back to the parent's interface form) | supersession must not strengthen a parent hypothesis | `reviews/SL1_statement_lock_sol.md` #1 | statement-change check bundled with LC1 (before the first freeze) |
-| 1.5 | (D3) relation remark | EQUAL (wording) | the margin forms differ also when log p/log n → A | SL1 #2 | LC1 bundle |
-| 1.5 | (T3⁺⁺)(a): R^♯_n defined on {Q = S₀}, 0 elsewhere; (a3) states the O_P-envelope consequence | EQUAL (definition completed; consequence of (a2)) | R^♯_n undefined when Q ⊋ S₀; SL1 OPTIONAL adopted | SL1 #3, OPTIONAL | LC1 bundle |
-| 1.5 | §4 scope sentence; PLAN section reference | EQUAL (wording) | — | SL1 #4, #5 | LC1 bundle |
+| 1.5 | VIS-c, VIS-m, NEC-b: hypothesis [TK] (quantitative form) in place of (E), (GF-16); the explicit thresholds kept as refinements under (E), (GF-16) | STRONGER (hypothesis back to the parent's interface form) | supersession must not strengthen a parent hypothesis | `reviews/SL1_statement_lock_sol.md` #1 | `reviews/LC1_line_check_sol.md` (tag confirmed) |
+| 1.5 | (D3) relation remark | EQUAL (wording) | the margin forms differ also when log p/log n → A | SL1 #2 | `reviews/LC1_line_check_sol.md` |
+| 1.5 | (T3⁺⁺)(a): R^♯_n defined on {Q = S₀}, 0 elsewhere; (a3) states the O_P-envelope consequence | EQUAL (definition completed; consequence of (a2)) | R^♯_n undefined when Q ⊋ S₀; SL1 OPTIONAL adopted | SL1 #3, OPTIONAL | `reviews/LC1_line_check_sol.md` |
+| 1.5 | §4 scope sentence; PLAN section reference | EQUAL (wording) | — | SL1 #4, #5 | `reviews/LC1_line_check_sol.md` |

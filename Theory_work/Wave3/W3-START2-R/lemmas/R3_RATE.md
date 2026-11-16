@@ -17,8 +17,10 @@ No registry claim is consumed beyond `STATEMENT.md` §5.
 Setting R (BASE `STATEMENT.md:69-72`) with p > s₀ for all large n (so s₀ ≥ 1 and p ≤ n^A). Notation and constants of
 BASE `lemmas/L9_BR.md:12-20`: N := n − 1; M = Δ_hi := s₀²θ_hi²; Δ_lo := (c_Σ/2)θ_lo²; a̲ := σ²/(σ² + Δ_hi);
 z̄_n² := 2 log(2^{21}) + 2A log n + 2 log log n ≥ z_n²; pc(·); F(g, a) and (F1), (F2) of BASE `:65-70`. "For n large"
-means n ≥ a threshold depending only on the fixed constants (A, θ_lo, θ_hi, σ², c_Σ, a_V, s₀, C_L, κ_H, C₀) and on the
-sequence r_n — never on Q, H̄_n or ε unless ε is displayed.
+means n ≥ a threshold depending only on the fixed constants (A, θ_lo, θ_hi, σ², c_Σ, a_V, s₀, C_L, κ_H, C₀), on the
+sequence r_n and — wherever the envelope of (D4) is used — on **n_H**, an index such that log H̄_n ≤ κ_H√log n for every
+n ≥ n_H ((D4) asks this only for all large n, so n_H depends on the sequence H̄_n) [R-10]; never on Q, and never on ε
+unless ε is displayed. The constants (C_B, C_R, C₇, C₈, C₉) do not depend on n_H.
 
 **(D4) remark.** (L-R⁺) (PARENT `STATEMENT.md:63-73`) asks |H_l| ≤ (log n)^{κ_Q}, κ_Q ≥ 1 fixed. Put H̄_n := (log n)^{κ_Q}.
 For any κ_H > 0, κ_Q log log n ≤ κ_H√log n for all large n, i.e. log H̄_n ≤ κ_H√log n. The other requirements of
@@ -31,7 +33,7 @@ Cov(W_l, W_j | W_U) = 0 for j ∈ S₀ ∖ U: (L-gain-0) with C₀ = 0. ∎
 
 **N̄_n.** N̄_n := (1 + H̄_n)^{15}. A set H_l with |H_l| ≤ H̄_n has at most Σ_{k≤15}C(|H_l| − 1, k) ≤ (1 + H̄_n)^{15} subsets
 U₀ ⊆ H_l ∖ {l} with |U₀| ≤ 15; so the reference family I_l of BASE `lemmas/L9_BR.md:94` has |I_l| ≤ N̄_n. Since H_l ⊇ {l} ∪ S₀,
-H̄_n ≥ 2 whenever Q ≠ [p], and then N̄_n ≤ (2H̄_n)^{15} ≤ 2^{15}exp(15κ_H√log n) for all large n. (If Q = [p] the sums over
+H̄_n ≥ 2 whenever Q ≠ [p], and then N̄_n ≤ (2H̄_n)^{15} ≤ 2^{15}exp(15κ_H√log n) for every n ≥ n_H. (If Q = [p] the sums over
 l ∉ Q below are empty and 𝔏_n(Q) = 0.)
 
 ## R3.1 (B-R⁺⁺)(i): BASE L9.1–L9.6 under (L-R⁺⁺)
@@ -110,8 +112,9 @@ and there are at most 2^{s₀} − 1 sets U, so on E⁰: 𝔏^♯_n ≤ Ψ⁰_n 
 E Ψ⁰_n ≤ 2^{s₀}Φ⁰_n ≤ 2^{s₀}C₉√log n. By Markov's inequality, for every λ ≥ 1 and n large:
   **P(𝔏^♯_n > λ·2^{s₀}C₉·√log n) ≤ s₀e^{−(n−1)/8} + 2^{s₀}n^{−2} + 1/λ.**                                         (R3.4)
 So 𝔏^♯_n = O_P(√log n) (tightness). This is (B-R⁺⁺)(iii). ∎
-*Where the count N_ref disappears.* The leading functional maximises over proper subsets of S₀ only, and S₀ ⊆ H_l: so no
-localisation (BASE L9.4) is needed and the reference family is the 2^{s₀} − 1 sets U ⊊ S₀ themselves (triage row
+*Where the count N_ref disappears.* The leading functional maximises over proper subsets of S₀ only, so no
+localisation (BASE L9.4) is needed — the maximisation already ranges only over proper subsets of S₀ — and the
+reference family is the 2^{s₀} − 1 sets U ⊊ S₀ themselves (triage row
 W3-START:START-R, `Theory_work/Wave3/API_AUDIT/sharp2/TRIAGE.md:57`). The shift d̄⁰_n = O(1/√log n) costs only the constant e^{C₈}.
 
 ## R3.4 (T3⁺⁺)(b)(i): the main display
@@ -122,7 +125,7 @@ P(X^r ∉ 𝒳_n) → 0 by BASE L9.1, L9.2 and (R3.2) in place of PARENT (4.2).
 Everything else is verbatim: the fixed constants for (T1)(d) (A, M = s₀²θ_hi², g_* = c_Σ/2, s₀, (V-c) with c_V := 2A + 4,
 κ_V = 3/2) are those of the version-1.3.4 bridge, so BASE Proposition L8.2(i) in the form of Corollary L6.0′ with κ = 1
 (BASE `lemmas/L8_TRANSFER.md:37-50`, BASE `lemmas/L6_COROLLARIES.md:19-26`) applies at each n as in PARENT `lemmas/P4_BR.md:59-67`; the threshold
-n_R depends only on the fixed constants and κ_H (through C_B), not on Q. So
+n_R depends only on the fixed constants, κ_H (through C_B) and n_H, not on Q. So
   **P(1 − π₀(𝓛(Q)) > (|Q| + 1)n^{−1/2}exp(C_R√log n)) ≤ 4/log n + 1/(32 log n) + P(X^r ∉ 𝒳_n) → 0.**
 The consequences for Q = S₀ and for |Q| ≤ n^{1/2−ε_Q} are PARENT `lemmas/P4_BR.md:71-74` verbatim. ∎
 (The designs of 𝒳_n satisfy (V-c) at c_V = 2A + 4, hence also (V-cp); no result of `lemmas/R1_VIS.md` is needed here.)

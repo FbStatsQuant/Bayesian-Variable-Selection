@@ -5,8 +5,8 @@ Citations: BASE = `Theory_work/Wave3/W3-START/` (v1.3.4), PARENT = `Theory_work/
 citation `:a-b` continues the file cited last; `STATEMENT.md` without prefix is this ticket's v1.5.
 Statement proved: `STATEMENT.md` §3.1 [TRANSFER] (`:167-188`), [F1], [F2], [F3] (`:129-133`), [OVL] (`:212-214`), [MIS]
 (`:189-198`). Uses: (T1⁺⁺) of `lemmas/R1_VIS.md` (START-F⁺⁺, including its uniform form (d) and the high-probability form
-of BASE Corollary L6.0′ under (D3)); BASE `lemmas/L8_TRANSFER.md` (L8.0, L8.1), `lemmas/L6_COROLLARIES.md` (L6.1, L6.3),
-`lemmas/L10_INTERFACES.md` (L10.3); PARENT `lemmas/P1_LEADING.md` (P1.6), `lemmas/P2_OVL.md`.
+of BASE Corollary L6.0′ under (D3)); BASE `lemmas/L8_TRANSFER.md` (L8.0, L8.1), BASE `lemmas/L6_COROLLARIES.md` (L6.1,
+L6.3), BASE `lemmas/L10_INTERFACES.md` (L10.3); PARENT `lemmas/P1_LEADING.md` (P1.6), PARENT `lemmas/P2_OVL.md`.
 
 ## R4.1 (T3⁺⁺)(a): transfer
 

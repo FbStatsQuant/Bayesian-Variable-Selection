@@ -1,0 +1,7 @@
+# External inputs of W3-START2-R (council manifest R1): parent statements and proof files consumed, one source statement.
+Theory_work/Wave3/W3-START/STATEMENT.md
+Theory_work/Wave3/W3-START/lemmas
+Theory_work/Wave3/W3-START2/STATEMENT.md
+Theory_work/Wave3/W3-START2/lemmas
+Theory_work/Wave1C/C-MIS/STATEMENT.md
+Theory_work/Wave3/W3-START/numerics/start_common.R
