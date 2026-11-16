@@ -82,3 +82,10 @@ the registry change. Newest entries at the bottom. Format:
 - 0 dependents SUSPECT; restored: —
 
 - 2026-11-16 correctness event (rollback history): W3-MISR:Cor-H 1.0.0 -> NARROWED 2.0.0 -> cleared ACTIVE 2.1.0. Cause: the KL reading (STATEMENT.md:191-195) was false for a random intercept (counterexample L1-1 / K1-1, W3-MISR-R reviews). Statement-change check: Theory_work/Dept/research/MISR_NARROW/DIFF_sol.md@d890acb5 (Sol DIFF PASS, WEAKER). 0 dependents. Erratum: Theory_work/Wave3/W3-MISR/reviews/ERRATA.md. HQ GO (task S).
+
+## 2026-11-16 — SUPERSEDE W3-MISR:Cor-G(a) / W3-MISR-R:CorG-min
+
+- decided by: HQ
+- reason: HQ GO real run (task Q, H5 card 10, 2026-11-16): free supersession (CorG-min implies Cor-G(a), STATEMENT §8 row 181, statement lock L1:59)
+- axes (Y vs X): assumptions=incomparable, conclusion=equal, rate=equal, scope=unknown
+- class free; key step check: —; dependents: 1 direct

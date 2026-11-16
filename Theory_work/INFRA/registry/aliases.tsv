@@ -91,3 +91,4 @@ C-MIS:GDb	C-MIS:GD(b)	bracket-free alias (HQ 2026-11-12): the conditional-on par
 C-PACK I4	C-PACK:SL0	W2-APP STATEMENT.md:50 (item 4 = SL0-SL2)
 GEN L5.3	W1-GEN:L5	W2-APP lemmas/L5_VN.md:30, L1_POST.md:62
 GEN (C1)	W1-GEN:L2	W2-APP lemmas/L5_VN.md:30 (W1-GEN L2 = (C1))
+C-MIS:GDb	C-MIS:GD(b)	W3-MISR-R CHECKPOINT_3 spelling (Corollary G(b) of C-MIS)

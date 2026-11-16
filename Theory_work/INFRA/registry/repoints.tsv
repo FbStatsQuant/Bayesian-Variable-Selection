@@ -3,3 +3,4 @@ W3-RM2:Cont-F	W3-RM:RM-F	W3-RM2:RM2-F	stmt	1.1.0	1.0.0	PROPOSED					2026-11-15	f
 W3-RM:Examples	W3-RM:RM-F	W3-RM2:RM2-F	stmt	1.1.0	1.0.0	PROPOSED					2026-11-15	free
 W3-RM2:Cont-R	W3-RM:RM-R	W3-RM2:RM2-R	stmt	1.1.0	1.0.0	PROPOSED					2026-11-15	free
 W3-RM:Examples	W3-RM:RM-R	W3-RM2:RM2-R	stmt	1.1.0	1.0.0	PROPOSED					2026-11-15	free
+W3-MISR:Cor-G(b)	W3-MISR:Cor-G(a)	W3-MISR-R:CorG-min	stmt	1.1.0	1.0.0	CONFIRMED	W3-MISR:Cor-G(a)@stmt	W3-MISR-R:CorG-min@stmt	no	W3-MISR-R:CorG-min implies W3-MISR:Cor-G(a) (W3-MISR-R STATEMENT.md §8 row 181; statement lock reviews/L1_statement_lock_sol.md:59); Cor-G(b) uses Cor-G(a)'s statement	2026-11-16	free

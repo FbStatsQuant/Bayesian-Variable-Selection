@@ -1858,3 +1858,15 @@ utc	actor	action	id	before	after	reason
 2026-11-16T10:50:25Z	HQ	accept	W3-MISR:MIS(i)		v1.0.0 fp2:018f39ac35c5056e1b149c0c	check.py --acceptance W3-MISR:R' W3-MISR:MIS(i) W3-MISR:MIS(i') W3-MISR:MIS(ii) W3-MISR:Cor-G(a) W3-MISR:Cor-G(b) W3-MISR:Cor-H: PASS (0 ERROR)
 2026-11-16T10:50:25Z	HQ	accept	W3-MISR:MIS(ii)		v1.0.0 fp2:5b89c213fdf7fa2fce2b1f4a	check.py --acceptance W3-MISR:R' W3-MISR:MIS(i) W3-MISR:MIS(i') W3-MISR:MIS(ii) W3-MISR:Cor-G(a) W3-MISR:Cor-G(b) W3-MISR:Cor-H: PASS (0 ERROR)
 2026-11-16T10:50:25Z	HQ	accept	W3-MISR:R'		v1.0.0 fp2:a2a6d4621f3e71bdcd631649	check.py --acceptance W3-MISR:R' W3-MISR:MIS(i) W3-MISR:MIS(i') W3-MISR:MIS(ii) W3-MISR:Cor-G(a) W3-MISR:Cor-G(b) W3-MISR:Cor-H: PASS (0 ERROR)
+2026-11-16T10:54:15Z	INFRA	ingest	W3-MISR-R:CorG-min		v1.0.0 PROVED-CHECKED, conditional on SOP:TH09, SOP:TH128; council	ingested from W3-MISR-R_CP3.jsonl
+2026-11-16T10:54:15Z	INFRA	ingest	W3-MISR-R:CorGb-plus		v1.0.0 PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-PO	ingested from W3-MISR-R_CP3.jsonl
+2026-11-16T10:54:15Z	INFRA	ingest	W3-MISR-R:CorH-plus		v1.0.0 PROVED-CHECKED, conditional on W3-POST2:D, SOP:TH09, SOP:TH1	ingested from W3-MISR-R_CP3.jsonl
+2026-11-16T10:54:15Z	INFRA	ingest	W3-MISR-R:CorH-U		v1.0.0 PROVED-CHECKED, conditional on W3-POST2:D, W3-POST2:C, W3-PO	ingested from W3-MISR-R_CP3.jsonl
+2026-11-16T10:54:30Z	HQ	accept	W3-MISR-R:CorG-min		v1.0.0 fp2:26f11718c80e807419c7f21c	check.py --acceptance W3-MISR-R:CorG-min W3-MISR-R:CorGb-plus W3-MISR-R:CorH-plus W3-MISR-R:CorH-U: PASS (0 ERROR)
+2026-11-16T10:54:30Z	HQ	accept	W3-MISR-R:CorGb-plus		v1.0.0 fp2:7ee7530154b1b1a838b28656	check.py --acceptance W3-MISR-R:CorG-min W3-MISR-R:CorGb-plus W3-MISR-R:CorH-plus W3-MISR-R:CorH-U: PASS (0 ERROR)
+2026-11-16T10:54:30Z	HQ	accept	W3-MISR-R:CorH-U		v1.0.0 fp2:bb70f41a4a1dccf3ac20601f	check.py --acceptance W3-MISR-R:CorG-min W3-MISR-R:CorGb-plus W3-MISR-R:CorH-plus W3-MISR-R:CorH-U: PASS (0 ERROR)
+2026-11-16T10:54:30Z	HQ	accept	W3-MISR-R:CorH-plus		v1.0.0 fp2:188283a1ea7fc69f9429d16d	check.py --acceptance W3-MISR-R:CorG-min W3-MISR-R:CorGb-plus W3-MISR-R:CorH-plus W3-MISR-R:CorH-U: PASS (0 ERROR)
+2026-11-16T10:54:31Z	HQ	supersede	W3-MISR:Cor-G(a)	ACTIVE	SUPERSEDED-VALID by W3-MISR-R:CorG-min	HQ GO real run (task Q, H5 card 10, 2026-11-16): free supersession (CorG-min implies Cor-G(a), STATEMENT §8 row 181, statement lock L1:59)
+2026-11-16T10:54:31Z	HQ	confirm-repoint	W3-MISR:Cor-G(b)	W3-MISR:Cor-G(a)	W3-MISR-R:CorG-min	checked by W3-MISR-R:CorG-min implies W3-MISR:Cor-G(a) (W3-MISR-R STATEMENT.md §8 row 181; statement lock reviews/L1_statement_lock_sol.md:59); Cor-G(b) uses Cor-G(a)'s statement
+2026-11-16T10:54:31Z	HQ	set	W3-MISR:Cor-G(b)	notes=	notes=COEXISTS with W3-MISR-R:CorGb-plus (HQ H5 card 10): CorGb-plus implies this row	HQ GO real run (task Q, H5 card 10, 2026-11-16)
+2026-11-16T10:54:37Z	HQ	accept	W3-MISR:Cor-G(b)		v1.0.0 fp2:18b04ef82329b7200ea5c422	check.py --acceptance W3-MISR:Cor-G(b): PASS (0 ERROR)
