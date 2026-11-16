@@ -18,6 +18,14 @@ CEO, reporting to the owner. Department managers report to HQ; **you are the man
 may talk to you directly; tell HQ what he decides. Report to HQ with `t3_thread_send` (mode queue), at most 10 lines,
 at each checkpoint.
 
+## Mandate (owner, 2026-11-15; POLICIES.md §8)
+1. Build machinery that runs the method at p = 10⁶ on NOTS.
+2. If impossible: prove it to HQ, with numbers (the binding resource, a lower bound, why no allowed engineering removes it).
+   HQ approves, with the consultant as needed; "hard" or "expensive" is not "impossible".
+3. Then the closest variant of the current strategy that reaches 10⁶, with every method change and its theorem impact
+   stated.
+4. If none exists: say so, with the argument.
+
 ## The goal (owner)
 Show that the method runs, and works, at **p = 10⁶**, a scale where joint (non-split) Bayesian variable selection has
 not been run. Feasibility comes first. The owner's standing requirements:
