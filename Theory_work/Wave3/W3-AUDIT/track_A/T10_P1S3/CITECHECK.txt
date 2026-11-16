@@ -9,6 +9,8 @@ OK            [STATEMENT.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult
 OK            [STATEMENT.md] cpp/v3_core.cpp:480-480 sha=3fe6e0943e | if (E.guard && E.guard->check(sec_ls0, "ls0", local_event(o.tier, -1, PH_LS0))) status = "resource_limit";
 OK            [STATEMENT.md] v3_calib.R:163-170 sha=af82929290 | if (status == "ok" && is.null(last$grid) && e == 1 && isTRUE(grid_fallback) && !is.null(last$fallback_grid) &&
 OK            [STATEMENT.md] v3_calib.R:122-125 sha=4501bbf810 | if (isTRUE(grid_fallback) && trig$grid_failure && tier == 1) {   # tier 0 failures escalate as in v3
+OK            [STATEMENT.md] Theory_work/Wave1C/C-DLV/REPORT.md:70-70 sha=a669eb03e0 | | F1 Proposition F | PROVED-CHECKED for the patched calibration law (R04; council round 2) | lemmas/L4_deliver
+OK            [STATEMENT.md] Theory_work/Wave1C/C-DLV/lemmas/L4_delivery.md:79-93 sha=da0fc3c201 | ## Proposition F (finding: a one-line fallback removes the last path; a change to a SHIPPED component).
 OK            [PROOF.md] v3_fit.R:88-89 sha=16c3c3e721 | valid_seed <- tryCatch({ if (length(seed) != 1) stop("seed must be a single integer"); v3_check_seed(seed); TR
 OK            [PROOF.md] v3_preprocess.R:7-11 sha=2ce30a54cc | v3_check_seed <- function(seed, what = "seed") {
 OK            [PROOF.md] v3_fit.R:91-94 sha=0607c49393 | if (!is.list(allocation)) stop("allocation must be a list containing mem_gb and hours")
@@ -66,8 +68,12 @@ OK            [PROOF.md] cpp/v3_core.cpp:473-474 sha=16c5ae9e75 | long long cap_
 OK            [PROOF.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
 OK            [PROOF.md] cpp/v3_start.h:272-272 sha=7a6fb31f17 | if (tie_dp && cap < 2) throw std::invalid_argument("start_mode: the e4 tie-aware fallback requires cap >= 2 (C
 OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+OK            [PROOF.md] cpp/v3_core.cpp:18-18 sha=cb5fa3fa29 | stop("object has no C++ pointer (ptr)");
 OK            [PROOF.md] cpp/v3_core.cpp:112-112 sha=1c5ef09274 | if ((int)s.size() > D.K) stop("v3_score: |S| = %d > K = %d (infeasible model; callers never pass these, R1)", 
 OK            [PROOF.md] cpp/v3_core.cpp:148-148 sha=7eb6a08f70 | for (auto& b : bl) if (b.empty() || (int)b.size() > B_MAX) stop("a block has %d members (supported 1..%d)", (i
+OK            [PROOF.md] cpp/v3_core.cpp:179-179 sha=3601ac5ed7 | check_blocks(st.blocks);
+OK            [PROOF.md] cpp/v3_core.cpp:209-209 sha=51932e648e | try { check_blocks(st.blocks); } catch (...) { delete g; throw; }
+OK            [PROOF.md] cpp/v3_core.cpp:209-209 sha=51932e648e | try { check_blocks(st.blocks); } catch (...) { delete g; throw; }
 OK            [PROOF.md] cpp/v3_core.cpp:212-219 sha=f3e5247962 | for (int j = 0; j < g->D->p; ++j) if (st.blk[j] < 0) stop("blocks do not cover every column");
 OK            [PROOF.md] cpp/v3_core.cpp:233-257 sha=b1786117e7 | HPtr h = get_holder(start); if (!h->has_start) stop("object has no start");
 OK            [PROOF.md] v3_setup.R:18-18 sha=98641f37f1 | if (!is.null(r$status)) stop(r$message)
@@ -111,6 +117,10 @@ OK            [PROOF.md] cpp/v3_engine.h:151-151 sha=ce616bc9be | int l = nth_no
 OK            [PROOF.md] cpp/v3_engine.h:80-85 sha=cea24221c8 | void set_model(Particle& q, const std::vector<int>& S) {
 OK            [PROOF.md] cpp/v3_score.h:230-230 sha=afffb5333d | if (k > D->K) throw std::runtime_error("v3_score: |S| > K (infeasible model; callers never pass these, R1)");
 OK            [PROOF.md] cpp/v3_engine.h:397-397 sha=095273a325 | else { if ((int)C.S.size() >= K) continue; add_var(Q, j); }
+OK            [PROOF.md] cpp/v3_core.cpp:714-714 sha=f07e235867 | double lm = sc.score(S).logm, cmp = st.comp(S);
+OK            [PROOF.md] cpp/v3_core.cpp:538-538 sha=ab81eb89a0 | ScoreOut o = sc.score(S);
+OK            [PROOF.md] cpp/v3_core.cpp:553-553 sha=1e23fdd0d2 | if ((int)S.size() >= K) return;
+OK            [PROOF.md] cpp/v3_core.cpp:126-126 sha=e04376f7eb | k = std::max(0, std::min(k, D.K));
 OK            [PROOF.md] cpp/v3_core.cpp:578-578 sha=055bb3ff03 | if (a.size() != b.size()) stop("logg0_V and d_V must have equal length");
 OK            [PROOF.md] cpp/v3_core.cpp:711-716 sha=bfe5a4ab30 | List M(n); NumericVector lg0(n), d(n), F(n); int i = 0;
 OK            [PROOF.md] v3_calib.R:67-67 sha=5ad3493bc4 | if (identical(V$status, "numerical_failure")) return(V)
@@ -127,6 +137,19 @@ OK            [PROOF.md] v3_calib.R:186-186 sha=c077797a2f | out$frozen <- v3_fr
 OK            [PROOF.md] v3_run.R:225-225 sha=df235c8d7a | v3_check_grid(frozen[["grid"]]); v3_check_seed(seed)
 OK            [PROOF.md] v3_calib.R:164-164 sha=27a2a1425a | isTRUE(tryCatch(v3_check_grid(last$fallback_grid$grid), error = function(err) FALSE))) {
 OK            [PROOF.md] v3_run.R:224-224 sha=ee64b727c4 | stopifnot(inherits(setup, "v3_setup"), inherits(frozen, "v3_frozen"))
+OK            [PROOF.md] cpp/v3_core.cpp:18-18 sha=cb5fa3fa29 | stop("object has no C++ pointer (ptr)");
+OK            [PROOF.md] cpp/v3_core.cpp:102-102 sha=98f64b3a8a | return List::create(_["ptr"] = ptr, _["G"] = G, _["z"] = NumericVector(D.z.begin(), D.z.end()), _["yty"] = D.y
+OK            [PROOF.md] cpp/v3_core.cpp:396-404 sha=5a3ceee21f | o.N = as<int>(ro["N"]); o.L = as<int>(ro["L"]); o.Hm = as<int>(ro["measured_rounds"]); o.islands = as<int>(ro[
+OK            [PROOF.md] cpp/v3_core.cpp:436-439 sha=6e0d5cfdf9 | EventCtx e; e.phase = phase_index(as<std::string>(pv["phase"])); e.tier = as<int>(pv["tier"]); e.island = as<i
+OK            [PROOF.md] cpp/v3_core.cpp:494-494 sha=9550ffb02b | double F = as<double>(hp["F"]);
+OK            [PROOF.md] cpp/v3_core.cpp:499-503 sha=fb4b037a3b | EventCtx ev; ev.phase = phase_index(as<std::string>(pv["phase"])); ev.tier = as<int>(pv["tier"]); ev.island = 
+OK            [PROOF.md] v3_run.R:90-102 sha=084810f924 | ro <- list(N = as.integer(b$tiers$N[tier + 1]), L = as.integer(b$L), measured_rounds = 4L,
+OK            [PROOF.md] cpp/v3_core.cpp:624-624 sha=44c5eb3d90 | CPtr c(state); const Data& D = *c->h->D;
+OK            [PROOF.md] cpp/v3_core.cpp:658-658 sha=44c5eb3d90 | CPtr c(state); const Data& D = *c->h->D;
+OK            [PROOF.md] cpp/v3_core.cpp:704-704 sha=b366767719 | CPtr c(state); const Data& D = *c->h->D; const Start& st = *c->h->st;
+OK            [PROOF.md] cpp/v3_core.cpp:729-729 sha=44c5eb3d90 | CPtr c(state); const Data& D = *c->h->D;
+OK            [PROOF.md] v3_run.R:50-64 sha=1e6908175a | v3_stage_table <- function(islands, rho = NULL, grid_label = NA_character_) {
+OK            [PROOF.md] v3_fit.R:163-163 sha=3ad4a29dbc | fr$stage_table <- v3_bind_records(list(cal$stage_table, fr$stage_table))
 OK            [PROOF.md] cpp/v3_start.h:272-272 sha=7a6fb31f17 | if (tie_dp && cap < 2) throw std::invalid_argument("start_mode: the e4 tie-aware fallback requires cap >= 2 (C
 OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
 OK            [PROOF.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
@@ -140,5 +163,5 @@ OK            [PROOF.md] cpp/v3_core.cpp:636-636 sha=6516277c83 | std::vector<do
 OK            [PROOF.md] cpp/v3_calib.h:30-46 sha=1101193d76 | inline NextPhi pilot_next_phi(const std::vector<double>& d, double phi, double H, int Te) {
 OK            [PROOF.md] cpp/v3_engine.h:310-310 sha=93ce25565d | if (phi_prev == 1.0) break;
 
-141 citations: 141 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+164 citations: 164 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

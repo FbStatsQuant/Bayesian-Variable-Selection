@@ -1,4 +1,4 @@
-# T6 · Lemma START-X (the start sampler and its normaliser are exact) — STATEMENT v1 (draft, not locked)
+# T6 · Lemma START-X (the start sampler and its normaliser are exact) — STATEMENT v2 (draft, not locked)
 
 Track A item T6 (`AUDIT.md` §6; CHECKPOINT_1 annex order 6). Tier B (second-seat re-check of N9 Claims S and Z against
 the code of record). **Lean target: yes** (algorithm level: backward sampling from a (block, size) convolution table is
@@ -24,12 +24,17 @@ r_b(U) = e^{ρ_b(U)} > 0 for every U ⊆ C_b. γ₀(S) := ϖ(|S|)∏_b r_b(S ∩
 Z̄₀ := Σ_Ω γ₀; π₀ := γ₀/Z̄₀. EX-A (exact arithmetic) and H-U (the uniforms read by `draw_pi0` are i.i.d. U[0, 1)).
 
 ## Lemma START-X
-- **(Z)** `st.logZbar0` = log Z̄₀ (`cpp/v3_start.h:133-135`), and this value is the reported normaliser: it initialises
-  every island's log Ẑ (`cpp/v3_engine.h:299`) and is the fit's `log_Zbar0` (`v3_fit.R:140`; `v3_run.R:217`).
+- **(Z)** `st.logZbar0` = log Z̄₀ (`cpp/v3_start.h:133-135`), and this value is the reported normaliser: every island
+  starts at log Ẑ₀ = log m(∅) + log Z̄₀ (`logZ = D.logm0 + st.logZbar0`, `cpp/v3_engine.h:299`, with `D.logm0` = log m(∅);
+  T12's Ẑ₀ = m(∅)Z̄₀), and it is the fit's `log_Zbar0` (`v3_fit.R:140`; `v3_run.R:217`).
 - **(S)** Each call `draw_pi0(st, vs, S)` returns S ∈ Ω with P(S = A) = π₀(A) for every A ∈ Ω, and consumes a number of
   uniforms that is a function of the returned draw (1 for the size, one per block visited, one per nonempty block).
 - **(S′)** Every π₀ draw of the method — initial draws (`draw_start`, `cpp/v3_engine.h:289`) and independence proposals
   (`cpp/v3_engine.h:184`) — is this call on the same `st` (`cpp/v3_engine.h:108`).
+
+**Reading.** W1-N1's and T12's premise START (`Theory_work/Wave1/W1-N1/STATEMENT.md:75`;
+`Docs/Theory/proofs/T12_T8_frozen_run_identities/STATEMENT.md:48`) = (Z) + (S) + (S′) + the independence of successive
+draws, which is `W3-SAMP:CC` CC4 ("CODE-CHECKED"); (S) alone is the law of one draw.
 
 ## Not claimed
 - Binary64 (N9 §5: categorical cumulatives of doubles, 2⁻⁵³ grid; quantified there, not re-checked here).
@@ -40,3 +45,4 @@ Z̄₀ := Σ_Ω γ₀; π₀ := γ₀/Z̄₀. EX-A (exact arithmetic) and H-U (t
 | version | clause | tag | reason | trigger | check |
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (re-states N9 rows 7–8 for the pin) | track A T6 | `AUDIT.md` §6 T6 | `CHECK.md` |
+| v2 | (Z) initialisation wording; reading START = (Z)+(S)+(S′)+CC4 | EQUAL (exact wording) | LC3 T6 #1, #5 | `reviews/LC3_reply_opus.md` | pending (gate) |

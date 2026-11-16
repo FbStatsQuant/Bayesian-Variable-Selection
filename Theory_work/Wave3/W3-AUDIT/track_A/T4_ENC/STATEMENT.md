@@ -1,4 +1,4 @@
-# T4 · Lemma ENC (the start object is built as Lemma E4 assumes) — STATEMENT v1 (draft, not locked)
+# T4 · Lemma ENC (the start object is built as Lemma E4 assumes) — STATEMENT v2 (draft, not locked)
 
 Track A item T4 (`AUDIT.md` §6; CHECKPOINT_1 annex order 4). Tier B (code reading; registers N3's encoding premise as a
 code-check). **Lean target: no** (code fact). Blocks row 3.1 (through `W3-RM:E4`, the start-mode clause of RM-0).
@@ -27,15 +27,17 @@ log m(U) − log m(∅) = log r_b(U).
 ## Lemma ENC
 Let `st` be the `Start` object `*g->st` built by `cpp_setup` (`cpp/v3_core.cpp:272-305`). Then:
 - **(ENC-a) Fields.** `st.D` points to the run's `Data` D with `D.p = p`, `D.K = K = min(p, ⌊n/2⌋)` and `D.logprior` of
-  length K + 1 with `D.logprior[k] = λ(k)`; `st.J = J`; `st.blocks[b]` = C_b as an increasing list, for the block order
+  length K + 1 with `D.logprior[k] = λ(k)`, finite (w(k) > 0); `st.J = J`; `st.blocks[b]` = C_b as an increasing list, for the block order
   of C(X); `st.blk`, `st.pos` are the inverse maps (x = `st.blocks[st.blk[x]][st.pos[x]]` for every column x, and
   `blk[blocks[b][i]] = b`, `pos[blocks[b][i]] = i`); `st.logr[b]` has length 2^{|C_b|}, `st.logr[b][0] = 0` and
   `st.logr[b][code(U)] = ρ_b(U)` for every U ⊆ C_b (all |U| ≤ |C_b| ≤ B ≤ K, so every entry is set and finite);
   `st.logprof[b]` has length min(|C_b|, K) + 1 = |C_b| + 1; `st.codes_by_size[b][j]` lists the size-j codes in increasing
   numeric order; 1 ≤ |C_b| ≤ 16 ≤ 31.
-- **(ENC-b) One object, never changed.** The same object is the one read by `start_mode` in LS0
+- **(ENC-b) One object, never changed (and its `Data`).** The same object is the one read by `start_mode` in LS0
   (`cpp/v3_core.cpp:392, 469`), by the engines and by the calibration (`cpp/v3_core.cpp:410, 611, 704`); after
-  `cpp_setup` returns it is accessed only through `const Start&`.
+  `cpp_setup` returns it is accessed only through `const Start&`. The `Data` it points to is written only by `data_init`
+  and afterwards read through `const Data&`/`const Data*`; its only changing fields are the `mutable` counters
+  (`cpp/v3_score.h:20-21`), which `start_mode` does not read.
 - **(ENC-c) Consequence.** The hypotheses N3 (H1) strengthened of `W3-RM:E4` hold on every run that reaches LS0;
   together with EX-A (E4's (H2)) and (H4), E4 gives that the LS0 centre S̃₀ maximises γ₀ on Ω.
 
@@ -49,3 +51,4 @@ Let `st` be the `Start` object `*g->st` built by `cpp_setup` (`cpp/v3_core.cpp:2
 | version | clause | tag | reason | trigger | check |
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (code check of E4's (H1) strengthened) | track A T4 | `AUDIT.md` §6 T4 | `CHECK.md` |
+| v2 | (ENC-a) finiteness of λ; (ENC-b) the `Data` | STRONGER (two facts added) | LC2 #5, #8 | `reviews/LC2_reply_opus.md` | pending (gate) |

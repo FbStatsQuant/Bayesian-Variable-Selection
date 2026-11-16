@@ -1,4 +1,4 @@
-# T8 · Lemma OVL (P-START and the production budget give P-OVL) — STATEMENT v1 (draft, not locked)
+# T8 · Lemma OVL (P-START and the production budget give P-OVL) — STATEMENT v2 (draft, not locked)
 
 Track A item T8 (`AUDIT.md` §6; CHECKPOINT_1 annex order 8). Tier B (a one-line consequence of checked results; no key
 lemma). **Lean target: yes** (an elementary limit argument). Blocks row 3.6, Theorem D clause only.
@@ -10,9 +10,11 @@ lemma). **Lean target: yes** (an elementary limit argument). Blocks row 3.6, The
 - Route named but not written as a lemma: "P-OVL | … | P-START; Proposition OVL | SAMP Theorem D"
   (`Theory_work/Wave3/W3-START/STATEMENT.md:185`).
 - **P-START**: "1_𝒜·o₀ → 0 in probability, i.e. π₀(S₀) → 1 on 𝒜" (`Theory_work/Wave3/W3-SAMP/STATEMENT.md:76-77`),
-  o₀ = δ₀/(1 − δ₀), δ₀ = 1 − π₀(S₀). Supplied by `W3-START2-R:IF-START` ("PROVED-CHECKED; council R2, …") **only under
-  the no-leakage condition (A5)** (AUDIT.md §6 correction 2), and stated there "for every event 𝒜"
-  (`Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-244`).
+  o₀ = δ₀/(1 − δ₀), δ₀ = 1 − π₀(S₀). Supplied by `W3-START2-R:IF-START` ("PROVED-CHECKED; council R2, …"), stated there "for every event 𝒜" under
+  "(T1⁺⁺) with (AL) at Q = S₀" (or (T3⁺⁺)(b) with Q = S₀) (`Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-244`).
+- **(A5)** in this file means the leakage hypothesis inside IF-START's hypotheses: the leakage set is Q = S₀ (no null
+  column leaks onto the truths). It is the reader version's "no leakage" condition of Theorem 10 (`AUDIT.md` §4 row
+  "(A5) no leakage"; correction 2 of §6: P-START is proved only under it).
 - Production budget: `W3-SAMP:D` (D-iii) production corollary, D_r ≥ max(2500, n, p)·(L + 6),
   L = max(4, ⌈log₂(n + 1)⌉) (`Theory_work/Wave3/W3-SAMP/STATEMENT.md:103`; proof
   `Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:53-54`), "PROVED-CHECKED".
@@ -28,10 +30,12 @@ D_r := N_e(1 + T + L + 4) with the executed N_e, T, L.
 - **(OVL-b) P-START ⇒ P-OVL.** If 1_𝒜°·o₀ → 0 in probability (P-START on 𝒜°), then for every c > 0,
   P(𝒜° ∩ {D_r·π₀(S₀) ≤ c}) ≤ P(𝒜° ∩ {π₀(S₀) ≤ ½}) as soon as 10n ≥ 2c, and the right side → 0. Hence P-OVL holds
   with 𝒜° (and with any 𝒜 ⊆ 𝒜°).
-- **(OVL-c) Status.** P-START on 𝒜° holds under the hypotheses of `W3-START2-R:IF-START`, i.e. **only under (A5)**; so
-  P-OVL is proved under (A5). Without (A5), P-OVL's production form also follows from `W3-START2-R:OVL` ("PROVED-CHECKED")
-  whenever limsup_n(E_n − max(1, log p/log n)) < 0 (`Theory_work/Wave3/W3-START2/STATEMENT.md:181-187`, word for word
-  in `Theory_work/Wave3/W3-START2-R/STATEMENT.md:212-213`), with no change here.
+- **(OVL-c) Status.** P-START on 𝒜° holds under the hypotheses of `W3-START2-R:IF-START`, which include (A5); so
+  P-OVL is proved by this route **only under IF-START's hypotheses, in particular (A5)**. Without (A5), P-OVL's production form also follows from `W3-START2-R:OVL` ("PROVED-CHECKED")
+  under its own hypotheses — OVL⁺ of `Theory_work/Wave3/W3-START2/STATEMENT.md:181-189` (setting F, (E), (GF-16),
+  visibility, a deterministic Q ⊇ S₀ with |Q| ≤ K and |Q ∖ S₀| ≤ q̄, (AL) for Q, bounded levels a_{n,l}) with the
+  substitutions of `Theory_work/Wave3/W3-START2-R/STATEMENT.md:212-213` — whenever
+  limsup_n(E_n − max(1, log p/log n)) < 0 (note log max(n, p)/log n = max(1, log p/log n)); quoted, not re-proved.
 
 ## Consequence for Theorem D (D-iv)
 P(completed ∩ {Ŝ ≠ S₀}) ≤ P(S† ≠ S₀) + E[1_𝒜°·(1 − π₀(S₀))^{D_r}] (D-iii, with 𝒜 ⊆ 𝒜°), and
@@ -45,3 +49,4 @@ P(completed ∩ {Ŝ ≠ S₀}) ≤ P(S† ≠ S₀) + E[1_𝒜°·(1 − π₀(S
 | version | clause | tag | reason | trigger | check |
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM | track A T8 | `AUDIT.md` §6 T8 | `CHECK.md` |
+| v2 | (A5) defined; (OVL-c) hypotheses stated in full | EQUAL (exact wording; no claim changed) | LC3 T8 #1–#3 | `reviews/LC3_reply_opus.md` | pending (gate) |

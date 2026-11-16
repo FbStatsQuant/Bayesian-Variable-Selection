@@ -1,4 +1,4 @@
-# T3 · Lemma OPC — PROOF v1 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# T3 · Lemma OPC — PROOF v2 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 Fix a valid input on the sampler branch and assume EX-A. The argument applies verbatim to the actual fit and to P°
 (T1 GW: P° differs only in that every check's Boolean is FALSE).
@@ -6,8 +6,8 @@ Fix a valid input on the sampler branch and assume EX-A. The argument applies ve
 ## Step 0 — the configuration reaches the C++ run
 `v3_fit` has `ls0 = getOption("v3.ls0", TRUE)` (`v3_fit.R:73`) and passes it to `v3_final_run` (`v3_fit.R:162`), which
 builds `ro <- v3_run_settings(setup, frozen, ls0)` (`v3_run.R:226`). With `ls0 = TRUE` and the options unset,
-`v3_run_settings` sets `ro$ls0 <- TRUE`, `ro$ls0_ell <- b$ell` (the validation at `v3_run.R:96-97` passes for an integer
-in [0, 10⁶]), `ro$ls0_tie_dp <- TRUE` and `ro$ls0_cap <- "ell_n_plus_mode"` (`v3_run.R:93-102`); `b$ell` =
+`v3_run_settings` sets `ro$ls0 <- TRUE`, `ro$ls0_ell <- b$ell` (its validation, `v3_run.R:96-97`, has passed on any run that
+returns a fit: a failure is an R error, INVENTORY X7), `ro$ls0_tie_dp <- TRUE` and `ro$ls0_cap <- "ell_n_plus_mode"` (`v3_run.R:93-102`); `b$ell` =
 `v3_ceil_log2(n + p + 1)` = ℓ_n (`v3_preprocess.R:15, 23`). In `cpp_final_run` these give `o.ls0 = true`,
 `o.ls0_tie_dp = true`, `o.ls0_ell = ℓ_n`, `o.ls0_cap_plus_mode = true` (`cpp/v3_core.cpp:400-404`).
 
@@ -18,7 +18,7 @@ final status is `"completed"`, none of `:451, 459, 480, 484` executed, and `stat
 `cpp/v3_core.cpp:453` and `cpp/v3_core.cpp:465`. Hence the final local search ran (`cpp/v3_core.cpp:456`) and then the
 LS0 block ran (`cpp/v3_core.cpp:465-481`): `m = start_mode(st, 1000000, o.ls0_tie_dp)` (`cpp/v3_core.cpp:469`), so the
 centre is `m.S` = S̃₀; the cap is `o.ls0_ell + m.S.size()` = ℓ_n + |S̃₀| (`cpp/v3_core.cpp:473-475`; the range check at
-`cpp/v3_core.cpp:474` passes since ℓ_n + |S̃₀| ≤ ℓ_n + K < 2³¹ − 1); and
+`cpp/v3_core.cpp:474` has passed on a completed run, since its failure is an R error without a fit object, INVENTORY X8); and
 `E.local_search(m.S, ls0_cap, o.tier, true, -1, PH_LS0)` is called once (`cpp/v3_core.cpp:476`) with
 `emit_centre = true`. No other call with phase `PH_LS0` exists.
 
@@ -65,7 +65,12 @@ On {status = "completed"}, Steps 2–3 give {S₀ ∈ Scored(S̃₀, ℓ_n + |S�
 since e^F ∝ π on Ω (CC2: F = log ϖ + log m, `cpp/v3_engine.h:97`), F(S₀) > F(S) for every S ∈ Ω ∖ {S₀}; with 𝓜 ⊆ Ω
 (CC5) and S₀ ∈ 𝓜, the `hpm_better`-maximum of 𝓜 is S₀. So on the sampler branch
 𝒪 ∩ {Ŝ⁺ ≠ S₀} ⊆ {π(S₀) ≤ ½} ∪ 𝒦_nᶜ, and 𝒦_n is a function of (X, y) by Step 2. The same holds for P° on 𝒪°, which
-gives [OP] of `W1-GEN:L5` in its potential-run form: 𝒪̄ ∩ {S₀ ∉ 𝒮̄⁺} ⊆ 𝒦_nᶜ on the sampler branch. ∎
+gives [OP] of `W1-GEN:L5` in its potential-run form: with 𝒪̄ := 𝒪° (T1 GW-iv) and 𝒮̄⁺ := the potential run's all-scored
+set, which contains 𝓜 (every model offered to the ledger was scored: tables, inherited models, final-run evaluations),
+𝒪̄ ∩ {S₀ ∉ 𝒮̄⁺} ⊆ 𝒦_nᶜ on the sampler branch.
+
+*Enumeration branch.* On {status = "exact"}, Ŝ⁺ is the `hpm_better`-maximum over all of Ω (`cpp/v3_core.cpp:548`;
+`v3_fit.R:123`), so under EX-A 𝒪 ∩ {Ŝ⁺ ≠ S₀} ⊆ {π(S₀) ≤ ½} there, and RM-0 (b)'s inclusion holds on every output run. ∎
 
 ## Re-check of `W1-GEN:L5` [OP] (the item's "re-check" part)
 [OP]'s direct argument (`Theory_work/Wave1/W1-GEN/lemmas/L5_assembly.md:11-16`) has four steps; against the code of

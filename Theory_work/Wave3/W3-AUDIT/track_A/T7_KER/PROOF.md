@@ -1,11 +1,13 @@
-# T7 · Lemma KER — PROOF v1 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# T7 · Lemma KER — PROOF v2 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 Independent derivation, then a comparison with N9. Write γ := γ_φ, S′ for the proposed set, k := |S|.
 
 ## Step 0 — common facts
 *The code's γ_φ.* A particle stores `lg0 = log ϖ(|S|) + comp(S)` and `d = (log m(S) − log m(∅)) − comp(S)`
 (`cpp/v3_engine.h:95-97`) and `lgphi(φ) = lg0 + φ·d` (`cpp/v3_engine.h:14`) = log γ₀(S) + φd(S) = log γ_φ(S). Under EX-A
-the cached and the fresh log m agree (T3 OPC Step 2), so every step reads the exact log γ_φ.
+the cached and the fresh log m agree: `ScoreCache::find` returns a stored value only for the same model (hash and full
+set compared, `cpp/v3_score.h:274-282`), and that value was computed by the same scorer (`cpp/v3_engine.h:91-94`); so
+every step reads the exact log γ_φ.
 *Fresh uniforms.* Each `vs->u(…)` returns the next value of the island's stream. A step reads a number of uniforms
 determined by the state and the uniforms already read in the step; by the strong Markov property of an i.i.d. sequence
 (as in `W3-SAMP:CC` CC4), given everything before the step, its uniforms are i.i.d. U[0, 1) and independent of the past.
@@ -36,7 +38,8 @@ q(S → S′) = 1/(k(p − k)) = q(S′ → S). So γ(S)q·(1 ∧ γ(S′)/γ(S)
 ## Step 3 — neighbour swap (`cpp/v3_engine.h:162-180`)
 *The graph.* `neighbour_graph` (`cpp/v3_blocks.h:149-173`) chooses for each j a list of l ≠ j (`cpp/v3_blocks.h:159`) and
 sets N(j) := the sorted, deduplicated union of j's choices and of {l : j ∈ chosen(l)} (`cpp/v3_blocks.h:170-171`). So N is
-symmetric (l ∈ N(j) ⇔ j ∈ N(l)) and loop-free. It is built once from X (`cpp/v3_core.cpp:302`).
+symmetric (l ∈ N(j) ⇔ j ∈ N(l)) and loop-free, and each N(j) is duplicate-free (`std::unique`, `cpp/v3_blocks.h:171`). It is built once from X
+(`cpp/v3_core.cpp:302`).
 *The step.* If k = 0: stay (`cpp/v3_engine.h:165`). Else j uniform on S (`cpp/v3_engine.h:167`); `cand` = N(j) ∖ S
 (`cpp/v3_engine.h:168-169`); if empty, stay (`cpp/v3_engine.h:170`); else l uniform on N(j) ∖ S (`cpp/v3_engine.h:171`),
 S′ = S ∖ {j} ∪ {l}, `back` = |N(l) ∖ S′| ≥ 1 (j ∈ N(l) by symmetry and j ∉ S′; `cpp/v3_engine.h:172-173`), and accept iff

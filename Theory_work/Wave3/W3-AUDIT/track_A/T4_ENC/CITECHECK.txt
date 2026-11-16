@@ -10,6 +10,7 @@ OK            [STATEMENT.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult
 OK            [STATEMENT.md] cpp/v3_core.cpp:410-410 sha=c76165ccde | Engine E(D, st, h->Nb, h->B);
 OK            [STATEMENT.md] cpp/v3_core.cpp:611-611 sha=9031677c7b | c->E.reset(new Engine(D, *h->st, h->Nb, h->B));
 OK            [STATEMENT.md] cpp/v3_core.cpp:704-704 sha=b366767719 | CPtr c(state); const Data& D = *c->h->D; const Start& st = *c->h->st;
+OK            [STATEMENT.md] cpp/v3_score.h:20-21 sha=3eba80c3e1 | mutable uint64_t routes[3] = {};
 OK            [STATEMENT.md] cpp/v3_core.cpp:204-212 sha=59ae24fd08 | List cpp_start(SEXP ctx, List blocks_R, List tables_R) {
 OK            [STATEMENT.md] v3_setup.R:38-38 sha=edca9ba9ea | s <- .v3cpp$cpp_start(ctx, lapply(blocks, as.integer), tables)
 OK            [PROOF.md] v3_fit.R:118-118 sha=18d46aead9 | ctx <- v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE)
@@ -52,8 +53,13 @@ OK            [PROOF.md] cpp/v3_engine.h:60-60 sha=457f71c54f | const Data& D; c
 OK            [PROOF.md] cpp/v3_core.cpp:704-704 sha=b366767719 | CPtr c(state); const Data& D = *c->h->D; const Start& st = *c->h->st;
 OK            [PROOF.md] cpp/v3_start.h:271-271 sha=c55fbc08a9 | inline ModeResult start_mode(const Start& st, long cap = 1000000, bool tie_dp = true) {
 OK            [PROOF.md] cpp/v3_core.cpp:207-212 sha=b1364f0b99 | g->st = std::make_shared<Start>(); Start& st = *g->st; st.D = g->D.get();
+OK            [PROOF.md] cpp/v3_core.cpp:178-181 sha=67021ebdcb | Start st; st.D = &D; st.blocks = blocks_from_R(D, blocks_R);
 OK            [PROOF.md] cpp/v3_core.cpp:277-300 sha=cb4fdf365e | g->st = std::make_shared<Start>(); Start& st = *g->st; st.D = &D; st.B = B;
+OK            [PROOF.md] cpp/v3_core.cpp:96-96 sha=12a03057ce | data_init(*h->D, X.begin(), y.begin(), n, p, o);
+OK            [PROOF.md] cpp/v3_core.cpp:275-275 sha=247335c6e5 | Holder* g = new Holder(); g->D = h->D; g->B = B;
+OK            [PROOF.md] cpp/v3_start.h:35-35 sha=3110d45488 | const Data* D = nullptr;
+OK            [PROOF.md] cpp/v3_score.h:20-21 sha=3eba80c3e1 | mutable uint64_t routes[3] = {};
 OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
 
-56 citations: 56 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+62 citations: 62 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

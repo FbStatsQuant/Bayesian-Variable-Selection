@@ -69,9 +69,11 @@ OK            [PROOF.md] v3_run.R:142-142 sha=a15449aa09 | out$hpm <- led$hpm$mo
 OK            [PROOF.md] cpp/v3_ledger.h:84-88 sha=90f89a13c7 | void offer_hpm(const std::vector<int>& S, double F, double logm, const EventCtx& ev, int mech) {
 OK            [PROOF.md] cpp/v3_util.h:121-126 sha=80b044a3de | inline bool hpm_better(double F1, const std::vector<int>& S1, double F2, const std::vector<int>& S2) {
 OK            [PROOF.md] cpp/v3_engine.h:97-97 sha=56a5950e55 | q.logm = lm; q.lg0 = D.logprior[k] + c; q.d = (lm - D.logm0) - c; q.F = D.logprior[k] + lm;
+OK            [PROOF.md] cpp/v3_core.cpp:548-548 sha=ed5bad79a6 | if (!has || hpm_better(F, S, hpmF, hpmS)) { has = true; hpmS = S; hpmF = F; hpm_eta = eta; }
+OK            [PROOF.md] v3_fit.R:123-123 sha=90096a3bc5 | fit$hpm <- e$hpm; fit$hpm_F <- e$hpm_F; fit$hpm_provenance <- list(phase = "exact", mechanism = "enumeration")
 OK            [PROOF.md] Theory_work/Wave1/W1-GEN/lemmas/L5_assembly.md:11-16 sha=4a5c81bb72 | * [OP] Operational closure: 𝒪̄ ∩ {S₀ ∉ 𝒮̄⁺} ⊆ {LS0 from S̃₀ does not score S₀}. Status: PROVED (by this seat,
 OK            [PROOF.md] Theory_work/Wave1/W1-GEN/lemmas/L5_assembly.md:44-45 sha=8c13c2ed75 | Wave-1 sibling result, not adopted by HQ). The remaining content of e4 here is the integration of LS0 itself (
 OK            [PROOF.md] cpp/v3_core.cpp:465-481 sha=0a142a081f | if (o.ls0 && status == "completed") {
 
-74 citations: 74 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+76 citations: 76 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

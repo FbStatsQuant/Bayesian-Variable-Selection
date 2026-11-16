@@ -6,6 +6,8 @@ OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:118-124 sha=
 OK            [STATEMENT.md] cpp/v3_core.cpp:302-302 sha=de3f578263 | g->Nb = neighbour_graph(D, B);
 OK            [PROOF.md] cpp/v3_engine.h:95-97 sha=e914319592 | double c = st.comp(q.S, scratch);
 OK            [PROOF.md] cpp/v3_engine.h:14-14 sha=d1e7266055 | inline double lgphi(double phi) const { return lg0 + phi * d; }  // log gamma_phi(S) = log gamma_0(S) + phi d(
+OK            [PROOF.md] cpp/v3_score.h:274-282 sha=ae80db72f8 | bool find(const std::vector<int>& S, uint64_t h, double& lm) {
+OK            [PROOF.md] cpp/v3_engine.h:91-94 sha=00f9095e12 | if (!(cache && cache->find(q.S, q.h, lm))) {
 OK            [PROOF.md] cpp/v3_engine.h:150-150 sha=d8e6bc538e | int j = P.S[(int)std::floor(vs->u("uswap_j") * k)];
 OK            [PROOF.md] cpp/v3_engine.h:167-167 sha=c691a76ab2 | int j = P.S[(int)std::floor(vs->u("nswap_j") * k)];
 OK            [PROOF.md] cpp/v3_engine.h:134-144 sha=bb9677e28a | int nth_nonmember(const std::vector<uint64_t>& bits, int m) const {
@@ -25,6 +27,7 @@ OK            [PROOF.md] cpp/v3_engine.h:162-180 sha=64f1759a1a | void step_nswa
 OK            [PROOF.md] cpp/v3_blocks.h:149-173 sha=14e1a50063 | inline std::vector<std::vector<int>> neighbour_graph(const Data& D, int B) {
 OK            [PROOF.md] cpp/v3_blocks.h:159-159 sha=f197d1281c | for (int l = 0; l < p; ++l) if (l != j) cand[c++] = l;
 OK            [PROOF.md] cpp/v3_blocks.h:170-171 sha=f8f830fb73 | for (int j = 0; j < p; ++j) for (int l : chosen[j]) { N[j].push_back(l); N[l].push_back(j); }
+OK            [PROOF.md] cpp/v3_blocks.h:171-171 sha=b4493b0848 | for (int j = 0; j < p; ++j) { std::sort(N[j].begin(), N[j].end()); N[j].erase(std::unique(N[j].begin(), N[j].e
 OK            [PROOF.md] cpp/v3_core.cpp:302-302 sha=de3f578263 | g->Nb = neighbour_graph(D, B);
 OK            [PROOF.md] cpp/v3_engine.h:165-165 sha=c4dcd757c2 | if (k == 0) { ms.ns_self++; return; }
 OK            [PROOF.md] cpp/v3_engine.h:167-167 sha=c691a76ab2 | int j = P.S[(int)std::floor(vs->u("nswap_j") * k)];
@@ -47,5 +50,5 @@ OK            [PROOF.md] cpp/v3_engine.h:60-60 sha=457f71c54f | const Data& D; c
 OK            [PROOF.md] Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/N9-KERNEL/PROOF.md:59-197 sha=5b1d61b196 | ## 1. The four elementary moves
 OK            [PROOF.md] cpp/v3_blocks.h:167-170 sha=bc5ee8f7bd | int keep = std::min(B, std::max(1, above));
 
-48 citations: 48 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+51 citations: 51 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

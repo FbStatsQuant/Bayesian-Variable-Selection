@@ -1,4 +1,4 @@
-# T5 · Lemma CAL-C — PROOF v1 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# T5 · Lemma CAL-C — PROOF v2 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 Fix a valid input; assume EX-A. Work with P° (T1 GW); Step 4 transfers to the actual fit.
 
@@ -29,7 +29,7 @@ are check bodies and the guard). The seed enters `v3_calibrate` only through `cp
 `c->seed` (`v3_calib.R:146-148`; `cpp/v3_core.cpp:606`), i.e. only as the seed of the streams, and through
 `calibration_seed` (`v3_calib.R:171`), a copy of the input. The `setup` object is a function of (X, y) (`v3_setup.R:67-77`;
 no stream). Hence 𝓒° — every statistical field of `v3_calibrate`'s return value (`v3_calib.R:171-190`) — is
-Ψ(X, y, U^{(0)}, …, U^{(9)}) (with the seed only as a label in `calibration_seed`, and ⊥ when `v3_calibrate` is not
+Ψ(X, y, seed, U^{(0)}, …, U^{(9)}) (the seed entering only as the label `calibration_seed`, and ⊥ when `v3_calibrate` is not
 called, a decision that depends on (X, y) only: `v3_fit.R:99-138`).
 
 ## Step 3 — measurability (bounded computation)
@@ -59,8 +59,9 @@ setting is a function of 𝓒° and (n, p, options), the final run's randomness 
 depends on (X, y) only.
 
 ## Step 5 — (CAL-d) the actual fit
-T1 (GW-iv): 𝒜 = 𝒜° ∩ G ⊆ 𝒜°; on G the actual calibration's statistical fields equal P°'s (T1 GW-iii), so on 𝒜 ⊆ G the
-actual record is 𝓒°. ∎
+T1 (GW-iv): 𝒜 = 𝒜° ∩ G ⊆ 𝒜°. On G no check evaluated before `v3_calibrate` returns fires, so T1's induction (PROOF
+Steps 3–4, the (⊇) part of Step 4) runs to that return with every Boolean FALSE, and the actual output's statistical
+fields equal P°'s. So on 𝒜 ⊆ G the actual record is 𝓒°. ∎
 
 ## Where the flag bites
 See STATEMENT, "Where the T1 flag bites": the conditional arguments of W3-SAMP are valid for (𝒜°, 𝓒°) by (CAL-b), and

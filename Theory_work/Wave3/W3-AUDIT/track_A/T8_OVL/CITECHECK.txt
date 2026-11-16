@@ -5,16 +5,17 @@ OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:76-77 sha=42
 OK            [STATEMENT.md] Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-244 sha=c1bc18ec4c | **[IF-START] (T5⁺⁺) IF-START⁺⁺.** Under (T1⁺⁺) with (AL) at Q = S₀ and level vector h: for every event 𝒜 and e
 OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:103-103 sha=ec7cc38fe2 | 4D_r under IND-T), and P(S† ≠ S₀) ≤ P(δ ≥ ½); production corollary: D_r ≥ max(2500, n, p)·(L + 6), L = max(4, 
 OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:53-54 sha=fe12f8a6ae | *Production corollary.* Production budgets give N_e = 4^e·N₀ ≥ N₀ = max(2500, n, p) and L = max(4, ⌈log₂(n+1)⌉
-OK            [STATEMENT.md] Theory_work/Wave3/W3-START2/STATEMENT.md:181-187 sha=1fbc2e443c | * **Proposition OVL⁺ (start mass under a bounded leakage set).** Setting F, (E), (GF-16), **visibility: (V-c),
+OK            [STATEMENT.md] Theory_work/Wave3/W3-START2/STATEMENT.md:181-189 sha=ca4030f94e | * **Proposition OVL⁺ (start mass under a bounded leakage set).** Setting F, (E), (GF-16), **visibility: (V-c),
 OK            [STATEMENT.md] Theory_work/Wave3/W3-START2-R/STATEMENT.md:212-213 sha=3d205fe564 | **[OVL] (OVL⁺⁺) Proposition OVL.** OVL⁺ of PARENT `:181-189`, word for word, with "visibility: (V-cp), or (V-m
 OK            [PROOF.md] Scripts/SMC_BVS/core/v3_run.R:88-92 sha=f6a22ead10 | v3_run_settings <- function(setup, frozen, ls0 = getOption("v3.ls0", TRUE)) {
 OK            [PROOF.md] Scripts/SMC_BVS/core/v3_preprocess.R:24-25 sha=aaa5aab895 | L <- max(4, v3_ceil_log2(n + 1))
 OK            [PROOF.md] Scripts/SMC_BVS/core/v3_preprocess.R:30-30 sha=95bafd3923 | tiers = data.frame(e = 0:1, N = c(N0, 4 * N0), H = c(H0, 4 * H0), T = c(T0, 4 * T0)),
+OK            [PROOF.md] Scripts/SMC_BVS/core/v3_run.R:225-225 sha=df235c8d7a | v3_check_grid(frozen[["grid"]]); v3_check_seed(seed)
 OK            [PROOF.md] Scripts/SMC_BVS/core/v3_run.R:77-81 sha=3c548b6e7c | v3_check_grid <- function(grid) {
 OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/lemmas/D_theorem.md:53-54 sha=fe12f8a6ae | *Production corollary.* Production budgets give N_e = 4^e·N₀ ≥ N₀ = max(2500, n, p) and L = max(4, ⌈log₂(n+1)⌉
 OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:82-83 sha=3ddfaf48d7 | - **P-OVL**: Q_D → ∞ in probability, where Q_D := D_r·π₀(S₀) on 𝒜 and Q_D := ∞ off 𝒜, D_r := N_e(1 + T + L + 4
 OK            [PROOF.md] Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-244 sha=c1bc18ec4c | **[IF-START] (T5⁺⁺) IF-START⁺⁺.** Under (T1⁺⁺) with (AL) at Q = S₀ and level vector h: for every event 𝒜 and e
 OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:102-103 sha=c323a314e6 | - (D-iii) with Lemma PC, unconditionally: P(completed ∩ {Ŝ ≠ S₀}) ≤ P(S† ≠ S₀) + E[1_𝒜 (1 − π₀(S₀))^{D_r}] (ex
 
-17 citations: 17 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+18 citations: 18 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

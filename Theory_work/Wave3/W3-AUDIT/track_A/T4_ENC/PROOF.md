@@ -1,4 +1,4 @@
-# T4 · Lemma ENC — PROOF v1 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# T4 · Lemma ENC — PROOF v2 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 Fix a valid input on the sampler branch with `cpp_setup` completing; assume EX-A.
 
@@ -6,7 +6,8 @@ Fix a valid input on the sampler branch with `cpp_setup` completing; assume EX-A
 *Data.* `v3_fit` builds `ctx <- v3_context(pre$X, pre$y, …)` (`v3_fit.R:118`) → `cpp_context` → `data_init`
 (`cpp/v3_core.cpp:91-96`), which sets `D.p = p`, `D.K = std::min(p, n / 2)` = min(p, ⌊n/2⌋) (`cpp/v3_score.h:40`) and
 `D.logprior` of length K + 1 with `D.logprior[k] = D.logw[k] − D.logWK`, `D.logw[k] = log(1/2) − log C(2p − 1, k)`,
-`D.logWK = log Σ_{k≤K} C(p, k) w(k)` (`cpp/v3_score.h:61-70`): this is log ϖ(k) for the capped BB(1, p) prior, i.e. λ(k).
+`D.logWK = log Σ_{k≤K} C(p, k) w(k)` (`cpp/v3_score.h:61-70`): this is log ϖ(k) for the capped BB(1, p) prior, i.e. λ(k), finite since
+every w(k) > 0 and W_K > 0.
 `cpp_setup` takes `D = *g->D` with `g->D = h->D` (`cpp/v3_core.cpp:275-276`) and sets `st.D = &D` (`cpp/v3_core.cpp:277`).
 
 *Blocks.* `st.blocks = make_blocks(D, B)` (`cpp/v3_core.cpp:279`): by T2 (BLK) this is C(X), each block nonempty with
@@ -28,8 +29,8 @@ code(U) = Σ_{x∈U} 2^{pos(x)} with pos the position in the increasing list; en
 *`build_start`* (`cpp/v3_start.h:101-151`, called at `cpp/v3_core.cpp:300`): with m = |C_b| and top = min(m, K) = m,
 `codes_by_size[b]` has top + 1 lists and the loop over code = 0, 1, …, 2^m − 1 in increasing order appends each code to
 the list of its popcount (`cpp/v3_start.h:107-112`), so `codes_by_size[b][j]` is the size-j codes in increasing numeric
-order; `logprof[b]` has length top + 1 = m + 1 (`cpp/v3_start.h:113`). Bound: m ≤ 16 ≤ 31 (BLK-a; enforced again by
-`check_B`, `cpp/v3_core.cpp:146, 274`).
+order; `logprof[b]` has length top + 1 = m + 1 (`cpp/v3_start.h:113`). Bound: m ≤ B ≤ 16 ≤ 31 (BLK-b gives |C_b| ≤ B;
+`check_B`, `cpp/v3_core.cpp:146, 274`, bounds B itself).
 
 ## (ENC-b) One object, never changed
 `cpp_setup` creates `g->st` (`cpp/v3_core.cpp:277`) and wraps `g` in the returned pointer `ptr` (`cpp/v3_core.cpp:305,
@@ -38,7 +39,11 @@ order; `logprof[b]` has length top + 1 = m + 1 (`cpp/v3_start.h:113`). Bound: m 
 (`cpp/v3_core.cpp:392`), `Engine(D, *h->st, …)` with member `const Start& st` (`cpp/v3_core.cpp:410, 611`;
 `cpp/v3_engine.h:60`), and `const Start& st = *c->h->st` (`cpp/v3_core.cpp:704`). `start_mode` takes `const Start&`
 (`cpp/v3_start.h:271`). The only non-const writers of a `Start` are `build_tables`, `build_start` and the constructors at
-`cpp/v3_core.cpp:207-212` (inspection helper `cpp_start`, not on the fit path) and `cpp/v3_core.cpp:277-300`. So the
+`cpp/v3_core.cpp:207-212` (inspection helper `cpp_start`, not on the fit path), `cpp/v3_core.cpp:178-181` (a local
+`Start` in `cpp_tables`, not on the fit path) and `cpp/v3_core.cpp:277-300`. The `Data`: written only by `data_init`
+(`cpp/v3_core.cpp:96`); `cpp_setup` shares it with the context holder (`cpp/v3_core.cpp:275`), and every later use is
+through `const Data&` or `const Data*` (e.g. `Start::D`, `cpp/v3_start.h:35`); only the `mutable` counters
+(`cpp/v3_score.h:20-21`) change, and `start_mode` reads K, `logprior` and p only. So the
 object LS0 reads at `cpp/v3_core.cpp:469` is the one built in (ENC-a), unchanged.
 
 ## (ENC-c) Consequence

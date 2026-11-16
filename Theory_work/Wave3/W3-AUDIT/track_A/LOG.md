@@ -40,3 +40,5 @@ Times from `date` (CST).
   new X9 (start_mode throws, unreachable) and X10 (LS0 guard, coded E5); D1 `schedule_limit` unreachable on the shipped
   path under EX-A because of the tier-1 fallback (consistent with C-DLV:Prop-F). (T3) W1-GEN:L5 [OP] correct at the pin;
   its note "LS0 is not in production code" is stale.
+- 2026-11-16 17:21 LC2 (Opus, blind; T3 T4 T5 T10) launched; 17:31 returned all VERIFIED WITH AMENDMENTS (19 findings, 2 C: a wrong justification in T3, a missed stop site in T10; no failing argument). All accepted (`reviews/LC2_disposition.md`); T3/T4/T5/T10 → v2, T9 → v1.1 (+TDP-e). 17:34 LC3 (Opus, blind; T6 T7 T8 T9) launched.
+- 2026-11-16 17:43 LC3 returned all VERIFIED WITH AMENDMENTS (18 findings, no C). All accepted (`reviews/LC3_disposition.md`); T6–T9 → v2. 17:45 LC4 (Opus, new agent, re-check of the LC2+LC3 repairs) launched. Sol gate read (T1+T2) still running.

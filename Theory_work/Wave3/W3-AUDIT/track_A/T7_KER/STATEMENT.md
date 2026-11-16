@@ -1,4 +1,4 @@
-# T7 · Lemma KER (the coded moves are the stated kernels; the round order is uniform) — STATEMENT v1 (draft, not locked)
+# T7 · Lemma KER (the coded moves are the stated kernels; the round order is uniform) — STATEMENT v2 (draft, not locked)
 
 Track A item T7 (`AUDIT.md` §6; CHECKPOINT_1 annex order 7). Tier B (second-seat re-check of N9 rows 1–5 against the code
 of record). **Lean target: yes for (KER-b) (detailed balance of four finite kernels and the uniformity of Fisher–Yates);
@@ -30,12 +30,13 @@ EX-A; H-U (the step's uniforms are fresh i.i.d. U[0, 1)); START-X (T6) for the i
   and fresh uniforms to the next state with exactly the transition law of the T12 §1 kernel of that label at φ; the
   Gibbs step's pre-draw value `oj` is T12's o_j(S, φ). No step leaves Ω.
 - **(KER-b) Reversibility (math half).** Each of the four kernels is γ_φ-reversible on Ω (detailed balance), hence leaves
-  q_φ = γ_φ/Z̄_φ invariant. The neighbour graph N is symmetric and has no loops, which the Hastings factor needs.
+  q_φ = γ_φ/Z̄_φ invariant. The neighbour graph N is symmetric, loop-free and duplicate-free; symmetry and duplicate-freeness are what the
+  proposal ratio uses.
 - **(KER-c) Order.** Each round (`one_round`) first draws an order by Fisher–Yates with m − 1 fresh uniforms, before any
   step, where m = p + B + 2 is fixed for the run; under H-U the order is uniform on the m! permutations and independent
   of the particle's state; the steps are then applied in that order, each with fresh uniforms.
-- **(KER-d) Inputs fixed before the islands.** N, B, `st` and the scores are built from the data before any island and
-  never depend on particles; the only state-dependent quantities in a step are its own feasibility rules and
+- **(KER-d) Inputs fixed before the islands.** N, B and `st` are built from the data before any island, and the score
+  function S ↦ log m(S) is fixed by the data; none of them depends on particles; the only state-dependent quantities in a step are its own feasibility rules and
   |N(j) ∖ S|, |N(l) ∖ S′|, which (KER-a) covers.
 
 ## Not claimed
@@ -47,3 +48,4 @@ EX-A; H-U (the step's uniforms are fresh i.i.d. U[0, 1)); START-X (T6) for the i
 | version | clause | tag | reason | trigger | check |
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (re-states N9 rows 1–5 for the pin) | track A T7 | `AUDIT.md` §6 T7 | `CHECK.md` |
+| v2 | (KER-b) graph properties; (KER-d) scores | EQUAL (exact wording) | LC3 T7 #2, #3 | `reviews/LC3_reply_opus.md` | pending (gate) |

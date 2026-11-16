@@ -1,4 +1,4 @@
-# T3 · Lemma OPC (OP-LS0: LS0 runs as specified on every completed sampler run) — STATEMENT v1 (draft, not locked)
+# T3 · Lemma OPC (OP-LS0: LS0 runs as specified on every completed sampler run) — STATEMENT v2 (draft, not locked)
 
 Track A item T3 (`AUDIT.md` §6; CHECKPOINT_1 annex order 3). Tier B (re-check of `W1-GEN:L5` [OP] against the code of
 record; no key lemma). **Lean target: no** (code fact). Blocks row 3.1.
@@ -39,17 +39,19 @@ alike, on {final-run status = "completed"} (so on 𝒪 and on 𝒪° restricted 
 - **(OPC-a) LS0 runs.** After the final local search, `cpp_final_run` computes S̃₀ and executes exactly one
   `local_search` from centre S̃₀, with the centre scored and emitted, and move cap ℓ_n + |S̃₀|.
 - **(OPC-b) It is the abstract search, run to its own end.** That call reads no uniform, is not interrupted, and
-  evaluates exactly the models of Scored(S̃₀, ℓ_n + |S̃₀|), in the order of LS(S̃₀, ℓ_n + |S̃₀|).
+  evaluates exactly the models of Scored(S̃₀, ℓ_n + |S̃₀|), with the same sequence of centres as LS(S̃₀, ℓ_n + |S̃₀|).
 - **(OPC-c) Its models enter the final comparison.** Scored(S̃₀, ℓ_n + |S̃₀|) ⊆ 𝓜, and the reported HPM Ŝ⁺ is the
   `hpm_better`-maximum of 𝓜 (larger F, then smaller size, then lexicographic).
 - **(OPC-d) Operational closure ([OP] of `W1-GEN:L5`).** Hence, on {status = "completed"},
   {S₀ ∈ Scored(S̃₀, ℓ_n + |S̃₀|)} ⊆ {S₀ ∈ 𝓜}, and on {S₀ ∈ 𝓜} ∩ {π(S₀) > ½}, Ŝ⁺ = S₀. In particular
   𝒪 ∩ {Ŝ⁺ ≠ S₀} ⊆ {π(S₀) ≤ ½} ∪ 𝒦_nᶜ on the sampler branch, with 𝒦_n := {S₀ ∈ Scored(S̃₀, ℓ_n + |S̃₀|)}, a function of
-  (X, y) only.
+  (X, y) only. On the enumeration branch (status "exact") Ŝ⁺ is the maximum over all of Ω, so 𝒪 ∩ {Ŝ⁺ ≠ S₀} ⊆
+  {π(S₀) ≤ ½} there; hence RM-0 (b)'s inclusion holds on every output run.
 
 ## Not claimed
 - That S̃₀ maximises γ₀ (that is `W3-RM:E4`, "PROVED-CHECKED", conditional on N3 (H1) strengthened = T4 ENC, and (H4)).
-- The enumeration branch (no LS0 there; it scores every feasible model — `Theory_work/Wave3/W3-RM/STATEMENT.md:62-63`).
+- On the enumeration branch, anything beyond the inclusion in (OPC-d) (no LS0 there; it scores every feasible model —
+  `Theory_work/Wave3/W3-RM/STATEMENT.md:62-63`).
 - Non-default options (`v3.ls0_ell`, `v3.ls0_tie_dp = FALSE`, `v3.ls0_cap = "ell_n"`, `ls0 = FALSE`); R′ > 4 (not in the
   core at the pin: `islands = 4L`, `v3_run.R:91`).
 - Binary64 (EX-A).
@@ -58,3 +60,4 @@ alike, on {final-run status = "completed"} (so on 𝒪 and on 𝒪° restricted 
 | version | clause | tag | reason | trigger | check |
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (restates [OP] + OP-LS0 for the code of record) | track A T3 | `AUDIT.md` §6 T3 | `CHECK.md` |
+| v2 | (OPC-b) wording; (OPC-d) enumeration-branch line | EQUAL; STRONGER (exact branch added) | LC2 #2, #4 | `reviews/LC2_reply_opus.md` | pending (gate) |

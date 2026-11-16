@@ -6,6 +6,7 @@ OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:39-41 sha=6a
 OK            [STATEMENT.md] cpp/v3_util.h:43-61 sha=4e4e423462 | struct Xoshiro256ss {
 OK            [STATEMENT.md] Theory_work/Wave1/W1-N1/STATEMENT.md:71-72 sha=3d1f20b87c | - **EX-S / H-U** fresh independent ideal U[0,1) uniforms within each stream; streams independent (TLF:86). The
 OK            [STATEMENT.md] v3_fit.R:162-162 sha=ebeb469ff9 | t0 <- proc.time()[["elapsed"]]; fr <- v3_final_run(setup, frozen, seed, runtime, ls0 = ls0)
+OK            [STATEMENT.md] Theory_work/Wave3/W3-SAMP/STATEMENT.md:35-35 sha=2b003901e7 | E[min(1, ρ)]. No claim is conditional on 𝒜 or on completion, and P(𝒜) → 1 is neither assumed nor claimed. Unde
 OK            [STATEMENT.md] Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-244 sha=c1bc18ec4c | **[IF-START] (T5⁺⁺) IF-START⁺⁺.** Under (T1⁺⁺) with (AL) at Q = S₀ and level vector h: for every event 𝒜 and e
 OK            [PROOF.md] cpp/v3_engine.h:20-23 sha=9538e23140 | struct RngSource : public VariateSource {
 OK            [PROOF.md] cpp/v3_core.cpp:239-241 sha=b2d8d32a37 | List cpp_start_draw(SEXP start, int N, double seed, double stream, bool as_key) {
@@ -55,5 +56,5 @@ OK            [PROOF.md] v3_calib.R:184-190 sha=72ba62ed9c | if (status == "ok")
 OK            [PROOF.md] cpp/v3_core.cpp:443-446 sha=855cede1e2 | for (int r = 1; r <= o.islands; ++r) {
 OK            [PROOF.md] Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-244 sha=c1bc18ec4c | **[IF-START] (T5⁺⁺) IF-START⁺⁺.** Under (T1⁺⁺) with (AL) at Q = S₀ and level vector h: for every event 𝒜 and e
 
-56 citations: 56 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+57 citations: 57 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

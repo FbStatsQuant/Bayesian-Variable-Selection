@@ -1,4 +1,4 @@
-# T9 · Lemma TDP — PROOF v1 (second seat on `C-ENG/lemmas/TDP_E.md`; code `Scripts/SMC_BVS/core/cpp/v3_start.h`)
+# T9 · Lemma TDP — PROOF v2 (second seat on `C-ENG/lemmas/TDP_E.md`; code `Scripts/SMC_BVS/core/cpp/v3_start.h`)
 
 Each step of TDP_E is checked against the code; deviations are noted. Paths below are relative to `Scripts/SMC_BVS/core/`.
 
@@ -23,7 +23,9 @@ Without truncation, `res.S` = lex_min E. Every element has size Σ j_b = k̂.
 *E ≠ ∅* (TDP_E (2)). M[b][0] = 0 for every b (only j = 0 is allowed at k = 0), so k̂ ≥ 0 exists. Every finite M[b][r]
 (b ≥ 1) was assigned some v(b, r, j), and the comparison at `cpp/v3_start.h:218` stores that exact double, so a tight
 edge into (b − 1, r − j) with M finite exists; M[0][r] is finite only for r = 0; and `arg[b][j] ≠ ∅` whenever `mb[b][j]`
-is finite. Following tight edges from (J, k̂) therefore reaches (0, 0).
+is finite. Following tight edges from (J, k̂) therefore reaches (0, 0). With IN = OUT = ∅ every nonempty `arg[b][j]` is allowed
+(`arg[b][0] = {0}`; `arg[b][j] ≠ ∅` for finite `mb[b][j]`, and all entries are finite by T4), so the root
+`feasible()` returns true and `cpp/v3_start.h:261` does not fire: this is (TDP-e).
 *Feasibility* (TDP_E (1)). `allowed[b][j]` = ∃ c ∈ `arg[b][j]` with (IN ∩ C_b) ⊆ U(c) and U(c) ∩ OUT = ∅, coded with
 per-block position masks (`cpp/v3_start.h:240-246`; `(c & inm) == inm`, `(c & outm) == 0`). `reach` is computed forward
 from (0, 0) over tight, allowed edges (`cpp/v3_start.h:249-257`), so `reach[J][k̂]` holds iff some tight path from
@@ -42,9 +44,17 @@ expressions v(b, r, j) and `logprior[k] + M[J][k]`, compared consistently in `mo
 statement holds for the computed doubles under (H2-FP) (`Scripts/SMC_BVS/core/cpp/Makevars.v3`, as TDP_E cites) and
 a fortiori under EX-A.
 
-## (TDP-c)
-Under EX-A, W1-N3 Theorem N3-code (b) (enumeration with N ≤ cap visits all of 𝒜*, only elements of 𝒜*;
-`Theory_work/Wave1/W1-N3/STATEMENT.md:117-119`) applied with cap > |E| gives E = 𝒜*; lex_min 𝒜* = S* by definition. ∎
+## (TDP-c) E = 𝒜* under EX-A (direct, for the code at the pin)
+Under EX-A the DP values are exact: `mb[b][j]` = max_{U⊆C_b, |U|=j} ρ_b(U); M[b][r] = the maximum of Σ_{c<b} ρ_c(U_c) over
+(U_c)_{c<b}, U_c ⊆ C_c, Σ_c |U_c| = r (max-plus convolution; `cpp/v3_start.h:211-219`), −∞ if no such tuple. For S ∈ Ω of
+size k with U_b = S ∩ C_b, f(S) = λ(k) + Σ_b ρ_b(U_b) ≤ λ(k) + M[J][k], with equality for some S of size k; so
+max_Ω f = max_k (λ(k) + M[J][k]) and the smallest maximising size is k̂ (strict `>` scan, `cpp/v3_start.h:220-224`), i.e.
+k* = k̂. Now let |S| = k̂, j_b := |U_b|, r_b := Σ_{c<b} j_c. Then Σ_b ρ_b(U_b) ≤ Σ_b mb[b][j_b], and each slack
+d_b := M[b][r_b] − M[b−1][r_{b−1}] − mb[b−1][j_{b−1}] is ≥ 0 by the definition of M (for j = 0, mb = 0 and v = M[b−1][r]),
+with Σ_b d_b = M[J][k̂] − Σ_b mb[b][j_b] (telescoping, M[0][0] = 0). So Σ_b ρ_b(U_b) = M[J][k̂] — i.e. S ∈ 𝒜* — iff every
+code(U_b) ∈ `arg[b][j_b]` and every d_b = 0, i.e. every edge (b, r_b, j_{b−1}) is tight: iff S ∈ E. Hence E = 𝒜* and
+lex_min E = S*. (This does not use W1-N3's proof of N3-code (b), which concerns an earlier copy of `start_mode`; at the
+pin the DP and enumeration arithmetic is the same but has been moved into `ModeDP`.) ∎
 
 ## (TDP-d) cost and storage
 `feasible()` loops over b ≤ J, r ≤ K, j ≤ t_{b−1} with O(1) work per triple (`mode_tight` is O(1)):
@@ -52,10 +62,18 @@ O(Σ_b (K + 1)(t_b + 1)). Each loop iteration of the greedy calls `refresh(b)` a
 O(2^{|C_b|}), and `feasible()` once; plus one initial `refresh` of every block and one root `feasible()`. Total
 O(Σ_b 2^{|C_b|} + p·(Σ_b (K + 1)(t_b + 1) + max_b 2^{|C_b|})). Since t_b + 1 ≤ K + 1 and max_b 2^{|C_b|} ≤ Σ_b 2^{|C_b|},
 this is within O(p·Σ_b(2^{|C_b|} + (K + 1)²)). Storage: `M` and `reach` (J + 1)(K + 1); `mb`, `allowed` Σ_b (t_b + 1);
-`arg` ≤ Σ_b 2^{|C_b|} codes; masks 2J: O(Σ_b 2^{|C_b|} + J(K + 1)). TDP_E's own cost line (`Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:62-64`) states the
-same operations bound with J(K + 1)(B + 1) for Σ_b (K + 1)(t_b + 1); it states no storage bound, supplied here.
+`arg` ≤ Σ_b 2^{|C_b|} codes; masks 2J: O(Σ_b 2^{|C_b|} + J(K + 1)). TDP_E's own cost line (`Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:62-64`) states the same operations bound with
+J(K + 1)(B + 1) for Σ_b (K + 1)(t_b + 1); it states no storage bound, supplied here.
+*Enumeration fast path.* Every node (b, r) that `rec` enters has M[b][r] finite, hence a tight edge to a node with finite
+M (the argument of (TDP-b)), down to (0, 0); so every branch ends at a leaf, and each leaf has at most J internal ancestors.
+An internal node costs O(t_b + 1) plus one call per child; a leaf costs O(p log p) (building, sorting and comparing S,
+`cpp/v3_start.h:285-289`). With at most min(|E|, cap) leaves the fast path costs O(min(|E|, cap)·(J(B + 2) + p log p)).
 
 ## Re-check verdict on `C-ENG:TDP_E`
-Correct as stated. Two precisions, no error: (i) the existence of a tight edge at every finite M[b][r] relies on the
-stored maximum being one of the computed v's exactly (true: assignment, not recomputation); (ii) the storage bound
-required by TDP-IMPL was not in TDP_E and is added in (TDP-d).
+Its mathematics is correct. Points to record: (i) the tight-edge equality tests are exact because `mode_tight` and `rec`
+recompute the same expression on the same doubles, which is deterministic under (H2-FP) with `-ffp-contract=off`
+(`Scripts/SMC_BVS/core/cpp/Makevars.v3`), and the stored M[b][r] is one such value; (ii) its claim (4) "for every cap ≥ 1"
+holds at the pin only for cap ≥ 2 with `tie_dp = true`: `start_mode` rejects cap < 2 (`cpp/v3_start.h:272`; C-PACK MR2,
+`cpp/v3_start.h:185-186`) — the shipped call uses 10⁶; (iii) its line references to `v3_start.h` are stale (e.g. `rec`
+"v3_start.h:217-237", now `cpp/v3_start.h:281-300`); (iv) the storage bound required by TDP-IMPL and the fast-path cost
+were not in TDP_E and are added in (TDP-d).

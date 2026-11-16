@@ -1,7 +1,9 @@
-# T6 · Lemma START-X — PROOF v1 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# T6 · Lemma START-X — PROOF v2 (code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
 An independent derivation, then a comparison with N9's proof. Blocks are indexed b = 0, …, J − 1 as in the code;
-m_b := |C_b| ≤ K (T2 BLK-a), so top_b := min(m_b, K) = m_b.
+m_b := |C_b| ≤ B ≤ K (T2 BLK-b and BLK-a; T4 ENC-a), so top_b := min(m_b, K) = m_b. Indices follow the code (0-based
+blocks); the code comments at `cpp/v3_start.h:139, 155-156` write blocks 1-based, the comment at `cpp/v3_start.h:147`
+notes the shift.
 
 ## Step 1 — what `build_start` computes (EX-A)
 - `logprof[b][j]` = log e_b(j), e_b(j) := Σ_{U⊆C_b, |U|=j} r_b(U), j = 0..m_b: the loop over `codes_by_size[b][j]` (all
@@ -26,7 +28,8 @@ loses nothing for k ≤ K. Since ϖ depends on S only through |S|,
 Z̄₀ = Σ_{k≤K} ϖ(k) Σ_{|S|=k} ∏_b r_b(S ∩ C_b) = Σ_{k≤K} ϖ(k)F_J(k) = exp(`logZbar0`).
 The reported value: `logZ = D.logm0 + st.logZbar0` at the start of every island (`cpp/v3_engine.h:299`);
 `fit$log_Zbar0 <- setup$start$log_Zbar0` (`v3_fit.R:140`) and the final run's `out$log_Zbar0 <- raw$log_Zbar0`
-(`v3_run.R:217`; `cpp/v3_core.cpp:515`), both `st.logZbar0`.
+(`v3_run.R:217`; `cpp/v3_core.cpp:515`), both `st.logZbar0` — the first through `start_summary`
+(`cpp/v3_core.cpp:198`) and `start <- r$start` (`v3_setup.R:73`).
 
 ## Step 3 — (S)
 *Categorical draws.* `cat_draw_gt(cum, u)` returns the smallest i with cum_i > u (`cpp/v3_start.h:18-20`). For
@@ -57,7 +60,8 @@ T4 (ENC-b). ∎
 N9's Claim Z and Claim S (`Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/N9-KERNEL/PROOF.md:266-286`)
 have the same structure. Checked line by line: its definitions of `logprof`, `sub_cum`, `logF`, `logZbar0`, `cond_cum`
 match the code at the pin (lines unchanged since 39db138); its index convention ("F_b is the size profile of the first b
-blocks (indices 0..b−1)", ":257-258") is the code's; the telescoping with r_b := Σ_{c≤b} k_c and r_{−1} = 0 is correct;
-the early-stop remark ("cond_cum[b][0] puts mass 1 on j = 0") is correct. One precision: N9 writes the middle product
+blocks (indices 0..b−1)", `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/N9-KERNEL/PROOF.md:254-255`) is the code's; the telescoping with r_b := Σ_{c≤b} k_c and r_{−1} = 0 is correct;
+N9 writes r_b both for the tables r_b(·) and for the partial sums; this PROOF uses s_b for the latter; the early-stop
+remark ("cond_cum[b][0] puts mass 1 on j = 0") is correct. One precision: N9 writes the middle product
 over all b = J−1..0 although the loop visits only blocks with remaining size > 0; the factors for unvisited blocks are 1
 (Step 3), so the identity is unaffected. No error found.

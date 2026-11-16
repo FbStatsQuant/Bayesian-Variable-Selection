@@ -1,4 +1,4 @@
-# T9 · Lemma TDP (the coded tie-aware start-mode fallback) — STATEMENT v1 (draft, not locked)
+# T9 · Lemma TDP (the coded tie-aware start-mode fallback) — STATEMENT v2 (draft, not locked)
 
 Track A item T9 (`AUDIT.md` §6; CHECKPOINT_1 annex order 9). Tier B (second-seat re-check of `C-ENG:TDP_E`, "PROVED (by
 this seat, unchecked)"). **Lean target: yes** (DP correctness and the greedy lex-min argument are finite statements).
@@ -27,16 +27,23 @@ edges; E := the sets built from a tight path (J, k̂) → (0, 0) and codes in `a
   visits all of E and `res.S` = lex_min E.
 - **(TDP-b) Fallback.** `mode_tie_dp` returns lex_min E (under (H2-FP) as in TDP_E, and under EX-A). Hence
   `start_mode(st, cap, true).S` = lex_min E for every cap ≥ 2, truncated or not.
-- **(TDP-c) Under EX-A** E = 𝒜* (W1-N3 Theorem N3-code (b) with cap = ∞), so the returned set is S*.
+- **(TDP-e) Nonempty, root check passes.** k̂ ≥ 0, E ≠ ∅, and `feasible()` with IN = OUT = ∅ returns true, so the
+  `runtime_error` at `cpp/v3_start.h:261` never fires (under (H2-FP) as in TDP_E, and under EX-A).
+- **(TDP-c) Under EX-A** E = 𝒜* (proved directly in PROOF, for the code at the pin), so the returned set is S*.
 - **(TDP-d) Cost.** The fallback performs O(p·(Σ_b (K + 1)(t_b + 1) + max_b 2^{|C_b|})) ⊆ O(p·Σ_b(2^{|C_b|} + (K + 1)²))
   elementary operations after `mode_dp` (which costs O(Σ_b 2^{|C_b|} + Σ_b (K + 1)(t_b + 1))), and uses
-  O(Σ_b 2^{|C_b|} + J(K + 1)) storage: TDP-IMPL's bounds.
+  O(Σ_b 2^{|C_b|} + J(K + 1)) storage: TDP-IMPL's bounds. The enumeration fast path that precedes it costs
+  O(min(|E|, cap)·(J(B + 2) + p log p)).
+- **How TDP-IMPL is discharged.** The coded routine is TDP-E (tight-edge reachability on the computed DP), not literally
+  L7's reference TDP; TDP-IMPL is met as "returns S* under EX-A (TDP-c) within TDP-IMPL's operation and storage bounds
+  (TDP-d)", which is what its users need ("e4 itself only fixes WHICH maximiser …; TDP-IMPL fixes HOW (its cost)").
 
 ## Not claimed
-- The cost of the enumeration fast path (bounded by cap times a polynomial; not part of TDP-IMPL).
 - That lex_min E is the lex-minimum of all rounded maximisers in binary64 (TDP_E's own disclaimer, `Theory_work/Wave1C/C-ENG/lemmas/TDP_E.md:34-36`).
 
 ## Changelog
 | version | clause | tag | reason | trigger | check |
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (re-states `C-ENG:TDP_E` + TDP-IMPL's cost for the pin) | track A T9 | `AUDIT.md` §6 T9 | `CHECK.md` |
+| v1.1 | (TDP-e) | STRONGER (states what (TDP-b)'s proof already shows; used by T10) | LC2 #14 | `reviews/LC2_reply_opus.md` | pending (gate) |
+| v2 | (TDP-c) direct proof; enumeration cost; how TDP-IMPL is met | STRONGER (enumeration cost added) / EQUAL | LC3 T9 #2, #3 | `reviews/LC3_reply_opus.md` | pending (gate) |

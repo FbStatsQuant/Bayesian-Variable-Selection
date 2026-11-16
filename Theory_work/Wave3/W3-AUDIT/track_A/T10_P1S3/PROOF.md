@@ -1,6 +1,7 @@
-# T10 · Re-audit P1/S.3 — PROOF v1 (second-seat code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
+# T10 · Re-audit P1/S.3 — PROOF v2 (second-seat code reading at pin 4676af6; paths relative to `Scripts/SMC_BVS/core/`)
 
-Method: (1) list every `stop`, `stopifnot`, `throw`, `checkUserInterrupt` in `cpp/` and `*.R` (grep, 2026-11-16) and
+Method: (1) list every explicit `stop`, `stopifnot`, `throw`, `checkUserInterrupt` in `cpp/` and `*.R` (grep,
+2026-11-16), plus the implicit error sources of §2 (X2-imp), and
 every assignment of a non-success status reaching `v3_fit`; (2) keep those on the `v3_fit` call graph; (3) map each to an
 INVENTORY row and re-locate its lines; (4) re-check each S.3 invariant against the code at the pin.
 
@@ -35,8 +36,10 @@ INVENTORY row and re-locate its lines; (4) re-check each S.3 invariant against t
 | X8 | LS0 cap-range guard | `cpp/v3_core.cpp:473-474` | A:IDEAL-W⁺ or 𝔇 (erratum) |
 | X9 | `start_mode` exceptions (new) | `cpp/v3_start.h:261, 272`, via `cpp/v3_core.cpp:469` | unreachable, §2 |
 
-Every other `stop`/`throw` in the core is off the `v3_fit` call graph: `cpp/v3_core.cpp:112` (`cpp_score`),
-`cpp/v3_core.cpp:148, 212-219` (`cpp_start`), `cpp/v3_core.cpp:233-257` (start inspection helpers),
+`get_holder`'s stop (`cpp/v3_core.cpp:18`) is on the call graph (every `cpp_*` entry point taking a context or setup) and
+is X2 (§2). Every other explicit `stop`/`throw` in the core is off the `v3_fit` call graph: `cpp/v3_core.cpp:112`
+(`cpp_score`), `cpp/v3_core.cpp:148` (`check_blocks`, called from `cpp_tables` `cpp/v3_core.cpp:179` and `cpp_start`
+`cpp/v3_core.cpp:209`, with the rethrow at `cpp/v3_core.cpp:209`), `cpp/v3_core.cpp:212-219` (`cpp_start`), `cpp/v3_core.cpp:233-257` (start inspection helpers),
 `v3_setup.R:18, 49, 81` (inspection wrappers). Non-success statuses reaching `v3_fit`: `invalid_input`,
 `no_predictors`, `y_constant`, `resource_limit`, `numerical_failure`, `schedule_limit`, `grid_failure_no_escalation`
 (the statuses set at the lines above; `v3_fit.R:89, 100, 117, 122, 135, 155`; `fr$status` copied at `v3_fit.R:171`). Each
@@ -48,7 +51,7 @@ row above is one of them or an error without a fit object. So (P1′) holds.
   `fired` is TRUE (`v3_calib.R:154`) and with e = 0 the loop either escalates (`v3_calib.R:158`) or stops with
   `resource_limit` (`v3_calib.R:157`). So with status "ok" the final tier is 1: unreachable.
 - **(i)** `check_B` (`cpp/v3_core.cpp:146`, called at `cpp/v3_core.cpp:274`): B ∈ [1, 16] by T2 (BLK-a).
-  (`check_blocks` is called only in `cpp_start`.)
+  (`check_blocks` is called only in `cpp_tables` and `cpp_start`, both off the call graph.)
 - **(ii)** `setup required` (`cpp/v3_core.cpp:393`): `has_graph` is set by `cpp_setup` (`cpp/v3_core.cpp:304`), and
   `v3_final_run` runs only after a successful `v3_setup` (`v3_fit.R:133-138, 162`).
 - **(iii)** `to_internal` validation (`cpp/v3_core.cpp:24-36`) on inherited models (`cpp/v3_core.cpp:422`) and the
@@ -60,7 +63,9 @@ row above is one of them or an error without a fit object. So (P1′) holds.
 - **(v)** `nth_nonmember` (`cpp/v3_engine.h:143`): called with ⌊u(p − k)⌋ < p − k = the number of non-members
   (`cpp/v3_engine.h:151`), and `set_model`/`add_var`/`del_var` keep `bits` consistent with `S` (`cpp/v3_engine.h:80-85`).
 - **(vi)** scorer k > K (`cpp/v3_score.h:230`): every caller passes |S| ≤ K (Gibbs `add_ok`, swaps preserve size, π₀
-  draws, tables |U| ≤ B ≤ K, local search skips additions at K `cpp/v3_engine.h:397`, inherited size check).
+  draws, tables |U| ≤ B ≤ K, local search skips additions at K `cpp/v3_engine.h:397`, inherited size check, `cpp_cal_V`
+  on leader-store models in Ω `cpp/v3_core.cpp:714`, `cpp_enumerate` whose recursion stops at |S| = K
+  `cpp/v3_core.cpp:538, 553`, `cpp_time_scores` with k clipped to K `cpp/v3_core.cpp:126`).
 - **(vi″)** `cpp_build_grid` equal length (`cpp/v3_core.cpp:578`): `cpp_cal_V` fills `lg0`, `d` with one entry per model
   of V (`cpp/v3_core.cpp:711-716`) or returns a failure status that `v3_calib.R:67, 80, 112` intercepts first. Seed
   re-checks `v3_calib.R:146`, `v3_run.R:225` pass by A1.
@@ -70,10 +75,21 @@ row above is one of them or an error without a fit object. So (P1′) holds.
   (`v3_run.R:225`): the frozen grid is a successful construction (C-DLV L3 Lemma 3.4: starts at 0, strictly increasing,
   ends at 1) or a fallback that passed `v3_check_grid` (`v3_calib.R:164`); class assertions `v3_run.R:224` hold for
   objects built by `v3_setup` / `v3_frozen`.
+- **`get_holder`** (`cpp/v3_core.cpp:18`): every call on the fit path passes `ctx` (a list with `ptr`,
+  `cpp/v3_core.cpp:102`) or `setup$ptr` / the calibration state (external pointers): unreachable.
+- **X2-imp (implicit errors).** Rcpp `as<>` and name lookups (`cpp/v3_core.cpp:396-404, 436-439, 494, 499-503`) read
+  fields that `v3_run_settings` and `cpp_cal_export`/`event_to_list` always create with fixed types (`v3_run.R:90-102`;
+  absent optional LS0 fields are guarded by `containsElementNamed`); `XPtr` constructions (`cpp/v3_core.cpp:624, 658,
+  704, 729`) receive the pointers created by `cpp_cal_new`/`cpp_setup`; the R `data.frame`/`rbind` calls of
+  `v3_stage_table`/`v3_bind_records` (`v3_run.R:50-64`; `v3_fit.R:163`) bind tables built by the same function with the
+  same columns. Unreachable on valid internal state (same standard as S.3's X2: code reading).
 - **X9 (new).** `cpp/v3_start.h:272` needs cap < 2; the only call passes 10⁶ (`cpp/v3_core.cpp:469`).
-  `cpp/v3_start.h:261` needs k̂ < 0 or no tight path from (J, k̂): impossible by T9 (TDP-b) "E ≠ ∅" under T4 (ENC).
-- **X7, X8** are reachable on very large inputs and excluded only by A:IDEAL-W⁺ or 𝔇, as the erratum says
-  (`Theory_work/Wave1C/C-DLV/INVENTORY.md:83-93`); confirmed at `v3_run.R:95-97` and `cpp/v3_core.cpp:473-474`.
+  `cpp/v3_start.h:261` needs k̂ < 0 or a failed root `feasible()` with IN = OUT = ∅: impossible by T9 (TDP-e) under T4
+  (ENC).
+- **X7, X8** are reachable only under IDEAL-W's unbounded reading of (n, p) and are then excluded by A:IDEAL-W⁺ or 𝔇,
+  as the erratum says (`Theory_work/Wave1C/C-DLV/INVENTORY.md:83-93`; `v3_run.R:95-97`, `cpp/v3_core.cpp:473-474`). For
+  inputs R can represent (n = `nrow`, p ≤ `ncol` ≤ 2³¹ − 1), ℓ_n = ⌈log₂(n + p + 1)⌉ ≤ 32 ≪ 10⁶ and
+  ℓ_n + |S̃₀| ≤ 32 + ⌊n/2⌋ ≤ 32 + 2³⁰ < 2³¹ − 1, so neither fires on the shipped path (a recorder note for the erratum).
 
 ## 3. D1 at the pin
 `v3_cal_tier` records a fallback only when `grid_fallback` and `trig$grid_failure` and tier = 1 (`v3_calib.R:122-125`):
