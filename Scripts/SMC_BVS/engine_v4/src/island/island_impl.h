@@ -122,6 +122,7 @@ class IslandEngine {
   std::vector<double> rb_d;   // compat: core's cumulative double RB accumulator (core/cpp/v3_engine.h:128, :350-364)
   inline double U(const Address& a) { return csrc ? csrc->u(a) : uniform_at(a); }
   double logZ = 0; double k_est = 8;
+  KernelStats ks_prev;   // verbose per-round deltas
   uint64_t ckpt_writes = 0;
   std::chrono::steady_clock::time_point last_ckpt;
 
@@ -386,20 +387,7 @@ class IslandEngine {
           const double* Xtile = &Xt[(size_t)ti * Bk * D.n];
           // products P[a][jj] = sum_i x_{i,a} x_{i,j}, sequential in i (bits of the Gram entry)
           const double tp0 = omp_get_wtime();
-          for (int a = 0; a < nA; ++a) {
-            const double* xa = &gb.XA[(size_t)a * D.n]; double* Pa = &Pp[(size_t)a * Bk];
-            for (int c0 = 0; c0 < Bk; c0 += 64) {
-              v8d s0 = bc(0), s1 = bc(0), s2 = bc(0), s3 = bc(0), s4 = bc(0), s5 = bc(0), s6 = bc(0), s7 = bc(0);
-              const double* rp = Xtile + c0;
-              for (int i = 0; i < D.n; ++i, rp += Bk) {
-                v8d xi = bc(xa[i]);
-                s0 = s0 + xi * load8(rp);      s1 = s1 + xi * load8(rp + 8);  s2 = s2 + xi * load8(rp + 16); s3 = s3 + xi * load8(rp + 24);
-                s4 = s4 + xi * load8(rp + 32); s5 = s5 + xi * load8(rp + 40); s6 = s6 + xi * load8(rp + 48); s7 = s7 + xi * load8(rp + 56);
-              }
-              store8(Pa + c0, s0); store8(Pa + c0 + 8, s1); store8(Pa + c0 + 16, s2); store8(Pa + c0 + 24, s3);
-              store8(Pa + c0 + 32, s4); store8(Pa + c0 + 40, s5); store8(Pa + c0 + 48, s6); store8(Pa + c0 + 56, s7);
-            }
-          }
+          tile_products(gb.XA.data(), nA, D.n, Xtile, Bk, Pp.data(), cfg.products_block);
           tprod += omp_get_wtime() - tp0;
           for (int s = 0; s < nsup; ++s) {
             const SupportCache& c = gb.sup[s];
@@ -878,6 +866,19 @@ class IslandEngine {
                        step, now_t - prev_t, now_t, (unsigned long long)k.passes,
                        (unsigned long long)k.supports, (unsigned long long)k.slow_supports, k.t_phaseA, k.t_phaseB, k.t_walk, k.t_build, k.t_orders,
                        top.size(), (unsigned long long)top.n_merges, (unsigned long long)top.n_buffered);
+          {   // per-round counters (manager 11-16 (a)): the round's own pairs, sweeps and costs
+            const double dt = now_t - prev_t, steps = (double)(k.particle_rounds - ks_prev.particle_rounds) * (double)m;
+            const double pairs = (double)(k.support_label_pairs - ks_prev.support_label_pairs), sweeps = (double)(k.particle_sweeps - ks_prev.particle_sweeps);
+            const double rounds = (double)(k.particle_rounds - ks_prev.particle_rounds);
+            std::fprintf(stderr, "  [round] step %d: wall %.2f s | steps %.4g pairs %.4g (%.3f per step) sweeps %.4g (M %.3f) passes %llu | "
+                         "ns per step (wall x threads) %.1f | ns per pair (wall x threads) %.1f | products ns/pair (thread) %.1f | phaseA ns/pair (wall x threads) %.1f | "
+                         "phaseB %.2f s compaction %.2f s\n",
+                         step, dt, steps, pairs, steps > 0 ? pairs / steps * m / std::max(1.0, (double)p) : 0.0, sweeps, rounds > 0 ? sweeps / rounds : 0.0,
+                         (unsigned long long)(k.passes - ks_prev.passes), steps > 0 ? 1e9 * dt * NT / steps : 0.0, pairs > 0 ? 1e9 * dt * NT / pairs : 0.0,
+                         pairs > 0 ? 1e9 * (k.t_products - ks_prev.t_products) / pairs : 0.0,
+                         pairs > 0 ? 1e9 * (k.t_phaseA - ks_prev.t_phaseA) * NT / pairs : 0.0, k.t_phaseB - ks_prev.t_phaseB, top.t_compact - ks_prev.t_store_compact);
+            ks_prev = k; ks_prev.t_store_compact = top.t_compact;
+          }
           prev_t = now_t;
         }
         if (cfg.check_store && !(top.check_invariant())) throw v4::Error(v4::Status::internal_error, "store invariant I1 violated");

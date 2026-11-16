@@ -57,18 +57,8 @@ static void bench_kernel(int p, int T, int nsup, int k, int div, int Bk) {
     for (int ti = 0; ti < ntile; ++ti) {
       int j0 = ti * Bk, nbv = std::min(Bk, p - j0); const double* Xtile = &Xt[(size_t)ti * Bk * n];
       double ta = now();
-      for (int a = 0; a < nA; ++a) {
-        const double* xa = &XA[(size_t)a * n]; double* Pa = &Pp[(size_t)a * Bk];
-        for (int c0 = 0; c0 < Bk; c0 += 64) {
-          v8d s0 = bc(0), s1 = bc(0), s2 = bc(0), s3 = bc(0), s4 = bc(0), s5 = bc(0), s6 = bc(0), s7 = bc(0);
-          const double* rp = Xtile + c0;
-          for (int i = 0; i < n; ++i, rp += Bk) { v8d xi = bc(xa[i]);
-            s0 = s0 + xi * load8(rp); s1 = s1 + xi * load8(rp + 8); s2 = s2 + xi * load8(rp + 16); s3 = s3 + xi * load8(rp + 24);
-            s4 = s4 + xi * load8(rp + 32); s5 = s5 + xi * load8(rp + 40); s6 = s6 + xi * load8(rp + 48); s7 = s7 + xi * load8(rp + 56); }
-          store8(Pa + c0, s0); store8(Pa + c0 + 8, s1); store8(Pa + c0 + 16, s2); store8(Pa + c0 + 24, s3);
-          store8(Pa + c0 + 32, s4); store8(Pa + c0 + 40, s5); store8(Pa + c0 + 48, s6); store8(Pa + c0 + 56, s7);
-        }
-      }
+      { static const int blk = std::getenv("V4_PRODUCTS_BLOCK") ? std::atoi(std::getenv("V4_PRODUCTS_BLOCK")) : 4;
+        tile_products(XA.data(), nA, n, Xtile, Bk, Pp.data(), blk); }
       double tb = now();
       for (auto& c : sup) {
         std::vector<v8d> ub(64); v8d* u = ub.data();
@@ -115,7 +105,10 @@ static void bench_island(int p, int N, const std::vector<int>& thr, KernelKind k
   Start st; build_start(st, D, contiguous_blocks(p, 4));
   Neighbours nb = window_neighbours(D, 14, 8);
   std::printf("# data AR(0.6) n=%d p=%d (stand-in partition: blocks of 4; window neighbours, B=14): %.1f s wall\n", n, p, now() - t0);
-  IslandConfig c; c.store_dup_filter = std::getenv("V4_NO_DUP_FILTER") == nullptr; c.verbose = std::getenv("V4_VERBOSE") != nullptr; c.store_parallel_compact = std::getenv("V4_SERIAL_COMPACT") == nullptr; c.allow_test_kernels = true; c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
+  IslandConfig c; c.store_dup_filter = std::getenv("V4_NO_DUP_FILTER") == nullptr; c.verbose = std::getenv("V4_VERBOSE") != nullptr;
+  if (const char* e = std::getenv("V4_ISLAND_ID")) c.island = (uint32_t)std::atoi(e);
+  if (const char* e = std::getenv("V4_PRODUCTS_BLOCK")) c.products_block = std::atoi(e);
+  if (const char* e = std::getenv("V4_MEM_BUDGET_GB")) c.mem_budget = (uint64_t)(std::atof(e) * 1073741824.0); c.store_parallel_compact = std::getenv("V4_SERIAL_COMPACT") == nullptr; c.allow_test_kernels = true; c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
   if (gspec.rfind("geo:", 0) == 0) {
     int Tst = std::atoi(gspec.c_str() + 4);
     c.grid.push_back(0.0); for (int t = 1; t < Tst; ++t) c.grid.push_back(std::pow(10.0, -3.0 * (1.0 - (double)t / (Tst - 1))) * ((double)t / Tst));

@@ -50,6 +50,7 @@ struct IslandConfig {
   bool store_dup_filter = true;             // exact snapshot duplicate filter (execution parameter; content unchanged)
   bool store_parallel_compact = true;       // compaction at pass/step boundaries with all threads (content unchanged)
   bool check_store = true;                  // I1 after every step (linear; O(c) hash lookups)
+  int products_block = 4;                   // tile products: 4 active columns x 32 labels per sweep (1: the original loop); same bits
   bool verbose = false;                     // progress line per step on stderr (benchmarks)
   // adaptive schedule (core's pilot rule: largest phi' with population ESS >= 0.9 H, floor 1/Te). Benchmarks and
   // pilot-like grids only; production islands use the frozen grid from calib.bin.
