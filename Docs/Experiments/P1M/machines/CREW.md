@@ -150,3 +150,29 @@ Machines (daily check <date> <time>):
 - **VS Code ripgrep paths** (only if the sweep ever matches on rg): both
   `~/.vscode-server/cli/servers/<build>/server/node_modules/@vscode/ripgrep-universal/bin/linux-x64/rg` (current builds)
   and `.../@vscode/ripgrep/bin/rg` (older). Engineering's sweep does not match on rg today; read only either way.
+
+## owls_guard check (HQ request, 11-16; READ ONLY: ~/.config/bvs-hq/owls/owls_tool.py, guard.log, `systemctl --user` unit owls-guard)
+- **What it acts on:** fb31 processes it classifies as "compute":
+  - comm matches R/Rscript/Rterm/python*/julia/make/gmake/ninja/cmake/cc1plus/cc1/gcc/g++/c++/cc/gfortran/f951/collect2/ld/as,
+    or cmd/cwd under /home/fb31/ls0_work or /tmp/*/work;
+  - EXCLUDING protected comm (claude, codex, node, sshd*, tmux*, t3*, bash/sh/zsh/fish/dash, systemd*, cloudflared, code*,
+    owls_guard*, sleep, ps, dbus*, ssh, scp, rsync, git, …) and protected cmd (.t3, .claude, .codex, .vscode-server,
+    .config/bvs-hq/owls, t3code, cloudflared, mcp).
+- **Actions:**
+  - when total compute CPU > the budget (OWLS_BUDGET_CORES = 8): renice all compute processes to 19;
+  - when > 2× the budget for 3 consecutive samples: SIGSTOP the top compute processes (resume = SIGCONT).
+  - Nothing else: no kills.
+- **VS Code: never.** rg's comm is not a compute name, its cmd contains `.vscode-server` (protected), and node/code* are
+  protected.
+- **BNP's guard: NOT guaranteed.** `.config/bnp-eng` is not in the protected list. If BNP's guard runs as python3 (comm
+  python3), it is classified as compute. It would then be reniced to 19 whenever fb31 compute exceeds 8 cores, and could
+  in principle be SIGSTOPped, although only if it were itself among the heaviest CPU users above 16 cores for 3 samples,
+  which a watchdog is not. Fix (HQ's tool): add `\.config/bnp-eng` to PROTECTED_CMD.
+- **03:40–04:00 spike:** it did NOT fire. state=OK throughout; compute 0–1% (rg is not compute); load1 9,777 → 40,046 →
+  1,926; samples stretched to ~4 min; guard_cpu ≤ 0.39%. Its only action today was at 00:58:35 (compute 1046% > 800%:
+  reniced 6 procs to 19). It could not have helped with the rg storm, by design.
+- Freezes today: no crontab or ~/.vscode-server/data/Machine/settings.json edits 10:05–10:30 and 11:05–11:30 CT
+  (Engineering has none). BNP ALERT file from 10:14 (not present at 05:5x).
+- **Fixed by HQ (11-16):** PROTECTED_CMD now also covers `.config/bnp-eng`, `Bayesian-Nonparametric-Lean-Library`,
+  `bnp_backups`, `bnp_tmp` and `bnp_worktrees`; the owls-guard service was restarted and is active. **owls_guard is
+  SMC-compute-only from now on**: it never acts on BNP's processes or guard, nor on VS Code.
