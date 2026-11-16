@@ -21,9 +21,11 @@ mixture over S ∈ Ω of π_𝒞(S | ·) = Φ(x, u)(S) (BASE (R1), `R_reduction.
 the law of Π(· | x, y^r) — hence P_κ(Π(B) > η) for any set B fixed by κ — does not depend on which such law is used.
 (ii) *Measurability.* For each n and each of the six set families B_n(κ) ∈ {B^a_n, H^a_n, K^a_n, B̄^b_n, H̄^b_n, K̄^b_n} put
   g_n(κ, w) := Ψ(x, Uᵀxβ + √v w)(B_n(κ)) if Uᵀxβ + √v w ≠ 0, and g_n(κ, w) := 0 otherwise.
-On each stratum {p = p′} of the configuration space 𝔎_n (BASE `STATEMENT.md:28-31`, `M_misr.md:133`), the indicator
-1_{B_n(κ)}(S, θ, v′) is a Borel function of (κ, S, θ, v′) (each defining inequality compares continuous functions of
-(x, β, v, S, θ, v′): μ̂ = X_Sθ with X continuous in x on 𝔛_n(p′), μ(κ), θ(κ), h̄_n, k̄_n), and the kernel Ψ(x, u)(dS dθ dv′)
+On each finer stratum {p = p′, supp β = T} of the configuration space 𝔎_n (a Borel set; finitely many T for each p′;
+BASE `STATEMENT.md:28-31`, `M_misr.md:133-138`) [K1-3], the indicator 1_{B_n(κ)}(S, θ, v′) is a Borel function of
+(κ, S, θ, v′): the event {S ≠ S₀(κ)} = {S ≠ T} is constant in κ there and S ranges over a finite set, and every other
+defining inequality compares continuous functions of (x, β, v, θ, v′) for fixed S (μ̂ = X_Sθ with X continuous in x on
+𝔛_n(p′), μ(κ), θ(κ), h̄_n, k̄_n); and the kernel Ψ(x, u)(dS dθ dv′)
 has a density in (θ, v′) w.r.t. counting × Lebesgue that is jointly Borel in (x, u, S, θ, v′) on {u ≠ 0}. By Tonelli g_n is
 Borel on 𝔎_n × ℝ^N [L1-4]. For fixed κ the set {w : Uᵀxβ + √v w = 0} is N_N(0, I)-null.
 

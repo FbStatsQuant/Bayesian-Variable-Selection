@@ -13,16 +13,16 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 # id, file (relative to this folder), lines "a-b" or "", uses, checked_sha, checked_by
 ROWS = [
-    ("S:notation", "STATEMENT.md", "25-46", "", "", ""),
-    ("S:CorG-min", "STATEMENT.md", "48-92", "S:notation", "", ""),
-    ("S:CorGb-plus", "STATEMENT.md", "94-108", "S:CorG-min", "", ""),
-    ("S:CorH-plus", "STATEMENT.md", "110-132", "S:notation,S:CorG-min", "", ""),
-    ("S:CorH-U", "STATEMENT.md", "134-155", "S:CorH-plus,S:CorGb-plus", "", ""),
-    ("S:inputs-deps", "STATEMENT.md", "164-205", "", "", ""),
-    ("L:G1_min", "lemmas/G1_min.md", "", "S:CorG-min", "", ""),
-    ("L:G2_corr", "lemmas/G2_corr.md", "", "S:CorGb-plus,L:G1_min", "", ""),
-    ("L:H1_plus", "lemmas/H1_plus.md", "", "S:CorH-plus,L:G1_min", "", ""),
-    ("L:H2_uniform", "lemmas/H2_uniform.md", "", "S:CorH-U,L:H1_plus,L:G2_corr", "", ""),
+    ("S:notation", "STATEMENT.md", "25-46", "", "3a025174ce55c22e", "reviews/K1_linecheck_sol.md"),
+    ("S:CorG-min", "STATEMENT.md", "48-92", "S:notation", "97b1ed2602f41b3b", "reviews/K1_linecheck_sol.md"),
+    ("S:CorGb-plus", "STATEMENT.md", "94-108", "S:CorG-min", "3b27ea0d061b648c", "reviews/K1_linecheck_sol.md"),
+    ("S:CorH-plus", "STATEMENT.md", "110-132", "S:notation,S:CorG-min", "55e295180dcc9662", "reviews/K1_linecheck_sol.md"),
+    ("S:CorH-U", "STATEMENT.md", "134-155", "S:CorH-plus,S:CorGb-plus", "533cc312b9632e27", "reviews/K1_linecheck_sol.md"),
+    ("S:inputs-deps", "STATEMENT.md", "164-205", "", "2b1ceff43dd69cd8", "reviews/K1_linecheck_sol.md"),
+    ("L:G1_min", "lemmas/G1_min.md", "", "S:CorG-min", "4915f1f44e6d09a8", "reviews/K1_linecheck_sol.md"),
+    ("L:G2_corr", "lemmas/G2_corr.md", "", "S:CorGb-plus,L:G1_min", "3fea96051b137a2e", "reviews/K1_linecheck_sol.md"),
+    ("L:H1_plus", "lemmas/H1_plus.md", "", "S:CorH-plus,L:G1_min", "9d056f33f53ea25d", "reviews/K1_linecheck_sol.md"),
+    ("L:H2_uniform", "lemmas/H2_uniform.md", "", "S:CorH-U,L:H1_plus,L:G2_corr", "75d8ba852a132b2c", "reviews/K1_linecheck_sol.md"),
 ]
 
 

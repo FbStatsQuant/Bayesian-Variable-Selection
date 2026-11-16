@@ -47,9 +47,9 @@ satisfies (E), (F₀), (OS; C_OS), the hypotheses of [POST2] D(b) (`:112-116`), 
 C_H(s, A) of STATEMENT §1; explicitly C_H = 8(C_A(s + j₀) + c₂) + 1 at σ*² = 1, [D] line 72, depending on (s, A) only) and,
 for every M_n → ∞, Π̃(B̃^b_n | ỹ) → 0 and Π̃(h̄_n² > (1 + C_H/4) log n/n | ỹ) → 0 in P̃-probability (C′_H = 1 + C_H/4 at
 σ*² = 1, [POST2] `:115`). By H1.0 the same holds for B^b_n(κ_n), H^b_n(κ_n) under P_{κ_n}.
-*KL set.* Put M″_n := (log n)^{1/2}. Off B^b_n(κ_n) computed with M″_n: |v′/v_n − 1| ≤ (log n/n)^{1/2} ≤ ½ for n ≥ 5 and
+*KL set.* Put M″_n := (log n)^{1/2}. Off B^b_n(κ_n) computed with M″_n: |v′/v_n − 1| ≤ (log n/n)^{1/2} ≤ ½ for n ≥ 9 [K1-2] and
 ‖μ̂ − μ(κ_n)‖² ≤ C_H v_n log n, so by (KL) k̄_n ≤ log n/n + C_H log n/(2n) = (1 + C_H/2) log n/n. Hence
-K^b_n(κ_n) ⊆ B^b_n(κ_n)|_{M″_n} for n ≥ 5 and Π(K^b_n(κ_n) | x_n, y^r) → 0 in probability. ∎
+K^b_n(κ_n) ⊆ B^b_n(κ_n)|_{M″_n} for n ≥ 9 (log n/n decreases for n > e and log 9/9 < ¼) and Π(K^b_n(κ_n) | x_n, y^r) → 0 in probability. ∎
 
 ## H1.3 Proof of (KL)
 

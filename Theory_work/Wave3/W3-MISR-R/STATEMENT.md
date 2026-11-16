@@ -207,5 +207,6 @@ A:SEL-P (new: premise δ_n → 0 in probability, resp. its uniform form (UP); Co
 
 | version | clause | STRONGER / WEAKER / EQUAL / NEW-CLAIM | reason | trigger | check |
 |---|---|---|---|---|---|
-| 1.1 | §2(d) sentence; §2 remark; §4 KL reading (ii); §2(a) parenthesis; §7 code/Cramér citations | EQUAL (lock amendments: wording and scope of interpretive sentences; no displayed hypothesis or conclusion changed) | L1-1 (MAJOR), L1-2, L1-3, Q1/Q5 | `reviews/L1_statement_lock_sol.md` | lock (`reviews/L1_disposition.md`) |
-| 1.2 | §5 CorH-U clause (G) | NEW-CLAIM (clause; a composition of (RD), §3 and MIS-R (i)) | needed by the reader-version remark (`READER_DELTA.md` B4.4) | lead [LA-1] | statement-change check owed (planned inside the Sol line-check batch, new agent) |
+| 1.1a | §4 KL reading (ii), row-wise sentence | WEAKER (an interpretive assertion restricted to a deterministic intercept; no displayed hypothesis or conclusion changed; not a target-clause display; reported at CP3 per v4 §4.2) | L1-1 (MAJOR) | `reviews/L1_statement_lock_sol.md` | `reviews/K1_linecheck_sol.md` (K1-1: tag corrected from EQUAL) |
+| 1.1b | §2(d) sentence; §2 remark; §2(a) parenthesis; §7 code/Cramér citations | EQUAL (wording, conditional-law convention, citations) | L1-2, L1-3, Q1/Q5 | `reviews/L1_statement_lock_sol.md` | `reviews/K1_linecheck_sol.md` (confirmed) |
+| 1.2 | §5 CorH-U clause (G) | NEW-CLAIM (clause; a composition of (RD), §3 and MIS-R (i)) | needed by the reader-version remark (`READER_DELTA.md` B4.4) | lead [LA-1] | `reviews/K1_linecheck_sol.md` (NEW-CLAIM confirmed; clause correct) |
