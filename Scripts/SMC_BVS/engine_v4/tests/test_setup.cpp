@@ -213,3 +213,54 @@ TEST(unit_tables_fallback_paths, 0) {
                 (unsigned long long)t0.prefix_scored, (unsigned long long)t0.fallback_scored, (unsigned long long)t1.fallback_scored);
   }
 }
+
+// ---- golden against core/'s R/Rcpp entry points (tools/golden_setup_ref.R): v3_preprocess'd X, cpp_setup
+// (exact blocks, neighbours, tables, log Zbar0), cpp_dup_components and cpp_cut_group (core/cpp/v3_core.cpp:746-818).
+// Runs when V4_R_GOLDEN_DIR points at the script's output (tests/run_setup_tests.sh does this when R is present).
+namespace {
+std::vector<std::vector<int>> read_rows(const std::string& f) {
+  std::vector<std::vector<int>> r; FILE* fp = std::fopen(f.c_str(), "r"); if (!fp) return r;
+  char buf[1 << 16];
+  while (std::fgets(buf, sizeof buf, fp)) {
+    std::vector<int> row; char* s = buf;
+    while (*s && *s != '\n') { row.push_back((int)std::strtol(s, &s, 10) - 1); if (*s == ',') ++s; }
+    r.push_back(row);
+  }
+  std::fclose(fp); return r;
+}
+std::vector<double> read_f64(const std::string& f) {
+  std::vector<double> v; FILE* fp = std::fopen(f.c_str(), "rb"); if (!fp) return v;
+  std::fseek(fp, 0, SEEK_END); long n = std::ftell(fp); std::fseek(fp, 0, SEEK_SET);
+  v.resize(n / 8); size_t got = std::fread(v.data(), 8, v.size(), fp); (void)got; std::fclose(fp); return v;
+}
+}  // namespace
+TEST(golden_R_reference, 0) {
+  const char* dir = std::getenv("V4_R_GOLDEN_DIR");
+  if (!dir) { std::printf("    skipped: V4_R_GOLDEN_DIR not set (R reference not generated)\n"); return; }
+  FILE* fi = std::fopen((std::string(dir) + "/INDEX").c_str(), "r");
+  CHECK(fi != nullptr, "no INDEX in %s", dir);
+  if (!fi) return;
+  char tagc[256]; int ncase = 0;
+  while (std::fscanf(fi, "%255s", tagc) == 1) {
+    std::string d = std::string(dir) + "/" + tagc + "/";
+    int n, p, B; FILE* fd = std::fopen((d + "dims.txt").c_str(), "r"); int got = std::fscanf(fd, "%d %d %d", &n, &p, &B); (void)got; std::fclose(fd);
+    auto X = read_f64(d + "Xs.f64"), y = read_f64(d + "ys.f64");
+    v4::DataOwner own; own.init(X.data(), y.data(), n, p);
+    SetupOptions o; o.B = B; o.threads = stk::threads(); o.part.mode = PartMode::Exact;
+    SetupResult r = run(own.D, o);
+    CHECK(r.status == v4::Status::completed, "%s: %s", tagc, r.reason.c_str());
+    CHECK(rows(r.corr.nb) == read_rows(d + "neighbours.txt"), "%s: neighbours differ from cpp_setup", tagc);
+    std::vector<std::vector<int>> bl; for (int b = 0; b < r.part.J; ++b) bl.emplace_back(r.part.block(b), r.part.block(b) + r.part.size(b));
+    CHECK(bl == read_rows(d + "blocks.txt"), "%s: exact blocks differ from cpp_setup", tagc);
+    CHECK(rows(r.corr.dup) == read_rows(d + "dup.txt"), "%s: duplicate components differ from cpp_dup_components", tagc);
+    CHECK(rows(r.cut) == read_rows(d + "cut.txt"), "%s: cut groups differ from cpp_cut_group", tagc);
+    auto lr = read_f64(d + "logr.f64"); bool ok = lr.size() == r.tab.logr.size();
+    for (size_t i = 0; ok && i < lr.size(); ++i) ok = stk::same_bits(lr[i], r.tab.logr[i]);
+    CHECK(ok, "%s: tables differ from cpp_setup", tagc);
+    CHECK(stk::same_bits(read_f64(d + "logZbar0.f64")[0], r.tab.logZbar0), "%s: log Zbar0 differs", tagc);
+    std::printf("    R golden %s: dup components %lld, cut groups %lld\n", tagc, (long long)r.corr.dup.rows(), (long long)r.cut.rows());
+    ++ncase;
+  }
+  std::fclose(fi);
+  CHECK(ncase >= 4, "R reference has %d cases", ncase);
+}
