@@ -4,7 +4,7 @@
 
 **Fable allocation (HQ, owner mandate 11-16: HQ manages Fables for two targets, the assumptions and meaningful
 improvements of the results).**
-- **One Fable 5.2, the "audit Fable"** (high effort, Claude Work, which has the most Fable headroom; a Theory child),
+- **One Fable 5.2, the "audit Fable"** (high effort, **Claude Personal**, per the owner 11-16: "we will burn a full CP reset this week"; a Theory child),
   works sequentially on the same context:
   1. **assumptions:** the track A classification check, then the track B dossiers against Song–Liang;
   2. **improvements:** track D, using its own assumption analysis as input.
@@ -78,8 +78,7 @@ For each core theorem, one sharpness record of at most a page, using the same ta
   s₀-dependence.
 
 **Who (owner, 11-16): the same audit Fable runs track D,** because Fable has the best grasp of the mathematics ("precision
-strike machines, not bombs to throw everywhere"). It is a single Fable, high effort, a Theory child agent, on the
-account HQ names at the resume.
+strike machines, not bombs to throw everywhere"). It is a single Fable, high effort, a Theory child agent, on Claude Personal.
 - **Input:** the core theorems' STATEMENTs, the pre-filled lists above, and the track A/B tables.
 - **Output:** the per-theorem sharpness records, plus at most 5 ranked improvement candidates, each with its gain,
   route and estimated cost.
