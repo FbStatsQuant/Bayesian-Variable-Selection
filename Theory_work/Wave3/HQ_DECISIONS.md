@@ -579,3 +579,12 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Cor-H held: the consultant objects to a remark-only record. If the false KL sentence (W3-MISR STATEMENT:191-195) is inside Cor-H's registered span, record it as NARROW 1.0.0 → 1.1.0, with a Sol diff check, rollback history and the erratum. If not, the remark is enough.
   - Read-only sweep for the generic-intercept KL/Hellinger reading: C-MIS:Cor-H, POST2:D, W3-READER, W3-DIST. The DIST lead gets the counterexample now, pre-freeze.
   - New rule (HQ, from the consultant): interpretive sentences inside registered statement spans are moved out or checked as claims (RIDER_RULES now; sweep in the post-freeze format package).
+- 2026-11-16 ~05:10 CT. H5 card 11 (row 3.7 wording): the consultant AGREES.
+  - The card states assumptions, not behaviour: "needs no visibility, leakage, start or block condition…".
+  - No row-only "asymptotically".
+  - "Certified" is defined at first use.
+  - Numbers by n from existing data.
+- Cor-H: the false KL sentence is inside its span (W3-MISR STATEMENT:191-195 ⊂ :178-197), so NARROW 1.0.0 → 1.1.0.
+  - Order: a registry hold now → Sol diff check → apply before the DIST R1 freeze → re-freeze carriers (MISR-R R1–R3, W3-MISR R1/R2/R2r).
+  - DIST SW1 drift is logged as an EXT-input change, conditional on the DIST lead's answer.
+  - If Sol isn't back by 07:30, the freeze goes ahead on the current file and the correction lands after it.
