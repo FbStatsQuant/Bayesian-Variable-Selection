@@ -1,0 +1,26 @@
+diff --git a/Theory_work/Wave3/W3-MISR/STATEMENT.md b/Theory_work/Wave3/W3-MISR/STATEMENT.md
+--- a/Theory_work/Wave3/W3-MISR/STATEMENT.md
++++ b/Theory_work/Wave3/W3-MISR/STATEMENT.md
+@@ -1,4 +1,4 @@
+-# W3-MISR — STATEMENT (v1.3, 2026-11-12; lead: Claude Fable 5.2, claudeAgent, high; v1.1 = statement-lock amendments [L01-#], locked by L02; v1.2 = sharpness-gate adoptions [BT1-A1, BT1-A3]; v1.3 = council R1 and sweep SW1 wording and bookkeeping [R1-F#, SW1-#])
++# W3-MISR — STATEMENT (v1.4, 2026-11-16; lead: Claude Fable 5.2, claudeAgent, high; v1.1 = statement-lock amendments [L01-#], locked by L02; v1.2 = sharpness-gate adoptions [BT1-A1, BT1-A3]; v1.3 = council R1 and sweep SW1 wording and bookkeeping [R1-F#, SW1-#]; v1.4 = Cor-H's Kullback–Leibler reading restricted to a deterministic intercept [W3-MISR-R L1-1])
+ 
+ Ticket W3-MISR (T1 of `Theory_work/Wave3/API_AUDIT/sharp1/TRIAGE.md`): C-MIS v2, the misspecified-subset theorem
+ without fixed variances. Statuses are verbatim: each claim carries the status of its proof file (`lemmas/R_reduction.md`,
+@@ -188,11 +188,11 @@
+ unit-noise comparison model of R′(b) in response units. Under [MIS1]'s GR it is the conditional law, given the
+ candidate design, of y^r_i − [α + a + n⁻¹Σ_l (xβ^𝒞)_l] (the response minus the sample average of its conditional
+ mean); it is not the law of (Cy^r)_i, whose variance is v(1 − 1/n). The contraction statements need no further
+-interpretation. **Kullback–Leibler reading, in the setting of Corollary G only:** there the conditional law of y_i
+-given the candidate covariates x_{𝒞,i} (omitted covariates integrated out) is N(α′ + x_{𝒞,i}ᵀβ^𝒞, σ²_𝒞), which belongs to
+-the candidate linear-Gaussian class and is therefore the Kullback–Leibler minimiser within it (SL's f₀, for centred
+-rows); the reference is that law with its mean centred over the sample. No KL statement is made for fixed designs
+-or for the projection given the realised omitted columns ([MIS1] `L1_reduction.md:69-74` keeps these apart).
++interpretation. **Kullback–Leibler reading, in the setting of Corollary G with a deterministic intercept α (and the deterministic parameters of
++that example) only [W3-MISR-R L1-1]:** there the conditional law of y_i given the candidate covariates x_{𝒞,i} (omitted covariates integrated
++out) is N(α′ + x_{𝒞,i}ᵀβ^𝒞, σ²_𝒞), which belongs to the candidate linear-Gaussian class and is therefore the Kullback–Leibler minimiser within
++it (SL's f₀, for centred rows); the reference is that law with its mean centred over the sample. No KL statement is made for a random
++intercept, for fixed designs or for the projection given the realised omitted columns ([MIS1] `L1_reduction.md:69-74` keeps these apart).
+ Differences from SL's Theorem 4: in-sample average distance, convergence in probability (not almost sure, not
+ integrated over the design law), the shipped prior, p_𝒞 ≤ n^A with s fixed; a rate is given.
+ 
