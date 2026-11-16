@@ -25,3 +25,4 @@
 - 2026-11-15 20:37 CST Temp convention noted: TMPDIR=/home/fb31/SMC_Theory_Department/tmp/<date>-W3-READER-<what>. Old bvs_tmp/W3-READER already removed (no other temp left).
 - 2026-11-15 20:46 CST CARD_ROW11_R03b.md drafted (proposed: A+ defer POST2-O1, E+ defer POST2-O2, E-floor+ defer POST2-O3, B+ reject for row 1.1 (no bearing)); SHARP3b verdict lines pending. gates_staged row 1.1 stays PENDING-DISPOSITION.
 - 2026-11-15 20:49 CST SHARP3b (POST2 C, E: IMPROVABLE-EASY) triaged into CARD_ROW11_R03b.md v1; no correctness issue; new item N1 (matching E delta_n lower bound) -> T12 scope or post-freeze POST2-R1. GATES/gates_staged updated (row 1.1 still PENDING-DISPOSITION).
+- 2026-11-15 20:50 CST Manager: N1 -> post-freeze rider POST2-R1 (T12 not widened). Card/gates_staged updated; row 1.1 stays PENDING-DISPOSITION until HQ confirmation.
