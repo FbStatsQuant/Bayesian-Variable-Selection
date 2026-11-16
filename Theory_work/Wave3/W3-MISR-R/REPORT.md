@@ -16,7 +16,7 @@ Cor-H once accepted. W3-MISR:Cor-G(b) is the reader version of the headline mast
 
 ## 2. Chain record
 Statement lock L1 (Sol, NORMAL): `reviews/L1_statement_lock_sol.md`, disposition `reviews/L1_disposition.md`. Line check +
-statement-change check K1 (Sol, NORMAL): `reviews/K1_linecheck_sol.md`, disposition `reviews/K1_disposition.md`. DEPS:
+statement-change check K1 (Sol, NORMAL): `reviews/K1_linecheck_sol.md`, disposition `reviews/K1_disposition.md`; re-check of the two repairs K2 (Sol, NORMAL): `reviews/K2_recheck_sol.md`. Changelog (`STATEMENT.md` §10): v1.1a WEAKER (an interpretive sentence of CorH-plus's KL reading restricted to a deterministic intercept; no display changed; tag set by K1), v1.1b EQUAL, v1.2 NEW-CLAIM (CorH-U (G), approved at CP1). Errata: `ERRATA.md`. DEPS:
 `DEPS.tsv` (kept by `deps_hand.py`). Citation check: `citecheck.py` → `reviews/CITECHECK.txt`. Boundary numerics:
 `numerics/N1_boundary.py` → `numerics/N1_out.txt`. Council: (to be filled at CP3).
 

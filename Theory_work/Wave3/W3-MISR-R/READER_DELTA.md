@@ -1,4 +1,4 @@
-# W3-MISR-R — READER_DELTA (draft v0.1, 2026-11-15; for W3-READER `READER_VERSIONS.md` row "thm4", card row 1.4)
+# W3-MISR-R — READER_DELTA (draft v0.2, 2026-11-15; v0.2 = manager's CP1 wording rules applied; for W3-READER `READER_VERSIONS.md` row "thm4", card row 1.4)
 
 Source read (read only): `/home/fb31/BVS-wt/W3-READER/Theory_work/Wave3/W3-READER/READER_VERSIONS.md`, row thm4 (between
 `<!-- ROW thm4 BEGIN -->` and `END`), section version 0.2 / update log v0.3 (2026-11-16). This draft proposes the delta;
@@ -56,9 +56,9 @@ uniformly over such configurations; a fixed-design version of the theorem unifor
 ## 3. "Why each assumption" (replaces the row's list)
 - (A0) The response condition is exactly what the proof needs: when the noise is Gaussian it is necessary and
   sufficient for the exact reduction to a well-specified problem; it covers omitted Gaussian predictors and omitted
-  predictors that are linear in the candidates plus Gaussian noise. Gaussian candidate rows are used only to transfer
-  the population floor (A2) and (A3) to the sample. Non-Gaussian conditional laws are outside this result (finite-n
-  numerics show no visible change just outside it).
+  predictors that are linear in the candidates plus Gaussian noise. The Gaussian law of the candidate rows is an
+  assumption on how the data are generated (not a choice of design); it is used only to transfer the population floor
+  (A2) and (A3) to the sample.
 - (A1) as Theorem 1.
 - (A2) The method standardises each column, so only correlations matter; the floor is on the candidates only.
 - (A3) Everything is measured relative to $\sigma^2_{\mathcal C}$ because the method is invariant to shifts and rescaling of
@@ -83,3 +83,8 @@ remark. Until then the row keeps its current masters and statuses; this delta is
 ## 6. Errata absorbed
 W3-EDIT LEDGER I4-F2 (full status quotes of SOP:TH09, SOP:TH128) is absorbed in this ticket's `STATEMENT.md` §7. No
 other routed erratum is restated by this delta (I4-F1, I4-F4 concern BASE §3(a) and the BASE changelog).
+
+## 7. Wording rules applied (manager, CP1 answer)
+Asymptotics are stated as what is proved, never as a limitation; no displayed numerical constant beyond the theorem's own
+(the liminf constant of the master stays in the master); the Gaussian law of the candidate rows is stated as an assumption
+on the data's law, not as a design family. The parity line "short vs SL Thm 4 in metric and mode" stays in TARGET/REPORT only.

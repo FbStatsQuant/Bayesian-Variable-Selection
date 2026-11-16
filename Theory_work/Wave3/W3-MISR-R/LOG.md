@@ -29,3 +29,4 @@
   v1.1a WEAKER / v1.1b EQUAL; ERRATA.md E1; DEPS: 8 OK, 2 STALE (H1, H2).
   Agent started: Sol (codex, gpt-6.1-sol, high), new agent — role: K2 re-check of the repair diff + STALE rows; brief
   reviews/K2_brief.md (saved before launch); reply → reviews/K2_recheck_sol.md. K1 reviewer finished → settled.
+- 2026-11-15 23:50 CST — READER_DELTA v0.2 (CP1 wording rules); REPORT chain record updated; council brief body drafted (reviews/BRIEF_R1_body.md). Heartbeat: waiting on K2.
