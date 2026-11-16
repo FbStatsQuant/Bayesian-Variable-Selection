@@ -20,12 +20,23 @@ Sources: `QUEUE.md`, `DECISIONS.md` D1–D23, `research/LEAN_READINESS.md` (in p
 
 After the Fri 11-20 freeze, anything unproved goes to the open-problems section (named open items in QUEUE.md).
 
-## (b) Lean certificates of the consistency results
-To be filled from `research/LEAN_READINESS.md`:
-- Level 1 (deterministic cores): which are checked and stable **now**, which wait for a rider's CP3 (Wed) or for
-  W3-DIST CP3, with an effort estimate each.
-- Level 2 skeletons (2–3 headline consistency theorems; DIST-1 expected first): the named axioms each needs.
-- Proposed Lean launch date and order, for HQ's decision. Fidelity check per statement (Sol), per `Lean/BRIEF.md`.
+## (b) Lean certificates of the consistency results (from `research/LEAN_READINESS.md`, 2026-11-15)
+- **Ready now (Level 1, deterministic, stable this week):** SL0; LT♯ (LT-d) sup-norm core; prior counting (T01
+  `lem:prior`, locked); DIST Lemma H (= POST2 D0 averaged over x). ≈ 3–4 lead-days. DIST C-0 / P6: small, pin to the
+  DIST CP3 version.
+- **Shared score base** (T01 `lem:spec` + PSHARP Lemma S; Schur-complement route; ≈ 1–1.5 weeks), then on top:
+  PSHARP Cor B / (B1), POST2 A2 / A0 / E3.1, MISR R′, START FLOOR, SCR L1 + bridges B1–B3, RM-0(a). The riders do not
+  change these (checked against their delta statements).
+- **After the rider CP3s (Wed 11-18):** RM0⁺(b), RM2 TL identity + counting bounds, PSHARP (B3) wording, MISR
+  Cor-G(a)/Cor-H (Level 2 only).
+- **Level 2 skeletons, in order:** DIST-1 (after its CP3; named axioms: χ² tails, Gaussian quadratic-form MGF,
+  Hoeffding, Cantelli, half-space growth, Bernstein, ε-net, sub-Gaussian scale) → W3-POST:Thm-1 items 1–5 (χ²/Gaussian
+  tails, conjugate formulas; item 6 excluded while W2-APP:POST is unrecorded) → RM2-F after its rider.
+- **Not Lean targets:** DLV-0 (code audit), full N1 (product-measure plumbing). Reuse: an old sorry-free snapshot
+  (`Old_Projects/.../L-LEAN`, same toolchain + Mathlib rev) has HPM / Markov / lattice-descent steps for RM-0.
+- **Launch proposal:** GO Thu 11-19 for the inventory + first batch (statements frozen by then), or one launch Mon 11-23
+  after the freeze; Level 2 from Mon 11-23 with DIST-1 if its CP3 lands by Fri, else W3-POST:Thm-1. Caveats: Mathlib
+  coverage to verify in the Lean inventory; certificates of rows still unchecked in the registry must say so.
 
 ## (c) Parked (owner, 11-15)
 T-MERGE (convex pooling) · EVAR / POOL (evidence variance; scaling paper) · T-N, T-PART, T-STREAM, T-CAL
