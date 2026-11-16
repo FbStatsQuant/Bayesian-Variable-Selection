@@ -1,6 +1,6 @@
 # WP3_DESIGN — the island: stores, addressed sampling, label-major round, restart
 
-**v0.6, 2026-11-16, WP3 builder (Opus 5.5). Status: PROVISIONAL.** v0.6 adds §1.11 (calibration islands, agreed with WP4); v0.5 added §1.10 (review PR26); v0.2 added §1.7 (parallel compaction, waves, snapshot filter), implements §1.6 (admission) and §6 (compat), and records the manager's §5 decisions. Branch `exp/P1M-wp3-island`
+**v0.7, 2026-11-16, WP3 builder (Opus 5.5). Status: PROVISIONAL.** v0.7 records the built calibration roles (§1.11); v0.6 added §1.11 (calibration islands, agreed with WP4); v0.5 added §1.10 (review PR26); v0.2 added §1.7 (parallel compaction, waves, snapshot filter), implements §1.6 (admission) and §6 (compat), and records the manager's §5 decisions. Branch `exp/P1M-wp3-island`
 (stacked on WP1's PR #11). Inputs: ENGINEERING_SPEC §0-v2, §3, §6; INTERFACES v0.1.3 (v0.1.5 announced: RNG domain and
 event key); Sol EXP-CP1 review §F2, §F4, §F5 (T3, T6); manager directives of 11-15 (D-21 scope cut, G ≤ 256, mem budget).
 Code references: `include/v4/island/*.h`, `src/island/island_impl.h`, `tests/test_island*.cpp`. Every number below
@@ -252,6 +252,44 @@ This is the API that WP4's `calib::IslandRunner` calls. It is built after the PR
     for final islands).
   - WP4 compares the whole calibration with `v3_calibrate`, so swapping in this runner changes no calib.bin bits in
     compat.
+
+- **Built (v0.7).**
+  - The runner is `include/v4/island/calib_runner.h`: `CalibIslandRunner<A>`, header-only. It owns the compat streams
+    and converts the island's output to WP4's `IslandOut`.
+  - The island side is in `island_impl.h`.
+    - Address role, tier and iteration come from `IslandConfig::role / tier / iter`.
+    - `base_key()` gives (CALIB, e, k, r).
+    - `phase_of()` gives PH_PILOT / PH_DIAG.
+    - Measured rounds are numbered L + h in the key; the address keeps h.
+    - `forced` counts the forced pilot steps.
+  - Ledger so far after a numerical failure: the round start keeps the published kept runs (O(1)) and a copy of the
+    particles. `rebuild_prefix()` discards the round's buffers and tallies, restores the stores (`TopStore::restore`)
+    and replays particles 1…i serially, particle-major.
+  - Compat stops at the first failure: no further draws, as core.
+  - The plan gains a `calib_snapshot` term (one kept run per store and a copy of the population).
+- **The calibrate command.**
+  - `src/calib/calib_run.cpp` runs `CalibIslandRunner` with the start law and neighbours read from setup.bin
+    (`island/setup_load.h`).
+    - Partition and block tables are read.
+    - The sampler is rebuilt by core's arithmetic.
+    - WP2's `size_cum`, when present, must equal the rebuild bit for bit.
+  - The kernel and arithmetic depend on the mode: compat and law use the bit form, particle-major (compat on 1 thread);
+    V uses class A, label-major.
+  - Build changes:
+    - a cycle between `v4_bit` (calib_run) and `v4_a` (the class-A island), declared in `island.cmake`;
+    - every translation unit that calls the island is compiled with the island's ISA (inline ISA namespaces; m9 will
+      remove the need).
+- **Tests.** MEASURED, Owls, 3 threads, `nice -n 19`.
+  - `golden_calibration_islands_compat_vs_core`: 10 islands (pilot e = 0; 2 rebuilds × 4 diagnostic islands; pilot
+    e = 1) on streams 0–5, continued. Everything equals core in bits, ledgers and stream positions included.
+  - `golden_calibration_islands_law_vs_core`: the same sequence on addressed uniforms, against core through the address
+    adapter, which tracks phases under `phase_override`. Particle-major on 1 thread and label-major on 3 threads.
+  - `golden_calibration_failure_ledger_so_far`: initial-draw and Gibbs-flip failures. The ledger so far equals core's
+    ledger after its throw: compat, PM 1/3 threads, LM 3 threads.
+  - `calibrate_command_end_to_end`: `smcbvs4 calibrate` in compat, law and V. V gives the same calibration at 1 and 3
+    threads.
+  - WP4's R golden with `runner = "wp3"`: the whole calibration through WP3's islands equals `v3_calibrate`, the
+    calib.bin round trip included.
 
 ---
 
