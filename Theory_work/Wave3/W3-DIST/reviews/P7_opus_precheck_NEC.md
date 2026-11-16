@@ -273,9 +273,36 @@ but Steps A–C do not).**
     limited by the size cap and by needing three near-copies with z² ≳ log n/2.
 - The freq{π(∅) ≥ ½} is ≥ 0.975 in every setting.
 
-Conclusion: the numerics confirm the Proposition qualitatively, and quantitatively with large margin. Over k ≤ 3 the far
-model mass is ≍ c(k)/n with c(k) geometric in k and flat in n.
-[CONTROL — orthonormal design, see §3a.]
+### 3a. Control: orthonormal design (satisfies (ND)), same p, same exact computation
+
+Columns √N u_j, j = 0..p′; 200 draws; maxk 4 (n = 400, 1600), 3 (n = 6400). "𝒮_k" here means the same index family:
+{0} ∪ J, J ⊆ 𝒢, |J| = k.
+
+| n | median π(∅) | med n·π(𝒮₁) | med n·π(𝒮₂) | med n·π(𝒮₃) |
+|---|---|---|---|---|
+| 400 | 0.943 | 2.12·10⁻² | 4.83·10⁻⁴ | 8.0·10⁻⁶ |
+| 1600 | 0.972 | 1.29·10⁻² | 1.88·10⁻⁴ | 2.0·10⁻⁶ |
+| 6400 | 0.985 | 6.70·10⁻³ | 5.40·10⁻⁵ | — |
+
+In the control, n·π(𝒮_k) **decays** in n, roughly like n^{−k/2} up to log factors: per 4-fold step in n, about ×0.6 at
+k = 1, ×0.3–0.4 at k = 2, ×0.25 at k = 3. In the near-copy design it is **flat**. This is exactly the difference between
+an Occam cost of n^{−1/2} and d^{−1/2} ≍ (log n)^{−1/2} per added direction. It is the mechanism of Steps A–B, and it is
+visible at n ≤ 6400.
+
+Caveat (reported, not hidden): the **radius-based** statistic n·Π_models(‖M_Se‖² ≥ R) does **not** separate the two designs
+at these n for R = (k/2) log n, k ≤ 2. For example, at k = 2 the medians are 0.25, 0.16, 0.22 in the control against
+0.06–0.72 in the β = 1 design. The reason is that in an orthonormal design with p ≍ √n, one or two columns with
+z² ≈ log n already carry mass ≍ L^{k/2}n^{−k/2}, which is ≍ n⁻¹·L at k = 2. The two designs separate in the radius
+statistic only at k ≥ 3, where the control decays as n^{−3/2}. Reaching that needs n well beyond 6400 and sizes ≥ 4 in
+the enumeration, which I did not run (the β = 256 size-4 run at n = 25600 would have 27M models per draw).
+So the n⁻¹ scaling of the **far mass of the family 𝒮_k** is clearly confirmed. The claim that this differs from an (ND)
+design at radius ≍ k log n with k ≥ 3 is confirmed by the theory (Lemma X with (ND) gives n^{−cM}; the control's
+𝒮_k mass decays) but not by a radius-based simulation at these n.
+
+Conclusion: the numerics confirm the Proposition qualitatively, and quantitatively with large margin. The far model mass
+of 𝒮_k is ≍ c(k)/n, with c(k) geometric in k and flat in n, whereas in the orthonormal control it decays like
+n^{−k/2}. The first batch run was stopped at its 30-minute limit during the control runs; all near-copy settings above
+had finished, and the control was re-run separately to completion (`control.txt`).
 
 ---
 
@@ -339,7 +366,7 @@ Not established:
 | §6 Step C, Proposition | VERIFIED |
 | §7 Refutation of the exponential clause | VERIFIED-WITH-AMENDMENTS (F-1, F-2, F-5: commentary bullets overclaim; the refutation itself is correct) |
 | §8 What is not broken; GAP 1, GAP 2 | VERIFIED-WITH-AMENDMENTS (F-3 missing argument for "holds trivially"; F-4 heuristic to be labelled) |
-| Numerical check | CONFIRMS (n⁻¹ scaling flat in n, geometric in k; 100% of draws above c₄(k) for k = 1, 2) |
+| Numerical check | CONFIRMS (n·π(𝒮_k) flat in n, geometric in k, vs decaying ≈ n^{−k/2} in an orthonormal control; 100% of draws above c₄(k) for k = 1, 2 at radius (k/24) log n; the radius statistic alone does not separate the designs at n ≤ 6400, see §3a) |
 
 STATEMENT-CHANGE REQUESTS in the file: none.
 

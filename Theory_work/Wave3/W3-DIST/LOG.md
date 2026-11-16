@@ -260,3 +260,27 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   **All five cross-family line checks are back (L1–L5): no CRITICAL or MAJOR finding in any proof.** Outstanding: BR1
   (Astra break review), P7 (Opus pre-check of the necessity counterexample), then one Sol diff check of the statement
   changes and post-check amendments. HOLDS read: none.
+- 21:05 — **Break review BR1 back** (`reviews/BR1_astra_break.md`, Astra): Lemma X NOT BROKEN; passage X → (1.1) NOT BROKEN;
+  Lemma X′ NOT BROKEN; passage X′ → (1.2) NOT BROKEN; 3 MINOR assembly omissions with full repairs (deterministic
+  sparsity level for Lemma T; the intercept-noise event; C′ = 33 for the size clause); **CP2: CONTINUE.**
+  `reviews/BR1_disposition.md`. Master assembly written: `lemmas/DIST12.md` v0.1 (DIST-1, DIST-2 from H, T, X, X′, with the
+  three repairs). STATEMENT v1.4.3 (the applications sentence of Lemma T; EQUAL). DEPS.tsv: TC/DIST-1, TC/DIST-2 →
+  lemmas/DIST12.md, UNCHECKED. `reviews/DIFF_STATEMENT_v131_to_v143.patch` generated (read-only `git diff` against the
+  snapshot commit f54bd6f = v1.3.1) for the coming diff check.
+- 21:05 — **CHECKPOINT_2.md written (soft CP2): gate met** — X, X′, S, V line-checked; break review CONTINUE; no open blocking
+  finding; no kill budget spent. The lead continues. Line check L6 (Sol) of `lemmas/DIST12.md` launched
+  (`reviews/BRIEF_L6_sol_DIST12.md`); the diff check follows it (sequential, calm usage). Running for this ticket: L6 (Sol),
+  P7 (Opus). HOLDS read: none.
+- 21:06 — Manager/HQ: CP2 CONTINUE approved. Owner's standing rule applied: asymptotics are never framed as a limitation — the remark on the numerical size of n₀ removed from STATEMENT (v1.4.4, EQUAL) and kept only as an internal REPORT line ("explicit constants, not optimised"); no such figure in any reader-facing text (TARGET §6 never had it). To be confirmed in the Sol diff check batch. Council-freeze target re-sent: Mon 2026-11-16 09:00 CT. HOLDS read: none.
+- 21:08 — Manager: I freeze the R1 manifest and launch both council seats myself (Astra seat; Opus 5.5 seat on Claude
+  Third), fresh and blind, briefs from INFRA/templates/COUNCIL_BRIEF.md saved before launch, each with the "must give
+  gates=FAIL on its own C/S/F" sentence; same for the sweep; digest sent to the manager right after the freeze; HOLDS
+  read just before the freeze. n₀ line: "explicit constants, not optimised", internal REPORT only (leftover phrase
+  removed from the changelog too).
+- 21:08 — Pre-check P7 back (`reviews/P7_opus_precheck_NEC.md`): the counterexample is correct as a **fixed-design,
+  in-sample** statement (Lemma X without (ND) is false, also with an outer probability only tending to 0); numerics on
+  the exact posterior confirm the n⁻¹ scaling; the attempt's commentary overclaimed (S-FIT at theorem level, Lemma X′'s
+  logarithm) — corrected. Written as `lemmas/NEC.md` (Proposition NEC + Corollary; non-target sharpness result);
+  `reviews/P7_disposition.md`; STATEMENT v1.4.5 (Proposition NEC in §3; S-FIT text; NEW-CLAIM non-target); DEPS rows NEC,
+  S-FIT. Line check L7 (Sol) launched (`reviews/BRIEF_L7_sol_NEC.md`). Running: L6 (Sol), L7 (Sol). HOLDS read: none.
+- 21:11 — REPORT.md generated (`mkreport.py` + `REPORT_extra.md`: §1 table pointing to STATEMENT lines, review trail, numerics, relations and sharpness, inputs and assurance with the three reviewer-unverified premises as "conditional on …", 20 registry blocks; internal line "Explicit constants, not optimised"). It is regenerated after any STATEMENT edit. Running: L6, L7 (Sol). HOLDS read: none.

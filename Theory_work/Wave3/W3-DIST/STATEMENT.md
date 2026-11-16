@@ -1,4 +1,4 @@
-# W3-DIST — STATEMENT (v1.4.2, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
+# W3-DIST — STATEMENT (v1.4.5, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
 
 **Status: targets TC1–TC9 fixed by HQ at CP1; proofs are in `lemmas/` and `work/<stream>/`; the check state of every item is
 in `DEPS.tsv` (a statement here is checked only if its row says OK).** v1.4 = v1.3.1 with the dispositions of the blind read S2
@@ -116,11 +116,11 @@ exponential control of the term δ_n, which is why the second display is in prob
   out-of-sample part of the bias needs its own control.
 - **S-EXP (exponential p).** Candidate: (1.1) with log n replaced by ℓ_n for ℓ_n = o(n^{κ₀}); Lemma S already has no
   p ≤ n^A restriction.
-- **S-FIT (sharp rate with no design condition).** Without (ND), the posterior size has a geometric tail of ratio ≈ ½
-  and no better (duplicate columns: [T03R] Proposition D; H1 F4), so the size clause of (1.1) is false in general. But
-  near-duplicate columns fit almost no extra noise, so the *distance* clause of (1.1) may still hold without (ND)
-  through a fit tail (effective dimension eᵀM_Se instead of |S|). OPEN. H1 derived (unchecked) the design-free
-  superset bound Σ_{|J|=j} π(S₀∪J)/π(S₀) ≤ poly(j)(√(1+η)/2)^j·O_P(1) (Lemma V); non-supersets are open.
+- **S-FIT (sharp rate with no design condition).** Status after Proposition NEC (§3): at the level of the fixed-design
+  core, the exponential form at the sharp radius is **false** without (ND) (posterior mass of order 1/n at radius of order
+  log n). A random-design version of that counterexample is not written. What remains open is the in-probability form:
+  whether Π(‖μ̂ − μ‖² > M_nσ*² log n | y) → 0 for every M_n → ∞ under (E), (C) alone (proved for supersets of S₀ and completely for
+  s₀ = 0 in the API attempt `work/api_attempts/dist1b/F-a-r2.md`, unchecked; non-supersets open). Not pursued in this leg.
 
 ## 1R. Reader versions (PROGRAM "Readability"; PROTOCOL_v4 H6) — candidates; corollaries of §1–2 through the bridges of §3
 
@@ -263,10 +263,7 @@ applied at t = M log n/C² (C ≥ 1 its radius constant), so the reader constant
 **C₁ = max{C′/C², 1 + s + (sA + s + 5)/log 2}** (the second term serves the sentence without (A4)); the common exceptional
 event comes from the joint bad set of (1.1) [P5 E-02, S2-04]. (5) The dependence of M₀ on (s, A, b̄, K, c_ψ) is not made
 explicit. (6) The HPM/MPM plug-in versions of Corollary C are DIST-C (C-iii), (C-iv). (7) Why each assumption is there
-and whether it is necessary: TARGET.md §6. (8) **Size of n₀.** With the absolute constant proved in bridge B2-core
-(c₂ = 10⁻⁵) and uniformity up to M = √n/log n, the threshold n₀ of Theorem A is of the order 10¹⁵–10¹⁸. Theorem A is an
-asymptotic statement; nothing is claimed about practical sample sizes (the v1.3 changelog's phrase "realistic n₀"
-is withdrawn) [P5 E-04]. (9) In §1R, K is the constant of (A3); elsewhere in this file K denotes the cap min(p, ⌊n/2⌋).
+and whether it is necessary: TARGET.md §6. (8) In §1R, K is the constant of (A3); elsewhere in this file K denotes the cap min(p, ⌊n/2⌋).
 
 ## 2. Candidate theorem for the method as coded (target (ii); P6)
 
@@ -331,8 +328,9 @@ of two affine half-spaces on d coordinates (growth function ≤ C(p_raw, d)·(2e
 inequality P(∃A: P(A) > 2P_n(A) + η²) ≤ 2S(2n)e^{−nη²/4} for nη² ≥ 25 is proved in that file (ghost sample with Cantelli's bound,
 random swaps with Hoeffding's), with no external result; a layer-cake step gives the truncated loss. (The ratio-type
 inequality quoted in v1.3 is not used.) [P4]
-Applications use d = min(p_raw, n − 1, d_t + s₀^r) (DIST-1) and min(p_raw, n − 1, m_n(t) + s₀^r)
-(DIST-2).
+Applications (`lemmas/DIST12.md`) use the **deterministic** levels d₁ = min{p_raw, 2s₀^r + ⌈32t/log n⌉} (DIST-1) and
+d₂ = min{p_raw, s₀^r + ⌈C_m t⌉} (DIST-2), both ≤ n − 1 for n ≥ n₀: Lemma T is stated for a fixed d, so d must not depend on the
+sample through s₀ or p_ret [BR1-01].
 
 **Lemma S (size tail with an exponential tail; reference-adaptive; no p ≤ n^A) [BT3].** Fixed design with p ≥ 2,
 noise G, ‖μ‖² ≤ nM. Let T ∈ Ω and ϑ ∈ ℝ^T be design-measurable with B_T(ϑ) := ‖μ − X_Tϑ‖² + (‖X_Tϑ‖² + ‖ϑ‖²)/n ≤ B.
@@ -361,6 +359,15 @@ their union with S₀; sizes above m_n(t) by Lemma S.
 **Lemma X′ (the same without (ND)).** Under (E; M), (C; M′) only, with constants depending also on κ₀: the conclusion
 of Lemma X holds with ‖μ̂ − μ‖² > Cσ*²tℓ_n and |S| > m_n(t) in place of ‖μ̂ − μ‖² > Cσ*²t and |S| > d_t (the variance
 displacement O(tℓ_n/n) is absorbed in C√(t/n) since √(t/n)·ℓ_n → 0 on the range) [S1-07].
+
+**Proposition NEC (sharpness of Lemma X's hypothesis; fixed design; not a target clause).** (Proof: `lemmas/NEC.md`.) For
+every n large enough there is a standardised design with p = ⌊√n⌋ + 1 columns such that, for the null truth (s₀ = 0, μ = 0; so
+(E; M), (C; M′) hold for all M, M′ ≥ 0), for every integer k ≥ 1 and all n ≥ n₄(k):
+P_e[Π(‖μ̂ − μ‖² ≥ (k/24)σ*² log n | y) ≥ c₄(k)/(2n)] ≥ 0.6, with c₄(k) > 0. Consequently the conclusion of Lemma X cannot hold under
+(E), (C) alone, for any constants, even with its outer probability replaced by a sequence tending to 0: the distance
+clause, not only the size clause, needs (ND) or a substitute. The design violates (ND), so Lemma X, (1.1) and every target
+clause are untouched; Lemma X′ and (1.2) are not contradicted; nothing is asserted about a random-design statement or
+about the in-probability form.
 
 **Lemma P6 (deterministic).** (a) [BT4] If Q ≤ Lπ on Ω then QΠ(B) ≤ LΠ(B | D_n). (b) For **a > 0** and
 𝔅 := {S : Π(B | S, D_n) > a}: π(𝔅) ≤ Π(B | D_n)/a [S1-11].
@@ -449,7 +456,7 @@ posterior with the contrast model (locked T01, [P1] `thm:T01i`, `lem:spec`, `lem
 | 1.2 | consumes: W3-MISR:R′@1.0.0 added; W3-POST:Thm-1 is a premise of Theorem B | EQUAL (master); conditional status of Theorem B stated | B0; Theorem B | HQ steer A5 | pending |
 | 1.3 | Theorem B: "(A4) and, in addition, (A6)" | EQUAL (intended meaning made explicit; the v1.2 wording was false if read as a replacement) | counterexample under the replacement reading | `reviews/P1_opus_precheck.md` P1-01 | pending (cross-family) |
 | 1.3 | Theorem A: M fixed before the assumptions; window q_n = min{p, ⌈C_qM log n⌉}; one n₀ | EQUAL | quantifier order | P1-03, P1-07 | pending |
-| 1.3 | Theorem A, Corollary C: range M ≤ √n/log n (was M ≤ √n) | WEAKER (reader clause, not yet fixed at CP1; range only — κ₀ = ½ gives a realistic n₀) | P1-10 | P1-10 | pending |
+| 1.3 | Theorem A, Corollary C: range M ≤ √n/log n (was M ≤ √n) | WEAKER (reader clause, not yet fixed at CP1; range only) | P1-10 | P1-10 | pending |
 | 1.3 | Theorem A: display (ii) on posterior model size added | STRONGER (from the size clause of (1.1)) | lead (clarity of what is proved) | — | pending |
 | 1.3 | Setup: constant columns removed; σ² in original units; intercept ȳ + (x − x̄)ᵀβ per draw; triangular arrays; notation table | EQUAL | P1-06, P1-13 | P1-06, P1-13 | pending |
 | 1.3 | Corollary C: "completed", exact arithmetic, scope, run-uniform wording; retention sentence restored | EQUAL / STRONGER (retention: an evaluated true model with posterior probability > ½ is kept) | P1-09, P1-12 | P1-09, P1-12 | pending |
@@ -461,7 +468,7 @@ posterior with the contrast model (locked T01, [P1] `thm:T01i`, `lem:spec`, `lem
 | 1.4 | Theorem A: "the two exceptional sets can be taken to be the same set"; window "of order log n for fixed M"; Example "jointly Gaussian", "common constant K" | EQUAL / STRONGER (joint event, from the joint bad set of (1.1)) | clarity | S2-04; P5 E-07 | pending |
 | 1.4 | Theorem B (A6)(b): b_n > 0 | **WEAKER** (companion clause, non-target: a hypothesis is added; it turns a statement that was false as written — b_n = −1 counterexample — into a true one). Reported at the next checkpoint; no early checkpoint | missing positivity | S2-01 | pending |
 | 1.4 | Corollary C: final-run scope; the list described as the best of the models offered to the final run (scored there or carried in); log-weights exponentiated; stopped runs not covered; 40r + 1; "reports as most probable"; "does not certify" | EQUAL (description made faithful to the code) | reader text said slightly more than the code delivers | stream D (RC-1…RC-5); P3 D-02, D-03; S2-06 | pending |
-| 1.4 | Remarks of §1R: general radii need the window at that level; constants (c, M₀, C₁ = max{…}); size of n₀ (10¹⁵–10¹⁸; "realistic n₀" withdrawn) | EQUAL (remarks) | honesty about constants | P5 E-02, E-03, E-04; S2-04 | pending |
+| 1.4 | Remarks of §1R: general radii need the window at that level; constants (c, M₀, C₁ = max{…}); the v1.3 changelog's remark on the threshold n₀ withdrawn | EQUAL (remarks) | constants | P5 E-02, E-03, E-04; S2-04 | pending |
 | 1.4 | §0: law-free reading of the master statements; (C) vs (L₀) sentence corrected | EQUAL (TC2–TC4, TC6, TC7 unchanged; a false explanatory sentence corrected) | P5 E-01; P6 C-7 | as listed | pending |
 | 1.4 | DIST-3: c = 1, dependence of C (on C_T) and n₀ stated; direction renamed w | EQUAL | quantifiers | P4; stream B | pending |
 | 1.4 | DIST-C: ϱ_n (name clash with the window); threshold form replaces the "λ = 0" parenthesis; (C-iii) needs ϱ_n ≤ ¼ (n₀ enlarged); RM2 route labelled conditional and unused; P⊗ per [SAMP] §0 | EQUAL (TC8's deterministic transfers unchanged; one incorrect parenthesis replaced by a proved form) | stream D SCR-1…SCR-5; P3 D-01 | as listed | pending |
@@ -469,6 +476,9 @@ posterior with the contrast model (locked T01, [P1] `thm:T01i`, `lem:spec`, `lem
 | 1.4 | §3 bridges (non-target): B2 and B3 window claims "q_n ≥ m_n + s" / "m♯_n + s ≤ q_n" replaced by min{p, s₀ + m} ≤ q_n; B3 requires b_n > 0; B0 restricted to data sets on which the posterior is defined | **WEAKER** (bridge remarks: false or over-broad claims replaced by the weaker true ones that the proofs use; Theorem A's statement is unaffected) | stream E; S2-01, S2-02, S2-05 | as listed | pending |
 | 1.4.1 | Lemma S: R^T_m written with its upper limit K | EQUAL (the proof's definition; with the sum to p the sentence "m = m_n(t) qualifies" would be false at the cap, while the probability bound is unaffected) | ambiguity | `reviews/L5_astra_SV.md` L5-02 | pending |
 | 1.4.2 | Corollary C, opening sentence: "uses a sequential Monte Carlo sampler to explore the models and to compute summaries of the posterior; it does not compute the full posterior" | EQUAL (description of the method made accurate; companion clause) | the method does not compute the full posterior | `reviews/L2_sol_D.md` L2D-01 | pending |
+| 1.4.3 | §3, sentence on the applications of Lemma T: deterministic sparsity levels d₁, d₂ | EQUAL (Lemma T's statement unchanged; the application is now valid as written). The proof of (1.1), (1.2) from Lemmas H, T, X, X′ is `lemmas/DIST12.md` (with the intercept event and C′ = 33) | Lemma T needs a deterministic d | `reviews/BR1_astra_break.md` BR1-01..03 | pending |
+| 1.4.4 | §1R Remarks: the remark on the numerical size of the threshold n₀ removed from this file (owner's standing rule: all results are asymptotic and asymptotics are not framed as a limitation); the fact is kept as one internal line of REPORT.md, "explicit constants, not optimised" | EQUAL (a remark; no statement changes) | owner's rule | manager's note, 2026-11-15 | pending |
+| 1.4.5 | §3: Proposition NEC added (sharpness of Lemma X's hypothesis (ND); fixed design); stretch item S-FIT restated accordingly | NEW-CLAIM (non-target; touches no target clause: the design violates (ND)) | necessity gate for (ND) | API attempt F-b-r2; `reviews/P7_opus_precheck_NEC.md` | pending (line check L7) |
 Target clauses TC1–TC9 were fixed by HQ at CP1 (2026-11-15) in their v1.3 form; TC10 = companion results. **Relative to that
 baseline, no row of v1.4 weakens the mathematics of a target clause** (per S2: this sentence is about the CP1 baseline, not
 about the history before it — the pre-CP1 rows 1.0.1, 1.1 and 1.3 marked WEAKER did narrow ranges or add remainder events).

@@ -1,6 +1,6 @@
 id	file[:lines]	uses	sha (sha256, first 16 hex)	checked_sha	checked_by	state
-TC/DIST-1	STATEMENT.md §1 (1.1)	H, T, X	7c8fcb7754175acd			UNCHECKED
-TC/DIST-2	STATEMENT.md §1 (1.2)	H, T, X'	7c8fcb7754175acd			UNCHECKED
+TC/DIST-1	proof lemmas/DIST12.md §D.0–D.5 (statement: STATEMENT.md §1 (1.1))	H, T, X	c05fb3f082fcb938		reviews/BR1_astra_break.md (Astra break review: passage Lemma X → (1.1) NOT BROKEN, with repairs BR1-01..03 now written in the proof) — not a line check	UNCHECKED (proof written; cross-family line check pending)
+TC/DIST-2	proof lemmas/DIST12.md §D.6 (statement: STATEMENT.md §1 (1.2))	H, T, X'	c05fb3f082fcb938		reviews/BR1_astra_break.md (passage Lemma X′ → (1.2) NOT BROKEN) — not a line check	UNCHECKED (proof written; cross-family line check pending)
 TC/DIST-3	proof work/B_transfer/DIST3.md (statement: STATEMENT.md §1)	H; locked T01 (conditional posterior)	4240189593efcb4d	4240189593efcb4d	reviews/L3_sol_B.md (VERIFIED, no findings; c = 1)	OK (proof); STATEMENT v1.4 wording diff check pending
 TC/DIST-C	proof work/D_output/P6_DISTC.md (statement: STATEMENT.md §2)	P6, DIST-1 (or DIST-2), DIST-3; W3-SAMP:CC@1.1.1; delivery premises W3-SAMP:D@2.1.1, LT#@2.0.1, C@1.1.1, TR@2.1.1, W3-RM2:RM2-F@1.0.0, RM2-R@1.0.0	5e3f9116a9ce9d36	1f28367e39d34090	reviews/L2_sol_D.md (gpt-6.1-sol, cross-family line check): (C-0), (C-iv) VERIFIED; (C-i), (C-ii), (C-iii) VERIFIED-WITH-AMENDMENTS (SCR-1, SCR-2, SCR-4, A-1, L2D-02)	STALE (amendments applied after the check — diff check pending)
 H	work/B_transfer/H.md (statement: STATEMENT.md §3)	— (D0 computation re-derived)	1ca0d39c24eebd49	1ca0d39c24eebd49	reviews/L3_sol_B.md (gpt-6.1-sol, cross-family line check: VERIFIED, no findings)	OK
@@ -11,9 +11,8 @@ X	lemmas/X.md §0–§8 (statement: STATEMENT.md §3)	locked T01 ([P1] lem:chi, 
 X'	lemmas/X.md §9 (statement: STATEMENT.md §3)	X (§2, §4–§7 of lemmas/X.md)	4c3a657742455bef	4c3a657742455bef	reviews/L1_astra_X.md (gpt-6-astra, cross-family line check: VERIFIED, no findings)	OK
 P6	work/D_output/P6_DISTC.md (Lemma P6)	—	5e3f9116a9ce9d36	1f28367e39d34090	reviews/L2_sol_D.md (gpt-6.1-sol, cross-family line check): Lemma P6 (a), (b), (c) VERIFIED	STALE (verified at checked_sha; amendments A-8..A-10 appended to the same file after the check — diff check pending)
 F-b (fallback)	ROUTES.md §6 item 3	H, T; W3-POST2:D.D(b)@1.2.0 (conditional; HQ note 2026-11-15)				UNCHECKED
-S-APX	STATEMENT.md §1 stretch	X, S	7c8fcb7754175acd			UNCHECKED (stretch)
-S-EXP	STATEMENT.md §1 stretch	X, T	7c8fcb7754175acd			UNCHECKED (stretch)
-S-FIT	STATEMENT.md §1 stretch	V (supersets)	7c8fcb7754175acd			UNCHECKED (stretch; OPEN)
+S-APX	STATEMENT.md §1 stretch	X, S	46fe9733857dc6b7			UNCHECKED (stretch)
+S-EXP	STATEMENT.md §1 stretch	X, T	46fe9733857dc6b7			UNCHECKED (stretch)
 NUM	work/numerics/RESULTS.md; ASSUMPTION_MAP.md §3	—	ef53be9c7a7a9fea / adc413eb7e3e2ca2			UNCHECKED (scripts not audited)
 R/Theorem-A	STATEMENT.md §1R; assembly work/E_bridges/ASSEMBLY.md	TC/DIST-1, TC/DIST-2, B0, B1, B2	e2bb6ed765be030f	f33326e5b23dcdd5	reviews/L4_sol_E.md (gpt-6.1-sol, cross-family line check): ASSEMBLY/Theorem A VERIFIED-WITH-AMENDMENTS (E-03)	STALE (amendment A-6 applied after the check — diff check pending); conditional on (1.1), (1.2), Lemma X′
 R/Theorem-B	STATEMENT.md §1R; assembly work/E_bridges/ASSEMBLY.md	TC/DIST-3, B0, B1, B2, B3; W3-POST:Thm-1@1.0.0 (premise)	e2bb6ed765be030f	f33326e5b23dcdd5	reviews/L4_sol_E.md (gpt-6.1-sol, cross-family line check): ASSEMBLY/Theorem B VERIFIED-WITH-AMENDMENTS (E-02, E-04, E-05)	STALE (amendments applied after the check — diff check pending); conditional on DIST-3 and W3-POST:Thm-1
@@ -24,3 +23,5 @@ B2-core	work/E_bridges/B2core.md (statement: STATEMENT.md §3 Bridges)	external:
 B2	work/E_bridges/B2.md (statement: STATEMENT.md §3 Bridges)	B1, B2-core; W3-POST2:A0@1.0.0 (re-derived)	5c1328b5bad99922	5c1328b5bad99922	reviews/L4_sol_E.md (gpt-6.1-sol, cross-family line check): VERIFIED-WITH-AMENDMENTS (STATEMENT wording, applied in v1.4)	OK
 B3	work/E_bridges/B3.md (statement: STATEMENT.md §3 Bridges)	B1, B2-core; W3-POST:Thm-1@1.0.0 item 6	95ed27da8ba36fa1	cea61a2ceeb4dddc	reviews/L4_sol_E.md (gpt-6.1-sol, cross-family line check): VERIFIED-WITH-AMENDMENTS (E-02, E-05)	STALE (amendments A-1, A-2 applied after the check — diff check pending)
 X12 (independent version of X1–X2; not on the path)	work/C_size/X12.md	—	b835453142f7bbda			UNCHECKED (pre-check P6 VERIFIED; not consumed: lemmas/X.md is self-contained)
+NEC	lemmas/NEC.md (statement: STATEMENT.md §3 Proposition NEC)	locked T01 ([P1] lem:spec, lem:slab)	c88d10a4555cf0d7			UNCHECKED (pre-check reviews/P7_opus_precheck_NEC.md VERIFIED-WITH-AMENDMENTS, applied; cross-family line check L7 pending)
+S-FIT	STATEMENT.md §1 stretch	NEC (negative part)	46fe9733857dc6b7			OPEN (stretch; exponential fixed-design form refuted by NEC; in-probability form open; not pursued)
