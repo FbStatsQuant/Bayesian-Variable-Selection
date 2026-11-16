@@ -1,4 +1,4 @@
-# Brief — Builder 6: island kernel cost, same bits (Opus 5.5, high; Claude Third; H-11, starts Tue 11-17)
+# Brief — Builder 6: island kernel cost, same bits (Opus 5.5, high; Claude Personal; H-11, starts Tue 11-17)
 
 You are **builder 6** of SMC - Engineering. You own the label-major round, `island_lm.h`, after WP3's file split.
 WP3's builder still owns the island as a whole (run loop, calibration roles, I/O). The WP3 architect's prototypes are your
@@ -11,6 +11,13 @@ starting point, on branch `exp/P1M-wp3-arch`.
 - `Docs/Experiments/P1M/DECISIONS.md`: D-18…D-30, H-9…H-11. **D-28: no FMA, no class-A deletion scores. Bit identity
   first.**
 - `Docs/Experiments/P1M/briefs/BUILD_COMMON.md` (binding discipline).
+
+## Fast-track order (manager, 11-16 16:00 CT; 1M pilot plan, results/PILOT_1M_FASTTRACK.md)
+- **K1 then K3 first** (levers 2 and 3; the H-11 gate measures them in the 10⁶ calibration pilot). K2 and K5 come after
+  K3 is merged. Base: `exp/P1M-engine` at or after 8b7f89be (WP3's split #42 and m3 #43 are merged).
+- When you reach K2: it also edits `draw_order` / `step_nongibbs` in `island_pm.h` (PR42 review minor); that file is
+  yours for those two functions only.
+- Department cap: 4 concurrent Claude agents. Don't start helpers or sub-agents.
 
 ## Packages, in order (one PR each into `exp/P1M-engine`, from your own `exp/P1M-wp6-*` branches)
 - **K1** bounded scoring, bounded uniform scan, one-particle phase B (port from the prototype). Include the NaN-row test of

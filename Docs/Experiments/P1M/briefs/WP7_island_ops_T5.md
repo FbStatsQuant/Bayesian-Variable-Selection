@@ -1,4 +1,4 @@
-# Brief — Builder 7: island operations and T5 (Opus 5.5, high; Claude Third; H-11, starts Tue 11-17)
+# Brief — Builder 7: island operations and T5 (Opus 5.5, high; Claude Personal; H-11, starts Tue 11-17)
 
 You are **builder 7** of SMC - Engineering. You own the island run loop and the store, `island_run.h` and `store.h`,
 after WP3's file split, plus the end-to-end NOTS gate T5. WP3's builder still owns the island as a whole (calibration
@@ -11,6 +11,12 @@ roles, I/O, the `island` command). Builder 6 owns `island_lm.h`.
 - `Docs/Experiments/P1M/DECISIONS.md`: D-26…D-30, H-9…H-11. **D-30: per-stage cost records. D-29: the offer floor in V
   mode, pending the WP4/WP1 contract checks.**
 - `Docs/Experiments/P1M/briefs/BUILD_COMMON.md` (binding); `tools/slurm/` (WP5's driver, which T5 uses).
+
+## Fast-track order (manager, 11-16 16:00 CT; 1M pilot plan, results/PILOT_1M_FASTTRACK.md)
+- **O1 → O2 (lean: the fields the re-size needs) → O5 (T5 harness at 10⁵ + the 10⁶ calibration-pilot command) → O6.**
+  O3 and O4 come after O6. Base: `exp/P1M-engine` at or after 8b7f89be (split #42 and m3 #43 merged).
+- O6 waits for the D-29 contract (WP4's answer + WP1's INTERFACES line); the manager tells you when it lands.
+- Department cap: 4 concurrent Claude agents. Don't start helpers or sub-agents.
 
 ## Packages, in order of value (one PR each into `exp/P1M-engine`, from your own `exp/P1M-wp7-*` branches)
 - **O1** (one day; biggest single lever, ≈ −56 ns·CPU/pair): the store check (I1) in parallel, run only before a
