@@ -21,3 +21,5 @@
 - 2026-11-15 20:26 CST — CHECKPOINT_1.md written. L01 thread not settled: still finishing its reply (review file complete); left running per POLICIES §10, settle later. Run ends at CP1; waiting for the manager's answer.
 - 2026-11-15 20:28 CST — Manager: temp convention — future temp work under /home/fb31/bvs_tmp/W3-PSHARP-R/ (export TMPDIR=… ; mkdir -p). Nothing written to /tmp by this ticket so far. Still at CP1, waiting.
 - 2026-11-15 20:34 CST — Manager: exact temp path — TMPDIR=/home/fb31/bvs_tmp/theory/<YYYYMMDD>-W3-PSHARP-R-<what>; CI: /home/fb31/bvs_tmp/ci; remove when done. Still at CP1.
+- 2026-11-15 20:36 CST — L01 thread completed (reply = verdict line + counts, matches the review file); settled per POLICIES §10. Still at CP1.
+- 2026-11-15 20:38 CST — Manager: FINAL temp location (replaces bvs_tmp): TMPDIR=/home/fb31/SMC_Theory_Department/tmp/<YYYYMMDD>-W3-PSHARP-R-<what>; CI: /home/fb31/SMC_Theory_Department/ci. Nothing created under bvs_tmp by this ticket. Still at CP1.
