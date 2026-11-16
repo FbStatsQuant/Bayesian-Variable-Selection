@@ -35,3 +35,6 @@
 - 2026-11-16 01:24 CST — Agents started (all codex gpt-6.1-sol, reasoningEffort high, fresh, blind, async, in parallel):
   **LC-A** (task w3-t03acc-lc-a-sol-20261116), **LC-B** (…-lc-b-…), **LC-C** (…-lc-c-…). Briefs: `reviews/BRIEF_LC_{A,B,C}_sol.md`.
   Object: STATEMENT v1.1 (a2e399a8…), PROOF.md (14973763…). Codex started the line checks well before the Tue 08:00 mark.
+- 2026-11-16 02:20 CST — **LC-C returned: VERIFIED, 0 GAP, 0 ERROR** (C6–C10, Assembly T03S.1–.5, completeness of the change lists,
+  [P3] §§6–7; N1 J_n^∞ confirmed harmless, N6 same-A confirmed (no A ≥ 1 used; feasibility forces A ≥ 0), N7 p = 1 confirmed).
+  DEPS rows C6–C10, ASM, ASM2, P3.under, P3.main → OK. API slip A4 dispositioned; ERRATA.md E1. LC-C reviewer settled.
