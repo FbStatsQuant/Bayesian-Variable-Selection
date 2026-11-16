@@ -366,6 +366,63 @@ class IslandEngine {
     res.ks.t_check += std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   }
 
+  // ---- per-step cost record (D-30, WP7 O2) ---------------------------------------------------------------------
+  // A mark at the start of a step; the row is closed before the checkpoint (so the checkpoint carries it) and completed
+  // after it (checkpoint and check seconds, the whole step's wall), then appended to the sidecar.
+  struct CostMark { std::chrono::steady_clock::time_point t; KernelStats ks; double t_compact = 0; uint64_t merges = 0, buffered = 0, dup = 0; };
+  int64_t cost_segment = 0;
+  FILE* cost_f = nullptr;
+  uint64_t dup_dropped_now() const { uint64_t d = 0; for (auto& t : tl) d += t->buf.n_dup_dropped; return d; }
+  CostMark cost_mark() const { return CostMark{std::chrono::steady_clock::now(), res.ks, top.t_compact, top.n_merges, top.n_buffered, dup_dropped_now()}; }
+  static void proc_mem_kb(uint64_t& rss, uint64_t& hwm) {
+    rss = hwm = 0;
+    if (FILE* fs = std::fopen("/proc/self/status", "r")) { char ln[256];
+      while (std::fgets(ln, sizeof ln, fs)) { if (!std::strncmp(ln, "VmRSS:", 6)) rss = (uint64_t)std::atol(ln + 6); if (!std::strncmp(ln, "VmHWM:", 6)) hwm = (uint64_t)std::atol(ln + 6); }
+      std::fclose(fs); }
+  }
+  void cost_close(int step, int kind, double phi, const CostMark& a) {
+    const KernelStats& k = res.ks; const KernelStats& o = a.ks;
+    StepCost c; c.step = step; c.kind = kind; c.segment = cost_segment; c.phi = phi;
+    c.wall = std::chrono::duration<double>(std::chrono::steady_clock::now() - a.t).count();
+    c.t_orders = k.t_orders - o.t_orders; c.t_build = k.t_build - o.t_build; c.t_phaseA = k.t_phaseA - o.t_phaseA; c.t_products = k.t_products - o.t_products;
+    c.t_walk = k.t_walk - o.t_walk; c.t_phaseB = k.t_phaseB - o.t_phaseB; c.t_apply = k.t_apply - o.t_apply; c.t_barrier = k.t_barrier - o.t_barrier; c.t_pm = k.t_pm - o.t_pm;
+    c.t_compact = top.t_compact - a.t_compact; c.t_compact_pass = k.t_compact_pass - o.t_compact_pass;
+    c.t_check = k.t_check - o.t_check; c.t_ckpt = k.t_ckpt - o.t_ckpt;
+    double sS = 0; for (auto& x : P) sS += (double)x.S.size();
+    c.mean_S = P.empty() ? 0.0 : sS / (double)P.size();
+    c.store_mean_k = top.size() ? (double)top.k->pool.size() / (double)top.size() : 0.0;
+    c.particle_rounds = k.particle_rounds - o.particle_rounds; c.sweeps = k.particle_sweeps - o.particle_sweeps; c.passes = k.passes - o.passes;
+    c.supports = k.supports - o.supports; c.pairs = k.support_label_pairs - o.support_label_pairs; c.flips = k.flip_evals - o.flip_evals;
+    c.act_cols = k.act_cols - o.act_cols; c.slow_supports = k.slow_supports - o.slow_supports;
+    c.offers = top.n_buffered - a.buffered; c.dup_dropped = dup_dropped_now() - a.dup; c.merges = top.n_merges - a.merges; c.store_size = top.size();
+    proc_mem_kb(c.rss_kb, c.hwm_kb);
+    res.cost.push_back(c);
+  }
+  void cost_complete(const CostMark& a) {   // after the step's checkpoint (if any): its seconds and the step's whole wall
+    if (res.cost.empty()) return;
+    StepCost& c = res.cost.back();
+    c.wall = std::chrono::duration<double>(std::chrono::steady_clock::now() - a.t).count();
+    c.t_check = res.ks.t_check - a.ks.t_check; c.t_ckpt = res.ks.t_ckpt - a.ks.t_ckpt;
+    if (!cfg.cost_path.empty()) {
+      if (!cost_f) {
+        cost_f = std::fopen(cfg.cost_path.c_str(), "a");
+        if (!cost_f) throw v4::Error(v4::Status::io_error, "cannot open the cost record " + cfg.cost_path);
+        const std::string h = cost_header().dump();
+        std::fprintf(cost_f, "{\"cost_header\":%s}\n", h.c_str());
+      }
+      const std::string ln = cost_row_json(c, m).dump();
+      if (std::fprintf(cost_f, "%s\n", ln.c_str()) < 0 || std::fflush(cost_f) != 0) throw v4::Error(v4::Status::io_error, "cost record write failed: " + cfg.cost_path);
+    }
+  }
+  v4::Json cost_header() const {
+    v4::Json h = v4::Json::object();
+    h["schema"] = "smcbvs4.cost/1"; h["r"] = (int)cfg.island; h["role"] = (int)cfg.role; h["tier"] = cfg.tier; h["iter"] = cfg.iter;
+    h["N"] = cfg.N; h["p"] = p; h["m"] = m; h["threads"] = NT; h["G"] = cfg.G; h["tile"] = cfg.tile; h["kernel"] = cfg.kernel == KernelKind::LabelMajor ? "lm" : "pm";
+    h["arith"] = A == Arith::ClassA ? "A" : "bit"; h["segment"] = (int64_t)cost_segment;
+    return h;
+  }
+  ~IslandEngine() { if (cost_f) std::fclose(cost_f); }
+
   // ---- checkpoint ---------------------------------------------------------------------------------------------
   // Configuration + binary fingerprint (not threads, G, tile or kernel: a resume may change them). INTERFACES v0.1.3:
   // a restart refuses a different binary block.
@@ -406,6 +463,7 @@ class IslandEngine {
     w.putv(top.k->v); w.putv(top.k->hash); w.putv(top.k->off); w.putv(top.k->len); w.putv(top.k->pool);
     if (csrc) { w.put(csrc->g.s); w.put(csrc->g.count); w.putv(rb_d); }   // compat: xoshiro state + position, double RB
     if (cfg.leaders) for (TopStore* L : {&lead0, &lead1}) { w.putv(L->k->v); w.putv(L->k->hash); w.putv(L->k->off); w.putv(L->k->len); w.putv(L->k->pool); }
+    w.putv(res.cost);   // D-30 cost rows (execution statistics; not part of the fingerprint or the law)
   }
   // Two generations <path>.a/.b, alternately: header placeholder, streamed payload, header (generation, length,
   // checksum) rewritten in place, fflush + fsync, rename from <file>.tmp.<pid>. A kill at any point leaves the other
@@ -497,7 +555,9 @@ class IslandEngine {
     { auto nk = std::make_shared<Kept>(); r.getv(nk->v); r.getv(nk->hash); r.getv(nk->off); r.getv(nk->len); r.getv(nk->pool); top.k = nk; }
     if (csrc) { r.get(csrc->g.s); r.get(csrc->g.count); r.getv(rb_d); }
     if (cfg.leaders) for (TopStore* L : {&lead0, &lead1}) { auto nk = std::make_shared<Kept>(); r.getv(nk->v); r.getv(nk->hash); r.getv(nk->off); r.getv(nk->len); r.getv(nk->pool); L->k = nk; L->publish_loaded(); }
+    r.getv(res.cost);
     if (r.bad) corrupt(f);
+    cost_segment = res.cost.empty() ? 1 : res.cost.back().segment + 1;   // the rows after a resume belong to a new job segment
     std::fclose(f);
     top.publish_loaded();
     return step;
@@ -576,6 +636,7 @@ class IslandEngine {
     bool stop = false;
     try {
       if (done_step < 0) {
+        const CostMark cm0 = cost_mark();   // the initial draws start the clock at tstart (the Xt copy above is setup)
         // initial draws (core/cpp/v3_engine.h:285-297)
         P.assign(N, Particle());
         if (calib) { snap = RoundSnap(); snap.valid = true; snap.init = true; snap.top = top.k; snap.lead0 = lead0.k; snap.lead1 = lead1.k; }
@@ -592,10 +653,13 @@ class IslandEngine {
         logZ = D.logm0 + st.logZbar0;
         sync_ledgers();
         res.ks.t_init += std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
+        cost_close(0, 0, 0.0, cm0);
         done_step = 0; maybe_ckpt(0, stop);
+        cost_complete(cm0);
       }
       std::vector<double> lw(N), lw2(N);
       for (int step = done_step + 1; step <= T + L + Hm && !stop; ++step) {
+        const CostMark cm = cost_mark();
         if (step <= T) {   // bridge stage t (core/cpp/v3_engine.h:303-339)
           auto tb = std::chrono::steady_clock::now();
           int t = step; double phi_prev = grid[t - 1];
@@ -670,8 +734,10 @@ class IslandEngine {
         }
         if (step == cfg.test_corrupt_store_step && top.size() >= 2) top.k->v[1] = top.k->v[0] + 1.0;   // tests only (O1)
         if (cfg.check_store_each_step) check_stores();   // tests / debugging only (O1: production checks at checkpoints and the final write)
-        if (over_budget(step)) { stop = true; break; }
+        cost_close(step, step <= T ? 1 : (step <= T + L ? 2 : 3), step <= T ? grid[step] : 1.0, cm);
+        if (over_budget(step)) { cost_complete(cm); stop = true; break; }
         maybe_ckpt(step, stop);
+        cost_complete(cm);
       }
     } catch (const NumericalFailure& e) {
       res.status = 2; res.reason = e.what();
@@ -715,6 +781,7 @@ class IslandEngine {
     res.ks.store_serial_merges = top.n_serial_merges; res.ks.t_store_compact = top.t_compact;
     for (auto& t : tl) res.ks.store_dup_dropped += t->buf.n_dup_dropped;
     res.ks.t_total = std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
+    res.cost_header = cost_header();
     return std::move(res);
   }
 };

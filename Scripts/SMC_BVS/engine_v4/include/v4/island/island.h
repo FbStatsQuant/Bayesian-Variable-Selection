@@ -23,6 +23,7 @@
 #include "v4/island/kernel.h"
 #include "v4/island/store.h"
 #include "v4/island/memory.h"
+#include "v4/json.h"
 
 namespace v4::island {
 
@@ -78,6 +79,8 @@ struct IslandConfig {
                                             // (same bits); 0 = auto: 4 when the island ISA has AVX-512, else 1 (review PR26
                                             // B2, MEASURED: block 4 is -27% on AVX-512 and +17% on x86-64-v2)
   bool verbose = false;                     // progress line per step on stderr (benchmarks)
+  std::string cost_path;                    // D-30 (O2): append one JSON line per step (header line first) and flush; empty: none.
+                                            // The rows are also in IslandRun::cost and island_r.bin meta.cost
   // adaptive schedule (core's pilot rule: largest phi' with population ESS >= 0.9 H, floor 1/Te). Benchmarks and
   // pilot-like grids only; production islands use the frozen grid from calib.bin.
   bool adaptive = false; double adaptive_H = 0; int adaptive_Te = 30;
@@ -103,9 +106,50 @@ struct KernelStats {   // execution statistics (not part of the law, not hashed)
   double t_products = 0;   // thread-seconds inside phase A spent on the tile products
   double t_init = 0, t_orders = 0, t_build = 0, t_phaseA = 0, t_walk = 0, t_phaseB = 0, t_apply = 0, t_barrier = 0,
          t_pm = 0, t_ckpt = 0, t_total = 0;
+  uint64_t act_cols = 0;     // label-major: sum over passes of the active columns (distinct members of fast supports that can add)
+  uint64_t flip_evals = 0;   // label-major: addition flips evaluated (non-member labels of supports that can add); bounded scoring
+                             // (builder 6, K1) counts only the flips it scores
   double t_check = 0;      // wall seconds in the I1 store checks (O1; included in t_ckpt when the check precedes a checkpoint)
   uint64_t store_checks = 0;   // I1 checks run (top store; leader stores counted with it)
 };
+
+// D-30 (WP7 O2): one execution-cost row per step -- step 0 = the initial draws, then the T bridge stages, the L burn-in
+// and the Hm measured rounds. Execution statistics, not the law: never hashed, never in a section hash (island_r.bin
+// meta.cost; the JSON-lines sidecar cfg.cost_path). Every field is 8 bytes (the rows are checkpointed as raw bytes and
+// survive a resume). Seconds are wall seconds of this step unless noted; counts are this step's own.
+struct StepCost {
+  int64_t step = 0, kind = 0, segment = 0;   // kind 0 init, 1 bridge, 2 burn-in, 3 measured; segment = resumes before it
+  double phi = 0;
+  double wall = 0;                           // the whole step: barrier, round, ledger sync, compaction, check, checkpoint
+  double t_orders = 0, t_build = 0, t_phaseA = 0, t_products = 0 /* thread-seconds */, t_walk = 0, t_phaseB = 0, t_apply = 0,
+         t_barrier = 0, t_pm = 0;
+  double t_compact = 0, t_compact_pass = 0;  // store compaction, all paths / of which at pass boundaries
+  double t_check = 0, t_ckpt = 0;            // I1 check (O1) / checkpoint write (t_ckpt includes the check before it)
+  double mean_S = 0;                         // population mean |S| after the step
+  double store_mean_k = 0;                   // mean |S| of the stored models after the step
+  uint64_t particle_rounds = 0, sweeps = 0, passes = 0, supports = 0, pairs = 0, flips = 0, act_cols = 0, slow_supports = 0;
+  uint64_t offers = 0, dup_dropped = 0, merges = 0, store_size = 0;   // top store: offers buffered / dropped by the snapshot filter
+  uint64_t rss_kb = 0, hwm_kb = 0;           // VmRSS after the step / VmHWM (process peak so far)
+};
+
+// one row as a JSON object (raw fields plus three derived ratios: M = sweeps / particle-rounds, flips per elementary
+// step = flips / (particle-rounds x m), active columns per pass); m = p + B + 2 elementary steps per particle-round
+inline v4::Json cost_row_json(const StepCost& c, int m) {
+  v4::Json j = v4::Json::object();
+  j["step"] = c.step; j["kind"] = c.kind; j["segment"] = c.segment; j["phi"] = c.phi; j["wall"] = c.wall;
+  j["t_orders"] = c.t_orders; j["t_build"] = c.t_build; j["t_phaseA"] = c.t_phaseA; j["t_products"] = c.t_products; j["t_walk"] = c.t_walk;
+  j["t_phaseB"] = c.t_phaseB; j["t_apply"] = c.t_apply; j["t_barrier"] = c.t_barrier; j["t_pm"] = c.t_pm;
+  j["t_compact"] = c.t_compact; j["t_compact_pass"] = c.t_compact_pass; j["t_check"] = c.t_check; j["t_ckpt"] = c.t_ckpt;
+  j["mean_S"] = c.mean_S; j["store_mean_k"] = c.store_mean_k;
+  j["particle_rounds"] = c.particle_rounds; j["sweeps"] = c.sweeps; j["passes"] = c.passes; j["supports"] = c.supports; j["pairs"] = c.pairs;
+  j["flips"] = c.flips; j["act_cols"] = c.act_cols; j["slow_supports"] = c.slow_supports; j["offers"] = c.offers; j["dup_dropped"] = c.dup_dropped;
+  j["merges"] = c.merges; j["store_size"] = c.store_size; j["rss_kb"] = c.rss_kb; j["hwm_kb"] = c.hwm_kb;
+  const double steps = (double)c.particle_rounds * (double)m;
+  j["M"] = c.particle_rounds ? (double)c.sweeps / (double)c.particle_rounds : 0.0;
+  j["flips_per_step"] = steps > 0 ? (double)c.flips / steps : 0.0;
+  j["act_cols_per_pass"] = c.passes ? (double)c.act_cols / (double)c.passes : 0.0;
+  return j;
+}
 
 struct Particle { Model S; uint64_t h = 0; double logm = 0, lg0 = 0, d = 0, F = 0; };
 
@@ -132,6 +176,8 @@ struct IslandRun {
   std::vector<double> lead0_v, lead1_v; std::vector<uint64_t> lead0_hash, lead0_off, lead1_hash, lead1_off;
   std::vector<uint16_t> lead0_len, lead1_len; std::vector<int32_t> lead0_pool, lead1_pool;      // admission: the group size used and the peak-live plan (text)
   KernelStats ks;
+  std::vector<StepCost> cost;   // D-30 per-step cost record (O2); kept across checkpoints
+  v4::Json cost_header;         // its configuration line: schema, r, role, N, p, m, threads, G, tile, kernel, arith, segment
   uint64_t hash() const;   // FNV-1a over every law output (T3 / T6 comparisons)
 };
 
