@@ -4,6 +4,7 @@
 #include <cmath>
 #include <fstream>
 #include "v4/format.h"
+#include "v4/provenance.h"
 #include "v4/sha256.h"
 #include "v4/status.h"
 
@@ -15,7 +16,9 @@ double r_mean(const double* x, size_t n) {
   long double s = 0.0L;
   for (size_t i = 0; i < n; ++i) s += x[i];
   if (std::isfinite((double)s)) s /= (long double)n;
-  else { long double t = 0.0L; for (size_t i = 0; i < n; ++i) t += x[i] / (long double)n; s = t; }
+  else {   // R: t += dx[k]/n with a double quotient. Unreachable in prep (|x| <= 1 after the division by max|x|).
+    long double t = 0.0L; for (size_t i = 0; i < n; ++i) t += x[i] / (double)n; s = t;
+  }
   if (std::isfinite((double)s)) {
     long double t = 0.0L;
     for (size_t i = 0; i < n; ++i) t += (x[i] - s);
@@ -111,7 +114,7 @@ std::string write_data(const std::string& path, const Data& D, const Result& r, 
   m["n"] = D.n; m["p_raw"] = r.p_raw; m["p"] = D.p; m["K"] = D.K; m["yty"] = D.yty; m["logCn"] = D.logCn; m["logm0"] = D.logm0;
   m["logWK"] = D.logWK; m["nu"] = D.nu; m["a0"] = D.a0; m["b0"] = D.b0;
   m["y_max"] = D.y_max; m["y_mean"] = D.y_mean; m["y_sd_scaled"] = D.y_sd_scaled; m["prep_class"] = prep_class;
-  m["inputs"] = inputs; m["schema"] = "smcbvs4.data/1";
+  m["inputs"] = inputs; m["schema"] = "smcbvs4.data/1"; m["kind"] = "data"; m["mode"] = "none"; m["binary"] = binary_block();
   w.add_json("meta", m);
   return w.write(path);
 }
@@ -122,12 +125,19 @@ Data load_data(const std::string& path, std::string* content_hash) {
   Json m = rd->json("meta");
   Data D;
   D.n = (int32_t)m.at("n").i64(); D.p = (int32_t)m.at("p").i64(); D.p_raw = (int32_t)m.at("p_raw").i64();
+  if (D.n < 3 || D.p < 1 || D.p_raw < D.p) throw Error(Status::invalid_input, "data.bin: bad n / p / p_raw");
+  auto f64 = [&](const char* nm, uint64_t want) {
+    uint64_t c; const double* q = rd->get<double>(nm, &c);
+    if (c != want) throw Error(Status::invalid_input, std::string("data.bin: section ") + nm + " has the wrong length");
+    return q;
+  };
+  const uint64_t P = (uint64_t)D.p;
+  D.Xs = f64("Xs_cm", (uint64_t)D.n * P); D.ys = f64("ys", (uint64_t)D.n);
+  D.z = f64("z", P); D.diagG = f64("diagG", P);
+  D.col_max = f64("col_max", P); D.col_mean = f64("col_mean", P); D.col_sd = f64("col_sd", P);
   uint64_t c;
-  D.Xs = rd->get<double>("Xs_cm", &c); if (c != (uint64_t)D.n * D.p) throw Error(Status::invalid_input, "data.bin: Xs size");
-  D.ys = rd->get<double>("ys", &c); if (c != (uint64_t)D.n) throw Error(Status::invalid_input, "data.bin: ys size");
-  D.z = rd->get<double>("z"); D.diagG = rd->get<double>("diagG");
-  D.col_max = rd->get<double>("col_max"); D.col_mean = rd->get<double>("col_mean"); D.col_sd = rd->get<double>("col_sd");
-  D.orig = rd->get<int32_t>("kept");
+  D.orig = rd->get<int32_t>("kept", &c); if (c != P) throw Error(Status::invalid_input, "data.bin: kept has the wrong length");
+  rd->get<int32_t>("dropped", &c); if (c != (uint64_t)(D.p_raw - D.p)) throw Error(Status::invalid_input, "data.bin: dropped has the wrong length");
   D.yty = m.at("yty").num(); D.y_max = m.at("y_max").num(); D.y_mean = m.at("y_mean").num(); D.y_sd_scaled = m.at("y_sd_scaled").num();
   data_constants(D);
   // the stored constants must equal the recomputed ones (same binary, same libm): a mismatch means a different libm
@@ -165,9 +175,20 @@ Json run(const Json& args) {
     r.own->col_sd = read_f64(dir + "/col_sd.f64", (size_t)r.p);
     r.own->orig = r.kept; r.own->dropped = r.dropped;
     r.ystd.max = m.at("y_max").num(); r.ystd.mean = m.at("y_mean").num(); r.ystd.sd = m.at("y_sd_scaled").num();
+    // kept and dropped must partition 1..p_raw, with |kept| = p
+    {
+      if ((int32_t)r.kept.size() != r.p || r.p < 1 || r.n < 3 || (int32_t)(r.kept.size() + r.dropped.size()) != r.p_raw)
+        throw Error(Status::invalid_input, "from_r: kept / dropped sizes do not match p, p_raw");
+      std::vector<char> seen((size_t)r.p_raw + 1, 0);
+      for (auto* v : {&r.kept, &r.dropped}) for (int32_t j : *v) {
+        if (j < 1 || j > r.p_raw || seen[(size_t)j]) throw Error(Status::invalid_input, "from_r: kept / dropped is not a partition of 1..p_raw");
+        seen[(size_t)j] = 1;
+      }
+      for (size_t a = 1; a < r.kept.size(); ++a) if (!(r.kept[a - 1] < r.kept[a])) throw Error(Status::invalid_input, "from_r: kept not increasing");
+    }
     cls = "B(R-standardised input)";
-    inputs["from_r_meta.json"] = sha256_file(dir + "/meta.json");
-    inputs["from_r_Xs.f64"] = sha256_file(dir + "/Xs.f64");
+    for (const char* f : {"meta.json", "Xs.f64", "ys.f64", "col_max.f64", "col_mean.f64", "col_sd.f64"})
+      inputs[std::string("from_r/") + f] = sha256_file(dir + "/" + f);
   } else {
     std::string in = args.at("in").str();
     fmt::Reader rd(in);
@@ -180,8 +201,10 @@ Json run(const Json& args) {
   }
   Json rec = Json::object();
   if (r.status != "ok") {
-    rec["status"] = r.status == "invalid_input" ? "invalid_input" : "completed";
-    rec["prep_status"] = r.status; rec["reason"] = r.reason;
+    // invalid_input is a task failure; no_predictors / y_constant are data outcomes (INTERFACES §7: exit 20 / 21)
+    if (r.status == "invalid_input") throw Error(Status::invalid_input, "prep: " + r.reason);
+    rec["status"] = "completed"; rec["prep_status"] = r.status; rec["hpm"] = Json::array();
+    rec["n"] = r.n; rec["p_raw"] = r.p_raw; rec["p"] = r.p; rec["dropped"] = Json::array_of(r.dropped);
     return rec;
   }
   Data D = make_data(r.own, r.n, r.p);

@@ -17,7 +17,7 @@ class Json {
   Json(double d) : t_(NUM), d_(d) {}
   Json(int v) : t_(NUM), d_(v) {}
   Json(int64_t v) : t_(NUM), d_((double)v) {}
-  Json(uint64_t v) : t_(NUM), d_((double)v) {}
+  Json(uint64_t v);   // throws internal_error above 2^53: write such values with hex64() (INTERFACES §5.1)
   Json(uint32_t v) : t_(NUM), d_(v) {}
   Json(const char* s) : t_(STR), s_(s) {}
   Json(std::string s) : t_(STR), s_(std::move(s)) {}

@@ -50,4 +50,26 @@ TEST(compat_streams_equal_v3) {
   CHECK(compat_stream(R_PILOT, 0, 0) == 0); CHECK(compat_stream(R_DIAG, 0, 4) == 4); CHECK(compat_stream(R_PILOT, 1, 0) == 5);
   CHECK(compat_stream(R_DIAG, 1, 1) == 6); CHECK(compat_stream(R_FINAL, 0, 1) == 10); CHECK(compat_stream(R_FINAL, 0, 4) == 13);
   CHECK_THROWS(compat_stream(R_FINAL, 0, 5));
+  CHECK_THROWS(compat_stream(R_PILOT, 2, 0)); CHECK_THROWS(compat_stream(R_DIAG, 2, 1)); CHECK_THROWS(compat_stream(R_DIAG, 0, 0));
+}
+
+TEST(checked_source_I5) {
+  AddressedSource base;
+  CheckedSource uq(base, CheckedSource::UNIQUE);
+  Address a; a.seed = 3; a.particle = 1; a.position = 5;
+  uq.u(a); a.slot = SLOT_ACCEPT; uq.u(a);
+  CHECK_THROWS(uq.u(a));                                  // the same address twice
+  // compat serial order inside one stream: init, then stage 1 (resample, round), stage 2, burn-in, measured
+  CompatSource cs(1, 10);
+  CheckedSource inc(cs, CheckedSource::INCREASING);
+  auto A = [](uint8_t xph, uint32_t st, uint32_t prt, uint32_t pos, uint32_t slot) {
+    Address x; x.seed = 1; x.island = 1; x.xph = xph; x.stage = st; x.particle = prt; x.position = pos; x.slot = slot; return x; };
+  std::vector<Address> seq = {A(X_INIT, 0, 1, 0, 0), A(X_INIT, 0, 1, 0, 3), A(X_INIT, 0, 2, 0, 0),
+    A(X_RESAMPLE, 1, 1, 0, 0), A(X_RESAMPLE, 1, 2, 0, 0), A(X_BRIDGE, 1, 1, 0, 0), A(X_BRIDGE, 1, 1, 7, 0), A(X_BRIDGE, 1, 1, 7, SLOT_ACCEPT),
+    A(X_BRIDGE, 1, 2, 0, 0), A(X_RESAMPLE, 2, 1, 0, 0), A(X_BRIDGE, 2, 1, 3, 1), A(X_BURN, 1, 1, 0, 0), A(X_BURN, 2, 1, 0, 0),
+    A(X_MEASURED, 1, 1, 0, 0)};
+  bool ok = true;
+  try { for (auto& x : seq) inc.u(x); } catch (...) { ok = false; }
+  CHECK(ok); CHECK(inc.checked == seq.size());
+  CHECK_THROWS(inc.u(A(X_BRIDGE, 2, 1, 3, 1)));          // going back in the serial order
 }

@@ -75,10 +75,12 @@ TEST(gen_command_writes_raw_and_truth) {
   std::string f = tmp_path("raw.bin"), t = tmp_path("truth.json");
   Json a = Json::object(); a["spec"] = Json::parse("{\"design\":\"AR\",\"n\":30,\"p\":100,\"seed\":5}"); a["out"] = f; a["truth"] = t;
   Json r1 = gen::run(a), r2 = gen::run(a);
-  CHECK(r1.at("raw_content_sha256").str() == r2.at("raw_content_sha256").str());
+  CHECK(r1.at("raw_content_sha256").str() == r2.at("raw_content_sha256").str());   // same binary -> same file
+  CHECK(r1.at("X_sha256").str() == r2.at("X_sha256").str());
   fmt::Reader rd(f);
   CHECK(rd.entry("X_cm").dims[0] == 30 && rd.entry("X_cm").dims[1] == 100);
   Json tj = read_json_file(t);
   CHECK(tj.at("S0").size() == 5 && tj.at("raw_content_sha256").str() == rd.content_hash());
+  CHECK(tj.at("X_sha256").str() == hex(rd.entry("X_cm").sha256, 32));
   std::remove(f.c_str()); std::remove(t.c_str());
 }

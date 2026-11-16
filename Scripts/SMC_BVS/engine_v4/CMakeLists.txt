@@ -8,11 +8,18 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 include(cmake/flags.cmake)
+# git commit recorded in the binary block (value at configure time; re-run cmake after committing)
+execute_process(COMMAND git rev-parse HEAD WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                OUTPUT_VARIABLE V4_GIT_COMMIT OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+if(NOT V4_GIT_COMMIT)
+  set(V4_GIT_COMMIT "unknown")
+endif()
+add_compile_definitions(V4_GIT_COMMIT="${V4_GIT_COMMIT}")
 find_package(OpenMP REQUIRED COMPONENTS CXX)
 
 set(V4_COMMON_SRC
   src/common/sha256.cpp src/common/format.cpp src/common/json.cpp src/common/data.cpp src/common/store.cpp
-  src/common/ledger.cpp src/common/status.cpp src/common/score.cpp src/common/gen.cpp src/common/prep.cpp src/common/pmath_info.cpp)
+  src/common/ledger.cpp src/common/status.cpp src/common/score.cpp src/common/provenance.cpp src/common/gen.cpp src/common/prep.cpp src/common/pmath_info.cpp)
 set(V4_STUB_SRC src/stubs/stubs.cpp)
 # WP5: evaluator and post (bit flags: they call BitScorer and must reproduce the stored F)
 set(V4_WP5_SRC src/eval/posterior.cpp src/eval/model.cpp src/eval/dist.cpp src/eval/metrics.cpp src/eval/io.cpp
@@ -40,16 +47,20 @@ if(V4_TESTS)
   set(V3_CORE_CPP ${CMAKE_CURRENT_SOURCE_DIR}/../core/cpp)
   add_executable(v4_tests tests/test_main.cpp tests/test_sha256.cpp tests/test_rng.cpp tests/test_format.cpp
     tests/test_store.cpp tests/test_ledger.cpp tests/test_score.cpp tests/test_gen.cpp tests/test_prep.cpp
-    tests/test_pmath.cpp
+    tests/test_pmath.cpp tests/test_cli.cpp
     tests/wp5/test_eval.cpp tests/wp5/test_golden_v3.cpp tests/wp5/test_post_e2e.cpp tests/wp5/test_t7.cpp)
   target_include_directories(v4_tests PRIVATE tests tests/wp5 src ${V3_CORE_CPP})
   target_compile_definitions(v4_tests PRIVATE V3_CORE_CPP_DIR="${V3_CORE_CPP}"
-    V4_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
+    V4_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures" V4_SMCBVS4="$<TARGET_FILE:smcbvs4>")
+  add_dependencies(v4_tests smcbvs4)
   target_compile_options(v4_tests PRIVATE ${V4_BIT_FLAGS})
   target_link_libraries(v4_tests PRIVATE v4_a v4_bit quadmath)
   add_executable(v4_pmath_check tools/pmath_check.cpp)
   target_compile_options(v4_pmath_check PRIVATE ${V4_BIT_FLAGS})
   target_link_libraries(v4_pmath_check PRIVATE v4_bit quadmath)
+  add_executable(v4_bench_store tools/bench_store.cpp)
+  target_compile_options(v4_bench_store PRIVATE ${V4_BIT_FLAGS})
+  target_link_libraries(v4_bench_store PRIVATE v4_bit)
   add_executable(v4_bench_score tools/bench_score.cpp)
   target_compile_options(v4_bench_score PRIVATE ${V4_BIT_FLAGS})
   target_link_libraries(v4_bench_score PRIVATE v4_bit)

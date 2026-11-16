@@ -13,7 +13,7 @@
 namespace v4::fmt {
 
 enum Kind : uint32_t { K_RAW = 1, K_DATA = 2, K_SETUP = 3, K_CALIB = 4, K_ISLAND = 5, K_FIT = 6, K_LAW = 7, K_CKPT = 8, K_EVAL = 9 };
-enum Mode : uint32_t { M_NONE = 0, M_COMPAT = 1, M_LAW = 2, M_V = 3 };
+enum Mode : uint32_t { M_NONE = 0 /* gen / prep outputs */, M_COMPAT = 1, M_LAW = 2, M_V = 3 };
 enum DType : uint32_t { D_F64 = 1, D_I32 = 2, D_U32 = 3, D_I64 = 4, D_U64 = 5, D_U8 = 6, D_U16 = 7, D_F32 = 8, D_JSON = 9 };
 constexpr uint32_t FORMAT_VERSION = 1;
 constexpr char MAGIC[8] = {'S', 'M', 'C', 'B', 'V', 'S', '4', '\0'};
@@ -21,7 +21,9 @@ constexpr char MAGIC[8] = {'S', 'M', 'C', 'B', 'V', 'S', '4', '\0'};
 #pragma pack(push, 1)
 struct FileHeader {
   char magic[8]; uint32_t format_version, kind, mode, n_sections; uint64_t file_bytes;
-  uint8_t table_sha256[32]; uint8_t reserved[64];
+  uint8_t table_sha256[32];     // SHA-256 of the section table
+  uint8_t content_sha256[32];   // SHA-256 of (this header with both hash fields zeroed || section table) = file content hash
+  uint8_t reserved[32];
 };
 struct SectionEntry {
   char name[48]; uint32_t dtype, ndim; uint64_t dims[2]; uint64_t offset, length; uint8_t sha256[32]; uint8_t reserved[8];
@@ -57,7 +59,7 @@ class Writer {
   void add_json(const std::string& name, const Json& j);
   void add_raw(const std::string& name, uint32_t dtype, const void* p, uint64_t bytes, uint64_t d0, uint64_t d1);
   void add_copy(const std::string& name, uint32_t dtype, const void* p, uint64_t bytes, uint64_t d0, uint64_t d1);
-  std::string write(const std::string& path) const;   // hex content hash (SHA-256 of the section table)
+  std::string write(const std::string& path) const;   // hex content hash (content_sha256: header + table)
  private:
   struct Sec { std::string name; uint32_t dtype; uint64_t d0, d1; const uint8_t* ptr; uint64_t n; std::shared_ptr<std::vector<uint8_t>> own; };
   uint32_t kind_, mode_;
@@ -72,7 +74,7 @@ class Reader {
   Reader(const Reader&) = delete; Reader& operator=(const Reader&) = delete;
   uint32_t kind() const { return hdr_.kind; }
   uint32_t mode() const { return hdr_.mode; }
-  const std::string& content_hash() const { return hash_; }   // hex SHA-256 of the section table
+  const std::string& content_hash() const { return hash_; }   // hex content_sha256 (header + table)
   const std::vector<SectionEntry>& sections() const { return table_; }
   bool has(const std::string& name) const;
   const SectionEntry& entry(const std::string& name) const;   // throws invalid_input

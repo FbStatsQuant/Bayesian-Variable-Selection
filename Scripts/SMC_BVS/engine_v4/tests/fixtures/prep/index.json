@@ -2060,7 +2060,8 @@
       "anchored": 0,
       "design": "AR",
       "seed": 101,
-      "raw_sha256": "3609fdc55507ab4d0f6133195109f1b5020317ee8cd291814160d0625f541477"
+      "X_sha256": "b0425e3524da027bd405062addd489f3e5bc0993d317c951e1cc6077e643e5ea",
+      "y_sha256": "33de4a82b3302df432c31164f9d5378e961d56cb68bc1e01161be4b2889d9b06"
     },
     {
       "name": "ind300",
@@ -2373,7 +2374,8 @@
       "anchored": 0,
       "design": "IND",
       "seed": 102,
-      "raw_sha256": "3d3e45329616270ba26b2395a1e631bcbb3e266a617bf5cb3db1901fe5c2e9d4"
+      "X_sha256": "135b8fc2f52880d4a1dcc32b7a669fe3b0ce86ff77892a7bc2f30aaffddb651a",
+      "y_sha256": "b0f585a13302186e9064cb20409e7b5ffacf6f7a91b1439331c183712b4b944e"
     },
     {
       "name": "blk400",
@@ -2786,7 +2788,8 @@
       "anchored": 0,
       "design": "BLK",
       "seed": 103,
-      "raw_sha256": "bed33bacf6fa9d2778cce822e3275af53296a571f2bc01ebfec74b98c6f2abff"
+      "X_sha256": "df396f4f28aba0e8617429b6e941897733f0714531c3a4764a4fb7cb8a3c8c38",
+      "y_sha256": "29e7660d8bc0d8c01adc257d0bfcbd48680dd73944a2fc63b74239a7f76ecd2b"
     },
     {
       "name": "adj500",
@@ -3299,7 +3302,8 @@
       "anchored": 0,
       "design": "ADJ-OPP",
       "seed": 104,
-      "raw_sha256": "711f9f2fb97fa6ac18a30d9106acd98216deb5c3c9bf191287cd01e14b8a684e"
+      "X_sha256": "56c7499adf4670bfdd4c4293200df40e13ce31db7934359691a182d45ed945be",
+      "y_sha256": "df0b67d9242f8e6b8d9678a03eb925d64f1c9c4828e9e166b652acbd8a837d35"
     }
   ],
   "source": "core/v3_preprocess.R (revision D)",

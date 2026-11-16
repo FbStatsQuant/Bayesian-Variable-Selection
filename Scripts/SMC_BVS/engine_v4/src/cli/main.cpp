@@ -8,6 +8,7 @@
 #include "v4/json.h"
 #include "v4/pmath.h"
 #include "v4/prep.h"
+#include "v4/provenance.h"
 #include "v4/sha256.h"
 #include "v4/status.h"
 #include "v4/stubs.h"
@@ -39,6 +40,8 @@ int main(int argc, char** argv) {
   std::string record_path;
   Status st = Status::completed;
   Json rec = Json::object();
+  // the record path first, so that a failure while reading the other arguments (e.g. a refused manifest) is recorded
+  for (int i = 2; i + 1 < argc; ++i) if (std::string(argv[i]) == "--record") record_path = argv[i + 1];
   try {
     for (int i = 2; i < argc; ++i) {
       std::string k = argv[i];
@@ -48,27 +51,21 @@ int main(int argc, char** argv) {
       if (key == "manifest") {
         Json m = read_json_file(val);
         for (auto& [kk, vv] : m.at("params").items()) args[kk] = vv;
-        // INTERFACES §5.3: inputs = {path: content sha256}; a job refuses to start on any mismatch (invalid_input)
-        if (m.contains("inputs"))
-          for (auto& [path, h] : m.at("inputs").items()) {
-            fmt::Reader rd(path);
-            if (rd.content_hash() != h.str()) throw Error(Status::invalid_input, "input hash mismatch: " + path);
-          }
+        verify_inputs(m);   // INTERFACES §5.3: a job refuses to start on any input hash mismatch (invalid_input)
         args["manifest"] = m;
       }
       else if (key == "record") record_path = val;
       else args[key] = number_or_string(val);
     }
     if (args.contains("threads")) set_threads((int)args.at("threads").i64());
+    if (cmd != "info" && cmd != "version") require_fma_variant();   // INTERFACES §6
     auto spec_from_args = [&]() {
       Json s = Json::object();
       for (const char* f : {"design", "n", "p", "seed", "rho", "b", "a", "s0", "sigma"}) if (args.contains(f)) s[f] = args.at(f);
       return s;
     };
     if (cmd == "version") {
-      auto li = pm::libm_info();
-      rec["binary"] = "smcbvs4"; rec["flags"] = V4_BIT_FLAGS_STR; rec["libm"] = li.path; rec["libm_sha256"] = li.sha256;
-      rec["glibc"] = li.gnu_libc_version; rec["pmath_binding"] = pm::binding(); rec["libm_fma_variant"] = li.fma_variant;
+      rec["program"] = "smcbvs4";
     } else if (cmd == "gen") {
       Json a = Json::object(); a["spec"] = spec_from_args(); a["out"] = args.at("out");
       if (args.contains("truth")) a["truth"] = args.at("truth");
@@ -109,8 +106,16 @@ int main(int argc, char** argv) {
     st = Status::internal_error; rec = Json::object(); rec["reason"] = e.what();
   }
   rec["status"] = status_name(st); rec["command"] = cmd;
+  try { rec["binary"] = binary_block(); } catch (...) {}
+  // INTERFACES §7: prep data outcomes (no data.bin) exit 20 / 21, never 0
+  int code = exit_code(st);
+  if (st == Status::completed && rec.contains("prep_status")) {
+    const std::string& ps = rec.at("prep_status").str();
+    if (ps == "no_predictors") code = 20; else if (ps == "y_constant") code = 21;
+  }
   if (record_path.empty() && args.contains("out") && args.at("out").type() == Json::STR) record_path = args.at("out").str() + ".json";
   try { if (!record_path.empty()) write_json_file(record_path, rec); } catch (...) { if (st == Status::completed) st = Status::io_error; }
+  if (st != Status::completed) code = exit_code(st);
   std::cout << rec.dump(2) << std::endl;
-  return exit_code(st);
+  return code;
 }
