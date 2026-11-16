@@ -348,7 +348,7 @@ class TestCells(Base):
         self.assertEqual(rows, p1m_cells.expand())
         # OD-14: five 1M fits at n = 200 + the N = 10⁴ check; option D one fit at n = 1,000
         c6 = [r for r in rows if r["block"] == "rung 1e6"]
-        self.assertEqual(len(c6), 6); self.assertEqual(sum(r["N"] == 10000 for r in c6), 1)
+        self.assertEqual(len(c6), 5); self.assertEqual(sum(r["N"] == 5000 for r in c6), 1)   # H-9: AR-weak at 1M dropped; self-check N = 5,000
         self.assertEqual([r["n"] for r in rows if r["block"] == "option D"], [1000])
         # ADJ-OPP present at 10⁴ and 10⁵ (Sol F7)
         self.assertTrue(any(r["design"] == "ADJ-OPP" and r["p"] == 10 ** 5 for r in rows))
@@ -360,7 +360,7 @@ class TestCells(Base):
             self.assertLessEqual(P["n_tasks"], 150)
             planned_ids |= {x["run_id"] for x in json.load(open(f))["fits"]}
         # PR #19 MINOR-6: the fit count (TSV data rows) and the planned count (all but the 20 block-costed T8 rows)
-        self.assertEqual(len(rows), 259)
+        self.assertEqual(len(rows), 258)   # H-9
         self.assertEqual(len(planned_ids), len(rows) - 20)
         self.assertEqual(len(written), 47)
 
