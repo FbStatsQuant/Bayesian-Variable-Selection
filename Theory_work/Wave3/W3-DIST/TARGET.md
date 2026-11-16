@@ -150,7 +150,8 @@ Then for every sequence M_n → ∞:
 
     Π( d_H(f, f*) > M_n/√n | D_n ) → 0   in P*-probability.
 
-**Corollary C (the output of the sampler).** The method computes the posterior by a sequential Monte Carlo sampler
+**Corollary C (the output of the sampler).** The method uses a sequential Monte Carlo sampler to explore the models and to compute summaries
+of the posterior; it does not compute the full posterior
 (small problems that it solves by exact enumeration are not covered here). A run is *completed* when the method
 reports the status "completed"; runs that stop early are not covered. The output of a completed run contains a list 𝒯
 of at most 40r + 1 distinct models: the best-scoring models among those offered to the final run of the sampler —

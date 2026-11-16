@@ -27,3 +27,18 @@ explicit sentence (added in v1.4 §0) is useful.
 V, B0, B1, B2-core, B2: OK (files unchanged since their check). S, B3, R/Theorem-A, R/Theorem-B: verified at their
 checked hashes, then amended as the checkers prescribed → marked STALE until one cross-family diff check confirms the
 amendments (to be batched with the STATEMENT v1.3.1 → v1.4.1 diff check).
+
+## L2 — `reviews/L2_sol_D.md` (gpt-6.1-sol, codex, high; P6_DISTC.md 1f28367e39d34090, COR_C.md f0c43732da9acefd)
+Verdict: VERIFIED-WITH-AMENDMENTS; 0 CRITICAL, 0 MAJOR, 4 MINOR, 1 NIT. **Lemma P6 (a), (b), (c) VERIFIED; DIST-C (C-0), (C-iv)
+VERIFIED; (C-i), (C-ii), (C-iii) and Corollary C VERIFIED-WITH-AMENDMENTS** (the statement edits SCR-1, SCR-2, SCR-4 — already
+in STATEMENT v1.4 — and the findings below). Retention checked against the store code and by exhaustive enumeration of
+small offer sequences (414 720 sequences); 21 code pins re-verified. Upstream hypotheses (DIST-1/2/3, Theorem A) accepted as given.
+| id | sev. | finding | disposition |
+|---|---|---|---|
+| L2D-01 | MINOR | Corollary C's opening says the method "computes the posterior" | ADOPT: STATEMENT v1.4.2 and TARGET §6 reworded; COR_C amendment A-4 |
+| L2D-02 | MINOR | amendment A-3's fallback ("first initial draw") proves 𝓜 ≠ ∅, not ∅ ∈ 𝓜 | ADOPT: P6_DISTC amendment A-8 (only nonemptiness is used downstream) |
+| L2D-03 | MINOR | non-completed runs: NA placeholders only when LS0 is enabled; LS0 optional for completion | ADOPT: P6_DISTC amendment A-9; COR_C A-4 |
+| L2D-04 | NIT | "any subset of Ω" → nonempty | ADOPT: COR_C amendment A-3 |
+| L2D-05 | MINOR | finiteness of m(S) needs the IG bound, not properness alone | ADOPT: P6_DISTC amendment A-10 |
+DEPS: P6, TC/DIST-C, R/Corollary-C verified at their checked hashes, then amended as prescribed → STALE until the batched
+cross-family diff check.

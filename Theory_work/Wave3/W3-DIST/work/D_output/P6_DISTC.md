@@ -471,3 +471,13 @@ A-6 (strengthening, not used). If S₀ lies inside one block of the start (for i
 tables and hence in 𝓜 on every completed run; no discovery premise is needed in that case.
 A-7 (LS0 and aborted fits). The LS0 search runs only when enabled; an Rcpp error aborts the fit and returns no output.
 Both are outside {completed} or do not change 𝓜's definition (LS0-scored models are offered to the same ledger).
+A-8 (after the cross-family line check; corrects A-3). 𝓜 ≠ ∅ because the first initial draw of island 1 is scored and offered
+(that draw need not be the empty model). If a block table exists, ∅ ∈ 𝓜 as well. Downstream (Corollary R1, Lemma W) only
+**nonemptiness** of 𝓜 is used.
+A-9 (pin P6 and non-completed runs). On a non-completed run the estimates are unavailable; explicit NA placeholders are
+returned only when LS0 is enabled (`v3_run.R:143-148`, `v3_unavailable_estimates` is called only if `v31` is true). Completion
+requires the final local search and, **when enabled**, LS0 (`cpp/v3_core.cpp:465`). No statement about completed runs changes.
+A-10 (§0, positivity and finiteness of m(S)). Positivity follows from integrating a strictly positive likelihood against a
+proper prior. Finiteness: with a = 0.01 and rate b = 0.01·s_y² > 0, the conditional Gaussian likelihood is at most (2πv)^{−N/2}
+(N the dimension of the centred response); integrating the proper coefficient prior and then
+E_{IG(a,b)}[v^{−N/2}] = b^{−N/2}Γ(a + N/2)/Γ(a) < ∞ gives m(S) < ∞. No new hypothesis.

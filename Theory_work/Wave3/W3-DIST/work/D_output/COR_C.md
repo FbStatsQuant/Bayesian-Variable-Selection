@@ -191,3 +191,8 @@ precomputed tables for small groups of predictors, and models kept from its cali
 scored the true model {j : β*_j ≠ 0} and the posterior probability of that model exceeds ½, then the list contains it, it
 is the model the method reports as most probable, and π(𝒯) > ½." (The stronger description "the best of everything the
 calibration and the final run scored" is not claimed: it was not line-checked.)
+A-3 (after the cross-family line check; §1). The first display holds for any **nonempty** subset of Ω (the restricted posterior is
+undefined for the empty subset; the returned list is nonempty).
+A-4 (§5 opening sentence and §4 row 1). Replace "The method computes the posterior by a sequential Monte Carlo sampler" by
+"The method uses a sequential Monte Carlo sampler to explore the models and to compute summaries of the posterior": the
+method computes neither the full posterior nor Π̂. (RC-2: completion requires the final local search and, when enabled, LS0.)

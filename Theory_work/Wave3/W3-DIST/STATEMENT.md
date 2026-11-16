@@ -1,4 +1,4 @@
-# W3-DIST — STATEMENT (v1.4.1, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
+# W3-DIST — STATEMENT (v1.4.2, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
 
 **Status: targets TC1–TC9 fixed by HQ at CP1; proofs are in `lemmas/` and `work/<stream>/`; the check state of every item is
 in `DEPS.tsv` (a statement here is checked only if its row says OK).** v1.4 = v1.3.1 with the dispositions of the blind read S2
@@ -213,7 +213,8 @@ Then for every sequence M_n → ∞:
 
     Π( d_H(f, f*) > M_n/√n | D_n ) → 0   in P*-probability.
 
-**Corollary C (the output of the sampler).** The method computes the posterior by a sequential Monte Carlo sampler
+**Corollary C (the output of the sampler).** The method uses a sequential Monte Carlo sampler to explore the models and to compute summaries
+of the posterior; it does not compute the full posterior
 (small problems that it solves by exact enumeration are not covered here). A run is *completed* when the method
 reports the status "completed"; runs that stop early are not covered. The output of a completed run contains a list 𝒯
 of at most 40r + 1 distinct models: the best-scoring models among those offered to the final run of the sampler —
@@ -467,6 +468,7 @@ posterior with the contrast model (locked T01, [P1] `thm:T01i`, `lem:spec`, `lem
 | 1.4 | §3: Lemma T's route text points to the proved one-sided inequality; Lemma V with Q^c, ρ′, D′ defined | EQUAL (statements of Lemmas T, V unchanged) | P4; P6 C-6 | as listed | pending |
 | 1.4 | §3 bridges (non-target): B2 and B3 window claims "q_n ≥ m_n + s" / "m♯_n + s ≤ q_n" replaced by min{p, s₀ + m} ≤ q_n; B3 requires b_n > 0; B0 restricted to data sets on which the posterior is defined | **WEAKER** (bridge remarks: false or over-broad claims replaced by the weaker true ones that the proofs use; Theorem A's statement is unaffected) | stream E; S2-01, S2-02, S2-05 | as listed | pending |
 | 1.4.1 | Lemma S: R^T_m written with its upper limit K | EQUAL (the proof's definition; with the sum to p the sentence "m = m_n(t) qualifies" would be false at the cap, while the probability bound is unaffected) | ambiguity | `reviews/L5_astra_SV.md` L5-02 | pending |
+| 1.4.2 | Corollary C, opening sentence: "uses a sequential Monte Carlo sampler to explore the models and to compute summaries of the posterior; it does not compute the full posterior" | EQUAL (description of the method made accurate; companion clause) | the method does not compute the full posterior | `reviews/L2_sol_D.md` L2D-01 | pending |
 Target clauses TC1–TC9 were fixed by HQ at CP1 (2026-11-15) in their v1.3 form; TC10 = companion results. **Relative to that
 baseline, no row of v1.4 weakens the mathematics of a target clause** (per S2: this sentence is about the CP1 baseline, not
 about the history before it — the pre-CP1 rows 1.0.1, 1.1 and 1.3 marked WEAKER did narrow ranges or add remainder events).

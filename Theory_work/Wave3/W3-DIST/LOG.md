@@ -250,3 +250,13 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   **CP2 gate: X, X′ (L1), S and V (L5) are line-checked; the Astra break review BR1 is still running.** HOLDS read: none.
 - 20:24 — POLICIES §12 rule 7 (calm usage) noted: no NOTS access from this ticket (none was ever used); no bursts of parallel jobs; Owls jobs ramp up within 16 cores; helpers kept to the brief and staggered. Currently running for this ticket: 3 agents (BR1 Astra, L2 Sol, P7 Opus with a small numerical check); the remaining launches (one Sol diff check, later the sweep) will be sequential. L3 and L4 completion notices arrived (already processed). HOLDS read: none.
 - 20:27 — Temp convention noted (HQ + Engineering): temp work under /home/fb31/bvs_tmp/W3-DIST/, never /tmp; TMPDIR exported in commands that write temp files; added to briefs/COMMON.md and briefs/PRECHECK_COMMON.md for future helpers. Directory created (empty). HOLDS read: none.
+- 20:33 — Temp path refined (Engineering's README): /home/fb31/bvs_tmp/theory/<YYYYMMDD>-W3-DIST-<what>, removed when the job ends. The empty top-level /home/fb31/bvs_tmp/W3-DIST created 6 minutes earlier was removed (nothing was in it); briefs/COMMON.md and briefs/PRECHECK_COMMON.md updated. HOLDS read: none.
+- 20:37 — FINAL temp location (POLICIES §12 rules 8–9): /home/fb31/SMC_Theory_Department/tmp/<YYYYMMDD>-W3-DIST-<what>; briefs updated. This ticket has nothing under /home/fb31/bvs_tmp and no temp folder at present. HOLDS read: none.
+- 20:38 — Line check L2 back (`reviews/L2_sol_D.md`, Sol): Lemma P6 (a), (b), (c), DIST-C (C-0), (C-iv) VERIFIED; (C-i), (C-ii),
+  (C-iii) and Corollary C VERIFIED-WITH-AMENDMENTS; 4 MINOR + 1 NIT, none against a completed-run statement. Amendments
+  appended to `work/D_output/P6_DISTC.md` (A-8..A-10) and `COR_C.md` (A-3, A-4); STATEMENT v1.4.2 and TARGET §6: Corollary C's
+  opening sentence corrected (the method does not compute the full posterior). Disposition appended to
+  `reviews/L4_L5_disposition.md`. DEPS.tsv: P6, TC/DIST-C, R/Corollary-C → STALE (verified, then amended; diff check pending).
+  **All five cross-family line checks are back (L1–L5): no CRITICAL or MAJOR finding in any proof.** Outstanding: BR1
+  (Astra break review), P7 (Opus pre-check of the necessity counterexample), then one Sol diff check of the statement
+  changes and post-check amendments. HOLDS read: none.
