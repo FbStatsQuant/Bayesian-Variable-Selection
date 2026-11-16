@@ -218,3 +218,8 @@
   under NC_r; READER thm10) and **SCR-R1** (drop "fixed" signals, ℓ¹ → total signal, exponential rate; READER thm8).
 - Gates PASS on all five-pillar rows except 1.1 (POST2 C/E: PENDING-DISPOSITION of 4 R03b proposals; SHARP3 addendum
   g05–g06 with HQ).
+
+## 2026-11-15 20:43 CT — HQ: D32 approved; NOTS access exists
+- Owls → NOTS works (`ssh nots`, key ~/.ssh/id_ed25519_nots; POLICIES §5). The department runs its own NOTS move after
+  the Wed freezes under §12: one multiplexed session, idle data only, INDEX.md on NOTS, no deletion without a verified
+  copy on Owls (records/ copy by Engineering today; verify + index on arrival). Plan: Thu 11-19 or later, one session.
