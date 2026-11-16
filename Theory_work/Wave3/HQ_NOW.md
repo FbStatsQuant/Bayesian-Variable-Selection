@@ -13,7 +13,7 @@
 ## PRIORITY ORDER (owner 2026-11-15, evening)
 1. All consistency results (selection + distribution / W3-DIST) **and their Lean parts** come first.
 2. Parallel-method theory (T-MERGE, EVAR, POOL) is NOT a priority now; parked for the scaling paper.
-3. Engineering: plan for 1M (any SMC BVS scheme), or an irrefutable NOTS-infrastructure proof.
+3. **Engineering: make p = 10⁶ work** (owner 11-15: "I need the 1 mil to work out … cherry on top … impressive paper"). Plan A+D approved (≈24.6k core-h). HQ tracks: G0 kernel speed on NOTS → EXP-CP1 v2 (Sol fold-in) → 10⁴ overlap and precision → 10⁵ rung → first 1M fit. Unblock fast.
 
 ## TOP PRIORITY (owner 2026-11-15): W3-DIST — distribution consistency (Song–Liang Thm 1–2 parity)
 "It needs to happen." It outranks W3-PATH, T7 and the riders in every resource conflict. Lead: Fable 5.2 on Claude Third
