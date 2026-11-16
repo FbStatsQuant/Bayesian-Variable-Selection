@@ -1,0 +1,19 @@
+id	file[:lines]	uses	sha (sha256, first 16 hex)	checked_sha	checked_by	state
+TC/DIST-1	STATEMENT.md §1 (1.1)	H, T, X	7c291b47c9e7e95c			UNCHECKED
+TC/DIST-2	STATEMENT.md §1 (1.2)	H, T, X'	7c291b47c9e7e95c			UNCHECKED
+TC/DIST-3	STATEMENT.md §1	H; external source of δ_n → 0 (W3-POST:Thm-1@1.0.0 item 6, as hypothesis)	7c291b47c9e7e95c			UNCHECKED
+TC/DIST-C	STATEMENT.md §2	P6, DIST-1 (or DIST-2), DIST-3; W3-SAMP:CC@1.1.1; delivery premises W3-SAMP:D@2.1.1, LT#@2.0.1, C@1.1.1, TR@2.1.1, W3-RM2:RM2-F@1.0.0, RM2-R@1.0.0	7c291b47c9e7e95c			UNCHECKED
+H	STATEMENT.md §3 Lemma H	— (D0 computation re-derived)	7c291b47c9e7e95c			UNCHECKED (S1 statement read of v1.0.2: sound; not a line check)
+T	STATEMENT.md §3 Lemma T	external: VC relative deviation inequality (to verify or prove)	7c291b47c9e7e95c			UNCHECKED (v1.0.2 form REFUTED by S1-01; v1.1 repaired)
+S	STATEMENT.md §3 Lemma S	locked T01 ([P1]); proof re-run of W3-POST2:B@1.0.0	7c291b47c9e7e95c			UNCHECKED (S1 statement read: sound for the S₀-reference form)
+V	work/prior_probe/REPORT.md §3, A2	—	d437de8eb4a9f577			UNCHECKED (helper-derived)
+X	STATEMENT.md §3 Lemma X	S, V; W3-POST2:A0@1.0.0 ((ND) interface)	7c291b47c9e7e95c			UNCHECKED
+X'	STATEMENT.md §3 Lemma X'	S	7c291b47c9e7e95c			UNCHECKED
+P6	STATEMENT.md §3 Lemma P6	—	7c291b47c9e7e95c			UNCHECKED
+B1	STATEMENT.md §3 Bridges	—	7c291b47c9e7e95c			UNCHECKED (v1.0.2 form REFUTED by S1-05; v1.1 repaired)
+B2	STATEMENT.md §3 Bridges	external: small-ball lower bound; example W3-POST:Cor-1R@1.0.0	7c291b47c9e7e95c			UNCHECKED
+F-b (fallback)	ROUTES.md §6 item 3	H, T; W3-POST2:D.D(b)@1.2.0 (conditional; HQ note 2026-11-15)				UNCHECKED
+S-APX	STATEMENT.md §1 stretch	X, S	7c291b47c9e7e95c			UNCHECKED (stretch)
+S-EXP	STATEMENT.md §1 stretch	X, T	7c291b47c9e7e95c			UNCHECKED (stretch)
+S-FIT	STATEMENT.md §1 stretch	V (supersets)	7c291b47c9e7e95c			UNCHECKED (stretch; OPEN)
+NUM	work/numerics/RESULTS.md; ASSUMPTION_MAP.md §3	—	ef53be9c7a7a9fea / 7e8737e69b0e8d34			UNCHECKED (scripts not audited)

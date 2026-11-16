@@ -32,3 +32,18 @@ Claude inference tally: all on Claude Third (lead + 2 helpers). OpenAI: 1 Astra 
 - 16:16 — Manifest S1 frozen: fb6d0dab98b8083273c1df73693af90831329776915737bda397c39ec024b62e (106 files, 18 extra
   inputs). Blind read S1 launched (gpt-6-astra, codex, reasoningEffort high; brief `reviews/BRIEF_S1_astra.md`).
   No manifest-covered file is edited while it runs.
+- 16:58 — HQ steer A4 (protocol v4; Tier A, NORMAL). `git pull --ff-only` (→ fe9a1d7); PROTOCOL_v4.md not yet on main.
+- 17:45 — HQ note on W3-POST2 Claim D (D(b) repaired after council; diff round in progress): recorded in the consumes
+  table. `git pull --ff-only`: PROTOCOL_v4.md on main; read §3, §4, §6 and H1–H5. HOLDS read: none.
+  Blind read S1 back (`reviews/S1_astra.md`, written 17:41): GO-WITH-REPAIRS; 5 MAJOR, 5 MINOR, 1 NIT; Lemma T
+  FALSE-AS-STATED on part of its range (DEPS: T REFUTED in its v1.0.2 form; dependents DIST-1, DIST-2 — repaired range
+  used, no target clause weakened); bridge B1 exponential clause refuted (no dependents among target clauses).
+- 17:48 — STATEMENT v1.1 (all S1 findings and the four better-theorem proposals adopted; changelog table at the foot,
+  v4 §4.2 form); ROUTES v1.1; ASSUMPTION_MAP v1.1; `reviews/S1_disposition.md`.
+- 17:51 — TARGET.md (v4 §3.2), API_CARDS.md (steer A4 item 6), DEPS.tsv (v4 §4.1 form, by hand with sha256; all rows
+  UNCHECKED). HOLDS read: none.
+- 17:55 — CHECKPOINT_1.md written. Run ends with CP1 as the final message. No work past CP1 without HQ's go.
+  Agents this leg: lead Fable 5.2 (Claude Third); H1 Opus 5.5 (Claude Third); H2 Sonnet 5.5 (Claude Third);
+  S1 gpt-6-astra (codex, high). No other agents. No git command beyond `git pull --ff-only` (4 times) and read-only
+  `git log`/`rev-parse`/`diff --stat`/`branch --show-current`.
+- 17:53 — Completion notice of the S1 Astra task received; its summary matches the report file already dispositioned (5 MAJOR, 5 MINOR, 1 NIT; GO-WITH-REPAIRS). No change to CHECKPOINT_1.md or any statement. HOLDS read: none.

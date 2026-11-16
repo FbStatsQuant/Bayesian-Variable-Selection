@@ -1,4 +1,4 @@
-# W3-DIST — ROUTES (proof routes, failure points, difficulty; v1.0, 2026-11-15)
+# W3-DIST — ROUTES (proof routes, failure points, difficulty; v1.1, 2026-11-15; v1.1 = after blind read S1)
 
 Everything here is a route sketch by the lead (unchecked). Notation: STATEMENT.md. t = nε² up to constants.
 
@@ -18,7 +18,9 @@ Everything here is a route sketch by the lead (unchecked). Notation: STATEMENT.m
 (Lead's reading, confirmed with one correction by helper H1, `work/prior_probe/REPORT.md` §1–2; both unchecked.) [SL] Theorems 1–2 follow Jiang (2007):
 prior mass near f*, a sieve of models of size ≤ r̄_n, tests. Mapped to the coded prior: r̄_n ↔ K = min(p, ⌊n/2⌋);
 V_ξ ↔ n(G_S + I)⁻¹; λ_n = r_n/P_n ↔ BB(1, p), whose size law is P(|S| = k) = ½C(p,k)/C(2p−1,k) ≈ 2^{−k−1}.
-- (14) holds for every design: ch₁(V_S⁻¹) ≤ |S| + 1 (standardised columns); and B̃_n = sup ch₁(V_S) ≤ n (ridge +I).
+- The covariance envelopes behind (11) and (14) are benign for every design: ch₁(V_S⁻¹) = (λ_max(G_S) + 1)/n ≤ |S| + 1
+  (standardised columns) and ch₁(V_S) ≤ n (ridge +I). (S1-04: this is a statement about the envelopes; the coded
+  beta-binomial mixture has no fixed Bernoulli parameter r_n/P_n, so (14) cannot be called literally satisfied.)
 - (9), (10) and (11) **fail** (H1 corrected the lead on (11): B̃_n is harmless, but (11) also carries r̄_n); "r_n ≻ 1" fails too: r̄_n log P_n ≺ nε_n² is false with r̄_n = ⌊n/2⌋. Replacing the hard cap by the prior's own tail does
   not rescue the sieve argument: a sieve {|S| ≤ m} needs prior tail 2^{−m} ≤ e^{−Cnε²} and entropy m log p ≲ nε², which
   are incompatible when log p → ∞. (BB(1, p) is the boundary case of the Castillo–van der Vaart complexity priors.)
@@ -31,7 +33,7 @@ exactly the statement that the Occam factor is present. Without (ND) the only di
 
 ## 2. Route for Theorem DIST-1 (and DIST-2)
 **Step 1 (Lemma H; deterministic; done up to checking).** STATEMENT §3.
-**Step 2 (Lemma T; classical).** STATEMENT §3. Apply with d = d_t + s₀^r, δ = e^{−ct}: η² ≤ C(t + d_t log n)/n = C′t/n.
+**Step 2 (Lemma T; classical).** STATEMENT §3. Apply with d = min(p_raw, n − 1, d_t + s₀^r) (Lemma T's repaired range, S1-01), δ = e^{−ct}: η² ≤ C(t + d_t log n)/n = C′t/n.
 On the event, for every posterior draw with |S| ≤ d_t:
   d_H²(f, f*) ≤ (v/σ*² − 1)² + (ε̄² + ‖μ̂ − μ‖²/n)/(2σ*²) + η².
 *Failure points:* (a) the exact form/constant of the relative-deviation inequality (citecheck; any version with
@@ -56,12 +58,16 @@ under the posterior: that is Step 3's size control (models above d_t are in the 
   Σ_{j>d_t−s₀} [C(s₀+j, j)2^{−j}]·(C t /(c_D n))^{j/2}-type ≤ (Ct/(c_Dn))^{(d_t−s₀)/2} ≤ e^{−3ct} when
   (d_t − s₀) log(n/(Ct)) ≥ 6ct; Markov at level e^{−ct}. (c) non-supersets with d_t < |S| ≤ m_n(t): compare with S ∪ S₀
   ([T03R] (C6)/(C8) device, loss ≤ 2^{s₀}(2p)^{s₀}(n+1)^{s₀/2}, absorbed as in X3).
-  *Failure points:* (1) the truncated moment with **unknown variance** at a t-scaled truncation — A_occam does it at
-  τ = C_Aj log n; with ν/(2b + Q_{S₀}) = (1 + O(√(t/n)))/(2σ*²) the truncated moment picks up a factor e^{O(τ√(t/n))},
-  which the dimension cut beats only if (d_t − s₀) log(n/t) ≳ t; hence the range t ≤ n^{1−κ₀} (STATEMENT v1.0.1); (2) (ND) is an
-  average over J of fixed size, but the truncation weights a_J depend on J through d_J — A_occam's (ADG) ⇒ (OS) step
-  bounds a_J by its maximum over J; must be redone with τ_j; (3) the union device needs S ∪ S₀ possibly outside Ω
-  (handled in [P2] by letting the sum run to min(m♯, p − s₀)). *Medium–high; this is the kill-budget item.*
+  *Budget before Markov (S1-06; H1 A3):* the superset sum carries (1) the j-independent factor
+  exp(‖P_{S₀}e‖²/2σ*²) ≤ e^{C(t + s₀ log n)} from Lemma V(c) (no (F₀)); (2) the union multiplicity
+  2^{s₀}(2p)^{s₀}(n+1)^{s₀/2} for non-supersets; (3) the variance surcharge: ν/(2b + Q_{S₀∪J}) ≤ (1 + ε_{n,t})/(2σ*²),
+  ε_{n,t} = O(√(t/n) + (m_n(t)+s₀) log n/n), costing e^{ε_{n,t}(j log n + t)} in the truncated moment. All three are
+  absorbed by taking C′ in d_t − s₀ = ⌈C′t/log n⌉ large, using log(n/t) ≥ κ₀ log n; C′ is chosen after budgeting them.
+  *Failure points:* (a) uniformity: **one n₀ for all t in [M₀ log n, n^{1−κ₀}]** (H1's Theorem P has n₀(u)); (b) (ND) is
+  an average over J of fixed size, but the truncation weights depend on J through d_J — replace by the uniform
+  envelope before averaging; (c) unions S ∪ S₀ outside Ω (handled in [P2] by letting the sum run to min(m, p − s₀));
+  (d) the conclusion of X must include the size statement Π(|S| > d_t | y) ≤ e^{−ct} on the same event.
+  *Medium–high; this is the kill-budget item.*
 **Step 4 (Lemma S).** Re-run the proof of [P2] Claim B (`W3-POST2/lemmas/B_tail_approx.md`, Steps 1–4) with T = S₀,
 ϑ = θ*: on 𝓑_n, π(|S| > m) ≤ R_m√(D_{S₀})√n · c♯ e^{Λ″_n} Θ^{(1)}_{n,m}, with E Θ^{(1)} = 1 and
 Λ″_n = |E′ − N|/(2√n) + E′/(2n) + ρ″/(2σ*²). The weak tail of Claim B comes only from applying Markov's inequality to
@@ -79,15 +85,18 @@ transfer is needed for the exponential form. *Low.* (For DIST-3: the diagonal tr
 [W3P] item 6.)
 **DIST-2:** Steps 1–5 with d_t := m_n(t) and no X4(b),(c); the rate is (m_n(t) log p + t)/n ≍ t log p/n.
 
-## 3. Route for Theorem DIST-3 (parametric rate; in probability)
-W3-POST2 D(a) (in-sample: S = S₀, ‖μ̂ − μ‖² ≤ M_n, |v/σ*² − 1| ≤ M_nn^{−1/2} with posterior probability → 1) + Lemma H
-without truncation + (TR₀): E_xΔ(x)² ≤ C_T n⁻¹ΣΔ_i² = C_T(ε̄² + ‖μ̂ − μ‖²/n). Assembly. *Failure point:* Lemma T cannot
-be used here (remainder log n/n); (TR₀) needs second moments of x on supp β* — at the parametric rate a moment
-condition is unavoidable for this route (a single huge-leverage direction can carry O(1/n) Hellinger mass).
-*Difficulty: low.* Status after assembly: conditional on W3-POST2:D (unchecked beyond its council pass).
+## 3. Route for Theorem DIST-3 (oracle bound; v1.1 after S1 Better-theorem 1–2)
+Given S = S₀ only one support is involved, so no union over models and no logarithm: [D] D1 gives
+‖M_{S₀}y_c − μ_c‖² ≤ 2‖P_{S₀}e‖² + 2L_{S₀} ≤ C(s₀ + u + B) outside probability e^{−u}; the conditional fitted-mean
+fluctuation is ≤_st vχ²_{s₀}; Q^c_{S₀} − ‖e‖² is O(u) (cross term variance ≤ σ*²L_{S₀}); v has Gamma tails at scale
+√(u/n); ε̄² ≤ 2σ*²u/n. Lemma H without truncation and (TR₀) give E_xΔ(x)² ≤ C_T(ε̄² + ‖μ̂ − μ‖²/n). Add δ_n for S ≠ S₀.
+(F₀) is not used; W3-POST2 D(a) is not consumed. *Failure point:* Lemma T cannot replace (TR₀) at this scale (its
+remainder is of order log n/n); (TR₀) needs second moments of x on supp β* and is automatic only for a fixed law.
+*Difficulty: low.*
 
 ## 4. Route for Theorem DIST-C (coded output)
-Lemma P6 is one line each (Π(B ∩ {S ∈ 𝒯}) ≤ Π(B); Markov over models). (C-ii)(α): retention is the top-store order
+Lemma P6 is one line each (domination Q ≤ Lπ; Markov over models, a > 0). Statements are under the joint law P⊗; bad
+output events are contained in bad data events. (C-ii)(α): retention is the top-store order
 (`cpp/v3_ledger.h:49-56`: an offered model is kept unless ≥ cap better ones are present; S₀ is the unique maximiser of
 F when δ < ½ — C-PACK SL0(iv)), discovery from the cited delivery results under their premises. *Failure points:*
 (1) **overclaim risk**: the code returns no distribution; the theorem must say "the store BMA / HPM plug-in defined
