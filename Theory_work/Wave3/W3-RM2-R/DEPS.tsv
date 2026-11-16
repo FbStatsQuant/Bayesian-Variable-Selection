@@ -1,8 +1,15 @@
 id	file[:lines]	uses	sha	checked_sha	checked_by	state
-stmt:sec2	STATEMENT.md:49-97	-	321ea57959ee0e7f	-	-	UNCHECKED
-stmt:C0p	STATEMENT.md:98-124	-	186d13d4531c77c7	-	-	UNCHECKED
-stmt:CD	STATEMENT.md:125-133	-	abe7c705c1ec1be4	-	-	UNCHECKED
-stmt:C1p	STATEMENT.md:136-146	-	73a0ac3a6833b97a	-	-	UNCHECKED
-stmt:C2p	STATEMENT.md:147-152	-	e9009dbe31e9fa2e	-	-	UNCHECKED
-stmt:C5p	STATEMENT.md:165-175	-	483df9980db274fb	-	-	UNCHECKED
-stmt:C4p	STATEMENT.md:176-207	-	f0d1d25e3f922663	-	-	UNCHECKED
+stmt:sec2	STATEMENT.md:52-115	-	ec407da996327240	ec407da996327240	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
+stmt:C0p	STATEMENT.md:118-143	stmt:sec2	66da571123e74d2b	66da571123e74d2b	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
+stmt:CD	STATEMENT.md:144-163	stmt:sec2	0372952b3decd561	0372952b3decd561	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
+stmt:C1p	STATEMENT.md:166-176	stmt:sec2;stmt:C0p;stmt:CD	73a0ac3a6833b97a	73a0ac3a6833b97a	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
+stmt:C2p	STATEMENT.md:177-182	stmt:C0p;stmt:CD	e9009dbe31e9fa2e	e9009dbe31e9fa2e	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
+stmt:bridges	STATEMENT.md:183-194	stmt:sec2	a0108fbf7c68628c	a0108fbf7c68628c	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
+stmt:C5p	STATEMENT.md:197-205	stmt:sec2	09dbd3db63764507	09dbd3db63764507	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
+stmt:C4p	STATEMENT.md:206-238	stmt:C0p;stmt:C1p;stmt:C2p	e91ddf1994bac1ba	e91ddf1994bac1ba	reviews/SL1_statement_lock_sol.md;reviews/SC1_statement_change_sol.md	LOCKED (statement; proofs UNCHECKED)
+parent:L1_sandF_b.md	../W3-RM2/lemmas/L1_sandF_b.md	-	4a29eea6b2f2ac38	4a29eea6b2f2ac38	W3-RM2 council R1 (registry)	OK (parent, read-only)
+parent:L2_width.md	../W3-RM2/lemmas/L2_width.md	-	0fa63729eeac8c28	0fa63729eeac8c28	W3-RM2 council R1 (registry)	OK (parent, read-only)
+parent:L3_assemblyF.md	../W3-RM2/lemmas/L3_assemblyF.md	-	2a65ad0fcdd6b70d	2a65ad0fcdd6b70d	W3-RM2 council R1 (registry)	OK (parent, read-only)
+parent:L5_formR.md	../W3-RM2/lemmas/L5_formR.md	-	c54350aec866d6e5	c54350aec866d6e5	W3-RM2 council R1 (registry)	OK (parent, read-only)
+parent:L6_examples.md	../W3-RM2/lemmas/L6_examples.md	-	84bb02399fbe6468	84bb02399fbe6468	W3-RM2 council R1 (registry)	OK (parent, read-only)
+parent:RM-L0_core.md	../W3-RM/lemmas/L0_core.md	-	51676910b103dac6	51676910b103dac6	W3-RM (registry PROVED-CHECKED)	OK (parent, read-only)

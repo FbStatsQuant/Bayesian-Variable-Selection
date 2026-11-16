@@ -13,7 +13,8 @@ design; master RM2-F). Nothing here is written in W3-READER's folder; the manage
   removal directions, now with an explicit constant. Nothing else in the hypotheses changes.
 * **Theorems 6 and 7 (conclusion).** The reader versions already say "the run produces output with probability one"
   and "P(Ŝ = S₀) → 1", through two NEW bridges (B6.6, B7.4 to W2-UNI:F-UNI). This ticket's masters state that
-  directly: under the standing conventions (exact arithmetic, shipped configuration, sufficient allocation) every run
+  directly: under the standing conventions (exact arithmetic, an idealised machine with unbounded integers — which also lifts two
+  fixed size ceilings in the code, see STATEMENT §2 IDEAL-W⁺ — shipped configuration, sufficient allocation) every run
   on every valid non-degenerate input returns output, and P(Ŝ ≠ S₀) ≤ P(S₀ is not the unique best-scoring model) +
   P(the local search from the start mode does not reach S₀). B6.6 and B7.4 are no longer needed.
 

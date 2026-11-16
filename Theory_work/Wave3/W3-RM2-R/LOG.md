@@ -18,3 +18,11 @@
 - 2026-11-15 21:43 CST — SL1 returned: DO NOT LOCK (5 findings: S1 length(y)=n; F2 literal guards ls0_ell≤1e6 and INT_MAX cap guard not covered by IDEAL-W; F3 T2(c) coded-start event; F4 DLV-0⇒Prop-F edge qualify; E5 pointers). T4 parts, T2(b), Ex-Proxy-d pass. Saved verbatim reviews/SL1_statement_lock_sol.md.
 - 2026-11-15 21:45 CST — applied SL1 findings 1–5 → STATEMENT v0.2 (disposition reviews/SL1_disposition.md; PLAN Q5 updated). Diff v0.1(c0b61cb)→v0.2 saved reviews/SC1_diff_v0.1_v0.2.diff; brief reviews/BRIEF_SC1_sol.md saved before launch.
 - 2026-11-15 21:47 CST — launched SC1 statement-change check (codex gpt-6.1-sol high, new agent; brief reviews/BRIEF_SC1_sol.md). Settled the finished SL1 reviewer thread (POLICIES §10).
+- 2026-11-15 23:20 CST — SC1 returned ACCEPT WITH CHANGES (S1 interval identity; F2 closed guard list; F3 sufficient domain wording; E4, E5). Saved verbatim (markdown link targets shortened to [file:line]). Applying.
+- 2026-11-15 23:21 CST — applied SC1 findings → STATEMENT v1.0 LOCKED (disposition reviews/SC1_disposition.md); READER_DELTA conclusion premise updated (IDEAL-W⁺); DEPS refreshed (statement rows LOCKED, parent lemma hashes); HOLDS.md on origin/main: 0 holds.
+- 2026-11-15 23:22 CST — wrote CHECKPOINT_1.md; settled finished SC1 reviewer thread; ending run at CP1 (hard).
+- 2026-11-15 23:25 CST — CP1 answered by manager: GO. Target clauses fixed as tabled; Cont-plus targets go in implies (not depends_on); O-Wq named open item; O4′ not started; Ex-PolyR/F not in this council; READER_DELTA: lead with output-conditional clause, delivery in body; IDEAL-W⁺ engineering note to HQ with H5 summary. Proceeding to lemmas + numerics helper.
+- 2026-11-15 23:25 CST — numerics/SPEC.md written (boundary sweep κ for (V♭),(BM-W⁺)); numerics/.gitignore (arrays/).
+- 2026-11-15 23:25 CST — launched numerics helper H1: delegate_task claudeAgent_claude_third claude-sonnet-5-5 effort high, async (role numerics; brief numerics/SPEC.md).
+- 2026-11-15 23:29 CST — wrote lemmas Q1_sandF_c.md (copy of PARENT L1, [R-0..4]), Q2_TL_c.md (partial copy of PARENT L2 §0,§4 [R-0..6] + §6 POST/MODE), Q7_proxy_d.md (new). Brief reviews/BRIEF_LCA_sol.md saved before launch.
+- 2026-11-15 23:29 CST — launched LC-A (codex gpt-6.1-sol high, new agent, blind) on Q1, Q2, Q7; shas at launch reviews/LCA_shas_at_launch.txt.
