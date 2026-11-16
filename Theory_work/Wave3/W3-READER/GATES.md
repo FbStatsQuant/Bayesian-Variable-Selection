@@ -50,7 +50,8 @@ review has a recorded triage disposition or a rider ticket (G1 :9-29; G2 :20-41)
   the four R03b items and the SHARP3b items: `CARD_ROW11_R03b.md` (awaiting HQ + consultant). Gate: PASS for the $O_P$
   form. **Re-based form: PASS-with-open-items O1–O3** (H5 card 6, consultant AGREE): B+ rejected for the row; N1 →
   post-freeze rider POST2-R1. The PASS **does not clear** `improvable` on `W3-POST2:C` and `W3-POST2:E` (set, linked to
-  O1–O3), and the necessity entry for the floor on $S_0$ stays OPEN ("sufficient; not known to be necessary", O3).
+  O1–O3), and the necessity entry for the floor on $S_0$ stays OPEN ("sufficient; not known to be necessary", O3). O1 ranks with O3 as a post-freeze rider
+  (H5 card 7): whether (OS) holds without any eigenvalue condition is open.
 
 ## Row 1.2 — random Gaussian design (Thm 2)
 lit PASS, necessity PASS, better PASS — G1 :80-123 (sharp1 f06 class B; superseded parts covered by POST2; T5

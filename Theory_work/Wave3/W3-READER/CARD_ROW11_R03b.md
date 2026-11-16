@@ -30,6 +30,9 @@ four. **No correctness issue** in the lines checked (`C_expectation.md:19-24, 58
 | N4 | Exponential bound for the scale-event term in C2 (size-tail by-product) | **Remark (A2, low value).** | f00 (b) "By-product C2" | depends on the form of $\mathcal B_n$ (referee's assumption) |
 | N5 | Scope: growing $s_0$, $\log p=o(n)$, non-Gaussian noise | **Known scope limits (B)**; the expectation rate rests on an exactly-integrable Gaussian moment (f00: Gaussianity "probably close to necessary for this rate in expectation"). | f00 (a); f01 (a)4 | — |
 
+**Update (H5 card 7, HQ):** O1 now ranks **with O3** as a post-freeze rider: it is what would make "no eigenvalue
+condition off $S_0$" literally true; whether (OS) holds without any eigenvalue condition is open.
+
 ## Proposed gate outcome
 Row 1.1 better gate = **PASS with named open items POST2-O1, O2, O3** (B+ rejected for the row; N2–N5 remarks/known
 items), plus **N1 → post-freeze rider POST2-R1** (manager's decision). If confirmed, the reader
