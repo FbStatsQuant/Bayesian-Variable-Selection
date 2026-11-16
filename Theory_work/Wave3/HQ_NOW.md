@@ -7,6 +7,11 @@ addendum A1 (P1–P6). Restore points: hourly cron → branch theory/W3-DIST. An
 budget, CP reset use) → ask Felipe at once, framed as "needed for W3-DIST". Target: proved and in chapter v2.0 this week.
 
 ## DEPARTMENTS / ACTIVE THREADS (HQ babysits; Owls, Claude Third)
+Operating model (owner, 11-15): HQ = CEO; each big effort is a top-level "department" thread (brief + branch +
+restore points + checkpoints); the owner may talk to any department directly; HQ gates spend and launches.
+- W3-READER (Opus): mcp:launch:2a4462b2… → CP1 (claims card by the five pillars; reader versions; notation; method intuition).
+- Lean (READY, not started; GO = owner + HQ): Lean/BRIEF.md, worktree /home/fb31/BVS-wt/LEAN.
+- Candidates next: Writing/Paper (chapter v2.0, paper, advisor report); Parallel-SMC theory + evidence variance (after the freeze).
 - W3-DIST lead (Fable 5.2): mcp:launch:75635c1f… → CP1 pending. API attempts after CP1. Snapshot cron */15 → theory/W3-DIST.
 - Experiment p = 1M (Opus 5.5): mcp:launch:dac077c2… → EXP-CP1 (plan). REQUESTS.md = NOTS queries for HQ. Snapshot → exp/P1M.
 - PR #10 (Actions CI): merge after the editorial-pass citecheck fixes. Protocol: PROTOCOL_v4.md (NORMAL mode).
