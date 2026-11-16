@@ -247,3 +247,4 @@
 - 05:36 — Consultant via HQ: TR1 re-framed (every-n under IDEAL-W alone vs domain restriction / IDEAL-W⁺; expect NARROW) → steered into running TR1 + brief addendum. Method-pin sweep (Sonnet, read-only) launched: every claim pinned to pre-change LS0 cap ℓ_n; delivery-about-shipped-method → SUSPECT candidates; list to HQ before any status change beyond F-UNI.
 - 05:36 — F9b Sol: all 4 resolved, FIDELITY FAITHFUL. Card 13 package paths sent to HQ (DIST CP3 + strength page @493a1907; RT1; READER delta @bc613f54 + F9/F9b).
 - 05:37 — Task S1 on main 4e08096d: F-UNI SUSPECT (correctness event; issue folder); tool cascade SUSPECT: UNI-0/1, W3-RM Examples/SAND-R/SAND-Rp/RM-R (state only); notes on 18 Prop-F consumers; 0 ERROR; 12/12 manifests. → HQ.
+- 05:39 — HQ: Owls crontab freezes TODAY 10:05–10:30 and 11:05–11:30 CT (BNP rg guard + backup cron). No crontab additions/edits/removals (incl. snapshot lines) in those windows.
