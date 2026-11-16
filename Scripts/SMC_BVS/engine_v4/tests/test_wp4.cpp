@@ -277,6 +277,11 @@ TEST(wp4_merge_guardw_t10) {
   double sw = 0; for (double x : fo.W_r) sw += x; CHECK(std::fabs(sw - 1) < 1e-12 && fo.R_eff >= 1 && fo.R_eff <= 4);
   double sp = 0; for (int j = 0; j < p; ++j) sp += fo.pip_T[j]; CHECK(sp > 0);
   CHECK(fo.occ_available && fo.occ.size() == 2 && fo.occ[0].M_used == 1 && fo.occ[0].occ_r.size() == 4);
+  {  // per-model counts agree with the M-set occupancies
+    uint64_t in10 = 0; for (size_t i = 0; i < fo.occ_top.size(); ++i) in10 += fo.occ_top[i];
+    CHECK(fo.occ_top.size() == 10 && fo.occ_total == 1600 && fo.occ_total_r.size() == 4 && fo.occ_top_r.size() == 40);
+    CHECK(same_bits((double)in10 / (double)fo.occ_total, fo.occ[1].occ));
+  }
   CHECK(fo.log_Z_T >= fo.hpm_F);   // lower bound contains the HPM's mass
   // T10: GUARD-W paths -- no estimates, declared statuses
   auto run_fault = [&](int which) {

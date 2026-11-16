@@ -89,6 +89,9 @@ struct FitOut {
   double log_Z_T = 0;
   std::vector<int32_t> mpm;
   std::vector<OccRow> occ; bool occ_available = false;
+  // per-model terminal occupancy of the first M_top = min(max occ_M, |store|) store models (WP5 fit.bin `occ_top`,
+  // `occ_top_r` R' x M_top, meta `occ_total`, `occ_total_r`)
+  std::vector<uint64_t> occ_top, occ_top_r, occ_total_r; uint64_t occ_total = 0;
   // near ties, certificates, flags (core/v3_run.R:169-207, v3.1 branch)
   std::vector<Model> near_ties; std::vector<double> near_tie_F; bool near_tie_truncated = false;
   bool local_limit = false, local_certified = false; std::string local_certified_by = "none";
@@ -224,6 +227,20 @@ FitOut merge_and_tail(const std::vector<IslandSlot>& slots, Ledger pre, const Mo
   out.occ_available = true;
   for (auto& s : slots) if (s.isl.terminal.empty()) out.occ_available = false;
   if (out.occ_available) {
+    {  // per-model counts of the top models
+      int Mt = 0; for (int M : ms.occ_M) Mt = std::max(Mt, M);
+      Mt = (int)std::min<size_t>((size_t)Mt, top.size());
+      std::unordered_map<Model, int, detail::ModelHash> idx;
+      for (int i = 0; i < Mt; ++i) { ModelView S = top.model((size_t)i); idx.emplace(Model(S.begin(), S.end()), i); }
+      out.occ_top.assign((size_t)Mt, 0); out.occ_top_r.assign((size_t)R * (size_t)Mt, 0);
+      for (int r = 0; r < R; ++r) {
+        for (auto& S : slots[r].isl.terminal) {
+          auto it = idx.find(S);
+          if (it != idx.end()) { out.occ_top[(size_t)it->second]++; out.occ_top_r[(size_t)r * (size_t)Mt + (size_t)it->second]++; }
+        }
+        out.occ_total_r.push_back(slots[r].isl.terminal.size()); out.occ_total += slots[r].isl.terminal.size();
+      }
+    }
     for (int M : ms.occ_M) {
       OccRow row; row.M = M; row.M_used = (int)std::min<size_t>((size_t)M, top.size());
       std::unordered_map<Model, int, detail::ModelHash> set;
