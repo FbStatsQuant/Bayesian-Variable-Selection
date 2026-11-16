@@ -158,3 +158,4 @@
 - 01:33 — heartbeat: PSHARP-R R2 Opus seat PASS 9.2 (F-1/F-2 resolved), Sol seat pending; T03ACC SL1 locked (v1.1), line checks started; RM2-R council prep; MISR-R R1 seats running; START2-R last log 23:26 (2h07, < 3 h). No report.
 - 02:19 — SL0 PC = EDITORIAL-ONLY (D57); recorder task N staged; HQ GO asked.
 - 02:19 — SL0 PC reviewer settled; side finding: SUBSTANTIVE post-C1 change in C-PACK I1 e4′(i) (outside SL0, not headline) → queued post-freeze targeted re-check (with M55).
+- 02:20 — HQ GO for task N real run (SL0 record + drop SL0 from conditional statuses; gates a–d); recorder told.
