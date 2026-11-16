@@ -218,3 +218,12 @@ returned `leaders_gamma0/1` of the final run. The inherited models' effect on th
 - Coming from Theory: PSMC-S0 Part 1, Engineering-facing notes (tonight or at the latest Thu 12:00). Contents: Check C
   (D-7), fixed-N and bounded-calibration observations, an OD-1 text correction, two calibration questions, and per change
   what to document or validate on the overlap rung. Entries A/B staging continues (the THEORY-5 pins are being verified).
+
+## THEORY-7 PSMC-S0 Part 1 received (11-16): branch theory/PSMC-S0, `Theory_work/Wave3/PSMC-S0/CHECKPOINT_1.md`
+- D-7: **SAFE TO DROP**, conditional on calibration feeding its leader stores into V and into the inherited models
+  (kept in our design). DECISIONS D-7 updated; the Theory recorder finishes the registry entry.
+- OD-1 wording: "equals v3.1 for p ≤ 2,500 **and n ≤ 2,500**". D-1 updated.
+- Answers to their calibration questions (D-26): in V-1M there is no tier escalation (N = 2,500, H = 512 always); I_max ≤ ℓ
+  is a requirement; a construction failure installs the last good grid (else the pilot schedule), never "no output".
+- Their per-change overlap-rung notes (CP1 §"Engineering-facing notes") are adopted as input to the overlap design and
+  MANIFEST_CELLS.md.
