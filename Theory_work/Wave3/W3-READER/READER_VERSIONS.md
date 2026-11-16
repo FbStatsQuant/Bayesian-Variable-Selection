@@ -245,7 +245,7 @@ presented as "proved; one input lemma not yet independently checked".
 
 ## 3. Theorem 3 — The rate cannot be improved
 <!-- ROW thm3 BEGIN -->
-**Card row** 1.3 · **Section version** 0.2 (2026-11-15) · **Pending delta** W3-PSHARP-R READER_DELTA v0.2 (expectation display for every $p$), staged in `deltas/thm3_W3-PSHARP-R.md` — **pending W3-PSHARP-R CP3 (target Tue, latest Wed); not in force**
+**Card row** 1.3 · **Section version** 0.2 (2026-11-15) · **Pending delta** W3-PSHARP-R READER_DELTA v0.3 (expectation display for every $p$), staged in `deltas/thm3_W3-PSHARP-R.md` — **pending W3-PSHARP-R CP3 (target Tue, latest Wed); not in force**
 
 
 ### Reader statement
