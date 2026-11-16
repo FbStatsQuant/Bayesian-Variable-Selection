@@ -12,6 +12,13 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | PSMC-S0 | Part 1 T-N + T-CAL prelim audits → CP1 Thu 11-19 12:00; Part 2 T-PART audit → CP2 Tue 11-24 | mcp:launch:c241a2d4… | BVS-wt/PSMC-S0 · theory/PSMC-S0 | → CP1 | CP1 summary ≤ 10 lines to HQ (owner OD-1/OD-2) |
 | W3-EDIT | editorial pass; citation fixes first (PR #10) | mcp:launch:950a7b4f… | BVS-wt/W3-EDIT · theory/W3-EDIT | citation fixes | ping HQ when CITEFIX_DONE; CP1 by Wed 18:00 |
 
+## Taken over from HQ (outside the lead cap)
+| ticket | lead | state | next |
+|---|---|---|---|
+| W3-DIST (TOP PRIORITY) | Fable 5.2, mcp:launch:75635c1f… (root clone folder; snapshot → theory/W3-DIST) | CP1 GO; streams A–F; proofs written + Opus pre-checked; Codex line checks L1–L5 + Sol S2 running; API dist1/dist1b in work/api_attempts | CP2 = Lemma X + S + V line-checked → Astra break review |
+| W3-READER | Opus, mcp:launch:2a4462b2… (BVS-wt/W3-READER) | CP1 drafted; Sol S1 fidelity read pending | CP1 → me → claims card to HQ (H5); absorbs rider READER_DELTAs |
+| recorder | Opus, mcp:launch:563aa9b9… | task C (W2-APP PC1 Sol) running; task D (POST2) on hold | HQ decision on headline flags + conditional statuses |
+
 ## Ready (launch as a slot frees)
 | ticket | contents | worktree / branch | note |
 |---|---|---|---|
@@ -21,7 +28,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 RM2-R aggregated leak (D) · START MIS with a general μ (D) · Ex-Equi b < 3/8 if not done in W3-RM2-R (O4′) · START2-O1 count (17 − s₀).
 
 ## Not ours
-W3-DIST, W3-READER, recorder runs, W2-APP:POST@1.0.1 check (HQ recorder/Sol), W3-PATH, T7, P6/D1.
+W3-PATH, T7, P6/D1 (HQ). Real recorder runs, CP3 acceptance, merges: HQ approves.
 
 ## Next campaign (proposal to HQ by Thu 11-19)
 Parallel-SMC theory + evidence-variance problem σ̂(log Ẑ_r) ≈ 1 at p ≥ 5k, coordinated with Engineering's spec and

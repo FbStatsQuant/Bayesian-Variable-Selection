@@ -39,3 +39,14 @@
   T-CAL prelim → CP1 Thu 12:00; Part 2 T-PART → CP2 Tue 11-24; HQ's "T-PART + T-N" approval predates D10, both are in
   scope) and W3-EDIT (citation fixes first → ping HQ for PR #10). W3-MISR-R takes the next free slot.
   Codex order: W3-DIST > riders > PSMC-S0 / W3-EDIT; > ~2 h queue → tell HQ.
+
+## 2026-11-15 19:43 CT — handover from HQ (owner's decision)
+- **D12.** W3-DIST (Fable lead, mcp:launch:75635c1f…; root-clone folder, snapshot → theory/W3-DIST), W3-READER (Opus,
+  mcp:launch:2a4462b2…, worktree BVS-wt/W3-READER) and the recorder (mcp:launch:563aa9b9…) now report to the Theory
+  Department. HQ keeps CP3 acceptance, H5 headline cards, merges, API submission. DIST and READER sit outside the lead
+  cap. Codex: W3-DIST > riders > PSMC-S0/W3-EDIT/READER.
+- Leads told: report to this thread; DIST told to take timestamps from `date` (its LOG has 20:30–21:00 entries before
+  a 19:21 one); READER told about the incoming READER_DELTAs and the equal-weight pooling fact (v3_run.R:154,162).
+- Recorder: task C continues (PC1 Sol); task D on hold. Two decisions go to HQ with a recommendation: (a) clear the
+  tool-set headline flags (v4 §8) by consultant card until the strength gates run; (b) inputs below PROVED-CHECKED →
+  "conditional on …" with @hyp (W3-11). No real run without HQ.
