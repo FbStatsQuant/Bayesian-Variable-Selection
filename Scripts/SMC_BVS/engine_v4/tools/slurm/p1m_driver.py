@@ -55,7 +55,9 @@ DEFAULT_RES = {
             "eval": {"cpus": 8, "mem": "16G", "time": "00:45:00"}},
     "1e6": {"setup": {"cpus": 96, "mem": "48G", "time": "01:30:00"},
             "calibrate": {"cpus": 64, "mem": "32G", "time": "02:00:00"},
-            "islands": {"cpus": 64, "mem": "32G", "time": "02:00:00"},
+            # H-9 (job 2748756): one island per socket, 96 CPUs (48 cores x 2), G = 256, peak RSS 34.3 GB -> 40G.
+            # TODO(T5): guarantee socket placement (two islands per exclusive node, or one socket per task) + numactl membind.
+            "islands": {"cpus": 96, "mem": "40G", "time": "02:00:00"},
             "merge": {"cpus": 32, "mem": "16G", "time": "01:00:00"},
             "eval": {"cpus": 8, "mem": "16G", "time": "01:00:00"}},
 }
