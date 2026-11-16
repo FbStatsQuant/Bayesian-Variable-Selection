@@ -282,3 +282,9 @@
   manifests (W2-APP MANIFEST_PC1 ← C run!; MISR R1/R2; PSHARP R1/R2; START2 R1). Merge now only the unlisted subset
   (02_method.tex, W1-N3 LFP, W1-PXN CR + W1-PXN:CR.R-prime patch rehash) via branch theory/W3-EDIT-now; the rest
   POST-FREEZE with the manifest re-freeze / EXT tool change. Lead asked to build the branch; recorder adds the rehash.
+
+## 2026-11-15 22:12 CT — W3-DIST L6-01 (MAJOR on TC3 sentence)
+- **D42.** Lead repaired constants (X.md v0.4, DIST12 v0.2) to keep TC3 as fixed: M₀ ≤ 16 + 4(1+s₀^r)(A+1) +
+  3(M+M′)/(2σ*²), C = C(A, σ*², M, M′). Conditions: fresh Sol re-check of exact diffs + all STALE rows (combined with
+  D1 diff check); reviewer confirms EQUAL tag and that "e^{s₀}q ≤ ½" needs no new hypothesis; else WEAKER on TC3 =
+  early checkpoint to HQ. No second break review for a constants-only repair. HQ informed.
