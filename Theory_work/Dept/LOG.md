@@ -40,3 +40,4 @@
 - 20:02 — §10 applied (D20); PSMC digest helper settled; dept/theory merged origin/main.
 - 20:02 — HQ approved D17 with change: better-gate for uncovered rows via API Fable sharpness batch (SHARP3 request list by Wed 12:00 CT); leg-2 draft updated.
 - 20:03 — D21: no shutdowns of any kind; digest helper unsettled; heartbeat updated.
+- 20:04 — D22 final §10 rule; digest helper re-settled; heartbeat updated; leads told.

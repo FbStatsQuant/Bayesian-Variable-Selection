@@ -118,3 +118,9 @@
 ## 2026-11-15 20:03 CT — correction to D20 (owner, POLICIES §10)
 - **D21.** Never settle, archive, cancel, interrupt or delete any thread or agent unless the owner asks; finished leads
   stay idle. The PSMC digest helper settled under D20 was **unsettled**. Heartbeat prompt updated. Relayed to all leads.
+
+## 2026-11-15 20:04 CT — final owner rule (POLICIES §10), replaces D21
+- **D22.** Let work run, then clean up: never cancel or interrupt; when a non-department thread we manage has finished
+  for good (ticket done, recorder tasks done, helper/reviewer done) the manager settles it; never settle department
+  threads; never archive or delete. A lead waiting at a checkpoint is not finished. Digest helper re-settled. Leads may
+  settle their own finished reviewers/helpers (settle only); they must not cancel or interrupt anything.
