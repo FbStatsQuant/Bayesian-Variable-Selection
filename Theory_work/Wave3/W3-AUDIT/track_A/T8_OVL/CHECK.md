@@ -4,7 +4,7 @@ Status (lead's label): **PROVED; Claude line check VERIFIED WITH AMENDMENTS (all
 (council batch T1–T10).** Not "PROVED-CHECKED" (needs the Sol lock, a Sol line check and the OpenAI council seat).
 Blocks row(s): 3.6 (Thm D).
 
-Frozen text (sha256, first 12 hex, 2026-11-16 18:0x CST, v3): STATEMENT `7c922e914cb5`, PROOF `1d6fbe9da0e1`.
+Frozen text (sha256, first 12 hex, 2026-11-16 17:57 CST, v3): STATEMENT `7c922e914cb5`, PROOF `1d6fbe9da0e1`.
 Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
 
 **What it says.** On 𝒜°, D_r ≥ max(2500, n, p)(L + 6) ≥ 10n; P-START on 𝒜° ⇒ P-OVL on 𝒜° (and on 𝒜). **Proved only under IF-START's hypotheses, in particular (A5)**; without (A5) the checked `W3-START2-R:OVL` route gives P-OVL's production form under its own hypotheses.
