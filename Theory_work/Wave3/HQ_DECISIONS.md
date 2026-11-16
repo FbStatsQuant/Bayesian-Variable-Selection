@@ -516,3 +516,57 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
     Sol (or Astra) verdict on the same manifest;
   - interim label on A1 and SCR-G: "council C1 on v3.3 text; post-C1 narrowing re-verified by Sol; second round pending";
   - fallback: row 3.7 in the abstract with the label stated, or in the body.
+- (overnight) ~01:50 CT 11-16, p = 1M re-size (H-9):
+  - lever batch 2748756 (48.3 core-h): G-invariance PASS; best configuration G = 256 socket-local, ≈ 1.44× plan per pair;
+    products no longer the bottleneck; memory 40 GB per island task.
+  - **Approved: 1M config G = 256 socket-local; L4 alternative = keep a reduced 1M self-check (N = 5,000) + drop AR-weak at
+    1M; envelope re-sized to ≈ 28.3k core-h (+15.2%).** Rule: quantity before precision (the self-check is part of
+    "validated").
+  - L5 savings buy AR-weak back first. M risk (×1.2–1.35) priced after T5; above ≈ 30k comes back before any 10⁵ release.
+
+- 2026-11-16 (overnight) BNP Lean Engineering install slots AGREED. Both happen after their council accepts and on a day they confirm (≥2 h notice).
+  - Owls crontab + authorized_keys: 11:13 CT; SMC edit-freeze 11:05–11:30.
+  - Desktop ~/.ssh/config block + task re-point to 03:00: 11:40 CT; HQ freeze 11:35–12:00.
+  - Conditions: restricted forced-command key; existing lines byte-identical; diffs sent; ssh -G owls/nots identical, else roll back.
+  - HQ TODO on confirmation: tell Theory Dept + Engineering about the Owls cron freeze.
+- 2026-11-16 (overnight) W3-SCR-R2: both reviewers accept all 21 SCR claims, with no proof problem. A1 (row 3.7) is sound with κ, b, M, σ fixed in n. Both quality gates failed only on the summaries in REPORT §2 (F1–F4).
+  - GO: replace those summaries with pointers to the STATEMENT lines; status-source lines stay byte-identical.
+  - R2 counts as the round HQ ordered (card 7); this fix is its one diff round (v4 §5.5). If it fails, it comes back to HQ.
+  - Row 3.7 keeps the interim (b1) label until the diff round passes. Then W3-READER states "κ, b, M, σ fixed in n" in row 3.7's reader version, through an H5 card with the CP3 package.
+  - SCR-R1 queued post-freeze.
+- 2026-11-16 (overnight) ~03:30 CT. W3-PSHARP-R CP3 council passed: Sol 9.5, Opus 9.2, MANIFEST fdfd4562.
+  - H5 card 8 (row 1.3): the consultant AGREES.
+  - Acceptance GO for AE and A2C, once the recorder re-stages the ingest on current main cleanly.
+  - Reader text v0.4 before the thm3 swap:
+    - headline: "Thm 1 rate cannot be improved under its assumptions: orthogonal/Gaussian null columns, E[1−π] ≥ c(s₀+1)√(log n/n), every p"; never "every design" (POST2-R1 open);
+    - A2C moves to the body as a growing-s₀ remark;
+    - named cases, with a §5 bridge (Sol line check if it is new);
+    - numbered remarks;
+    - status lines updated;
+    - fidelity check on the "forces s₀ bounded" remark.
+  - HQ signs off v0.4 without a new card unless the headline sentence changes.
+- 2026-11-16 (overnight) Cont-F/R edge fix on main 435896a7. 83/83 accept records current. The TH05.0 leftover on Cont-R is deferred to post-freeze.
+- 2026-11-16 (overnight) W3-PSHARP-R:AE and :A2C are PROVED-CHECKED (main 5fff7740).
+  - Recorded with no implies edge; PSHARP:A stays ACTIVE as the in-probability record.
+  - The rider folder came onto main as a snapshot (POST2 precedent); the branch is kept as history.
+  - Accept records 86/86 current.
+  - Policy: §14 scratch rule refined (44238a06).
+- 2026-11-16 (overnight) W3-MISR-R CP3 council: both seats accept all 4 claims; the gates fail only on one reader sentence (the "why (A0)" sentence).
+  - GO for one HQ-ordered R3: diff only, fresh seats; it is the last round, and a failure comes back to HQ.
+  - Deciding outside bind is refused.
+  - The v1.1a WEAKER change (KL sentence) is flagged for H5 if any headline row or reader version quotes it.
+- 2026-11-16 ~04:00 CT, owner back. Decisions:
+  - (b) Fable 5.2 architect for WP3 APPROVED (CT, high, ~3 d).
+  - (a) 7 builders OK'd, phased by HQ: stay at 5 until the WP3 design lands, because the owner asked to pace down.
+  - Desktop offload destination D:\SMC_Engineering_Department\ (created); Task Scheduler hourly pulls OK, installed by HQ from Engineering's script.
+  - Codex level 0. Claude pacing down: no new tickets pre-freeze unless critical path, Sonnet/Haiku for routine helpers, no new Fables beyond (b).
+- 2026-11-16 ~03:55 CT Owls incident: load ~41k from a VS Code Remote extension host (fb31 pid 873283) spawning ~3,200 hung `rg --files` scans.
+  - HQ killed the extension host and the rg processes; the load is falling.
+  - Theory, Engineering and BNP HQ informed.
+- 2026-11-16 ~04:30 CT. W3-SCR-R2 R3 PASS (sol 10.0 / opus 9.4); merged to main 9364df88. PR #35 (offload docs) merged f6d07e10. Desktop offload installed: task "SMC Engineering offload pull", hourly :20, Interactive logon; ssh -G owls/nots identical.
+- H5 card 9 (row 3.7, closes card 7): the consultant AGREES to form (a), plain. Conditions:
+  - c₁ named in the abstract; the formula stays in the body;
+  - q_n ≤ K−1 stated, or a bridge for it;
+  - the honest-limit line is REQUIRED, with the intersection event made clear;
+  - certification frequency from numerics, especially on strong-factor designs; until it is reported, the row is not called the remedy for 3.1.
+  - One HQ GO covers label removal and the reader swap after the diff.

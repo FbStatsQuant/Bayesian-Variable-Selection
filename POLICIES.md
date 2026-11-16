@@ -288,7 +288,7 @@ Each department may tailor the review, process and rollback protocols to its nee
   in `HQ_DECISIONS.md`. Until a variant is approved, the baseline applies.
 
 ## 14. Codex pacing levels (owner, 2026-11-15)
-The owner says "pace to level N"; HQ relays it to every manager the same day. Reviews already in flight finish as
+The owner says "pace to level N"; HQ relays it to every manager the same day. **A pacing level is not a reasoning effort:** Codex reviewers always run at effort high, at every level. Reviews already in flight finish as
 started.
 
 | level | Codex (Sol / Astra) used for | moves to Claude (Opus / Fable) |
@@ -299,3 +299,8 @@ started.
 
 **No level drops a Codex check on what we call checked:** statement locks, key lemmas and the council OpenAI seat. The current
 level is recorded in `HQ_NOW.md`.
+
+**Unattended agents never wait on approvals (HQ, 2026-11-16; from Theory D62):**
+- A Codex or other unattended reviewer that triggers a sandbox approval request stalls forever, because no tool can answer it.
+- Briefs therefore never set TMPDIR or write outside the agent's own worktree or folder. Scratch goes in `<worktree>/.rc_tmp/` at the worktree root (git-ignored via the shared .git/info/exclude), never inside a ticket folder, because manifest.py walks ticket folders and stray files break freeze and bind. Never add a .gitignore inside a frozen folder.
+- Managers check pending requests when a review runs over 2 h.
