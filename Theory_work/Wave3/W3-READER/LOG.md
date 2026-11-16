@@ -43,3 +43,4 @@
 - 2026-11-16 01:21 CST Row 3.7 (SCR-PC): Thm 8 (A1)-(A2) explicit fixed-in-n kappa, b0, M, sigma (match SCR STATEMENT:158-160); n-dependent not covered (SCR-R1); A1o separate; placements (i) abstract clause / (ii) body written in RV thm8 + card. For Monday's Sol statement-change check.
 - 2026-11-16 01:23 CST H5 card 7 verdict (row 3.7): abstract clause names kappa, b, M, sigma fixed in n; body Theorem 8' (master W3-SCR:A-inf) for n-varying signals; forms (a)/(b1)/(b2) for the second SCR council round; (b1) recommended. RV thm8 v0.4, card.
 - 2026-11-16 01:24 CST Thm 8' form dependency noted (plain if W3-SCR:A-inf ACCEPT in W3-SCR-R2, else (b1) label).
+- 2026-11-16 02:46 CST SL0 cleared (main 33e1f0f5): requoted W2-APP:POST@1.0.6, W3-SAMP C/D/LT#/TR (@1.1.3/2.1.3/2.0.3/2.1.3), RM-R@1.1.2, RM2-R/POST-R @1.0.2; SL0 reader wording dropped from rows 1.2, 3.1, 3.6 and Form A; card v0.9; R4, REPORT. Historical logs kept.

@@ -1,9 +1,9 @@
 # R4 — Printed outputs are consistent: assembly for card row 3.6 (Theorem 10) (W3-READER bridge leg, 2026-11-16)
 
 Status: **PROVED (by this seat, unchecked)**. An assembly; no new probability. Input statuses [S2-F7, S3]:
-`W3-START2:IF-START`, `W3-START2:START-R` "PROVED-CHECKED"; `W3-SAMP:C@1.1.2` "PROVED-CHECKED, conditional on
-C-PACK:SL0, SOP:TH09" [REG-f526]; `W2-APP:POST@1.0.5` "PROVED-CHECKED,
-conditional on SOP:TH09, C-PACK:SL0" [REG-f526]; `W3-POST:Thm-1` item 6 "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF
+`W3-START2:IF-START`, `W3-START2:START-R` "PROVED-CHECKED"; `W3-SAMP:C@1.1.3` "PROVED-CHECKED, conditional on
+SOP:TH09" [REG-33e1]; `W2-APP:POST@1.0.6` "PROVED-CHECKED,
+conditional on SOP:TH09" [REG-33e1]; `W3-POST:Thm-1` item 6 "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF
 VERIFIED (A-REV2)"; this ticket's bridges R1 (B2.1, B6.1) "PROVED (by this seat, unchecked)". Scope: the sampler branch; the (C-v) statements
 concern the potential records on $\mathcal A$ and equal the printed fields on completed runs (Lemma PC) [S2-F3].
 

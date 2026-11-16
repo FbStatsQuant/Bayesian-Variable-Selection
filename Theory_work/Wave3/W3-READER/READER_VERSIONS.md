@@ -83,7 +83,7 @@ Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
 
 ## 1. Theorem 1 — Posterior concentration (fixed design)
 <!-- ROW thm1 BEGIN -->
-**Card row** 1.1 · **Section version** 0.9 (2026-11-16) · **Pending delta** —
+**Card row** 1.1 · **Section version** 1.0 (2026-11-16) · **Pending delta** —
 
 
 ### Reader statement
@@ -189,7 +189,7 @@ abstract form (Form A / Form B below).
   HPM = MPM = $S_0$, PIPs), whose master then carries no open condition. The design-uniform expectation display and
   Theorem 1′ are stated in the body with their own conditions until those are cleared: the expectation route
   (`W3-POST2:C`) also lists `W3-POST:Prop-LB` (author-only; implied by the checked `W3-PSHARP:B` — recorder item),
-  `[L1a′]` (unchecked), `SOP:TH128` and `W2-APP:POST` (→ the posterior-summary lemma SL0, Sol PC check running).
+  `[L1a′]` (unchecked), `SOP:TH128` and `W2-APP:POST` (conditional on `SOP:TH09` only since main 33e1f0f5).
 - **Form B — W3-T03ACC misses Thu 18:00.** Two variants:
   - **B1 (abstract, condition stated verbatim in reader words):** *"Conditional on the posterior concentration theorem
     for the coded prior — verified independently by reviewers of the same and of a different model family, but without
@@ -242,13 +242,14 @@ as a post-freeze rider — it would make "no eigenvalue condition off $S_0$" lit
   with O3; "whether (OS) holds without any eigenvalue condition is open" (EQUAL; presentation).
 - v0.9 2026-11-16: [REG-f526] statuses refreshed (POST2 C/E/A0/A1 recorded, conditional); abstract Forms A/B added
   (HQ order; CP3 picks on W3-T03ACC) (EQUAL).
+- v1.0 2026-11-16: [REG-33e1] Form A no longer carries an SL0 condition; `W2-APP:POST` conditional on SOP:TH09 only (EQUAL).
 <!-- ROW thm1 END -->
 
 ---
 
 ## 2. Theorem 2 — Posterior concentration (random Gaussian design)
 <!-- ROW thm2 BEGIN -->
-**Card row** 1.2 · **Section version** 0.3 (2026-11-16) · **Pending delta** —
+**Card row** 1.2 · **Section version** 0.4 (2026-11-16) · **Pending delta** —
 
 
 ### Reader statement
@@ -282,24 +283,22 @@ version uses a constant for simplicity.
 
 ### Master theorem
 `W3-POST:Thm-1@1.0.0` item 6 (random-design interface), `Theory_work/Wave3/W3-POST/STATEMENT.md:95-100`, status as in §1;
-with `W2-APP:POST@1.0.5`, `Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-33`, status verbatim **"PROVED-CHECKED,
-conditional on SOP:TH09, C-PACK:SL0"** [REG-f526] (`C-PACK:SL0@1.0.0`: "PROVED; XF-checked (R34 ERROR-as-written → 9
-fixes; core re-derived valid), R38/R39, council"), and its restatement `W3-POST:Cor-1R@1.0.0`
+with `W2-APP:POST@1.0.6`, `Theory_work/Wave2/W2-APP/lemmas/L1_POST.md:27-33`, status verbatim **"PROVED-CHECKED,
+conditional on SOP:TH09"** [REG-33e1] (`C-PACK:SL0@1.0.1`, the posterior-summary lemma, is now "PROVED-CHECKED"), and its restatement `W3-POST:Cor-1R@1.0.0`
 (`W3-POST/STATEMENT.md:106-118`), status **"PROVED (by this seat, unchecked)"**.
 
 ### Bridges
 | # | Bridge | Mark | Detail |
 |---|---|---|---|
 | B2.1 | (A3) ⇒ LSF (i) and (ii) with $\psi_n=\varphi^2$ | NEW arithmetic | LSF asks the floor on $|S|\le\min(p,s_0+j_0)$ and on $|S|\le\bar k_n=\min\{p,s_0+\max(j_0,\bar m_n)\}$, $\bar m_n=\lceil[s_0(A\log n+\log2)+\log2+\tfrac{s_0+2}2\log n]/\log\tfrac32\rceil$ (L1_POST.md:20-25). For $n\ge3$: $\bar k_n\le(2.47As_0+3.7s_0+5.9)\log n\le5(A+1)(s_0+1)\log n$, and $s_0+j_0\le(2A+2)s_0+2$ is smaller. Checked numerically (LOG). |
-| B2.2 | LSF + Gaussian rows + fixed coefficients ⇒ events $\mathcal A_n$, $P(\mathcal A_n)\to1$, carrying (E), (F_λ), (F_w), BM-∞ with common constants | EXISTS-CHECKED, conditional | `W2-APP:POST@1.0.5` part (a), "PROVED-CHECKED, conditional on SOP:TH09, C-PACK:SL0" (accepted at W2-APP's CP3, main f526e45b) [REG-f526]. Raw-scale coefficients are covered (L1_POST.md:12-15, event $\mathcal H_n$). Theorems 2, 6 and 10 depend on it; Theorem 4 does not (its master uses its own Gaussian-design transfer [S1-F12]). |
+| B2.2 | LSF + Gaussian rows + fixed coefficients ⇒ events $\mathcal A_n$, $P(\mathcal A_n)\to1$, carrying (E), (F_λ), (F_w), BM-∞ with common constants | EXISTS-CHECKED, conditional | `W2-APP:POST@1.0.6` part (a), "PROVED-CHECKED, conditional on SOP:TH09" (accepted at W2-APP's CP3, main f526e45b) [REG-f526]. Raw-scale coefficients are covered (L1_POST.md:12-15, event $\mathcal H_n$). Theorems 2, 6 and 10 depend on it; Theorem 4 does not (its master uses its own Gaussian-design transfer [S1-F12]). |
 | B2.3 | events ⇒ conclusions under the joint law | inside the master | Theorem 1 item 6 (diagonal transfer). |
 
 **Effort:** B2.1 half a page.
 
 ### Honest limits
-None for the statement. Status [REG-f526]: Theorem 2 is conditional on T03♯ (same-family and cross-family verified, no
-council record) and on the elementary lemma turning the posterior miss into HPM/MPM/PIP statements (cross-family
-checked; council record pending the Sol check running now). Abstract wording: Form A / Form B of row 1.1 apply here
+None for the statement. Status [REG-33e1]: Theorem 2 is conditional on T03♯ only (same-family and cross-family verified, no
+council record); the posterior-summary lemma SL0 is "PROVED-CHECKED" since main 33e1f0f5 [REG-33e1]. Abstract wording: Form A / Form B of row 1.1 apply here
 too (see the row 1.1 forms).
 
 #### Update log (thm2)
@@ -307,6 +306,7 @@ too (see the row 1.1 forms).
 - v0.2 2026-11-15: S1 fixes none needed (S1: FAITHFUL); [S1-F12] dependency note.
 - v0.3 2026-11-16: [REG-f526] `W2-APP:POST@1.0.5` status refreshed (accepted, conditional on SOP:TH09, C-PACK:SL0); B2.2
   mark and honest limits updated (EQUAL).
+- v0.4 2026-11-16: [REG-33e1] SL0 cleared: `W2-APP:POST@1.0.6` conditional on SOP:TH09 only (EQUAL).
 <!-- ROW thm2 END -->
 
 ---
@@ -525,7 +525,7 @@ abstract.
 
 ## 6. Theorem 6 — The reported model equals the truth (random Gaussian design; main theorem)
 <!-- ROW thm6 BEGIN -->
-**Card row** 3.1 · **Section version** 0.5 (2026-11-16) · **Pending delta** —
+**Card row** 3.1 · **Section version** 0.6 (2026-11-16) · **Pending delta** —
 
 
 ### Reader statement
@@ -582,12 +582,11 @@ blocks.
   other way, no-addition fails w.p. $\to1$). Not known to be necessary for the conclusion.
 
 ### Master theorems
-1. `W3-RM2:RM2-R@1.0.0`, `Theory_work/Wave3/W3-RM2/STATEMENT.md:216-218` (assumptions :172-202), status verbatim
+1. `W3-RM2:RM2-R@1.0.2`, `Theory_work/Wave3/W3-RM2/STATEMENT.md:216-218` (assumptions :172-202), status verbatim
    **"PROVED-CHECKED, conditional on W2-APP:POST; input versions W2-APP:POST@1.0.1; council R1, MANIFEST 00bbeab8…,
-   astra=9.5 PASS, opus=8.8 PASS; …"**. Its input `W2-APP:POST@1.0.5` is now "PROVED-CHECKED, conditional on SOP:TH09,
-   C-PACK:SL0" [REG-f526], so row 3.1 is conditional on T03♯ and the posterior-summary lemma SL0 (the polylogarithmic
-   special case `W3-RM:RM-R@1.1.1` reads "PROVED-CHECKED, conditional on C-PACK:SL0, SOP:TH09, SOP:TH05.0"). Abstract
-   wording: Form A / B of row 1.1, plus SL0 until the Sol PC check clears it.
+   astra=9.5 PASS, opus=8.8 PASS; …"**. Its input `W2-APP:POST@1.0.6` is "PROVED-CHECKED, conditional on SOP:TH09" [REG-33e1], so row 3.1 is conditional on
+   T03♯ only (the polylogarithmic special case `W3-RM:RM-R@1.1.2` reads "PROVED-CHECKED, conditional on SOP:TH09,
+   SOP:TH05.0"). Abstract wording: Form A / B of row 1.1.
 2. `W3-RM:RM-0@1.0.0`, `Theory_work/Wave3/W3-RM/STATEMENT.md:160-176` (pathwise reduction; common good event
    :173-175), **"PROVED-CHECKED"**; `W3-RM:E4@1.0.0` (:219-230), **"PROVED-CHECKED"**.
 3. `W2-UNI:F-UNI@1.1.0`, `Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md:15-21` (delivery), **"PROVED-CHECKED"**
@@ -606,7 +605,7 @@ blocks.
 | B6.2 | (A4)(i),(ii) = (L-R^b) | identity | (L-gain-R) with $\varpi_n=o(\sqrt{\log n/n})$; (L-loc-R) with $r_n\to0$ (RM2 STATEMENT.md:176-189). (L-feas) carried in (A4). |
 | B6.3 | (A6) + (A5) ⇒ (D-loc^b) incl. its variance clause | **NEW** (one paragraph; proof below) | (D-loc^b) = RM (D-loc) (RM STATEMENT.md:154-156) with $L_n^2\log(|Q|+1)=o(\log n)$; its second clause $\operatorname{Var}(W_l\mid W_{T\cap N_l})\le(1+\eta_n)\operatorname{Var}(W_l\mid W_T)$, $\eta_n\to0$, follows from (A6) and (A5): see proof. |
 | B6.4 | (D-loc^b) ⇒ (D-R^b) ⇒ (W-R) | EXISTS-CHECKED | `W3-RM2:D-to-W@1.0.0`, "PROVED-CHECKED; council R1, …" (STATEMENT.md:256, (C3)/(P9)). |
-| B6.5 | (T1-R) ⇒ posterior input [POST] | EXISTS-CHECKED, conditional | `W3-RM2:POST-R@1.0.0`, "PROVED-CHECKED, conditional on W2-APP:POST; …" ⇐ B2.2 (**EXISTS-UNCHECKED**). |
+| B6.5 | (T1-R) ⇒ posterior input [POST] | EXISTS-CHECKED, conditional | `W3-RM2:POST-R@1.0.2`, "PROVED-CHECKED, conditional on W2-APP:POST; …" ⇐ B2.2 (**EXISTS-UNCHECKED**). |
 | B6.6 | RM2-R conclusions ⇒ F-UNI premises (S), (P), (V); F-UNI's operational premises carried as (S4) | **NEW** (assembly; (V)/(S)/(P) part passed S1) | (S): $P(\mathrm{Sand}\cap\mathrm{NA}\cap\mathrm{TL})\ge1-\sum P(\cdot^c)\to1$ from [SAND(Q)], [NA(Q)], [TL(Q)]; (P) = [POST]; (V) = "(R) with $\lambda_{\min}(\Sigma_n)>0$". LS0 cap and default-on tier-1 fallback match (`v3_calib.R:141-144`). F-UNI's method/premise/allocation paragraph (`L5_delivery.md:7-12`: EX-A as cost model, IDEAL-W, EX-S, SR, e4/TDP-IMPL, GUARD-W, MACH, CONFIG, valid seed, allocation and preflight inequalities at $(n,p_{\mathrm{raw}})$; P1/S.3 "AUDITED (code reading)") is **not derived**: it is carried as (S4) [S1-F2]. Premise-by-premise table: proof leg (`lemmas/R3_delivery_assembly.md`). |
 | B6.7 | standardised-signal convention | limit | The masters take $\theta^*$ deterministic (Setting R). A raw-scale version (fixed $\beta^*$) would need a **NEW** bridge (medium; the population conditions involve $\theta^*$). Not proposed for CP1. |
 
@@ -639,7 +638,8 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 - v0.4 2026-11-16: [S2-F1] (S4) carries MACH, CONFIG, TDP-IMPL and the amended allocation by exact source reference.
   Tag (S3): **WEAKER** for the "always produces output" clause — restores the master's own premises
   (`C-DLV/STATEMENT.md:28-46`, `FINAL/sections/s6_delivery.tex:29-35`); common-data-event clause EQUAL.
-- v0.5 2026-11-16: [REG-f526] RM2-R's input `W2-APP:POST@1.0.5` status and the RM-R special-case status quoted (EQUAL).
+- v0.5 2026-11-16: [REG-f526] RM2-R's input `W2-APP:POST@1.0.6` status and the RM-R special-case status quoted (EQUAL).
+- v0.6 2026-11-16: [REG-33e1] SL0 cleared: row 3.1 conditional on T03♯ only; RM2-R/POST-R @1.0.2, RM-R @1.1.2 (EQUAL).
 <!-- ROW thm6 END -->
 
 ---
@@ -845,7 +845,7 @@ writes $r$); (2) the assumption summary says **"no beta-min and no fixed lower b
 
 ## 10. Theorem 10 — The printed outputs are consistent (card row 3.6; row 3.5 as a remark)
 <!-- ROW thm10 BEGIN -->
-**Card row** 3.6 (and 3.5) · **Section version** 0.7 (2026-11-16) · **Pending delta** post-freeze rider SAMP-R1
+**Card row** 3.6 (and 3.5) · **Section version** 0.8 (2026-11-16) · **Pending delta** post-freeze rider SAMP-R1
 
 ### Reader statement
 **Theorem 10.** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m_n,\Sigma_n)$ with $\Sigma_n$ a correlation matrix, and
@@ -889,17 +889,17 @@ per-island identity of the unbiasedness theorem by linearity).
 - (S5) idealises the random numbers and the coded kernels; they are not statistical assumptions.
 
 ### Master theorem
-`W3-SAMP:C@1.1.2`, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:149-163`, clause (C-v) at :158-162, status **"PROVED-CHECKED,
-conditional on C-PACK:SL0, SOP:TH09"** [REG-f526];
+`W3-SAMP:C@1.1.3`, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:149-163`, clause (C-v) at :158-162, status **"PROVED-CHECKED,
+conditional on SOP:TH09"** [REG-33e1];
 start input `W3-START2:IF-START@1.0.0` (`W3-START2/STATEMENT.md:176-180`), **"PROVED-CHECKED"**; posterior input Theorem 2
-(`W3-POST:Thm-1@1.0.0` item 6 with `W2-APP:POST@1.0.5`, "PROVED-CHECKED, conditional on SOP:TH09, C-PACK:SL0"). Alternative
-route (remark): `W3-SAMP:TR@2.1.2`, "PROVED-CHECKED, conditional on C-PACK:SL0, SOP:TH09" [REG-f526]. Row 3.5: `W1-N1:Thm-N1@1.0.0`,
+(`W3-POST:Thm-1@1.0.0` item 6 with `W2-APP:POST@1.0.6`, "PROVED-CHECKED, conditional on SOP:TH09"). Alternative
+route (remark): `W3-SAMP:TR@2.1.3`, "PROVED-CHECKED, conditional on SOP:TH09" [REG-33e1]. Row 3.5: `W1-N1:Thm-N1@1.0.0`,
 "PROVED-CHECKED", and `W3-READER:PoolZ` ("PROVED (by this seat, unchecked)").
 
 ### Bridges
 | # | Bridge | Mark | Detail |
 |---|---|---|---|
-| B10.1 | (A2)–(A3) ⇒ $o_1=O_P(\sqrt{\log n/n})$ | via Theorem 2: EXISTS-CHECKED, conditional (`W2-APP:POST@1.0.5`) + R1 (B2.1) | `lemmas/R4_printed_outputs.md` step (1); standardised-signal convention covered by `L1_POST.md:11, 15-18`. |
+| B10.1 | (A2)–(A3) ⇒ $o_1=O_P(\sqrt{\log n/n})$ | via Theorem 2: EXISTS-CHECKED, conditional (`W2-APP:POST@1.0.6`) + R1 (B2.1) | `lemmas/R4_printed_outputs.md` step (1); standardised-signal convention covered by `L1_POST.md:11, 15-18`. |
 | B10.2 | (A3)–(A5) ⇒ $\mathbf 1_{\mathcal A}o_0=O_P(\rho_n)$ | EXISTS-CHECKED + R1 (B6.1) | IF-START⁺ under (T3⁺)(b) with $Q=S_0$. |
 | B10.3 | $\mathbf 1_{\mathcal A}\max(o_0,o_1)=O_P(\rho_n)$ ⇒ (C-v) with rate $\rho_n$ | **NEW** (assembly) | `lemmas/R4_printed_outputs.md` steps (3)–(4). |
 | B10.4 | pooled $\hat Z$ unbiased | **NEW** (claim) | `W3-READER:PoolZ`, two-line proof from N1. |
@@ -908,8 +908,8 @@ route (remark): `W3-SAMP:TR@2.1.2`, "PROVED-CHECKED, conditional on C-PACK:SL0, 
 The conclusion is localised to calibration success $\mathcal A$ on the sampler branch (intersections, not conditioning);
 that $P(\mathcal A)\to1$ is not claimed here (under the
 delivery conventions (S4) runs always complete, but that link is not used). The rate $\rho_n$ is the start law's rate,
-slower than the posterior rate $\sqrt{\log n/n}$ by a factor $e^{C\sqrt{\log n}}$. Conditional on T03♯ and the
-posterior-summary lemma SL0 (through `W3-SAMP:C` and `W2-APP:POST`) [REG-f526].
+slower than the posterior rate $\sqrt{\log n/n}$ by a factor $e^{C\sqrt{\log n}}$. Conditional on T03♯ (through `W3-SAMP:C`
+and `W2-APP:POST`) [REG-33e1].
 
 #### Update log (thm10)
 - v0.3 2026-11-16: first version (manager's CP1 decision 4; bridge leg).
@@ -922,6 +922,7 @@ posterior-summary lemma SL0 (through `W3-SAMP:C` and `W2-APP:POST`) [REG-f526].
   replaced by a scope note "not covered"; [S3-N9] moderate-$n$ note about $\pi$ only; [S3-N8] START and KERNEL
   statuses quoted separately. Net tag vs S2-frozen: **WEAKER** (master premises restored).
 - v0.7 2026-11-16: [REG-f526] `W3-SAMP:C/TR` and `W2-APP:POST` statuses refreshed (conditional on C-PACK:SL0, SOP:TH09) (EQUAL).
+- v0.8 2026-11-16: [REG-33e1] SL0 cleared: `W3-SAMP:C/TR` @1.1.3/2.1.3 and `W2-APP:POST@1.0.6` conditional on SOP:TH09 only (EQUAL).
 <!-- ROW thm10 END -->
 
 ---
@@ -930,7 +931,7 @@ posterior-summary lemma SL0 (through `W3-SAMP:C` and `W2-APP:POST`) [REG-f526].
 
 | Bridge | Theorem | Mark | Where proved | Importance |
 |---|---|---|---|---|
-| B2.2 `W2-APP:POST@1.0.5` | 2, 6, 10 | EXISTS-CHECKED, conditional on SOP:TH09, C-PACK:SL0 | accepted at W2-APP CP3 (main f526e45b) | conditions: W3-T03ACC (T03♯), Sol PC check (SL0) |
+| B2.2 `W2-APP:POST@1.0.6` | 2, 6, 10 | EXISTS-CHECKED, conditional on SOP:TH09 | accepted at W2-APP CP3; SL0 cleared (main 33e1f0f5) | condition: W3-T03ACC (T03♯) |
 | B4.3 / B1.7 POST2 C/E/A1/A0 | 1 (re-base), 1′, 4 | EXISTS-CHECKED, conditional (on SOP:TH09 and others, §1) | recorded at main f526e45b | condition: W3-T03ACC |
 | B6.6 / B7.4 RM2 ⇒ delivery assembly; (S4) premise table | 6, 7 | NEW | `lemmas/R3_delivery_assembly.md` | high |
 | B6.3 local regressions ⇒ variance clause | 6 (7: B7.3) | NEW | `lemmas/R2_local_regression.md` | medium |
