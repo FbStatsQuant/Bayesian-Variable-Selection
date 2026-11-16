@@ -12,7 +12,21 @@ p ≤ n^A for any fixed A, p ≫ n the regime that matters most; about the metho
 **Readability (owner, 2026-11-15; binding for every headline theorem, the chapter and the paper).** "They must be true
 but, as much as possible, they should not be weird-looking statements. They have to be presented in a way that makes
 clear to the reader what the assumptions are and what the proven statements are." Song–Liang (2015) Theorems 1–2 are an
-*example* of statements a reader understands from the statement alone. They are not a template to copy (owner). Every headline theorem therefore has a **reader version**:
+*example* of statements a reader understands from the statement alone. They are not a template to copy (owner). The owner again: "I don't want a bunch of alien-looking theorems. The proof might be as tough as needed, I don't care."
+Proof difficulty and length are free; **statement clarity is not negotiable**.
+**House style reference:** the owner's paper Bedoya & Li, "Large series priors for adaptive and optimal Bayesian
+nonparametric regression" (local copy `Papers/Own_work/Bedoya_Li_Large_series_priors_SBSS_unblinded.pdf`, gitignored,
+never commit it). Its proofs run to 65 pages with thousands of lines of Lean, yet the method and the theorem are
+completely clear:
+- a short notation paragraph;
+- every rate sequence introduced in words, with its role;
+- three named assumptions (Basis, Sparse approximability, Prior conditions), each followed by a paragraph on its role;
+- a theorem with two or three clean displays, followed by "Theorem 1 makes two assertions …";
+- a concrete prior shown to satisfy the assumptions;
+- a corollary for classical classes;
+- "formally verified in Lean 4, with formal statements that match those in the paper".
+
+Every headline theorem therefore has a **reader version**:
 - the assumptions are a short numbered list (A1)–(Ak), each in standard, primitive terms a reader recognises: i.i.d.
   rows with sub-Gaussian tails, strict sparsity, p ≤ n^A, a sparse eigenvalue bound, a beta-min level. Technical
   sample-level interfaces (events such as (E), (ND), (F_w), visibility or leakage objects) do not appear there. They

@@ -52,3 +52,6 @@ __pycache__/
 # full-text copies of copyrighted papers (keep local only; repo is public)
 **/song_liang.txt
 Papers/Core_bibliography/32_2015_Song_Liang_*.pdf
+
+# Owner's own unpublished papers (style references; never public)
+Papers/Own_work/
