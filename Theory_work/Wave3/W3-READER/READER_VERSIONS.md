@@ -63,7 +63,7 @@ Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
 
 ## 1. Theorem 1 — Posterior concentration (fixed design)
 <!-- ROW thm1 BEGIN -->
-**Card row** 1.1 · **Section version** 0.2 (2026-11-15) · **Pending delta** —
+**Card row** 1.1 · **Section version** 0.4 (2026-11-15) · **Pending delta** —
 
 
 ### Reader statement
@@ -91,10 +91,11 @@ $$
 (Expectation over the noise, design fixed. With the second form of (A6), $n_0$ depends also on the divergence of
 $\theta^*_{\min}\sqrt{n/\log n}$.)
 
-**Theorem 1′ (no eigenvalue condition away from the truth).** Replace (A4) by
+**Theorem 1′ (no eigenvalue condition off $S_0$).** Replace (A4) by
 - **(A4′) Floor on the truth and an identifiability margin.** $\lambda_{\min}(\hat R_{S_0})\ge\varphi_0^2$, and every model
   $S$ with $|S|\le K$, $S_0\not\subseteq S$ and at most $j_0:=\lceil(2A+1)s_0\rceil+1$ variables outside $S_0$ leaves
-  residual signal $\|(I-P_S)X\theta^*\|^2\ge c\,\sigma_*^2\log n$, with a fixed $c>c_1(s_0,A)$,
+  residual signal $\|(I-P_S)X\theta^*\|^2\ge c\,\sigma_*^2\log n$, with a fixed $c>c_1(s_0,A)$, where $c_1(s_0,A)$ is an
+  explicit constant, not optimised [H5-6],
 
 and drop (A6). Then the conclusions of Theorem 1 hold (the expectation bound with constants depending on
 $(s_0,A,\sigma_*^2,\bar\theta,\varphi_0,g_0,c)$). [H5-1]
@@ -104,14 +105,18 @@ Occam factors of over-fitted models (a "superset Occam sum"); a readable suffici
 $\det H_{S_0\cup J}\det(G_{S_0}+I)/(\det H_{S_0}\det(G_{S_0\cup J}+I))\ge[c_D(n+1)]^{|J|}$ for $1\le|J|\le3(A+1)(s_0+1)\log n$.
 In Theorem 1′ the margin replaces both the floor off $S_0$ and beta-min: under (A4) and (A6) it holds with
 $c=C_\beta^2\varphi_0^2(1-1/n)$, so Theorem 1′ contains Theorem 1 when $C_\beta^2\varphi_0^2>c_1$; for
-$c_0<C_\beta^2\varphi_0^2\le c_1$ the two coexist ($c_1\approx161$ vs $c_0=128$ at $s_0=A=1$; both proof constants). (i) The last inequality holds for every data set; with the
+$c_0<C_\beta^2\varphi_0^2\le c_1$ the two coexist (both are explicit constants depending only on $(s_0,A)$, not
+optimised) [H5-6]. (i) The last inequality holds for every data set; with the
 first display it gives sensitivity and specificity of all PIPs at rate $\sqrt{\log n/n}$, uniformly in $j$.
 (ii) Without (A6): $\pi(S\supsetneq S_0\mid y)=O_P(\sqrt{\log n/n})$ (no over-fitting mass) and every truth with
 $\theta_j^{*2}\ge c\,\sigma_*^2\log n/(n\varphi_0^2)$, $c>c_0$, has $1-\mathrm{PIP}_j=O_P(\sqrt{\log n/n})$; specificity can
-fail without beta-min (numerical counterexample). (iii) $c_0(s_0,A)=\max\{4C_*,32[s_0(A+1)+2]\}$ is a proof constant
-(not sharp). (iv) (A3) is used only through the energy bound $\|X\theta^*\|^2\le n s_0^2\bar\theta^2$; any bound
+fail without beta-min (numerical counterexample). (iii) $c_0(s_0,A)$ is an explicit constant depending only on $(s_0,A)$, not optimised (formula in the appendix)
+[H5-6]. (iv) (A3) is used only through the energy bound $\|X\theta^*\|^2\le n s_0^2\bar\theta^2$; any bound
 $\|X\theta^*\|^2\le nM$ suffices. (v) Models of size $\ge 3(A+1)(s_0+1)\log n$ carry posterior mass $O_P(n^{-1/2})$ with
-no eigenvalue condition at all (size-tail lemma; separate statement).
+no eigenvalue condition (size-tail lemma, which uses a coefficient bound instead; separate statement). (vi) *Scope of
+the rate* [H5-6]: on every design the posterior miss is at least of order $n^{-1/2}$ (Theorem 3(a)); the extra
+$\sqrt{\log n}$ is shown to be attained only on the witness designs of Theorem 3(b). No two-sided rate
+$\sqrt{\log n/n}$ on every design is claimed (open; post-freeze rider POST2-R1).
 
 ### Why each assumption, and is it necessary
 - (A1) Gaussian errors give exact $\chi^2$ laws for the score differences. Necessity open; every comparable Bayesian
@@ -123,6 +128,8 @@ no eigenvalue condition at all (size-tail lemma; separate statement).
 - (A4) Lets the posterior separate $S_0$ from under-fitted models of bounded size. The part *anchored at $S_0$* is
   needed at the beta-min scale (numerics); the floor on null-only directions looks removable (numerics; an unchecked
   strengthening replaces it by an identifiability margin).
+- (A4′) of Theorem 1′, the floor $\lambda_{\min}(\hat R_{S_0})\ge\varphi_0^2$ on the truth: **sufficient; not known to be
+  necessary (open item O3)** [H5-6]. The margin's constant $c_1$: proof artefact (open item O2).
 - (A5) Excludes exact (or near-exact, $\lambda_{\min}<g_0$ unnormalised) linear dependence among $O(\log n)$ columns, so
   over-fitted models pay their full Occam factor. Note the floor is $g_0/(n-1)$ on the correlation scale: it vanishes.
   Looks improvable (numerics); an unchecked strengthening replaces it by a weaker Occam-sum condition.
@@ -159,9 +166,10 @@ in progress, recorder task D, 2026-11-16). Until recorded, the abstract cites Th
 **Effort:** B1.1–B1.4 are a half page; one Sol line check.
 
 ### Honest limits
-None for the statement: every assumption is primitive. The beta-min constant is not explicit in a friendly form
-($c_0\ge128$ at $s_0=A=1$); the paper should say "a sufficiently large constant depending only on $(s_0,A,\varphi_0)$"
-in the statement and give $c_0$ in a remark.
+None for the statement: every assumption is primitive. The beta-min and margin constants are explicit but not
+optimised; the paper should say "a sufficiently large constant depending only on $(s_0,A,\varphi_0)$" in the statement
+and give the formulas in an appendix, without numerical values [H5-6]. Named open items attached to this row: O1
+(weaker Occam-sum interface), O2 (margin constant), O3 (floor on the truth) — `CARD_ROW11_R03b.md`.
 
 #### Update log (thm1)
 - v0.1 2026-11-15: first version (CP1).
@@ -169,6 +177,8 @@ in the statement and give $c_0$ in a remark.
 - v0.3 2026-11-16: [H5-1] re-based on W3-POST2 C (uniform expectation rate; conclusion STRONGER, same hypotheses) with
   Theorem 1′ (W3-POST2 E: identifiability margin, no floor off $S_0$, no beta-min) and remark (o) (W3-POST2 A1).
   Masters C/E/A1/A0 below PROVED-CHECKED until recorded.
+- v0.4 2026-11-16: [H5-6] consultant's conditions: "off $S_0$" wording for Theorem 1′; (A4′) floor line "sufficient;
+  not known to be necessary (O3)"; no numerical constant values; rate-scope remark (vi) (EQUAL; wording).
 <!-- ROW thm1 END -->
 
 ---
@@ -261,7 +271,8 @@ $s_0=O(\sqrt{\log n})$. (Without the size restriction (a) is false: e.g. $S=[p]$
 factor $\sqrt{\log n}$ is attained. On the two witness sequences that also satisfy the upper-bound assumptions —
 fully orthogonal designs with $p=\min(n-1,\lfloor n^a\rfloor)$, and raw designs with i.i.d. $N(0,1)$ entries and
 $p=\lfloor n^a\rfloor$, both with fixed nonzero coefficients — the rate $\sqrt{\log n/n}$ is exact (conditional on
-Theorems 1 and 2) [S1-F6].
+Theorems 1 and 2) [S1-F6]. On a general design only the order $n^{-1/2}$ of part (a) is proved as a lower bound; a
+matching $\sqrt{\log n/n}$ lower bound on every design is open (post-freeze rider POST2-R1) [H5-6].
 
 ### Why each assumption
 (a) has none: it is a deterministic property of the prior and the Occam factor (each of the $p-s_0$ one-variable
@@ -704,7 +715,7 @@ writes $r$); (2) the assumption summary says **"no beta-min and no fixed lower b
 
 ## 10. Theorem 10 — The printed outputs are consistent (card row 3.6; row 3.5 as a remark)
 <!-- ROW thm10 BEGIN -->
-**Card row** 3.6 (and 3.5) · **Section version** 0.3 (2026-11-16) · **Pending delta** — (SHARP3 better-gate pending)
+**Card row** 3.6 (and 3.5) · **Section version** 0.3 (2026-11-16) · **Pending delta** post-freeze rider SAMP-R1
 
 ### Reader statement
 **Theorem 10.** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m_n,\Sigma_n)$ with $\Sigma_n$ a correlation matrix, and

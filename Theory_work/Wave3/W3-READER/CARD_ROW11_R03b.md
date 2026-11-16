@@ -1,7 +1,9 @@
 # CARD — row 1.1 better gate: R03b's four open proposals + SHARP3b verdicts (W3-READER → Theory Dept → HQ + consultant)
 
-v1 2026-11-16 (lead). **Proposed dispositions, not final**: HQ confirms with its consultant (headline row). Until then
-row 1.1's better gate reads `PENDING-DISPOSITION` in `gates_staged.tsv`. Context: row 1.1 is re-based on `W3-POST2:C`
+v1 2026-11-16 (lead). **Confirmed by H5 card 6** (consultant AGREE, relayed by the manager): row 1.1 better =
+PASS-with-open-items O1–O3; B+ rejected for the row; N1 → post-freeze rider POST2-R1. Conditions applied: "off $S_0$"
+wording; floor on $S_0$ "sufficient; not known to be necessary (O3)"; `improvable` stays set on POST2 C/E; no
+two-sided rate on every design until N1 is proved; no numerical margin values in reader-facing text. Context: row 1.1 is re-based on `W3-POST2:C`
 (uniform expectation rate) with `W3-POST2:E` as the variant Theorem 1′ (H5 card 5). R03b is the in-ticket
 better-theorem review (`Theory_work/Wave3/W3-POST2/reviews/R03b_better_theorem_astra.md`, gpt-6-astra high): C+ and D+
 adopted in POST2 v1.2 (`R03b_disposition.md:9-11`); four open (`:12-15`; `W3-POST2/REPORT.md:184-187`).

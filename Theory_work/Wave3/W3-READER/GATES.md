@@ -15,7 +15,7 @@ review has a recorded triage disposition or a rider ticket (G1 :9-29; G2 :20-41)
 ## Summary
 | Row | Masters | lit | necessity | better |
 |---|---|---|---|---|
-| 1.1 | `W3-POST2:C`, `W3-POST2:E` (re-base, H5-1); `W3-POST:Thm-1`=`SOP:TH09` ($O_P$ form) | PASS | PASS | PASS for Thm-1 (sharp1 f15, class B); **re-based masters: in-ticket R03b, 4 proposals awaiting HQ disposition; blind verdict requested (SHARP3 addendum g05–g06)** |
+| 1.1 | `W3-POST2:C`, `W3-POST2:E` (re-base, H5-1); `W3-POST:Thm-1`=`SOP:TH09` ($O_P$ form) | PASS | PASS, except the floor on $S_0$: **OPEN** (O3) | **PASS-with-open-items O1–O3** (H5 card 6); `improvable` stays set |
 | 1.2 | `W2-APP:POST` (+ Thm-1 item 6) | PASS | PASS | PASS (sharp1 f06, class B) |
 | 1.3 | `W3-PSHARP:A`, `:B` | PASS | PASS | PASS (sharp2 f02: A → A1 adopted, rider T12; B SHARP) |
 | 1.4 | `W3-MISR:MIS(i)`, `MIS(i')`, `MIS(ii)`; reader version `Cor-G(b)` | **PASS (resolved here)** | PASS | PASS (sharp2 f00/f01; A2 → rider T13) |
@@ -45,10 +45,12 @@ review has a recorded triage disposition or a rider ticket (G1 :9-29; G2 :20-41)
 - **better.** Thm-1: sharp1 f15 IMPROVABLE-EASY, triage class B (A residual → W3-PSHARP, now PROVED-CHECKED); its
   proposals (F_w)→(OS), (F_λ)→margin, expectation rate are exactly POST2 A1/E/C, now adopted as the re-base (G1 :66-76).
   **Re-based masters POST2 C/E:** in-ticket better review R03b (gpt-6-astra high; `W3-POST2/REPORT.md:173`), proposals C+
-  and D+ adopted (HQ approval noted pending), A+ (weaker (OS)), E+ ($c_1\approx54$), E-floor+ ((F₀) → bounded ridge
+  and D+ adopted (HQ approval noted pending), A+ (weaker (OS)), E+ (a smaller margin constant), E-floor+ ((F₀) → bounded ridge
   cost), B+ open (`W3-POST2/REPORT.md:184-187`) → **HQ to disposition**. Blind API verdicts: SHARP3b `api/sharp3b/f00.md` (C) and `f01.md` (E), both IMPROVABLE-EASY. Proposed dispositions of
   the four R03b items and the SHARP3b items: `CARD_ROW11_R03b.md` (awaiting HQ + consultant). Gate: PASS for the $O_P$
-  form; PENDING-DISPOSITION for the re-based form; proposed outcome PASS with named open items POST2-O1–O3.
+  form. **Re-based form: PASS-with-open-items O1–O3** (H5 card 6, consultant AGREE): B+ rejected for the row; N1 →
+  post-freeze rider POST2-R1. The PASS **does not clear** `improvable` on `W3-POST2:C` and `W3-POST2:E` (set, linked to
+  O1–O3), and the necessity entry for the floor on $S_0$ stays OPEN ("sufficient; not known to be necessary", O3).
 
 ## Row 1.2 — random Gaussian design (Thm 2)
 lit PASS, necessity PASS, better PASS — G1 :80-123 (sharp1 f06 class B; superseded parts covered by POST2; T5
