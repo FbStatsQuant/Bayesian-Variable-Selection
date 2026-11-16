@@ -74,3 +74,4 @@
 - 20:40 — W3-READER: SHARP3 addendum (g05 POST2:C, g06 POST2:E) forwarded to HQ (~$1); fallback = R03b better review + HQ disposition of its 4 open proposals. Leg 2: helpers done, no sub-par signal; lit 1.4/3.7 and necessity 3.6 being resolved.
 - 20:40 — HQ: 38-row evidence-format cleanup post-freeze as one package, except abstract-row masters (fixed before their CP3 acceptance); recorder told to list + stage those with H and C; recorder work dir → SMC_Theory_Department when convenient.
 - 20:41 — HQ approved C real run + F-UNI gate record fix; recorder told (order D→E→F→C→F-UNI gate).
+- 20:41 — D33: records/ created for Engineering's NOTS-scratch copy; verify + index on arrival.

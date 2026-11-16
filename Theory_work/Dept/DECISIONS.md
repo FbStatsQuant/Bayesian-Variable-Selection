@@ -203,3 +203,9 @@
 - C (W2-APP) real run approved (10 rows on MANIFEST_PC1, Family-map excluded); F-UNI stale gate = record fix now; M27
   text after RM2-R CP3 as H5; 12 NARROW = one post-freeze batch with one H5 card for M61/M35/M30; chapter guard confirmed
   (Writing QUEUE + READER already done). Real-run order D → E → F → C → F-UNI gate. Recorder told.
+
+## 2026-11-15 20:41 CT — NOTS scratch purge risk (14 days without access)
+- **D33.** Engineering copies /scratch/fb31/theory_w2 and theory_w3 (P6) today, checksum-verified, into
+  /home/fb31/SMC_Theory_Department/records/ (created + indexed in INDEX.md). On arrival: I verify the checksums against
+  Engineering's manifest and index each dataset (source, size, files, check result). Rule: data of record lives on Owls
+  NFS (later the owner's laptop), never only in NOTS scratch for more than 7 days; the NOTS move (D32) keeps that.
