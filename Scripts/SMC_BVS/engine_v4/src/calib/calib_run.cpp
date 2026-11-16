@@ -54,6 +54,7 @@ Json run(const Json& args) {
   const island::Neighbours nb = island::load_neighbours(spath, D.p);
   island::CalibRunnerConfig rc; rc.seed = (uint32_t)seed; rc.B = b.B; rc.threads = s.threads;
   rc.mem_budget = (uint64_t)num_arg(args, "mem_budget", 0);
+  rc.inputs_bytes = island::start_bytes(st, nb);   // the island's setup inputs (dep::Start; the flat view will shrink it)
   if (mode == fmt::M_COMPAT) { rc.compat = true; rc.kernel = island::KernelKind::ParticleMajor; rc.threads = 1; }
   else if (mode == fmt::M_LAW) rc.kernel = island::KernelKind::ParticleMajor;
   else rc.kernel = island::KernelKind::LabelMajor;

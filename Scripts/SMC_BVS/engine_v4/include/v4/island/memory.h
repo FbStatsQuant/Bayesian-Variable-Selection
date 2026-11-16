@@ -20,6 +20,7 @@
 //                with k_q = min(K, 3k): G (32 k_q^2) + G k_q n 8 + T G k_q tile 8
 //   particles    two populations + pending + terminal supports                   (2N + G) (4k + 64) + N 4k
 //   ckpt         streamed checkpoint buffers                                     2 MiB
+//   headroom     12 % of every term except the inputs (allocator slack, run-to-run variation of the peak)
 //   calib_snapshot  calibration islands: the round-start kept runs (top, leaders) + a copy of the population
 // Allocator: for particle-major islands with threads > 1 (their serial store compacts on worker threads) run_island fixes
 // glibc's mmap threshold (4 MiB), so every large array (kept runs, staging, indexes) is mmapped and returned to the
@@ -87,6 +88,11 @@ inline MemPlan island_memory(const MemSizes& z, double k) {
     add("calib_snapshot", ((double)c + cl) * e + 4.0 * (double)pow2_at_least(2 * c + 2) + idxl + z.N * (4 * k + 64));
   }
   add("ckpt", 2.0 * 1048576);
+  // headroom (manager 11-16, after the PR #26 re-check): 12 % of every term except the inputs. The terms above are
+  // upper bounds of the arrays, but the measured peak also carries allocator slack (free lists, arena tails, page
+  // rounding) and varies between runs of the same configuration (VmHWM 220 vs 237 MiB in one label-major row at
+  // p = 2e4, against a 243 MiB plan): the headroom keeps the plan >= 10 % over every measured row.
+  { uint64_t rest = 0; for (const auto& it : m.items) if (it.name != "inputs") rest += it.bytes; add("headroom", 0.12 * (double)rest); }
   return m;
 }
 inline std::string mem_plan_text(const MemPlan& m) {

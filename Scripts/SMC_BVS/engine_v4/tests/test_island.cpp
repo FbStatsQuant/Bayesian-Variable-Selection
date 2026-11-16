@@ -810,9 +810,10 @@ static void plan_bounds_peak(int p, int N, std::initializer_list<int> Gs) {
     const double plan_mb = (double)(mp.total - inputs) / 1048576.0, meas_mb = (double)(hwm - rss0) / 1024.0;
     std::printf("  (stored mean |S| at the end %.2f; the plan's k %.2f)\n", k, k_plan);
     std::printf("  p %d N %d %s G %3d leaders %d%s: island peak increment %.0f MiB, plan %.0f MiB (k %.2f) -> %s\n", p, c.N, kern ? "LM" : "PM", G, (int)lead,
-                cal ? " calibration" : "", meas_mb, plan_mb, k, plan_mb >= meas_mb ? "bound holds" : "BOUND FAILS");
-    CHECKF(r.status == 0 && rss0 > 0 && hwm > 0 && plan_mb >= meas_mb, "p %d %s G %d leaders %d cal %d: measured %.0f MiB > plan %.0f MiB", p, kern ? "LM" : "PM", G,
-           (int)lead, (int)cal, meas_mb, plan_mb);
+                cal ? " calibration" : "", meas_mb, plan_mb, k, plan_mb >= 1.10 * meas_mb ? "bound + 10 % holds" : "BOUND (+10 %) FAILS");
+    // the plan is an upper bound with headroom (manager 11-16): >= 10 % over the measured peak in every row
+    CHECKF(r.status == 0 && rss0 > 0 && hwm > 0 && plan_mb >= 1.10 * meas_mb, "p %d %s G %d leaders %d cal %d: measured %.0f MiB, plan %.0f MiB < 1.10 x measured", p,
+           kern ? "LM" : "PM", G, (int)lead, (int)cal, meas_mb, plan_mb);
   }
 }
 TEST(mem_plan_bounds_measured_peak_2e4) { plan_bounds_peak(20000, 500, {64, 256}); }

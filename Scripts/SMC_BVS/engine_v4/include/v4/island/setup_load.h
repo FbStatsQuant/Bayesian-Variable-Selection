@@ -42,6 +42,23 @@ inline Start load_start(const std::string& path, const Data& D) {
   return st;
 }
 
+// Resident bytes of a dep::Start and its neighbour lists: payloads + 24 B per std::vector + 16 B malloc header per
+// allocation (the plan's caller-supplied inputs term until the island reads WP2's flat arrays as a view; manager 11-16).
+inline double start_bytes(const Start& st, const Neighbours& nb) {
+  double b = 0;
+  auto v = [&](const auto& x) { b += 24.0 + 16.0 + (double)x.capacity() * sizeof(x[0]); };
+  for (const auto& x : st.blocks) v(x);
+  v(st.blk); v(st.pos); v(st.size_logmass); v(st.size_cum); v(st.code_ptr); v(st.logr_flat); v(st.c0r);
+  for (const auto& x : st.logr) v(x);
+  for (const auto& x : st.logprof) v(x);
+  for (const auto& x : st.logF) v(x);
+  for (const auto& b1 : st.cond_cum) { b += 40; for (const auto& x : b1) v(x); }
+  for (const auto& b1 : st.sub_cum) { b += 40; for (const auto& x : b1) v(x); }
+  for (const auto& b1 : st.codes_by_size) { b += 40; for (const auto& x : b1) v(x); }
+  v(nb.ptr); v(nb.idx);
+  return b;
+}
+
 inline Neighbours load_neighbours(const std::string& path, int p) {
   fmt::Reader R(path);
   if (!R.has("nb_ptr") || !R.has("nb_idx")) throw Error(Status::invalid_input, path + ": no neighbour lists (nb_ptr / nb_idx)");

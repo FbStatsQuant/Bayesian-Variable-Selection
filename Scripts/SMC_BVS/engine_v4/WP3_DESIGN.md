@@ -279,6 +279,17 @@ This is the API that WP4's `calib::IslandRunner` calls. It is built after the PR
     - a cycle between `v4_bit` (calib_run) and `v4_a` (the class-A island), declared in `island.cmake`;
     - every translation unit that calls the island is compiled with the island's ISA (inline ISA namespaces; m9 will
       remove the need).
+- **Memory plan (re-check m1, manager 11-16).**
+  - The serial staging is reserved at limit + one buffer. Particle-major islands with threads > 1 fix glibc's mmap
+    threshold.
+  - New terms:
+    - `calib_snapshot`: one kept run per store plus a copy of the population;
+    - **`headroom` = 12% of every term except the inputs**: allocator slack and the run-to-run variation of the peak. The
+      VmHWM of one label-major row varied from 220 to 237 MiB against a 243 MiB plan.
+  - The plan-bound test requires plan ≥ 1.10 × measured in every row: label-major G 64 / 256 with leaders off / on,
+    particle-major on 3 threads, and a calibration island.
+  - The calibrate command passes the expanded `dep::Start` bytes as the inputs term (`island::start_bytes`) until the
+    island reads WP2's flat arrays as a view.
 - **Tests.** MEASURED, Owls, 3 threads, `nice -n 19`.
   - `golden_calibration_islands_compat_vs_core`: 10 islands (pilot e = 0; 2 rebuilds × 4 diagnostic islands; pilot
     e = 1) on streams 0–5, continued. Everything equals core in bits, ledgers and stream positions included.
@@ -290,6 +301,25 @@ This is the API that WP4's `calib::IslandRunner` calls. It is built after the PR
     threads.
   - WP4's R golden with `runner = "wp3"`: the whole calibration through WP3's islands equals `v3_calibrate`, the
     calib.bin round trip included.
+
+### 1.12 Planned (manager-approved 11-16): StartView over WP2's flat setup arrays
+- **What changes.**
+  - The island reads WP2's `setup.h` arrays as a view over the mapped setup.bin instead of expanding them into
+    `dep::Start`.
+  - Arrays read: the partition, `code_ptr` / `logr`, `size_logmass` / `size_cum`, `cond_ptr` / `cond_cum`, `logZbar0`.
+  - `codes_by_size` and `sub_cum` are rebuilt per draw, only for the blocks the draw selects (D-18).
+  - `c0r` is dropped. The 8-lane size-0 test gathers `cond_cum[cond_ptr[b*(K+1) + r]]`: the same comparison, the same
+    bits.
+  - One view type serves both owned storage (tests, bench) and mapped storage.
+  - The memory plan's inputs term becomes the mapped section lengths.
+- **WP2's layout answers (11-16).**
+  - The row index is b·(K+1) + r, b-major. Row (b, r) holds min(m_b, r) + 1 cumulative masses, equal to core's bits,
+    and ends at 1.0.
+  - An all-−∞ row has the same length and holds zeros, so the gather of entry 0 is always in bounds. A valid draw never
+    reaches such a row; debug builds assert this.
+  - Pending HQ: WP2 may move `cond_cum` on demand (`cond_row(b, r)`, same bits). The gather then calls it.
+- **Why.** WP2's ESTIMATE of the sections an island reads at 10⁶ is 4.4–14.1 GB, against 13–38 GB for `dep::Start`.
+- **When.** After WP2's PR #13 merges, built on its `setup.h` types.
 
 ---
 
