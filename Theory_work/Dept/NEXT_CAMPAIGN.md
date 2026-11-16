@@ -43,6 +43,9 @@ T-MERGE (convex pooling) · EVAR / POOL (evidence variance; scaling paper) · T-
 (Engineering's design choices; PSMC-S0 Part 1 delivered as Engineering-facing notes) · approximate sparsity and
 exponential p for W3-DIST (stretch, after DIST closes).
 
+## (e) Protocol variant
+Sent with this proposal for approval: `PROTOCOL.md` (POLICIES §13), deviations B1–B10.
+
 ## (d) Found while scoping (for HQ)
 - Pooled PIP: method text vs code (02_method.tex:440-451 vs v3_run.R:154,162). Routed (D13): READER fixed; W3-EDIT
   item 7; Writing queue row.
