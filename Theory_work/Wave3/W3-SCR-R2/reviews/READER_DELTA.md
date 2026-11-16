@@ -102,8 +102,8 @@ None.
 ## 5. Certification frequency (card 9 condition 4)
 **Finding.** In every existing study with a certification field, the method certified a small reported model in
 essentially every completed run, strong-factor designs included. Certification is therefore almost never the binding
-event. Theorem 8's content is in its hypotheses, and no study is in (A3)'s quantitative range. (A3) cannot hold below
-n ≈ 1,450: κb ≤ M (`W3-SCR/lemmas/L7_master.md:103-104`) gives c₁ < 1/200, so (A3) forces log n < n/200.
+event. Theorem 8's content is in its hypotheses. At these constants (A3) requires n ≳ 1,450: κb ≤ M
+(`W3-SCR/lemmas/L7_master.md:103-104`) gives c₁ < 1/200, so (A3) gives log n < n/200; the studies below have n ≤ 200.
 
 | study (code) | design | fits | certified | certified, small | small and ⊇ S₀ |
 |---|---|---|---|---|---|
@@ -137,16 +137,17 @@ Sources (file:line):
 
 **Certification-frequency line for the reader (next to row 3.7; numerics, not a theorem):** *"In existing numerics the
 method certified a small reported model in essentially every completed run (2,394 of 2,394 in the 2,400-fit study at
-n = 200; 376 of 376 in the strong-factor experiment with n ≤ 150 and p up to 10n). Certification alone is therefore
-not informative: on strong-factor designs (equicorrelation ρ ≥ 0.5) at n = 50 and p ≥ 2.5n, certified small models
-missed a true predictor in 61 of 122 fits. Theorem 8 is asymptotic, and these sample sizes are below its range."*
+n = 200; 376 of 376 in the strong-factor experiment with n ≤ 150 and p up to 10n; 71 of 71 in the screening study at
+n = 100). On strong-factor designs (equicorrelation ρ ≥ 0.5) at n = 50 and p ≥ 2.5n, the certified small model missed a
+true predictor in 61 of 122 fits. Theorem 8 holds asymptotically under (A1)–(A3); at these constants (A3) requires
+n ≳ 1,450."*
 
 **Consequence for the card (W3-READER decides the wording).**
 - `CLAIMS_CARD.md:60` says row 3.7 "holds where 3.1–3.2 may fail (strong factors, masking)". As a theorem statement
   this is true, because its hypotheses involve no visibility condition.
-- It must **not** be read as a finite-n remedy for row 3.1 on strong-factor designs. At the sample sizes of the
-  existing strong-factor numerics, certified small models miss truths often.
-- Suggested qualifier: "asymptotically, under (A1)–(A3)".
+- Scope statement for the card (neutral wording, owner rule):
+  "asymptotically, under (A1)–(A3), row 3.7 holds where 3.1–3.2 may fail", with the certification numbers above
+  stated as facts next to the row (H5 card 11).
 - No small-run proposal is drafted, because data exist (card 9 condition 4 asks for one only if no data has it).
 - Gaps, if HQ wants them closed: the production study has no per-fit HPM size, and no strong-factor run has n ≥ 200.
 
