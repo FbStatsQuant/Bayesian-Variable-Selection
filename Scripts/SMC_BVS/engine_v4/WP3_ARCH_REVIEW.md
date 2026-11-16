@@ -8,9 +8,9 @@ machine load 21–29 during the runs. "SPR" = NOTS Sapphire Rapids, job 2748756 
 
 ## 0. Summary
 
-1. **Late 10⁶ rounds can go well under the plan.** Measured 287 ns·CPU per pair (job 2748756). L5 as built, the
-   store check moved off the step path, bounded scoring and Gram-row reuse together give **≈ 105 ns·CPU per pair**
-   (ESTIMATE on SPR; plan 200). On Owls the same two late rounds of a 10⁶ island went from 47.1 s to 28.1 s (−40%) with
+1. **Late 10⁶ rounds can go well under the plan.** Measured 287 ns·CPU per pair (job 2748756) and 240–254 with L5
+   (job 2749328). The store check moved off the step path, bounded scoring and Gram-row reuse give **≈ 120 ns·CPU per
+   pair**, ≈ 102 if L5's phase-B regression is recovered (ESTIMATE on SPR, updated in §7.1; plan 200). On Owls the same two late rounds of a 10⁶ island went from 47.1 s to 28.1 s (−40%) with
    an identical output hash (MEASURED).
 2. **About 19% of a late round is a serial debug check that no counter shows.** `check_store` is on by default and
    verifies the whole store after every step: 6.6 s per step at 4·10⁷ entries (MEASURED, Owls). WP3's time split read it
@@ -23,6 +23,8 @@ machine load 21–29 during the runs. "SPR" = NOTS Sapphire Rapids, job 2748756 
 4. Two more design risks: calibration islands carry leader stores that compact serially (+42% at 3 threads, MEASURED),
    and the top store is rewritten about once per bridge stage (§3 R2, R3).
 5. The SPR confirmation is one job of ≈ 40 core-h (§5).
+6. Addendum §7: the L5 batch confirms the uncounted check on SPR (≈ 5.7 s per step in both islands); the real setup
+   tables cost under 2% in phase A but 8–35 GB of memory, depending on how the island holds them.
 
 ## 1. Cost model
 
@@ -284,11 +286,11 @@ sbatch --partition=commons --constraint=<Sapphire Rapids 8468> --nodes=1 --ntask
 | step | what | ESTIMATE wall | expected result (ESTIMATE) |
 |---|---|---|---|
 | transient | π₀ → φ = 1 in one stage, 2 burn-in rounds, checkpoint | ≈ 10 min | — |
-| `ref` | PR #26 behaviour, check on | 2.5 min | ≈ 21–22 s per round (215 ns·CPU per pair); `[arch]` line shows the check ≈ 5 s |
-| `check` | check off | 2.5 min | ≈ 16.5 s (163) |
-| `bounded` | lever 2 | 2.5 min | ≈ 12.5–13 s (≈ 126) |
-| `gram` | + lever 3 (640 slots, + 5.1 GB) | 2.5 min | ≈ 10.5–11 s (≈ 105) |
-| `fma` | + lever 6 (its hash differs by design) | 2.5 min | ≈ 10–10.5 s |
+| `ref` | PR #26 behaviour, check on | 2.5 min | ≈ 24 s per round (240 ns·CPU per pair, as job 2749328); the `[arch]` line shows the check ≈ 5.7 s |
+| `check` | check off | 2.5 min | ≈ 18.5 s (≈ 184) |
+| `bounded` | lever 2 | 2.5 min | ≈ 14.3 s (≈ 141) |
+| `gram` | + lever 3 (640 slots, + 5.1 GB) | 2.5 min | ≈ 12 s (≈ 120) |
+| `fma` | + lever 6 (its hash differs by design) | 2.5 min | ≈ 11.5 s |
 | early stages (`V4_BENCH_EARLY=1`) | N = G = 64, φ = 0.01, 0.02, 0.03, reference and `gram` (4,000 slots, 32 GB) | ≈ 2 min | reference ≈ 15–18 µs·CPU per step, `gram` ≈ 3.5–4 |
 
 Cost: ≈ 25 min × 96 CPUs ≈ **40 core-h** (worst case 50 min × 96 = 80). Optional variants `g64` and `smt48` add ≈ 4
@@ -322,3 +324,98 @@ Limits of this evidence:
 - The prototypes are not production code: no unit tests added, switches through environment variables, and the Gram
   rows are outside the memory plan. The `ref` variant of my build already contains lever 4.
 - Lever 5, lever 7 beyond interleaving, and the offer floor are designs with estimates, not measurements.
+
+## 7. Addendum (2026-11-16, later): the L5 SPR batch and WP2's real setup tables
+
+Inputs: `results/WP3_L5_SPR.md` with the logs of job 2749328 (commit be24e9d), and WP2's 10⁶ counts (LOG 05:04 and
+05:06). Where this section gives a number that differs from §0–§5, this section wins.
+
+### 7.1 The L5 batch against the cost model (MEASURED, job 2749328, round 5, G = 256)
+
+| | island 1 | island 2 |
+|---|---|---|
+| wall of the round | 24.27 s (240 ns·CPU per pair) | 24.05 s |
+| phase A / phase B / orders / walk / build | 11.9 / 2.7 / 1.7 / 0.6 / 0.0 s | 11.8 / 2.7 / 1.7 / 0.5 / 0.0 s |
+| sum of the counted phases | 16.9 s | 16.7 s |
+| compaction (partly inside phase B) | 1.67 s | 1.65 s |
+| **in no counter** | **5.7–7.4 s** | **5.7–7.4 s** |
+
+- The uncounted time is the same as before L5 (§1.1) and be24e9d still has `check_store = true`. So the store check is
+  now ≈ 24% of a late round on SPR: **≈ 56 ns·CPU per pair**. This is the gap between WP3's projection (215) and the
+  measurement (247), together with the phase-B wave regression the manager already found (≈ 1.7 s per round).
+- **Moving the check off the step path alone gives ≈ 184 ns·CPU per pair, below the plan** (ESTIMATE: 24.27 − 5.6 s).
+- Updated projection for the late round, from the measured L5 phases and the Owls ratios of §2 (ESTIMATE):
+  check off 18.7 s (184) → bounded scoring 14.3 s (≈ 141) → Gram rows and the Philox multiply 12.0 s (**≈ 120**) → and
+  ≈ 10.3 s (**≈ 102**) if the wave regression is recovered. §0 said ≈ 105; it assumed WP3's projected L5 phases.
+- Memory: steady RSS 19.5 GB after round 1, peak 34.8 GB in round 1 (the store full of π₀-sized models), with ≈ 2.5 GB
+  of stand-in tables. So the island without tables is ≈ 17 GB steady and ≈ 32 GB at the peak.
+
+### 7.2 Table lookups in phase A with production-sized tables (MEASURED, Owls)
+
+Phase A reads one table entry per flip: the singleton code of the label, `logr[code_ptr[b] + (1 << pos)]`. With the
+stand-in (32 MB) that entry sits in L2/L3. With blocks of 14 the table is 9.4 GB: the read is one DRAM cache line and,
+on 4 KB pages, 0.43 page walks per label (MEASURED count: the singleton codes touch 18.8% of the table's pages,
+1.63 GB). But the entry is the same for every support of the pass, and the supports are scored one after the other
+inside a tile. So the miss is paid once per (label, tile visit), not once per flip.
+
+`v4_bench_arch comp 1000000 14 <supports> 3 <scatter> <small_pages>` (the loop shape of phase A: tiles, then
+supports, then labels), ns of thread time per (support, label) for the composite sum:
+
+| supports that need the label | stand-in table | 9.4 GB table, huge pages | 9.4 GB table, 4 KB pages | with a singleton array |
+|---|---|---|---|---|
+| 64 | 10.7 | 14.7 | 13.2 | 9.3–9.5 |
+| 4 | — | 29.5 | 27.6 | 9.6–10.0 |
+| 1 | — | 73.6 | 88.6 | 9.8–10.4 |
+| 64, labels scattered over blocks | — | — | 27.9 | 25.3 |
+| 4, scattered | — | — | 61.6 | 22.0 |
+
+- **Cost of the real table: 64–78 ns per (label, tile visit)**, divided by the number of supports that need the label.
+- In the island:
+  - reference code, ≈ 74 supports per pass: ≈ +1 ns per pair (under 1% of 240);
+  - bounded scoring, late rounds (≈ 27 of 74 supports need a given label): ≈ +3 ns per flip, 1–2% of the round;
+  - early stages (G·k limits the group to 24–64 supports, 7% of the labels needed): +14–46 ns on a flip of ≈ 1 µs.
+- **So the real tables do not move any per-pair figure by more than ≈ 2%** (ESTIMATE from these measurements). The
+  per-tile working set is unchanged: 128 table lines (8 KB) beside a 205 KB tile.
+- The fix costs nothing: a p-indexed array `lr1[j]` of the singleton terms (8 MB, read sequentially). The sum is the
+  same doubles added in the same order (checked: identical bit sums). It removes the miss and, more important, takes
+  the 1.63 GB of singleton pages out of the island's hot set (7.3).
+- The second column pair shows what the block search costs when a design's blocks are not contiguous in the label
+  index (branch mispredictions: 25 vs 9.5 ns). AR and IND pack by minimum index, so they are on the first rows.
+
+### 7.3 Island memory with the real tables (10⁶, n = 200, G = 256, 96 threads; GB)
+
+Non-table part from 7.1: ≈ 17 steady, ≈ 32 at the peak (MEASURED minus the stand-in). Tables for IND at n = 200:
+logr 9.25 (WP2), plus cond_cum ≈ 0.9, logF 0.06, neighbours ≈ 0.15 (ESTIMATE): ≈ 10.4 in `setup.bin`.
+
+| how the island holds the start law | tables in memory | island peak | task request (peak + 15%) |
+|---|---|---|---|
+| (a) today: `dep::Start` (nested vectors, a flat copy of logr, stored sampler tables) | 26–35 (2.5–3.4 × setup.bin, WP2); 37.9 at IND n = 1,000 | ≈ 58–67 | ≈ 68–78 |
+| (b) WP2's flat `setup::Start`, read into memory | ≈ 10.4 | ≈ 43 | ≈ 48–50 |
+| (c) flat `setup::Start` as a read-only file mapping, with the hot arrays copied: `lr1` (8 MB), `blk`/`pos` (8 MB), the π₀ scan table (58 MB at n = 200, 286 MB at n = 1,000), neighbours | ≈ 1 resident in late rounds (ESTIMATE); the rest is page cache the kernel may drop | ≈ 33.5 | ≈ 40 (H-9 holds) |
+| (c) with Gram rows (+5.1), inverse-only orders (−1.0) | | ≈ 37.6 | ≈ 44 |
+| (c) with those and the offer floor of R3 (store peak ≈ −12, ESTIMATE) | | ≈ 26 | ≈ 30 |
+
+- Without `lr1`, layout (c) touches 1.63 GB of logr in every pass; those pages must stay resident.
+- What stays cold in (c): logr is then read only for labels in a block that meets a support and for π₀ draws. Late
+  rounds: at most a few thousand distinct blocks × 131 KB (ESTIMATE ≤ 0.7 GB). Early stages touch most blocks over time,
+  one cache line at a time; under memory pressure the kernel drops and re-reads them.
+- cond_cum (4.5 GB at n = 1,000): the island needs only the selected rows of a draw and the scan table of first
+  entries P(k_b = 0 | r). If the island builds the scan table by reading cond_cum it touches all of it once. Have
+  WP2 write the scan table into `setup.bin`, or build it from logF and logprof (same function, same bits), so that
+  cond_cum can go on demand as WP2 proposes.
+- Two islands of one node map the same file. Its pages live on the socket of whichever island touched them first. With
+  the hot arrays copied into each island's own memory this does not reach phase A.
+- **The admission plan** counts the caller's `inputs_bytes` in full: with real tables it prints ≈ 53 GiB for this
+  configuration (45.1 − 2.5 + 10.4), so a 40 or 48 GB task is refused before it starts. Decide one rule: either the task
+  request follows the plan (≈ 56 GB), or the plan counts hot table bytes and reports mapped, droppable sections on a
+  separate line. I recommend the second with layout (c).
+
+### 7.4 What changes in the recommendations
+
+1. Lever 1 (the store check) is now confirmed on SPR and worth more than I wrote: ≈ 56 ns·CPU per pair, the difference
+   between 1.23× and ≈ 0.92× of the plan. It is a one-day change (builder 7, O1): do it before the next SPR batch.
+2. New package for the WP3 builder, with the flat-Start reader: layout (c), `lr1`, the scan table from `setup.bin` or
+   from logF, and the two plan lines. No output change.
+3. The memory order of work for the island task: flat Start (−16 to −25 GB) → offer floor (−12) → Gram rows (+5).
+4. The benches should take a table-size option (blocks of 14 with synthetic values, as `v4_bench_arch comp` does) so
+   that SPR numbers include the real footprint from now on.

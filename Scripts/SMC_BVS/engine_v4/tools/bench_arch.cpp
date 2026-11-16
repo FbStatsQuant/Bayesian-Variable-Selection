@@ -7,9 +7,10 @@
 //        ns per multiply-add of the tile products: block 1, block 4 (the engine's bits) and block 4 with FMA (class A only).
 //   fy <m> <threads> <reps>
 //        Fisher-Yates round order + inverse: the L5 code against deeper look-ahead (identical permutations).
-//   comp <p> <bsz> <nsup> <threads> <scatter:0|1>
+//   comp <p> <bsz> <nsup> <threads> <scatter:0|1> [small_pages:0|1]
 //        the composite-table read of comp_add with production-sized tables (blocks of bsz), and with a singleton array.
 #include <omp.h>
+#include <sys/mman.h>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -171,7 +172,7 @@ static void bench_fy(int m, int T, int reps) {
 // contiguous (scatter 0: AR-like clusters) or with labels assigned to blocks at random (scatter 1); nsup supports of 6
 // random members; ns per (support, label) of comp_add as coded, and with a p-indexed array of the singleton terms
 // lr1[j] = logr[blk[j]][1 << pos[j]] (same doubles, same additions in the same order: identical results, checked).
-static void bench_comp(int p, int bsz, int nsup, int T, int scatter) {
+static void bench_comp(int p, int bsz, int nsup, int T, int scatter, int small_pages) {
   Start st; st.J = (p + bsz - 1) / bsz;
   st.blk.assign(p, 0); st.pos.assign(p, 0);
   std::vector<int> perm(p); for (int j = 0; j < p; ++j) perm[j] = j;
@@ -182,13 +183,27 @@ static void bench_comp(int p, int bsz, int nsup, int T, int scatter) {
   st.code_ptr.assign(st.J + 1, 0);
   for (int b = 0; b < st.J; ++b) st.code_ptr[b + 1] = st.code_ptr[b] + ((int64_t)1 << bsize[b]);
   double t0 = now();
+  // small_pages = 1: the table on 4 KB pages (as a mapped setup.bin section is: file pages are not huge pages); the
+  // default heap allocation is on transparent 2 MB pages where the machine enables them
+  st.logr_flat.reserve((size_t)st.code_ptr[st.J]);
+  if (small_pages) {
+    const uintptr_t a = ((uintptr_t)st.logr_flat.data() + 4095) & ~(uintptr_t)4095; const size_t len = ((size_t)st.code_ptr[st.J] * 8) & ~(size_t)4095;
+    if (len > 4096 && madvise((void*)a, len - 4096, MADV_NOHUGEPAGE) != 0) std::printf("# madvise(MADV_NOHUGEPAGE) failed\n");
+  }
   st.logr_flat.resize((size_t)st.code_ptr[st.J]);
   #pragma omp parallel for num_threads(T) schedule(static)
   for (int64_t i = 0; i < st.code_ptr[st.J]; ++i) { uint64_t x = (uint64_t)i; st.logr_flat[i] = -1e-3 * (double)(splitmix64(x) >> 44); }
   std::vector<double> lr1(p);
   for (int j = 0; j < p; ++j) lr1[j] = st.lr(st.blk[j], 1u << st.pos[j]);
-  std::printf("# comp tables p=%d blocks of %d (%s): %.2f GB of logr, built in %.1f s\n", p, bsz, scatter ? "labels scattered over blocks" : "contiguous blocks",
-              (double)st.logr_flat.size() * 8 / 1073741824.0, now() - t0);
+  std::printf("# comp tables p=%d blocks of %d (%s; %s pages): %.2f GB of logr, built in %.1f s\n", p, bsz, scatter ? "labels scattered over blocks" : "contiguous blocks",
+              small_pages ? "4 KB" : "default (huge where enabled)", (double)st.logr_flat.size() * 8 / 1073741824.0, now() - t0);
+  {   // the table pages a phase-A sweep touches: the singleton codes of every label
+    std::vector<uint64_t> pg; pg.reserve(p);
+    for (int j = 0; j < p; ++j) pg.push_back((uint64_t)(st.code_ptr[st.blk[j]] + ((int64_t)1 << st.pos[j])) * 8 / 4096);
+    std::sort(pg.begin(), pg.end()); const size_t np = std::unique(pg.begin(), pg.end()) - pg.begin();
+    std::printf("# singleton codes touch %zu of %zu 4 KB pages of logr (%.1f%%, %.2f GB); %.2f pages per label\n", np, st.logr_flat.size() * 8 / 4096,
+                100.0 * np / (st.logr_flat.size() * 8 / 4096.0), np * 4096.0 / 1073741824.0, (double)np / p);
+  }
   std::vector<SupportCache> sup(nsup);
   for (auto& c : sup) {   // the composite-block part of build_support (kernel.h), on random supports of 6 members
     Model S; while ((int)S.size() < 6) { int j = (int)(g() % p); if (!contains(S, j)) sorted_insert(S, j); }
@@ -237,7 +252,7 @@ int main(int argc, char** argv) {
   if (mode == "check" && argc >= 5) bench_check(strtoull(argv[2], 0, 10), atoi(argv[3]), atoi(argv[4]));
   else if (mode == "products" && argc >= 5) bench_products(atoi(argv[2]), atoi(argv[3]), atoi(argv[4]), argc > 5 ? atoi(argv[5]) : 200, argc > 6 ? atoi(argv[6]) : 128);
   else if (mode == "fy" && argc >= 5) bench_fy(atoi(argv[2]), atoi(argv[3]), atoi(argv[4]));
-  else if (mode == "comp" && argc >= 7) bench_comp(atoi(argv[2]), atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), atoi(argv[6]));
+  else if (mode == "comp" && argc >= 7) bench_comp(atoi(argv[2]), atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), atoi(argv[6]), argc > 7 ? atoi(argv[7]) : 0);
   else { std::fprintf(stderr, "unknown mode or missing arguments (see header)\n"); return 1; }
   return 0;
 }
