@@ -111,3 +111,4 @@
 - 22:14 — DIST: L7 VERIFIED (NEC + Cor; 2 MINOR + 1 NIT applied; no target touched); D1 (L6-01 repair re-check + tags) and D2 (NEC hunks) on Sol; citecheck 0 MISS; staged ingest 20 claims 0 problems; acceptance refused only on stale W3-MISR:R′ accept record → recorder J (MISR incl. R′ right after PSHARP). Freeze Mon 09:00.
 - 22:14 — DIST: D42 conditions wired into D1 brief (tag CONFIRMED/CONTESTED; e^{s₀}q ≤ n^{-1/8} ≤ ½ is an unchanged line-checked X v0.3 line from threshold (d) — repair adds no condition; short extra Sol check if D1 isn't explicit). Nothing past 2 h.
 - 22:15 — MISR-R CP1 → GO (D43).
+- 22:17 — recorder J step 1: infra/accept-identity-case 33a8519 (64/72 accept records match after fix; tl 175/0); Opus code review launched (child). Recorder: PSHARP re-record now; MISR (R′ first, unblocks DIST) + START manifest re-freeze now (C-MIS check cleared); then K; CI venv built in SMC_Theory_Department/ci.
