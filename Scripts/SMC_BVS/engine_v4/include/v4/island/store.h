@@ -18,7 +18,6 @@
 #include <limits>
 #include <memory>
 #include <omp.h>
-#include <parallel/algorithm>
 #include <chrono>
 #include <mutex>
 #include <tuple>
@@ -33,6 +32,37 @@ using v4::ME_INIT; using v4::ME_GIBBS_HELD; using v4::ME_GIBBS_FLIP; using v4::M
 inline void add_moves(MoveStats& a, const MoveStats& o) {
   a.gibbs += o.gibbs; a.gibbs_change += o.gibbs_change; a.us_exec += o.us_exec; a.us_acc += o.us_acc; a.us_self += o.us_self;
   a.ns_exec += o.ns_exec; a.ns_acc += o.ns_acc; a.ns_noscore += o.ns_noscore; a.ns_self += o.ns_self; a.in_exec += o.in_exec; a.in_acc += o.in_acc; a.gibbs_cap += o.gibbs_cap;
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// Parallel sort without allocation inside the parallel region (review PR26 r2: __gnu_parallel::sort allocates inside
+// its own OpenMP region, where a std::bad_alloc cannot be caught and aborts the process). The caller's scratch `tmp`
+// (same size) is allocated outside every region, so an out-of-memory surfaces as a catchable std::bad_alloc here,
+// before the region. Chunks are sorted with std::sort, then merged pairwise with std::merge (neither allocates).
+// `less` must be a strict weak order whose equivalent elements are identical in content (both store orders are), so
+// the sorted sequence is unique and independent of `threads`.
+template <class T, class Less>
+inline void psort_noalloc(std::vector<T>& a, std::vector<T>& tmp, Less less, int threads) {
+  const size_t n = a.size();
+  if (threads <= 1 || n < 4096) { std::sort(a.begin(), a.end(), less); return; }
+  tmp.resize(n);                                     // outside any region (may throw std::bad_alloc: caught by the owner)
+  const int C = threads;
+  std::vector<size_t> b(C + 1);
+  for (int c = 0; c <= C; ++c) b[c] = n * (size_t)c / (size_t)C;
+  #pragma omp parallel for num_threads(threads) schedule(static, 1)
+  for (int c = 0; c < C; ++c) std::sort(a.begin() + b[c], a.begin() + b[c + 1], less);
+  T* src = a.data(); T* dst = tmp.data();
+  for (size_t width = 1; width < (size_t)C; width *= 2) {
+    const int npairs = (int)((C + 2 * width - 1) / (2 * width));
+    #pragma omp parallel for num_threads(threads) schedule(static, 1)
+    for (int q = 0; q < npairs; ++q) {
+      const size_t lo = b[std::min<size_t>(C, 2 * width * q)], mid = b[std::min<size_t>(C, 2 * width * q + width)],
+                   hi = b[std::min<size_t>(C, 2 * width * (q + 1))];
+      std::merge(src + lo, src + mid, src + mid, src + hi, dst + lo, less);
+    }
+    std::swap(src, dst);
+  }
+  if (src != a.data()) std::copy(src, src + n, a.data());
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -109,6 +139,7 @@ class TopStore {
   bool defer = false;          // true: flush() never compacts below stage_hard; the owner calls compact_parallel()
   double t_compact = 0;        // wall seconds spent compacting (any path)
   bool dup_filter = true;
+  int64_t test_oom_merge = -1; // tests only: compact_parallel throws std::bad_alloc from this merge on (review PR26 r2)
   StoreBuffer stage;                                     // island staging area (guarded by mu)
 
   void init(uint64_t c, Order o) {
@@ -210,7 +241,7 @@ class TopStore {
   }
   // Parallel compaction (pass boundaries and step boundaries; all `threads` workers are free). Same content as
   // compact_locked() -- a function of the set of offers -- for every thread count and flush order:
-  //   1. staged refs sorted by (hash, |S|, S, v desc) with __gnu_parallel::sort (the order is total on content, so the
+  //   1. staged refs sorted by (hash, |S|, S, v desc) with psort_noalloc (the order is total on content, so the
   //      sorted sequence is unique); 2. first entry per model kept (sequential scan); 3. each survivor matched against
   //      the kept index in parallel (a kept copy >= drops it, a smaller kept copy is marked dead); 4. survivors sorted
   //      under the store order (parallel); 5. merge-path parallel merge of the alive kept run and the survivors, both
@@ -234,7 +265,9 @@ class TopStore {
       if (c != 0) return lex_less(a.S, a.k, b.S, b.k);
       return a.v > b.v;
     };
-    __gnu_parallel::sort(r.begin(), r.end(), by_model, __gnu_parallel::default_parallel_tag(threads));
+    if (test_oom_merge >= 0 && (int64_t)n_merges >= test_oom_merge) throw std::bad_alloc();   // test hook (r2)
+    std::vector<StoreRef> scratch;   // sort scratch, allocated outside every parallel region (r2)
+    psort_noalloc(r, scratch, by_model, threads);
     size_t w = 0;
     for (size_t i = 0; i < s; ++i) if (w == 0 || !same_model_ref(r[w - 1], r[i])) r[w++] = r[i];
     r.resize(w);
@@ -247,7 +280,7 @@ class TopStore {
     size_t w2 = 0; for (size_t i = 0; i < w; ++i) if (!drop[i]) r[w2++] = r[i];
     r.resize(w2);
     auto ordl = [this](const StoreRef& a, const StoreRef& b) { return ord_less(a, b); };
-    __gnu_parallel::sort(r.begin(), r.end(), ordl, __gnu_parallel::default_parallel_tag(threads));
+    psort_noalloc(r, scratch, ordl, threads);
     std::vector<uint32_t> alive; alive.reserve(K.size());
     for (size_t i = 0; i < K.size(); ++i) if (!dead[i]) alive.push_back((uint32_t)i);
     const size_t na = alive.size(), nb = r.size(), keep = std::min<size_t>(cap, na + nb);

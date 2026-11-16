@@ -10,11 +10,14 @@
 # (store compactions in the first rounds are serial: see WP3 report), peak RSS ~ 12-15 GB.
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$here/tools/nots_guard.sh"
 build="${1:?build dir}"; thr="${2:-24,48,96}"; plist="${3:-100000,1000000}"
-cmake -S "$here" -B "$build" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF -DV4_ISLAND_ISA=sapphirerapids > "$build.cmake.log"
+nots_guard "$build"   # TMPDIR set, build dir and TMPDIR under the department folders (B4)
+cmake -S "$here" -B "$build" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF -DV4_ISLAND_ISA=sapphirerapids > "$LOGDIR/cmake.log"
 make -C "$build" -j 16 v4_bench_island 2>&1 | grep -E "error|warning" || true
 B="$build/v4_bench_island"
 export OMP_PROC_BIND=spread OMP_PLACES=threads
+export V4_K_STORE="${V4_K_STORE:-8}"   # calibration-measured mean stored |S| at 1e6 (6-8; review PR26 B1)
 lscpu | grep -E "Model name|^CPU\(s\)|Socket|NUMA node\(s\)"
 for p in ${plist//,/ }; do
   G=256; [[ "$p" -ge 1000000 ]] && G=64

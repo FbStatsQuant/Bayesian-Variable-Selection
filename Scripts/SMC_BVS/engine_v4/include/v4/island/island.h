@@ -34,10 +34,13 @@ struct IslandConfig {
   int B = 14;                               // number of N-swap labels (core: labels N1..NB)
   KernelKind kernel = KernelKind::LabelMajor;
   int G = 256; int tile = 128; int threads = 1;   // execution parameters: never part of the law (G = 0: largest G <= 256 that fits mem_budget)
-  double k_store = 0;                       // admission: calibration-measured mean stored |S| (0: estimate from pi_0)
+  double k_store = 0;                       // admission: calibration-measured mean stored |S| (calib.bin); REQUIRED at
+                                            // p >= 1e5 (review PR24 r1 / PR26: invalid_input when absent)
+  bool k_store_optional = false;            // tests / benchmarks only: p >= 1e5 without k_store (plan from pi_0 alone)
   double inputs_bytes = 0;                  // admission: setup / calib inputs mapped by the caller (X, z, diag(G) are in the plan)
   double test_admission_k = 0;              // tests only: force the admission's k (forces a step-boundary refusal)
   int test_oom_pass = -1;                   // tests only: throw std::bad_alloc inside phase A at this pass (resource_limit path)
+  int test_oom_merge = -1;                  // tests only: throw std::bad_alloc in the parallel compaction from this merge on
   uint64_t mem_budget = 0;                  // bytes; 0 = no admission check (--mem-budget; manager Q3/Q4)
   uint64_t store_cap = 0;                   // 0: 40 p + 1 (OD-13)
   std::string ckpt_path;                    // empty: no checkpoints; else <path>.a / <path>.b
@@ -54,12 +57,24 @@ struct IslandConfig {
   bool store_dup_filter = true;             // exact snapshot duplicate filter (execution parameter; content unchanged)
   bool store_parallel_compact = true;       // compaction at pass/step boundaries with all threads (content unchanged)
   bool check_store = true;                  // I1 after every step (linear; O(c) hash lookups)
-  int products_block = 4;                   // tile products: 4 active columns x 32 labels per sweep (1: the original loop); same bits
+  int products_block = 0;                   // tile products: 4 = 4 active columns x 32 labels per sweep, 1 = the original loop
+                                            // (same bits); 0 = auto: 4 when the island ISA has AVX-512, else 1 (review PR26
+                                            // B2, MEASURED: block 4 is -27% on AVX-512 and +17% on x86-64-v2)
   bool verbose = false;                     // progress line per step on stderr (benchmarks)
   // adaptive schedule (core's pilot rule: largest phi' with population ESS >= 0.9 H, floor 1/Te). Benchmarks and
   // pilot-like grids only; production islands use the frozen grid from calib.bin.
   bool adaptive = false; double adaptive_H = 0; int adaptive_Te = 30;
 };
+
+// the products block a configuration uses (0 = auto by the island ISA; review PR26 B2)
+inline int products_block_of(const IslandConfig& c) {
+  if (c.products_block > 0) return c.products_block;
+#if defined(__AVX512F__)
+  return 4;
+#else
+  return 1;
+#endif
+}
 
 using v4::StageRow;
 

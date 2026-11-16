@@ -9,6 +9,12 @@
 //        own population (a calibrated-like schedule). Prints ns per step, M, products, offers, phase times, peak RSS.
 //   store <cap> <threads> <offers_per_thread>
 //        cost of TopStore::offer under a realistic mix (most offers below tau, duplicates above it).
+//   plan <p> <N> <threads> <G list> [n]      the admission's memory plan (no island run)
+//   overheads <p> [n]                          per-call costs of the L5 levers, old vs new (1 thread)
+// Environment: V4_K_STORE (calibration-measured mean stored |S| -> IslandConfig::k_store; island and plan modes; without
+// it the island mode plans from pi_0 alone, which real runs refuse at p >= 1e5), V4_MEM_BUDGET_GB, V4_ISLAND_ID,
+// V4_PRODUCTS_BLOCK (default: 4 with AVX-512, else 1), V4_VERBOSE, V4_NO_DUP_FILTER, V4_SERIAL_COMPACT.
+// Exit status: non-zero when any island run is refused or does not complete (review PR26 B1).
 #include <omp.h>
 #include <chrono>
 #include <cstdio>
@@ -48,6 +54,9 @@ static void bench_kernel(int p, int T, int nsup, int k, int div, int Bk) {
   int ntile = (p + Bk - 1) / Bk; avec<double> Xt((size_t)ntile * Bk * n, 0.0);
   for (int ti = 0; ti < ntile; ++ti) for (int jj = 0; jj < Bk && ti * Bk + jj < p; ++jj) for (int i = 0; i < n; ++i) Xt[(size_t)ti * Bk * n + (size_t)i * Bk + jj] = D.col(ti * Bk + jj)[i];
   double tprod = 0, tflip = 0; long pairs = 0; double chk = 0;
+  // products block read per run, as in the island path (review PR26 nit); default = the island ISA's (B2)
+  IslandConfig cb; if (const char* e = std::getenv("V4_PRODUCTS_BLOCK")) cb.products_block = std::atoi(e);
+  const int blk = products_block_of(cb);
   double w0 = now();
   #pragma omp parallel num_threads(T) reduction(+ : tprod, tflip, pairs, chk)
   {
@@ -57,8 +66,7 @@ static void bench_kernel(int p, int T, int nsup, int k, int div, int Bk) {
     for (int ti = 0; ti < ntile; ++ti) {
       int j0 = ti * Bk, nbv = std::min(Bk, p - j0); const double* Xtile = &Xt[(size_t)ti * Bk * n];
       double ta = now();
-      { static const int blk = std::getenv("V4_PRODUCTS_BLOCK") ? std::atoi(std::getenv("V4_PRODUCTS_BLOCK")) : 4;
-        tile_products(XA.data(), nA, n, Xtile, Bk, Pp.data(), blk); }
+      tile_products(XA.data(), nA, n, Xtile, Bk, Pp.data(), blk);
       double tb = now();
       for (auto& c : sup) {
         std::vector<v8d> ub(64); v8d* u = ub.data();
@@ -105,8 +113,10 @@ static std::vector<int> parse_list(const std::string& s) {
 }
 
 // island <p> <N> <threads list, e.g. 1,24,48,96> <bit|A> <lm|pm> <G> <tile> <grid: geo:T | adaptive:Te> <L> <Hm> [n] [cap]
+// returns 0 when every run completed; else the first failing run's code (refusals included: review PR26 B1):
+// 20 + IslandRun::status (1 interrupted, 2 numerical_failure, 3 resource_limit), or exit_code(status) of a thrown error
 template <Arith A>
-static void bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk, int G, int Bk, const std::string& gspec, int L, int Hm, int n, uint64_t cap) {
+static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk, int G, int Bk, const std::string& gspec, int L, int Hm, int n, uint64_t cap) {
   Data D; double t0 = now(); make_ar_data(D, n, p, 0.6, 7);
   Start st; build_start(st, D, contiguous_blocks(p, 4));
   Neighbours nb = window_neighbours(D, 14, 8);
@@ -121,8 +131,11 @@ static void bench_island(int p, int N, const std::vector<int>& thr, KernelKind k
   // environment overrides AFTER the defaults (the island id was reset to 1 before: manager 11-16 note 1)
   if (const char* e = std::getenv("V4_ISLAND_ID")) c.island = (uint32_t)std::atoi(e);
   if (const char* e = std::getenv("V4_MEM_BUDGET_GB")) c.mem_budget = (uint64_t)(std::atof(e) * 1073741824.0);
+  if (const char* e = std::getenv("V4_K_STORE")) c.k_store = std::atof(e);   // calibration-measured mean stored |S| (B1)
+  else c.k_store_optional = true;   // bench only: without V4_K_STORE the plan's k comes from pi_0 alone (r1 refuses this in real runs)
   c.inputs_bytes = inputs_extra;
-  std::printf("# island id %u (address key), seed %u\n", c.island, c.seed);
+  std::printf("# island id %u (address key), seed %u, k_store %s, products block %d\n", c.island, c.seed,
+              c.k_store > 0 ? std::to_string(c.k_store).c_str() : "absent (pi_0 plan)", products_block_of(c));
   if (gspec.rfind("geo:", 0) == 0) {
     int Tst = std::atoi(gspec.c_str() + 4);
     c.grid.push_back(0.0); for (int t = 1; t < Tst; ++t) c.grid.push_back(std::pow(10.0, -3.0 * (1.0 - (double)t / (Tst - 1))) * ((double)t / Tst));
@@ -134,12 +147,15 @@ static void bench_island(int p, int N, const std::vector<int>& thr, KernelKind k
   } else if (gspec.rfind("adaptive:", 0) == 0) {
     c.adaptive = true; c.adaptive_H = N; c.adaptive_Te = std::atoi(gspec.c_str() + 9);
   } else { std::fprintf(stderr, "grid spec: geo:T | steps:phi1,...,1 | adaptive:Te\n"); std::exit(2); }
-  uint64_t h0 = 0;
+  uint64_t h0 = 0; int rc = 0;
   for (int T : thr) {
     c.threads = T;
     double w0 = now();
-    IslandRun r = run_island<A>(D, st, nb, c);
+    IslandRun r;
+    try { r = run_island<A>(D, st, nb, c); }
+    catch (const v4::Error& e) { std::printf("island threads=%d REFUSED: %s\n", T, e.what()); std::fflush(stdout); if (!rc) rc = v4::exit_code(e.st); continue; }
     double wall = now() - w0;
+    if (r.status != 0) { std::printf("island threads=%d status=%d (NOT completed): %s\n", T, r.status, r.reason.c_str()); if (!rc) rc = 20 + r.status; }
     const auto& k = r.ks;
     int rounds = r.T + L + Hm;
     double steps = (double)N * (p + 16) * rounds;   // elementary steps N (p + B + 2) per round
@@ -171,6 +187,7 @@ static void bench_island(int p, int N, const std::vector<int>& thr, KernelKind k
                 vm_hwm_kb() / 1048576.0, (unsigned long long)r.hash(), r.hash() == h0 ? "same" : "DIFFERENT");
     std::fflush(stdout);
   }
+  return rc;
 }
 
 static void bench_store(uint64_t cap, int T, long per) {
@@ -219,7 +236,8 @@ int main(int argc, char** argv) {
     KernelKind kk = kn == "pm" ? KernelKind::ParticleMajor : KernelKind::LabelMajor;
     std::printf("# v4_bench_island flags %s, island ISA override '%s', kernel namespace %s; host threads available %d; compiler %s\n",
                 V4_BIT_FLAGS_STR, V4_ISLAND_ISA_STR, kHasFMA() ? "fma" : "base", omp_get_max_threads(), __VERSION__);
-    if (ar == "bit") bench_island<Arith::Bit>(p, N, thr, kk, G, Bk, gs, L, Hm, n, cap); else bench_island<Arith::ClassA>(p, N, thr, kk, G, Bk, gs, L, Hm, n, cap);
+    int rc = ar == "bit" ? bench_island<Arith::Bit>(p, N, thr, kk, G, Bk, gs, L, Hm, n, cap) : bench_island<Arith::ClassA>(p, N, thr, kk, G, Bk, gs, L, Hm, n, cap);
+    if (rc) { std::fprintf(stderr, "v4_bench_island: a run did not complete (exit %d)\n", rc); return rc; }
   } else if (mode == "plan") {   // plan <p> <N> <threads> <G list> [n]: build data + setup, print the admission plan (no island run)
     int p = atoi(argv[2]), N = atoi(argv[3]), T = atoi(argv[4]); std::vector<int> Gs = parse_list(argv[5]); int n = argc > 6 ? atoi(argv[6]) : 200;
     Data D; make_ar_data(D, n, p, 0.6, 7); Start st; build_start(st, D, contiguous_blocks(p, 4)); Neighbours nb = window_neighbours(D, 14, 8);
@@ -227,6 +245,7 @@ int main(int argc, char** argv) {
     std::printf("# p=%d n=%d N=%d threads=%d: process RSS after data + setup %.2f GB (inputs beyond X/z/diagG %.2f GB)\n", p, n, N, T, vm_rss_kb() / 1048576.0, inputs_extra / 1073741824.0);
     for (int G : Gs) {
       IslandConfig c; c.N = N; c.threads = T; c.G = G; c.kernel = KernelKind::LabelMajor; c.Hm = 2; c.inputs_bytes = inputs_extra;
+      if (const char* e = std::getenv("V4_K_STORE")) c.k_store = std::atof(e);
       double k = 0; MemPlan mp = plan_island(D, st, c, nullptr, &k, nullptr);
       std::printf("plan G=%d: %.2f GB  [%s]\n", G, mp.total / 1073741824.0, mem_plan_text(mp).c_str());
     }

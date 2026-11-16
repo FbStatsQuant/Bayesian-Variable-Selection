@@ -569,6 +569,20 @@ TEST(oom_in_region_is_resource_limit) {
   }
 }
 
+// out of memory in the parallel compaction (review PR26 r2): the sort scratch is allocated outside every parallel
+// region (psort_noalloc), so the failure is a catchable std::bad_alloc -> resource_limit, never an abort
+TEST(oom_in_parallel_compaction_is_resource_limit) {
+  Fixture F(100, 300, 34);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16; c.test_oom_merge = 1;
+  IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
+  CHECKF(r.status == 3 && r.reason.find("out of memory") != std::string::npos && r.top_v.empty(), "status %d '%s' (merges %llu)", r.status, r.reason.c_str(),
+         (unsigned long long)r.ks.store_merges);
+  // psort_noalloc = std::sort for every thread count (chunks + pairwise merges)
+  std::mt19937_64 g(7); std::vector<uint64_t> a(20011); for (auto& x : a) x = g() % 5000;
+  std::vector<uint64_t> ref = a; std::sort(ref.begin(), ref.end());
+  for (int th : {1, 2, 3, 5, 8}) { std::vector<uint64_t> b = a, tmp; psort_noalloc(b, tmp, std::less<uint64_t>(), th); CHECKF(b == ref, "threads %d", th); }
+}
+
 // leader stores (review PR24 P1): label-major = particle-major (= core through the compat golden), both arithmetic forms
 TEST(leaders_label_major_equal_particle_major) {
   Fixture F(100, 300, 35);
@@ -776,7 +790,7 @@ static void plan_bounds_peak(int p, int N, std::initializer_list<int> Gs) {
   Fixture F(200, p, 36);
   for (int G : Gs) for (bool lead : {false, true}) {
     IslandConfig c = small_cfg(); c.N = N; c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = G; c.leaders = lead;
-    c.grid = {0.0, 0.3, 0.7, 1.0}; c.L = 0; c.Hm = 1;
+    c.grid = {0.0, 0.3, 0.7, 1.0}; c.L = 0; c.Hm = 1; c.k_store = 8.0;   // as calib.bin would give (r1)
     { FILE* cr = std::fopen("/proc/self/clear_refs", "w"); if (cr) { std::fputs("5", cr); std::fclose(cr); } }
     const long rss0 = status_kb("VmRSS:");
     IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
@@ -794,6 +808,18 @@ static void plan_bounds_peak(int p, int N, std::initializer_list<int> Gs) {
 }
 TEST(mem_plan_bounds_measured_peak_2e4) { plan_bounds_peak(20000, 500, {64, 256}); }
 TEST_TAGGED(mem_plan_bounds_measured_peak_1e5, "full") { plan_bounds_peak(100000, 500, {64, 256}); }
+
+// review PR24 r1 / PR26 B1: at p >= 1e5 an island without the calibration-measured k_store is invalid_input (no real
+// run plans from the pi_0 fallback); with k_store (or the test/bench override) it is admitted
+TEST(k_store_required_at_1e5) {
+  Fixture F(20, 100000, 37);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.N = 4; c.grid = {0.0, 1.0}; c.L = 0; c.Hm = 1;
+  bool refused = false;
+  try { (void)run_island<Arith::ClassA>(F.D, F.st, F.nb, c); } catch (const v4::Error& e) { refused = e.st == v4::Status::invalid_input && std::string(e.what()).find("k_store") != std::string::npos; }
+  CHECKF(refused, "p 1e5 without k_store was not refused");
+  c.k_store = 8.0; IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c); CHECKF(r.status == 0, "with k_store: status %d", r.status);
+  c.k_store = 0; c.k_store_optional = true; IslandRun r2 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c); CHECKF(r2.status == 0 && r2.hash() == r.hash(), "override");
+}
 
 // L5: the vectorised pi_0 draw = the original draw (same uniforms per slot, same model), and philox8_word over slots
 // = uniform_at; checked for many particles, two partitions, and sizes up to K (n = 60 -> K = 30).

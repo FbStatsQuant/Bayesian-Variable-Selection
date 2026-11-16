@@ -8,7 +8,7 @@
 //                requested from WP1).
 //   x_tiles      label-major: the tiled row-major copy of X                      ntile * tile * n * 8
 //   store        store_peak_bytes(): deferred (label-major): old + new kept run 2 c e, staging reserved at c/2: (c/2) e,
-//                sort refs + the mergesort copy (c/2) 64, flags, alive list 5 c, two indexes 2 * 4 pow2(2c + 2);
+//                sort refs + the sort scratch of psort_noalloc (c/2) 64, flags, alive list 5 c, two indexes 2 * 4 pow2(2c + 2);
 //                serial (particle-major): staging c/4, refs 32, pool over-reservation (c/4) 4k, + one stale generation
 //   k            the plan's mean stored |S|: max(8, q90(pi_0 size) + 1, k_store) -- round 1 stores pi_0-sized models
 //   leaders      (calibration islands, option `leaders`) two stores of cap 20p, serial compaction at cap/4, same terms
@@ -42,7 +42,7 @@ inline uint64_t pow2_at_least(uint64_t x) { uint64_t n = 16; while (n < x) n <<=
 
 // Peak of one store during a compaction. Deferred (label-major, review P2): the staging area is reserved at its hard
 // limit and never reaches it (bounded waves), the parallel path allocates the new pool exactly and runs after all workers
-// released their snapshots: old + new kept run + staging + sort refs and the mergesort copy + flags + two indexes.
+// released their snapshots: old + new kept run + staging + sort refs and the sort scratch + flags + two indexes.
 // Serial (particle-major, or a store without deferral): staging at its limit, std::sort refs, the new pool over-reserved
 // by the staged pool, and one stale snapshot generation held by another worker.
 inline double store_peak_bytes(uint64_t c, bool deferred, double k) {

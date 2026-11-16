@@ -175,6 +175,7 @@ class IslandEngine {
       for (auto& t : tl) { t->lead0 = &lead0; t->lead1 = &lead1; }
     }
     top.dup_filter = cfg.store_dup_filter;
+    top.test_oom_merge = cfg.test_oom_merge;
     top.defer = cfg.store_parallel_compact && NT > 1 && cfg.kernel == KernelKind::LabelMajor;   // PM has no boundaries (review m3)   // compaction at pass/step boundaries, all threads
     scratch_P.resize(NT);
     Bk = std::max(64, (cfg.tile + 63) / 64 * 64);
@@ -432,7 +433,7 @@ class IslandEngine {
           const double* Xtile = &Xt[(size_t)ti * Bk * D.n];
           // products P[a][jj] = sum_i x_{i,a} x_{i,j}, sequential in i (bits of the Gram entry)
           const double tp0 = omp_get_wtime();
-          tile_products(gb.XA.data(), nA, D.n, Xtile, Bk, Pp.data(), cfg.products_block);
+          tile_products(gb.XA.data(), nA, D.n, Xtile, Bk, Pp.data(), products_block_of(cfg));
           tprod += omp_get_wtime() - tp0;
           for (int s = 0; s < nsup; ++s) {
             const SupportCache& c = gb.sup[s];
@@ -958,7 +959,7 @@ class IslandEngine {
             const double dt = now_t - prev_t, steps = (double)(k.particle_rounds - ks_prev.particle_rounds) * (double)m;
             const double pairs = (double)(k.support_label_pairs - ks_prev.support_label_pairs), sweeps = (double)(k.particle_sweeps - ks_prev.particle_sweeps);
             const double rounds = (double)(k.particle_rounds - ks_prev.particle_rounds);
-            std::fprintf(stderr, "  [round] step %d: wall %.2f s | steps %.4g pairs %.4g (%.3f per step) sweeps %.4g (M %.3f) passes %llu | "
+            std::fprintf(stderr, "  [round] step %d: wall %.2f s | steps %.4g pairs %.4g (%.3f pairs per particle-round / p) sweeps %.4g (M %.3f) passes %llu | "
                          "ns per step (wall x threads) %.1f | ns per pair (wall x threads) %.1f | products ns/pair (thread) %.1f | phaseA ns/pair (wall x threads) %.1f | "
                          "phaseB %.2f s compaction %.2f s\n",
                          step, dt, steps, pairs, steps > 0 ? pairs / steps * m / std::max(1.0, (double)p) : 0.0, sweeps, rounds > 0 ? sweeps / rounds : 0.0,
@@ -1049,6 +1050,8 @@ IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const
     throw v4::Error(v4::Status::invalid_input, "run_island: the bit-form label-major kernel is test-only (D-21, manager Q1); theory mode runs particle-major");
   if (cfg.stop_after_step >= 0 && cfg.ckpt_path.empty()) throw v4::Error(v4::Status::invalid_input, "run_island: stop_after_step needs a checkpoint path");
   if (cfg.G < 0 || cfg.G > 256) throw v4::Error(v4::Status::invalid_input, "run_island: G must be in 0..256 (0 = chosen by mem_budget; manager Q3)");
+  if (D.p >= 100000 && !(cfg.k_store > 0) && !cfg.k_store_optional)   // review PR24 r1 / PR26 B1: no real run plans without it
+    throw v4::Error(v4::Status::invalid_input, "run_island: p >= 1e5 needs k_store (the calibration-measured mean stored |S|, calib.bin)");
   // admission (manager Q3/Q4, review PR24 P2): plan_island (k = max(8, q90(pi_0 size) + 1, k_store); G = the largest
   // value <= 256 that fits). The step-boundary re-check uses the store's actual pool.
   MemSizes z; double k_est = 0; int G = 0;
