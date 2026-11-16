@@ -235,3 +235,17 @@ the registry change. Newest entries at the bottom. Format:
 - 2026-11-16 correctness event (rollback history, W2-LOC2): W2-LOC2:F-LOC2, W2-LOC2:F-LOC2.exp, W2-LOC2:F-LOC2.poly SUSPECT (S3) -> NARROWED (major) -> cleared ACTIVE (task S4 batch NARROW, A:IDEAL-W⁺ / 𝔇). DIFF Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (PASS, WEAKER). HQ GO.
 
 - 2026-11-16 correctness event (rollback history, W2-UNI): W2-UNI:UNI-0, W2-UNI:UNI-1 SUSPECT (S3) -> NARROWED (major) -> cleared ACTIVE (task S4 batch NARROW, A:IDEAL-W⁺ / 𝔇). DIFF Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (PASS, WEAKER). HQ GO.
+
+## 2026-11-16 — SUPERSEDE W3-START2:START-R / W3-START2-R:START-R
+
+- decided by: HQ
+- reason: HQ GO real run (task U, H5 card 14 (A), 2026-11-16): free supersession (card 14 (A), STRONGER; W3-START2-R:START-R implies W3-START2:START-R, STATEMENT.md supersession table)
+- axes (Y vs X): assumptions=incomparable, conclusion=equal, rate=unknown, scope=unknown
+- class free; key step check: —; dependents: 1 direct
+
+## 2026-11-16 — SUPERSEDE W3-START2:IF-START / W3-START2-R:IF-START
+
+- decided by: HQ
+- reason: HQ GO real run (task U, H5 card 14 (A), 2026-11-16): free supersession (card 14 (A), STRONGER; W3-START2-R:IF-START implies W3-START2:IF-START, STATEMENT.md supersession table)
+- axes (Y vs X): assumptions=better, conclusion=equal, rate=unknown, scope=unknown
+- class free; key step check: —; dependents: 0 direct
