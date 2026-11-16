@@ -116,3 +116,4 @@
 - 22:27 — HQ approved Cont-F/R edge fix (D44, post-CP3s); PROTOCOL rule added; recorder told; W3-EDIT-now head to HQ after K.
 - 22:37 — READER S2: FAIL AS WRITTEN (5 MAJOR premise/scope omissions, no FATAL; math passed) → all repaired (4eae977); S3 Opus diff check running (overnight rule) with explicit tags; S2-F6 wording ('…off S₀ beyond the vanishing floor (A5)') sent to HQ for consultant; freeze after HQ confirms or in the morning.
 - 22:38 — HQ: S2-F6 accepted; Sol statement-change check on READER's S2 diff Mon after midday (D45); READER told.
+- 22:46 — READER S3 (Opus): FIXES-NEEDED → repaired (5ac7160a): (S5) independence restored; exact-branch STRONGER remark withdrawn; WEAKER tags on Thm 6/7, Thm 10, card 3.6/1.3 (restoring master premises); HQ told for H5 decision. Sol statement-change check Mon after midday.
