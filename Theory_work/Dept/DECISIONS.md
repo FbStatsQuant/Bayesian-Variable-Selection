@@ -293,3 +293,9 @@
 - **D43.** Lock LOCK-WITH-AMENDMENTS (1 MAJOR, 3 MINOR applied). Targets fixed: CorG-min, CorGb-plus (extension
   approved), CorH-plus (+ KL), CorH-U ([LA-1] approved; its statement-change check folded into the Sol line-check agent).
   MIS(i)/(i′)/(ii) unchanged; reader row thm4 weaker hypotheses / same displays (STRONGER) → H5 at CP3. CP3 target Tue 11-17.
+
+## 2026-11-15 22:26 CT — J real runs done
+- PSHARP 4a663e2; MISR 7c45d4b (MANIFEST_R2r re-frozen + HQ carriers citing PC_CMIS_CITEFIX_opus.md); START cd1c995
+  (+ START2 9 rows); RM2 b69476e. check.py 468/0 ERROR. W3-DIST staged acceptance now PASSES (R′ current); PSHARP-R A5
+  gone. Cont-F/R refused by tools (A0/A5): asked HQ to replace the depends_on edge to RM-F/R by the implication relation
+  (they prove RM2 ⇒ RM) — low urgency. Tool fix branch still under Opus review (future-proofing).

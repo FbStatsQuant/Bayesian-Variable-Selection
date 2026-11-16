@@ -112,3 +112,4 @@
 - 22:14 — DIST: D42 conditions wired into D1 brief (tag CONFIRMED/CONTESTED; e^{s₀}q ≤ n^{-1/8} ≤ ½ is an unchanged line-checked X v0.3 line from threshold (d) — repair adds no condition; short extra Sol check if D1 isn't explicit). Nothing past 2 h.
 - 22:15 — MISR-R CP1 → GO (D43).
 - 22:17 — recorder J step 1: infra/accept-identity-case 33a8519 (64/72 accept records match after fix; tl 175/0); Opus code review launched (child). Recorder: PSHARP re-record now; MISR (R′ first, unblocks DIST) + START manifest re-freeze now (C-MIS check cleared); then K; CI venv built in SMC_Theory_Department/ci.
+- 22:26 — J real runs done (PSHARP/MISR/START/RM2 re-recorded; START & MISR manifests re-frozen); DIST + PSHARP-R unblocked; Cont-F/R edge question to HQ.
