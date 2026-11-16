@@ -1,0 +1,8 @@
+v3_fit.R copyLF=c19c3a2fa856 prodLF=c19c3a2fa856 git2252LF=c19c3a2fa856 sums=1f0eb5506d9e prodCRLF=0
+v3_run.R copyLF=3d486abe5a10 prodLF=3d486abe5a10 git2252LF=3d486abe5a10 sums=91c00e2b17dd prodCRLF=0
+v3_exact.R copyLF=18e29edea8d0 prodLF=18e29edea8d0 git2252LF=18e29edea8d0 sums=6bd5adbcfe47 prodCRLF=0
+v3_preprocess.R copyLF=c35cf5aa7d87 prodLF=c35cf5aa7d87 git2252LF=c35cf5aa7d87 sums=758d97e0f02c prodCRLF=1
+cpp/v3_engine.h copyLF=ff00892ae176 prodLF=ff00892ae176 git2252LF=ff00892ae176 sums=b2dd4847272d prodCRLF=0
+cpp/v3_core.cpp copyLF=aa3b11f0d2b2 prodLF=aa3b11f0d2b2 git2252LF=aa3b11f0d2b2 sums=07b8c3c93b09 prodCRLF=0
+cpp/v3_ledger.h copyLF=a07192a6d986 prodLF=a07192a6d986 git2252LF=a07192a6d986 sums=129ee8aebc37 prodCRLF=1
+cpp/v3_score.h copyLF=41173ac1460e prodLF=41173ac1460e git2252LF=41173ac1460e sums=c306e4979fa4 prodCRLF=0
