@@ -18,7 +18,20 @@ The structure is right, and the core claim reproduces: the v4 calibration ledger
 
 ## Test runs (MEASURED, Owls `owls.stat.rice.edu`, Xeon Gold 6148, g++ 11.5.0, 3 threads, `nice -n 19`)
 
-RESULTS_PLACEHOLDER
+| tree | command | result |
+|---|---|---|
+| PR head `453b227c` | `TMPDIR=… tests/run_tests.sh --quick --threads 3` | `v4_tests` **107 test cases, 0 failed, 0 check failures**; WP5 driver 17/17 OK; WP5 competitor harness and install script OK; **WP4 golden (quick): 428,237 checks, 0 failures** |
+| PR merged onto current `exp/P1M-engine` `4c238a32` (local detached merge `eed6a859`, tree `01c583be`; `git merge-tree` clean, no file overlaps) | same | `v4_tests` **110 test cases, 0 failed** (3 more from PR #26 / v0.1.12); WP5 all OK; **WP4 golden (quick): 428,237 checks, 0 failures** |
+
+- **Check count:** the PR's 1,986,300 is presumably the `--full` golden. I ran the quick level, as asked. The ledger path (`ledger_calib`) runs at every level: every case at 1 and 3 threads, plus P1, P2, P4 and P5.
+- **Reviewer probe:** `probe.cpp`, linked against the PR's `libv4_bit.a`, 1 thread. It ran five cases, labelled A–E:
+  - A: admission `resource_limit` → `numerical_failure`;
+  - B: `internal_error` → `numerical_failure`;
+  - C: leaders-off island ledgers → status ok;
+  - D: V settings at (200, 10⁶) → H 204,800 and N0 10⁶;
+  - E: the I_max clamp.
+
+  Cases A–D are cited in M-1, M-2 and M-3; E is cited in m-5.
 
 ## Focus questions
 

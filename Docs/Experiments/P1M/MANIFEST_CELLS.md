@@ -1,4 +1,4 @@
-# MANIFEST_CELLS — the executable cell / seed manifest of the P1M experiment (DRAFT v0.3, 2026-11-16; v0.2 = the PR #19 review fixes (WP5); v0.3 = H-9 re-size (Engineering manager))
+# MANIFEST_CELLS — the executable cell / seed manifest of the P1M experiment (DRAFT v0.4, 2026-11-16; v0.2 = the PR #19 review fixes (WP5); v0.3 = H-9 re-size; v0.4 = H-10 re-cost after L5 + gated AR-weak 1M (Engineering manager))
 
 **Status: DRAFT for the Engineering manager.** It answers Sol F7 and the F3 disposition: "one costed cell/seed manifest
 replaces the tier totals". Sources:
@@ -97,16 +97,16 @@ each extra N = 2,500 arm costs ≈ 35 core-h per dataset, ≈ 106 over the 3 dat
 | ADJ-OPP | 200 | 2 | 192 (mandatory at 10⁵, Sol F7) |
 | **total** | | **12** | **1,325** |
 
-### 10⁶ rung, V, n = 200 (OD-14 / D-10; **re-sized by H-9**, ×1.44 from job 2748756, G = 256 socket-local)
+### 10⁶ rung, V, n = 200 (OD-14 / D-10; **re-costed by H-10**, ×1.234 from job 2749328 after L5; H-9 used ×1.44)
 | cell | fits | core-h |
 |---|---|---|
-| AR-strong × 3 (rep 1 = pilot, see §1) | 3 | 4,160 |
-| ADJ-OPP × 1 | 1 | 1,387 |
-| self-check: **N = 5,000** on AR rep 1's data (H-9; was N = 10⁴ at 3,600) | 1 | 2,592 |
-| **total** | **5** | **8,139** |
-| *named, NOT in the total (Sol F7):* second seed on AR rep 1 | (1) | (1,387) |
-| *dropped by H-9, first buy-back if L5 saves enough:* AR-weak × 1 | (1) | (1,387) |
-| **option D** (H-1, conditional on the 10⁵ π̂(S₀) trend): AR-strong, n = 1,000 | 1 | 4,752 |
+| AR-strong × 3 (rep 1 = pilot, see §1) | 3 | 3,565 |
+| ADJ-OPP × 1 | 1 | 1,188 |
+| self-check: **N = 5,000** on AR rep 1's data (H-9) | 1 | 2,221 |
+| **total** | **5** | **6,974** |
+| **AR-weak × 1, GATED (H-10): the last-released cell.** Runs only after T5 prices M **and** the re-sized total incl. M stays ≤ ≈ 28.3k; otherwise it drops again automatically (HQ told, no new request) | 1 | 1,188 |
+| *named, NOT in the total (Sol F7):* second seed on AR rep 1 | (1) | (1,188) |
+| **option D** (H-1, conditional on the 10⁵ π̂(S₀) trend): AR-strong, n = 1,000 | 1 | 4,072 |
 
 ### Other blocks
 | block | core-h |
@@ -114,13 +114,17 @@ each extra N = 2,500 arm costs ≈ 35 core-h per dataset, ≈ 106 over the 3 dat
 | ablations (start mode / + LS0 / pilot + local), once per distinct 10⁴–10⁶ dataset (ESTIMATE: 6% of its V fit) | 482 |
 | competitors at all rungs + the acceptance runs (Sol F8; `tools/competitors/ACCEPTANCE.md`; 1M = lasso + 1 variational + SIS, D-21) | 400 |
 
-## 3. Totals (PLANNING VALUES) against the re-sized envelope (H-9 ≈ 28.3k)
+## 3. Totals (PLANNING VALUES) against the H-9 envelope (≈ 28.3k)
 | | core-h |
 |---|---|
-| planned, excluding option D | 17,967 |
-| with 25% contingency | 22,458 |
-| option D (with contingency) | 4,752 (5,940) |
-| **A + D with contingency** | **28,398**, against the H-9 envelope ≈ 28.3k (H-1 was ≈ 24.6k) |
+| planned, excluding option D (incl. the gated AR-weak 1M cell) | 18,014 |
+| with 25% contingency | 22,518 |
+| option D (with contingency) | 4,072 (5,090) |
+| **A + D with contingency** | **27,608**, against the H-9 envelope ≈ 28.3k |
+
+v0.4 change (H-10, HQ 11-16): 10⁶ costs × 1.234 (MEASURED after L5, `results/WP3_L5_SPR.md`); AR-weak at 1M bought back
+as the gated last cell (1,188 planned). Fits 258 → 259, plans 47 → 48. If the m3 fix (≈ 223 ns·CPU/pair, ESTIMATE) lands
+before T5, re-cost again with it. After T5 prices M: if the total incl. M exceeds ≈ 28.3k, the gated cell drops.
 
 v0.3 change (H-9, HQ 11-16): 10⁶ per-fit costs × 1.44 (measured, `results/WP3_LEVERS_SPR.md`); the 1M self-check
 reduced to N = 5,000; AR-weak at 1M dropped (first buy-back). Fits 259 → 258. Unpriced risk: M (pairs per step) 3.9–4.1
