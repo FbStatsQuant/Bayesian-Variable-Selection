@@ -1,0 +1,12 @@
+# External inputs of W3-MISR-R (premise sources and inherited proof files cited by the lemmas)
+Theory_work/Wave3/W3-MISR/STATEMENT.md
+Theory_work/Wave3/W3-MISR/lemmas/G_corollaries.md
+Theory_work/Wave3/W3-MISR/lemmas/M_misr.md
+Theory_work/Wave3/W3-MISR/lemmas/R_reduction.md
+Theory_work/Wave3/W3-POST2/STATEMENT.md
+Theory_work/Wave3/W3-POST2/lemmas/D_hellinger.md
+Theory_work/Wave3/W3-POST2/lemmas/A_occam.md
+Theory_work/Wave3/W3-POST/STATEMENT.md
+Theory_work/Wave1C/C-MIS/STATEMENT.md
+Theory_work/Wave1C/C-MIS/lemmas/L2_gaussian.md
+Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md
