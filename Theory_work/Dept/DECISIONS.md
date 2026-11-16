@@ -198,3 +198,8 @@
   NOTS: migration of theory_w2/w3, /scratch/fb31/theory_w2|3, P6 outputs into /home/fb31/SMC_Theory_Department (+ scratch
   link) is planned after the Wed freezes, calm and idle-only, with INDEX.md; first a single read-only check that Owls
   can reach NOTS (HQ_NOW said it could not: host key) — if not, the migration runs via HQ/Engineering.
+
+## 2026-11-15 20:41 CT — HQ on D31
+- C (W2-APP) real run approved (10 rows on MANIFEST_PC1, Family-map excluded); F-UNI stale gate = record fix now; M27
+  text after RM2-R CP3 as H5; 12 NARROW = one post-freeze batch with one H5 card for M61/M35/M30; chapter guard confirmed
+  (Writing QUEUE + READER already done). Real-run order D → E → F → C → F-UNI gate. Recorder told.
