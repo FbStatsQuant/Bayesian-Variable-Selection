@@ -42,8 +42,11 @@ carry the binary block in `meta` (INTERFACES v0.1.2 §5.3); the FMA guard runs i
     the top-K-only value and the bound |d_H(f̄, f*) − d_H(f̄_K, f*)| ≤ √τ (flag `dH_bound_vacuous` when √τ ≥ the
     estimate: then cite the estimate ± tail SE, t with 7 df). Exact when the tail has ≤ R components;
   - `law_truncation` (Π̂^𝒯 only; Sol F9-b): the law is a **truncated approximation of the store BMA**; the summed omitted
-    relative mass δ (`omitted_mass`) is carried as error terms: every d_H of the law object is within √δ of the store
-    object's (`dH_bound_truncation`; H²(f̄_store, f̄_law) ≤ 1 − √(1 − δ) ≤ δ), and weighted means of d_H² within δ;
+    relative mass δ (`omitted_mass`) is carried as error terms. Covered: the **predictive** d_H is within √δ of the
+    store object's (`dH_bound_truncation`; H²(f̄_store, f̄_law) ≤ 1 − √(1 − δ) ≤ δ); `weighted_plugin.h2`, the
+    `post_dH` tail probabilities and mean within δ (quantiles: level α within the store's levels α ± δ); predictive KL
+    and test mlpd one-sided only (`kl_upper_add` = −log(1 − δ), `mlpd_lower_add` = log(1 − δ)). **Not covered**
+    (`not_covered`): `plugin` (posterior-mean plug-in and its prediction error), `weighted_plugin.pred_error`, `test.mse`;
   - `test`: MSE of the predictive mean and mean log predictive density on 10⁴ rows (same estimator); ratios to the oracle.
   Rows are streamed in blocks with only the columns in use: for gen designs WP1's `gen::generate_test_rows`
   (PR #17; bit-identical to `generate_test`; rows 0 … n_x − 1 for the integrals, n_x … for the test rows), otherwise
@@ -69,8 +72,9 @@ AR(0.6) / BLK(20, 0.5) / FAC(0.3), n ∈ {100, 200, 400}, strong and weak amplit
   either is a FAIL. (v1's "½ unit of the 3rd significant digit" is undefined near zero distance; it is now printed
   for information only.)
 - Numerical error of the predictive integrals (`wp5_predictive_numerical_error_doubling`, declared before the run):
-  doubling the GH order 64 → 128 at fixed rows changes d_H² and KL by ≤ 1e-8 (measured 1.3e-15 / 1.2e-16); doubling
-  the x draws 4,000 → 8,000 changes them by ≤ 5 x-MC SE (measured 5.8e-5 vs SE 1.3e-4; KL 2.2e-4 vs 5.2e-4). The x
+  doubling the GH order 64 → 128 at fixed rows changes d_H² and KL by ≤ 1e-8 (measured 1.3e-15 / 1.2e-16); an
+  estimate on 8,000 x rows disjoint from the first 4,000 (rows 4,000 … 11,999) differs by ≤ 5 combined x-MC SE
+  (measured: d_H² 1.9e-4 vs combined SE 1.6e-4; KL 7.3e-4 vs 6.2e-4). The x
   error is Monte Carlo and is reported with every estimate (`h2_se_x`, `kl_se_x`).
 - Fixtures added for Sol F9: empty support / zero signal (S₀ = ∅, the k = 0 model: plug-in = H²(N(ȳ, v̄), N(0, σ²))
   exactly, predictive vs Simpson ≤ 1e-9); the anchored (near-constant) preprocessing branch with unequal column scales
