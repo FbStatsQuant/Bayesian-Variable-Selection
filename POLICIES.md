@@ -57,10 +57,16 @@ PROGRAM Readability, with a fidelity check of every number.
   - run every tool, test and dry run;
   - open PRs to `main`;
   - start reviewers and helpers within their brief's allowance.
-- **Expert agents (owner, 2026-11-15):** for engineering and technical questions, departments spawn Opus 5.5 and/or
-  Fable 5.2 experts themselves (Claude Third; effort high), rather than escalating to the owner with partial
-  information ("technical experts of each area need to sort things out"). Technical decisions are made by the department with its experts, and confirmed by HQ. The owner keeps
-  budget tiers, paper claims and big-picture direction.
+- **Expert agents and escalation (owner memo, 2026-11-15; supersedes the earlier expert rule).**
+  - Departments solve technical problems themselves. **Opus 5.5 / Sonnet 5.5 experts and helpers** may be spawned
+    within the brief's allowance (Claude Third, effort high), without asking.
+  - **A Fable 5.2 expert needs permission:** the manager asks HQ, with why and the expected size. HQ takes it to the owner,
+    who approves it within budget and says which account pays. Fables already approved before this memo continue (the
+    W3-DIST lead; Engineering's feasibility expert).
+  - **Big problems are reported to HQ at once**: a counterexample to a target, an infeasible plan, a budget overrun, a
+    blocked dependency, anything touching a headline. Say what happened, its impact and what you propose.
+  - Technical decisions are still made by the department and confirmed by HQ. The owner keeps budget tiers, paper
+    claims, competitors and framing, and big-picture direction.
 - **HQ only:** merges to `main`, registry acceptance (CP3 / `--record`), headline changes, protocol amendments,
   supersessions, API batch credits (the Console key stays on HQ's desktop: send HQ "API cards"), and NOTS job
   submission unless HQ delegates it for a named ticket.
