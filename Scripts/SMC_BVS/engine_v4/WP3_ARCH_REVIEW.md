@@ -560,3 +560,24 @@ per-stage record: wall by phase, mean |S|, M, flips per step, offers buffered, c
 - M₀ = 1 + 0.37·E₀ comes from the stand-in. G0 has a larger share of non-Gibbs acceptances than the bench.
 - Calibration is taken as three final-island equivalents. Its islands run pilot-length schedules with leader stores;
   only the leader term is modelled separately.
+
+## 9. Status after WP2's production start law (2026-11-16, for builders 6 and 7)
+
+WP2 measured E_π₀|S| = 3.61 (AR) / 3.86 (IND) at 10⁶, n = 200, with q90 = 5 (`results/R1_RESIZE.md`). The stand-in
+start law of every bench in this review had 56. What that changes here, for n = 200:
+
+- **R1 is settled for n = 200**: with levers 1–3 and the sort fix a fit is ≈ 1.0–1.1k core-h (the manager's run of the
+  §8 model; ESTIMATE). The "early stages cost 25× a late round" result of §1.3 describes the stand-in, not production.
+  At E₀ ≈ 3.6 the model is below its anchors (k < 6): it treats every bridge stage as late-like plus compaction. What
+  is left open is the late M (3.9 on the bench, 5.5 in G0) and the offers per bridge stage. The 10⁶ pilot of §8.4 pins both.
+- **Lever 7 and package K4 (large supports) are not needed for n = 200.** Keep them out of builder 6's list unless WP2's
+  n = 400 / 1,000 sizes come back large.
+- **Gram rows (K3) need no group-size logic**: 640 slots at G = 256 cover every stage (ESTIMATE; the measured late rounds
+  used 151 active columns per pass).
+- **Memory**: the 32 GB peak without tables in §7.3 came from π₀-sized models filling the store in round 1. With
+  q90 = 5 the plan's k is 8 and that transient should not occur: expect ≈ 20–22 GB without tables (ESTIMATE; steady
+  17–19.5 GB MEASURED plus one compaction), so the task requests of §7.3 fall by ≈ 10 GB. The offer floor then saves
+  compaction time, not memory. Confirm on the pilot.
+- **Benches from now on should use the production setup.** The stand-in overstates the supports 15-fold and
+  understates the late M.
+- Unchanged: levers 1–3, the sort fix, the leader stores (R2), restart at scale (R5) and the order of work in §4.
