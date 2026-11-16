@@ -33,3 +33,9 @@
 - **D10. PSMC-S0 re-scoped:** Part 1 = T-N audit + T-CAL preliminary → CP1 Thu 11-19 12:00 CT (owner OD-1/OD-2 batch,
   soft 11-20); Part 2 = T-PART audit over Engineering's full consumer list (THEORY-1) → CP2 Tue 11-24 (soft 11-25).
   T-STREAM (soft 11-27) is the campaign's first ticket after the freeze; T-MERGE (soft 11-30, hard 12-18) its main one.
+
+## 2026-11-15 19:41 CT — HQ: slots and launches
+- **D11.** HQ granted 2 temporary slots (≤ 5 running until Wed 18:00 CT). Launched PSMC-S0 (brief rev. 1: Part 1 T-N +
+  T-CAL prelim → CP1 Thu 12:00; Part 2 T-PART → CP2 Tue 11-24; HQ's "T-PART + T-N" approval predates D10, both are in
+  scope) and W3-EDIT (citation fixes first → ping HQ for PR #10). W3-MISR-R takes the next free slot.
+  Codex order: W3-DIST > riders > PSMC-S0 / W3-EDIT; > ~2 h queue → tell HQ.

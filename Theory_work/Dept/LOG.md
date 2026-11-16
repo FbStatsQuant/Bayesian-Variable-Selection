@@ -14,3 +14,4 @@
   OWNER_DECISIONS v0.2, EXPERIMENT_PLAN §8, W3-SCALE DESIGN_v1 obligations O1–O21. Message to the Engineering manager
   (interfaces 1–4). ENG_INTERFACE.md, PSMC-S0 brief, W3-EDIT brief final. D7–D9.
 - 19:38 — timestamp correction: entries before this one were estimated, not read from `date`; corrected to the actual clock (first `date` read 19:22 CT). Messages sent to HQ and Engineering at ~19:33–19:36 carried wrong clock times (20:15–20:30).
+- 19:41 — HQ approved 5 slots to Wed 18:00. Launched PSMC-S0 (mcp:launch:c241a2d4…) and W3-EDIT (mcp:launch:950a7b4f…). 5 running; MISR-R queued.
