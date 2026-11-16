@@ -141,14 +141,13 @@ A department that expects to exceed its envelope asks HQ first.
 | SMC - Writing | chapter v2.0, advisor report (~Dec 4–6), later the paper; readable to peers | Claude Personal (Opus/Sonnet/Haiku); LaTeX on Owls | delivery dates, a fidelity check per document, merges |
 | SMC - Lean | Lean certificates of headline theorems (launched when material is ready) | to be set at launch | launch, merges |
 
-**Engineering mandate (owner, 2026-11-15), in order:**
-1. Build machinery that runs the method at p = 10⁶ on NOTS.
-2. If (1) is impossible: a written impossibility argument with numbers (the binding resource, a lower bound on it, and why no
-   allowed engineering removes it). HQ approves or rejects it, with the consultant as needed. "Hard" or "expensive" is
-   not "impossible".
-3. If impossibility is approved: the **closest variant of the current strategy** that reaches 10⁶, with each change
-   to the method stated and its effect on the theorems (via the Theory Department's premise tickets).
-4. If no such variant exists: say so, with the argument. HQ approves, and HQ reports to the owner.
+**Engineering mandate (owner, 2026-11-15, final).** Deliver exactly one of:
+1. **A plan** that runs an SMC BVS scheme at p = 10⁶ on NOTS, feasibly and with high precision. Any SMC BVS scheme is
+   allowed, modified as needed and validated against the theorem-covered method on an overlap rung (below).
+2. **An irrefutable proof that no SMC BVS scheme is feasible at p = 10⁶ on NOTS**, and that the obstruction is NOTS
+   infrastructure (a binding resource limit: memory per node or per user, CPUs, wall time, bandwidth, storage), with
+   numbers and lower bounds valid for every SMC BVS scheme, not only the current one. Method choices, cost or
+   difficulty are not accepted as reasons. HQ approves such a proof, with the consultant, and reports it to the owner.
 
 **Scope of the theory vs the 1M run (owner, 2026-11-15).** The theory stays about the method as described and coded (the
 algorithm that runs at 10⁴). To make p = 10⁶ feasible and very precise, Engineering **may modify the algorithm**. That has

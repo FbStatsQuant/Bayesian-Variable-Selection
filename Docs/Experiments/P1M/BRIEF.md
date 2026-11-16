@@ -18,13 +18,12 @@ CEO, reporting to the owner. Department managers report to HQ; **you are the man
 may talk to you directly; tell HQ what he decides. Report to HQ with `t3_thread_send` (mode queue), at most 10 lines,
 at each checkpoint.
 
-## Mandate (owner, 2026-11-15; POLICIES.md §8)
-1. Build machinery that runs the method at p = 10⁶ on NOTS.
-2. If impossible: prove it to HQ, with numbers (the binding resource, a lower bound, why no allowed engineering removes it).
-   HQ approves, with the consultant as needed; "hard" or "expensive" is not "impossible".
-3. Then the closest variant of the current strategy that reaches 10⁶, with every method change and its theorem impact
-   stated.
-4. If none exists: say so, with the argument.
+## Mandate (owner, 2026-11-15, final; POLICIES.md §8)
+Deliver exactly one of:
+1. **A plan** that runs an SMC BVS scheme at p = 10⁶ on NOTS, feasibly and very precisely. You may modify the algorithm;
+   validate it against the theorem-covered method on an overlap rung.
+2. **An irrefutable proof** that **no** SMC BVS scheme is feasible at 10⁶ on NOTS because of NOTS infrastructure limits,
+   with numbers and lower bounds valid for every SMC BVS scheme. Method choices, cost or difficulty are not reasons.
 
 ## The goal (owner)
 Show that the method runs, and works, at **p = 10⁶**, a scale where joint (non-split) Bayesian variable selection has
