@@ -58,3 +58,4 @@
   set no TMPDIR. Scratch only in a git-ignored `.rc_tmp/` inside the worktree, deleted at the end." (The running Astra seat's brief
   points scratch to the department tmp folder; no action on it per the manager.) Integrity check after on-disk change notices:
   `manifest.py verify` OK on MANIFEST_R1 (9714aea4…); the notices were the lead's own pre-freeze edits.
+- 2026-11-16 03:12 CST — D62 precision: Codex scratch only in <worktree root>/.rc_tmp/ (git-ignored repo-wide on main), never in the ticket folder; no .gitignore edits by leads.
