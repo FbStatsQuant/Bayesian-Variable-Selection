@@ -7,3 +7,4 @@
 - 2026-11-15 18:41 CST helper CODE_FACTS received (pins spot-checked: v3_score.h:14,40,64-65; v3_preprocess.R:21-25; v3_core.cpp:473; v3_run.R:91,159-163; v3_engine.h:316-327 — all OK). Toy example numerics/toy_example.py (+_out.txt): start mode {1,3,5} (leakage), posterior 0.688 on {1,3}, LS0 deletes 5. METHOD_INTUITION.md v0.1 written. Waiting for Sol S1.
 - 2026-11-15 18:41 CST CHECKPOINT_1.md drafted (Sol section pending). Waiting on S1 (Sol) and H1 completion notice.
 - 2026-11-15 19:22 CST HQ organisation note: CLAIMS_CARD v0.2 regrouped into five pillars (+ rows 3.5 N1, 3.6 SAMP, 4.1-4.3 parallel, 5.1-5.3 scale); CP1 §1 updated. Still waiting on S1 (Sol).
+- 2026-11-15 19:23 CST read POLICIES.md (HQ merged main, 7c24a3d). Committed + pushed 121c25d on theory/W3-READER. HOLDS: none. Waiting on S1 (Sol); CP1 report to HQ via t3_thread_send (queue) after S1.
