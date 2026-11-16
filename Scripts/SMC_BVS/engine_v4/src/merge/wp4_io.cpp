@@ -2,6 +2,7 @@
 #include "v4/wp4_io.h"
 
 #include <sys/stat.h>
+#include <map>
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -27,6 +28,38 @@ uint64_t u64_of(const Json& j) {
 }
 }  // namespace
 
+// ---------------------------------------------------------------------------------------- content validation (review PR20 M-2)
+// Every model read from a file: strictly increasing, in [0, p), size <= K. Every offset: off <= pool and len <= pool - off
+// (no u64 wrap). Every value: finite. Checked BEFORE the data is used, so a hash-consistent bad file is refused with
+// invalid_input, never a crash or an out-of-bounds read.
+void check_model(ModelView S, int32_t p, int32_t K, const std::string& what) {
+  if ((int64_t)S.k > (int64_t)K) throw Error(Status::invalid_input, what + ": model larger than K");
+  for (uint32_t a = 0; a < S.k; ++a) {
+    const int32_t j = S.idx[a];
+    if (j < 0 || j >= p) throw Error(Status::invalid_input, what + ": index out of range [0, p)");
+    if (a && j <= S.idx[a - 1]) throw Error(Status::invalid_input, what + ": model not strictly increasing");
+  }
+}
+namespace {
+inline bool off_ok(uint64_t off, uint64_t len, uint64_t np) { return off <= np && len <= np - off; }
+inline void need_finite(double v, const std::string& what) { if (!std::isfinite(v)) throw Error(Status::invalid_input, what + ": not finite"); }
+// Validated ptr/idx pair (ptr[0] = 0, non-decreasing, ptr[n] = |idx|), checked before any read.
+std::vector<Model> models_checked(const int64_t* ptr, uint64_t np, const int32_t* idx, uint64_t ni, int32_t p, int32_t K, const std::string& what) {
+  std::vector<Model> out;
+  if (np == 0) return out;
+  if (ptr[0] != 0 || (uint64_t)ptr[np - 1] != ni) throw Error(Status::invalid_input, what + ": offsets do not cover the pool");
+  for (uint64_t i = 0; i + 1 < np; ++i)
+    if (ptr[i + 1] < ptr[i] || (uint64_t)ptr[i + 1] > ni) throw Error(Status::invalid_input, what + ": offsets not monotone or past the pool");
+  out.reserve(np - 1);
+  for (uint64_t i = 0; i + 1 < np; ++i) {
+    ModelView v(idx + ptr[i], (uint32_t)(ptr[i + 1] - ptr[i]));
+    check_model(v, p, K, what);
+    out.emplace_back(v.begin(), v.end());
+  }
+  return out;
+}
+}  // namespace
+
 // ---------------------------------------------------------------------------------------------------- generic sections
 void add_store(fmt::Writer& W, Json& meta, const std::string& prefix, const Store& s) {
   if (s.staging() != 0) throw Error(Status::internal_error, "add_store: store " + prefix + " is not compacted");
@@ -35,7 +68,7 @@ void add_store(fmt::Writer& W, Json& meta, const std::string& prefix, const Stor
   Json d = Json::object(); d["cap"] = u64_json(s.cap); d["order"] = s.ord == Order::HPM ? "HPM" : "LEX"; d["size"] = u64_json(s.size());
   meta["stores"][prefix] = d;
 }
-void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefix, Store& s) {
+void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefix, Store& s, int32_t p, int32_t K) {
   const Json& d = meta.at("stores").at(prefix);
   s.init(u64_of(d.at("cap")), d.at("order").str() == "HPM" ? Order::HPM : Order::LEX);
   uint64_t n = 0, no = 0, nl = 0, nh = 0, np = 0;
@@ -46,9 +79,11 @@ void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefi
   const int32_t* pool = R.get<int32_t>(prefix + "_pool", &np);
   if (no != n || nl != n || nh != n || n > s.cap) throw Error(Status::invalid_input, "store " + prefix + ": inconsistent sections");
   for (uint64_t i = 0; i < n; ++i) {
-    if (off[i] + len[i] > np) throw Error(Status::invalid_input, "store " + prefix + ": pool out of range");
-    s.offer(v[i], ModelView(pool + off[i], len[i]), h[i]);
+    if (!off_ok(off[i], len[i], np)) throw Error(Status::invalid_input, "store " + prefix + ": pool out of range");
+    need_finite(v[i], "store " + prefix + " value");
+    check_model(ModelView(pool + off[i], len[i]), p, K, "store " + prefix);
   }
+  for (uint64_t i = 0; i < n; ++i) s.offer(v[i], ModelView(pool + off[i], len[i]), h[i]);
   s.compact();
   if (s.size() != n || !s.check_invariants()) throw Error(Status::invalid_input, "store " + prefix + ": not a valid sorted store (I1)");
 }
@@ -57,16 +92,11 @@ void add_models(fmt::Writer& W, const std::string& prefix, const std::vector<Mod
   for (auto& m : ms) { idx.insert(idx.end(), m.begin(), m.end()); ptr.push_back((int64_t)idx.size()); }
   add_vec_copy(W, prefix + "_ptr", ptr); add_vec_copy(W, prefix + "_idx", idx);
 }
-std::vector<Model> read_models(const fmt::Reader& R, const std::string& prefix) {
+std::vector<Model> read_models(const fmt::Reader& R, const std::string& prefix, int32_t p, int32_t K) {
   uint64_t np = 0, ni = 0;
   const int64_t* ptr = R.get<int64_t>(prefix + "_ptr", &np);
   const int32_t* idx = R.get<int32_t>(prefix + "_idx", &ni);
-  std::vector<Model> out;
-  for (uint64_t i = 0; i + 1 < np; ++i) {
-    if (ptr[i] < 0 || ptr[i + 1] < ptr[i] || (uint64_t)ptr[i + 1] > ni) throw Error(Status::invalid_input, prefix + ": bad ptr");
-    out.emplace_back(idx + ptr[i], idx + ptr[i + 1]);
-  }
-  return out;
+  return models_checked(ptr, np, idx, ni, p, K, prefix);
 }
 Json event_json(const EventCtx& e) {
   Json j = Json::object();
@@ -82,7 +112,7 @@ static int index_of(const char* (*name)(int), int n, const std::string& s) {
 }
 EventCtx event_from_json(const Json& j) {
   EventCtx e;
-  e.phase = index_of(phase_name, N_PHASE, j.at("phase").str()); e.mech = index_of(mech_name, N_MECH, j.at("mechanism").str());
+  e.phase = index_of(phase_name, N_PHASE, j.at("phase").str()); e.mech = index_of(mech_name, N_MECH, j.at("mechanism").str());   // range-checked
   e.phi = j.at("phi").num();
   e.key.seg = (uint8_t)j.at("seg").num(); e.key.tier = (uint8_t)j.at("tier").num(); e.key.iter = (int8_t)j.at("iter").num();
   e.key.unit = (uint32_t)u64_of(j.at("unit")); e.key.xph = (uint8_t)j.at("xph").num(); e.key.stage = (uint32_t)u64_of(j.at("stage"));
@@ -153,20 +183,28 @@ std::string write_calib(const std::string& path, const CalibWrite& c) {
   W.add_json("meta", meta);
   return W.write(path);
 }
-CalibIn read_calib(const std::string& path) {
+CalibIn read_calib(const std::string& path, int32_t p, int32_t K) {
   fmt::Reader R(path);
   if (R.kind() != fmt::K_CALIB) throw Error(Status::invalid_input, path + ": not a calib file");
   CalibIn c; c.content_hash = R.content_hash(); c.mode = R.mode(); c.meta = R.json("meta");
   c.status = c.meta.at("status").str();
   c.tier = (int32_t)c.meta.at("tier").num(); c.N = (int32_t)c.meta.at("N").num(); c.L = (int32_t)c.meta.at("L").num();
   c.Hm = (int32_t)c.meta.at("Hm").num();
+  if (c.N < 1 || c.L < 0 || c.Hm < 1 || c.tier < 0 || c.tier > 1) throw Error(Status::invalid_input, path + ": calib meta N / L / Hm / tier out of range");
   if (R.has("grid")) c.grid = R.vec<double>("grid");
+  if (c.status == "ok" && !calib::check_grid(c.grid)) throw Error(Status::invalid_input, path + ": frozen grid is not a valid grid");
   c.has_hpm = c.meta.at("has_hpm").boolean();
-  if (c.has_hpm) { c.hpm = R.vec<int32_t>("hpm_S"); c.hpm_ev = event_from_json(c.meta.at("hpm_ev")); c.hpm_ev.key.seg = SG_CALIB; }
-  std::vector<Model> im = read_models(R, "inh");
+  if (c.has_hpm) {
+    c.hpm = R.vec<int32_t>("hpm_S"); check_model(c.hpm, p, K, path + ": hpm_S");
+    c.hpm_ev = event_from_json(c.meta.at("hpm_ev")); c.hpm_ev.key.seg = SG_CALIB;
+  }
+  std::vector<Model> im = read_models(R, "inh", p, K);
   std::vector<double> iF = R.vec<double>("inh_F"), ilg0 = R.vec<double>("inh_lg0"), ilogm = R.vec<double>("inh_logm");
   if (iF.size() != im.size() || ilg0.size() != im.size() || ilogm.size() != im.size()) throw Error(Status::invalid_input, "calib: inherited arrays differ in length");
-  for (size_t i = 0; i < im.size(); ++i) c.inherited.push_back({im[i], iF[i], ilg0[i], ilogm[i]});
+  for (size_t i = 0; i < im.size(); ++i) {
+    need_finite(iF[i], path + ": inh_F"); need_finite(ilg0[i], path + ": inh_lg0"); need_finite(ilogm[i], path + ": inh_logm");
+    c.inherited.push_back({im[i], iF[i], ilg0[i], ilogm[i]});
+  }
   return c;
 }
 
@@ -234,8 +272,11 @@ merge::IslandHead head_island(const std::string& path, int r, const Expect& ex, 
       h.load = merge::Load::hash_mismatch; h.detail = path + ": meta.inputs differ from the merge's data/setup/calib"; return h;
     }
     h.r = (int32_t)meta.at("r").num(); h.N = (int32_t)meta.at("N").num(); h.p = (int32_t)meta.at("p").num();
+    h.T = (int32_t)meta.at("T").num(); h.L = (int32_t)meta.at("L").num(); h.Hm = (int32_t)meta.at("Hm").num();
     h.status = status_from_name(meta.at("status").str());
     h.logZ = h.status == Status::completed ? R.vec<double>("logZ").at(0) : 0.0;
+    h.content_hash = R.content_hash();
+    { uint64_t ne = 0, npool = 0; R.get<uint16_t>("top_len", &ne); R.get<int32_t>("top_pool", &npool); h.store_entries = ne; h.store_pool = npool; }
     if (binary_out) *binary_out = meta.at("binary");
     h.load = merge::Load::ok;
   } catch (const std::exception& e) {
@@ -244,53 +285,85 @@ merge::IslandHead head_island(const std::string& path, int r, const Expect& ex, 
   return h;
 }
 
-merge::IslandIn load_island_full(const std::string& path, int Rp, int p) {
+merge::IslandIn load_island_full(const std::string& path, int Rp, int p, const Expect& ex) {
   fmt::Reader R(path);
   Json meta = R.json("meta");
   merge::IslandIn I;
   I.r = (int32_t)meta.at("r").num(); I.N = (int32_t)meta.at("N").num(); I.T = (int32_t)meta.at("T").num();
   I.L = (int32_t)meta.at("L").num(); I.Hm = (int32_t)meta.at("Hm").num();
   I.status = status_from_name(meta.at("status").str()); I.message = str_or(meta, "reason", "");
-  if ((int)meta.at("p").num() != p) throw Error(Status::invalid_input, path + ": p differs from data.bin");
+  const int32_t K = ex.K > 0 ? ex.K : p;
+  if ((int)meta.at("p").num() != p) throw Error(Status::invalid_input, "p differs from data.bin");
+  if (I.r < 1 || I.r > Rp || I.N < 1 || I.T < 0 || I.L < 0 || I.Hm < 1) throw Error(Status::invalid_input, "meta r / N / T / L / Hm out of range");
+  // schedule and stage table: T + 1 grid points, T stages; the final islands run the calibration's frozen grid, L, Hm
   std::vector<double> grid = R.vec<double>("grid");
   I.ess = R.vec<double>("st_ess");
+  if (grid.size() != (size_t)I.T + 1 || I.ess.size() != (size_t)I.T) throw Error(Status::invalid_input, "grid / st_ess length differs from T");
+  for (double x : grid) need_finite(x, "grid");
+  if (!ex.grid.empty() && grid != ex.grid) throw Error(Status::invalid_input, "grid differs from calib.bin's frozen grid");
+  if ((ex.L >= 0 && I.L != ex.L) || (ex.Hm >= 1 && I.Hm != ex.Hm)) throw Error(Status::invalid_input, "L / Hm differ from calib.bin");
   LedgerConfig cfg; cfg.p = p; cfg.islands = Rp; cfg.leaders = false; cfg.fresh_counters = false;   // v0.1.7: no leaders
   I.led.init(cfg);
   { uint64_t n = 0, no = 0, nl = 0, nh = 0, np = 0;
     const double* v = R.get<double>("top_v", &n); const uint64_t* off = R.get<uint64_t>("top_off", &no);
     const uint16_t* len = R.get<uint16_t>("top_len", &nl); const uint64_t* hh = R.get<uint64_t>("top_hash", &nh);
     const int32_t* pool = R.get<int32_t>("top_pool", &np);
-    if (no != n || nl != n || nh != n || n > I.led.top.cap) throw Error(Status::invalid_input, path + ": inconsistent top store");
-    for (uint64_t i = 0; i < n; ++i) {
-      if (off[i] + len[i] > np) throw Error(Status::invalid_input, path + ": top pool out of range");
-      I.led.top.offer(v[i], ModelView(pool + off[i], len[i]), hh[i]);
+    if (no != n || nl != n || nh != n || n > I.led.top.cap) throw Error(Status::invalid_input, "inconsistent top store sections");
+    for (uint64_t i = 0; i < n; ++i) {   // every entry validated before any is used
+      if (!off_ok(off[i], len[i], np)) throw Error(Status::invalid_input, "top store: pool offset out of range");
+      need_finite(v[i], "top store value");
+      check_model(ModelView(pool + off[i], len[i]), p, K, "top store");
     }
+    for (uint64_t i = 0; i < n; ++i) I.led.top.offer(v[i], ModelView(pool + off[i], len[i]), hh[i]);
     I.led.top.compact();
-    if (I.led.top.size() != n || !I.led.top.check_invariants()) throw Error(Status::invalid_input, path + ": top store not sorted / unique (I1)");
+    if (I.led.top.size() != n || !I.led.top.check_invariants()) throw Error(Status::invalid_input, "top store not sorted / unique (I1)");
   }
   { std::vector<int32_t> hs = R.vec<int32_t>("hpm_S"); std::vector<double> hv = R.vec<double>("hpm_val"); std::vector<int64_t> ev = R.vec<int64_t>("hpm_ev");
-    if (hv.size() != 2 || ev.size() != 12) throw Error(Status::invalid_input, path + ": hpm_val / hpm_ev size");
-    I.led.has_hpm = I.led.top.size() > 0; I.led.hpmS = Model(hs.begin(), hs.end()); I.led.hpmF = hv[0]; I.led.hpm_logm = hv[1];
-    EventKey& k = I.led.hpm_ev.key;
-    k.seg = (uint8_t)ev[0]; k.tier = (uint8_t)ev[1]; k.iter = (int8_t)ev[2]; k.unit = (uint32_t)ev[3]; k.xph = (uint8_t)ev[4];
-    k.stage = (uint32_t)ev[5]; k.round = (uint32_t)ev[6]; k.particle = (uint32_t)ev[7]; k.position = (uint32_t)ev[8]; k.sub = (uint8_t)ev[9];
-    I.led.hpm_ev.phase = (int)ev[10]; I.led.hpm_ev.mech = (int)ev[11];
-    // phi is not in hpm_ev: v3's values by phase (INIT 0, BRIDGE grid[stage], BURN / MEASURED 1)
-    I.led.hpm_ev.phi = k.xph == X_BRIDGE && k.stage < grid.size() ? grid[k.stage] : (k.xph == X_BURN || k.xph == X_MEASURED) ? 1.0 : 0.0;
+    if (hv.size() != 2 || ev.size() != 12) throw Error(Status::invalid_input, "hpm_val / hpm_ev size");
+    I.led.has_hpm = I.led.top.size() > 0;
+    if (I.led.has_hpm) {
+      Model S(hs.begin(), hs.end());
+      check_model(S, p, K, "hpm_S");
+      need_finite(hv[0], "hpm_val F");
+      if (std::isnan(hv[1])) throw Error(Status::invalid_input, "hpm_val log m: NaN");
+      // the island's HPM is the best entry of its own store (same order), with the same value
+      ModelView t0 = I.led.top.model(0);
+      if (!same_model(S, t0) || hv[0] != I.led.top.v[0]) throw Error(Status::invalid_input, "hpm_S / hpm_val differ from the store's best entry");
+      // hpm_ev: field ranges (INTERFACES v0.1.8 §5.1 order), a final event of this island, stage <= T
+      if (ev[10] < 0 || ev[10] >= N_PHASE || ev[11] < 0 || ev[11] >= N_MECH) throw Error(Status::invalid_input, "hpm_ev phase / mech out of range");
+      if (ev[0] != SG_FINAL || ev[3] != I.r) throw Error(Status::invalid_input, "hpm_ev is not a final event of this island");
+      if (!(ev[4] == X_INIT || ev[4] == X_BRIDGE || ev[4] == X_BURN || ev[4] == X_MEASURED)) throw Error(Status::invalid_input, "hpm_ev xph out of range");
+      for (int q : {1, 5, 6, 7, 8, 9}) if (ev[q] < 0 || ev[q] > (int64_t)UINT32_MAX) throw Error(Status::invalid_input, "hpm_ev field out of range");
+      if (ev[2] < -1 || ev[2] > 63) throw Error(Status::invalid_input, "hpm_ev iter out of range");
+      if (ev[5] > I.T || (ev[4] == X_BRIDGE && ev[5] < 1)) throw Error(Status::invalid_input, "hpm_ev stage out of range [0, T]");
+      I.led.hpmS = S; I.led.hpmF = hv[0]; I.led.hpm_logm = hv[1];
+      EventKey& k = I.led.hpm_ev.key;
+      k.seg = (uint8_t)ev[0]; k.tier = (uint8_t)ev[1]; k.iter = (int8_t)ev[2]; k.unit = (uint32_t)ev[3]; k.xph = (uint8_t)ev[4];
+      k.stage = (uint32_t)ev[5]; k.round = (uint32_t)ev[6]; k.particle = (uint32_t)ev[7]; k.position = (uint32_t)ev[8]; k.sub = (uint8_t)ev[9];
+      I.led.hpm_ev.phase = (int)ev[10]; I.led.hpm_ev.mech = (int)ev[11];
+      // phi is not in hpm_ev: v3's values by phase (INIT 0, BRIDGE grid[stage], BURN / MEASURED 1); stage <= T checked
+      I.led.hpm_ev.phi = k.xph == X_BRIDGE ? grid[k.stage] : (k.xph == X_BURN || k.xph == X_MEASURED) ? 1.0 : 0.0;
+    } else if (I.status == Status::completed) throw Error(Status::invalid_input, "a completed island with an empty store");
   }
   { std::vector<double> ib = R.vec<double>("island_best");
-    for (size_t i = 0; i < ib.size() && i < I.led.island_best.size(); ++i) I.led.island_best[i] = ib[i]; }
+    if (ib.size() != (size_t)I.r + 1) throw Error(Status::invalid_input, "island_best length is not r + 1");
+    if (std::isnan(ib[(size_t)I.r]) || ib[(size_t)I.r] == POS_INF) throw Error(Status::invalid_input, "island_best: not finite");
+    // only entry r belongs to this island; the others stay -inf (review PR20 M-2, H19)
+    I.led.island_best[(size_t)I.r] = ib[(size_t)I.r]; }
   { uint64_t n = 0; const uint64_t* lg = R.get<uint64_t>("logical", &n);
-    if (n != (uint64_t)N_PHASE * N_MECH) throw Error(Status::invalid_input, path + ": logical size");
+    if (n != (uint64_t)N_PHASE * N_MECH) throw Error(Status::invalid_input, "logical size");
     for (int a = 0; a < N_PHASE; ++a) for (int b = 0; b < N_MECH; ++b) I.led.logical[a][b] = lg[(size_t)a * N_MECH + b]; }
   if (I.status == Status::completed) {
-    I.logZ = R.vec<double>("logZ").at(0);
-    I.rb_acc = R.vec<double>("rb_acc"); I.pip = R.vec<double>("pip_r");
-    if ((int)I.pip.size() != p) throw Error(Status::invalid_input, path + ": pip_r has the wrong length");
-    std::vector<double> rr = R.vec<double>("rb_round");
-    if (p > 0 && rr.size() != (size_t)I.Hm * (size_t)p) throw Error(Status::invalid_input, path + ": rb_round is not Hm x p");
-    for (int h = 0; h < I.Hm; ++h) I.rb_round.emplace_back(rr.begin() + (size_t)h * p, rr.begin() + (size_t)(h + 1) * p);
+    std::vector<double> lz = R.vec<double>("logZ");
+    if (lz.size() != 1) throw Error(Status::invalid_input, "logZ size");
+    I.logZ = lz[0]; need_finite(I.logZ, "logZ");
+    I.pip = R.vec<double>("pip_r");
+    if ((int)I.pip.size() != p) throw Error(Status::invalid_input, "pip_r has the wrong length");
+    for (double x : I.pip) if (!(x >= 0.0 && x <= 1.0)) throw Error(Status::invalid_input, "pip_r: not in [0, 1]");
+    // rb_acc / rb_round are not used by the merge: not loaded (review PR20 m-2); their shape is still checked
+    if (R.entry("rb_round").length != (uint64_t)I.Hm * (uint64_t)p * 8) throw Error(Status::invalid_input, "rb_round is not Hm x p");
     I.terminal = merge::read_terminal_supports(R, I.N, p);
+    for (auto& S : I.terminal) check_model(S, p, K, "terminal_S");
   }
   return I;
 }
@@ -300,7 +373,7 @@ merge::IslandSlot load_island(const std::string& path, int r, const Expect& ex, 
   merge::IslandHead h = head_island(path, r, ex, binary_out);
   s.load = h.load; s.detail = h.detail;
   if (h.load != merge::Load::ok) return s;
-  try { s.isl = load_island_full(path, std::max(1, h.r), p); }
+  try { s.isl = load_island_full(path, std::max(1, h.r), p, ex); }
   catch (const std::exception& e) { s = merge::IslandSlot(); s.load = merge::Load::corrupt; s.detail = path + ": " + e.what(); }
   return s;
 }
@@ -321,13 +394,13 @@ void check_binaries(std::vector<merge::IslandSlot>& slots, const std::vector<Jso
   check_binaries(h, blocks, mode);
   for (size_t i = 0; i < slots.size(); ++i) if (h[i].load == merge::Load::binary_mismatch) { slots[i].load = h[i].load; slots[i].detail = h[i].detail; }
 }
-FileIslandSource::FileIslandSource(std::vector<std::string> paths, const Expect& ex, int Rp, int p) : paths_(std::move(paths)), Rp_(Rp), p_(p) {
+FileIslandSource::FileIslandSource(std::vector<std::string> paths, const Expect& ex, int Rp, int p) : paths_(std::move(paths)), ex_(ex), Rp_(Rp), p_(p) {
   std::vector<Json> blocks(paths_.size());
   for (size_t r = 1; r <= paths_.size(); ++r) heads_.push_back(head_island(paths_[r - 1], (int)r, ex, &blocks[r - 1]));
   check_binaries(heads_, blocks, ex.mode);
 }
 merge::IslandIn FileIslandSource::load(int r) {
-  try { return load_island_full(paths_[(size_t)r - 1], Rp_, p_); }
+  try { return load_island_full(paths_[(size_t)r - 1], Rp_, p_, ex_); }
   catch (const std::exception& e) { merge::IslandIn bad; bad.r = -1; bad.message = e.what(); return bad; }   // refused by the merge
 }
 
@@ -359,16 +432,38 @@ EventCtx SetupView::table_event_of(const Model& S) const {
   for (int32_t j : S) { if (blk[(size_t)j] != b) throw Error(Status::invalid_input, "table store model spans blocks"); code |= 1u << pos[(size_t)j]; }
   return merge::table_event(b, code);
 }
-SetupView read_setup(const std::string& path) {
+SetupView read_setup(const std::string& path, int32_t p, int32_t K) {
   fmt::Reader R(path);
   if (R.kind() != fmt::K_SETUP) throw Error(Status::invalid_input, path + ": not a setup file");
   SetupView s; s.content_hash = R.content_hash();
   Json meta = R.json("meta");
   s.blk = R.vec<int32_t>("blk"); s.pos = R.vec<int32_t>("pos"); s.code_ptr = R.vec<int64_t>("code_ptr"); s.logr = R.vec<double>("logr");
   s.blk_ptr = R.vec<int64_t>("blk_ptr"); s.blk_members = R.vec<int32_t>("blk_members"); s.mode_S = R.vec<int32_t>("mode_S");
-  read_store(R, meta, "tstore_top", s.ttop);
-  if (R.has("tstore_lead0_v")) read_store(R, meta, "tstore_lead0", s.tlead0);
-  if (R.has("tstore_lead1_v")) read_store(R, meta, "tstore_lead1", s.tlead1);
+  // shapes (review PR20 M-2): blk / pos / members over p columns; blocks of 1..20 members (B <= 16, table codes < 2^20);
+  // members[blk_ptr[b] + pos[j]] = j; each block's table fits in logr; logr finite for every code with |U| <= K
+  const std::string w = path + ": ";
+  if (s.blk.size() != (size_t)p || s.pos.size() != (size_t)p || s.blk_members.size() != (size_t)p) throw Error(Status::invalid_input, w + "blk / pos / blk_members length != p");
+  const size_t J = s.code_ptr.size();
+  if (s.blk_ptr.size() != J + 1 || s.blk_ptr[0] != 0 || s.blk_ptr[J] != p) throw Error(Status::invalid_input, w + "blk_ptr shape");
+  for (size_t b = 0; b < J; ++b) {
+    const int64_t m = s.blk_ptr[b + 1] - s.blk_ptr[b];
+    if (m < 1 || m > 20) throw Error(Status::invalid_input, w + "block size outside 1..20");
+    const int64_t c0 = s.code_ptr[b];
+    if (c0 < 0 || (uint64_t)c0 > s.logr.size() || (uint64_t)(1ull << m) > s.logr.size() - (uint64_t)c0) throw Error(Status::invalid_input, w + "code_ptr / logr out of range");
+    for (uint32_t c = 0; c < (1u << m); ++c) if (__builtin_popcount(c) <= K && !std::isfinite(s.logr[(size_t)c0 + c])) throw Error(Status::invalid_input, w + "logr not finite for a code with |U| <= K");
+  }
+  for (int32_t j = 0; j < p; ++j) {
+    const int32_t b = s.blk[(size_t)j], q = s.pos[(size_t)j];
+    if (b < 0 || (size_t)b >= J) throw Error(Status::invalid_input, w + "blk out of range");
+    if (q < 0 || q >= s.blk_ptr[(size_t)b + 1] - s.blk_ptr[(size_t)b]) throw Error(Status::invalid_input, w + "pos out of range of its block");
+    if (s.blk_members[(size_t)(s.blk_ptr[(size_t)b] + q)] != j) throw Error(Status::invalid_input, w + "blk / pos / blk_members inconsistent");
+  }
+  check_model(s.mode_S, p, K, w + "mode_S");
+  read_store(R, meta, "tstore_top", s.ttop, p, K);
+  if (R.has("tstore_lead0_v")) read_store(R, meta, "tstore_lead0", s.tlead0, p, K);
+  if (R.has("tstore_lead1_v")) read_store(R, meta, "tstore_lead1", s.tlead1, p, K);
+  for (const Store* st : {&s.ttop, &s.tlead0, &s.tlead1})   // table models lie within one block
+    for (size_t i = 0; i < st->size(); ++i) { ModelView v = st->model(i); s.table_event_of(Model(v.begin(), v.end())); }
   return s;
 }
 std::string write_setup_min(const std::string& path, const SetupView& s, const Json& inputs) {
@@ -524,34 +619,113 @@ std::string sget(const Json& a, const std::string& k, const std::string& d = "")
 double nget(const Json& a, const std::string& k, double d) { return a.contains(k) ? a.at(k).num() : d; }
 }  // namespace
 
-// args: data, setup, calib, islands [paths, r = 1..R'], out (fit.bin), mode (compat | law | V), threads, chunk,
-// manifest (optional: inputs {name: content hash} for data/setup/calib/islands), ell (test override).
+// The merge's inputs (review PR20 C-1, M-1). Two forms, which may be combined:
+//  * the WP5 driver's manifest (`--manifest m.json`; the CLI passes the parsed object and copies `params` into args):
+//    data / setup / calib / island_<r>.bin are the `inputs` paths (by base name), R' = params.Rp, mode = the manifest's mode;
+//  * explicit arguments: --data --setup --calib, --islands as a JSON array or a comma-separated list (island r = position r),
+//    --Rp, --mode.
+// R' must be given (params.Rp or --Rp) and the island list must have exactly R' entries, indices 1..R' each once; else
+// invalid_input. --mem-budget is in BYTES (INTERFACES §7; 0 = off); --mem-budget-gb is an alias. --out is required.
+struct MergeInputs { std::string data, setup, calib, out; std::vector<std::string> islands; int Rp = 0; uint32_t mode = 0; Json manifest; };
+namespace {
+std::string base_name(const std::string& p) { size_t k = p.find_last_of('/'); return k == std::string::npos ? p : p.substr(k + 1); }
+}
+MergeInputs parse_merge_inputs(const Json& args) {
+  MergeInputs in;
+  if (args.contains("manifest")) {
+    const Json& m = args.at("manifest");
+    in.manifest = m.type() == Json::STR ? read_json_file(m.str()) : m;
+    if (in.manifest.type() != Json::OBJ) throw Error(Status::invalid_input, "merge: --manifest is not a JSON object");
+  } else in.manifest = Json::object();
+  const Json minp = in.manifest.contains("inputs") ? in.manifest.at("inputs") : Json::object();
+  auto from_inputs = [&](const std::string& name) {
+    std::string found;
+    for (auto& [k, v] : minp.items()) if (base_name(k) == name) {
+      if (!found.empty()) throw Error(Status::invalid_input, "merge: manifest inputs name " + name + " twice");
+      found = k;
+    }
+    return found;
+  };
+  auto path_arg = [&](const char* key, const std::string& name) {
+    if (args.contains(key)) { if (args.at(key).type() != Json::STR) throw Error(Status::invalid_input, std::string("merge: --") + key + " must be a path"); return args.at(key).str(); }
+    std::string f = from_inputs(name);
+    if (f.empty()) throw Error(Status::invalid_input, std::string("merge: no ") + name + " (give --" + key + " or a manifest input)");
+    return f;
+  };
+  in.data = path_arg("data", "data.bin"); in.setup = path_arg("setup", "setup.bin"); in.calib = path_arg("calib", "calib.bin");
+  if (!args.contains("out") || args.at("out").type() != Json::STR || args.at("out").str().empty())
+    throw Error(Status::invalid_input, "merge: --out is required");   // review PR20 m-4: no default output path
+  in.out = args.at("out").str();
+  // R' (never from the list's length)
+  if (!args.contains("Rp") || args.at("Rp").type() != Json::NUM) throw Error(Status::invalid_input, "merge: R' must be given (manifest params.Rp or --Rp)");
+  const double rp = args.at("Rp").num();
+  if (!(rp >= 1) || rp != std::floor(rp) || rp > 1e6) throw Error(Status::invalid_input, "merge: R' must be a whole number >= 1");
+  in.Rp = (int)rp;
+  // islands
+  if (args.contains("islands")) {
+    const Json& il = args.at("islands");
+    if (il.type() == Json::ARR) {
+      for (auto& x : il.elems()) { if (x.type() != Json::STR || x.str().empty()) throw Error(Status::invalid_input, "merge: --islands entries must be paths"); in.islands.push_back(x.str()); }
+    } else if (il.type() == Json::STR) {
+      std::string t = il.str(); size_t a = 0;
+      while (a <= t.size()) { size_t b = t.find(',', a); if (b == std::string::npos) b = t.size(); std::string x = t.substr(a, b - a);
+        if (x.empty()) throw Error(Status::invalid_input, "merge: empty entry in --islands"); in.islands.push_back(x); a = b + 1; }
+    } else throw Error(Status::invalid_input, "merge: --islands must be a list of paths");
+    std::vector<std::string> sorted = in.islands; std::sort(sorted.begin(), sorted.end());
+    if (std::adjacent_find(sorted.begin(), sorted.end()) != sorted.end()) throw Error(Status::invalid_input, "merge: an island path appears twice");
+  } else {   // island_<r>.bin inputs of the manifest, r = 1..R' each exactly once
+    std::map<int, std::string> by_r;
+    for (auto& [k, v] : minp.items()) {
+      const std::string b = base_name(k);
+      if (b.rfind("island_", 0) != 0 || b.size() < 12 || b.substr(b.size() - 4) != ".bin") continue;
+      const std::string num = b.substr(7, b.size() - 11);
+      if (num.empty() || num.find_first_not_of("0123456789") != std::string::npos) throw Error(Status::invalid_input, "merge: bad island input name " + b);
+      int r = std::stoi(num);
+      if (by_r.count(r)) throw Error(Status::invalid_input, "merge: island " + num + " named twice in the manifest");
+      by_r[r] = k;
+    }
+    for (auto& [r, k] : by_r) if (r < 1 || r > in.Rp) throw Error(Status::invalid_input, "merge: island index " + std::to_string(r) + " outside 1..R'");
+    for (int r = 1; r <= in.Rp; ++r) {
+      if (!by_r.count(r)) throw Error(Status::invalid_input, "merge: island " + std::to_string(r) + " of R' = " + std::to_string(in.Rp) + " is not in the manifest");
+      in.islands.push_back(by_r[r]);
+    }
+  }
+  if ((int)in.islands.size() != in.Rp)
+    throw Error(Status::invalid_input, "merge: " + std::to_string(in.islands.size()) + " island files for R' = " + std::to_string(in.Rp) + " (no subset is ever pooled)");
+  // mode
+  std::string mode = args.contains("mode") && args.at("mode").type() == Json::STR ? args.at("mode").str()
+                   : in.manifest.contains("mode") && in.manifest.at("mode").type() == Json::STR ? in.manifest.at("mode").str() : "";
+  if (mode.empty()) throw Error(Status::invalid_input, "merge: mode not given (--mode or the manifest's mode)");
+  in.mode = fmt::mode_from_name(mode);
+  return in;
+}
+
 Json run(const Json& args) {
   auto t0 = std::chrono::steady_clock::now();
-  const uint32_t mode = fmt::mode_from_name(sget(args, "mode", "compat"));
-  Json man = args.contains("manifest") ? read_json_file(args.at("manifest").str()) : Json::object();
-  const Json& minp = man.contains("inputs") ? man.at("inputs") : Json::object();
-  auto want = [&](const std::string& path, const std::string& name) {
-    std::string base = path.substr(path.find_last_of('/') + 1);
-    return minp.contains(path) ? minp.at(path).str() : minp.contains(base) ? minp.at(base).str() : minp.contains(name) ? minp.at(name).str() : std::string();
+  MergeInputs in = parse_merge_inputs(args);
+  const uint32_t mode = in.mode;
+  const Json minp = in.manifest.contains("inputs") ? in.manifest.at("inputs") : Json::object();
+  auto want = [&](const std::string& path) {   // the manifest's content hash for this input: exact path, else a unique base name
+    if (minp.contains(path)) return minp.at(path).str();
+    std::string found; int n = 0;
+    for (auto& [k, v] : minp.items()) if (base_name(k) == base_name(path) && v.type() == Json::STR) { found = v.str(); ++n; }
+    return n == 1 ? found : std::string();
   };
-  const std::string dpath = sget(args, "data"), spath = sget(args, "setup"), cpath = sget(args, "calib"), out = sget(args, "out", "fit.bin");
   std::string dhash;
-  Data D = prep::load_data(dpath, &dhash);
-  wp4io::SetupView S = wp4io::read_setup(spath);
-  wp4io::CalibIn C = wp4io::read_calib(cpath);
-  for (auto pr : {std::make_pair(dpath, dhash), std::make_pair(spath, S.content_hash), std::make_pair(cpath, C.content_hash)}) {
-    std::string w = want(pr.first, pr.first == dpath ? "data.bin" : pr.first == spath ? "setup.bin" : "calib.bin");
+  Data D = prep::load_data(in.data, &dhash);
+  wp4io::SetupView S = wp4io::read_setup(in.setup, D.p, D.K);
+  wp4io::CalibIn C = wp4io::read_calib(in.calib, D.p, D.K);
+  for (auto pr : {std::make_pair(in.data, dhash), std::make_pair(in.setup, S.content_hash), std::make_pair(in.calib, C.content_hash)}) {
+    std::string w = want(pr.first);
     if (!w.empty() && w != pr.second) throw Error(Status::invalid_input, pr.first + ": content hash differs from the manifest");
   }
   if (C.status != "ok") throw Error(Status::invalid_input, "calib.bin status " + C.status + ": no frozen grid");
   if (C.mode != mode) throw Error(Status::invalid_input, "calib.bin mode differs from the merge mode");
-  const Json& il = args.at("islands");
-  const int R = (int)il.size();
+  const int R = in.Rp;
   wp4io::Expect ex; ex.mode = mode; ex.data_hash = dhash; ex.setup_hash = S.content_hash; ex.calib_hash = C.content_hash;
-  for (int r = 0; r < R; ++r) ex.island_hash.push_back(want(il.at((size_t)r).str(), "island_" + std::to_string(r + 1) + ".bin"));
-  std::vector<std::string> paths; for (int r = 0; r < R; ++r) paths.push_back(il.at((size_t)r).str());
-  wp4io::FileIslandSource src(paths, ex, R, D.p);   // pass 1: heads + binary check
+  ex.grid = C.grid; ex.L = C.L; ex.Hm = C.Hm; ex.K = D.K;
+  for (int r = 0; r < R; ++r) ex.island_hash.push_back(want(in.islands[(size_t)r]));
+  wp4io::FileIslandSource src(in.islands, ex, R, D.p);   // pass 1: heads + binary check
   LedgerConfig cfg; cfg.p = D.p; cfg.islands = R; cfg.leaders = false; cfg.fresh_counters = false;   // v0.1.7: no final-run leaders
   Ledger pre(cfg);
   wp4io::offer_tables(pre, S, D.K, D.zob);
@@ -562,7 +736,17 @@ Json run(const Json& args) {
   ms.ell = (int)nget(args, "ell", ceil_log2((double)D.n + D.p + 1));
   ms.ls0 = true; ms.ls0_ell = ms.ell; ms.log_m0 = D.logm0;
   ms.threads = (int)nget(args, "threads", 1); ms.chunk = (size_t)nget(args, "chunk", 2048); ms.zob = &D.zob;
-  ms.mem_budget_bytes = (uint64_t)(nget(args, "mem_budget_gb", 0) * 1073741824.0);   // --mem-budget (GiB); 0 = off
+  // --mem-budget: bytes (INTERFACES §7), whole task; --mem-budget-gb: alias in GiB
+  if (args.contains("mem_budget")) ms.mem_budget_bytes = (uint64_t)nget(args, "mem_budget", 0);
+  else if (args.contains("mem_budget_gb")) ms.mem_budget_bytes = (uint64_t)(nget(args, "mem_budget_gb", 0) * 1073741824.0);
+  // memory plan (review PR20 m-2): mean model size from the islands' store sections; the rest of the task = data.bin
+  // (X mapped) + setup.bin (arrays and table stores, x 2.5 for the stores' staging)
+  { double kb = 1;
+    for (auto& h : src.heads()) if (h.store_entries) kb = std::max(kb, (double)h.store_pool / (double)h.store_entries);
+    ms.kbar = kb;
+    struct stat a{}, b{};
+    uint64_t dsz = ::stat(in.data.c_str(), &a) == 0 ? (uint64_t)a.st_size : 0, ssz = ::stat(in.setup.c_str(), &b) == 0 ? (uint64_t)b.st_size : 0;
+    ms.extra_bytes = dsz + (uint64_t)(2.5 * (double)ssz); }
   BitFactory fac{&D, &S};
   FitOut fo = merge_stream(src, std::move(pre), S.mode_S, fac, ms);
   std::string why;
@@ -570,11 +754,12 @@ Json run(const Json& args) {
   if (!why.empty()) fo.reason += " [" + why + "]";
   wp4io::FitWrite fw; fw.mode = mode; fw.fo = &fo; fw.ms = &ms;
   fw.inputs["data.bin"] = dhash; fw.inputs["setup.bin"] = S.content_hash; fw.inputs["calib.bin"] = C.content_hash;
-  for (int r = 0; r < R; ++r) fw.inputs["island_" + std::to_string(r + 1) + ".bin"] = ex.island_hash[(size_t)r];
+  // review PR20 m-1: the content hash actually read ("" only for a file that could not be read)
+  for (int r = 0; r < R; ++r) fw.inputs["island_" + std::to_string(r + 1) + ".bin"] = src.heads()[(size_t)r].content_hash;
   fw.timings["merge_tail_seconds"] = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   Json rec = Json::object();
-  wp4io::write_fit(out, fw, &rec);
-  rec["command"] = "merge";
+  wp4io::write_fit(in.out, fw, &rec);
+  rec["command"] = "merge"; rec["Rp"] = R;
   if (fo.status != Status::completed) rec["exit_status"] = status_name(fo.status);
   return rec;
 }

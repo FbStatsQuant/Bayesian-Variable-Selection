@@ -481,7 +481,7 @@ List wp4_files_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
   // merge command
   v4::Json a = v4::Json::object();
   a["data"] = dpath; a["setup"] = spath; a["calib"] = cpath; a["out"] = dir + "/fit.bin"; a["mode"] = "compat";
-  a["threads"] = threads; a["chunk"] = 256; a["ell"] = ell; a["islands"] = il;
+  a["threads"] = threads; a["chunk"] = 256; a["ell"] = ell; a["islands"] = il; a["Rp"] = R;
   v4::Json rec = v4::merge::run(a);
   // read fit.bin back
   v4::fmt::Reader F(dir + "/fit.bin");

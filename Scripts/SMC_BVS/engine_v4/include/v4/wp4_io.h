@@ -18,10 +18,12 @@ namespace v4::wp4io {
 // The store must be compacted and stay alive until Writer::write returns. Its cap and order go to meta["stores"].
 void add_store(fmt::Writer& W, Json& meta, const std::string& prefix, const Store& s);
 // Rebuilds a Store from the sections (offer + compact; checks I1). Throws Error(invalid_input) on a malformed store.
-void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefix, Store& s);
+void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefix, Store& s, int32_t p, int32_t K);
+// Content checks (review PR20 M-2): a model is strictly increasing, in [0, p), of size <= K; else Error(invalid_input).
+void check_model(ModelView S, int32_t p, int32_t K, const std::string& what);
 // A list of models as <prefix>_ptr i64 (n + 1) and <prefix>_idx i32 (copied).
 void add_models(fmt::Writer& W, const std::string& prefix, const std::vector<Model>& ms);
-std::vector<Model> read_models(const fmt::Reader& R, const std::string& prefix);
+std::vector<Model> read_models(const fmt::Reader& R, const std::string& prefix, int32_t p, int32_t K);   // offsets + models checked
 Json event_json(const EventCtx& e);                 // phase/mech names, phi, every key field
 EventCtx event_from_json(const Json& j);
 void add_ledger_tally(fmt::Writer& W, Json& meta, const Ledger& L);   // hpm_S, meta.hpm_ev/hpm_F/hpm_logm, logical, island_best
@@ -44,7 +46,7 @@ struct CalibIn {
   bool has_hpm = false; Model hpm; EventCtx hpm_ev;
   std::vector<merge::InheritedModel> inherited;
 };
-CalibIn read_calib(const std::string& path);
+CalibIn read_calib(const std::string& path, int32_t p, int32_t K);   // every model, value, grid and meta range checked
 
 // ---- island_r.bin (INTERFACES v0.1.8 §5.1 = WP3's include/v4/island/island_file.h) ---------------------------------
 // meta {schema, kind, mode, r, N, T, L, Hm, p, status, reason, inputs, binary, timings, logZ_hex, init_hash};
@@ -63,6 +65,8 @@ struct Expect {
   uint32_t mode = fmt::M_COMPAT;
   std::string data_hash, setup_hash, calib_hash;   // content hashes of the inputs actually opened by the merge
   std::vector<std::string> island_hash;            // per island r = 1..R': manifest content hash ("" = not given)
+  std::vector<double> grid;                        // calib.bin's frozen grid: every final island ran it (bitwise)
+  int32_t L = -1, Hm = -1, K = 0;                  // calib.bin's L, Hm; the model cap K (data)
 };
 // Pass-1 head of island r (1-based): header, every section hash, kind/mode, content hash vs the manifest, meta.inputs
 // vs the merge's data/setup/calib content hashes, and the meta scalars. Classification (spec §6, T10): no file ->
@@ -70,7 +74,7 @@ struct Expect {
 merge::IslandHead head_island(const std::string& path, int r, const Expect& ex, Json* binary_out);
 // Full load (pass 2) of a file whose head was ok: the IslandIn the streaming merge needs (store, HPM + provenance,
 // counters, island_best sized for R', estimates, terminal supports). Throws Error(invalid_input) on a malformed file.
-merge::IslandIn load_island_full(const std::string& path, int Rp, int p);
+merge::IslandIn load_island_full(const std::string& path, int Rp, int p, const Expect& ex);
 // Slot form (head + load in one), used by tests.
 merge::IslandSlot load_island(const std::string& path, int r, const Expect& ex, int p, Json* binary_out);
 // Every island ran a compatible binary/libm block (INTERFACES §5.1 binary consistency; provenance.h): islands whose
@@ -87,7 +91,7 @@ class FileIslandSource : public merge::IslandSource {
   merge::IslandIn load(int r) override;
   const std::vector<merge::IslandHead>& heads() const { return heads_; }
  private:
-  std::vector<std::string> paths_; std::vector<merge::IslandHead> heads_; int Rp_, p_;
+  std::vector<std::string> paths_; std::vector<merge::IslandHead> heads_; Expect ex_; int Rp_, p_;
 };
 
 // ---- setup view (until WP2's reader lands): the sections the merge needs --------------------------------------------
@@ -102,7 +106,7 @@ struct SetupView {
   uint64_t table_event_count(int32_t K) const;      // codes with |U| <= K (one logical TABLE event each)
   EventCtx table_event_of(const Model& S) const;    // block b + 1, code of S in that block
 };
-SetupView read_setup(const std::string& path);
+SetupView read_setup(const std::string& path, int32_t p, int32_t K);   // shapes, ranges and finite values checked
 std::string write_setup_min(const std::string& path, const SetupView& s, const Json& inputs);   // tests / harness
 // Table step of the merge ledger: the table top stores offered (top -> HPM + top, lead0, lead1) with their table event
 // keys, plus the logical TABLE count. Equal to ingesting every table code (core/cpp/v3_core.cpp:372-387) for the

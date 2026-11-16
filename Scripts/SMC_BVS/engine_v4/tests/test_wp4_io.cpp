@@ -20,6 +20,7 @@ struct Fx {   // a small dataset with pair blocks, its setup view, calibration a
   std::vector<std::string> ipath;
   std::vector<merge::IslandIn> isl;
   std::vector<merge::InheritedModel> inh; Model calib_hpm; EventCtx calib_ev;
+  std::vector<double> grid{0, 0.3, 0.7, 1};   // the frozen grid; T = 3 stages
 };
 struct Ev {   // compat evaluator: Bit scorer + comp (as merge::run's)
   const Data* D; const wp4io::SetupView* S; BitScorer sc; std::vector<std::pair<int32_t, int32_t>> scr;
@@ -91,8 +92,8 @@ Fx make_fx(const std::string& tag, int R, uint32_t mode = fmt::M_COMPAT) {
   std::sort(f.inh.begin(), f.inh.end(), [](const merge::InheritedModel& a, const merge::InheritedModel& b) { return lex_less(a.S, b.S); });
   f.calib_hpm = cl.hpmS; f.calib_ev = cl.hpm_ev;
   calib::CalibOut co; co.status = calib::CalStatus::ok; co.tier_final = 0; co.has_frozen = true;
-  co.frozen.grid = {0, 0.3, 1}; co.frozen.grid_unrefined = co.frozen.grid; co.frozen.grid_label = "rebuild_1"; co.I_used = 1;
-  calib::TierOut t0; t0.tier = 0; t0.has_triggers = true; calib::GridRecord gr; gr.label = "preliminary"; gr.grid = {0, 0.3, 1}; t0.grids.push_back(gr);
+  co.frozen.grid = f.grid; co.frozen.grid_unrefined = co.frozen.grid; co.frozen.grid_label = "rebuild_1"; co.I_used = 1;
+  calib::TierOut t0; t0.tier = 0; t0.has_triggers = true; calib::GridRecord gr; gr.label = "preliminary"; gr.grid = f.grid; t0.grids.push_back(gr);
   co.tiers.push_back(t0);
   wp4io::CalibWrite cw; cw.mode = mode; cw.co = &co; cw.led = &cl; cw.inherited = f.inh; cw.N = 50; cw.L = 4; cw.Hm = 4;
   cw.inputs["data.bin"] = f.dhash; cw.inputs["setup.bin"] = f.shash;
@@ -116,7 +117,7 @@ Fx make_fx(const std::string& tag, int R, uint32_t mode = fmt::M_COMPAT) {
     f.isl.push_back(I);
     std::string ip = tmp_path(tag + "_island_" + std::to_string(r) + ".bin");
     Json in = Json::object(); in["data.bin"] = f.dhash; in["setup.bin"] = f.shash; in["calib.bin"] = f.chash;
-    wp4io::write_island(ip, mode, I, in, &clean_block());
+    wp4io::write_island(ip, mode, I, in, &clean_block(), &f.grid);
     f.ipath.push_back(ip);
   }
   return f;
@@ -124,7 +125,7 @@ Fx make_fx(const std::string& tag, int R, uint32_t mode = fmt::M_COMPAT) {
 Json merge_args(const Fx& f, const std::string& out, int threads) {
   Json a = Json::object();
   a["data"] = f.dpath; a["setup"] = f.spath; a["calib"] = f.cpath; a["out"] = out; a["mode"] = "compat";
-  a["threads"] = threads; a["chunk"] = 7; a["ell"] = 3;
+  a["threads"] = threads; a["chunk"] = 7; a["ell"] = 3; a["Rp"] = (int)f.ipath.size();
   Json il = Json::array(); for (auto& p : f.ipath) il.push(p); a["islands"] = il;
   return a;
 }
@@ -162,8 +163,8 @@ void cleanup(const Fx& f) {
 
 TEST(wp4_io_calib_island_roundtrip) {
   TmpGuard tmp_guard("rt"); Fx f = make_fx("rt", 2);
-  wp4io::CalibIn c = wp4io::read_calib(f.cpath);
-  CHECK(c.status == "ok" && c.grid == std::vector<double>({0, 0.3, 1}) && c.N == 50 && c.L == 4 && c.tier == 0 && c.content_hash == f.chash);
+  wp4io::CalibIn c = wp4io::read_calib(f.cpath, f.D.p, f.D.K);
+  CHECK(c.status == "ok" && c.grid == f.grid && c.N == 50 && c.L == 4 && c.tier == 0 && c.content_hash == f.chash);
   CHECK(c.has_hpm && c.hpm == f.calib_hpm && c.hpm_ev.key.seg == SG_CALIB && c.hpm_ev.key.stage == f.calib_ev.key.stage &&
         c.hpm_ev.key.particle == f.calib_ev.key.particle && c.hpm_ev.phase == PH_PILOT);
   CHECK(c.inherited.size() == f.inh.size());
@@ -179,10 +180,10 @@ TEST(wp4_io_calib_island_roundtrip) {
   CHECK(a.r == 1 && a.N == 50 && same_bits(a.logZ, b.logZ) && a.pip == b.pip && a.ess == b.ess && a.terminal == b.terminal);
   CHECK(a.led.top.size() == b.led.top.size() && a.led.top.content_hash() == b.led.top.content_hash());
   CHECK(a.led.hpmS == b.led.hpmS && a.led.hpm_ev.key == b.led.hpm_ev.key && same_bits(a.led.island_best[1], b.led.island_best[1]) &&
-        a.rb_round.size() == 4 && a.rb_round[0].size() == (size_t)f.D.p && a.led.lead0.cap == 0);
+        a.rb_round.empty() && a.led.lead0.cap == 0);   // rb_* are not loaded by the merge (review PR20 m-2)
   bool lg = true; for (int x = 0; x < N_PHASE; ++x) for (int y = 0; y < N_MECH; ++y) lg = lg && a.led.logical[x][y] == b.led.logical[x][y];
   CHECK(lg && blk.contains("git_commit"));
-  wp4io::SetupView S2 = wp4io::read_setup(f.spath);
+  wp4io::SetupView S2 = wp4io::read_setup(f.spath, f.D.p, f.D.K);
   CHECK(S2.ttop.content_hash() == f.S.ttop.content_hash() && S2.logr == f.S.logr && S2.mode_S == f.S.mode_S);
   CHECK(S2.table_event_count(f.D.K) == (uint64_t)(4 * (f.D.p / 2) + (f.D.p % 2 ? 2 : 0)));
   cleanup(f);
@@ -202,7 +203,7 @@ TEST(wp4_io_load_island_t10) {
   // a different binary block (flags) on island 4 -> binary_mismatch
   Json other = clean_block(); other["flags"] = "-O3 -ffast-math";
   Json in = Json::object(); in["data.bin"] = f.dhash; in["setup.bin"] = f.shash; in["calib.bin"] = f.chash;
-  wp4io::write_island(f.ipath[3], fmt::M_COMPAT, f.isl[3], in, &other);
+  wp4io::write_island(f.ipath[3], fmt::M_COMPAT, f.isl[3], in, &other, &f.grid);
   std::vector<merge::IslandSlot> slots; std::vector<Json> blocks(4);
   for (int r = 1; r <= 4; ++r) slots.push_back(wp4io::load_island(f.ipath[r - 1], r, ex, f.D.p, &blocks[r - 1]));
   wp4io::check_binaries(slots, blocks, fmt::M_COMPAT);
@@ -257,13 +258,13 @@ TEST(wp4_io_merge_command_e2e) {
   flip_byte(f.ipath[2], "pip_r");
   refused(tmp_path("e2e_fit_corrupt.bin"), Status::invalid_input);
   Json in = Json::object(); in["data.bin"] = f.dhash; in["setup.bin"] = f.shash; in["calib.bin"] = f.chash;
-  wp4io::write_island(f.ipath[2], fmt::M_COMPAT, f.isl[2], in, &clean_block());   // repaired
+  wp4io::write_island(f.ipath[2], fmt::M_COMPAT, f.isl[2], in, &clean_block(), &f.grid);   // repaired
   { merge::IslandIn bad = f.isl[0]; bad.status = Status::numerical_failure;
-    wp4io::write_island(f.ipath[0], fmt::M_COMPAT, bad, in, &clean_block()); refused(tmp_path("e2e_fit_numfail.bin"), Status::numerical_failure);
-    wp4io::write_island(f.ipath[0], fmt::M_COMPAT, f.isl[0], in, &clean_block()); }
+    wp4io::write_island(f.ipath[0], fmt::M_COMPAT, bad, in, &clean_block(), &f.grid); refused(tmp_path("e2e_fit_numfail.bin"), Status::numerical_failure);
+    wp4io::write_island(f.ipath[0], fmt::M_COMPAT, f.isl[0], in, &clean_block(), &f.grid); }
   { Json dirty = clean_block(); dirty["git_commit"] = std::string(40, 'a') + "-dirty";   // theory mode refuses a dirty build
-    wp4io::write_island(f.ipath[1], fmt::M_COMPAT, f.isl[1], in, &dirty); refused(tmp_path("e2e_fit_dirty.bin"), Status::invalid_input);
-    wp4io::write_island(f.ipath[1], fmt::M_COMPAT, f.isl[1], in, &clean_block()); }
+    wp4io::write_island(f.ipath[1], fmt::M_COMPAT, f.isl[1], in, &dirty, &f.grid); refused(tmp_path("e2e_fit_dirty.bin"), Status::invalid_input);
+    wp4io::write_island(f.ipath[1], fmt::M_COMPAT, f.isl[1], in, &clean_block(), &f.grid); }
   { // --mem-budget admission through the command: refused before any island store is loaded
     Json a2 = merge_args(f, tmp_path("e2e_fit_mem.bin"), 1); a2["mem_budget_gb"] = 1e-6;
     Json r = merge::run(a2);
@@ -273,13 +274,13 @@ TEST(wp4_io_merge_command_e2e) {
   }
   { // v0.1.8: a non-completed island file carries no estimate section
     merge::IslandIn bad = f.isl[0]; bad.status = Status::numerical_failure;
-    std::string bp = tmp_path("e2e_bad_island.bin"); wp4io::write_island(bp, fmt::M_COMPAT, bad, in, &clean_block());
+    std::string bp = tmp_path("e2e_bad_island.bin"); wp4io::write_island(bp, fmt::M_COMPAT, bad, in, &clean_block(), &f.grid);
     fmt::Reader R(bp);
     CHECK(!R.has("logZ") && !R.has("pip_r") && !R.has("rb_acc") && !R.has("rb_round") && !R.has("terminal_S") && !R.has("st_inc") && R.has("st_ess") && R.has("hpm_ev"));
     std::remove(bp.c_str());
   }
   // the merge's own inputs: a manifest hash mismatch for calib.bin refuses the whole job (invalid_input thrown)
-  Json man = Json::object(); man["inputs"]["calib.bin"] = "00ff"; std::string mp = tmp_path("e2e_manifest.json"); write_json_file(mp, man);
+  Json man = Json::object(); man["inputs"][f.cpath] = "00ff"; std::string mp = tmp_path("e2e_manifest.json"); write_json_file(mp, man);
   Json a = merge_args(f, tmp_path("e2e_fit_bad.bin"), 1); a["manifest"] = mp;
   CHECK_THROWS(merge::run(a));
   std::remove(mp.c_str()); std::remove(o1.c_str()); std::remove(o3.c_str());
@@ -337,8 +338,8 @@ TEST(wp4_io_island_layout_vs_wp3) {
   wp4io::Expect ex; ex.mode = fmt::M_LAW; ex.data_hash = f.dhash; ex.setup_hash = f.shash; ex.calib_hash = f.chash;
   merge::IslandHead h = wp4io::head_island(pa, 2, ex, nullptr);
   CHECK_MSG(h.load == merge::Load::ok && h.r == 2 && h.N == I.N && h.p == f.D.p && same_bits(h.logZ, I.logZ), h.detail);
-  merge::IslandIn A = wp4io::load_island_full(pa, 4, f.D.p);
-  CHECK(A.r == 2 && same_bits(A.logZ, I.logZ) && A.pip == I.pip && A.ess == I.ess && A.terminal == I.terminal && A.rb_round == I.rb_round);
+  merge::IslandIn A = wp4io::load_island_full(pa, 4, f.D.p, ex);
+  CHECK(A.r == 2 && same_bits(A.logZ, I.logZ) && A.pip == I.pip && A.ess == I.ess && A.terminal == I.terminal && A.rb_round.empty());
   CHECK(A.led.top.content_hash() == I.led.top.content_hash() && A.led.hpmS == I.led.hpmS && A.led.hpm_ev.key == I.led.hpm_ev.key &&
         same_bits(A.led.hpmF, I.led.hpmF) && same_bits(A.led.island_best[2], I.led.island_best[2]) && A.led.island_best.size() == 5);
   // phi from the grid: the HPM event is MEASURED in this fixture -> 1

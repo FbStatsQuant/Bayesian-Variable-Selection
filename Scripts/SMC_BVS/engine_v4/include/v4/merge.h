@@ -48,7 +48,11 @@ struct IslandIn {
 // How an island file was found by the loader (WP1 format reader / manifest / binary check).
 enum class Load : uint8_t { ok = 0, missing, corrupt, hash_mismatch, binary_mismatch };
 // Pass-1 view of an island: what GUARD-W needs, read from headers and meta only (no store is loaded).
-struct IslandHead { Load load = Load::missing; Status status = Status::completed; int32_t r = 0, N = 0, p = 0; double logZ = 0; std::string detail; };
+struct IslandHead {
+  Load load = Load::missing; Status status = Status::completed; int32_t r = 0, N = 0, p = 0, T = 0, L = 0, Hm = 0; double logZ = 0;
+  std::string detail, content_hash;            // content hash actually read (recorded in fit.bin meta.inputs)
+  uint64_t store_entries = 0, store_pool = 0;  // section lengths of the island store (memory plan: mean model size)
+};
 // Where the streaming merge reads islands from: files (slice 2), memory (tests, golden harness).
 struct IslandSource {
   virtual ~IslandSource() = default;
@@ -85,13 +89,14 @@ struct MergeSettings {
   // memory admission (review PR16 F1): 0 = off; else refuse with resource_limit before any island store is loaded if
   // estimate_merge_memory(...).total exceeds it
   uint64_t mem_budget_bytes = 0;
-  double kbar = 8;             // mean model size used by the estimate
+  double kbar = 8;             // mean model size used by the estimate (merge::run: measured from the islands' store sections)
+  uint64_t extra_bytes = 0;    // the rest of the task (review PR20 m-2): data.bin X (mapped), setup arrays and table stores
   // INTERFACES v0.1.7: final-run leader stores are not outputs in any mode; final-run ledgers use leaders = false
 };
 
 // Memory model of the streaming merge (ESTIMATE; bytes). A store entry costs 26 + 4 k bytes (v, off, hash, len, pool);
 // a store peaks at 2.5 cap entries (kept + staging + new kept run, INTERFACES §4.1).
-struct MemEstimate { uint64_t merged = 0, one_island = 0, small = 0, tail = 0, total = 0; };
+struct MemEstimate { uint64_t merged = 0, one_island = 0, small = 0, tail = 0, extra = 0, total = 0; };
 inline MemEstimate estimate_merge_memory(const MergeSettings& ms) {
   const double entry = 26.0 + 4.0 * ms.kbar, c = 40.0 * ms.p + 1, lead = 0.0;   // no final-run leaders (v0.1.7)
   MemEstimate m;
@@ -99,7 +104,8 @@ inline MemEstimate estimate_merge_memory(const MergeSettings& ms) {
   m.one_island = (uint64_t)(2.5 * c * entry);                                        // one island store while loaded
   m.small = (uint64_t)((double)ms.Rp * ms.p * 8.0 * 2 + (double)ms.Rp * ms.N * (24 + 4 * ms.kbar));   // pip_r (+ pip_eq/Z/T) + terminal supports
   m.tail = (uint64_t)((double)std::max(1, ms.threads) * 4 * (double)ms.chunk * (entry + 48));        // one wave of chunk buffers
-  m.total = m.merged + m.one_island + m.small + m.tail;
+  m.extra = ms.extra_bytes;
+  m.total = m.merged + m.one_island + m.small + m.tail + m.extra;
   return m;
 }
 
@@ -194,6 +200,7 @@ inline Status load_status(Load l) {
 // GUARD-W, pass 1 (spec §6 "missing or invalid island at merge"): heads only. A non-finite log Z_r is a numerical
 // failure of that island (review PR16 F8; R's sd would give NA there). Returns true if the merge may proceed.
 inline bool guard_heads(IslandSource& src, const MergeSettings& ms, FitOut& out) {
+  if (ms.Rp < 1) { out.status = Status::invalid_input; out.fit_state = "incomplete"; out.reason = "R' < 1: nothing to merge (review PR20 C-1)"; return false; }
   if (src.count() != ms.Rp) { out.status = Status::invalid_input; out.fit_state = "incomplete"; out.reason = "manifest R' != number of islands"; return false; }
   std::vector<Status> st;
   for (int r = 1; r <= ms.Rp; ++r) {
@@ -243,11 +250,16 @@ FitOut merge_stream(IslandSource& src, Ledger&& pre, const Model& mode_S, Factor
   std::vector<std::vector<Model>> terminal((size_t)R);
   for (int r = 1; r <= R; ++r) {
     IslandIn I = src.load(r);
+    if (I.r == -1) {   // the loader refused the file's content (review PR20 m-3)
+      out = FitOut(); out.mem = estimate_merge_memory(ms);
+      out.status = Status::invalid_input; out.fit_state = "incomplete";
+      out.reason = "merge refused (GUARD-W): island " + std::to_string(r) + ": malformed (" + I.message + ")";
+      return out;
+    }
     if (I.r != r || (int)I.pip.size() != p || I.N != ms.N || I.status != Status::completed || !std::isfinite(I.logZ)) {
       out = FitOut(); out.mem = estimate_merge_memory(ms);
       out.status = Status::invalid_input; out.fit_state = "incomplete";
-      out.reason = "merge refused (GUARD-W): island " + std::to_string(r) + " changed between the head check and its load" +
-                   (I.message.empty() ? std::string() : " (" + I.message + ")");
+      out.reason = "merge refused (GUARD-W): island " + std::to_string(r) + " changed between the head check and its load";
       return out;
     }
     if (I.led.lead0.cap != 0 || I.led.lead1.cap != 0) {   // final-run island ledgers carry no leaders (v0.1.7)
@@ -401,6 +413,15 @@ FitOut merge_stream(IslandSource& src, Ledger&& pre, const Model& mode_S, Factor
   }
   for (double e : ess_all) if (e < 0.5 * ms.N) out.low_ESS = true;
   out.checks_passed_final = !(out.E1 || out.E2 || out.E3 || out.low_ESS);
+  // last line of GUARD-W (review PR20 C-1): no estimate is ever reported completed unless it is finite
+  bool finite = std::isfinite(out.log_Z) && std::isfinite(out.log_Z_T) && std::isfinite(out.hpm_F) && std::isfinite(out.R_eff);
+  for (const auto* v : {&out.logZ_r, &out.pip_eq, &out.pip_Z, &out.pip_T}) for (double x : *v) finite = finite && std::isfinite(x);
+  if (!finite) {
+    FitOut bad; bad.mem = out.mem; bad.status = Status::internal_error; bad.fit_state = "failed";
+    bad.reason = "a non-finite estimate at assembly (internal check)"; bad.has_hpm = out.has_hpm; bad.hpm = out.hpm; bad.hpm_F = out.hpm_F;
+    bad.hpm_ev = out.hpm_ev; bad.hpm_incomplete = true; bad.island_status = out.island_status;
+    return bad;
+  }
   out.estimates_available = true;
   out.led = std::move(led);
   return out;
