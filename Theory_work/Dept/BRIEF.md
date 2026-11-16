@@ -1,6 +1,7 @@
 # SMC - Theory Department — manager's brief (HQ, 2026-11-15)
 
 ## Organization (owner, 2026-11-15)
+**Read `POLICIES.md` (repo root) first: the company handbook (policies, pipeline, access and autonomy).**
 - **Felipe = owner.** He sets goals and decides budget and big-picture questions.
 - **Theory HQ = CEO** (the thread on the owner's desktop). HQ reports to the owner.
 - **Department managers report to HQ.** Each manager acts as the manager of a department; you are the manager of the

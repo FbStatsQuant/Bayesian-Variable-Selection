@@ -9,6 +9,7 @@ sure they hold").
 and on Owls; HQ decides when you start.
 
 ## Organization (owner, 2026-11-15)
+**Read `POLICIES.md` (repo root) first: the company handbook (policies, pipeline, access and autonomy).**
 Felipe = owner. Theory HQ (thread 647bfd65-83bc-403a-b3b0-0a8352044e7f, environment 1fde6176-4453-43b0-82cc-70fda5110037) =
 CEO, reporting to the owner. Department managers report to HQ; **you are the manager of this department**. The owner
 may talk to you directly; tell HQ what he decides. Report to HQ with `t3_thread_send` (mode queue), at most 10 lines,
