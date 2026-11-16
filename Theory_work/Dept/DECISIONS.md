@@ -183,3 +183,10 @@
   then the score base; Level 2 Mon 11-23 (DIST-1 if CP3 landed, else W3-POST:Thm-1). LEAN_READINESS.md stays current
   (refresh after Wed rider CP3s and DIST CP2/CP3). Old sorry-free snapshot:
   Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/L-LEAN/ (STATUS.md, REPORT.md).
+
+## 2026-11-15 20:32 CT — adjudication of the 20 class-(iii) audit items
+- **D31.** E 2, PATCH 6, NARROW 12, REFUTED 0; no headline-candidate main clause affected. W2-APP:POST M57/M58 PATCH
+  (sub-clause / parenthetical): C real run proposed to HQ on MANIFEST_PC1; the patches join F1–F4 in the post-freeze
+  Family-map diff round. F-UNI M27 PATCH: gate record fix now (task I), text after RM2-R CP3 + H5 card. 12 NARROW →
+  one post-freeze LIFECYCLE §3 batch (priced), H5 card for GEN (C4), FAC-CS (C1), SAMP:Pkg. Narrowed wordings added to
+  Docs/Writing/QUEUE.md for the chapter; READER told. Open checks M69, M05 go into the batch prep.

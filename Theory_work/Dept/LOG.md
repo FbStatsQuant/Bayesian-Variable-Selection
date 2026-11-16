@@ -65,3 +65,4 @@
 - 20:30 — /tmp/hq1115-* count 0 (both gone, ~1.06 GB); root 86% / 9.9 GB free; recorder in bvs_tmp (1.5 GB). Task I: F-UNI gate stale (fix after M27); 38/44 candidates have free-text correct:PASS evidence (post-freeze record-format cleanup proposed). HQ told.
 - 20:30 — SHARP3 results in (5/5 IMPROVABLE-EASY: SAMP D, LT#, C, TR; SCR:A1; ~$2.2); READER to triage (TRIAGE_SHARP3.md; settle NC_r every island, P-MAP localisable; cheap improvements → post-freeze riders; dispositions in better-gate).
 - 20:31 — W3-DIST: L5 (S, S.1, S.2, V) VERIFIED; L3 (H, T, DIST-3) VERIFIED, no findings; L4 bridges VERIFIED(-WITH-AMENDMENTS, 5 MINOR wording). X, S, V all line-checked → CP2 waits only on BR1 (Astra, since 19:46; 2 h at 21:46). L2 (Sol, stream D) since ~19:10 (2 h at ~21:10). STATEMENT v1.4.1 retagged; Sol diff check owed after BR1+L2. All first-attempt passes.
+- 20:32 — adjudication in (D31); HQ summary sent; Writing queue row added; adjudicator settled.
