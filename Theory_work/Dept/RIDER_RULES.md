@@ -90,4 +90,7 @@ the new text, and the bridges it needs. The manager passes it to HQ for W3-READE
   can answer, and the reviewer stalls forever (11-16, START2-R RC1). Their briefs must say: no TMPDIR, no writes outside
   the worktree; scratch only in `<worktree root>/.rc_tmp/` (git-ignored for all worktrees via the shared
   `.git/info/exclude`; never inside the ticket folder, where manifest.py would count it), deleted at the end.
+- **Patch application (HQ rule, 11-16, after a silent `git apply` skip):** run every patch from the repo root with
+  `git apply --verbose` (or `patch -p1 --verbose`); a "Skipped" or 0-hunk result is a hard failure. After applying, verify each
+  target file's sha256 against the expected post-apply hash from the dry run (or the prepared LINES_CHECK); any mismatch → stop.
 - Do not touch: `Theory_work/Wave3/W3-DIST/`, `W3-READER/`, `PROTOCOL_REVIEW/`, `Docs/`, `Lean/`, `Theory_work/Dept/`.
