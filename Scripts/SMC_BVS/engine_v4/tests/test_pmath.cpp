@@ -7,6 +7,8 @@ TEST(pmath_binding_is_libm) {
   auto li = pm::libm_info();
   std::printf("    libm: %s sha256 %s glibc %s binding %s\n", li.path.c_str(), li.sha256.c_str(), li.gnu_libc_version.c_str(), pm::binding());
   CHECK(!li.path.empty());
+  std::printf("    FMA libm variant expected: %s\n", li.fma_variant ? "yes" : "NO (bit-form results will differ from the v3.1 records)");
+  CHECK(li.fma_variant);
   double xs[] = {1e-300, 0.1, 0.5, 1, 2, 3.5, 100, 1e10};
   bool ok = true;
   for (double x : xs) ok = ok && same_bits(pm::log(x), std::log(x)) && same_bits(pm::exp(-x), std::exp(-x)) && same_bits(pm::lgamma(x), std::lgamma(x)) &&

@@ -17,6 +17,10 @@ inline double sqrt(double x) { return std::sqrt(x); }   // IEEE correctly rounde
 inline long double logl(long double x) { return std::log(x); }
 inline long double expl(long double x) { return std::exp(x); }
 inline const char* binding() { return "glibc-libm"; }
-struct LibmInfo { std::string path, sha256, gnu_libc_version; };
-LibmInfo libm_info();   // path of the loaded libm.so.6, its SHA-256, gnu_get_libc_version()
+struct LibmInfo { std::string path, sha256, gnu_libc_version; bool fma_variant = false; };
+LibmInfo libm_info();   // path of the loaded libm.so.6, its SHA-256, gnu_get_libc_version(), FMA variant expected
+// glibc's x86-64 libm selects FMA/AVX2 variants of exp/log/... at load time (ifunc); they give different bits from the
+// SSE2 variants (measured: tests/PMATH_REPORT.md). The v3.1 records and the engine's bit form assume the FMA variant:
+// true iff this CPU has FMA and AVX2 and GLIBC_TUNABLES does not mask them. Bit-form (T / compat) runs refuse otherwise.
+bool fma_variant_expected();
 }  // namespace v4::pm

@@ -24,14 +24,17 @@ static uint64_t align64(uint64_t x) { return (x + 63) & ~uint64_t(63); }
 void Writer::add_raw(const std::string& name, uint32_t dtype, const void* p, uint64_t bytes, uint64_t d0, uint64_t d1) {
   if (name.empty() || name.size() >= 48) throw Error(Status::internal_error, "section name length: " + name);
   for (auto& s : secs_) if (s.name == name) throw Error(Status::internal_error, "duplicate section " + name);
-  Sec s{name, dtype, d0, d1, {}};
-  s.bytes.resize(bytes);
-  if (bytes) std::memcpy(s.bytes.data(), p, bytes);
-  secs_.push_back(std::move(s));
+  if (bytes && !p) throw Error(Status::internal_error, "null section data: " + name);
+  secs_.push_back(Sec{name, dtype, d0, d1, (const uint8_t*)p, bytes, nullptr});
+}
+void Writer::add_copy(const std::string& name, uint32_t dtype, const void* p, uint64_t bytes, uint64_t d0, uint64_t d1) {
+  auto own = std::make_shared<std::vector<uint8_t>>((const uint8_t*)p, (const uint8_t*)p + bytes);
+  add_raw(name, dtype, own->data(), bytes, d0, d1);
+  secs_.back().own = own;
 }
 void Writer::add_json(const std::string& name, const Json& j) {
   std::string t = j.dump();
-  add_raw(name, D_JSON, t.data(), t.size(), t.size(), 0);
+  add_copy(name, D_JSON, t.data(), t.size(), t.size(), 0);
 }
 
 static void write_all(int fd, const void* p, size_t n, const std::string& path) {
@@ -51,8 +54,8 @@ std::string Writer::write(const std::string& path) const {
     std::memset(&e, 0, sizeof e);
     std::memcpy(e.name, secs_[i].name.data(), secs_[i].name.size());
     e.dtype = secs_[i].dtype; e.ndim = secs_[i].d1 ? 2 : 1; e.dims[0] = secs_[i].d0; e.dims[1] = secs_[i].d1;
-    e.offset = off; e.length = secs_[i].bytes.size();
-    auto h = sha256(secs_[i].bytes.data(), secs_[i].bytes.size());
+    e.offset = off; e.length = secs_[i].n;
+    auto h = sha256(secs_[i].ptr, secs_[i].n);
     std::memcpy(e.sha256, h.data(), 32);
     off = align64(off + e.length);
   }
@@ -72,7 +75,7 @@ std::string Writer::write(const std::string& path) const {
     static const uint8_t zeros[64] = {0};
     for (size_t i = 0; i < secs_.size(); ++i) {
       write_all(fd, zeros, table[i].offset - pos, tmp); pos = table[i].offset;
-      write_all(fd, secs_[i].bytes.data(), secs_[i].bytes.size(), tmp); pos += secs_[i].bytes.size();
+      write_all(fd, secs_[i].ptr, secs_[i].n, tmp); pos += secs_[i].n;
     }
     write_all(fd, zeros, off - pos, tmp);
     if (::fsync(fd) != 0) throw Error(Status::io_error, "fsync failed: " + tmp);

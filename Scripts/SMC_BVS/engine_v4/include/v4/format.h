@@ -43,6 +43,8 @@ template <class T> constexpr uint32_t dtype_of() {
 }
 
 // Writer: collect sections, then write(path) = temporary name, fsync, rename. Returns the file's content hash.
+// add()/add_raw() keep a POINTER to the caller's data (no copy: X is 1.6 GB at p = 10^6); it must stay alive and
+// unchanged until write() returns. add_json() and add_copy() own their bytes.
 class Writer {
  public:
   Writer(uint32_t kind, uint32_t mode) : kind_(kind), mode_(mode) {}
@@ -54,9 +56,10 @@ class Writer {
   }
   void add_json(const std::string& name, const Json& j);
   void add_raw(const std::string& name, uint32_t dtype, const void* p, uint64_t bytes, uint64_t d0, uint64_t d1);
+  void add_copy(const std::string& name, uint32_t dtype, const void* p, uint64_t bytes, uint64_t d0, uint64_t d1);
   std::string write(const std::string& path) const;   // hex content hash (SHA-256 of the section table)
  private:
-  struct Sec { std::string name; uint32_t dtype; uint64_t d0, d1; std::vector<uint8_t> bytes; };
+  struct Sec { std::string name; uint32_t dtype; uint64_t d0, d1; const uint8_t* ptr; uint64_t n; std::shared_ptr<std::vector<uint8_t>> own; };
   uint32_t kind_, mode_;
   std::vector<Sec> secs_;
 };

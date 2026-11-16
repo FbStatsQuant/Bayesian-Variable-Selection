@@ -45,7 +45,17 @@ int main(int argc, char** argv) {
       if (k.rfind("--", 0) != 0 || i + 1 >= argc) throw Error(Status::invalid_input, "bad argument " + k);
       std::string key = k.substr(2), val = argv[++i];
       for (auto& ch : key) if (ch == '-') ch = '_';
-      if (key == "manifest") { Json m = read_json_file(val); for (auto& [kk, vv] : m.at("params").items()) args[kk] = vv; args["manifest"] = m; }
+      if (key == "manifest") {
+        Json m = read_json_file(val);
+        for (auto& [kk, vv] : m.at("params").items()) args[kk] = vv;
+        // INTERFACES §5.3: inputs = {path: content sha256}; a job refuses to start on any mismatch (invalid_input)
+        if (m.contains("inputs"))
+          for (auto& [path, h] : m.at("inputs").items()) {
+            fmt::Reader rd(path);
+            if (rd.content_hash() != h.str()) throw Error(Status::invalid_input, "input hash mismatch: " + path);
+          }
+        args["manifest"] = m;
+      }
       else if (key == "record") record_path = val;
       else args[key] = number_or_string(val);
     }
@@ -58,7 +68,7 @@ int main(int argc, char** argv) {
     if (cmd == "version") {
       auto li = pm::libm_info();
       rec["binary"] = "smcbvs4"; rec["flags"] = V4_BIT_FLAGS_STR; rec["libm"] = li.path; rec["libm_sha256"] = li.sha256;
-      rec["glibc"] = li.gnu_libc_version; rec["pmath_binding"] = pm::binding();
+      rec["glibc"] = li.gnu_libc_version; rec["pmath_binding"] = pm::binding(); rec["libm_fma_variant"] = li.fma_variant;
     } else if (cmd == "gen") {
       Json a = Json::object(); a["spec"] = spec_from_args(); a["out"] = args.at("out");
       if (args.contains("truth")) a["truth"] = args.at("truth");

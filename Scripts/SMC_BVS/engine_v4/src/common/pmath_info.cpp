@@ -3,10 +3,18 @@
 #include <gnu/libc-version.h>
 #include <link.h>
 #include <cmath>
+#include <cstdlib>
+#include <string>
 #include "v4/pmath.h"
 #include "v4/sha256.h"
 
 namespace v4::pm {
+bool fma_variant_expected() {
+  if (!__builtin_cpu_supports("fma") || !__builtin_cpu_supports("avx2")) return false;
+  const char* t = std::getenv("GLIBC_TUNABLES");
+  if (t) { std::string s(t); if (s.find("-FMA") != std::string::npos || s.find("-AVX2") != std::string::npos) return false; }
+  return true;
+}
 LibmInfo libm_info() {
   LibmInfo r;
   r.gnu_libc_version = gnu_get_libc_version();
@@ -18,6 +26,7 @@ LibmInfo libm_info() {
   }, &r.path);
   if (!r.path.empty()) { try { r.sha256 = sha256_file(r.path); } catch (...) { r.sha256 = "unreadable"; } }
   else r.path = "static-or-unknown";
+  r.fma_variant = fma_variant_expected();
   return r;
 }
 }  // namespace v4::pm
