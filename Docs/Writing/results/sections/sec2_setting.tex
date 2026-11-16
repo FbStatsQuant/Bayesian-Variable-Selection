@@ -3,8 +3,8 @@
 
 This section fixes the data, the model, the prior and the posterior, and names the few objects of the method that the
 theorems talk about. The method is described in full in the methodology section; here we recall only what the statements
-need. Appendix~\ref{app:notation} lists the main symbols; a constant that appears in one assumption only is defined
-there.
+need. Appendix~\ref{app:notation} lists the main symbols. A constant that appears in only one assumption is defined in
+that assumption and is not listed in the appendix.
 
 \subsection{Notation}\label{sec:notation}
 
@@ -13,8 +13,9 @@ $\norm{v}$ and its $\ell_1$ norm is $\norm{v}_1$. An identity matrix is written 
 and $\one_n$ (or $\one$) is the vector of ones. The smallest eigenvalue of a symmetric matrix $B$ is $\lmin(B)$. The
 number of elements of a set $S$ is $\abs{S}$. Logarithms are natural ($\log$) or binary ($\log_2$);
 $\lceil\cdot\rceil$ and $\lfloor\cdot\rfloor$ round up and down; $a\vee b:=\max(a,b)$; and $\ind{E}$ is the indicator of
-an event or condition $E$. A star marks a true parameter value; the superscript $\mathrm r$ marks raw, unstandardised
-data.
+an event or condition $E$. A star on a parameter marks its true value; the superscript $\mathrm r$ marks raw,
+unstandardised data. For a matrix $B$ indexed by $\set{p}$ and sets $U,V\subseteq\set{p}$, $B_{UV}$ is the sub-matrix with
+rows in $U$ and columns in $V$, and $B_U:=B_{UU}$.
 
 \subsection{Data and model}\label{sec:model}
 
@@ -22,7 +23,8 @@ We observe a response vector $\yr\in\R^n$ and $\praw$ predictors. The method fir
 constant in the sample. A constant predictor is a multiple of $\one_n$, so its effect is absorbed by the intercept. We
 therefore write the model with the remaining predictors only: $\Xr$ is the $n\times p$ matrix of the $p$ \emph{retained}
 predictors, indexed by $\set{p}$. Everything the method computes, including its prior, uses these $p$ predictors only.
-The raw count $\praw$ appears only in Section~\ref{sec:distribution} and in the computing conventions.
+The raw count $\praw$ appears only in Section~\ref{sec:distribution}, in the delivery domain of
+Section~\ref{sec:reported} and in the computing conventions.
 
 The data follow a Gaussian linear model with an intercept:
 \begin{equation}\label{eq:model}
@@ -39,10 +41,11 @@ We consider two kinds of design.
 \begin{itemize}[leftmargin=1.5em]
   \item \emph{Fixed design.} The matrix $\Xr$ is deterministic, and probability refers to the noise $\varepsilon$ only.
   \item \emph{Random Gaussian design.} The rows of $\Xr$ are independent and identically distributed (i.i.d.)
-    $\Normal_p(m_n,\Sig)$, and probability refers to the joint law of $(\Xr,\varepsilon)$. The subscript $n$ recalls
-    that this law may change with $n$. When the rows are random, we write $W=(W_1,\dots,W_p)\sim\Normal_p(0,\Sig)$ for a
-    centred copy of one row; for $S\subseteq\set{p}$, $W_S$ is the sub-vector indexed by $S$ and $\Sigma_{n,S}$ the
-    principal sub-matrix of $\Sig$ indexed by $S$.
+    $\Normal_p(m_n,\Sig)$, with covariance matrix $\Sig$ (a correlation matrix under \as{GR} below), and probability
+    refers to the joint law of $(\Xr,\varepsilon)$. The subscript $n$ recalls that this law may change with $n$. When the
+    rows are random, we write $W=(W_1,\dots,W_p)\sim\Normal_p(0,\Sig)$ for a centred copy of one row; for
+    $S\subseteq\set{p}$, $W_S$ is the sub-vector indexed by $S$, and $\Sigma_{n,S}$ and $\Sigma_{n,UV}$ are sub-matrices
+    of $\Sig$ as in Section~\ref{sec:notation}.
 \end{itemize}
 Apart from the lower bounds of Theorem~\ref{thm:sharp}(b), which are proved on two explicit designs, no theorem assumes
 a particular correlation structure, such as equicorrelation; such structures appear only as
@@ -63,7 +66,8 @@ In terms of the standardised predictors, the centred response is
 \[
   P^\perp_{\one}\yr=X\tstar+P^\perp_{\one}\varepsilon,\qquad \tstar:=D\bstar .
 \]
-We call $\tstar$ the \emph{standardised coefficients}; they are in the units of the raw response. The \emph{mean signal}
+We call $\tstar$ the \emph{standardised coefficients}: they are the coefficients of the standardised predictors for
+the centred raw response, so they carry the units of $\yr$ (the method's $y$ is further divided by $s_y$). The \emph{mean signal}
 is $\mu:=X\tstar\in\R^n$, and $\tmin:=\min_{j\in\Sz}\abs{\theta^*_j}$ is the smallest true standardised coefficient.
 Standardising does not move the support: $\supp\tstar=\Sz$. For a fixed design $\tstar$ is deterministic; for a random
 design it is random through $D$, and a theorem that places its conditions on $\tstar$ says so.
@@ -82,7 +86,8 @@ $\sigma^2>0$, the working likelihood is
 \begin{equation}\label{eq:working}
   y\mid S,\theta_S,\sigma^2\ \sim\ \Normal_n(X_S\theta_S,\sigma^2I_n).
 \end{equation}
-Here $\theta_S$ (on the standardised scale, like $\tstar$) and $\sigma^2$ are working parameters, not the true values. The intercept is removed by centring and has no
+Here $\theta_S$ and $\sigma^2$ are working parameters, not the true values; $\theta_S$ is on the scale of
+the standardised response $y$, so its true counterpart is $\tstar_S/s_y$. The intercept is removed by centring and has no
 prior of its own. The theorems are proved under the true model~\eqref{eq:model}, not under this working model.
 
 \paragraph{Model space.} The method considers every model with at most $K$ predictors:
@@ -160,13 +165,13 @@ one.
 The method is a sequential Monte Carlo sampler over $\Om$, combined with a local search. Four of its objects appear in
 the theorems: the start law, the local search, the reported model, and the estimated summaries.
 
-\paragraph{A run.} A \emph{run} is one call of the software on a data set, with a user-supplied random \emph{seed}. When
-$\Om$ is small enough, the method enumerates it and computes the posterior exactly. Otherwise it runs the sampler. Before
-the final sampler run it performs an internal \emph{calibration}: a few short pilot runs that fix the sequence of
-intermediate distributions and the effort level, so that these settings are frozen before the final run's random numbers
-are drawn. A run either \emph{produces output}, ending with status ``exact'' (enumeration) or ``completed'' (sampler), or
-it stops without estimates, for example when its computing allocation is exhausted. A \emph{completed run} is a sampler
-run that ends with status ``completed''; enumeration runs are not completed runs in this sense.
+\paragraph{A run.} A \emph{run} is one call of the software on a data set, with a user-supplied random \emph{seed} and
+a computing \emph{allocation} (memory and time). The inputs are \emph{valid} when $n\ge3$, at least one predictor is
+given and every entry is a finite number; the seed is valid when it is an integer in $[1,2^{31}-1]$. When $\Om$ is small
+enough, the method enumerates it and computes the posterior exactly. Otherwise it runs the sampler described below. A run
+either \emph{produces output}, ending with status ``exact'' (enumeration) or ``completed'' (sampler), or it stops without
+estimates, for example when its allocation is exhausted. A \emph{completed run} is a sampler run that ends with status
+``completed''; enumeration runs are not completed runs in this sense.
 
 \paragraph{The start law.} The method partitions the predictors into blocks $C_1,\dots,C_J$ of at most $16$ predictors
 each, by clustering on sample correlations; the theory uses only that the partition is a function of $X$ with blocks of
@@ -176,14 +181,25 @@ all interactions between blocks ignored:
   \pi_0(S)\ \propto\ w(\abs{S})\prod_{b=1}^{J}\frac{m(S\cap C_b)}{m(\emptyset)},\qquad S\in\Om.
 \end{equation}
 It can be computed and sampled exactly, and the sampler starts from it. The \emph{start mode} $\tSz$ is a maximiser of
-$\pi_0$ over $\Om$.
+$\pi_0$ over $\Om$ (the tilde distinguishes it from the true model $\Sz$).
+
+\paragraph{The sampler.} The sampler moves a population of models, called \emph{particles}, from the start law to the
+posterior through a sequence of intermediate distributions $\pi_\phi\propto\pi_0^{1-\phi}\,\pi(\cdot\mid y)^{\phi}$, with
+\emph{temperatures} $0=\phi_0<\phi_1<\dots<\phi_T=1$. At each temperature it reweights the particles by how much more the
+next distribution favours them, resamples them in proportion to these weights, and applies Markov moves that leave the
+current distribution unchanged: an update of each predictor's inclusion given the others, swaps of a member for a
+non-member, and fresh proposals drawn from $\pi_0$. Before the final run, an internal \emph{calibration} uses short pilot
+runs to choose the temperatures and the effort level (the number of particles). The calibration \emph{succeeds} when it
+produces a sequence of temperatures, either by its main construction or by a simpler fallback sequence built from the
+pilot runs; these settings are then frozen before the final run draws any random number. If no sequence can be built,
+the run stops without estimates.
 
 \paragraph{Local search.} Two models are \emph{neighbours} if one comes from the other by deleting one predictor, adding
 one (while the size is below $K$), or swapping one member for one non-member. A local search scans all neighbours of the
 current model and moves to the best one if its log score is strictly higher. It stops at the first scan with no strict
 improvement, or when it reaches its move cap, whichever comes first. After the sampler, the method runs two local
-searches: one from the best model found so far, and one from the start mode, with move cap $\ell_n+\abs{\tSz}$, where
-$\ell_n:=\lceil\log_2(n+p+1)\rceil$.
+searches: one from the best model found so far (move cap $\ell_n$), and one from the start mode (move cap
+$\ell_n+\abs{\tSz}$), where $\ell_n:=\lceil\log_2(n+p+1)\rceil$.
 
 \paragraph{The reported model and certification.} The method records every model it scores, in the sampler and in the
 local searches. The \emph{reported model} $\Shat$ is the best-scoring recorded model. The method \emph{certifies}
@@ -191,7 +207,8 @@ $\Shat$ (it sets its local-optimality flag) in two cases: (a) it enumerated $\Om
 $\Om$; or (b) $\Shat$ ends a local search whose last scan found no strict improvement, so that no neighbour of $\Shat$
 has a higher log score.
 
-\paragraph{Estimated summaries.} The sampler runs four independent copies, called \emph{islands}. Island $r$ produces
+\paragraph{Estimated summaries.} The final run consists of four independent copies of the sampler, called
+\emph{islands}. Island $r$ produces
 estimated inclusion probabilities $\PIPhat_{r,j}$ and an estimate $\Zhat_r$ of the evidence $Z$. The method pools the
 islands with equal weights,
 \[
@@ -232,22 +249,24 @@ The conventions are not statistical assumptions: they fix what ``the method'' me
 
 \begin{convention}{C1}{The method}
 Statements about what the method returns assume exact arithmetic (scores and comparisons computed without rounding
-error), the default configuration (in particular, the local search from the start mode is switched on), and valid inputs
-and seed; a run that meets these conventions is \emph{admissible}, and so is a sample size $n$ for which valid inputs
-exist. Unless a statement says otherwise, it holds for every valid seed and every outcome of the internal calibration.
+error), the software's default configuration (in particular, the local search from the start mode is switched on), and
+valid inputs and seed (Section~\ref{sec:method}). A run that meets these conventions is called \emph{admissible}. A
+sample size $n$ is admissible if some data set of that size is a valid input. Unless a statement says otherwise, it holds
+for every valid seed and every outcome of the internal calibration.
 \end{convention}
 
 \begin{convention}{C2}{Delivery}
-Used only by the clauses ``the run always produces output''. The computer does exact arithmetic, never overflows and
-never fails. The method runs in its default configuration, with ideal random numbers. The user grants at least the
-memory and time that the method's own requirement formulas, polynomial in $(n,\praw)$, ask for. Convention
-\as{C2p} is the same with the code's two fixed integer limits on the local-search move caps lifted. Appendix~\ref{app:conventions}
+Used only by the delivery clauses of Theorems~\ref{thm:reported-random} and~\ref{thm:reported-fixed}, which say that a
+run produces output with probability one. The computer does exact arithmetic, never overflows and never fails. The method
+runs in its default configuration, with ideal random numbers. The user grants at least the memory and time that the
+method's own requirement formulas, polynomial in $(n,\praw)$, ask for. Convention \as{C2p} is the same with the code's
+two fixed integer limits on the local-search move caps lifted (Section~\ref{sec:reported}). Appendix~\ref{app:conventions}
 gives the full lists.
 \end{convention}
 
 \begin{convention}{C3}{Sampler}
 Used only by the results on the estimated summaries. The computer does exact arithmetic. The random numbers are ideal
 independent uniforms, and the final run's random numbers are independent of the data and of the calibration. The start law
-is sampled exactly, and every Markov move does exactly what its definition says. Appendix~\ref{app:conventions} gives the
+is sampled exactly, and every Markov move of the sampler does exactly what its definition says. Appendix~\ref{app:conventions} gives the
 full list.
 \end{convention}

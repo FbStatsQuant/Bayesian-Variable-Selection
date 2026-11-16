@@ -10,10 +10,10 @@ completed run returns.
 
 This section has its own setting, closer to that of \citet{SongLiang2015}: the observations are i.i.d.\ pairs, and the
 number of observed predictors $\praw$ is used directly. In this section only, $x$ and $y$ denote one raw observation of
-the predictors and of the response, $x_j$ is the $j$-th coordinate of $x$, and $(x_i,y_i)$ is the $i$-th observation; the
+the predictors and of the response, $x_j$ is the $j$-th coordinate of $x$, and $(x^{(i)},y^{(i)})$ is the $i$-th observation; the
 standardised data of Section~\ref{sec:standardise} do not appear.
 
-The data are $n$ independent copies $(x_i,y_i)$, $i=1,\dots,n$, of a pair $(x,y)$: $x\in\R^{\praw}$ is the vector of all
+The data are $n$ independent copies $(x^{(i)},y^{(i)})$, $i=1,\dots,n$, of a pair $(x,y)$: $x\in\R^{\praw}$ is the vector of all
 observed predictors (a row of the raw design) and $y\in\R$ is the response. We write $\Dn$ for the data set. The number
 $\praw$ may grow with $n$ and may be much larger than $n$, and the law of $(x,y)$ may change with $n$. As everywhere,
 the method runs on the $p\le\praw$ predictors that are not constant in the sample, with the prior of
@@ -29,8 +29,9 @@ exceptional sets of the theorems. Outside those sets, $p=\praw$.
 \]
 with the sample-mean intercept ($\bar y$ and $\bar x$ are sample means). The law of $x$ is \emph{not} estimated. Let $f$
 be the joint density of $(x,y)$ in which $x$ has its true law and $y$ given $x$ has the law above, and let $f^*$ be the
-true joint density. For two laws $P$ and $Q$, $H^2(P,Q):=1-\int\sqrt{dP\,dQ}$ is the squared Hellinger distance, and for
-two densities $d_H(f,g):=(1-\int\sqrt{fg})^{1/2}$. Because $f$ and $f^*$ share the law of $x$,
+true joint density. The true model is $\Sz:=\{j:\beta^*_j\neq0\}$. For two laws $P$ and $Q$,
+$H^2(P,Q):=1-\int\sqrt{dP\,dQ}$ is the squared Hellinger distance, and for
+two densities $d_H(f,g):=(1-\int\sqrt{fg})^{1/2}$, so that $d_H^2(f,g)$ is $H^2$ of the corresponding laws. Because $f$ and $f^*$ share the law of $x$,
 \begin{equation}\label{eq:dH}
   d_H^2(f,f^*)=\E_x\Big[H^2\Big(\Normal\big(\bar y+(x-\bar x)^\top\beta,\sigma^2\big),\
   \Normal\big(\alpha^*+x^\top\bstar,\sigs^2\big)\Big)\Big]:
@@ -44,10 +45,10 @@ standard deviations, variances and correlation matrices; $\zeta_j:=(x_j-\E x_j)/
 standardised in the population, and $\zeta:=(\zeta_1,\dots,\zeta_{\praw})$; $x_T$ is the sub-vector of $x$ indexed by a
 set $T$.
 
-\paragraph{Constants, level and window.} $s\ge0$ is an upper bound on the number of nonzero coefficients (not
-necessarily the exact count), and $A\ge1$, $L\ge1$, $c_\psi>0$, $\bar b>0$ are fixed
-constants. The reader fixes a \emph{level} $M\ge1$: a larger $M$ gives a larger ball and a smaller exceptional
-probability. The \emph{window} is
+\paragraph{Constants, level and window.} The integer $s\ge0$ is an upper bound on the number of nonzero
+coefficients (not necessarily the exact count). It and the constants $A\ge1$, $L\ge1$, $c_\psi>0$ and $\bar b>0$ are
+fixed. We fix a \emph{level} $M\ge1$. The contraction radius below is $\sqrt{M\log n/n}$ and the exceptional
+probability is $n^{-c_{\mathrm H}M}$, so a larger $M$ gives a larger radius and a smaller exceptional probability. The \emph{window} is
 \[
   q_n:=\min\big\{\praw,\ \lceil C_qM\log n\rceil\big\},\qquad C_q:=2\big(s(A+2)+4\big)/\log2,
 \]
@@ -57,8 +58,8 @@ the largest number of predictors that the conditions below constrain jointly; it
 
 \inwords{Suppose the observations are i.i.d., the response follows a sparse Gaussian linear model, the predictors have
 light tails, no small group of predictors is almost exactly collinear, and no single predictor carries an unbounded
-signal. Then, except on a set of data sets of probability at most $n^{-c_\star M}$, the posterior gives probability at most
-$n^{-c_\star M}$ to draws whose conditional law of $y$ given $x$ is farther than $\sqrt{M\log n/n}$ from the true one. That is,
+signal. Then, except on a set of data sets of probability at most $n^{-c_{\mathrm H} M}$, the posterior gives probability at most
+$n^{-c_{\mathrm H} M}$ to draws whose conditional law of $y$ given $x$ is farther than $\sqrt{M\log n/n}$ from the true one. That is,
 the posterior contracts around the true conditional law at the rate $\rn$.}
 
 \begin{localassumption}[Distribution-level setting]\label{asm:dist}
@@ -76,19 +77,19 @@ the posterior contracts around the true conditional law at the rate $\rn$.}
   \item\label{asm:dist-bs} \emph{Bounded signal.} $\abs{\beta^*_j}\sd(x_j)\le\bar b\,\sigs$ for every $j$.
 \end{asmitems}
 \rulesout{(a) non-Gaussian or heteroscedastic noise and dependent observations; (b) dense coefficient vectors and more
-than polynomially many predictors; (c) heavy-tailed predictors; (d) groups of $O(\log n)$ predictors that are collinear up
-to $1-c_\psi/n$, while predictors may otherwise be very strongly correlated; (e) a single predictor whose signal is
+than polynomially many predictors; (c) heavy-tailed predictors; (d) groups of $O(\log n)$ predictors whose
+correlation matrix has smallest eigenvalue below $c_\psi/n$, while predictors may otherwise be very strongly correlated; (e) a single predictor whose signal is
 unboundedly large compared with the noise, and huge coefficients that cancel.}
 \end{localassumption}
 
 No lower bound on the nonzero coefficients (no beta-min condition) and no fixed lower bound on eigenvalues is assumed.
 
 \begin{theorem}[Distribution-level consistency]\label{thm:dist}
-There are constants $c_\star>0$, $C_2$, $M_0$ and $n_0$, depending only on $(s,A,L,c_\psi,\bar b)$, such that the following
+There are constants $c_{\mathrm H}>0$, $M_0$ and $n_0$, depending only on $(s,A,L,c_\psi,\bar b)$, such that the following
 holds. Fix a level $M\ge M_0$ and assume Assumption~\ref{asm:dist}, with the window $q_n$ of this $M$. Then for every
 $n\ge n_0$ with $\sqrt n/\log n\ge M$,
 \begin{equation}\label{eq:dist-i}
-  \P^*\Big[\,\Pi\Big(d_H(f,f^*)>\sqrt{M\log n/n}\ \Big|\ \Dn\Big)>n^{-c_\star M}\Big]\ \le\ n^{-c_\star M}.
+  \P^*\Big[\,\Pi\Big(d_H(f,f^*)>\sqrt{M\log n/n}\ \Big|\ \Dn\Big)>n^{-c_{\mathrm H} M}\Big]\ \le\ n^{-c_{\mathrm H} M}.
 \end{equation}
 \end{theorem}
 
@@ -99,11 +100,12 @@ puts almost no mass on models with more than $s+C_2M$ predictors. Without the co
 a factor $\sqrt{\log(\praw\vee n)}$.}
 
 \begin{proposition}[Level-$M$ form, and the case without the collinearity condition]\label{prop:dist}
-\textup{(i)} The constants of Theorem~\ref{thm:dist} serve every level $M$ with $M_0\le M\le\sqrt n/\log n$, which may
-depend on $n$: whenever $n\ge n_0$ and Assumption~\ref{asm:dist} holds with the window $q_n$ of this $M$,
+\textup{(i)} There is a constant $C_2$, depending only on $(s,A,L,c_\psi,\bar b)$, such that the following holds. The
+constants of Theorem~\ref{thm:dist} serve every level $M$ with $M_0\le M\le\sqrt n/\log n$, and $M$ may now depend on $n$
+(Theorem~\ref{thm:dist} fixes it): whenever $n\ge n_0$ and Assumption~\ref{asm:dist} holds with the window $q_n$ of this $M$,
 \eqref{eq:dist-i} holds, and also
 \begin{equation}\label{eq:dist-ii}
-  \P^*\Big[\,\Pi\big(\abs{S}>s+C_2M\ \big|\ \Dn\big)>n^{-c_\star M}\Big]\ \le\ n^{-c_\star M}.
+  \P^*\Big[\,\Pi\big(\abs{S}>s+C_2M\ \big|\ \Dn\big)>n^{-c_{\mathrm H} M}\Big]\ \le\ n^{-c_{\mathrm H} M}.
 \end{equation}
 The two exceptional sets of data sets can be taken to be the same set, and the bounds are uniform over all laws of the
 data that satisfy Assumption~\ref{asm:dist} with the given constants.
@@ -111,7 +113,7 @@ data that satisfy Assumption~\ref{asm:dist} with the given constants.
 \textup{(ii)} If Assumption~\ref{asm:dist}\ref{asm:dist-nec} is dropped and Assumption~\ref{asm:dist}\ref{asm:dist-subg} is
 required only for single predictors ($u$ with one nonzero entry), then
 \begin{equation}\label{eq:dist-iii}
-  \P^*\Big[\,\Pi\Big(d_H(f,f^*)>\sqrt{M\log n\cdot\log(\praw\vee n)/n}\ \Big|\ \Dn\Big)>n^{-c_\star M}\Big]\ \le\ n^{-c_\star M},
+  \P^*\Big[\,\Pi\Big(d_H(f,f^*)>\sqrt{M\log n\cdot\log(\praw\vee n)/n}\ \Big|\ \Dn\Big)>n^{-c_{\mathrm H} M}\Big]\ \le\ n^{-c_{\mathrm H} M},
 \end{equation}
 and~\eqref{eq:dist-ii} holds with $s+C_2M\log n$ in place of $s+C_2M$.
 \end{proposition}
@@ -120,18 +122,18 @@ and~\eqref{eq:dist-ii} holds with $s+C_2M\log n$ in place of $s+C_2M$.
 Appendix~\ref{app:status}, row 2.1.}
 
 \begin{remark}[On the assumptions]\label{rem:dist-asm}
-(o) \emph{Designs that satisfy the assumptions include} jointly Gaussian predictors, which satisfy
+(i) \emph{Designs that satisfy the assumptions include} jointly Gaussian predictors, which satisfy
 Assumption~\ref{asm:dist}\ref{asm:dist-subg} with $L=1$; independent predictors, which satisfy it when each does with a
 common constant $L$; and, for Assumption~\ref{asm:dist}\ref{asm:dist-nec} for all large $n$, every correlation matrix
 whose $q_n\times q_n$ principal blocks have smallest eigenvalue at least a fixed $\psi>0$, for instance correlation
 $\varrho^{\abs{j-k}}$ with $\abs{\varrho}<1$, or equal correlation $\varrho\in[0,1)$.
-(i) Assumption~\ref{asm:dist}\ref{asm:dist-subg} is used only to make the sample variances and covariances of small groups of
-predictors track their population values with probability $1-n^{-c_\star M}$; the passage from the sample to the population
+(ii) Assumption~\ref{asm:dist}\ref{asm:dist-subg} is used only to make the sample variances and covariances of small groups of
+predictors track their population values with probability $1-n^{-c_{\mathrm H} M}$; the passage from the sample to the population
 distance uses no tail condition.
-(ii) Assumption~\ref{asm:dist}\ref{asm:dist-nec} keeps in force the prior's penalty for each extra predictor (a factor of order
-$n^{-1/2}$); this gives the rate $\rn$, the level $n^{-c_\star M}$ and the bounded model size. Whether it is needed for the rate
+(iii) Assumption~\ref{asm:dist}\ref{asm:dist-nec} keeps in force the penalty that the prior on the coefficients imposes on
+each extra predictor (the Occam factor, of order $n^{-1/2}$); this gives the rate $\rn$, the level $n^{-c_{\mathrm H} M}$ and the bounded model size. Whether it is needed for the rate
 $\rn$ is open.
-(iii) Assumption~\ref{asm:dist}\ref{asm:dist-bs} bounds the signal in units of the noise. The noise level $\sigs$ is free because
+(iv) Assumption~\ref{asm:dist}\ref{asm:dist-bs} bounds the signal in units of the noise. The noise level $\sigs$ is free because
 rescaling the response leaves the posterior over models unchanged and rescales the posterior of $(\beta,\sigma^2)$.
 \end{remark}
 
@@ -150,7 +152,7 @@ $\min\{\abs{\beta^*_j}\sd(x_j)/\sigs:\beta^*_j\neq0\}\ge b_n$, where $b_n>0$ and
 \end{localassumption}
 
 \begin{theorem}[Parametric rate when the true predictors are detectable]\label{thm:dist-param}
-Assume Assumption~\ref{asm:dist} with the window $q_n$ of $M=1$, with exactly $s\ge1$ nonzero coordinates of $\bstar$,
+Assume Assumption~\ref{asm:dist} with the window $q_n$ of level $M=1$, with exactly $s\ge1$ nonzero coordinates of $\bstar$,
 and Assumption~\ref{asm:dist-det}. Then for every sequence $M_n\to\infty$,
 \[
   \Pi\big(d_H(f,f^*)>M_n/\sqrt n\ \big|\ \Dn\big)\to0\quad\text{in $\P^*$-probability.}
@@ -163,9 +165,10 @@ proved and independently verified (two independent verification passes). Verbati
 \paragraph{What a completed run returns.} The method explores the models with a sequential Monte Carlo sampler; it does
 not compute the full posterior. (Small problems that it solves by exact enumeration are not covered here.) Runs that stop
 early are not covered either. The output of a completed run contains a list $\mathcal T$ of at most $40p+1$ distinct
-models: the best-scoring models among those offered to the final run of the sampler (the models scored in that run,
-together with models scored earlier and carried into it, namely the precomputed tables for the blocks and the models kept
-from the calibration). Each model in the list comes with the logarithm of its unnormalised posterior weight. The output
+models (a list of size $O(p)$; the constant is the code's). The list holds the best-scoring models among a pool: the
+models scored in the final sampler run, plus those carried into it, namely the precomputed block tables and the models
+kept from the calibration. Each model in the list comes with its log score $F(S)$, the logarithm of its unnormalised
+posterior weight. The output
 contains no draws of $(\beta,\sigma^2)$. Let $\pi(\mathcal T\mid\Dn)$ be the posterior probability of the list, and let
 $\hat\Pi$ (not computed by the method) be the posterior restricted to the list: the models in $\mathcal T$, weighted in
 proportion to the exponentials of their returned log-weights, each with its exact conditional posterior of
@@ -176,13 +179,13 @@ is as good as the full posterior: it, too, puts almost no mass outside the ball 
 
 \begin{corollary}[The output of the sampler]\label{cor:dist-output}
 Assume the conditions of Proposition~\ref{prop:dist}(i), and that the returned log-weights are computed in exact arithmetic.
-With $\P^*$-probability at least $1-n^{-c_\star M}$ over the data, every completed run, whatever its random numbers, with
-$\pi(\mathcal T\mid\Dn)\ge n^{-c_\star M/2}$ satisfies
+With $\P^*$-probability at least $1-n^{-c_{\mathrm H} M}$ over the data, every completed run, whatever its random numbers, with
+$\pi(\mathcal T\mid\Dn)\ge n^{-c_{\mathrm H} M/2}$ satisfies
 \[
-  \hat\Pi\Big(d_H(f,f^*)>\sqrt{M\log n/n}\Big)\ \le\ n^{-c_\star M/2}.
+  \hat\Pi\Big(d_H(f,f^*)>\sqrt{M\log n/n}\Big)\ \le\ n^{-c_{\mathrm H} M/2}.
 \]
-If a completed run scored the true model $\{j:\beta^*_j\neq0\}$ and the posterior probability of that model exceeds
-$\tfrac12$, then the list contains it, it is the model the method reports as most probable, and $\pi(\mathcal T\mid\Dn)>\tfrac12$.
+If a completed run scored the true model $\Sz$ and $\pi(\Sz\mid\Dn)>\tfrac12$, then the list contains $\Sz$, the
+reported model is $\Shat=\Sz$, and $\pi(\mathcal T\mid\Dn)>\tfrac12$.
 \end{corollary}
 
 \status{\textbf{Proved and checked, under exact arithmetic}. The description of the output was checked against the code
@@ -191,7 +194,8 @@ by independent reviewers. Verbatim: Appendix~\ref{app:status}, row 2.1.}
 \begin{remark}[What is not claimed]\label{rem:dist-output}
 (i) Whether the list carries enough posterior probability is a property of the run: Corollary~\ref{cor:dist-output} does
 not assert it, and the output does not certify it.
-(ii) Theorem~\ref{thm:dist} and Corollary~\ref{cor:dist-output} concern the exact posterior and need no further input;
+(ii) Theorem~\ref{thm:dist} and Corollary~\ref{cor:dist-output} use no result from other sections (the corollary concerns
+the exact posterior restricted to the returned list);
 Theorem~\ref{thm:dist-param} also uses the posterior concentration theorem (Theorem~\ref{thm:post-fixed}). Statements that
 a completed run has in fact found and kept the true model rest, in addition, on the sampler results of
 Section~\ref{sec:delivery} and on exact arithmetic.
@@ -200,7 +204,9 @@ Section~\ref{sec:delivery} and on exact arithmetic.
 
 \subsection{Fixed designs and the in-sample distance}\label{sec:dist-fixed}
 
-For a fixed design, a weaker statement holds in the in-sample distance, which Theorem~\ref{thm:dist} does not cover.
+Theorem~\ref{thm:dist} is about i.i.d.\ observations and does not apply to a fixed design. For a fixed design,
+Remark~\ref{rem:dist-fixed} gives contraction in an in-sample distance instead. In this remark we return to the notation
+of Section~\ref{sec:setting}.
 
 \begin{remark}[Further consequences: fixed designs]\label{rem:dist-fixed}
 Let the design be fixed, and let $\bar h_n$ be the average, over the $n$ observations, of the Hellinger distance between
@@ -209,7 +215,7 @@ $2\le p\le n^A$, the energy bound $\norm{\mu}^2\le nM_\mu$, and the floor $\lmin
 model. All limits below are in probability. (a) If also $1-\pis{\Sz}\to0$, then $\Pi(\bar h_n>M_n/\sqrt n\mid y)\to0$ for
 every $M_n\to\infty$: the distance contracts at rate $M_n/\sqrt n$. (b) Without beta-min, under the superset Occam-sum
 condition of Remark~\ref{rem:post-fixed-asm}(iii) instead (which \as{NC} implies for all large $n$),
-$\Pi(\bar h_n^2>C'_H\log n/n\mid y)\to0$ for a constant $C'_H$: the squared distance contracts at rate $\log n/n$.
+$\Pi(\bar h_n^2>C_H\log n/n\mid y)\to0$ for a constant $C_H$: the squared distance contracts at rate $\log n/n$.
 \end{remark}
 
 \status{\textbf{Proved and checked}; its inputs are Theorem~\ref{thm:post-fixed} in probability form (proved and
@@ -217,7 +223,9 @@ independently verified) and the random-design transfer lemma (proved and indepen
 
 \subsection{Comparison with Song and Liang (2015), Theorems 1--2}\label{sec:SL-dist}
 
-Page and equation numbers are those of the published paper \citep{SongLiang2015}.
+Page and equation numbers are those of the published paper \citep{SongLiang2015}. In this subsection the symbols $r_n$,
+$\bar r_n$, $P_n$, $\xi$, $\alpha$, $\theta$, $k$ and the constant $c_1$ are Song and Liang's, and their displays and
+conditions are numbered as in their paper; $b_n\succ a_n$ means $a_n/b_n\to0$.
 
 \paragraph{The analogue is display~\eqref{eq:dist-i}.} Their distance is
 $d(f_1,f_2)=\{\int\!\!\int(f_1^{1/2}-f_2^{1/2})^2\,dx\,dy\}^{1/2}$ between joint densities of $(x,y)$ that share the law of
@@ -246,7 +254,7 @@ Assumption~\ref{asm:dist}\ref{asm:dist-nec} is a condition on the design that th
 conditions, (11) and (14), are on the prior covariance).
 
 \paragraph{Not the analogue: display~\eqref{eq:dist-iii}.} It is the fallback without Assumption~\ref{asm:dist}\ref{asm:dist-nec}. Its radius is larger
-by $\sqrt{\log(\praw\vee n)}$, so its exponent is $c_\star n\varepsilon_n^2/\log(\praw\vee n)$, not $c_\star n\varepsilon_n^2$; and, as
+by $\sqrt{\log(\praw\vee n)}$, so its exponent is $c_{\mathrm H} n\varepsilon_n^2/\log(\praw\vee n)$, not $c_{\mathrm H} n\varepsilon_n^2$; and, as
 proved, in the general form of the theorem (in-sample signal energy and coefficient cost bounded by fixed constants), its
 squared radius at the smallest admissible level is at most of order $(1+s)^3\log n\log(\praw\vee n)/n$ for fixed $s$ (an
 upper bound; the proof is not known to be tight in $s$); under Assumption~\ref{asm:dist}\ref{asm:dist-bs} those bounds themselves grow with $s$.

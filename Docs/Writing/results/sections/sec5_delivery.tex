@@ -13,9 +13,9 @@ conditions (Section~\ref{sec:screen}), and that every reported estimate is consi
 The method inspects the predictors in blocks of at most $16$. The conditions of this section say how the signal looks
 from that point of view. They use the following quantities.
 
-\paragraph{Signal gain and residual variance (fixed design).} For a set $U\subseteq\set{p}$ and a predictor $l\notin U$,
+\paragraph{Signal gain and residual scale (fixed design).} For a set $U\subseteq\set{p}$ and a predictor $l\notin U$,
 the \emph{signal gain} of $l$ given $U$ is $\delta^2_{U,l}:=\norm{(P_{U\cup\{l\}}-P_U)\mu}^2$: the increase in explained
-mean signal when $x_l$ joins $X_U$. The \emph{residual variance} left by $U$ is
+mean signal when $x_l$ joins $X_U$. The \emph{residual scale} left by $U$ is
 $\tau^2_U:=\sigs^2+\norm{(I-P_U)\mu}^2/(n-1)$: noise plus unexplained signal energy per observation. The sample
 regression coefficient of $x_l$ on $X_U$ is $\hat\beta_{U,l}:=(X_U^\top X_U)^{-1}X_U^\top x_l$, padded with zeros to a
 vector indexed by a larger set when needed.
@@ -27,7 +27,9 @@ regression coefficient of $W_l$ on $W_U$ (padded with zeros); and $\Var(W_l\mid 
 \paragraph{Visibility and leakage.} A true predictor is \emph{visible} if its signal cannot be explained away by any $15$
 other predictors; $15$ is the largest block size minus one. A \emph{leakage set} is a deterministic set $Q$ with
 $\Sz\subseteq Q\subseteq\set{p}$ that contains every predictor able to imitate part of the signal. Its \emph{lattice} is
-$\Lat(Q):=\{T:\Sz\subseteq T\subseteq Q\}$, the models between the true model and $Q$. ``No leakage'' means $Q=\Sz$.
+$\Lat(Q):=\{T:\Sz\subseteq T\subseteq Q\}$, the models between the true model and $Q$. Below, \as{NL} is a condition that no null predictor leaks at all, as seen by
+the start law; Assumption~\ref{asm:reported-random} allows a leakage set $Q$ larger than $\Sz$, under a different, weaker
+leak bound outside $Q$.
 
 \paragraph{Signals fixed on the standardised scale.} Theorems~\ref{thm:start}, \ref{thm:reported-random}
 and~\ref{thm:outputs} fix the signal on the scale the method sees:
@@ -40,8 +42,8 @@ $j\in\Sz$, with fixed $0<\theta_{\mathrm{lo}}\le\theta_{\mathrm{hi}}<\infty$.
 \end{assumption}
 
 Since $X=P^\perp_{\one}\Xr D^{-1}$, this is model~\eqref{eq:model} with raw coefficients $\bstar=D^{-1}\tstar$ and an
-intercept that depend on the design. Raw-scale versions of these three theorems would need a further argument and are not
-claimed.
+intercept that depend on the design. In these three theorems \as{FSt} takes the place of \as{GL} and \as{SP}. Raw-scale
+versions of the three theorems would need a further argument and are not claimed.
 
 \subsection{The start law already concentrates}\label{sec:start}
 
@@ -58,14 +60,14 @@ $a>0$.
 \rulesout{masking: a true predictor whose signal some $15$ other predictors can explain away.}
 \end{assumption}
 
-\begin{assumption}{NL}{No leakage}
+\begin{assumption}{NL}{No leakage, as seen by the start law}
 Every null predictor $l\notin\Sz$ has a deterministic \emph{neighbourhood} $\Hl_l\supseteq\{l\}\cup\Sz$ with
 $\abs{\Hl_l}\le e^{\kappa_H\sqrt{\log n}}$ for a fixed $\kappa_H$, such that, for every $U\not\ni l$ with $\abs{U}\le15$, writing
 $U_0:=U\cap\Hl_l$ for the part of $U$ inside the neighbourhood:
 \begin{enumerate}[label=(\roman*),leftmargin=2em,itemsep=1pt]
   \item \emph{no leak:} $\abs{\Cov(W_l,W_j\mid W_{U_0})}\le C_Ln^{-1/2}$ for every $j\in\Sz\setminus U_0$, with a fixed $C_L$;
-  \item \emph{locality:} $\abs{\Cov(W_l,W_v\mid W_{U_0})}\le r_n$ and $\abs{\Cov(W_j,W_v\mid W_{U_0})}\le r_n$ for every
-    $v\in U\setminus\Hl_l$ and $j\in\Sz\setminus U_0$, where $r_n(n\log n)^{1/4}\to0$.
+  \item \emph{locality:} $\abs{\Cov(W_l,W_v\mid W_{U_0})}\le r^\circ_n$ and $\abs{\Cov(W_j,W_v\mid W_{U_0})}\le r^\circ_n$ for every
+    $v\in U\setminus\Hl_l$ and $j\in\Sz\setminus U_0$, where $r^\circ_n(n\log n)^{1/4}\to0$.
 \end{enumerate}
 \rulesout{null predictors that imitate a true one within the start law's block view, and dependence that is not local.}
 \end{assumption}
@@ -99,19 +101,18 @@ $\sqrt{\log n}$.
 \status{\textbf{Proved and independently checked}. Verbatim: Appendix~\ref{app:status}, row 3.3.}
 
 \begin{remark}[Further consequences]\label{rem:start-cons}
-\emph{With leakage.} If \as{NL} holds with $\Sz$ replaced by a deterministic $Q\supseteq\Sz$ with $\abs{Q}\le K$ (predictors
-outside $Q$ do not leak), then
+\emph{With leakage.} Keep the other assumptions of Theorem~\ref{thm:start}, and let \as{NL} hold with $\Sz$ replaced by a
+deterministic $Q\supseteq\Sz$ with $\abs{Q}\le K$, so that only predictors outside $Q$ are required not to leak. Then
 $\P\big(\pi_0(\Lat(Q))\ge1-(\abs{Q}+1)n^{-1/2}e^{C\sqrt{\log n}}\big)\to1$; for $\abs{Q}\le n^{1/2-\epsilon}$ this is at
 least $1-n^{-c}$ for every $c<\epsilon$.
 \end{remark}
 
 \begin{remark}[On the assumptions]\label{rem:start-asm}
 (i) \as{V} says that each true predictor, alone, improves the fit of every small model it is missing from; then the start
-law, which sees only within-block interactions, still ranks $\Sz$ first. The level is sharp in the fixed-design analogue
-for every $p$.
+law, which sees only within-block interactions, still ranks $\Sz$ first.
 (ii) In \as{NL} the level $n^{-1/2}$ is a threshold of the proof (numerics show no cliff there); localisation is needed
-because the blocks depend on the data. The size bound on $\Hl_l$ only counts reference sets in a union bound; it is not
-known to be needed.
+because the blocks depend on the data. The size bound on $\Hl_l$ enters only through a union bound over these sets;
+it is not known to be needed.
 (iii) The uncorrelatedness condition for~\eqref{eq:start-rate} is an additional hypothesis for the sharper rate only; it
 does not replace \as{NL}. It suffices that these correlations be at most $C/\sqrt{n\log n}$ given every proper subset of
 the true model. It is not known to be necessary.
@@ -148,8 +149,8 @@ caps are not reached:
 \[
   \Dom:=\big\{(n,\praw):\lceil\log_2(n+\praw+1)\rceil\le10^6,\ \ \lceil\log_2(n+\praw+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\big\}.
 \]
-The limits are a base move cap of $10^6$ and a 32-bit integer bound $2^{31}-1$ on the move cap of the search from the
-start mode. The first can bind only when $n+p+1$ exceeds $2^{10^6}$; the second only when the start mode has more than
+The limits are a ceiling of $10^6$ on the base move cap $\ell_n$, and the 32-bit integer bound $2^{31}-1$ on the move cap
+$\ell_n+\abs{\tSz}$ of the search from the start mode. The first can bind only when $n+p+1$ exceeds $2^{10^6}$; the second only when the start mode has more than
 about $2.1\times10^9$ predictors, which needs $n\gtrsim4.3\times10^9$, since $\abs{\tSz}\le\lfloor n/2\rfloor$.
 
 Fix $b\in(0,\tfrac12)$ and $b_H>0$ with $15b_H+b<\tfrac12$.
@@ -191,6 +192,10 @@ with $(n,\praw)\in\Dom$. Under Convention~\as{C2p} instead,
 \end{equation}
 \end{theorem}
 
+Under \as{C2} the delivery clause holds only on the bounded domain $\Dom$, so no limit in $n$ can be stated there;
+\as{C2p} removes the bound. In practice $\Dom$ contains every feasible $(n,\praw)$: see the paragraph before the
+theorem.
+
 \status{\textbf{Proved and checked}; its one condition (the transfer from population to sample conditions) is itself
 proved and independently checked. Delivery clauses: \textbf{proved and independently checked}. \bridgepending{} A
 revision of this statement, from a strengthening that has passed its review, is pending. Verbatim:
@@ -200,8 +205,8 @@ Appendix~\ref{app:status}, row 3.1.}
 (i) On $\mathcal G_n$ the local search from the start mode only deletes the spurious members of the start mode, one per
 move, in at most $n^b$ moves, and certifies $\Sz$; its move cap never binds.
 (ii) The case $\abs{Q}\le(\log n)^{\kappa'}$ for a fixed $\kappa'$ is a special case.
-(iii) Designs that satisfy the assumptions include correlation that is local in a metric, polynomial correlation decay of
-exponent $\alpha>2$ (not yet checked), and one-factor blocks; these are examples, not hypotheses.
+(iii) Designs that satisfy the assumptions include correlation that is local in a metric, polynomial correlation decay
+with exponent greater than $2$ (not yet checked), and one-factor blocks; these are examples, not hypotheses.
 \end{remark}
 
 \begin{remark}[On the assumptions]\label{rem:reported-random-asm}
@@ -216,9 +221,10 @@ of size $n^b$, and within that set regressions are local.
 \end{remark}
 
 \begin{remark}[Comparison with \citet{SongLiang2015}]\label{rem:SL-reported}
-This is consistency of what the software reports, with $p\gg n$ and no design family. We know of no comparable result for
-the selection output of an SMC or MCMC implementation of Bayesian variable selection: \citet{SongLiang2015} run the SAMC
-sampler of \citet{LiangLiuCarroll2007}, citing its general properties, but prove nothing about its selection output.
+This is consistency of what the software reports, with $p\gg n$ and without assuming a particular correlation
+structure for the design. We know of no comparable result for
+the selection output of an SMC or MCMC implementation of Bayesian variable selection: \citet{SongLiang2015} run the stochastic
+approximation Monte Carlo (SAMC) sampler of \citet{LiangLiuCarroll2007}, citing its general properties, but prove nothing about its selection output.
 \end{remark}
 
 \paragraph{Fixed design.} The same conclusion holds for a fixed design under sample-level conditions.
@@ -241,18 +247,18 @@ probability tending to one.}
   \item\label{asm:rf-size} \emph{Size of the leakage set.} One of: (d1) $\abs{Q\setminus\Sz}\le(1-\delta_Q)\log n$ for a
     fixed $\delta_Q\in(0,1)$; or (d2) $\abs{Q}\le n^b$ with $b<\tfrac12-\tfrac\eta2-\sqrt{2A\eta}$,
     $\theta^{*2}_{\min}n/(\abs{Q}+\log n)\to\infty$, and local regressions: for every $l$ a deterministic set
-    $N_l\subseteq Q\setminus\{l\}$ with $\abs{N_l}\le h\log_2n$, $h+b<\tfrac12$, and a deterministic $L_n\to0$ with
+    $N_l\subseteq Q\setminus\{l\}$ with $\abs{N_l}\le h\log_2n$, for a fixed $h$ with $h+b<\tfrac12$, and a deterministic $L_n\to0$ with
     $L_n^2\log(\abs{Q}+1)=o(\log n)$, such that $\norm{\hat\beta_{T,l}-\hat\beta_{T\cap N_l,l}}_1\le L_n$ for every
     $T\in\Lat(Q)$ with $\abs{T}<K$ and $l\notin T$.
 \end{asmitems}
 \rulesout{(a) collinearity within a block, or between the leakage set and any other predictor; (b) masking in the
-sample; (c) predictors outside $Q$ that, added to a small model, explain more than a fraction $\eta$ of $\log n$
-residual-variance units; (d) a leakage set so large, or so entangled, that adding a predictor could improve the score
+sample; (c) predictors outside $Q$ whose signal gain, given a small model, exceeds $\eta\,\tau^2_U\log n$; (d) a leakage set so large, or so entangled, that adding a predictor could improve the score
 somewhere between $\Sz$ and $Q$.}
 \end{localassumption}
 
 \begin{theorem}[The reported model equals the true model: fixed design]\label{thm:reported-fixed}
-Let the design be fixed, with no raw predictor constant in the sample. Assume \as{GL}, \as{DIM}, \as{SP}, \as{BC},
+Let the design be fixed, with no raw predictor constant in the sample (an input condition of the delivery result; then
+$p=\praw$). Assume \as{GL}, \as{DIM}, \as{SP}, \as{BC},
 \as{EF}, \as{NC}, \as{BM}(b), Assumption~\ref{asm:reported-fixed} and Convention~\as{C1}. Then the conclusions of
 Theorem~\ref{thm:reported-random} hold: there are data events $\mathcal G_n$ with $\P(\mathcal G_n)\to1$ on which every
 admissible run that produces output reports $\Shat=\Sz$, for every seed and calibration outcome; and the delivery
@@ -270,8 +276,8 @@ in $Q$ may enter the start mode, and the local search removes them one at a time
 \emph{adding} a predictor between $\Sz$ and $Q$, which holds when $Q$ has fewer than $\log n$ extra predictors
 (case~(d1)), or when regressions on such models are carried by a few members of $Q$ (case~(d2)).
 (ii) These are sample-level conditions on $(X,\tstar)$. They are interpretable but not reducible to eigenvalue floors and
-beta-min: visibility fails on well-conditioned designs where true predictors cancel. Theorem~\ref{thm:reported-random}
-shows that population analogues imply them with probability tending to one.
+beta-min: visibility fails on well-conditioned designs where true predictors cancel. The proof of
+Theorem~\ref{thm:reported-random} shows that population analogues imply them with probability tending to one.
 \end{remark}
 
 \begin{remark}[What is not claimed]\label{rem:reported-not}
@@ -306,7 +312,8 @@ Theorem~\ref{thm:screen-margin}); (c) a budget $k_n$ too large for a union bound
 \end{localassumption}
 
 \begin{theorem}[Certified screening]\label{thm:screen}
-Let the design be fixed and assume \as{GL}, Assumption~\ref{asm:screen} and Convention~\as{C1}. Then
+Let the design be fixed and assume \as{GL}, Assumption~\ref{asm:screen} and Convention~\as{C1}; \as{SP} is not assumed.
+Then
 \begin{equation}\label{eq:screen}
   \P\big(\text{the run produces output},\ \Shat\text{ is certified},\ \abs{\Shat}\le k_n,\ \Sz\not\subseteq\Shat\big)\to0 .
 \end{equation}
@@ -315,8 +322,8 @@ In particular this holds for $p\le n^A$ and every $k_n=o(n/\log n)$.
 
 \status{\textbf{Proved and independently checked}. Verbatim: Appendix~\ref{app:status}, row 3.7.}
 
-No condition on the start, leakage, blocks or visibility is used, and $p\le n^A$ is not needed. The argument needs only a
-weaker, directional floor, which leaves correlations among null predictors free; the full floor
+No condition on the start, leakage, blocks or visibility is used, and $p\le n^A$ is not needed. The proof needs only a
+weaker floor, along certain directions, which leaves correlations among null predictors free; the full floor
 in Assumption~\ref{asm:screen}\ref{asm:screen-floor} does constrain them.
 
 Can the signal-strength conditions vary with $n$? The next result replaces them by a single margin condition on how much
@@ -326,9 +333,14 @@ signal a missing true predictor can add.
 level of a union bound over models of that size, the conclusion of Theorem~\ref{thm:screen} holds, with no condition on
 the dimension, the true model size, or the null predictors.}
 
-For a predictor $t\notin S$ and a model $S$, define the \emph{noiseless gain} $\gamma(t\mid S)$ of a predictor $t\notin S$ given a
-model $S$: the decrease of the method's ridge-regularised residual quadratic form when $t$ joins $S$ and the response is
-replaced by its mean $\mu$. Let
+For a model $S$ let $\mathcal R_S:=I_n-X_S(G_S+\lambda_0I)^{-1}X_S^\top$, with $\lambda_0:=1/(n+1)$, be the ridge residual
+operator ($\mathcal R_\emptyset=I_n$), and for $t\notin S$ let $a(t\mid S):=x_t^\top\mathcal R_Sx_t+\lambda_0$. The
+\emph{noiseless gain} of $t$ given $S$ is
+\[
+  \gamma(t\mid S):=\frac{(x_t^\top\mathcal R_S\mu)^2}{a(t\mid S)}=\frac{n+1}{n}\big(\SSq^{\mu}_S-\SSq^{\mu}_{S\cup\{t\}}\big),
+\]
+where $\SSq^{\mu}_S$ is the shrunken sum of squares $\SSq_S$ of~\eqref{eq:marglik} with $y$ replaced by its mean $\mu$: the
+decrease of the method's own quadratic form when $t$ joins $S$ and the response is replaced by its mean. Let
 $\Gamma_n(q):=\min\{\max_{t\in\Sz\setminus S}\gamma(t\mid S):\abs{S}\le q,\ S\not\supseteq\Sz\}$, so that every model of
 size at most $q$ that misses a true predictor has some missing true predictor with gain at least $\Gamma_n(q)$; and let
 $\tau_n^2:=\sigs^2+\norm{\mu}^2/(n-1)$, which is $\tau^2_\emptyset$ of Section~\ref{sec:delivery-quantities}.
@@ -352,11 +364,11 @@ returns a superset of the true model with probability tending to one.
 (ii) A run is not claimed to certify a small model with probability tending to one; how often it does is reported from
 numerics below.
 (iii) It is one-sided: certified small models are not shown to equal the true model. Exact recovery from the certificate
-needs a near-orthogonality floor (proved and checked), which we do not state here.
+needs a further, stronger condition on the design (proved and checked), which we do not state here.
 \end{remark}
 
 \paragraph{How often runs certify (numerics, not a theorem).} In existing numerics the method certified the reported model
-in every completed run: 2,394 of 2,394 in the 2,400-fit study ($n=200$); 376 of 376 in the strong-factor experiment
+in every completed run: 2,394 of 2,394 (the completed runs) in the 2,400-fit study ($n=200$); 376 of 376 in the strong-factor experiment
 ($n\le150$, $p$ up to $10n$); and 71 of 71 in the screening study ($n=100$). Where model sizes were recorded, the certified
 models were small: all 376 strong-factor fits had at most $2\sz$ predictors, and all 71 screening fits at most 5 (the
 2,400-fit study records no per-fit size). On strong-factor designs (equicorrelation $\varrho\in\{0.5,0.7\}$, $p\ge2.5n$,
@@ -372,10 +384,11 @@ This subsection shows that all of them are consistent, on the event that the met
 
 This result concerns runs that use the sampler, that is, runs in which the model space is too large to enumerate; the
 enumeration case is not covered. Let $\Acal$ be the event that the method uses the sampler and its calibration succeeds
-(fallbacks included); every completed sampler run lies in $\Acal$. On $\Acal$, let $\Zhat$, $\PIPhat$ and $\MPMhat$ be the
+(possibly through a fallback, Section~\ref{sec:method}); every completed sampler run lies in $\Acal$. On $\Acal$, let $\Zhat$, $\PIPhat$ and $\MPMhat$ be the
 evidence estimate, the pooled inclusion probabilities and their median probability model, the values the four islands would produce, pooled with equal weights (Section~\ref{sec:method}), if the run
-were not interrupted. On completed runs they are exactly the reported values. Let $\rho_n:=n^{-1/2}e^{C_3\sqrt{\log n}}$ for a suitable constant $C_3$; so $\rho_n\le n^{-c}$
-eventually, for every $c<\tfrac12$.
+were not interrupted. On completed runs they are exactly the reported values. Let $\rho_n:=n^{-1/2}e^{C_3\sqrt{\log n}}$ for a constant $C_3$ that depends only on the fixed quantities of the
+assumptions; so $\rho_n\le n^{-c}$ eventually, for every $c<\tfrac12$. Assumption~\ref{asm:start} is not listed in the
+theorem below because \as{EFS} implies it: $16+\sz\le5(A+1)(\sz+1)\log n$ for $n\ge3$.
 
 \inwords{Under the conditions that make the start law concentrate, every reported estimate is within $\rho_n$ of its
 target on the event that the calibration succeeds: the evidence estimate is close to the evidence, the inclusion
@@ -400,13 +413,14 @@ and~\eqref{eq:outputs-rate} also holds for the reported values multiplied by the
 (i) No lower bound on $\P(\Acal)$ is asserted: the statements are about intersections with $\Acal$ or with completion, not
 conditional on them. Under Convention~\as{C2} completion holds on $\Dom$, and under \as{C2p} for every $n$; that link is
 not used here.
-(ii) The rate $\rho_n$ is the start law's rate, slower than the posterior rate $\rn$ by the factor $e^{C_3\sqrt{\log n}}$.
+(ii) The rate $\rho_n$ is the start law's rate (Remark~\ref{rem:start-cons} with $Q=\Sz$). It is slower than the posterior
+rate: $\rho_n/\rn=e^{C_3\sqrt{\log n}}/\sqrt{\log n}\to\infty$.
 \end{remark}
 
 \begin{remark}[On the assumptions]\label{rem:outputs-moderate}
 Asymptotically the start law concentrates on $\Sz$, so the sampler has almost no mass to move and $\Zhat/Z\to1$, whatever
 the length of the sequence of intermediate distributions. At moderate $n$ the posterior is spread over $\Sz$ and its many
-one-predictor supersets (Remark~\ref{rem:moderate}). An alternative argument, with no condition on $\Zhat$, gives the same
+one-predictor supersets (Remark~\ref{rem:moderate}). An alternative argument, which does not go through the evidence estimate, gives the same
 conclusions for the inclusion probabilities and the median and highest posterior models under a global-overlap
 condition (stated in full with the proof).
 \end{remark}
@@ -414,7 +428,8 @@ condition (stated in full with the proof).
 \status{The alternative argument: \textbf{proved and independently checked}. Verbatim: Appendix~\ref{app:status}, row 3.6.}
 
 \begin{remark}[The pooled evidence estimate is unbiased]\label{rem:unbiased}
-Given the calibration, each island's evidence estimate is unbiased for $Z$, for every design and data set; no condition
+Under Convention~\as{C3}, given the calibration, each island's evidence estimate is unbiased for $Z$, for every design and
+data set; no condition
 on the design is needed. By linearity, so is the reported equal-weight pooled estimate: on $\Acal$,
 $\E[\Zhat\mid\text{calibration}]=Z$. This is the classical unbiasedness of sequential Monte Carlo estimates of normalising
 constants \citep{DelMoral2004}, established here for the method as coded, calibration included: the calibration is frozen

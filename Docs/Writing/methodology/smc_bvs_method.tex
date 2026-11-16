@@ -559,8 +559,28 @@ not as a run covered by the theorems.
 
 % =====================================================================================================
 \section{Notation}\label{app:m-notation}
-[Shared with the companion section; the full table is Appendix~A there. Symbols specific to this section: $B$, $\ell_n$,
-$L$, $N_0$, $H_0$, $T_0$, $e$, $\gamma_0$, $\bar Z_0$, $d(S)$, $\gamma_\phi$, $\phi$, $\omega_i$, $o_j$, $V$, $F_V$, $\rho_V$.]
+
+The symbols of Sections~\ref{sec:m-setup}--\ref{sec:m-posterior} are shared with the companion section, whose notation
+table lists them. The symbols specific to this section are:
+
+{\small
+\begin{longtable}{@{}p{0.2\linewidth}p{0.6\linewidth}l@{}}
+\toprule
+Symbol & Meaning & Where \\ \midrule \endhead
+$B$ & block size cap $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ & \S\ref{sec:m-budgets} \\
+$\ell_n$, $L$ & base move cap; burn-in rounds & \S\ref{sec:m-budgets} \\
+$N_0,H_0,T_0$; $e$; $N_e,H_e,T_e$ & particles, calibration particles, stage ceiling; tier; their tier-$e$ values & \S\ref{sec:m-budgets} \\
+$C_b$, $J$, $r_b(U)$ & blocks; number of blocks; block table $m(U)/m(\emptyset)$ & \S\ref{sec:m-blocks} \\
+$\gamma_0$, $\bar Z_0$, $\pi_0$ & unnormalised start law; its normaliser; start law & \S\ref{sec:m-start} \\
+$e_b(j)$, $F_b(k)$ & size profile of block $b$; cumulative size profile & \S\ref{sec:m-start} \\
+$\tSz$ & start mode & \S\ref{sec:m-start} \\
+$d(S)$ & discrepancy between the posterior and the start law & \S\ref{sec:m-start} \\
+$\phi$, $\gamma_\phi$, $T$ & temperature; path from the start law to the posterior; number of stages & \S\ref{sec:m-island} \\
+$N$, $\omega_i$, $o_j$ & particles per island; reweighting factor; Gibbs inclusion probability & \S\ref{sec:m-island} \\
+$V$, $F_V$, $\rho_V$ & candidate set; restricted log-normaliser; restricted effective sample size & \S\ref{sec:m-calibration} \\
+$\Shat$, $\PIPhat_j$, $\Zhat$, $\MPMhat$ & reported model and pooled estimates & \S\ref{sec:m-outputs} \\
+\bottomrule
+\end{longtable}}
 
 % =====================================================================================================
 \section{Where the sources and the code disagree (for HQ)}\label{app:m-disagree}
@@ -571,6 +591,11 @@ $L$, $N_0$, $H_0$, $T_0$, $e$, $\gamma_0$, $\bar Z_0$, $d(S)$, $\gamma_\phi$, $\
     \code{README.md:16}). This text follows the code.
   \item A code comment says the block size satisfies $1\le B\le20$ (\code{cpp/v3_core.cpp:144}); the constant is $16$
     (\code{cpp/v3_core.cpp:145-146}). This text uses $16$.
+  \item The earlier method chapter (\code{Theory_work/State_of_Project/sections/02_method.tex:363-386}) describes an optional
+    number of final islands $R'=4k$, declared in advance, with an ``expanded'' and a ``baseline'' record, and a parallel
+    execution layer with process workers. The shipped serial code fixes the number of islands at four
+    (\code{v3_run.R:91}, \code{islands = 4L}) and has neither option. This text describes four islands; the parallel
+    engine is the subject of Appendix~\ref{app:m-1m} and of the companion section's Section~6.
 \end{enumerate}
 
 \end{document}

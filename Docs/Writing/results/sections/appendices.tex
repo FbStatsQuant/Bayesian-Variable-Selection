@@ -13,10 +13,10 @@ $X$, $x_j$, $y$ & standardised design and column $j$ ($\norm{x_j}^2=n-1$); stand
 $\tstar$, $\mu$, $\tmin$ & standardised coefficients $D\bstar$; mean signal $X\tstar$; smallest true $\abs{\theta^*_j}$ & \S\ref{sec:standardise} \\
 $X_S$, $G_S$, $\Rhat_S$, $P_S$ & columns in $S$; Gram matrix; sample correlation matrix; projection & \S\ref{sec:standardise} \\
 $\Om$, $K$ & model space; size cap $\min(p,\lfloor n/2\rfloor)$ & \S\ref{sec:prior} \\
-$w(k)$, $W_K$ & model-size weight $1/\{2\binom{2p-1}{k}\}$; its normaliser over $\Om$ & \S\ref{sec:prior} \\
+$w(k)$, $\bar w_K$ & model-size weight $1/\{2\binom{2p-1}{k}\}$; its normaliser over $\Om$ & \S\ref{sec:prior} \\
 $a_0,b_0$ & inverse-gamma hyperparameters ($0.01$ each) & \S\ref{sec:prior} \\
 $m(S)$, $C_n$, $H_S$, $\SSq_S$, $z_S$, $\nu$ & marginal likelihood and its ingredients & \S\ref{sec:posterior} \\
-$\pis{S}$, $F(S)$, $Z$ & posterior over models; log score; evidence & \S\ref{sec:posterior}, \S\ref{sec:method} \\
+$\pis{S}$, $F(S)$, $Z$ & posterior over models; log score; evidence & \S\ref{sec:posterior} \\
 $\PIP_j$, $\HPM$, $\MPM$ & inclusion probability; highest posterior model; median probability model & \S\ref{sec:posterior} \\
 $1-\pis{\Sz}$ & posterior miss & \S\ref{sec:posterior} \\
 $C_b$, $J$ & blocks of the method's partition ($\abs{C_b}\le16$); number of blocks & \S\ref{sec:method} \\
@@ -29,15 +29,19 @@ $\Dom$ & bounded domain of $(n,\praw)$ on which the code's integer limits are no
 $A$ & dimension exponent ($p\le n^A$) & \S\ref{sec:standing} \\
 $\OP,\oP,O,o,\lesssim,\asymp,\gg$ & asymptotic notation & \S\ref{sec:asymptotics} \\
 $\varphi_0,g_0,\bar\theta,C_\beta$ & fixed constants of the fixed-design assumptions & \S\ref{sec:fixed} \\
-$q_n$, $\kappa$, $\tlow$, $M_1$, $c_{\mathrm{SB}}$ & size budget and constants of certified screening & \S\ref{sec:screen} \\
+$k_n$, $\kappa$, $\tlow$, $M_1$, $c_{\mathrm{SB}}$ & size budget and constants of certified screening & \S\ref{sec:screen} \\
 $c_0(\sz,A)$, $c_1(\sz,A)$, $c_{\mathrm{id}}$, $C_1$ & beta-min and margin constants; margin level; rate constant & \S\ref{sec:fixed} \\
 $\varphi$, $b_{\mathrm{lo}},b_{\mathrm{hi}}$; $\theta_{\mathrm{lo}},\theta_{\mathrm{hi}}$ & population floor; bounds on true raw and standardised coefficients & \S\ref{sec:random}, \S\ref{sec:delivery-quantities} \\
 $\mathcal C$, $\beta^{\mathcal C}$, $\sigma^2_{\mathcal C}$, $\Sz^{\mathcal C}$, $s$ & candidates; best linear predictor; residual variance; its support and size & \S\ref{sec:omitted} \\
 $\Dn$, $\Pi(\cdot\mid\Dn)$, $\P^*$, $\zeta$ & data set; posterior of $(S,\beta,\sigma^2)$; law of the data; population-standardised predictors & \S\ref{sec:dist-setting} \\
 $f$, $f^*$, $d_H$, $H^2$ & fitted and true joint densities; Hellinger distances & \S\ref{sec:dist-setting} \\
 $M$, $q_n$ & level and window of the distribution theorem & \S\ref{sec:dist-setting} \\
-$\mathcal T$, $\hat\Pi$ & list returned by a completed run; posterior restricted to it & \S\ref{sec:dist-results} \\
-$\delta^2_{U,l}$, $\tau^2_U$, $\hat\beta_{U,l}$ & signal gain; residual variance; sample regression coefficient & \S\ref{sec:delivery} \\
+$\mathcal T$, $\hat\Pi$ & list returned by a completed run; posterior restricted to it & \S\ref{sec:dist-param} \\
+$c_{\mathrm H}$, $C_2$, $M_0$, $C_q$ & constants of the distribution theorem & \S\ref{sec:dist-results} \\
+$\gamma(t\mid S)$, $\Gamma_n$, $\tau_n$, $\mathcal R_S$ & noiseless gain; its worst case over small models; scale; ridge residual operator & \S\ref{sec:screen} \\
+$\mathcal G_n$ & data event of the reported-model theorems & \S\ref{sec:reported} \\
+$\bar h_n$ & in-sample average Hellinger distance & \S\ref{sec:dist-fixed} \\
+$\delta^2_{U,l}$, $\tau^2_U$, $\hat\beta_{U,l}$ & signal gain; residual scale; sample regression coefficient & \S\ref{sec:delivery-quantities} \\
 $\Cov(\cdot,\cdot\mid W_U)$, $\bar\beta_{U,l}$ & partial covariance; population regression coefficient & \S\ref{sec:delivery} \\
 $Q$, $\Lat(Q)$, $\Hl_l$ & leakage set; its lattice; locality sets & \S\ref{sec:delivery} \\
 $\Acal$, $\rho_n$ & sampler used and calibration succeeds; rate $n^{-1/2}e^{C_3\sqrt{\log n}}$ & \S\ref{sec:outputs} \\
@@ -67,7 +71,7 @@ Label & In words & Stated in & Used by \\ \midrule \endhead
 \as{C3} & sampler: ideal random numbers, exact kernels & \S\ref{sec:standing}, App.~\ref{app:conventions} & Thm \ref{thm:outputs}, Rem.~\ref{rem:unbiased} \\
 \bottomrule
 \end{longtable}
-\noindent Local assumptions, used by one theorem each: Assumptions~\ref{asm:margin} (Theorem~\ref{thm:post-margin}),
+\noindent Numbered assumptions, used within one subsection: Assumptions~\ref{asm:margin} (Theorem~\ref{thm:post-margin}),
 \ref{asm:witness} (Theorem~\ref{thm:sharp}), \ref{asm:omitted} (Theorem~\ref{thm:omitted}), \ref{asm:dist}
 (Theorems~\ref{thm:dist} and~\ref{thm:dist-param}), \ref{asm:dist-det} (Theorem~\ref{thm:dist-param}), \ref{asm:start}
 (Theorem~\ref{thm:start}), \ref{asm:reported-random} (Theorem~\ref{thm:reported-random}), \ref{asm:reported-fixed}
@@ -80,27 +84,27 @@ Theorems~\ref{thm:reported-random} and~\ref{thm:reported-fixed}. They are operat
 statistical condition.
 \begin{enumerate}[label=(\roman*),leftmargin=2em]
   \item \emph{Idealised machine:} exact arithmetic at unit cost (including $\exp$ and $\log$); no integer, index,
-    stream-identifier or allocation overflow; wall time at most $c_{\mathrm t}\cdot(\text{operation count})+c_{\mathrm t0}$ and peak memory at
+    random-stream identifier or allocation overflow; wall time at most $c_{\mathrm t}\cdot(\text{operation count})+c_{\mathrm t0}$ and peak memory at
     most $c_{\mathrm m}\cdot(\text{words held})+c_{\mathrm m0}$ for fixed constants $(c_{\mathrm t},c_{\mathrm t0},c_{\mathrm m},c_{\mathrm m0})$; every allocation within
     the declared memory succeeds; the build and its dependencies work; no external interruption or worker crash.
-  \item \emph{Covered configuration:} the production core with the local search from the start mode (cap
-    $\ell_n+\abs{\tSz}$) and the tie-aware start-mode fallback, implemented with
+  \item \emph{Covered configuration:} the default core of the software, with the local search from the start mode (cap
+    $\ell_n+\abs{\tSz}$) and the rule that resolves ties in the start mode, implemented with
     $O\big(p\sum_b(2^{\abs{C_b}}+(K+1)^2)\big)$ operations and $O\big(\sum_b2^{\abs{C_b}}+J(K+1)\big)$ storage; the local
     search from the start mode starting at the smallest, lexicographically first maximiser of the start law; the default
     list of summaries only; certificate computations with declared polynomial operation and memory budgets, included in
     the allocation; serial execution or a fixed number of concurrent workers (memory envelope multiplied by that number);
-    a fixed number of islands; the grid fallback switched on (the default).
+    a fixed number of islands; the fallback temperature sequence switched on (the default).
   \item \emph{Random numbers and stops:} ideal independent uniform random numbers; the method's stop-and-return rule and
     stop-only resource guard as coded (a stopped run returns no estimates).
   \item \emph{Inputs and allocation:} a valid seed (an integer in $[1,2^{31}-1]$) and a declared memory and time allocation
-    at least the method's explicit polynomial work and memory envelopes in $(n,\praw)$, including the preflight bounds and
-    the local-search archive and time bounds.
+    at least the method's explicit polynomial work and memory envelopes in $(n,\praw)$, including the memory checks made before the run and
+    the bounds on the records and time of the local searches.
 \end{enumerate}
 The code has two fixed integer limits: a run is rejected when the base cap $\ell_n$ exceeds a fixed ceiling, or when the
 move cap $\ell_n+\abs{\tSz}$ of the search from the start mode exceeds the integer range. Theorems~\ref{thm:reported-random}
 and~\ref{thm:reported-fixed} use (i)--(iv) on the domain $\Dom$ where neither limit is reached. \emph{Convention \as{C2p}} is the idealised machine of (i)
-with these two limits lifted, everything else (other validators, the start-mode enumeration cap and its fallback, every
-method cap) kept as coded; under it the delivery clauses hold for every $n$. Plain (i) does not give delivery for every
+with these two limits lifted, everything else (other validators, the cap on the enumeration used to find the start mode, and its fallback, every
+method cap) kept as coded; under it the delivery clauses hold for every $n$. With the limits in place, (i)--(iv) give delivery only on $\Dom$, not for every
 $n$.
 
 \paragraph{Convention \as{C3}: sampler.} Used only by Theorem~\ref{thm:outputs} and Remark~\ref{rem:unbiased}.
@@ -112,8 +116,8 @@ $n$.
     normalising constant of the unnormalised weights of $\pi_0$.
   \item The coded Markov moves realise their stated kernels, applied in a uniformly random order that is independent of
     the state.
-  \item The calibration record is a function of the data and the calibration streams, and each island's record is a
-    measurable function of the calibration value and its stream.
+  \item The outcome of the calibration is a function of the data and of the calibration's random streams, and each island's
+    record is a measurable function of that outcome and of the island's stream.
   \item Statements about estimates refer to the potential (uninterrupted) run, which is identified with the reported
     values on completed runs.
 \end{enumerate}

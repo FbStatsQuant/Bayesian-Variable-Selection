@@ -1,7 +1,9 @@
 \section{The parallel method: what is and is not proved}\label{sec:parallel}
 
-The method runs four independent islands and pools them. What is proved about the pooling is short. A parallel engine
-that reproduces the serial output exactly inherits every guarantee above, but that inheritance is not yet written as a
+By the \emph{parallel method} we mean software that runs the computations of the method on many processors at once,
+possibly with more islands. The method itself runs four independent islands and pools them; what is proved about that
+pooling is short. A parallel engine that reproduces the output of the serial software exactly inherits every guarantee
+above, but that inheritance is not yet written as a
 theorem. Running many islands at very large $p$ raises questions that are open.
 
 \paragraph{Pooling over the four islands (proved).} The pooled inclusion probability is the equal-weight mean of the
@@ -21,7 +23,8 @@ progress.
 
 \paragraph{Many islands and island weighting at very large $p$ (open).} Runs at larger $p$ show that the spread of the
 islands' log-evidence estimates grows with $p$: $0.09$ at $p=2{,}000$, and $0.76$--$1.15$ for $p$ between $5{,}000$ and
-$20{,}000$, where one island held $79\%$ of the evidence weight at $p=5{,}000$. The islands' inclusion probabilities
+$20{,}000$, where one island would have received $79\%$ of the weight at $p=5{,}000$ if the islands had been weighted by their
+evidence estimates. The islands' inclusion probabilities
 nevertheless agree to within $5\times10^{-4}$. This is why the method pools islands with equal weights rather than by
 their evidence estimates. Results for many islands, for weighting islands, and for a fixed number of particles per
 island at $p=10^6$ are open. The planned run at $p=10^6$ uses an engineered variant of the method; it will be reported as
@@ -36,9 +39,9 @@ We list the questions our results leave open, in the order of the sections above
 statement in this paper.
 
 \begin{enumerate}[leftmargin=1.5em]
-  \item \emph{Over-fitted models with no eigenvalue condition.} Find a sufficient condition for the superset Occam-sum
-    condition of Remark~\ref{rem:post-fixed-asm}(iii) that involves no design quantity. Whether that condition holds without
-    any eigenvalue condition is open. A positive answer would remove the vanishing floor \as{NC} from
+  \item \emph{Over-fitted models with no eigenvalue condition.} Whether the superset Occam-sum condition of
+    Remark~\ref{rem:post-fixed-asm}(iii) can hold with no eigenvalue condition on the design is open; a sufficient condition
+    for it that involves no design quantity would settle this. A positive answer would remove the vanishing floor \as{NC} from
     Theorem~\ref{thm:post-margin}, so that it would need no eigenvalue condition away from the true model.
   \item \emph{The floor on the true model.} Replace the floor $\lmin(\Rhat_{\Sz})\ge\varphi_0^2$ in
     Assumption~\ref{asm:margin} by a weaker condition, a bound on the ridge cost of the true model; the floor is sufficient
@@ -52,10 +55,11 @@ statement in this paper.
   \item \emph{Whether Assumption~\ref{asm:dist}\ref{asm:dist-nec} is needed} for the rate $\rn$ in Theorem~\ref{thm:dist}.
   \item \emph{Leakage sets of size $n^b$ with $b\ge\tfrac12$}, and a reported-model theorem with no condition on the
     lattice of the leakage set, which would require control of the actual search path
-    (Remark~\ref{rem:reported-fixed}).
+    (Remark~\ref{rem:reported-not}).
   \item \emph{Raw-scale signals} in Theorems~\ref{thm:start}, \ref{thm:reported-random} and~\ref{thm:outputs}, which
     are stated with the signal fixed on the standardised scale \as{FSt}.
-  \item \emph{Certified screening with signals that vary with $n$} under a sparse eigenvalue floor, in the form of
+  \item \emph{Certified screening with signals that vary with $n$}, stated through a sparse eigenvalue floor and a
+    lower bound on the signals as in
     Theorem~\ref{thm:screen}.
   \item \emph{Sharper rates for the reported estimates} (Theorem~\ref{thm:outputs}).
   \item \emph{The parallel method}: the inheritance note, and results for many islands and island weighting
