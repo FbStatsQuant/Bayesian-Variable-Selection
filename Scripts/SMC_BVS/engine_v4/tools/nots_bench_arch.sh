@@ -56,6 +56,25 @@ for v in $variants; do
   h="$(grep -o "output hash [0-9a-f]*" "$LOGDIR/variant_$v.log" | head -1)"
   if [[ "$v" == fma ]]; then echo "   (fma: class-A bits differ by design: $h)"; else hashes+=("$h"); fi
 done
+# Early bridge stages (optional, V4_BENCH_EARLY=1): the first three stages of a bridge from pi_0 (phi = 0.01, 0.02, 0.03),
+# where the supports are pi_0-sized and a particle takes many sweeps per round. N = G = 64 so that the Gram rows of every
+# active column fit (4,000 rows = 32 GB). Reference and `gram`; the two must stop in the same state (same hash).
+# ESTIMATE (Owls: 13-16 us thread-time per step for ref, 3.1-3.6 for gram): ref ~ 3 x 10 s, gram ~ 3 x 3 s of wall on
+# 96 threads, plus 2 x 25 s of data and setup: ~ 2 min x 96 CPUs ~ 3 core-h.
+if [[ -n "${V4_BENCH_EARLY:-}" ]]; then
+  eh=()
+  for v in ref gram; do
+    envs=(V4_NO_CHECK_STORE=1); [[ "$v" == ref ]] && envs+=(V4_NO_BOUNDED=1); [[ "$v" == gram ]] && envs+=(V4_GRAM_SLOTS=4000)
+    cke="$TMPDIR/arch_ckpt_early_$$"; rm -f "$cke".a "$cke".b
+    echo "== early stages, variant $v: N=G=64 threads=$NT ${envs[*]}  $(date +%T)"
+    env "${envs[@]}" V4_MEM_BUDGET_GB=0 V4_CKPT="$cke" V4_STOP_AFTER=3 OMP_NUM_THREADS=$NT $pre "$B" island "$p" 64 "$NT" A lm 64 128 steps:0.01,0.02,0.03,1 0 1 > "$LOGDIR/early_$v.log" 2>&1 \
+      || { tail -5 "$LOGDIR/early_$v.log" >&2; exit 9; }
+    grep -E "\[round\]|\[arch\]|output hash|peak RSS" "$LOGDIR/early_$v.log" || true
+    eh+=("$(grep -o "output hash [0-9a-f]*" "$LOGDIR/early_$v.log" | head -1)"); rm -f "$cke".a "$cke".b
+  done
+  if [[ "${eh[0]}" != "${eh[1]}" || -z "${eh[0]}" ]]; then echo "ERROR: early-stage hashes differ or are missing: ${eh[*]}" >&2; exit 10; fi
+  echo "== early stages: ${eh[0]} (identical)"
+fi
 uniq_h=$(printf '%s\n' "${hashes[@]}" | sort -u | wc -l)
 if [[ "$uniq_h" -ne 1 || -z "${hashes[0]}" ]]; then echo "ERROR: the variants' output hashes differ or are missing: ${hashes[*]}" >&2; exit 8; fi
 echo "== all variants: ${hashes[0]} (identical)"

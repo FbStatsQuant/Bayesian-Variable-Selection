@@ -301,6 +301,49 @@ inline unsigned flip8_A(const Data& D, const SupportCache& s, const v8d* u, v8d 
   return ok;
 }
 
+// [arch] Class A, ng <= 4 groups of 8 labels at once. flip8_A is latency-bound: the forward substitution
+// x -= vH[t] * L[c][t] is one dependency chain per group (FMA latency x k^2/2), so one group leaves the FMA units
+// mostly idle (MEASURED on Owls: 416 ns per pair at k = 50). Several groups run their chains side by side. Every lane
+// performs exactly the operations of flip8_A in the same order: the same bits.
+inline void flipN_A(const Data& D, const SupportCache& s, int ng, const v8d* const* u, const v8d* gjj, const v8d* zj, v8d* logm, unsigned* okm) {
+  const int k = s.k; const double n1 = D.n + 1.0;
+  v8d* vH = lane_scratch(2, (size_t)std::max(1, k) * 4).data(); v8d* vA = lane_scratch(3, (size_t)std::max(1, k) * 4).data();   // [t * 4 + g]
+  // always four groups, in named locals so that the chains stay in registers; groups >= ng repeat the last one (same
+  // inputs, results ignored): the chains are latency-bound, so the padding costs no time
+  const v8d *u0 = u[0], *u1 = u[std::min(1, ng - 1)], *u2 = u[std::min(2, ng - 1)], *u3 = u[std::min(3, ng - 1)];
+  const v8d g0 = gjj[0], g1 = gjj[std::min(1, ng - 1)], g2 = gjj[std::min(2, ng - 1)], g3 = gjj[std::min(3, ng - 1)];
+  v8d dH0 = fma8(bc(n1), g0, bc(1.0)), dH1 = fma8(bc(n1), g1, bc(1.0)), dH2 = fma8(bc(n1), g2, bc(1.0)), dH3 = fma8(bc(n1), g3, bc(1.0));
+  v8d dA0 = g0 + bc(1.0), dA1 = g1 + bc(1.0), dA2 = g2 + bc(1.0), dA3 = g3 + bc(1.0);
+  v8d wz0 = zj[0], wz1 = zj[std::min(1, ng - 1)], wz2 = zj[std::min(2, ng - 1)], wz3 = zj[std::min(3, ng - 1)];
+  for (int c = 0; c < k; ++c) {
+    v8d x0 = bc(n1) * u0[c], x1 = bc(n1) * u1[c], x2 = bc(n1) * u2[c], x3 = bc(n1) * u3[c];
+    v8d y0 = u0[c], y1 = u1[c], y2 = u2[c], y3 = u3[c];
+    const double* lh = s.LH[c]; const double* la = s.LA[c];
+    for (int t = 0; t < c; ++t) {
+      const v8d bh = bc(lh[t]), ba = bc(la[t]); const v8d* h = vH + (size_t)t * 4; const v8d* a = vA + (size_t)t * 4;
+      x0 = fnma8(h[0], bh, x0); x1 = fnma8(h[1], bh, x1); x2 = fnma8(h[2], bh, x2); x3 = fnma8(h[3], bh, x3);
+      y0 = fnma8(a[0], ba, y0); y1 = fnma8(a[1], ba, y1); y2 = fnma8(a[2], ba, y2); y3 = fnma8(a[3], ba, y3);
+    }
+    const v8d rh = bc(s.rLH[c]), ra = bc(s.rLA[c]), wh = bc(s.wH[c]);
+    v8d* h = vH + (size_t)c * 4; v8d* a = vA + (size_t)c * 4;
+    const v8d h0 = x0 * rh, h1 = x1 * rh, h2 = x2 * rh, h3 = x3 * rh, a0 = y0 * ra, a1 = y1 * ra, a2 = y2 * ra, a3 = y3 * ra;
+    h[0] = h0; h[1] = h1; h[2] = h2; h[3] = h3; a[0] = a0; a[1] = a1; a[2] = a2; a[3] = a3;
+    dH0 = fnma8(h0, h0, dH0); dH1 = fnma8(h1, h1, dH1); dH2 = fnma8(h2, h2, dH2); dH3 = fnma8(h3, h3, dH3);
+    dA0 = fnma8(a0, a0, dA0); dA1 = fnma8(a1, a1, dA1); dA2 = fnma8(a2, a2, dA2); dA3 = fnma8(a3, a3, dA3);
+    wz0 = fnma8(h0, wh, wz0); wz1 = fnma8(h1, wh, wz1); wz2 = fnma8(h2, wh, wz2); wz3 = fnma8(h3, wh, wz3);
+  }
+  const v8d dH[4] = {dH0, dH1, dH2, dH3}, dA[4] = {dA0, dA1, dA2, dA3}, wz[4] = {wz0, wz1, wz2, wz3};
+  for (int g = 0; g < ng; ++g) {
+    unsigned ok = pos_finite_mask(dH[g]) & pos_finite_mask(dA[g]);
+    v8d quad = bc(s.preQ[k]) + (wz[g] * wz[g]) / dH[g];
+    v8d Q = fnma8(bc((double)D.n), quad, bc(D.yty));
+    v8d t1 = alog8(dH[g] / dA[g]), t2 = alog8(bc(2 * D.b0) + Q);
+    logm[g] = bc(D.logCn - (s.preH[k] - s.preA[k])) - fma8(bc(D.nu), t2, bc(0.5) * t1);
+    ok &= lanemask((Q >= bc(1e-8 * D.yty)) & (logm[g] > bc(-__builtin_inf())) & (logm[g] < bc(__builtin_inf())));
+    okm[g] = ok;
+  }
+}
+
 // Odds for additions: lane l is label j8[l] ∉ S with logm8[l] = log m(S ∪ j). core/cpp/v3_engine.h:97, :124-126.
 template <Arith A>
 inline v8d odds_add8(const Data& D, const Start& st, const SupportCache& s, const int32_t* j8, v8d logm8) {
@@ -339,6 +382,27 @@ inline void eval8_add(const Data& D, const Start& st, BitScorer& sc, const Suppo
   }
   v8d o = odds_add8<A>(D, st, s, j8, lm);
   for (int l = 0; l < 8; ++l) if (lanes & (1u << l)) { logm_out[l] = lm[l]; o_out[l] = (failed >> l) & 1u ? ODDS_FAILED : o[l]; }
+}
+
+// [arch] Class A additions for ng <= 4 groups of 8 labels: the results of eval8_add<ClassA> group by group (same bits),
+// with the flip scores of the groups computed side by side (flipN_A). u[g]: the k Gram vectors of group g.
+inline void evalN_add_A(const Data& D, const Start& st, BitScorer& sc, const SupportCache& s, int ng, const v8d* const* u,
+                        const int32_t (*j8)[8], const unsigned* lanes, double (*logm_out)[8], double (*o_out)[8]) {
+  v8d gjj[4], zj[4], lm[4]; unsigned okm[4];
+  for (int g = 0; g < ng; ++g) for (int l = 0; l < 8; ++l) { gjj[g][l] = D.diagG[j8[g][l]]; zj[g][l] = D.z[j8[g][l]]; }
+  flipN_A(D, s, ng, u, gjj, zj, lm, okm);
+  for (int g = 0; g < ng; ++g) {
+    unsigned bad = lanes[g] & ~okm[g], failed = 0;
+    if (bad) {
+      Model T;
+      for (int l = 0; l < 8; ++l) if (bad & (1u << l)) {
+        T = s.S; sorted_insert(T, j8[g][l]);
+        try { lm[g][l] = sc.score(T).logm; } catch (const v4::NumericalFailure&) { lm[g][l] = std::numeric_limits<double>::quiet_NaN(); failed |= 1u << l; }
+      }
+    }
+    v8d o = odds_add8<Arith::ClassA>(D, st, s, j8[g], lm[g]);
+    for (int l = 0; l < 8; ++l) if (lanes[g] & (1u << l)) { logm_out[g][l] = lm[g][l]; o_out[g][l] = (failed >> l) & 1u ? ODDS_FAILED : o[l]; }
+  }
 }
 
 // One label, any support (the particle-major reference and the slow path of the label-major kernel).

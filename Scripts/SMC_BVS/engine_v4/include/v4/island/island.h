@@ -57,6 +57,7 @@ struct IslandConfig {
   bool store_dup_filter = true;             // exact snapshot duplicate filter (execution parameter; content unchanged)
   bool store_parallel_compact = true;       // compaction at pass/step boundaries with all threads (content unchanged)
   bool test_ckpt_any_binary = false;        // [arch] benchmarks only: the checkpoint fingerprint omits the binary block
+  int flip_groups = 1;                      // [arch] class A: groups of 8 labels per flip call (1..4; same bits)
   int gram_slots = 0;                       // [arch] Gram rows of active columns kept across passes: number of rows (p doubles
                                             // each); 0 = off. Execution parameter (same bits); needs bounded_scoring
   bool products_fma = false;                // [arch] class A only: FMA in the tile products (changes the class-A bits; T3 kept)
@@ -87,6 +88,7 @@ using v4::StageRow;
 struct KernelStats {   // execution statistics (not part of the law, not hashed)
   uint64_t particle_rounds = 0, particle_sweeps = 0, passes = 0, support_label_pairs = 0, supports = 0;
   uint64_t gram_rows_new = 0, gram_rows_reused = 0, gram_rows_noslot = 0;   // [arch] active columns per pass: computed / cached / no slot
+  uint64_t act_cols = 0, loc_cols = 0;   // [arch] sum over passes of the active columns / of those whose products were computed
   uint64_t flip_evals = 0;   // [arch] addition flips actually evaluated (fast supports)
   uint64_t slow_supports = 0, store_merges = 0, store_buffered = 0, store_dup_dropped = 0, store_serial_merges = 0;
   double t_store_compact = 0, t_compact_pass = 0;   // wall seconds compacting (all paths) / at pass boundaries

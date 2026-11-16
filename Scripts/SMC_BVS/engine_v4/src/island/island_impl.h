@@ -453,6 +453,7 @@ class IslandEngine {
         for (int a = 0; a < nA; ++a) gb.loc.push_back(a);
       }
       const int nLoc = (int)gb.loc.size();
+      KS.act_cols += (uint64_t)nA; KS.loc_cols += (uint64_t)nLoc;
       for (int t = 0; t < nLoc; ++t) gb.act_local[gb.loc[t]] = t;
       gb.XA.resize((size_t)nLoc * D.n);
       for (int t = 0; t < nLoc; ++t) std::memcpy(&gb.XA[(size_t)t * D.n], D.col(gb.act[gb.loc[t]]), sizeof(double) * D.n);
@@ -531,7 +532,30 @@ class IslandEngine {
               int cnt = 0;
               for (size_t w = 0; w < needw.size(); ++w) for (uint64_t b = needw[w]; b; b &= b - 1) nlist[cnt++] = (int)(w * 64) + __builtin_ctzll(b);
               nflip += (uint64_t)cnt;
-              for (int c0 = 0; c0 < cnt; c0 += 8) {
+              int c_first = 0;
+              if constexpr (A == Arith::ClassA) if (cfg.flip_groups > 1) {
+                // [arch] up to 4 groups of 8 needed labels per call: their flip-score chains run side by side (same bits)
+                const int W = std::min(4, cfg.flip_groups);
+                if (ub.size() < (size_t)std::max(1, c.k) * 4) { ub.resize((size_t)std::max(1, c.k) * 4); u = ub.data(); }
+                for (; c_first < cnt; c_first += 8 * W) {
+                  const int ng = std::min(W, (cnt - c_first + 7) / 8);
+                  int32_t j8g[4][8]; unsigned lanes[4]; double lmg[4][8], og[4][8]; const v8d* up[4];
+                  for (int g = 0; g < ng; ++g) {
+                    const int b0 = c_first + 8 * g, nl = std::min(8, cnt - b0); lanes[g] = (1u << nl) - 1u; up[g] = u + (size_t)g * c.k;
+                    int jj8[8];
+                    for (int l = 0; l < 8; ++l) { jj8[l] = nlist[b0 + std::min(l, nl - 1)]; j8g[g][l] = j0 + jj8[l]; }
+                    for (int a = 0; a < c.k; ++a) {
+                      const int ai = c.arow[a];
+                      const double* row = gb.act_gr[ai] ? gb.act_gr[ai] + j0 : &Pp[(size_t)gb.act_local[ai] * Bk];
+                      v8d gv; for (int l = 0; l < 8; ++l) gv[l] = row[jj8[l]];
+                      u[(size_t)g * c.k + a] = gv;
+                    }
+                  }
+                  evalN_add_A(D, st, sc, c, ng, up, j8g, lanes, lmg, og);
+                  for (int g = 0; g < ng; ++g) { const int nl = std::min(8, cnt - (c_first + 8 * g)); for (int l = 0; l < nl; ++l) { lb[j8g[g][l]] = lmg[g][l]; ob[j8g[g][l]] = og[g][l]; } }
+                }
+              }
+              for (int c0 = c_first; c0 < cnt; c0 += 8) {
                 const int nl = std::min(8, cnt - c0); const unsigned valid = (1u << nl) - 1u;
                 int32_t j8[8], jj8[8];
                 for (int l = 0; l < 8; ++l) { jj8[l] = nlist[c0 + std::min(l, nl - 1)]; j8[l] = j0 + jj8[l]; }
@@ -1120,6 +1144,14 @@ class IslandEngine {
                          step, k.t_orders - ks_prev.t_orders, k.t_build - ks_prev.t_build, k.t_phaseA - ks_prev.t_phaseA, k.t_products - ks_prev.t_products,
                          k.t_walk - ks_prev.t_walk, k.t_phaseB - ks_prev.t_phaseB, k.t_compact_pass - ks_prev.t_compact_pass, k.t_apply - ks_prev.t_apply,
                          k.t_check - ks_prev.t_check);
+            {   // the population at the step boundary and the pass shape: what the cost per pair depends on
+              double ks = 0; for (auto& x : P) ks += (double)x.S.size();
+              const double np = (double)(k.passes - ks_prev.passes);
+              std::fprintf(stderr, "  [arch] step %d: phi %.5g | mean |S| %.2f | per pass: supports %.1f, active columns %.1f (products computed for %.1f) | "
+                           "ns per step (wall x threads) %.1f\n", step, step <= T ? grid[std::min<size_t>(step, grid.size() - 1)] : 1.0, ks / std::max<size_t>(1, P.size()),
+                           np > 0 ? (double)(k.supports - ks_prev.supports) / np : 0.0, np > 0 ? (double)(k.act_cols - ks_prev.act_cols) / np : 0.0,
+                           np > 0 ? (double)(k.loc_cols - ks_prev.loc_cols) / np : 0.0, steps > 0 ? 1e9 * dt * NT / steps : 0.0);
+            }
             std::fprintf(stderr, "  [arch] step %d: Gram rows (column x pass): computed %llu, reused %llu, no slot %llu\n", step,
                          (unsigned long long)(k.gram_rows_new - ks_prev.gram_rows_new), (unsigned long long)(k.gram_rows_reused - ks_prev.gram_rows_reused),
                          (unsigned long long)(k.gram_rows_noslot - ks_prev.gram_rows_noslot));

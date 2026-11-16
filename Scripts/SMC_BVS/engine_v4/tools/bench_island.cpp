@@ -131,6 +131,8 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
   if (std::getenv("V4_NO_BOUNDED")) c.bounded_scoring = false;   // [arch] A/B of bounded scoring
   if (std::getenv("V4_PRODUCTS_FMA")) c.products_fma = true;     // [arch] class A: FMA products (other class-A bits)
   if (const char* e = std::getenv("V4_GRAM_SLOTS")) c.gram_slots = std::atoi(e);   // [arch] Gram-row cache (rows of p doubles)
+  if (const char* e = std::getenv("V4_FLIP_GROUPS")) c.flip_groups = std::atoi(e);  // [arch] class A: 1..4 groups of 8 labels per flip call
+  if (std::getenv("V4_LEADERS")) c.leaders = true;   // [arch] calibration-island shape: the two leader stores (cap 20p, serial compaction)
   // [arch] checkpointed A/B: V4_CKPT=<path> writes/reads <path>.a/.b; V4_STOP_AFTER=<step> stops after that step (status 1 is
   // then the expected outcome). A second run with V4_CKPT alone resumes after that step: variants (execution parameters
   // only: threads, G, tile, V4_NO_BOUNDED, V4_NO_CHECK_STORE, ...) are compared on the same remaining rounds without
