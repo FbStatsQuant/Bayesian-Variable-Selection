@@ -1,0 +1,3 @@
+custom_id	scope	n_verdicts	verdict_ids
+audit2-s1	v1.3 label changes (items 1–5)	19	item1:B4.PROOFS;item1:B4.STATED;item2:B5.S;item2:B6.S;item3:SAMP.LABEL;item3:SAMP.ABSENCE;item4:HEAD.ORDER;item4:HEAD.S;item4:HEAD.H;item4:HEAD.CONC;item5:S.QUOTE;item5:S.MODEL;item5:S.PRIOR;item5:S.DIM;item5:S.LOWER;item5:S.UPPER;item5:S.SIGNAL;item5:S.CONC;item5:S.CORE3
+audit2-s2	v1.3 label changes (items 1–5)	19	item1:B4.PROOFS;item1:B4.STATED;item2:B5.S;item2:B6.S;item3:SAMP.LABEL;item3:SAMP.ABSENCE;item4:HEAD.ORDER;item4:HEAD.S;item4:HEAD.H;item4:HEAD.CONC;item5:S.QUOTE;item5:S.MODEL;item5:S.PRIOR;item5:S.DIM;item5:S.LOWER;item5:S.UPPER;item5:S.SIGNAL;item5:S.CONC;item5:S.CORE3
