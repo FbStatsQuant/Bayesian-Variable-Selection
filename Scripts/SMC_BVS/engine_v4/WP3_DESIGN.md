@@ -1,6 +1,6 @@
 # WP3_DESIGN — the island: stores, addressed sampling, label-major round, restart
 
-**v0.5, 2026-11-16, WP3 builder (Opus 5.5). Status: PROVISIONAL.** v0.5 adds §1.10 (review PR26); v0.2 added §1.7 (parallel compaction, waves, snapshot filter), implements §1.6 (admission) and §6 (compat), and records the manager's §5 decisions. Branch `exp/P1M-wp3-island`
+**v0.6, 2026-11-16, WP3 builder (Opus 5.5). Status: PROVISIONAL.** v0.6 adds §1.11 (calibration islands, agreed with WP4); v0.5 added §1.10 (review PR26); v0.2 added §1.7 (parallel compaction, waves, snapshot filter), implements §1.6 (admission) and §6 (compat), and records the manager's §5 decisions. Branch `exp/P1M-wp3-island`
 (stacked on WP1's PR #11). Inputs: ENGINEERING_SPEC §0-v2, §3, §6; INTERFACES v0.1.3 (v0.1.5 announced: RNG domain and
 event key); Sol EXP-CP1 review §F2, §F4, §F5 (T3, T6); manager directives of 11-15 (D-21 scope cut, G ≤ 256, mem budget).
 Code references: `include/v4/island/*.h`, `src/island/island_impl.h`, `tests/test_island*.cpp`. Every number below
@@ -186,6 +186,54 @@ increasing from 0 to 1, B ≥ 0.
   scripts refuse without TMPDIR or outside the department folders (`tools/nots_guard.sh`), keep logs in
   `<build>/logs`; socket mode waits for both islands, prints both logs, and requires exit 0, `status=0` and two
   distinct non-empty hashes.
+
+### 1.11 v0.6 (agreed with WP4, 2026-11-16): calibration islands (pilot, diagnostic)
+This is the API that WP4's `calib::IslandRunner` calls. It is built after the PR #26 re-check. Core reference:
+`core/cpp/v3_core.cpp:620-692` (`cpp_cal_pilot`, `cpp_cal_diag`) and `cpp/v3_engine.h:269-372` (`run_island_s` with
+`phase_override`).
+- **Config.**
+  - `IslandConfig::role` is `Final`, `Pilot` or `Diag`. `tier` = e, the new `iter` = k (0 for the pilot, k for rebuild
+    k), and `island` = 0 for the pilot, 1…4 for the diagnostic islands.
+  - Addresses use role R_PILOT / R_DIAG with tier e, iter k and island r (INTERFACES §3). Islands of different rebuilds
+    get fresh addresses.
+  - The pilot uses the adaptive schedule (core's pilot rule, `adaptive_H` = H, `adaptive_Te`). The diagnostic islands
+    use WP4's fixed grid.
+  - `leaders` is on for calibration roles (they feed V). Final islands never carry leaders (D-7).
+- **Events.**
+  - Every event is labelled PH_PILOT or PH_DIAG (core's `phase_override`).
+  - EventKey = (CALIB, e, k, r, xph, stage, round, particle, position, sub). MEASURED rounds are numbered L + h
+    (INTERFACES v0.1.5 §4.2).
+- **Output.**
+  - IslandRun → `to_record()` → `v4::IslandResult` with its own Ledger: top store, lead0 / lead1, HPM + key,
+    island_best and logical counts.
+  - Ledger configuration: islands = 4, leaders = true, caps 40p + 1 / 20p / 20p (`Ledger::merge` refuses a mismatch).
+    The pilot (unit 0) has no island_best of its own.
+  - The island ledger starts empty: no tables and no inherited models.
+  - WP4 owns the calibration ledger and merges island ledgers with `Ledger::merge`, which is order-free.
+  - WP4 also resets island_best before each rebuild's four diagnostic islands (`v3_core.cpp:662`) and runs every local
+    search (CALIB, e, k, UNIT_LOCAL). There is no local search inside the island.
+  - Also returned: `forced` (forced pilot steps), the schedule used, stages, logZ, pip, init_hash, and the stream
+    positions (start, end) in compat.
+- **Stops.**
+  - resource_limit returns core's partial output: the schedule so far, `forced`, the stages so far, logZ so far and
+    `partial = true`.
+  - The ledger so far is also returned, because core's shared ledger keeps a partial island's events. WP4 decides
+    whether to merge it.
+  - numerical_failure returns status and message only (`v3_core.cpp:637-651, 673-681`).
+  - There are no island checkpoints in calibration.
+- **Compat.**
+  - Streams are caller-owned: `IslandConfig::compat_src` is a `v4::CompatSource*` that is required for calibration
+    roles. The streams are 0 (pilot, e = 0) or 5 (e = 1), and 1–4 or 6–9 for the diagnostic islands.
+  - The island draws from the stream in core's serial order and leaves it advanced. WP4 keeps each stream across
+    rebuilds (R6). A final compat island keeps its own stream 9 + r unless one is passed.
+  - `fresh` and the cache statistics are on the compat exclusion list (spec §4.1, OD-3): no seen-set, never compared.
+- **Golden tests.**
+  - Per island, against WP4's `CoreRunner`, which runs core `Engine::run_island_s` with a fresh v3 ledger and
+    caller-owned streams. Fixtures are `fixture()` / `make_setup()` from `tests/golden/wp4_harness.cpp`.
+  - Compat (bit-identical) and law mode (particle-major = label-major; the island = core's law through the adapter, as
+    for final islands).
+  - WP4 compares the whole calibration with `v3_calibrate`, so swapping in this runner changes no calib.bin bits in
+    compat.
 
 ---
 
