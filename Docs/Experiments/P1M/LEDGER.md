@@ -27,4 +27,4 @@ Rules:
 | 2026-11-15 23:3x CST | WP3 fixed-rounds island on SPR (cd1a7e02, PR #21): p = 10⁶, G = 64, transient island (3 stages + 1 round) at 48 then 96 threads; 96 CPUs, 50 min | exploratory (HQ sweep + standing authority) | 2748105 | 80.0 | 67.1 | COMPLETED (42 min; MaxRSS 32.6 GB; hashes equal) |
 
 | 2026-11-16 01:xx CST | WP3 10⁶ lever batch (efc0dfd0, pre-#24-fix, leaders unused): one exclusive SPR node, socket 0 G = 64 / socket 1 G = 256, block 4, parallel compaction; 192 CPUs, 35 min | exploratory (HQ GO ≤ 112) | 2748756 | 112.0 | 48.3 | COMPLETED (15.1 min; MaxRSS 58.7 GB both islands; G-invariance hash PASS) |
-**Totals (2026-11-16 02:xx):** actual ≈ 146.2 core-h closed (G0 kernel 0.88 + pmath 0.10 + WP3 bench 19.5 + SPR sweep 77.4 + lever batch 48.3) · open: G0 stage tasks 2747372_2 / 2747799_1 · remaining ≈ 24,450 of the A + D envelope.
+**Totals (2026-11-16 02:xx):** actual ≈ 146.2 core-h closed (G0 kernel 0.88 + pmath 0.10 + WP3 bench 19.5 + SPR sweep 77.4 + lever batch 48.3) · open: G0 stage tasks 2747372_2 / 2747799_1 · remaining ≈ 28,150 of the re-sized envelope (H-9 ≈ 28.3k; manifest v0.3 plans 28,398 with contingency).

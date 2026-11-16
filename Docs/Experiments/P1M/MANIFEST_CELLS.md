@@ -1,4 +1,4 @@
-# MANIFEST_CELLS — the executable cell / seed manifest of the P1M experiment (DRAFT v0.2, WP5, 2026-11-16; v0.2 = the PR #19 review fixes)
+# MANIFEST_CELLS — the executable cell / seed manifest of the P1M experiment (DRAFT v0.3, 2026-11-16; v0.2 = the PR #19 review fixes (WP5); v0.3 = H-9 re-size (Engineering manager))
 
 **Status: DRAFT for the Engineering manager.** It answers Sol F7 and the F3 disposition: "one costed cell/seed manifest
 replaces the tier totals". Sources:
@@ -97,16 +97,16 @@ each extra N = 2,500 arm costs ≈ 35 core-h per dataset, ≈ 106 over the 3 dat
 | ADJ-OPP | 200 | 2 | 192 (mandatory at 10⁵, Sol F7) |
 | **total** | | **12** | **1,325** |
 
-### 10⁶ rung, V, n = 200 (OD-14 / D-10)
+### 10⁶ rung, V, n = 200 (OD-14 / D-10; **re-sized by H-9**, ×1.44 from job 2748756, G = 256 socket-local)
 | cell | fits | core-h |
 |---|---|---|
-| AR-strong × 3 (rep 1 = pilot, see §1) | 3 | 2,889 |
-| ADJ-OPP × 1 | 1 | 963 |
-| AR-weak × 1 | 1 | 963 |
-| self-check: N = 10⁴ on AR rep 1's data | 1 | 3,600 |
-| **total** | **6** | **8,415** |
-| *named, NOT in the total (Sol F7):* second seed on AR rep 1 | (1) | (963) |
-| **option D** (H-1, conditional on the 10⁵ π̂(S₀) trend): AR-strong, n = 1,000 | 1 | 3,300 |
+| AR-strong × 3 (rep 1 = pilot, see §1) | 3 | 4,160 |
+| ADJ-OPP × 1 | 1 | 1,387 |
+| self-check: **N = 5,000** on AR rep 1's data (H-9; was N = 10⁴ at 3,600) | 1 | 2,592 |
+| **total** | **5** | **8,139** |
+| *named, NOT in the total (Sol F7):* second seed on AR rep 1 | (1) | (1,387) |
+| *dropped by H-9, first buy-back if L5 saves enough:* AR-weak × 1 | (1) | (1,387) |
+| **option D** (H-1, conditional on the 10⁵ π̂(S₀) trend): AR-strong, n = 1,000 | 1 | 4,752 |
 
 ### Other blocks
 | block | core-h |
@@ -114,13 +114,17 @@ each extra N = 2,500 arm costs ≈ 35 core-h per dataset, ≈ 106 over the 3 dat
 | ablations (start mode / + LS0 / pilot + local), once per distinct 10⁴–10⁶ dataset (ESTIMATE: 6% of its V fit) | 482 |
 | competitors at all rungs + the acceptance runs (Sol F8; `tools/competitors/ACCEPTANCE.md`; 1M = lasso + 1 variational + SIS, D-21) | 400 |
 
-## 3. Totals (PLANNING VALUES) against H-1
+## 3. Totals (PLANNING VALUES) against the re-sized envelope (H-9 ≈ 28.3k)
 | | core-h |
 |---|---|
-| planned, excluding option D | 18,199 |
-| with 25% contingency | 22,749 |
-| option D (with contingency) | 3,300 (4,125) |
-| **A + D with contingency** | **26,874**, against the H-1 envelope ≈ 24.6k: **+9.2%** |
+| planned, excluding option D | 17,967 |
+| with 25% contingency | 22,458 |
+| option D (with contingency) | 4,752 (5,940) |
+| **A + D with contingency** | **28,398**, against the H-9 envelope ≈ 28.3k (H-1 was ≈ 24.6k) |
+
+v0.3 change (H-9, HQ 11-16): 10⁶ per-fit costs × 1.44 (measured, `results/WP3_LEVERS_SPR.md`); the 1M self-check
+reduced to N = 5,000; AR-weak at 1M dropped (first buy-back). Fits 259 → 258. Unpriced risk: M (pairs per step) 3.9–4.1
+vs 3 → ×1.2–1.35 on the 1M block, priced after T5; if the total then exceeds ≈ 30k, HQ decides before any 10⁵ stage.
 
 v0.2 change: A3 on BLK cut from 10 to 5 reps (the cheaper of the two pairing fixes; raising science BLK n = 200 to 10
 reps instead would have cost +53 planned): −50 core-h of fits and −3 of ablations, so −53 planned, **−66 with
@@ -157,7 +161,7 @@ The first two alone, both with contingency: 26,874 − 1,575 − 1,058 ≈ **24.
 - At the driver's planning time limits the 47 plans sum to ≈ 53.0k worst case (52,968), against 18.2k planned. Those limits are
   deliberately generous until T5. Tighten them from measured stage times before submitting; otherwise the admission
   check reserves too much of the envelope.
-- **Memory moves** (REVIEW_disposition_sol): island tasks 24–32 GB, calibration 48–64 GB at 10⁶. Option D (n = 1,000):
+- **Memory moves** (REVIEW_disposition_sol; H-9): island tasks **96 CPUs (one socket) + 40 GB at G = 256** (measured 34.3 GB, job 2748756), calibration 48–64 GB at 10⁶. Option D (n = 1,000):
   X 8 GB and logr ≤ 9.4 GB under D-19, so 64 GB per island task.
 
 ## 6. Open (for the manager)
