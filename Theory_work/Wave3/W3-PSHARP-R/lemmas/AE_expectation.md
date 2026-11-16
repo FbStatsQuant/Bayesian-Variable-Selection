@@ -1,7 +1,8 @@
 # AE — Proposition A-E and Corollaries A1-E, A2-E (W3-PSHARP-R, claim `W3-PSHARP-R:AE`)
 
 Status: **PROVED (by this seat, unchecked)**. Repair [L02-S1] (Lemma F starting index; §4, §5 indices) after line check
-L02 (`../reviews/L02_line_check_sol.md`, `../reviews/L02_disposition.md`). Statement: `../STATEMENT.md` v1.1 §2 (notation, Setting-E, (W-orth-E),
+L02 (`../reviews/L02_line_check_sol.md`, `../reviews/L02_disposition.md`); [L03-S2] tail indices after re-check L03
+(`../reviews/L03_recheck_sol.md`, `../reviews/L03_disposition.md`). Statement: `../STATEMENT.md` v1.1 §2 (notation, Setting-E, (W-orth-E),
 (W-sph-E)), §3.1–§3.3. PARENT := `Theory_work/Wave3/W3-PSHARP/`; "P-A :a-b" := PARENT `lemmas/A_log_factor.md` lines
 a-b; "P-S" := PARENT `lemmas/S_one_step.md`; "P-ST :a" := PARENT `STATEMENT.md` line a.
 Consumed, unchanged: Lemma S(4) and Lemma V (`W3-PSHARP:S`@1.0.0, P-ST :32-44; P-S); from the proof of
@@ -77,7 +78,8 @@ e_n log T ≤ 1.02(√2·x_n log T/√(n − 1) + 2(log T)²/(n − 1)) + (0.04 
 ≤ C(ψ_n^{1/2} + ψ_n² + (1 + (M + M′)/σ*²)ψ_n/√n) with an absolute C (n ≥ 3, n/(n − 1) ≤ 3/2). So
 b_n := e^{−e_n log T}(1 − ψ_n) → 1 and θ⁻_n = a_n → 1 at rates depending only on (n, ϵ, ω_n, (M + M′)/σ*²). Lemma F
 gives n₀ = n₀(ϵ, (M + M′)/σ*², (ω_n)) with E δ_n ≥ (1 − ϵ − Λ^E_n)Λ^E_n for n ≥ n₀; here the starting index of the
-displayed inequality is n₁ := the least n with n ≥ 3, n > (4/ϵ)² and ψ_n ≤ 1, a function of (ϵ, (ω_n)) only [L02-S1]. ∎
+displayed inequality is n₁ := the least integer m such that, for every integer n ≥ m, n ≥ 3, n > (4/ϵ)² and ψ_n ≤ 1;
+it is a function of (ϵ, (ω_n)) only [L02-S1, L03-S2]. ∎
 
 ## 5. Proof under (W-sph-E)
 **Setup (P-A :75-99, unchanged).** X_{S₀}, θ* deterministic; ρ̃ := ρ̃_{S₀} ≠ 0 is a function of ε; for j ∈ 𝒩_n,
@@ -99,8 +101,8 @@ log T/√n ≤ ψ_n → 0, so 2 log T ≤ (n − 1)/2 eventually and θ^±_n →
 log T ≤ log p + ½ log n ≤ log(pn): e′_n log T ≤ C₀ψ_n/√n + 2x ω′_n. Take x = x_n := (ω′_n)^{−1/2} (ω′_n ≥ log(pn)/n > 0; x_n ≥ 1
 once ω′_n ≤ 1): e′_n log T ≤ C₀ψ_n/√n + 2(ω′_n)^{1/2} → 0, and
 b_n := e^{−e′_n log T}(1 − 2/(n − 1) − 16/n − (ω′_n)^{1/2}) → 1 at rates depending on (n, C₀, ω_n, ω′_n), and b_n ≤ 1.
-Lemma F — with n₁ := the least n with n ≥ 4 (so d = n − 1 ≥ 3), n > (4/ϵ)², ψ_n ≤ ¼ (so 2 log T ≤ √n/2 ≤ (n − 1)/2)
-and ω′_n ≤ 1, a function of (ϵ, (ω_n), (ω′_n)) only [L02-S1] — gives n₀ = n₀(ϵ, C₀, (ω_n), (ω′_n)) — C₀ is a function of
+Lemma F — with n₁ := the least integer m such that, for every integer n ≥ m, n ≥ 4 (so d = n − 1 ≥ 3), n > (4/ϵ)²,
+ψ_n ≤ ¼ (so 2 log T ≤ √n/2 ≤ (n − 1)/2), and ω′_n ≤ 1; it is a function of (ϵ, (ω_n), (ω′_n)) only [L02-S1, L03-S2] — gives n₀ = n₀(ϵ, C₀, (ω_n), (ω′_n)) — C₀ is a function of
 (σ*², M, M′) — with E δ_n ≥ (1 − ϵ − Λ^E_n)Λ^E_n for
 n ≥ n₀. ∎
 

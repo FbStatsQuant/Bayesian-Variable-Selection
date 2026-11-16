@@ -16,6 +16,7 @@ Rider T12 (Tier B, NORMAL mode), delta over W3-PSHARP. This report restates noth
 | statement lock L01 | Sol gpt-6.1-sol, high (NORMAL; fresh, blind) | `reviews/BRIEF_L01_sol.md` | `reviews/L01_statement_lock_sol.md` | `reviews/L01_disposition.md` |
 | line check L02 (both lemmas) | Sol gpt-6.1-sol, high (NORMAL; fresh, blind) | `reviews/BRIEF_L02_sol.md` | `reviews/L02_line_check_sol.md` | `reviews/L02_disposition.md` |
 | re-check L03 (repair [L02-S1] of AE) | Sol gpt-6.1-sol, high (NORMAL; new agent; repair + STALE rows) | `reviews/BRIEF_L03_sol.md` | `reviews/L03_recheck_sol.md` | `reviews/L03_disposition.md` |
+| re-check L04 (repair [L03-S2] of AE) | Sol gpt-6.1-sol, high (NORMAL; new agent) | `reviews/BRIEF_L04_sol.md` | `reviews/L04_recheck_sol.md` | `reviews/L04_disposition.md` |
 | citation check | script | `citecheck.py` | `reviews/CITECHECK.txt` | — |
 | council R1 | Sol seat + Opus seat | `reviews/BRIEF_R1_*.md` | `reviews/R1_council_*.md` | `reviews/R1_disposition.md` |
 (Rows below L01 are filled as the steps complete; CHECKPOINT_3 carries the final state.)
