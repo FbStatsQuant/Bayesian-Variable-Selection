@@ -1,4 +1,4 @@
-# W3-PSHARP-R — PLAN (v1.0, 2026-11-15)
+# W3-PSHARP-R — PLAN (v1.1, 2026-11-15; v1.1 = L01 amendments)
 
 Targets: BRIEF.md §Targets 1–2 (T12 of `API_AUDIT/sharp2/TRIAGE.md`). Delta statement: `STATEMENT.md` v1.0. Tier B,
 NORMAL mode. No new key lemma: the route is the one named in the brief (truncate at T = ϵ/c_n; Var ≤ T·E), on top of
@@ -16,8 +16,9 @@ PARENT's checked steps. Kill budget 3 per lemma.
 Let odds ≥ Y := c Σ_{j=1}^N U_j 1_{G_j}·e^{−e} with c, e ≥ 0 deterministic, 0 ≤ U_j ≤ T, the U_j independent and
 identically distributed, and U_j independent of G_j [orth] (or all U_j jointly independent of one event G = G_j [sph]).
 Then, with δ = odds/(1 + odds) and x/(1+x) ≥ x − x²:
-  E δ ≥ E Y − E Y²,  E Y = e^{−e}·c N E U·min_j P(G_j),  E Y² ≤ c²(N·T·E U + N²(E U)²)   (U² ≤ T U; independence).
-With T := ϵ/c: E δ ≥ L·(e^{−e}·min P(G_j) − ϵ − L), L := cN E U.
+  E δ ≥ E Y − E Y²,  E Y = e^{−e}·c E U·Σ_j P(G_j) ≥ e^{−e}·c N E U·min_j P(G_j),
+  E Y² ≤ c²(N·T·E U + N²(E U)²)   (drop the indicators; U² ≤ T U; the U_j independent)  [L01-F2].
+With c > 0, T := ϵ/c > 0: E δ ≥ L·(e^{−e}·min P(G_j) − ϵ − L), L := cN E U.
 
 ### 2.2 (W-orth)
 PARENT §3 (`A_log_factor.md:53-63`): νγ_j = κ_n g_j²/2, κ_n ≥ (n−1)σ*²/V, V ≤ σ*²E(1 + 0.04/(n−1)) + 1.06M + M′,
@@ -45,7 +46,9 @@ factors sit inside the slack ϵ/2. Random (X_{S₀}, θ*): condition, multiply b
   for fixed p.
 - A2-E: sub-block argument. Any 𝒩′ ⊆ 𝒩 satisfies the same witness hypotheses (stated through p, not N). Per-column
   increment of Λ^E is Δ_n = 2c_n√(ℓ_n/π) ≤ 2√(ℓ_n/(πn)) → 0 (s₀ ≤ p/2 ⇒ (s₀+1)/(2p−1−s₀) ≤ 1). Pick |𝒩′| with
-  Λ^E(𝒩′) ∈ [min(Λ^E, ¼) − Δ_n, min(Λ^E, ¼)]; Prop A-E with ϵ = ½ ⇒ E δ_n ≥ ¼(min(Λ^E_n, ¼) − Δ_n). (i) follows; (ii):
+  Λ^E(𝒩′) ∈ [min(Λ^E, ¼) − Δ_n, min(Λ^E, ¼)]; Prop A-E with ϵ = ½ ⇒ E δ_n ≥ ¼(min(Λ^E_n, ¼) − Δ_n) (if only |𝒩′| = 0
+  fits, the right side is ≤ 0 and δ_n ≥ 0 suffices [L01]). (W-sph) without the rank condition: E δ_n → 0 and PARENT B1
+  (δ_n ≥ (s₀+1)/(3√n + s₀ + 1) surely) give s₀ = o(√n), hence (r₀+1) log(pn) = o(n), then apply A-E [L01-F3]. (i) follows; (ii):
   then liminf E δ_n/Λ^E_n ≥ 1, 2N/(2p−1−s₀) ≥ ½, ℓ_n ≥ ½ log n ⇒ s₀ + 1 = O(1).
 
 ### 2.6 A2C (W-orth, multi-step; new, ~1 page)
@@ -54,7 +57,8 @@ D_{S₀∪J}/D_{S₀} = n^j and Q_{S₀} − Q_{S₀∪J} = Σ_{k∈J}(x_kᵀy)�
 π(S₀∪J)/π(S₀) = [w(s₀+j)/w(s₀)] n^{−j/2}(1 − Σ_J γ_k)^{−ν} ≥ (c_n)^j Π_{k∈J} e^{νγ_k}  (prior ratio = Π_{i<j}(s₀+1+i)/(2p−1−s₀−i) ≥ P_n^j).
 So odds ≥ Σ_{j=1}^{J₀} c_n^j e_j(e^{νγ}). On PARENT's κ-event (Lemma R proof `:46`): e^{νγ_k} ≥ e^{−ϵ/2}W_k, W_k ≤ N.
 Newton-type bound j! e_j ≥ A^j − C(j,2)B A^{j−2} with A = c_nΣW, B = c_n²ΣW² ≤ (c_nN)A, c_nN ≤ (s₀+1)/√n → 0 when Λ_n
-bounded. Lemma W: P(A ≥ (1−ϵ)Λ_n) → 1, E A = Λ_n. Let J₀ → ∞ slowly, ϵ → 0: odds ≥ e^λ − 1 − η w.p. → 1. Needs
+bounded. Lemma W: P(A ≥ (1−ϵ)Λ_n) → 1, E A = Λ_n. Fix J₀ large for the given η, then ϵ small, n large: odds ≥
+e^λ − 1 − η w.p. → 1 (no growing-j estimate needed [L01]); expectation consequence by boundedness [L01-F4]. Needs
 K − s₀ → ∞ (s₀ = O(√n) from Λ_n bounded, p − s₀ → ∞).
 
 ## 3. Numerics

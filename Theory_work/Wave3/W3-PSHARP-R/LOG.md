@@ -15,3 +15,9 @@
 - 2026-11-15 20:01 CST — Manager: POLICIES §9 (expensive resources by ≤10-line request). Not needed for this ticket. L01 still running.
 - 2026-11-15 20:03 CST — Manager: POLICIES §10 (never shut down/cancel/settle any thread or agent). Noted; L01 left running. 
 - 2026-11-15 20:04 CST — Manager: FINAL POLICIES §10 — never cancel/interrupt running work; settle own finished reviewers/helpers allowed; never archive/delete. L01 still running.
+- 2026-11-15 20:22 CST — Manager: POLICIES §12 (compute discipline). Check: N1 ran 18 s wall, ~10 cores (numpy threads), not niced — future runs: nice -n 19, OMP_NUM_THREADS=8. No arrays saved (numerics/ holds only script + text output); no temp files written outside the worktree. L01 still running.
+- 2026-11-15 20:24 CST — Manager: POLICIES §12 rule 7 (no NOTS; no bursts; staggered numerics). Compliant: one agent (L01) running, no helpers, no NOTS use.
+- 2026-11-15 20:25 CST — L01 returned (reviews/L01_statement_lock_sol.md): LOCK-WITH-AMENDMENTS, MAJOR 1 / MINOR 3, no counterexample. All accepted (reviews/L01_disposition.md). STATEMENT v1.1 **locked**; PLAN v1.1; TARGET, READER_DELTA v0.2 aligned; DEPS updated. HOLDS.md (origin/main): no hold.
+- 2026-11-15 20:26 CST — CHECKPOINT_1.md written. L01 thread not settled: still finishing its reply (review file complete); left running per POLICIES §10, settle later. Run ends at CP1; waiting for the manager's answer.
+- 2026-11-15 20:28 CST — Manager: temp convention — future temp work under /home/fb31/bvs_tmp/W3-PSHARP-R/ (export TMPDIR=… ; mkdir -p). Nothing written to /tmp by this ticket so far. Still at CP1, waiting.
+- 2026-11-15 20:34 CST — Manager: exact temp path — TMPDIR=/home/fb31/bvs_tmp/theory/<YYYYMMDD>-W3-PSHARP-R-<what>; CI: /home/fb31/bvs_tmp/ci; remove when done. Still at CP1.

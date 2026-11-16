@@ -1,8 +1,8 @@
-# READER_DELTA.md — W3-PSHARP-R (draft v0.1, 2026-11-15; RIDER_RULES §5, PROTOCOL_v4 H6)
+# READER_DELTA.md — W3-PSHARP-R (draft v0.2, 2026-11-15, after the statement lock L01; RIDER_RULES §5, PROTOCOL_v4 H6)
 
 For HQ → W3-READER. Read-only source: `/home/fb31/BVS-wt/W3-READER/Theory_work/Wave3/W3-READER/READER_VERSIONS.md`
 (draft v0.1, W3-READER CP1), §3 "Theorem 3 — The rate cannot be improved", lines 158-200. Nothing here is written in
-W3-READER's folder. Master claims: `W3-PSHARP-R:AE`, `W3-PSHARP-R:A2C` (`STATEMENT.md` v1.0 of this ticket; **not yet
+W3-READER's folder. Master claims: `W3-PSHARP-R:AE`, `W3-PSHARP-R:A2C` (`STATEMENT.md` v1.1, locked, of this ticket; **not yet
 proved or checked** — statuses at CP3), on top of `W3-PSHARP:A`@1.0.0 and `W3-PSHARP:B`@1.0.0.
 
 ## 1. Current reader text (W3-READER `READER_VERSIONS.md:166-180`, abridged)
@@ -34,8 +34,8 @@ $$
 *Consequences (remarks).* (As now for (a).) By (b) with p = n^a, E[1 − π(S₀ | y)] ≥ (1 − o(1))(s₀+1)√((a+½)/π)·√(log n/n),
 and for fixed p, E[1 − π(S₀ | y)] ≥ c_p (s₀+1)√(log n/n) with c_p = 2(p − s₀)/((2p − 1 − s₀)√(2π)). So the factor √(log n)
 is attained **in expectation for every p**, and **in probability whenever log p ≍ log n**; on these designs, which
-satisfy the assumptions of Theorems 1–2, the rate √(log n/n) is exact in both senses there (conditional on Theorems 1
-and 2). The extra √(log n) in expectation at bounded p comes from rare large gains of a single extra variable, not
+satisfy the assumptions of Theorems 1–2, the rate √(log n/n) is exact in probability whenever log p ≍ log n, and in
+expectation wherever the matching expectation upper bound applies (conditional on Theorems 1 and 2 and that bound). The extra √(log n) in expectation at bounded p comes from rare large gains of a single extra variable, not
 from the number of competitors. If s₀ is allowed to grow, a posterior mean error of order √(log n/n) forces s₀ to stay
 bounded, for every p. *(Critical scale, (N-orth) only.)* If (s₀ + 1)√(log p/(πn)) → λ ∈ (0, ∞) and s₀/p → 0, then
 π(S₀ | y) ≤ e^{−λ} + o_P(1).

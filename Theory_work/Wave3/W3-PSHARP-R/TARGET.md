@@ -1,6 +1,6 @@
 # TARGET.md — W3-PSHARP-R (one page; PROTOCOL_v4 §3.2, RIDER_RULES §2)
 
-Target statement: `STATEMENT.md` v1.0 (delta over W3-PSHARP), claims `W3-PSHARP-R:AE` (Prop A-E, Cor A1-E, Cor A2-E)
+Target statement: `STATEMENT.md` v1.1, locked (delta over W3-PSHARP), claims `W3-PSHARP-R:AE` (Prop A-E, Cor A1-E, Cor A2-E)
 and `W3-PSHARP-R:A2C`. These are sharpness records (lower bounds): a hypothesis is read as "does the record survive
 without it", not "is it needed for an upper bound". Reader version: `READER_DELTA.md` (PROTOCOL_v4 H6).
 
@@ -11,6 +11,7 @@ without it", not "is it needed for an upper bound". Reader version: `READER_DELT
 | N_n ≥ 1 (was N_n → ∞), AE | Lemma T (PLAN §2.1) | truncation at T = ϵ/c_n; E U² ≤ T·E U; no weak law needed | one null column already gives E[min(c_n e^{χ²₁/2}, 1)] ≈ 2c_n√(log(1/c_n)/π) | NONE: N_n = 1 is the boundary and is covered; numerics N1 at p = 2 (N = 1) | none |
 | (log p)² = o(n) added to (W-orth) for a general null block (AE) | κ-bound, PLAN §2.2 | (1 − κ_n) log T → 0 with log T ≈ ℓ_n ≤ log p + ½ log n | exponent coefficient → 1 faster than 1/log T | ARTEFACT of the route; automatic for 𝒩 = [p]∖S₀ (p ≤ 2n) and inside regime R1 (p ≤ n^A); beyond it Λ^E_n is tiny anyway (N_n ≤ n) | artefact-threshold (harmless) |
 | (W-sph): log N_n → log(pn) in both growth conditions (AE) | Lemma W(ii) at τ = 2 log T; κ′-bound | sphere density vs normal on t² ≤ 2 log T; (1 − κ′_n) log T → 0 | as PARENT rows :16-17 with T for N | ARTEFACT (as PARENT :16-17); with s₀ fixed reduces to (log p)² = o(n), i.e. the parent's scope for 𝒩 = [p]∖S₀ | artefact-threshold |
+| (W-sph-E) rank condition dropped in A2-E [L01-F3] | A2-E, first step | PARENT B1 gives s₀ = o(√n) from E δ_n → 0 | — | NONE for A2-E | none |
 | s₀ ≤ p/2 (A2-E) | sub-block step, PLAN §2.5 | per-column increment of Λ^E ≤ 2√(ℓ_n/(πn)); 2N/(2p−1−s₀) ≥ ½ | multiplicity ≍ p | cosmetic (any s₀/p ≤ θ < 1 works with other constants) | none |
 | Λ_n → λ, s₀/p → 0, (W-orth) (A2C) | multi-step sum, PLAN §2.6 | exact D-ratio n^j and additive fit on orthogonal blocks; e_j ≈ e₁^j/j! | independent scores, max weight ≪ sum | witness; (W-sph) version needs multi-step fit control (not attempted) | unharvested on (W-sph) |
 

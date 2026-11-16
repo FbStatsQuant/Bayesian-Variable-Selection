@@ -1,4 +1,4 @@
-# W3-PSHARP-R — STATEMENT v1.0 (delta over W3-PSHARP; 2026-11-15; lead: Claude Opus 5.5, claudeAgent_claude_third, high; draft for the statement lock L01)
+# W3-PSHARP-R — STATEMENT v1.1 (delta over W3-PSHARP; 2026-11-15; lead: Claude Opus 5.5, claudeAgent_claude_third, high; v1.1 = statement-lock amendments [L01-F#], `reviews/L01_disposition.md`; **locked**)
 
 Ticket T12 of `Theory_work/Wave3/API_AUDIT/sharp2/TRIAGE.md` (row W3-PSHARP:A, line 43; §2 row T12, line 80; §4,
 line 111). Rider, Tier B.
@@ -20,7 +20,7 @@ No method change. All results are about the exact coded target π.
 | C2 | Corollary A1-E (§3.2) | Cor A1 second display, :72 | E δ_n ≥ (1 − o(1))(s₀+1)√((a+½)/π) r_n for p = n^a, in place of √(a/π); **fixed p included** |
 | C3 | Corollary A2-E (§3.3) | Cor A2, :75-77; B2–B3, :103-111 | in expectation the growing-s₀ obstruction holds for **every p** (no log p ≍ log n) |
 | C4 | Proposition A2C (§3.4) | Cor A2, :75-77 | on (W-orth) at the critical scale: limsup π(S₀) ≤ e^{−λ} in place of the implied 1/(1 + λ) |
-| R1 | reading A3′ (§4.1) | Remark A3, :84-88 | expectation reading: r_n exact in expectation for every p on the witnesses |
+| R1 | reading A3′ (§4.1) | Remark A3, :84-88 | the √(log n) expectation obstruction includes bounded p; r_n is exact in expectation where the quoted expectation upper bound applies [L01-F1] |
 | R2 | reading B3′ (§4.2) | B3 parenthesis, :109 | "no claim when log p = o(log n)" becomes in-probability only |
 
 Nothing else changes. In particular PARENT Prop A (in probability), Cor A1 first display and its p = n^a line, Lemma
@@ -63,9 +63,10 @@ unit sphere of 1^⊥ and independent of ε (PARENT :56-57, first sentence); and
 **Proposition A-E.** Under Setting-E and (W-orth-E) or (W-sph-E): for every ϵ ∈ (0, 1) there is n₀ such that for all
 n ≥ n₀
   E δ_n ≥ (1 − ϵ − Λ^E_n)·Λ^E_n.
-Here n₀ depends only on ϵ, (σ*², M, M′) and the o(·) sequences in (W-orth-E), resp. (W-sph-E); in particular the bound
-is uniform over all designs, θ*, S₀ and 𝒩_n that satisfy the hypotheses with the same constants and sequences (N_n is
-not restricted). Consequently, **if Λ^E_n → 0, then liminf E δ_n/Λ^E_n ≥ 1.**
+Here n₀ depends only on ϵ, (σ*², M, M′) and the o(·) sequences in (W-orth-E), resp. (W-sph-E) — i.e. on common
+deterministic sequences bounding (log p)²/n, resp. (log p)²/n and (r₀ + 1) log(pn)/n, that tend to 0 [L01]; in
+particular the bound is uniform over all designs, θ*, S₀ and 𝒩_n that satisfy the hypotheses with the same constants and
+sequences (N_n is not restricted). Consequently, **if Λ^E_n → 0, then liminf E δ_n/Λ^E_n ≥ 1.**
 *Random (X_{S₀}, θ*).* If (X_{S₀}, θ*) is random and the hypotheses hold conditionally on (X_{S₀}, θ*) on events 𝒜_n
 with the same constants and sequences, then E δ_n ≥ P(𝒜_n)(1 − ϵ − Λ^E_n)Λ^E_n for n ≥ n₀; so the last conclusion
 holds whenever P(𝒜_n) → 1.
@@ -84,7 +85,8 @@ In particular:
 
 ### 3.3 Corollary A2-E (growing s₀, expectation, every p; part of `W3-PSHARP-R:AE`)
 
-Under Setting-E with 𝒩_n = [p]∖S₀ and s₀ ≤ p/2 (s₀ may grow), and (W-orth-E) or (W-sph-E):
+Under Setting-E with 𝒩_n = [p]∖S₀ and s₀ ≤ p/2 (s₀ may grow), and (W-orth-E) or (W-sph-E) **without its rank
+condition** (i.e. the spherical structure of (W-sph-E) with (log p)² = o(n) only) [L01-F3]:
 - **(i)** E δ_n → 0 implies Λ^E_n → 0, i.e. (s₀ + 1)√(log(p√n/(s₀ + 1))/n) → 0;
 - **(ii)** E δ_n = O(r_n) implies s₀ = O(1).
 No relation between log p and log n is assumed; p may be bounded.
@@ -95,6 +97,7 @@ Setting of PARENT :48-50 (N_n → ∞ kept) with (W-orth), 𝒩_n = [p]∖S₀, 
 (Λ_n as PARENT :63; under these hypotheses Λ_n = (1 + o(1))(s₀ + 1)√(log p/(πn)), PARENT `lemmas/A_log_factor.md:121`,
 so the condition reads (s₀ + 1)√(log p/(πn)) → λ). Then for every η > 0
   P( δ_n/(1 − δ_n) ≥ e^λ − 1 − η ) → 1,  equivalently  P( π(S₀) ≤ e^{−λ} + η ) → 1.
+Consequently (0 ≤ π(S₀) ≤ 1): limsup E π(S₀) ≤ e^{−λ} and liminf E δ_n ≥ 1 − e^{−λ} [L01-F4].
 
 ## 4. Corrected readings (not claims)
 
@@ -121,14 +124,15 @@ E δ_n → 0 forces (s₀ + 1)√(log(p√n/(s₀ + 1))/n) → 0."
 - The in-probability constant of PARENT Cor A1 is not changed: in probability the constant stays √(a/π), and
   Proposition A-E says nothing about δ_n in probability. With N_n bounded, PARENT's in-probability log factor is not
   available (PARENT `ASSUMPTION_MAP.md:15`); the √(log n) in A1-E(b) is an expectation (tail) effect only.
-- A2C is claimed on (W-orth) only; on (W-sph) it would need multi-step fit control (not attempted). No expectation
-  form of A2C.
+- A2C is claimed on (W-orth) only; on (W-sph) it would need multi-step fit control (not attempted). Its expectation
+  consequence follows by boundedness; no matching upper bound for E δ_n is claimed [L01-F4].
 - Parked (named, no work): dropping (G) under (W-sph); a coherence witness replacing exact orthogonality.
 
 ## 6. Dependencies and supersession
 
 Consumed in the proofs (cited, unchanged): `W3-PSHARP:S`@1.0.0 (Lemma V; Lemma S(1) incl. its equality case, S(2),
-S(4)); inside the proof of `W3-PSHARP:A`@1.0.0: PARENT `lemmas/A_log_factor.md` Lemma W(i) (:22-24), Lemma W(ii)(a)-(b)
+S(4)); `W3-PSHARP:B`@1.0.0, consequence (B1) (PARENT :99), in Corollary A2-E only [L01-F3]; inside the proof of
+`W3-PSHARP:A`@1.0.0: PARENT `lemmas/A_log_factor.md` Lemma W(i) (:22-24), Lemma W(ii)(a)-(b)
 (:26-37), the proof of Lemma R (:45-50), §3 identities and the bound on V (:53-63), §4 scores, law of the ζ_j and
 bound on κ′_n (:75-99), §6 A2 asymptotics (:121). Copies with changed lines, where needed, are in this folder with
 [R-#] marks.
@@ -148,3 +152,7 @@ headline statement) is HQ's decision through the HQ consultant (PROTOCOL_v4 H5).
 | version | clause | STRONGER / WEAKER / EQUAL / NEW-CLAIM | reason | trigger (review file) | check (review file) |
 |---|---|---|---|---|---|
 | 1.0 | all | — (draft for the lock) | — | — | — |
+| 1.1 | §0 row R1 | EQUAL (summary narrowed to what §4.1 says) | overclaim in the summary table | `reviews/L01_statement_lock_sol.md` F1 | lock amendment |
+| 1.1 | §3.1 "n₀ depends only on" | EQUAL (wording) | meaning of "same o(·) sequences" | L01, §Claim-by-claim | lock amendment |
+| 1.1 | §3.3 A2-E hypotheses | STRONGER (rank condition of (W-sph-E) dropped) | removable via PARENT B1 | L01 F3 | lock amendment |
+| 1.1 | §3.4 A2C | STRONGER (expectation consequence added) | free by boundedness | L01 F4 | lock amendment |
