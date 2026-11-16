@@ -39,3 +39,4 @@
 - 20:01 — POLICIES §9 (expensive-resource requests encouraged; owner decides) relayed to all 8 leads.
 - 20:02 — §10 applied (D20); PSMC digest helper settled; dept/theory merged origin/main.
 - 20:02 — HQ approved D17 with change: better-gate for uncovered rows via API Fable sharpness batch (SHARP3 request list by Wed 12:00 CT); leg-2 draft updated.
+- 20:03 — D21: no shutdowns of any kind; digest helper unsettled; heartbeat updated.

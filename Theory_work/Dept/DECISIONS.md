@@ -114,3 +114,7 @@
   finish in place; each is settled when finished. dept/theory merged with origin/main (brief update). Research helper
   (PSMC digest) settled.
 - W3-MISR-R launches as a child when PSMC-S0 writes CHECKPOINT_1 (cap 5 until Wed 18:00).
+
+## 2026-11-15 20:03 CT — correction to D20 (owner, POLICIES §10)
+- **D21.** Never settle, archive, cancel, interrupt or delete any thread or agent unless the owner asks; finished leads
+  stay idle. The PSMC digest helper settled under D20 was **unsettled**. Heartbeat prompt updated. Relayed to all leads.
