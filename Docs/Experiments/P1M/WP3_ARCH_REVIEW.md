@@ -25,6 +25,9 @@ machine load 21–29 during the runs. "SPR" = NOTS Sapphire Rapids, job 2748756 
 5. The SPR confirmation is one job of ≈ 40 core-h (§5).
 6. Addendum §7: the L5 batch confirms the uncounted check on SPR (≈ 5.7 s per step in both islands); the real setup
    tables cost under 2% in phase A but 8–35 GB of memory, depending on how the island holds them.
+7. Addendum §8: the per-stage re-size of one 1M fit against H-10's 1,188 core-h, by start-law size E₀ = 10 / 25 / 56
+   (ESTIMATE): today's code 2,575 / 4,136 / 9,937; levers 1–3 with the sort fix 1,159 / 1,609 / 2,624; with the offer
+   floor 895 / 1,264 / 2,112. Job 2749483 confirmed the late round on SPR: 236 → 116 ns·CPU per pair, same bits.
 
 ## 1. Cost model
 
@@ -428,3 +431,132 @@ logr 9.25 (WP2), plus cond_cum ≈ 0.9, logF 0.06, neighbours ≈ 0.15 (ESTIMATE
 3. The memory order of work for the island task: flat Start (−16 to −25 GB) → offer floor (−12) → Gram rows (+5).
 4. The benches should take a table-size option (blocks of 14 with synthetic values, as `v4_bench_arch comp` does) so
    that SPR numbers include the real footprint from now on.
+
+## 8. Addendum: per-stage re-size of one V-1M fit (R1)
+
+Inputs: the SPR job of my script (`results/WP3_ARCH_SPR.md`, job 2749483), the two G0 stage records (real partition,
+real start law, calibrated grids: `records/G0/stage_2747799` p = 5,000, 16 islands; `stage_2747372` p = 10,000,
+8 islands), and the 10⁵ bridge of §1.3. The production E_π₀|S| at 10⁶ is not in yet, so everything is given for
+E₀ = 10, 25, 56. The model is `tools/arch_resize_model.py` on the branch (standard library only; it prints the tables
+below). **Every core-h figure in this section is an ESTIMATE built from the MEASURED anchors listed.**
+
+### 8.1 What the G0 records say about the schedule and M (MEASURED)
+
+| | p = 5,000 (T = 36) | p = 10,000 (T = 28) |
+|---|---|---|
+| M at stage 1 → lowest → last stage | 7.0 → 4.1 → 5.5 | 4.9 → 4.1 → 5.5 |
+| M in the 12 terminal rounds | 5.47–5.53 | 5.50–5.56 |
+| mean M over the island | 5.6 | 5.0 |
+| of which Gibbs changes / N-swap / independence acceptances per particle-round, stage 1 | 3.5 / 1.6 / 0.83 | 1.9 / 1.1 / 0.86 |
+| stages with φ ≤ 0.2 / ≤ 0.4 / ≤ 0.6 / all | 7 / 29 / 31 / 36 | 2 / 22 / 23 / 28 |
+| π₀-like share of the population, mean over the stages | 0.21 | 0.36 |
+
+- M = 1 + accepted state changes per particle-round. "π₀-like share" = the acceptance rate of the independence step,
+  normalised by its value at stage 1: it falls to zero at φ ≈ 0.30 (5k) and 0.34 (10k).
+- **In the real method M is nearly flat, 4 to 7, over the whole calibrated schedule, and 5.5 in the terminal rounds
+  at both sizes.** The plan has 3; the bench's stand-in at 10⁶ has 3.9 in late rounds.
+- **A calibrated grid puts about 80% of its stages at φ ≤ 0.4**, most of them packed around the point where the
+  population leaves π₀. The stages where part of the population is still π₀-like are 20 of 36 and 14 of 28.
+- These runs do not record support sizes. Their M at stage 1 (7.0 and 4.9) is close to their late M (5.5), so the
+  π₀-like stages cost no more sweeps than the late ones there; by the stand-in relation of 8.2 that corresponds to
+  E₀ of at most ≈ 10–16. Whether that holds at 10⁶ is what WP2's number decides.
+
+### 8.2 The model
+
+One fit = 16 final islands + calibration = 3 island-equivalents (your figure), each of N = 2,500, p = 10⁶,
+T = 120 bridge stages + 8 + 4 rounds, 2.5·10⁹ steps per round. The plan is 600 ns·CPU per step: 55 core-h per island.
+
+**Per stage t**, with w_t the π₀-like share:
+- support size k_t = 6 + (E₀ − 6)·w_t; sweeps M_t = M_late + (M₀ − M_late)·w_t with M₀ = max(M_late, 1 + 0.37·E₀).
+  - 6 = late mean |S| (MEASURED in every 10⁶ run). 0.37: MEASURED on the stand-in (M = 10.1 at E₀ = 24; 21–22 at 56).
+  - w_t: three profiles, each stretched to 120 stages (the refinement m keeps the distribution over φ): the two G0
+    grids and the 10⁵ stand-in bridge (mean share 0.21, 0.36, 0.43).
+  - M_late: 3.9 (stand-in at 10⁶) or 5.5 (G0); both are tabulated.
+
+**Cost per step, ns·CPU (SPR, one socket, 96 threads):**
+
+| term | today (be24e9d) | levers 1–3 | source |
+|---|---|---|---|
+| kernel | M_t × (164 + 12.8·(k_t − 6)) | flips 142 + 27.7·(k_t − 6); products 32·(M_t − 1); build 300·(M_t/20)·(k_t/55)³; phase B 60 + 2,000 × offers; orders and walk 85 | MEASURED at k = 6 (late round 5: 180 and 116 per pair) and at k = 55, M = 20 (early stage 3: reference 790 per pair; `gram` phase A 2,100, build ≈ 300 per step); linear in k between them |
+| store check | 220 | 0 | MEASURED: 23.90 − 18.18 s per round |
+| compaction | merges × seconds × 38.4, merges = offers × 2.5·10⁹ / 1.15·10⁷, seconds = 0.8 + 0.0146·(26 + 4·k_t) | same; − 0.9 s per merge with the sort fix (m3) | 1.15·10⁷ staged entries and 1.6 s per compaction MEASURED at stored \|S\| 6–8.5; the growth with model size is an ESTIMATE |
+| calibration islands | + 0.33 µs of wall per top-store offer (serial leader stores) | compaction × 2 (leader stores made parallel, O3) | MEASURED: 157 s for 355·10⁶ offers, 39 s for 180·10⁶ (leaders island, rounds 1–2) |
+
+The model reproduces the two late rounds it is anchored on: 921 vs 918 measured (today), 453 vs 452 (levers 1–3).
+
+**Offers per step in a bridge stage** is the least known input. Central 0.03, bracket 0.01–0.10.
+- MEASURED analogues: 0.14, 0.07, 0.03, 0.01 in rounds 1–4 of the φ = 1 transient at N = 2,500; 0.18 on the 10⁵ bridge
+  at N = 256, which is 1.1 store capacities per stage or 39% of what a fully new population would insert.
+- The same 39% at N = 2,500 and 10⁶ is 0.03 per step (two capacities per stage). Late rounds: 0.005 (MEASURED).
+- The early-stage runs of job 2749483 cannot pin it: with N = 64 a stage offers barely more than one capacity.
+- With the offer floor (D-29) the final islands' bridge stages are taken at the late rate; calibration islands keep
+  their full traffic, because they build the stores that define the floor.
+
+### 8.3 Core-h per 1M fit (ESTIMATE; central [low, high]; H-10 has 1,188)
+
+Central = mean over the three stage profiles at 0.03 offers per step. Low and high = the extremes over the profiles
+and the offer bracket.
+
+**Late M = 3.9 (bench stand-in at 10⁶)**
+
+| E_π₀\|S\| | state | fit, core-h | × H-10 | 16 islands | calibration | mean M | a π₀-like stage, ns·CPU per step: kernel + compaction |
+|---|---|---|---|---|---|---|---|
+| 10 | today's code | 2,575 [1,916, 4,699] | 2.2 | 1,965 | 610 | 4.1 | 1,231 + 442 |
+| 10 | levers 1–3 | 1,579 [993, 3,576] | 1.3 | 1,244 | 335 | 4.1 | 576 + 442 |
+| 10 | levers 1–3 and the sort fix | 1,159 [848, 2,192] | 1.0 | 938 | 221 | 4.1 | 576 + 216 |
+| 10 | + offer floor | **895** [797, 1,168] | 0.8 | 675 | 221 | 4.1 | 526 + 36 |
+| 25 | today's code | 4,136 [2,791, 7,051] | 3.5 | 3,280 | 857 | 5.8 | 4,389 + 661 |
+| 25 | levers 1–3 | 2,029 [1,219, 4,551] | 1.7 | 1,607 | 422 | 5.8 | 1,182 + 661 |
+| 25 | levers 1–3 and the sort fix | 1,609 [1,074, 3,167] | 1.4 | 1,302 | 307 | 5.8 | 1,182 + 436 |
+| 25 | + offer floor | **1,264** [1,013, 1,749] | 1.1 | 957 | 307 | 5.8 | 1,132 + 73 |
+| 56 | today's code | 9,937 [5,962, 15,250] | 8.4 | 8,165 | 1,772 | 9.3 | 17,656 + 1,114 |
+| 56 | levers 1–3 | 3,044 [1,730, 6,677] | 2.6 | 2,430 | 614 | 9.3 | 2,736 + 1,114 |
+| 56 | levers 1–3 and the sort fix | 2,624 [1,585, 5,293] | 2.2 | 2,125 | 499 | 9.3 | 2,736 + 889 |
+| 56 | + offer floor | **2,112** [1,503, 3,060] | 1.8 | 1,613 | 499 | 9.3 | 2,686 + 148 |
+
+**Late M = 5.5 (G0, real data at 5k–10k)**, central values: E₀ = 10: 2,991 / 1,655 / 1,234 / **971**; E₀ = 25:
+4,511 / 2,091 / 1,671 / **1,327**; E₀ = 56: 10,404 / 3,107 / 2,687 / **2,175** (same four states). The late M moves
+today's code by 4–16% and the lever states by 2–8%: after bounded scoring the cost hardly depends on M.
+
+How to read it:
+1. **Today's code does not fit H-10 at any start-law size**: 2.2× at E₀ = 10, 8.4× at 56. Even with small supports the
+   sum of M ≈ 4–5.5 instead of 3, the store check, the bridge compaction and the serial leader stores is ≈ 2×.
+2. **Levers 1–3 with the sort fix reach H-10 at E₀ = 10 (1.0×) and miss it by 1.4× at 25 and 2.2× at 56.**
+3. **With the offer floor: 0.8× at E₀ = 10, 1.1× at 25, 1.8× at 56.** So H-10 holds if the production start law has
+   supports up to about 20 members; at 56 one fit costs about two.
+4. Where the remainder is at E₀ = 56 with all of it: a π₀-like stage costs 2.7 µs·CPU per step (flips on 56-member
+   supports 1.5, new Gram rows 0.7, support builds 0.3), and calibration is 24% of the fit (its islands keep the full
+   store traffic). Lever 7 of §2 addresses
+   the first; a floor for the later calibration rounds would address the second and needs its own argument.
+5. The offer rate is worth a factor 0.6–2.3 on the lever states and almost nothing once the floor is in. The floor is
+   therefore also what makes the re-size predictable.
+6. Not in these figures: setup, merge, tail and evaluation; the memory-driven task shape of §7.3; lever 5.
+
+### 8.4 The single most valuable measurement
+
+**The calibration pilot island at 10⁶ on the production `setup.bin`** (pilot rule, N = 2,500, H = 512), with the
+per-stage record: wall by phase, mean |S|, M, flips per step, offers buffered, compactions and their seconds.
+- It gives, at the target size and with the real start law and neighbours, the three curves the model takes from
+  elsewhere: M(φ) and |S|(φ) (now from a stand-in and from 5k–10k) and the offers per stage at production N (now a
+  bracket of 10×). With the calibrated grid's stage positions, 8.2 then has no free input.
+- It is the first task of any 1M fit, so the code path is the production one; if the configuration is already the
+  frozen one, the run is not spent.
+- Cost (ESTIMATE from the model: ≈ 20 pilot stages + 12 rounds, one calibration-shaped island): **≈ 50 / 70 / 145
+  core-h with today's code at E₀ = 10 / 25 / 56**, and ≈ 27 / 34 / 50 with the lever switches of the prototype build.
+  One socket, ≈ 56 GB with the real tables (48.6 GB MEASURED for the calibration shape with stand-in tables).
+- It needs the island to read WP2's flat Start and the pilot role, which WP3 has as its next items. Nothing else of
+  the pipeline (calibrate loop, merge, evaluation) is needed.
+- T5 at 10⁵ stays necessary as the end-to-end gate, and it will give the calibrated grid's shape. It cannot replace
+  this: at 10⁵ the stand-in start law is half the size it is at 10⁶ (24 vs 56), and the question is the 10⁶ size.
+- Until then, the cheapest useful number is WP2's E_π₀|S| itself: read the row of 8.3.
+
+### 8.5 Limits of this model
+
+- The k and M of a stage are interpolated with one weight; the cost between k = 6 and k = 55 is taken linear. The Owls
+  kernel at k = 20 (§1.3) is 22% below that line, so the model overstates mid-sized supports. The split of phase B into
+  60 + 2,000 per offer is an ESTIMATE.
+- The early anchors are from N = 64 runs; I use thread time, not wall, for the phases that wait on one particle there.
+  The manager's wall-based figure without compaction is 4–5 µs·CPU per step against my 2.7 at production N.
+- M₀ = 1 + 0.37·E₀ comes from the stand-in. G0 has a larger share of non-Gibbs acceptances than the bench.
+- Calibration is taken as three final-island equivalents. Its islands run pilot-length schedules with leader stores;
+  only the leader term is modelled separately.
