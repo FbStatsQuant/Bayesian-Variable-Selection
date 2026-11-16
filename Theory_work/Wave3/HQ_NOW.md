@@ -36,6 +36,10 @@
     - Assumptions on abstract mathematical objects (distributions, divergences, prior or kernel properties) must be proved: small checked lemmas, and Lean targets.
     - Design-matrix assumptions (and similar) get a **"why this is reasonable" dossier in the advisor report**: plain meaning, comparison with standard literature conditions, where they hold and fail, and whether our simulation designs and a typical user are plausibly inside. No empirical tracking.
     - Theory leads it; Writing presents it. The consultant stress-tests the core list and the audit plan. HQ proposes moving the freeze to include the audit (owner's OK pending).
+- **HQ decision 11-16 (owner: "open for you to decide").**
+  - The core list is ADOPTED.
+  - The Fri 11-20 freeze STANDS for recorded statements. The audit (W3-AUDIT) is the next campaign, adding lemmas and corollaries after the freeze; a draft of its first version ≈ 3 working days after the resume, ahead of the advisor report.
+  - Brief: Theory_work/Wave3/W3-AUDIT/BRIEF.md: tracks A (proved), B (reasonableness dossier, with Song–Liang as the reference point, "blank check" if same or weaker) and C (internal empirical proxies, ≤ 150 core-h).
 - **On resume:** move the department threads to Claude Personal (t3_thread_configure), then send each manager "resume from RESUME card". Pending HQ items:
   - V (RM2-R) real-run GO after rule (b) and the dry run;
   - re-enable the 3 Theory scheduled tasks;
