@@ -861,6 +861,31 @@ TEST(pi0_fast_draw_equals_draw) {
   }
 }
 
+// calibration admission (WP4's N-1 rule, IslandSpec): mem_budget = the whole task's budget, resident_bytes = the
+// calibration's own state without the inputs; admitted iff resident_bytes + the island's plan <= mem_budget (to the byte)
+#include "v4/island/calib_runner.h"
+TEST(calibration_admission_n1_rule) {
+  Fixture F(100, 300, 38);
+  // a fixed G on both sides (G = 0 lets the admission shrink G until the plan fits)
+  CalibRunnerConfig rc; rc.seed = 3; rc.kernel = KernelKind::ParticleMajor; rc.threads = 1; rc.B = 14; rc.G = 1;
+  CalibIslandRunner<Arith::Bit> run(F.D, F.st, F.nb, rc);
+  v4::calib::IslandSpec sp; sp.role = v4::calib::IslandRole::Diag; sp.tier = 0; sp.iter = 1; sp.island = 1; sp.H = 30;
+  sp.grid = {0.0, 0.3, 1.0}; sp.L = 1; sp.Hm = 1; sp.resident_bytes = 123456789;
+  IslandConfig c; c.role = IslandRole::Diag; c.island = 1; c.iter = 1; c.N = sp.H; c.grid = sp.grid; c.L = 1; c.Hm = 1; c.B = 14;
+  c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.G = 1; c.leaders = true; c.inputs_bytes = (double)sp.resident_bytes;
+  const uint64_t plan = plan_island(F.D, F.st, c).total;   // includes the resident bytes through the inputs term
+  sp.mem_budget = plan - 1;
+  v4::calib::IslandOut o1 = run.run(sp);
+  CHECKF(o1.status == v4::Status::resource_limit && !o1.partial, "budget = plan - 1: status %s partial %d", v4::status_name(o1.status), (int)o1.partial);
+  sp.mem_budget = plan;
+  v4::calib::IslandOut o2 = run.run(sp);
+  CHECKF(o2.status == v4::Status::completed, "budget = plan: status %s '%s'", v4::status_name(o2.status), o2.message.c_str());
+  sp.resident_bytes = 0; sp.mem_budget = plan - 123456789;   // the same island without the resident state fits exactly
+  v4::calib::IslandOut o3 = run.run(sp);
+  CHECKF(o3.status == v4::Status::completed, "no resident, budget = plan - resident: status %s", v4::status_name(o3.status));
+  std::printf("  plan with resident %llu B: refused at budget plan - 1, admitted at plan\n", (unsigned long long)plan);
+}
+
 // `smcbvs4 calibrate` end to end (WP4's calib::run with WP3's island runner plugged in; WP3_DESIGN §1.11): data.bin from
 // prep, a setup.bin with the partition, block tables, table stores and neighbour lists (WP4's write_setup_min sections
 // + nb_ptr / nb_idx), then the command in each mode. compat runs the bit form particle-major on the v3 streams, law the
