@@ -617,3 +617,14 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - F-UNI → SUSPECT now.
   - One neutral Sol check: do Prop-F Steps 1-2 transfer to the shipped cap under IDEAL-W? YES → erratum + PATCH + clear. NO → NARROW to DLV-0 ((D), IDEAL-W⁺).
   - Row 3.1's delivery is re-pointed to DLV-0 meanwhile. No recorded headline status asserted it (the gate was PENDING).
+- 2026-11-16 ~06:30 CT. **H5 card 13 (W3-DIST, row 2.1): the consultant AGREES**; row 2.1 becomes proved on recording.
+  - Reader edits:
+    - the Song–Liang analogue is display (i) only (cubic s₀/ℓ_n only in (iii));
+    - "s fixed" goes in the Weaker list;
+    - the SL sentences are verified against the published text;
+    - exact estimand wording (conditional law of y, Hellinger averaged over x; law of x not estimated);
+    - lead with the fixed-level display; only (i) in the abstract;
+    - 2.2 stays a body remark.
+  - Status: the TH09 (T01 part) discharge happens only if task T shows the cited T01 labels were LC-A verified; otherwise the row is recorded conditional.
+  - Sharpness top 3: item 1 ((A4)/(ND)), 8(a)+10, 9; 8(b) gets a kill budget.
+- Owls: BNP installs today, guard at 10:13 CT and backup cron at 11:13 CT; SMC crontab freezes 10:05–10:30 and 11:05–11:30. Baseline crontab (15 lines) saved by HQ. Correction to BNP: SMC does have owls_guard (a load watchdog).
