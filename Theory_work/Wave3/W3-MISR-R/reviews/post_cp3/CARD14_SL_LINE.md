@@ -1,0 +1,11 @@
+# CLAIMS_CARD row 1.4 — "Buys vs the literature" replacement line (post-CP3; answers SL_PDF_CHECK finding S12; 2026-11-16)
+
+**Old line** (W3-READER `CLAIMS_CARD.md:44`, column 4; from READER_DELTA v0.4):
+> Analogue of Song–Liang (2015) Theorem 4 and Corollary 2 in their omitted-Gaussian-predictor setting, where the candidate-only conditional model is correctly specified: exact selection of the best candidate predictor's support with rate $\sqrt{\log n/n}$, no condition on how $\Sigma$, $\beta$, $\sigma^2$ vary with $n$; the coded method is exactly invariant to shifts and rescaling of $y$ [H5-10].
+
+**New line:**
+> Song–Liang (2015, Theorem 4, eqs. (17)–(18); Corollary 2) fit a fixed candidate subset that misses true predictors, a model they call misspecified, with candidates having finite second moments only (their Condition 4): the posterior is Hellinger-consistent at the Kullback–Leibler projection, for each fixed $\varepsilon$, almost surely and without a rate, and the projection's support is included in the selected model with probability tending to one. Here, assuming instead that, given the candidates, the response is Gaussian with a mean linear in them and a constant variance (as when the omitted predictors are jointly Gaussian with the candidates), we prove exact selection of the best candidate linear predictor's support (Song–Liang's $\tilde s$ for centred rows) at rate $\sqrt{\log n/n}$, with up to $n^A$ candidates and no condition on how $\Sigma$, $\beta$, $\sigma^2$ vary with $n$; the coded method is exactly invariant to shifts and rescaling of $y$.
+
+**SL citations** (journal pages, from `W3-READER/reviews/SL_PDF_CHECK.md` S12): p. 956 (fixed subset s missing true predictors; "the model y = X_sβ_s + ε is misspecified"; f* ∉ P_s; eq. (17) f₀ = arg min KL); p. 957 Condition 4 (E{(aᵀx_s)²} < ∞, second moments only); p. 957 Theorem 4, eq. (18) (π[d(f₀, f) > ε | D_n^s] → 0 a.s., fixed ε); p. 957 Corollary 2 (π(s̃ ⊂ ξ | D_n^s) →ᵖ 1, s̃ = support of β₀).
+
+**Reason (one line):** S12 found that SL assume second moments only and call their setting misspecified; the new line states SL's setting and results as printed, and puts the Gaussian-linear-homoscedastic conditional law on our side as our (narrower) assumption, with the differences in conclusion (exact selection, rate, growing candidate set, parameters free in n).
