@@ -294,3 +294,4 @@
 - 07:46 — HQ: S4b approved pre-freeze on B11 confirm. NEW RULE (D80): patches applied from repo root with --verbose, Skipped/0-hunk = hard fail, post-apply sha256 vs expected; RIDER_RULES §6 + recorder runbook; re-verify today's patch-applying recordings (Cor-H S, S2, T re-anchors, reader swaps).
 - 07:47 — D80 in RIDER_RULES §6; recorder + READER re-verifying. Manager sanity: Cor-H (a4f83d8c) and F-UNI (05c4cdf6) statement hashes on main = expected, narrowed text present, 0 ERROR → S and S2 applied. → HQ.
 - 07:47 — Recorder: S4 patch mechanics verified on fresh apply (21/21 effective; FINAL s6 complete in 3 files); guard added to task_s4.py. Clarified: S4 real GO already given → run now; then S4b, D80 re-verify S/S2/T, U/V dry.
+- 07:48 — READER D80 re-verify: four swaps OK (absent patch lines = deliberate requotes). Found: thm8 '(A3) requires n ≳ 1,450' sentence still missing (restore request dropped) → re-sent (HQ ruled it stays).
