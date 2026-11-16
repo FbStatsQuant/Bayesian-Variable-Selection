@@ -1,0 +1,24 @@
+# island.cmake -- WP3 sources, tests and tools (included from engine_v4/CMakeLists.txt after the WP1 targets).
+# Bit form in v4_bit (v3 flags), class A in v4_a (V4_A_FLAGS: x86-64-v3 + FMA intrinsics with -DV4_WIDE_ISA=ON).
+# -DV4_ISLAND_ISA=x86-64-v4 overrides -march for the island sources only (AVX-512 on Owls Skylake-SP and NOTS
+# Sapphire Rapids; the bit form uses only IEEE + - * / sqrt in vector lanes, so its bits are ISA-independent: the golden
+# tests run in every build).
+set(V4_ISLAND_ISA "" CACHE STRING "optional -march override for the island sources (e.g. x86-64-v4)")
+set(V4_ISLAND_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/island)
+target_sources(v4_bit PRIVATE ${V4_ISLAND_DIR}/island_bit.cpp ${V4_ISLAND_DIR}/island_file.cpp)
+target_sources(v4_a PRIVATE ${V4_ISLAND_DIR}/island_a.cpp)
+set(V4_ISLAND_SOURCES ${V4_ISLAND_DIR}/island_bit.cpp ${V4_ISLAND_DIR}/island_a.cpp ${V4_ISLAND_DIR}/island_file.cpp tests/test_island.cpp tests/test_island_golden.cpp tools/bench_island.cpp)
+# -Wno-psabi: the 64-byte vector types are passed between inline functions only (no ABI boundary)
+if(V4_ISLAND_ISA)
+  set_source_files_properties(${V4_ISLAND_SOURCES} PROPERTIES COMPILE_OPTIONS "-march=${V4_ISLAND_ISA};-Wno-psabi")
+else()
+  set_source_files_properties(${V4_ISLAND_SOURCES} PROPERTIES COMPILE_OPTIONS "-Wno-psabi")
+endif()
+if(V4_TESTS)
+  target_sources(v4_tests PRIVATE tests/test_island.cpp tests/test_island_golden.cpp)
+endif()
+# the benchmark needs no test dependency (NOTS: -DV4_TESTS=OFF -DV4_ISLAND_ISA=sapphirerapids)
+add_executable(v4_bench_island tools/bench_island.cpp)
+target_compile_options(v4_bench_island PRIVATE ${V4_BIT_FLAGS})
+target_link_libraries(v4_bench_island PRIVATE v4_a v4_bit)
+target_compile_definitions(v4_bench_island PRIVATE V4_ISLAND_ISA_STR="${V4_ISLAND_ISA}")
