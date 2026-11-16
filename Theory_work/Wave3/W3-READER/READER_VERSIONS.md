@@ -1,4 +1,7 @@
-# Reader versions of the headline theorems — draft v0.3 (W3-READER, bridge leg, 2026-11-16)
+# Reader versions of the headline theorems — draft v0.4 (W3-READER, bridge leg, 2026-11-16)
+
+v0.4 = v0.3 with H5 card 6, the Engineering D-17 wording, and the repairs of the S2 line check and the S3 diff check
+(markers [H5-6], [ENG-D17], [S2-F#], [S3-N#]); per-row tags in the update logs (confirmed by S3).
 
 v0.3 = v0.2 with the manager's CP1 decisions and the H5 card-5 actions (markers [H5-#]): Theorem 1 re-based on the
 posterior refinements (expectation rate; Theorem 1′); (S4) completed from the delivery premise table
@@ -47,14 +50,14 @@ TDP-IMPL, valid inputs, declared allocation) and the amended allocation of `Theo
 `W2-UNI:F-UNI@1.1.0` (`L5_delivery.md:7-12`).
 (S5) *Sampler conventions* (used only by Theorem 10 and the pooled-evidence remark) [R4, S2-F2] — the sampler contract,
 incorporated by reference and stated in words: exact arithmetic; within each random stream, fresh independent ideal
-uniforms; the final run's stream for each island independent of the calibration's streams; the coded start sampler
+uniforms; the final run's stream for each island independent of the data and of the calibration's streams [S3-N1]; the coded start sampler
 returns exact draws from $\pi_0$ **and** the reported start normaliser equals $\sum_{S\in\Omega}\gamma_0(S)$ exactly; the coded
 MCMC steps realise their stated kernels, applied in a uniformly random order independent of the state; the calibration
 record is a function of the data and the calibration streams; the island record is a measurable function of the
 calibration value and its stream; statements about estimates refer to the potential (uninterrupted) run, identified
 with the reported fields on completed runs. *Source of record:* `Theory_work/Wave1/W1-N1/STATEMENT.md:70-88` (EX-A,
-EX-S/H-U, START, KERNEL, CAL, SI, MEAS, potential run; START and KERNEL with inherited status "PROVED (candidate),
-code-checked; CHK_INHERITED VERIFIED WITH AMENDMENT"), the code bridge `W1-N1/lemmas/L1_bridge.md:33-55` (measurability,
+EX-S/H-U, START, KERNEL, CAL, SI, MEAS, potential run; inherited statuses: START "PROVED (candidate)" (N1:73), KERNEL
+"PROVED (candidate), code-checked; CHK_INHERITED VERIFIED WITH AMENDMENT") [S3-N8], the code bridge `W1-N1/lemmas/L1_bridge.md:33-55` (measurability,
 control flow), and `W3-SAMP/STATEMENT.md:29-53, 64-70, 90-95` (localisation, production values, Lemma PC).
 
 
@@ -80,7 +83,7 @@ Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
 
 ## 1. Theorem 1 — Posterior concentration (fixed design)
 <!-- ROW thm1 BEGIN -->
-**Card row** 1.1 · **Section version** 0.4 (2026-11-15) · **Pending delta** —
+**Card row** 1.1 · **Section version** 0.7 (2026-11-16) · **Pending delta** —
 
 
 ### Reader statement
@@ -133,8 +136,10 @@ fail without beta-min (numerical counterexample). (iii) $c_0(s_0,A)$ is an expli
 $\|X\theta^*\|^2\le nM$ suffices. (v) Models of size $\ge 3(A+1)(s_0+1)\log n$ carry posterior mass $O_P(n^{-1/2})$ with
 no eigenvalue condition (size-tail lemma, which uses a coefficient bound instead; separate statement). (vi) *Scope of
 the rate* [H5-6]: on every design the posterior miss is at least of order $n^{-1/2}$ (Theorem 3(a)); the extra
-$\sqrt{\log n}$ is shown to be attained only on the witness designs of Theorem 3(b). No two-sided rate
-$\sqrt{\log n/n}$ on every design is claimed (open; post-freeze rider POST2-R1). (vii) *What the posterior looks like at
+$\sqrt{\log n}$ has been shown to be attained on the witness designs of Theorem 3(b); on other designs it is not known
+[S3-N5]. No two-sided rate on every design is claimed: a matching lower bound $E[1-\pi(S_0\mid y)]\gtrsim\sqrt{\log n/n}$ in
+expectation, under a floor on $S_0\cup\{j\}$, is open (post-freeze rider POST2-R1); in probability the $\sqrt{\log n}$
+factor is shown only when $\log p\asymp\log n$ (Theorem 3(b)) [S3-N4]. (vii) *What the posterior looks like at
 moderate $n$* [ENG-D17]: the miss $1-\pi(S_0\mid y)$ is carried mainly by the $p-s_0$ one-variable supersets
 $S_0\cup\{j\}$, each individually light (posterior odds of order $n^{-1/2}/p$ against $S_0$, times a $\chi^2_1$ factor), but
 numerous; together they can weigh as much as $S_0$ itself, so at moderate $n$ and large $p$ the posterior is a mixture
@@ -199,11 +204,13 @@ and give the formulas in an appendix, without numerical values [H5-6]. Named ope
 - v0.3 2026-11-16: [H5-1] re-based on W3-POST2 C (uniform expectation rate; conclusion STRONGER, same hypotheses) with
   Theorem 1′ (W3-POST2 E: identifiability margin, no floor off $S_0$, no beta-min) and remark (o) (W3-POST2 A1).
   Masters C/E/A1/A0 below PROVED-CHECKED until recorded.
-- v0.6 2026-11-16: [S2-F6] Theorem 1′ title: "no eigenvalue condition off $S_0$ beyond the vanishing floor (A5)" (EQUAL;
-  description).
-- v0.5 2026-11-16: [ENG-D17] remark (vii) on the moderate-$n$ shape of the posterior (EQUAL; description only).
 - v0.4 2026-11-16: [H5-6] consultant's conditions: "off $S_0$" wording for Theorem 1′; (A4′) floor line "sufficient;
   not known to be necessary (O3)"; no numerical constant values; rate-scope remark (vi) (EQUAL; wording).
+- v0.5 2026-11-16: [ENG-D17] remark (vii) on the moderate-$n$ shape of the posterior (EQUAL; description only).
+- v0.6 2026-11-16: [S2-F6] Theorem 1′ title: "no eigenvalue condition off $S_0$ beyond the vanishing floor (A5)" (EQUAL;
+  description; HQ-accepted wording).
+- v0.7 2026-11-16: [S3-N4, N5] remark (vi): open item scoped to the expectation lower bound under a floor on
+  $S_0\cup\{j\}$; "has been shown … on other designs it is not known" (EQUAL; tags confirmed by S3).
 <!-- ROW thm1 END -->
 
 ---
@@ -270,7 +277,7 @@ presented as "proved; one input lemma not yet independently checked".
 
 ## 3. Theorem 3 — The rate cannot be improved
 <!-- ROW thm3 BEGIN -->
-**Card row** 1.3 · **Section version** 0.2 (2026-11-15) · **Pending delta** W3-PSHARP-R READER_DELTA v0.3 (expectation display for every $p$), staged in `deltas/thm3_W3-PSHARP-R.md` — **pending W3-PSHARP-R CP3 (target Tue, latest Wed); not in force**
+**Card row** 1.3 · **Section version** 0.3 (2026-11-16) · **Pending delta** W3-PSHARP-R READER_DELTA v0.3 (expectation display for every $p$), staged in `deltas/thm3_W3-PSHARP-R.md` — **pending W3-PSHARP-R CP3 (target Tue, latest Wed); not in force**
 
 
 ### Reader statement
@@ -297,7 +304,8 @@ factor $\sqrt{\log n}$ is attained. On the two witness sequences that also satis
 fully orthogonal designs with $p=\min(n-1,\lfloor n^a\rfloor)$, and raw designs with i.i.d. $N(0,1)$ entries and
 $p=\lfloor n^a\rfloor$, both with fixed nonzero coefficients — the rate $\sqrt{\log n/n}$ is exact (conditional on
 Theorems 1 and 2) [S1-F6]. On a general design only the order $n^{-1/2}$ of part (a) is proved as a lower bound; a
-matching $\sqrt{\log n/n}$ lower bound on every design is open (post-freeze rider POST2-R1) [H5-6].
+matching lower bound $E[1-\pi(S_0\mid y)]\gtrsim\sqrt{\log n/n}$ in expectation, under a floor on $S_0\cup\{j\}$, is open
+(post-freeze rider POST2-R1) [H5-6, S3-N4].
 
 ### Why each assumption
 (a) has none: it is a deterministic property of the prior and the Occam factor (each of the $p-s_0$ one-variable
@@ -322,13 +330,16 @@ None. Note for the text: the expectation form of (b) for every $p$ (sharp2 rider
 #### Update log (thm3)
 - v0.1 2026-11-15: first version (CP1).
 - v0.2 2026-11-15: S1 fixes [S1-F5] domain on remarks; [S1-F6] named witnesses (EQUAL).
+- v0.3 2026-11-16: [H5-6, S3-N4] scope sentence: on a general design only order $n^{-1/2}$; the open item is the
+  expectation lower bound under a floor on $S_0\cup\{j\}$ (EQUAL: a non-claim, S3); header points to the staged,
+  not-in-force W3-PSHARP-R delta.
 <!-- ROW thm3 END -->
 
 ---
 
 ## 4. Theorem 4 — Omitted variables (misspecification)
 <!-- ROW thm4 BEGIN -->
-**Card row** 1.4 · **Section version** 0.2 (2026-11-15) · **Pending delta** MISR Cor-G(a)/Cor-H (rider T13, via Theory Dept)
+**Card row** 1.4 · **Section version** 0.3 (2026-11-16) · **Pending delta** MISR Cor-G(a)/Cor-H (rider T13, via Theory Dept)
 
 
 ### Reader statement
@@ -478,7 +489,7 @@ abstract.
 
 ## 6. Theorem 6 — The reported model equals the truth (random Gaussian design; main theorem)
 <!-- ROW thm6 BEGIN -->
-**Card row** 3.1 · **Section version** 0.2 (2026-11-15) · **Pending delta** —
+**Card row** 3.1 · **Section version** 0.4 (2026-11-16) · **Pending delta** —
 
 
 ### Reader statement
@@ -586,15 +597,16 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 - v0.3 2026-11-16: [R3] (S4) completed from the delivery premise table (EX-S, stop/return rule, stop-only guard, e4 tie
   rule; STRONGER convention list, now faithful); F-UNI qualifications quoted; [H5-2] delivery clause out of the
   abstract until F-UNI's correctness gate is resolved.
-- v0.4 2026-11-16: [S2-F1] (S4) carries MACH, CONFIG, TDP-IMPL and the amended allocation by exact source reference
-  (STRONGER convention list, now faithful).
+- v0.4 2026-11-16: [S2-F1] (S4) carries MACH, CONFIG, TDP-IMPL and the amended allocation by exact source reference.
+  Tag (S3): **WEAKER** for the "always produces output" clause — restores the master's own premises
+  (`C-DLV/STATEMENT.md:28-46`, `FINAL/sections/s6_delivery.tex:29-35`); common-data-event clause EQUAL.
 <!-- ROW thm6 END -->
 
 ---
 
 ## 7. Theorem 7 — The reported model equals the truth (fixed design)
 <!-- ROW thm7 BEGIN -->
-**Card row** 3.2 · **Section version** 0.2 (2026-11-15) · **Pending delta** RM2-F (rider T4, via Theory Dept)
+**Card row** 3.2 · **Section version** 0.4 (2026-11-16) · **Pending delta** RM2-F (rider T4, via Theory Dept)
 
 
 ### Reader statement (two sufficient versions)
@@ -665,7 +677,8 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
 - v0.2 2026-11-15: S1 fixes [S1-F2] delivery under (S4) (WEAKER unconditional clause).
 - v0.3 2026-11-16: [R3] non-constant raw columns stated (input validity of the delivery result); $N_l$, $L_n$ deterministic
   (as the master's (W-loc)); (S4) completed (STRONGER, now faithful).
-- v0.4 2026-11-16: [S2-F1] as Theorem 6 (S4).
+- v0.4 2026-11-16: [S2-F1] as Theorem 6 (S4). Tag (S3): **WEAKER** for the delivery clause (restores the master's
+  premises); statistical clauses EQUAL.
 <!-- ROW thm7 END -->
 
 ---
@@ -743,7 +756,7 @@ writes $r$); (2) the assumption summary says **"no beta-min and no fixed lower b
 
 ## 10. Theorem 10 — The printed outputs are consistent (card row 3.6; row 3.5 as a remark)
 <!-- ROW thm10 BEGIN -->
-**Card row** 3.6 (and 3.5) · **Section version** 0.3 (2026-11-16) · **Pending delta** post-freeze rider SAMP-R1
+**Card row** 3.6 (and 3.5) · **Section version** 0.6 (2026-11-16) · **Pending delta** post-freeze rider SAMP-R1
 
 ### Reader statement
 **Theorem 10.** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m_n,\Sigma_n)$ with $\Sigma_n$ a correlation matrix, and
@@ -754,7 +767,7 @@ $y^{\mathrm r}=\alpha\mathbf 1+X\theta^*+\varepsilon$ with a deterministic $\the
 - **(A4) Visibility** and **(A5) no leakage**: (A4) and (A5) of Theorem 5.
 
 This theorem concerns the sampler branch of the method (the model space is too large to enumerate; the exact branch is
-the remark below) [S2-F3]. Let $\mathcal A$ be the event that the method takes the sampler branch and its calibration
+the scope note below) [S2-F3]. Let $\mathcal A$ be the event that the method takes the sampler branch and its calibration
 succeeds (fallback ladder included); every completed sampler run lies in $\mathcal A$. On $\mathcal A$ let $\hat Z$,
 $\widehat{\mathrm{PIP}}$, $\widehat{\mathrm{MPM}}$ denote the evidence estimate, pooled PIPs and their MPM computed from the
 four islands' uninterrupted records (equal-weight pooling, `NOTATION.md` §5); on completed runs they are exactly the
@@ -771,8 +784,7 @@ and the same rate holds for the printed fields multiplied by the indicator of a 
 normalising constant. No lower bound on $P(\mathcal A)$ is asserted: the statements are about intersections with
 $\mathcal A$ or with completion, not conditional on them.
 
-*Remark (exact branch).* When the model space is small enough, the method enumerates it and returns the exact
-posterior, its exact evidence and exact PIPs; their consistency is then Theorem 2 itself (no sampler statement needed).
+*Scope.* The exact-enumeration branch (small model spaces) is not covered by this theorem [S3-N3].
 
 *Remark (row 3.5: the pooled evidence is unbiased).* Given the calibration, on $\mathcal A$, $E[\hat Z\mid\text{calibration}]=Z$
 for every design and data set; no statistical condition is needed (claim `W3-READER:PoolZ`, `STATEMENT.md`, from the
@@ -781,8 +793,8 @@ per-island identity of the unbiasedness theorem by linearity).
 ### Why each assumption
 - (A2)–(A3) give posterior concentration (Theorem 2) and the start's small-set floor.
 - (A4)–(A5) make the start law concentrate on $S_0$ as $n\to\infty$ (Theorem 5): asymptotically the sampler then has
-  vanishing mass to transport and $\hat Z/Z\to1$, independently of the ladder length. (At moderate $n$ both $\pi_0$ and $\pi$
-  are mixtures over $S_0$ and its many one-variable supersets; Theorem 1, remark (vii).) [ENG-D17]
+  vanishing mass to transport and $\hat Z/Z\to1$, independently of the ladder length. (At moderate $n$ the posterior $\pi$
+  is a mixture over $S_0$ and its many one-variable supersets; Theorem 1, remark (vii).) [ENG-D17, S3-N9]
   This is the regime of the result; an alternative route with no condition on $\hat Z$ (a global-overlap condition)
   exists for the PIPs, MPM and HPM (remark).
 - (S5) idealises the random numbers and the coded kernels; they are not statistical assumptions.
@@ -811,9 +823,13 @@ slower than the posterior rate $\sqrt{\log n/n}$ by a factor $e^{C\sqrt{\log n}}
 #### Update log (thm10)
 - v0.3 2026-11-16: first version (manager's CP1 decision 4; bridge leg).
 - v0.4 2026-11-16: [ENG-D17] "why" line reworded: concentration is asymptotic; moderate-$n$ mixture noted (EQUAL).
-- v0.5 2026-11-16: [S2-F2] (S5) carries the full sampler contract (STRONGER convention list, now faithful); [S2-F3]
-  sampler-branch scope, potential estimates on $\mathcal A$, printed fields on completion, exact-branch remark (WEAKER
-  literal scope, now faithful).
+- v0.5 2026-11-16: [S2-F2] (S5) carries the full sampler contract; [S2-F3] sampler-branch scope, potential estimates on
+  $\mathcal A$, printed fields on completion. Tags (S3): **WEAKER** (restores `W1-N1/STATEMENT.md:73-86`,
+  `W3-SAMP/STATEMENT.md:29-41, 64-70, 90-95, 186`).
+- v0.6 2026-11-16: [S3-N1] (S5) restores "independent of the data" for the final-run streams (`W3-SAMP/STATEMENT.md:39-41`;
+  undoes v0.5's accidental STRONGER part); [S3-N3] the exact-branch remark (a new claim, STRONGER) is withdrawn and
+  replaced by a scope note "not covered"; [S3-N9] moderate-$n$ note about $\pi$ only; [S3-N8] START and KERNEL
+  statuses quoted separately. Net tag vs S2-frozen: **WEAKER** (master premises restored).
 <!-- ROW thm10 END -->
 
 ---
