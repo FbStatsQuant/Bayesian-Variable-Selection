@@ -516,3 +516,10 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
     Sol (or Astra) verdict on the same manifest;
   - interim label on A1 and SCR-G: "council C1 on v3.3 text; post-C1 narrowing re-verified by Sol; second round pending";
   - fallback: row 3.7 in the abstract with the label stated, or in the body.
+- (overnight) ~01:50 CT 11-16, p = 1M re-size (H-9):
+  - lever batch 2748756 (48.3 core-h): G-invariance PASS; best configuration G = 256 socket-local, ≈ 1.44× plan per pair;
+    products no longer the bottleneck; memory 40 GB per island task.
+  - **Approved: 1M config G = 256 socket-local; L4 alternative = keep a reduced 1M self-check (N = 5,000) + drop AR-weak at
+    1M; envelope re-sized to ≈ 28.3k core-h (+15.2%).** Rule: quantity before precision (the self-check is part of
+    "validated").
+  - L5 savings buy AR-weak back first. M risk (×1.2–1.35) priced after T5; above ≈ 30k comes back before any 10⁵ release.
