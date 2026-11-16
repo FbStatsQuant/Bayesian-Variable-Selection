@@ -40,4 +40,4 @@ W3-DIST runs its own gates in its chain (TARGET.md). The rider tickets' new rows
 - Rows where a gate cannot pass go to the manager at once: that is a sub-par signal touching a headline candidate.
 
 ## Budget
-~6–8 Opus hours; up to 2 helpers (Claude Third, Opus/Sonnet 5.5, effort high); fresh Opus reviewers as above.
+~6–8 Opus hours; up to 2 helpers (Claude Third, Opus/Sonnet 5.5, effort high). better-gate reviews come from the API batch only.
