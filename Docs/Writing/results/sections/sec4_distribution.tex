@@ -1,0 +1,253 @@
+% =====================================================================================================
+\section{The posterior is right about the distribution}\label{sec:distribution}
+
+Selecting the right model is one goal; predicting well is another. This section shows that the posterior recovers the
+conditional law of the response given the predictors, at the rate $\rn$, in the distance used by \citet{SongLiang2015},
+with no beta-min condition and no fixed lower bound on eigenvalues. The same holds for the part of the posterior that a
+completed run returns.
+
+\subsection{Setting for this section}\label{sec:dist-setting}
+
+This section has its own setting, closer to that of \citet{SongLiang2015}: the observations are i.i.d.\ pairs, and the
+number of observed predictors $\praw$ is used directly.
+
+The data are $n$ independent copies $(x_i,y_i)$, $i=1,\dots,n$, of a pair $(x,y)$: $x\in\R^{\praw}$ is the vector of all
+observed predictors (a row of the raw design) and $y\in\R$ is the response. We write $\Dn$ for the data set. The number
+$\praw$ may grow with $n$ and may be much larger than $n$, and the law of $(x,y)$ may change with $n$. As everywhere,
+the method runs on the $p\le\praw$ predictors that are not constant in the sample, with the prior of
+Section~\ref{sec:prior}. We write $\Pi(\cdot\mid\Dn)$ for the resulting exact posterior of $(S,\beta,\sigma^2)$, mapped
+back to the original units: $S$ is the set of included predictors, $\beta\in\R^{\praw}$ is the coefficient vector (zero
+outside $S$ and on removed predictors), and $\sigma^2$ is the noise variance. If fewer than two predictors remain, or the
+response is constant in the sample, the posterior is not defined; under the assumptions below such data sets have
+probability smaller than the exceptional probabilities in the theorems and are counted in them, and $p=\praw$ outside
+them.
+
+\paragraph{What is estimated.} A posterior draw $(S,\beta,\sigma^2)$ defines a conditional law of $y$ given $x$,
+\[
+  \Normal\big(\bar y+(x-\bar x)^\top\beta,\ \sigma^2\big),
+\]
+with the sample-mean intercept ($\bar y$ and $\bar x$ are sample means). The law of $x$ is \emph{not} estimated. Let $f$
+be the joint density of $(x,y)$ in which $x$ has its true law and $y$ given $x$ has the law above, and let $f^*$ be the
+true joint density. For two laws $P$ and $Q$, $H^2(P,Q):=1-\int\sqrt{dP\,dQ}$ is the squared Hellinger distance, and for
+two densities $d_H(f,g):=(1-\int\sqrt{fg})^{1/2}$. Because $f$ and $f^*$ share the law of $x$,
+\begin{equation}\label{eq:dH}
+  d_H^2(f,f^*)=\E_x\Big[H^2\Big(\Normal\big(\bar y+(x-\bar x)^\top\beta,\sigma^2\big),\
+  \Normal\big(\alpha^*+x^\top\bstar,\sigs^2\big)\Big)\Big]:
+\end{equation}
+the squared Hellinger distance between the fitted and the true conditional laws of $y$ given $x$, averaged over a new $x$
+independent of the data. This is the distance of \citet[Theorems~1--2]{SongLiang2015}, who use
+$\int(\sqrt f-\sqrt{f^*})^2=2d_H^2$.
+
+\paragraph{Further notation.} $\P^*$ is the law of the data. For the predictors, $\sd$, $\Var$ and $\Corr$ are population
+standard deviations, variances and correlation matrices; $\zeta_j:=(x_j-\E x_j)/\sd(x_j)$ is the $j$-th predictor
+standardised in the population, and $\zeta:=(\zeta_1,\dots,\zeta_{\praw})$; $x_T$ is the sub-vector of $x$ indexed by a
+set $T$.
+
+\paragraph{Constants, level and window.} $s\ge0$ is an integer and $A\ge1$, $L\ge1$, $c_\psi>0$, $\bar b>0$ are fixed
+constants. The reader fixes a \emph{level} $M\ge1$: a larger $M$ gives a larger ball and a smaller exceptional
+probability. The \emph{window} is
+\[
+  q_n:=\min\big\{\praw,\ \lceil C_qM\log n\rceil\big\},\qquad C_q:=2\big(s(A+2)+4\big)/\log2,
+\]
+the largest number of predictors that the conditions below constrain jointly; it is of order $\log n$ for a fixed level.
+
+\subsection{The posterior contracts around the true conditional law}\label{sec:dist-results}
+
+\inwords{Suppose the observations are i.i.d., the response follows a sparse Gaussian linear model, the predictors have
+light tails, no small group of predictors is almost exactly collinear, and no single predictor carries an unbounded
+signal. Then, except on a set of data sets of probability at most $n^{-cM}$, the posterior gives probability at most
+$n^{-cM}$ to draws whose conditional law of $y$ given $x$ is farther than $\sqrt{M\log n/n}$ from the true one. That is,
+the posterior contracts around the true conditional law at the rate $\rn$.}
+
+\begin{localassumption}[Distribution-level setting]\label{asm:dist}
+\begin{asmitems}
+  \item\label{asm:dist-model} \emph{Gaussian linear model for i.i.d.\ pairs.} $y=\alpha^*+x^\top\bstar+\varepsilon$ with
+    $\varepsilon\sim\Normal(0,\sigs^2)$, $\sigs^2>0$, independent of $x$. The numbers $\alpha^*$, $\bstar$, $\sigs$ and the
+    law of $x$ may depend on $n$.
+  \item\label{asm:dist-sparse} \emph{Sparsity and dimension.} At most $s$ coordinates of $\bstar$ are nonzero, and
+    $2\le\praw\le n^A$.
+  \item\label{asm:dist-subg} \emph{Sub-Gaussian predictors on sparse directions.} Every predictor has positive variance,
+    and for every $u\in\R^{\praw}$ with at most $q_n$ nonzero entries and every $\lambda\in\R$,
+    $\E\exp(\lambda u^\top\zeta)\le\exp\big(L^2\lambda^2\Var(u^\top\zeta)/2\big)$.
+  \item\label{asm:dist-nec} \emph{No near-exact collinearity.} $\lmin(\Corr(x_T))\ge c_\psi/n$ for every set $T$ of at
+    most $q_n$ predictors.
+  \item\label{asm:dist-bs} \emph{Bounded signal.} $\abs{\beta^*_j}\sd(x_j)\le\bar b\,\sigs$ for every $j$.
+\end{asmitems}
+\rulesout{(a) non-Gaussian or heteroscedastic noise and dependent observations; (b) dense coefficient vectors and more
+than polynomially many predictors; (c) heavy-tailed predictors; (d) groups of $O(\log n)$ predictors that are collinear up
+to $1-c_\psi/n$, while predictors may otherwise be very strongly correlated; (e) a single predictor whose signal is
+unboundedly large compared with the noise, and huge coefficients that cancel.}
+\end{localassumption}
+
+No lower bound on the nonzero coefficients (no beta-min condition) and no fixed lower bound on eigenvalues is assumed.
+
+\begin{theorem}[Distribution-level consistency]\label{thm:dist}
+There are constants $c>0$, $C_2$, $M_0$ and $n_0$, depending only on $(s,A,L,c_\psi,\bar b)$, such that the following
+holds. Fix a level $M\ge M_0$ and assume Assumption~\ref{asm:dist}, with the window $q_n$ of this $M$. Then for every
+$n\ge n_0$ with $\sqrt n/\log n\ge M$,
+\begin{equation}\label{eq:dist-i}
+  \P^*\Big[\,\Pi\Big(d_H(f,f^*)>\sqrt{M\log n/n}\ \Big|\ \Dn\Big)>n^{-cM}\Big]\ \le\ n^{-cM}.
+\end{equation}
+\end{theorem}
+
+\status{\textbf{Proved and independently checked}. Verbatim: Appendix~\ref{app:status}, row 2.1.}
+
+\begin{remark}[Further consequences]\label{rem:dist}
+(i) \emph{Level-$M$ form.} The same constants serve every level $M$ with $M_0\le M\le\sqrt n/\log n$, which may depend on
+$n$: whenever $n\ge n_0$ and Assumption~\ref{asm:dist} holds with the window $q_n$ of this $M$, \eqref{eq:dist-i} holds,
+and also
+\begin{equation}\label{eq:dist-ii}
+  \P^*\Big[\,\Pi\big(\abs{S}>s+C_2M\ \big|\ \Dn\big)>n^{-cM}\Big]\ \le\ n^{-cM}.
+\end{equation}
+The two exceptional sets of data sets can be taken to be the same set, and the bounds are uniform over all laws of the
+data that satisfy Assumption~\ref{asm:dist} with the given constants. Display~\eqref{eq:dist-ii} bounds the number of
+selected predictors; it does not say that they are the true ones.
+(ii) \emph{Without the collinearity condition.} If
+Assumption~\ref{asm:dist}\ref{asm:dist-nec} is dropped and~\ref{asm:dist}\ref{asm:dist-subg} is required only for single predictors ($u$
+with one nonzero entry), then
+\begin{equation}\label{eq:dist-iii}
+  \P^*\Big[\,\Pi\Big(d_H(f,f^*)>\sqrt{M\log n\cdot\log(\praw\vee n)/n}\ \Big|\ \Dn\Big)>n^{-cM}\Big]\ \le\ n^{-cM},
+\end{equation}
+and~\eqref{eq:dist-ii} holds with $s+C_2M\log n$ in place of $s+C_2M$.
+(iii) \emph{Examples.} Jointly Gaussian predictors satisfy~\ref{asm:dist}\ref{asm:dist-subg} with $L=1$; independent predictors satisfy
+it when each does with a common constant $L$. Assumption~\ref{asm:dist}\ref{asm:dist-nec} holds for all large $n$ whenever every
+$q_n\times q_n$ principal block of the correlation matrix has smallest eigenvalue at least a fixed $\psi>0$; for instance,
+correlation $\rho^{\abs{j-k}}$ with $\abs{\rho}<1$, or equal correlation $\rho\in[0,1)$.
+\end{remark}
+
+\status{Remark~\ref{rem:dist}(i)--(ii): \textbf{proved and independently checked} (same result as
+Theorem~\ref{thm:dist}).}
+
+\begin{remark}[On the assumptions]\label{rem:dist-asm}
+(i) Assumption~\ref{asm:dist}\ref{asm:dist-subg} is used only to make the sample variances and covariances of small groups of
+predictors track their population values with probability $1-n^{-cM}$; the passage from the sample to the population
+distance uses no tail condition.
+(ii) Assumption~\ref{asm:dist}\ref{asm:dist-nec} keeps in force the prior's penalty for each extra predictor (a factor of order
+$n^{-1/2}$); this gives the rate $\rn$, the level $n^{-cM}$ and the bounded model size. Whether it is needed for the rate
+$\rn$ is open.
+(iii) Assumption~\ref{asm:dist}\ref{asm:dist-bs} bounds the signal in units of the noise. The noise level $\sigs$ is free because
+rescaling the response leaves the posterior over models unchanged and rescales the posterior of $(\beta,\sigma^2)$.
+\end{remark}
+
+\subsection{The parametric rate, and the output of a run}\label{sec:dist-param}
+
+The logarithm in the rate disappears when the true predictors are detectable.
+
+\inwords{If, in addition, small groups of predictors have a fixed eigenvalue floor and every true signal is above the
+detection scale $\rn$, the posterior contracts at the parametric rate $1/\sqrt n$, up to any factor that tends to
+infinity.}
+
+\begin{localassumption}[Detectable signal]\label{asm:dist-det}
+(a) $\lmin(\Corr(x_T))\ge\psi$ for a fixed $\psi>0$ and every set $T$ of at most $(2A+3)s+2$ predictors; and (b)
+$\min\{\abs{\beta^*_j}\sd(x_j)/\sigs:\beta^*_j\neq0\}\ge b_n$, where $b_n>0$ and $b_n^2n/\log n\to\infty$.
+\rulesout{collinearity among small sets of predictors, and true signals below the detection scale $\rn$.}
+\end{localassumption}
+
+\begin{theorem}[Parametric rate when the true predictors are detectable]\label{thm:dist-param}
+Assume Assumption~\ref{asm:dist} with the window $q_n$ of $M=1$, with exactly $s\ge1$ nonzero coordinates of $\bstar$,
+and Assumption~\ref{asm:dist-det}. Then for every sequence $M_n\to\infty$,
+\[
+  \Pi\big(d_H(f,f^*)>M_n/\sqrt n\ \big|\ \Dn\big)\to0\quad\text{in $\P^*$-probability.}
+\]
+\end{theorem}
+
+\status{\textbf{Proved and checked, conditional on} Theorem~\ref{thm:post-fixed} (in-probability form), which is itself
+proved and independently checked. Verbatim: Appendix~\ref{app:status}, row 2.1.}
+
+\paragraph{What a completed run returns.} The method explores the models with a sequential Monte Carlo sampler; it does
+not compute the full posterior. (Small problems that it solves by exact enumeration are not covered here.) Runs that stop
+early are not covered either. The output of a completed run contains a list $\mathcal T$ of at most $40p+1$ distinct
+models: the best-scoring models among those offered to the final run of the sampler (the models scored in that run,
+together with models scored earlier and carried into it, namely the precomputed tables for the blocks and the models kept
+from the calibration). Each model in the list comes with the logarithm of its unnormalised posterior weight. The output
+contains no draws of $(\beta,\sigma^2)$. Let $\pi(\mathcal T)$ be the posterior probability of the list, and let
+$\hat\Pi$ (not computed by the method) be the posterior restricted to the list: the models in $\mathcal T$, weighted in
+proportion to the exponentials of their returned log-weights, each with its exact conditional posterior of
+$(\beta,\sigma^2)$.
+
+\inwords{If a completed run's list carries a non-negligible share of the posterior, the posterior restricted to that list
+is as good as the full posterior: it, too, puts almost no mass outside the ball of radius $\sqrt{M\log n/n}$.}
+
+\begin{corollary}[The output of the sampler]\label{cor:dist-output}
+Assume the conditions of Remark~\ref{rem:dist}(i), and that the returned log-weights are computed in exact arithmetic.
+With $\P^*$-probability at least $1-n^{-cM}$ over the data, every completed run, whatever its random numbers, with
+$\pi(\mathcal T)\ge n^{-cM/2}$ satisfies
+\[
+  \hat\Pi\Big(d_H(f,f^*)>\sqrt{M\log n/n}\Big)\ \le\ n^{-cM/2}.
+\]
+If a completed run scored the true model $\{j:\beta^*_j\neq0\}$ and the posterior probability of that model exceeds
+$\tfrac12$, then the list contains it, it is the model the method reports as most probable, and $\pi(\mathcal T)>\tfrac12$.
+\end{corollary}
+
+\status{\textbf{Proved and checked, under exact arithmetic}. The description of the output was checked against the code
+by independent reviewers. Verbatim: Appendix~\ref{app:status}, row 2.1.}
+
+\begin{remark}[What is not claimed]\label{rem:dist-output}
+(i) Whether the list carries enough posterior probability is a property of the run: Corollary~\ref{cor:dist-output} does
+not assert it, and the output does not certify it.
+(ii) Theorem~\ref{thm:dist} and Corollary~\ref{cor:dist-output} concern the exact posterior and need no further input;
+Theorem~\ref{thm:dist-param} also uses the posterior concentration theorem (Theorem~\ref{thm:post-fixed}). Statements that
+a completed run has in fact found and kept the true model rest, in addition, on the sampler results of
+Section~\ref{sec:delivery} and on exact arithmetic.
+(iii) Statement~\eqref{eq:dist-ii} bounds the size of the selected models, not their identity.
+\end{remark}
+
+\subsection{Fixed designs and the in-sample distance}\label{sec:dist-fixed}
+
+For a fixed design, a weaker statement holds in the in-sample distance, which Theorem~\ref{thm:dist} does not cover.
+
+\begin{remark}[Fixed designs]\label{rem:dist-fixed}
+Let the design be fixed, and let $\bar h_n$ be the in-sample average Hellinger distance between the fitted and the true
+laws of one observation, on the centred scale. Assume \as{GL}, $\sz\ge1$ fixed and $2\le p\le n^A$, the energy bound
+$\norm{\mu}^2\le nM_\mu$, and the floor $\lmin(\Rhat_{\Sz})\ge\varphi_0^2$ on the true model; conclusions are in
+probability. (a) If also $1-\pis{\Sz}\to0$ in probability, then $\Pi(\bar h_n>M_n/\sqrt n\mid y)\to0$ for every
+$M_n\to\infty$ (distance, rate $M_n/\sqrt n$). (b) Without beta-min, under the superset Occam-sum condition of
+Remark~\ref{rem:post-fixed-asm}(iii) instead, $\Pi(\bar h_n^2>C'_H\log n/n\mid y)\to0$ (squared distance $\log n/n$; distance
+radius $\sqrt{C'_H\log n/n}$).
+\end{remark}
+
+\status{\textbf{Proved and checked} (its inputs, Theorem~\ref{thm:post-fixed} in probability form and the random-design
+transfer lemma, are checked). Verbatim: Appendix~\ref{app:status}, row 2.2.}
+
+\subsection{Comparison with Song and Liang (2015), Theorems 1--2}\label{sec:SL-dist}
+
+Page and equation numbers are those of the published paper \citep{SongLiang2015}.
+
+\paragraph{The analogue is display~\eqref{eq:dist-i}.} Their distance is
+$d(f_1,f_2)=\{\int\!\!\int(f_1^{1/2}-f_2^{1/2})^2\,dx\,dy\}^{1/2}$ between joint densities of $(x,y)$ that share the law of
+$x$ (\S2.1.2, p.~952), so $d^2=2d_H^2$: the same distance. Their display~(15) (Theorem~1, p.~952; Theorem~2 states the
+same form, p.~953) reads $P^*[\pi\{d(f,f^*)>\varepsilon_n\mid D_n\}>\exp(-c_1n\varepsilon_n^2)]<\exp(-c_1n\varepsilon_n^2)$
+(their constant $c_1$); display~\eqref{eq:dist-i} has this form with $n\varepsilon_n^2=M\log n$ (and $d_H$ in place of
+$d$).
+
+\paragraph{Stronger.} (1) The prior is the one the method uses, with no tuning. Their theorems assume independent
+Bernoulli$(r_n/P_n)$ inclusion with a hard cap $\abs{\xi}\le\bar r_n$ on the model size and conditions (9)--(14)
+(pp.~951--953), which the method's beta-binomial prior with cap $\min(p,\lfloor n/2\rfloor)$ does not meet. (2) The radius
+is a constant times $\rn$. At polynomial $p$ their Theorem~2 (p.~953) needs $\bar r_n\log n=o(n\varepsilon_n^2)$ with
+$\bar r_n\ge r_n\to\infty$ (and their (14)), so $n\varepsilon_n^2/\log n\to\infty$; their Corollary~1 (p.~954) gives
+$\varepsilon_n=O\{n^{-(1-\alpha)/2}\log^{k/2}n\}$. In display~\eqref{eq:dist-i} the radius constant does not depend on $s$,
+and the smallest level $M_0$ grows at most linearly in $s$ (in the general form of the theorem, where the in-sample
+signal energy and coefficient cost are bounded by fixed constants; under~\ref{asm:dist}\ref{asm:dist-bs} those bounds themselves grow
+with $s$). (3) Theorem~\ref{thm:dist-param} gives the parametric rate $M_n/\sqrt n$ and Corollary~\ref{cor:dist-output}
+covers the sampler's output; their results concern the exact posterior only and give no parametric rate. (4) No lower
+bound on the growth of $p$ is needed; they assume $P_n\succ n^\theta$ (p.~950).
+
+\paragraph{Weaker.} (1) $\praw\le n^A$; their Corollary~1 allows $P_n<\exp(Cn^\alpha)$. (2) Exact sparsity; their
+Theorem~1 covers approximate sparsity (their (3): $\lim_n\sum_j\abs{\beta^*_j}<\infty$, with predictors bounded by 1), under
+which the number of nonzero coefficients may grow. (3) $s$ is fixed, with constants depending on $s$; their Theorem~2 also
+has a true model of bounded size (their (4), p.~950), so this is weaker only against their Theorem~1. (4)
+Assumption~\ref{asm:dist}\ref{asm:dist-nec} is a condition on the design that their Theorems~1--2 do not have (their eigenvalue
+conditions, (11) and (14), are on the prior covariance).
+
+\paragraph{Not the analogue: display~\eqref{eq:dist-iii}}, the fallback without~\ref{asm:dist}\ref{asm:dist-nec}. Its radius is larger
+by $\sqrt{\log(\praw\vee n)}$, so its exponent is $c\,n\varepsilon_n^2/\log(\praw\vee n)$, not $c\,n\varepsilon_n^2$; and, as
+proved, in the general form of the theorem (in-sample signal energy and coefficient cost bounded by fixed constants), its
+squared radius at the smallest admissible level is at most of order $(1+s)^3\log n\log(\praw\vee n)/n$ for fixed $s$ (an
+upper bound; the proof is not known to be tight in $s$); under~\ref{asm:dist}\ref{asm:dist-bs} those bounds themselves grow with $s$.
+
+\paragraph{Different, not ranked.} Tail conditions on the predictors: \ref{asm:dist}\ref{asm:dist-subg} and~\ref{asm:dist}\ref{asm:dist-bs} here;
+theirs are $\abs{x_i}\le1$ (Theorem~1), Condition~1 (an exponential-moment bound on averages of at most $\bar r_n$
+predictors, Theorem~2, p.~953) and Condition~2 (second moments, for their limit form (16), p.~954).
+
+\paragraph{Overall: incomparable.} Stronger on the prior, the rate and the coded output; weaker on the range of $p$, on
+approximate sparsity and, for display~\eqref{eq:dist-i}, by~\ref{asm:dist}\ref{asm:dist-nec}.

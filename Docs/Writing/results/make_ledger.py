@@ -1,7 +1,7 @@
 """Generate status_ledger.tex (D2 Appendix C) from STATUS_LEDGER.md. Registry strings are kept verbatim (escaped)."""
 import re, sys
 md = open('STATUS_LEDGER.md', encoding='utf-8').read().splitlines()
-rows = [l for l in md if l.startswith('| ') and not l.startswith('| D2 item') and not l.startswith('|---')]
+rows = [l for l in md if l.startswith('| ') and not l.startswith('| Result (reader') and not l.startswith('|---')]
 UNI = {'♯': r'$\sharp$', '′': "$'$", '…': r'\ldots{}', '–': '--', '—': '---', '⇒': r'$\Rightarrow$', '≤': r'$\le$',
        '→': r'$\to$', '⁶': r'$^6$', '⁴': r'$^4$', '⁵': r'$^5$', '≥': r'$\ge$', '“': '``', '”': "''"}
 def esc(t):

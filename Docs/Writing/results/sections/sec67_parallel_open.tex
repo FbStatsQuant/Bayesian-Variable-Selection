@@ -1,0 +1,62 @@
+\section{The parallel method: what is and is not proved}\label{sec:parallel}
+
+The method runs four independent islands and pools them. What is proved about the pooling is short. A parallel engine
+that reproduces the serial output exactly inherits every guarantee above, but that inheritance is not yet written as a
+theorem. Running many islands at very large $p$ raises questions that are open.
+
+\paragraph{Pooling over the four islands (proved).} The pooled inclusion probability is the equal-weight mean of the
+island estimates, so its sup-norm error is at most that of the worst island:
+$\max_j\abs{\PIPhat_j-\PIP_j}\le\max_r\max_j\abs{\PIPhat_{r,j}-\PIP_j}$. The pooled evidence estimate
+$\Zhat=\frac14\sum_r\Zhat_r$ is unbiased given the calibration (Remark~\ref{rem:unbiased}).
+
+\status{Worst-island bound: \textbf{proved and independently checked}. Verbatim: Appendix~\ref{app:status}, row 4.1.}
+
+\paragraph{An output-identical parallel engine (empirical; no theorem).} The current parallel engine reproduces the serial
+engine's output exactly on the tested set: byte-identical output in 24 of 24 production test cases and 10 of 10
+supplementary cases. If an engine's output is identical to the serial method's, every result of
+Sections~\ref{sec:selection}--\ref{sec:delivery} applies to it unchanged; a note stating this inheritance precisely is in
+progress.
+
+\status{\textbf{In progress}: empirical fact and a note in progress; no theorem.}
+
+\paragraph{Many islands and island weighting at very large $p$ (open).} Runs at larger $p$ show that the spread of the
+islands' log-evidence estimates grows with $p$: $0.09$ at $p=2{,}000$, and $0.76$--$1.15$ for $p$ between $5{,}000$ and
+$20{,}000$, where one island held $79\%$ of the evidence weight at $p=5{,}000$. The islands' inclusion probabilities
+nevertheless agree to within $5\times10^{-4}$. This is why the method pools islands with equal weights rather than by
+their evidence estimates. Results for many islands, for weighting islands, and for a fixed number of particles per
+island at $p=10^6$ are open. The planned run at $p=10^6$ uses an engineered variant of the method; it will be reported as
+a variant validated against the method of this paper on shared problem sizes, not as a run covered by the theorems.
+
+\status{\textbf{Open}; no theorem.}
+
+% =====================================================================================================
+\section{Open questions}\label{sec:open}
+
+We list the questions our results leave open, in the order of the sections above. None of them is needed for any
+statement in this paper.
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item \emph{Over-fitted models with no eigenvalue condition.} Find a sufficient condition for the superset Occam-sum
+    condition of Remark~\ref{rem:post-fixed-asm}(iii) that involves no design quantity. Whether that condition holds without
+    any eigenvalue condition is open. A positive answer would remove the vanishing floor \as{NC} from
+    Theorem~\ref{thm:post-margin}, so that it would need no eigenvalue condition away from the true model.
+  \item \emph{The floor on the truth.} Replace the floor $\lmin(\Rhat_{\Sz})\ge\varphi_0^2$ in Assumption~\ref{asm:margin} by a bounded ridge
+    cost; the floor is sufficient and not known to be necessary.
+  \item \emph{The margin constant.} The constant $c_1(\sz,A)$ in Assumption~\ref{asm:margin} is explicit but not optimised.
+  \item \emph{A lower bound on every design.} Prove $\E[1-\pis{\Sz}]\gtrsim\rn$ under a floor on the sets
+    $\Sz\cup\{j\}$, matching Theorem~\ref{thm:post-fixed} on every such design (Remark~\ref{rem:sharp-not}).
+  \item \emph{The $\sqrt{\log n}$ in probability when $\log p=o(\log n)$}, and the matching upper bound in expectation on
+    raw Gaussian designs (Remark~\ref{rem:sharp-not}).
+  \item \emph{Whether Assumption~\ref{asm:dist}\ref{asm:dist-nec} is needed} for the rate $\rn$ in Theorem~\ref{thm:dist}.
+  \item \emph{Leakage sets of size $n^b$ with $b\ge\tfrac12$}, and a reported-model theorem with no condition on the
+    lattice of the leakage set, which would require control of the actual search path
+    (Remark~\ref{rem:reported-fixed}).
+  \item \emph{Raw-scale signals} in Theorems~\ref{thm:start}, \ref{thm:reported-random} and~\ref{thm:outputs}, which
+    are stated with the signal fixed on the standardised scale \as{FSt}.
+  \item \emph{Certified screening with signals that vary with $n$} under a sparse eigenvalue floor, in the plain form of
+    Theorem~\ref{thm:screen}.
+  \item \emph{Sharper rates for the printed outputs} (Theorem~\ref{thm:outputs}).
+  \item \emph{The parallel method}: the inheritance note, and results for many islands and island weighting
+    (Section~\ref{sec:parallel}).
+\end{enumerate}
+

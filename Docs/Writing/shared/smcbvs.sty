@@ -27,18 +27,36 @@
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 
-% Named assumptions: \begin{assumption}{BM}{Beta-min} ... \end{assumption}
-% The label is printed as (BM) and can be cited with \as{BM}; \label is automatic (asm:BM).
+% ---- Global named assumptions (used by two or more theorems) and conventions.
+% Display names are registered once here, so they can be cited before the defining text.
+\newcommand{\defasm}[2]{\expandafter\def\csname asmdisp@#1\endcsname{#2}}
+\newcommand{\asmdisp}[1]{\csname asmdisp@#1\endcsname}
+\defasm{GL}{GL}\defasm{DIM}{DIM}\defasm{GR}{GR}\defasm{SP}{SP}\defasm{BC}{BC}\defasm{BM}{BM}
+\defasm{FSb}{FS$_\beta$}\defasm{FSt}{FS$_\theta$}\defasm{EF}{EF}\defasm{NC}{NC}\defasm{EFS}{EF$_\Sigma$}
+\defasm{V}{V}\defasm{NL}{NL}
+\defasm{C1}{C1}\defasm{C2}{C2}\defasm{C2p}{C2$^+$}\defasm{C3}{C3}
+% \begin{assumption}{key}{Name} ... \end{assumption}: prints "Assumption (DISPLAY) (Name)."
 \newenvironment{assumption}[2]{%
   \par\smallskip\noindent
   \phantomsection\label{asm:#1}%
-  \textbf{Assumption (#1)} \textit{(#2).}\ \ignorespaces}{\par\smallskip}
-\newcommand{\as}[1]{\hyperref[asm:#1]{\textup{(#1)}}}
+  \textbf{Assumption (\asmdisp{#1})} \textit{(#2).}\ \ignorespaces}{\par\smallskip}
+% \begin{convention}{key}{Name}: same layout, "Convention (C1)".
+\newenvironment{convention}[2]{%
+  \par\smallskip\noindent
+  \phantomsection\label{asm:#1}%
+  \textbf{Convention (\asmdisp{#1})} \textit{(#2).}\ \ignorespaces}{\par\smallskip}
+\newcommand{\as}[1]{\hyperref[asm:#1]{\textup{(\asmdisp{#1})}}}
+% Local assumptions of one theorem: numbered with the theorem counter, items (a), (b), ...
+% cite as Assumption~\ref{asm:start}(b).
+\theoremstyle{definition}
+\newtheorem{localassumption}[theorem]{Assumption}
+\newenvironment{asmitems}{\begin{enumerate}[label=(\alph*),ref=(\alph*),leftmargin=2em,itemsep=2pt]}{\end{enumerate}}
+
 % "What it rules out" line, inside an assumption.
-\newcommand{\rulesout}[1]{\par\noindent\hspace*{1.5em}{\small\textit{What it rules out:} #1}}
+\newcommand{\rulesout}[1]{\par\noindent\hspace*{1.5em}\textit{Rules out:} #1}
 
 % In-words paragraph before a formal statement.
-\newcommand{\inwords}[1]{\par\medskip\noindent\textit{In words.} #1\par}
+\newcommand{\inwords}[1]{\par\medskip\noindent\textit{In words.} #1\par\smallskip}
 
 % Status note (outside the theorem environment).
 \newcommand{\status}[1]{\ifshowstatus\par\noindent
@@ -83,8 +101,11 @@
 \newcommand{\sz}{s_0}
 \newcommand{\Rhat}{\hat R}
 \newcommand{\Sig}{\Sigma_n}
-\newcommand{\rate}{r_n}                    % reference rate sqrt(log n / n)
-\newcommand{\rn}{\sqrt{\log n/n}}
+\newcommand{\rn}{\sqrt{\log n/n}}           % the rate, written out
+\newcommand{\SSq}{\mathrm{SS}}             % shrunken sum of squares SS_S
+\newcommand{\Hl}{\mathcal H}                % locality sets H_l
+\newcommand{\Dn}{\mathcal D_n}              % data set (distribution section)
+\newcommand{\tlow}{\underline\theta}        % screening signal floor
 
 % ---------------------------------------------------------------- prior and posterior
 \newcommand{\Om}{\Omega}
@@ -93,7 +114,6 @@
 \newcommand{\PIP}{\mathrm{PIP}}
 \newcommand{\HPM}{\mathrm{HPM}}
 \newcommand{\MPM}{\mathrm{MPM}}
-\newcommand{\miss}{\delta_n}               % posterior miss 1 - pi(S0|y)
 
 % ---------------------------------------------------------------- the method
 \newcommand{\tSz}{\tilde S_0}              % start mode
