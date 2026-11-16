@@ -95,3 +95,4 @@
 - 21:12 — PSHARP-R: lemmas written (A2C restatement-level), L02 Sol running, citecheck 0 MISS, REPORT staged ingest 2 claims/0 problems; A5-accepted ERROR: parents W3-PSHARP:A/B/S accept records stale → recorder task J (diagnose + stage re-record; check other recorded tickets). READER_DELTA v0.3 → READER.
 - 21:26 — owner rule (POLICIES §10): threads/agents only on Owls or the desktop. Department complies: all leads, children and helpers run on Owls (environment b18966a3; leads' delegate_task children inherit it). No relay needed.
 - 21:34 — recorder: E/F/D real runs on main (68d48f4, 70644a2+cec478b, 8efc627); HQ told.
+- 21:35 — HQ (overnight): J before F-UNI gate and CI venv; H + C together (H first if needed). Owner away until morning; HQ decides; escalate only what can't wait. Recorder re-ordered: J → H+C → F-UNI gate → venv → I.
