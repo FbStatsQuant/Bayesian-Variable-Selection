@@ -600,3 +600,7 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Sharpness list: item 8 (log p form with an A-free constant) and item 9 (the true s₀-dependence).
   - Recording waits for the Sol check, H5 card 13 (row 2.1) and the task T interplay.
 - Also on main: task R 8875eeba; row 3.7 interim-label removal d2b600ba; READER swaps thm3 f12828fd, thm4 45a18748, thm8 30991734. Cor-H correction 213e2115; MISR-R recorded 2b54cb3c.
+- 2026-11-16 ~05:40 CT. H-10 (1M): L5 measured, with bit identity PASS. Late rounds 1.44× → 1.23× of plan; re-size A+D+contingency ≈ 26.1k core-h.
+  - AR-weak at 1M bought back conditionally (≈ 27.6k against the 28.3k envelope). Those are the last-released cells, run only after T5 prices M and the total stays ≤ 28.3k; otherwise they drop automatically.
+  - The m3 fix (≈ 223 ns) gets a re-size when it lands.
+- DIST-2 rate sentence (RT1 Sol): LOOSE, in span. Erratum in the editorial batch, no correction. Item 9: proof gives ε_n² ≲ (1+s₀)³ log n·ℓ_n/n, against Song–Liang's linear s; for the sharpness review.
