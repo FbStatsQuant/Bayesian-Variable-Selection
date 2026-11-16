@@ -139,6 +139,7 @@ struct DistOpts {
   int tail_r = 1000;           // stratified tail importance sample per row block, in tail_groups independent groups
   int tail_groups = 8;         // 8 groups (7 df) for the tail SE (review R-1)
   int block_rows = 500;        // rows per block; the tail sample is refreshed per block
+  int x_row0 = 0;              // first row of the predictive integrals (tests: disjoint row sets); test rows follow them
   std::vector<double> eps_c = {0.5, 1, 2, 4, 8};
 };
 
