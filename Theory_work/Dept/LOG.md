@@ -161,3 +161,4 @@
 - 02:20 — HQ GO for task N real run (SL0 record + drop SL0 from conditional statuses; gates a–d); recorder told.
 - 02:42 — task N dry run: all gates pass except literal (a) on 10 HQ-file rows (pre-existing A4, no regression) → HQ asked to accept 'no regression + checkpoint rows clean'; Cont-F/R edge fix now on RM2-R CP3 path (Cont-plus 7 ERR) → HQ asked to move it right after N.
 - 02:42 — HQ GO 1 (task N real) + GO 2 (Cont-F/R edge fix next) relayed (D58).
+- 02:45 — task N real run main 33e1f0f5: SL0 PROVED-CHECKED; SL0 dropped from 16 statuses (W2-APP CP5, RM2 CP6, HQ file); 27 re-recorded; 469/0; rows 1.2/3.1/3.6 rest on T03♯ only. READER told. Cont-F/R edge fix re-gating (pre-N dry run: RM2-R staged ingest 8/8 PASS; UNI-0 cleared).
