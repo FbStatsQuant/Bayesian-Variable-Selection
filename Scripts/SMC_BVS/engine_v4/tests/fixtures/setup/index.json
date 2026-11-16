@@ -1,0 +1,39 @@
+{
+  "cases": [
+    {
+      "name": "ar2k",
+      "n": 200,
+      "p": 2000,
+      "B": 14,
+      "J": 201,
+      "draws": 2000,
+      "draw_seed": 4242,
+      "draw_stream": 200,
+      "logm_tab": false
+    },
+    {
+      "name": "blk400",
+      "n": 120,
+      "p": 400,
+      "B": 10,
+      "J": 53,
+      "draws": 2000,
+      "draw_seed": 4242,
+      "draw_stream": 200,
+      "logm_tab": true
+    },
+    {
+      "name": "adj500",
+      "n": 200,
+      "p": 500,
+      "B": 14,
+      "J": 50,
+      "draws": 2000,
+      "draw_seed": 4242,
+      "draw_stream": 200,
+      "logm_tab": true
+    }
+  ],
+  "source": "core v3_setup + v3_start_draw (revision D)",
+  "note": "indices are internal 0-based; blocks in packing order; log_r by block then code"
+}
