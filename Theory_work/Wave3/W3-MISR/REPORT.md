@@ -73,7 +73,7 @@ over the class 𝒦⁰′_n it uses) — covered by council R2.
   almost-sure statement). Remaining: Gaussian contrast direction law; fixed s; p ≤ n^A (inherited).
 - **Sharpness record** (`ASSUMPTION_MAP.md`): fixed variance — removed; GR^c — weakened to the direction law (R′(c));
   non-scalar residual laws — excluded for the same mean-only target by C-MIS E2 and N3 (scalar covariance itself not necessary under (PR)); margin — the relative form is the right one (N2),
-  constant c₁ an artefact; (E^σ) — cannot be dropped (BT1 obstruction, N5), weakenable (N4); (F₀), (OS), fixed s,
+  constant c₁ an artefact; (E^σ) — evidence that it cannot simply be dropped (BT1 obstruction, N5: finite-sample N5 observations with an analytic sketch, not a checked asymptotic proof), weakenable (N4); (F₀), (OS), fixed s,
   p ≤ n^A — inherited from W3-POST2.
 - **Open / could be strengthened** (each with a disposition in `reviews/BT1_disposition.md`): BT1-A2 Corollary H in
   expectation with posterior-tail rates (upstream, W3-POST2:D); BT1-B1 the empty projection s = 0 at growing p (new
