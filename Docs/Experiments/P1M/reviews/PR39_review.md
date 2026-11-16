@@ -1,18 +1,24 @@
 # PR #39 review — WP3 calibration roles (PILOT / DIAG), CalibIslandRunner, `smcbvs4 calibrate` plugged in, re-check m1 / m2
 
-Reviewer: independent (Opus 5.5, high), 2026-11-16. Head reviewed: **e8bef8b0** (base `exp/P1M-engine` 571f11bc).
-Contract: INTERFACES v0.1.13 on the branch, plus the calibration memory rule of v0.1.14 §7 (shared docs; WP4 N-1,
-LOG 07:37). Design: WP3_DESIGN §1.11, §1.12. WP4 interface: `include/v4/calib_backend.h`.
+Reviewer: independent (Opus 5.5, high), 2026-11-16. Base: `exp/P1M-engine` 571f11bc.
+- **Heads:** I reviewed **e8bef8b0** in full. **fcdcd2c0** was pushed during the review (the N-1 admission, see
+  MAJOR-1); I reviewed that diff and tested it inside the whole stack (#43 head 8d584649, full `run_tests.sh`).
+- **Contract:** INTERFACES v0.1.13 on the branch, plus the calibration memory rule of v0.1.14 §7 (shared docs; WP4
+  N-1, LOG 07:37).
+- **Design:** WP3_DESIGN §1.11, §1.12. **WP4 interface:** `include/v4/calib_backend.h`.
 
-## Verdict: **ACCEPT-WITH-FIXES**
+## Verdict: **ACCEPT-WITH-FIXES** (mergeable now; the fixes are follow-ups)
 
-The calibration roles, the runner and the ledger-so-far are correct. I found no bit divergence, and the goldens compare
-against core. One contract item is not met: the calibration memory rule (WP4 N-1) is not implemented. The runner and
-`calibrate` still use the older "budget left over" composition, and it counts the data and setup inputs twice. At
-10⁶ this alone refuses the V calibration under the driver's 64 G task. That must be fixed together with WP4's N-1
-change before any budgeted calibrate runs; it does not block merging the rest.
+- The calibration roles, the runner and the ledger so far are correct. There is no bit divergence; the goldens compare
+  against core, and WP4's whole-calibration golden with WP3's islands equals `v3_calibrate`.
+- The calibration memory rule was missing at e8bef8b0 (MAJOR-1). It is now implemented on the WP3 side at fcdcd2c0.
+- **What remains:**
+  - a scale problem: at 10⁶ the V calibration does not fit the driver's 64 G task until StartView lands, and
+    `--plan-only` cannot show it (MAJOR-2, for the manager / driver);
+  - WP4's half of N-1: the up-front refusal (MINOR-6);
+  - test gaps.
 
-Counts: **0 CRITICAL, 2 MAJOR, 5 MINOR** (+ 3 INFO).
+Counts at fcdcd2c0: **0 CRITICAL, 1 MAJOR (+ 1 MAJOR resolved), 6 MINOR** (+ 4 INFO).
 
 ## Test run (Owls, Xeon Gold 6148, gcc 11.5, `nice -n 19`, 3 threads, fresh build of e8bef8b0 from `git archive`)
 `TMPDIR=/home/fb31/SMC_Engineering_Department/tmp/20261116-review-39-43/t39 tests/run_tests.sh --threads 3` (quick):
@@ -55,7 +61,21 @@ Counts: **0 CRITICAL, 2 MAJOR, 5 MINOR** (+ 3 INFO).
 
 ## Findings
 
-### MAJOR-1 — the calibration memory rule (INTERFACES v0.1.14 §7, WP4 N-1) is not implemented
+### MAJOR-1 — the calibration memory rule (INTERFACES v0.1.14 §7, WP4 N-1) was not implemented — **RESOLVED at fcdcd2c0 (WP3 side)**
+
+**Resolution, checked at fcdcd2c0:**
+- `calib_runner.h:44` adds `spec.resident_bytes` to the island plan's caller-supplied inputs term and keeps
+  `mem_budget` = the spec's budget.
+- `calib_run.cpp:140` passes `resident = ledger + export` (no inputs) and the whole `--mem-budget`.
+- So an island is admitted iff resident + plan ≤ budget. The resident bytes sit in the `inputs` term, so they get no
+  12% headroom. The admission, the G-reduction loop and the step-boundary `over_budget` all see the same total
+  (`msz.inputs_bytes`).
+- The double count of X / setup is gone.
+- New test `calibration_admission_n1_rule`: refused at plan − 1 with `partial = false`, admitted at plan, and admitted
+  at plan − resident without resident. It passes in the stack run.
+- Items 1–3 below are fixed. Item 4 (the up-front refusal) is WP4's code and remains: MINOR-6.
+
+As found at e8bef8b0:
 The rule: islands get `mem_budget` = the whole task's budget; `resident_bytes` = calibration ledger + inherited
 export, **excluding** data and setup inputs; an island is admitted iff `resident_bytes + plan ≤ mem_budget`;
 `calibrate` refuses up front, before any allocation, iff `resident + inputs + one island ledger > --mem-budget`.
@@ -93,22 +113,32 @@ What the PR does instead:
   - Add a `calibrate --mem-budget` test (see MINOR-1). Agree the change with WP4 so that only one side subtracts.
 
 ### MAJOR-2 — 10⁶ V calibration does not fit the driver's 64 G task; `--plan-only` cannot show it (scale; ESTIMATE)
-- `calibrate --plan-only` reports WP4's plan: 17.4 GiB resident + 10.8 GiB island ledger + inputs ≈ 36 GiB. It
-  does **not** contain the calibration island's own plan, which is 30–37 GiB before the Start (MAJOR-1).
-- The true peak of the calibration task is about `resident + island plan + start_bytes`. That is
-  ≈ 17.4 + 31.9 + 13–38 GB ≈ 61–85 GiB at G = 64 with today's dep::Start, above the 64 G request (ESTIMATE).
-- With StartView (4.4–14.1 GB of setup sections), it is ≈ 53–63 GiB, which is borderline.
+- `calibrate --plan-only` reports WP4's plan: 17.4 GiB resident + 10.8 GiB island ledger + inputs ≈ 36 GiB.
+  - It does **not** contain the calibration island's own plan: 30.1 / 31.9 / 37.2 GiB at G = 1 / 64 / 256, before
+    the Start (MAJOR-1).
+  - Its `island_budget` field (`calib_run.cpp:69`, budget − resident with the inputs) no longer describes what
+    islands receive after fcdcd2c0.
+- The true peak of the calibration task is about `resident + island plan + start_bytes`.
+  - At fcdcd2c0, with the N-1 rule, the island is admitted iff 17.4 + 30.1 (G = 1) + start_bytes ≤ 53.6 GiB, so
+    only when **start_bytes ≤ ≈ 6 GiB**.
+  - Today's dep::Start (13–38 GB, WP2) is refused at the V pilot. The task then ends with `resource_limit` and
+    produces no calib.bin. This is deterministic and safe, but it blocks the 10⁶ calibration pilot that H-11 makes
+    the next measurement.
+  - With StartView (4.4–14.1 GB of setup sections) it fits only at the low end and with a reduced G.
+  - Unconstrained, the peak at G = 64 is ≈ 17.4 + 31.9 + start ≈ 61–85 GiB today and ≈ 53–63 GiB with StartView
+    (ESTIMATE).
 - **Fix.**
   - Have `--plan-only` print the island plan as well (`plan_island` with a calibration `IslandConfig`, the
     V-mode N / threads / k from setup) and the total.
   - The manager re-sizes the 10⁶ calibrate task from it, likely ≥ 96 G until StartView lands. This sits with the
     driver re-size already noted in LOG 07:09.
 
-### MINOR-1 — the runner's resource paths are not tested through the runner or the command
+### MINOR-1 — the runner's resource paths are not tested through the runner or the command (partly addressed at fcdcd2c0)
 - `calibrate_command_end_to_end` never passes `--mem-budget`, so `island_budget`, the up-front refusal and an
   island admission refusal through `calib::run` (exit 11) are not exercised.
-- `partial = true` (a step-boundary stop with the ledger so far) and `partial = false` (admission) are only tested
-  with WP4's toy runner (`test_wp4.cpp:504-583`).
+- `partial = true` (a step-boundary stop with the ledger so far) is only tested with WP4's toy runner
+  (`test_wp4.cpp:504-583`). At fcdcd2c0, `partial = false` (admission) is tested through `CalibIslandRunner`
+  (`calibration_admission_n1_rule`).
 - The R golden's resource stop uses core's runner only (`wp4_harness.cpp`: "runtime guard applies to core's runner
   only").
 - **Fix:**
@@ -149,6 +179,19 @@ What the PR does instead:
   are covered by the R golden's "P2 tier-1 start" run with `runner = "wp3"`.
 - **Fix (cheap):** add `{LM, 1}` and `{PM, 3}` to the law loop, and a tier-1 diagnostic rebuild to `cal_sequence`.
 
+### MINOR-6 — WP4's half of N-1: the up-front refusal (`calib_run.cpp:115`, unchanged at fcdcd2c0)
+- The rule: refuse up front iff `resident + inputs + one island ledger > --mem-budget`. The code refuses only on
+  `resident ≥ budget`.
+- `load_start` then expands dep::Start (13–38 GB at 10⁶) at `calib_run.cpp:126`, before any check counts it.
+- Under an undersized budget this allocates before the island admission refuses. That admission now does refuse
+  deterministically, but only after the Start and the calibration ledger with its tables are built.
+- The calibration plan's k is still `max(8, |mode| + 1)` instead of `max(8, q90(π₀) + 1)` (WP4 N-2).
+- **Fix (WP4):**
+  - implement the rule's up-front check with inputs = data + the Start bytes. The Start bytes can be computed from
+    setup.bin section sizes before expansion, or from the island plan once StartView lands;
+  - use the setup's q90 for k, the same helper as `plan_island`;
+  - drop or redefine `island_budget` in `plan_json`.
+
 ### INFO
 - **I-1 ISA propagation is sound for bits.**
   - With `V4_ISLAND_ISA`, `calib_run.cpp` (WP4 calibration templates: FV, grid rules, local search) compiles with the
@@ -161,6 +204,10 @@ What the PR does instead:
     resolves it.
 - **I-2** `fix_mmap_threshold()` is process-wide and permanent. In `calibrate` law mode (particle-major, threads > 1)
   it also changes how WP4's later large allocations (stores, V) are served. This affects performance only.
+- **I-4** The N-1 rule counts the setup once, as the expanded dep::Start. `calibrate` also keeps setup.bin
+  mapped: the table stores and `logr` are read through `SetupView`. Its touched pages are page cache that Slurm's
+  cgroup charges to the task. Until StartView replaces the expanded copy, the real footprint can exceed the plan by
+  the touched part of setup.bin (up to ≈ 7 GB at 10⁶, ESTIMATE). Worth a VmRSS + cgroup reading on the 10⁶ pilot.
 - **I-3** `compat_stream` throws `std::out_of_range` (not `v4::Error`) for tier > 1, and `IslandRun` status 1 maps
   to `resource_limit` in the runner. Neither is reachable from WP4's calibration today.
 
