@@ -638,3 +638,10 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
     - Lemma-1a edge discharged (LC-A:47-48 verified).
   - Follow-up T2: Sol line checks of [P1] lem:prior(e) (W3-DIST X/V, row 2.1) and T02(ii♯) 5(a) (Thm-1, row 1.1).
 - F-UNI: TR1 Sol says transfer NO; NARROW to (D) / IDEAL-W⁺. Ceilings: le ≤ 10⁶ (binds at n+p > 2^(10⁶)) and INT_MAX (binds once the start model has ≳ 2×10⁹ variables). The sweep covers all every-n delivery claims about shipped code. owls_guard now protects BNP paths (HQ edit 06:3x CT).
+- 2026-11-16 ~07:20 CT. Method-pin sweep: 17 more every-n shipped-code delivery claims are exposed (Wave 2 FAC/LOC2/UNI family + HQ_AUDIT-W1C A2/A3); card reach is rows 3.1/3.2 delivery only.
+  - Cause: validators `le ≤ 10⁶` (v3_run.R:96) and `ℓ+|S̃₀| ≤ INT_MAX` (v3_core.cpp:474) are not covered by IDEAL-W.
+  - GO: SUSPECT the 17 now (state only), as part of the F-UNI correctness event.
+  - Batch NARROW (A:IDEAL-W⁺ or (D)) this week, before the Fri freeze: one Opus prep + one Sol batch diff, major bumps, carriers.
+  - C-DLV errata (exit inventory + IDEAL-W amendment note) and the FINAL s7_impl:39 erratum.
+  - No silent widening of IDEAL-W.
+- owls_guard: further BNP paths protected (bnp_quality, phaseB_inbox, ~/lean, ~/.elan).
