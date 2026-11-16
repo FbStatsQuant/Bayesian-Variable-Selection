@@ -25,5 +25,13 @@ test -x "$build/v4_tests" || { echo "build failed (see $build)"; exit 1; }
 if [[ "$fixtures" == 1 ]]; then
   nice -n 19 Rscript "$here/tools/make_fixtures.R" "$here" "$build/smcbvs4" "${TMPDIR:-/tmp}/v4_fixwork"
 fi
+# WP2: reference outputs from core/'s Rcpp entry points (dup components, cut group, cpp_setup); the test
+# golden_R_reference is skipped when R is absent.
+if command -v Rscript > /dev/null 2>&1; then
+  rg="${TMPDIR:-$build}/v4_r_golden_setup"
+  if nice -n 19 Rscript "$here/tools/golden_setup_ref.R" "$here/../core" "$rg" > "$build/r_golden_setup.log" 2>&1; then
+    export V4_R_GOLDEN_DIR="$rg"
+  else echo "R golden generation failed (see $build/r_golden_setup.log)"; exit 1; fi
+fi
 args=(); [[ "$mode" == full ]] && args+=(--full)
 nice -n 19 "$build/v4_tests" "${args[@]}"

@@ -7,7 +7,12 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "wp1_shim.h"  // TEMPORARY: replaced by <v4/types.h> <v4/data.h> <v4/model.h> <v4/store.h> <v4/status.h> (WP1)
+#include "v4/data.h"
+#include "v4/json.h"
+#include "v4/model.h"
+#include "v4/rng.h"
+#include "v4/status.h"
+#include "v4/store.h"
 
 namespace v4::setup {
 
@@ -153,7 +158,11 @@ struct SetupResult {
   std::vector<StageTiming> timings;
 };
 int default_B(int n, int p);
-SetupResult run(const Data& D, const SetupOptions& o);
+// All stages on an in-memory Data (library entry; statuses in SetupResult, never thrown).
+SetupResult run_setup(const Data& D, const SetupOptions& o);
+// The `setup` command (include/v4/stubs.h): args data (data.bin), out (setup.bin), optional threads, B, partition
+// ("truncated" | "exact"), tau, strict (0/1), mode_cap, tie_dp (0/1), file_mode ("law" | "compat" | "V").
+Json run(const Json& args);
 // setup.bin (INTERFACES §5.1 kind 3). Returns the content hash. `data_hash` = content hash of data.bin.
 std::string write_setup_bin(const std::string& path, const Data& D, const SetupResult& r, const SetupOptions& o, const std::string& data_hash);
 SetupResult read_setup_bin(const std::string& path, std::string* content_hash = nullptr);

@@ -7,23 +7,20 @@
 #include <cstring>
 #include <functional>
 #include <string>
+#include <memory>
 #include <vector>
 #include "v4/setup.h"
 
+#include <omp.h>
+#include "tk.h"
+
 namespace stk {
 
-struct Test { const char* name; int level; std::function<void()> fn; };  // level 0 quick, 1 full
-inline std::vector<Test>& registry() { static std::vector<Test> r; return r; }
-struct Reg { Reg(const char* n, int lvl, std::function<void()> f) { registry().push_back({n, lvl, f}); } };
-inline long& fails() { static long f = 0; return f; }
-inline long& checks() { static long c = 0; return c; }
-inline int& threads() { static int t = 3; return t; }
-#define STK_CAT2(a, b) a##b
-#define STK_CAT(a, b) STK_CAT2(a, b)
-#define TEST(name, level) static void STK_CAT(t_, name)(); static stk::Reg STK_CAT(r_, name)(#name, level, STK_CAT(t_, name)); static void STK_CAT(t_, name)()
-#define CHECK(cond, ...) do { ++stk::checks(); if (!(cond)) { ++stk::fails(); std::printf("  FAIL %s:%d: %s ", __FILE__, __LINE__, #cond); std::printf(__VA_ARGS__); std::printf("\n"); } } while (0)
+// printf-style check on top of tk.h (WP1's harness)
+#define SCHECK(cond, ...) do { if (!(cond)) { char _b[512]; std::snprintf(_b, sizeof _b, __VA_ARGS__); tk::fail(__FILE__, __LINE__, std::string("CHECK(" #cond "): ") + _b); } } while (0)
+inline int threads() { return std::max(1, std::min(3, omp_get_max_threads())); }   // Owls rule: <= 3
 
-inline bool same_bits(double a, double b) { uint64_t x, y; std::memcpy(&x, &a, 8); std::memcpy(&y, &b, 8); return x == y || (std::isnan(a) && std::isnan(b)); }
+inline bool same_bits(double a, double b) { return ::same_bits(a, b) || (std::isnan(a) && std::isnan(b)); }
 
 // deterministic normal generator (splitmix64 + Box-Muller); the designs need not match any other generator
 struct Rng {
@@ -39,8 +36,9 @@ inline const char* design_name(Design d) { static const char* n[] = {"IND", "AR"
 // Standardised fixture: X n x p column-major (centred, sum x^2 = n - 1), y standardised. TIE = AR(0.6) with exact
 // duplicates and sign-flipped duplicates of some columns (bit-identical |columns|) to exercise every tie rule.
 struct Fixture {
-  v4::DataOwner own;
-  const v4::Data& D() const { return own.D; }
+  std::shared_ptr<v4::DataOwned> own = std::make_shared<v4::DataOwned>();
+  v4::Data data;
+  const v4::Data& D() const { return data; }
   Design design; int n, p;
   Fixture(Design d, int n_, int p_, uint64_t seed, double rho = 0.6, int blk = 20) : design(d), n(n_), p(p_) {
     Rng g(seed + 1000003ULL * (int)d);
@@ -77,7 +75,8 @@ struct Fixture {
     double m = 0, s = 0; for (int i = 0; i < n; ++i) m += y[i];
     m /= n; for (int i = 0; i < n; ++i) { y[i] -= m; s += y[i] * y[i]; }
     s = std::sqrt(s / (n - 1)); for (int i = 0; i < n; ++i) y[i] /= s;
-    own.init(X.data(), y.data(), n, p);
+    own->X = X; own->y = y;
+    data = v4::make_data(own, n, p);
   }
 };
 

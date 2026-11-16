@@ -6,7 +6,7 @@
 #include <atomic>
 #include <chrono>
 #include "v4/setup.h"
-#include "bitscore_ref.h"
+#include "v4/score.h"
 
 namespace v4::setup {
 
@@ -21,9 +21,9 @@ namespace {
 // for U is the value for the prefix plus one more term, added in the same order. Only row k-1 is new at depth k.
 // Entries that leave the plain Cholesky route (a failed pivot in the prefix or now, log m not finite, or Q below
 // 1e-8 y'y, which recomputes Q) are scored by the full copy of the v3 scorer (RefScorer); everything else gives the
-// bits of core/cpp/v3_score.h:212-217 on route chol.
+// bits of core/cpp/v3_score.h:212-217 on route chol. (Entries that leave it are scored by WP1's BitScorer.)
 struct PrefixScorer {
-  const Data& D; detail::RefScorer ref; int B;
+  const Data& D; BitScorer ref; int B;
   std::vector<double> LH, LA, w, ldH, ldA, quad;  // stride B; per-depth running sums at index depth
   std::vector<char> okd;                          // prefix of depth d factorised on the chol route
   std::vector<int32_t> U;
@@ -79,7 +79,7 @@ struct PrefixScorer {
       }
     }
     prefix = false;
-    detail::RefScore o = ref.score(U.data(), k);
+    ScoreOut o = ref.score(ModelView(U.data(), (uint32_t)k));  // WP1's Bit scorer: the bits of core/cpp/v3_score.h:212-224
     route = o.route;
     return o.logm;
   }
@@ -153,12 +153,8 @@ void select_store(const Data& D, const Partition& P, const Tables& T, Store& S, 
   });
   if (sel.size() > cap) sel.resize(cap);
   Model M;
-  for (int64_t g : sel) {
-    members(g, M);
-    S.v.push_back(val(g)); S.off.push_back(S.pool.size()); S.hash.push_back(D.zob.hash(view(M))); S.len.push_back((uint16_t)M.size());
-    S.pool.insert(S.pool.end(), M.begin(), M.end());
-  }
-  S.nsorted = S.v.size();
+  for (int64_t g : sel) { members(g, M); S.offer(val(g), M, D.zob.hash(M)); }
+  S.compact();
 }
 }  // namespace
 
@@ -174,7 +170,7 @@ Tables build_tables(const Data& D, const Partition& P, int threads, TableStores*
   std::vector<double> logm(T.code_ptr.back(), 0.0);  // transient (dropped after the table top stores)
   const int TH = std::max(1, threads);
   std::vector<BlockOut> outs(TH);
-  std::atomic<bool> failed{false}; std::string fail_msg;
+  std::atomic<bool> failed{false}; std::string fail_msg; Status fail_st = Status::internal_error;
 #pragma omp parallel num_threads(TH)
   {
     PrefixScorer ps(D, 16);
@@ -187,11 +183,11 @@ Tables build_tables(const Data& D, const Partition& P, int threads, TableStores*
         score_block(D, P.block(b), P.size(b), ps, &T.logr[T.code_ptr[b]], &logm[T.code_ptr[b]], bo);
       } catch (const Error& e) {
 #pragma omp critical
-        { if (!failed) { failed = true; fail_msg = e.what(); } }
+        { if (!failed) { failed = true; fail_msg = e.what(); fail_st = e.st; } }
       }
     }
   }
-  if (failed) throw NumericalFailure(fail_msg);
+  if (failed) throw Error(fail_st, "tables: " + fail_msg);
   TableStats st;
   for (auto& o : outs) { st.scored += o.scored; st.prefix_scored += o.prefix; st.fallback_scored += o.fallback; for (int r = 0; r < 3; ++r) st.routes[r] += o.routes[r]; }
   st.seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();

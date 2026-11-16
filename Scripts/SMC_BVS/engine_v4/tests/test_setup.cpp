@@ -3,7 +3,7 @@
 #include <map>
 #include <unistd.h>
 #include "setup_tk.h"
-#include "wp1_format_shim.h"
+#include "v4/format.h"
 
 using namespace v4::setup;
 using stk::Fixture;
@@ -30,21 +30,21 @@ std::vector<std::vector<int>> rows(const Csr& c) {
 }
 }  // namespace
 
-TEST(unit_dup_components_and_cut_group, 0) {
+TEST(unit_dup_components_and_cut_group) {
   for (auto d : {stk::TIE, stk::AR, stk::BLK, stk::IND})
     for (int p : {50, 700}) {
       Fixture F(d, 80, p, 3);
       CorrOptions o; o.B = default_B(80, p); o.threads = stk::threads();
       CorrResult C = correlation_pass(F.D(), o);
       std::vector<std::vector<int>> ref; dense_components(F.D(), 1 - 1e-10, ref);
-      CHECK(rows(C.dup) == ref, "dup components differ (%s p=%d)", stk::design_name(d), p);
-      if (d == stk::TIE) CHECK(C.dup.rows() > 0, "TIE fixture has no duplicates");
+      SCHECK(rows(C.dup) == ref, "dup components differ (%s p=%d)", stk::design_name(d), p);
+      if (d == stk::TIE) SCHECK(C.dup.rows() > 0, "TIE fixture has no duplicates");
       PartitionOptions po; po.B = o.B;
       Partition P = make_partition(F.D(), C, po);
       Csr cut = cut_groups(p, C.edges, C.rn, P);
       std::vector<std::vector<int>> comps, flagged; dense_components(F.D(), C.rn, comps);
       for (auto& c : comps) { bool span = false; for (int j : c) if (P.blk[j] != P.blk[c[0]]) span = true; if (span) flagged.push_back(c); }
-      CHECK(rows(cut) == flagged, "cut groups differ (%s p=%d)", stk::design_name(d), p);
+      SCHECK(rows(cut) == flagged, "cut groups differ (%s p=%d)", stk::design_name(d), p);
     }
 }
 
@@ -65,7 +65,7 @@ void t11(stk::Design d, int n, int p, uint64_t seed, bool strict, double tau = -
   // the next exact merge (if any) is above the cut, and every truncated merge is within it
   if (ok && m < Te.merges()) ok = strict ? !(Te.height[p + m] < hcut) : !(Te.height[p + m] <= hcut);
   for (int x = p; ok && x < p + m; ++x) ok = strict ? Tt.height[x] < hcut : Tt.height[x] <= hcut;
-  CHECK(ok, "T11 fails: %s n=%d p=%d strict=%d (truncated merges %d, exact %d)", stk::design_name(d), n, p, (int)strict, m, Te.merges());
+  SCHECK(ok, "T11 fails: %s n=%d p=%d strict=%d (truncated merges %d, exact %d)", stk::design_name(d), n, p, (int)strict, m, Te.merges());
   // the clusters at the cut: identical member sets (T11 "identical clusters")
   auto clusters = [&](const Forest& T, int upto) {
     std::vector<int> parent(p + upto); for (int x = 0; x < p + upto; ++x) parent[x] = x;
@@ -75,23 +75,23 @@ void t11(stk::Design d, int n, int p, uint64_t seed, bool strict, double tau = -
     for (int j = 0; j < p; ++j) { int x = j; while (owner[x] >= 0 && owner[x] < p + upto) x = owner[x]; lab[j] = x; }
     return lab;
   };
-  if (ok) CHECK(clusters(Tt, m) == clusters(Te, m), "T11 clusters differ: %s p=%d", stk::design_name(d), p);
+  if (ok) SCHECK(clusters(Tt, m) == clusters(Te, m), "T11 clusters differ: %s p=%d", stk::design_name(d), p);
   std::printf("    T11 %s n=%d p=%d strict=%d: %d merges <= 1 - tau = %.6f, %zu edges, J(trunc) = %d\n", stk::design_name(d), n, p, (int)strict, m,
               hcut, C.edges.size(), cut_and_pack(Tt, B, PackOrder::MinIndex).J);
 }
 }  // namespace
-TEST(T11_truncated_equals_exact_below_cut, 0) {
+TEST(T11_truncated_equals_exact_below_cut) {
   for (auto d : {stk::AR, stk::BLK, stk::IND, stk::TIE}) for (bool s : {false, true}) t11(d, 200, 1500, 21, s);
   t11(stk::AR, 60, 800, 22, false, 0.2);  // a lower tau: deep forests
 }
-TEST(T11_truncated_equals_exact_below_cut_full, 1) {
+TEST_TAGGED(T11_truncated_equals_exact_below_cut_full, "full") {
   for (auto d : {stk::AR, stk::BLK, stk::IND, stk::TIE}) t11(d, 200, 20000, 31, false);
   t11(stk::AR, 200, 20000, 32, true);
   t11(stk::AR, 400, 10000, 33, false);
 }
 
 // ---- truncated partition: blocks cover, sizes <= B, packing by minimum index, members sorted
-TEST(unit_truncated_partition_shape, 0) {
+TEST(unit_truncated_partition_shape) {
   for (auto d : {stk::AR, stk::BLK, stk::IND, stk::TIE}) {
     Fixture F(d, 200, 3000, 41);
     int B = default_B(200, 3000);
@@ -112,20 +112,20 @@ TEST(unit_truncated_partition_shape, 0) {
       std::vector<int32_t> st{r}; int b0 = -1;
       while (!st.empty()) { int x = st.back(); st.pop_back(); if (x < 3000) { if (b0 < 0) b0 = P.blk[x]; ok &= P.blk[x] == b0; } else { st.push_back(T.left[x]); st.push_back(T.right[x]); } }
     }
-    CHECK(ok, "truncated partition shape (%s)", stk::design_name(d));
+    SCHECK(ok, "truncated partition shape (%s)", stk::design_name(d));
   }
 }
 
 // ---- invariance: setup.bin content hash identical for threads 1, 2, 3 and tile widths (T3 for setup)
-TEST(invariance_threads_and_tiles, 0) {
+TEST(invariance_threads_and_tiles) {
   for (auto d : {stk::AR, stk::TIE}) {
     Fixture F(d, 150, 2000, 51);
     std::string ref;
     for (int th : {1, 2, 3})
       for (PartMode pm : {PartMode::Truncated, PartMode::Exact}) {
         SetupOptions o; o.threads = th; o.part.mode = pm;
-        SetupResult r = run(F.D(), o);
-        CHECK(r.status == v4::Status::completed, "setup failed: %s", r.reason.c_str());
+        SetupResult r = run_setup(F.D(), o);
+        SCHECK(r.status == v4::Status::completed, "setup failed: %s", r.reason.c_str());
         r.timings.clear();  // timings are not part of the result
         std::string path = tmpdir() + "/inv_" + std::to_string(getpid()) + ".bin";
         std::string h = write_setup_bin(path, F.D(), r, o, "test");
@@ -134,7 +134,7 @@ TEST(invariance_threads_and_tiles, 0) {
         static std::map<std::string, std::string> refs;
         std::string k2 = std::string(stk::design_name(d)) + key;
         if (!refs.count(k2)) refs[k2] = h;
-        CHECK(refs[k2] == h, "setup.bin hash depends on threads (%s, threads %d, mode %d)", stk::design_name(d), th, (int)pm);
+        SCHECK(refs[k2] == h, "setup.bin hash depends on threads (%s, threads %d, mode %d)", stk::design_name(d), th, (int)pm);
       }
     for (int tile : {32, 100, 512}) {  // correlation pass alone
       CorrOptions a; a.B = 12; a.threads = 3; a.tile = tile;
@@ -142,61 +142,62 @@ TEST(invariance_threads_and_tiles, 0) {
       CorrResult ca = correlation_pass(F.D(), a), cb = correlation_pass(F.D(), b);
       bool ok = ca.nb.ptr == cb.nb.ptr && ca.nb.idx == cb.nb.idx && ca.edges.size() == cb.edges.size() && ca.dup.idx == cb.dup.idx;
       for (size_t i = 0; ok && i < ca.edges.size(); ++i) ok = ca.edges[i].j == cb.edges[i].j && ca.edges[i].l == cb.edges[i].l && stk::same_bits(ca.edges[i].absr, cb.edges[i].absr);
-      CHECK(ok, "correlation pass depends on tile/threads (tile %d)", tile);
+      SCHECK(ok, "correlation pass depends on tile/threads (tile %d)", tile);
     }
   }
 }
 
 // ---- setup.bin round trip and hash verification
-TEST(unit_setup_bin_roundtrip, 0) {
+TEST(unit_setup_bin_roundtrip) {
   Fixture F(stk::AR, 100, 500, 61);
   SetupOptions o; o.threads = stk::threads();
-  SetupResult r = run(F.D(), o);
-  CHECK(r.status == v4::Status::completed, "setup failed: %s", r.reason.c_str());
+  SetupResult r = run_setup(F.D(), o);
+  SCHECK(r.status == v4::Status::completed, "setup failed: %s", r.reason.c_str());
   std::string path = tmpdir() + "/rt_" + std::to_string(getpid()) + ".bin";
   std::string h = write_setup_bin(path, F.D(), r, o, "datahash");
   std::string h2; SetupResult q = read_setup_bin(path, &h2);
-  CHECK(h == h2, "content hash differs on read");
-  CHECK(q.corr.nb.idx == r.corr.nb.idx && q.corr.nb.ptr == r.corr.nb.ptr && q.part.members == r.part.members && q.part.blk == r.part.blk &&
+  SCHECK(h == h2, "content hash differs on read");
+  SCHECK(q.corr.nb.idx == r.corr.nb.idx && q.corr.nb.ptr == r.corr.nb.ptr && q.part.members == r.part.members && q.part.blk == r.part.blk &&
         q.tab.logr.size() == r.tab.logr.size() && q.tab.cond_cum.size() == r.tab.cond_cum.size() && q.mode.S == r.mode.S &&
         stk::same_bits(q.tab.logZbar0, r.tab.logZbar0) && q.stores.top.pool == r.stores.top.pool && q.stores.hpmS == r.stores.hpmS,
         "round trip differs");
   bool ok = true;
   for (size_t i = 0; i < r.tab.logr.size(); ++i) ok &= stk::same_bits(q.tab.logr[i], r.tab.logr[i]);
-  CHECK(ok, "logr round trip");
+  SCHECK(ok, "logr round trip");
   // a flipped byte must be detected
   {
-    FILE* f = std::fopen(path.c_str(), "r+b"); std::fseek(f, -10, SEEK_END); int c = std::fgetc(f); std::fseek(f, -10, SEEK_END); std::fputc(c ^ 1, f); std::fclose(f);
+    long at; { v4::fmt::Reader rd(path); at = (long)rd.entry("logr").offset + 3; }   // a byte inside a hashed section
+    FILE* f = std::fopen(path.c_str(), "r+b"); std::fseek(f, at, SEEK_SET); int c = std::fgetc(f); std::fseek(f, at, SEEK_SET); std::fputc(c ^ 1, f); std::fclose(f);
     bool threw = false;
     try { read_setup_bin(path); } catch (const v4::Error& e) { threw = e.st == v4::Status::invalid_input; }
-    CHECK(threw, "corrupted setup.bin not detected");
+    SCHECK(threw, "corrupted setup.bin not detected");
   }
   std::remove(path.c_str());
 }
 
 // ---- edge cases
-TEST(unit_edge_cases, 0) {
+TEST(unit_edge_cases) {
   for (int p : {1, 2, 3}) {
     Fixture F(stk::IND, 12, p, 71);
     for (PartMode pm : {PartMode::Truncated, PartMode::Exact}) {
       SetupOptions o; o.part.mode = pm;
-      SetupResult r = run(F.D(), o);
-      CHECK(r.status == v4::Status::completed && r.part.J >= 1 && (int)r.corr.nb.ptr.size() == p + 1, "p=%d mode=%d: %s", p, (int)pm, r.reason.c_str());
+      SetupResult r = run_setup(F.D(), o);
+      SCHECK(r.status == v4::Status::completed && r.part.J >= 1 && (int)r.corr.nb.ptr.size() == p + 1, "p=%d mode=%d: %s", p, (int)pm, r.reason.c_str());
     }
   }
   // tau above 1 (tiny n): no edges, every column its own cluster, still a valid partition
   Fixture F(stk::AR, 6, 400, 72);
-  SetupOptions o; SetupResult r = run(F.D(), o);
-  CHECK(r.status == v4::Status::completed && r.corr.rn > 1, "tiny n: %s rn=%g", r.reason.c_str(), r.corr.rn);
+  SetupOptions o; SetupResult r = run_setup(F.D(), o);
+  SCHECK(r.status == v4::Status::completed && r.corr.rn > 1, "tiny n: %s rn=%g", r.reason.c_str(), r.corr.rn);
   // the edge cap is a resource_limit status, not a crash
   CorrOptions co; co.B = 4; co.max_edges = 10; co.tau = 0.0;
   bool threw = false;
   try { correlation_pass(F.D(), co); } catch (const v4::Error& e) { threw = e.st == v4::Status::resource_limit; }
-  CHECK(threw, "edge cap not enforced");
+  SCHECK(threw, "edge cap not enforced");
 }
 
 // ---- prefix scorer: the full-scorer fallback gives the same bits as the prefix path (goldens: prefix path = core/)
-TEST(unit_tables_fallback_paths, 0) {
+TEST(unit_tables_fallback_paths) {
   for (auto d : {stk::TIE, stk::AR}) {
     Fixture F(d, 60, 400, 81);
     CorrOptions co; co.B = default_B(60, 400); CorrResult C = correlation_pass(F.D(), co);
@@ -208,7 +209,7 @@ TEST(unit_tables_fallback_paths, 0) {
     testing::set_force_fallback(0);
     bool ok = A.logr.size() == Bt.logr.size();
     for (size_t i = 0; ok && i < A.logr.size(); ++i) ok = stk::same_bits(A.logr[i], Bt.logr[i]);
-    CHECK(ok && t1.fallback_scored > 0, "forced fallback changes table bits (%s)", stk::design_name(d));
+    SCHECK(ok && t1.fallback_scored > 0, "forced fallback changes table bits (%s)", stk::design_name(d));
     std::printf("    tables %s: scored %llu, prefix %llu, fallback %llu (forced run: %llu)\n", stk::design_name(d), (unsigned long long)t0.scored,
                 (unsigned long long)t0.prefix_scored, (unsigned long long)t0.fallback_scored, (unsigned long long)t1.fallback_scored);
   }
@@ -234,33 +235,34 @@ std::vector<double> read_f64(const std::string& f) {
   v.resize(n / 8); size_t got = std::fread(v.data(), 8, v.size(), fp); (void)got; std::fclose(fp); return v;
 }
 }  // namespace
-TEST(golden_R_reference, 0) {
+TEST(golden_R_reference) {
   const char* dir = std::getenv("V4_R_GOLDEN_DIR");
   if (!dir) { std::printf("    skipped: V4_R_GOLDEN_DIR not set (R reference not generated)\n"); return; }
   FILE* fi = std::fopen((std::string(dir) + "/INDEX").c_str(), "r");
-  CHECK(fi != nullptr, "no INDEX in %s", dir);
+  SCHECK(fi != nullptr, "no INDEX in %s", dir);
   if (!fi) return;
   char tagc[256]; int ncase = 0;
   while (std::fscanf(fi, "%255s", tagc) == 1) {
     std::string d = std::string(dir) + "/" + tagc + "/";
     int n, p, B; FILE* fd = std::fopen((d + "dims.txt").c_str(), "r"); int got = std::fscanf(fd, "%d %d %d", &n, &p, &B); (void)got; std::fclose(fd);
     auto X = read_f64(d + "Xs.f64"), y = read_f64(d + "ys.f64");
-    v4::DataOwner own; own.init(X.data(), y.data(), n, p);
+    auto ow = std::make_shared<v4::DataOwned>(); ow->X = X; ow->y = y;
+    v4::Data own = v4::make_data(ow, n, p);
     SetupOptions o; o.B = B; o.threads = stk::threads(); o.part.mode = PartMode::Exact;
-    SetupResult r = run(own.D, o);
-    CHECK(r.status == v4::Status::completed, "%s: %s", tagc, r.reason.c_str());
-    CHECK(rows(r.corr.nb) == read_rows(d + "neighbours.txt"), "%s: neighbours differ from cpp_setup", tagc);
+    SetupResult r = run_setup(own, o);
+    SCHECK(r.status == v4::Status::completed, "%s: %s", tagc, r.reason.c_str());
+    SCHECK(rows(r.corr.nb) == read_rows(d + "neighbours.txt"), "%s: neighbours differ from cpp_setup", tagc);
     std::vector<std::vector<int>> bl; for (int b = 0; b < r.part.J; ++b) bl.emplace_back(r.part.block(b), r.part.block(b) + r.part.size(b));
-    CHECK(bl == read_rows(d + "blocks.txt"), "%s: exact blocks differ from cpp_setup", tagc);
-    CHECK(rows(r.corr.dup) == read_rows(d + "dup.txt"), "%s: duplicate components differ from cpp_dup_components", tagc);
-    CHECK(rows(r.cut) == read_rows(d + "cut.txt"), "%s: cut groups differ from cpp_cut_group", tagc);
+    SCHECK(bl == read_rows(d + "blocks.txt"), "%s: exact blocks differ from cpp_setup", tagc);
+    SCHECK(rows(r.corr.dup) == read_rows(d + "dup.txt"), "%s: duplicate components differ from cpp_dup_components", tagc);
+    SCHECK(rows(r.cut) == read_rows(d + "cut.txt"), "%s: cut groups differ from cpp_cut_group", tagc);
     auto lr = read_f64(d + "logr.f64"); bool ok = lr.size() == r.tab.logr.size();
     for (size_t i = 0; ok && i < lr.size(); ++i) ok = stk::same_bits(lr[i], r.tab.logr[i]);
-    CHECK(ok, "%s: tables differ from cpp_setup", tagc);
-    CHECK(stk::same_bits(read_f64(d + "logZbar0.f64")[0], r.tab.logZbar0), "%s: log Zbar0 differs", tagc);
+    SCHECK(ok, "%s: tables differ from cpp_setup", tagc);
+    SCHECK(stk::same_bits(read_f64(d + "logZbar0.f64")[0], r.tab.logZbar0), "%s: log Zbar0 differs", tagc);
     std::printf("    R golden %s: dup components %lld, cut groups %lld\n", tagc, (long long)r.corr.dup.rows(), (long long)r.cut.rows());
     ++ncase;
   }
   std::fclose(fi);
-  CHECK(ncase >= 4, "R reference has %d cases", ncase);
+  SCHECK(ncase >= 4, "R reference has %d cases", ncase);
 }

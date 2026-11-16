@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
   std::printf("# host=%s design=AR(0.6) n=%d p=%d threads=%d gen_seconds=%.2f rss_after_gen_mb=%.0f\n", host, n, p, th, tgen, peak_rss_mb());
   if (what == "full") {
     SetupOptions o; o.threads = th; o.part.mode = extra ? PartMode::Exact : PartMode::Truncated;
-    SetupResult r = run(F.D(), o);
+    SetupResult r = run_setup(F.D(), o);
     std::printf("status=%s %s B=%d J=%d edges_kept=? nb_entries=%zu dup=%lld cut_groups=%lld table_codes=%lld mode_|S|=%zu ties=%ld\n",
                 v4::status_name(r.status), r.reason.c_str(), r.B, r.part.J, r.corr.nb.idx.size(), (long long)r.corr.dup.rows(),
                 (long long)r.cut.rows(), (long long)(r.tab.code_ptr.empty() ? 0 : r.tab.code_ptr.back()), r.mode.S.size(), r.mode.ties);
