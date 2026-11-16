@@ -145,7 +145,7 @@ fail without beta-min (numerical counterexample). (iii) $c_0(s_0,A)$ is an expli
 [H5-6]. (iv) (A3) is used only through the energy bound $\|X\theta^*\|^2\le n s_0^2\bar\theta^2$; any bound
 $\|X\theta^*\|^2\le nM$ suffices. (v) Models of size $\ge 3(A+1)(s_0+1)\log n$ carry posterior mass $O_P(n^{-1/2})$ with
 no eigenvalue condition (size-tail lemma, which uses a coefficient bound instead; separate statement). (vi) *Scope of
-the rate* [H5-6]: on every design with $s_0\le\min(K-1,p/2)$ the posterior miss is at least of order $n^{-1/2}$ (Theorem 3(a); $s_0<p$ suffices by Prop. LB) [R1-S3]; the extra
+the rate* [H5-6]: on every design with $s_0\le\min(K-1,p/2)$ the posterior miss is at least of order $n^{-1/2}$ (Theorem 3(a); $s_0\le K-1$ suffices, by Corollary B with $c(p,s_0)\ge1$ or by Prop. LB) [R1-S3, R2-O2]; the extra
 $\sqrt{\log n}$ has been shown to be attained on the witness designs of Theorem 3(b); on other designs it is not known
 [S3-N5]. No two-sided rate on every design is claimed: a matching lower bound $E[1-\pi(S_0\mid y)]\gtrsim\sqrt{\log n/n}$ in
 expectation, under a floor on $S_0\cup\{j\}$, is open (post-freeze rider POST2-R1); in probability the $\sqrt{\log n}$
@@ -250,6 +250,7 @@ as a post-freeze rider — it would make "no eigenvalue condition off $S_0$" lit
 - v1.0 2026-11-16: [REG-33e1] Form A no longer carries an SL0 condition; `W2-APP:POST` conditional on SOP:TH09 only (EQUAL).
 - FRZ-RQ 2026-11-16: [REG-6cd6] freeze requote (main 14892123): `SOP:TH09@1.0.2` PROVED-CHECKED (W3-T03ACC accepted, 6cd699dd); POST2 C/E/A1/A0 @1.0.5 with TH09/TH128 dropped; Form A applies. Statuses only (EQUAL).
 - R1 2026-11-16: council R1 fixes — [R1-S3] lower-bound remark (vi) and (A2) line restricted to $s_0\le\min(K-1,p/2)$ (WEAKER: restores the master's domain); [R1-F3] remark (vii) relabelled an Engineering observation, mechanism sentence removed (WEAKER); [R1-E5] status base line (EQUAL).
+- R2-ED 2026-11-16: [R2-O2] remark (vi) domain pointer: $s_0\le K-1$ via Corollary B or Prop. LB (EQUAL).
 <!-- ROW thm1 END -->
 
 ---
@@ -700,8 +701,9 @@ does not reach }S_0)$. *(Interpretation, not part of the theorem [D71]: the two 
 search error.)* (i) $\mathcal G_n$ can be chosen ($\mathcal M_n\cap\mathrm{Sand}_n(Q)\cap\mathrm{NA}\cap\mathrm{TL}$) so that on it the local search from the start mode only deletes the spurious members of the start
 mode, one per move, at most $n^b$ moves, and certifies $S_0$; its move cap never binds. (ii) The polylogarithmic case
 $|Q|\le(\log n)^{\kappa}$ is a special case (the earlier version of the theorem). (iii) Examples (never hypotheses):
-metric-local correlation, polynomial correlation decay of exponent $\alpha>2$ (example status unchecked), one-factor
-blocks.
+metric-local correlation, polynomial correlation decay of exponent $\alpha>2$ (`W3-RM2:Ex-PolyR@1.0.3` "PROVED; line-checked LC2-C; Astra seat
+ACCEPT; not examined by the Opus seat — next council round; conditional on W2-APP:POST, W2-LOC2:Lemma-BC, W2-LOC2:Lemma-IR; …"),
+one-factor blocks [R2-O6].
 
 ### Why each assumption
 - (A2) Fixed signals give the posterior input (Theorem 2) and the truth-removal margin.
@@ -802,6 +804,7 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 - FRZ-RQ 2026-11-16: [REG-6cd6] RM2-R @1.0.3 (ACTIVE, supersession deferred), POST-R/D-to-W @1.0.3, `W2-APP:POST@1.0.7` "PROVED-CHECKED", F-UNI @2.1.0 (history), RM-R @1.2.0 SUPERSEDED-VALID; row conditions now only the two delivery-path audits. Statuses only (EQUAL).
 - v0.9 2026-11-16: [GUARD-W] (HQ YES 11-16; W3-AUDIT track A T1 GUARD-W, theory/W3-AUDIT 58e24245, `track_A/T1_GW/`) sentence added after the delivery display, with a pointer to the meaning of "output" (code: `v3_fit.R:84`, `v3_run.R:142-145`): "The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and no output." Presentation (EQUAL).
 - R1 2026-11-16: [R1-F6] delivery-route sentence corrected (frozen F-UNI@2.1.0 states the shipped cap; only C-DLV Prop-F used $\ell_n$); [R1-F2] B6.6 / R3 marked historical; [R1-E7] $\mathcal G_n$ choice in remark (i) (EQUAL; corrections of descriptions).
+- R2-ED 2026-11-16: [R2-O6] remark (iii) example status verbatim (EQUAL).
 <!-- ROW thm6 END -->
 
 ---
@@ -827,7 +830,7 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 - **(A5) Size of the leakage set**, one of:
   (a) $|Q\setminus S_0|\le(1-\delta)\log n$ for a fixed $\delta\in(0,1)$; or
   (b) $|Q|\le n^b$ with $b<\tfrac12-\tfrac\eta2-\sqrt{2A\eta}$; $\theta^{*2}_{\min}\ge C_Q\,\sigma_*^2(|Q|+\log n)/(n\varphi_0^2)$ for a
-  fixed $C_Q$ above an explicit constant (Remark (a)) [RM2R-4]; and *local
+  fixed $C_Q$ above an explicit constant (e.g. any fixed $C_Q>\max\{32,\,64A+c\}$ with $c$ as in Remark (a)) [RM2R-4, R2-O4]; and *local
   regressions*: for every $l$ a deterministic set $N_l\subseteq Q\setminus\{l\}$ with $|N_l|\le h\log_2n$, $h+b<\tfrac12$,
   and a deterministic $L_n\to0$ with $L_n^2\log(|Q|+1)=o(\log n)$, such that
   $\|\hat\beta_{T,l}-\hat\beta_{T\cap N_l,l}\|_1\le L_n$ for every $T$ with $S_0\subseteq T\subseteq Q$, $|T|<K$,
@@ -840,6 +843,7 @@ $$
 P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad P(\hat S=S_0)\to1 .
 $$
 The delivery statement idealises two fixed integer limits in the code (a base search cap of $10^6$, `v3_run.R:96`, and a 32-bit integer bound $2^{31}-1$ on the search cap, `cpp/v3_core.cpp:474`): the first can bind only when $n+p+1$ exceeds $2^{10^6}$, the second only when the starting model has more than about $2.1\times10^9$ variables, which needs $n\gtrsim4.3\times10^9$ since $|\tilde S_0|\le\lfloor n/2\rfloor$; without the idealisation, delivery holds on the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, and with it (IDEAL-W⁺) for every $n$ [RM2R-5]. Neither limit can bind unless $n+p+1>2^{10^6}$ or $n\gtrsim4\times10^9$, that is, at no feasible problem size [RM2R-6].
+The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and no output. (No output means no estimates, as in Theorem 6.) [GUARD-W]
 
 *Remarks* [RM2R-4]. (a) *Constants.* With $C_R:=3(M+\sigma_*^2)$ ($\|X\theta^*\|^2\le nM$): (A3) holds with any
 $M_V>(\sigma_*\sqrt{2A}+\sqrt{(2A+1)C_R})^2$; (A5)(b)'s signal clause may be replaced by the master's (BM-Q♭) [R1-E2]:
@@ -880,8 +884,8 @@ nonconstant raw columns").
 | B7.3′ | (A5)(b) signal clause (Remark (a) form) ⇒ (BM-Q♭) ⇒ (BM-W⁺) | identity | `W3-RM2-R/STATEMENT.md:107-112`; checked as R7.3 of W3-RM2-R. |
 | B7.4′ | (A3) = (V♭) | identity | `W3-RM2-R/STATEMENT.md:101-105`. |
 | B7.1 | (A1) ⇒ (T1-F) | as B1.1–B1.4 (with BM-∞) | (T1-F) uses BM-∞ (RM STATEMENT.md:91-92). Superseded by B7.1′ for the current master. |
-| B7.2 | (A5)(a) ⇒ (L-size^b) for every small $b>0$, (W) via (W-χ), (BM-W) = BM-∞ | EXISTS-CHECKED | `W3-RM2:W-suff@1.0.3` (C3)(c) "(W-χ) ⇒ (W-δ)"; (BM-W) reduces to BM-∞ when $d_n^2=O(\log n)$ (STATEMENT.md:137-139). $b<\beta(\eta,A)$ is possible because $\eta<\eta_A$. |
-| B7.3 | (A5)(b) ⇒ (W) via (W-loc) ⇒ (W-ref) ⇒ (W-unif) ⇒ (W-δ) | EXISTS-CHECKED | `W3-RM2:W-suff@1.0.3`; the variance clause of (W-loc) follows from $L_n\to0$ under the floor on $Q\cup\{l\}$ (STATEMENT.md:164). $\theta^{*2}_{\min}n/(|Q|+\log n)\to\infty$ is (BM-Q) ⇒ (BM-W) (:138-139). |
+| B7.2 | (A5)(a) ⇒ (L-size^b) for every small $b>0$, (W) via (W-χ), (BM-W) = BM-∞ | EXISTS-CHECKED | `W3-RM2:W-suff@1.0.3` (C3)(c) "(W-χ) ⇒ (W-δ)" (current); historical, under the former hypotheses: (BM-W) reduces to BM-∞ when $d_n^2=O(\log n)$ (STATEMENT.md:137-139); truth removal now via B7.2′ [R2-E1]. $b<\beta(\eta,A)$ is possible because $\eta<\eta_A$. |
+| B7.3 | (A5)(b) ⇒ (W) via (W-loc) ⇒ (W-ref) ⇒ (W-unif) ⇒ (W-δ) | EXISTS-CHECKED | `W3-RM2:W-suff@1.0.3`; the variance clause of (W-loc) follows from $L_n\to0$ under the floor on $Q\cup\{l\}$ (STATEMENT.md:164). Historical, under the former hypotheses: $\theta^{*2}_{\min}n/(|Q|+\log n)\to\infty$ is (BM-Q) ⇒ (BM-W) (:138-139); truth removal now via B7.3′ [R2-E1]. |
 | B7.4 | RM2-F conclusions ⇒ F-UNI premises (S), (P), (V) | **NEW** (assembly) | as B6.6, fixed-design input validity ((E) with nonconstant raw columns); operational premises carried as (S4) [S1-F2]. Superseded by B7.5 for the shipped method (method drift, §6). |
 | B7.5 | (S4) ⇔ (D) | identity [RM2R-2] | as B6.6′. |
 
@@ -915,6 +919,7 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
   Supersedes the [FUNI-N] delivery wording of v0.5: delivery now rests on DLV-0 (method drift [D74]); (S4)(v) folded into (S4)(i) as IDEAL-W⁺, and $\mathfrak D$ is stated in the [RM2R-5] sentence.
 - FRZ-RQ 2026-11-16: [REG-6cd6] previous master RM2-F @1.0.3 "PROVED-CHECKED; …" (ACTIVE), W-suff @1.0.3, F-UNI @2.1.0 (history); T03♯ discharged. Statuses only (EQUAL).
 - R1 2026-11-16: [R1-S6] honest limits (ii): Theorem 6 gives the same conclusion under population analogues (WEAKER); [R1-E8] example statuses verbatim; [R1-E2] Remark (a) reworded as the master's (BM-Q♭) replacement; [R1-F6] delivery-route label (EQUAL).
+- R2-ED 2026-11-16: [GUARD-W] (manager 11-16: Theorem 7's guarantee concerns a run's output) time-guard sentence after the delivery display, as in Theorem 6 (EQUAL). [R2-O4] (A5)(b) $C_Q$ threshold example; [R2-E1] B7.2/B7.3 historical commentary labelled (EQUAL).
 <!-- ROW thm7 END -->
 
 ---
@@ -1340,8 +1345,9 @@ route (remark): `W3-SAMP:TR@2.1.4`, "PROVED-CHECKED" [REG-6cd6]. Row 3.5: `W1-N1
 The conclusion is localised to calibration success $\mathcal A$ on the sampler branch (intersections, not conditioning);
 that $P(\mathcal A)\to1$ is not claimed here (under (S4), whose item (i) now includes IDEAL-W⁺, completion holds for every
 admissible $n$, and without the two limits lifted on $\mathfrak D$; that link is not used here) [S4-S1, RM2R-1]. The theorem covers only designs with no leakage outside the true model (A5), such as independent predictors; AR and
-block designs are outside it (rows 3.1 and 3.5 apply there) [AUD-B11]. The rate $\rho_n$ is the start law's rate,
-slower than the posterior rate $\sqrt{\log n/n}$ by a factor $e^{C\sqrt{\log n}}$. No open registry condition: `W3-SAMP:C` and `W2-APP:POST`
+block designs are outside it (row 3.5 applies there, and row 3.1 for particular AR or block designs that satisfy Theorem 6's
+conditions) [AUD-B11, R2-L1]. The rate $\rho_n$ is the start law's rate,
+its ratio to the posterior rate $\sqrt{\log n/n}$ is $e^{C\sqrt{\log n}}/\sqrt{\log n}$ [R2-E2]. No open registry condition: `W3-SAMP:C` and `W2-APP:POST`
 are "PROVED-CHECKED" since T03♯ was discharged (main 6cd699dd) [REG-6cd6]; the assembly R4 and PoolZ are unchecked.
 
 #### Update log (thm10)
@@ -1369,6 +1375,7 @@ are "PROVED-CHECKED" since T03♯ was discharged (main 6cd699dd) [REG-6cd6]; the
 - FRZ-RQ 2026-11-16: [REG-6cd6] `W3-SAMP:C/TR` @1.1.4/2.1.4 and `W2-APP:POST@1.0.7` "PROVED-CHECKED"; no open registry condition (R4, PoolZ unchecked). Statuses only (EQUAL).
 - v1.1 2026-11-16: [GUARD-W] (HQ YES 11-16; W3-AUDIT track A T1 GUARD-W, theory/W3-AUDIT 58e24245, `track_A/T1_GW/`) sentence added to Theorem 10 and to the row 3.5 remark: "The guarantees describe the run as if uninterrupted; a run stopped by its time guard reports status `resource_limit` and no output." Presentation (EQUAL).
 - R1 2026-11-16: [R1-F3] moderate-$n$ parenthesis relabelled an observation (WEAKER).
+- R2-ED 2026-11-16: post-council editorial items [R2-E2] exact rate ratio, [R2-L1] AR/block pointer as in card row 3.6 (EQUAL).
 <!-- ROW thm10 END -->
 
 ---

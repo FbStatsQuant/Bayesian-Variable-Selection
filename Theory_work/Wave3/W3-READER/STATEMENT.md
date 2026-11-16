@@ -40,7 +40,7 @@ average, and are covered by `W3-SAMP:LT#` (LT-d) and `W3-SAMP:C`. (iii) The iden
 ## Bridge lemmas (proofs in `lemmas/`)
 | id | statement (short) | file | used by |
 |---|---|---|---|
-| R1 | set-size and elementary bridges B1.1, B1.2, B1.3, B2.1, B3.2, B4.1, B6.1 | `lemmas/R1_set_sizes.md` | Thms 1, 2, 3, 4, 6 |
+| R1 | set-size and elementary bridges B1.1, B1.2, B1.3, B2.1, B3.2, B4.1, B6.1 | `lemmas/R1_set_sizes.md` | Thms 1, 2, 3, 4, 6, 10 |
 | R2 | local regressions ⇒ variance clause (population R2.1; sample R2.2) | `lemmas/R2_local_regression.md` | Thms 6, 7 |
 | R3 | (historical) delivery assembly: RM2 conclusions ⇒ F-UNI premises (S), (P), (V); operational premises carried as (S4) | `lemmas/R3_delivery_assembly.md` | former Thms 6, 7 only (current ones use B6.6′, B7.5) [R1-F2] |
 | R4 | printed outputs consistent: Thm 2 + Thm 5 ($Q=S_0$) + `W3-SAMP:C` (C-v) | `lemmas/R4_printed_outputs.md` | Thm 10 (row 3.6) |

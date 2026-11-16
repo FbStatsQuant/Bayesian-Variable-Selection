@@ -68,8 +68,8 @@ programme over model sizes. *Problems solved:* (i) the sampler starts from i.i.d
 the target instead of from an arbitrary model; (ii) its exact normaliser anchors the evidence estimate; (iii) its mode
 $\tilde S_0$ is a data-driven, deterministic guess of the true model. *What it gets wrong:* a predictor in one block
 that imitates a truth in another block looks useful on its own, so $\pi_0$ may include it (leakage). Theorem 5 shows
-that, when there are no such imitators, $\pi_0$ puts mass $1-n^{-c}$ ($c<\tfrac12$) on the true model with probability tending to one as $n$ grows, and when
-they are confined to a set of size $n^{1/2-\epsilon}$ it puts mass $1-n^{-c}$ ($c<\epsilon$), again with probability tending to one, on the models between the truth
+that, when there are no such imitators, $\pi_0$ puts mass at least $1-n^{-c}$ ($c<\tfrac12$) on the true model with probability tending to one as $n$ grows, and when
+they are confined to a set of size $n^{1/2-\epsilon}$ it puts mass at least $1-n^{-c}$ ($c<\epsilon$), again with probability tending to one, on the models between the truth
 and that set.
 
 **4. Calibration (choosing the ladder, then freezing it).** The sampler moves from $\pi_0$ to $\pi$ through tempered
@@ -79,7 +79,7 @@ $1/T_e$, `cpp/v3_calib.h:25-44`; candidate-grid steps are checked against the re
 found until it stops changing; if diagnostics fail, the whole calibration is repeated once with four times the effort.
 If no acceptable ladder is built at the final calibration tier, the last successful construction is used, else the pilot's schedule (`v3_calib.R:120-124`), so the run proceeds unless another stop occurs or the allocation is insufficient [R1-E10, R1-F4]. *Problems solved:* the
 ladder is fitted to this data set, and it is **frozen before the final run draws any random number**, so the final run
-is a standard SMC sampler with a fixed schedule — this is what makes its evidence estimate unbiased and its outputs
+is a standard SMC sampler with a fixed schedule — this is what makes its evidence estimate unbiased (the uninterrupted final run's estimate, given the calibration) [R2-O8] and its outputs
 analysable. Together with the fallback ladder, freezing is what lets a run with enough computing allocation produce output (the
 delivery result used in Theorems 6–7): under the idealised-machine conventions this holds on a bounded range of $(n,p)$
 where the code's two fixed integer limits are not reached, and for every $n$ when those two limits are idealised away

@@ -10,7 +10,7 @@ REGISTRY
 claim: W3-READER:PoolZ | kind: corollary | statement: STATEMENT.md:12-39 | premises: Theory_work/Wave1/W1-N1/STATEMENT.md §2
 name: Corollary PoolZ (the pooled evidence estimate is unbiased given the calibration)
 status: PROVED (by this seat, unchecked) | status_source: STATEMENT.md:13
-conclusion: identity: E[Zhat | C] = Z a.s. on the calibration-success event A, Zhat = (1/4) sum_r Zhat_r (equal-weight island mean, v3_run.R:154) | scope: SMC branch, any design, any data, N1 premises
+conclusion: identity: E[Zhat | C] = Z a.s. on the calibration-success event A, Zhat = (1/4) sum_r Zhat_r (equal-weight island mean, v3_run.R:154; potential record, data fixed; equals the printed field on completed runs) | scope: SMC branch, any design, any data, N1 premises
 depends_on: W1-N1:Thm-N1@1.0.0@proof:linearity
 method: Scripts/SMC_BVS/core/v3_run.R:91,154
 gates: correct:PENDING(bridge-leg Sol line check)
