@@ -1,0 +1,18 @@
+diff --git a/Theory_work/Wave3/W3-START2-R/READER_DELTA.md b/Theory_work/Wave3/W3-START2-R/READER_DELTA.md
+index 73fc5f08..2a3c9199 100644
+--- a/Theory_work/Wave3/W3-START2-R/READER_DELTA.md
++++ b/Theory_work/Wave3/W3-START2-R/READER_DELTA.md
+@@ -48,8 +48,10 @@ improved **and the rate under (A6) is optimal up to the factor $\sqrt{\log n}$**
+   violate it and are treated separately."
+ - (A5) add: "**The size bound on $H_l$ only counts reference sets in a union bound; it is not known to be needed.**"
+ - **(A6) The start odds are, to first order, a sum over null columns of block Bayes factors computed given subsets of
+-  the truth. Uncorrelated nulls make each expected factor of order $\sqrt{\log n}$; under (A5) alone a small correlation
+-  $Cn^{-1/2}$ shifts the Gaussian score and costs a factor $e^{O(\sqrt{\log n})}$. It suffices that these correlations be
++  the truth. With uncorrelated nulls the proof bounds the expectation of a truncated envelope of these factors by
++  $O(\sqrt{\log n})$ (an upper bound), and averaging over the columns and Markov's inequality give the displayed rate;
++  under (A5) alone a correlation of size $Cn^{-1/2}$ shifts the Gaussian score, and the same upper bound then carries a
++  factor $e^{O(\sqrt{\log n})}$. It suffices that these correlations be
+   at most $C/\sqrt{n\log n}$ given every proper subset of the truth (master statement). Not known to be necessary.**
+ 
+ ### Master theorem and bridges
+--- ERRATA.md is a new file (not in MANIFEST_R1): Theory_work/Wave3/W3-START2-R/ERRATA.md

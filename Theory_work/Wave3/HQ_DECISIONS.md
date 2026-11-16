@@ -657,3 +657,6 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Totals ≈ 24.6–26.1k (levers + m3) and ≈ 22.3–23.4k (with the floor), both under 28.3k. High bracket: ≈ 37k without the floor, ≈ 27k with it.
   - Gate: no 1M stage on today's code. Levers + m3 merged and measured in the SPR 10⁶ calibration pilot (≈ 27–50 core-h); the offer floor before the first 1M fit; re-size from measured numbers. AR-weak gate kept.
 - Theory: task T recorded (6cd699dd; TH09/TH128 PROVED-CHECKED, rows 1.2/3.2/3.6 plain); S3 88f36120 (17 SUSPECT + 15 cascade); T2 1574a127 (74/74 edges discharged); S2 4754e3e9 (F-UNI NARROWED 2.0.0; A:IDEAL-W⁺ registered).
+- 2026-11-16 ~09:30 CT. **W3-DIST RECORDED** (e7a7216c CC rule + tests; cb642afd record): all 20 claims PROVED-CHECKED, with no T01 caveat. Row 2.1 (distribution consistency, Song–Liang Thms 1–2 analogue, display (i)) moves from in progress to proved; thm9 + card swap variant A in progress.
+  - Remaining conditions: Thm-B/B3 on W3-POST:Thm-1; DIST-C on the SAMP delivery premises + EX-A; Cor C on EX-A.
+  - The owner's top-priority item is closed.

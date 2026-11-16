@@ -115,3 +115,137 @@ the registry change. Newest entries at the bottom. Format:
 - 6 dependents SUSPECT; restored: —
 
 - 2026-11-16 correctness event (rollback history, W2-UNI): W2-UNI:F-UNI 1.1.0 SUSPECT (task S1) -> NARROWED 2.0.0 (task S2); clear to ACTIVE 2.1.0 in S4 with W2-FAC-A:Prop-F-FAC. Cause: every-n delivery cited Prop-F's cap-ℓ_n method (transfer NO: Theory_work/Dept/research/FUNI_transfer/TR1_sol.md). Narrow: (a) IDEAL-W on 𝔇, (b) A:IDEAL-W⁺ (new assumption; IDEAL-W unchanged). Statement-change check: Theory_work/Dept/research/FUNI_NARROW/DIFF_sol.md@fc30c749 (Sol DIFF PASS, WEAKER). UNI-0/UNI-1 stay SUSPECT (S4); SAND-R, SAND-Rp, RM-R, Examples stay SUSPECT via UNI-0 (noted). HQ GO (task S2).
+
+## 2026-11-16 — NARROW HQ_AUDIT-W1C:A2
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 31 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW HQ_AUDIT-W1C:A3
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 0 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-FAC-A:Thm-FAC-L
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 3 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-FAC-A:Prop-F-FAC
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 15 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-FAC-B:Thm-FAC-CS
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 4 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-FAC-PK:Thm-FAC-PK
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 0 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-FAC-S5:Thm-FAC-BCS-R
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 1 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-FAC-X:Thm-FAC-CS-iid
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 1 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-FAC-X:Thm-FAC-GL
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 0 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-FAC-X:X10
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 1 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-FAC-XA:X4
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 0 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-LOC2:F-LOC2
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 1 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-UNI:UNI-0
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 4 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-UNI:UNI-1
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 0 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-FAC-S5:L5.C4-R
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 3 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-LOC2:F-LOC2.exp
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 2 dependents SUSPECT; restored: —
+
+## 2026-11-16 — NARROW W2-LOC2:F-LOC2.poly
+
+- decided by: HQ
+- reason: HQ GO real run (task S4, 2026-11-16): batch NARROW (A:IDEAL-W⁺ / bounded domain 𝔇), correctness event (same as W2-UNI:F-UNI): every-n delivery under plain IDEAL-W not covered (validators le ≤ 10⁶, ℓ+|S̃₀| ≤ INT_MAX). Statement-change check Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (Sol DIFF PASS, WEAKER); patches Theory_work/Dept/research/IDEALW_BATCH/patches/@46e58252
+- 2 dependents SUSPECT; restored: —
+
+- 2026-11-16 correctness event (rollback history, HQ_AUDIT-W1C): HQ_AUDIT-W1C:A2, HQ_AUDIT-W1C:A3 SUSPECT (S3) -> NARROWED (major) -> cleared ACTIVE (task S4 batch NARROW, A:IDEAL-W⁺ / 𝔇). DIFF Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (PASS, WEAKER). HQ GO.
+
+- 2026-11-16 correctness event (rollback history, W2-FAC-A): W2-FAC-A:Thm-FAC-L, W2-FAC-A:Prop-F-FAC SUSPECT (S3) -> NARROWED (major) -> cleared ACTIVE (task S4 batch NARROW, A:IDEAL-W⁺ / 𝔇). DIFF Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (PASS, WEAKER). HQ GO.
+
+- 2026-11-16 correctness event (rollback history, W2-FAC-B): W2-FAC-B:Thm-FAC-CS SUSPECT (S3) -> NARROWED (major) -> cleared ACTIVE (task S4 batch NARROW, A:IDEAL-W⁺ / 𝔇). DIFF Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (PASS, WEAKER). HQ GO.
+
+- 2026-11-16 correctness event (rollback history, W2-FAC-PK): W2-FAC-PK:Thm-FAC-PK SUSPECT (S3) -> NARROWED (major) -> cleared ACTIVE (task S4 batch NARROW, A:IDEAL-W⁺ / 𝔇). DIFF Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (PASS, WEAKER). HQ GO.
+
+- 2026-11-16 correctness event (rollback history, W2-FAC-S5): W2-FAC-S5:Thm-FAC-BCS-R, W2-FAC-S5:L5.C4-R SUSPECT (S3) -> NARROWED (major) -> cleared ACTIVE (task S4 batch NARROW, A:IDEAL-W⁺ / 𝔇). DIFF Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (PASS, WEAKER). HQ GO.
+
+- 2026-11-16 correctness event (rollback history, W2-FAC-X): W2-FAC-X:Thm-FAC-CS-iid, W2-FAC-X:Thm-FAC-GL, W2-FAC-X:X10 SUSPECT (S3) -> NARROWED (major) -> cleared ACTIVE (task S4 batch NARROW, A:IDEAL-W⁺ / 𝔇). DIFF Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (PASS, WEAKER). HQ GO.
+
+- 2026-11-16 correctness event (rollback history, W2-FAC-XA): W2-FAC-XA:X4 SUSPECT (S3) -> NARROWED (major) -> cleared ACTIVE (task S4 batch NARROW, A:IDEAL-W⁺ / 𝔇). DIFF Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (PASS, WEAKER). HQ GO.
+
+- 2026-11-16 correctness event (rollback history, W2-LOC2): W2-LOC2:F-LOC2, W2-LOC2:F-LOC2.exp, W2-LOC2:F-LOC2.poly SUSPECT (S3) -> NARROWED (major) -> cleared ACTIVE (task S4 batch NARROW, A:IDEAL-W⁺ / 𝔇). DIFF Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (PASS, WEAKER). HQ GO.
+
+- 2026-11-16 correctness event (rollback history, W2-UNI): W2-UNI:UNI-0, W2-UNI:UNI-1 SUSPECT (S3) -> NARROWED (major) -> cleared ACTIVE (task S4 batch NARROW, A:IDEAL-W⁺ / 𝔇). DIFF Theory_work/Dept/research/IDEALW_BATCH/DIFF2_sol.md@46e58252 (PASS, WEAKER). HQ GO.
+
+## 2026-11-16 — SUPERSEDE W3-START2:START-R / W3-START2-R:START-R
+
+- decided by: HQ
+- reason: HQ GO real run (task U, H5 card 14 (A), 2026-11-16): free supersession (card 14 (A), STRONGER; W3-START2-R:START-R implies W3-START2:START-R, STATEMENT.md supersession table)
+- axes (Y vs X): assumptions=incomparable, conclusion=equal, rate=unknown, scope=unknown
+- class free; key step check: —; dependents: 1 direct
+
+## 2026-11-16 — SUPERSEDE W3-START2:IF-START / W3-START2-R:IF-START
+
+- decided by: HQ
+- reason: HQ GO real run (task U, H5 card 14 (A), 2026-11-16): free supersession (card 14 (A), STRONGER; W3-START2-R:IF-START implies W3-START2:IF-START, STATEMENT.md supersession table)
+- axes (Y vs X): assumptions=better, conclusion=equal, rate=unknown, scope=unknown
+- class free; key step check: —; dependents: 0 direct
