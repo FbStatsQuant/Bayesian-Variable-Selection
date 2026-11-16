@@ -52,6 +52,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | SL0 PC check (RUNNING, pre-freeze per HQ) | C-PACK:SL0: diff check of the 5 files changed since the C1 snapshot → record SL0 → drop SL0 from 11 conditional statuses | D48 |
 | accept-identity follow-ups | NB-3 sunset of the legacy Windows fallback; NB-4 compute identity once | CR_accept_identity_opus.md |
 | Cont-R TH05.0 condition | Cont-R still lists SOP:TH05.0 (inherited via the removed RM-R edge); drop via a new full RM2 checkpoint | recorder note 11-16; HQ 11-16: conservative (extra condition only), post-freeze package together with TH05.0's own acceptance |
+| DIST 7 unharvested-strength items → HQ one-pager | after DIST R1 council: list with likely gain + cost each (DIST TARGET §4) → post-freeze sharpness review (consultant) | HQ 11-16 |
 | T03ACC E findings (10) + ERRATA E1–E4 | W3-T03ACC reviews/R1_disposition.md → post-freeze editorial batch (one 'editorial only' bump) | HQ 11-16 |
 | KL C-hits (post-freeze, D71 sweep) | W3-MISR STATEMENT:176 heading 'projected law — SL Thm 4 analog'; G_corollaries.md:91-93 proof copy (editorial); CLAIMS_CARD:41 'best candidate predictor' → supp β^𝒞; API_AUDIT sharp2 TRIAGE:93, f01:90 notes | KL sweep 11-16 |
 | Format package: sweep interpretive sentences in registered spans | D71: every 'hence/reading/this means' inside a registered span → move out or check as claim | HQ/consultant 11-16 |
