@@ -23,8 +23,14 @@ frozen in commit `2714aaca` (content of `68443dcc`); `manifest.py verify` OK; bi
 | Delivery-route sentence corrected (frozen F-UNI@2.1.0 states the shipped cap; only C-DLV Prop-F used ℓ_n) | 3.1, 3.2 | EQUAL | `bf4495e8` [R1-F6] |
 | R2 editorial items (13) | 3.1, 3.5, Thms 1, 6, 7, 10 | EQUAL | `68443dcc`; card v1.12 [R2-*] |
 
-Post-freeze editorial batch: R3 opus items 1–2 (comma splice thm10; DLV-0 condition note in R4's unused remark); RM2-R
-READER_DELTA F-UNI cap sentence (manager-queued, RM2-R ticket).
+**Known pending editorial (post-freeze; not in MANIFEST_R3):**
+- R3 opus items 1–2: comma splice in thm10 honest limits; DLV-0 condition note in R4's unused "Not claimed" remark.
+- [AUD-S4] (W3-AUDIT v1.3, theory/W3-AUDIT f98cf498, WRITING_DELTA_v1.3.md item 4; EQUAL, concerns Song–Liang's paper):
+  card row 3.1 "Buys" — replace "but prove nothing about its selection output" by "their statements on the sampler's output
+  are limits in the number of iterations at fixed data (supplement pp. 12–13, 16–17); they prove nothing at a finite
+  computational budget or jointly in n"; card row 2.1 "Buys" (Corollary 9C comparison) — "the sampler's output, which they
+  do not treat" to be aligned to the same wording.
+- RM2-R READER_DELTA F-UNI cap sentence (manager-queued, RM2-R ticket).
 
 ## Rows 3.1, 3.2, 3.6 — before (card v1.5) / after (card v1.12), statement column
 **3.1 before.** **Main theorem: the reported model is the truth (Gaussian rows).** Under visibility, a leakage set of size $\le n^b$ ($b<\tfrac12$) with locality, population sparse eigenvalue floors and local regressions inside the leakage set: on one data event of probability $\to1$, every admissible run that produces output, for every seed and calibration outcome, reports $S_0$. *Delivery clause (body only until resolved [H5-2]):* the code has two fixed integer limits; under the delivery conventions (idealised machine, covered configuration, sufficient declared allocation) every run produces output on the bounded domain of $(n,p_{\mathrm{raw}})$ where neither limit is reached, and, under IDEAL-W⁺ (the two limits lifted), for every $n$, with $P(\hat S=S_0)\to1$ [FUNI-N]. The delivery statement idealises two fixed integer limits in the code (a base search cap of $10^6$, `v3_run.R:96`, and a 32-bit integer bound $2^{31}-1$ on the search cap, `cpp/v3_core.cpp:474`): the first can bind only when $n+p+1$ exceeds $2^{10^6}$, the second only when the starting model has more than about $2.1\times10^9$ variables, which needs $n\gtrsim4.3\times10^9$ since $|\tilde S_0|\le\lfloor n/2\rfloor$; without the idealisation, delivery holds on the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, and with it (IDEAL-W⁺) for every $n$ [RM2R-5].
