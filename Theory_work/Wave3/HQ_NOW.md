@@ -11,6 +11,11 @@
 - When: BNP sends a "quiet window" (expected 11-16 early afternoon CST). HQ pauses SMC departments' leads, restarts, verifies, then messages BNP back. BNP launches nothing until confirmed.
 - BNP already moved its temp to /home/fb31/bnp_tmp and removed 73 stale sandboxes (11-15).
 
+## POST-FREEZE QUEUE (HQ, collected)
+- Engineering doc batch: the preflight README/v3_fit comment fix; the v3_core.cpp:144 comment (says B ≤ 20, while 16 is enforced); the item1_um_checks.py Windows path.
+- Theory: the registry blocks-assumption source line (C-GROW 61 → 65–67); the 6 RM2 supersessions; the suspect-dependents NARROW batch; track D #2 → #3 → #5′ from Sat 11-21.
+- Tools: manifest.py honours .gitignore.
+
 ## RESUMED 11-16 16:00 CT (owner order)
 - Theory and Engineering resumed on Claude Personal; Writing stays idle on Claude Work.
 - **24 live SMC threads were switched from Claude Third to Claude Personal.** The 84 settled, finished threads were left as they are; they will not run again.
