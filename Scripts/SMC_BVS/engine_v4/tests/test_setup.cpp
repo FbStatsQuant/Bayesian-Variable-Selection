@@ -434,3 +434,69 @@ TEST(cli_setup_pipeline) {
     std::remove((d + sfx).c_str());
 }
 #endif
+
+// ---- setup.bin -> the island's Start / Neighbours (manager request; WP3 island, WP4 calibration)
+#include "v4/setup_island.h"
+TEST(island_loader_round_trip) {
+  namespace dep = v4::island::dep;
+  for (auto d : {stk::AR, stk::TIE}) {
+    Fixture F(d, 150, 1500, 101);
+    SetupOptions o; o.threads = stk::threads();
+    SetupResult r = run_setup(F.D(), o);
+    SCHECK(r.status == v4::Status::completed, "%s", r.reason.c_str());
+    const std::string path = tmpdir() + "/isl_" + std::to_string(getpid()) + ".bin";
+    write_setup_bin(path, F.D(), r, o, "data-hash-A");
+    dep::Start st; dep::Neighbours nb;
+    std::string h = load_for_island(path, F.D(), st, nb, "data-hash-A");
+    SCHECK(!h.empty() && st.D == &F.D() && st.J == r.part.J, "loader header (%s)", stk::design_name(d));
+    // every array, in bits, against WP2's tables (sampler arrays stored here only for the comparison, D-18)
+    Tables T2 = r.tab; build_start(F.D(), r.part, T2, /*store_sampler=*/true);
+    bool ok = nb.ptr == r.corr.nb.ptr && nb.idx == r.corr.nb.idx && stk::same_bits(st.logZbar0, T2.logZbar0);
+    const int K = F.D().K;
+    for (int b = 0; ok && b < st.J; ++b) {
+      ok = st.blocks[b] == std::vector<int>(r.part.block(b), r.part.block(b) + r.part.size(b));
+      for (size_t c = 0; ok && c < st.logr[b].size(); ++c) ok = stk::same_bits(st.logr[b][c], T2.logr[T2.code_ptr[b] + c]) && stk::same_bits(st.lr(b, (uint32_t)c), st.logr[b][c]);
+      for (size_t j = 0; ok && j < st.logprof[b].size(); ++j) {
+        const int64_t row = T2.logprof_ptr[b] + (int64_t)j;
+        ok = stk::same_bits(st.logprof[b][j], T2.logprof[row]) && st.codes_by_size[b][j].size() == (size_t)(T2.cbs_ptr[row + 1] - T2.cbs_ptr[row]);
+        for (size_t q = 0; ok && q < st.codes_by_size[b][j].size(); ++q)
+          ok = (uint32_t)st.codes_by_size[b][j][q] == T2.codes_by_size[T2.cbs_ptr[row] + q] && stk::same_bits(st.sub_cum[b][j][q], T2.sub_cum[T2.sub_ptr[row] + q]);
+      }
+      for (int r0 = 0; ok && r0 <= K; ++r0) {
+        const size_t row = (size_t)b * (K + 1) + r0;
+        ok = st.cond_cum[b][r0].size() == (size_t)(T2.cond_ptr[row + 1] - T2.cond_ptr[row]);
+        for (size_t q = 0; ok && q < st.cond_cum[b][r0].size(); ++q) ok = stk::same_bits(st.cond_cum[b][r0][q], T2.cond_cum[T2.cond_ptr[row] + q]);
+      }
+    }
+    for (int b = 0; ok && b <= st.J; ++b) for (int k = 0; ok && k <= K; ++k) ok = stk::same_bits(st.logF[b][k], T2.logF_at(b, k));
+    SCHECK(ok, "island Start / Neighbours differ from setup's arrays (%s)", stk::design_name(d));
+    // WP3's own stand-in sampler, run on the loaded logr, reproduces WP2's arrays (same bits)
+    dep::Start re = st; dep::build_sampler(re, F.D());
+    ok = stk::same_bits(re.logZbar0, st.logZbar0);
+    for (int b = 0; ok && b < st.J; ++b) {
+      for (size_t j = 0; ok && j < st.sub_cum[b].size(); ++j)
+        for (size_t q = 0; ok && q < st.sub_cum[b][j].size(); ++q) ok = stk::same_bits(re.sub_cum[b][j][q], st.sub_cum[b][j][q]);
+      for (int r0 = 0; ok && r0 <= K; ++r0)
+        for (size_t q = 0; ok && q < st.cond_cum[b][r0].size(); ++q) ok = stk::same_bits(re.cond_cum[b][r0][q], st.cond_cum[b][r0][q]);
+    }
+    SCHECK(ok, "WP3's build_sampler on the loaded logr differs from WP2's arrays (%s)", stk::design_name(d));
+    // pi_0 draws at the same Philox addresses (INTERFACES §3 v0.1.5 slots) and comp: identical
+    Start S; S.D = &F.D(); S.P = &r.part; S.T = &r.tab; S.logZbar0 = r.tab.logZbar0;
+    v4::AddressedSource as;
+    v4::Model a, b2; ok = true;
+    for (uint32_t i = 1; ok && i <= 5000; ++i) {
+      v4::Address ad; ad.seed = 77; ad.role = v4::R_FINAL; ad.island = 3; ad.xph = v4::X_INIT; ad.particle = i;
+      S.draw_pi0(as, ad, a);
+      dep::draw_pi0(st, [&](uint32_t slot) { v4::Address x = ad; x.slot = slot; return v4::uniform_at(x); }, b2);
+      ok = a == b2 && stk::same_bits(S.comp(a), st.comp(b2));
+    }
+    SCHECK(ok, "pi_0 draws or comp differ between setup::Start and island::dep::Start (%s)", stk::design_name(d));
+    // refusals: other data (p differs) and another data.bin hash
+    Fixture G(d, 150, 1400, 102);
+    bool t1 = false, t2 = false;
+    try { load_for_island(path, G.D(), st, nb); } catch (const v4::Error& e) { t1 = e.st == v4::Status::invalid_input; }
+    try { load_for_island(path, F.D(), st, nb, "data-hash-B"); } catch (const v4::Error& e) { t2 = e.st == v4::Status::invalid_input; }
+    SCHECK(t1 && t2, "loader refusals (%s): p mismatch %d, data hash %d", stk::design_name(d), (int)t1, (int)t2);
+    std::remove(path.c_str());
+  }
+}

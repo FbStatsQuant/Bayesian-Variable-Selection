@@ -23,7 +23,7 @@ set(V4_COMMON_SRC
 set(V4_WP4_SRC src/merge/wp4_io.cpp)   # WP4: calib/island/fit files, merge command
 set(V4_STUB_SRC src/stubs/stubs.cpp)
 # WP2 setup (bit library: tables and start law must equal the v3 bits)
-set(V4_SETUP_SRC src/setup/corr.cpp src/setup/partition.cpp src/setup/tables.cpp src/setup/start.cpp src/setup/setup_run.cpp src/setup/account.cpp)
+set(V4_SETUP_SRC src/setup/corr.cpp src/setup/partition.cpp src/setup/tables.cpp src/setup/start.cpp src/setup/setup_run.cpp src/setup/account.cpp src/setup/setup_island.cpp)
 # WP5: evaluator and post (bit flags: they call BitScorer and must reproduce the stored F)
 set(V4_WP5_SRC src/eval/posterior.cpp src/eval/model.cpp src/eval/dist.cpp src/eval/metrics.cpp src/eval/io.cpp
   src/eval/run.cpp src/post/law.cpp)

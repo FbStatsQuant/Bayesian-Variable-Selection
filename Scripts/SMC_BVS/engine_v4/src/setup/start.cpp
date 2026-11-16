@@ -25,19 +25,19 @@ double Start::comp(ModelView S) const {
 static inline int cat_draw_gt(const double* b, const double* e, double u) { return (int)(std::upper_bound(b, e, u) - b); }
 
 // core/cpp/v3_start.h:158-176. Variate order: the total size; block sizes for b = J..1 while r > 0; sub-models for
-// b = 1..J with k_b > 0. Uniform t is read at address a with slot t (INTERFACES §3, initial pi_0 draw).
+// b = 1..J with k_b > 0. Slots (INTERFACES v0.1.5 §3): PI0_SIZE 0; PI0_BLOCKSIZE b; PI0_SUBMODEL b. A compat
+// source ignores the address and returns the serial stream in this same order.
 void Start::draw_pi0(UniformSource& us, Address a, Model& S) const {
   const int K = T->K;
-  uint32_t slot = a.slot;
-  auto U = [&]() { Address x = a; x.slot = slot++; return us.u(x); };
-  int k = cat_draw_gt(T->size_cum.data(), T->size_cum.data() + K + 1, U());
+  auto U = [&](SlotKind kind, uint32_t index) { Address x = a; x.slot = slot_of(kind, index); return us.u(x); };
+  int k = cat_draw_gt(T->size_cum.data(), T->size_cum.data() + K + 1, U(SK_PI0_SIZE, 0));
   thread_local std::vector<std::pair<int, int>> kb;  // (block, size) with size > 0, in decreasing block order
   kb.clear();
   int r = k;
   for (int b = T->J - 1; b >= 0 && r > 0; --b) {
     size_t row = (size_t)b * (K + 1) + r;
     const double* c = &T->cond_cum[T->cond_ptr[row]];
-    int j = cat_draw_gt(c, &T->cond_cum[0] + T->cond_ptr[row + 1], U());
+    int j = cat_draw_gt(c, &T->cond_cum[0] + T->cond_ptr[row + 1], U(SK_PI0_BLOCKSIZE, (uint32_t)b));
     if (j > 0) kb.push_back({b, j});
     r -= j;
   }
@@ -50,11 +50,11 @@ void Start::draw_pi0(UniformSource& us, Address a, Model& S) const {
     uint32_t code;
     if (stored) {
       const double* c = &T->sub_cum[T->sub_ptr[row]];
-      int i = cat_draw_gt(c, &T->sub_cum[0] + T->sub_ptr[row + 1], U());
+      int i = cat_draw_gt(c, &T->sub_cum[0] + T->sub_ptr[row + 1], U(SK_PI0_SUBMODEL, (uint32_t)b));
       code = T->codes_by_size[T->cbs_ptr[row] + i];
     } else {  // D-18: the within-size law of this block and size, recomputed from logr (same bits as the stored arrays)
       sub_cum_of(*T, b, P->size(b), j, sc);
-      int i = cat_draw_gt(sc.data(), sc.data() + sc.size(), U());
+      int i = cat_draw_gt(sc.data(), sc.data() + sc.size(), U(SK_PI0_SUBMODEL, (uint32_t)b));
       uint32_t n; code = codes_of_size(P->size(b), j, &n)[i];
     }
     for (int t = 0; t < P->size(b); ++t) if (code & (1u << t)) S.push_back(P->block(b)[t]);
