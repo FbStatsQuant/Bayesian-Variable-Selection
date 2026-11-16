@@ -301,6 +301,7 @@ run_one <- function(design, n, b, kappa, seed, mode_margin = FALSE) {
   out$wk_in_start <- (S0[wk] %in% St)
   out$moves <- ls$moves; out$cap <- cap; out$ell <- ell; out$limit <- ls$limit; out$certified <- ls$certified
   out$final_eq_S0 <- identical(as.integer(ls$final), as.integer(S0)); out$final_size <- length(ls$final)
+  out$final_miss <- sum(!(S0 %in% ls$final)); out$final_extra <- sum(!(ls$final %in% S0))
   out$end_ok <- out$final_eq_S0 && ls$certified
   out$all_del_extra <- (ls$moves == nd); out$n_del_extra <- nd; out$n_other <- ls$moves - nd
   out$moveseq_other <- paste(ls$types[ls$types != "del_extra"], collapse = " ")
@@ -308,6 +309,9 @@ run_one <- function(design, n, b, kappa, seed, mode_margin = FALSE) {
   out$path_NA_ok <- (max(ls$naC, ls$naD, ls$naE) < 0)
   out$tl_min <- ls$tl_min; out$tl_first <- ls$tl_first; out$tl_last <- ls$tl_last; out$n_tl <- ls$n_tl
   out$tl_ok <- isTRUE(ls$tl_min > 0)
+  sc0 <- scan_at(P, S0)                                   # the base lattice set T = S0 (path independent)
+  out$tl_S0 <- sc0$FS - max(c(sc0$Fdel, as.vector(sc0$Fsw)))     # F(S0) - best truth-removing neighbour (deletion of a truth / swap)
+  out$na_S0 <- max(sc0$Fadd) - sc0$FS                           # best addition margin at S0 (< 0: no addition improves)
   out$mm_le3 <- mm[["mm_le3"]]; out$mm_le1 <- mm[["mm_le1"]]
   out$sec_setup <- as.numeric(t1 - t0); out$sec_ls0 <- as.numeric(t2 - t1)
   out

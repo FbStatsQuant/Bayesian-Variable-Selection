@@ -1,4 +1,4 @@
-# W3-RM2-R — READER_DELTA (draft for CP1; RIDER_RULES §5)
+# W3-RM2-R — READER_DELTA (v0.2, after CP1; RIDER_RULES §5)
 
 Source of the current reader versions (read only): `/home/fb31/BVS-wt/W3-READER/Theory_work/Wave3/W3-READER/READER_VERSIONS.md`
 draft v0.1 (W3-READER CP1, 2026-11-15), §6 "Theorem 6" (Gaussian rows; master RM2-R) and §7 "Theorem 7" (fixed
@@ -13,7 +13,7 @@ design; master RM2-F). Nothing here is written in W3-READER's folder; the manage
   removal directions, now with an explicit constant. Nothing else in the hypotheses changes.
 * **Theorems 6 and 7 (conclusion).** The reader versions already say "the run produces output with probability one"
   and "P(Ŝ = S₀) → 1", through two NEW bridges (B6.6, B7.4 to W2-UNI:F-UNI). This ticket's masters state that
-  directly: under the standing conventions (exact arithmetic, an idealised machine with unbounded integers — which also lifts two
+  directly (HQ CP1 shape: the output-conditional clause leads; delivery goes in the body): under the standing conventions (exact arithmetic, an idealised machine with unbounded integers — which also lifts two
   fixed size ceilings in the code, see STATEMENT §2 IDEAL-W⁺ — shipped configuration, sufficient allocation) every run
   on every valid non-degenerate input returns output, and P(Ŝ ≠ S₀) ≤ P(S₀ is not the unique best-scoring model) +
   P(the local search from the start mode does not reach S₀). B6.6 and B7.4 are no longer needed.
@@ -30,12 +30,20 @@ local-regression part of (A5)(b) verbatim. Write C_R := 3(M + σ²), where ‖X�
   (n − 1)φ₀²θ*²_min/σ² ≥ 32(|Q| + 1) + 64 log(2p) + c log n for a fixed c > max{16, 8(A + 1) + 4(2A + 1)C_R/σ²}.
   (Under (A5)(a) no extra clause: (A1)'s beta-min with C_β²φ₀² large enough suffices — see bridge R7.2.)
 
-**Theorems 6 and 7 — conclusion (one display, unchanged in form).**
-$$P(\text{the run produces output})=1\ \text{for every }n,\qquad P(\hat S=S_0)\to1,$$
-with the remark: more precisely, for every seed and calibration outcome,
-P(Ŝ ≠ S₀) ≤ P(S₀ is not the unique maximiser of the score) + P(the local search from the start mode misses S₀),
-and both terms tend to zero. (Remark (i) of Theorem 6 — the search only deletes spurious members, at most n^b moves,
-cap never binding — is unchanged.)
+**Theorems 6 and 7 — conclusion (shape set by HQ and the consultant at CP1, rows 3.1/3.2: lead with the clause that
+needs no delivery convention).**
+Main display (no delivery premise needed):
+$$	ext{there are data events }\mathcal G_n,\ P(\mathcal G_n)	o1,\ 	ext{on which every run that produces output
+reports }\hat S=S_0,\ 	ext{for every seed and calibration outcome.}$$
+Body of the theorem / first remark (with the delivery conventions stated: exact arithmetic, an idealised machine with
+unbounded integers that also lifts two fixed size ceilings of the code, the shipped configuration, a sufficient
+declared allocation — master STATEMENT §2 (D), IDEAL-W⁺): every run on every valid input produces output, so
+$$P(\hat S=S_0)	o1,\qquad P(\hat S
+e S_0)\le P(S_0	ext{ is not the unique maximiser of the score})+P(	ext{the
+local search from the start mode misses }S_0),$$
+for every seed. (Remark (i) of Theorem 6 — the search only deletes spurious members, at most n^b moves, cap never
+binding — is unchanged.) In words for the paper: errors come from two sources only, the posterior mode being wrong and
+the local search not reaching it; both vanish.
 
 **"Why each assumption" lines (Theorem 7; replace (A3), add to (A1)).**
 - (A1) beta-min: the order σ√(log n/n) is that of every comparable selection theorem; the constants are proof artefacts.

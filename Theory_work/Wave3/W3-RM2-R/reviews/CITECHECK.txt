@@ -1,0 +1,16 @@
+W3-RM2-R citecheck: 171 citations extracted from 11 files; 0 MISS; 18 resolved by the unique-file fallback
+FALLBACK Theory_work/Wave3/W3-RM2-R/PLAN.md: L0_core.md -> Theory_work/Wave3/W3-RM/lemmas/L0_core.md
+FALLBACK Theory_work/Wave3/W3-RM2-R/PLAN.md: cpp/v3_core.cpp -> Scripts/SMC_BVS/core/cpp/v3_core.cpp
+FALLBACK Theory_work/Wave3/W3-RM2-R/PLAN.md: v3_calib.R -> Scripts/SMC_BVS/core/v3_calib.R
+FALLBACK Theory_work/Wave3/W3-RM2-R/PLAN.md: v3_core.cpp -> Scripts/SMC_BVS/core/cpp/v3_core.cpp
+FALLBACK Theory_work/Wave3/W3-RM2-R/PLAN.md: v3_fit.R -> Scripts/SMC_BVS/core/v3_fit.R
+FALLBACK Theory_work/Wave3/W3-RM2-R/PLAN.md: v3_preprocess.R -> Scripts/SMC_BVS/core/v3_preprocess.R
+FALLBACK Theory_work/Wave3/W3-RM2-R/PLAN.md: v3_run.R -> Scripts/SMC_BVS/core/v3_run.R
+FALLBACK Theory_work/Wave3/W3-RM2-R/PLAN.md: v3_start.h -> Scripts/SMC_BVS/core/cpp/v3_start.h
+FALLBACK Theory_work/Wave3/W3-RM2-R/STATEMENT.md: API_AUDIT/pass1/TRIAGE.md -> Theory_work/Wave3/API_AUDIT/pass1/TRIAGE.md
+FALLBACK Theory_work/Wave3/W3-RM2-R/STATEMENT.md: L2_degenerate.md -> Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md
+FALLBACK Theory_work/Wave3/W3-RM2-R/STATEMENT.md: lemmas/L1_resources.md -> Theory_work/Wave1C/C-DLV/lemmas/L1_resources.md
+FALLBACK Theory_work/Wave3/W3-RM2-R/STATEMENT.md: lemmas/L3_grid.md -> Theory_work/Wave1C/C-DLV/lemmas/L3_grid.md
+FALLBACK Theory_work/Wave3/W3-RM2-R/lemmas/Q5_dlv0.md: v3_calib.R -> Scripts/SMC_BVS/core/v3_calib.R
+FALLBACK Theory_work/Wave3/W3-RM2-R/lemmas/Q5_dlv0.md: v3_fit.R -> Scripts/SMC_BVS/core/v3_fit.R
+FALLBACK Theory_work/Wave3/W3-RM2-R/lemmas/Q5_dlv0.md: v3_run.R -> Scripts/SMC_BVS/core/v3_run.R
