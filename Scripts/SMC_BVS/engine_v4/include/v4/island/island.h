@@ -70,7 +70,8 @@ struct IslandConfig {
   bool store_dup_filter = true;             // exact snapshot duplicate filter (execution parameter; content unchanged)
   bool store_parallel_compact = true;       // compaction at pass/step boundaries with all threads (content unchanged)
   bool check_store = true;                  // I1 on the top store (and the leader stores), in parallel over index ranges,
-                                            // before every checkpoint and before the store is reported (the final write),
+                                            // before every checkpoint and on every exit of the run, whatever its status
+                                            // (before any island file can be written; review PR47 finding 1),
                                             // whenever the store changed since the last check (WP3_ARCH_REVIEW R4, O1).
                                             // The only run-time proof of I1: production never turns it off
   bool check_store_each_step = false;       // tests / debugging: also after every step (the pre-O1 behaviour; ~5.7 s per

@@ -36,7 +36,7 @@ std::string write_island_file(const std::string& path, const IslandRun& r, Arith
     Json c = r.cost_header.type() == Json::OBJ ? r.cost_header : Json::object();
     const int mm = c.contains("m") ? (int)c.at("m").i64() : 0;
     Json cols = Json::object();
-    for (const StepCost& row : r.cost) for (auto& kv : cost_row_json(row, mm).items()) cols[kv.first].push(kv.second);
+    for (const StepCost& row : r.cost) { const Json j = cost_row_json(row, mm); for (auto& kv : j.items()) cols[kv.first].push(kv.second); }   // j outlives the loop
     c["rows"] = (int64_t)r.cost.size(); c["columns"] = cols;
     m["cost"] = c;
   }

@@ -344,8 +344,8 @@ class IslandEngine {
   // ---- I1 store check (WP3_ARCH_REVIEW R4, package O1) --------------------------------------------------------
   // The only run-time proof of I1 (strictly sorted under the store order, no model twice, size <= cap). It used to run
   // serially after every step (6.6 s per step at 4e7 entries, MEASURED Owls; ~5.7 s on SPR, job 2749328); it now runs
-  // in parallel over index ranges, and only where a store leaves the process: before every checkpoint and before the
-  // final write (the store moved into the IslandRun). A store whose generation has not changed since its last check is
+  // in parallel over index ranges, and only where a store leaves the process: before every checkpoint and on every
+  // exit of run() whatever the status (the final write; review PR47 finding 1). A store whose generation has not changed since its last check is
   // not checked again (the kept run is immutable once published). Read-only: no output bit depends on it.
   uint64_t checked_gen_top = ~0ull, checked_gen_l0 = ~0ull, checked_gen_l1 = ~0ull;
   void check_stores() {
@@ -752,6 +752,12 @@ class IslandEngine {
       try { sync_ledgers(); } catch (const std::bad_alloc&) { res.status = 3; res.reason = "resource_limit: out of memory"; }
       res.partial = res.status == 3;
     }
+    // I1 on EVERY exit of an engine with live stores, before the result is handed over (review PR47 finding 1): completed,
+    // interrupted, numerical_failure and resource_limit (the step-boundary budget exit and a caught out-of-memory) alike,
+    // whether or not the store is exported below. A violation throws internal_error, so no IslandRun and no island file
+    // exist for that island: internal_error takes precedence over numerical_failure and resource_limit (INTERFACES §7,
+    // fit_status order; §7 "Invariant violations (I1-I7) -> internal_error"). Skipped for a generation already checked.
+    check_stores();
     res.T = T; res.grid = grid;
     if (stop && res.status == 0) { res.status = 1; res.reason = "interrupted after checkpoint (stop_after_step)"; }
     // outputs
@@ -764,7 +770,6 @@ class IslandEngine {
     res.island_best = master.island_best; res.hpm = master.hpm;
     if (res.status == 0 || res.status == 1 || calib) {   // only a completed (or test-interrupted) island reports its store: a failed
                                                 // or refused island may hold part of an unfinished round (GUARD-W, review m1)
-      check_stores();   // before the final write (O1; skipped when the last checkpoint already checked this generation)
       Kept& K = *top.k;      // moved, not copied (review m8b; the run is over)
       res.top_v = std::move(K.v); res.top_hash = std::move(K.hash); res.top_off = std::move(K.off); res.top_len = std::move(K.len); res.top_pool = std::move(K.pool);
     }

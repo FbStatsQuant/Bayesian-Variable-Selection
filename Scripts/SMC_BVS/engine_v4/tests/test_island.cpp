@@ -1156,3 +1156,50 @@ TEST(cost_record_per_step) {
               r.cost[1].wall, (double)r.cost[1].sweeps / r.cost[1].particle_rounds, r.cost[1].mean_S, (double)r.cost[1].flips / ((double)r.cost[1].particle_rounds * m),
               (double)r.cost[1].act_cols / std::max<uint64_t>(1, r.cost[1].passes), (unsigned long long)r.cost[1].offers);
 }
+// Review PR47 finding 1: I1 runs on every exit, whatever the status. The reviewer's case (a final island stopped by the
+// step-boundary memory budget after step 1) and a caught out-of-memory in the parallel compaction: a valid store is
+// checked once and the island returns resource_limit; a corrupted store raises internal_error, so no IslandRun and no
+// island file exist (INTERFACES §7: internal_error before resource_limit).
+TEST(store_check_on_failure_exits) {
+  TmpGuard tg;
+  Fixture F(100, 300, 43);
+  IslandConfig base = small_cfg(); base.kernel = KernelKind::LabelMajor; base.threads = 3; base.G = 16;
+  auto expect_i1_error = [&](const IslandConfig& c, const char* what) {
+    bool threw = false; std::string msg;
+    try { IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
+          msg = "returned status " + std::to_string(r.status) + " (" + r.reason + "), checks " + std::to_string(r.ks.store_checks); }
+    catch (const v4::Error& e) { threw = e.st == v4::Status::internal_error && std::string(e.what()).find("I1") != std::string::npos; msg = e.what(); }
+    CHECKF(threw, "%s: %s", what, msg.c_str());
+  };
+  // (a) step-boundary budget exit (the reviewer's reproducer)
+  IslandConfig b = base; b.test_admission_k = .5; b.mem_budget = plan_island(F.D, F.st, b).total + 1024;
+  {
+    IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, b);
+    CHECKF(r.status == 3 && r.reason.find("mem_budget") != std::string::npos && r.ks.store_checks == 1, "budget exit, valid store: status %d checks %llu",
+           r.status, (unsigned long long)r.ks.store_checks);
+    std::string path = tg.add(wp3_tmp("pr47_budget.bin"));   // the failure file of a checked store is still written (no estimates)
+    write_island_file(path, r, Arith::ClassA, v4::Json::object());
+    CHECK(read_island_file(path).meta.at("status").str() == "resource_limit");
+  }
+  IslandConfig bc = b; bc.test_corrupt_store_step = 1;
+  expect_i1_error(bc, "budget exit, corrupted store");
+  // (b) a caught out-of-memory (inside phase A, the first pass of step 2: no compaction between the corruption after
+  //     step 1 and the failure)
+  uint64_t passes1 = 0;
+  {
+    IslandConfig a = base; a.ckpt_path = tg.add(wp3_tmp("pr47_ck")); a.ckpt_every_s = 1e9; a.stop_after_step = 1; wp3_rm(a.ckpt_path);
+    passes1 = run_island<Arith::ClassA>(F.D, F.st, F.nb, a).ks.passes;   // passes up to the end of step 1
+    wp3_rm(a.ckpt_path);
+  }
+  IslandConfig o = base; o.test_oom_pass = (int)passes1;   // throws in pass passes1 + 1
+  {
+    IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, o);
+    CHECKF(r.status == 3 && r.reason.find("out of memory") != std::string::npos && r.ks.store_checks == 1 && r.ks.passes == passes1 + 1,
+           "oom exit, valid store: status %d '%s' checks %llu passes %llu", r.status, r.reason.c_str(), (unsigned long long)r.ks.store_checks,
+           (unsigned long long)r.ks.passes);
+  }
+  IslandConfig oc = o; oc.test_corrupt_store_step = 1;
+  expect_i1_error(oc, "oom exit, corrupted store");
+  // (c) numerical-failure exits are covered by the same call (it precedes every status branch); interrupted runs by the
+  //     checkpoint guard (store_check_at_checkpoints_and_final_write)
+}
