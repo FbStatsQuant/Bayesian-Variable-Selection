@@ -1,0 +1,84 @@
+OK            [STATEMENT.md] Theory_work/INFRA/registry/assumptions.tsv:15-15 sha=03bb33e4ef | A:BLOCK-LE-16	assumption	yes	Blocks of size <=16	method partition is an X-measurable partition into blocks of 
+OK            [STATEMENT.md] Theory_work/Wave1C/C-GROW/STATEMENT.md:65-67 sha=cf7d7d1b25 | * **Blocks** C₁, …, C_J: the method's actual partition (complete linkage on 1 − |r̂|, top-down cut at
+OK            [STATEMENT.md] Theory_work/Wave3/W3-RM/STATEMENT.md:46-48 sha=df43cf5665 | * **Blocks.** The method's partition C₁, …, C_J (complete linkage on 1 − |r̂|, cut at B = min(⌊√n⌋, ⌊√p⌋, 16),
+OK            [STATEMENT.md] Theory_work/Wave3/W3-RM2/STATEMENT.md:217-217 sha=919266691c | partition with blocks ≤ 16. Assume (T1-R), (FL-R), (V-R), (L-R^b) with 15ρ + b < ½, and (W-R). Then, under the
+OK            [STATEMENT.md] Theory_work/Wave3/W3-RM2/STATEMENT.md:248-248 sha=42d601f1df | | (P1) SAND-F^b | Setting F, ‖μ‖² ≤ Mn, p ≤ n^A, a partition with blocks ≤ 16 that is a function of X, (G3a), 
+OK            [STATEMENT.md] Theory_work/Wave3/W3-RM2/STATEMENT.md:254-254 sha=8f21993269 | | (P7) SAND-R^b | Setting R, (FL-R) on sets ≤ 16 + s₀, (V-R), (L-R^b), 15ρ + b < ½ ⇒ [SAND(Q)] for any X-measu
+OK            [STATEMENT.md] v3_preprocess.R:22-22 sha=5c8543faed | B <- min(v3_isqrt(n), v3_isqrt(p), 16)            # B* = 16 (implementation limit)
+OK            [STATEMENT.md] Theory_work/State_of_Project/sections/02_method.tex:187-193 sha=5a2bf85828 | \item \textbf{Clustering:} complete linkage on the distance $1-|r_{jl}|$ computed from $X$; ties between candi
+OK            [STATEMENT.md] Theory_work/Wave1C/C-GROW/STATEMENT.md:57-57 sha=cbc10f9cb6 | * **G**: fixed raw design X^r (n × p, nonconstant columns), y^r = α1 + X^rβ + ε, ε ~ N_n(0, σ²I), σ² > 0 fixed
+OK            [STATEMENT.md] Theory_work/Wave3/W3-RM/STATEMENT.md:41-42 sha=4fcc27c486 | * **Setting R (Gaussian rows)** = UNI `STATEMENT.md` §1 design (R) / LOC2 `STATEMENT.md` §1: raw rows iid
+OK            [STATEMENT.md] cpp/v3_blocks.h:124-144 sha=425491de1e | inline std::vector<std::vector<int>> make_blocks(const Data& D, int B, Dendrogram* out_tree = nullptr) {
+OK            [STATEMENT.md] v3_fit.R:99-103 sha=017e556e30 | if (pre$status != "ok") {
+OK            [STATEMENT.md] v3_fit.R:117-117 sha=9b407003b8 | if (pf$exceeds) { fit$status <- "resource_limit"; return(finish(fit)) }
+OK            [STATEMENT.md] v3_fit.R:120-133 sha=f91a78f989 | if (fit$branch_run == "exact") {
+OK            [STATEMENT.md] cpp/v3_core.cpp:272-279 sha=98788ffd56 | List cpp_setup(SEXP ctx, int B) {
+OK            [STATEMENT.md] cpp/v3_core.cpp:283-283 sha=89a1fef4b8 | build_tables(st, sc);
+OK            [STATEMENT.md] cpp/v3_core.cpp:300-300 sha=a2eacfecae | build_start(st);
+OK            [STATEMENT.md] cpp/v3_core.cpp:410-410 sha=c76165ccde | Engine E(D, st, h->Nb, h->B);
+OK            [STATEMENT.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+OK            [STATEMENT.md] cpp/v3_core.cpp:611-611 sha=9031677c7b | c->E.reset(new Engine(D, *h->st, h->Nb, h->B));
+OK            [STATEMENT.md] cpp/v3_core.cpp:714-714 sha=f07e235867 | double lm = sc.score(S).logm, cmp = st.comp(S);
+OK            [STATEMENT.md] cpp/v3_core.cpp:811-811 sha=268d625623 | std::set<int> blocks; for (int j : kv.second) blocks.insert(st.blk[j] + 1);
+OK            [STATEMENT.md] v3_fit.R:141-142 sha=34e9882271 | cg <- .v3cpp$cpp_cut_group(setup$ptr)
+OK            [STATEMENT.md] v3_fit.R:172-172 sha=5420f83d39 | fit$flags$cut_group <- fit$cut_group
+OK            [STATEMENT.md] Theory_work/Wave3/W3-RM/STATEMENT.md:48-48 sha=0c9f69763f | |C_b| ≤ 16. Nothing else about the partition is used anywhere below.
+OK            [STATEMENT.md] v3_preprocess.R:111-113 sha=43dfcf1070 | constant <- apply(X, 2, function(x) all(x == x[1]))   # dropped only if all entries are exactly equal
+OK            [PROOF.md] v3_fit.R:133-133 sha=0423b7855a | t0 <- proc.time()[["elapsed"]]; setup <- v3_setup(ctx)
+OK            [PROOF.md] v3_setup.R:67-70 sha=d5a3ca78fa | v3_setup <- function(ctx) {
+OK            [PROOF.md] cpp/v3_core.cpp:145-146 sha=188a9bc8e8 | static const int B_MAX = 16;
+OK            [PROOF.md] cpp/v3_core.cpp:274-274 sha=afc0773c66 | check_B(B);
+OK            [PROOF.md(cont)] cpp/v3_core.cpp:279-279 sha=0a29ea6572 | st.blocks = make_blocks(D, B);
+OK            [PROOF.md] v3_preprocess.R:22-22 sha=5c8543faed | B <- min(v3_isqrt(n), v3_isqrt(p), 16)            # B* = 16 (implementation limit)
+OK            [PROOF.md] v3_preprocess.R:14-14 sha=ce7b972f37 | v3_isqrt <- function(x) { r <- floor(sqrt(x)); while ((r + 1)^2 <= x) r <- r + 1; while (r^2 > x) r <- r - 1; 
+OK            [PROOF.md] v3_preprocess.R:103-103 sha=e25d39086c | n <- nrow(X); p_raw <- ncol(X)
+OK            [PROOF.md] v3_preprocess.R:111-113 sha=43dfcf1070 | constant <- apply(X, 2, function(x) all(x == x[1]))   # dropped only if all entries are exactly equal
+OK            [PROOF.md] v3_fit.R:118-118 sha=18d46aead9 | ctx <- v3_context(pre$X, pre$y, orig = pre$kept, return_gram = FALSE)
+OK            [PROOF.md] v3_preprocess.R:106-106 sha=1099b0cc5f | if (n < 3) return(bad("n < 3"))
+OK            [PROOF.md(cont)] v3_preprocess.R:114-114 sha=9450fa0e89 | if (!length(kept)) return(c(list(status = "no_predictors", hpm = integer(0)), base))
+OK            [PROOF.md] v3_preprocess.R:21-21 sha=4c126289e7 | K <- min(p, n %/% 2)
+OK            [PROOF.md] cpp/v3_score.h:40-40 sha=3b222c88d0 | D.n = n; D.p = p; D.K = std::min(p, n / 2); D.W = nwords(p);
+OK            [PROOF.md] cpp/v3_blocks.h:124-144 sha=425491de1e | inline std::vector<std::vector<int>> make_blocks(const Data& D, int B, Dendrogram* out_tree = nullptr) {
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:52-52 sha=bdbfd92df2 | if (p == 1) { T.root = 0; return T; }
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:76-76 sha=aea9d73d78 | for (int step = 0; step < p - 1; ++step) {
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:82-82 sha=332179768e | int a = bi, b = best[bi];
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:70-70 sha=e590bfd78b | if (j == i || !active[j]) continue;
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:93-93 sha=65d4ad1a9f | mem[a].swap(u); mem[b].clear(); active[b] = 0; node[a] = nn;
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:99-103 sha=23e1a5b3d9 | recompute_row(a);
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:85-88 sha=ac49259c23 | int na = node[a], nb = node[b];
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:67-72 sha=e8952c9e32 | auto recompute_row = [&](int i) {
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:49-49 sha=1e31b90f7b | T.left.assign(2 * p - 1, -1); T.right.assign(2 * p - 1, -1); T.size.assign(2 * p - 1, 1); T.minidx.assign(2 * 
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:106-106 sha=6469564760 | T.root = next_node - 1;
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:127-133 sha=fe69f619bf | std::vector<std::vector<int>> clusters;
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:111-119 sha=e4b4d79a53 | inline std::vector<int> subtree_leaves(const Dendrogram& T, int nd, int p) {
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:134-141 sha=f9a1a5baf5 | std::vector<std::vector<int>> blocks;
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:137-137 sha=0645054f04 | if (cur.size() + c.size() > (size_t)B) { blocks.push_back(cur); cur.clear(); }
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:138-138 sha=46524ba5cc | cur.insert(cur.end(), c.begin(), c.end());
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:140-140 sha=263ddd799b | if (!cur.empty()) blocks.push_back(cur);
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:137-137 sha=0645054f04 | if (cur.size() + c.size() > (size_t)B) { blocks.push_back(cur); cur.clear(); }
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:140-140 sha=263ddd799b | if (!cur.empty()) blocks.push_back(cur);
+OK            [PROOF.md(cont)] cpp/v3_blocks.h:141-141 sha=4acff4509a | for (auto& b : blocks) std::sort(b.begin(), b.end());
+OK            [PROOF.md] cpp/v3_blocks.h:53-53 sha=fb78abe928 | std::vector<double> r = correlation_matrix(D);
+OK            [PROOF.md] cpp/v3_blocks.h:10-17 sha=dbea640c0e | inline std::vector<double> correlation_matrix(const Data& D) {
+OK            [PROOF.md] cpp/v3_score.h:44-53 sha=950724c0df | D.G.assign((size_t)p * p, 0.0);
+OK            [PROOF.md] v3_preprocess.R:116-121 sha=d9d37204a6 | Xs <- matrix(0, n, length(kept)); cm <- cmu <- csd <- numeric(length(kept))
+OK            [PROOF.md(cont)] v3_preprocess.R:37-68 sha=b9e5a58ce3 | v3_standardise <- function(x) {
+OK            [PROOF.md(cont)] v3_preprocess.R:55-55 sha=6d07936b6f | us <- sqrt(sum(uc^2) / (length(x) - 1))
+OK            [PROOF.md(cont)] v3_preprocess.R:96-96 sha=b2efc1fd87 | # dup_components = FALSE skips the duplicate check (v3_fit computes it after the preflight).
+OK            [PROOF.md(cont)] v3_preprocess.R:20-30 sha=c73a58832c | n <- as.numeric(n); p <- as.numeric(p)
+OK            [PROOF.md(cont)] v3_preprocess.R:62-66 sha=ab47d11917 | centering = list(method = "anchored_two_pass", anchor = x[1],
+OK            [PROOF.md(cont)] v3_preprocess.R:86-86 sha=17b431dae7 | if (i < j) { x <- find(i); y <- find(j); if (x != y) parent[max(x, y)] <- min(x, y) }
+OK            [PROOF.md] cpp/v3_core.cpp:275-275 sha=247335c6e5 | Holder* g = new Holder(); g->D = h->D; g->B = B;
+OK            [PROOF.md] cpp/v3_core.cpp:283-283 sha=89a1fef4b8 | build_tables(st, sc);
+OK            [PROOF.md] cpp/v3_core.cpp:300-300 sha=a2eacfecae | build_start(st);
+OK            [PROOF.md] cpp/v3_core.cpp:410-410 sha=c76165ccde | Engine E(D, st, h->Nb, h->B);
+OK            [PROOF.md] cpp/v3_core.cpp:611-611 sha=9031677c7b | c->E.reset(new Engine(D, *h->st, h->Nb, h->B));
+OK            [PROOF.md] cpp/v3_core.cpp:714-714 sha=f07e235867 | double lm = sc.score(S).logm, cmp = st.comp(S);
+OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
+OK            [PROOF.md] Theory_work/Wave3/W3-SAMP/lemmas/CC_code_check.md:102-104 sha=65766bcaa0 | ## CC7 — B is bounded
+OK            [PROOF.md] cpp/v3_core.cpp:144-144 sha=d7275f1d0d | // Block width supported by the table codes (uint32 bit codes; 2^B entries per block): 1 <= B <= 20 (code revi
+OK            [PROOF.md] cpp/v3_core.cpp:145-146 sha=188a9bc8e8 | static const int B_MAX = 16;
+OK            [PROOF.md] v3_preprocess.R:116-121 sha=d9d37204a6 | Xs <- matrix(0, n, length(kept)); cm <- cmu <- csd <- numeric(length(kept))
+
+81 citations: 81 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+Not machine-checked: unbackticked references and the semantic match of each excerpt.
