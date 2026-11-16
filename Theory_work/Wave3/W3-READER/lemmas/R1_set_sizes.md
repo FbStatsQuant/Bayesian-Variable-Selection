@@ -20,8 +20,8 @@ $j_0:=\lceil(2A+1)s\rceil+1$, $\ell_2:=1/\log2<1.4427$, $d:=1/\log(3/2)<2.4664$.
 **Claim.** For $s\le K$: $s+m^\sharp_n\le3(A+1)(s+1)\log n$. Hence (A5) of Theorem 1 covers every $S_0\cup J$ with
 $|J|\le m^\sharp_n$, which is (F_w) = SE_w($m^\sharp_n$; $g_0$) (`W3-POST/STATEMENT.md:71-73`).
 *Input.* $m^\sharp_n(\omega)\le\min\{K,\ s+\lceil(\log\binom ps+\tfrac{s+1}2\log n+\omega)/\log2\rceil\}$ for $s\ge1$,
-$\omega\ge0$, $s\le K$ ([T03R] E2(ii), restated at `W3-POST/STATEMENT.md:38-39`; inside `SOP:TH09@1.0.0`, status
-"T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2). …"), with $m^\sharp_n:=m^\sharp_n(\tfrac12\log n)$.
+$\omega\ge0$, $s\le K$ ([T03R] E2(ii), restated at `W3-POST/STATEMENT.md:38-39`; inside `SOP:TH09@1.0.2`, status
+"PROVED-CHECKED (T03♯ only: …)" (main 6cd699dd) [REG-6cd6]), with $m^\sharp_n:=m^\sharp_n(\tfrac12\log n)$.
 *Proof.* $\binom ps\le p^s\le n^{As}$, so $\log\binom ps\le Ast$. Then
 $s+m^\sharp_n\le 2s+1+\ell_2(As+\tfrac{s+1}2+\tfrac12)t=2s+1+\ell_2(As+\tfrac s2+1)t$. Since $t>1$,
 $2s+1<(2s+1)t$, so $s+m^\sharp_n<[(2s+1)+1.45(As+\tfrac s2+1)]t=[1.45As+2.725s+2.45]t$. Finally

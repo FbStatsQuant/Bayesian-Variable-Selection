@@ -2,14 +2,13 @@
 
 Status: **PROVED (by this seat, unchecked)**. An assembly; no new probability. Input statuses [S2-F7, S3]:
 `W3-START2-R:IF-START@1.0.0`, `W3-START2-R:START-R@1.0.0` "PROVED-CHECKED; council R2, MANIFEST 12bb52cd… (= R2 90886d06 re-frozen CITATION-ONLY as R2r), sol=9.0 PASS, opus=9.3 PASS" (main b48fd0a1; free supersessions of
-`W3-START2:IF-START`, `START-R`) [REPIN]; `W3-SAMP:C@1.1.3` "PROVED-CHECKED, conditional on
-SOP:TH09" [REG-33e1]; `W2-APP:POST@1.0.6` "PROVED-CHECKED,
-conditional on SOP:TH09" [REG-33e1]; `W3-POST:Thm-1` item 6 "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF
+`W3-START2:IF-START`, `START-R`) [REPIN]; `W3-SAMP:C@1.1.4` "PROVED-CHECKED"; `W2-APP:POST@1.0.7` "PROVED-CHECKED" (main 6cd699dd,
+T03♯ discharged) [REG-6cd6]; `W3-POST:Thm-1` item 6 "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF
 VERIFIED (A-REV2)"; this ticket's bridges R1 (B2.1, B6.1) "PROVED (by this seat, unchecked)". Scope: the sampler branch; the (C-v) statements
 concern the potential records on $\mathcal A$ and equal the printed fields on completed runs (Lemma PC) [S2-F3].
 
 ## Inputs (statuses verbatim, registry)
-- `W3-SAMP:C@1.1.3` (Theorem C, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:149-163`), "PROVED-CHECKED, conditional on SOP:TH09"
+- `W3-SAMP:C@1.1.4` (Theorem C, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:149-163`), "PROVED-CHECKED" [REG-6cd6]
   (main 33e1f0f5) [S4-F1]. Clause (C-v): under the
   N1 premises (`W3-SAMP/STATEMENT.md` §1 = `Theory_work/Wave1/W1-N1/STATEMENT.md` §2: EX-A, H-U, START, KERNEL, CAL, SI,
   MEAS, POT), if $1_{\mathcal A}\bar\delta\to0$ in probability then for every $\epsilon>0$:
@@ -23,8 +22,8 @@ concern the potential records on $\mathcal A$ and equal the printed fields on co
 - `W3-START2-R:IF-START@1.0.0` (IF-START⁺⁺, `W3-START2-R/STATEMENT.md:241-246`), "PROVED-CHECKED; council R2, MANIFEST 12bb52cd… (= R2 90886d06 re-frozen CITATION-ONLY as R2r), sol=9.0 PASS, opus=9.3 PASS" [REPIN]: under (T3⁺⁺)(b)
   (:226-240) with $Q=S_0$,
   $1_{\mathcal A}o_0=O_P(\rho_n)$ with $\rho_n:=n^{-1/2}\exp(C_R\sqrt{\log n})$ for every event $\mathcal A$.
-- Theorem 2 (`W3-POST:Thm-1@1.0.0` item 6, "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)", + `W2-APP:POST@1.0.6`,
-  "PROVED-CHECKED, conditional on SOP:TH09", main 33e1f0f5) [S4-F1]: $\delta=O_P(\sqrt{\log n/n})$ under the joint law.
+- Theorem 2 (`W3-POST:Thm-1@1.0.0` item 6, "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)", + `W2-APP:POST@1.0.7`,
+  "PROVED-CHECKED", main 6cd699dd; root `SOP:TH09@1.0.2` PROVED-CHECKED) [S4-F1, REG-6cd6]: $\delta=O_P(\sqrt{\log n/n})$ under the joint law.
 
 ## Claim (R4)
 Assume Setting R with the standardised-signal convention ($\theta^*$ deterministic,

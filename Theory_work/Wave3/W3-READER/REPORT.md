@@ -20,7 +20,7 @@ claim: W3-READER:R1 | kind: lemma | statement: lemmas/R1_set_sizes.md:1-59 | pre
 name: Lemma R1 (set-size and elementary bridges to the posterior and main-theorem hypotheses)
 status: PROVED (by this seat, unchecked) | status_source: lemmas/R1_set_sizes.md:3
 conclusion: identity: s0+j0 <= (2A+2)s0+2; s0+m#_n <= 3(A+1)(s0+1)log n; kbar_n <= 5(A+1)(s0+1)log n; 16+s0 <= 5(A+1)(s0+1)log n (n >= 3); bounded coefficients => energy; Gaussian nulls => (W-sph) | scope: n >= 3, A >= 1, s0 >= 1
-depends_on: SOP:TH09@1.0.0@proof:[T03R]E2(ii)
+depends_on: SOP:TH09@1.0.2@proof:[T03R]E2(ii)
 gates: correct:PENDING(bridge-leg Sol line check; S1 verified the arithmetic analytically)
 
 REGISTRY
@@ -34,8 +34,8 @@ REGISTRY
 claim: W3-READER:R3 | kind: lemma | statement: lemmas/R3_delivery_assembly.md:1-54 | premises: READER_VERSIONS.md (S4)
 name: Lemma R3 (delivery assembly for the reported-model theorems)
 status: PROVED (by this seat, unchecked) | status_source: lemmas/R3_delivery_assembly.md:3
-conclusion: implication: RM2-R / RM2-F conclusions + (S4) => premises (V), (S), (P) and the method/premise/allocation paragraph of W2-UNI:F-UNI; hence P(no output) = 0 on the bounded domain D under IDEAL-W, and for every admissible n >= 3 under A:IDEAL-W+, with P(Shat = S0) -> 1 under A:IDEAL-W+ [F-UNI narrowed to 2.1.0, recorder task S2; requote after S2]
-depends_on: W2-UNI:F-UNI@1.1.0 (to repin @2.1.0 after task S2) ; W3-RM2:RM2-R@1.0.2 ; W3-RM2:RM2-F@1.0.2
+conclusion: implication: RM2-R / RM2-F conclusions + (S4) => premises (V), (S), (P) and the method/premise/allocation paragraph of W2-UNI:F-UNI; hence P(no output) = 0 on the bounded domain D under IDEAL-W, and for every admissible n >= 3 under A:IDEAL-W+, with P(Shat = S0) -> 1 under A:IDEAL-W+ [F-UNI narrowed to 2.1.0, task S2]
+depends_on: W2-UNI:F-UNI@2.1.0 ; W3-RM2:RM2-R@1.0.3 ; W3-RM2:RM2-F@1.0.3 (history: superseded for the shipped method by B6.6′/B7.5 = W3-RM2-R:DLV-0 premises)
 gates: correct:PENDING(bridge-leg Sol line check)
 
 REGISTRY
@@ -43,12 +43,12 @@ claim: W3-READER:R4 | kind: lemma | statement: lemmas/R4_printed_outputs.md:1-49
 name: Lemma R4 (printed PIPs, MPM, HPM and evidence estimate are consistent: assembly)
 status: PROVED (by this seat, unchecked) | status_source: lemmas/R4_printed_outputs.md:3
 conclusion: rate: 1_A max(o0, o1) = O_P(n^{-1/2} exp(C_R sqrt(log n))); hence Zhat/Z - 1, log Zhat - log Z, ||pip_primary - 1_S0||_inf = O_P(that) on A; P(A and MPM != S0) -> 0; P(completed and Shat != S0) -> 0 | scope: Gaussian rows, standardised-signal convention, Q = S0 (no leakage outside the true model, e.g. independent predictors; AR and block designs not covered)
-depends_on: W3-SAMP:C@1.1.3 ; W3-START2-R:IF-START@1.0.0 ; W3-START2-R:START-R@1.0.0 ; W3-POST:Thm-1@1.0.0 ; W2-APP:POST@1.0.6
+depends_on: W3-SAMP:C@1.1.4 ; W3-START2-R:IF-START@1.0.0 ; W3-START2-R:START-R@1.0.0 ; W3-POST:Thm-1@1.0.0 ; W2-APP:POST@1.0.7
 gates: correct:PENDING(bridge-leg Sol line check)
 ```
 
-Notes for the ingest (HQ / recorder): R4 inherits the conditions of its inputs, "conditional on SOP:TH09"
-(through `W3-SAMP:C@1.1.3` and `W2-APP:POST@1.0.6`, main 33e1f0f5). R3 carries F-UNI's qualifications ([OP] author-only; e4/N3 OPEN; P1/S.3 code-reading audit).
+Notes for the ingest (HQ / recorder): R4's inputs carry no open registry condition (`W3-SAMP:C@1.1.4`, `W2-APP:POST@1.0.7`
+"PROVED-CHECKED", main 6cd699dd; `W3-POST:Thm-1` label as recorded). R3 carries F-UNI's qualifications ([OP] author-only; e4/N3 OPEN; P1/S.3 code-reading audit).
 The reader-version corollaries (Theorems 1–8, 10 of `READER_VERSIONS.md`) are not proposed as separate rows here;
 HQ decides whether each reader version gets a row (PROGRAM "Readability": "The reader version is a corollary with its
 bridges checked").

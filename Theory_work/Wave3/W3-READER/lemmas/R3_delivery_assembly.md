@@ -12,7 +12,10 @@ for every admissible $n\ge3$ with $(n,p_{\mathrm{raw}})\in\mathfrak D$; if in ad
 admissible $n\ge3$, $P(\text{no output})=0$, and $P(\hat S=S_0)\to1$ under the joint design/noise law (resp. the noise law),
 together with the algorithm's randomness.
 
-**Source.** `W2-UNI:F-UNI@1.1.0` (`Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md:15-21`; registry "PROVED-CHECKED";
+**History note (v-next, RM2R-2 / HQ D74).** For the shipped method this assembly is superseded by the identities B6.6′ and B7.5
+((S4) ⇔ the delivery premises (D) of `W3-RM2-R:DLV-0`); it is kept for the record (it concerns F-UNI's registered method).
+
+**Source.** `W2-UNI:F-UNI@2.1.0` (`Theory_work/Wave2/W2-UNI/lemmas/L5_delivery.md:15-21`; registry "PROVED-CHECKED";
 the file header still says "PROVED (by this seat, unchecked)" — bookkeeping note already reported). Its proof (:23-36)
 uses (V) in Step 1, the method/premise/allocation paragraph in Step 2 ("design-free: P(no output) = 0"), and (S), (P)
 in Step 3 (via C-GROW L1.2 and C-DLV Corollary D′).
@@ -23,7 +26,7 @@ in Step 3 (via C-GROW L1.2 and C-DLV Corollary D′).
 | (V) input validity, random design: "(R) with $\lambda_{\min}(\Sigma_n)>0$ for every n" (:16) | Thm 6 (A1) | Gaussian rows with $\Sigma_n$ a positive definite correlation matrix. |
 | (V) input validity, fixed design: "(E) with nonconstant raw columns" (:16) | Thm 7 (A1) via Setting F | Setting F is a fixed raw design **with non-constant columns** (`W3-START/STATEMENT.md:66-67`; RM Setting F = GROW §1). **Statement fix:** Theorem 7 must say "raw columns non-constant" explicitly (added in READER_VERSIONS v0.3). |
 | (S) deterministic $Q_n\supseteq S_0$, $\mathcal L_n\subseteq\Omega$ ($|Q_n|\le K_n$), $P(\mathrm{Sand}_n\cap\mathrm{NA}(\mathcal L_n)\cap\mathrm{TL}(\mathcal L_n))\to1$ (:17-18) | RM2-R (Thm 6) / RM2-F (Thm 7) conclusions [SAND(Q)], [NA(Q)], [TL(Q)] (`W3-RM2/STATEMENT.md:207-208, 217-218`); (L-feas) for $|Q|\le K$ | Union bound: $P(\cdot)\ge1-P(\mathrm{Sand}^c)-P(\mathrm{NA}^c)-P(\mathrm{TL}^c)\to1$. Same $Q$, same lattice; the events are those of RM §1 (`W3-RM/STATEMENT.md:49-54`), which F-UNI imports through "as in GROW L4 / FIN s5" (`W2-UNI/STATEMENT.md:34`). |
-| (P) $E[1-\pi(S_0)]\to0$ (:19) | interface [POST] (`W3-RM2/STATEMENT.md:100`), delivered by RM2-R (via `W3-RM2:POST-R`, conditional on `W2-APP:POST`) / RM2-F (via `SOP:TH09`) | identical property. |
+| (P) $E[1-\pi(S_0)]\to0$ (:19) | interface [POST] (`W3-RM2/STATEMENT.md:100`), delivered by RM2-R (via `W3-RM2:POST-R`, conditional on `W2-APP:POST`, now "PROVED-CHECKED") / RM2-F (via `SOP:TH09`, PROVED-CHECKED since main 6cd699dd) | identical property. |
 | v3.1 with deterministic complete-scan LS0 from the exact e4 start-mode maximiser (:8) | code + (S3)/(S4) | LS0 on by default (`v3_fit.R:73`, `ls0 = getOption("v3.ls0", TRUE)`); complete scans (`cpp/v3_engine.h:394-406`); `start_mode(st, 1e6, tie_dp)` with `ls0_tie_dp` default TRUE (`v3_run.R:99`, `cpp/v3_core.cpp:469`). The **e4** tie rule (the emitted centre is the prescribed smallest-size, lexicographically smallest maximiser) and **TDP-IMPL** (the tie-aware fallback's cost) are carried as premises in (S4); RM's Lemma E4 proves only "a maximiser" and does not discharge them (S1 F2). |
 | LS0 move cap $a_n=\ell_n+|\tilde S_0|$; other caps $\ell_n$ (:8) | code | `cpp/v3_core.cpp:473` (default `ell_n_plus_mode`); final local search cap $\ell$ (`cpp/v3_core.cpp:453-458`). Same cap as RM2's configuration (`W3-RM/STATEMENT.md:59-61`). |
 | total tier-1 fallback with complete fallback-grid freezing (:8-9) | code | `v3_fit.R:151` passes `isTRUE(ls0) && isTRUE(getOption("v3.grid_fallback", TRUE))`, so the fallback is on under the shipped defaults (`ls0 = TRUE`, `v3.grid_fallback = TRUE`), both required by the covered configuration (S4)(ii); fallback recorded at `v3_calib.R:120-124`, selected and frozen at `v3_calib.R:163-189` [S2-F8]. |
