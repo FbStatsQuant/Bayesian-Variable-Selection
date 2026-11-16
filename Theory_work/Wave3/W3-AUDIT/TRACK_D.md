@@ -1,7 +1,8 @@
-# W3-AUDIT — track D: could we do better? (v1, one pass, 2026-11-16)
+# W3-AUDIT — track D: could we do better? (v1.1, after the revision round, 2026-11-16)
 
-Author: audit Fable. No proving. Statuses verbatim from `claims.tsv` of this worktree. Lines marked [audit calc] are my
-own short computations, unchecked. Labels: **NECESSARY** (counterexample or lower bound cited), **LIKELY WEAKENABLE**
+Author: audit Fable. No proving. Statuses verbatim from `claims.tsv` of this worktree. My two verdict-bearing
+computations were checked independently and corrected (`reviews/AUDITCALC_check_opus.md`, 2d7c2b90); they are marked "checked
+(AUDITCALC_check_opus.md §k)". §5a remains an unchecked sketch. Labels: **NECESSARY** (counterexample or lower bound cited), **LIKELY WEAKENABLE**
 (route given), **UNKNOWN**. Constants are not a target (HQ ruling 2); a constant is mentioned only where it hides a
 qualitatively worse dependence. Inputs used: `W3-DIST/reviews/UNHARVESTED_STRENGTH.md` (items 1–11),
 `API_AUDIT/sharp2/TRIAGE.md`, `W3-READER/TRIAGE_SHARP3.md`, the check X sketch
@@ -28,14 +29,22 @@ on S₀" can cover AR. HQ's stated purpose (AR, the primary 1M design) needs can
   (C2)(i): if some null l has gain δ²_{U,l} ≥ c·τ²_U·log n **given the truths of its own block**, c > 1 + 2Ā, then
   P(π₀(S₀) ≤ n^{−κ′}) → 1.
 
-**Why AR and BLK stay outside** [audit calc; verdict-bearing — please route a check].
-- AR(ρ), ρ fixed: a column at distance k from a truth j has marginal gain ≍ nρ^{2k}θ_j²; this exceeds (1 + 2A) log n for
-  every k ≤ k_n ≍ log n / (2 log(1/ρ)). A method block has at most 16 columns, so for large n some such column lies in a
-  block that does not contain j. NEC-b (C2)(i) then gives π₀(S₀) → 0. (At n = 200–800, p = 10⁶, ρ = 0.6 and θ_j/σ = 1 the radius is only
-  k_n = 1 to 3, so a truth whose near neighbours fall in its own block is fine and a truth at a block boundary is not.)
+**Why AR and BLK stay outside** — checked (AUDITCALC_check_opus.md §1), with three corrections applied here.
+- AR(ρ), ρ fixed, **as n → ∞**: a column at distance k from a truth j has a gain of order n·ρ^{2k}θ_j²/τ²_U (the gain is
+  normalised by τ²_U, about 4.3 on the plan's AR design; my first version dropped it). For every fixed k this exceeds
+  NEC-b's threshold for large n. A block has at most 16 columns, so among the 16 columns within distance 8 of j at
+  least one lies in a block without j (pigeonhole; a fixed radius is enough, no log n radius is needed). NEC-b (C2)(i)
+  then gives P(π₀(S₀) ≤ n^{−κ}) → 1 for every κ, whatever partition the method builds.
+- **At the plan's sizes the result is silent:** for n ≤ 400 and p = 10⁶ no column at any distance meets NEC-b's
+  threshold, so nothing recorded bounds π₀(S₀) on AR there, in either direction. (My earlier "radius 1 to 3" note was
+  wrong and is withdrawn.)
+- NEC-b is a fixed-design lemma; applying it to Gaussian rows needs one conditioning sentence that is not recorded
+  anywhere (the checker accepts the step). A ticket that uses the conclusion should write it.
 - BLK of the 1M plan: groups of 20 columns exceed the block cap 16, so every truth has group-mates (correlation 0.5) in
-  a block without it: same conclusion.
+  a block without it: same asymptotic conclusion, same silence at the plan's sizes.
 - Pervasive factors (S5, P6, FAC): every null leaks from every truth; same conclusion.
+- Track C (internal, `track_C/RESULTS.md` @ 4f0f9a82) has no proxy for the start mass; its leak sets agree with the
+  picture (equal to S₀ only for IND; bounded but larger than S₀ for AR ≤ 0.8 and fixed blocks).
 
 **Gain.** Row 3.6 (Theorem 10) and row 3.3 (Theorem 5): assumption (A5) "no leakage" is replaced by "no leakage **given the
 truths of the column's own group**". Designs that come inside: block designs with groups no larger than the block cap
@@ -130,7 +139,7 @@ this route**; the open question is the scope (factors), which is decision D1, no
 | No leakage (A5), partition-free | LIKELY WEAKENABLE to the group-relative form | candidate #1 |
 | No leakage given the truths of the block | NECESSARY for start concentration | `W3-START:NEC-b` (C2)(i), "PROVED-CHECKED" |
 | Start concentration (P-START) itself | NECESSARY for the evidence clause in Theorem C's stated scope (any frozen parameters); not known to be needed at production budgets | sharp3 triage C1–C2: E\|W_r − 1\| ≤ 2·TV(π, π₀), attained at N_e = T = 1 |
-| Global overlap (P-OVL∞) as an alternative | fails on leaky designs [audit calc; verdict-bearing] | where a fixed-level leak sits outside the truth's block, π₀(S₀) is exponentially small while π(S₀) → 1, so max π/π₀ is exponentially large; route TR cannot reach AR either |
+| Global overlap (P-OVL∞) as an alternative | fails, as n → ∞, where a null leaks given the truths of its own block — checked (AUDITCALC_check_opus.md §2) | there π₀(S₀) is below every power of n by NEC-b's statement (exponentially small by its proof, `W3-START/lemmas/L7_NEC.md:21-24`) while π(S₀) → 1, so max π/π₀ exceeds every power of n; TR's finite bound is empty as well (its factor e_L tends to 1). Route TR delivers nothing on AR or BLK. Where every leaking null shares a block with its truth the calculation says nothing |
 | Visibility, floors, Gaussian rows | as core 3 | — |
 
 **Conclusion.** Rate n^{-1/2}e^{C√log n} in the reader version: a **GAP**; √(log n/n) is already proved when nulls are
@@ -178,21 +187,21 @@ O1–O3 of row 1.1 (no route); exponential p (no route).
 | X4 edge `W3-DIST:Cor-C → DIST-C` | **relabelling (recorder)** | retype to clauses (C-0), (C-i) threshold form, (C-ii)(α) |
 | X5 `W3-READER:PoolZ` | **lemma (Tier B)** | two-line proof; line check and registry row |
 
-## 4. The [audit calc] lines: which verdicts depend on them (HQ ruling 5)
+## 4. The [audit calc] lines: which verdicts depend on them, and the checker's result
+
+Checker: `reviews/AUDITCALC_check_opus.md` (Opus, independent; 2d7c2b90). None refuted; corrections applied in v1.1.
 
 | Where | Calculation | A verdict depends on it? |
 |---|---|---|
 | TRACK_B B3 | bounds 0.74 / 0.81 / 0.88 from Theorem 3(a) | no (illustration) |
 | TRACK_B B5 | per-observation margin of Thm 1′ against Song–Liang's level | no (the verdict rests on the quoted Condition 3) |
-| TRACK_B B5 | λ_min(Σ) of the 13 designs | **yes**: every "inside" entry of B5, B6 and the sentence "all our designs are inside cores 1 and 2" |
-| TRACK_B B7 | Thm 9 (A3) ⇒ Song–Liang Condition 1 | **yes**: the verdict "stronger than Condition 1 (implies it)" |
-| TRACK_B B8 | visibility on S1–S4, S6, IND, AR, BLK, cs | **yes**: those "inside" entries (the Song–Liang verdict does not depend on it) |
-| TRACK_B B9 | partial covariance under cs(ρ); the same claim for fac2 and s5 without a displayed formula | **yes**: the "outside" entries for S5, P6, FAC |
-| TRACK_B B11 | a truth's AR neighbour or block-mate has fixed covariance | **yes**, but immediate from Σ |
-| TRACK_D §0 | start mass destroyed on AR and on BLK (via NEC-b) | **yes**: the scope of candidate #1 and the need for #5 |
-| TRACK_D core 4 | P-OVL∞ fails on leaky designs | **yes**: "route TR cannot reach AR" |
-
-Suggested routing: one Opus read (half a day) of the six "yes" rows; the two TRACK_D rows first.
+| TRACK_B B5 | λ_min(Σ) of the 13 designs | **yes**: every "inside" entry of B5, B6 and the sentence "all our designs are inside cores 1 and 2". **CONFIRMED** (§3) |
+| TRACK_B B7 | Thm 9 (A3) ⇒ Song–Liang Condition 1 | **yes**: the verdict "stronger than Condition 1 (implies it)". **CONFIRMED, stronger**: holds for every r (§4) |
+| TRACK_B B8 | visibility on S1–S4, S6, IND, AR, BLK, cs | **yes**: those "inside" entries. **CONFIRMED** (§5); S5 stays "unclear" (worst ratio 0.0056) |
+| TRACK_B B9 | fixed covariance of every null with every truth under factors | **yes**: the "outside" entries for S5, P6, FAC. **CONFIRMED, simplified**: follows at U = ∅ (§6) |
+| TRACK_B B11 | a truth's AR neighbour or block-mate has fixed covariance | **yes**, immediate from Σ. **CONFIRMED** |
+| TRACK_D §0 | start mass destroyed on AR and on BLK (via NEC-b) | **yes**: the scope of candidate #1. **CONFIRMED asymptotically, corrected** (§1): τ²_U restored, fixed radius 8, silent at n ≤ 400 |
+| TRACK_D core 4 | P-OVL∞ fails where a null leaks given its block's truths | **yes**: "route TR cannot reach AR". **CONFIRMED, corrected** (§2): cite the proof line for "exponentially small"; TR's finite bound is empty too |
 
 ---
 
@@ -218,7 +227,7 @@ path identities (`W3-SAMP:MR`). The grid lemmas and the two-model closed forms o
 `L5-5.2`, each "PROVED-CHECKED"). From `W3-DIST`: the domination transfer and the retention fact of DIST-C (C-0),
 (C-ii)(α), for the weaker statement below.
 
-**First obstruction.** π₀ and π are nearly singular on AR (π₀(S₀) is exponentially small). Every recorded identity about
+**First obstruction.** π₀ and π are nearly singular on AR for large n (π₀(S₀) falls below every power of n). Every recorded identity about
 the particles carries the factor Ẑ_r/Z (`W3-SAMP:MR`), so it says nothing unless non-collapse is already known; and the
 record contains no mixing or variance statement for the coded sampler (`W3-SAMP/STATEMENT.md:183`). A proof must
 therefore follow the population forward, stage by stage, through resampling. The step most likely to fail is the

@@ -1,10 +1,11 @@
-# W3-AUDIT — are our assumptions reasonable? AUDIT v1 (first version, 2026-11-16)
+# W3-AUDIT — are our assumptions reasonable? AUDIT v1.1 (after the revision round, 2026-11-16)
 
-Author: audit Fable (Claude Fable 5.2, high). Branch `theory/W3-AUDIT`. Step 1 of the brief (assumptions); track D follows
-after the manager's go.
+Author: audit Fable (Claude Fable 5.2, high). Branch `theory/W3-AUDIT`. Steps 1 (assumptions) and 2 (track D) of the brief, after
+one revision round. v1.1 applies the independent check of my own computations (`reviews/AUDITCALC_check_opus.md`, 2d7c2b90: none
+refuted, four corrected) and cites track C (`track_C/RESULTS.md` @ 4f0f9a82, internal, Owls part).
 
 **Sources.** Theorem statements: reader versions `W3-READER/READER_VERSIONS.md` §1, §2, §3, §6, §9, §10 (W3-READER worktree
-@ 7eb818e6) and their masters. Statuses: `Theory_work/INFRA/registry/claims.tsv` of this worktree (main a7fc5093), quoted
+@ 7eb818e6; **READER pre-freeze**, to be re-pinned to the READER commit of the CP3 freeze) and their masters. Statuses: `Theory_work/INFRA/registry/claims.tsv` of this worktree (main a7fc5093), quoted
 verbatim; council suffixes cut and marked "…". Track-A inventory: `work/A_inventory.md` (Opus helper, 2e6c7d86), checked in
 §6. Song and Liang (2015): the paper itself (JRSS-B 77(5), 947–972; `/home/fb31/SMC_Theory_Department/refs/Song_Liang_2015.pdf`,
 sha256 `315c247c236b5f33…`), journal pages; supplement not inspected. Track-B dossiers B1–B12: `TRACK_B.md`.
@@ -155,7 +156,7 @@ endorse unless noted.
 | T8 | P-OVL (missing, one line) | 3.6 (Thm D clause) | **OVL.** Under the production budget and P-START, D_r·π₀(S₀) → ∞ in probability on 𝒜. · D_r ≥ max(2500, n, p)(L + 6) and π₀(S₀) → 1. | yes |
 | T9 | Start-mode DP implementation (unchecked) | 3.1, delivery clause | **TDP.** The tie-aware DP returns the lexicographically first maximiser of the start law under the size cap, within its stated cost. · Second-seat re-check of `C-ENG/lemmas/TDP_E.md`. | yes |
 | T10 | P1 inventory and case S.3 (audited by reading only) | 3.1, delivery clause | **Re-audit.** Second-seat code reading of `C-DLV/STATEMENT.md:52-53`, `lemmas/L2_degenerate.md:37-67`. | no |
-| T11 | P-OVL∞ (missing) | 3.6, remark route (TR) only | Not a Tier B item: it needs a new key lemma (a bound on max π/π₀). **My recommendation differs from the helper's:** keep Thm TR in the remark with P-OVL∞ named as an open premise, because TR is the only recorded route to the printed PIPs that does not need (A5) (HQ agreed, 11-16). Track D adds a caution [audit calc]: P-OVL∞ fails where a fixed-level leak sits outside the truth's block (π₀(S₀) is then exponentially small), so TR reaches only slightly past start concentration and not AR. | no |
+| T11 | P-OVL∞ (missing) | 3.6, remark route (TR) only | Not a Tier B item: it needs a new key lemma (a bound on max π/π₀). **My recommendation differs from the helper's:** keep Thm TR in the remark with P-OVL∞ named as an open premise, because TR is the only recorded route to the printed PIPs that does not need (A5) (HQ agreed, 11-16). Track D adds a caution (checked, AUDITCALC_check_opus.md §2): as n → ∞, P-OVL∞ fails where a null leaks given the truths of its own block (π₀(S₀) is then below every power of n), and TR's finite bound is empty there too; TR does not reach AR or BLK. | no |
 | T12, T13 | `P:SCORE-EXP`, `P:START-CENTRE` (unchecked, route only) | none (reached only through the historical route `W1-GEN`) | No proof ticket. Bookkeeping: record that the core rows do not use them. | — |
 
 **Further open inputs that are claims** (not among the 13; same Tier B treatment suggested, after T1–T8):
@@ -177,10 +178,18 @@ invariant; T6; X1; T9.
 Twelve dossiers and the summary table (assumption × Song–Liang × our designs) are in `TRACK_B.md`. Verdict counts:
 **same** 2 (B1, B3); **comparable** 3 (B4, B5, B9); **stronger than Song–Liang** 4 (B2 upper range, B6, B7, B8), each with
 the reason it is mild or method-specific; **no counterpart** 3 (B10, B11, B12). Two short implications are proposed as
-lemmas for the report, both one-line calculations [audit calc, unchecked]: Thm 9 (A3) ⇒ their Condition 1 (dossier B7);
+lemmas for the report: Thm 9 (A3) ⇒ their Condition 1, for every r, with δ = √(3/8)/L and M = log 2 on standardised
+predictors (dossier B7; checked, AUDITCALC_check_opus.md §4);
 Thm 6 (A3) ⇒ their Condition 5 (dossier B8). Candidate corollaries in primitive terms: Thm 2 and Thm 9 already are (their
 "for instance" and "Example" lines); Thm 6 for block-diagonal Σ with one truth per block (B9, short proof expected);
 Thm 10 for Σ = diag(Σ_{S₀}, Σ_N) (B11).
+
+**Track C (internal; `track_C/RESULTS.md` @ 4f0f9a82, Owls part, 19 designs).** No inside/outside verdict of `TRACK_B.md` is
+contradicted. Confirmed: floors inside and rising with n everywhere (B5, B6); beta-min and Occam proxies inside (B4,
+B6); leak set bounded for IND, AR ≤ 0.8, fixed blocks and S6, and the whole design for S5 and fixed-correlation factors
+(B9). Added: visibility fails at the population level for a pervasive factor with mixed-sign truths and for a
+riboflavin-like real-data design (B8), so a typical real-data user may be outside core 3 while inside cores 1 and 2;
+at (n, p) = (200, 2000) the sample proxies of visibility and of the O(log n)-set floor are near 0, trend pending (NOTS).
 
 ## 8. Method version per study (HQ alignment item)
 
@@ -216,8 +225,9 @@ overclaim. Its reach, plainly:
 - **What still holds there:** Theorem 6 (the reported model is S₀) on S2–S4, S6, AR, BLK; row 3.5 (the evidence estimate
   is unbiased) on every design; the posterior theorems (cores 1, 2) on every design. What has no theorem there: that the
   printed PIPs, MPM and Ẑ are close to the exact posterior quantities.
-- **Why this is not a proof artefact everywhere:** on AR and BLK the start law does not concentrate on S₀
-  (`W3-START:NEC-b`, "PROVED-CHECKED"; `TRACK_D.md` §0, [audit calc]), so the present route cannot be stretched to them.
+- **Why this is not a proof artefact everywhere:** on AR and BLK, as n → ∞, the start mass on S₀ falls below every power
+  of n (`W3-START:NEC-b`, "PROVED-CHECKED"; `TRACK_D.md` §0; checked, AUDITCALC_check_opus.md §1), so the present route
+  cannot be stretched to them. At the 1M plan's sizes (n ≤ 400, p = 10⁶) that result is silent.
 
 Nothing else looks false or unreasonable. Explicit constants from the proofs are conservative; the audit judges the
 qualitative conditions only (HQ ruling 1).
@@ -244,7 +254,8 @@ Ranked candidates (gain · cost · kill budget in `TRACK_D.md` §2):
 
 **HQ final order (2026-11-16; supersedes the earlier #2 → #3 → #1):** #2 check X (kill 1.5 days) → #3 sub-Gaussian
 rows for Theorem 2 (kill 3 days) → **#5′ store-restricted clause (kill 3 days), which replaces #1.** All post-freeze, from
-Sat 11-21, after the independent check of the [audit calc] lines. #1 and #4 are deferred. No G1/G2 gate: the printed
+Sat 11-21; the independent check of my computations has confirmed them (none refuted), so the three are unblocked.
+#1 and #4 are deferred. No G1/G2 gate: the printed
 PIPs, MPM and Ẑ on AR stay NO-GO and scoped as worded, with AR covered by Theorem 6 and row 3.5.
 - **#5′** (`TRACK_D.md` §5a): on every design inside Theorem 6 (S2–S4, S6, AR, BLK), the PIPs, median model and evidence
   sum computed from the returned list are within 1 − π(S₀ | y) of the truth. Tier B, 1–2 Opus days; two named links to
@@ -253,5 +264,5 @@ PIPs, MPM and Ẑ on AR stay NO-GO and scoped as worded, with AR covered by Theo
   summaries next to the printed fields. Post-processing only, no algorithm change, so the theorem covers numbers
   reported on AR and BLK.
 
-X1–X5: X1, X3, X5 are lemmas (Tier B); X2, X4 are relabellings (recorder). The [audit calc] lines on which a verdict
-depends are listed in `TRACK_D.md` §4.
+X1–X5: X1, X3, X5 are lemmas (Tier B); X2, X4 are relabellings (recorder). The computations on which a verdict
+depends, with the checker's result for each, are listed in `TRACK_D.md` §4.
