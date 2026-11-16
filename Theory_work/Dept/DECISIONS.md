@@ -209,3 +209,12 @@
   /home/fb31/SMC_Theory_Department/records/ (created + indexed in INDEX.md). On arrival: I verify the checksums against
   Engineering's manifest and index each dataset (source, size, files, check result). Rule: data of record lives on Owls
   NFS (later the owner's laptop), never only in NOTS scratch for more than 7 days; the NOTS move (D32) keeps that.
+
+## 2026-11-15 20:42 CT — SHARP3 triage (W3-READER, f7d2ad8)
+- No correctness problem. NC_r every island = restatement (islands i.d. given 𝒞; class C). P-MAP localisable to 𝒜 =
+  trivial restatement (W3-SAMP errata). Gate record: P-START NECESSARY-FOR-ROUTE in Thm C's any-parameter scope,
+  ARTEFACT at production budgets (E|W−1| ≤ 2·TV attained at N_e = T = 1).
+- **D34.** Two post-freeze riders queued: **SAMP-R1** (truth-free D, TV re-centring of C, hybrid TR bound, LT rate
+  under NC_r; READER thm10) and **SCR-R1** (drop "fixed" signals, ℓ¹ → total signal, exponential rate; READER thm8).
+- Gates PASS on all five-pillar rows except 1.1 (POST2 C/E: PENDING-DISPOSITION of 4 R03b proposals; SHARP3 addendum
+  g05–g06 with HQ).

@@ -29,6 +29,16 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 |---|---|
 | strength gates for headline candidates (lit / necessity / better, LIFECYCLE §4.2) | D17: W3-READER leg 2 after its CP1, five-pillar rows by Thu 11-19 18:00 CT (draft drafts/W3-READER_LEG2_GATES.md); 44 tool-set flags cleared per HQ/consultant (recorder task F) |
 
+## Post-freeze riders (queued)
+| ticket | contents | source |
+|---|---|---|
+| SAMP-R1 | truth-free D; TV re-centring of C; hybrid TR bound; LT rate under NC_r | SHARP3 triage (W3-READER TRIAGE_SHARP3.md) |
+| SCR-R1 | drop "fixed" signals (only use L3:69); ℓ¹ → total signal; exponential rate | SHARP3 triage |
+| NARROW batch | 12 statement-precision narrowings (LIFECYCLE §3, priced) + H5 card for GEN C4 / FAC-CS C1 / SAMP:Pkg | ADJ_MINORS_iii.md (D31) |
+| W2-APP Family-map diff round | F1–F4 + M57/M58 patches | PC1, D31 |
+| errata batch | CHAPTER-ONLY errata held for riders (W3-EDIT CP1 groups) + F-UNI "eventually" (H5) | D19, D31 |
+| record-format package | 38 rows free-text → file-path evidence | recorder task I |
+
 ## Named open items (no tickets; for the chapter's open-problems section)
 RM2-R aggregated leak (D) · START MIS with a general μ (D) · Ex-Equi b < 3/8 if not done in W3-RM2-R (O4′) · START2-O1 count (17 − s₀).
 
