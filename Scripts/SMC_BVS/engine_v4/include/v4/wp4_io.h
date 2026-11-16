@@ -18,7 +18,8 @@ namespace v4::wp4io {
 // The store must be compacted and stay alive until Writer::write returns. Its cap and order go to meta["stores"].
 void add_store(fmt::Writer& W, Json& meta, const std::string& prefix, const Store& s);
 // Rebuilds a Store from the sections (offer + compact; checks I1). Throws Error(invalid_input) on a malformed store.
-void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefix, Store& s, int32_t p, int32_t K);
+void read_store(const fmt::Reader& R, const Json& meta, const std::string& prefix, Store& s, int32_t p, int32_t K,
+                const Zobrist* zob = nullptr /* hashes checked against the models when given */);
 // Content checks (review PR20 M-2): a model is strictly increasing, in [0, p), of size <= K; else Error(invalid_input).
 void check_model(ModelView S, int32_t p, int32_t K, const std::string& what);
 // A list of models as <prefix>_ptr i64 (n + 1) and <prefix>_idx i32 (copied).
@@ -67,6 +68,8 @@ struct Expect {
   std::vector<std::string> island_hash;            // per island r = 1..R': manifest content hash ("" = not given)
   std::vector<double> grid;                        // calib.bin's frozen grid: every final island ran it (bitwise)
   int32_t L = -1, Hm = -1, K = 0;                  // calib.bin's L, Hm; the model cap K (data)
+  int32_t tier = -1;                               // calib.bin's frozen tier (hpm_ev tier must equal it)
+  const Zobrist* zob = nullptr;                    // data's Zobrist keys: every store hash is checked against its model
 };
 // Pass-1 head of island r (1-based): header, every section hash, kind/mode, content hash vs the manifest, meta.inputs
 // vs the merge's data/setup/calib content hashes, and the meta scalars. Classification (spec §6, T10): no file ->
@@ -106,7 +109,7 @@ struct SetupView {
   uint64_t table_event_count(int32_t K) const;      // codes with |U| <= K (one logical TABLE event each)
   EventCtx table_event_of(const Model& S) const;    // block b + 1, code of S in that block
 };
-SetupView read_setup(const std::string& path, int32_t p, int32_t K);   // shapes, ranges and finite values checked
+SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobrist* zob = nullptr);   // shapes, ranges and finite values checked
 std::string write_setup_min(const std::string& path, const SetupView& s, const Json& inputs);   // tests / harness
 // Table step of the merge ledger: the table top stores offered (top -> HPM + top, lead0, lead1) with their table event
 // keys, plus the logical TABLE count. Equal to ingesting every table code (core/cpp/v3_core.cpp:372-387) for the
