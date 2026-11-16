@@ -408,7 +408,9 @@ real runs only on 0 problems.
     except with probability ≤ n^{−cM};
   - (ii) the model size is bounded.
 
-  No beta-min, no identifiability. Without (A4): one extra log p. Parity:
+  No beta-min, no fixed lower bound on eigenvalues ("no identifiability" withdrawn per Sol S2: (A4) makes sparse
+  coefficients distinguishable; correction 11-15). Prior as coded: BB(1, r), r = non-constant predictors. Without (A4): one
+  extra log p. Parity:
   - matches Song–Liang on metric, form, coded prior and sparsity;
   - beats them on rate (no diverging factor) and on coded output;
   - short on second-moment-only predictors, approximate sparsity and exponential p.
@@ -421,3 +423,89 @@ real runs only on 0 problems.
 - **API proof attempts:** batch msgbatch_01BEGZfGBtUEbs5hCBdvQEaG.
   - 21 requests, cards X×6, S×3, T×3, V×3, F×3, B×3; ≤ $32;
   - tool `API_AUDIT/dist_attempts.py`; outputs in `API_AUDIT/dist1/`, which HQ copies to the lead's `work/api_attempts/`.
+
+- 2026-11-15 ~21:30 CT: W3-DIST Sol S2 (reader versions) REPAIR REQUIRED 3M/4m, fixed in STATEMENT v1.4. Theorem A unchanged
+  (EQUAL, faithfulness wording; no H5 card). The 19:10 entry corrected. Companion Theorem B false as written ((A6) needed b_n > 0):
+  WEAKER on a non-target clause, reported at the next checkpoint. Lemma X/X′ line-checked VERIFIED.
+
+## 2026-11-15 ~22:30 CT — p = 1M plan approved (HQ as CEO; owner: "as CEO you either approve or not")
+- Engineering deliverable (1): a plan, with no NOTS obstruction. Batched kernel measured 8–15× faster on Owls; a precise 1M fit ≈ 963
+  core-h / 2.2 h at the 1,536-CPU cap.
+- **Approved: budget A + D ≈ 24.6k core-h.** One 1M fit at n = 1,000 is conditional on the 10⁵ π̂(S₀)-by-n trend. Released per gate;
+  a re-size beyond the total, or a Sol-review change above ~15%, comes back to HQ.
+- **Approved:** the "validated" definition; the evidence wording at 1M; competitors and framing ("not found in the literature";
+  1M claims as posterior summaries).
+- G0 (≈ 57 core-h worst case) approved earlier; submitted by Engineering from Owls.
+
+## 2026-11-15 ~22:45 CT — H5 card 5 (provisional headline list): consultant AGREE with one OBJECT, adopted
+Abstract split adopted provisionally. Conditions:
+- masters PROVED-CHECKED; strength gates PASS; W3-DIST 2.1 only after CP3; the owner may re-order;
+- a fresh FAITHFUL fidelity read;
+- no unstated unchecked conditions;
+- pooled-Ẑ corollary 4.1 registered and checked.
+
+Changes:
+- row 1.1 re-based on W3-POST2 A1 + C (E as variant) or explicit "better" disposals;
+- F-UNI gate PENDING to be resolved before the 3.1 delivery clause;
+- MISR flag on MIS(i)/(ii), Cor-G(b) as the reader version;
+- setting line states the Gaussian rows;
+- add 3.7 certified screening to the abstract; 3.6 a candidate; 2.2 POST2:D the pillar-2 fallback.
+
+## 2026-11-15 ~23:00 CT — Lean Department launch set for Thu 11-19; Theory 6th slot
+- From the Theory Department's LEAN_READINESS.md:
+  - Level 1 ready now: SL0, LT♯ sup-norm core, T01 prior counting, DIST Lemma H (≈3–4 lead-days); then a shared score base
+    (≈1–1.5 wk);
+  - Level 2 order: DIST-1, W3-POST:Thm-1, RM2-F.
+- **HQ: launch the SMC - Lean Department Thu 11-19** (inventory + Level-1 batch). Level 2 from Mon 11-23. Owner priority:
+  "consistency results and even their lean parts".
+- Theory gets a temporary 6th lead slot for W3-MISR-R until PSMC-S0 closes.
+
+## 2026-11-15 ~21:45 CT — OVERNIGHT MODE ON (owner: "until tomorrow morning, you have full authority for any decision")
+HQ decides everything under POLICIES §11 limits: within existing envelopes and accounts; nothing irreversible or
+outward-facing; every decision tagged "(overnight)"; morning brief for the owner.
+- (overnight) ~22:00 CT, task J: approved a case-preserving accept-identity tool fix (bvsreg `_pkey`; Windows-recorded paths
+  read stale on Linux; 49 of 57 records match once fixed) with a regression test, an Opus review, and a Linux re-record
+  (PSHARP first). Manifest drift from the citefix merge (4 line-number re-points in C-MIS EXT inputs of START/MISR
+  manifests): Opus diff check + re-frozen manifests with HQ seat carriers now; tool change (EXT inputs verified at their
+  freeze commit) after Friday. Cont-F/R recorded as-is (implication lemmas consume RM-F/R by design). New Theory protocol
+  rule: a manifest-impact check before merging edits to files listed in accepted manifests.
+- (overnight) ~22:05 CT: W3-START2-R CP1 GO. Start-mass rate √(log n/n), optimal up to √log n; the visibility threshold exactly 1.
+  H5 card at CP3. Codex congested (BNP's review push): for the rest of the night, new **non-critical** reviews go to Opus.
+  This is a level-1 call for non-critical work only; DIST and rider CP3 paths stay on Codex.
+- (overnight) ~22:30 CT, Engineering:
+  - Sol EXP-CP1 review: GO-WITH-CHANGES, 2 CRITICAL / 8 MAJOR, no NOTS obstruction. All 11 adopted.
+  - ENGINEERING_SPEC v3 = EXP-CP1 v2 accepted. D-19 (block cap B_V = 14) and D-20 (pinned reference config) confirmed.
+  - Envelope +1–5%; memory per task up (island ~24–32 GB, calibration ~48–64 GB), within the cap.
+  - Schedule: 10⁴ pilot early Dec, 10⁵ mid-Dec, first 1M fit at risk for before the holidays. A recovery-options card is
+    requested for the owner's morning brief.
+- (overnight) ~23:15 CT: Claude Third hit its 5-hour session limit. All SMC agents on it failed: both department threads'
+  children, the leads, the recorder; the Engineering Department thread too. The window resets at 05:20 UTC. HQ
+  scheduled a one-off resume (05:24 UTC) telling both managers to resume with a paced ramp-up. Account allocation is
+  unchanged (the owner wants Claude Third used today and tomorrow). Lesson for the morning pacing plan: with ~5 builders
+  + ~6 leads + reviewers, Claude Third's 5-hour window runs out in about 4–5 h. Consider a concurrency cap or a split to
+  Claude Work.
+- (overnight) ~23:18 CT, account split: Engineering's WP2 and WP5 builders + their reviewers move to **Claude Work** (Opus,
+  high); the critical path (WP3/WP4) and the managers stay on Claude Third. Reason: Claude Third's 5-hour window binds at
+  the current concurrency, while Claude Work is ~82% of its week unused. For the owner's review in the morning pacing plan.
+- (overnight) ~23:40 CT, root finding (recorder H): SOP:TH09 (T03♯) has no council record and is the root of headline
+  rows 1.1/1.2/3.1. C-PACK:SL0 has 5 files changed since its C1 snapshot. TH05.0 is author-only. Decisions:
+  - new Tier B ticket **W3-T03ACC**: a council acceptance of T03♯ on its existing proof, target CP3 Thu 11-19;
+  - SL0 PC-style diff check before Friday;
+  - TH05.0 post-freeze unless it sits under an abstract row;
+  - a blind Fable API audit of T03♯ as an extra read;
+  - fallback: row 1.1 states its condition or moves to the body.
+
+  C (W2-APP) and the conditional re-status of 11 consumers approved.
+- (overnight) ~00:40 CT 11-16: the record damage from H's fallback (Cont-R status source moved off W3-RM2/CHECKPOINT_4
+  broke A4 for every CP4-sourced RM2 row; accept records of POST2:A1, RM2-R and POST-R stale). Repair GO:
+  CHECKPOINT_5 = a verbatim copy of CP4 with only Cont-R's extended status; re-point; re-record (dry run first; must show
+  A4 PASS, RM2-R re-validating, check 0 ERROR, suite pass, DIST still passing). Task L GO. Prop-LB re-point deferred to the
+  post-freeze POST2 checkpoint rewrite. Protocol lesson added to the Theory variant.
+- (overnight) ~01:00 CT 11-16, Engineering H-1 flag:
+  - at 10⁶ the late rounds cost ≈ 330 ns·CPU per pair (1.65× plan); 48 → 96 threads gives only 1.15×; memory/NUMA bound;
+    peak 31 GB per island;
+  - pro-rated, A + D with contingency becomes ≈ 33.7k (+37%), so no 10⁶ stage is released.
+  - Approved a ≤ 80 core-h exploratory batch to measure L1 (socket-local islands), L2 (G = 256) and L3 (parallel
+    compaction), then a firm re-size (quantity cut before precision).
+  - The sweep cost 77.4 core-h vs ≈ 40 announced (covered by the 200 standing authority; rule: pre-announce > 50%
+    overruns).
