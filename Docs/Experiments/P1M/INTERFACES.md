@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.1 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -23,8 +23,8 @@ Scripts/SMC_BVS/engine_v4/
 - CMake targets: `v4_bit` (static lib; flags **`-O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2`**, every kernel
   that must equal v3 bits), `v4_a` (static lib; class-A kernels; `-march=x86-64-v2` unless `-DV4_WIDE_ISA=ON` →
   `-march=x86-64-v3`, FMA only through explicit intrinsics / `std::fma`), `smcbvs4` (CLI), `v4_tests` (all unit + golden
-  tests, own minimal harness `tests/tk.h`, no external deps), `v3ref` (tests only: core/ headers compiled unchanged
-  with the v3 flags, for golden comparisons). C++20, GCC ≥ 11. OpenMP required. No network at configure or build time.
+  tests, own minimal harness `tests/tk.h`; it also compiles the core/ headers unchanged with the v3 flags for golden
+  comparisons; links libquadmath), tools `v4_pmath_check`, `v4_bench_score`. C++20, GCC ≥ 11. OpenMP required. No network at configure or build time.
 - Test runner: `engine_v4/tests/run_tests.sh [--quick|--full] [--threads k]` = configure + build (`make -j3`, `nice -n 19`)
   + run `v4_tests` + R golden scripts if R is present. Exit 0 iff all pass. Prints machine, compiler, flags, libm hash.
 
@@ -234,7 +234,9 @@ operation order, spec §1). Class A: same exact-arithmetic map, any rounding; ag
 against Bit; fallback to the Bit form whenever the class-A Cholesky pivot test fails (so routes are identical). The
 kernel (WP3) is templated on `Arith`; T always instantiates `Bit`, V `ClassA`. Pinned transcendental functions:
 all scorer/engine code calls `v4::pm::log, exp, log1p, expm1, lgamma` (`include/v4/pmath.h`), never `std::` directly.
-The binding of `pm::` (glibc or bundled) is decided and recorded by WP1 (§8).
+**Binding (v0.1.1): glibc 2.34 libm, FMA/AVX2 ifunc variants** (the v3.1 records' bits; a correctly rounded libm would
+change them). `pm::fma_variant_expected()` must be true for any bit-form run; the manifest records libm path + SHA-256
+and `libm_fma_variant`. Evidence: `engine_v4/tests/PMATH_REPORT.md`.
 
 ## 7. Statuses, errors, threads (`include/v4/status.h`, `threads.h`)
 ```cpp
@@ -261,3 +263,7 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
 
 ## Changelog
 - v0.1 (2026-11-15, WP1) — first binding version.
+- v0.1.1 (2026-11-15, WP1) — §5.1 `SectionEntry` gets `reserved[8]` (the entry is 128 B, as stated; the field list
+  summed to 120). `fmt::Writer::add` keeps a pointer to the caller's buffer (no copy) until `write()`. §6 libm binding
+  decided (glibc FMA variant + run-time check). §1: no separate `v3ref` target (`v4_tests` includes the core/ headers).
+  §5.3: manifest `inputs` keys are file paths; the CLI verifies each `.bin` content hash before running.
