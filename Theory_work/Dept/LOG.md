@@ -70,3 +70,4 @@
 - 20:35 — POLICIES §13: Theory_work/Dept/PROTOCOL.md drafted (minimums kept; deviations B1–B10 with reasons and D-numbers); goes to HQ with the Thu proposal.
 - 20:35 — HQ: Engineering crew tracing the ENOSPC spike source; BNP/shared temp cleanup and CLAUDE_CODE_TMPDIR move are owner calls; leads already told retry + commit promptly + temp under bvs_tmp (manifests are written in worktrees on NFS). Any Wed CP3 slip from this → HQ at once.
 - 20:36 — W3-READER: shell back, pushed (f7be7d2, c72c58a); bridge leg R1–R4 + PoolZ claim written; READER_VERSIONS v0.3 (1.1 re-based on POST2 C; Thm 1′ on POST2 E; Thm 4 masters MIS(i)/(ii); Thm 10 = row 3.6); CLAIMS_CARD v0.5 with all H5 actions; Thm 7 'raw columns non-constant' fix; Sol S2 (one review: R1–R4, PoolZ, v0.1→v0.3 diff, card fidelity) running; G1/G2 gates tables in; CP3 Fri on track.
+- 20:39 — D32: Owls department folder laid out; leads switched; NOTS migration planned post-freeze.

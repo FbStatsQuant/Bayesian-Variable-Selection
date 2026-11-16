@@ -190,3 +190,11 @@
   Family-map diff round. F-UNI M27 PATCH: gate record fix now (task I), text after RM2-R CP3 + H5 card. 12 NARROW →
   one post-freeze LIFECYCLE §3 batch (priced), H5 card for GEN (C4), FAC-CS (C1), SAMP:Pkg. Narrowed wordings added to
   Docs/Writing/QUEUE.md for the chapter; READER told. Open checks M69, M05 go into the batch prep.
+
+## 2026-11-15 20:39 CT — POLICIES §12 rules 8–9: department folders
+- **D32.** Owls: /home/fb31/SMC_Theory_Department/ laid out (tmp/, ci/, recorder/, logs/, helpers/, INDEX.md). All new
+  temp/CI/clones go there (all 9 leads told; RIDER_RULES updated). Idle bvs_tmp/{theory,ci} + top-level department
+  folders migrate there at a quiet moment (after the running G clone and W3-EDIT CI finish); bvs_tmp then retired for us.
+  NOTS: migration of theory_w2/w3, /scratch/fb31/theory_w2|3, P6 outputs into /home/fb31/SMC_Theory_Department (+ scratch
+  link) is planned after the Wed freezes, calm and idle-only, with INDEX.md; first a single read-only check that Owls
+  can reach NOTS (HQ_NOW said it could not: host key) — if not, the migration runs via HQ/Engineering.
