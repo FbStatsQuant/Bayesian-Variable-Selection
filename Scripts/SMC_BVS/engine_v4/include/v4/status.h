@@ -7,7 +7,10 @@
 
 namespace v4 {
 
-enum class Status : uint8_t { completed = 0, resource_limit = 1, numerical_failure = 2, invalid_input = 3, io_error = 4, internal_error = 5 };
+// schedule_limit (v0.1.7): theory / compat calibration only -- tier-1 grid construction failed and no fallback grid
+// exists (core/v3_calib.R:170). It cannot arise in V-1M (D-26).
+enum class Status : uint8_t { completed = 0, resource_limit = 1, numerical_failure = 2, invalid_input = 3, io_error = 4, internal_error = 5,
+                              schedule_limit = 6 };
 
 const char* status_name(Status s);
 Status status_from_name(const std::string& s);   // throws Error(invalid_input) on an unknown name
@@ -23,7 +26,7 @@ struct NumericalFailure : public Error {
 };
 
 // Fit level: the first that applies in the order invalid_input, internal_error, numerical_failure, resource_limit,
-// io_error, completed (ENGINEERING_SPEC §6). Empty input -> completed.
+// schedule_limit, io_error, completed (ENGINEERING_SPEC §6; schedule_limit added in v0.1.7). Empty input -> completed.
 Status fit_status(const std::vector<Status>& tasks);
 
 }  // namespace v4
