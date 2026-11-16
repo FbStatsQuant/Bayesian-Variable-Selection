@@ -25,6 +25,10 @@
   - D2 (all consistency results in reader form, statuses verbatim): draft ≈ 6 h after the resume.
   - D1 (methodology as coded: priors, distributions, every parameter fixed or f(n, p), with code file:line): ≈ 24 h.
   - The Writing thread is already on Claude Personal. HQ orders one Sol read per document and shows the owner the PDFs.
+- **For Engineering on resume (Writing D1 finding, 11-16):** the default v3_fit preflight is NOT memory-only. With ls0 = TRUE and cap ℓ_n+|S̃₀|, ls0_wc = TRUE (v3_fit.R:114) charges the LS0 worst-case time 2·(ℓ_n+K+1)·(p+p²/4)·(measured s per size-K score) against the allocated hours (:43-47, :65, :144-148).
+  - At n = 200, p = 10⁴ that is ≈ 563 h on Owls, so a default fit returns resource_limit before setup. The README and the code comment (:25) say "memory-only".
+  - Engineering: check how the overlap rung (10⁴) and the 1M plan set hours/ls0_cap, and which setting the 2,400-fit study and P6 used. Report the doc fix.
+  - Theory is unaffected ((C2) assumes allocation ≥ the requirement formulas).
 - **On resume:** move the department threads to Claude Personal (t3_thread_configure), then send each manager "resume from RESUME card". Pending HQ items:
   - V (RM2-R) real-run GO after rule (b) and the dry run;
   - re-enable the 3 Theory scheduled tasks;
