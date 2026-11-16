@@ -61,6 +61,12 @@ For each core theorem, one sharpness record of at most a page, using the same ta
 - **Pre-filled from existing lists:** W3-DIST UNHARVESTED_STRENGTH (11 items), the MISR/SCR better-theorem notes,
   rider P1, check X, IDEAL-W⁺ binding, and the sharp2/sharp3 triage.
 
+**Scope (owner, 11-16):** "we are almost done; the core analysis will be based on what we have."
+- Track D covers **only the core theorems and key components**, and is light. Its main output may well be "near-optimal for this method", with the reason.
+- **No effort on niche theorems.** At most 3 improvement tickets in total, each with a hard kill budget, and only
+  where the gain changes a headline statement: weaker assumptions on the design, a rate in log p, or the
+  s₀-dependence.
+
 The consultant then ranks the improvements. Each one adopted becomes a ticket with a kill budget, and a success
 supersedes the weaker result (rollback to the better theorem, as today with Cor-G(a) → CorG-min and START-R).
 
