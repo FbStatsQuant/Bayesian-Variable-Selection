@@ -18,6 +18,13 @@ PROVED-CHECKED is called checked; "conditional on …" is carried.
 (S3) "The method" means the method as coded, under the standing conventions of `NOTATION.md` §5 (exact arithmetic,
 shipped configuration, sufficient allocation). (S3) matters only for Theorems 5–8.
 
+
+**Row structure (for in-place updates).** Each theorem section is one card row, delimited by
+`<!-- ROW thmK BEGIN -->` / `<!-- ROW thmK END -->`. A READER_DELTA (from the Theory Department riders) replaces the
+affected blocks of one row in place — reader statement, assumption lines, master, bridges — bumps that row's
+**Section version**, and adds one line to its **Update log** (with the STRONGER / WEAKER / EQUAL tag of the master's
+changelog). No other row changes. The bridge summary at the end is regenerated from the rows.
+
 Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
 1. Posterior concentration, fixed design — §1
 2. Posterior concentration, random Gaussian design — §2
@@ -32,6 +39,9 @@ Numbering of the headline theorems (proposal; see `CLAIMS_CARD.md`):
 ---
 
 ## 1. Theorem 1 — Posterior concentration (fixed design)
+<!-- ROW thm1 BEGIN -->
+**Card row** 1.1 · **Section version** 0.1 (2026-11-15) · **Pending delta** —
+
 
 ### Reader statement
 **Theorem 1.** Let the design be fixed. Assume
@@ -101,9 +111,16 @@ None for the statement: every assumption is primitive. The beta-min constant is 
 ($c_0\ge128$ at $s_0=A=1$); the paper should say "a sufficiently large constant depending only on $(s_0,A,\varphi_0)$"
 in the statement and give $c_0$ in a remark.
 
+#### Update log (thm1)
+- v0.1 2026-11-15: first version (CP1).
+<!-- ROW thm1 END -->
+
 ---
 
 ## 2. Theorem 2 — Posterior concentration (random Gaussian design)
+<!-- ROW thm2 BEGIN -->
+**Card row** 1.2 · **Section version** 0.1 (2026-11-15) · **Pending delta** —
+
 
 ### Reader statement
 **Theorem 2.** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m_n,\Sigma_n)$ with $\Sigma_n$ a correlation matrix, and
@@ -153,9 +170,16 @@ unchecked); R02 VERIFIED-WITH-AMENDMENTS, applied"**, and its restatement `W3-PO
 None for the statement. Its status is the weakest link: until `W2-APP:POST` is line-checked, Theorem 2 must be
 presented as "proved; one input lemma not yet independently checked".
 
+#### Update log (thm2)
+- v0.1 2026-11-15: first version (CP1).
+<!-- ROW thm2 END -->
+
 ---
 
 ## 3. Theorem 3 — The rate cannot be improved
+<!-- ROW thm3 BEGIN -->
+**Card row** 1.3 · **Section version** 0.1 (2026-11-15) · **Pending delta** PSHARP Cor A1 (rider T12, via Theory Dept)
+
 
 ### Reader statement
 **Theorem 3.** (a) *(Every design.)* For every $n\ge3$, every standardised design with $p\ge2$, every response and every
@@ -199,9 +223,16 @@ both, verbatim: **"PROVED-CHECKED; council R2, MANIFEST 4513e05a…, sol=9.2 PAS
 ### Honest limits
 None. Note for the text: the expectation form of (b) for every $p$ (sharp2 rider T12) is not yet proved.
 
+#### Update log (thm3)
+- v0.1 2026-11-15: first version (CP1).
+<!-- ROW thm3 END -->
+
 ---
 
 ## 4. Theorem 4 — Omitted variables (misspecification)
+<!-- ROW thm4 BEGIN -->
+**Card row** 3.4 · **Section version** 0.1 (2026-11-15) · **Pending delta** MISR Cor-G(a)/Cor-H (rider T13, via Theory Dept)
+
 
 ### Reader statement
 **Theorem 4** (candidate-only fit with omitted predictors). Let the rows $(x_{\mathcal C,i},x_{\mathcal M,i})$ be i.i.d.
@@ -262,9 +293,16 @@ Fixed-design form: `W3-MISR:MIS(i)@1.0.0` (:110-123), **"PROVED-CHECKED, conditi
 The statement is primitive. The status is not: Theorem 4 is "proved and council-passed, conditional on four
 council-passed but not accepted posterior refinements". The card must say so until the POST2 diff round passes.
 
+#### Update log (thm4)
+- v0.1 2026-11-15: first version (CP1).
+<!-- ROW thm4 END -->
+
 ---
 
 ## 5. Theorem 5 — The start law already concentrates
+<!-- ROW thm5 BEGIN -->
+**Card row** 3.3 · **Section version** 0.1 (2026-11-15) · **Pending delta** START2 (T1⁺)/(T3⁺)(b)/IF-START⁺ (rider START2 v1.5, via Theory Dept)
+
 
 ### Reader statement
 **Theorem 5.** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m_n,\Sigma_n)$, $\Sigma_n$ a correlation matrix, and let
@@ -321,9 +359,16 @@ simplification is proposed without a proof. Recommendation: option (i).
 Also: this theorem is about an internal object of the method; it belongs in the paper's method section, not in the
 abstract.
 
+#### Update log (thm5)
+- v0.1 2026-11-15: first version (CP1).
+<!-- ROW thm5 END -->
+
 ---
 
 ## 6. Theorem 6 — The reported model equals the truth (random Gaussian design; main theorem)
+<!-- ROW thm6 BEGIN -->
+**Card row** 3.1 · **Section version** 0.1 (2026-11-15) · **Pending delta** —
+
 
 ### Reader statement
 **Theorem 6.** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m_n,\Sigma_n)$ with $\Sigma_n$ a positive definite
@@ -416,9 +461,16 @@ the signal is not masked, that what can imitate it is confined to a set of size 
 regressions are local. HQ choices: keep them as stated (faithful), or state Theorem 6 in words in the abstract
 ("under visibility, polynomially bounded leakage and local dependence") with the full list in the theorem.
 
+#### Update log (thm6)
+- v0.1 2026-11-15: first version (CP1).
+<!-- ROW thm6 END -->
+
 ---
 
 ## 7. Theorem 7 — The reported model equals the truth (fixed design)
+<!-- ROW thm7 BEGIN -->
+**Card row** 3.2 · **Section version** 0.1 (2026-11-15) · **Pending delta** RM2-F (rider T4, via Theory Dept)
+
 
 ### Reader statement (two sufficient versions)
 **Theorem 7.** Let the design be fixed. Assume
@@ -482,9 +534,16 @@ theorem; one equicorrelated group, $b<3/10$ — checked, conditional; polynomial
 **Not available:** the theorem without any lattice condition (open problem: control of the actual search path), and
 any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully explicit) and (b) as the strengthening.
 
+#### Update log (thm7)
+- v0.1 2026-11-15: first version (CP1).
+<!-- ROW thm7 END -->
+
 ---
 
 ## 8. Theorem 8 — Certified screening
+<!-- ROW thm8 BEGIN -->
+**Card row** 3.7 · **Section version** 0.1 (2026-11-15) · **Pending delta** —
+
 
 ### Reader statement
 **Theorem 8.** Let the design be fixed and assume (S1), (S3) and
@@ -518,9 +577,16 @@ None. It is a one-sided guarantee (no false negatives among small certified mode
 certificate needs a near-orthogonality floor (`W3-SCR:SCR-C`, PROVED-CHECKED), which is not reader-friendly
 ($\varphi_n(q_n)\ge2A/(2A+1)+\epsilon$) — keep it as a remark.
 
+#### Update log (thm8)
+- v0.1 2026-11-15: first version (CP1).
+<!-- ROW thm8 END -->
+
 ---
 
 ## 9. Theorem 9 — Distribution-level consistency (placeholder)
+<!-- ROW thm9 BEGIN -->
+**Card row** 2.1 · **Section version** 0.1 (2026-11-15) · **Pending delta** W3-DIST CP2/CP3
+
 
 Ticket W3-DIST is at its CP1 (read-only here; not touched). Candidate master: "Theorem DIST-1" in
 `/home/fb31/BVS-wt/W3-DIST/Theory_work/Wave3/W3-DIST/STATEMENT.md:67-87` — joint Hellinger contraction of the
@@ -528,6 +594,10 @@ $(x,y)$ density at rate $\sqrt{\log n/n}$ in exponential form, with design inter
 statement at a scoping checkpoint; not proved; no registry row.** Its CP1 already proposes "Reader version = master
 theorem + bridges B0, B1, B2" (:119). W3-READER will take that proposal over at W3-DIST's CP2/CP3; no reader version
 is written here.
+
+#### Update log (thm9)
+- v0.1 2026-11-15: first version (CP1).
+<!-- ROW thm9 END -->
 
 ---
 

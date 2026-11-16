@@ -1,5 +1,8 @@
 # W3-READER — CHECKPOINT 1 (lead: Claude Opus 5.5, Claude Third, Owls; 2026-11-15)
 
+Reports to: SMC - Theory Department manager (owner's decision, 2026-11-15; HQ receives the claims card through the
+manager for the H5 headline card).
+
 Tier B (PROTOCOL_v4). No new key lemma appeared (all NEW bridges are arithmetic, a one-paragraph variance bound, and a
 premise-matching assembly). HOLDS: none at any step (`Theory_work/Wave3/HOLDS.md`, worktree and main checkout).
 

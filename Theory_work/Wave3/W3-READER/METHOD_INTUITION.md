@@ -84,7 +84,7 @@ output (the delivery result used in Theorems 6–7).
 of $\pi_0$. At each rung of the ladder the particles are reweighted by how much more the next distribution likes them,
 resampled, and moved by MCMC steps that leave the current distribution invariant: a Gibbs update of every coordinate,
 random swaps, swaps with correlated neighbours, and independence proposals drawn from $\pi_0$. At $\phi=1$ the PIPs are
-averaged from the Gibbs inclusion probabilities (Rao–Blackwellisation) and pooled with equal weights across islands;
+averaged from the Gibbs inclusion probabilities (Rao–Blackwellisation) and pooled with **equal weights** across islands (islands are not weighted by their evidence);
 the evidence $\hat Z$ is the product of the average reweighting factors, averaged across islands. *Problems solved:*
 moving from an easy distribution to the hard one in small steps avoids getting trapped; the independence and
 neighbour-swap moves let particles jump between near-equivalent models; independent islands give a check of
@@ -181,6 +181,7 @@ re-checked the ones marked ✓.
 | no-output statuses; best model returned on stops | `v3_run.R:109-114`; `v3_fit.R:134-137`, `:154-159`; `cpp/v3_runtime.h:13-27` |
 
 Notes for HQ: (i) the code reports `hpm` and `mpm` without naming one "the selected model"; the theory's reported
-model is `hpm`. (ii) The Ẑ-weighted secondary PIP described in the methodology document is not computed by the
-shipped code (README:16). (iii) The tempered target is written $\pi_0^{1-\phi}\pi^\phi$ up to constants
+model is `hpm`. (ii) The Ẑ-weighted PIP described in the methodology document, and called primary for v3.1 in
+`Theory_work/State_of_Project/sections/02_method.tex:444-451`, is not computed by the shipped code (README:16); the code
+pools with equal weights (`v3_run.R:154`, `:162`). Follow the code (Theory Dept manager, 2026-11-15). (iii) The tempered target is written $\pi_0^{1-\phi}\pi^\phi$ up to constants
 ($\gamma_\phi=\gamma_0^{1-\phi}\gamma_1^{\phi}$ with $\gamma_1\propto$ target).

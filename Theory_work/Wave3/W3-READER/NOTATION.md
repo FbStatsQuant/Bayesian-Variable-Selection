@@ -114,8 +114,11 @@ The method is a sequential Monte Carlo sampler over $\Omega$ with a deterministi
   reported model is the best-scoring recorded model. It is reported as **certified** when it is the end point of a
   local search whose last complete scan found no strict improvement (i.e. it is verified to be a local optimum of $F$
   in the neighbourhood above).
-* **Estimated summaries.** The method also returns estimated PIPs, the MPM built from them, and an estimate of the
-  normalising constant (the evidence) $\hat Z$.
+* **Estimated summaries.** The sampler runs $R=4$ independent islands. Each island $r$ produces Rao–Blackwellised
+  inclusion probabilities $\widehat{\mathrm{PIP}}_{r,j}$ and an evidence estimate $\hat Z_r$. The method pools them
+  with **equal weights**: $\widehat{\mathrm{PIP}}_j:=\frac1R\sum_{r=1}^R\widehat{\mathrm{PIP}}_{r,j}$ and
+  $\hat Z:=\frac1R\sum_{r=1}^R\hat Z_r$ (islands are *not* weighted by their evidence). The estimated MPM is
+  $\{j:\widehat{\mathrm{PIP}}_j>1/2\}$.
 
 **Output.** A run either returns these estimates ("produces output") or stops without them (for example when its
 computing allocation is exhausted). $\mathcal O$ denotes the event that a run produces output.
@@ -223,6 +226,11 @@ $\beta^*$ and $S_0$ may change with $n$; $s_0$ is fixed unless said otherwise.
   $\ell_n=\lceil\log_2(n+p+1)\rceil$: W3-RM2 STATEMENT.md:60-67 (pins `cpp/v3_engine.h:392-414`,
   `cpp/v3_core.cpp:465-476`); W3-RM STATEMENT.md:45.
 * Reported model = ≻-maximum of the scored set; certified set: W3-SCR STATEMENT.md:29-44; C-DLV `lemmas/L4_delivery.md:66-70`.
+* Equal-weight pooling (code wins over the documentation): `pip_primary = rowMeans(P)` at
+  `Scripts/SMC_BVS/core/v3_run.R:162`; $\log\hat Z$ = log of the plain mean of the $\hat Z_r$ at `v3_run.R:154`; MPM at
+  `:163`. `Theory_work/State_of_Project/sections/02_method.tex:444-451` says v3.1 made the $\hat Z$-weighted PIP primary;
+  the shipped code does not compute it (`Scripts/SMC_BVS/core/README.md:16`). Flag raised by the Theory Dept manager,
+  2026-11-15.
 * Output event, resource guard: `Scripts/SMC_BVS/core/README.md` (runtime guard; `resource_limit`); delivery fallback
   (tier-1 grid freezing, default on): `Scripts/SMC_BVS/core/v3_calib.R:120-124, 141-151`.
 * Standing conventions (i)–(iii) = implementation premises EX-A; OP-LS0 with configuration `ls0 = TRUE`,

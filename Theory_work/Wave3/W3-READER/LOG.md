@@ -8,3 +8,4 @@
 - 2026-11-15 18:41 CST CHECKPOINT_1.md drafted (Sol section pending). Waiting on S1 (Sol) and H1 completion notice.
 - 2026-11-15 19:22 CST HQ organisation note: CLAIMS_CARD v0.2 regrouped into five pillars (+ rows 3.5 N1, 3.6 SAMP, 4.1-4.3 parallel, 5.1-5.3 scale); CP1 §1 updated. Still waiting on S1 (Sol).
 - 2026-11-15 19:23 CST read POLICIES.md (HQ merged main, 7c24a3d). Committed + pushed 121c25d on theory/W3-READER. HOLDS: none. Waiting on S1 (Sol); CP1 report to HQ via t3_thread_send (queue) after S1.
+- 2026-11-15 19:44 CST Now under SMC - Theory Dept manager (report there, queue, <=10 lines). Applied manager's faithfulness flag: equal-weight pooling (v3_run.R:154,162) explicit in NOTATION §5 + traceability, METHOD_INTUITION; READER_VERSIONS given per-row BEGIN/END markers, section versions, pending-delta lines (thm3 PSHARP A1, thm4 MISR G(a)/H, thm5 START2, thm7 RM2-F) and update logs. Waiting on S1.
