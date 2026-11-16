@@ -63,3 +63,4 @@
 - 20:26 — W3-MISR-R launched as child agent (D30); Lean launch Thu 11-19 noted.
 - 20:28 — temp convention /home/fb31/bvs_tmp/<ticket> (TMPDIR) adopted (HQ + Engineering); relayed to all 9 leads incl. MISR-R child; recorder's _scratch note replaced; RIDER_RULES updated.
 - 20:30 — /tmp/hq1115-* count 0 (both gone, ~1.06 GB); root 86% / 9.9 GB free; recorder in bvs_tmp (1.5 GB). Task I: F-UNI gate stale (fix after M27); 38/44 candidates have free-text correct:PASS evidence (post-freeze record-format cleanup proposed). HQ told.
+- 20:30 — SHARP3 results in (5/5 IMPROVABLE-EASY: SAMP D, LT#, C, TR; SCR:A1; ~$2.2); READER to triage (TRIAGE_SHARP3.md; settle NC_r every island, P-MAP localisable; cheap improvements → post-freeze riders; dispositions in better-gate).
