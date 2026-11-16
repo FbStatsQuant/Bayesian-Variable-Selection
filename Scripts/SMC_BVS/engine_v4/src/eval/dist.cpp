@@ -455,13 +455,29 @@ Json dist_metrics(const Law& L, const Truth& T, int32_t n_obs, const DistOpts& o
   J["dropped_mass"] = L.dropped_mass;
   if (L.store_law) {
     // Sol F9-b: the law is a truncated approximation of the store BMA; the omitted (summed) mass δ enters as error terms.
-    // f̄_store = (1 − δ) f̄_law + δ f̄_omitted ⇒ H²(f̄_store, f̄_law) ≤ 1 − √(1 − δ) ≤ δ, so every d_H of a law object is
-    // within √δ of the store object's; weighted means of d_H² ∈ [0, 1] are within δ.
+    // The store law is (1 − δ)·law + δ·omitted (as model mixtures). What δ covers, field by field:
+    //  - predictive d_H: f̄_store = (1 − δ) f̄_law + δ f̄_om ⇒ H²(f̄_store, f̄_law) ≤ 1 − √(1 − δ) ≤ δ, so by the triangle
+    //    inequality |d_H(f̄_store, f*) − d_H(f̄_law, f*)| ≤ √δ (the predictive d_H only);
+    //  - weighted_plugin.h2 (a mixture mean of values in [0, 1]): within δ;
+    //  - post_dH: tail probabilities Π(d_H > ε) and the mean of d_H ∈ [0, 1] within δ; a quantile of level α lies between
+    //    the store law's quantiles of levels α − δ and α + δ;
+    //  - predictive KL and test mlpd: one-sided only (f̄_store ≥ (1 − δ) f̄_law): KL_store ≤ KL_law − log(1 − δ) and
+    //    mlpd_store ≥ mlpd_law + log(1 − δ);
+    //  - NOT covered (unbounded functionals of the omitted models): plugin (posterior-mean plug-in and its prediction
+    //    error), weighted_plugin.pred_error, test.mse.
+    const double dl = L.dropped_mass;
     Json Tr = Json::object();
     Tr["label"] = "truncated approximation of the store BMA";
-    Tr["omitted_mass"] = L.dropped_mass;
-    Tr["dH_bound_truncation"] = std::sqrt(L.dropped_mass);
-    Tr["weighted_h2_bound_truncation"] = L.dropped_mass;
+    Tr["omitted_mass"] = dl;
+    Tr["dH_bound_truncation"] = std::sqrt(dl);   // predictive d_H only
+    Tr["weighted_h2_bound_truncation"] = dl;
+    Tr["post_dH_tail_prob_bound"] = dl;
+    Tr["post_dH_mean_bound"] = dl;
+    Tr["kl_upper_add"] = -std::log1p(-dl);       // KL_store ≤ KL_law + this (one-sided)
+    Tr["mlpd_lower_add"] = std::log1p(-dl);      // mlpd_store ≥ mlpd_law + this (one-sided)
+    Json nc = Json::array(); for (const char* f : {"plugin", "weighted_plugin.pred_error", "test.mse"}) nc.push(Json(f));
+    Tr["not_covered"] = nc;
+    Tr["note"] = "dH_bound_truncation applies to the predictive d_H only; see not_covered";
     J["law_truncation"] = Tr;
   }
 
@@ -558,7 +574,7 @@ Json dist_metrics(const Law& L, const Truth& T, int32_t n_obs, const DistOpts& o
     const uint32_t nr = std::min<uint32_t>(B, (uint32_t)o.n_x - r0);
     std::vector<std::vector<int>> groups; std::vector<int32_t> cols;
     block_mix(0, blk, groups, cols);
-    const XSample xs = make_rows(T, cols, r0, nr, o.seed, false);
+    const XSample xs = make_rows(T, cols, (uint32_t)o.x_row0 + r0, nr, o.seed, false);
     max_cols = std::max(max_cols, xs.cols.size());
 #pragma omp parallel for schedule(static) num_threads(o.threads)
     for (long r = 0; r < (long)nr; ++r) {
@@ -593,7 +609,7 @@ Json dist_metrics(const Law& L, const Truth& T, int32_t n_obs, const DistOpts& o
     const uint32_t nr = std::min<uint32_t>(B, (uint32_t)o.n_test - r0);
     std::vector<std::vector<int>> groups; std::vector<int32_t> cols;
     block_mix(1, blk, groups, cols);
-    const XSample xs = make_rows(T, cols, (uint32_t)o.n_x + r0, nr, o.seed, true);
+    const XSample xs = make_rows(T, cols, (uint32_t)o.x_row0 + (uint32_t)o.n_x + r0, nr, o.seed, true);
 #pragma omp parallel for schedule(static) num_threads(o.threads)
     for (long r = 0; r < (long)nr; ++r) {
       MixAt Mx; fill_mix(Mx, xs, (size_t)r, groups);
