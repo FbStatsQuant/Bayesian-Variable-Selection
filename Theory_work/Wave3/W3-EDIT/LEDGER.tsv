@@ -1,0 +1,12 @@
+id	claim	file:line	finding (source)	class	before	after	route
+C6-01	C-MIS:Thm-MIS(i); C-MIS:Thm-MIS(ii); C-MIS:Cor-N (premise STATEMENT.md:54-62)	Theory_work/Wave1C/C-MIS/STATEMENT.md:59	cite line-drift after SoP v1.1 dd60e09 (+6 lines at 537a541-543); C-MIS citecheck MISS (PR #10 CI)	CITATION	`04_theory.tex:774-782`	`04_theory.tex:780-788`	IN-PLACE
+C6-02	—	Theory_work/Wave1C/C-MIS/STATEMENT.md:174	same drift (+6 after 537, at 811)	CITATION	`04_theory.tex:811`	`04_theory.tex:817`	IN-PLACE
+C6-03	—	Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md:10	same drift	CITATION	`04_theory.tex:776-782`	`04_theory.tex:782-788`	IN-PLACE
+C6-04	—	Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md:16	same drift	CITATION	`04_theory.tex:776-779`	`04_theory.tex:782-785`	IN-PLACE
+C6-05	—	Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md:45	same drift	CITATION	`04_theory.tex:775`	`04_theory.tex:781`	IN-PLACE
+C6-06	—	Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md:62	same drift	CITATION	`04_theory.tex:811`	`04_theory.tex:817`	IN-PLACE
+C6-07	—	Theory_work/Wave1C/C-MIS/lemmas/L3_hpm.md:6	same drift (+3 at 181a182-184)	CITATION	`04_theory.tex:466`	`04_theory.tex:469`	IN-PLACE
+C6-08	— (tool)	Theory_work/Wave1C/C-MIS/numerics/citecheck.py:19-24	CHECKS rows mirror C6-01..07	CITATION	466; 774-782; 775; 776-779; 776-782; 811	469; 780-788; 781; 782-785; 782-788; 817	IN-PLACE
+C6-09	— (record)	Theory_work/Wave1C/C-MIS/reviews/CITECHECK.txt	refreshed output of C6-08 (34 OK, ALL OK)	CITATION	old line numbers	new line numbers	IN-PLACE
+C6-10	— (tool)	Theory_work/Wave2/W2-FAC-X/reviews/citecheck.py:9	PREF lacks 'Theory_work/Wave2/': STATEMENT.md:118,122 cites W2-FAC-B/REPORT.md:30, W2-FAC-A/REPORT.md:20 not found (MISS 0->2, PR #10 CI)	CITATION	no 'Theory_work/Wave2/' prefix	'Theory_work/Wave2/' added after C-GROW, as in citecheck_final.py:15	IN-PLACE
+C6-11	— (record)	Theory_work/Wave2/W2-FAC-X/reviews/CITECHECK.txt	refreshed output of C6-10 (ok=7 miss=0); the hand-appended status-string section kept verbatim	CITATION	ok=5 miss=0 (predates the two cites)	ok=7 miss=0	IN-PLACE
