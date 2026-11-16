@@ -137,3 +137,4 @@
 - 23:36 — HQ approved format-fix real run (RM-0, SCR:A1); pre-Wave-3 council form failures fixed in the record at acceptance (v4 §7). Recorder told.
 - 23:37 — READER forms A/B (916a08a4, card v0.8): Form A = Thm 1 O_P (T03♯ only); B1 recommended (shared conditional sentence); POST2:C stays conditional (Prop-LB, Lemma-1a′, TH128, POST→SL0) → expectation display + Thm 1′ in body. Proposed to HQ: implies PSHARP:B ⇒ W3-POST:Prop-LB (one reviewer) to clear Prop-LB.
 - 23:37 — D51: row 1.1 Form A/B1 decided; implication check launched; L1a′/TH128 queued.
+- 23:39 — HQ: blind Fable audit of T03♯ = 2 samples, both MINOR, 0 GAP/ERROR ('proved as stated'); relayed to T03ACC lead (slips as named points for its Sol line checks; not to blind seats; council stays the gate).
