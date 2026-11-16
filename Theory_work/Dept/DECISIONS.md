@@ -361,3 +361,9 @@
 - **D54.** Sources pinned (W1-T03R @7e14d6f + [P1]/[P3]); STATEMENT v1.0 verbatim T03♯, 8 readings for SL1 to rule;
   GO for parallel LC-A/B/C after the lock; api/ → reviews/api/; hypotheses the record lacks (A ≥ 1, p ≥ 2) = WEAKER vs
   record, reported at CP3. CP3 aimed Wed 18:00, hard Thu 18:00.
+
+## 2026-11-16 01:20 CT — SCR PC check: A1-SUBSTANTIVE (escalated)
+- **D55.** Post-council v3.4 edits added fixed-in-n κ, b, M (σ) to W3-SCR:A1 = WEAKER scope vs council-read text; Sol
+  re-verified the current proof chain as valid (not a correctness issue; v3.3 snapshot missing). Proposed to HQ: honest
+  record note (post-C1 WEAKER, proof re-verified by PC_SCR_sol.md); row 3.7 reader text states fixed-signal premises;
+  SCR-R1 post-freeze restores n-dependent bounds. Awaiting HQ (H5 possible).
