@@ -1,6 +1,6 @@
 # Lemma X and Lemma X′ — in-sample exponential core (W3-DIST, stream A; lead: Claude Fable 5.2)
 
-Status: **DRAFT (unchecked)**. v0.2, 2026-11-15. Statement: `../STATEMENT.md` §3 (Lemma X, Lemma X′); target clauses
+Status: **DRAFT**. v0.3, 2026-11-15 (amendments to v0.2 are marked [v0.3, …]; review record in `../DEPS.tsv`). Statement: `../STATEMENT.md` §3 (Lemma X, Lemma X′); target clauses
 TC2–TC4, TC6 depend on it.
 
 **Provenance and choice of route.** §0–§8 are the API proof attempt `../work/api_attempts/dist1/X-b-1.md` (Fable batch run
@@ -9,7 +9,7 @@ cleanest of the five available derivations: a fractional moment (λ < 1) of the 
 moments, so no truncation event, no rank bookkeeping and no factor exp(‖P_{S₀}e‖²/2σ²) are needed; it is self-contained
 modulo the locked [P1] (it proves the instances of Lemma V(a), of the size tail and of the good-model bound that it
 uses), so Lemma X no longer depends on stream C's files. The text of §0–§8 is reproduced unchanged apart from this
-header. Independent derivations of the same statement, for the line checker to compare: the lead's truncated-moment
+header and the amendments marked [v0.3, P2-…]. Independent derivations of the same statement, for the line checker to compare: the lead's truncated-moment
 proof `X_route_a.md` (written before the attempts arrived), and the attempts `X-a-1.md`, `X-a-2.md`, `X-b-2.md` in
 `../work/api_attempts/dist1/`. All five reach c = ½ and a size cut s₀ + C′t/log n (C′ = 32 here; C′ = 12A + 68 in route a).
 The adversarial attempt `X-d-1.md` found no counterexample and records that (C) cannot be dropped.
@@ -43,7 +43,8 @@ Put j₁ := ⌈32t/log n⌉, d_t = s₀ + j₁, and
 
 All three are deterministic, nondecreasing in t, and tend to 0 at t = n^{1−κ₀}.
 
-**n₀** is the least n such that, at t = n^{1−κ₀} (hence for all smaller t):
+**n₀** is the least integer such that **for every n ≥ n₀**, at t = n^{1−κ₀} (hence for all smaller t) [amended v0.3, P2-F1;
+such an n₀ exists because each condition holds for all large n]:
 - (a) n ≥ e⁸;
 - (b) ε₁ + 12t/N ≤ ½;
 - (c) ε₂ < 1 and ε₃ ≤ 1/(8A+2);
@@ -115,7 +116,8 @@ E[1_{𝓔_t}BF_J^λ] ≤ e^{3B/(2σ²)}(8A+4)^{(s₀+j)/2}[w(s₀+j)/w(s₀)]^λ
 **Step 4 (non-supersets through S ∪ S₀).** Let S ∈ Ω with S₀ ⊄ S and d_t < |S| ≤ m_n(t); put J′ := S∖S₀, S′ := S ∪ S₀ = S_{J′} (possibly ∉ Ω). Then j₁ < |J′| ≤ min(m_n(t), p − s₀), and
 ℓ(S)/ℓ(S′) = [w(|S|)/w(|S′|)](D_{S′}/D_S)^{1/2}((2b + Q_{S′})/(2b + Q_S))^ν ≤ (2p)^{s₀}(n+1)^{s₀/2}:
 - w(k)/w(k+1) = (2p−1−k)/(k+1) ≤ 2p (`lem:prior`(b), |S′| ≤ p);
-- D_{S′}/D_S ≤ (n+1)^{|S′|−|S|}: by Cauchy interlacing λ_i(G_{S′}) ≤ λ_i(G_S), and f < n + 1 in `lem:spec`(e);
+- D_{S′}/D_S ≤ (n+1)^{|S′|−|S|}: by Cauchy interlacing with the eigenvalues in **increasing** order (λ_i(G_{S′}) ≤ λ_i(G_S), i ≤ |S|, for S ⊆ S′; the
+  |S′| − |S| extra eigenvalues of G_{S′} each contribute a factor f < n + 1), and f increasing in `lem:spec`(e) [v0.3, P2-F3];
 - Q_{S′} ≤ Q_S (`lem:spec`(d)).
 
 Each S′ arises from fewer than 2^{s₀} such S. Supersets S_J ∈ Ω with d_t < |S_J| ≤ m_n(t) have j₁ < |J| ≤ m_n(t) − s₀. Since π(S) ≤ ℓ(S)/ℓ(S₀) (S₀ ∈ Ω), for every data set:
@@ -129,7 +131,8 @@ P(𝓔_t ∩ 𝓕₂ᶜ) ≤ e^{λt}A_n^λ Σ_{j>j₁}T_j ≤ e^t·2·4^{s₀}e^
 ## 4. X4(a) — sizes above m_n(t) (the instance of Lemma S needed)
 
 Let m := m_n(t). If m = K the mass is 0. Otherwise m = s₀ + ⌈x/log 2⌉ with x = s₀ log(2p) + ((s₀+2)/2) log(n+1) + 3t.
-- **Prior ratio.** R_m := ϖ(|S| > m)/ϖ(S₀) ≤ 2^{−m}/w(s₀) ≤ 2(2p)^{s₀}2^{−m} (`lem:prior`(c): Σ_{k>m}q_k ≤ 2^{−m}; 1/w(s₀) = 2C(2p−1, s₀)). With D_{S₀} ≤ (n+1)^{s₀}: R_m√(D_{S₀})√n ≤ 2n^{−1/2}e^{−3t}.
+- **Prior ratio.** R_m := ϖ(|S| > m)/ϖ(S₀) ≤ 2^{−m}/w(s₀) ≤ 2(2p)^{s₀}2^{−m} (the line Σ_{k>m}q_k ≤ 2^{−m} in the **proof** of `lem:prior`(c) — its statement is ϖ(|S| > m) ≤ 2^{1−m}; re-derived: q_{k+1}/q_k =
+  (p − k)/(2p − 1 − k) ≤ ½ for k ≥ 1 and q₁ = p/(2(2p − 1)) ≤ ⅓, so Σ_{k>m}q_k ≤ 2q_{m+1} ≤ 2^{−m} for m ≥ 0 [v0.3, P2-F4]; 1/w(s₀) = 2C(2p−1, s₀)). With D_{S₀} ≤ (n+1)^{s₀}: R_m√(D_{S₀})√n ≤ 2n^{−1/2}e^{−3t}.
 - **Numerator.** N_m := Σ_{S∈Ω,|S|>m}ϖ(S)m^c_{b₋}(S)/f₀(y_c) has E N_m = ϖ(|S| > m) (`lem:num`). Let 𝓕₁ := {N_m ≤ e^tϖ(|S| > m)}; P(𝓕₁ᶜ) ≤ e^{−t}.
 - **Denominator.** Q_{S₀} ≤ ‖y_c − X_{c,S₀}θ*‖² + nρ′/n = ‖e‖² + ρ′ (`lem:slab`). The proof of `lem:den` with R_n replaced by ρ′ (it uses only Q_{S₀} ≤ σ²E′ + nonnegative term; this is `B_tail_approx.md` Steps 2–3 with r = 0) gives
   m^c_{b₊}(S₀)/f₀(y_c) ≥ D_{S₀}^{−1/2}c_IGσ²n^{−1/2}e^{−Λ″}, Λ″ := |E′ − N|/(2√n) + E′/(2n) + ρ′/(2σ²), E′ = ‖e‖²/σ².
@@ -168,7 +171,7 @@ and P((𝓔_t ∩ 𝓕₁ ∩ 𝓕₂)ᶜ) ≤ 5e^{−t} + e^{−t} + e^{−t} =
 
 This is Lemma X with c = ½, C′ = 32 and the C, M₀, n₀ of §0. The single n₀ is uniform in t because conditions (a)–(g) are monotone in t and imposed at t = n^{1−κ₀}. ∎
 
-## 8. Remarks on the route
+## 8. Remarks on the route (commentary; no step of the proof uses this section; R1–R2 contain unproved claims) [v0.3, P2-F6]
 
 **R1. The literal X-b cannot give d_t.** Lemma V(b) is correct, and the helper's argument for it checks: with Σ_T^{(c)} := (I − M_T^{(c)})^{−1} ⪰ I,
 det(I − D′) ≥ det(I − Σ₀^{(c)1/2}D′Σ₀^{(c)1/2}) = det Σ₀^{(c)}/det Σ_S^{(1/c)},
@@ -182,7 +185,7 @@ and the eigenvalue-wise comparisons det Σ_S^{(1/c)} ≤ c^{|S|}D_S, D_{S₀} �
 - Factor (2), multiplicity A_n: remains, paid by M₀ ≥ (A+1)s.
 - No truncation event χ²_J ≤ τ_j, no rank bookkeeping d_J and no weights a_J are needed.
 
-**R4. Hypotheses actually used.** (ND) is used only for j > ⌈32t/log n⌉ and only as the weaker power-mean condition C(p−s₀, j)^{−1}Σ_J(D_{S₀}/D_{S_J})^{λ/2} ≤ [c_D(n+1)]^{−λj/2}. (C; M′) is used only through ρ′ ≤ B. p ≤ n^A is used in (N2), (N3), Step 3 and A_n.
+**R4. Hypotheses actually used.** (ND) is used only for j > ⌈32t/log n⌉ and only as the weaker power-mean condition C(p−s₀, j)^{−1}Σ_J(D_{S₀}/D_{S_J})^{λ/2} ≤ [c_D(n+1)]^{−λj/2}. (C; M′) is used only through ρ′ ≤ B. p ≤ n^A is used in (N2), (N3), (E3) through C_m, (E4), Step 3, A_n and the last line of §5 [v0.3, P2-F5].
 
 ## 9. Lemma X′ (without (ND)) — lead
 Statement (STATEMENT §3): under (E; M), (C; M′) only, for n ≥ n₀′ and M₀ log n ≤ t ≤ n^{1−κ₀}, with ℓ_n := log(p_raw ∨ n) ≥ log n:
@@ -202,7 +205,14 @@ replace d_t by m := m_n(t) and, in the *thresholds* only, t by t′:
   with conditional probability ≥ 1 − 3e^{−t}: ‖μ̂ − μ‖² ≤ C_1′σ²t′ ≤ C_1′σ²tℓ_n and |v/σ² − 1| ≤ C_v′√(t/n).
 - {|S| > m}: §4, on 𝓔_t ∩ 𝓕₁: π(|S| > m) ≤ e^{−1.5t}.
 Assembly as in §7: on 𝓔_t ∩ 𝓕₁, Π(Bad′ | y) ≤ e^{−1.5t} + e^{−t} + 3e^{−t} ≤ e^{−t/2}; P((𝓔_t ∩ 𝓕₁)ᶜ) ≤ 6e^{−t} ≤ 2e^{−t/2}. So Lemma X′ holds
-with c = ½; constants depend on (s₀^r, A, σ², M, M′, κ₀). ∎ (DRAFT, unchecked.)
+with c = ½. ∎ (DRAFT.)
+**Constants of §9 [v0.3, P2-F2].** C_P′, C_x′, Λ′, C_Q′ as above; C_v′ := 2(b̄/σ² + 11 + C_Q′); C₁′ := 4(2C_m + 4 + C_P′ + Λ′);
+**C := max{C₁′, C_v′}**; **M₀′ := max{16, (A + 1)s}** (§9 needs t ≥ 16, n^{(A+1)s₀} ≤ e^t and t ≥ (s₀ + 1) log 2, not t ≥ log C₅).
+**n₀′** := the least integer such that for every n ≥ n₀′, at t = n^{1−κ₀}: n ≥ 16; (b); the first part of (e); (g);
+Λ′t log n ≤ 8n; √(t/n)·log n ≤ 1; and (f′) C_v′n^{−κ₀/2} ≤ 1 (so that v ≤ 2σ² in the v-step, whose bound reads
+|v/σ² − 1| ≤ C_v′√(t/n)). None of these involves c_D, and (a), (c), (d) and the second part of (e) are not used in §9; the
+consequences (E1), (E2) of §2 and the bound of (E3) restricted to ‖P_Se‖² ≤ σ²(C_A′C_m + 4)t log n hold on 𝓔_t for n ≥ n₀′.
+So the constants of Lemma X′ depend only on (s₀^r, A, σ², M, M′, κ₀).
 
 ## 10. Lead's check notes on §0–§8 (not a review)
 Checked by the lead, line by line: Step 1–3 and 5 of §3 (the pointwise bound, the determinant formula and the bound

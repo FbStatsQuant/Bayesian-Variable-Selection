@@ -9,3 +9,12 @@ S: draws on B_n: 60; max over (draw, m) of log pi(|S|>m) - log[R sqrt(D_T n) c# 
 B_n: n=20 MC P(B_n^c)=2.20e-03 <= bound 3.465
 B_n: n=40 MC P(B_n^c)=3.50e-05 <= bound 2.986
 B_n: n=80 MC P(B_n^c)=0.00e+00 <= bound 2.233
+X1: n=120 p=8 t=2.0: empirical P(E_t^c) = 11/4000 = 0.0027 <= e^-t = 0.1353
+X1(iv): max (s_y^2 - 3(M+s^2)) on E_t = -2.364e+00 (<= 0)
+X facts on E_t: F2 lower viol -1.474e+01, F2 upper viol -8.615e+00, F3 viol -5.551e+01, F4 viol -6.664e-01 (all <= 0)
+X2: n=400, t=3, C_mu=180, C_v=117: max over 200 data sets of MC Pi(bad|S,y) = 0.00e+00 <= e^-t = 0.050
+X2: (the explicit constants are loose; with C=2 the MC frequency of the last data set is 0.437)
+
+real	1m52.662s
+user	28m43.448s
+sys	3m29.702s

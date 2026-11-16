@@ -2,8 +2,8 @@
 
 **Status: DRAFT (by this seat, unchecked).** Author: stream B (Claude Opus 5.5, Claude Third). Target: STATEMENT.md
 v1.3.1 §3 "Lemma H" (lines 291–295). Notation: STATEMENT §0 and API_CARDS "Common definitions" (binding).
-No statement change is requested for Lemma H. The computations of `W3-POST2/lemmas/D_hellinger.md` D0 (lines 13–19)
-and D4.0 (lines 89–93) are re-derived here, not cited as premises.
+No statement change is requested for Lemma H. The computations of `W3-POST2/lemmas/D_hellinger.md` D0 (lines 8–18)
+and D4.0 (lines 84–88) are re-derived here, not cited as premises.
 
 Numerical sanity check: `check_H.py` → `check_H_out.txt` (pointwise inequality on a grid, closed-form affinity versus
 quadrature, the in-sample identity with a dropped true column).

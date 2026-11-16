@@ -178,3 +178,16 @@ needs a delivery premise: discovery of S_true ([P6] (C-ii)(α-disc): W3-SAMP D-i
    error term, and (C2) holds for the computed order ([P6] Remark 6.3).
 3. The code pins were re-verified on the working tree, but the commit identity was not (no git). The SHA-256 values are
    recorded in `pins_sha256.txt`.
+
+## Amendments (lead, 2026-11-15, after the same-family pre-check; they are part of this file)
+A-1 (§3, "Relation to DIST-C"). Read that paragraph with Theorem A's constants throughout: the radius is √(M log n/n) and
+the level n^{−cM} with the c of Theorem A (which already absorbs DIST-1's radius constant C); the proof in §2–§4 does not
+use the paragraph.
+A-2 (§5, reader wording — final form proposed by the lead, replacing the two sentences about the list and the last
+paragraph). "A run is *completed* when the method reports the status "completed"; runs that stop early are not
+covered. The output of a completed run contains a list 𝒯 of at most 40p + 1 distinct models: the best-scoring models
+among those scored in the final run together with those the method scored earlier and carries into it (its
+precomputed tables for small groups of predictors, and models kept from its calibration stage). … If a completed run
+scored the true model {j : β*_j ≠ 0} and the posterior probability of that model exceeds ½, then the list contains it, it
+is the model the method reports as most probable, and π(𝒯) > ½." (The stronger description "the best of everything the
+calibration and the final run scored" is not claimed: it was not line-checked.)

@@ -21,8 +21,8 @@ report("B2-core net inequality", val >= 0.5, f"value={val:.6f}")
 report("B2-core per-point exponent", abs(min((1/5)**2/256, 1/768) - 1/6400) < 1e-15, f"min={min((1/5)**2/256, 1/768):.6g}")
 # union: log 2 * c2 + 2 log 21 * c2 + c2 <= 1/6400 ? (with L >= 1, log count <= 2 log21 L, log2 <= log2 L)
 c2 = 1e-5
-lhs = (math.log(2) + 2*math.log(21) + 1)*c2
-report("B2-core union constant c2=1e-5", lhs <= 1/6400, f"(log2+2log21+1)c2={lhs:.4g} <= 1/6400={1/6400:.4g}")
+lhs = (math.log(2) + 2*math.log(21) + 2)*c2  # proof needs (log2 + 1 + 2log21)c2 + c2 <= 1/6400
+report("B2-core union constant c2=1e-5", lhs <= 1/6400, f"(log2+2log21+2)c2={lhs:.4g} <= 1/6400={1/6400:.4g}")
 
 # ---------- N2: window coverage m_n(M log n) + s <= ceil(C_q M log n) (and the bound used for m#_n) ----------
 def m_n_uncapped(t, s0, p, n):

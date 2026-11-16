@@ -10,8 +10,8 @@ statement: (1) ‖D′‖ ≤ cn/(cn + 1) (explicit); (2) STATEMENT §3's form o
 "eᵀD′e ≤ ‖(P_S − P_{S₀})e‖² + ‖P_{S₀}e‖², where ‖(P_S − P_{S₀})e‖²/σ*² ~ χ²_{d_J} exactly, d_J := rank X_{c,S} − rank X_{c,S₀} ≤ |J|"
 (a pathwise inequality with an exactly χ²-distributed first term).
 
-**Verdict on H1 A2.** Correct in substance. Fixes: (i) A2(a) states the upper Young inequality for Q_{S₀} with the
-factor (1+1/η) and the lower one with 1/η; the sum (1 + 2/η) is right — written out below; (ii) A2(b)'s Weyl step
+**Verdict on H1 A2.** Correct in substance. Line-by-line notes: (i) A2(a) is right as written ((1 + 1/η)ρ′ from the upper
+Young bound for Q_{S₀}, ρ′/η from the lower one for Q_S); both Young inequalities are derived below; (ii) A2(b)'s Weyl step
 compares det(I − D′) with det(I − D′^{1/2}Σ₀D′^{1/2}); the needed facts (the eigenvalues of D′^{1/2}Σ₀D′^{1/2} are < 1, and
 they dominate those of D′ index by index) are proved below — H1 does not prove the first; (iii) the identity
 det Σ^{(c)}_T = D^{(c)}_T and D^{(1)}_T = D_T are proved below (H1 asserts them); (iv) H1's ρ′ is the right quantity, with
@@ -51,7 +51,7 @@ sides are ‖Y‖². For a = 1, K = G_T + A_T/n = H_T/n, so M^{(1)}_T = nX_{c,T}
 (0.ii) *Spectrum.* With B := X_{c,T}X_{c,T}ᵀ (N × N, ⪰ 0) and K as above: X_{c,T}K = X_{c,T}((1 + a/n)G_T + (a/n)I) =
 ((1 + a/n)B + (a/n)I)X_{c,T}, hence X_{c,T}K⁻¹ = ((1 + a/n)B + (a/n)I)⁻¹X_{c,T} and
   M^{(a)}_T = h_a(B),  h_a(λ) := λ / ((1 + a/n)λ + a/n)  (λ ≥ 0),
-the two factors commuting (functional calculus; the argument of [P1] `lem:spec`(a), `PROOF_v3.tex:103`). h_a is increasing
+the two factors commuting (functional calculus; the argument of [P1] `lem:spec`(a), `PROOF_v3.tex:101`). h_a is increasing
 with h_a(0) = 0 and h_a(λ) < 1/(1 + a/n) = n/(n + a). B vanishes on (col X_{c,T})^⊥ and its nonzero eigenvalues have
 eigenvectors spanning col X_{c,T}. Therefore M^{(a)}_T = 0 on (col X_{c,T})^⊥, its eigenvalues on col X_{c,T} lie in (0, n/(n+a)),
 and 0 ⪯ M^{(a)}_T ⪯ (n/(n + a))P_T ⪯ P_T. Also P_T = 1{λ > 0}(B), so P_T − M^{(a)}_T = (1{λ>0} − h_a)(B) has eigenvalues in
@@ -91,7 +91,7 @@ I − W((a/n)A_T + G_T)⁻¹Wᵀ = I − M^{(a)}_T. (Direct check: (I + WCWᵀ)(
 (2.ii) *Determinant.* By Sylvester's identity det(I_N + WCWᵀ) = det(I_{|T|} + CWᵀW):
 D^{(a)}_T = det(I + (n/a)A_T⁻¹G_T) = det(A_T + (n/a)G_T)/det A_T = ∏_i g_a(λ_i), g_a(λ) := (1 + (1 + n/a)λ)/(1 + λ),
 λ_i the eigenvalues of G_T (A_T and G_T commute). For a = 1, g_1(λ) = ((n+1)λ + 1)/(λ + 1) = f(λ) of [P1] `lem:spec`(e)
-(`PROOF_v3.tex:96,108`), so D^{(1)}_T = D_T. Note g_a(0) = 1: zero eigenvalues (singular G, duplicated columns) contribute 1.
+(`PROOF_v3.tex:97,109`), so D^{(1)}_T = D_T. Note g_a(0) = 1: zero eigenvalues (singular G, duplicated columns) contribute 1.
 (2.iii) *Gaussian integral.* For z ~ N_N(0, I) and a symmetric B with λ_max(B) < 1: E exp(zᵀBz/2) = det(I − B)^{−1/2}
 (diagonalise B = Σ_i β_i u_iu_iᵀ; the zᵢ := u_iᵀz are i.i.d. N(0,1) and E e^{β z²/2} = (1 − β)^{−1/2} for β < 1). With z = e/σ*
 and B = D′ (λ_max(D′) < 1 by (a)): E exp(eᵀD′e/(2σ*²)) = det(I − D′)^{−1/2}.
@@ -107,9 +107,9 @@ Therefore E exp(eᵀD′e/(2σ*²)) ≤ (D^{(1/c)}_S / D^{(c)}_{S₀})^{1/2}.
 (2.v) *Eigenvalue-wise determinant bounds.* For λ ≥ 0 and c ≥ 1:
   g_{1/c}(λ) ≤ c·g_1(λ)  ⇔  1 + λ + cnλ ≤ c(1 + λ + nλ)  ⇔  1 + λ ≤ c(1 + λ);  true;
   g_1(λ) ≤ c·g_c(λ)     ⇔  1 + λ + nλ ≤ c(1 + λ) + nλ   ⇔  1 + λ ≤ c(1 + λ);  true.
-(multiply through by 1 + λ > 0; g_c(λ) = (1 + λ + nλ/c)/(1 + λ)). At λ = 0 both sides equal 1 resp. c ≥ 1, so the factor c is
-paid only for nonzero eigenvalues if one uses g_a(0) = 1 directly: D^{(1/c)}_S ≤ c^{r_S}D_S and D_{S₀} ≤ c^{r₀}D^{(c)}_{S₀}, r_T = rank G_T;
-a fortiori ≤ c^{|S|} and c^{s₀}.
+(multiply through by 1 + λ > 0; g_c(λ) = (1 + λ + nλ/c)/(1 + λ)). Since g_a(0) = 1 for every a, zero eigenvalues contribute the
+factor 1 to both sides; applying the inequalities only to the nonzero eigenvalues: D^{(1/c)}_S ≤ c^{r_S}D_S and
+D_{S₀} ≤ c^{r₀}D^{(c)}_{S₀}, r_T := rank G_T; a fortiori ≤ c^{|S|}D_S and ≤ c^{s₀}D^{(c)}_{S₀}.
 (2.vi) *Assembly.* (D_{S₀}/D_S)^{1/2}·E exp(eᵀD′e/(2σ*²)) ≤ (D_{S₀}/D_S)^{1/2}(D^{(1/c)}_S/D^{(c)}_{S₀})^{1/2}
 = (D_{S₀}/D^{(c)}_{S₀})^{1/2}(D^{(1/c)}_S/D_S)^{1/2} ≤ c^{(r₀ + r_S)/2} ≤ c^{(s₀ + s₀ + |J|)/2} = (1 + η)^{s₀ + |J|/2}.
 D_{S₀}, D_S are deterministic (fixed design), so they come out of the expectation. ∎(b)
@@ -140,7 +140,7 @@ vectors, so ‖(P_S − P_{S₀})e‖²/σ*² ~ χ²_{d_J} and ‖P_{S₀}e‖²
 - **V.2 (combination with the posterior ratio).** For S = S₀ ∪ J: π(S)/π(S₀) = [w(|S|)/w(s₀)](D_{S₀}/D_S)^{1/2}((2b + Q^c_{S₀})/(2b + Q^c_S))^ν
   and ((2b + Q₀)/(2b + Q_S))^ν ≤ exp(ν(Q₀ − Q_S)₊/(2b + Q_S)) (log(1 + x) ≤ x). With (a), (Q₀ − Q_S)₊ ≤ eᵀD′e + (1 + 2/η)ρ′ (the right
   side is ≥ 0). Then (b) and the prior identity C(p − s₀, j)w(s₀+j)/w(s₀) ≤ 2C(s₀+j, j)2^{−j} ([P1] `lem:prior`(e),
-  `PROOF_v3.tex:120,133-137`) give the design-free superset bound E Σ_{|J|=j}[…] ≤ 2C(s₀+j, j)2^{−j}(1+η)^{s₀+j/2}·e^{(1+2/η)ρ′/(2σ*²)}
+  `PROOF_v3.tex:119,134-136`) give the design-free superset bound E Σ_{|J|=j}[…] ≤ 2C(s₀+j, j)2^{−j}(1+η)^{s₀+j/2}·e^{(1+2/η)ρ′/(2σ*²)}
   **if the surcharge were 1**; with the surcharge one restricts to 𝓔_t and uses V.1.
 - **V.3 (reference).** (a) uses the exact representation μ_c = X_{c,S₀}θ*. For an approximate reference (T, ϑ) with
   residual r = μ − X_Tϑ ≠ 0 the substitution leaves the cross term 2eᵀUᵀr-type and the residual inside both minima; (a)

@@ -103,3 +103,64 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   calibration-inherited models; stopped runs return a partial store; weights are returned as logs. None touches
   TC1–TC9 (DIST-C deterministic transfers unchanged; Corollary C is TC10).
   Pre-check P3 launched (Opus 5.5, Claude Third; `briefs/BRIEF_P3_D_precheck.md`). HOLDS read: none.
+- 19:25 — Stream B completed (`work/B_transfer/H.md`, `T.md`, `DIST3.md`; DRAFT): Lemma H proved; Lemma T proved **as
+  stated** (same range of d, same η²_n) by a self-contained one-sided inequality (ghost sample + Cantelli, random swaps
+  + Hoeffding; Sauer–Shelah and the half-space VC bound proved in the file) — no external inequality cited, which
+  settles the open citation of the VC inequality if the proof survives checking; DIST-3 proved with c = 1 and explicit
+  constants. No statement-change request; wording clarifications queued (rename (TR₀)'s direction u → w; record c = 1
+  and n₀'s dependence; route text of Lemma T to point at the proved inequality). Pre-check P4 launched (Opus 5.5,
+  Claude Third; `briefs/BRIEF_P4_B_precheck.md`; comparison material API T-a-1, T-b-1, T-c-1). HOLDS read: none.
+- 19:35 — Stream E completed (`work/E_bridges/B0.md`, `B1.md`, `B2core.md`, `B2.md`, `B3.md`, `ASSEMBLY.md`; DRAFT): all
+  bridges proved with explicit absolute constants (c₁ = 1/576, c₂ = 10⁻⁵); B0 pathwise with σ* free (no fallback to
+  fixed σ*); B2-core in the stated generality (no fallback to Gaussian rows); Theorem A (i), (ii) and its sentence
+  without (A4) assembled from (1.1), (1.2), Lemma X′ and the bridges with one n₀ and constants depending only on
+  (s, A, K, c_ψ, b̄); Theorem B from DIST-3, B0–B3 and W3-POST Theorem 1 (hypothesis); Example verified. One editorial
+  change request queued: STATEMENT's phrase "q_n ≥ m_n(M log n) + s" is false for small p; what holds and is needed is
+  ⌈C_qM log n⌉ ≥ m_n + s, i.e. min{p, m_n + s₀} ≤ q_n (no target clause changes). No early-checkpoint trigger.
+  Pre-check P5 launched (Opus 5.5, Claude Third; `briefs/BRIEF_P5_E_precheck.md`; comparison API B-a-1, B-b-1, B-c-1).
+  HOLDS read: none.
+- 19:50 — Pre-check P2 back (`reviews/P2_opus_precheck_X.md`): VERIFIED-WITH-AMENDMENTS, 0 CRITICAL / 0 MAJOR / 2 MINOR /
+  4 NIT; every section of Lemma X VERIFIED, §7 and §9 with amendments (definition of n₀ "for every n ≥ n₀"; §9's
+  constants and a c_D-free n₀′). All applied: `lemmas/X.md` v0.3 (sha 4c3a657742455bef); `reviews/P2_disposition.md`;
+  DEPS.tsv rows X, X′ refreshed (still UNCHECKED: a pre-check is not a review layer). Earlier verdicts removed from the
+  file header before the blind line check.
+- 19:52 — Cross-family line check L1 launched on `lemmas/X.md` v0.3: gpt-6-astra, codex, high (`reviews/BRIEF_L1_astra_X.md`).
+  HOLDS read: none. Agent tally this leg: 10 Claude (Claude Third: 5 workers, 5 pre-checks incl. P1) + 2 codex (Sol S2, Astra L1).
+- 20:05 — Stream C completed (`work/C_size/S.md`, `V.md`, `X12.md`; DRAFT; no statement-change request): Lemma S proved in a
+  stronger form (every n ≥ 3, every t > 0; constants free of κ₀; P(𝓑_nᶜ) ≤ 4e^{−c_Bn}); Lemma V (a), (b), (c) proved,
+  including singular and duplicated designs; X1–X2 as an independent version with facts F1–F7. C notes that the
+  variance surcharge cannot go inside V(b)'s first moment (λ_max(D′) can approach 1) — consistent with `lemmas/X.md`,
+  which uses the fractional moment λ₁ < 1 − 1/(8A + 4). Pre-check P6 launched (Opus 5.5, Claude Third;
+  `briefs/BRIEF_P6_C_precheck.md`; comparison API S-a-1, S-b-1, S-c-1, V-a-1, V-b-1, V-c-1).
+- 20:05 — Stream F completed (`work/F_numerics/RESULTS.md`; DRAFT). Nothing contradicts a statement. (1) Nested tails at
+  p = 12 (200 data sets, 10⁶ draws each): at t ≈ log n the median over data sets of Π(n·d² > t | D) is 1.2·10⁻³ (n = 100)
+  and 2.6·10⁻⁵ (n = 400), worst data set 0.54 and 0.029; with c = 1 the display needs C² ≥ 2 at these n. (2) Dangerous
+  collinearity scale τ² ∈ {log n/n², 4 log n/n², n^{−1.5}}: the distance clause does not deteriorate; the size clause
+  fails with (ND) (P(|S| ≥ 6) ≈ 0.03–0.06, flat in n) — as predicted; supports S-FIT. (3) (A5) violated: B = √n keeps
+  (E), (C) and n·d² = O(1); B = n breaks them and n·d² ≈ 0.14n — the coefficient-cost interface is really needed.
+  (4) Lemma T: no violation found (margin ≥ 60 at n = 1000; heuristic search, 10 data sets per cell). (5) B2-core:
+  minima ≥ 0.79 at n = 2000; at n = 200, q = 4 the factor ½ fails in 35% (AR 0.9) of samples — consistent with the
+  lemma's requirement q log(ep/q) ≤ c₂n/K⁴ and a large onset n₀ (to be stated honestly). (6) Lemma V: 0 violations in
+  1500 adversarial designs; Lemma S's cutoff is vacuous at p = 12 (clamps to K). (7) Citecheck of STATEMENT pins: MISS = 0.
+  HOLDS read: none.
+- 20:20 — Pre-check P3 back (`reviews/P3_opus_precheck_D.md`): VERIFIED-WITH-AMENDMENTS, 0 CRITICAL / 0 MAJOR / 3 MINOR /
+  7 NIT; P6 VERIFIED; all 33 code pins and the retention induction re-checked; SCR-1..5 judged justified and
+  non-weakening. Amendments appended to `work/D_output/P6_DISTC.md` and `COR_C.md`; `reviews/P3_disposition.md`; DEPS.tsv
+  rows P6, TC/DIST-C, R/Corollary-C refreshed (UNCHECKED until the cross-family line check).
+  Line check L2 launched: gpt-6.1-sol, codex, high (`reviews/BRIEF_L2_sol_D.md`). Grouping note: cross-family line
+  checks are run one call per stream, with a separate verdict for each lemma or bridge in the report.
+  HOLDS read: none. Agent tally this leg: 11 Claude (Claude Third) + 3 codex (Sol S2, Astra L1, Sol L2).
+- 20:30 — Pre-check P4 back (`reviews/P4_opus_precheck_B.md`): VERIFIED-WITH-AMENDMENTS, 0 CRITICAL / 0 MAJOR / 2 MINOR /
+  2 NIT. Lemma H VERIFIED; Lemma T VERIFIED exactly as stated (constants recomputed: swap exponent 48/169 ≥ 1/4, nη² > 36.64
+  on the whole range, failure probability δ/2; no external result) — the kill-budget risk "constant/reference of the
+  VC inequality" is closed pending the cross-family check; DIST-3 VERIFIED-WITH-AMENDMENTS (statement must say that C
+  depends on C_T and quantify n₀; queued, EQUAL). `reviews/P4_disposition.md`; DEPS.tsv rows H, T, TC/DIST-3 refreshed.
+  Line check L3 launched: gpt-6.1-sol, codex, high (`reviews/BRIEF_L3_sol_B.md`). HOLDS read: none.
+  Agent tally this leg: 11 Claude (Claude Third) + 4 codex (Sol S2, Astra L1, Sol L2, Sol L3).
+- 20:45 — Pre-check P5 back (`reviews/P5_opus_precheck_E.md`): VERIFIED-WITH-AMENDMENTS, 0 CRITICAL / 0 MAJOR / 4 MINOR /
+  4 NIT. B0, B1, B2-core, B2, B3 VERIFIED; ASSEMBLY VERIFIED-WITH-AMENDMENTS (wording only). Noted for honesty: with the
+  proved absolute constant c₂ = 10⁻⁵ the reader theorem's n₀ is of order 10¹⁵–10¹⁸ — the changelog's phrase "realistic n₀"
+  is withdrawn (queued STATEMENT edit); Theorem A is asymptotic. Amendments appended to `work/E_bridges/B1.md`,
+  `ASSEMBLY.md`; `reviews/P5_disposition.md`; DEPS.tsv bridge and reader rows refreshed.
+  Line check L4 launched: gpt-6.1-sol, codex, high (`reviews/BRIEF_L4_sol_E.md`). HOLDS read: none.
+  Agent tally this leg: 11 Claude (Claude Third) + 5 codex (Sol S2, Astra L1, Sol L2, L3, L4).

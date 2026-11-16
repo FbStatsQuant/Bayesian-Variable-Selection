@@ -451,3 +451,23 @@ conditioning. Its asymptotic premises (P-CONC, P-OVL, …) are read with this S�
    S₀ to be **offered**, not merely evaluated.
 4. The RM2 alternative is cited, not verified (its output event 𝒪 versus {completed} is not checked).
 5. Nothing here addresses P-STORE without beta-min (OPEN, as ROUTES §4 says).
+
+## Amendments (lead, 2026-11-15, after the same-family pre-check; they are part of this file)
+A-1 (RM2 route, §6 (C-ii) alternative). The alternative discovery route through W3-RM2 is **conditional and not used
+by any proof here**: two links are unchecked (whether RM2's output event covers {completed}; whether its Ŝ⁺ is the
+reported `hpm`). Every statement of this file that needs discovery uses W3-SAMP Theorem D (D-i) with P-OVL, or assumes
+S₀ ∈ 𝓜 explicitly.
+A-2 (Lemma M, proof (a), (b)). Completing the case list: a particle state created by resampling is a copy of a state
+that entered the particle system through an `eval`, so it was offered when first scored; the only `eval` with
+`emit = false` in the final run is the centre of the final local search, which is the current running best and was
+offered when first scored (`cpp/v3_core.cpp:456`, `cpp/v3_engine.h:382`). The conclusion of Lemma M is unchanged.
+A-3 (Lemma M, "∅ ∈ 𝓜"). This is used only as an illustration; it holds when there is at least one block table, or
+because the first initial draw of island 1 is scored and offered. No proof step depends on it.
+A-4 (Remark 6.3). `v3_score.h:253-254` is a code comment, cited as documentation of intent, not as an assertion of the
+code's behaviour.
+A-5 (SCR-1, restated). In (C-iii), "P-HIT is implied by S₀ ∈ 𝓜 and δ_n < ½" holds once e^{−ct} ≤ ¼, i.e. after enlarging n₀ so
+that cM₀ log n₀ ≥ log 4.
+A-6 (strengthening, not used). If S₀ lies inside one block of the start (for instance s₀ ≤ 1), then S₀ is in the block
+tables and hence in 𝓜 on every completed run; no discovery premise is needed in that case.
+A-7 (LS0 and aborted fits). The LS0 search runs only when enabled; an Rcpp error aborts the fit and returns no output.
+Both are outside {completed} or do not change 𝓜's definition (LS0-scored models are offered to the same ledger).

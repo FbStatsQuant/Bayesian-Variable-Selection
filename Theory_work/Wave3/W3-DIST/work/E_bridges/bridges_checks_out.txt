@@ -1,7 +1,7 @@
 [PASS] B1 exponents >= 1/576: lower=0.00195312, upper=0.00173611, mean=0.125, 1/576=0.00173611
 [PASS] B2-core net inequality: value=0.543600
 [PASS] B2-core per-point exponent: min=0.00015625
-[PASS] B2-core union constant c2=1e-5: (log2+2log21+1)c2=7.782e-05 <= 1/6400=0.0001563
+[PASS] B2-core union constant c2=1e-5: (log2+2log21+2)c2=8.782e-05 <= 1/6400=0.0001563
 [PASS] window coverage (grid): 156240 cases; counterexample=None
 [PASS] B3: (2A+3)s+2 <= C_q log 3: 
 [PASS] D_{S+j}/D_S >= phi(lambda_min(G_{S+j})): min ratio/phi = 1.000000

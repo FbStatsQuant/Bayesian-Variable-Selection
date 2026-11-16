@@ -1,25 +1,25 @@
 id	file[:lines]	uses	sha (sha256, first 16 hex)	checked_sha	checked_by	state
 TC/DIST-1	STATEMENT.md §1 (1.1)	H, T, X	f8ff769760f69064			UNCHECKED
 TC/DIST-2	STATEMENT.md §1 (1.2)	H, T, X'	f8ff769760f69064			UNCHECKED
-TC/DIST-3	STATEMENT.md §1	H; external source of δ_n → 0 (W3-POST:Thm-1@1.0.0 item 6, as hypothesis)	f8ff769760f69064			UNCHECKED
-TC/DIST-C	STATEMENT.md §2	P6, DIST-1 (or DIST-2), DIST-3; W3-SAMP:CC@1.1.1; delivery premises W3-SAMP:D@2.1.1, LT#@2.0.1, C@1.1.1, TR@2.1.1, W3-RM2:RM2-F@1.0.0, RM2-R@1.0.0	f8ff769760f69064			UNCHECKED
-H	STATEMENT.md §3 Lemma H	— (D0 computation re-derived)	f8ff769760f69064			UNCHECKED (S1 statement read of v1.0.2: sound; not a line check)
-T	STATEMENT.md §3 Lemma T	external: VC relative deviation inequality (to verify or prove)	f8ff769760f69064			UNCHECKED (v1.0.2 form REFUTED by S1-01; v1.1 repaired)
+TC/DIST-3	STATEMENT.md §1; proof work/B_transfer/DIST3.md	H; locked T01 (conditional posterior)	f8ff769760f69064			UNCHECKED (proof written, c = 1; pre-check P4 VERIFIED-WITH-AMENDMENTS — statement wording queued; line check pending)
+TC/DIST-C	STATEMENT.md §2; proof work/D_output/P6_DISTC.md	P6, DIST-1 (or DIST-2), DIST-3; W3-SAMP:CC@1.1.1; delivery premises W3-SAMP:D@2.1.1, LT#@2.0.1, C@1.1.1, TR@2.1.1, W3-RM2:RM2-F@1.0.0, RM2-R@1.0.0	f8ff769760f69064			UNCHECKED (proof written; pre-check P3 VERIFIED-WITH-AMENDMENTS, applied; line check pending; statement edits SCR-1..5 queued)
+H	work/B_transfer/H.md (statement: STATEMENT.md §3)	— (D0 computation re-derived)	1ca0d39c24eebd49			UNCHECKED (proof written; pre-check reviews/P4_opus_precheck_B.md VERIFIED; cross-family line check pending)
+T	work/B_transfer/T.md (statement: STATEMENT.md §3)	— (self-contained: one-sided inequality proved in the file; no external result)	193cdc8145e724e8			UNCHECKED (proof written as stated; pre-check P4 VERIFIED; cross-family line check pending)
 S	STATEMENT.md §3 Lemma S	locked T01 ([P1]); proof re-run of W3-POST2:B@1.0.0	f8ff769760f69064			UNCHECKED (S1 statement read: sound for the S₀-reference form)
 V	work/prior_probe/REPORT.md §3, A2	—	d437de8eb4a9f577			UNCHECKED (helper-derived)
-X	lemmas/X.md §0–§8 (statement: STATEMENT.md §3)	locked T01 ([P1] lem:chi, lem:prior, lem:num, thm:Ta, lem:den (proof), lem:spec, lem:slab); (ND) interface	b6700367cb4c1d81			UNCHECKED (v0.2: API attempt X-b-1 adopted; self-contained; independent derivations: lemmas/X_route_a.md, api X-a-1, X-a-2, X-b-2)
-X'	lemmas/X.md §9 (statement: STATEMENT.md §3)	X (§2, §4–§7 of lemmas/X.md)	b6700367cb4c1d81			UNCHECKED (v0.2, lead)
-P6	STATEMENT.md §3 Lemma P6	—	f8ff769760f69064			UNCHECKED
+X	lemmas/X.md §0–§8 (statement: STATEMENT.md §3)	locked T01 ([P1] lem:chi, lem:prior, lem:num, thm:Ta, lem:den (proof), lem:spec, lem:slab); (ND) interface	4c3a657742455bef			UNCHECKED (v0.3; same-family pre-check reviews/P2_opus_precheck_X.md VERIFIED-WITH-AMENDMENTS, applied; cross-family line check pending)
+X'	lemmas/X.md §9 (statement: STATEMENT.md §3)	X (§2, §4–§7 of lemmas/X.md)	4c3a657742455bef			UNCHECKED (v0.3; same-family pre-check reviews/P2_opus_precheck_X.md VERIFIED-WITH-AMENDMENTS, applied; cross-family line check pending)
+P6	work/D_output/P6_DISTC.md (Lemma P6)	—	1f28367e39d34090			UNCHECKED (proof written; pre-check reviews/P3_opus_precheck_D.md VERIFIED; cross-family line check pending)
 F-b (fallback)	ROUTES.md §6 item 3	H, T; W3-POST2:D.D(b)@1.2.0 (conditional; HQ note 2026-11-15)				UNCHECKED
 S-APX	STATEMENT.md §1 stretch	X, S	f8ff769760f69064			UNCHECKED (stretch)
 S-EXP	STATEMENT.md §1 stretch	X, T	f8ff769760f69064			UNCHECKED (stretch)
 S-FIT	STATEMENT.md §1 stretch	V (supersets)	f8ff769760f69064			UNCHECKED (stretch; OPEN)
 NUM	work/numerics/RESULTS.md; ASSUMPTION_MAP.md §3	—	ef53be9c7a7a9fea / adc413eb7e3e2ca2			UNCHECKED (scripts not audited)
-R/Theorem-A	STATEMENT.md §1R	TC/DIST-1, TC/DIST-2, B0, B1, B2	f8ff769760f69064			UNCHECKED (same-family pre-check P1 of v1.2: REPAIRABLE; repairs applied in v1.3; not a review layer)
-R/Theorem-B	STATEMENT.md §1R	TC/DIST-3, B0, B1, B2, B3; W3-POST:Thm-1@1.0.0 (premise)	f8ff769760f69064			UNCHECKED (same-family pre-check P1 of v1.2: REPAIRABLE; repairs applied in v1.3; not a review layer)
-R/Corollary-C	STATEMENT.md §1R	R/Theorem-A, TC/DIST-C, P6	f8ff769760f69064			UNCHECKED (same-family pre-check P1 of v1.2: SOUND; repairs applied in v1.3; not a review layer)
-B0	STATEMENT.md §3 Bridges	W3-MISR:R'@1.0.0	f8ff769760f69064			UNCHECKED (same-family pre-check P1 of v1.2: REPAIRABLE; repairs applied in v1.3; not a review layer)
-B1	STATEMENT.md §3 Bridges	—	f8ff769760f69064			UNCHECKED (same-family pre-check P1 of v1.2: SOUND; repairs applied in v1.3; not a review layer)
-B2-core	STATEMENT.md §3 Bridges	external: Bernstein + net (standard)	f8ff769760f69064			UNCHECKED (same-family pre-check P1 of v1.2: REPAIRABLE; repairs applied in v1.3; not a review layer)
-B2	STATEMENT.md §3 Bridges	B1, B2-core; W3-POST2:A0@1.0.0 (re-derived)	f8ff769760f69064			UNCHECKED (same-family pre-check P1 of v1.2: REPAIRABLE; repairs applied in v1.3; not a review layer)
-B3	STATEMENT.md §3 Bridges	B1, B2-core; W3-POST:Thm-1@1.0.0 item 6	f8ff769760f69064			UNCHECKED (same-family pre-check P1 of v1.2: SOUND; repairs applied in v1.3; not a review layer)
+R/Theorem-A	STATEMENT.md §1R; assembly work/E_bridges/ASSEMBLY.md	TC/DIST-1, TC/DIST-2, B0, B1, B2	f8ff769760f69064			UNCHECKED (assembly written; pre-check P5 VERIFIED-WITH-AMENDMENTS, applied; conditional on the master displays; line check pending; blind read S2 pending)
+R/Theorem-B	STATEMENT.md §1R; assembly work/E_bridges/ASSEMBLY.md	TC/DIST-3, B0, B1, B2, B3; W3-POST:Thm-1@1.0.0 (premise)	f8ff769760f69064			UNCHECKED (assembly written; pre-check P5 VERIFIED-WITH-AMENDMENTS, applied; conditional on the master displays; line check pending; blind read S2 pending)
+R/Corollary-C	STATEMENT.md §1R; proof work/D_output/COR_C.md	R/Theorem-A, TC/DIST-C, P6	f8ff769760f69064			UNCHECKED (proof written; pre-check P3 VERIFIED-WITH-AMENDMENTS, applied; line check pending; reader wording to be updated)
+B0	work/E_bridges/B0.md (statement: STATEMENT.md §3 Bridges)	W3-MISR:R'@1.0.0	e60274f7fb68242a			UNCHECKED (proof written; pre-check reviews/P5_opus_precheck_E.md VERIFIED; cross-family line check pending)
+B1	work/E_bridges/B1.md (statement: STATEMENT.md §3 Bridges)	—	9c06b7ffabb109ce			UNCHECKED (proof written; pre-check reviews/P5_opus_precheck_E.md VERIFIED; cross-family line check pending)
+B2-core	work/E_bridges/B2core.md (statement: STATEMENT.md §3 Bridges)	external: Bernstein + net (standard)	77eaa30c4d7ba5ef			UNCHECKED (proof written; pre-check reviews/P5_opus_precheck_E.md VERIFIED; cross-family line check pending)
+B2	work/E_bridges/B2.md (statement: STATEMENT.md §3 Bridges)	B1, B2-core; W3-POST2:A0@1.0.0 (re-derived)	5c1328b5bad99922			UNCHECKED (proof written; pre-check reviews/P5_opus_precheck_E.md VERIFIED; cross-family line check pending)
+B3	work/E_bridges/B3.md (statement: STATEMENT.md §3 Bridges)	B1, B2-core; W3-POST:Thm-1@1.0.0 item 6	cea61a2ceeb4dddc			UNCHECKED (proof written; pre-check reviews/P5_opus_precheck_E.md VERIFIED; cross-family line check pending)
