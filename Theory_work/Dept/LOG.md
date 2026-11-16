@@ -110,3 +110,4 @@
 - 22:12 — DIST L6: displays VERIFIED; L6-01 MAJOR on TC3 sentence → constant repair (D42); HQ told.
 - 22:14 — DIST: L7 VERIFIED (NEC + Cor; 2 MINOR + 1 NIT applied; no target touched); D1 (L6-01 repair re-check + tags) and D2 (NEC hunks) on Sol; citecheck 0 MISS; staged ingest 20 claims 0 problems; acceptance refused only on stale W3-MISR:R′ accept record → recorder J (MISR incl. R′ right after PSHARP). Freeze Mon 09:00.
 - 22:14 — DIST: D42 conditions wired into D1 brief (tag CONFIRMED/CONTESTED; e^{s₀}q ≤ n^{-1/8} ≤ ½ is an unchanged line-checked X v0.3 line from threshold (d) — repair adds no condition; short extra Sol check if D1 isn't explicit). Nothing past 2 h.
+- 22:15 — MISR-R CP1 → GO (D43).

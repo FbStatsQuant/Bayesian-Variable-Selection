@@ -288,3 +288,8 @@
   3(M+M′)/(2σ*²), C = C(A, σ*², M, M′). Conditions: fresh Sol re-check of exact diffs + all STALE rows (combined with
   D1 diff check); reviewer confirms EQUAL tag and that "e^{s₀}q ≤ ½" needs no new hypothesis; else WEAKER on TC3 =
   early checkpoint to HQ. No second break review for a constants-only repair. HQ informed.
+
+## 2026-11-15 22:15 CT — W3-MISR-R CP1: GO
+- **D43.** Lock LOCK-WITH-AMENDMENTS (1 MAJOR, 3 MINOR applied). Targets fixed: CorG-min, CorGb-plus (extension
+  approved), CorH-plus (+ KL), CorH-U ([LA-1] approved; its statement-change check folded into the Sol line-check agent).
+  MIS(i)/(i′)/(ii) unchanged; reader row thm4 weaker hypotheses / same displays (STRONGER) → H5 at CP3. CP3 target Tue 11-17.
