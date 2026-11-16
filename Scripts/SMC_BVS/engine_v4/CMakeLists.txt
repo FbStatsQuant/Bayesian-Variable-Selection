@@ -1,0 +1,46 @@
+# engine_v4 -- large-p SMC-BVS engine (P1M). Contract: INTERFACES.md (v0.1). No network at configure/build time.
+cmake_minimum_required(VERSION 3.20)
+project(smcbvs4 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+include(cmake/flags.cmake)
+find_package(OpenMP REQUIRED COMPONENTS CXX)
+
+set(V4_COMMON_SRC
+  src/common/sha256.cpp src/common/format.cpp src/common/json.cpp src/common/data.cpp src/common/store.cpp
+  src/common/ledger.cpp src/common/status.cpp src/common/score.cpp src/common/gen.cpp src/common/prep.cpp src/common/pmath_info.cpp)
+set(V4_STUB_SRC src/stubs/stubs.cpp)
+
+# v4_bit: every kernel that must equal the v3 bits (flags of core/cpp/Makevars.v3).
+add_library(v4_bit STATIC ${V4_COMMON_SRC} ${V4_STUB_SRC})
+target_include_directories(v4_bit PUBLIC include)
+target_compile_options(v4_bit PRIVATE ${V4_BIT_FLAGS} ${V4_WARN})
+target_link_libraries(v4_bit PUBLIC OpenMP::OpenMP_CXX m)
+
+# v4_a: class-A kernels (WP3 adds sources). Wider ISA only with -DV4_WIDE_ISA=ON.
+add_library(v4_a STATIC src/common/class_a_placeholder.cpp)
+target_include_directories(v4_a PUBLIC include)
+target_compile_options(v4_a PRIVATE ${V4_A_FLAGS} ${V4_WARN})
+target_link_libraries(v4_a PUBLIC v4_bit)
+
+add_executable(smcbvs4 src/cli/main.cpp)
+target_compile_options(smcbvs4 PRIVATE ${V4_BIT_FLAGS} ${V4_WARN})
+target_link_libraries(smcbvs4 PRIVATE v4_a v4_bit)
+
+option(V4_TESTS "build the test executables" ON)
+if(V4_TESTS)
+  # v3ref: core/ headers compiled unchanged with the v3 flags (golden comparisons). core/ is never edited.
+  set(V3_CORE_CPP ${CMAKE_CURRENT_SOURCE_DIR}/../core/cpp)
+  add_executable(v4_tests tests/test_main.cpp tests/test_sha256.cpp tests/test_rng.cpp tests/test_format.cpp
+    tests/test_store.cpp tests/test_ledger.cpp tests/test_score.cpp tests/test_gen.cpp tests/test_prep.cpp
+    tests/test_pmath.cpp)
+  target_include_directories(v4_tests PRIVATE tests ${V3_CORE_CPP})
+  target_compile_definitions(v4_tests PRIVATE V3_CORE_CPP_DIR="${V3_CORE_CPP}"
+    V4_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
+  target_compile_options(v4_tests PRIVATE ${V4_BIT_FLAGS})
+  target_link_libraries(v4_tests PRIVATE v4_a v4_bit quadmath)
+endif()

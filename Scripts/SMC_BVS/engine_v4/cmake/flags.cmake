@@ -1,0 +1,11 @@
+# Bit-form flags = core/cpp/Makevars.v3: no FMA contraction, no errno, portable ISA. Do not change without a bit test.
+set(V4_BIT_FLAGS -O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2)
+option(V4_WIDE_ISA "class-A kernels with -march=x86-64-v3 (AVX2/FMA via explicit intrinsics only)" OFF)
+if(V4_WIDE_ISA)
+  set(V4_A_FLAGS -O2 -fno-math-errno -ffp-contract=off -march=x86-64-v3)
+else()
+  set(V4_A_FLAGS -O2 -fno-math-errno -ffp-contract=off -march=x86-64-v2)
+endif()
+set(V4_WARN -Wall -Wextra -Wno-unused-parameter)
+string(REPLACE ";" " " V4_BIT_FLAGS_STR "${V4_BIT_FLAGS}")
+add_compile_definitions(V4_BIT_FLAGS_STR="${V4_BIT_FLAGS_STR}")
