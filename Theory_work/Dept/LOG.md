@@ -144,3 +144,4 @@
 - 23:45 — HQ GO on CHECKPOINT_5 repair (gated) + Task L; PROTOCOL pre-merge A4 sweep rule; recorder told (D53).
 - 00:05 — heartbeat: T03ACC CP1 → GO (D54); PSHARP-R in council R1 (Opus seat FAIL on F-1 → diff round, lead handling); START2-R REPORT written; RM2-R numerics done; MISR-R council prep; DIST D1 back.
 - 00:09 — DIST D1: L6-01 repair VERIFIED, EQUAL on TC3 CONFIRMED; 4 MINOR/1 NIT; D1-04 Corollary C STRONGER HPM conclusion → HQ go asked (else revert that part at freeze). D3 next; freeze Mon 09:00 tight (report by 04:00 if slipping).
+- 00:09 — HQ GO: Corollary C STRONGER HPM conclusion stays for sweep + council (named in sweep and both seat briefs; changelog STRONGER, HQ go); H5 at CP3. Lead told.
