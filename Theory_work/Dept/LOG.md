@@ -59,3 +59,4 @@
 - 20:22 — §12 relayed (D29); recorder scratch location corrected; DIST arrays confirmed ignored.
 - 20:23 — HQ: CP3 Sol seat with FIDELITY line counts as the fresh read; pooled-Ẑ claim approved; task I go, tied to M27 (recorder told: no F-UNI fix before the verdict); SHARP3 batch submitted (msgbatch_01BYKCfJ…), results go to READER.
 - 20:24 — §12 rule 7 (calm usage, no swarming) relayed to all 8 leads; department has no NOTS access by design (any NOTS need via me).
+- 20:25 — W3-READER blocked by intermittent ENOSPC (shell); root fs 87% now; READER told to retry + commit; HQ told (spike source unknown; propose Engineering crew / CLAUDE_CODE_TMPDIR on restart). READER: H5 actions in progress, R1–R4 + SHARP3 written; helpers G1/G2 on lit/necessity.
