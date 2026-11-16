@@ -2,11 +2,13 @@
 // log/exp, the concurrent store (order-free, multi-thread), T3 execution invariance, T6 restart.
 #include <omp.h>
 #include <cstdio>
+#include <filesystem>
 #include <map>
 #include <random>
 #include <set>
 #include <unistd.h>
 #include "tk.h"
+#include "tutil.h"
 #include "tutil_island.h"
 #include "v4/island/island.h"
 #include "v4/island/island_file.h"
@@ -14,7 +16,29 @@
 
 using namespace v4::island;
 
-static std::string tmpdir() { const char* t = std::getenv("TMPDIR"); return t ? t : "."; }
+// Temporary files (manager 11-16): pid-suffixed names under $TMPDIR through tests/tutil.h tmp_path(), never "." -- the
+// island tests refuse to run without TMPDIR -- and every file is removed when the test ends (TmpGuard), even on failure.
+static std::string wp3_tmp(const std::string& name) {
+  const char* t = std::getenv("TMPDIR");
+  if (!t || !*t) throw std::runtime_error("TMPDIR is not set: the island tests write temporary files only under $TMPDIR");
+  return tmp_path("wp3_" + name);
+}
+// removes a file, or a checkpoint base's generations <base>.a/.b and any leftover <base>.{a,b}.tmp.<pid>
+static void wp3_rm(const std::string& base) {
+  std::error_code ec;
+  for (const char* sfx : {"", ".a", ".b"}) std::filesystem::remove(base + sfx, ec);
+  std::filesystem::path bp(base);
+  const std::string stem = bp.filename().string();
+  for (auto& de : std::filesystem::directory_iterator(bp.parent_path(), ec)) {
+    const std::string fn = de.path().filename().string();
+    if (fn.rfind(stem + ".a.tmp.", 0) == 0 || fn.rfind(stem + ".b.tmp.", 0) == 0 || fn.rfind(stem + ".tmp.", 0) == 0) std::filesystem::remove(de.path(), ec);
+  }
+}
+struct TmpGuard {
+  std::vector<std::string> paths;
+  const std::string& add(const std::string& p) { paths.push_back(p); return paths.back(); }
+  ~TmpGuard() { for (auto& p : paths) wp3_rm(p); }
+};
 
 // ---------------------------------------------------------------------------------------------------------------
 TEST(philox_known_answers) {
@@ -298,12 +322,13 @@ TEST(logical_counts_and_invariants) {
 
 // T6: interrupt after a checkpoint at several steps, resume (with other threads / G / kernel): identical bytes.
 TEST(t6_restart_bit_identical) {
+  TmpGuard tg;
   Fixture F(100, 300, 23);
   IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 2; c.G = 16;
   uint64_t h0 = run_island<Arith::Bit>(F.D, F.st, F.nb, c).hash();
   int Tsteps = (int)c.grid.size() - 1 + c.L + c.Hm;
   for (int stop : {0, 2, 5, 6, Tsteps - 1}) {
-    IslandConfig a = c; a.ckpt_path = tmpdir() + "/wp3_t6_" + std::to_string(stop); a.ckpt_every_s = 1e9; a.stop_after_step = stop;
+    IslandConfig a = c; a.ckpt_path = tg.add(wp3_tmp("t6_" + std::to_string(stop))); a.ckpt_every_s = 1e9; a.stop_after_step = stop;
     std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
     IslandRun r1 = run_island<Arith::Bit>(F.D, F.st, F.nb, a);
     CHECK(r1.status == 1);
@@ -315,7 +340,7 @@ TEST(t6_restart_bit_identical) {
   }
   // two generations: checkpoint every step; corrupt the newest; resume from the older one
   {
-    IslandConfig a = c; a.ckpt_path = tmpdir() + "/wp3_t6_gen"; a.ckpt_every_s = 0; a.stop_after_step = 4;
+    IslandConfig a = c; a.ckpt_path = tg.add(wp3_tmp("t6_gen")); a.ckpt_every_s = 0; a.stop_after_step = 4;
     std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
     run_island<Arith::Bit>(F.D, F.st, F.nb, a);
     // step 4 was the 5th write (steps 0..4) -> file .a; corrupt one byte in its payload
@@ -333,12 +358,13 @@ TEST(t6_restart_bit_identical) {
 // island_r.bin: write, read back, compare with the run (record fields, store, HPM key, terminal supports); an
 // interrupted run writes no estimate section (GUARD-W).
 TEST(island_file_roundtrip_and_terminal_supports) {
+  TmpGuard tg;
   Fixture F(100, 300, 24);
   IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16;
   for (int arith = 0; arith < 2; ++arith) {
     IslandRun r = arith ? run_island<Arith::ClassA>(F.D, F.st, F.nb, c) : run_island<Arith::Bit>(F.D, F.st, F.nb, c);
     CHECK(r.status == 0 && (int)r.terminal.size() == c.N);
-    std::string path = tmpdir() + "/wp3_island_rt.bin";
+    std::string path = tg.add(wp3_tmp("island_rt.bin"));
     v4::Json inputs = v4::Json::object(); inputs["data.bin"] = "test";
     write_island_file(path, r, arith ? Arith::ClassA : Arith::Bit, inputs);
     IslandFile f = read_island_file(path);
@@ -356,10 +382,10 @@ TEST(island_file_roundtrip_and_terminal_supports) {
     std::remove(path.c_str());
   }
   // interrupted run (stop after a checkpoint): no logZ / rb / pip / terminal sections
-  IslandConfig a = c; a.ckpt_path = tmpdir() + "/wp3_island_rt_ck"; a.ckpt_every_s = 1e9; a.stop_after_step = 2;
+  IslandConfig a = c; a.ckpt_path = tg.add(wp3_tmp("island_rt_ck")); a.ckpt_every_s = 1e9; a.stop_after_step = 2;
   std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
   IslandRun ri = run_island<Arith::Bit>(F.D, F.st, F.nb, a);
-  std::string path = tmpdir() + "/wp3_island_rt_int.bin";
+  std::string path = tg.add(wp3_tmp("island_rt_int.bin"));
   bool refused = false; try { write_island_file(path, ri, Arith::Bit, v4::Json::object()); } catch (const v4::Error&) { refused = true; }
   CHECK(refused);   // an interrupted island is a test outcome, never a file (review m3)
   std::remove(path.c_str()); std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
@@ -404,7 +430,7 @@ TEST(t6_kill_during_write_resubmit_and_refusal) {
   Fixture F(100, 300, 25);
   IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 2; c.G = 16;
   const uint64_t h0 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c).hash();
-  const std::string base = tmpdir() + "/wp3_t6k";
+  TmpGuard tg; const std::string base = tg.add(wp3_tmp("t6k"));
   auto clean = [&]() { for (const char* s : {".a", ".b", ".b.tmp.12345", ".a.tmp.12345"}) std::remove((base + s).c_str()); };
   // (1) checkpoint every step, stop after step 4 (writes 0 a, 1 b, 2 a, 3 b, 4 a); then a "kill" during the next
   //     write: a partial temporary file, and the newest generation torn to half its length
@@ -523,7 +549,7 @@ TEST(mem_budget_admission) {
   d.mem_budget = island_memory(sizes_of(F, d, d.G), 0.5).total + 1024;
   IslandRun r4 = run_island<Arith::ClassA>(F.D, F.st, F.nb, d);
   CHECKF(r4.status == 3 && r4.reason.find("after step") != std::string::npos && r4.top_v.empty() && r4.rb_acc.empty(), "step refusal: status %d '%s'", r4.status, r4.reason.c_str());
-  std::string path = tmpdir() + "/wp3_refused.bin";
+  TmpGuard tg; std::string path = tg.add(wp3_tmp("refused.bin"));
   write_island_file(path, r4, Arith::ClassA, v4::Json::object());
   { v4::fmt::Reader rd(path); uint64_t n = 0; rd.get<double>("top_v", &n);
     CHECK(rd.json("meta").at("status").str() == "resource_limit" && n == 0 && !rd.has("logZ") && !rd.has("terminal_S")); }
@@ -570,7 +596,7 @@ TEST(compat_restart_file_and_refusals) {
   IslandConfig c = small_cfg(); c.compat = true; c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.island = 2;
   IslandRun r0 = run_island<Arith::Bit>(F.D, F.st, F.nb, c);
   CHECK(r0.status == 0 && r0.compat && r0.stream_count > 0 && !r0.leaders && r0.lead0_v.empty() && r0.lead1_v.empty());   // v0.1.7
-  const std::string base = tmpdir() + "/wp3_compat_ck";
+  TmpGuard tg; const std::string base = tg.add(wp3_tmp("compat_ck"));
   for (int stop : {0, 3, 6}) {
     std::remove((base + ".a").c_str()); std::remove((base + ".b").c_str());
     IslandConfig a = c; a.ckpt_path = base; a.ckpt_every_s = 1e9; a.stop_after_step = stop;
@@ -580,7 +606,7 @@ TEST(compat_restart_file_and_refusals) {
     CHECKF(r.status == 0 && r.resumed_from_step == stop && r.hash() == r0.hash() && r.stream_count == r0.stream_count, "compat resume after %d", stop);
   }
   std::remove((base + ".a").c_str()); std::remove((base + ".b").c_str());
-  std::string path = tmpdir() + "/wp3_compat_island.bin";
+  std::string path = tg.add(wp3_tmp("compat_island.bin"));
   write_island_file(path, r0, Arith::Bit, v4::Json::object());
   { v4::fmt::Reader rd(path); CHECK(rd.mode() == v4::fmt::M_COMPAT && !rd.has("lead0_v") && !rd.has("lead1_v") && rd.json("meta").at("mode").str() == "compat"); }
   // even an island run with the test-only leaders option writes no leader store (v0.1.7)
@@ -616,7 +642,7 @@ TEST(numerical_failure_status_deterministic) {
       if (reason0.empty()) { reason0 = r.reason; std::printf("  [%s] %s\n", arith ? "A" : "bit", r.reason.c_str()); }
       CHECKF(ok && r.reason == reason0, "arith %d kernel %d threads %d: status %d reason '%s' vs '%s'", arith, kern, th, r.status, r.reason.c_str(), reason0.c_str());
       if (kern == 1 && th == 3) {
-        std::string path = tmpdir() + "/wp3_nf.bin";
+        TmpGuard tg; std::string path = tg.add(wp3_tmp("nf.bin"));
         write_island_file(path, r, arith ? Arith::ClassA : Arith::Bit, v4::Json::object());
         v4::fmt::Reader rd(path);
         CHECK(rd.json("meta").at("status").str() == "numerical_failure" && !rd.has("logZ") && !rd.has("rb_acc") && !rd.has("pip_r") &&
