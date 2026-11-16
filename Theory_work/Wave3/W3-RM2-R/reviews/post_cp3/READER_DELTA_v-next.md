@@ -59,3 +59,9 @@ inputs and small start modes outside 𝔇 also deliver). Not phrased as a limita
 > Neither limit can bind unless $n+p+1>2^{10^6}$ or $n\gtrsim4\times10^9$, that is, at no feasible problem size [RM2R-6].
 
 By the arithmetic of `IDEALW_BINDING.md` (no log grep needed, per HQ).
+
+## 9. Addition [RM2R-7] (HQ): conditions of the new masters
+The recording shows RM0-plus, RM2-F-plus, RM2-R-plus and Cont-plus conditional on `C-DLV:L2-S3` and `C-DLV:P1-Inventory`
+(DLV-0 takes these code-reading audits of the delivery path as hypotheses, `W3-RM2-R/STATEMENT.md` (C-D) and §6). Stated
+in plain words — "conditional on two code-reading audits of the delivery path" — in the status lines of the masters
+(thm6 item 0, thm7 master), in the conditions paragraph of each row, and in card rows 3.1 and 3.2.

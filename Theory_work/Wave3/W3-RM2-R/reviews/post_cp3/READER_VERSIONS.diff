@@ -55,18 +55,21 @@
  mode, one per move, at most $n^b$ moves, and certifies $S_0$; its move cap never binds. (ii) The polylogarithmic case
  $|Q|\le(\log n)^{\kappa}$ is a special case (the earlier version of the theorem). (iii) Examples (never hypotheses):
  metric-local correlation, polynomial correlation decay of exponent $\alpha>2$ (example status unchecked), one-factor
-@@ -672,6 +680,10 @@
+@@ -672,6 +680,13 @@
    other way, no-addition fails w.p. $\to1$). Not known to be necessary for the conclusion.
  
  ### Master theorems
 +0. [RM2R-2] `W3-RM2-R:RM2-R-plus`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:177-182` (same hypotheses as RM2-R; conclusion
-+   adds [MODE] and, under (D), delivery and $P(\hat S=S_0)\to1$ with the error split), status "PROVED (by this seat, unchecked); conditional on W2-APP:POST@1.0.1; LC-B VERIFIED" (CP3 status; council R3 PASS, MANIFEST b06a8588…, sol=9.5, opus=9.4; HQ accepted CP3, H5 card 14 AGREED — **quote the registry status verbatim once recorded**).
++   adds [MODE] and, under (D), delivery and $P(\hat S=S_0)\to1$ with the error split), status "PROVED (by this seat, unchecked); conditional on W2-APP:POST@1.0.1; LC-B VERIFIED", and conditional on two code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`), which DLV-0 takes as hypotheses [RM2R-7] (CP3 status; council R3 PASS, MANIFEST b06a8588…, sol=9.5, opus=9.4; HQ accepted CP3, H5 card 14 AGREED — **quote the registry status verbatim once recorded**).
 +   With `W3-RM2-R:RM0-plus` (`STATEMENT.md:118-143`, mode form of the core) and `W3-RM2-R:DLV-0` (`STATEMENT.md:144-163`,
 +   deterministic delivery at the pinned code). RM2-R-plus implies RM2-R (`W3-RM2-R:Cont-plus`).
++   **Conditions of the row (current master) [RM2R-7]:** the posterior input (through `W2-APP:POST`, itself conditional on
++   T03♯) and two code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`); the recording shows
++   `W3-RM2-R:RM0-plus`, `RM2-R-plus` and `Cont-plus` with the latter two conditions.
  1. `W3-RM2:RM2-R@1.0.2`, `Theory_work/Wave3/W3-RM2/STATEMENT.md:216-218` (assumptions :172-202), status verbatim
     **"PROVED-CHECKED, conditional on W2-APP:POST; input versions W2-APP:POST@1.0.1; council R1, MANIFEST 00bbeab8…,
     astra=9.5 PASS, opus=8.8 PASS; …"**. Its input `W2-APP:POST@1.0.6` is "PROVED-CHECKED, conditional on SOP:TH09" [REG-33e1], so row 3.1 is conditional on
-@@ -687,6 +699,10 @@
+@@ -687,6 +702,10 @@
     used for consistency; delivery keeps e4 with TDP-IMPL as in Proposition F); S.3 is a code-reading audit." [R3]
     **Abstract [H5-2]:** the delivery clause ("always produces output; $P(\hat S=S_0)\to1$") stays out of the abstract
     until the F-UNI gate is resolved; the abstract states the common-data-event clause.
@@ -77,7 +80,7 @@
  
  ### Bridges
  | # | Bridge | Mark | Detail |
-@@ -697,6 +713,7 @@
+@@ -697,6 +716,7 @@
  | B6.4 | (D-loc^b) ⇒ (D-R^b) ⇒ (W-R) | EXISTS-CHECKED | `W3-RM2:D-to-W@1.0.0`, "PROVED-CHECKED; council R1, …" (STATEMENT.md:256, (C3)/(P9)). |
  | B6.5 | (T1-R) ⇒ posterior input [POST] | EXISTS-CHECKED, conditional | `W3-RM2:POST-R@1.0.2`, "PROVED-CHECKED, conditional on W2-APP:POST; …" ⇐ B2.2 (**EXISTS-UNCHECKED**). |
  | B6.6 | RM2-R conclusions ⇒ F-UNI premises (S), (P), (V); F-UNI's operational premises carried as (S4) | **NEW** (assembly; (V)/(S)/(P) part passed S1) | (S): $P(\mathrm{Sand}\cap\mathrm{NA}\cap\mathrm{TL})\ge1-\sum P(\cdot^c)\to1$ from [SAND(Q)], [NA(Q)], [TL(Q)]; (P) = [POST]; (V) = "(R) with $\lambda_{\min}(\Sigma_n)>0$". LS0 cap and default-on tier-1 fallback match (`v3_calib.R:141-144`). F-UNI's method/premise/allocation paragraph (`L5_delivery.md:7-12`: EX-A as cost model, IDEAL-W, EX-S, SR, e4/TDP-IMPL, GUARD-W, MACH, CONFIG, valid seed, allocation and preflight inequalities at $(n,p_{\mathrm{raw}})$; P1/S.3 "AUDITED (code reading)") is **not derived**: it is carried as (S4) [S1-F2]. Premise-by-premise table: proof leg (`lemmas/R3_delivery_assembly.md`). |
@@ -85,7 +88,7 @@
  | B6.7 | standardised-signal convention | limit | The masters take $\theta^*$ deterministic (Setting R). A raw-scale version (fixed $\beta^*$) would need a **NEW** bridge (medium; the population conditions involve $\theta^*$). Not proposed for CP1. |
  
  **Proof of B6.3.** Fix $l$ and $T$ in the lattice with $l\notin T$, put $A:=T\cap N_l\subseteq T$ and
-@@ -730,29 +747,37 @@
+@@ -730,29 +750,37 @@
    (`C-DLV/STATEMENT.md:28-46`, `FINAL/sections/s6_delivery.tex:29-35`); common-data-event clause EQUAL.
  - v0.5 2026-11-16: [REG-f526] RM2-R's input `W2-APP:POST@1.0.6` status and the RM-R special-case status quoted (EQUAL).
  - v0.6 2026-11-16: [REG-33e1] SL0 cleared: row 3.1 conditional on T03♯ only; RM2-R/POST-R @1.0.2, RM-R @1.1.2 (EQUAL).
@@ -129,7 +132,7 @@
    regressions*: for every $l$ a deterministic set $N_l\subseteq Q\setminus\{l\}$ with $|N_l|\le h\log_2n$, $h+b<\tfrac12$,
    and a deterministic $L_n\to0$ with $L_n^2\log(|Q|+1)=o(\log n)$, such that
    $\|\hat\beta_{T,l}-\hat\beta_{T\cap N_l,l}\|_1\le L_n$ for every $T$ with $S_0\subseteq T\subseteq Q$, $|T|<K$,
-@@ -760,14 +785,24 @@
+@@ -760,14 +788,24 @@
  
  Then there are data events $\mathcal G_n$, $P(\mathcal G_n)\to1$, on which every admissible run that produces output
  reports $\hat S=S_0$, for every seed and calibration outcome; in particular $P(\text{output and }\hat S\neq S_0)\to0$.
@@ -157,20 +160,21 @@
    truth out.
  - *Bounded leakage (A4).* Outside $Q$, no column, added to any small model, explains more than a fraction $\eta$ of
    $\log n$ residual-variance units; such columns never look like signal and stay out of the start mode.
-@@ -778,7 +813,11 @@
+@@ -778,7 +816,12 @@
  - *Floors (A2).* Regressions on blocks and on $Q\cup\{l\}$ are well posed.
  
  ### Master theorem
 -`W3-RM2:RM2-F@1.0.0`, `Theory_work/Wave3/W3-RM2/STATEMENT.md:206-214` (assumptions :126-170), status verbatim
 +[RM2R-2] `W3-RM2-R:RM2-F-plus`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:166-176` (hypotheses §2 :95-112 and PARENT's;
-+conclusion with [MODE] and, under (D), delivery and the error split), status "PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0; LC-B VERIFIED" (CP3 status; council R3 PASS, MANIFEST b06a8588…, sol=9.5, opus=9.4; HQ accepted CP3, H5 card 14 AGREED — **quote the registry status verbatim once recorded**); with `W3-RM2-R:RM0-plus`
++conclusion with [MODE] and, under (D), delivery and the error split; conditions of the row: T03♯ (`SOP:TH09`) and two
++code-reading audits of the delivery path, `C-DLV:L2-S3` and `C-DLV:P1-Inventory` [RM2R-7]), status "PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0; LC-B VERIFIED", and conditional on two code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`), which DLV-0 takes as hypotheses [RM2R-7] (CP3 status; council R3 PASS, MANIFEST b06a8588…, sol=9.5, opus=9.4; HQ accepted CP3, H5 card 14 AGREED — **quote the registry status verbatim once recorded**); with `W3-RM2-R:RM0-plus`
 +and `W3-RM2-R:DLV-0` as in §6. It implies the previous master (`W3-RM2-R:Cont-plus`), kept below for the record.
 +Method drift: as §6 [HQ D74].
 +Previous master: `W3-RM2:RM2-F@1.0.0`, `Theory_work/Wave3/W3-RM2/STATEMENT.md:206-214` (assumptions :126-170), status verbatim
  **"PROVED-CHECKED, conditional on SOP:TH09; input versions SOP:TH09@1.0.0; council R1, MANIFEST 00bbeab8…, astra=9.5
  PASS, opus=8.8 PASS; …"**; with `W3-RM:RM-0@1.0.0` and `W2-UNI:F-UNI@1.1.0` as in §6 (input validity "(E) with
  nonconstant raw columns").
-@@ -786,10 +825,15 @@
+@@ -786,10 +829,15 @@
  ### Bridges
  | # | Bridge | Mark | Detail |
  |---|---|---|---|
@@ -188,7 +192,7 @@
  
  ### Honest limits (the case the brief names)
  (A3)–(A5) are **sample-level conditions on $(X,\theta^*)$**: partial signal gains $\delta^2_{U,j}$ and sample regressions.
-@@ -809,6 +853,11 @@
+@@ -809,6 +857,11 @@
    (as the master's (W-loc)); (S4) completed (STRONGER, now faithful).
  - v0.4 2026-11-16: [S2-F1] as Theorem 6 (S4). Tag (S3): **WEAKER** for the delivery clause (restores the master's
    premises); statistical clauses EQUAL.

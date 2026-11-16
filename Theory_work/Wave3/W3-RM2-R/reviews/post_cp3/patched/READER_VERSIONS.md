@@ -681,9 +681,12 @@ blocks.
 
 ### Master theorems
 0. [RM2R-2] `W3-RM2-R:RM2-R-plus`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:177-182` (same hypotheses as RM2-R; conclusion
-   adds [MODE] and, under (D), delivery and $P(\hat S=S_0)\to1$ with the error split), status "PROVED (by this seat, unchecked); conditional on W2-APP:POST@1.0.1; LC-B VERIFIED" (CP3 status; council R3 PASS, MANIFEST b06a8588…, sol=9.5, opus=9.4; HQ accepted CP3, H5 card 14 AGREED — **quote the registry status verbatim once recorded**).
+   adds [MODE] and, under (D), delivery and $P(\hat S=S_0)\to1$ with the error split), status "PROVED (by this seat, unchecked); conditional on W2-APP:POST@1.0.1; LC-B VERIFIED", and conditional on two code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`), which DLV-0 takes as hypotheses [RM2R-7] (CP3 status; council R3 PASS, MANIFEST b06a8588…, sol=9.5, opus=9.4; HQ accepted CP3, H5 card 14 AGREED — **quote the registry status verbatim once recorded**).
    With `W3-RM2-R:RM0-plus` (`STATEMENT.md:118-143`, mode form of the core) and `W3-RM2-R:DLV-0` (`STATEMENT.md:144-163`,
    deterministic delivery at the pinned code). RM2-R-plus implies RM2-R (`W3-RM2-R:Cont-plus`).
+   **Conditions of the row (current master) [RM2R-7]:** the posterior input (through `W2-APP:POST`, itself conditional on
+   T03♯) and two code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`); the recording shows
+   `W3-RM2-R:RM0-plus`, `RM2-R-plus` and `Cont-plus` with the latter two conditions.
 1. `W3-RM2:RM2-R@1.0.2`, `Theory_work/Wave3/W3-RM2/STATEMENT.md:216-218` (assumptions :172-202), status verbatim
    **"PROVED-CHECKED, conditional on W2-APP:POST; input versions W2-APP:POST@1.0.1; council R1, MANIFEST 00bbeab8…,
    astra=9.5 PASS, opus=8.8 PASS; …"**. Its input `W2-APP:POST@1.0.6` is "PROVED-CHECKED, conditional on SOP:TH09" [REG-33e1], so row 3.1 is conditional on
@@ -814,7 +817,8 @@ reach }S_0)$. *(Interpretation, not part of the theorem [D71]: posterior-mode er
 
 ### Master theorem
 [RM2R-2] `W3-RM2-R:RM2-F-plus`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:166-176` (hypotheses §2 :95-112 and PARENT's;
-conclusion with [MODE] and, under (D), delivery and the error split), status "PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0; LC-B VERIFIED" (CP3 status; council R3 PASS, MANIFEST b06a8588…, sol=9.5, opus=9.4; HQ accepted CP3, H5 card 14 AGREED — **quote the registry status verbatim once recorded**); with `W3-RM2-R:RM0-plus`
+conclusion with [MODE] and, under (D), delivery and the error split; conditions of the row: T03♯ (`SOP:TH09`) and two
+code-reading audits of the delivery path, `C-DLV:L2-S3` and `C-DLV:P1-Inventory` [RM2R-7]), status "PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0; LC-B VERIFIED", and conditional on two code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`), which DLV-0 takes as hypotheses [RM2R-7] (CP3 status; council R3 PASS, MANIFEST b06a8588…, sol=9.5, opus=9.4; HQ accepted CP3, H5 card 14 AGREED — **quote the registry status verbatim once recorded**); with `W3-RM2-R:RM0-plus`
 and `W3-RM2-R:DLV-0` as in §6. It implies the previous master (`W3-RM2-R:Cont-plus`), kept below for the record.
 Method drift: as §6 [HQ D74].
 Previous master: `W3-RM2:RM2-F@1.0.0`, `Theory_work/Wave3/W3-RM2/STATEMENT.md:206-214` (assumptions :126-170), status verbatim
