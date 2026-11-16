@@ -248,3 +248,20 @@ same rules for anything it runs.
 10. **Engineering uses NOTS heavily** (owner, 2026-11-15: "they are an engineering department, not theoreticians"). It
     measures rather than estimates. It holds a standing authorization for exploratory batches up to ~200 core-h each inside
     the approved budget, each logged and reported. Bigger batches and the gated stages go to HQ.
+
+## 13. Department protocols: tailored, but in order (owner, 2026-11-15)
+Each department may tailor the review, process and rollback protocols to its needs. Order is kept this way:
+- **One company baseline:** `Theory_work/Wave3/PROTOCOL_v4.md` and `Theory_work/INFRA/LIFECYCLE.md`. Anything a
+  department does not override follows the baseline.
+- **One written variant per department,** in its folder: `<dept folder>/PROTOCOL.md` (e.g.
+  `Docs/Experiments/P1M/PROTOCOL.md`, `Theory_work/Dept/PROTOCOL.md`). It lists each deviation from the baseline and
+  why. A variant that only exists in chat does not count.
+- **Company minimums that no variant may remove:**
+  - independent review before anything is called checked, validated or done;
+  - restore points and a rollback path for every deliverable;
+  - a decision log;
+  - honest status labels;
+  - the escalation rules (§4, §9);
+  - the compute discipline (§12).
+- **HQ approves each variant and each change to it**, with the consultant when the change is significant, and logs it
+  in `HQ_DECISIONS.md`. Until a variant is approved, the baseline applies.
