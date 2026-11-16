@@ -187,6 +187,41 @@ increasing from 0 to 1, B ≥ 0.
   `<build>/logs`; socket mode waits for both islands, prints both logs, and requires exit 0, `status=0` and two
   distinct non-empty hashes.
 
+### 1.10b m3 (L5 SPR batch 2749328): the phase-B / compaction regression
+- **Cause.** The r2 fix (PR #26) replaced `__gnu_parallel::sort` in the parallel compaction with `psort_noalloc`, which
+  merged the sorted chunks pairwise with one task per pair. Round r of the merge therefore ran on threads / 2^(r+1)
+  tasks, and the last round on one: the merge's critical path was about 2n element moves. On SPR (96 threads) that made
+  the compaction's two sorts nearly serial.
+  - Compaction runs at pass and step boundaries and between phase-B waves, so it showed up in both phase B and compaction
+    time: 38.5 → 57.1 s and 65 → 88 s per island.
+  - The compaction count is unchanged (33 in every build below), so neither the wave cap nor the reserved staging is
+    the cause.
+- **Fix.**
+  - Each merge round cuts every pair's output into equal segments at merge-path splits. Each segment is one stable
+    `std::merge` of the two sub-ranges that produce it, so the result is the same sequence as before, with all threads
+    busy in every round and no allocation inside a region.
+  - The merge's critical path becomes about (n / threads) · log2(threads): roughly 27× shorter at 96 threads (ESTIMATE).
+  - The `[round]` lines now report the number of compactions and the sort seconds.
+- **MEASURED, Owls, 3 threads.**
+  - The sort alone (`v4_bench_island sort`, best of 3; all three variants give the same sequence):
+
+    | staged refs | pairwise | merge-path | `__gnu_parallel` |
+    |---|---|---|---|
+    | 1.5 M | 0.115 s | 0.091 s | 0.085 s |
+    | 6 M | 0.590 s | 0.419 s | 0.453 s |
+
+  - The island (p = 10⁵, N = 500, G = 256, `steps:1`, L = 2, Hm = 1): the same output hash `bab293252e9ebe57` in all
+    three builds.
+
+    | build | compaction (33 in each) | phase B |
+    |---|---|---|
+    | pre-L5 (`32b11a91`) | 15.56 s | 19.00 s |
+    | engine (`4c238a32`) | 19.05 s | 22.17 s |
+    | m3 | 16.38 s | 19.97 s |
+
+    In the m3 build the sorts are 4.3 s of the 16.4 s of compaction.
+  - 3 threads show only the first rounds of the problem; the SPR batch measures the 96-thread gain.
+
 ### 1.11 v0.6 (agreed with WP4, 2026-11-16): calibration islands (pilot, diagnostic)
 This is the API that WP4's `calib::IslandRunner` calls. It is built after the PR #26 re-check. Core reference:
 `core/cpp/v3_core.cpp:620-692` (`cpp_cal_pilot`, `cpp_cal_diag`) and `cpp/v3_engine.h:269-372` (`run_island_s` with
