@@ -42,3 +42,4 @@
 - 20:03 — D21: no shutdowns of any kind; digest helper unsettled; heartbeat updated.
 - 20:04 — D22 final §10 rule; digest helper re-settled; heartbeat updated; leads told.
 - 20:05 — HQ restated §10 goal (inbox = HQ + departments): already applied (D20, D22); no t3_thread_launch from here on; rider/lead briefs already use delegate_task for reviewers and helpers.
+- 20:05 — recorder: F partly done (44-flag clear + HEADLINE_CANDIDATES.md on recorder/staging-1115; D dry run on flag-cleared clone 10/10, 0 ERROR; E updated with THEORY-5 pins); C and Ex-STAR/ENUM next. Asked about task G (citefix branch, priority).
