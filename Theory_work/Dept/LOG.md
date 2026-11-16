@@ -272,3 +272,4 @@
 - 06:02 — F9d Sol: FAITHFUL. Card-13 package final (948d58fd, A/B diffs) → HQ. READER S4 started (swaps thm3/4/8, card v1.3 SL fixes, FUNI-N, card-13 proposal).
 - 06:05 — READER S4 launched (Sol high, one call; frozen snapshot reviews/S4_frozen, c219065b); scope incl. swaps, card v1.3, FUNI-N, card-13 proposal. Verdict pending.
 - 06:13 — heartbeat: IDEAL-W⁺ batch Sol DIFF FAIL on wording only (R1 XA:X4 is a research target; R2 inventory summary line) → agent repairs once + new Sol. START2-R and RM2-R v-next reader deltas ready. IDEALW_BINDING: ceilings never bind (arithmetic). T real run in suite. S4 running. No Codex > 2 h. → HQ.
+- 06:13 — HQ: batch per brief rule (2nd FAIL → HQ); IDEAL-W⁺ ceilings: arithmetic suffices, state in body as fact; log grep optional post-freeze (one Haiku, read-only, if free). Recorder order T → S3 → T2 → S2 → W → U/V → swaps stands.
