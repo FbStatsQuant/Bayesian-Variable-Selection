@@ -296,3 +296,4 @@
 - 07:47 — Recorder: S4 patch mechanics verified on fresh apply (21/21 effective; FINAL s6 complete in 3 files); guard added to task_s4.py. Clarified: S4 real GO already given → run now; then S4b, D80 re-verify S/S2/T, U/V dry.
 - 07:48 — READER D80 re-verify: four swaps OK (absent patch lines = deliberate requotes). Found: thm8 '(A3) requires n ≳ 1,450' sentence still missing (restore request dropped) → re-sent (HQ ruled it stays).
 - 07:49 — s6:46 fresh Opus: FIX CORRECTED (premise = Theorem D's; class hypotheses/qualifications + unconditioned law restored). Third short Opus confirm (B11, author ≠ checker) launched before S4b.
+- 07:49 — READER restored '(A3) requires n ≳ 1,450' in thm8 (578168a9, v0.6.1; D80 hash check).
