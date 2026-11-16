@@ -1,5 +1,10 @@
 # HQ now (resume card; HQ keeps this current)
 
+## PENDING OWLS T3 RESTART (agreed with BNP Lean HQ, peer; thread mcp:0a4bc001-e5d5-40be-b36a-3d4f45984c49)
+- Purpose: set Claude Code's temp directory for the T3 server on Owls to NFS (e.g. /home/fb31/.claude_tmp/) to end the root-disk ENOSPC spikes.
+- When: BNP sends a "quiet window" (expected 11-16 early afternoon CST). HQ pauses SMC departments' leads, restarts, verifies, then messages BNP back. BNP launches nothing until confirmed.
+- BNP already moved its temp to /home/fb31/bnp_tmp and removed 73 stale sandboxes (11-15).
+
 ## CODEX PACING LEVEL (owner sets; POLICIES §14): **0 (normal)** since 2026-11-15
 
 ## ACCOUNT ALLOCATION (owner sets; HQ relays to all managers)
