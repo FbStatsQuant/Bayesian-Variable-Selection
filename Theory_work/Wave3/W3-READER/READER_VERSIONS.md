@@ -725,13 +725,15 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
 
 ## 8. Theorem 8 — Certified screening
 <!-- ROW thm8 BEGIN -->
-**Card row** 3.7 · **Section version** 0.2 (2026-11-15) · **Pending delta** —
+**Card row** 3.7 · **Section version** 0.3 (2026-11-16) · **Pending delta** —
 
 
 ### Reader statement
 **Theorem 8.** Let the design be fixed and assume (S1), (S3) and
-- **(A1) Sparse eigenvalue floor.** $\lambda_{\min}(\hat R_S)\ge\kappa$ for every $S$ with $|S|\le q_n+s_0$;
-- **(A2) Fixed signals.** $\theta^*_{\min}\ge b_0>0$ and $\|\theta^*\|_1\le M$ (fixed $\kappa,b_0,M,\sigma_*$);
+- **(A1) Sparse eigenvalue floor.** $\lambda_{\min}(\hat R_S)\ge\kappa$ for every $S$ with $|S|\le q_n+s_0$, with a constant
+  $\kappa>0$ fixed in $n$;
+- **(A2) Signals bounded below and coefficients bounded above by constants fixed in $n$.** $\theta^*_{\min}\ge b_0>0$ and
+  $\|\theta^*\|_1\le M$, where $\kappa$, $b_0$, $M$ and the noise variance $\sigma_*^2$ do not depend on $n$ [SCR-PC];
 - **(A3) Size budget.** $(q_n+1)\log p+\log n\le c_1n$, $c_1:=\kappa^2b_0^2/(200(M^2+\sigma_*^2))$, with
   $q_n\in\{0,\dots,K-1\}$ [S1-F8].
 
@@ -739,14 +741,26 @@ Then
 $$
 P\big(\text{output},\ \hat S\text{ certified},\ |\hat S|\le q_n,\ S_0\not\subseteq\hat S\big)\to0 .
 $$
-In particular this holds for $p\le n^A$ and every $q_n=o(n/\log n)$. No condition on the start, leakage, blocks or
+In particular this holds for $p\le n^A$ and every $q_n=o(n/\log n)$. Signal sizes or floors that vary with $n$ are
+**not** covered by this theorem (removing "fixed" is the named open item SCR-R1, a post-freeze rider) [SCR-PC]. No condition on the start, leakage, blocks or
 visibility is used beyond (A1)–(A3), and $p\le n^A$ is not needed. (The master needs only a weaker directional floor,
 which leaves null-null correlations free; the full floor (A1) does constrain them [S1-F8].)
+
+### Placements of row 3.7 (H5 card 7; the CP3 freeze picks per the consultant's verdict) [SCR-PC]
+- **(i) Abstract clause:** *"Certified screening: if the design has a sparse eigenvalue floor on models of size
+  $q_n+s_0$, the true coefficients are bounded below and above by constants fixed in $n$ (as are the floor and the noise
+  variance), and $(q_n+1)\log p+\log n\le c_1n$, then the probability that a run produces output, certifies a reported
+  model of size at most $q_n$, and that model misses a true predictor tends to zero — with no visibility, leakage, start
+  or block condition."*
+- **(ii) Body theorem:** Theorem 8 exactly as stated above, with (A1)–(A3) and the sentence "signal sizes or floors
+  that vary with $n$ are not covered (open item SCR-R1)".
 
 ### Why each assumption
 (A1) only the realised combination of missing truths must keep a fraction of its energy outside any small model (the
 master uses a weaker directional floor); the full floor is not needed (numerics with highly correlated nulls).
-(A2) fixed signals; a version with beta-min at rate $\sigma\sqrt{((q_n+1)\log p+\log n)/n}$ exists (remark).
+(A2) signals and coefficient bounds are constants fixed in $n$, as in the master (`W3-SCR/STATEMENT.md:158-160`, "with κ,
+b, M, σ fixed (not depending on n)"); a separate statement with beta-min at rate
+$\sigma\sqrt{((q_n+1)\log p+\log n)/n}$ exists (`W3-SCR:A1o`, different hypotheses), and is not part of this theorem [SCR-PC].
 (A3) a union bound over models of size $\le q_n$.
 
 ### Master theorem
@@ -764,6 +778,10 @@ certificate needs a near-orthogonality floor (`W3-SCR:SCR-C`, PROVED-CHECKED), w
 #### Update log (thm8)
 - v0.1 2026-11-15: first version (CP1).
 - v0.2 2026-11-15: S1 fixes [S1-F8] q_n range and null-correlation wording (EQUAL).
+- v0.3 2026-11-16: [SCR-PC] (A1)–(A2) state that κ, b₀, M, σ* are fixed in $n$, matching `W3-SCR/STATEMENT.md:158-160`
+  (the master's current text); n-dependent signals not covered (SCR-R1); A1° named as a separate claim; placements
+  (i) abstract clause / (ii) body theorem for H5 card 7 (EQUAL to the current master; tag to be confirmed by the Sol
+  statement-change check).
 <!-- ROW thm8 END -->
 
 ---
