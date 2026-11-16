@@ -260,3 +260,6 @@ W3-RM2:RM2-R	A:RM2-LGAIN-R	WEAKENABLE	Theory_work/Wave3/W3-RM2/REPORT.md:180: le
 W3-RM2:RM2-R	A:RM2-LLOC-R	NONE	Theory_work/Wave3/W3-RM2/REPORT.md:180: SHARPNESS.md §3; needed by this proof at r_n → 0 only	HQ record 2026-11-15 (card 1), from the REPORT block; DRAFT until the strength gate
 W3-PSHARP-R:AE	A:PSHARP-WORTH-E	ARTEFACT	Theory_work/Wave3/W3-PSHARP-R/TARGET.md:12	ingested
 W3-PSHARP-R:AE	A:PSHARP-WSPH-E	ARTEFACT	Theory_work/Wave3/W3-PSHARP-R/TARGET.md:13	ingested
+W3-DIST:DIST-1	A:DIST-ND	NECESSARY-FOR-ROUTE	Theory_work/Wave3/W3-DIST/lemmas/NEC.md:8	ingested
+W3-DIST:DIST-1	A:P-POLY	ARTEFACT	Theory_work/Wave3/W3-DIST/ASSUMPTION_MAP.md:13	ingested
+W3-DIST:X	A:DIST-ND	NECESSARY-FOR-ROUTE	Theory_work/Wave3/W3-DIST/lemmas/NEC.md:8	ingested

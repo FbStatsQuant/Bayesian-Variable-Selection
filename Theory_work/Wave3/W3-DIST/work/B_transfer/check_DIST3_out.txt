@@ -1,0 +1,7 @@
+[0] constants (sigma*^2=1, s0^r=3, M=B=1, C_T=2, kappa0=1/2): C_rho=16.00, C_v=37.65, C_mu=69.27, C_rad=38.12, n0=2009014
+[1] chain checks on posterior draws given S0 (all must hold):
+    n=  100: median_n[d_H^2]: 1.046  95%-quantile n d_H^2: 2.249; Lemma H violations: 0; TR0-chain violations: 0; max |H-id gap| 4.4e-16; realised C_T mean 1.338
+    n=  400: median_n[d_H^2]: 1.111  95%-quantile n d_H^2: 2.446; Lemma H violations: 0; TR0-chain violations: 0; max |H-id gap| 3.5e-16; realised C_T mean 1.177
+    n= 1600: median_n[d_H^2]: 1.157  95%-quantile n d_H^2: 2.498; Lemma H violations: 0; TR0-chain violations: 0; max |H-id gap| 1.6e-16; realised C_T mean 1.066
+    n= 6400: median_n[d_H^2]: 0.952  95%-quantile n d_H^2: 2.113; Lemma H violations: 0; TR0-chain violations: 0; max |H-id gap| 4.8e-17; realised C_T mean 1.032
+    (n*d_H^2 is flat in n: parametric rate; values far below C_rad^2*u, as expected of a crude constant.)
