@@ -5,9 +5,19 @@
 #include "v4/json.h"
 
 namespace v4 {
-// {sha256 of /proc/self/exe, git_commit (at configure time), compiler, flags, libm {path, sha256, glibc, fma_variant}}.
-// Computed once per process.
+// {sha256 of /proc/self/exe, git_commit (40-hex HEAD + "-dirty" when tracked files changed; refreshed at every build), compiler,
+// flags, libm {path, sha256, glibc, fma_variant, binding, self_test}}. Computed once per process.
 const Json& binary_block();
+const Json& binary_block_no_self_test();   // the same with self_test = "not run" (info only)
+
+// INTERFACES §5.1 binary consistency (v0.1.4), one rule for every caller:
+//   MergeV      (merge, V mode)        both self-tests passed; flags and libm binding equal;
+//   MergeTheory (merge, compat / law)  the same, plus git commits equal, clean (no "-dirty") and known;
+//   Restart     (checkpoint restart)   the same as MergeV, plus the same executable (sha256) and git commit.
+enum class BinaryUse { MergeV, MergeTheory, Restart };
+struct BinaryCheck { bool ok; std::string reason; };
+BinaryCheck binary_compatible(const Json& a, const Json& b, BinaryUse use);
+void require_binary_compatible(const Json& a, const Json& b, BinaryUse use);   // throws Error(invalid_input)
 // INTERFACES §6 (v0.1.3): throws Error(invalid_input) unless pm::self_test() passes, i.e. log / exp / lgamma return the
 // measured reference bits (Owls = NOTS). Keys on function results, not on the libm file hash. Called by every command
 // except info / version.

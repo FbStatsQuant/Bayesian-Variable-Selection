@@ -68,12 +68,12 @@ Truth truth(const Spec& s) {
 double normal_at(uint32_t seed, uint8_t xph, uint32_t row, uint32_t col) {
   Address a; a.seed = seed; a.role = R_GEN; a.xph = xph; a.particle = row; a.position = col;
   for (uint32_t t = 0;; ++t) {
-    a.slot = t;
+    a.slot = t;   // role GEN: slot = attempt number (INTERFACES §3); no slot kinds in this role
     double u, u2; uniform2_at(a, u, u2);
     double v1 = 2.0 * u - 1.0, v2 = 2.0 * u2 - 1.0;
     double r = v1 * v1 + v2 * v2;
     if (r > 0.0 && r < 1.0) return v1 * pm::sqrt(-2.0 * pm::log(r) / r);
-    if (t == 0xFFFFFFFFu) throw Error(Status::internal_error, "gen: polar method did not accept");
+    if (t == 0x0FFFFFFFu) throw Error(Status::internal_error, "gen: polar method did not accept");
   }
 }
 

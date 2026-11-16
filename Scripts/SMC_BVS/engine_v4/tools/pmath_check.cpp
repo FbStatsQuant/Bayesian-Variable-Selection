@@ -58,6 +58,18 @@ int main(int argc, char** argv) {
                 first ? " " : ",", F.name, F.lo, F.hi, hex(h).c_str(), notcr, maxu, ns);
     first = false;
   }
+  // x87 long double rows (INTERFACES v0.1.4): reference = libquadmath rounded to long double; 10 significant bytes compared
+  struct FnL { const char* name; long double (*f)(long double); __float128 (*q)(__float128); };
+  FnL fl[] = {{"expl", [](long double x) { return pm::expl(x); }, expq}, {"logl", [](long double x) { return pm::logl(x); }, logq}};
+  for (auto& F : fl) {
+    std::vector<long double> x = pm::check_arguments_l(F.name, N), y(N);
+    auto t0 = std::chrono::steady_clock::now();
+    for (size_t i = 0; i < N; ++i) y[i] = F.f(x[i]);
+    double ns = std::chrono::duration<double, std::nano>(std::chrono::steady_clock::now() - t0).count() / (double)N;
+    size_t notcr = 0;
+    for (size_t i = 0; i < N; ++i) { long double r = (long double)F.q((__float128)x[i]); if (std::memcmp(&r, &y[i], 10) != 0) ++notcr; }
+    std::printf(", {\"fn\":\"%s\",\"sha256\":\"%s\",\"not_correctly_rounded\":%zu,\"ns_per_call\":%.2f}\n", F.name, pm::sha256_ld(y).c_str(), notcr, ns);
+  }
   std::printf("]}\n");
   return 0;
 }
