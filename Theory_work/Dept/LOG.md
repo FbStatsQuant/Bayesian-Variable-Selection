@@ -147,3 +147,4 @@
 - 00:09 — HQ GO: Corollary C STRONGER HPM conclusion stays for sweep + council (named in sweep and both seat briefs; changelog STRONGER, HQ go); H5 at CP3. Lead told.
 - 00:12 — DIST: HQ go recorded (Cor C STRONGER, named in sweep + seat briefs); D1 findings applied (v1.4.8); D3 Sol (≈60 lines) launched 00:10; DIST-C (C-i) event made explicit, tagged EQUAL on TC8, D3 to confirm (WEAKER → early checkpoint).
 - 00:13 — recorder: RM2 CHECKPOINT_5 repair + re-records + task L on main a2a9044c (all 5 gates passed in dry run; real: A4 0 on 18 rows, record PASS, 469/0). Only Cont-F/R stale (post-CP3s). HQ told.
+- 00:48 — heartbeat: RM2-R LC-A back (Q1 V-w-A, Q2, Q7 VERIFIED); MISR-R council R1 launched (Sol + Opus, MANIFEST fadb67e8); PSHARP-R R1 Sol seat pending; T03ACC SL1 queued; DIST D3 running. No waits > 2 h on critical paths; no report needed.
