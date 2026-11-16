@@ -80,5 +80,5 @@ the new text, and the bridges it needs. The manager passes it to HQ for W3-READE
   it, drop it to a named open item at the earliest checkpoint rather than run late.
 - Heartbeat in LOG.md at least every 2 h while working. Your final message at each checkpoint = the checkpoint's
   content in ≤ 25 lines.
-- Temp work: `/home/fb31/bvs_tmp/<TICKET>/` with TMPDIR pointed there, never /tmp (HQ + Engineering convention, 11-15).
+- Temp work: `export TMPDIR=/home/fb31/bvs_tmp/theory/<YYYYMMDD>-<TICKET>-<what>` (CI runs: `/home/fb31/bvs_tmp/ci`), never /tmp; remove when done (rules: /home/fb31/bvs_tmp/README.md).
 - Do not touch: `Theory_work/Wave3/W3-DIST/`, `W3-READER/`, `PROTOCOL_REVIEW/`, `Docs/`, `Lean/`, `Theory_work/Dept/`.
