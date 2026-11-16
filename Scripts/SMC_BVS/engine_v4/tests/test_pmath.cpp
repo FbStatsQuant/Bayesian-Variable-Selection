@@ -12,6 +12,10 @@ TEST(pmath_binding_is_libm) {
   double xs[] = {1e-300, 0.1, 0.5, 1, 2, 3.5, 100, 1e10};
   bool ok = true;
   for (double x : xs) ok = ok && same_bits(pm::log(x), std::log(x)) && same_bits(pm::exp(-x), std::exp(-x)) && same_bits(pm::lgamma(x), std::lgamma(x)) &&
-                      same_bits(pm::log1p(x), std::log1p(x)) && same_bits(pm::expm1(-x), std::expm1(-x));
+                      same_bits(pm::machine::log1p(x), std::log1p(x)) && same_bits(pm::machine::expm1(-x), std::expm1(-x));
   CHECK(ok);
+  // the guard: log / exp / lgamma reproduce the reference hashes (Owls = NOTS) on all six rows
+  const pm::SelfTest& st = pm::self_test();
+  for (auto& r : st.rows) CHECK_MSG(r.ok, std::string(r.fn) + " " + r.sha256);
+  CHECK(st.ok && st.rows.size() == 8);   // 6 double rows + x87 expl, logl (v0.1.4)
 }

@@ -7,6 +7,7 @@
 #include "tutil.h"
 #include "v4/score.h"
 #include "v4/format.h"
+#include "v4/sha256.h"
 #include "v4/json.h"
 using namespace v4;
 
@@ -125,7 +126,7 @@ TEST(score_bits_equal_R_cpp_score) {
   for (auto& cs : idx.at("cases").elems()) {
     std::string nm = cs.at("name").str(); int n = (int)cs.at("n").i64(), p = (int)cs.at("p").i64();
     Data D = data_from_R(nm, n, p);
-    auto consts = read_f64(dir + nm + "_consts.f64");
+    auto consts = read_f64(dir + nm + "_consts.f64", 4);
     CHECK_MSG(same_bits(consts[0], D.logCn) && same_bits(consts[1], D.logm0) && same_bits(consts[2], D.logWK) && same_bits(consts[3], D.yty), nm + " constants");
     auto ptr = read_i32(dir + nm + "_ptr.i32"), idxs = read_i32(dir + nm + "_idx.i32"), route = read_i32(dir + nm + "_route.i32");
     const size_t nm_models = (size_t)cs.at("models").i64();
@@ -226,4 +227,26 @@ TEST(prep_from_r_equals_cpp_path) {
   CHECK(same_bits(s1.score(Model{0, 3, 7}).logm, s0.score(Model{0, 3, 7}).logm));
   std::string rmcmd = "rm -rf '" + rdir + "' '" + raw + "' '" + d1 + "' '" + d2 + "' '" + d1 + ".json'";
   CHECK(std::system(rmcmd.c_str()) == 0);
+}
+
+// The pinned reference (Sol F10): the fixtures name the exact core/ they were made from; if core/ changes, the golden
+// tests would compare against a stale reference, so this test fails until the fixtures are regenerated.
+TEST(fixtures_pinned_reference_matches_core) {
+  Json man;
+  if (!fixture_index(std::string(V4_FIXTURE_DIR) + "/MANIFEST.json", man)) return;
+  CHECK(man.contains("reference"));
+  if (!man.contains("reference")) return;
+  const Json& ref = man.at("reference");
+  for (const char* k : {"name", "core_commit", "R", "compiler", "flags"}) CHECK_MSG(ref.contains(k), k);
+  CHECK(ref.at("libm").contains("sha256"));
+  std::string core = std::string(V3_CORE_CPP_DIR) + "/..";
+  int n = 0, bad = 0;
+  for (auto& [f, h] : ref.at("core_files_sha256").items()) {
+    ++n;
+    std::string got;
+    try { got = sha256_file(core + "/" + f); } catch (...) { got = "missing"; }
+    if (got != h.str()) { ++bad; std::printf("    core file changed since the fixtures were made: %s\n", f.c_str()); }
+  }
+  CHECK(n >= 18); CHECK_EQ(bad, 0);
+  std::printf("    reference: %s, core commit %s, %d core files pinned\n", ref.at("name").str().c_str(), ref.at("core_commit").str().c_str(), n);
 }

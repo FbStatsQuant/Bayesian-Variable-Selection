@@ -103,9 +103,26 @@ jsonlite::write_json(list(cases = uidx, source = "core v3_setup + v3_start_draw 
                           note = "indices are internal 0-based; blocks in packing order; log_r by block then code"),
                      file.path(fx, "setup", "index.json"), auto_unbox = TRUE, digits = NA, pretty = TRUE)
 
+# ---- the pinned reference (INTERFACES §5.3 "reference", v0.1.5; Sol F10): exactly what produced these fixtures ----
+core_files <- sort(list.files(core_src, recursive = TRUE, all.files = FALSE))
+core_files <- core_files[!grepl("^\\.cpp_cache", core_files)]
+mk <- readLines(file.path(core_src, "cpp", "Makevars.v3"))
+libm <- "/lib64/libm.so.6"
+reference <- list(
+  name = "SMC-BVS v3.1 core (revision D + LS0 merge), Scripts/SMC_BVS/core",
+  core_commit = system2("git", c("-C", core_src, "log", "-1", "--format=%H", "--", "."), stdout = TRUE),
+  core_files_sha256 = setNames(lapply(core_files, function(f) digest::digest(file = file.path(core_src, f), algo = "sha256")), core_files),
+  R = R.version.string, Rcpp = as.character(packageVersion("Rcpp")),
+  compiler = system2("g++", "--version", stdout = TRUE)[1],
+  flags = sub("^CXXFLAGS = ", "", grep("^CXXFLAGS = ", mk, value = TRUE)),
+  libm = list(path = libm, sha256 = digest::digest(file = libm, algo = "sha256"),
+              glibc = system2("ldd", "--version", stdout = TRUE)[1]),
+  host = Sys.info()[["nodename"]])
+
 # ---- manifest ----
 files <- list.files(fx, recursive = TRUE); files <- files[files != "MANIFEST.json"]
 man <- list(generated = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z"), host = Sys.info()[["nodename"]], R = R.version.string,
+            reference = reference,
             core_cpp_key = V3_CPP_KEY, smcbvs4 = digest::digest(file = bin, algo = "sha256"),
             files = setNames(lapply(files, function(f) digest::digest(file = file.path(fx, f), algo = "sha256")), files))
 jsonlite::write_json(man, file.path(fx, "MANIFEST.json"), auto_unbox = TRUE, pretty = TRUE)

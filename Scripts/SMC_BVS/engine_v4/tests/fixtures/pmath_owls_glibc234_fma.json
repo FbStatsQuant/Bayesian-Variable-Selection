@@ -1,11 +1,13 @@
 {"libm":"/lib64/libm.so.6","libm_sha256":"840be1bbf53e1697dbb0dd258594ca70870936a5c20e1fe8ed44b34b9bc83d7e","glibc":"2.34","N":2000000,"functions":[
-  {"fn":"log","range":[1e-300,1e+12],"sha256":"164995feb48757a32cd1743916481ea7aad73c777c0b516cf5342b7a8399f10c","not_correctly_rounded":3,"max_ulp_vs_quad":1,"ns_per_call":6.98}
-, {"fn":"log_near1","range":[0.5,2],"sha256":"be4025e3d956faace7d3bbd5dda696268d53fd0b9ae2ce04992a5f52065d9c98","not_correctly_rounded":2601,"max_ulp_vs_quad":1,"ns_per_call":10.14}
-, {"fn":"exp","range":[-745,0],"sha256":"9c68e5b42ddc2763d0f039b7675098fb4c2e95ead26cb30ef2ee647cb375b673","not_correctly_rounded":1602,"max_ulp_vs_quad":1,"ns_per_call":14.68}
-, {"fn":"exp_pos","range":[0,700],"sha256":"f24a4667ec96665b03b36aa0d5ff1a620f3802945603bed0943a573b792ed51f","not_correctly_rounded":1578,"max_ulp_vs_quad":1,"ns_per_call":10.26}
-, {"fn":"log1p","range":[-0.999,1000],"sha256":"393d4ba8875c4e1927a995ab9838075c2f38f7a6457c99f5573932942a7615d5","not_correctly_rounded":39988,"max_ulp_vs_quad":1,"ns_per_call":15.20}
-, {"fn":"log1p_small","range":[1e-300,0.001],"sha256":"c0aae58cfa33115598e9124c42e09243cf64909f0f529b472a3f2f4f0dd1964f","not_correctly_rounded":16,"max_ulp_vs_quad":1,"ns_per_call":6.16}
-, {"fn":"expm1","range":[-40,1],"sha256":"c00844e2efbc4d7b5ea272330cb4eca40cb2c86dac15915249e4cdc786250def","not_correctly_rounded":22746,"max_ulp_vs_quad":1,"ns_per_call":13.66}
-, {"fn":"lgamma","range":[0.001,3e+06],"sha256":"2e128c4aca69a2d64762dd560db3fd3bbfcebdc57a4e2ed295ce527a74a02c2c","not_correctly_rounded":412936,"max_ulp_vs_quad":2,"ns_per_call":22.03}
-, {"fn":"lgamma_int","range":[1,3e+06],"sha256":"3eff706a7b26e8e59c4f8ac0cbdaf21d462c24a1cad0f1081a275ec970f7cf85","not_correctly_rounded":640129,"max_ulp_vs_quad":2,"ns_per_call":17.19}
+  {"fn":"log","range":[1e-300,1e+12],"sha256":"164995feb48757a32cd1743916481ea7aad73c777c0b516cf5342b7a8399f10c","not_correctly_rounded":3,"max_ulp_vs_quad":1,"ns_per_call":6.87}
+, {"fn":"log_near1","range":[0.5,2],"sha256":"be4025e3d956faace7d3bbd5dda696268d53fd0b9ae2ce04992a5f52065d9c98","not_correctly_rounded":2601,"max_ulp_vs_quad":1,"ns_per_call":7.75}
+, {"fn":"exp","range":[-745,0],"sha256":"9c68e5b42ddc2763d0f039b7675098fb4c2e95ead26cb30ef2ee647cb375b673","not_correctly_rounded":1602,"max_ulp_vs_quad":1,"ns_per_call":14.79}
+, {"fn":"exp_pos","range":[0,700],"sha256":"f24a4667ec96665b03b36aa0d5ff1a620f3802945603bed0943a573b792ed51f","not_correctly_rounded":1578,"max_ulp_vs_quad":1,"ns_per_call":10.60}
+, {"fn":"log1p","range":[-0.999,1000],"sha256":"393d4ba8875c4e1927a995ab9838075c2f38f7a6457c99f5573932942a7615d5","not_correctly_rounded":39988,"max_ulp_vs_quad":1,"ns_per_call":15.24}
+, {"fn":"log1p_small","range":[1e-300,0.001],"sha256":"c0aae58cfa33115598e9124c42e09243cf64909f0f529b472a3f2f4f0dd1964f","not_correctly_rounded":16,"max_ulp_vs_quad":1,"ns_per_call":6.18}
+, {"fn":"expm1","range":[-40,1],"sha256":"c00844e2efbc4d7b5ea272330cb4eca40cb2c86dac15915249e4cdc786250def","not_correctly_rounded":22746,"max_ulp_vs_quad":1,"ns_per_call":17.67}
+, {"fn":"lgamma","range":[0.001,3e+06],"sha256":"2e128c4aca69a2d64762dd560db3fd3bbfcebdc57a4e2ed295ce527a74a02c2c","not_correctly_rounded":412936,"max_ulp_vs_quad":2,"ns_per_call":21.84}
+, {"fn":"lgamma_int","range":[1,3e+06],"sha256":"3eff706a7b26e8e59c4f8ac0cbdaf21d462c24a1cad0f1081a275ec970f7cf85","not_correctly_rounded":640129,"max_ulp_vs_quad":2,"ns_per_call":17.05}
+, {"fn":"expl","sha256":"90880997dcef54b6acc1a111130e48b3b675aea3ab01b106aabe0de40bff888b","not_correctly_rounded":191853,"ns_per_call":60.12}
+, {"fn":"logl","sha256":"475c11284bfe560a27d9a71af19691da7d616bad52ac13afa30efb3d1bcd4f38","not_correctly_rounded":310852,"ns_per_call":28.48}
 ]}

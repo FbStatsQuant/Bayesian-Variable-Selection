@@ -84,3 +84,23 @@ TEST(gen_command_writes_raw_and_truth) {
   CHECK(tj.at("X_sha256").str() == hex(rd.entry("X_cm").sha256, 32));
   std::remove(f.c_str()); std::remove(t.c_str());
 }
+
+// Row ranges (for WP5's chunked evaluation): rows [a, b) equal the same rows of the full test design, bit for bit.
+TEST(gen_test_row_ranges) {
+  for (auto d : {gen::Design::AR, gen::Design::IND, gen::Design::BLK, gen::Design::ADJOPP}) {
+    gen::Spec s; s.design = d; s.n = 20; s.p = 200; s.seed = 11; if (d == gen::Design::BLK) s.rho = 0.5;
+    std::vector<int32_t> cols = {3, 50, 120}, oc, oc2; std::vector<double> Xt, yt, Xr, yr;
+    const int nt = 37; gen::generate_test(s, nt, cols, oc, Xt, yt);
+    bool ok = true;
+    for (auto [a, b] : std::vector<std::pair<int, int>>{{0, 37}, {5, 6}, {10, 30}, {36, 37}, {12, 12}}) {
+      gen::generate_test_rows(s, a, b, cols, oc2, Xr, yr);
+      ok = ok && oc2 == oc && yr.size() == (size_t)(b - a);
+      for (int i = a; i < b; ++i) {
+        ok = ok && same_bits(yr[(size_t)(i - a)], yt[(size_t)i]);
+        for (size_t c = 0; c < oc.size(); ++c) ok = ok && same_bits(Xr[c * (size_t)(b - a) + (size_t)(i - a)], Xt[c * nt + (size_t)i]);
+      }
+    }
+    CHECK(ok);
+    CHECK_THROWS(gen::generate_test_rows(s, 5, 4, cols, oc2, Xr, yr));
+  }
+}
