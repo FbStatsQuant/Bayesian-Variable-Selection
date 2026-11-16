@@ -1,0 +1,10 @@
+Lemma V checks on 1500 designs (kinds: plain, weakS0, nearJ, dupJ, dupS0, allJdup, J_mutual_dup, near1e-8, nearJ1e-6, s0zero, J_in_span_S0); eta in 0.01..100; n in 10..600; s0 in 0..3, |J| in 1..5
+(a) max over 6000 draws of [Q_S0 - Q_S] - [e'D'e + (1+2/eta) rho'] = -5.602e-08  (claim <= 0)  worst design ('J_mutual_dup', 600, 0, 4, 10.0);  draws with violation > 1e-8 rel: 0
+(b) spectrum of D': min eig = -8.008e-15 (claim >= 0), max eig = 0.999983 (claim < 1);  max over designs of log[LHS_b] - log[(1+eta)^(s0+|J|/2)] = -1.650e-05 (claim <= 0)  worst design ('weakS0', 600, 0, 2, 0.01)
+(c) max of e'D'e - e'P_S e = -8.722e-10  (claim <= 0)
+(d) Monte Carlo (2e6 draws) of E[exp(e'D'e/2)] vs det(I-D')^{-1/2}, and of the full left side vs (1+eta)^(s0+|J|/2):
+   n=30 s0=2 |J|=2 plain     eta=1.0 (max eig D'=0.983; Var of exp(q/2) finite iff < 0.5): MC E exp = 13.2393, det formula = 61.7735; (D0/DS)^(1/2)*det formula = 2.0651 <= (1+eta)^(s0+|J|/2) = 8.0000: True
+   n=30 s0=2 |J|=2 dupJ      eta=0.5 (max eig D'=0.977; Var of exp(q/2) finite iff < 0.5): MC E exp = 5.3457, det formula = 6.8506; (D0/DS)^(1/2)*det formula = 1.2414 <= (1+eta)^(s0+|J|/2) = 3.3750: True
+   n=30 s0=2 |J|=3 allJdup   eta=1.0 (max eig D'=0.048; Var of exp(q/2) finite iff < 0.5): MC E exp = 1.0503, det formula = 1.0503; (D0/DS)^(1/2)*det formula = 1.0304 <= (1+eta)^(s0+|J|/2) = 11.3137: True
+   n=60 s0=1 |J|=2 nearJ     eta=2.0 (max eig D'=0.226; Var of exp(q/2) finite iff < 0.5): MC E exp = 1.2556, det formula = 1.2558; (D0/DS)^(1/2)*det formula = 1.1601 <= (1+eta)^(s0+|J|/2) = 9.0000: True
+   n=30 s0=3 |J|=2 near1e-8  eta=1.0 (max eig D'=0.983; Var of exp(q/2) finite iff < 0.5): MC E exp = 18.0780, det formula = 61.8667; (D0/DS)^(1/2)*det formula = 2.0640 <= (1+eta)^(s0+|J|/2) = 16.0000: True

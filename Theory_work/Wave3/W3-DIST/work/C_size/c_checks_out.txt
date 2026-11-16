@@ -1,0 +1,11 @@
+V: max over draws of (a) LHS-RHS = -2.846e-05 (must be <= 0)
+V: max over designs of (b) log LHS - log RHS = -1.083e-03 (must be <= 0)
+V: min eig D' = -5.936e-16 (>= 0 up to rounding); max (lam_max D' - cn/(cn+1)) = -8.159e-05 (<= 0)
+V: min eig of (P_S-P_S0+R0-D') = -2.946e-16; min eig R0 = -2.552e-16; min eig (P_S0-R0) = -5.179e-16 (all >= 0 up to rounding)
+V: max |log D^(1) - log D| = 9.734e-13
+V-MC: lambda_max(D') = 0.127; MC mean 1.07946 +- 0.00018 vs det formula 1.07968
+S: max over draws of log[lower bound] - log[m^c_{b+}(T)/f0] = -3.119e+00 (must be <= 0)
+S: draws on B_n: 60; max over (draw, m) of log pi(|S|>m) - log[R sqrt(D_T n) c# e^Lam Theta1] = -4.913e+00 (<= 0)
+B_n: n=20 MC P(B_n^c)=2.20e-03 <= bound 3.465
+B_n: n=40 MC P(B_n^c)=3.50e-05 <= bound 2.986
+B_n: n=80 MC P(B_n^c)=0.00e+00 <= bound 2.233

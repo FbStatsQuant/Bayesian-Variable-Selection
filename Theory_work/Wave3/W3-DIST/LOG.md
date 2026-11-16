@@ -69,3 +69,37 @@ Claude inference tally: all on Claude Third (lead + 2 helpers). OpenAI: 1 Astra 
 - 18:35 — CHECKPOINT_1.md revised (reader theorem first; bridges in kill budgets and plan; TC9/TC10). HOLDS read: none.
   Run ends with the revised CP1 as the final message. Agents this leg: lead Fable 5.2; H1 Opus 5.5; H2 Sonnet 5.5;
   P1 Opus 5.5 (all Claude Third); S1 gpt-6-astra (codex, high).
+
+## Proof leg (HQ GO at CP1, restore point RP W3-DIST CHECKPOINT_1, branch theory/W3-DIST @ 8eec1b5)
+HQ decisions recorded: TC1–TC9 fixed (TC10 = companion results); kill budgets of CHECKPOINT_1 §5 approved; early
+checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → fixed σ*; CP2 soft; API attempts incoming under
+`work/api_attempts/`; second Fable decided after S-FIT attempts.
+- 2026-11-15 18:45 CST — `git pull --ff-only`; HOLDS read: none. STATEMENT v1.3.1 (editorial: earlier review verdicts
+  removed from the body for blind-read hygiene); DEPS.tsv sha refreshed (f8ff769760f69064).
+- 18:46 — Manifest S2 frozen: 54cf9123be0545bfba5228560af875214bfade4d4ca2c402780a082beae4206f (105 files, 7 extra
+  inputs; state at freeze — workers add files under `work/` only; STATEMENT, TARGET, ROUTES are not edited while S2 runs).
+- 18:47 — Launched (all async): S2 blind read — gpt-6.1-sol, codex, high (`reviews/BRIEF_S2_sol.md`; reader versions,
+  bridges, changelog tags). Stream B — Opus 5.5, Claude Third (`briefs/BRIEF_B_transfer.md`: H, T, DIST-3). Stream C —
+  Opus 5.5 (`BRIEF_C_size.md`: S, V, X1–X2). Stream D — Opus 5.5 (`BRIEF_D_output.md`: P6, DIST-C, Corollary C).
+  Stream E — Opus 5.5 (`BRIEF_E_bridges.md`: B0–B3, assembly; critical path). Stream F — Sonnet 5.5
+  (`BRIEF_F_numerics.md`). Common rules: `briefs/COMMON.md`. Stream A (lead, Fable): Lemma X steps X3–X4, in `lemmas/X.md`.
+  Agent tally this leg: 5 Claude workers (Claude Third) + 1 codex Sol.
+- 18:51 — Stream A: `lemmas/X.md` v0.1 written (steps X1, X3, X4 and the assembly of Lemma X with explicit constants: C_A = 3A + 5, C′ = 12A + 68, c = 1/2; Lemma X′ in §5). Inputs from stream C fixed in the exact forms (I-X2), (I-S), (I-V). DEPS.tsv rows X, X′ updated (UNCHECKED). Proof attempt 1 of 3 on X (kill budget). HOLDS read: none.
+- 19:05 — HQ delivered API attempts (`work/api_attempts/dist1/`, 21 files; H3: proof material only). Read X-d-1
+  (adversarial: no counterexample; (C) cannot be dropped) and X-b-1 in full; skimmed X-a-1, X-a-2, X-b-2, T-a/b/c.
+  Decision (lead): main proof of Lemma X := the fractional-moment route of X-b-1 (`lemmas/X.md` v0.2, §0–§8 reproduced,
+  §9 Lemma X′ and §10 check notes by the lead); the lead's truncated-moment proof kept as `lemmas/X_route_a.md`
+  (independent derivation). Lemma X is now self-contained modulo locked [P1]; it no longer consumes stream C's S, V,
+  X12 (which stay as independent versions and as the proofs of the stated Lemmas S and V). [P1] citations verified
+  to exist; five items flagged for the line check (X.md §10). DEPS.tsv rows X, X′ updated. HOLDS read: none.
+  API files for stream owners (C: S-*, V-*; B: T-*; E: B-*) will be attached to each lemma's pre-check as comparison
+  material, since the streams are mid-run.
+- 18:56 — Pre-check P2 launched on `lemmas/X.md` v0.2 (Lemma X, Lemma X′): Claude Opus 5.5, Claude Third, high; brief `briefs/BRIEF_P2_X_precheck.md`; comparison material X_route_a.md and API attempts X-a-1, X-a-2, X-b-2, X-d-1. Filter only; the Astra line check of X follows its disposition. Agent tally this leg: 6 Claude (Claude Third) + 1 codex Sol. HOLDS read: none.
+- 19:15 — Stream D completed (`work/D_output/P6_DISTC.md`, `COR_C.md`; DRAFT): P6, DIST-C (C-0)–(C-iv), Corollary C
+  proved taking DIST-1/2/3 as given; retention proved from the store rule; 33 code pins re-verified. Statement-change
+  requests queued (STATEMENT is not edited while S2 runs): SCR-1 (C-iii) needs e^{−ct} ≤ ¼; SCR-2 (C-i)'s "λ = 0, π(𝒯) ≥ η"
+  parenthesis is not an instance of the display (replace by the threshold form for a ∈ (0, 1]); SCR-3..5 editorial;
+  Corollary C reader text: the returned list is the best of the final-run ledger, which also holds block-table and
+  calibration-inherited models; stopped runs return a partial store; weights are returned as logs. None touches
+  TC1–TC9 (DIST-C deterministic transfers unchanged; Corollary C is TC10).
+  Pre-check P3 launched (Opus 5.5, Claude Third; `briefs/BRIEF_P3_D_precheck.md`). HOLDS read: none.

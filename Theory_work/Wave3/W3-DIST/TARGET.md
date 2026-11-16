@@ -66,10 +66,7 @@ X′ (their changes are tracked in DEPS and the changelog).
 The text between the rules is identical to STATEMENT.md §1R (the checked object is there). Its form is the lead's
 choice: a complete setup, numbered assumptions in standard terms, two displays with the rate explicit, a plain-words
 paragraph, the statement without (A4), an example, and a notation table; no internal ids. Master versions: (1.1),
-(1.2), DIST-3, DIST-C; bridges B0–B3 in STATEMENT.md §3. Candidates. Reviews so far: the blind read S1 covered the
-master versions only; the reader versions and bridges have had the Opus same-family pre-check P1
-(`reviews/P1_opus_precheck.md`: REPAIRABLE, no reader clause false under its faithful reading; all findings applied,
-`reviews/P1_disposition.md`). The cross-family check is pending.
+(1.2), DIST-3, DIST-C; bridges B0–B3 in STATEMENT.md §3. Candidates. Review record: `DEPS.tsv`.
 
 ---
 **Setup.** We observe D_n = {(x_i, y_i) : i = 1, …, n}: n independent copies of a pair (x, y), where x ∈ ℝ^p is a

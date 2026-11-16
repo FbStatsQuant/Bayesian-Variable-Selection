@@ -1,4 +1,4 @@
-# W3-DIST — STATEMENT (candidate statements; v1.3, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
+# W3-DIST — STATEMENT (candidate statements; v1.3.1, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
 
 **Status of everything in this file: CANDIDATE (scoping leg; nothing here is proved).** v1.3 = v1.2 with the dispositions of the same-family pre-check P1 (`reviews/P1_opus_precheck.md`,
 `reviews/P1_disposition.md`) and the lead's final form of the reader versions. v1.2 = v1.1 + reader versions
@@ -122,8 +122,7 @@ sentence = DIST-2 (1.2) + B0, B1 (size clause from Lemma X′). Theorem B = DIST
 W3-POST:Thm-1@1.0.0** (selection consistency of the exact posterior; status "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF
 VERIFIED (A-REV2)"). Corollary C = DIST-C (C-0), (C-i), (C-ii)(α) + Theorem A. The form is the lead's choice (HQ's
 settled note of 2026-11-15); the text between the rules is the proposed main-text wording, with no internal ids.
-Same-family pre-check: `reviews/P1_opus_precheck.md` (REPAIRABLE; all findings applied, `reviews/P1_disposition.md`).
-Cross-family check: pending.
+Review record: `DEPS.tsv` and the changelog.
 
 ---
 **Setup.** We observe D_n = {(x_i, y_i) : i = 1, …, n}: n independent copies of a pair (x, y), where x ∈ ℝ^p is a
@@ -292,8 +291,7 @@ statement and is not restated.
 **Lemma H (Hellinger reduction; deterministic).** For every (S, θ, v) with v > 0, with Δ(x) := (â + xᵀb) − (α* + xᵀβ*):
   d_H²(f_{S,θ,v}, f*) ≤ (v/σ*² − 1)² + E_x[min{1, Δ(x)²/(4σ*²)}].
 *Proof.* Pointwise in x, H² = 1 − A·B(x) ≤ (1 − A) + (1 − B(x)); 1 − A ≤ 1 − A² = (√r − 1)²/(r + 1) ≤ (r − 1)², r = v/σ*²;
-1 − B(x) = 1 − exp(−Δ(x)²/(4(v + σ*²))) ≤ min{1, Δ(x)²/(4σ*²)}. Integrate over ν_x. ∎ (S1: "SOUND-AS-STATED"; not a
-line check.) In-sample: Δ_i := Δ(x_i) = ε̄ + (μ̂ − μ)_i, so n⁻¹Σ_iΔ_i² = ε̄² + ‖μ̂ − μ‖²/n, μ̂ = X_Sθ; valid when true
+1 − B(x) = 1 − exp(−Δ(x)²/(4(v + σ*²))) ≤ min{1, Δ(x)²/(4σ*²)}. Integrate over ν_x. ∎ (not line-checked.) In-sample: Δ_i := Δ(x_i) = ε̄ + (μ̂ − μ)_i, so n⁻¹Σ_iΔ_i² = ε̄² + ‖μ̂ − μ‖²/n, μ̂ = X_Sθ; valid when true
 columns were dropped.
 
 **Lemma T (distribution-free sample-to-population transfer on sparse directions) [S1-01].** Let x₁, …, x_n be i.i.d.
@@ -315,8 +313,7 @@ There are C, c, n₀ depending on (σ*², M, B, κ₀) such that for n ≥ n₀,
   log R^T_m + ½ log D_T + ½ log n + C[1 + √t + t/√n] ≤ −2t   (R^T_m := Σ_{k>m} q_k/w(|T|)):
   P_ε[ π(|S| > m) > e^{−t} ] ≤ Ce^{−t} + Ce^{−cn}.
 With T = S₀, ϑ = θ* (B = M + M′), R_m ≤ 2(2p)^{s₀}2^{−m} and D_{S₀} ≤ (n+1)^{s₀}, m = m_n(t) qualifies for t ≥ log n.
-(Strengthens the tail of [W3P] Lemma 1a′ / [P2] Claim B, whose failure probability is of order 1/log L. S1:
-"SOUND-AS-STATED" for the S₀-reference form; not a line check.)
+(Strengthens the tail of [W3P] Lemma 1a′ / [P2] Claim B, whose failure probability is of order 1/log L.)
 
 **Lemma V (helper H1, unchecked).** For S = S₀ ∪ J ⊇ S₀ and η > 0: (a) Q_{S₀} − Q_S ≤ eᵀD′e + (1 + 2/η)ρ′ with
 0 ⪯ D′, ‖D′‖ < 1; (b) E[(D_{S₀}/D_S)^{1/2} exp(eᵀD′e/(2σ*²))] ≤ (1 + η)^{s₀+|J|/2}; (c) eᵀD′e ≤ σ*²χ²_{d_J} + ‖P_{S₀}e‖².
@@ -350,8 +347,7 @@ displacement O(tℓ_n/n) is absorbed in C√(t/n) since √(t/n)·ℓ_n → 0 on
   for n ≥ 3, with probability ≥ 1 − 4p·exp(−c₁n/K⁴) (c₁ absolute): ½ ≤ ŝ_j²/Var(x_j) ≤ 2 for every j ≤ p. On this event no
   column is dropped (p_ret = p ≥ 2, s₀ = |supp β*|), and under (A5): ‖μ‖² ≤ 2s²b̄²σ*²·n and ‖θ*‖² ≤ 2sb̄²σ*², i.e. (E; 2s²b̄²) and
   (C; 2sb̄²) in units of σ*². (Triangle inequality ‖μ‖ ≤ Σ_j|β*_j|·ŝ_j√(n−1).) For DIST-2 only the coordinates in supp β*
-  and two others are needed. (P1: "SOUND-AS-STATED"; a same-family pre-check, not a line check. v1.0's B1 was false,
-  S1-05; v1.2's variant B1′ is dropped — it implied (A5) and was not an alternative, P1-14.)
+  and two others are needed. (v1.0's B1 was false; v1.2's variant B1′ is dropped — it implied (A5).)
 - **B2-core (sparse lower bound for the sample second moments, with an intercept) [P1-07].** Under (A3) with sparsity q,
   put q′ := min(q, p). If q′·log(ep/q′) ≤ c₂n/K⁴ then with probability ≥ 1 − exp(−c₂n/K⁴): for all a ∈ ℝ and all u with at
   most q nonzero entries, n⁻¹Σ_i(a + uᵀz_i)² ≥ ½(a² + Var(uᵀz)); in particular uᵀΣ̂^z u ≥ ½·uᵀCorr(x)u for the centred sample
@@ -426,4 +422,5 @@ posterior with the contrast model (locked T01, [P1] `thm:T01i`, `lem:spec`, `lem
 | 1.3 | Setup: constant columns removed; σ² in original units; intercept ȳ + (x − x̄)ᵀβ per draw; triangular arrays; notation table | EQUAL | P1-06, P1-13 | P1-06, P1-13 | pending |
 | 1.3 | Corollary C: "completed", exact arithmetic, scope, run-uniform wording; retention sentence restored | EQUAL / STRONGER (retention: an evaluated true model with posterior probability > ½ is kept) | P1-09, P1-12 | P1-09, P1-12 | pending |
 | 1.3 | bridges: B0 pathwise; B1 n ≥ 3; B2-core with q ∧ p; B2 by interlacing; B1′ dropped | EQUAL (B0, B1, B2-core); repair of a wrong formula with the same conclusion (B2) | P1-04, P1-05, P1-07, P1-11, P1-14 | as listed | pending |
-No WEAKER row touches a target clause fixed so far (TARGET.md §5); the reader clauses TC9/TC10 are proposed at CP1 in their v1.3 form.
+| 1.3.1 | body annotations quoting earlier review verdicts removed (blind-read hygiene) | EQUAL (editorial only) | PROTOCOL_v4 standing rule: blind briefs carry no prior verdicts | lead, before blind read S2 | — |
+Target clauses TC1–TC9 fixed by HQ at CP1 (2026-11-15) in their v1.3 form; TC10 = companion results. No WEAKER row touches a target clause.
