@@ -228,3 +228,12 @@
 - **D35.** Card forwarded to HQ (consultant): A+, E+, E-floor+ DEFER as POST2-O1..O3; B+ REJECT (no bearing); gate PASS
   with named open items. New expectation lower bound on every design → **post-freeze rider POST2-R1** (not a widening of
   T12: W3-PSHARP-R is in its statement lock; one step unverified). Queued.
+
+## 2026-11-15 20:52 CT — H5 card 6 (row 1.1) agreed
+- **D36.** Row 1.1 better = PASS with named open items O1–O3 (B+ rejected; N1 → POST2-R1). Conditions to READER: floor
+  "sufficient; not known to be necessary (O3)"; Thm 1′ "no eigenvalue condition off S₀"; improvable + open necessity kept
+  on POST2:C/E; "sharp" only on witness designs (1/√n on every design) until N1; no displayed margin value. Gate set after
+  1–4 are in the files.
+- Post-freeze order (owner tie-break): **POST2-O3 (E-floor+) first**, then **POST2-R1 (N1) with POST2-O2 (E+)**, each
+  kill-budgeted. O2 rider must price the MISR rebuild: if c₁ < c₀ (258.9 vs 192 at s = 2, A = 1) MIS(i′) covers C-MIS's
+  whole inclusion range → C-MIS → MISR supersession possible (H5).

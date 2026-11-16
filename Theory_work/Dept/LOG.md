@@ -83,3 +83,4 @@
 - 20:47 — SHARP3b in (POST2 C, E: IMPROVABLE-EASY; main f237bfa3); READER to triage with R03b → CARD_ROW11_R03b.md → HQ.
 - 20:49 — records copy landed (Engineering ~20:44): theory_w2 5,957 files / 452,990,677 B; theory_w3 (P6) 1,858 / 3,015,990 B. Independent sha256sum -c by the department: 0 mismatches both; counts/bytes match; indexed in SMC_Theory_Department/INDEX.md.
 - 20:50 — row 1.1 card forwarded to HQ (D35); POST2-R1 queued post-freeze.
+- 20:52 — H5 card 6 agreed (D36); conditions sent to READER; post-freeze order O3 → N1+O2 queued.
