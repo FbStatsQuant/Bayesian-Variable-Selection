@@ -81,3 +81,10 @@ T02(ii♯)	SOP:TH09	T02 belongs to the T01-T03 package behind T03♯
 R03 §5A construction	-	review-internal construction (W3-POST reviews/R03), not a registered claim
 PROGRAM item 2	-	Wave 3 program premise (assumption A:P-START), not a claim
 C-MIS:GDb	C-MIS:GD(b)	bracket-free alias (HQ 2026-11-12): the conditional-on parser cannot read ids with parentheses
+[P1]	SOP:TH09	W3-POST(2) STATEMENT alias: locked T01/T02 proof (W3-POST2 STATEMENT.md:11)
+[P3]	SOP:TH09	W3-POST(2) STATEMENT alias: locked T03 proof (W3-POST2 STATEMENT.md:11)
+[T03R]	SOP:TH128	W3-POST(2) STATEMENT alias: restated T03 proof ARC/W1-T03R (W3-POST2 STATEMENT.md:11-12)
+[L1a′]	W3-POST:Lemma-1a'	W3-POST2 STATEMENT.md:12-13
+[LB]	W3-POST:Prop-LB	W3-POST2 STATEMENT.md:13
+[W3P] Theorem 1	W3-POST:Thm-1	W3-POST2 STATEMENT.md:12 ([W3P] = W3-POST STATEMENT v1.4)
+[POST]	W2-APP:POST	W3-POST(2) STATEMENT alias (W3-POST STATEMENT.md:12)

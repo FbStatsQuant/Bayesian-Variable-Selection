@@ -408,7 +408,9 @@ real runs only on 0 problems.
     except with probability ≤ n^{−cM};
   - (ii) the model size is bounded.
 
-  No beta-min, no identifiability. Without (A4): one extra log p. Parity:
+  No beta-min, no fixed lower bound on eigenvalues ("no identifiability" withdrawn per Sol S2: (A4) makes sparse
+  coefficients distinguishable; correction 11-15). Prior as coded: BB(1, r), r = non-constant predictors. Without (A4): one
+  extra log p. Parity:
   - matches Song–Liang on metric, form, coded prior and sparsity;
   - beats them on rate (no diverging factor) and on coded output;
   - short on second-moment-only predictors, approximate sparsity and exponential p.
@@ -421,3 +423,49 @@ real runs only on 0 problems.
 - **API proof attempts:** batch msgbatch_01BEGZfGBtUEbs5hCBdvQEaG.
   - 21 requests, cards X×6, S×3, T×3, V×3, F×3, B×3; ≤ $32;
   - tool `API_AUDIT/dist_attempts.py`; outputs in `API_AUDIT/dist1/`, which HQ copies to the lead's `work/api_attempts/`.
+
+- 2026-11-15 ~21:30 CT: W3-DIST Sol S2 (reader versions) REPAIR REQUIRED 3M/4m, fixed in STATEMENT v1.4. Theorem A unchanged
+  (EQUAL, faithfulness wording; no H5 card). The 19:10 entry corrected. Companion Theorem B false as written ((A6) needed b_n > 0):
+  WEAKER on a non-target clause, reported at the next checkpoint. Lemma X/X′ line-checked VERIFIED.
+
+## 2026-11-15 ~22:30 CT — p = 1M plan approved (HQ as CEO; owner: "as CEO you either approve or not")
+- Engineering deliverable (1): a plan, with no NOTS obstruction. Batched kernel measured 8–15× faster on Owls; a precise 1M fit ≈ 963
+  core-h / 2.2 h at the 1,536-CPU cap.
+- **Approved: budget A + D ≈ 24.6k core-h.** One 1M fit at n = 1,000 is conditional on the 10⁵ π̂(S₀)-by-n trend. Released per gate;
+  a re-size beyond the total, or a Sol-review change above ~15%, comes back to HQ.
+- **Approved:** the "validated" definition; the evidence wording at 1M; competitors and framing ("not found in the literature";
+  1M claims as posterior summaries).
+- G0 (≈ 57 core-h worst case) approved earlier; submitted by Engineering from Owls.
+
+## 2026-11-15 ~22:45 CT — H5 card 5 (provisional headline list): consultant AGREE with one OBJECT, adopted
+Abstract split adopted provisionally. Conditions:
+- masters PROVED-CHECKED; strength gates PASS; W3-DIST 2.1 only after CP3; the owner may re-order;
+- a fresh FAITHFUL fidelity read;
+- no unstated unchecked conditions;
+- pooled-Ẑ corollary 4.1 registered and checked.
+
+Changes:
+- row 1.1 re-based on W3-POST2 A1 + C (E as variant) or explicit "better" disposals;
+- F-UNI gate PENDING to be resolved before the 3.1 delivery clause;
+- MISR flag on MIS(i)/(ii), Cor-G(b) as the reader version;
+- setting line states the Gaussian rows;
+- add 3.7 certified screening to the abstract; 3.6 a candidate; 2.2 POST2:D the pillar-2 fallback.
+
+## 2026-11-15 ~23:00 CT — Lean Department launch set for Thu 11-19; Theory 6th slot
+- From the Theory Department's LEAN_READINESS.md:
+  - Level 1 ready now: SL0, LT♯ sup-norm core, T01 prior counting, DIST Lemma H (≈3–4 lead-days); then a shared score base
+    (≈1–1.5 wk);
+  - Level 2 order: DIST-1, W3-POST:Thm-1, RM2-F.
+- **HQ: launch the SMC - Lean Department Thu 11-19** (inventory + Level-1 batch). Level 2 from Mon 11-23. Owner priority:
+  "consistency results and even their lean parts".
+- Theory gets a temporary 6th lead slot for W3-MISR-R until PSMC-S0 closes.
+
+## 2026-11-15 ~21:45 CT — OVERNIGHT MODE ON (owner: "until tomorrow morning, you have full authority for any decision")
+HQ decides everything under POLICIES §11 limits: within existing envelopes and accounts; nothing irreversible or
+outward-facing; every decision tagged "(overnight)"; morning brief for the owner.
+- (overnight) ~22:00 CT, task J: approved a case-preserving accept-identity tool fix (bvsreg `_pkey`; Windows-recorded paths
+  read stale on Linux; 49 of 57 records match once fixed) with a regression test, an Opus review, and a Linux re-record
+  (PSHARP first). Manifest drift from the citefix merge (4 line-number re-points in C-MIS EXT inputs of START/MISR
+  manifests): Opus diff check + re-frozen manifests with HQ seat carriers now; tool change (EXT inputs verified at their
+  freeze commit) after Friday. Cont-F/R recorded as-is (implication lemmas consume RM-F/R by design). New Theory protocol
+  rule: a manifest-impact check before merging edits to files listed in accepted manifests.

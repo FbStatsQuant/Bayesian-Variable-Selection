@@ -91,6 +91,8 @@ PASS2_TICKETS = ["W3-RM", "W3-POST2", "W3-POST", "W2-LOC2", "W1-GEN", "W1-PXN", 
                  "C-ENG", "W2-APP"]
 
 
+SHARP3_IDS = ["W3-SAMP:C", "W3-SAMP:TR", "W3-SAMP:LT#", "W3-SAMP:D", "W3-SCR:A1"]
+SHARP3B_IDS = ["W3-POST2:C", "W3-POST2:E"]  # 2026-11-15, row 1.1 re-base  # 2026-11-15, W3-READER strength gates
 SHARP2_TICKETS = ["W3-MISR", "W3-START", "W3-START2", "W3-RM2", "W3-PSHARP"]
 
 
@@ -101,6 +103,10 @@ def select(rows, mode):
     if mode == "pass3":  # remaining author-only PROVED claims of the factor-design tickets
         return [r for r in rows if r["status"].startswith("PROVED") and "PROVED-CHECKED" not in r["status"]
                 and r["ticket"].startswith("W2-FAC") and r["file"].endswith(".md")]
+    if mode == "sharp3":  # one claim per request (max_tokens 64000)
+        return [r for r in rows if r["id"] in SHARP3_IDS]
+    if mode == "sharp3b":
+        return [r for r in rows if r["id"] in SHARP3B_IDS]
     if mode == "sharp2":  # 2026-11-15: main results of the tickets recorded 11-12/13 (sharpness, not correctness)
         return [r for r in rows if r["ticket"] in SHARP2_TICKETS and "PROVED-CHECKED" in r["status"]
                 and r["kind"] in ("theorem", "proposition", "corollary") and r["file"].endswith(".md")]
@@ -146,6 +152,8 @@ def build(outdir: Path, mode="pass1"):
     items = sorted(byfile.items())
     if mode == "sharp2":  # 2026-11-15: sharp2 v1 hit max_tokens 24000 on thinking; split to <= 4 claims per request
         items = [(cf, cl[i:i + 4]) for cf, cl in items for i in range(0, len(cl), 4)]
+    if mode in ("sharp3", "sharp3b"):
+        items = [(cf, [c]) for cf, cl in items for c in cl]
     for n, (cf, claims) in enumerate(items):
         tdir = (ROOT / cf).parent
         if tdir.name == "lemmas":
@@ -276,5 +284,9 @@ if __name__ == "__main__":
         build(out, "sharp")
     elif cmd == "buildsharp2":
         build(out, "sharp2")
+    elif cmd == "buildsharp3":
+        build(out, "sharp3")
+    elif cmd == "buildsharp3b":
+        build(out, "sharp3b")
     else:
         {"build": build, "count": count, "submit": submit, "wait": wait}[cmd](out)

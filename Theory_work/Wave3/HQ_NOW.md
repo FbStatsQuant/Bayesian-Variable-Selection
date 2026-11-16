@@ -1,5 +1,33 @@
 # HQ now (resume card; HQ keeps this current)
 
+## DATA OF RECORD: DESTINATION (owner 11-15)
+- The laptop (Felipe_Bedoya) is often off when the owner is away. The **desktop (DESKTOP-955G53S, HQ's machine) is always on**.
+- The owner gives a desktop local storage path on 11-16. Then the desktop becomes the primary destination for heavy data
+  of record (NOTS → desktop; the desktop already has NOTS access), and the laptop route stays secondary/opportunistic.
+  Until then, records stay on Owls NFS.
+
+## PENDING OWLS T3 RESTART (agreed with BNP Lean HQ, peer; thread mcp:0a4bc001-e5d5-40be-b36a-3d4f45984c49)
+- Purpose: set Claude Code's temp directory for the T3 server on Owls to NFS (e.g. /home/fb31/.claude_tmp/) to end the root-disk ENOSPC spikes.
+- When: BNP sends a "quiet window" (expected 11-16 early afternoon CST). HQ pauses SMC departments' leads, restarts, verifies, then messages BNP back. BNP launches nothing until confirmed.
+- BNP already moved its temp to /home/fb31/bnp_tmp and removed 73 stale sandboxes (11-15).
+
+## USAGE NOTE (owner, 11-15 ~21:30 CT; all times Central)
+- Tonight: keep the rhythm. Tomorrow (11-16) probably pace down a bit: Claude Third is burning about a week of Ultra in
+  about 2.5 days (new account, odd reset schedule). The two companies together used ~2B tokens in ~4 h; this pace is not
+  the norm.
+- HQ on 11-16 morning: check the account and Codex meters, then propose a pacing plan to the owner (concurrency per
+  department, account split, Codex level) before the departments ramp up.
+
+## CODEX PACING LEVEL (owner sets; POLICIES §14): **0 (normal)** since 2026-11-15
+
+## ACCOUNT ALLOCATION (owner sets; HQ relays to all managers)
+- Current (2026-11-15): all new department agents on **Claude Third**; HQ and the Writing Department on Claude Personal.
+
+## PRIORITY ORDER (owner 2026-11-15, evening)
+1. All consistency results (selection + distribution / W3-DIST) **and their Lean parts** come first.
+2. Parallel-method theory (T-MERGE, EVAR, POOL) is NOT a priority now; parked for the scaling paper.
+3. **Engineering: make p = 10⁶ work** (owner 11-15: "I need the 1 mil to work out … cherry on top … impressive paper"). Plan A+D approved (≈24.6k core-h). HQ tracks: G0 kernel speed on NOTS → EXP-CP1 v2 (Sol fold-in) → 10⁴ overlap and precision → 10⁵ rung → first 1M fit. Unblock fast.
+
 ## TOP PRIORITY (owner 2026-11-15): W3-DIST — distribution consistency (Song–Liang Thm 1–2 parity)
 "It needs to happen." It outranks W3-PATH, T7 and the riders in every resource conflict. Lead: Fable 5.2 on Claude Third
 (Owls, thread mcp:launch:75635c1f…); team of Opus/Sonnet workers on Claude Third after CP1; parity checklist = BRIEF
@@ -12,7 +40,7 @@ restore points + checkpoints); the owner may talk to any department directly; HQ
 - W3-READER (Opus): mcp:launch:2a4462b2… → CP1 (claims card by the five pillars; reader versions; notation; method intuition).
 - **SMC - Theory Department** (running; Opus 5.5 high, Claude Third, Owls): mcp:launch:21e33dae…; brief `Theory_work/Dept/BRIEF.md`;
   worktree /home/fb31/BVS-wt/THEORY-DEPT, branch dept/theory. Owns: riders queue, T-PART (with Engineering OD-5),
-  parallel-SMC campaign proposal by Thu. HQ keeps W3-DIST, W3-READER, CP3 acceptance, headlines, merges, API.
+  parallel-SMC campaign proposal by Thu. Since the 11-15 evening handover (owner) it also manages W3-DIST, W3-READER and the recorder; HQ keeps CP3 acceptance, headlines, merges, API.
 - Handbook for everyone: `POLICIES.md` (repo root). Departments push their own branches and open PRs; HQ merges.
 - **Owner batch (when Felipe asks):** Engineering OD-1 fixed N, OD-2 E2 escalation, OD-3 B2-3 cost column, OD-5
   partition (T-PART), OD-8(b) per-particle streams [OP-law] (dept recommendation); after ENGINEERING_SPEC v1.
@@ -22,7 +50,7 @@ restore points + checkpoints); the owner may talk to any department directly; HQ
 - **SMC - Lean Department** (future; owner 11-15: launch "when we have more material": i.e. once stable checked headline theorems exist, earliest after the theory freeze / W3-DIST CP3; workspace READY: Lean/BRIEF.md, Lean/BVSCert, worktree /home/fb31/BVS-wt/LEAN; thread to be launched by HQ, not yet created; GO = owner + HQ): Lean/BRIEF.md, worktree /home/fb31/BVS-wt/LEAN.
 - Candidates next: Parallel-SMC theory + evidence variance (after the freeze).
 - W3-DIST lead (Fable 5.2): mcp:launch:75635c1f… → CP1 pending. API attempts after CP1. Snapshot cron */15 → theory/W3-DIST.
-- **SMC - Engineering Department** (was "Experiment p = 1M"; renamed by owner 11-15; Opus 5.5): mcp:launch:dac077c2… → EXP-CP1 (plan). REQUESTS.md = NOTS queries for HQ. Snapshot → exp/P1M.
+- **SMC - Engineering Department** (was "Experiment p = 1M"; renamed by owner 11-15; Opus 5.5): mcp:launch:dac077c2… → EXP-CP1 (plan). Owls has NOTS access (since 11-15). Snapshot → exp/P1M.
 - PR #10 (Actions CI): merge after the editorial-pass citecheck fixes. Protocol: PROTOCOL_v4.md (NORMAL mode).
 
 ## sharp2 riders (API sharpness batch 11-15, triage `API_AUDIT/sharp2/TRIAGE.md`; A 17 / B 11 / C 0 / D 2; ~8 real)
