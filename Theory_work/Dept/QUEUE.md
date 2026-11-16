@@ -52,6 +52,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | SL0 PC check (RUNNING, pre-freeze per HQ) | C-PACK:SL0: diff check of the 5 files changed since the C1 snapshot → record SL0 → drop SL0 from 11 conditional statuses | D48 |
 | accept-identity follow-ups | NB-3 sunset of the legacy Windows fallback; NB-4 compute identity once | CR_accept_identity_opus.md |
 | Cont-R TH05.0 condition | Cont-R still lists SOP:TH05.0 (inherited via the removed RM-R edge); drop via a new full RM2 checkpoint | recorder note 11-16; HQ 11-16: conservative (extra condition only), post-freeze package together with TH05.0's own acceptance |
+| Post-freeze: IDEAL-W⁺ ceilings | do the two lifted code ceilings bind in the 2,400-fit / P6 / SCR logs? never → say so in body; yes → sharpness/rider list (RM2-R lead note post_cp3/IDEALW_BINDING.md) | HQ card 14, 11-16 |
 | START2-R / RM2-R acceptance | CP3 accepted by HQ 11-16; card 14 (rows 3.2/3.3) with consultant; recorder tasks U/V dry after T; real after card 14 + HQ GO; E items → editorial batch | 11-16 |
 | DIST-2 'best rate ≍ (1+s₀^r)…' gloss (STATEMENT:96-97, in span) | RT1 Sol: LOOSE → erratum in editorial batch + D71 span sweep; true dependence (1+s₀^r)³ (item 9) | RT1 11-16 |
 | DIST 9 unharvested-strength items → HQ one-pager | with DIST CP3 package: gain + cost each (TARGET §4; item 8 = ε_n² ≍ (1+s₀) log p/n with constant free of A; item 9 = true s₀-dependence of the rate vs SL s log p/n) → post-freeze sharpness review (consultant) | HQ 11-16 |
