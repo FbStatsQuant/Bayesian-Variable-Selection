@@ -24,21 +24,38 @@ PROVED-CHECKED is called checked; "conditional on …" is carried.
 (S2) Asymptotics: $n\to\infty$, $p=p_n$ with $2\le p\le n^A$ for a fixed $A\ge1$ ($p\gg n$ allowed).
 (S3) "The method" means the method as coded, under the standing conventions of `NOTATION.md` §5 (exact arithmetic,
 shipped configuration, admissible runs). (S3) matters only for Theorems 5–8.
-(S4) *Delivery conventions* (used only by the "always produces output" clauses of Theorems 6–7) [S1-F2]: an idealised
-machine (exact unit-cost arithmetic; no integer or index overflow; every memory and worker allocation within the
-declared memory succeeds; the build and its dependencies work; no external interruption or worker crash); the
-covered configuration (production core with the local search from the start mode and the tie-aware start-mode
-fallback; default summaries only; serial execution or a fixed number of workers; fixed number of islands); ideal
-independent uniform random numbers; the method's stop/return rule and stop-only resource guard as coded (a stopped run
-returns no estimates); the local search from the start mode starting at the smallest, lexicographically first maximiser
-of the start law, computed by the tie-aware routine within its stated cost [R3]; a valid seed; and a declared memory
-and time allocation at least the method's polynomial envelopes in $(n,p_{\mathrm{raw}})$, including its preflight bounds
-(listed in the paper's appendix). These are operational assumptions; they are not consequences of (S1)–(S3) or of any
-design condition.
-(S5) *Sampler conventions* (used only by Theorem 10 and the pooled-evidence remark): the final run's random numbers are
-ideal uniforms, independent of the data and of the calibration's random numbers; the coded start sampler draws exactly
-from $\pi_0$ and the coded MCMC steps realise their stated kernels; the calibration is a function of the data and its
-own random numbers [R4].
+(S4) *Delivery conventions* (used only by the "always produces output" clauses of Theorems 6–7) [S1-F2, S2-F1] — the
+delivery contract of the method, incorporated by reference and stated here in words: (i) *idealised machine*: exact
+arithmetic at unit cost (including exp and log); no integer, index, stream-id or allocation overflow; wall time at most
+$\tau\cdot(\text{operation count})+\tau_0$ and peak memory at most $\beta\cdot(\text{words held})+\beta_0$ for fixed constants
+$(\tau,\tau_0,\beta,\beta_0)$; every allocation within the declared memory succeeds; the build and its dependencies work; no
+external interruption or worker crash; (ii) *covered configuration*: the production core with the local search from the
+start mode (cap $\ell_n+|\tilde S_0|$) and the tie-aware start-mode fallback, implemented with
+$O\big(p\sum_b(2^{|C_b|}+(K+1)^2)\big)$ operations and $O\big(\sum_b2^{|C_b|}+J(K+1)\big)$ storage; the local search from the
+start mode starting at the smallest, lexicographically first maximiser of the start law; the default list of
+summaries only; certificate computations with declared polynomial operation and memory budgets, included in the
+allocation; serial execution or a fixed number of concurrent workers (memory envelope multiplied by that number); fixed
+number of islands; the grid fallback switched on (shipped default); (iii) *random numbers and stops*: ideal independent
+uniform random numbers; the method's stop/return rule and stop-only resource guard as coded (a stopped run returns no
+estimates); (iv) *inputs and allocation*: a valid seed (integer in $[1,2^{31}-1]$) and a declared memory and time
+allocation $(\mathrm{mem}_n,\mathrm{time}_n)$ at least the method's explicit polynomial work and memory envelopes in
+$(n,p_{\mathrm{raw}})$, including the preflight bounds and the local-search archive and time bounds (stated in full in the
+paper's appendix). These are operational assumptions, not consequences of (S1)–(S3) or of any design condition.
+*Source of record:* `Theory_work/Wave1C/C-DLV/STATEMENT.md:21-46` (IDEAL-W, EX-A as a cost model, MACH, CONFIG,
+TDP-IMPL, valid inputs, declared allocation) and the amended allocation of `Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:29-62`
+($W_G$, $M_G$, $P_0$, $P_1$, $\bar P_t$, certificate budgets, the LS0 preflight addition), as imported by
+`W2-UNI:F-UNI@1.1.0` (`L5_delivery.md:7-12`).
+(S5) *Sampler conventions* (used only by Theorem 10 and the pooled-evidence remark) [R4, S2-F2] — the sampler contract,
+incorporated by reference and stated in words: exact arithmetic; within each random stream, fresh independent ideal
+uniforms; the final run's stream for each island independent of the calibration's streams; the coded start sampler
+returns exact draws from $\pi_0$ **and** the reported start normaliser equals $\sum_{S\in\Omega}\gamma_0(S)$ exactly; the coded
+MCMC steps realise their stated kernels, applied in a uniformly random order independent of the state; the calibration
+record is a function of the data and the calibration streams; the island record is a measurable function of the
+calibration value and its stream; statements about estimates refer to the potential (uninterrupted) run, identified
+with the reported fields on completed runs. *Source of record:* `Theory_work/Wave1/W1-N1/STATEMENT.md:70-88` (EX-A,
+EX-S/H-U, START, KERNEL, CAL, SI, MEAS, potential run; START and KERNEL with inherited status "PROVED (candidate),
+code-checked; CHK_INHERITED VERIFIED WITH AMENDMENT"), the code bridge `W1-N1/lemmas/L1_bridge.md:33-55` (measurability,
+control flow), and `W3-SAMP/STATEMENT.md:29-53, 64-70, 90-95` (localisation, production values, Lemma PC).
 
 
 **Row structure (for in-place updates).** Each theorem section is one card row, delimited by
@@ -91,7 +108,7 @@ $$
 (Expectation over the noise, design fixed. With the second form of (A6), $n_0$ depends also on the divergence of
 $\theta^*_{\min}\sqrt{n/\log n}$.)
 
-**Theorem 1′ (no eigenvalue condition off $S_0$).** Replace (A4) by
+**Theorem 1′ (no eigenvalue condition off $S_0$ beyond the vanishing floor (A5)).** Replace (A4) by
 - **(A4′) Floor on the truth and an identifiability margin.** $\lambda_{\min}(\hat R_{S_0})\ge\varphi_0^2$, and every model
   $S$ with $|S|\le K$, $S_0\not\subseteq S$ and at most $j_0:=\lceil(2A+1)s_0\rceil+1$ variables outside $S_0$ leaves
   residual signal $\|(I-P_S)X\theta^*\|^2\ge c\,\sigma_*^2\log n$, with a fixed $c>c_1(s_0,A)$, where $c_1(s_0,A)$ is an
@@ -103,7 +120,8 @@ $(s_0,A,\sigma_*^2,\bar\theta,\varphi_0,g_0,c)$). [H5-1]
 *Remarks (go to the paper's remarks, not the statement).* (o) [H5-1] (A5) can be weakened to a condition on the
 Occam factors of over-fitted models (a "superset Occam sum"); a readable sufficient form is determinant growth,
 $\det H_{S_0\cup J}\det(G_{S_0}+I)/(\det H_{S_0}\det(G_{S_0\cup J}+I))\ge[c_D(n+1)]^{|J|}$ for $1\le|J|\le3(A+1)(s_0+1)\log n$.
-In Theorem 1′ the margin replaces both the floor off $S_0$ and beta-min: under (A4) and (A6) it holds with
+In Theorem 1′ the margin replaces the bounded-size floor (A4) off $S_0$ and beta-min (the vanishing floor (A5) on
+$O(\log n)$-sets is kept) [S2-F6]: under (A4) and (A6) it holds with
 $c=C_\beta^2\varphi_0^2(1-1/n)$, so Theorem 1′ contains Theorem 1 when $C_\beta^2\varphi_0^2>c_1$; for
 $c_0<C_\beta^2\varphi_0^2\le c_1$ the two coexist (both are explicit constants depending only on $(s_0,A)$, not
 optimised) [H5-6]. (i) The last inequality holds for every data set; with the
@@ -181,6 +199,8 @@ and give the formulas in an appendix, without numerical values [H5-6]. Named ope
 - v0.3 2026-11-16: [H5-1] re-based on W3-POST2 C (uniform expectation rate; conclusion STRONGER, same hypotheses) with
   Theorem 1′ (W3-POST2 E: identifiability margin, no floor off $S_0$, no beta-min) and remark (o) (W3-POST2 A1).
   Masters C/E/A1/A0 below PROVED-CHECKED until recorded.
+- v0.6 2026-11-16: [S2-F6] Theorem 1′ title: "no eigenvalue condition off $S_0$ beyond the vanishing floor (A5)" (EQUAL;
+  description).
 - v0.5 2026-11-16: [ENG-D17] remark (vii) on the moderate-$n$ shape of the posterior (EQUAL; description only).
 - v0.4 2026-11-16: [H5-6] consultant's conditions: "off $S_0$" wording for Theorem 1′; (A4′) floor line "sufficient;
   not known to be necessary (O3)"; no numerical constant values; rate-scope remark (vi) (EQUAL; wording).
@@ -566,6 +586,8 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 - v0.3 2026-11-16: [R3] (S4) completed from the delivery premise table (EX-S, stop/return rule, stop-only guard, e4 tie
   rule; STRONGER convention list, now faithful); F-UNI qualifications quoted; [H5-2] delivery clause out of the
   abstract until F-UNI's correctness gate is resolved.
+- v0.4 2026-11-16: [S2-F1] (S4) carries MACH, CONFIG, TDP-IMPL and the amended allocation by exact source reference
+  (STRONGER convention list, now faithful).
 <!-- ROW thm6 END -->
 
 ---
@@ -643,6 +665,7 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
 - v0.2 2026-11-15: S1 fixes [S1-F2] delivery under (S4) (WEAKER unconditional clause).
 - v0.3 2026-11-16: [R3] non-constant raw columns stated (input validity of the delivery result); $N_l$, $L_n$ deterministic
   (as the master's (W-loc)); (S4) completed (STRONGER, now faithful).
+- v0.4 2026-11-16: [S2-F1] as Theorem 6 (S4).
 <!-- ROW thm7 END -->
 
 ---
@@ -730,17 +753,26 @@ $y^{\mathrm r}=\alpha\mathbf 1+X\theta^*+\varepsilon$ with a deterministic $\the
 - **(A3) Population sparse eigenvalue floor.** $\lambda_{\min}(\Sigma_{n,S})\ge c>0$ for every $|S|\le5(A+1)(s_0+1)\log n$.
 - **(A4) Visibility** and **(A5) no leakage**: (A4) and (A5) of Theorem 5.
 
-Let $\mathcal A$ be the event that the method's calibration succeeds (it contains every completed run), and
-$\rho_n:=n^{-1/2}e^{C\sqrt{\log n}}$ for a suitable constant $C$ (so $\rho_n\le n^{-c}$ eventually, for every $c<\tfrac12$).
-Then, under the joint law of design, noise and the method's random numbers,
+This theorem concerns the sampler branch of the method (the model space is too large to enumerate; the exact branch is
+the remark below) [S2-F3]. Let $\mathcal A$ be the event that the method takes the sampler branch and its calibration
+succeeds (fallback ladder included); every completed sampler run lies in $\mathcal A$. On $\mathcal A$ let $\hat Z$,
+$\widehat{\mathrm{PIP}}$, $\widehat{\mathrm{MPM}}$ denote the evidence estimate, pooled PIPs and their MPM computed from the
+four islands' uninterrupted records (equal-weight pooling, `NOTATION.md` §5); on completed runs they are exactly the
+printed fields, and $\hat S$ is the reported model. Let $\rho_n:=n^{-1/2}e^{C\sqrt{\log n}}$ for a suitable constant $C$
+(so $\rho_n\le n^{-c}$ eventually, for every $c<\tfrac12$). Then, under the joint law of design, noise and the method's
+random numbers,
 $$
 \mathbf 1_{\mathcal A}\Big(\big|\hat Z/Z-1\big|+\big|\log\hat Z-\log Z\big|+\max_{j}\big|\widehat{\mathrm{PIP}}_j-\mathbf 1\{j\in S_0\}\big|\Big)=O_P(\rho_n),
 $$
 $$
-P\big(\mathcal A\cap\{\widehat{\mathrm{MPM}}\neq S_0\}\big)\to0,\qquad P\big(\text{the run completes and }\hat S\neq S_0\big)\to0 .
+P\big(\mathcal A\cap\{\widehat{\mathrm{MPM}}\neq S_0\}\big)\to0,\qquad P\big(\text{the run completes and }\hat S\neq S_0\big)\to0 ,
 $$
-Here $\hat Z$, $\widehat{\mathrm{PIP}}$ and $\widehat{\mathrm{MPM}}$ are the printed evidence, pooled PIPs and MPM
-(`NOTATION.md` §5: equal-weight pooling over the four islands), and $Z$ is the exact normalising constant.
+and the same rate holds for the printed fields multiplied by the indicator of a completed run. Here $Z$ is the exact
+normalising constant. No lower bound on $P(\mathcal A)$ is asserted: the statements are about intersections with
+$\mathcal A$ or with completion, not conditional on them.
+
+*Remark (exact branch).* When the model space is small enough, the method enumerates it and returns the exact
+posterior, its exact evidence and exact PIPs; their consistency is then Theorem 2 itself (no sampler statement needed).
 
 *Remark (row 3.5: the pooled evidence is unbiased).* Given the calibration, on $\mathcal A$, $E[\hat Z\mid\text{calibration}]=Z$
 for every design and data set; no statistical condition is needed (claim `W3-READER:PoolZ`, `STATEMENT.md`, from the
@@ -771,13 +803,17 @@ applied"). Alternative route (remark): `W3-SAMP:TR@2.1.1`, "PROVED-CHECKED". Row
 | B10.4 | pooled $\hat Z$ unbiased | **NEW** (claim) | `W3-READER:PoolZ`, two-line proof from N1. |
 
 ### Honest limits
-The conclusion is localised to calibration success $\mathcal A$; that $P(\mathcal A)\to1$ is not claimed here (under the
+The conclusion is localised to calibration success $\mathcal A$ on the sampler branch (intersections, not conditioning);
+that $P(\mathcal A)\to1$ is not claimed here (under the
 delivery conventions (S4) runs always complete, but that link is not used). The rate $\rho_n$ is the start law's rate,
 slower than the posterior rate $\sqrt{\log n/n}$ by a factor $e^{C\sqrt{\log n}}$. Conditional on `W2-APP:POST`.
 
 #### Update log (thm10)
 - v0.3 2026-11-16: first version (manager's CP1 decision 4; bridge leg).
 - v0.4 2026-11-16: [ENG-D17] "why" line reworded: concentration is asymptotic; moderate-$n$ mixture noted (EQUAL).
+- v0.5 2026-11-16: [S2-F2] (S5) carries the full sampler contract (STRONGER convention list, now faithful); [S2-F3]
+  sampler-branch scope, potential estimates on $\mathcal A$, printed fields on completion, exact-branch remark (WEAKER
+  literal scope, now faithful).
 <!-- ROW thm10 END -->
 
 ---

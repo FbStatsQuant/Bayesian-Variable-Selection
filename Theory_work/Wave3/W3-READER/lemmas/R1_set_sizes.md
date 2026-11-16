@@ -5,7 +5,7 @@ by the S1 fidelity read (`reviews/S1_fidelity_sol.md`, "NEW arithmetic bridges")
 line check. Numeric spot check: LOG 2026-11-15 (grid $A\in[1,20]$, $s_0\le39$, $n\in[3,10^{15}]$, 0 violations).
 
 Notation as `READER_VERSIONS.md` / `NOTATION.md`: $n\ge3$ (so $t:=\log n\ge\log3>1$), $A\ge1$, $s:=s_0\ge1$,
-$j_0:=\lceil(2A+1)s\rceil+1$, $\ell_2:=1/\log2<1.4427$, $d:=1/\log(3/2)<2.4663$.
+$j_0:=\lceil(2A+1)s\rceil+1$, $\ell_2:=1/\log2<1.4427$, $d:=1/\log(3/2)<2.4664$.
 
 ## B1.1 (bounded coefficients ⇒ energy)
 **Claim.** If $|\theta^*_j|\le\bar\theta$ for all $j$ and $|S_0|=s$, then $\|X\theta^*\|^2\le n\,s^2\bar\theta^2$.
