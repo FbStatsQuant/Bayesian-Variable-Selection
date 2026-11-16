@@ -1,0 +1,43 @@
+##### lemmas/NEC.md : checked sha c88d10a4555cf0d7 (snapshot commit f0e0d58) -> current sha 54340e87b89336a1
+--- a/lemmas/NEC.md@c88d10a4555cf0d7
++++ b/lemmas/NEC.md@54340e87b89336a1
+@@ -1,6 +1,7 @@
+ # Proposition NEC — the non-degeneracy hypothesis cannot be dropped from Lemma X (W3-DIST; sharpness result, not a target clause)
+ 
+-Status: **DRAFT**. v0.1, 2026-11-15. Provenance: §1–§6 are the API proof attempt `../work/api_attempts/dist1b/F-b-r2.md`
++Status: **DRAFT**. v0.2, 2026-11-15 (v0.2: three presentation amendments marked [amended, L7-0x]; no change to the
++Proposition, the Corollary, their constants or their proofs). Provenance: §1–§6 are the API proof attempt `../work/api_attempts/dist1b/F-b-r2.md`
+ (Fable batch run by HQ; proof material), reproduced with three clarifications marked [amended]; §0 and §7–§8 are rewritten
+ by the lead (the attempt's own commentary overstated what follows from the Proposition). Notation: `../API_CARDS.md`
+ "Common definitions"; Lemma X: `../STATEMENT.md` §3. [P1] = the locked T01 proof file.
+@@ -17,8 +18,9 @@
+ is replaced by any sequence tending to 0. So the distance clause of Lemma X (not only its size clause) needs (ND) or a
+ substitute.
+ **What this does not say.** (1) It does not contradict Lemma X, Theorem DIST-1 or any target clause: the design violates
+-(ND) (already at j = 2), so the remainder of (1.1) equals 1 on it. (2) It does not contradict Lemma X′ or (1.2), whose
+-radius is Cσ*²tℓ_n with t ≥ M₀ log n (§8). (3) It is a fixed-design, in-sample statement: it does not by itself refute a
++(ND) (already at j = 2), so the remainder of (1.1) equals 1 on it. (2) It does not contradict Lemma X′ or (1.2): Lemma X′ has the
++squared in-sample radius Cσ*²tℓ_n with t ≥ M₀ log n (§8), and (1.2) is a random-design statement in the Hellinger distance, with
++radius C√(tℓ_n/n), for which this fixed-design in-sample bound supplies no counterexample [amended, L7-01]. (3) It is a fixed-design, in-sample statement: it does not by itself refute a
+ random-design Hellinger statement without the non-degeneracy condition (that would need a law of x realising the design
+ and a population lower bound; not done). (4) It says nothing against the in-probability form (§8).
+ 
+@@ -95,7 +97,7 @@
+ 
+ For 𝓔₃: on 𝒯, Ã equals the truncated sum Ã′ := d^{−1/2}(1 + Σ_j e^{(1+ε)z_j²/2}1{z_j² ≤ 2L}). Its mean satisfies
+ 
+-  E Ã′ ≤ d^{−1/2}(1 + p′·(2/√(2π))∫₀^{√(2L)} e^{εz²/2}dz) ≤ 1 + p′·2√(L/π)e^{εL}/√(βL) = 1 + 0.0705·p′·e^{εL} ≤ 0.08p
++  E Ã′ ≤ d^{−1/2}(1 + p′·(2/√(2π))∫₀^{√(2L)} e^{εz²/2}dz) ≤ 1 + p′·2√(L/π)e^{εL}/√(βL) = 1 + (2/√(πβ))·p′·e^{εL} ≤ 1 + 0.0706·p′·e^{εL} ≤ 0.08p [amended, L7-02: 2/√(256π) = 0.07052… ≤ 0.0706]
+ 
+ for large n (εL → 0). By Markov, P(Ã′ > p/2) ≤ 0.16.
+ 
+@@ -175,6 +177,7 @@
+ replaced by windows ω_n → ∞ slowly and 𝓔₃ controlled by Chebyshev's inequality); so the design does not break the
+ in-probability form. Whether Π(‖μ̂ − μ‖² > M_n σ*² log n | y) → 0 holds for every design under (E), (C) alone is open.
+ (d) The threshold n₁ implicit in P(𝓔) ≥ 0.6 is large with the stated bounds (the term P(𝒯ᶜ) ≤ 1/√(πL)); explicit constants,
+-not optimised. A numerical check on the exact posterior (all models of size ≤ 4; n = 1600, 6400, 25600; 200 noise draws
+-each) shows n·π(𝒮₁) ≈ 2·10⁻², n·π(𝒮₂) ≈ 5·10⁻⁴, flat in n, and the event of the Proposition in every draw for k = 1, 2
++not optimised. A numerical check on the posterior restricted to the models of size ≤ 4 (that is, conditional on |S| ≤ 4, computed
++exactly; larger models are not summed, so the full-posterior masses are slightly smaller [amended, L7-03]; n = 1600, 6400, 25600;
++200 noise draws each) shows n·π(𝒮₁) ≈ 2·10⁻², n·π(𝒮₂) ≈ 5·10⁻⁴, flat in n, and the event of the Proposition in every draw for k = 1, 2
+ (`../reviews/P7_opus_precheck_NEC.md` §3; evidence, not proof).

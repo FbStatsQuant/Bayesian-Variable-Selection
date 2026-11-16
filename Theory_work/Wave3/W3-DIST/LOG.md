@@ -292,3 +292,35 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   store law is in general a mixture over many models; the condition of Corollary C concerns the list as a whole;
   (C-ii)(γ) added as a description; TARGET §6 synced; REPORT regenerated. Goes into the Sol diff check batch.
   P7's completion notice arrived (already processed). HOLDS read: none. X.md sha re-verified (4c3a657742455bef).
+- 22:04 — **L6 landed** (`reviews/L6_sol_DIST12.md`, Sol): displays (1.1), (1.2), D.1–D.3, consequences (a), (b), (d), (e)
+  VERIFIED; one finding, **L6-01 (MAJOR)**: the sparsity dependence claimed in DIST-1 (c) / TC3 (M₀ = O((1 + s₀^r)(A + 1))) was
+  not established (K_s gave M₀ ≳ s log s; C grew with s; raw/retained sparsity mixed). **Repaired by constants, TC3 kept
+  as fixed**: `lemmas/X.md` v0.4 (K_s → 2; C_d := 34), `lemmas/DIST12.md` v0.2 (C_T free of s; dependence paragraph),
+  STATEMENT v1.4.7 (c) with the explicit bound M₀ ≤ 16 + 4(1 + s₀^r)(A + 1) + 3(M + M′)/(2σ*²), tag EQUAL; TARGET P3 synced;
+  DEPS: X, X′, TC/DIST-1, TC/DIST-2 → STALE (re-check inside the Sol diff check D1); REPORT regenerated;
+  `reviews/L6_disposition.md`. Fallback if the re-check fails: reviewer's minimal repair = WEAKER on TC3 = early
+  checkpoint. Manager told. L7 (Sol, NEC) still running (launched about 21:05). HOLDS read: none.
+- 22:06 — Diff check **D1 (Sol, new agent)** launched (`reviews/BRIEF_D1_sol_diff.md`): Part A re-check of the L6-01 repair
+  (X.md v0.4, DIST12.md v0.2); Part B the post-check amendments (S, P6_DISTC, COR_C, B3, ASSEMBLY); Part C STATEMENT
+  v1.3.1 → v1.4.7 and every changelog tag from 1.4 on. Diffs: `reviews/DIFFS_D1.patch` (each file against its
+  line-checked version, taken from the snapshot branch, read-only git) and `reviews/DIFF_STATEMENT_v131_to_v147.patch`.
+  Running: L7 (Sol), D1 (Sol). HOLDS read: none.
+- 22:09 — **L7 landed** (`reviews/L7_sol_NEC.md`, Sol): **Proposition NEC and Corollary NEC VERIFIED**; file
+  VERIFIED-WITH-AMENDMENTS: L7-01 (MINOR: the radius attributed to (1.2) in "what this does not say"), L7-02 (NIT: 0.0705
+  rounded down), L7-03 (MINOR: the numerical check is the posterior restricted to sizes ≤ 4, not the full posterior). All
+  three applied (`lemmas/NEC.md` v0.2; nothing in the Proposition, Corollary, constants or proofs changes). DEPS row NEC:
+  STALE until the three hunks are re-checked (D2, a short Sol diff check, `reviews/BRIEF_D2_sol_NEC_diff.md`).
+  Citation check: 9 pins, 0 MISS (the script's own spot check looks for `pip_r` on v3_run.R:160; it is on :161, inside
+  the cited range 159–162: no error in STATEMENT). Staged registry ingest of REPORT.md: first run 14 form problems
+  (statuses not verbatim on their source line; "bridge none"; a "|" inside an assumption text): fixed in
+  `mkreport.py` / `REPORT_extra.md` (table status and block status now come from one string); second run 20 claims,
+  **0 problems, 0 ERROR introduced**; acceptance on the staged copy REFUSED with 4 ERROR, all the same cause outside this
+  ticket: the accept record of the consumed claim **W3-MISR:R′** is stale in the live registry (B0 → Theorem A,
+  Theorem B, Corollary C). To the manager. HOLDS read: none.
+- 22:13 — Manager's conditions on L6-01 received (reviewer confirms the EQUAL tag; no new condition may be hidden in
+  the repair; fresh Sol agent on the exact diffs and every STALE row; no second break review for a constant repair) and
+  answered: all three are in D1's brief; "e^{s₀}q ≤ n^{−1/8} ≤ ½" is an unchanged, line-checked line of X.md v0.3 (threshold
+  condition (d) of n₀). D2 (Sol, three NEC hunks) launched. Prepared while D1, D2 run: `reviews/INPUTS_R1.txt` (tracked
+  external inputs), `reviews/BRIEF_SW1_astra.md` (sweep, two passes: blind, then records), `reviews/BRIEF_R1_TEMPLATE.md`
+  (council seats; C/S/F/E tags; the gates=FAIL sentence; verdict-line block), REPORT §2 rows for L6, L7, D1, D2.
+  Running: D1 (Sol), D2 (Sol). HOLDS read: none.

@@ -1,4 +1,4 @@
-# W3-DIST — STATEMENT (v1.4.6, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
+# W3-DIST — STATEMENT (v1.4.7, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
 
 **Status: targets TC1–TC9 fixed by HQ at CP1; proofs are in `lemmas/` and `work/<stream>/`; the check state of every item is
 in `DEPS.tsv` (a statement here is checked only if its row says OK).** v1.4 = v1.3.1 with the dispositions of the blind read S2
@@ -81,9 +81,10 @@ Equivalently, for every sequence ε_n with C²M₀ log n/n ≤ ε_n² ≤ C²n^{
 - (a) **[SL] (15)-form** whenever P*(interfaces fail) ≤ e^{−c₁nε_n²}. At the best rate the right side is n^{−cM₀}, a
   polynomial, so polynomial-probability control of the design events is enough there.
 - (b) **[SL] (16)-form**: if P*(interfaces fail) → 0 then lim P*[Π(d_H > ε_n | D_n) > e^{−c₁nε_n²}] = 0.
-- (c) **Rate (P3)**: ε_n² = C²M₀ log n/n with M₀ of order (1 + s₀^r)(A + 1): of order (1 + s₀) log p/n when p = n^A
-  (the "1 +" is the intercept and the variance; s₀ = 0 is covered) [S1-07]. No beta-min and no identifiability
-  condition ([SL] Condition 3 is not used).
+- (c) **Rate (P3)**: ε_n² = C²M₀ log n/n, where C depends only on (A, σ*², M, M′) and M₀ ≤ 16 + 4(1 + s₀^r)(A + 1) + 3(M + M′)/(2σ*²)
+  (`lemmas/DIST12.md` D.4, `lemmas/X.md` §0). So for fixed (σ*², M, M′), M₀ is of order (1 + s₀^r)(A + 1) and ε_n² is of order
+  (1 + s₀^r) log p_raw/n when p_raw = n^A (the "1 +" is the intercept and the variance; s₀^r = 0 is covered; s₀^r is the raw
+  sparsity) [S1-07, L6-01]. No beta-min and no identifiability condition ([SL] Condition 3 is not used).
 - (d) **No condition on ν_x enters the passage from the sample to the population distance** (Lemma T); the law of x
   matters only through the probability of the interfaces.
 - (e) **Posterior predictive.** With f̄ := ∫ f dΠ(f | D_n): on the complement of the event in (1.1) (the success
@@ -486,6 +487,7 @@ posterior with the contrast model (locked T01, [P1] `thm:T01i`, `lem:spec`, `lem
 | 1.4.4 | §1R Remarks: the remark on the numerical size of the threshold n₀ removed from this file (owner's standing rule: all results are asymptotic and asymptotics are not framed as a limitation); the fact is kept as one internal line of REPORT.md, "explicit constants, not optimised" | EQUAL (a remark; no statement changes) | owner's rule | manager's note, 2026-11-15 | pending |
 | 1.4.5 | §3: Proposition NEC added (sharpness of Lemma X's hypothesis (ND); fixed design); stretch item S-FIT restated accordingly | NEW-CLAIM (non-target; touches no target clause: the design violates (ND)) | necessity gate for (ND) | API attempt F-b-r2; `reviews/P7_opus_precheck_NEC.md` | pending (line check L7) |
 | 1.4.6 | DIST-C (C-ii)(γ) added; Corollary C's closing sentences: the condition concerns the total posterior probability of the list, and the posterior is in general a mixture over many models | EQUAL (descriptive sentences; no statement relied on a point-mass posterior — (C-ii)(α) and the retention sentence use π(S₀) > ½ only as a sufficient condition) | cross-department finding: at moderate n the store law is a mixture over S₀ and many one-extra-variable supersets | Engineering via HQ and the manager (`Docs/Experiments/P1M/DECISIONS.md` D-17) | pending |
+| 1.4.7 | DIST-1 (c): the dependence of the rate constant on the sparsity is written out (C free of s₀^r; explicit bound on M₀; raw sparsity s₀^r in place of s₀) | EQUAL on TC3 ("M₀ = O((1 + s₀^r)(A + 1))" is now proved as written, for fixed (σ*², M, M′); v1.3's sentence was not established by the proof files: the constants of `lemmas/X.md` v0.3 gave M₀ ≳ s log s and C growing with s). Proof files: `lemmas/X.md` v0.4, `lemmas/DIST12.md` v0.2 (constants only) | a claimed constant dependence was not established | `reviews/L6_sol_DIST12.md` L6-01 (MAJOR) | pending (diff check) |
 Target clauses TC1–TC9 were fixed by HQ at CP1 (2026-11-15) in their v1.3 form; TC10 = companion results. **Relative to that
 baseline, no row of v1.4 weakens the mathematics of a target clause** (per S2: this sentence is about the CP1 baseline, not
 about the history before it — the pre-CP1 rows 1.0.1, 1.1 and 1.3 marked WEAKER did narrow ranges or add remainder events).

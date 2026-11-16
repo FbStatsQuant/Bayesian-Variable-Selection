@@ -13,7 +13,9 @@
 | L2 line check | gpt-6.1-sol | `work/D_output/*` | VERIFIED / VERIFIED-WITH-AMENDMENTS; 4 MINOR, 1 NIT | `L4_L5_disposition.md` |
 | BR1 key-lemma break review (CP2) | gpt-6-astra | Lemma X, X′ and the passage to (1.1), (1.2) | NOT BROKEN ×4; 3 MINOR assembly repairs; CONTINUE | `BR1_disposition.md` |
 | P7 pre-check | Claude Opus 5.5 | the counterexample behind Proposition NEC | VERIFIED-WITH-AMENDMENTS (commentary only) | `P7_disposition.md` |
-| L6, L7 line checks; D1 diff check | gpt-6.1-sol | `lemmas/DIST12.md`; `lemmas/NEC.md`; statement changes v1.3.1 → @@VER@@ and post-check amendments | recorded in `DEPS.tsv` and `CHECKPOINT_3.md` (outside this file once frozen) | — |
+| L6 line check | gpt-6.1-sol | `lemmas/DIST12.md` v0.1 (DIST-1, DIST-2) | displays (1.1), (1.2) and consequences (a), (b), (d), (e) VERIFIED; 1 MAJOR (L6-01: the dependence of the rate constant on the sparsity claimed in consequence (c) was not established) | `L6_disposition.md`: repaired by constants (`lemmas/X.md` v0.4, `lemmas/DIST12.md` v0.2); the target clause is kept |
+| L7 line check | gpt-6.1-sol | `lemmas/NEC.md` v0.1 (Proposition NEC) | Proposition and Corollary VERIFIED; 2 MINOR, 1 NIT (presentation) | applied (v0.2) |
+| D1 diff check (re-check of the L6-01 repair; post-check amendments; statement changes v1.3.1 → @@VER@@ with every changelog tag) and D2 (the three L7 amendments) | gpt-6.1-sol, new agents | `lemmas/X.md` v0.4, `lemmas/DIST12.md` v0.2, five amended proof files, `STATEMENT.md`; `lemmas/NEC.md` v0.2 | @@D1D2@@ | @@D1D2disp@@ |
 Proof material that is not a review: API proof attempts `work/api_attempts/dist1/`, `dist1b/` (PROTOCOL_v4 H3). Two were
 adopted as proofs after the lead's check and then reviewed as above: Lemma X (attempt X-b-1) and Proposition NEC (F-b-r2).
 
@@ -77,8 +79,8 @@ Statuses are those of §1 (one per claim). The `council:` line is added by the p
 ```
 REGISTRY
 claim: W3-DIST:DIST-1 | kind: theorem | statement: STATEMENT.md:@@DIST-1@@ | premises: STATEMENT.md:@@setting@@
-status: PROVED (by this seat), line-checked, conditional on SOP:TH09 | status_source: REPORT.md:11
-assumptions: A:DIST-RD (new | random design, Gaussian noise | rows iid from an arbitrary law on R^{p_raw}; noise N(0, sigma*^2) independent of the design, sigma*^2 fixed | STATEMENT.md:@@setting@@ | shared yes | bridge none) ; A:DIST-SPARSE (new | strict sparsity, null truth allowed | the support of beta* has a fixed size s0^r >= 0 | STATEMENT.md:@@setting@@ | shared yes | bridge none) ; A:P-POLY ; A:DIST-DOM (new | at least two retained columns | p_ret >= 2 | STATEMENT.md:@@setting@@ | shared yes | bridge W3-DIST:B1) ; A:ENERGY ; A:COEF-REP ; A:DIST-ND (new | no degeneracy on average | average determinant growth over supersets of S0 of each size up to m_n(t) | STATEMENT.md:@@setting@@ | shared no | bridge W3-DIST:B2)
+status: @@st:DIST-1@@ | status_source: REPORT.md:@@line:DIST-1@@
+assumptions: A:DIST-RD (new | random design, Gaussian noise | rows iid from an arbitrary law on R^{p_raw}; noise N(0, sigma*^2) independent of the design, sigma*^2 fixed | STATEMENT.md:@@setting@@ | shared yes) ; A:DIST-SPARSE (new | strict sparsity, null truth allowed | the support of beta* has a fixed size s0^r >= 0 | STATEMENT.md:@@setting@@ | shared yes) ; A:P-POLY ; A:DIST-DOM (new | at least two retained columns | p_ret >= 2 | STATEMENT.md:@@setting@@ | shared yes | bridge W3-DIST:B1) ; A:ENERGY ; A:COEF-REP ; A:DIST-ND (new | no degeneracy on average | average determinant growth over supersets of S0 of each size up to m_n(t) | STATEMENT.md:@@setting@@ | shared no | bridge W3-DIST:B2)
 conclusion: posterior: P*[Pi(d_H(f, f*) > C sqrt(t/n) or |S| > s0 + C' t/log n | D_n) > e^{-ct}] <= 3 e^{-ct} + P*(interfaces fail), for M0 log n <= t <= n^{1-kappa0}; d_H the Hellinger distance between joint (x, y) laws | rate: C sqrt(log n / n) at t = M0 log n | scope: exact coded posterior; random design; p_raw <= n^A, p >> n allowed; no beta-min; no condition on the predictor law beyond the interfaces
 depends_on: W3-DIST:H@stmt ; W3-DIST:T@stmt ; W3-DIST:X@stmt ; SOP:TH09@hyp
 implies: W3-POST2:D (in-sample fixed-design Hellinger contraction at rate log n / n follows from Lemma X under its interfaces; the population statement is new)
@@ -87,7 +89,7 @@ gates: lit:PARTIAL(TARGET.md) ; necessity:PARTIAL(ASSUMPTION_MAP.md) ; better-pr
 
 REGISTRY
 claim: W3-DIST:DIST-2 | kind: theorem | statement: STATEMENT.md:@@DIST-2@@ | premises: STATEMENT.md:@@setting@@
-status: PROVED (by this seat), line-checked, conditional on SOP:TH09 | status_source: REPORT.md:12
+status: @@st:DIST-2@@ | status_source: REPORT.md:@@line:DIST-2@@
 assumptions: A:DIST-RD ; A:DIST-SPARSE ; A:P-POLY ; A:DIST-DOM ; A:ENERGY ; A:COEF-REP
 conclusion: posterior: the display of W3-DIST:DIST-1 with radius C sqrt(t log(p_raw v n)/n) and no size clause, remainder without the non-degeneracy interface | rate: sqrt(log n log(p v n) / n) | scope: as W3-DIST:DIST-1, no condition on the dependence among predictors
 depends_on: W3-DIST:H@stmt ; W3-DIST:T@stmt ; W3-DIST:X'@stmt ; SOP:TH09@hyp
@@ -95,7 +97,7 @@ gates: lit:PARTIAL(TARGET.md) ; necessity:PARTIAL(ASSUMPTION_MAP.md)
 
 REGISTRY
 claim: W3-DIST:DIST-3 | kind: theorem | statement: STATEMENT.md:@@DIST-3@@ | premises: STATEMENT.md:@@setting@@
-status: PROVED (by this seat), line-checked, conditional on SOP:TH09 | status_source: REPORT.md:13
+status: @@st:DIST-3@@ | status_source: REPORT.md:@@line:DIST-3@@
 assumptions: A:DIST-RD ; A:DIST-SPARSE ; A:DIST-DOM ; A:ENERGY ; A:DIST-L0 (new | bounded ridge loss of the true model | L_{S0} <= B | STATEMENT.md:@@setting@@ | shared no | bridge W3-DIST:B1) ; A:DIST-TR0 (new | second-moment comparison on the true support | E_x (a + w'x)^2 <= C_T times its sample mean for all a and all w supported on supp beta* | STATEMENT.md:@@DIST-3@@ | shared no | bridge W3-DIST:B3)
 conclusion: posterior: Pi(d_H > C sqrt(u/n) | D_n) <= delta_n + C e^{-u} outside a noise event of probability C e^{-u}, 1 <= u <= n^{1-kappa0}; hence Pi(d_H > M_n/sqrt(n) | D_n) -> 0 in probability when delta_n -> 0 | rate: M_n / sqrt(n) | scope: exact coded posterior; random design; no eigenvalue floor; no polynomial bound on p
 depends_on: W3-DIST:H@stmt ; SOP:TH09@hyp
@@ -103,7 +105,7 @@ gates: better-proposal:BT1-BT2(reviews/S1_astra.md) ; better-disposition:BT1-BT2
 
 REGISTRY
 claim: W3-DIST:DIST-C | kind: theorem | statement: STATEMENT.md:@@DIST-C@@ | premises: STATEMENT.md:@@code@@
-status: PROVED (by this seat), line-checked, conditional on SOP:TH09, W3-SAMP:D, W3-SAMP:PC, W3-SAMP:LT#, W3-SAMP:C, W3-SAMP:TR | status_source: REPORT.md:14
+status: @@st:DIST-C@@ | status_source: REPORT.md:@@line:DIST-C@@
 assumptions: A:EX-A ; A:DIST-RD ; A:DIST-SPARSE ; A:P-POLY ; A:DIST-DOM ; A:ENERGY ; A:COEF-REP ; A:DIST-ND
 conclusion: delivery: for any output-defined law Q on models with Q <= L pi, the reconstructed parameter law has QPi(B) <= L Pi(B | D_n); the store-restricted posterior and the HPM and MPM plug-ins inherit W3-DIST:DIST-1 or DIST-3 under named premises on the run (enough posterior mass in the returned store, or discovery of the true model); all statements jointly with a completed run | scope: output of the final SMC run (no particles, no parameter draws, no predictive are returned); exact-enumeration branch excluded
 depends_on: W3-DIST:P6@stmt ; W3-DIST:DIST-1@stmt ; W3-DIST:DIST-3@stmt ; W3-SAMP:CC@stmt ; W3-SAMP:D@hyp ; W3-SAMP:PC@hyp ; W3-SAMP:LT#@hyp ; W3-SAMP:C@hyp ; W3-SAMP:TR@hyp ; SOP:TH09@hyp
@@ -111,8 +113,8 @@ gates: better-proposal:BT4(reviews/S1_astra.md) ; better-disposition:BT4=adopted
 
 REGISTRY
 claim: W3-DIST:Thm-A | kind: theorem | statement: STATEMENT.md:@@Thm-A@@ | premises: STATEMENT.md:@@setupR@@
-status: PROVED (by this seat), line-checked, conditional on SOP:TH09 | status_source: REPORT.md:15
-assumptions: A:DIST-A1 (new | Gaussian linear model, any noise level | y = alpha* + x'beta* + eps, eps normal and independent of x, sigma* > 0 free | STATEMENT.md:@@setupR@@ | shared yes | bridge W3-DIST:B0) ; A:DIST-A2 (new | sparsity and dimension | at most s nonzero coefficients, 2 <= p <= n^A | STATEMENT.md:@@setupR@@ | shared yes | bridge none) ; A:DIST-A3 (new | sub-Gaussian predictors on sparse directions | E exp(lambda u'z) <= exp(K^2 lambda^2 Var(u'z)/2) for u with at most q_n nonzero entries | STATEMENT.md:@@setupR@@ | shared yes | bridge W3-DIST:B1, W3-DIST:B2core) ; A:DIST-A4 (new | no near-exact collinearity | smallest eigenvalue of Corr(x_T) at least c_psi/n for sets T of at most q_n predictors | STATEMENT.md:@@setupR@@ | shared yes | bridge W3-DIST:B2) ; A:DIST-A5 (new | bounded signal | |beta*_j| sd(x_j) <= b sigma* | STATEMENT.md:@@setupR@@ | shared yes | bridge W3-DIST:B1)
+status: @@st:Thm-A@@ | status_source: REPORT.md:@@line:Thm-A@@
+assumptions: A:DIST-A1 (new | Gaussian linear model, any noise level | y = alpha* + x'beta* + eps, eps normal and independent of x, sigma* > 0 free | STATEMENT.md:@@setupR@@ | shared yes | bridge W3-DIST:B0) ; A:DIST-A2 (new | sparsity and dimension | at most s nonzero coefficients, 2 <= p <= n^A | STATEMENT.md:@@setupR@@ | shared yes) ; A:DIST-A3 (new | sub-Gaussian predictors on sparse directions | E exp(lambda u'z) <= exp(K^2 lambda^2 Var(u'z)/2) for u with at most q_n nonzero entries | STATEMENT.md:@@setupR@@ | shared yes | bridge W3-DIST:B2core) ; A:DIST-A4 (new | no near-exact collinearity | smallest eigenvalue of Corr(x_T) at least c_psi/n for sets T of at most q_n predictors | STATEMENT.md:@@setupR@@ | shared yes | bridge W3-DIST:B2) ; A:DIST-A5 (new | bounded signal | abs(beta*_j) sd(x_j) <= b sigma* for every j | STATEMENT.md:@@setupR@@ | shared yes | bridge W3-DIST:B1)
 conclusion: posterior: P*[Pi(d_H(f, f*) > sqrt(M log n/n) | D_n) > n^{-cM}] <= n^{-cM} and P*[Pi(|S| > s + C1 M | D_n) > n^{-cM}] <= n^{-cM}, M0 <= M <= sqrt(n)/log n; without the collinearity assumption, radius sqrt(M log n log(p v n)/n) and size s + C1 M log n | rate: sqrt(log n / n) | scope: exact coded posterior, prior as coded, no tuning; p >> n allowed; no beta-min
 depends_on: W3-DIST:DIST-1@stmt ; W3-DIST:DIST-2@stmt ; W3-DIST:B0@stmt ; W3-DIST:B1@stmt ; W3-DIST:B2@stmt ; SOP:TH09@hyp
 sharpness: A:DIST-A3 = WEAKENABLE (evidence: ASSUMPTION_MAP.md:59) ; A:DIST-A4 = NECESSARY-FOR-ROUTE (evidence: lemmas/NEC.md:8) ; A:DIST-A5 = WEAKENABLE (evidence: ASSUMPTION_MAP.md:59)
@@ -120,31 +122,31 @@ gates: lit:PARTIAL(TARGET.md) ; necessity:PARTIAL(TARGET.md)
 
 REGISTRY
 claim: W3-DIST:Thm-B | kind: theorem | statement: STATEMENT.md:@@Thm-B@@ | premises: STATEMENT.md:@@setupR@@
-status: PROVED (by this seat), line-checked, conditional on W3-POST:Thm-1, SOP:TH09 | status_source: REPORT.md:16
+status: @@st:Thm-B@@ | status_source: REPORT.md:@@line:Thm-B@@
 assumptions: A:DIST-A1 ; A:DIST-A2 ; A:DIST-A3 ; A:DIST-A4 ; A:DIST-A5 ; A:DIST-A6 (new | detectable signal | a fixed eigenvalue floor on sets of at most (2A+3)s+2 predictors and a beta-min level b_n > 0 with b_n^2 n/log n -> infinity | STATEMENT.md:@@Thm-B@@ | shared no | bridge W3-DIST:B3)
 conclusion: posterior: Pi(d_H(f, f*) > M_n/sqrt(n) | D_n) -> 0 in probability for every M_n -> infinity | rate: M_n / sqrt(n) | scope: exact coded posterior; exactly s >= 1 nonzero coefficients
 depends_on: W3-DIST:DIST-3@stmt ; W3-DIST:B0@stmt ; W3-DIST:B1@stmt ; W3-DIST:B2@stmt ; W3-DIST:B3@stmt ; W3-POST:Thm-1@hyp ; SOP:TH09@hyp
 
 REGISTRY
 claim: W3-DIST:Cor-C | kind: theorem | statement: STATEMENT.md:@@Cor-C@@ | premises: STATEMENT.md:@@setupR@@
-status: PROVED (by this seat), line-checked, conditional on SOP:TH09 | status_source: REPORT.md:17
+status: @@st:Cor-C@@ | status_source: REPORT.md:@@line:Cor-C@@
 assumptions: A:EX-A ; A:DIST-A1 ; A:DIST-A2 ; A:DIST-A3 ; A:DIST-A4 ; A:DIST-A5
 conclusion: delivery: with probability at least 1 - n^{-cM} over the data, every completed run whose returned list has posterior probability at least n^{-cM/2} has store-restricted posterior mass at most n^{-cM/2} outside the Hellinger ball of radius sqrt(M log n/n); an evaluated true model with posterior probability above 1/2 is kept in the list | scope: output of the final SMC run; the premise on the list is a property of the run and is not asserted
 depends_on: W3-DIST:Thm-A@stmt ; W3-DIST:DIST-C@stmt ; W3-SAMP:CC@stmt ; SOP:TH09@hyp
 
 REGISTRY
 claim: W3-DIST:H | kind: lemma | statement: STATEMENT.md:@@H@@ | premises: STATEMENT.md:@@setting@@
-status: PROVED (by this seat), line-checked | status_source: REPORT.md:18
+status: @@st:H@@ | status_source: REPORT.md:@@line:H@@
 conclusion: identity: d_H^2 <= (v/sigma*^2 - 1)^2 + E_x min(1, Delta(x)^2/(4 sigma*^2)), with the in-sample identity for the plug-in intercept | scope: deterministic; every posterior draw; dropped true columns included
 
 REGISTRY
 claim: W3-DIST:T | kind: lemma | statement: STATEMENT.md:@@T@@ | premises: STATEMENT.md:@@T@@
-status: PROVED (by this seat), line-checked | status_source: REPORT.md:19
+status: @@st:T@@ | status_source: REPORT.md:@@line:T@@
 conclusion: identity: with probability at least 1 - delta, uniformly over intercepts, scales and d-sparse directions, the population mean of the truncated squared linear form is at most twice its sample mean plus eta_n^2(d, delta) | scope: iid rows from any law; 1 <= d <= min(p_raw, n - 1); no moment condition
 
 REGISTRY
 claim: W3-DIST:S | kind: lemma | statement: STATEMENT.md:@@S@@ | premises: STATEMENT.md:@@setting@@
-status: PROVED (by this seat), line-checked | status_source: REPORT.md:20
+status: @@st:S@@ | status_source: REPORT.md:@@line:S@@
 assumptions: A:GAUSS-NOISE ; A:ENERGY ; A:COEF-REP
 conclusion: posterior: P[pi(|S| > m) > e^{-t}] <= C e^{-t} + C e^{-cn} for every m beyond an explicit cutoff built from the reference cost and the exact determinant | scope: fixed design; reference-adaptive; no polynomial bound on p
 depends_on: SOP:TH09@proof:P1-lem-num-thm-Ta-lem-den
@@ -152,13 +154,13 @@ implies: W3-POST:Lemma-1a' (same cutoff order, exponential failure probability) 
 
 REGISTRY
 claim: W3-DIST:V | kind: lemma | statement: STATEMENT.md:@@V@@ | premises: STATEMENT.md:@@setting@@
-status: PROVED (by this seat), line-checked | status_source: REPORT.md:21
+status: @@st:V@@ | status_source: REPORT.md:@@line:V@@
 conclusion: identity: for supersets S of S0, Q_{S0} - Q_S <= e'D'e + (1 + 2/eta) rho' and E[(D_{S0}/D_S)^{1/2} exp(e'D'e/(2 sigma*^2))] <= (1 + eta)^{s0 + |J|/2} | scope: every design, singular Gram matrices included
 depends_on: SOP:TH09@proof:P1-lem-slab-lem-spec
 
 REGISTRY
 claim: W3-DIST:X | kind: lemma | statement: STATEMENT.md:@@X@@ | premises: STATEMENT.md:@@setting@@
-status: PROVED (by this seat), line-checked | status_source: REPORT.md:22
+status: @@st:X@@ | status_source: REPORT.md:@@line:X@@
 assumptions: A:GAUSS-NOISE ; A:P-POLY ; A:ENERGY ; A:COEF-REP ; A:DIST-ND
 conclusion: posterior: P[Pi(in-sample error above C sigma*^2 t, or variance ratio off by more than C sqrt(t/n), or |S| > s0 + ceil(C' t/log n) | y) > e^{-ct}] <= 2 e^{-ct}, one n0 for M0 log n <= t <= n^{1-kappa0} | rate: in-sample squared error of order log n | scope: fixed design; s0 >= 0; constants free of the design
 depends_on: SOP:TH09@proof:P1-lem-chi-lem-prior-lem-num-thm-Ta-lem-den-lem-spec-lem-slab
@@ -166,43 +168,43 @@ sharpness: A:DIST-ND = NECESSARY-FOR-ROUTE (evidence: lemmas/NEC.md:8)
 
 REGISTRY
 claim: W3-DIST:X' | kind: lemma | statement: STATEMENT.md:@@X'@@ | premises: STATEMENT.md:@@setting@@
-status: PROVED (by this seat), line-checked | status_source: REPORT.md:23
+status: @@st:X'@@ | status_source: REPORT.md:@@line:X'@@
 assumptions: A:GAUSS-NOISE ; A:P-POLY ; A:ENERGY ; A:COEF-REP
 conclusion: posterior: the conclusion of W3-DIST:X with in-sample error threshold C sigma*^2 t log(p v n) and size cut m_n(t) | scope: fixed design; no non-degeneracy interface
 depends_on: SOP:TH09@proof:P1-lem-chi-lem-prior-lem-num-thm-Ta-lem-den-lem-spec-lem-slab
 
 REGISTRY
 claim: W3-DIST:NEC | kind: proposition | statement: STATEMENT.md:@@NEC@@ | premises: STATEMENT.md:@@setting@@
-status: PROVED (by this seat), line check recorded in DEPS.tsv | status_source: REPORT.md:24
+status: @@st:NEC@@ | status_source: REPORT.md:@@line:NEC@@
 conclusion: negative: on an explicit design with a null truth, with probability at least 0.6 the posterior puts mass at least c(k)/n on in-sample error above (k/24) sigma*^2 log n; hence the conclusion of W3-DIST:X fails without the non-degeneracy interface, for any constants | scope: fixed design, in sample; contradicts no theorem of this ticket
 depends_on: SOP:TH09@proof:P1-lem-spec-lem-slab
 
 REGISTRY
 claim: W3-DIST:P6 | kind: lemma | statement: STATEMENT.md:@@P6@@ | premises: STATEMENT.md:@@P6@@
-status: PROVED (by this seat), line-checked | status_source: REPORT.md:25
+status: @@st:P6@@ | status_source: REPORT.md:@@line:P6@@
 conclusion: identity: domination transfer Q <= L pi implies QPi(B) <= L Pi(B); Markov bound over models; convexity of the squared Hellinger distance for predictive mixtures | scope: deterministic
 
 REGISTRY
 claim: W3-DIST:B0 | kind: lemma | statement: STATEMENT.md:@@B0@@ | premises: STATEMENT.md:@@setupR@@
-status: PROVED (by this seat), line-checked | status_source: REPORT.md:26
+status: @@st:B0@@ | status_source: REPORT.md:@@line:B0@@
 conclusion: identity: draw by draw, the Hellinger distance to the truth is unchanged when the response is centred at the true intercept and divided by the noise level; the noise level may depend on n | scope: every data set on which the coded posterior is defined
 depends_on: W3-MISR:R'@stmt
 
 REGISTRY
 claim: W3-DIST:B1 | kind: lemma | statement: STATEMENT.md:@@B1@@ | premises: STATEMENT.md:@@setupR@@
-status: PROVED (by this seat), line-checked | status_source: REPORT.md:27
+status: @@st:B1@@ | status_source: REPORT.md:@@line:B1@@
 assumptions: A:DIST-A3 ; A:DIST-A5
 conclusion: identity: with probability at least 1 - 4p exp(-c1 n/K^4) all sample variances are within a factor 2 of the population ones, no column is dropped, and the energy and coefficient-cost interfaces hold | scope: n >= 3
 
 REGISTRY
 claim: W3-DIST:B2core | kind: lemma | statement: STATEMENT.md:@@B2core@@ | premises: STATEMENT.md:@@setupR@@
-status: PROVED (by this seat), line-checked | status_source: REPORT.md:28
+status: @@st:B2core@@ | status_source: REPORT.md:@@line:B2core@@
 assumptions: A:DIST-A3
 conclusion: identity: with probability at least 1 - exp(-c2 n/K^4), for all intercepts and all q-sparse directions the sample second moment is at least half the population one | scope: q' log(ep/q') <= c2 n/K^4, q' = min(q, p)
 
 REGISTRY
 claim: W3-DIST:B2 | kind: lemma | statement: STATEMENT.md:@@B2@@ | premises: STATEMENT.md:@@setupR@@
-status: PROVED (by this seat), line-checked | status_source: REPORT.md:29
+status: @@st:B2@@ | status_source: REPORT.md:@@line:B2@@
 assumptions: A:DIST-A3 ; A:DIST-A4
 conclusion: identity: on the events of W3-DIST:B1 and W3-DIST:B2core the unnormalised Gram floor c_psi/8 holds on all sets of size at most q, hence determinant growth and the non-degeneracy interface with c_D = g0/(1 + g0) | scope: window q_n = min(p, ceil(C_q M log n))
 depends_on: W3-DIST:B1@stmt ; W3-DIST:B2core@stmt
@@ -210,7 +212,7 @@ implies: W3-POST:Cor-1R (for sub-Gaussian rows, with a population floor of order
 
 REGISTRY
 claim: W3-DIST:B3 | kind: lemma | statement: STATEMENT.md:@@B3@@ | premises: STATEMENT.md:@@setupR@@
-status: PROVED (by this seat), line-checked, conditional on W3-POST:Thm-1 for its last sentence | status_source: REPORT.md:30
+status: @@st:B3@@ | status_source: REPORT.md:@@line:B3@@
 assumptions: A:DIST-A3 ; A:DIST-A4 ; A:DIST-A5 ; A:DIST-A6
 conclusion: identity: under the assumptions of W3-DIST:Thm-B the second-moment comparison on the true support and the events of the random-design form of the selection theorem hold with common constants and probability tending to 1 | scope: exactly s >= 1
 depends_on: W3-DIST:B1@stmt ; W3-DIST:B2core@stmt ; W3-POST:Thm-1@hyp

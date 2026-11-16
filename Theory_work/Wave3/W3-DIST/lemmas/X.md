@@ -1,6 +1,8 @@
 # Lemma X and Lemma X′ — in-sample exponential core (W3-DIST, stream A; lead: Claude Fable 5.2)
 
-Status: **DRAFT**. v0.3, 2026-11-15 (amendments to v0.2 are marked [v0.3, …]; review record in `../DEPS.tsv`). Statement: `../STATEMENT.md` §3 (Lemma X, Lemma X′); target clauses
+Status: **DRAFT**. v0.4, 2026-11-15 (amendments are marked [v0.3, …] and [v0.4]; review record in `../DEPS.tsv`). v0.4 changes
+constants only (C_d, C₅, the geometric sum of §3 Step 3), so that the dependence of M₀ and C on the sparsity is explicit;
+no step of the argument and no conclusion changes. Statement: `../STATEMENT.md` §3 (Lemma X, Lemma X′); target clauses
 TC2–TC4, TC6 depend on it.
 
 **Provenance and choice of route.** §0–§8 are the API proof attempt `../work/api_attempts/dist1/X-b-1.md` (Fable batch run
@@ -29,10 +31,13 @@ Notation: σ := σ*, z := e/σ ~ N_N(0, I), B := M + M′, s := s₀^r. ρ′ :=
 - **From [P1]:** `thm:T01i`, `lem:slab`, `lem:spec`(b),(d),(e), `lem:prior`(b),(c),(e), `lem:num`, `thm:Ta`, the proof of `lem:den`; constants b_±, κ, c_IG, c♯ = κ²/(c_IGσ²), event 𝓑_n.
 
 **Constants** (depending only on (s, A, σ², M, M′, c_D, κ₀); all nondecreasing in s₀, so stated with s):
-- C_A′ := 4A + 6; C_m := 2s + 1 + (s(A+2) + 5)/log 2; C_d := s + 33; C_x := (A+1)C_d + 2; C_P := C_A′C_d + 4.
+- C_A′ := 4A + 6; C_m := 2s + 1 + (s(A+2) + 5)/log 2; **C_d := 34** [v0.4: was s + 33; see (E4)]; C_x := (A+1)C_d + 2; C_P := C_A′C_d + 4.
 - Λ := max{32C_x, 8C_P, 8B/σ², 48/log 2}; C_Q := C_P + 2√(2C_xΛ) + Λ; b̄ := 0.04(M + σ²); C_β := b̄/σ² + 5 + C_Q; C_v := 2(C_β + 6).
 - **C := max{4(2C_d + 4 + C_P + Λ), C_v}; λ := (4A+1)/(4A+2); C′ := 32; c := ½.**
-- K_s := Σ_{i≥0}(1+i)^s2^{−i}; C₅ := 4^{s+1}e^{3B/(2σ²)}(8A+4)^{s/2}K_s; **M₀ := max{16, (A+1)s, log C₅}.**
+- **C₅ := 2·4^{s+1}e^{3B/(2σ²)}(8A+4)^{s/2}** [v0.4: the factor K_s := Σ_{i≥0}(1+i)^s2^{−i} of v0.3 is replaced by 2; see §3 Step 3];
+  **M₀ := max{16, (A+1)s, log C₅}.** *Dependence on s [v0.4].* C_A′, C_d, C_x, C_P, Λ, C_Q, b̄, C_β, C_v and C do not depend on s (they
+  depend on (A, σ², M, M′)); log C₅ = log 2 + (s+1) log 4 + 3B/(2σ²) + (s/2) log(8A+4) ≤ 4(1+s)(A+1) + 3B/(2σ²) (log 2 + (s+1) log 4 ≤ 2.1(1+s)
+  and ½ log(8A+4) ≤ A + 1), so **M₀ ≤ 16 + 4(1+s)(A+1) + 3B/(2σ²)**: for fixed (σ², M, M′), M₀ is of order (1+s)(A+1).
 
 Since log n ≥ log 3 > 1, on the range: t ≥ M₀, log n ≤ t, n^{(A+1)s₀} ≤ e^t. Also t/N ≤ 1.5n^{−κ₀}.
 
@@ -89,7 +94,8 @@ Let 𝓔_t be the intersection of:
 - **(E2)** σ²/2 ≤ s_y² ≤ 2(M + σ²), so 𝓔_t ⊆ 𝓑_n and 0 < 2b ≤ b̄.
   Ns_y² = ‖μ‖² + 2μ_cᵀe + ‖e‖², and (N3) at S = ∅ gives 2|μ_cᵀe| ≤ 4σ‖μ‖√t. Using 4σ‖μ‖√t ≤ ‖μ‖² + 4σ²t: Ns_y² ≥ Nσ²(1 − ε₁ − 4t/N) ≥ Nσ²/2. Using 4σ‖μ‖√t ≤ ‖μ‖²/3 + 12σ²t and ‖μ‖²/N ≤ 1.5M: s_y² ≤ 2M + σ²(1 + ε₁ + 12t/N) ≤ 2M + 2σ². Both by (b).
 - **(E3)** For J ⊆ [p]∖S₀ with 1 ≤ |J| ≤ min(m_n(t), p − s₀), S = S₀ ∪ J: since μ_c ∈ col X_{c,S}, `lem:spec`(b) gives Q_S ≥ ‖(I − P_S)e‖² = ‖e‖² − ‖P_Se‖² ≥ Nσ²(1 − ε₂) > 0. Here (N2) is applied with |S| ≤ m_n(t) + s₀ ≤ C_m t, so ‖P_Se‖² ≤ σ²(C_A′C_m + 4)t log n. Hence ν/Q_S ≤ (1 + ε₃)/(2σ²).
-- **(E4)** For S ∈ Ω with |S| ≤ d_t (so |S| ≤ m_n(t), and |S| log n ≤ (s₀ + 1) log n + 32t ≤ C_d t): ‖P_Se‖² ≤ σ²C_P t and x_{|S|} ≤ C_x t.
+- **(E4)** For S ∈ Ω with |S| ≤ d_t (so |S| ≤ m_n(t), and |S| log n ≤ (s₀ + 1) log n + 32t ≤ 2t + 32t = C_d t, because
+  (s₀ + 1) log n ≤ (s₀ + 1)t/M₀ ≤ 2t: M₀ ≥ max{16, (A+1)s} ≥ (s₀ + 1)/2 [v0.4]): ‖P_Se‖² ≤ σ²C_P t and x_{|S|} ≤ C_x t.
 
 ## 3. X4(b),(c) — sizes in (d_t, m_n(t)]: untruncated fractional moment
 
@@ -110,8 +116,9 @@ E[1_{𝓔_t}BF_J^λ] ≤ e^{3B/(2σ²)}(8A+4)^{(s₀+j)/2}[w(s₀+j)/w(s₀)]^λ
 - Therefore T_j := Σ_{|J|=j}E[1_{𝓔_t}BF_J^λ] ≤ 2e^{3B/(2σ²)}(8A+4)^{s₀/2}(j+1)^{s₀}q^j, with
   q := (8A+4)^{1/2}c_D^{−1/2}n^{A(1−λ)−λ/2} = (8A+4)^{1/2}c_D^{−1/2}n^{−1/4},
   because A(1−λ) − λ/2 = A/(4A+2) − (4A+1)/(2(4A+2)) = −¼.
-- By (d), e^{s₀}q ≤ n^{−1/8} ≤ ½. Using j₁ + 2 + i ≤ (j₁+2)(1+i) and j₁ + 2 ≤ e^{j₁+1}:
-  Σ_{j>j₁}(j+1)^{s₀}q^j ≤ K_s(e^{s₀}q)^{j₁+1} ≤ K_s n^{−(j₁+1)/8} ≤ K_s e^{−4t}.
+- By (d), e^{s₀}q ≤ n^{−1/8} ≤ ½. Using j₁ + 2 + i ≤ (j₁+2)(1+i), j₁ + 2 ≤ e^{j₁+1} and 1 + i ≤ e^{i} [v0.4]: for j = j₁ + 1 + i,
+  (j+1)^{s₀}q^j ≤ e^{s₀(j₁+1)}e^{s₀i}q^{j₁+1}q^i = (e^{s₀}q)^{j₁+1}(e^{s₀}q)^i, hence
+  Σ_{j>j₁}(j+1)^{s₀}q^j ≤ (e^{s₀}q)^{j₁+1}Σ_{i≥0}2^{−i} = 2(e^{s₀}q)^{j₁+1} ≤ 2n^{−(j₁+1)/8} ≤ 2e^{−4t}.
 
 **Step 4 (non-supersets through S ∪ S₀).** Let S ∈ Ω with S₀ ⊄ S and d_t < |S| ≤ m_n(t); put J′ := S∖S₀, S′ := S ∪ S₀ = S_{J′} (possibly ∉ Ω). Then j₁ < |J′| ≤ min(m_n(t), p − s₀), and
 ℓ(S)/ℓ(S′) = [w(|S|)/w(|S′|)](D_{S′}/D_S)^{1/2}((2b + Q_{S′})/(2b + Q_S))^ν ≤ (2p)^{s₀}(n+1)^{s₀/2}:
@@ -124,7 +131,7 @@ Each S′ arises from fewer than 2^{s₀} such S. Supersets S_J ∈ Ω with d_t 
 π(d_t < |S| ≤ m_n(t)) ≤ A_nV, V := Σ_{J: j₁<|J|≤min(m_n(t),p−s₀)}BF_J, A_n := 1 + 2^{s₀}(2p)^{s₀}(n+1)^{s₀/2} ≤ 2·4^{s₀}n^{(A+1)s₀} ≤ 2·4^{s₀}e^t.
 
 **Step 5 (Markov at power λ).** Let 𝓕₂ := {A_nV ≤ e^{−t}}. By (Σa_i)^λ ≤ Σa_i^λ:
-P(𝓔_t ∩ 𝓕₂ᶜ) ≤ e^{λt}A_n^λ Σ_{j>j₁}T_j ≤ e^t·2·4^{s₀}e^t·2e^{3B/(2σ²)}(8A+4)^{s₀/2}K_se^{−4t} ≤ C₅e^{−2t} ≤ e^{−t} (t ≥ log C₅).
+P(𝓔_t ∩ 𝓕₂ᶜ) ≤ e^{λt}A_n^λ Σ_{j>j₁}T_j ≤ e^t·2·4^{s₀}e^t·2e^{3B/(2σ²)}(8A+4)^{s₀/2}·2e^{−4t} ≤ C₅e^{−2t} ≤ e^{−t} (t ≥ log C₅) [v0.4: 2 in place of K_s].
 
 (ND) is used only for j₁ < j ≤ min(m_n(t), p − s₀), and only through its λ-power mean.
 

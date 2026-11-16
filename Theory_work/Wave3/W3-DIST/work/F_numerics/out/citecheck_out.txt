@@ -2,15 +2,15 @@ STATEMENT: Theory_work/Wave3/W3-DIST/STATEMENT.md   repo root: /home/fb31/Bayesi
 
 | STATEMENT line | pin as written | resolved file | file lines | cited lines | status | text of first cited line |
 |---|---|---|---|---|---|---|
-| 250 | `Scripts/SMC_BVS/core/v3_run.R:142` -> Scripts/SMC_BVS/core/v3_run.R:142 | Scripts/SMC_BVS/core/v3_run.R | 229 | 142-142 | OK | out$hpm <- led$hpm$model; out$hpm_F <- led$hpm$F; out$hpm_provenance < |
-| 250 | `:159-162` (inherits file) -> Scripts/SMC_BVS/core/v3_run.R:159-162 | Scripts/SMC_BVS/core/v3_run.R | 229 | 159-162 | OK | P <- do.call(cbind, lapply(isl, function(r) r$pip)) |
-| 250 | `:163` (inherits file) -> Scripts/SMC_BVS/core/v3_run.R:163 | Scripts/SMC_BVS/core/v3_run.R | 229 | 163-163 | OK | out$mpm <- as.integer(orig[out$pip_primary > 0.5]) |
-| 250 | `:154` (inherits file) -> Scripts/SMC_BVS/core/v3_run.R:154 | Scripts/SMC_BVS/core/v3_run.R | 229 | 154-154 | OK | out$log_Z <- v3_log_sum_exp(logZr) - log(R)                    # poole |
-| 251 | `:210` (inherits file) -> Scripts/SMC_BVS/core/v3_run.R:210 | Scripts/SMC_BVS/core/v3_run.R | 229 | 210-210 | OK | out$leaders_gamma0 <- led$leaders_gamma0; out$leaders_gamma1 <- led$le |
-| 251 | `cpp/v3_core.cpp:358-366` -> cpp/v3_core.cpp:358-366 | Scripts/SMC_BVS/core/cpp/v3_core.cpp | 827 | 358-366 | OK | static List store_to_list(const TopStore& s, const Data& D) { |
-| 252 | `cpp/v3_ledger.h:43-56, 78` -> cpp/v3_ledger.h:43-56 | Scripts/SMC_BVS/core/cpp/v3_ledger.h | 115 | 43-56 | OK | struct TopStore { |
-| 252 | `cpp/v3_ledger.h:43-56, 78` -> cpp/v3_ledger.h:78 | Scripts/SMC_BVS/core/cpp/v3_ledger.h | 115 | 78-78 | OK | top.init(40 * p + 1, true); lead0.init(20 * p, false); lead1.init(20 * |
-| 273 | `cpp/v3_ledger.h:49-56` -> cpp/v3_ledger.h:49-56 | Scripts/SMC_BVS/core/cpp/v3_ledger.h | 115 | 49-56 | OK | bool offer(double v, const std::vector<int>& S) { |
+| 275 | `Scripts/SMC_BVS/core/v3_run.R:142` -> Scripts/SMC_BVS/core/v3_run.R:142 | Scripts/SMC_BVS/core/v3_run.R | 229 | 142-142 | OK | out$hpm <- led$hpm$model; out$hpm_F <- led$hpm$F; out$hpm_provenance < |
+| 275 | `:159-162` (inherits file) -> Scripts/SMC_BVS/core/v3_run.R:159-162 | Scripts/SMC_BVS/core/v3_run.R | 229 | 159-162 | OK | P <- do.call(cbind, lapply(isl, function(r) r$pip)) |
+| 275 | `:163` (inherits file) -> Scripts/SMC_BVS/core/v3_run.R:163 | Scripts/SMC_BVS/core/v3_run.R | 229 | 163-163 | OK | out$mpm <- as.integer(orig[out$pip_primary > 0.5]) |
+| 275 | `:154` (inherits file) -> Scripts/SMC_BVS/core/v3_run.R:154 | Scripts/SMC_BVS/core/v3_run.R | 229 | 154-154 | OK | out$log_Z <- v3_log_sum_exp(logZr) - log(R)                    # poole |
+| 276 | `:210` (inherits file) -> Scripts/SMC_BVS/core/v3_run.R:210 | Scripts/SMC_BVS/core/v3_run.R | 229 | 210-210 | OK | out$leaders_gamma0 <- led$leaders_gamma0; out$leaders_gamma1 <- led$le |
+| 276 | `cpp/v3_core.cpp:358-366` -> cpp/v3_core.cpp:358-366 | Scripts/SMC_BVS/core/cpp/v3_core.cpp | 827 | 358-366 | OK | static List store_to_list(const TopStore& s, const Data& D) { |
+| 277 | `cpp/v3_ledger.h:43-56, 78` -> cpp/v3_ledger.h:43-56 | Scripts/SMC_BVS/core/cpp/v3_ledger.h | 115 | 43-56 | OK | struct TopStore { |
+| 277 | `cpp/v3_ledger.h:43-56, 78` -> cpp/v3_ledger.h:78 | Scripts/SMC_BVS/core/cpp/v3_ledger.h | 115 | 78-78 | OK | top.init(40 * p + 1, true); lead0.init(20 * p, false); lead1.init(20 * |
+| 299 | `cpp/v3_ledger.h:49-56` -> cpp/v3_ledger.h:49-56 | Scripts/SMC_BVS/core/cpp/v3_ledger.h | 115 | 49-56 | OK | bool offer(double v, const std::vector<int>& S) { |
 
 Total pins (each range/list item counted once): 9;  OK: 9;  MISS: 0
 
