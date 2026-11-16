@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.12 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.13 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -174,7 +174,15 @@ atomically, so other threads may read it at any time. Caps: top = 40p + 1 (HPM o
 value lg0); lead1 = 20p (LEX, value F). Leader stores exist only inside calibration, where they feed V (D-7). **Final-run
 leader stores are not engine outputs in any mode, compat included** (D-7, confirmed safe by Theory PSMC-S0): final-run
 ledgers are built with `leaders = false`, and compat comparisons against v3 put v3's final `leaders` on the exclusion
-list. A model's value is a deterministic function of S, so duplicates are equal entries.
+list.
+
+**Values (v0.1.13; WP3_ARCH_REVIEW R7).**
+- **Bit form:** a model's value is a deterministic function of S, so duplicates are equal entries.
+- **Class A:** values are path-dependent maxima. A model reached by two flips can carry two class-A values. The store
+  keeps each model once, with the larger value, and the HPM provenance is the first event (smallest key) with that
+  larger value. This is deterministic and T3-invariant.
+- Every store (island, reference `Store`, merge) therefore holds **one entry per model, with its best offered value**,
+  and its content is the top-c of distinct models by best value, independent of offer order.
 
 ### 4.2 Ledger (one per island) and ThreadLedger (one per worker thread)
 ```cpp
@@ -303,7 +311,8 @@ Sections (names fixed; WPs may add sections, never rename):
 - `setup.bin` (WP2): `nb_ptr` i64, `nb_idx` i32, `dup_ptr/dup_idx`, `cut_ptr/cut_idx`, `blk_ptr/blk_members`, `blk`,
   `pos`, `code_ptr`, `logr`, `logprof_ptr/logprof`, `logF`, `size_logmass`, `size_cum`, `cond_ptr/cond_cum`,
   `mode_S`, table top stores `tstore_{top,lead0,lead1}_{v,off,len,hash,pool}`, `meta`.
-- `calib.bin` (WP4): `grid`, `meta` {tier, N, L, Hm, I_used, flags, triggers}, `grids_all_ptr/grids_all`, stage
+- `calib.bin` (WP4): `grid`, `meta` {tier, N, L, Hm, I_used, flags, triggers, **`k_store`** (the calibration top
+  store's mean |S|; the k of §7's admission rule)}, `grids_all_ptr/grids_all`, stage
   records, calibration stores (as stores), HPM (`hpm_S`, `hpm_ev`), `logical` u64 N_PHASE×N_MECH.
 - `island_r.bin` (WP3; `include/v4/island/island_file.h`):
   - `meta` holds r, N, T, L, Hm, p, status, reason, inputs, binary, timings, `logZ_hex` and `init_hash`.
@@ -407,7 +416,7 @@ Status fit_status(span<Status>);   // first that applies: invalid_input, interna
   - the setup inputs (tables, neighbour graph), whose size the **caller** supplies.
 
   Admission at task start plans the store with model size **k = max(q90(π₀ size) + 1 from setup, calibration's
-  measured mean |S| when calib.bin exists)**. At p ≥ 10⁵:
+  measured mean |S| when calib.bin exists, i.e. `calib.bin` `meta.k_store`, §5.1)**. At p ≥ 10⁵:
   - a final island without a calib.bin k is refused with `invalid_input`;
   - calibration islands, which run before calib.bin exists, use the setup-derived k.
 
@@ -487,3 +496,6 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
 - v0.1.12 (2026-11-16, WP1; PR #26 re-check m2) — §7: the admission plan's k = max(q90(π₀ size) + 1 from setup,
   calibration's mean |S| when calib.bin exists). At p ≥ 10⁵ a final island without a calib.bin k is `invalid_input`;
   calibration islands use the setup-derived k.
+- v0.1.13 (2026-11-16, WP1; WP4 PR #37, WP3_ARCH_REVIEW R7) — §5.1: `calib.bin` `meta.k_store` (calibration top store
+  mean |S|), cross-referenced from §7 admission. §4.1: class-A values are path-dependent maxima; every store keeps one
+  entry per model with its best value (the reference `Store` now de-duplicates by model; deterministic, T3-invariant).

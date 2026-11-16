@@ -1,6 +1,9 @@
 // store.h -- top-c store of distinct models under a strict total order, flat arrays + integer pool (INTERFACES §4.1).
 // Content after compact() = the top-c of everything ever offered, independent of offer order (core/cpp/v3_ledger.h:35-66
 // semantics: TopCmp order, distinct models, capacity c; but no std::set and no per-model heap allocation).
+// A model may be offered with different values (class A: path-dependent maxima, INTERFACES §4.1): the store holds each
+// model ONCE, with the best value it was offered with ("top-c of distinct models by their best value"); still
+// independent of offer order.
 // Layout: [0, nkept) the kept run (sorted, unique); [nkept, size) the staging run (unsorted offers). compact() sorts the
 // staging run and merges it into the kept run (peak about 2.5 c entries with the max(c/4, 4096) staging trigger).
 // cutoff(): -inf until c entries are kept, then the worst kept value; monotone non-decreasing; atomic (other threads
@@ -40,6 +43,8 @@ class Store {
 
  private:
   size_t nkept_ = 0;                                    // kept run = [0, nkept_)
+  std::vector<uint32_t> hidx_;                          // kept run indices sorted by (hash, model): duplicate lookup
+  bool key_less(uint32_t a, uint32_t b) const;          // (hash, then lexicographic model)
   std::atomic<double> cut_{-__builtin_huge_val()};
   uint64_t trigger() const { return cap / 4 > 4096 ? cap / 4 : 4096; }
 };
