@@ -178,5 +178,7 @@ HQ adds its recommendation and forwards it to the owner the same day. Nothing ex
 - A separate top-level thread is allowed only for a large, independent piece of work: an independent headline theorem,
   or a multi-day campaign the owner may want to talk to directly. The manager says why when launching it.
 - Threads already running as top-level finish where they are, no relaunch. New work follows this rule.
-- **Never shut anything down** (owner, 2026-11-15): no settling, archiving, cancelling, interrupting or deleting of any
-  thread or agent, finished or not, unless the owner asks. Finished threads simply stay idle.
+- **Let work run; clean up when done** (owner, 2026-11-15). Never cancel, interrupt or delete running work. When a
+  **non-department thread** (ticket lead, helper, reviewer, recorder task, expert) has **finished**, its manager
+  **settles** it (`t3_thread_organize` action `settle`), so the sidebar shows only HQ, the departments and work in
+  progress. Department threads and HQ are never settled. Nothing is archived or deleted unless the owner asks.
