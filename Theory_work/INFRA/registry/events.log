@@ -1838,3 +1838,5 @@ utc	actor	action	id	before	after	reason
 2026-11-16T09:15:58Z	INFRA	ingest	W3-PSHARP-R:A2C		v1.0.0 PROVED-CHECKED; council R2, MANIFEST fdfd45629f8716ac00e9854	ingested from W3-PSHARP-R_CP3.jsonl
 2026-11-16T09:16:09Z	HQ	accept	W3-PSHARP-R:A2C		v1.0.0 fp2:3f311b8dcab967234df20f68	check.py --acceptance W3-PSHARP-R:AE W3-PSHARP-R:A2C: PASS (0 ERROR)
 2026-11-16T09:16:09Z	HQ	accept	W3-PSHARP-R:AE		v1.0.0 fp2:7da164a089f3244bc2bac4f7	check.py --acceptance W3-PSHARP-R:AE W3-PSHARP-R:A2C: PASS (0 ERROR)
+2026-11-16T10:49:57Z	HQ	suspect	W3-MISR:Cor-H	ACTIVE v1.0.0	SUSPECT v1.0.0	HQ GO real run (2026-11-16) (task S0): KL reading at STATEMENT.md:191-195 known false for a random intercept (counterexample W3-MISR-R reviews/L1_statement_lock_sol.md:7, K1-1); NARROW pending (HQ 11-16)
+2026-11-16T10:49:57Z	HQ	set	W3-MISR:Cor-H	notes=	notes=HOLD (HQ 11-16, task S0): KL reading at STATEMENT.md:191-195 known false for a r	HQ GO real run (2026-11-16)
