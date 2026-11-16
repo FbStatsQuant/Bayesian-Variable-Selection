@@ -15,3 +15,9 @@ Baseline (5 Opus builders, scope as is): first 1M fit ≈ **Jan 5–9**.
 if the owner wants the before-holidays date to be realistic; (a) only with (b), since more builders without a stronger WP3
 design increases churn. Honest bottom line: **before the holidays needs (a)+(b)+(c) and every gate passing first time;
 the first week of January is the realistic date** with (c) alone.
+
+**Update 11-16 (after the SPR sweep, `results/WP3_ROUNDS_SPR.md`):** at 10⁶ the scoring products are memory/NUMA bound
+(≈ 1.65× the plan per pair; 48 → 96 threads only 1.15×). **Yes, the WP3 architect (b) would also cover the NUMA layout of the
+scoring products:** socket-local islands and first-touch placement, the X / score-row layout and blocking for reuse per
+pass, and the choice of G and tile. That is now the largest lever on the 1M budget (+≈ 5.5k core-h if it is not fixed), so
+(b) moves from tail-risk insurance to a direct cost lever. Our own L1–L3 batch (≤ 80 core-h) runs either way.

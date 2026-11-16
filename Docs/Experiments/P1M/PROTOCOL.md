@@ -133,6 +133,9 @@ request.
 - Owls: `nice`, ≤ 16 cores, gradual ramp-up.
 - Exploratory batches ≤ ~200 core-h on HQ's standing authorisation (logged); gated stages and larger batches only with
   HQ's go.
+- **Cost honesty (HQ, 11-16).** Before submitting, compare the batch's realistic cost with the figure already given to
+  HQ. If the actual may exceed it by more than 50%, tell HQ before submitting, even under the ~200 core-h authority.
+  Size every estimate from the slowest measured point, not the builder's guess.
 - Daily machines line in the report.
 
 
@@ -157,3 +160,4 @@ Proposed by the Engineering manager, approved by HQ, recorded in the changelog b
 ## Changelog
 - v1.0 (2026-11-15) — first version; submitted to HQ with EXP-CP1 v2. Includes the owner-priority rule for NOTS (owner, 11-15).
 - v1.0 approved by HQ 11-15, with two edits folded in: §4 data lifecycle → continuous offload (desktop primary, laptop mirror, NOTS freed after verification, 7-day rule); §2 Sol reviews subject to the Codex pacing level (POLICIES §14; at level ≥ 1 routine PR reviews are Opus-only).
+- v1.1 (2026-11-16) — §7: cost-honesty rule (HQ, after the WP3 SPR sweep cost 77.4 core-h against the stated ≈ 40).
