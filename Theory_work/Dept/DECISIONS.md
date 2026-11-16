@@ -384,3 +384,9 @@
 - **D58.** Task N real run (gate (a) = no A4 regression + every checkpoint row clean; 10 HQ-file rows → post-freeze
   format package). Cont-F/R edge fix moved up right after N (W3-RM2-R CP3 path), same gates + RM2-R staged ingest; UNI-0
   record gap reported separately if it remains.
+
+## 2026-11-16 02:55 CT — W3-SCR-R2 result
+- **D59.** Both seats ACCEPT all 21 SCR claims; A1 sound as stated (fixed κ, b, M, σ); both gates FAIL only on REPORT.md
+  §2 summaries (F1–F4, faithfulness). Proposed to HQ: REPORT §2 → pointers to STATEMENT lines (v4 "REPORT restates
+  nothing"; status lines byte-identical) + diff round (same seat models, fresh; Sol + Opus). Round-count question to HQ.
+  Row 3.7 keeps the (b1) label until it passes. SCR-R1 = corollary of SCR-A + B2d with κ_n b_n²(n²−1) ≥ 4M_n².
