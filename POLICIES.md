@@ -204,3 +204,24 @@ decides with its Fable consultant for anything important. Limits:
 - every decision is logged in `HQ_DECISIONS.md` with a "(overnight)" tag.
 
 When the owner is back, HQ gives a short morning brief: what was decided, what moved, and what needs him.
+
+## 12. Compute discipline on NOTS and Owls (owner, 2026-11-15): "military order and discipline"
+1. **Use NOTS as much as needed, 24/7**, professionally: every job batch is sized, logged (ids, actual core-h) and inside an
+   approved budget. Never touch `/home/fb31/projects/BVS/SMC_BVS_v3/deploy/` or `/projects/ml75`.
+2. **The home folder never clogs** (10 GB quota). Heavy data is never written to home; it goes to `/scratch/fb31/`. A cleaning
+   crew checks home every day (guard threshold 8 GB, target below 7 GB) and cleans caches, logs and temp files.
+3. **Heavy experiment data, when an experiment is done**, is downloaded to the owner's laptop (Felipe_Bedoya) at
+   `C:\Users\felip\Documents\<folder named by Engineering>`, then removed from NOTS scratch once the copy is verified
+   (checksums). HQ sets up the transfer route with the owner before the first heavy dataset. Until then, data stays in scratch.
+4. **One unified, indexed SMC-BVS tree on NOTS**, kept organized continuously. No stray or "flying" folders.
+   - The tree is in scratch, with home kept minimal. An `INDEX.md` at its root records what lives where and its provenance.
+   - Only idle data moves: nothing used by queued or running jobs. Old paths get a symlink or an index entry.
+   - The exclusions in rule 1 stay untouched.
+5. **Owls is fair game for small-scale computation.** It is a shared server: use `nice`, cap concurrent cores (≤ 16 unless
+   HQ approves more), and run nothing large or multi-day. Outputs live in the owning worktree or folder; no clutter in
+   `/home/fb31`.
+6. **NOTS and Owls must look squeaky clean 24/7.** Every file has an owner and a place, temp files are removed when a job
+   ends, and stray files are a defect reported in the daily report.
+
+Owner: the SMC - Engineering Department runs the crews (cleaning, transfer, organization). The Theory Department follows the
+same rules for anything it runs.
