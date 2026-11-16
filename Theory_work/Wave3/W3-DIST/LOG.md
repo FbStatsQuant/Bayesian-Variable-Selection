@@ -186,3 +186,14 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   "Not yours (HQ keeps until done): W3-DIST"; HQ's own note of this evening said W3-DIST stays under HQ until CP3.
   Action: the clock correction (above) is done; the reporting change is held until HQ confirms it; a one-line
   confirmation request is sent to the HQ thread. Work continues unchanged. HOLDS read: none.
+- 19:45 — HQ confirmed the move (records on main updated: POLICIES.md §1, Dept/BRIEF.md "Handover", HQ_NOW): W3-DIST now reports to the SMC - Theory Department manager (thread mcp:launch:21e33dae…; ≤ 10 lines at checkpoints and daily; API cards routed through the department). HQ keeps CP3 acceptance and headline cards. Owner memo (POLICIES §4): a new Fable expert needs approval via HQ and the owner; the lead continues as is. HOLDS read: none.
+- 19:45 — Line check L1 back (`reviews/L1_astra_X.md`; gpt-6-astra, codex, high; on lemmas/X.md sha 4c3a657742455bef):
+  **Lemma X VERIFIED; Lemma X′ VERIFIED; no finding at any severity**; every section §1–§7, §9 VERIFIED; all [P1]
+  citations audited; null truth, p = 2, singular true blocks, duplicates, unions outside Ω and the top of the t range
+  checked analytically; no counterexample found (algebraic verification, no numerical search). DEPS.tsv: rows X, X′
+  → **OK** (checked_sha = sha, checked_by L1). Kill budget on X: 1 of 3 attempts used, passed.
+- 19:45 — CP2 break review BR1 prepared (`reviews/BRIEF_BR1_astra_break.md`): Astra, on STATEMENT + lemmas/X.md + [P1];
+  asks to break Lemma X and the passage to (1.1)/(1.2), then CONTINUE / REDIRECT / STOP. Launched now (Lemma X no longer
+  consumes S or V; their line check L5 runs in parallel). HOLDS read: none.
+- 19:47 — Owner memo (via the Theory Dept manager; POLICIES.md §4) received and adopted: technical problems are solved inside the ticket; Opus/Sonnet helpers within the brief; a new Fable expert (including the possible second Fable for S-FIT) needs permission requested through the department manager; big problems reported to the manager at once. One-line confirmation with the L1 result sent to the department thread. HOLDS read: none.
+- 19:52 — Owner's final rule on helpers noted (POLICIES §4, §8): Opus/Sonnet/Haiku helpers free within the brief; a new Fable needs the owner's green light, requested through the department manager (problem, why Opus is not enough, how many, size/duration, account). No change to the plan. HOLDS read: none.
