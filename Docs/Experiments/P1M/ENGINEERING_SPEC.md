@@ -207,7 +207,8 @@ about 10× larger at n ≥ 256 (B = 16).
 | setup transient: top-B heaps and edge list | 12 B × (pB + edges) | 2 MB | 20 MB | 0.2–0.5 GB | **(guess)** |
 | particles | sparse supports + (log m, log γ₀, d, F, hash); two populations | < 1 MB | < 1 MB | < 1 MB | v3.1 uses p/8 bytes per particle: 0.6 GB at 1M |
 | RB arrays | `rb_acc`, 4 × `rb_round`, `pip` | 0.5 MB | 5 MB | 48 MB | exact |
-| top store, island | c = 40p + 1 entries × ≈ 56 B (26 B fixed + pool at k ≈ 7); 2c during compaction | 22–45 MB | 0.22–0.45 GB | 2.2–4.5 GB | **(guess for k)** |
+| top store, island (ONE per island; INTERFACES v0.1.2) | c = 40p + 1 entries; MEASURED (WP1, Owls, k = 7): 68.5 B per kept entry, 136 B per cap entry at peak (staging merge ≈ 2.25c) | 27–54 MB | 0.27–0.54 GB | **2.7 GB kept, ≈ 5.4 GB peak (worst case)** | measured at c = 4·10⁶ (517 MB peak), scaled |
+| per-thread offer buffers | 65,536 entries × ≈ 70 B per thread | 4.6 MB/thread | same | ≈ 0.4 GB at 96 threads | WP1 default |
 | leader stores | 2 × 20p × ≈ 56 B; calibration only | 22 MB | 0.22 GB | 2.2 GB | final islands: none |
 | label-major working set | round orders (u32 × p per particle, groups of G = 256 particles), gathered X_A, products for a block of 4,096 labels, odds for the distinct supports | 0.1 GB | 0.3 GB | 1.5–3 GB | **(guess)**; G is a free parameter, not part of the law |
 | score cache | none in production; ≤ 64 MB per thread if a memo is kept | 0 | 0 | 0 | OD-3 |

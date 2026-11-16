@@ -222,3 +222,145 @@ Extra probes I ran (MEASURED, Owls, nice 19, 3 threads):
    - The diff touches only `Scripts/SMC_BVS/engine_v4/`, and `core/` is unchanged.
    - No hard-coded paths, apart from the `/tmp` fallback in `run_tests.sh:26`.
    - The largest file is 4.7 MB and the fixtures total 13 MB (≤ 20 MB).
+
+---
+
+## Re-check (diff 8ff9775..e53fda6; the same reviewer, 2026-11-15)
+
+Scope: `git diff 8ff9775..e53fda6` only (34 files, +817 / −180, all inside `Scripts/SMC_BVS/engine_v4/`). Disposition:
+`reviews/PR11_disposition.md` (#10 deferred to WP5, so it is not re-checked). INTERFACES is now **v0.1.2**, and the
+branch copy is identical to the docs copy.
+
+### Final verdict: **MERGE**
+- All 11 findings in scope are fixed.
+- #1 (cut-off design): correct by argument and by test. The cut-off can never drop an entry that belongs in the top-c,
+  including under concurrent flushes.
+- Three residual MINOR notes (R1–R3 below). None blocks the merge. R1 is a contract-wording clarification that WP4 needs
+  before it codes the merge's input validation.
+
+### Test run (MEASURED)
+
+| | |
+|---|---|
+| Machine and toolchain | Owls, GCC 11.5.0, glibc 2.34 (FMA variant) |
+| Command | `TMPDIR=/home/fb31/SMC_Engineering_Department/tmp/20261115-review-pr11b tests/run_tests.sh --full --threads 3` (nice 19, -j3), clean build |
+| Result | **35 / 35 PASS**, 0 check failures; 28.6 s wall. The 7 new cases all pass |
+| Golden counts | Unchanged: 1,608 / 773,998 / 5 prep cases / 231 forced routes |
+| Fixtures | 74 files, all SHA-256 match `MANIFEST.json`; 13 MB |
+
+The `Xs`, `ys` and `stats` golden files are unchanged. Only `prep/index.json` changed (`raw_sha256` → `X_sha256` /
+`y_sha256`), and the prep golden test still regenerates X with `gen` and matches R's `Xs` bit for bit.
+
+Store probe:
+
+| Probe (c = 4,000,001) | Peak RSS | Time | Bytes per cap entry |
+|---|---|---|---|
+| My first-round probe: random values, k = 7, 1.6·10⁷ offers | **530 MB** (was 724 MB) | 13.1 s (was 21.6 s) | ≈ 133 |
+| `v4_bench_store` | 516 MB | 4.7 s | 135 |
+
+- The 133–135 B per cap entry matches INTERFACES "≈ 2.5c entries".
+- ESTIMATE at p = 10⁶: about 5.3 GB for the single island top store, plus threads × 3 × 65,536 buffered entries
+  (about 0.5 GB at 48 threads).
+
+### Findings 1–9, 11, 12
+
+| # | Status | Evidence |
+|---|---|---|
+| 1 | **FIXED** | Design analysed in the next subsection. `src/common/store.cpp:37` drops strictly below the cut-off; `store.cpp:82` publishes the cut-off only after a compact that leaves c entries kept, and never lowers it; `src/common/ledger.cpp:95` is the ThreadLedger quick reject; `ledger.cpp:99-100` flushes under the island lock; `ledger.cpp:69-71` absorbs under the lock. Tests: `thread_ledgers_equal_serial_ledger` (`tests/test_ledger.cpp:65`) and `store_cutoff_monotone_and_exact` (`tests/test_store.cpp:62`) |
+| 2 | **FIXED** | `src/cli/main.cpp:61` calls `require_fma_variant()` for every command except info / version. `main.cpp:109` puts the binary block in every record; `gen.cpp:165` and `prep.cpp:117` put it in `meta`. Test: `cli_pipeline_exit_codes_and_records` (`tests/test_cli.cpp:21`): `GLIBC_TUNABLES=glibc.cpu.hwcaps=-AVX2,-FMA gen` exits 13 and writes no file; `version` still runs |
+| 3 | **FIXED** | All 6 from-r inputs are hashed (`prep.cpp:191`); the partition of `kept` / `dropped` is validated (`prep.cpp:178-188`). Test: `prep_from_r_equals_cpp_path` (`tests/test_prep.cpp:180`) gives section hashes equal to the C++ path, refuses a bad partition, and checks the `load_data` round trip |
+| 4 | **FIXED** | A missing index is a FAIL unless `--allow-missing-fixtures` (`test_prep.cpp:22-29`); a missing file throws; vector lengths are checked. Residual nit: `_consts.f64` and `ptr` / `idx` / `route` are read without a length argument; the size cross-checks cover all but `consts` |
+| 5 | **FIXED** | `content_sha256` = SHA-256 of the header (both hash fields zeroed) ‖ table (`format.cpp:24`, `:75`), verified at `:125`; `meta` now has `kind` and `mode`. Test: `format_roundtrip_and_alignment` (`tests/test_format.cpp:28-31`): a changed mode byte is refused |
+| 6 | **FIXED** | `include/v4/rng.h:90-92`. Test: `compat_streams_equal_v3` (`tests/test_rng.cpp:53`) throws for PILOT tier 2, DIAG tier 2 and DIAG island 0 |
+| 7 | **FIXED (one residual, R2)** | `types.h` and the R-golden runner text are corrected (INTERFACES §1, §2, §8); `gen-test` and `version` are listed. I5 is implemented as `CheckedSource` (`rng.h:133`). Test: `checked_source_I5` (`tests/test_rng.cpp:56`) |
+| 8 | **FIXED** | INTERFACES:100 (π₀ draw at slots 0…u−1, accept at `SLOT_ACCEPT`); `rng.h:45`; used in `checked_source_I5` |
+| 9 | **FIXED** | `main.cpp:110-115` exits 20 / 21; `prep.cpp:205` makes invalid input exit 13; INTERFACES §7 documents it. Test: `cli_prep_data_outcomes_exit_20_21` (`tests/test_cli.cpp:46`): exit codes, no `data.bin`, `prep_status`, `hpm: []` |
+| 11 | **FIXED** | `format.cpp:120` (table count), `:131` (overflow-safe range check; sections start after header and table), `:97` (directory fsync); `prep.cpp:126-140` (every section length, plus `n` / `p` / `p_raw` sanity). Covered by inspection and by the round trip in `prep_from_r_equals_cpp_path`; there is no dedicated malformed-file test |
+| 12 | **FIXED** | See the item list below |
+
+Finding 12, item by item:
+- R overflow branch: `prep.cpp:19`, with a note that it cannot be reached.
+- u64 guard and `hex64`: `json.cpp:13`. Test: `json_u64_guard_and_hex64`.
+- Build directory: TMPDIR is required (`run_tests.sh:9`), and `.gitignore` now ignores `v4_build/`.
+- `/tmp` fallback removed: `run_tests.sh:29`.
+- `cond_A` is compared: `test_score.cpp:28-29`.
+- CLI tests added: `tests/test_cli.cpp`.
+
+### #1: is the cut-off exact under concurrency?
+**Conforms to INTERFACES v0.1.2 §4.2 and §7(4):** one store-owning `Ledger` per island; per-thread `ThreadLedger`s with a
+`Tally` and three bounded `OfferBuffer`s and no stores; absorb at stage ends in thread-index order; quick rejects against
+`Store::cutoff()`.
+
+**Why the cut-off is exact:**
+- `cut_` is written only in `compact()` (`store.cpp:82`), and only when the kept run holds exactly c entries.
+- The kept run is the top-c of a set of offers that really happened, so every value ever published is the value of the
+  c-th best of a subset of the final union.
+- As the union grows, that c-th value can only rise. The cut-off is therefore monotone (also enforced by `w > old`) and
+  is always a lower bound on the final c-th value.
+- An offer with `value < cutoff` is strictly worse than c distinct entries that are in the final union, so it cannot be
+  in the final top-c.
+- Ties (`value == cutoff`) are never dropped by the cut-off. They go on to `Store::offer`, where the full order (size,
+  then lexicographic) decides.
+
+**Concurrency:**
+- Threads read `cut_` with a relaxed atomic load and no lock (`ledger.cpp:95`).
+- A stale read can only return an older, lower value, which drops fewer offers; that is safe.
+- Every value that can be read is a valid lower bound, and no value can come from the future: it is written only after a
+  compact under the island mutex.
+- `Store::offer` and `compact` (the kept arrays) are touched only under the island mutex (`ledger.cpp:71`, `:99`).
+- `cap` is constant after `init`, so the unlocked `s.cap` read is benign.
+
+**Test evidence:** `thread_ledgers_equal_serial_ledger` runs 1–3 OpenMP threads × buffers of 1 / 7 / 65,536 × two
+configurations. One configuration uses caps 81 / 40, so the cut-off is active (36,956 offers dropped). Values are integers
+in 0..12, so ties are heavy. Flushes run concurrently with the cut-off reads, with absorbs every 5,000 events. The island
+ledger equals the serial ledger in HPM and provenance key, all three store content hashes, counters and island_best.
+
+**Notes for WP3, not defects:**
+- A flush can trigger a compaction while holding the island lock. At c = 4·10⁷ that is a multi-second stall (ESTIMATE:
+  sorting the c/4 staging run and merging) for every thread whose buffer fills meanwhile. Measure it in WP3; a
+  double-buffered store or compacting at the stage end are options.
+- A NaN value would pass the cut-off test and break the strict order. As before, guard with
+  `if (std::isnan(value)) throw Error(internal_error)` in `Store::offer`.
+
+### WP1's statement that the content hash changes per build, so data identity is checked by section hashes
+**Facts checked:** `meta` now carries `binary_block()`: the sha256 of `/proc/self/exe`, the git commit, the compiler,
+flags and libm. `content_sha256` covers the table, which includes the `meta` section's hash. So any rebuild or new commit
+changes the content hash of every file it writes, even when the data are identical. Within one binary the content hash is
+reproducible (`gen_command_writes_raw_and_truth`).
+
+**Manifests: sound, and stricter than before.**
+- A manifest pins the exact files on disk: `verify_inputs`, `src/common/provenance.cpp`, compares content hashes.
+- The driver writes each manifest after its inputs exist, so per-build variation does not matter. A regenerated input,
+  even with identical data, invalidates the manifests that point at the old file; that is the correct fail-closed
+  behaviour.
+- Manifests must keep using content hashes. They must not switch to section hashes.
+
+**Merge input validation: sound if it uses content hashes, unsound if it uses section hashes.**
+- The merge (WP4) must establish that every island consumed the same `data.bin`, `setup.bin` and `calib.bin`. The right
+  check is: each island's `meta.inputs` content hashes equal the merge manifest's content hashes for those files. That is
+  exact file identity, and it works with per-build hashes because the input files are produced once and shared.
+- "Data identity by section hashes" would be **unsound** for engine files, because part of their meaning lives in `meta`:
+  - `calib.bin`: `meta` holds tier, N, L, Hm, I_used, flags and triggers;
+  - `island_r.bin`: `logZ`, status and timings are in `meta`.
+- Two `calib.bin` files that differ only in N or L would have identical non-meta section hashes.
+
+**R1 (MINOR, contract wording; before WP4 codes the merge).** INTERFACES §5.1 (line 207) says, without qualification,
+"Data identity (e.g. regenerated data) is checked by section hashes". Narrow it in a v0.1.3 changelog line:
+- **file identity** (manifests, merge, restart from a checkpoint) = `content_sha256`, always;
+- **data identity across builds** = *named* data sections only: `X_cm` and `y` for raw files (`X_sha256` / `y_sha256`),
+  and `Xs_cm`, `ys`, `kept` for data files. Never used for setup, calib, island, fit or law files.
+- Also add these rules:
+  - the merge checks that every island's binary block agrees (libm sha256, `fma_variant`, flags, and for T bit-identity
+    the git commit), since bit-form islands built from different binaries could merge silently today;
+  - a checkpoint restart refuses a different binary block.
+- Cross-machine bit-identity (T2) compares section hashes excluding `meta`, or the fit fingerprint, never content hashes.
+
+### Residual MINOR notes (non-blocking)
+- **R1:** see above.
+- **R2:** INTERFACES:107 says WP3 and WP4 enable `CheckedSource` "in builds with `-DV4_CHECK_ADDRESSES=ON`", but
+  `CMakeLists.txt` defines no such option (grep: no match in CMake, `include/` or `src/`). Add
+  `option(V4_CHECK_ADDRESSES ...)` and a `V4_CHECK_ADDRESSES` compile definition, or drop the sentence.
+- **R3:** the test-harness nits under #4 (no length check on `_consts.f64`), and no dedicated malformed-container test
+  for #11 (a crafted offset or length that would overflow). Add them when convenient.
+
+Temporary files: `/home/fb31/SMC_Engineering_Department/tmp/20261115-review-pr11b` was removed after the run.
