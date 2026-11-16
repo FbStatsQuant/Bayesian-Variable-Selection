@@ -16,6 +16,7 @@
 #include "v4/eval.h"
 #include "wp5_tk.h"
 
+using namespace v4;
 using namespace v4::eval;
 
 namespace {
@@ -44,7 +45,7 @@ Fixture make_fixture(int id) {
     double mu = T.alpha; for (int t = 0; t < 5; ++t) mu += T.beta[t] * X[(size_t)(T.S0[t] - 1) * n + i];
     y[i] = mu + N(g);
   }
-  OwnedData O = standardise(X.data(), y.data(), n, p);
+  Data O = data_from_raw(X.data(), y.data(), n, p);
   Model S;   // internal = orig − 1 (no dropped columns for continuous designs)
   switch (id % 4) {
     case 0: S = {5, 17, 29, 41, 53}; break;                 // S0
@@ -54,7 +55,7 @@ Fixture make_fixture(int id) {
   }
   std::sort(S.begin(), S.end());
   if (id >= 16) S = {5, 29};                                // badly misspecified: large m, s²
-  Component c = component_from_post(O.D, model_post(O.D, S), 1.0);
+  Component c = component_from_post(O, model_post(O, S), 1.0);
   Fixture f; f.name = "f" + std::to_string(id) + "_" + des + "_n" + std::to_string(n);
   f.T = T; f.orig = c.orig; f.b = c.b_mean(); f.a = c.a_mean(); f.v = c.v_mean();
   return f;
@@ -96,7 +97,7 @@ void mc_x(const Fixture& f, G gfun, uint64_t draws, uint64_t seed, double& mean,
 
 }  // namespace
 
-TEST_SLOW(gate_T7_closed_forms_vs_monte_carlo) {
+TEST_SLOW(wp5_gate_T7_closed_forms_vs_monte_carlo) {
   const std::string tsv = std::string(std::getenv("TMPDIR") ? std::getenv("TMPDIR") : ".") + "/T7_result.tsv";
   FILE* fo = std::fopen(tsv.c_str(), "w");
   std::fprintf(fo, "fixture\tquantity\tclosed\tmc\tmc_se\ttol3\tdraws\tpass\n");

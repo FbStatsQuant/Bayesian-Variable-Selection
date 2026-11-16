@@ -4,6 +4,7 @@
 #include "v4/eval.h"
 #include "wp5_tk.h"
 
+using namespace v4;
 using namespace v4::eval;
 
 // composite Simpson on [a,b] with m (even) intervals
@@ -14,7 +15,7 @@ template <class F> static double simpson(F f, double a, double b, int m) {
 }
 static double lnorm(double y, double m, double v) { return -0.5 * std::log(2 * M_PI * v) - 0.5 * (y - m) * (y - m) / v; }
 
-OwnedData test_data(int n, int p, double rho, uint64_t seed, std::vector<int32_t> S0 = {3, 9, 15}, std::vector<double> beta = {1.0, -0.8, 0.6}) {
+static Data test_data(int n, int p, double rho, uint64_t seed, std::vector<int32_t> S0 = {3, 9, 15}, std::vector<double> beta = {1.0, -0.8, 0.6}) {
   std::mt19937_64 g(seed); std::normal_distribution<double> N(0, 1);
   std::vector<double> X((size_t)n * p), y(n);
   for (int i = 0; i < n; ++i) {
@@ -23,10 +24,10 @@ OwnedData test_data(int n, int p, double rho, uint64_t seed, std::vector<int32_t
     double mu = 0; for (size_t t = 0; t < S0.size(); ++t) mu += beta[t] * X[(size_t)(S0[t] - 1) * n + i];
     y[i] = mu + N(g);
   }
-  return standardise(X.data(), y.data(), n, p);
+  return data_from_raw(X.data(), y.data(), n, p);
 }
 
-TEST(gauss_hermite_rule) {
+TEST(wp5_gauss_hermite_rule) {
   std::vector<double> t, w;
   for (int n : {8, 20, 64}) {
     gauss_hermite(n, t, w);
@@ -39,7 +40,7 @@ TEST(gauss_hermite_rule) {
   }
 }
 
-TEST(h2_normals_vs_quadrature) {
+TEST(wp5_h2_normals_vs_quadrature) {
   const double cases[][4] = {{0, 1, 0, 1}, {0.3, 1.2, 0, 1}, {-1.5, 0.4, 0.2, 2.5}, {0.01, 1.001, 0, 1}, {4, 1, 0, 1}};
   for (auto& c : cases) {
     double q = simpson([&](double y) { return std::exp(0.5 * (lnorm(y, c[0], c[1]) + lnorm(y, c[2], c[3]))); }, -40, 40, 200000);
@@ -50,9 +51,9 @@ TEST(h2_normals_vs_quadrature) {
   CHECK_NEAR(h2_plugin(e0, 1.3, 1.0), h2_normals(0.4, 1.3, 0.0, 1.0), 1e-15);
 }
 
-TEST(model_post_matches_dense_algebra) {
-  OwnedData O = test_data(120, 30, 0.5, 21);
-  const EvalData& D = O.D;
+TEST(wp5_model_post_matches_dense_algebra) {
+  Data O = test_data(120, 30, 0.5, 21);
+  const Data& D = O;
   Model S = {2, 8, 14, 20};
   ModelPost mp = model_post(D, S);
   const int k = 4, n = D.n;
@@ -73,15 +74,15 @@ TEST(model_post_matches_dense_algebra) {
   Component c = component_from_post(D, mp, 1.0);
   std::vector<double> b = c.b_mean(); double a0 = c.a_mean();
   CHECK(b.size() == 4 && c.orig[0] == 3);
-  CHECK_NEAR(c.v_mean(), D.sy() * D.sy() * mp.beta_n / (mp.alpha_n - 1), 1e-12);
+  CHECK_NEAR(c.v_mean(), sy(D) * sy(D) * mp.beta_n / (mp.alpha_n - 1), 1e-12);
   (void)a0;
 }
 
-TEST(gamma_and_normal_draws) {
+TEST(wp5_gamma_and_normal_draws) {
   for (double shape : {0.5, 3.0, 100.5}) {
     const int N = 40000; double s = 0, ss = 0;
     for (int i = 0; i < N; ++i) {
-      v4::wp5prov::Address a; a.seed = 9; a.role = v4::wp5prov::R_POST; a.xph = v4::wp5prov::X_POST; a.particle = (uint32_t)i; a.stage = (uint32_t)(shape * 10);
+      v4::Address a; a.seed = 9; a.role = v4::R_POST; a.xph = v4::X_POST; a.particle = (uint32_t)i; a.stage = (uint32_t)(shape * 10);
       double g = gamma_draw(shape, a); s += g; ss += g * g;
     }
     double m = s / N, v = ss / N - m * m;
@@ -89,14 +90,14 @@ TEST(gamma_and_normal_draws) {
     CHECK_NEAR(v, shape, 6 * shape * std::sqrt(2.0 / N) + 0.05 * shape);
   }
   double s = 0, ss = 0; const int N = 100000;
-  for (int i = 0; i < N; ++i) { v4::wp5prov::Address a; a.seed = 4; a.particle = (uint32_t)i; double z = normal_draw(a); s += z; ss += z * z; }
+  for (int i = 0; i < N; ++i) { v4::Address a; a.seed = 4; a.particle = (uint32_t)i; double z = normal_draw(a); s += z; ss += z * z; }
   CHECK_NEAR(s / N, 0.0, 4 / std::sqrt((double)N)); CHECK_NEAR(ss / N, 1.0, 4 * std::sqrt(2.0 / N));
 }
 
-TEST(posterior_draw_moments) {
-  OwnedData O = test_data(150, 30, 0.6, 22);
-  ModelPost mp = model_post(O.D, {2, 8, 14});
-  Law L; L.name = "x"; L.comps.push_back(component_from_post(O.D, mp, 1.0));
+TEST(wp5_posterior_draw_moments) {
+  Data O = test_data(150, 30, 0.6, 22);
+  ModelPost mp = model_post(O, {2, 8, 14});
+  Law L; L.name = "x"; L.comps.push_back(component_from_post(O, mp, 1.0));
   const int N = 20000; const Component& C = L.comps[0];
   std::vector<double> bm = C.b_mean(), sb(3, 0.0); double sv = 0, sa = 0;
   for (int i = 0; i < N; ++i) { ParamDraw d = draw_params(L, 5, 0, (uint32_t)i); for (int j = 0; j < 3; ++j) sb[j] += d.b[j]; sv += d.v; sa += d.a; }
@@ -106,7 +107,7 @@ TEST(posterior_draw_moments) {
   CHECK_NEAR(sa / N, C.a_mean(), 0.01);
 }
 
-TEST(predictive_gaussian_component_is_exact) {
+TEST(wp5_predictive_gaussian_component_is_exact) {
   Truth T; T.design = "AR"; T.rho = 0.6; T.S0 = {2, 5}; T.beta = {1.0, -0.5}; T.sigma = 1.0;
   Law L; L.name = "g"; L.comps.push_back(component_gaussian({2, 7}, {0.9, 0.1}, 0.05, 1.3));
   XSample xs = draw_x(T, {2, 5, 7}, 50, 3, 1);
@@ -120,13 +121,13 @@ TEST(predictive_gaussian_component_is_exact) {
   }
 }
 
-TEST(predictive_t_mixture_vs_quadrature) {
-  OwnedData O = test_data(100, 25, 0.6, 23);
+TEST(wp5_predictive_t_mixture_vs_quadrature) {
+  Data O = test_data(100, 25, 0.6, 23);
   Truth T; T.design = "AR"; T.rho = 0.6; T.S0 = {3, 9, 15}; T.beta = {1.0, -0.8, 0.6};
   Law L; L.name = "mix";
   const Model ms[3] = {{2, 8, 14}, {2, 8}, {2, 8, 14, 20}};
   const double ws[3] = {0.7, 0.2, 0.1};
-  for (int i = 0; i < 3; ++i) L.comps.push_back(component_from_post(O.D, model_post(O.D, ms[i]), ws[i]));
+  for (int i = 0; i < 3; ++i) L.comps.push_back(component_from_post(O, model_post(O, ms[i]), ws[i]));
   XSample xs = draw_x(T, {3, 9, 15, 21}, 20, 4, 1);
   std::vector<double> t, w; gauss_hermite(64, t, w);
   double worst = 0;
@@ -142,7 +143,7 @@ TEST(predictive_t_mixture_vs_quadrature) {
   std::printf("    predictive GH(64) vs Simpson: worst relative error of d_H^2 = %.2e\n", worst);
 }
 
-TEST(draw_x_covariance) {
+TEST(wp5_draw_x_covariance) {
   Truth T; T.design = "BLK"; T.rho = 0.5; T.block = 20;
   XSample xs = draw_x(T, {1, 2, 21, 40}, 40000, 8, 1);
   auto cov = [&](int a, int b) { double s = 0; for (size_t r = 0; r < xs.m; ++r) s += xs.X[r * 4 + a] * xs.X[r * 4 + b]; return s / xs.m; };
@@ -153,11 +154,13 @@ TEST(draw_x_covariance) {
   CHECK_NEAR(s / xa.m, 0.36, 0.03);
 }
 
-TEST(store_mass_find_occ) {
+TEST(wp5_store_mass_find_occ) {
   std::vector<double> v = {-1.0, -1.5, -3.0, -40.0};
   std::vector<uint64_t> off = {0, 1, 3, 5}, hash(4);
   std::vector<uint16_t> len = {1, 2, 2, 0};
   std::vector<int32_t> pool = {4, 1, 4, 2, 9};
+  v4::Zobrist zb; zb.init(10);
+  auto zobrist_hash = [&](const Model& M, int) { return zb.hash(M); };
   for (int i = 0; i < 4; ++i) hash[i] = zobrist_hash(Model(pool.begin() + off[i], pool.begin() + off[i] + len[i]), 10);
   StoreView s; s.size = 4; s.v = v.data(); s.off = off.data(); s.len = len.data(); s.hash = hash.data(); s.pool = pool.data();
   StoreMass m = store_mass(s, 1e-12);
@@ -172,14 +175,14 @@ TEST(store_mass_find_occ) {
   CHECK(std::isnan(logZ_occ(v.data(), 2, 0, 100)));
 }
 
-TEST(selection_pip_evidence) {
-  OwnedData O = test_data(60, 12, 0.0, 24);
+TEST(wp5_selection_pip_evidence) {
+  Data O = test_data(60, 12, 0.0, 24);
   Model S0 = {2, 8, 14 - 4};   // internal {2,8,10}
-  Json s = selection_metrics(S0, {2, 8}, -5.0, {2, 8, 10, 11}, -4.0, O.D);
+  Json s = selection_metrics(S0, {2, 8}, -5.0, {2, 8, 10, 11}, -4.0, O);
   CHECK(s.at("outcome_class").str() == "search");
   CHECK(s.at("hpm_fn").num() == 1 && s.at("hpm_fp").num() == 0 && s.at("mpm_fp").num() == 1 && s.at("mpm_hamming").num() == 1);
-  CHECK(selection_metrics(S0, {2, 8}, -3.0, {}, -4.0, O.D).at("outcome_class").str() == "posterior");
-  CHECK(selection_metrics(S0, S0, -3.0, S0, -3.0, O.D).at("outcome_class").str() == "correct");
+  CHECK(selection_metrics(S0, {2, 8}, -3.0, {}, -4.0, O).at("outcome_class").str() == "posterior");
+  CHECK(selection_metrics(S0, S0, -3.0, S0, -3.0, O).at("outcome_class").str() == "correct");
   std::vector<double> pip(12, 0.01); pip[2] = 0.99; pip[8] = 0.6; pip[10] = 0.3; pip[5] = 0.7; pip[6] = 0.2;
   Json pm = pip_metrics(pip, S0, 12);
   CHECK_NEAR(pm.at("sup_null").num(), 0.7, 0); CHECK(pm.at("argsup_null").num() == 5);
@@ -197,12 +200,12 @@ TEST(selection_pip_evidence) {
   CHECK_NEAR(ev.at("sigma_hat").num(), std::sqrt(2.0), 1e-15);
 }
 
-TEST(dist_metrics_thread_invariance_and_oracle) {
-  OwnedData O = test_data(200, 30, 0.6, 25);
+TEST(wp5_dist_metrics_thread_invariance_and_oracle) {
+  Data O = test_data(200, 30, 0.6, 25);
   Truth T; T.design = "AR"; T.rho = 0.6; T.S0 = {3, 9, 15}; T.beta = {1.0, -0.8, 0.6};
   Law L; L.name = "T";
-  L.comps.push_back(component_from_post(O.D, model_post(O.D, {2, 8, 14}), 0.8));
-  L.comps.push_back(component_from_post(O.D, model_post(O.D, {2, 8, 14, 22}), 0.2));
+  L.comps.push_back(component_from_post(O, model_post(O, {2, 8, 14}), 0.8));
+  L.comps.push_back(component_from_post(O, model_post(O, {2, 8, 14, 22}), 0.2));
   DistOpts o; o.n_draws = 2000; o.n_x = 500; o.n_test = 1000; o.seed = 77;
   DistShared sh = make_shared_draws(T, {3, 9, 15, 23}, o);
   o.threads = 1; std::string a = dist_metrics(L, T, 200, o, sh, 2).dump();

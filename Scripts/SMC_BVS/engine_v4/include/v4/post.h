@@ -34,17 +34,18 @@ struct LawFile {
   std::vector<double> w;
   std::vector<int32_t> cols, cols_orig;
   std::vector<double> cols_xbar, cols_xsd;
-  eval::Json meta_extra = eval::Json::object();
+  Json meta_extra = Json::object();
 };
 
 // Kept = store entries with F ≥ vmax + log(rel_cut) (at most max_models); conjugate parameters recomputed from Xs.
 // max_abs_dF = max |F_store − F_recomputed| (class A engines differ at ≈ 1e-9 relative; recorded, not asserted).
-LawFile build_law(const eval::EvalData& D, const eval::StoreView& s, double rel_cut = 1e-12, size_t max_models = 1000000);
+LawFile build_law(const Data& D, const eval::StoreView& s, double rel_cut = 1e-12, size_t max_models = 1000000);
 std::string write_law(const LawFile& L, const std::string& path, int n_draws = 0, uint32_t draw_seed = 0);
-LawFile read_law(const std::string& path);
+LawFile read_law(const std::string& path, std::string* content_hash = nullptr);
 eval::Law to_eval_law(const LawFile& L, const std::string& name = "T");
 
-// post::run: --fit fit.bin --data data.bin --out law [--rel-cut 1e-12] [--max-models M] [--draws N --seed s]
-int run(int argc, char** argv);
+// post::run: --fit fit.bin --data data.bin --out law.bin [--rel_cut 1e-12] [--max_models M] [--draws N --seed s]
+// (include/v4/stubs.h signature; main writes the record <out>.json)
+Json run(const Json& args);
 
 }  // namespace v4::post

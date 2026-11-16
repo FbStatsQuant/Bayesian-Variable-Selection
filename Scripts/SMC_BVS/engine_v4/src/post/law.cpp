@@ -6,18 +6,17 @@
 #include <map>
 
 #include "../eval/io.h"
+#include "v4/format.h"
 #include "v4/post.h"
+#include "v4/prep.h"
 
 namespace v4::post {
 
-using eval::Json;
-using wp5prov::BinReader;
-using wp5prov::BinWriter;
 
-LawFile build_law(const eval::EvalData& D, const eval::StoreView& s, double rel_cut, size_t max_models) {
+LawFile build_law(const Data& D, const eval::StoreView& s, double rel_cut, size_t max_models) {
   LawFile L;
   L.n = D.n; L.p = D.p; L.rel_cut = rel_cut; L.n_store = s.size;
-  L.ybar = D.ybar(); L.sy = D.sy(); L.a0 = D.a0; L.b0 = D.b0;
+  L.ybar = eval::ybar(D); L.sy = eval::sy(D); L.a0 = D.a0; L.b0 = D.b0;
   eval::StoreMass sm = eval::store_mass(s, rel_cut);
   L.vmax = sm.vmax; L.logZ_T = sm.logZ_T;
   if (s.size == 0) throw Error(Status::invalid_input, "build_law: empty store");
@@ -31,7 +30,7 @@ LawFile build_law(const eval::EvalData& D, const eval::StoreView& s, double rel_
   L.dropped_mass = (double)(drop / tot);   // includes models cut by max_models
   std::map<int32_t, int> colset;
   for (size_t i : keep) {
-    eval::Model S = s.model(i);
+    Model S = s.model(i);
     eval::ModelPost mp = eval::model_post(D, S);
     L.max_abs_dF = std::max(L.max_abs_dF, std::fabs(mp.F - s.v[i]));
     mp.F = s.v[i];
@@ -41,7 +40,7 @@ LawFile build_law(const eval::EvalData& D, const eval::StoreView& s, double rel_
   }
   for (auto& kv : colset) {
     L.cols.push_back(kv.first); L.cols_orig.push_back(D.orig[kv.first]);
-    L.cols_xbar.push_back(D.xbar(kv.first)); L.cols_xsd.push_back(D.xsd(kv.first));
+    L.cols_xbar.push_back(eval::xbar(D, kv.first)); L.cols_xsd.push_back(eval::xsd(D, kv.first));
   }
   return L;
 }
@@ -76,22 +75,22 @@ std::string write_law(const LawFile& L, const std::string& path, int n_draws, ui
     F[m] = mp.F; logm[m] = mp.logm; Q[m] = mp.Q; an[m] = mp.alpha_n; bn[m] = mp.beta_n; route[m] = (uint8_t)mp.route;
   }
   Json meta = Json::object();
-  meta.set("schema", "smcbvs4.law/1");
-  meta.set("n", L.n); meta.set("p", L.p); meta.set("M", (int64_t)M); meta.set("C", (int64_t)C);
-  meta.set("rel_cut", L.rel_cut); meta.set("vmax", L.vmax); meta.set("logZ_T", L.logZ_T);
-  meta.set("dropped_mass", L.dropped_mass); meta.set("n_store", L.n_store);
-  meta.set("ybar", L.ybar); meta.set("sy", L.sy); meta.set("a0", L.a0); meta.set("b0", L.b0); meta.set("max_abs_dF", L.max_abs_dF);
-  for (auto& kv : L.meta_extra.items()) meta.set(kv.first, kv.second);
-  BinWriter W(wp5prov::K_LAW, wp5prov::M_V);
-  W.add_vec("model_ptr", wp5prov::DT_I64, mptr); W.add_vec("model_idx", wp5prov::DT_I32, midx);
-  W.add_vec("F", wp5prov::DT_F64, F); W.add_vec("w", wp5prov::DT_F64, w);
-  W.add_vec("logm", wp5prov::DT_F64, logm); W.add_vec("Q", wp5prov::DT_F64, Q);
-  W.add_vec("alpha_n", wp5prov::DT_F64, an); W.add_vec("beta_n", wp5prov::DT_F64, bn);
-  W.add_vec("route", wp5prov::DT_U8, route);
-  W.add_vec("theta_bar", wp5prov::DT_F64, th);
-  W.add_vec("LH_ptr", wp5prov::DT_I64, lptr); W.add_vec("LH", wp5prov::DT_F64, LH);
-  W.add_vec("cols", wp5prov::DT_I32, L.cols); W.add_vec("cols_orig", wp5prov::DT_I32, L.cols_orig);
-  W.add_vec("cols_xbar", wp5prov::DT_F64, L.cols_xbar); W.add_vec("cols_xsd", wp5prov::DT_F64, L.cols_xsd);
+  meta["schema"] = ("smcbvs4.law/1");
+  meta["n"] = (L.n); meta["p"] = (L.p); meta["M"] = ((int64_t)M); meta["C"] = ((int64_t)C);
+  meta["rel_cut"] = (L.rel_cut); meta["vmax"] = (L.vmax); meta["logZ_T"] = (L.logZ_T);
+  meta["dropped_mass"] = (L.dropped_mass); meta["n_store"] = (L.n_store);
+  meta["ybar"] = (L.ybar); meta["sy"] = (L.sy); meta["a0"] = (L.a0); meta["b0"] = (L.b0); meta["max_abs_dF"] = (L.max_abs_dF);
+  for (auto& kv : L.meta_extra.items()) meta[kv.first] = kv.second;
+  fmt::Writer W(fmt::K_LAW, fmt::M_V);
+  W.add("model_ptr", mptr); W.add("model_idx", midx);
+  W.add("F", F); W.add("w", w);
+  W.add("logm", logm); W.add("Q", Q);
+  W.add("alpha_n", an); W.add("beta_n", bn);
+  W.add("route", route);
+  W.add("theta_bar", th);
+  W.add("LH_ptr", lptr); W.add("LH", LH);
+  W.add("cols", L.cols); W.add("cols_orig", L.cols_orig);
+  W.add("cols_xbar", L.cols_xbar); W.add("cols_xsd", L.cols_xsd);
   if (n_draws > 0) {
     eval::Law el = to_eval_law(L);
     std::vector<int32_t> dm(n_draws); std::vector<double> da(n_draws), dv(n_draws), db((size_t)n_draws * C, 0.0);
@@ -104,38 +103,39 @@ std::string write_law(const LawFile& L, const std::string& path, int n_draws, ui
         db[(size_t)d * C + q] = pd.b[i];
       }
     }
-    W.add_vec("draw_model", wp5prov::DT_I32, dm); W.add_vec("draw_a", wp5prov::DT_F64, da); W.add_vec("draw_v", wp5prov::DT_F64, dv);
-    W.add("draw_b", wp5prov::DT_F64, db.data(), db.size() * sizeof(double), 2, (uint64_t)n_draws, C);
-    Json dj = Json::object(); dj.set("n", n_draws); dj.set("seed", (int64_t)draw_seed); dj.set("role", "POST");
-    meta.set("draws", dj);
+    W.add("draw_model", dm); W.add("draw_a", da); W.add("draw_v", dv);
+    W.add("draw_b", db.data(), db.size(), (uint64_t)n_draws, (uint64_t)C);
+    Json dj = Json::object(); dj["n"] = (n_draws); dj["seed"] = ((int64_t)draw_seed); dj["role"] = ("POST");
+    meta["draws"] = (dj);
   } else {
-    meta.set("draws", Json());
+    meta["draws"] = (Json());
   }
-  W.add_json("meta", meta.dump());
+  W.add_json("meta", meta);
   return W.write(path);
 }
 
-LawFile read_law(const std::string& path) {
-  BinReader B(path, true);
-  if (B.header().kind != wp5prov::K_LAW) throw Error(Status::invalid_input, path + ": not a law.bin (kind != 7)");
-  Json meta = Json::parse(B.json("meta"));
-  if (meta.str_or("schema", "") != "smcbvs4.law/1") throw Error(Status::invalid_input, path + ": unknown law schema");
+LawFile read_law(const std::string& path, std::string* content_hash) {
+  fmt::Reader B(path);
+  if (content_hash) *content_hash = B.content_hash();
+  if (B.kind() != fmt::K_LAW) throw Error(Status::invalid_input, path + ": not a law.bin (kind != 7)");
+  Json meta = B.json("meta");
+  if (eval::jstr_or(meta, "schema", "") != "smcbvs4.law/1") throw Error(Status::invalid_input, path + ": unknown law schema");
   LawFile L;
   L.n = (int32_t)meta.at("n").num(); L.p = (int32_t)meta.at("p").num();
   L.rel_cut = meta.at("rel_cut").num(); L.vmax = meta.at("vmax").num(); L.logZ_T = meta.at("logZ_T").num();
   L.dropped_mass = meta.at("dropped_mass").num(); L.n_store = (uint64_t)meta.at("n_store").num();
   L.ybar = meta.at("ybar").num(); L.sy = meta.at("sy").num(); L.a0 = meta.at("a0").num(); L.b0 = meta.at("b0").num();
-  L.max_abs_dF = meta.num_or("max_abs_dF", NAN);
+  L.max_abs_dF = eval::jnum_or(meta, "max_abs_dF", NAN);
   const size_t M = (size_t)meta.at("M").num();
   uint64_t c;
-  const int64_t* mptr = B.ptr<int64_t>("model_ptr", wp5prov::DT_I64, &c); if (c != M + 1) throw Error(Status::invalid_input, "law.bin: model_ptr");
-  const int32_t* midx = B.ptr<int32_t>("model_idx", wp5prov::DT_I32, &c);
+  const int64_t* mptr = B.get<int64_t>("model_ptr", &c); if (c != M + 1) throw Error(Status::invalid_input, "law.bin: model_ptr");
+  const int32_t* midx = B.get<int32_t>("model_idx", &c);
   if ((uint64_t)mptr[M] != c) throw Error(Status::invalid_input, "law.bin: model_idx size");
-  const double *F = B.ptr<double>("F", wp5prov::DT_F64), *w = B.ptr<double>("w", wp5prov::DT_F64), *logm = B.ptr<double>("logm", wp5prov::DT_F64),
-               *Q = B.ptr<double>("Q", wp5prov::DT_F64), *an = B.ptr<double>("alpha_n", wp5prov::DT_F64), *bn = B.ptr<double>("beta_n", wp5prov::DT_F64),
-               *th = B.ptr<double>("theta_bar", wp5prov::DT_F64), *LH = B.ptr<double>("LH", wp5prov::DT_F64);
-  const uint8_t* route = B.ptr<uint8_t>("route", wp5prov::DT_U8);
-  const int64_t* lptr = B.ptr<int64_t>("LH_ptr", wp5prov::DT_I64);
+  const double *F = B.get<double>("F"), *w = B.get<double>("w"), *logm = B.get<double>("logm"),
+               *Q = B.get<double>("Q"), *an = B.get<double>("alpha_n"), *bn = B.get<double>("beta_n"),
+               *th = B.get<double>("theta_bar"), *LH = B.get<double>("LH");
+  const uint8_t* route = B.get<uint8_t>("route");
+  const int64_t* lptr = B.get<int64_t>("LH_ptr");
   for (size_t m = 0; m < M; ++m) {
     eval::ModelPost mp;
     const size_t k = (size_t)(mptr[m + 1] - mptr[m]);
@@ -148,45 +148,38 @@ LawFile read_law(const std::string& path) {
     mp.F = F[m]; mp.logm = logm[m]; mp.Q = Q[m]; mp.alpha_n = an[m]; mp.beta_n = bn[m]; mp.route = route[m];
     L.models.push_back(std::move(mp)); L.w.push_back(w[m]);
   }
-  const int32_t* cols = B.ptr<int32_t>("cols", wp5prov::DT_I32, &c);
+  const int32_t* cols = B.get<int32_t>("cols", &c);
   L.cols.assign(cols, cols + c);
-  const int32_t* co = B.ptr<int32_t>("cols_orig", wp5prov::DT_I32); L.cols_orig.assign(co, co + c);
-  const double* cx = B.ptr<double>("cols_xbar", wp5prov::DT_F64); L.cols_xbar.assign(cx, cx + c);
-  const double* cs = B.ptr<double>("cols_xsd", wp5prov::DT_F64); L.cols_xsd.assign(cs, cs + c);
+  const int32_t* co = B.get<int32_t>("cols_orig"); L.cols_orig.assign(co, co + c);
+  const double* cx = B.get<double>("cols_xbar"); L.cols_xbar.assign(cx, cx + c);
+  const double* cs = B.get<double>("cols_xsd"); L.cols_xsd.assign(cs, cs + c);
   return L;
 }
 
-int run(int argc, char** argv) {
-  std::string out = "law";
+Json run(const Json& a) {
+  auto t0 = std::chrono::steady_clock::now();
   Json rec = Json::object();
-  rec.set("schema", "smcbvs4.post/1"); rec.set("command", "post");
-  try {
-    auto a = eval::io::parse_args(argc, argv, 1);
-    out = eval::io::arg_or(a, "out", "law");
-    const std::string fitp = eval::io::arg_or(a, "fit", ""), datap = eval::io::arg_or(a, "data", "");
-    if (fitp.empty() || datap.empty()) throw Error(Status::invalid_input, "post: --fit and --data are required");
-    const double rel = std::stod(eval::io::arg_or(a, "rel-cut", "1e-12"));
-    const size_t maxm = (size_t)std::stoull(eval::io::arg_or(a, "max-models", "1000000"));
-    const int nd = std::stoi(eval::io::arg_or(a, "draws", "0"));
-    const uint32_t seed = (uint32_t)std::stoul(eval::io::arg_or(a, "seed", "1"));
-    auto t0 = std::chrono::steady_clock::now();
-    eval::io::DataFile df; eval::io::load_data(datap, df);
-    eval::io::FitFile ff; eval::io::load_fit(fitp, ff);
-    LawFile L = build_law(df.D, ff.top, rel, maxm);
-    Json inp = Json::object(); inp.set("fit.bin", ff.bin->content_hash()); inp.set("data.bin", df.bin->content_hash());
-    L.meta_extra.set("inputs", inp);
-    const std::string h = write_law(L, out + ".bin", nd, seed);
-    rec.set("inputs", inp);
-    Json o = Json::object(); o.set("law.bin", h); rec.set("outputs", o);
-    rec.set("M", (int64_t)L.models.size()); rec.set("dropped_mass", L.dropped_mass); rec.set("logZ_T", L.logZ_T);
-    rec.set("max_abs_dF", L.max_abs_dF);
-    rec.set("wall_s", std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count());
-    return eval::io::finish(out + ".json", rec, Status::completed, "");
-  } catch (const Error& e) {
-    return eval::io::finish(out + ".json", rec, e.st, e.what());
-  } catch (const std::exception& e) {
-    return eval::io::finish(out + ".json", rec, Status::internal_error, e.what());
-  }
+  rec["schema"] = "smcbvs4.post/1";
+  const std::string fitp = eval::io::arg_str(a, "fit", ""), datap = eval::io::arg_str(a, "data", ""), out = eval::io::out_bin(a, "");
+  if (fitp.empty() || datap.empty() || out.empty()) throw Error(Status::invalid_input, "post: --fit, --data and --out are required");
+  const double rel = eval::io::arg_num(a, "rel_cut", 1e-12);
+  const size_t maxm = (size_t)eval::io::arg_num(a, "max_models", 1000000);
+  const int nd = (int)eval::io::arg_num(a, "draws", 0);
+  const uint32_t seed = (uint32_t)eval::io::arg_num(a, "seed", 1);
+  std::string dh;
+  const Data D = prep::load_data(datap, &dh);
+  eval::io::FitFile ff; eval::io::load_fit(fitp, ff);
+  LawFile L = build_law(D, ff.top, rel, maxm);
+  Json inp = Json::object(); inp["fit.bin"] = ff.bin->content_hash(); inp["data.bin"] = dh;
+  L.meta_extra["inputs"] = inp;
+  const std::string h = write_law(L, out, nd, seed);
+  rec["inputs"] = inp;
+  Json o = Json::object(); o[out.substr(out.find_last_of('/') + 1)] = h; rec["outputs"] = o;
+  rec["M"] = (uint64_t)L.models.size(); rec["dropped_mass"] = L.dropped_mass; rec["logZ_T"] = L.logZ_T;
+  rec["max_abs_dF"] = L.max_abs_dF;
+  rec["wall_s"] = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+  rec["status"] = "completed";
+  return rec;
 }
 
 }  // namespace v4::post

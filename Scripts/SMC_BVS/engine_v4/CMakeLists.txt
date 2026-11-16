@@ -14,9 +14,12 @@ set(V4_COMMON_SRC
   src/common/sha256.cpp src/common/format.cpp src/common/json.cpp src/common/data.cpp src/common/store.cpp
   src/common/ledger.cpp src/common/status.cpp src/common/score.cpp src/common/gen.cpp src/common/prep.cpp src/common/pmath_info.cpp)
 set(V4_STUB_SRC src/stubs/stubs.cpp)
+# WP5: evaluator and post (bit flags: they call BitScorer and must reproduce the stored F)
+set(V4_WP5_SRC src/eval/posterior.cpp src/eval/model.cpp src/eval/dist.cpp src/eval/metrics.cpp src/eval/io.cpp
+  src/eval/run.cpp src/post/law.cpp)
 
 # v4_bit: every kernel that must equal the v3 bits (flags of core/cpp/Makevars.v3).
-add_library(v4_bit STATIC ${V4_COMMON_SRC} ${V4_STUB_SRC})
+add_library(v4_bit STATIC ${V4_COMMON_SRC} ${V4_STUB_SRC} ${V4_WP5_SRC})
 target_include_directories(v4_bit PUBLIC include)
 target_compile_options(v4_bit PRIVATE ${V4_BIT_FLAGS} ${V4_WARN})
 target_link_libraries(v4_bit PUBLIC OpenMP::OpenMP_CXX m)
@@ -37,8 +40,9 @@ if(V4_TESTS)
   set(V3_CORE_CPP ${CMAKE_CURRENT_SOURCE_DIR}/../core/cpp)
   add_executable(v4_tests tests/test_main.cpp tests/test_sha256.cpp tests/test_rng.cpp tests/test_format.cpp
     tests/test_store.cpp tests/test_ledger.cpp tests/test_score.cpp tests/test_gen.cpp tests/test_prep.cpp
-    tests/test_pmath.cpp)
-  target_include_directories(v4_tests PRIVATE tests ${V3_CORE_CPP})
+    tests/test_pmath.cpp
+    tests/wp5/test_eval.cpp tests/wp5/test_golden_v3.cpp tests/wp5/test_post_e2e.cpp tests/wp5/test_t7.cpp)
+  target_include_directories(v4_tests PRIVATE tests tests/wp5 src ${V3_CORE_CPP})
   target_compile_definitions(v4_tests PRIVATE V3_CORE_CPP_DIR="${V3_CORE_CPP}"
     V4_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures")
   target_compile_options(v4_tests PRIVATE ${V4_BIT_FLAGS})

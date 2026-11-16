@@ -6,22 +6,6 @@
 
 namespace v4::eval {
 
-// Copied from core/cpp/v3_util.h:37-42 (splitmix64) and :99-108 (Zobrist keys from 0x5EEDB175C0DE2026).
-static uint64_t splitmix64(uint64_t& x) {
-  uint64_t z = (x += 0x9E3779B97F4A7C15ULL);
-  z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9ULL;
-  z = (z ^ (z >> 27)) * 0x94D049BB133111EBULL;
-  return z ^ (z >> 31);
-}
-uint64_t zobrist_hash(const Model& S, int32_t p) {
-  // keys are generated sequentially, so the key of j needs j + 1 splitmix steps; cache the key table per p
-  static thread_local std::vector<uint64_t> key; static thread_local int32_t kp = -1;
-  if (kp != p) { key.resize(p); uint64_t x = 0x5EEDB175C0DE2026ULL; for (int32_t j = 0; j < p; ++j) key[j] = splitmix64(x); kp = p; }
-  uint64_t h = 0;
-  for (int32_t j : S) { if (j < 0 || j >= p) throw Error(Status::invalid_input, "zobrist_hash: index out of range"); h ^= key[j]; }
-  return h;
-}
-
 StoreMass store_mass(const StoreView& s, double rel_cut) {
   StoreMass m;
   if (s.size == 0) { m.vmax = m.logZ_T = -INFINITY; return m; }
@@ -56,7 +40,7 @@ long store_find(const StoreView& s, const Model& S, uint64_t h) {
   return -1;
 }
 
-static Json to_orig(const Model& S, const EvalData& D) {
+static Json to_orig(const Model& S, const Data& D) {
   Json a = Json::array(); for (int32_t j : S) a.push(Json(D.orig[j])); return a;
 }
 static void set_cmp(const Model& S, const Model& S0, int& tp, int& fp, int& fn) {
@@ -65,20 +49,20 @@ static void set_cmp(const Model& S, const Model& S0, int& tp, int& fp, int& fn) 
   fp = (int)S.size() - tp; fn = (int)S0.size() - tp;
 }
 
-Json selection_metrics(const Model& S0, const Model& hpm, double F_hpm, const Model& mpm, double F_S0, const EvalData& D) {
+Json selection_metrics(const Model& S0, const Model& hpm, double F_hpm, const Model& mpm, double F_S0, const Data& D) {
   Json J = Json::object();
   int tp, fp, fn;
   set_cmp(hpm, S0, tp, fp, fn);
-  J.set("hpm", to_orig(hpm, D)); J.set("hpm_size", (int64_t)hpm.size());
-  J.set("hpm_eq_S0", hpm == S0); J.set("hpm_hamming", fp + fn); J.set("hpm_tp", tp); J.set("hpm_fp", fp); J.set("hpm_fn", fn);
+  J["hpm"] = (to_orig(hpm, D)); J["hpm_size"] = ((int64_t)hpm.size());
+  J["hpm_eq_S0"] = (hpm == S0); J["hpm_hamming"] = (fp + fn); J["hpm_tp"] = (tp); J["hpm_fp"] = (fp); J["hpm_fn"] = (fn);
   set_cmp(mpm, S0, tp, fp, fn);
-  J.set("mpm", to_orig(mpm, D)); J.set("mpm_size", (int64_t)mpm.size());
-  J.set("mpm_eq_S0", mpm == S0); J.set("mpm_hamming", fp + fn); J.set("mpm_tp", tp); J.set("mpm_fp", fp); J.set("mpm_fn", fn);
-  J.set("F_hpm", F_hpm); J.set("F_S0", F_S0); J.set("F_hpm_minus_F_S0", F_hpm - F_S0);
+  J["mpm"] = (to_orig(mpm, D)); J["mpm_size"] = ((int64_t)mpm.size());
+  J["mpm_eq_S0"] = (mpm == S0); J["mpm_hamming"] = (fp + fn); J["mpm_tp"] = (tp); J["mpm_fp"] = (fp); J["mpm_fn"] = (fn);
+  J["F_hpm"] = (F_hpm); J["F_S0"] = (F_S0); J["F_hpm_minus_F_S0"] = (F_hpm - F_S0);
   // outcome class (P6): correct; posterior (F(HPM) > F(S0): the posterior prefers another model); search (F(S0) > F(HPM):
   // the sampler did not report the better S0); tie (equal F, different sets: resolved by the |S|/lex order)
   std::string oc = hpm == S0 ? "correct" : (F_hpm > F_S0 ? "posterior" : (F_S0 > F_hpm ? "search" : "tie"));
-  J.set("outcome_class", oc);
+  J["outcome_class"] = (oc);
   return J;
 }
 
@@ -92,8 +76,9 @@ Json pip_metrics(const std::vector<double>& pip, const Model& S0, int32_t p) {
   std::vector<int64_t> bn(NB, 0), bt(NB, 0); std::vector<double> bs(NB, 0.0);
   long double br = 0;
   for (int32_t j = 0; j < p; ++j) {
-    const double q = pip[j];
-    if (!(q >= 0 && q <= 1)) throw Error(Status::invalid_input, "pip_metrics: PIP outside [0,1]");
+    const double q0 = pip[j];   // rounding margin 1e-12 (sums of normalised weights), clamped; beyond it: invalid
+    if (!(q0 >= -1e-12 && q0 <= 1 + 1e-12)) throw Error(Status::invalid_input, "pip_metrics: PIP outside [0,1]");
+    const double q = std::min(1.0, std::max(0.0, q0));
     const double t = tru[j] ? 1.0 : 0.0;
     br += (long double)((q - t) * (q - t));
     if (tru[j]) { if (q < min_true) { min_true = q; arg_min = j; } }
@@ -102,17 +87,17 @@ Json pip_metrics(const std::vector<double>& pip, const Model& S0, int32_t p) {
     bn[b]++; bt[b] += tru[j]; bs[b] += q;
   }
   brier = (double)(br / p);
-  J.set("sup_null", S0.size() < (size_t)p ? sup_null : NAN); J.set("argsup_null", arg_sup);
-  J.set("min_true", S0.empty() ? NAN : min_true); J.set("argmin_true", arg_min);
-  J.set("brier", brier); J.set("n_null_gt_0.1", n01); J.set("n_null_gt_0.5", n05);
+  J["sup_null"] = (S0.size() < (size_t)p ? sup_null : NAN); J["argsup_null"] = (arg_sup);
+  J["min_true"] = (S0.empty() ? NAN : min_true); J["argmin_true"] = (arg_min);
+  J["brier"] = (brier); J["n_null_gt_0.1"] = (n01); J["n_null_gt_0.5"] = (n05);
   Json rel = Json::array();   // reliability bins of width 0.05 (pooled across fits downstream)
   for (int b = 0; b < NB; ++b) {
     Json r = Json::object();
-    r.set("lo", b * 0.05); r.set("hi", (b + 1) * 0.05); r.set("n", bn[b]); r.set("n_true", bt[b]);
-    r.set("mean_pip", bn[b] ? bs[b] / bn[b] : NAN);
+    r["lo"] = (b * 0.05); r["hi"] = ((b + 1) * 0.05); r["n"] = (bn[b]); r["n_true"] = (bt[b]);
+    r["mean_pip"] = (bn[b] ? bs[b] / bn[b] : NAN);
     rel.push(r);
   }
-  J.set("reliability", rel);
+  J["reliability"] = (rel);
   return J;
 }
 
@@ -129,17 +114,17 @@ Json pip_island_spread(const double* pr, int32_t Rp, int32_t p, double sd_target
     if (sd > sd_target) ++n_over;
     max_rng = std::max(max_rng, hi - lo);
   }
-  J.set("Rp", Rp); J.set("max_sd", max_sd); J.set("argmax_sd", arg); J.set("max_range", max_rng);
-  J.set("sd_target", sd_target); J.set("n_sd_over_target", n_over); J.set("target_met", n_over == 0);
+  J["Rp"] = (Rp); J["max_sd"] = (max_sd); J["argmax_sd"] = (arg); J["max_range"] = (max_rng);
+  J["sd_target"] = (sd_target); J["n_sd_over_target"] = (n_over); J["target_met"] = (n_over == 0);
   return J;
 }
 
 Json evidence_metrics(double logZ, const std::vector<double>& lr, double logZ_T) {
   Json J = Json::object();
   const size_t R = lr.size();
-  J.set("logZ", logZ);
-  J.set("logZ_r", Json::array_of(lr));
-  J.set("logZ_lower95", std::log(0.05) + logZ);   // Markov bound, core/v3_run.R:155
+  J["logZ"] = (logZ);
+  J["logZ_r"] = (Json::array_of(lr));
+  J["logZ_lower95"] = (std::log(0.05) + logZ);   // Markov bound, core/v3_run.R:155
   if (R) {
     double m = 0; for (double v : lr) m += v; m /= R;
     double ss = 0; for (double v : lr) ss += (v - m) * (v - m);
@@ -152,14 +137,14 @@ Json evidence_metrics(double logZ, const std::vector<double>& lr, double logZ_T)
     double w2 = 0, wmax = 0, sw = 0;
     for (double v : lr) sw += std::exp(v - mx);
     for (double v : lr) { double w = std::exp(v - mx) / sw; w2 += w * w; wmax = std::max(wmax, w); }
-    J.set("sigma_hat", R > 1 ? std::sqrt(ss / (R - 1)) : NAN);
-    J.set("sigma_hat_robust", 1.4826 * mad);
-    J.set("max_minus_median", mx - med);
-    J.set("R_eff", 1.0 / w2); J.set("R_eff_over_Rp", 1.0 / w2 / R); J.set("max_W", wmax);
-    J.set("logZ_pooled_check", mx + std::log(sw) - std::log((double)R));   // = logZ if the merge pooled as v3_run.R:154
+    J["sigma_hat"] = (R > 1 ? std::sqrt(ss / (R - 1)) : NAN);
+    J["sigma_hat_robust"] = (1.4826 * mad);
+    J["max_minus_median"] = (mx - med);
+    J["R_eff"] = (1.0 / w2); J["R_eff_over_Rp"] = (1.0 / w2 / R); J["max_W"] = (wmax);
+    J["logZ_pooled_check"] = (mx + std::log(sw) - std::log((double)R));   // = logZ if the merge pooled as v3_run.R:154
   }
-  J.set("logZ_T", logZ_T);
-  J.set("logZ_minus_logZ_T", logZ - logZ_T);
+  J["logZ_T"] = (logZ_T);
+  J["logZ_minus_logZ_T"] = (logZ - logZ_T);
   return J;
 }
 

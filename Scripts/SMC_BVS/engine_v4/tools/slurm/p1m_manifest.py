@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """p1m_manifest.py -- fill a job-manifest template at run time (INTERFACES §5.3). Stdlib only; Python >= 3.6.
 
-  p1m_manifest.py fill --template T.json --run-dir RUN --out M.json [--bin PATH] [--set a.b=v ...]
+  p1m_manifest.py fill --template T.json --out M.json [--bin PATH] [--set a.b=v ...]
 
 Placeholders in the template:
-  "@from:<record>.json"  -> the content hash of the input, read from RUN/<record>.json "outputs" (written by the stage
-                            that produced it); the record must have "status": "completed", else exit 66 (refuse to start)
+  inputs {"<path>": "@hash"} -> the content hash of the .bin at <path> = SHA-256 of its section table (INTERFACES §5.1;
+                            what smcbvs4 checks), after checking the table against the header; the producer's record
+                            <path>.json must exist with "status": "completed", else exit (refuse to start)
   "@binary"              -> binary.sha256 = SHA-256 of --bin (default $BIN); compiler/flags/libm = "see <bin> info"
   "@slurm"               -> machine.host / slurm_job_id / params.threads from the Slurm environment
 """
@@ -14,6 +15,7 @@ import hashlib
 import json
 import os
 import socket
+import struct
 import sys
 
 
@@ -25,31 +27,35 @@ def sha256_file(path):
     return h.hexdigest()
 
 
-def resolve_from(run_dir, rec_name, input_name):
-    path = os.path.join(run_dir, rec_name)
+def content_hash(path):
+    """INTERFACES §5.1: content hash = SHA-256 of the section table (n_sections x 128 B after the 128 B header)."""
+    with open(path, "rb") as fh:
+        hdr = fh.read(128)
+        if len(hdr) < 128 or hdr[:8] != b"SMCBVS4\0":
+            raise SystemExit("p1m_manifest: %s is not an engine container: refusing to start" % path)
+        ns = struct.unpack_from("<I", hdr, 20)[0]
+        table = fh.read(128 * ns)
+    h = hashlib.sha256(table).digest()
+    if h != hdr[32:64]:   # FileHeader: magic 8, 4 x u32, u64 file_bytes, then table_sha256
+        raise SystemExit("p1m_manifest: %s: section table hash mismatch: refusing to start" % path)
+    return h.hex()
+
+
+def check_record(path):
+    rp = path + ".json"
     try:
-        with open(path) as fh:
+        with open(rp) as fh:
             rec = json.load(fh)
     except (OSError, ValueError) as e:
-        raise SystemExit("p1m_manifest: cannot read %s (%s): refusing to start" % (path, e))
+        raise SystemExit("p1m_manifest: cannot read the producer record %s (%s): refusing to start" % (rp, e))
     if rec.get("status") != "completed":
-        raise SystemExit("p1m_manifest: %s has status %r: refusing to start" % (path, rec.get("status")))
-    outs = rec.get("outputs") or {}
-    h = outs.get(input_name)
-    if h is None:   # records may key outputs by path; match the basename
-        for k, v in outs.items():
-            if os.path.basename(k) == input_name:
-                h = v
-    if not h:
-        raise SystemExit("p1m_manifest: %s lists no output %s: refusing to start" % (path, input_name))
-    return h
+        raise SystemExit("p1m_manifest: %s has status %r: refusing to start" % (rp, rec.get("status")))
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["fill"])
     ap.add_argument("--template", required=True)
-    ap.add_argument("--run-dir", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--bin", default=os.environ.get("BIN", ""))
     ap.add_argument("--set", action="append", default=[])
@@ -57,8 +63,9 @@ def main(argv=None):
     with open(a.template) as fh:
         m = json.load(fh)
     for k, v in list(m.get("inputs", {}).items()):
-        if isinstance(v, str) and v.startswith("@from:"):
-            m["inputs"][k] = resolve_from(a.run_dir, v[len("@from:"):], k)
+        if v == "@hash":
+            check_record(k)
+            m["inputs"][k] = content_hash(k)
     b = m.get("binary", {})
     for k, v in list(b.items()):
         if v == "@binary":

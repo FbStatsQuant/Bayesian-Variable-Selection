@@ -5,10 +5,10 @@
 #include <map>
 
 #include "v4/eval.h"
+#include "v4/gen.h"
 
 namespace v4::eval {
 
-using wp5prov::Address;
 
 // ------------------------------------------------------------------------------------------------ closed forms
 double h2_normals(double m1, double v1, double m2, double v2) {
@@ -76,12 +76,10 @@ void gauss_hermite(int n, std::vector<double>& x, std::vector<double>& w) {
 
 // ------------------------------------------------------------------------------------------------ random draws
 double normal_draw(Address& a) {
-  uint32_t r[4]; wp5prov::philox_at(a, r); a.slot++;
-  double u1 = (double)((((uint64_t)r[1] << 32) | r[0]) >> 11) * 0x1.0p-53;
-  double u2 = (double)((((uint64_t)r[3] << 32) | r[2]) >> 11) * 0x1.0p-53;
+  double u1, u2; uniform2_at(a, u1, u2); a.slot++;
   return std::sqrt(-2.0 * std::log1p(-u1)) * std::cos(2.0 * M_PI * u2);
 }
-static double unif_draw(Address& a) { double u = wp5prov::uniform_at(a); a.slot++; return u; }
+static double unif_draw(Address& a) { double u = uniform_at(a); a.slot++; return u; }
 
 double gamma_draw(double shape, Address& a) {
   if (!(shape > 0)) throw Error(Status::internal_error, "gamma_draw: shape <= 0");
@@ -127,7 +125,7 @@ XSample draw_x(const Truth& T, const std::vector<int32_t>& cols, size_t m, uint3
   xs.X.assign(m * k, 0.0);
   std::vector<double> e(k);
   for (size_t r = 0; r < m; ++r) {
-    Address a; a.seed = seed; a.role = wp5prov::R_TEST; a.xph = wp5prov::X_TEST_X; a.stage = stage;
+    Address a; a.seed = seed; a.role = R_TEST; a.xph = X_TEST_X; a.stage = stage;
     a.particle = (uint32_t)r; a.position = 0; a.slot = 0;
     for (size_t j = 0; j < k; ++j) e[j] = normal_draw(a);
     double* row = &xs.X[r * k];
@@ -143,7 +141,7 @@ std::vector<double> draw_y(const Truth& T, const XSample& xs, uint32_t seed, uin
   std::vector<double> y(xs.m);
   const size_t k = xs.cols.size();
   for (size_t r = 0; r < xs.m; ++r) {
-    Address a; a.seed = seed; a.role = wp5prov::R_TEST; a.xph = wp5prov::X_TEST_NOISE; a.stage = stage; a.particle = (uint32_t)r;
+    Address a; a.seed = seed; a.role = R_TEST; a.xph = X_TEST_NOISE; a.stage = stage; a.particle = (uint32_t)r;
     double mu = T.alpha;
     for (size_t i = 0; i < ps.size(); ++i) mu += xs.X[r * k + ps[i]] * T.beta[i];
     y[r] = mu + sd * normal_draw(a);
@@ -154,16 +152,35 @@ std::vector<double> draw_y(const Truth& T, const XSample& xs, uint32_t seed, uin
 DistShared make_shared_draws(const Truth& T, const std::vector<int32_t>& cols, const DistOpts& o) {
   std::vector<int32_t> c = cols;
   c.insert(c.end(), T.S0.begin(), T.S0.end());
+  std::sort(c.begin(), c.end()); c.erase(std::unique(c.begin(), c.end()), c.end());
   DistShared sh;
+  if (!T.gen_spec.is_null()) {
+    // WP1 gen test rows (same definition as the training data; role TEST, key = data seed): n_x + n_test rows, split
+    gen::Spec sp = gen::spec_from_json(T.gen_spec);
+    std::vector<int32_t> oc; std::vector<double> Xt, yt;
+    const int32_t nt = o.n_x + o.n_test;
+    gen::generate_test(sp, nt, c, oc, Xt, yt);
+    const size_t k = oc.size();
+    auto fill = [&](XSample& xs, int32_t r0, int32_t m) {
+      xs.cols = oc; xs.m = (size_t)m; xs.X.assign((size_t)m * k, 0.0);
+      for (int32_t r = 0; r < m; ++r) for (size_t j = 0; j < k; ++j) xs.X[(size_t)r * k + j] = Xt[j * (size_t)nt + (size_t)(r0 + r)];
+    };
+    fill(sh.xq, 0, o.n_x);
+    fill(sh.xt, o.n_x, o.n_test);
+    sh.yt.assign(yt.begin() + o.n_x, yt.end());
+    sh.source = "gen_test";
+    return sh;
+  }
   sh.xq = draw_x(T, c, (size_t)o.n_x, o.seed, 1);
   sh.xt = draw_x(T, c, (size_t)o.n_test, o.seed, 2);
   sh.yt = draw_y(T, sh.xt, o.seed, 2);
+  sh.source = "draw_x";
   return sh;
 }
 
 // ------------------------------------------------------------------------------------------------ posterior draws
 ParamDraw draw_params(const Law& L, uint32_t seed, uint32_t object_id, uint32_t draw) {
-  Address a; a.seed = seed; a.role = wp5prov::R_POST; a.xph = wp5prov::X_POST; a.stage = object_id; a.particle = draw; a.slot = 0;
+  Address a; a.seed = seed; a.role = R_POST; a.xph = X_POST; a.stage = object_id; a.particle = draw; a.slot = 0;
   ParamDraw d;
   // component by inverse CDF of the weights (one uniform, slot 0)
   double u = unif_draw(a), acc = 0; d.comp = (int)L.comps.size() - 1;
@@ -271,10 +288,6 @@ void predictive_at_x(const Law& L, const Truth& T, const XSample& xs, size_t row
 double log_pred_density(const Law& L, const XSample& xs, size_t row, double y) {
   std::vector<CompAt> cs; comps_at(L, xs, row, cs); return log_mix(cs, y);
 }
-double pred_mean(const Law& L, const XSample& xs, size_t row) {
-  std::vector<CompAt> cs; comps_at(L, xs, row, cs);
-  double m = 0; for (auto& c : cs) m += std::exp(c.lw) * c.loc; return m;
-}
 
 // ------------------------------------------------------------------------------------------------ per-object metrics
 static double quantile_sorted(const std::vector<double>& s, double q) {   // R type 7
@@ -295,9 +308,9 @@ Json dist_metrics(const Law& L, const Truth& T, int32_t n_obs, const DistOpts& o
   if (std::fabs(wsum - 1.0) > 1e-9) throw Error(Status::internal_error, "dist_metrics: weights do not sum to 1");
   const double s2 = T.sigma2_eff();
   Json J = Json::object();
-  J.set("object", L.name);
-  J.set("n_components", (int64_t)L.comps.size());
-  J.set("dropped_mass", L.dropped_mass);
+  J["object"] = (L.name);
+  J["n_components"] = ((int64_t)L.comps.size());
+  J["dropped_mass"] = (L.dropped_mass);
 
   // 1. plug-in (posterior mean of (b, a, v)) — closed form
   std::map<int32_t, double> bm; double am = 0, vm = 0;
@@ -311,9 +324,9 @@ Json dist_metrics(const Law& L, const Truth& T, int32_t n_obs, const DistOpts& o
   LinErr e = lin_error(T, bo, bv, am);
   const double h2p = h2_plugin(e, vm, s2);
   Json P = Json::object();
-  P.set("h2", h2p); P.set("dH", std::sqrt(h2p)); P.set("n_h2", n_obs * h2p);
-  P.set("m", e.m); P.set("s2", e.s2); P.set("v", vm); P.set("pred_error", pred_error(e));
-  J.set("plugin", P);
+  P["h2"] = (h2p); P["dH"] = (std::sqrt(h2p)); P["n_h2"] = (n_obs * h2p);
+  P["m"] = (e.m); P["s2"] = (e.s2); P["v"] = (vm); P["pred_error"] = (pred_error(e));
+  J["plugin"] = (P);
 
   // 2. posterior law of d_H by conjugate draws
   std::vector<double> dh((size_t)o.n_draws);
@@ -327,18 +340,18 @@ Json dist_metrics(const Law& L, const Truth& T, int32_t n_obs, const DistOpts& o
   std::vector<double> sd = dh; std::sort(sd.begin(), sd.end());
   Json D = Json::object();
   double dm = 0; for (double x : dh) dm += x; dm /= dh.size();
-  D.set("n_draws", o.n_draws); D.set("mean", dm);
-  D.set("q05", quantile_sorted(sd, 0.05)); D.set("q25", quantile_sorted(sd, 0.25)); D.set("q50", quantile_sorted(sd, 0.5));
-  D.set("q75", quantile_sorted(sd, 0.75)); D.set("q95", quantile_sorted(sd, 0.95));
+  D["n_draws"] = (o.n_draws); D["mean"] = (dm);
+  D["q05"] = (quantile_sorted(sd, 0.05)); D["q25"] = (quantile_sorted(sd, 0.25)); D["q50"] = (quantile_sorted(sd, 0.5));
+  D["q75"] = (quantile_sorted(sd, 0.75)); D["q95"] = (quantile_sorted(sd, 0.95));
   Json tail = Json::array();
   for (double c : o.eps_c) {
     const double eps2 = c * std::log((double)n_obs) / n_obs;
     size_t cnt = 0; for (double x : dh) if (x * x > eps2) ++cnt;
-    Json t = Json::object(); t.set("c", c); t.set("eps2", eps2); t.set("prob", (double)cnt / dh.size());
+    Json t = Json::object(); t["c"] = (c); t["eps2"] = (eps2); t["prob"] = ((double)cnt / dh.size());
     tail.push(t);
   }
-  D.set("tail", tail);
-  J.set("post_dH", D);
+  D["tail"] = (tail);
+  J["post_dH"] = (D);
   if (dH_out) *dH_out = dh;
 
   // 3. predictive Hellinger and KL: n_x draws of x × n_gh Gauss–Hermite nodes in y
@@ -348,9 +361,9 @@ Json dist_metrics(const Law& L, const Truth& T, int32_t n_obs, const DistOpts& o
   for (long r = 0; r < (long)sh.xq.m; ++r) predictive_at_x(L, T, sh.xq, (size_t)r, ght, ghw, &aff[r], &kl[r]);
   double am_, ase, km, kse; mean_se(aff, am_, ase); mean_se(kl, km, kse);
   Json Q = Json::object();
-  Q.set("h2", 1.0 - am_); Q.set("h2_se", ase); Q.set("n_h2", n_obs * (1.0 - am_));
-  Q.set("kl", km); Q.set("kl_se", kse); Q.set("n_x", (int64_t)sh.xq.m); Q.set("n_gh", o.n_gh);
-  J.set("predictive", Q);
+  Q["h2"] = (1.0 - am_); Q["h2_se"] = (ase); Q["n_h2"] = (n_obs * (1.0 - am_));
+  Q["kl"] = (km); Q["kl_se"] = (kse); Q["n_x"] = ((int64_t)sh.xq.m); Q["n_gh"] = (o.n_gh);
+  J["predictive"] = (Q);
 
   // 4. test rows: MSE of the predictive mean and mean log predictive density
   std::vector<double> se2(sh.xt.m), lpd(sh.xt.m);
@@ -363,8 +376,8 @@ Json dist_metrics(const Law& L, const Truth& T, int32_t n_obs, const DistOpts& o
   }
   double mm, mse_, lm, lse; mean_se(se2, mm, mse_); mean_se(lpd, lm, lse);
   Json Tt = Json::object();
-  Tt.set("mse", mm); Tt.set("mse_se", mse_); Tt.set("mlpd", lm); Tt.set("mlpd_se", lse); Tt.set("n_test", (int64_t)sh.xt.m);
-  J.set("test", Tt);
+  Tt["mse"] = (mm); Tt["mse_se"] = (mse_); Tt["mlpd"] = (lm); Tt["mlpd_se"] = (lse); Tt["n_test"] = ((int64_t)sh.xt.m);
+  J["test"] = (Tt);
   return J;
 }
 

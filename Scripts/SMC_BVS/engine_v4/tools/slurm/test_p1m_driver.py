@@ -111,7 +111,7 @@ class TestGenerate(Base):
         self.assertEqual(subprocess.call(["sha256sum", "--quiet", "-c", "SHA256SUMS"], cwd=out), 0)
         m = json.load(open(os.path.join(out, "manifests", "A2_ARs_n200_r1", "merge.json")))
         self.assertEqual(m["schema"], "smcbvs4.manifest/1")
-        self.assertEqual(len([k for k in m["inputs"] if k.startswith("island_")]), 16)
+        self.assertEqual(len([k for k in m["inputs"] if os.path.basename(k).startswith("island_")]), 16)
         rm = json.load(open(os.path.join(out, "run_manifests", "A2_ARs_n200_r2.json")))
         self.assertEqual(rm["params"]["data_seed"], 20261202)
         row = open(os.path.join(out, "ledger_row.md")).read()
@@ -170,13 +170,27 @@ class TestFakeSubmission(Base):
 
 
 STUB = r"""#!/bin/bash
-# stub smcbvs4: writes <out>.bin and <out>.json {status, outputs} for any command; checks the manifest inputs exist
-cmd=$1; shift; out=""; man=""
-while [[ $# -gt 0 ]]; do case $1 in --out) out=$2; shift 2;; --manifest) man=$2; shift 2;; *) shift;; esac; done
-if [[ -n $man ]]; then python3 -c "import json,sys; m=json.load(open('$man')); assert all(not str(v).startswith('@') for v in m['inputs'].values()), m['inputs']" || exit 13; fi
-echo "$cmd" > "$out.bin"
-[[ $cmd == gen ]] && echo '{}' > "$(dirname $out)/truth.json"
-printf '{"status":"completed","outputs":{"%s.bin":"h_%s_%s"}}\n' "$(basename $out)" "$cmd" "$(basename $out)" > "$out.json"
+# stub smcbvs4: writes an empty valid container at --out and the record <out>.json; with --manifest, checks that every
+# input is a path whose content hash matches (as WP1's main does)
+cmd=$1; shift; out=""; man=""; truth=""
+while [[ $# -gt 0 ]]; do case $1 in --out) out=$2; shift 2;; --manifest) man=$2; shift 2;; --truth) truth=$2; shift 2;; *) shift 2;; esac; done
+python3 - "$out" "$man" "$cmd" <<'PY' || exit 13
+import hashlib, json, struct, sys
+out, man, cmd = sys.argv[1:4]
+def chash(p):
+    b = open(p, "rb").read(); ns = struct.unpack_from("<I", b, 20)[0]
+    return hashlib.sha256(b[128:128 + 128 * ns]).hexdigest()
+if man:
+    m = json.load(open(man))
+    for path, h in m["inputs"].items():
+        assert chash(path) == h, (path, h)
+tag = cmd.encode()[:64].ljust(64, b"\0")
+hdr = b"SMCBVS4\0" + struct.pack("<IIIIQ", 1, 6, 3, 0, 128) + hashlib.sha256(b"").digest() + tag
+open(out, "wb").write(hdr)
+json.dump({"status": "completed", "command": cmd}, open(out + ".json", "w"))
+PY
+[[ -n $truth ]] && echo '{}' > "$truth"
+exit 0
 """
 
 
@@ -214,30 +228,43 @@ class TestLocalChain(Base):
         run("eval", arg=1)
         rd = os.path.join(dept, "scratch", "runs", "A2_pilot", "A2_ARs_n200_r1")
         mm = json.load(open(os.path.join(rd, "manifests", "merge.json")))
-        self.assertEqual(mm["inputs"]["island_2.bin"], "h_island_island_2")
-        self.assertEqual(mm["inputs"]["calib.bin"], "h_calibrate_calib")
+        self.assertEqual(len(mm["inputs"]), 3 + 3)
+        self.assertEqual(mm["inputs"][os.path.join(rd, "island_2.bin")], p1m_manifest.content_hash(os.path.join(rd, "island_2.bin")))
+        gm = json.load(open(os.path.join(rd, "manifests", "gen.json")))
+        self.assertEqual(gm["params"]["seed"], 20261201)   # gen takes the data seed
         self.assertEqual(mm["machine"]["slurm_job_id"], "77")
         self.assertEqual(mm["params"]["threads"], 2)
         im = json.load(open(os.path.join(rd, "manifests", "island_3.json")))
-        self.assertEqual(im["params"]["island"], 3)
+        self.assertEqual(im["params"]["id"], 3)
         self.assertTrue(os.path.exists(os.path.join(rd, "run_manifest.json")))
-        self.assertTrue(os.path.exists(os.path.join(rd, "eval.json")) and os.path.exists(os.path.join(rd, "law.json")))
+        self.assertTrue(os.path.exists(os.path.join(rd, "eval.bin.json")) and os.path.exists(os.path.join(rd, "law.bin.json")))
         ends = open(os.path.join(dept, "scratch", "runs", "A2_pilot", "ends.jsonl")).read().splitlines()
         self.assertEqual(len(ends), 1 + 1 + 3 + 1 + 1)
         self.assertEqual(os.listdir(os.path.join(dept, "scratch", "tmp")), [])   # TMPDIR removed on exit
 
 
 class TestManifest(Base):
-    def test_refuses_incomplete_input(self):
+    def test_refuses_incomplete_or_bad_input(self):
+        import hashlib, struct
         rd = os.path.join(self.tmp, "run"); os.makedirs(rd)
+        binp = os.path.join(rd, "data.bin")
+        sec = b"x" * 128   # one fake section entry
+        hdr = b"SMCBVS4\0" + struct.pack("<IIIIQ", 1, 2, 0, 1, 256) + hashlib.sha256(sec).digest() + b"\0" * 64
+        open(binp, "wb").write(hdr + sec)
         t = os.path.join(self.tmp, "t.json")
-        json.dump({"inputs": {"data.bin": "@from:data.json"}, "params": {}}, open(t, "w"))
-        json.dump({"status": "invalid_input", "outputs": {}}, open(os.path.join(rd, "data.json"), "w"))
+        json.dump({"inputs": {binp: "@hash"}, "params": {}}, open(t, "w"))
+        out = os.path.join(self.tmp, "m.json")
+        with self.assertRaises(SystemExit):   # no producer record
+            p1m_manifest.main(["fill", "--template", t, "--out", out])
+        json.dump({"status": "invalid_input"}, open(binp + ".json", "w"))
+        with self.assertRaises(SystemExit):   # producer failed
+            p1m_manifest.main(["fill", "--template", t, "--out", out])
+        json.dump({"status": "completed"}, open(binp + ".json", "w"))
+        p1m_manifest.main(["fill", "--template", t, "--out", out])
+        self.assertEqual(json.load(open(out))["inputs"][binp], hashlib.sha256(sec).hexdigest())
+        open(binp, "r+b").write(b"SMCBVS4\0" + struct.pack("<IIIIQ", 1, 2, 0, 1, 256) + b"\1" * 32)   # corrupt table hash
         with self.assertRaises(SystemExit):
-            p1m_manifest.main(["fill", "--template", t, "--run-dir", rd, "--out", os.path.join(self.tmp, "m.json")])
-        json.dump({"status": "completed", "outputs": {"/x/y/data.bin": "abc"}}, open(os.path.join(rd, "data.json"), "w"))
-        p1m_manifest.main(["fill", "--template", t, "--run-dir", rd, "--out", os.path.join(self.tmp, "m.json")])
-        self.assertEqual(json.load(open(os.path.join(self.tmp, "m.json")))["inputs"]["data.bin"], "abc")
+            p1m_manifest.main(["fill", "--template", t, "--out", out])
 
 
 class TestCost(Base):
