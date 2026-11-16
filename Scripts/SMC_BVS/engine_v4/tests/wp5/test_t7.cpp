@@ -10,6 +10,7 @@
 //   T7c  (sanity, not part of the criterion) joint (x, y) MC of d_H² within 4 SE, 2²² draws.
 // Fixtures: the posterior-mean plug-in of a model near S₀ on generated data, 4 designs × n ∈ {100, 200, 400} × models
 // with false positives / false negatives, so (m, s², v) cover the range seen in practice. Output: TSV in $TMPDIR.
+#include <stdexcept>
 #include <unistd.h>
 
 #include <cstdio>
@@ -109,7 +110,9 @@ void mc_x(const Fixture& f, G gfun, uint64_t draws, uint64_t seed, double& mean,
 }  // namespace
 
 TEST_SLOW(wp5_gate_T7_closed_forms_vs_monte_carlo) {
-  const std::string tsv = std::string(std::getenv("TMPDIR") ? std::getenv("TMPDIR") : ".") + "/T7_result.tsv";
+  const char* td = std::getenv("TMPDIR");   // no fallback into the working tree (tests write only under $TMPDIR)
+  if (!td || !*td) throw std::runtime_error("TMPDIR is not set (tests write only under $TMPDIR)");
+  const std::string tsv = std::string(td) + "/T7_result.tsv";
   FILE* fo = std::fopen(tsv.c_str(), "w");
   std::fprintf(fo, "fixture\tquantity\tclosed\tmc\tmc_se\tse_max\ttol_abs\tdraws\tpass\ttol3_v1_info\n");
   int pass = 0, total = 0;
