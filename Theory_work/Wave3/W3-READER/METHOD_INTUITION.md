@@ -182,6 +182,6 @@ re-checked the ones marked ✓.
 
 Notes for HQ: (i) the code reports `hpm` and `mpm` without naming one "the selected model"; the theory's reported
 model is `hpm`. (ii) The Ẑ-weighted PIP described in the methodology document, and called primary for v3.1 in
-`Theory_work/State_of_Project/sections/02_method.tex:444-451`, is not computed by the shipped code (README:16); the code
+`Theory_work/State_of_Project/sections/02_method.tex:440-451`, is not computed by the shipped code (README:16); the code
 pools with equal weights (`v3_run.R:154`, `:162`). Follow the code (Theory Dept manager, 2026-11-15). (iii) The tempered target is written $\pi_0^{1-\phi}\pi^\phi$ up to constants
 ($\gamma_\phi=\gamma_0^{1-\phi}\gamma_1^{\phi}$ with $\gamma_1\propto$ target).

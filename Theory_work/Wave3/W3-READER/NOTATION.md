@@ -228,8 +228,8 @@ $\beta^*$ and $S_0$ may change with $n$; $s_0$ is fixed unless said otherwise.
 * Reported model = ≻-maximum of the scored set; certified set: W3-SCR STATEMENT.md:29-44; C-DLV `lemmas/L4_delivery.md:66-70`.
 * Equal-weight pooling (code wins over the documentation): `pip_primary = rowMeans(P)` at
   `Scripts/SMC_BVS/core/v3_run.R:162`; $\log\hat Z$ = log of the plain mean of the $\hat Z_r$ at `v3_run.R:154`; MPM at
-  `:163`. `Theory_work/State_of_Project/sections/02_method.tex:444-451` says v3.1 made the $\hat Z$-weighted PIP primary;
-  the shipped code does not compute it (`Scripts/SMC_BVS/core/README.md:16`). Flag raised by the Theory Dept manager,
+  `:163`. `Theory_work/State_of_Project/sections/02_method.tex:440-451` says v3.1 made the $\hat Z$-weighted PIP primary;
+  the shipped code does not compute it (`Scripts/SMC_BVS/core/README.md:16`); $\log\hat Z$ = log-sum-exp of the $\log\hat Z_r$ minus $\log R$. Equal-weight primary confirmed by OD-4 (dept + HQ, 11-15); W3-EDIT adds the note in 02_method.tex. Flag raised by the Theory Dept manager,
   2026-11-15.
 * Output event, resource guard: `Scripts/SMC_BVS/core/README.md` (runtime guard; `resource_limit`); delivery fallback
   (tier-1 grid freezing, default on): `Scripts/SMC_BVS/core/v3_calib.R:120-124, 141-151`.
