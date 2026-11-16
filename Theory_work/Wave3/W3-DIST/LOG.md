@@ -400,3 +400,27 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   proof files are not edited). The seven "unharvested strength" items: named open items for HQ, not adopted
   (TARGET §4). D4 (Sol, new agent, D62 brief `reviews/BRIEF_D4_sol_diff.md`, `reviews/DIFFS_D4.patch`) launched.
   SW1 thread settled. Running: D4 (Sol). HOLDS read: none.
+- 04:45 — **D4 landed** (`reviews/D4_sol_diff.md`, Sol; notice 04:41): VERIFIED-WITH-AMENDMENTS, 0 CRITICAL, 0 MAJOR, 3 MINOR
+  on records (D4-01 a sentence of TARGET §1; D4-02 the pin record; D4-03 a sentence of REPORT §4). SW1-01, 03, 04, 05, 07,
+  09 RESOLVED; **tags CONFIRMED: EQUAL (Lemma X's description), EQUAL on TC8**; B3.md VERIFIED. The three record repairs
+  applied with the reviewer's wording (PINS.md now 63 rows); **not re-checked by a further diff check** (records, not
+  statements or proofs; said to the manager; goes into CP3). DEPS: B3 → OK; **every row under a claim OK** (script).
+  Changelog check cells completed. REPORT regenerated (STATEMENT v1.4.9, sha 96b5d4fc1347a63c). Citation check 9 pins,
+  0 MISS. Reader blocks identical. `git pull --ff-only origin main` (the first pull failed on an unrelated ref; second
+  succeeded): main = origin/main = 85cf8c4b; all 20 external inputs equal origin/main. **W3-MISR/STATEMENT.md frozen at
+  sha256 797bca0e29ae2726dfc22b00b70af96f88777f4ef37ac5371e63d82654c84b87** (the Cor-H correction had not landed).
+  Staged ingest on the synced main: 20 claims, 0 problems, acceptance PASS. HOLDS read just before the freeze: none.
+  **R1 FROZEN: MANIFEST c7d74e49a9e5a05fb4c9457f6ccf3bb7c83cb85ca00bf49e47d3d8f4a7c8834d** (`reviews/MANIFEST_R1.txt`, 223 files,
+  20 extra inputs; verify OK). Digest sent to the manager at once. Briefs saved before launch:
+  `reviews/BRIEF_R1_astra.md`, `reviews/BRIEF_R1_opus.md` (from `Theory_work/INFRA/templates/COUNCIL_BRIEF.md`; gates=FAIL
+  sentence; HQ's named point on Corollary C; PINS.md convention; D62 scratch rule). Seats launched, both new agents,
+  blind: Astra (codex, gpt-6-astra, reasoningEffort high) and Opus 5.5 (Claude Third, effort high). From now nothing in
+  the ticket folder is edited except `reviews/`, `LOG.md`, `CHECKPOINT_*.md`. D4 thread settled.
+- 04:46 — Manager: R1 freeze acknowledged; the three D4 record edits need no extra check. The Cor-H correction to
+  W3-MISR/STATEMENT.md (line 1 and :191-195 only; R′/B0 lines untouched) will land on main during or after the council:
+  (a) **I do not pull main into this clone while the seats read**; (b) at bind time, if verify shows that one external
+  input changed, re-freeze MANIFEST_R1r after pulling, with a CORRECTION-ONLY carrier note (evidence
+  Theory_work/Dept/research/MISR_NARROW/DIFF_sol.md on dept/theory, W3-MISR's ERRATA; precedent W3-START / W3-MISR
+  MANIFEST_R2r) and bind the R1 verdicts through it; if bind refuses, HQ decides. Verdict lines go to the manager when
+  both seats return. After the council: one page on the seven unharvested-strength items (gain, cost) for HQ.
+  Running: R1 astra (Codex), R1 opus (Claude Third); 2-hour timer set for the Codex seat.
