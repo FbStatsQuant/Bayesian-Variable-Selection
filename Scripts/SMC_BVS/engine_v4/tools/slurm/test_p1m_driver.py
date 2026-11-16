@@ -16,6 +16,7 @@ import unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+import p1m_cells  # noqa: E402
 import p1m_cost  # noqa: E402
 import p1m_driver  # noqa: E402
 import p1m_manifest  # noqa: E402
@@ -335,6 +336,26 @@ class TestContentHashV012(Base):
         open(pth, "wb").write(head + th + b"\2" * 32 + b"\0" * 32 + sec)
         with self.assertRaises(SystemExit):
             p1m_manifest.content_hash(pth)
+
+
+class TestCells(Base):
+    """MANIFEST_CELLS generator: unique run ids, seeds in range, deterministic, every plan valid for the driver."""
+
+    def test_expand_and_plans(self):
+        rows = p1m_cells.expand()
+        self.assertEqual(len({r["run_id"] for r in rows}), len(rows))
+        self.assertTrue(all(1 <= r["seed"] <= 2 ** 31 - 1 for r in rows))
+        self.assertEqual(rows, p1m_cells.expand())
+        # OD-14: five 1M fits at n = 200 + the N = 10⁴ check; option D one fit at n = 1,000
+        c6 = [r for r in rows if r["block"] == "rung 1e6"]
+        self.assertEqual(len(c6), 6); self.assertEqual(sum(r["N"] == 10000 for r in c6), 1)
+        self.assertEqual([r["n"] for r in rows if r["block"] == "option D"], [1000])
+        # ADJ-OPP present at 10⁴ and 10⁵ (Sol F7)
+        self.assertTrue(any(r["design"] == "ADJ-OPP" and r["p"] == 10 ** 5 for r in rows))
+        out = os.path.join(self.tmp, "plans")
+        for f in p1m_cells.plans(rows, out):
+            P = p1m_driver.resolve(json.load(open(f)))
+            self.assertLessEqual(P["n_tasks"], 150)
 
 
 class TestCost(Base):
