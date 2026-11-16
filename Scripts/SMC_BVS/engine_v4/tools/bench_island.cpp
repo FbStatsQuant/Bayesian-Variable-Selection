@@ -7,6 +7,7 @@
 //        one island end to end on AR(0.6) data, once per thread count (same output hash required); grid geo:T = a
 //        geometric T-stage grid, adaptive:Te = core's pilot rule (ESS >= 0.9 N per stage, floor 1/Te) on the island's
 //        own population (a calibrated-like schedule). Prints ns per step, M, products, offers, phase times, peak RSS.
+//   sort <n> <threads> [k]                     the compaction sort: pairwise (PR26) vs merge-path (m3) vs __gnu_parallel
 //   store <cap> <threads> <offers_per_thread>
 //        cost of TopStore::offer under a realistic mix (most offers below tau, duplicates above it).
 //   plan <p> <N> <threads> <G list> [n]      the admission's memory plan (no island run)
@@ -25,6 +26,7 @@
 #include <algorithm>
 #include <cmath>
 #include <random>
+#include <parallel/algorithm>
 #include "v4/island/island.h"
 
 using namespace v4::island;
@@ -190,6 +192,63 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
   return rc;
 }
 
+// sort <n> <threads> [k]: the compaction's first sort (by model: hash, |S|, S, v desc) on n staged refs of mean size k,
+// old (one task per pair: PR26 r2) vs new (merge-path segments: review m3) vs __gnu_parallel::sort (pre-r2); same result
+template <class T, class Less>
+static void psort_pairwise_old(std::vector<T>& a, std::vector<T>& tmp, Less less, int threads) {
+  const size_t n = a.size(); tmp.resize(n); const int C = threads;
+  std::vector<size_t> b(C + 1); for (int c = 0; c <= C; ++c) b[c] = n * (size_t)c / (size_t)C;
+  #pragma omp parallel for num_threads(threads) schedule(static, 1)
+  for (int c = 0; c < C; ++c) std::sort(a.begin() + b[c], a.begin() + b[c + 1], less);
+  T* src = a.data(); T* dst = tmp.data();
+  for (size_t width = 1; width < (size_t)C; width *= 2) {
+    const int npairs = (int)((C + 2 * width - 1) / (2 * width));
+    #pragma omp parallel for num_threads(threads) schedule(static, 1)
+    for (int q = 0; q < npairs; ++q) {
+      const size_t lo = b[std::min<size_t>(C, 2 * width * q)], mid = b[std::min<size_t>(C, 2 * width * q + width)], hi = b[std::min<size_t>(C, 2 * width * (q + 1))];
+      std::merge(src + lo, src + mid, src + mid, src + hi, dst + lo, less);
+    }
+    std::swap(src, dst);
+  }
+  if (src != a.data()) std::copy(src, src + n, a.data());
+}
+static void bench_sort(size_t n, int T, int k) {
+  std::mt19937_64 g(5); std::vector<int32_t> pool; std::vector<StoreRef> r(n);
+  pool.reserve(n * (size_t)k);
+  std::vector<size_t> off(n);
+  for (size_t i = 0; i < n; ++i) {
+    off[i] = pool.size(); int kk = 1 + (int)(g() % (2 * k)); int32_t last = -1;
+    for (int a = 0; a < kk; ++a) { last += 1 + (int32_t)(g() % 1000); pool.push_back(last); }
+  }
+  for (size_t i = 0; i < n; ++i) {
+    size_t e = i + 1 < n ? off[i + 1] : pool.size(); uint16_t kk = (uint16_t)(e - off[i]);
+    uint64_t h = 1469598103934665603ull; for (size_t t = off[i]; t < e; ++t) h = (h ^ (uint64_t)pool[t]) * 1099511628211ull;
+    // ~1/3 of the refs repeat an earlier model with another value (duplicates are common in staging)
+    if (i > 10 && g() % 3 == 0) { size_t src = g() % i; r[i] = r[src]; r[i].v = std::normal_distribution<double>()(g); continue; }
+    r[i] = StoreRef{std::normal_distribution<double>()(g), h, pool.data() + off[i], kk};
+  }
+  auto by_model = [](const StoreRef& a, const StoreRef& b) {
+    if (a.h != b.h) return a.h < b.h;
+    if (a.k != b.k) return a.k < b.k;
+    int c = std::memcmp(a.S, b.S, sizeof(int32_t) * a.k);
+    if (c != 0) return lex_less(a.S, a.k, b.S, b.k);
+    return a.v > b.v;
+  };
+  auto same = [](const std::vector<StoreRef>& x, const std::vector<StoreRef>& y) {
+    for (size_t i = 0; i < x.size(); ++i) if (x[i].h != y[i].h || x[i].S != y[i].S || std::memcmp(&x[i].v, &y[i].v, 8)) return false;
+    return true;
+  };
+  std::vector<StoreRef> ref = r; std::sort(ref.begin(), ref.end(), by_model);
+  double t_old = 1e30, t_new = 1e30, t_gnu = 1e30; bool ok = true;
+  for (int rep = 0; rep < 3; ++rep) {
+    std::vector<StoreRef> a = r, tmp; double t0 = now(); psort_pairwise_old(a, tmp, by_model, T); t_old = std::min(t_old, now() - t0); ok = ok && same(a, ref);
+    a = r; tmp.clear(); t0 = now(); psort_noalloc(a, tmp, by_model, T); t_new = std::min(t_new, now() - t0); ok = ok && same(a, ref);
+    a = r; t0 = now(); __gnu_parallel::sort(a.begin(), a.end(), by_model, __gnu_parallel::default_parallel_tag(T)); t_gnu = std::min(t_gnu, now() - t0); ok = ok && same(a, ref);
+  }
+  std::printf("sort n=%zu threads=%d (best of 3, wall): pairwise (PR26) %.3f s, merge-path (m3) %.3f s, __gnu_parallel %.3f s; identical %d\n",
+              n, T, t_old, t_new, t_gnu, (int)ok);
+}
+
 static void bench_store(uint64_t cap, int T, long per) {
   TopStore st; st.init(cap, Order::HPM);
   std::vector<StoreBuffer> bufs(T);
@@ -298,6 +357,8 @@ int main(int argc, char** argv) {
     { std::vector<double> a, b; a.resize((size_t)5 * p); b.resize((size_t)5 * p);
       double t0 = now(); a.resize((size_t)145 * p); b.resize((size_t)145 * p); double t1 = now();
       std::printf("score rows: growing 5 -> 145 supports re-zero-fills %.2f GB in %.3f s (per group, before the fix)\n", 2.0 * 140 * p * 8 / 1e9, t1 - t0); }
+  } else if (mode == "sort") {
+    bench_sort(strtoull(argv[2], 0, 10), atoi(argv[3]), argc > 4 ? atoi(argv[4]) : 7);
   } else if (mode == "store") {
     bench_store(strtoull(argv[2], 0, 10), atoi(argv[3]), atol(argv[4]));
   } else return 1;
