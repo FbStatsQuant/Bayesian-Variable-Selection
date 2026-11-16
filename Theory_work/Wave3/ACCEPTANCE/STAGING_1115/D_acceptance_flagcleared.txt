@@ -1,0 +1,487 @@
+WARN  C10-unsplit       C-PACK:SL1.I-a                 split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       C-PACK:SL1.I-b                 split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       C-PACK:SL1.I-c                 split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       C-PACK:SL1.I-d                 split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       C-PACK:SL1.core                split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W1-GEN:L1.L1.1                 split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W1-GEN:L1.L1.2                 split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W1-GEN:L1.L1.3                 split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W1-GEN:L1.L1.4                 split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W1-PXN:Lemma-LS.P6-prime       split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-A:L1.Cor-U              split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-A:L1.U(a)               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-A:L1.U(b)               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-A:L1.U(c)               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-A:L1.U(d)               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-B:L1.L1.0               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-B:L1.L1.1               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-B:L1.L1.2               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-B:L1.L1.3               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-B:L1.L1.4               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-B:L1.L1.5               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-B:L1.L1.5(a)            split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-B:L1.L1.5(b)            split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-B:L1.L1.5(c)            split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5:L1.L1.1              split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5:L1.L1.2              split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5:L1.L1.3              split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5:L1.L1.4              split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5:L5.C3-R              split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5:L5.C4-R              split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L0.L0.1             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L0.L0.2             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L0.L0.3             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L0.L0.4             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L0.L0.5             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L0.L0.6             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L0.L0.7             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L1.L1.0             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L1.L1.1             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L1.L1.2             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L1.L1.3             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L1.L1.4             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L1.L1.5             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L1.L1.6             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-S5F:L1.L1.7             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-X:X1.X1.1               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-X:X1.X1.2               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-X:X1.X1.3               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-X:X6.X6.3               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-X:X6.X6.4               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-XA:L1.L1a               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-XA:L1.L1b               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-FAC-XA:L1.L1c               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-LOC2:F-LOC2.exp             split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-LOC2:F-LOC2.poly            split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-LOC2:PLR.C-i                split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-unsplit       W2-LOC2:PLR.C-ii               split part without its own status: inherits the parent's verbatim status (the ticket should state per-clause statuses)
+WARN  C10-verbatim      C-DLV:C1-CondDelivery          empty status (no own status written in the ticket files)
+WARN  C10-verbatim      W2-FAC-S5F:C1                  empty status (no own status written in the ticket files)
+WARN  C10-verbatim      W2-FAC-S5F:C2                  empty status (no own status written in the ticket files)
+WARN  C10-verbatim      W2-FAC-S5F:C3                  empty status (no own status written in the ticket files)
+WARN  C10-verbatim      W2-FAC-S5F:C4                  empty status (no own status written in the ticket files)
+WARN  C8-final          C-DLV                          Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:49 quotes 'PROVED-CHECKED for the patched calibration law', STRONGER than the ticket result 'PARTIAL. Every no-output path except schedule_limit is excluded (proba' (overclaim unless it is a sub-claim)
+WARN  S5-interface      A:BETAMIN                      2 bridges (SOP:TH09, C-GROW:L2.1); interface rule: exactly one A ⇒ P
+WARN  S5-interface      A:BLOCK-LE-16                  shared assumption without a bridge lemma A ⇒ P
+WARN  S5-interface      A:IID-GAUSS-ROWS               shared assumption without a bridge lemma A ⇒ P
+WARN  S5-interface      C-GROW:Thm-GROW                lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      C-GROW:Thm-GROW                lists shared assumption A:BETAMIN directly; consume its property via the bridge SOP:TH09; C-GROW:L2.1
+WARN  S5-interface      C-GROW:Thm-GROW                lists shared assumption A:ENERGY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      C-GROW:Thm-GROW                lists shared assumption A:SPARSE-EIG directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      C-GROW:Thm-GROW                lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      C-GROW:Thm-GROW                lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      C-GROW:Thm-GROW                lists shared assumption A:RELEVANCE-SIZE directly; consume its property via the bridge C-GROW:L2.3
+WARN  S5-interface      C-GROW:Thm-GROW                lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      C-GROW:Thm-GROW                lists shared assumption A:BLOCK-VIS directly; consume its property via the bridge C-GROW:L3
+WARN  S5-interface      C-GROW:Thm-GROW                lists shared assumption A:MR1-CAP directly; consume its property via the bridge C-GROW:L1.2
+WARN  S5-interface      C-GROW:Thm-GROW                lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      C-GROW:Thm-GROW                lists shared assumption A:CAL directly; consume its property via the bridge C-DLV:Cor-Dp
+WARN  S5-interface      C-MIS:Thm-MIS(i)               lists shared assumption A:GR directly; consume its property via the bridge C-MIS:LemR
+WARN  S5-interface      C-MIS:Thm-MIS(i)               lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      C-MIS:Thm-MIS(i)               lists shared assumption A:BETAMIN directly; consume its property via the bridge SOP:TH09; C-GROW:L2.1
+WARN  S5-interface      C-MIS:Thm-MIS(i)               lists shared assumption A:ENERGY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      C-MIS:Thm-MIS(i)               lists shared assumption A:SPARSE-EIG directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      C-MIS:Thm-MIS(i)               lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      C-MIS:Thm-MIS(i)               lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      C-MIS:Thm-MIS(ii)              lists shared assumption A:GR directly; consume its property via the bridge C-MIS:LemR
+WARN  S5-interface      C-MIS:Thm-MIS(ii)              lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      C-MIS:Thm-MIS(ii)              lists shared assumption A:BETAMIN directly; consume its property via the bridge SOP:TH09; C-GROW:L2.1
+WARN  S5-interface      C-MIS:Thm-MIS(ii)              lists shared assumption A:ENERGY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      C-MIS:Thm-MIS(ii)              lists shared assumption A:SPARSE-EIG directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      C-MIS:Thm-MIS(ii)              lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      C-MIS:Thm-MIS(ii)              lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      C-MIS:Thm-MIS(ii)              lists shared assumption A:IID-GAUSS-ROWS directly; consume its property via the bridge MISSING
+WARN  S5-interface      W1-GEN:Thm-GEN                 lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W1-GEN:Thm-GEN                 lists shared assumption A:BETAMIN directly; consume its property via the bridge SOP:TH09; C-GROW:L2.1
+WARN  S5-interface      W1-GEN:Thm-GEN                 lists shared assumption A:ENERGY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W1-GEN:Thm-GEN                 lists shared assumption A:SPARSE-EIG directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W1-GEN:Thm-GEN                 lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W1-GEN:Thm-GEN                 lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W1-GEN:Thm-GEN                 lists shared assumption A:RELEVANCE-SIZE directly; consume its property via the bridge C-GROW:L2.3
+WARN  S5-interface      W1-GEN:Thm-GEN                 lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W1-GEN:Thm-GEN                 lists shared assumption A:BLOCK-VIS directly; consume its property via the bridge C-GROW:L3
+WARN  S5-interface      W1-GEN:Thm-GEN                 lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W1-GEN:Thm-GEN                 lists shared assumption A:CAL directly; consume its property via the bridge C-DLV:Cor-Dp
+WARN  S5-interface      W1-PXN:Thm-PXN                 lists shared assumption A:INST-LH-IID directly; consume its property via the bridge W1-PXN:Thm-R
+WARN  S5-interface      W1-PXN:Thm-PXN                 lists shared assumption A:IID-GAUSS-ROWS directly; consume its property via the bridge MISSING
+WARN  S5-interface      W1-PXN:Thm-PXN                 lists shared assumption A:SIZE directly; consume its property via the bridge W1-PXN:Thm-R
+WARN  S5-interface      W1-PXN:Thm-PXN                 lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W1-PXN:Thm-PXN                 lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W1-PXN:Thm-PXN                 lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W1-PXN:Thm-PXN                 lists shared assumption A:BETAMIN directly; consume its property via the bridge SOP:TH09; C-GROW:L2.1
+WARN  S5-interface      W1-PXN:Thm-PXN                 lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W1-PXN:Thm-PXN                 lists shared assumption A:CAL directly; consume its property via the bridge C-DLV:Cor-Dp
+WARN  S5-interface      W2-FAC-A:Prop-F-FAC            lists shared assumption A:DELIVERY-ALLOC directly; consume its property via the bridge C-DLV:Prop-F
+WARN  S5-interface      W2-FAC-A:Prop-F-FAC            lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W2-FAC-A:Prop-F-FAC            lists shared assumption A:MR1-CAP directly; consume its property via the bridge C-GROW:L1.2
+WARN  S5-interface      W2-FAC-A:Prop-F-FAC            lists shared assumption A:EXACT-GRAM directly; consume its property via the bridge W2-FAC-A:L1
+WARN  S5-interface      W2-FAC-A:Prop-F-FAC            lists shared assumption A:IID-GAUSS-ROWS directly; consume its property via the bridge MISSING
+WARN  S5-interface      W2-FAC-A:Prop-F-FAC            lists shared assumption A:BLOCK-VIS directly; consume its property via the bridge C-GROW:L3
+WARN  S5-interface      W2-FAC-A:Prop-F-FAC            lists shared assumption A:BETAMIN directly; consume its property via the bridge SOP:TH09; C-GROW:L2.1
+WARN  S5-interface      W2-FAC-A:Prop-F-FAC            lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W2-FAC-A:Thm-FAC-L             lists shared assumption A:GRAM-OP-BOUND directly; consume its property via the bridge W2-FAC-A:L1
+WARN  S5-interface      W2-FAC-A:Thm-FAC-L             lists shared assumption A:BLOCK-VIS directly; consume its property via the bridge C-GROW:L3
+WARN  S5-interface      W2-FAC-A:Thm-FAC-L             lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W2-FAC-A:Thm-FAC-L             lists shared assumption A:BETAMIN directly; consume its property via the bridge SOP:TH09; C-GROW:L2.1
+WARN  S5-interface      W2-FAC-A:Thm-FAC-L             lists shared assumption A:ENERGY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W2-FAC-A:Thm-FAC-L             lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W2-FAC-A:Thm-FAC-L             lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W2-FAC-A:Thm-FAC-L             lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W2-FAC-A:Thm-FAC-L             lists shared assumption A:MR1-CAP directly; consume its property via the bridge C-GROW:L1.2
+WARN  S5-interface      W2-FAC-A:Thm-FAC-L             lists shared assumption A:DELIVERY-ALLOC directly; consume its property via the bridge C-DLV:Prop-F
+WARN  S5-interface      W2-FAC-B:Thm-FAC-CS            lists shared assumption A:INST-CS directly; consume its property via the bridge W2-FAC-B:L1
+WARN  S5-interface      W2-FAC-B:Thm-FAC-CS            lists shared assumption A:EXACT-GRAM directly; consume its property via the bridge W2-FAC-A:L1
+WARN  S5-interface      W2-FAC-B:Thm-FAC-CS            lists shared assumption A:FS directly; consume its property via the bridge W2-FAC-B:L2
+WARN  S5-interface      W2-FAC-B:Thm-FAC-CS            lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W2-FAC-B:Thm-FAC-CS            lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W2-FAC-B:Thm-FAC-CS            lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W2-FAC-B:Thm-FAC-CS            lists shared assumption A:MR1-CAP directly; consume its property via the bridge C-GROW:L1.2
+WARN  S5-interface      W2-FAC-B:Thm-FAC-CS            lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W2-FAC-B:Thm-FAC-CS            lists shared assumption A:CAL directly; consume its property via the bridge C-DLV:Cor-Dp
+WARN  S5-interface      W2-FAC-B:Thm-FAC-CS            lists shared assumption A:DELIVERY-ALLOC directly; consume its property via the bridge C-DLV:Prop-F
+WARN  S5-interface      W2-FAC-PK:Thm-NEG              lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W2-FAC-PK:Thm-NEG              lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W2-FAC-PK:Thm-NEG              lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W2-FAC-PK:Thm-PATH             lists shared assumption A:PK-REGIME directly; consume its property via the bridge W2-FAC-PK:P1
+WARN  S5-interface      W2-FAC-PK:Thm-PATH             lists shared assumption A:INST-CS directly; consume its property via the bridge W2-FAC-B:L1
+WARN  S5-interface      W2-FAC-PK:Thm-PATH             lists shared assumption A:EXACT-GRAM directly; consume its property via the bridge W2-FAC-A:L1
+WARN  S5-interface      W2-FAC-PK:Thm-PATH             lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W2-FAC-PK:Thm-PATH             lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W2-FAC-PK:Thm-PATH             lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W2-FAC-PK:Thm-PATH             lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W2-FAC-X:Thm-FAC-CS-iid        lists shared assumption A:INST-CS directly; consume its property via the bridge W2-FAC-B:L1
+WARN  S5-interface      W2-FAC-X:Thm-FAC-CS-iid        lists shared assumption A:IID-GAUSS-ROWS directly; consume its property via the bridge MISSING
+WARN  S5-interface      W2-FAC-X:Thm-FAC-CS-iid        lists shared assumption A:FS directly; consume its property via the bridge W2-FAC-B:L2
+WARN  S5-interface      W2-FAC-X:Thm-FAC-CS-iid        lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W2-FAC-X:Thm-FAC-CS-iid        lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W2-FAC-X:Thm-FAC-CS-iid        lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W2-FAC-X:Thm-FAC-CS-iid        lists shared assumption A:MR1-CAP directly; consume its property via the bridge C-GROW:L1.2
+WARN  S5-interface      W2-FAC-X:Thm-FAC-CS-iid        lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W2-FAC-X:Thm-FAC-CS-iid        lists shared assumption A:DELIVERY-ALLOC directly; consume its property via the bridge C-DLV:Prop-F
+WARN  S5-interface      W2-LOC2:F-LOC2                 lists shared assumption A:IID-GAUSS-ROWS directly; consume its property via the bridge MISSING
+WARN  S5-interface      W2-LOC2:F-LOC2                 lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W2-LOC2:F-LOC2                 lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W2-LOC2:F-LOC2                 lists shared assumption A:MR1-CAP directly; consume its property via the bridge C-GROW:L1.2
+WARN  S5-interface      W2-LOC2:F-LOC2                 lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W2-LOC2:F-LOC2                 lists shared assumption A:DELIVERY-ALLOC directly; consume its property via the bridge C-DLV:Prop-F
+WARN  S5-interface      W2-LOC2:PLR                    lists shared assumption A:RELEVANCE-SIZE directly; consume its property via the bridge C-GROW:L2.3
+WARN  S5-interface      W2-LOC2:PLR                    lists shared assumption A:NA-FRAME directly; consume its property via the bridge W2-LOC2:NA-R
+WARN  S5-interface      W2-LOC2:PLR                    lists shared assumption A:LSF directly; consume its property via the bridge W2-APP:POST
+WARN  S5-interface      W2-LOC2:PLR                    lists shared assumption A:IID-GAUSS-ROWS directly; consume its property via the bridge MISSING
+WARN  S5-interface      W2-LOC2:PLR                    lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W2-LOC2:PLR                    lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W2-LOC2:PLR                    lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W2-LOC2:PLR                    lists shared assumption A:MR1-CAP directly; consume its property via the bridge C-GROW:L1.2
+WARN  S5-interface      W2-LOC2:PLR                    lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W2-LOC2:PLR                    lists shared assumption A:CAL directly; consume its property via the bridge C-DLV:Cor-Dp
+WARN  S5-interface      W2-LOC2:Thm-Poly               lists shared assumption A:PTV directly; consume its property via the bridge W2-APP:Thm-LOC
+WARN  S5-interface      W2-LOC2:Thm-Poly               lists shared assumption A:LSF directly; consume its property via the bridge W2-APP:POST
+WARN  S5-interface      W2-LOC2:Thm-Poly               lists shared assumption A:IID-GAUSS-ROWS directly; consume its property via the bridge MISSING
+WARN  S5-interface      W2-LOC2:Thm-Poly               lists shared assumption A:NA-FRAME directly; consume its property via the bridge W2-LOC2:NA-R
+WARN  S5-interface      W2-LOC2:Thm-Poly               lists shared assumption A:BETAMIN directly; consume its property via the bridge SOP:TH09; C-GROW:L2.1
+WARN  S5-interface      W2-LOC2:Thm-Poly               lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W2-LOC2:Thm-Poly               lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W2-LOC2:Thm-Poly               lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W2-LOC2:Thm-Poly               lists shared assumption A:MR1-CAP directly; consume its property via the bridge C-GROW:L1.2
+WARN  S5-interface      W2-LOC2:Thm-Poly               lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W2-LOC2:Thm-Poly               lists shared assumption A:CAL directly; consume its property via the bridge C-DLV:Cor-Dp
+WARN  S5-interface      W2-UNI:F-UNI                   lists shared assumption A:DELIVERY-ALLOC directly; consume its property via the bridge C-DLV:Prop-F
+WARN  S5-interface      W2-UNI:F-UNI                   lists shared assumption A:IID-GAUSS-ROWS directly; consume its property via the bridge MISSING
+WARN  S5-interface      W2-UNI:F-UNI                   lists shared assumption A:GRAM-OP-BOUND directly; consume its property via the bridge W2-FAC-A:L1
+WARN  S5-interface      W2-UNI:F-UNI                   lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W2-UNI:F-UNI                   lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W2-UNI:F-UNI                   lists shared assumption A:MR1-CAP directly; consume its property via the bridge C-GROW:L1.2
+WARN  S5-interface      W2-UNI:F-UNI                   lists shared assumption A:RELEVANCE-SIZE directly; consume its property via the bridge C-GROW:L2.3
+WARN  S5-interface      W3-MISR:Cor-G(a)               lists shared assumption A:IID-GAUSS-ROWS directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-MISR:Cor-G(b)               lists shared assumption A:IID-GAUSS-ROWS directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-MISR:Cor-G(b)               lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-MISR:Cor-G(b)               lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-MISR:Cor-H                  lists shared assumption A:MISR-GRC directly; consume its property via the bridge W3-MISR:R'
+WARN  S5-interface      W3-MISR:Cor-H                  lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-MISR:Cor-H                  lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-MISR:MIS(i')                lists shared assumption A:MISR-GRC directly; consume its property via the bridge W3-MISR:R'
+WARN  S5-interface      W3-MISR:MIS(i')                lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-MISR:MIS(i')                lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-MISR:MIS(i)                 lists shared assumption A:MISR-GRC directly; consume its property via the bridge W3-MISR:R'
+WARN  S5-interface      W3-MISR:MIS(i)                 lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-MISR:MIS(i)                 lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-MISR:MIS(ii)                lists shared assumption A:MISR-GRC directly; consume its property via the bridge W3-MISR:R'
+WARN  S5-interface      W3-MISR:MIS(ii)                lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-MISR:MIS(ii)                lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST2:A1                    lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W3-POST2:A1                    lists shared assumption A:ENERGY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST2:A1                    lists shared assumption A:BETAMIN directly; consume its property via the bridge SOP:TH09; C-GROW:L2.1
+WARN  S5-interface      W3-POST2:A1                    lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST2:A1                    lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST2:B                     lists shared assumption A:ENERGY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST2:C                     lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W3-POST2:C                     lists shared assumption A:ENERGY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST2:C                     lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST2:C                     lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST2:D                     lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W3-POST2:D                     lists shared assumption A:ENERGY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST2:D                     lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST2:D                     lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST2:E                     lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W3-POST2:E                     lists shared assumption A:ENERGY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST2:E                     lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST2:E                     lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST:Lemma-1a'              lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W3-POST:Lemma-1a'              lists shared assumption A:ENERGY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST:Thm-1                  lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W3-POST:Thm-1                  lists shared assumption A:ENERGY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST:Thm-1                  lists shared assumption A:SPARSE-EIG directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST:Thm-1                  lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST:Thm-1                  lists shared assumption A:P-POLY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-POST:Thm-1                  lists shared assumption A:BETAMIN directly; consume its property via the bridge SOP:TH09; C-GROW:L2.1
+WARN  S5-interface      W3-PSHARP:A                    lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W3-PSHARP:A                    lists shared assumption A:ENERGY directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-RM2:RM2-F                   lists shared assumption A:T03-HYP directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-RM2:RM2-F                   lists shared assumption A:RM2-LSIZE-B directly; consume its property via the bridge W3-RM2:SAND-F-b
+WARN  S5-interface      W3-RM2:RM2-F                   lists shared assumption A:RM2-BM-W directly; consume its property via the bridge W3-RM2:TL-F-b
+WARN  S5-interface      W3-RM2:RM2-F                   lists shared assumption A:RM2-W directly; consume its property via the bridge W3-RM2:NA-W
+WARN  S5-interface      W3-RM2:RM2-F                   lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W3-RM2:RM2-F                   lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-RM2:RM2-R                   lists shared assumption A:LSF directly; consume its property via the bridge W2-APP:POST
+WARN  S5-interface      W3-RM2:RM2-R                   lists shared assumption A:IID-GAUSS-ROWS directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-RM2:RM2-R                   lists shared assumption A:PTV directly; consume its property via the bridge W2-APP:Thm-LOC
+WARN  S5-interface      W3-RM2:RM2-R                   lists shared assumption A:RM2-W-R directly; consume its property via the bridge W3-RM2:F-to-R
+WARN  S5-interface      W3-RM2:RM2-R                   lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W3-RM2:RM2-R                   lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-RM:RM-0                     lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W3-RM:RM-F                     lists shared assumption A:T03-HYP directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-RM:RM-F                     lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W3-RM:RM-F                     lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-RM:RM-R                     lists shared assumption A:LSF directly; consume its property via the bridge W2-APP:POST
+WARN  S5-interface      W3-RM:RM-R                     lists shared assumption A:IID-GAUSS-ROWS directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-RM:RM-R                     lists shared assumption A:PTV directly; consume its property via the bridge W2-APP:Thm-LOC
+WARN  S5-interface      W3-RM:RM-R                     lists shared assumption A:NA-FRAME directly; consume its property via the bridge W2-LOC2:NA-R
+WARN  S5-interface      W3-RM:RM-R                     lists shared assumption A:OP directly; consume its property via the bridge SOP:TH05.0
+WARN  S5-interface      W3-RM:RM-R                     lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-SAMP:C                      lists shared assumption A:CAL directly; consume its property via the bridge C-DLV:Cor-Dp
+WARN  S5-interface      W3-SAMP:D                      lists shared assumption A:CAL directly; consume its property via the bridge C-DLV:Cor-Dp
+WARN  S5-interface      W3-SAMP:LT#                    lists shared assumption A:CAL directly; consume its property via the bridge C-DLV:Cor-Dp
+WARN  S5-interface      W3-SAMP:LT#                    lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-SAMP:TR                     lists shared assumption A:CAL directly; consume its property via the bridge C-DLV:Cor-Dp
+WARN  S5-interface      W3-SCR:A1                      lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W3-SCR:A1o                     lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W3-SCR:SCR-A                   lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W3-SCR:SCR-Ao                  lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W3-SCR:SCR-C                   lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W3-SCR:SCR-C                   lists shared assumption A:FIXED-S0 directly; consume its property via the bridge SOP:TH09
+WARN  S5-interface      W3-SCR:SCR-G                   lists shared assumption A:GAUSS-NOISE directly; consume its property via the bridge W1-GEN:L1
+WARN  S5-interface      W3-START2:F2                   lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START2:IF-START             lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START2:LEAK-0               lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START2:NEC                  lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START2:OVL                  lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START2:START-F              lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START2:START-R              lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START2:TRANSFER             lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:AGG                   lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:ASM                   lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:F1                    lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:F2                    lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:F3                    lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:F4                    lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:FLOOR                 lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:IF-START              lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:MIS                   lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:NEC                   lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:NEC-b                 lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:OVL                   lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:START-F               lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:START-R               lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:TRANSFER              lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+WARN  S5-interface      W3-START:VIS-c                 lists shared assumption A:BLOCK-LE-16 directly; consume its property via the bridge MISSING
+INFO  A1-gates          W3-POST2:A0                    not a headline (headline != yes): strength gates not required
+INFO  A1-gates          W3-POST2:A1                    not a headline (headline != yes): strength gates not required
+INFO  A1-gates          W3-POST2:A2                    not a headline (headline != yes): strength gates not required
+INFO  A1-gates          W3-POST2:B                     not a headline (headline != yes): strength gates not required
+INFO  A1-gates          W3-POST2:C                     not a headline (headline != yes): strength gates not required
+INFO  A1-gates          W3-POST2:D                     not a headline (headline != yes): strength gates not required
+INFO  A1-gates          W3-POST2:D.D(a)                not a headline (headline != yes): strength gates not required
+INFO  A1-gates          W3-POST2:D.D(b)                not a headline (headline != yes): strength gates not required
+INFO  A1-gates          W3-POST2:E                     not a headline (headline != yes): strength gates not required
+INFO  A1-gates          W3-POST2:E3.1                  not a headline (headline != yes): strength gates not required
+INFO  A3-assurance      W3-POST2:A0                    uses SOP:TH09@hyp (unclassified status, ACTIVE) as a declared hypothesis named in its statement ('[P1]') and its status is conditional on it ('SOP:TH09'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:A1                    uses W3-POST:Thm-1@hyp (unclassified status, ACTIVE) as a declared hypothesis named in its statement ('[W3P] Theorem 1') and its status is conditional on it ('W3-POST:Thm-1'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:A1                    uses SOP:TH128@hyp (proved but unchecked / author-only, ACTIVE) as a declared hypothesis named in its statement ('[T03R]') and its status is conditional on it ('SOP:TH128'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:A1                    uses SOP:TH09@hyp (unclassified status, ACTIVE) as a declared hypothesis named in its statement ('[P1]') and its status is conditional on it ('SOP:TH09'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:A1                    uses W2-APP:POST@hyp (proved but unchecked / author-only, ACTIVE) as a declared hypothesis named in its statement ('[POST]') and its status is conditional on it ('W2-APP:POST'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:B                     uses W3-POST:Lemma-1a'@hyp (proved but unchecked / author-only, ACTIVE) as a declared hypothesis named in its statement ('[L1a′]') and its status is conditional on it ('[L1a′]'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:B                     uses SOP:TH09@hyp (unclassified status, ACTIVE) as a declared hypothesis named in its statement ('[P1]') and its status is conditional on it ('SOP:TH09'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:B                     uses SOP:TH128@hyp (proved but unchecked / author-only, ACTIVE) as a declared hypothesis named in its statement ('[T03R]') and its status is conditional on it ('SOP:TH128'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:C                     uses W3-POST:Prop-LB@hyp (proved but unchecked / author-only, ACTIVE) as a declared hypothesis named in its statement ('[LB]') and its status is conditional on it ('W3-POST:Prop-LB'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:C                     uses W3-POST:Lemma-1a'@hyp (proved but unchecked / author-only, ACTIVE) as a declared hypothesis named in its statement ('[L1a′]') and its status is conditional on it ('[L1a′]'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:C                     uses SOP:TH09@hyp (unclassified status, ACTIVE) as a declared hypothesis named in its statement ('[P1]') and its status is conditional on it ('SOP:TH09'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:C                     uses SOP:TH128@hyp (proved but unchecked / author-only, ACTIVE) as a declared hypothesis named in its statement ('[T03R]') and its status is conditional on it ('SOP:TH128'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:D                     uses SOP:TH09@hyp (unclassified status, ACTIVE) as a declared hypothesis named in its statement ('[P1]') and its status is conditional on it ('SOP:TH09'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:D.D(a)                uses SOP:TH09@hyp (unclassified status, ACTIVE) as a declared hypothesis named in its statement ('[P1]') and its status is conditional on it ('SOP:TH09'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:D.D(b)                uses SOP:TH09@hyp (unclassified status, ACTIVE) as a declared hypothesis named in its statement ('[P1]') and its status is conditional on it ('SOP:TH09'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:E                     uses SOP:TH128@hyp (proved but unchecked / author-only, ACTIVE) as a declared hypothesis named in its statement ('[T03R]') and its status is conditional on it ('SOP:TH128'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:E                     uses SOP:TH09@hyp (unclassified status, ACTIVE) as a declared hypothesis named in its statement ('[P1]') and its status is conditional on it ('SOP:TH09'); HQ attests it is stated as a hypothesis
+INFO  A3-assurance      W3-POST2:E3.1                  uses SOP:TH09@hyp (unclassified status, ACTIVE) as a declared hypothesis named in its statement ('[P1]') and its status is conditional on it ('SOP:TH09'); HQ attests it is stated as a hypothesis
+INFO  C11-tex           C-DLV:Prop-F                   LaTeX transcription never reviewed against the Markdown statement (paper block is flagged)
+INFO  C11-tex           C-DLV:Thm-D                    LaTeX transcription never reviewed against the Markdown statement (paper block is flagged)
+INFO  C11-tex           C-GROW:Thm-GROW                LaTeX transcription never reviewed against the Markdown statement (paper block is flagged)
+INFO  C11-tex           C-MIS:Thm-F                    LaTeX transcription never reviewed against the Markdown statement (paper block is flagged)
+INFO  C11-tex           C-MIS:Thm-MIS(i)               LaTeX transcription never reviewed against the Markdown statement (paper block is flagged)
+INFO  C11-tex           C-MIS:Thm-MIS(ii)              LaTeX transcription never reviewed against the Markdown statement (paper block is flagged)
+INFO  C11-tex           C-PACK:SL1                     LaTeX transcription never reviewed against the Markdown statement (paper block is flagged)
+INFO  C11-tex           SOP:TH09                       LaTeX transcription never reviewed against the Markdown statement (paper block is flagged)
+INFO  C11-tex           W1-GEN:Thm-GEN                 LaTeX transcription never reviewed against the Markdown statement (paper block is flagged)
+INFO  C11-tex           W1-N1:Cor-E                    LaTeX transcription never reviewed against the Markdown statement (paper block is flagged)
+INFO  C11-tex           W1-N1:Thm-N1                   LaTeX transcription never reviewed against the Markdown statement (paper block is flagged)
+INFO  C11-tex           W1-PXN:Thm-PXN                 LaTeX transcription never reviewed against the Markdown statement (paper block is flagged)
+INFO  C11-tex           W1C-FINAL:Lemma-CAP            LaTeX transcription never reviewed against the Markdown statement (paper block is flagged)
+INFO  C3-unregistered   C-MIS:GD(b)                    uses 'EXT:Vershynin Cor 5.35 / Davidson–Szarek': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   C-MIS:LemO2                    uses 'EXT:[P1] integral representation': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W1-GEN:L1.L1.1                 uses 'EXT:Laurent-Massart': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W1-GEN:L5                      uses 'EXT:OP-closure': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W1-GEN:Obs-GEN-S2S5            uses 'EXT:CONC': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W1-GEN:Thm-GEN(C5a)            uses 'W1-EXP:Lemma4.2': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W1-GEN:Thm-GEN(C5a)            uses 'W1-EXP:Lemma4.1(a)': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W1-GEN:Thm-GEN(C5b)            uses 'EXT:CONC': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W1-GEN:Thm-GEN(C5d-S1346)      uses 'EXT:CONC': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W1-PXN:CR.Lemma                uses 'EXT:Laurent-Massart': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W1C-FINAL:Lemma-CAP            uses 'EXT:[OP] operational closure': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-APP:Thm-LOC                 uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-FAC-S5:L5                   uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-FAC-S5:L5.C3-R              uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-FAC-S5:L5.C4-R              uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-FAC-S5:Thm-FAC-BCS-R        uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-FAC-S5F:C4                  uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-FAC-X:Thm-FAC-CS-iid        uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-FAC-X:Thm-FAC-GL            uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-FAC-X:X10                   uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-FAC-X:X6                    uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-FAC-X:X6.X6.3               uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-FAC-X:X6.X6.4               uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-LOC2:PLR                    uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-LOC2:PLR.C-i                uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-UNI:F-UNI                   uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W2-UNI:UNI-1                   uses 'EXT:[OP]': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W3-POST:Thm-1(5-spec)          uses 'EXT:R03 §5A construction@proof:mechanism': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W3-SAMP:C                      uses 'EXT:PROGRAM item 2@stmt:P-START (C-v) - input': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C3-unregistered   W3-SAMP:D                      uses 'EXT:PROGRAM item 2@stmt:P-START (start mass) - input': literature / named premise / archive lemma with no registry row (aliases.tsv '-')
+INFO  C4-lifecycle      W3-RM2:Cont-F                  uses W3-RM:RM-F, SUPERSEDED-VALID by W3-RM2:RM2-F (still true; re-point after a check: propagate.py confirm-repoint)
+INFO  C4-lifecycle      W3-RM2:Cont-R                  uses W3-RM:RM-R, SUPERSEDED-VALID by W3-RM2:RM2-R (still true; re-point after a check: propagate.py confirm-repoint)
+INFO  C4-lifecycle      W3-RM:Examples                 uses W3-RM:RM-F, SUPERSEDED-VALID by W3-RM2:RM2-F (still true; re-point after a check: propagate.py confirm-repoint)
+INFO  C4-lifecycle      W3-RM:Examples                 uses W3-RM:RM-R, SUPERSEDED-VALID by W3-RM2:RM2-R (still true; re-point after a check: propagate.py confirm-repoint)
+INFO  C5-strength       C-DLV:L1-R                     checked result uses C-ENG:TDP_E from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       C-DLV:L1-R                     checked result uses W1-N3:L7 from another ticket whose own status is author-level ('PROVED; cross-family check: R05 CORRECT (Sol).'); a ticket council does not certify inputs
+INFO  C5-strength       C-ENG:Impl-DLV-A2              checked result uses W1-N3:Thm-N3-code(a-d) from another ticket whose own status is author-level ('PROVED; XF-checked'); a ticket council does not certify inputs
+INFO  C5-strength       C-ENG:Impl-DLV-A2              checked result uses W1-N3:L7 from another ticket whose own status is author-level ('PROVED; cross-family check: R05 CORRECT (Sol).'); a ticket council does not certify inputs
+INFO  C5-strength       C-GROW:C5c                     checked result uses W1-GEN:L5 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       C-GROW:L0.1                    checked result uses W1-GEN:L1 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       C-GROW:L0.2                    checked result uses W1-GEN:L1.L1.2 from another ticket whose own status is author-level ('UNSPLIT-STATUS: PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       C-GROW:L1.2                    checked result uses W1-GEN:L4 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       C-GROW:L2.1                    checked result uses W1-GEN:L1.L1.4 from another ticket whose own status is author-level ('UNSPLIT-STATUS: PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       C-GROW:L3                      checked result uses W1-GEN:L1.L1.4 from another ticket whose own status is author-level ('UNSPLIT-STATUS: PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       C-GROW:L6.2                    checked result uses W1-GEN:L1.L1.2 from another ticket whose own status is author-level ('UNSPLIT-STATUS: PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       C-GROW:L6.5                    checked result uses W1-GEN:L1.L1.4 from another ticket whose own status is author-level ('UNSPLIT-STATUS: PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       C-GROW:Thm-GROW                checked result uses W1-GEN:L5 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       C-PACK:L8-check                checked result uses W1-GEN:L8 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       C-PACK:SEL-check               checked result uses W1-GEN:Thm-GEN(C5d-S1346) from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       HQ_AUDIT-W1C:A4                checked result uses W1C-FINAL:Lemma-CAP from another ticket whose own status is author-level ('PROVED (by this seat)'); a ticket council does not certify inputs
+INFO  C5-strength       HQ_AUDIT-W2:B1                 checked result uses W2-FAC-A:Prop-F-FAC from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       HQ_AUDIT-W2:B2                 checked result uses W2-APP:POST from another ticket whose own status is author-level ('PROVED (by this seat, unchecked); R02 VERIFIED-WITH-AMENDMEN'); a ticket council does not certify inputs
+INFO  C5-strength       HQ_AUDIT-W2:B2                 checked result uses W2-APP:Thm-LOC from another ticket whose own status is author-level ('PROVED (by this seat, unchecked); R03 Sol xhigh VERIFIED-WIT'); a ticket council does not certify inputs
+INFO  C5-strength       HQ_AUDIT-W2:B2                 checked result uses W2-APP:VN from another ticket whose own status is author-level ('PROVED (by this seat, unchecked); R04 VERIFIED-WITH-AMENDMEN'); a ticket council does not certify inputs
+INFO  C5-strength       HQ_AUDIT-W2:B2                 checked result uses W2-APP:Ex-STAR from another ticket whose own status is author-level ('PROVED (by this seat, unchecked); R04 VERIFIED-WITH-AMENDMEN'); a ticket council does not certify inputs
+INFO  C5-strength       HQ_AUDIT-W2:B2                 checked result uses W2-APP:ENUM from another ticket whose own status is author-level ('PROVED (by this seat, unchecked); added after council r1; pr'); a ticket council does not certify inputs
+INFO  C5-strength       HQ_AUDIT-W2:B4                 checked result uses W2-LOC2:NA-R from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       HQ_AUDIT-W2:B4                 checked result uses W2-LOC2:PLR from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       HQ_AUDIT-W2:B4                 checked result uses W2-LOC2:LOC-d from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       HQ_AUDIT-W2:B4                 checked result uses W2-LOC2:LOC-BF from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       HQ_AUDIT-W2:B4                 checked result uses W2-LOC2:Thm-Poly from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       HQ_AUDIT-W2:B4                 checked result uses W2-LOC2:F-LOC2 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-A:Thm-FAC-L             checked result uses SOP:TH281 from another ticket whose own status is author-level ('PROVED; SF VERIFIED (W3-VT38E); XF VERIFIED (A-REV1 s7.4; A-'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-A:Thm-FAC-L             checked result uses W1-PXN:CR from another ticket whose own status is author-level ('PROVED (by this seat); XF VERIFIED (R19, Codex gpt-6.1-sol)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-B:Thm-FAC-CS            checked result uses SOP:TH281 from another ticket whose own status is author-level ('PROVED; SF VERIFIED (W3-VT38E); XF VERIFIED (A-REV1 s7.4; A-'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-PK:P1                   checked result uses W2-FAC-B:L2 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-PK:P1                   checked result uses W2-FAC-B:L1.L1.1 from another ticket whose own status is author-level ('UNSPLIT-STATUS: PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-PK:Thm-FAC-PK           checked result uses W2-FAC-B:L5 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-PK:Thm-FAC-PK           checked result uses SOP:TH281 from another ticket whose own status is author-level ('PROVED; SF VERIFIED (W3-VT38E); XF VERIFIED (A-REV1 s7.4; A-'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-PK:Thm-FAC-PK           checked result uses W1-GEN:L5 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-PK:Thm-FAC-PK           checked result uses W1C-FINAL:Lemma-CAP from another ticket whose own status is author-level ('PROVED (by this seat)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-PK:Thm-NEG              checked result uses W1C-FINAL:Lemma-CAP from another ticket whose own status is author-level ('PROVED (by this seat)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-PK:Thm-PATH             checked result uses W1C-FINAL:Lemma-CAP from another ticket whose own status is author-level ('PROVED (by this seat)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L1                   checked result uses W2-FAC-B:L1.L1.0 from another ticket whose own status is author-level ('UNSPLIT-STATUS: PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L1                   checked result uses W2-FAC-B:L1.L1.5(b) from another ticket whose own status is author-level ('UNSPLIT-STATUS: PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L1.L1.1              checked result uses W2-FAC-B:L1 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L1.L1.4              checked result uses W2-FAC-B:L1 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L2                   checked result uses W2-FAC-B:L2 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L3                   checked result uses W2-FAC-B:L3 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L5                   checked result uses W2-FAC-B:L5 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L5                   checked result uses SOP:TH281 from another ticket whose own status is author-level ('PROVED; SF VERIFIED (W3-VT38E); XF VERIFIED (A-REV1 s7.4; A-'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L5                   checked result uses W1C-FINAL:Lemma-CAP from another ticket whose own status is author-level ('PROVED (by this seat)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L5.C3-R              checked result uses W2-FAC-B:L5 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L5.C3-R              checked result uses SOP:TH281 from another ticket whose own status is author-level ('PROVED; SF VERIFIED (W3-VT38E); XF VERIFIED (A-REV1 s7.4; A-'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L5.C3-R              checked result uses W1C-FINAL:Lemma-CAP from another ticket whose own status is author-level ('PROVED (by this seat)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L5.C4-R              checked result uses W2-FAC-B:L5 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:L5.C4-R              checked result uses W1C-FINAL:Lemma-CAP from another ticket whose own status is author-level ('PROVED (by this seat)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:Thm-FAC-BCS-R        checked result uses SOP:TH281 from another ticket whose own status is author-level ('PROVED; SF VERIFIED (W3-VT38E); XF VERIFIED (A-REV1 s7.4; A-'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:Thm-FAC-BCS-R        checked result uses W1C-FINAL:Lemma-CAP from another ticket whose own status is author-level ('PROVED (by this seat)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:Thm-FAC-BCS-R        checked result uses W2-FAC-B:L1.L1.5 from another ticket whose own status is author-level ('UNSPLIT-STATUS: PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-S5:Thm-FAC-BCS-R        checked result uses W2-FAC-B:L5 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-X:Thm-FAC-CS-iid        checked result uses SOP:TH281 from another ticket whose own status is author-level ('PROVED; SF VERIFIED (W3-VT38E); XF VERIFIED (A-REV1 s7.4; A-'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-X:Thm-FAC-CS-iid        checked result uses W1C-FINAL:Lemma-CAP from another ticket whose own status is author-level ('PROVED (by this seat)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-FAC-X:Thm-FAC-CS-iid        checked result uses W1-PXN:CR from another ticket whose own status is author-level ('PROVED (by this seat); XF VERIFIED (R19, Codex gpt-6.1-sol)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:F-UNI                   checked result uses W2-FAC-A:Prop-F-FAC from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:U-LOC                   checked result uses W2-FAC-A:L1.U(a) from another ticket whose own status is author-level ('UNSPLIT-STATUS: PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:U-LOC-Cor               checked result uses W2-FAC-A:L1.U(d) from another ticket whose own status is author-level ('UNSPLIT-STATUS: PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:UNI-0                   checked result uses W2-LOC2:PLR from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:UNI-0                   checked result uses W2-LOC2:NA-R from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:UNI-0                   checked result uses W2-LOC2:L0' from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:UNI-0                   checked result uses W2-LOC2:LOC-d from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:UNI-0                   checked result uses W2-APP:Thm-LOC from another ticket whose own status is author-level ('PROVED (by this seat, unchecked); R03 Sol xhigh VERIFIED-WIT'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:UNI-1                   checked result uses W2-FAC-A:L1.U(d) from another ticket whose own status is author-level ('UNSPLIT-STATUS: PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:UNI-1                   checked result uses W2-FAC-A:L2 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:UNI-1                   checked result uses W2-FAC-A:L3.1 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:UNI-1                   checked result uses W2-FAC-A:L3.2 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:UNI-1                   checked result uses W2-FAC-A:L4 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W2-UNI:UNI-1                   checked result uses W2-FAC-A:L5 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W3-MISR:MIS(i')                checked result uses SOP:TH128 from another ticket whose own status is author-level ('PROVED (candidate) (W1-T03R); SF VERIFIED (W2-VT03R, no GAP/'); a ticket council does not certify inputs
+INFO  C5-strength       W3-POST2:A1                    checked result uses SOP:TH128 from another ticket whose own status is author-level ('PROVED (candidate) (W1-T03R); SF VERIFIED (W2-VT03R, no GAP/'); a ticket council does not certify inputs
+INFO  C5-strength       W3-POST2:A1                    checked result uses W2-APP:POST from another ticket whose own status is author-level ('PROVED (by this seat, unchecked); R02 VERIFIED-WITH-AMENDMEN'); a ticket council does not certify inputs
+INFO  C5-strength       W3-POST2:B                     checked result uses W3-POST:Lemma-1a' from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W3-POST2:B                     checked result uses SOP:TH128 from another ticket whose own status is author-level ('PROVED (candidate) (W1-T03R); SF VERIFIED (W2-VT03R, no GAP/'); a ticket council does not certify inputs
+INFO  C5-strength       W3-POST2:C                     checked result uses W3-POST:Prop-LB from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W3-POST2:C                     checked result uses W3-POST:Lemma-1a' from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W3-POST2:C                     checked result uses SOP:TH128 from another ticket whose own status is author-level ('PROVED (candidate) (W1-T03R); SF VERIFIED (W2-VT03R, no GAP/'); a ticket council does not certify inputs
+INFO  C5-strength       W3-POST2:E                     checked result uses SOP:TH128 from another ticket whose own status is author-level ('PROVED (candidate) (W1-T03R); SF VERIFIED (W2-VT03R, no GAP/'); a ticket council does not certify inputs
+INFO  C5-strength       W3-RM2:POST-R                  checked result uses W2-APP:POST from another ticket whose own status is author-level ('PROVED (by this seat, unchecked); R02 VERIFIED-WITH-AMENDMEN'); a ticket council does not certify inputs
+INFO  C5-strength       W3-RM2:RM2-R                   checked result uses W2-APP:POST from another ticket whose own status is author-level ('PROVED (by this seat, unchecked); R02 VERIFIED-WITH-AMENDMEN'); a ticket council does not certify inputs
+INFO  C5-strength       W3-RM:E4                       checked result uses W1-N3:Thm-N3-code(a-d) from another ticket whose own status is author-level ('PROVED; XF-checked'); a ticket council does not certify inputs
+INFO  C5-strength       W3-RM:E4                       checked result uses C-ENG:TDP_E from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W3-RM:Examples                 checked result uses W2-LOC2:LOC-BF from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W3-RM:Examples                 checked result uses W1-GEN:Cex-GEN(C6) from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W3-RM:RM-0                     checked result uses W1-GEN:L5 from another ticket whose own status is author-level ('PROVED (by this seat, unchecked)'); a ticket council does not certify inputs
+INFO  C5-strength       W3-SAMP:D                      checked result uses W1-N1:B from another ticket whose own status is author-level ('PROVED under the named premises of STATEMENT §2 — cross-fami'); a ticket council does not certify inputs
+INFO  C5-strength       W3-SAMP:MR                     checked result uses W1-N1:F from another ticket whose own status is author-level ('PROVED under the named premises of STATEMENT §2 — cross-fami'); a ticket council does not certify inputs
+INFO  C5-strength       W3-SAMP:MR                     checked result uses W1-N1:B from another ticket whose own status is author-level ('PROVED under the named premises of STATEMENT §2 — cross-fami'); a ticket council does not certify inputs
+INFO  C5-strength       W3-SAMP:ST                     checked result uses W1-N1:B from another ticket whose own status is author-level ('PROVED under the named premises of STATEMENT §2 — cross-fami'); a ticket council does not certify inputs
+INFO  C7-sop-missing    W2-APP                         no theory_loop.tsv row (result 'PROVED-CHECKED — council round 3 PASSED (Codex gpt-6.1-sol xhigh 9.1, ')
+INFO  C7-sop-missing    W2-FAC-A                       no theory_loop.tsv row (result 'PROVED-CHECKED (for the narrowed, flagged target STATEMENT.md v1.2) — ')
+INFO  C7-sop-missing    W2-FAC-B                       no theory_loop.tsv row (result 'PROVED-CHECKED — Theorem FAC-CS (claims (C1)–(C4) of STATEMENT v3.1, p')
+INFO  C7-sop-missing    W2-FAC-PK                      no theory_loop.tsv row (result 'PARTIAL relative to the brief; (P1)–(P5) on the exact-Gram stage: PROV')
+INFO  C7-sop-missing    W2-FAC-PKA                     no theory_loop.tsv row (result 'PARTIAL — midpoint CONTINUE; cap-remedy analysis in progress.')
+INFO  C7-sop-missing    W2-FAC-S5                      no theory_loop.tsv row (result 'PARTIAL')
+INFO  C7-sop-missing    W2-FAC-X                       no theory_loop.tsv row (result 'PROVED-CHECKED (Target 1 — Theorem FAC-CS-iid); Target 2 partial')
+INFO  C7-sop-missing    W2-LOC2                        no theory_loop.tsv row (result 'PROVED-CHECKED — council round 1 PASSED (Codex gpt-6.1-sol xhigh 9.3, ')
+INFO  C7-sop-missing    W2-UNI                         no theory_loop.tsv row (result 'PROVED-CHECKED — STATEMENT v1.1.4: Theorem UNI-0 (ii), Theorem UNI-1 (')
+INFO  C7-sop-missing    W3-POST2                       no theory_loop.tsv row (result 'COUNCIL-PASSED in round C1')
+INFO  C7-sop-missing    W3-RM                          no theory_loop.tsv row (result 'PROVED-CHECKED')
+INFO  C7-sop-missing    W3-SAMP                        no theory_loop.tsv row (result 'PROVED-CHECKED')
+INFO  C7-sop-missing    W3-SCR                         no theory_loop.tsv row (result 'PROVED-CHECKED')
+INFO  C8-final          W1-N1                          Theory_work/Wave1C/FINAL/sections/s4_sampler.tex:21 quotes 'PROVED under the named premises', weaker than the ticket result 'PROVED-CHECKED. N1 and Corollary E are proved unde'
+INFO  S9-repoints       W3-RM2:Cont-F                  PROPOSED re-point W3-RM:RM-F -> W3-RM2:RM2-F (use stmt) awaiting a check
+INFO  S9-repoints       W3-RM2:Cont-R                  PROPOSED re-point W3-RM:RM-R -> W3-RM2:RM2-R (use stmt) awaiting a check
+INFO  S9-repoints       W3-RM:Examples                 PROPOSED re-point W3-RM:RM-F -> W3-RM2:RM2-F (use stmt) awaiting a check
+INFO  S9-repoints       W3-RM:Examples                 PROPOSED re-point W3-RM:RM-R -> W3-RM2:RM2-R (use stmt) awaiting a check
+
+check.py: 465 claims; 0 ERROR, 296 WARN, 187 INFO
+acceptance (W3-POST2:A0, W3-POST2:A1, W3-POST2:A2, W3-POST2:B, W3-POST2:C, W3-POST2:D, W3-POST2:D.D(a), W3-POST2:D.D(b), W3-POST2:E, W3-POST2:E3.1): PASS; 0 acceptance ERROR, 0 other ERROR
+by check: INFO:A1-gates=10, INFO:A3-assurance=18, INFO:C11-tex=13, INFO:C3-unregistered=30, INFO:C4-lifecycle=4, INFO:C5-strength=94, INFO:C7-sop-missing=13, INFO:C8-final=1, INFO:S9-repoints=4, WARN:C10-unsplit=57, WARN:C10-verbatim=5, WARN:C8-final=1, WARN:S5-interface=233

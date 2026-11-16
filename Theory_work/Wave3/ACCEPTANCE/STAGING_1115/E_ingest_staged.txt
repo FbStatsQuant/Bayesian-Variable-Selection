@@ -1,0 +1,7 @@
+3 claim(s) to add; 0 problem(s); new tickets ['EXP-P1M']; 0 new assumption(s); 0 sharpness row(s); 0 binding row(s); 0 claim(s) with bound bridges; 3 method pin(s)
+written
+
+STAGED check.py on the proposed registry (with --acceptance on the 3 ingested id(s)): 468 claims; 0 ERROR, 262 WARN, 241 INFO
+  ERROR introduced by this claims fragment: 0; ERROR already in the live registry: 0
+  acceptance (EXP-P1M:Impl-D3-cost, EXP-P1M:Impl-D8-outputs, EXP-P1M:Impl-D8-logZstore): PASS; 0 acceptance ERROR
+(staged copy discarded; the live registry was not touched. Apply with --apply only if this passed, then run check.py --acceptance <ids> --record.)

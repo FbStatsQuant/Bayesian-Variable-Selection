@@ -1,0 +1,3 @@
+
+check.py: 465 claims; 0 ERROR, 296 WARN, 159 INFO
+by check: INFO:C11-tex=13, INFO:C3-unregistered=30, INFO:C4-lifecycle=4, INFO:C5-strength=94, INFO:C7-sop-missing=13, INFO:C8-final=1, INFO:S9-repoints=4, WARN:C10-unsplit=57, WARN:C10-verbatim=5, WARN:C8-final=1, WARN:S5-interface=233
