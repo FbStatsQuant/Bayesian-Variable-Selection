@@ -265,3 +265,16 @@ Each department may tailor the review, process and rollback protocols to its nee
   - the compute discipline (§12).
 - **HQ approves each variant and each change to it**, with the consultant when the change is significant, and logs it
   in `HQ_DECISIONS.md`. Until a variant is approved, the baseline applies.
+
+## 14. Codex pacing levels (owner, 2026-11-15)
+The owner says "pace to level N"; HQ relays it to every manager the same day. Reviews already in flight finish as
+started.
+
+| level | Codex (Sol / Astra) used for | moves to Claude (Opus / Fable) |
+|---|---|---|
+| **0, normal** (default) | all independent reviews | none |
+| **1, light pacing** | statement locks, key-lemma line checks, council OpenAI seats, break reviews | line checks off the key path, re-checks of repairs, fidelity reads |
+| **2, efficient** (PROTOCOL_v4 §2A) | only locks, key lemmas, council seats; reviewer sessions reused where blind first reads don't matter | everything else |
+
+**No level drops a Codex check on what we call checked:** statement locks, key lemmas and the council OpenAI seat. The current
+level is recorded in `HQ_NOW.md`.

@@ -1,5 +1,7 @@
 # HQ now (resume card; HQ keeps this current)
 
+## CODEX PACING LEVEL (owner sets; POLICIES §14): **0 (normal)** since 2026-11-15
+
 ## ACCOUNT ALLOCATION (owner sets; HQ relays to all managers)
 - Current (2026-11-15): all new department agents on **Claude Third**; HQ and the Writing Department on Claude Personal.
 
