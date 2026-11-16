@@ -119,3 +119,82 @@ C4, C6 and C9 are MATCH.
 - C4, optional precision: "rows i.i.d.; here Gaussian, theirs any law under their Conditions 1/2".
 - C6, optional precision: SL's Theorems 1–2 rates are strictly slower than √(log n/n), so the parity is in form and distance, not in rate.
 - C9: SL's only statement about the procedure's output is the informal p. 959 sentence. SL cite general SAMC convergence theory, but none of it is about BVS output.
+
+---
+
+## Applied lines (2026-11-16)
+
+These are the applied lines in `CLAIMS_CARD.md`, column 4, read with `sed`. Only the Song–Liang (SL) content is judged. Page numbers are journal pages, as above.
+
+### A1. Row 1.1 (:41)
+> "Full-model selection consistency for the shipped prior, with an explicit, design-uniform expectation rate and exact HPM/MPM; no tuning (Song–Liang's Theorem 3 gives sure screening only: sensitivity → 1, specificity not controlled; their MAP consistency is in their supplement). Thm 1′ replaces eigenvalue floors off the truth by a residual-signal identifiability margin (Narisetty–He style; cf. Song–Liang's population-level identifiability Condition 3 for their Theorem 3). Narrower in dimension ($n^A$ vs Song–Liang's $P_n<e^{Cn^\alpha}$, $\alpha<1$: their Corollary 1 via their (10), inherited by their Theorem 3) [SL-card]."
+
+**VERDICT: MATCH.**
+- "Theorem 3 … sure screening only: sensitivity → 1, specificity not controlled". p. 956: "Although theorem 3 states only the sure screening property (the sensitivity is asymptotically 1, but the specificity is not controlled)". The theorem is titled "Theorem 3 (sure screening)" (p. 956).
+- "MAP consistency is in their supplement". p. 956: "Theorem S in the on-line supplementary material establishes the consistency of MAP models."
+- "population-level identifiability Condition 3 for their Theorem 3". p. 955, Condition 3: "E[exp{−(x_k + Σ_{i=1}^{r̄_n} b_i x_{j_i})²}] ≤ 1 − δ_n, δ_n ≻ ε_n²". p. 956, Theorem 3: "If a true predictor x_t (t ∈ t) is identifiable, then …".
+- "P_n < e^{Cn^α}, α < 1: Corollary 1 via (10), inherited by Theorem 3":
+  - p. 954, Cor 1: "Suppose that P_n < exp(Cn^α) for some α ∈ (0, 1)".
+  - p. 952, (10): "r̄_n ln(P_n) ≺ nε_n²".
+  - p. 956, Thm 3: "Assume that all the conditions of theorem 2 hold."
+  - The word "inherited" is our inference from these three; SL do not state it (see C3).
+- **Nit (no change needed):** Theorem 3 is per predictor. "Sensitivity → 1" for the whole true model needs every true predictor to be identifiable. p. 956: "π(t ⊂ ξ_q) →ᵖ 1 if all true predictors are identifiable."
+
+### A2. Row 1.4 (:44)
+> "Song–Liang (2015, Theorem 4, eqs. (17)–(18); Corollary 2) fit a fixed candidate subset that misses true predictors, a model they call misspecified, with candidates having finite second moments only (their Condition 4): the posterior is Hellinger-consistent at the Kullback–Leibler projection, for each fixed $\varepsilon$, almost surely and without a rate, and the projection's support is included in the selected model with probability tending to one. Here, … we prove exact selection of the best candidate linear predictor's support (Song–Liang's $\tilde s$ for centred rows) at rate …"
+
+**VERDICT: PARTLY.** Every citation and every assumption is right. The Corollary 2 clause is stated as a single probability, but it is a posterior probability that tends to one *in probability*. It also omits Corollary 2's one extra assumption.
+
+Item by item:
+- **"Theorem 4, eqs. (17)–(18)": MATCH.**
+  - p. 956, (17): "f₀ = arg min_{f∈P_s} ∫ ln(f*/f) f*", the KL minimizer.
+  - p. 957, Theorem 4: "π[{f ∈ P_s : d(f₀, f) > ε} | D_nˢ] → 0, almost surely, (18)".
+- **"fixed candidate subset that misses true predictors": MATCH.** p. 956: "Let D_nˢ = {y, X_s} denote a fixed subset of observations, where s ⊂ {1, 2, …, P_n} … Assume that X_s does not include all of the true predictors of model (1)."
+- **"a model they call misspecified": MATCH.** p. 956: "Therefore, the model y = X_s β_s + ε is misspecified." Also: "It is obvious that f* ∉ P_s."
+- **"finite second moments only (their Condition 4)": MATCH.**
+  - p. 957, Condition 4: "There is a constant δ > 0 such that for any a = (a₁, …, a_s)ᵀ ∈ ℝ^s, with |a_i| ≤ δ for i = 1, …, s, we have E{(aᵀx_s)²} < ∞".
+  - Taking a = δe_i shows this is equivalent to E x_i² < ∞ for every i ∈ s.
+  - Theorem 4 places no other condition on x. p. 957: "Assume that condition 4 holds for a given subset s."
+  - On the prior, SL require only "π(ξ) > 0 for all ξ" (p. 957), with the IG(a₀, b₀) / N(0, σ²V_ξ) slab.
+- **"Hellinger-consistent at the KL projection, for each fixed ε, almost surely and without a rate": MATCH.** p. 957, Theorem 4: "for any ε > 0, π[{f ∈ P_s : d(f₀, f) > ε} | D_nˢ] → 0, almost surely, (18) as n → ∞". No rate is given.
+- **"the projection's support is included in the selected model with probability tending to one": PARTLY.**
+  - p. 957, Corollary 2: "Assume that the conditions of theorem 4 hold. If x_s does not have exact multicollinearity between variables, i.e. there does not exist a non-zero vector a ∈ ℝ^s such that P(aᵀx_s = 0) = 1, then for the posterior probability of model ξ, conditioned on the subset D_nˢ, we have π(s̃ ⊂ ξ | D_nˢ) →ᵖ 1."
+  - Here ξ is a model drawn from the posterior. p. 956, in Theorem 3: "where ξ denotes a model sampled from the posterior distribution".
+  - The statement is that the **posterior probability** of {s̃ ⊂ ξ} tends to 1 **in probability**. "Included in the selected model with probability tending to one" can be read as a statement about one selected model (e.g. the MAP model). That is not what Corollary 2 says.
+  - Corollary 2 also needs the no-exact-multicollinearity condition on x_s.
+  - That s̃ is the support of the projection matches p. 957: "Let s̃ denote the subset of s corresponding to non-zero entries of β₀."
+- **"Song–Liang's s̃ for centred rows": MATCH.**
+  - p. 957: "β₀ = arg min_{β_s} E(β_sᵀx_s − β*ᵀx)², i.e. β₀ᵀx_s is the projection of β*ᵀx."
+  - p. 957, (19): "β₀ = Σ_s⁻¹Σ_{s,t}β_t* = Σ_s⁻¹cov(x_s, y), where Σ_s = var(x_s) and Σ_{s,t} = cov(x_s, x_t)".
+  - SL's model (1) has no intercept, and the arg min uses raw second moments. That arg min equals the covariance form (19), and hence the best linear predictor with an intercept, when x has mean zero. So "for centred rows" is the right qualifier, and SL's own (19) implicitly assumes it.
+- **Fix:** replace "and the projection's support is included in the selected model with probability tending to one" with "and, if the candidates have no exact collinearity, the posterior probability that a sampled model contains the projection's support tends to one in probability (Corollary 2)".
+
+### A3. Row 2.2 (:51)
+> "Fixed-design (in-sample) counterpart of Song–Liang's joint-$(x,y)$ Hellinger contraction (they have no fixed-design result; parity in kind only); input to 2.1 [SL-card]."
+
+**VERDICT: MATCH.**
+- p. 952: "For two density functions f₁(x, y) and f₂(x, y), the Hellinger distance is defined as …".
+- p. 952, Thm 1: "d²(f, f*) = ∫∫ |φ^{1/2}(y; xᵀβ*, σ*) − φ^{1/2}(y; xᵀβ, σ)|² ν_x(dx) dy".
+- p. 957: "f₀ = φ(y; β₀ᵀx_s, σ₀) ν(x_s)".
+- No theorem in the paper is stated conditionally on X or for an in-sample distance (see C7).
+
+### A4. Row 3.1 (:57)
+> "… no comparable result for the selection output of an SMC/MCMC BVS implementation known to us (Song–Liang's SAMC sampler has general convergence theory but no selection-output result) [SL-card]."
+
+**VERDICT: PARTLY.** "No selection-output result" is right. Two points need fixing:
+1. **SAMC is not Song–Liang's sampler.** It is the algorithm of Liang et al. (2007), which SL use.
+2. **SL contain no SAMC convergence theory.** They only cite other papers for SAMC's properties. I did not check those cited papers, so "has general convergence theory" is not supported by this PDF. My earlier caveat in C9 ("SL cite general SAMC convergence theory") was too loose in the same way, and this note supersedes it.
+
+Quotes:
+- p. 959: "the stochastic approximation Monte Carlo (SAMC) algorithm (Liang et al., 2007) was used in this paper."
+- p. 959: "As explained in Liang et al. (2007), the self-adjusting mechanism of the invariant distribution enables the SAMC algorithm to be immune to local trap problems."
+- p. 959: "As shown in Liang (2009), the SAMC algorithm is essentially a dynamic importance sampling algorithm, and quantities of interest can be estimated by averaging the samples with respect to their importance weights."
+- p. 959, the only link between the theory and the procedure: "Clearly, it follows from the theory that was developed in Section 2 that the SAM approach will lead to a consistent selection of true predictors."
+- p. 970: supplement section 2 "describes the SAMC algorithm and its implementation". The supplement's theory consists of the proofs of Theorems 1–4 (§1) and MAP consistency (§3).
+
+**Fix:** "(Song–Liang run the SAMC sampler of Liang et al. (2007), citing its general properties, but prove nothing about its selection output)".
+
+### MISMATCHES (applied lines)
+- A2 (row 1.4) PARTLY. Replace "the projection's support is included in the selected model with probability tending to one" with "if the candidates have no exact collinearity, the posterior probability that a sampled model contains the projection's support tends to one in probability (Corollary 2)".
+- A4 (row 3.1) PARTLY. Replace "(Song–Liang's SAMC sampler has general convergence theory but no selection-output result)" with "(Song–Liang run the SAMC sampler of Liang et al. (2007), citing its general properties, but prove nothing about its selection output)".
+- A1 (row 1.1) and A3 (row 2.2): MATCH.
