@@ -324,3 +324,7 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   external inputs), `reviews/BRIEF_SW1_astra.md` (sweep, two passes: blind, then records), `reviews/BRIEF_R1_TEMPLATE.md`
   (council seats; C/S/F/E tags; the gates=FAIL sentence; verdict-line block), REPORT §2 rows for L6, L7, D1, D2.
   Running: D1 (Sol), D2 (Sol). HOLDS read: none.
+- 22:27 — Manager: the W3-MISR:R′ accept record is fixed on main (b69476e). `git pull --ff-only` done (main only). The
+  consumed text of W3-MISR STATEMENT (lines 70–72, 75–77) is unchanged. Staged ingest rerun: 20 claims, 0 problems,
+  0 ERROR introduced, **acceptance PASS, 0 acceptance ERROR**. L6's late completion notice arrived (already processed;
+  thread settled). Running: D1 (Sol), D2 (Sol). HOLDS read: none.

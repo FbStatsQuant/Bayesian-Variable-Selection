@@ -1,16 +1,18 @@
-L7 line check — lemmas/NEC.md sha256 c88d10a4555cf0d7
+L7 line check — lemmas/NEC.md sha256 54340e87b89336a1
 
 Independent cross-family review of the permitted packet. No other review, attempt, log, checkpoint, dependency file, or source was consulted. The numerical calculation below ran inline and created no temporary file. No agents or state-changing git commands were used.
 
-The Proposition and Corollary are VERIFIED. The manuscript is VERIFIED-WITH-AMENDMENTS because of the three presentation findings below. None changes the counterexample, its constants, or its probability guarantee.
+The Proposition, Corollary, and current manuscript are VERIFIED. The initial review of v0.1 (sha256 c88d10a4555cf0d7) found the three presentation issues recorded below. During final verification the source changed to v0.2 (the hash in the first line), applying all three repairs. I reread the revised permitted proof file and checked those amendments. There are no outstanding findings. The mathematical proof, constants, and probability guarantee did not change.
 
-## Findings
+## Findings and amendment recheck
 
-**L7-01 — MINOR — §0, lines 20–21; comparison with (1.2).** The sentence groups Lemma X′ and display (1.2) together as having radius `Cσ*²tℓ_n`. That is the squared in-sample radius of Lemma X′. Display (1.2) instead has Hellinger radius `C√(tℓ_n/n)`; these are different distances and units. The conclusion that neither is contradicted is correct, but the stated common radius is false. **Minimal repair:** separate the statements: Lemma X′ has squared in-sample radius `Cσ*²tℓ_n`; (1.2) has Hellinger radius `C√(tℓ_n/n)`, and this fixed-design in-sample lower bound supplies no random-design population-Hellinger counterexample.
+The following findings concern the initial v0.1 snapshot. All are **RESOLVED** in the current v0.2 snapshot; severity records the original issue.
 
-**L7-02 — NIT — §3, line 98.** The displayed equality replacing `2/√(πβ)` by `0.0705` is numerically false: for β = 256 the coefficient is `0.07052369794346953…`. It is rounded downward, so `0.0705` cannot be used as an upper-bound coefficient either. The subsequent `0.08p` bound still holds eventually. **Minimal repair:** retain the exact coefficient `2/√(πβ)`, or use the upper bound `0.0706` with an inequality.
+**L7-01 — MINOR — §0, originally lines 20–21 — RESOLVED.** The original sentence gave Lemma X′ and display (1.2) the common radius `Cσ*²tℓ_n`. That is Lemma X′'s squared in-sample radius, whereas (1.2) has Hellinger radius `C√(tℓ_n/n)`. These are different distances and units. **Minimal repair:** distinguish the two distances and state why the fixed-design in-sample lower bound supplies no random-design Hellinger counterexample. **Recheck:** current lines 21–23 make exactly that distinction and are correct.
 
-**L7-03 — MINOR — §8(d), lines 178–180.** The numerical evidence is described as an “exact posterior (all models of size ≤ 4)” although the posterior in the Proposition has Ω equal to all subsets, including larger models. Summing and normalizing only through size four yields the conditional posterior given `|S| ≤ 4`, and overestimates the full posterior mass of each of the reported families. The permitted manuscript gives neither a full normalizing sum nor a certified omitted-mass bound, so it does not establish the description as an exact full-posterior calculation. The cited review is outside this review's permitted inputs and was not read. **Minimal repair:** identify the calculation as the posterior restricted to sizes at most four; alternatively document a full normalization or a bound on the omitted contribution sufficient to validate the stated full-posterior values and event checks. This affects the numerical remark only, which is explicitly not used as proof.
+**L7-02 — NIT — §3, originally line 98 — RESOLVED.** The original equality replaced `2/√(πβ)` by the downward-rounded `0.0705`; its value is `0.07052369794346953…`, so the equality and any upper bound using that rounded coefficient were false. The subsequent eventual `0.08p` bound was unaffected. **Minimal repair:** retain the exact coefficient or use `0.0706` as an upper bound. **Recheck:** current line 100 retains the exact coefficient and then uses the valid upper bound `0.0706`.
+
+**L7-03 — MINOR — §8(d), originally lines 178–180 — RESOLVED.** The original numerical remark called an enumeration through size four an “exact posterior” calculation although Ω contains every subset. Normalizing only through size four gives the conditional posterior given `|S|≤4`, and overestimates each corresponding full-posterior model-family mass. No omitted-mass bound was supplied. **Minimal repair:** identify the calculation as restricted, or document full normalization or a sufficient omitted-mass bound. **Recheck:** current lines 180–182 explicitly describe the restricted posterior, conditional normalization, and unsummed larger models. The reported numerical event checks are understood with that same stated restriction; they do not independently certify the full-posterior event. This numerical remark is evidence only and is not used in the proof. The cited review was outside the permitted packet and was not read.
 
 ## Line checks
 
@@ -20,7 +22,7 @@ The design is a single sequence `X^(n)` independent of k. For each fixed k, all 
 
 The null truth satisfies both interfaces for every nonnegative M and M′, and is allowed in the fixed-design formulation for every sparsity bound `s₀^r ≥ 0`. The dimension bound holds for every A ≥ 1 eventually.
 
-Limitation (1) is substantively correct: the design fails (ND), so it is outside Lemma X's hypotheses. The phrase about the remainder of (1.1) must be read at the level of its design-failure event: this design belongs to that event. A numerical value for the unconditional random-design probability in (1.1) would additionally require a law of the design; if (ND) failed almost surely under such a law, that remainder would equal one. No such law is constructed here. Limitation (2) has the radius error in L7-01, but its non-contradiction conclusion is correct. Limitations (3) and (4) correctly distinguish the fixed-design in-sample exponential claim from a random-design Hellinger claim and from convergence in probability.
+Limitation (1) is substantively correct: the design fails (ND), so it is outside Lemma X's hypotheses. The phrase about the remainder of (1.1) must be read at the level of its design-failure event: this design belongs to that event. A numerical value for the unconditional random-design probability in (1.1) would additionally require a law of the design; if (ND) failed almost surely under such a law, that remainder would equal one. No such law is constructed here. Limitation (2), amended in response to L7-01, now states both radii correctly, and its non-contradiction conclusion is correct. Limitations (3) and (4) correctly distinguish the fixed-design in-sample exponential claim from a random-design Hellinger claim and from convergence in probability.
 
 ### §1 — design
 
@@ -38,7 +40,7 @@ For anchored subsets, the k−1 contrast eigenvalues again equal `Nτ²`. The di
 
 For an anchored model of size r, the lower determinant bound is `n d^(r−2)`; this yields (2.1) directly. The unanchored bound is stronger by one factor d. The singleton anchor also satisfies (2.1). The range of M is contained in the model column space and `0 ⪯ M ⪯ P` by the locked spectral lemma. The ambient span inclusion consequently proves both parts of (2.2).
 
-The trial coefficients cancel the u₀ component exactly. The fitted vector is `h Σ_J z_j u_j`. Its residual and coefficient penalties give precisely line 66, including the separate term
+The trial coefficients cancel the u₀ component exactly. The fitted vector is `h Σ_J z_j u_j`. Its residual and coefficient penalties give precisely the displayed expansion, including the separate term
 
 `φ₀²/n = a²h²(Σ_J z_j)²/(nNτ²)`.
 
@@ -58,7 +60,7 @@ The truncation is essential and is used correctly: 𝓔₃ need not itself have 
 
 `P(𝒯ᶜ ∪ 𝓔₃ᶜ) ≤ P(𝒯ᶜ)+P(Ã′>p/2)`.
 
-The mean calculation for Ã′ is correct with the exact coefficient in L7-02. Because `εL→0`, it is eventually at most `0.08p`; Markov then yields 0.16. All other displayed failure terms vanish except 0.046 and 0.125. Their sum with 0.16 is 0.331, leaving positive slack to the required failure bound 0.4. Thus `P(𝓔) ≥ 0.6` for all sufficiently large n.
+The amended mean calculation for Ã′ is correct, including its exact coefficient and numerical upper bound. Because `εL→0`, it is eventually at most `0.08p`; Markov then yields 0.16. All other displayed failure terms vanish except 0.046 and 0.125. Their sum with 0.16 is 0.331, leaving positive slack to the required failure bound 0.4. Thus `P(𝓔) ≥ 0.6` for all sufficiently large n.
 
 For (i), (2.2) gives `Q_S ≥ n−7√n` uniformly over all models. Writing `x=√n`, the asserted comparison of `ν/Q_S` with `(1+8/√n)/2` follows, for example, once `x ≥ 56.02`. For (ii), the identity for B is exact, its upper bound follows from 𝓔₁, and `1/(1+u) ≥ 1−u` gives the last inequality.
 
@@ -78,15 +80,15 @@ Here `x=(Q_∅−Q_S)/B` lies in [0,1), since b > 0 almost surely and Q_S ≥ 0.
 
 `(Q_∅−Q_S)/2 − 5(Q_∅−Q_S)/(2√n)`.
 
-Use (2.3) on the first term and `Q_∅−Q_S ≤ 4+kL` on the subtracted term. This proves line 126, since k is fixed and `(4+kL)/√n→0`. The determinant and prior lower bounds have the correct directions.
+Use (2.3) on the first term and `Q_∅−Q_S ≤ 4+kL` on the subtracted term. This proves the displayed likelihood lower bound, since k is fixed and `(4+kL)/√n→0`. The determinant and prior lower bounds have the correct directions.
 
 For k ≥ 2, fixing any colliding pair in the tuple expansion contributes at most `(Σ_j a_j²)A^(k−2) ≤ (max a_j)A^(k−1)`. A union bound over the `binom(k,2)` pairs proves the displayed symmetric-polynomial bound. For k = 1 the conclusion is immediate. On 𝓔₄ the relative collision bound is at most `k²/(√p′m₁)→0`; in particular, the model family has enough distinct indices eventually.
 
-For L ≥ 1, `m₁/√d ≥ 1/√(2π(β+1))`. Substitution into line 130 gives
+For L ≥ 1, `m₁/√d ≥ 1/√(2π(β+1))`. Substitution into the displayed model-family odds bound gives
 
 `[(k+1)e^(−c_k/2−1)/(4p√(n+1))] [(p′/p)(m₁/√d)/4]^k`,
 
-which implies line 138 with exactly the stated c₃. Finally `p√(n+1) ≤ 2n` eventually and `π(∅) ≥ 1/2` give (5.1) with the stated denominator 16. The factors of two are correct.
+which implies the next displayed bound with exactly the stated c₃. Finally `p√(n+1) ≤ 2n` eventually and `π(∅) ≥ 1/2` give (5.1) with the stated denominator 16. The factors of two are correct.
 
 ### §6 — Step C and Proposition
 
@@ -118,7 +120,7 @@ for every fixed c_D > 0. Thus (ND) fails at j = 2 for large n, including the cut
 
 ### §8 — four remarks
 
-(a) The non-contradiction conclusion is correct. At the minimum t, Lemma X′ has a squared in-sample radius of order log² n. The Proposition covers every fixed k, not k growing with n; its specified constant indeed satisfies `log c₄(k)=−Θ(k²)`. It supplies no contradiction at the larger radius. The separate Hellinger distance in (1.2) also requires the distinction in L7-01.
+(a) The non-contradiction conclusion is correct. At the minimum t, Lemma X′ has a squared in-sample radius of order log² n. The Proposition covers every fixed k, not k growing with n; its specified constant indeed satisfies `log c₄(k)=−Θ(k²)`. It supplies no contradiction at the larger radius. The separate Hellinger distance in (1.2) is now correctly distinguished by the amendment addressing L7-01.
 
 (b) Nothing proved here establishes necessity of the full additional logarithm. A uniform extension to growing k with improved losses would be a further argument, not a consequence of the present fixed-k Proposition. The stated open question is consistent with the permitted packet; this review makes no claim to establish a literature-wide open status.
 
@@ -132,7 +134,7 @@ and
 
 The latter follows by integrating the second truncated moment: `∫_0^√(2L) exp((1/2+ε_n)z²) dz = O(p′e^(2ε_nL)/√L)`. Chebyshev applies to this truncated variable, not to the untruncated sum, whose mean is infinite when ε_n > 0. Step A now holds on events with probability tending to one, with upper bound `n^(−1/2)d exp((1+ε_n)ω_n²/2)→0`. Hence `π(∅)→1` in probability, and the asserted posterior distance mass tends to zero. This stronger consistency on the example is compatible with its polynomially small far mass.
 
-(d) The large-threshold comment is correct. The numerical full-posterior description needs L7-03. The independent restricted calculation below supports its scale of numerical values, but does not authenticate the cited 200-draw experiment or remove the normalization issue.
+(d) The large-threshold comment is correct. The numerical description now explicitly identifies the conditional-on-size posterior, resolving L7-03. The independent restricted calculation below supports its scale of numerical values but does not authenticate the cited 200-draw experiment. The conditional numerical event checks are not used to prove the full-posterior Proposition.
 
 ## Independent numerical check
 
@@ -151,16 +153,16 @@ These are explicitly conditional-on-size numerical posterior values, not estimat
 
 | Item | Verdict |
 |---|---|
-| §0 | VERIFIED-WITH-AMENDMENTS |
+| §0 | VERIFIED |
 | §1 | VERIFIED |
 | §2 | VERIFIED |
-| §3 | VERIFIED-WITH-AMENDMENTS |
+| §3 | VERIFIED |
 | §4 | VERIFIED |
 | §5 | VERIFIED |
 | §6 | VERIFIED |
 | §7 | VERIFIED |
-| §8 | VERIFIED-WITH-AMENDMENTS |
+| §8 | VERIFIED |
 | Proposition NEC | VERIFIED |
 | Corollary NEC | VERIFIED |
 
-Overall verdict: VERIFIED-WITH-AMENDMENTS.
+Overall verdict: VERIFIED.
