@@ -119,3 +119,4 @@
 - 22:46 — READER S3 (Opus): FIXES-NEEDED → repaired (5ac7160a): (S5) independence restored; exact-branch STRONGER remark withdrawn; WEAKER tags on Thm 6/7, Thm 10, card 3.6/1.3 (restoring master premises); HQ told for H5 decision. Sol statement-change check Mon after midday.
 - 22:47 — HQ: READER WEAKER tags = faithfulness fixes, no H5 card (consultant FYI with S2-F6); plan approved (Sol check Mon after midday → DEPS OK → CP3 freeze).
 - 22:47 — Opus code review of infra/accept-identity-case: CR-VERDICT APPROVE (tl 175/0, check 468/0); 5 non-blocking, main: add a negative test (changed content + legacy Windows stamp must fail; probe confirmed it does). Reviewer settled.
+- 22:48 — recorder asked to add NB-1/NB-2 tests to the accept-identity branch, rebase, push head → HQ merge; NB-3/NB-4 post-freeze.
