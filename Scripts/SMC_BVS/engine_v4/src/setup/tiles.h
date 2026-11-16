@@ -9,7 +9,7 @@
 #include <omp.h>
 #include <atomic>
 #include <vector>
-#include "wp1_shim.h"
+#include "v4/data.h"
 
 namespace v4::setup::detail {
 

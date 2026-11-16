@@ -22,12 +22,14 @@ set(V4_COMMON_SRC
   src/common/ledger.cpp src/common/status.cpp src/common/score.cpp src/common/provenance.cpp src/common/gen.cpp src/common/prep.cpp src/common/pmath_info.cpp)
 set(V4_WP4_SRC src/merge/wp4_io.cpp)   # WP4: calib/island/fit files, merge command
 set(V4_STUB_SRC src/stubs/stubs.cpp)
+# WP2 setup (bit library: tables and start law must equal the v3 bits)
+set(V4_SETUP_SRC src/setup/corr.cpp src/setup/partition.cpp src/setup/tables.cpp src/setup/start.cpp src/setup/setup_run.cpp src/setup/account.cpp)
 # WP5: evaluator and post (bit flags: they call BitScorer and must reproduce the stored F)
 set(V4_WP5_SRC src/eval/posterior.cpp src/eval/model.cpp src/eval/dist.cpp src/eval/metrics.cpp src/eval/io.cpp
   src/eval/run.cpp src/post/law.cpp)
 
 # v4_bit: every kernel that must equal the v3 bits (flags of core/cpp/Makevars.v3).
-add_library(v4_bit STATIC ${V4_COMMON_SRC} ${V4_WP4_SRC} ${V4_STUB_SRC} ${V4_WP5_SRC})
+add_library(v4_bit STATIC ${V4_COMMON_SRC} ${V4_WP4_SRC} ${V4_STUB_SRC} ${V4_WP5_SRC} ${V4_SETUP_SRC})
 target_include_directories(v4_bit PUBLIC include PRIVATE ${V4_GEN_DIR})
 add_dependencies(v4_bit v4_git_version)
 target_compile_options(v4_bit PRIVATE ${V4_BIT_FLAGS} ${V4_WARN})
@@ -50,7 +52,8 @@ if(V4_TESTS)
   add_executable(v4_tests tests/test_main.cpp tests/test_sha256.cpp tests/test_rng.cpp tests/test_format.cpp
     tests/test_store.cpp tests/test_ledger.cpp tests/test_score.cpp tests/test_gen.cpp tests/test_prep.cpp
     tests/test_pmath.cpp tests/test_cli.cpp tests/test_wp4.cpp tests/test_wp4_io.cpp
-    tests/wp5/test_eval.cpp tests/wp5/test_golden_v3.cpp tests/wp5/test_post_e2e.cpp tests/wp5/test_t7.cpp tests/wp5/test_scale.cpp)
+    tests/wp5/test_eval.cpp tests/wp5/test_golden_v3.cpp tests/wp5/test_post_e2e.cpp tests/wp5/test_t7.cpp tests/wp5/test_scale.cpp
+    tests/test_setup.cpp tests/golden/golden_setup.cpp)
   target_include_directories(v4_tests PRIVATE tests tests/wp5 src ${V3_CORE_CPP})
   target_compile_definitions(v4_tests PRIVATE V3_CORE_CPP_DIR="${V3_CORE_CPP}"
     V4_FIXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures" V4_SMCBVS4="$<TARGET_FILE:smcbvs4>")
@@ -66,6 +69,10 @@ if(V4_TESTS)
   add_executable(v4_bench_wp4_fv tools/bench_wp4_fv.cpp)
   target_compile_options(v4_bench_wp4_fv PRIVATE ${V4_BIT_FLAGS})
   target_link_libraries(v4_bench_wp4_fv PRIVATE v4_bit)
+  add_executable(v4_setup_bench tools/bench_setup.cpp)
+  target_include_directories(v4_setup_bench PRIVATE tests src/setup)
+  target_compile_options(v4_setup_bench PRIVATE ${V4_BIT_FLAGS})
+  target_link_libraries(v4_setup_bench PRIVATE v4_bit)
   add_executable(v4_bench_score tools/bench_score.cpp)
   target_compile_options(v4_bench_score PRIVATE ${V4_BIT_FLAGS})
   target_link_libraries(v4_bench_score PRIVATE v4_bit)

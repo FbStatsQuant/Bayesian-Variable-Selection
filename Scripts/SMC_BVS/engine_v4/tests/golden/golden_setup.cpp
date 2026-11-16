@@ -51,15 +51,15 @@ void check_neighbours(const Fixture& F, V3& R, int B, const std::string& t) {
         std::vector<int> row(C.nb.idx.begin() + C.nb.ptr[j], C.nb.idx.begin() + C.nb.ptr[j + 1]);
         if (row != ref[j]) ok = false;
       }
-      CHECK(ok, "neighbours differ: %s threads=%d tile=%d", t.c_str(), th, tile);
+      SCHECK(ok, "neighbours differ: %s threads=%d tile=%d", t.c_str(), th, tile);
     }
 }
 }  // namespace
 
-TEST(golden_G1_neighbour_graph, 0) {
+TEST(golden_G1_neighbour_graph) {
   for (auto& c : cases(false)) { Fixture F(c.d, c.n, c.p, c.seed); V3 R(F.D()); check_neighbours(F, R, default_B(c.n, c.p), tag(c)); }
 }
-TEST(golden_G1_neighbour_graph_full, 1) {
+TEST_TAGGED(golden_G1_neighbour_graph_full, "full") {
   for (auto& c : cases(true)) { Fixture F(c.d, c.n, c.p, c.seed); V3 R(F.D()); for (int B : {1, 5, default_B(c.n, c.p)}) check_neighbours(F, R, B, tag(c)); }
 }
 
@@ -75,18 +75,18 @@ void golden_exact(bool full) {
     bool ok = (int)T4.left.size() == (int)T3.left.size();
     for (size_t x = 0; ok && x < T4.left.size(); ++x)
       ok = T4.left[x] == T3.left[x] && T4.right[x] == T3.right[x] && T4.size[x] == T3.size[x] && T4.minidx[x] == T3.minidx[x] && stk::same_bits(T4.height[x], T3.height[x]);
-    CHECK(ok, "dendrogram differs: %s", tag(c).c_str());
+    SCHECK(ok, "dendrogram differs: %s", tag(c).c_str());
     Partition P = cut_and_pack(T4, B, PackOrder::LeafOrder);
-    CHECK(to_v3_blocks(P) == blocks3, "exact blocks differ: %s", tag(c).c_str());
+    SCHECK(to_v3_blocks(P) == blocks3, "exact blocks differ: %s", tag(c).c_str());
     PartitionOptions po; po.mode = PartMode::Exact; po.B = B; po.threads = 1;
     CorrOptions co; co.B = B;
     Partition P2 = make_partition(F.D(), correlation_pass(F.D(), co), po);
-    CHECK(to_v3_blocks(P2) == blocks3, "make_partition(Exact) differs: %s", tag(c).c_str());
+    SCHECK(to_v3_blocks(P2) == blocks3, "make_partition(Exact) differs: %s", tag(c).c_str());
   }
 }
 }  // namespace
-TEST(golden_G2_exact_partition, 0) { golden_exact(false); }
-TEST(golden_G2_exact_partition_full, 1) { golden_exact(true); }
+TEST(golden_G2_exact_partition) { golden_exact(false); }
+TEST_TAGGED(golden_G2_exact_partition_full, "full") { golden_exact(true); }
 
 // ---- G3-G7: tables, table top stores, start law, draws, start mode; on the exact and the truncated partition
 namespace {
@@ -105,8 +105,8 @@ void golden_tables_start(const Fixture& F, V3& R, const Partition& P, const std:
   bool ok = T.J == st.J;
   for (int b = 0; ok && b < T.J; ++b)
     for (uint32_t c = 0; ok && c < st.logr[b].size(); ++c) ok = stk::same_bits(T.logr[T.code_ptr[b] + c], st.logr[b][c]);
-  CHECK(ok, "tables logr differ: %s", t.c_str());
-  CHECK(ts.scored == ts.prefix_scored + ts.fallback_scored + (uint64_t)P.J, "table counts: %s", t.c_str());
+  SCHECK(ok, "tables logr differ: %s", t.c_str());
+  SCHECK(ts.scored == ts.prefix_scored + ts.fallback_scored + (uint64_t)P.J, "table counts: %s", t.c_str());
   // G4 table top stores vs the v3 ledger fed as core/cpp/v3_core.cpp:372-386 (ingest_tables)
   {
     v3::Ledger led(&R.D, 4);
@@ -126,14 +126,14 @@ void golden_tables_start(const Fixture& F, V3& R, const Partition& P, const std:
       bool o = a.s.size() == s.size(); size_t i = 0;
       for (auto it = a.s.begin(); o && it != a.s.end(); ++it, ++i) {
         std::vector<int> m(s.pool.begin() + s.off[i], s.pool.begin() + s.off[i] + s.len[i]);
-        o = stk::same_bits(it->v, s.v[i]) && it->S == m && s.hash[i] == D.zob.hash(s.S(i));
+        o = stk::same_bits(it->v, s.v[i]) && it->S == m && s.hash[i] == D.zob.hash(s.model(i));
       }
-      CHECK(o, "table store %s differs: %s (sizes %zu vs %zu)", nm, t.c_str(), a.s.size(), s.size());
+      SCHECK(o, "table store %s differs: %s (sizes %zu vs %zu)", nm, t.c_str(), a.s.size(), s.size());
     };
     cmp_store(led.top, S4.top, "top"); cmp_store(led.lead0, S4.lead0, "lead0"); cmp_store(led.lead1, S4.lead1, "lead1");
     std::vector<int> h(S4.hpmS.begin(), S4.hpmS.end());
-    CHECK(led.has_hpm && h == led.hpmS && stk::same_bits(S4.hpmF, led.hpmF), "table HPM differs: %s", t.c_str());
-    CHECK(S4.hpm_block + 1 == led.hpm_ev.stage && (int)S4.hpm_code == led.hpm_ev.position, "table HPM provenance differs: %s", t.c_str());
+    SCHECK(led.has_hpm && h == led.hpmS && stk::same_bits(S4.hpmF, led.hpmF), "table HPM differs: %s", t.c_str());
+    SCHECK(S4.hpm_block + 1 == led.hpm_ev.stage && (int)S4.hpm_code == led.hpm_ev.position, "table HPM provenance differs: %s", t.c_str());
   }
   // G5 start law (core/cpp/v3_start.h:101-151)
   ok = stk::same_bits(T.logZbar0, st.logZbar0);
@@ -154,7 +154,7 @@ void golden_tables_start(const Fixture& F, V3& R, const Partition& P, const std:
   }
   for (int b = 0; ok && b <= T.J; ++b) for (int k = 0; ok && k <= D.K; ++k) ok = stk::same_bits(T.logF_at(b, k), st.logF[b][k]);
   for (int k = 0; ok && k <= D.K; ++k) ok = stk::same_bits(T.size_logmass[k], st.size_logmass[k]) && stk::same_bits(T.size_cum[k], st.size_cum[k]);
-  CHECK(ok, "start law differs: %s", t.c_str());
+  SCHECK(ok, "start law differs: %s", t.c_str());
   // comp and log gamma_0 on the table models and random models
   Start S; S.D = &D; S.P = &P; S.T = &T; S.logZbar0 = T.logZbar0;
   // G6 draws from pi_0 (core/cpp/v3_start.h:158-176), same serial stream
@@ -166,10 +166,10 @@ void golden_tables_start(const Fixture& F, V3& R, const Partition& P, const std:
       v3::draw_pi0(st, a, S3);
       v4::Address ad; ad.particle = i + 1;
       S.draw_pi0(b4, ad, S4m);
-      o = std::vector<int>(S4m.begin(), S4m.end()) == S3 && stk::same_bits(S.comp(v4::view(S4m)), st.comp(S3)) &&
-          stk::same_bits(S.log_gamma0(v4::view(S4m)), st.log_gamma0(S3));
+      o = std::vector<int>(S4m.begin(), S4m.end()) == S3 && stk::same_bits(S.comp(v4::ModelView(S4m)), st.comp(S3)) &&
+          stk::same_bits(S.log_gamma0(v4::ModelView(S4m)), st.log_gamma0(S3));
     }
-    CHECK(o && a.g.count == b4.g.count, "pi_0 draws / comp differ: %s", t.c_str());
+    SCHECK(o && a.g.count == b4.g.count, "pi_0 draws / comp differ: %s", t.c_str());
   }
   // G7 start mode (core/cpp/v3_start.h:178-305), every cap regime, every algorithm
   for (long cap : {1000000L, 2L, 3L, 5L, 17L, 1L})
@@ -181,7 +181,7 @@ void golden_tables_start(const Fixture& F, V3& R, const Partition& P, const std:
         ModeResult m4 = start_mode(D, P, T, cap, tie, al);
         bool o = std::vector<int>(m4.S.begin(), m4.S.end()) == m3.S && stk::same_bits(m4.lg0, m3.lg0) && m4.ties == m3.ties &&
                  m4.truncated == m3.truncated && m4.tie_dp_used == m3.tie_dp_used;
-        CHECK(o, "start mode differs: %s cap=%ld tie=%d algo=%d (v3 ties=%ld trunc=%d)", t.c_str(), cap, (int)tie, (int)al, m3.ties, (int)m3.truncated);
+        SCHECK(o, "start mode differs: %s cap=%ld tie=%d algo=%d (v3 ties=%ld trunc=%d)", t.c_str(), cap, (int)tie, (int)al, m3.ties, (int)m3.truncated);
       }
     }
 }
@@ -200,46 +200,105 @@ void golden_ts(bool full) {
   }
 }
 }  // namespace
-TEST(golden_G3to7_tables_stores_start_draws_mode, 0) { golden_ts(false); }
-TEST(golden_G3to7_tables_stores_start_draws_mode_full, 1) { golden_ts(true); }
+TEST(golden_G3to7_tables_stores_start_draws_mode) { golden_ts(false); }
+TEST_TAGGED(golden_G3to7_tables_stores_start_draws_mode_full, "full") { golden_ts(true); }
 
 // ---- tie-heavy start-mode fixture: many duplicate signal columns, so |E| is large and the tie DP path is taken
-TEST(golden_G7_start_mode_tie_heavy, 0) {
+TEST(golden_G7_start_mode_tie_heavy) {
   for (int p : {60, 400}) {
     Fixture F(stk::TIE, 120, p, 77);
     // overwrite y with a sum of many duplicated columns (each duplicate pair is one tied choice in the mode)
-    std::vector<double> X(F.own.X), y(F.n, 0.0);
+    std::vector<double> X(F.own->X), y(F.n, 0.0);
     stk::Rng g(5);
     for (int j = 1, q = 0; j < p && q < 8; j += 7 * (p / 60), ++q) for (int i = 0; i < F.n; ++i) y[i] += ((j % 2) ? 1.5 : -1.5) * X[(size_t)j * F.n + i];
     for (int i = 0; i < F.n; ++i) y[i] += 0.5 * g.norm();
     double m = 0, s = 0; for (double v : y) m += v;
     m /= F.n; for (double& v : y) { v -= m; s += v * v; }
     s = std::sqrt(s / (F.n - 1)); for (double& v : y) v /= s;
-    v4::DataOwner own; own.init(X.data(), y.data(), F.n, p);
-    V3 R(own.D);
+    auto ow = std::make_shared<v4::DataOwned>(); ow->X = X; ow->y = y;
+    v4::Data own = v4::make_data(ow, F.n, p);
+    V3 R(own);
     int B = default_B(F.n, p);
-    CorrOptions co; co.B = B; CorrResult C = correlation_pass(own.D, co);
+    CorrOptions co; co.B = B; CorrResult C = correlation_pass(own, co);
     for (PartMode pm : {PartMode::Exact, PartMode::Truncated}) {
       PartitionOptions po; po.mode = pm; po.B = B;
-      Partition P = make_partition(own.D, C, po);
+      Partition P = make_partition(own, C, po);
       v3::Start st; st.D = &R.D; st.blocks = to_v3_blocks(P);
       v3::Scorer sc(&R.D); v3::build_tables(st, sc); v3::build_start(st);
-      Tables T = build_tables(own.D, P, 2); build_start(own.D, P, T);
+      Tables T = build_tables(own, P, 2); build_start(own, P, T);
       for (long cap : {1000000L, 2L, 4L, 64L, 1000L})
         for (bool tie : {true, false}) {
           v3::ModeResult m3 = v3::start_mode(st, cap, tie);
           for (ModeAlgo al : {ModeAlgo::Auto, ModeAlgo::Enumerate, ModeAlgo::CountThenTieDP}) {
             if (al == ModeAlgo::CountThenTieDP && !tie && m3.truncated) continue;
-            ModeResult m4 = start_mode(own.D, P, T, cap, tie, al);
+            ModeResult m4 = start_mode(own, P, T, cap, tie, al);
             bool o = std::vector<int>(m4.S.begin(), m4.S.end()) == m3.S && stk::same_bits(m4.lg0, m3.lg0) && m4.ties == m3.ties &&
                      m4.truncated == m3.truncated && m4.tie_dp_used == m3.tie_dp_used;
-            CHECK(o, "tie-heavy start mode differs: p=%d part=%d cap=%ld tie=%d algo=%d (v3 ties=%ld)", p, (int)pm, cap, (int)tie, (int)al, m3.ties);
+            SCHECK(o, "tie-heavy start mode differs: p=%d part=%d cap=%ld tie=%d algo=%d (v3 ties=%ld)", p, (int)pm, cap, (int)tie, (int)al, m3.ties);
           }
         }
       // the fixture must actually exercise ties
       long nt = v3::start_mode(st, 1000000, true).ties;
       std::printf("    tie-heavy p=%d part=%d: |E| = %ld\n", p, (int)pm, nt);
-      CHECK(nt >= 16, "tie-heavy fixture has too few ties (p=%d)", p);
+      SCHECK(nt >= 16, "tie-heavy fixture has too few ties (p=%d)", p);
     }
   }
 }
+
+// ---- golden against the committed core/ fixtures (tools/make_fixtures.R, WP1): v3_preprocess'd X, v3_setup blocks,
+// tables, start law (log Zbar0, size law), neighbours, and 2,000 pi_0 draws from (seed 4242, stream 200).
+#ifdef V4_FIXTURE_DIR
+namespace {
+template <class T> std::vector<T> rdbin(const std::string& f) {
+  std::vector<T> v; FILE* fp = std::fopen(f.c_str(), "rb"); if (!fp) return v;
+  std::fseek(fp, 0, SEEK_END); long n = std::ftell(fp); std::fseek(fp, 0, SEEK_SET);
+  v.resize(n / sizeof(T)); size_t got = std::fread(v.data(), sizeof(T), v.size(), fp); (void)got; std::fclose(fp); return v;
+}
+}  // namespace
+TEST(golden_fixtures_core_setup) {
+  const std::string fx = V4_FIXTURE_DIR;
+  v4::Json idx = v4::read_json_file(fx + "/setup/index.json");
+  int ncase = 0;
+  for (const v4::Json& c : idx.at("cases").elems()) {
+    const std::string nm = c.at("name").str();
+    const int n = (int)c.at("n").i64(), p = (int)c.at("p").i64(), B = (int)c.at("B").i64();
+    auto ow = std::make_shared<v4::DataOwned>();
+    ow->X = rdbin<double>(fx + "/prep/" + nm + "_Xs.f64"); ow->y = rdbin<double>(fx + "/prep/" + nm + "_ys.f64");
+    SCHECK(ow->X.size() == (size_t)n * p, "%s: fixture X missing", nm.c_str());
+    if (ow->X.size() != (size_t)n * p) continue;
+    v4::Data D = v4::make_data(ow, n, p);
+    SetupOptions o; o.B = B; o.threads = stk::threads(); o.part.mode = PartMode::Exact;
+    SetupResult r = run_setup(D, o);
+    SCHECK(r.status == v4::Status::completed, "%s: %s", nm.c_str(), r.reason.c_str());
+    const std::string s = fx + "/setup/" + nm;
+    auto bp = rdbin<int32_t>(s + "_blk_ptr.i32"), bm = rdbin<int32_t>(s + "_blk_members.i32");
+    bool ok = (int)bp.size() == r.part.J + 1 && bm.size() == r.part.members.size();
+    for (size_t i = 0; ok && i < bp.size(); ++i) ok = bp[i] == r.part.bptr[i];
+    for (size_t i = 0; ok && i < bm.size(); ++i) ok = bm[i] == r.part.members[i];
+    SCHECK(ok, "%s: blocks differ from v3_setup", nm.c_str());
+    auto lr = rdbin<double>(s + "_logr.f64"); ok = lr.size() == r.tab.logr.size();
+    for (size_t i = 0; ok && i < lr.size(); ++i) ok = stk::same_bits(lr[i], r.tab.logr[i]);
+    SCHECK(ok, "%s: tables differ from v3_setup", nm.c_str());
+    auto st = rdbin<double>(s + "_start.f64"); ok = st.size() == r.tab.size_logmass.size() + 1 && stk::same_bits(st[0], r.tab.logZbar0);
+    for (size_t k = 0; ok && k < r.tab.size_logmass.size(); ++k) ok = stk::same_bits(st[k + 1], r.tab.size_logmass[k]);
+    SCHECK(ok, "%s: start law differs from v3_start", nm.c_str());
+    auto np = rdbin<int32_t>(s + "_nb_ptr.i32"), ni = rdbin<int32_t>(s + "_nb_idx.i32");
+    ok = np.size() == r.corr.nb.ptr.size() && ni.size() == r.corr.nb.idx.size();
+    for (size_t i = 0; ok && i < np.size(); ++i) ok = np[i] == r.corr.nb.ptr[i];
+    for (size_t i = 0; ok && i < ni.size(); ++i) ok = ni[i] == r.corr.nb.idx[i];
+    SCHECK(ok, "%s: neighbours differ from v3_setup", nm.c_str());
+    auto dp = rdbin<int32_t>(s + "_draw_ptr.i32"), di = rdbin<int32_t>(s + "_draw_idx.i32");
+    Start S; S.D = &D; S.P = &r.part; S.T = &r.tab; S.logZbar0 = r.tab.logZbar0;
+    v4::CompatSource cs((uint64_t)c.at("draw_seed").i64(), (uint64_t)c.at("draw_stream").i64());
+    v4::Model M; ok = (int64_t)dp.size() == c.at("draws").i64() + 1;
+    for (size_t t = 0; ok && t + 1 < dp.size(); ++t) {
+      v4::Address a; a.particle = (uint32_t)t + 1;
+      S.draw_pi0(cs, a, M);
+      ok = (int)M.size() == dp[t + 1] - dp[t] && std::equal(M.begin(), M.end(), di.begin() + dp[t]);
+    }
+    SCHECK(ok, "%s: pi_0 draws differ from v3_start_draw", nm.c_str());
+    ++ncase;
+  }
+  SCHECK(ncase == 3, "expected 3 fixture cases, ran %d", ncase);
+}
+#endif
