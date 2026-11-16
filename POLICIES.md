@@ -261,6 +261,10 @@ same rules for anything it runs.
     the old access time; staff may purge earlier; no backup). Nothing of record stays idle in scratch for more than 7 days.
     Records of record are copied (rsync with checksums) to the department's Owls folder (NFS), and later to the owner's
     laptop. `$WORK` `/storage/hpc/work/ml75` is the advisor's group space: never touch it.
+13. **Continuous offload** (owner, 2026-11-15): the desktop (always on; path from the owner) and the laptop each have
+    about 1 TB. Results of record are pumped off NOTS continuously, after each run or batch: checksummed to the desktop
+    (primary), mirrored to the laptop when it is online, then NOTS scratch is freed. Each PC stays under ~70% for our
+    data.
 
 ## 13. Department protocols: tailored, but in order (owner, 2026-11-15)
 Each department may tailor the review, process and rollback protocols to its needs. Order is kept this way:
