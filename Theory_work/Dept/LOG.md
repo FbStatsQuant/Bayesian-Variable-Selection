@@ -121,3 +121,4 @@
 - 22:47 — Opus code review of infra/accept-identity-case: CR-VERDICT APPROVE (tl 175/0, check 468/0); 5 non-blocking, main: add a negative test (changed content + legacy Windows stamp must fail; probe confirmed it does). Reviewer settled.
 - 22:48 — recorder asked to add NB-1/NB-2 tests to the accept-identity branch, rebase, push head → HQ merge; NB-3/NB-4 post-freeze.
 - 22:49 — consultant consequences for READER relayed (D46); POST2-O1 queued with O3.
+- 22:54 — task K done: theory/W3-EDIT-now-rb af9825b (check 0 ERROR, assemble current, CI check/paper/cite PASS, tl 174/0) → HQ merge.
