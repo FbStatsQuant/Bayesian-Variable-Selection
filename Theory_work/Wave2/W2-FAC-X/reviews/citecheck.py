@@ -6,7 +6,7 @@ T = os.path.join(ROOT, 'Theory_work', 'Wave2', 'W2-FAC-X')
 files = [os.path.join(T, f) for f in ['STATEMENT.md', 'REPORT.md', 'CHECKPOINT.md']] + sorted(glob.glob(os.path.join(T, 'lemmas', '*.md')))
 pat = re.compile(r'`?([A-Za-z0-9_./\-]+\.(?:tex|md|R|py|h|cpp)):(\d+)(?:-(\d+))?`?')
 PREF = ['', 'Theory_work/State_of_Project/sections/', 'Theory_work/Wave1C/FINAL/sections/', 'Theory_work/Wave1C/HQ_AUDIT/',
-        'Theory_work/Wave1C/', 'Theory_work/Wave1/', 'Theory_work/Wave1/W1-GEN/', 'Theory_work/Wave1C/C-GROW/',
+        'Theory_work/Wave1C/', 'Theory_work/Wave1/', 'Theory_work/Wave1/W1-GEN/', 'Theory_work/Wave1C/C-GROW/', 'Theory_work/Wave2/',
         'Theory_work/Wave2/W2-FAC-X/', 'Theory_work/Wave2/W2-FAC-B/', 'Theory_work/Wave2/W2-FAC-B/lemmas/', 'Theory_work/Wave2/W2-FAC-X/lemmas/', 'Theory_work/']
 def resolve(path):
     for pre in PREF:

@@ -1,0 +1,15 @@
+# N1 W3-MISR-R, R = 300 replications, seed 20261115
+# OUT-nl population best-linear-predictor coefficient (1e-2 rounding): [1.6, 1.4, 0.0, -0.0, -0.0]; support (|coef| > 0.02) = [1, 2]
+scenario  n     E_delta   P(HPM!=target)  r_n
+IN          100    0.9169      0.9533       0.2146
+IN          400    0.2784      0.1267       0.1224
+IN         1600    0.0828      0.0067       0.0679
+OUT-het     100    0.9076      0.9367       0.2146
+OUT-het     400    0.2822      0.1500       0.1224
+OUT-het    1600    0.0670      0.0000       0.0679
+OUT-rad     100    0.9089      0.9533       0.2146
+OUT-rad     400    0.2880      0.1533       0.1224
+OUT-rad    1600    0.0692      0.0067       0.0679
+OUT-nl      100    0.3169      0.1067       0.2146
+OUT-nl      400    0.1523      0.0367       0.1224
+OUT-nl     1600    0.0759      0.0100       0.0679

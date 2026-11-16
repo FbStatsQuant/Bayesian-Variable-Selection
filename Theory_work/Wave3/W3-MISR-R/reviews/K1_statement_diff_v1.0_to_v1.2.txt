@@ -1,0 +1,94 @@
+diff --git a/Theory_work/Wave3/W3-MISR-R/STATEMENT.md b/Theory_work/Wave3/W3-MISR-R/STATEMENT.md
+index cfafd23..6ac037f 100644
+--- a/Theory_work/Wave3/W3-MISR-R/STATEMENT.md
++++ b/Theory_work/Wave3/W3-MISR-R/STATEMENT.md
+@@ -1,4 +1,4 @@
+-# W3-MISR-R — STATEMENT v1.0 (delta over W3-MISR v1.3; 2026-11-15; lead: Claude Opus 5.5, high, Claude Third)
++# W3-MISR-R — STATEMENT v1.2 (delta over W3-MISR v1.3; 2026-11-15; lead: Claude Opus 5.5, high, Claude Third; v1.1 = statement-lock amendments [L1-#], locked by `reviews/L1_statement_lock_sol.md` (LOCK-WITH-AMENDMENTS; `reviews/L1_disposition.md`); v1.2 = lead addition [LA-1], changelog §10)
+ 
+ Ticket W3-MISR-R (rider T13 of `Theory_work/Wave3/API_AUDIT/sharp2/TRIAGE.md` §2, row "T13 MISR-G/H"; motivation rows
+ `TRIAGE.md:40-42` and §3). Tier B, NORMAL mode. Protocol: `Theory_work/Wave3/PROTOCOL_v4.md`, rider rules `RIDER_RULES.md`.
+@@ -16,7 +16,7 @@ in the checkpoints. All results are asymptotic (n → ∞) unless marked *determ
+ | 1 | **W3-MISR-R:CorG-min** (§2) | Cor-G(a), `:162-170` | the candidate design is arbitrary (any law, dependent rows, no Σ_𝒞𝒞); only the omitted part, given the candidates, must be Gaussian with linear mean on the contrast scale; Σ_𝒞𝒞 ≻ 0 dropped; necessity under Gaussian noise; a Cramér partial converse |
+ | 2 | **W3-MISR-R:CorGb-plus** (§3) | Cor-G(b), `:171-174` | Gaussian candidate rows plus the omitted-part condition of §2 instead of jointly Gaussian rows; floor on the correlation matrix (no variance bound C₀); beta-min may be a liminf condition; explicit finite-n bound |
+ | 3 | **W3-MISR-R:CorH-plus** (§4) | Cor-H, `:176-197` | clause (a) needs only (SZ), (E^σ), (F₀) and δ_n → 0 in probability (no (OS), no margin); an in-sample Kullback–Leibler clause |
+-| 4 | **W3-MISR-R:CorH-U** (§5) | new (no BASE counterpart) | uniform-over-class forms of Cor-H(a), (b); the conditional random-design form (as BASE §4 for MIS-R) |
++| 4 | **W3-MISR-R:CorH-U** (§5) | new (no BASE counterpart) | uniform-over-class forms of Cor-H(a), (b); the conditional random-design form (as BASE §4 for MIS-R); its Gaussian-row instance (G) |
+ 
+ Unchanged and not restated: BASE §0 (`:17-66`, setting, configurations, (GR^c), hypotheses, classes, constants, laws),
+ Lemma R′ (`:68-106`), MIS-R (i), (i′), (ii) (`:108-160`), Remarks SNR, P, U (`:199-220`), BASE §9 non-claims (`:259-266`)
+@@ -62,7 +62,8 @@ Put β^𝒞(x) := β_𝒞 + γ(x) and κ_n := (X^r_𝒞, β^𝒞(X^r_𝒞), σ²
+ configuration off it (a null event).
+ **(a) Sufficiency.** Under (N) and (OV^c), (GR^c | σ(X^r_𝒞)) of BASE §4 (`:147`) holds for κ_n. Hence BASE MIS-R (ii)
+ (`:150-160`) applies with 𝓕_n := σ(X^r_𝒞) and target S₀(κ_n) = supp(β_𝒞 + γ(X^r_𝒞)) (random when γ depends on the
+-design; BASE §4(b) slices cover a random size).
++design; BASE §4(b) slices cover a random size in {1, …, s̄}; the class/event hypotheses of MIS-R (ii) are still to be
++verified).
+ **(b) Full-vector sufficient form.** (OV^c) holds if there is moreover a Borel a : ℝ^{n×p} → ℝ such that, conditionally on
+ X^r_𝒞, X^r_𝓜β_𝓜 ~ N_n(a(X^r_𝒞)1 + X^r_𝒞γ(X^r_𝒞), τ²(X^r_𝒞)I_n)   **(OV)**.
+ If (N), (OV) hold and α = α(X^r_𝒞) is a Borel function of the design, then conditionally on X^r_𝒞,
+@@ -74,8 +75,8 @@ is equivalent to (GR^c | σ(X^r_𝒞)) at κ_n.
+ **(d) Cramér partial converse (noise law unknown).** Assume only that ε is independent of (X^r_𝒞, X^r_𝓜), with any law.
+ If (GR^c | σ(X^r_𝒞)) holds for κ_n as in (c), then Uᵀε ~ N_N(b, Σ_ε) for some deterministic b ∈ ℝ^N, Σ_ε ⪰ 0, and,
+ conditionally on X^r_𝒞, Uᵀ(X^r_𝓜β_𝓜 − X^r_𝒞γ(X^r_𝒞)) ~ N_N(−b, v(X^r_𝒞)I_N − Σ_ε) (in particular v(X^r_𝒞)I_N ⪰ Σ_ε a.s.).
+-Neither the noise contrasts nor the omitted-part contrasts can be non-Gaussian; their covariances need only add to a
+-scalar matrix.
++The noise contrasts are Gaussian, and the centred omitted-part contrasts are Gaussian **conditionally on the candidate
++design**; their conditional covariances add to v(X^r_𝒞)I_N [L1-2].
+ **(e) Examples (each a one-line check of (OV)).**
+   (E1) *Jointly Gaussian rows* (BASE `:164-165`): rows (x^r_{𝒞,i}, x^r_{𝓜,i}) iid N(m, Σ) with Σ_jj > 0 for j ∈ 𝒞 and n ≥ 2;
+   **Σ_𝒞𝒞 may be singular.** (OV) holds with deterministic γ := Σ_𝒞𝒞⁺Σ_𝒞𝓜β_𝓜 (Moore–Penrose inverse),
+@@ -85,7 +86,8 @@ scalar matrix.
+   with γ := Γβ_𝓜, a := m′ᵀβ_𝓜, τ² := β_𝓜ᵀΣ_Zβ_𝓜.
+   (E3) *Fixed design*: X^r_𝒞 ≡ x deterministic. Then (N) + (OV^c) is BASE's (GR^c) (`:36-43`) with β = β_𝒞 + γ(x),
+   v = σ² + τ²(x).
+-**Remark (what β^𝒞 is; no claim).** Under (OV^c), E[Uᵀ X^r_𝓜β_𝓜 | X^r_𝒞] = UᵀX^r_𝒞γ(X^r_𝒞): β^𝒞 is the candidate
++**Remark (what β^𝒞 is; no claim).** Under (OV^c), the mean of the regular conditional law of UᵀX^r_𝓜β_𝓜 given
++X^r_𝒞 = x is Uᵀxγ(x) (no integrability of UᵀX^r_𝓜β_𝓜 itself is assumed or needed) [L1-3]: β^𝒞 is the candidate
+ coefficient of the conditional mean of the response contrasts given the candidates. As in BASE `:41-42`, β^𝒞 need
+ not be unique when UᵀX^r_𝒞 has deficient column rank; statements are about the chosen γ.
+ 
+@@ -123,8 +125,9 @@ probability.
+ contrast family {N_N(UᵀX b, wI_N) : b ∈ ℝ^p, w > 0}; so it is its own Kullback–Leibler projection onto that family
+ (divergence 0). (ii) In the setting of §2(b) (with α a function of the design): the conditional law of y^r given the
+ candidate design is N_n((α + a)1 + X^r_𝒞β^𝒞, σ²_𝒞I_n), a member of the candidate linear-Gaussian family, hence the
+-Kullback–Leibler minimiser over it (divergence 0); for jointly Gaussian rows this is BASE's row-wise reading (SL's f₀,
+-centred rows). k̄_n is the in-sample average divergence from the posterior's one-observation laws to the reference.
++Kullback–Leibler minimiser over it (divergence 0). For jointly Gaussian rows as in (E1), with a deterministic intercept
++α (and the deterministic parameters of that example), this also gives BASE's row-wise reading (SL's f₀, centred rows)
++[L1-1]. k̄_n is the in-sample average divergence from the posterior's one-observation laws to the reference.
+ No statement about the projection given the realised omitted columns ([MIS1] `L1_reduction.md:69-74`).
+ Differences from SL's Theorem 4 as BASE `:196-197`.
+ 
+@@ -146,6 +149,10 @@ In particular Π(B_n(κ_n) | X^r_𝒞, y^r) → 0 in P-probability if P(𝒜_n)
+ also when for every η″ > 0 there are constants (s̄, A, M, φ₀)_{η″}, classes 𝒦^{♭,η″}_n with (UP) and events
+ 𝒜^{η″}_n ∈ 𝓕_n, 𝒜^{η″}_n ⊆ {κ_n ∈ 𝒦^{♭,η″}_n}, with limsup_n P((𝒜^{η″}_n)ᶜ) ≤ η″ (the form of BASE §4(c), `:157-160`).
+ With §2 this applies to omitted-variable models with an arbitrary candidate design (𝓕_n = σ(X^r_𝒞)).
++**(G) Gaussian-row instance [LA-1].** In the setting and under the hypotheses of §3, with κ_n := (X^r_𝒞, β^𝒞, σ²_𝒞)
++(reference configuration off the null event of §2): for every M_n → ∞, Π(B | X^r_𝒞, y^r) → 0 in P-probability for
++B ∈ {B^a_n(κ_n), H^a_n(κ_n), K^a_n(κ_n)}. (By (RD) with 𝓕_n = σ(X^r_𝒞), 𝒦^♭_n := 𝒦^λ_n(s, A, 2M₀ + 1, (c_R/8)^{1/2}, C_OS, c)
++of §3 — (UP) by BASE MIS-R (i) and Markov — and the design events of §3's proof, whose probability tends to one.)
+ 
+ ## 6. Not claimed (additions to BASE §9, `:259-266`)
+ 
+@@ -171,8 +178,11 @@ HEURISTIC/OPEN only); the BASE `ASSUMPTION_MAP.md:27` cross-cite (editorial tick
+   (through Cor-G(b) and MIS(ii); quoted in full, absorbing erratum W3-EDIT I4-F2 for this delta).
+ - C-MIS:Prop-P@1.0.0 — "R02 VERIFIED; R04 wording fixes checked in R05; council PASS"; C-MIS:GD(b)@1.0.0 — "R02
+   VERIFIED-WITH-AMENDMENTS (applied); council PASS" (through Cor-G(b)).
+-- Code: as BASE `:15` (commit 16a7f85); Code facts used: the standardisation X = CxD_x⁻¹ (BASE `:22`, `v3_preprocess.R`
+-  as cited at BASE `:79-81`), which makes π_𝒞 invariant under positive rescaling of candidate columns (used in §3).
++- Code: as BASE `:15` (commit 16a7f85). Code fact used: the standardisation of the retained candidate columns
++  X = CxD_x⁻¹ (BASE `:22`; [W3P] `Theory_work/Wave3/W3-POST/STATEMENT.md:18-22`, with the code lines cited there)
++  [L1-Q5], which makes π_𝒞 invariant under positive rescaling of candidate columns (used in §3).
++- External classical input: Cramér's decomposition theorem (H. Cramér, Math. Z. 41 (1936), 405–414: if the sum of two
++  independent real random variables is Gaussian, each is Gaussian, degenerate laws included), used in §2(d) only [L1-Q5].
+ 
+ ## 8. Dependencies and supersession (each new claim implies the BASE claim it replaces)
+ 
+@@ -197,4 +207,5 @@ A:SEL-P (new: premise δ_n → 0 in probability, resp. its uniform form (UP); Co
+ 
+ | version | clause | STRONGER / WEAKER / EQUAL / NEW-CLAIM | reason | trigger | check |
+ |---|---|---|---|---|---|
+-| 1.0 | all | — (pre-lock draft) | — | — | — |
++| 1.1 | §2(d) sentence; §2 remark; §4 KL reading (ii); §2(a) parenthesis; §7 code/Cramér citations | EQUAL (lock amendments: wording and scope of interpretive sentences; no displayed hypothesis or conclusion changed) | L1-1 (MAJOR), L1-2, L1-3, Q1/Q5 | `reviews/L1_statement_lock_sol.md` | lock (`reviews/L1_disposition.md`) |
++| 1.2 | §5 CorH-U clause (G) | NEW-CLAIM (clause; a composition of (RD), §3 and MIS-R (i)) | needed by the reader-version remark (`READER_DELTA.md` B4.4) | lead [LA-1] | statement-change check owed (planned inside the Sol line-check batch, new agent) |

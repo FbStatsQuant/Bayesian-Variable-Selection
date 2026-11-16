@@ -1,0 +1,391 @@
+diff --git a/Theory_work/State_of_Project/sections/02_method.tex b/Theory_work/State_of_Project/sections/02_method.tex
+index 9c1a6b7..4b6d257 100644
+--- a/Theory_work/State_of_Project/sections/02_method.tex
++++ b/Theory_work/State_of_Project/sections/02_method.tex
+@@ -449,7 +449,7 @@ measured rounds \src{Docs/Methodology/METHODOLOGY_v3.md:271-272}.
+ \end{itemize}
+ \end{stmt}
+ This \emph{swaps} v3's pooling, where the equal-weight mean was primary and the $\hat Z$-weighted one secondary
+-\src{Docs/Methodology/METHODOLOGY_v3.md:272-275} (\rid{MD08}). Code (v2.2.1) also computes \emph{plain} PIPs: per island the
++\src{Docs/Methodology/METHODOLOGY_v3.md:272-275} (\rid{MD08}). As coded, the run keeps the equal-weight mean as primary and computes no $\hat Z$-weighted PIP, no $\mathrm{MPM}_{\hat Z}$ and no $R_{\mathrm{eff}}$: \texttt{pip\_primary} is the equal-weight mean of the island PIPs (\texttt{mpm} thresholds it at $\tfrac12$) and $\hat Z$ is the plain mean $R'^{-1}\sum_r\hat Z_r$, formed by log-sum-exp \src{Scripts/SMC_BVS/core/v3_run.R:154,162}; v2.2.1 is the same \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:121,129} (OD-4, 2026-11-15: equal-weight primary). Code (v2.2.1) also computes \emph{plain} PIPs: per island the
+ fraction of particles containing $j$ at the end of each of the 4 measured rounds
+ \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/cpp/v3_engine.h:350-371}, pooled with equal weights as
+ \texttt{pip\_plain}, \texttt{mpm\_plain} \src{Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/core/v3_run.R:167-169}.
+diff --git a/Theory_work/Wave1/W1-N3/lemmas/LFP_floating_point.md b/Theory_work/Wave1/W1-N3/lemmas/LFP_floating_point.md
+index a36f2c7..7251802 100644
+--- a/Theory_work/Wave1/W1-N3/lemmas/LFP_floating_point.md
++++ b/Theory_work/Wave1/W1-N3/lemmas/LFP_floating_point.md
+@@ -60,7 +60,7 @@ leaves, so `res.S` is a processed leaf. (The ordering and counting statements of
+ point the visited family is the set of "exactly tight" paths, which may be a proper subset of the ĝ-maximisers of size
+ kbest.)
+ 
+-(v) Examples (`numerics/fp_example.py`, run through the frozen code):
++(v) Examples (`numerics/fp_example.py`, run through the frozen code with its default cap):
+ 1. Blocks C_0 = {0} with ρ = 1000.0, C_1 = {1,2} with ρ{1} = 10⁻¹⁴, ρ{2} = 2·10⁻¹⁴, ρ{1,2} = −5; K = 2;
+    λ = (0, −1, 0). Since 2·10⁻¹⁴ < ½ ulp(1000) = 2⁻⁴⁴, 1000 ⊕ 10⁻¹⁴ = 1000 ⊕ 2·10⁻¹⁴ = 1000, so ĝ({0,1}) = ĝ({0,2}) =
+    1000 = max ĝ (other sets: ĝ(∅) = 0, ĝ({0}) = 999, ĝ({1,2}) < 0, singletons {1},{2} ≈ −1). The size-then-lex choice under
+diff --git a/Theory_work/Wave1/W1-PXN/lemmas/CR_corr_tails.md b/Theory_work/Wave1/W1-PXN/lemmas/CR_corr_tails.md
+index 48c079e..acc1973 100644
+--- a/Theory_work/Wave1/W1-PXN/lemmas/CR_corr_tails.md
++++ b/Theory_work/Wave1/W1-PXN/lemmas/CR_corr_tails.md
+@@ -43,7 +43,7 @@ On LH-iid with (SIZE) at n: within-group population correlations equal ρ; cross
+ all ≤ ψ̄ < ρ in absolute value (W7-PART §0.2 example, PROOF.md:41-44 of W7). Put δ* := (ρ − ψ̄)/2 ∈ (0, ½) and t := (ρ+ψ̄)/2.
+ On {max_{j<k}|r̂_jk − Σ_jk| < δ*}: every within |r̂| > ρ − δ* = t and every cross |r̂| < ψ̄ + δ* = t, i.e. the global
+ margin of W7 Theorem B's proof holds, and W7 Theorem A (A4 ⇒ A1 ⇒ A3; status "PROVED (W7-PART); XF VERIFIED* (A-REV9:
+-A1-A4 VERIFIED ...)", `NBH/ID_REGISTRY.md:310`) — equivalently PXN Lemma P1 (XF VERIFIED, A-REV3) — gives blocks = groups.
++A1-A4 VERIFIED ...)", `NBH/ID_REGISTRY.md:310`) — equivalently PXN Lemma P1 (XF VERIFIED, A-REV3) — gives blocks = groups (the internal step A0(c) of Theorem A is not used: direct argument `R_branch_repair.md:20-26`, ERRATA E-17).
+ Hence, for every n ≥ 3 at which SIZE holds,
+   P(𝒜_nᶜ) ≤ 3p² exp(−(n−1)(ρ−ψ̄)²/4096).
+ Consequences: with p ≤ n^A, Σ_n P(𝒜_nᶜ) < ∞, and for every C > 0, P(𝒜_nᶜ) ≤ p^{−C} once
+diff --git a/Theory_work/Wave1C/C-MIS/STATEMENT.md b/Theory_work/Wave1C/C-MIS/STATEMENT.md
+index 90b6d8d..88de3ea 100644
+--- a/Theory_work/Wave1C/C-MIS/STATEMENT.md
++++ b/Theory_work/Wave1C/C-MIS/STATEMENT.md
+@@ -56,7 +56,7 @@ concentration π_𝒞(S₀^𝒞 | y) → 1 with rate O_P(√(log n/n)) for the s
+ and ε ~ N_n(0, σ²I). The method's uniforms are independent of (X^r, ε, ξ).
+ **Definitions.** β^𝒞 := β_𝒞 + γ; **S₀^𝒞 := supp β^𝒞**; s₀^𝒞 := |S₀^𝒞|; σ_𝒞² := σ² + τ²; θ^𝒞 := D_xβ^𝒞; μ^𝒞 := X_𝒞θ^𝒞.
+ Then y^r = (α + a)1 + X^r_𝒞β^𝒞 + ε′, ε′ := ε + ξ, and ε′ | X^r_𝒞 ~ N_n(0, σ_𝒞²I) (so ε′ is independent of X^r_𝒞).
+-**(H-MIS)** = the T03♯ hypotheses (SoP `04_theory.tex:774-782`) for the candidate problem, i.e. with
++**(H-MIS)** = the T03♯ hypotheses (SoP `04_theory.tex:780-788`) for the candidate problem, i.e. with
+ (p, S₀, s₀, θ*, μ, σ*²) := (p_𝒞, S₀^𝒞, s₀^𝒞, θ^𝒞, μ^𝒞, σ_𝒞²), eigenvalue conditions on subsets of 𝒞, and in particular
+ **s₀^𝒞 ≥ 1 fixed** (the empty-support case is excluded; not claimed), p_𝒞 ≤ n^A, ‖μ^𝒞‖² ≤ Mn, λ_min(R̂_{S₀^𝒞}) ≥ φ₀²,
+ SE_λ(j₀), SE_w(m♯_n; g₀), and BM-∞ or BM(c > c₀) **with σ_𝒞²**.
+@@ -171,4 +171,4 @@ Targets until checked. Cited inputs keep verbatim statuses: T03♯ "PROVED; SF V
+ T01–T03 "PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY"; T38-(0) as above; Theorem GEN "PROVED-CHECKED"
+ (Wave 1) with its premises (e4; N3 "OPEN" as a general invariant). All convergence claims are asymptotic, with thresholds
+ depending on the stated constants and envelope/onset sequences. TH09's approximately two-million illustration
+-(SoP `04_theory.tex:811`) is not a universal threshold and is not transferred to the new results.
++(SoP `04_theory.tex:817`) is not a universal threshold and is not transferred to the new results.
+diff --git a/Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md b/Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md
+index 0eaeb1d..8d5e3da 100644
+--- a/Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md
++++ b/Theory_work/Wave1C/C-MIS/lemmas/L1_reduction.md
+@@ -7,13 +7,13 @@ Notation of STATEMENT.md §§1–2.
+ 
+ ## L1.0 What T03♯ assumes (read from its sources)
+ 
+-T03♯ (TH09; SoP `04_theory.tex:776-782`; proof T03R §6, `PROOF.md:160-207`) is a statement about the exact posterior π
++T03♯ (TH09; SoP `04_theory.tex:782-788`; proof T03R §6, `PROOF.md:160-207`) is a statement about the exact posterior π
+ of the shipped target computed from raw data (X^r, y^r) with p columns, under:
+ * **G** (`Docs/Theory/theorems/00_COMMON.md:35`): fixed design; ε ~ N_n(0, σ*²I), σ*² > 0 fixed; intercept removed by
+   contrasts. The statistical model is y^r = α*1 + X^rβ* + ε, μ = CX^rβ* = Xθ*, θ* = D_xβ*, S₀ = supp β*
+   (`00_COMMON.md:14`).
+ * R1, R, SE_λ(j₀), SE_w(m♯_n; g₀), BM-∞ or BM(c > c₀): conditions on (X, θ*, σ*², s₀, p) only
+-  (SoP `04_theory.tex:776-779`; T03R `PROOF.md:129-134,162-164`).
++  (SoP `04_theory.tex:782-785`; T03R `PROOF.md:129-134,162-164`).
+ * Its conclusions (T03R `PROOF.md:168`) are statements about the law of y ↦ π(· | X, y) (and functions of it: PIP, MPM,
+   S†) under that model.
+ 
+@@ -42,7 +42,7 @@ are independent of (ε, ξ). ∎
+ 
+ Assume GR with fixed X^r_𝒞 and (H-MIS): the T03♯ hypotheses with (p, S₀, s₀, θ*, μ, σ*²) := (p_𝒞, S₀^𝒞, s₀^𝒞,
+ θ^𝒞, μ^𝒞, σ_𝒞²), where S₀^𝒞 = supp β^𝒞 = supp θ^𝒞 (D_x is diagonal with positive entries) and s₀^𝒞 ≥ 1 fixed
+-(TH09's R1 requires s₀ ≥ 1, SoP `04_theory.tex:775`).
++(TH09's R1 requires s₀ ≥ 1, SoP `04_theory.tex:781`).
+ 
+ *Proof.* By Lemma R the posterior π_𝒞(· | y) has the law it has under the G-model (X^r_𝒞, β^𝒞, σ_𝒞²); in that model
+ the truth is S₀^𝒞 and the T03♯ hypotheses hold by assumption. Each conclusion of T03♯ (T03R `PROOF.md:168`, (i)–(iv)) is
+@@ -59,7 +59,7 @@ j ∈ (S₀ ∩ 𝒞) ∖ S₀^𝒞 then PIP_j ≤ 1 − π_𝒞(S₀^𝒞 | y)
+ **Remarks.** (a) The beta-min threshold is on the *projected* coefficients and scales with σ_𝒞² = σ² + τ²: omitted
+ signal raises the detection threshold (dilution). Since σ_𝒞² is a fixed constant, BM-∞ for σ_𝒞² is equivalent to BM-∞
+ for σ²; the difference matters for BM(c) and for J_n^𝒞(c). (b) All convergence claims are asymptotic, with thresholds depending on the stated constants and envelope/onset
+-sequences; TH09's ≈ 2·10⁶ illustration (SoP `04_theory.tex:811`) is not a universal threshold and is not transferred. (c) If s₀^𝒞 = 0 (β^𝒞 = 0) the target is the empty model; TH09 as carded
++sequences; TH09's ≈ 2·10⁶ illustration (SoP `04_theory.tex:817`) is not a universal threshold and is not transferred. (c) If s₀^𝒞 = 0 (β^𝒞 = 0) the target is the empty model; TH09 as carded
+ requires s₀ ≥ 1, so this case is not claimed here.
+ 
+ **Corollary N (the naive targets are wrong whenever a proxy or a cancellation exists).** Under the hypotheses of (i):
+diff --git a/Theory_work/Wave1C/C-MIS/lemmas/L3_hpm.md b/Theory_work/Wave1C/C-MIS/lemmas/L3_hpm.md
+index 6ad4d92..da2dd9a 100644
+--- a/Theory_work/Wave1C/C-MIS/lemmas/L3_hpm.md
++++ b/Theory_work/Wave1C/C-MIS/lemmas/L3_hpm.md
+@@ -3,7 +3,7 @@
+ Status (per claim): Corollary H, Corollary D — R02 VERIFIED; Corollary D′ (optional instance) — R02
+ VERIFIED-WITH-AMENDMENTS (applied). Sweep R06 fixes applied. Council pending.
+ Inputs (verbatim statuses): M5(0) = T38-(0) "PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))" (SoP
+-`04_theory.tex:466`); Theorem GEN: "PROVED-CHECKED" (`Theory_work/Wave1/W1-GEN/REPORT.md:20`), with its premises (incl. e4;
++`04_theory.tex:469`); Theorem GEN: "PROVED-CHECKED" (`Theory_work/Wave1/W1-GEN/REPORT.md:20`), with its premises (incl. e4;
+ N3 "OPEN" as a general invariant, GEN REPORT flag 4).
+ Notation (M5/T38): 𝒪 output-available event, U = 𝒪ᶜ; 𝒮⁺ the all-scored set; Ŝ⁺ its ≻-maximum under (F, −|S|, lex);
+ barred objects refer to the potential uninterrupted run (Lemma RO, GUARD-W) — T38 proof
+diff --git a/Theory_work/Wave1C/C-MIS/numerics/citecheck.py b/Theory_work/Wave1C/C-MIS/numerics/citecheck.py
+index ecc5b67..22dc62a 100644
+--- a/Theory_work/Wave1C/C-MIS/numerics/citecheck.py
++++ b/Theory_work/Wave1C/C-MIS/numerics/citecheck.py
+@@ -17,12 +17,12 @@ CHECKS = [
+     (COMMON, 14, 14, ["μ = CX^rβ*", "S₀ = supp β*"]),
+     (COMMON, 35, 35, ["| G |", "ε ~ N_n(0, σ*²I)"]),
+     (SOP + "02_method.tex", 84, 106, ["a_0=b_0=0.01", "H_S=(n+1)G_S+I_k", "nu=a_0+n/2"]),
+-    (SOP + "04_theory.tex", 466, 466, ["T38-(0) \"PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))\""]),
+-    (SOP + "04_theory.tex", 774, 782, ["fixed \\(s_0\\ge1\\)", "Tail cutoff", "Anchored eigenvalues", "Final statement"]),
+-    (SOP + "04_theory.tex", 775, 775, ["fixed \\(s_0\\ge1\\)"]),
+-    (SOP + "04_theory.tex", 776, 779, ["Tail cutoff", "BM-∞"]),
+-    (SOP + "04_theory.tex", 776, 782, ["Final statement"]),
+-    (SOP + "04_theory.tex", 811, 811, ["2\\cdot10^{6}"]),
++    (SOP + "04_theory.tex", 469, 469, ["T38-(0) \"PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))\""]),
++    (SOP + "04_theory.tex", 780, 788, ["fixed \\(s_0\\ge1\\)", "Tail cutoff", "Anchored eigenvalues", "Final statement"]),
++    (SOP + "04_theory.tex", 781, 781, ["fixed \\(s_0\\ge1\\)"]),
++    (SOP + "04_theory.tex", 782, 785, ["Tail cutoff", "BM-∞"]),
++    (SOP + "04_theory.tex", 782, 788, ["Final statement"]),
++    (SOP + "04_theory.tex", 817, 817, ["2\\cdot10^{6}"]),
+     (T03R, 15, 17, ["R_m:="]),
+     (T03R, 44, 47, ["m^\\sharp_n(\\omega):=\\min"]),
+     (T03R, 52, 52, ["s_0\\le m^\\sharp_n(\\omega)\\le\\min\\{K,\\ m_n(\\omega)\\}"]),
+diff --git a/Theory_work/Wave1C/C-MIS/reviews/CITECHECK.txt b/Theory_work/Wave1C/C-MIS/reviews/CITECHECK.txt
+index c1a057e..5ba0d16 100644
+--- a/Theory_work/Wave1C/C-MIS/reviews/CITECHECK.txt
++++ b/Theory_work/Wave1C/C-MIS/reviews/CITECHECK.txt
+@@ -2,12 +2,12 @@ OK    Docs/Theory/theorems/00_COMMON.md:9-9
+ OK    Docs/Theory/theorems/00_COMMON.md:14-14
+ OK    Docs/Theory/theorems/00_COMMON.md:35-35
+ OK    Theory_work/State_of_Project/sections/02_method.tex:84-106
+-OK    Theory_work/State_of_Project/sections/04_theory.tex:466-466
+-OK    Theory_work/State_of_Project/sections/04_theory.tex:774-782
+-OK    Theory_work/State_of_Project/sections/04_theory.tex:775-775
+-OK    Theory_work/State_of_Project/sections/04_theory.tex:776-779
+-OK    Theory_work/State_of_Project/sections/04_theory.tex:776-782
+-OK    Theory_work/State_of_Project/sections/04_theory.tex:811-811
++OK    Theory_work/State_of_Project/sections/04_theory.tex:469-469
++OK    Theory_work/State_of_Project/sections/04_theory.tex:780-788
++OK    Theory_work/State_of_Project/sections/04_theory.tex:781-781
++OK    Theory_work/State_of_Project/sections/04_theory.tex:782-785
++OK    Theory_work/State_of_Project/sections/04_theory.tex:782-788
++OK    Theory_work/State_of_Project/sections/04_theory.tex:817-817
+ OK    Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/A-REV5/sources/W1-T03R/PROOF.md:15-17
+ OK    Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/A-REV5/sources/W1-T03R/PROOF.md:44-47
+ OK    Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/A-REV5/sources/W1-T03R/PROOF.md:52-52
+diff --git a/Theory_work/Wave2/W2-APP/lemmas/L4_families.md b/Theory_work/Wave2/W2-APP/lemmas/L4_families.md
+index 02ea00d..f239f9c 100644
+--- a/Theory_work/Wave2/W2-APP/lemmas/L4_families.md
++++ b/Theory_work/Wave2/W2-APP/lemmas/L4_families.md
+@@ -142,7 +142,7 @@ geometrically decaying loadings can give Σ ∈ LOC (R05-1 example b_j = 2^{−j
+ under PTV). One-factor with |b_l| ≥ b₀ on a null set 𝒩_n and |b_{S₀}ᵀθ*| ≥ β₀ (all V4 floors): GEN obstructed if
+ |𝒩_n| → ∞, GROW/LOC if min(K, |𝒩_n|)/log n → ∞. Cancellation — including WEIGHTED factor cancellation
+ b_{S₀}ᵀθ* = 0 with Σ_kθ*_k ≠ 0 (R06-2: θ* = (1, 1), b = (½, −½) on S₀, b_l = ½ on nulls, Ψ = ¾I: every null has zero partial
+-correlation with the response) — weak exposure, multi-factor: **no claim**.
++correlation with the response given any conditioning set disjoint from S₀, the VNF quantifier; not given a set containing exactly one truth) — weak exposure, multi-factor: **no claim**.
+ Study S5 (0.3 common, 0.7 within groups of 5): Σ_S5 = 0.3·11ᵀ + 0.4H + 0.3I has correlation floor 0.3, so **POST holds**
+ for the study sequence's S5 (R06); GEN's sufficient class excludes the study sequence (GEN L6 (d), cited);
+ GROW frontier (C-GROW (C6), "Frontier (with evidence, not proved)"). Reported model on pervasive designs:
+diff --git a/Theory_work/Wave2/W2-FAC-X/reviews/CITECHECK.txt b/Theory_work/Wave2/W2-FAC-X/reviews/CITECHECK.txt
+index 374e618..e558690 100644
+--- a/Theory_work/Wave2/W2-FAC-X/reviews/CITECHECK.txt
++++ b/Theory_work/Wave2/W2-FAC-X/reviews/CITECHECK.txt
+@@ -1,15 +1,19 @@
+-OK    [lemmas\X1_representation.md] 04_theory.tex:69-74
++OK    [STATEMENT.md] W2-FAC-B/REPORT.md:30-30
++      **PROVED-CHECKED** — Theorem FAC-CS (claims (C1)–(C4) of STATEMENT v3.1, plus the flagged (C1-M)). Statement lock
++OK    [STATEMENT.md] W2-FAC-A/REPORT.md:20-20
++      **PROVED-CHECKED** (for the narrowed, flagged target STATEMENT.md v1.2) — Theorem FAC-L (Part I: (L1)–(L5), delivery
++OK    [lemmas/X1_representation.md] 04_theory.tex:69-74
+       \par\smallskip\noindent\textbf{Shared definition.}\enspace Exact scope | \par\smallskip\noindent\textbf{D0: data/target.}\enspace \(n\ge3,p\ge1\); nonconstant columns and response, centered and standardized. \(K=\min(p,\lfloor n/2\rfloor)\), \ | \par\smallskip\noindent\textbf{Score.}\enspace \(G_U=X_U^\top X_U,\ z_U=X_U^\top y,\ H_U=(n+1)G_U+I,\ Q_U=y^\top y-nz_U^\top H_U^{-1}z_U,\ \nu=.01+n/2\). \(m(U)=c_n[\det  | \par\smallskip\noindent\textbf{Prior.}\enspace \(w(k)=[2\binom{2p-1}{k}]^{-1}\), \(W_K=\sum_{k\le K}\binom pk w(k)\), \(\varpi(S)=w(|S|)/W_K\).
+-OK    [lemmas\X6_assembly.md] 04_theory.tex:492-492
++OK    [lemmas/X6_assembly.md] 04_theory.tex:492-492
+       \par\noindent\rid{TH05.0} (M5(0) Composition at every n, any X): \status{T38-(0) "PROVED (SF: VERIFIED (W3-VT38E); XF: VERIFIED* (A-REV5))"; N200 "PROVED (elementary, eve
+-OK    [lemmas\X6_assembly.md] s3_posterior.tex:20-20
++OK    [lemmas/X6_assembly.md] s3_posterior.tex:20-20
+       \textbf{Random designs.} T03♯ is a fixed-design theorem. Random-design versions used below: (a) W1-PXN (P) on LH-iid, $1-\pi(S_0)=O_P(\sqrt{\log n/n})$ under the joint la
+-OK    [lemmas\X6_assembly.md] Theory_work/Wave1C/HQ_AUDIT/A2_propF_GROW.md:55-67
++OK    [lemmas/X6_assembly.md] Theory_work/Wave1C/HQ_AUDIT/A2_propF_GROW.md:55-67
+       **3. Replace D′'s statistical inputs by GROW's data events.** Define 𝒦_n to mean that deterministic LS0 with cap a_n scores S₀, whether or not a run delivers. Put E_n = S |  | P(𝒦_nᶜ) ≤ P(Sand_nᶜ)+P(NA(𝓛)ᶜ)+P(TL(𝓛)ᶜ) → 0. | 
+-OK    [lemmas\X6_assembly.md] A2_propF_GROW.md:37-47
++OK    [lemmas/X6_assembly.md] A2_propF_GROW.md:37-47
+       ## Proof |  | **1. Lemma S extends.** For fixed GROW designs, raw columns are finite and nonconstant by G, and standardisation gives centred columns with squared norm n−1 (`GROW/STATEM | 
+ 
+-TOTAL ok=5 miss=0
++TOTAL ok=7 miss=0
+ 
+ ## Status-string / file-level citation check
+ OK   Wave1/W1-PXN/lemmas/CR_corr_tails.md  ::  PROVED (by this seat); XF VERIFIED (R19, Codex gpt-6.1-sol)
+diff --git a/Theory_work/Wave2/W2-FAC-X/reviews/citecheck.py b/Theory_work/Wave2/W2-FAC-X/reviews/citecheck.py
+index 73b570f..8c617a9 100644
+--- a/Theory_work/Wave2/W2-FAC-X/reviews/citecheck.py
++++ b/Theory_work/Wave2/W2-FAC-X/reviews/citecheck.py
+@@ -6,7 +6,7 @@ T = os.path.join(ROOT, 'Theory_work', 'Wave2', 'W2-FAC-X')
+ files = [os.path.join(T, f) for f in ['STATEMENT.md', 'REPORT.md', 'CHECKPOINT.md']] + sorted(glob.glob(os.path.join(T, 'lemmas', '*.md')))
+ pat = re.compile(r'`?([A-Za-z0-9_./\-]+\.(?:tex|md|R|py|h|cpp)):(\d+)(?:-(\d+))?`?')
+ PREF = ['', 'Theory_work/State_of_Project/sections/', 'Theory_work/Wave1C/FINAL/sections/', 'Theory_work/Wave1C/HQ_AUDIT/',
+-        'Theory_work/Wave1C/', 'Theory_work/Wave1/', 'Theory_work/Wave1/W1-GEN/', 'Theory_work/Wave1C/C-GROW/',
++        'Theory_work/Wave1C/', 'Theory_work/Wave1/', 'Theory_work/Wave1/W1-GEN/', 'Theory_work/Wave1C/C-GROW/', 'Theory_work/Wave2/',
+         'Theory_work/Wave2/W2-FAC-X/', 'Theory_work/Wave2/W2-FAC-B/', 'Theory_work/Wave2/W2-FAC-B/lemmas/', 'Theory_work/Wave2/W2-FAC-X/lemmas/', 'Theory_work/']
+ def resolve(path):
+     for pre in PREF:
+diff --git a/Theory_work/Wave3/W3-MISR/ASSUMPTION_MAP.md b/Theory_work/Wave3/W3-MISR/ASSUMPTION_MAP.md
+index d64db2b..07107eb 100644
+--- a/Theory_work/Wave3/W3-MISR/ASSUMPTION_MAP.md
++++ b/Theory_work/Wave3/W3-MISR/ASSUMPTION_MAP.md
+@@ -14,7 +14,7 @@ not limits, and they do not probe growing p).
+ |---|---|---|---|---|---|
+ | A:MISR-GRC — GR^c: Uᵀ(y^r − xβ) ~ N_N(0, vI) | Lemma R′(b) only | the contrast vector, divided by √v, has the law of the unit-noise G-model; π depends on y^r through it | P: the standardised response has the law it has under a G-model with truth β/√v | scalar covariance: arbitrary non-scalar residual laws cannot be admitted with the same mean-only target — C-MIS E2 (a common random slope) is a counterexample, and in N3(iii) E π({0}) goes 0.23, 0.12, 0.03, 0.02 for the mean-only target; the slope can be put in 𝓕_n (§4). Scalar covariance itself is not necessary: under (PR) (R′(c)) the contrasts may be non-scalar, with β a reference target rather than a conditional-mean coefficient [SW1-2]; heteroscedastic residual within a design (N3(ii)): δ/r_n is 1.46, 1.71, 2.04, 2.59, HPM 0.92–0.95 — the rate looks lost at these n [SW1-6]; Gaussianity: t₃ residual (N3(i)) δ/r_n 1.30, 1.43, 1.09, 1.23, HPM 0.96–1.00: no visible deterioration in these runs — **looks improvable** | boundary-numerics (Gaussianity); inherited from the whole chain (A:GAUSS-NOISE), hard |
+ | v > 0 arbitrary (no fixed variance) | R′(a),(b) | exact invariance under y ↦ a1 + cy | — | this is the removal of v1's "σ², τ² fixed"; N1(i): posteriors agree to 5·10⁻¹⁴ across the five regimes v_n = σ² + τ_n² ∈ {2, 1 + n, 1 + n², 2/n, n⁻²} [SW1-3]; N1(ii): δ/r_n ∈ [1.07, 1.42] in every regime; code: N0 | none (assumption removed) |
+-| A:MISR-ESNR — (E^σ; M): ‖μ‖² ≤ nMv | through W3-POST2: Lemma C1/C2 (denominator, size tail), `lem:ongood` (‖y_c‖², b), R_n in E1 | bounds on ‖y_c‖²/(nv) and on the ridge cost of the reference | bounded ridge cost of S₀ and bounded ‖y_c‖²/(nv) | **cannot be dropped** (BT1 "Limits", confirmed by N5 = `numerics/N5_out.txt`: p = 2 orthogonal, v = 1, θ₁ = n, θ₂² = 200 log n/n. In this arm (F₀) holds, (OS) is void and every underfit has ridge loss ≥ n(n − 1) (L_{{1}} = n(n − 1) + 200(n − 1)log n/n; the other two are larger), so (ID^{M,σ}; c) holds eventually for any fixed c, e.g. c > c₁(2, 1) ≈ 258.9 [SW1-1]; energy/(nv) ≍ n², and E π(S₀) = 0.87, 0.18, 0.04, 0.014, 0.007, 0.003 for n = 100 … 102400: a huge signal inflates the coded residual scale and hides a threshold-level one). Not sharp either: in the control arms of N5 (θ₁ = 1 or √n; numerical controls, not verified instances of the margin class) E π(S₀) = 1.0000 at every n, and in N4 (all signals strong, energy/(nv) ≍ n^b, b ∈ {½, 1, 2}) δ/r_n is 0.47–1.22 with HPM ≥ 0.98: finite-sample behaviour compatible with the conclusion [SW1-5] — **weakenable, not removable** | boundary-numerics; single-use bounds |
++| A:MISR-ESNR — (E^σ; M): ‖μ‖² ≤ nMv | through W3-POST2: Lemma C1/C2 (denominator, size tail), `lem:ongood` (‖y_c‖², b), R_n in E1 | bounds on ‖y_c‖²/(nv) and on the ridge cost of the reference | bounded ridge cost of S₀ and bounded ‖y_c‖²/(nv) | **evidence that it cannot simply be dropped** (finite-sample N5 observations with an analytic sketch, not a checked asymptotic proof; BT1 "Limits", illustrated numerically by N5 = `numerics/N5_out.txt`: p = 2 orthogonal, v = 1, θ₁ = n, θ₂² = 200 log n/n. In this arm (F₀) holds, (OS) is void and every underfit has ridge loss ≥ n(n − 1) (L_{{1}} = n(n − 1) + 200(n − 1)log n/n; the other two are larger), so (ID^{M,σ}; c) holds eventually for any fixed c, e.g. c > c₁(2, 1) ≈ 258.9 [SW1-1]; energy/(nv) ≍ n², and E π(S₀) = 0.87, 0.18, 0.04, 0.014, 0.007, 0.003 for n = 100 … 102400: a huge signal inflates the coded residual scale and hides a threshold-level one). Not sharp either: in the control arms of N5 (θ₁ = 1 or √n; numerical controls, not verified instances of the margin class) E π(S₀) = 1.0000 at every n, and in N4 (all signals strong, energy/(nv) ≍ n^b, b ∈ {½, 1, 2}) δ/r_n is 0.47–1.22 with HPM ≥ 0.98: finite-sample behaviour compatible with the conclusion [SW1-5] — **weakenable, not removable** | boundary-numerics; single-use bounds |
+ | A:POST2-F0 — (F₀; φ₀) on S₀(κ) | W3-POST2 (C1, (C4′), E1) | coefficient bound, η_n | bounded ridge cost L_{S₀} | W3-POST2 N8: looks improvable; not re-tested | inherited; improvable |
+ | A:POST2-OS — (OS; C_OS) | W3-POST2 (C5′)(b), (C8′) | superset sums in expectation | — | unweighted feasible part necessary (W3-POST2:A2) | inherited |
+ | A:MISR-IDM-SNR — (ID^{M,σ}; c), c > c₁ | W3-POST2 Lemma E1 | underfit comparison | margin relative to v | N2: fixed raw coefficients, τ_n² = n^{2a}: relative ratio n^{1−2a}/log n; (nominal ratio, with population SDs) a = 0, 0.25 (ratio increasing): at n = 6400 δ/r_n is 1.242 and 1.216, HPM 1.00; a = 0.4 (ratio 0.5–0.7 at these n), a ≥ 0.5 (ratio decreasing): δ ≥ 0.98, HPM ≤ 0.01 [SW1-4, SW1-5] — the margin must be **relative to v** (this is v1's "R02 counterexample", now a margin failure); constant c₁ (≈ 161 at s = A = 1; ≈ 259 at s = 2, A = 1): ARTEFACT (inherited) | artefact-threshold (c₁) |
+@@ -24,7 +24,7 @@ not limits, and they do not probe growing p).
+ | A:IID-GAUSS-ROWS (Cor-G only) | Cor-G | Gaussian conditioning; C-MIS GD(b) steps | example only | — | family-named, in an example only (allowed) |
+ 
+ Conclusion level: posterior (MIS(i), (i′), (ii)); target/identity (R′); posterior for the parameter (Cor-H).
+-Rate: E δ_n ≤ C r_n, r_n = √(log n/n), constants free of v; lower bound (1 + √(n+1))⁻¹ inherited on LB's domain.
++Rate: E δ_n ≤ C r_n, r_n = √(log n/n), constants free of v; lower bound (1 + √(n+1))⁻¹ inherited on LB's domain. Cross-reference for the matching order (well-specified witness designs; not a claim of this ticket): W3-PSHARP:A, Corollary A1 (`W3-PSHARP/STATEMENT.md:70-73`, status "PROVED-CHECKED", council R2): with p = ⌊n^a⌋, δ_n ≥ (1 − o_P(1))(s₀ + 1)√(a/π)·r_n; the every-p expectation form is W3-PSHARP-R's open target (T12).
+ Scope: 2 ≤ p ≤ n^A, s ≥ 1 fixed; fixed designs uniformly over a configuration class; random designs by conditioning;
+ law: GR^c.
+ 
+@@ -38,7 +38,7 @@ posterior-tail rates — needs W3-POST2:D's proof redone in expectation.
+ Boundary-violation numerics run (all in `numerics/misr_numerics_out.txt`): N1 (variance → 0 / → ∞, SNR held: inside
+ the new range, outside v1's), N2 (relative margin violated), N3 (outside GR^c: heavy tails, heteroscedastic, random
+ slope), N4 (outside (E^σ)); N5 (`numerics/N5_energy_obstruction.py` → `numerics/N5_out.txt`: (E^σ) violated with a huge
+-signal — the conclusion fails). For `ci/falsification.tsv` (`kind=boundary`): `misr_numerics.py` (≈ 10 min, py -3.13).
++signal — posterior target mass deteriorates over the sampled n). For `ci/falsification.tsv` (`kind=boundary`): `misr_numerics.py` (≈ 10 min, py -3.13).
+ 
+ Closest literature result: Song–Liang (2015) §2.3 Theorem 4 (density consistency around the KL minimiser within a
+ misspecified candidate subset, fixed |s|, a.s.) and Corollary 2 (support inclusion). Ours: stronger conclusion (exact
+@@ -51,5 +51,5 @@ restrictions fixed s, p ≤ n^A are inherited here and are the main literature g
+ 
+ Sharpness reading (per hypothesis): GR^c — weakened in v1.2 to the law of the contrast direction (PR), with a
+ total-variation stability bound; non-scalar Gaussian residual laws — excluded for the same mean-only target by C-MIS E2 (scalar covariance itself not necessary under (PR));
+-Gaussianity of the direction law — improvable (hard, upstream); (E^σ) — needed in some form (N5), weakenable; (F₀) — improvable (inherited); (OS) — partly necessary;
++Gaussianity of the direction law — improvable (hard, upstream); (E^σ) — evidence that it cannot simply be dropped (N5: finite-sample N5 observations with an analytic sketch, not a checked asymptotic proof), weakenable; (F₀) — improvable (inherited); (OS) — partly necessary;
+ (ID^{M,σ}) — relative form necessary in N2's sense, constant an artefact; fixed s, p ≤ n^A — inherited.
+diff --git a/Theory_work/Wave3/W3-MISR/REPORT.md b/Theory_work/Wave3/W3-MISR/REPORT.md
+index c296e9d..609153b 100644
+--- a/Theory_work/Wave3/W3-MISR/REPORT.md
++++ b/Theory_work/Wave3/W3-MISR/REPORT.md
+@@ -73,7 +73,7 @@ over the class 𝒦⁰′_n it uses) — covered by council R2.
+   almost-sure statement). Remaining: Gaussian contrast direction law; fixed s; p ≤ n^A (inherited).
+ - **Sharpness record** (`ASSUMPTION_MAP.md`): fixed variance — removed; GR^c — weakened to the direction law (R′(c));
+   non-scalar residual laws — excluded for the same mean-only target by C-MIS E2 and N3 (scalar covariance itself not necessary under (PR)); margin — the relative form is the right one (N2),
+-  constant c₁ an artefact; (E^σ) — cannot be dropped (BT1 obstruction, N5), weakenable (N4); (F₀), (OS), fixed s,
++  constant c₁ an artefact; (E^σ) — evidence that it cannot simply be dropped (BT1 obstruction, N5: finite-sample N5 observations with an analytic sketch, not a checked asymptotic proof), weakenable (N4); (F₀), (OS), fixed s,
+   p ≤ n^A — inherited from W3-POST2.
+ - **Open / could be strengthened** (each with a disposition in `reviews/BT1_disposition.md`): BT1-A2 Corollary H in
+   expectation with posterior-tail rates (upstream, W3-POST2:D); BT1-B1 the empty projection s = 0 at growing p (new
+diff --git a/Theory_work/Wave3/W3-MISR/numerics/N5_energy_obstruction.py b/Theory_work/Wave3/W3-MISR/numerics/N5_energy_obstruction.py
+index f427389..fe0bda2 100644
+--- a/Theory_work/Wave3/W3-MISR/numerics/N5_energy_obstruction.py
++++ b/Theory_work/Wave3/W3-MISR/numerics/N5_energy_obstruction.py
+@@ -2,12 +2,12 @@
+ reviews/BT1_better_theorem_astra.md, "Limits"). Local only.
+ 
+ p = 2, exactly orthogonal centred columns (G = N I), v = 1, S0 = {0, 1}. theta_1 = n^a (a huge first signal when a = 1),
+-theta_2 = sqrt(c log n / n), c = 200 > c_0(2, 1) = 192 (the beta-min threshold); c_1(2, 1) is approximately 258.9.
++theta_2 = sqrt(c log n / n), c = 200 > c_0(2, 1) = 192 (4C_* ≈ 161 < 192, [P3] STATEMENT line 21; the beta-min threshold); c_1(2, 1) is approximately 258.9.
+ In the obstruction arm a = 1, all hypotheses of MIS-R(i) except (E^sigma) hold eventually: p = s, so (OS) is void; (F0)
+ holds; and every underfit has ridge loss exceeding any fixed multiple of log n: with h = (n-1)/n the smoother
+ eigenvalue, L_{0} = (n-1) n + 200 (n-1) log(n)/n for the model keeping the huge signal, and the other two underfits
+ have loss at least (n-1) n^2. The arms a = 0 and a = 1/2 are numerical controls, not verified instances of the
+-ridge-margin class with c = 200 > c_1.
++ridge-margin class at any claimed margin constant above c_1(2,1); the coefficient constant 200 is below c_1(2,1).
+ Observation: with a = 1 the posterior mass of S0 decreases towards 0 over the sampled n (it moves to {0}); in the control
+ arms it is 1.0000 at every sampled n.
+ 
+diff --git a/Theory_work/Wave3/W3-PSHARP/PLAN.md b/Theory_work/Wave3/W3-PSHARP/PLAN.md
+index 4e9cc0d..a92df59 100644
+--- a/Theory_work/Wave3/W3-PSHARP/PLAN.md
++++ b/Theory_work/Wave3/W3-PSHARP/PLAN.md
+@@ -25,8 +25,8 @@ definition of π ([W3P] §0); no consumed claim enters a proof (the parents are
+   prior × Occam × count ≤ e^{O(log² n)} against fit ≤ e^{−c n b²}.
+ 
+ ## Numerics (local only; `py -3.13 -I`)
+-- `numerics/a_orth.py`: orthogonal design; **exact** δ_n for large p by the Gamma-integral + elementary-symmetric
+-  DP (validated against brute-force enumeration at p ≤ 12); report δ_n/Λ_n, one-step sum/Λ_n, δ_n√n.
++- `numerics/a_orth.py`: orthogonal design; compute odds over |S| ≤ min(K, s₀+60) (s₀+80 in E2) by Gamma-integral/elementary-symmetric
++  DP, evaluated by quadrature and validated against brute force; report restricted odds/Λ_n, one-step odds/Λ_n, and the transformed lower bound on δ_n√n.
+ - `numerics/a_sph.py`: iid Gaussian design, p ≫ n; exact one-step sum Σ_j π(S₀∪{j})/π(S₀) (a rigorous lower bound
+   for δ/(1−δ)) against Λ_n; brute-force check of Lemma S formulas.
+ - `numerics/b_check.py`: falsification search for Corollary B (random/adversarial small designs, exact enumeration),
+diff --git a/Theory_work/Wave3/W3-PSHARP/REPORT.md b/Theory_work/Wave3/W3-PSHARP/REPORT.md
+index beef86e..6548af5 100644
+--- a/Theory_work/Wave3/W3-PSHARP/REPORT.md
++++ b/Theory_work/Wave3/W3-PSHARP/REPORT.md
+@@ -5,8 +5,8 @@ Lead: Claude Fable 5.2 (claudeAgent, high). Branch `theory/W3-PSHARP`; folder `T
+ 
+ **RESULT.** All three records are proved, each with its own status: **PROVED (by this seat, unchecked)** in the
+ protocol's wording, with the check record of §2 (statement lock, blind break review, two blind line checks; the
+-council verdict is recorded in `CHECKPOINT_2.md` and `reviews/`, outside this frozen file). They are lower bounds /
+-necessity statements, not new upper bounds, and all are asymptotic statements about the exact coded target π. No
++council verdict is recorded in `CHECKPOINT_3.md` and `reviews/`, outside this frozen file). They are lower bounds /
++necessity statements, not new upper bounds. Lemma S and Corollary B are deterministic (every n, design and data set); Propositions A and C are asymptotic; all concern the exact coded target π. No
+ claim of the registry is used in any proof (every proof starts from the definition of π), so nothing here is
+ conditional on a parent's status. The parents are only what is sharpened.
+ 
+@@ -36,7 +36,7 @@ exactly 2√(log N/π) (re-derived; the brief's three moment formulas are confir
+ 
+ **(b) Claim B — a sparsity obstruction on every design** (`lemmas/B_sparsity.md`). For every design, every data set and
+ every S₀ with 0 ≤ s₀ ≤ K − 1 (no law, no truth):
+-δ_n/(1 − δ_n) ≥ 𝒪^{lb}_n = Σ_{j≥1} C(s₀+j, j) n^{−j/2} Π_{i<j}(p−s₀−i)/(2p−1−s₀−i) ≥ c(p, s₀)/√n,
++δ_n/(1 − δ_n) ≥ 𝒪^{lb}_n = Σ_{j=1}^{K−s₀} C(s₀+j, j) n^{−j/2} Π_{i<j}(p−s₀−i)/(2p−1−s₀−i) ≥ c(p, s₀)/√n,
+ c(p, s₀) = (s₀+1)(p−s₀)/(2p−1−s₀) ≥ (s₀+1)/3 for s₀ ≤ p/2 (and c/(s₀+1) → ½ when p → ∞, s₀/p → 0). Consequences,
+ **for sequences with s₀ ≤ min(K − 1, p/2)**:
+ - π(S₀) ≤ [1 + (s₀+1)/(3√n)]⁻¹ surely: **π(S₀) → 1 needs s₀ = o(√n)**; at s₀ ~ λ√n **with s₀/p → 0**,
+@@ -44,7 +44,7 @@ c(p, s₀) = (s₀+1)(p−s₀)/(2p−1−s₀) ≥ (s₀+1)/3 for s₀ ≤ p/2
+ - a rate δ_n = O_P(ρ_n) needs s₀ + 1 = O(√n ρ_n): the rate r_n needs s₀ = O(√log n) on every such design, and — by
+   (a) — **bounded s₀ on the witness designs with log p ≍ log n**.
+ - These consequences need s₀ ≤ p/2 (the multiplicity c(p, s₀) ≍ s₀ + 1): with p = s₀ + 1 there is a single superset,
+-  c = 1, and π(S₀) → 1 is possible with s₀ ~ √n; and without s₀/p → 0 the critical-scale limit is weaker (p = 2s₀:
++  c = 1, and π(S₀) → 1 is possible with s₀ ~ √n (heuristic, not proved here); and without s₀/p → 0 the critical-scale limit is weaker (p = 2s₀:
+   e^{−λ/3}). The inequality δ_n/(1 − δ_n) ≥ 𝒪^{lb}_n ≥ c(p, s₀)/√n itself holds for every 0 ≤ s₀ ≤ K − 1.
+ - **Target correction (for HQ; §4).** "Growing s₀ = o(log n/log log n)" (W3-POST REPORT §4 item 8) cannot keep the
+   rate r_n on the witness sequences with log p ≍ log n.
+@@ -71,7 +71,7 @@ suffices; so a large enough constant multiple of (log n)² already fails). Open:
+ | Line check KSA (Lemma V, S; Claim A) | gpt-6.1-sol high (codex), blind | both files **VERIFIED**; 0 FATAL / 0 MAJOR / 0 MINOR / 0 NIT | `reviews/KSA_check_sol.md` | none needed (`reviews/KSA_KBC_disposition.md`) |
+ | Line check KBC (Claims B, C) | gpt-6.1-sol high (codex), blind | B **VERIFIED**; C **VERIFIED-WITH-AMENDMENTS**; 0 / 0 / 3 MINOR / 1 NIT (commentary and one rounded number in C; no proof step) | `reviews/KBC_check_sol.md` | `reviews/KSA_KBC_disposition.md`: all applied → v1.2.1 |
+ | Citation check | `citecheck.py` (cited ranges and quoted output numbers) | 42 checks, 0 MISS | `reviews/CITECHECK.txt` | — |
+-| Council | seat sol: gpt-6.1-sol high (codex); seat opus: Claude Opus 5.5 high (claudeAgent); blind | recorded in `CHECKPOINT_2.md` (this file is inside the frozen manifest) | `reviews/R<k>_council_sol.md`, `reviews/R<k>_council_opus.md` | `CHECKPOINT_2.md` |
++| Council | seat sol: gpt-6.1-sol high (codex); seat opus: Claude Opus 5.5 high (claudeAgent); blind | recorded in `CHECKPOINT_3.md` (this file is inside the frozen manifest) | `reviews/R<k>_council_sol.md`, `reviews/R<k>_council_opus.md` | `CHECKPOINT_3.md` |
+ 
+ Layers used are those of the ticket brief (statement lock; numerics; break review; proofs; line checks; council).
+ No separate mid-point or exhaustive sweep was run: the brief defines CP2 as proofs + Sol checks + council for this
+@@ -86,7 +86,7 @@ re-read.
+ - **(a) orthogonal witness** — `a_orth.py` → `a_orth_out.txt`. Odds summed over |S| ≤ min(K, s₀ + 60) (s₀ + 80 in E2):
+   a lower bound for the full odds δ_n/(1−δ_n), before quadrature error. Computed by a Gamma-integral /
+   elementary-symmetric DP: an exact formula evaluated by quadrature, not a certified enclosure (brute-force agreement 1.4·10⁻¹³ at p ≤ 13; all
+-  sizes ≤ K against sizes ≤ s₀ + 60: 3·10⁻¹³). Median of these restricted odds/Λ_n: 1.2–1.5 at n = 100, falling to 1.003 (s₀ = 1) and
++  sizes ≤ K against sizes ≤ s₀ + 60: ≤ 3.5·10⁻¹³). Median of these restricted odds/Λ_n: 1.2–1.5 at n = 100, falling to 1.003 (s₀ = 1) and
+   1.007 (s₀ = 3) at n = 25600, p = n − 1; P(odds ≥ 0.75Λ_n) ≥ 0.93 in every row. Growing s₀ = n^{0.3} inside (E), (C):
+   1.26–1.37 (min 0.98).
+ - **(a) spherical witness, p ≫ n** — `a_sph.py` → `a_sph_out.txt`. One-step odds (closed form of Lemma S; a lower
+@@ -108,7 +108,7 @@ re-read.
+ 
+ | recorded item | now |
+ |---|---|
+-| W3-POST Theorem 1 item 7 / REPORT §4 item 10: "whether the extra √(log n) is attained for p = n^A is a conjecture" | **Settled (attained)** on the witness classes of Claim A, for every p = n^a, a > 0, with constant (s₀+1)√(a/π). Open: an upper bound √((1 ∨ log p)/n) when log p = o(log n). |
++| W3-POST Theorem 1 item 7 / REPORT §4 item 10: "whether the extra √(log n) is attained for p = n^A is a conjecture" | **Settled:** the √(log p) factor is present (lower bound, proved here) on the witness classes of Claim A, for every p = n^a, a > 0, with constant (s₀+1)√(a/π); the rate r_n is exact on the two sequences of Remark A3 (upper bound from W3-POST:Thm-1 / Cor-1R). Open: an upper bound √((1 ∨ log p)/n) when log p = o(log n). |
+ | W3-POST2 REPORT §6 item 6, first bullet: "does the √(log n) factor in E δ_n appear?" | **Yes** (lower bound, Corollary A1). |
+ | W3-POST REPORT §4 item 8: "Growing s₀ = o(log n/log log n). Risk medium" | **Correct the target**: with s₀ → ∞ and log p ≍ log n the rate r_n is impossible on the witness designs; aim at (s₀+1)√(log p/n) for s₀ = o(√(n/log p)); beyond s₀ ≍ √n, π(S₀) ↛ 1 on every design with s₀ ≤ min(K − 1, p/2), so only mode (HPM) consistency can be aimed at (TRIAGE T2(b)). |
+ | W3-POST:Prop-LB (δ ≥ 1/(1 + √(n+1)), 1 ≤ s₀) | Sharpened by Corollary B: n in place of n + 1; multiplicity kept; s₀ = 0 covered. |
+@@ -172,5 +172,5 @@ gates: correct:PENDING(reviews/BRIEF_R2_sol.md)
+ Notes for the ingest (HQ): the four claims are sharpness records (kind as above; `headline` no). Links to the
+ claims they sharpen: A → `W3-POST:Thm-1` (rate exact), `W3-POST2:C` (E δ_n); B → `W3-POST:Prop-LB`, `W3-POST2:A2`;
+ C → `W3-POST:Lemma-1a'`, `W3-POST2:B`. Proposed sharpness rows for those parents are in §4. The council record
+-(round, manifest digest, seats, scores) is in `CHECKPOINT_2.md`; the `council:` field and the `correct:` gate are to be
++(round, manifest digest, seats, scores) is in `CHECKPOINT_3.md`; the `council:` field and the `correct:` gate are to be
+ filled from it at CP3 (an editorial diff under rule 15), since this file is inside the frozen manifest.
+diff --git a/Theory_work/Wave3/W3-START2/REPORT.md b/Theory_work/Wave3/W3-START2/REPORT.md
+index cec962d..7da768e 100644
+--- a/Theory_work/Wave3/W3-START2/REPORT.md
++++ b/Theory_work/Wave3/W3-START2/REPORT.md
+@@ -20,12 +20,12 @@ In words (all four improvements proposed by the base ticket's better-theorem rev
+   **proper** subsets of the truth only. The term 15√(2/π)z_n/p of version 1.3.4 is gone. Reason: the at most 15 null
+   columns that can share a block with every truth have zero mean gain, and for a bounded number of standard normal
+   variables a fixed cut-off of the tail replaces the level z_n ≈ √(2 log p) (Lemma LEAK-0). Consequence: the
+-  strong-signal corollary F2 needs no growth condition on p; for bounded p > s₀ the order n^{−1/2} is exact.
++  strong-signal corollary F2 needs no growth condition on p; for bounded p > s₀ the order n^{−1/2} is exact when η′ = 0 and κ_V > ½ (F2⁺).
+ * **P2 — overlap under either visibility condition.** The lower bound π₀(S₀) ≥ n^{−E_n−ε} for a bounded leakage set
+   holds under the margin form (V-m) as well as under (V-c), by the exact identity
+   1/π₀(S₀) = [Σ_{T∈𝓛(Q)}γ₀(T)/γ₀(S₀)]/π₀(𝓛(Q)) and the lattice clause of Theorem START-F.
+ * **P3 — a partition-free leaking-null limit that is not vacuous.** For 1 ≤ s₀ ≤ 15: if 17 − s₀ null columns each gain
+-  more than (1 + 2Ā)·τ²_V·log n on every proper subset V of the truth, then π₀(S₀) → 0 at a polynomial rate, whatever
++  at least c·τ²_V·log n, with a fixed c > 1 + 2Ā, on every proper subset V of the truth, then π₀(S₀) → 0 at a polynomial rate, whatever
+   the partition. A design satisfying the premise is given for every s₀ ∈ {1, …, 15}.
+ * **P4 — leakage sets of any size ≤ K under Gaussian rows.** P(1 − π₀(𝓛(Q)) ≤ (|Q| + 1)·n^{−1/2}·e^{C_R√log n}) → 1 with no
+   restriction on |Q| beyond |Q| ≤ K; the bound is informative up to |Q| = n^{1/2−ε}. Only the reference sets H_l stay
+@@ -86,7 +86,7 @@ W3-START:LEAK stays in use for U_Q.
+ 
+ | item | reading | evidence |
+ |---|---|---|
+-| leading rate n^{−1/2}·𝔏^♯_n(h) | sharp in order when 𝔏^♯_n(h) = O(1): o₀ ≥ T₁ ≥ ½(n + 1)^{−1/2} on every data set (T0), and 𝔏^♯_n(h) ≥ (p − s₀)/(4p) | `lemmas/P1_LEADING.md` P1.1, P1.6(v) |
++| leading rate n^{−1/2}·𝔏^♯_n(h) | the leading contribution is sharp in order when 𝔏^♯_n(h) = O(1): o₀ ≥ T₁ ≥ ½(n + 1)^{−1/2} on every data set (T0), and 𝔏^♯_n(h) ≥ (p − s₀)/(4p); exact order of the full odds o₀ needs the remainder conditions of F2⁺ (η′ = 0, κ_V > ½; P1.6(v)) | `lemmas/P1_LEADING.md` P1.1, P1.6(v) |
+ | ε-dependent constant in (T1⁺)(d) | NECESSARY-FOR-ROUTE: the cut-off for the exceptional columns grows as the allowed failure probability decreases; exp(Z²/2) has infinite expectation | `lemmas/P1_LEADING.md` P1.3, Remarks |
+ | s₀ = 0 keeps 𝔏⁰_n(h) | NECESSARY-FOR-ROUTE: every null is exceptional and there are p of them | `lemmas/P1_LEADING.md` P1.3, Remark (4) |
+ | visibility in OVL⁺ | used only for π₀(𝓛(Q)) → 1 | `lemmas/P2_OVL.md` P2.2, P2.3 |

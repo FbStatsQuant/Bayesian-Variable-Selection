@@ -742,6 +742,29 @@ def status_token(status: str) -> str:
     return m.group(0) if m else ""
 
 
+_CODE_CHECKED = re.compile(r"^CODE-CHECKED(?![\w-])")
+
+
+def carrier_checked(row: dict) -> bool:
+    """HQ 11-16 (task W): an IMPLEMENTATION row whose status is CODE-CHECKED counts as checked ONLY when it is accepted
+    through an HQ carrier: its status source is a CHECKPOINT_<k>.md and it has a council record. A4 then checks that
+    council on the row itself (manifest, seats, per-claim ACCEPT, checkpoint route), and A5 requires its accept record
+    from every consumer that uses it through a statement / proof edge. Used @hyp it stays a condition (weak_or_invalid
+    keeps status_strength). Nothing else about CODE-CHECKED changes (not checked in general)."""
+    if row.get("kind") != "implementation" or not _CODE_CHECKED.match(_norm_status(row.get("status", ""))):
+        return False
+    if not (row.get("council") or "").strip():
+        return False
+    # the status source must be the row's OWN ticket's CHECKPOINT_<k>.md (the carrier sits in the row's ticket)
+    return bool(own_checkpoint(row, ticket_folders().get(row.get("ticket", ""), "")))
+
+
+def row_strength(row: dict):
+    """status_strength of a row's status, plus the carrier rule for CODE-CHECKED implementation rows (carrier_checked)."""
+    s = status_strength(row.get("status", ""))
+    return 3 if s is None and carrier_checked(row) else s
+
+
 def status_strength(status: str):
     s = _norm_status(status)
     if not s:
@@ -1714,7 +1737,12 @@ def manifest_tool():
 
 def ticket_dir(row: dict, folder: str = "") -> str:
     """The ticket folder whose reviews/MANIFEST_*.txt holds a claim's council manifest: tickets.tsv `folder`, else the
-    folder of the claim's statement file."""
+    folder of the claim's statement file. An EXTERNAL row (no tickets.tsv folder) whose status is carried by a council
+    CHECKPOINT and which has a council record: the folder of that checkpoint (the HQ carrier's ticket; task T, 2026-11-16)."""
+    if not folder and row.get("kind") == "external" and (row.get("council") or "").strip():
+        raw = (row.get("status_source", "") or "").rpartition(":")[0]
+        if raw and _CKPT_NAME.match(os.path.basename(raw)):
+            return _pkey(os.path.dirname(raw))
     return _pkey(folder or os.path.dirname(row.get("file", "")) or "")
 
 
@@ -1893,7 +1921,15 @@ def _digest(lines) -> str:
     return hashlib.sha256("\n".join(lines).encode("utf-8", errors="replace")).hexdigest()
 
 
-def accept_artifacts(row: dict, folder: str = "") -> list[str]:
+def _akey(relpath: str, fold: bool = False) -> str:
+    """Path as written into the acceptance identity: case-preserving `_pkey` on every platform (INFRA J, 2026-11-15:
+    `_pcase` folded case on Windows only, so the same claim had two identities). `fold=True` reproduces the legacy
+    Windows identity, used only to MATCH records written before the fix (accept_stamp_matches), never to write one."""
+    k = _pkey(relpath)
+    return k.lower() if fold else k
+
+
+def accept_artifacts(row: dict, folder: str = "", fold: bool = False) -> list[str]:
     """The artifacts a claim's acceptance rests on, each as `<reference> -> <repo path>[@pin] <content digest>` (or
     `<reference> MISSING`): every gate evidence reference (whatever the result), every council seat's review file and
     each `<ticket>/reviews/MANIFEST_*.txt` whose header is the council digest."""
@@ -1915,7 +1951,7 @@ def accept_artifacts(row: dict, folder: str = "") -> list[str]:
                 out.add(f"{tok} MISSING")
                 continue
             lines = read_lines_at(path, pin) if pin else read_lines(path)
-            out.add(f"{tok} -> {_pcase(path)}{'@' + pin if pin else ''} "
+            out.add(f"{tok} -> {_akey(path, fold)}{'@' + pin if pin else ''} "
                     + (_digest(lines) if lines is not None else "UNREADABLE"))
     d = ticket_dir(row, folder)
     for dg in mans:
@@ -1925,14 +1961,14 @@ def accept_artifacts(row: dict, folder: str = "") -> list[str]:
                 rel = os.path.relpath(mp, ROOT).replace(os.sep, "/")
                 lines = read_lines(rel)
                 if lines and lines[0].strip() == f"MANIFEST {dg}":
-                    out.add(f"MANIFEST {dg} -> {_pcase(rel)} {_digest(lines)}")
+                    out.add(f"MANIFEST {dg} -> {_akey(rel, fold)} {_digest(lines)}")
                     hit = True
         if not hit:
             out.add(f"MANIFEST {dg} MISSING")
     return sorted(out)
 
 
-def accept_identity(cid: str, by: dict, g, aliases: dict, folders: dict | None = None) -> list[str]:
+def accept_identity(cid: str, by: dict, g, aliases: dict, folders: dict | None = None, fold: bool = False) -> list[str]:
     """The acceptance identity of a claim (see above) as a list of lines; accept_stamp fingerprints it."""
     row = by[cid]
     folders = ticket_folders() if folders is None else folders
@@ -1944,15 +1980,23 @@ def accept_identity(cid: str, by: dict, g, aliases: dict, folders: dict | None =
         tr = by.get(t, {})
         ident.append(f"input={t}@{','.join(sorted(g.uses[(cid, t)]))} v{tr.get('version', '')} "
                      f"{tr.get('sha256', '')} {tr.get('status', '')}")
-    ident += [f"artifact={a}" for a in accept_artifacts(row, folder)]
+    ident += [f"artifact={a}" for a in accept_artifacts(row, folder, fold)]
     return ident
 
 
-def accept_stamp(cid: str, by: dict, g, aliases: dict, folders: dict | None = None) -> str:
+def accept_stamp(cid: str, by: dict, g, aliases: dict, folders: dict | None = None, fold: bool = False) -> str:
     """`v<version> fp2:<24 hex>`: what an accept event records. The fingerprint covers the whole acceptance identity
     (row fields, ticket folder, effective inputs, names, artifact contents), so ANY later change makes it stale."""
-    fp = hashlib.sha256("\x1f".join(accept_identity(cid, by, g, aliases, folders)).encode()).hexdigest()[:24]
+    fp = hashlib.sha256("\x1f".join(accept_identity(cid, by, g, aliases, folders, fold)).encode()).hexdigest()[:24]
     return f"v{by[cid].get('version', '')} {ACCEPT_FORMAT}:{fp}"
+
+
+def accept_stamp_matches(cid: str, by: dict, g, aliases: dict, have: set, folders: dict | None = None) -> bool:
+    """True if a recorded accept event matches the claim's CURRENT identity: the case-preserving stamp (every record
+    written from INFRA J on), or the legacy Windows-folded stamp of a record written on Windows before the fix."""
+    if accept_stamp(cid, by, g, aliases, folders) in have:
+        return True
+    return accept_stamp(cid, by, g, aliases, folders, fold=True) in have
 
 
 def accept_records() -> dict[str, set]:
@@ -2076,12 +2120,12 @@ def unaccepted_inputs(cid: str, by: dict, g, aliases: dict, now: set, records=No
             seen.add(d)
             q.append((d, path + [d]))
             dr = by[d]
-            if dr.get("state") not in VALID or status_strength(dr.get("status", "")) != 3 or d in now:
+            if dr.get("state") not in VALID or row_strength(dr) != 3 or d in now:
                 continue
             if (d, dr.get("version", ""), dr.get("sha256", "")) in legacy:
                 continue
             have = records.get(d, set())
-            if accept_stamp(d, by, g, aliases, folders) in have:
+            if accept_stamp_matches(d, by, g, aliases, have, folders):
                 probs = revalidate(d) if revalidate else []
                 if probs:
                     out.append((d, path + [d], "its accept record matches, but it no longer passes acceptance on the "
@@ -2133,7 +2177,7 @@ def conditional_on(status: str, names) -> str | None:
 
 def weak_or_invalid(dr: dict) -> bool:
     """An @hyp input needs the conditional-result treatment if it is below checked assurance or not ACTIVE."""
-    s = status_strength(dr.get("status", ""))
+    s = status_strength(dr.get("status", ""))   # NOT row_strength: a declared @hyp condition stays a condition (fail-closed)
     return (s != 3 and s != "NEG") or dr.get("state") != "ACTIVE"
 
 

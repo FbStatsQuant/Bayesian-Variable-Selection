@@ -29,6 +29,35 @@ try:
     R = importlib.util.module_from_spec(_spec)
     _spec.loader.exec_module(R)
     assert os.path.normcase(R.ROOT) == os.path.normcase(os.path.abspath(TMP)), (R.ROOT, TMP)
+    # Fixture normalisation (SANDBOX COPY ONLY; task W, 2026-11-16): the legacy scenarios below use live rows
+    # (W2-FAC-A:Thm-FAC-L, W2-FAC-B:Thm-FAC-CS, W2-UNI:UNI-1, ...) as fixtures and assume them ACTIVE. The 2026-11-16
+    # correctness events (tasks S1-S3: F-UNI and the 17 every-n delivery claims, with their cascade) made them SUSPECT /
+    # NARROWED in the live registry. Put the rows those events touched back to their prior state in the sandbox, so the
+    # scenarios test the tools, not today's registry state. The live registry is never touched.
+    # pinned to the live rows the legacy scenarios use as fixtures and everything they walk through (their transitive
+    # dependents and inputs), not to a date, so a later correctness event on another date cannot break them
+    _FIXTURE = {"W2-FAC-A:Thm-FAC-L", "W2-FAC-B:Thm-FAC-CS", "W2-UNI:UNI-1"}
+    _fx = R.load_claims()
+    _gx = R.Graph(_fx)
+    _near = set(_FIXTURE)
+    for _f in _FIXTURE:
+        _near |= set(_gx.dependents(_f))
+        _st, _seen = [_f], set()
+        while _st:
+            _u = _st.pop()
+            for _d in _gx.deps.get(_u, []):
+                if _d not in _seen:
+                    _seen.add(_d)
+                    _st.append(_d)
+        _near |= _seen
+    _fx_n = 0
+    for _r in _fx:
+        if _r["id"] in _near and _r["state"] in ("SUSPECT", "NARROWED", "REBASE-NEEDED"):
+            _r["state"] = "SUPERSEDED-VALID" if (_r.get("superseded_by") or "").strip() else "ACTIVE"
+            _r["state_reason"] = "test fixture: restored in the sandbox (legacy scenarios assume these rows valid)"
+            _fx_n += 1
+    R.save_claims(_fx)
+    print(f"fixture normalisation (sandbox only): {_fx_n} rows restored")
 
     def run(*a, ok=True):
         extra = ["--apply"] if a[0] == "propagate.py" else []
@@ -1966,6 +1995,200 @@ try:
         on_disk = os.listdir(os.path.join(INFRA, "paper", "generated", "blocks"))
         results.append(("assemble writes one distinct block file per selected claim (no overwrite)",
                         rc_a == 0 and len(files_a) == len(set(files_a)) == len(on_disk) > 0))
+
+    if True:  # assemble.py headline candidates (HQ 2026-11-15, v4 §7): candidates get a labelled block
+        rows_hc = R.load_claims()
+        if not any(r.get("headline") == "yes" for r in rows_hc):  # after the 44-flag clear: flag one row here
+            first = next(r for r in rows_hc if r["state"] == "ACTIVE")
+            run("registry.py", "set", first["id"], "headline=yes", "--reason", "test")
+            rows_hc = R.load_claims()
+        hl = next(r for r in rows_hc if r.get("headline") == "yes")
+        nonhl = next(r for r in rows_hc if r.get("headline") != "yes" and r["state"] == "ACTIVE"
+                     and r["id"] != hl["id"])
+        hc_path = os.path.join(INFRA, "registry", "HEADLINE_CANDIDATES.md")
+        with open(hc_path, "w", encoding="utf-8") as fh_:
+            fh_.write("# test\n\n| id@version | x |\n|---|---|\n"
+                      f"| {nonhl['id']}@{nonhl['version']} | candidate |\n| {hl['id']}@{hl['version']} | flagged |\n")
+        rc_h = subprocess.run([sys.executable, os.path.join(INFRA, "tools", "assemble.py")], capture_output=True,
+                              text=True, encoding="utf-8", errors="replace", cwd=TMP).returncode
+        man_h = open(os.path.join(INFRA, "paper", "generated", "MANIFEST.txt"), encoding="utf-8").read().splitlines()[1:]
+        blk = {ln.split("\t")[0]: ln.split("\t")[1] for ln in man_h if ln.strip()}
+        txt = lambda cid: open(os.path.join(INFRA, "paper", "generated", blk[cid]), encoding="utf-8").read()  # noqa: E731
+        lab = "headline admission pending (strength gates)"
+        results.append(("assemble: a non-headline row listed in HEADLINE_CANDIDATES.md gets a block with the visible "
+                        "label 'headline admission pending (strength gates)'; a headline=yes row listed there gets no "
+                        "label", rc_h == 0 and nonhl["id"] in blk and lab in txt(nonhl["id"])
+                        and hl["id"] in blk and lab not in txt(hl["id"])))
+        os.remove(hc_path)
+
+    if True:  # INFRA J (2026-11-15): the accept identity must not depend on the platform (+ Opus CR NB-1, NB-2)
+        rows_j = R.load_claims(); by_j = R.index(rows_j); g_j = R.Graph(rows_j); al_j = R.load_aliases()
+        rec_j = R.accept_records(); leg_j = R.legacy_boundary()[0]
+
+        def consumer_of(c):  # a direct dependent whose edge to c is not a declared @hyp condition (A5 examines c)
+            for d, pth in g_j.dependents(c).items():
+                if len(pth) == 2 and "hyp" not in g_j.uses.get((d, c), set()):
+                    return d
+            return None
+        cand_j = [r["id"] for r in rows_j if rec_j.get(r["id"]) and r.get("council") and r["state"] == "ACTIVE"
+                  and R.status_strength(r.get("status", "")) == 3
+                  and (r["id"], r.get("version", ""), r.get("sha256", "")) not in leg_j]
+        cid_j = next(c for c in cand_j if consumer_of(c) and R.accept_stamp(c, by_j, g_j, al_j)
+                     != R.accept_stamp(c, by_j, g_j, al_j, fold=True))
+        cons_j = consumer_of(cid_j)
+        folded = R.accept_stamp(cid_j, by_j, g_j, al_j, fold=True)
+        plain = R.accept_stamp(cid_j, by_j, g_j, al_j)
+        ev = os.path.join(INFRA, "registry", "events.log")
+
+        def set_records(stamps):  # replace cid_j's accept events by the given stamps
+            keep = [ln for ln in open(ev, encoding="utf-8").read().splitlines()
+                    if not (ln.split("\t")[2:3] == ["accept"] and ln.split("\t")[3:4] == [cid_j])]
+            keep += ["\t".join(["2026-11-12T00:00:00Z", "TEST", "accept", cid_j, "", s_, "test record"]) for s_ in stamps]
+            open(ev, "w", encoding="utf-8", newline="\n").write("\n".join(keep) + "\n")
+
+        def a5_flags():  # does the consumer's A5 flag cid_j?
+            return any(x[0] == cid_j for x in R.unaccepted_inputs(cons_j, by_j, g_j, al_j, set(), R.accept_records(),
+                                                                   leg_j, None))
+        # 1. a record written on Windows (case-folded artifact paths) matches on Linux
+        ok_legacy = R.accept_stamp_matches(cid_j, by_j, g_j, al_j, {folded}) and \
+            R.accept_stamp_matches(cid_j, by_j, g_j, al_j, {plain}) and \
+            not R.accept_stamp_matches(cid_j, by_j, g_j, al_j, {"v0.0.0 fp2:000000000000000000000000"})
+        # 2. (NB-2, non-vacuous) the consumer's A5 flags cid_j with no record, and accepts the folded record alone
+        set_records([])
+        a5_control = a5_flags()
+        set_records([folded])
+        a5_ok = a5_control and not a5_flags()
+        # NB-1: a folded legacy record does NOT match once a cited artifact's content changed (direct and via A5)
+        art = next(a.split(" -> ", 1)[1].rsplit(" ", 1)[0] for a in R.accept_artifacts(by_j[cid_j],
+                   R.ticket_folders().get(by_j[cid_j]["ticket"], "")) if " -> " in a)
+        art_path = os.path.join(TMP, art.split("@")[0])
+        orig_art = open(art_path, "rb").read()
+        open(art_path, "ab").write(b"\nedited after acceptance (test)\n")
+        nb1 = (not R.accept_stamp_matches(cid_j, by_j, g_j, al_j, {folded})) and a5_flags()
+        open(art_path, "wb").write(orig_art)
+        nb1 = nb1 and R.accept_stamp_matches(cid_j, by_j, g_j, al_j, {folded})  # restored -> matches again
+        # 3. a new record is case-preserving (the stamp check.py --record writes)
+        rc_r = subprocess.run([sys.executable, os.path.join(INFRA, "tools", "check.py"), "--acceptance", cid_j,
+                               "--record"], capture_output=True, text=True, encoding="utf-8", errors="replace",
+                              cwd=TMP).returncode
+        last = [ln.split("\t")[5] for ln in open(ev, encoding="utf-8").read().splitlines()
+                if ln.split("\t")[2:4] == ["accept", cid_j]][-1]
+        results.append((f"INFRA J: accept identity is platform-independent ({cid_j}, consumer {cons_j}): a record "
+                        "written with Windows-folded artifact paths matches on Linux, directly and through the "
+                        "consumer's A5 (which flags the claim when it has no record), and a new --record writes the "
+                        "case-preserving stamp", ok_legacy and a5_ok and rc_r == 0 and last == plain and plain != folded))
+        results.append((f"INFRA J (CR NB-1): a folded legacy record of {cid_j} does NOT match once a cited artifact "
+                        f"({art}) changed, directly and through the consumer's A5; restoring the file restores the match",
+                        nb1))
+
+        # ---------------- task T (HQ 11-16): an EXTERNAL row accepted through an HQ carrier checkpoint ----------------
+        # bvsreg.ticket_dir: for an external row (no tickets.tsv folder) with a council record whose status source is a
+        # CHECKPOINT_<k>.md, A4's ticket folder is that checkpoint's folder (the carrier's ticket), where the frozen
+        # manifest and the seat reviews are; before the fix it was the statement file's folder. Other rows: unchanged.
+        TX = "Theory_work/WaveT/EXTT"
+        STX = "PROVED-CHECKED (external anchor; council R1)"
+        put(f"{TX}/STATEMENT.md", "Theorem TX. T holds.\n")
+        put(f"{TX}/sources/row.tsv", "TX9\tTheorem TX\tsupp-card\tT holds.\n")
+        put(f"{TX}/CHECKPOINT_4.md", f"# EXTT carrier\n\n{STX}\n")
+        put(f"{TX}/LOG.md", f"# EXTT log\n\n{STX}\n")
+        os.makedirs(os.path.join(TMP, TX, "reviews"), exist_ok=True)
+        man("freeze", TX, f"{TX}/reviews/MANIFEST_R1.txt")
+        dgX = open(os.path.join(TMP, TX, "reviews", "MANIFEST_R1.txt"), encoding="utf-8").readline().split()[1]
+        for seat_ in ("sol", "opus"):
+            put(f"{TX}/reviews/R1_council_{seat_}.md", f"Council R1 ({seat_}).\n\n| id | decision |\n|---|---|\n"
+                "| SOP:TX9 | ACCEPT |\n\n" + vline(dgX, seat_))
+        cellX = f"R1; MANIFEST {dgX}; sol=8.5 PASS(reviews/R1_council_sol.md); opus=8.5 PASS(reviews/R1_council_opus.md)"
+        run("registry.py", "add", "SOP:TX9", "--file", f"{TX}/sources/row.tsv", "--lines", "1-1", "--kind", "external",
+            "--name", "TX", "--status", STX, "--source", f"{TX}/CHECKPOINT_4.md:3", "--reason", "t")
+        run("registry.py", "set", "SOP:TX9", f"council={cellX}",
+            f"gates=correct:PASS({TX}/reviews/R1_council_sol.md, {TX}/reviews/R1_council_opus.md)", "--reason", "t")
+        tdir_ok = R.ticket_dir(R.index(R.load_claims())["SOP:TX9"]) == TX
+        e_ok = acc_errs("SOP:TX9")
+        # the status moved to a non-checkpoint file: the old rule (statement file's folder) -> no manifest there -> A4
+        run("registry.py", "correct-status", "SOP:TX9", "--status", STX, "--source", f"{TX}/LOG.md:3", "--reason", "t")
+        e_log = acc_errs("SOP:TX9")
+        tdir_log = R.ticket_dir(R.index(R.load_claims())["SOP:TX9"]) == f"{TX}/sources"
+        run("registry.py", "correct-status", "SOP:TX9", "--status", STX, "--source", f"{TX}/CHECKPOINT_4.md:3", "--reason", "t")
+        # a non-external row in the same arrangement keeps the old rule -> A4
+        run("registry.py", "set", "SOP:TX9", "kind=theorem", "--reason", "t")
+        e_kind = acc_errs("SOP:TX9")
+        tdir_kind = R.ticket_dir(R.index(R.load_claims())["SOP:TX9"]) == f"{TX}/sources"
+        run("registry.py", "set", "SOP:TX9", "kind=external", "--reason", "t")
+        e_back = acc_errs("SOP:TX9")
+        results.append(("task T: an external row with a council record and a CHECKPOINT status source is checked "
+                        "against its carrier ticket's manifest and seats (A4 passes); with a non-checkpoint status "
+                        "source, or as a non-external row, the statement file's folder is used (A4 refuses); restored "
+                        "-> passes again",
+                        tdir_ok and not e_ok and tdir_log and tdir_kind and "A4-council" in {f[1] for f in e_log}
+                        and "A4-council" in {f[1] for f in e_kind} and not e_back))
+
+        # ---------------- task W (HQ 11-16): CODE-CHECKED implementation rows count as checked ONLY via an HQ carrier --
+        # bvsreg.row_strength / carrier_checked: an implementation row whose status is CODE-CHECKED is checked only with a
+        # CHECKPOINT status source AND a council record; A4 then checks that council on the row itself and A5 requires
+        # its accept record from every consumer. Without the carrier (or as another kind) it stays below checked (A3).
+        TC = "Theory_work/WaveT/CCT"
+        SCC = "CODE-CHECKED (test carrier; council R1)"
+        put(f"{TC}/STATEMENT.md", "Lemma CC. The code does X.\nTheorem Y. Y holds, using Lemma CC.\n")
+        put(f"{TC}/CHECKPOINT_4.md", f"# CCT carrier\n\n{SCC}\n")
+        put(f"{TC}/LOG.md", f"# CCT log\n\n{SCC}\nPROVED-CHECKED\n")
+        os.makedirs(os.path.join(TMP, TC, "reviews"), exist_ok=True)
+        man("freeze", TC, f"{TC}/reviews/MANIFEST_R1.txt")
+        dgC = open(os.path.join(TMP, TC, "reviews", "MANIFEST_R1.txt"), encoding="utf-8").readline().split()[1]
+        for seat_ in ("sol", "opus"):
+            put(f"{TC}/reviews/R1_council_{seat_}.md", f"Council R1 ({seat_}).\n\n| id | decision |\n|---|---|\n"
+                "| TCC:CC | ACCEPT |\n\n" + vline(dgC, seat_))
+        cellC = f"R1; MANIFEST {dgC}; sol=8.5 PASS(reviews/R1_council_sol.md); opus=8.5 PASS(reviews/R1_council_opus.md)"
+        run("registry.py", "add", "TCC:CC", "--file", f"{TC}/STATEMENT.md", "--lines", "1-1", "--kind", "implementation",
+            "--name", "Lemma CC", "--status", SCC, "--source", f"{TC}/LOG.md:3", "--reason", "t")
+        run("registry.py", "add", "TCC:Y", "--file", f"{TC}/STATEMENT.md", "--lines", "2-2", "--kind", "theorem",
+            "--name", "Theorem Y", "--status", "PROVED-CHECKED", "--source", f"{TC}/LOG.md:4",
+            "--field", "depends_on=TCC:CC@stmt", "--reason", "t")
+
+        def cc_errs():
+            return {f[1] for f in acc_errs("TCC:Y") if "TCC:CC" in f[3] and f[1] in ("A3-assurance", "A5-accepted")}
+        e_plain = cc_errs()                                   # no carrier: CODE-CHECKED is below checked -> A3
+        run("registry.py", "correct-status", "TCC:CC", "--status", SCC, "--source", f"{TC}/CHECKPOINT_4.md:3", "--reason", "t")
+        run("registry.py", "set", "TCC:CC", f"council={cellC}",
+            f"gates=correct:PASS({TC}/reviews/R1_council_sol.md, {TC}/reviews/R1_council_opus.md)", "--reason", "t")
+        e_norec = cc_errs()                                   # carrier, no accept record yet -> A5 (no A3)
+        rc_cc, _ = tool("check.py", "--acceptance", "TCC:CC", "--record")
+        e_acc = cc_errs()                                     # accepted through the carrier -> clean
+        run("registry.py", "set", "TCC:CC", "kind=lemma", "--reason", "t")
+        e_kind_cc = cc_errs()                                 # the rule is for implementation rows only -> A3
+        run("registry.py", "set", "TCC:CC", "kind=implementation", "--reason", "t")
+        # an invalid council cell on the carrier route (run BEFORE any covered file changes, so the manifest still
+        # verifies and the refusal is the council's): counted checked for A3, but A4 refuses CC itself on the council
+        # cell, so the consumer's A5 refuses (no valid accept record can exist); restored afterwards
+        run("registry.py", "set", "TCC:CC", "council=R1; MANIFEST " + "0" * 64 + "; sol=9 PASS(x.md); opus=9 PASS(y.md)",
+            "--reason", "t")
+        rc_bad, out_bad = tool("check.py", "--acceptance", "TCC:CC", "--record")
+        bad_is_council = "A4-council" in out_bad and "fails on the current tree" not in out_bad
+        e_badcouncil = cc_errs()
+        run("registry.py", "set", "TCC:CC", f"council={cellC}", "--reason", "t")
+        # Opus W review: used @hyp with a 'conditional on' status, CC stays a CONDITION even through the carrier route:
+        # a descendant E of Y with an unconditional checked status must carry it (A3-condition)
+        put(f"{TC}/STATEMENT.md", "Lemma CC. The code does X.\nTheorem Y. Y holds, using Lemma CC.\n"
+            "Theorem Z. Assume Lemma CC. Then Z.\nTheorem E. E holds, using Theorem Z.\n")
+        put(f"{TC}/LOG.md", f"# CCT log\n\n{SCC}\nPROVED-CHECKED\nPROVED-CHECKED, conditional on Lemma CC\n")
+        run("registry.py", "add", "TCC:Z", "--file", f"{TC}/STATEMENT.md", "--lines", "3-3", "--kind", "theorem",
+            "--name", "Theorem Z", "--status", "PROVED-CHECKED, conditional on Lemma CC", "--source", f"{TC}/LOG.md:5",
+            "--field", "depends_on=TCC:CC@hyp", "--reason", "t")
+        run("registry.py", "add", "TCC:E", "--file", f"{TC}/STATEMENT.md", "--lines", "4-4", "--kind", "theorem",
+            "--name", "Theorem E", "--status", "PROVED-CHECKED", "--source", f"{TC}/LOG.md:4",
+            "--field", "depends_on=TCC:Z@stmt", "--reason", "t")
+        e_hyp = {f[1] for f in acc_errs("TCC:E") if "TCC:CC" in f[3]}
+        run("registry.py", "set", "TCC:CC", "council=", "--reason", "t")
+        e_nocouncil = cc_errs()                               # carrier source but no council record -> A3
+        results.append(("task W: a CODE-CHECKED implementation row is below checked without an HQ carrier (consumer "
+                        "A3); with a CHECKPOINT status source and a council record it counts as checked, so the "
+                        "consumer needs its accept record (A5) until it is accepted (clean); as another kind, or "
+                        "without a council record, it is below checked again (A3)",
+                        e_plain == {"A3-assurance"} and e_norec == {"A5-accepted"} and rc_cc == 0 and not e_acc
+                        and e_kind_cc == {"A3-assurance"} and e_nocouncil == {"A3-assurance"}))
+        results.append(("task W (Opus review): used @hyp under a 'conditional on' status, a carrier-route CODE-CHECKED row "
+                        "stays a condition (an unconditional descendant gets A3-condition); with an invalid council cell "
+                        "its own acceptance is refused (A4) and the consumer is refused (A5)",
+                        "A3-condition" in e_hyp and rc_bad != 0 and bad_is_council and e_badcouncil == {"A5-accepted"}))
 
 finally:
     SB.__exit__(None, None, None)
