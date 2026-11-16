@@ -52,6 +52,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | SL0 PC check (RUNNING, pre-freeze per HQ) | C-PACK:SL0: diff check of the 5 files changed since the C1 snapshot → record SL0 → drop SL0 from 11 conditional statuses | D48 |
 | accept-identity follow-ups | NB-3 sunset of the legacy Windows fallback; NB-4 compute identity once | CR_accept_identity_opus.md |
 | Cont-R TH05.0 condition | Cont-R still lists SOP:TH05.0 (inherited via the removed RM-R edge); drop via a new full RM2 checkpoint | recorder note 11-16; HQ 11-16: conservative (extra condition only), post-freeze package together with TH05.0's own acceptance |
+| Format package: sweep interpretive sentences in registered spans | D71: every 'hence/reading/this means' inside a registered span → move out or check as claim | HQ/consultant 11-16 |
 | MISR-R REPORT §3 DIST note → W3-DIST lead | HEURISTIC/OPEN note (`W3-MISR-R/REPORT.md` §3) as input only; hand over **after the DIST R1 freeze** (HQ 11-16) | HQ 11-16 |
 | MISR-R E1–E6 | ERRATA.md of W3-MISR-R → post-freeze editorial batch | HQ 11-16 |
 | MISR-R supersession + thm4 reader swap | card 10 AGREED: supersessions staged in task Q (Cor-H clauses a–b only, KL tombstone); thm4 v0.4 (retitle, honest limit, 1.2 vs 1.4 sentence) by MISR-R lead → diff to HQ | HQ 11-16 |

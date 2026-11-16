@@ -17,6 +17,11 @@ On top of: `Theory_work/Wave3/PROTOCOL_v4.md` (H1–H6), `Theory_work/Wave3/PROG
   (new claim ⇒ parent claim, one line of why). It asserts no proof status. Claim ids are new (`<TICKET>:<name>`);
   the recorder registers them with `implies` edges to the parents; supersession of headline rows goes through HQ and
   the HQ consultant (v4 H5), not you.
+- **Interpretive sentences (HQ/consultant rule, 11-16).** A "hence …", "this means …", "reading" or "interpretation" sentence
+  inside a registered statement span is either moved out of the span (a remark below it, not registered) or stated and
+  checked as a claim, with a reviewer seat asked about it by name. Both council seats passed a false one (W3-MISR
+  STATEMENT:191-195, KL reading with a random intercept). Council briefs ask each seat to list every such sentence in
+  the claimed spans and give each a verdict.
 - New proofs go in new files under `lemmas/`. Where you reuse a parent lemma unchanged, cite it (`file:line`, the
   registered id and version). Where you change a step, copy the lemma into your folder, mark the changed lines
   `[R-#]`, and that copy is what gets line-checked.
