@@ -558,8 +558,10 @@ conditions.
   variance bound; omitted Gaussian predictors as the Example; Hellinger/KL remark; non-implication note on Theorem 2;
   honest limits; masters CorGb-plus, CorG-min, CorH-plus, CorH-U (STRONGER: weaker hypotheses, same conclusion).
 - S4 tag record 2026-11-16 [S4-S3]: v0.5 is EQUAL to its delta (W3-MISR-R v0.4). Against the S3 text: STRONGER for the main
-  theorem (weaker hypotheses (A0), (A2), (A3); the same two displayed conclusions); the Hellinger/KL remark, the
-  fixed-design selection-only and uniform forms and the examples are new (STRONGER) statements.
+  theorem (weaker model assumption (A0) and floor (A2); (A3) unchanged; the same two displayed conclusions) [S5-N1]; the
+  Hellinger/KL remark and the fixed-design selection-only and uniform forms are new (STRONGER) statements; in the
+  Example, the jointly Gaussian case with invertible $\Sigma_{\mathcal C\mathcal C}$ was already present, and the
+  pseudoinverse and linear-plus-noise cases are the new (STRONGER) scope.
 <!-- ROW thm4 END -->
 
 ---

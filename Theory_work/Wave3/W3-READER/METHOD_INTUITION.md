@@ -78,8 +78,10 @@ found until it stops changing; if diagnostics fail, the whole calibration is rep
 If no acceptable ladder is built, the pilot's own ladder is used, so the run always proceeds. *Problems solved:* the
 ladder is fitted to this data set, and it is **frozen before the final run draws any random number**, so the final run
 is a standard SMC sampler with a fixed schedule — this is what makes its evidence estimate unbiased and its outputs
-analysable. Together with the fallback ladder, freezing guarantees that a run with enough computing allocation always produces
-output (the delivery result used in Theorems 6–7).
+analysable. Together with the fallback ladder, freezing is what lets a run with enough computing allocation produce output (the
+delivery result used in Theorems 6–7): under the idealised-machine conventions this holds on a bounded range of $(n,p)$
+where the code's two fixed integer limits are not reached, and for every $n$ when those two limits are idealised away
+(IDEAL-W⁺; a larger allocation does not imply it) [S5-G1].
 
 **5. The final SMC run.** Four independent islands, each with $N\ge\max(2500,n,p)$ particles, start from i.i.d. draws
 of $\pi_0$. At each rung of the ladder the particles are reweighted by how much more the next distribution likes them,
