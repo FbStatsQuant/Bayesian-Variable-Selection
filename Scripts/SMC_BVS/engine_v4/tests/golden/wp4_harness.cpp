@@ -488,10 +488,10 @@ List wp4_files_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
   v4::Json meta = F.json("meta");
   List out = List::create(_["status"] = meta.at("status").str(), _["record"] = rec.dump());
   if (!meta.at("estimates_available").boolean()) return out;
-  auto models = [&](const std::string& pfx) { return models_to_list(D3, v4::wp4io::read_models(F, pfx)); };
+  auto models = [&](const std::string& pfx) { return models_to_list(D3, v4::wp4io::read_models(F, pfx, p, D3.K)); };
   auto vecd = [&](const std::string& nm) { std::vector<double> v = F.vec<double>(nm); return NumericVector(v.begin(), v.end()); };
   auto modl = [&](const std::string& nm) { std::vector<int32_t> v = F.vec<int32_t>(nm); return to_orig(D3, std::vector<int>(v.begin(), v.end())); };
-  v4::Store top; v4::wp4io::read_store(F, meta, "top", top);
+  v4::Store top; v4::wp4io::read_store(F, meta, "top", top, p, D3.K);
   out["hpm"] = modl("hpm_S"); out["hpm_F"] = meta.at("hpm_F").num();
   out["hpm_provenance"] = wp4h::ev_list(v4::wp4io::event_from_json(meta.at("hpm_ev")));
   out["log_Z"] = meta.at("logZ").num(); out["log_Z_r"] = vecd("logZ_r");
