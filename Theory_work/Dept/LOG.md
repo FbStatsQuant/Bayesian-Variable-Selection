@@ -81,3 +81,4 @@
 - 20:44 — HQ submitted SHARP3 addendum (POST2 C, E; 64k; ≤ $3); results → READER api/sharp3b/. READER told to also dispose of R03b's four proposals (A+, E+, E-floor+, B+) in row 1.1's better-gate regardless of verdicts.
 - 20:44 — HQ: D34 riders approved post-freeze. Row 1.1: READER proposes R03b dispositions using SHARP3b → CARD_ROW11_R03b.md → me → HQ + consultant → gate PASS / PASS-with-open-items before Fri.
 - 20:47 — SHARP3b in (POST2 C, E: IMPROVABLE-EASY; main f237bfa3); READER to triage with R03b → CARD_ROW11_R03b.md → HQ.
+- 20:49 — records copy landed (Engineering ~20:44): theory_w2 5,957 files / 452,990,677 B; theory_w3 (P6) 1,858 / 3,015,990 B. Independent sha256sum -c by the department: 0 mismatches both; counts/bytes match; indexed in SMC_Theory_Department/INDEX.md.
