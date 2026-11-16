@@ -25,7 +25,7 @@ nulls) or spherical null block (p ≫ n allowed); bounded p and bounded N includ
 |---|---|---|---|
 | A-E: E δ_n ≥ (1 − ϵ − Λ^E_n)Λ^E_n, every N ≥ 1 | witness classes (lower bounds need a witness); p ≫ n via (W-sph); coded prior, exact π — matches | no published lower bound of this form known to us (PARENT `ASSUMPTION_MAP.md:33-36`; audit f02 `:31`); the upper-bound literature uses per-variable penalties p^{−c}, not comparable — n/a | **beats**: PARENT has no expectation claim for a general block, and none for bounded N |
 | A1-E(a): constant √((a+½)/π) for E δ_n | matches (same sequences as PARENT Remark A3) | — | **beats** PARENT :72 (√(a/π)); factor √(1 + 1/(2a)) |
-| A1-E(b): E δ_n ≍ r_n at fixed p | matches | — | **beats**: PARENT makes no claim at fixed p (Cor A1 needs p → ∞) |
+| A1-E(b): E δ_n ≥ (1 − o(1))C_{p,s₀} r_n at fixed p, C_{p,s₀} = (s₀+1)[2(p−s₀)/(2p−1−s₀)]/√(2π) (a lower bound of order r_n; no upper bound claimed) [R1-F1] | matches | — | **beats**: PARENT makes no claim at fixed p (Cor A1 needs p → ∞) |
 | A2-E: E δ_n = O(r_n) ⇒ s₀ = O(1), every p | matches | — | **beats** PARENT :77, :104, :109 (log p ≍ log n needed there) |
 | A2C: limsup π(S₀) ≤ e^{−λ} on (W-orth) | short of design-agnostic (one witness; reason: multi-step fit control on (W-sph) is new work) | — | **beats** PARENT :75-77 (1/(1 + λ)); compare Cor B critical cap e^{−λ/2} (PARENT :101-102), which holds on every design |
 
