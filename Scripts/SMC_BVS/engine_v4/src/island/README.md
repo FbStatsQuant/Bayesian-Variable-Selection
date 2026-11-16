@@ -13,7 +13,12 @@ v4::IslandResult to_record(const IslandRun&);     // INTERFACES §5.2 record (Le
 | `include/v4/island/amath.h` | 8-lane `v8d` type, `fma8`, class-A vector log / exp (fdlibm algorithms, < 1 ulp) |
 | `include/v4/island/kernel.h` | `SupportCache`, flip scores (bit form: sorted-prefix reuse; class A: bordered update), odds |
 | `include/v4/island/store.h` | `TopStore` (concurrent top-c, order-free), `ThreadLedger` (counters, island_best, HPM + key) |
-| `include/v4/island/island.h`, `src/island/island_impl.h` | the island: init, bridge, burn-in, measured rounds; label-major and particle-major kernels; checkpoints |
+| `include/v4/island/island.h` | the island API: `IslandConfig` (incl. calibration roles), `IslandRun`, `run_island`, `plan_island` |
+| `src/island/island_impl.h` | aggregator of the four headers below (included by `island_bit.cpp`, `island_a.cpp`) |
+| `src/island/island_run.h` | the engine: run loop (init, bridge, burn-in, measured rounds), stage barrier, ledger sync, compaction, memory re-check, checkpoints, ledger so far, outputs; `plan_island`, `run_island` (owner: builder 7 from 11-17, with `store.h`) |
+| `src/island/island_pm.h` | the steps shared by both kernels (U, N_b, I; round order) and the particle-major reference round |
+| `src/island/island_lm.h`, `island_lm_state.h` | the label-major round and its group state (owner: builder 6 from 11-17) |
+| `include/v4/island/calib_runner.h`, `setup_load.h` | calibration runner for WP4; start law and neighbours from setup.bin |
 | `tests/test_island.cpp` | Philox KAT, kernel bits, class A, store (multi-thread, vs WP1 Store), T3, I2/I4, T6 |
 | `tests/test_island_golden.cpp` | golden vs `core/` compiled unchanged: tables, flip scores, **a whole island vs `v3::Engine::run_island`** |
 | `tools/bench_island.cpp` | measurements (kernel ns per (support, label), store offers, island end to end) |
