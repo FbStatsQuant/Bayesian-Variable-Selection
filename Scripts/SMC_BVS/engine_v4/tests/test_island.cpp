@@ -319,6 +319,37 @@ static void bounded_same_bits(const char* tag) {
 TEST(bounded_scoring_same_bits_bit) { bounded_same_bits<Arith::Bit>("bit"); }
 TEST(bounded_scoring_same_bits_classA) { bounded_same_bits<Arith::ClassA>("A"); }
 
+// K3 (WP3_ARCH_REVIEW §2.2): Gram rows kept across passes give the dense output bits with any number of slots
+// (auto, a few: columns without a slot fall back to per-pass products, off), both forms, threads 1 / 3, G 1 / 16 / 48
+template <Arith A>
+static void gram_rows_same_bits(const char* tag) {
+  Fixture F(100, 300, 42);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 48; c.bounded_scoring = false;
+  const uint64_t h0 = run_island<A>(F.D, F.st, F.nb, c).hash();
+  struct Conf { int slots, threads, G; };
+  for (const Conf& cf : std::vector<Conf>{{-1, 3, 48}, {-1, 1, 16}, {3, 3, 48}, {3, 1, 1}, {0, 3, 48}, {400, 3, 16}}) {
+    IslandConfig d = c; d.bounded_scoring = true; d.test_nan_rows = true; d.gram_slots = cf.slots; d.threads = cf.threads; d.G = cf.G;
+    IslandRun r = run_island<A>(F.D, F.st, F.nb, d);
+    const auto& k = r.ks;
+    CHECKF(r.status == 0 && r.hash() == h0, "[%s] slots %d threads %d G %d: hash %016llx vs dense %016llx", tag, cf.slots, cf.threads, cf.G,
+           (unsigned long long)r.hash(), (unsigned long long)h0);
+    if (cf.slots != 0) CHECKF(k.gram_rows_reused > 0 && k.gram_rows_new > 0, "[%s] slots %d: no Gram row reused", tag, cf.slots);
+    if (cf.slots == 3) CHECKF(k.gram_rows_noslot > 0, "[%s] 3 slots: the no-slot fallback was not exercised", tag);
+    if (cf.slots == 0) CHECK(k.gram_rows_new + k.gram_rows_reused + k.gram_rows_noslot == 0);
+    std::printf("  [%s] slots %3d (used %d) threads %d G %2d: hash %016llx = dense; Gram rows computed %llu reused %llu no slot %llu\n", tag, cf.slots,
+                gram_slots_of(d, cf.G, F.D.p), cf.threads, cf.G, (unsigned long long)r.hash(), (unsigned long long)k.gram_rows_new,
+                (unsigned long long)k.gram_rows_reused, (unsigned long long)k.gram_rows_noslot);
+  }
+  // the memory plan carries the term, and only when the slots are in use
+  auto plan_has = [&](const IslandConfig& x) { for (auto& it : plan_island(F.D, F.st, x).items) if (it.name == "gram_rows") return it.bytes; return (uint64_t)0; };
+  IslandConfig d = c; d.bounded_scoring = true; d.G = 48;
+  CHECK(plan_has(d) == (uint64_t)gram_slots_of(d, 48, F.D.p) * F.D.p * 8 && gram_slots_of(d, 48, F.D.p) == 120);
+  d.gram_slots = 0; CHECK(plan_has(d) == 0);
+  d.gram_slots = -1; d.bounded_scoring = false; CHECK(plan_has(d) == 0);
+}
+TEST(gram_rows_same_bits_bit) { gram_rows_same_bits<Arith::Bit>("bit"); }
+TEST(gram_rows_same_bits_classA) { gram_rows_same_bits<Arith::ClassA>("A"); }
+
 // negative control of the NaN-row test: bounded scoring that skips the position just below the running first change
 // (test_bound_shrink = 1) consumes unscored values; the test must catch it as an internal_error
 TEST(nan_rows_catch_an_unscored_read) {
