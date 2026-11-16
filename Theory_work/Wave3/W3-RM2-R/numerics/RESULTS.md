@@ -155,8 +155,8 @@ q = 14–27) and is of order 1 here; d_n²/log n lies in 0.13–0.33.
 
 ## 4. Reading (plain language; finite-n observations only)
 
-**Design P.** The three events — truth inclusion S₀ ⊆ S̃₀, truth removal not beating the truth (F(S₀) > F(∅) is the only
-truth-removing competitor, so the margin at T = S₀ is F(S₀) − F(∅)), and LS0 ending at S₀ — coincide run by run in all 224
+**Design P.** The three events — truth inclusion S₀ ⊆ S̃₀, truth removal not beating the truth (the empty set is the binding
+truth-removing competitor in these runs [R1-sol-3], so the margin at T = S₀ equals F(S₀) − F(∅)), and LS0 ending at S₀ — coincide run by run in all 224
 P runs. At n = 400 they hold in all 10 seeds from κ = 8, in 9/10 at κ = 4 (the failing seed has F(∅) > F(S₀) by 2.5 and
 the start mode is empty), in 1/10 at κ = 2 and in 0/10 at κ ≤ 1. At n = 1600 they hold in all 6 seeds from κ = 4 and in
 0/6 at κ ≤ 2 (κ = 3 was not run). The mode-margin proxy over |S| ≤ 3 follows the same pattern (positive in 9/10 at κ = 4,

@@ -1,4 +1,4 @@
-# W3-RM2-R — READER_DELTA (v0.2, after CP1; RIDER_RULES §5)
+# W3-RM2-R — READER_DELTA (v0.3, council R1 diff round; RIDER_RULES §5)
 
 Source of the current reader versions (read only): `/home/fb31/BVS-wt/W3-READER/Theory_work/Wave3/W3-READER/READER_VERSIONS.md`
 draft v0.1 (W3-READER CP1, 2026-11-15), §6 "Theorem 6" (Gaussian rows; master RM2-R) and §7 "Theorem 7" (fixed
@@ -58,14 +58,14 @@ the local search not reaching it; both vanish.
 | # | bridge | mark | detail |
 |---|---|---|---|
 | R7.1 | (A1) ⇒ (T1-F♭) | identity + B1.1–B1.3 of READER §1 | (A6) of Theorem 1 is BM(c) with c = C_β²φ₀², or BM-∞ (READER B1.4) |
-| R7.2 | (A1) (beta-min with C_β²φ₀² ≥ max{c_TL, 8(1 + √(D/2))²} where d_n² ≤ D log n) ⇒ (BM-W⁺) under (A5)(a) | NEW (two lines) | under (A5)(a), |Q| ≤ s₀ + log n, so d_n² ≤ 2(|Q| + 1) + 4 log(2p) ≤ (2 + 4A + o(1)) log n =: D log n; STATEMENT §2 last sentence of (BM-W⁺) |
+| R7.2 | (A1) ⇒ (BM-W⁺) under (A5)(a) | NEW (two lines) [R1-opus-F2, R1-sol-4] | fix a constant D > 2 + 4A; under (A5)(a), \|Q\| ≤ s₀ + log n, so d_n² ≤ 2(\|Q\| + 1) + 4 log(2p) ≤ D log n for n ≥ n₀. If C_β²φ₀² > max{c_TL⁰, 8(1 + √(D/2))²} (strict), choose c_TL with c_TL⁰ < c_TL and max{c_TL, 8(1 + √(D/2))²} < C_β²φ₀²(1 − 1/n₀); then λ_n = (n − 1)φ₀²θ*²_min/σ² ≥ (1 − 1/n)C_β²φ₀² log n ≥ max{c_TL, 8(1 + √(D/2))²} log n for n ≥ n₀, which is (BM-W⁺) by STATEMENT §2 (last sentence of (BM-W⁺)) |
 | R7.3 | (A5)(b) signal clause ⇒ (BM-W⁺) | identity | it is (BM-Q♭) of STATEMENT §2 |
 | R7.4 | (A3) = (V♭) | identity | STATEMENT §2 |
 | R6/7.5 | conclusions | master | W3-RM2-R:RM2-F-plus, RM2-R-plus with (D) = (S3) (standing conventions of NOTATION §5: "sufficient allocation" must be read as 𝒜_n of STATEMENT §2, re-audited at v3.2) |
 
-R7.2 needs one more look before the final: under (A5)(a), (A1) at BM(c) level gives (BM-W⁺) only if C_β is large
-enough relative to c_TL⁰ and D; the reader text should then say "with C_β large enough (explicit in the remark)" — HQ
-choice between that and keeping θ*_min√(n/log n) → ∞ as the simple sufficient form in the main text.
+R7.2 (as corrected): under (A5)(a), (A1) at the BM(c) level gives (BM-W⁺) once C_β²φ₀² exceeds the explicit
+constant above; the reader text can say "with C_β large enough (explicit in a remark)" — HQ choice between that and
+keeping θ*_min√(n/log n) → ∞ as the simple sufficient form in the main text.
 
 ## 4. Open for HQ / W3-READER
 

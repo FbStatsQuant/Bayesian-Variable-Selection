@@ -29,9 +29,9 @@ Statuses below are as of this draft; the council result is recorded in §4 and i
 | W3-RM2-R:DLV-0 | `STATEMENT.md:144-163` | `lemmas/Q5_dlv0.md` | PROVED (by this seat, unchecked), relative to the C-DLV P1/S.3 audits; LC-B VERIFIED-WITH-AMENDMENTS, applied; RC1 VERIFIED |
 | W3-RM2-R:RM2-F-plus | `STATEMENT.md:166-176` | `lemmas/Q6_assembly.md` §1 | PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0; LC-B VERIFIED |
 | W3-RM2-R:RM2-R-plus | `STATEMENT.md:177-182` | `lemmas/Q6_assembly.md` §2 | PROVED (by this seat, unchecked); conditional on W2-APP:POST@1.0.1; LC-B VERIFIED |
-| W3-RM2-R:SAND-F-c | `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:183-194` (Q1 row) | `lemmas/Q1_sandF_c.md` | PROVED (by this seat, unchecked); LC-A VERIFIED-WITH-AMENDMENTS (1 E → ERRATA E1) |
-| W3-RM2-R:TL-F-c | `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:183-194` (Q2, Q3 rows) | `lemmas/Q2_TL_c.md` §4, §6 | PROVED (by this seat, unchecked); §6 conditional on SOP:TH09@1.0.0; LC-A VERIFIED |
-| W3-RM2-R:Ex-Proxy-d | `STATEMENT.md:197-205` | `lemmas/Q7_proxy_d.md` | PROVED (by this seat, unchecked); LC-A VERIFIED |
+| W3-RM2-R:SAND-F-c | `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:188` (Q1 row) | `lemmas/Q1_sandF_c.md` | PROVED (by this seat, unchecked); LC-A VERIFIED-WITH-AMENDMENTS (1 E → ERRATA E1) |
+| W3-RM2-R:TL-F-c | `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:189` (Q2 row) | `lemmas/Q2_TL_c.md` §4 | PROVED (by this seat, unchecked); LC-A VERIFIED |
+| W3-RM2-R:Ex-Proxy-d | `STATEMENT.md:197-205` | `lemmas/Q7_proxy_d.md` | PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0; LC-A VERIFIED |
 | W3-RM2-R:Cont-plus | `STATEMENT.md:206-213` | `lemmas/Q6_assembly.md` §3 | PROVED (by this seat, unchecked); LC-B VERIFIED |
 
 ## 3. Sharpness and open items (HEURISTIC where not proved)
@@ -43,7 +43,11 @@ Statuses below are as of this draft; the council result is recorded in §4 and i
 
 ## 4. Council
 
-Pending (R1: Sol seat + Opus 5.5 seat; manifest `reviews/MANIFEST_R1.txt`).
+R1 (manifest `reviews/MANIFEST_R1.txt`, MANIFEST 4c2183ce…cd402): both seats ACCEPT every claim and pass the
+correctness gate; both FAIL other gates on findings in derived texts only — Opus 8.7 (`reviews/R1_council_opus.md`:
+F1 REPORT conditions vs STATEMENT, F2 READER bridge R7.2), Sol 8.5 (`reviews/R1_council_sol.md`: F1 Song–Liang
+attribution in TARGET, S2 TARGET necessity wording). Dispositions: `reviews/R1_disposition.md`. Diff round R2:
+manifest `reviews/MANIFEST_R2.txt`; result recorded here when complete.
 
 ## 5. REGISTRY
 
@@ -59,8 +63,9 @@ conclusion: reported-model: one data event of probability -> 1 on which every ad
 rate: none claimed
 scope: fixed design; s0 fixed; p <= n^A (p >> n allowed); |Q| <= n^b
 depends_on: W3-RM2-R:RM0-plus@stmt ; W3-RM2-R:DLV-0@stmt ; W3-RM2-R:SAND-F-c@stmt ; W3-RM2-R:TL-F-c@stmt ; W3-RM2:NA-W@stmt ; W3-RM:E4@stmt ; SOP:TH09@hyp
+notes: the posterior/mode step POST/MODE-F (Theorem RM2-F-plus input; Theory_work/Wave3/W3-RM2-R/STATEMENT.md:190, bridge (Q3); proof lemmas/Q2_TL_c.md §6) is recorded under this claim, which carries its condition SOP:TH09 [R1-opus-F1]
 implies: W3-RM2:RM2-F (weaker hypotheses, conclusions contain; proved in W3-RM2-R:Cont-plus)
-sharpness: A:RM2-V-FLAT = ARTEFACT (evidence: lemmas/Q1_sandF_c.md:128) ; A:RM2-BM-W-PLUS = ARTEFACT (evidence: lemmas/Q2_TL_c.md:103)
+sharpness: A:RM2-V-FLAT = ARTEFACT (evidence: lemmas/Q1_sandF_c.md:158) ; A:RM2-BM-W-PLUS = ARTEFACT (evidence: lemmas/Q2_TL_c.md:113)
 gates: correct:PENDING(reviews/LCB_line_check_sol.md) ; lit:PENDING(TARGET.md) ; necessity:PENDING(TARGET.md) ; better:PENDING(TARGET.md)
 council: none yet
 ```
@@ -92,13 +97,14 @@ council: none yet
 REGISTRY
 claim: W3-RM2-R:DLV-0 | kind: lemma | statement: STATEMENT.md:144-163 | premises: STATEMENT.md:71-93
 status: PROVED (by this seat, unchecked), relative to the C-DLV P1/S.3 audits; LC-B VERIFIED-WITH-AMENDMENTS, applied; RC1 VERIFIED | status_source: REPORT.md:29
-depends_on: C-DLV:Thm-D@proof ; C-DLV:L2-S2@stmt ; C-DLV:L1-R@stmt ; C-DLV:Cor-R@stmt ; C-DLV:L3-3.3@stmt ; C-DLV:L3-3.4@stmt ; W2-UNI:F-UNI@proof ; W3-RM:E4@stmt
+depends_on: C-DLV:Thm-D@proof ; C-DLV:L2-S2@stmt ; C-DLV:L1-R@stmt ; C-DLV:Cor-R@stmt ; C-DLV:L3-3.3@stmt ; C-DLV:L3-3.4@stmt ; C-DLV:Prop-F@proof ; C-DLV:P1-Inventory@stmt ; C-DLV:L2-S3@stmt ; W2-UNI:F-UNI@proof ; W3-RM:E4@stmt
+notes: the allocation A_n is taken from FINAL s6_delivery.tex:33-44 (HQ audits A1/A4; not a registry claim); C-DLV:Prop-F is used for its delivery half only (R-AUD1 restatement) [R1-opus-E3]
 council: none yet
 ```
 
 ```
 REGISTRY
-claim: W3-RM2-R:SAND-F-c | kind: lemma | statement: STATEMENT.md:183-194 | premises: STATEMENT.md:52-115
+claim: W3-RM2-R:SAND-F-c | kind: lemma | statement: STATEMENT.md:188 | premises: STATEMENT.md:52-115
 status: PROVED (by this seat, unchecked); LC-A VERIFIED-WITH-AMENDMENTS (1 E → ERRATA E1) | status_source: REPORT.md:32
 depends_on: W3-RM2:SAND-F-b@proof ; W3-RM2:Toolkit-b@stmt
 implies: W3-RM2:SAND-F-b ((V_b) implies (V_b-flat))
@@ -107,9 +113,9 @@ council: none yet
 
 ```
 REGISTRY
-claim: W3-RM2-R:TL-F-c | kind: lemma | statement: STATEMENT.md:183-194 | premises: STATEMENT.md:52-115
-status: PROVED (by this seat, unchecked); §6 conditional on SOP:TH09@1.0.0; LC-A VERIFIED | status_source: REPORT.md:33
-depends_on: W3-RM2:TL-F-b@proof ; W3-RM2:Toolkit-b@stmt ; W3-RM2:NA-W@stmt ; SOP:TH09@hyp
+claim: W3-RM2-R:TL-F-c | kind: lemma | statement: STATEMENT.md:189 | premises: STATEMENT.md:52-115
+status: PROVED (by this seat, unchecked); LC-A VERIFIED | status_source: REPORT.md:33
+depends_on: W3-RM2:TL-F-b@proof ; W3-RM2:Toolkit-b@stmt ; W3-RM2:NA-W@stmt
 implies: W3-RM2:TL-F-b ((BM-W) implies (BM-W-plus))
 council: none yet
 ```
@@ -117,8 +123,8 @@ council: none yet
 ```
 REGISTRY
 claim: W3-RM2-R:Ex-Proxy-d | kind: proposition | statement: STATEMENT.md:197-205 | premises: STATEMENT.md:52-115
-status: PROVED (by this seat, unchecked); LC-A VERIFIED | status_source: REPORT.md:34
-depends_on: W3-RM2:Ex-Proxy@proof
+status: PROVED (by this seat, unchecked); conditional on SOP:TH09@1.0.0; LC-A VERIFIED | status_source: REPORT.md:34
+depends_on: W3-RM2:Ex-Proxy@proof ; SOP:TH09@hyp
 implies: W3-RM2:Ex-Proxy (constant theta is a special case of part (b))
 council: none yet
 ```
