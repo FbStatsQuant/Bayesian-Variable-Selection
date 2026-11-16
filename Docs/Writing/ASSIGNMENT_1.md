@@ -4,6 +4,21 @@ Start this when HQ sends the resume message (after the Claude Personal weekly re
 `POLICIES.md` first. The owner will read both documents himself to judge how the method and the theorems look. Write
 for a statistician peer: clear, complete, honest.
 
+## Clarity first (owner, binding: "as clearly as possible")
+Clarity is the main measure of these documents. Accuracy is the floor; clarity is the goal.
+- **Plain language.** Short sentences, one idea per paragraph, no jargon where a plain word works, and no internal
+  ids (ticket names, claim ids, file tags) in the text.
+- **Build up in order.** Each section opens with a 2–3 sentence summary in words. Every concept is introduced before
+  it is used, and every symbol is defined at first use and listed in the notation table.
+- **Say it in words, then in symbols.** Every displayed formula gets a sentence saying what it means. Every theorem
+  gets a plain-words version before the formal one, and the assumptions are numbered, each with one line on what it
+  rules out.
+- **Show, don't only state.** Use a small worked example or a picture where it helps: what the prior does to a
+  3-variable model, how one SMC step moves particles. Use tables for parameters and assumptions.
+- **Clarity check before delivery.** A fresh Opus reader, with no prior context, reads each document as a
+  statistician new to the project. It lists every sentence it had to read twice, every symbol it met before its
+  definition, and every step it could not follow. Fix them all, then deliver.
+
 ## D1. Methodology: "The SMC-BVS method, as coded" (LaTeX → PDF)
 Cover the method the theory is about: the shipped serial code at `Scripts/SMC_BVS/core/` (v3.x; R + C++). This is
 NOT the p = 10⁶ engine. That engine's changes go in a separate short appendix, taken from
