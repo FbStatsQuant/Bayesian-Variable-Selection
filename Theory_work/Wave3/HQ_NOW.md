@@ -12,7 +12,7 @@
 - BNP already moved its temp to /home/fb31/bnp_tmp and removed 73 stale sandboxes (11-15).
 
 ## MORNING BRIEF 11-16 (items for the owner)
-- p = 1M schedule: with descope (c, approved) the first 1M fit is in the first week of January. Options for the owner:
+- p = 1M: at 10⁶ the cost is ≈ 1.65× plan (memory/NUMA bound) → ≈ 33.7k core-h (+37%) unless levers L1–L3 recover it; a ≤ 80 core-h measurement is approved, then a firm re-size (HQ decides; quantity before precision). Schedule: with descope (c, approved) the first 1M fit is in the first week of January. Options for the owner:
   - (b) Fable 5.2 architect for WP3, ≈ 3 days (HQ recommends yes);
   - (a) 7 Opus builders, ≈ +40% Claude Third for ~3 wk (only with b, and only if the accounts allow);
   - a+b+c → ≈ Dec 21–23, but no slack.

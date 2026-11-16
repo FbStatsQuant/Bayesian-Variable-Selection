@@ -501,3 +501,11 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   CHECKPOINT_5 = a verbatim copy of CP4 with only Cont-R's extended status; re-point; re-record (dry run first; must show
   A4 PASS, RM2-R re-validating, check 0 ERROR, suite pass, DIST still passing). Task L GO. Prop-LB re-point deferred to the
   post-freeze POST2 checkpoint rewrite. Protocol lesson added to the Theory variant.
+- (overnight) ~01:00 CT 11-16, Engineering H-1 flag:
+  - at 10⁶ the late rounds cost ≈ 330 ns·CPU per pair (1.65× plan); 48 → 96 threads gives only 1.15×; memory/NUMA bound;
+    peak 31 GB per island;
+  - pro-rated, A + D with contingency becomes ≈ 33.7k (+37%), so no 10⁶ stage is released.
+  - Approved a ≤ 80 core-h exploratory batch to measure L1 (socket-local islands), L2 (G = 256) and L3 (parallel
+    compaction), then a firm re-size (quantity cut before precision).
+  - The sweep cost 77.4 core-h vs ≈ 40 announced (covered by the 200 standing authority; rule: pre-announce > 50%
+    overruns).
