@@ -37,15 +37,19 @@ inline const char* cal_status_name(CalStatus s) {
   static const char* nm[] = {"ok", "resource_limit", "numerical_failure", "schedule_limit", "grid_failure_no_escalation"};
   return nm[(int)s];
 }
-// schedule_limit / grid_failure_no_escalation (coded rule only; the bounded rule cannot reach them, D-26) are DISTINCT
-// statuses (manager, 2026-11-15): records carry the exact name (cal_status_name). INTERFACES §7 has no code for them
-// yet (requested from WP1); until then the process exit code alone uses resource_limit.
+// INTERFACES v0.1.7 §7: Status::schedule_limit (6, exit 16) = the theory / compat calibration ended without a grid
+// (core/v3_calib.R:170: tier-1 construction failure and no fallback). grid_failure_no_escalation (the same end at tier 0,
+// v3_calib.R:170; unreachable when calibration starts at tier 0, since a grid failure escalates or is blocked by the
+// preflight) maps to it as well; records keep the exact v3 name (cal_status_name). The bounded rule cannot reach either
+// (D-26: it always installs a fallback grid).
 inline Status task_status(CalStatus s) {
   switch (s) {
     case CalStatus::ok: return Status::completed;
     case CalStatus::numerical_failure: return Status::numerical_failure;
-    default: return Status::resource_limit;
+    case CalStatus::resource_limit: return Status::resource_limit;
+    case CalStatus::schedule_limit: case CalStatus::grid_failure_no_escalation: return Status::schedule_limit;
   }
+  return Status::internal_error;
 }
 
 struct TierSettings { int tier = 0, H = 0, Te = 0, L = 0, Hm = 4, ell = 0; };   // core/v3_calib.R:9-13

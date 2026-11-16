@@ -140,7 +140,7 @@ TEST(wp4_calib_driver) {
     }
     calib::Settings s = mk(calib::Rule::coded, 1, 3); s.grid_fallback = false;
     Mock m = base; calib::Driver drv(m, s); auto o = drv.run();
-    CHECK(o.status == calib::CalStatus::schedule_limit && !o.has_frozen && calib::task_status(o.status) == Status::resource_limit);
+    CHECK(o.status == calib::CalStatus::schedule_limit && !o.has_frozen && calib::task_status(o.status) == Status::schedule_limit);
   }
   {  // numerical failure in V; preflight blocks the escalation
     Mock m = base; m.v_fail = true; calib::Driver drv(m, mk(calib::Rule::coded, 200, 3)); auto o = drv.run();

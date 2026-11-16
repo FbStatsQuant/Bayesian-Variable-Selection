@@ -86,14 +86,14 @@ struct MergeSettings {
   // estimate_merge_memory(...).total exceeds it
   uint64_t mem_budget_bytes = 0;
   double kbar = 8;             // mean model size used by the estimate
-  bool leaders = false;        // compat: leader stores in the merged ledger
+  // INTERFACES v0.1.7: final-run leader stores are not outputs in any mode; final-run ledgers use leaders = false
 };
 
 // Memory model of the streaming merge (ESTIMATE; bytes). A store entry costs 26 + 4 k bytes (v, off, hash, len, pool);
 // a store peaks at 2.5 cap entries (kept + staging + new kept run, INTERFACES §4.1).
 struct MemEstimate { uint64_t merged = 0, one_island = 0, small = 0, tail = 0, total = 0; };
 inline MemEstimate estimate_merge_memory(const MergeSettings& ms) {
-  const double entry = 26.0 + 4.0 * ms.kbar, c = 40.0 * ms.p + 1, lead = ms.leaders ? 2 * 20.0 * ms.p : 0.0;
+  const double entry = 26.0 + 4.0 * ms.kbar, c = 40.0 * ms.p + 1, lead = 0.0;   // no final-run leaders (v0.1.7)
   MemEstimate m;
   m.merged = (uint64_t)(2.5 * (c + lead) * entry);
   m.one_island = (uint64_t)(2.5 * c * entry);                                        // one island store while loaded

@@ -267,7 +267,7 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
   wp4h::CoreFactory fac{&D, &st};
   v4::Zobrist zob; zob.init(D.p);
   // 1. pre-island ledger: tables (core/cpp/v3_core.cpp:372-387), inherited (419-441)
-  v4::LedgerConfig lcfg; lcfg.p = D.p; lcfg.islands = R; lcfg.leaders = true; lcfg.fresh_counters = false;
+  v4::LedgerConfig lcfg; lcfg.p = D.p; lcfg.islands = R; lcfg.leaders = false; lcfg.fresh_counters = false;   // v0.1.7: no final-run leaders
   v4::Ledger pre(lcfg);
   {
     std::vector<int> U;
@@ -325,7 +325,7 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
       s.isl.logZ = res.logZ; s.isl.ess = res.ess; s.isl.rb_acc = res.rb_acc; s.isl.pip = res.pip; s.isl.rb_round = res.rb_round;
     } catch (v3::NumericalFailure& e) { s.isl.status = v4::Status::numerical_failure; s.isl.message = e.what(); s.isl.pip.assign(D.p, 0); }
     s.isl.r = r; s.isl.N = N; s.isl.L = L; s.isl.Hm = Hm;
-    s.isl.led = wp4h::ledger_from_v3(led, D.p, R, true, zob);
+    s.isl.led = wp4h::ledger_from_v3(led, D.p, R, false, zob);
     island_secs[r - 1] = secs_since(t0);
   }
   if (fault_island >= 1 && fault_island <= R) {

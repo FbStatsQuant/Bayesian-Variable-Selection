@@ -127,8 +127,9 @@ compare_final <- function(r, m, tag) {
           "ls0_local_limit", "ls0_improved", "ls0_hpm_changed")
   same(r$flags[fl], m$flags[fl], paste(tag, "flags"))
   same(r$top_store, m$top_store, paste(tag, "top store"))
-  same(r$leaders_gamma0, m$leaders_gamma0, paste(tag, "leaders gamma0"))
-  same(r$leaders_gamma1, m$leaders_gamma1, paste(tag, "leaders gamma1"))
+  # v3's final-run leader stores (r$leaders_gamma0/1) are on the exclusion list: INTERFACES v0.1.7 -- final-run leaders
+  # are not outputs in any mode (final ledgers use leaders = false). Calibration leaders are compared in compare_calib.
+  n_checks <<- n_checks + 1L; if (m$leaders_gamma0$capacity != 0 || length(m$leaders_gamma0$models)) { failures <<- c(failures, paste(tag, "final leaders present")); cat("  FAIL:", tag, "final leaders present\n") }
   same(r$score_counts$logical, m$logical, paste(tag, "logical counters"))
 }
 
