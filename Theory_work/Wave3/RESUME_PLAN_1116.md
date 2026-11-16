@@ -24,6 +24,12 @@ Set both department threads to Claude Personal (claudeAgent_personal, claude-opu
   - W3-READER's final read and CP3. The Fri 11-20 freeze stands for recorded statements.
 - **Route the Writing open items** (C* in c₀, the 32s₀ term, the moderate-n figure, the noiseless-gain/SS identity
   sentence). Answer them into Docs/Writing/ via files; don't message Writing.
+- **FIX FIRST: the theory CI has been red on main since 6cd699dd** (GitHub "Run failed: theory-ci" emails to the owner).
+  - The only failing step is `cite`: `Theory_work/Wave2/W2-UNI/citecheck.py` MISS 0 → 1 and `Theory_work/Wave3/W3-MISR-R/citecheck.py` MISS 0 → 4. These are line-pointer drift from today's in-place NARROWs and corrections (S2/S4/Cor-H). check.py is 0 ERROR.
+  - Repair the pointers CITATION-ONLY; re-freeze carriers only if a manifest hashes the changed file.
+  - Run `run_ci.py --steps check,paper,falsify,cite` locally to all-PASS, push, confirm the Actions run is green, and close the `CI HOLD` issue.
+  - Also: the pre-existing C-PACK/numerics/item1_um_checks.py Windows-path issue (Engineering, post-freeze) if it affects CI.
+  - **New recorder rule:** after every recording, run the cite step before pushing.
 - **Pacing:**
   - at most 3 concurrent leads + the audit Fable;
   - Sonnet/Haiku for routine work;
