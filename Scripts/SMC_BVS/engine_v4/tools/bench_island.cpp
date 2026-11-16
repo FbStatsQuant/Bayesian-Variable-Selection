@@ -1,0 +1,176 @@
+// bench_island.cpp -- WP3 measurements on Owls (ENGINEERING_SPEC §0-v2.4; WP3 brief item 8). Every number it prints is
+// thread-time unless labelled wall. Modes:
+//   kernel <p> <threads> <nsup> <k> <div> <arith:bit|A> <tile>
+//        ns per (support, label) of the engine's label-major tile kernel (products + 8-lane flip scores + odds), nsup
+//        supports of size k (div = 0: the 5 truths + k-5 random members; div = 1: all random).
+//   island <p> <N> <threads> <arith> <kernel:lm|pm> <G> <tile> <T> <L> <Hm> [n] [store_cap]
+//        one island end to end on AR(0.6) data (geometric grid of T stages); prints M, distinct supports, phase times,
+//        store statistics and ns per elementary step.
+//   store <cap> <threads> <offers_per_thread>
+//        cost of TopStore::offer under a realistic mix (most offers below tau, duplicates above it).
+#include <omp.h>
+#include <chrono>
+#include <cstdio>
+#include <random>
+#include "v4/island/island.h"
+
+using namespace v4::island;
+static double now() { return omp_get_wtime(); }
+
+template <Arith A>
+static void bench_kernel(int p, int T, int nsup, int k, int div, int Bk) {
+  const int n = 200;
+  Data D; double t0 = now(); make_ar_data(D, n, p, 0.6, 1);
+  Start st; build_start(st, D, contiguous_blocks(p, 4));
+  std::printf("data+tables n=%d p=%d: %.1f s wall\n", n, p, now() - t0);
+  BitScorer sc(&D);
+  std::mt19937_64 g(4242);
+  Model truth; for (int t = 0; t < 5; ++t) truth.push_back((int)std::floor((t + 0.5) * p / 5));
+  std::vector<SupportCache> sup(nsup); std::vector<int> act;
+  for (int s = 0; s < nsup; ++s) {
+    Model S = div ? Model() : truth;
+    while ((int)S.size() < k) { int j = (int)(g() % p); if (!contains(S, j)) sorted_insert(S, j); }
+    double lm = sc.score(S).logm, c = st.comp(S);
+    build_support(D, st, sc, sup[s], S, zobrist(D, S), lm, D.logprior[S.size()] + c, (lm - D.logm0) - c, 1.0);
+    act.insert(act.end(), S.begin(), S.end());
+  }
+  std::sort(act.begin(), act.end()); act.erase(std::unique(act.begin(), act.end()), act.end());
+  int nA = (int)act.size();
+  for (auto& s : sup) { s.arow.resize(s.k); for (int a = 0; a < s.k; ++a) s.arow[a] = (int)(std::lower_bound(act.begin(), act.end(), s.S[a]) - act.begin()); }
+  std::vector<double> XA((size_t)nA * n); for (int a = 0; a < nA; ++a) std::memcpy(&XA[(size_t)a * n], D.col(act[a]), 8 * n);
+  int ntile = (p + Bk - 1) / Bk; std::vector<double> Xt((size_t)ntile * Bk * n, 0.0);
+  for (int ti = 0; ti < ntile; ++ti) for (int jj = 0; jj < Bk && ti * Bk + jj < p; ++jj) for (int i = 0; i < n; ++i) Xt[(size_t)ti * Bk * n + (size_t)i * Bk + jj] = D.col(ti * Bk + jj)[i];
+  double tprod = 0, tflip = 0; long pairs = 0; double chk = 0;
+  double w0 = now();
+  #pragma omp parallel num_threads(T) reduction(+ : tprod, tflip, pairs, chk)
+  {
+    BitScorer scl(&D);
+    std::vector<double> Pp((size_t)nA * Bk); std::vector<double> lb(Bk), ob(Bk);
+    #pragma omp for schedule(dynamic, 4)
+    for (int ti = 0; ti < ntile; ++ti) {
+      int j0 = ti * Bk, nbv = std::min(Bk, p - j0); const double* Xtile = &Xt[(size_t)ti * Bk * n];
+      double ta = now();
+      for (int a = 0; a < nA; ++a) {
+        const double* xa = &XA[(size_t)a * n]; double* Pa = &Pp[(size_t)a * Bk];
+        for (int c0 = 0; c0 < Bk; c0 += 64) {
+          v8d s0 = bc(0), s1 = bc(0), s2 = bc(0), s3 = bc(0), s4 = bc(0), s5 = bc(0), s6 = bc(0), s7 = bc(0);
+          const double* rp = Xtile + c0;
+          for (int i = 0; i < n; ++i, rp += Bk) { v8d xi = bc(xa[i]);
+            s0 = s0 + xi * load8(rp); s1 = s1 + xi * load8(rp + 8); s2 = s2 + xi * load8(rp + 16); s3 = s3 + xi * load8(rp + 24);
+            s4 = s4 + xi * load8(rp + 32); s5 = s5 + xi * load8(rp + 40); s6 = s6 + xi * load8(rp + 48); s7 = s7 + xi * load8(rp + 56); }
+          store8(Pa + c0, s0); store8(Pa + c0 + 8, s1); store8(Pa + c0 + 16, s2); store8(Pa + c0 + 24, s3);
+          store8(Pa + c0 + 32, s4); store8(Pa + c0 + 40, s5); store8(Pa + c0 + 48, s6); store8(Pa + c0 + 56, s7);
+        }
+      }
+      double tb = now();
+      for (auto& c : sup) {
+        v8d u[KM];
+        for (int v = 0; v < nbv; v += 8) {
+          int32_t j8[8]; unsigned valid = 0;
+          for (int l = 0; l < 8; ++l) { int j = std::min(j0 + v + l, p - 1); j8[l] = j; if (v + l < nbv && !contains(c.S, j0 + v + l)) valid |= 1u << l; }
+          for (int a = 0; a < c.k; ++a) u[a] = load8(&Pp[(size_t)c.arow[a] * Bk + v]);
+          if constexpr (A == Arith::ClassA) eval8_add<A>(D, st, scl, c, 0, u, j8, valid, &lb[v], &ob[v]);
+          else {
+            unsigned rest = valid;
+            while (rest) { int l0 = __builtin_ctz(rest); int q = (int)(std::lower_bound(c.S.begin(), c.S.end(), j8[l0]) - c.S.begin()); unsigned lanes = 0;
+              for (int l = l0; l < 8; ++l) if (((rest >> l) & 1u) && (int)(std::lower_bound(c.S.begin(), c.S.end(), j8[l]) - c.S.begin()) == q) lanes |= 1u << l;
+              eval8_add<A>(D, st, scl, c, q, u, j8, lanes, &lb[v], &ob[v]); rest &= ~lanes; }
+          }
+        }
+        for (int jj = 0; jj < nbv; ++jj) chk += ob[jj];
+        pairs += nbv;
+      }
+      double tc = now(); tprod += tb - ta; tflip += tc - tb;
+    }
+  }
+  double wall = now() - w0;
+  std::printf("kernel arith=%s p=%d threads=%d supports=%d k=%d div=%d tile=%d |A|=%d: products %.1f ns, flip+odds %.1f ns, "
+              "total %.1f ns per (support,label) thread-time; wall %.2f s [chk %.4f]\n",
+              A == Arith::Bit ? "bit" : "A", p, T, nsup, k, div, Bk, nA, 1e9 * tprod / pairs, 1e9 * tflip / pairs, 1e9 * (tprod + tflip) / pairs, wall, chk);
+}
+
+template <Arith A>
+static void bench_island(int p, int N, int T, KernelKind kk, int G, int Bk, int Tst, int L, int Hm, int n, uint64_t cap) {
+  Data D; double t0 = now(); make_ar_data(D, n, p, 0.6, 7);
+  Start st; build_start(st, D, contiguous_blocks(p, 4));
+  Neighbours nb = window_neighbours(D, 14, 8);
+  std::printf("data+tables+neighbours n=%d p=%d: %.1f s wall\n", n, p, now() - t0);
+  IslandConfig c; c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.threads = T;
+  c.store_cap = cap;
+  // geometric grid 0 < 1e-3 ... 1 with Tst stages (stand-in for a calibrated grid)
+  c.grid.push_back(0.0); for (int t = 1; t < Tst; ++t) c.grid.push_back(std::pow(10.0, -3.0 * (1.0 - (double)t / (Tst - 1)) ) * ((double)t / Tst) + 0.0);
+  c.grid.push_back(1.0);
+  for (size_t i = 1; i < c.grid.size(); ++i) if (!(c.grid[i] > c.grid[i - 1])) c.grid[i] = std::nextafter(c.grid[i - 1], 2.0);
+  double w0 = now();
+  IslandResult r = run_island<A>(D, st, nb, c);
+  double wall = now() - w0;
+  const auto& k = r.ks;
+  int rounds = Tst + L + Hm;
+  double steps = (double)N * (p + 16) * rounds;
+  double thread_s = wall * T;
+  std::printf("island arith=%s kernel=%s p=%d n=%d N=%d threads=%d G=%d tile=%d T=%d L=%d Hm=%d: status %d, wall %.1f s\n", A == Arith::Bit ? "bit" : "A",
+              kk == KernelKind::LabelMajor ? "lm" : "pm", p, n, N, T, G, Bk, Tst, L, Hm, r.status, wall);
+  std::printf("  logZ %.6f  HPM |S|=%zu F=%.4f  store %zu (cap %llu, merges %llu, buffered offers %llu)\n", r.logZ, r.hpm.S.size(), r.hpm.F, r.top_v.size(),
+              (unsigned long long)(cap ? cap : 40ULL * p + 1), (unsigned long long)k.store_merges, (unsigned long long)k.store_buffered);
+  std::printf("  M (sweeps per particle-round) %.3f; (support,label) pairs per particle-round / p %.3f; passes %llu; distinct supports per pass %.1f\n",
+              (double)k.particle_sweeps / std::max<uint64_t>(1, k.particle_rounds), (double)k.support_label_pairs / std::max<uint64_t>(1, k.particle_rounds) / p,
+              (unsigned long long)k.passes, (double)k.supports / std::max<uint64_t>(1, k.passes));
+  std::printf("  wall s: init %.1f orders %.1f build %.1f phaseA %.1f walk %.1f phaseB %.1f apply %.1f barrier %.1f pm %.1f ckpt %.1f total %.1f\n",
+              k.t_init, k.t_orders, k.t_build, k.t_phaseA, k.t_walk, k.t_phaseB, k.t_apply, k.t_barrier, k.t_pm, k.t_ckpt, k.t_total);
+  std::printf("  cost per elementary step c = %.1f ns thread-time (wall x threads / N(p+16)rounds); per (support,label) pair (phase A thread-time) %.1f ns\n",
+              1e9 * thread_s / steps, 1e9 * k.t_phaseA * T / std::max<uint64_t>(1, k.support_label_pairs));
+  for (size_t t = 0; t < r.stages.size(); ++t) {
+    auto& s = r.stages[t];
+    if (t < 3 || t + 3 >= r.stages.size()) std::printf("  stage %2zu phi %.5f ess %.0f distinct %d/%d gibbs_change/particle %.3f\n", t + 1, s.phi, s.ess, s.distinct_res, s.distinct_moved, (double)s.moves.gibbs_change / N);
+  }
+  for (size_t t = 0; t < r.terminal_moves.size(); ++t) std::printf("  terminal round %zu: gibbs_change/particle %.3f distinct %d\n", t + 1, (double)r.terminal_moves[t].gibbs_change / N, r.terminal_distinct[t]);
+  std::printf("  hash %016llx\n", (unsigned long long)r.hash());
+}
+
+static void bench_store(uint64_t cap, int T, long per) {
+  TopStore st; st.init(cap, Order::HPM);
+  std::vector<StoreBuffer> bufs(T);
+  // phase 1 fill: cap distinct models with F ~ N(0,1)
+  double t0 = now();
+  #pragma omp parallel num_threads(T)
+  {
+    std::mt19937_64 g(omp_get_thread_num() + 1); std::normal_distribution<double> nd;
+    #pragma omp for
+    for (long i = 0; i < (long)cap; ++i) { int32_t S[3] = {(int32_t)(i % 1000000), (int32_t)(1000000 + i / 1000000), 2100000}; st.offer(bufs[omp_get_thread_num()], nd(g), S, 3, splitmix64(*(uint64_t*)&i)); }
+  }
+  for (auto& b : bufs) st.merge_buffer(b);
+  double tfill = now() - t0;
+  // phase 2: mix: 90% far below tau, 10% re-offers of stored models (duplicates)
+  t0 = now();
+  #pragma omp parallel num_threads(T)
+  {
+    std::mt19937_64 g(100 + omp_get_thread_num());
+    #pragma omp for
+    for (long i = 0; i < per * T; ++i) {
+      if (g() % 10) { int32_t S[3] = {1, 2, 3}; st.offer(bufs[omp_get_thread_num()], -10.0, S, 3, 12345); }
+      else { size_t e = g() % st.size(); st.offer(bufs[omp_get_thread_num()], st.v[e], st.pool.data() + st.off[e], st.len[e], st.hash[e]); }
+    }
+  }
+  for (auto& b : bufs) st.merge_buffer(b);
+  double tmix = now() - t0;
+  std::printf("store cap=%llu threads=%d: fill %.1f ns per offer (thread-time), mix(90%% reject, 10%% duplicate) %.1f ns per offer; merges %llu; invariant %d\n",
+              (unsigned long long)cap, T, 1e9 * tfill * T / cap, 1e9 * tmix * T / (per * T), (unsigned long long)st.n_merges, (int)st.check_invariant());
+}
+
+int main(int argc, char** argv) {
+  if (argc < 2) { std::fprintf(stderr, "see header\n"); return 1; }
+  std::string mode = argv[1];
+  if (mode == "kernel") {
+    int p = atoi(argv[2]), T = atoi(argv[3]), ns = atoi(argv[4]), k = atoi(argv[5]), div = atoi(argv[6]); std::string ar = argv[7]; int Bk = atoi(argv[8]);
+    if (ar == "bit") bench_kernel<Arith::Bit>(p, T, ns, k, div, Bk); else bench_kernel<Arith::ClassA>(p, T, ns, k, div, Bk);
+  } else if (mode == "island") {
+    int p = atoi(argv[2]), N = atoi(argv[3]), T = atoi(argv[4]); std::string ar = argv[5], kn = argv[6];
+    int G = atoi(argv[7]), Bk = atoi(argv[8]), Ts = atoi(argv[9]), L = atoi(argv[10]), Hm = atoi(argv[11]);
+    int n = argc > 12 ? atoi(argv[12]) : 200; uint64_t cap = argc > 13 ? strtoull(argv[13], 0, 10) : 0;
+    KernelKind kk = kn == "pm" ? KernelKind::ParticleMajor : KernelKind::LabelMajor;
+    if (ar == "bit") bench_island<Arith::Bit>(p, N, T, kk, G, Bk, Ts, L, Hm, n, cap); else bench_island<Arith::ClassA>(p, N, T, kk, G, Bk, Ts, L, Hm, n, cap);
+  } else if (mode == "store") {
+    bench_store(strtoull(argv[2], 0, 10), atoi(argv[3]), atol(argv[4]));
+  } else return 1;
+  return 0;
+}
