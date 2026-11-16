@@ -1,0 +1,14 @@
+--- S3_frozen/METHOD_INTUITION.md
++++ S4_frozen/METHOD_INTUITION.md
+@@ -67,8 +67,9 @@
+ the target instead of from an arbitrary model; (ii) its exact normaliser anchors the evidence estimate; (iii) its mode
+ $\tilde S_0$ is a data-driven, deterministic guess of the true model. *What it gets wrong:* a predictor in one block
+ that imitates a truth in another block looks useful on its own, so $\pi_0$ may include it (leakage). Theorem 5 shows
+-that, when such imitators are confined to a small set, $\pi_0$ puts mass $1-n^{-c}$ ($c<\tfrac12$) on the right models as
+-$n$ grows.
++that, when there are no such imitators, $\pi_0$ puts mass $1-n^{-c}$ ($c<\tfrac12$) on the true model as $n$ grows, and when
++they are confined to a set of size $n^{1/2-\epsilon}$ it puts mass $1-n^{-c}$ ($c<\epsilon$) on the models between the truth
++and that set.
+ 
+ **4. Calibration (choosing the ladder, then freezing it).** The sampler moves from $\pi_0$ to $\pi$ through tempered
+ distributions $\pi_\phi\propto\pi_0^{1-\phi}\pi^{\phi}$, $0=\phi_0<\phi_1<\dots<\phi_T=1$. Pilot runs choose the ladder
