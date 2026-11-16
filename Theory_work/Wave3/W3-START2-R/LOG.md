@@ -7,3 +7,5 @@
 | 2026-11-15 19:35 | Writing PLAN.md, STATEMENT.md v1.5 (delta over START2 v1.4.1), TARGET.md, READER_DELTA.md. |
 | 2026-11-15 19:42 | Drafts written: STATEMENT v1.5-draft0, PLAN, TARGET, READER_DELTA. Brief saved: reviews/BRIEF_SL1_sol.md. |
 | 2026-11-15 19:42 | Agent started: **SL1 statement lock**, Sol (codex gpt-6.1-sol, reasoningEffort high), fresh, blind, read-only; role: reviewer. |
+| 2026-11-15 21:25 | SL1 returned: LOCK WITH CHANGES (1 F on supersession hypotheses, 1 F wording, 3 E, 1 optional). Saved verbatim: reviews/SL1_statement_lock_sol.md. All accepted and applied: reviews/SL1_disposition.md. **STATEMENT v1.5 locked.** Statement-change check for the STRONGER row bundled into LC1. DEPS.tsv started (statement rows, sha256 prefix of the line ranges; all UNCHECKED). |
+| 2026-11-15 21:26 | HOLDS re-read at CP1: none. SL1 reviewer thread settled (finished; reply saved). **CHECKPOINT_1.md written; run ends at CP1** awaiting the manager's answer. |

@@ -34,7 +34,8 @@ TARGET.md §3. ≈ 1.5 h.
 
 ## 3. Review chain (RIDER_RULES §3; NORMAL mode; Sol = codex gpt-6.1-sol, high)
 1. **SL1** statement lock (Sol, fresh, blind): STATEMENT, PLAN, the parent files consumed, triage rows. → CP1, end run.
-2. **LC1** Sol line check: R1 + R2 (+ numerics if a statement cites them). **LC2** Sol line check: R3 + R4 + R5.
+2. **LC1** Sol line check: R1 + R2 (+ numerics if a statement cites them), plus the statement-change check of the
+   SL1 changelog rows (PROTOCOL_v4 §4.2; STATEMENT changelog). **LC2** Sol line check: R3 + R4 + R5.
    New agent per batch, blind to LOG and earlier reviews. Repairs → re-check by a new Sol agent (repair + STALE rows).
 3. citecheck (copy of BASE `citecheck.py`), 0 MISS; DEPS all OK; REPORT with registry block.
 4. **Council R1**: Sol seat + Opus 5.5 high seat (Claude Third), fresh, blind, on `reviews/MANIFEST_R1.txt`; diff round if

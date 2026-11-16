@@ -1,7 +1,8 @@
 # W3-START2-R — STATEMENT v1.5 (rider on the start-mass statement: pointwise visibility, Gaussian-row rate)
 
 Ticket W3-START2-R (Tier B rider), Theory Wave 3. Lead: Claude Opus 5.5 (effort high).
-Status of this file: **v1.5-draft0** (2026-11-15; record in `LOG.md`). Protocol: `Theory_work/Wave3/PROTOCOL_v4.md`.
+Status of this file: **v1.5** (2026-11-15; locked after review SL1 with the changes of `reviews/SL1_disposition.md`;
+record in `LOG.md`). Protocol: `Theory_work/Wave3/PROTOCOL_v4.md`.
 All results are asymptotic (n → ∞) unless marked *deterministic*.
 
 **This is a delta statement.** PARENT := `Theory_work/Wave3/W3-START2/` (ticket W3-START2, STATEMENT v1.4.1, itself a
@@ -11,7 +12,7 @@ with BASE `STATEMENT.md` as it directs. **Version 1.5 of the start-mass statemen
 definition, hypothesis and claim of version 1.5 that differs from version 1.4 and takes everything else by line
 reference. Claims of version 1.4 not listed in §3 are unchanged, keep their version-1.4 hypotheses, and are used by id.
 **This file fixes target statements only and asserts no proof status.** Proofs belong in `lemmas/R1`–`R5` (`PLAN.md`
-§3); whether a proof is written or checked is recorded outside this file. **No method change is requested.**
+§2); whether a proof is written or checked is recorded outside this file. **No method change is requested.**
 
 ## 0. What changes, in one table
 
@@ -61,8 +62,10 @@ the prior-plus-dimension price of the configuration U against T. For a > d it is
 penalised by the prior, and (V-mp) asks correspondingly less. Version 1.4 replaced it by (1 + 2A)(d − a)₊ log n.)
 *Relation to version 1.4.* (V-c) with c_V > 1 + 2A implies (V-cp) with c_V − 2A in place of c_V (2 log p ≤ 2A log n),
 with the same κ_V. (V-m) with (c_m, ε₀) implies (V-mp) with the same (c_m, ε₀) for every n ≥ 256s₀² (then
-π_n(d, a; Q) ≤ (1 + 2A)(d − a)₊ log n, because p/c_Q ≥ 1/(16s₀)). When log p/log n → A the two forms agree; when p is
-smaller, or log p/log n oscillates, (D3) asks less.
+π_n(d, a; Q) ≤ (1 + 2A)(d − a)₊ log n, because p/c_Q ≥ 1/(16s₀)). When log p/log n → A the constant-level thresholds of
+(V-c) and (V-cp) agree at leading order; the margin form (V-mp) still asks less than (V-m) in that regime, because it
+keeps the negative price −(a − d)(log n + 2 log(p/c_Q)) of a net addition of nulls (a > d), which (V-m) replaces by 0.
+When p is smaller than the envelope, or log p/log n oscillates, both forms of (D3) ask less.
 
 **(D4) (L-R⁺⁺) [A:START2R-R-L]** (Gaussian rows; replaces (L-R⁺) of PARENT `:63-73`). Fixed constants C_L ≥ 0 and
 κ_H > 0. There are a deterministic Q = Q_n ⊇ S₀ with |Q| ≤ K, a deterministic sequence H̄_n with
@@ -95,14 +98,17 @@ of PARENT `:86-87` is to be read in this sense.
 
 ### 3.1 Fixed design (T8)
 
-**[VIS-c] (B-V1⁺⁺).** Setting F, (E), (GF-16), a deterministic Q ⊇ S₀ with |Q| ≤ K, (V-cp). For every κ ∈ (0, κ_V) there
-is n₄ depending only on κ and the fixed constants (A, M, σ², g_*, s₀, c_V) such that for n ≥ n₄, on the event
+**[VIS-c] (B-V1⁺⁺).** Setting F, a deterministic Q ⊇ S₀ with |Q| ≤ K. (V-cp), [TK] (in the quantitative form of BASE
+`:187-191`), [LEAK(Q)], (AL) ⇒ P(e_n > n^{−κ}) → 0 and [VIS(κ; Q)], for every κ < κ_V = (c_V − 1)/2 (as (B-V1), BASE
+`:235`, with (V-cp) for (V-c)). *Refinement under (E), (GF-16)* (which deliver that form of [TK]): for every κ ∈ (0, κ_V)
+there is n₄ depending only on κ and the fixed constants (A, M, σ², g_*, s₀, c_V) such that for n ≥ n₄, on the event
 𝓔^blk ∩ 𝓧 of BASE `lemmas/L4_VIS.md:12` (probability ≥ 1 − P((𝓔^blk)ᶜ) − 1/log n): e_n ≤ 2^{−16}n^{−κ}, and on
-𝓔^blk ∩ 𝓧 ∩ {c_QU_Q ≤ 1}: Ξ(Q) ≤ n^{−κ}. If moreover [LEAK(Q)] and (AL) hold: [VIS(κ; Q)] for every κ < κ_V.
+𝓔^blk ∩ 𝓧 ∩ {c_QU_Q ≤ 1}: Ξ(Q) ≤ n^{−κ}.
 
-**[VIS-m] (B-V2⁺⁺).** Setting F, (E), (GF-16), a deterministic Q ⊇ S₀ with |Q| ≤ K, (V-mp) with this Q. For every
-κ ∈ (0, κ_V) there is n₃ depending only on κ and the fixed constants (A, M, σ², g_*, s₀, c_m, ε₀) such that for n ≥ n₃,
-on 𝓔^blk ∩ 𝓧: Ξ(Q) ≤ n^{−κ}. Hence [VIS(κ; Q)] for every κ < κ_V = c_m/2.
+**[VIS-m] (B-V2⁺⁺).** Setting F, a deterministic Q ⊇ S₀ with |Q| ≤ K. (V-mp) with this Q, [TK] (quantitative form) ⇒
+[VIS(κ; Q)] for every κ < κ_V = c_m/2 (as (B-V2), BASE `:236`, with (V-mp) for (V-m)). *Refinement under (E), (GF-16):*
+for every κ ∈ (0, κ_V) there is n₃ depending only on κ and the fixed constants (A, M, σ², g_*, s₀, c_m, ε₀) such that
+for n ≥ n₃, on 𝓔^blk ∩ 𝓧: Ξ(Q) ≤ n^{−κ}.
 
 **[START-F] (T1⁺⁺) Theorem START-F (fixed design).** Setting F, the start as coded. Assume (E), (GF-16), visibility
 **(V-cp) or (V-mp)** (with this Q), and (AL) for a deterministic Q ⊇ S₀ with |Q| ≤ K, with level vector h (default:
@@ -136,7 +142,8 @@ h, whenever ϱ^{−I}_n(Q) → 0 and the second term tends to zero — for a fix
 and (|Q| + 1)n^{−κ₁} → 0 for some κ₁ < (1 − c)/2. (By (C2⁺⁺)(i) a column whose gain given the truths of its block is
 above τ²(c·log n + 2 log p) with c > 1 destroys the start mass: the two thresholds meet at c = 1 for every sequence p_n.)
 
-**[NEC-b] (C2⁺⁺) Lemma NEC-b (component diagnostics; Setting F, (E), (GF-16)).** On the actual partition:
+**[NEC-b] (C2⁺⁺) Lemma NEC-b (component diagnostics; Setting F, (E), [TK] in the quantitative form of BASE `:187-191`,
+which (E) and (GF-16) deliver).** On the actual partition:
 * (i) Suppose that for all large n some null l = l_n has **δ²_{U,l} ≥ τ²_U·(c_n·log n + 2 log p)** at U = U*_{b(l)}.
   If c_n ≡ c > 1 is fixed: P(π₀(S₀) ≤ n^{−κ′}) → 1 for every κ′ < (c − 1)/2. If (c_n − 1)·√log n → ∞: π₀(S₀) → 0 in
   probability.
@@ -162,8 +169,9 @@ design and let α, β, Q and a level vector h be measurable functions of X^r; co
 y^r = α(X^r)1 + X^rβ(X^r) + ε with ε | X^r ~ N_n(0, σ²I), σ² > 0 fixed; θ* := D_xβ(X^r), S₀ := supp β(X^r) (after dropping
 constant columns). Fix constants (A, M, g_*, s̄ and c_V or (c_m, ε₀)). A realisation x of X^r is **admissible at n** if,
 with its own (θ*, S₀, Q, h): p ≤ n^A retained columns, |S₀| ≤ s̄, |S₀| < p, S₀ ⊆ Q, |Q| ≤ K, h a level vector for Q,
-‖μ‖² ≤ Mn, (GF-16), and (V-cp) or (V-mp) at n. Write ϱ_n := ϱ_n(Q; h) and **R^♯_n := n^{−1/2}𝔏^♯_n(h) + n^{−1}𝔏_n(S₀; h)²**,
-evaluated at the realised design (random variables).
+‖μ‖² ≤ Mn, (GF-16), and (V-cp) or (V-mp) at n. Write ϱ_n := ϱ_n(Q; h), evaluated at the realised design, and
+**R^♯_n := n^{−1/2}𝔏^♯_n(h) + n^{−1}𝔏_n(S₀; h)²** on {Q = S₀}, R^♯_n := 0 on {Q ≠ S₀} (on {Q = S₀} the level vector h is
+indexed by every l ∉ S₀, as these functionals require); both are random variables.
 * (a1) **conditional form.** For every ε ∈ (0, 1) and κ ∈ (0, κ_V) there are C < ∞, c₀ > 0 and n₀, depending only on
   (ε, κ) and the fixed constants, such that for every n ≥ n₀, almost surely:
   on {X^r admissible, ϱ_n ≤ c₀}: **P(1 − π₀(𝓛(Q)) > C·ϱ_n + n^{−κ} | X^r) ≤ ε + b_n(h)**;
@@ -171,8 +179,10 @@ evaluated at the realised design (random variables).
 * (a2) **random-rate form.** If P(X^r admissible at n) → 1, b_n(h) → 0 in probability and ϱ_n → 0 in probability, then
   for every κ ∈ (0, κ_V): 1 − π₀(𝓛(Q)) = O_P(ϱ_n) + o_P(n^{−κ}); if moreover P(Q = S₀) → 1, then
   **o₀ = O_P(R^♯_n) + o_P(n^{−κ})**.
-* (a3) **deterministic envelopes.** (T3⁺)(a) of PARENT `:120-133` holds with (D3) in place of the visibility condition
-  and |S₀| ≤ s̄ in place of |S₀| = s₀ (a consequence of (a2)).
+* (a3) **deterministic envelopes.** If in (a2) moreover ϱ_n = O_P(ϱ̄_n) for a deterministic ϱ̄_n → 0, then
+  1 − π₀(𝓛(Q)) = O_P(ϱ̄_n) + o_P(n^{−κ}); if R^♯_n = O_P(r̄_n) for a deterministic r̄_n and P(Q = S₀) → 1, then
+  o₀ = O_P(r̄_n) + o_P(n^{−κ}). In particular (T3⁺)(a) of PARENT `:120-133` holds with (D3) in place of the visibility
+  condition and |S₀| ≤ s̄ in place of |S₀| = s₀.
 Supports, coefficients, sets Q or level vectors selected using the response are not covered. *Convention off the
 admissible designs:* as BASE `:301-305` (also in (b)).
 
@@ -235,8 +245,8 @@ P-START holds, and SAMP Theorem C (C-v)'s rate clause applies with 1_𝒜δ̄ = 
 holds with a deterministic rate r^{post}_n. Only the start interface is supplied (as PARENT `:179-180`).
 
 ## 4. Not claimed (changes to PARENT `:191-201`)
-* Removed from that list: "a reference set H_l beyond polylogarithmic size" (now up to exp(κ_H√log n) in (T3⁺⁺)(b)(i),
-  and any size in (ii)–(iii)).
+* Removed from that list: "a reference set H_l beyond polylogarithmic size" (now up to exp(κ_H√log n) under (L-R⁺⁺)
+  in (B-R⁺⁺) and (T3⁺⁺)(b); the stand-alone leading-functional bridge (B-R⁺⁺)(iii) needs no reference-set hypothesis).
 * Added: a Gaussian-row lattice rate free of N̄_n for Q ⊋ S₀; a Gaussian-row bound o₀ = O_P(√(log n/n)) when
   (L-gain-0) fails; a lower bound of order √(log p/n) (BASE `:380` stays not claimed); drifting constants on the
   sufficiency side of (D3); (T3⁺⁺)(b) for a candidate run with deterministic **raw** coefficients (Setting R has θ*
@@ -280,3 +290,7 @@ consultant, PROTOCOL_v4 H5):
 | version | clause | STRONGER / WEAKER / EQUAL / NEW-CLAIM | reason | trigger (review file) | check (review file) |
 |---|---|---|---|---|---|
 | 1.5-draft0 | all | — | draft for the statement lock | — | — |
+| 1.5 | VIS-c, VIS-m, NEC-b: hypothesis [TK] (quantitative form) in place of (E), (GF-16); the explicit thresholds kept as refinements under (E), (GF-16) | STRONGER (hypothesis back to the parent's interface form) | supersession must not strengthen a parent hypothesis | `reviews/SL1_statement_lock_sol.md` #1 | statement-change check bundled with LC1 (before the first freeze) |
+| 1.5 | (D3) relation remark | EQUAL (wording) | the margin forms differ also when log p/log n → A | SL1 #2 | LC1 bundle |
+| 1.5 | (T3⁺⁺)(a): R^♯_n defined on {Q = S₀}, 0 elsewhere; (a3) states the O_P-envelope consequence | EQUAL (definition completed; consequence of (a2)) | R^♯_n undefined when Q ⊋ S₀; SL1 OPTIONAL adopted | SL1 #3, OPTIONAL | LC1 bundle |
+| 1.5 | §4 scope sentence; PLAN section reference | EQUAL (wording) | — | SL1 #4, #5 | LC1 bundle |
