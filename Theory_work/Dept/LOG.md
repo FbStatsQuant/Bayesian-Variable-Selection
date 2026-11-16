@@ -287,3 +287,4 @@
 - 07:17 — HQ GO task W real run (conditional on CC-rule Opus re-check PASS; FAIL → stop, nothing recorded). After: thm9/card 2.1 swap variant A via READER (conditions in plain words). Recorder + READER briefed.
 - 07:17 — READER thm9/card 2.1 swap (variant A) prepared, not applied (ce212ca2 — corrected from 61a12dfc; PATCH_row21_thm9_A.diff; 'Conditions, in words' paragraph). Waits for task W real-run commit signal.
 - 07:41 — W3-DIST RECORDED on main e7a7216c (CC rule) + cb642afd (record): 20 PC, no T01 caveat; CC accepted; 502/0 ERROR; 15/15. READER signalled for thm9/card 2.1 swap (variant A). → HQ.
+- 07:42 — READER swapped row 2.1/thm9 (ef7179da, variant A, statuses @cb642afd; card v1.5). W3-DIST closed end to end. READER freeze waits on U, V, S4 (+ START2-R/RM2-R reader swaps). → HQ.
