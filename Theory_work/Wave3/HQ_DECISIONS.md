@@ -575,3 +575,7 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Supersessions GO: Cor-G(a), Cor-G(b), and Cor-H (clauses (a),(b) only; tombstone notes the KL generic-intercept reading is not carried; erratum if the base was false).
   - Reader thm4 v0.4: retitle to omitted Gaussian predictors; honest-limit line; relation of rows 1.2/1.4.
   - Post-freeze: rider P1; check X (CorGb-plus as a row 1.2 master in place of W2-APP:POST?).
+- 2026-11-16 ~05:00 CT. Task Q (MISR-R): GO on the complete transitive conditions; Cor-G(a) supersede; Cor-G(b) coexist.
+  - Cor-H held: the consultant objects to a remark-only record. If the false KL sentence (W3-MISR STATEMENT:191-195) is inside Cor-H's registered span, record it as NARROW 1.0.0 → 1.1.0, with a Sol diff check, rollback history and the erratum. If not, the remark is enough.
+  - Read-only sweep for the generic-intercept KL/Hellinger reading: C-MIS:Cor-H, POST2:D, W3-READER, W3-DIST. The DIST lead gets the counterexample now, pre-freeze.
+  - New rule (HQ, from the consultant): interpretive sentences inside registered statement spans are moved out or checked as claims (RIDER_RULES now; sweep in the post-freeze format package).
