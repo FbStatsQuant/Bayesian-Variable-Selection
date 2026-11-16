@@ -1,7 +1,7 @@
 # WP5 — evaluator, `law.bin`, Slurm driver, competitor harness (engine v4)
 
 Scope: ENGINEERING_SPEC §0.3 WP5, §1 rows 6–7, §0-v2.3/§0-v2.7; EXPERIMENT_PLAN §3 (§3.3 = W3-DIST metrics), §4;
-W3-DIST STATEMENT §0, §2; DECISIONS D-8, D-13. Contract: INTERFACES v0.1.1 (v0.1.2 items: see "Open").
+W3-DIST STATEMENT §0, §2; DECISIONS D-8, D-13, **D-17** (review PR12 MAJOR-1). Contract: INTERFACES v0.1.2.
 
 ## Commands
 ```
@@ -10,8 +10,12 @@ smcbvs4 eval --fit fit.bin --data data.bin --truth truth.json --out eval.bin [--
 smcbvs4 eval --competitor comp_<method>.json --data data.bin --truth truth.json --out ev_<method>.bin
 smcbvs4 post --fit fit.bin --data data.bin --out law.bin [--rel-cut 1e-12] [--max-models M] [--draws N --seed s]
 ```
+Mixture-predictive options (D-17): `--top-k 1000 --tail-r 1000 --tail-groups 4 --block-rows 500`. With a job manifest,
+`params.truth_sha256` is checked against truth.json (`invalid_input` on a mismatch).
 The record is `<out>.json` (written by WP1's `main`); `eval.bin` (kind 9) holds the 10⁴ draws of d_H per object.
-GUARD-W: a fit whose `meta.status` is not `completed` gets a record with `fit_status` and no metric fields.
+GUARD-W (fail closed): a fit.bin without `meta.status` is `invalid_input`; a fit whose status is not `completed` gets a
+record with `fit_status` and no metric fields (eval) or no law (post). `eval.bin` / `law.bin` take the fit's mode and
+carry the binary block in `meta` (INTERFACES v0.1.2 §5.3); the FMA guard runs in `main` for every command.
 
 ## What the record holds (schema `smcbvs4.eval/1`)
 - **selection**: HPM (`hpm_S`, else store entry 0) and MPM (`pip_eq > 0.5`, `core/v3_run.R:163`) vs S₀: equality,
@@ -22,11 +26,19 @@ GUARD-W: a fit whose `meta.status` is not `completed` gets a record with `fit_st
 - **evidence**: log Ẑ, log Ẑ_r, σ̂, robust σ̂ (1.4826 MAD), max − median, R_eff, R_eff/R′, max W_r, `log_Z_lower95`
   (`core/v3_run.R:155`), log Z_𝒯 = log Σ_𝒯 e^F, log Ẑ_occ for M ∈ {1, 10, 100, 1000} pooled and sd over islands (D-13).
 - **store**: size, log Z_𝒯, π̂(𝒯) = Σ_𝒯 e^F / Ẑ, law size, dropped mass, max |F_store − F_recomputed|.
-- **dist**: for Π̂^H, Π̂^M, Π̂^𝒯 and the oracle Π(·|S₀): (1) plug-in d_H² closed form, prediction error m² + s²;
-  (2) posterior law of d_H from 10⁴ conjugate draws (quantiles; tail Π̂(d_H² > c log n/n), c ∈ {½, 1, 2, 4, 8});
-  (3) predictive d_H² and KL (Student-t mixture; 4,000 x × 64-node Gauss–Hermite, centred on the geometric mean of
-  the two densities); (4) test MSE and mean log predictive density on 10⁴ rows; ratios to the oracle.
-  Test rows come from WP1's `gen::generate_test` (same definition as the data) when `truth.json` carries a gen spec.
+- **dist**: for Π̂^H, Π̂^M, Π̂^𝒯 and the oracle Π(·|S₀), at production scale (D-17; the store law keeps ≈ every
+  S₀ ∪ {j}, so M ≈ 40p + 1 up to the 10⁶ cap):
+  - `plugin`: closed form at the law's posterior mean (b̄ over the union of supports, ā, v̄) and its prediction error;
+  - `weighted_plugin`: exact E_π[d_H²(f_{S,θ̄_S,v̄_S}, f*)] and E_π[prediction error], O(M) closed forms;
+  - `post_dH`: 10⁴ conjugate draws (model by binary search on cumulative weights): quantiles and Π̂(d_H² > c log n/n);
+  - `predictive`: d_H² and KL of the mixture predictive: exact top-K (1,000 by weight) + a stratified (systematic)
+    importance sample of the tail (R = 1,000 in 4 independent groups, refreshed per block of 500 rows), an unbiased
+    estimate of f̄ at every (x, y) node; reported with the x-MC SE, the tail-MC SE (between groups), the tail mass τ,
+    the top-K-only value and the bound |d_H(f̄, f*) − d_H(f̄_K, f*)| ≤ √τ. Exact when the tail has ≤ R components;
+  - `test`: MSE of the predictive mean and mean log predictive density on 10⁴ rows (same estimator); ratios to the oracle.
+  Rows are streamed in blocks with only the columns in use: for gen designs exactly `gen::generate_test`'s rows
+  (bit-equal; rows 0 … n_x − 1 for the integrals, n_x … for the test rows), otherwise the same Markov / factor
+  constructions on eval-seeded Philox normals. dᵀΣd is O(|cols|) for IND / AR / ADJ-OPP / BLK / FAC.
 - **cost**: fit timings from `meta.timings`; the sacct summary of `tools/slurm/p1m_cost.py` (`--cost`); eval wall.
 
 ## The plug-in closed form (plan §3.3 item 1)
@@ -45,13 +57,24 @@ AR(0.6) / BLK(20, 0.5) / FAC(0.3), n ∈ {100, 200, 400}, strong and weak amplit
   Pass: |closed − MC| ≤ ½ unit of the 3rd significant digit, with MC s.e. ≤ ⅓ of that (MC doubles 2²⁰ … 2²⁷).
 - T7c (sanity): joint (x, y) MC within 4 s.e.
 
-Result (MEASURED, Owls, 3 threads, 2026-11-15, 187.6 s): **40 / 40 pass** — `tests/wp5/T7_result_owls_20261115.tsv`.
+Result (MEASURED, Owls, 3 threads, 2026-11-15): **46 / 46 pass** (23 fixtures; 3 added after review PR12 MINOR-6 with a
+shifted intercept, |m| ≈ 1, and v/σ² ∈ {0.5, 2}) — `tests/wp5/T7_result_owls_20261115.tsv`.
 GH(64) predictive vs Simpson: worst relative error 5e-11.
 
+## Scale test T7′ and the mixture estimator (D-17 item 7; `tests/wp5/test_scale.cpp`, `v4_tests --full wp5_`)
+- Agreement: law of 5,000 conjugate components from real data (S₀, S₀ + j, S₀ + j + l; p = 2,000, IND; tempered weights,
+  tail mass 0.53): top-K + tail d_H² 0.005006 vs the exact full mixture 0.005006 (tail SE 3.6e-6); KL 0.019405 vs
+  0.019404 (tail SE 1.4e-5). Within 3 SE (asserted), and |√h2_exact − dH_topK| ≤ √τ (asserted).
+- T7′ (MEASURED, Owls, 3 threads, production sizes 10⁴ draws / 4,000 x × 64 GH / 10⁴ test rows, AR gen spec at p = 10⁶):
+  M = 10⁵: 13.6 s, peak RSS 0.09 GB; M = 10⁶: 14.9 s, 0.81 GB (limits: 10⁴ rung 20 min × 4 CPUs, 8 GB; 10⁶ rung
+  1 h × 8 CPUs, 16 GB). Law build (model_post per kept model, n = 200): 3.9 µs per model on 3 threads → ESTIMATE 4 s
+  for 10⁶ models. Not measured: reading a 2.3 GB fit.bin / 1.6 GB data.bin on NOTS scratch.
+
 ## `law.bin` (kind 7; `include/v4/post.h`)
-Models with F ≥ max F + log 10⁻¹² (store prefix; HPM order), weights, logm, Q, α_n, β_n, route, θ̄ (standardised), packed
-Cholesky factor of H = (n+1)G_S + I, the union columns with x̄ and ŝ, ȳ, s_y, dropped mass; optional N draws
-(role POST) of (model, a, v, b over the union columns).
+Models with F ≥ max F + log 10⁻¹² (store prefix; HPM order; at most 10⁶), weights, logm, Q, α_n, β_n, route, θ̄
+(standardised), packed Cholesky factor of H = (n+1)G_S + I, the union columns with x̄ and ŝ, ȳ, s_y, dropped mass;
+optional N draws (role POST), sparse: model, a, v and the coefficients on the model's own columns (`draw_ptr`/`draw_b`).
+The file takes the fit's mode; `meta` carries the binary block.
 
 ## Slurm driver (`tools/slurm/`, dry run only)
 `p1m_driver.py --plan plan.json --out <dir>` writes `stage_{setup,calibrate,islands,merge,eval}.sbatch`, `submit.sh`
@@ -59,21 +82,27 @@ Cholesky factor of H = (n+1)G_S + I, the union columns with x̄ and ŝ, ȳ, s_y,
 job-manifest templates, one run manifest per fit, `ledger_row.md`. Graph: setup[1..F] → calibrate[1..F] (`aftercorr`)
 → per fit: islands[1..R′] (`afterok:<calibrate>_i`) → merge → eval(+post); 2 + 3F sbatch calls; ≤ 150 tasks; no task
 above 2 h; worst case = Σ CPUs × limit. prep exit 20/21 end the fit's pipeline (OUTCOME file; later stages exit 0;
-eval writes the outcome record). `p1m_manifest.py` fills inputs (path → content hash, producer record must be
-completed); `p1m_cost.py` turns one sacct dump per batch into per-fit cost JSON. Example: `examples/plan_A2_pilot_1e4.json`
+eval writes the outcome record). Every stage, eval and post included, runs with a job manifest: `p1m_manifest.py`
+fills inputs (path → content hash; the producer record must be completed) and `params.truth_sha256` for eval.
+`#SBATCH --kill-on-invalid-dep=yes` removes dependants of a failed task. `--dept`, `--out` and a run-time `P1M_DEPT`
+must resolve (realpath) inside the department folder (tests: `P1M_TEST_ROOT` inside `$TMPDIR`). `submit.sh` calls
+`${SBATCH:-sbatch}`; its test passes a stub by absolute path on a PATH holding no other sbatch. Eval resources:
+10⁴ 4 CPUs / 8 GB / 20 min; 10⁵ 8 / 16 GB / 45 min; 10⁶ 8 / 16 GB / 1 h. `p1m_cost.py` turns one sacct dump per batch into per-fit cost JSON. Example: `examples/plan_A2_pilot_1e4.json`
 (2 fits at 10⁴: 40 tasks, worst case 164.0 billed core-h with the planning resources).
 
 ## Competitor harness (`tools/competitors/p1m_competitors.R`)
 lasso-CV (λ_min, λ_1se; glmnet), MCP / SCAD (ncvreg), lasso via biglasso, L0Learn (L0L2), SuSiE (L = 10), varbvs,
 BAS (p ≤ 10⁴; model law with our kernels), SIS screen (hand-off file for the engine), built-in baselines (marginal+OLS,
 oracle OLS). **On Owls none of the packages is installed** (glmnet, ncvreg, biglasso, bigmemory, L0Learn, susieR,
-varbvs, BAS): those methods give `package_missing` records and their code paths are untested. NOTS needs the same list
-(not checked: no NOTS access for builders).
+varbvs, BAS): those methods give `package_missing` records. Their extraction / record logic is tested against mocks
+(`tools/competitors/mock_packages.R`, `P1M_COMPETITOR_MOCK`; structure only, not the real APIs — review MINOR-11,
+DEFER until the packages are installed on NOTS). NOTS needs the same list. Predictive choices to state in C5:
+penalised fits use σ² = CV error (σ² + prediction error); SuSiE and varbvs use a Gaussian at the posterior mean.
 
 ## Open
-1. INTERFACES v0.1.2 (WP1 code not yet pushed): call `require_fma_variant()` / `binary_block()` in eval/post and put
-   the block into `eval.bin` / `law.bin` meta; the manifest filler already accepts the v0.1.2 content hash.
-2. fit.bin names read by eval but not fixed in INTERFACES: `hpm_S`, `meta.hpm_F`, `meta.logZ`, `meta.status`,
-   `pip_r` (R′×p), `occ_top` / `occ_top_r`, `meta.occ_total(_r)`, `meta.timings` (change request to WP1/WP4).
-3. Plan §3.1 exact log π₀(S₀) and the lattice mass need setup.bin tables (WP2): not in this slice.
-4. Package-backed competitor paths untested until the packages exist somewhere we may run.
+1. fit.bin names read by eval but not yet in INTERFACES (`hpm_S`, `meta.hpm_F/logZ/status/timings`, `pip_r` R′×p,
+   `occ_top(_r)`, `meta.occ_total(_r)`): list sent to WP1 for v0.1.3 (review MINOR-2).
+2. Plan §3.1 exact log π₀(S₀) and the lattice mass need setup.bin tables (WP2): not in this slice.
+3. Real competitor package APIs untested until the packages exist on NOTS (MINOR-11, deferred).
+4. Row generation re-implements `gen::generate_test`'s definition per row range (bit-equal by test); a row-range entry
+   point in WP1's gen would remove the copy.

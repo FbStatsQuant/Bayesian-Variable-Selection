@@ -1,5 +1,5 @@
 // test_t7.cpp -- gate T7 (ENGINEERING_SPEC §5; plan G-A): the closed forms of the evaluator against brute-force Monte
-// Carlo on 20 fixtures, to 3 significant digits. Declared before the run (src/eval/README_WP5.md):
+// Carlo on 20 fixtures (+ 3 added after review PR12 MINOR-6: shifted intercept, v/σ² ∈ {0.5, 2}), to 3 significant digits. Declared before the run (src/eval/README_WP5.md):
 //   T7a  plug-in d_H² (closed form, plan §3.3 item 1) vs MC over x ~ ν_x (mt19937_64, independent of the eval's Philox),
 //        the y-integral by the normal–normal affinity (checked against quadrature in test h2_normals_vs_quadrature);
 //   T7b  prediction error m² + s² vs MC over x of (â + xᵀb − α* − xᵀβ*)²;
@@ -54,10 +54,14 @@ Fixture make_fixture(int id) {
     default: S = {5, 18, 29, 41, 53}; break;                // a neighbour of a truth (AR proxy / BLK partner)
   }
   std::sort(S.begin(), S.end());
-  if (id >= 16) S = {5, 29};                                // badly misspecified: large m, s²
+  if (id >= 16 && id < 20) S = {5, 29};                     // badly misspecified: large m, s²
   Component c = component_from_post(O, model_post(O, S), 1.0);
   Fixture f; f.name = "f" + std::to_string(id) + "_" + des + "_n" + std::to_string(n);
   f.T = T; f.orig = c.orig; f.b = c.b_mean(); f.a = c.a_mean(); f.v = c.v_mean();
+  // PR12 MINOR-6: exercise the m-term and v ≠ σ² (shifted intercept |m| ≈ 1; v/σ² ∈ {0.5, 2})
+  if (id == 20) { f.a += 1.0; f.v = 0.5 * T.sigma2_eff(); f.name += "_shift+1_v0.5"; }
+  if (id == 21) { f.a -= 0.8; f.v = 2.0 * T.sigma2_eff(); f.name += "_shift-0.8_v2"; }
+  if (id == 22) { f.a += 1.2; f.v = 2.0 * T.sigma2_eff(); f.name += "_shift+1.2_v2"; }
   return f;
 }
 
@@ -102,7 +106,7 @@ TEST_SLOW(wp5_gate_T7_closed_forms_vs_monte_carlo) {
   FILE* fo = std::fopen(tsv.c_str(), "w");
   std::fprintf(fo, "fixture\tquantity\tclosed\tmc\tmc_se\ttol3\tdraws\tpass\n");
   int pass = 0, total = 0;
-  for (int id = 0; id < 20; ++id) {
+  for (int id = 0; id < 23; ++id) {
     Fixture f = make_fixture(id);
     const double s2t = f.T.sigma2_eff();
     LinErr e = lin_error(f.T, f.orig, f.b, f.a);
@@ -149,5 +153,5 @@ TEST_SLOW(wp5_gate_T7_closed_forms_vs_monte_carlo) {
   }
   std::fclose(fo);
   std::printf("    gate T7: %d / %d closed-form checks pass (3 significant digits); table: %s\n", pass, total, tsv.c_str());
-  CHECK(pass == total && total == 40);
+  CHECK(pass == total && total == 46);
 }

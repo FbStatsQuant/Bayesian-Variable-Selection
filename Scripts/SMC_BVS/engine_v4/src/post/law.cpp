@@ -9,11 +9,12 @@
 #include "v4/format.h"
 #include "v4/post.h"
 #include "v4/prep.h"
+#include "v4/provenance.h"
 
 namespace v4::post {
 
 
-LawFile build_law(const Data& D, const eval::StoreView& s, double rel_cut, size_t max_models) {
+LawFile build_law(const Data& D, const eval::StoreView& s, double rel_cut, size_t max_models, int threads) {
   LawFile L;
   L.n = D.n; L.p = D.p; L.rel_cut = rel_cut; L.n_store = s.size;
   L.ybar = eval::ybar(D); L.sy = eval::sy(D); L.a0 = D.a0; L.b0 = D.b0;
@@ -28,19 +29,25 @@ LawFile build_law(const Data& D, const eval::StoreView& s, double rel_cut, size_
   for (size_t i = 0; i < s.size; ++i) { long double e = std::exp((long double)(s.v[i] - sm.vmax)); tot += e; if (i >= keep.size()) drop += e; }
   for (size_t i : keep) kept += std::exp((long double)(s.v[i] - sm.vmax));
   L.dropped_mass = (double)(drop / tot);   // includes models cut by max_models
-  std::map<int32_t, int> colset;
-  for (size_t i : keep) {
-    Model S = s.model(i);
-    eval::ModelPost mp = eval::model_post(D, S);
-    L.max_abs_dF = std::max(L.max_abs_dF, std::fabs(mp.F - s.v[i]));
+  // conjugate parameters per kept model: independent, threaded, stored by index (no order dependence)
+  L.models.resize(keep.size()); L.w.resize(keep.size());
+  std::vector<double> dF(keep.size());
+#pragma omp parallel for schedule(dynamic, 256) num_threads(std::max(1, threads))
+  for (long q = 0; q < (long)keep.size(); ++q) {
+    const size_t i = keep[q];
+    eval::ModelPost mp = eval::model_post(D, s.model(i));
+    dF[q] = std::fabs(mp.F - s.v[i]);
     mp.F = s.v[i];
-    for (int32_t j : S) colset[j] = 1;
-    L.models.push_back(std::move(mp));
-    L.w.push_back((double)(std::exp((long double)(s.v[i] - sm.vmax)) / kept));
+    L.models[q] = std::move(mp);
+    L.w[q] = (double)(std::exp((long double)(s.v[i] - sm.vmax)) / kept);
   }
-  for (auto& kv : colset) {
-    L.cols.push_back(kv.first); L.cols_orig.push_back(D.orig[kv.first]);
-    L.cols_xbar.push_back(eval::xbar(D, kv.first)); L.cols_xsd.push_back(eval::xsd(D, kv.first));
+  for (double x : dF) L.max_abs_dF = std::max(L.max_abs_dF, x);
+  std::vector<int32_t> cs;
+  for (auto& mp : L.models) cs.insert(cs.end(), mp.S.begin(), mp.S.end());
+  std::sort(cs.begin(), cs.end()); cs.erase(std::unique(cs.begin(), cs.end()), cs.end());
+  for (int32_t j : cs) {
+    L.cols.push_back(j); L.cols_orig.push_back(D.orig[j]);
+    L.cols_xbar.push_back(eval::xbar(D, j)); L.cols_xsd.push_back(eval::xsd(D, j));
   }
   return L;
 }
@@ -60,7 +67,7 @@ eval::Law to_eval_law(const LawFile& L, const std::string& name) {
   return out;
 }
 
-std::string write_law(const LawFile& L, const std::string& path, int n_draws, uint32_t draw_seed) {
+std::string write_law(const LawFile& L, const std::string& path, int n_draws, uint32_t draw_seed, uint32_t mode) {
   const size_t M = L.models.size(), C = L.cols.size();
   std::vector<int64_t> mptr(M + 1, 0), lptr(M + 1, 0);
   std::vector<int32_t> midx; std::vector<double> F(M), w = L.w, logm(M), Q(M), an(M), bn(M), th, LH;
@@ -81,7 +88,8 @@ std::string write_law(const LawFile& L, const std::string& path, int n_draws, ui
   meta["dropped_mass"] = (L.dropped_mass); meta["n_store"] = (eval::hex_u64(L.n_store));
   meta["ybar"] = (L.ybar); meta["sy"] = (L.sy); meta["a0"] = (L.a0); meta["b0"] = (L.b0); meta["max_abs_dF"] = (L.max_abs_dF);
   for (auto& kv : L.meta_extra.items()) meta[kv.first] = kv.second;
-  fmt::Writer W(fmt::K_LAW, fmt::M_V);
+  meta["binary"] = binary_block(); meta["kind"] = "law"; meta["mode"] = fmt::mode_name(mode);   // v0.1.2 §5.3; mode of the fit (MINOR-3)
+  fmt::Writer W(fmt::K_LAW, mode);
   W.add("model_ptr", mptr); W.add("model_idx", midx);
   W.add("F", F); W.add("w", w);
   W.add("logm", logm); W.add("Q", Q);
@@ -91,21 +99,20 @@ std::string write_law(const LawFile& L, const std::string& path, int n_draws, ui
   W.add("LH_ptr", lptr); W.add("LH", LH);
   W.add("cols", L.cols); W.add("cols_orig", L.cols_orig);
   W.add("cols_xbar", L.cols_xbar); W.add("cols_xsd", L.cols_xsd);
+  // draws stored sparsely (D-17 item 3): draw d's coefficients are draw_b[draw_ptr[d] .. draw_ptr[d+1]) on model draw_model[d]
+  std::vector<int32_t> dm; std::vector<double> da, dv, db; std::vector<int64_t> dptr;
   if (n_draws > 0) {
     eval::Law el = to_eval_law(L);
-    std::vector<int32_t> dm(n_draws); std::vector<double> da(n_draws), dv(n_draws), db((size_t)n_draws * C, 0.0);
+    const std::vector<double> cum = eval::cumulative_weights(el);
+    dm.resize(n_draws); da.resize(n_draws); dv.resize(n_draws); dptr.assign((size_t)n_draws + 1, 0);
     for (int d = 0; d < n_draws; ++d) {
-      eval::ParamDraw pd = eval::draw_params(el, draw_seed, 0, (uint32_t)d);
+      eval::ParamDraw pd = eval::draw_params(el, cum, draw_seed, 0, (uint32_t)d);
       dm[d] = pd.comp; da[d] = pd.a; dv[d] = pd.v;
-      const eval::ModelPost& mp = L.models[pd.comp];
-      for (size_t i = 0; i < mp.S.size(); ++i) {
-        size_t q = (size_t)(std::lower_bound(L.cols.begin(), L.cols.end(), mp.S[i]) - L.cols.begin());
-        db[(size_t)d * C + q] = pd.b[i];
-      }
+      db.insert(db.end(), pd.b.begin(), pd.b.end());
+      dptr[d + 1] = (int64_t)db.size();
     }
-    W.add("draw_model", dm); W.add("draw_a", da); W.add("draw_v", dv);
-    W.add("draw_b", db.data(), db.size(), (uint64_t)n_draws, (uint64_t)C);
-    Json dj = Json::object(); dj["n"] = (n_draws); dj["seed"] = ((int64_t)draw_seed); dj["role"] = ("POST");
+    W.add("draw_model", dm); W.add("draw_a", da); W.add("draw_v", dv); W.add("draw_ptr", dptr); W.add("draw_b", db);
+    Json dj = Json::object(); dj["n"] = (n_draws); dj["seed"] = ((int64_t)draw_seed); dj["role"] = ("POST"); dj["layout"] = "sparse";
     meta["draws"] = (dj);
   } else {
     meta["draws"] = (Json());
@@ -169,10 +176,16 @@ Json run(const Json& a) {
   std::string dh;
   const Data D = prep::load_data(datap, &dh);
   eval::io::FitFile ff; eval::io::load_fit(fitp, ff);
-  LawFile L = build_law(D, ff.top, rel, maxm);
+  // GUARD-W (PR12 MINOR-4): no law from a fit that is not completed; a missing status is invalid input
+  if (!eval::jfind(ff.meta, "status") || ff.meta.at("status").type() != Json::STR) throw Error(Status::invalid_input, "fit.bin: meta.status missing");
+  if (ff.meta.at("status").str() != "completed") {
+    rec["fit_status"] = ff.meta.at("status").str(); rec["reason"] = "fit not completed: no law"; rec["status"] = "completed";
+    return rec;
+  }
+  LawFile L = build_law(D, ff.top, rel, maxm, (int)eval::io::arg_num(a, "threads", 1));
   Json inp = Json::object(); inp["fit.bin"] = ff.bin->content_hash(); inp["data.bin"] = dh;
   L.meta_extra["inputs"] = inp;
-  const std::string h = write_law(L, out, nd, seed);
+  const std::string h = write_law(L, out, nd, seed, ff.bin->mode());
   rec["inputs"] = inp;
   Json o = Json::object(); o[out.substr(out.find_last_of('/') + 1)] = h; rec["outputs"] = o;
   rec["M"] = (uint64_t)L.models.size(); rec["dropped_mass"] = L.dropped_mass; rec["logZ_T"] = L.logZ_T;

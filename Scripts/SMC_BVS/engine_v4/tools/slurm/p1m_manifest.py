@@ -9,6 +9,7 @@ Placeholders in the template:
                             <path>.json must exist with "status": "completed", else exit (refuse to start)
   "@binary"              -> binary.sha256 = SHA-256 of --bin (default $BIN); compiler/flags/libm = "see <bin> info"
   "@slurm"               -> machine.host / slurm_job_id / params.threads from the Slurm environment
+  params "@sha256:<path>" -> SHA-256 of a plain file (truth.json for eval; eval refuses on a mismatch)
 """
 import argparse
 import hashlib
@@ -88,6 +89,12 @@ def main(argv=None):
         if v == "@slurm":
             mach[k] = socket.gethostname() if k == "host" else os.environ.get("SLURM_JOB_ID", "none")
     prm = m.get("params", {})
+    for k, v in list(prm.items()):   # "@sha256:<path>": SHA-256 of a plain file (truth.json), checked by eval
+        if isinstance(v, str) and v.startswith("@sha256:"):
+            fp = v[len("@sha256:"):]
+            if not os.path.exists(fp):
+                raise SystemExit("p1m_manifest: %s missing: refusing to start" % fp)
+            prm[k] = sha256_file(fp)
     if prm.get("threads") == "@slurm":
         prm["threads"] = int(os.environ.get("SLURM_CPUS_PER_TASK", "1"))
     for s in a.set:

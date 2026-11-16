@@ -40,4 +40,16 @@ pk = json.load(open(os.path.join(W, "packages.json")))
 missing = [p["package"] for p in pk["packages"] if not p["installed"]]
 print("  packages missing here:", ", ".join(missing) or "none")
 PY
+# PR12 MINOR-11: the package paths against mocks (structure only; the real APIs are checked once the packages exist)
+M=$W/mock; mkdir -p "$M"
+P1M_COMPETITOR_MOCK="$here/mock_packages.R" nice -n 19 Rscript "$here/p1m_competitors.R" --raw "$W/raw.bin" --truth "$W/truth.json" \
+  --out-dir "$M" --seed 3 --methods lasso_cv_min,lasso_cv_1se,mcp_cv,scad_cv,lasso_cv_big,l0learn_cv,susie,varbvs,bas > "$M/log.txt" 2>&1 || fail=1
+for f in "$M"/comp_*.json; do
+  m=$(basename "$f" .json); m=${m#comp_}
+  st=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['status'])" "$f")
+  rc=0; "$BIN" eval --competitor "$f" --data "$W/data.bin" --truth "$W/truth.json" --out "$M/ev_$m.bin" --n-draws 200 --n-x 100 --n-test 200 > /dev/null || rc=$?
+  ok=$(python3 -c "import json,sys; r=json.load(open(sys.argv[1])); print('dist' in r and r['dist']['C'] is not None)" "$M/ev_$m.bin.json")
+  echo "  mock $m: competitor=$st eval_rc=$rc predictive_scored=$ok"
+  [[ $st == completed && $rc == 0 && $ok == True ]] || { echo "  FAIL: mock $m"; fail=1; }
+done
 [[ $fail == 0 ]] && echo "competitor harness: OK" || { echo "competitor harness: FAILED"; exit 1; }

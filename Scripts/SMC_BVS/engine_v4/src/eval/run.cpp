@@ -8,6 +8,7 @@
 #include "io.h"
 #include "v4/post.h"
 #include "v4/prep.h"
+#include "v4/provenance.h"
 #include "v4/sha256.h"
 
 namespace v4::eval {
@@ -45,6 +46,11 @@ DistOpts dist_opts(const Json& a, const Truth& T) {
   o.n_gh = (int)io::arg_num(a, "n_gh", 64);
   o.n_test = (int)io::arg_num(a, "n_test", 10000);
   o.threads = (int)io::arg_num(a, "threads", 1);
+  o.top_k = (int)io::arg_num(a, "top_k", 1000);
+  o.tail_r = (int)io::arg_num(a, "tail_r", 1000);
+  o.tail_groups = (int)io::arg_num(a, "tail_groups", 4);
+  o.block_rows = (int)io::arg_num(a, "block_rows", 500);
+  if (o.top_k < 1 || o.tail_r < 2 || o.tail_groups < 2 || o.block_rows < 1) throw Error(Status::invalid_input, "eval: bad mixture-predictive sizes");
   if (o.n_draws < 1 || o.n_x < 2 || o.n_gh < 8 || o.n_test < 2 || o.threads < 1) throw Error(Status::invalid_input, "eval: bad Monte Carlo sizes");
   return o;
 }
@@ -52,29 +58,27 @@ Json params_json(const DistOpts& o, double rel_cut, const std::string& rows) {
   Json p = Json::object();
   p["seed"] = (int64_t)o.seed; p["n_draws"] = o.n_draws; p["n_x"] = o.n_x; p["n_gh"] = o.n_gh; p["n_test"] = o.n_test;
   p["threads"] = o.threads; p["rel_cut"] = rel_cut; p["test_rows"] = rows;
+  p["top_k"] = o.top_k; p["tail_r"] = o.tail_r; p["tail_groups"] = o.tail_groups; p["block_rows"] = o.block_rows;
   return p;
 }
 // Distribution block for a list of objects (null entries are recorded as null) + the oracle Π(·|S0) and ratios.
 Json dist_block(const std::vector<std::pair<std::string, const Law*>>& objs, const Law& oracle, const Truth& T, int32_t n,
                 const DistOpts& o, std::map<std::string, std::vector<double>>* draws, std::string* rows) {
-  std::vector<int32_t> cols;
-  for (auto& ob : objs) if (ob.second) for (auto& c : ob.second->comps) cols.insert(cols.end(), c.orig.begin(), c.orig.end());
-  for (auto& c : oracle.comps) cols.insert(cols.end(), c.orig.begin(), c.orig.end());
-  const DistShared sh = make_shared_draws(T, cols, o);
-  if (rows) *rows = sh.source;
+  if (rows) *rows = T.gen_spec.is_null() ? "eval_philox" : "gen_test";
   Json dist = Json::object(), rat = Json::object();
   std::vector<double> dO;
-  Json jO = dist_metrics(oracle, T, n, o, sh, 3, &dO);
+  Json jO = dist_metrics(oracle, T, n, o, 3, &dO);
   if (draws) (*draws)["oracle"] = dO;
   uint32_t oid = 0;
   for (auto& ob : objs) {
     const uint32_t id = (ob.first == "H") ? 0 : (ob.first == "M" ? 1 : (ob.first == "T" ? 2 : 4 + oid++));
     if (!ob.second) { dist[ob.first] = Json(); rat[ob.first] = Json(); continue; }
     std::vector<double> dh;
-    Json j = dist_metrics(*ob.second, T, n, o, sh, id, &dh);
+    Json j = dist_metrics(*ob.second, T, n, o, id, &dh);
     if (draws) (*draws)[ob.first] = dh;
     Json r = Json::object();
     r["plugin_h2"] = ratio(j, jO, "plugin", "h2");
+    r["weighted_plugin_h2"] = ratio(j, jO, "weighted_plugin", "h2");
     r["pred_error"] = ratio(j, jO, "plugin", "pred_error");
     r["predictive_h2"] = ratio(j, jO, "predictive", "h2");
     r["kl"] = ratio(j, jO, "predictive", "kl");
@@ -99,18 +103,23 @@ Json run(const Json& a) {
   std::string data_hash;
   const Data D = prep::load_data(datap, &data_hash);
   io::FitFile ff; io::load_fit(fitp, ff);
+  const std::string truth_hash = sha256_file(truthp);
+  if (const Json* th = jfind(a, "truth_sha256")) if (th->type() == Json::STR && th->str() != truth_hash)
+    throw Error(Status::invalid_input, "truth.json: content hash differs from the manifest");
   const Truth T = truth_from_json(read_json_file(truthp));
   const fmt::Reader& FB = *ff.bin;
   const DistOpts o = dist_opts(a, T);
   const double rel_cut = io::arg_num(a, "rel_cut", 1e-12);
 
   Json inp = Json::object();
-  inp["fit.bin"] = FB.content_hash(); inp["data.bin"] = data_hash; inp["truth.json"] = sha256_file(truthp);
+  inp["fit.bin"] = FB.content_hash(); inp["data.bin"] = data_hash; inp["truth.json"] = truth_hash;
   Json fit = Json::object();
   fit["mode"] = fmt::mode_name(FB.mode());
   fit["meta"] = ff.meta;
   rec["fit"] = fit;
-  const std::string fst = jstr_or(ff.meta, "status", "completed");
+  // GUARD-W, fail closed (PR12 MINOR-4): a fit.bin without meta.status is invalid input
+  if (!jfind(ff.meta, "status") || ff.meta.at("status").type() != Json::STR) throw Error(Status::invalid_input, "fit.bin: meta.status missing");
+  const std::string fst = ff.meta.at("status").str();
   rec["fit_status"] = fst;
   if (fst != "completed") {   // GUARD-W: no estimate fields for an incomplete fit; the fit stays in the denominator
     rec["inputs"] = inp;
@@ -145,16 +154,21 @@ Json run(const Json& a) {
 
   // ---------------- store mass and the law Π̂^𝒯
   const StoreMass sm = store_mass(ff.top, rel_cut);
-  post::LawFile LF;
-  const std::string lawp = io::arg_str(a, "law", "");
-  if (!lawp.empty()) { std::string h; LF = post::read_law(lawp, &h); inp["law.bin"] = h; }
-  else LF = post::build_law(D, ff.top, rel_cut);
+  Law LT; double law_dropped = 0, law_dF = 0; uint64_t law_M = 0;
+  {
+    post::LawFile LF;
+    const std::string lawp = io::arg_str(a, "law", "");
+    if (!lawp.empty()) { std::string h; LF = post::read_law(lawp, &h); inp["law.bin"] = h; }
+    else LF = post::build_law(D, ff.top, rel_cut, (size_t)io::arg_num(a, "max_models", 1000000), o.threads);
+    LT = post::to_eval_law(LF, "T");
+    law_dropped = LF.dropped_mass; law_dF = LF.max_abs_dF; law_M = LF.models.size();
+  }
   const double logZ = jnum_or(ff.meta, "logZ", NAN);
   Json st = Json::object();
   st["size"] = (uint64_t)ff.top.size; st["logZ_T"] = sm.logZ_T;
   st["pi_T_hat"] = std::exp(sm.logZ_T - logZ);                 // π̂(𝒯) = Σ_𝒯 e^F / Ẑ (ratio of estimates)
-  st["law_models"] = (uint64_t)LF.models.size(); st["dropped_mass"] = LF.dropped_mass;
-  st["max_abs_dF_law"] = LF.max_abs_dF;
+  st["law_models"] = law_M; st["dropped_mass"] = law_dropped;
+  st["max_abs_dF_law"] = law_dF;
   rec["store"] = st;
 
   // ---------------- PIPs
@@ -214,7 +228,6 @@ Json run(const Json& a) {
   // ---------------- distribution objects: Π̂^H, Π̂^M, Π̂^𝒯, oracle Π(·|S0)
   Law LH; LH.name = "H"; LH.comps.push_back(component_from_post(D, mph, 1.0));
   Law LO; LO.name = "oracle"; LO.comps.push_back(component_from_post(D, mp0, 1.0));
-  Law LT = post::to_eval_law(LF, "T");
   Law LM; const bool have_M = mpm.size() <= (size_t)D.K;
   if (have_M) { LM.name = "M"; LM.comps.push_back(component_from_post(D, model_post(D, mpm), 1.0)); }
   std::map<std::string, std::vector<double>> dr;
@@ -234,6 +247,8 @@ Json run(const Json& a) {
   // ---------------- eval.bin (arrays)
   fmt::Writer W(fmt::K_EVAL, FB.mode());
   for (auto& kv : dr) W.add("dH_draws_" + kv.first, kv.second);
+  rec["binary"] = binary_block();   // INTERFACES v0.1.2 §5.3 (also in the record, by main)
+  rec["kind"] = "eval"; rec["mode"] = fmt::mode_name(FB.mode());
   W.add_json("meta", rec);
   Json outs = Json::object(); outs[out.substr(out.find_last_of('/') + 1)] = W.write(out);
   rec["outputs"] = outs;

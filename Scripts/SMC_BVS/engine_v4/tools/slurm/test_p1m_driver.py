@@ -32,7 +32,7 @@ class Base(unittest.TestCase):
     def setUp(self):
         root = os.environ.get("TMPDIR") or tempfile.gettempdir()
         self.tmp = tempfile.mkdtemp(prefix="p1m_driver_", dir=root)
-        os.environ["P1M_DRIVER_TEST"] = "1"
+        os.environ["P1M_TEST_ROOT"] = self.tmp   # inside $TMPDIR (path_allowed)
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
@@ -86,9 +86,16 @@ class TestResolve(Base):
         self.assertEqual(rc, 65)
 
     def test_dept_guard(self):
-        os.environ.pop("P1M_DRIVER_TEST")
-        rc, _ = self.gen(load_example(), dept="/tmp/elsewhere")
-        self.assertEqual(rc, 64)
+        os.environ.pop("P1M_TEST_ROOT")
+        for bad in ("/tmp/elsewhere", p1m_driver.DEPT_DEFAULT + "_x", p1m_driver.DEPT_DEFAULT + "/../elsewhere"):
+            rc, _ = self.gen(load_example(), dept=bad)
+            self.assertEqual(rc, 64, bad)
+        # --out outside the department folder (and no test root) is refused too
+        pp = os.path.join(self.tmp, "plan.json"); json.dump(load_example(), open(pp, "w"))
+        self.assertEqual(p1m_driver.main(["--plan", pp, "--out", "/tmp/p1m_out_elsewhere"]), 64)
+        # a test root outside $TMPDIR does not open the gate
+        os.environ["P1M_TEST_ROOT"] = "/tmp"
+        self.assertFalse(p1m_driver.path_allowed("/tmp/x"))
 
 
 class TestGenerate(Base):
@@ -102,6 +109,7 @@ class TestGenerate(Base):
             self.assertEqual(subprocess.call(["bash", "-n", path]), 0, path)
             self.assertIn("#SBATCH --constraint=sapphirerapids", txt)
             self.assertIn("#SBATCH --qos=nots_commons", txt)
+            self.assertIn("#SBATCH --kill-on-invalid-dep=yes", txt)
             self.assertIn("#SBATCH --output=%s/scratch/slurm_out/" % dept, txt)
             self.assertIn("export TMPDIR=$DEPT/scratch/tmp/${SLURM_JOB_ID}", txt)
             code = [l for l in txt.splitlines() if not l.lstrip().startswith("#")]
@@ -145,7 +153,11 @@ class TestFakeSubmission(Base):
         with open(os.path.join(fbin, "sbatch"), "w") as fh:
             fh.write("#!/bin/bash\nn=$(( $(wc -l < %s 2>/dev/null || echo 0) + 1000 ))\necho \"$n $*\" >> %s\necho $n\n" % (calls, calls))
         os.chmod(os.path.join(fbin, "sbatch"), 0o755)
-        env = dict(os.environ, PATH=fbin + os.pathsep + os.environ["PATH"], P1M_DEPT=fake_dept)
+        # PR12 MINOR-9: the stub is passed by absolute path (SBATCH) and the PATH holds no other sbatch
+        safe_path = os.pathsep.join([fbin, "/usr/bin", "/bin"])
+        fake = os.path.join(fbin, "sbatch")
+        self.assertEqual(shutil.which("sbatch", path=safe_path), fake)
+        env = dict(os.environ, PATH=safe_path, SBATCH=fake, P1M_DEPT=fake_dept, P1M_TEST_ROOT=self.tmp)
         # without CONFIRM it refuses
         self.assertEqual(subprocess.call(["bash", os.path.join(scr, "submit.sh")], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL), 64)
         self.assertFalse(os.path.exists(calls))
@@ -230,6 +242,10 @@ class TestLocalChain(Base):
         run("merge", arg=1)
         run("eval", arg=1)
         rd = os.path.join(dept, "scratch", "runs", "A2_pilot", "A2_ARs_n200_r1")
+        em = json.load(open(os.path.join(rd, "manifests", "eval.json")))
+        self.assertEqual(len(em["inputs"]), 2)
+        self.assertEqual(em["params"]["truth_sha256"], p1m_manifest.sha256_file(os.path.join(rd, "truth.json")))
+        self.assertTrue(os.path.exists(os.path.join(rd, "manifests", "post.json")))
         mm = json.load(open(os.path.join(rd, "manifests", "merge.json")))
         self.assertEqual(len(mm["inputs"]), 3 + 3)
         self.assertEqual(mm["inputs"][os.path.join(rd, "island_2.bin")], p1m_manifest.content_hash(os.path.join(rd, "island_2.bin")))

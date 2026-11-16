@@ -91,7 +91,7 @@ void write_fit_bin(const Synthetic& s, const std::string& path, const std::strin
   W.add("occ_top", occ);
   double mx = *std::max_element(lr.begin(), lr.end()); double sw = 0; for (double x : lr) sw += std::exp(x - mx);
   Json m = Json::object();
-  m["status"] = (status); m["logZ"] = (mx + std::log(sw / R)); m["hpm_F"] = (s.F[ord[0]]); m["Rp"] = (R); m["occ_total"] = (hex_u64(tot));
+  if (status != "<none>") m["status"] = (status); m["logZ"] = (mx + std::log(sw / R)); m["hpm_F"] = (s.F[ord[0]]); m["Rp"] = (R); m["occ_total"] = (hex_u64(tot));
   m["hpm_phase"] = ("measured"); m["local_certified"] = (true);
   Json tm = Json::object(); tm["islands_s"] = (12.5); m["timings"] = (tm);
   W.add_json("meta", m);
@@ -116,7 +116,7 @@ TEST(wp5_e2e_post_and_eval) {
   CHECK(lh == pj.at("outputs").at("law.bin").str());
   CHECK(L.models.size() == (size_t)pj.at("M").num() && L.models.size() > 10);
   double ws = 0; for (double w : L.w) ws += w; CHECK_NEAR(ws, 1.0, 1e-12);
-  { fmt::Reader B(d + "/law.bin"); CHECK(B.has("draw_b") && B.entry("draw_b").dims[0] == 500); }
+  { fmt::Reader B(d + "/law.bin"); CHECK(B.has("draw_b") && B.entry("draw_ptr").dims[0] == 501 && B.mode() == fmt::M_V); }
   ModelPost mp = model_post(s.D, L.models[3].S);
   CHECK(mp.theta_bar == L.models[3].theta_bar && mp.beta_n == L.models[3].beta_n);
   // eval (built-in law) and eval (with law.bin) must agree on Π̂^𝒯
@@ -185,6 +185,16 @@ TEST(wp5_e2e_failure_paths) {
   write_fit_bin(s, d + "/fit_inc.bin", "resource_limit", 6);
   Json ji = eval::run(base(d + "/fit_inc.bin", "ev_inc.bin"));
   CHECK(ji.at("fit_status").str() == "resource_limit" && !ji.contains("selection") && !ji.contains("dist"));
+  // post on an incomplete fit: no law (PR12 MINOR-4)
+  Json pi = post::run(args({{"fit", d + "/fit_inc.bin"}, {"data", d + "/data.bin"}, {"out", d + "/law_inc.bin"}}));
+  CHECK(pi.at("fit_status").str() == "resource_limit" && !pi.contains("outputs"));
+  CHECK(!std::ifstream(d + "/law_inc.bin").good());
+  // a fit.bin without meta.status fails closed in eval and post
+  write_fit_bin(s, d + "/fit_nostatus.bin", "<none>", 8);
+  CHECK(status_of([&] { eval::run(base(d + "/fit_nostatus.bin", "ev_ns.bin")); }) == Status::invalid_input);
+  CHECK(status_of([&] { post::run(args({{"fit", d + "/fit_nostatus.bin"}, {"data", d + "/data.bin"}, {"out", d + "/law_ns.bin"}})); }) == Status::invalid_input);
+  // a manifest truth hash that differs from truth.json is refused
+  { Json a = base(d + "/fit_inc.bin", "ev_th.bin"); a["truth_sha256"] = "00"; CHECK(status_of([&] { eval::run(a); }) == Status::invalid_input); }
   // corrupt fit.bin: invalid_input
   write_fit_bin(s, d + "/fit_bad.bin", "completed", 7);
   { fmt::Reader B(d + "/fit_bad.bin"); uint64_t off = B.entry("pip_eq").offset;

@@ -111,39 +111,55 @@ inline double pred_error(const LinErr& e) { return e.m * e.m + e.s2; }
 
 // ------------------------------------------------------------------------------------------------ Monte Carlo pieces
 void gauss_hermite(int n, std::vector<double>& t, std::vector<double>& w);
+// x rows (and y for test rows) restricted to a sorted column set.
 struct XSample {
   std::vector<int32_t> cols;   // sorted original columns
   std::vector<double> X;       // m × |cols| row-major
+  std::vector<double> y;       // m (test rows) or empty
   size_t m = 0;
   int pos(int32_t orig1) const;
 };
-// Gaussian rows from ν_x restricted to cols (Cholesky of design_cov; Philox role TEST, xph TEST_X, stage).
+// Small-case Gaussian rows by Cholesky of design_cov (tests, T7c). Philox role TEST, xph TEST_X, stage.
 XSample draw_x(const Truth& T, const std::vector<int32_t>& cols, size_t m, uint32_t seed, uint32_t stage);
 std::vector<double> draw_y(const Truth& T, const XSample& xs, uint32_t seed, uint32_t stage);
+// Rows row0 … row0 + nrows − 1 of a row-addressable stream, only the columns `cols` (∪ S0), O(|cols|) per row (D-17 item 5).
+//   gen designs (truth.json has a gen spec): exactly gen::generate_test's definition (src/common/gen.cpp, copied below
+//   with gen::normal_at), rows 0 … n_x − 1 for the predictive integrals and n_x … for the test rows;
+//   otherwise (FAC, MIS, intercept): the same Markov / factor constructions with Philox normals (role TEST, eval seed).
+XSample make_rows(const Truth& T, const std::vector<int32_t>& cols, uint32_t row0, uint32_t nrows, uint32_t seed, bool with_y);
+// dᵀΣd for d on sorted original columns, O(|cols|) for IND / AR / ADJ-OPP / BLK / FAC (no |cols|² matrix).
+double quad_form(const Truth& T, const std::vector<int32_t>& cols, const std::vector<double>& d);
 
 struct DistOpts {
-  uint32_t seed = 1;           // posterior draws (role POST)
+  uint32_t seed = 1;           // posterior draws and tail samples (role POST); non-gen rows (role TEST)
   int n_draws = 10000, n_x = 4000, n_gh = 64, n_test = 10000;
   int threads = 1;
+  int top_k = 1000;            // exact components of the mixture predictive (D-17 item 4)
+  int tail_r = 1000;           // stratified tail importance sample per row block, in tail_groups independent groups
+  int tail_groups = 4;
+  int block_rows = 500;        // rows per block; the tail sample is refreshed per block
   std::vector<double> eps_c = {0.5, 1, 2, 4, 8};
 };
-struct DistShared {
-  XSample xq;                              // n_x rows for the predictive integrals
-  XSample xt; std::vector<double> yt;      // n_test test rows
-  std::string source;                      // "gen_test" (WP1 gen, same definition as the data) or "draw_x"
-};
-// Rows from WP1's gen::generate_test when truth.json carries a gen spec (n_x + n_test rows, split in that order),
-// otherwise from draw_x/draw_y with the eval seed.
-DistShared make_shared_draws(const Truth& T, const std::vector<int32_t>& cols, const DistOpts& o);
 
-Json dist_metrics(const Law& L, const Truth& T, int32_t n_obs, const DistOpts& o, const DistShared& sh, uint32_t object_id,
-                  std::vector<double>* dH_draws = nullptr);
+// Per-object distribution metrics (plan §3.3 items 1-4; D-17). Fields:
+//   plugin            closed form at the law's posterior mean (b̄, ā, v̄) (plan item 1), and its prediction error;
+//   weighted_plugin   exact E_π[d_H²(f_{S,θ̄_S,v̄_S}, f*)] and E_π[prediction error] over the whole law (O(M));
+//   post_dH           the posterior law of d_H from n_draws conjugate draws (model by binary search on cumulative weights);
+//   predictive        mixture predictive d_H² and KL: exact top-K + stratified tail sample (unbiased density at each node),
+//                     x-MC SE, tail-MC SE (from tail_groups independent groups), tail mass τ, the top-K-only value and
+//                     the bound |d_H(f̄, f*) − d_H(f̄_K, f*)| ≤ √τ; exact when the tail has ≤ tail_r components;
+//   test              MSE of the predictive mean and mean log predictive density on n_test rows (same estimator).
+Json dist_metrics(const Law& L, const Truth& T, int32_t n_obs, const DistOpts& o, uint32_t object_id,
+                  std::vector<double>* dH_draws = nullptr, std::vector<struct ParamDraw>* draws_out = nullptr);
+// The exact full mixture at one row (tests): ∫ sqrt(f̄ f*) dy and ∫ f* log(f*/f̄) dy.
 void predictive_at_x(const Law& L, const Truth& T, const XSample& xs, size_t row, const std::vector<double>& ght,
                      const std::vector<double>& ghw, double* affinity, double* kl);
 double log_pred_density(const Law& L, const XSample& xs, size_t row, double y);
 
 struct ParamDraw { int comp = 0; std::vector<double> b; double a = 0, v = 0; };
-ParamDraw draw_params(const Law& L, uint32_t seed, uint32_t object_id, uint32_t draw);
+std::vector<double> cumulative_weights(const Law& L);   // prefix sums in component order (last = Σ w)
+ParamDraw draw_params(const Law& L, const std::vector<double>& cum, uint32_t seed, uint32_t object_id, uint32_t draw);
+inline ParamDraw draw_params(const Law& L, uint32_t seed, uint32_t object_id, uint32_t draw) { return draw_params(L, cumulative_weights(L), seed, object_id, draw); }
 double gamma_draw(double shape, Address& a);   // Marsaglia–Tsang; consumes slots from a.slot upward
 double normal_draw(Address& a);                // Box–Muller on (u, u2) of one address; slot++
 

@@ -53,8 +53,16 @@ to_json <- function(x) {   # minimal writer (no dependency): NULL, logical, nume
 }
 arr <- function(x) I(x)   # always a JSON array, even of length 0 or 1
 write_record <- function(rec, path) { tmp <- paste0(path, ".tmp.", Sys.getpid()); writeLines(to_json(rec), tmp); file.rename(tmp, path) }
-have <- function(p) nzchar(p) && requireNamespace(p, quietly = TRUE)
-pkg_version <- function(p) if (have(p)) as.character(utils::packageVersion(p)) else ""
+# Package functions go through pkgfun(), so that a mock file (P1M_COMPETITOR_MOCK = path; tests only, PR12 MINOR-11)
+# can stand in for packages that are not installed. A mock defines MOCK[["pkg::fn"]] and S3 methods for its objects.
+MOCK <- new.env()
+mocked <- function(p) any(startsWith(ls(MOCK), paste0(p, "::")))
+pkgfun <- function(pkg, name) {
+  key <- paste0(pkg, "::", name)
+  if (exists(key, envir = MOCK, inherits = FALSE)) get(key, envir = MOCK) else getExportedValue(pkg, name)
+}
+have <- function(p) nzchar(p) && (mocked(p) || requireNamespace(p, quietly = TRUE))
+pkg_version <- function(p) if (!nzchar(p)) "" else if (mocked(p)) "mock" else if (have(p)) as.character(utils::packageVersion(p)) else ""
 
 gaussian_pred <- function(a0, b, sigma2) {
   nz <- which(b != 0)
@@ -76,7 +84,7 @@ run_method <- function(m, X, y, truth, seed, opt) {
   full_b <- function(idx, val) { b <- numeric(p); b[idx] <- val; b }
   switch(m,
     lasso_cv_min = , lasso_cv_1se = {
-      cv <- glmnet::cv.glmnet(X, y, foldid = foldid, family = "gaussian", alpha = 1)
+      cv <- pkgfun("glmnet", "cv.glmnet")(X, y, foldid = foldid, family = "gaussian", alpha = 1)
       lam <- if (m == "lasso_cv_min") cv$lambda.min else cv$lambda.1se
       cf <- as.numeric(stats::coef(cv, s = lam)); b <- cf[-1]
       list(selected = which(b != 0), pip = NULL, predictive = gaussian_pred(cf[1], b, cv$cvm[cv$lambda == lam]),
@@ -84,20 +92,20 @@ run_method <- function(m, X, y, truth, seed, opt) {
     },
     mcp_cv = , scad_cv = {
       pen <- if (m == "mcp_cv") "MCP" else "SCAD"
-      cv <- ncvreg::cv.ncvreg(X, y, penalty = pen, fold = foldid, seed = seed)
+      cv <- pkgfun("ncvreg", "cv.ncvreg")(X, y, penalty = pen, fold = foldid, seed = seed)
       cf <- stats::coef(cv); b <- as.numeric(cf[-1])
       list(selected = which(b != 0), pip = NULL, predictive = gaussian_pred(cf[1], b, min(cv$cve)),
            note = sprintf("ncvreg cv.ncvreg %s, 10 folds (seed %d), lambda.min", pen, seed))
     },
     lasso_cv_big = {
-      Xb <- bigmemory::as.big.matrix(X)
-      cv <- biglasso::cv.biglasso(Xb, y, nfolds = 10, seed = seed, ncores = opt$threads)
+      Xb <- pkgfun("bigmemory", "as.big.matrix")(X)
+      cv <- pkgfun("biglasso", "cv.biglasso")(Xb, y, nfolds = 10, seed = seed, ncores = opt$threads)
       cf <- as.numeric(stats::coef(cv)); b <- cf[-1]
       list(selected = which(b != 0), pip = NULL, predictive = gaussian_pred(cf[1], b, min(cv$cve)),
            note = sprintf("biglasso cv.biglasso, 10 folds (seed %d), lambda.min", seed))
     },
     l0learn_cv = {
-      cv <- L0Learn::L0Learn.cvfit(X, y, penalty = "L0L2", nFolds = 10, seed = seed)
+      cv <- pkgfun("L0Learn", "L0Learn.cvfit")(X, y, penalty = "L0L2", nFolds = 10, seed = seed)
       g <- which.min(vapply(cv$cvMeans, min, 0)); l <- which.min(cv$cvMeans[[g]])
       lam <- cv$fit$lambda[[g]][l]; gam <- cv$fit$gamma[g]
       cf <- as.numeric(stats::coef(cv, lambda = lam, gamma = gam)); b <- cf[-1]
@@ -105,13 +113,13 @@ run_method <- function(m, X, y, truth, seed, opt) {
            note = sprintf("L0Learn L0L2 cvfit, 10 folds (seed %d), min CV error over (gamma, lambda)", seed))
     },
     susie = {
-      s <- susieR::susie(X, y, L = 10)
+      s <- pkgfun("susieR", "susie")(X, y, L = 10)
       cf <- as.numeric(stats::coef(s)); b <- cf[-1]
       list(selected = which(s$pip > 0.5), pip = sparse_pip(s$pip), predictive = gaussian_pred(cf[1], b, s$sigma2),
            note = "susieR::susie L = 10; predictive = N(posterior-mean fit, sigma2) (approximation of the SER mixture)")
     },
     varbvs = {
-      f <- varbvs::varbvs(X, NULL, y, family = "gaussian", verbose = FALSE)
+      f <- pkgfun("varbvs", "varbvs")(X, NULL, y, family = "gaussian", verbose = FALSE)
       cf <- stats::coef(f); av <- cf[, ncol(cf)]          # last column = averaged over the hyperparameter grid
       a0 <- av[1]; b <- as.numeric(av[-1])
       pip <- as.numeric(f$pip); s2 <- sum(f$w * f$sigma)
@@ -121,7 +129,7 @@ run_method <- function(m, X, y, truth, seed, opt) {
     bas = {
       if (p > opt$bas_p_max) stop(sprintf("skipped: p = %d > bas-p-max = %d", p, opt$bas_p_max))
       df <- data.frame(y = y, X)
-      f <- BAS::bas.lm(y ~ ., data = df, method = "MCMC", prior = "g-prior", alpha = n, modelprior = BAS::beta.binomial(1, p),
+      f <- pkgfun("BAS", "bas.lm")(y ~ ., data = df, method = "MCMC", prior = "g-prior", alpha = n, modelprior = pkgfun("BAS", "beta.binomial")(1, p),
                        MCMC.iterations = 20 * p, initprobs = "marg-eplogp")
       w <- f$postprobs; keep <- order(-w)[seq_len(min(1000, length(w)))]
       models <- lapply(f$which[keep], function(v) arr(as.integer(setdiff(v, 0))))   # BAS index 0 = intercept
@@ -172,6 +180,8 @@ check_packages <- function(out_dir = NULL) {
 main <- function(a) {
   o <- args_parse(a)
   here <- dirname(normalizePath(sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])))
+  mk <- Sys.getenv("P1M_COMPETITOR_MOCK")
+  if (nzchar(mk)) { sys.source(mk, envir = globalenv()); message("MOCK packages from ", mk, " (test only)") }
   if (!is.null(o[["check-packages"]])) { check_packages(o[["out-dir"]]); return(invisible(0)) }
   for (k in c("raw", "truth", "out-dir")) if (is.null(o[[k]])) stop("missing --", k)
   source(file.path(here, "..", "v4_read.R"))

@@ -75,7 +75,14 @@ TEST(wp5_model_post_matches_dense_algebra) {
   std::vector<double> b = c.b_mean(); double a0 = c.a_mean();
   CHECK(b.size() == 4 && c.orig[0] == 3);
   CHECK_NEAR(c.v_mean(), sy(D) * sy(D) * mp.beta_n / (mp.alpha_n - 1), 1e-12);
-  (void)a0;
+  // PR12 MINOR-5: at every sample row, â + Σ b_j x_raw,ij = ȳ + s_y Σ θ̄_j z_ij (x_raw = x̄ + ŝ z)
+  double worst = 0;
+  for (int i = 0; i < n; ++i) {
+    double lhs = a0, rhs = ybar(D);
+    for (int t = 0; t < k; ++t) { const double z = D.col(S[t])[i]; lhs += b[t] * (xbar(D, S[t]) + xsd(D, S[t]) * z); rhs += sy(D) * mp.theta_bar[t] * z; }
+    worst = std::max(worst, std::fabs(lhs - rhs) / std::max(1.0, std::fabs(rhs)));
+  }
+  CHECK_MSG(worst <= 1e-12, "raw-scale intercept identity off by " + std::to_string(worst));
 }
 
 TEST(wp5_gamma_and_normal_draws) {
@@ -105,6 +112,26 @@ TEST(wp5_posterior_draw_moments) {
   for (int j = 0; j < 3; ++j) CHECK_NEAR(sb[j] / N, bm[j], 0.01);
   CHECK_NEAR(sv / N, C.v_mean(), 4 * C.v_mean() * std::sqrt(1.0 / (C.alpha_n - 2)) / std::sqrt((double)N));
   CHECK_NEAR(sa / N, C.a_mean(), 0.01);
+  // PR12 MINOR-5: Cov(b) = D_s (n E[v] H⁻¹) D_s, D_s = diag(s_y / ŝ_j), E[v] = β_n/(α_n − 1) (marginal t of θ)
+  const int k = 3;
+  std::vector<double> Hi(k * k, 0.0);   // H⁻¹ from the factor: solve L Lᵀ x = e_j
+  for (int j = 0; j < k; ++j) {
+    std::vector<double> e(k, 0.0), w(k), x(k); e[j] = 1;
+    for (int i = 0; i < k; ++i) { double t = e[i]; for (int q = 0; q < i; ++q) t -= C.LH[i * k + q] * w[q]; w[i] = t / C.LH[i * k + i]; }
+    for (int i = k - 1; i >= 0; --i) { double t = w[i]; for (int q = i + 1; q < k; ++q) t -= C.LH[q * k + i] * x[q]; x[i] = t / C.LH[i * k + i]; }
+    for (int i = 0; i < k; ++i) Hi[i * k + j] = x[i];
+  }
+  const double Ev = C.beta_n / (C.alpha_n - 1);
+  std::vector<double> cov(k * k, 0.0), mb(k, 0.0);
+  std::vector<std::vector<double>> bs(N);
+  for (int i = 0; i < N; ++i) { bs[i] = draw_params(L, 5, 0, (uint32_t)i).b; for (int j = 0; j < k; ++j) mb[j] += bs[i][j] / N; }
+  for (int i = 0; i < N; ++i) for (int a = 0; a < k; ++a) for (int c2 = 0; c2 < k; ++c2) cov[a * k + c2] += (bs[i][a] - mb[a]) * (bs[i][c2] - mb[c2]) / (N - 1);
+  for (int a = 0; a < k; ++a) for (int c2 = 0; c2 < k; ++c2) {
+    const double ta = C.sy / C.xsd[a], tc = C.sy / C.xsd[c2];
+    const double th = ta * tc * C.n * Ev * Hi[a * k + c2];
+    const double va = ta * ta * C.n * Ev * Hi[a * k + a], vc = tc * tc * C.n * Ev * Hi[c2 * k + c2];
+    CHECK_NEAR(cov[a * k + c2], th, 5 * std::sqrt((va * vc + th * th) / N));
+  }
 }
 
 TEST(wp5_predictive_gaussian_component_is_exact) {
@@ -207,9 +234,8 @@ TEST(wp5_dist_metrics_thread_invariance_and_oracle) {
   L.comps.push_back(component_from_post(O, model_post(O, {2, 8, 14}), 0.8));
   L.comps.push_back(component_from_post(O, model_post(O, {2, 8, 14, 22}), 0.2));
   DistOpts o; o.n_draws = 2000; o.n_x = 500; o.n_test = 1000; o.seed = 77;
-  DistShared sh = make_shared_draws(T, {3, 9, 15, 23}, o);
-  o.threads = 1; std::string a = dist_metrics(L, T, 200, o, sh, 2).dump();
-  o.threads = 3; std::string b = dist_metrics(L, T, 200, o, sh, 2).dump();
+  o.threads = 1; std::string a = dist_metrics(L, T, 200, o, 2).dump();
+  o.threads = 3; std::string b = dist_metrics(L, T, 200, o, 2).dump();
   CHECK_MSG(a == b, "dist_metrics depends on the thread count");
   Json j = Json::parse(a);
   const double h2 = j.at("plugin").at("h2").num(), hq = j.at("predictive").at("h2").num();

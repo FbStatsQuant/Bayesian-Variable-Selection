@@ -15,8 +15,9 @@
 //   cols_orig   i32   C          1-based original columns
 //   cols_xbar   f64   C          x̄_j (response map, v3_preprocess.R:35-51)
 //   cols_xsd    f64   C          ŝ_j
-//   optional draws (post --draws N; Philox role POST, never streams 0…9 + R′):
-//   draw_model  i32 N;  draw_a f64 N;  draw_v f64 N;  draw_b f64 N×C (row-major over cols, zeros off the model)
+//   optional draws (post --draws N; Philox role POST, never streams 0…9 + R′), sparse (D-17):
+//   draw_model  i32 N;  draw_a f64 N;  draw_v f64 N;  draw_ptr i64 N+1;  draw_b f64 Σk (coefficients on the model's columns)
+//   The file's mode is the fit's mode; meta carries the binary block (INTERFACES v0.1.2 §5.3).
 #pragma once
 #include <string>
 #include <vector>
@@ -39,8 +40,8 @@ struct LawFile {
 
 // Kept = store entries with F ≥ vmax + log(rel_cut) (at most max_models); conjugate parameters recomputed from Xs.
 // max_abs_dF = max |F_store − F_recomputed| (class A engines differ at ≈ 1e-9 relative; recorded, not asserted).
-LawFile build_law(const Data& D, const eval::StoreView& s, double rel_cut = 1e-12, size_t max_models = 1000000);
-std::string write_law(const LawFile& L, const std::string& path, int n_draws = 0, uint32_t draw_seed = 0);
+LawFile build_law(const Data& D, const eval::StoreView& s, double rel_cut = 1e-12, size_t max_models = 1000000, int threads = 1);
+std::string write_law(const LawFile& L, const std::string& path, int n_draws = 0, uint32_t draw_seed = 0, uint32_t mode = 3);
 LawFile read_law(const std::string& path, std::string* content_hash = nullptr);
 eval::Law to_eval_law(const LawFile& L, const std::string& name = "T");
 

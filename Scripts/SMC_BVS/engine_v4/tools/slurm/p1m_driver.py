@@ -47,17 +47,17 @@ DEFAULT_RES = {
             "calibrate": {"cpus": 16, "mem": "8G", "time": "00:45:00"},
             "islands": {"cpus": 16, "mem": "4G", "time": "00:15:00"},
             "merge": {"cpus": 8, "mem": "4G", "time": "00:15:00"},
-            "eval": {"cpus": 4, "mem": "4G", "time": "00:20:00"}},
+            "eval": {"cpus": 4, "mem": "8G", "time": "00:20:00"}},
     "1e5": {"setup": {"cpus": 32, "mem": "16G", "time": "00:30:00"},
             "calibrate": {"cpus": 64, "mem": "16G", "time": "01:30:00"},
             "islands": {"cpus": 64, "mem": "8G", "time": "01:00:00"},
             "merge": {"cpus": 16, "mem": "8G", "time": "00:30:00"},
-            "eval": {"cpus": 4, "mem": "8G", "time": "00:30:00"}},
+            "eval": {"cpus": 8, "mem": "16G", "time": "00:45:00"}},
     "1e6": {"setup": {"cpus": 96, "mem": "48G", "time": "01:30:00"},
             "calibrate": {"cpus": 64, "mem": "32G", "time": "02:00:00"},
             "islands": {"cpus": 64, "mem": "32G", "time": "02:00:00"},
             "merge": {"cpus": 32, "mem": "16G", "time": "01:00:00"},
-            "eval": {"cpus": 8, "mem": "16G", "time": "00:45:00"}},
+            "eval": {"cpus": 8, "mem": "16G", "time": "01:00:00"}},
 }
 
 
@@ -169,6 +169,7 @@ HEADER = """#!/usr/bin/env bash
 #SBATCH --constraint=sapphirerapids
 #SBATCH --export=NONE
 #SBATCH --no-requeue
+#SBATCH --kill-on-invalid-dep=yes
 #SBATCH --output={dept}/scratch/slurm_out/%x_%A_%a.out
 #SBATCH --error={dept}/scratch/slurm_out/%x_%A_%a.err
 set -euo pipefail
@@ -193,7 +194,10 @@ BUILD_SH = """#!/usr/bin/env bash
 # build.sh -- build the frozen engine for batch {batch} into $SCR/bin (GENERATED). Run ON NOTS by the manager, after the
 # frozen code (`git archive` of commit {commit}) is unpacked in $SCR/code. nice, 3 jobs (POLICIES §12).
 set -euo pipefail
-SCR=${{P1M_DEPT:-{dept}}}/scripts/{batch}
+DEPT=$(realpath -m "${{P1M_DEPT:-{dept}}}")
+in_dir() {{ local r; r=$(realpath -m "$2"); [[ $1 == "$r" || $1 == "$r"/* ]]; }}
+in_dir "$DEPT" "$HOME/SMC_Engineering_Department" || {{ [[ -n ${{P1M_TEST_ROOT:-}} ]] && in_dir "$DEPT" "$P1M_TEST_ROOT"; }} || {{ echo "refusing: $DEPT is outside the department folder" >&2; exit 64; }}
+SCR=$DEPT/scripts/{batch}
 set +u; source "$SCR/env.sh"; set -u
 B=$SCR/build; mkdir -p "$B" "$SCR/bin"
 nice -n 19 cmake -S "$SCR/code/Scripts/SMC_BVS/engine_v4" -B "$B" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF > "$B/cmake.log"
@@ -247,9 +251,12 @@ def stage_body(stage):
     if stage == "eval":
         return ('if [[ -e $RUN/OUTCOME ]]; then printf \'{"status":"completed","command":"eval","fit_status":"prep_%s","prep_status":"%s","hpm":[]}\\n\' '
                 '"$(cat "$RUN/OUTCOME")" "$(cat "$RUN/OUTCOME")" > "$RUN/eval.bin.json"; exit 0; fi\n'
-                '"$BIN" eval --fit "$RUN/fit.bin" --data "$RUN/data.bin" --truth "$RUN/truth.json" --threads "$OMP_NUM_THREADS" '
-                '--n-draws "$NDRAWS" --n-x "$NX" --n-test "$NTEST" --out "$RUN/eval.bin" > "$RUN/log/eval.log" 2>&1\n'
-                'if [[ $POST == 1 ]]; then "$BIN" post --fit "$RUN/fit.bin" --data "$RUN/data.bin" --out "$RUN/law.bin" > "$RUN/log/post.log" 2>&1; fi\n')
+                + fill.format(cmd="eval", suffix="") + "\n"
+                + '"$BIN" eval --manifest "$RUN/manifests/eval.json" --fit "$RUN/fit.bin" --data "$RUN/data.bin" --truth "$RUN/truth.json" '
+                '--threads "$OMP_NUM_THREADS" --n-draws "$NDRAWS" --n-x "$NX" --n-test "$NTEST" --out "$RUN/eval.bin" > "$RUN/log/eval.log" 2>&1\n'
+                'if [[ $POST == 1 ]]; then\n'
+                + "  " + fill.format(cmd="post", suffix="") + "\n"
+                + '  "$BIN" post --manifest "$RUN/manifests/post.json" --fit "$RUN/fit.bin" --data "$RUN/data.bin" --threads "$OMP_NUM_THREADS" --out "$RUN/law.bin" > "$RUN/log/post.log" 2>&1\nfi\n')
     raise ValueError(stage)
 
 
@@ -314,6 +321,7 @@ def generate(P, out, dept):
             "calibrate": ins("data.bin", "setup.bin"),
             "island": ins("data.bin", "setup.bin", "calib.bin"),
             "merge": ins("data.bin", "setup.bin", "calib.bin", *["island_%d.bin" % r for r in range(1, f["Rp"] + 1)]),
+            "eval": ins("fit.bin", "data.bin"), "post": ins("fit.bin", "data.bin"),
         }
         # gen takes the data seed as `seed` (WP1 gen spec); the other commands take the engine seed
         amp = {"strong": 1.0, "weak": 0.6, "null": 0.0}.get(f["signal"], 1.0)
@@ -329,9 +337,11 @@ def generate(P, out, dept):
                  "binary": {"sha256": "@binary", "git_commit": P["code_commit"], "compiler": "@binary", "flags": "@binary",
                             "libm": "@binary"},
                  "inputs": dict(sorted(inputs.items())),
-                 "params": dict(gen_params) if cmd == "gen" else dict(base_params, threads="@slurm"),
+                 "params": (dict(gen_params) if cmd == "gen" else
+                            {"truth_sha256": "@sha256:" + rd + "/truth.json", "threads": "@slurm"} if cmd == "eval" else
+                            {"threads": "@slurm"} if cmd == "post" else dict(base_params, threads="@slurm")),
                  "budget": {"task_seconds": int(hours(f["resources"]["islands" if cmd == "island" else
-                                                                 ("setup" if cmd in ("gen", "prep") else cmd)]["time"]) * 3600),
+                                                                 ("setup" if cmd in ("gen", "prep") else ("eval" if cmd == "post" else cmd))]["time"]) * 3600),
                             "fit_core_h": round(P["worst_case_core_h"] / len(P["fits"]), 1), "retries": 2},
                  "machine": {"host": "@slurm", "node_type": "sapphirerapids", "slurm_job_id": "@slurm"},
                  "outputs": {}}
@@ -353,7 +363,13 @@ def generate(P, out, dept):
 # Job graph: setup[1-{F}] -> calibrate[1-{F}] (aftercorr) -> per fit i: islands[1-Rp] (afterok calibrate_i) -> merge -> eval.
 # sbatch calls: 2 arrays + 3 per fit = {ncalls}. No polling here (POLICIES §12: at most one squeue/sacct per 5 minutes).
 set -euo pipefail
-DEPT=${{P1M_DEPT:-{dept}}}
+DEPT=$(realpath -m "${{P1M_DEPT:-{dept}}}")
+# department guard (PR12 MINOR-8): resolved path inside $HOME/SMC_Engineering_Department, or inside P1M_TEST_ROOT (tests)
+in_dir() {{ local r; r=$(realpath -m "$2"); [[ $1 == "$r" || $1 == "$r"/* ]]; }}
+if ! in_dir "$DEPT" "$HOME/SMC_Engineering_Department"; then
+  [[ -n ${{P1M_TEST_ROOT:-}} ]] && in_dir "$DEPT" "$P1M_TEST_ROOT" || {{ echo "refusing: $DEPT is outside the department folder" >&2; exit 64; }}
+fi
+SB=${{SBATCH:-sbatch}}   # PR12 MINOR-9: tests point SBATCH at a stub by absolute path
 SCR=$DEPT/scripts/{batch}
 [[ ${{CONFIRM:-}} == yes ]] || {{ echo "refusing: set CONFIRM=yes (the manager's submission, after HQ's go)" >&2; exit 64; }}
 cd "$SCR"
@@ -364,13 +380,13 @@ mkdir -p "$DEPT/scratch/runs/{batch}"
 LOG=$DEPT/scratch/runs/{batch}/submissions.jsonl
 log() {{ printf '{{"stage":"%s","fit":"%s","job":"%s","submitted_utc":"%s"}}\\n' "$1" "$2" "$3" "$(date -u +%FT%TZ)" | tee -a "$LOG"; }}
 RUNS=({runs})
-js=$(sbatch --parsable --array=1-{F} stage_setup.sbatch); log setup all "$js"
-jc=$(sbatch --parsable --array=1-{F} --dependency=aftercorr:$js stage_calibrate.sbatch); log calibrate all "$jc"
+js=$("$SB" --parsable --array=1-{F} stage_setup.sbatch); log setup all "$js"
+jc=$("$SB" --parsable --array=1-{F} --dependency=aftercorr:$js stage_calibrate.sbatch); log calibrate all "$jc"
 for i in $(seq 1 {F}); do
   rp=$(sed -n "${{i}}p" fit_rp.txt)
-  ji=$(sbatch --parsable --array=1-$rp{thr} --dependency=afterok:${{jc}}_$i stage_islands.sbatch $i); log islands "${{RUNS[$((i-1))]}}" "$ji"
-  jm=$(sbatch --parsable --dependency=afterok:$ji stage_merge.sbatch $i); log merge "${{RUNS[$((i-1))]}}" "$jm"
-  je=$(sbatch --parsable --dependency=afterok:$jm stage_eval.sbatch $i); log eval "${{RUNS[$((i-1))]}}" "$je"
+  ji=$("$SB" --parsable --array=1-$rp{thr} --dependency=afterok:${{jc}}_$i stage_islands.sbatch $i); log islands "${{RUNS[$((i-1))]}}" "$ji"
+  jm=$("$SB" --parsable --dependency=afterok:$ji stage_merge.sbatch $i); log merge "${{RUNS[$((i-1))]}}" "$jm"
+  je=$("$SB" --parsable --dependency=afterok:$jm stage_eval.sbatch $i); log eval "${{RUNS[$((i-1))]}}" "$je"
 done
 echo "submitted; ledger row: see ledger_row.md (fill job ids from $LOG)"
 """.format(batch=batch, F=F, ntask=P["n_tasks"], wc=P["worst_case_core_h"], ncalls=2 + 3 * F, dept=dept,
@@ -401,6 +417,18 @@ echo "submitted; ledger row: see ledger_row.md (fill job ids from $LOG)"
     return files
 
 
+def _inside(path, root):
+    p, r = os.path.realpath(os.path.abspath(path)), os.path.realpath(os.path.abspath(root))
+    return os.path.commonpath([p, r]) == r
+
+
+def path_allowed(path):
+    if _inside(path, DEPT_DEFAULT):
+        return True
+    root, tmp = os.environ.get("P1M_TEST_ROOT"), os.environ.get("TMPDIR")
+    return bool(root and tmp and _inside(root, tmp) and _inside(path, root))
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--plan", required=True)
@@ -408,9 +436,12 @@ def main(argv=None):
     ap.add_argument("--dept", default=DEPT_DEFAULT, help="department root ON NOTS (paths written into the scripts)")
     ap.add_argument("--now", default=None, help="timestamp to record (tests); default: current UTC")
     a = ap.parse_args(argv)
-    if not a.dept.startswith("/home/fb31/SMC_Engineering_Department") and not os.environ.get("P1M_DRIVER_TEST"):
-        print("refusing: --dept must be the department folder (POLICIES §12)", file=sys.stderr)
-        return 64
+    # PR12 MINOR-8: resolved (symlink-free), absolute containment checks. --dept and --out must lie inside the
+    # department folder; tests may use P1M_TEST_ROOT, itself inside $TMPDIR (never a bare prefix match).
+    for what, path in (("--dept", a.dept), ("--out", a.out)):
+        if not path_allowed(path):
+            print("refusing: %s %s is outside the department folder (POLICIES §12)" % (what, path), file=sys.stderr)
+            return 64
     with open(a.plan) as fh:
         plan = json.load(fh)
     try:
