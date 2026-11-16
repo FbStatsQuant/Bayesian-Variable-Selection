@@ -188,3 +188,70 @@ O1–O3 of row 1.1 (no route); exponential p (no route).
 | TRACK_D core 4 | P-OVL∞ fails on leaky designs | **yes**: "route TR cannot reach AR" |
 
 Suggested routing: one Opus read (half a day) of the six "yes" rows; the two TRACK_D rows first.
+
+---
+
+## 5a. Feasibility note for candidate #5 — printed estimates on AR(ρ) without start concentration (2026-11-16)
+
+Everything here is a sketch [audit sketch, unchecked]; nothing is proved. Setting: Theorem 6's assumptions (AR(ρ)
+satisfies them with a leakage set Q of O(log n) columns around the truths), production budgets, the sampler branch.
+𝓛(Q) is the lattice {S₀ ⊆ T ⊆ Q}; q_φ ∝ γ₀^{1−φ}γ₁^{φ} is the tempered target (q₀ = π₀, q₁ = π).
+
+**What a lemma would have to state.** Two forms, the second weaker.
+- *(NC) Evidence form.* 1_𝒜·|Ẑ_r/Z − 1| → 0 in probability. This is NC_r with a rate; with `W3-SAMP:LT#` (LT-e) it gives
+  every clause of Theorem 10 (PIPs, MPM, Ẑ) with (A5) replaced by Theorem 6's leakage set.
+- *(OCC) Occupancy form.* At the end of the bridge the fraction of island r's particles in 𝓛(Q) tends to 1 in
+  probability on 𝒜. It says where the particles are, not what the weights are. It would give the PIP and MPM clauses
+  only: after the bridge the code runs L = max(4, ⌈log₂(n + 1)⌉) rounds at φ = 1 (`W3-SAMP/STATEMENT.md:103`), each round
+  contains a Gibbs step for every column (`:56-57`), and from a lattice state one such round deletes every extra with
+  probability → 1 on the no-addition event; `W3-SAMP:ST` then keeps the particle at S₀.
+
+**Recorded pieces it could reuse.** The start law is on 𝓛(Q) with a rate (`W3-START2-R:START-R` (i), "PROVED-CHECKED;
+council R2, …"). The events at φ = 1 on the lattice: sandwich, no-addition, truth-removal (`W3-RM2:SAND-R-b`, `NA-W`,
+`TL-F-b`). The transfer from non-collapse to the printed fields (`W3-SAMP:LT#`), the staying lemma (`W3-SAMP:ST`), the
+path identities (`W3-SAMP:MR`). The grid lemmas and the two-model closed forms of `C-DLV` (`L3-3.3`, `L3-3.5a`, `L5-5.1`,
+`L5-5.2`, each "PROVED-CHECKED"). From `W3-DIST`: the domination transfer and the retention fact of DIST-C (C-0),
+(C-ii)(α), for the weaker statement below.
+
+**First obstruction.** π₀ and π are nearly singular on AR (π₀(S₀) is exponentially small). Every recorded identity about
+the particles carries the factor Ẑ_r/Z (`W3-SAMP:MR`), so it says nothing unless non-collapse is already known; and the
+record contains no mixing or variance statement for the coded sampler (`W3-SAMP/STATEMENT.md:183`). A proof must
+therefore follow the population forward, stage by stage, through resampling. The step most likely to fail is the
+resampling step: a lower bound on the normalised mean incremental weight of the lattice particles under the frozen,
+calibrated grid, together with control of rare off-lattice particles whose weights can be large.
+
+**Cheapest route (three steps).**
+1. *Interpolation for single moves.* For T ∈ 𝓛(Q) and any single flip or swap that leaves 𝓛(Q), the q_φ-odds of the move
+   equal (odds at φ = 0)^{1−φ}·(odds at φ = 1)^{φ}, hence are at most the larger endpoint odds. The endpoint bounds are
+   the recorded ones (leak and visibility bounds at φ = 0; no-addition and truth-removal at φ = 1). This gives "tempered"
+   versions of those events with no new estimate, provided the φ = 0 bounds hold uniformly over lattice states.
+2. *Near-product structure on the lattice.* Under Theorem 6's local-regression condition the inclusion odds of an extra
+   depend little on the other extras, so one Gibbs round nearly refreshes the lattice coordinates; the relative variance
+   of the stage weights on the lattice is then the χ²-distance between consecutive targets, which the grid rule controls.
+3. *Assembly.* Induction over the stages for (OCC); a second-moment bound of order T/N_e for (NC).
+
+**Go / no-go (kill budget).** A gate of at most 2 Opus days before any Tier A ticket:
+- **G1.** Write step 1 as a lemma and check that the φ = 0 bounds are uniform over lattice states, including additions
+  inside a block that already holds lattice extras. **No-go** if they are not.
+- **G2.** Exact computation on a toy lattice (one truth, m independent leaking columns, the coded resampling and grid
+  rule): is Var(Ẑ_r/Z) ≤ C·T/N_e at production N_e? **No-go** if the weights degenerate.
+If both pass: Tier A, Fable for the key lemma with HQ's OK, 3 attempts (STUCK rule). If G2 fails but G1 passes, only
+(OCC) is worth a ticket.
+
+**A weaker statement on AR that needs none of this — yes, a store-restricted clause; no for the printed MPM.**
+- On Theorem 6's data event every completed run scores S₀ (its final search ends there), so the returned list 𝒯 contains
+  S₀ and S₀ is the reported model (DIST-C (C-ii)(α)). Then, deterministically and in exact arithmetic: the PIPs computed
+  from the returned list satisfy max_j |PIP^𝒯_j − 1{j ∈ S₀}| ≤ 1 − π(S₀ | y); their median model is S₀; the sum of the
+  list's weights Z^𝒯 satisfies π(S₀ | y)·Z ≤ Z^𝒯 ≤ Z; and Corollary 9C's bound holds with π(𝒯) > ½. With Theorem 2 the
+  errors are O_P(√(log n/n)). A store-restricted PIP corollary already exists unchecked (`C-PACK` Corollary SL2,
+  `I4_SL_corollaries.md:90`).
+- Reach: every design inside Theorem 6 — S2–S4, S6, AR, BLK — with no start or leakage-free condition.
+- Cost: Tier B, 1–2 Opus days. Two links are named as unchecked in the record and must be closed
+  (`W3-DIST/STATEMENT.md:297-303`): that Theorem 6's output event covers "completed", and that its reported model is
+  the printed field `hpm`.
+- Limit, to state plainly: these are functions of the output that the method does not print; the printed PIPs, MPM
+  and Ẑ are sampler averages. Printing the list-based quantities would be a code change (Engineering and HQ).
+- The printed MPM alone is **not** reachable without at least (OCC): it depends on where the final particles are.
+
+**Recommendation.** Open the store-restricted clause as a cheap ticket (call it #5′); buy the G1/G2 gate only if HQ wants
+the printed fields themselves on AR.
