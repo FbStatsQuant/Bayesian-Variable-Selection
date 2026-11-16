@@ -37,6 +37,14 @@ For each design-side assumption, produce a reasonableness dossier for the adviso
 5. **Candidate corollaries:** one per core theorem, stated only in primitive terms (Σ, β, σ², n, p) for standard
    random designs, where provable.
 
+**Length and form (owner, binding: "precise and concrete arguments / evidence, not pages upon pages").**
+- At most about half a page per assumption in the report.
+- Lead with a one-line verdict: "same as Song–Liang (their (4))", "weaker than …", or "holds for designs X, Y (Prop …); fails for Z".
+- Then the single strongest piece of evidence: an exact citation with its equation number, a proved proposition,
+  or one concrete example or counterexample.
+- No surveys and no hedging paragraphs. The whole track-B section is 3–5 pages, plus one summary table
+  (assumption × Song–Liang comparison × our designs).
+
 ## Track C: light empirical check (internal only; not for the paper)
 Simulations across many design types (IND, AR, block, Toeplitz, factor of several strengths, real-data-like
 designs), tracking computable proxies of the design assumptions: sparse eigenvalues on small sets, visibility and
