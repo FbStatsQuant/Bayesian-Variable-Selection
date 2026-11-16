@@ -14,5 +14,5 @@
 - 2026-11-15 22:11 CST — All L1 findings accepted (reviews/L1_disposition.md); STATEMENT v1.1 locked; v1.2 adds [LA-1]
   (CorH-U (G), for READER_DELTA B4.4; statement-change check owed). PLAN v1.1, TARGET, READER_DELTA updated.
   HOLDS.md (origin/main) re-read before CP1: 0 HOLD lines.
-  L1 reviewer finished; it will be settled after the manager's CP1 answer (no cancel/interrupt).
+  L1 reviewer finished; settled (t3_thread_organize settle) at CP1 (no cancel/interrupt).
 - 2026-11-15 22:12 CST — CHECKPOINT_1.md written; run 1 ends (awaiting manager's CP1 answer).
