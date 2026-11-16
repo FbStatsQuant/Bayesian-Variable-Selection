@@ -1,4 +1,4 @@
-# W3-DIST — STATEMENT (v1.4, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
+# W3-DIST — STATEMENT (v1.4.1, 2026-11-15; lead: Claude Fable 5.2, Claude Third, high)
 
 **Status: targets TC1–TC9 fixed by HQ at CP1; proofs are in `lemmas/` and `work/<stream>/`; the check state of every item is
 in `DEPS.tsv` (a statement here is checked only if its row says OK).** v1.4 = v1.3.1 with the dispositions of the blind read S2
@@ -336,7 +336,7 @@ Applications use d = min(p_raw, n − 1, d_t + s₀^r) (DIST-1) and min(p_raw, n
 **Lemma S (size tail with an exponential tail; reference-adaptive; no p ≤ n^A) [BT3].** Fixed design with p ≥ 2,
 noise G, ‖μ‖² ≤ nM. Let T ∈ Ω and ϑ ∈ ℝ^T be design-measurable with B_T(ϑ) := ‖μ − X_Tϑ‖² + (‖X_Tϑ‖² + ‖ϑ‖²)/n ≤ B.
 There are C, c, n₀ depending on (σ*², M, B, κ₀) such that for n ≥ n₀, 1 ≤ t ≤ n^{1−κ₀} and every integer m with
-  log R^T_m + ½ log D_T + ½ log n + C[1 + √t + t/√n] ≤ −2t   (R^T_m := Σ_{k>m} q_k/w(|T|)):
+  log R^T_m + ½ log D_T + ½ log n + C[1 + √t + t/√n] ≤ −2t   (R^T_m := Σ_{k=max(m+1,0)}^{K} q_k/w(|T|), the sum stopping at the cap K [L5-02]):
   P_ε[ π(|S| > m) > e^{−t} ] ≤ Ce^{−t} + Ce^{−cn}.
 With T = S₀, ϑ = θ* (B = M + M′), R_m ≤ 2(2p)^{s₀}2^{−m} and D_{S₀} ≤ (n+1)^{s₀}, m = m_n(t) qualifies for t ≥ log n.
 (Strengthens the tail of [W3P] Lemma 1a′ / [P2] Claim B, whose failure probability is of order 1/log L.)
@@ -466,6 +466,7 @@ posterior with the contrast model (locked T01, [P1] `thm:T01i`, `lem:spec`, `lem
 | 1.4 | DIST-C: ϱ_n (name clash with the window); threshold form replaces the "λ = 0" parenthesis; (C-iii) needs ϱ_n ≤ ¼ (n₀ enlarged); RM2 route labelled conditional and unused; P⊗ per [SAMP] §0 | EQUAL (TC8's deterministic transfers unchanged; one incorrect parenthesis replaced by a proved form) | stream D SCR-1…SCR-5; P3 D-01 | as listed | pending |
 | 1.4 | §3: Lemma T's route text points to the proved one-sided inequality; Lemma V with Q^c, ρ′, D′ defined | EQUAL (statements of Lemmas T, V unchanged) | P4; P6 C-6 | as listed | pending |
 | 1.4 | §3 bridges (non-target): B2 and B3 window claims "q_n ≥ m_n + s" / "m♯_n + s ≤ q_n" replaced by min{p, s₀ + m} ≤ q_n; B3 requires b_n > 0; B0 restricted to data sets on which the posterior is defined | **WEAKER** (bridge remarks: false or over-broad claims replaced by the weaker true ones that the proofs use; Theorem A's statement is unaffected) | stream E; S2-01, S2-02, S2-05 | as listed | pending |
+| 1.4.1 | Lemma S: R^T_m written with its upper limit K | EQUAL (the proof's definition; with the sum to p the sentence "m = m_n(t) qualifies" would be false at the cap, while the probability bound is unaffected) | ambiguity | `reviews/L5_astra_SV.md` L5-02 | pending |
 Target clauses TC1–TC9 were fixed by HQ at CP1 (2026-11-15) in their v1.3 form; TC10 = companion results. **Relative to that
 baseline, no row of v1.4 weakens the mathematics of a target clause** (per S2: this sentence is about the CP1 baseline, not
 about the history before it — the pre-CP1 rows 1.0.1, 1.1 and 1.3 marked WEAKER did narrow ranges or add remainder events).

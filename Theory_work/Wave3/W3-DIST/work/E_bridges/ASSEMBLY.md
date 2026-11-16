@@ -220,3 +220,11 @@ A-5 (reading convention R-a). The master displays (1.1), (1.2) and DIST-3 are us
 constants depending only on the listed constants, not on the law of the data), the bound holds for every law in (RD)
 at that n. STATEMENT §0 is to state this explicitly; the proofs of Lemmas X, X′ and DIST-3 are written in this form
 (fixed design, bounds uniform over designs satisfying the interfaces at that n).
+A-6 (after the cross-family line check; §2, claims (i′), (ii′) without (A4): common exceptional set). On the common design
+event E₁, apply both consumed noise bounds and take the union of their failures: the joint failure probability is at most
+5n^{−2cM} + 5n^A·exp(−c₂n/K⁴). In the definition of n₀ replace the requirement n ≥ 6^{1/c} by **n ≥ 10^{1/c}**; then the first term
+is at most ½n^{−cM} and the existing condition n_R handles the second half. So (i) and (ii) hold on a common set of data
+sets also in the statement without (A4), with the same parameter dependence and one n₀ for the whole range of M.
+A-7 (§3, Step 3). Read "constants c₃ > 0, C₃ ≥ 1" (only C₃ is enlarged; no argument needs c₃ ≥ 1: a sufficiently large fixed u
+works for every c₃ > 0).
+A-8 (§3, Step 2). The retained-dimension qualification and completion argument of `B3.md` amendment A-2 apply here.

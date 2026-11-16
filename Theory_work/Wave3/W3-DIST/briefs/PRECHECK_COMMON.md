@@ -17,3 +17,8 @@ agents, effort high at most. A pre-check is a filter before the cross-family lin
 - Output: findings with id, severity (CRITICAL / MAJOR / MINOR / NIT), file and section, the error or gap in full, the
   minimal repair; a verdict per lemma or section: VERIFIED / VERIFIED-WITH-AMENDMENTS / NOT VERIFIED; a final overall
   verdict line. Do not soften findings; if you could not check something, say exactly what.
+- **Compute discipline (POLICIES §12).** No files in /home/fb31 outside the ticket folder; any job on Owls runs under `nice`
+  with at most 16 cores, nothing large or multi-day; temp files are removed when done (/tmp is on a nearly full root
+  disk); numerical arrays stay in a git-ignored folder of the ticket and are not copied elsewhere.
+- **Temp convention.** All temporary files go under `/home/fb31/bvs_tmp/W3-DIST/`, never `/tmp`: prefix shell commands that
+  write temp files with `export TMPDIR=/home/fb31/bvs_tmp/W3-DIST; mkdir -p "$TMPDIR";` and remove them when done.

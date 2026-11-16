@@ -19,3 +19,8 @@ Ticket W3-DIST (lead: Claude Fable 5.2). Repo clone `/home/fb31/Bayesian-Variabl
   independent pre-check and a cross-family line check; write so that a line-by-line reader can verify it.
 - One markdown file per lemma, as named in your brief. End your reply with a 12-line summary: what is proved, what is
   not, statement-change requests, risks.
+- **Compute discipline (POLICIES §12).** No files in /home/fb31 outside the ticket folder; any job on Owls runs under `nice`
+  with at most 16 cores, nothing large or multi-day; temp files are removed when done (/tmp is on a nearly full root
+  disk); numerical arrays stay in a git-ignored folder of the ticket and are not copied elsewhere.
+- **Temp convention.** All temporary files go under `/home/fb31/bvs_tmp/W3-DIST/`, never `/tmp`: prefix shell commands that
+  write temp files with `export TMPDIR=/home/fb31/bvs_tmp/W3-DIST; mkdir -p "$TMPDIR";` and remove them when done.

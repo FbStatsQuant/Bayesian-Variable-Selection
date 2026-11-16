@@ -234,3 +234,19 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   (B2/B3 windows, B3 positivity, B0 domain) → WEAKER, non-target, split from the EQUAL row for Lemmas T and V. TC9: EQUAL
   for the mathematics (manager's view; HQ decides on an H5 card). The Sol diff check v1.3.1 → v1.4 will confirm or
   correct every tag. S2's completion notice also arrived (already processed). HOLDS read: none.
+- 20:21 — POLICIES §12 (compute discipline) noted and added to `briefs/COMMON.md` and `briefs/PRECHECK_COMMON.md` for future
+  helpers. Check done: the lead's scratchpad is empty (one temp script removed); this ticket's helpers left only small
+  scripts in their own scratchpads (≤ 44 KB each); `work/numerics/arrays/` (68 MB, git-ignored) and
+  `work/F_numerics/out/` (1.2 MB, arrays ignored) stay in the ticket folder, no copies elsewhere. The large folders
+  under /tmp/claude-71711 (≈ 2 GB) belong to other projects' and other departments' sessions; not touched. No job of this
+  ticket is running on Owls CPUs now. HOLDS read: none.
+- 20:22 — Line checks L5 and L4 back. **L5** (`reviews/L5_astra_SV.md`, Astra): Lemma S, Corollaries S.1, S.2 and Lemma V
+  (a), (b), (c) all VERIFIED; 2 MINOR + 1 NIT (a wrong simulation in the check script — its validation claim withdrawn;
+  R^T_m's upper limit K made explicit in STATEMENT v1.4.1; toolbox s > 0). **L4** (`reviews/L4_sol_E.md`, Sol): B0, B1,
+  B2-core VERIFIED; B2, B3, ASSEMBLY (Theorems A, B) VERIFIED-WITH-AMENDMENTS, 5 MINOR (capped-window chain in B3; common
+  exceptional set without (A4); c₃ > 0; p_ret = p qualification) — amendments appended to S.md, B3.md, ASSEMBLY.md.
+  `reviews/L4_L5_disposition.md`. DEPS.tsv: V, B0, B1, B2-core, B2 → OK; S, B3, R/Theorem-A, R/Theorem-B → STALE
+  (verified, then amended as prescribed; one Sol diff check will confirm, batched with the STATEMENT diff check).
+  **CP2 gate: X, X′ (L1), S and V (L5) are line-checked; the Astra break review BR1 is still running.** HOLDS read: none.
+- 20:24 — POLICIES §12 rule 7 (calm usage) noted: no NOTS access from this ticket (none was ever used); no bursts of parallel jobs; Owls jobs ramp up within 16 cores; helpers kept to the brief and staggered. Currently running for this ticket: 3 agents (BR1 Astra, L2 Sol, P7 Opus with a small numerical check); the remaining launches (one Sol diff check, later the sweep) will be sequential. L3 and L4 completion notices arrived (already processed). HOLDS read: none.
+- 20:27 — Temp convention noted (HQ + Engineering): temp work under /home/fb31/bvs_tmp/W3-DIST/, never /tmp; TMPDIR exported in commands that write temp files; added to briefs/COMMON.md and briefs/PRECHECK_COMMON.md for future helpers. Directory created (empty). HOLDS read: none.

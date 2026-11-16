@@ -172,3 +172,13 @@ question is certain.
 A-3 (Corollary S.2). The "equivalently" form also requires ct ≤ n^{1−κ₀} and n ≥ n_S′.
 A-4 (definition of R^T_m). R^T_m is summed up to K; summing to K is the weaker hypothesis on m, so the lemma covers both
 readings of the statement (sum to K or to p).
+A-5 (after the cross-family line check; Remark R6 and `c_checks.py`, function `check_Bn_tail`). The simulation of the
+bracket event drew ‖e‖²/σ² and μ_cᵀe independently; they are functions of the same Gaussian vector, so the printed
+frequencies are **not** estimates of P(𝓑_nᶜ). The numerical-validation claim for the bracket bound is withdrawn (the
+exact law is N·s_y² ~ σ²·noncentral χ²_N with noncentrality ‖μ‖²/σ²). Step 6 is unaffected: its union bound uses marginal
+tails only and assumes no independence.
+A-6 (R^T_m and the cap; replaces the last sentence of A-4). R^T_m is the sum over max(m + 1, 0) ≤ k ≤ **K**. Lemma S's implication
+also holds with the larger sum to p (a stronger hypothesis on m), but the sentence "m = m_n(t) qualifies" in Corollary S.1
+is about the K-truncated sum: when m_n(t) = K < p the tail {|S| > K} is empty and R^T_K = 0, whereas the sum to p need not be small.
+A-7 (Toolbox (G)). The Gaussian tail bound is stated for s > 0; the degenerate case s = 0 is handled separately where it
+occurs (Step 5 for r = 0, Step 6 for μ = 0).
