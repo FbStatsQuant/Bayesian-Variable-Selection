@@ -1,0 +1,227 @@
+diff --git a/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md b/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+index f54e7ecd..7d624d4d 100644
+--- a/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
++++ b/Theory_work/Wave3/W3-READER/CLAIMS_CARD.md
+@@ -1,5 +1,6 @@
+-# Headline claims card — proposal v1.3, organised by five pillars (W3-READER, bridge leg, 2026-11-16)
++# Headline claims card — proposal v1.4, organised by five pillars (W3-READER, bridge leg, 2026-11-16)
+ 
++v1.4 = v1.3 with the S4 repairs (Sol, `reviews/S4_statement_change_sol.md`): row 2.2 metric and premises [S4-C1] (WEAKER, restores the master's scope); row 1.1 comparison keeps (A5) [S4-S2] (WEAKER); full conditional statuses in row 1.4 and the scoped "single root" note [S4-F1] (EQUAL); stale abstract bullets and the D-17 provenance [S4-E1] (EQUAL). Swap rows (1.3, 1.4, 3.7) are tagged against their deltas; S3-relative strength in the READER_VERSIONS update logs [S4-S3].
+ v1.3 = v1.2 with [SL-card] Song–Liang sentences checked against the paper (`reviews/SL_PDF_CHECK_card.md`): rows 1.1 (Thm 3 = sure screening; Condition 3; dimension from their Cor 1 / (10)), 1.4 (MISR-R line, CARD14_SL_LINE @e0176277), 2.2 (parity in kind), 3.1 (selection output) — WEAKER/precision on the comparisons only; and [FUNI-N] delivery clause 3.1/3.2 narrowed (bounded domain; every $n$ under IDEAL-W⁺; sentence [RM2R-5]) — WEAKER (follows the master).
+ v1.2 = v1.1 with row 3.7 swapped to W3-SCR-R2 READER_DELTA v4 (HQ conditional GO, task R main 8875eeba, interim label removed d2b600ba): form (a), plain; row text per H5 card 11 — EQUAL.
+ v1.1 = v1.0 with row 1.4 swapped to W3-MISR-R READER_DELTA v0.4 (HQ signal, task Q; accepted main 2b54cb3c): reader-version master CorGb-plus, Song–Liang line from the delta — STRONGER (weaker hypotheses).
+@@ -39,17 +40,17 @@ marked · **long** = primitive but lengthy · **limit** = no primitive version;
+ 
+ | # | Result, in words | Master and status (verbatim) | Buys vs the literature | Reader version |
+ |---|---|---|---|---|
+-| 1.1 (Thm 1, 1′) | **Posterior concentration, fixed design** [H5-1]. With a sparse eigenvalue floor on sets of bounded size, no near-collinearity among $O(\log n)$ columns, bounded coefficients and beta-min at $\sqrt{\log n/n}$: $E[1-\pi(S_0\mid y)]\le C\sqrt{\log n/n}$ **uniformly over such designs**, HPM = MPM = $S_0$ w.p. $\ge1-4C\sqrt{\log n/n}$, every PIP within $1-\pi(S_0\mid y)$ of the truth. Variant (Thm 1′, no eigenvalue condition off $S_0$ beyond the vanishing floor (A5) on $O(\log n)$-sets, which still excludes exact dependence among $O(\log n)$ columns, duplicated nulls included): the bounded-size floor off $S_0$ and beta-min replaced by an identifiability margin (every small model missing a truth leaves residual signal $\ge c\,\sigma_*^2\log n$ with $c>c_1(s_0,A)$, an explicit constant, not optimised) [S3-N7]; the floor on $S_0$ is sufficient, not known to be necessary (open item O3) [H5-6]. | Expectation form and variant (main f526e45b): `W3-POST2:C@1.0.4` "PROVED-CHECKED, conditional on W3-POST:Prop-LB, [L1a′], SOP:TH09, SOP:TH128, W2-APP:POST, W3-POST:Thm-1"; `W3-POST2:E@1.0.4` "PROVED-CHECKED, conditional on SOP:TH128, SOP:TH09, W2-APP:POST, W3-POST:Thm-1" [REG-f526]. $O_P$ form: `W3-POST:Thm-1@1.0.0` = `SOP:TH09@1.0.0`: "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)" (council C3 passed; label pending). | Full-model selection consistency for the shipped prior, with an explicit, design-uniform expectation rate and exact HPM/MPM; no tuning (Song–Liang's Theorem 3 gives sure screening only: sensitivity → 1, specificity not controlled; their MAP consistency is in their supplement). Thm 1′ replaces eigenvalue floors off the truth by a residual-signal identifiability margin (Narisetty–He style; cf. Song–Liang's population-level identifiability Condition 3 for their Theorem 3). Narrower in dimension ($n^A$ vs Song–Liang's $P_n<e^{Cn^\alpha}$, $\alpha<1$: their Corollary 1 via their (10), inherited by their Theorem 3) [SL-card]. | **clean** (both); NEW bridges: set-size arithmetic (R1) |
++| 1.1 (Thm 1, 1′) | **Posterior concentration, fixed design** [H5-1]. With a sparse eigenvalue floor on sets of bounded size, no near-collinearity among $O(\log n)$ columns, bounded coefficients and beta-min at $\sqrt{\log n/n}$: $E[1-\pi(S_0\mid y)]\le C\sqrt{\log n/n}$ **uniformly over such designs**, HPM = MPM = $S_0$ w.p. $\ge1-4C\sqrt{\log n/n}$, every PIP within $1-\pi(S_0\mid y)$ of the truth. Variant (Thm 1′, no eigenvalue condition off $S_0$ beyond the vanishing floor (A5) on $O(\log n)$-sets, which still excludes exact dependence among $O(\log n)$ columns, duplicated nulls included): the bounded-size floor off $S_0$ and beta-min replaced by an identifiability margin (every small model missing a truth leaves residual signal $\ge c\,\sigma_*^2\log n$ with $c>c_1(s_0,A)$, an explicit constant, not optimised) [S3-N7]; the floor on $S_0$ is sufficient, not known to be necessary (open item O3) [H5-6]. | Expectation form and variant (main f526e45b): `W3-POST2:C@1.0.4` "PROVED-CHECKED, conditional on W3-POST:Prop-LB, [L1a′], SOP:TH09, SOP:TH128, W2-APP:POST, W3-POST:Thm-1"; `W3-POST2:E@1.0.4` "PROVED-CHECKED, conditional on SOP:TH128, SOP:TH09, W2-APP:POST, W3-POST:Thm-1" [REG-f526]. $O_P$ form: `W3-POST:Thm-1@1.0.0` = `SOP:TH09@1.0.0`: "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)" (council C3 passed; label pending). | Full-model selection consistency for the shipped prior, with an explicit, design-uniform expectation rate and exact HPM/MPM; no tuning (Song–Liang's Theorem 3 gives sure screening only: sensitivity → 1, specificity not controlled; their MAP consistency is in their supplement). Thm 1′ replaces the bounded-size floor (A4) off the truth and beta-min by a residual-signal identifiability margin, while retaining the vanishing floor (A5) (Narisetty–He style; [S4-S2] cf. Song–Liang's population-level identifiability Condition 3 for their Theorem 3). Narrower in dimension ($n^A$ vs Song–Liang's $P_n<e^{Cn^\alpha}$, $\alpha<1$: their Corollary 1 via their (10), inherited by their Theorem 3) [SL-card]. | **clean** (both); NEW bridges: set-size arithmetic (R1) |
+ | 1.2 (Thm 2) | **Same for random Gaussian designs**: rows i.i.d. Gaussian, fixed nonzero coefficients, population sparse eigenvalues bounded below on $O(\log n)$-sets (no upper bound): $1-\pi(S_0\mid y)=O_P(\sqrt{\log n/n})$, HPM = MPM = $S_0$ w.p. $\to1$. | Thm-1 item 6 (as 1.1) + `W2-APP:POST@1.0.6`: "PROVED-CHECKED, conditional on SOP:TH09" [REG-f526]. | Song–Liang's random-design setting; $p\gg n$. | **clean**; conditional on T03♯ (abstract: Form A/B) |
+ | 1.3 (Thm 3) | **The rate cannot be improved** [W3-PSHARP-R swap]. The rate of Theorem 1 cannot be improved under its assumptions: on orthogonal or Gaussian null columns, $E[1-\pi(S_0\mid y)]\ge c\cdot(s_0+1)\cdot\sqrt{\log n/n}$, for every $p$. On every design, for every model with $|S|\le\min(K-1,p/2)$, $\pi(S\mid y)\le(1+(|S|+1)/(3\sqrt n))^{-1}$ (order $n^{-1/2}$ only); in probability, $1-\pi(S_0\mid y)\ge(1-o_P(1))(s_0+1)\sqrt{\log p/(\pi n)}$ on these null-column designs when $p\to\infty$. | `W3-PSHARP:B@1.0.0`, `W3-PSHARP:A@1.0.0`: "PROVED-CHECKED; council R2, MANIFEST 4513e05a…, sol=9.2 PASS, opus=9.3 PASS; …". Expectation display: `W3-PSHARP-R:AE@1.0.0`, `W3-PSHARP-R:A2C@1.0.0`: "PROVED-CHECKED; council R2, MANIFEST fdfd4562…, sol=9.5 PASS, opus=9.2 PASS". Named exactness case: bridge B3.8 (Sol-checked). | "Is your rate optimal?" — on the witness designs (orthogonal or i.i.d. Gaussian null columns) yes for $\log p\asymp\log n$; on every design the proved lower bound is of order $n^{-1/2}$ (a matching expectation lower bound $\gtrsim\sqrt{\log n/n}$ under a floor on $S_0\cup\{j\}$ is open, rider POST2-R1) [H5-6, S3-N4]; the sparsity frontier $s_0=o(\sqrt n)$. | **clean**, no bridge |
+-| 1.4 (Thm 4) | **Omitted variables** [H5-3]: fitting candidates only, with any residual variance (fixed, vanishing or growing with $n$), the posterior concentrates on the support of the best candidate predictor at rate $\sqrt{\log n/n}$ in expectation, uniformly over the residual variance (fixed candidate design); with Gaussian candidate rows and, given the candidates, Gaussian responses with mean linear in the candidates (reader version; omitted Gaussian predictors of any size are the leading example) the HPM error is $O(\sqrt{\log n/n})$ [H5-10]. | Headline masters `W3-MISR:MIS(i)@1.0.0`: "PROVED-CHECKED, conditional on W3-POST2:C; …"; `W3-MISR:MIS(i')@1.0.0`, `W3-MISR:MIS(ii)@1.0.0`: "PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, SOP:TH09, SOP:TH128; …". Gaussian-row reader version `W3-MISR-R:CorGb-plus@1.0.0`: "PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, SOP:TH09, SOP:TH128, C-MIS:GDb, C-MIS:Prop-P; council R3, MANIFEST 052ea6df…, sol=10.0 PASS, opus=9.6 PASS"; Example `W3-MISR-R:CorG-min@1.0.0`: "PROVED-CHECKED, conditional on SOP:TH09, SOP:TH128; council R3, MANIFEST 052ea6df…, sol=10.0 PASS, opus=9.6 PASS"; body remark (Hellinger/KL) `W3-MISR-R:CorH-plus@1.0.0`, `W3-MISR-R:CorH-U@1.0.0`: "PROVED-CHECKED, conditional on W3-POST2:D, …" [REG-2b54]. Inputs `W3-POST2:C/E/A1/A0@1.0.4`: "PROVED-CHECKED, conditional on …" (ultimately on SOP:TH09; main f526e45b) [REG-f526]. | Song–Liang (2015, Theorem 4, eqs. (17)–(18); Corollary 2) fit a fixed candidate subset that misses true predictors, a model they call misspecified, with candidates having finite second moments only (their Condition 4): the posterior is Hellinger-consistent at the Kullback–Leibler projection, for each fixed $\varepsilon$, almost surely and without a rate, and, if the candidates have no exact collinearity, the posterior probability that a sampled model contains the projection's support tends to one in probability (Corollary 2). Here, assuming instead that, given the candidates, the response is Gaussian with a mean linear in them and a constant variance (as when the omitted predictors are jointly Gaussian with the candidates), we prove exact selection of the best candidate linear predictor's support (Song–Liang's $\tilde s$ for centred rows) at rate $\sqrt{\log n/n}$, with up to $n^A$ candidates and no condition on how $\Sigma$, $\beta$, $\sigma^2$ vary with $n$; the coded method is exactly invariant to shifts and rescaling of $y$ [H5-10, SL-card]. | **clean** (CorGb-plus); conditional on POST2 |
++| 1.4 (Thm 4) | **Omitted variables** [H5-3]: fitting candidates only, with any residual variance (fixed, vanishing or growing with $n$), the posterior concentrates on the support of the best candidate predictor at rate $\sqrt{\log n/n}$ in expectation, uniformly over the residual variance (fixed candidate design); with Gaussian candidate rows and, given the candidates, Gaussian responses with mean linear in the candidates (reader version; omitted Gaussian predictors of any size are the leading example) the HPM error is $O(\sqrt{\log n/n})$ [H5-10]. | Headline masters `W3-MISR:MIS(i)@1.0.0`: "PROVED-CHECKED, conditional on W3-POST2:C; …"; `W3-MISR:MIS(i')@1.0.0`, `W3-MISR:MIS(ii)@1.0.0`: "PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, SOP:TH09, SOP:TH128; …". Gaussian-row reader version `W3-MISR-R:CorGb-plus@1.0.0`: "PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, SOP:TH09, SOP:TH128, C-MIS:GDb, C-MIS:Prop-P; council R3, MANIFEST 052ea6df…, sol=10.0 PASS, opus=9.6 PASS"; Example `W3-MISR-R:CorG-min@1.0.0`: "PROVED-CHECKED, conditional on SOP:TH09, SOP:TH128; council R3, MANIFEST 052ea6df…, sol=10.0 PASS, opus=9.6 PASS"; body remark (Hellinger/KL) `W3-MISR-R:CorH-plus@1.0.0`: "PROVED-CHECKED, conditional on W3-POST2:D, SOP:TH09, SOP:TH128; council R3, MANIFEST 052ea6df…, sol=10.0 PASS, opus=9.6 PASS"; `W3-MISR-R:CorH-U@1.0.0`: "PROVED-CHECKED, conditional on W3-POST2:D, W3-POST2:C, W3-POST2:A0, SOP:TH09, SOP:TH128, C-MIS:Prop-P; clause (G) also conditional on W3-POST2:E, W3-POST2:A1, SOP:TH09, SOP:TH128, C-MIS:GDb; council R3, MANIFEST 052ea6df…, sol=10.0 PASS, opus=9.6 PASS" [REG-2b54]. Inputs (main f526e45b) [REG-f526]: `W3-POST2:C@1.0.4` "PROVED-CHECKED, conditional on W3-POST:Prop-LB, [L1a′], SOP:TH09, SOP:TH128, W2-APP:POST, W3-POST:Thm-1"; `W3-POST2:E@1.0.4` "PROVED-CHECKED, conditional on SOP:TH128, SOP:TH09, W2-APP:POST, W3-POST:Thm-1"; `W3-POST2:A1@1.0.4` "PROVED-CHECKED, conditional on W3-POST:Thm-1, SOP:TH128, SOP:TH09, W2-APP:POST"; `W3-POST2:A0@1.0.4` "PROVED-CHECKED, conditional on SOP:TH09" [S4-F1]. | Song–Liang (2015, Theorem 4, eqs. (17)–(18); Corollary 2) fit a fixed candidate subset that misses true predictors, a model they call misspecified, with candidates having finite second moments only (their Condition 4): the posterior is Hellinger-consistent at the Kullback–Leibler projection, for each fixed $\varepsilon$, almost surely and without a rate, and, if the candidates have no exact collinearity, the posterior probability that a sampled model contains the projection's support tends to one in probability (Corollary 2). Here, assuming instead that, given the candidates, the response is Gaussian with a mean linear in them and a constant variance (as when the omitted predictors are jointly Gaussian with the candidates), we prove exact selection of the best candidate linear predictor's support (Song–Liang's $\tilde s$ for centred rows) at rate $\sqrt{\log n/n}$, with up to $n^A$ candidates and no condition on how $\Sigma$, $\beta$, $\sigma^2$ vary with $n$; the coded method is exactly invariant to shifts and rescaling of $y$ [H5-10, SL-card]. | **clean** (CorGb-plus); conditional on POST2 |
+ 
+ ## Pillar 2 — The posterior is right about the distribution
+ 
+ | # | Result, in words | Master and status | Buys | Reader version |
+ |---|---|---|---|---|
+ | 2.1 (Thm 9) | **Distribution-level consistency (in progress).** Joint $(x,y)$ Hellinger contraction of the posterior at rate $\sqrt{\log n/n}$, exponential form (Song–Liang Theorems 1–2 analogue); no beta-min and no fixed lower bound on eigenvalues (W3-DIST v1.4 wording). | W3-DIST "Theorem A" (v1.4): **not proved; no registry row**. Abstract only after DIST CP3 [H5-5]. | Song–Liang Theorems 1–2 parity; owner's top priority. | not yet (W3-DIST proposes "master + bridges B0–B2") |
+-| 2.2 | **Fallback if 2.1 slips [H5-5]:** in-sample (fixed-design) Hellinger contraction of the parameter posterior, rate $M_n/\sqrt n$ with selection, $\log n/n$ without beta-min. | `W3-POST2:D@1.1.4`: "PROVED-CHECKED, conditional on SOP:TH09, SOP:TH128, W2-APP:POST, W3-POST:Thm-1" [REG-f526]. | Fixed-design (in-sample) counterpart of Song–Liang's joint-$(x,y)$ Hellinger contraction (they have no fixed-design result; parity in kind only); input to 2.1 [SL-card]. | to write if used |
++| 2.2 | **Fallback if 2.1 slips [H5-5]:** fixed design; $\bar h_n$ = in-sample average Hellinger distance between the fitted and the true laws of one observation (centred scale). Premises of both parts: Gaussian linear model (G), $s_0\ge1$ fixed and $2\le p\le n^A$ (regime R1), energy bound (E), eigenvalue floor on $S_0$ (F₀); conclusions in probability. (a) If also $1-\pi(S_0\mid y)\to0$ in probability: $\Pi(\bar h_n>M_n/\sqrt n\mid y)\to0$ for every $M_n\to\infty$ (distance, rate $M_n/\sqrt n$). (b) Without beta-min, under the superset Occam-sum condition (OS) instead: $\Pi(\bar h_n^2>C'_H\log n/n\mid y)\to0$ (squared distance $\log n/n$; distance radius $\sqrt{C'_H\log n/n}$) [S4-C1]. | `W3-POST2:D@1.1.4`: "PROVED-CHECKED, conditional on SOP:TH09, SOP:TH128, W2-APP:POST, W3-POST:Thm-1" [REG-f526]. | Fixed-design (in-sample) counterpart of Song–Liang's joint-$(x,y)$ Hellinger contraction (they have no fixed-design result; parity in kind only); input to 2.1 [SL-card]. | to write if used |
+ 
+ ## Pillar 3 — The coded algorithm delivers that posterior
+ 
+@@ -97,11 +98,13 @@ may carry an unchecked "conditional on" input only if the abstract states it [H5
+   body statement, with the delivery conventions (S4) of C-DLV: on the bounded domain, and for every $n$ only under
+   IDEAL-W⁺ [H5-7.3, FUNI-N].
+ - **3.2**, wherever it is cited (body by default): the same order of clauses as 3.1 [H5-7.3].
+-- **1.1** posterior concentration (expectation form once POST2 is recorded; until then the $O_P$ form), **1.2**, **1.3**.
++- **1.1** posterior concentration in Theorem 1's $O_P$ form (Form A / B1 above; the expectation display and Theorem 1′ stay in
++  the body with their conditions), **1.2**, **1.3** [S4-E1].
+   Theorem 1′ is never called "the design-agnostic form"; its exact description is: *it drops the fixed floor (A4) off
+   $S_0$ but keeps the vanishing floor (A5), which still excludes exact linear dependence among $O(\log n)$ columns,
+   duplicated null columns included* [H5-7.1].
+-- **1.4** omitted variables — states its conditionality on the posterior refinements until they are recorded.
++- **1.4** omitted variables — states its conditional inputs (POST2 C/E/A1/A0, SOP:TH09, SOP:TH128, C-MIS inputs) until they
++  are discharged [S4-E1].
+ - **3.7** certified screening — **abstract, form (a), plain** (second SCR council round passed; H5 cards 9, 11): the
+   clause of `READER_VERSIONS.md` row thm8 "Placements" ($\kappa$, $b$, $M$, $\sigma_*$ fixed in $n$; $q_n$ below the cap;
+   $c_1$ by name; "certifies" defined); the body carries Theorem 8′ (plain) [SCR-R2].
+@@ -124,8 +127,8 @@ honest-status rows.
+   other row numbers stay stable.
+ * **Status refresh (main f526e45b, then 33e1f0f5) [REG-f526, REG-33e1].** `W2-APP:POST` accepted, conditional on SOP:TH09;
+   POST2 C/E/A0/A1/D recorded (conditional, ultimately on SOP:TH09); C-PACK:SL0 PROVED-CHECKED, so W3-SAMP C/D/LT♯/TR
+-  and W3-RM:RM-R read conditional on SOP:TH09 (RM-R also SOP:TH05.0). The single remaining root is T03♯ (W3-T03ACC,
+-  CP3 Thu 18:00). The list below is superseded where it disagrees.
++  and W3-RM:RM-R read conditional on SOP:TH09 (RM-R also SOP:TH05.0). For the abstract rows (1.1 in $O_P$ form, 1.2, 3.1) the single remaining root is T03♯ (W3-T03ACC, CP3 Thu 18:00);
++  other rows keep further conditions (e.g. POST2:C's W3-POST:Prop-LB, [L1a′], SOP:TH128; row 1.4's MISR inputs) [S4-F1]. The list below is superseded where it disagrees.
+ * **What blocks a fully PROVED-CHECKED card** (bookkeeping or line checks, no new mathematics): (1) `W2-APP:POST@1.0.1`
+   Sol line check (1.2, 3.1, 3.6) — HQ-queued; (2) POST2 C/E/A1/A0/D recording (1.1 expectation form, 1.4, 2.2) —
+   recorder task D; (3) registry label for `SOP:TH09`/`W3-POST:Thm-1` (1.1 $O_P$ form, 3.2); (4) F-UNI correctness gate
+@@ -137,6 +140,7 @@ honest-status rows.
+ * **Moderate-$n$ description [ENG-D17].** All rows are asymptotic. At moderate $n$ and large $p$ the posterior and the
+   coded output are a mixture over $S_0$ and its many one-variable supersets (individually light, together comparable to
+   $S_0$); texts describe this as the shape of the posterior, not as a limitation, and never describe the output as a point
+-  mass at moderate $n$ (Engineering measurement, `Docs/Experiments/P1M/DECISIONS.md` D-17, on `main` at f237bfa3 or later) [S3-N8].
++  mass at moderate $n$ (Engineering measurement, row D-17 of the Engineering working file `Docs/Experiments/P1M/DECISIONS.md` in the main
++  checkout; that file is not git-tracked, so no commit pin is given) [S3-N8, S4-E1].
+ * **Readability (lead's verdict):** 1.1–1.4, 3.6, 3.7 read like Song–Liang-level statements; 3.1 is faithful but long
+   (the "15" needs one sentence: block size minus one); 3.2 and 3.3 are honest-limit rows.
+diff --git a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+index 69db42d5..436c5520 100644
+--- a/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
++++ b/Theory_work/Wave3/W3-READER/READER_VERSIONS.md
+@@ -2,6 +2,8 @@
+ 
+ v0.4 = v0.3 with H5 card 6, the Engineering D-17 wording, and the repairs of the S2 line check and the S3 diff check
+ (markers [H5-6], [ENG-D17], [S2-F#], [S3-N#]); per-row tags in the update logs (confirmed by S3).
++S4 repairs (Sol statement-change check, `reviews/S4_statement_change_sol.md`) carry markers [S4-S1], [S4-F1], [S4-F2], [S4-S3],
++[S4-E1]; swap tags are delta-relative, with the S3-relative strength recorded in each row's update log [S4-S3].
+ 
+ v0.3 = v0.2 with the manager's CP1 decisions and the H5 card-5 actions (markers [H5-#]): Theorem 1 re-based on the
+ posterior refinements (expectation rate; Theorem 1′); (S4) completed from the delivery premise table
+@@ -67,7 +69,7 @@ MCMC steps realise their stated kernels, applied in a uniformly random order ind
+ record is a function of the data and the calibration streams; the island record is a measurable function of the
+ calibration value and its stream; statements about estimates refer to the potential (uninterrupted) run, identified
+ with the reported fields on completed runs. *Source of record:* `Theory_work/Wave1/W1-N1/STATEMENT.md:70-88` (EX-A,
+-EX-S/H-U, START, KERNEL, CAL, SI, MEAS, potential run; inherited statuses: START "PROVED (candidate)" (N1:73), KERNEL
++EX-S/H-U, START, KERNEL, CAL, SI, MEAS, potential run; inherited statuses: START "PROVED (candidate)" (N1:75), KERNEL
+ "PROVED (candidate), code-checked; CHK_INHERITED VERIFIED WITH AMENDMENT") [S3-N8], the code bridge `W1-N1/lemmas/L1_bridge.md:33-55` (measurability,
+ control flow), and `W3-SAMP/STATEMENT.md:29-53, 64-70, 90-95` (localisation, production values, Lemma PC).
+ 
+@@ -433,6 +435,9 @@ display is attained is not proved. Status: the expectation display and remarks (
+   (HQ wording); remarks (i)–(iv) with named exactness cases; mechanism sentence corrected (sum of truncated fit factors);
+   bridges B3.3–B3.8 (B3.8 checked by Sol L06 + L07 confirm YES, 0 findings); masters' statuses verbatim
+   (AE, A2C PROVED-CHECKED, council R2) (STRONGER: new expectation display for every $p$; EQUAL elsewhere).
++- S4 tag record 2026-11-16 [S4-S3]: v0.4 is EQUAL to its delta (W3-PSHARP-R v0.4). Against the S3 text: STRONGER for the
++  every-$p$ expectation display, the fully orthogonal expectation exactness, the growing-$s_0$ expectation obstruction and the
++  critical-scale $e^{-\lambda}$ bound; EQUAL for the original probability clauses and size-domain consequences.
+ <!-- ROW thm3 END -->
+ 
+ ---
+@@ -552,6 +557,9 @@ conditions.
+   (candidate rows Gaussian; Gaussian linear conditional law given the candidates), floor on the correlation matrix, no
+   variance bound; omitted Gaussian predictors as the Example; Hellinger/KL remark; non-implication note on Theorem 2;
+   honest limits; masters CorGb-plus, CorG-min, CorH-plus, CorH-U (STRONGER: weaker hypotheses, same conclusion).
++- S4 tag record 2026-11-16 [S4-S3]: v0.5 is EQUAL to its delta (W3-MISR-R v0.4). Against the S3 text: STRONGER for the main
++  theorem (weaker hypotheses (A0), (A2), (A3); the same two displayed conclusions); the Hellinger/KL remark, the
++  fixed-design selection-only and uniform forms and the examples are new (STRONGER) statements.
+ <!-- ROW thm4 END -->
+ 
+ ---
+@@ -712,7 +720,7 @@ blocks.
+ | B6.2 | (A4)(i),(ii) = (L-R^b) | identity | (L-gain-R) with $\varpi_n=o(\sqrt{\log n/n})$; (L-loc-R) with $r_n\to0$ (RM2 STATEMENT.md:176-189). (L-feas) carried in (A4). |
+ | B6.3 | (A6) + (A5) ⇒ (D-loc^b) incl. its variance clause | **NEW** (one paragraph; proof below) | (D-loc^b) = RM (D-loc) (RM STATEMENT.md:154-156) with $L_n^2\log(|Q|+1)=o(\log n)$; its second clause $\operatorname{Var}(W_l\mid W_{T\cap N_l})\le(1+\eta_n)\operatorname{Var}(W_l\mid W_T)$, $\eta_n\to0$, follows from (A6) and (A5): see proof. |
+ | B6.4 | (D-loc^b) ⇒ (D-R^b) ⇒ (W-R) | EXISTS-CHECKED | `W3-RM2:D-to-W@1.0.0`, "PROVED-CHECKED; council R1, …" (STATEMENT.md:256, (C3)/(P9)). |
+-| B6.5 | (T1-R) ⇒ posterior input [POST] | EXISTS-CHECKED, conditional | `W3-RM2:POST-R@1.0.2`, "PROVED-CHECKED, conditional on W2-APP:POST; …" ⇐ B2.2 (**EXISTS-UNCHECKED**). |
++| B6.5 | (T1-R) ⇒ posterior input [POST] | EXISTS-CHECKED, conditional | `W3-RM2:POST-R@1.0.2`, "PROVED-CHECKED, conditional on W2-APP:POST; …" ⇐ B2.2 (EXISTS-CHECKED, conditional on SOP:TH09; main 33e1f0f5) [S4-F1]. |
+ | B6.6 | RM2-R conclusions ⇒ F-UNI premises (S), (P), (V); F-UNI's operational premises carried as (S4) | **NEW** (assembly; (V)/(S)/(P) part passed S1) | (S): $P(\mathrm{Sand}\cap\mathrm{NA}\cap\mathrm{TL})\ge1-\sum P(\cdot^c)\to1$ from [SAND(Q)], [NA(Q)], [TL(Q)]; (P) = [POST]; (V) = "(R) with $\lambda_{\min}(\Sigma_n)>0$". LS0 cap and default-on tier-1 fallback match (`v3_calib.R:141-144`). F-UNI's method/premise/allocation paragraph (`L5_delivery.md:7-12`: EX-A as cost model, IDEAL-W, EX-S, SR, e4/TDP-IMPL, GUARD-W, MACH, CONFIG, valid seed, allocation and preflight inequalities at $(n,p_{\mathrm{raw}})$; P1/S.3 "AUDITED (code reading)") is **not derived**: it is carried as (S4) [S1-F2]. Premise-by-premise table: proof leg (`lemmas/R3_delivery_assembly.md`). |
+ | B6.7 | standardised-signal convention | limit | The masters take $\theta^*$ deterministic (Setting R). A raw-scale version (fixed $\beta^*$) would need a **NEW** bridge (medium; the population conditions involve $\theta^*$). Not proposed for CP1. |
+ 
+@@ -917,9 +925,11 @@ certificate needs a near-orthogonality floor (`W3-SCR:SCR-C`, PROVED-CHECKED), w
+ ($\varphi_n(q_n)\ge2A/(2A+1)+\epsilon$) — keep it as a remark.
+ 
+ ### Certification frequency (numerics, not a theorem) [SCR-R2]
+-A run certifies a model when its local-optimality flag is set. In existing numerics the method certified a small
++A run certifies a model when its local-optimality flag is set. In existing numerics the method certified the
+ reported model in every completed run: 2,394 of 2,394 in the 2,400-fit study ($n=200$); 376 of 376 in the strong-factor
+-experiment ($n\le150$, $p$ up to $10n$); 71 of 71 in the screening study ($n=100$). On strong-factor designs
++experiment ($n\le150$, $p$ up to $10n$); 71 of 71 in the screening study ($n=100$). Where model sizes were recorded the
++certified models were small: all 376 strong-factor fits had at most $2s_0$ predictors, all 71 screening fits at most 5
++(the 2,400-fit study records no per-fit size) [S4-F2]. On strong-factor designs
+ (equicorrelation $\rho\in\{0.5,0.7\}$, $p\ge2.5n$, $s_0\in\{4,8\}$) the certified model contained every true predictor in
+ 61 of 122 fits at $n=50$, 18 of 20 at $n=75$ and 30 of 30 at $n=100$.
+ (Sources: `/home/fb31/BVS-wt/W3-SCR-R2/Theory_work/Wave3/W3-SCR-R2/reviews/READER_DELTA.md` §5, theory/W3-SCR-R2 @ 048b6b23.)
+@@ -942,6 +952,10 @@ experiment ($n\le150$, $p$ up to $10n$); 71 of 71 in the screening study ($n=100
+   certification-frequency line (EQUAL). Source: W3-SCR-R2 `reviews/READER_DELTA.md` v4 @ 048b6b23. At application:
+   "certifies" defined at first use in the reader statement; the delta line's closing sentence on the sample size (A3)
+   requires at these constants is omitted (owner rule: no sample-size thresholds); A1, SCR-G statuses quoted at d2b600ba.
++- S4 tag record 2026-11-16 [S4-S3]: v0.6 is EQUAL to its delta (W3-SCR-R2 v4). Against the S3 text: card row 3.7's
++  intersection event and fixed-constant scope are WEAKER (restore `W3-SCR:SCR-A` :80-89, `A1` :158-163); Theorem 8′ is a
++  STRONGER addition (EQUAL to `W3-SCR:A-inf`). S4 [S4-F2]: certification counts separated from size evidence (WEAKER, restores
++  the cited measurements' scope).
+ <!-- ROW thm8 END -->
+ 
+ ---
+@@ -1035,8 +1049,8 @@ route (remark): `W3-SAMP:TR@2.1.3`, "PROVED-CHECKED, conditional on SOP:TH09" [R
+ 
+ ### Honest limits
+ The conclusion is localised to calibration success $\mathcal A$ on the sampler branch (intersections, not conditioning);
+-that $P(\mathcal A)\to1$ is not claimed here (under the
+-delivery conventions (S4) runs always complete, but that link is not used). The rate $\rho_n$ is the start law's rate,
++that $P(\mathcal A)\to1$ is not claimed here (under (S4)(i)–(iv), completion holds on $\mathfrak D$; under those conventions and
++A:IDEAL-W⁺ it holds for every admissible $n$; that link is not used here) [S4-S1]. The rate $\rho_n$ is the start law's rate,
+ slower than the posterior rate $\sqrt{\log n/n}$ by a factor $e^{C\sqrt{\log n}}$. Conditional on T03♯ (through `W3-SAMP:C`
+ and `W2-APP:POST`) [REG-33e1].
+ 
+@@ -1052,6 +1066,8 @@ and `W2-APP:POST`) [REG-33e1].
+   statuses quoted separately. Net tag vs S2-frozen: **WEAKER** (master premises restored).
+ - v0.7 2026-11-16: [REG-f526] `W3-SAMP:C/TR` and `W2-APP:POST` statuses refreshed (conditional on C-PACK:SL0, SOP:TH09) (EQUAL).
+ - v0.8 2026-11-16: [REG-33e1] SL0 cleared: `W3-SAMP:C/TR` @1.1.3/2.1.3 and `W2-APP:POST@1.0.6` conditional on SOP:TH09 only (EQUAL).
++- S4 2026-11-16 [S4-S1]: the completion remark in the honest limits follows the F-UNI narrowing (on $\mathfrak D$ under
++  (S4)(i)–(iv); every $n$ under A:IDEAL-W⁺; WEAKER, unused link).
+ <!-- ROW thm10 END -->
+ 
+ ---
+@@ -1061,7 +1077,7 @@ and `W2-APP:POST`) [REG-33e1].
+ | Bridge | Theorem | Mark | Where proved | Importance |
+ |---|---|---|---|---|
+ | B2.2 `W2-APP:POST@1.0.6` | 2, 6, 10 | EXISTS-CHECKED, conditional on SOP:TH09 | accepted at W2-APP CP3; SL0 cleared (main 33e1f0f5) | condition: W3-T03ACC (T03♯) |
+-| B4.3 / B1.7 POST2 C/E/A1/A0 | 1 (re-base), 1′, 4 | EXISTS-CHECKED, conditional (on SOP:TH09 and others, §1) | recorded at main f526e45b | condition: W3-T03ACC |
++| B4.3 / B1.7 POST2 C/E/A1/A0 | 1 (re-base), 1′, 4 | EXISTS-CHECKED, conditional (on SOP:TH09 and others, §1) | recorded at main f526e45b | conditions: SOP:TH09 (W3-T03ACC) and the others quoted in §1 (C: W3-POST:Prop-LB, [L1a′], SOP:TH128, W2-APP:POST, W3-POST:Thm-1) [S4-F1] |
+ | B6.6 / B7.4 RM2 ⇒ delivery assembly; (S4) premise table | 6, 7 | NEW | `lemmas/R3_delivery_assembly.md` | high |
+ | B6.3 local regressions ⇒ variance clause | 6 (7: B7.3) | NEW | `lemmas/R2_local_regression.md` | medium |
+ | B1.1–B1.3, B2.1, B3.2, B4.1, B6.1 set sizes and elementary bridges | 1, 2, 3, 4, 6, 10 | NEW | `lemmas/R1_set_sizes.md` | medium |
+diff --git a/Theory_work/Wave3/W3-READER/REPORT.md b/Theory_work/Wave3/W3-READER/REPORT.md
+index 1a8759ce..62e1c1a8 100644
+--- a/Theory_work/Wave3/W3-READER/REPORT.md
++++ b/Theory_work/Wave3/W3-READER/REPORT.md
+@@ -31,19 +31,19 @@ conclusion: inequality: Var(W_l | W_A) <= (1 + L^2/c) Var(W_l | W_T) for A subse
+ gates: correct:PENDING(bridge-leg Sol line check; S1: population form passes)
+ 
+ REGISTRY
+-claim: W3-READER:R3 | kind: lemma | statement: lemmas/R3_delivery_assembly.md:1-47 | premises: READER_VERSIONS.md (S4)
++claim: W3-READER:R3 | kind: lemma | statement: lemmas/R3_delivery_assembly.md:1-54 | premises: READER_VERSIONS.md (S4)
+ name: Lemma R3 (delivery assembly for the reported-model theorems)
+ status: PROVED (by this seat, unchecked) | status_source: lemmas/R3_delivery_assembly.md:3
+ conclusion: implication: RM2-R / RM2-F conclusions + (S4) => premises (V), (S), (P) and the method/premise/allocation paragraph of W2-UNI:F-UNI; hence P(no output) = 0 on the bounded domain D under IDEAL-W, and for every admissible n >= 3 under A:IDEAL-W+, with P(Shat = S0) -> 1 under A:IDEAL-W+ [F-UNI narrowed to 2.1.0, recorder task S2; requote after S2]
+-depends_on: W2-UNI:F-UNI@1.1.0 ; W3-RM2:RM2-R@1.0.0 ; W3-RM2:RM2-F@1.0.0
++depends_on: W2-UNI:F-UNI@1.1.0 (to repin @2.1.0 after task S2) ; W3-RM2:RM2-R@1.0.2 ; W3-RM2:RM2-F@1.0.2
+ gates: correct:PENDING(bridge-leg Sol line check)
+ 
+ REGISTRY
+-claim: W3-READER:R4 | kind: lemma | statement: lemmas/R4_printed_outputs.md:1-44 | premises: lemmas/R4_printed_outputs.md (Claim)
++claim: W3-READER:R4 | kind: lemma | statement: lemmas/R4_printed_outputs.md:1-49 | premises: lemmas/R4_printed_outputs.md (Claim)
+ name: Lemma R4 (printed PIPs, MPM, HPM and evidence estimate are consistent: assembly)
+ status: PROVED (by this seat, unchecked) | status_source: lemmas/R4_printed_outputs.md:3
+ conclusion: rate: 1_A max(o0, o1) = O_P(n^{-1/2} exp(C_R sqrt(log n))); hence Zhat/Z - 1, log Zhat - log Z, ||pip_primary - 1_S0||_inf = O_P(that) on A; P(A and MPM != S0) -> 0; P(completed and Shat != S0) -> 0 | scope: Gaussian rows, standardised-signal convention, Q = S0
+-depends_on: W3-SAMP:C@1.1.1 ; W3-START2:IF-START@1.0.0 ; W3-START2:START-R@1.0.0 ; W3-POST:Thm-1@1.0.0 ; W2-APP:POST@1.0.1
++depends_on: W3-SAMP:C@1.1.3 ; W3-START2:IF-START@1.0.0 ; W3-START2:START-R@1.0.0 ; W3-POST:Thm-1@1.0.0 ; W2-APP:POST@1.0.6
+ gates: correct:PENDING(bridge-leg Sol line check)
+ ```
+ 
+diff --git a/Theory_work/Wave3/W3-READER/lemmas/R4_printed_outputs.md b/Theory_work/Wave3/W3-READER/lemmas/R4_printed_outputs.md
+index 1e52303b..ce7dd59c 100644
+--- a/Theory_work/Wave3/W3-READER/lemmas/R4_printed_outputs.md
++++ b/Theory_work/Wave3/W3-READER/lemmas/R4_printed_outputs.md
+@@ -8,7 +8,8 @@ VERIFIED (A-REV2)"; this ticket's bridges R1 (B2.1, B6.1) "PROVED (by this seat,
+ concern the potential records on $\mathcal A$ and equal the printed fields on completed runs (Lemma PC) [S2-F3].
+ 
+ ## Inputs (statuses verbatim, registry)
+-- `W3-SAMP:C@1.1.1` (Theorem C, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:149-163`), "PROVED-CHECKED". Clause (C-v): under the
++- `W3-SAMP:C@1.1.3` (Theorem C, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:149-163`), "PROVED-CHECKED, conditional on SOP:TH09"
++  (main 33e1f0f5) [S4-F1]. Clause (C-v): under the
+   N1 premises (`W3-SAMP/STATEMENT.md` §1 = `Theory_work/Wave1/W1-N1/STATEMENT.md` §2: EX-A, H-U, START, KERNEL, CAL, SI,
+   MEAS, POT), if $1_{\mathcal A}\bar\delta\to0$ in probability then for every $\epsilon>0$:
+   $P(\mathcal A\cap\{|\hat Z/Z-1|>\epsilon\})\to0$, $P(\mathcal A\cap\{|\log\hat Z-\log Z|>\epsilon\})\to0$,
+@@ -20,8 +21,8 @@ concern the potential records on $\mathcal A$ and equal the printed fields on co
+   $\{\text{completed}\}\subseteq\mathcal A$ (:38-41).
+ - `W3-START2:IF-START@1.0.0` (`W3-START2/STATEMENT.md:176-180`), "PROVED-CHECKED": under (T3⁺)(b) with $Q=S_0$,
+   $1_{\mathcal A}o_0=O_P(\rho_n)$ with $\rho_n:=n^{-1/2}\exp(C_R\sqrt{\log n})$ for every event $\mathcal A$.
+-- Theorem 2 (`W3-POST:Thm-1@1.0.0` item 6 + `W2-APP:POST@1.0.1`, "PROVED (by this seat, unchecked); R02
+-  VERIFIED-WITH-AMENDMENTS, applied"): $\delta=O_P(\sqrt{\log n/n})$ under the joint law.
++- Theorem 2 (`W3-POST:Thm-1@1.0.0` item 6, "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)", + `W2-APP:POST@1.0.6`,
++  "PROVED-CHECKED, conditional on SOP:TH09", main 33e1f0f5) [S4-F1]: $\delta=O_P(\sqrt{\log n/n})$ under the joint law.
+ 
+ ## Claim (R4)
+ Assume Setting R with the standardised-signal convention ($\theta^*$ deterministic,
