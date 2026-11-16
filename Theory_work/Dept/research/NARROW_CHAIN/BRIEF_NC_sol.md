@@ -2,7 +2,10 @@
 Sol (codex gpt-6.1-sol), effort high, ONE call, fresh, read-only. Your output is read by a tool, so the line format below is exact.
 Do not write any file outside the worktree and set no TMPDIR. Scratch only in /home/fb31/BVS-wt/THEORY-DEPT/.rc_tmp/, deleted at the end.
 Write exactly one file: `Theory_work/Dept/research/NARROW_CHAIN/NC_sol.md` (relative to /home/fb31/BVS-wt/THEORY-DEPT). Change no git state.
-First run `git fetch -q origin` and read every file at **origin/main** (`git show origin/main:<path>`), not the working tree.
+**Where to read (v2 of this brief; v1 was ambiguous):** the department files named below under `Theory_work/Dept/research/` (rows.tsv,
+A_IDEALW_PLUS.md, TR1_sol.md, DIFF files) exist **only in this working tree** (branch dept/theory) — read them from the working tree.
+The **theory files** (each row's statement file and its proof chain under `Theory_work/Wave*/`, the registry `Theory_work/INFRA/registry/claims.tsv`)
+must be read at **origin/main**: run `git fetch -q origin` and use `git show origin/main:<path>`.
 
 ## Context
 Today these registry rows were NARROWED (correctness event): every-n delivery claims about shipped code were restricted to (a) a bounded
