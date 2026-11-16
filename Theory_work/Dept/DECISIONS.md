@@ -105,3 +105,12 @@
   RM2, RM) are CHAPTER-ONLY now (no in-place edit while riders hash them in DEPS); W3-EDIT CP1 groups them by parent;
   each rider absorbs the ones its delta restates; the rest go to a post-freeze in-place batch after the riders' CP3.
   In-place edits only in files no rider consumes. W3-EDIT told to take timestamps from `date` (stamped 20:45 at 19:57).
+
+## 2026-11-15 20:02 CT — POLICIES §10: leads as child agents
+- **D20.** From now on leads, helpers, reviewers and experts start as this thread's child agents (`delegate_task`,
+  provider claudeAgent_claude_third, Opus 5.5 high; the child works in its ticket worktree by absolute path; the task text
+  authorises it to start its own Sol/Astra reviewers and ≤ 2 helpers). Top-level only for a large independent theorem,
+  with the reason stated. Running top-level leads (DIST, READER, START2-R, RM2-R, PSHARP-R, PSMC-S0, W3-EDIT, recorder)
+  finish in place; each is settled when finished. dept/theory merged with origin/main (brief update). Research helper
+  (PSMC digest) settled.
+- W3-MISR-R launches as a child when PSMC-S0 writes CHECKPOINT_1 (cap 5 until Wed 18:00).

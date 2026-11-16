@@ -37,3 +37,4 @@
 - 19:58 — D19 correction: C-DLV is consumed by W3-RM2-R (DLV-0 rests on L4_delivery.md:13-22,79-91); W3-EDIT told to revert e1988ea by a new commit and route Prop-F wording CHAPTER-ONLY; RM2-R pointed to R-AUD1 (Prop-F over-strong sentence) for DLV-0.
 - 19:59 — HQ: recorder prepares the C-MIS rehash on theory/W3-EDIT-citefix (origin/main + 1a198e6 + rehash ×3); recorder task G (priority) sent with HQ's pass criteria. No running rider consumes C-MIS (grep of rider DEPS/STATEMENT).
 - 20:01 — POLICIES §9 (expensive-resource requests encouraged; owner decides) relayed to all 8 leads.
+- 20:02 — §10 applied (D20); PSMC digest helper settled; dept/theory merged origin/main.
