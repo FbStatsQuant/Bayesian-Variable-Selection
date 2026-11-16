@@ -67,7 +67,8 @@ uint64_t IslandRun::hash() const {
   f.pod(hpm.has); f.vec(hpm.S); f.pod(hpm.F); f.pod(hpm.logm); f.pod(hpm.key.seg); f.pod(hpm.key.tier); f.pod(hpm.key.iter); f.pod(hpm.key.unit); f.pod(hpm.key.xph); f.pod(hpm.key.stage); f.pod(hpm.key.round); f.pod(hpm.key.particle); f.pod(hpm.key.position); f.pod(hpm.key.sub); f.pod(hpm.phase); f.pod(hpm.mech);
   f.vec(top_v); f.vec(top_hash); f.vec(top_len); f.vec(top_pool);
   for (auto& m : terminal) f.vec(m);
-  if (compat) { f.pod(stream_count); f.vec(lead0_v); f.vec(lead0_len); f.vec(lead0_pool); f.vec(lead1_v); f.vec(lead1_len); f.vec(lead1_pool); }
+  if (compat) f.pod(stream_count);
+  if (leaders) { f.vec(lead0_v); f.vec(lead0_len); f.vec(lead0_pool); f.vec(lead1_v); f.vec(lead1_len); f.vec(lead1_pool); }
   return f.h;
 }
 
@@ -131,6 +132,8 @@ class IslandEngine {
     master.top = &top;
     if (cfg.compat) {
       csrc.reset(new v4::CompatSource(cfg.seed, v4::compat_stream(R_FINAL, (uint8_t)cfg.tier, cfg.island)));
+    }
+    if (cfg.leaders) {   // calibration islands / golden tests only (INTERFACES v0.1.7: no final-run leader stores)
       lead0.init(20ULL * (uint64_t)p, Order::LEX); lead1.init(20ULL * (uint64_t)p, Order::LEX);   // core/cpp/v3_ledger.h:78
       for (auto& t : tl) { t->lead0 = &lead0; t->lead1 = &lead1; }
     }
@@ -245,7 +248,7 @@ class IslandEngine {
         if (has_other) {
           T = Pi.S; if (in) sorted_erase(T, lab); else sorted_insert(T, lab);
           double F = D.logprior[T.size()] + lm;
-          const double lg0T = csrc ? D.logprior[T.size()] + st.comp(T) : std::numeric_limits<double>::quiet_NaN();
+          const double lg0T = cfg.leaders ? D.logprior[T.size()] + st.comp(T) : std::numeric_limits<double>::quiet_NaN();
           L.scored(T.data(), (uint32_t)T.size(), Pi.h ^ D.zob.key[lab], F, lm, rc.phase, ME_GIBBS_FLIP, key(rc, i1, pos, 1), lg0T);
         }
         if (rb) { if (csrc) rb_d[lab] += o; else (*rb)[lab] += fix63(o); }   // compat: core's double sum, serial order
@@ -576,8 +579,8 @@ class IslandEngine {
   }
   // merge thread ledgers and flush store buffers (step boundary; order-free)
   void sync_ledgers() {
-    for (auto& t : tl) { top.flush(t->buf); if (csrc) { lead0.flush(t->buf0); lead1.flush(t->buf1); } master.merge_from(*t); t->reset_counters(); }
-    if (csrc) { lead0.compact(); lead1.compact(); }
+    for (auto& t : tl) { top.flush(t->buf); if (cfg.leaders) { lead0.flush(t->buf0); lead1.flush(t->buf1); } master.merge_from(*t); t->reset_counters(); }
+    if (cfg.leaders) { lead0.compact(); lead1.compact(); }
     release_snapshots();
     if (top.defer) top.compact_parallel(NT); else top.compact();   // one island store, compacted at every step boundary
   }
@@ -600,7 +603,7 @@ class IslandEngine {
   // a restart refuses a different binary block.
   uint64_t fingerprint() const {
     Fnv f; f.pod(cfg.seed); f.pod(cfg.island); f.pod(cfg.tier); f.pod(cfg.N); f.vec(cfg.grid); f.pod(cfg.L); f.pod(cfg.Hm); f.pod(cfg.B);
-    f.pod(top.cap); f.pod(D.n); f.pod(D.p); f.pod(D.yty); f.pod(st.logZbar0); f.pod(st.J); f.pod((int)A); f.pod(cfg.compat);
+    f.pod(top.cap); f.pod(D.n); f.pod(D.p); f.pod(D.yty); f.pod(st.logZbar0); f.pod(st.J); f.pod((int)A); f.pod(cfg.compat); f.pod(cfg.leaders);
     const std::string bb = v4::binary_block_no_self_test().dump(); f.bytes(bb.data(), bb.size());
     return f.h;
   }
@@ -630,10 +633,8 @@ class IslandEngine {
     w.put(master.logical); w.put(master.island_best);
     w.put(master.hpm.has); w.putv(master.hpm.S); w.put(master.hpm.F); w.put(master.hpm.logm); w.put(master.hpm.key); w.put(master.hpm.phase); w.put(master.hpm.mech);
     w.putv(top.k->v); w.putv(top.k->hash); w.putv(top.k->off); w.putv(top.k->len); w.putv(top.k->pool);
-    if (csrc) {   // compat: the xoshiro state and position, the double RB accumulator and the leader stores
-      w.put(csrc->g.s); w.put(csrc->g.count); w.putv(rb_d);
-      for (TopStore* L : {&lead0, &lead1}) { w.putv(L->k->v); w.putv(L->k->hash); w.putv(L->k->off); w.putv(L->k->len); w.putv(L->k->pool); }
-    }
+    if (csrc) { w.put(csrc->g.s); w.put(csrc->g.count); w.putv(rb_d); }   // compat: xoshiro state + position, double RB
+    if (cfg.leaders) for (TopStore* L : {&lead0, &lead1}) { w.putv(L->k->v); w.putv(L->k->hash); w.putv(L->k->off); w.putv(L->k->len); w.putv(L->k->pool); }
   }
   // Two generations <path>.a/.b, alternately: header placeholder, streamed payload, header (generation, length,
   // checksum) rewritten in place, fflush + fsync, rename from <file>.tmp.<pid>. A kill at any point leaves the other
@@ -704,10 +705,8 @@ class IslandEngine {
     r.get(master.logical); r.get(master.island_best);
     r.get(master.hpm.has); r.getv(master.hpm.S); r.get(master.hpm.F); r.get(master.hpm.logm); r.get(master.hpm.key); r.get(master.hpm.phase); r.get(master.hpm.mech);
     { auto nk = std::make_shared<Kept>(); r.getv(nk->v); r.getv(nk->hash); r.getv(nk->off); r.getv(nk->len); r.getv(nk->pool); top.k = nk; }
-    if (csrc) {
-      r.get(csrc->g.s); r.get(csrc->g.count); r.getv(rb_d);
-      for (TopStore* L : {&lead0, &lead1}) { auto nk = std::make_shared<Kept>(); r.getv(nk->v); r.getv(nk->hash); r.getv(nk->off); r.getv(nk->len); r.getv(nk->pool); L->k = nk; L->publish_loaded(); }
-    }
+    if (csrc) { r.get(csrc->g.s); r.get(csrc->g.count); r.getv(rb_d); }
+    if (cfg.leaders) for (TopStore* L : {&lead0, &lead1}) { auto nk = std::make_shared<Kept>(); r.getv(nk->v); r.getv(nk->hash); r.getv(nk->off); r.getv(nk->len); r.getv(nk->pool); L->k = nk; L->publish_loaded(); }
     std::fclose(f);
     if (r.bad) return -1;
     top.publish_loaded();
@@ -831,8 +830,9 @@ class IslandEngine {
     res.island_best = master.island_best; res.hpm = master.hpm;
     res.top_v = top.k->v; res.top_hash = top.k->hash; res.top_off = top.k->off; res.top_len = top.k->len; res.top_pool = top.k->pool;
     if (cfg.keep_terminal) for (auto& x : P) res.terminal.push_back(x.S);
-    if (csrc) {
-      res.compat = true; res.stream_count = csrc->g.count;
+    if (csrc) { res.compat = true; res.stream_count = csrc->g.count; }
+    if (cfg.leaders) {
+      res.leaders = true;
       res.lead0_v = lead0.k->v; res.lead0_hash = lead0.k->hash; res.lead0_off = lead0.k->off; res.lead0_len = lead0.k->len; res.lead0_pool = lead0.k->pool;
       res.lead1_v = lead1.k->v; res.lead1_hash = lead1.k->hash; res.lead1_off = lead1.k->off; res.lead1_len = lead1.k->len; res.lead1_pool = lead1.k->pool;
     }

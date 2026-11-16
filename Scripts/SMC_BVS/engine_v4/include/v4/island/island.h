@@ -43,8 +43,10 @@ struct IslandConfig {
   bool keep_terminal = true;               // terminal supports (N, after the last measured round) -> island_r.bin
   uint32_t tier = 0;                        // frozen calibration tier (event key, INTERFACES v0.1.5 §4.2)
   bool allow_test_kernels = false;
-  bool compat = false;                      // v3 serial streams (CompatSource 9 + r), core's double RB sum, leader stores;
+  bool compat = false;                      // v3 serial streams (CompatSource 9 + r), core's double RB sum;
                                             // requires Arith::Bit, particle-major, 1 thread (manager Q2: the <= 5k bit anchor)
+  bool leaders = false;                     // leader stores (lead0 log gamma_0, lead1 F): NEVER in a final run (INTERFACES
+                                            // v0.1.7, D-7); calibration islands and golden tests only; never written to island_r.bin
   bool store_dup_filter = true;
   bool store_parallel_compact = true;       // compaction at pass/step boundaries with all threads (content unchanged)
   bool verbose = false;                     // progress line per step on stderr (benchmarks)             // exact snapshot duplicate filter (execution parameter; content unchanged)          // tests only: the bit-form label-major kernel (manager Q1)
@@ -81,6 +83,7 @@ struct IslandRun {
   int resumed_from_step = -1;
   int G_used = 0; std::string mem_plan;
   bool compat = false; uint64_t stream_count = 0;   // compat: xoshiro draws consumed
+  bool leaders = false;                              // lead0_* / lead1_* filled (in memory only)
   std::vector<double> lead0_v, lead1_v; std::vector<uint64_t> lead0_hash, lead0_off, lead1_hash, lead1_off;
   std::vector<uint16_t> lead0_len, lead1_len; std::vector<int32_t> lead0_pool, lead1_pool;      // admission: the group size used and the peak-live plan (text)
   KernelStats ks;

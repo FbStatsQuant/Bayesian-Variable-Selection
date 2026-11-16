@@ -195,9 +195,9 @@ TEST(golden_island_vs_core_engine) {
 
 
 // COMPAT (manager Q2; the <= 5k bit anchor): the island with core's serial v3 stream 9 + r (WP1 CompatSource), the
-// particle-major bit path, core's double RB sum and the leader stores, against core's Engine::run_island with its own
-// RngSource on the same stream: every output in bits (RB, rb_round and PIPs included), both leader stores, and the
-// stream position at the end.
+// particle-major bit path and core's double RB sum, against core's Engine::run_island with its own RngSource on the same
+// stream: every output in bits (RB, rb_round and PIPs included) and the stream position at the end. The leader stores
+// (not outputs: INTERFACES v0.1.7) are compared too, with the test-only option `leaders`.
 TEST(golden_compat_island_vs_core_serial_stream) {
   for (int variant = 0; variant < 2; ++variant) {
     int n = variant ? 80 : 100, p = variant ? 150 : 220, N = variant ? 40 : 30;
@@ -209,7 +209,7 @@ TEST(golden_compat_island_vs_core_serial_stream) {
     v3::RngSource src; src.g.seed_stream(seed, 9 + r);
     E.led = &L3; E.vs = &src; E.cache = nullptr;
     v3::IslandResult R3 = E.run_island(r, N, grid, L, Hm, 0, nullptr);
-    IslandConfig c; c.compat = true; c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.seed = seed; c.island = (uint32_t)r;
+    IslandConfig c; c.compat = true; c.leaders = true; /* test-only: compares core's leader stores */ c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.seed = seed; c.island = (uint32_t)r;
     c.N = N; c.grid = grid; c.L = L; c.Hm = Hm; c.B = B;
     IslandRun R = run_island<Arith::Bit>(W.D, W.st, W.nb, c);
     compare_island(R3, L3, R, r, "compat");

@@ -45,10 +45,7 @@ std::string write_island_file(const std::string& path, const IslandRun& r, Arith
   w.add("term_distinct", r.terminal_distinct);
   // ledger
   w.add("top_v", r.top_v); w.add("top_hash", r.top_hash); w.add("top_off", r.top_off); w.add("top_len", r.top_len); w.add("top_pool", r.top_pool);
-  if (r.compat) {   // leader stores (compat only, D-7): LEX order, values log gamma_0 (lead0) and F (lead1)
-    w.add("lead0_v", r.lead0_v); w.add("lead0_hash", r.lead0_hash); w.add("lead0_off", r.lead0_off); w.add("lead0_len", r.lead0_len); w.add("lead0_pool", r.lead0_pool);
-    w.add("lead1_v", r.lead1_v); w.add("lead1_hash", r.lead1_hash); w.add("lead1_off", r.lead1_off); w.add("lead1_len", r.lead1_len); w.add("lead1_pool", r.lead1_pool);
-  }
+  // no leader stores in island_r.bin, in any mode (INTERFACES v0.1.7 §4.1/§5.1; D-7)
   w.add("hpm_S", r.hpm.S);
   double hv[2] = {r.hpm.F, r.hpm.logm}; w.add_copy("hpm_val", fmt::D_F64, hv, 16, 2, 0);
   const EventKey& k = r.hpm.key;

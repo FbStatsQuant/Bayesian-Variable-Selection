@@ -262,10 +262,12 @@ fsync and rename, repeated resubmission (resume twice), resume with a different 
 `CompatSource` on the island's v3 stream (seed, 9 + r) — the particle-major code requests uniforms in exactly core's
 serial order (proved address by address by the golden adapter). RB is core's double sum in serial order, `rb_round`
 the difference of cumulative sums (`core/cpp/v3_engine.h:350-364`); the two leader stores (lead0: log γ₀, lead1: F,
-LEX order, 20p) are kept; checkpoints add the xoshiro state + count, the double accumulator and the leader stores;
-island_r.bin is mode `compat` with `lead0_*`, `lead1_*`. Test `golden_compat_island_vs_core_serial_stream`: core's
+LEX order, 20p) are NOT kept in final runs (INTERFACES v0.1.7: not outputs in any mode; option `leaders`, default off,
+for calibration islands and the golden test only); checkpoints add the xoshiro state + count and the double accumulator;
+island_r.bin is mode `compat` and never carries leader stores. Test `golden_compat_island_vs_core_serial_stream`: core's
 `Engine::run_island` with its own `RngSource` on stream 9 + r against the compat island — **every output in bits**
-(RB, rb_round, PIP included), both leader stores, HPM + provenance, counters, store, stream position.
+(RB, rb_round, PIP included), HPM + provenance, counters, store, stream position (and, with the test-only `leaders`
+option, both leader stores).
 
 ## 7. Manager decisions on §5 (2026-11-15)
 Q1 bit-form LM test-only (production refuses; `allow_test_kernels`). Q2 exact fixed-point RB in law mode, core's double

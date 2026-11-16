@@ -520,14 +520,14 @@ TEST(mem_budget_admission) {
   CHECK(store > big.total / 3);
 }
 
-// Compat (serial v3 stream): checkpoint/resume restores the xoshiro state, the double RB accumulator and the leader
-// stores (identical bytes); island_r.bin is mode compat with lead0_* / lead1_* sections; production configurations
+// Compat (serial v3 stream): checkpoint/resume restores the xoshiro state and the double RB accumulator (identical
+// bytes); island_r.bin is mode compat with NO leader stores (INTERFACES v0.1.7); production configurations
 // that cannot be serial are refused.
 TEST(compat_restart_file_and_refusals) {
   Fixture F(100, 300, 27);
   IslandConfig c = small_cfg(); c.compat = true; c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.island = 2;
   IslandRun r0 = run_island<Arith::Bit>(F.D, F.st, F.nb, c);
-  CHECK(r0.status == 0 && r0.compat && r0.stream_count > 0 && !r0.lead0_v.empty() && !r0.lead1_v.empty());
+  CHECK(r0.status == 0 && r0.compat && r0.stream_count > 0 && !r0.leaders && r0.lead0_v.empty() && r0.lead1_v.empty());   // v0.1.7
   const std::string base = tmpdir() + "/wp3_compat_ck";
   for (int stop : {0, 3, 6}) {
     std::remove((base + ".a").c_str()); std::remove((base + ".b").c_str());
@@ -540,7 +540,12 @@ TEST(compat_restart_file_and_refusals) {
   std::remove((base + ".a").c_str()); std::remove((base + ".b").c_str());
   std::string path = tmpdir() + "/wp3_compat_island.bin";
   write_island_file(path, r0, Arith::Bit, v4::Json::object());
-  { v4::fmt::Reader rd(path); CHECK(rd.mode() == v4::fmt::M_COMPAT && rd.has("lead0_v") && rd.has("lead1_pool") && rd.json("meta").at("mode").str() == "compat"); }
+  { v4::fmt::Reader rd(path); CHECK(rd.mode() == v4::fmt::M_COMPAT && !rd.has("lead0_v") && !rd.has("lead1_v") && rd.json("meta").at("mode").str() == "compat"); }
+  // even an island run with the test-only leaders option writes no leader store (v0.1.7)
+  { IslandConfig cl = c; cl.leaders = true; IslandRun rl = run_island<Arith::Bit>(F.D, F.st, F.nb, cl);
+    CHECK(rl.leaders && !rl.lead0_v.empty());
+    write_island_file(path, rl, Arith::Bit, v4::Json::object());
+    v4::fmt::Reader rd(path); CHECK(!rd.has("lead0_v") && !rd.has("lead1_v")); }
   std::remove(path.c_str());
   for (int bad = 0; bad < 3; ++bad) {
     IslandConfig x = c; if (bad == 0) x.threads = 2; if (bad == 1) { x.kernel = KernelKind::LabelMajor; x.allow_test_kernels = true; } if (bad == 2) x.island = 5;
