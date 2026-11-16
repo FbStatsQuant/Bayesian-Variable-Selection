@@ -80,6 +80,9 @@ PROGRAM Readability, with a fidelity check of every number.
 - **API credits** (Anthropic Console, Fable batches): HQ only.
 
 ## 6. Reporting
+**The owner centralizes his conversations through HQ** (owner, 2026-11-15). Departments report to HQ only; HQ relays
+to the owner what matters: launches, finished milestones, and decisions he must make. Do not message the owner unless
+he talks to you first; if he does, answer him and tell HQ what he decided.
 Report to HQ at each checkpoint and daily: at most 10 lines with `t3_thread_send`, mode queue, covering what moved,
 what is blocked, and what you need. Escalate at once: a counterexample to a target, a WEAKER change to a target clause,
 a hold on a consumed claim, a budget overrun, or anything touching a headline claim.
