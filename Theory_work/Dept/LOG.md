@@ -50,3 +50,4 @@
 - 20:11 — W3-READER CP1 answered (D26); card v0.3 to HQ for H5; leg 2 brief delivered.
 - 20:12 — HQ approved recorder real runs D, E, F(+tool fix); C and H dry runs; recorder instructed.
 - 20:12 — HQ: D25 agreed (EQUAL, no H5); HQ_DECISIONS 19:10 entry corrected on main; Theorem B WEAKER goes in the next checkpoint; HQ awaits DIST CP2.
+- 20:15 — W3-EDIT triage: 20 (iii) (6 ★), 30 (ii), 9 (i). D27: adjudicator child launched; HQ escalated; recorder C held.

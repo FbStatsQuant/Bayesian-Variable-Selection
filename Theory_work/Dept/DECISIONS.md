@@ -157,3 +157,9 @@
   (candidate blocks labelled "headline admission pending (strength gates)", regression test) → C dry run (10 ACCEPT
   rows bound to MANIFEST_PC1; Family-map excluded) → HQ → C real → H root-fix dry run (TH09/SL0/TH05.0; else honest
   re-status of 10 consumers). Commit hash + check totals after each, relayed to HQ.
+
+## 2026-11-15 20:15 CT — 20 class-(iii) audit MINORs (W3-EDIT TRIAGE_MINORS, fd0dd92)
+- **D27.** Escalated to HQ (6 ★ headline candidates incl. two W2-APP:POST sub-clauses). Fresh Opus adjudicator (child)
+  gives E / PATCH / NARROW / REFUTED per row with consumers (propagate --dry-run) → research/ADJ_MINORS_iii.md.
+  NARROW → LIFECYCLE §3 priced; headline main clause → H5 via HQ. C (W2-APP) real run held pending M57/M58; D/E/F go on.
+  The 30 class-(ii) slips and 9 class-(i) wording items: routed after the adjudication (post-freeze editorial/patch batch).
