@@ -1,8 +1,11 @@
 // io.cpp -- WP5 readers (see io.h).
 #include "io.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <utility>
+#include <vector>
 
 namespace v4::eval::io {
 
@@ -20,6 +23,21 @@ void load_fit(const std::string& path, FitFile& o) {
   s.pool = B.get<int32_t>("top_pool", &c);
   for (size_t i = 0; i < n; ++i) if (s.off[i] + s.len[i] > c) throw Error(Status::invalid_input, "fit.bin: store entry beyond pool");
   for (size_t i = 1; i < n; ++i) if (s.v[i] > s.v[i - 1]) throw Error(Status::invalid_input, "fit.bin: top store not sorted (I1)");
+  // I1, one entry per model (INTERFACES §4.1 v0.1.13; PR40 review #6): a fit.bin merged before that rule (V mode) may
+  // hold a model twice, which double counts it in log Z_T, PIP_T and the occupancy sets. Refuse such files.
+  {
+    std::vector<std::pair<uint64_t, uint32_t>> kp(n);
+    for (size_t i = 0; i < n; ++i) kp[i] = {s.hash[i], (uint32_t)i};
+    auto mless = [&](uint32_t a, uint32_t b) {
+      return std::lexicographical_compare(s.pool + s.off[a], s.pool + s.off[a] + s.len[a], s.pool + s.off[b], s.pool + s.off[b] + s.len[b]);
+    };
+    std::sort(kp.begin(), kp.end(), [&](const std::pair<uint64_t, uint32_t>& x, const std::pair<uint64_t, uint32_t>& y) {
+      return x.first != y.first ? x.first < y.first : mless(x.second, y.second);
+    });
+    for (size_t t = 1; t < n; ++t)
+      if (kp[t].first == kp[t - 1].first && !mless(kp[t - 1].second, kp[t].second) && !mless(kp[t].second, kp[t - 1].second))
+        throw Error(Status::invalid_input, "fit.bin: a model appears twice in the top store (I1; re-merge with the current engine)");
+  }
 }
 
 std::string arg_str(const Json& a, const std::string& k, const std::string& d) {

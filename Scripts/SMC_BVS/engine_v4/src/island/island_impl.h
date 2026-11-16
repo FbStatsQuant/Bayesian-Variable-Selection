@@ -86,8 +86,8 @@ v4::IslandResult to_record(const IslandRun& r) {
   o.led.hpm_ev.phase = r.hpm.phase; o.led.hpm_ev.mech = r.hpm.mech; o.led.hpm_ev.key = r.hpm.key;
   std::memcpy(o.led.logical, r.logical, sizeof(r.logical));
   if (r.r >= 0 && (size_t)r.r < o.led.island_best.size()) o.led.island_best[r.r] = r.island_best;
-  for (size_t i = 0; i < r.top_v.size(); ++i) o.led.top.offer(r.top_v[i], v4::ModelView(r.top_pool.data() + r.top_off[i], r.top_len[i]), r.top_hash[i]);
-  o.led.top.compact();
+  o.led.top.load_unique_sorted(r.top_v.size(), r.top_v.data(), r.top_hash.data(), r.top_off.data(), r.top_len.data(),
+                               r.top_pool.data(), r.top_pool.size());   // the island store is sorted and unique: verified bulk load
   o.t.total = r.ks.t_total;
   return o;
 }
