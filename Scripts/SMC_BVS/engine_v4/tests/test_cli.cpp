@@ -70,3 +70,39 @@ TEST(json_u64_guard_and_hex64) {
   CHECK(Json((uint64_t)12345).i64() == 12345);
   CHECK(hex64(0x5EEDB175C0DE2026ULL) == "0x5eedb175c0de2026");
 }
+
+// INTERFACES §5.1 binary consistency (v0.1.4): one helper for WP3 (restart) and WP4 (merge).
+TEST(binary_compatible_rules) {
+  Json a = binary_block();
+  CHECK(a.at("libm").at("self_test").at("pass").boolean());
+  CHECK(binary_compatible(a, a, BinaryUse::MergeV).ok && binary_compatible(a, a, BinaryUse::Restart).ok);
+  // theory mode: needs a clean, known commit
+  Json c = a; c["git_commit"] = "0123456789abcdef0123456789abcdef01234567";
+  CHECK(binary_compatible(c, c, BinaryUse::MergeTheory).ok);
+  Json d = c; d["git_commit"] = std::string("0123456789abcdef0123456789abcdef01234567-dirty");
+  CHECK(!binary_compatible(d, d, BinaryUse::MergeTheory).ok);
+  Json u = c; u["git_commit"] = "unknown";
+  CHECK(!binary_compatible(u, u, BinaryUse::MergeTheory).ok);
+  Json e = c; e["git_commit"] = "fedcba9876543210fedcba9876543210fedcba98";
+  CHECK(!binary_compatible(c, e, BinaryUse::MergeTheory).ok);
+  CHECK(binary_compatible(c, e, BinaryUse::MergeV).ok);      // V: different commits may merge
+  // flags, failed self-test, other executable
+  Json f = a; f["flags"] = "-O3"; CHECK(!binary_compatible(a, f, BinaryUse::MergeV).ok);
+  Json g = a; g["libm"]["self_test"]["pass"] = false; CHECK(!binary_compatible(a, g, BinaryUse::MergeV).ok);
+  Json h = a; h["libm"]["self_test"] = "not run"; CHECK(!binary_compatible(a, h, BinaryUse::MergeV).ok);
+  Json x = a; x["sha256"] = std::string(64, 'f'); CHECK(!binary_compatible(a, x, BinaryUse::Restart).ok);
+  CHECK(binary_compatible(a, x, BinaryUse::MergeV).ok);
+  CHECK_THROWS(require_binary_compatible(a, f, BinaryUse::MergeV));
+  // the commit field: 40 hex characters, optionally "-dirty", or "unknown"
+  std::string gc = a.at("git_commit").str();
+  CHECK(gc == "unknown" || gc.size() == 40 || (gc.size() == 46 && gc.substr(40) == "-dirty"));
+  std::printf("    git_commit in this build: %s\n", gc.c_str());
+}
+TEST(cli_info_skips_self_test) {
+  std::string raw = tmp_path("cli_info.bin"), rec = tmp_path("cli_info.json");
+  CHECK_EQ(run("gen --design IND --n 10 --p 5 --seed 2 --out " + raw), 0);
+  CHECK_EQ(run("info --in " + raw + " --record " + rec), 0);
+  Json r = read_json_file(rec);
+  CHECK(r.at("binary").at("libm").at("self_test").type() == Json::STR && r.at("binary").at("libm").at("self_test").str() == "not run");
+  for (auto f : {raw, raw + ".json", rec}) std::remove(f.c_str());
+}

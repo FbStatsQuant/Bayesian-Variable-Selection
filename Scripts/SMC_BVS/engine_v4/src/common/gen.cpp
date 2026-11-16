@@ -68,12 +68,12 @@ Truth truth(const Spec& s) {
 double normal_at(uint32_t seed, uint8_t xph, uint32_t row, uint32_t col) {
   Address a; a.seed = seed; a.role = R_GEN; a.xph = xph; a.particle = row; a.position = col;
   for (uint32_t t = 0;; ++t) {
-    a.slot = t;
+    a.slot = t;   // role GEN: slot = attempt number (INTERFACES §3); no slot kinds in this role
     double u, u2; uniform2_at(a, u, u2);
     double v1 = 2.0 * u - 1.0, v2 = 2.0 * u2 - 1.0;
     double r = v1 * v1 + v2 * v2;
     if (r > 0.0 && r < 1.0) return v1 * pm::sqrt(-2.0 * pm::log(r) / r);
-    if (t == 0xFFFFFFFFu) throw Error(Status::internal_error, "gen: polar method did not accept");
+    if (t == 0x0FFFFFFFu) throw Error(Status::internal_error, "gen: polar method did not accept");
   }
 }
 
@@ -118,8 +118,10 @@ void generate(const Spec& s, std::vector<double>& X, std::vector<double>& y) {
   }
 }
 
-void generate_test(const Spec& s, int32_t nt, const std::vector<int32_t>& cols, std::vector<int32_t>& oc,
-                   std::vector<double>& Xt, std::vector<double>& yt) {
+void generate_test_rows(const Spec& s, int64_t a, int64_t b, const std::vector<int32_t>& cols, std::vector<int32_t>& oc,
+                        std::vector<double>& Xt, std::vector<double>& yt) {
+  if (a < 0 || b < a || b > 0xFFFFFFFFLL) throw Error(Status::invalid_input, "gen test: bad row range");
+  const int64_t nt = b - a;   // local row r = i - a; addresses use the global row i
   Truth t = truth(s);
   oc = cols; oc.insert(oc.end(), t.S0.begin(), t.S0.end());
   std::sort(oc.begin(), oc.end()); oc.erase(std::unique(oc.begin(), oc.end()), oc.end());
@@ -127,7 +129,8 @@ void generate_test(const Spec& s, int32_t nt, const std::vector<int32_t>& cols, 
   const size_t m = oc.size();
   Xt.assign((size_t)nt * m, 0.0); yt.assign((size_t)nt, 0.0);
 #pragma omp parallel for schedule(static)
-  for (int32_t i = 0; i < nt; ++i) {
+  for (int64_t i = a; i < b; ++i) {
+    const size_t r = (size_t)(i - a);
     double prev = 0; int64_t jprev = -1;
     for (size_t c = 0; c < m; ++c) {
       uint32_t j0 = (uint32_t)(oc[c] - 1);   // 0-based column
@@ -143,15 +146,20 @@ void generate_test(const Spec& s, int32_t nt, const std::vector<int32_t>& cols, 
       } else {
         x = normal_at(s.seed, X_TEST_X, (uint32_t)i, j0);
       }
-      Xt[c * nt + i] = x;
+      Xt[c * (size_t)nt + r] = x;
     }
     double mu = 0;
     for (size_t k = 0; k < t.S0.size(); ++k) {
       size_t c = (size_t)(std::lower_bound(oc.begin(), oc.end(), t.S0[k]) - oc.begin());
-      mu += t.beta[k] * Xt[c * nt + i];
+      mu += t.beta[k] * Xt[c * (size_t)nt + r];
     }
-    yt[(size_t)i] = mu + s.sigma * normal_at(s.seed, X_TEST_NOISE, (uint32_t)i, 0);
+    yt[r] = mu + s.sigma * normal_at(s.seed, X_TEST_NOISE, (uint32_t)i, 0);
   }
+}
+
+void generate_test(const Spec& s, int32_t nt, const std::vector<int32_t>& cols, std::vector<int32_t>& oc,
+                   std::vector<double>& Xt, std::vector<double>& yt) {
+  generate_test_rows(s, 0, nt, cols, oc, Xt, yt);
 }
 
 static Json truth_json(const Spec& s, const Truth& t) {

@@ -8,13 +8,13 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 include(cmake/flags.cmake)
-# git commit recorded in the binary block (value at configure time; re-run cmake after committing)
-execute_process(COMMAND git rev-parse HEAD WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                OUTPUT_VARIABLE V4_GIT_COMMIT OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
-if(NOT V4_GIT_COMMIT)
-  set(V4_GIT_COMMIT "unknown")
-endif()
-add_compile_definitions(V4_GIT_COMMIT="${V4_GIT_COMMIT}")
+# git commit recorded in the binary block: HEAD + "-dirty" (tracked changes), refreshed at every build
+# (generated header v4_git.h; only rewritten when the value changes)
+set(V4_GEN_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated)
+file(MAKE_DIRECTORY ${V4_GEN_DIR})
+add_custom_target(v4_git_version ALL
+  COMMAND ${CMAKE_COMMAND} -DSRC=${CMAKE_CURRENT_SOURCE_DIR} -DOUT=${V4_GEN_DIR}/v4_git.h -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/git_version.cmake
+  BYPRODUCTS ${V4_GEN_DIR}/v4_git.h COMMENT "git commit (+dirty) -> v4_git.h")
 find_package(OpenMP REQUIRED COMPONENTS CXX)
 
 set(V4_COMMON_SRC
@@ -27,7 +27,8 @@ set(V4_WP5_SRC src/eval/posterior.cpp src/eval/model.cpp src/eval/dist.cpp src/e
 
 # v4_bit: every kernel that must equal the v3 bits (flags of core/cpp/Makevars.v3).
 add_library(v4_bit STATIC ${V4_COMMON_SRC} ${V4_STUB_SRC} ${V4_WP5_SRC})
-target_include_directories(v4_bit PUBLIC include)
+target_include_directories(v4_bit PUBLIC include PRIVATE ${V4_GEN_DIR})
+add_dependencies(v4_bit v4_git_version)
 target_compile_options(v4_bit PRIVATE ${V4_BIT_FLAGS} ${V4_WARN})
 target_link_libraries(v4_bit PUBLIC OpenMP::OpenMP_CXX m)
 

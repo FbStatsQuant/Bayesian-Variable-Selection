@@ -1,7 +1,9 @@
 #include <fstream>
 #include "tk.h"
 #include "tutil.h"
+#include <cstring>
 #include "v4/format.h"
+#include "v4/sha256.h"
 using namespace v4;
 
 TEST(format_roundtrip_and_alignment) {
@@ -37,6 +39,32 @@ TEST(format_roundtrip_and_alignment) {
   CHECK_THROWS(fmt::Reader bad2(f));
   std::remove(f.c_str());
   CHECK_THROWS(fmt::Reader missing(f));
+}
+// A crafted section entry whose offset + length wraps around, with every hash recomputed so that only the range check
+// can catch it (review PR11 #11 / R3); and an entry pointing into the header.
+TEST(format_malformed_entries_rejected) {
+  std::string f = tmp_path("mal.bin");
+  std::vector<double> a(16, 1.0);
+  fmt::Writer w(fmt::K_DATA, fmt::M_NONE); w.add("a", a); w.write(f);
+  auto craft = [&](uint64_t off, uint64_t len) {
+    std::fstream io(f, std::ios::in | std::ios::out | std::ios::binary);
+    fmt::FileHeader h; io.read((char*)&h, sizeof h);
+    fmt::SectionEntry e; io.read((char*)&e, sizeof e);
+    e.offset = off; e.length = len;
+    auto th = sha256(&e, sizeof e); std::memcpy(h.table_sha256, th.data(), 32);
+    fmt::FileHeader z = h; std::memset(z.table_sha256, 0, 32); std::memset(z.content_sha256, 0, 32);
+    Sha256 s; s.update(&z, sizeof z); s.update(&e, sizeof e); auto ch = s.final(); std::memcpy(h.content_sha256, ch.data(), 32);
+    io.seekp(0); io.write((char*)&h, sizeof h); io.write((char*)&e, sizeof e);
+  };
+  craft(64, 0xFFFFFFFFFFFFFFC0ULL);          // offset + length wraps to a small number
+  bool range = false;
+  try { fmt::Reader r(f); } catch (const Error& e) { range = std::string(e.what()).find("out of range") != std::string::npos; }
+  CHECK(range);
+  craft(0, 128);                              // inside the header and table
+  range = false;
+  try { fmt::Reader r(f); } catch (const Error& e) { range = std::string(e.what()).find("out of range") != std::string::npos; }
+  CHECK(range);
+  std::remove(f.c_str());
 }
 TEST(format_duplicate_section_rejected) {
   fmt::Writer w(fmt::K_RAW, fmt::M_NONE); std::vector<double> a = {1};

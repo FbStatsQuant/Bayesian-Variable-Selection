@@ -42,3 +42,15 @@ Other facts:
   compare its 9 hashes with `tests/fixtures/pmath_owls_glibc234_fma.json`. Expect identical bits if the libm code is the
   same el9 build family. If not, it is the libm package, not the CPU, and this decision is revisited.
 - Class-A kernels (V) may use vector log/exp: they are class A by definition, not affected.
+
+## Addendum (2026-11-15, after the NOTS run; INTERFACES v0.1.3)
+- NOTS (job 2747666, node bb2u16c1, SPR, glibc 2.34, libm sha256 98677841…; Owls 840be1bb…): 7 of 9 row hashes equal.
+  `log1p` and `expm1` differ. NOTS's not-correctly-rounded counts for them (39,981 and 22,831) are exactly Owls' counts
+  under the **non-FMA** variant, so NOTS's libm build takes the SSE2 code for these two functions.
+  Write-up: `Docs/Experiments/P1M/results/PMATH_NOTS.md`.
+- `core/` never calls log1p/expm1 (`log_add` and `log1mexp_v3` are unused), so the Owls fixtures are valid for NOTS.
+- **The no-bundling decision stands.** Changes:
+  - log1p/expm1 move to `pm::machine::` (class A only);
+  - the guard becomes `require_bit_libm()`, which checks that log/exp/lgamma reproduce the six measured row hashes. It
+    keys on function results, not on the libm file hash. A CPU-flag check alone could not have seen the per-function
+    difference above.
