@@ -1,0 +1,8 @@
+id	file[:lines]	uses	sha	checked_sha	checked_by	state
+stmt:sec2	STATEMENT.md:49-97	-	321ea57959ee0e7f	-	-	UNCHECKED
+stmt:C0p	STATEMENT.md:98-124	-	186d13d4531c77c7	-	-	UNCHECKED
+stmt:CD	STATEMENT.md:125-133	-	abe7c705c1ec1be4	-	-	UNCHECKED
+stmt:C1p	STATEMENT.md:136-146	-	73a0ac3a6833b97a	-	-	UNCHECKED
+stmt:C2p	STATEMENT.md:147-152	-	e9009dbe31e9fa2e	-	-	UNCHECKED
+stmt:C5p	STATEMENT.md:165-175	-	483df9980db274fb	-	-	UNCHECKED
+stmt:C4p	STATEMENT.md:176-207	-	f0d1d25e3f922663	-	-	UNCHECKED
