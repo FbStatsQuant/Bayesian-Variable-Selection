@@ -35,3 +35,21 @@ true diff round is impossible. A1 is headline row 3.7 (abstract). The consultant
 
 Rules: never cancel agents; settle your own finished reviewers; timestamps from `date`; temp under
 /home/fb31/SMC_Theory_Department/tmp/<YYYYMMDD>-W3-SCR-R2-<what>; nice; ≤ 16 cores; statuses verbatim.
+
+## Leg 2 — REPORT fix + diff round (HQ GO, 2026-11-16; v4 §5.5; this is R2's one diff round)
+1. **Fix (only edit allowed in W3-SCR):** in `Theory_work/Wave3/W3-SCR/REPORT.md` §2, replace each claim summary with a
+   pointer to its STATEMENT lines (e.g. "A1: STATEMENT.md:158-163"), following v4 "REPORT restates nothing". Keep every
+   registry status-source line byte-identical and at the same line number (A1 at :61, SCR-G at :63, and so on).
+   Check this against `claims.tsv` status_source for all 21 W3-SCR rows **before and after** the edit (sha of each cited
+   line). If a line number must move, stop and tell the manager.
+2. **Manifest-impact check** (department rule): `git grep` every MANIFEST_* / INPUTS* on origin/main for
+   `W3-SCR/REPORT.md` and report the hits. MANIFEST_R2 itself is expected; any other hit, stop and tell the manager.
+3. Freeze a new manifest `Theory_work/Wave3/W3-SCR/reviews/MANIFEST_R3.txt` (diff round) and commit and push.
+4. **Diff round:** the same two seat models, fresh threads: Opus 5.5 high (Claude Third) and Sol (codex gpt-6.1-sol, high).
+   Each gets: its own R2 review, the REPORT diff (R2 manifest → R3 manifest), and the DEPS-style list of changed
+   objects (REPORT §2 only). Each answers: is each of my findings resolved (F1–F4); does the diff break anything; a
+   per-claim table for all 21 rows; one `COUNCIL-VERDICT round=R3 manifest=<R3 digest> seat=<seat> score=… gates=…`.
+   No new E findings; no re-reading of unchanged text.
+5. `manifest.py bind` on R3 → CHECKPOINT_2.md (in this folder): verdicts, bind output, F1–F4 status. End.
+**If the diff round fails: stop and report. No further round without HQ.** Deadline Thu 2026-11-19 18:00 CT.
+Codex order: W3-DIST > riders > W3-T03ACC > this.
