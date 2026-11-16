@@ -19,21 +19,20 @@
 #include <algorithm>
 #include <string>
 #include <vector>
-#include "wp4_par.h"
-#include "wp4_standin.h"
+#include "v4/ledger.h"
+#include "v4/records.h"
+#include "v4/rng.h"
+#include "v4/status.h"
+#include "v4/wp4_par.h"
 
 namespace v4 {
 namespace merge {
 
-// = core/cpp/v3_engine.h:46-53
-struct LocalArchive {
-  Model centre; double centre_F = 0;
-  std::vector<Model> path; std::vector<double> path_F;
-  std::vector<Model> scanned; std::vector<double> scanned_F; std::vector<int> scan_complete, scan_size;
-  std::string termination; bool local_limit = false, local_certified = false;
-  Model returned; double returned_F = 0;
-  int moves = 0; long n_eval = 0;
-};
+// LocalArchive = v4::LocalArchive (records.h; core/cpp/v3_engine.h:46-53).
+inline std::string strip_status_prefix(const std::string& m) {   // Error::what() = "<status>: <message>"
+  const std::string pre = "numerical_failure: ";
+  return m.rfind(pre, 0) == 0 ? m.substr(pre.size()) : m;
+}
 
 struct TailSettings {
   int threads = 1;
@@ -41,6 +40,7 @@ struct TailSettings {
   int K = 0;               // model size cap
   int p = 0;
   int tier = 0;
+  const Zobrist* zob = nullptr;   // model hashes for the stores (Data::zob)
 };
 
 namespace detail {
@@ -61,7 +61,7 @@ LocalArchive local_search(const Model& centre, int ell, bool emit_centre, int ph
   const uint8_t seg = phase == PH_LS0 ? SG_LS0 : SG_LOCAL;
   auto make_ev = [&](uint32_t stage, uint32_t round, uint32_t position) {
     EventCtx ev; ev.phase = phase; ev.mech = ME_LOCAL; ev.phi = 1.0;
-    ev.key.seg = seg; ev.key.tier = (uint8_t)ts.tier; ev.key.iter = -1; ev.key.unit = UNIT_LOCAL;
+    ev.key.seg = seg; ev.key.tier = (uint8_t)ts.tier; ev.key.iter = -1; ev.key.unit = UNIT_LOCAL; ev.key.xph = X_INIT;
     ev.key.stage = stage; ev.key.round = round; ev.key.position = position;
     return ev;
   };
@@ -69,7 +69,7 @@ LocalArchive local_search(const Model& centre, int ell, bool emit_centre, int ph
   {
     auto ev = fac.make(); double lm, lg0, d;
     ev(C, lm, lg0, d, CF);
-    if (emit_centre) led.event(C, CF, lg0, lm, make_ev(0, 0, 0), true);
+    if (emit_centre) led.event(C, ts.zob->hash(C), CF, lg0, lm, make_ev(0, 0, 0), true);
   }
   A.centre = C; A.centre_F = CF;
   const int p = ts.p, K = ts.K;
@@ -121,14 +121,14 @@ LocalArchive local_search(const Model& centre, int ell, bool emit_centre, int ph
     bool have = false; Model bestS; double bestF = 0; long n_eval = 0;
     for (size_t c = 0; c < nc && !failed; ++c) {
       detail::ChunkOut& o = co[c];
-      for (auto& x : o.offers) led.offer_stores(x.S, x.F, x.lg0, x.logm, make_ev(stage, round, x.position));
+      for (auto& x : o.offers) led.offer_stores(x.S, ts.zob->hash(x.S), x.F, x.lg0, x.logm, make_ev(stage, round, x.position));
       n_eval += o.n_eval;
       if (o.failed) { failed = true; fmsg = o.fail_msg; break; }
       if (o.have && (!have || o.bestF > bestF || (o.bestF == bestF && lex_less(o.bestS, bestS)))) { bestS = o.bestS; bestF = o.bestF; have = true; }
     }
     led.logical[phase][ME_LOCAL] += (uint64_t)n_eval;
     A.n_eval += n_eval;
-    if (failed) throw NumericalFailure(fmsg.rfind("numerical_failure: ", 0) == 0 ? fmsg.substr(19) : fmsg);
+    if (failed) throw NumericalFailure(strip_status_prefix(fmsg));
     A.scanned.push_back(C); A.scanned_F.push_back(CF); A.scan_complete.push_back(1);
     A.scan_size.push_back((int)(n_flip_eval + (uint32_t)k * (uint32_t)(p - k)));
     if (have && bestF > CF) {   // strict F improvement only (R14)

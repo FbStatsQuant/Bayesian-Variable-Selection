@@ -17,9 +17,14 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include "calib_rules.h"
-#include "tail.h"
-#include "wp4_standin.h"
+#include <algorithm>
+#include <chrono>
+#include <limits>
+#include "v4/calib_rules.h"
+#include "v4/ledger.h"
+#include "v4/records.h"
+#include "v4/status.h"
+#include "v4/tail.h"
 
 namespace v4 {
 namespace merge {
@@ -53,6 +58,7 @@ struct MergeSettings {
   std::vector<int> occ_M{1, 10, 100, 1000};
   double near_tie_eps = 1e-9;
   int threads = 1; size_t chunk = 2048;
+  const Zobrist* zob = nullptr;   // model hashes (Data::zob)
 };
 
 struct OccRow {   // log Z^_occ for one M (D-13)
@@ -93,7 +99,7 @@ struct FitOut {
 
 // ---- helpers for the pre-island ledger ----------------------------------------------------------------------------
 inline EventCtx table_event(int block, uint32_t code) {   // core/cpp/v3_core.cpp:372-387 (stage = b + 1, position = code)
-  EventCtx ev; ev.phase = PH_TABLE; ev.mech = ME_TABLE; ev.key.seg = SG_TABLE; ev.key.iter = -1;
+  EventCtx ev; ev.phase = PH_TABLE; ev.mech = ME_TABLE; ev.key.seg = SG_TABLE; ev.key.iter = -1; ev.key.unit = 0;
   ev.key.stage = (uint32_t)block + 1; ev.key.position = code; return ev;
 }
 inline EventCtx inherited_event() {
@@ -157,11 +163,10 @@ FitOut merge_and_tail(const std::vector<IslandSlot>& slots, Ledger pre, const Mo
   const int R = ms.Rp, p = ms.p;
   // 3. ledger merge (order-free)
   Ledger led = std::move(pre);
-  if ((int)led.island_best.size() < R + 1) led.island_best.resize(R + 1, NEG_INF);
   for (auto& s : slots) led.merge(s.isl.led);
   led.compact();
   // 4. tail
-  TailSettings ts; ts.threads = ms.threads; ts.chunk = ms.chunk; ts.K = ms.K; ts.p = p; ts.tier = ms.tier;
+  TailSettings ts; ts.threads = ms.threads; ts.chunk = ms.chunk; ts.K = ms.K; ts.p = p; ts.tier = ms.tier; ts.zob = ms.zob;
   out.hpm_before_local = led.hpmS; out.hpm_before_local_F = led.hpmF;
   try {
     auto t0 = std::chrono::steady_clock::now();
@@ -184,6 +189,8 @@ FitOut merge_and_tail(const std::vector<IslandSlot>& slots, Ledger pre, const Mo
     }
   } catch (const NumericalFailure& e) {
     out.status = Status::numerical_failure; out.fit_state = "failed"; out.reason = e.what();
+  } catch (const Error& e) {
+    out.status = e.st; out.fit_state = "failed"; out.reason = e.what();
   }
   led.compact();
   out.has_hpm = led.has_hpm; out.hpm = led.hpmS; out.hpm_F = led.hpmF; out.hpm_logm = led.hpm_logm; out.hpm_ev = led.hpm_ev;
@@ -191,8 +198,8 @@ FitOut merge_and_tail(const std::vector<IslandSlot>& slots, Ledger pre, const Mo
 
   // 5. assembly (core/v3_run.R:150-216, v3.1 branch)
   for (auto& s : slots) out.logZ_r.push_back(s.isl.logZ);
-  out.log_Z = detail::lse(out.logZ_r) - std::log((double)R);
-  out.log_Z_lower95 = std::log(0.05) + out.log_Z;
+  out.log_Z = detail::lse(out.logZ_r) - pm::log((double)R);
+  out.log_Z_lower95 = pm::log(0.05) + out.log_Z;
   out.log_Z_rel_m0 = out.log_Z - ms.log_m0;
   for (double z : out.logZ_r) out.log_Z_r_rel_m0.push_back(z - ms.log_m0);
   for (auto& s : slots) out.pip_r.push_back(s.isl.pip);
@@ -203,15 +210,15 @@ FitOut merge_and_tail(const std::vector<IslandSlot>& slots, Ledger pre, const Mo
   // PIP_Z: evidence weights W_r = Z_r / sum Z_r
   double lz = detail::lse(out.logZ_r);
   double w2 = 0; out.max_W = 0;
-  for (double z : out.logZ_r) { double w = std::exp(z - lz); out.W_r.push_back(w); w2 += w * w; out.max_W = std::max(out.max_W, w); }
+  for (double z : out.logZ_r) { double w = pm::exp(z - lz); out.W_r.push_back(w); w2 += w * w; out.max_W = std::max(out.max_W, w); }
   out.R_eff = 1.0 / w2;
   out.pip_Z.assign(p, 0.0);
   for (int j = 0; j < p; ++j) { long double a = 0.0L; for (int r = 0; r < R; ++r) a += (long double)out.W_r[r] * out.pip_r[r][j]; out.pip_Z[j] = (double)a; }
   // log Z_T (deterministic lower bound: LSE of F over the merged top store) and PIP_T (store-renormalised)
-  const auto& top = led.top.e;
-  { std::vector<double> F; F.reserve(top.size()); for (auto& x : top) F.push_back(x.v); out.log_Z_T = detail::lse(F); }
+  const Store& top = led.top;   // compacted: entries sorted under the HPM order
+  out.log_Z_T = detail::lse(top.v);
   { std::vector<long double> acc(p, 0.0L);
-    for (auto& x : top) { long double w = std::exp((long double)(x.v - out.log_Z_T)); for (int32_t j : x.S) acc[j] += w; }
+    for (size_t i = 0; i < top.size(); ++i) { long double w = pm::expl((long double)(top.v[i] - out.log_Z_T)); for (int32_t j : top.model(i)) acc[j] += w; }
     out.pip_T.assign(p, 0.0); for (int j = 0; j < p; ++j) out.pip_T[j] = (double)acc[j]; }
   // log Z^_occ (D-13): available only if every island supplied terminal supports
   out.occ_available = true;
@@ -221,7 +228,7 @@ FitOut merge_and_tail(const std::vector<IslandSlot>& slots, Ledger pre, const Mo
       OccRow row; row.M = M; row.M_used = (int)std::min<size_t>((size_t)M, top.size());
       std::unordered_map<Model, int, detail::ModelHash> set;
       std::vector<double> F;
-      for (int i = 0; i < row.M_used; ++i) { set.emplace(top[i].S, i); F.push_back(top[i].v); }
+      for (int i = 0; i < row.M_used; ++i) { ModelView S = top.model((size_t)i); set.emplace(Model(S.begin(), S.end()), i); F.push_back(top.v[(size_t)i]); }
       row.log_store_mass = detail::lse(F);
       uint64_t in_all = 0, tot_all = 0; std::vector<uint64_t> in_r, tot_r;
       for (auto& s : slots) {
@@ -229,10 +236,10 @@ FitOut merge_and_tail(const std::vector<IslandSlot>& slots, Ledger pre, const Mo
         in_r.push_back(in); tot_r.push_back(s.isl.terminal.size()); in_all += in; tot_all += s.isl.terminal.size();
       }
       row.occ = (double)in_all / (double)tot_all;
-      row.log_Z_occ = row.log_store_mass - std::log(row.occ);
+      row.log_Z_occ = row.log_store_mass - pm::log(row.occ);
       for (int r = 0; r < R; ++r) {
         double o = (double)in_r[r] / (double)tot_r[r];
-        row.occ_r.push_back(o); row.log_Z_occ_r.push_back(row.log_store_mass - std::log(o));
+        row.occ_r.push_back(o); row.log_Z_occ_r.push_back(row.log_store_mass - pm::log(o));
       }
       row.sd_log_Z_occ_r = calib::r_sd(row.log_Z_occ_r);
       // Pearson chi-square of the 2 x R' table (in set / not in set by island), df = R' - 1
@@ -247,8 +254,8 @@ FitOut merge_and_tail(const std::vector<IslandSlot>& slots, Ledger pre, const Mo
     }
   }
   // near ties (core/v3_run.R:170-173)
-  for (auto& x : top) if (x.v >= out.hpm_F - ms.near_tie_eps) { out.near_ties.push_back(x.S); out.near_tie_F.push_back(x.v); }
-  out.near_tie_truncated = led.top.full() && !top.empty() && top.back().v >= out.hpm_F - ms.near_tie_eps;
+  for (size_t i = 0; i < top.size(); ++i) if (top.v[i] >= out.hpm_F - ms.near_tie_eps) { ModelView S = top.model(i); out.near_ties.emplace_back(S.begin(), S.end()); out.near_tie_F.push_back(top.v[i]); }
+  out.near_tie_truncated = top.size() >= top.cap && top.size() > 0 && top.v.back() >= out.hpm_F - ms.near_tie_eps;
   // certificates and flags (core/v3_run.R:175-207)
   const LocalArchive& ls = out.local;
   out.local_limit = ls.local_limit;

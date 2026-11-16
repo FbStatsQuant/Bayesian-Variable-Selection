@@ -6,6 +6,10 @@
 // [[Rcpp::plugins(openmp)]]
 #include <v4/calib.h>
 #include <v4/merge.h>
+// WP1 library sources used by the WP4 headers (compiled into this test TU; no R dependency)
+#include "../../src/common/status.cpp"
+#include "../../src/common/store.cpp"
+#include "../../src/common/ledger.cpp"
 
 namespace wp4h {
 
@@ -120,27 +124,28 @@ inline v4::EventCtx ev_from_v3(const v3::EventCtx& e, int mech) {
     default: k.seg = v4::SG_FINAL;
   }
   k.unit = (e.phase == PH_LOCAL || e.phase == PH_LS0) ? v4::UNIT_LOCAL : (uint32_t)e.island;
-  k.xph = e.phase == PH_FINAL_BRIDGE ? v4::XK_BRIDGE : e.phase == PH_BURN_IN ? v4::XK_BURN : e.phase == PH_MEASURED ? v4::XK_MEASURED : v4::XK_INIT;
+  k.xph = e.phase == PH_FINAL_BRIDGE ? v4::X_BRIDGE : e.phase == PH_BURN_IN ? v4::X_BURN : e.phase == PH_MEASURED ? v4::X_MEASURED : v4::X_INIT;
   k.stage = (uint32_t)e.stage; k.round = (uint32_t)e.round; k.particle = (uint32_t)e.particle; k.position = (uint32_t)e.position;
   return o;
 }
-inline void store_from_v3(v4::Store& dst, const v3::TopStore& s) {
-  for (auto& e : s.s) dst.offer(e.v, e.S);
+inline void store_from_v3(v4::Store& dst, const v3::TopStore& s, const v4::Zobrist& z) {
+  for (auto& e : s.s) dst.offer(e.v, e.S, z.hash(e.S));
   dst.compact();
 }
-inline v4::Ledger ledger_from_v3(const v3::Ledger& L, size_t p, int R, bool leaders) {
-  v4::Ledger o(p, R, leaders);
+inline v4::Ledger ledger_from_v3(const v3::Ledger& L, size_t p, int R, bool leaders, const v4::Zobrist& z) {
+  v4::LedgerConfig cfg; cfg.p = (int32_t)p; cfg.islands = R; cfg.leaders = leaders; cfg.fresh_counters = false;
+  v4::Ledger o(cfg);
   if (L.has_hpm) { o.has_hpm = true; o.hpmS = L.hpmS; o.hpmF = L.hpmF; o.hpm_logm = L.hpm_logm; o.hpm_ev = ev_from_v3(L.hpm_ev, L.hpm_mech); }
-  store_from_v3(o.top, L.top);
-  if (leaders) { store_from_v3(o.lead0, L.lead0); store_from_v3(o.lead1, L.lead1); }
+  store_from_v3(o.top, L.top, z);
+  if (leaders) { store_from_v3(o.lead0, L.lead0, z); store_from_v3(o.lead1, L.lead1, z); }
   for (int a = 0; a < N_PHASE; ++a) for (int b = 0; b < N_MECH; ++b) o.logical[a][b] = L.logical[a][b];
   for (int r = 0; r <= R; ++r) o.island_best[r] = L.island_best[r];
   return o;
 }
 inline List store_list(const v4::Store& s, const v3::Data& D) {
-  List M(s.e.size()); NumericVector v(s.e.size());
-  for (size_t i = 0; i < s.e.size(); ++i) { M[i] = to_orig(D, s.e[i].S); v[i] = s.e[i].v; }
-  return List::create(_["models"] = M, _["value"] = v, _["capacity"] = (double)s.cap, _["full"] = s.e.size() >= s.cap);
+  List M(s.size()); NumericVector v(s.size());
+  for (size_t i = 0; i < s.size(); ++i) { v4::ModelView S = s.model(i); M[i] = to_orig(D, std::vector<int>(S.begin(), S.end())); v[i] = s.v[i]; }
+  return List::create(_["models"] = M, _["value"] = v, _["capacity"] = (double)s.cap, _["full"] = s.size() >= s.cap);
 }
 inline NumericMatrix counters(const v4::Ledger& L, bool ls0) {
   int nph = ls0 ? N_PHASE : PH_LS0;
@@ -151,10 +156,11 @@ inline NumericMatrix counters(const v4::Ledger& L, bool ls0) {
   M.attr("dimnames") = List::create(rn, cn);
   return M;
 }
-inline List local_list(const v4::merge::LocalArchive& A, const v3::Data& D) {
+inline List local_list(const v4::LocalArchive& A, const v3::Data& D) {
   return List::create(_["centre"] = to_orig(D, A.centre), _["centre_F"] = A.centre_F, _["path"] = models_to_list(D, A.path),
                       _["path_F"] = A.path_F, _["scanned_centres"] = models_to_list(D, A.scanned), _["scanned_F"] = A.scanned_F,
-                      _["scan_complete"] = A.scan_complete, _["scan_size"] = A.scan_size, _["termination"] = A.termination,
+                      _["scan_complete"] = IntegerVector(A.scan_complete.begin(), A.scan_complete.end()),
+                      _["scan_size"] = IntegerVector(A.scan_size.begin(), A.scan_size.end()), _["termination"] = A.termination,
                       _["local_limit"] = A.local_limit, _["local_certified"] = A.local_certified,
                       _["returned"] = to_orig(D, A.returned), _["returned_F"] = A.returned_F, _["moves"] = A.moves,
                       _["n_evaluated"] = (double)A.n_eval);
@@ -236,8 +242,10 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
   bool plus = !ro.containsElementNamed("ls0_cap") || as<std::string>(ro["ls0_cap"]) != "ell_n";
   std::vector<double> g(grid.begin(), grid.end());
   wp4h::CoreFactory fac{&D, &st};
+  v4::Zobrist zob; zob.init(D.p);
   // 1. pre-island ledger: tables (core/cpp/v3_core.cpp:372-387), inherited (419-441)
-  v4::Ledger pre(D.p, R, true);
+  v4::LedgerConfig lcfg; lcfg.p = D.p; lcfg.islands = R; lcfg.leaders = true; lcfg.fresh_counters = false;
+  v4::Ledger pre(lcfg);
   {
     std::vector<int> U;
     for (int b = 0; b < st.J; ++b) {
@@ -247,7 +255,7 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
         U.clear();
         for (int i = 0; i < m; ++i) if (c & (1u << i)) U.push_back(st.blocks[b][i]);
         double lm = st.logm_tab[b][c], F = D.logprior[U.size()] + lm, lg0 = D.logprior[U.size()] + st.logr[b][c];
-        pre.event(U, F, lg0, lm, v4::merge::table_event(b, c), true);
+        pre.event(U, zob.hash(U), F, lg0, lm, v4::merge::table_event(b, c), true);
       }
     }
     if (!Rf_isNull(inherited)) {
@@ -255,7 +263,7 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
       if (inh.containsElementNamed("models")) {
         auto Ms = models_from_R(D, inh["models"]);
         auto ev = fac.make();
-        for (auto& S : Ms) { double lm, lg0, dd, F; ev(S, lm, lg0, dd, F); pre.offer_stores(S, F, lg0, lm, v4::merge::inherited_event()); }
+        for (auto& S : Ms) { double lm, lg0, dd, F; ev(S, lm, lg0, dd, F); pre.offer_stores(S, zob.hash(S), F, lg0, lm, v4::merge::inherited_event()); }
       }
       if (inh.containsElementNamed("hpm") && !Rf_isNull(inh["hpm"])) {
         List hp = inh["hpm"]; List pv = hp["provenance"];
@@ -288,7 +296,7 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
       s.isl.logZ = res.logZ; s.isl.ess = res.ess; s.isl.rb_acc = res.rb_acc; s.isl.pip = res.pip; s.isl.rb_round = res.rb_round;
     } catch (v3::NumericalFailure& e) { s.isl.status = v4::Status::numerical_failure; s.isl.message = e.what(); s.isl.pip.assign(D.p, 0); }
     s.isl.r = r; s.isl.N = N; s.isl.L = L; s.isl.Hm = Hm;
-    s.isl.led = wp4h::ledger_from_v3(led, D.p, R, true);
+    s.isl.led = wp4h::ledger_from_v3(led, D.p, R, true, zob);
     island_secs[r - 1] = secs_since(t0);
   }
   if (fault_island >= 1 && fault_island <= R) {
@@ -301,7 +309,7 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
   ModeResult m = start_mode(st, 1000000, tie_dp);
   v4::merge::MergeSettings ms;
   ms.Rp = R; ms.N = N; ms.p = D.p; ms.K = D.K; ms.tier = tier; ms.ell = ell; ms.ls0 = ls0; ms.ls0_ell = ls0_ell;
-  ms.ls0_cap_plus_mode = plus; ms.log_m0 = D.logm0; ms.threads = threads; ms.chunk = (size_t)chunk;
+  ms.ls0_cap_plus_mode = plus; ms.log_m0 = D.logm0; ms.threads = threads; ms.chunk = (size_t)chunk; ms.zob = &zob;
   auto t1 = Clock::now();
   v4::merge::FitOut fo;
   if (fault == "tail_numerical") {

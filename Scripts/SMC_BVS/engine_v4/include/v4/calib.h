@@ -18,8 +18,9 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "calib_rules.h"
-#include "wp4_standin.h"
+#include "v4/calib_rules.h"
+#include "v4/model.h"
+#include "v4/status.h"
 
 namespace v4 {
 namespace calib {

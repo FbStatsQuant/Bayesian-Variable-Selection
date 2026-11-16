@@ -1,25 +1,29 @@
 // test_wp4.cpp -- WP4 unit tests (no R): calibration rules and driver paths (mock backend), store/ledger order-freeness,
 // threaded tail against a serial reference (thread and chunk invariance, tie rules), merge assembly, GUARD-W / T10.
-// Build: see tests/run_wp4.sh. Exit 0 iff all pass.
+// Part of v4_tests (tk harness).
 #include <cstdio>
 #include <random>
-#include <v4/calib.h>
-#include <v4/merge.h>
+#include "tk.h"
+#include "v4/calib.h"
+#include "v4/merge.h"
 
-static int n_ok = 0, n_fail = 0;
-#define CHECK(c) do { if (c) ++n_ok; else { ++n_fail; std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); } } while (0)
-static bool same_bits(double a, double b) { return std::memcmp(&a, &b, sizeof a) == 0; }
-static bool same_bits(const std::vector<double>& a, const std::vector<double>& b) {
+namespace {
+bool same_bits_v(const std::vector<double>& a, const std::vector<double>& b) {
   if (a.size() != b.size()) return false;
-  for (size_t i = 0; i < a.size(); ++i) if (!same_bits(a[i], b[i])) return false;
+  for (size_t i = 0; i < a.size(); ++i) if (!::same_bits(a[i], b[i])) return false;
   return true;
 }
 
+}  // namespace
 using namespace v4;
+namespace {
+const Zobrist& zob() { static Zobrist z; static bool init = false; if (!init) { z.init(4000); init = true; } return z; }
+Ledger mkled(int p, int R, bool leaders) { LedgerConfig c; c.p = p; c.islands = R; c.leaders = leaders; c.fresh_counters = false; return Ledger(c); }
+}  // namespace
 
 // ---------------------------------------------------------------------------------------------------------------------
 // calibration rules
-static void test_rules() {
+TEST(wp4_calib_rules) {
   std::mt19937_64 g(7); std::normal_distribution<double> nd;
   std::vector<double> a(200000), b(200000);
   for (size_t i = 0; i < a.size(); ++i) { a[i] = 3 * nd(g); b[i] = 20 * nd(g); }
@@ -38,10 +42,10 @@ static void test_rules() {
   std::vector<double> tg{0, 0.001, 0.01, 0.05, 0.1, 0.2, 0.35, 0.5, 0.7, 0.85, 1.0};
   auto g1 = calib::build_grid(a, b, tg, 1000, calib::SumMode::Serial, 1);
   auto g3 = calib::build_grid(a, b, tg, 1000, calib::SumMode::Serial, 3);
-  CHECK(g1.ok && same_bits(g1.grid, g3.grid) && same_bits(g1.rho, g3.rho) && g1.evals == g3.evals);
+  CHECK(g1.ok && same_bits_v(g1.grid, g3.grid) && same_bits_v(g1.rho, g3.rho) && g1.evals == g3.evals);
   auto h1 = calib::build_grid(a, b, tg, 1000, calib::SumMode::Blocked, 1);
   auto h3 = calib::build_grid(a, b, tg, 1000, calib::SumMode::Blocked, 3);
-  CHECK(h1.ok && same_bits(h1.grid, h3.grid) && same_bits(h1.rho, h3.rho));
+  CHECK(h1.ok && same_bits_v(h1.grid, h3.grid) && same_bits_v(h1.rho, h3.rho));
   auto tf = calib::build_grid(a, b, tg, 2, calib::SumMode::Serial, 1);
   CHECK(!tf.ok && tf.reason == "too_many_intervals");
   // refinement and grid check
@@ -80,7 +84,7 @@ static calib::Settings mk(calib::Rule r, int Te, int ell, int I_max = 3) {
   for (int e = 0; e < 2; ++e) { s.tiers[e].tier = e; s.tiers[e].H = 64; s.tiers[e].Te = Te * (e + 1); s.tiers[e].L = 4; s.tiers[e].ell = ell; }
   return s;
 }
-static void test_driver() {
+TEST(wp4_calib_driver) {
   std::mt19937_64 g(3); std::normal_distribution<double> nd;
   Mock base; for (int i = 0; i < 500; ++i) { base.lg0.push_back(nd(g)); base.d.push_back(8 * nd(g)); }
   {  // coded, converging: one rebuild, no trigger, no escalation
@@ -145,21 +149,21 @@ struct ToyEval {
 struct ToyFactory { const std::vector<double>* w; Model bad; bool use_bad = false; ToyEval make() const { return ToyEval{w, bad, use_bad}; } };
 
 // serial reference: core/cpp/v3_engine.h:379-419 over the toy evaluator, offering in serial order
-static merge::LocalArchive serial_local(const Model& centre, int ell, bool emit, int phase, Ledger& led, ToyFactory& fac, int p, int K, int tier) {
-  merge::LocalArchive A; ToyEval ev = fac.make();
+static LocalArchive serial_local(const Model& centre, int ell, bool emit, int phase, Ledger& led, ToyFactory& fac, int p, int K, int tier) {
+  LocalArchive A; ToyEval ev = fac.make();
   auto mkev = [&](uint32_t st, uint32_t rd, uint32_t pos) {
     EventCtx e; e.phase = phase; e.mech = ME_LOCAL; e.phi = 1; e.key.seg = phase == PH_LS0 ? SG_LS0 : SG_LOCAL; e.key.tier = (uint8_t)tier;
-    e.key.iter = -1; e.key.unit = UNIT_LOCAL; e.key.stage = st; e.key.round = rd; e.key.position = pos; return e;
+    e.key.iter = -1; e.key.unit = UNIT_LOCAL; e.key.xph = X_INIT; e.key.stage = st; e.key.round = rd; e.key.position = pos; return e;
   };
   Model C = centre; double CF, lm, lg0, d;
-  ev(C, lm, lg0, d, CF); if (emit) led.event(C, CF, lg0, lm, mkev(0, 0, 0), true);
+  ev(C, lm, lg0, d, CF); if (emit) led.event(C, zob().hash(C), CF, lg0, lm, mkev(0, 0, 0), true);
   A.centre = C; A.centre_F = CF;
   while (true) {
     uint32_t st = (uint32_t)A.scanned.size() + 1, rd = (uint32_t)A.moves; uint32_t pos = 0;
     bool have = false; Model best; double bestF = 0;
     auto consider = [&](const Model& Q) {
       double F; ev(Q, lm, lg0, d, F); ++pos; A.n_eval++;
-      led.event(Q, F, lg0, lm, mkev(st, rd, pos), true);
+      led.event(Q, zob().hash(Q), F, lg0, lm, mkev(st, rd, pos), true);
       if (!have || F > bestF || (F == bestF && lex_less(Q, best))) { best = Q; bestF = F; have = true; }
     };
     for (int j = 0; j < p; ++j) {
@@ -183,25 +187,25 @@ static merge::LocalArchive serial_local(const Model& centre, int ell, bool emit,
   return A;
 }
 static bool same_store(const Store& a, const Store& b) {
-  if (a.e.size() != b.e.size()) return false;
-  for (size_t i = 0; i < a.e.size(); ++i) if (!same_bits(a.e[i].v, b.e[i].v) || a.e[i].S != b.e[i].S) return false;
+  if (a.size() != b.size()) return false;
+  for (size_t i = 0; i < a.size(); ++i) if (!same_bits(a.v[i], b.v[i]) || !same_model(a.model(i), b.model(i))) return false;
   return true;
 }
 static bool same_ledger(const Ledger& a, const Ledger& b) {
   bool ok = a.has_hpm == b.has_hpm && a.hpmS == b.hpmS && same_bits(a.hpmF, b.hpmF) && a.hpm_ev.key == b.hpm_ev.key &&
             a.hpm_ev.phase == b.hpm_ev.phase && same_store(a.top, b.top) && same_store(a.lead0, b.lead0) && same_store(a.lead1, b.lead1) &&
-            same_bits(a.island_best, b.island_best);
+            same_bits_v(a.island_best, b.island_best);
   for (int x = 0; x < N_PHASE; ++x) for (int y = 0; y < N_MECH; ++y) ok = ok && a.logical[x][y] == b.logical[x][y];
   return ok;
 }
-static bool same_archive(const merge::LocalArchive& a, const merge::LocalArchive& b) {
-  return a.centre == b.centre && same_bits(a.centre_F, b.centre_F) && a.path == b.path && same_bits(a.path_F, b.path_F) &&
-         a.scanned == b.scanned && same_bits(a.scanned_F, b.scanned_F) && a.scan_complete == b.scan_complete && a.scan_size == b.scan_size &&
+static bool same_archive(const LocalArchive& a, const LocalArchive& b) {
+  return a.centre == b.centre && same_bits(a.centre_F, b.centre_F) && a.path == b.path && same_bits_v(a.path_F, b.path_F) &&
+         a.scanned == b.scanned && same_bits_v(a.scanned_F, b.scanned_F) && a.scan_complete == b.scan_complete && a.scan_size == b.scan_size &&
          a.termination == b.termination && a.local_limit == b.local_limit && a.local_certified == b.local_certified &&
          a.returned == b.returned && same_bits(a.returned_F, b.returned_F) && a.moves == b.moves && a.n_eval == b.n_eval;
 }
 
-static void test_tail() {
+TEST(wp4_tail_threads_vs_serial) {
   for (int trial = 0; trial < 6; ++trial) {
     std::mt19937_64 g(100 + trial);
     int p = 150 + 37 * trial, K = trial == 3 ? 3 : 12;   // trial 3: the cap K binds (additions skipped)
@@ -210,10 +214,10 @@ static void test_tail() {
     Model c0; for (int j = 0; j < std::min(K, 3); ++j) c0.push_back((int)(g() % p)); std::sort(c0.begin(), c0.end()); c0.erase(std::unique(c0.begin(), c0.end()), c0.end());
     int ell = trial % 2 ? 2 : 50;   // odd trials: the move cap binds (local_limit)
     // small store caps make the would_enter filter matter
-    auto fresh = [&]() { Ledger L(p, 4, true); L.top = Store(60, Order::HPM); L.lead0 = Store(40, Order::LEX); L.lead1 = Store(40, Order::LEX); return L; };
+    auto fresh = [&]() { Ledger L = mkled(p, 4, true); L.top.init(60, Order::HPM); L.lead0.init(40, Order::LEX); L.lead1.init(40, Order::LEX); return L; };
     Ledger ref = fresh(); auto Aref = serial_local(c0, ell, trial % 3 == 0, trial % 3 == 0 ? PH_LS0 : PH_LOCAL, ref, fac, p, K, 0);
     for (int th : {1, 3}) for (size_t ch : {size_t(7), size_t(64), size_t(100000)}) {
-      Ledger L = fresh(); merge::TailSettings ts; ts.threads = th; ts.chunk = ch; ts.K = K; ts.p = p;
+      Ledger L = fresh(); merge::TailSettings ts; ts.threads = th; ts.chunk = ch; ts.K = K; ts.p = p; ts.zob = &zob();
       auto A = merge::local_search(c0, ell, trial % 3 == 0, trial % 3 == 0 ? PH_LS0 : PH_LOCAL, L, fac, ts);
       CHECK(same_archive(A, Aref));
       CHECK(same_ledger(L, ref));
@@ -224,7 +228,7 @@ static void test_tail() {
     int p = 80, K = 10; std::vector<double> w(p); for (int j = 0; j < p; ++j) w[j] = 0.5 * ((j * 7) % 13) - 3;
     Model c0{5, 9}; Model bad{5, 9, 40};
     ToyFactory ff{&w, bad, true};
-    Ledger L(p, 4, false); merge::TailSettings ts; ts.threads = 3; ts.chunk = 8; ts.K = K; ts.p = p;
+    Ledger L = mkled(p, 4, false); merge::TailSettings ts; ts.threads = 3; ts.chunk = 8; ts.K = K; ts.p = p; ts.zob = &zob();
     bool threw = false;
     try { merge::local_search(c0, 5, false, PH_LOCAL, L, ff, ts); } catch (const NumericalFailure&) { threw = true; }
     CHECK(threw);
@@ -234,7 +238,7 @@ static void test_tail() {
 
 // ---------------------------------------------------------------------------------------------------------------------
 // ledger merge is order-free; merge assembly; GUARD-W (T10)
-static void test_merge() {
+TEST(wp4_merge_guardw_t10) {
   const int p = 60, R = 4;
   std::vector<double> w(p); for (int j = 0; j < p; ++j) w[j] = 0.25 * ((j * 11) % 17) - 2;
   ToyFactory fac{&w}; ToyEval ev = fac.make();
@@ -242,14 +246,14 @@ static void test_merge() {
   auto island = [&](int r) {
     merge::IslandIn I; I.r = r; I.N = 100; I.Hm = 4; I.logZ = -50 + 0.1 * r; I.ess.assign(10, 80.0);
     I.pip.assign(p, 0.0); for (int j = 0; j < p; ++j) I.pip[j] = std::fmod(0.013 * (j + 1) * (r + 2), 1.0);
-    I.led = Ledger(p, R, false);
+    I.led = mkled(p, R, false);
     for (int t = 0; t < 400; ++t) {
       Model S; int k = 1 + (int)(g() % 4); for (int a = 0; a < k; ++a) S.push_back((int)(g() % p));
       std::sort(S.begin(), S.end()); S.erase(std::unique(S.begin(), S.end()), S.end());
       double lm, lg0, d, F; ev(S, lm, lg0, d, F);
-      EventCtx e; e.phase = PH_MEASURED; e.mech = ME_GIBBS_FLIP; e.key.seg = SG_FINAL; e.key.unit = (uint32_t)r; e.key.xph = XK_MEASURED;
+      EventCtx e; e.phase = PH_MEASURED; e.mech = ME_GIBBS_FLIP; e.key.seg = SG_FINAL; e.key.unit = (uint32_t)r; e.key.xph = X_MEASURED;
       e.key.stage = 30; e.key.round = 1 + t / 100; e.key.particle = 1 + t % 100; e.key.position = 1 + (uint32_t)(g() % 70);
-      I.led.event(S, F, lg0, lm, e, true);
+      I.led.event(S, zob().hash(S), F, lg0, lm, e, true);
       I.terminal.push_back(S);
     }
     I.led.compact();
@@ -258,13 +262,13 @@ static void test_merge() {
   std::vector<merge::IslandSlot> slots(R);
   for (int r = 1; r <= R; ++r) { slots[r - 1].load = merge::Load::ok; slots[r - 1].isl = island(r); }
   // order-freeness of Ledger.merge
-  Ledger a(p, R, false), b(p, R, false);
+  Ledger a = mkled(p, R, false), b = mkled(p, R, false);
   for (int r : {0, 1, 2, 3}) a.merge(slots[r].isl.led);
   for (int r : {3, 1, 0, 2}) b.merge(slots[r].isl.led);
   a.compact(); b.compact();
   CHECK(same_ledger(a, b));
-  merge::MergeSettings ms; ms.Rp = R; ms.N = 100; ms.p = p; ms.K = 8; ms.ell = 5; ms.threads = 3; ms.chunk = 16; ms.occ_M = {1, 10};
-  Ledger pre(p, R, false);
+  merge::MergeSettings ms; ms.Rp = R; ms.N = 100; ms.p = p; ms.K = 8; ms.ell = 5; ms.threads = 3; ms.chunk = 16; ms.occ_M = {1, 10}; ms.zob = &zob();
+  Ledger pre = mkled(p, R, false);
   auto fo = merge::merge_and_tail(slots, pre, Model{1, 2}, fac, ms);
   CHECK(fo.status == Status::completed && fo.estimates_available);
   CHECK(fo.hpm == fo.local.returned || fo.hpm == fo.ls0.returned);
@@ -307,13 +311,4 @@ static void test_merge() {
   }
   CHECK(fit_status({Status::completed, Status::io_error, Status::numerical_failure}) == Status::numerical_failure);
   CHECK(fit_status({Status::resource_limit, Status::invalid_input}) == Status::invalid_input);
-}
-
-int main() {
-  test_rules();
-  test_driver();
-  test_tail();
-  test_merge();
-  std::printf("WP4 unit tests: %d passed, %d failed (stand-in WP1 headers: %s)\n", n_ok, n_fail, V4_WP4_USING_WP1 ? "no" : "yes");
-  return n_fail ? 1 : 0;
 }

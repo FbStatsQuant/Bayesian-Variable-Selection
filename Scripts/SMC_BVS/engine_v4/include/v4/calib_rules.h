@@ -17,6 +17,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include "v4/pmath.h"
 #include "wp4_par.h"
 
 namespace v4 {
@@ -28,14 +29,14 @@ const double CAL_NEG_INF = -std::numeric_limits<double>::infinity();
 inline double lse_cal(const std::vector<double>& x) {
   double m = CAL_NEG_INF; for (double v : x) if (v > m) m = v;
   if (!std::isfinite(m)) return m;
-  long double s = 0.0L; for (double v : x) s += std::exp(v - m);
-  return m + std::log((double)s);
+  long double s = 0.0L; for (double v : x) s += pm::exp(v - m);
+  return m + pm::log((double)s);
 }
 // core/cpp/v3_calib.h:19-23 (copied)
 inline double population_ess(const std::vector<double>& d, double delta) {
   std::vector<double> x(d.size()), x2(d.size());
   for (size_t i = 0; i < d.size(); ++i) { x[i] = delta * d[i]; x2[i] = 2 * x[i]; }
-  return std::exp(2 * lse_cal(x) - lse_cal(x2));
+  return pm::exp(2 * lse_cal(x) - lse_cal(x2));
 }
 // core/cpp/v3_calib.h:29-46 (copied): pilot next temperature (used by the pilot island, WP3).
 struct NextPhi { double phi; bool forced; };
@@ -92,16 +93,16 @@ class FV {
     if (mode == SumMode::Serial) {
       if (th == 1) {   // core/cpp/v3_calib.h:14 arithmetic, without a buffer
         long double s = 0.0L;
-        for (size_t i = 0; i < n; ++i) s += std::exp((A[i] + t * B[i]) - m);
-        return m + std::log((double)s);
+        for (size_t i = 0; i < n; ++i) s += pm::exp((A[i] + t * B[i]) - m);
+        return m + pm::log((double)s);
       }
       buf_.resize(n);
       for_chunks(n, chunk, th, [&](size_t, size_t b, size_t e) {
-        for (size_t i = b; i < e; ++i) buf_[i] = std::exp((A[i] + t * B[i]) - m);
+        for (size_t i = b; i < e; ++i) buf_[i] = pm::exp((A[i] + t * B[i]) - m);
       });
       long double s = 0.0L;
       for (size_t i = 0; i < n; ++i) s += buf_[i];
-      return m + std::log((double)s);
+      return m + pm::log((double)s);
     }
     // Blocked (class C): block partials in long double, combined in block order.
     const size_t nb = n_chunks(n, block);
@@ -111,13 +112,13 @@ class FV {
       for (size_t q = bb; q < be; ++q) {
         size_t b = q * block, e = std::min(n, b + block);
         long double s = 0.0L;
-        for (size_t i = b; i < e; ++i) s += std::exp((A[i] + t * B[i]) - m);
+        for (size_t i = b; i < e; ++i) s += pm::exp((A[i] + t * B[i]) - m);
         part_[q] = s;
       }
     });
     long double s = 0.0L;
     for (size_t q = 0; q < nb; ++q) s += part_[q];
-    return m + std::log((double)s);
+    return m + pm::log((double)s);
   }
 
   // restricted ESS rho_V(u, v) = exp{2 F_V(v) - F_V(u) - F_V(2v - u)} (core/cpp/v3_calib.h:55-58, same expression order)
@@ -126,7 +127,7 @@ class FV {
   double rho(double u, double v) {
     evals += 3;
     if (!(has_u_ && u == u_)) { Fu_ = (*this)(u); u_ = u; has_u_ = true; }
-    return std::exp(2 * (*this)(v) - Fu_ - (*this)(2 * v - u));
+    return pm::exp(2 * (*this)(v) - Fu_ - (*this)(2 * v - u));
   }
 
  private:
@@ -214,7 +215,7 @@ inline double r_sd(const std::vector<double>& x) {
   if (std::isfinite((double)xm)) { long double t = 0.0L; for (double v : x) t += (v - xm); xm = xm + t / (long double)n; }
   double xmd = (double)xm;
   long double ss = 0.0L; for (double v : x) ss += (v - xmd) * (v - xmd);   // product in double (cov.c), sum in long double
-  return std::sqrt((double)(ss / (long double)(n - 1)));
+  return pm::sqrt((double)(ss / (long double)(n - 1)));
 }
 
 }  // namespace calib
