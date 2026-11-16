@@ -35,3 +35,4 @@
 - 2026-11-16 00:40 CST — LC-A returned: Q1 VERIFIED-WITH-AMENDMENTS (1 E → ERRATA E1, not applied), Q2 VERIFIED, Q7 VERIFIED. Saved verbatim reviews/LCA_line_check_sol.md; disposition reviews/LCA_disposition.md. (Harness note that Q7 changed on disk: checked, sha identical to launch sha — no change.)
 - 2026-11-16 01:32 CST — LC-B returned: Q4 VERIFIED, Q5 VERIFIED-WITH-AMENDMENTS (3 F: MACH exits explicit; scorer throw citation; W2-UNI Step 2 citation), Q6 VERIFIED. Saved verbatim; repaired Q5 [LCB-1..3] (statement §1 unchanged); diff reviews/LCB_repair_Q5.diff; brief RC1 saved.
 - 2026-11-16 01:32 CST — launched RC1 (codex gpt-6.1-sol high, new agent) on the Q5 repair. DEPS: Q4, Q6 OK; Q5 STALE pending RC1. Settled LC-A, LC-B threads.
+- 2026-11-16 01:33 CST — prepared reviews/INPUTS_R1.txt and reviews/BRIEF_R1_TEMPLATE.md (council block from INFRA template; sweep duties; six gates; must-FAIL rule).
