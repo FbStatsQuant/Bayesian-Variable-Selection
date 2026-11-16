@@ -26,8 +26,13 @@ for (f in c("v3_preprocess.R", "v3_setup.R", "v3_run.R", "v3_exact.R", "v3_calib
 tu_dir <- file.path(work, "tu"); dir.create(tu_dir, showWarnings = FALSE)
 tu <- file.path(tu_dir, "wp4_test_core.cpp")
 writeLines(c(readLines(file.path(ref, "cpp", "v3_core.cpp")), "", readLines(file.path(eng_dir, "tests", "golden", "wp4_harness.cpp"))), tu)
+# the engine library, position-independent, for linking into the R module
+libdir <- file.path(work, "v4pic")
+st1 <- system2("cmake", c("-S", shQuote(eng_dir), "-B", shQuote(libdir), "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_POSITION_INDEPENDENT_CODE=ON", "-DV4_TESTS=OFF"), stdout = FALSE)
+st2 <- system2("make", c("-C", shQuote(libdir), "-j3", "v4_bit"), stdout = FALSE)
+if (st1 != 0 || st2 != 0 || !file.exists(file.path(libdir, "libv4_bit.a"))) stop("could not build libv4_bit.a (PIC)")
 Sys.setenv(PKG_CPPFLAGS = paste0("-I", file.path(ref, "cpp"), " -I", file.path(eng_dir, "include"), " -fopenmp"),
-           PKG_LIBS = "-fopenmp", R_MAKEVARS_USER = file.path(ref, "cpp", "Makevars.v3"), MAKEFLAGS = "-j1")
+           PKG_LIBS = paste("-fopenmp", shQuote(file.path(libdir, "libv4_bit.a"))), R_MAKEVARS_USER = file.path(ref, "cpp", "Makevars.v3"), MAKEFLAGS = "-j1")
 .v3cpp <- new.env(parent = globalenv())
 t_c <- proc.time()[["elapsed"]]
 Rcpp::sourceCpp(tu, env = .v3cpp, cacheDir = file.path(work, "cache"), rebuild = FALSE, showOutput = FALSE)
@@ -198,6 +203,24 @@ for (cs in cases) {
                                                ref_s = t_fr, wp4_s = sum(mm$seconds_islands) + mm$seconds_merge_tail)
   }
   if (isTRUE(cs$prov) || cs$id == "AR0.6_n100_p40") provenance_cases(setup, r$frozen, seed, fr, cs$id)
+  # T9 through files: data/setup/calib/island files -> smcbvs4 merge (in process) -> fit.bin read back == v3
+  fdir <- file.path(work, paste0("files_", cs$id)); unlink(fdir, recursive = TRUE); dir.create(fdir)
+  mf <- .v3cpp$wp4_files_merge(setup$ptr, r$frozen$grid, ro, as.numeric(seed), r$frozen$inherited, fdir, threads)
+  tg <- paste(cs$id, "T9-files")
+  same(mf$status, "completed", paste(tg, "status"))
+  if (identical(mf$status, "completed")) {
+    for (nm in c("hpm", "hpm_F", "hpm_provenance", "log_Z", "log_Z_r", "pip_primary", "mpm", "near_ties", "near_tie_F",
+                 "hpm_before_local", "top_store", "local_certified", "local_certified_by"))
+      same(fr[[nm]], mf[[nm]], paste(tg, nm))
+    same(unname(fr$pip_r), unname(mf$pip_r), paste(tg, "pip_r"))
+    same(fr$start_mode$model, mf$start_mode, paste(tg, "start_mode"))
+    same(fr$local_search$scanned_centres, mf$ls_scanned, paste(tg, "local scanned")); same(fr$local_search$scanned_F, mf$ls_scanned_F, paste(tg, "local scanned F"))
+    same(fr$local_search$path, mf$ls_path, paste(tg, "local path"))
+    same(fr$ls0$scanned_centres, mf$ls0_scanned, paste(tg, "ls0 scanned")); same(fr$ls0$scanned_F, mf$ls0_scanned_F, paste(tg, "ls0 scanned F"))
+    fl <- names(mf$flags); same(fr$flags[fl], mf$flags, paste(tg, "flags"))
+    same(unname(fr$score_counts$logical), unname(mf$logical), paste(tg, "logical counters"))
+  } else cat("  files merge record:", mf$record, "\n")
+  unlink(fdir, recursive = TRUE)
   if (isTRUE(cs$heavy)) next   # T10 and the bounded rule are size-independent logic: quick cases only
   # 3. T10 through the merge
   for (fault in c("missing", "corrupt", "hash_mismatch", "island_numerical", "tail_numerical")) {
