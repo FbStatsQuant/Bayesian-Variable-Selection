@@ -1,6 +1,8 @@
-# ENGINEERING_SPEC v1 — large-p SMC-BVS engine ("v4")
+# ENGINEERING_SPEC v2 — large-p SMC-BVS engine ("v4") and the 1M variant V-1M
 
-**Status: v1 DRAFT for the Sol feasibility and budget review (EXP-CP1), 2026-11-15.** SMC - Engineering Department.
+**Status: v2 DRAFT (EXP-CP1 v2), 2026-11-15.** SMC - Engineering Department. v2 adds §0-v2: the owner's scope change
+(the 1M run is an engineered variant validated on an overlap rung) and the feasibility study (`FEASIBILITY_fable.md`,
+`FEASIBILITY_disposition.md`). Where §0-v2 and §0–§7 disagree, **§0-v2 wins**.
 
 **Sources.**
 - Built from the independent skeleton `SPEC_SKELETON_fable.md` (Fable 5.2), adopted with the amendments in §0 and
@@ -9,6 +11,96 @@
 - Reference engine: v3.1 / revision D (`Scripts/SMC_BVS/core/`).
 - Sizes use n = 200, N = 2,500, R′ = 16, K = 100, B = 14 and a mean block size of 9 (measured on Owls, plan §6.1).
 - **(guess)** marks an estimate that a gate must replace by a measurement.
+
+## 0-v2. The 1M variant V-1M, the theory mode, and how they are validated (v2; supersedes §0.1–§0.3 where they conflict)
+
+### 0-v2.1 Two configurations of one engine
+- **Theory mode (T).** The theorem-covered method as coded: N = max(2500, n, p), R = 4, coded calibration with
+  escalation, exact complete linkage, multinomial resampling, the v3 scorer's bits (bit-form kernel). It is run in two
+  ways:
+  - **compat** (serial v3.1 streams; bit-identical to revision D; gate T2) where it fits in 24 h, i.e. p ≤ 5k;
+  - **law** (addressed streams, threaded, checkpointed) at 10⁴, and at 10⁵ if the owner buys that overlap.
+- **V-1M (V).** The engineered variant for the 1M run. The changes from T are the complete list below. The paper presents
+  V as an engineered variant validated against T (POLICIES §8).
+
+### 0-v2.2 Complete list of changes V vs T (requirement (a))
+| # | change | default in V | decided by | D |
+|---|---|---|---|---|
+| 1 | fixed N per island | 2,500 (N = 10⁴ arm in the precision study; one 1M doubling fit) | precision study | D-1 |
+| 2 | R′ = 16 process islands + merge (union stores; equal-weight RB PIP primary) | 16 | — | D-6, D-11 |
+| 3 | position-addressed counter-based uniforms | on | — | D-5 |
+| 4 | **label-major batched kernel, class-A arithmetic** (bordered update, FMA, vector log/exp; ≈ 10⁻⁹ relative agreement with the coded scorer) | on | measured (F1) | D-15 |
+| 5 | partition: complete linkage truncated at 1 − τ_n (τ_n = r_n, edges \|r\| ≥ τ_n), coded top-down cut, packing by minimum index | on | A3 paired comparison | D-4 |
+| 6 | bounded calibration: pilot + at most I_max rebuilds, no escalation except construction failure | I_max ∈ {0, 3} | precision study | D-2 |
+| 7 | grid refinement: every interval of the frozen grid split into m equal parts | m ∈ {1, 4} | precision study | D-12 |
+| 8 | new estimators beside the coded ones: log Z_𝒯 (deterministic lower bound), **log Ẑ_occ** (store sum over the top-M models / terminal occupancy of them), PIP_𝒯 | on (additions) | T8 exact reference | D-8, D-13 |
+| 9 | systematic resampling; more N-swap labels per round | off unless the precision study shows a gain | precision study | D-14 |
+| 10 | no score cache, no `fresh`, no leader stores in final islands | on | — | D-3, D-7 |
+
+### 0-v2.3 Precision targets at 10⁶ (reported per fit; never used to switch estimators)
+- Selection: the same best model in 16 of 16 islands; the merged HPM certified by the final local search.
+- PIP: sd over islands ≤ 0.005 for every variable; max_j |PIP_eq − PIP_𝒯| ≤ 0.01 + (1 − π̂(𝒯)).
+- Evidence: sd over islands of log Ẑ_occ,r ≤ 0.05; the SMC log Ẑ within 3 s.e. of it; σ̂(log Ẑ_r) reported (goal ≤ 0.5).
+- Island homogeneity of the top-M occupancies (flag only; invariant I7).
+
+### 0-v2.4 Kernels and build order (replaces §0.2 item 1 and WP3)
+- The **label-major kernel is built first**:
+  1. tiles of 64–128 columns copied to row-major;
+  2. products X_Aᵀx_j for the group's active set (sequential in i per label);
+  3. per (support, label): score, odds, addressed uniform, accept.
+- A particle that moves takes a new sweep for the rest of its round (factor M).
+- Two arithmetic forms behind one interface:
+  - **bit form** (sorted-prefix reuse, scalar libm): equals `v3::Scorer` in bits (measured: 0 mismatches of 4,096 at 10⁵
+    and 10⁶). Used by **T**;
+  - **class A**: used by **V**.
+- Particle-major direct code is kept only as the one-thread reference of T3.
+- Measured on Owls (FEASIBILITY §4, loaded Skylake, 8 threads):
+  - direct step 2,100–2,700 ns;
+  - per (support, label): 42–128 ns class A, 163–288 ns bit form.
+
+  Planning cost per step c = M·c_s + c_f = 3·90 + 30 = 300 ns (class A); 660 ns (bit form).
+
+### 0-v2.5 Cost (billed core-h, n = 200; planning values; gate G0 re-sizes them)
+| fit | V (class A) | T in the new engine (bit form) |
+|---|---|---|
+| 10⁴ precise | ≈ 10 | 52–115 (coded calibration with escalation) |
+| 10⁵ precise | ≈ 96 | ≈ 6,100 (one dataset, escalated) |
+| 10⁶ baseline (T ≈ 30) / precise (T ≈ 120 on the final islands) | 363 / **963** | not run |
+| 10⁶ precise, N = 10⁴ | 3,600 | — |
+
+One precise 1M fit is ≈ 2.2 h of wall time at the 1,536-CPU cap; no job is longer than 2 h. Island tasks: 64 CPUs +
+32 GB by default (NOTS_FACTS: free memory binds; 96 CPUs when available).
+
+### 0-v2.6 Gates (replace plan §2.3 gates)
+| gate | content | pass → |
+|---|---|---|
+| **G0** (now; HQ batch ≤ 5 core-h + ≈ 60) | kernel on one SPR node at 1/24/48/96 threads incl. store offers; M from P6 stage tables; per-stage increment variance over 16–64 islands at 5k–10k (stage-level records) | c ≤ 700 ns → precise plan; 700–1,500 → baseline precision, 3 fits at 1M; > 1,500 → stop and report |
+| **G-A** | T3 invariance; T8 exact reference for every Δ/C change and Ẑ_occ; the 5k anchor; the 10⁴ overlap within tolerance; the precision study freezes (N, m, resampling, I_max) | 10⁴ science, then 10⁵ |
+| **G-B** | one 10⁵ pilot ≤ 1.5× model, precision targets met, memory < request | 10⁵ rung |
+| **G-C** | 10⁵ ≥ 90% complete; forced-kill restart at 10⁵; configuration, evaluator and competitors frozen by hash | the 1M pilot alone; kill rule 2× model at 50% |
+| **G-C2** | pilot meets the targets | remaining 1M fits + the N = 10⁴ doubling fit |
+
+### 0-v2.7 Overlap-rung validation (requirement (b))
+| level | runs | datasets | cost |
+|---|---|---|---|
+| exact | p ≤ 25, SMC branch forced, against enumeration: Ẑ_r/Z, Ẑ_occ/Z, PIPs within 3 s.e. | 20 fixtures × 400 islands | < 50 |
+| anchor 5k | T by the **existing unmodified code** (revision D) vs T in the new engine (bit form, compat) vs V; plus a 20-seed law test at 2k | 3 | ≈ 300 |
+| overlap 10⁴ | T (new engine, law mode) vs V, 2 seeds each | 10: AR-strong 4, AR-weak 2, ADJ-OPP 2, IND 1, null 1 | 1,040–2,500 |
+| overlap 10⁵ (owner option) | T vs V | 1 | ≈ 6,100 |
+| 1M self-check | V vs V(N = 10⁴); island homogeneity; deterministic bounds | 1 | 3,600 |
+
+Tolerances, per dataset (the yardstick is T's own seed-to-seed spread):
+- HPM(V) = HPM(T) as sets in ≥ 9 of 10 datasets, and T never reports a model with a higher F than V's; MPM equal.
+- max_j |PIP_V − PIP_T| ≤ max(0.01, 3 combined s.e.).
+- |log Ẑ_V − log Ẑ_T| ≤ 3 combined s.e., and |log Ẑ_occ,V − log Ẑ_occ,T| ≤ 0.05.
+- The Hellinger distance between the store-BMA predictives of V and T is ≤ 10% of T's distance to f*.
+
+### 0-v2.8 Budget (planning; FEASIBILITY §3.3)
+Gates and benchmarks 400 · 5k anchor 300 · overlap 10⁴ 2,500 · precision study 950 · 10⁴ science 2,000 · 10⁵ 1,500 ·
+**10⁶: 5 precise fits + the doubling fit 8,400** · competitors 300 → subtotal 16,350; **total ≈ 20.5k with 25%
+contingency**. The 10⁵ T overlap (option) adds 6,100, giving ≈ 26.6k. The owner chooses (owner sheet).
+
+---
 
 ## 0. Amendments, decisions assumed, and build plan (Engineering manager)
 

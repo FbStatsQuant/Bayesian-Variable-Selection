@@ -41,3 +41,10 @@
   Default island task: 64 CPUs (32 cores) + 32 GB; 96 only when available. Load: SPR 8,742 / 4,506 idle / 192 / 13,440.
 - B3 jobs (sacct, REQUESTS R5): 5k 15:30:05 elapsed, MaxRSS 1.22 GB (ReqMem 16G); 10k 10:29:18, 2.38 GB (20G);
   20k 15:29:51, 6.64 GB (36G). All 2 CPUs. The 20k RSS includes the Gram (p² doubles = 3.2 GB).
+- **Usage discipline (owner, POLICIES §12 rule 7, "be chill, do not swarm"; the account was flagged two weeks ago).**
+  - SSH multiplexing on Owls for host `nots` (ControlMaster auto, ControlPath ~/.ssh/cm-%r@%h:%p, ControlPersist 10m;
+    configured 11-15 by Engineering; backup ~/.ssh/config.bak-20261115-2021). Verified: `ssh -O check nots` → Master running.
+  - One connection per session; no parallel logins; polling ≤ 1 squeue/sacct per 5 minutes; batches as job arrays only
+    (≤ 150 tasks); no scans or unusual tools.
+  - Owls: ramp gradually, ≤ 16 cores.
+  - Anything that might look odd to Rice IT → ask HQ first.
