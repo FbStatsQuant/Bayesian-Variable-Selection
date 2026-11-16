@@ -459,3 +459,7 @@ Changes:
 - **HQ: launch the SMC - Lean Department Thu 11-19** (inventory + Level-1 batch). Level 2 from Mon 11-23. Owner priority:
   "consistency results and even their lean parts".
 - Theory gets a temporary 6th lead slot for W3-MISR-R until PSMC-S0 closes.
+
+## 2026-11-15 ~21:45 CT — OVERNIGHT MODE ON (owner: "until tomorrow morning, you have full authority for any decision")
+HQ decides everything under POLICIES §11 limits: within existing envelopes and accounts; nothing irreversible or
+outward-facing; every decision tagged "(overnight)"; morning brief for the owner.
