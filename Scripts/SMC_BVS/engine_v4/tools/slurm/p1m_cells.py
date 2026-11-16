@@ -32,7 +32,7 @@ from collections import OrderedDict
 DESIGN_CODE = {"IND": 1, "AR": 2, "AR-weak": 3, "BLK": 4, "ADJ-OPP": 5, "NULL": 6}
 # planning core-h per fit at n = 200 (V = V-1M class A, precise; T = theory mode in the new engine, law mode, bit form)
 # 10⁶: H-9 (HQ 11-16) re-size from job 2748756, G = 256 socket-local: 1.44 × the 963 plan (≈ 288 ns·CPU per pair)
-RESIZE_6 = 1.44
+RESIZE_6 = 1.234   # H-10 (11-16): MEASURED after L5, job 2749328 (≈ 247 ns·CPU per pair); H-9 used 1.44 (job 2748756)
 COST_V = {4: 10.0, 5: 96.0, 6: 963.0 * RESIZE_6}
 COST_T = {4: 115.0, 5: 6100.0}          # 10⁴: upper end of 52–115 (escalating coded calibration)
 COST_V_N5000 = {6: 1800.0 * RESIZE_6}     # the 1M self-check, reduced to N = 5,000 (H-9; was N = 10⁴ at 3,600)
@@ -100,6 +100,9 @@ CELLS = [
     # --- 10⁶ rung (OD-14 / D-10): rep 1 is the pilot (counts only if the frozen configuration is unchanged)
     ("rung 1e6", 6, "AR", 200, 3, V1, "rep 1 = pilot"), ("rung 1e6", 6, "ADJ-OPP", 200, 1, V1, ""),
     ("rung 1e6", 6, "AR", 200, 1, [{"mode": "V", "seeds": 1, "N": 5000, "tag": "N5000"}], "self-check: N = 5,000 on AR rep 1's data (H-9)"),
+    # H-10: AR-weak at 1M bought back as the LAST-released cell, gated: runs only after T5 prices M and the re-sized total
+    # (including M) stays <= the H-9 envelope (~28.3k); otherwise it drops again automatically.
+    ("rung 1e6 gated-H10", 6, "AR-weak", 200, 1, V1, "GATED H-10: last released; only if the post-T5 total incl. M <= 28.3k"),
     ("option D", 6, "AR", 1000, 1, V1, "conditional on the 10⁵ pi(S0) trend (H-1)"),
 ]
 # block-level costs not expanded into fits (PLANNING VALUES; ENGINEERING_SPEC §0-v2.8 and REVIEW_disposition_sol)
@@ -111,7 +114,7 @@ FIXED = OrderedDict([
     ("competitors (all rungs) + acceptance runs (Sol F8)", 400.0),
 ])
 OPTIONAL = [("1M second seed on AR rep 1 (Sol F7: named, NOT in A + D)", 963.0 * RESIZE_6),
-            ("AR-weak at 1M (H-9: dropped; first buy-back if L5 saves enough)", 963.0 * RESIZE_6)]
+]
 CONTINGENCY = 0.25
 
 
@@ -282,7 +285,7 @@ def main(argv=None):
             print("  + %-88s %8.0f" % (k, v))
         print("planned (excl. option D): %.0f; with %d%% contingency: %.0f" % (planned, CONTINGENCY * 100, planned * (1 + CONTINGENCY)))
         print("option D: %.0f; with contingency: %.0f" % (d, d * (1 + CONTINGENCY)))
-        print("A + D with contingency: %.0f (H-1 envelope ~24.6k)" % ((planned + d) * (1 + CONTINGENCY)))
+        print("A + D with contingency: %.0f (H-9 envelope ~28.3k; H-1 was ~24.6k)" % ((planned + d) * (1 + CONTINGENCY)))
         for k, v in OPTIONAL:
             print("optional, not in the total: %s %.0f" % (k, v))
     return 0
