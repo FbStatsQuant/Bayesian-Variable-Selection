@@ -60,3 +60,7 @@
   `manifest.py verify` OK on MANIFEST_R1 (9714aea4…); the notices were the lead's own pre-freeze edits.
 - 2026-11-16 03:12 CST — D62 precision: Codex scratch only in <worktree root>/.rc_tmp/ (git-ignored repo-wide on main), never in the ticket folder; no .gitignore edits by leads.
 - 2026-11-16 04:01 CST — Manager pacing (04:02): Codex level 0; Claude finish in-flight only; Owls load spike 03:40–04:00. No command of the lead ran in that window; manifest verify re-run anyway: OK (9714aea4…). Astra seat still running.
+- 2026-11-16 04:26 CST — **Astra seat returned:** T03S.1–.5 ACCEPT, G1–G6 PASS, 9.5, gates=PASS; 4 E findings (3 = ERRATA E1–E3). Astra settled.
+  `manifest.py bind` OK (astra 9.5, opus 9.4); verify OK. No diff round. Staged ingest on REPORT.md refused (7 form problems);
+  form-fixed copy `reviews/REPORT_formfix.md`: 0 problems, staged check 0 ERROR, acceptance PASS. Reviewer scratch removed.
+  CHECKPOINT_3.md written; run ends (HQ accepts and records).
