@@ -122,3 +122,4 @@
 - 22:48 — recorder asked to add NB-1/NB-2 tests to the accept-identity branch, rebase, push head → HQ merge; NB-3/NB-4 post-freeze.
 - 22:49 — consultant consequences for READER relayed (D46); POST2-O1 queued with O3.
 - 22:54 — task K done: theory/W3-EDIT-now-rb af9825b (check 0 ERROR, assemble current, CI check/paper/cite PASS, tl 174/0) → HQ merge.
+- 22:55 — HQ merged W3-EDIT-now-rb → main 246587c3 (468/0). W3-EDIT ticket done; its lead thread is already settled (no pending tasks). Snapshot cron left in place (no-op logging).
