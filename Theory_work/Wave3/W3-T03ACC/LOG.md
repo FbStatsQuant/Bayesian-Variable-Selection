@@ -32,3 +32,6 @@
   MAJOR 1 E: [P1] transitive deps of thm:Ta / lem:den; MINOR 1 E: m♯_n ≤ K only when s₀ ≤ K). All accepted, plus 3 optional
   suggestions. p = 1: SL1 rules that no hypothesis is needed. STATEMENT v1.1 LOCKED (sha a2e399a8…). PLAN and LC briefs updated
   (same-A and p = 1 named points). Disposition: `reviews/SL1_disposition.md`. Settled the SL1 reviewer (finished).
+- 2026-11-16 01:24 CST — Agents started (all codex gpt-6.1-sol, reasoningEffort high, fresh, blind, async, in parallel):
+  **LC-A** (task w3-t03acc-lc-a-sol-20261116), **LC-B** (…-lc-b-…), **LC-C** (…-lc-c-…). Briefs: `reviews/BRIEF_LC_{A,B,C}_sol.md`.
+  Object: STATEMENT v1.1 (a2e399a8…), PROOF.md (14973763…). Codex started the line checks well before the Tue 08:00 mark.
