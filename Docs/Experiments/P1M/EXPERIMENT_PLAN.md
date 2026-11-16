@@ -1,4 +1,4 @@
-# EXPERIMENT_PLAN — SMC-BVS at p = 10⁶ (draft v0.1, EXP-CP1, 2026-11-15)
+# EXPERIMENT_PLAN — SMC-BVS at p = 10⁶ (draft v0.2 after the Fable review, EXP-CP1, 2026-11-15)
 
 Status: **DRAFT FOR REVIEW.** Planning only: nothing is built, submitted or changed. Author: Experiment department
 (Claude Opus 5.5, Claude Third, Owls). HQ approves every launch; one independent Sol review (feasibility and budget) comes
@@ -14,6 +14,24 @@ Tags as in SCALING_DESIGN_v0: **[OP-bit]** same output bits as v3.1; **[OP-law]*
 **UNVERIFIED** extrapolated or not run.
 
 ---
+
+## v0.2 errata (Fable review, `REVIEW_disposition.md`). These override the text below wherever they conflict.
+- **Calibration (OD-2 rewritten).** Seven triggers escalate, including `grid_unconverged`, which fired in effect in 3 of 3
+  B3 runs at p ≥ 5k (rebuilds = ℓ). The plan now assumes a bounded calibration [Δ𝒞] (I_max = 3, fixed by a three-arm test
+  at 10⁴). Cost per fit: 19 island-equivalents, not 26.3.
+- **Partition (OD-5, G3 rewritten).** Complete linkage truncated at 1 − τ_n on the sparse graph. The v0.1 component rule
+  fails on AR(0.6).
+- **Hot path.** The direct Gram-free step may be bandwidth-bound at 1M (1.6 KB of X per step). Gate T5 measures it before
+  G-B. A label-major prototype (OD-16) runs in parallel. Streams are position-addressed (OD-8).
+- **Rung C cells (OD-14):** AR-strong × 3, ADJ-OPP × 1, AR-weak × 1 (n = 200); IND only at 10⁴/10⁵. Added everywhere:
+  ablations (start mode / + LS0 / pilot + local / full), a null control at 10⁴/10⁵, a second seed on the same data,
+  SIS → our method, an equal-budget MCMC at 10⁴, and the exact reference at p ≤ 25 (T8).
+- **C2 at 1M** is stated as feasibility plus agreement with the trend of the lower rungs (3/3 gives a 95% lower bound of 0.37).
+- **Budget (OD-7 v0.2):** Minimal ≈ 11k, Standard ≈ 26k (31k with contingency), Full ≈ 42k. Planning cost per fit:
+  27 / 272 / 2,720 core-h at 10⁴ / 10⁵ / 10⁶. The Minimal tier is the stated expectation for December.
+- **New metrics:** log Z_𝒯 (deterministic lower bound), PIP_𝒯, ablation outcomes, seed agreement, occupancy check (needs
+  terminal supports, OD-15).
+- **Engineering:** ENGINEERING_SPEC.md v1 replaces §5's gap list as the build document. Task memory 32 GB.
 
 ## 0. Summary
 
@@ -43,7 +61,7 @@ Every claim is illustrated, not proved, by the experiment. Designs appear only a
 | id | claim (what the numbers show) | theorem / paper section | primary metric |
 |---|---|---|---|
 | C1 | **Feasibility.** Joint (non-split, no screening) SMC-BVS completes at p = 10⁶ on individual-level data. | paper §Experiments (scale); theory #16 (parallel SMC, W3-SCALE) | completion; wall, core-h, peak RSS (§3.5) |
-| C2 | **Reported model = S₀** with probability rising to 1 in n, at every p of the ladder. | RM-0/RM-F/RM-R (#7), RM2-F/R (#8), Delivery C-DLV (#10), GEN/GROW (#6) | P̂(HPM = S₀), outcome class (posterior / search) |
+| C2 | **Reported model = S₀** with probability rising to 1 in n (estimated at 10⁴/10⁵; at 10⁶ feasibility plus agreement with that trend). | RM-0/RM-F/RM-R (#7), RM2-F/R (#8), Delivery C-DLV (#10), GEN/GROW (#6) | P̂(HPM = S₀), outcome class (posterior / search) |
 | C3 | **Start mass.** π₀(S₀) → 1 at the rate n^{−c}, computed exactly from the start tables. | W3-START, START2 (#5) | log(1 − π₀(S₀)) against log n |
 | C4 | **PIP consistency.** pip_primary → 1_{S₀} in sup-norm; MPM = HPM = S₀. | SAMP LT♯, TR, D (#9); C-PACK SL1/SL2 | sup_{j∉S₀} PIP, min_{j∈S₀} PIP, P̂(MPM = S₀) |
 | C5 | **Distribution consistency (top priority).** The returned output's predictive law contracts to f* in Hellinger at the rate s₀ log p / n (store-BMA) and at the parametric rate under selection (HPM/MPM plug-in). | W3-DIST: DIST-1, DIST-2, DIST-3, DIST-C(i)–(iv) (candidates, status CANDIDATE); POST2 Hellinger (#2) | d_H² of the plug-in and predictive outputs; n·d_H² against n (§3.3) |
@@ -93,7 +111,7 @@ p = n^A with A = log p / log n. At 1M: A = 2.6 (n = 200), 2.3 (n = 400).
 | A3 partition | 10⁴ | AR, BLK strong | 200 | 10 | 16 | exact complete linkage against the 1M partition rule, same data: π₀(S₀) and outcomes (OD-5) |
 | A4 extras | 10⁴ | MIS, ADJ, FAC (if D1 says so) | 200, 400 | 5 | 16 | optional |
 | B | 10⁵ | AR strong (n-trend), IND strong | 200, 400 (AR); 200 (IND) | 5 | 16 | first rung needing G1–G7 |
-| C | 10⁶ | AR strong (primary); IND strong | 200 (AR, IND); 400 (AR, Full tier only) | 3 (AR), 2 (IND) | 16 (8 if budget) | rep 1 is the pilot |
+| C | 10⁶ | AR strong (primary); ADJ-OPP; AR weak (v0.2) | 200; 400 (AR, Full tier only) | 3 / 1 / 1 | 16 | rep 1 is the pilot |
 
 Gates (each needs HQ approval with measured numbers; a failed gate returns to HQ and the owner):
 - **G-A (enter rung A).** All of:
@@ -211,7 +229,7 @@ in-process layout. Sizes are agent-days (A-d) of an Opus lead plus a review, and
 |---|---|---|---|---|---|
 | G1 | **Gram-free canonical scorer.** G_{S,j} from X columns by lane-parallel *sequential* dot products (same summation order as `data_init`, v3_score.h:45–53); per-particle factor cache. | [OP-bit] (v0 local check: identical bits) | the Gram is 8 TB at 1M | 4 A-d, gate 20 core-h | SCALE |
 | G2 | **Streamed correlation tiles** for the neighbour graph (r_n threshold, partial selection, O(pB) memory, threaded) and for duplicate components (now R `crossprod`, O(np²) in R). | [OP-bit] | 2·10¹⁴ flops at n = 200, about 1–2 node-hours; no p² array | 3 A-d | SCALE |
-| G3 | **Block partition above about 150k.** Exact complete linkage needs the full distance matrix (v3_blocks.h:54: dense r and dist, 16p² bytes; 4 TB condensed at 1M). Proposed rule: exact complete linkage inside the connected components of {\|r\| ≥ τ_n}; components larger than B cut by the same top-down rule; components packed by next-fit in index order. | **[Δlaw]** (π₀ changes); O8 | hard memory wall | 5 A-d + TH | SCALE + **TH T-PART** |
+| G3 | **Block partition above about 150k.** Exact complete linkage needs the full distance matrix (v3_blocks.h:54: dense r and dist, 16p² bytes; 4 TB condensed at 1M). **v0.2 rule:** complete linkage truncated at height 1 − τ_n on the sparse graph {\|r\| ≥ τ_n}; the coded top-down cut; next-fit packing by minimum index (the v0.1 component rule fails on AR(0.6)). | **[Δlaw]** (π₀ changes); O8 | hard memory wall | 5 A-d + TH | SCALE + **TH T-PART** |
 | G4 | **Tables** by depth-first search with a bordered Cholesky; threaded over blocks; compact storage (drop `logm_tab` / `route_tab` after HPM ingestion); one read-only mmapped file shared by all islands on a node. | [OP-bit] (v0: 5–8×, identical) | ≈ 2·10⁸ table codes at 1M, n = 200 (§6.1); ≈ 7 GB | 3 A-d | SCALE |
 | G5 | **No O(p) work per elementary step.** In-place flip and undo (no `tmpQ = P` bitset copy, v3_engine.h:120,131,152,172); `nth_nonmember` by a word-prefix index; O(p) Fisher–Yates kept (it is law). | [OP-bit] | a 125 KB copy per step would cost about 10× the score | 2 A-d (part done in B1; verify) | SCALE |
 | G6 | **Score-cache capacity decoupled from p.** 500p entries is 5·10⁸ at 1M (30–50 GB per island); fixed capacity instead. | [OP-bit] except `fresh` | memory | 1 A-d | SCALE, after **OD-3** |
@@ -289,10 +307,10 @@ The plan is infeasible if E2 escalation fires at 1M under the coded rule (OD-2).
 | # | risk | likelihood / impact | mitigation | trigger to HQ |
 |---|---|---|---|---|
 | R1 | **log Ẑ dispersion** grows with p (σ̂ 0.76–1.15 at 5k–20k, N = 2,500; right tail not cured by 4N). Weight degeneracy (R_eff/R′ → small) at 1M. | high / medium: affects evidence and PIP_Z, not HPM or PIP_eq (islands agree so far) | report, never switch on it; keep PIP_eq primary (OD-4); the union HPM/store needs no weights; 64-island census at 10⁴/10⁵ to chart σ̂(p) | R_eff/R′ < 0.1 or islands disagree on the HPM |
-| R2 | **E2 escalation at large p** quadruples the cost | high / high | OD-2 decided before rung B, with A2 data on how often it fires | E2 rate > 20% in A2 |
+| R2 | **Escalation at large p** (any of 7 triggers, incl. `grid_unconverged`) quadruples the cost | high / high | bounded calibration OD-2(c); three-arm test at 10⁴ fixes I_max | any escalation in production mode |
 | R3 | **Memory**: the Θ(p²) objects (Gram, r, dist), cache 500p, store 40p + 1, tables | certain without G1–G7 / blocking | G1–G7, G11; mmap-shared tables and X; memory model checked at 10⁵ (G-B) | RSS > 1.2× model |
 | R4 | **Partition change** (G3) alters π₀ and possibly the START premises | medium / high (theory) | T-PART before rung C; A3 paired comparison at 10⁴ | T-PART says a premise fails |
-| R5 | **Per-step cost at 1M** is UNVERIFIED (cache misses on p-long arrays, nth_nonmember, permutations) | medium / high | 10⁵ pilot measures it; micro-benchmarks on Owls at 10⁵–10⁶ before G-B | > 1.5× model |
+| R5 | **Per-step cost at 1M** is UNVERIFIED and may be **bandwidth-bound** (1.6 KB of X per Gram-free step ≈ 168 TB per island) | medium / high | gate T5 (bandwidth curve + step cost on Owls/one node at 10⁵–10⁶) before G-B; label-major prototype (OD-16) | > 1.5× model |
 | R6 | **T and I grow with p** (ℓ = 20 at 1M) | medium / medium (+25–60%) | measured at 10⁵; budget lever R′ = 8 | I hits ℓ or T > 45 |
 | R7 | **24 h limit / preemption**: a serial 1M island takes about 70 h | certain without checkpoints | G9 checkpoint at stage boundaries; forced-kill test at 10⁵; commons only (no scavenge for long work) | restart not bit-identical |
 | R8 | **Preflight refusals**: the memory preflight refuses from about 19k; the LS0 charge refusal returns between 20k and 30k | certain without G11/G12 | rewrite the preflight models; admission only (O14) | — |

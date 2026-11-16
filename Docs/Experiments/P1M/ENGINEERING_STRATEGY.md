@@ -1,4 +1,4 @@
-# ENGINEERING_STRATEGY — the large-p engine ("v4") (draft v0.1, 2026-11-15, owner conversation)
+# ENGINEERING_STRATEGY — the large-p engine ("v4") (draft v0.1, 2026-11-15) — SUPERSEDED by ENGINEERING_SPEC.md v1 (see REVIEW_disposition.md R2e, R2f)
 
 Proposal only. Engine code on `main` is HQ's call, and the engine's builder is the W3-SCALE leg-C team (OD-11). This file
 complements EXPERIMENT_PLAN §5 (the gap list) with *how* to build it.
