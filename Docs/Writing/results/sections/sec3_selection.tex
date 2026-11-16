@@ -368,8 +368,8 @@ lemmas on Gaussian designs that are verified and passed a council review. \bridg
 Suppose the rows $(x_{\mathcal C,i},x_{\mathcal M,i})$ of candidates and omitted predictors are i.i.d.\ Gaussian with
 $\Sigma_{\mathcal C\mathcal C}$ invertible, and
 $\yr_i=\alpha+x_{\mathcal C,i}^\top\beta^*_{\mathcal C}+x_{\mathcal M,i}^\top\beta^*_{\mathcal M}+\varepsilon_i$ with
-$\varepsilon\sim\Normal_n(0,\sigma^2I)$ independent of the rows. Then the candidate-only fit is misspecified
-(no candidate model contains the true regression function), and Assumption~\ref{asm:omitted}\ref{asm:omitted-model} holds with
+$\varepsilon\sim\Normal_n(0,\sigma^2I)$ independent of the rows. Then the full model,
+with all predictors, is misspecified for the candidate-only fit, and Assumption~\ref{asm:omitted}\ref{asm:omitted-model} holds with
 \[
   \beta^{\mathcal C}=\beta^*_{\mathcal C}+\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M}\beta^*_{\mathcal M},
   \qquad
@@ -387,8 +387,9 @@ noise term whose rows are i.i.d.\ and independent of the candidates (the candida
 law of $\yr$ given the candidates, hence the Kullback--Leibler projection of the truth onto the candidate linear models:
 the posterior concentrates on the support of the best candidate predictor.
 (ii) \emph{Contraction.} Under the same assumptions the posterior's fitted mean and variance also contract around this
-law, in the in-sample average Hellinger and Kullback--Leibler distances (the distances between the fitted and the true
-laws of one observation, averaged over the $n$ observations), at rate $M_n/\sqrt n$ in Hellinger and $M_n/n$
+law, in the in-sample Hellinger and Kullback--Leibler distances (for Hellinger, the root mean square over the $n$
+observations of the distance between the fitted and the true laws of one observation, as in
+Remark~\ref{rem:dist-fixed}), at rate $M_n/\sqrt n$ in Hellinger and $M_n/n$
 in Kullback--Leibler, for any $M_n\to\infty$. Here the mean of the law is centred over the sample, because the fitted mean
 carries no intercept.
 For a fixed design the contraction needs only that the posterior mass of $\Sz^{\mathcal C}$ tends to one in probability
@@ -402,7 +403,8 @@ not state it here.
 \status{Remark~\ref{rem:omitted-cons}(ii): \textbf{proved and checked}, conditional on the posterior contraction lemma for
 fixed designs (itself proved and checked) and, for the random-design clause, on the same inputs as
 Theorem~\ref{thm:omitted}. (iii): \textbf{proved and checked, conditional on} the expectation bound of
-Theorem~\ref{thm:post-fixed}. Verbatim: Appendix~\ref{app:status}, row 1.4.}
+Theorem~\ref{thm:post-fixed}. The composition that puts (ii)--(iii) in this reader form awaits its final independent
+check. Verbatim: Appendix~\ref{app:status}, row 1.4.}
 
 \begin{remark}[On the assumptions]\label{rem:omitted-asm}
 (i) \emph{A weaker sufficient condition.} The proof uses only that, given the candidates, the coordinates of the residual

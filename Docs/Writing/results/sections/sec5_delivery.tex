@@ -390,10 +390,12 @@ were not interrupted. On completed runs they are exactly the reported values. Le
 assumptions; so $\rho_n\le n^{-c}$ eventually, for every $c<\tfrac12$. Assumption~\ref{asm:start} is not listed in the
 theorem below because \as{EFS} implies it: $16+\sz\le5(A+1)(\sz+1)\log n$ for $n\ge3$.
 
-\inwords{Under the conditions that make the start law concentrate, every reported estimate is within $\rho_n$ of its
-target on the event that the calibration succeeds: the evidence estimate is close to the evidence, the inclusion
-probabilities are close to $1$ for true predictors and to $0$ for null ones, and the reported median probability model
-and reported model are wrong with vanishing probability.}
+\inwords{Under the conditions that make the start law concentrate, the errors of the reported estimates, multiplied by
+the indicator that the calibration succeeds, are of order $\rho_n$ in probability: the relative and the log error of the
+evidence estimate, and the distance of the inclusion probabilities from $1$ for true predictors and $0$ for null ones. The
+probability that the calibration succeeds and the reported median probability model is wrong tends to zero, and so does
+the probability that the run completes and the reported model is wrong. Nothing is said conditionally on success, or
+about how likely success is.}
 
 \begin{theorem}[The reported estimates are consistent]\label{thm:outputs}
 Assume \as{GR}, \as{DIM} with $p>\sz$, \as{FSt}, \as{EFS}, \as{V}, \as{NL}, and Conventions~\as{C1} and~\as{C3}. Then,

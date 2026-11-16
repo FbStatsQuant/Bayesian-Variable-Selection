@@ -209,8 +209,9 @@ Remark~\ref{rem:dist-fixed} gives contraction in an in-sample distance instead. 
 of Section~\ref{sec:setting}.
 
 \begin{remark}[Further consequences: fixed designs]\label{rem:dist-fixed}
-Let the design be fixed, and let $\bar h_n$ be the average, over the $n$ observations, of the Hellinger distance between
-the fitted and the true laws of one observation, both centred over the sample. Assume \as{GL}, $\sz\ge1$ fixed and
+Let the design be fixed, and let $\bar h_n$ be the in-sample Hellinger distance: $\bar h_n^2$ is the average, over the $n$
+observations, of the squared Hellinger distance between the fitted and the true laws of one observation, both centred over
+the sample (so $\bar h_n$ is a root mean square). Assume \as{GL}, $\sz\ge1$ fixed and
 $2\le p\le n^A$, the energy bound $\norm{\mu}^2\le nM_\mu$, and the floor $\lmin(\Rhat_{\Sz})\ge\varphi_0^2$ on the true
 model. All limits below are in probability. (a) If also $1-\pis{\Sz}\to0$, then $\Pi(\bar h_n>M_n/\sqrt n\mid y)\to0$ for
 every $M_n\to\infty$: the distance contracts at rate $M_n/\sqrt n$. (b) Without beta-min, under the superset Occam-sum

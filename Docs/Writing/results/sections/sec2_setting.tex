@@ -10,12 +10,19 @@ that assumption and is not listed in the appendix.
 
 For an integer $k\ge1$ we write $\set{k}:=\{1,\dots,k\}$. Vectors are columns. The Euclidean norm of a vector $v$ is
 $\norm{v}$ and its $\ell_1$ norm is $\norm{v}_1$. An identity matrix is written $I_n$, or $I$ when its size is clear,
-and $\one_n$ (or $\one$) is the vector of ones. The smallest eigenvalue of a symmetric matrix $B$ is $\lmin(B)$. The
-number of elements of a set $S$ is $\abs{S}$. Logarithms are natural ($\log$) or binary ($\log_2$);
+and $\one_n$ (or $\one$) is the vector of ones. The smallest eigenvalue of a symmetric matrix is written $\lmin(\cdot)$.
+The number of elements of a set $S$ is $\abs{S}$. Logarithms are natural ($\log$) or binary ($\log_2$);
 $\lceil\cdot\rceil$ and $\lfloor\cdot\rfloor$ round up and down; $a\vee b:=\max(a,b)$; and $\ind{E}$ is the indicator of
 an event or condition $E$. A star on a parameter marks its true value; the superscript $\mathrm r$ marks raw,
-unstandardised data. For a matrix $B$ indexed by $\set{p}$ and sets $U,V\subseteq\set{p}$, $B_{UV}$ is the sub-matrix with
-rows in $U$ and columns in $V$, and $B_U:=B_{UU}$.
+unstandardised data. For a $p\times p$ matrix $\Lambda$ and sets $U,V\subseteq\set{p}$, $\Lambda_{UV}$ is the sub-matrix
+with rows in $U$ and columns in $V$, and $\Lambda_U:=\Lambda_{UU}$.
+
+For random variables $V_n$ and positive numbers $a_n$, $V_n=\OP(a_n)$ means that for every $\epsilon>0$ there is a
+constant $C$ with $\P(\abs{V_n}>Ca_n)\le\epsilon$ for all large $n$, and $V_n=\oP(a_n)$ means $V_n/a_n\to0$ in
+probability; \emph{with probability tending to one} means that the probability of the event tends to one. For positive
+sequences, $a_n=O(b_n)$ (also $a_n\lesssim b_n$) means $a_n\le Cb_n$ for a constant $C$; $a_n=o(b_n)$ means
+$a_n/b_n\to0$; $a_n\asymp b_n$ means $a_n\lesssim b_n$ and $b_n\lesssim a_n$; $a_n\gg b_n$ means $b_n/a_n\to0$; and
+$a_n\gtrsim b_n$ means $b_n\lesssim a_n$. A quantity is \emph{fixed} if it does not depend on $n$.
 
 \subsection{Data and model}\label{sec:model}
 
@@ -124,16 +131,16 @@ model in closed form:
 \end{equation}
 where $z_S:=X_S^\top y$, $\nu:=a_0+n/2$ and $C_n:=(2b_0)^{a_0}\Gamma(a_0+n/2)/\{\pi^{n/2}\Gamma(a_0)\}$ (here $\pi$ is the
 number $3.14\ldots$). In words, $\SSq_S$ is a shrunken residual sum of squares of model $S$, and the determinant ratio is
-a penalty for model size (an Occam factor): in a well-conditioned model, each extra predictor multiplies $m(S)$ by about
-$(n+1)^{-1/2}$.
+a penalty for model size (an Occam factor): in a well-conditioned model, the determinant ratio alone multiplies $m(S)$ by
+about $(n+1)^{-1/2}$ for each extra predictor, and a better fit, through $\SSq_S$, can more than make up for it.
 
-The \emph{posterior over models} is
+The \emph{log score} of a model is $F(S):=\log\{w(\abs{S})/\bar w_K\}+\log m(S)$, the logarithm of its prior probability
+times its marginal likelihood. The \emph{posterior over models} is
 \begin{equation}\label{eq:posterior}
-  \pis{S}=\frac{w(\abs{S})\,m(S)}{\bar w_K\,Z},\qquad Z:=\frac{1}{\bar w_K}\sum_{V\in\Om}w(\abs{V})\,m(V),\qquad S\in\Om .
+  \pis{S}=\frac{e^{F(S)}}{Z},\qquad Z:=\sum_{S'\in\Om}e^{F(S')},\qquad S\in\Om .
 \end{equation}
 The normalising constant $Z$ is the \emph{evidence}: the marginal likelihood of the standardised data under the working
-model and the prior. The \emph{log score} of a model is $F(S):=\log\{w(\abs{S})/\bar w_K\}+\log m(S)=\log\pis{S}+\log Z$: the log
-posterior, up to the additive constant $\log Z$. The method's target is exactly this posterior. Because $y$ is standardised, the posterior over models
+model and the prior. The method's target is exactly this posterior. Because $y$ is standardised, the posterior over models
 does not change if $\yr$ is shifted or rescaled.
 
 \paragraph{Posterior summaries.} These are properties of the posterior, not of any algorithm:
@@ -185,7 +192,7 @@ $\pi_0$ over $\Om$ (the tilde distinguishes it from the true model $\Sz$).
 
 \paragraph{The sampler.} The sampler moves a population of models, called \emph{particles}, from the start law to the
 posterior through a sequence of intermediate distributions $\pi_\phi\propto\pi_0^{1-\phi}\,\pi(\cdot\mid y)^{\phi}$, with
-\emph{temperatures} $0=\phi_0<\phi_1<\dots<\phi_T=1$. At each temperature it reweights the particles by how much more the
+\emph{temperatures} $0=\phi_{[0]}<\phi_{[1]}<\dots<\phi_{[T]}=1$. At each temperature it reweights the particles by how much more the
 next distribution favours them, resamples them in proportion to these weights, and applies Markov moves that leave the
 current distribution unchanged: an update of each predictor's inclusion given the others, swaps of a member for a
 non-member, and fresh proposals drawn from $\pi_0$. Before the final run, an internal \emph{calibration} uses short pilot
@@ -196,8 +203,10 @@ the run stops without estimates.
 
 \paragraph{Local search.} Two models are \emph{neighbours} if one comes from the other by deleting one predictor, adding
 one (while the size is below $K$), or swapping one member for one non-member. A local search scans all neighbours of the
-current model and moves to the best one if its log score is strictly higher. It stops at the first scan with no strict
-improvement, or when it reaches its move cap, whichever comes first. After the sampler, the method runs two local
+current model and moves to the best one if its log score is strictly higher. It makes at most its move cap of moves. It
+stops at the first scan with no strict improvement, and then certifies its end point. After the last allowed move it
+still scans the neighbours once more: if none improves, it certifies its end point; otherwise it stops at the best
+improving neighbour, uncertified. After the sampler, the method runs two local
 searches: one from the best model found so far (move cap $\ell_n$), and one from the start mode (move cap
 $\ell_n+\abs{\tSz}$), where $\ell_n:=\lceil\log_2(n+p+1)\rceil$.
 
@@ -223,11 +232,7 @@ change with $n$. A quantity is \emph{fixed} if it does not depend on $n$; every 
 fixed. Generic positive constants that depend only on fixed quantities are written $C$ and $c$ in prose; a constant that
 appears in a displayed result has its own name.
 
-For random variables $V_n$ and positive numbers $a_n$: $V_n=\OP(a_n)$ means that for every $\epsilon>0$ there is a
-constant $C$ with $\P(\abs{V_n}>Ca_n)\le\epsilon$ for all large $n$; $V_n=\oP(a_n)$ means $V_n/a_n\to0$ in probability.
-\emph{With probability tending to one} means that the probability of the event tends to one. For positive sequences,
-$a_n=O(b_n)$ (also $a_n\lesssim b_n$) means $a_n\le Cb_n$ for a constant $C$; $a_n=o(b_n)$ means $a_n/b_n\to0$;
-$a_n\asymp b_n$ means $a_n\lesssim b_n$ and $b_n\lesssim a_n$; and $a_n\gg b_n$ means $b_n/a_n\to0$.
+The asymptotic symbols $\OP$, $\oP$, $O$, $o$, $\lesssim$, $\asymp$ and $\gg$ are those of Section~\ref{sec:notation}.
 
 \subsection{Standing assumptions and conventions}\label{sec:standing}
 

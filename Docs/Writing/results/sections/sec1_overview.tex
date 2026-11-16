@@ -12,7 +12,8 @@ Section~\ref{sec:method}.
 signal-strength conditions (a beta-min condition: a lower bound on the smallest true coefficient). For fixed designs, the posterior mass outside the true model is at most a constant times
 $\rn$ on average, uniformly over the designs that meet the conditions (Theorems~\ref{thm:post-fixed}
 and~\ref{thm:post-margin}); the highest posterior model and the median probability model equal the true model with
-probability tending to one. The same holds for random Gaussian designs (Theorem~\ref{thm:post-random}). For true models of at most
+probability tending to one. For random Gaussian designs the posterior miss is $\OP(\rn)$, and the same models recover
+the true model with probability tending to one (Theorem~\ref{thm:post-random}). For true models of at most
 $\min(K-1,p/2)$ predictors no design allows a rate faster than $n^{-1/2}$, and on two families of designs the rate $\rn$ is attained (Theorem~\ref{thm:sharp}). When
 some true predictors are missing from the data, the posterior selects the predictors used by the best linear predictor
 built from the others (Theorem~\ref{thm:omitted}).
@@ -29,8 +30,9 @@ looks block by block. The \textbf{main theorem}, Theorem~\ref{thm:reported-rando
 determined by the data alone and of probability tending to one, on which every run that produces output reports exactly
 the true model, whatever its seed. As an intermediate step, the start law, the distribution from which the sampler starts, already
 concentrates on the true model (Theorem~\ref{thm:start}). A certified small model rarely misses a true predictor, under much weaker conditions
-(Theorems~\ref{thm:screen} and~\ref{thm:screen-margin}). When the calibration succeeds, every reported estimate is
-consistent (Theorem~\ref{thm:outputs}), and the evidence estimate is unbiased (Remark~\ref{rem:unbiased}).
+(Theorems~\ref{thm:screen} and~\ref{thm:screen-margin}). On the event that the calibration succeeds, the reported
+estimates are consistent (Theorem~\ref{thm:outputs}; the statement is about that event, and makes no claim about how
+likely it is or conditional on it), and the evidence estimate is unbiased (Remark~\ref{rem:unbiased}).
 
 \paragraph{What carries over to the parallel method? (Section~\ref{sec:parallel})} The pooling of the four islands is
 covered; the rest is empirical or open, and we say so.
@@ -91,7 +93,7 @@ Thm~\ref{thm:start} & the start law concentrates on the true model & Gaussian ro
 Thm~\ref{thm:reported-random} & \textbf{every run that produces output reports the true model} & Gaussian rows & --- & \st{checked$^{e}$} \\
 Thm~\ref{thm:reported-fixed} & the same, fixed design & fixed & --- & \st{checked$^{e}$} \\
 Thms~\ref{thm:screen}, \ref{thm:screen-margin} & a certified small model rarely misses a true predictor & fixed & --- & \st{checked} \\
-Thm~\ref{thm:outputs} & when the calibration succeeds, every reported estimate is consistent & Gaussian rows & $n^{-1/2}e^{C\sqrt{\log n}}$ & \st{checked$^{e}$} \\
+Thm~\ref{thm:outputs} & reported estimates consistent, on the event that the calibration succeeds & Gaussian rows & $n^{-1/2}e^{C\sqrt{\log n}}$ & \st{checked$^{e}$} \\
 Rem~\ref{rem:unbiased} & the pooled evidence estimate is unbiased & any & exact & \st{see note$^{f}$} \\
 Sec~\ref{sec:parallel} & parallel engine; many islands & --- & --- & \st{in progress / open} \\
 \bottomrule
