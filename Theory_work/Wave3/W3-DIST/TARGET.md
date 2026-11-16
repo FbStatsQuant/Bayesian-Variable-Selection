@@ -61,3 +61,74 @@ the corrected one.
   {completed} and under its named premise.
 Not target clauses: bridges B1, B2; the stretch statements S-APX, S-EXP, S-FIT; the internal form of Lemmas T, S, V, X,
 X′ (their changes are tracked in DEPS and the changelog).
+
+## 6. Reader versions (PROGRAM "Readability"; PROTOCOL_v4 H6; HQ steer A5) — proposed main-text wording
+Identical to STATEMENT.md §1R (the checked object is there). Master versions: (1.1), (1.2), DIST-3, DIST-C; bridges
+B0–B3 in STATEMENT.md §3. Candidates; the reader versions were written after the blind read S1 and have had an Opus
+same-family pre-check only (`reviews/P1_disposition.md`); the cross-family check is pending.
+
+---
+**Setup (complete for the three statements).** Data D_n = {(x_i, y_i) : i ≤ n}, i.i.d. pairs with x_i ∈ ℝ^p. The method
+standardises the predictors and the response in the sample and uses, with no tuning: a beta-binomial BB(1, p) prior on
+the set S of included predictors (at most min(p, ⌊n/2⌋) of them), a Gaussian prior on their coefficients with
+covariance n·σ²·(G_S + I)⁻¹ (G_S the sample Gram matrix of the standardised predictors in S), and an inverse-gamma
+IG(0.01, 0.01) prior on the noise variance σ². Π(· | D_n) is the resulting exact posterior of (S, β, σ²) (coefficients on
+the original scale; the intercept is estimated by the sample means). Each (S, β, σ²) defines a joint density f of
+(x, y): x has its true law and y | x ~ N(intercept + xᵀβ, σ²). f* is the true joint density. d_H(f, g) = (1 − ∫√(fg))^{1/2}
+is the Hellinger distance. sd(·), Var(·), Corr(·) are population quantities; z_j := (x_j − E x_j)/sd(x_j) are the
+standardised predictors; λ_min is the smallest eigenvalue; P* is the law of the data.
+
+**Assumptions.** s ≥ 0 and A ≥ 1 are fixed integers/constants; K ≥ 1, b̄ > 0, c_ψ > 0 are constants.
+- **(A1) Gaussian linear model.** y = α* + xᵀβ* + ε, where ε ~ N(0, σ*²) is independent of x and σ* > 0.
+- **(A2) Sparsity and dimension.** β* has at most s nonzero entries, and 2 ≤ p ≤ n^A (p may be much larger than n).
+- **(A3) Sub-Gaussian predictors.** Every predictor has positive variance, and for every vector u with at most q_n
+  nonzero entries and every real λ: E exp(λ·uᵀz) ≤ exp(K²λ²·Var(uᵀz)/2).
+- **(A4) No near-exact collinearity.** For every set T of at most q_n predictors, λ_min(Corr(x_T)) ≥ c_ψ/n.
+- **(A5) Bounded signal.** |β*_j|·sd(x_j) ≤ b̄·σ* for every j.
+Here q_n := ⌈C_q·M·log n⌉, with M the constant in the conclusion and C_q := 2(s(A + 2) + 4)/log 2.
+There is **no** lower bound on the nonzero coefficients and **no** identifiability condition.
+
+**Theorem A (distribution consistency of the exact posterior).** Assume (A1)–(A5). There are constants c > 0, M₀ and n₀,
+depending only on (s, A, K, c_ψ, b̄), such that for every n ≥ n₀ and every M with M₀ ≤ M ≤ √n:
+
+    P*[ Π( d_H(f, f*) > √(M·log n / n) | D_n ) > n^{−cM} ] ≤ n^{−cM}.
+
+In words: except on an event of probability at most n^{−cM}, the posterior puts mass at most n^{−cM} on joint laws
+farther than √(M log n/n) from the truth. The rate is √(log n/n) (of order √((1 + s) log p/n) when p = n^A).
+*Without (A4)* (and with (A3) required only for single predictors): the same display holds with radius
+√(M·log n·log(p ∨ n)/n).
+
+**Theorem B (parametric rate when the true predictors are detectable).** Assume (A1)–(A5) with s ≥ 1 nonzero entries
+exactly, with (A4) strengthened to λ_min(Corr(x_T)) ≥ ψ for a constant ψ > 0 and every set T of at most (2A + 3)s + 2
+predictors, and
+- **(A6) Beta-min.** min{|β*_j|·sd(x_j)/σ* : β*_j ≠ 0} ≥ b_n with b_n²·n/log n → ∞.
+Then for every sequence M_n → ∞:   Π( d_H(f, f*) > M_n/√n | D_n ) → 0 in P*-probability.
+
+**Corollary C (what the sampler returns).** The sampler returns a list 𝒯 of at most 40p + 1 models with their exact
+unnormalised posterior weights, and no parameter draws. Let Π̂ be the posterior restricted to the returned models:
+models in 𝒯 weighted in proportion to their returned weights, each with its exact conditional posterior of (β, σ²).
+Under the assumptions of Theorem A, for every n ≥ n₀ and M₀ ≤ M ≤ √n, with probability at least 1 − n^{−cM}: every
+completed run whose list carries posterior mass π(𝒯) ≥ n^{−cM/2} satisfies
+
+    Π̂( d_H(f, f*) > √(M·log n / n) ) ≤ n^{−cM/2}.
+
+If the list contains the true model and the posterior probability of the true model exceeds ½, then π(𝒯) > ½.
+Whether a run's list carries enough mass is a property of the run; the theorem does not assert it.
+
+---
+### One line per assumption
+| assumption | why it is there | necessary? |
+|---|---|---|
+| (A1) Gaussian linear model, noise independent of x | the method's likelihood; gives exact conjugate formulas and χ² tails | assumed also by Song–Liang; whether sub-Gaussian noise suffices is open (not a target) |
+| (A2) sparsity s fixed; p ≤ n^A | the constant M₀ grows like (1 + s)(A + 1); posterior size is controlled relative to s | some sparsity is needed for a log p/n rate; strictness and p ≤ n^A are proof devices (stretch items: approximate sparsity, exponential p) |
+| (A3) sub-Gaussian predictors | only to make sample variances and sparse sample covariances track their population values, with probability 1 − n^{−cM} | **not necessary**: the master theorem needs only three sample events; the passage to the population distance uses no tail condition; simulations with infinite fourth moments show no degradation. Under second moments one gets the same display with "probability → 1" in place of n^{−cM} |
+| (A4) no near-exact collinearity (eigenvalue ≥ c_ψ/n on sets of order log n) | makes the prior's dimension penalty (a factor n^{−1/2} per extra variable) effective, which gives the sharp rate and the exponent n^{−cM} | **not necessary for consistency** (dropping it costs one logarithm; second sentence of Theorem A); whether it is needed for the sharp rate is open; any fixed ψ > 0 satisfies it; it is not an identifiability condition |
+| (A5) bounded signal per predictor | the prior scale is tied to the response scale; excludes huge coefficients that cancel | a bound of this kind is needed by the proof (a counterexample with cancelling coefficients of size n breaks the weaker sample condition); the master theorem needs only ‖coefficients‖² ≤ const·n in standardised units |
+| (A6) beta-min (Theorem B only), with a fixed eigenvalue floor on small sets | makes the posterior select the true model, which removes the logarithm | selection consistency is needed for this route to a 1/√n rate; the rate √(log n/n) of Theorem A holds without it |
+| no lower bound on σ*, no fixed σ* | the posterior is invariant under rescaling the response | — |
+
+### Proposed additional target clauses
+- **TC9 (reader Theorem A).** Assumptions (A1)–(A5) as written, the display with radius √(M log n/n) and level n^{−cM} for
+  M₀ ≤ M ≤ √n, and the sentence without (A4). Faithfulness: Theorem A = DIST-1/DIST-2 + B0, B1, B2.
+- **TC10 (reader Theorem B and Corollary C), if HQ makes them headline.** As written; Theorem B conditional on
+  W3-POST:Thm-1; Corollary C with its premise on the returned list stated in the display.
