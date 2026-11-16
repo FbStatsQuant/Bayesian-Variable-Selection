@@ -41,6 +41,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 - X2, X4: relabelling (recorder, post-freeze). P6 method version: Engineering reconciliation pending. RERUN_SPEC: open (HQ).
 
 ## Post-freeze riders (queued)
+- (11-16) Registry: blocks-assumption source line stale (C-GROW :61 → :65-67). Engineering: cpp/v3_core.cpp:144 comment 'B up to 20' vs enforced 16.
 - (11-16) RM2-R supersessions ×6 (recorder dry log tmp/20261116-recorder-SUP/sup_dry.log): 4 blocked by self-dependence; 2 need 6 checked re-points (adds C-DLV conditions). run_ci: run W3-RM2/W3-RM2-R citechecks from the repo root.
 | ticket | contents | source |
 |---|---|---|
