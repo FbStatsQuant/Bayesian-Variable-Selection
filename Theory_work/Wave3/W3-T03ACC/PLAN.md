@@ -21,16 +21,21 @@ Sol agent. A gap that needs a new argument is an early checkpoint (Tier A) repor
 ## 2. Line-check batches (each 2–4 objects as v4 §2A asks; all [P1]/[P3] steps consumed are inside a batch because
 T01–T03 are SAME-FAMILY-ONLY, STATEMENT §5)
 - **LC-A — size tail.** PROOF.md §1 (`:13-47`, Lemma E1(a),(b),(d), definition of m♯_n; E2(i) `:49-59`) and §2
-  (`:74-101`, Lemma den′, Theorem T02(i♯)); with [P1] `lem:spec`, `lem:prior`, `lem:chi`, `lem:slab`, `lem:IGint`
-  (`PROOF_v3.tex:60-152`), `thm:T01iii` (`:232-252`), `thm:Ta` (`:253-268`), `lem:num`, `lem:den`, `thm:T02i`
-  (`:313-384`). E1(c) and E2(ii),(iii) are used only by Prop. E3 (out of scope) — the checker confirms that.
+  (`:74-101`, Lemma den′, Theorem T02(i♯)); with [P1] setting and `eq:UX` (`PROOF_v3.tex:40-58`), `lem:slab`,
+  `lem:IGint`, `lem:spec`(a)–(e), `lem:prior`, `lem:chi` (`:60-152`), `prop:closed`, `thm:T01i`, `thm:T01ii` (`:153-222`,
+  SL1 req. 2: the chain `thm:Ta` ← `thm:T01i`, `thm:T01ii`; `thm:T01i` ← `prop:closed` ← `lem:slab`, `lem:IGint`),
+  `thm:T01iii` (`:232-252`), `thm:Ta` (`:253-268`), `lem:num`, `lem:den`, `thm:T02i` (`:313-384`). E1(c) and E2(ii),(iii) are used only by Prop. E3 (out of scope) — the checker confirms that.
+- **Same-A and p = 1 duties (SL1).** Every batch checks the inherited steps at the recorded $A$ (no $A\ge1$; STATEMENT
+  §4 item 3): LC-B the polynomial counting of [P3] `lem:Gprob` (`PROOF_v2.tex:190-194`), LC-C the signal constant and
+  the rate exponent (`PROOF_v2.tex:311, 329`; `PROOF.md:197, 201`), LC-A any use of $p\le n^A$. E1/E2 are checked on
+  their $p\ge2$ domain; LC-C records the $p=1$ specialization (STATEMENT §4 item 4).
 - **LC-B — anchored eigenvalues and supersets.** PROOF.md §4 (`:127-145`, Lemma I, Lemma B (B1)–(B3)) and (C1)–(C5)
-  (`:170-185`); with [P3] §§1–4 (`PROOF_v2.tex:1-279`: setting, `eq:mn`, `lem:red`, `eq:score`, `lem:smoother`,
+  (`:170-185`); with [P3] §§1–5 (`PROOF_v2.tex:1-279`: setting, `eq:mn`, `lem:red`, `eq:score`, `lem:smoother`,
   `cor:diff`, `lem:det`, `lem:prior`, `lem:signal` statement, `lem:chi`, `sec:good`, `lem:Gprob`, `lem:ongood`,
   `lem:onesup`, `prop:sup`).
-- **LC-C — underfitting models and assembly.** (C6)–(C10) and Assembly (`PROOF.md:187-209`); with [P3] §§5–6
+- **LC-C — underfitting models and assembly.** (C6)–(C10) and Assembly (`PROOF.md:187-209`); with [P3] §§6–7 and remarks
   (`PROOF_v2.tex:280-396`: `lem:SvsSp`, `lem:signalgain`, `lem:assemble`, `sec:main` Step 0, Step 1, (i)–(v)), and the
-  `lem:signal` proof; plus the "unchanged / changed steps" lists (`PROOF.md:205-207`) checked for completeness.
+  `lem:signal` proof (`:146-153`, inside LC-B's range too: a shared dependency); plus the "unchanged / changed steps" lists (`PROOF.md:205-207`) checked for completeness.
 
 Each checker gets STATEMENT.md (locked), its batch, and the sources; verdict per step VERIFIED / GAP / ERROR with
 file:line; is asked to break each step; checks the hidden-hypothesis question (every use of an eigenvalue bound is

@@ -1,5 +1,7 @@
 # BRIEF — line check LC-C (seat: Codex gpt-6.1-sol, reasoningEffort high) — underfitting models and assembly; new agent, blind
 
+**Object:** `STATEMENT.md` v1.1 (LOCKED), sha256 a2e399a8d30873713a950f5c16de58614901dbf6f8ad9d6e40285f8556ae6bef; `sources/W1-T03R/PROOF.md` sha256 1497376391655759bb8d0479b4f344c10f3c9e1a476182cd1881ee28868e9bd4.
+
 **Write exactly one file:** `Theory_work/Wave3/W3-T03ACC/reviews/LC_C_line_check_sol.md`.
 
 ## Your batch (proof under review: `sources/W1-T03R/PROOF.md`)
@@ -25,6 +27,11 @@
 - **N4.** Assembly (i): is the split of Ω ∖ {S₀} into {|S| > m♯_n}, supersets of size ≤ m♯_n, and 𝒰 exhaustive, and
   are models S′ = S ∪ S₀ with |S′| > K (outside Ω) handled correctly (ℓ(·) is defined on all of 2^{[p]})?
 - **N5.** Clause T03S.3: "P₀(S† ≠ S₀) ≤ 2E₀[1 − π(S₀)] → 0" and the strict-maximiser statement on {π(S₀) > ½}.
+- **N6 (same A).** The record allows any fixed $A$ (STATEMENT §4 item 3); the inherited bundles say $A\ge1$. Check
+  the signal constant and the rate exponent at the recorded $A$: `PROOF_v2.tex:311, 329, 346-348`, `PROOF.md:197, 201`.
+  Does any step use $A\ge1$? If yes, name the line and whether it is repairable locally.
+- **N7 (p = 1).** Record the $p=1$ specialization (STATEMENT §4 item 4): $s_0=1$, $K=m^\sharp_n=1$, the only underfitting
+  model $\emptyset$, superset sums empty. Do (C6)–(C10) and the Assembly go through without any $p-1$ denominator?
 
 ## Rules (common to LC-A, LC-B, LC-C)
 You are an independent, blind line checker for theory ticket W3-T03ACC of the SMC-BVS project. This file is your whole

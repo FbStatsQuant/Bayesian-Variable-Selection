@@ -1,4 +1,4 @@
-# W3-T03ACC — STATEMENT v1.0 (T03♯ = SOP:TH09, restated verbatim for council acceptance)
+# W3-T03ACC — STATEMENT v1.1 — LOCKED (SL1) (T03♯ = SOP:TH09, restated verbatim for council acceptance)
 
 Ticket W3-T03ACC, Tier B (re-check of an existing proof; no new mathematics). This file restates the theorem of record
 and defines every object in it. It asserts no proof status. The object is fixed by the brief (`BRIEF.md:12-21`); this is
@@ -14,8 +14,10 @@ and defines every object in it. It asserts no proof status. The object is fixed 
 | proof's own statement | `sources/W1-T03R/PROOF.md:160-168` (§6 hypotheses/conclusions), `:44-47` (m♯_n), `:127-132` (SE_λ, SE_w) | the text the line checks run against |
 | definitions | `sources/common/00_COMMON.md:9-14, 29, 35-38`; `sources/P3/STATEMENT.md:5-27` | data, target, prior, regimes, G, R, constants |
 
-The four sources agree on every hypothesis and conclusion, with the differences listed in §4 (all of them readings or
-forms, none a change of content). Where the record and the card differ in wording, §2–§3 follow the record.
+Record, card and the proof's §6 agree on the conclusions and on the hypotheses as written, except for the source
+discrepancy on the growth exponent $A$ (§4 item 3): the record and card say "$A$ fixed", while the inherited R bundles of
+the locked proofs say $A\ge1$. The statement follows the record; the line checks check the proof at the recorded $A$.
+The other differences (§4) are readings or forms. Where the record and the card differ in wording, §2–§3 follow the record.
 
 ## 1. Setting (definitions; `sources/common/00_COMMON.md:9-14`, `sources/P3/STATEMENT.md:7-14`)
 - **Data.** Raw $(X^r,y^r)$, $X^r\in\mathbb R^{n\times p}$, $n\ge3$, no constant column, $y^r$ not constant.
@@ -39,13 +41,13 @@ forms, none a change of content). Where the record and the card differ in wordin
 
 ## 2. Hypotheses (record: `sources/statement/W6-FIXREV2_STATEMENTS.md:19-35`; proof: `sources/W1-T03R/PROOF.md:127-132, 162-164`)
 - **R1.** Triangular array, $n\to\infty$; $X=X_n$ fixed (non-random); $s_0\ge1$ fixed; $p=p_n\le n^A$ with $A$ fixed
-  ($A\ge1$, see §4 item 3); $s_0\le K=\min(p,\lfloor n/2\rfloor)$ for all large $n$. Design, $\beta^*$, $S_0$ may vary with $n$.
+  (see §4 item 3); $s_0\le K=\min(p,\lfloor n/2\rfloor)$ for all large $n$. Design, $\beta^*$, $S_0$ may vary with $n$.
 - **G.** $y^r=\alpha^*\mathbf 1+X^r\beta^*+\varepsilon$, $\varepsilon\sim N_n(0,\sigma_*^2I)$, $\sigma_*^2>0$ fixed;
   $\mu=X\theta^*$, $S_0=\operatorname{supp}\beta^*$.
 - **R.** $\|\mu\|^2\le Mn$ and $\lambda_{\min}(R_{S_0})\ge\varphi_0^2>0$, with $M,\varphi_0$ fixed.
 - **Size-tail objects (data-free).** $q_k:=\binom pk w(k)$. For every integer $m$,
   $R_m:=\sum_{k=\max(m+1,0)}^{K}q_k/w(s_0)$ (empty sum $=0$, so $R_m=0$ for $m\ge K$). For real $\omega$,
-  $m^\sharp_n(\omega):=\min\{m\in\mathbb Z:m\ge s_0,\ R_m\le n^{-(s_0+1)/2}e^{-\omega}\}$ (exists, $\le K$);
+  $m^\sharp_n(\omega):=\min\{m\in\mathbb Z:m\ge s_0,\ R_m\le n^{-(s_0+1)/2}e^{-\omega}\}$ (exists; for $n$ with $s_0\le K$, it is $\le K$);
   $m^\sharp_n:=m^\sharp_n(\tfrac12\log n)=\min\{m\ge s_0:R_m\le n^{-(s_0+2)/2}\}$. It is a deterministic function of
   $(n,p,s_0)$.
 - **SE$_\lambda(j_0)$** (normalised, anchored, bounded size): $j_0:=\lceil(2A+1)s_0\rceil+1$ $(=j_*)$, and
@@ -69,8 +71,8 @@ and SE$_w(m^\sharp_n;g_0)$; for clauses 1–3 also BM-∞ or BM($c$) with $c>c_0
    Then $\Pi(S\not\supseteq J_n(c)\mid y)=O_{P_0}(r_n)$ and $1-\min_{j\in J_n(c)}\mathrm{PIP}_j=O_{P_0}(r_n)$, with the
    convention $\min_\emptyset:=1$ (the claim is vacuous when $J_n(c)=\emptyset$). The same holds for
    $J_n^\infty=\{j:\theta^{*2}_j\ge M_n\sigma_*^2\log n/(n\varphi_0^2)\}$ with any deterministic $M_n\to\infty$.
-5. **`T03S.5`** Scale invariance as in the locked T03: for every $c>0$, replacing $(\theta^*,\sigma_*^2)$ by
-   $(\theta^*/c,\sigma_*^2/c^2)$ (in particular $c=s_y$) leaves the BM-∞ and BM($c$) inequalities and the sets
+5. **`T03S.5`** Scale invariance as in the locked T03: for every $d>0$, replacing $(\theta^*,\sigma_*^2)$ by
+   $(\theta^*/d,\sigma_*^2/d^2)$ (in particular $d=s_y$) leaves the BM-∞ and BM($c$) inequalities and the sets
    $J_n(c)$, $J^\infty_n$ unchanged (`sources/P3/STATEMENT.md:43`, `sources/P3/PROOF_v2.tex:380`).
 
 Card form (approved wording, `sources/statement/TLF_434-499.md:29`): "Under R1, G, R, SE$_\lambda(j_0)$,
@@ -82,7 +84,8 @@ inclusion sentence = clause 4; clause 5 and the "for every data set" inequality 
 
 **What the theorem is about.** The exact posterior $\pi$ (algorithm-free). It says nothing about the sampler's
 reported HPM. The record's "Scope" paragraph (`sources/statement/W6-FIXREV2_STATEMENTS.md:63-81`: Prop. E3, Prop. D,
-the finite-$n$ thresholds of the written proof) is context, not part of the claim, and is not under review here.
+the finite-$n$ thresholds of the written proof) is labelled by the record "must accompany the theorem": it is not part
+of the claim and is not under review here, and any accepted text of T03♯ carries a pointer to it.
 No expectation rate is inferred from $O_P$; no universal onset $n_0$; fixed design, fixed $s_0$
 (`sources/statement/TLF_434-499.md:30`).
 
@@ -92,12 +95,16 @@ No expectation rate is inferred from $O_P$; no universal onset $n_0$; fixed desi
    in SE$_\lambda$, SE$_w$ (`PROOF.md:131-132`) is automatic.
 2. **$J=\emptyset$ in SE$_\lambda$** gives $\lambda_{\min}(R_{S_0})\ge\varphi_0^2$, i.e. R's eigenvalue condition. Since
    $\operatorname{diag}R_{S_0}=1$, R forces $\varphi_0\le1$.
-3. **$A\ge1$.** The proof's R (`sources/common/00_COMMON.md:36`, `sources/P3/STATEMENT.md:19`) has "$p\le n^A$, $A\ge1$";
-   record and card say "$A$ fixed". Any $A<1$ is covered by applying the theorem with $\max(A,1)$, at the price of
-   $j_0$, $c_0$ computed at $\max(A,1)$. The restatement carries $A\ge1$ explicitly.
-4. **$p\ge2$.** The proof assumes $p\ge2$ (`sources/W1-T03R/PROOF.md:9`: "for $p=1$ every statement below is trivial or
-   void"). Under R1 with $s_0\ge1$ and $p=1$, $\Omega=\{\emptyset,\{1\}\}$; the reviewers are asked to confirm the
-   $p=1$ remark or to name it as a hypothesis.
+3. **$A$ (source discrepancy, SL1 required change 1).** The record/card specify $A$ fixed
+   (`sources/statement/W6-FIXREV2_STATEMENTS.md:19`, `sources/statement/TLF_434-499.md:15`), whereas the inherited R
+   bundles state $A\ge1$ (`sources/common/00_COMMON.md:36`, `sources/P3/STATEMENT.md:19`). No replacement of $A$ is made
+   in $j_0$, $C_*$ or $c_0$. The line checks must check the inherited steps at the recorded $A$; replacing $A$ by
+   $\max(A,1)$ only gives a more restrictive sufficient condition.
+4. **$p=1$ (no hypothesis added; SL1 ruling).** The proof assumes $p\ge2$ (`sources/W1-T03R/PROOF.md:9`: "for $p=1$ every
+   statement below is trivial or void"). Under R1 with $s_0\ge1$, $p=1$ forces $s_0=1$, $K=m^\sharp_n=1$, $S_0=\{1\}$,
+   $\Omega=\{\emptyset,\{1\}\}$; the size tail vanishes, the superset sums are empty and the only underfitting model
+   $\emptyset$ is handled by the inherited signal-gain argument. No $p\ge2$ hypothesis is added; E1/E2 are used only on
+   their $p\ge2$ domain, and the line checks record the $p=1$ specialization.
 5. **$\sigma$ vs $\sigma_*$; $\theta^*_{\min}$.** The card's $\sigma^2$ is $\sigma_*^2$ of G; $\theta^{*2}_{\min}=\min_{j\in S_0}\theta^{*2}_j$.
    The card's BM-∞ "$\theta^{*2}_{\min}n\phi_0^2/(\sigma^2\log n)\to\infty$" is the record's BM-∞ with
    $M_n:=\theta^{*2}_{\min}n\varphi_0^2/(\sigma_*^2\log n)$.
@@ -114,7 +121,7 @@ Assembly). §3 (Prop. D), Prop. E3 and §5 (T02(ii♯)) are not used by T03♯ a
 
 | consumed result | where used in PROOF.md | labels | status (verbatim) and source |
 |---|---|---|---|
-| **[P1]** T01 (locked) | den′ (`:89-91`), T02(i♯) proof (`:93-97`) | `lem:spec`(b),(e), `lem:prior`(a)–(d), `lem:chi`, `lem:slab`/`lem:IGint` via `lem:den`, `thm:T01iii`, `thm:Ta` | SOP:TH09 row: "T01–T03: PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY" (`sources/statement/registry_theory_main_L68.tsv`); NBH TH121: "PROVED-LOCKED (wave 3; statement checker approved; two review rounds, both reviewers verified; external OpenAI review queued); MEET-THM flag SAME-FAMILY-ONLY" (`Theory_work/Old_Projects/New_BVS_Headquarters/ID_REGISTRY.md` TH121) |
+| **[P1]** T01 (locked) | den′ (`:89-91`), T02(i♯) proof (`:93-97`) | setting and `eq:UX` (`PROOF_v3.tex:40-58`); `lem:slab`, `lem:IGint`, `lem:spec`(a)–(e), `lem:prior`(a)–(d), `lem:chi`; `prop:closed` (with `eq:m`, `eq:mc`), `thm:T01i`, `thm:T01ii`, `thm:T01iii`, `thm:Ta`. Transfer chain: `thm:Ta` ← `thm:T01i`, `thm:T01ii`; `thm:T01i` ← `prop:closed` ← `lem:slab`, `lem:IGint` | SOP:TH09 row: "T01–T03: PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY" (`sources/statement/registry_theory_main_L68.tsv`); NBH TH121: "PROVED-LOCKED (wave 3; statement checker approved; two review rounds, both reviewers verified; external OpenAI review queued); MEET-THM flag SAME-FAMILY-ONLY" (`Theory_work/Old_Projects/New_BVS_Headquarters/ID_REGISTRY.md` TH121) |
 | **[P1]** T02(i) machinery (locked) | den′, T02(i♯) | `lem:num`, `lem:den` (body, without its last factor) | NBH TH122: "PROVED-LOCKED (wave 3; statement checker approved; two review rounds, both reviewers verified; external OpenAI review queued); MEET-THM flag SAME-FAMILY-ONLY; the (i) form is superseded for use by TH125 (T02(i-sharp))" |
 | **[P3]** T03 (locked) | (C1)–(C10), Assembly | `lem:red`, `lem:smoother`, `cor:diff`, `lem:det`, `lem:prior`, `lem:signal`, `lem:chi`, `lem:Gprob`, `lem:ongood`(a)–(d), `lem:onesup`, `prop:sup`, `lem:SvsSp`, `lem:signalgain`, `lem:assemble`, eqs `eq:mn`, `eq:score`, `eq:tail`, `eq:kappa`, §`sec:main` paragraphs (i)–(v) | NBH TH123: "PROVED-LOCKED (wave 3; statement checker approved; two review rounds, both reviewers verified; external OpenAI review queued); MEET-THM flag SAME-FAMILY-ONLY; numerical check 1958/1958; statement unchanged; conditional on H-T02 which T02(i) closes" |
 | T02(i♯) | (C9) | `PROOF.md` §2 | inside the proof under review; checked here (NBH TH125: "PROVED (candidate) (W1-T03R); SF VERIFIED (W2-VT03R row 10); XF VERIFIED (A-REV2 section 2: den-prime and T02(i-sharp); quantifier is sup_m P, not P(sup_m)); final card C9: PROVED, SF/XF VERIFIED") |
@@ -126,4 +133,9 @@ the changed steps, so that no consumed step stays below a cross-family check.
 ## 6. Changelog (v4 §4.2)
 | version | clause | tag | reason | trigger | check |
 |---|---|---|---|---|---|
-| 1.0 | all | — | initial restatement for the lock | — | SL1 (pending) |
+| 1.0 | all | — | initial restatement for the lock | — | SL1 |
+| 1.1 | R1 ($A$), §0, §4 item 3 | EQUAL vs the record (v1.0's added $A\ge1$ removed; v1.0 was more restrictive than the record) | SL1 req. 1 (CRITICAL, F): the record says "$A$ fixed"; source discrepancy exposed, same-$A$ check assigned to the line checks | `reviews/SL1_statement_lock_sol.md` req. 1 | text applied as SL1 required; LC-A/B/C |
+| 1.1 | §5 consumes ([P1]) | EQUAL (record only) | SL1 req. 2 (MAJOR, E): transitive [P1] dependencies of `thm:Ta`, `lem:den` listed | SL1 req. 2 | LC-A covers them |
+| 1.1 | §2 $m^\sharp_n$ | EQUAL | SL1 req. 3 (MINOR, E): "$\le K$" only for $n$ with $s_0\le K$ | SL1 req. 3 | text applied as SL1 required |
+| 1.1 | §4 item 4 ($p=1$) | EQUAL vs the record (no $p\ge2$ hypothesis) | SL1 check 2: $p=1$ specialization works under $s_0\ge1$ | SL1 checks §2 | LC-A/LC-C record it |
+| 1.1 | clause 5; §3 scope | EQUAL | SL1 optional 2, 3: scaling letter $d$; pointer to the record's mandatory scope paragraph | SL1 opt. 2, 3 | editorial |

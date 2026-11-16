@@ -28,3 +28,7 @@
 - 2026-11-16 00:06 CST — Briefs for LC-A, LC-B, LC-C saved in `reviews/` (before launch). The API slips go in as
   named points (LC-A N1–N3, LC-B N1–N2, LC-C N1), and the lead adds points of their own. Launch waits on the SL1 lock.
   Heartbeat: SL1 still running (Codex queue).
+- 2026-11-16 01:24 CST — SL1 returned: LOCK WITH CHANGES (CRITICAL 1 F: drop the added A ≥ 1, check at the recorded A;
+  MAJOR 1 E: [P1] transitive deps of thm:Ta / lem:den; MINOR 1 E: m♯_n ≤ K only when s₀ ≤ K). All accepted, plus 3 optional
+  suggestions. p = 1: SL1 rules that no hypothesis is needed. STATEMENT v1.1 LOCKED (sha a2e399a8…). PLAN and LC briefs updated
+  (same-A and p = 1 named points). Disposition: `reviews/SL1_disposition.md`. Settled the SL1 reviewer (finished).

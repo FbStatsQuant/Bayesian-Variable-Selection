@@ -1,5 +1,7 @@
 # BRIEF — line check LC-B (seat: Codex gpt-6.1-sol, reasoningEffort high) — anchored eigenvalues and supersets; new agent, blind
 
+**Object:** `STATEMENT.md` v1.1 (LOCKED), sha256 a2e399a8d30873713a950f5c16de58614901dbf6f8ad9d6e40285f8556ae6bef; `sources/W1-T03R/PROOF.md` sha256 1497376391655759bb8d0479b4f344c10f3c9e1a476182cd1881ee28868e9bd4.
+
 **Write exactly one file:** `Theory_work/Wave3/W3-T03ACC/reviews/LC_B_line_check_sol.md`.
 
 ## Your batch (proof under review: `sources/W1-T03R/PROOF.md`)
@@ -23,6 +25,10 @@
 - **N3.** (C2)/(C3)/(C4): [P3] states `lem:ongood`(a),(b),(d) and (G1),(G2) "under SE". Confirm from their proofs that
   no eigenvalue condition is used, and that (G2) covers |T| ≤ m♯_n + s₀ as (C4) needs.
 - **N4.** (C5)(b): with g₀ fixed, is q_n ≤ ½ placeable in n₀, and is q_n² = c_q² r_n² · n/(n+1) · e^{2ε_n}/4 right?
+- **N5 (same A).** The record allows any fixed $A$ (STATEMENT §4 item 3); the inherited bundles say $A\ge1$. Check
+  every step of the batch at the recorded $A$, with $j_0$, $C_*$, $c_0$ as defined at that $A$: in particular the
+  polynomial union bounds of [P3] `lem:Gprob` (`PROOF_v2.tex:190-194`), $C_m$ in `eq:mn`, and (C1). Does any step use
+  $A\ge1$ (or $p\ge n$, or $\log p\ge\log n$)? If yes, name the line and whether it is repairable locally.
 
 ## Rules (common to LC-A, LC-B, LC-C)
 You are an independent, blind line checker for theory ticket W3-T03ACC of the SMC-BVS project. This file is your whole

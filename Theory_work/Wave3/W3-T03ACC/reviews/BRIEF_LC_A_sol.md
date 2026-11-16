@@ -1,5 +1,7 @@
 # BRIEF — line check LC-A (seat: Codex gpt-6.1-sol, reasoningEffort high) — size tail; new agent, blind
 
+**Object:** `STATEMENT.md` v1.1 (LOCKED), sha256 a2e399a8d30873713a950f5c16de58614901dbf6f8ad9d6e40285f8556ae6bef; `sources/W1-T03R/PROOF.md` sha256 1497376391655759bb8d0479b4f344c10f3c9e1a476182cd1881ee28868e9bd4.
+
 **Write exactly one file:** `Theory_work/Wave3/W3-T03ACC/reviews/LC_A_line_check_sol.md`.
 
 ## Your batch (proof under review: `sources/W1-T03R/PROOF.md`; definitions at `:9` and STATEMENT §1)
@@ -10,7 +12,7 @@
 | E2(i) | `PROOF.md:49-59` (statement `:52`, proof `:59`) | E2(ii),(iii), E3 (`:63-70`) are not used by T03♯: confirm by reading `:160-207`, do not check them |
 | Lemma den′ | `PROOF.md:89-91` | extracted from the **proof** of [P1] `lem:den`, not its statement: re-derive it from `PROOF_v3.tex:324-361` |
 | Theorem T02(i♯) and its proof | `PROOF.md:74-101` | the quantifier is sup_m P₀(·); the consequence for deterministic ω_n |
-| [P1] consumed results | `sources/P1/PROOF_v3.tex`: §1 setting `:40-59`; `lem:slab`, `lem:IGint`, `lem:spec`, `lem:prior`, `lem:chi` `:60-152`; `prop:closed`, `thm:T01i` `:153-210`; `thm:T01ii` `:213-222` (used by `thm:Ta`); `thm:T01iii` `:232-252`; `thm:Ta` `:253-268`; `lem:num`, `lem:den`, `thm:T02i` `:313-384` | check each proof; `thm:T01iv`, `thm:Tb1`, `thm:Tb` and §T02(ii) (`:385-476`) are **not** in this batch |
+| [P1] consumed results | `sources/P1/PROOF_v3.tex`: §1 setting `:40-59`; `lem:slab`, `lem:IGint`, `lem:spec`, `lem:prior`, `lem:chi` `:60-152`; `prop:closed`, `thm:T01i` `:153-210`; `thm:T01ii` `:213-222` (used by `thm:Ta`; chain `thm:Ta` ← `thm:T01i`, `thm:T01ii`; `thm:T01i` ← `prop:closed` ← `lem:slab`, `lem:IGint`); `lem:spec`(a)–(e) all count ((c) is used inside `lem:den`); `thm:T01iii` `:232-252`; `thm:Ta` `:253-268`; `lem:num`, `lem:den`, `thm:T02i` `:313-384` | check each proof; `thm:T01iv`, `thm:Tb1`, `thm:Tb` and §T02(ii) (`:385-476`) are **not** in this batch |
 
 ## Named points to check (the lead asks for an explicit answer on each)
 - **N1.** `PROOF.md:9` says "for p = 1 every statement below is trivial or void". E1(b) and E2(i) divide by p − 1. Is the
@@ -21,6 +23,8 @@
   only for 0 ≤ k ≤ p. For m < 0 the sum must be read with lower limit max(m + 1, 0) (STATEMENT §2), i.e.
   R_m = ϖ(Ω)/ϖ(S₀). Does T02(i♯) hold for every integer m under that reading, and is the sup over m affected?
 - **N3.** E2(i)'s side condition (n ≥ 5 if s₀ = 0): irrelevant under STATEMENT's s₀ ≥ 1? Confirm.
+- **N4 (same A).** STATEMENT §4 item 3: the record allows any fixed $A$. Does any step of this batch (including [P1])
+  use $p\le n^A$ or $A\ge1$? (`PROOF.md:99` says $p\le n^A$ is not used by T02(i♯): confirm.)
 
 ## Rules (common to LC-A, LC-B, LC-C)
 You are an independent, blind line checker for theory ticket W3-T03ACC of the SMC-BVS project. This file is your whole
