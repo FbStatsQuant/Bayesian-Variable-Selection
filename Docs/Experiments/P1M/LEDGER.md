@@ -21,6 +21,6 @@ Rules:
 | 2026-11-15 22:00 CST | pmath bind check, rerun 3 | exploratory | 2747666 | 0.5 | 0.04 | COMPLETED (75 s; 7/9 hashes equal; log1p, expm1 differ, unused by core) |
 
 | 2026-11-16 00:2x CST | pmath check 2 (PR #15 5e3d5bf: + expl/logl rows) on SPR | exploratory | 2747875 | 0.5 | 0.05 | COMPLETED (83 s; expl/logl equal; all 8 guarded rows match) |
-| 2026-11-16 00:3x CST | WP3 class-A island bench on SPR (820bd30; p = 10⁴ adaptive + geo:30 at 24/48/96 threads; p = 10⁵ at 48/96; 96 CPUs, 12 min) | exploratory | 2747881 | 19.2 | — | submitted |
+| 2026-11-16 00:3x CST | WP3 class-A island bench on SPR (820bd30; p = 10⁴ adaptive + geo:30 at 24/48/96 threads; p = 10⁵ at 48/96; 96 CPUs, 12 min) | exploratory | 2747881 | 19.2 | 19.5 | TIMEOUT at 12 min (p = 10⁴ runs complete; p = 10⁵ not reached) |
 
 **Totals:** actual 0.883 · reserved (worst case, open) 49.5 · remaining ≈ 24,543 (admission check: 0 + 57.0 ≤ the G0 cap of 71.5 and ≤ the envelope).
