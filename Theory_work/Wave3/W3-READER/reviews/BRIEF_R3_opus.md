@@ -43,3 +43,5 @@ You must give `gates=FAIL` if you hold a C, S or F finding.
 End the review with exactly ONE line of its own:
 COUNCIL-VERDICT round=R3 manifest=7aebdf2eb126058719114df656d0eaf416adb1ae3d21138cb11b51d7075d2263 seat=opus score=<x.y> gates=PASS|FAIL
 Write no other line containing that verdict keyword. If you did not review exactly this manifest, write `gates=FAIL`.
+
+**Lead note (HQ condition 2):** GUARD-W for Theorem 7 / row 3.2 — included: Theorem 7 concludes that every admissible run that produces output reports $S_0$ and, under (S4), that the run produces output with probability one, so its conclusions are about run output (same criterion as row 3.1).
