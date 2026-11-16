@@ -151,3 +151,4 @@
 - 01:20 — SCR PC check: A1-SUBSTANTIVE (scope restriction, proof valid) → escalated (D55); reviewer settled.
 - 01:20 — HQ: row 3.7 → consultant (H5 card 7). Recorder task M = dry run of honest SCR:A1 record (WEAKER note + PC evidence; A4 sweep; no real run). READER prepares row 3.7 in both placements. SCR-R1 stays post-freeze.
 - 01:23 — card 7 verdict (D56): W3-SCR-R2 round launched (child coordinator); interim SCR label → recorder real run; READER prepares 3.7 forms (a)/(b).
+- 01:24 — HQ: D56 items approved; W3-SCR-R2 outside the lead cap; Codex order DIST > riders > T03ACC > SCR-R2 (coordinator told).
