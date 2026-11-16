@@ -29,8 +29,8 @@ CP3 acceptance, headline cards (H5), merges and API submission.
   push those branches, and add snapshot cron lines using `~/.config/bvs-hq/snap/snapshot_ticket.sh` (commit-in-place mode
   `SNAP_WT=1` when the lead works inside its worktree; read the script header first).
 - You never push to `main` or force-push, and you never touch other departments' folders or branches.
-- Launch ticket leads as top-level threads (`t3_thread_launch` on Owls, project "SMC - BVS", existing_worktree) on
-  **Claude Third**:
+- Launch ticket leads as **your child agents** (`delegate_task`, provider `claudeAgent_claude_third`, with the ticket worktree);
+  a top-level thread only for a large independent theorem (POLICIES.md §10). On **Claude Third**:
   - Opus 5.5 high by default;
   - Fable 5.2 only for a new hard key lemma, after you tell HQ why.
 - Reviewers on codex (Sol / Astra, high), per PROTOCOL_v4 NORMAL mode. At most **3 ticket leads running at once**

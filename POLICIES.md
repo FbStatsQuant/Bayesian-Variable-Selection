@@ -170,3 +170,12 @@ A request (from the manager to HQ, ≤ 10 lines) states:
 - what happens if it is declined.
 
 HQ adds its recommendation and forwards it to the owner the same day. Nothing expensive starts before the owner's answer.
+
+## 10. Threads and agents (owner, 2026-11-15)
+- **Departments are the only top-level threads.** A department runs its leads, helpers, reviewers and experts as **its
+  own child agents** (`delegate_task` from the department thread), so they stay inside the department and out of the
+  owner's sidebar.
+- A separate top-level thread is allowed only for a large, independent piece of work: an independent headline theorem,
+  or a multi-day campaign the owner may want to talk to directly. The manager says why when launching it.
+- Threads already running as top-level finish where they are, no relaunch. Close them when done (settle or archive).
+  New work follows this rule.
