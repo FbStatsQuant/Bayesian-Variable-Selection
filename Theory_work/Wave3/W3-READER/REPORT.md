@@ -43,7 +43,7 @@ claim: W3-READER:R4 | kind: lemma | statement: lemmas/R4_printed_outputs.md:1-49
 name: Lemma R4 (printed PIPs, MPM, HPM and evidence estimate are consistent: assembly)
 status: PROVED (by this seat, unchecked) | status_source: lemmas/R4_printed_outputs.md:3
 conclusion: rate: 1_A max(o0, o1) = O_P(n^{-1/2} exp(C_R sqrt(log n))); hence Zhat/Z - 1, log Zhat - log Z, ||pip_primary - 1_S0||_inf = O_P(that) on A; P(A and MPM != S0) -> 0; P(completed and Shat != S0) -> 0 | scope: Gaussian rows, standardised-signal convention, Q = S0 (no leakage outside the true model, e.g. independent predictors; AR and block designs not covered)
-depends_on: W3-SAMP:C@1.1.3 ; W3-START2:IF-START@1.0.0 ; W3-START2:START-R@1.0.0 ; W3-POST:Thm-1@1.0.0 ; W2-APP:POST@1.0.6
+depends_on: W3-SAMP:C@1.1.3 ; W3-START2-R:IF-START@1.0.0 ; W3-START2-R:START-R@1.0.0 ; W3-POST:Thm-1@1.0.0 ; W2-APP:POST@1.0.6
 gates: correct:PENDING(bridge-leg Sol line check)
 ```
 

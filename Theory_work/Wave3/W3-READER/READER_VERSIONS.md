@@ -29,9 +29,10 @@ PROVED-CHECKED is called checked; "conditional on …" is carried.
 (S2) Asymptotics: $n\to\infty$, $p=p_n$ with $2\le p\le n^A$ for a fixed $A\ge1$ ($p\gg n$ allowed).
 (S3) "The method" means the method as coded, under the standing conventions of `NOTATION.md` §5 (exact arithmetic,
 shipped configuration, admissible runs). (S3) matters only for Theorems 5–8.
-(S4) *Delivery conventions* (used only by the "always produces output" clauses of Theorems 6–7) [S1-F2, S2-F1, FUNI-N] — the
+(S4) *Delivery conventions* (used only by the "always produces output" clauses of Theorems 6–7) [S1-F2, S2-F1, FUNI-N, RM2R-1] — the
 delivery contract of the method, incorporated by reference and stated here in words: (i) *idealised machine*: exact
-arithmetic at unit cost (including exp and log); no integer, index, stream-id or allocation overflow; wall time at most
+arithmetic at unit cost (including exp and log); no integer, index, stream-id or allocation overflow, and the two fixed
+integer limits of the code named below the delivery display of Theorems 6–7 are idealised (IDEAL-W⁺) [RM2R-1, RM2R-5]; wall time at most
 $\tau\cdot(\text{operation count})+\tau_0$ and peak memory at most $\beta\cdot(\text{words held})+\beta_0$ for fixed constants
 $(\tau,\tau_0,\beta,\beta_0)$; every allocation within the declared memory succeeds; the build and its dependencies work; no
 external interruption or worker crash; (ii) *covered configuration*: the production core with the local search from the
@@ -42,24 +43,19 @@ summaries only; certificate computations with declared polynomial operation and 
 allocation; serial execution or a fixed number of concurrent workers (memory envelope multiplied by that number); fixed
 number of islands; the grid fallback switched on (shipped default); (iii) *random numbers and stops*: ideal independent
 uniform random numbers; the method's stop/return rule and stop-only resource guard as coded (a stopped run returns no
-estimates); (iv) *inputs and allocation*: a valid seed (integer in $[1,2^{31}-1]$) and a declared memory and time
+estimates); (iv) *inputs and allocation*: a valid non-degenerate input (finite data, response of length $n$ and not constant, at
+least one non-constant predictor column; a single seed, an integer in $[1,2^{31}-1]$) [RM2R-1] and a declared memory and time
 allocation $(\mathrm{mem}_n,\mathrm{time}_n)$ at least the method's explicit polynomial work and memory envelopes in
 $(n,p_{\mathrm{raw}})$, including the preflight bounds and the local-search archive and time bounds (stated in full in the
-paper's appendix); (v) *the code's two fixed integer limits* [FUNI-N]: a run is rejected when the local-search base cap
-$\ell_n=\lceil\log_2(n+p+1)\rceil$ exceeds a fixed ceiling, or when the start-mode cap $\ell_n+|\tilde S_0|$ exceeds the integer
-range. Under (i)–(iv), with no further idealisation, the "always produces output" clauses hold on the bounded domain
-$\mathfrak D$ of $(n,p_{\mathrm{raw}})$ on which neither limit is reached; they hold for every $n$ under **IDEAL-W⁺**: the
-idealised machine of (i) with these two limits lifted, everything else (other validators, the start-mode enumeration
-cap and its fallback, every method cap) kept as coded. Plain (i) does not give every-$n$ delivery. These are
-operational assumptions, not consequences of (S1)–(S3) or of any design condition.
-*Source of record:* `Theory_work/Wave1C/C-DLV/STATEMENT.md:21-46` (IDEAL-W, EX-A as a cost model, MACH, CONFIG,
+paper's appendix). These are operational assumptions, not consequences of (S1)–(S3) or of any design condition.
+*Source of record (shipped method):* the delivery premises (D) with IDEAL-W⁺ of `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:71-93`,
+whose lemma DLV-0 re-audits the code as pinned [RM2R-2]; they take over, with the two additions above, the premises of
+`Theory_work/Wave1C/C-DLV/STATEMENT.md:21-46` (IDEAL-W, EX-A as a cost model, MACH, CONFIG,
 TDP-IMPL, valid inputs, declared allocation) and the amended allocation of `Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:29-62`
-($W_G$, $M_G$, $P_0$, $P_1$, $\bar P_t$, certificate budgets, the LS0 preflight addition), as imported by
-`W2-UNI:F-UNI@1.1.0` (`L5_delivery.md:7-12`). (v): `Scripts/SMC_BVS/core/v3_run.R:96` (`le > 10^6`) and
+($W_G$, $M_G$, $P_0$, $P_1$, $\bar P_t$, certificate budgets, the LS0 preflight addition). The two limits: `Scripts/SMC_BVS/core/v3_run.R:96` (`le > 10^6`) and
 `cpp/v3_core.cpp:474` (`cap_ll > INT_MAX`); $\mathfrak D:=\{(n,p_{\mathrm{raw}}):\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$
 (sufficient, not necessary); A:IDEAL-W⁺ as defined in `reviews/carriers/A_IDEALW_PLUS.md` (verbatim copy of
-dept/theory fc30c749 `Theory_work/Dept/research/FUNI_NARROW/A_IDEALW_PLUS.md`); F-UNI narrowed to `@2.1.0` (every $n$ under
-A:IDEAL-W⁺; $\mathfrak D$ under IDEAL-W; recorder task S2) [FUNI-N]. The two limits in words: the sentence [RM2R-5] after the
+dept/theory fc30c749 `Theory_work/Dept/research/FUNI_NARROW/A_IDEALW_PLUS.md`). The two limits in words: the sentence [RM2R-5] after the
 delivery displays of Theorems 6 and 7.
 (S5) *Sampler conventions* (used only by Theorem 10 and the pooled-evidence remark) [R4, S2-F2] — the sampler contract,
 incorporated by reference and stated in words: exact arithmetic; within each random stream, fresh independent ideal
@@ -659,7 +655,7 @@ abstract.
 
 ## 6. Theorem 6 — The reported model equals the truth (random Gaussian design; main theorem)
 <!-- ROW thm6 BEGIN -->
-**Card row** 3.1 · **Section version** 0.7 (2026-11-16) · **Pending delta** —
+**Card row** 3.1 · **Section version** 0.8 (2026-11-16) · **Pending delta** — (RM2-R rider merged, v0.8)
 
 
 ### Reader statement
@@ -688,15 +684,17 @@ $b\in(0,\tfrac12)$ and $\rho>0$ with $15\rho+b<\tfrac12$. Assume
 
 Then, under the joint law of design and noise, there are data events $\mathcal G_n$ with $P(\mathcal G_n)\to1$ on
 which **every** admissible run that produces output reports $\hat S=S_0$, whatever its seed and the outcome of its
-internal calibration; in particular $P(\text{output and }\hat S\neq S_0)\to0$. If moreover the delivery conventions (S4)(i)–(iv) hold [S1-F2], $P(\text{the run produces output})=1$ for every admissible
-$n\ge3$ with $(n,p_{\mathrm{raw}})$ in the bounded domain $\mathfrak D$ of (S4)(v), where the code's two fixed integer limits are not
-reached. If in addition IDEAL-W⁺ holds ((S4)(v): the two limits lifted),
+internal calibration; in particular $P(\text{output and }\hat S\neq S_0)\to0$. If moreover the delivery conventions
+(S4) hold [S1-F2, RM2R-1],
 $$
 P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad P(\hat S=S_0)\to1 .
 $$
-The delivery statement idealises two fixed integer limits in the code (a base search cap of $10^6$, `v3_run.R:96`, and a 32-bit integer bound $2^{31}-1$ on the search cap, `cpp/v3_core.cpp:474`): the first can bind only when $n+p+1$ exceeds $2^{10^6}$, the second only when the starting model has more than about $2.1\times10^9$ variables, which needs $n\gtrsim4.3\times10^9$ since $|\tilde S_0|\le\lfloor n/2\rfloor$; without the idealisation, delivery holds on the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, and with it (IDEAL-W⁺) for every $n$ [RM2R-5].
+The delivery statement idealises two fixed integer limits in the code (a base search cap of $10^6$, `v3_run.R:96`, and a 32-bit integer bound $2^{31}-1$ on the search cap, `cpp/v3_core.cpp:474`): the first can bind only when $n+p+1$ exceeds $2^{10^6}$, the second only when the starting model has more than about $2.1\times10^9$ variables, which needs $n\gtrsim4.3\times10^9$ since $|\tilde S_0|\le\lfloor n/2\rfloor$; without the idealisation, delivery holds on the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, and with it (IDEAL-W⁺) for every $n$ [RM2R-5]. Neither limit can bind unless $n+p+1>2^{10^6}$ or $n\gtrsim4\times10^9$, that is, at no feasible problem size [RM2R-6].
 
-*Remarks.* (i) On $\mathcal G_n$ the local search from the start mode only deletes the spurious members of the start
+*Remarks.* (o) [RM2R-3] Under (S4), for every seed and calibration outcome,
+$P(\hat S\neq S_0)\le P(S_0\text{ is not the unique maximiser of the score})+P(\text{the local search from the start mode
+does not reach }S_0)$. *(Interpretation, not part of the theorem [D71]: the two terms are the posterior-mode error and the
+search error.)* (i) On $\mathcal G_n$ the local search from the start mode only deletes the spurious members of the start
 mode, one per move, at most $n^b$ moves, and certifies $S_0$; its move cap never binds. (ii) The polylogarithmic case
 $|Q|\le(\log n)^{\kappa}$ is a special case (the earlier version of the theorem). (iii) Examples (never hypotheses):
 metric-local correlation, polynomial correlation decay of exponent $\alpha>2$ (example status unchecked), one-factor
@@ -718,6 +716,14 @@ blocks.
   other way, no-addition fails w.p. $\to1$). Not known to be necessary for the conclusion.
 
 ### Master theorems
+0. [RM2R-2] `W3-RM2-R:RM2-R-plus@1.0.0`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:177-182` (same hypotheses as RM2-R; conclusion
+   adds [MODE] and, under (D), delivery and $P(\hat S=S_0)\to1$ with the error split), status verbatim **"PROVED-CHECKED, conditional on C-DLV:L2-S3, C-DLV:P1-Inventory; council R3, MANIFEST 5d6d3c90… (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS"** (main 5d3a8a70, task V) [REG-5d3a]; the two conditions are code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`, each "AUDITED (code reading)"), which DLV-0 takes as hypotheses [RM2R-7].
+   With `W3-RM2-R:RM0-plus@1.0.0` (`STATEMENT.md:118-143`, mode form of the core) and `W3-RM2-R:DLV-0@1.0.0` (`STATEMENT.md:144-163`,
+   deterministic delivery at the pinned code), each with the same status verbatim. RM2-R-plus implies RM2-R
+   (`W3-RM2-R:Cont-plus@1.0.0`, same status); the supersession is not applied (deferred post-freeze), so `W3-RM2:RM2-R` stays ACTIVE.
+   **Conditions of the row (current master) [RM2R-7]:** the posterior input (through `W2-APP:POST`, itself conditional on
+   T03♯) and two code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`); the recording shows
+   `W3-RM2-R:RM0-plus`, `RM2-R-plus` and `Cont-plus` with the latter two conditions.
 1. `W3-RM2:RM2-R@1.0.2`, `Theory_work/Wave3/W3-RM2/STATEMENT.md:216-218` (assumptions :172-202), status verbatim
    **"PROVED-CHECKED, conditional on W2-APP:POST; input versions W2-APP:POST@1.0.1; council R1, MANIFEST 00bbeab8…,
    astra=9.5 PASS, opus=8.8 PASS; …"**. Its input `W2-APP:POST@1.0.6` is "PROVED-CHECKED, conditional on SOP:TH09" [REG-33e1], so row 3.1 is conditional on
@@ -732,11 +738,15 @@ blocks.
    (`L5_delivery.md:39-40`): "[OP] "PROVED (by this seat, unchecked)"; e4 rests on N3, "OPEN" (only "some maximiser" is
    used for consistency; delivery keeps e4 with TDP-IMPL as in Proposition F); S.3 is a code-reading audit." [R3]
    **Narrowing [FUNI-N]:** F-UNI is NARROWED to `@2.1.0` (recorder task S2; Dept FUNI_NARROW, Sol DIFF PASS @fc30c749):
-   delivery for every $n$ under A:IDEAL-W⁺, and on the bounded domain $\mathfrak D$ under IDEAL-W. The delivery sentences above
-   follow the narrowed statement. **Requote F-UNI from `claims.tsv` once S2 lands (commit from the manager); nothing that
-   quotes F-UNI is frozen before that.**
+   delivery for every $n$ under A:IDEAL-W⁺, and on the bounded domain $\mathfrak D$ under IDEAL-W. The v0.7 delivery
+   sentences followed the narrowed statement; from v0.8 they follow item 0 (RM2R-5 sentence). F-UNI requoted from
+   `claims.tsv` at the freeze (history only).
    **Abstract [H5-2]:** the delivery clause ("always produces output; $P(\hat S=S_0)\to1$") stays out of the abstract
    until the F-UNI gate is resolved; the abstract states the common-data-event clause.
+   **Method drift [RM2R-2, HQ D74]:** `C-DLV:Prop-F`'s method uses the LS0 move cap $\ell_n$, not the shipped cap
+   $\ell_n+|\tilde S_0|$, so the delivery bridges through Prop-F and F-UNI (B6.6) were not about the shipped
+   configuration as registered. Delivery for the shipped method rests on `W3-RM2-R:DLV-0` (item 0); items 1–3 are kept
+   as the history of the row. The abstract still leads with the common-data-event clause (H5 card 14).
 
 ### Bridges
 | # | Bridge | Mark | Detail |
@@ -747,6 +757,7 @@ blocks.
 | B6.4 | (D-loc^b) ⇒ (D-R^b) ⇒ (W-R) | EXISTS-CHECKED | `W3-RM2:D-to-W@1.0.0`, "PROVED-CHECKED; council R1, …" (STATEMENT.md:256, (C3)/(P9)). |
 | B6.5 | (T1-R) ⇒ posterior input [POST] | EXISTS-CHECKED, conditional | `W3-RM2:POST-R@1.0.2`, "PROVED-CHECKED, conditional on W2-APP:POST; …" ⇐ B2.2 (EXISTS-CHECKED, conditional on SOP:TH09; main 33e1f0f5) [S4-F1]. |
 | B6.6 | RM2-R conclusions ⇒ F-UNI premises (S), (P), (V); F-UNI's operational premises carried as (S4) | **NEW** (assembly; (V)/(S)/(P) part passed S1) | (S): $P(\mathrm{Sand}\cap\mathrm{NA}\cap\mathrm{TL})\ge1-\sum P(\cdot^c)\to1$ from [SAND(Q)], [NA(Q)], [TL(Q)]; (P) = [POST]; (V) = "(R) with $\lambda_{\min}(\Sigma_n)>0$". LS0 cap and default-on tier-1 fallback match (`v3_calib.R:141-144`). F-UNI's method/premise/allocation paragraph (`L5_delivery.md:7-12`: EX-A as cost model, IDEAL-W, EX-S, SR, e4/TDP-IMPL, GUARD-W, MACH, CONFIG, valid seed, allocation and preflight inequalities at $(n,p_{\mathrm{raw}})$; P1/S.3 "AUDITED (code reading)") is **not derived**: it is carried as (S4) [S1-F2]. Premise-by-premise table: proof leg (`lemmas/R3_delivery_assembly.md`). |
+| B6.6′ | (S4) ⇔ delivery premises (D) of RM2-R-plus; RM2-R-plus's conclusions are the reader conclusions | identity [RM2R-2] | (S4)(i)–(iv) state in words `W3-RM2-R/STATEMENT.md:71-93` (IDEAL-W⁺, EX-A, MACH, CONFIG at the shipped configuration, TDP-IMPL, allocation 𝒜_n, valid non-degenerate input). No assembly with F-UNI is needed; B6.6 is kept for the record and superseded by B6.6′ for the shipped method. Needs one line check with the bridges leg. |
 | B6.7 | standardised-signal convention | limit | The masters take $\theta^*$ deterministic (Setting R). A raw-scale version (fixed $\beta^*$) would need a **NEW** bridge (medium; the population conditions involve $\theta^*$). Not proposed for CP1. |
 
 **Proof of B6.3.** Fix $l$ and $T$ in the lattice with $l\notin T$, put $A:=T\cap N_l\subseteq T$ and
@@ -783,29 +794,38 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 - v0.7 2026-11-16: [FUNI-N] delivery clause narrowed with F-UNI 2.1.0: bounded domain $\mathfrak D$ under (S4)(i)–(iv), every $n$
   under IDEAL-W⁺ ((S4)(v)); F-UNI narrowing to 2.1.0 noted; sentence [RM2R-5] added after the display. Tag: **WEAKER** for the delivery clause (follows the
   master's narrowing); common-data-event clause EQUAL.
+- v0.8 2026-11-16: [RM2R-1..3, RM2R-7] RM2-R rider (READER_DELTA v-next e78a1055) (statuses verbatim, main 5d3a8a70 [REG-5d3a]) (W3-RM2-R CP3, HQ card 14). Master: RM2-R-plus + RM0-plus + DLV-0; method-drift
+  note; (S4) adds the two lifted code ceilings and the valid-input clause; error split as a remark. Tag **MIXED**:
+  STRONGER — the conclusion now has the mode form (RM0-plus) and its delivery clause is about the shipped configuration;
+  WEAKER — delivery needs IDEAL-W⁺ (two code ceilings lifted) and a narrower (valid, non-degenerate) input domain, and
+  the implication edge to `C-DLV:Prop-F` is withdrawn. Assumptions (A1)–(A6) EQUAL.
+  Supersedes the [FUNI-N] delivery wording of v0.7: delivery now rests on DLV-0 (method drift [D74]); (S4)(v) folded into (S4)(i) as IDEAL-W⁺, and $\mathfrak D$ is stated in the [RM2R-5] sentence.
 <!-- ROW thm6 END -->
 
 ---
 
 ## 7. Theorem 7 — The reported model equals the truth (fixed design)
 <!-- ROW thm7 BEGIN -->
-**Card row** 3.2 · **Section version** 0.5 (2026-11-16) · **Pending delta** RM2-F (rider T4, via Theory Dept)
+**Card row** 3.2 · **Section version** 0.6 (2026-11-16) · **Pending delta** — (RM2-F rider T4/T2 merged, v0.6)
 
 
 ### Reader statement (two sufficient versions)
 **Theorem 7.** Let the design be fixed, with non-constant raw columns [R3]. Assume
-- **(A1) Model and posterior conditions.** (S1), (S2), (S3); (A2)–(A5) of Theorem 1; and strong signals
-  $\theta^*_{\min}\sqrt{n/\log n}\to\infty$.
+- **(A1) Model and posterior conditions.** (S1), (S2), (S3); (A2)–(A5) of Theorem 1; and the beta-min
+  $\theta^*_{\min}\ge C_\beta\,\sigma_*\sqrt{\log n/n}$ with a fixed $C_\beta$ above an explicit constant depending on
+  $(s_0,A,M,\sigma_*^2,\varphi_0)$ (Remark (a)), or $\theta^*_{\min}\sqrt{n/\log n}\to\infty$ [RM2R-4].
 - **(A2) Floors.** $\lambda_{\min}(\hat R_T)\ge\varphi_0^2$ for every $T$ with $|T|\le16$ and for every
   $T=Q\cup\{l\}$, $l\in[p]$ ($Q$ as in (A4)).
-- **(A3) Visibility.** There is a deterministic $M_n\to\infty$ such that $\delta^2_{U,j}\ge M_n\log n$ for every
-  $j\in S_0$ and every $U\not\ni j$ with $|U|\le15$.
+- **(A3) Visibility.** There is a fixed $M_V$, larger than an explicit constant depending on $(A,M,\sigma_*^2)$
+  (Remark (a)), such that $\delta^2_{U,j}\ge M_V\log n$ for every $j\in S_0$ and every $U\not\ni j$ with $|U|\le15$
+  (large $n$) [RM2R-4].
 - **(A4) Bounded leakage.** There are a deterministic $Q\supseteq S_0$ (with $|Q|\le K$ and ($Q=[p]$ or
   $K\ge2|Q|+32s_0+1$) for large $n$) and a fixed $\eta\in[0,\eta_A)$, $\eta_A:=(\sqrt{2A+1}-\sqrt{2A})^2$, such that
   $\delta^2_{U,l}\le\eta\,\tau^2_U\log n$ for every $l\notin Q$ and every $U\not\ni l$ with $|U|\le15$.
 - **(A5) Size of the leakage set**, one of:
   (a) $|Q\setminus S_0|\le(1-\delta)\log n$ for a fixed $\delta\in(0,1)$; or
-  (b) $|Q|\le n^b$ with $b<\tfrac12-\tfrac\eta2-\sqrt{2A\eta}$; $\theta^{*2}_{\min}\,n/(|Q|+\log n)\to\infty$; and *local
+  (b) $|Q|\le n^b$ with $b<\tfrac12-\tfrac\eta2-\sqrt{2A\eta}$; $\theta^{*2}_{\min}\ge C_Q\,\sigma_*^2(|Q|+\log n)/(n\varphi_0^2)$ for a
+  fixed $C_Q$ above an explicit constant (Remark (a)) [RM2R-4]; and *local
   regressions*: for every $l$ a deterministic set $N_l\subseteq Q\setminus\{l\}$ with $|N_l|\le h\log_2n$, $h+b<\tfrac12$,
   and a deterministic $L_n\to0$ with $L_n^2\log(|Q|+1)=o(\log n)$, such that
   $\|\hat\beta_{T,l}-\hat\beta_{T\cap N_l,l}\|_1\le L_n$ for every $T$ with $S_0\subseteq T\subseteq Q$, $|T|<K$,
@@ -813,17 +833,24 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 
 Then there are data events $\mathcal G_n$, $P(\mathcal G_n)\to1$, on which every admissible run that produces output
 reports $\hat S=S_0$, for every seed and calibration outcome; in particular $P(\text{output and }\hat S\neq S_0)\to0$.
-If moreover the delivery conventions (S4)(i)–(iv) hold [S1-F2], $P(\text{the run produces output})=1$ for every admissible
-$n\ge3$ with $(n,p_{\mathrm{raw}})$ in the bounded domain $\mathfrak D$ of (S4)(v), where the code's two fixed integer limits are not
-reached. If in addition IDEAL-W⁺ holds ((S4)(v): the two limits lifted),
+If moreover the delivery conventions (S4) hold [S1-F2, RM2R-1],
 $$
 P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad P(\hat S=S_0)\to1 .
 $$
-The delivery statement idealises two fixed integer limits in the code (a base search cap of $10^6$, `v3_run.R:96`, and a 32-bit integer bound $2^{31}-1$ on the search cap, `cpp/v3_core.cpp:474`): the first can bind only when $n+p+1$ exceeds $2^{10^6}$, the second only when the starting model has more than about $2.1\times10^9$ variables, which needs $n\gtrsim4.3\times10^9$ since $|\tilde S_0|\le\lfloor n/2\rfloor$; without the idealisation, delivery holds on the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, and with it (IDEAL-W⁺) for every $n$ [RM2R-5].
+The delivery statement idealises two fixed integer limits in the code (a base search cap of $10^6$, `v3_run.R:96`, and a 32-bit integer bound $2^{31}-1$ on the search cap, `cpp/v3_core.cpp:474`): the first can bind only when $n+p+1$ exceeds $2^{10^6}$, the second only when the starting model has more than about $2.1\times10^9$ variables, which needs $n\gtrsim4.3\times10^9$ since $|\tilde S_0|\le\lfloor n/2\rfloor$; without the idealisation, delivery holds on the bounded domain $\mathfrak D=\{\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$, and with it (IDEAL-W⁺) for every $n$ [RM2R-5]. Neither limit can bind unless $n+p+1>2^{10^6}$ or $n\gtrsim4\times10^9$, that is, at no feasible problem size [RM2R-6].
+
+*Remarks* [RM2R-4]. (a) *Constants.* With $C_R:=3(M+\sigma_*^2)$ ($\|X\theta^*\|^2\le nM$): (A3) holds with any
+$M_V>(\sigma_*\sqrt{2A}+\sqrt{(2A+1)C_R})^2$; the clause of (A5)(b) holds as soon as
+$(n-1)\varphi_0^2\theta^{*2}_{\min}/\sigma_*^2\ge32(|Q|+1)+64\log(2p)+c\log n$ with a fixed $c>\max\{16,\,8(A+1)+4(2A+1)C_R/\sigma_*^2\}$;
+under (A5)(a) the beta-min of (A1) suffices with $C_\beta^2\varphi_0^2>\max\{c_0(s_0,A),\,8(A+1)+4(2A+1)C_R/\sigma_*^2,\,8(1+\sqrt{D/2})^2\}$
+for a fixed $D>2+4A$. These are proof constants, not sharp. (b) Under (S4), for every seed and calibration outcome,
+$P(\hat S\neq S_0)\le P(S_0\text{ is not the unique maximiser of the score})+P(\text{the local search from the start mode does not
+reach }S_0)$. *(Interpretation, not part of the theorem [D71]: posterior-mode error plus search error.)*
 
 ### Intuition for each condition (for the paper's text)
-- *Visibility (A3).* Each truth, added alone to any small model that misses it, explains $\gg\log n$ more signal —
-  more than the prior charges for one variable. So the start law, which judges variables block by block, never leaves a
+- *Visibility (A3).* Each truth, added alone to any small model that misses it, explains at least a fixed multiple of
+  $\log n$ more signal — more than the prior charges for one variable plus the largest noise gain among the $p$
+  candidates [RM2R-4]. So the start law, which judges variables block by block, never leaves a
   truth out.
 - *Bounded leakage (A4).* Outside $Q$, no column, added to any small model, explains more than a fraction $\eta$ of
   $\log n$ residual-variance units; such columns never look like signal and stay out of the start mode.
@@ -834,7 +861,12 @@ The delivery statement idealises two fixed integer limits in the code (a base se
 - *Floors (A2).* Regressions on blocks and on $Q\cup\{l\}$ are well posed.
 
 ### Master theorem
-`W3-RM2:RM2-F@1.0.0`, `Theory_work/Wave3/W3-RM2/STATEMENT.md:206-214` (assumptions :126-170), status verbatim
+[RM2R-2] `W3-RM2-R:RM2-F-plus@1.0.0`, `Theory_work/Wave3/W3-RM2-R/STATEMENT.md:166-176` (hypotheses §2 :95-112 and PARENT's;
+conclusion with [MODE] and, under (D), delivery and the error split; conditions of the row: T03♯ (`SOP:TH09`) and two
+code-reading audits of the delivery path, `C-DLV:L2-S3` and `C-DLV:P1-Inventory` [RM2R-7]), status verbatim **"PROVED-CHECKED, conditional on C-DLV:L2-S3, C-DLV:P1-Inventory; council R3, MANIFEST 5d6d3c90… (= R3 b06a8588 re-frozen as R3r), sol=9.5 PASS, opus=9.4 PASS"** (main 5d3a8a70, task V) [REG-5d3a]; the two conditions are code-reading audits of the delivery path (`C-DLV:L2-S3`, `C-DLV:P1-Inventory`, each "AUDITED (code reading)"), which DLV-0 takes as hypotheses [RM2R-7]; with `W3-RM2-R:RM0-plus`
+and `W3-RM2-R:DLV-0` as in §6. It implies the previous master (`W3-RM2-R:Cont-plus`), kept below for the record (supersession deferred post-freeze; `W3-RM2:RM2-F` stays ACTIVE).
+Method drift: as §6 [HQ D74].
+Previous master: `W3-RM2:RM2-F@1.0.0`, `Theory_work/Wave3/W3-RM2/STATEMENT.md:206-214` (assumptions :126-170), status verbatim
 **"PROVED-CHECKED, conditional on SOP:TH09; input versions SOP:TH09@1.0.0; council R1, MANIFEST 00bbeab8…, astra=9.5
 PASS, opus=8.8 PASS; …"**; with `W3-RM:RM-0@1.0.0` and `W2-UNI:F-UNI@1.1.0` as in §6 (input validity "(E) with
 nonconstant raw columns").
@@ -842,10 +874,15 @@ nonconstant raw columns").
 ### Bridges
 | # | Bridge | Mark | Detail |
 |---|---|---|---|
-| B7.1 | (A1) ⇒ (T1-F) | as B1.1–B1.4 (with BM-∞) | (T1-F) uses BM-∞ (RM STATEMENT.md:91-92). |
+| B7.1′ | (A1) ⇒ (T1-F♭) | identity + B1.1–B1.4 [RM2R-4] | (T1-F♭) = Theorem 1's (H0) with BM-∞ or BM(c), c > c₀ (`W3-RM2-R/STATEMENT.md:95-99`); (A1)'s constant exceeds c₀. Replaces B7.1. |
+| B7.2′ | (A5)(a) + (A1) ⇒ (BM-W⁺) | NEW (two lines; council-checked as READER_DELTA R7.2 of W3-RM2-R) | fixed $D>2+4A$, $d_n^2\le D\log n$ for large $n$; the strict constant of Remark (a); `W3-RM2-R/STATEMENT.md:107-112` (last sentence of (BM-W⁺)). Under $\theta^*_{\min}\sqrt{n/\log n}\to\infty$: (BM-W) ⇒ (BM-W⁺). |
+| B7.3′ | (A5)(b) signal clause (Remark (a) form) ⇒ (BM-Q♭) ⇒ (BM-W⁺) | identity | `W3-RM2-R/STATEMENT.md:107-112`; checked as R7.3 of W3-RM2-R. |
+| B7.4′ | (A3) = (V♭) | identity | `W3-RM2-R/STATEMENT.md:101-105`. |
+| B7.1 | (A1) ⇒ (T1-F) | as B1.1–B1.4 (with BM-∞) | (T1-F) uses BM-∞ (RM STATEMENT.md:91-92). Superseded by B7.1′ for the current master. |
 | B7.2 | (A5)(a) ⇒ (L-size^b) for every small $b>0$, (W) via (W-χ), (BM-W) = BM-∞ | EXISTS-CHECKED | `W3-RM2:W-suff@1.0.0` (C3)(c) "(W-χ) ⇒ (W-δ)"; (BM-W) reduces to BM-∞ when $d_n^2=O(\log n)$ (STATEMENT.md:137-139). $b<\beta(\eta,A)$ is possible because $\eta<\eta_A$. |
 | B7.3 | (A5)(b) ⇒ (W) via (W-loc) ⇒ (W-ref) ⇒ (W-unif) ⇒ (W-δ) | EXISTS-CHECKED | `W3-RM2:W-suff@1.0.0`; the variance clause of (W-loc) follows from $L_n\to0$ under the floor on $Q\cup\{l\}$ (STATEMENT.md:164). $\theta^{*2}_{\min}n/(|Q|+\log n)\to\infty$ is (BM-Q) ⇒ (BM-W) (:138-139). |
-| B7.4 | RM2-F conclusions ⇒ F-UNI premises (S), (P), (V) | **NEW** (assembly) | as B6.6, fixed-design input validity ((E) with nonconstant raw columns); operational premises carried as (S4) [S1-F2]. |
+| B7.4 | RM2-F conclusions ⇒ F-UNI premises (S), (P), (V) | **NEW** (assembly) | as B6.6, fixed-design input validity ((E) with nonconstant raw columns); operational premises carried as (S4) [S1-F2]. Superseded by B7.5 for the shipped method (method drift, §6). |
+| B7.5 | (S4) ⇔ (D) | identity [RM2R-2] | as B6.6′. |
 
 ### Honest limits (the case the brief names)
 (A3)–(A5) are **sample-level conditions on $(X,\theta^*)$**: partial signal gains $\delta^2_{U,j}$ and sample regressions.
@@ -867,6 +904,12 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
   premises); statistical clauses EQUAL.
 - v0.5 2026-11-16: [FUNI-N] as Theorem 6 v0.7 (delivery on $\mathfrak D$; every $n$ under IDEAL-W⁺). Tag: **WEAKER** for the
   delivery clause; statistical clauses EQUAL.
+- v0.6 2026-11-16: [RM2R-1..4, RM2R-7] RM2-F rider (READER_DELTA v-next e78a1055) (statuses verbatim, main 5d3a8a70 [REG-5d3a]) (W3-RM2-R CP3, HQ card 14). Master RM2-F-plus; (A1) beta-min, (A3)
+  visibility and the (A5)(b) signal clause at the constant level, constants in Remark (a); error split in Remark (b);
+  method-drift note. Tag **MIXED**: STRONGER — (A1), (A3), (A5)(b) weakened to constant level, mode-form conclusion
+  (RM0-plus); WEAKER — delivery needs IDEAL-W⁺ (two code ceilings lifted) and a narrower input domain, and the implication
+  edge to `C-DLV:Prop-F` is withdrawn.
+  Supersedes the [FUNI-N] delivery wording of v0.5: delivery now rests on DLV-0 (method drift [D74]); (S4)(v) folded into (S4)(i) as IDEAL-W⁺, and $\mathfrak D$ is stated in the [RM2R-5] sentence.
 <!-- ROW thm7 END -->
 
 ---
@@ -1219,7 +1262,7 @@ enumeration branch are not covered. Status: the masters' statuses above, with th
 
 ## 10. Theorem 10 — The printed outputs are consistent (card row 3.6; row 3.5 as a remark)
 <!-- ROW thm10 BEGIN -->
-**Card row** 3.6 (and 3.5) · **Section version** 0.9 (2026-11-16) · **Pending delta** post-freeze rider SAMP-R1
+**Card row** 3.6 (and 3.5) · **Section version** 1.0 (2026-11-16) · **Pending delta** post-freeze rider SAMP-R1
 
 ### Reader statement
 **Theorem 10.** Let the rows of $X^{\mathrm r}$ be i.i.d. $N_p(m_n,\Sigma_n)$ with $\Sigma_n$ a correlation matrix, and
@@ -1271,7 +1314,8 @@ per-island identity of the unbiasedness theorem by linearity).
 ### Master theorem
 `W3-SAMP:C@1.1.3`, `Theory_work/Wave3/W3-SAMP/STATEMENT.md:149-163`, clause (C-v) at :158-162, status **"PROVED-CHECKED,
 conditional on SOP:TH09"** [REG-33e1];
-start input `W3-START2:IF-START@1.0.0` (`W3-START2/STATEMENT.md:176-180`), **"PROVED-CHECKED"**; posterior input Theorem 2
+start input `W3-START2-R:IF-START@1.0.0` (IF-START⁺⁺, `W3-START2-R/STATEMENT.md:241-246`, under (T3⁺⁺)(b) at :226-240 with (L-R⁺⁺) at
+:70-81), **"PROVED-CHECKED; council R2, MANIFEST 12bb52cd… (= R2 90886d06 re-frozen CITATION-ONLY as R2r), sol=9.0 PASS, opus=9.3 PASS"** (main b48fd0a1; supersedes `W3-START2:IF-START`, free, SUPERSEDED-VALID) [REPIN]; posterior input Theorem 2
 (`W3-POST:Thm-1@1.0.0` item 6 with `W2-APP:POST@1.0.6`, "PROVED-CHECKED, conditional on SOP:TH09"). Alternative
 route (remark): `W3-SAMP:TR@2.1.3`, "PROVED-CHECKED, conditional on SOP:TH09" [REG-33e1]. Row 3.5: `W1-N1:Thm-N1@1.0.0`,
 "PROVED-CHECKED", and `W3-READER:PoolZ` ("PROVED (by this seat, unchecked)").
@@ -1280,14 +1324,14 @@ route (remark): `W3-SAMP:TR@2.1.3`, "PROVED-CHECKED, conditional on SOP:TH09" [R
 | # | Bridge | Mark | Detail |
 |---|---|---|---|
 | B10.1 | (A2)–(A3) ⇒ $o_1=O_P(\sqrt{\log n/n})$ | via Theorem 2: EXISTS-CHECKED, conditional (`W2-APP:POST@1.0.6`) + R1 (B2.1) | `lemmas/R4_printed_outputs.md` step (1); standardised-signal convention covered by `L1_POST.md:11, 15-18`. |
-| B10.2 | (A3)–(A5) ⇒ $\mathbf 1_{\mathcal A}o_0=O_P(\rho_n)$ | EXISTS-CHECKED + R1 (B6.1) | IF-START⁺ under (T3⁺)(b) with $Q=S_0$. |
+| B10.2 | (A3)–(A5) ⇒ $\mathbf 1_{\mathcal A}o_0=O_P(\rho_n)$ | EXISTS-CHECKED + R1 (B6.1) | IF-START⁺⁺ under (T3⁺⁺)(b) with $Q=S_0$; (A4)–(A5) = (V-R), (L-R⁺⁺) with $\bar H_n=e^{\kappa\sqrt{\log n}}$ (Theorem 5, B5.1′) [REPIN]. |
 | B10.3 | $\mathbf 1_{\mathcal A}\max(o_0,o_1)=O_P(\rho_n)$ ⇒ (C-v) with rate $\rho_n$ | **NEW** (assembly) | `lemmas/R4_printed_outputs.md` steps (3)–(4). |
 | B10.4 | pooled $\hat Z$ unbiased | **NEW** (claim) | `W3-READER:PoolZ`, two-line proof from N1. |
 
 ### Honest limits
 The conclusion is localised to calibration success $\mathcal A$ on the sampler branch (intersections, not conditioning);
-that $P(\mathcal A)\to1$ is not claimed here (under (S4)(i)–(iv), completion holds on $\mathfrak D$; under those conventions and
-A:IDEAL-W⁺ it holds for every admissible $n$; that link is not used here) [S4-S1]. The theorem covers only designs with no leakage outside the true model (A5), such as independent predictors; AR and
+that $P(\mathcal A)\to1$ is not claimed here (under (S4), whose item (i) now includes IDEAL-W⁺, completion holds for every
+admissible $n$, and without the two limits lifted on $\mathfrak D$; that link is not used here) [S4-S1, RM2R-1]. The theorem covers only designs with no leakage outside the true model (A5), such as independent predictors; AR and
 block designs are outside it (rows 3.1 and 3.5 apply there) [AUD-B11]. The rate $\rho_n$ is the start law's rate,
 slower than the posterior rate $\sqrt{\log n/n}$ by a factor $e^{C\sqrt{\log n}}$. Conditional on T03♯ (through `W3-SAMP:C`
 and `W2-APP:POST`) [REG-33e1].
@@ -1309,6 +1353,11 @@ and `W2-APP:POST`) [REG-33e1].
 - v0.9 2026-11-16: [AUD-B11] (HQ 11-16, from W3-AUDIT CHECKPOINT_1, theory/W3-AUDIT 81291dd9, TRACK_B.md B11) scope of
   (A5) stated plainly: no leakage outside the true model, such as independent predictors; AR and block designs not
   covered; rows 3.1 and 3.5 named for them. Presentation only (EQUAL; the statement already names (A5)).
+- v1.0 2026-11-16: [REPIN] start input repinned `W3-START2:IF-START` → `W3-START2-R:IF-START@1.0.0` (free supersession,
+  main b48fd0a1); B10.2 reads IF-START⁺⁺ under (T3⁺⁺)(b). Tag **STRONGER**: since the row 3.3 swap (Theorem 5 v0.3,
+  a33d890d) (A5) here is (L-R⁺⁺) with reference sets up to $e^{\kappa\sqrt{\log n}}$, which only the new master covers (the old
+  one needs (L-R⁺), polylogarithmic sets). The rate $\rho_n$ and the conclusions are unchanged. [RM2R-1] the completion
+  remark refers to (S4) as amended (EQUAL).
 <!-- ROW thm10 END -->
 
 ---
