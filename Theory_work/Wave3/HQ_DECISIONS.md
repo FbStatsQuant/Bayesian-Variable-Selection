@@ -523,3 +523,9 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
     1M; envelope re-sized to ≈ 28.3k core-h (+15.2%).** Rule: quantity before precision (the self-check is part of
     "validated").
   - L5 savings buy AR-weak back first. M risk (×1.2–1.35) priced after T5; above ≈ 30k comes back before any 10⁵ release.
+
+- 2026-11-16 (overnight) BNP Lean Engineering install slots AGREED. Both happen after their council accepts and on a day they confirm (≥2 h notice).
+  - Owls crontab + authorized_keys: 11:13 CT; SMC edit-freeze 11:05–11:30.
+  - Desktop ~/.ssh/config block + task re-point to 03:00: 11:40 CT; HQ freeze 11:35–12:00.
+  - Conditions: restricted forced-command key; existing lines byte-identical; diffs sent; ssh -G owls/nots identical, else roll back.
+  - HQ TODO on confirmation: tell Theory Dept + Engineering about the Owls cron freeze.
