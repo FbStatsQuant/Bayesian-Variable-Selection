@@ -104,3 +104,4 @@
 - 21:55 — W3-EDIT CP1 final (a3d2f3d): manifest-impact check → split merge (D41).
 - 21:56 — Engineering finding (D-17, PR12 review): π(S₀) ≈ 0.45–0.65 at n=200, p=10⁴–10⁵ (mass on ~p one-null supersets); store law not near point mass. DIST lead + READER told to fix point-mass wording (mixture over many supersets at moderate n; no limitation framing) before their freezes.
 - 21:57 — store-law wording row added to Docs/Writing/QUEUE.md.
+- 21:58 — DIST: D-17 folded in (v1.4.6, EQUAL): no statement-level point-mass reliance; π(S₀) > ½ only as sufficient conditions; Corollary C / DIST-C wording 'mixture over many models' (no caveat). L6 (since 21:05) + L7 (necessity prop) on Sol; counterexample pre-check passed (in-sample, touches no target). REPORT drafted (20 blocks). Freeze Mon 09:00 unchanged.
