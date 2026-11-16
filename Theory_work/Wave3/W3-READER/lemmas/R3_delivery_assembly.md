@@ -3,6 +3,10 @@
 Status: **PROVED (by this seat, unchecked)**. S1 checked the (V)/(S)/(P) part ("B6.6/B7.4 pass only for (V)/(S)/(P)")
 and required the operational premises to be carried, with a premise-by-premise table (F2). This file is that table.
 
+**Narrowed 2026-11-16 [FUNI-N]** (F-UNI SUSPECT at main 4e08096d, narrowed to `@2.1.0`): IDEAL-W does not lift the code's two
+rejections (`v3_run.R:96`, `cpp/v3_core.cpp:474`). The target below holds for $(n,p_{\mathrm{raw}})$ in the bounded domain
+$\mathfrak D$ of (S4)(v) under (S4)(i)–(iv), and for every admissible $n\ge3$ under A:IDEAL-W⁺; the limit statement uses the latter.
+
 **Target.** Under the hypotheses of Theorem 6 (resp. 7) and the delivery conventions (S4): for every admissible
 $n\ge3$, $P(\text{no output})=0$, and $P(\hat S=S_0)\to1$ under the joint design/noise law (resp. the noise law),
 together with the algorithm's randomness.
@@ -23,7 +27,7 @@ in Step 3 (via C-GROW L1.2 and C-DLV Corollary D′).
 | LS0 move cap $a_n=\ell_n+|\tilde S_0|$; other caps $\ell_n$ (:8) | code | `cpp/v3_core.cpp:473` (default `ell_n_plus_mode`); final local search cap $\ell$ (`cpp/v3_core.cpp:453-458`). Same cap as RM2's configuration (`W3-RM/STATEMENT.md:59-61`). |
 | total tier-1 fallback with complete fallback-grid freezing (:8-9) | code | `v3_fit.R:151` passes `isTRUE(ls0) && isTRUE(getOption("v3.grid_fallback", TRUE))`, so the fallback is on under the shipped defaults (`ls0 = TRUE`, `v3.grid_fallback = TRUE`), both required by the covered configuration (S4)(ii); fallback recorded at `v3_calib.R:120-124`, selected and frozen at `v3_calib.R:163-189` [S2-F8]. |
 | EX-A (unit-cost exact reals) (:9) | (S3)(i) + (S4) | exact arithmetic is (S3); its unit-cost reading is in (S4) ("exact unit-cost arithmetic"). |
-| IDEAL-W (:9) | (S4) | "no integer or index overflow" (so `unsupported_size` never fires; C-DLV STATEMENT.md:24-26). |
+| IDEAL-W (:9) | (S4) | "no integer or index overflow" (so `unsupported_size` never fires; C-DLV STATEMENT.md:24-26). The two LS0 cap rejections (`le > 10^6`, `cap_ll > INT_MAX`) are **not** lifted by IDEAL-W: on $\mathfrak D$ they do not fire; elsewhere A:IDEAL-W⁺ ((S4)(v)) [FUNI-N]. |
 | EX-S (:9) | (S4) | **added in v0.3**: "ideal independent uniform random numbers". |
 | SR (stop/return rule) (:9) | (S3) "the method's execution conventions" | **made explicit in v0.3**: (S4) lists "the method's stop/return rule as coded". |
 | e4 (:9) | (S4)(ii) | see the LS0 row. |

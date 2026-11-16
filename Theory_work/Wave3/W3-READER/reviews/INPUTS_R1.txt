@@ -19,3 +19,5 @@ Theory_work/Wave1C/C-DLV/STATEMENT.md
 Theory_work/Wave1C/FINAL/sections/s6_delivery.tex
 Theory_work/Wave1C/C-PACK/lemmas/I4_SL_corollaries.md
 Scripts/SMC_BVS/core
+# carrier: verbatim copy of dept/theory fc30c749 Theory_work/Dept/research/FUNI_NARROW/A_IDEALW_PLUS.md (A:IDEAL-W+ definition; not on main yet)
+Theory_work/Wave3/W3-READER/reviews/carriers/A_IDEALW_PLUS.md

@@ -27,7 +27,7 @@ PROVED-CHECKED is called checked; "conditional on …" is carried.
 (S2) Asymptotics: $n\to\infty$, $p=p_n$ with $2\le p\le n^A$ for a fixed $A\ge1$ ($p\gg n$ allowed).
 (S3) "The method" means the method as coded, under the standing conventions of `NOTATION.md` §5 (exact arithmetic,
 shipped configuration, admissible runs). (S3) matters only for Theorems 5–8.
-(S4) *Delivery conventions* (used only by the "always produces output" clauses of Theorems 6–7) [S1-F2, S2-F1] — the
+(S4) *Delivery conventions* (used only by the "always produces output" clauses of Theorems 6–7) [S1-F2, S2-F1, FUNI-N] — the
 delivery contract of the method, incorporated by reference and stated here in words: (i) *idealised machine*: exact
 arithmetic at unit cost (including exp and log); no integer, index, stream-id or allocation overflow; wall time at most
 $\tau\cdot(\text{operation count})+\tau_0$ and peak memory at most $\beta\cdot(\text{words held})+\beta_0$ for fixed constants
@@ -43,11 +43,21 @@ uniform random numbers; the method's stop/return rule and stop-only resource gua
 estimates); (iv) *inputs and allocation*: a valid seed (integer in $[1,2^{31}-1]$) and a declared memory and time
 allocation $(\mathrm{mem}_n,\mathrm{time}_n)$ at least the method's explicit polynomial work and memory envelopes in
 $(n,p_{\mathrm{raw}})$, including the preflight bounds and the local-search archive and time bounds (stated in full in the
-paper's appendix). These are operational assumptions, not consequences of (S1)–(S3) or of any design condition.
+paper's appendix); (v) *the code's two fixed integer limits* [FUNI-N]: a run is rejected when the local-search base cap
+$\ell_n=\lceil\log_2(n+p+1)\rceil$ exceeds a fixed ceiling, or when the start-mode cap $\ell_n+|\tilde S_0|$ exceeds the integer
+range. Under (i)–(iv), with no further idealisation, the "always produces output" clauses hold on the bounded domain
+$\mathfrak D$ of $(n,p_{\mathrm{raw}})$ on which neither limit is reached; they hold for every $n$ under **IDEAL-W⁺**: the
+idealised machine of (i) with these two limits lifted, everything else (other validators, the start-mode enumeration
+cap and its fallback, every method cap) kept as coded. Plain (i) does not give every-$n$ delivery. These are
+operational assumptions, not consequences of (S1)–(S3) or of any design condition.
 *Source of record:* `Theory_work/Wave1C/C-DLV/STATEMENT.md:21-46` (IDEAL-W, EX-A as a cost model, MACH, CONFIG,
 TDP-IMPL, valid inputs, declared allocation) and the amended allocation of `Theory_work/Wave1C/FINAL/sections/s6_delivery.tex:29-62`
 ($W_G$, $M_G$, $P_0$, $P_1$, $\bar P_t$, certificate budgets, the LS0 preflight addition), as imported by
-`W2-UNI:F-UNI@1.1.0` (`L5_delivery.md:7-12`).
+`W2-UNI:F-UNI@1.1.0` (`L5_delivery.md:7-12`). (v): `Scripts/SMC_BVS/core/v3_run.R:96` (`le > 10^6`) and
+`cpp/v3_core.cpp:474` (`cap_ll > INT_MAX`); $\mathfrak D:=\{(n,p_{\mathrm{raw}}):\lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil\le10^6,\ \lceil\log_2(n+p_{\mathrm{raw}}+1)\rceil+\lfloor n/2\rfloor\le2^{31}-1\}$
+(sufficient, not necessary); A:IDEAL-W⁺ as defined in `reviews/carriers/A_IDEALW_PLUS.md` (verbatim copy of
+dept/theory fc30c749 `Theory_work/Dept/research/FUNI_NARROW/A_IDEALW_PLUS.md`); F-UNI narrowed to `@2.1.0` (every $n$ under
+A:IDEAL-W⁺; $\mathfrak D$ under IDEAL-W) [FUNI-N].
 (S5) *Sampler conventions* (used only by Theorem 10 and the pooled-evidence remark) [R4, S2-F2] — the sampler contract,
 incorporated by reference and stated in words: exact arithmetic; within each random stream, fresh independent ideal
 uniforms; the final run's stream for each island independent of the data and of the calibration's streams [S3-N1]; the coded start sampler
@@ -615,7 +625,7 @@ abstract.
 
 ## 6. Theorem 6 — The reported model equals the truth (random Gaussian design; main theorem)
 <!-- ROW thm6 BEGIN -->
-**Card row** 3.1 · **Section version** 0.6 (2026-11-16) · **Pending delta** —
+**Card row** 3.1 · **Section version** 0.7 (2026-11-16) · **Pending delta** —
 
 
 ### Reader statement
@@ -644,8 +654,9 @@ $b\in(0,\tfrac12)$ and $\rho>0$ with $15\rho+b<\tfrac12$. Assume
 
 Then, under the joint law of design and noise, there are data events $\mathcal G_n$ with $P(\mathcal G_n)\to1$ on
 which **every** admissible run that produces output reports $\hat S=S_0$, whatever its seed and the outcome of its
-internal calibration; in particular $P(\text{output and }\hat S\neq S_0)\to0$. If moreover the delivery conventions
-(S4) hold [S1-F2],
+internal calibration; in particular $P(\text{output and }\hat S\neq S_0)\to0$. If moreover the delivery conventions (S4)(i)–(iv) hold [S1-F2], $P(\text{the run produces output})=1$ for every admissible
+$n\ge3$ with $(n,p_{\mathrm{raw}})$ in the bounded domain $\mathfrak D$ of (S4)(v), where the code's two fixed integer limits are not
+reached. If in addition IDEAL-W⁺ holds ((S4)(v): the two limits lifted),
 $$
 P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad P(\hat S=S_0)\to1 .
 $$
@@ -685,6 +696,10 @@ blocks.
    finding on the "eventually" wording of its (S) is in progress. Inherited qualifications, verbatim
    (`L5_delivery.md:39-40`): "[OP] "PROVED (by this seat, unchecked)"; e4 rests on N3, "OPEN" (only "some maximiser" is
    used for consistency; delivery keeps e4 with TDP-IMPL as in Proposition F); S.3 is a code-reading audit." [R3]
+   **Registry state [FUNI-N]:** SUSPECT since main 4e08096d (correctness event: the every-$n$ delivery cited a proof for a
+   different local-search cap than the shipped $\ell_n+|\tilde S_0|$); being NARROWED to `@2.1.0` (every $n$ under A:IDEAL-W⁺;
+   the bounded domain $\mathfrak D$ under IDEAL-W; Dept FUNI_NARROW, Sol DIFF PASS @fc30c749). The delivery sentences above
+   follow the narrowed form; requote and repin at freeze.
    **Abstract [H5-2]:** the delivery clause ("always produces output; $P(\hat S=S_0)\to1$") stays out of the abstract
    until the F-UNI gate is resolved; the abstract states the common-data-event clause.
 
@@ -730,13 +745,16 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
   (`C-DLV/STATEMENT.md:28-46`, `FINAL/sections/s6_delivery.tex:29-35`); common-data-event clause EQUAL.
 - v0.5 2026-11-16: [REG-f526] RM2-R's input `W2-APP:POST@1.0.6` status and the RM-R special-case status quoted (EQUAL).
 - v0.6 2026-11-16: [REG-33e1] SL0 cleared: row 3.1 conditional on T03♯ only; RM2-R/POST-R @1.0.2, RM-R @1.1.2 (EQUAL).
+- v0.7 2026-11-16: [FUNI-N] delivery clause narrowed with F-UNI 2.1.0: bounded domain $\mathfrak D$ under (S4)(i)–(iv), every $n$
+  under IDEAL-W⁺ ((S4)(v)); F-UNI registry state SUSPECT quoted. Tag: **WEAKER** for the delivery clause (follows the
+  master's narrowing); common-data-event clause EQUAL.
 <!-- ROW thm6 END -->
 
 ---
 
 ## 7. Theorem 7 — The reported model equals the truth (fixed design)
 <!-- ROW thm7 BEGIN -->
-**Card row** 3.2 · **Section version** 0.4 (2026-11-16) · **Pending delta** RM2-F (rider T4, via Theory Dept)
+**Card row** 3.2 · **Section version** 0.5 (2026-11-16) · **Pending delta** RM2-F (rider T4, via Theory Dept)
 
 
 ### Reader statement (two sufficient versions)
@@ -760,7 +778,9 @@ regressions are local. HQ choices: keep them as stated (faithful), or state Theo
 
 Then there are data events $\mathcal G_n$, $P(\mathcal G_n)\to1$, on which every admissible run that produces output
 reports $\hat S=S_0$, for every seed and calibration outcome; in particular $P(\text{output and }\hat S\neq S_0)\to0$.
-If moreover the delivery conventions (S4) hold [S1-F2],
+If moreover the delivery conventions (S4)(i)–(iv) hold [S1-F2], $P(\text{the run produces output})=1$ for every admissible
+$n\ge3$ with $(n,p_{\mathrm{raw}})$ in the bounded domain $\mathfrak D$ of (S4)(v), where the code's two fixed integer limits are not
+reached. If in addition IDEAL-W⁺ holds ((S4)(v): the two limits lifted),
 $$
 P(\text{the run produces output})=1\ \ \text{for every admissible }n\ge3,\qquad P(\hat S=S_0)\to1 .
 $$
@@ -809,6 +829,8 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
   (as the master's (W-loc)); (S4) completed (STRONGER, now faithful).
 - v0.4 2026-11-16: [S2-F1] as Theorem 6 (S4). Tag (S3): **WEAKER** for the delivery clause (restores the master's
   premises); statistical clauses EQUAL.
+- v0.5 2026-11-16: [FUNI-N] as Theorem 6 v0.7 (delivery on $\mathfrak D$; every $n$ under IDEAL-W⁺). Tag: **WEAKER** for the
+  delivery clause; statistical clauses EQUAL.
 <!-- ROW thm7 END -->
 
 ---

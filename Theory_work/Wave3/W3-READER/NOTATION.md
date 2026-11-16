@@ -142,7 +142,9 @@ says the run *always produces output*): an idealised machine (exact unit-cost ar
 overflow, every allocation within the declared memory succeeds, the build and its dependencies work, no external
 interruption or worker crash), the covered configuration (production core with the start-mode search and its
 tie-aware fallback, default summaries, serial execution or a fixed number of workers), a valid seed, and a declared
-memory and time allocation at least the method's polynomial envelopes in $(n,p_{\mathrm{raw}})$, preflight bounds
+memory and time allocation at least the method's polynomial envelopes in $(n,p_{\mathrm{raw}})$ (with these, a run produces
+output on the bounded domain of $(n,p_{\mathrm{raw}})$ where the code's two fixed integer limits on the local-search caps are not
+reached; for every $n$ only under IDEAL-W⁺, which lifts those two limits), preflight bounds
 included. These are operational assumptions, not consequences of any statistical condition.
 
 ## 6. Design quantities used in the assumptions

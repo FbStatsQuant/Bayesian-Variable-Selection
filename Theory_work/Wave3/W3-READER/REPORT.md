@@ -34,7 +34,7 @@ REGISTRY
 claim: W3-READER:R3 | kind: lemma | statement: lemmas/R3_delivery_assembly.md:1-47 | premises: READER_VERSIONS.md (S4)
 name: Lemma R3 (delivery assembly for the reported-model theorems)
 status: PROVED (by this seat, unchecked) | status_source: lemmas/R3_delivery_assembly.md:3
-conclusion: implication: RM2-R / RM2-F conclusions + (S4) => premises (V), (S), (P) and the method/premise/allocation paragraph of W2-UNI:F-UNI; hence P(no output) = 0 for every admissible n >= 3 and P(Shat = S0) -> 1
+conclusion: implication: RM2-R / RM2-F conclusions + (S4) => premises (V), (S), (P) and the method/premise/allocation paragraph of W2-UNI:F-UNI; hence P(no output) = 0 on the bounded domain D under IDEAL-W, and for every admissible n >= 3 under A:IDEAL-W+, with P(Shat = S0) -> 1 under A:IDEAL-W+ [F-UNI narrowed to 2.1.0; SUSPECT at main 4e08096d]
 depends_on: W2-UNI:F-UNI@1.1.0 ; W3-RM2:RM2-R@1.0.0 ; W3-RM2:RM2-F@1.0.0
 gates: correct:PENDING(bridge-leg Sol line check)
 
