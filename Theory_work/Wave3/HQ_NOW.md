@@ -21,6 +21,10 @@
   - the pilot is labelled "pilot", with overlap validation after;
   - **hard constraint:** the fast-track must not delay the main ladder or the January campaign. It runs as a side track; if the pilot fails, the main plan continues unchanged.
   - The plan states the Claude usage, the NOTS core-h per attempt (≈ 1k), and the gates.
+- **OWNER 11-16: the Writing Department STARTS at the resume.** Assignment: Docs/Writing/ASSIGNMENT_1.md.
+  - D2 (all consistency results in reader form, statuses verbatim): draft ≈ 6 h after the resume.
+  - D1 (methodology as coded: priors, distributions, every parameter fixed or f(n, p), with code file:line): ≈ 24 h.
+  - The Writing thread is already on Claude Personal. HQ orders one Sol read per document and shows the owner the PDFs.
 - **On resume:** move the department threads to Claude Personal (t3_thread_configure), then send each manager "resume from RESUME card". Pending HQ items:
   - V (RM2-R) real-run GO after rule (b) and the dry run;
   - re-enable the 3 Theory scheduled tasks;
