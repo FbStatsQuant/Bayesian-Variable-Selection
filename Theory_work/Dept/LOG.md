@@ -236,3 +236,4 @@
 - 05:22 — HQ: card 13 as one package once (1) CP3 + UNHARVESTED_STRENGTH on theory/W3-DIST (snapshot), (2) RT1 (done), (3) READER proposal: card row 2.1 text + thm9 proved reader text + row 2.2 fate. READER lead tasked (DELTA_row21_thm9_DIST.md, not applied).
 - 05:22 — HQ: card 13 needs proposed row 2.1 + thm9 text BEFORE recording (consultant signs text + status together) — already tasked to READER as a not-applied delta; paths go to HQ with CP3 + UNHARVESTED_STRENGTH on branch.
 - 05:22 — DIST lead: item 9 added to UNHARVESTED_STRENGTH.md (11 rows); MANIFEST_R2 still verifies.
+- 05:27 — READER card-13 proposal (6a07d34c): DELTA_row21_thm9_DIST.md + .diff (apply --check OK); no s₀-dependence stated; row 2.2 stays as body remark (fixed design/in-sample); Cor C conditional on TH09 + EX-A only. NEW B9.5 + fidelity read → F9 Sol (high, one call, B5 two scopes) launched by manager. DIST snapshot of CP3/UNHARVESTED pending (next cron 11:30Z).
