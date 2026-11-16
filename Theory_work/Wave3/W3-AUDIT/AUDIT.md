@@ -16,8 +16,8 @@ provable; disclosed). *Status or dossier*: for A, the claim that discharges it a
 **One-paragraph answer.** The assumptions of the two posterior theorems are the same as, or comparable to, Song–Liang's,
 and all our simulation designs satisfy them, strong factors included. The reported-model theorem adds two method-specific
 design conditions with Song–Liang counterparts (their Condition 5 and their remark (a), p. 958); it excludes pervasive
-factors at p ≫ √n. One assumption is narrow enough to be flagged: "no leakage" in the printed-estimates theorem (row 3.6),
-which only independent designs satisfy (B11). On the mathematical side, rows 1.x and 2.1 have no open item; rows 3.1, 3.5
+factors at p ≫ √n. The printed-estimates theorem (row 3.6) is correct as stated and has a narrow reach: its "no leakage"
+condition holds on independent designs only (B11; §9). On the mathematical side, rows 1.x and 2.1 have no open item; rows 3.1, 3.5
 and 3.6 rest on 13 code-level items that are named but not yet checked (§6).
 
 ---
@@ -155,7 +155,7 @@ endorse unless noted.
 | T8 | P-OVL (missing, one line) | 3.6 (Thm D clause) | **OVL.** Under the production budget and P-START, D_r·π₀(S₀) → ∞ in probability on 𝒜. · D_r ≥ max(2500, n, p)(L + 6) and π₀(S₀) → 1. | yes |
 | T9 | Start-mode DP implementation (unchecked) | 3.1, delivery clause | **TDP.** The tie-aware DP returns the lexicographically first maximiser of the start law under the size cap, within its stated cost. · Second-seat re-check of `C-ENG/lemmas/TDP_E.md`. | yes |
 | T10 | P1 inventory and case S.3 (audited by reading only) | 3.1, delivery clause | **Re-audit.** Second-seat code reading of `C-DLV/STATEMENT.md:52-53`, `lemmas/L2_degenerate.md:37-67`. | no |
-| T11 | P-OVL∞ (missing) | 3.6, remark route (TR) only | Not a Tier B item: it needs a new key lemma (a bound on max π/π₀). **My recommendation differs from the helper's:** keep Thm TR in the remark with P-OVL∞ named as an open premise, because TR is the only recorded route to the printed PIPs that does not need (A5); treat the lemma as a track-D candidate. | no |
+| T11 | P-OVL∞ (missing) | 3.6, remark route (TR) only | Not a Tier B item: it needs a new key lemma (a bound on max π/π₀). **My recommendation differs from the helper's:** keep Thm TR in the remark with P-OVL∞ named as an open premise, because TR is the only recorded route to the printed PIPs that does not need (A5) (HQ agreed, 11-16). Track D adds a caution [audit calc]: P-OVL∞ fails where a fixed-level leak sits outside the truth's block (π₀(S₀) is then exponentially small), so TR reaches only slightly past start concentration and not AR. | no |
 | T12, T13 | `P:SCORE-EXP`, `P:START-CENTRE` (unchecked, route only) | none (reached only through the historical route `W1-GEN`) | No proof ticket. Bookkeeping: record that the core rows do not use them. | — |
 
 **Further open inputs that are claims** (not among the 13; same Tier B treatment suggested, after T1–T8):
@@ -192,7 +192,7 @@ posterior, not the code. Engineering's report was checked against the files belo
 | Study | Method as run (evidence) | Verdict |
 |---|---|---|
 | 2,400-fit study | v2.2.1, frozen (`Docs/PLAN.md:38`; core `Scripts/Campaigns/2026-10-28_New_Campaign/code/core/v2_2_1/`). No LS0: no file in that tree contains "ls0" (grep, this worktree). Preflight memory-only (`…/v2_2_1/core/v3_fit.R:16`). **Engineering's report confirmed.** | **APPLIES UP TO** no LS0, no tie-aware start mode, no tier-1 grid fallback (`Theory_work/Pause_2026-11/RERUN_SPEC.md:22`). Rows 1.x, 2.1: unaffected (same target; score files byte-identical, `RERUN_SPEC.md:23`). Row 3.1: not covered (its reported model is the post-LS0 one). Rows 3.5, 3.6: island code unchanged, but identity of Ẑ and PIPs with v3.1 is "expected" from a diff, not from a run (`:24`); the study's headline MPM uses plain PIPs (`:13`), which Thm 10 does not describe. |
-| P6 | v3.1 core, `git archive` of main 2252d57 (`W3-P6/DESIGN.md:10-12`; `LOG.md:14-15`). **LS0 on**, wide base cap `options(v3.ls0_ell = ell + K)` (`scripts/p6_fit.R:55`); hours = 22.5 (`configs/b1_tasks.tsv:1`); LS0 worst-case charge active (`p6_fit.R:108`). `smoke_v3_tasks.tsv` is the v3 driver smoke test (`LOG.md:40`). **Engineering's report not confirmed for P6.** | **APPLIES UP TO** the wide LS0 cap, a documented testing option; the shipped-cap outcome is re-derived and validated on paired fits (`DESIGN.md:25-33`). The P6 designs are outside row 3.1's leakage assumption (B9): P6 tests beyond the theorem, by design. |
+| P6 | v3.1 core, `git archive` of main 2252d57 (`W3-P6/DESIGN.md:10-12`; `LOG.md:14-15`). **LS0 on**, wide base cap `options(v3.ls0_ell = ell + K)` (`scripts/p6_fit.R:55`); hours = 22.5 (`configs/b1_tasks.tsv:1`); LS0 worst-case charge active (`p6_fit.R:108`). `smoke_v3_tasks.tsv` is the v3 driver smoke test (`LOG.md:40`). **Engineering's report not confirmed for P6 (Engineering reconciliation pending).** | **APPLIES UP TO** the wide LS0 cap, a documented testing option; the shipped-cap outcome is re-derived and validated on paired fits (`DESIGN.md:25-33`). The P6 designs are outside row 3.1's leakage assumption (B9): P6 tests beyond the theorem, by design. |
 | SCR N1 | Core copied from main 2252d57 (`W3-SCR/LOG.md:6`) = the pin of `W3-SCR:A1`. Default settings (not verified line by line). | **APPLIES as run** (row 3.7, not a core row). |
 | W3-SCALE | v3.1 records against revision D = 6866f57 (`origin/theory/W3-SCALE:…/CHECKPOINT_2.md:20-22`); revision D charges the LS0 preflight after setup (`:13`, `:30-31`). | v3.1 records: **APPLIES as run**. Revision D: **APPLIES UP TO** the output-identity note (card row 4.2: "no theorem, no registry row") and the preflight change, which touches only the allocation premise of the delivery clause. |
 | Overlap rung (10⁴) | Planned, not run: "v3.1 law (N = p = 10⁴, R′ = 4) against fixed N = 2,500 (R′ = 16)" (`…/P1M/EXPERIMENT_PLAN.md:109`). With the default 24 h, the v3.1 preflight refuses at p = 10⁴ (`Theory_work/Wave3/HQ_NOW.md:33`), so the arm must record its `hours` and LS0 preflight setting. | v3.1 arm: **APPLIES as run** once that setting is recorded. Fixed-N arm: **APPLIES UP TO** N_e and R′: rows 1.x, 2.1 unaffected; row 3.1 holds for every N_e and R′ (`W3-RM:RM-0` scope); rows 3.5, 3.6 hold for any N_e (`W3-SAMP/STATEMENT.md:43-46`) but are stated for R′ = 4 (`:42`). |
@@ -206,10 +206,41 @@ computed after the fact on the 1,200 data sets and combined with the stored pre-
 Ẑ and PIPs across versions is an expectation from a diff. (4) Independently of the version, the study's designs S2–S6 are
 outside Thm 10 (B11), so the study illustrates rows 1.x, 2.1 and 3.1, not row 3.6. (5) P6 needs no rerun.
 
-## 9. Assumptions flagged for the manager
+## 9. Reach of the printed-estimates theorem (row 3.6) — presentation, not a correctness event (HQ ruling)
 
-- **B11, "no leakage" (Thm 10 (A5), row 3.6): narrow, not false.** It requires every null to be uncorrelated with every
-  truth up to C n^{-1/2}. Inside: S1 and IND. Outside: S2–S6, all of P6, and AR and BLK of the 1M plan (AR is its primary
-  design). A reader will ask at once whether the printed PIPs and Ẑ are covered on an AR design; today they are not.
-- Nothing else looks false or unreasonable. Explicit constants from the proofs are conservative; the audit judges the
-  qualitative conditions only (HQ ruling 1).
+The card row names "Theorem 5's visibility and no-leakage conditions", so the statement is correct and does not
+overclaim. Its reach, plainly:
+- **Covered by Theorem 10 (printed PIPs, MPM, Ẑ consistent):** designs in which every null column is uncorrelated with
+  every true column up to C n^{-1/2}, given any ≤ 15 others. Of ours: **S1 and IND.**
+- **Not covered by Theorem 10:** S2–S6 of the 2,400-fit study, all of P6, and AR, BLK, FAC of the 1M plan.
+- **What still holds there:** Theorem 6 (the reported model is S₀) on S2–S4, S6, AR, BLK; row 3.5 (the evidence estimate
+  is unbiased) on every design; the posterior theorems (cores 1, 2) on every design. What has no theorem there: that the
+  printed PIPs, MPM and Ẑ are close to the exact posterior quantities.
+- **Why this is not a proof artefact everywhere:** on AR and BLK the start law does not concentrate on S₀
+  (`W3-START:NEC-b`, "PROVED-CHECKED"; `TRACK_D.md` §0, [audit calc]), so the present route cannot be stretched to them.
+
+Nothing else looks false or unreasonable. Explicit constants from the proofs are conservative; the audit judges the
+qualitative conditions only (HQ ruling 1).
+
+## D. Track D — sharpness and improvement candidates (summary; full text in `TRACK_D.md`)
+
+| Core | Assumptions | Conclusion |
+|---|---|---|
+| 1 | s₀ fixed is NECESSARY up to √log n; the floor off S₀ is already replaced (Thm 1′); Gaussian rows and the floor's set size are LIKELY WEAKENABLE; the rest UNKNOWN | rate OPTIMAL on the witness designs; GAP of √log n on a general design; GAP on random designs (in probability only) |
+| 2 | (A4) NECESSARY in some form for the fixed-design interface (`W3-DIST:NEC`), LIKELY WEAKENABLE in window; display (iii) hides an s³ | radius better than Song–Liang's at polynomial p; GAP in form (log n, not log p); Thm 9B OPTIMAL |
+| 3 | visibility NECESSARY for the start route; per-truth leak level LIKELY WEAKENABLE; \|Q\| ≤ n^b UNKNOWN beyond the route | near-optimal for this route; scope (factors) is decision D1 |
+| 4 | no leakage LIKELY WEAKENABLE to a group-relative form, which is NECESSARY for start concentration | rate GAP closed by a recorded result (reader swap); reach is the open issue |
+| 5 | none (a) / witnesses (b) | lower bound on every design: open rider, not ranked |
+
+Ranked candidates (gain · cost · kill budget in `TRACK_D.md` §2):
+1. **Group-relative no-leakage** (HQ's #1): rows 3.6 and 3.3 gain bounded-group designs (S3, S4, S6). **It does not
+   reach AR or BLK.** Opus ≈ 3 days, Tier A with one small key lemma; fallback Tier B.
+2. **Check X**: Theorem 2 from the omitted-variables master — expectation rate on Gaussian designs, parameters free to
+   vary with n. Opus 1 day, Tier B.
+3. **Sub-Gaussian rows for Theorem 2**, reusing `W3-DIST:B2`. Opus ≈ 2 days, Tier B.
+4. **Theorem 9 bundle** (items 1, 8(a) + 10, 9 of the unharvested list; order set by card 13). Opus ≈ 3 days, Tier B.
+5. **Printed estimates on leaky designs** (what AR needs): a non-collapse lemma for the tempered sampler. Tier A, high
+   risk; feasibility note first.
+
+X1–X5: X1, X3, X5 are lemmas (Tier B); X2, X4 are relabellings (recorder). The [audit calc] lines on which a verdict
+depends are listed in `TRACK_D.md` §4.

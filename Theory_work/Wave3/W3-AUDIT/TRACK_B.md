@@ -4,6 +4,25 @@ Author: audit Fable. Each dossier: **verdict** against Song and Liang (2015) →
 → **our designs** → **candidate corollary** in primitive terms (Σ, β, σ², n, p). Nothing here is a new checked result:
 lines marked [audit calc] are my own short computations, unchecked.
 
+## Answer (for the owner's question)
+
+1. **The posterior theorems (core 1: the true model; core 2: the true distribution) hold on all our designs** — the
+   2,400-fit study, P6 with its strong factors, and the 1M plan — **under assumptions that are the same as, or comparable
+   to, Song–Liang's.** Three items are stronger than theirs: the range of p (p ≤ n^A, B2), a collinearity floor of order
+   c/n on O(log n) columns (B6), and the law of the rows (Gaussian or sub-Gaussian, B7).
+2. **The reported-model theorem (core 3)** adds two method-specific conditions with Song–Liang counterparts: visibility
+   (stronger than their Condition 5, B8) and a leakage set (their remark (a), p. 958, B9). Inside: S1–S4, S6, IND, AR,
+   BLK. Outside: pervasive factors at p ≫ √n (S5, P6, FAC).
+3. **The printed-estimates theorem (row 3.6)** is correct as stated and has a narrow reach: its "no leakage" condition
+   (B11) holds on S1 and IND only. Outside it, Theorem 6 (reported model) and row 3.5 (unbiased evidence) still hold.
+
+| Core theorem | Assumptions against Song–Liang | Our designs inside |
+|---|---|---|
+| 1 and 2 (posterior) | same or comparable; stronger: B2, B6, B7 | **all** |
+| 3 (reported model) | + B8 (stronger than Condition 5), B9 (comparable to remark (a)), B10 (no counterpart) | S1–S4, S6, IND, AR, BLK; not S5, P6, FAC |
+| 4 (printed estimates, row 3.6) | + B11 (no counterpart) | S1, IND only |
+| 5 (rate lower bound) | witnesses only | — |
+
 **Song–Liang source.** Every "SL" reference is to the paper itself, read first-hand: Q. Song and F. Liang (2015),
 J. R. Statist. Soc. B 77(5), 947–972, local file `/home/fb31/SMC_Theory_Department/refs/Song_Liang_2015.pdf` (sha256
 `315c247c236b5f33…`; not in git). Page numbers are journal pages. Their supplement (proofs; Theorem S on MAP
@@ -178,8 +197,9 @@ among themselves. Fails: any null correlated with a truth at a fixed level.
 **What is still true there.** Thm 6 (reported model = S₀) covers S2–S4, S6, AR, BLK; row 3.5 (unbiased evidence) needs
 no design condition. Not covered there: consistency of the printed PIPs, MPM and Ẑ.
 **Corollary (Thm 10, primitive).** Σ = diag(Σ_{S₀}, Σ_N) with λ_min ≥ c and Σ_N block-diagonal with bounded blocks.
-**Candidate repair (track D, not proved):** show π₀(S₀) → 1 when every leaking null shares a method block with the truth
-it imitates (inside a block the start law uses the exact block posterior), which would bring S3, S4, S6 and BLK inside.
+**Candidate repair (track D #1, scoped in `TRACK_D.md` §0, not proved):** ask no leakage only given the truths of the
+column's own group. It would bring S3, S4, S6 inside. It would not bring AR or BLK (groups of 20 exceed the block cap
+16): there the start mass on S₀ is destroyed (`W3-START:NEC-b`, "PROVED-CHECKED") [audit calc on the designs].
 
 ## B12. Witness designs of Thm 3(b): orthogonal, or i.i.d. N(0, 1), null columns
 **Verdict: not an assumption to defend** (a lower bound needs one design; SL have no lower bound). Part (a) has no
