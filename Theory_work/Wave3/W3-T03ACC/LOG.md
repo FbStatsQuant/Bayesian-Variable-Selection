@@ -54,3 +54,7 @@
   (task w3-t03acc-r1-astra-20261116); **Opus seat** = claudeAgent_claude_third claude-opus-5-5, effort high (task w3-t03acc-r1-opus-20261116).
 - 2026-11-16 02:37 CST — **Opus seat returned:** T03S.1–.5 ACCEPT, G1–G6 PASS, score 9.4, gates=PASS; 6 findings, all E (no C/S/F).
   Disposition `reviews/R1_disposition.md` (E items held for the editorial batch; ERRATA.md is frozen in R1). Opus seat settled.
+- 2026-11-16 03:09 CST — Manager rule D62 received: every Codex brief from now on says "Do not write any file outside the worktree and
+  set no TMPDIR. Scratch only in a git-ignored `.rc_tmp/` inside the worktree, deleted at the end." (The running Astra seat's brief
+  points scratch to the department tmp folder; no action on it per the manager.) Integrity check after on-disk change notices:
+  `manifest.py verify` OK on MANIFEST_R1 (9714aea4…); the notices were the lead's own pre-freeze edits.
