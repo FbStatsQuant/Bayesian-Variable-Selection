@@ -99,16 +99,39 @@ TEST(unit_truncated_partition_shape) {
     CorrResult C = correlation_pass(F.D(), o);
     PartitionOptions po; po.B = B;
     Forest T; Partition P = make_partition(F.D(), C, po, &T);
-    std::vector<int> seen(3000, 0); bool ok = true; int prev_min = -1;
+    std::vector<int> seen(3000, 0); bool ok = true;
     for (int b = 0; b < P.J; ++b) {
-      ok &= P.size(b) >= 1 && P.size(b) <= B;
+      ok &= P.size(b) >= 1 && P.size(b) <= P.B;
       ok &= std::is_sorted(P.block(b), P.block(b) + P.size(b));
       for (int i = 0; i < P.size(b); ++i) { seen[P.block(b)[i]]++; ok &= P.blk[P.block(b)[i]] == b && P.pos[P.block(b)[i]] == i; }
-      (void)prev_min;
     }
     for (int j = 0; j < 3000; ++j) ok &= seen[j] == 1;
+    // PR13 review m6: recompute the packing from the forest (retained clusters cut at > B_blocks, left first; ordered by
+    // minimum member index; next-fit into blocks of <= B_blocks; members sorted) and compare with P
+    {
+      std::vector<std::pair<int, std::vector<int32_t>>> cl;
+      for (int32_t r0 : T.roots) {
+        std::vector<int32_t> st{r0};
+        while (!st.empty()) {
+          int x = st.back(); st.pop_back();
+          if (T.size[x] <= P.B) {
+            std::vector<int32_t> lv, s2{x};
+            while (!s2.empty()) { int y = s2.back(); s2.pop_back(); if (y < 3000) lv.push_back(y); else { s2.push_back(T.right[y]); s2.push_back(T.left[y]); } }
+            cl.push_back({*std::min_element(lv.begin(), lv.end()), lv});
+            continue;
+          }
+          st.push_back(T.right[x]); st.push_back(T.left[x]);
+        }
+      }
+      std::sort(cl.begin(), cl.end(), [](const auto& a, const auto& b) { return a.first < b.first; });
+      std::vector<int64_t> bptr{0}; std::vector<int32_t> mem, cur;
+      auto flush = [&]() { std::sort(cur.begin(), cur.end()); mem.insert(mem.end(), cur.begin(), cur.end()); bptr.push_back((int64_t)mem.size()); cur.clear(); };
+      for (auto& c : cl) { if (cur.size() + c.second.size() > (size_t)P.B) flush(); cur.insert(cur.end(), c.second.begin(), c.second.end()); }
+      if (!cur.empty()) flush();
+      SCHECK(bptr == P.bptr && mem == P.members, "packing by minimum index differs from the recomputation (%s)", stk::design_name(d));
+    }
     // every forest cluster of size <= B lies inside one block
-    for (int32_t r : T.roots) if (T.size[r] <= B) {
+    for (int32_t r : T.roots) if (T.size[r] <= P.B) {
       std::vector<int32_t> st{r}; int b0 = -1;
       while (!st.empty()) { int x = st.back(); st.pop_back(); if (x < 3000) { if (b0 < 0) b0 = P.blk[x]; ok &= P.blk[x] == b0; } else { st.push_back(T.left[x]); st.push_back(T.right[x]); } }
     }
@@ -377,3 +400,37 @@ TEST(hub_column_guard_and_degrees) {
   SCHECK(r.status == v4::Status::completed && mx <= r.part.B, "setup with a hub: %s", r.reason.c_str());
   std::printf("    hub: threshold-graph degree %lld, neighbour-union degree %lld, edges %zu, J %d\n", (long long)hubdeg, (long long)nbhub, C.edges.size(), r.part.J);
 }
+
+// ---- PR13 review m9: CLI gen -> prep -> setup (and --count-only) -> info: exit codes, status, sections, meta
+#ifdef V4_SMCBVS4
+#include <sys/wait.h>
+namespace {
+int run_cli(const std::string& args) {
+  std::string cmd = std::string(V4_SMCBVS4) + " " + args + " > /dev/null 2>&1";
+  int st = std::system(cmd.c_str());
+  return WIFEXITED(st) ? WEXITSTATUS(st) : -1;
+}
+}  // namespace
+TEST(cli_setup_pipeline) {
+  const std::string d = tmpdir() + "/clisetup_" + std::to_string(getpid());
+  SCHECK(run_cli("gen --design AR --n 80 --p 400 --seed 5 --out " + d + "_raw.bin") == 0, "gen");
+  SCHECK(run_cli("prep --in " + d + "_raw.bin --out " + d + "_data.bin") == 0, "prep");
+  SCHECK(run_cli("setup --data " + d + "_data.bin --out " + d + "_setup.bin --threads 2") == 0, "setup");
+  v4::Json rec = v4::read_json_file(d + "_setup.bin.json");
+  SCHECK(rec.at("status").str() == "completed" && rec.contains("binary") && rec.at("partition").str() == "truncated" &&
+         rec.at("file_mode").str() == "law", "setup record");
+  {
+    v4::fmt::Reader rd(d + "_setup.bin");
+    v4::Json m = rd.json("meta");
+    SCHECK(rd.kind() == v4::fmt::K_SETUP && m.contains("binary") && m.at("B_blocks").i64() <= 14 && rd.has("logr") && !rd.has("sub_cum") &&
+           !rd.has("codes_by_size"), "setup.bin sections / meta");
+  }
+  SCHECK(run_cli("info --in " + d + "_setup.bin") == 0, "info");
+  SCHECK(run_cli("setup --data " + d + "_data.bin --out " + d + "_count --count-only 1 --threads 2") == 0, "count-only");
+  v4::Json cr = v4::read_json_file(d + "_count.json");
+  SCHECK(cr.at("count_only").boolean() && cr.at("accounting").at("C").i64() > 0, "count-only record");
+  SCHECK(run_cli("setup --data " + d + "_data.bin --out " + d + "_adm.bin --mem-budget 0.000001") == 11, "admission exit code (resource_limit = 11)");
+  for (const char* sfx : {"_raw.bin", "_raw.bin.json", "_data.bin", "_data.bin.json", "_setup.bin", "_setup.bin.json", "_count.json", "_adm.bin.json", "_truth.json"})
+    std::remove((d + sfx).c_str());
+}
+#endif

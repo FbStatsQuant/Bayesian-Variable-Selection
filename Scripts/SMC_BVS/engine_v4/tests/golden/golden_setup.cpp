@@ -308,3 +308,45 @@ TEST(golden_fixtures_core_setup) {
   SCHECK(ncase == 3, "expected 3 fixture cases, ran %d", ncase);
 }
 #endif
+
+// ---- PR13 review m1: the reviewer's exact-tie design. Columns h_a +- h_b (1 <= a < b <= 10) and h_a +- h_b +- h_c
+// (1 <= a < b < c <= 8) over Walsh vectors h_k[i] = (-1)^popcount(i & k), n = 64, plus 6 exact duplicates, shuffled:
+// many exactly equal correlations (0, 1/2, 2/3, ...), union-lex ties between multi-member clusters, and merges exactly
+// at the cut for tau = 1 - 2/3. The truncated forest must equal v3::complete_linkage's merges at height <= (or <) the cut.
+TEST(golden_T11_exact_tie_design_vs_v3) {
+  const int n = 64;
+  std::vector<std::vector<double>> cols;
+  auto h = [&](int k, int i) { return (__builtin_popcount(i & k) & 1) ? -1.0 : 1.0; };
+  for (int a = 1; a <= 10; ++a) for (int b = a + 1; b <= 10; ++b) for (int sb : {1, -1}) {
+    std::vector<double> c(n); for (int i = 0; i < n; ++i) c[i] = h(a, i) + sb * h(b, i); cols.push_back(c);
+  }
+  for (int a = 1; a <= 8; ++a) for (int b = a + 1; b <= 8; ++b) for (int c3 = b + 1; c3 <= 8; ++c3) for (int sb : {1, -1}) for (int sc : {1, -1}) {
+    std::vector<double> c(n); for (int i = 0; i < n; ++i) c[i] = h(a, i) + sb * h(b, i) + sc * h(c3, i); cols.push_back(c);
+  }
+  for (int d = 0; d < 6; ++d) cols.push_back(cols[(size_t)d * 37 % cols.size()]);
+  stk::Rng g(4242);
+  for (size_t i = cols.size() - 1; i > 0; --i) std::swap(cols[i], cols[(size_t)(g.u() * (i + 1)) % (i + 1)]);
+  const int p = (int)cols.size();
+  auto ow = std::make_shared<v4::DataOwned>();
+  ow->X.resize((size_t)n * p); ow->y.resize(n);
+  for (int j = 0; j < p; ++j) std::copy(cols[j].begin(), cols[j].end(), ow->X.begin() + (size_t)j * n);
+  for (int i = 0; i < n; ++i) ow->y[i] = g.norm();
+  v4::Data D = v4::make_data(ow, n, p);
+  V3 R(D);
+  v3::Dendrogram T3 = v3::complete_linkage(R.D);
+  for (double tau : {0.3, 0.5, 1.0 - 2.0 / 3.0})
+    for (bool strict : {false, true}) {
+      CorrOptions co; co.B = 8; co.tau = tau; co.threads = stk::threads(); co.max_edges = (int64_t)p * p;  // dense by design
+      CorrResult C = correlation_pass(D, co);
+      const double hcut = 1.0 - tau;
+      Forest T = complete_linkage_truncated(p, C.edges, hcut, strict);
+      const int m = T.merges();
+      bool ok = m <= p - 1;
+      for (int x = p; ok && x < p + m; ++x)
+        ok = T.left[x] == T3.left[x] && T.right[x] == T3.right[x] && stk::same_bits(T.height[x], T3.height[x]);
+      if (ok && m < p - 1) ok = strict ? !(T3.height[p + m] < hcut) : !(T3.height[p + m] <= hcut);
+      int at_cut = 0; for (int x = p; x < p + m; ++x) at_cut += T.height[x] == hcut;
+      SCHECK(ok, "exact-tie design: tau=%.6f strict=%d: truncated forest != v3 dendrogram below the cut (%d merges)", tau, (int)strict, m);
+      std::printf("    exact-tie design p=%d tau=%.6f strict=%d: %d merges, %d exactly at the cut\n", p, tau, (int)strict, m, at_cut);
+    }
+}

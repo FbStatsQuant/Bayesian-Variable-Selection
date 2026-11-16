@@ -62,6 +62,13 @@ int main(int argc, char** argv) {
                 (long long)r.cut.rows(), (long long)(r.tab.code_ptr.empty() ? 0 : r.tab.code_ptr.back()), r.mode.S.size(), r.mode.ties);
     std::printf("stage\tp\tn\tthreads\tseconds\tpeak_rss_mb\n");
     for (auto& t : r.timings) std::printf("%s\t%d\t%d\t%d\t%.3f\t%.0f\n", t.name.c_str(), p, n, th, t.seconds, t.peak_rss_mb);
+    std::printf("accounting: C=%lld J=%lld B_blocks=%lld peak=%.0f MB setup_bin=%.0f MB (stage peaks:", (long long)r.acc.C, (long long)r.acc.J,
+                (long long)r.acc.B_blocks, r.acc.peak / 1e6, r.acc.setup_bin / 1e6);
+    for (auto& sp : r.acc.stage_peak) std::printf(" %s %.0f", sp.first.c_str(), sp.second / 1e6);
+    std::printf(")\n");
+    for (const auto* st : {&r.stores.top, &r.stores.lead0, &r.stores.lead1})
+      std::printf("store: entries %zu pool %zu ints (mean |S| %.2f) bytes %.0f MB\n", st->v.size(), st->pool.size(),
+                  st->v.size() ? (double)st->pool.size() / st->v.size() : 0.0, (st->v.size() * 26.0 + st->pool.size() * 4.0) / 1e6);
     std::printf("tables: scored %llu prefix %llu fallback %llu; stores %.3f s\n", (unsigned long long)r.tstats.scored,
                 (unsigned long long)r.tstats.prefix_scored, (unsigned long long)r.tstats.fallback_scored, r.tstats.seconds_stores);
     std::string path = std::string(std::getenv("TMPDIR") ? std::getenv("TMPDIR") : ".") + "/bench_setup.bin";

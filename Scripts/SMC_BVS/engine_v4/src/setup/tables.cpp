@@ -112,6 +112,56 @@ void score_block(const Data& D, const int32_t* mem, int m, PrefixScorer& ps, dou
   }
 }
 
+// The c-th largest of val(b, code) over all table models (the empty model once), by histogram selection: one pass
+// for the range, one histogram pass (2^20 bins, per-thread counts), then the bin holding rank c is collected and
+// selected exactly (refined recursively while it is large). Returns -inf if there are at most c table models.
+template <class Val>
+double kth_largest(const Tables& T, const Partition& P, uint64_t c, int TH, Val val) {
+  auto for_all = [&](auto&& f) {   // f(tid, value); per-thread, order-free
+#pragma omp parallel for num_threads(TH) schedule(dynamic, 64)
+    for (int b = 0; b < P.J; ++b) {
+      const int tid = omp_get_thread_num();
+      const double* lr = &T.logr[T.code_ptr[b]];
+      for (uint32_t code = (b == 0 ? 0u : 1u); code < (1u << P.size(b)); ++code) if (!std::isnan(lr[code])) f(tid, val(b, code));
+    }
+  };
+  double lo = POS_INF, hi = NEG_INF; uint64_t N = 0;
+  {
+    std::vector<double> l(TH, POS_INF), h(TH, NEG_INF); std::vector<uint64_t> n(TH, 0);
+    for_all([&](int t, double v) { l[t] = std::min(l[t], v); h[t] = std::max(h[t], v); n[t]++; });
+    for (int t = 0; t < TH; ++t) { lo = std::min(lo, l[t]); hi = std::max(hi, h[t]); N += n[t]; }
+  }
+  if (N <= c || c == 0) return NEG_INF;
+  uint64_t rank = c;   // we want the rank-th largest within [lo, hi]
+  for (int depth = 0; depth < 8; ++depth) {
+    if (!(hi > lo)) return lo;
+    const int NB = 1 << 20;
+    const double w = (hi - lo) / NB;
+    auto bin = [&](double v) { int k = (int)((v - lo) / w); return std::min(std::max(k, 0), NB - 1); };
+    std::vector<std::vector<uint64_t>> cnt(TH, std::vector<uint64_t>(NB, 0));
+    for_all([&](int t, double v) { if (v >= lo && v <= hi) cnt[t][bin(v)]++; });
+    for (int t = 1; t < TH; ++t) for (int k = 0; k < NB; ++k) cnt[0][k] += cnt[t][k];
+    uint64_t above = 0; int kb = NB - 1;
+    for (; kb >= 0; --kb) { if (above + cnt[0][kb] >= rank) break; above += cnt[0][kb]; }
+    const uint64_t inbin = cnt[0][kb];
+    rank -= above;
+    // the bin's exact value range: values v with bin(v) == kb
+    std::vector<std::vector<double>> got(TH);
+    if (inbin <= (uint64_t)50000000 || depth == 7) {
+      for_all([&](int t, double v) { if (v >= lo && v <= hi && bin(v) == kb) got[t].push_back(v); });
+      std::vector<double> all; for (auto& g : got) all.insert(all.end(), g.begin(), g.end());
+      std::nth_element(all.begin(), all.begin() + (rank - 1), all.end(), std::greater<double>());
+      return all[rank - 1];
+    }
+    // refine: new [lo, hi] = the bin's value range
+    double nlo = POS_INF, nhi = NEG_INF;
+    std::vector<double> l(TH, POS_INF), h(TH, NEG_INF);
+    for_all([&](int t, double v) { if (v >= lo && v <= hi && bin(v) == kb) { l[t] = std::min(l[t], v); h[t] = std::max(h[t], v); } });
+    for (int t = 0; t < TH; ++t) { nlo = std::min(nlo, l[t]); nhi = std::max(nhi, h[t]); }
+    lo = nlo; hi = nhi;
+  }
+  return lo;
+}
 }  // namespace
 
 Tables build_tables(const Data& D, const Partition& P, int threads, TableStores* stores, TableStats* stats) {
@@ -128,11 +178,17 @@ Tables build_tables(const Data& D, const Partition& P, int threads, TableStores*
   if (stores) {  // core/cpp/v3_ledger.h:78 capacities and orders
     stores->top.init(40 * p + 1, Order::HPM); stores->lead0.init(20 * p, Order::LEX); stores->lead1.init(20 * p, Order::LEX);
   }
-  // Streaming (Sol review F1, item 3): blocks are processed in batches of TH * CH consecutive blocks. Threads score the
-  // batch's blocks (fixed chunks of CH blocks; each writes its own logr range and a chunk-local log m buffer); then the
-  // batch's table models are offered to the three stores serially in (block, code) order, the order of
-  // core/cpp/v3_core.cpp:375-383, and the buffers are reused. No per-code log m or route array exists globally.
-  // Store content is order-free (top-c under a strict total order), so the result does not depend on TH.
+  // Streaming, two passes (Sol review F1 item 3; PR13 review m2). No per-code log m or route array ever exists
+  // globally, and the stores never see more than about their capacity:
+  //  pass 1: threads score the blocks in batches of TH * CH consecutive blocks (fixed chunks of CH blocks); only logr
+  //          is kept;
+  //  thresholds: for each store, the c-th largest value over all table models, found by a histogram selection from
+  //          logr alone: lg0 = log varpi(k) + logr is exact; F is approximated by log varpi(k) + (logr + log m0), which
+  //          differs from F by a few ulps (logr = fl(log m - log m0)), so the offer bound is lowered by a margin;
+  //  pass 2: the batches are re-scored (same bits) and only table models at or above the bounds are offered, serially in
+  //          (block, code) order (core/cpp/v3_core.cpp:375-383) with the exact F.
+  // Store content is the top-c under a strict total order of everything offered, and every model of the true top-c is
+  // offered, so the result is that of offering every table model, for any TH.
   const int CH = 16;
   std::vector<std::vector<double>> lm(TH * CH);  // one buffer per block slot of a batch
   std::vector<BlockOut> outs(TH);
@@ -142,52 +198,70 @@ Tables build_tables(const Data& D, const Partition& P, int threads, TableStores*
   TableStats st;
   double sec_stores = 0;
   Model U;
-  for (int b0 = 0; b0 < P.J && !failed; b0 += TH * CH) {
-    const int b1 = std::min(P.J, b0 + TH * CH);
-    const int nch = (b1 - b0 + CH - 1) / CH;
+  double loF = NEG_INF, lo0 = NEG_INF;
+  auto run_pass = [&](bool offer) {
+    for (int b0 = 0; b0 < P.J && !failed; b0 += TH * CH) {
+      const int b1 = std::min(P.J, b0 + TH * CH);
+      const int nch = (b1 - b0 + CH - 1) / CH;
 #pragma omp parallel for num_threads(TH) schedule(dynamic, 1)
-    for (int c = 0; c < nch; ++c) {
-      const int tid = omp_get_thread_num();
-      for (int b = b0 + c * CH; b < std::min(b1, b0 + (c + 1) * CH) && !failed; ++b) {
-        std::vector<double>& buf = lm[b - b0];
-        buf.resize((size_t)1 << P.size(b));
-        try {
-          ps[tid].U.clear();
-          score_block(D, P.block(b), P.size(b), ps[tid], &T.logr[T.code_ptr[b]], buf.data(), outs[tid]);
-        } catch (const Error& e) {
+      for (int c = 0; c < nch; ++c) {
+        const int tid = omp_get_thread_num();
+        for (int b = b0 + c * CH; b < std::min(b1, b0 + (c + 1) * CH) && !failed; ++b) {
+          try {
+            std::vector<double>& buf = lm[b - b0];
+            buf.resize((size_t)1 << P.size(b));
+            ps[tid].U.clear();
+            BlockOut dummy;
+            score_block(D, P.block(b), P.size(b), ps[tid], &T.logr[T.code_ptr[b]], buf.data(), offer ? dummy : outs[tid]);
+          } catch (const Error& e) {
 #pragma omp critical(v4_tables_err)
-          { if (!failed) { failed = true; fail_msg = e.what(); fail_st = e.st; } }
-        } catch (const std::bad_alloc&) {   // PR13 review m8: nothing escapes the OpenMP region
+            { if (!failed) { failed = true; fail_msg = e.what(); fail_st = e.st; } }
+          } catch (const std::bad_alloc&) {   // PR13 review m8: nothing escapes the OpenMP region
 #pragma omp critical(v4_tables_err)
-          { if (!failed) { failed = true; fail_msg = "out of memory"; fail_st = Status::resource_limit; } }
-        } catch (...) {
+            { if (!failed) { failed = true; fail_msg = "out of memory"; fail_st = Status::resource_limit; } }
+          } catch (...) {
 #pragma omp critical(v4_tables_err)
-          { if (!failed) { failed = true; fail_msg = "unexpected exception"; fail_st = Status::internal_error; } }
+            { if (!failed) { failed = true; fail_msg = "unexpected exception"; fail_st = Status::internal_error; } }
+          }
         }
       }
-    }
-    if (failed || !stores) continue;
-    auto ts = std::chrono::steady_clock::now();
-    for (int b = b0; b < b1; ++b) {
-      const int m = P.size(b);
-      const double* logm = lm[b - b0].data();
-      const double* lr = &T.logr[T.code_ptr[b]];
-      for (uint32_t c = (b == 0 ? 0u : 1u); c < (1u << m); ++c) {  // the empty model once (block 0, code 0)
-        if (std::isnan(lr[c])) continue;                             // |U| > K: not scored (core/cpp/v3_core.cpp:378)
-        const int k = __builtin_popcount(c);
-        const double F = D.logprior[k] + logm[c], lg0 = D.logprior[k] + lr[c];   // core/cpp/v3_core.cpp:381
-        if (!std::isfinite(F) || !std::isfinite(lg0)) throw Error(Status::internal_error, "tables: non-finite table value");
-        // quick rejects against the monotone cut-offs (the stores apply the same test; this only skips building U)
-        const bool t1 = F >= stores->top.cutoff(), t2 = lg0 >= stores->lead0.cutoff(), t3 = F >= stores->lead1.cutoff();
-        if (!t1 && !t2 && !t3) continue;
-        U.clear(); for (int i = 0; i < m; ++i) if (c & (1u << i)) U.push_back(P.block(b)[i]);
-        const uint64_t h = D.zob.hash(U);
-        if (t1) stores->top.offer(F, U, h);
-        if (t2) stores->lead0.offer(lg0, U, h);
-        if (t3) stores->lead1.offer(F, U, h);
+      if (failed || !offer) continue;
+      auto ts = std::chrono::steady_clock::now();
+      for (int b = b0; b < b1; ++b) {
+        const int m = P.size(b);
+        const double* logm = lm[b - b0].data();
+        const double* lr = &T.logr[T.code_ptr[b]];
+        for (uint32_t c = (b == 0 ? 0u : 1u); c < (1u << m); ++c) {  // the empty model once (block 0, code 0)
+          if (std::isnan(lr[c])) continue;                             // |U| > K: not scored (core/cpp/v3_core.cpp:378)
+          const int k = __builtin_popcount(c);
+          const double F = D.logprior[k] + logm[c], lg0 = D.logprior[k] + lr[c];   // core/cpp/v3_core.cpp:381
+          if (!std::isfinite(F) || !std::isfinite(lg0)) throw Error(Status::internal_error, "tables: non-finite table value");
+          const bool tF = F >= loF, t0 = lg0 >= lo0;
+          if (!tF && !t0) continue;
+          const bool t1 = tF && F >= stores->top.cutoff(), t2 = t0 && lg0 >= stores->lead0.cutoff(), t3 = tF && F >= stores->lead1.cutoff();
+          if (!t1 && !t2 && !t3) continue;
+          U.clear(); for (int i = 0; i < m; ++i) if (c & (1u << i)) U.push_back(P.block(b)[i]);
+          const uint64_t h = D.zob.hash(U);
+          if (t1) stores->top.offer(F, U, h);
+          if (t2) stores->lead0.offer(lg0, U, h);
+          if (t3) stores->lead1.offer(F, U, h);
+        }
       }
+      sec_stores += std::chrono::duration<double>(std::chrono::steady_clock::now() - ts).count();
     }
+  };
+  run_pass(false);
+  if (!failed && stores) {
+    auto ts = std::chrono::steady_clock::now();
+    auto Fa = [&](int b, uint32_t c) { return D.logprior[__builtin_popcount(c)] + (T.logr[T.code_ptr[b] + c] + D.logm0); };
+    auto L0 = [&](int b, uint32_t c) { return D.logprior[__builtin_popcount(c)] + T.logr[T.code_ptr[b] + c]; };
+    const uint64_t capF = 40 * p + 1;   // top (the larger of the two F stores)
+    const double vF = kth_largest(T, P, capF, TH, Fa), v0 = kth_largest(T, P, 20 * p, TH, L0);
+    // |F - Fa| <= a few ulps of (|log varpi| + |log m| + |log m0|); the margin is generous (candidates in it are few)
+    loF = (vF == NEG_INF) ? NEG_INF : vF - 1e-9 * (1.0 + std::fabs(vF) + 2.0 * std::fabs(D.logm0));
+    lo0 = v0;
     sec_stores += std::chrono::duration<double>(std::chrono::steady_clock::now() - ts).count();
+    run_pass(true);
   }
   if (failed) throw Error(fail_st, "tables: " + fail_msg);
   for (auto& o : outs) { st.scored += o.scored; st.prefix_scored += o.prefix; st.fallback_scored += o.fallback; for (int r = 0; r < 3; ++r) st.routes[r] += o.routes[r]; }

@@ -2,11 +2,12 @@
 # test `golden_R_reference` (tests/test_setup.cpp). Covers what exists only in the Rcpp layer (cpp_dup_components,
 # cpp_cut_group, cpp_setup) plus v3_preprocess standardisation.
 #   Rscript tools/golden_setup_ref.R <core dir> <out dir> [<work dir>]
-# core/ is copied to <work dir>/core_copy first (default <out dir>/../core_copy_wp2), so the compiled cache is never
+# core/ is copied to <work dir>/core_copy first (default $TMPDIR/v4_fixwork_wp2), so the compiled cache is never
 # written inside core/ or the fixtures. Writes <out dir>/SHA256SUMS.
 args <- commandArgs(trailingOnly = TRUE)
 core <- normalizePath(args[1]); out <- args[2]
-work <- if (length(args) >= 3) args[3] else file.path(dirname(out), "core_copy_wp2")
+if (length(args) < 3 && !nzchar(Sys.getenv("TMPDIR"))) stop("give a work directory (3rd argument) or set TMPDIR")
+work <- if (length(args) >= 3) args[3] else file.path(Sys.getenv("TMPDIR"), "v4_fixwork_wp2")
 dir.create(out, recursive = TRUE, showWarnings = FALSE); dir.create(work, recursive = TRUE, showWarnings = FALSE)
 cc <- file.path(work, "core_copy")
 unlink(cc, recursive = TRUE); dir.create(cc)

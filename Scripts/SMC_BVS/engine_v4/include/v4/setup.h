@@ -148,7 +148,7 @@ struct Start {
 // Exact byte accounting of every setup array from the partition alone (no table is allocated). Items marked bound are
 // upper bounds that become exact only after the tables exist (store pools: <= B_blocks int32 per entry; std::set /
 // allocator overheads of the truncated linkage: per-node estimate). Stage peaks = the arrays live in each stage.
-struct MemItem { std::string name, stage; uint64_t bytes = 0; bool exact = true; bool stored = false; };
+struct MemItem { std::string name, stage; uint64_t bytes = 0; bool exact = true; bool stored = false; uint64_t est = 0; };
 struct MemAccount {
   int64_t n = 0, p = 0, K = 0, B = 0, B_blocks = 0, J = 0, threads = 1, edges = 0, nb_nnz = -1;
   std::vector<int64_t> hist;            // hist[m] = number of blocks with m members, m = 0..16
@@ -156,8 +156,8 @@ struct MemAccount {
   int64_t C_feasible = 0;               // codes with popcount <= K (= C when every block has <= K members)
   int64_t NR = 0, cond_vals = 0, table_models = 0;
   std::vector<MemItem> items;
-  std::vector<std::pair<std::string, uint64_t>> stage_peak;
-  uint64_t peak = 0, setup_bin = 0, not_stored_d18 = 0;
+  std::vector<std::pair<std::string, uint64_t>> stage_peak, stage_peak_est;   // bound / estimate per stage
+  uint64_t peak = 0, peak_est = 0, setup_bin = 0, setup_bin_est = 0, not_stored_d18 = 0;
   Json to_json() const;
 };
 MemAccount account(const Data& D, int coded_B, const Partition& P, int64_t edges, int64_t nb_nnz, int threads, PartMode mode);

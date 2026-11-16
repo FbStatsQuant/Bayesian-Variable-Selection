@@ -34,8 +34,9 @@ MemAccount account(const Data& D, int coded_B, const Partition& P, int64_t edges
   A.table_models = A.C_feasible - (J - 1);  // the empty model counted once
   const int64_t Bn = std::min<int64_t>(coded_B, std::max<int64_t>(p - 1, 1));
   const int64_t nb = nb_nnz >= 0 ? nb_nnz : 2 * p * Bn;  // the symmetric union has at most 2 p B entries in total
-  auto add = [&](const char* name, const char* stage, uint64_t bytes, bool exact = true, bool stored = false) {
-    A.items.push_back(MemItem{name, stage, bytes, exact, stored});
+  // est: the estimate used beside a bound (measured factors, labelled in the name); = bytes for exact items
+  auto add = [&](const char* name, const char* stage, uint64_t bytes, bool exact = true, bool stored = false, int64_t est = -1) {
+    MemItem it{name, stage, bytes, exact, stored}; it.est = est < 0 ? bytes : (uint64_t)est; A.items.push_back(it);
   };
   // ---- data (data.bin, mapped): X and the per-column arrays
   add("X (n x p f64)", "data", 8ull * n * p, true, false);
@@ -58,9 +59,15 @@ MemAccount account(const Data& D, int coded_B, const Partition& P, int64_t edges
   add("tables: per-batch log m buffers (threads x 16 blocks x 2^maxm f64)", "tables", (uint64_t)TH * 16 * 8ull * ((uint64_t)1 << maxm));
   // stores: entry = v f64 + off u64 + hash u64 + len u16 = 26 B, pool <= B_blocks int32 per entry (bound)
   const uint64_t ct = std::min<uint64_t>(40ull * p + 1, (uint64_t)A.table_models), cl = std::min<uint64_t>(20ull * p, (uint64_t)A.table_models);
-  const uint64_t ent = 26 + 4ull * P.B;
-  add("table top stores kept (top 40p+1, lead0 20p, lead1 20p; pool bound B_blocks x i32)", "persistent", (ct + 2 * cl) * ent, false, true);
-  add("table top stores fill peak extra (staging + merge run, about 1.5 x kept; WP1 Store)", "tables", (uint64_t)(1.5 * (double)((ct + 2 * cl) * ent)), false);
+  // entry = 26 B exact (v, off, hash, len) + pool: bound B_blocks int32; estimate 3.1 int32 (MEASURED mean |S| of the
+  // table stores: 3.03 top / 2.59 leads at p = 1e5 and 3e4, AR n = 200)
+  const uint64_t ent = 26 + 4ull * P.B, ent_est = 26 + 12;
+  add("table top stores kept (top 40p+1, lead0 20p, lead1 20p; pool bound B_blocks x i32, estimate 3.1 x i32)", "persistent",
+      (ct + 2 * cl) * ent, false, true, (int64_t)((ct + 2 * cl) * ent_est));
+  // fill transient (two-pass build, serial offers): the three staging runs (<= c_i / 4 each, WP1 Store trigger) plus one
+  // merge run (<= the top store's c) at a time
+  add("table top stores fill transient (staging c_i/4 x 3 + one merge run <= c_top)", "tables", (ct / 4 + cl / 2 + ct) * ent, false, false,
+      (int64_t)((ct / 4 + cl / 2 + ct) * ent_est));
   // ---- start law (persistent) and D-18
   add("logprof_ptr, logprof", "persistent", 8ull * (J + 1) + 8ull * A.NR, true, true);
   add("logF ((J+1) x (K+1) f64)", "persistent", 8ull * (J + 1) * (K + 1), true, true);
@@ -69,38 +76,41 @@ MemAccount account(const Data& D, int coded_B, const Partition& P, int64_t edges
   add("static code tables (all m <= 16)", "persistent", 4ull * ((1u << 17) - 1));
   A.not_stored_d18 = 4ull * A.C_feasible + 8ull * A.C_feasible + 16ull * (A.NR + 1);
   // ---- start mode (transient)
-  add("start mode: mb, arg (bound C_feasible u32), M, count DP, tie DP", "mode",
-      8ull * A.NR + 8ull * (A.NR + 1) + 4ull * A.C_feasible + 24ull * A.NR + 8ull * (J + 1) * (K + 1) + 2ull * (J + 1) * (K + 1) + 16ull * J + A.NR, false);
-  // ---- stage peaks
-  auto sum = [&](std::initializer_list<const char*> stages) {
-    uint64_t s = 0;
-    for (auto& it : A.items) for (const char* st : stages) if (it.stage == st) s += it.bytes;
-    return s;
+  // arg: codes attaining each per-size maximum; bound C_feasible, estimate NR (one per row without exact ties)
+  const uint64_t mode_fixed = 8ull * A.NR + 8ull * (A.NR + 1) + 24ull * A.NR + 8ull * (J + 1) * (K + 1) + 2ull * (J + 1) * (K + 1) + 16ull * J + A.NR;
+  add("start mode: mb, arg (bound C_feasible u32, estimate NR u32), M, count DP, tie DP", "mode", mode_fixed + 4ull * A.C_feasible, false, false,
+      (int64_t)(mode_fixed + 4ull * A.NR));
+  // ---- stage peaks (bound and estimate): the arrays live in each stage
+  auto stage_sum = [&](bool est, std::initializer_list<const char*> stages, std::initializer_list<const char*> names) {
+    uint64_t t = 0;
+    for (auto& it : A.items) {
+      bool in = false;
+      for (const char* st : stages) if (it.stage == st) in = true;
+      for (const char* nm : names) if (it.name.rfind(nm, 0) == 0) in = true;
+      if (in) t += est ? it.est : it.bytes;
+    }
+    return t;
   };
-  const uint64_t data = sum({"data"});
-  const uint64_t nbb = 8ull * (p + 1) + 4ull * nb, partb = 8ull * (J + 1) + 12ull * p;
-  const uint64_t logr = 8ull * A.C + 8ull * (J + 1);
-  uint64_t stores_kept = 0, stores_extra = 0, start = 0;
-  for (auto& it : A.items) {
-    if (it.name.rfind("table top stores kept", 0) == 0) stores_kept = it.bytes;
-    if (it.name.rfind("table top stores fill", 0) == 0) stores_extra = it.bytes;
-    if (it.stage == "persistent" && (it.name.rfind("logprof", 0) == 0 || it.name.rfind("logF", 0) == 0 || it.name.rfind("size_", 0) == 0 ||
-                                     it.name.rfind("cond_", 0) == 0 || it.name.rfind("static", 0) == 0)) start += it.bytes;
+  for (int est = 0; est < 2; ++est) {
+    auto& sp = est ? A.stage_peak_est : A.stage_peak;
+    sp.clear();
+    sp.push_back({"correlation", stage_sum(est, {"corr"}, {"X (", "ys, z"})});
+    sp.push_back({"partition", stage_sum(est, {"partition"}, {"X (", "ys, z", "neighbours", "edges"})});
+    sp.push_back({"tables", stage_sum(est, {"tables"}, {"X (", "ys, z", "neighbours", "partition (", "logr", "code_ptr", "table top stores kept"})});
+    sp.push_back({"start_law", stage_sum(est, {}, {"X (", "ys, z", "neighbours", "partition (", "logr", "code_ptr", "table top stores kept",
+                                                   "logprof", "logF", "size_", "cond_", "static"})});
+    sp.push_back({"start_mode", stage_sum(est, {"mode"}, {"X (", "ys, z", "neighbours", "partition (", "logr", "code_ptr", "table top stores kept",
+                                                          "logprof", "logF", "size_", "cond_", "static"})});
+    uint64_t pk = 0; for (auto& x : sp) pk = std::max(pk, x.second);
+    (est ? A.peak_est : A.peak) = pk;
   }
-  const uint64_t edgesb = 16ull * edges;
-  A.stage_peak.push_back({"correlation", data + sum({"corr"})});
-  A.stage_peak.push_back({"partition", data + nbb + edgesb + sum({"partition"})});
-  A.stage_peak.push_back({"tables", data + nbb + partb + logr + sum({"tables"}) + stores_kept});
-  A.stage_peak.push_back({"start_law", data + nbb + partb + logr + stores_kept + start});
-  A.stage_peak.push_back({"start_mode", data + nbb + partb + logr + stores_kept + start + sum({"mode"})});
-  for (auto& sp : A.stage_peak) A.peak = std::max(A.peak, sp.second);
-  (void)stores_extra;
   // ---- setup.bin bytes (64-aligned sections + header and table; dup/cut sections excluded: small, known after corr)
   uint64_t f = 128;
   int nsec = 0;
-  for (auto& it : A.items) if (it.stored && it.name.rfind("static", 0) != 0) { f += al64(it.bytes); ++nsec; }
-  f += 128ull * (nsec + 20) + 8 * 64;
-  A.setup_bin = f;
+  uint64_t fe = 128;
+  for (auto& it : A.items) if (it.stored && it.name.rfind("static", 0) != 0) { f += al64(it.bytes); fe += al64(it.est); ++nsec; }
+  f += 128ull * (nsec + 20) + 8 * 64; fe += 128ull * (nsec + 20) + 8 * 64;
+  A.setup_bin = f; A.setup_bin_est = fe;
   return A;
 }
 
@@ -113,10 +123,14 @@ Json MemAccount::to_json() const {
   j["C"] = C; j["C_feasible"] = C_feasible; j["codes_per_column"] = p ? (double)C / (double)p : 0.0;
   j["mean_block"] = J ? (double)p / (double)J : 0.0; j["table_models"] = table_models;
   Json it = Json::array();
-  for (auto& x : items) { Json e = Json::object(); e["name"] = x.name; e["stage"] = x.stage; e["bytes"] = (int64_t)x.bytes; e["exact"] = x.exact; e["in_setup_bin"] = x.stored; it.push(e); }
+  for (auto& x : items) { Json e = Json::object(); e["name"] = x.name; e["stage"] = x.stage; e["bytes"] = (int64_t)x.bytes; e["estimate_bytes"] = (int64_t)x.est; e["exact"] = x.exact; e["in_setup_bin"] = x.stored; it.push(e); }
   j["items"] = it;
   Json sp = Json::object(); for (auto& s : stage_peak) sp[s.first] = (int64_t)s.second;
+  Json se = Json::object(); for (auto& s : stage_peak_est) se[s.first] = (int64_t)s.second;
   j["stage_peak_bytes"] = sp; j["peak_bytes"] = (int64_t)peak; j["setup_bin_bytes"] = (int64_t)setup_bin;
+  j["stage_peak_estimate_bytes"] = se; j["peak_estimate_bytes"] = (int64_t)peak_est; j["setup_bin_estimate_bytes"] = (int64_t)setup_bin_est;
+  j["peak_note"] = "peak_bytes: exact arrays + upper bounds (store pools at B_blocks per entry, start-mode ties at C_feasible); "
+                   "peak_estimate_bytes: the same with measured factors (mean |S| 3.1 in the table stores, no exact ties). X is file-backed (data.bin mapping).";
   j["d18_not_stored_bytes"] = (int64_t)not_stored_d18;
   return j;
 }
@@ -133,17 +147,23 @@ namespace {
 // 4 rows j (columns of the j-tile) x 64 columns l of the row-major tile R (n x 64 floats). Writes hit pairs.
 __attribute__((target("avx512f,fma")))
 int micro_4x64(const float* const* xj, const float* R, int n, float thr, int jbase, int l0, int lmin_off[4], int32_t* hits) {
-  __m512 c[4][4];
-  for (int q = 0; q < 4; ++q) for (int t = 0; t < 4; ++t) c[q][t] = _mm512_setzero_ps();
+  // 16 named accumulators (an indexed array is not kept in registers at -O2)
+  __m512 c00 = _mm512_setzero_ps(), c01 = c00, c02 = c00, c03 = c00, c10 = c00, c11 = c00, c12 = c00, c13 = c00;
+  __m512 c20 = c00, c21 = c00, c22 = c00, c23 = c00, c30 = c00, c31 = c00, c32 = c00, c33 = c00;
+  const float *x0 = xj[0], *x1 = xj[1], *x2 = xj[2], *x3 = xj[3];
   for (int i = 0; i < n; ++i) {
     const float* r = R + (size_t)i * 64;
     const __m512 r0 = _mm512_loadu_ps(r), r1 = _mm512_loadu_ps(r + 16), r2 = _mm512_loadu_ps(r + 32), r3 = _mm512_loadu_ps(r + 48);
-    for (int q = 0; q < 4; ++q) {
-      const __m512 b = _mm512_set1_ps(xj[q][i]);
-      c[q][0] = _mm512_fmadd_ps(b, r0, c[q][0]); c[q][1] = _mm512_fmadd_ps(b, r1, c[q][1]);
-      c[q][2] = _mm512_fmadd_ps(b, r2, c[q][2]); c[q][3] = _mm512_fmadd_ps(b, r3, c[q][3]);
-    }
+    __m512 b = _mm512_set1_ps(x0[i]);
+    c00 = _mm512_fmadd_ps(b, r0, c00); c01 = _mm512_fmadd_ps(b, r1, c01); c02 = _mm512_fmadd_ps(b, r2, c02); c03 = _mm512_fmadd_ps(b, r3, c03);
+    b = _mm512_set1_ps(x1[i]);
+    c10 = _mm512_fmadd_ps(b, r0, c10); c11 = _mm512_fmadd_ps(b, r1, c11); c12 = _mm512_fmadd_ps(b, r2, c12); c13 = _mm512_fmadd_ps(b, r3, c13);
+    b = _mm512_set1_ps(x2[i]);
+    c20 = _mm512_fmadd_ps(b, r0, c20); c21 = _mm512_fmadd_ps(b, r1, c21); c22 = _mm512_fmadd_ps(b, r2, c22); c23 = _mm512_fmadd_ps(b, r3, c23);
+    b = _mm512_set1_ps(x3[i]);
+    c30 = _mm512_fmadd_ps(b, r0, c30); c31 = _mm512_fmadd_ps(b, r1, c31); c32 = _mm512_fmadd_ps(b, r2, c32); c33 = _mm512_fmadd_ps(b, r3, c33);
   }
+  const __m512 c[4][4] = {{c00, c01, c02, c03}, {c10, c11, c12, c13}, {c20, c21, c22, c23}, {c30, c31, c32, c33}};
   const __m512 th = _mm512_set1_ps(thr);
   int nh = 0;
   for (int q = 0; q < 4; ++q)
