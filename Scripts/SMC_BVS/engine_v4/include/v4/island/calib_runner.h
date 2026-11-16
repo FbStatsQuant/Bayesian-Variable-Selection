@@ -36,7 +36,9 @@ class CalibIslandRunner final : public v4::calib::IslandRunner {
     c.seed = c_.seed; c.role = pilot ? IslandRole::Pilot : IslandRole::Diag; c.tier = (uint32_t)sp.tier; c.iter = (uint32_t)sp.iter;
     c.island = (uint32_t)sp.island; c.N = sp.H; c.L = sp.L; c.Hm = sp.Hm; c.B = c_.B;
     c.kernel = c_.kernel; c.threads = c_.threads; c.G = c_.G; c.tile = c_.tile; c.allow_test_kernels = c_.allow_test_kernels;
-    c.k_store = c_.k_store; c.inputs_bytes = c_.inputs_bytes; c.mem_budget = c_.mem_budget;
+    // memory (INTERFACES §7, WP4's IslandSpec): the budget left for this island after the calibration's resident state
+    // (spec.mem_budget, 0 = no admission); the island's plan adds its own setup inputs (inputs_bytes)
+    c.k_store = c_.k_store; c.inputs_bytes = c_.inputs_bytes; c.mem_budget = sp.mem_budget ? sp.mem_budget : c_.mem_budget;
     c.keep_terminal = false; c.leaders = true;
     if (pilot) { c.adaptive = true; c.adaptive_H = sp.H; c.adaptive_Te = sp.Te; } else c.grid = sp.grid;
     if (c_.compat) {
@@ -52,7 +54,8 @@ class CalibIslandRunner final : public v4::calib::IslandRunner {
     o.schedule.assign(r.grid.begin() + (r.grid.empty() ? 0 : 1), r.grid.begin() + (r.grid.empty() ? 0 : 1) + ns);
     o.stages = r.stages; o.pip = r.pip;
     o.led = std::move(to_record(r).led);
-    if (r.compat) { o.position_start = (double)r.stream_start; o.position_end = (double)r.stream_count; }
+    o.init_hash = r.init_hash;
+    if (r.compat) { o.position_start = r.stream_start; o.position_end = r.stream_count; }
     return o;
   }
 

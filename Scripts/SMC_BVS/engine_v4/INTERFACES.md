@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.11 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.12 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -406,8 +406,12 @@ Status fit_status(span<Status>);   // first that applies: invalid_input, interna
   - one stale snapshot generation;
   - the setup inputs (tables, neighbour graph), whose size the **caller** supplies.
 
-  Admission at task start uses calibration's measured mean |S| when it is given, and refuses deterministically, before
-  any allocation, with `resource_limit`. The check at every step boundary uses the store's **actual** size. With G = 0
+  Admission at task start plans the store with model size **k = max(q90(π₀ size) + 1 from setup, calibration's
+  measured mean |S| when calib.bin exists)**. At p ≥ 10⁵:
+  - a final island without a calib.bin k is refused with `invalid_input`;
+  - calibration islands, which run before calib.bin exists, use the setup-derived k.
+
+  Over budget, admission refuses deterministically with `resource_limit`, before any allocation. The check at every step boundary uses the store's **actual** size. With G = 0
   the island chooses the largest G ≤ 256 that fits. The merge applies the same rule to its own plan (`merge.h`, WP4).
 - **Data outcomes of `prep`** (v3 returns them as fit outcomes with an empty HPM, `core/v3_preprocess.R:111-114`):
   `no_predictors` and `y_constant`. The task status is `completed`, the record has `prep_status` and `hpm: []`, no
@@ -480,3 +484,6 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
 - v0.1.11 (2026-11-16, WP1; WP4 PR #33) — §1: `smcbvs4 merge` argument forms (driver form with an authoritative
   manifest, where a disagreeing explicit argument exits 13; explicit form; base-name input rules; `--mem-budget` range;
   exit codes).
+- v0.1.12 (2026-11-16, WP1; PR #26 re-check m2) — §7: the admission plan's k = max(q90(π₀ size) + 1 from setup,
+  calibration's mean |S| when calib.bin exists). At p ≥ 10⁵ a final island without a calib.bin k is `invalid_input`;
+  calibration islands use the setup-derived k.

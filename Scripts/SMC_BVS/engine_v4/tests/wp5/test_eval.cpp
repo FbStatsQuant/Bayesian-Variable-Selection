@@ -203,7 +203,7 @@ TEST(wp5_store_mass_find_occ) {
 }
 
 TEST(wp5_selection_pip_evidence) {
-  Data O = test_data(60, 12, 0.0, 24);
+  Data O = test_data(60, 12, 0.0, 24, {3, 9, 11});   // p = 12: the default S0 {3,9,15} read column 15 of a 12-column X (PR37 re-check INFO-3)
   Model S0 = {2, 8, 14 - 4};   // internal {2,8,10}
   Json s = selection_metrics(S0, {2, 8}, -5.0, {2, 8, 10, 11}, -4.0, O);
   CHECK(s.at("outcome_class").str() == "search");
