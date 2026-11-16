@@ -472,3 +472,9 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - (overnight) ~22:05 CT: W3-START2-R CP1 GO. Start-mass rate √(log n/n), optimal up to √log n; the visibility threshold exactly 1.
   H5 card at CP3. Codex congested (BNP's review push): for the rest of the night, new **non-critical** reviews go to Opus.
   This is a level-1 call for non-critical work only; DIST and rider CP3 paths stay on Codex.
+- (overnight) ~22:30 CT, Engineering:
+  - Sol EXP-CP1 review: GO-WITH-CHANGES, 2 CRITICAL / 8 MAJOR, no NOTS obstruction. All 11 adopted.
+  - ENGINEERING_SPEC v3 = EXP-CP1 v2 accepted. D-19 (block cap B_V = 14) and D-20 (pinned reference config) confirmed.
+  - Envelope +1–5%; memory per task up (island ~24–32 GB, calibration ~48–64 GB), within the cap.
+  - Schedule: 10⁴ pilot early Dec, 10⁵ mid-Dec, first 1M fit at risk for before the holidays. A recovery-options card is
+    requested for the owner's morning brief.
