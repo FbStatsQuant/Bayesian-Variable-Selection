@@ -725,7 +725,7 @@ any $b\ge\tfrac12$. Recommendation: present (A5)(a) in the main text (fully expl
 
 ## 8. Theorem 8 — Certified screening
 <!-- ROW thm8 BEGIN -->
-**Card row** 3.7 · **Section version** 0.4 (2026-11-16) · **Pending delta** —
+**Card row** 3.7 · **Section version** 0.5 (2026-11-16) · **Pending delta** —
 
 
 ### Reader statement
@@ -776,6 +776,10 @@ bound on $s_0$, and no condition on the start, leakage, blocks or the collineari
 **"PROVED-CHECKED"**; its non-asymptotic form `W3-SCR:SCR-A@1.0.0` (:79-85, probability $\le3e^{-x}$ under a finite-$n$
 margin condition), **"PROVED-CHECKED"**. Theorem 8 is its corollary under fixed constants (`W3-SCR:A1`). *Bridge:* none
 (the quantities are the master's, described in words).
+*Form dependency (manager, 2026-11-16):* `W3-SCR:A-inf` sits in the post-C1 tree that the second SCR council round
+(W3-SCR-R2, per-claim table for all 21 rows) is re-reviewing. Theorem 8′ is stated **plain** if A-inf is ACCEPTed in that
+round; otherwise it carries the (b1) label: *"(reviewed by a council on an earlier text; a second council review is
+pending)"*. The CP3 freeze picks per the round's table.
 
 ### Why each assumption
 (A1) only the realised combination of missing truths must keep a fraction of its energy outside any small model (the
@@ -807,6 +811,8 @@ certificate needs a near-orthogonality floor (`W3-SCR:SCR-C`, PROVED-CHECKED), w
 - v0.4 2026-11-16: [H5 card 7 verdict] abstract clause names κ, b, M, σ as fixed in $n$; body Theorem 8′ (master
   A-inf) for $n$-varying signals; forms (a)/(b1)/(b2) for the second SCR council round, (b1) recommended (NEW body
   statement = master A-inf in words; EQUAL to its master).
+- v0.5 2026-11-16: Theorem 8′ form dependency on the W3-SCR-R2 per-claim table noted (plain if A-inf ACCEPT, else
+  (b1) label) (EQUAL).
 <!-- ROW thm8 END -->
 
 ---

@@ -42,3 +42,4 @@
 - 2026-11-15 23:38 CST HQ: Form A if T03ACC passes else B1 (approved); B2 rejected; Thm 1' / expectation display in body; abstract uses O_P form. Recorded in RV thm1 and card. Prop-LB implication check running (manager will relay).
 - 2026-11-16 01:21 CST Row 3.7 (SCR-PC): Thm 8 (A1)-(A2) explicit fixed-in-n kappa, b0, M, sigma (match SCR STATEMENT:158-160); n-dependent not covered (SCR-R1); A1o separate; placements (i) abstract clause / (ii) body written in RV thm8 + card. For Monday's Sol statement-change check.
 - 2026-11-16 01:23 CST H5 card 7 verdict (row 3.7): abstract clause names kappa, b, M, sigma fixed in n; body Theorem 8' (master W3-SCR:A-inf) for n-varying signals; forms (a)/(b1)/(b2) for the second SCR council round; (b1) recommended. RV thm8 v0.4, card.
+- 2026-11-16 01:24 CST Thm 8' form dependency noted (plain if W3-SCR:A-inf ACCEPT in W3-SCR-R2, else (b1) label).
