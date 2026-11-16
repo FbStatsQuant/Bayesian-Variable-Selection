@@ -319,3 +319,4 @@
 - Writing open items (C*, 32s₀, moderate-n Remark 3.7, noiseless gain/SS): Opus helper (delegate 263f2e2b) → WRITING/Docs/Writing/from_theory/ANSWERS_2026-11-16.md + copy in Dept/writing_answers/.
 - Slots: recorder + 2 Opus helpers = 3; audit Fable outside the cap. Codex: none before 16:20; one read per gate.
 - 2026-11-16 16:08 CST HQ: Song & Liang 2015 PDF on Owls at /home/fb31/SMC_Theory_Department/refs/Song_Liang_2015.pdf (sha256 315c247c…; out of git). Audit Fable steered: track B must cite the paper itself (thm/eq/page); the map is a finding aid only.
+- 2026-11-16 16:11 CST HQ alignment item → audit Fable (steer): AUDIT.md 'Method version per study' (2,400-fit, P6, SCR N1, W3-SCALE, overlap rung, 1M) with an APPLIES / UP TO a difference / DOES NOT APPLY verdict + a rerun recommendation for RERUN_SPEC. Engineering's cost is asked only if a rerun is recommended.
