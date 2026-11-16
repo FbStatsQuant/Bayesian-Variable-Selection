@@ -172,6 +172,10 @@ A request (from the manager to HQ, ≤ 10 lines) states:
 HQ adds its recommendation and forwards it to the owner the same day. Nothing expensive starts before the owner's answer.
 
 ## 10. Threads and agents (owner, 2026-11-15)
+**Goal: the owner's inbox shows only HQ and the departments.**
+- HQ does not start agents on other machines. Work for Owls goes to a department, which starts its own agents.
+- Departments start agents **inside their own thread**, either with `delegate_task` on their own environment (a nested
+  child of the department) or with native subagents. They never use `t3_thread_launch` for routine work.
 - **Departments are the only top-level threads.** A department runs its leads, helpers, reviewers and experts as **its
   own child agents** (`delegate_task` from the department thread), so they stay inside the department and out of the
   owner's sidebar.
