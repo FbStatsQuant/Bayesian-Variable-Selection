@@ -9,6 +9,24 @@ Theorems are stated under conditions on (X, θ*) only — **no design family app
 (AR, banded, spatial, blocks, one-factor, masked hubs, ...) appear only in an examples table. All results asymptotic;
 p ≤ n^A for any fixed A, p ≫ n the regime that matters most; about the method as coded (main).
 
+**Readability (owner, 2026-11-15; binding for every headline theorem, the chapter and the paper).** "They must be true
+but, as much as possible, they should not be weird-looking statements. They have to be presented in a way that makes
+clear to the reader what the assumptions are and what the proven statements are." Song–Liang (2015) Theorems 1–2 are
+the model. Every headline theorem therefore has a **reader version**:
+- the assumptions are a short numbered list (A1)–(Ak), each in standard, primitive terms a reader recognises: i.i.d.
+  rows with sub-Gaussian tails, strict sparsity, p ≤ n^A, a sparse eigenvalue bound, a beta-min level. Technical
+  sample-level interfaces (events such as (E), (ND), (F_w), visibility or leakage objects) do not appear there. They
+  live in a "master theorem" or in lemmas, with bridges from (A1)–(Ak) to them;
+- the conclusion is one display, or at most three, in the standard form of the literature (e.g. Song–Liang (15)),
+  with the rate written explicitly;
+- each assumption gets one line on why it is there and whether it is necessary (from TARGET.md);
+- constants and secondary clauses go to remarks; no new notation in the statement beyond what the setup defines.
+
+The master (interface) version stays as the checked result. The reader version is a corollary with its bridges checked,
+and **both** pass review. The reader version is the one in the paper's main text, the chapter, the claims card and the
+advisor report. At CP1 the lead proposes the reader version; council gate F (faithfulness) covers reader version =
+master + bridges; HQ and the consultant check readability on the headline cards (PROTOCOL_v4 H5).
+
 ## The package (CRITIQUE_fable.md §4, with the adjudicators' fixes)
 1. **Posterior concentration** (T03♯/UNI-P, SL0/SL1) — proved; needs an independent adversarial re-check (it never had
    a council pass) and a sharpness check. 1a: size-tail lemma stated on its own. 1b: predictive/Hellinger corollary

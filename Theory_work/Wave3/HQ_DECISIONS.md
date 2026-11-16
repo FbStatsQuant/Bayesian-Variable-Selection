@@ -377,3 +377,12 @@ real runs only on 0 problems.
   "PROVED (by this seat, unchecked)"). Needs a council diff round (v4 §5.5) on a frozen manifest, with per-claim tables.
 - After the runs: `check.py --quiet` 465 claims, 0 ERROR, 262 WARN, 238 INFO; `test_lifecycle.py` 171 PASS, 0 FAIL (exit 0).
 - 2026-11-15 follow-ups (HQ): card 3 revised — implies W3-START2:X ⇒ W3-START:X recorded for 8 rows with evidence, no supersession, START rows ACTIVE with an 'implied by' note, no headline flag to move (coexist refused: needs a trade-off), 0e8d07c; assemble.py block names made injective (1 collision group in 465 ids: W3-MISR:MIS(i)/MIS(i')), 2 regression tests, 91eac3f. check.py 0 ERROR; assemble --check current; test_lifecycle 173 PASS.
+
+## 2026-11-15 ~18:30 CT — readability rule (owner) + Lean department READY
+- Owner: headline theorems must be true and not "weird-looking"; assumptions and conclusions clear to the reader
+  (Song–Liang style). PROGRAM.md "Readability" + PROTOCOL_v4 H6: a reader version (numbered primitive assumptions, one
+  display) as a checked corollary of the interface master theorem plus bridges. W3-DIST is told to propose one at CP1.
+- Lean department set up, READY, not started (owner: BNP runs full throttle; start on owner + HQ GO):
+  - `Lean/BRIEF.md`; the lake project `Lean/BVSCert` (BNP toolchain v4.35.0-rc2, Mathlib 0653561);
+  - Owls worktree /home/fb31/BVS-wt/LEAN, branch lean/BVSCert, snapshot cron;
+  - Level 1 deterministic cores, Level 2 axiom-named skeletons, a fidelity check per statement.
