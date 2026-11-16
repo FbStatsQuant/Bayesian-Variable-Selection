@@ -341,6 +341,31 @@ class IslandEngine {
   }
   MoveStats take_moves() { MoveStats ms = master.ms; master.ms = MoveStats(); return ms; }
 
+  // ---- I1 store check (WP3_ARCH_REVIEW R4, package O1) --------------------------------------------------------
+  // The only run-time proof of I1 (strictly sorted under the store order, no model twice, size <= cap). It used to run
+  // serially after every step (6.6 s per step at 4e7 entries, MEASURED Owls; ~5.7 s on SPR, job 2749328); it now runs
+  // in parallel over index ranges, and only where a store leaves the process: before every checkpoint and before the
+  // final write (the store moved into the IslandRun). A store whose generation has not changed since its last check is
+  // not checked again (the kept run is immutable once published). Read-only: no output bit depends on it.
+  uint64_t checked_gen_top = ~0ull, checked_gen_l0 = ~0ull, checked_gen_l1 = ~0ull;
+  void check_stores() {
+    if (!cfg.check_store && !cfg.check_store_each_step) return;
+    auto t0 = std::chrono::steady_clock::now();
+    bool any = false;
+    auto one = [&](const TopStore& s, uint64_t& seen, const char* what) {
+      const uint64_t g = s.gen.load(std::memory_order_acquire);
+      if (g == seen) return;
+      any = true;
+      if (!s.check_invariant_parallel(NT)) throw v4::Error(v4::Status::internal_error, std::string("store invariant I1 violated (") + what + ")");
+      seen = g;
+    };
+    one(top, checked_gen_top, "top store");
+    if (cfg.leaders) { one(lead0, checked_gen_l0, "leader store lead0"); one(lead1, checked_gen_l1, "leader store lead1"); }
+    if (!any) return;
+    ++res.ks.store_checks;
+    res.ks.t_check += std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+  }
+
   // ---- checkpoint ---------------------------------------------------------------------------------------------
   // Configuration + binary fingerprint (not threads, G, tile or kernel: a resume may change them). INTERFACES v0.1.3:
   // a restart refuses a different binary block.
@@ -387,6 +412,7 @@ class IslandEngine {
   // generation intact (tests: truncated / leftover temporary / corrupt newest).
   void save_ckpt(int step) {
     auto t0 = std::chrono::steady_clock::now();
+    check_stores();   // never checkpoint a store that fails I1 (O1)
     std::string path = cfg.ckpt_path + ((ckpt_writes & 1) ? ".b" : ".a");
     std::string tmp = path + ".tmp." + std::to_string((long)getpid());
     FILE* f = std::fopen(tmp.c_str(), "wb");
@@ -632,17 +658,18 @@ class IslandEngine {
             const double rounds = (double)(k.particle_rounds - ks_prev.particle_rounds);
             std::fprintf(stderr, "  [round] step %d: wall %.2f s | steps %.4g pairs %.4g (%.3f pairs per particle-round / p) sweeps %.4g (M %.3f) passes %llu | "
                          "ns per step (wall x threads) %.1f | ns per pair (wall x threads) %.1f | products ns/pair (thread) %.1f | phaseA ns/pair (wall x threads) %.1f | "
-                         "phaseB %.2f s compaction %.2f s (%llu compactions, sorts %.2f s)\n",
+                         "phaseB %.2f s compaction %.2f s (%llu compactions, sorts %.2f s) | store check %.2f s checkpoint %.2f s (since the last line)\n",
                          step, dt, steps, pairs, steps > 0 ? pairs / steps * m / std::max(1.0, (double)p) : 0.0, sweeps, rounds > 0 ? sweeps / rounds : 0.0,
                          (unsigned long long)(k.passes - ks_prev.passes), steps > 0 ? 1e9 * dt * NT / steps : 0.0, pairs > 0 ? 1e9 * dt * NT / pairs : 0.0,
                          pairs > 0 ? 1e9 * (k.t_products - ks_prev.t_products) / pairs : 0.0,
                          pairs > 0 ? 1e9 * (k.t_phaseA - ks_prev.t_phaseA) * NT / pairs : 0.0, k.t_phaseB - ks_prev.t_phaseB, top.t_compact - ks_prev.t_store_compact,
-                         (unsigned long long)(top.n_merges - merges_prev), top.t_sort - sort_prev);
+                         (unsigned long long)(top.n_merges - merges_prev), top.t_sort - sort_prev, k.t_check - ks_prev.t_check, k.t_ckpt - ks_prev.t_ckpt);
             ks_prev = k; ks_prev.t_store_compact = top.t_compact; merges_prev = top.n_merges; sort_prev = top.t_sort;
           }
           prev_t = now_t;
         }
-        if (cfg.check_store && !(top.check_invariant())) throw v4::Error(v4::Status::internal_error, "store invariant I1 violated");
+        if (step == cfg.test_corrupt_store_step && top.size() >= 2) top.k->v[1] = top.k->v[0] + 1.0;   // tests only (O1)
+        if (cfg.check_store_each_step) check_stores();   // tests / debugging only (O1: production checks at checkpoints and the final write)
         if (over_budget(step)) { stop = true; break; }
         maybe_ckpt(step, stop);
       }
@@ -671,6 +698,7 @@ class IslandEngine {
     res.island_best = master.island_best; res.hpm = master.hpm;
     if (res.status == 0 || res.status == 1 || calib) {   // only a completed (or test-interrupted) island reports its store: a failed
                                                 // or refused island may hold part of an unfinished round (GUARD-W, review m1)
+      check_stores();   // before the final write (O1; skipped when the last checkpoint already checked this generation)
       Kept& K = *top.k;      // moved, not copied (review m8b; the run is over)
       res.top_v = std::move(K.v); res.top_hash = std::move(K.hash); res.top_off = std::move(K.off); res.top_len = std::move(K.len); res.top_pool = std::move(K.pool);
     }
