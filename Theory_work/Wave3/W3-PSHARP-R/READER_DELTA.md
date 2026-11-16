@@ -1,23 +1,27 @@
-# READER_DELTA.md — W3-PSHARP-R (draft v0.2, 2026-11-15, after the statement lock L01; RIDER_RULES §5, PROTOCOL_v4 H6)
+# READER_DELTA.md — W3-PSHARP-R (draft v0.3, 2026-11-15, after CP1 conditions; rebased on W3-READER section 0.2 @88f5dec; RIDER_RULES §5, PROTOCOL_v4 H6)
 
 For HQ → W3-READER. Read-only source: `/home/fb31/BVS-wt/W3-READER/Theory_work/Wave3/W3-READER/READER_VERSIONS.md`
-(draft v0.1, W3-READER CP1), §3 "Theorem 3 — The rate cannot be improved", lines 158-200. Nothing here is written in
-W3-READER's folder. Master claims: `W3-PSHARP-R:AE`, `W3-PSHARP-R:A2C` (`STATEMENT.md` v1.1, locked, of this ticket; **not yet
+(at commit 88f5dec), §3 "Theorem 3 — The rate cannot be improved" (commit 88f5dec, lines 246-295; W3-READER staged v0.2 of this file as
+`deltas/thm3_W3-PSHARP-R.md`, pending CP3). Nothing here is written in
+W3-READER's folder. Master claims: `W3-PSHARP-R:AE`, `W3-PSHARP-R:A2C` (`STATEMENT.md` v1.1, locked, of this ticket; proofs written in `lemmas/`, **not yet
 proved or checked** — statuses at CP3), on top of `W3-PSHARP:A`@1.0.0 and `W3-PSHARP:B`@1.0.0.
 
-## 1. Current reader text (W3-READER `READER_VERSIONS.md:166-180`, abridged)
-(b) *(Orthogonal or Gaussian null columns.)* Assume (S1), s₀ fixed, **p → ∞**, ‖Xθ*‖² ≤ nM and ‖θ*‖² ≤ nM′ with fixed
-M, M′, and either (N-orth) … or (N-gauss) … and p ≤ n^A. Then
+## 1. Current reader text (W3-READER `READER_VERSIONS.md` at commit 88f5dec, §3 "Theorem 3", section version 0.2, lines 246-295)
+(b) (`:257-266`) *(Orthogonal or Gaussian null columns.)* Assume (S1), s₀ fixed, **p → ∞**, ‖Xθ*‖² ≤ nM and
+‖θ*‖² ≤ nM′ with fixed M, M′, and either (N-orth) … or (N-gauss) … and p ≤ n^A. Then
   1 − π(S₀ | y) ≥ (1 − o_P(1)) (s₀ + 1) √(log p/(πn)).
-Remark: "… the rate √(log n/n) is exact whenever log p ≍ log n". Honest limits (`:200`): "the expectation form of (b)
-for every p (sharp2 rider T12) is not yet proved".
+Consequences (`:268-275`, for sequences with s₀ ≤ min(K − 1, p/2) [S1-F5]): "… By (b) with p = n^a, the factor √(log n)
+is attained. On the two witness sequences … the rate √(log n/n) is exact (conditional on Theorems 1 and 2) [S1-F6]. On a
+general design only the order n^{−1/2} of part (a) is proved as a lower bound; a matching √(log n/n) lower bound on every
+design is open (post-freeze rider POST2-R1) [H5-6]." Why each assumption (`:277-281`). Honest limits (`:294-295`): "the
+expectation form of (b) for every p (sharp2 rider T12) is not yet proved".
 
 ## 2. What changes
 1. (b) gains an **expectation** display valid for **every p** (bounded p allowed), with a larger constant.
 2. The assumption "p → ∞" moves from (b) as a whole to the in-probability display only.
 3. The remark "exact whenever log p ≍ log n" is split: in probability as before; in expectation for every p.
 4. A remark on the critical sparsity scale (orthogonal null columns only) is added.
-5. The honest-limits note at `:200` is replaced (see §4).
+5. The honest-limits note at `:295` is replaced (see §4).
 
 ## 3. New reader text (proposed)
 
@@ -31,25 +35,32 @@ $$
 1-\pi(S_0\mid y)\ \ge\ (1-o_P(1))\,(s_0+1)\sqrt{\frac{\log p}{\pi n}}.
 $$
 
-*Consequences (remarks).* (As now for (a).) By (b) with p = n^a, E[1 − π(S₀ | y)] ≥ (1 − o(1))(s₀+1)√((a+½)/π)·√(log n/n),
-and for fixed p, E[1 − π(S₀ | y)] ≥ c_p (s₀+1)√(log n/n) with c_p = 2(p − s₀)/((2p − 1 − s₀)√(2π)). So the factor √(log n)
-is attained **in expectation for every p**, and **in probability whenever log p ≍ log n**; on these designs, which
-satisfy the assumptions of Theorems 1–2, the rate √(log n/n) is exact in probability whenever log p ≍ log n, and in
-expectation wherever the matching expectation upper bound applies (conditional on Theorems 1 and 2 and that bound). The extra √(log n) in expectation at bounded p comes from rare large gains of a single extra variable, not
-from the number of competitors. If s₀ is allowed to grow, a posterior mean error of order √(log n/n) forces s₀ to stay
-bounded, for every p. *(Critical scale, (N-orth) only.)* If (s₀ + 1)√(log p/(πn)) → λ ∈ (0, ∞) and s₀/p → 0, then
-π(S₀ | y) ≤ e^{−λ} + o_P(1).
+*Consequences (remarks), all for sequences with s₀ ≤ min(K − 1, p/2).* (Part (a) text unchanged, `:268-270`.) The
+bounds in (b) are lower bounds **on the two witness designs only**. By (b) with p = n^a,
+E[1 − π(S₀ | y)] ≥ (1 − o(1))(s₀+1)√((a+½)/π)·√(log n/n), and for fixed p, E[1 − π(S₀ | y)] ≥ c (s₀+1)√(log n/n) with a
+constant c > 0 depending only on p and s₀. So on these designs the factor √(log n) is present **in expectation for every
+p**, bounded p included, and **in probability whenever log p ≍ log n**. When log p = o(log n), nothing is claimed **in
+probability**: the in-probability display then gives only order √(log p/n), and whether the √(log n) is present in
+probability there is open. On the two witness sequences that also satisfy the upper-bound assumptions (as now, `:271-274`)
+the rate √(log n/n) is exact in probability (conditional on Theorems 1 and 2), and in expectation wherever a matching
+upper bound for the posterior mean error is available. The extra √(log n) in expectation at bounded p comes from rare
+large gains of a single extra variable, not from the number of competitors. If s₀ is allowed to grow, then on these
+designs a posterior mean error of order √(log n/n) forces s₀ to stay bounded, for every p. *(Critical scale, (N-orth)
+only.)* If (s₀ + 1)√(log p/(πn)) → λ ∈ (0, ∞) and s₀/p → 0, then π(S₀ | y) ≤ e^{−λ} + o_P(1). On a general design only the
+order n^{−1/2} of part (a) is proved as a lower bound; a matching √(log n/n) lower bound on every design is open
+(post-freeze rider POST2-R1) (as now, `:274-275`).
 
-*Why each assumption* (one line each, replaces the (b) sentence at `:184-186`): the witness conditions make the
+*Why each assumption* (one line each, replaces the (b) sentence at `:279-281`): the witness conditions make the
 one-variable supersets behave as independent χ²₁ competitors; for the expectation display a single such competitor
 already suffices (its heavy upper tail gives the √(log n)), for the in-probability display p → ∞ competitors are
 needed (their maximum gives the √(log p)); energy and coefficient bounds keep the variance posterior on scale. These
 are witnesses, not claimed necessary.
 
-## 4. Honest limits (replaces `:200`)
-"None for the statement. The expectation display holds for every p; whether its constant is attained is a numerical
-observation only (ratio 0.99–1.03 at n = 10⁶ for p ∈ {2, 3, 5})." Until CP3: "the expectation display is proved by
-rider T12, not yet checked".
+## 4. Honest limits (replaces `:295`)
+"The √(log n) lower bounds hold on the two witness designs only; on every design only order n^{−1/2} is proved
+(part (a)). Whether the constant of the expectation display is attained is not proved." Until CP3: "the expectation
+display is proved, not yet independently checked". (Note for HQ, not reader text: numerically the expectation constant
+looks attained at fixed p, `numerics/ae_fixed_p_out.txt`.)
 
 ## 5. Bridges needed
 
