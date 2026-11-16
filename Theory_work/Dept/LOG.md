@@ -61,3 +61,4 @@
 - 20:24 — §12 rule 7 (calm usage, no swarming) relayed to all 8 leads; department has no NOTS access by design (any NOTS need via me).
 - 20:25 — W3-READER blocked by intermittent ENOSPC (shell); root fs 87% now; READER told to retry + commit; HQ told (spike source unknown; propose Engineering crew / CLAUDE_CODE_TMPDIR on restart). READER: H5 actions in progress, R1–R4 + SHARP3 written; helpers G1/G2 on lit/necessity.
 - 20:26 — W3-MISR-R launched as child agent (D30); Lean launch Thu 11-19 noted.
+- 20:28 — temp convention /home/fb31/bvs_tmp/<ticket> (TMPDIR) adopted (HQ + Engineering); relayed to all 9 leads incl. MISR-R child; recorder's _scratch note replaced; RIDER_RULES updated.
