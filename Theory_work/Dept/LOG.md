@@ -78,3 +78,4 @@
 - 20:42 — SHARP3 triaged by READER (no correctness issue; gates PASS except 1.1 pending R03b dispositions); SAMP-R1, SCR-R1 queued post-freeze (D34).
 - 20:43 — Eng: purge is atime-keyed (mv doesn't reset; copy does); HQ already approved the records copy (D33); target ready; bvs_tmp to be absorbed as jobs go idle.
 - 20:43 — HQ: D32 approved; Owls has NOTS access; department runs its own NOTS move post-freeze (queued).
+- 20:44 — HQ submitted SHARP3 addendum (POST2 C, E; 64k; ≤ $3); results → READER api/sharp3b/. READER told to also dispose of R03b's four proposals (A+, E+, E-floor+, B+) in row 1.1's better-gate regardless of verdicts.
