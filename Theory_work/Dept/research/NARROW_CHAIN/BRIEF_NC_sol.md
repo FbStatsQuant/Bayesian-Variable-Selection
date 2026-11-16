@@ -14,10 +14,12 @@ validators can throw (`Theory_work/Dept/research/FUNI_transfer/TR1_sol.md`). Ear
 `IDEALW_BATCH/DIFF2_sol.md` (the batch). The registry wants, per row, an explicit statement-level verification.
 
 ## Task — for each row of `Theory_work/Dept/research/NARROW_CHAIN/rows.tsv` (columns: id, file, lines, stored sha256)
-1. Compute the sha256 of the statement span exactly as the registry does (lines joined with "\n", UTF-8, no trailing newline — if your hash
-   of a span does not match the stored one, try with a trailing newline and say which convention reproduces the stored hashes; use that one
-   for all rows). Report your computed hash.
-2. Judge: is the narrowed statement in that span **proved by the row's own existing proof chain** (the lemmas/files it already cites, with the
+1. Compute the row's hash **exactly as the registry does**: `Theory_work/INFRA/tools/bvsreg.py` claim_hash (statement span PLUS ordered
+   premise spans, each prefixed by its `--premise <path>--` marker, per-line rstrip, LF joins, no final newline; read bvsreg.py at origin/main
+   for the exact procedure, or import it). It must reproduce the stored hash in rows.tsv; report it. (v3 of this brief: v2 asked for a
+   statement-only hash, which is not the registry's convention — see NC_sol_v2_hashconv.md; its proof-chain judgments are a prior read you
+   may consult but must re-judge yourself.)
+   2. Judge: is the narrowed statement in that span **proved by the row's own existing proof chain** (the lemmas/files it already cites, with the
    delivery step restricted as the narrowing says), with no input that the chain lacks? Cite the chain files:lines. A row whose statement is
    a research target / partial claim (e.g. W2-FAC-XA:X4) is judged on what its span asserts; if it asserts no proved result, say so.
 
