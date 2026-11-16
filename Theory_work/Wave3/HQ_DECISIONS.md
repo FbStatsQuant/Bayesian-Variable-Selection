@@ -534,3 +534,15 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - R2 counts as the round HQ ordered (card 7); this fix is its one diff round (v4 §5.5). If it fails, it comes back to HQ.
   - Row 3.7 keeps the interim (b1) label until the diff round passes. Then W3-READER states "κ, b, M, σ fixed in n" in row 3.7's reader version, through an H5 card with the CP3 package.
   - SCR-R1 queued post-freeze.
+- 2026-11-16 (overnight) ~03:30 CT. W3-PSHARP-R CP3 council passed: Sol 9.5, Opus 9.2, MANIFEST fdfd4562.
+  - H5 card 8 (row 1.3): the consultant AGREES.
+  - Acceptance GO for AE and A2C, once the recorder re-stages the ingest on current main cleanly.
+  - Reader text v0.4 before the thm3 swap:
+    - headline: "Thm 1 rate cannot be improved under its assumptions: orthogonal/Gaussian null columns, E[1−π] ≥ c(s₀+1)√(log n/n), every p"; never "every design" (POST2-R1 open);
+    - A2C moves to the body as a growing-s₀ remark;
+    - named cases, with a §5 bridge (Sol line check if it is new);
+    - numbered remarks;
+    - status lines updated;
+    - fidelity check on the "forces s₀ bounded" remark.
+  - HQ signs off v0.4 without a new card unless the headline sentence changes.
+- 2026-11-16 (overnight) Cont-F/R edge fix on main 435896a7. 83/83 accept records current. The TH05.0 leftover on Cont-R is deferred to post-freeze.
