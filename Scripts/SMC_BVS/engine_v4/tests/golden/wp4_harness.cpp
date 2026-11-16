@@ -260,20 +260,26 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
     }
     if (!Rf_isNull(inherited)) {
       List inh(inherited);
+      bool has_hpm = false; v4::Model chpm; v4::EventCtx ce;
+      if (inh.containsElementNamed("hpm") && !Rf_isNull(inh["hpm"])) {
+        List hp = inh["hpm"];
+        if (hp.containsElementNamed("provenance") && hp.containsElementNamed("model")) {
+          List pv = hp["provenance"];
+          EventCtx e; e.phase = phase_index(as<std::string>(pv["phase"])); e.tier = as<int>(pv["tier"]); e.island = as<int>(pv["island"]);
+          e.stage = as<int>(pv["stage"]); e.round = as<int>(pv["round"]); e.particle = as<int>(pv["particle"]);
+          e.position = as<int>(pv["position"]); e.phi = as<double>(pv["phi"]); e.iter = pv.containsElementNamed("iter") ? as<int>(pv["iter"]) : -1;
+          ce = wp4h::ev_from_v3(e, mech_index(as<std::string>(pv["mechanism"])));
+          ce.key.seg = v4::SG_CALIB;   // a calibration event (INTERFACES v0.1.6)
+          chpm = to_internal(D, hp["model"]); has_hpm = true;
+        }
+      }
+      std::vector<v4::merge::InheritedModel> im;
       if (inh.containsElementNamed("models")) {
         auto Ms = models_from_R(D, inh["models"]);
         auto ev = fac.make();
-        for (auto& S : Ms) { double lm, lg0, dd, F; ev(S, lm, lg0, dd, F); pre.offer_stores(S, zob.hash(S), F, lg0, lm, v4::merge::inherited_event()); }
+        for (auto& S : Ms) { v4::merge::InheritedModel m; m.S = S; double dd; ev(S, m.logm, m.lg0, dd, m.F); im.push_back(m); }
       }
-      if (inh.containsElementNamed("hpm") && !Rf_isNull(inh["hpm"])) {
-        List hp = inh["hpm"]; List pv = hp["provenance"];
-        EventCtx e; e.phase = phase_index(as<std::string>(pv["phase"])); e.tier = as<int>(pv["tier"]); e.island = as<int>(pv["island"]);
-        e.stage = as<int>(pv["stage"]); e.round = as<int>(pv["round"]); e.particle = as<int>(pv["particle"]);
-        e.position = as<int>(pv["position"]); e.phi = as<double>(pv["phi"]); e.iter = pv.containsElementNamed("iter") ? as<int>(pv["iter"]) : -1;
-        v4::EventCtx ce = wp4h::ev_from_v3(e, mech_index(as<std::string>(pv["mechanism"])));
-        ce.key.seg = v4::SG_CALIB;
-        v4::merge::apply_inherited_provenance(pre, to_internal(D, hp["model"]), ce);
-      }
+      v4::merge::offer_inherited(pre, im, has_hpm, chpm, ce, zob);
     }
   }
   pre.compact();

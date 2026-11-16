@@ -92,9 +92,9 @@ struct Triggers {   // names and order as core/v3_calib.R:60-61
   bool any() const { return E1 || E2 || E3 || forced_pilot_steps || grid_failure || grid_unconverged || local_limit; }
   std::vector<std::string> fired() const {
     std::vector<std::string> f;
-    if (E1) f.push_back("E1"); if (E2) f.push_back("E2"); if (E3) f.push_back("E3");
-    if (forced_pilot_steps) f.push_back("forced_pilot_steps"); if (grid_failure) f.push_back("grid_failure");
-    if (grid_unconverged) f.push_back("grid_unconverged"); if (local_limit) f.push_back("local_limit");
+    const bool on[] = {E1, E2, E3, forced_pilot_steps, grid_failure, grid_unconverged, local_limit};
+    const char* nm[] = {"E1", "E2", "E3", "forced_pilot_steps", "grid_failure", "grid_unconverged", "local_limit"};
+    for (int i = 0; i < 7; ++i) if (on[i]) f.push_back(nm[i]);
     return f;
   }
 };

@@ -50,12 +50,12 @@ same <- function(a, b, path) {
 expect <- function(cond, path) { n_checks <<- n_checks + 1L; if (!isTRUE(cond)) { failures <<- c(failures, path); cat("  FAIL:", path, "\n") } }
 
 # ---- fixtures -------------------------------------------------------------------------------------------------------
-fixture <- function(n, p, rho, seed, s0 = c(3, 7, 11, 19, 23)) {
+fixture <- function(n, p, rho, seed, s0 = c(3, 7, 11, 19, 23), beta = c(1, -0.8)) {
   set.seed(seed)
   X <- matrix(0, n, p); X[, 1] <- rnorm(n)
   for (j in 2:p) X[, j] <- rho * X[, j - 1] + sqrt(1 - rho^2) * rnorm(n)
   s0 <- s0[s0 <= p]
-  y <- drop(X[, s0, drop = FALSE] %*% rep(c(1, -0.8), length.out = length(s0))) + rnorm(n)
+  y <- drop(X[, s0, drop = FALSE] %*% rep(beta, length.out = length(s0))) + rnorm(n)
   list(X = X, y = y)
 }
 make_setup <- function(fx, H, Te, N, ell = NULL) {
@@ -132,7 +132,37 @@ compare_final <- function(r, m, tag) {
   same(r$score_counts$logical, m$logical, paste(tag, "logical counters"))
 }
 
+# ---- inherited-HPM provenance, INTERFACES v0.1.6 (core/cpp/v3_core.cpp:416-441): the calibration HPM model is
+# (i) also a table model, (ii) in the inherited list only, (iii) in neither. Each must give v3's provenance.
+fake_prov <- list(phase = "pilot", mechanism = "gibbs_flip", tier = 0L, island = 0L, stage = 3L, round = 3L,
+                  particle = 7L, position = 11L, phi = 0.5, iter = 0L)
+same_model <- function(a, b) identical(as.integer(a), as.integer(b))
+provenance_cases <- function(setup, frozen, seed, fr, tag) {
+  Sstar <- as.integer(fr$hpm); Fstar <- fr$hpm_F
+  base <- Filter(function(m) !same_model(m, Sstar), frozen$inherited$models)
+  is_table <- any(vapply(setup$blocks, function(b) all(Sstar %in% b), TRUE))
+  mk <- function(models, hpm_model) list(models = models, hpm = list(model = hpm_model, F = Fstar, provenance = fake_prov))
+  variants <- list(
+    ii = list(inh = mk(c(base, list(Sstar)), Sstar), want = if (is_table) "table" else "fake"),
+    iii = list(inh = mk(base, Sstar), want = if (is_table) "table" else "island"))
+  if (is_table) variants$i <- list(inh = mk(c(list(Sstar), base), Sstar), want = "table")
+  cat(sprintf("   provenance cases: HPM {%s} is %sa table model\n", paste(Sstar, collapse = ","), if (is_table) "" else "not "))
+  for (nm in names(variants)) {
+    v <- variants[[nm]]
+    fz <- v3_frozen(frozen$grid, tier = frozen$tier, N = frozen$N, L = frozen$L, inherited = v$inh)
+    fz$rho_V <- frozen$rho_V; fz$grid_label <- frozen$grid_label
+    ro <- v3_run_settings(setup, fz, ls0 = TRUE)
+    f2 <- v3_final_run(setup, fz, seed, runtime = NULL, ls0 = TRUE)
+    m2 <- .v3cpp$wp4_final_merge(setup$ptr, fz$grid, ro, as.numeric(seed), fz$inherited, threads, 64L, "", 0L)
+    compare_final(f2, m2, sprintf("%s provenance(%s)", tag, nm))
+    pv <- f2$hpm_provenance
+    got <- if (identical(pv[names(fake_prov)], fake_prov)) "fake" else if (identical(pv$phase, "table")) "table" else "island"
+    if (same_model(f2$hpm, Sstar)) expect(identical(got, v$want), sprintf("%s provenance(%s): v3 gives %s, expected %s", tag, nm, got, v$want))
+  }
+}
+
 cases <- list(
+  list(id = "AR0.9_n100_p30_s34", n = 100, p = 30,   rho = 0.9, seed = 21, H = c(48, 96),   Te = c(40, 80),   N = c(100, 200), ell = NULL, s0 = c(3, 4), beta = c(2, 1.5), prov = TRUE),
   list(id = "AR0.6_n100_p40",   n = 100, p = 40,   rho = 0.6, seed = 11, H = c(64, 128),  Te = c(60, 120),  N = c(150, 300), ell = NULL),
   list(id = "AR0.9_n120_p120",  n = 120, p = 120,  rho = 0.9, seed = 12, H = c(48, 96),   Te = c(40, 80),   N = c(120, 240), ell = 3),
   list(id = "IND_n80_p60_Te3",  n = 80,  p = 60,   rho = 0.0, seed = 13, H = c(32, 64),   Te = c(3, 4),     N = c(100, 200), ell = 2),
@@ -144,7 +174,7 @@ if (level == "full") cases <- c(cases, list(
 timing <- list()
 for (cs in cases) {
   cat(sprintf("== case %s\n", cs$id))
-  fx <- fixture(cs$n, cs$p, cs$rho, cs$seed)
+  fx <- if (is.null(cs$s0)) fixture(cs$n, cs$p, cs$rho, cs$seed) else fixture(cs$n, cs$p, cs$rho, cs$seed, cs$s0, cs$beta)
   setup <- make_setup(fx, cs$H, cs$Te, cs$N, cs$ell)
   seed <- 1000L + cs$seed
   t0 <- proc.time()[["elapsed"]]; r <- v3_calibrate(setup, seed, tier = 0, preflight = NULL, runtime = NULL, grid_fallback = TRUE)
@@ -167,6 +197,7 @@ for (cs in cases) {
     timing[[length(timing) + 1]] <- data.frame(case = cs$id, what = sprintf("final th=%d chunk=%d (merge+tail part)", th, ch),
                                                ref_s = t_fr, wp4_s = sum(mm$seconds_islands) + mm$seconds_merge_tail)
   }
+  if (isTRUE(cs$prov) || cs$id == "AR0.6_n100_p40") provenance_cases(setup, r$frozen, seed, fr, cs$id)
   if (isTRUE(cs$heavy)) next   # T10 and the bounded rule are size-independent logic: quick cases only
   # 3. T10 through the merge
   for (fault in c("missing", "corrupt", "hash_mismatch", "island_numerical", "tail_numerical")) {

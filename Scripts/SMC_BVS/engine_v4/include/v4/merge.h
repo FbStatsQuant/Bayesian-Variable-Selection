@@ -43,7 +43,7 @@ struct IslandIn {
   std::vector<Model> terminal;           // optional
 };
 // How an island file was found by the loader (WP1 format reader / manifest check).
-enum class Load : uint8_t { ok = 0, missing, corrupt, hash_mismatch };
+enum class Load : uint8_t { ok = 0, missing, corrupt, hash_mismatch, binary_mismatch };
 struct IslandSlot { Load load = Load::missing; IslandIn isl; std::string detail; };
 
 struct MergeSettings {
@@ -105,13 +105,26 @@ inline EventCtx table_event(int block, uint32_t code) {   // core/cpp/v3_core.cp
   EventCtx ev; ev.phase = PH_TABLE; ev.mech = ME_TABLE; ev.key.seg = SG_TABLE; ev.key.iter = -1; ev.key.unit = 0;
   ev.key.stage = (uint32_t)block + 1; ev.key.position = code; return ev;
 }
-inline EventCtx inherited_event() {
-  EventCtx ev; ev.phase = PH_INHERITED; ev.mech = ME_INHERITED; ev.key.seg = SG_INHERITED; ev.key.iter = -1; return ev;
+// INTERFACES v0.1.5 key table: inherited model i (input order) = (INHERITED, tier 0, iter -1, unit 0, particle i).
+inline EventCtx inherited_event(uint32_t i) {
+  EventCtx ev; ev.phase = PH_INHERITED; ev.mech = ME_INHERITED; ev.key.seg = SG_INHERITED; ev.key.iter = -1; ev.key.particle = i;
+  return ev;
 }
-// core/cpp/v3_core.cpp:430-441: after the inherited offers, the inherited HPM's label "inherited" is replaced by its
-// calibration provenance when the ledger's HPM is the calibration HPM and still carries the label "inherited".
-inline void apply_inherited_provenance(Ledger& led, const Model& calib_hpm, const EventCtx& calib_ev) {
-  if (led.has_hpm && led.hpm_ev.phase == PH_INHERITED && led.hpmS == calib_hpm) led.hpm_ev = calib_ev;
+// One inherited model with its stored values (calib.bin `inh_*`: F, lg0, logm from the calibration scorer).
+struct InheritedModel { Model S; double F = 0, lg0 = 0, logm = 0; };
+// The inherited step (core/cpp/v3_core.cpp:419-441; INTERFACES v0.1.6 §4.2): every model is offered to the HPM and the
+// stores (no logical count, as v3's offer_stores); the offer of the CALIBRATION HPM model carries that model's
+// calibration EventCtx (key segment CALIB), all others carry INHERITED keys. With the smallest-key rule this reproduces
+// v3's provenance replacement in its three cases: (i) the model is also a table model -> its table event (earlier key)
+// wins, as in v3 where the HPM then carries the label "table" and is not replaced; (ii) it is in the inherited list
+// only -> its calibration provenance; (iii) it is in neither -> it is never offered, as in v3 (nothing to replace).
+inline void offer_inherited(Ledger& led, const std::vector<InheritedModel>& inh, bool has_calib_hpm, const Model& calib_hpm,
+                            const EventCtx& calib_ev, const Zobrist& zob) {
+  for (size_t i = 0; i < inh.size(); ++i) {
+    const InheritedModel& m = inh[i];
+    const bool is_hpm = has_calib_hpm && m.S == calib_hpm;
+    led.offer_stores(m.S, zob.hash(m.S), m.F, m.lg0, m.logm, is_hpm ? calib_ev : inherited_event((uint32_t)i));
+  }
 }
 
 namespace detail {
@@ -137,6 +150,7 @@ inline bool guard_islands(const std::vector<IslandSlot>& slots, const MergeSetti
       case Load::missing: x = Status::io_error; out.missing.push_back(i + 1); break;
       case Load::corrupt: x = Status::invalid_input; out.invalid.push_back(i + 1); break;
       case Load::hash_mismatch: x = Status::invalid_input; out.invalid.push_back(i + 1); break;
+      case Load::binary_mismatch: x = Status::invalid_input; out.invalid.push_back(i + 1); break;
       case Load::ok:
         if (s.isl.r != i + 1 || (int)s.isl.pip.size() != ms.p || s.isl.N != ms.N) { x = Status::invalid_input; out.invalid.push_back(i + 1); }
         else x = s.isl.status;
