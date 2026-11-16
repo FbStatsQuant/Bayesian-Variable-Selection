@@ -144,6 +144,28 @@ increasing from 0 to 1, B ≥ 0.
   Q ≥ y'y/(n+1) > 1e-8 y'y, the refactor, QR and non-negative-Q routes cannot be reached in exact arithmetic for
   finite data; near-collinear columns do not trigger them. The compat golden adds a cap variant (n = 12, K = 6) instead.
 
+### 1.9 v0.4 (lever batch 2748756): the 10⁶ peak, and L5
+- **Missing plan term at 10⁶ (P2 again)**: round 1 stores π₀-sized models before the particles shrink (stand-in π₀ at
+  10⁶: mean size 56), so the store's peak is reached with k ≈ 56–62, not the final 6. The plan's k is now
+  max(8, q90(π₀ size) + 1, k_store) — exact from the setup's size masses — and three transients are removed from the
+  code instead of being budgeted: score rows sized once at G·p (growing re-zero-filled and reallocated them), the
+  staging area reserved once at its hard limit, and phase-B waves bounded to 0.1 c offers so the in-pass serial
+  compaction (stale snapshots, pool over-reservation) cannot occur in label-major. MEASURED plan vs the lever batch
+  (setup inputs measured in-process, 2.24 GB beyond X): **G = 64: plan 37.7 GiB ≥ measured 23.7 GiB; G = 256: 43.8 ≥ 32.0
+  GiB** (measured at efc0dfd0, before these fixes). At 2·10⁴ / 10⁵ the bound holds in all eight configurations.
+- **L5, per-pass overheads.** Per-call costs (MEASURED, Owls, 1 thread, `v4_bench_island overheads p`), old → new, all
+  exact (same uniforms, same results; T3 hashes and both golden tests unchanged):
+  π₀ draw (every I step and initial draw) 59.2 → 4.0 ms at 10⁶ (8.99 → 0.42 ms at 10⁵): the draw checks 8 blocks at once
+  against an r-major table of P(k_b = 0 | r) with 8-lane Philox over the block slots; round order (Fisher–Yates) 41.8 →
+  21.0 ns per label at 10⁶ (8-lane Philox + prefetched swap targets); inverse 4.9 → 3.4 ns; score rows no longer
+  re-zero-filled (1.8 s per group at 10⁶, G = 256); apply in parallel.
+  ESTIMATE for the late 10⁶ round of job 2748756 (G = 256, 29.1 s): walk −3.3 s, build −2.2 s, orders −1.4 s,
+  apply −0.5 s → ≈ 21.7 s, i.e. **≈ 215 ns·CPU per pair (≈ 1.07× the plan), from 287**. To be measured on SPR.
+  Not built yet: dropping the stored round order (only the inverse is needed if phase A records the label of the
+  first change) halves the order arrays and allows G = 512 within 2 GB of orders (+4 GB of score rows).
+  Production note: the r-major table is (K + 1)·J·8 bytes (≈ 200 MB at 10⁶) built from WP2's tables; with WP2's
+  setup it belongs in the plan (or in setup.bin).
+
 ---
 
 ## 2. Addressed sampling

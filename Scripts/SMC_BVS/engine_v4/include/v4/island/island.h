@@ -36,6 +36,7 @@ struct IslandConfig {
   int G = 256; int tile = 128; int threads = 1;   // execution parameters: never part of the law (G = 0: largest G <= 256 that fits mem_budget)
   double k_store = 0;                       // admission: calibration-measured mean stored |S| (0: estimate from pi_0)
   double inputs_bytes = 0;                  // admission: setup / calib inputs mapped by the caller (X, z, diag(G) are in the plan)
+  double test_admission_k = 0;              // tests only: force the admission's k (forces a step-boundary refusal)
   int test_oom_pass = -1;                   // tests only: throw std::bad_alloc inside phase A at this pass (resource_limit path)
   uint64_t mem_budget = 0;                  // bytes; 0 = no admission check (--mem-budget; manager Q3/Q4)
   uint64_t store_cap = 0;                   // 0: 40 p + 1 (OD-13)
@@ -99,6 +100,10 @@ struct IslandRun {
 // The INTERFACES §5.2 record (records.h): stage table, RB arrays, Ledger (HPM + provenance, island_best, logical
 // counters, top store as a compacted v4::Store). Leader stores are absent in final islands (D-7).
 v4::IslandResult to_record(const IslandRun& r);
+
+// The --mem-budget admission plan of an island (manager Q3/Q4, review PR24 P2): the group size it would use (largest
+// G <= 256 that fits mem_budget when cfg.G == 0), the plan's k, the sizes. Used by run_island and by the bench.
+MemPlan plan_island(const Data& D, const Start& st, const IslandConfig& cfg, MemSizes* z = nullptr, double* k = nullptr, int* G = nullptr);
 
 template <Arith A>
 IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg);

@@ -528,9 +528,7 @@ TEST(mem_budget_admission) {
   Fixture F(100, 300, 26);
   IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3;
   const uint64_t h0 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c).hash();
-  double Ek = 0; for (size_t k = 0; k < F.st.size_logmass.size(); ++k) Ek += (double)k * std::exp(F.st.size_logmass[k]);
-  const double k_est = std::max(8.0, 2.0 * Ek + 2.0);
-  auto plan = [&](int G) { return island_memory(sizes_of(F, c, G), k_est).total; };
+  auto plan = [&](int G) { IslandConfig cg = c; cg.G = G; return plan_island(F.D, F.st, cg).total; };
   // (1) refusal before any allocation: budget below the G = 1 plan; deterministic reason
   IslandConfig a = c; a.G = 0; a.mem_budget = plan(1) - 1;
   IslandRun r1 = run_island<Arith::ClassA>(F.D, F.st, F.nb, a);
@@ -543,10 +541,10 @@ TEST(mem_budget_admission) {
   // (3) a fixed G whose plan exceeds the budget is refused
   IslandConfig b = c; b.G = 48; b.mem_budget = plan(17);
   CHECK(run_island<Arith::ClassA>(F.D, F.st, F.nb, b).status == 3);
-  // (4) step-boundary refusal (review PR24 m1): the admission's k (k_store = 0.5) is far below the stored models' real
+  // (4) step-boundary refusal (review PR24 m1): the admission's k (forced to 0.5) is far below the stored models' real
   //     size, so the admission passes and the first step-boundary check (actual pool) refuses; no store is reported
-  IslandConfig d = c; d.k_store = 0.5;
-  d.mem_budget = island_memory(sizes_of(F, d, d.G), 0.5).total + 1024;
+  IslandConfig d = c; d.test_admission_k = 0.5;
+  d.mem_budget = plan_island(F.D, F.st, d).total + 1024;
   IslandRun r4 = run_island<Arith::ClassA>(F.D, F.st, F.nb, d);
   CHECKF(r4.status == 3 && r4.reason.find("after step") != std::string::npos && r4.top_v.empty() && r4.rb_acc.empty(), "step refusal: status %d '%s'", r4.status, r4.reason.c_str());
   TmpGuard tg; std::string path = tg.add(wp3_tmp("refused.bin"));
@@ -785,9 +783,10 @@ static void plan_bounds_peak(int p, int N, std::initializer_list<int> Gs) {
     const long hwm = status_kb("VmHWM:");
     double k = r.top_v.empty() ? 8.0 : (double)r.top_pool.size() / (double)r.top_v.size();
     if (lead && !r.lead0_v.empty()) k = std::max({k, (double)r.lead0_pool.size() / r.lead0_v.size(), (double)r.lead1_pool.size() / r.lead1_v.size()});
-    MemPlan mp = island_memory(sizes_of(F, c, G), k);
+    double k_plan = 0; MemPlan mp = plan_island(F.D, F.st, c, nullptr, &k_plan, nullptr);   // the admission's own plan
     uint64_t inputs = 0; for (auto& it : mp.items) if (it.name == "inputs") inputs = it.bytes;
     const double plan_mb = (double)(mp.total - inputs) / 1048576.0, meas_mb = (double)(hwm - rss0) / 1024.0;
+    std::printf("  (stored mean |S| at the end %.2f; the plan's k %.2f)\n", k, k_plan);
     std::printf("  p %d N %d G %3d leaders %d: island peak increment %.0f MiB, plan %.0f MiB (k %.2f) -> %s\n", p, N, G, (int)lead, meas_mb, plan_mb, k,
                 plan_mb >= meas_mb ? "bound holds" : "BOUND FAILS");
     CHECKF(r.status == 0 && rss0 > 0 && hwm > 0 && plan_mb >= meas_mb, "p %d G %d leaders %d: measured %.0f MiB > plan %.0f MiB", p, G, (int)lead, meas_mb, plan_mb);
@@ -795,3 +794,24 @@ static void plan_bounds_peak(int p, int N, std::initializer_list<int> Gs) {
 }
 TEST(mem_plan_bounds_measured_peak_2e4) { plan_bounds_peak(20000, 500, {64, 256}); }
 TEST_TAGGED(mem_plan_bounds_measured_peak_1e5, "full") { plan_bounds_peak(100000, 500, {64, 256}); }
+
+// L5: the vectorised pi_0 draw = the original draw (same uniforms per slot, same model), and philox8_word over slots
+// = uniform_at; checked for many particles, two partitions, and sizes up to K (n = 60 -> K = 30).
+TEST(pi0_fast_draw_equals_draw) {
+  for (int bsz : {4, 7}) {
+    Data D; make_ar_data(D, 60, 3000, 0.6, 51);
+    Start st; build_start(st, D, contiguous_blocks(3000, bsz));
+    long same = 0, total = 0; size_t maxk = 0;
+    for (uint32_t i = 1; i <= 3000; ++i) {
+      Address a0; a0.seed = 5; a0.island = 2; a0.xph = X_BRIDGE; a0.stage = 3; a0.particle = i; a0.position = 77;
+      auto nu = [&](uint32_t slot) { Address a = a0; a.slot = slot; return uniform_at(a); };
+      const v4::Ctr4 ctr = v4::address_ctr(a0); const v4::Key2 kk = v4::address_key(a0);
+      Model S1, S2;
+      draw_pi0(st, nu, S1);
+      draw_pi0_fast(st, nu, [&](const uint32_t* sl, double* out) { philox8_word(ctr.data(), kk.data(), 0, sl, out); }, S2);
+      ++total; if (S1 == S2) ++same; maxk = std::max(maxk, S1.size());
+    }
+    std::printf("  blocks of %d: %ld / %ld draws identical (largest |S| %zu)\n", bsz, same, total, maxk);
+    CHECK(same == total);
+  }
+}

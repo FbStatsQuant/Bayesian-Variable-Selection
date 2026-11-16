@@ -140,6 +140,11 @@ class TopStore {
     b.push(val, S, kk, hsh);
     if (b.size() >= buf_limit) flush(b);
   }
+  // capacity of the staging area reserved once (virtual until touched): the deferred hard limit (or the serial limit)
+  void reserve_staging(double k) {
+    const size_t n = defer ? stage_hard : stage_limit;
+    stage.v.reserve(n); stage.h.reserve(n); stage.off.reserve(n); stage.len.reserve(n); stage.pool.reserve((size_t)(n * std::max(1.0, k)));
+  }
   void flush(StoreBuffer& b) {
     if (b.size() == 0) return;
     std::lock_guard<std::mutex> lk(mu);

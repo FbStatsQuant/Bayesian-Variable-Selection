@@ -76,6 +76,8 @@ struct Start {
   std::vector<std::vector<std::vector<double>>> cond_cum, sub_cum;
   std::vector<std::vector<std::vector<int>>> codes_by_size;
   std::vector<int64_t> code_ptr; std::vector<double> logr_flat;   // flat copy (INTERFACES §2 Tables layout)
+  // r-major table of P(k_b = 0 | remaining r) = cond_cum[b][r][0], (K+1) x J, for the vectorised pi_0 draw (L5)
+  std::vector<double> c0r;
   inline double lr(int b, uint32_t code) const { return logr_flat[code_ptr[b] + code]; }
   // core/cpp/v3_start.h:54-66: blocks met by S, increasing block order, sum from 0.
   double comp(const Model& S) const {
@@ -159,6 +161,8 @@ inline void build_sampler(Start& st, const Data& D) {
       st.cond_cum[b][r] = cumulative_from_logs(lj);
     }
   }
+  st.c0r.assign((size_t)(K + 1) * J, 0.0);
+  for (int b = 0; b < J; ++b) for (int r = 0; r <= K; ++r) st.c0r[(size_t)r * J + b] = st.cond_cum[b][r].empty() ? 1.0 : st.cond_cum[b][r][0];
 }
 // core/cpp/v3_start.h:165-176. `nu(slot)` returns the uniform at the caller's address with that slot; slots follow
 // INTERFACES v0.1.5 §3: PI0_SIZE 0, PI0_BLOCKSIZE b (b = J-1 .. 0 while r > 0), PI0_SUBMODEL b (k_b > 0, b increasing).
@@ -178,6 +182,40 @@ inline void draw_pi0(const Start& st, NextU&& nu, Model& S) {
   }
   std::sort(S.begin(), S.end());
 }
+// The same draw as draw_pi0 (identical uniforms, identical result), for addressed uniforms (L5): block b takes size
+// 0 exactly when u_b < cond_cum[b][r][0] (cat_draw_gt: the smallest index with cum > u), so 8 blocks are checked at
+// once against the r-major table c0r with 8 uniforms nu8(slots) of the BLOCKSIZE slots; the full categorical runs only
+// for the blocks that take members. Lanes past the stopping point are computed but never used (a computed value is
+// not a consumed one). Not for serial streams (compat), whose consumption must stop exactly where core's does.
+template <class NextU, class NextU8>
+inline void draw_pi0_fast(const Start& st, NextU&& nu, NextU8&& nu8, Model& S) {
+  const int J = st.J;
+  int k = cat_draw_gt(st.size_cum, nu(v4::slot_of(v4::SK_PI0_SIZE, 0)));
+  thread_local std::vector<std::pair<int, int>> nz; nz.clear();   // (block, size) of the blocks taking members, b descending
+  int r = k, b = J - 1;
+  uint32_t slots[8]; double u8[8];
+  while (b >= 0 && r > 0) {
+    const int nl = std::min(8, b + 1);
+    for (int l = 0; l < 8; ++l) slots[l] = v4::slot_of(v4::SK_PI0_BLOCKSIZE, (uint32_t)std::max(0, b - l));
+    nu8(slots, u8);
+    const double* c0 = &st.c0r[(size_t)r * J];
+    int l = 0;
+    while (l < nl && u8[l] < c0[b - l]) ++l;
+    if (l == nl) { b -= nl; continue; }
+    const int bb = b - l;
+    const int j = cat_draw_gt(st.cond_cum[bb][r], u8[l]);
+    nz.push_back({bb, j}); r -= j; b = bb - 1;
+  }
+  S.clear();
+  for (auto it = nz.rbegin(); it != nz.rend(); ++it) {   // submodels for b increasing, as draw_pi0
+    const int bb = it->first, kb = it->second;
+    int i = cat_draw_gt(st.sub_cum[bb][kb], nu(v4::slot_of(v4::SK_PI0_SUBMODEL, (uint32_t)bb)));
+    uint32_t code = (uint32_t)st.codes_by_size[bb][kb][i];
+    for (size_t t = 0; t < st.blocks[bb].size(); ++t) if (code & (1u << t)) S.push_back(st.blocks[bb][t]);
+  }
+  std::sort(S.begin(), S.end());
+}
+
 inline std::vector<std::vector<int>> contiguous_blocks(int p, int bsz) {
   std::vector<std::vector<int>> b;
   for (int j0 = 0; j0 < p; j0 += bsz) { std::vector<int> v; for (int j = j0; j < std::min(p, j0 + bsz); ++j) v.push_back(j); b.push_back(v); }
