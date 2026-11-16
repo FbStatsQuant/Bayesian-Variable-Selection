@@ -1,6 +1,6 @@
 # WP3_DESIGN — the island: stores, addressed sampling, label-major round, restart
 
-**v0.5, 2026-11-16, WP3 builder (Opus 5.5). Status: PROVISIONAL.** v0.5 adds §1.10 (review PR26); v0.2 added §1.7 (parallel compaction, waves, snapshot filter), implements §1.6 (admission) and §6 (compat), and records the manager's §5 decisions. Branch `exp/P1M-wp3-island`
+**v0.7, 2026-11-16, WP3 builder (Opus 5.5). Status: PROVISIONAL.** v0.7 records the built calibration roles (§1.11); v0.6 added §1.11 (calibration islands, agreed with WP4); v0.5 added §1.10 (review PR26); v0.2 added §1.7 (parallel compaction, waves, snapshot filter), implements §1.6 (admission) and §6 (compat), and records the manager's §5 decisions. Branch `exp/P1M-wp3-island`
 (stacked on WP1's PR #11). Inputs: ENGINEERING_SPEC §0-v2, §3, §6; INTERFACES v0.1.3 (v0.1.5 announced: RNG domain and
 event key); Sol EXP-CP1 review §F2, §F4, §F5 (T3, T6); manager directives of 11-15 (D-21 scope cut, G ≤ 256, mem budget).
 Code references: `include/v4/island/*.h`, `src/island/island_impl.h`, `tests/test_island*.cpp`. Every number below
@@ -186,6 +186,148 @@ increasing from 0 to 1, B ≥ 0.
   scripts refuse without TMPDIR or outside the department folders (`tools/nots_guard.sh`), keep logs in
   `<build>/logs`; socket mode waits for both islands, prints both logs, and requires exit 0, `status=0` and two
   distinct non-empty hashes.
+
+### 1.11 v0.6 (agreed with WP4, 2026-11-16): calibration islands (pilot, diagnostic)
+This is the API that WP4's `calib::IslandRunner` calls. It is built after the PR #26 re-check. Core reference:
+`core/cpp/v3_core.cpp:620-692` (`cpp_cal_pilot`, `cpp_cal_diag`) and `cpp/v3_engine.h:269-372` (`run_island_s` with
+`phase_override`).
+- **Config.**
+  - `IslandConfig::role` is `Final`, `Pilot` or `Diag`. `tier` = e, the new `iter` = k (0 for the pilot, k for rebuild
+    k), and `island` = 0 for the pilot, 1…4 for the diagnostic islands.
+  - Addresses use role R_PILOT / R_DIAG with tier e, iter k and island r (INTERFACES §3). Islands of different rebuilds
+    get fresh addresses.
+  - The pilot uses the adaptive schedule (core's pilot rule, `adaptive_H` = H, `adaptive_Te`). The diagnostic islands
+    use WP4's fixed grid.
+  - `leaders` is on for calibration roles (they feed V). Final islands never carry leaders (D-7).
+- **Events.**
+  - Every event is labelled PH_PILOT or PH_DIAG (core's `phase_override`).
+  - EventKey = (CALIB, e, k, r, xph, stage, round, particle, position, sub). MEASURED rounds are numbered L + h
+    (INTERFACES v0.1.5 §4.2).
+- **Output.**
+  - IslandRun → `to_record()` → `v4::IslandResult` with its own Ledger: top store, lead0 / lead1, HPM + key,
+    island_best and logical counts.
+  - Ledger configuration: islands = 4, leaders = true, caps 40p + 1 / 20p / 20p (`Ledger::merge` refuses a mismatch).
+    The pilot (unit 0) has no island_best of its own.
+  - The island ledger starts empty: no tables and no inherited models.
+  - WP4 owns the calibration ledger and merges island ledgers with `Ledger::merge`, which is order-free.
+  - WP4 also resets island_best before each rebuild's four diagnostic islands (`v3_core.cpp:662`) and runs every local
+    search (CALIB, e, k, UNIT_LOCAL). There is no local search inside the island.
+  - Also returned: `forced` (forced pilot steps), the schedule used, stages, logZ, pip, init_hash, and the stream
+    positions (start, end) in compat.
+- **Admission (WP4's N-1 rule, `IslandSpec`).**
+  - `mem_budget` is the whole calibration task's budget, passed unchanged to every island.
+  - `resident_bytes` is the calibration process's own state: the calibration ledger at its staging peak and the
+    inherited export. It excludes X / z / diag(G) and the setup inputs, which the island's plan counts itself.
+  - The runner adds `resident_bytes` to the plan's caller-supplied inputs term, so an island is admitted iff
+    resident_bytes + plan ≤ mem_budget. No byte is counted twice.
+  - `calib_run` passes resident = ledger + export (WP4's plan without its inputs term) and budget = the task's budget.
+  - Test `calibration_admission_n1_rule`: refused at plan − 1, admitted at plan.
+- **Stops.**
+  - resource_limit returns core's partial output: the schedule so far, `forced`, the stages so far, logZ so far and
+    `partial = true`.
+  - The ledger so far is also returned, because core's shared ledger keeps a partial island's events. WP4 decides
+    whether to merge it.
+  - numerical_failure returns status and message, plus the ledger so far (WP4, 11-16).
+    - Core's shared ledger keeps the events up to the failure, and `v3_calibrate`'s exported HPM-so-far includes them.
+      WP4 merges the ledger so far in both stop cases.
+    - Meaning: the serial prefix. That is every event of the earlier rounds; in the failing round (or the initial
+      draw), the events of particles 1…i−1; and the events of the failing particle i at positions before the failing
+      score.
+    - Label-major processes a round's particles together, so the prefix is rebuilt exactly as follows.
+      - At each round start in a calibration role, after the step-boundary compaction, the island keeps:
+        - the published kept runs, which are immutable `shared_ptr`s, so keeping them is O(1);
+        - copies of the tallies;
+        - the particles' states.
+      - On a failure, it restores that state and replays the round's prefix particle-major, serially, at the same
+        addresses, so the events and offers are identical.
+      - The replay stops at the failing score.
+    - The cost is one partial particle-major round, and only on failure. The compat island is already serial
+      particle-major, so its ledger is the prefix directly.
+    - Tests: in compat, ledger so far = CoreRunner's ledger after the failure, bit for bit. In law mode, label-major =
+      particle-major (threads 1 and 3). The failure is forced at the initial draw and at a Gibbs flip in a bridge
+      round (the existing failure fixtures).
+  - There are no island checkpoints in calibration.
+- **Compat.**
+  - Streams are caller-owned: `IslandConfig::compat_src` is a `v4::CompatSource*` that is required for calibration
+    roles. The streams are 0 (pilot, e = 0) or 5 (e = 1), and 1–4 or 6–9 for the diagnostic islands.
+  - The island draws from the stream in core's serial order and leaves it advanced. WP4 keeps each stream across
+    rebuilds (R6). A final compat island keeps its own stream 9 + r unless one is passed.
+  - `fresh` and the cache statistics are on the compat exclusion list (spec §4.1, OD-3): no seen-set, never compared.
+- **Golden tests.**
+  - Per island, against WP4's `CoreRunner`, which runs core `Engine::run_island_s` with a fresh v3 ledger and
+    caller-owned streams. Fixtures are `fixture()` / `make_setup()` from `tests/golden/wp4_harness.cpp`.
+  - Compat (bit-identical) and law mode (particle-major = label-major; the island = core's law through the adapter, as
+    for final islands).
+  - WP4 compares the whole calibration with `v3_calibrate`, so swapping in this runner changes no calib.bin bits in
+    compat.
+
+- **Built (v0.7).**
+  - The runner is `include/v4/island/calib_runner.h`: `CalibIslandRunner<A>`, header-only. It owns the compat streams
+    and converts the island's output to WP4's `IslandOut`.
+  - The island side is in `island_impl.h`.
+    - Address role, tier and iteration come from `IslandConfig::role / tier / iter`.
+    - `base_key()` gives (CALIB, e, k, r).
+    - `phase_of()` gives PH_PILOT / PH_DIAG.
+    - Measured rounds are numbered L + h in the key; the address keeps h.
+    - `forced` counts the forced pilot steps.
+  - Ledger so far after a numerical failure: the round start keeps the published kept runs (O(1)) and a copy of the
+    particles. `rebuild_prefix()` discards the round's buffers and tallies, restores the stores (`TopStore::restore`)
+    and replays particles 1…i serially, particle-major.
+  - Compat stops at the first failure: no further draws, as core.
+  - The plan gains a `calib_snapshot` term (one kept run per store and a copy of the population).
+- **The calibrate command.**
+  - `src/calib/calib_run.cpp` runs `CalibIslandRunner` with the start law and neighbours read from setup.bin
+    (`island/setup_load.h`).
+    - Partition and block tables are read.
+    - The sampler is rebuilt by core's arithmetic.
+    - WP2's `size_cum`, when present, must equal the rebuild bit for bit.
+  - The kernel and arithmetic depend on the mode: compat and law use the bit form, particle-major (compat on 1 thread);
+    V uses class A, label-major.
+  - Build changes:
+    - a cycle between `v4_bit` (calib_run) and `v4_a` (the class-A island), declared in `island.cmake`;
+    - every translation unit that calls the island is compiled with the island's ISA (inline ISA namespaces; m9 will
+      remove the need).
+- **Memory plan (re-check m1, manager 11-16).**
+  - The serial staging is reserved at limit + one buffer. Particle-major islands with threads > 1 fix glibc's mmap
+    threshold.
+  - New terms:
+    - `calib_snapshot`: one kept run per store plus a copy of the population;
+    - **`headroom` = 12% of every term except the inputs**: allocator slack and the run-to-run variation of the peak. The
+      VmHWM of one label-major row varied from 220 to 237 MiB against a 243 MiB plan.
+  - The plan-bound test requires plan ≥ 1.10 × measured in every row: label-major G 64 / 256 with leaders off / on,
+    particle-major on 3 threads, and a calibration island.
+  - The calibrate command passes the expanded `dep::Start` bytes as the inputs term (`island::start_bytes`) until the
+    island reads WP2's flat arrays as a view.
+- **Tests.** MEASURED, Owls, 3 threads, `nice -n 19`.
+  - `golden_calibration_islands_compat_vs_core`: 10 islands (pilot e = 0; 2 rebuilds × 4 diagnostic islands; pilot
+    e = 1) on streams 0–5, continued. Everything equals core in bits, ledgers and stream positions included.
+  - `golden_calibration_islands_law_vs_core`: the same sequence on addressed uniforms, against core through the address
+    adapter, which tracks phases under `phase_override`. Particle-major on 1 thread and label-major on 3 threads.
+  - `golden_calibration_failure_ledger_so_far`: initial-draw and Gibbs-flip failures. The ledger so far equals core's
+    ledger after its throw: compat, PM 1/3 threads, LM 3 threads.
+  - `calibrate_command_end_to_end`: `smcbvs4 calibrate` in compat, law and V. V gives the same calibration at 1 and 3
+    threads.
+  - WP4's R golden with `runner = "wp3"`: the whole calibration through WP3's islands equals `v3_calibrate`, the
+    calib.bin round trip included.
+
+### 1.12 Planned (manager-approved 11-16): StartView over WP2's flat setup arrays
+- **What changes.**
+  - The island reads WP2's `setup.h` arrays as a view over the mapped setup.bin instead of expanding them into
+    `dep::Start`.
+  - Arrays read: the partition, `code_ptr` / `logr`, `size_logmass` / `size_cum`, `cond_ptr` / `cond_cum`, `logZbar0`.
+  - `codes_by_size` and `sub_cum` are rebuilt per draw, only for the blocks the draw selects (D-18).
+  - `c0r` is dropped. The 8-lane size-0 test gathers `cond_cum[cond_ptr[b*(K+1) + r]]`: the same comparison, the same
+    bits.
+  - One view type serves both owned storage (tests, bench) and mapped storage.
+  - The memory plan's inputs term becomes the mapped section lengths.
+- **WP2's layout answers (11-16).**
+  - The row index is b·(K+1) + r, b-major. Row (b, r) holds min(m_b, r) + 1 cumulative masses, equal to core's bits,
+    and ends at 1.0.
+  - An all-−∞ row has the same length and holds zeros, so the gather of entry 0 is always in bounds. A valid draw never
+    reaches such a row; debug builds assert this.
+  - Pending HQ: WP2 may move `cond_cum` on demand (`cond_row(b, r)`, same bits). The gather then calls it.
+- **Why.** WP2's ESTIMATE of the sections an island reads at 10⁶ is 4.4–14.1 GB, against 13–38 GB for `dep::Start`.
+- **When.** After WP2's PR #13 merges, built on its `setup.h` types.
 
 ---
 

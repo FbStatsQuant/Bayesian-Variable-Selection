@@ -172,8 +172,10 @@ class TopStore {
     if (b.size() >= buf_limit) flush(b);
   }
   // capacity of the staging area reserved once (virtual until touched): the deferred hard limit (or the serial limit)
+  // serial mode: one flush appends up to buf_limit entries before the limit check, so the reserve is limit + buf_limit
+  // (review PR26 re-check m1: the vectors reallocated to 2x once per cycle before)
   void reserve_staging(double k) {
-    const size_t n = defer ? stage_hard : stage_limit;
+    const size_t n = defer ? stage_hard : stage_limit + buf_limit;
     stage.v.reserve(n); stage.h.reserve(n); stage.off.reserve(n); stage.len.reserve(n); stage.pool.reserve((size_t)(n * std::max(1.0, k)));
   }
   void flush(StoreBuffer& b) {
@@ -337,6 +339,15 @@ class TopStore {
     gen.fetch_add(1, std::memory_order_acq_rel);
     tau.store(k->size() >= cap ? k->v.back() : NEG_INF);
     t_compact += std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+  }
+  // restore a previously published kept run (calibration: the round-start state before a prefix replay); the staging
+  // area is discarded. The caller has cleared every worker buffer.
+  void restore(std::shared_ptr<Kept> kr) {
+    std::lock_guard<std::mutex> lk(mu);
+    stage.clear();
+    { std::lock_guard<std::mutex> lk2(snap_mu); k = std::move(kr); }
+    gen.fetch_add(1, std::memory_order_acq_rel);
+    tau.store(k->size() >= cap ? k->v.back() : NEG_INF);
   }
   // after loading a kept run (checkpoint): index, tau, generation
   void publish_loaded() { k->rebuild_index(); k->count_live(); gen.fetch_add(1); tau.store(k->size() >= cap ? k->v.back() : NEG_INF); }

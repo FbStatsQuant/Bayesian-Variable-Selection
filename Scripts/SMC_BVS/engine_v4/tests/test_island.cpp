@@ -788,9 +788,17 @@ static long status_kb(const char* key) {
 }
 static void plan_bounds_peak(int p, int N, std::initializer_list<int> Gs) {
   Fixture F(200, p, 36);
-  for (int G : Gs) for (bool lead : {false, true}) {
-    IslandConfig c = small_cfg(); c.N = N; c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = G; c.leaders = lead;
+  // rows: label-major for each G (leaders off / on); particle-major, 3 threads (re-check m1; leaders off / on); a
+  // calibration diagnostic island, label-major (leaders and the round-start snapshot)
+  std::vector<std::tuple<int, int, bool, bool>> rows;   // kernel (0 PM, 1 LM), G, leaders, calibration
+  for (int G : Gs) for (bool lead : {false, true}) rows.emplace_back(1, G, lead, false);
+  for (bool lead : {false, true}) rows.emplace_back(0, 1, lead, false);
+  rows.emplace_back(1, *Gs.begin(), true, true);
+  for (auto [kern, G, lead, cal] : rows) {
+    IslandConfig c = small_cfg(); c.N = kern || !lead ? N : N / 2;   // PM with leaders: N / 2 (time)
+    c.kernel = kern ? KernelKind::LabelMajor : KernelKind::ParticleMajor; c.threads = 3; c.G = G; c.leaders = lead;
     c.grid = {0.0, 0.3, 0.7, 1.0}; c.L = 0; c.Hm = 1; c.k_store = 8.0;   // as calib.bin would give (r1)
+    if (cal) { c.role = IslandRole::Diag; c.island = 1; c.iter = 1; }
     { FILE* cr = std::fopen("/proc/self/clear_refs", "w"); if (cr) { std::fputs("5", cr); std::fclose(cr); } }
     const long rss0 = status_kb("VmRSS:");
     IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c);
@@ -801,9 +809,11 @@ static void plan_bounds_peak(int p, int N, std::initializer_list<int> Gs) {
     uint64_t inputs = 0; for (auto& it : mp.items) if (it.name == "inputs") inputs = it.bytes;
     const double plan_mb = (double)(mp.total - inputs) / 1048576.0, meas_mb = (double)(hwm - rss0) / 1024.0;
     std::printf("  (stored mean |S| at the end %.2f; the plan's k %.2f)\n", k, k_plan);
-    std::printf("  p %d N %d G %3d leaders %d: island peak increment %.0f MiB, plan %.0f MiB (k %.2f) -> %s\n", p, N, G, (int)lead, meas_mb, plan_mb, k,
-                plan_mb >= meas_mb ? "bound holds" : "BOUND FAILS");
-    CHECKF(r.status == 0 && rss0 > 0 && hwm > 0 && plan_mb >= meas_mb, "p %d G %d leaders %d: measured %.0f MiB > plan %.0f MiB", p, G, (int)lead, meas_mb, plan_mb);
+    std::printf("  p %d N %d %s G %3d leaders %d%s: island peak increment %.0f MiB, plan %.0f MiB (k %.2f) -> %s\n", p, c.N, kern ? "LM" : "PM", G, (int)lead,
+                cal ? " calibration" : "", meas_mb, plan_mb, k, plan_mb >= 1.10 * meas_mb ? "bound + 10 % holds" : "BOUND (+10 %) FAILS");
+    // the plan is an upper bound with headroom (manager 11-16): >= 10 % over the measured peak in every row
+    CHECKF(r.status == 0 && rss0 > 0 && hwm > 0 && plan_mb >= 1.10 * meas_mb, "p %d %s G %d leaders %d cal %d: measured %.0f MiB, plan %.0f MiB < 1.10 x measured", p,
+           kern ? "LM" : "PM", G, (int)lead, (int)cal, meas_mb, plan_mb);
   }
 }
 TEST(mem_plan_bounds_measured_peak_2e4) { plan_bounds_peak(20000, 500, {64, 256}); }
@@ -814,11 +824,16 @@ TEST_TAGGED(mem_plan_bounds_measured_peak_1e5, "full") { plan_bounds_peak(100000
 TEST(k_store_required_at_1e5) {
   Fixture F(20, 100000, 37);
   IslandConfig c = small_cfg(); c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.N = 4; c.grid = {0.0, 1.0}; c.L = 0; c.Hm = 1;
+  c.mem_budget = 1ull << 40;   // the requirement is the admission's (final island with a budget; re-check m2)
   bool refused = false;
   try { (void)run_island<Arith::ClassA>(F.D, F.st, F.nb, c); } catch (const v4::Error& e) { refused = e.st == v4::Status::invalid_input && std::string(e.what()).find("k_store") != std::string::npos; }
   CHECKF(refused, "p 1e5 without k_store was not refused");
   c.k_store = 8.0; IslandRun r = run_island<Arith::ClassA>(F.D, F.st, F.nb, c); CHECKF(r.status == 0, "with k_store: status %d", r.status);
   c.k_store = 0; c.k_store_optional = true; IslandRun r2 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c); CHECKF(r2.status == 0 && r2.hash() == r.hash(), "override");
+  // re-check m2: without a budget there is no admission, and calibration islands plan from the setup (no calib.bin)
+  c.k_store_optional = false; c.mem_budget = 0; IslandRun r3 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c); CHECKF(r3.status == 0, "no budget: status %d", r3.status);
+  c.mem_budget = 1ull << 40; c.role = IslandRole::Pilot; c.island = 0; c.adaptive = true; c.adaptive_H = c.N; c.adaptive_Te = 4; c.grid.clear();
+  IslandRun r4 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c); CHECKF(r4.status == 0, "pilot at 1e5 without k_store: status %d '%s'", r4.status, r4.reason.c_str());
 }
 
 // L5: the vectorised pi_0 draw = the original draw (same uniforms per slot, same model), and philox8_word over slots
@@ -839,5 +854,112 @@ TEST(pi0_fast_draw_equals_draw) {
     }
     std::printf("  blocks of %d: %ld / %ld draws identical (largest |S| %zu)\n", bsz, same, total, maxk);
     CHECK(same == total);
+  }
+}
+
+// calibration admission (WP4's N-1 rule, IslandSpec): mem_budget = the whole task's budget, resident_bytes = the
+// calibration's own state without the inputs; admitted iff resident_bytes + the island's plan <= mem_budget (to the byte)
+#include "v4/island/calib_runner.h"
+TEST(calibration_admission_n1_rule) {
+  Fixture F(100, 300, 38);
+  // a fixed G on both sides (G = 0 lets the admission shrink G until the plan fits)
+  CalibRunnerConfig rc; rc.seed = 3; rc.kernel = KernelKind::ParticleMajor; rc.threads = 1; rc.B = 14; rc.G = 1;
+  CalibIslandRunner<Arith::Bit> run(F.D, F.st, F.nb, rc);
+  v4::calib::IslandSpec sp; sp.role = v4::calib::IslandRole::Diag; sp.tier = 0; sp.iter = 1; sp.island = 1; sp.H = 30;
+  sp.grid = {0.0, 0.3, 1.0}; sp.L = 1; sp.Hm = 1; sp.resident_bytes = 123456789;
+  IslandConfig c; c.role = IslandRole::Diag; c.island = 1; c.iter = 1; c.N = sp.H; c.grid = sp.grid; c.L = 1; c.Hm = 1; c.B = 14;
+  c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.G = 1; c.leaders = true; c.inputs_bytes = (double)sp.resident_bytes;
+  const uint64_t plan = plan_island(F.D, F.st, c).total;   // includes the resident bytes through the inputs term
+  sp.mem_budget = plan - 1;
+  v4::calib::IslandOut o1 = run.run(sp);
+  CHECKF(o1.status == v4::Status::resource_limit && !o1.partial, "budget = plan - 1: status %s partial %d", v4::status_name(o1.status), (int)o1.partial);
+  sp.mem_budget = plan;
+  v4::calib::IslandOut o2 = run.run(sp);
+  CHECKF(o2.status == v4::Status::completed, "budget = plan: status %s '%s'", v4::status_name(o2.status), o2.message.c_str());
+  sp.resident_bytes = 0; sp.mem_budget = plan - 123456789;   // the same island without the resident state fits exactly
+  v4::calib::IslandOut o3 = run.run(sp);
+  CHECKF(o3.status == v4::Status::completed, "no resident, budget = plan - resident: status %s", v4::status_name(o3.status));
+  std::printf("  plan with resident %llu B: refused at budget plan - 1, admitted at plan\n", (unsigned long long)plan);
+}
+
+// `smcbvs4 calibrate` end to end (WP4's calib::run with WP3's island runner plugged in; WP3_DESIGN §1.11): data.bin from
+// prep, a setup.bin with the partition, block tables, table stores and neighbour lists (WP4's write_setup_min sections
+// + nb_ptr / nb_idx), then the command in each mode. compat runs the bit form particle-major on the v3 streams, law the
+// bit form particle-major, V class A label-major. Checks: status ok, calib.bin readable (grid from 0 to 1, inherited
+// models), the island's start law equals the setup's (load_start), V the same for 1 and 3 threads.
+#include "v4/calib_run.h"
+#include "v4/island/setup_load.h"
+#include "v4/prep.h"
+#include "v4/stubs.h"
+#include "v4/wp4_io.h"
+TEST(calibrate_command_end_to_end) {
+  const int n = 60, p_raw = 30;
+  std::vector<double> X((size_t)n * p_raw), y(n);
+  { std::mt19937_64 g(41); std::normal_distribution<double> nd;
+    for (int i = 0; i < n; ++i) { double prev = 0; for (int j = 0; j < p_raw; ++j) { double x = 0.6 * prev + 0.8 * nd(g); X[(size_t)j * n + i] = x; prev = x; } }
+    for (int i = 0; i < n; ++i) y[i] = 1.2 * X[(size_t)2 * n + i] - 0.9 * X[(size_t)11 * n + i] + nd(g); }
+  v4::prep::Result pr = v4::prep::preprocess(X.data(), y.data(), n, p_raw);
+  CHECK(pr.status == "ok");
+  v4::Data D = v4::make_data(pr.own, n, pr.p);
+  const int p = D.p;
+  TmpGuard tg;
+  const std::string dpath = tg.add(wp3_tmp("cal_data.bin")), s0 = tg.add(wp3_tmp("cal_setup0.bin")), spath = tg.add(wp3_tmp("cal_setup.bin"));
+  const std::string dhash = v4::prep::write_data(dpath, D, pr, "B", v4::Json::object());
+  // setup: blocks of 3, the island's own tables (core's arithmetic), table stores over every table model
+  Start st; build_start(st, D, contiguous_blocks(p, 3));
+  Neighbours nb = window_neighbours(D, 6, 4);
+  v4::wp4io::SetupView S; S.blk = st.blk; S.pos = st.pos; S.blk_ptr.push_back(0);
+  S.ttop.init(40ull * p + 1, Order::HPM); S.tlead0.init(20ull * p, Order::LEX); S.tlead1.init(20ull * p, Order::LEX);
+  BitScorer sc(&D);
+  for (int b = 0; b < st.J; ++b) {
+    for (int j : st.blocks[b]) S.blk_members.push_back(j);
+    S.blk_ptr.push_back((int64_t)S.blk_members.size()); S.code_ptr.push_back((int64_t)S.logr.size());
+    for (uint32_t c = 0; c < st.logr[b].size(); ++c) {
+      S.logr.push_back(st.logr[b][c]);
+      Model U; for (size_t i = 0; i < st.blocks[b].size(); ++i) if (c & (1u << i)) U.push_back(st.blocks[b][i]);
+      if ((int)U.size() > D.K) continue;
+      double F = D.logprior[U.size()] + sc.score(U).logm, lg0 = D.logprior[U.size()] + st.logr[b][c];
+      S.ttop.offer(F, U, D.zob.hash(U)); S.tlead0.offer(lg0, U, D.zob.hash(U)); S.tlead1.offer(F, U, D.zob.hash(U));
+    }
+  }
+  S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
+  S.mode_S = Model(S.ttop.model(0).begin(), S.ttop.model(0).end());
+  v4::Json sin = v4::Json::object(); sin["data.bin"] = dhash;
+  v4::wp4io::write_setup_min(s0, S, sin);
+  { v4::fmt::Reader R(s0); v4::fmt::Writer W(v4::fmt::K_SETUP, v4::fmt::M_COMPAT);   // + the neighbour lists (WP2's sections)
+    for (const auto& e : R.sections()) {
+      const std::string nm(e.name);
+      if (e.dtype == v4::fmt::D_JSON) { W.add_json(nm, R.json(nm)); continue; }
+      const void* q = e.dtype == v4::fmt::D_F64 ? (const void*)R.get<double>(nm) : e.dtype == v4::fmt::D_I32 ? (const void*)R.get<int32_t>(nm)
+                    : e.dtype == v4::fmt::D_U32 ? (const void*)R.get<uint32_t>(nm) : e.dtype == v4::fmt::D_I64 ? (const void*)R.get<int64_t>(nm)
+                    : e.dtype == v4::fmt::D_U64 ? (const void*)R.get<uint64_t>(nm) : e.dtype == v4::fmt::D_U16 ? (const void*)R.get<uint16_t>(nm)
+                    : (const void*)R.get<uint8_t>(nm);
+      W.add_copy(nm, e.dtype, q, e.length, e.dims[0], e.dims[1]);
+    }
+    W.add("nb_ptr", nb.ptr); W.add("nb_idx", nb.idx); W.add("size_cum", st.size_cum); W.write(spath); }
+  { Start st2 = load_start(spath, D); Neighbours nb2 = load_neighbours(spath, p);
+    CHECK(st2.size_cum == st.size_cum && st2.logZbar0 == st.logZbar0 && st2.blocks == st.blocks && nb2.ptr == nb.ptr && nb2.idx == nb.idx); }
+  auto calibrate = [&](const std::string& mode, int threads, const std::string& out) {
+    v4::Json a = v4::Json::object(); a["data"] = dpath; a["setup"] = spath; a["out"] = out; a["mode"] = mode; a["seed"] = 77.0; a["threads"] = (double)threads;
+    return v4::calib::run(a);
+  };
+  std::map<std::string, v4::wp4io::CalibIn> got;
+  for (auto [mode, th] : std::vector<std::pair<std::string, int>>{{"compat", 1}, {"law", 3}, {"V", 1}, {"V", 3}}) {
+    const std::string out = tg.add(wp3_tmp("cal_" + mode + std::to_string(th) + ".bin"));
+    double t0 = omp_get_wtime();
+    v4::Json rec = calibrate(mode, th, out);
+    CHECKF(rec.at("status").str() == "ok", "%s threads %d: status %s", mode.c_str(), th, rec.at("status").str().c_str());
+    if (rec.at("status").str() != "ok") continue;
+    v4::wp4io::CalibIn ci = v4::wp4io::read_calib(out, p, D.K);
+    CHECKF(ci.grid.size() >= 2 && ci.grid.front() == 0.0 && ci.grid.back() == 1.0 && !ci.inherited.empty() && ci.has_hpm, "%s: calib.bin", mode.c_str());
+    std::printf("  calibrate %-6s threads %d: %.1f s, tier %d, T = %zu, %zu inherited models, HPM |S| = %zu\n", mode.c_str(), th, omp_get_wtime() - t0,
+                ci.tier, ci.grid.size() - 1, ci.inherited.size(), ci.hpm.size());
+    const std::string key = mode + (mode == "V" ? "" : std::to_string(th));
+    if (got.count(key)) {   // V with 1 and 3 threads: the same calibration
+      const auto& o = got[key];
+      bool same = o.grid == ci.grid && o.tier == ci.tier && o.inherited.size() == ci.inherited.size() && o.hpm == ci.hpm;
+      for (size_t i = 0; same && i < ci.inherited.size(); ++i) same = o.inherited[i].S == ci.inherited[i].S && same_bits(o.inherited[i].F, ci.inherited[i].F);
+      CHECKF(same, "%s: calibration differs between runs / thread counts", mode.c_str());
+    } else got[key] = ci;
   }
 }
