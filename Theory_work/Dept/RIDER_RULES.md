@@ -56,7 +56,7 @@ registry tools read only `CHECKPOINT_<digit>.md`) · `REPORT.md` with its REGIST
 
 ## 4. Agents
 - Reviews: `delegate_task`, provider `codex`, model `gpt-6.1-sol` (Sol) or `gpt-6-astra` (Astra), reasoningEffort
-  `high`, mode wait. If codex is unavailable or rate-limited, say so in LOG and to the manager; never substitute a
+  `high` always ("Codex level N" is the company pacing level, POLICIES §14, never an effort setting), mode wait. If codex is unavailable or rate-limited, say so in LOG and to the manager; never substitute a
   Claude reviewer for an OpenAI step. W3-DIST has priority on codex in any conflict.
 - Helpers: at most 2 at once, `delegate_task`, provider `claudeAgent_claude_third`; Sonnet 5.5 or Haiku 5.5 for routine
   work (bookkeeping, citecheck, numerics), Opus 5.5 only for proof work; no Fable (owner pacing, 11-16); effort high max. A helper never reviews what it wrote.
