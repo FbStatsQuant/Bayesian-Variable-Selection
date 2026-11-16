@@ -7,7 +7,7 @@ diff --git a/Theory_work/Wave1C/C-DLV/INVENTORY.md b/Theory_work/Wave1C/C-DLV/IN
  
  ## Summary
 -Under (d)-premises EX-A, IDEAL-W, MACH and valid declared inputs, every path except D1 is either impossible
-+Under (d)-premises EX-A, IDEAL-W, MACH and valid declared inputs, every path except D1 and the shipped LS0 cap validators X7–X8 (ERRATUM 2026-11-16, section X′ below; excluded only by A:IDEAL-W⁺ or on a bounded domain) is either impossible
++Under (d)-premises EX-A, IDEAL-W, MACH and valid declared inputs, and after additionally excluding the shipped LS0 cap validators X7–X8 by A:IDEAL-W⁺ or on 𝔇 (ERRATUM 2026-11-16, section X′ below), every path except D1 is either impossible
  (P = 0 or unreachable) or deterministic resource use; D1 (`schedule_limit`) is the only random no-output path.
 +
 +## X′. ERRATUM (2026-11-16; HQ D78; precedent R02 #5 `nth_nonmember`, added to L2 S.3's X2 list after R02)

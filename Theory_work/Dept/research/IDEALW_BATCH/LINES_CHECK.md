@@ -1,13 +1,13 @@
 # LINES_CHECK — IDEAL-W⁺ batch NARROW (19 claims) + errata
 
-Run 2026-11-16 05:59 CST against origin/main 967313dd (registry `claims.tsv` and every target file as on origin/main). Method: the origin/main files and copies patched by `patches/*.patch` (scratch outside the repo, since deleted); `git apply --check` passes for all 20 patches on an origin/main tree, and the applied result is byte-identical to the generator's output. Hashes follow the registry rule: span hash = `bvsreg.text_hash` (lines rstripped, LF-joined, sha256); claim hash = `bvsreg.claim_hash` (statement span, then each premise span after its `--premise path--` marker). Recomputed before the patch, the claim hash equals the stored `sha256` for all 99 rows checked (0 mismatches), which validates the method.
+v2 (2026-11-16, after Sol `DIFF_sol.md` FAIL: repairs R1 (XA note) and R2 (INVENTORY :80) applied verbatim; whole-file after-hashes refreshed; the repairs change no registered span or claim hash). Run 2026-11-16 05:59 CST against origin/main 967313dd (registry `claims.tsv` and every target file as on origin/main). Method: the origin/main files and copies patched by `patches/*.patch` (scratch outside the repo, since deleted); `git apply --check` passes for all 20 patches on an origin/main tree, and the applied result is byte-identical to the generator's output. Hashes follow the registry rule: span hash = `bvsreg.text_hash` (lines rstripped, LF-joined, sha256); claim hash = `bvsreg.claim_hash` (statement span, then each premise span after its `--premise path--` marker). Recomputed before the patch, the claim hash equals the stored `sha256` for all 99 rows checked (0 mismatches), which validates the method.
 
-**Result: PASS — no registered or cited span moves.** Every in-place edit replaces a line by one line (same line count inside every span); every narrowing note / erratum is appended after the old last line. Hash changes: exactly the 19 batch rows that carry an every-n/asymptotic delivery sentence in their span or premises (16 by statement span, X10 by premise `STATEMENT_T2.md:61-62`), **plus W1C-FINAL:Lemma-CAP** (premise `s7_impl.tex:36-43` contains the :39 erratum; its statement span 45-56 is unchanged). Two batch rows keep their hash: **W2-FAC-B:L5** (span 44-45 is the (C3) consistency theorem; its delivery text L5.4 lies outside any span, edited in place at :61) and **W2-FAC-S5:L5** (span 33-37 is (C3-R); its delivery part is the separate row W2-FAC-S5:L5.C4-R, narrowed). For those two the recorder edits only `short`/`notes` (they mention delivery).
+**Result: PASS — no registered or cited span moves.** Every in-place edit replaces a line by one line (same line count inside every span); every narrowing note / erratum is appended after the old last line. Hash changes: exactly the 17 batch rows that carry an every-n/asymptotic delivery sentence in their span or premises (16 by statement span, X10 by premise `STATEMENT_T2.md:61-62`), **plus W1C-FINAL:Lemma-CAP** (premise `s7_impl.tex:36-43` contains the :39 erratum; its statement span 45-56 is unchanged). Two batch rows keep their hash: **W2-FAC-B:L5** (span 44-45 is the (C3) consistency theorem; its delivery text L5.4 lies outside any span, edited in place at :61) and **W2-FAC-S5:L5** (span 33-37 is (C3-R); its delivery part is the separate row W2-FAC-S5:L5.C4-R, narrowed). For those two the recorder edits only `short`/`notes` (they mention delivery).
 
 ## 0. Files and lines
 | file | lines | changed lines (old numbering) | sha256 before → after (LF-normalised whole file) |
 |---|---|---|---|
-| `Wave1C/C-DLV/INVENTORY.md` | 81 → 93 | 80 (Summary; no registered span in this file); section X′ appended 82-93 — ERRATUM | `de7188d81864c42b…` → `220efcad1a7fb82e…` |
+| `Wave1C/C-DLV/INVENTORY.md` | 81 → 93 | 80 (Summary; no registered span in this file); section X′ appended 82-93 — ERRATUM | `de7188d81864c42b…` → `fc9b0bd14d41094c…` |
 | `Wave1C/C-DLV/lemmas/L2_degenerate.md` | 70 → 72 | none; erratum appended 71-72 (span 37-67 untouched) — ERRATUM | `6d46b556a6c8adb5…` → `fff0ae3f003365a4…` |
 | `Wave1C/C-DLV/STATEMENT.md` | 84 → 86 | none; amendment note appended 85-86 (C-DLV:O / Prop-F spans end at 84, unchanged) — ERRATUM | `464d659ac3807579…` → `517f0f91dc386661…` |
 | `Wave1C/FINAL/sections/s7_impl.tex` | 82 → 82 | 39 (inside premise span 36-43 of W1C-FINAL:Lemma-CAP) — ERRATUM | `eff77ee7400df48b…` → `5de4913f483695fa…` |
@@ -20,7 +20,7 @@ Run 2026-11-16 05:59 CST against origin/main 967313dd (registry `claims.tsv` and
 | `Wave2/W2-FAC-PK/STATEMENT.md` | 121 → 125 | 82 (in span 73-87); note appended 122-125 | `192d65495ce4b2cf…` → `edd5108acc207f8a…` |
 | `Wave2/W2-FAC-S5/lemmas/L5_assembly.md` | 56 → 60 | 41 (in span 39-43 of L5.C4-R; outside L5's 33-37); note appended 57-60 | `6c70772d89d297be…` → `5648edebb2643eba…` |
 | `Wave2/W2-FAC-S5/STATEMENT.md` | 148 → 152 | 124 (in span 112-124); note appended 149-152 | `99f13e49d3d2868e…` → `32d293e75ae25a3a…` |
-| `Wave2/W2-FAC-XA/STATEMENT.md` | 110 → 114 | 86 (in span 85-86); note appended 111-114 | `e754526598d5190c…` → `0777647a02b2d10b…` |
+| `Wave2/W2-FAC-XA/STATEMENT.md` | 110 → 114 | 86 (in span 85-86); note appended 111-114 | `e754526598d5190c…` → `886e5541973ff0e5…` |
 | `Wave2/W2-FAC-X/lemmas/X10_assembly_T2.md` | 22 → 22 | 21 (outside X10's span 1-1; (G4) paragraph); no append | `24024393ab688add…` → `c500b350763890a4…` |
 | `Wave2/W2-FAC-X/STATEMENT.md` | 126 → 130 | 94 (in span 76-95); note appended 127-130 | `f6e011fd028f082d…` → `dbf90d03df79cb39…` |
 | `Wave2/W2-FAC-X/STATEMENT_T2.md` | 84 → 88 | 62 (in span 49-62 and in X10's premise 61-62); note appended 85-88 | `48078b426f8cf866…` → `3e7da6d058dd0bb0…` |
@@ -32,7 +32,7 @@ Full whole-file hashes (for IMPACT / manifest re-freezes):
 ```
 Theory_work/Wave1C/C-DLV/INVENTORY.md
   before de7188d81864c42b0a6cb18c803780d6cf06eea7ea43df0df9fd438fbc3395fe
-  after  220efcad1a7fb82e1e8ce12d614b7d3b6d7d2401b9b1ca876d189c8ee120f913
+  after  fc9b0bd14d41094c147a011e0b5e8a7a9b6da010b29ff4eded035c8ef264e505
 Theory_work/Wave1C/C-DLV/lemmas/L2_degenerate.md
   before 6d46b556a6c8adb5caca016c0ce4f3782eae0acd4148a0f451114ffbe8b583aa
   after  fff0ae3f003365a46f3ff8adbc8d210744f78b801db631a7bfdb54e7e9ac0630
@@ -71,7 +71,7 @@ Theory_work/Wave2/W2-FAC-S5/STATEMENT.md
   after  32d293e75ae25a3a309faee9ac1d0d084664e2b665234b7b782b9477926c7a30
 Theory_work/Wave2/W2-FAC-XA/STATEMENT.md
   before e754526598d5190c00b96bcb3a1f7127160d89b271e559193dc3fbfba31f3c7c
-  after  0777647a02b2d10b3270f7c540052048a060d9613afcdf81f664740badafdb53
+  after  886e5541973ff0e5869b1104d3896db103301bc78a26afd21c4b328fc5a97569
 Theory_work/Wave2/W2-FAC-X/lemmas/X10_assembly_T2.md
   before 24024393ab688add32022912f45b276335db20b81a1535c90b2d66e77c2ac4db
   after  c500b350763890a4cbe1c3a986c09634c14eeb67f9ecdbae0672e7215805eadc
@@ -128,7 +128,7 @@ Batch rows in **bold**. `claim_hash before` equals the stored `sha256` in every 
 | W2-FAC-B:L2 | Wave2/W2-FAC-B/lemmas/L2_start.md:69-70 | no | `61e76c66855ffdde9536fec154044eb4287fd8a525616360612f0ccdfee85c2d` | `61e76c66855ffdde9536fec154044eb4287fd8a525616360612f0ccdfee85c2d` | no | 1.0.0 |
 | W2-FAC-B:L3 | Wave2/W2-FAC-B/lemmas/L3_event.md:40-40 | no | `aec47061312eaded2b3ae785bf2bcfbc81c042292b6374e26057196733c8d1fc` | `aec47061312eaded2b3ae785bf2bcfbc81c042292b6374e26057196733c8d1fc` | no | 1.0.0 |
 | W2-FAC-B:L4 | Wave2/W2-FAC-B/lemmas/L4_path.md:13-19 | no | `0b4a48ce60d8e6275158144f03c852bdaa097136d186f3dad6197762de00d63e` | `0b4a48ce60d8e6275158144f03c852bdaa097136d186f3dad6197762de00d63e` | no | 1.0.0 |
-| **W2-FAC-B:L5** | Wave2/W2-FAC-B/lemmas/L5_assembly.md:44-45 | no | `1e2585eaa8c63ab466b46dc3f7d97c4200d85f7a6b83b95dbaed95593cc77291` | `1e2585eaa8c63ab466b46dc3f7d97c4200d85f7a6b83b95dbaed95593cc77291` | no | 1.0.0 (hash unchanged; recorder edits short/notes) |
+| **W2-FAC-B:L5** | Wave2/W2-FAC-B/lemmas/L5_assembly.md:44-45 | no | `1e2585eaa8c63ab466b46dc3f7d97c4200d85f7a6b83b95dbaed95593cc77291` | `1e2585eaa8c63ab466b46dc3f7d97c4200d85f7a6b83b95dbaed95593cc77291` | no | UNCHANGED; keep 1.0.0; delivery metadata correction only (Sol DIFF (c)) |
 | W2-FAC-PK:P1 | Wave2/W2-FAC-PK/STATEMENT.md:59-62 | no | `542af5cff8a9cc46b0b53d8a3bffa730dbf891e5717a80a4c9c23c41998bd989` | `542af5cff8a9cc46b0b53d8a3bffa730dbf891e5717a80a4c9c23c41998bd989` | no | 1.0.0 |
 | W2-FAC-PK:Thm-NEG | Wave2/W2-FAC-PK/STATEMENT.md:63-68 | no | `0453695573daf56caaed348ee7fe92c355488501e3fb9fe4f5a9c80e35fc0abb` | `0453695573daf56caaed348ee7fe92c355488501e3fb9fe4f5a9c80e35fc0abb` | no | 1.0.0 |
 | W2-FAC-PK:Thm-PATH | Wave2/W2-FAC-PK/STATEMENT.md:69-72 | no | `cdf6cb8b62e7d3d7eacfcaeb22b1679c6ddf60a3c1af9a3d9c7cbd66a466ae80` | `cdf6cb8b62e7d3d7eacfcaeb22b1679c6ddf60a3c1af9a3d9c7cbd66a466ae80` | no | 1.0.0 |
@@ -142,7 +142,7 @@ Batch rows in **bold**. `claim_hash before` equals the stored `sha256` in every 
 | W2-FAC-S5:L2 | Wave2/W2-FAC-S5/lemmas/L2_start.md:54-55 | no | `923c31747b3b318abab4b1618bb3fe3cadd586e54ffcd8fc794b5ae323e35b08` | `923c31747b3b318abab4b1618bb3fe3cadd586e54ffcd8fc794b5ae323e35b08` | no | 1.0.0 |
 | W2-FAC-S5:L3 | Wave2/W2-FAC-S5/lemmas/L3_event.md:19-19 | no | `7c61ea2baee3d62f58d6b0c0a0f345dce92284ef5f99248d0e30077b2e43ca8a` | `7c61ea2baee3d62f58d6b0c0a0f345dce92284ef5f99248d0e30077b2e43ca8a` | no | 1.0.0 |
 | W2-FAC-S5:L4 | Wave2/W2-FAC-S5/lemmas/L4_path.md:16-23 | no | `5ee58cdf3844c18e5ff2b16e0b46f6c69130e2c1481154da00bf88a7626b0be5` | `5ee58cdf3844c18e5ff2b16e0b46f6c69130e2c1481154da00bf88a7626b0be5` | no | 1.0.0 |
-| **W2-FAC-S5:L5** | Wave2/W2-FAC-S5/lemmas/L5_assembly.md:33-37 | no | `233b30926a2644bf68d97fcd6caeb33c3a586544cbbbfe221bba1ba9bbbf6c6c` | `233b30926a2644bf68d97fcd6caeb33c3a586544cbbbfe221bba1ba9bbbf6c6c` | no | 1.0.0 (hash unchanged; recorder edits short/notes) |
+| **W2-FAC-S5:L5** | Wave2/W2-FAC-S5/lemmas/L5_assembly.md:33-37 | no | `233b30926a2644bf68d97fcd6caeb33c3a586544cbbbfe221bba1ba9bbbf6c6c` | `233b30926a2644bf68d97fcd6caeb33c3a586544cbbbfe221bba1ba9bbbf6c6c` | no | UNCHANGED; keep 1.0.0; delivery metadata correction only (Sol DIFF (c)) |
 | W2-FAC-S5F:C1 | Wave2/W2-FAC-S5F/STATEMENT.md:76-77 | no | `7abae52eaf06bab184a158d14a87d0d1be9fd34193239a8bc9336a5b7e4f3506` | `7abae52eaf06bab184a158d14a87d0d1be9fd34193239a8bc9336a5b7e4f3506` | no | 1.0.0 |
 | W2-FAC-S5F:C2 | Wave2/W2-FAC-S5F/STATEMENT.md:78-87 | no | `ee5aa9c8e6376345fb085c284ab28fd62eb78384c9a92706ae43478bd5a3ffe3` | `ee5aa9c8e6376345fb085c284ab28fd62eb78384c9a92706ae43478bd5a3ffe3` | no | 1.0.0 |
 | W2-FAC-S5F:C3 | Wave2/W2-FAC-S5F/STATEMENT.md:88-95 | no | `6c010af483ac1ecf0f2650f73c285068221ee2c2600479283b45e54bf67a67b4` | `6c010af483ac1ecf0f2650f73c285068221ee2c2600479283b45e54bf67a67b4` | no | 1.0.0 |
@@ -160,7 +160,7 @@ Batch rows in **bold**. `claim_hash before` equals the stored `sha256` in every 
 | W2-FAC-XA:X1 | Wave2/W2-FAC-XA/STATEMENT.md:74-75 | no | `bf386d71086ac7ac6051b69b15a4d7e21462aa5d0326c564878ecd9e4f8a229f` | `bf386d71086ac7ac6051b69b15a4d7e21462aa5d0326c564878ecd9e4f8a229f` | no | 1.0.0 |
 | W2-FAC-XA:X2 | Wave2/W2-FAC-XA/STATEMENT.md:76-82 | no | `b6ed3a6385ae9f1ae1f6de293b415ed78c036bdadde425ca24669a897ff5f85e` | `b6ed3a6385ae9f1ae1f6de293b415ed78c036bdadde425ca24669a897ff5f85e` | no | 1.0.0 |
 | W2-FAC-XA:X3 | Wave2/W2-FAC-XA/STATEMENT.md:83-84 | no | `ef504dc6837437f6b320f9dcb893e04d30d3a2b775f4aabf0b5314d823bf107a` | `ef504dc6837437f6b320f9dcb893e04d30d3a2b775f4aabf0b5314d823bf107a` | no | 1.0.0 |
-| **W2-FAC-XA:X4** | Wave2/W2-FAC-XA/STATEMENT.md:85-86 | YES | `92e83ce73b6795812d193eb1209dd935762e304509a1a76e05cd419736debe80` | `dcae8987f2f75961d183d712ee833256d382e17328d1e13d37cab2de82a72e5b` | **YES** | 1.0.0 → 2.0.0 (WEAKER, major = narrow) |
+| **W2-FAC-XA:X4** | Wave2/W2-FAC-XA/STATEMENT.md:85-86 | YES | `92e83ce73b6795812d193eb1209dd935762e304509a1a76e05cd419736debe80` | `dcae8987f2f75961d183d712ee833256d382e17328d1e13d37cab2de82a72e5b` | **YES** | 1.0.0 → 2.0.0 (WEAKER target only; retain PARTIAL) |
 | W2-LOC2:L0' | Wave2/W2-LOC2/STATEMENT.md:35-41 | no | `7956bcff9bebe2bf37b3c0a83c85f088dd9566a246f1ab601b8fae74a9abc252` | `7956bcff9bebe2bf37b3c0a83c85f088dd9566a246f1ab601b8fae74a9abc252` | no | 1.0.0 |
 | W2-LOC2:NA-R | Wave2/W2-LOC2/STATEMENT.md:43-59 | no | `43e09fc4d2d52943c0315a24d19ffd4670f68741a84e4657dcb66c37b586853d` | `43e09fc4d2d52943c0315a24d19ffd4670f68741a84e4657dcb66c37b586853d` | no | 1.0.0 |
 | W2-LOC2:PLR | Wave2/W2-LOC2/STATEMENT.md:61-65 | no | `a5ba654eef8233844f74f958cf75572e61790015a7dd0ce444199634efaa2678` | `a5ba654eef8233844f74f958cf75572e61790015a7dd0ce444199634efaa2678` | no | 1.0.0 |
