@@ -54,3 +54,4 @@
 - 20:15 — HQ: READER headline split → consultant (H5 card 5, provisional; abstract rows gated on gates PASS + PROVED-CHECKED masters; 2.1 after DIST CP3). Legs approved. Order D, E, F, C stands; C still goes dry run → HQ (my M57/M58 hold request crossed this message; no conflict).
 - 20:16 — W3-READER: SHARP3_REQUEST.md ready (5 one-claim Fable calls: W3-SAMP C/TR/LT#/D, W3-SCR:A1); forwarded to HQ (suggested 64k output cap). Bridge leg + leg 2 running with 2 Opus helpers; MISR → row 1.4.
 - 20:17 — H5 card 5 verdict folded into READER (D28); recorder task I (F-UNI gate) staged.
+- 20:17 — HQ approved D27 (C real run held for M57/M58; adjudicator go; NARROW via LIFECYCLE §3 priced; headline main clauses incl. POST J_n(c) and F-UNI 'eventually' → H5 card); summary to HQ when ADJ lands.
