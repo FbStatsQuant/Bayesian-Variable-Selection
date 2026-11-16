@@ -1,0 +1,10 @@
+# PROVISIONAL standalone project for WP5 until the WP1 skeleton (engine_v4/CMakeLists.txt) exists.
+cmake_minimum_required(VERSION 3.20)
+project(smcbvs4_wp5 CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+set(CMAKE_CXX_FLAGS_RELEASE "")   # flags come from wp5.cmake only (no -O3 -DNDEBUG from CMake defaults)
+include(${CMAKE_CURRENT_LIST_DIR}/../../cmake/wp5.cmake)
