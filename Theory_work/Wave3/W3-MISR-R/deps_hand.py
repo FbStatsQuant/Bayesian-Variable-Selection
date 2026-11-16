@@ -17,10 +17,10 @@ ROWS = [
     ("S:CorG-min", "STATEMENT.md", "48-92", "S:notation", "97b1ed2602f41b3b", "reviews/K1_linecheck_sol.md"),
     ("S:CorGb-plus", "STATEMENT.md", "94-108", "S:CorG-min", "3b27ea0d061b648c", "reviews/K1_linecheck_sol.md"),
     ("S:CorH-plus", "STATEMENT.md", "110-132", "S:notation,S:CorG-min", "55e295180dcc9662", "reviews/K1_linecheck_sol.md"),
-    ("S:CorH-U", "STATEMENT.md", "134-155", "S:CorH-plus,S:CorGb-plus", "533cc312b9632e27", "reviews/K1_linecheck_sol.md"),
+    ("S:CorH-U", "STATEMENT.md", "134-155", "S:notation,S:CorG-min,S:CorH-plus,S:CorGb-plus", "533cc312b9632e27", "reviews/K1_linecheck_sol.md"),
     ("S:inputs-deps", "STATEMENT.md", "164-205", "", "2b1ceff43dd69cd8", "reviews/K1_linecheck_sol.md"),
-    ("L:G1_min", "lemmas/G1_min.md", "", "S:CorG-min", "4915f1f44e6d09a8", "reviews/K1_linecheck_sol.md"),
-    ("L:G2_corr", "lemmas/G2_corr.md", "", "S:CorGb-plus,L:G1_min", "3fea96051b137a2e", "reviews/K1_linecheck_sol.md"),
+    ("L:G1_min", "lemmas/G1_min.md", "", "S:notation,S:CorG-min,S:inputs-deps", "4915f1f44e6d09a8", "reviews/K1_linecheck_sol.md"),
+    ("L:G2_corr", "lemmas/G2_corr.md", "", "S:CorGb-plus,S:inputs-deps,L:G1_min", "3fea96051b137a2e", "reviews/K1_linecheck_sol.md"),
     ("L:H1_plus", "lemmas/H1_plus.md", "", "S:CorH-plus,L:G1_min", "697ee1475af3f701", "reviews/K1_linecheck_sol.md + reviews/K2_recheck_sol.md"),
     ("L:H2_uniform", "lemmas/H2_uniform.md", "", "S:CorH-U,L:H1_plus,L:G2_corr", "7757a8986d5306c9", "reviews/K1_linecheck_sol.md + reviews/K2_recheck_sol.md"),
 ]
@@ -44,9 +44,15 @@ def main():
         st = "UNCHECKED" if not csha else ("OK" if csha == s else "STALE")
         state[rid] = st
         rows.append([rid, path + (":" + lines if lines else ""), uses, s, csha, cby, st])
+    changed = True
+    while changed:  # propagate DOWNSTREAM transitively, to a fixed point [R1-E4]
+        changed = False
+        for r in rows:
+            if r[6] == "OK" and any(state.get(u) != "OK" for u in r[2].split(",") if u):
+                r[6] = "DOWNSTREAM"
+                state[r[0]] = "DOWNSTREAM"
+                changed = True
     for r in rows:
-        if r[6] == "OK" and any(state.get(u) != "OK" for u in r[2].split(",") if u):
-            r[6] = "DOWNSTREAM"
         out.append("\t".join(r))
     with open(os.path.join(HERE, "DEPS.tsv"), "w") as f:
         f.write("\n".join(out) + "\n")
