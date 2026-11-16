@@ -25,8 +25,8 @@ definition of π ([W3P] §0); no consumed claim enters a proof (the parents are 
   prior × Occam × count ≤ e^{O(log² n)} against fit ≤ e^{−c n b²}.
 
 ## Numerics (local only; `py -3.13 -I`)
-- `numerics/a_orth.py`: orthogonal design; **exact** δ_n for large p by the Gamma-integral + elementary-symmetric
-  DP (validated against brute-force enumeration at p ≤ 12); report δ_n/Λ_n, one-step sum/Λ_n, δ_n√n.
+- `numerics/a_orth.py`: orthogonal design; compute odds over |S| ≤ min(K, s₀+60) (s₀+80 in E2) by Gamma-integral/elementary-symmetric
+  DP, evaluated by quadrature and validated against brute force; report restricted odds/Λ_n, one-step odds/Λ_n, and the transformed lower bound on δ_n√n.
 - `numerics/a_sph.py`: iid Gaussian design, p ≫ n; exact one-step sum Σ_j π(S₀∪{j})/π(S₀) (a rigorous lower bound
   for δ/(1−δ)) against Λ_n; brute-force check of Lemma S formulas.
 - `numerics/b_check.py`: falsification search for Corollary B (random/adversarial small designs, exact enumeration),

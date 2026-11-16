@@ -5,8 +5,8 @@ Lead: Claude Fable 5.2 (claudeAgent, high). Branch `theory/W3-PSHARP`; folder `T
 
 **RESULT.** All three records are proved, each with its own status: **PROVED (by this seat, unchecked)** in the
 protocol's wording, with the check record of §2 (statement lock, blind break review, two blind line checks; the
-council verdict is recorded in `CHECKPOINT_2.md` and `reviews/`, outside this frozen file). They are lower bounds /
-necessity statements, not new upper bounds, and all are asymptotic statements about the exact coded target π. No
+council verdict is recorded in `CHECKPOINT_3.md` and `reviews/`, outside this frozen file). They are lower bounds /
+necessity statements, not new upper bounds. Lemma S and Corollary B are deterministic (every n, design and data set); Propositions A and C are asymptotic; all concern the exact coded target π. No
 claim of the registry is used in any proof (every proof starts from the definition of π), so nothing here is
 conditional on a parent's status. The parents are only what is sharpened.
 
@@ -36,7 +36,7 @@ exactly 2√(log N/π) (re-derived; the brief's three moment formulas are confir
 
 **(b) Claim B — a sparsity obstruction on every design** (`lemmas/B_sparsity.md`). For every design, every data set and
 every S₀ with 0 ≤ s₀ ≤ K − 1 (no law, no truth):
-δ_n/(1 − δ_n) ≥ 𝒪^{lb}_n = Σ_{j≥1} C(s₀+j, j) n^{−j/2} Π_{i<j}(p−s₀−i)/(2p−1−s₀−i) ≥ c(p, s₀)/√n,
+δ_n/(1 − δ_n) ≥ 𝒪^{lb}_n = Σ_{j=1}^{K−s₀} C(s₀+j, j) n^{−j/2} Π_{i<j}(p−s₀−i)/(2p−1−s₀−i) ≥ c(p, s₀)/√n,
 c(p, s₀) = (s₀+1)(p−s₀)/(2p−1−s₀) ≥ (s₀+1)/3 for s₀ ≤ p/2 (and c/(s₀+1) → ½ when p → ∞, s₀/p → 0). Consequences,
 **for sequences with s₀ ≤ min(K − 1, p/2)**:
 - π(S₀) ≤ [1 + (s₀+1)/(3√n)]⁻¹ surely: **π(S₀) → 1 needs s₀ = o(√n)**; at s₀ ~ λ√n **with s₀/p → 0**,
@@ -44,7 +44,7 @@ c(p, s₀) = (s₀+1)(p−s₀)/(2p−1−s₀) ≥ (s₀+1)/3 for s₀ ≤ p/2 
 - a rate δ_n = O_P(ρ_n) needs s₀ + 1 = O(√n ρ_n): the rate r_n needs s₀ = O(√log n) on every such design, and — by
   (a) — **bounded s₀ on the witness designs with log p ≍ log n**.
 - These consequences need s₀ ≤ p/2 (the multiplicity c(p, s₀) ≍ s₀ + 1): with p = s₀ + 1 there is a single superset,
-  c = 1, and π(S₀) → 1 is possible with s₀ ~ √n; and without s₀/p → 0 the critical-scale limit is weaker (p = 2s₀:
+  c = 1, and π(S₀) → 1 is possible with s₀ ~ √n (heuristic, not proved here); and without s₀/p → 0 the critical-scale limit is weaker (p = 2s₀:
   e^{−λ/3}). The inequality δ_n/(1 − δ_n) ≥ 𝒪^{lb}_n ≥ c(p, s₀)/√n itself holds for every 0 ≤ s₀ ≤ K − 1.
 - **Target correction (for HQ; §4).** "Growing s₀ = o(log n/log log n)" (W3-POST REPORT §4 item 8) cannot keep the
   rate r_n on the witness sequences with log p ≍ log n.
@@ -71,7 +71,7 @@ suffices; so a large enough constant multiple of (log n)² already fails). Open:
 | Line check KSA (Lemma V, S; Claim A) | gpt-6.1-sol high (codex), blind | both files **VERIFIED**; 0 FATAL / 0 MAJOR / 0 MINOR / 0 NIT | `reviews/KSA_check_sol.md` | none needed (`reviews/KSA_KBC_disposition.md`) |
 | Line check KBC (Claims B, C) | gpt-6.1-sol high (codex), blind | B **VERIFIED**; C **VERIFIED-WITH-AMENDMENTS**; 0 / 0 / 3 MINOR / 1 NIT (commentary and one rounded number in C; no proof step) | `reviews/KBC_check_sol.md` | `reviews/KSA_KBC_disposition.md`: all applied → v1.2.1 |
 | Citation check | `citecheck.py` (cited ranges and quoted output numbers) | 42 checks, 0 MISS | `reviews/CITECHECK.txt` | — |
-| Council | seat sol: gpt-6.1-sol high (codex); seat opus: Claude Opus 5.5 high (claudeAgent); blind | recorded in `CHECKPOINT_2.md` (this file is inside the frozen manifest) | `reviews/R<k>_council_sol.md`, `reviews/R<k>_council_opus.md` | `CHECKPOINT_2.md` |
+| Council | seat sol: gpt-6.1-sol high (codex); seat opus: Claude Opus 5.5 high (claudeAgent); blind | recorded in `CHECKPOINT_3.md` (this file is inside the frozen manifest) | `reviews/R<k>_council_sol.md`, `reviews/R<k>_council_opus.md` | `CHECKPOINT_3.md` |
 
 Layers used are those of the ticket brief (statement lock; numerics; break review; proofs; line checks; council).
 No separate mid-point or exhaustive sweep was run: the brief defines CP2 as proofs + Sol checks + council for this
@@ -86,7 +86,7 @@ re-read.
 - **(a) orthogonal witness** — `a_orth.py` → `a_orth_out.txt`. Odds summed over |S| ≤ min(K, s₀ + 60) (s₀ + 80 in E2):
   a lower bound for the full odds δ_n/(1−δ_n), before quadrature error. Computed by a Gamma-integral /
   elementary-symmetric DP: an exact formula evaluated by quadrature, not a certified enclosure (brute-force agreement 1.4·10⁻¹³ at p ≤ 13; all
-  sizes ≤ K against sizes ≤ s₀ + 60: 3·10⁻¹³). Median of these restricted odds/Λ_n: 1.2–1.5 at n = 100, falling to 1.003 (s₀ = 1) and
+  sizes ≤ K against sizes ≤ s₀ + 60: ≤ 3.5·10⁻¹³). Median of these restricted odds/Λ_n: 1.2–1.5 at n = 100, falling to 1.003 (s₀ = 1) and
   1.007 (s₀ = 3) at n = 25600, p = n − 1; P(odds ≥ 0.75Λ_n) ≥ 0.93 in every row. Growing s₀ = n^{0.3} inside (E), (C):
   1.26–1.37 (min 0.98).
 - **(a) spherical witness, p ≫ n** — `a_sph.py` → `a_sph_out.txt`. One-step odds (closed form of Lemma S; a lower
@@ -108,7 +108,7 @@ re-read.
 
 | recorded item | now |
 |---|---|
-| W3-POST Theorem 1 item 7 / REPORT §4 item 10: "whether the extra √(log n) is attained for p = n^A is a conjecture" | **Settled (attained)** on the witness classes of Claim A, for every p = n^a, a > 0, with constant (s₀+1)√(a/π). Open: an upper bound √((1 ∨ log p)/n) when log p = o(log n). |
+| W3-POST Theorem 1 item 7 / REPORT §4 item 10: "whether the extra √(log n) is attained for p = n^A is a conjecture" | **Settled:** the √(log p) factor is present (lower bound, proved here) on the witness classes of Claim A, for every p = n^a, a > 0, with constant (s₀+1)√(a/π); the rate r_n is exact on the two sequences of Remark A3 (upper bound from W3-POST:Thm-1 / Cor-1R). Open: an upper bound √((1 ∨ log p)/n) when log p = o(log n). |
 | W3-POST2 REPORT §6 item 6, first bullet: "does the √(log n) factor in E δ_n appear?" | **Yes** (lower bound, Corollary A1). |
 | W3-POST REPORT §4 item 8: "Growing s₀ = o(log n/log log n). Risk medium" | **Correct the target**: with s₀ → ∞ and log p ≍ log n the rate r_n is impossible on the witness designs; aim at (s₀+1)√(log p/n) for s₀ = o(√(n/log p)); beyond s₀ ≍ √n, π(S₀) ↛ 1 on every design with s₀ ≤ min(K − 1, p/2), so only mode (HPM) consistency can be aimed at (TRIAGE T2(b)). |
 | W3-POST:Prop-LB (δ ≥ 1/(1 + √(n+1)), 1 ≤ s₀) | Sharpened by Corollary B: n in place of n + 1; multiplicity kept; s₀ = 0 covered. |
@@ -172,5 +172,5 @@ gates: correct:PENDING(reviews/BRIEF_R2_sol.md)
 Notes for the ingest (HQ): the four claims are sharpness records (kind as above; `headline` no). Links to the
 claims they sharpen: A → `W3-POST:Thm-1` (rate exact), `W3-POST2:C` (E δ_n); B → `W3-POST:Prop-LB`, `W3-POST2:A2`;
 C → `W3-POST:Lemma-1a'`, `W3-POST2:B`. Proposed sharpness rows for those parents are in §4. The council record
-(round, manifest digest, seats, scores) is in `CHECKPOINT_2.md`; the `council:` field and the `correct:` gate are to be
+(round, manifest digest, seats, scores) is in `CHECKPOINT_3.md`; the `council:` field and the `correct:` gate are to be
 filled from it at CP3 (an editorial diff under rule 15), since this file is inside the frozen manifest.
