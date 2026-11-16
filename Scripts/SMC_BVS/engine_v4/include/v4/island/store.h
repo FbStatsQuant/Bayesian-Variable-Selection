@@ -22,30 +22,13 @@
 namespace v4::island {
 using namespace v4::island::dep;
 
-// INTERFACES §4.2; = core/cpp/v3_ledger.h:11, :14
-enum Phase { PH_TABLE = 0, PH_PILOT, PH_DIAG, PH_FINAL_INIT, PH_FINAL_BRIDGE, PH_BURN_IN, PH_MEASURED, PH_LOCAL,
-             PH_INHERITED, PH_TEST, PH_LS0, N_PHASE };
-enum Mech { ME_TABLE = 0, ME_INIT, ME_GIBBS_HELD, ME_GIBBS_FLIP, ME_USWAP, ME_NSWAP, ME_INDEP, ME_LOCAL, ME_INHERITED, N_MECH };
-enum Segment : uint8_t { SG_TABLE = 0, SG_INHERITED = 1, SG_CALIB = 2, SG_FINAL = 3, SG_LOCAL = 4, SG_LS0 = 5 };
-enum class Order : uint8_t { HPM, LEX };
-
-struct EventKey {
-  uint8_t seg = SG_FINAL, tier = 0; int8_t iter = 0; uint32_t unit = 0;
-  uint8_t xph = 0; uint32_t stage = 0, round = 0, particle = 0, position = 0; uint8_t sub = 0;
-  auto tie() const { return std::make_tuple(seg, tier, iter, unit, xph, stage, round, particle, position, sub); }
-  bool operator<(const EventKey& o) const { return tie() < o.tie(); }
-  bool operator==(const EventKey& o) const { return tie() == o.tie(); }
-};
-
-struct MoveStats {  // core/cpp/v3_engine.h:25-28
-  uint64_t gibbs = 0, gibbs_change = 0, us_exec = 0, us_acc = 0, us_self = 0, ns_exec = 0, ns_acc = 0, ns_noscore = 0, ns_self = 0,
-           in_exec = 0, in_acc = 0;
-  void add(const MoveStats& o) {
-    gibbs += o.gibbs; gibbs_change += o.gibbs_change; us_exec += o.us_exec; us_acc += o.us_acc; us_self += o.us_self;
-    ns_exec += o.ns_exec; ns_acc += o.ns_acc; ns_noscore += o.ns_noscore; ns_self += o.ns_self; in_exec += o.in_exec; in_acc += o.in_acc;
-  }
-  bool operator==(const MoveStats& o) const { return std::memcmp(this, &o, sizeof(*this)) == 0; }
-};
+using v4::Phase; using v4::Mech; using v4::Segment; using v4::Order; using v4::EventKey; using v4::MoveStats;
+using v4::PH_FINAL_INIT; using v4::PH_FINAL_BRIDGE; using v4::PH_BURN_IN; using v4::PH_MEASURED; using v4::N_PHASE; using v4::N_MECH;
+using v4::ME_INIT; using v4::ME_GIBBS_HELD; using v4::ME_GIBBS_FLIP; using v4::ME_USWAP; using v4::ME_NSWAP; using v4::ME_INDEP; using v4::SG_FINAL;
+inline void add_moves(MoveStats& a, const MoveStats& o) {
+  a.gibbs += o.gibbs; a.gibbs_change += o.gibbs_change; a.us_exec += o.us_exec; a.us_acc += o.us_acc; a.us_self += o.us_self;
+  a.ns_exec += o.ns_exec; a.ns_acc += o.ns_acc; a.ns_noscore += o.ns_noscore; a.ns_self += o.ns_self; a.in_exec += o.in_exec; a.in_acc += o.in_acc;
+}
 
 // ---------------------------------------------------------------------------------------------------------------
 struct StoreBuffer {
@@ -171,7 +154,7 @@ struct ThreadLedger {
     for (int a = 0; a < N_PHASE; ++a) for (int b = 0; b < N_MECH; ++b) logical[a][b] += o.logical[a][b];
     if (o.island_best > island_best) island_best = o.island_best;
     if (o.hpm.has && hpm_cand_better(o.hpm.F, o.hpm.S.data(), o.hpm.S.size(), o.hpm.key, hpm)) hpm = o.hpm;
-    ms.add(o.ms);
+    add_moves(ms, o.ms);
   }
   void reset_counters() { std::memset(logical, 0, sizeof(logical)); island_best = NEG_INF; hpm = HpmRec(); ms = MoveStats(); }
 };

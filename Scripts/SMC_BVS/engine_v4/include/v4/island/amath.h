@@ -15,7 +15,15 @@
 #include <immintrin.h>
 #endif
 
+#if defined(__AVX512F__)
+#define V4_ISLAND_ISA_NS isa_avx512
+#elif defined(__FMA__)
+#define V4_ISLAND_ISA_NS isa_fma
+#else
+#define V4_ISLAND_ISA_NS isa_base
+#endif
 namespace v4::island {
+inline namespace V4_ISLAND_ISA_NS {
 
 typedef double v8d __attribute__((vector_size(64), aligned(64)));
 typedef int64_t v8l __attribute__((vector_size(64), aligned(64)));
@@ -105,4 +113,5 @@ inline v8d aexp8(v8d x) {
   return res;
 }
 
+}  // namespace V4_ISLAND_ISA_NS
 }  // namespace v4::island

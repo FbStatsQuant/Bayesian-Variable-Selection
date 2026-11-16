@@ -62,3 +62,5 @@ if(V4_TESTS)
   target_compile_options(v4_bench_score PRIVATE ${V4_BIT_FLAGS})
   target_link_libraries(v4_bench_score PRIVATE v4_bit)
 endif()
+
+include(src/island/island.cmake)   # WP3 island kernel (sources, tests, bench)

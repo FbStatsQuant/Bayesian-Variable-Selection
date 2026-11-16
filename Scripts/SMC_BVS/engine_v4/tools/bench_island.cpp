@@ -102,7 +102,7 @@ static void bench_island(int p, int N, int T, KernelKind kk, int G, int Bk, int 
   c.grid.push_back(1.0);
   for (size_t i = 1; i < c.grid.size(); ++i) if (!(c.grid[i] > c.grid[i - 1])) c.grid[i] = std::nextafter(c.grid[i - 1], 2.0);
   double w0 = now();
-  IslandResult r = run_island<A>(D, st, nb, c);
+  IslandRun r = run_island<A>(D, st, nb, c);
   double wall = now() - w0;
   const auto& k = r.ks;
   int rounds = Tst + L + Hm;

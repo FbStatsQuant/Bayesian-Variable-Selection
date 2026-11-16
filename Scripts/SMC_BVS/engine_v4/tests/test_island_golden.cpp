@@ -14,11 +14,11 @@ typedef void* SEXP;
 inline bool Rf_isNull(SEXP x) { return x == nullptr; }
 namespace Rcpp { template <class T> struct XPtr { T* p; explicit XPtr(SEXP x) : p((T*)x) {} T* get() { return p; } }; }
 #include "v3_engine.h"
-#include "island_tk.h"
+#include "tk.h"
+#include "tutil_island.h"
 #include "v4/island/island.h"
 
 using namespace v4::island;
-static bool same_bits(double a, double b) { return std::memcmp(&a, &b, 8) == 0; }
 
 struct Twin {
   Data D; Start st; Neighbours nb;
@@ -29,7 +29,7 @@ struct Twin {
     build_start(st, D, blocks);
     nb = window_neighbours(D, 14, 8);
     std::vector<int> orig(p); for (int j = 0; j < p; ++j) orig[j] = j + 1;
-    v3::data_init(D3, D.X.data(), D.y.data(), n, p, orig);
+    v3::data_init(D3, D.Xs, D.ys, n, p, orig);
     st3.D = &D3; st3.blocks = blocks;
     v3::Scorer sc3(&D3); v3::build_tables(st3, sc3); v3::build_start(st3);
     Nb3.assign(p, {}); for (int j = 0; j < p; ++j) for (int64_t e = nb.ptr[j]; e < nb.ptr[j + 1]; ++e) Nb3[j].push_back(nb.idx[e]);
@@ -40,7 +40,7 @@ TEST(golden_data_and_tables) {
   Twin W(100, 240, 31, 4);
   CHECK(same_bits(W.D.logm0, W.D3.logm0) && same_bits(W.D.logCn, W.D3.logCn) && same_bits(W.D.logWK, W.D3.logWK) && same_bits(W.D.yty, W.D3.yty));
   bool ok = true;
-  for (int j = 0; j < W.D.p; ++j) ok = ok && same_bits(W.D.z[j], W.D3.z[j]) && same_bits(W.D.diagG[j], W.D3.Gat(j, j)) && W.D.zkey[j] == W.D3.zob.key[j];
+  for (int j = 0; j < W.D.p; ++j) ok = ok && same_bits(W.D.z[j], W.D3.z[j]) && same_bits(W.D.diagG[j], W.D3.Gat(j, j)) && W.D.zob.key[j] == W.D3.zob.key[j];
   for (int k = 0; k <= W.D.K; ++k) ok = ok && same_bits(W.D.logprior[k], W.D3.logprior[k]);
   CHECK(ok);
   bool tok = W.st.J == W.st3.J && same_bits(W.st.logZbar0, W.st3.logZbar0);
@@ -102,9 +102,9 @@ struct AddrSource : public v3::VariateSource {
   }
 };
 
-static void compare_island(const v3::IslandResult& R3, const v3::Ledger& L3, const IslandResult& R, int r, const char* tag) {
+static void compare_island(const v3::IslandResult& R3, const v3::Ledger& L3, const IslandRun& R, int r, const char* tag) {
   bool ok = same_bits(R3.logZ, R.logZ) && R3.init_hash == R.init_hash && R3.phi.size() == R.stages.size();
-  CHECK_MSG(ok, "[%s] logZ %.17g vs %.17g, init hash %d, T %zu vs %zu", tag, R3.logZ, R.logZ, (int)(R3.init_hash == R.init_hash), R3.phi.size(), R.stages.size());
+  CHECKF(ok, "[%s] logZ %.17g vs %.17g, init hash %d, T %zu vs %zu", tag, R3.logZ, R.logZ, (int)(R3.init_hash == R.init_hash), R3.phi.size(), R.stages.size());
   for (size_t t = 0; t < std::min(R3.phi.size(), R.stages.size()); ++t) {
     const auto& s = R.stages[t]; const auto& m3 = R3.stage_moves[t];
     bool st_ok = same_bits(R3.phi[t], s.phi) && same_bits(R3.inc[t], s.inc) && same_bits(R3.ess[t], s.ess) && same_bits(R3.cum[t], s.cum) &&
@@ -112,7 +112,7 @@ static void compare_island(const v3::IslandResult& R3, const v3::Ledger& L3, con
     bool mv_ok = m3.gibbs == s.moves.gibbs && m3.gibbs_change == s.moves.gibbs_change && m3.us_exec == s.moves.us_exec && m3.us_acc == s.moves.us_acc &&
                  m3.us_self == s.moves.us_self && m3.ns_exec == s.moves.ns_exec && m3.ns_acc == s.moves.ns_acc && m3.ns_noscore == s.moves.ns_noscore &&
                  m3.ns_self == s.moves.ns_self && m3.in_exec == s.moves.in_exec && m3.in_acc == s.moves.in_acc;
-    CHECK_MSG(st_ok && mv_ok, "[%s] stage %zu: table %d moves %d (gibbs_change %llu vs %llu)", tag, t + 1, (int)st_ok, (int)mv_ok,
+    CHECKF(st_ok && mv_ok, "[%s] stage %zu: table %d moves %d (gibbs_change %llu vs %llu)", tag, t + 1, (int)st_ok, (int)mv_ok,
               (unsigned long long)m3.gibbs_change, (unsigned long long)s.moves.gibbs_change);
   }
   CHECK(R3.terminal_moves.size() == R.terminal_moves.size());
@@ -127,13 +127,13 @@ static void compare_island(const v3::IslandResult& R3, const v3::Ledger& L3, con
     wrb = std::max(wrb, std::fabs(R3.pip[j] - R.pip[j]));
     for (size_t h = 0; h < R.rb_round.size(); ++h) wrb = std::max(wrb, std::fabs(R3.rb_round[h][j] - R.rb_round[h][j]) / std::max(1.0, std::fabs(R3.rb_round[h][j])));
   }
-  CHECK_MSG(wrb <= 1e-12, "[%s] RB/PIP max deviation %.3e", tag, wrb);
+  CHECKF(wrb <= 1e-12, "[%s] RB/PIP max deviation %.3e", tag, wrb);
   // ledger
   std::vector<int> h3(L3.hpmS.begin(), L3.hpmS.end());
   bool hok = L3.has_hpm == R.hpm.has && Model(h3.begin(), h3.end()) == R.hpm.S && same_bits(L3.hpmF, R.hpm.F) && same_bits(L3.hpm_logm, R.hpm.logm) &&
              L3.hpm_ev.phase == R.hpm.phase && L3.hpm_mech == R.hpm.mech && (uint32_t)L3.hpm_ev.stage == R.hpm.key.stage &&
              (uint32_t)L3.hpm_ev.round == R.hpm.key.round && (uint32_t)L3.hpm_ev.particle == R.hpm.key.particle && (uint32_t)L3.hpm_ev.position == R.hpm.key.position;
-  CHECK_MSG(hok, "[%s] HPM F %.17g vs %.17g; ev (%d,%d,%d,%d,%d) vs (%d,%u,%u,%u,%u)", tag, L3.hpmF, R.hpm.F, L3.hpm_ev.phase, L3.hpm_ev.stage,
+  CHECKF(hok, "[%s] HPM F %.17g vs %.17g; ev (%d,%d,%d,%d,%d) vs (%d,%u,%u,%u,%u)", tag, L3.hpmF, R.hpm.F, L3.hpm_ev.phase, L3.hpm_ev.stage,
             L3.hpm_ev.round, L3.hpm_ev.particle, L3.hpm_ev.position, R.hpm.phase, R.hpm.key.stage, R.hpm.key.round, R.hpm.key.particle, R.hpm.key.position);
   CHECK(same_bits(L3.island_best[r], R.island_best));
   bool lok = true;
@@ -145,7 +145,7 @@ static void compare_island(const v3::IslandResult& R3, const v3::Ledger& L3, con
     Model S(it->S.begin(), it->S.end());
     sok = same_bits(it->v, R.top_v[i]) && S == Model(R.top_pool.begin() + R.top_off[i], R.top_pool.begin() + R.top_off[i] + R.top_len[i]);
   }
-  CHECK_MSG(sok, "[%s] top store: sizes %zu vs %zu, first difference at %zu", tag, L3.top.s.size(), R.top_v.size(), i);
+  CHECKF(sok, "[%s] top store: sizes %zu vs %zu, first difference at %zu", tag, L3.top.s.size(), R.top_v.size(), i);
 }
 
 TEST(golden_island_vs_core_engine) {
@@ -165,10 +165,9 @@ TEST(golden_island_vs_core_engine) {
     IslandConfig c; c.seed = seed; c.island = (uint32_t)r; c.N = N; c.grid = grid; c.L = L; c.Hm = Hm; c.B = B;
     for (int kern = 0; kern < 2; ++kern) {
       c.kernel = kern ? KernelKind::LabelMajor : KernelKind::ParticleMajor; c.threads = kern ? 3 : 1; c.G = 8; c.tile = 64;
-      IslandResult R = run_island<Arith::Bit>(W.D, W.st, W.nb, c);
+      IslandRun R = run_island<Arith::Bit>(W.D, W.st, W.nb, c);
       compare_island(R3, L3, R, r, kern ? "label-major" : "particle-major");
     }
   }
 }
 
-int main(int argc, char** argv) { return tk::run_all(argc, argv); }

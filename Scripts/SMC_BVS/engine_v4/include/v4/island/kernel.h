@@ -12,13 +12,14 @@
 //                  Q < 1e-8 y'y test or finiteness fall back to the full scalar scorer (same routes as core/).
 //   Arith::ClassA  bordered update with the label appended last, fma8, vector log/exp (amath.h). Same exact-arithmetic
 //                  value; ≤ 1e-9 relative to Bit (tested). Failing lanes fall back to the Bit scorer (INTERFACES §6).
-// Deletions (j ∈ S) are k full scores from the cached Gram of S (Bit arithmetic in both forms), done once per support.
+// Deletions (j ∈ S) are k full scores by WP1's Bit scorer (both forms), done once per support.
 #pragma once
 #include "v4/island/amath.h"
 #include "v4/island/dep.h"
 
 namespace v4::island {
 using namespace v4::island::dep;
+inline namespace V4_ISLAND_ISA_NS {
 
 enum class Arith { Bit, ClassA };
 constexpr int KM = 24;  // largest support handled by the vector paths; larger supports take the scalar path
@@ -74,7 +75,7 @@ inline void build_support(const Data& D, const Start& st, BitScorer& sc, Support
       s.MH[a][b] = bH[a * k + b] = n1 * G[a * k + b] + (a == b ? 1.0 : 0.0);
       s.MA[a][b] = bA[a * k + b] = G[a * k + b] + (a == b ? 1.0 : 0.0);
     }
-    if (chol_inplace(bH.data(), k) && chol_inplace(bA.data(), k)) {
+    if (v4::chol_inplace(bH, k) && v4::chol_inplace(bA, k)) {
       s.fast = true;
       for (int a = 0; a < k; ++a) for (int b = 0; b < k; ++b) { s.LH[a][b] = bH[a * k + b]; s.LA[a][b] = bA[a * k + b]; }
       s.preH[0] = s.preA[0] = s.preQ[0] = 0;
@@ -103,12 +104,10 @@ inline void build_support(const Data& D, const Start& st, BitScorer& sc, Support
   }
   // deletions: score(S \ S[a]) from the cached Gram (bits of core's scorer), odds as core/cpp/v3_engine.h:124-126
   s.del_logm.assign(k, 0.0); s.del_odds.assign(k, 0.0);
-  std::vector<double> Gd; Model Sd;
+  Model Sd;
   for (int a = 0; a < k; ++a) {
     Sd.clear(); for (int t = 0; t < k; ++t) if (t != a) Sd.push_back(S[t]);
-    Gd.assign((size_t)(k - 1) * (k - 1), 0.0);
-    for (int r = 0, rr = 0; r < k; ++r) { if (r == a) continue; for (int c = 0, cc = 0; c < k; ++c) { if (c == a) continue; Gd[rr * (k - 1) + cc] = G[r * k + c]; ++cc; } ++rr; }
-    double lm = sc.score_gs(Sd, Gd.data()).logm;
+    double lm = sc.score(Sd).logm;   // WP1's Gram-free Bit scorer: the bits of core's score(S \ S[a])
     double c = comp_del(st, s, S[a]);
     double lg0d = D.logprior[k - 1] + c, dd = (lm - D.logm0) - c;
     s.del_logm[a] = lm;
@@ -254,4 +253,5 @@ inline void eval1(const Data& D, const Start& st, BitScorer& sc, const SupportCa
   logm_out = lm8[0]; o_out = o8[0];
 }
 
+}  // namespace V4_ISLAND_ISA_NS
 }  // namespace v4::island

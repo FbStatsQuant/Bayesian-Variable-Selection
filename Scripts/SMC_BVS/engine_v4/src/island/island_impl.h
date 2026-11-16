@@ -20,7 +20,7 @@ struct Fnv { uint64_t h = 0xcbf29ce484222325ULL;
 };
 
 #ifdef V4_ISLAND_DEFINE_COMMON
-uint64_t IslandResult::hash() const {
+uint64_t IslandRun::hash() const {
   Fnv f;
   f.pod(status); f.pod(r); f.pod(N); f.pod(T); f.pod(L); f.pod(Hm); f.pod(p); f.pod(logZ); f.pod(init_hash);
   for (auto& s : stages) { f.pod(s.phi); f.pod(s.inc); f.pod(s.ess); f.pod(s.cum); f.pod(s.distinct_res); f.pod(s.distinct_moved); f.pod(s.moves); }
@@ -28,10 +28,28 @@ uint64_t IslandResult::hash() const {
   f.vec(terminal_distinct); f.vec(rb_acc); f.vec(pip);
   for (auto& v : rb_round) f.vec(v);
   f.bytes(logical, sizeof(logical)); f.pod(island_best);
-  f.pod(hpm.has); f.vec(hpm.S); f.pod(hpm.F); f.pod(hpm.logm); f.pod(hpm.key.tie()); f.pod(hpm.phase); f.pod(hpm.mech);
+  f.pod(hpm.has); f.vec(hpm.S); f.pod(hpm.F); f.pod(hpm.logm); f.pod(hpm.key.seg); f.pod(hpm.key.tier); f.pod(hpm.key.iter); f.pod(hpm.key.unit); f.pod(hpm.key.xph); f.pod(hpm.key.stage); f.pod(hpm.key.round); f.pod(hpm.key.particle); f.pod(hpm.key.position); f.pod(hpm.key.sub); f.pod(hpm.phase); f.pod(hpm.mech);
   f.vec(top_v); f.vec(top_hash); f.vec(top_len); f.vec(top_pool);
   for (auto& m : terminal) f.vec(m);
   return f.h;
+}
+
+v4::IslandResult to_record(const IslandRun& r) {
+  v4::IslandResult o;
+  o.status = r.status == 0 ? v4::Status::completed : (r.status == 2 ? v4::Status::numerical_failure : v4::Status::resource_limit);
+  o.r = r.r; o.N = r.N; o.T = r.T; o.L = r.L; o.Hm = r.Hm; o.logZ = r.logZ; o.init_hash = r.init_hash;
+  o.stages = r.stages; o.terminal_moves = r.terminal_moves; o.terminal_distinct = r.terminal_distinct;
+  o.rb_acc = r.rb_acc; o.pip = r.pip; o.rb_round = r.rb_round;
+  v4::LedgerConfig lc; lc.p = r.p; lc.islands = std::max(1, r.r); lc.leaders = false; lc.fresh_counters = false;
+  o.led.init(lc);
+  o.led.has_hpm = r.hpm.has; o.led.hpmS = r.hpm.S; o.led.hpmF = r.hpm.F; o.led.hpm_logm = r.hpm.logm;
+  o.led.hpm_ev.phase = r.hpm.phase; o.led.hpm_ev.mech = r.hpm.mech; o.led.hpm_ev.key = r.hpm.key;
+  std::memcpy(o.led.logical, r.logical, sizeof(r.logical));
+  if (r.r >= 0 && (size_t)r.r < o.led.island_best.size()) o.led.island_best[r.r] = r.island_best;
+  for (size_t i = 0; i < r.top_v.size(); ++i) o.led.top.offer(r.top_v[i], v4::ModelView(r.top_pool.data() + r.top_off[i], r.top_len[i]), r.top_hash[i]);
+  o.led.top.compact();
+  o.t.total = r.ks.t_total;
+  return o;
 }
 #endif
 
@@ -82,7 +100,7 @@ class IslandEngine {
   std::vector<std::unique_ptr<BitScorer>> scorers;
   std::vector<u128> rb_cur, rb_tot;
   std::vector<std::vector<u128>> rb_thread;        // particle-major reference with threads
-  IslandResult res;
+  IslandRun res;
   // tiled row-major copy of X for the label-major products: tile t holds columns [t*Bk, t*Bk + Bk) as n rows of Bk
   std::vector<double> Xt; int Bk = 128, ntile = 0;
   double logZ = 0;
@@ -196,7 +214,7 @@ class IslandEngine {
         if (has_other) {
           T = Pi.S; if (in) sorted_erase(T, lab); else sorted_insert(T, lab);
           double F = D.logprior[T.size()] + lm;
-          L.scored(T.data(), (uint32_t)T.size(), Pi.h ^ D.zkey[lab], F, lm, rc.phase, ME_GIBBS_FLIP, key(rc, i1, pos));
+          L.scored(T.data(), (uint32_t)T.size(), Pi.h ^ D.zob.key[lab], F, lm, rc.phase, ME_GIBBS_FLIP, key(rc, i1, pos));
         }
         if (rb) (*rb)[lab] += fix63(o);
         double u = uniform_at(addr(rc.xph, rc.ustage, i1, pos, 0));
@@ -412,7 +430,7 @@ class IslandEngine {
               L.logical[rc.phase][ME_GIBBS_FLIP] += ncons - 1;   // + 1 inside scored()
               if (F >= top.tau.load(std::memory_order_relaxed) || F > L.island_best || F >= L.hpm.F) {
                 T = c.S; if (in) sorted_erase(T, j); else sorted_insert(T, j);
-                L.scored(T.data(), (uint32_t)T.size(), c.h ^ D.zkey[j], F, lm, rc.phase, ME_GIBBS_FLIP, key(rc, (uint32_t)(g0 + first) + 1, fpos));
+                L.scored(T.data(), (uint32_t)T.size(), c.h ^ D.zob.key[j], F, lm, rc.phase, ME_GIBBS_FLIP, key(rc, (uint32_t)(g0 + first) + 1, fpos));
               } else {
                 L.logical[rc.phase][ME_GIBBS_FLIP] += 1;
               }
@@ -560,7 +578,7 @@ class IslandEngine {
   }
 
   // ---- the island ---------------------------------------------------------------------------------------------
-  IslandResult run() {
+  IslandRun run() {
     auto tstart = std::chrono::steady_clock::now();
     last_ckpt = tstart;
     const int N = cfg.N, T = (int)cfg.grid.size() - 1, L = cfg.L, Hm = cfg.Hm;
@@ -652,7 +670,7 @@ class IslandEngine {
 };
 
 template <Arith A>
-IslandResult run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg) {
+IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg) {
   if (cfg.grid.size() < 2 || cfg.grid.front() != 0.0 || cfg.grid.back() != 1.0) throw std::invalid_argument("run_island: grid must run from 0 to 1");
   for (size_t i = 1; i < cfg.grid.size(); ++i) if (!(cfg.grid[i] > cfg.grid[i - 1])) throw std::invalid_argument("run_island: grid not strictly increasing (I3)");
   IslandEngine<A> E(D, st, nb, cfg);

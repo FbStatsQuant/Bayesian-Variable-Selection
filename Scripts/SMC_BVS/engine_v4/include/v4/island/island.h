@@ -41,7 +41,7 @@ struct IslandConfig {
   bool keep_terminal = false;
 };
 
-struct StageRow { double phi = 0, inc = 0, ess = 0, cum = 0; int32_t distinct_res = 0, distinct_moved = 0; MoveStats moves; };
+using v4::StageRow;
 
 struct KernelStats {   // execution statistics (not part of the law, not hashed)
   uint64_t particle_rounds = 0, particle_sweeps = 0, passes = 0, support_label_pairs = 0, supports = 0;
@@ -52,7 +52,7 @@ struct KernelStats {   // execution statistics (not part of the law, not hashed)
 
 struct Particle { Model S; uint64_t h = 0; double logm = 0, lg0 = 0, d = 0, F = 0; };
 
-struct IslandResult {
+struct IslandRun {
   int status = 0;   // 0 completed, 1 interrupted (stop_after_step), 2 numerical_failure
   std::string reason;
   int r = 0, N = 0, T = 0, L = 0, Hm = 0, p = 0;
@@ -68,10 +68,14 @@ struct IslandResult {
   uint64_t hash() const;   // FNV-1a over every law output (T3 / T6 comparisons)
 };
 
-template <Arith A>
-IslandResult run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg);
+// The INTERFACES §5.2 record (records.h): stage table, RB arrays, Ledger (HPM + provenance, island_best, logical
+// counters, top store as a compacted v4::Store). Leader stores are absent in final islands (D-7).
+v4::IslandResult to_record(const IslandRun& r);
 
-extern template IslandResult run_island<Arith::Bit>(const Data&, const Start&, const Neighbours&, const IslandConfig&);
-extern template IslandResult run_island<Arith::ClassA>(const Data&, const Start&, const Neighbours&, const IslandConfig&);
+template <Arith A>
+IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const IslandConfig& cfg);
+
+extern template IslandRun run_island<Arith::Bit>(const Data&, const Start&, const Neighbours&, const IslandConfig&);
+extern template IslandRun run_island<Arith::ClassA>(const Data&, const Start&, const Neighbours&, const IslandConfig&);
 
 }  // namespace v4::island

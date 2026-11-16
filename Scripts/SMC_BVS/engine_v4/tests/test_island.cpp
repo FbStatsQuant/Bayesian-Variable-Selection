@@ -5,12 +5,12 @@
 #include <map>
 #include <random>
 #include <set>
-#include "island_tk.h"
+#include "tk.h"
+#include "tutil_island.h"
 #include "v4/island/island.h"
 
 using namespace v4::island;
 
-static bool same_bits(double a, double b) { return std::memcmp(&a, &b, 8) == 0; }
 static std::string tmpdir() { const char* t = std::getenv("TMPDIR"); return t ? t : "."; }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -22,12 +22,12 @@ TEST(philox_known_answers) {
       {{0x243f6a88, 0x85a308d3, 0x13198a2e, 0x03707344}, {0xa4093822, 0x299f31d0}, {0xd16cfe09, 0x94fdcceb, 0x5001e420, 0x24126ea1}},
   };
   for (auto& t : kat) {
-    uint32_t o[4]; Philox4x32::gen(t.c, t.k, o);
-    for (int i = 0; i < 4; ++i) CHECK_MSG(o[i] == t.o[i], "word %d: %08x vs %08x", i, o[i], t.o[i]);
+    v4::Ctr4 o = v4::philox4x32_10(v4::Ctr4{t.c[0], t.c[1], t.c[2], t.c[3]}, v4::Key2{t.k[0], t.k[1]});
+    for (int i = 0; i < 4; ++i) CHECKF(o[i] == t.o[i], "word %d: %08x vs %08x", i, o[i], t.o[i]);
   }
   // address packing (INTERFACES §3) and uniform range
   Address a; a.seed = 7; a.role = R_FINAL; a.island = 3; a.xph = X_BRIDGE; a.stage = 5; a.particle = 11; a.position = 13; a.slot = 2;
-  uint32_t c[4], k[2]; address_words(a, c, k);
+  v4::Key2 k = v4::address_key(a); v4::Ctr4 c = v4::address_ctr(a);
   CHECK(k[0] == 7 && k[1] == 3 && c[0] == 2 && c[1] == 13 && c[2] == 11 && c[3] == ((2u << 24) | 5u));
   double u = uniform_at(a); CHECK(u >= 0 && u < 1);
 }
@@ -42,6 +42,7 @@ struct Fixture {
   }
 };
 
+static uint64_t D_hash(const std::vector<uint64_t>& key, const Model& S) { uint64_t h = 0; for (int j : S) h ^= key[j]; return h; }
 static Model random_support(std::mt19937_64& g, int p, int k, const Model& base = {}) {
   Model S = base;
   while ((int)S.size() < k) { int j = (int)(g() % p); if (!contains(S, j)) sorted_insert(S, j); }
@@ -181,8 +182,37 @@ TEST(store_order_free_multithread) {
       for (auto& b : bufs) st.merge_buffer(b);
       bool ok = st.check_invariant() && st.size() == ref.size();
       for (size_t i = 0; ok && i < ref.size(); ++i) ok = same_bits(st.v[i], std::get<0>(ref[i])) && st.model(i) == std::get<1>(ref[i]);
-      CHECK_MSG(ok, "cap %zu threads %d buf %zu: size %zu vs %zu", cap, threads, lim, st.size(), ref.size());
+      CHECKF(ok, "cap %zu threads %d buf %zu: size %zu vs %zu", cap, threads, lim, st.size(), ref.size());
     }
+  }
+}
+
+// The island's concurrent store against WP1's reference v4::Store (INTERFACES §4.1) when every model has one value
+// (the bit form): identical content, order and bits, in both orders.
+TEST(store_equals_wp1_reference_store) {
+  std::mt19937_64 g(23);
+  std::vector<uint64_t> key(300); uint64_t x = 5; for (auto& k : key) k = splitmix64(x);
+  std::map<Model, double> val;
+  std::vector<Model> offers;
+  for (int i = 0; i < 100000; ++i) {
+    Model S = random_support(g, 300, 1 + (int)(g() % 5));
+    if (!val.count(S)) val[S] = -std::floor((double)(g() % 5000) / 7.0);
+    offers.push_back(S);
+  }
+  for (auto ord : {Order::HPM, Order::LEX}) for (uint64_t cap : {1ull, 13ull, 2000ull, 30000ull}) {
+    v4::Store ref(cap, ord); TopStore st; st.init(cap, ord); st.buf_limit = 4096;
+    std::vector<StoreBuffer> bufs(3);
+    for (auto& S : offers) ref.offer(val[S], S, D_hash(key, S));
+    ref.compact();
+    #pragma omp parallel for num_threads(3) schedule(dynamic, 64)
+    for (size_t i = 0; i < offers.size(); ++i) {
+      const Model& S = offers[offers.size() - 1 - i];
+      st.offer(bufs[omp_get_thread_num()], val.at(S), S.data(), (uint32_t)S.size(), D_hash(key, S));
+    }
+    for (auto& b : bufs) st.merge_buffer(b);
+    bool ok = ref.size() == st.size() && st.check_invariant() && ref.check_invariants();
+    for (size_t i = 0; ok && i < ref.size(); ++i) ok = same_bits(ref.v[i], st.v[i]) && Model(ref.model(i).begin(), ref.model(i).end()) == st.model(i);
+    CHECKF(ok, "order %d cap %llu: sizes %zu vs %zu", (int)ord, (unsigned long long)cap, ref.size(), st.size());
   }
 }
 
@@ -198,7 +228,7 @@ static void t3_invariance(const char* tag) {
   Fixture F(100, 300, 21);
   IslandConfig c = small_cfg();
   c.kernel = KernelKind::ParticleMajor; c.threads = 1;
-  IslandResult ref = run_island<A>(F.D, F.st, F.nb, c);
+  IslandRun ref = run_island<A>(F.D, F.st, F.nb, c);
   CHECK(ref.status == 0);
   uint64_t h0 = ref.hash();
   std::printf("  [%s] reference hash %016llx logZ %.12f hpm |S|=%zu F=%.6f store %zu sweeps/round %.3f\n", tag, (unsigned long long)h0,
@@ -209,9 +239,9 @@ static void t3_invariance(const char* tag) {
                              {KernelKind::LabelMajor, 3, 1, 128}, {KernelKind::LabelMajor, 2, 7, 64}, {KernelKind::LabelMajor, 3, 16, 256}};
   for (auto& cf : confs) {
     IslandConfig d = c; d.kernel = cf.k; d.threads = cf.threads; d.G = cf.G; d.tile = cf.tile;
-    IslandResult r = run_island<A>(F.D, F.st, F.nb, d);
+    IslandRun r = run_island<A>(F.D, F.st, F.nb, d);
     double M = r.ks.particle_rounds ? (double)r.ks.particle_sweeps / r.ks.particle_rounds : 0;
-    CHECK_MSG(r.hash() == h0, "[%s] kernel %d threads %d G %d tile %d: hash %016llx logZ %.17g vs %.17g", tag, (int)cf.k, cf.threads, cf.G,
+    CHECKF(r.hash() == h0, "[%s] kernel %d threads %d G %d tile %d: hash %016llx logZ %.17g vs %.17g", tag, (int)cf.k, cf.threads, cf.G,
               cf.tile, (unsigned long long)r.hash(), r.logZ, ref.logZ);
     std::printf("  [%s] kernel %s threads %d G %3d tile %3d: hash %016llx  M %.3f  pairs/(N p round) %.3f\n", tag,
                 cf.k == KernelKind::LabelMajor ? "LM" : "PM", cf.threads, cf.G, cf.tile, (unsigned long long)r.hash(), M,
@@ -225,7 +255,7 @@ TEST(t3_invariance_classA) { t3_invariance<Arith::ClassA>("A"); }
 TEST(logical_counts_and_invariants) {
   Fixture F(100, 300, 22);
   IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 16;
-  IslandResult r = run_island<Arith::Bit>(F.D, F.st, F.nb, c);
+  IslandRun r = run_island<Arith::Bit>(F.D, F.st, F.nb, c);
   int T = (int)c.grid.size() - 1;
   uint64_t held = r.logical[PH_FINAL_BRIDGE][ME_GIBBS_HELD];
   CHECK(held == (uint64_t)c.N * F.D.p * T);
@@ -254,11 +284,11 @@ TEST(t6_restart_bit_identical) {
   for (int stop : {0, 2, 5, 6, Tsteps - 1}) {
     IslandConfig a = c; a.ckpt_path = tmpdir() + "/wp3_t6_" + std::to_string(stop); a.ckpt_every_s = 1e9; a.stop_after_step = stop;
     std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
-    IslandResult r1 = run_island<Arith::Bit>(F.D, F.st, F.nb, a);
+    IslandRun r1 = run_island<Arith::Bit>(F.D, F.st, F.nb, a);
     CHECK(r1.status == 1);
     IslandConfig b = a; b.stop_after_step = -1; b.threads = 3; b.G = 5; b.kernel = (stop % 2) ? KernelKind::ParticleMajor : KernelKind::LabelMajor;
-    IslandResult r2 = run_island<Arith::Bit>(F.D, F.st, F.nb, b);
-    CHECK_MSG(r2.status == 0 && r2.resumed_from_step == stop && r2.hash() == h0, "stop %d: resumed %d hash %016llx vs %016llx", stop,
+    IslandRun r2 = run_island<Arith::Bit>(F.D, F.st, F.nb, b);
+    CHECKF(r2.status == 0 && r2.resumed_from_step == stop && r2.hash() == h0, "stop %d: resumed %d hash %016llx vs %016llx", stop,
               r2.resumed_from_step, (unsigned long long)r2.hash(), (unsigned long long)h0);
     std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
   }
@@ -272,10 +302,9 @@ TEST(t6_restart_bit_identical) {
     FILE* f = std::fopen(newest.c_str(), "r+b"); CHECK(f != nullptr);
     if (f) { std::fseek(f, 100, SEEK_SET); int ch = std::fgetc(f); std::fseek(f, 100, SEEK_SET); std::fputc(ch ^ 0x5A, f); std::fclose(f); }
     IslandConfig b = a; b.stop_after_step = -1;
-    IslandResult r2 = run_island<Arith::Bit>(F.D, F.st, F.nb, b);
-    CHECK_MSG(r2.resumed_from_step == 3 && r2.hash() == h0, "corrupt newest: resumed %d", r2.resumed_from_step);
+    IslandRun r2 = run_island<Arith::Bit>(F.D, F.st, F.nb, b);
+    CHECKF(r2.resumed_from_step == 3 && r2.hash() == h0, "corrupt newest: resumed %d", r2.resumed_from_step);
     std::remove((a.ckpt_path + ".a").c_str()); std::remove((a.ckpt_path + ".b").c_str());
   }
 }
 
-int main(int argc, char** argv) { return tk::run_all(argc, argv); }
