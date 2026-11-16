@@ -33,6 +33,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | ticket | contents | source |
 |---|---|---|
 | SAMP-R1 | truth-free D; TV re-centring of C; hybrid TR bound; LT rate under NC_r | SHARP3 triage (W3-READER TRIAGE_SHARP3.md) |
+| POST2-O1 | design-free sufficient condition for (OS) (makes "no eigenvalue condition off S₀" literally true); ranks WITH O3 (consultant, D46); kill budget | D46 |
 | POST2-O3 | E-floor+: bounded ridge cost in place of the floor on S₀ (design-agnosticism; FIRST post-freeze, owner tie-break); kill budget | H5 card 6 (D36) |
 | POST2-O2 | E+: lower c₁; if c₁ < c₀, MIS(i′) covers C-MIS's inclusion range → C-MIS → MISR supersession (price the MISR rebuild); with POST2-R1; kill budget | H5 card 6 |
 | POST2-R1 | matching expectation lower bound E δ_n ≳ √(log n/n) on every design with a floor (Thm 1 two-sided); one unverified step; kill budget | row 1.1 card (D35) |

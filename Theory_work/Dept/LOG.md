@@ -120,3 +120,4 @@
 - 22:47 — HQ: READER WEAKER tags = faithfulness fixes, no H5 card (consultant FYI with S2-F6); plan approved (Sol check Mon after midday → DEPS OK → CP3 freeze).
 - 22:47 — Opus code review of infra/accept-identity-case: CR-VERDICT APPROVE (tl 175/0, check 468/0); 5 non-blocking, main: add a negative test (changed content + legacy Windows stamp must fail; probe confirmed it does). Reviewer settled.
 - 22:48 — recorder asked to add NB-1/NB-2 tests to the accept-identity branch, rebase, push head → HQ merge; NB-3/NB-4 post-freeze.
+- 22:49 — consultant consequences for READER relayed (D46); POST2-O1 queued with O3.

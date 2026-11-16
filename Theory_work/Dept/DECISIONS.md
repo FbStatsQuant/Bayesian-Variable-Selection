@@ -309,3 +309,8 @@
 - **D45.** S2-F6 wording accepted ("no eigenvalue condition off S₀ beyond the vanishing floor (A5)"). Premise-adding repairs
   to headline reader statements need a Sol statement-change check before the CP3 freeze (v4 §4.2): Opus S3 tonight, Sol
   check on the S2 diff Mon 11-16 after ~midday (BNP push ends); then DEPS OK → freeze → council (Sol seat FIDELITY line).
+
+## 2026-11-15 22:49 CT — consultant consequences for W3-READER (HQ adopted)
+- **D46.** Thm 1′ not "design-agnostic" (keeps vanishing floor (A5)); O1 ranks with O3 post-freeze; rows 3.1/3.2 lead with
+  the convention-free clause (every admissible run that produces output reports S₀, every seed, one data event);
+  "every run produces output" to the body; row 3.6 stays in the body; freeze only after a clean read of the final text.
