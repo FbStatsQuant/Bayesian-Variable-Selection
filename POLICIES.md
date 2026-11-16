@@ -57,16 +57,16 @@ PROGRAM Readability, with a fidelity check of every number.
   - run every tool, test and dry run;
   - open PRs to `main`;
   - start reviewers and helpers within their brief's allowance.
-- **Expert agents and escalation (owner memo, 2026-11-15; supersedes the earlier expert rule).**
-  - Departments solve technical problems themselves. **Opus 5.5 / Sonnet 5.5 experts and helpers** may be spawned
-    within the brief's allowance (Claude Third, effort high), without asking.
-  - **A Fable 5.2 expert needs permission:** the manager asks HQ, with why and the expected size. HQ takes it to the owner,
-    who approves it within budget and says which account pays. Fables already approved before this memo continue (the
-    W3-DIST lead; Engineering's feasibility expert).
-  - **Big problems are reported to HQ at once**: a counterexample to a target, an infeasible plan, a budget overrun, a
-    blocked dependency, anything touching a headline. Say what happened, its impact and what you propose.
-  - Technical decisions are still made by the department and confirmed by HQ. The owner keeps budget tiers, paper
-    claims, competitors and framing, and big-picture direction.
+- **Models and escalation (owner, 2026-11-15, final).**
+  - Departments are independent in using **Opus 5.5, Sonnet 5.5 and Haiku 5.5** (Claude Third unless their charter
+    says otherwise; effort high max).
+  - **A new Fable 5.2 needs the owner's green light.** If a problem is big enough to need it, the manager reports to HQ:
+    the problem, why Opus is not enough, **how many Fables**, the expected size or duration, and the account. HQ passes
+    it to the owner, and the owner gives the green light. Fables already approved continue (the W3-DIST lead;
+    Engineering's feasibility expert).
+  - Big problems are reported to HQ at once.
+  - Otherwise every department works on its own: the same repo, the same information, clear goals and resources (charters
+    in §8). Technical decisions are the department's, confirmed by HQ.
 - **HQ only:** merges to `main`, registry acceptance (CP3 / `--record`), headline changes, protocol amendments,
   supersessions, API batch credits (the Console key stays on HQ's desktop: send HQ "API cards"), and NOTS job
   submission unless HQ delegates it for a named ticket.
@@ -131,3 +131,12 @@ A department that expects to exceed its envelope asks HQ first.
 - Each department keeps `DECISIONS.md` and `LOG.md` in its folder.
 - HQ keeps `HQ_DECISIONS.md` (decisions) and `HQ_NOW.md` (roster, queue, owner batch).
 - Nothing important lives only in a chat.
+
+## 8. Department charters (goals and resources)
+
+| department | goal | resources | gates with HQ |
+|---|---|---|---|
+| SMC - Theory | all theory tickets: W3-DIST (top priority: distribution consistency), W3-READER, riders, premise tickets (T-N, T-PART, T-STREAM, T-CAL, T-MERGE), parallel-SMC campaign, strength gates for headline candidates | Claude Third (Opus/Sonnet/Haiku); up to 5 concurrent leads until Wed 11-18 18:00, then 3; Codex reviews (priority W3-DIST); NOTS read access | CP3 acceptance, headline cards (H5), merges, API submission, new Fables |
+| SMC - Engineering | the engine for large p and the p = 1M experiment: spec, build, ladder 10⁴ → 10⁵ → 10⁶ | Claude Third (Opus/Sonnet/Haiku); Owls local runs; NOTS read access; NOTS core-hours per approved batch | job batches, budget tier (owner), paper claim for the parallel method (owner), new Fables, merges |
+| SMC - Writing | chapter v2.0, advisor report (~Dec 4–6), later the paper; readable to peers | Claude Personal (Opus/Sonnet/Haiku); LaTeX on Owls | delivery dates, a fidelity check per document, merges |
+| SMC - Lean | Lean certificates of headline theorems (launched when material is ready) | to be set at launch | launch, merges |
