@@ -63,4 +63,22 @@ islands at 5k and 8 at 10k.
 - **Memory.** It is not billed. The B3 MaxRSS at 5k (1.22 GB) includes an N = 10,000 run, so 5G is generous for both.
 
 ## Owls dry run (p = 1,000, 4 islands, nice 19; local gcc 11.5 / R 4.6.0; core compiled from a copy in /home/fb31/p1m_g0_dryrun)
-See `owls_dryrun_p1000.log` and `owls_dryrun_tables/`. Results are in `../README.md`.
+**Outcome: WORKS.** Run 11-15 20:25–21:04 CT, one core, nice 19, on the shared Owls (load average 25–420). Log
+and record: `/home/fb31/p1m_g0_dryrun/stage/stage_p1000.{log,rds}` (1.2 MB).
+- **Core check:** 19 of 19 files match `revD_SHA256SUMS`.
+- **Calibration:** status ok; T_pilot 27, 7 rebuilds, T_grid 31; 1,349 s.
+- **Final run:** completed, 4 of 4 islands, 236 s per island. HPM = truth; sd(log Ẑ_r) 0.21.
+- **Store:** 40,001 of 40,001 entries (full); log Σ e^F = −68.33.
+- **Totals:** wall 38.5 min; peak RSS 0.46 GB.
+- **Records present:**
+  - per island: the 31-stage table with all 19 columns, including `gibbs_state_changes`; the 12-round terminal table;
+    the complete core record;
+  - `stage_dispersion` (Σ_t var(log increment) = 0.0035 against var(log Ẑ_r) = 0.044);
+  - the pilot table (27 rows) and 28 diagnostic-island stage tables (7 iterations × 4);
+  - the store F values and models.
+- **Read-back:** `stage_readback.R` wrote all five tables (124 / 31 / 4 / 1 / 868 rows).
+- **Observation at p = 1k only** (not a G0 result): accepted Gibbs moves per particle and round were 2.3–5.4 by
+  stage.
+- p = 2,000 was not run: the p = 1,000 run alone took 38 min, more than the 10-minute condition.
+- Not exercised: the B3 line-up (no B3 records on Owls) and a guard stop.
+- Known cosmetic bug: the pilot `ess_share` divides by N₀ instead of H₀ = 512 (see `../README.md` §8).

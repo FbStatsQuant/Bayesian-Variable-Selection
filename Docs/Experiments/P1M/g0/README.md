@@ -189,7 +189,13 @@ The T = 1 S₀ rows at p = 10⁵ use only 40 tiles and are inflated by warm-up; 
 0.0013 (Δ = 10), 0.011 (Δ = 12), 0.10 (Δ = 14), 1.0 (Δ = 16).
 
 ### Stage
-STAGE_DRYRUN_RESULTS
+p = 1,000, 4 islands, one core, nice 19 (gcc 11.5 / R 4.6.0; core compiled from a copy):
+- **Works:** core check 19/19; calibration ok (T_grid 31, 7 rebuilds); 4 of 4 islands; every record present (stage
+  tables with `gibbs_state_changes`, terminal tables, a full store of 40,001 F values, 28 diagnostic-island tables);
+  `stage_readback.R` writes all five tables.
+- Wall 38.5 min on the loaded Owls; peak 0.46 GB.
+- p = 2,000 was not run (over 10 min).
+- Details in `stage/README.md`.
 
 ## 7. What the dry runs do NOT check
 - **NOTS toolchain.** Not run on NOTS:
@@ -211,3 +217,17 @@ STAGE_DRYRUN_RESULTS
 - **Bits of the stage dry run.** The Owls dry run compiled the core with gcc 11.5 and R 4.6.0, so its numbers are not
   bit-comparable with NOTS. It checks the driver's logic and records only.
 - **Statistical content.** The dry runs check that the records exist and are consistent, not what they will show.
+
+## 8. Known bugs (found after submission; not fixed — WP3 builds the real store)
+- **Multi-thread `offer` segfaults (kernel job 2747371, NOTS).** The T = 1 offer test completed; the next one (T = 48)
+  crashed.
+  - Cause: in `offer_one` (`kernel/g0_bench.cpp`, about line 493) the sample buffer has max(NR, NM) = 2²²/T entries.
+    The FILL sample writes NF = min(c/2, 2²⁰) entries into it. At T = 48, NF = 416,666 against a buffer of 87,381.
+  - At T ≤ 4 (the Owls dry runs) the buffer is ≥ 2²⁰, so the dry run could not show it.
+  - Fix, if the mode is ever rerun: size the buffer as max(NF, NR, NM).
+  - Effect: G0 has the offer costs at T = 1 only (one store of 4·10⁷), and no multi-thread offer contention numbers.
+    Every test before it (all batch, direct, perm and bw rows, and the pass fractions) is unaffected.
+- **Mislabelled pilot ESS share (`stage_measure.R`, cosmetic).** `calibration$pilot_stage_table$ess_share` divides by
+  N₀ = 2,500. The pilot island has H₀ = 512 particles. Use `ess / 512` (the `ess` column itself is right).
+  - The diagnostic-island tables (H₀) and the final-island tables (N = 2,500) are correct.
+  - Not fixed, so the repo copy stays identical to the deployed one (stage job 2747372 is running).

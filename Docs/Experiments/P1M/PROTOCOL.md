@@ -1,4 +1,4 @@
-# PROTOCOL — SMC - Engineering Department (v1.0 draft, 2026-11-15; HQ approves this variant and every change)
+# PROTOCOL — SMC - Engineering Department (v1.0, approved by HQ 2026-11-15; HQ approves every change)
 
 Tailored under POLICIES.md §13. Engineering's checks are code tests, gates, overlap validation and benchmarks, not proof
 councils.
@@ -27,8 +27,9 @@ councils.
    - **invariance tests** for threads, groups and tiles (T3);
    - CI green.
 2. **Independent code review** by a reviewer who did not write the code: an Opus 5.5 helper with a written brief for
-   routine PRs; a Sol review via HQ for the engine core (scorer, kernels, streams, merge, calibration). The verdict and
-   the disposition of each finding are filed in `reviews/`.
+   routine PRs; a Sol review via HQ for the engine core (scorer, kernels, streams, merge, calibration), subject to the
+   Codex pacing level (POLICIES §14). At level ≥ 1, engine-core PR reviews stay on Sol, but routine PR reviews are
+   Opus-only. The verdict and the disposition of each finding are filed in `reviews/`.
 3. HQ merges. No self-merge.
 
 **Plan and spec.** The Sol feasibility and budget review at each EXP-CP (commissioned by HQ). Independent expert reviews
@@ -90,9 +91,15 @@ rung" (POLICIES §8 (c)).
 Outputs are immutable once published (write to a temporary name, then rename). A re-run gets a new `run_id`, never an
 overwrite. A failed or cancelled run keeps its directory and its ledger row.
 
-**Data lifecycle.** Generated data are regenerable from (generator, seed) and checked by hash. Heavy data of record leave
-scratch only after a checksum-verified transfer to the owner's laptop (POLICIES §12 rule 3). Nothing of record is
-deleted without the owner's request.
+**Data lifecycle.** Generated data are regenerable from (generator, seed) and checked by hash. Results of record go off
+NOTS by the **continuous offload** (POLICIES §12.13; `machines/OFFLOAD.md`):
+1. checksummed (SHA-256 computed on NOTS) to Owls, then to the **owner's desktop (primary; path from the owner on 11-16)**;
+2. mirrored to the laptop when it is online;
+3. NOTS scratch is freed only after the Owls and desktop copies are verified.
+
+Nothing of record stays idle in scratch for more than **7 days** (POLICIES §12.12; the CRC purge is 14 days on atime).
+Nothing of record is deleted without a verified copy, and nothing at a final destination is deleted without the owner's
+request.
 
 **Errors found later.** An error in a result already reported gets:
 1. a correction entry in LOG.md;
@@ -149,3 +156,4 @@ Proposed by the Engineering manager, approved by HQ, recorded in the changelog b
 
 ## Changelog
 - v1.0 (2026-11-15) — first version; submitted to HQ with EXP-CP1 v2. Includes the owner-priority rule for NOTS (owner, 11-15).
+- v1.0 approved by HQ 11-15, with two edits folded in: §4 data lifecycle → continuous offload (desktop primary, laptop mirror, NOTS freed after verification, 7-day rule); §2 Sol reviews subject to the Codex pacing level (POLICIES §14; at level ≥ 1 routine PR reviews are Opus-only).

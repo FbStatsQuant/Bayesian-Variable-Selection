@@ -1,5 +1,9 @@
 # BUILD_COMMON — rules for every engine builder (SMC - Engineering Department, 2026-11-15)
 
+**Paths:** the department docs are NOT in your worktree (they are uncommitted in the shared clone). Read them at
+`/home/fb31/Bayesian-Variable-Selection/Docs/Experiments/P1M/` (absolute path). Your code goes in YOUR worktree, on your
+branch created by `git fetch origin && git checkout -b exp/P1M-wp<N>-<short> origin/exp/P1M-engine`.
+
 You build one work package (WP) of the large-p SMC-BVS engine ("v4") for the p = 10⁶ experiment. The p = 10⁶ run is a
 top company objective. Read, in this order:
 1. this file;

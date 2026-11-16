@@ -11,6 +11,7 @@ Rules:
 
 | date | batch | kind | job ids | worst case | actual | status |
 |---|---|---|---|---|---|---|
-| — | (none yet) | | | | | |
+| 2026-11-15 20:53 CST | G0 kernel benchmark (1 SPR node, 96 CPUs, 5 min) | gated (HQ go 11-15) | 2747371 | 8.0 | **0.88** | COMPLETED (33 s; benchmark segfault after the T = 1 offer test, results kept) |
+| 2026-11-15 20:53 CST | G0 stage-level re-runs (5k: 16 islands, 7 h limit; 10k: 8 islands, 17.5 h), revision D unmodified | gated (HQ go 11-15) | 2747372_[1-2] | 49.0 | — | submitted |
 
-**Totals:** actual 0 · reserved (worst case, open) 0 · remaining ≈ 24,600.
+**Totals:** actual 0.88 · reserved (worst case, open) 49.0 · remaining ≈ 24,543 (admission check: 0 + 57.0 ≤ the G0 cap of 71.5 and ≤ the envelope).
