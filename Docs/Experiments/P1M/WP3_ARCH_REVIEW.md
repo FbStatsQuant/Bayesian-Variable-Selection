@@ -8,13 +8,13 @@ machine load 21–29 during the runs. "SPR" = NOTS Sapphire Rapids, job 2748756 
 
 ## 0. Summary
 
-1. **Late 10⁶ rounds can go well under the plan.** Measured 287 ns·CPU per pair (job 2748756). L5 as built, the
-   store check moved off the step path, bounded scoring and Gram-row reuse together give **≈ 105 ns·CPU per pair**
-   (ESTIMATE on SPR; plan 200). On Owls the same two late rounds of a 10⁶ island went from 47.1 s to 28.1 s (−40%) with
+1. **Late 10⁶ rounds can go well under the plan.** Measured 287 ns·CPU per pair (job 2748756) and 240–254 with L5
+   (job 2749328). The store check moved off the step path, bounded scoring and Gram-row reuse give **≈ 120 ns·CPU per
+   pair**, ≈ 102–110 if L5's compaction regression is recovered (ESTIMATE on SPR, §1.1 and §2; plan 200). On Owls the same two late rounds of a 10⁶ island went from 47.1 s to 28.1 s (−40%) with
    an identical output hash (MEASURED).
-2. **About 19% of a late round is a serial debug check that no counter shows.** `check_store` is on by default and
-   verifies the whole store after every step: 6.6 s per step at 4·10⁷ entries (MEASURED, Owls). WP3's time split read it
-   as per-pass overhead, so the L5 estimate (215) still contains it.
+2. **About 24% of a late round is a serial debug check that no counter shows.** `check_store` is on by default and
+   verifies the whole store after every step: 6.6 s per step at 4·10⁷ entries (MEASURED, Owls); ≈ 5.7 s of every round
+   is in no counter on SPR, before and after L5 (§1.1). Moving it off the step path alone gives ≈ 184 ns·CPU per pair.
 3. **The late-round figure is not the cost of a fit.** No SPR run so far has measured a bridge. Early bridge stages
    carry π₀-sized supports and many sweeps per particle. At 10⁶ with the stand-in start law a step costs
    **13–16 µs of thread time, about 25× a late round and about 45× the plan** (MEASURED, Owls). The prototype brings
@@ -23,30 +23,50 @@ machine load 21–29 during the runs. "SPR" = NOTS Sapphire Rapids, job 2748756 
 4. Two more design risks: calibration islands carry leader stores that compact serially (+42% at 3 threads, MEASURED),
    and the top store is rewritten about once per bridge stage (§3 R2, R3).
 5. The SPR confirmation is one job of ≈ 40 core-h (§5).
+6. Addendum §7: the L5 batch confirms the uncounted check on SPR (≈ 5.7 s per step in both islands); the real setup
+   tables cost under 2% in phase A but 8–35 GB of memory, depending on how the island holds them.
 
 ## 1. Cost model
 
-### 1.1 A late 10⁶ round on SPR (MEASURED, job 2748756, round 5, G = 256, 96 threads on one socket)
+### 1.1 A late 10⁶ round on SPR, before and after L5 (MEASURED; G = 256, 96 threads on one socket, same data and stream)
 
-Wall 29.06 s for 9.72·10⁹ (support, label) pairs = 287 ns·CPU per pair = 1,116 ns·CPU per step (M = 3.89). From the
-`[island]` and `[round]` lines of `results/levers_2748756/socket1.log`:
+Before = job 2748756 (commit efc0dfd0), after = job 2749328 (commit be24e9d), round 5, island 1; island 2 of the second
+job is within 0.2 s on every line. 9.72·10⁹ (support, label) pairs, M = 3.89. One second of wall = 9.87 ns·CPU per pair.
+Phase times are differences of the cumulative `[island]` counters; compaction is from the `[round]` line.
 
-| part | wall s | share | ns·CPU per pair | nature |
+| part | before, s | after L5, s | after, ns·CPU per pair | nature |
 |---|---|---|---|---|
-| phase A: products | 4.5 | 15% | 44 | core throughput; hyperthreads add nothing (49.5 → 98.8 ns thread-time from 48 to 96 threads, job 2748105) |
-| phase A: flips, odds, uniform scan | 6.5 | 22% | 64 | throughput |
-| store invariant check (in no counter; ESTIMATE as the residual) | ≈ 5.5 | 19% | ≈ 54 | **serial**, once per step |
-| walk | 3.5 | 12% | 35 | latency: one π₀ draw (59 ms on Owls before L5) holds every pass |
-| build | 3.1 | 11% | 31 | serial zero-fill of the score rows per group (before L5) |
-| orders | 2.9 | 10% | 29 | throughput, random memory access |
-| phase B | 1.9 | 7% | 19 | throughput, memory-bound |
-| compaction | 0.7 | 3% | 7 | |
+| phase A: products | 4.5 | 4.7 | 46 | core throughput; hyperthreads add nothing (job 2748105: 49.5 → 98.8 thread-ns from 48 to 96 threads) |
+| phase A: flips, odds, uniform scan | 6.5 | 7.2 | 71 | throughput |
+| **store invariant check (in no counter)** | ≈ 5.9 | **≈ 5.7** | **≈ 56** | serial, once per step |
+| phase B | 1.9 | 2.7 | 27 | throughput, memory-bound |
+| compaction | 0.7 | 1.7 | 16 | one compaction per late round in both jobs |
+| orders | 2.9 | 1.7 | 17 | throughput, random memory access |
+| walk | 3.5 | 0.6 | 6 | was latency-bound on one π₀ draw per pass |
+| build | 3.1 | 0.0 | 0 | was the serial zero-fill of the score rows |
+| **round** | **29.1** | **24.3** | **240** (rounds 4–5: 247) | plan 200 |
 
-- The check is the residual: the counted phases sum to ≈ 23.3 s. The residual is 4.3–6.6 s in every round of both
-  islands (G = 64 and G = 256, 131 to 845 passes), so it is per step, not per pass. The check alone costs 6.64 s at
-  c = 4·10⁷, k = 6 on Owls (MEASURED, `v4_bench_arch check 40000001 6 3`; 166 ns per entry: one random index lookup each).
-- A linear fit of phase A over the two islands (ESTIMATE from two MEASURED points) gives ≈ 9 ms of wall per pass that
-  does not depend on the pairs: 1.2 s per round at 131 passes.
+- **The check.** The counted phases sum to 22.4 s before and 16.9 s after; with the compaction, 5.9 s and 5.7 s of each
+  round are in no counter (5.8 and 5.8 in round 4; the same in island 2). The amount does not depend on L5, on G (it was
+  the same at G = 64) or on the number of passes: it is per step. `check_store` is on by default in both commits and
+  verifies the whole store, serially, after every step. Alone it costs 6.64 s at c = 4·10⁷, k = 6 on Owls (MEASURED,
+  `v4_bench_arch check 40000001 6 3`; 166 ns per entry: one random index lookup each). If the late compaction runs
+  between phase-B waves, it is counted inside phase B as well and the check is then 7.4 s; 5.7 s is the lower bound.
+- **Why L5 gave 247 and not 215.** WP3's projection removed 7.4 s (walk, build, orders, apply) from 29.1 s. The
+  measured counters removed 7.2 s there: that part landed. Three things moved the other way: phase A + 0.9 s (+ 8%;
+  products 44.4 → 46.5 thread-ns per pair; cause not identified, possibly the node), phase B + 0.8 s and compaction
+  + 0.9 s (m3).
+- **m3, from the store counters.** The number of compactions per round did not change (29–31, 14–16, 6–7, 2, 1). The
+  time per compaction did: 0.72–0.76 s in rounds 2–5 before, 1.56–1.73 s after; round 1 is unchanged at ≈ 1.6 s.
+  So about 0.9 s was added to every compaction. Diagnosis from the code, not measured: `psort_noalloc` replaced the
+  library's parallel sort by a pairwise merge tree, and the last levels of that tree run on 1–3 threads over all staged
+  entries, twice per compaction. A bucket sort on the leading key (the hash, then the value) with per-bucket sorts has no
+  such levels and gives the same unique order. Phase B's own rise may be the same seconds seen twice (a compaction between
+  waves sits inside the phase-B timer), so the regression is 0.9–1.7 s per late round.
+- A linear fit of phase A over the two islands of the first job (ESTIMATE from two MEASURED points, G = 64 and 256)
+  gives ≈ 9 ms of wall per pass that does not depend on the pairs: 1.2 s per round at 131 passes.
+- Round 1 (π₀ → φ = 1 in one stage, M ≈ 55): 540 → 533 s. It is not a model of a bridge stage: the one-stage jump
+  collapses the population onto a few ancestors, so its supports are shared. §1.3 measures real early stages.
 
 ### 1.2 Three structural causes
 
@@ -121,28 +141,30 @@ The unit "ns per (support, label) pair" stops meaning anything once whole suppor
 
 ## 2. Recommendations, ranked
 
-Expected gain = late 10⁶ round on SPR, ns·CPU per pair-equivalent, baseline 287 (ESTIMATE unless marked). "Same bits"
-= the output hash is unchanged, checked on Owls in both arithmetic forms where it applies.
+Expected gain = late 10⁶ round on SPR, ns·CPU per pair-equivalent, **on the measured L5 basis of §1.1 (240, round 5)**
+(ESTIMATE unless marked). "Same bits" = the output hash is unchanged, checked on Owls in both arithmetic forms where it
+applies.
 
-| # | lever | output | expected on SPR | MEASURED on Owls | state |
+| # | lever | output | expected on SPR, from 240 | MEASURED on Owls | state |
 |---|---|---|---|---|---|
-| 0 | L5 as built by WP3 (PR #26) | same bits | −72 (WP3's estimate) | π₀ draw 60 → 4.3 ms, round order 40 → 20 ns per label | built |
-| 1 | store check: parallel, and only before a checkpoint or the final write | same bits | **−54** | 6.64 s per step serial; 1.2 s with 3 threads | one-day change |
-| 2 | bounded scoring: score a (support, label) only if a particle can still consume it; bounded uniform scan; one-particle phase B | same bits | **−30 to −35** | late 10⁶ round 47.1 → 34.0 s; flips 3.83 → 1.37 per step | prototype |
-| 3 | Gram rows of active columns kept across passes | same bits | **−20** | 34.0 → 28.1 s; products 31 → 15 thread-s; early 10⁶ stages ÷ 4 with #2 | prototype |
-| 4 | Philox 32×32 multiply (`vpmuludq` instead of the 64-bit lane multiply) | same bits | −3 | round order 19.7 → 15.6 ns per label; π₀ draw 4.27 → 3.03 ms; a 16-draw look-ahead adds −12% | prototype |
+| 0 | L5 as built by WP3 (PR #26) | same bits | done: 287 → 240 (MEASURED, round 5) | π₀ draw 60 → 4.3 ms, round order 40 → 20 ns per label | merged basis |
+| 1 | store check: parallel, and only before a checkpoint or the final write | same bits | **−56** | 6.64 s per step serial; 1.2 s with 3 threads | one-day change |
+| 2 | bounded scoring: score a (support, label) only if a particle can still consume it; bounded uniform scan; one-particle phase B | same bits | **−43** | late 10⁶ round 47.1 → 34.0 s; flips 3.83 → 1.37 per step | prototype |
+| 3 | Gram rows of active columns kept across passes | same bits | **−19** | 34.0 → 28.1 s; products 31 → 15 thread-s; early 10⁶ stages ÷ 4 with #2 | prototype |
+| 4 | Philox 32×32 multiply (`vpmuludq` instead of the 64-bit lane multiply) | same bits | −3.5 | round order 19.7 → 15.6 ns per label; π₀ draw 4.27 → 3.03 ms; a 16-draw look-ahead adds −12% | prototype |
+| m3 | compaction sort without the serial merge levels (§1.1) | same bits | −9 to −17 | not measured (diagnosis) | WP3 |
 | 5 | rolling admission: a finished particle's slot goes to the next particle, so every pass stays full | same bits | −15 | not built (from the 9 ms per pass of §1.1 and ≈ 45 passes per round instead of 131) | design |
 | 6 | FMA in the class-A products | **other class-A bits**; label-major = particle-major kept | −5 to −8 | products 15.3 → 12.4 thread-s; kernel 0.067 → 0.045 ns per multiply-add | prototype; your decision |
 | 7 | large supports: full 8-label groups across tiles, several groups per flip call, deletion scores from the cached Gram | same bits | small late; ≈ ÷ 1.5–2 on early stages | interleaving alone: no gain (most calls hold 1–2 groups) | design |
 | 8 | offer floor from calibration (§3 R3) | **island file content changes**; fit identical | −5 late; −10 to −20% of a bridge stage; −10 to −15 GB | compaction = 30% of the prototype's 10⁵ bridge | needs a contract decision |
 
-Levers 0–4 together: 287 → **≈ 105 ns·CPU per pair-equivalent ≈ 410 ns·CPU per step** at M = 3.89 (ESTIMATE; plan 600
-per step at M = 3). The M risk of H-9 is then absorbed in late rounds: the cost no longer scales with M, because
-the flips per step stay near 1.0–1.5 whatever M is.
+Levers 1–4: 240 → **≈ 120 ns·CPU per pair-equivalent ≈ 460 ns·CPU per step** at M = 3.89; with m3, ≈ 102–110
+(ESTIMATE; plan 200 per pair, 600 per step at M = 3). Lever 1 alone gives ≈ 184. The M risk of H-9 is absorbed in late
+rounds: the cost no longer scales with M, because the flips per step stay near 1.0–1.5 whatever M is.
 
-How the ESTIMATE is built: SPR phases after L5 (WP3's deltas), minus the check, with the Owls ratios applied to
-phase A (20.4 / 37.5) and phase B (4.3 / 6.2): 6.0 + 1.3 + orders 1.2 + build 0.9 + walk 0.3 + compaction 0.7 + 0.2
-≈ 10.6 s per round.
+How the ESTIMATE is built: the measured L5 phases of §1.1 with the Owls ratios of the same two rounds applied to phase A
+(× 0.67 with bounded scoring and scan: 25.3 / 37.5 s; × 0.54 with Gram rows: 20.4 / 37.5), to phase B (× 0.81, × 0.69)
+and to the orders (× 0.79). 24.3 − 5.6 (check) = 18.7 s → 14.3 s → 12.0 s.
 
 ### 2.1 Lever 2, bounded scoring (the main design change)
 
@@ -187,7 +209,8 @@ phase A (20.4 / 37.5) and phase B (4.3 / 6.2): 6.0 + 1.3 + orders 1.2 + build 0.
 
 ### 2.4 Can the island reach 200 ns·CPU per pair?
 
-- **Late rounds: yes**, ≈ 105 (ESTIMATE), to be confirmed on SPR (§5).
+- **Late rounds: yes**, ≈ 120, and ≈ 102–110 with the compaction sort fixed (ESTIMATE), to be confirmed on SPR (§5).
+  The store check alone brings the measured 240 to ≈ 184.
 - **Early bridge stages: no.** The prototype reaches 3.1–3.6 µs of thread time per step at 10⁶ with 55-member supports
   (MEASURED), against 0.3 in the plan. Lever 7, a cheaper deletion score and the offer floor may give another factor of
   about 2 (ESTIMATE). The floor of §1.4 (u·n multiply-adds per consumed flip) stays. What decides the bill is how many
@@ -284,11 +307,11 @@ sbatch --partition=commons --constraint=<Sapphire Rapids 8468> --nodes=1 --ntask
 | step | what | ESTIMATE wall | expected result (ESTIMATE) |
 |---|---|---|---|
 | transient | π₀ → φ = 1 in one stage, 2 burn-in rounds, checkpoint | ≈ 10 min | — |
-| `ref` | PR #26 behaviour, check on | 2.5 min | ≈ 21–22 s per round (215 ns·CPU per pair); `[arch]` line shows the check ≈ 5 s |
-| `check` | check off | 2.5 min | ≈ 16.5 s (163) |
-| `bounded` | lever 2 | 2.5 min | ≈ 12.5–13 s (≈ 126) |
-| `gram` | + lever 3 (640 slots, + 5.1 GB) | 2.5 min | ≈ 10.5–11 s (≈ 105) |
-| `fma` | + lever 6 (its hash differs by design) | 2.5 min | ≈ 10–10.5 s |
+| `ref` | PR #26 behaviour, check on | 2.5 min | ≈ 24 s per round (240 ns·CPU per pair, as job 2749328); the `[arch]` line shows the check ≈ 5.7 s |
+| `check` | check off | 2.5 min | ≈ 18.5 s (≈ 184) |
+| `bounded` | lever 2 | 2.5 min | ≈ 14.3 s (≈ 141) |
+| `gram` | + lever 3 (640 slots, + 5.1 GB) | 2.5 min | ≈ 12 s (≈ 120) |
+| `fma` | + lever 6 (its hash differs by design) | 2.5 min | ≈ 11.5 s |
 | early stages (`V4_BENCH_EARLY=1`) | N = G = 64, φ = 0.01, 0.02, 0.03, reference and `gram` (4,000 slots, 32 GB) | ≈ 2 min | reference ≈ 15–18 µs·CPU per step, `gram` ≈ 3.5–4 |
 
 Cost: ≈ 25 min × 96 CPUs ≈ **40 core-h** (worst case 50 min × 96 = 80). Optional variants `g64` and `smt48` add ≈ 4
@@ -322,3 +345,86 @@ Limits of this evidence:
 - The prototypes are not production code: no unit tests added, switches through environment variables, and the Gram
   rows are outside the memory plan. The `ref` variant of my build already contains lever 4.
 - Lever 5, lever 7 beyond interleaving, and the offer floor are designs with estimates, not measurements.
+
+## 7. Addendum (2026-11-16, later): the L5 SPR batch and WP2's real setup tables
+
+Inputs: `results/WP3_L5_SPR.md` with the logs of job 2749328 (commit be24e9d), and WP2's 10⁶ counts (LOG 05:04 and
+05:06). Where this section gives a number that differs from §0–§5, this section wins.
+
+### 7.1 The L5 batch against the cost model
+
+Now §1.1 (before and after, per phase) and the lever table of §2, which are rebuilt on the measured L5 numbers. Two
+facts from it that matter here: the uncounted ≈ 5.7 s per step is unchanged by L5 and be24e9d still has
+`check_store = true`; and the memory of the job was 19.5 GB steady after round 1 and 34.8 GB at the peak in round 1
+(the store full of π₀-sized models), with ≈ 2.5 GB of stand-in tables. So the island without tables is ≈ 17 GB steady
+and ≈ 32 GB at the peak.
+
+### 7.2 Table lookups in phase A with production-sized tables (MEASURED, Owls)
+
+Phase A reads one table entry per flip: the singleton code of the label, `logr[code_ptr[b] + (1 << pos)]`. With the
+stand-in (32 MB) that entry sits in L2/L3. With blocks of 14 the table is 9.4 GB: the read is one DRAM cache line and,
+on 4 KB pages, 0.43 page walks per label (MEASURED count: the singleton codes touch 18.8% of the table's pages,
+1.63 GB). But the entry is the same for every support of the pass, and the supports are scored one after the other
+inside a tile. So the miss is paid once per (label, tile visit), not once per flip.
+
+`v4_bench_arch comp 1000000 14 <supports> 3 <scatter> <small_pages>` (the loop shape of phase A: tiles, then
+supports, then labels), ns of thread time per (support, label) for the composite sum:
+
+| supports that need the label | stand-in table | 9.4 GB table, huge pages | 9.4 GB table, 4 KB pages | with a singleton array |
+|---|---|---|---|---|
+| 64 | 10.7 | 14.7 | 13.2 | 9.3–9.5 |
+| 4 | — | 29.5 | 27.6 | 9.6–10.0 |
+| 1 | — | 73.6 | 88.6 | 9.8–10.4 |
+| 64, labels scattered over blocks | — | — | 27.9 | 25.3 |
+| 4, scattered | — | — | 61.6 | 22.0 |
+
+- **Cost of the real table: 64–78 ns per (label, tile visit)**, divided by the number of supports that need the label.
+- In the island:
+  - reference code, ≈ 74 supports per pass: ≈ +1 ns per pair (under 1% of 240);
+  - bounded scoring, late rounds (≈ 27 of 74 supports need a given label): ≈ +3 ns per flip, 1–2% of the round;
+  - early stages (G·k limits the group to 24–64 supports, 7% of the labels needed): +14–46 ns on a flip of ≈ 1 µs.
+- **So the real tables do not move any per-pair figure by more than ≈ 2%** (ESTIMATE from these measurements). The
+  per-tile working set is unchanged: 128 table lines (8 KB) beside a 205 KB tile.
+- The fix costs nothing: a p-indexed array `lr1[j]` of the singleton terms (8 MB, read sequentially). The sum is the
+  same doubles added in the same order (checked: identical bit sums). It removes the miss and, more important, takes
+  the 1.63 GB of singleton pages out of the island's hot set (7.3).
+- The second column pair shows what the block search costs when a design's blocks are not contiguous in the label
+  index (branch mispredictions: 25 vs 9.5 ns). AR and IND pack by minimum index, so they are on the first rows.
+
+### 7.3 Island memory with the real tables (10⁶, n = 200, G = 256, 96 threads; GB)
+
+Non-table part from 7.1: ≈ 17 steady, ≈ 32 at the peak (MEASURED minus the stand-in). Tables for IND at n = 200:
+logr 9.25 (WP2), plus cond_cum ≈ 0.9, logF 0.06, neighbours ≈ 0.15 (ESTIMATE): ≈ 10.4 in `setup.bin`.
+
+| how the island holds the start law | tables in memory | island peak | task request (peak + 15%) |
+|---|---|---|---|
+| (a) today: `dep::Start` (nested vectors, a flat copy of logr, stored sampler tables) | 26–35 (2.5–3.4 × setup.bin, WP2); 37.9 at IND n = 1,000 | ≈ 58–67 | ≈ 68–78 |
+| (b) WP2's flat `setup::Start`, read into memory | ≈ 10.4 | ≈ 43 | ≈ 48–50 |
+| (c) flat `setup::Start` as a read-only file mapping, with the hot arrays copied: `lr1` (8 MB), `blk`/`pos` (8 MB), the π₀ scan table (58 MB at n = 200, 286 MB at n = 1,000), neighbours | ≈ 1 resident in late rounds (ESTIMATE); the rest is page cache the kernel may drop | ≈ 33.5 | ≈ 40 (H-9 holds) |
+| (c) with Gram rows (+5.1), inverse-only orders (−1.0) | | ≈ 37.6 | ≈ 44 |
+| (c) with those and the offer floor of R3 (store peak ≈ −12, ESTIMATE) | | ≈ 26 | ≈ 30 |
+
+- Without `lr1`, layout (c) touches 1.63 GB of logr in every pass; those pages must stay resident.
+- What stays cold in (c): logr is then read only for labels in a block that meets a support and for π₀ draws. Late
+  rounds: at most a few thousand distinct blocks × 131 KB (ESTIMATE ≤ 0.7 GB). Early stages touch most blocks over time,
+  one cache line at a time; under memory pressure the kernel drops and re-reads them.
+- cond_cum (4.5 GB at n = 1,000): the island needs only the selected rows of a draw and the scan table of first
+  entries P(k_b = 0 | r). If the island builds the scan table by reading cond_cum it touches all of it once. Have
+  WP2 write the scan table into `setup.bin`, or build it from logF and logprof (same function, same bits), so that
+  cond_cum can go on demand as WP2 proposes.
+- Two islands of one node map the same file. Its pages live on the socket of whichever island touched them first. With
+  the hot arrays copied into each island's own memory this does not reach phase A.
+- **The admission plan** counts the caller's `inputs_bytes` in full: with real tables it prints ≈ 53 GiB for this
+  configuration (45.1 − 2.5 + 10.4), so a 40 or 48 GB task is refused before it starts. Decide one rule: either the task
+  request follows the plan (≈ 56 GB), or the plan counts hot table bytes and reports mapped, droppable sections on a
+  separate line. I recommend the second with layout (c).
+
+### 7.4 What changes in the recommendations
+
+1. Lever 1 (the store check) is confirmed on SPR: ≈ 56 ns·CPU per pair, the difference between 1.23× and ≈ 0.92× of
+   the plan. It is a one-day change (builder 7, O1): do it before the next SPR batch.
+2. New package for the WP3 builder, with the flat-Start reader: layout (c), `lr1`, the scan table from `setup.bin` or
+   from logF, and the two plan lines. No output change.
+3. The memory order of work for the island task: flat Start (−16 to −25 GB) → offer floor (−12) → Gram rows (+5).
+4. The benches should take a table-size option (blocks of 14 with synthetic values, as `v4_bench_arch comp` does) so
+   that SPR numbers include the real footprint from now on.
