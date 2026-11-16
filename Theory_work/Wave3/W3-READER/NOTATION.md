@@ -212,8 +212,9 @@ $\beta^*$ and $S_0$ may change with $n$; $s_0$ is fixed unless said otherwise.
 * Prior, score, $K$, $\nu$, $H_S$, $a_0=b_0=0.01$, $\log w(k)=-\log2-\log\binom{2p-1}{k}$:
   `Scripts/SMC_BVS/core/cpp/v3_score.h:40-71, 196-224` (W3-POST STATEMENT.md:21-29). Working-model reading
   (coefficient prior $N(0,n\sigma^2(G_S+I)^{-1})$, IG(0.01, 0.01)): W3-POST STATEMENT.md:26-29.
-* Beta-binomial identity: $\binom{p}{k}^{-1}\cdot$ BB(1,p) mass $=B(k+1,2p-k)/B(1,p)=\tfrac12/\binom{2p-1}{k}$ (direct
-  computation; "capped BB(1, p)" in W3-POST STATEMENT.md:23).
+* Beta-binomial identity: under $q\sim\mathrm{Beta}(1,p)$ and independent inclusion, a given model of size $k$ has
+  probability $B(k+1,2p-k)/B(1,p)=\tfrac12/\binom{2p-1}{k}$ (direct computation; code comment `cpp/v3_score.h:15`;
+  "capped BB(1, p)" in W3-POST STATEMENT.md:23).
 * Partition (complete linkage on $1-|\hat r|$, cut at $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$, next-fit
   packing), tables $r_b$, start law, start mode: W3-START STATEMENT.md:47-61 (pins `cpp/v3_blocks.h:124-144`,
   `cpp/v3_start.h:68-137`, `v3_preprocess.R:22`); start mode is a maximiser of $\pi_0$: W3-RM:E4@1.0.0
