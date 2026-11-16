@@ -71,3 +71,15 @@ TEST(format_duplicate_section_rejected) {
   w.add("x", a); CHECK_THROWS(w.add("x", a));
   CHECK_THROWS(w.add(std::string(60, 'n'), a));
 }
+
+// Tests write only under $TMPDIR: tmp_path() refuses when it is unset or empty (no fallback into the working tree).
+TEST(tmp_path_requires_tmpdir) {
+  const char* old = std::getenv("TMPDIR");
+  std::string saved = old ? old : "";
+  ::unsetenv("TMPDIR");
+  CHECK_THROWS(tmp_path("x"));
+  ::setenv("TMPDIR", "", 1);
+  CHECK_THROWS(tmp_path("x"));
+  if (old) ::setenv("TMPDIR", saved.c_str(), 1); else ::unsetenv("TMPDIR");
+  if (old) CHECK(tmp_path("x").rfind(saved + "/v4test_", 0) == 0);
+}

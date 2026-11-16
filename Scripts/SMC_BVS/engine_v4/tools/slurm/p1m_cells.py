@@ -31,10 +31,12 @@ from collections import OrderedDict
 
 DESIGN_CODE = {"IND": 1, "AR": 2, "AR-weak": 3, "BLK": 4, "ADJ-OPP": 5, "NULL": 6}
 # planning core-h per fit at n = 200 (V = V-1M class A, precise; T = theory mode in the new engine, law mode, bit form)
-COST_V = {4: 10.0, 5: 96.0, 6: 963.0}
+# 10⁶: H-9 (HQ 11-16) re-size from job 2748756, G = 256 socket-local: 1.44 × the 963 plan (≈ 288 ns·CPU per pair)
+RESIZE_6 = 1.44
+COST_V = {4: 10.0, 5: 96.0, 6: 963.0 * RESIZE_6}
 COST_T = {4: 115.0, 5: 6100.0}          # 10⁴: upper end of 52–115 (escalating coded calibration)
-COST_V_N1E4 = {6: 3600.0}               # the 1M N = 10⁴ doubling fit
-COST_6_BY_N = {200: 963.0, 500: 1800.0, 1000: 3300.0}   # owner sheet option D
+COST_V_N5000 = {6: 1800.0 * RESIZE_6}     # the 1M self-check, reduced to N = 5,000 (H-9; was N = 10⁴ at 3,600)
+COST_6_BY_N = {k: v * RESIZE_6 for k, v in {200: 963.0, 500: 1800.0, 1000: 3300.0}.items()}   # owner sheet option D, H-9 re-size
 MAX_REP = 99            # seed-rule field widths (see the module docstring)
 K_SEED2, K_PREC_FINAL, K_PREC_CALIB = 1, 10, 20
 
@@ -45,8 +47,8 @@ def n_factor(n):
 
 
 def fit_cost(rung, n, mode, N=2500, islands=16):
-    if rung == 6 and mode == "V" and N == 10000:
-        return COST_V_N1E4[6]
+    if rung == 6 and mode == "V" and N == 5000:
+        return COST_V_N5000[6]
     if rung == 6:
         return COST_6_BY_N.get(n, COST_V[6] * n_factor(n))
     base = (COST_T if mode == "law" else COST_V)[rung] * n_factor(n)
@@ -97,8 +99,7 @@ CELLS = [
     ("rung 1e5", 5, "IND", 200, 2, V1, ""), ("rung 1e5", 5, "ADJ-OPP", 200, 2, V1, "mandatory (Sol F7)"),
     # --- 10⁶ rung (OD-14 / D-10): rep 1 is the pilot (counts only if the frozen configuration is unchanged)
     ("rung 1e6", 6, "AR", 200, 3, V1, "rep 1 = pilot"), ("rung 1e6", 6, "ADJ-OPP", 200, 1, V1, ""),
-    ("rung 1e6", 6, "AR-weak", 200, 1, V1, ""),
-    ("rung 1e6", 6, "AR", 200, 1, [{"mode": "V", "seeds": 1, "N": 10000, "tag": "N1e4"}], "self-check: N = 10⁴ on AR rep 1's data"),
+    ("rung 1e6", 6, "AR", 200, 1, [{"mode": "V", "seeds": 1, "N": 5000, "tag": "N5000"}], "self-check: N = 5,000 on AR rep 1's data (H-9)"),
     ("option D", 6, "AR", 1000, 1, V1, "conditional on the 10⁵ pi(S0) trend (H-1)"),
 ]
 # block-level costs not expanded into fits (PLANNING VALUES; ENGINEERING_SPEC §0-v2.8 and REVIEW_disposition_sol)
@@ -109,7 +110,8 @@ FIXED = OrderedDict([
     ("ablations (start mode / + LS0 / pilot + local) once per distinct 10⁴–10⁶ dataset (ESTIMATE 6% of its V fit)", None),   # computed
     ("competitors (all rungs) + acceptance runs (Sol F8)", 400.0),
 ])
-OPTIONAL = [("1M second seed on AR rep 1 (Sol F7: named, NOT in A + D)", 963.0)]
+OPTIONAL = [("1M second seed on AR rep 1 (Sol F7: named, NOT in A + D)", 963.0 * RESIZE_6),
+            ("AR-weak at 1M (H-9: dropped; first buy-back if L5 saves enough)", 963.0 * RESIZE_6)]
 CONTINGENCY = 0.25
 
 
@@ -162,7 +164,7 @@ def check_seeds(rows):
     - data seeds, seed-2 values, precision final seeds and calibration seeds are pairwise disjoint sets;
     - every precision fit has its own (seed, calib_seed), shared with no other fit (incl. the overlap T / V and A3 fits);
     - a (data seed, engine seed) pair is shared only by fits of the same dataset whose engine seed is seed 1 or seed 2
-      (T vs V, A3 vs the default partition, the 1M N = 10⁴ self-check): never by a precision arm."""
+      (T vs V, A3 vs the default partition, the 1M N = 5,000 self-check (H-9)): never by a precision arm."""
     data = {r["data_seed"] for r in rows}
     s2 = {r["seed"] for r in rows if r["seed"] == r["data_seed"] + 100 * K_SEED2}
     prec = [r for r in rows if r["block"] == "precision"]

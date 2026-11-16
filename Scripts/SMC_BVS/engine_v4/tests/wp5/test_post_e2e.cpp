@@ -5,6 +5,9 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <cstdlib>
+#include <filesystem>
+#include <stdexcept>
 #include <fstream>
 #include <random>
 
@@ -20,9 +23,19 @@ using namespace v4::eval;
 
 namespace {
 
+// The e2e scratch folder is removed at process exit (clean-tmp rule, BUILD_COMMON; reported by WP1 11-16).
+std::string& tdir_path() { static std::string d; return d; }
+void tdir_cleanup() { std::error_code ec; if (!tdir_path().empty()) std::filesystem::remove_all(tdir_path(), ec); }
+
 std::string tdir() {
-  static std::string d;
-  if (d.empty()) { d = std::string(std::getenv("TMPDIR") ? std::getenv("TMPDIR") : ".") + "/wp5_e2e_" + std::to_string(getpid()); std::string c = "mkdir -p " + d; if (std::system(c.c_str())) {} }
+  std::string& d = tdir_path();
+  if (d.empty()) {
+    const char* td = std::getenv("TMPDIR");   // no fallback into the working tree
+    if (!td || !*td) throw std::runtime_error("TMPDIR is not set (tests write only under $TMPDIR)");
+    d = std::string(td) + "/wp5_e2e_" + std::to_string(getpid());
+    std::error_code ec; std::filesystem::create_directories(d, ec);
+    std::atexit(tdir_cleanup);
+  }
   return d;
 }
 
