@@ -12,7 +12,7 @@ Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
 | Tier B step (PROTOCOL_v4 §3, step 4 omitted) | who (NORMAL) | state | record |
 |---|---|---|---|
 | 1 statement lock | Sol, fresh | **pending (gate)** | — |
-| 2 better-theorem review | — | **placeholder: HQ ruling pending (manager 11-16); not run** | — |
+| 2 better-theorem review | — | skipped (HQ 11-16, RIDER_RULES) | — |
 | 3 line check | Sol (NORMAL); Claude stand-in | Claude: LC2 → LC4; no C/F finding open | `../reviews/LC2_*`, `LC3_*`, `LC4_*` |
 | statement-change check (§4.2), rows not EQUAL | Sol, new agent | **pending (gate)**; v3 reading note WEAKER (not a clause) | STATEMENT changelog |
 | 6 citation check | script | **0 MISS** (57 citations) | `CITECHECK.txt` |

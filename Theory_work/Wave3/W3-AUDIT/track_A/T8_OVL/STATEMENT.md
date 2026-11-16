@@ -1,4 +1,4 @@
-# T8 · Lemma OVL (P-START and the production budget give P-OVL) — STATEMENT v2 (draft, not locked)
+# T8 · Lemma OVL (P-START and the production budget give P-OVL) — STATEMENT v3 (draft, not locked)
 
 Track A item T8 (`AUDIT.md` §6; CHECKPOINT_1 annex order 8). Tier B (a one-line consequence of checked results; no key
 lemma). **Lean target: yes** (an elementary limit argument). Blocks row 3.6, Theorem D clause only.
@@ -38,6 +38,14 @@ D_r := N_e(1 + T + L + 4) with the executed N_e, T, L.
   substitutions of `Theory_work/Wave3/W3-START2-R/STATEMENT.md:212-213` — whenever
   limsup_n(E_n − max(1, log p/log n)) < 0 (note log max(n, p)/log n = max(1, log p/log n)); quoted, not re-proved.
 
+- **(OVL-d) Both premises hold for the uninterrupted run (HQ check, 11-16).** With 𝒜° the potential (uninterrupted)
+  success event of T1/T5: (i) **P-START holds with 1_𝒜°** under IF-START's hypotheses (in particular (A5)): o₀ is a
+  function of (X, y) alone, and IF-START's proof is 0 ≤ 1_𝒜o₀ ≤ o₀ = O_P(r_n) for an arbitrary event 𝒜
+  (`Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md:14-15`); 𝒜° is an event by T5 (CAL-b). (ii) **P-OVL holds with
+  𝒜°** by (OVL-b), D_r being the uninterrupted run's executed budget (a function of 𝓒°, T5 CAL-c); without (A5), the
+  OVL route's conclusion P(π₀(S₀) ≥ n^{−E_n−ε}) → 1 is event-free and (OVL-a) holds on 𝒜°, so its production form holds
+  with 𝒜° as well. No premise fails for the uninterrupted version. (P-OVL∞, Theorem TR, stays a named open premise.)
+
 ## Consequence for Theorem D (D-iv)
 P(completed ∩ {Ŝ ≠ S₀}) ≤ P(S† ≠ S₀) + E[1_𝒜°·(1 − π₀(S₀))^{D_r}] (D-iii, with 𝒜 ⊆ 𝒜°), and
 (1 − π₀(S₀))^{D_r} ≤ e^{−D_rπ₀(S₀)}; under (OVL-b) and P-MAP the right side → 0.
@@ -52,3 +60,4 @@ P(completed ∩ {Ŝ ≠ S₀}) ≤ P(S† ≠ S₀) + E[1_𝒜°·(1 − π₀(S
 | v1 | all | NEW-CLAIM | track A T8 | `AUDIT.md` §6 T8 | `CHECK.md` |
 | v2 | (A5) defined; (OVL-c) hypotheses stated in full | EQUAL (exact wording; no claim changed) | LC3 T8 #1–#3 | `reviews/LC3_reply_opus.md` | pending (gate) |
 | v2.1 | (A5) gloss | EQUAL (editorial) | LC4 E2 | `reviews/LC4_reply_opus.md` | — |
+| v3 | (OVL-d) uninterrupted-run check | STRONGER (makes explicit what (OVL-b), (OVL-c) and T5 give) | HQ 11-16 ruling (c) | manager message 11-16 | pending (council batch) |

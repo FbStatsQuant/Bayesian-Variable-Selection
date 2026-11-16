@@ -1,4 +1,4 @@
-# T8 · Lemma OVL — PROOF v2
+# T8 · Lemma OVL — PROOF v3
 
 ## (OVL-a)
 On 𝒜° the final run executes N_e = `b$tiers$N[tier + 1]` ∈ {N₀, 4N₀}, N₀ = max(2500, n, p), and L = `b$L` =
@@ -19,6 +19,16 @@ with 𝒜 are smaller. ∎
 `W3-START2-R:IF-START`: "for every event 𝒜 … 1_𝒜o₀ = O_P(r_n) … r_n → 0" (`Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-244`),
 so P-START holds with 𝒜° under its hypotheses, which include (A5) (defined in the STATEMENT). The OVL route is quoted,
 not re-proved.
+
+## (OVL-d) the uninterrupted run
+(i) π₀ is built in `cpp_setup` from (X, y) only, with no stream and no check (T4, T5 CAL-a), so o₀ = δ₀/(1 − δ₀) is a
+function of (X, y), the same in the actual and the uninterrupted run. IF-START's interface proof reads "0 ≤ 1_𝒜o₀ ≤ o₀,
+so 1_𝒜o₀ = O_P(r_n) … this is P-START" (`Theory_work/Wave3/W3-START/lemmas/L10_INTERFACES.md:14-15`; carried to
+IF-START⁺⁺ with the rates of `Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-244`): it holds for every event, in
+particular 𝒜°, which is measurable (T5 CAL-b). (ii) (OVL-a)–(OVL-b) are stated and proved on 𝒜° with the uninterrupted
+run's (N_e, T, L) (T5 CAL-c). Without (A5): `W3-START2-R:OVL` gives P(π₀(S₀) ≥ n^{−E_n−ε}) → 1 with no event, and on
+𝒜° D_r ≥ max(2500, n, p)(L + 6) ≥ max(n, p)·log₂(n + 1) (since L + 6 > log₂(n + 1)), so the production form
+max(n, p)·log₂(n + 1)·π₀(S₀) → ∞ gives P-OVL with 𝒜°. ∎
 
 ## Consequence for (D-iv)
 (D-iii): P(completed ∩ {Ŝ ≠ S₀}) ≤ P(S† ≠ S₀) + E[1_𝒜(1 − π₀(S₀))^{D_r}] (`Theory_work/Wave3/W3-SAMP/STATEMENT.md:102-103`);
