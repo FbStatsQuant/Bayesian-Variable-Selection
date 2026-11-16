@@ -427,3 +427,12 @@ real runs only on 0 problems.
 - 2026-11-15 ~21:30 CT: W3-DIST Sol S2 (reader versions) REPAIR REQUIRED 3M/4m, fixed in STATEMENT v1.4. Theorem A unchanged
   (EQUAL, faithfulness wording; no H5 card). The 19:10 entry corrected. Companion Theorem B false as written ((A6) needed b_n > 0):
   WEAKER on a non-target clause, reported at the next checkpoint. Lemma X/X′ line-checked VERIFIED.
+
+## 2026-11-15 ~22:30 CT — p = 1M plan approved (HQ as CEO; owner: "as CEO you either approve or not")
+- Engineering deliverable (1): a plan, with no NOTS obstruction. Batched kernel measured 8–15× faster on Owls; a precise 1M fit ≈ 963
+  core-h / 2.2 h at the 1,536-CPU cap.
+- **Approved: budget A + D ≈ 24.6k core-h.** One 1M fit at n = 1,000 is conditional on the 10⁵ π̂(S₀)-by-n trend. Released per gate;
+  a re-size beyond the total, or a Sol-review change above ~15%, comes back to HQ.
+- **Approved:** the "validated" definition; the evidence wording at 1M; competitors and framing ("not found in the literature";
+  1M claims as posterior summaries).
+- G0 (≈ 57 core-h worst case) approved earlier; submitted by Engineering from Owls.
