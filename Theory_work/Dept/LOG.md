@@ -56,3 +56,4 @@
 - 20:17 — H5 card 5 verdict folded into READER (D28); recorder task I (F-UNI gate) staged.
 - 20:17 — HQ approved D27 (C real run held for M57/M58; adjudicator go; NARROW via LIFECYCLE §3 priced; headline main clauses incl. POST J_n(c) and F-UNI 'eventually' → H5 card); summary to HQ when ADJ lands.
 - 20:19 — Lean readiness list in (research/LEAN_READINESS.md); NEXT_CAMPAIGN (b) filled; helper settled; sent HQ (+ ask: MISR-R as 6th lead while all 5 wait on Codex). Transient ENOSPC on Owls root fs (/tmp): 88–90% used; recorder clones in /tmp (~0.5 GB each) are a peak source.
+- 20:22 — §12 relayed (D29); recorder scratch location corrected; DIST arrays confirmed ignored.

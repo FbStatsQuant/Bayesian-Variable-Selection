@@ -170,3 +170,9 @@
   setting line; 3.7 into the abstract, 3.6 candidate, 2.2 fallback; condition (i): FAITHFUL fidelity read via the CP3
   council Sol seat (explicit FIDELITY line; Codex economy, told HQ), no unstated conditional inputs in the abstract,
   pooled-Ẑ corollary registered as a W3-READER claim and line-checked. CP3 Fri morning.
+
+## 2026-11-15 20:22 CT — POLICIES §12 compute discipline
+- **D29.** Relayed to all 8 leads. Correction to my disk note: no /home/fb31/scratch_recorder (never created); recorder
+  clones go in an ignored `_scratch/` inside its own worktree (record-1115), one at a time, removed when done; its /tmp
+  clones removed when no task needs them. W3-DIST arrays (~70 MB .npz) already git-ignored in work/numerics/arrays/;
+  stay there. My own scratchpad temp files removed.
