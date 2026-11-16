@@ -563,3 +563,10 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - 2026-11-16 ~03:55 CT Owls incident: load ~41k from a VS Code Remote extension host (fb31 pid 873283) spawning ~3,200 hung `rg --files` scans.
   - HQ killed the extension host and the rg processes; the load is falling.
   - Theory, Engineering and BNP HQ informed.
+- 2026-11-16 ~04:30 CT. W3-SCR-R2 R3 PASS (sol 10.0 / opus 9.4); merged to main 9364df88. PR #35 (offload docs) merged f6d07e10. Desktop offload installed: task "SMC Engineering offload pull", hourly :20, Interactive logon; ssh -G owls/nots identical.
+- H5 card 9 (row 3.7, closes card 7): the consultant AGREES to form (a), plain. Conditions:
+  - c₁ named in the abstract; the formula stays in the body;
+  - q_n ≤ K−1 stated, or a bridge for it;
+  - the honest-limit line is REQUIRED, with the intersection event made clear;
+  - certification frequency from numerics, especially on strong-factor designs; until it is reported, the row is not called the remedy for 3.1.
+  - One HQ GO covers label removal and the reader swap after the diff.
