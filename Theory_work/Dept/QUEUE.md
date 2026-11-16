@@ -1,7 +1,7 @@
 # Theory Department — queue (manager keeps this current)
 
-Updated 2026-11-15 19:38 CT. Cap: ≤ 5 leads until Wed 11-18 18:00 CT (HQ temporary OK), then 3 (Claude Third, Opus 5.5 high).
-Cut-off for riders: theory content freeze Wed 11-18 (aim CP3 Wed 18:00 CT; HQ to confirm). W3-DIST has priority on codex.
+Updated 2026-11-15 19:40 CT. Cap: ≤ 5 leads until Wed 11-18 18:00 CT (HQ temporary OK), then 3 (Claude Third, Opus 5.5 high).
+Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed by HQ; a late rider ships at its last checked state). W3-DIST has priority on codex.
 
 ## Running
 | ticket | contents | lead thread | worktree / branch | state | next |
