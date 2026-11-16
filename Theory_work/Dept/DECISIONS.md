@@ -299,3 +299,8 @@
   (+ START2 9 rows); RM2 b69476e. check.py 468/0 ERROR. W3-DIST staged acceptance now PASSES (R′ current); PSHARP-R A5
   gone. Cont-F/R refused by tools (A0/A5): asked HQ to replace the depends_on edge to RM-F/R by the implication relation
   (they prove RM2 ⇒ RM) — low urgency. Tool fix branch still under Opus review (future-proofing).
+
+## 2026-11-15 22:27 CT — HQ: Cont-F/R edge fix approved
+- **D44.** Replace depends_on RM-F/RM-R on Cont-F/R by a reference to the implies edges (RM2-F ⇒ RM-F, RM2-R ⇒ RM-R),
+  note why, re-record — after the riders' CP3s. PROTOCOL §C: implication lemmas record their target in implies, never
+  in depends_on.
