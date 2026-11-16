@@ -15,6 +15,7 @@
 - Order: current agents finish their current task, then ALL operations cease. Resume on **Claude Personal after its weekly reset** (≈ 17:30 CT 11-16, per the owner's screenshot; Codex weekly reset ≈ 18:45 CT).
 - Sent: Theory Dept, Engineering Dept and the consultant. Departments write resume cards: Theory_work/Dept/RESUME_2026-11-16.md and Docs/Experiments/P1M/RESUME_2026-11-16.md.
 - Scheduled tasks disabled by HQ: Theory Dept heartbeat (45 min), Theory daily report, W3-READER S4 ping. Builders 6–7 start: disabled. Left running (no tokens): snapshot crons, desktop offload, NOTS jobs in flight. BNP's own tasks (guard 10:13 and backup 11:13 installs) are theirs; HQ only verifies the crontab diffs.
+- BNP cancelled today's Owls slots (guard 10:13, backup 11:13); the SMC freezes are lifted; the crontab is verified unchanged against HQ's baseline. Both departments are STOPPED (resume cards: dept/theory db6bd259; Engineering Docs/Experiments/P1M/RESUME_2026-11-16.md). BNP is also paused; its T3-restart window comes after both resume.
 - **On resume:** move the department threads to Claude Personal (t3_thread_configure), then send each manager "resume from RESUME card". Pending HQ items:
   - V (RM2-R) real-run GO after rule (b) and the dry run;
   - re-enable the 3 Theory scheduled tasks;
