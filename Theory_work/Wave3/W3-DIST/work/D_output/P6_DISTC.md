@@ -478,6 +478,9 @@ A-9 (pin P6 and non-completed runs). On a non-completed run the estimates are un
 returned only when LS0 is enabled (`v3_run.R:143-148`, `v3_unavailable_estimates` is called only if `v31` is true). Completion
 requires the final local search and, **when enabled**, LS0 (`cpp/v3_core.cpp:465`). No statement about completed runs changes.
 A-10 (§0, positivity and finiteness of m(S)). Positivity follows from integrating a strictly positive likelihood against a
-proper prior. Finiteness: with a = 0.01 and rate b = 0.01·s_y² > 0, the conditional Gaussian likelihood is at most (2πv)^{−N/2}
-(N the dimension of the centred response); integrating the proper coefficient prior and then
-E_{IG(a,b)}[v^{−N/2}] = b^{−N/2}Γ(a + N/2)/Γ(a) < ∞ gives m(S) < ∞. No new hypothesis.
+proper prior. Finiteness [corrected, D1-01: the first version paired the N-dimensional likelihood with the shape 0.01 of the
+n-dimensional working model]: by the locked identification T01(i) ([P1] `thm:T01i`), m(S) = c·m^c(S) with a factor 0 < c < ∞ that
+depends on (n, s_y) only, where m^c(S) is the marginal likelihood of the N-dimensional contrast model (N = n − 1), whose variance
+prior is IG(a, b) with shape a = 0.51 (the extra half-power of v in T01(i)) and rate b = 0.01·s_y² > 0 on a completed run. The
+contrast Gaussian likelihood is at most (2πv)^{−N/2}; integrating the proper coefficient prior and then
+E_{IG(a,b)}[v^{−N/2}] = b^{−N/2}Γ(a + N/2)/Γ(a) gives m^c(S) ≤ (2π)^{−N/2}b^{−N/2}Γ(0.51 + N/2)/Γ(0.51) < ∞, hence m(S) < ∞. No new hypothesis.

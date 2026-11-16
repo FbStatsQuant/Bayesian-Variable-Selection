@@ -64,15 +64,21 @@ line to the last. A flaw is anything a careful referee would require to be chang
 8. **Honesty of scope**: Proposition NEC and its "what this does not say" list (it must touch no target clause);
    the stretch items S-APX, S-EXP, S-FIT (labelled as candidates or open, nothing claimed); Remarks of §1R; the
    comparison with Song–Liang in `TARGET.md` §2 (each "matches / beats / short" row).
-9. **Unharvested strength** (short): any strictly stronger statement that the existing proofs already give at no
+9. **Corollary C's reported-model conclusion (named point to check).** Corollary C's conclusion about the most
+   probable reported model (HPM) was strengthened at v1.4: "if a completed run scored the true model and the posterior
+   probability of that model exceeds ½, then the list contains it, it is the model the method reports as most
+   probable, and π(𝒯) > ½". Verify it line by line (`work/D_output/COR_C.md` C2, `work/D_output/P6_DISTC.md` Corollary R1,
+   the code: `Scripts/SMC_BVS/core/v3_run.R:142`, the store in `Scripts/SMC_BVS/core/cpp/v3_ledger.h`), including ties, the
+   exact-arithmetic convention and what "reports" means in the code.
+10. **Unharvested strength** (short): any strictly stronger statement that the existing proofs already give at no
    extra cost, or a hypothesis that the proofs never use.
 
 ## Pass 2 — records (only after Pass 1 is written down)
 Now also read `REPORT.md`, `DEPS.tsv` and, for spot checks only, the review files it names in `reviews/`.
-10. **REPORT and the registry blocks against STATEMENT**: every row of REPORT §1 (line ranges, proof file, status);
+11. **REPORT and the registry blocks against STATEMENT**: every row of REPORT §1 (line ranges, proof file, status);
     every REGISTRY block at the end of REPORT (statement and premise line spans, assumptions, consumes, conclusion,
     rate, scope, depends_on, implies, sharpness) against `STATEMENT.md`; nothing restated differently, nothing upgraded.
-11. **DEPS rows spot-checked against review files**: for at least eight rows, among them X, TC/DIST-1, T, S, B2, P6, NEC
+12. **DEPS rows spot-checked against review files**: for at least eight rows, among them X, TC/DIST-1, T, S, B2, P6, NEC
     and R/Theorem-A, check that the file hash recorded is the current one, that the review file named exists and says
     what the row says, and that the state is right. Do not let the review files change your Pass 1 findings.
 

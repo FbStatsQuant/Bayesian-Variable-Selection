@@ -71,6 +71,13 @@ Six gates (each PASS or FAIL, with a justification that names what you re-derive
   this does not say"; stretch items labelled as open; the comparison with Song–Liang in `TARGET.md` §2; `REPORT.md` and
   its registry blocks say no more than the statement and the proofs support).
 
+**Named point to check (both seats).** Corollary C's conclusion about the most probable reported model (HPM) was
+strengthened at v1.4: "if a completed run scored the true model and the posterior probability of that model exceeds ½,
+then the list contains it, it is the model the method reports as most probable, and π(𝒯) > ½". Verify it line by line
+(`work/D_output/COR_C.md` C2, `work/D_output/P6_DISTC.md` Corollary R1, the code: `Scripts/SMC_BVS/core/v3_run.R:142`, the store
+in `Scripts/SMC_BVS/core/cpp/v3_ledger.h`), including ties, the exact-arithmetic convention and what "reports" means in
+the code, and say in your review what you found.
+
 Project convention (owner's rule, not a defect): every result here is asymptotic (n → ∞) unless marked deterministic.
 Do not score the size of n at which a bound becomes informative, unoptimised constants, or the absence of finite-n
 guarantees. Do score any asymptotic claim that is false, unproved, or stated more strongly than proved.

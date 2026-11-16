@@ -15,7 +15,8 @@
 | P7 pre-check | Claude Opus 5.5 | the counterexample behind Proposition NEC | VERIFIED-WITH-AMENDMENTS (commentary only) | `P7_disposition.md` |
 | L6 line check | gpt-6.1-sol | `lemmas/DIST12.md` v0.1 (DIST-1, DIST-2) | displays (1.1), (1.2) and consequences (a), (b), (d), (e) VERIFIED; 1 MAJOR (L6-01: the dependence of the rate constant on the sparsity claimed in consequence (c) was not established) | `L6_disposition.md`: repaired by constants (`lemmas/X.md` v0.4, `lemmas/DIST12.md` v0.2); the target clause is kept |
 | L7 line check | gpt-6.1-sol | `lemmas/NEC.md` v0.1 (Proposition NEC) | Proposition and Corollary VERIFIED; 2 MINOR, 1 NIT (presentation) | applied (v0.2) |
-| D1 diff check (re-check of the L6-01 repair; post-check amendments; statement changes v1.3.1 → @@VER@@ with every changelog tag) and D2 (the three L7 amendments) | gpt-6.1-sol, new agents | `lemmas/X.md` v0.4, `lemmas/DIST12.md` v0.2, five amended proof files, `STATEMENT.md`; `lemmas/NEC.md` v0.2 | @@D1D2@@ | @@D1D2disp@@ |
+| D1 diff check (re-check of the L6-01 repair; post-check amendments; statement changes v1.3.1 → v1.4.7 with every changelog tag) and D2 (the three L7 amendments) | gpt-6.1-sol, new agents | `lemmas/X.md` v0.4, `lemmas/DIST12.md` v0.2, five amended proof files, `STATEMENT.md`; `lemmas/NEC.md` v0.2 | D1: VERIFIED-WITH-AMENDMENTS: the L6-01 repair VERIFIED, the tag "EQUAL on TC3" CONFIRMED, 15 changelog tags CONFIRMED, 3 corrected; 4 MINOR, 1 NIT. D2: VERIFIED-WITH-AMENDMENTS; 1 MINOR (a numerical remark) | `D1_D2_disposition.md` |
+| D3 diff check (the amendments applied after D1 and D2; Corollary C's reported-model conclusion) | gpt-6.1-sol, new agent | `STATEMENT.md` v1.4.8 (DIST-C (C-i), changelog), `work/D_output/P6_DISTC.md` A-10, `lemmas/NEC.md` v0.3, `work/D_output/COR_C.md` C2 | @@D3@@ | @@D3disp@@ |
 Proof material that is not a review: API proof attempts `work/api_attempts/dist1/`, `dist1b/` (PROTOCOL_v4 H3). Two were
 adopted as proofs after the lead's check and then reviewed as above: Lemma X (attempt X-b-1) and Proposition NEC (F-b-r2).
 
@@ -31,8 +32,13 @@ One check script's simulation was wrong and its claim is withdrawn (`work/C_size
 ## 4. Relations, strength, sharpness
 - **Target clauses** (fixed by HQ at CP1): `TARGET.md` §5–§6. Parity with Song–Liang (2015) Theorems 1–2, item by item:
   `TARGET.md` §2. No WEAKER change to the mathematics of a target clause since CP1 (changelog at the foot of STATEMENT).
-- **WEAKER rows on non-target clauses, reported at CP2:** reader Theorem B gains b_n > 0; bridge remarks B2, B3 (window
-  inequalities) and B0 (domain) replaced by the weaker true forms.
+- **WEAKER rows on non-target clauses** (changelog; reported at CP2 and CP3): reader Theorem B gains b_n > 0; bridge
+  remarks B2, B3 (window inequalities) and B0 (domain) replaced by the weaker true forms; the last bridge bullet states
+  its failure bound for M ≤ √n/log n; Remark (1) of the reader section needs the window at the level of its radius.
+- **STRONGER since CP1** (changelog row 1.4, Corollary C): when a completed run scored the true model and its posterior
+  probability exceeds ½, the true model is the model the method reports as most probable. Companion result; HQ go of
+  2026-11-16 (PROTOCOL_v4 §4.2). The dependence of the rate constant on the sparsity (DIST-1 (c), target clause TC3) is
+  proved as fixed at CP1: tag EQUAL, confirmed by the reviewer of D1.
 - **Implies / supersedes.** DIST-1 with DIST-3 gives, out of sample and for a random design, what W3-POST2:D gave in
   sample for a fixed design; DIST-3 does not use W3-POST2:D. Lemma S strengthens the tail of W3-POST:Lemma-1a' and of
   W3-POST2:B (same cutoff order, exponential failure probability). Bridge B2 needs a population sparse eigenvalue floor
@@ -131,7 +137,7 @@ REGISTRY
 claim: W3-DIST:Cor-C | kind: theorem | statement: STATEMENT.md:@@Cor-C@@ | premises: STATEMENT.md:@@setupR@@
 status: @@st:Cor-C@@ | status_source: REPORT.md:@@line:Cor-C@@
 assumptions: A:EX-A ; A:DIST-A1 ; A:DIST-A2 ; A:DIST-A3 ; A:DIST-A4 ; A:DIST-A5
-conclusion: delivery: with probability at least 1 - n^{-cM} over the data, every completed run whose returned list has posterior probability at least n^{-cM/2} has store-restricted posterior mass at most n^{-cM/2} outside the Hellinger ball of radius sqrt(M log n/n); an evaluated true model with posterior probability above 1/2 is kept in the list | scope: output of the final SMC run; the premise on the list is a property of the run and is not asserted
+conclusion: delivery: with probability at least 1 - n^{-cM} over the data, every completed run whose returned list has posterior probability at least n^{-cM/2} has store-restricted posterior mass at most n^{-cM/2} outside the Hellinger ball of radius sqrt(M log n/n); a true model that a completed run scored and that has posterior probability above 1/2 is kept in the list and is the model the method reports as most probable | scope: output of the final SMC run; the premise on the list is a property of the run and is not asserted
 depends_on: W3-DIST:Thm-A@stmt ; W3-DIST:DIST-C@stmt ; W3-SAMP:CC@stmt ; SOP:TH09@hyp
 
 REGISTRY

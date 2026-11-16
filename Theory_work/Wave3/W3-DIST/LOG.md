@@ -340,3 +340,20 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   Proposition and Corollary unaffected. Accepted; the reviewer's wording applied (`lemmas/NEC.md` v0.3, §8(d) only).
   DEPS row NEC: STALE until that sentence is re-read; batched with whatever D1 returns into one short Sol check (D3).
   D2 thread settled. Running: D1 (Sol). HOLDS read: none.
+- 00:11 — **D1's report** (`reviews/D1_sol_diff.md`, written 23:51; completion notice not yet received at 00:10; manager told at
+  00:07 under the 2-hour rule, answered "fine, proceed"): overall VERIFIED-WITH-AMENDMENTS. **Part A: the L6-01 repair
+  VERIFIED (items 1–7); Lemma X, X′, DIST-1, DIST-2 VERIFIED as they stand; "EQUAL on TC3" CONFIRMED**; no new condition
+  (e^{s₀}q ≤ n^{−1/8} < ½ from the existing (a), (d)). Part B: S, COR_C, B3, ASSEMBLY VERIFIED; P6_DISTC
+  VERIFIED-WITH-AMENDMENTS (D1-01: A-10 mixed the N-dimensional likelihood with shape 0.01). Part C: 15 changelog rows
+  CONFIRMED, 3 CONTESTED on tags (D1-04: Corollary C has a STRONGER part; Remarks a WEAKER part; bridges mixed), D1-02
+  ((C-i) wording, SCR-4 not yet applied), D1-03 (an unrecorded range change in the last bridge bullet), D1-05 (my
+  statement patch was a deletion snapshot: regenerated with diff -u). No CRITICAL, no MAJOR.
+  **HQ go (via manager, 11-16): the STRONGER HPM conclusion of Corollary C stays in**; the sweep brief and both council
+  briefs must name it as a point to check; recorded in the changelog row.
+  Applied: STATEMENT **v1.4.8** ((C-i) event written out, tag EQUAL on TC8 pending the reviewer; three v1.4 rows
+  re-tagged; check column filled from D1); `work/D_output/P6_DISTC.md` A-10 corrected (contrast model, shape 0.51).
+  DEPS: X, X′, TC/DIST-1, TC/DIST-2, TC/DIST-3, S, B3, R/Theorem-A, R/Theorem-B, R/Corollary-C → **OK**; P6, TC/DIST-C, NEC
+  STALE until D3. D3 (Sol, new agent, about sixty changed lines, `reviews/BRIEF_D3_sol_diff.md`, `reviews/DIFFS_D3.patch`)
+  launched. Running: D1 (final pass), D3. HOLDS read: none.
+- 00:12 — D1's completion notice arrived; verdicts identical to the report I acted on (file checked again: same first and
+  last lines). D1 thread settled. Running: D3 (Sol). HOLDS read: none.
