@@ -660,3 +660,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - 2026-11-16 ~09:30 CT. **W3-DIST RECORDED** (e7a7216c CC rule + tests; cb642afd record): all 20 claims PROVED-CHECKED, with no T01 caveat. Row 2.1 (distribution consistency, Song–Liang Thms 1–2 analogue, display (i)) moves from in progress to proved; thm9 + card swap variant A in progress.
   - Remaining conditions: Thm-B/B3 on W3-POST:Thm-1; DIST-C on the SAMP delivery premises + EX-A; Cor C on EX-A.
   - The owner's top-priority item is closed.
+- 2026-11-16 ~10:30 CT. Recorded on main: S4 b3153634 (IDEAL-W⁺ batch; D80 23/23 hashes; F-UNI ACTIVE 2.1.0), START2-R b48fd0a1 (row 3.3 masters STRONGER), S4b a8a135d6. D80 re-verification of today's recordings: no mismatch.
+- Task V (RM2-R) blocker. Rule (b) GO, fail-closed: a legacy-accepted row NARROWED by a recorded NARROW keeps legacy acceptance only if (1) its Sol DIFF verdict explicitly says the narrowed statement is proved by the row's own chain, (2) the DIFF post-patch sha equals the current hash, and (3) the council cell is unchanged.
+  - Tests + Opus review; fallback (a) per-row carriers; (c) refused.
+  - Rows 3.1/3.2 newly conditional on C-DLV:L2-S3 / P1-Inventory (code-reading audits), stated plainly.
+  - Post-freeze: check those audits for council evidence.
