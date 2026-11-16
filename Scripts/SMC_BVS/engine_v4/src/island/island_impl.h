@@ -123,6 +123,7 @@ class IslandEngine {
   inline double U(const Address& a) { return csrc ? csrc->u(a) : uniform_at(a); }
   double logZ = 0; double k_est = 8; MemSizes msz;
   KernelStats ks_prev;   // verbose per-round deltas
+  uint64_t merges_prev = 0; double sort_prev = 0;
   uint64_t ckpt_writes = 0;
   std::chrono::steady_clock::time_point last_ckpt;
 
@@ -961,12 +962,13 @@ class IslandEngine {
             const double rounds = (double)(k.particle_rounds - ks_prev.particle_rounds);
             std::fprintf(stderr, "  [round] step %d: wall %.2f s | steps %.4g pairs %.4g (%.3f pairs per particle-round / p) sweeps %.4g (M %.3f) passes %llu | "
                          "ns per step (wall x threads) %.1f | ns per pair (wall x threads) %.1f | products ns/pair (thread) %.1f | phaseA ns/pair (wall x threads) %.1f | "
-                         "phaseB %.2f s compaction %.2f s\n",
+                         "phaseB %.2f s compaction %.2f s (%llu compactions, sorts %.2f s)\n",
                          step, dt, steps, pairs, steps > 0 ? pairs / steps * m / std::max(1.0, (double)p) : 0.0, sweeps, rounds > 0 ? sweeps / rounds : 0.0,
                          (unsigned long long)(k.passes - ks_prev.passes), steps > 0 ? 1e9 * dt * NT / steps : 0.0, pairs > 0 ? 1e9 * dt * NT / pairs : 0.0,
                          pairs > 0 ? 1e9 * (k.t_products - ks_prev.t_products) / pairs : 0.0,
-                         pairs > 0 ? 1e9 * (k.t_phaseA - ks_prev.t_phaseA) * NT / pairs : 0.0, k.t_phaseB - ks_prev.t_phaseB, top.t_compact - ks_prev.t_store_compact);
-            ks_prev = k; ks_prev.t_store_compact = top.t_compact;
+                         pairs > 0 ? 1e9 * (k.t_phaseA - ks_prev.t_phaseA) * NT / pairs : 0.0, k.t_phaseB - ks_prev.t_phaseB, top.t_compact - ks_prev.t_store_compact,
+                         (unsigned long long)(top.n_merges - merges_prev), top.t_sort - sort_prev);
+            ks_prev = k; ks_prev.t_store_compact = top.t_compact; merges_prev = top.n_merges; sort_prev = top.t_sort;
           }
           prev_t = now_t;
         }
