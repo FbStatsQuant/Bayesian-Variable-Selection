@@ -424,3 +424,40 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   MANIFEST_R2r) and bind the R1 verdicts through it; if bind refuses, HQ decides. Verdict lines go to the manager when
   both seats return. After the council: one page on the seven unharvested-strength items (gain, cost) for HQ.
   Running: R1 astra (Codex), R1 opus (Claude Third); 2-hour timer set for the Codex seat.
+- 05:03 — **Council R1 returned (both notices 04:5x): NOT A PASS.** astra: score 7.9, gates=FAIL (G4, G6), one F finding
+  R1-astra-01 (statuses of S, X, X′ lacked "conditional on SOP:TH09"); 17 ACCEPT, 3 REJECT on that label only.
+  opus: score 8.6, gates=FAIL (G5), one S finding R1-opus-01 (the gloss on the rate in DIST-1 (c) let A vary); 20 ACCEPT.
+  **No C finding from either seat**; both verified Corollary C's HPM conclusion against the code. E findings: 1 + 6.
+  Verdict lines sent to the manager with the flag that R1-opus-01 sits next to TC3. Manager (HQ informed): TC3
+  untouched, EQUAL; the gloss change is WEAKER on a descriptive sentence, no early checkpoint; conditions: changelog
+  tags it WEAKER naming the sentence and noting log p_raw → log n under fixed A; both diff-round seats confirm by name
+  that TC3's text is unchanged and the new gloss is exactly what is proved; statuses conditional as `@hyp` for S, X,
+  X′, V, NEC; pulling main for the diff-round manifest picks up Cor-H (no R1r carrier); E findings to ERRATA.
+  Repairs applied: STATEMENT **v1.4.10** (c) (line numbers unchanged), `lemmas/DIST12.md` v0.3 (one sentence),
+  TARGET P3 row; statuses and `@hyp` edges in `mkreport.py` / `REPORT_extra.md`; `ERRATA.md` created (E1–E8);
+  `reviews/R1_disposition.md`. DEPS: TC/DIST-1, TC/DIST-2 STALE until D5. D5 (Sol, new agent, D62 brief
+  `reviews/BRIEF_D5_sol_diff.md`) launched. Both seat threads settled. Running: D5 (Sol). HOLDS read: none.
+- 05:07 — **D5 landed** (`reviews/D5_sol_diff.md`, Sol): R1-opus-01 RESOLVED; **TC3 unchanged and proved as written**; tag
+  CONFIRMED (EQUAL on TC3; WEAKER on the descriptive sentence only); no surviving free-A rate assertion;
+  R1-astra-01 RESOLVED (the condition is right for S, V, X, X′, NEC; none missing for H, T, P6, B0–B3); DIST12.md
+  VERIFIED-WITH-AMENDMENTS: **D5-01 (MINOR)**, a bracketed remark wrote "A = log p_raw/log n" though only p_raw ≤ n^A is
+  assumed. Repaired by deleting the equality. Manager (HQ agrees): the gloss repair is not a WEAKER change to a
+  headline clause; item 8 added to the after-council one-pager (the Song–Liang form with a constant independent of A);
+  each lemma's DEPS row must name the exact T01 items: `uses` column of S, V, X, X′, NEC, TC/DIST-3 rewritten from
+  what the proof files cite. D6 (Sol, new agent, very short, `reviews/BRIEF_D6_sol_diff.md`) launched on the deleted
+  clause and the six `uses` cells. D5 thread settled. Running: D6 (Sol). HOLDS read: none.
+- 05:11 — **D6 landed** (`reviews/D6_sol_diff.md`, Sol): D5-01 RESOLVED; `lemmas/DIST12.md` (DIST-1, DIST-2) **VERIFIED** at
+  sha 111c31af7990b881; `uses` cells: V, X, TC/DIST-3 CORRECT; S, X′, NEC corrected with the reviewer's lists
+  (S adds thm:T01ii; X′ drops unused items; NEC adds lem:spec (e)). DEPS: TC/DIST-1, TC/DIST-2 → OK; **every row under
+  a claim OK** (script). REPORT regenerated (STATEMENT v1.4.10, sha 70b367001c7509ab); citation check 0 MISS; reader
+  blocks identical. `git pull --ff-only origin main`: main = origin/main = d2b600ba. **W3-MISR/STATEMENT.md now at
+  sha256 84eb0f27000da51c748b5f708feafc03572286c44ffe2ea08cf275de202e6ce0** (commit 213e2115, the Cor-H correction: line 1
+  and lines 191–195 only; the lines bridge B0 quotes, 20–22 and 70–77, are unchanged). Verify against MANIFEST_R1
+  shows exactly 10 differences, all in `reviews/DIFFS_R1_to_R2.patch`: 8 ticket files changed, ERRATA.md added, that one
+  external input. Staged ingest on this main: 20 claims, 0 problems, acceptance PASS. HOLDS read just before the
+  freeze: none. **DIFF ROUND FROZEN: MANIFEST c5cd9cdd30ecfe06a39b06ee0aa8b86f70d4b08425a98e9f4d09023de5282ddc**
+  (`reviews/MANIFEST_R2.txt`, 224 files, 20 extra inputs; verify OK). Briefs saved before launch:
+  `reviews/BRIEF_R2_astra.md`, `reviews/BRIEF_R2_opus.md` (own R1 review + the diff; the two named confirmations on TC3
+  and the gloss; the external change named; gates=FAIL sentence; verdict-line block; D62). Seats launched, fresh
+  threads, same models: Astra (codex, gpt-6-astra, high), Opus 5.5 (Claude Third, high). D6 thread settled.
+  Nothing in the ticket folder is edited from now except `reviews/`, `LOG.md`, `CHECKPOINT_*.md`.

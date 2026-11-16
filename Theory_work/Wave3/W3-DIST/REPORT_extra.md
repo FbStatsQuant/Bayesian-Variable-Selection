@@ -18,6 +18,8 @@
 | D1 diff check (re-check of the L6-01 repair; post-check amendments; statement changes v1.3.1 → v1.4.7 with every changelog tag) and D2 (the three L7 amendments) | gpt-6.1-sol, new agents | `lemmas/X.md` v0.4, `lemmas/DIST12.md` v0.2, five amended proof files, `STATEMENT.md`; `lemmas/NEC.md` v0.2 | D1: VERIFIED-WITH-AMENDMENTS: the L6-01 repair VERIFIED, the tag "EQUAL on TC3" CONFIRMED, 15 changelog tags CONFIRMED, 3 corrected; 4 MINOR, 1 NIT. D2: VERIFIED-WITH-AMENDMENTS; 1 MINOR (a numerical remark) | `D1_D2_disposition.md` |
 | SW1 sweep (two passes: blind, then records) | gpt-6-astra, new agent | the whole package, frozen as MANIFEST de9ccec7… (`MANIFEST_SW1.txt`) | 0 CRITICAL, 0 MAJOR, 9 MINOR; every claim and TC1–TC9 "proved as stated" (DIST-C and B3 after local repairs); Corollary C's reported-model conclusion valid | `SW1_disposition.md`; repairs checked by D4 |
 | D4 diff check (the repairs made after the sweep) | gpt-6.1-sol, new agent | `STATEMENT.md` v1.4.9, `work/E_bridges/B3.md`, the maps, this report's registry blocks, `PINS.md` | VERIFIED-WITH-AMENDMENTS; 0 CRITICAL, 0 MAJOR, 3 MINOR on records (a sentence of `TARGET.md` §1, the pin record, a sentence of §4 below); SW1-01, 03, 04, 05, 07, 09 RESOLVED; the tags "EQUAL" (Lemma X's description) and "EQUAL on TC8" CONFIRMED; `work/E_bridges/B3.md` VERIFIED | the three record repairs applied as the reviewer wrote them (`SW1_disposition.md`, last section); not re-checked before the council freeze |
+| Council R1 (blind) | gpt-6-astra; Claude Opus 5.5 | the package frozen as MANIFEST c7d74e49… (`MANIFEST_R1.txt`) | not a pass: each seat gates=FAIL on one finding of its own, no C finding from either. Astra 7.9: R1-astra-01 (F: the statuses of S, X, X′ lacked "conditional on SOP:TH09"). Opus 8.6: R1-opus-01 (S: the gloss on the rate in DIST-1 (c) let A vary). Both verified Corollary C's reported-model conclusion against the code | `R1_disposition.md`: both repaired; E findings in `ERRATA.md`; diff round (PROTOCOL_v4 §5.5) |
+| D5 diff check (the two repairs after council R1) | gpt-6.1-sol, new agent | `STATEMENT.md` v1.4.10 (c), `lemmas/DIST12.md` v0.3, `TARGET.md` P3 row, the statuses and dependencies of S, V, X, X′, NEC | both council findings RESOLVED; TC3's text unchanged and proved as written; the tag "EQUAL on TC3; WEAKER on the descriptive sentence only" CONFIRMED; no status condition missing for the other claims; 1 MINOR (D5-01: a bracketed remark in `lemmas/DIST12.md`) | the remark corrected; that clause and the `uses` cells of six `DEPS.tsv` rows re-read in D6 (gpt-6.1-sol, new agent): D5-01 RESOLVED, `lemmas/DIST12.md` VERIFIED; three of the six `uses` cells corrected with the reviewer's lists |
 | D3 diff check (the amendments applied after D1 and D2; Corollary C's reported-model conclusion) | gpt-6.1-sol, new agent | `STATEMENT.md` v1.4.8 (DIST-C (C-i), changelog), `work/D_output/P6_DISTC.md` A-10, `lemmas/NEC.md` v0.3, `work/D_output/COR_C.md` C2 | VERIFIED, no findings: D1-01 … D1-04 and D2-01 RESOLVED; the tag "EQUAL on TC8" and the three split tags CONFIRMED; Corollary C's reported-model conclusion VERIFIED | — |
 Proof material that is not a review: API proof attempts `work/api_attempts/dist1/`, `dist1b/` (PROTOCOL_v4 H3). Two were
 adopted as proofs after the lead's check and then reviewed as above: Lemma X (attempt X-b-1) and Proposition NEC (F-b-r2).
@@ -71,7 +73,9 @@ Consumed by registry id @ version (ACTIVE on main at the time of writing); detai
   `Theory_work/Old_Projects/New_BVS_Headquarters/branch_snapshots/main@c4ef0dc/Docs/Theory/proofs/T01_T02_contrast_dimension/PROOF_v3.tex`
   (`lem:chi`, `lem:prior`, `lem:num`, `lem:spec`, `lem:slab`, `thm:Ta`, the proof of `lem:den`). **Not audited as a whole by a
   reviewer of this ticket** (the reviewers of D1, D3 and the sweep read the passages used); every theorem about the
-  coded posterior is "conditional on SOP:TH09 (T01)".
+  coded posterior is "conditional on SOP:TH09 (T01)", and so is each lemma whose proof uses the locked results of that
+  file (S, V, X, X′, NEC) [R1-astra-01]. The lemmas of [P1] used by each proof are listed in the proof file and in
+  `DEPS.tsv` (column `uses`).
 - **W3-POST:Thm-1@1.0.0** ("T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)") — premise of reader Theorem B and of
   the last sentence of bridge B3 only: "conditional on W3-POST:Thm-1".
 - **W3-MISR:R'@1.0.0** ("PROVED-CHECKED; council R2", accepted) — bridge B0.
@@ -84,7 +88,7 @@ Consumed by registry id @ version (ACTIVE on main at the time of writing); detai
   `work/D_output/pins_sha256.txt`). HOLDS.md was read before each step: empty throughout.
 
 ## 6. Files
-`STATEMENT.md` (@@VER@@), `TARGET.md`, `ROUTES.md`, `PLAN.md`, `ASSUMPTION_MAP.md`, `DEPS.tsv`, `DEPS.md`, `API_CARDS.md`, `PINS.md` (the line pins into STATEMENT inside the proof files are historical pins to
+`STATEMENT.md` (@@VER@@), `TARGET.md`, `ROUTES.md`, `PLAN.md`, `ASSUMPTION_MAP.md`, `DEPS.tsv`, `DEPS.md`, `API_CARDS.md`, `ERRATA.md` (editorial findings, for one later batch), `PINS.md` (the line pins into STATEMENT inside the proof files are historical pins to
 v1.3.1; this record maps each to its object and to the current lines), `REPORT.md`
 (generated by `mkreport.py` from `REPORT_extra.md`), `LOG.md`, `CHECKPOINT_1.md`, `CHECKPOINT_2.md`; proofs: `lemmas/X.md`,
 `lemmas/DIST12.md`, `lemmas/NEC.md` (and `lemmas/X_route_a.md`, an independent second derivation of Lemma X, not on the
@@ -99,7 +103,7 @@ REGISTRY
 claim: W3-DIST:DIST-1 | kind: theorem | statement: STATEMENT.md:@@DIST-1@@ | premises: STATEMENT.md:@@setting@@
 status: @@st:DIST-1@@ | status_source: REPORT.md:@@line:DIST-1@@
 assumptions: A:DIST-RD (new | random design, Gaussian noise | rows iid from an arbitrary law on R^{p_raw}; noise N(0, sigma*^2) independent of the design, sigma*^2 fixed | STATEMENT.md:@@setting@@ | shared yes) ; A:DIST-SPARSE (new | strict sparsity, null truth allowed | the support of beta* has a fixed size s0^r >= 0 | STATEMENT.md:@@setting@@ | shared yes) ; A:P-POLY ; A:DIST-DOM (new | at least two retained columns | p_ret >= 2 | STATEMENT.md:@@setting@@ | shared yes | bridge W3-DIST:B1) ; A:ENERGY ; A:COEF-REP ; A:DIST-ND (new | no degeneracy on average | average determinant growth over supersets of S0 of each size up to m_n(t) | STATEMENT.md:@@setting@@ | shared no | bridge W3-DIST:B2)
-conclusion: posterior: P*[Pi(d_H(f, f*) > C sqrt(t/n) or |S| > s0 + C' t/log n | D_n) > e^{-ct}] <= 3 e^{-ct} + P*(interfaces fail), for M0 log n <= t <= n^{1-kappa0}; d_H the Hellinger distance between joint (x, y) laws | rate: C sqrt(M0 log n / n) at t = M0 log n, with C free of the sparsity and M0 <= 16 + 4(1 + s0^r)(A + 1) + 3(M + M')/(2 sigma*^2) | scope: exact coded posterior; random design; p_raw <= n^A, p >> n allowed; no beta-min; no condition on the predictor law beyond the interfaces
+conclusion: posterior: P*[Pi(d_H(f, f*) > C sqrt(t/n) or |S| > s0 + C' t/log n | D_n) > e^{-ct}] <= 3 e^{-ct} + P*(interfaces fail), for M0 log n <= t <= n^{1-kappa0}; d_H the Hellinger distance between joint (x, y) laws | rate: C sqrt(M0 log n / n) at t = M0 log n, with C free of the sparsity (C depends on A, sigma*^2, M, M') and M0 <= 16 + 4(1 + s0^r)(A + 1) + 3(M + M')/(2 sigma*^2); for fixed (A, sigma*^2, M, M') of order sqrt((1 + s0^r) log n / n) | scope: exact coded posterior; random design; p_raw <= n^A, p >> n allowed; no beta-min; no condition on the predictor law beyond the interfaces
 depends_on: W3-DIST:H@stmt ; W3-DIST:T@stmt ; W3-DIST:X@stmt ; SOP:TH09@hyp
 sharpness: A:DIST-ND = NECESSARY-FOR-ROUTE (evidence: lemmas/NEC.md:8) ; A:P-POLY = ARTEFACT (evidence: ASSUMPTION_MAP.md:13)
 gates: lit:PARTIAL(TARGET.md) ; necessity:PARTIAL(ASSUMPTION_MAP.md) ; better-proposal:BT1-BT4(reviews/S1_astra.md) ; better-disposition:BT1-BT4=adopted(reviews/S1_disposition.md)
@@ -165,21 +169,21 @@ claim: W3-DIST:S | kind: lemma | statement: STATEMENT.md:@@S@@ | premises: STATE
 status: @@st:S@@ | status_source: REPORT.md:@@line:S@@
 assumptions: A:GAUSS-NOISE ; A:ENERGY ; A:DIST-REF (new | bounded reference cost | a design-measurable reference (T, vartheta) with T in Omega and cost B_T(vartheta) <= B; the true pair (S0, theta*) is one admissible reference when the coefficient cost is bounded | STATEMENT.md:@@S@@ | shared no)
 conclusion: posterior: P[pi(|S| > m) > e^{-t}] <= C e^{-t} + C e^{-cn} for every m beyond an explicit cutoff built from the reference cost and the exact determinant (cutoff and range of t: STATEMENT.md lines @@S@@) | scope: fixed design; reference-adaptive; no polynomial bound on p
-depends_on: SOP:TH09@proof:P1-lem-num-thm-Ta-lem-den
+depends_on: SOP:TH09@hyp
 implies: W3-POST:Lemma-1a' (same cutoff order, exponential failure probability) ; W3-POST2:B (the same with an approximate reference)
 
 REGISTRY
 claim: W3-DIST:V | kind: lemma | statement: STATEMENT.md:@@V@@ | premises: STATEMENT.md:@@setting@@
 status: @@st:V@@ | status_source: REPORT.md:@@line:V@@
 conclusion: identity: for supersets S of S0, Q_{S0} - Q_S <= e'D'e + (1 + 2/eta) rho' and E[(D_{S0}/D_S)^{1/2} exp(e'D'e/(2 sigma*^2))] <= (1 + eta)^{s0 + |J|/2} | scope: every design, singular Gram matrices included
-depends_on: SOP:TH09@proof:P1-lem-slab-lem-spec
+depends_on: SOP:TH09@hyp
 
 REGISTRY
 claim: W3-DIST:X | kind: lemma | statement: STATEMENT.md:@@X@@ | premises: STATEMENT.md:@@setting@@
 status: @@st:X@@ | status_source: REPORT.md:@@line:X@@
 assumptions: A:GAUSS-NOISE ; A:P-POLY ; A:ENERGY ; A:COEF-REP ; A:DIST-ND
 conclusion: posterior: P[Pi(in-sample error above C sigma*^2 t, or variance ratio off by more than C sqrt(t/n), or |S| > s0 + ceil(C' t/log n) | y) > e^{-ct}] <= 2 e^{-ct}, one n0 for M0 log n <= t <= n^{1-kappa0} | rate: in-sample squared error of order log n | scope: fixed design; s0 >= 0; constants free of the design
-depends_on: SOP:TH09@proof:P1-lem-chi-lem-prior-lem-num-thm-Ta-lem-den-lem-spec-lem-slab
+depends_on: SOP:TH09@hyp
 sharpness: A:DIST-ND = NECESSARY-FOR-ROUTE (evidence: lemmas/NEC.md:8)
 
 REGISTRY
@@ -187,13 +191,13 @@ claim: W3-DIST:X' | kind: lemma | statement: STATEMENT.md:@@X'@@ | premises: STA
 status: @@st:X'@@ | status_source: REPORT.md:@@line:X'@@
 assumptions: A:GAUSS-NOISE ; A:P-POLY ; A:ENERGY ; A:COEF-REP
 conclusion: posterior: the conclusion of W3-DIST:X with in-sample error threshold C sigma*^2 t log(p v n) and size cut m_n(t) | scope: fixed design; no non-degeneracy interface
-depends_on: SOP:TH09@proof:P1-lem-chi-lem-prior-lem-num-thm-Ta-lem-den-lem-spec-lem-slab
+depends_on: SOP:TH09@hyp
 
 REGISTRY
 claim: W3-DIST:NEC | kind: proposition | statement: STATEMENT.md:@@NEC@@ | premises: STATEMENT.md:@@setting@@
 status: @@st:NEC@@ | status_source: REPORT.md:@@line:NEC@@
 conclusion: negative: on an explicit design with a null truth, with probability at least 0.6 the posterior puts mass at least c(k)/n on in-sample error above (k/24) sigma*^2 log n; hence the conclusion of W3-DIST:X fails without the non-degeneracy interface, for any constants | scope: fixed design, in sample; contradicts no theorem of this ticket
-depends_on: SOP:TH09@proof:P1-lem-spec-lem-slab
+depends_on: SOP:TH09@hyp
 
 REGISTRY
 claim: W3-DIST:P6 | kind: lemma | statement: STATEMENT.md:@@P6@@ | premises: STATEMENT.md:@@P6@@

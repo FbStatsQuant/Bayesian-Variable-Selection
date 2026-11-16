@@ -1,6 +1,7 @@
 # Theorems DIST-1 and DIST-2 — proof from Lemmas H, T, X, X′ (W3-DIST, stream A; lead: Claude Fable 5.2)
 
-Status: **DRAFT (by this seat)**. v0.2, 2026-11-15 (v0.2: the constant C_T and the paragraph on the dependence on the sparsity). Statements: `../STATEMENT.md` §1, displays (1.1) and (1.2) (target clauses
+Status: **DRAFT (by this seat)**. v0.3, 2026-11-16 (v0.2: the constant C_T and the paragraph on the dependence on the sparsity; v0.3: one sentence of that
+paragraph, A held fixed in the order statement). Statements: `../STATEMENT.md` §1, displays (1.1) and (1.2) (target clauses
 TC1–TC4, TC6), with §0 for the setting (RD), the retained dimension, the interfaces and the cutoff m_n(t).
 Inputs, used exactly as stated in `../STATEMENT.md` §3: Lemma H (proof `../work/B_transfer/H.md`), Lemma T (proof
 `../work/B_transfer/T.md`), Lemma X and Lemma X′ (proofs `X.md` §0–§7 and §9). Nothing else is used. Three points of the
@@ -66,8 +67,9 @@ data: for each such n the bound holds for every law in (RD).
 *Dependence on the sparsity [v0.2].* By `X.md` §0 (v0.4), C_X depends on (A, σ², M, M′) only, and so does
 C = (C_X² + C_X/2 + 1 + C_T)^{1/2}; c = ½ and C′ = 33 are absolute; and M₀ ≤ 16 + 4(1 + s)(A + 1) + 3(M + M′)/(2σ²). Hence at
 t = M₀ log n: ε_n² = C²M₀ log n/n ≤ C²[16 + 4(1 + s)(A + 1) + 3(M + M′)/(2σ²)]·log n/n, with s = s₀^r the raw sparsity (the transfer
-step uses the raw support). For fixed (σ², M, M′) this is of order (1 + s₀^r)(A + 1) log n/n, i.e. (1 + s₀^r) log p_raw/n when
-p_raw = n^A. (c_D and κ₀ enter only n₀.)
+step uses the raw support). For fixed (A, σ², M, M′) this is of order (1 + s₀^r) log n/n [v0.3, R1-opus-01: A is held fixed here, because
+C depends on A (C_X ≥ 4Λ ≥ 128[34(A + 1) + 2] by `X.md` §0, and C_T = 4[34(A + 7) + 8]; both grow with A), so the display
+gives no rate linear in A]. (c_D and κ₀ enter only n₀.)
 *Consequences (a)–(e) of STATEMENT.* (a), (b): substitute ε_n = C√(t/n) and bound or let the remainder tend to 0. (c): take
 t = M₀ log n and use the preceding paragraph. (d): 𝒯_{1,t} has probability ≥ 1 − e^{−t} for every ν_x. (e): on the success event,
 d_H²(f̄, f*) ≤ ∫d_H²(f, f*)dΠ ≤ C²t/n + Π(d_H > C√(t/n) | D_n) ≤ C²t/n + e^{−t/2}, by convexity of f ↦ d_H²(f, f*)

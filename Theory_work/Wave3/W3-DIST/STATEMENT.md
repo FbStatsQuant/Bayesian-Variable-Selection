@@ -1,4 +1,4 @@
-# W3-DIST — STATEMENT (v1.4.9, 2026-11-16; lead: Claude Fable 5.2, Claude Third, high)
+# W3-DIST — STATEMENT (v1.4.10, 2026-11-16; lead: Claude Fable 5.2, Claude Third, high)
 
 **Status: targets TC1–TC9 fixed by HQ at CP1; proofs are in `lemmas/` and `work/<stream>/`; the check state of every item is
 in `DEPS.tsv` (a statement here is checked only if its row says OK).** v1.4 = v1.3.1 with the dispositions of the blind read S2
@@ -82,9 +82,9 @@ Equivalently, for every sequence ε_n with C²M₀ log n/n ≤ ε_n² ≤ C²n^{
   polynomial, so polynomial-probability control of the design events is enough there.
 - (b) **[SL] (16)-form**: if P*(interfaces fail) → 0 then lim P*[Π(d_H > ε_n | D_n) > e^{−c₁nε_n²}] = 0.
 - (c) **Rate (P3)**: ε_n² = C²M₀ log n/n, where C depends only on (A, σ*², M, M′) and M₀ ≤ 16 + 4(1 + s₀^r)(A + 1) + 3(M + M′)/(2σ*²)
-  (`lemmas/DIST12.md` D.4, `lemmas/X.md` §0). So for fixed (σ*², M, M′), M₀ is of order (1 + s₀^r)(A + 1) and ε_n² is of order
-  (1 + s₀^r) log p_raw/n when p_raw = n^A (the "1 +" is the intercept and the variance; s₀^r = 0 is covered; s₀^r is the raw
-  sparsity) [S1-07, L6-01]. No beta-min and no identifiability condition ([SL] Condition 3 is not used).
+  (`lemmas/DIST12.md` D.4, `lemmas/X.md` §0). So for fixed (σ*², M, M′), M₀ is of order (1 + s₀^r)(A + 1); and for fixed (A, σ*², M, M′), ε_n² is of order
+  (1 + s₀^r) log n/n (the "1 +" is the intercept and the variance; s₀^r = 0 is covered; s₀^r is the raw sparsity). The radius constant C depends on A, so nothing is claimed about how the rate depends on A beyond the factor in M₀
+  [S1-07, L6-01, R1-opus-01]. No beta-min and no identifiability condition ([SL] Condition 3 is not used).
 - (d) **No condition on ν_x enters the passage from the sample to the population distance** (Lemma T); the law of x
   matters only through the probability of the interfaces.
 - (e) **Posterior predictive.** With f̄ := ∫ f dΠ(f | D_n): on the complement of the event in (1.1) (the success
@@ -493,6 +493,7 @@ posterior with the contrast model (locked T01, [P1] `thm:T01i`, `lem:spec`, `lem
 | 1.4.8 | DIST-C (C-i): "on the complementary success event" replaced by the explicit event {completed} ∩ {π(𝒯) ≥ e^{−λt}} ∩ {Π̂^𝒯(B_n) ≤ e^{−(c−λ)t}}; changelog tags of three v1.4 rows split | EQUAL on TC8 (TC8 fixes the delivery statements "jointly with {completed} and under its named premise", which is this event; the loose phrase, read literally, also covered stopped runs and lists of small posterior probability, where nothing was proved or intended; the probability display and (C-0) are unchanged) | the statement did not match the proved form (`work/D_output/P6_DISTC.md` SCR-4) | `reviews/D1_sol_diff.md` D1-02, D1-03, D1-04 | `reviews/D3_sol_diff.md`: **CONFIRMED (EQUAL on TC8)**; D1-01 … D1-04 RESOLVED; Corollary C's reported-model conclusion VERIFIED |
 | 1.4.9 | DIST-C (C-i): the predictive display written for both readings (ε_n² = C²t/n for (1.1), C²tℓ_n/n for (1.2)) | EQUAL on TC8 (the sentence introducing DIST-C already said "(or (1.2), with its rate)"; the display now carries the substitution, as the proof does in `work/D_output/P6_DISTC.md` Remark 6.6; read literally for (1.2), the old display omitted ℓ_n) | the display left the substitution implicit | `reviews/SW1_sweep_astra.md` SW1-03 | `reviews/D4_sol_diff.md`: RESOLVED; **CONFIRMED (EQUAL on TC8)** |
 | 1.4.9 | §3 Lemma X: the paragraph describing the structure of the proof, and the consumes row for W3-POST2:A0, A1 | EQUAL (descriptions of the proof route and of what is consumed; the statement of Lemma X is unchanged). They described an earlier route (truncated moments, Lemmas S and V as inputs); the adopted proof is the fractional-moment route of `lemmas/X.md` and is self-contained | description did not match the adopted proof | `reviews/SW1_sweep_astra.md` SW1-01 | `reviews/D4_sol_diff.md`: RESOLVED; CONFIRMED (EQUAL) |
+| 1.4.10 | DIST-1 (c), the sentence after the bound on M₀ (a gloss on the rate): "for fixed (σ*², M, M′) … ε_n² is of order (1 + s₀^r) log p_raw/n when p_raw = n^A" replaced by "for fixed (A, σ*², M, M′), ε_n² is of order (1 + s₀^r) log n/n", with the remark that C depends on A | **EQUAL on TC3** (the text of TC3, "Best radius ε_n² = C²M₀ log n/n with M₀ = O((1 + s₀^r)(A + 1))", is not edited and is proved as written); **WEAKER on this descriptive sentence of consequence (c), which is not a target clause**: A is now held fixed, and the gloss changes log p_raw to log n (the same order for fixed A). The old sentence let A vary, which reads as a rate linear in A; the radius constant C grows with A (through C_X and C_T), so that reading was not proved | the gloss claimed more than is proved | `reviews/R1_council_opus.md` R1-opus-01 (S) | `reviews/D5_sol_diff.md`: RESOLVED; TC3 unchanged and proved as written; tag **CONFIRMED** (EQUAL on TC3; WEAKER on the descriptive sentence only). Both seats of the diff round are asked to confirm the same by name |
 Target clauses TC1–TC9 were fixed by HQ at CP1 (2026-11-15) in their v1.3 form; TC10 = companion results. **Relative to that
 baseline, no row of v1.4 weakens the mathematics of a target clause** (per S2: this sentence is about the CP1 baseline, not
 about the history before it — the pre-CP1 rows 1.0.1, 1.1 and 1.3 marked WEAKER did narrow ranges or add remainder events).
