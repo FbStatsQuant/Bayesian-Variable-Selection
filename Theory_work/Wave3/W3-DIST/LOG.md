@@ -378,3 +378,7 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   file, no notice; manager told at 03:28 (asked to check pending requests; SW1's brief predates D62) together with the
   04:00 estimate: R1 freeze between 08:00 and 11:00 CT if the sweep returns by about 05:00 with local repairs only.
   MANIFEST_SW1 verify: OK. HOLDS read: none. Running: SW1 (Astra).
+- 04:01 — Manager (03:31, 04:02): SW1 alive (0 pending requests), left running; owner pacing: Codex normal, Claude finishes the
+  chain in flight (sweep, repairs, R1 freeze, council), no new Fable, Sonnet/Haiku for routine helpers; Owls load spike
+  03:40–04:00 (runaway process, killed). Nothing of mine ran in that window except a sleep timer; nothing failed.
+  MANIFEST_SW1 verify: OK. Running: SW1 (Astra).
