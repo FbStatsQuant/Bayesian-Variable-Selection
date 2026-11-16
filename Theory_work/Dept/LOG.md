@@ -175,3 +175,4 @@
 - 03:13 — HQ: D62 made company rule (POLICIES §14, f8ac317a), Engineering told; 09:00 START2-R slip check stands. Sent HQ the worktree-root precision for §14's wording.
 - 03:13 — HQ GO option 1 + real run (task O): CHECKPOINT_4 HQ carrier (R2 sol 9.5/opus 9.2, MANIFEST fdfd4562, card 8 AGREE, HQ_DECISIONS 4cece391); no implies edge; clause relation in notes; REPORT frozen. Recorder launched.
 - 03:16 — Task O real run on main 5fff7740: AE, A2C PROVED-CHECKED (carrier CHECKPOINT_4; no implies; notes cite CP3). check.py 471/0 ERROR; propagate: PSHARP:A stays ACTIVE (not free). Accept records 86/86 (83 + SL0 + 2). Rider folder brought onto main as at a65150e4 (50 files). Noted: old non-council manifests list claims.tsv → never verify after a registry write (post-freeze format package).
+- 03:17 — HQ accepted task O (5fff7740); row 1.3 rider done. Folder-on-main precedent OK (as POST2 R2); theory/W3-PSHARP-R kept as history, no merge. Waiting v0.4 diff.
