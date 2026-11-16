@@ -184,6 +184,15 @@ HEURISTIC/OPEN only); the BASE `ASSUMPTION_MAP.md:27` cross-cite (editorial tick
 - External classical input: Cramér's decomposition theorem (H. Cramér, Math. Z. 41 (1936), 405–414: if the sum of two
   independent real random variables is Gaussian, each is Gaussian, degenerate laws included), used in §2(d) only [L1-Q5].
 
+**§7 status refresh (2026-11-16; CITATION-ONLY; HQ recorder; the quotes above are kept as history).** After task T
+(commit 6cd699dd: SOP:TH09 and SOP:TH128 PROVED-CHECKED, W3-T03ACC council R1; the conditional statuses no longer list
+them), the registry statuses on origin/main read, verbatim and in full:
+  - W3-MISR:MIS(ii)@1.0.1 — "PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1; council R2, MANIFEST 217d6708dfee945fa0416171268e08e359e0e7a3fde5bd169756431143c51103, sol=9.2 PASS, opus=8.9 PASS; correct:PASS(reviews/R2_council_sol.md, reviews/R2_council_opus.md, per-claim addenda: ACCEPT)";
+  - W3-MISR:Cor-G(b)@1.0.1 — "PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:Prop-P, C-MIS:GDb; input versions C-MIS:Prop-P@1.0.0, C-MIS:GD(b)@1.0.0 (C-MIS:GDb = alias of C-MIS:GD(b)); council R2, MANIFEST 217d6708dfee945fa0416171268e08e359e0e7a3fde5bd169756431143c51103, sol=9.2 PASS, opus=8.9 PASS; correct:PASS(reviews/R2_council_sol.md, reviews/R2_council_opus.md, per-claim addenda: ACCEPT)";
+  - SOP:TH09@1.0.2 — "PROVED-CHECKED (T03♯ only: the conjunction of W3-T03ACC:T03S.1–T03S.4, clause map CHECKPOINT_4.md §2; council R1, MANIFEST 9714aea441df09c3caedff6179232fd84cce9e6aa631050ddfeb9c1cec86b3c6, astra=9.5 PASS, opus=9.4 PASS; LC-A, LC-B, LC-C VERIFIED). Not upgraded (their statuses stay as at theory_main.tsv:68): T02(i♯) and T02(ii♯) PROVED, SF/XF VERIFIED; T01–T03 PROVED-LOCKED (wave 3; external review queued), SAME-FAMILY-ONLY";
+  - SOP:TH128@1.0.2 — "PROVED-CHECKED (the conjunction of W3-T03ACC:T03S.1–T03S.5 = record clauses 1–5, clause map CHECKPOINT_4.md §2; council R1, MANIFEST 9714aea441df09c3caedff6179232fd84cce9e6aa631050ddfeb9c1cec86b3c6, astra=9.5 PASS, opus=9.4 PASS; LC-A, LC-B, LC-C VERIFIED)".
+  This refresh changes no clause of §2–§6 and no premise span; it updates quotations only.
+
 ## 8. Dependencies and supersession (each new claim implies the BASE claim it replaces)
 
 | new claim | implies | why (one line) |

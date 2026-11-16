@@ -660,3 +660,29 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - 2026-11-16 ~09:30 CT. **W3-DIST RECORDED** (e7a7216c CC rule + tests; cb642afd record): all 20 claims PROVED-CHECKED, with no T01 caveat. Row 2.1 (distribution consistency, Song–Liang Thms 1–2 analogue, display (i)) moves from in progress to proved; thm9 + card swap variant A in progress.
   - Remaining conditions: Thm-B/B3 on W3-POST:Thm-1; DIST-C on the SAMP delivery premises + EX-A; Cor C on EX-A.
   - The owner's top-priority item is closed.
+- 2026-11-16 ~10:30 CT. Recorded on main: S4 b3153634 (IDEAL-W⁺ batch; D80 23/23 hashes; F-UNI ACTIVE 2.1.0), START2-R b48fd0a1 (row 3.3 masters STRONGER), S4b a8a135d6. D80 re-verification of today's recordings: no mismatch.
+- Task V (RM2-R) blocker. Rule (b) GO, fail-closed: a legacy-accepted row NARROWED by a recorded NARROW keeps legacy acceptance only if (1) its Sol DIFF verdict explicitly says the narrowed statement is proved by the row's own chain, (2) the DIFF post-patch sha equals the current hash, and (3) the council cell is unchanged.
+  - Tests + Opus review; fallback (a) per-row carriers; (c) refused.
+  - Rows 3.1/3.2 newly conditional on C-DLV:L2-S3 / P1-Inventory (code-reading audits), stated plainly.
+  - Post-freeze: check those audits for council evidence.
+- 2026-11-16 (owner, during the pause). The Writing Department started early on Claude Work (thread switched from CP), paced until 16:00 CT (≤ 1 helper).
+  - Codex/Astra allowed for review, efficiently: one end-of-draft read per document.
+  - **One Fable 5.2 writing advisor approved** (CW, high, a Writing child): style and clarity only, never math or statuses. If CW hits its 5-h limit: stop and wait, no account switching.
+  - 1M fast-track pilot (before Dec 4) approved, no delay to the main plan; queued for the resume.
+- 2026-11-16 ~17:00 CT. Resume executed (24 live SMC threads moved CT → CP; POLICIES: CP is the SMC default, CT retired for SMC). Engineering's 1M fast-track pilot plan APPROVED (submit 11-25/26, evaluated 12-1; P9 GO gate ≤ 1,188 core-h per fit and ≤ 28.3k campaign).
+- W3-AUDIT CHECKPOINT_1 (81291dd9):
+  - Posterior cores (rows 1.1, 1.2, 2.1): every design of ours is inside; the assumptions are the same as or comparable to Song–Liang's.
+  - Core 3 (row 3.1): strong factors are outside (visibility/leakage).
+  - **Row 3.6 needs A5 (no leakage): only IND/S1 inside; AR, the 1M primary, is outside.** HQ: no correctness event; the headline wording states the A5 scope plainly; the repair "leaks inside a method block are harmless" is track D candidate #1.
+  - P6 version conflict (Theory: v3.1 with LS0; Engineering: v2.2): Engineering to reconcile.
+  - RERUN_SPEC left open until Writing restructures.
+- 2026-11-16 ~17:45 CT. CI green (a14ce83b; issue #41 closed). Task V GO, with the 6 free supersessions as a small follow-up task. P6 confirmed v3.1 with LS0 (Engineering corrected); only the 2,400-fit study is v2.2.1.
+- W3-AUDIT CP2 (track D): candidate #1 (group-relative no-leakage) reaches S3/S4/S6 only, not AR or the 1M BLK. AR needs #5 (non-collapse; Fable feasibility note pending).
+  - HQ order, post-freeze (from Sat 11-21), after the Opus check of the audit-calc lines:
+    - #2 check X: 1 d, kill at 1.5 d;
+    - #3 sub-Gaussian Thm 2: 2 d, kill at 3 d;
+    - #1 group no-leakage: 3 d, kill at 4 d.
+  - #4 deferred; #5 decided on the note (may replace #1).
+- 2026-11-16 ~18:15 CT. Track D: #5′ (store-restricted printed-output clause on every Thm 6 design, AR and BLK included; Tier B, 1–2 d, kill at 3 d) REPLACES #1.
+  - Final order: #2 → #3 → #5′, post-freeze. No G1/G2 gate; printed fields on AR stay NO-GO.
+  - After #5′: Engineering reports the store-derived summaries in the overlap/1M analysis (post-processing only).

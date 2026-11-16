@@ -92,3 +92,5 @@ C-PACK I4	C-PACK:SL0	W2-APP STATEMENT.md:50 (item 4 = SL0-SL2)
 GEN L5.3	W1-GEN:L5	W2-APP lemmas/L5_VN.md:30, L1_POST.md:62
 GEN (C1)	W1-GEN:L2	W2-APP lemmas/L5_VN.md:30 (W1-GEN L2 = (C1))
 C-MIS:GDb	C-MIS:GD(b)	W3-MISR-R CHECKPOINT_3 spelling (Corollary G(b) of C-MIS)
+P1 inventory	C-DLV:P1-Inventory	W3-RM2-R STATEMENT.md:152 spelling (task V)
+Lemma S.3	C-DLV:L2-S3	W3-RM2-R STATEMENT.md:152 spelling (task V)

@@ -11,6 +11,52 @@
 - When: BNP sends a "quiet window" (expected 11-16 early afternoon CST). HQ pauses SMC departments' leads, restarts, verifies, then messages BNP back. BNP launches nothing until confirmed.
 - BNP already moved its temp to /home/fb31/bnp_tmp and removed 73 stale sandboxes (11-15).
 
+## RESUMED 11-16 16:00 CT (owner order)
+- Theory and Engineering resumed on Claude Personal; Writing stays idle on Claude Work.
+- **24 live SMC threads were switched from Claude Third to Claude Personal.** The 84 settled, finished threads were left as they are; they will not run again.
+- POLICIES §5/§7/§8 updated: Claude Personal is the SMC default, and Claude Third is retired for SMC.
+
+## PAUSE (owner, 11-16 ~10:40 CT): resources low
+- Order: current agents finish their current task, then ALL operations cease. Resume on **Claude Personal after its weekly reset** (≈ 17:30 CT 11-16, per the owner's screenshot; Codex weekly reset ≈ 18:45 CT).
+- Sent: Theory Dept, Engineering Dept and the consultant. Departments write resume cards: Theory_work/Dept/RESUME_2026-11-16.md and Docs/Experiments/P1M/RESUME_2026-11-16.md.
+- Scheduled tasks disabled by HQ: Theory Dept heartbeat (45 min), Theory daily report, W3-READER S4 ping. Builders 6–7 start: disabled. Left running (no tokens): snapshot crons, desktop offload, NOTS jobs in flight. BNP's own tasks (guard 10:13 and backup 11:13 installs) are theirs; HQ only verifies the crontab diffs.
+- BNP cancelled today's Owls slots (guard 10:13, backup 11:13); the SMC freezes are lifted; the crontab is verified unchanged against HQ's baseline. Both departments are STOPPED (resume cards: dept/theory db6bd259; Engineering Docs/Experiments/P1M/RESUME_2026-11-16.md). BNP is also paused; its T3-restart window comes after both resume.
+- **OWNER 11-16 (during the pause): 1M fast-track APPROVED, "but I want no delays either".** First message to Engineering on resume:
+  - produce, within its first working day, a fast-track plan for a **1M pilot fit before the advisor report (target Dec 1–4)**: 10⁵ and 10⁶ run side by side, the 1M pilot launches right after a short 10⁵ smoke test, and all 7 builders run at full speed from the resume;
+  - the pilot is labelled "pilot", with overlap validation after;
+  - **hard constraint:** the fast-track must not delay the main ladder or the January campaign. It runs as a side track; if the pilot fails, the main plan continues unchanged.
+  - The plan states the Claude usage, the NOTS core-h per attempt (≈ 1k), and the gates.
+- **OWNER 11-16: the Writing Department STARTS at the resume.** Assignment: Docs/Writing/ASSIGNMENT_1.md.
+  - D2 (all consistency results in reader form, statuses verbatim): draft ≈ 6 h after the resume.
+  - D1 (methodology as coded: priors, distributions, every parameter fixed or f(n, p), with code file:line): ≈ 24 h.
+  - The Writing thread is already on Claude Personal. HQ orders one Sol read per document and shows the owner the PDFs.
+- **For Engineering on resume (Writing D1 finding, 11-16):** the default v3_fit preflight is NOT memory-only. With ls0 = TRUE and cap ℓ_n+|S̃₀|, ls0_wc = TRUE (v3_fit.R:114) charges the LS0 worst-case time 2·(ℓ_n+K+1)·(p+p²/4)·(measured s per size-K score) against the allocated hours (:43-47, :65, :144-148).
+  - At n = 200, p = 10⁴ that is ≈ 563 h on Owls, so a default fit returns resource_limit before setup. The README and the code comment (:25) say "memory-only".
+  - Engineering: check how the overlap rung (10⁴) and the 1M plan set hours/ls0_cap, and which setting the 2,400-fit study and P6 used. Report the doc fix.
+  - Theory is unaffected ((C2) assumes allocation ≥ the requirement formulas).
+- **OWNER 11-16, after reading D2 v1 (binding direction):**
+  - (1) A tight report and paper: the core theorems in the main text, the rest in a supplement with a one-line "why it matters", or cut. HQ's proposed core: rows 1.1/1.2, 2.1, 3.1, 3.6 (+ 3.5), and 1.3 as a remark. The owner's OK on the list is pending.
+  - (2) Niche results are motivated in one sentence or cut.
+  - (3) **Assumption audit.**
+    - Assumptions on abstract mathematical objects (distributions, divergences, prior or kernel properties) must be proved: small checked lemmas, and Lean targets.
+    - Design-matrix assumptions (and similar) get a **"why this is reasonable" dossier in the advisor report**: plain meaning, comparison with standard literature conditions, where they hold and fail, and whether our simulation designs and a typical user are plausibly inside. No empirical tracking.
+    - Theory leads it; Writing presents it. The consultant stress-tests the core list and the audit plan. HQ proposes moving the freeze to include the audit (owner's OK pending).
+- **HQ decision 11-16 (owner: "open for you to decide").**
+  - The core list is ADOPTED.
+  - The Fri 11-20 freeze STANDS for recorded statements. The audit (W3-AUDIT) is the next campaign, adding lemmas and corollaries after the freeze; a draft of its first version ≈ 3 working days after the resume, ahead of the advisor report.
+  - Brief: Theory_work/Wave3/W3-AUDIT/BRIEF.md: tracks A (proved), B (reasonableness dossier, with Song–Liang as the reference point, "blank check" if same or weaker) and C (internal empirical proxies, ≤ 150 core-h).
+- **OWNER 11-16: at the resume, ON THE OWNER'S ORDER (wait for his word),** the Fable consultant reviews the **sub-optimality policies** for improvements:
+  - the sharpness gate, the S findings and better-theorem notes, supersession/rollback to better theorems, the optimizer, and the new W3-AUDIT track D;
+  - sources: PROTOCOL_v4 (§ supersession, sharpness), memory optimality-risk-feedback, W3-AUDIT/BRIEF.md.
+- **OWNER 11-16 (scope):** the theory is nearly done; the core analysis rests on what we have.
+  - Improvement work covers only the core theorems and key components; track D is light, with ≤ 3 tickets and kill budgets, and no effort on niche results.
+  - The Fable policy review is aimed at **the company playbook for future papers** (the owner is on board with protocol optimisation); it does not reopen this paper's theory.
+- **On resume:** move the department threads to Claude Personal (t3_thread_configure), then send each manager "resume from RESUME card". Pending HQ items:
+  - V (RM2-R) real-run GO after rule (b) and the dry run;
+  - re-enable the 3 Theory scheduled tasks;
+  - the builders 6–7 start;
+  - re-plan the freeze date (was Fri 11-20).
+
 ## MORNING BRIEF 11-16 (items for the owner)
 - p = 1M: re-sized (H-9, HQ overnight) to ≈ 28.3k core-h with G = 256 socket-local (≈ 1.44× plan per pair); AR-weak at 1M dropped (returns first if L5 saves); a reduced 1M self-check (N = 5,000) kept. M risk priced after T5. Schedule: with descope (c, approved) the first 1M fit is in the first week of January. Options for the owner:
   - (b) Fable 5.2 architect for WP3, ≈ 3 days (HQ recommends yes);
