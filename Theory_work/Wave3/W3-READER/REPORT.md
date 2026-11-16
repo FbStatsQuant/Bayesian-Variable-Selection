@@ -31,19 +31,19 @@ conclusion: inequality: Var(W_l | W_A) <= (1 + L^2/c) Var(W_l | W_T) for A subse
 gates: correct:PENDING(bridge-leg Sol line check; S1: population form passes)
 
 REGISTRY
-claim: W3-READER:R3 | kind: lemma | statement: lemmas/R3_delivery_assembly.md:1-47 | premises: READER_VERSIONS.md (S4)
+claim: W3-READER:R3 | kind: lemma | statement: lemmas/R3_delivery_assembly.md:1-54 | premises: READER_VERSIONS.md (S4)
 name: Lemma R3 (delivery assembly for the reported-model theorems)
 status: PROVED (by this seat, unchecked) | status_source: lemmas/R3_delivery_assembly.md:3
 conclusion: implication: RM2-R / RM2-F conclusions + (S4) => premises (V), (S), (P) and the method/premise/allocation paragraph of W2-UNI:F-UNI; hence P(no output) = 0 on the bounded domain D under IDEAL-W, and for every admissible n >= 3 under A:IDEAL-W+, with P(Shat = S0) -> 1 under A:IDEAL-W+ [F-UNI narrowed to 2.1.0, recorder task S2; requote after S2]
-depends_on: W2-UNI:F-UNI@1.1.0 ; W3-RM2:RM2-R@1.0.0 ; W3-RM2:RM2-F@1.0.0
+depends_on: W2-UNI:F-UNI@1.1.0 (to repin @2.1.0 after task S2) ; W3-RM2:RM2-R@1.0.2 ; W3-RM2:RM2-F@1.0.2
 gates: correct:PENDING(bridge-leg Sol line check)
 
 REGISTRY
-claim: W3-READER:R4 | kind: lemma | statement: lemmas/R4_printed_outputs.md:1-44 | premises: lemmas/R4_printed_outputs.md (Claim)
+claim: W3-READER:R4 | kind: lemma | statement: lemmas/R4_printed_outputs.md:1-49 | premises: lemmas/R4_printed_outputs.md (Claim)
 name: Lemma R4 (printed PIPs, MPM, HPM and evidence estimate are consistent: assembly)
 status: PROVED (by this seat, unchecked) | status_source: lemmas/R4_printed_outputs.md:3
 conclusion: rate: 1_A max(o0, o1) = O_P(n^{-1/2} exp(C_R sqrt(log n))); hence Zhat/Z - 1, log Zhat - log Z, ||pip_primary - 1_S0||_inf = O_P(that) on A; P(A and MPM != S0) -> 0; P(completed and Shat != S0) -> 0 | scope: Gaussian rows, standardised-signal convention, Q = S0
-depends_on: W3-SAMP:C@1.1.1 ; W3-START2:IF-START@1.0.0 ; W3-START2:START-R@1.0.0 ; W3-POST:Thm-1@1.0.0 ; W2-APP:POST@1.0.1
+depends_on: W3-SAMP:C@1.1.3 ; W3-START2:IF-START@1.0.0 ; W3-START2:START-R@1.0.0 ; W3-POST:Thm-1@1.0.0 ; W2-APP:POST@1.0.6
 gates: correct:PENDING(bridge-leg Sol line check)
 ```
 

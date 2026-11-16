@@ -2,6 +2,8 @@
 
 v0.4 = v0.3 with H5 card 6, the Engineering D-17 wording, and the repairs of the S2 line check and the S3 diff check
 (markers [H5-6], [ENG-D17], [S2-F#], [S3-N#]); per-row tags in the update logs (confirmed by S3).
+S4 repairs (Sol statement-change check, `reviews/S4_statement_change_sol.md`) carry markers [S4-S1], [S4-F1], [S4-F2], [S4-S3],
+[S4-E1]; swap tags are delta-relative, with the S3-relative strength recorded in each row's update log [S4-S3].
 
 v0.3 = v0.2 with the manager's CP1 decisions and the H5 card-5 actions (markers [H5-#]): Theorem 1 re-based on the
 posterior refinements (expectation rate; Theorem 1′); (S4) completed from the delivery premise table
@@ -67,7 +69,7 @@ MCMC steps realise their stated kernels, applied in a uniformly random order ind
 record is a function of the data and the calibration streams; the island record is a measurable function of the
 calibration value and its stream; statements about estimates refer to the potential (uninterrupted) run, identified
 with the reported fields on completed runs. *Source of record:* `Theory_work/Wave1/W1-N1/STATEMENT.md:70-88` (EX-A,
-EX-S/H-U, START, KERNEL, CAL, SI, MEAS, potential run; inherited statuses: START "PROVED (candidate)" (N1:73), KERNEL
+EX-S/H-U, START, KERNEL, CAL, SI, MEAS, potential run; inherited statuses: START "PROVED (candidate)" (N1:75), KERNEL
 "PROVED (candidate), code-checked; CHK_INHERITED VERIFIED WITH AMENDMENT") [S3-N8], the code bridge `W1-N1/lemmas/L1_bridge.md:33-55` (measurability,
 control flow), and `W3-SAMP/STATEMENT.md:29-53, 64-70, 90-95` (localisation, production values, Lemma PC).
 
@@ -433,6 +435,9 @@ display is attained is not proved. Status: the expectation display and remarks (
   (HQ wording); remarks (i)–(iv) with named exactness cases; mechanism sentence corrected (sum of truncated fit factors);
   bridges B3.3–B3.8 (B3.8 checked by Sol L06 + L07 confirm YES, 0 findings); masters' statuses verbatim
   (AE, A2C PROVED-CHECKED, council R2) (STRONGER: new expectation display for every $p$; EQUAL elsewhere).
+- S4 tag record 2026-11-16 [S4-S3]: v0.4 is EQUAL to its delta (W3-PSHARP-R v0.4). Against the S3 text: STRONGER for the
+  every-$p$ expectation display, the fully orthogonal expectation exactness, the growing-$s_0$ expectation obstruction and the
+  critical-scale $e^{-\lambda}$ bound; EQUAL for the original probability clauses and size-domain consequences.
 <!-- ROW thm3 END -->
 
 ---
@@ -552,6 +557,9 @@ conditions.
   (candidate rows Gaussian; Gaussian linear conditional law given the candidates), floor on the correlation matrix, no
   variance bound; omitted Gaussian predictors as the Example; Hellinger/KL remark; non-implication note on Theorem 2;
   honest limits; masters CorGb-plus, CorG-min, CorH-plus, CorH-U (STRONGER: weaker hypotheses, same conclusion).
+- S4 tag record 2026-11-16 [S4-S3]: v0.5 is EQUAL to its delta (W3-MISR-R v0.4). Against the S3 text: STRONGER for the main
+  theorem (weaker hypotheses (A0), (A2), (A3); the same two displayed conclusions); the Hellinger/KL remark, the
+  fixed-design selection-only and uniform forms and the examples are new (STRONGER) statements.
 <!-- ROW thm4 END -->
 
 ---
@@ -712,7 +720,7 @@ blocks.
 | B6.2 | (A4)(i),(ii) = (L-R^b) | identity | (L-gain-R) with $\varpi_n=o(\sqrt{\log n/n})$; (L-loc-R) with $r_n\to0$ (RM2 STATEMENT.md:176-189). (L-feas) carried in (A4). |
 | B6.3 | (A6) + (A5) ⇒ (D-loc^b) incl. its variance clause | **NEW** (one paragraph; proof below) | (D-loc^b) = RM (D-loc) (RM STATEMENT.md:154-156) with $L_n^2\log(|Q|+1)=o(\log n)$; its second clause $\operatorname{Var}(W_l\mid W_{T\cap N_l})\le(1+\eta_n)\operatorname{Var}(W_l\mid W_T)$, $\eta_n\to0$, follows from (A6) and (A5): see proof. |
 | B6.4 | (D-loc^b) ⇒ (D-R^b) ⇒ (W-R) | EXISTS-CHECKED | `W3-RM2:D-to-W@1.0.0`, "PROVED-CHECKED; council R1, …" (STATEMENT.md:256, (C3)/(P9)). |
-| B6.5 | (T1-R) ⇒ posterior input [POST] | EXISTS-CHECKED, conditional | `W3-RM2:POST-R@1.0.2`, "PROVED-CHECKED, conditional on W2-APP:POST; …" ⇐ B2.2 (**EXISTS-UNCHECKED**). |
+| B6.5 | (T1-R) ⇒ posterior input [POST] | EXISTS-CHECKED, conditional | `W3-RM2:POST-R@1.0.2`, "PROVED-CHECKED, conditional on W2-APP:POST; …" ⇐ B2.2 (EXISTS-CHECKED, conditional on SOP:TH09; main 33e1f0f5) [S4-F1]. |
 | B6.6 | RM2-R conclusions ⇒ F-UNI premises (S), (P), (V); F-UNI's operational premises carried as (S4) | **NEW** (assembly; (V)/(S)/(P) part passed S1) | (S): $P(\mathrm{Sand}\cap\mathrm{NA}\cap\mathrm{TL})\ge1-\sum P(\cdot^c)\to1$ from [SAND(Q)], [NA(Q)], [TL(Q)]; (P) = [POST]; (V) = "(R) with $\lambda_{\min}(\Sigma_n)>0$". LS0 cap and default-on tier-1 fallback match (`v3_calib.R:141-144`). F-UNI's method/premise/allocation paragraph (`L5_delivery.md:7-12`: EX-A as cost model, IDEAL-W, EX-S, SR, e4/TDP-IMPL, GUARD-W, MACH, CONFIG, valid seed, allocation and preflight inequalities at $(n,p_{\mathrm{raw}})$; P1/S.3 "AUDITED (code reading)") is **not derived**: it is carried as (S4) [S1-F2]. Premise-by-premise table: proof leg (`lemmas/R3_delivery_assembly.md`). |
 | B6.7 | standardised-signal convention | limit | The masters take $\theta^*$ deterministic (Setting R). A raw-scale version (fixed $\beta^*$) would need a **NEW** bridge (medium; the population conditions involve $\theta^*$). Not proposed for CP1. |
 
@@ -917,9 +925,11 @@ certificate needs a near-orthogonality floor (`W3-SCR:SCR-C`, PROVED-CHECKED), w
 ($\varphi_n(q_n)\ge2A/(2A+1)+\epsilon$) — keep it as a remark.
 
 ### Certification frequency (numerics, not a theorem) [SCR-R2]
-A run certifies a model when its local-optimality flag is set. In existing numerics the method certified a small
+A run certifies a model when its local-optimality flag is set. In existing numerics the method certified the
 reported model in every completed run: 2,394 of 2,394 in the 2,400-fit study ($n=200$); 376 of 376 in the strong-factor
-experiment ($n\le150$, $p$ up to $10n$); 71 of 71 in the screening study ($n=100$). On strong-factor designs
+experiment ($n\le150$, $p$ up to $10n$); 71 of 71 in the screening study ($n=100$). Where model sizes were recorded the
+certified models were small: all 376 strong-factor fits had at most $2s_0$ predictors, all 71 screening fits at most 5
+(the 2,400-fit study records no per-fit size) [S4-F2]. On strong-factor designs
 (equicorrelation $\rho\in\{0.5,0.7\}$, $p\ge2.5n$, $s_0\in\{4,8\}$) the certified model contained every true predictor in
 61 of 122 fits at $n=50$, 18 of 20 at $n=75$ and 30 of 30 at $n=100$.
 (Sources: `/home/fb31/BVS-wt/W3-SCR-R2/Theory_work/Wave3/W3-SCR-R2/reviews/READER_DELTA.md` §5, theory/W3-SCR-R2 @ 048b6b23.)
@@ -942,6 +952,10 @@ experiment ($n\le150$, $p$ up to $10n$); 71 of 71 in the screening study ($n=100
   certification-frequency line (EQUAL). Source: W3-SCR-R2 `reviews/READER_DELTA.md` v4 @ 048b6b23. At application:
   "certifies" defined at first use in the reader statement; the delta line's closing sentence on the sample size (A3)
   requires at these constants is omitted (owner rule: no sample-size thresholds); A1, SCR-G statuses quoted at d2b600ba.
+- S4 tag record 2026-11-16 [S4-S3]: v0.6 is EQUAL to its delta (W3-SCR-R2 v4). Against the S3 text: card row 3.7's
+  intersection event and fixed-constant scope are WEAKER (restore `W3-SCR:SCR-A` :80-89, `A1` :158-163); Theorem 8′ is a
+  STRONGER addition (EQUAL to `W3-SCR:A-inf`). S4 [S4-F2]: certification counts separated from size evidence (WEAKER, restores
+  the cited measurements' scope).
 <!-- ROW thm8 END -->
 
 ---
@@ -1035,8 +1049,8 @@ route (remark): `W3-SAMP:TR@2.1.3`, "PROVED-CHECKED, conditional on SOP:TH09" [R
 
 ### Honest limits
 The conclusion is localised to calibration success $\mathcal A$ on the sampler branch (intersections, not conditioning);
-that $P(\mathcal A)\to1$ is not claimed here (under the
-delivery conventions (S4) runs always complete, but that link is not used). The rate $\rho_n$ is the start law's rate,
+that $P(\mathcal A)\to1$ is not claimed here (under (S4)(i)–(iv), completion holds on $\mathfrak D$; under those conventions and
+A:IDEAL-W⁺ it holds for every admissible $n$; that link is not used here) [S4-S1]. The rate $\rho_n$ is the start law's rate,
 slower than the posterior rate $\sqrt{\log n/n}$ by a factor $e^{C\sqrt{\log n}}$. Conditional on T03♯ (through `W3-SAMP:C`
 and `W2-APP:POST`) [REG-33e1].
 
@@ -1052,6 +1066,8 @@ and `W2-APP:POST`) [REG-33e1].
   statuses quoted separately. Net tag vs S2-frozen: **WEAKER** (master premises restored).
 - v0.7 2026-11-16: [REG-f526] `W3-SAMP:C/TR` and `W2-APP:POST` statuses refreshed (conditional on C-PACK:SL0, SOP:TH09) (EQUAL).
 - v0.8 2026-11-16: [REG-33e1] SL0 cleared: `W3-SAMP:C/TR` @1.1.3/2.1.3 and `W2-APP:POST@1.0.6` conditional on SOP:TH09 only (EQUAL).
+- S4 2026-11-16 [S4-S1]: the completion remark in the honest limits follows the F-UNI narrowing (on $\mathfrak D$ under
+  (S4)(i)–(iv); every $n$ under A:IDEAL-W⁺; WEAKER, unused link).
 <!-- ROW thm10 END -->
 
 ---
@@ -1061,7 +1077,7 @@ and `W2-APP:POST`) [REG-33e1].
 | Bridge | Theorem | Mark | Where proved | Importance |
 |---|---|---|---|---|
 | B2.2 `W2-APP:POST@1.0.6` | 2, 6, 10 | EXISTS-CHECKED, conditional on SOP:TH09 | accepted at W2-APP CP3; SL0 cleared (main 33e1f0f5) | condition: W3-T03ACC (T03♯) |
-| B4.3 / B1.7 POST2 C/E/A1/A0 | 1 (re-base), 1′, 4 | EXISTS-CHECKED, conditional (on SOP:TH09 and others, §1) | recorded at main f526e45b | condition: W3-T03ACC |
+| B4.3 / B1.7 POST2 C/E/A1/A0 | 1 (re-base), 1′, 4 | EXISTS-CHECKED, conditional (on SOP:TH09 and others, §1) | recorded at main f526e45b | conditions: SOP:TH09 (W3-T03ACC) and the others quoted in §1 (C: W3-POST:Prop-LB, [L1a′], SOP:TH128, W2-APP:POST, W3-POST:Thm-1) [S4-F1] |
 | B6.6 / B7.4 RM2 ⇒ delivery assembly; (S4) premise table | 6, 7 | NEW | `lemmas/R3_delivery_assembly.md` | high |
 | B6.3 local regressions ⇒ variance clause | 6 (7: B7.3) | NEW | `lemmas/R2_local_regression.md` | medium |
 | B1.1–B1.3, B2.1, B3.2, B4.1, B6.1 set sizes and elementary bridges | 1, 2, 3, 4, 6, 10 | NEW | `lemmas/R1_set_sizes.md` | medium |
