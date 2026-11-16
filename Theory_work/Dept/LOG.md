@@ -53,3 +53,4 @@
 - 20:15 — W3-EDIT triage: 20 (iii) (6 ★), 30 (ii), 9 (i). D27: adjudicator child launched; HQ escalated; recorder C held.
 - 20:15 — HQ: READER headline split → consultant (H5 card 5, provisional; abstract rows gated on gates PASS + PROVED-CHECKED masters; 2.1 after DIST CP3). Legs approved. Order D, E, F, C stands; C still goes dry run → HQ (my M57/M58 hold request crossed this message; no conflict).
 - 20:16 — W3-READER: SHARP3_REQUEST.md ready (5 one-claim Fable calls: W3-SAMP C/TR/LT#/D, W3-SCR:A1); forwarded to HQ (suggested 64k output cap). Bridge leg + leg 2 running with 2 Opus helpers; MISR → row 1.4.
+- 20:17 — H5 card 5 verdict folded into READER (D28); recorder task I (F-UNI gate) staged.

@@ -163,3 +163,10 @@
   gives E / PATCH / NARROW / REFUTED per row with consumers (propagate --dry-run) → research/ADJ_MINORS_iii.md.
   NARROW → LIFECYCLE §3 priced; headline main clause → H5 via HQ. C (W2-APP) real run held pending M57/M58; D/E/F go on.
   The 30 class-(ii) slips and 9 class-(i) wording items: routed after the adjudication (post-freeze editorial/patch batch).
+
+## 2026-11-15 20:17 CT — H5 card 5 (headline split) folded in
+- **D28.** READER told: 1.1 re-base on POST2 A1 + C (E variant) or explicit better-gate dispositions; 3.1 delivery
+  clause out of the abstract until F-UNI's correct: gate is fixed (recorder task I); 1.4 flag on MIS(i)/(ii); Gaussian-row
+  setting line; 3.7 into the abstract, 3.6 candidate, 2.2 fallback; condition (i): FAITHFUL fidelity read via the CP3
+  council Sol seat (explicit FIDELITY line; Codex economy, told HQ), no unstated conditional inputs in the abstract,
+  pooled-Ẑ corollary registered as a W3-READER claim and line-checked. CP3 Fri morning.
