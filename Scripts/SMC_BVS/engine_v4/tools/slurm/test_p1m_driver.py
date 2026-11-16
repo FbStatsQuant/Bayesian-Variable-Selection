@@ -16,6 +16,7 @@ import unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+import p1m_cells  # noqa: E402
 import p1m_cost  # noqa: E402
 import p1m_driver  # noqa: E402
 import p1m_manifest  # noqa: E402
@@ -335,6 +336,84 @@ class TestContentHashV012(Base):
         open(pth, "wb").write(head + th + b"\2" * 32 + b"\0" * 32 + sec)
         with self.assertRaises(SystemExit):
             p1m_manifest.content_hash(pth)
+
+
+class TestCells(Base):
+    """MANIFEST_CELLS generator: unique run ids, seeds in range, deterministic, every plan valid for the driver."""
+
+    def test_expand_and_plans(self):
+        rows = p1m_cells.expand()
+        self.assertEqual(len({r["run_id"] for r in rows}), len(rows))
+        self.assertTrue(all(1 <= r["seed"] <= 2 ** 31 - 1 for r in rows))
+        self.assertEqual(rows, p1m_cells.expand())
+        # OD-14: five 1M fits at n = 200 + the N = 10⁴ check; option D one fit at n = 1,000
+        c6 = [r for r in rows if r["block"] == "rung 1e6"]
+        self.assertEqual(len(c6), 6); self.assertEqual(sum(r["N"] == 10000 for r in c6), 1)
+        self.assertEqual([r["n"] for r in rows if r["block"] == "option D"], [1000])
+        # ADJ-OPP present at 10⁴ and 10⁵ (Sol F7)
+        self.assertTrue(any(r["design"] == "ADJ-OPP" and r["p"] == 10 ** 5 for r in rows))
+        out = os.path.join(self.tmp, "plans")
+        written = p1m_cells.plans(rows, out)
+        planned_ids = set()
+        for f in written:
+            P = p1m_driver.resolve(json.load(open(f)))
+            self.assertLessEqual(P["n_tasks"], 150)
+            planned_ids |= {x["run_id"] for x in json.load(open(f))["fits"]}
+        # PR #19 MINOR-6: the fit count (TSV data rows) and the planned count (all but the 20 block-costed T8 rows)
+        self.assertEqual(len(rows), 259)
+        self.assertEqual(len(planned_ids), len(rows) - 20)
+        self.assertEqual(len(written), 47)
+
+    def test_precision_seeds_independent(self):
+        """PR #19 MAJOR-1 (Sol F6): every precision arm has its own final and calibration seed, shared with no other fit."""
+        rows = p1m_cells.expand()
+        prec = [r for r in rows if r["block"] == "precision"]
+        self.assertEqual(len(prec), 24)
+        finals = [r["seed"] for r in prec]
+        calibs = [json.loads(r["params"])["calib_seed"] for r in prec]
+        self.assertEqual(len(set(finals)), 24); self.assertEqual(len(set(calibs)), 24)
+        others = {(r["data_seed"], r["seed"]) for r in rows if r["block"] != "precision"}
+        all_seeds = {r["seed"] for r in rows if r["block"] != "precision"} | {r["data_seed"] for r in rows}
+        for r, c in zip(prec, calibs):
+            self.assertNotIn((r["data_seed"], r["seed"]), others)
+            self.assertNotIn(r["seed"], all_seeds); self.assertNotIn(c, all_seeds | set(finals))
+        # the assert in expand() catches a shared precision key
+        bad = [dict(r) for r in rows]
+        p = [r for r in bad if r["block"] == "precision"]
+        p[1]["seed"] = p[0]["seed"]
+        with self.assertRaises(AssertionError):
+            p1m_cells.check_seeds(bad)
+
+    def test_a3_paired(self):
+        """PR #19 MAJOR-2: every A3 fit has a default-partition V fit on the same data; an unpaired one is refused."""
+        rows = p1m_cells.expand()
+        a3 = [r for r in rows if "A3" in r["run_id"]]
+        self.assertEqual(len(a3), 15)
+        default = {r["data_seed"] for r in rows if r["mode"] == "V" and r["N"] == 2500 and r["Rp"] == 16
+                   and r["seed"] == r["data_seed"] and "partition" not in json.loads(r["params"])}
+        self.assertTrue(all(r["data_seed"] in default for r in a3))
+        extra = dict(a3[-1]); extra["data_seed"] += 5; extra["seed"] += 5; extra["run_id"] = "4-BLK-n200-r10-A3-exactlink-s1"
+        with self.assertRaises(AssertionError):
+            p1m_cells.check_a3_pairing(rows + [extra])
+
+    def test_seed_rule_limits(self):
+        """PR #19 MINOR-5: the field widths are asserted (rep <= 99), so the seed rule stays one-to-one."""
+        cells = p1m_cells.CELLS
+        try:
+            p1m_cells.CELLS = [("science 1e4", 4, "AR", 200, 100, p1m_cells.V1, "")]
+            with self.assertRaises(AssertionError):
+                p1m_cells.expand()
+        finally:
+            p1m_cells.CELLS = cells
+
+    def test_only_rung(self):
+        """PR #19 MINOR-7: --only takes a rung (4|5|6 or 1eK) or p."""
+        self.assertEqual(p1m_cells.rung_to_p("5"), 10 ** 5)
+        self.assertEqual(p1m_cells.rung_to_p("1e6"), 10 ** 6)
+        self.assertEqual(p1m_cells.rung_to_p("10000"), 10 ** 4)
+        rows = p1m_cells.expand()
+        w = p1m_cells.plans(rows, os.path.join(self.tmp, "p5"), only="5")
+        self.assertTrue(w and all(f["p"] == 10 ** 5 for x in w for f in json.load(open(x))["fits"]))
 
 
 class TestCost(Base):

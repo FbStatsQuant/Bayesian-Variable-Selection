@@ -1,0 +1,11 @@
+package	min_version	snapshot_2026-11-02	methods	api_used_by_p1m_competitors.R	notes
+glmnet	4.1	5.2	lasso_cv_min,lasso_cv_1se	cv.glmnet(X, y, foldid, family = "gaussian", alpha = 1); coef(cv, s); cv$lambda, $lambda.min, $lambda.1se, $cvm	dense X in memory: 10^4-10^5; at 10^6 (1.6 GB) feasible but memory-heavy ; MAJOR version above the API the harness was written against: verify in the acceptance run
+ncvreg	3.13	3.16.0	mcp_cv,scad_cv	cv.ncvreg(X, y, penalty = "MCP"|"SCAD", fold, seed); coef(cv); cv$cve	also a dependency of biglasso
+biglasso	1.5	1.7.2	lasso_cv_big	cv.biglasso(big.matrix, y, nfolds, seed, ncores); coef(cv); cv$cve	the 10^6 lasso path (file-backed big.matrix)
+bigmemory	4.6	4.6.6	lasso_cv_big	as.big.matrix(X)	needs a C++ toolchain (GCC 14.3.0 module)
+L0Learn	2.0	2.1.0	l0learn_cv	L0Learn.cvfit(X, y, penalty = "L0L2", nFolds, seed); coef(cv, lambda, gamma); cv$cvMeans, cv$fit$lambda, cv$fit$gamma	RcppArmadillo build
+susieR	0.12	0.14.2	susie	susie(X, y, L = 10); coef(s); s$pip, s$sigma2	predictive = Gaussian at the posterior mean (labelled)
+varbvs	2.5	2.6-10	varbvs	varbvs(X, NULL, y, family = "gaussian", verbose = FALSE); coef(f) (last column = averaged); f$pip, f$w, f$sigma	predictive = Gaussian at the averaged posterior mean (labelled)
+BAS	1.6	2.0.2	bas	bas.lm(y ~ ., data, method = "MCMC", prior = "g-prior", alpha = n, modelprior = beta.binomial(1, p), MCMC.iterations, initprobs = "marg-eplogp"); f$which, $postprobs, $probne0	p <= 10^4 only (formula interface, MCMC time) ; MAJOR version above the API the harness was written against: verify in the acceptance run
+jsonlite	1.8	(module)	(tools/v4_read.R json sections)	fromJSON	usually already in the R module library
+digest	0.6	(module)	(tools/v4_read.R section hashes)	digest(algo = "sha256", serialize = FALSE)	optional (hash verification); usually already present
