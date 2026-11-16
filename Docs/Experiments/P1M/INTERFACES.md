@@ -173,6 +173,7 @@ struct SectionEntry {             // 128 bytes
   uint32_t ndim; uint64_t dims[2];   // row-major dims; column-major arrays say so in their name (suffix _cm)
   uint64_t offset, length;        // bytes
   uint8_t  sha256[32];
+  uint8_t  reserved[8];           // zero
 };
 ```
 Hash of a file "by content" = SHA-256 of the section table (it contains every section hash). SHA-256 is bundled
