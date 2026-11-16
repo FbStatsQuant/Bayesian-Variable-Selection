@@ -40,6 +40,9 @@ Contents (owner):
 2. a concrete list of the most important theorems as of then (from the headline claims card);
 3. a concrete plan for the p = 1M experiment (from the Experiment department's EXP-CP1).
 
+Standard: thorough setup and notation section; every symbol defined before use; notation table; no internal ids;
+intelligible to peers (PROGRAM "Readability" → notation).
+
 Plan:
 - start Mon 11-23, after the theory freeze;
 - writer: the Owls briefing thread (it built the 11-13 status PDF);

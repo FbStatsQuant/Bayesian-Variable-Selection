@@ -21,6 +21,12 @@ clear to the reader what the assumptions are and what the proven statements are.
   explicitly;
 - each assumption gets one line on why it is there and whether it is necessary (from TARGET.md);
 - constants and secondary clauses go to remarks; no new notation in the statement beyond what the setup defines.
+- **notation (owner, 2026-11-15): intelligible to peers.** Every document a reader sees (paper, chapter, claims
+  card, advisor report) opens with a complete setup and notation section: model, prior as coded, the posterior, the
+  output of the method, and every symbol, index set, norm, asymptotic notation (O_P, ≍, ≪) and constant used later.
+  Every symbol is defined before its first use. A notation table goes at the end. No internal ids (ticket names, claim
+  ids, interface tags such as (ND), (F_w), LS0, R′) in the main text; where a code object matters, it is described in
+  words. A peer in Bayesian high-dimensional statistics must be able to read each theorem without our files.
 
 The master (interface) version stays as the checked result. The reader version is a corollary with its bridges checked,
 and **both** pass review. The reader version is the one in the paper's main text, the chapter, the claims card and the
