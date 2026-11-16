@@ -38,3 +38,4 @@
 - 19:59 — HQ: recorder prepares the C-MIS rehash on theory/W3-EDIT-citefix (origin/main + 1a198e6 + rehash ×3); recorder task G (priority) sent with HQ's pass criteria. No running rider consumes C-MIS (grep of rider DEPS/STATEMENT).
 - 20:01 — POLICIES §9 (expensive-resource requests encouraged; owner decides) relayed to all 8 leads.
 - 20:02 — §10 applied (D20); PSMC digest helper settled; dept/theory merged origin/main.
+- 20:02 — HQ approved D17 with change: better-gate for uncovered rows via API Fable sharpness batch (SHARP3 request list by Wed 12:00 CT); leg-2 draft updated.

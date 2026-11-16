@@ -28,11 +28,13 @@ W3-DIST runs its own gates in its chain (TARGET.md). The rider tickets' new rows
   weaker / incomparable; flag literature dominance). Reuse each ticket's TARGET / ASSUMPTION_MAP / SHARPNESS parity rows.
 - **necessity:** per hypothesis, NECESSARY (counterexample) / NECESSARY-FOR-ROUTE / ARTEFACT (keeps `improvable`),
   from the ticket's ASSUMPTION_MAP, SHARPNESS and `sharpness.tsv`. Cite the files; no new proofs.
-- **better:** the blind API sharpness audits (`API_AUDIT/sharp1`, `sharp1b`, `sharp2`: a fresh strongest reviewer
-  asked only for strictly better statements) count as the better-theorem review where they covered the row. Cite the
-  verdict file and the triage disposition (A/B/C/D → adopted / ticket / declined / remark). For rows no audit covered:
-  one fresh Claude Opus 5.5 (effort high) better-theorem review per row, briefed with the statement, the assumption
-  map and the binding map only. Codex is saved for W3-DIST and the riders.
+- **better:** rows covered by the blind API sharpness audits (`API_AUDIT/sharp1`, `sharp1b`, `sharp2`) cite the verdict
+  file and the triage disposition (A/B/C/D → adopted / ticket / declined / remark). **Uncovered rows go to an API Fable
+  sharpness batch** (HQ, 11-15: independent stronger reviewer, no Codex, HQ's credits, ~$15–25). Prepare the request list
+  in the format of `Theory_work/Wave3/API_AUDIT/audit_batch.py` modes `sharp`/`sharp2`: a `SHARP3_TICKETS` spec or an
+  explicit list of row ids, each with statement file:line. Save it as `SHARP3_REQUEST.md` and send it to the manager by
+  **Wed 11-18 12:00 CT**. HQ builds and submits the batch and returns the results; you triage them (as `sharp2/TRIAGE.md`)
+  and record the dispositions. No Opus better-reviews.
 - Output: `GATES.md` (one section per row: lit / necessity / better, each PASS or the open item) and a
   `gates_staged.tsv` for the recorder (id | lit | necessity | better | better-proposals | file refs).
 - Rows where a gate cannot pass go to the manager at once: that is a sub-par signal touching a headline candidate.
