@@ -16,7 +16,7 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | ticket | lead | state | next |
 |---|---|---|---|
 | W3-DIST (TOP PRIORITY) | Fable 5.2, mcp:launch:75635c1f… (root clone folder; snapshot → theory/W3-DIST) | CP1 GO; key Lemma X, X′ line-checked VERIFIED (Astra L1); CP2 break review (Astra) running since 19:46; L2–L5, S2 running | CP2 = Lemma X + S + V line-checked → Astra break review |
-| W3-READER | Opus, mcp:launch:2a4462b2… (BVS-wt/W3-READER) | CP1 drafted (card v0.2, five pillars); pooling fix applied; waits on Sol S1 | CP1 → me → claims card to HQ (H5); READER_DELTA rows: thm3 PSHARP, thm4 MISR, thm5 START2, thm7 RM2-F |
+| W3-READER | Opus, mcp:launch:2a4462b2… (BVS-wt/W3-READER) | CP1 answered (D26): bridge leg + leg 2 gates running; card v0.3 at HQ (H5) | CP1 → me → claims card to HQ (H5); READER_DELTA rows: thm3 PSHARP, thm4 MISR, thm5 START2, thm7 RM2-F |
 | recorder | Opus, mcp:launch:563aa9b9… | task C (W2-APP PC1 Sol) running; task D (POST2) on hold | HQ decision on headline flags + conditional statuses |
 
 ## Ready (launch as a slot frees)

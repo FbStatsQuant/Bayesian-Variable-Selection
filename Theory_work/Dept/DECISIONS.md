@@ -145,3 +145,9 @@
   "no identifiability condition" withdrawn → "no beta-min and no fixed lower bound on eigenvalues"); my view to HQ:
   no H5 card needed, HQ decides. Theorem B: "b_n > 0" added = WEAKER on a non-target companion (changelog row, reported
   at next CP). Sol diff check v1.3.1 → v1.4 owed before the next freeze. READER synced (prior as coded for all theorems).
+
+## 2026-11-15 20:11 CT — W3-READER CP1 answered
+- **D26.** Thm 6: full list + one-line abstract summary. Thm 7: version (a) main, (b) strengthening. Row 3.6 reader
+  version in the bridge leg (consistency of printed outputs = owner priority); 3.5 one-line remark. Bridge leg GO
+  (Tier B), one Sol review for bridges + v0.1→v0.2 diff. MISR → pillar 1 (row 1.4), recommended to HQ. Leg 2 (gates)
+  brief placed in READER's folder (BRIEF_LEG2_GATES.md). Card v0.3 forwarded to HQ for H5. CP3 council target Fri a.m.
