@@ -3,17 +3,50 @@
 //   v4_setup_bench full  <p> [n=200] [threads=3] [exact=0]    all stages of setup::run on AR(0.6)
 //   v4_setup_bench corr  <p> [n=200] [threads=3] [ntiles=0]   correlation pass; ntiles > 0: only that many column
 //                                                             tiles J (spread over the range), projected to the full pass
+//   v4_setup_bench count <design> <p> <n> [threads=3] [seed=1] [bv_cap=14]   setup --count-only on WP1's generator
+//                                                             (AR | IND | BLK | ADJOPP), X standardised in place
 #include <chrono>
 #include <cstdlib>
 #include <unistd.h>
 #include "setup_tk.h"
 #include "tiles.h"
+#include "v4/gen.h"
+#include "v4/prep.h"
 
 using namespace v4::setup;
+
+static int count_main(int argc, char** argv) {
+  v4::gen::Spec sp; sp.design = v4::gen::design_from_name(argv[2]); sp.p = std::atoi(argv[3]); sp.n = std::atoi(argv[4]);
+  int th = argc > 5 ? std::atoi(argv[5]) : 3; sp.seed = argc > 6 ? (uint32_t)std::atoi(argv[6]) : 1u;
+  int bv = argc > 7 ? std::atoi(argv[7]) : 14;
+  if (sp.design == v4::gen::Design::BLK) sp.rho = 0.5;
+  auto t0 = std::chrono::steady_clock::now();
+  auto own = std::make_shared<v4::DataOwned>();
+  v4::gen::generate(sp, own->X, own->y);
+  double tg = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+  // standardise in place, column by column (the arithmetic of prep: v3_standardise, core/v3_preprocess.R:24-51)
+  std::vector<double> z(sp.n);
+  for (int j = 0; j < sp.p; ++j) { double* x = &own->X[(size_t)j * sp.n]; v4::prep::standardise(x, sp.n, z.data()); std::copy(z.begin(), z.end(), x); }
+  v4::prep::standardise(own->y.data(), sp.n, z.data()); std::copy(z.begin(), z.end(), own->y.begin());
+  v4::Data D = v4::make_data(own, sp.n, sp.p);
+  double ts = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count() - tg;
+  PartitionOptions po; po.bv_cap = bv;
+  CountResult c = count_only(D, po, default_B(sp.n, sp.p), th);
+  v4::Json rec = v4::Json::object();
+  rec["design"] = v4::gen::design_name(sp.design); rec["n"] = sp.n; rec["p"] = sp.p; rec["seed"] = (int64_t)sp.seed; rec["threads"] = th;
+  char host[256] = {}; gethostname(host, sizeof host - 1); rec["host"] = host;
+  rec["accounting"] = c.acc.to_json(); rec["filter_used"] = c.filter_used; rec["filter_candidates"] = (int64_t)c.candidates;
+  rec["r_n"] = c.corr.rn; rec["dup_components"] = c.corr.dup.rows();
+  v4::Json s = v4::Json::object(); s["generate"] = tg; s["standardise"] = ts; s["edges"] = c.seconds_edges; s["partition"] = c.seconds_partition;
+  rec["seconds"] = s; rec["peak_rss_mb"] = peak_rss_mb();
+  std::printf("%s\n", rec.dump(1).c_str());
+  return 0;
+}
 
 int main(int argc, char** argv) {
   if (argc < 3) { std::fprintf(stderr, "usage: see header\n"); return 2; }
   std::string what = argv[1];
+  if (what == "count") return count_main(argc, argv);
   int p = std::atoi(argv[2]), n = argc > 3 ? std::atoi(argv[3]) : 200, th = argc > 4 ? std::atoi(argv[4]) : 3;
   int extra = argc > 5 ? std::atoi(argv[5]) : 0;
   char host[256] = {}; gethostname(host, sizeof host - 1);

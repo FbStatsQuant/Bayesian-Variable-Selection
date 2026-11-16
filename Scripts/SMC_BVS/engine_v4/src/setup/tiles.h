@@ -9,30 +9,40 @@
 #include <emmintrin.h>
 #include <omp.h>
 #include <atomic>
+#include <new>
+#include <string>
 #include <vector>
+#include "v4/status.h"
 #include "v4/data.h"
 
 namespace v4::setup::detail {
 
 // sink(tid, j, l0, cnt, G): G[t] = G_{j, l0 + t} for t < cnt, all with l0 + t > j.
 // jtiles (benchmarks only): restrict the pass to these column tiles J (each still against every I <= J).
-template <class Sink>
-void tile_pass(const Data& D, int tile, int threads, Sink&& sink, const std::vector<int>* jtiles = nullptr) {
+// hook(tid, It, Jt, ev): ev 0 = unit Jt begins, 1 = block (It, Jt) done, 2 = unit Jt done.
+// Any exception inside the parallel region is caught there and rethrown after it (std::bad_alloc -> resource_limit).
+struct NoHook { void operator()(int, int, int, int) const {} };
+template <class Sink, class Hook = NoHook>
+void tile_pass(const Data& D, int tile, int threads, Sink&& sink, const std::vector<int>* jtiles = nullptr, Hook hook = Hook()) {
   const int n = D.n, p = D.p;
   if (p < 2) return;
   const int TW = tile;
   const int nt = (p + TW - 1) / TW;
   std::atomic<int> next{0};
+  std::atomic<int> err{0};  // 1 bad_alloc, 2 Error, 3 other
+  std::string msg; Status est = Status::internal_error;
 #pragma omp parallel num_threads(threads)
   {
+   try {
     const int tid = omp_get_thread_num();
     std::vector<double> RJ((size_t)n * TW);
     std::vector<double> acc(4 * (size_t)TW);
     for (;;) {
       int u = next.fetch_add(1);
-      if (u >= (jtiles ? (int)jtiles->size() : nt)) break;
+      if (u >= (jtiles ? (int)jtiles->size() : nt) || err) break;
       const int Jt = jtiles ? (*jtiles)[u] : nt - 1 - u;  // large tiles first (more work)
       const int l0 = Jt * TW, l1 = std::min(p, l0 + TW), w = l1 - l0;
+      hook(tid, -1, Jt, 0);
       for (int t = 0; t < w; ++t) {
         const double* x = D.col(l0 + t);
         for (int i = 0; i < n; ++i) RJ[(size_t)i * TW + t] = x[i];
@@ -87,9 +97,20 @@ void tile_pass(const Data& D, int tile, int threads, Sink&& sink, const std::vec
           const int start = (It == Jt) ? (j - l0 + 1) : 0;
           if (start < w) sink(tid, j, l0 + start, w - start, a0 + start);
         }
+        hook(tid, It, Jt, 1);
       }
+      hook(tid, -1, Jt, 2);
     }
+   } catch (const std::bad_alloc&) { err = 1; }
+     catch (const Error& e) {
+#pragma omp critical(v4_tile_err)
+       { if (!err) { msg = e.what(); est = e.st; } err = 2; }
+     }
+     catch (...) { err = 3; }
   }
+  if (err == 1) throw Error(Status::resource_limit, "correlation tiles: out of memory");
+  if (err == 2) throw Error(est, msg);
+  if (err == 3) throw Error(Status::internal_error, "correlation tiles: unexpected exception");
 }
 
 }  // namespace v4::setup::detail

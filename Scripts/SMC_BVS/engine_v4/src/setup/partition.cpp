@@ -216,8 +216,11 @@ Partition cut_and_pack(const Forest& T, int B, PackOrder order) {
   return P;
 }
 
+int block_cap(const PartitionOptions& o) { return o.mode == PartMode::Exact ? o.B : std::min(o.B, o.bv_cap); }
+
 Partition make_partition(const Data& D, const CorrResult& C, const PartitionOptions& o, Forest* out) {
   if (o.B < 1 || o.B > 16) throw Error(Status::invalid_input, "partition: B outside 1..16 (core/cpp/v3_core.cpp:180)");
+  if (o.bv_cap < 1 || o.bv_cap > 16) throw Error(Status::invalid_input, "partition: bv_cap outside 1..16");
   Forest T;
   Partition P;
   if (o.mode == PartMode::Exact) {
@@ -227,7 +230,7 @@ Partition make_partition(const Data& D, const CorrResult& C, const PartitionOpti
     double tau = o.tau < 0 ? C.rn : o.tau;
     if (tau != C.tau) throw Error(Status::internal_error, "partition: tau differs from the correlation pass's tau");
     T = complete_linkage_truncated(D.p, C.edges, 1.0 - tau, o.strict);
-    P = cut_and_pack(T, o.B, o.pack);
+    P = cut_and_pack(T, block_cap(o), o.pack);   // D-19: blocks of at most min(B, bv_cap) members
   }
   if (out) *out = std::move(T);
   return P;

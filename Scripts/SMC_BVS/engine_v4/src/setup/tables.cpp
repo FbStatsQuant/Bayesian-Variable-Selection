@@ -85,7 +85,7 @@ struct PrefixScorer {
   }
 };
 
-struct BlockOut { std::vector<double> logm; uint64_t scored = 0, prefix = 0, fallback = 0, routes[3] = {0, 0, 0}; };
+struct BlockOut { uint64_t scored = 0, prefix = 0, fallback = 0, routes[3] = {0, 0, 0}; };
 
 void score_block(const Data& D, const int32_t* mem, int m, PrefixScorer& ps, double* logr, double* logm, BlockOut& bo) {
   const uint32_t ncode = 1u << m;
@@ -112,50 +112,6 @@ void score_block(const Data& D, const int32_t* mem, int m, PrefixScorer& ps, dou
   }
 }
 
-// Top-c selection over all table models (global code index g = code_ptr[b] + code), strict order
-// (value desc, [size asc,] lex asc) as core/cpp/v3_ledger.h:35-42. Table models are distinct (blocks are disjoint;
-// the empty model is taken once, from block 0), so no duplicates arise.
-template <class ValFn>
-void select_store(const Data& D, const Partition& P, const Tables& T, Store& S, uint64_t cap, Order ord, ValFn val) {
-  S.init(cap, ord);
-  const int64_t NG = T.code_ptr.back();
-  auto popc = [&](int64_t g, int& b, uint32_t& code) {
-    b = (int)(std::upper_bound(T.code_ptr.begin(), T.code_ptr.end(), g) - T.code_ptr.begin()) - 1;
-    code = (uint32_t)(g - T.code_ptr[b]);
-  };
-  auto valid = [&](int64_t g) {
-    if (std::isnan(T.logr[g])) return false;
-    int b; uint32_t code; popc(g, b, code);
-    return !(code == 0 && b != 0);
-  };
-  std::vector<double> tmp; tmp.reserve(NG);
-  for (int64_t g = 0; g < NG; ++g) if (valid(g)) tmp.push_back(val(g));
-  double vstar = NEG_INF; bool all = tmp.size() <= cap;
-  if (!all && cap > 0) {
-    std::nth_element(tmp.begin(), tmp.begin() + (cap - 1), tmp.end(), std::greater<double>());
-    vstar = tmp[cap - 1];
-  }
-  std::vector<double>().swap(tmp);
-  if (cap == 0) return;
-  std::vector<int64_t> sel;
-  for (int64_t g = 0; g < NG; ++g) if (valid(g) && (all || val(g) >= vstar)) sel.push_back(g);
-  auto members = [&](int64_t g, Model& M) {
-    int b; uint32_t code; popc(g, b, code);
-    M.clear(); for (int i = 0; i < P.size(b); ++i) if (code & (1u << i)) M.push_back(P.block(b)[i]);
-  };
-  Model Ma, Mb;
-  std::sort(sel.begin(), sel.end(), [&](int64_t a, int64_t b) {
-    double va = val(a), vb = val(b);
-    if (va != vb) return va > vb;
-    members(a, Ma); members(b, Mb);
-    if (ord == Order::HPM && Ma.size() != Mb.size()) return Ma.size() < Mb.size();
-    return lex_less(Ma, Mb);
-  });
-  if (sel.size() > cap) sel.resize(cap);
-  Model M;
-  for (int64_t g : sel) { members(g, M); S.offer(val(g), M, D.zob.hash(M)); }
-  S.compact();
-}
 }  // namespace
 
 Tables build_tables(const Data& D, const Partition& P, int threads, TableStores* stores, TableStats* stats) {
@@ -167,55 +123,95 @@ Tables build_tables(const Data& D, const Partition& P, int threads, TableStores*
     T.code_ptr[b + 1] = T.code_ptr[b] + ((int64_t)1 << P.size(b));
   }
   T.logr.assign(T.code_ptr.back(), 0.0);
-  std::vector<double> logm(T.code_ptr.back(), 0.0);  // transient (dropped after the table top stores)
   const int TH = std::max(1, threads);
+  const uint64_t p = (uint64_t)D.p;
+  if (stores) {  // core/cpp/v3_ledger.h:78 capacities and orders
+    stores->top.init(40 * p + 1, Order::HPM); stores->lead0.init(20 * p, Order::LEX); stores->lead1.init(20 * p, Order::LEX);
+  }
+  // Streaming (Sol review F1, item 3): blocks are processed in batches of TH * CH consecutive blocks. Threads score the
+  // batch's blocks (fixed chunks of CH blocks; each writes its own logr range and a chunk-local log m buffer); then the
+  // batch's table models are offered to the three stores serially in (block, code) order, the order of
+  // core/cpp/v3_core.cpp:375-383, and the buffers are reused. No per-code log m or route array exists globally.
+  // Store content is order-free (top-c under a strict total order), so the result does not depend on TH.
+  const int CH = 16;
+  std::vector<std::vector<double>> lm(TH * CH);  // one buffer per block slot of a batch
   std::vector<BlockOut> outs(TH);
+  std::vector<PrefixScorer> ps; ps.reserve(TH);
+  for (int t = 0; t < TH; ++t) ps.emplace_back(D, 16);
   std::atomic<bool> failed{false}; std::string fail_msg; Status fail_st = Status::internal_error;
-#pragma omp parallel num_threads(TH)
-  {
-    PrefixScorer ps(D, 16);
-    BlockOut& bo = outs[omp_get_thread_num()];
-#pragma omp for schedule(dynamic, 64)
-    for (int b = 0; b < P.J; ++b) {
-      if (failed) continue;
-      try {
-        ps.U.clear();
-        score_block(D, P.block(b), P.size(b), ps, &T.logr[T.code_ptr[b]], &logm[T.code_ptr[b]], bo);
-      } catch (const Error& e) {
-#pragma omp critical
-        { if (!failed) { failed = true; fail_msg = e.what(); fail_st = e.st; } }
+  TableStats st;
+  double sec_stores = 0;
+  Model U;
+  for (int b0 = 0; b0 < P.J && !failed; b0 += TH * CH) {
+    const int b1 = std::min(P.J, b0 + TH * CH);
+    const int nch = (b1 - b0 + CH - 1) / CH;
+#pragma omp parallel for num_threads(TH) schedule(dynamic, 1)
+    for (int c = 0; c < nch; ++c) {
+      const int tid = omp_get_thread_num();
+      for (int b = b0 + c * CH; b < std::min(b1, b0 + (c + 1) * CH) && !failed; ++b) {
+        std::vector<double>& buf = lm[b - b0];
+        buf.resize((size_t)1 << P.size(b));
+        try {
+          ps[tid].U.clear();
+          score_block(D, P.block(b), P.size(b), ps[tid], &T.logr[T.code_ptr[b]], buf.data(), outs[tid]);
+        } catch (const Error& e) {
+#pragma omp critical(v4_tables_err)
+          { if (!failed) { failed = true; fail_msg = e.what(); fail_st = e.st; } }
+        } catch (const std::bad_alloc&) {   // PR13 review m8: nothing escapes the OpenMP region
+#pragma omp critical(v4_tables_err)
+          { if (!failed) { failed = true; fail_msg = "out of memory"; fail_st = Status::resource_limit; } }
+        } catch (...) {
+#pragma omp critical(v4_tables_err)
+          { if (!failed) { failed = true; fail_msg = "unexpected exception"; fail_st = Status::internal_error; } }
+        }
       }
     }
+    if (failed || !stores) continue;
+    auto ts = std::chrono::steady_clock::now();
+    for (int b = b0; b < b1; ++b) {
+      const int m = P.size(b);
+      const double* logm = lm[b - b0].data();
+      const double* lr = &T.logr[T.code_ptr[b]];
+      for (uint32_t c = (b == 0 ? 0u : 1u); c < (1u << m); ++c) {  // the empty model once (block 0, code 0)
+        if (std::isnan(lr[c])) continue;                             // |U| > K: not scored (core/cpp/v3_core.cpp:378)
+        const int k = __builtin_popcount(c);
+        const double F = D.logprior[k] + logm[c], lg0 = D.logprior[k] + lr[c];   // core/cpp/v3_core.cpp:381
+        if (!std::isfinite(F) || !std::isfinite(lg0)) throw Error(Status::internal_error, "tables: non-finite table value");
+        // quick rejects against the monotone cut-offs (the stores apply the same test; this only skips building U)
+        const bool t1 = F >= stores->top.cutoff(), t2 = lg0 >= stores->lead0.cutoff(), t3 = F >= stores->lead1.cutoff();
+        if (!t1 && !t2 && !t3) continue;
+        U.clear(); for (int i = 0; i < m; ++i) if (c & (1u << i)) U.push_back(P.block(b)[i]);
+        const uint64_t h = D.zob.hash(U);
+        if (t1) stores->top.offer(F, U, h);
+        if (t2) stores->lead0.offer(lg0, U, h);
+        if (t3) stores->lead1.offer(F, U, h);
+      }
+    }
+    sec_stores += std::chrono::duration<double>(std::chrono::steady_clock::now() - ts).count();
   }
   if (failed) throw Error(fail_st, "tables: " + fail_msg);
-  TableStats st;
   for (auto& o : outs) { st.scored += o.scored; st.prefix_scored += o.prefix; st.fallback_scored += o.fallback; for (int r = 0; r < 3; ++r) st.routes[r] += o.routes[r]; }
-  st.seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   if (stores) {
-    auto t1 = std::chrono::steady_clock::now();
-    const uint64_t p = D.p;
-    std::vector<uint8_t> k(T.code_ptr.back());
-    for (int b = 0; b < P.J; ++b) for (uint32_t c = 0; c < (1u << P.size(b)); ++c) k[T.code_ptr[b] + c] = (uint8_t)__builtin_popcount(c);
-    auto F = [&](int64_t g) { return D.logprior[k[g]] + logm[g]; };       // core/cpp/v3_core.cpp:381
-    auto lg0 = [&](int64_t g) { return D.logprior[k[g]] + T.logr[g]; };  // core/cpp/v3_core.cpp:381
-    select_store(D, P, T, stores->top, 40 * p + 1, Order::HPM, F);       // core/cpp/v3_ledger.h:78
-    select_store(D, P, T, stores->lead0, 20 * p, Order::LEX, lg0);
-    select_store(D, P, T, stores->lead1, 20 * p, Order::LEX, F);
+    auto ts = std::chrono::steady_clock::now();
+    stores->top.compact(); stores->lead0.compact(); stores->lead1.compact();
     // table HPM = the first entry under the HPM order; provenance = its first table event (block, code) in the order
     // of core/cpp/v3_core.cpp:375-383 (the empty model: block 0, code 0)
     const Store& top = stores->top;
     if (top.size() > 0) {
-      stores->hpmS.assign(top.pool.begin() + top.off[0], top.pool.begin() + top.off[0] + top.len[0]);
+      ModelView h = top.model(0);
+      stores->hpmS.assign(h.begin(), h.end());
       stores->hpmF = top.v[0];
       if (stores->hpmS.empty()) { stores->hpm_block = 0; stores->hpm_code = 0; }
       else {
-        int b = P.blk[stores->hpmS[0]]; uint32_t c = 0;
+        uint32_t c = 0;
         for (int32_t j : stores->hpmS) c |= 1u << P.pos[j];
-        stores->hpm_block = b; stores->hpm_code = c;
+        stores->hpm_block = P.blk[stores->hpmS[0]]; stores->hpm_code = c;
       }
     }
-    st.seconds_stores = std::chrono::duration<double>(std::chrono::steady_clock::now() - t1).count();
+    sec_stores += std::chrono::duration<double>(std::chrono::steady_clock::now() - ts).count();
   }
+  st.seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+  st.seconds_stores = sec_stores;
   if (stats) *stats = st;
   return T;
 }

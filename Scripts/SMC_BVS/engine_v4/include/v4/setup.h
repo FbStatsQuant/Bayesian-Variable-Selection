@@ -75,8 +75,10 @@ struct PartitionOptions {
   double tau = -1;        // < 0 => r_n
   bool strict = false;    // false: merge iff height <= 1 - tau (">=" sub-choice of THEORY-1); true: height < 1 - tau
   PackOrder pack = PackOrder::MinIndex;   // Truncated mode; Exact mode always uses the v3 leaf order
+  int bv_cap = 14;        // D-19: truncated (V-1M) blocks have at most min(B, bv_cap) members at every n; exact keeps B
   int threads = 1;
 };
+int block_cap(const PartitionOptions& o);   // the block cap actually used: Exact B, Truncated min(B, bv_cap)
 // Exact mode: dense p x p distances (8 p^2 bytes), complete linkage copied from core/cpp/v3_blocks.h:46-108.
 Forest complete_linkage_exact(const Data& D, int threads);
 // Truncated mode: complete linkage restricted to merges at height <= hcut (or < hcut) on the sparse edge set.
@@ -142,6 +144,34 @@ struct Start {
   void draw_pi0(UniformSource& us, Address a, Model& S) const;
 };
 
+// ---------------------------------------------------------------- memory accounting and admission (Sol review F1)
+// Exact byte accounting of every setup array from the partition alone (no table is allocated). Items marked bound are
+// upper bounds that become exact only after the tables exist (store pools: <= B_blocks int32 per entry; std::set /
+// allocator overheads of the truncated linkage: per-node estimate). Stage peaks = the arrays live in each stage.
+struct MemItem { std::string name, stage; uint64_t bytes = 0; bool exact = true; bool stored = false; };
+struct MemAccount {
+  int64_t n = 0, p = 0, K = 0, B = 0, B_blocks = 0, J = 0, threads = 1, edges = 0, nb_nnz = -1;
+  std::vector<int64_t> hist;            // hist[m] = number of blocks with m members, m = 0..16
+  int64_t C = 0;                        // sum_b 2^{|C_b|} (table codes, logr entries)
+  int64_t C_feasible = 0;               // codes with popcount <= K (= C when every block has <= K members)
+  int64_t NR = 0, cond_vals = 0, table_models = 0;
+  std::vector<MemItem> items;
+  std::vector<std::pair<std::string, uint64_t>> stage_peak;
+  uint64_t peak = 0, setup_bin = 0, not_stored_d18 = 0;
+  Json to_json() const;
+};
+MemAccount account(const Data& D, int coded_B, const Partition& P, int64_t edges, int64_t nb_nnz, int threads, PartMode mode);
+
+// count-only (Sol review F1 item 1): correlation edges -> production partition -> histogram, C, accounting; no tables.
+// With AVX-512 the edge set comes from a float32 candidate filter with a proven error margin, every candidate
+// re-checked in double with the production predicate (so the edge set, hence the partition, is exactly production's);
+// otherwise from the exact correlation pass.
+struct CountResult { CorrResult corr; Partition part; MemAccount acc; bool filter_used = false; uint64_t candidates = 0; double seconds_edges = 0, seconds_partition = 0; };
+CountResult count_only(const Data& D, const PartitionOptions& po, int coded_B, int threads, bool allow_filter = true);
+// float32 AVX-512 candidate filter + exact double re-check (exposed for tests). Throws if AVX-512F is unavailable.
+std::vector<Edge> edges_by_filter(const Data& D, double tau, int threads, uint64_t* candidates = nullptr);
+bool filter_available();
+
 // ---------------------------------------------------------------- the setup command
 struct SetupOptions {
   int B = 0;                  // 0 => min(isqrt(n), isqrt(p), 16) (core/v3_preprocess.R:22)
@@ -151,6 +181,8 @@ struct SetupOptions {
   bool tie_dp = true;
   bool table_stores = true;
   uint32_t file_mode = 2;     // 1 compat, 2 law, 3 V
+  double mem_budget_gb = 0;   // > 0: admission rule, refuse (resource_limit, reason "admission:") if the accounted peak exceeds it
+  int64_t max_edges = 0;      // edge guard for the uncapped threshold graph (0 => 64 p)
 };
 struct StageTiming { std::string name; double seconds; double peak_rss_mb; };
 struct SetupResult {
@@ -164,6 +196,7 @@ struct SetupResult {
   TableStores stores;
   ModeResult mode;
   TableStats tstats;
+  MemAccount acc;
   std::vector<StageTiming> timings;
 };
 int default_B(int n, int p);

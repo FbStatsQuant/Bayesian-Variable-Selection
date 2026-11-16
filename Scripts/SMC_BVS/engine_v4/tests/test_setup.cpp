@@ -118,24 +118,30 @@ TEST(unit_truncated_partition_shape) {
 
 // ---- invariance: setup.bin content hash identical for threads 1, 2, 3 and tile widths (T3 for setup)
 TEST(invariance_threads_and_tiles) {
+  // PR13 review m3: file identity is this run's content hash (meta holds timings and the binary block); the result is
+  // compared through the hashes of every named section except meta, at threads 1, 2, 3.
+  auto section_hashes = [](const std::string& path) {
+    std::map<std::string, std::string> h;
+    v4::fmt::Reader rd(path);
+    for (const auto& e : rd.sections()) if (std::string(e.name) != "meta") h[e.name] = std::string((const char*)e.sha256, 32);
+    return h;
+  };
   for (auto d : {stk::AR, stk::TIE}) {
     Fixture F(d, 150, 2000, 51);
-    std::string ref;
-    for (int th : {1, 2, 3})
-      for (PartMode pm : {PartMode::Truncated, PartMode::Exact}) {
+    for (PartMode pm : {PartMode::Truncated, PartMode::Exact}) {
+      std::map<std::string, std::string> ref;
+      for (int th : {1, 2, 3}) {
         SetupOptions o; o.threads = th; o.part.mode = pm;
         SetupResult r = run_setup(F.D(), o);
         SCHECK(r.status == v4::Status::completed, "setup failed: %s", r.reason.c_str());
-        r.timings.clear();  // timings are not part of the result
         std::string path = tmpdir() + "/inv_" + std::to_string(getpid()) + ".bin";
-        std::string h = write_setup_bin(path, F.D(), r, o, "test");
+        write_setup_bin(path, F.D(), r, o, "test");
+        auto h = section_hashes(path);
         std::remove(path.c_str());
-        std::string key = std::to_string((int)pm);
-        static std::map<std::string, std::string> refs;
-        std::string k2 = std::string(stk::design_name(d)) + key;
-        if (!refs.count(k2)) refs[k2] = h;
-        SCHECK(refs[k2] == h, "setup.bin hash depends on threads (%s, threads %d, mode %d)", stk::design_name(d), th, (int)pm);
+        if (ref.empty()) ref = h;
+        SCHECK(h == ref && h.size() > 30, "setup.bin sections depend on threads (%s, threads %d, mode %d)", stk::design_name(d), th, (int)pm);
       }
+    }
     for (int tile : {32, 100, 512}) {  // correlation pass alone
       CorrOptions a; a.B = 12; a.threads = 3; a.tile = tile;
       CorrOptions b = a; b.threads = 1; b.tile = 256;
@@ -271,4 +277,103 @@ TEST(golden_R_reference) {
   }
   std::fclose(fi);
   SCHECK(ncase >= 4, "R reference has %d cases", ncase);
+}
+
+// ---- count-only (Sol review F1 item 1): the filter's edge set and partition equal production's; the accounting of
+// the per-code and start-law arrays equals the arrays run_setup actually builds; the stores fit their bound.
+TEST(count_only_equals_production_and_accounting_exact) {
+  for (auto d : {stk::AR, stk::IND, stk::BLK, stk::TIE})
+    for (int n : {60, 200}) {
+      Fixture F(d, n, 3000, 91);
+      const int B = default_B(n, 3000);
+      PartitionOptions po;
+      CountResult c = count_only(F.D(), po, B, stk::threads(), /*allow_filter=*/true);
+      SetupOptions o; o.threads = stk::threads();
+      SetupResult r = run_setup(F.D(), o);
+      SCHECK(r.status == v4::Status::completed, "%s", r.reason.c_str());
+      CorrOptions co; co.B = B; co.threads = stk::threads();
+      CorrResult full = correlation_pass(F.D(), co);
+      bool ok = c.corr.edges.size() == full.edges.size();
+      for (size_t i = 0; ok && i < full.edges.size(); ++i)
+        ok = c.corr.edges[i].j == full.edges[i].j && c.corr.edges[i].l == full.edges[i].l && stk::same_bits(c.corr.edges[i].absr, full.edges[i].absr);
+      SCHECK(ok, "count-only edges differ from production (%s n=%d, filter=%d, %zu vs %zu)", stk::design_name(d), n, (int)c.filter_used,
+             c.corr.edges.size(), full.edges.size());
+      SCHECK(c.part.bptr == r.part.bptr && c.part.members == r.part.members, "count-only partition differs (%s n=%d)", stk::design_name(d), n);
+      const MemAccount& A = c.acc;
+      SCHECK(A.C == (int64_t)r.tab.logr.size() && A.NR == (int64_t)r.tab.logprof.size() && A.cond_vals == (int64_t)r.tab.cond_cum.size() &&
+             A.J == r.part.J, "accounting differs from the built arrays (%s n=%d)", stk::design_name(d), n);
+      uint64_t sb = 0;
+      for (const v4::Store* st : {&r.stores.top, &r.stores.lead0, &r.stores.lead1})
+        sb += st->v.size() * 26 + st->pool.size() * 4;
+      uint64_t bound = 0; for (auto& it : A.items) if (it.name.rfind("table top stores kept", 0) == 0) bound = it.bytes;
+      SCHECK(sb <= bound, "table stores exceed their accounted bound (%s n=%d)", stk::design_name(d), n);
+      if (n == 200 && d == stk::AR) std::printf("    count-only AR n=200 p=3000: filter %d, candidates %llu, edges %zu, J %lld, C %lld, peak %.1f MB\n",
+                                               (int)c.filter_used, (unsigned long long)c.candidates, c.corr.edges.size(), (long long)A.J, (long long)A.C, A.peak / 1e6);
+    }
+}
+
+// ---- admission (Sol review F1 item 2) and the exact-mode guard (PR13 review m7)
+TEST(admission_rule_refuses_with_reason) {
+  Fixture F(stk::AR, 100, 1500, 92);
+  SetupOptions o; o.threads = stk::threads(); o.mem_budget_gb = 1e-6;
+  SetupResult r = run_setup(F.D(), o);
+  SCHECK(r.status == v4::Status::resource_limit && r.reason.find("admission:") != std::string::npos, "%s", r.reason.c_str());
+  o.mem_budget_gb = 64; r = run_setup(F.D(), o);
+  SCHECK(r.status == v4::Status::completed, "%s", r.reason.c_str());
+  SetupOptions e; e.part.mode = PartMode::Exact; e.mem_budget_gb = 8.0 * 1500 * 1500 / 1e9 / 2;   // below 8 p^2
+  r = run_setup(F.D(), e);
+  SCHECK(r.status == v4::Status::resource_limit && r.reason.find("exact partition needs") != std::string::npos, "%s", r.reason.c_str());
+}
+
+// ---- D-19: truncated blocks capped at min(B, bv_cap) at every n; exact keeps the coded B
+TEST(d19_block_cap) {
+  Fixture F(stk::IND, 400, 3000, 93);   // coded B = min(20, 54, 16) = 16
+  SetupOptions o; o.threads = stk::threads();
+  SetupResult r = run_setup(F.D(), o);
+  int mx = 0; for (int b = 0; b < r.part.J; ++b) mx = std::max(mx, r.part.size(b));
+  SCHECK(r.B == 16 && r.part.B == 14 && mx == 14, "D-19 cap: B=%d B_blocks=%d max block %d", r.B, r.part.B, mx);
+  o.part.bv_cap = 9; r = run_setup(F.D(), o);
+  mx = 0; for (int b = 0; b < r.part.J; ++b) mx = std::max(mx, r.part.size(b));
+  SCHECK(r.part.B == 9 && mx <= 9, "bv_cap=9: max block %d", mx);
+}
+
+// ---- hub (Sol review F1 item 4): one column correlated with every other. The uncapped threshold graph and the
+// symmetric neighbour union have a row of degree p - 1 (so "<= 2B per column" is false per column; the total is
+// <= 2 p B); the edge guard turns a too-large graph into resource_limit; the partition stays valid.
+TEST(hub_column_guard_and_degrees) {
+  // tau_n = sqrt(2 log p / n) = 0.084 at (p, n) = (1200, 2000); hub loading 0.19: hub pairs r = 0.19 (about 5 sd above
+  // tau_n, so the hub has degree p - 1), other pairs r = 0.036 (about 2 sd below: a few percent are noise edges)
+  const int n = 2000, p = 1200;
+  stk::Rng g(94);
+  auto own = std::make_shared<v4::DataOwned>();
+  own->X.resize((size_t)n * p); own->y.resize(n);
+  std::vector<double> f(n); for (auto& v : f) v = g.norm();
+  for (int j = 0; j < p; ++j)
+    for (int i = 0; i < n; ++i) own->X[(size_t)j * n + i] = (j == 0) ? f[i] : 0.19 * f[i] + std::sqrt(1 - 0.19 * 0.19) * g.norm();
+  for (int i = 0; i < n; ++i) own->y[i] = f[i] + g.norm();
+  for (int j = 0; j <= p; ++j) {  // standardise columns and y
+    double* x = j < p ? &own->X[(size_t)j * n] : own->y.data(); double m = 0, s = 0;
+    for (int i = 0; i < n; ++i) m += x[i];
+    m /= n; for (int i = 0; i < n; ++i) { x[i] -= m; s += x[i] * x[i]; }
+    s = std::sqrt(s / (n - 1)); for (int i = 0; i < n; ++i) x[i] /= s;
+  }
+  v4::Data D = v4::make_data(own, n, p);
+  const int B = default_B(n, p);
+  CorrOptions co; co.B = B; co.threads = stk::threads();
+  CorrResult C = correlation_pass(D, co);
+  int64_t hubdeg = 0; for (const Edge& e : C.edges) if (e.j == 0 && e.absr >= C.rn) ++hubdeg;
+  const int64_t nbhub = C.nb.ptr[1] - C.nb.ptr[0];
+  SCHECK(hubdeg >= p - 1 - 20 && nbhub > 2 * B, "hub degree %lld (threshold graph), %lld (neighbour union)", (long long)hubdeg, (long long)nbhub);
+  SCHECK((int64_t)C.nb.idx.size() <= 2LL * p * B, "neighbour total %zu > 2 p B", C.nb.idx.size());
+  co.max_edges = p / 2;
+  bool threw = false;
+  try { correlation_pass(D, co); } catch (const v4::Error& e) { threw = e.st == v4::Status::resource_limit; }
+  SCHECK(threw, "edge guard did not fire on the hub");
+  SetupOptions o; o.threads = stk::threads(); o.max_edges = p / 2;
+  SetupResult r = run_setup(D, o);
+  SCHECK(r.status == v4::Status::resource_limit && r.reason.find("max_edges") != std::string::npos, "setup on the hub: %s", r.reason.c_str());
+  o.max_edges = 0; r = run_setup(D, o);
+  int mx = 0; for (int b = 0; b < r.part.J; ++b) mx = std::max(mx, r.part.size(b));
+  SCHECK(r.status == v4::Status::completed && mx <= r.part.B, "setup with a hub: %s", r.reason.c_str());
+  std::printf("    hub: threshold-graph degree %lld, neighbour-union degree %lld, edges %zu, J %d\n", (long long)hubdeg, (long long)nbhub, C.edges.size(), r.part.J);
 }

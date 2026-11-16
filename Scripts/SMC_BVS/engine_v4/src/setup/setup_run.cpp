@@ -37,12 +37,26 @@ SetupResult run_setup(const Data& D, const SetupOptions& o) {
   };
   try {
     R.B = o.B > 0 ? o.B : default_B(D.n, D.p);
-    CorrOptions co; co.B = R.B; co.threads = o.threads; co.tau = o.part.tau; co.keep_edges = true;
+    // PR13 review m7: the exact partition needs a dense 8 p^2 distance matrix; refuse up front above the limit
+    const double lim_gb = o.mem_budget_gb > 0 ? o.mem_budget_gb : 32.0;
+    if (o.part.mode == PartMode::Exact && 8.0 * (double)D.p * (double)D.p / 1e9 > lim_gb) {
+      char b[200]; std::snprintf(b, sizeof b, "admission: exact partition needs 8 p^2 = %.1f GB > limit %.1f GB (use partition=truncated)",
+                                 8.0 * (double)D.p * (double)D.p / 1e9, lim_gb);
+      throw Error(Status::resource_limit, b);
+    }
+    CorrOptions co; co.B = R.B; co.threads = o.threads; co.tau = o.part.tau; co.keep_edges = true; co.max_edges = o.max_edges;
     R.corr = correlation_pass(D, co);
     lap("correlation");
     PartitionOptions po = o.part; po.B = R.B; po.threads = o.threads;
     R.part = make_partition(D, R.corr, po);
     lap(po.mode == PartMode::Exact ? "partition_exact" : "partition_truncated");
+    // admission rule (Sol review F1 item 2): deterministic accounted peak (a function of the data and options only)
+    R.acc = account(D, R.B, R.part, (int64_t)R.corr.edges.size(), (int64_t)R.corr.nb.idx.size(), o.threads, po.mode);
+    if (o.mem_budget_gb > 0 && (double)R.acc.peak / 1e9 > o.mem_budget_gb) {
+      char b[240]; std::snprintf(b, sizeof b, "admission: accounted setup peak %.2f GB > mem_budget %.2f GB (C = %lld codes, J = %d, B_blocks = %d)",
+                                 (double)R.acc.peak / 1e9, o.mem_budget_gb, (long long)R.acc.C, R.part.J, R.part.B);
+      throw Error(Status::resource_limit, b);
+    }
     R.cut = cut_groups(D.p, R.corr.edges, R.corr.rn, R.part);
     std::vector<Edge>().swap(R.corr.edges);  // edges are not needed after the partition and the cut-group record
     lap("cut_groups");
@@ -104,7 +118,8 @@ std::string write_setup_bin(const std::string& path, const Data& D, const SetupR
   W.add("scalars_f64", sc); W.add("scalars_i64", isc);
   Json m = Json::object();
   m["kind"] = "setup"; m["index_base"] = "internal0"; m["mode"] = fmt::mode_name(o.file_mode);
-  m["n"] = D.n; m["p"] = D.p; m["K"] = D.K; m["B"] = r.B; m["J"] = T.J;
+  m["n"] = D.n; m["p"] = D.p; m["K"] = D.K; m["B"] = r.B; m["B_blocks"] = r.part.B; m["bv_cap"] = o.part.bv_cap; m["J"] = T.J;
+  m["accounted_peak_bytes"] = (int64_t)r.acc.peak; m["mem_budget_gb"] = o.mem_budget_gb; m["C"] = r.acc.C;
   m["partition"] = modename(o.part.mode); m["pack"] = o.part.pack == PackOrder::MinIndex ? "min_index" : "leaf_order";
   m["strict"] = o.part.strict; m["r_n"] = r.corr.rn; m["tau"] = r.corr.tau; m["logZbar0"] = T.logZbar0;
   Json mo = Json::object(); mo["lg0"] = r.mode.lg0; mo["ties"] = (int64_t)r.mode.ties; mo["truncated"] = r.mode.truncated;
@@ -172,11 +187,29 @@ Json run(const Json& args) {
   if (args.contains("strict")) o.part.strict = args.at("strict").i64() != 0;
   if (args.contains("mode_cap")) o.mode_cap = (long)args.at("mode_cap").i64();
   if (args.contains("tie_dp")) o.tie_dp = args.at("tie_dp").i64() != 0;
+  if (args.contains("bv_cap")) o.part.bv_cap = (int)args.at("bv_cap").i64();
+  if (args.contains("mem_budget")) o.mem_budget_gb = args.at("mem_budget").num();
+  if (args.contains("max_edges")) o.max_edges = args.at("max_edges").i64();
   o.file_mode = args.contains("file_mode") ? fmt::mode_from_name(args.at("file_mode").str()) : (uint32_t)fmt::M_LAW;
   if (o.part.mode == PartMode::Truncated && o.file_mode == fmt::M_COMPAT)
     throw Error(Status::invalid_input, "setup: compat mode uses the exact partition (v3 rule)");
-  SetupResult r = run_setup(D, o);
   Json rec = Json::object();
+  rec["partition"] = o.part.mode == PartMode::Exact ? "exact" : "truncated"; rec["file_mode"] = fmt::mode_name(o.file_mode);
+  rec["binary"] = binary_block();
+  if (args.contains("count_only") && args.at("count_only").i64() != 0) {   // Sol review F1 item 1: no tables allocated
+    const int B = o.B > 0 ? o.B : default_B(D.n, D.p);
+    CountResult c = count_only(D, o.part, B, o.threads);
+    rec["status"] = "completed"; rec["count_only"] = true;
+    rec["accounting"] = c.acc.to_json();
+    rec["edges_by"] = c.filter_used ? "float32 AVX-512 filter + exact double re-check" : "exact correlation pass";
+    rec["filter_candidates"] = (int64_t)c.candidates; rec["r_n"] = c.corr.rn; rec["tau"] = c.corr.tau;
+    rec["dup_components"] = c.corr.dup.rows();
+    Json sec = Json::object(); sec["edges"] = c.seconds_edges; sec["partition"] = c.seconds_partition; rec["seconds"] = sec;
+    rec["peak_rss_mb"] = peak_rss_mb();
+    rec["admission"] = (o.mem_budget_gb > 0) ? Json((double)c.acc.peak / 1e9 <= o.mem_budget_gb ? "admit" : "refuse") : Json("no budget");
+    return rec;
+  }
+  SetupResult r = run_setup(D, o);
   rec["status"] = status_name(r.status);
   if (r.status != Status::completed) { rec["reason"] = r.reason; return rec; }   // GUARD-W: no setup.bin
   std::string out = args.at("out").str();
@@ -186,7 +219,7 @@ Json run(const Json& args) {
   rec["p"] = D.p; rec["n"] = D.n; rec["B"] = r.B; rec["J"] = r.part.J; rec["mode_size"] = (int64_t)r.mode.S.size();
   Json tm = Json::object(); for (auto& t : r.timings) tm[t.name] = t.seconds;
   rec["seconds"] = tm; rec["peak_rss_mb"] = peak_rss_mb();
-  rec["binary"] = binary_block();
+  rec["B_blocks"] = r.part.B; rec["C"] = r.acc.C; rec["accounted_peak_bytes"] = (int64_t)r.acc.peak;
   return rec;
 }
 

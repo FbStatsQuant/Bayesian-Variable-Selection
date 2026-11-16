@@ -4,6 +4,7 @@
 #include <omp.h>
 #include <algorithm>
 #include <chrono>
+#include <mutex>
 #include "v4/setup.h"
 #include "tiles.h"
 
@@ -16,6 +17,7 @@ inline bool cand_better(double ra, int a, double rb, int b) { return ra != rb ? 
 // Per-thread bounded candidate lists: B slots per column, unsorted, with the position of the worst kept.
 struct TopB {
   int B = 0; std::vector<double> v; std::vector<int32_t> id; std::vector<uint8_t> cnt, worst;
+  void swap_out(TopB& o) { std::vector<double>().swap(o.v); std::vector<int32_t>().swap(o.id); std::vector<uint8_t>().swap(o.cnt); std::vector<uint8_t>().swap(o.worst); }
   void init(int p, int b) { B = b; v.assign((size_t)p * b, 0.0); id.assign((size_t)p * b, -1); cnt.assign(p, 0); worst.assign(p, 0); }
   inline void offer(int j, double r, int l) {
     double* vv = &v[(size_t)j * B]; int32_t* ii = &id[(size_t)j * B];
@@ -76,30 +78,48 @@ CorrResult correlation_pass(const Data& D, const CorrOptions& o) {
   std::vector<double> s(p);
   for (int j = 0; j < p; ++j) s[j] = std::sqrt(D.diagG[j]);
   const int T = std::max(1, o.threads);
-  std::vector<TopB> heaps(T);
+  const int Bn = std::min(B, std::max(p - 1, 1));
+  // Global top-B lists (one per column, independent of the thread count; PR13 review m9). Each thread reduces a tile
+  // block to block-local top-B lists first (I side: per block; J side: per unit), then merges them into the global
+  // lists under the owning column tile's lock. The top-B of a union under a strict total order does not depend on how
+  // the union is split or in which order the parts arrive, so the result is independent of threads and schedule.
+  TopB G; G.init(p, Bn);
+  const int TW = o.tile, ntile = (p + TW - 1) / TW;
+  std::vector<std::mutex> locks(std::max(ntile, 1));
+  std::vector<TopB> locI(T), locJ(T);
+  for (int t = 0; t < T; ++t) { locI[t].init(TW, Bn); locJ[t].init(TW, Bn); }
   std::vector<std::vector<Edge>> edges(T);
   std::vector<uint64_t> pairs(T, 0);
   std::atomic<bool> overflow{false};
-#pragma omp parallel for num_threads(T) schedule(static, 1)
-  for (int t = 0; t < T; ++t) heaps[t].init(p, std::min(B, std::max(p - 1, 1)));
-  detail::tile_pass(D, o.tile, T, [&](int tid, int j, int l0, int cnt, const double* G) {
-    TopB& H = heaps[tid];
+  auto merge_into = [&](TopB& L, int tile0) {  // L covers columns tile0 .. tile0 + TW - 1
+    std::lock_guard<std::mutex> g(locks[tile0 / TW]);
+    for (int c = 0; c < TW && tile0 + c < p; ++c) {
+      for (int q = 0; q < L.cnt[c]; ++q) G.offer(tile0 + c, L.v[(size_t)c * Bn + q], L.id[(size_t)c * Bn + q]);
+      L.cnt[c] = 0;
+    }
+  };
+  detail::tile_pass(D, TW, T, [&](int tid, int j, int l0, int cnt, const double* Gv) {
+    TopB& LI = locI[tid]; TopB& LJ = locJ[tid];
     std::vector<Edge>& E = edges[tid];
     const double sj = s[j];
+    const int ji = j % TW;
     for (int t = 0; t < cnt; ++t) {
       const int l = l0 + t;
-      const double ar = std::fabs(G[t] / (sj * s[l]));  // core/cpp/v3_blocks.h:15, :161
-      H.offer(j, ar, l);
-      H.offer(l, ar, j);
+      const double ar = std::fabs(Gv[t] / (sj * s[l]));  // core/cpp/v3_blocks.h:15, :161
+      LI.offer(ji, ar, l);
+      LJ.offer(l % TW, ar, j);
       if (o.keep_edges && (ar >= rho || (1.0 - ar) <= hcut || ar >= 1 - 1e-10)) E.push_back(Edge{j, l, ar});
     }
     pairs[tid] += cnt;
     if ((int64_t)E.size() > max_edges) overflow = true;
+  }, nullptr, [&](int tid, int It, int Jt, int ev) {
+    if (ev == 0) { for (int c = 0; c < TW; ++c) locJ[tid].cnt[c] = 0; }
+    else if (ev == 1) merge_into(locI[tid], It * TW);
+    else merge_into(locJ[tid], Jt * TW);
   });
-  if (overflow) throw Error(Status::resource_limit, "correlation_pass: more than max_edges edges (hub design); raise max_edges");
+  if (overflow) throw Error(Status::resource_limit, "correlation_pass: more than max_edges edges in the uncapped threshold graph (hub design); raise max_edges");
   for (uint64_t c : pairs) R.pairs += c;
-  // Merge the per-thread lists (top-B of a union under a strict total order: independent of the split), then the
-  // selection of core/cpp/v3_blocks.h:165-168 and the symmetric union of :170-171.
+  // the selection of core/cpp/v3_blocks.h:165-168 and the symmetric union of :170-171
   std::vector<int32_t> chosen((size_t)p * B, -1);
   std::vector<uint8_t> nchosen(p, 0);
 #pragma omp parallel num_threads(T)
@@ -108,10 +128,7 @@ CorrResult correlation_pass(const Data& D, const CorrOptions& o) {
 #pragma omp for schedule(static, 1024)
     for (int j = 0; j < p; ++j) {
       c.clear();
-      for (int t = 0; t < T; ++t) {
-        const TopB& H = heaps[t];
-        for (int q = 0; q < H.cnt[j]; ++q) c.push_back({H.v[(size_t)j * H.B + q], H.id[(size_t)j * H.B + q]});
-      }
+      for (int q = 0; q < G.cnt[j]; ++q) c.push_back({G.v[(size_t)j * Bn + q], G.id[(size_t)j * Bn + q]});
       std::sort(c.begin(), c.end(), [](const auto& a, const auto& b) { return cand_better(a.first, a.second, b.first, b.second); });
       int above = 0;
       for (size_t q = 0; q < c.size() && (int)q < B; ++q) { if (c[q].first > R.rn) ++above; else break; }
@@ -121,7 +138,7 @@ CorrResult correlation_pass(const Data& D, const CorrOptions& o) {
       nchosen[j] = (uint8_t)keep;
     }
   }
-  heaps.clear(); heaps.shrink_to_fit();
+  { TopB().swap_out(G); }
   {
     std::vector<uint64_t> pr;
     size_t tot = 0; for (int j = 0; j < p; ++j) tot += nchosen[j];
