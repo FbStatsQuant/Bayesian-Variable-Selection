@@ -428,54 +428,84 @@ display is attained is not proved. Status: the expectation display and remarks (
 
 ## 4. Theorem 4 — Omitted variables (misspecification)
 <!-- ROW thm4 BEGIN -->
-**Card row** 1.4 · **Section version** 0.4 (2026-11-16) · **Pending delta** MISR Cor-G(a)/Cor-H (rider T13, via Theory Dept)
+**Card row** 1.4 · **Section version** 0.5 (2026-11-16) · **Pending delta** —
 
 
 ### Reader statement
-**Theorem 4** (candidate-only fit with omitted predictors). Let the rows $(x_{\mathcal C,i},x_{\mathcal M,i})$ be i.i.d.
-$N(m,\Sigma)$ with $\Sigma_{\mathcal C\mathcal C}\succ0$, and let
-$y^{\mathrm r}_i=\alpha+x_{\mathcal C,i}^\top\beta_{\mathcal C}+x_{\mathcal M,i}^\top\beta_{\mathcal M}+\varepsilon_i$
-with $\varepsilon\sim N_n(0,\sigma^2I)$ independent of the rows. The method is run on $(x_{\mathcal C},y^{\mathrm r})$
-only ($p$ = number of candidates). Define the **projected coefficient** and **residual variance**
-$$
-\beta^{\mathcal C}:=\beta_{\mathcal C}+\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M}\beta_{\mathcal M},\qquad
-\sigma^2_{\mathcal C}:=\sigma^2+\beta_{\mathcal M}^\top\big(\Sigma_{\mathcal M\mathcal M}-\Sigma_{\mathcal M\mathcal C}\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M}\big)\beta_{\mathcal M}>0,
-$$
-and $S_0^{\mathcal C}:=\operatorname{supp}\beta^{\mathcal C}$, $s:=|S_0^{\mathcal C}|$. Assume
+**Theorem 4** (candidate-only fitting with omitted Gaussian predictors; no condition on how $\Sigma$, $\beta$, $\sigma^2$ vary with $n$) [P4]. The method is run on the candidate predictors
+$x_{\mathcal C}$ and the response $y^{\mathrm r}$ only ($p$ = number of candidates). Assume:
+- **(A0) Model.** The candidate rows $x_{\mathcal C,1},\dots,x_{\mathcal C,n}$ are i.i.d. $N_p(m,\Sigma)$, and, given the
+  candidate design, the responses are independent with
+  $y^{\mathrm r}_i\mid x_{\mathcal C}\sim N\big(\alpha'+x_{\mathcal C,i}^\top\beta^{\mathcal C},\ \sigma^2_{\mathcal C}\big)$, $\sigma^2_{\mathcal C}>0$.
+  Write $S_0^{\mathcal C}:=\operatorname{supp}\beta^{\mathcal C}$ and $s:=|S_0^{\mathcal C}|$.
 - **(A1) Dimension and sparsity.** $2\le p\le n^A$; $s\ge1$ fixed.
-- **(A2) Floor.** $\lambda_{\min}(\Sigma_{TT})\ge c$ for every $T\subseteq\mathcal C$ with $|T|\le3(A+1)(s+1)\log n$, and
-  $\max_j\Sigma_{jj}\le C_0$, with fixed $c,C_0>0$.
+- **(A2) Floor.** With $R$ the correlation matrix of a candidate row, $\lambda_{\min}(R_{TT})\ge c$ for every
+  $T\subseteq\mathcal C$ with $|T|\le 3(A+1)(s+1)\log n$, for a fixed $c>0$.
 - **(A3) Signal relative to the residual variance.**
-  $\beta^{\mathcal C\top}\Sigma_{\mathcal C\mathcal C}\beta^{\mathcal C}\le M_0\,\sigma^2_{\mathcal C}$ and
+  $\beta^{\mathcal C\top}\Sigma\beta^{\mathcal C}\le M_0\,\sigma^2_{\mathcal C}$ and
   $n\min_{j\in S_0^{\mathcal C}}\Sigma_{jj}(\beta^{\mathcal C}_j)^2/(\sigma^2_{\mathcal C}\log n)\to\infty$.
 
-No condition is placed on how $\sigma^2$ or the omitted part vary with $n$. Then
+No condition is placed on how $m$, $\Sigma$, $\beta^{\mathcal C}$ or $\sigma^2_{\mathcal C}$ vary with $n$. Then
 $$
 E\big[1-\pi(S_0^{\mathcal C}\mid y)\big]=O\Big(\sqrt{\tfrac{\log n}{n}}\Big),\qquad
 P\big(\mathrm{HPM}\neq S_0^{\mathcal C}\big)=O\Big(\sqrt{\tfrac{\log n}{n}}\Big).
 $$
-*Remark.* $N(\alpha'+x_{\mathcal C}^\top\beta^{\mathcal C},\sigma^2_{\mathcal C})$ is the conditional law of $y$ given the
-candidates, hence the Kullback–Leibler projection of the truth onto the candidate linear models: the posterior
-concentrates on the support of the best candidate predictor. A fixed-design version (uniform over the residual
-variance) and a Hellinger version exist (remarks in the paper; same status).
+*Example (omitted predictors: the full model is misspecified for the candidate-only fit) [P4].* If the rows $(x_{\mathcal C,i},x_{\mathcal M,i})$ are i.i.d. Gaussian with
+$\Sigma_{\mathcal C\mathcal C}$ invertible and
+$y^{\mathrm r}_i=\alpha+x_{\mathcal C,i}^\top\beta_{\mathcal C}+x_{\mathcal M,i}^\top\beta_{\mathcal M}+\varepsilon_i$ with
+$\varepsilon\sim N_n(0,\sigma^2I)$ independent of the rows, then (A0) holds with
+$\beta^{\mathcal C}=\beta_{\mathcal C}+\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M}\beta_{\mathcal M}$ and
+$\sigma^2_{\mathcal C}=\sigma^2+\beta_{\mathcal M}^\top(\Sigma_{\mathcal M\mathcal M}-\Sigma_{\mathcal M\mathcal C}\Sigma_{\mathcal C\mathcal C}^{-1}\Sigma_{\mathcal C\mathcal M})\beta_{\mathcal M}$.
+(If $\Sigma_{\mathcal C\mathcal C}$ is singular, the same holds with its Moore–Penrose inverse in place of the inverse.)
+The same holds when the omitted predictors are a linear function of the candidates plus Gaussian noise whose rows are
+i.i.d. and independent of the candidates.
+*Remark.* The law in (A0) is the conditional law of $y$ given the candidates, hence the Kullback–Leibler projection of
+the truth onto the candidate linear models: the posterior concentrates on the support of the best candidate
+predictor. Under the same assumptions the posterior's fitted mean and variance also contract around this law, with its
+mean centred over the sample (the fitted mean carries no intercept), in the in-sample average Hellinger and
+Kullback–Leibler distances, at rate $M_n/\sqrt n$ in Hellinger and $M_n/n$ in Kullback–Leibler (any $M_n\to\infty$).
+For a fixed design the contraction needs only that the posterior mass of $S_0^{\mathcal C}$ tends to one in probability
+(with the energy bound and a floor on $S_0^{\mathcal C}$); it holds uniformly over any class of fixed-design configurations with
+common constants and bounded support size on which this convergence is uniform. A fixed-design version of the theorem, uniform
+over the residual variance, also holds (remarks in the paper; same status).
+*Relation to Theorem 2 [P4].* Theorem 2 does not give Theorem 4: Theorem 2 fixes $\sigma^2$ and has no omitted predictors.
+Whether Theorem 4's hypotheses cover Theorem 2's setting without omitted predictors is open and being checked; until then the
+two rows rest on different masters with their own conditions.
 
 ### Why each assumption
+- (A0) is a convenient sufficient form. The proof uses only a weaker condition: given the candidates, the coordinates of
+  the residual vector $y^{\mathrm r}-\alpha'1-x_{\mathcal C}\beta^{\mathcal C}$ in an orthonormal basis of the vectors
+  orthogonal to the constant vector are i.i.d. $N(0,\sigma^2_{\mathcal C})$ — centred, with the variance of (A0); nothing
+  is required of the residual's sample mean. When the noise is Gaussian with variance $\sigma^2$ and independent of all
+  predictors, this holds if and only if the omitted contribution, after subtracting its linear candidate component, has
+  (given the candidates) such coordinates i.i.d. $N(0,\sigma^2_{\mathcal C}-\sigma^2)$, the variance possibly zero. (A0) covers omitted Gaussian predictors and omitted predictors that are
+  linear in the candidates plus Gaussian noise. The Gaussian law of the candidate rows is an assumption on how the data
+  are generated (not a choice of design); it is used only to transfer the population floor (A2) and (A3) to the sample.
 - (A1) as Theorem 1.
-- (A2) Population floors transferred to the sample (as Theorem 2), on the candidates only.
-- (A3) Everything is measured relative to the residual variance $\sigma^2_{\mathcal C}$, because the method is exactly
-  invariant to shifts and rescaling of $y$. The energy bound cannot be dropped (numerical witness); the beta-min order is
-  that of Theorem 1.
-- Gaussian rows: they make the omitted part Gaussian given the candidates. Arbitrary non-Gaussian residual laws are
-  outside this result.
+- (A2) The method standardises each column, so only correlations matter; the floor is on the candidates only.
+- (A3) Everything is measured relative to $\sigma^2_{\mathcal C}$ because the method is invariant to shifts and rescaling of
+  $y$. The energy bound cannot simply be dropped (numerical evidence); the beta-min order is that of Theorem 1
+  (a liminf condition at a fixed constant suffices; remark).
 
 ### Master theorem
 **Headline masters [H5-3]:** the fixed-design theorems `W3-MISR:MIS(i)@1.0.0` (:110-123; uniform over the residual
 variance), `W3-MISR:MIS(i')@1.0.0` (:127-140) and `W3-MISR:MIS(ii)@1.0.0` (:144-160; random candidate designs,
 conditional form) carry the headline flag; statuses verbatim: MIS(i) **"PROVED-CHECKED, conditional on W3-POST2:C; …"**;
 MIS(i′) and MIS(ii) **"PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, SOP:TH09, SOP:TH128; input
-versions SOP:TH09@1.0.0, SOP:TH128@1.0.0; …"**. The reader statement above is their **Gaussian-row reader version**,
-the corollary below (it applies MIS(ii) through the Gaussian conditional law).
-`W3-MISR:Cor-G(b)@1.0.0`, `Theory_work/Wave3/W3-MISR/STATEMENT.md:171-174` (with (a) at :164-170), status verbatim:
+versions SOP:TH09@1.0.0, SOP:TH128@1.0.0; …"**. The reader statement above is their **Gaussian-row reader version**: `W3-MISR-R:CorGb-plus` (with `W3-MISR-R:CorG-min`
+(E1), (E2) for the Example) and, for the remark, `W3-MISR-R:CorH-plus`, `W3-MISR-R:CorH-U` — statuses verbatim from the
+registry (main 2b54cb3c) [REG-2b54]: `W3-MISR-R:CorGb-plus@1.0.0` **"PROVED-CHECKED, conditional on W3-POST2:C,
+W3-POST2:E, W3-POST2:A1, W3-POST2:A0, SOP:TH09, SOP:TH128, C-MIS:GDb, C-MIS:Prop-P; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
+`W3-MISR-R:CorG-min@1.0.0` **"PROVED-CHECKED, conditional on SOP:TH09, SOP:TH128; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
+`W3-MISR-R:CorH-plus@1.0.0` **"PROVED-CHECKED, conditional on W3-POST2:D, SOP:TH09, SOP:TH128; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**;
+`W3-MISR-R:CorH-U@1.0.0` **"PROVED-CHECKED, conditional on W3-POST2:D, W3-POST2:C, W3-POST2:A0, SOP:TH09, SOP:TH128,
+C-MIS:Prop-P; clause (G) also conditional on W3-POST2:E, W3-POST2:A1, SOP:TH09, SOP:TH128, C-MIS:GDb; council R3, MANIFEST 052ea6dffa0495584b051435b1e82d6b7c598d965e3b13ddc067545728728069, sol=10.0 PASS, opus=9.6 PASS"**.
+These replace `W3-MISR:Cor-G(b)` below as the row's reader-version master. `W3-MISR:Cor-G(b)` stays ACTIVE and coexists
+with CorGb-plus (CorGb-plus implies it and reuses its proof steps); `W3-MISR:Cor-G(a)` is SUPERSEDED-VALID by CorG-min.
+The remark's Kullback–Leibler sentence rests on CorH-plus (centred reference), not on `W3-MISR:Cor-H` (whose KL reading
+is restricted to a deterministic intercept at 2.1.0).
+Earlier reader-version master, kept for the record: `W3-MISR:Cor-G(b)@1.0.0`,
+`Theory_work/Wave3/W3-MISR/STATEMENT.md:171-174`, status verbatim:
 **"PROVED-CHECKED, conditional on W3-POST2:C, W3-POST2:E, W3-POST2:A1, W3-POST2:A0, C-MIS:Prop-P, SOP:TH09, SOP:TH128,
 C-MIS:GDb; input versions …; council R2, MANIFEST 217d6708…, sol=9.2 PASS, opus=8.9 PASS; …"**.
 Inputs, verbatim (main f526e45b) [REG-f526]: `W3-POST2:C/E/A1/A0@1.0.4` as quoted in §1 (each "PROVED-CHECKED,
@@ -488,15 +518,18 @@ onset gloss ERROR); LIT-STAT: modest extension of Rossell 2022, clause (iii) kno
 Fixed-design form: `W3-MISR:MIS(i)@1.0.0` (:110-123), **"PROVED-CHECKED, conditional on W3-POST2:C; …"**.
 
 ### Bridges
-| # | Bridge | Mark | Detail |
+| # | bridge | mark | detail |
 |---|---|---|---|
-| B4.1 | (A2) size $3(A+1)(s+1)\log n$ ⇒ Cor-G(b)'s $|T|\le s+\max(j_0,m^\sharp_n)$ | NEW arithmetic | As B1.3 with $s_0:=s$ (and $s+j_0\le(2A+2)s+2$). $m^\sharp_n$ here is computed with $p=|\mathcal C|$. |
-| B4.2 | (A3) = Cor-G(b)'s signal conditions | identity | :172-173. |
-| B4.3 | POST2 C, E, A1, A0 | EXISTS-CHECKED, conditional | Recorded at main f526e45b (§1 quotes); conditional on `SOP:TH09` (W3-T03ACC) [REG-f526]. |
+| B4.0 | (A0) ⇒ CorGb-plus setting | NEW (one line) | take no explicit omitted columns, ε := y^r − α′1 − X_𝒞β^𝒞: given X_𝒞 it is N_n(0, σ²_𝒞I), hence independent of X_𝒞 ((N) with q = 0; (OV) with γ = 0, τ² = 0). The Example is `CorG-min` (E1) (and (E2) for the linear-plus-noise sentence) |
+| B4.1 | (A2) size 3(A+1)(s+1)log n ⇒ CorGb-plus's \|T\| ≤ s + max(j₀, m♯_n), for all large n | NEW arithmetic (as current B4.1) | unchanged arithmetic; the floor is now on R; sufficient for the O(·) conclusions |
+| B4.2 | (A3) = CorGb-plus's signal conditions (→ ∞ branch of its liminf condition) | identity | `STATEMENT.md` §3 |
+| B4.3 | POST2 C, E, A1, A0 (and D for the remark) | EXISTS-CHECKED, conditional | recorded at main f526e45b; conditional on `SOP:TH09` (W3-T03ACC) [REG-f526] |
+| B4.4 | Remark ⇒ CorH-U (RD) with 𝒦^♭_n := 𝒦^λ_n(s, A, 2M₀+1, (c_R/8)^{1/2}, C_OS, c) ((UP) by MIS(i) + Markov) and the events 𝒜_n of CorGb-plus's proof (P(𝒜_n) → 1); contraction sentence for a fixed design ⇒ CorH-plus (a′), (KL), with the premise δ_n → 0 in probability; uniform sentence ⇒ CorH-U (U-a), with its premise (UP); "fixed-design version of the theorem, uniform over the residual variance" ⇒ W3-MISR:MIS(i)@1.0.0 (BASE `STATEMENT.md:110-114`, constants free of v) | NEW (composition; the random-design part is `CorH-U` clause (G), STATEMENT §5) | the Hellinger rate M_n/√n and KL rate M_n/n are the sets H^a, K^a; the reference is centred (STATEMENT §1: μ(κ) = Cxβ) [R1] |
 
 ### Honest limits
-The statement is primitive. The status is not: Theorem 4 is "proved and council-passed, conditional on four
-council-passed but not accepted posterior refinements". The card must say so until the POST2 diff round passes.
+Nothing is claimed when, given the candidates, $y$ is not Gaussian with a mean linear in the candidates and a constant
+variance (beyond the contrast form described under (A0) in §3). Status: the masters' statuses, verbatim in §5, with their
+conditions.
 
 #### Update log (thm4)
 - v0.1 2026-11-15: first version (CP1).
@@ -504,6 +537,10 @@ council-passed but not accepted posterior refinements". The card must say so unt
 - v0.3 2026-11-16: [H5-3] headline masters named: MIS(i), MIS(i′), MIS(ii); reader statement = their Gaussian-row
   reader version Cor-G(b) (EQUAL); card row 3.4 → 1.4.
 - v0.4 2026-11-16: [REG-f526] POST2 input statuses refreshed (EQUAL).
+- v0.5 2026-11-16: [W3-MISR-R CP3, accepted main 2b54cb3c; H5 card 10; swap signal task Q] reader statement → W3-MISR-R READER_DELTA v0.4 (@93e50640): model (A0)
+  (candidate rows Gaussian; Gaussian linear conditional law given the candidates), floor on the correlation matrix, no
+  variance bound; omitted Gaussian predictors as the Example; Hellinger/KL remark; non-implication note on Theorem 2;
+  honest limits; masters CorGb-plus, CorG-min, CorH-plus, CorH-U (STRONGER: weaker hypotheses, same conclusion).
 <!-- ROW thm4 END -->
 
 ---
