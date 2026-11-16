@@ -613,3 +613,7 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
     - Flag: Prop-F/F-UNI bridges used LS0 cap ℓ_n, not the shipped ℓ_n+|S̃₀|. The recorder lists consumers and re-points them to DLV-0; any headline row relying on them goes to HQ first.
     - Row 3.1 (Thm 6) changes to RM2-R-plus, recorded as a row 3.1 change.
   - Post-freeze: does IDEAL-W⁺ ever bind in existing runs?
+- 2026-11-16 ~06:10 CT. Correctness event: the card-14 method drift reaches row 3.1. W2-UNI:F-UNI@1.1.0 claims every-n delivery for the shipped LS0 cap ℓ_n+|S̃₀|, but its proof cites C-DLV:Prop-F (cap ℓ_n).
+  - F-UNI → SUSPECT now.
+  - One neutral Sol check: do Prop-F Steps 1-2 transfer to the shipped cap under IDEAL-W? YES → erratum + PATCH + clear. NO → NARROW to DLV-0 ((D), IDEAL-W⁺).
+  - Row 3.1's delivery is re-pointed to DLV-0 meanwhile. No recorded headline status asserted it (the gate was PENDING).
