@@ -1,0 +1,576 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{natbib}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit}
+\usepackage{../shared/smcbvs}
+\bibliographystyle{abbrvnat}
+\setcitestyle{authoryear,round}
+\linespread{1.08}
+% code locations: paths relative to Scripts/SMC_BVS/core/
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+
+\title{The SMC-BVS method, as coded}
+\author{SMC-BVS project}
+\date{Draft, \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This section describes the SMC-BVS method exactly as the software implements it: the data preparation, the model and
+every prior, the posterior it targets, and each step of the algorithm, from the start law to the reported outputs. Every
+tuning constant and every prior hyperparameter is either fixed or a stated function of the sample size $n$ and the
+number of predictors $p$; none is chosen by the user. A parameter table gives each one with its location in the code.
+The theory of the companion section is about this method.
+\end{abstract}
+
+% =====================================================================================================
+\section{Setup and notation}\label{sec:m-setup}
+
+This section introduces the notation used in this paper, the data, and the way the method prepares them. The method sees
+the data only after centring and scaling, and every later quantity is defined on that scale.
+
+\paragraph{Notation.} For an integer $k\ge1$, $\set{k}:=\{1,\dots,k\}$. Vectors are columns; $\norm{v}$ is the Euclidean
+norm and $\norm{v}_1$ the $\ell_1$ norm. $I_n$ (or $I$) is an identity matrix and $\one_n$ (or $\one$) the vector of
+ones. For a symmetric matrix $B$, $\lmin(B)$ is its smallest eigenvalue. For a set $S$, $\abs{S}$ is its number of
+elements. A \emph{model} is a set $S\subseteq\set{p}$ of predictors; $X_S$ is the matrix of the columns of $X$ in $S$,
+and $v_S$ the sub-vector of a vector $v$ indexed by $S$. Logarithms are natural ($\log$) or binary ($\log_2$);
+$\lceil\cdot\rceil$ and $\lfloor\cdot\rfloor$ round up and down. A star marks a true parameter value, and the superscript
+$\mathrm r$ marks raw data. For random variables $V_n$ and positive numbers $a_n$, $V_n=\OP(a_n)$ means that for every
+$\epsilon>0$ there is a constant $C$ with $\P(\abs{V_n}>Ca_n)\le\epsilon$ for all large $n$, and $V_n=\oP(a_n)$ means
+$V_n/a_n\to0$ in probability. For positive sequences, $a_n=O(b_n)$ (also $a_n\lesssim b_n$) means $a_n\le Cb_n$ for a
+constant $C$, $a_n=o(b_n)$ means $a_n/b_n\to0$, and $a_n\asymp b_n$ means $a_n\lesssim b_n$ and $b_n\lesssim a_n$. A
+quantity is \emph{fixed} if it does not depend on $n$.
+
+\paragraph{Data.} The method receives a response vector $\yr\in\R^n$, an $n\times\praw$ matrix of predictors, a random
+seed (an integer in $[1,2^{31}-1]$) and a computing allocation (memory and time; by default 8\,GB and 24 hours). It
+requires $n\ge3$, at least one predictor, and finite entries.
+
+\paragraph{Removing constant predictors.} A predictor whose entries are all exactly equal is removed; the method records
+which predictors were removed. A constant predictor is a multiple of $\one_n$, so its effect is absorbed by the
+intercept. We write $\Xr$ for the $n\times p$ matrix of the $p$ \emph{retained} predictors. From here on, $p$ always
+means this number: the prior, the size cap and every score use the retained predictors only. If no predictor is retained,
+or if the response is constant, the method stops and reports the empty model.
+
+\paragraph{Standardisation.} The method centres and scales every retained predictor and the response. Let
+$P^\perp_{\one}:=I_n-n^{-1}\one\one^\top$ be the centring matrix and $D$ the diagonal matrix of the sample standard
+deviations (divisor $n-1$) of the columns of $\Xr$. The method works with
+\begin{equation}\label{eq:m-standardise}
+  X:=P^\perp_{\one}\Xr D^{-1},\qquad y:=P^\perp_{\one}\yr/s_y,\qquad s_y^2:=\norm{P^\perp_{\one}\yr}^2/(n-1).
+\end{equation}
+So every column $x_j$ of $X$ has mean zero and $\norm{x_j}^2=n-1$, and $y$ has mean zero and $y^\top y=n-1$. (In
+floating point, each column is first divided by its largest absolute value, which leaves~\eqref{eq:m-standardise}
+unchanged; a numerically stable two-pass centring is used when a column is nearly constant.) For a model $S$ we write
+$G_S:=X_S^\top X_S$ for the Gram matrix, $\Rhat_S:=G_S/(n-1)$ for the sample correlation matrix, and $z_S:=X_S^\top y$.
+
+\paragraph{The intercept.} The intercept is not a parameter of the working model: it is removed by centring $X$ and $y$.
+Exact duplicate predictors (sample correlation at least $1-10^{-10}$ in absolute value) are reported but kept.
+
+% =====================================================================================================
+\section{The model and the prior}\label{sec:m-prior}
+
+The method fits a Gaussian linear model to the standardised data and puts a prior on its three unknowns: which
+predictors are in the model, their coefficients, and the noise variance. Every hyperparameter is fixed or a function of
+$(n,p)$; Table~\ref{tab:m-prior} lists them.
+
+\paragraph{Working model.} Given a model $S$, coefficients $\theta_S\in\R^{\abs{S}}$ and a variance $\sigma^2>0$,
+\begin{equation}\label{eq:m-working}
+  y\mid S,\theta_S,\sigma^2\ \sim\ \Normal_n(X_S\theta_S,\sigma^2I_n).
+\end{equation}
+In words: the standardised response is a linear function of the predictors in $S$ plus independent Gaussian noise. These
+are working parameters; the theory studies the method under a true model that need not coincide with any prior draw.
+
+\paragraph{Model space and size cap.} The method considers every model with at most $K$ predictors:
+\begin{equation}\label{eq:m-space}
+  \Om:=\{S\subseteq\set{p}:\abs{S}\le K\},\qquad K:=\min\big(p,\lfloor n/2\rfloor\big).
+\end{equation}
+The cap is a function of $(n,p)$: models with more than half as many predictors as observations are never scored.
+
+\paragraph{Model prior.} The prior probability of a model depends only on its size $k=\abs{S}$:
+\begin{equation}\label{eq:m-modelprior}
+  \text{prior probability of }S=\frac{w(\abs{S})}{\bar w_K},\qquad w(k):=\frac{1}{2\binom{2p-1}{k}},\qquad
+  \bar w_K:=\sum_{k=0}^{K}\binom{p}{k}w(k).
+\end{equation}
+This is the beta-binomial prior $\BB(1,p)$ \citep{ScottBerger2010}, restricted to $\Om$. A probability $q$ is drawn from
+$\BetaDist(1,p)$, and, given $q$, each predictor enters the model independently with probability $q$; then a given model
+of size $k$ has probability $B(k+1,2p-k)/B(1,p)=w(k)$, where $B$ is the beta function. Dividing by $\bar w_K$ renormalises the
+prior to models of size at most $K$. The second parameter of the beta distribution is $p$, the number of retained
+predictors, so the prior is a function of $p$ and its cap a function of $(n,p)$. Its prior mean model size is about one.
+Adding one predictor to a model of size $k$ multiplies the prior weight by $(k+1)/(2p-1-k)$: one more predictor costs
+about $\log\{2p/(k+1)\}$ in log prior odds, so the prior penalises size more when $p$ is large.
+
+\begin{example}[The model prior with three predictors]\label{ex:m-prior}
+Take $p=3$ and $n\ge6$, so that $K=3$ and no model is excluded. Then $w(0)=\tfrac12$, $w(1)=\tfrac1{10}$ and
+$w(2)=w(3)=\tfrac1{20}$, and $\bar w_K=\tfrac12+3\cdot\tfrac1{10}+3\cdot\tfrac1{20}+\tfrac1{20}=1$. So the empty model has prior
+probability $\tfrac12$; each one-predictor model $\tfrac1{10}$ (together $\tfrac3{10}$); each two-predictor model
+$\tfrac1{20}$ (together $\tfrac3{20}$); and the full model $\tfrac1{20}$. Small models are favoured, and each extra
+predictor must earn its place through the data. With $n=4$ instead, $K=2$, the full model is excluded, and
+$\bar w_K=\tfrac{19}{20}$: the remaining seven models are renormalised.
+\end{example}
+
+\paragraph{Coefficients.} Given $S$ and $\sigma^2$, the coefficients have the ridge-stabilised $g$-prior
+\citep{Zellner1986} with $g=n$:
+\begin{equation}\label{eq:m-slab}
+  \theta_S\mid S,\sigma^2\ \sim\ \Normal\big(0,\;n\sigma^2(G_S+I)^{-1}\big).
+\end{equation}
+In words: the prior covariance is $n\sigma^2$ times the inverse of the Gram matrix with a unit ridge added. The factor
+$g=n$ makes the prior worth about one observation; the ridge $I$ keeps the prior proper when $G_S$ is singular. The code
+does not write this prior down; it is the unique Gaussian prior that produces the matrices the code uses,
+$H_S=(n+1)G_S+I$ and $G_S+I$ in~\eqref{eq:m-marglik}.
+
+\paragraph{Noise variance.} $\sigma^2\sim\IG(a_0,b_0)$, inverse gamma with shape $a_0=0.01$ and scale $b_0=0.01$, a weak
+prior.
+
+\begin{table}[ht]
+\centering\small
+\caption{The prior: every hyperparameter, and where the code sets it (paths relative to \code{Scripts/SMC_BVS/core/}).}
+\label{tab:m-prior}
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}X l >{\raggedright\arraybackslash}p{0.27\linewidth}@{}}
+\toprule
+Symbol & Meaning & Value & Code \\
+\midrule
+$K$ & size cap & $\min(p,\lfloor n/2\rfloor)$ & \code{cpp/v3_score.h:40}; \code{v3_preprocess.R:21} \\
+$w(k)$ & model-size weight, $\BB(1,p)$ & $\tfrac12/\binom{2p-1}{k}$ & \code{cpp/v3_score.h:64-65} \\
+$\bar w_K$ & renormalisation to $\Om$ & $\sum_{k\le K}\binom pk w(k)$ & \code{cpp/v3_score.h:66-70} \\
+$g$ & $g$-prior scale & $n$ & via $H_S$, \code{cpp/v3_score.h:175-183} \\
+ridge & added to $G_S$ in the slab & $I$ (unit) & via $G_S+I$, \code{cpp/v3_score.h:175-183} \\
+$a_0$, $b_0$ & inverse-gamma shape and scale & $0.01$, $0.01$ & \code{cpp/v3_score.h:14} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% =====================================================================================================
+\section{The posterior}\label{sec:m-posterior}
+
+Because the prior is conjugate, the coefficients and the noise variance integrate out in closed form, and the posterior
+over models is known up to one constant. The method's target is exactly this posterior.
+
+\paragraph{Marginal likelihood.} Integrating $\theta_S$ and $\sigma^2$ out of~\eqref{eq:m-working}--\eqref{eq:m-slab}
+gives
+\begin{equation}\label{eq:m-marglik}
+  m(S)=C_n\Big(\frac{\det H_S}{\det(G_S+I)}\Big)^{-1/2}(2b_0+\SSq_S)^{-\nu},\qquad
+  H_S:=(n+1)G_S+I,\quad \SSq_S:=y^\top y-n\,z_S^\top H_S^{-1}z_S,
+\end{equation}
+with $\nu:=a_0+n/2$ and $C_n:=(2b_0)^{a_0}\Gamma(a_0+n/2)/\{\pi^{n/2}\Gamma(a_0)\}$ (here $\pi$ is the number $3.14\ldots$).
+For the empty model, $m(\emptyset)=C_n(2b_0+y^\top y)^{-\nu}$. In words: $\SSq_S$ is a shrunken residual sum of squares, so
+models that fit better have larger $m(S)$; the determinant ratio is an Occam factor, and in a well-conditioned model each
+extra predictor multiplies $m(S)$ by about $(n+1)^{-1/2}$. The code computes $\log m(S)$ through a Cholesky factorisation;
+if that fails it recomputes the Gram matrix from $X$, then uses a QR factorisation, and it reports a numerical failure only
+if all three fail. When $\SSq_S$ is very small (below $10^{-8}\,y^\top y$) it is recomputed in a non-negative form.
+
+\paragraph{Log score and posterior.} The \emph{log score} of a model is
+\begin{equation}\label{eq:m-score}
+  F(S):=\log\{w(\abs{S})/\bar w_K\}+\log m(S),
+\end{equation}
+and the \emph{posterior over models} is
+\begin{equation}\label{eq:m-posterior}
+  \pis{S}=\frac{e^{F(S)}}{Z},\qquad Z:=\sum_{V\in\Om}e^{F(V)},\qquad S\in\Om .
+\end{equation}
+The normalising constant $Z$ is the \emph{evidence}: the marginal likelihood of the standardised data under the working
+model and the prior. Because $y$ is standardised, the posterior over models does not change if $\yr$ is shifted or
+rescaled.
+
+\paragraph{Posterior summaries.} The posterior inclusion probability of predictor $j$ is $\PIP_j:=\sum_{S\ni j}\pis{S}$;
+the highest posterior model is $\HPM:=\argmax_{S\in\Om}\pis{S}$; and the median probability model is
+$\MPM:=\{j:\PIP_j>1/2\}$ \citep{BarbieriBerger2004}. The method estimates these, and $Z$.
+
+% =====================================================================================================
+\section{The algorithm, step by step}\label{sec:m-algorithm}
+
+The method has seven stages (Figure~\ref{fig:m-pipeline}). Small problems are solved exactly. Otherwise the method builds
+an exactly computable approximation of the posterior, the start law; calibrates a sequence of distributions from the start
+law to the posterior; moves four independent sets of particles along that sequence; and finishes with two deterministic
+local searches. Every model scored anywhere is recorded, and the best one is reported.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[node distance=4mm, every node/.style={font=\footnotesize},
+  box/.style={draw, rounded corners, align=center, minimum height=9mm, text width=19mm},
+  exact/.style={box, fill=blue!8}, stoch/.style={box, fill=orange!12}, det/.style={box, fill=green!10}]
+\node[exact] (pre) {1. standardise;\\ exact if small};
+\node[exact, right=of pre] (blk) {2. blocks of\\ $\le16$; tables};
+\node[exact, right=of blk] (start) {3. start law $\pi_0$,\\ start mode $\tSz$};
+\node[stoch, right=of start] (cal) {4. calibrate,\\ then freeze};
+\node[stoch, right=of cal] (smc) {5. four islands\\ $\pi_0\to\pi$};
+\node[det, below=9mm of smc] (ls) {6. local searches};
+\node[det, left=of ls] (out) {7. report};
+\draw[-{Stealth}] (pre)--(blk); \draw[-{Stealth}] (blk)--(start); \draw[-{Stealth}] (start)--(cal);
+\draw[-{Stealth}] (cal)--(smc); \draw[-{Stealth}] (smc)--(ls); \draw[-{Stealth}] (ls)--(out);
+\draw[-{Stealth}, dashed] (start.south) |- node[pos=0.75, below]{start mode} (ls.west -| out.east) ;
+\end{tikzpicture}
+\caption{The stages of a run. Blue: exact computations. Orange: random. Green: deterministic search and reporting. The
+second local search starts from the start mode and does not depend on the particles (dashed).}
+\label{fig:m-pipeline}
+\end{figure}
+
+\subsection{Budgets and the exact case}\label{sec:m-budgets}
+
+From $(n,p)$ alone the method computes its effort constants (Table~\ref{tab:m-params}): the block size cap
+$B:=\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$; the search cap $\ell_n:=\lceil\log_2(n+p+1)\rceil$; the number of
+burn-in rounds $L:=\max(4,\lceil\log_2(n+1)\rceil)$; the base number of particles per island $N_0:=\max(2500,n,p)$; the
+calibration particles $H_0:=\lceil512N_0/2500\rceil$; and the stage ceiling $T_0:=\max(1000,\ell_n^2)$. There are two
+effort tiers, $e\in\{0,1\}$, with $(N_e,H_e,T_e):=4^e(N_0,H_0,T_0)$.
+
+\paragraph{The exact case.} If the number of models in $\Om$ is at most $(5H_0+4N_0)\,p$, the method scores every model,
+computes $Z$, the inclusion probabilities and the highest posterior model exactly, reports $\MPM$, and stops. No random
+number is used. Otherwise it proceeds as follows.
+
+\subsection{Blocks and block tables}\label{sec:m-blocks}
+
+The method partitions the predictors into blocks $C_1,\dots,C_J$ of at most $B\le16$ predictors each. It clusters the
+predictors by complete-linkage hierarchical clustering on the dissimilarity $1-\abs{r_{jl}}$, where $r_{jl}$ is the
+sample correlation of $x_j$ and $x_l$; splits every cluster with more than $B$ members, from the top down; and packs the
+resulting clusters, in leaf order and whole, into blocks of at most $B$ members. Ties are broken by fixed rules, so the
+partition is a deterministic function of $X$. Correlated predictors tend to share a block.
+
+Within each block $C_b$ the method scores every subset $U\subseteq C_b$ with $\abs{U}\le K$ against the full response, and
+stores the \emph{block table} $r_b(U):=m(U)/m(\emptyset)$, with $r_b(\emptyset)=1$. A block has at most $2^{16}$ subsets,
+so the tables are cheap. The method also builds a \emph{neighbour graph}: for each predictor $j$ it keeps the predictors
+$l$ with $\abs{r_{jl}}>\sqrt{2\log p/n}$, at least one and at most $B$ of them, in decreasing order of $\abs{r_{jl}}$, and
+symmetrises the result.
+
+\subsection{The start law and the start mode}\label{sec:m-start}
+
+\paragraph{The start law.} The start law multiplies the size prior by the block tables:
+\begin{equation}\label{eq:m-startlaw}
+  \pi_0(S)=\frac{\gamma_0(S)}{\bar Z_0},\qquad \gamma_0(S):=\frac{w(\abs{S})}{\bar w_K}\prod_{b=1}^J r_b(S\cap C_b),\qquad
+  \bar Z_0:=\sum_{S\in\Om}\gamma_0(S).
+\end{equation}
+In words: $\pi_0$ is the posterior one would have if the evidence for a model split into independent contributions from
+the blocks. It sees every interaction within a block and none between blocks; the size prior still couples the blocks.
+The normaliser $\bar Z_0$ is computed exactly by a dynamic programme over model sizes: with
+$e_b(j):=\sum_{U\subseteq C_b,\abs{U}=j}r_b(U)$, the size profiles $F_b(k):=\sum_jF_{b-1}(k-j)e_b(j)$, $F_0(0)=1$, give
+$\bar Z_0=\sum_{k\le K}\{w(k)/\bar w_K\}F_J(k)$. The same recursion yields an exact sampler: draw the total size $k$ with
+probability proportional to $\{w(k)/\bar w_K\}F_J(k)$, split it among the blocks backwards from block $J$, and draw each
+block's subset with probability proportional to $r_b(U)$. So $\pi_0$ can be computed and sampled exactly.
+
+\paragraph{The start mode.} The \emph{start mode} $\tSz$ is a maximiser of $\pi_0$ over $\Om$, found by the same dynamic
+programme with sums replaced by maxima. Ties in size go to the smaller size; among the remaining maximisers the method
+returns the lexicographically smallest set, by enumeration of at most $10^6$ candidates or, beyond that, by a tie-aware
+dynamic programme that returns the same set without enumerating.
+
+\paragraph{The discrepancy.} The start law and the posterior differ by the \emph{discrepancy}
+\begin{equation}\label{eq:m-discrepancy}
+  d(S):=\log\frac{m(S)}{m(\emptyset)}-\sum_{b=1}^J\log r_b(S\cap C_b),
+\end{equation}
+the part of the evidence for $S$ that comes from interactions between blocks. Then $\gamma_0(S)e^{d(S)}=e^{F(S)}/m(\emptyset)$,
+which is proportional to the posterior.
+
+\begin{example}[Leakage, with six predictors]\label{ex:m-toy}
+Take $n=100$ and six predictors with true model $\{1,3\}$, coefficients $1$ and unit noise. Predictor $2$ is a near copy
+of $1$ (correlation $0.93$); $4$ is moderately correlated with $3$ ($0.69$); $5$ is correlated with $1$ ($0.63$); and $6$
+is a near copy of $5$ ($0.89$). The blocks are $\{1,2\}$, $\{3,4\}$ and $\{5,6\}$, so the imitator $5$ sits in a different
+block from the true predictor it imitates. The start law and the posterior are:
+
+\smallskip
+\centerline{\small
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+model & $\{1,3,5\}$ & $\{1,3\}$ & $\{1,3,6\}$ & $\{1,3,4\}$ & $\{1,2,3\}$ \\
+\midrule
+start law $\pi_0$ & $\mathbf{0.517}$ & $0.198$ & $0.067$ & $0.012$ & $0.008$ \\
+posterior $\pi(\cdot\mid y)$ & $0.042$ & $\mathbf{0.688}$ & $0.118$ & $0.051$ & $0.037$ \\
+\bottomrule
+\end{tabular}}
+\smallskip
+
+Within its own block, predictor $5$ explains much of $y$, because it carries part of predictor $1$'s signal, and the start
+law cannot see that predictor $1$, in another block, already explains it. So the start mode is $\{1,3,5\}$: this is
+\emph{leakage}. The proxy $2$, which shares predictor $1$'s block, is handled correctly by the block table. The posterior,
+which sees all interactions, puts $0.69$ on $\{1,3\}$. The local search from the start mode (Section~\ref{sec:m-search})
+makes one move, deleting $5$, reaches $\{1,3\}$, finds no improving neighbour, and certifies it. (Computed with an
+independent re-implementation of the coded score, start law and search rule on this one data set, with the partition the
+clustering produces; an illustration, not a test of the software.)
+\end{example}
+
+\subsection{The sampler: one island}\label{sec:m-island}
+
+\paragraph{The path.} The sampler moves from the start law to the posterior through the distributions
+\begin{equation}\label{eq:m-path}
+  \gamma_\phi(S):=\gamma_0(S)\,e^{\phi\,d(S)},\qquad 0\le\phi\le1,
+\end{equation}
+so $\gamma_0$ is the start law (unnormalised) and $\gamma_1$ is proportional to the posterior; in between,
+$\gamma_\phi\propto\gamma_0^{1-\phi}\gamma_1^{\phi}$. The \emph{temperature} $\phi$ follows a grid
+$0=\phi_0<\phi_1<\dots<\phi_T=1$ fixed by the calibration (Section~\ref{sec:m-calibration}).
+
+\paragraph{One island.} An island runs $N$ particles, each a model.
+\begin{enumerate}[leftmargin=1.8em,itemsep=2pt]
+  \item \emph{Start.} Draw $N$ independent models from $\pi_0$. Set the running log-evidence to $\log m(\emptyset)+\log\bar Z_0$.
+  \item \emph{For each stage $t=1,\dots,T$:}
+  \begin{enumerate}[label=(\alph*),itemsep=1pt]
+    \item \emph{reweight:} give particle $i$ the weight $\omega_i:=\exp\{(\phi_t-\phi_{t-1})\,d(S_i)\}$, and add
+      $\log\{N^{-1}\sum_i\omega_i\}$ to the running log-evidence; record the effective sample size
+      $(\sum_i\omega_i)^2/\sum_i\omega_i^2$;
+    \item \emph{resample:} draw $N$ particles from the current ones with probabilities proportional to $\omega_i$
+      (multinomial resampling, at every stage);
+    \item \emph{move:} apply one round of Markov moves that leave $\gamma_{\phi_t}$ invariant to every particle.
+  \end{enumerate}
+  \item \emph{At $\phi=1$:} apply $L$ burn-in rounds, then four measured rounds. In each measured round, record for every
+    predictor $j$ and particle the Gibbs inclusion probability $o_j$ computed in that round. The island's estimate
+    $\PIPhat_{r,j}$ is the average of $o_j$ over the $N$ particles and the four rounds (a Rao--Blackwellised estimate).
+\end{enumerate}
+The island's evidence estimate is $\Zhat_r:=m(\emptyset)\bar Z_0\prod_{t=1}^T\{N^{-1}\sum_i\omega_i^{(t)}\}$: the exact
+normaliser of the start law times the product of the average reweighting factors. Figure~\ref{fig:m-step} shows one stage.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[every node/.style={font=\footnotesize}, x=1cm, y=1cm]
+\foreach \x/\w in {0/0.5,1/1.6,2/0.3,3/1.1,4/0.8}{
+  \fill[blue!40] (\x,0) circle (0.12);
+  \draw[orange!80!black, line width=2pt] (\x,0.25)--(\x,0.25+\w*0.6);
+}
+\node[align=center] at (2,-0.6) {(a) reweight by $e^{(\phi_t-\phi_{t-1})d(S)}$};
+\begin{scope}[xshift=6.2cm]
+\foreach \x in {0,1,2,3,4}{ \fill[blue!40] (\x,0) circle (0.12); }
+\node at (1,0.45) {$\times2$}; \node at (3,0.45) {$\times2$}; \node at (2,0.45) {$\times0$};
+\node[align=center] at (2,-0.6) {(b) resample in proportion to weight};
+\end{scope}
+\begin{scope}[yshift=-2.2cm, xshift=3.1cm]
+\foreach \x in {0,1,2,3,4}{ \fill[blue!40] (\x,0) circle (0.12); \draw[-{Stealth}] (\x,0.15) to[bend left=40] (\x+0.35,0.15);}
+\node[align=center] at (2,-0.6) {(c) move: Gibbs, swaps, independence proposals from $\pi_0$};
+\end{scope}
+\end{tikzpicture}
+\caption{One stage of an island. Each dot is a particle (a model). Its weight (bar) is how much more the next
+distribution likes it. Resampling copies heavy particles and drops light ones; the Markov moves then spread the copies
+out again.}
+\label{fig:m-step}
+\end{figure}
+
+\paragraph{The Markov moves.} One round applies $p+B+2$ labelled moves, in a fresh uniformly random order; each leaves
+$\gamma_\phi$ invariant.
+\begin{itemize}[leftmargin=1.5em,itemsep=1pt]
+  \item \emph{Gibbs update of predictor $j$} (one for each $j\in\set{p}$): with $a:=\gamma_\phi(S\cup\{j\})/\gamma_\phi(S\setminus\{j\})$,
+    include $j$ with probability $o_j:=a/(1+a)$, or $o_j:=0$ if including $j$ would exceed the cap $K$. The value $o_j$ is
+    recorded before the draw.
+  \item \emph{Uniform swap:} pick a member of the model and a non-member uniformly at random and propose to swap them;
+    accept with the Metropolis--Hastings probability.
+  \item \emph{Neighbour swaps} ($B$ copies): pick a member $j$ uniformly, and a non-member $l$ uniformly among $j$'s neighbours
+    in the neighbour graph; propose the swap, with the Hastings correction for the different neighbourhood sizes.
+  \item \emph{Independence move:} propose a fresh draw $S'$ from $\pi_0$, and accept with probability
+    $\min\{1,\exp(\phi[d(S')-d(S)])\}$.
+\end{itemize}
+Swaps keep the model size, so only the Gibbs moves can add a predictor, and they enforce the cap.
+
+\subsection{Calibration}\label{sec:m-calibration}
+
+Before the final run, the method chooses the temperature grid and the effort tier from short pilot runs, and then
+freezes them. Freezing happens before the final run draws any random number, so the final run is a standard sequential
+Monte Carlo sampler with a fixed schedule.
+
+\begin{enumerate}[leftmargin=1.8em,itemsep=2pt]
+  \item \emph{Pilot.} One island of $H_e$ particles with an adaptive schedule: from the current $\phi$, the next
+    temperature is the largest $\phi'$ for which the reweighting keeps an effective sample size of at least $0.90H_e$
+    (trying $\phi'=1$ first, then bisecting 60 times). If that step is shorter than $1/T_e$, the method takes the step
+    $1/T_e$ anyway and counts a \emph{forced step}. A local search from the best model found follows.
+  \item \emph{Candidate set.} $V$ is the empty model together with the $20p$ best models by $\gamma_0$ and the $20p$ best
+    by $F$, among all models scored so far.
+  \item \emph{Grid.} On $V$, the restricted log-normaliser $F_V(t):=\log\sum_{S\in V}\gamma_0(S)e^{t\,d(S)}$ gives a restricted
+    effective sample size $\rho_V(u,v):=\exp\{2F_V(v)-F_V(u)-F_V(2v-u)\}$ for a step from $u$ to $v$. Starting at $u=0$, the
+    method appends the next pilot temperature if $\rho_V\ge0.90$, and otherwise the largest $v$ with $\rho_V(u,v)\ge0.90$
+    (60 bisections). The grid fails if it stops progressing or needs more than $T_e$ steps.
+  \item \emph{Rebuild loop.} Up to $\ell_n$ times: run four diagnostic islands of $H_e$ particles on the current grid, a
+    local search from the best model found, recompute $V$ and the grid. The grid has \emph{converged} when a rebuild
+    returns the same grid.
+  \item \emph{Escalation.} At tier $0$, if any trigger fires, the whole calibration is repeated once at tier $1$ (four
+    times the effort), after a memory check. The triggers are: E1, some island's best log score is more than $1$ below
+    the overall best; E2, the standard deviation of the islands' log-evidence estimates exceeds $1$; E3, a calibration
+    local search strictly improved the best log score; a forced pilot step; a grid failure; an unconverged grid; or a
+    local search that hit its move cap.
+  \item \emph{Fallback and freezing.} If the tier-$1$ grid fails, the method uses its last successful tier-$1$ grid, or else
+    the tier-$1$ pilot schedule. It then freezes the grid, the tier, $N=N_e$, $L$, and a set of models carried into the
+    final run (the best $40p+1$ models from calibration and the leading models by $\gamma_0$ and by $F$). The calibration
+    estimates themselves are archived and never reported.
+\end{enumerate}
+
+\subsection{The final run and the local searches}\label{sec:m-search}
+
+\paragraph{Final run.} Four independent islands of $N_e$ particles run on the frozen grid, with random-number streams
+disjoint from those of the calibration.
+
+\paragraph{Local search.} Two models are \emph{neighbours} if one comes from the other by deleting one predictor, adding
+one (while the size is below $K$), or swapping one member for one non-member. A local search from a model scans all its
+neighbours, scores each, and moves to the best one (ties broken lexicographically) if its log score is strictly higher.
+It stops at the first scan with no strict improvement, with its end point \emph{certified} as a local maximum of $F$, or
+when it reaches its move cap. After the islands, the method runs two local searches:
+\begin{itemize}[leftmargin=1.5em,itemsep=1pt]
+  \item from the best model found so far, with move cap $\ell_n$;
+  \item from the start mode $\tSz$, with move cap $\ell_n+\abs{\tSz}$. This search uses no random numbers and does not
+    depend on the particles.
+\end{itemize}
+
+\subsection{What a run reports}\label{sec:m-outputs}
+
+\paragraph{The reported model.} The method records every model it scores: all block-table subsets, the models carried
+from calibration, every particle and every proposal of the final islands, and every model scanned by the two local
+searches. The \emph{reported model} $\Shat$ (the reported highest posterior model) is the best of them, by log score,
+with exact ties broken towards the smaller model and then lexicographically. The method certifies $\Shat$ when $\Shat$ is
+the end point of a local search that stopped with no improvement (in the exact case, always).
+
+\paragraph{Estimates.} The method pools the islands with equal weights:
+\begin{equation}\label{eq:m-pool}
+  \PIPhat_j:=\frac14\sum_{r=1}^4\PIPhat_{r,j},\qquad \Zhat:=\frac14\sum_{r=1}^4\Zhat_r,
+\end{equation}
+and reports the estimated median probability model $\MPMhat:=\{j:\PIPhat_j>1/2\}$, $\log\Zhat$, the one-sided lower bound
+$\log(0.05\,\Zhat)$ (from Markov's inequality, since $\Zhat$ is unbiased), and the island estimates. Islands are not
+weighted by their evidence estimates.
+
+\paragraph{Diagnostics.} The method reports, without changing any output: E1 and E2 as in the calibration, computed on the
+final islands; E3, whether the final local search strictly improved the best model; a low-effective-sample-size flag (some
+stage below $0.5N$); and the models within $10^{-9}$ of the best log score.
+
+\paragraph{Runs without output.} A run stops without estimates when its inputs are invalid, when no predictor or no
+response variation remains, when the memory check before the run or a later one fails, when the elapsed time plus the
+last operation would exceed the time allocation (checked after every stage, grid construction and local search), when all
+three score computations fail, or when no schedule can be built. On such stops the method returns the best model scored
+so far, marked incomplete, and marks every estimate unavailable.
+
+% =====================================================================================================
+\section{The parameter table}\label{sec:m-table}
+
+Table~\ref{tab:m-params} lists every tuning constant of the method. Each is fixed or a function of $(n,p)$; none is set
+by the user. The column ``Theory'' says whether a theorem of the companion section uses the parameter, and how. Code
+locations are relative to \code{Scripts/SMC_BVS/core/}; code names, where they differ from the paper's symbols, are given
+in parentheses. The example column uses $n=200$ and $p=10{,}000$.
+
+{\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.08\linewidth}>{\raggedright\arraybackslash}p{0.19\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.14\linewidth}@{}}
+\caption{Every parameter of the method.}\label{tab:m-params}\\
+\toprule
+Symbol & Meaning & Value & $n{=}200$, $p{=}10^4$ & Code & Theory \\ \midrule \endfirsthead
+\toprule
+Symbol & Meaning & Value & $n{=}200$, $p{=}10^4$ & Code & Theory \\ \midrule \endhead
+\multicolumn{6}{@{}l}{\emph{Prior}} \\
+$K$ & size cap & $\min(p,\lfloor n/2\rfloor)$ & 100 & \code{cpp/v3_score.h:40}; \code{v3_preprocess.R:21} (\code{K}) & all \\
+$w(k)$, $\bar w_K$ & model prior $\BB(1,p)$, renormalised & $\tfrac12/\binom{2p-1}{k}$ & --- & \code{cpp/v3_score.h:61-70} (\code{logw}, \code{logWK}) & all \\
+$g$, ridge & slab scale and ridge & $g=n$, $I$ & --- & \code{cpp/v3_score.h:175-183} & all \\
+$a_0$, $b_0$ & inverse-gamma shape, scale & $0.01$, $0.01$ & --- & \code{cpp/v3_score.h:14} & all \\
+\multicolumn{6}{@{}l}{\emph{Blocks and start}} \\
+$B$ & block size cap & $\min(\lfloor\sqrt n\rfloor,\lfloor\sqrt p\rfloor,16)$ & 14 & \code{v3_preprocess.R:22}; cap 16 at \code{cpp/v3_core.cpp:145-146} (\code{B_MAX}) & start law, reported model ($15=16-1$) \\
+--- & neighbour threshold & $\abs{r}>\sqrt{2\log p/n}$; 1 to $B$ neighbours & --- & \code{cpp/v3_blocks.h:146-172} & none \\
+--- & start-mode enumeration cap & $10^6$ & --- & \code{cpp/v3_core.cpp:469}; \code{cpp/v3_start.h:271-305} & delivery \\
+\multicolumn{6}{@{}l}{\emph{Exact case}} \\
+--- & enumerate if $\abs{\Om}\le$ & $(5H_0+4N_0)\,p$ & --- & \code{cpp/v3_core.cpp:71-85}; \code{v3_fit.R:105-106} & scope of the estimate results \\
+\multicolumn{6}{@{}l}{\emph{Sampler}} \\
+--- & islands & $4$ & 4 & \code{v3_run.R:91} (\code{islands}) & estimates, pooled evidence \\
+$N_0$ & particles per island, tier 0 & $\max(2500,n,p)$ & 10,000 & \code{v3_preprocess.R:25} & sampler conventions \\
+$N_1$ & particles per island, tier 1 & $4N_0$ & 40,000 & \code{v3_preprocess.R:30} & sampler conventions \\
+$L$ & burn-in rounds at $\phi=1$ & $\max(4,\lceil\log_2(n+1)\rceil)$ & 8 & \code{v3_preprocess.R:24} & sampler conventions \\
+--- & measured rounds & $4$ & 4 & \code{v3_run.R:90}; \code{v3_calib.R:12} & sampler conventions \\
+--- & resampling & multinomial, every stage & --- & \code{cpp/v3_engine.h:316-327} & sampler conventions \\
+--- & moves per round & $p$ Gibbs, 1 uniform swap, $B$ neighbour swaps, 1 independence & --- & \code{cpp/v3_engine.h:111-214} & sampler conventions \\
+\multicolumn{6}{@{}l}{\emph{Calibration}} \\
+$H_0$ & calibration particles, tier 0 & $\lceil512N_0/2500\rceil$ & 2,048 & \code{v3_preprocess.R:26} & none \\
+$T_0$ & stage ceiling, tier 0 & $\max(1000,\ell_n^2)$ & 1,000 & \code{v3_preprocess.R:27} & none \\
+--- & tiers & $e\in\{0,1\}$, factor $4^e$, one escalation & --- & \code{v3_preprocess.R:30}; \code{v3_calib.R:150-159} & none \\
+--- & pilot ESS target & $0.90H_e$ & --- & \code{cpp/v3_calib.h:31} & none \\
+--- & pilot step floor & $1/T_e$ & --- & \code{cpp/v3_calib.h:38-43} & none \\
+--- & grid restricted-ESS target & $0.90$ & --- & \code{cpp/v3_calib.h:79,84,92} & none \\
+--- & bisections & 60 & --- & \code{cpp/v3_calib.h:34,82} & none \\
+--- & candidate set $V$ & $\emptyset$, top $20p$ by $\gamma_0$, top $20p$ by $F$ & --- & \code{cpp/v3_core.cpp:699-724}; \code{cpp/v3_ledger.h:78} & none \\
+--- & rebuild iterations & at most $\ell_n$ & 14 & \code{v3_calib.R:84-119} & none \\
+--- & triggers E1, E2 & $1$ (log score), $1$ (s.d.\ of $\log\Zhat_r$) & --- & \code{v3_calib.R:60-61,101-110} & none \\
+--- & grid fallback & on & --- & \code{v3_calib.R:120-125,163-169}; \code{v3_fit.R:151} & delivery \\
+\multicolumn{6}{@{}l}{\emph{Local searches}} \\
+$\ell_n$ & base move cap & $\lceil\log_2(n+p+1)\rceil$ & 14 & \code{v3_preprocess.R:23} (\code{ell}) & reported model; delivery \\
+--- & move cap from the start mode & $\ell_n+\abs{\tSz}$ & --- & \code{cpp/v3_core.cpp:473}; \code{v3_run.R:100-101} (\code{ls0_cap}) & reported model; delivery \\
+--- & search from the start mode & on & --- & \code{v3_fit.R:73} (\code{ls0 = TRUE}); \code{cpp/v3_core.cpp:460-481} & reported model \\
+\multicolumn{6}{@{}l}{\emph{Outputs}} \\
+--- & pooling & equal weights & --- & \code{v3_run.R:154,162} & estimates \\
+--- & MPM threshold & $\PIPhat_j>1/2$ & --- & \code{v3_run.R:163} & estimates \\
+--- & stored models & best $40p+1$ by $F$ & 400,001 & \code{cpp/v3_ledger.h:78} & output of a run (distribution) \\
+--- & evidence lower bound & $0.05\,\Zhat$ & --- & \code{v3_run.R:155} & none \\
+--- & low-ESS flag & ESS $<0.5N$ & --- & \code{v3_run.R:201} & none \\
+--- & near-tie window & $10^{-9}$ & --- & \code{v3_run.R:171} & none \\
+\multicolumn{6}{@{}l}{\emph{Computing}} \\
+--- & allocation defaults & 8 GB, 24 h & --- & \code{v3_fit.R:73,92} & delivery \\
+--- & score cache & $500p$ models, cleared when full & --- & \code{v3_run.R:92} & none \\
+--- & seed & integer in $[1,2^{31}-1]$ & --- & \code{v3_preprocess.R:7-11} & method conventions \\
+\midrule
+\multicolumn{6}{@{}l}{\emph{Two fixed integer limits (facts of the code)}} \\
+--- & base cap check & $\ell_n\le10^6$, else the run stops & --- & \code{v3_run.R:96} & delivery domain \\
+--- & integer-range check & $\ell_n+\abs{\tSz}\le2^{31}-1$, else the run stops & --- & \code{cpp/v3_core.cpp:474} & delivery domain \\
+\bottomrule
+\end{longtable}}
+
+The two limits at the end of the table are facts of the code, not tuning choices. The first can bind only when $n+p+1$
+exceeds $2^{10^6}$; the second only when the start mode has more than about $2.1\times10^9$ predictors, which needs
+$n\gtrsim4.3\times10^9$, since $\abs{\tSz}\le\lfloor n/2\rfloor$.
+
+% =====================================================================================================
+\section{Why sequential Monte Carlo, and why this start law}\label{sec:m-intuition}
+
+The posterior is known up to one constant, so the difficulty is not computing it but finding where its mass is: the
+model space is enormous and rugged. It is rugged for two reasons. Correlated predictors create near-ties between models
+that differ by swapping a true predictor for its proxy. And a predictor that is useless once the true ones are in can look
+useful on its own: it leaks signal.
+
+A Markov chain started at an arbitrary model can spend a long time stuck near one of these near-ties. Sequential Monte
+Carlo avoids that by starting from a distribution that is easy and already close to the target, and moving towards the
+target in small steps, with many particles at once. At each step the particles that the next distribution likes are
+copied and the others dropped, and Markov moves spread the copies out again. The independence moves, drawn from the start
+law, let particles jump between near-equivalent models in one step. Four independent islands give a check of stability.
+
+The start law is that easy, close distribution. It resolves exactly the hardest local competition, a true predictor
+against its close proxies, because correlated predictors tend to land in the same block, where every subset is scored.
+It can be normalised and sampled exactly, so the particles start from independent draws and the evidence estimate has an
+exact anchor. What it gets wrong is leakage across blocks. The local search from the start mode undoes that: it deletes
+the spurious predictors one per move. Because this search uses no random numbers, it gives a second, deterministic route
+to the true model that does not depend on how well the particles mixed.
+
+Finally, the calibration fits the sequence of distributions to the data set and then freezes it before the final run. That
+is what makes the final run a standard sampler with an unbiased evidence estimate, and what lets every reported number be
+analysed.
+
+\bibliography{../shared/refs}
+
+\appendix
+% =====================================================================================================
+\section{The engine for $p=10^6$ (an engineered variant)}\label{app:m-1m}
+
+\emph{This appendix describes a different engine, not the method above. The theorems of the companion section are about the
+method above.} To run at $p=10^6$, the planned engine changes the method in the ways listed below (draft engineering
+specification of 2026-11-15; values marked ``precision study'' are not yet decided). The 1M run will be reported as an
+engineered variant validated against the method above on shared problem sizes ($p=10^4$, and $p=10^5$ where possible),
+not as a run covered by the theorems.
+
+\begin{enumerate}[leftmargin=1.8em,itemsep=2pt]
+  \item A fixed number of particles per island: $2{,}500$ (an arm with $10^4$ in the precision study), instead of
+    $\max(2500,n,p)$.
+  \item Sixteen islands in separate processes, merged afterwards (union of the stored models; equal-weight
+    Rao--Blackwellised inclusion probabilities as the primary estimate), instead of four.
+  \item Random numbers addressed by position (counter-based), instead of sequential streams.
+  \item A batched scoring kernel with different floating-point arithmetic, agreeing with the method's scores to about
+    $10^{-9}$ in relative terms.
+  \item A different partition: complete linkage truncated at a correlation threshold, the same top-down cut, and packing by
+    minimum index; blocks capped at $14$ predictors.
+  \item A bounded calibration: the pilot and at most a fixed number of rebuilds (0 or 3, to be decided by the precision
+    study), with no escalation except after a construction failure.
+  \item An optional refinement of the frozen grid, splitting every interval into $m\in\{1,4\}$ equal parts (precision study).
+  \item New estimators reported beside the method's own: a deterministic lower bound on $\log Z$ from the stored models,
+    an occupancy-based evidence estimate, and inclusion probabilities computed from the stored models.
+  \item Systematic resampling and more neighbour-swap moves per round, off unless the precision study shows a gain.
+  \item No score cache and no leader stores in the final islands.
+\end{enumerate}
+
+% =====================================================================================================
+\section{Notation}\label{app:m-notation}
+[Shared with the companion section; the full table is Appendix~A there. Symbols specific to this section: $B$, $\ell_n$,
+$L$, $N_0$, $H_0$, $T_0$, $e$, $\gamma_0$, $\bar Z_0$, $d(S)$, $\gamma_\phi$, $\phi$, $\omega_i$, $o_j$, $V$, $F_V$, $\rho_V$.]
+
+% =====================================================================================================
+\section{Where the sources and the code disagree (for HQ)}\label{app:m-disagree}
+[To be completed after the code check.] Known so far:
+\begin{enumerate}[leftmargin=1.8em]
+  \item The earlier method document describes an evidence-weighted pooled inclusion probability as primary; the code pools
+    the islands with equal weights and does not compute the weighted version (\code{v3_run.R:154,162};
+    \code{README.md:16}). This text follows the code.
+  \item A code comment says the block size satisfies $1\le B\le20$ (\code{cpp/v3_core.cpp:144}); the constant is $16$
+    (\code{cpp/v3_core.cpp:145-146}). This text uses $16$.
+\end{enumerate}
+
+\end{document}

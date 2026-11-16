@@ -25,7 +25,7 @@ $\ell_n$ & base move cap $\lceil\log_2(n+p+1)\rceil$ & \S\ref{sec:method} \\
 $\Shat$ & reported model & \S\ref{sec:method} \\
 $\PIPhat_{r,j}$, $\Zhat_r$ & estimates of island $r\in\{1,\dots,4\}$ & \S\ref{sec:method} \\
 $\PIPhat_j$, $\Zhat$, $\MPMhat$ & pooled estimates and estimated median probability model & \S\ref{sec:method} \\
-$\Dom$ & bounded domain of $(n,\praw)$ on which the code's integer limits are not reached & \S\ref{sec:standing}, \S\ref{sec:reported} \\
+$\Dom$ & bounded domain of $(n,\praw)$ on which the code's integer limits are not reached & \S\ref{sec:reported} \\
 $A$ & dimension exponent ($p\le n^A$) & \S\ref{sec:standing} \\
 $\OP,\oP,O,o,\lesssim,\asymp,\gg$ & asymptotic notation & \S\ref{sec:asymptotics} \\
 $\varphi_0,g_0,\bar\theta,C_\beta$ & fixed constants of the fixed-design assumptions & \S\ref{sec:fixed} \\
@@ -80,8 +80,8 @@ Theorems~\ref{thm:reported-random} and~\ref{thm:reported-fixed}. They are operat
 statistical condition.
 \begin{enumerate}[label=(\roman*),leftmargin=2em]
   \item \emph{Idealised machine:} exact arithmetic at unit cost (including $\exp$ and $\log$); no integer, index,
-    stream-identifier or allocation overflow; wall time at most $\tau\cdot(\text{operation count})+\tau_0$ and peak memory at
-    most $\beta\cdot(\text{words held})+\beta_0$ for fixed constants $(\tau,\tau_0,\beta,\beta_0)$; every allocation within
+    stream-identifier or allocation overflow; wall time at most $c_{\mathrm t}\cdot(\text{operation count})+c_{\mathrm t0}$ and peak memory at
+    most $c_{\mathrm m}\cdot(\text{words held})+c_{\mathrm m0}$ for fixed constants $(c_{\mathrm t},c_{\mathrm t0},c_{\mathrm m},c_{\mathrm m0})$; every allocation within
     the declared memory succeeds; the build and its dependencies work; no external interruption or worker crash.
   \item \emph{Covered configuration:} the production core with the local search from the start mode (cap
     $\ell_n+\abs{\tSz}$) and the tie-aware start-mode fallback, implemented with
@@ -89,7 +89,7 @@ statistical condition.
     search from the start mode starting at the smallest, lexicographically first maximiser of the start law; the default
     list of summaries only; certificate computations with declared polynomial operation and memory budgets, included in
     the allocation; serial execution or a fixed number of concurrent workers (memory envelope multiplied by that number);
-    a fixed number of islands; the grid fallback switched on (the shipped default).
+    a fixed number of islands; the grid fallback switched on (the default).
   \item \emph{Random numbers and stops:} ideal independent uniform random numbers; the method's stop-and-return rule and
     stop-only resource guard as coded (a stopped run returns no estimates).
   \item \emph{Inputs and allocation:} a valid seed (an integer in $[1,2^{31}-1]$) and a declared memory and time allocation
@@ -103,14 +103,34 @@ with these two limits lifted, everything else (other validators, the start-mode 
 method cap) kept as coded; under it the delivery clauses hold for every $n$. Plain (i) does not give delivery for every
 $n$.
 
-\paragraph{Convention \as{C3}: sampler.} Used only by Theorem~\ref{thm:outputs} and Remark~\ref{rem:unbiased}. Exact
-arithmetic; within each random stream, fresh independent ideal uniform random numbers; the final run's stream for each
-island independent of the data and of the calibration's streams; the coded start sampler returns exact draws from
-$\pi_0$, and the reported start normaliser equals the exact normalising constant of $\pi_0$'s unnormalised weights; the
-coded Markov moves realise their stated kernels, applied in a uniformly random order independent of the state; the
-calibration record is a function of the data and the calibration streams; each island's record is a measurable function
-of the calibration value and its stream; statements about estimates refer to the potential (uninterrupted) run,
-identified with the reported fields on completed runs.
+\paragraph{Convention \as{C3}: sampler.} Used only by Theorem~\ref{thm:outputs} and Remark~\ref{rem:unbiased}.
+\begin{enumerate}[label=(\roman*),leftmargin=2em,itemsep=1pt]
+  \item The computer does exact arithmetic.
+  \item Within each random stream, the random numbers are fresh, independent, ideal uniforms; the final run's stream for
+    each island is independent of the data and of the calibration's streams.
+  \item The coded start sampler returns exact draws from $\pi_0$, and the reported start normaliser equals the exact
+    normalising constant of the unnormalised weights of $\pi_0$.
+  \item The coded Markov moves realise their stated kernels, applied in a uniformly random order that is independent of
+    the state.
+  \item The calibration record is a function of the data and the calibration streams, and each island's record is a
+    measurable function of the calibration value and its stream.
+  \item Statements about estimates refer to the potential (uninterrupted) run, which is identified with the reported
+    values on completed runs.
+\end{enumerate}
+
+\section{Explicit constants}\label{app:constants}
+
+The constants of Section~\ref{sec:fixed} are explicit. We copy them from the statements of the underlying results; none is
+optimised.
+\begin{itemize}[leftmargin=1.5em]
+  \item \emph{Beta-min constant:} $c_0(\sz,A)=\max\{4C_*,\,32[\sz(A+1)+2]\}$, where $C_*$ is a constant of the proof of the
+    posterior concentration theorem. [For Theory after the resume: the value or formula of $C_*$.]
+  \item \emph{Margin constant:} with $j_0=\lceil(2A+1)\sz\rceil+1$, $C_A:=8+3A$ and
+    $C_x:=Aj_0+\sz+\log(j_0+1)+2$,
+    \[
+      c_1(\sz,A)=\Big(\sqrt{2C_x}+\sqrt{2C_x+C_Aj_0+(2/\log2)\{\sz(A+1)+2\}}\Big)^2 .
+    \]
+\end{itemize}
 
 \section{Status ledger (internal; removed for submission)}\label{app:status}
 

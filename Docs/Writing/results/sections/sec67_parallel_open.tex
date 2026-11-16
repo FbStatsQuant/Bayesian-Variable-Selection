@@ -40,9 +40,11 @@ statement in this paper.
     condition of Remark~\ref{rem:post-fixed-asm}(iii) that involves no design quantity. Whether that condition holds without
     any eigenvalue condition is open. A positive answer would remove the vanishing floor \as{NC} from
     Theorem~\ref{thm:post-margin}, so that it would need no eigenvalue condition away from the true model.
-  \item \emph{The floor on the truth.} Replace the floor $\lmin(\Rhat_{\Sz})\ge\varphi_0^2$ in Assumption~\ref{asm:margin} by a bounded ridge
-    cost; the floor is sufficient and not known to be necessary.
-  \item \emph{The margin constant.} The constant $c_1(\sz,A)$ in Assumption~\ref{asm:margin} is explicit but not optimised.
+  \item \emph{The floor on the true model.} Replace the floor $\lmin(\Rhat_{\Sz})\ge\varphi_0^2$ in
+    Assumption~\ref{asm:margin} by a weaker condition, a bound on the ridge cost of the true model; the floor is sufficient
+    and not known to be necessary.
+  \item \emph{The margin constant.} Optimise the constant $c_1(\sz,A)$ in Assumption~\ref{asm:margin}, which is explicit but
+    not optimised.
   \item \emph{A lower bound on every design.} Prove $\E[1-\pis{\Sz}]\gtrsim\rn$ under a floor on the sets
     $\Sz\cup\{j\}$, matching Theorem~\ref{thm:post-fixed} on every such design (Remark~\ref{rem:sharp-not}).
   \item \emph{The $\sqrt{\log n}$ in probability when $\log p=o(\log n)$}, and the matching upper bound in expectation on
@@ -53,9 +55,9 @@ statement in this paper.
     (Remark~\ref{rem:reported-fixed}).
   \item \emph{Raw-scale signals} in Theorems~\ref{thm:start}, \ref{thm:reported-random} and~\ref{thm:outputs}, which
     are stated with the signal fixed on the standardised scale \as{FSt}.
-  \item \emph{Certified screening with signals that vary with $n$} under a sparse eigenvalue floor, in the plain form of
+  \item \emph{Certified screening with signals that vary with $n$} under a sparse eigenvalue floor, in the form of
     Theorem~\ref{thm:screen}.
-  \item \emph{Sharper rates for the printed outputs} (Theorem~\ref{thm:outputs}).
+  \item \emph{Sharper rates for the reported estimates} (Theorem~\ref{thm:outputs}).
   \item \emph{The parallel method}: the inheritance note, and results for many islands and island weighting
     (Section~\ref{sec:parallel}).
 \end{enumerate}

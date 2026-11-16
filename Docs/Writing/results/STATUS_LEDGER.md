@@ -10,7 +10,7 @@ Plain-label vocabulary (assignment): "proved and independently checked" · "prov
 
 | Result (reader numbering) | card row | master(s) @version: status verbatim | D2 plain label |
 |---|---|---|---|
-| Theorem 1, in-probability form (HPM/MPM/PIPs) | 1.1 | `SOP:TH09@1.0.2`: "PROVED-CHECKED (T03♯ only: the conjunction of W3-T03ACC:T03S.1–T03S.4, clause map CHECKPOINT_4.md §2; council R1, MANIFEST 9714aea4…, astra=9.5 PASS, opus=9.4 PASS; LC-A, LC-B, LC-C VERIFIED). Not upgraded …: T02(i♯) and T02(ii♯) PROVED, SF/XF VERIFIED; T01–T03 PROVED-LOCKED …" · the card's alias `W3-POST:Thm-1@1.0.0` still reads "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)" **[FLAG H1]** | proved and independently checked |
+| Theorem 1, in-probability form (HPM/MPM/PIPs) | 1.1 | `SOP:TH09@1.0.2`: "PROVED-CHECKED (T03♯ only: the conjunction of W3-T03ACC:T03S.1–T03S.4, clause map CHECKPOINT_4.md §2; council R1, MANIFEST 9714aea4…, astra=9.5 PASS, opus=9.4 PASS; LC-A, LC-B, LC-C VERIFIED). Not upgraded …: T02(i♯) and T02(ii♯) PROVED, SF/XF VERIFIED; T01–T03 PROVED-LOCKED …" · the card's alias `W3-POST:Thm-1@1.0.0` still reads "T03♯: PROVED; SF VERIFIED (W2-VT03R); XF VERIFIED (A-REV2)" **[FLAG H1]** | proved and independently verified (two independent verification passes) — HQ ruling H1, 2026-11-16 |
 | Theorem 1, expectation display | 1.1 | `W3-POST2:C@1.0.5`: "PROVED-CHECKED, conditional on W3-POST:Prop-LB, [L1a′], W2-APP:POST, W3-POST:Thm-1"; `W3-POST:Prop-LB@1.0.0`: "PROVED (by this seat, unchecked)"; [L1a′] = `W3-POST/lemmas/L1a_size_tail.md`, no registry row (unchecked per READER_VERSIONS); `W2-APP:POST@1.0.7`: "PROVED-CHECKED" | proved and checked, conditional on two supporting lemmas (a size-tail lemma and a lower bound on the posterior miss) that are proved but not yet independently checked |
 | Theorem 1′ | 1.1 | `W3-POST2:E@1.0.5`: "PROVED-CHECKED, conditional on W2-APP:POST, W3-POST:Thm-1"; `W3-POST2:A0@1.0.5`: "PROVED-CHECKED"; uses C case (iii) → inherits C's conditions | proved and checked, conditional on the same two supporting lemmas as the expectation display |
 | Remark (o) determinant growth | 1.1 | `W3-POST2:A1@1.0.5`: "PROVED-CHECKED, conditional on W3-POST:Thm-1, W2-APP:POST" | (remark) proved and checked |
@@ -33,8 +33,10 @@ Plain-label vocabulary (assignment): "proved and independently checked" · "prov
 | Output-identical parallel engine | 4.2 | no registry row; engineering fact + note in progress | in progress (empirical; no theorem) |
 | Many islands / island weighting at 10⁶ | 4.3 | no registry row; "OPEN" | open |
 
-## Flags for HQ
-- **H1.** `W3-POST:Thm-1@1.0.0` still carries the pre-acceptance string, while `SOP:TH09@1.0.2` (the same theorem, card row 1.1) is PROVED-CHECKED (T03♯ only) since 6cd699dd. D2 labels Theorem 1's in-probability form "proved and independently checked" on the strength of SOP:TH09. Please confirm, or have the recorder sync the alias row.
-- **H2.** Rows 3.1/3.2 (Theorems 6, 7) have a pending RM2-R reader swap (W3-READER LOG 08:09, item 1). D2 uses READER_VERSIONS v0.4 as it stands; the theorem text will be re-synced when the swap lands.
-- **H3.** `W3-READER:PoolZ` has no registry row on main; D2 states the pooled-evidence unbiasedness as a remark, "not yet independently checked".
-- **H4.** The expectation display of Theorem 1, Theorem 1′ and Theorem 4 are conditional on `W3-POST:Prop-LB` ("PROVED (by this seat, unchecked)") and `[L1a′]` (no registry row). The card says Prop-LB is implied by the checked `W3-PSHARP:B` (recorder item). If that is recorded, these become "proved and checked, conditional on the size-tail lemma" only.
+## Flags for HQ — answered 2026-11-16 (HQ, for Theory)
+- **H1.** Label Theorem 1 (in-probability form) "proved and independently verified (two independent verification passes)", with a plain-words note on the two passes; never "council". Applied to Theorem 1, and to its dependants' notes (Theorem 2, Theorem 9B, row 2.2).
+- **H2.** "Revision pending" for rows 3.1/3.2 until the RM2 follow-up is recorded after the resume. Applied.
+- **H3.** Pooled evidence: "not yet independently checked". Applied.
+- **H4.** Prop-LB is not logged as implied by PSHARP:B (an unchecked, post-freeze item). The expectation form of Theorem 1, Theorem 1′ and Theorem 4 stay conditional on the lower-bound proposition and lemma [L1a′], not yet independently checked. Applied.
+- Constants: $c_1$ copied from `W3-POST2/STATEMENT.md:130` ($C_A$ at :22); $c_0$ from `W3-POST/STATEMENT.md:75`, with the proof constant $C_*$ left as a placeholder for Theory.
+- Song–Liang lines: rewritten as full sentences with the same claims (HQ permission). The Codex read checks each one against the card line and the PDF.

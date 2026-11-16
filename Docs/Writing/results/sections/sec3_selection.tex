@@ -64,11 +64,13 @@ The expectation is over the noise, with the design fixed. Under form (b) of \as{
 $\tmin\sqrt{n/\log n}$ diverges.
 \end{theorem}
 
-\status{The in-probability conclusions (the limit in~\eqref{eq:post-hpm}, and~\eqref{eq:post-op}): \textbf{proved and
-independently checked}. The expectation bound~\eqref{eq:post-exp}, and the explicit bound $1-4C_1\rn$
-in~\eqref{eq:post-hpm} that follows from it: \textbf{proved and checked, conditional on two supporting lemmas} (a tail
-bound on the posterior model size, and a lower bound on the posterior miss) \textbf{that are proved but not yet
-independently checked}. \bridgepending{} Verbatim registry strings: Appendix~\ref{app:status}, row 1.1.}
+\status{The in-probability conclusions (the limit in~\eqref{eq:post-hpm}, and~\eqref{eq:post-op}): \textbf{proved and independently verified} (two independent verification passes: one by a reviewer of the same model
+family as the author, one by a reviewer of a different model family; all inputs of the result were discharged on
+2026-11-16). The
+expectation bound~\eqref{eq:post-exp}, and the explicit bound $1-4C_1\rn$ in~\eqref{eq:post-hpm} that follows from it:
+\textbf{proved and checked, conditional on two supporting results} (a proposition giving a lower bound on the posterior
+miss, and a lemma bounding the tail of the posterior model size) \textbf{that are proved but not yet independently
+checked}. \bridgepending{} Verbatim registry strings: Appendix~\ref{app:status}, row 1.1.}
 
 \begin{remark}[Further consequences]\label{rem:post-fixed-cons}
 (i) \emph{Sensitivity and specificity.} By Lemma~\ref{lem:summaries} and~\eqref{eq:post-exp}, inclusion probabilities of
@@ -76,19 +78,20 @@ true predictors are close to one and those of null predictors close to zero, at 
 (ii) \emph{Without beta-min.} Under the other assumptions of Theorem~\ref{thm:post-fixed}, the posterior mass of models
 that strictly contain $\Sz$ (over-fitted models) is $\OP(\rn)$, and every true predictor with
 $\theta_j^{*2}\ge c\,\sigs^2\log n/(n\varphi_0^2)$, $c>c_0(\sz,A)$, has $1-\PIP_j=\OP(\rn)$. Specificity can fail
-without beta-min (a numerical counterexample shows this).
+without beta-min (a numerical counterexample, reported with the proof, shows this).
 (iii) \emph{Large models.} Models of size at least $3(A+1)(\sz+1)\log n$ carry posterior mass $\OP(n^{-1/2})$ with no
 eigenvalue condition; this uses a bound on the coefficients instead.
 \end{remark}
 
-The next result asks for an eigenvalue floor on the true model only, and for no beta-min condition. In exchange it asks
-for an identifiability margin: every small model that misses a true predictor must leave part of the signal
-unexplained. The vanishing floor \as{NC} is kept.
+\status{(ii): part of the posterior concentration result, with the status of the in-probability form of
+Theorem~\ref{thm:post-fixed}. (iii): the size-tail lemma, \textbf{proved, not yet independently checked}.}
+
+Can the eigenvalue floor away from the true model, and the beta-min condition, be dropped?
 
 \inwords{The conclusions of Theorem~\ref{thm:post-fixed} still hold if, instead of a floor on every small set of
 predictors and a lower bound on each true coefficient, we ask only that the true predictors are not collinear among
 themselves, and that every small model that misses a true predictor leaves unexplained signal of at least a constant times
-$\sigs^2\log n$.}
+$\sigs^2\log n$. The vanishing floor \as{NC} is kept.}
 
 \begin{localassumption}[Floor on the true model and an identifiability margin]\label{asm:margin}
 \begin{asmitems}
@@ -98,30 +101,33 @@ $\sigs^2\log n$.}
     $\norm{(I-P_S)\mu}^2\ge c_{\mathrm{id}}\,\sigs^2\log n$, for a fixed $c_{\mathrm{id}}>c_1(\sz,A)$, where $c_1(\sz,A)$ is an
     explicit constant that depends only on $(\sz,A)$.
 \end{asmitems}
-\rulesout{small wrong models that explain almost all of the mean signal. Beyond the vanishing floor \as{NC}, it asks for
-no eigenvalue condition away from the true model.}
+\rulesout{small wrong models that explain almost all of the mean signal.}
 \end{localassumption}
+
+Beyond the vanishing floor \as{NC}, Assumption~\ref{asm:margin} asks for no eigenvalue condition on sets other than the
+true model.
+
 
 \begin{theorem}[Posterior concentration under an identifiability margin]\label{thm:post-margin}
 Let the design be fixed and assume \as{GL}, \as{DIM}, \as{SP}, \as{BC}, \as{NC} and Assumption~\ref{asm:margin}. Then
-the conclusions~\eqref{eq:post-exp}--\eqref{eq:post-op} of Theorem~\ref{thm:post-fixed} hold, for every $n\ge n_0$ and
-every design and $\tstar$ that satisfy the assumptions at that $n$, with $n_0$ and $C_1$ depending only on
-$(\sz,A,\sigs^2,\bar\theta,\varphi_0,g_0,c_{\mathrm{id}})$.
+the conclusions~\eqref{eq:post-exp}--\eqref{eq:post-op} of Theorem~\ref{thm:post-fixed} hold, the expectation bound with
+constants depending only on $(\sz,A,\sigs^2,\bar\theta,\varphi_0,g_0,c_{\mathrm{id}})$.
 \end{theorem}
 
-\status{\textbf{Proved and checked, conditional on the same two supporting lemmas} as the expectation bound of
-Theorem~\ref{thm:post-fixed}. \bridgepending{} Verbatim: Appendix~\ref{app:status}, row 1.1.}
+\status{\textbf{Proved and checked, conditional on the same two supporting results} (the lower-bound proposition
+and the size-tail lemma, not yet independently checked) as the expectation bound of Theorem~\ref{thm:post-fixed}. \bridgepending{} Verbatim: Appendix~\ref{app:status}, row 1.1.}
 
 \begin{remark}[On the assumptions]\label{rem:post-fixed-asm}
-(i) \emph{The constants.} $c_0(\sz,A)$ and $c_1(\sz,A)$ are explicit but not optimised. Under \as{EF} and \as{BM}(a),
+(i) \emph{The constants.} $c_0(\sz,A)$ and $c_1(\sz,A)$ are explicit but not optimised (Appendix~\ref{app:constants}). Under \as{EF} and \as{BM}(a),
 Assumption~\ref{asm:margin} holds with $c_{\mathrm{id}}=C_\beta^2\varphi_0^2(1-1/n)$. So Theorem~\ref{thm:post-margin}
 contains Theorem~\ref{thm:post-fixed} when $C_\beta^2\varphi_0^2>c_1$; when $c_0<C_\beta^2\varphi_0^2\le c_1$,
-Theorem~\ref{thm:post-fixed} applies and Theorem~\ref{thm:post-margin} does not follow from it.
+the two theorems coexist: Theorem~\ref{thm:post-fixed} applies, and Theorem~\ref{thm:post-margin} is not shown to apply.
 (ii) \emph{Coefficients.} \as{BC} is used only through the energy bound $\norm{\mu}^2\le n\sz^2\bar\theta^2$; any bound
 $\norm{\mu}^2\le nM_\mu$ with a fixed $M_\mu$ suffices.
 (iii) \emph{A weaker form of \as{NC}.} \as{NC} can be weakened to a condition on the Occam factors of over-fitted
-models, the \emph{superset Occam-sum condition}. A readable sufficient form is determinant growth: for a fixed $c_D>0$
-and every set $T$ of null predictors with $1\le\abs{T}\le3(A+1)(\sz+1)\log n$,
+models, the \emph{superset Occam-sum condition} (stated in full with the proof); \as{NC} implies it for all large $n$. A
+readable sufficient form is determinant growth: for a constant $c_D>0$ and every set $T$ with
+$1\le\abs{T}\le3(A+1)(\sz+1)\log n$,
 \[
   \frac{\det H_{\Sz\cup T}\,\det(G_{\Sz}+I)}{\det H_{\Sz}\,\det(G_{\Sz\cup T}+I)}\ \ge\ \{c_D(n+1)\}^{\abs{T}} .
 \]
@@ -139,20 +145,23 @@ other designs it is not known.
 
 \begin{remark}[At moderate $n$]\label{rem:moderate}
 The theorems describe the limit $n\to\infty$. The posterior miss is carried mainly by the $p-\sz$ models
-$\Sz\cup\{j\}$ that add one null predictor to the true model. Each is individually light: its posterior odds against
+$\Sz\cup\{j\}$ that add one null predictor to the true model. Each is individually light: its posterior odds relative to
 $\Sz$ are of order $n^{-1/2}/p$, times a random factor driven by a $\chi^2_1$ variable. But they are numerous, and together
 they can weigh as much as $\Sz$ itself. So at moderate $n$ and large $p$ the posterior is spread over $\Sz$ and many
 models with one extra null predictor.
 \end{remark}
 
 \begin{remark}[Comparison with \citet{SongLiang2015}]\label{rem:SL-fixed}
-Theorems~\ref{thm:post-fixed} and~\ref{thm:post-margin} give full-model selection consistency for the shipped prior,
-with an explicit, design-uniform expectation rate and exact HPM/MPM; no tuning (Song--Liang's Theorem~3 gives sure
-screening only: sensitivity $\to1$, specificity not controlled; their MAP consistency is in their supplement).
-Theorem~\ref{thm:post-margin} replaces the bounded-size floor \as{EF} off the truth and beta-min by a residual-signal
-identifiability margin, while retaining the vanishing floor \as{NC} (in the style of \citealp{NarisettyHe2014}; compare
-Song--Liang's population-level identifiability Condition~3 for their Theorem~3). Narrower in dimension ($n^A$ against
-Song--Liang's $P_n<e^{Cn^\alpha}$, $\alpha<1$: their Corollary~1 via their~(10), inherited by their Theorem~3).
+Theorems~\ref{thm:post-fixed} and~\ref{thm:post-margin} give selection consistency for the full model, under the prior
+as the method sets it and with no tuning: an explicit rate in expectation that is uniform over designs, and exact
+recovery by the highest posterior model and the median probability model. Theorem~3 of Song and Liang gives sure
+screening only: its sensitivity tends to one, and its specificity is not controlled; their consistency result for the
+maximum a posteriori model is in their supplement. Theorem~\ref{thm:post-margin} replaces the floor \as{EF} on sets of
+bounded size away from the true model, and the beta-min condition, by an identifiability margin on the residual signal,
+while keeping the vanishing floor \as{NC}. This is in the style of \citet{NarisettyHe2014}; compare the population-level
+identifiability condition of Song and Liang, their Condition~3, used for their Theorem~3. Our results are narrower in
+dimension: we allow $p\le n^A$, while Song and Liang allow $P_n<e^{Cn^\alpha}$ with $\alpha<1$, through their
+Corollary~1 and their condition~(10), which their Theorem~3 inherits.
 \end{remark}
 
 \subsection{Random Gaussian designs}\label{sec:random}
@@ -169,8 +178,6 @@ The rows of $\Xr$ are i.i.d.\ $\Normal_p(m_n,\Sig)$, where $\Sig$ is a correlati
 \rulesout{dependent rows and non-Gaussian predictors.}
 \end{assumption}
 
-Since the method standardises every predictor, the unit diagonal only fixes the scale of each predictor.
-
 \begin{assumption}{FSb}{Fixed signals, raw scale}
 $b_{\mathrm{lo}}\le\abs{\beta^*_j}\le b_{\mathrm{hi}}$ for every $j\in\Sz$, with fixed $0<b_{\mathrm{lo}}\le b_{\mathrm{hi}}<\infty$.
 \rulesout{true coefficients that shrink to zero or blow up as $n$ grows.}
@@ -179,19 +186,21 @@ $b_{\mathrm{lo}}\le\abs{\beta^*_j}\le b_{\mathrm{hi}}$ for every $j\in\Sz$, with
 \begin{assumption}{EFS}{Population eigenvalue floor}
 $\lmin(\Sigma_{n,S})\ge\varphi^2$ for every $S$ with $\abs{S}\le5(A+1)(\sz+1)\log n$, for a fixed $\varphi\in(0,1]$ (for
 instance, $\lmin(\Sig)\ge\varphi^2$).
-\rulesout{population collinearity within sets of $O(\log n)$ predictors. No upper bound on the eigenvalues is needed.}
+\rulesout{population collinearity within sets of $O(\log n)$ predictors.}
 \end{assumption}
 
 \begin{theorem}[Posterior concentration, random Gaussian design]\label{thm:post-random}
 Assume \as{GL}, \as{DIM}, \as{SP}, \as{GR}, \as{FSb} and \as{EFS}. Then, under the joint law of the design and the noise,
-\begin{gather*}
-  1-\pis{\Sz}=\OP\Big(\sqrt{\frac{\log n}{n}}\Big),\qquad \P\big(\HPM=\MPM=\Sz\big)\to1,\\
-  \max_{j\in\set{p}}\big|\PIP_j-\ind{j\in\Sz}\big|=\OP\Big(\sqrt{\frac{\log n}{n}}\Big).
-\end{gather*}
+\begin{gather}
+  1-\pis{\Sz}=\OP\Big(\sqrt{\frac{\log n}{n}}\Big),\qquad \P\big(\HPM=\MPM=\Sz\big)\to1,\label{eq:post-random}\\
+  \max_{j\in\set{p}}\big|\PIP_j-\ind{j\in\Sz}\big|=\OP\Big(\sqrt{\frac{\log n}{n}}\Big).\nonumber
+\end{gather}
 \end{theorem}
 
-\status{\textbf{Proved and independently checked} (both the fixed-design theorem it rests on and the transfer from
-population to sample conditions). \bridgepending{} Verbatim: Appendix~\ref{app:status}, row 1.2.}
+\status{The fixed-design result it rests on (Theorem~\ref{thm:post-fixed}, in-probability form): \textbf{proved and independently verified} (two independent verification passes: one by a reviewer of the same model
+family as the author, one by a reviewer of a different model family; all inputs of the result were discharged on
+2026-11-16). The
+transfer from population to sample conditions: \textbf{proved and independently checked}. \bridgepending{} Verbatim: Appendix~\ref{app:status}, row 1.2.}
 
 \begin{remark}[On the assumptions]\label{rem:post-random}
 (i) No upper bound on the eigenvalues of $\Sig$ and no beta-min condition beyond \as{FSb} are needed, and $p\gg n$ is
@@ -200,7 +209,10 @@ $(\log n)^{3/2}/\sqrt n$; the statement uses a constant floor for simplicity.
 (ii) Gaussian rows are used only to show that sample correlations of small sets of predictors are close to their
 population values; sub-Gaussian rows are expected to work but are not claimed. Without the lower bound $b_{\mathrm{lo}}$
 in \as{FSb}, the statements of Remark~\ref{rem:post-fixed-cons}(ii) still hold.
-(iii) This is the random-design setting of \citet{SongLiang2015}, here with $p\gg n$.
+\end{remark}
+
+\begin{remark}[Comparison with \citet{SongLiang2015}]\label{rem:SL-random}
+This is the random-design setting of Song and Liang; here $p\gg n$ is allowed.
 \end{remark}
 
 \subsection{The rate cannot be improved}\label{sec:sharp}
@@ -208,8 +220,8 @@ in \as{FSb}, the statements of Remark~\ref{rem:post-fixed-cons}(ii) still hold.
 Is $\rn$ the right rate? This subsection shows that no design allows a rate faster than $n^{-1/2}$, and that on two
 families of designs the extra factor $\sqrt{\log n}$ is really there.
 
-\inwords{(a) Whatever the design, the posterior cannot put more than about $1-c/\sqrt n$ of its mass on any one small
-model, because the prior and the Occam factor keep every one-predictor extension of it alive. (b) On designs whose null
+\inwords{(a) Whatever the design, the posterior cannot put more than about $1-c/\sqrt n$ of its mass on any one
+model with at most $\min(K-1,p/2)$ predictors, because the prior and the Occam factor keep every one-predictor extension of it alive. (b) On designs whose null
 predictors are orthogonal, or independent Gaussian, the posterior miss is on average at least a constant times
 $(\sz+1)\rn$, for every number of predictors. So the rate of Theorem~\ref{thm:post-fixed} cannot be improved under its
 assumptions.}
@@ -221,7 +233,7 @@ consistency; they describe where the rate is attained.
 \begin{asmitems}
   \item\label{asm:witness-energy} The true model size $\sz$ is fixed, and $\norm{\mu}^2\le nM_\mu$ and
     $\norm{\tstar}^2\le nM_\theta$ for fixed $M_\mu$, $M_\theta$.
-  \item\label{asm:witness-orth} \emph{Orthogonal null predictors.} The columns of $X$ outside $\Sz$ are mutually orthogonal
+  \item\label{asm:witness-orth} \emph{Orthogonal null predictors.} The columns outside $\Sz$ are mutually orthogonal
     and orthogonal to the columns in $\Sz$.
   \item\label{asm:witness-gauss} \emph{Gaussian null predictors.} The raw columns outside $\Sz$ have i.i.d.\ $\Normal(0,1)$
     entries, independent of $\Xr_{\Sz}$ and of $\varepsilon$, and $p\le n^A$.
@@ -247,12 +259,13 @@ and, if moreover $p\to\infty$,
 \end{equation}
 \end{theorem}
 
-In~\eqref{eq:sharp-b} and~\eqref{eq:sharp-c}, $\pi$ is the number $3.14\ldots$, not the posterior.
-Display~\eqref{eq:sharp-a} says that no model, the true one included, can carry posterior mass closer to one than about
-$(\abs{S}+1)/(3\sqrt n)$. Display~\eqref{eq:sharp-b} says that, on the witness designs, the expected posterior miss is at
-least $c\cdot(\sz+1)\cdot\rn$, where $c>0$ depends only on $\sz$, and does not depend on $\sz$ when $\sz\le p/2$.
-
 \status{\textbf{Proved and independently checked}. \bridgepending{} Verbatim: Appendix~\ref{app:status}, row 1.3.}
+
+In~\eqref{eq:sharp-b} and~\eqref{eq:sharp-c}, $\pi$ is the number $3.14\ldots$, not the posterior.
+Display~\eqref{eq:sharp-a} says that no model of that size, the true one included, can carry posterior mass closer to one
+than about $(\abs{S}+1)/(3\sqrt n)$. Display~\eqref{eq:sharp-b} says that, on the witness designs, the expected posterior
+miss is at least $c\cdot(\sz+1)\cdot\rn$, where $c>0$ depends only on $\sz$, and does not depend on $\sz$ when
+$\sz\le p/2$.
 
 \begin{remark}[Further consequences]\label{rem:sharp}
 (i) \emph{Size of the true model.} By~(a), for true models with $\sz\le\min(K-1,p/2)$, no design gives a rate faster than
@@ -271,12 +284,12 @@ $p=\min(n-1,\lfloor n^a\rfloor)$, and on raw designs with i.i.d.\ $\Normal(0,1)$
 with fixed nonzero coefficients (conditional on Theorems~\ref{thm:post-fixed} and~\ref{thm:post-random}).
 \end{remark}
 
-\begin{remark}[Growing true models]\label{rem:sharp-growing}
+\begin{remark}[Further consequences: growing true models]\label{rem:sharp-growing}
 (i) Keep the energy bounds of Assumption~\ref{asm:witness}\ref{asm:witness-energy}, let all columns outside $\Sz$ be null
-columns of type~\ref{asm:witness-orth}, or of type~\ref{asm:witness-gauss} with the columns in $\Sz$ and the coefficients
+columns as in Assumption~\ref{asm:witness}\ref{asm:witness-orth}, or as in Assumption~\ref{asm:witness}\ref{asm:witness-gauss} with the columns in $\Sz$ and the coefficients
 fixed (nonrandom), and let $\sz\le p/2$ grow with $n$. Then a posterior mean error $\E[1-\pis{\Sz}]$ of order $\rn$
 forces $\sz$ to stay bounded, for every $p$.
-(ii) \emph{Critical scale} (orthogonal null predictors only). Keep the energy bounds and type~\ref{asm:witness-orth},
+(ii) \emph{Critical scale} (orthogonal null predictors only). Keep the energy bounds and Assumption~\ref{asm:witness}\ref{asm:witness-orth},
 let $p\to\infty$, and let $\sz$ grow with $\sz/p\to0$ and $(\sz+1)\sqrt{\log p/(\pi n)}\to\lambda\in(0,\infty)$. Then
 $\pis{\Sz}\le e^{-\lambda}+\oP(1)$.
 \end{remark}
@@ -315,7 +328,7 @@ correlation matrix of a candidate row.
   \item\label{asm:omitted-floor} \emph{Floor.} $\lmin(R_{TT})\ge c_{\mathcal C}$ for every $T\subseteq\mathcal C$ with
     $\abs{T}\le3(A+1)(s+1)\log n$, for a fixed $c_{\mathcal C}>0$.
   \item\label{asm:omitted-signal} \emph{Signal relative to the residual variance.}
-    $\beta^{\mathcal C\top}\Sigma\beta^{\mathcal C}\le M_0\,\sigma^2_{\mathcal C}$, and
+    $\beta^{\mathcal C\top}\Sigma\beta^{\mathcal C}\le M_{\mathcal C}\,\sigma^2_{\mathcal C}$, and
     \[
       \frac{n\min_{j\in\Sz^{\mathcal C}}\Sigma_{jj}(\beta^{\mathcal C}_j)^2}{\sigma^2_{\mathcal C}\log n}\to\infty .
     \]
@@ -331,15 +344,15 @@ and $\sigma^2_{\mathcal C}$ is the variance left over, which includes the contri
 \begin{theorem}[Omitted variables]\label{thm:omitted}
 Assume \as{DIM} (with $p$ the number of candidates), Assumption~\ref{asm:omitted}, and that $s\ge1$ is fixed. No
 condition is placed on how $m$, $\Sigma$, $\beta^{\mathcal C}$ or $\sigma^2_{\mathcal C}$ vary with $n$. Then
-\[
+\begin{equation}\label{eq:omitted}
   \E\big[1-\pi(\Sz^{\mathcal C}\mid y)\big]=O\Big(\sqrt{\frac{\log n}{n}}\Big),\qquad
   \P\big(\HPM\neq\Sz^{\mathcal C}\big)=O\Big(\sqrt{\frac{\log n}{n}}\Big).
-\]
+\end{equation}
 \end{theorem}
 
 \status{\textbf{Proved and checked, conditional on} the expectation bound of Theorem~\ref{thm:post-fixed} (hence on its
-two supporting lemmas, not yet independently checked) and on two lemmas on Gaussian designs that are verified and passed
-a council review. \bridgepending{} Verbatim: Appendix~\ref{app:status}, row 1.4.}
+two supporting results, the lower-bound proposition and the size-tail lemma, not yet independently checked) and on two
+lemmas on Gaussian designs that are verified and passed a council review. \bridgepending{} Verbatim: Appendix~\ref{app:status}, row 1.4.}
 
 \begin{example}[Omitted Gaussian predictors]\label{ex:omitted}
 Suppose the rows $(x_{\mathcal C,i},x_{\mathcal M,i})$ of candidates and omitted predictors are i.i.d.\ Gaussian with
@@ -364,8 +377,9 @@ noise whose rows are i.i.d.\ and independent of the candidates.
 law of $\yr$ given the candidates, hence the Kullback--Leibler projection of the truth onto the candidate linear models:
 the posterior concentrates on the support of the best candidate predictor.
 (ii) \emph{Contraction.} Under the same assumptions the posterior's fitted mean and variance also contract around this
-law, with its mean centred over the sample (the fitted mean carries no intercept), in the in-sample average Hellinger and
-Kullback--Leibler distances, at rate $M_n/\sqrt n$ in Hellinger and $M_n/n$ in Kullback--Leibler, for any $M_n\to\infty$.
+law, in the in-sample average Hellinger and Kullback--Leibler distances, at rate $M_n/\sqrt n$ in Hellinger and $M_n/n$
+in Kullback--Leibler, for any $M_n\to\infty$. Here the mean of the law is centred over the sample, because the fitted mean
+carries no intercept.
 For a fixed design the contraction needs only that the posterior mass of $\Sz^{\mathcal C}$ tends to one in probability
 (with the energy bound and a floor on $\Sz^{\mathcal C}$); it holds uniformly over any class of fixed-design
 configurations with common constants and bounded support size on which this convergence is uniform.
@@ -388,8 +402,8 @@ Assumption~\ref{asm:omitted}\ref{asm:omitted-signal} cannot simply be dropped (n
 that of Theorem~\ref{thm:post-fixed}.
 (iii) \emph{Relation to Theorem~\ref{thm:post-random}.} Theorem~\ref{thm:post-random} does not give
 Theorem~\ref{thm:omitted}: it fixes the noise variance and has no omitted predictors. Whether the hypotheses of
-Theorem~\ref{thm:omitted} cover the setting of Theorem~\ref{thm:post-random} without omitted predictors is open; until
-then the two theorems rest on different arguments, each with its own conditions.
+Theorem~\ref{thm:omitted} cover the setting of Theorem~\ref{thm:post-random} without omitted predictors is open. For now the two
+theorems rest on different arguments, each with its own conditions.
 \end{remark}
 
 \begin{remark}[Comparison with \citet{SongLiang2015}]\label{rem:SL-omitted}

@@ -3,7 +3,8 @@
 
 This section fixes the data, the model, the prior and the posterior, and names the few objects of the method that the
 theorems talk about. The method is described in full in the methodology section; here we recall only what the statements
-need. Every symbol is listed in Appendix~\ref{app:notation}.
+need. Appendix~\ref{app:notation} lists the main symbols; a constant that appears in one assumption only is defined
+there.
 
 \subsection{Notation}\label{sec:notation}
 
@@ -43,7 +44,8 @@ We consider two kinds of design.
     centred copy of one row; for $S\subseteq\set{p}$, $W_S$ is the sub-vector indexed by $S$ and $\Sigma_{n,S}$ the
     principal sub-matrix of $\Sig$ indexed by $S$.
 \end{itemize}
-No theorem assumes a particular correlation structure, such as equicorrelation; such structures appear only as
+Apart from the lower bounds of Theorem~\ref{thm:sharp}(b), which are proved on two explicit designs, no theorem assumes
+a particular correlation structure, such as equicorrelation; such structures appear only as
 examples.
 
 \subsection{What the method sees: standardised data}\label{sec:standardise}
@@ -75,12 +77,12 @@ columns of $X_S$, with $P_\emptyset:=0$.
 The method fits a working Gaussian linear model to the standardised data and puts a prior on its three unknowns: which
 predictors are in the model, their coefficients, and the noise variance. Nothing in the prior is tuned by the user.
 
-\paragraph{Working model.} Given a model $S$, a coefficient vector $\beta_S\in\R^{\abs{S}}$ and a variance
+\paragraph{Working model.} Given a model $S$, a coefficient vector $\theta_S\in\R^{\abs{S}}$ and a variance
 $\sigma^2>0$, the working likelihood is
 \begin{equation}\label{eq:working}
-  y\mid S,\beta_S,\sigma^2\ \sim\ \Normal_n(X_S\beta_S,\sigma^2I_n).
+  y\mid S,\theta_S,\sigma^2\ \sim\ \Normal_n(X_S\theta_S,\sigma^2I_n).
 \end{equation}
-Here $\beta_S$ and $\sigma^2$ are working parameters, not the true values. The intercept is removed by centring and has no
+Here $\theta_S$ (on the standardised scale, like $\tstar$) and $\sigma^2$ are working parameters, not the true values. The intercept is removed by centring and has no
 prior of its own. The theorems are proved under the true model~\eqref{eq:model}, not under this working model.
 
 \paragraph{Model space.} The method considers every model with at most $K$ predictors:
@@ -90,7 +92,7 @@ prior of its own. The theorems are proved under the true model~\eqref{eq:model},
 
 \paragraph{Model prior.} The prior probability of a model depends only on its size:
 \begin{equation}\label{eq:modelprior}
-  \text{prior probability of }S\;=\;\frac{w(\abs{S})}{W_K},\qquad w(k):=\frac{1}{2\binom{2p-1}{k}},\qquad W_K:=\sum_{k=0}^{K}\binom{p}{k}w(k),\qquad
+  \text{prior probability of }S\;=\;\frac{w(\abs{S})}{\bar w_K},\qquad w(k):=\frac{1}{2\binom{2p-1}{k}},\qquad \bar w_K:=\sum_{k=0}^{K}\binom{p}{k}w(k),\qquad
   S\in\Om .
 \end{equation}
 This is the beta-binomial prior $\BB(1,p)$ \citep{ScottBerger2010}, restricted to models of size at most $K$: a
@@ -103,13 +105,13 @@ methodology section works through the case $p=3$.
 $g$-prior \citep{Zellner1986} with $g=n$, and the noise variance has an inverse-gamma prior with shape $a_0$ and scale
 $b_0$:
 \begin{equation}\label{eq:slab}
-  \beta_S\mid S,\sigma^2\ \sim\ \Normal\big(0,\;n\sigma^2(G_S+I)^{-1}\big),\qquad
+  \theta_S\mid S,\sigma^2\ \sim\ \Normal\big(0,\;n\sigma^2(G_S+I)^{-1}\big),\qquad
   \sigma^2\ \sim\ \IG(a_0,b_0),\quad a_0=b_0=0.01.
 \end{equation}
 
 \subsection{The posterior}\label{sec:posterior}
 
-Integrating $\beta_S$ and $\sigma^2$ out of~\eqref{eq:working}--\eqref{eq:slab} gives the marginal likelihood of each
+Integrating $\theta_S$ and $\sigma^2$ out of~\eqref{eq:working}--\eqref{eq:slab} gives the marginal likelihood of each
 model in closed form:
 \begin{equation}\label{eq:marglik}
   m(S)=C_n\Big(\frac{\det H_S}{\det(G_S+I)}\Big)^{-1/2}\,(2b_0+\SSq_S)^{-\nu},\qquad
@@ -122,10 +124,10 @@ $(n+1)^{-1/2}$.
 
 The \emph{posterior over models} is
 \begin{equation}\label{eq:posterior}
-  \pis{S}=\frac{w(\abs{S})\,m(S)}{W_K\,Z},\qquad Z:=\frac{1}{W_K}\sum_{V\in\Om}w(\abs{V})\,m(V),\qquad S\in\Om .
+  \pis{S}=\frac{w(\abs{S})\,m(S)}{\bar w_K\,Z},\qquad Z:=\frac{1}{\bar w_K}\sum_{V\in\Om}w(\abs{V})\,m(V),\qquad S\in\Om .
 \end{equation}
 The normalising constant $Z$ is the \emph{evidence}: the marginal likelihood of the standardised data under the working
-model and the prior. The \emph{log score} of a model is $F(S):=\log\{w(\abs{S})/W_K\}+\log m(S)=\log\pis{S}+\log Z$: the log
+model and the prior. The \emph{log score} of a model is $F(S):=\log\{w(\abs{S})/\bar w_K\}+\log m(S)=\log\pis{S}+\log Z$: the log
 posterior, up to the additive constant $\log Z$. The method's target is exactly this posterior. Because $y$ is standardised, the posterior over models
 does not change if $\yr$ is shifted or rescaled.
 
@@ -139,7 +141,7 @@ does not change if $\yr$ is shifted or rescaled.
 \end{itemize}
 The next lemma is used throughout: a bound on the posterior miss controls all three summaries at once.
 
-\begin{lemma}\label{lem:summaries}
+\begin{lemma}[The posterior miss controls the summaries]\label{lem:summaries}
 For every data set, $\max_{j\in\set{p}}\abs{\PIP_j-\ind{j\in\Sz}}\le1-\pis{\Sz}$. If $\pis{\Sz}>1/2$, then
 $\HPM=\MPM=\Sz$.
 \end{lemma}
@@ -163,8 +165,8 @@ $\Om$ is small enough, the method enumerates it and computes the posterior exact
 the final sampler run it performs an internal \emph{calibration}: a few short pilot runs that fix the sequence of
 intermediate distributions and the effort level, so that these settings are frozen before the final run's random numbers
 are drawn. A run either \emph{produces output}, ending with status ``exact'' (enumeration) or ``completed'' (sampler), or
-it stops without estimates, for example when its computing allocation is exhausted. We also say that a run that produces
-output \emph{completes}.
+it stops without estimates, for example when its computing allocation is exhausted. A \emph{completed run} is a sampler
+run that ends with status ``completed''; enumeration runs are not completed runs in this sense.
 
 \paragraph{The start law.} The method partitions the predictors into blocks $C_1,\dots,C_J$ of at most $16$ predictors
 each, by clustering on sample correlations; the theory uses only that the partition is a function of $X$ with blocks of
@@ -231,8 +233,8 @@ The conventions are not statistical assumptions: they fix what ``the method'' me
 \begin{convention}{C1}{The method}
 Statements about what the method returns assume exact arithmetic (scores and comparisons computed without rounding
 error), the default configuration (in particular, the local search from the start mode is switched on), and valid inputs
-and seed. Unless a statement says otherwise, it holds for every valid seed and every outcome of the internal
-calibration.
+and seed; a run that meets these conventions is \emph{admissible}, and so is a sample size $n$ for which valid inputs
+exist. Unless a statement says otherwise, it holds for every valid seed and every outcome of the internal calibration.
 \end{convention}
 
 \begin{convention}{C2}{Delivery}
@@ -244,7 +246,8 @@ gives the full lists.
 \end{convention}
 
 \begin{convention}{C3}{Sampler}
-Used only by the results on the estimated summaries. Exact arithmetic; ideal independent uniform random numbers, with the
-final run's random numbers independent of the data and of the calibration; exact draws from the start law; and Markov
-moves that do exactly what their definitions say. Appendix~\ref{app:conventions} gives the full list.
+Used only by the results on the estimated summaries. The computer does exact arithmetic. The random numbers are ideal
+independent uniforms, and the final run's random numbers are independent of the data and of the calibration. The start law
+is sampled exactly, and every Markov move does exactly what its definition says. Appendix~\ref{app:conventions} gives the
+full list.
 \end{convention}
