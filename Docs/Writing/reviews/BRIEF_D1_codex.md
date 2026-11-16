@@ -21,8 +21,17 @@ Paths are relative to the worktree root `/home/fb31/BVS-wt/WRITING`. Scratch goe
    `Docs/Writing/results/what_we_prove.pdf`. Check that each cited theorem or convention really uses the parameter.
 
 ## Already done (do not redo; report only if something is still wrong)
-An Opus code check (`Docs/Writing/reviews/D1_code_check_opus.md`, disposition `D1_code_check_disposition.md`) has
+An Opus clarity read (`Docs/Writing/advisor/CLARITY_D1_opus.md`, disposition `CLARITY_D1_disposition.md`) and an Opus code check (`Docs/Writing/reviews/D1_code_check_opus.md`, disposition `D1_code_check_disposition.md`) has
 checked every table row and procedural statement, and its findings are applied.
+
+## Specified after a clarity read (new content; check each against the code)
+- The grid rule, which refines the pilot temperatures (`cpp/v3_calib.h:60-98`), and the rebuild and convergence rules (`v3_calib.R:44-130`).
+- The calibration control flow in Algorithm 1: a failed step 3 skips the rebuild loop; tier-1 triggers are only recorded; an unconverged grid is used as it is; the fallback; "a grid always exists" with the fallback on.
+- The three stores and "the best model found so far" (`cpp/v3_ledger.h:66-80`).
+- The block partition (`cpp/v3_blocks.h:110-141`).
+- The exact sampler's backward split (`cpp/v3_start.h:136-176`).
+- The non-negative form of SS_S (`cpp/v3_score.h:145-160`).
+- The lists of outputs and stops in Section 5.7, including the exact case.
 
 ## What to check
 - **A. Formulas.** Every formula in Sections 1–5 against the code: the prior, the marginal likelihood and $C_n$, the log

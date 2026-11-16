@@ -23,3 +23,9 @@
 - 2026-11-16 09:46 CST Sol re-check: RECHECK: ALL-RESOLVED (8/8; sync hunks claim-neutral). D2 v1 FINAL for the owner's review.
 - 2026-11-16 09:52 CST D1 code check (Opus) NOT-CODE-FAITHFUL: 3C/6S/7E + table pins; all C/S fixed (reviews/D1_code_check_disposition.md); preflight finding escalated to HQ. D1 clean compile.
 - 2026-11-16 09:53 CST HELPER CALL #5: fresh Opus clarity reader on D1 → advisor/CLARITY_D1_opus.md. Own fix: Example 4.1 table is the top-5 by POSTERIOR (toy_example_out.txt), not start law; corrected. D1 Codex brief staged (reviews/BRIEF_D1_codex.md; sources .rc_tmp/d1_sources/).
+- 2026-11-16 10:03 CST D1 clarity read (CLARITY_D1_opus.md, 112 items) applied (advisor/CLARITY_D1_disposition.md); calibration/grid/partition/sampler specified from code. D1 clean compile. Next: D1 Codex read.
+- 2026-11-16 10:03 CST CODEX CALL #3 (D1): Sol gpt-6.1-sol high, fidelity read per reviews/BRIEF_D1_codex.md → reviews/D1_codex_fidelity.md.
+- 2026-11-16 10:09 CST Sol D1 read NOT-FAITHFUL (1C 4S 1F 1E; reviews/D1_codex_fidelity.md). All 7 confirmed and fixed (reviews/D1_codex_disposition.md). Asking HQ re same-session diff-only re-check (C finding).
+- 2026-11-16 10:10 CST HQ told first; CODEX CALL #4 (D1 re-check, same Sol session, diff-only): .rc_tmp/d1_recheck_brief.md, .rc_tmp/d1_fix_diff.patch (reconstructed as-read text .rc_tmp/d1_as_read.tex) → reviews/D1_codex_recheck.md.
+- 2026-11-16 10:11 CST Sol D1 re-check: RECHECK: ALL-RESOLVED. D1 v1 FINAL for the owner's review (methodology/smc_bvs_method_v1.pdf).
+- 2026-11-16 10:12 CST HQ: keep advisor thread open (not settled); department idle, nothing new until the owner's feedback. Theory items routed by HQ at the resume.
