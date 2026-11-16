@@ -43,3 +43,4 @@
   prop:closed, thm:T01i, thm:T01ii, thm:T01iii, thm:Ta, lem:num, lem:den, thm:T02i). N1 p = 1 confirmed; N2 R_m for m < 0
   confirmed; N3 moot; N4 no use of p ≤ n^A or A ≥ 1. API slips A1, A3 dispositioned (ERRATA E2, E3). DEPS rows → OK.
   LC-A reviewer settled.
+- 2026-11-16 02:23 CST — REPORT.md draft (registry block, 5 claims, status_source REPORT.md:17-23); citecheck 69 citations, 0 MISS. Waiting on LC-B.

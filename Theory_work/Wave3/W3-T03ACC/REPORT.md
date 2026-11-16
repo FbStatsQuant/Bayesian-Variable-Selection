@@ -35,7 +35,7 @@ under review. HEURISTIC/OPEN: none asserted here.
 
 ## 4. Registry block
 Status source for every claim: this ticket (`REPORT.md:17-23`). The `council:` field and the `correct:` gate are filled
-from `CHECKPOINT_3.md` at CP3 (editorial; this file is inside the frozen manifest).
+from the CP3 checkpoint file (editorial; this file is inside the frozen manifest).
 
 ```
 REGISTRY

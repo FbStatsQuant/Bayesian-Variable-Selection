@@ -1,4 +1,4 @@
-W3-T03ACC CITECHECK: 70 citations (51 with line ranges, 19 path-only); MISSING/OUT-OF-RANGE: 1
+W3-T03ACC CITECHECK: 69 citations (50 with line ranges, 19 path-only); MISSING/OUT-OF-RANGE: 0
 OK 7dd4e18b392d [STATEMENT.md] BRIEF.md:12-21 -> Theory_work/Wave3/W3-T03ACC/BRIEF.md
       first: but **no council record**, so every consumer is recorded "conditional on SOP:TH09". Card c
       last:  **[P3]** `Docs/Theory/proofs/T03_A2_selection_consistency/PROOF_v2.tex` (with STATEMENT.md
@@ -168,4 +168,3 @@ OK 4bc1eb547642 [REPORT.md] sources/statement/W6-FIXREV2_STATEMENTS.md:63-81 -> 
 OK 3fb42bd17f2d [REPORT.md] REPORT.md:17-23 -> Theory_work/Wave3/W3-T03ACC/REPORT.md
       first: ## 2. Checks (review files; verdicts verbatim)
       last:  | line check LC-C | (C6)–(C10), Assembly (T03S.1–.5), completeness of the change lists; [P
-MISSING          [REPORT.md] CHECKPOINT_3.md
