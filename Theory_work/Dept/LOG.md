@@ -154,3 +154,4 @@
 - 01:24 — HQ: D56 items approved; W3-SCR-R2 outside the lead cap; Codex order DIST > riders > T03ACC > SCR-R2 (coordinator told).
 - 01:24 — READER row 3.7 v0.4 (d88b4483): abstract clause names κ, b, M, σ² fixed in n; body Thm 8′ = SCR:A-inf (n-varying signals); forms (a)/(b1)/(b2), recommends b1. Told: Thm 8′ follows SCR-R2's verdict on A-inf.
 - 01:28 — recorder: SCR interim label recorded (main 38604282; notes + evidence; A4 sweep unchanged; 469/0). HQ told; recorder's SL0 queue note corrected (SL0 PC check running pre-freeze).
+- 01:30 — DIST: D3 VERIFIED (TC8 EQUAL confirmed; Cor C HPM verified); DEPS all OK; sweep manifest SW1 frozen (de9ccec7…), RP commit 05bc9ae0 made by running the snapshot script; Astra sweep launched 01:28. R1 freeze likely a few hours after 09:00. HQ told.
