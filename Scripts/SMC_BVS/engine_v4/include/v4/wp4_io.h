@@ -114,6 +114,7 @@ struct SetupView {
   std::vector<int32_t> blk, pos; std::vector<int64_t> code_ptr; std::vector<double> logr;
   std::vector<int64_t> blk_ptr; std::vector<int32_t> blk_members;
   Model mode_S;
+  std::vector<double> size_logmass;                 // log P_pi0(|S| = k), k = 0..K (INTERFACES §5; empty if the file has none)
   Store ttop, tlead0, tlead1;                       // table top stores
   // core/cpp/v3_start.h:54-66 (copied): ordered block sum of log r_b(S n C_b).
   double comp(const Model& S, std::vector<std::pair<int32_t, int32_t>>& scratch) const;

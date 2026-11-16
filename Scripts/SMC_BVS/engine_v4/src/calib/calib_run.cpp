@@ -45,13 +45,15 @@ Json settings_json(const Settings& s, const Budgets& b, Rule rule) {
   j["tiers"] = t; j["K"] = b.K; j["B"] = b.B;
   return j;
 }
-Json plan_json(const CalibMemPlan& m, uint64_t budget, double kbar) {
+Json plan_json(const CalibMemPlan& m, uint64_t budget, double kbar, const std::string& k_src) {
   Json j = Json::object();
   auto u = [](uint64_t x) { return Json((double)x); };
-  j["label"] = "ESTIMATE (calibration memory plan: 3 calibration stores, one island ledger in flight, flat V / export, inputs)";
-  j["kbar"] = kbar; j["ledger"] = u(m.ledger); j["island_ledger"] = u(m.island_ledger); j["export"] = u(m.export_);
+  j["label"] = "ESTIMATE (calibration memory plan: 3 calibration stores + flat V / export = resident; inputs; one island ledger)";
+  j["rule"] = "islands get mem_budget = the whole budget and resident_bytes = resident; an island is admitted iff "
+              "resident + its plan (inputs included) <= mem_budget; refused up front iff total = resident + inputs + island_ledger > budget";
+  j["kbar"] = kbar; j["kbar_source"] = k_src;
+  j["ledger"] = u(m.ledger); j["island_ledger"] = u(m.island_ledger); j["export"] = u(m.export_);
   j["inputs"] = u(m.inputs); j["resident"] = u(m.resident); j["total"] = u(m.total); j["budget"] = u(budget);
-  j["island_budget"] = u(budget > m.resident ? budget - m.resident : 0);
   return j;
 }
 }  // namespace
@@ -85,27 +87,31 @@ Json run(const Json& args) {
   }
   s.threads = threads;
   Driver::validate(s);   // e.g. I_max > ell -> invalid_input, before anything runs (review PR37 m-4)
-  // memory plan (review PR37 M-5): kbar = the largest of the start mode's size + 1 and 8 (ESTIMATE until calibration measures it)
-  wp4io::SetupView S; double kbar = 8;
+  // memory plan (review PR37 M-5, N-2): k = max(8, q90(pi_0 size) + 1) from setup.bin (INTERFACES §7, as WP3's plan);
+  // a plan from --n / --p alone has no setup and uses the floor 8 (labelled)
+  wp4io::SetupView S; double kbar = 8; std::string k_src = "floor 8 (no setup.bin)";
   if (!plan_only || (!spath.empty() && !dpath.empty())) {
     if (spath.empty()) throw Error(Status::invalid_input, "calibrate: --setup is required");
     S = wp4io::read_setup(spath, D.p, D.K, &D.zob);
     if (!S.data_hash.empty() && S.data_hash != dhash) throw Error(Status::invalid_input, "calibrate: setup.bin was built from another data.bin");
-    kbar = std::max(kbar, (double)S.mode_S.size() + 1);
+    if (S.size_logmass.empty()) throw Error(Status::invalid_input, "calibrate: setup.bin has no size_logmass (INTERFACES §5; the memory plan's k)");
+    kbar = calib_k_plan(S.size_logmass); k_src = "max(8, q90(pi_0 size) + 1) from setup.bin";
   }
   const CalibMemPlan plan = calib_memory_plan(p, kbar, file_bytes(dpath) + file_bytes(spath));
   Json rec = Json::object();
-  rec["settings"] = settings_json(s, b, rule); rec["mem_plan"] = plan_json(plan, budget, kbar); rec["n"] = (double)n; rec["p"] = (double)p;
+  rec["settings"] = settings_json(s, b, rule); rec["mem_plan"] = plan_json(plan, budget, kbar, k_src); rec["n"] = (double)n; rec["p"] = (double)p;
   rec["mode"] = mode_s;
-  if (budget && plan.resident >= budget) {   // the calibration's own state does not fit: refuse before any allocation
-    rec["status"] = "resource_limit"; rec["reason"] = "calibrate not admitted: calibration state " + std::to_string(plan.resident) + " B >= --mem-budget";
+  if (budget && plan.total > budget) {   // no island can run beside the calibration state: refuse before any allocation (N-2)
+    rec["status"] = "resource_limit";
+    rec["reason"] = "calibrate not admitted: calibration state + inputs + one island ledger = " + std::to_string(plan.total) + " B > --mem-budget " + std::to_string(budget) + " B";
     return rec;
   }
   if (plan_only) { rec["status"] = "completed"; rec["plan_only"] = true; return rec; }
   if (out.empty()) throw Error(Status::invalid_input, "calibrate: --out is required");
   const int64_t seed = whole_arg(args, "seed", -1, 1, 2147483647);
   if (seed < 1) throw Error(Status::invalid_input, "calibrate: --seed is required (a whole number in [1, 2^31 - 1])");
-  // the island runner: WP3's island with calibration roles (PILOT / DIAG; WP3_DESIGN §1.11) -- not merged yet
+  // the island runner: WP3's island with calibration roles (PILOT / DIAG; WP3_DESIGN §1.11) -- not merged yet. When it
+  // is: calibrate_with(runner, ledger, fac, s, ts, plan.resident, budget) (N-1: the whole budget, resident without inputs)
   throw Error(Status::internal_error, "calibrate: the island runner (WP3 calibration roles) is not available yet; inputs and settings validated: data " +
               dhash + ", setup " + S.content_hash + ", n = " + std::to_string(n) + ", p = " + std::to_string(p) + ", " +
               settings_json(s, b, rule).dump());

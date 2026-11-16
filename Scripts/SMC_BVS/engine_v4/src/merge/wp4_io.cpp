@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <limits>
 #include "v4/pmath.h"
 #include "v4/prep.h"
 #include "v4/provenance.h"
@@ -259,7 +260,8 @@ CalibIn read_calib(const std::string& path, int32_t p, int32_t K, const std::str
       throw Error(Status::invalid_input, path + ": meta.inputs differ from the data / setup in use");
   }
   if (c.status == "ok") {
-    if (!c.meta.contains("k_store") || !std::isfinite(c.meta.at("k_store").num()) || !(c.meta.at("k_store").num() > 0))
+    if (!c.meta.contains("k_store") || c.meta.at("k_store").type() != Json::NUM ||   // a NaN is written as the string "NaN"
+        !std::isfinite(c.meta.at("k_store").num()) || !(c.meta.at("k_store").num() > 0))
       throw Error(Status::invalid_input, path + ": k_store (calibration mean stored |S|) missing or not finite and > 0");
     c.k_store = c.meta.at("k_store").num();
   } else return c;   // a non-ok calib.bin exposes no inherited models
@@ -537,6 +539,16 @@ SetupView read_setup(const std::string& path, int32_t p, int32_t K, const Zobris
     if (s.blk_members[(size_t)(s.blk_ptr[(size_t)b] + q)] != j) throw Error(Status::invalid_input, w + "blk / pos / blk_members inconsistent");
   }
   check_model(s.mode_S, p, K, w + "mode_S");
+  if (R.has("size_logmass")) {   // the pi_0 size law (calibrate's memory plan, INTERFACES §7): K + 1 log masses summing to 1
+    s.size_logmass = R.vec<double>("size_logmass");
+    if (s.size_logmass.size() != (size_t)K + 1) throw Error(Status::invalid_input, w + "size_logmass length != K + 1");
+    long double tot = 0;
+    for (double x : s.size_logmass) {
+      if (std::isnan(x) || x == std::numeric_limits<double>::infinity() || x > 1e-9) throw Error(Status::invalid_input, w + "size_logmass not a log probability");
+      tot += std::exp((long double)x);
+    }
+    if (std::fabs((double)tot - 1.0) > 1e-6) throw Error(Status::invalid_input, w + "size_logmass does not sum to 1");
+  }
   read_store(R, meta, "tstore_top", s.ttop, p, K, zob);
   if (R.has("tstore_lead0_v")) read_store(R, meta, "tstore_lead0", s.tlead0, p, K, zob);
   if (R.has("tstore_lead1_v")) read_store(R, meta, "tstore_lead1", s.tlead1, p, K, zob);
@@ -549,6 +561,7 @@ std::string write_setup_min(const std::string& path, const SetupView& s, const J
   Json meta = Json::object();
   W.add("blk", s.blk); W.add("pos", s.pos); W.add("code_ptr", s.code_ptr); W.add("logr", s.logr);
   W.add("blk_ptr", s.blk_ptr); W.add("blk_members", s.blk_members); W.add("mode_S", s.mode_S);
+  if (!s.size_logmass.empty()) W.add("size_logmass", s.size_logmass);
   add_store(W, meta, "tstore_top", s.ttop);
   if (s.tlead0.cap) add_store(W, meta, "tstore_lead0", s.tlead0);
   if (s.tlead1.cap) add_store(W, meta, "tstore_lead1", s.tlead1);

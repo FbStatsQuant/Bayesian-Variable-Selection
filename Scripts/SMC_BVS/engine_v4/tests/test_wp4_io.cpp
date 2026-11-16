@@ -3,6 +3,9 @@
 #include <cstdio>
 #include <dirent.h>
 #include <fstream>
+#include <cmath>
+#include <functional>
+#include <limits>
 #include <random>
 #include "tk.h"
 #include "tutil.h"
@@ -21,7 +24,16 @@ struct Fx {   // a small dataset with pair blocks, its setup view, calibration a
   std::vector<merge::IslandIn> isl;
   std::vector<merge::InheritedModel> inh; Model calib_hpm; EventCtx calib_ev;
   std::vector<double> grid{0, 0.3, 0.7, 1};   // the frozen grid; T = 3 stages
+  // calib.bin's writer inputs (kept so tests can write variants: review PR37 N-4)
+  uint32_t mode = fmt::M_COMPAT; int Nfx = 50; Ledger cl; calib::CalibOut co; calib::Settings cset;
 };
+// The fixture's CalibWrite (pointers into f: valid while f lives).
+wp4io::CalibWrite calib_write(const Fx& f) {
+  wp4io::CalibWrite cw; cw.mode = f.mode; cw.co = &f.co; cw.led = &f.cl; cw.inherited = f.inh; cw.N = f.Nfx; cw.L = 4; cw.Hm = 4;
+  cw.settings = &f.cset; cw.k_store = 2.0;
+  cw.inputs["data.bin"] = f.dhash; cw.inputs["setup.bin"] = f.shash;
+  return cw;
+}
 struct Ev {   // compat evaluator: Bit scorer + comp (as merge::run's)
   const Data* D; const wp4io::SetupView* S; BitScorer sc; std::vector<std::pair<int32_t, int32_t>> scr;
   Ev(const Data* d, const wp4io::SetupView* s) : D(d), S(s), sc(d) {}
@@ -71,6 +83,10 @@ Fx make_fx(const std::string& tag, int R, uint32_t mode = fmt::M_COMPAT) {
   }
   S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
   S.mode_S = Model(S.ttop.model(0).begin(), S.ttop.model(0).end());
+  // pi_0 size law (setup.bin size_logmass; calibrate's plan k, review PR37 N-2): P(0) .5, P(1) .3, P(12) .15, P(13) .05
+  // -> q90 = 12, plan k = 13
+  S.size_logmass.assign((size_t)f.D.K + 1, -std::numeric_limits<double>::infinity());
+  S.size_logmass[0] = std::log(0.5); S.size_logmass[1] = std::log(0.3); S.size_logmass[12] = std::log(0.15); S.size_logmass[13] = std::log(0.05);
   f.spath = tmp_path(tag + "_setup.bin");
   Json sin = Json::object(); sin["data.bin"] = f.dhash;
   f.shash = wp4io::write_setup_min(f.spath, S, sin);
@@ -78,7 +94,7 @@ Fx make_fx(const std::string& tag, int R, uint32_t mode = fmt::M_COMPAT) {
   std::mt19937_64 g(11);
   Ev ev(&f.D, &S);
   LedgerConfig cfg; cfg.p = p; cfg.islands = 4; cfg.leaders = mode == fmt::M_COMPAT; cfg.fresh_counters = false;
-  Ledger cl(cfg);
+  f.cl.init(cfg); Ledger& cl = f.cl;
   for (int t = 0; t < 300; ++t) {
     Model M = random_model(g, p, 4); double lm, lg0, dd, F; ev(M, lm, lg0, dd, F);
     EventCtx e; e.phase = PH_PILOT; e.mech = ME_GIBBS_FLIP; e.phi = 0.25; e.key.seg = SG_CALIB; e.key.iter = 0; e.key.unit = 0;
@@ -91,16 +107,14 @@ Fx make_fx(const std::string& tag, int R, uint32_t mode = fmt::M_COMPAT) {
   }
   std::sort(f.inh.begin(), f.inh.end(), [](const merge::InheritedModel& a, const merge::InheritedModel& b) { return lex_less(a.S, b.S); });
   f.calib_hpm = cl.hpmS; f.calib_ev = cl.hpm_ev;
-  calib::CalibOut co; co.status = calib::CalStatus::ok; co.tier_final = 0; co.has_frozen = true;
+  f.mode = mode; calib::CalibOut& co = f.co; co.status = calib::CalStatus::ok; co.tier_final = 0; co.has_frozen = true;
   co.rule = mode == fmt::M_V ? calib::Rule::bounded : calib::Rule::coded;   // V: bounded rule, N = 2,500 (D-1, D-26)
-  const int Nfx = mode == fmt::M_V ? calib::V_N : 50;
-  static calib::Settings cset; cset.rule = co.rule; cset.I_max = 1; cset.tiers[0].ell = 3; cset.tiers[0].H = 64; cset.tiers[0].Te = 40;
+  const int Nfx = f.Nfx = mode == fmt::M_V ? calib::V_N : 50;
+  calib::Settings& cset = f.cset; cset.rule = co.rule; cset.I_max = 1; cset.tiers[0].ell = 3; cset.tiers[0].H = 64; cset.tiers[0].Te = 40;
   co.frozen.grid = f.grid; co.frozen.grid_unrefined = co.frozen.grid; co.frozen.grid_label = "rebuild_1"; co.I_used = 1;
   calib::TierOut t0; t0.tier = 0; t0.has_triggers = true; calib::GridRecord gr; gr.label = "preliminary"; gr.grid = f.grid; t0.grids.push_back(gr);
   co.tiers.push_back(t0);
-  wp4io::CalibWrite cw; cw.mode = mode; cw.co = &co; cw.led = &cl; cw.inherited = f.inh; cw.N = Nfx; cw.L = 4; cw.Hm = 4;
-  cw.settings = &cset; cw.k_store = 2.0;
-  cw.inputs["data.bin"] = f.dhash; cw.inputs["setup.bin"] = f.shash;
+  const wp4io::CalibWrite cw = calib_write(f);
   f.cpath = tmp_path(tag + "_calib.bin");
   f.chash = wp4io::write_calib(f.cpath, cw);
   // islands
@@ -317,6 +331,111 @@ TEST(wp4_io_chi2_and_inherited_provenance) {
   CHECK(L3.hpmS == A && L3.hpm_ev.phase == PH_INHERITED && L3.hpm_ev.key.particle == 0);
   Ledger L4 = run(false, {iT, iA}, A);   // another inherited model keeps its INHERITED key (input index 0)
   CHECK(L4.hpmS == T && L4.hpm_ev.phase == PH_INHERITED && L4.hpm_ev.key.particle == 0);
+}
+
+// review PR37 N-4: every calib.bin refusal added in PR #37 (read_calib's V rule / tier / N, I_used <= I_max <= ell,
+// k_store, meta.inputs; write_calib's reserved extra keys), each against a variant of the fixture's own calib.bin.
+#define EXPECT_STR(a, b) do { const std::string a_ = (a), b_ = (b); CHECK_MSG(a_ == b_, "got " + a_ + ", want " + b_); } while (0)
+TEST(wp4_io_calib_refusals) {
+  TmpGuard tmp_guard("cref");
+  Fx fv = make_fx("cref", 1, fmt::M_V), ft = make_fx("crft", 1, fmt::M_COMPAT);
+  // outcome of writing + reading one variant: "ok", "w:<status>" (writer refused) or "r:<status>" (reader refused)
+  auto outcome = [&](const Fx& f, const std::function<void(wp4io::CalibWrite&, calib::CalibOut&, calib::Settings&)>& mod,
+                     const std::string& dh = "", const std::string& sh = "") -> std::string {
+    calib::CalibOut co = f.co; calib::Settings cs = f.cset;
+    wp4io::CalibWrite cw = calib_write(f); cw.co = &co; cw.settings = &cs;
+    mod(cw, co, cs);
+    const std::string path = tmp_path("cref_variant.bin");
+    try { wp4io::write_calib(path, cw); } catch (const Error& e) { return std::string("w:") + status_name(e.st); }
+    try { wp4io::read_calib(path, f.D.p, f.D.K, dh, sh); } catch (const Error& e) { return std::string("r:") + status_name(e.st); }
+    return "ok";
+  };
+  using CW = wp4io::CalibWrite; using CO = calib::CalibOut; using CS = calib::Settings;
+  const std::string bad = "r:invalid_input";
+  // baselines: the fixture's V and compat calib.bin read back, also with the right data / setup hashes
+  EXPECT_STR(outcome(fv, [](CW&, CO&, CS&) {}), "ok");
+  EXPECT_STR(outcome(fv, [](CW&, CO&, CS&) {}, fv.dhash, fv.shash), "ok");
+  EXPECT_STR(outcome(ft, [](CW&, CO&, CS&) {}, ft.dhash, ft.shash), "ok");
+  // V: N = 2,500, tier 0 and the bounded rule only (D-1, D-26)
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.N = 50; }), bad);
+  EXPECT_STR(outcome(fv, [](CW&, CO& c, CS& s) { c.tier_final = 1; s.tiers[1].ell = 3; }), bad);
+  EXPECT_STR(outcome(fv, [](CW&, CO& c, CS& s) { c.rule = calib::Rule::coded; s.rule = calib::Rule::coded; }), bad);
+  // theory mode: the coded rule only
+  EXPECT_STR(outcome(ft, [](CW&, CO& c, CS& s) { c.rule = calib::Rule::bounded; s.rule = calib::Rule::bounded; }), bad);
+  // V: I_used <= I_max <= ell (fixture: I_used 1, I_max 1, ell 3)
+  EXPECT_STR(outcome(fv, [](CW&, CO&, CS& s) { s.I_max = 3; }), "ok");                  // I_max = ell: allowed
+  EXPECT_STR(outcome(fv, [](CW&, CO&, CS& s) { s.I_max = 4; }), bad);                   // I_max > ell
+  EXPECT_STR(outcome(fv, [](CW&, CO& c, CS&) { c.I_used = 2; }), bad);                  // I_used > I_max
+  // k_store: finite and > 0 when the calibration completed; not needed otherwise
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.k_store = 0; }), bad);
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.k_store = -1; }), bad);
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.k_store = std::nan(""); }), bad);
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.k_store = std::numeric_limits<double>::infinity(); }), bad);
+  EXPECT_STR(outcome(ft, [](CW& w, CO&, CS&) { w.k_store = 0; }), bad);
+  EXPECT_STR(outcome(fv, [](CW& w, CO& c, CS&) { w.k_store = 0; c.status = calib::CalStatus::resource_limit; }), "ok");
+  {  // a non-ok calib.bin exposes no inherited models and no HPM
+    calib::CalibOut co = fv.co; co.status = calib::CalStatus::resource_limit; CW cw = calib_write(fv); cw.co = &co;
+    const std::string path = tmp_path("cref_nonok.bin"); wp4io::write_calib(path, cw);
+    wp4io::CalibIn c = wp4io::read_calib(path, fv.D.p, fv.D.K, fv.dhash, fv.shash);
+    CHECK(c.status == "resource_limit" && c.inherited.empty() && !c.has_hpm && c.k_store == 0);
+  }
+  // meta.inputs must name the data / setup in use (review PR37 m-3)
+  const std::string other(64, 'a');
+  EXPECT_STR(outcome(fv, [](CW&, CO&, CS&) {}, other, fv.shash), bad);
+  EXPECT_STR(outcome(fv, [](CW&, CO&, CS&) {}, fv.dhash, other), bad);
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.inputs = Json::object(); }, fv.dhash, ""), bad);   // no inputs recorded
+  // write_calib: reserved meta keys are refused (internal_error), other extra keys are written
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.extra["N"] = 50; }), "w:internal_error");
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.extra["k_store"] = 9; }), "w:internal_error");
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.extra["inputs"] = Json::object(); }), "w:internal_error");
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.extra["mode"] = "compat"; }), "w:internal_error");
+  EXPECT_STR(outcome(fv, [](CW& w, CO&, CS&) { w.extra["seed"] = 7; }), "ok");
+}
+
+// review PR37 N-1 / N-2: the calibration plan's k comes from setup.bin's pi_0 size law (q90 + 1, floor 8, as WP3's
+// plan_island); resident excludes the inputs; the command refuses up front iff resident + inputs + one island ledger >
+// --mem-budget. setup.bin's size_logmass is validated.
+TEST(wp4_io_calib_plan_from_setup) {
+  TmpGuard tmp_guard("cplan");
+  Fx f = make_fx("cplan", 1, fmt::M_V);
+  wp4io::SetupView S = wp4io::read_setup(f.spath, f.D.p, f.D.K, &f.D.zob);
+  CHECK(S.size_logmass == f.S.size_logmass);
+  CHECK_EQ(calib::calib_k_plan(S.size_logmass), 13.0);                           // q90 = 12
+  { std::vector<double> lm(31, -INFINITY); lm[2] = std::log(0.95); lm[3] = std::log(0.05); CHECK_EQ(calib::calib_k_plan(lm), 8.0); }   // floor
+  { std::vector<double> lm(31, -INFINITY); lm[0] = std::log(0.9); lm[20] = std::log(0.1); CHECK_EQ(calib::calib_k_plan(lm), 8.0); }    // q90 = 0
+  { std::vector<double> lm(31, -INFINITY); lm[0] = std::log(0.89); lm[20] = std::log(0.11); CHECK_EQ(calib::calib_k_plan(lm), 21.0); }
+  // the plan: resident = ledger + export (no inputs); total = resident + inputs + one island ledger
+  const calib::CalibMemPlan m = calib::calib_memory_plan(1000000, 8, 123456);
+  CHECK(m.resident == m.ledger + m.export_ && m.total == m.resident + m.inputs + m.island_ledger && m.inputs == 123456);
+  // the command (plan only) on the fixture's data / setup
+  Json a = Json::object(); a["data"] = f.dpath; a["setup"] = f.spath; a["mode"] = "V"; a["plan_only"] = 1;
+  Json r = calib::run(a);
+  const Json& mp = r.at("mem_plan");
+  CHECK(r.at("status").str() == "completed" && mp.at("kbar").num() == 13.0);
+  const double total = mp.at("total").num(), resident = mp.at("resident").num();
+  CHECK(resident == mp.at("ledger").num() + mp.at("export").num() && total == resident + mp.at("inputs").num() + mp.at("island_ledger").num());
+  auto with_budget = [&](double bytes) { Json b = a; b["mem_budget"] = bytes; return calib::run(b).at("status").str(); };
+  CHECK(with_budget(total) == "completed");                                       // total <= budget: admitted
+  CHECK(with_budget(total - 1) == "resource_limit");                              // N-2: refused up front
+  CHECK(with_budget(resident + 1) == "resource_limit");                           // resident fits, no island would
+  // setup.bin without a size law, or with a malformed one
+  auto setup_variant = [&](const std::vector<double>& lm) {
+    wp4io::SetupView v = f.S; v.size_logmass = lm;
+    Json sin = Json::object(); sin["data.bin"] = f.dhash;
+    const std::string sp = tmp_path("cplan_setup_v.bin"); wp4io::write_setup_min(sp, v, sin);
+    Status st = Status::completed;
+    try { wp4io::read_setup(sp, f.D.p, f.D.K, &f.D.zob); Json b = a; b["setup"] = sp; calib::run(b); } catch (const Error& e) { st = e.st; }
+    return st;
+  };
+  CHECK(setup_variant({}) == Status::invalid_input);                                // read_setup accepts, calibrate refuses
+  std::vector<double> lm = f.S.size_logmass; lm.pop_back();
+  CHECK(setup_variant(lm) == Status::invalid_input);                                // length != K + 1
+  lm = f.S.size_logmass; lm[13] = std::log(0.01);
+  CHECK(setup_variant(lm) == Status::invalid_input);                                // sums to 0.96
+  lm = f.S.size_logmass; lm[5] = std::nan("");
+  CHECK(setup_variant(lm) == Status::invalid_input);
+  lm = f.S.size_logmass; lm[5] = INFINITY;
+  CHECK(setup_variant(lm) == Status::invalid_input);
 }
 
 #include "v4/island/island_file.h"
