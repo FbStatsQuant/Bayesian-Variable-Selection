@@ -64,6 +64,8 @@ PROGRAM Readability, with a fidelity check of every number.
 - **HQ only:** merges to `main`, registry acceptance (CP3 / `--record`), headline changes, protocol amendments,
   supersessions, API batch credits (the Console key stays on HQ's desktop: send HQ "API cards"), and NOTS job
   submission unless HQ delegates it for a named ticket.
+- **Self-sufficiency (owner, 2026-11-15):** every department solves its technical problems itself, with its own experts;
+  HQ is for gates, budget, merges, API submission and cross-department coordination.
 - **Never:**
   - force-push, rewrite history, or delete branches you don't own;
   - commit secrets, API keys, the owner's email in new files, or unpublished papers (`Papers/Own_work/` is
@@ -80,7 +82,9 @@ PROGRAM Readability, with a fidelity check of every number.
 - **Claude Work:** as HQ says.
 - **Codex** (Sol `gpt-6.1-sol`, Astra `gpt-6-astra`, high): one shared Codex Pro account, also used by the owner's BNP
   Lean project. NORMAL mode until HQ switches it.
-- **NOTS:** via HQ, or the Engineering Department per its brief; at most 150 concurrent tasks; commons / scavenge.
+- **NOTS:** Owls now has its own login (`ssh nots`, dedicated key `~/.ssh/id_ed25519_nots`, comment "owls-bvs-departments";
+  revocable by deleting that line from NOTS `~/.ssh/authorized_keys`). Departments run read-only queries
+  (squeue/sacct/sinfo, reading results) themselves. **Job submission still needs HQ's go per ticket** (budget gate); at most 150 concurrent tasks; commons / scavenge.
 - **API credits** (Anthropic Console, Fable batches): HQ only.
 
 ## 6. Reporting
