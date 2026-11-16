@@ -1,0 +1,2 @@
+{'in': 869373, 'out': 845722, 'cache_read': 1617680}
+(rough cost estimate $21.04; check Console)

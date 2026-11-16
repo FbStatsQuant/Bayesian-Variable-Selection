@@ -1,0 +1,180 @@
+diff --git a/Theory_work/Wave3/W3-POST2/ASSUMPTION_MAP.md b/Theory_work/Wave3/W3-POST2/ASSUMPTION_MAP.md
+index 019352a..fcda5a4 100644
+--- a/Theory_work/Wave3/W3-POST2/ASSUMPTION_MAP.md
++++ b/Theory_work/Wave3/W3-POST2/ASSUMPTION_MAP.md
+@@ -11,7 +11,7 @@ not probe polynomially growing p, and are finite-n observations, not limits [S01
+ | id | statement | enters | necessary? |
+ |---|---|---|---|
+ | POST2-OS | superset Occam sum (OS; C_OS) | A1: (C5′)(b) E Υ′_n, (C8′) the > j₀ term; C (cases ii–iii); D(b); E | its unweighted feasible counterpart 𝒪⁰_n is **necessary** (A2: δ_n ≥ 𝒪⁰_n/(1+𝒪⁰_n), deterministic); the weights, the infeasible comparison unions and the amplified j > j₀ inequality are proof envelopes |
+-| POST2-ADG / DG | averaged / pointwise determinant ratio | ⇒ (OS) (Lemma A0) | sufficient only; (ADG) improvable to (OS) (N2) |
++| POST2-ADG / DG | averaged / pointwise determinant ratio | ⇒ (OS) (Lemma A0) | sufficient only; (ADG) improvable to (OS) (N2: finite-n evidence only, no asymptotic proof) |
+ | POST2-F0 | floor λ_min(R_{S₀}) ≥ φ₀² | coefficient bound (tail; C1); (B3) in (C4′); R_n, L_{S₀} in E1, D | **looks improvable** (N8: rate holds as λ_min(R_{S₀}) → 0); R03b E-floor+ (bounded ridge cost L_{S₀}) recorded, not proved |
+ | POST2-ID / ID^M | margin on bounded-excess underfits: Δ_S (projection) or L_S ≥ Δ_S (ridge) ≥ cσ*² log n | E: Lemma E1 only; D(b) uses E1 at c₁ + 1 to discard far underfits (no hypothesis) | no converse proved; small-margin obstructions illustrated (N1 κ = 1, N4 c ≤ 2); c₁ ≈ 161 a proof artefact |
+ | POST2-GP | G′: Gaussian noise, arbitrary centred mean μ = Cf | B | the arbitrary mean is free (N6b); Gaussianity enters through the explicit f₀ exponent, the χ² fluctuation and the Gaussian cross term in the denominator, and the scale event ([P1] `thm:T01iii`); `lem:num` needs only a positive density f₀ [S01-15]. Non-Gaussian noise: not tested (the whole inherited chain assumes G; outside this ticket) |
+@@ -56,7 +56,8 @@ the floor (F₀) on S₀ is the only eigenvalue condition left in Claim E and in
+ - **Expectation rate:** E δ_n = O(r_n) (Claim C); and, **when 1 ≤ s₀ < p and s₀ + 1 ≤ K** (LB's domain), E δ_n ≥
+   (1 + √(n+1))⁻¹; so on that domain sharp up to √(log n) [S01-10]. (For p = s₀ the lower bound can fail; W3-POST
+   `lb_domain_out.txt`.)
+-- **Predictive rate:** D(a) 1/n scale cannot be improved for the mean part (χ²_{s₀}-type conditional spread); D(b)
++- **Predictive rate:** D(a) 1/n scale is argued, not proved, to be unimprovable for the mean part (χ²_{s₀}-type conditional spread; no lower
++bound proved); D(b)
+   log n/n: numerics consistent, no lower bound proved.
+ - **Reference cost (Claim B):** a bounded cost is sufficient for this proof's uniform constant; growing cost gives an
+   exp(O_P(B_n)) upper payment; boundedness is **not** necessary (N6b; S01-1).
+diff --git a/Theory_work/Wave3/W3-POST2/lemmas/A_occam.md b/Theory_work/Wave3/W3-POST2/lemmas/A_occam.md
+index fcc7331..e052a36 100644
+--- a/Theory_work/Wave3/W3-POST2/lemmas/A_occam.md
++++ b/Theory_work/Wave3/W3-POST2/lemmas/A_occam.md
+@@ -30,7 +30,8 @@ Remark (compatibility, not a proved example) [K-AE-3]. If the last column u of S
+ u = X_{S}a with a of minimal norm, the Schur factor is [1 + (n+1)aᵀG(I+(n+1)G)⁻¹a]/[1 + aᵀG(I+G)⁻¹a] ≤ 1 + ‖a‖²; so
+ exact rank loss at |J| = j is not *excluded* by (DG) as long as c_D^j(n+1) ≤ 1 + ‖a‖² (whether (DG) then holds depends on
+ the other factors; no explicit design is claimed). (ADG) allows a vanishing fraction of dependent J at
+-every j; (OS) allows, at fixed p, e.g. an exactly duplicated null pair (numerics N2).
++every j; (OS) appears to allow, at fixed p, e.g. an exactly duplicated null pair: finite-n evidence only (numerics N2); no
++asymptotic proof is given for this example.
+ 
+ ## A1. Sufficiency (Theorem 1-OS)
+ 
+diff --git a/Theory_work/Wave3/W3-POST2/lemmas/D_hellinger.md b/Theory_work/Wave3/W3-POST2/lemmas/D_hellinger.md
+index 936fd5b..e1d7934 100644
+--- a/Theory_work/Wave3/W3-POST2/lemmas/D_hellinger.md
++++ b/Theory_work/Wave3/W3-POST2/lemmas/D_hellinger.md
+@@ -50,7 +50,8 @@ above form (with M_n/√2 and 2σ*²M_n² → ∞). ∎
+ Assume R1, G, (E), (F₀), (OS). Fix c₂ := c₁ + 1 (c₁ of Claim E) and let 𝔉 := {S ∈ Ω : S₀ ⊄ S, |S∖S₀| ≤ j₀} and
+   𝒮_n := {S₀} ∪ 𝒰_near,  𝒰_near := {S ∈ 𝔉 : L_S < c₂σ*² log n}.
+ **Mass outside 𝒮_n.** Ω∖𝒮_n ⊆ {|S| > m♯_n} ∪ {S ⊋ S₀, |S| ≤ m♯_n} ∪ 𝒰_far, 𝒰_far := {S ∈ Ω underfitting, |S| ≤ m♯_n,
+-S ∉ 𝒰_near} (an underfit S ∈ 𝔉 has |S| ≤ s₀ + j₀ − 1 ≤ min(s₀ + j₀, K) ≤ m♯_n for n ≥ n₀, by Lemma E0 of
++S ∉ 𝒰_near} (an underfit S ∈ 𝔉 has |S| ≤ s₀ + j₀ − 1, as S₀ ⊄ S and |S∖S₀| ≤ j₀, and |S| ≤ K, as S ∈ Ω; so
++|S| ≤ min(s₀ + j₀ − 1, K) ≤ min(s₀ + j₀, K) ≤ m♯_n for n ≥ n₀ [HQ repair 2026-11-11, PC1 P1], by Lemma E0 of
+ `E_visibility.md` with B = s₀ + j₀) [C1B-5]. The first two sets have mass
+ O_P(n^{−1/2}) (T02(i♯)) and O_P(r_n) (Claim A1 5(a); uses (E), (F₀), (OS)). For 𝒰_far, run the assembly of
+ `E_visibility.md` E2 with 𝒰 := 𝒰_far: an S ∈ 𝒰_far with |S∖S₀| ≤ j₀ is in 𝔉 with L_S ≥ c₂σ*² log n, so Lemma E1(b)
+@@ -93,8 +94,8 @@ Neither (F_λ), (ID), (G4) nor beta-min is used; the only eigenvalue condition i
+    probability; rate ε_n² = log n/n with no beta-min and no floor away from S₀ (D(b)), ε_n = M_n/√n with selection (D(a)). Random designs enter
+    through [W3P] item 6; an integrated (out-of-sample) version would need a design law and is not claimed.
+ 2. **Scale (no lower bound proved) [S01-8].** D(a): given S₀ the posterior law of ‖μ̂ − μ‖² has a non-degenerate
+-   χ²_{s₀}-type spread (posterior covariance trace v·tr(M_{S₀}) ≍ s₀σ*²), so the 1/n scale cannot be improved for the mean
+-   part. D(b): numerics are consistent with the log n/n scale (`../numerics/post2_checks_out.txt` N7, two weak truths with
++   χ²_{s₀}-type spread (posterior covariance trace v·tr(M_{S₀}) ≍ s₀σ*²), which argues (no lower bound is proved) that the 1/n
++   scale cannot be improved for the mean part. D(b): numerics are consistent with the log n/n scale (`../numerics/post2_checks_out.txt` N7, two weak truths with
+    θ² = 0.5 log n/n: posterior E‖μ̂ − μ‖²/log n ≈ 1.0 for n = 400 … 6400, where the posterior drops the weak truths); this
+    is a posterior expectation of an upper bound, not a proved lower bound. With beta-min (N7, D(a) design): n·E[h̄² bound]
+    ≈ 4–5, flat in n.
+diff --git a/Theory_work/Wave3/W3-POST2/reviews/PC1_postcouncil_diff_sol.md b/Theory_work/Wave3/W3-POST2/reviews/PC1_postcouncil_diff_sol.md
+new file mode 100644
+index 0000000..bc5981e
+--- /dev/null
++++ b/Theory_work/Wave3/W3-POST2/reviews/PC1_postcouncil_diff_sol.md
+@@ -0,0 +1,58 @@
++# PC1 - adversarial post-council diff review (Sol)
++
++Paths below are relative to `Theory_work/Wave3/W3-POST2/`. Read-only review except for this file; no subagents or git state changes. Reviewed 2026-11-11.
++
++## Edit inventory and classification
++
++The baseline is the versions explicitly reviewed by C1 seat A and seat B (STATEMENT v1.2, ASSUMPTION_MAP v1.3), their quoted old wording and findings, compared with the current files, `reviews/C1_disposition.md`, and `LOG.md` steps 16-17. Post-council edits **did occur**. LOG ends at step 17; it records no later edit. The available reviews are not full pre-council file snapshots, so this is an inventory of every identifiable recorded change, not a claim to have reconstructed an unavailable byte-for-byte historical diff. Current line numbers are used throughout.
++
++Under the requested strict definition, an added proof, extension of a theorem's domain, stronger implication, new numerical assertion, or withdrawal of a mathematical sufficiency assertion is not merely editorial. A disposition calling something "bookkeeping" does not determine its classification.
++
++| edit | file:line | class | reason |
++|---|---|---|---|
++| Final council result, scores, completion trail and final-version references added | REPORT.md:6-20, 168-200; STATEMENT.md:1; LOG.md:42-46; reviews/C1_disposition.md:1-5 | EDITORIAL | Records the two supplied PASS 8.6 reviews and post-council completion. Does not itself alter a theorem. The new mathematical additions are classified separately below. |
++| Scope flag now discloses E's ID -> ID^M effect, limits "no other proposal" to ranked proposals, and reserves HQ scope/budget decisions | REPORT.md:22-35; lemmas/E_visibility.md:3 | EDITORIAL | C1A finding 1/C1B finding 1 already reviewed the ridge formulation. This edit discloses an existing change, rather than introducing ID^M after council. LOG step 8 and the C1 independent audits establish the chronology. |
++| Per-file check records filled | lemmas/A_occam.md:3; lemmas/B_tail_approx.md:3; lemmas/C_expectation.md:3; lemmas/D_hellinger.md:3; lemmas/E_visibility.md:3 | EDITORIAL | Replaces empty pointers identified by C1B finding 2 with the existing line checks, midpoint, sweep and council results. K2's C VERIFIED / D,E VERIFIED-WITH-AMENDMENTS and M01's D(b) repair are accurately distinguished. Literal author statuses remain unchanged. |
++| Delegation-brief / HQ numbering mapping added | STATEMENT.md:3-5; REPORT.md:41-42 | EDITORIAL | A=section 4.1, B=section 4.3, C=section 4.4, D=PROGRAM 1b/section 4.11, E=section 4.2; no claim content changes. |
++| N4 universal-sufficiency wording withdrawn in favor of actual finite-n margins and ratios | REPORT.md:156-158; ASSUMPTION_MAP.md:28 | SUBSTANTIVE-CORRECT | Removes an unsupported mathematical reading. Saved N4 c=4 rows give ID/log n = 3.6704, 3.9204, 3.9817, 3.9945 and delta/r_n = 1.1750, .74586, .97290, .84372, agreeing with the rounded replacement. Neither STATEMENT E nor E1's c>c1 proof is weakened. |
++| N2 strict-separation wording qualified as finite-n evidence, without an asymptotic proof | REPORT.md:149-150, 193; ASSUMPTION_MAP.md:27 | SUBSTANTIVE-CORRECT | Properly withdraws a claimed conclusion from four observations. The saved weighted ratios decrease but do not prove OS along an infinite sequence. This qualification is incompletely propagated: see dependency finding P2 below. |
++| Intercept-inclusive distance and extension of D(a), D(b) added | lemmas/D_hellinger.md:83-87; STATEMENT.md:118-119; REPORT.md:95-96 | SUBSTANTIVE-CORRECT | Adds a new mathematical extension, already suggested but not proved in the old files. Orthogonal centering yields the displayed extra term; both rates, including the same fixed C_H_prime, survive. Line-by-line verification below. |
++| Lemma E0 and its proof added | lemmas/E_visibility.md:15-20 | SUBSTANTIVE-CORRECT | New deterministic uniform cutoff proof. Its ratio product, lower bounds, exponent and small-K case all check against the inherited cutoff definition. Full verification below. |
++| E1(b) cutoff use now cites E0 | lemmas/E_visibility.md:45-46; REPORT.md:108-109 | SUBSTANTIVE-CORRECT | For S in F, \|J_prime\|<=j0 and \|J_prime\|<=\|S\|<=K, so \|J_prime\|<=min(j0,K)<=m_sharp. The j0=ceil((2A+1)s0)+1 choice meets E0's B>=s0+1 requirement. Rank-zero increments are separately defined. |
++| D3 cutoff argument replaced/expanded to cite E0 with B=s0+j0 | lemmas/D_hellinger.md:52-54 | SUBSTANTIVE-WRONG | The displayed chain asserts s0+j0-1 <= min(s0+j0,K). For s0=A=1, j0=4 and p=K=2 (all sufficiently large n), it says 4<=2. No large-n onset fixes this fixed-p counterexample. The intended bound on \|S\| is valid, but this proof step as written is false. See P1. |
++| B relation strengthened to imply Lemma 1a with its constants | STATEMENT.md:79-80; REPORT.md:119, 228 | SUBSTANTIVE-CORRECT | Verified using the exact-reference refinement, not generic C_doubleprime(B). F0 gives \|\|theta*\|\|^2/n<=M/((n-1)phi0^2)<=M/(2phi0^2), and Theta_sharp=sqrt(D0)/(n+1)^(s0/2) Theta_doubleprime<=Theta_doubleprime. B Remark 1 removes the cross term. Thus the resulting constant is at most the stated original C_Lambda. |
++| Expanded c0<c1 grid observation added | STATEMENT.md:136; REPORT.md:122; reviews/C1_disposition.md:18 | SUBSTANTIVE-CORRECT | Independently recomputed using STATEMENT's c1 and the inherited C*=2s0+3[Aj0+s0+log(j0+1)+1], c0=max(4C*,32[s0(A+1)+2]). On s0=1,...,20 and A=1,...,10 in steps .001, min c1/c0=1.2277505771641137 at (1,10), rounding to 1.23. This verifies a grid observation, not a continuum theorem. |
++| Relation labels consolidated in report table | REPORT.md:113-122 | EDITORIAL | A1 and A2 use "implies"; mathematical implication unchanged. E still expressly records its two parameter regimes. |
++| A's notation-version pointer updated | lemmas/A_occam.md:4 | EDITORIAL | v1.1 -> v1.2 citation housekeeping; the underlying proof was already reviewed by C1. Older internal event references at A:51-52 do not change the events. |
++| N5 misleading header replaced; output regenerated | numerics/post2_checks.py:263; numerics/post2_checks_out.txt:58, 66 | EDITORIAL | Current headers identify Claim C v2's proved O(r_n) bound instead of asserting that boundedness proves an artefact. C1B finding 9 identifies the old header. No recorded post-council change to numerical formulas or values; no inference from this header is needed in C's proof. Historical numerical byte identity cannot be established from review quotations alone. |
++| Song-Liang dimension exponent renamed from xi to alpha | ASSUMPTION_MAP.md:44; lemmas/D_hellinger.md:90-91 | EDITORIAL | Symbol correction consistently applied to the dimension restriction and rate; no exponent value or local theorem changes. |
++| "Rank loss costs nothing" limited to chi-square component; determinant cost made explicit | REPORT.md:55-56 | EDITORIAL | Makes explicit the determinant ratio already present in OS and A's unchanged proof. LOG's initial reading note still uses the old shorthand, but it is a dated historical note, not a revised theorem. |
++| D(a) sharpness assertion downgraded to an argument, without a proved lower bound | REPORT.md:161-162 | SUBSTANTIVE-CORRECT | A withdrawal of proof-level strength, consistent with D4 Remark 2's header "no lower bound proved" and the absence of a stated lower-bound theorem. Propagation remains uneven: ASSUMPTION_MAP.md:59 and D_hellinger.md:96 retain "cannot be improved"; see P3. |
++| Registry blocks appended | REPORT.md:202-254 | EDITORIAL | Restates A1, A2, B, C, D and E with author statuses and dependency pointers. D(a)/D(b) share a D block and status, rather than seven separate blocks. No mathematical conclusion is newly proved by these metadata. The blocks do not independently validate the post-council additions. |
++| B Remark 4 citation redirected to prior-proof line | lemmas/B_tail_approx.md:54 | EDITORIAL | Numerical inequality is unchanged. The actual source [P1] PROOF_v3.tex:128 proves sum_{k>m}q_k<=2^(-m); w(0)=1/2 then gives R_m^empty<=2^(1-m). The cutoff in B:55-56 remains valid. |
++| Citecheck count/output refreshed | reviews/CITECHECK.txt:1; LOG.md:46; REPORT.md:180 | EDITORIAL | C1 seats saw 120 checks and a stale report count 119; current saved output is 136/0 and the report uses an output pointer. Added registry ranges account for added checks. Mechanical range/label checks do not check the truth of D3's inequalities. |
++| Estimated clock times replaced by step numbers, with erratum | LOG.md:10-46 (erratum at 39-41); REPORT.md:34-35; reviews/C1_disposition.md:24<=25 | EDITORIAL | Chronology correction only; substantive pre-council adoptions remain placed at steps 8-14, before council launch at 15. |
++
++## Mathematical verification and dependency consequences
++
++**E0, line by line.** The inherited definition in W3-POST/STATEMENT.md:36-38 minimizes over m>=s0 and imposes R_m<=n^(-(s0+2)/2). The source [T03R] PROOF.md:22 gives q_(m+1)/w(s0)=C(p,s0) product_{i=s0}^m rho_i. For m<min(B,K), q_(m+1) is present in R_m. Every denominator 2p-1-i is positive. If p>=2B, i<B implies rho_i>=(p-B)/(2p)>=1/4; otherwise rho_i>=1/(2p)>=1/(4B). There are m-s0+1<=B factors, each at least 1/(4B), and C(p,s0)>=1. Thus R_m>=(4B)^(-B), uniformly in p. Choosing n0 strictly above (4B)^(2B/(s0+2)) excludes every candidate m below min(B,K). If K<B this excludes all m<K and the admissible endpoint is K, where R_K=0. This is valid in the ticket's R1 domain s0<=K. E1 uses B=j0; D3 uses B=s0+j0; both are fixed functions of s0,A, so no new n0 dependence leaks into the stated rates. E2 and C case (iii) consume E1 and need no further hypothesis changes.
++
++**Intercept, line by line.** By the truth convention in W3-POST/STATEMENT.md:31, ybar^r=alpha*+mean(X^r beta*)+epsilonbar, while mu=CX^r beta*. Consequently the raw fitted-minus-true mean is epsilonbar 1+(muhat-mu). Both fitted and true centered means lie in 1-perp. Squaring gives exactly n epsilonbar^2+||muhat-mu||^2. Repeating D0:12-17 yields the displayed Hellinger upper bound, and Gaussian noise gives n epsilonbar^2/sigma*^2~chi-square_1. For D(a), n h_int^2 is posterior-tight in sampling probability, hence every diverging M_n threshold works. For D(b), one must use slack rather than simply append a positive term to an exhausted bound: apply the uniform variance result D3:70-72 with M_n=sqrt(log n/2). Its squared contribution is <=(log n)/(2n) outside vanishing posterior mass; epsilonbar^2/(4sigma*^2)=o_P(log n/n), so it fits inside the remaining (log n)/(2n). Thus exactly C_H_prime=1+C_H/(4sigma*^2) still works. STATEMENT and REPORT carry this extension; no coefficient or selection premise changes.
++
++**Exact B implication.** The constant comparison requires the existing refined exact-reference proof at B:45-48; inserting B into the generic display alone would retain an unnecessary sqrt(B) term. With r=0 that term vanishes. The resulting constant 1/sqrt(2)+1/2+[M+M/(2phi0^2)]/(2sigma*^2) is <= W3-POST Lemma 1a's C_Lambda at STATEMENT.md:48, because that original constant has the additional positive sigma*^2 contribution. The determinant normalization transfers the same tail inequality. The stronger relation in the statement, report table and registry is therefore supported.
++
++**P1 - false propagated cutoff chain (required repair).** At D_hellinger.md:53 the error is the comparison between the numerical upper bound s0+j0-1 and K, not E0. For a concrete admissible sequence take p=2, s0=A=1, centered orthogonal standardized columns, and a bounded nonzero truth coefficient. F0, E and OS hold, and K=2 for every n>=4. Underfitting models (including the empty model) exist. Nevertheless the printed middle inequality reads 4<=2. Replace that portion by
++
++`|S| <= min(s0+j0-1,K) <= min(s0+j0,K) <= m_sharp_n`.
++
++This follows by combining |S|-s0+j0-1 with S in Omega, rather than asserting the first bound itself is <=K. E0 then proves the final step. The intended D(b) theorem is repairable without changing constants or premises. As requested, this review does not repair the proof file. D(b)'s report/registry and intercept extension inherit reliance on a proof containing this false line.
++
++**P2 - N2 qualification not propagated everywhere.** C1A finding 2 explicitly linked its concern to A_occam.md:33. That line still says OS "allows, at fixed p, e.g. an exactly duplicated null pair (numerics N2)"; ASSUMPTION_MAP.md:14 still says ADG is "improvable to (OS) (N2)." These present a stronger asymptotic example claim than REPORT.md:149-150 and :193, which explicitly say no asymptotic proof for this example is given. This is not a counterexample to OS or A0; it is an incomplete propagation of the evidential downgrade. Add the same finite-n qualification or supply the missing explicit asymptotic argument. The disposition's "all findings applied" is too broad on this point.
++
++**P3 - predictive sharpness qualification not uniform.** REPORT.md:161 now says the 1/n scale is argued, not proved as a lower bound. ASSUMPTION_MAP.md:59 still asserts it "cannot be improved," and D_hellinger.md:95-96 pairs a no-lower-bound header with that assertion. The conditional-spread argument may support the assertion, but no new formal lower-bound proof was added. These summaries should use the report's proof-status qualification. This does not negate D(a)'s upper rate.
++
++There is no evidence of a new post-council adoption of C+, D+, or E's ridge hypothesis: both C1 seats explicitly audited them. The actual new analytic work is E0 and the intercept extension; the strengthened B relation relies on an existing refined proof. No later LOG entry supplies a re-check of the added D3 chain.
++
++## Verdict: NOT-CLEAN
++
++The edited D3 proof contains a demonstrably false inequality at `lemmas/D_hellinger.md:53`; N2's evidential correction is incompletely propagated. E0, the intercept extension, and the exact B relation withstand the checks above, but those successes do not clear the defective dependent line.
+diff --git a/Theory_work/Wave3/W3-POST2/reviews/PC2_repair_check_sol.md b/Theory_work/Wave3/W3-POST2/reviews/PC2_repair_check_sol.md
+new file mode 100644
+index 0000000..e1fae53
+--- /dev/null
++++ b/Theory_work/Wave3/W3-POST2/reviews/PC2_repair_check_sol.md
+@@ -0,0 +1,48 @@
++# PC2 — adversarial repair check (Sol)
++
++Reviewed 2026-11-11. Paths are relative to `Theory_work/Wave3/W3-POST2/` unless otherwise stated. Ran `git diff -- Theory_work/Wave3/W3-POST2` and checked its five changed files against PC1 P1–P3 and their proof dependencies. Read-only review except for this output file; no git state changes or subagents.
++
++## P1 — repaired cutoff and dependent proof: PASS
++
++The chain in `lemmas/D_hellinger.md:53-55` is now correct, including when K is smaller than the nominal cardinality bound:
++
++1. By `lemmas/D_hellinger.md:50-51`, S ∈ 𝔉 implies S₀ ⊄ S and |S∖S₀| ≤ j₀. Consequently |S∩S₀| ≤ s₀−1, and |S| = |S∩S₀| + |S∖S₀| ≤ s₀+j₀−1.
++2. Also S ∈ Ω, hence |S| ≤ K. `STATEMENT.md:15-16` explicitly inherits Ω and K from W3-POST §0; `../W3-POST/STATEMENT.md:21` defines Ω = {S ⊆ [p] : |S| ≤ K}, K = min(p, floor(n/2)). Thus |S| ≤ min(s₀+j₀−1,K). This combines two bounds on |S|; it does not claim s₀+j₀−1 ≤ K.
++3. Monotonicity of the minimum gives min(s₀+j₀−1,K) ≤ min(s₀+j₀,K), without any restriction on which argument is smaller.
++4. Apply E0 (`lemmas/E_visibility.md:16-20`) with B = s₀+j₀. `STATEMENT.md:21` gives j₀ = ceil((2A+1)s₀)+1. In inherited R1, s₀ ≥ 1 and A ≥ 1 are fixed (`../W3-POST/STATEMENT.md:63-66`); therefore B is a fixed integer and B ≥ s₀+1. E0 yields min(s₀+j₀,K) ≤ m♯_n for all sufficiently large n, uniformly over the allowed p. B depends only on s₀,A, so this invocation adds no parameter dependence to C_H and no new hypothesis.
++
++**Independent check of E0.** The inherited cutoff has threshold n^{−(s₀+2)/2}, minimizes over integers m ≥ s₀, and is at most K (`../W3-POST/STATEMENT.md:36-38`). For s₀ ≤ m < min(B,K), the positive term q_{m+1}/w(s₀) belongs to R_m. The ratio product in E0 is exactly [T03R] `PROOF.md:22,32` (under the inherited ARC alias). Every factor (p−i)/(2p−1−i) is positive. For p ≥ 2B it is at least 1/4; for p < 2B it is at least 1/(4B). There are m−s₀+1 ≤ B factors, and C(p,s₀) ≥ 1. Thus R_m ≥ (4B)^{−B}. Taking n₀ strictly larger than (4B)^{2B/(s₀+2)} excludes every such m. If K < B, the conclusion is m♯_n = K because R_K = 0. If K = s₀ the conclusion follows immediately from the cutoff's domain. E0's hypotheses and proof cover all these cases.
++
++**Counterexample attempts.** PC1's p=K=2, s₀=A=1 case has j₀=4 and B=5. Here R_1=1 and R_2=0, so m♯_n=2 for n≥4. With S₀={1}, the underfits are ∅ and {2}, of sizes 0 and 1. The repaired chain reads |S| ≤ min(4,2)=2 ≤ min(5,2)=2 = m♯_n. The false comparison 4≤2 has disappeared. The same reasoning covers K<s₀+j₀−1, K=s₀, p=s₀ (only deletion underfits), empty S, and K≥s₀+j₀ (including growing p). In the last case E0 eventually puts the entire bounded-excess family below the cutoff. As a supplementary finite check, an in-memory Python sweep tested 87,307 feasible cardinality tuples with 2≤p≤16, 1≤s₀≤p, A∈{1,1.25,2,5}, s₀≤K≤p, and every feasible intersection/excess size; all first two inequalities passed. E0's product lower bounds also passed on this grid. The uniform argument above, rather than this finite sweep, establishes the asymptotic last inequality.
++
++**Remaining D3, checked through the conclusion.**
++
++- `lemmas/D_hellinger.md:52-59`: the three sets cover Ω∖𝒮_n. The repaired bound additionally puts every near underfit below the cutoff, as required for the conditional event bounds. Tail and strict-superset masses use T02(i♯) and A1 5(a), respectively, with only (E),(F₀),(OS). For a far underfit with excess ≤j₀, exclusion from 𝒰_near forces L_S≥c₂σ*²log n. E1(b) is applicable at c₂=c₁+1 without assuming a global identifiability condition. For excess >j₀, the unconditional comparison and amplified OS sum apply. The E2 assembly (`lemmas/E_visibility.md:61-65`) remains valid for this subfamily: multiplicity is bounded by 2^{s₀}, and comparison unions may leave Ω, as already allowed by `STATEMENT.md:33-34`. Thus mass outside 𝒮_n is O_P(r_n).
++- `lemmas/D_hellinger.md:60-65`: |S|≤s₀+j₀ and L_S≤c₂σ*²log n hold on 𝒮_n for large n, including S₀ because its ridge loss is bounded by ρ̄. The repaired cutoff gives |S|≤m♯_n for near models, and m♯_n≥s₀ handles S₀; hence (G2*) covers every model used. The cross-term event covers 𝒰_near, and the separate displayed projection argument covers S₀. D1 then yields the stated fitted-mean and residual bounds uniformly. Empty models cause no problem: their noise projection is zero.
++- `lemmas/D_hellinger.md:66-71`: with ν−1=n/2−0.99 and N=n−1, subtracting σ*² from (2b+Q^c_S)/(n−1.98) gives exactly the displayed +0.98σ*² term. The bounded b term is absorbed by the log n envelope eventually. The IG variance is O(1/n) uniformly on the good event. Crucially the common χ²_N fluctuation is O_P(√n); together with O(log n) model-dependent residual error, this yields the stronger uniform O_P(n^{−1/2}) posterior-mean error, sufficient for every diverging M_n.
++- `lemmas/D_hellinger.md:72-79`: C_H=4m_n^{fit}/log n+1 depends only on s₀,A,σ*². The mean split and Markov bound have the stated constants; Chebyshev gives the 16/M_n² variance tail. Adding the O_P(r_n) discarded mass proves the joint contraction, and M_n=√log n proves the fixed C_H′ Hellinger bound. Neither beta-min, (F_λ), (G4), nor (ID) has been silently reintroduced.
++
++**Statements and intercept.** `STATEMENT.md:112-119`, `REPORT.md:94-100,240-242`, and `ASSUMPTION_MAP.md:16,38,46,59-61` remain supported by this proof. The report's rate shorthand is read in its explicitly stated posterior-contraction sense. The random-design transfer in `STATEMENT.md:117` still uses the inherited common-constant event interface; the repair introduces no additional design condition.
++
++For `lemmas/D_hellinger.md:84-88`, inherited truth `../W3-POST/STATEMENT.md:31` gives the raw mean error ε̄1+(μ̂−μ). Orthogonality yields squared norm nε̄²+‖μ̂−μ‖², so the displayed intercept-inclusive Hellinger upper bound is valid and nε̄²/σ*² has the χ²₁ law. D(a) survives since this adds a sampling-tight term to n times the squared-distance bound. For D(b), retaining exactly C_H′ requires slack: use D3's variance result with M_n=√(log n/2). Outside vanishing posterior mass its squared variance contribution is ≤log n/(2n), while ε̄²/(4σ*²)=o_P(log n/n) fits in the remaining log n/(2n). The mean contribution stays ≤C_H log n/(4nσ*²). Therefore the same C_H′ works, not merely a larger unspecified constant. No independence between these bounds is needed.
++
++## P2 — N2 qualification: PASS
++
++Searched REPORT, STATEMENT, ASSUMPTION_MAP, every lemma, and additionally all non-review ticket files for N2, duplicate-null wording, strict weakening/separation, and sharpness wording (PowerShell Select-String fallback because rg is unavailable).
++
++- `lemmas/A_occam.md:33-34` now says “appears to allow,” explicitly “finite-n evidence only,” and “no asymptotic proof.”
++- `ASSUMPTION_MAP.md:14` now qualifies the ADG-to-OS N2 evidence as finite-n, with no asymptotic proof; its numerical row at `:27` already gives the same qualification.
++- `REPORT.md:143-150` explicitly limits the observations to finite n and gives no asymptotic proof; `:193` still lists explicit-design asymptotic strictness as open.
++- `STATEMENT.md:35-38,46,54-66` states the sufficient interfaces and proved implications, without claiming that N2 establishes asymptotic strictness. Other lemmas contain no unqualified N2 separation assertion. The numerical script/output N2 labels assert failure of F_λ/DG/ADG, not asymptotic satisfaction of OS; those labels do not undo the qualification.
++
++No remaining unqualified N2 assertion of asymptotic OS satisfaction or strict separation was found in the current claim documents. Historical reviews retain quoted superseded wording and are not current theorem assertions.
++
++## P3 — predictive sharpness qualification: PASS
++
++The literal phrase “cannot be improved” remains once among the current claim documents, at `lemmas/D_hellinger.md:98`. Read with `:96-97`, it is explicitly an argument with “no lower bound is proved,” not a proved sharpness claim. `ASSUMPTION_MAP.md:59-61` now says “argued, not proved” and “no lower bound proved.” Both match `REPORT.md:161-162`. D(b)'s log n/n evidence remains numerical, with no proved lower bound (`lemmas/D_hellinger.md:98-101`, `ASSUMPTION_MAP.md:60-61`, `REPORT.md:191`). STATEMENT gives upper contraction results only (`STATEMENT.md:107-119`); no new lower-bound theorem is asserted there or elsewhere in the lemmas.
++
++## New claims introduced by this repair diff
++
++No new theorem, extension, numerical result, hypothesis, rate, constant, or asymptotic example is introduced. The D3 edit supplies the correct explicit cardinality inference needed by the existing theorem (`lemmas/D_hellinger.md:53-55`). P2 and P3 reduce the asserted evidential strength of existing remarks (`lemmas/A_occam.md:33-34`, `ASSUMPTION_MAP.md:14,59-61`, `lemmas/D_hellinger.md:96-98`). E0 and the intercept extension predate this repair diff; both were rechecked above. The new minimum bound is a justified proof repair, not an expansion of D(b)'s domain or conclusion.
++
++Verdict: REPAIRED (D(b)'s proof is now correct and P2/P3 are consistently propagated).

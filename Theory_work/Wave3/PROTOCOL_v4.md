@@ -18,6 +18,9 @@ Running tickets other than W3-DIST (W3-P6, W3-SCALE: compute tickets) finish und
   card: before/after in plain words, what it buys the paper, which assumptions moved, the evidence, HQ's recommendation.
   On AGREE, HQ adopts. On OBJECT, HQ and the consultant settle it, and only an unresolved disagreement goes to Felipe.
   Felipe is informed afterwards in the weekly owner digest. This replaces the owner veto of H2(c) in practice.
+- **H6. Reader versions (owner, 2026-11-15).** Every headline theorem has a reader version per PROGRAM.md "Readability":
+  numbered primitive assumptions and one-display conclusions, with the interface version as the master and checked
+  bridges. It is part of TARGET.md at CP1 and of the council manifest at CP3.
 - **H3. API batch proof attempts** (Fable via the Console key, run by HQ) are proof material handed to the lead. They
   are never reviews, never count toward a review layer, and are line-checked like any lemma before use.
 - **H4. Tooling.** HQ implements the remote snapshot changes (§8: 15-min cadence, one log line per run, RP labels,

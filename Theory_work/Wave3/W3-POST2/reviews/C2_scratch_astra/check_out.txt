@@ -1,0 +1,4 @@
+Cutoff cardinality tuples checked: 1590302; all pass.
+E0 exact product/lower-bound instances checked: 30655; all pass.
+c1/c0 grid: 180020 points, A=1,1.001,...,10; all >1; minimum (1.2277505771641137, (1, 10.0, 22, 2709.62593059115, 3326.744800182133)).
+Finite checks supplement the analytic argument; no continuum or asymptotic theorem inferred from them.
