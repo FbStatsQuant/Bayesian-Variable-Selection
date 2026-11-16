@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include "v4/calib.h"
+#include "v4/calib_backend.h"
 #include "v4/format.h"
 #include "v4/json.h"
 #include "v4/merge.h"
@@ -38,6 +39,8 @@ struct CalibWrite {
   std::vector<merge::InheritedModel> inherited;     // models of the three calibration stores with F, lg0, logm
   int32_t N = 0, L = 0, Hm = 4;                     // final-run settings frozen with the grid
   Json inputs = Json::object();                     // {data.bin: hash, setup.bin: hash}
+  std::vector<calib::StageRecord> stages;           // pilot and diagnostic islands' stage tables (calib.bin `stage_*`)
+  Json extra = Json::object();                      // merged into meta (settings, budgets, seed)
 };
 std::string write_calib(const std::string& path, const CalibWrite& c);   // returns the content hash
 struct CalibIn {
