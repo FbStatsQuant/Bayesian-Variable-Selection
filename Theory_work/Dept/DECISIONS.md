@@ -396,3 +396,8 @@
   REPORT §2 → STATEMENT pointers (status-source lines byte-identical/unmoved), manifest-impact check, MANIFEST_R3, diff
   round (fresh Opus + Sol), bind → CHECKPOINT_2. Row 3.7 (b1) label until pass; then READER states κ, b, M, σ fixed in n
   → H5 with the CP3 package. SCR-R1 queued as corollary of SCR-A + B2d with κ_n b_n²(n²−1) ≥ 4M_n².
+
+## 2026-11-16 03:04 CT — W3-PSHARP-R CP3 (council passed)
+- **D61.** R2 diff round PASS (Sol 9.5, Opus 9.2; bind/verify OK). Sent to HQ for acceptance + H5 card (row 1.3, Cor A1
+  expectation every p). Recorder task O stages the acceptance on current main + implies AE ⇒ PSHARP:A. 11 E → post-freeze
+  editorial batch. START2-R's RC1 (Sol) > 2 h flagged to HQ.

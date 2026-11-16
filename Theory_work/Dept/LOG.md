@@ -165,3 +165,4 @@
 - 02:48 — READER: SL0 cleared + requoted (e20d287f, card v0.9); S4 Sol statement-change check ready, held for Codex; CP3 council briefs drafted. One-time scheduled ping to READER at 12:15 CT to launch S4.
 - 02:55 — SCR-R2: 21/21 ACCEPT, gates FAIL on REPORT §2 summaries only; coordinator settled; HQ asked (D59).
 - 02:56 — HQ GO (D60): SCR-R2 leg 2 launched (child coordinator).
+- 03:04 — heartbeat: PSHARP-R CP3 (council PASSED) → HQ (D61); recorder task O; START2-R RC1 > 2 h flagged; RM2-R R1 Opus seat FAIL on F1 (REPORT conditions) → diff round expected; MISR-R in diff round R2; T03ACC moving; READER CP3 briefs drafted.
