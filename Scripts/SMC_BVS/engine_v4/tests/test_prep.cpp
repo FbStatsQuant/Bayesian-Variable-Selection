@@ -7,6 +7,7 @@
 #include "tutil.h"
 #include "v4/score.h"
 #include "v4/format.h"
+#include "v4/sha256.h"
 #include "v4/json.h"
 using namespace v4;
 
@@ -226,4 +227,26 @@ TEST(prep_from_r_equals_cpp_path) {
   CHECK(same_bits(s1.score(Model{0, 3, 7}).logm, s0.score(Model{0, 3, 7}).logm));
   std::string rmcmd = "rm -rf '" + rdir + "' '" + raw + "' '" + d1 + "' '" + d2 + "' '" + d1 + ".json'";
   CHECK(std::system(rmcmd.c_str()) == 0);
+}
+
+// The pinned reference (Sol F10): the fixtures name the exact core/ they were made from; if core/ changes, the golden
+// tests would compare against a stale reference, so this test fails until the fixtures are regenerated.
+TEST(fixtures_pinned_reference_matches_core) {
+  Json man;
+  if (!fixture_index(std::string(V4_FIXTURE_DIR) + "/MANIFEST.json", man)) return;
+  CHECK(man.contains("reference"));
+  if (!man.contains("reference")) return;
+  const Json& ref = man.at("reference");
+  for (const char* k : {"name", "core_commit", "R", "compiler", "flags"}) CHECK_MSG(ref.contains(k), k);
+  CHECK(ref.at("libm").contains("sha256"));
+  std::string core = std::string(V3_CORE_CPP_DIR) + "/..";
+  int n = 0, bad = 0;
+  for (auto& [f, h] : ref.at("core_files_sha256").items()) {
+    ++n;
+    std::string got;
+    try { got = sha256_file(core + "/" + f); } catch (...) { got = "missing"; }
+    if (got != h.str()) { ++bad; std::printf("    core file changed since the fixtures were made: %s\n", f.c_str()); }
+  }
+  CHECK(n >= 18); CHECK_EQ(bad, 0);
+  std::printf("    reference: %s, core commit %s, %d core files pinned\n", ref.at("name").str().c_str(), ref.at("core_commit").str().c_str(), n);
 }

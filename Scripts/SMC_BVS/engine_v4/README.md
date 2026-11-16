@@ -28,4 +28,5 @@ libquadmath (tests only). R (Rcpp, digest, jsonlite) is needed only to regenerat
 | stubs for WP2–WP5 entry points | `include/v4/stubs.h`, `src/stubs/stubs.cpp` | link from day one |
 
 Fixtures for WP2 (setup objects from `v3_setup`: blocks, `log_r`, start law, neighbours, 2,000 π₀ draws on stream 200)
-are in `tests/fixtures/setup/` (format in `index.json`; indices internal 0-based).
+are in `tests/fixtures/setup/` (format in `index.json`; indices internal 0-based). `tests/fixtures/MANIFEST.json`
+carries the pinned `reference` (core commit, per-file hashes, compiler, flags, libm; INTERFACES §5.3).

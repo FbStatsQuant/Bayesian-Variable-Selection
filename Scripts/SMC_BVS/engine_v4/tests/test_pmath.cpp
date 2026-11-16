@@ -17,5 +17,5 @@ TEST(pmath_binding_is_libm) {
   // the guard: log / exp / lgamma reproduce the reference hashes (Owls = NOTS) on all six rows
   const pm::SelfTest& st = pm::self_test();
   for (auto& r : st.rows) CHECK_MSG(r.ok, std::string(r.fn) + " " + r.sha256);
-  CHECK(st.ok && st.rows.size() == 6);
+  CHECK(st.ok && st.rows.size() == 8);   // 6 double rows + x87 expl, logl (v0.1.4)
 }

@@ -41,8 +41,24 @@ struct Address {
   uint32_t seed = 0; uint8_t role = 0, tier = 0, iter = 0; uint32_t island = 0;   // key
   uint8_t xph = 0; uint32_t stage = 0; uint32_t particle = 0, position = 0, slot = 0;  // counter
 };
-// Independence step: the pi_0 draw uses slots 0..u-1 (u = uniforms it consumes), the accept test this fixed slot.
-constexpr uint32_t SLOT_ACCEPT = 0xFFFFFFFFu;
+// Slot taxonomy (INTERFACES §3, v0.1.5): slot = (kind << 28) | index, index < 2^28. Every uniform's address is a
+// fixed function of the control flow, and kinds never overlap.
+enum SlotKind : uint32_t {
+  SK_ORDER = 0,         // Fisher-Yates draw number d = 0..m-2 of a round order (position 0)
+  SK_RESAMPLE = 1,      // the resampling uniform of DESTINATION particle i (index 0)
+  SK_PI0_SIZE = 2,      // pi_0 draw: total size k (index 0)
+  SK_PI0_BLOCKSIZE = 3, // pi_0 draw: size of block b (index = b, 0-based; consumed for b = J-1 .. 0 while r > 0)
+  SK_PI0_SUBMODEL = 4,  // pi_0 draw: submodel of block b (index = b; blocks with k_b > 0, b increasing)
+  SK_MOVE_J = 5,        // U / N_b: choice of j in S (index 0)
+  SK_MOVE_L = 6,        // U / N_b: choice of l (index 0)
+  SK_ACCEPT = 7         // G: include test; U / N_b / I: Metropolis-Hastings test (index 0)
+};                      // role GEN (gen / gen-test) is separate: slot = polar-method attempt number (< 2^28)
+constexpr uint32_t SLOT_INDEX_LIMIT = 1u << 28;
+inline uint32_t slot_of(SlotKind k, uint32_t index) {
+  if (index >= SLOT_INDEX_LIMIT) throw std::out_of_range("slot index >= 2^28");
+  return ((uint32_t)k << 28) | index;
+}
+constexpr uint32_t SLOT_ACCEPT = (uint32_t)SK_ACCEPT << 28;   // slot_of(SK_ACCEPT, 0)
 inline Key2 address_key(const Address& a) {
   if (a.island >= (1u << 20) || a.iter >= 64 || a.tier >= 4 || a.role >= 16) throw std::out_of_range("address key field out of range");
   return Key2{a.seed, ((uint32_t)a.role << 28) | ((uint32_t)a.tier << 26) | ((uint32_t)a.iter << 20) | a.island};
@@ -128,10 +144,14 @@ constexpr bool kCheckAddresses = true;    // cmake -DV4_CHECK_ADDRESSES=ON
 #else
 constexpr bool kCheckAddresses = false;
 #endif
+// Serial (v3 consumption) order of addresses within one unit. Inside one step the kinds are consumed in the order
+// ORDER < RESAMPLE < PI0_SIZE < PI0_BLOCKSIZE (b decreasing) < PI0_SUBMODEL (b increasing) < MOVE_J < MOVE_L < ACCEPT.
 inline auto serial_key(const Address& a) {
   int rank = a.xph == X_INIT ? 0 : (a.xph == X_RESAMPLE || a.xph == X_BRIDGE) ? 1 : a.xph == X_BURN ? 2 : a.xph == X_MEASURED ? 3 : 4 + a.xph;
   int sub = a.xph == X_BRIDGE ? 1 : 0;
-  return std::make_tuple(a.seed, a.role, a.tier, a.iter, a.island, rank, a.stage, sub, a.particle, a.position, a.slot);
+  uint32_t kind = a.slot >> 28, idx = a.slot & (SLOT_INDEX_LIMIT - 1);
+  if (kind == SK_PI0_BLOCKSIZE) idx = (SLOT_INDEX_LIMIT - 1) - idx;   // consumed for b = J-1 down to 0
+  return std::make_tuple(a.seed, a.role, a.tier, a.iter, a.island, rank, a.stage, sub, a.particle, a.position, kind, idx);
 }
 inline bool serial_less(const Address& a, const Address& b) { return serial_key(a) < serial_key(b); }
 

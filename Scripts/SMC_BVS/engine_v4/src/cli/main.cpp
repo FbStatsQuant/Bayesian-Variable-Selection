@@ -106,7 +106,7 @@ int main(int argc, char** argv) {
     st = Status::internal_error; rec = Json::object(); rec["reason"] = e.what();
   }
   rec["status"] = status_name(st); rec["command"] = cmd;
-  try { rec["binary"] = binary_block(); } catch (...) {}
+  try { rec["binary"] = cmd == "info" ? binary_block_no_self_test() : binary_block(); } catch (...) {}
   // INTERFACES §7: prep data outcomes (no data.bin) exit 20 / 21, never 0
   int code = exit_code(st);
   if (st == Status::completed && rec.contains("prep_status")) {

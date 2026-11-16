@@ -4,6 +4,8 @@
 // with the bit flags.
 //   pm::log, pm::exp, pm::lgamma, pm::sqrt -- BIT FORM. Their bits equal on Owls and NOTS (MEASURED, 2·10^6 arguments
 //       each, results/PMATH_NOTS.md) although the libm files differ; checked at start by pm::self_test().
+//   pm::logl, pm::expl -- BIT FORM (x87 long double; log_sum_exp -> log W_K -> log varpi -> every F, and WP2's
+//       cumulative_from_logs). Self-test rows "expl" / "logl" (80-bit results hashed); Owls reference, NOTS re-run pending.
 //   pm::machine::log1p, pm::machine::expm1 -- CLASS A ONLY. Their bits differ between Owls and NOTS (NOTS's libm takes
 //       the SSE2 code for them). Bit-form code must not call them (core/ never does: log_add and log1mexp_v3 in
 //       core/cpp/v3_util.h:67-86 are unused); their results never enter a fixture or a bit test.
@@ -33,8 +35,13 @@ bool fma_variant_expected();
 // (2·10^6 arguments each) compared with the hashes measured on Owls and equal on NOTS (PMATH_NOTS.md). This is the
 // guard: it keys on function results, not on the libm file hash (the files differ between Owls and NOTS).
 struct SelfTestRow { const char* fn; std::string sha256; bool ok; };
-struct SelfTest { bool ok = true; std::vector<SelfTestRow> rows; };   // rows: log, log_near1, exp, exp_pos, lgamma, lgamma_int
-SelfTest self_test();                                   // computed once per process (≈ 0.3 s)
+struct SelfTest { bool ok = true; std::vector<SelfTestRow> rows; };   // log, log_near1, exp, exp_pos, lgamma, lgamma_int, expl, logl
+SelfTest self_test();                                   // once per process; MEASURED 1.0–1.4 s wall with binary_block()
 // v4_pmath_check rows (shared with the tool): arguments of row `name`, first n.
 std::vector<double> check_arguments(const std::string& name, size_t n);
+// Long double rows: "expl" (double-valued arguments in [-11000, 0], as log_sum_exp passes them) and "logl" (genuine
+// 64-bit-mantissa arguments in [1, 1001), as the long double sums of log_sum_exp). Generator mt19937_64(12345).
+std::vector<long double> check_arguments_l(const std::string& name, size_t n);
+// SHA-256 over the 10 significant bytes of each x87 value (the 6 padding bytes are not hashed).
+std::string sha256_ld(const std::vector<long double>& y);
 }  // namespace v4::pm

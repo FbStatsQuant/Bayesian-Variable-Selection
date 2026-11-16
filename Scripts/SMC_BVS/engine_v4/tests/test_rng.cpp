@@ -1,3 +1,4 @@
+#include <random>
 #include <set>
 #include "tk.h"
 #include "v4/rng.h"
@@ -72,4 +73,80 @@ TEST(checked_source_I5) {
   try { for (auto& x : seq) inc.u(x); } catch (...) { ok = false; }
   CHECK(ok); CHECK(inc.checked == seq.size());
   CHECK_THROWS(inc.u(A(X_BRIDGE, 2, 1, 3, 1)));          // going back in the serial order
+}
+
+// I5 over a complete multi-rebuild calibration + final islands (Sol F4a): every address produced by the INTERFACES §3
+// control flow is unique (production), and each compat unit's addresses arrive in the serial order. The control flow is
+// simulated: labels G / U / N / I drawn at random, pi_0 draws consuming a random number of block categoricals.
+namespace {
+struct AddrSim {
+  int N = 5, J = 6, p = 7, B = 2, T = 3, L = 2, Hm = 2;
+  std::mt19937_64 g{77};
+  std::vector<Address> out;
+  void pi0(Address a) {   // one pi_0 draw at address a (slots by kind)
+    a.slot = slot_of(SK_PI0_SIZE, 0); out.push_back(a);
+    int r = 1 + (int)(g() % 4);
+    std::vector<int> kb(J, 0);
+    for (int b = J - 1; b >= 0 && r > 0; --b) { a.slot = slot_of(SK_PI0_BLOCKSIZE, (uint32_t)b); out.push_back(a); int j = (int)(g() % 3); j = std::min(j, r); kb[b] = j; r -= j; }
+    for (int b = 0; b < J; ++b) if (kb[b] > 0) { a.slot = slot_of(SK_PI0_SUBMODEL, (uint32_t)b); out.push_back(a); }
+  }
+  void round(Address a) {   // a carries role/tier/iter/island/xph/stage/particle
+    int m = p + B + 2;
+    for (int d = 0; d < m - 1; ++d) { a.position = 0; a.slot = slot_of(SK_ORDER, (uint32_t)d); out.push_back(a); }
+    for (int q = 1; q <= m; ++q) {
+      a.position = (uint32_t)q; int lab = (int)(g() % 4);
+      if (lab == 0) { a.slot = SLOT_ACCEPT; out.push_back(a); }                                         // G
+      else if (lab == 1 || lab == 2) {                                                                  // U, N_b
+        if (g() % 5 == 0) continue;                                                                     // self-loop
+        a.slot = slot_of(SK_MOVE_J, 0); out.push_back(a);
+        if (lab == 2 && g() % 4 == 0) continue;                                                         // N(j)\S empty
+        a.slot = slot_of(SK_MOVE_L, 0); out.push_back(a); a.slot = SLOT_ACCEPT; out.push_back(a);
+      } else { pi0(a); a.slot = SLOT_ACCEPT; out.push_back(a); }                                       // I
+    }
+  }
+  void island(Address a) {
+    a.xph = X_INIT; a.stage = 0;
+    for (int i = 1; i <= N; ++i) { a.particle = (uint32_t)i; a.position = 0; pi0(a); }
+    for (int t = 1; t <= T; ++t) {
+      a.stage = (uint32_t)t;
+      a.xph = X_RESAMPLE; a.position = 0;
+      for (int i = 1; i <= N; ++i) { a.particle = (uint32_t)i; a.slot = slot_of(SK_RESAMPLE, 0); out.push_back(a); }   // destination i
+      a.xph = X_BRIDGE;
+      for (int i = 1; i <= N; ++i) { a.particle = (uint32_t)i; round(a); }
+    }
+    for (int l = 1; l <= L; ++l) { a.xph = X_BURN; a.stage = (uint32_t)l; for (int i = 1; i <= N; ++i) { a.particle = (uint32_t)i; round(a); } }
+    for (int h = 1; h <= Hm; ++h) { a.xph = X_MEASURED; a.stage = (uint32_t)h; for (int i = 1; i <= N; ++i) { a.particle = (uint32_t)i; round(a); } }
+  }
+};
+}  // namespace
+TEST(i5_multi_rebuild_calibration_and_final) {
+  AddrSim sim;
+  std::vector<std::pair<size_t, size_t>> units;   // [begin, end) of each unit's addresses
+  auto unit = [&](uint8_t role, uint8_t tier, uint8_t iter, uint32_t island) {
+    size_t b = sim.out.size();
+    Address a; a.seed = 2147483647u; a.role = role; a.tier = tier; a.iter = iter; a.island = island;
+    sim.island(a); units.push_back({b, sim.out.size()});
+  };
+  for (uint8_t e = 0; e <= 1; ++e) {                        // two tiers (one escalation)
+    unit(R_PILOT, e, 0, 0);                                  // pilot
+    for (uint8_t it = 1; it <= 3; ++it) for (uint32_t r = 1; r <= 4; ++r) unit(R_DIAG, e, it, r);   // 3 rebuilds x 4 islands
+  }
+  for (uint32_t r = 1; r <= 16; ++r) unit(R_FINAL, 0, 0, r); // R' = 16 final islands
+  AddressedSource base; CheckedSource uq(base, CheckedSource::UNIQUE);
+  bool ok = true;
+  try { for (auto& a : sim.out) uq.u(a); } catch (...) { ok = false; }
+  CHECK(ok);
+  // compat order: each unit separately, in generation (= serial) order
+  bool inc_ok = true;
+  for (auto& u : units) {
+    CompatSource cs(1, 10); CheckedSource inc(cs, CheckedSource::INCREASING);
+    try { for (size_t i = u.first; i < u.second; ++i) inc.u(sim.out[i]); } catch (...) { inc_ok = false; }
+  }
+  CHECK(inc_ok);
+  std::printf("    %zu addresses over %zu units (2 tiers x (pilot + 3 rebuilds x 4) + 16 final): all unique\n", sim.out.size(), units.size());
+  // packing is injective at the field limits
+  Address hi; hi.seed = 0xFFFFFFFFu; hi.role = 15; hi.tier = 3; hi.iter = 63; hi.island = (1u << 20) - 1; hi.xph = 255;
+  hi.stage = (1u << 24) - 1; hi.particle = 0xFFFFFFFFu; hi.position = 0xFFFFFFFFu; hi.slot = slot_of(SK_ACCEPT, SLOT_INDEX_LIMIT - 1);
+  CHECK(uniform_at(hi) >= 0);
+  CHECK_THROWS(slot_of(SK_ORDER, SLOT_INDEX_LIMIT));
 }
