@@ -60,7 +60,7 @@ leaves, so `res.S` is a processed leaf. (The ordering and counting statements of
 point the visited family is the set of "exactly tight" paths, which may be a proper subset of the ĝ-maximisers of size
 kbest.)
 
-(v) Examples (`numerics/fp_example.py`, run through the frozen code):
+(v) Examples (`numerics/fp_example.py`, run through the frozen code with its default cap):
 1. Blocks C_0 = {0} with ρ = 1000.0, C_1 = {1,2} with ρ{1} = 10⁻¹⁴, ρ{2} = 2·10⁻¹⁴, ρ{1,2} = −5; K = 2;
    λ = (0, −1, 0). Since 2·10⁻¹⁴ < ½ ulp(1000) = 2⁻⁴⁴, 1000 ⊕ 10⁻¹⁴ = 1000 ⊕ 2·10⁻¹⁴ = 1000, so ĝ({0,1}) = ĝ({0,2}) =
    1000 = max ĝ (other sets: ĝ(∅) = 0, ĝ({0}) = 999, ĝ({1,2}) < 0, singletons {1},{2} ≈ −1). The size-then-lex choice under

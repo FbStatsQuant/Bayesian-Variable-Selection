@@ -43,7 +43,7 @@ On LH-iid with (SIZE) at n: within-group population correlations equal ρ; cross
 all ≤ ψ̄ < ρ in absolute value (W7-PART §0.2 example, PROOF.md:41-44 of W7). Put δ* := (ρ − ψ̄)/2 ∈ (0, ½) and t := (ρ+ψ̄)/2.
 On {max_{j<k}|r̂_jk − Σ_jk| < δ*}: every within |r̂| > ρ − δ* = t and every cross |r̂| < ψ̄ + δ* = t, i.e. the global
 margin of W7 Theorem B's proof holds, and W7 Theorem A (A4 ⇒ A1 ⇒ A3; status "PROVED (W7-PART); XF VERIFIED* (A-REV9:
-A1-A4 VERIFIED ...)", `NBH/ID_REGISTRY.md:310`) — equivalently PXN Lemma P1 (XF VERIFIED, A-REV3) — gives blocks = groups.
+A1-A4 VERIFIED ...)", `NBH/ID_REGISTRY.md:310`) — equivalently PXN Lemma P1 (XF VERIFIED, A-REV3) — gives blocks = groups (the internal step A0(c) of Theorem A is not used: direct argument `R_branch_repair.md:20-26`, ERRATA E-17).
 Hence, for every n ≥ 3 at which SIZE holds,
   P(𝒜_nᶜ) ≤ 3p² exp(−(n−1)(ρ−ψ̄)²/4096).
 Consequences: with p ≤ n^A, Σ_n P(𝒜_nᶜ) < ∞, and for every C > 0, P(𝒜_nᶜ) ≤ p^{−C} once
