@@ -1,10 +1,10 @@
-# W3-MISR-R — READER_DELTA (draft v0.4, 2026-11-16; v0.4 = post-CP3 presentation items of HQ card 10 [P4]: title, honest limits, relation to Theorem 2, Song–Liang line; theorem statement unchanged. v0.3 = council R1/R2 faithfulness fixes [R1], passed council R3; v0.2 = manager's CP1 wording rules applied; for W3-READER `READER_VERSIONS.md` row "thm4", card row 1.4)
+# W3-MISR-R — READER_DELTA (draft v0.4, 2026-11-16; v0.4 = post-CP3 presentation items of HQ card 10 [P4]: title, honest limits, a non-implication note on Theorem 2 (the comparison is parked as check X, `CHECK_X_sketch.md`), Song–Liang line; theorem statement unchanged. v0.3 = council R1/R2 faithfulness fixes [R1], passed council R3; v0.2 = manager's CP1 wording rules applied; for W3-READER `READER_VERSIONS.md` row "thm4", card row 1.4)
 
 Source read (read only): `/home/fb31/BVS-wt/W3-READER/Theory_work/Wave3/W3-READER/READER_VERSIONS.md`, row thm4 (between
 `<!-- ROW thm4 BEGIN -->` and `END`), section version 0.2 / update log v0.3 (2026-11-16). This draft proposes the delta;
 the manager passes it to HQ for W3-READER. Nothing here is written in W3-READER's folder. Status of every new master:
-**not yet checked** (this ticket is at CP1); the row must keep the current masters until W3-MISR-R passes CP3 and HQ
-(with the consultant, v4 H5) adopts the change.
+council R3 passed (MANIFEST 43b2366b…, sol=10.0, opus=9.6); acceptance accepted by HQ, recording pending; the row keeps its
+current masters until the recorder records the acceptance and HQ's GO swaps the text.
 
 ## 1. What changes, in plain words
 
@@ -56,15 +56,9 @@ For a fixed design the contraction needs only that the posterior mass of $S_0^{\
 (with the energy bound and a floor on $S_0^{\mathcal C}$); it holds uniformly over any class of fixed-design configurations with
 common constants and bounded support size on which this convergence is uniform. A fixed-design version of the theorem, uniform
 over the residual variance, also holds (remarks in the paper; same status).
-*Relation to Theorem 2 [P4].* With no omitted predictors ($\beta^{\mathcal C}=\beta$, $\sigma^2_{\mathcal C}=\sigma^2$), the
-assumptions of Theorem 2 imply (A0)–(A3): Theorem 2's floor is on larger sets, and a correlation-matrix covariance, a fixed
-$s$, coefficients $b_{\mathrm{lo}}\le|\beta_j|\le b_{\mathrm{hi}}$ and a fixed $\sigma^2$ give the energy bound and a diverging
-beta-min. So in that case Theorem 4 gives Theorem 2's conclusions for $1-\pi(S_0\mid y)$ and the HPM in the stronger
-expectation form, and also when $\Sigma$, $\beta$, $\sigma^2$ vary with $n$; Theorem 2's PIP and MPM clauses then follow from
-the deterministic bounds $\max_j|\mathrm{PIP}_j-\mathbf 1\{j\in S_0\}|\le1-\pi(S_0\mid y)$ and
-$\{\mathrm{MPM}\neq S_0\}\subseteq\{1-\pi(S_0\mid y)\ge\tfrac12\}$. Theorem 2 does not give Theorem 4 (it fixes $\sigma^2$ and has
-no omitted predictors). The two theorems rest on different masters with their own conditions, and this comparison is a
-bridge (B4.5), not a separate claim.
+*Relation to Theorem 2 [P4].* Theorem 2 does not give Theorem 4: Theorem 2 fixes $\sigma^2$ and has no omitted predictors.
+Whether Theorem 4's hypotheses cover Theorem 2's setting without omitted predictors is open and being checked; until then the
+two rows rest on different masters with their own conditions.
 
 ## 3. "Why each assumption" (replaces the row's list)
 - (A0) is a convenient sufficient form. The proof uses only a weaker condition: given the candidates, the coordinates of
@@ -90,7 +84,6 @@ bridge (B4.5), not a separate claim.
 | B4.2 | (A3) = CorGb-plus's signal conditions (→ ∞ branch of its liminf condition) | identity | `STATEMENT.md` §3 |
 | B4.3 | POST2 C, E, A1, A0 (and D for the remark) | EXISTS-UNCHECKED (unchanged) | as the current row |
 | B4.4 | Remark ⇒ CorH-U (RD) with 𝒦^♭_n := 𝒦^λ_n(s, A, 2M₀+1, (c_R/8)^{1/2}, C_OS, c) ((UP) by MIS(i) + Markov) and the events 𝒜_n of CorGb-plus's proof (P(𝒜_n) → 1); contraction sentence for a fixed design ⇒ CorH-plus (a′), (KL), with the premise δ_n → 0 in probability; uniform sentence ⇒ CorH-U (U-a), with its premise (UP); "fixed-design version of the theorem, uniform over the residual variance" ⇒ W3-MISR:MIS(i)@1.0.0 (BASE `STATEMENT.md:110-114`, constants free of v) | NEW (composition; the random-design part is `CorH-U` clause (G), STATEMENT §5) | the Hellinger rate M_n/√n and KL rate M_n/n are the sets H^a, K^a; the reference is centred (STATEMENT §1: μ(κ) = Cxβ) [R1] |
-| B4.5 | Relation to Theorem 2 (remark) ⇒ masters | NEW (comparison; for W3-READER's fidelity read) [P4] | Theorem 2 (row thm2: (A1)–(A3), `READER_VERSIONS.md:255-262` at W3-READER 45d39fb4) with no omitted predictors ⇒ CorGb-plus hypotheses: floor on \|S\| ≤ 5(A+1)(s₀+1)log n ⊇ the sets of (A2) here; energy β'Σβ ≤ λ_max(Σ_SS)‖β_S‖² ≤ s²b_hi² (correlation entries ≤ 1), so M₀ = s²b_hi²/σ²; beta-min n b_lo²/(σ² log n) → ∞; (S1) gives (A0) with constant α′. Conclusions: CorGb-plus display; PIP/MPM by the deterministic consequences of W3-MISR STATEMENT.md:119-120 (MIS-R (i), items 1–2, "for every data set"). Not implied: Theorem 4 by Theorem 2. Masters differ: W3-MISR-R:CorGb-plus vs W3-POST:Thm-1 item 6 + W2-APP:POST |
 
 
 ## Honest limits (replaces the row's "### Honest limits") [P4]
