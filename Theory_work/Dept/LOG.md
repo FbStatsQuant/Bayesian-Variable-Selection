@@ -127,3 +127,4 @@
 - 23:22 — accept-identity fix + NB-1/NB-2 tests: infra/accept-identity-case-v2 5cc7786 (tl 176/0, check 468/0) → HQ merge. NB-3/NB-4 post-freeze.
 - 23:22 — Eng accepted PSMC-S0 results (THEORY-7, D-26); D-7 entry cleared for the recorder.
 - 23:22 — HQ merged accept-identity-case-v2 → main 9a5f23aa (468/0). NB-3/NB-4 post-freeze. PSMC-S0 closed.
+- 23:25 — Claude Third reset: resumed; HOLDS none; no failed child agents to re-launch. RM2-R CP1 → GO (D47).

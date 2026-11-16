@@ -314,3 +314,10 @@
 - **D46.** Thm 1′ not "design-agnostic" (keeps vanishing floor (A5)); O1 ranks with O3 post-freeze; rows 3.1/3.2 lead with
   the convention-free clause (every admissible run that produces output reports S₀, every seed, one data event);
   "every run produces output" to the body; row 3.6 stays in the body; freeze only after a clean read of the final text.
+
+## 2026-11-15 23:25 CT — resume after Claude Third limit; W3-RM2-R CP1: GO
+- Resume check: HOLDS none; no thread of ours failed on the rate limit (all running/waiting/completed normally); nothing
+  to re-launch.
+- **D47.** RM2-R CP1 → GO: targets fixed (RM0-plus, DLV-0, RM2-F-plus / RM2-R-plus STRONGER, bridges, Ex-Proxy-d,
+  Cont-plus with targets in implies); O-Wq and O4′ named open items; Ex-PolyR/F targeted review post-freeze; READER_DELTA
+  shaped to the card rule (abstract: convention-free clause; body: delivery + error split). CP3 by Wed 18:00.
