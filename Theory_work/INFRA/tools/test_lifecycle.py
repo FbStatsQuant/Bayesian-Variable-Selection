@@ -1967,6 +1967,31 @@ try:
         results.append(("assemble writes one distinct block file per selected claim (no overwrite)",
                         rc_a == 0 and len(files_a) == len(set(files_a)) == len(on_disk) > 0))
 
+    if True:  # assemble.py headline candidates (HQ 2026-11-15, v4 §7): candidates get a labelled block
+        rows_hc = R.load_claims()
+        if not any(r.get("headline") == "yes" for r in rows_hc):  # after the 44-flag clear: flag one row here
+            first = next(r for r in rows_hc if r["state"] == "ACTIVE")
+            run("registry.py", "set", first["id"], "headline=yes", "--reason", "test")
+            rows_hc = R.load_claims()
+        hl = next(r for r in rows_hc if r.get("headline") == "yes")
+        nonhl = next(r for r in rows_hc if r.get("headline") != "yes" and r["state"] == "ACTIVE"
+                     and r["id"] != hl["id"])
+        hc_path = os.path.join(INFRA, "registry", "HEADLINE_CANDIDATES.md")
+        with open(hc_path, "w", encoding="utf-8") as fh_:
+            fh_.write("# test\n\n| id@version | x |\n|---|---|\n"
+                      f"| {nonhl['id']}@{nonhl['version']} | candidate |\n| {hl['id']}@{hl['version']} | flagged |\n")
+        rc_h = subprocess.run([sys.executable, os.path.join(INFRA, "tools", "assemble.py")], capture_output=True,
+                              text=True, encoding="utf-8", errors="replace", cwd=TMP).returncode
+        man_h = open(os.path.join(INFRA, "paper", "generated", "MANIFEST.txt"), encoding="utf-8").read().splitlines()[1:]
+        blk = {ln.split("\t")[0]: ln.split("\t")[1] for ln in man_h if ln.strip()}
+        txt = lambda cid: open(os.path.join(INFRA, "paper", "generated", blk[cid]), encoding="utf-8").read()  # noqa: E731
+        lab = "headline admission pending (strength gates)"
+        results.append(("assemble: a non-headline row listed in HEADLINE_CANDIDATES.md gets a block with the visible "
+                        "label 'headline admission pending (strength gates)'; a headline=yes row listed there gets no "
+                        "label", rc_h == 0 and nonhl["id"] in blk and lab in txt(nonhl["id"])
+                        and hl["id"] in blk and lab not in txt(hl["id"])))
+        os.remove(hc_path)
+
 finally:
     SB.__exit__(None, None, None)
 for name, ok in results:
