@@ -242,3 +242,6 @@ same rules for anything it runs.
    No Engineering file anywhere else: temp files, logs, job scripts, outputs and crews all live inside. The exceptions are
    its git worktree on Owls (repo code only) and Slurm's own spool. Existing SMC-BVS material is moved in by the
    reorganization plan (idle data only).
+9. **Every department gets its own folder on each machine** (owner, 2026-11-15), named `SMC_<Name>_Department` under
+   `/home/fb31/` (e.g. `SMC_Lean_Department` at its launch), with a `scratch` link on NOTS when it needs heavy data. Each
+   department works only inside its own folders.
