@@ -20,3 +20,11 @@
   Four distinct slips (A1 p = 1 remark at PROOF.md:9, both samples; A2 n ≥ 5 side condition for s₀ = 0; A3 R_m for m < 0;
   A4 J_n^∞ without "j ∈ S₀"), recorded in `reviews/API_dispositions.md` with the line-check batch that gets each as a
   named point. PLAN.md not edited (it is in the SL1 manifest while SL1 runs). `api/` not moved yet (CP1 ask (b) open).
+- 2026-11-16 00:05 CST — Manager CP1 answer: GO. (a) Launch LC-A/B/C in parallel once SL1 locks, covering every consumed
+  [P1]/[P3] step. (b) `api/` moved to `reviews/api/` (done). SL1 rulings on §4 readings to be adopted and recorded in the
+  changelog; a reading that adds a hypothesis the record lacks (A ≥ 1, p ≥ 2) is WEAKER vs the record and is named in CP3.
+  The API slips go to the batches as named points, each with a disposition. Deadline: CP3 aim Wed 18:00, hard Thu 18:00;
+  report Tue 08:00 if Codex has not started the line checks.
+- 2026-11-16 00:06 CST — Briefs for LC-A, LC-B, LC-C saved in `reviews/` (before launch). The API slips go in as
+  named points (LC-A N1–N3, LC-B N1–N2, LC-C N1), and the lead adds points of their own. Launch waits on the SL1 lock.
+  Heartbeat: SL1 still running (Codex queue).

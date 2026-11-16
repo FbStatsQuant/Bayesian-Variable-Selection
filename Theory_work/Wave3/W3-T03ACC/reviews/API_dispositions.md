@@ -1,6 +1,6 @@
 # W3-T03ACC — dispositions of HQ's blind API Fable audit (v4 H3: proof material, not a review layer)
 
-Inputs: `api/t03acc-1.md`, `api/t03acc-2.md`, `api/VERDICTS.tsv` (also on main: `Theory_work/Wave3/API_AUDIT/t03acc/`).
+Inputs: `reviews/api/t03acc-1.md`, `reviews/api/t03acc-2.md`, `reviews/api/VERDICTS.tsv` (moved from `api/` on the manager's CP1 answer) (also on main: `Theory_work/Wave3/API_AUDIT/t03acc/`).
 Both samples: `AUDIT SOP:TH09 VERDICT=MINOR FINDINGS=0`, no GAP or ERROR ("the theorem is proved as stated"). Line numbers
 in the audits match `sources/W1-T03R/PROOF.md` (checked: :79 = T02(i♯), :168 = conclusions, :172 = (C1)).
 Never given to the blind council seats. Each slip goes to a Sol line-check batch as a **named point to check**; final
