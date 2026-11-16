@@ -288,7 +288,7 @@ Each department may tailor the review, process and rollback protocols to its nee
   in `HQ_DECISIONS.md`. Until a variant is approved, the baseline applies.
 
 ## 14. Codex pacing levels (owner, 2026-11-15)
-The owner says "pace to level N"; HQ relays it to every manager the same day. Reviews already in flight finish as
+The owner says "pace to level N"; HQ relays it to every manager the same day. **A pacing level is not a reasoning effort:** Codex reviewers always run at effort high, at every level. Reviews already in flight finish as
 started.
 
 | level | Codex (Sol / Astra) used for | moves to Claude (Opus / Fable) |
