@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# nots_bench_arch.sh -- WP3 architect SPR measurement (branch exp/P1M-wp3-arch): the levers of WP3_ARCH_REVIEW.md on a
+# late 10^6 round, A/B on the SAME rounds of the SAME island.
+#
+# One island is run once through its transient (pi_0 -> phi = 1 in one stage, 2 burn-in rounds) and stopped with a
+# checkpoint; every variant then resumes from that checkpoint and runs the 2 measured rounds. Variants differ only in
+# execution parameters (never in the law), so every variant must print the SAME output hash (checked here).
+# Run inside ONE allocation of one whole socket: 96 CPUs of one socket + its memory (the H-9 island shape).
+#   sbatch --nodes=1 --ntasks=1 --cpus-per-task=96 --mem=60G --time=00:40:00 --constraint=<SPR 8468> ...
+# Usage: tools/nots_bench_arch.sh <build-dir> [variants]
+#   variants (space separated, default "ref check bounded all"):
+#     ref      PR #26 head behaviour: L5, dense scoring, I1 check after every step
+#     check    ref without the per-step I1 check                      (lever 1: the check)
+#     bounded  check + bounded scoring and the one-particle phase B   (lever 2)
+#     all      bounded + every other [arch] switch that is on by default in this build
+#     g64      `all` at G = 64      smt48  `all` with 48 threads (one per core)
+# Cost ESTIMATE at p = 10^6 (from job 2748756: transient 656 s, measured rounds 29-31 s each at G = 256): transient ~11 min,
+# each variant ~2.5 min (data + setup 20 s, checkpoint load, 2 rounds) -> 4 variants ~ 21 min x 96 CPUs ~ 34 core-h.
+# Requires TMPDIR and a build directory under the department folders (tools/nots_guard.sh); logs in <build-dir>/logs.
+set -euo pipefail
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$here/tools/nots_guard.sh"
+build="${1:?build dir}"; variants="${2:-ref check bounded all}"; p="${V4_BENCH_P:-1000000}"
+nots_guard "$build"
+cmake -S "$here" -B "$build" -DCMAKE_BUILD_TYPE=Release -DV4_TESTS=OFF -DV4_ISLAND_ISA="${V4_ISLAND_ISA_BUILD:-sapphirerapids}" > "$LOGDIR/cmake.log"
+make -C "$build" -j "${V4_MAKE_J:-16}" v4_bench_island v4_bench_arch > "$LOGDIR/make.log" 2>&1 || { tail -30 "$LOGDIR/make.log" >&2; exit 5; }
+B="$build/v4_bench_island"
+export V4_K_STORE="${V4_K_STORE:-8}" V4_VERBOSE=1 V4_MEM_BUDGET_GB="${V4_MEM_BUDGET_GB:-60}"
+export OMP_PROC_BIND=close OMP_PLACES=threads
+N="${V4_BENCH_N:-2500}"; G=256; GRID="steps:1"; L=2; HM=2; NT="${V4_BENCH_THREADS:-96}"
+ck="$TMPDIR/arch_ckpt_$$"; trap 'rm -f "$ck".a "$ck".b "$ck".a.tmp.* "$ck".b.tmp.*' EXIT
+lscpu | grep -E "Model name|^CPU\(s\)|Socket|NUMA node\(s\)"
+pre=""; if command -v numactl > /dev/null; then pre="numactl --localalloc"; fi
+echo "== transient (stage 1 + 2 burn-in rounds), stop after step 3 with a checkpoint  $(date +%T)"
+V4_CKPT="$ck" V4_STOP_AFTER=3 V4_NO_CHECK_STORE=1 OMP_NUM_THREADS=$NT $pre "$B" island "$p" "$N" "$NT" A lm "$G" 128 "$GRID" "$L" "$HM" > "$LOGDIR/transient.log" 2>&1 \
+  || { tail -5 "$LOGDIR/transient.log" >&2; exit 6; }
+grep -E "\[round\]|\[arch\]|stopped after" "$LOGDIR/transient.log" || true
+hashes=()
+for v in $variants; do
+  envs=(); g=$G; nt=$NT
+  case "$v" in
+    ref)     envs=(V4_NO_BOUNDED=1) ;;
+    check)   envs=(V4_NO_BOUNDED=1 V4_NO_CHECK_STORE=1) ;;
+    bounded) envs=(V4_NO_CHECK_STORE=1 V4_ARCH_ONLY_BOUNDED=1) ;;
+    all)     envs=(V4_NO_CHECK_STORE=1) ;;
+    g64)     envs=(V4_NO_CHECK_STORE=1); g=64 ;;
+    smt48)   envs=(V4_NO_CHECK_STORE=1 OMP_PLACES=cores); nt=48 ;;
+    *) echo "unknown variant $v" >&2; exit 2 ;;
+  esac
+  echo "== variant $v: G=$g threads=$nt ${envs[*]}  $(date +%T)"
+  env "${envs[@]}" V4_CKPT="$ck" OMP_NUM_THREADS=$nt $pre "$B" island "$p" "$N" "$nt" A lm "$g" 128 "$GRID" "$L" "$HM" > "$LOGDIR/variant_$v.log" 2>&1 \
+    || { tail -5 "$LOGDIR/variant_$v.log" >&2; exit 7; }
+  grep -E "\[round\]|\[arch\]|resumed after|output hash|peak RSS" "$LOGDIR/variant_$v.log" || true
+  hashes+=("$(grep -o "output hash [0-9a-f]*" "$LOGDIR/variant_$v.log" | head -1)")
+done
+uniq_h=$(printf '%s\n' "${hashes[@]}" | sort -u | wc -l)
+if [[ "$uniq_h" -ne 1 || -z "${hashes[0]}" ]]; then echo "ERROR: the variants' output hashes differ or are missing: ${hashes[*]}" >&2; exit 8; fi
+echo "== all variants: ${hashes[0]} (identical)"

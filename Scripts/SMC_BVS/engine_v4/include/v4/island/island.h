@@ -56,6 +56,8 @@ struct IslandConfig {
                                             // v0.1.7, D-7); calibration islands and golden tests only; never written to island_r.bin
   bool store_dup_filter = true;             // exact snapshot duplicate filter (execution parameter; content unchanged)
   bool store_parallel_compact = true;       // compaction at pass/step boundaries with all threads (content unchanged)
+  bool bounded_scoring = true;              // [arch] score a (support, label) only if a particle can still consume it (execution
+                                            // parameter; outputs unchanged)
   bool check_store = true;                  // I1 after every step (linear; O(c) hash lookups)
   int products_block = 0;                   // tile products: 4 = 4 active columns x 32 labels per sweep, 1 = the original loop
                                             // (same bits); 0 = auto: 4 when the island ISA has AVX-512, else 1 (review PR26
@@ -80,12 +82,13 @@ using v4::StageRow;
 
 struct KernelStats {   // execution statistics (not part of the law, not hashed)
   uint64_t particle_rounds = 0, particle_sweeps = 0, passes = 0, support_label_pairs = 0, supports = 0;
+  uint64_t flip_evals = 0;   // [arch] addition flips actually evaluated (fast supports)
   uint64_t slow_supports = 0, store_merges = 0, store_buffered = 0, store_dup_dropped = 0, store_serial_merges = 0;
   double t_store_compact = 0, t_compact_pass = 0;   // wall seconds compacting (all paths) / at pass boundaries
   int kept_live_max = 0;   // most kept runs alive at once in this process (M2 bound; process-wide counter)
   double t_products = 0;   // thread-seconds inside phase A spent on the tile products
   double t_init = 0, t_orders = 0, t_build = 0, t_phaseA = 0, t_walk = 0, t_phaseB = 0, t_apply = 0, t_barrier = 0,
-         t_pm = 0, t_ckpt = 0, t_total = 0;
+         t_pm = 0, t_ckpt = 0, t_total = 0, t_check = 0;   // t_check [arch]: the I1 store check after every step
 };
 
 struct Particle { Model S; uint64_t h = 0; double logm = 0, lg0 = 0, d = 0, F = 0; };

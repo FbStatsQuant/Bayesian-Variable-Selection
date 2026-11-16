@@ -50,6 +50,22 @@ inline NextPhi pilot_next_phi(const std::vector<double>& d, double phi, double H
   return {lo, false};
 }   // INTERFACES v0.1.2 §3 (I step accept)
 
+// [arch] bit l set iff lo < pos[l] < hi, for 16 positions (AVX-512: two unsigned compares)
+static inline uint32_t in_open_range16(const uint32_t* pos, uint32_t lo, uint32_t hi) {
+#if defined(__AVX512F__)
+  const __m512i v = _mm512_loadu_si512((const void*)pos);
+  return (uint32_t)(_mm512_cmpgt_epu32_mask(v, _mm512_set1_epi32((int)lo)) & _mm512_cmplt_epu32_mask(v, _mm512_set1_epi32((int)hi)));
+#else
+  uint32_t r = 0; for (int l = 0; l < 16; ++l) r |= (uint32_t)((pos[l] > lo) & (pos[l] < hi)) << l; return r;
+#endif
+}
+// [arch] the labels jj of a tile (nbv of them, positions pos[jj]) with lo < pos[jj] < hi, OR-ed into the bit words w
+static inline void or_range_bits(const uint32_t* pos, int nbv, uint32_t lo, uint32_t hi, uint64_t* w) {
+  int jj = 0;
+  for (; jj + 16 <= nbv; jj += 16) w[jj >> 6] |= (uint64_t)in_open_range16(pos + jj, lo, hi) << (jj & 63);
+  for (; jj < nbv; ++jj) w[jj >> 6] |= (uint64_t)((pos[jj] > lo) & (pos[jj] < hi)) << (jj & 63);
+}
+
 struct Fnv { uint64_t h = 0xcbf29ce484222325ULL;
   void bytes(const void* p, size_t n) { const unsigned char* c = (const unsigned char*)p; for (size_t i = 0; i < n; ++i) { h ^= c[i]; h *= 0x100000001b3ULL; } }
   template <class T> void pod(const T& x) { bytes(&x, sizeof(T)); }
@@ -417,6 +433,24 @@ class IslandEngine {
         gb.lbuf.resize(full); gb.obuf.resize(full);
       }
       for (int gi : active) gb.fmin[gi].store(UINT32_MAX, std::memory_order_relaxed);
+      if (cfg.bounded_scoring) {
+        // [arch] deletion pre-scan. The deletion odds of the k members are in the support cache, so the first member
+        // whose addressed uniform deletes it is known before any tile is scored: it bounds the particle's first change.
+        // Same test as the tile scan below (member: change iff failed score or !(u < o)), same uniform address.
+        for (int gi : active) {
+          const SupportCache& c = gb.sup[gb.sup_of[gi]];
+          const uint32_t* inv = &gb.inv[(size_t)gi * m]; const uint32_t qi = gb.q[gi]; uint32_t best = UINT32_MAX;
+          const uint32_t i1 = (uint32_t)(g0 + gi) + 1;
+          for (int a = 0; a < c.k; ++a) {
+            const uint32_t pos = inv[c.S[a]];
+            if (pos <= qi || pos >= best) continue;
+            const double oj = c.del_odds[a];
+            const double u = uniform_at(addr(rc.xph, rc.ustage, i1, pos, SLOT_ACCEPT));
+            if (oj < 0 || !(u < oj)) best = pos;
+          }
+          gb.fmin[gi].store(best, std::memory_order_relaxed);
+        }
+      }
       lap(KS.t_build);
 
       // ---- phase A: scores, odds, first change per particle -------------------------------------------------
@@ -425,7 +459,7 @@ class IslandEngine {
         BitScorer& sc = *scorers[omp_get_thread_num()];
         avec<double>& Pp = scratch_P[omp_get_thread_num()];   // persistent per thread (no allocation per pass)
         if (Pp.size() < (size_t)std::max(1, nA) * Bk + 8) Pp.resize((size_t)std::max(1, nA) * Bk + 8);
-        std::vector<uint8_t> inm(Bk); double tprod = 0;
+        std::vector<uint8_t> inm(Bk); std::vector<uint64_t> needw((size_t)Bk / 64); std::vector<int> nlist(Bk + 1); double tprod = 0; uint64_t nflip = 0;
         #pragma omp for schedule(dynamic, 1) nowait
         for (int ti = 0; ti < ntile; ++ti) oom_guard([&] {
           if (cfg.test_oom_pass >= 0 && (int)KS.passes == cfg.test_oom_pass + 1 && ti == 0) throw std::bad_alloc();   // test hook
@@ -445,6 +479,47 @@ class IslandEngine {
               for (int jj = 0; jj < nbv; ++jj) if (!inm[jj]) { lb[j0 + jj] = std::numeric_limits<double>::quiet_NaN(); ob[j0 + jj] = 0.0; }
             } else if (!c.fast) {
               for (int jj = 0; jj < nbv; ++jj) if (!inm[jj]) eval1<A>(D, st, sc, c, j0 + jj, lb[j0 + jj], ob[j0 + jj]);
+            } else if (cfg.bounded_scoring) {
+              // [arch] bounded scoring. A non-member label j is scored for support s only if some particle i on s can
+              // still consume it: q_i < inv_i[j] < fmin_i, where fmin_i is the particle's running first change (an upper
+              // bound of its final e at any time: it only decreases). Every label a particle consumes (position <= e)
+              // satisfied the test when its tile was scored, so phase B, the walk and the apply step read only values
+              // computed in this pass; the others are never read (spec §3 rule 2). The needed labels of the tile are
+              // packed 8 to a vector: a lane's result does not depend on the other lanes, so the bits are unchanged.
+              thread_local std::vector<v8d> ub; if (ub.size() < (size_t)std::max(1, c.k)) ub.resize((size_t)std::max(1, c.k));
+              v8d* u = ub.data();
+              std::fill(needw.begin(), needw.end(), 0ull);
+              for (int gi : gb.sup_parts[s])
+                or_range_bits(&gb.inv[(size_t)gi * m + j0], nbv, gb.q[gi], gb.fmin[gi].load(std::memory_order_relaxed), needw.data());
+              for (auto it = mlo; it != mhi; ++it) needw[(*it - j0) >> 6] &= ~(1ull << ((*it - j0) & 63));   // members: cached deletions
+              int cnt = 0;
+              for (size_t w = 0; w < needw.size(); ++w) for (uint64_t b = needw[w]; b; b &= b - 1) nlist[cnt++] = (int)(w * 64) + __builtin_ctzll(b);
+              nflip += (uint64_t)cnt;
+              for (int c0 = 0; c0 < cnt; c0 += 8) {
+                const int nl = std::min(8, cnt - c0); const unsigned valid = (1u << nl) - 1u;
+                int32_t j8[8], jj8[8];
+                for (int l = 0; l < 8; ++l) { jj8[l] = nlist[c0 + std::min(l, nl - 1)]; j8[l] = j0 + jj8[l]; }
+                for (int a = 0; a < c.k; ++a) {
+                  const double* row = &Pp[(size_t)c.arow[a] * Bk];
+                  v8d g; for (int l = 0; l < 8; ++l) g[l] = row[jj8[l]];
+                  u[a] = g;
+                }
+                double lm8[8], o8[8];
+                if constexpr (A == Arith::ClassA) {
+                  eval8_add<A>(D, st, sc, c, 0, u, j8, valid, lm8, o8);
+                } else {
+                  unsigned rest = valid;
+                  while (rest) {   // lanes sharing the sorted insertion position q
+                    int l0 = __builtin_ctz(rest);
+                    int q = (int)(std::lower_bound(c.S.begin(), c.S.end(), j8[l0]) - c.S.begin());
+                    unsigned lanes = 0;
+                    for (int l = l0; l < 8; ++l) if ((rest >> l) & 1u) { int ql = (int)(std::lower_bound(c.S.begin(), c.S.end(), j8[l]) - c.S.begin()); if (ql == q) lanes |= 1u << l; }
+                    eval8_add<A>(D, st, sc, c, q, u, j8, lanes, lm8, o8);
+                    rest &= ~lanes;
+                  }
+                }
+                for (int l = 0; l < nl; ++l) { lb[j8[l]] = lm8[l]; ob[j8[l]] = o8[l]; }
+              }
             } else {
               thread_local std::vector<v8d> ub; if (ub.size() < (size_t)std::max(1, c.k)) ub.resize((size_t)std::max(1, c.k));
               v8d* u = ub.data();
@@ -452,6 +527,7 @@ class IslandEngine {
                 int32_t j8[8]; unsigned valid = 0;
                 for (int l = 0; l < 8; ++l) { int j = j0 + v + l; if (v + l < nbv && !inm[v + l]) valid |= 1u << l; j8[l] = std::min(j, p - 1); }
                 if (!valid) continue;
+                nflip += (uint64_t)__builtin_popcount(valid);
                 for (int a = 0; a < c.k; ++a) u[a] = load8(&Pp[(size_t)c.arow[a] * Bk + v]);
                 double lm8[8], o8[8];
                 if constexpr (A == Arith::ClassA) {
@@ -500,6 +576,8 @@ class IslandEngine {
         });
         #pragma omp atomic
         KS.t_products += tprod;
+        #pragma omp atomic
+        KS.flip_evals += nflip;
       }
       lap(KS.t_phaseA);
       if (fail_fatal()) return;
@@ -544,7 +622,7 @@ class IslandEngine {
       {
         ThreadLedger& L = *tl[omp_get_thread_num()];
         Model T;
-        std::vector<uint32_t> ncons_v(Bk), fpos_v(Bk); std::vector<int> first_v(Bk);
+        std::vector<uint32_t> ncons_v(Bk), fpos_v(Bk); std::vector<int> first_v(Bk); std::vector<uint64_t> consw((size_t)Bk / 64);
         #pragma omp for schedule(dynamic, 1)
         for (int ti = w0; ti < w1; ++ti) oom_guard([&] {
           if (L.buf.snap && L.buf.snap_gen != top.gen.load(std::memory_order_relaxed)) { L.buf.snap.reset(); L.buf.snap_gen = ~0ull; }   // M2
@@ -558,24 +636,14 @@ class IslandEngine {
             const double* lb = &gb.lbuf[(size_t)s * p]; const double* ob = &gb.obuf[(size_t)s * p];
             const auto& parts = gb.sup_parts[s];
             const double prior_add = c.add_ok ? D.logprior[c.k + 1] : 0.0, prior_del = c.k > 0 ? D.logprior[c.k - 1] : 0.0;
-            // consumption counts per label: particles in ascending order, each reading its own inverse order row
-            std::fill(ncons_v.begin(), ncons_v.begin() + nbv, 0u); std::fill(first_v.begin(), first_v.begin() + nbv, -1);
-            for (int gi : parts) {
-              const uint32_t* inv = &gb.inv[(size_t)gi * m + j0]; const uint32_t qi = gb.q[gi], ei = gb.e[gi];
-              for (int jj = 0; jj < nbv; ++jj) {
-                uint32_t pos = inv[jj];
-                if (pos > qi && pos <= ei) { if (first_v[jj] < 0) { first_v[jj] = gi; fpos_v[jj] = pos; } ++ncons_v[jj]; }
-              }
-            }
-            for (int jj = 0; jj < nbv; ++jj) {
+            // one consumed label: ncons particles of this support consumed it; `first` = the smallest of them, at fpos
+            auto consume = [&](const int jj, const uint32_t ncons, const int first, const uint32_t fpos) {
               const int j = j0 + jj;
-              const uint32_t ncons = ncons_v[jj]; const int first = first_v[jj]; const uint32_t fpos = fpos_v[jj];
-              if (!ncons) continue;
               const uint64_t fx = rc.measured ? fix63(ob[j]) : 0;
               if (rc.measured) rb_cur[j] += (u128)fx * ncons;
               L.logical[rc.phase][ME_GIBBS_HELD] += ncons; L.ms.gibbs += ncons;
               const double lm = lb[j];
-              if (std::isnan(lm)) { L.ms.gibbs_cap += ncons; continue; }   // infeasible addition: no flip event (core/cpp/v3_engine.h:119)
+              if (std::isnan(lm)) { L.ms.gibbs_cap += ncons; return; }   // infeasible addition: no flip event (core/cpp/v3_engine.h:119)
               const bool in = std::binary_search(c.S.begin(), c.S.end(), j);
               const double F = (in ? prior_del : prior_add) + lm;
               L.logical[rc.phase][ME_GIBBS_FLIP] += ncons - 1;   // + 1 inside scored()
@@ -589,6 +657,28 @@ class IslandEngine {
               } else {
                 L.logical[rc.phase][ME_GIBBS_FLIP] += 1;
               }
+            };
+            if (cfg.bounded_scoring && parts.size() == 1) {
+              // [arch] one particle on the support (the usual case once the particles have separated): its consumed
+              // labels of the tile are the bits lo < position < e + 1; no per-label counting pass
+              const int gi = parts[0]; const uint32_t qi = gb.q[gi], ei = gb.e[gi];
+              if (ei > qi) {
+                const uint32_t* inv = &gb.inv[(size_t)gi * m + j0];
+                std::fill(consw.begin(), consw.end(), 0ull);
+                or_range_bits(inv, nbv, qi, ei + 1, consw.data());
+                for (size_t w = 0; w < consw.size(); ++w) for (uint64_t b = consw[w]; b; b &= b - 1) { const int jj = (int)(w * 64) + __builtin_ctzll(b); consume(jj, 1u, gi, inv[jj]); }
+              }
+            } else {
+              // consumption counts per label: particles in ascending order, each reading its own inverse order row
+              std::fill(ncons_v.begin(), ncons_v.begin() + nbv, 0u); std::fill(first_v.begin(), first_v.begin() + nbv, -1);
+              for (int gi : parts) {
+                const uint32_t* inv = &gb.inv[(size_t)gi * m + j0]; const uint32_t qi = gb.q[gi], ei = gb.e[gi];
+                for (int jj = 0; jj < nbv; ++jj) {
+                  uint32_t pos = inv[jj];
+                  if (pos > qi && pos <= ei) { if (first_v[jj] < 0) { first_v[jj] = gi; fpos_v[jj] = pos; } ++ncons_v[jj]; }
+                }
+              }
+              for (int jj = 0; jj < nbv; ++jj) if (ncons_v[jj]) consume(jj, ncons_v[jj], first_v[jj], fpos_v[jj]);
             }
           }
         });
@@ -966,11 +1056,22 @@ class IslandEngine {
                          (unsigned long long)(k.passes - ks_prev.passes), steps > 0 ? 1e9 * dt * NT / steps : 0.0, pairs > 0 ? 1e9 * dt * NT / pairs : 0.0,
                          pairs > 0 ? 1e9 * (k.t_products - ks_prev.t_products) / pairs : 0.0,
                          pairs > 0 ? 1e9 * (k.t_phaseA - ks_prev.t_phaseA) * NT / pairs : 0.0, k.t_phaseB - ks_prev.t_phaseB, top.t_compact - ks_prev.t_store_compact);
+            std::fprintf(stderr, "  [arch] step %d: orders %.2f build %.2f phaseA %.2f (products %.2f thread-s) walk %.2f phaseB %.2f compact_pass %.2f apply %.2f | prev-step I1 check %.2f s\n",
+                         step, k.t_orders - ks_prev.t_orders, k.t_build - ks_prev.t_build, k.t_phaseA - ks_prev.t_phaseA, k.t_products - ks_prev.t_products,
+                         k.t_walk - ks_prev.t_walk, k.t_phaseB - ks_prev.t_phaseB, k.t_compact_pass - ks_prev.t_compact_pass, k.t_apply - ks_prev.t_apply,
+                         k.t_check - ks_prev.t_check);
+            std::fprintf(stderr, "  [arch] step %d: flip evaluations %.4g = %.3f per step (pairs %.3f per step)\n", step, (double)(k.flip_evals - ks_prev.flip_evals),
+                         steps > 0 ? (double)(k.flip_evals - ks_prev.flip_evals) / steps : 0.0, steps > 0 ? pairs / steps : 0.0);
             ks_prev = k; ks_prev.t_store_compact = top.t_compact;
           }
           prev_t = now_t;
         }
-        if (cfg.check_store && !(top.check_invariant())) throw v4::Error(v4::Status::internal_error, "store invariant I1 violated");
+        if (cfg.check_store) {   // [arch] timed: serial O(c) hash lookups after every step
+          const auto tc0 = std::chrono::steady_clock::now();
+          const bool ok = top.check_invariant();
+          res.ks.t_check += std::chrono::duration<double>(std::chrono::steady_clock::now() - tc0).count();
+          if (!ok) throw v4::Error(v4::Status::internal_error, "store invariant I1 violated");
+        }
         if (over_budget(step)) { stop = true; break; }
         maybe_ckpt(step, stop);
       }
