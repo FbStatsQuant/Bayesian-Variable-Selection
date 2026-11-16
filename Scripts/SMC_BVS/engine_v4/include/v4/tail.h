@@ -8,15 +8,21 @@
 //  * best neighbour: largest F, exact ties -> plain lexicographic order; a move only on a strict F increase;
 //    at most `ell` moves, then one further scan; local_limit iff that scan still finds a strict improvement;
 //  * every scanned model is a score event (phase local or ls0, mechanism local_scan) offered to the ledger.
-// Threads: the scan's label space is cut into fixed chunks (chunk size is a parameter, not part of the result); each
-// chunk keeps its best neighbour and the offers that can enter a store (filter: would_enter at the scan start, which is
-// exact because stores only improve); chunk results are combined serially in chunk order. The best-neighbour reduction
-// is a max under a strict total order, so it keeps the tie rule (core/cpp/v3_engine.h:392). Offers are applied with
-// their serial event keys, so stores and HPM provenance equal the serial run (INTERFACES §4.2).
-// Numerical failure: offers before the first failing position are applied (as in the serial run), then
-// NumericalFailure is rethrown; the caller returns no estimate (GUARD-W).
+// Threads: the scan's label space is cut into fixed chunks (chunk size is a parameter, not part of the result),
+// processed in WAVES of 4 x threads chunks. Each chunk keeps its best neighbour and the offers that can still enter a
+// store (filter: value >= the store's monotone cut-off, INTERFACES §4.1 -- exact, entries below it never enter); after
+// each wave the chunk results are applied serially in chunk order and the buffers are freed, so at most one wave of
+// chunk buffers (<= 4 x threads x chunk offers) exists at any time (bounded buffers, INTERFACES §7(4); review PR16 F3).
+// The best-neighbour reduction is a max under a strict total order, so it keeps the tie rule
+// (core/cpp/v3_engine.h:392). Offers are applied with their serial event keys, so stores and HPM provenance equal the
+// serial run (INTERFACES §4.2).
+// Numerical failure (a scorer exception, or a NaN score): offers before the first failing position are applied, as in
+// the serial run, so the HPM-so-far equals v3's exactly; then NumericalFailure is rethrown and the caller returns no
+// estimate (GUARD-W). (A ThreadLedger with eager flushes could not keep this: a flushed buffer may hold positions after
+// the failure. Hence explicit wave buffers here.)
 #pragma once
 #include <algorithm>
+#include <cmath>
 #include <string>
 #include <vector>
 #include "v4/ledger.h"
@@ -75,7 +81,6 @@ LocalArchive local_search(const Model& centre, int ell, bool emit_centre, int ph
   const int p = ts.p, K = ts.K;
   while (true) {
     const uint32_t stage = (uint32_t)A.scanned.size() + 1, round = (uint32_t)A.moves;
-    led.compact();   // the would_enter filter needs compacted stores
     const int k = (int)C.size();
     const bool add_ok = k < K;
     // label space: t in [0, p) flips; t in [p, p + k*p) swaps (a = (t-p)/p member index, l = (t-p)%p)
@@ -84,47 +89,55 @@ LocalArchive local_search(const Model& centre, int ell, bool emit_centre, int ph
     auto in_C = [&](int j) { return std::binary_search(C.begin(), C.end(), j); };
     auto below = [&](int j) { return (uint32_t)(std::lower_bound(C.begin(), C.end(), j) - C.begin()); };  // members < j
     const size_t nc = n_chunks(n_lab, ts.chunk);
-    std::vector<detail::ChunkOut> co(nc);
-    for_chunks(n_lab, ts.chunk, ts.threads, [&](size_t c, size_t b, size_t e) {
-      detail::ChunkOut& o = co[c];
-      auto ev = fac.make();
-      Model Q; double lm, lg0, d, F;
-      for (size_t t = b; t < e; ++t) {
-        uint32_t pos;
-        if (t < (size_t)p) {
-          int j = (int)t;
-          bool in = in_C(j);
-          if (!in && !add_ok) continue;
-          Q = C;
-          if (in) Q.erase(std::lower_bound(Q.begin(), Q.end(), j));
-          else Q.insert(std::lower_bound(Q.begin(), Q.end(), j), j);
-          pos = add_ok ? (uint32_t)j + 1 : below(j) + 1;
-        } else {
-          size_t u = t - (size_t)p; int a = (int)(u / (size_t)p); int l = (int)(u % (size_t)p);
-          if (in_C(l)) continue;
-          int j = C[a];
-          Q = C;
-          Q.erase(std::lower_bound(Q.begin(), Q.end(), j));
-          Q.insert(std::lower_bound(Q.begin(), Q.end(), l), l);
-          pos = n_flip_eval + (uint32_t)a * (uint32_t)(p - k) + ((uint32_t)l - below(l)) + 1;
-        }
-        try { ev(Q, lm, lg0, d, F); }
-        catch (const NumericalFailure& ex) { o.failed = true; o.fail_pos = pos; o.fail_msg = ex.what(); return; }
-        o.n_eval++;
-        if (!o.have || F > o.bestF || (F == o.bestF && lex_less(Q, o.bestS))) { o.bestS = Q; o.bestF = F; o.have = true; }
-        if (led.top.would_enter(F, Q) || led.lead0.would_enter(lg0, Q) || led.lead1.would_enter(F, Q))
-          o.offers.push_back({Q, F, lg0, lm, pos});
-      }
-    });
-    // serial combination in chunk order
+    const size_t wave = 4 * (size_t)std::max(1, ts.threads);
+    auto passes = [](const Store& st, double v) { return st.cap > 0 && v >= st.cutoff(); };
     bool failed = false; std::string fmsg;
     bool have = false; Model bestS; double bestF = 0; long n_eval = 0;
-    for (size_t c = 0; c < nc && !failed; ++c) {
-      detail::ChunkOut& o = co[c];
-      for (auto& x : o.offers) led.offer_stores(x.S, ts.zob->hash(x.S), x.F, x.lg0, x.logm, make_ev(stage, round, x.position));
-      n_eval += o.n_eval;
-      if (o.failed) { failed = true; fmsg = o.fail_msg; break; }
-      if (o.have && (!have || o.bestF > bestF || (o.bestF == bestF && lex_less(o.bestS, bestS)))) { bestS = o.bestS; bestF = o.bestF; have = true; }
+    std::vector<detail::ChunkOut> co(std::min(wave, nc));
+    for (size_t w0 = 0; w0 < nc && !failed; w0 += wave) {
+      const size_t w1 = std::min(nc, w0 + wave);
+      for (auto& o : co) o = detail::ChunkOut();
+      for_chunks(w1 - w0, 1, ts.threads, [&](size_t i, size_t, size_t) {
+        const size_t c = w0 + i, b = c * ts.chunk, e = std::min(n_lab, b + ts.chunk);
+        detail::ChunkOut& o = co[i];
+        auto ev = fac.make();
+        Model Q; double lm, lg0, d, F;
+        for (size_t t = b; t < e; ++t) {
+          uint32_t pos;
+          if (t < (size_t)p) {
+            int j = (int)t;
+            bool in = in_C(j);
+            if (!in && !add_ok) continue;
+            Q = C;
+            if (in) Q.erase(std::lower_bound(Q.begin(), Q.end(), j));
+            else Q.insert(std::lower_bound(Q.begin(), Q.end(), j), j);
+            pos = add_ok ? (uint32_t)j + 1 : below(j) + 1;
+          } else {
+            size_t u = t - (size_t)p; int a = (int)(u / (size_t)p); int l = (int)(u % (size_t)p);
+            if (in_C(l)) continue;
+            int j = C[a];
+            Q = C;
+            Q.erase(std::lower_bound(Q.begin(), Q.end(), j));
+            Q.insert(std::lower_bound(Q.begin(), Q.end(), l), l);
+            pos = n_flip_eval + (uint32_t)a * (uint32_t)(p - k) + ((uint32_t)l - below(l)) + 1;
+          }
+          try {
+            ev(Q, lm, lg0, d, F);
+            if (std::isnan(F) || std::isnan(lg0)) throw NumericalFailure("NaN score in the local search");   // review PR16 F11
+          } catch (const NumericalFailure& ex) { o.failed = true; o.fail_pos = pos; o.fail_msg = ex.what(); return; }
+          o.n_eval++;
+          if (!o.have || F > o.bestF || (F == o.bestF && lex_less(Q, o.bestS))) { o.bestS = Q; o.bestF = F; o.have = true; }
+          if (passes(led.top, F) || passes(led.lead0, lg0) || passes(led.lead1, F)) o.offers.push_back({Q, F, lg0, lm, pos});
+        }
+      });
+      // serial combination of this wave in chunk order; buffers freed before the next wave
+      for (size_t i = 0; i < w1 - w0 && !failed; ++i) {
+        detail::ChunkOut& o = co[i];
+        for (auto& x : o.offers) led.offer_stores(x.S, ts.zob->hash(x.S), x.F, x.lg0, x.logm, make_ev(stage, round, x.position));
+        n_eval += o.n_eval;
+        if (o.failed) { failed = true; fmsg = o.fail_msg; break; }
+        if (o.have && (!have || o.bestF > bestF || (o.bestF == bestF && lex_less(o.bestS, bestS)))) { bestS = o.bestS; bestF = o.bestF; have = true; }
+      }
     }
     led.logical[phase][ME_LOCAL] += (uint64_t)n_eval;
     A.n_eval += n_eval;
