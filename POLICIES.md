@@ -257,6 +257,10 @@ same rules for anything it runs.
     - resume when he says the way is clear.
 
     Design consequence: jobs stay ≤ ~6 h and checkpoint at stage boundaries.
+12. **NOTS scratch is not storage** (CRC KB 147975): files untouched for **14 days** are purged (by access time; `mv` keeps
+    the old access time; staff may purge earlier; no backup). Nothing of record stays idle in scratch for more than 7 days.
+    Records of record are copied (rsync with checksums) to the department's Owls folder (NFS), and later to the owner's
+    laptop. `$WORK` `/storage/hpc/work/ml75` is the advisor's group space: never touch it.
 
 ## 13. Department protocols: tailored, but in order (owner, 2026-11-15)
 Each department may tailor the review, process and rollback protocols to its needs. Order is kept this way:
