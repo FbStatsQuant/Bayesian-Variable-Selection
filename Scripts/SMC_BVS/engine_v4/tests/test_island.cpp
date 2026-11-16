@@ -578,9 +578,13 @@ TEST(oom_in_parallel_compaction_is_resource_limit) {
   CHECKF(r.status == 3 && r.reason.find("out of memory") != std::string::npos && r.top_v.empty(), "status %d '%s' (merges %llu)", r.status, r.reason.c_str(),
          (unsigned long long)r.ks.store_merges);
   // psort_noalloc = std::sort for every thread count (chunks + pairwise merges)
-  std::mt19937_64 g(7); std::vector<uint64_t> a(20011); for (auto& x : a) x = g() % 5000;
-  std::vector<uint64_t> ref = a; std::sort(ref.begin(), ref.end());
-  for (int th : {1, 2, 3, 5, 8}) { std::vector<uint64_t> b = a, tmp; psort_noalloc(b, tmp, std::less<uint64_t>(), th); CHECKF(b == ref, "threads %d", th); }
+  // (review m3: every merge round is cut into merge-path segments; uneven chunk and segment counts included)
+  std::mt19937_64 g(7);
+  for (size_t n : {(size_t)4100, (size_t)20011}) {
+    std::vector<uint64_t> a(n); for (auto& x : a) x = g() % 5000;
+    std::vector<uint64_t> ref = a; std::sort(ref.begin(), ref.end());
+    for (int th : {1, 2, 3, 4, 5, 7, 8}) { std::vector<uint64_t> b = a, tmp; psort_noalloc(b, tmp, std::less<uint64_t>(), th); CHECKF(b == ref, "n %zu threads %d", n, th); }
+  }
 }
 
 // leader stores (review PR24 P1): label-major = particle-major (= core through the compat golden), both arithmetic forms
