@@ -5,6 +5,8 @@ Owner, 11-16:
 - Engineering must not "go crazy with the tokens": "a big chunk of the difficult thinking was already done";
 - only these two departments. Writing stays idle, waiting for the owner's feedback.
 
+**Codex note:** BNP uses the remaining Codex week until its reset at about 16:13 CT. **SMC launches no Codex review before 16:20 CT** today.
+
 ## Step 1: accounts
 Set both department threads to Claude Personal (claudeAgent_personal, claude-opus-5-5, effort high):
 - Theory: mcp:launch:21e33daeadb0370566300eff69ab315a69cd0f68217cd5cbc81c41fe8924f041 (env Owls b18966a3-…)
