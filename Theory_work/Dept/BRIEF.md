@@ -21,8 +21,8 @@ QUEUE.md, DECISIONS.md), in your worktree `/home/fb31/BVS-wt/THEORY-DEPT` (branc
 | ordering reviews (Sol / Astra) per PROTOCOL_v4, recorder tasks staged as dry runs | merges to `main`, protocol amendments |
 | sharpness follow-ups, riders, numerics, registry upkeep proposals | cross-department integration; API credits (the Console key lives only on HQ's desktop: send HQ "API cards" for batch proof attempts) |
 
-**Not yours (HQ keeps until done):** W3-DIST (top priority; until its CP3), W3-READER (headline card), the current
-recorder thread.
+**Handover (owner, 2026-11-15 evening):** W3-DIST (top priority), W3-READER and the recorder thread are now yours. HQ keeps
+CP3 acceptance, headline cards (H5), merges and API submission.
 
 ## Authority
 - You may create ticket worktrees under `/home/fb31/BVS-wt/<TICKET>` on branches `theory/<TICKET>` from `origin/main`,

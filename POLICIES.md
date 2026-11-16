@@ -12,7 +12,7 @@ the documents win.
   - SMC - Engineering Department: engine, p = 1M.
   - SMC - Writing Department: chapter, paper, advisor report.
   - Lean department: certificates.
-  - Tickets directly under HQ: W3-DIST, W3-READER.
+  - All theory tickets, including W3-DIST and W3-READER, are under the Theory Department (handover 2026-11-15, owner).
 - **Advisors:** HQ consultant (Fable 5.2), the second signature on headline changes (PROTOCOL_v4 H5).
 
 ## 2. Binding policies (read in this order)
