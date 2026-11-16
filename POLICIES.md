@@ -158,3 +158,15 @@ variant:
   and their outputs compared (selection, PIPs, evidence), so the 1M result is anchored to the method the theorems cover;
 - (c) the paper describes the 1M run as an engineered variant validated against the theorem-covered method, not as a
   theorem-covered run.
+
+## 9. Requests for expensive resources (owner controls the traffic, 2026-11-15)
+Asking for strong resources to attack a hard problem is **encouraged**: Fable experts, extra NOTS core-hours beyond an
+approved batch, API credits, review-heavy campaigns. The owner approves, changes or declines each request; HQ routes it.
+A request (from the manager to HQ, ≤ 10 lines) states:
+- the problem;
+- why the department's own resources (Opus / Sonnet / Haiku, its envelope) are not enough;
+- what is asked: model and **count**, duration or size, and the account if the manager has a view;
+- the expected payoff;
+- what happens if it is declined.
+
+HQ adds its recommendation and forwards it to the owner the same day. Nothing expensive starts before the owner's answer.
