@@ -177,5 +177,6 @@ HQ adds its recommendation and forwards it to the owner the same day. Nothing ex
   owner's sidebar.
 - A separate top-level thread is allowed only for a large, independent piece of work: an independent headline theorem,
   or a multi-day campaign the owner may want to talk to directly. The manager says why when launching it.
-- Threads already running as top-level finish where they are, no relaunch. Close them when done (settle or archive).
-  New work follows this rule.
+- Threads already running as top-level finish where they are, no relaunch. New work follows this rule.
+- **Never shut anything down** (owner, 2026-11-15): no settling, archiving, cancelling, interrupting or deleting of any
+  thread or agent, finished or not, unless the owner asks. Finished threads simply stay idle.
