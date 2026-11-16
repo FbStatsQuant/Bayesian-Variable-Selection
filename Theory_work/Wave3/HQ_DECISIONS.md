@@ -551,3 +551,7 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - The rider folder came onto main as a snapshot (POST2 precedent); the branch is kept as history.
   - Accept records 86/86 current.
   - Policy: §14 scratch rule refined (44238a06).
+- 2026-11-16 (overnight) W3-MISR-R CP3 council: both seats accept all 4 claims; the gates fail only on one reader sentence (the "why (A0)" sentence).
+  - GO for one HQ-ordered R3: diff only, fresh seats; it is the last round, and a failure comes back to HQ.
+  - Deciding outside bind is refused.
+  - The v1.1a WEAKER change (KL sentence) is flagged for H5 if any headline row or reader version quotes it.
