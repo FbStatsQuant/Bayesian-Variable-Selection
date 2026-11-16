@@ -135,3 +135,4 @@
 - 23:33 — HQ approved D-7 real run; recorder told (then F-UNI gate; Cont-F/R after CP3s).
 - 23:35 — recorder: F-UNI gate + D-7 real runs; format fix staged (RM-0, SCR:A1) → HQ; SCR PC check (Sol) launched (D50).
 - 23:36 — HQ approved format-fix real run (RM-0, SCR:A1); pre-Wave-3 council form failures fixed in the record at acceptance (v4 §7). Recorder told.
+- 23:37 — READER forms A/B (916a08a4, card v0.8): Form A = Thm 1 O_P (T03♯ only); B1 recommended (shared conditional sentence); POST2:C stays conditional (Prop-LB, Lemma-1a′, TH128, POST→SL0) → expectation display + Thm 1′ in body. Proposed to HQ: implies PSHARP:B ⇒ W3-POST:Prop-LB (one reviewer) to clear Prop-LB.
