@@ -75,3 +75,8 @@
   daily (first 11-16), plus a report at every checkpoint; heartbeat every 45 min stays. Charter (§8) adds **strength
   gates for headline candidates** (lit / necessity / better) to our remit: queued below, planned with the recorder's
   task D blocker (POST2 / W2-APP headline rows lack lit/necessity/better PASS).
+
+## 2026-11-15 19:49 CT — HQ on recorder decisions
+- 4(b) approved (conditional-on + @hyp). 4(a) with HQ's consultant (H5), condition: W3-READER candidate rows keep flags
+  until the claims card is decided. Recorder told: dry runs for C and D, two variants for 4(a) (flags kept / cleared off
+  the candidate list); no real run until HQ. Forward W3-READER CP1 claims card to HQ as soon as Sol S1 lands.

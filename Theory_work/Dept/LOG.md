@@ -23,3 +23,4 @@
 - 19:48 — owner memo relayed to all leads (D15).
 - 19:49 — POLICIES §7–§8 read; daily report scheduled 08:30 CT (D16).
 - 19:49 — W3-READER ack: reports to us; pooling fix applied (NOTATION §5, METHOD_INTUITION); READER_VERSIONS row markers thm3 PSHARP, thm4 MISR, thm5 START2, thm7 RM2-F for the deltas; CP1 waits on Sol S1 (theory/W3-READER e21c845).
+- 19:49 — HQ: 4(b) approved, 4(a) at consultant; recorder steered (dry runs, two variants).
