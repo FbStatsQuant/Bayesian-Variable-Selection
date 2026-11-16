@@ -68,6 +68,13 @@ struct IslandConfig {
   bool store_dup_filter = true;             // exact snapshot duplicate filter (execution parameter; content unchanged)
   bool store_parallel_compact = true;       // compaction at pass/step boundaries with all threads (content unchanged)
   bool check_store = true;                  // I1 after every step (linear; O(c) hash lookups)
+  bool bounded_scoring = true;              // label-major (K1, WP3_ARCH_REVIEW §2.1): a (support, label) is scored only if a
+                                            // particle on the support can still consume it; bounded uniform scan; one-particle
+                                            // phase B. Execution parameter: outputs unchanged (false = the dense reference)
+  bool test_nan_rows = false;               // tests only: poison the label-major score rows before every pass; any read of a
+                                            // value not computed in the pass is an internal_error (review §2.1 NaN-row test)
+  int test_bound_shrink = 0;                // tests only: bounded scoring skips the last s positions below the running first
+                                            // change (a deliberate bug: the negative control of test_nan_rows)
   int products_block = 0;                   // tile products: 4 = 4 active columns x 32 labels per sweep, 1 = the original loop
                                             // (same bits); 0 = auto: 4 when the island ISA has AVX-512, else 1 (review PR26
                                             // B2, MEASURED: block 4 is -27% on AVX-512 and +17% on x86-64-v2)
@@ -91,12 +98,13 @@ using v4::StageRow;
 
 struct KernelStats {   // execution statistics (not part of the law, not hashed)
   uint64_t particle_rounds = 0, particle_sweeps = 0, passes = 0, support_label_pairs = 0, supports = 0;
+  uint64_t flip_evals = 0;   // label-major: addition flips evaluated on fast supports (bounded scoring: the needed ones only)
   uint64_t slow_supports = 0, store_merges = 0, store_buffered = 0, store_dup_dropped = 0, store_serial_merges = 0;
   double t_store_compact = 0, t_compact_pass = 0;   // wall seconds compacting (all paths) / at pass boundaries
   int kept_live_max = 0;   // most kept runs alive at once in this process (M2 bound; process-wide counter)
   double t_products = 0;   // thread-seconds inside phase A spent on the tile products
   double t_init = 0, t_orders = 0, t_build = 0, t_phaseA = 0, t_walk = 0, t_phaseB = 0, t_apply = 0, t_barrier = 0,
-         t_pm = 0, t_ckpt = 0, t_total = 0;
+         t_pm = 0, t_ckpt = 0, t_total = 0, t_check = 0;   // t_check: the I1 store check after every step (wall)
 };
 
 struct Particle { Model S; uint64_t h = 0; double logm = 0, lg0 = 0, d = 0, F = 0; };

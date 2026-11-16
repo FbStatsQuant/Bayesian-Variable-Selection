@@ -14,7 +14,9 @@
 //   overheads <p> [n]                          per-call costs of the L5 levers, old vs new (1 thread)
 // Environment: V4_K_STORE (calibration-measured mean stored |S| -> IslandConfig::k_store; island and plan modes; without
 // it the island mode plans from pi_0 alone, which real runs refuse at p >= 1e5), V4_MEM_BUDGET_GB, V4_ISLAND_ID,
-// V4_PRODUCTS_BLOCK (default: 4 with AVX-512, else 1), V4_VERBOSE, V4_NO_DUP_FILTER, V4_SERIAL_COMPACT.
+// V4_PRODUCTS_BLOCK (default: 4 with AVX-512, else 1), V4_VERBOSE, V4_NO_DUP_FILTER, V4_SERIAL_COMPACT,
+// V4_NO_BOUNDED (WP6 K1: the dense label-major reference), V4_NO_CHECK_STORE (no I1 check after every step),
+// V4_CKPT=<base> (checkpoints; resume from <base> when present) with V4_STOP_AFTER=<step> (stop after that step's checkpoint).
 // Exit status: non-zero when any island run is refused or does not complete (review PR26 B1).
 #include <omp.h>
 #include <chrono>
@@ -136,6 +138,11 @@ static int bench_island(int p, int N, const std::vector<int>& thr, KernelKind kk
   if (const char* e = std::getenv("V4_K_STORE")) c.k_store = std::atof(e);   // calibration-measured mean stored |S| (B1)
   else c.k_store_optional = true;   // bench only: without V4_K_STORE the plan's k comes from pi_0 alone (r1 refuses this in real runs)
   c.inputs_bytes = inputs_extra;
+  c.bounded_scoring = std::getenv("V4_NO_BOUNDED") == nullptr; c.check_store = std::getenv("V4_NO_CHECK_STORE") == nullptr;
+  if (const char* e = std::getenv("V4_CKPT")) { c.ckpt_path = e; c.ckpt_every_s = 1e30; c.resume = true; }   // checkpoint only at V4_STOP_AFTER
+  if (const char* e = std::getenv("V4_STOP_AFTER")) c.stop_after_step = std::atoi(e);
+  std::printf("# bounded scoring %s, I1 check after every step %s%s\n", c.bounded_scoring ? "on" : "OFF (dense reference)", c.check_store ? "on" : "off",
+              c.ckpt_path.empty() ? "" : (", checkpoints " + c.ckpt_path).c_str());
   std::printf("# island id %u (address key), seed %u, k_store %s, products block %d\n", c.island, c.seed,
               c.k_store > 0 ? std::to_string(c.k_store).c_str() : "absent (pi_0 plan)", products_block_of(c));
   if (gspec.rfind("geo:", 0) == 0) {

@@ -291,6 +291,48 @@ static void t3_invariance(const char* tag) {
 TEST(t3_invariance_bit) { t3_invariance<Arith::Bit>("bit"); }
 TEST(t3_invariance_classA) { t3_invariance<Arith::ClassA>("A"); }
 
+// K1 (WP6, WP3_ARCH_REVIEW §2.1): bounded scoring, bounded scan and one-particle phase B give the dense label-major
+// output bits, both arithmetic forms, any threads / G / tile; with the NaN-row test on (score rows poisoned before every
+// pass: a read of a value not computed in the pass is an internal_error) and fewer flip evaluations than dense.
+template <Arith A>
+static void bounded_same_bits(const char* tag) {
+  Fixture F(100, 300, 41);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3; c.G = 48; c.bounded_scoring = false;
+  IslandRun dense = run_island<A>(F.D, F.st, F.nb, c);
+  CHECK(dense.status == 0);
+  const uint64_t h0 = dense.hash();
+  struct Conf { int threads, G, tile; };
+  for (const Conf& cf : std::vector<Conf>{{1, 48, 128}, {3, 48, 64}, {2, 7, 128}, {3, 1, 64}, {3, 16, 256}}) {
+    IslandConfig d = c; d.bounded_scoring = true; d.test_nan_rows = true; d.threads = cf.threads; d.G = cf.G; d.tile = cf.tile;
+    IslandRun r = run_island<A>(F.D, F.st, F.nb, d);
+    CHECKF(r.status == 0 && r.hash() == h0, "[%s] threads %d G %d tile %d: status %d hash %016llx vs dense %016llx", tag, cf.threads, cf.G, cf.tile,
+           r.status, (unsigned long long)r.hash(), (unsigned long long)h0);
+    CHECKF(r.ks.flip_evals < dense.ks.flip_evals, "[%s] flip evaluations %llu (bounded) vs %llu (dense)", tag, (unsigned long long)r.ks.flip_evals,
+           (unsigned long long)dense.ks.flip_evals);
+    std::printf("  [%s] threads %d G %3d tile %3d: hash %016llx = dense; flip evaluations %llu vs dense %llu\n", tag, cf.threads, cf.G, cf.tile,
+                (unsigned long long)r.hash(), (unsigned long long)r.ks.flip_evals, (unsigned long long)dense.ks.flip_evals);
+  }
+  // the dense path also passes the NaN-row test (it writes every entry it reads)
+  IslandConfig d = c; d.test_nan_rows = true;
+  CHECK(run_island<A>(F.D, F.st, F.nb, d).hash() == h0);
+}
+TEST(bounded_scoring_same_bits_bit) { bounded_same_bits<Arith::Bit>("bit"); }
+TEST(bounded_scoring_same_bits_classA) { bounded_same_bits<Arith::ClassA>("A"); }
+
+// negative control of the NaN-row test: bounded scoring that skips the position just below the running first change
+// (test_bound_shrink = 1) consumes unscored values; the test must catch it as an internal_error
+TEST(nan_rows_catch_an_unscored_read) {
+  Fixture F(100, 300, 41);
+  for (int th : {1, 3}) {
+    IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = th; c.G = 48; c.test_nan_rows = true; c.test_bound_shrink = 1;
+    bool caught = false; std::string what;
+    try { (void)run_island<Arith::ClassA>(F.D, F.st, F.nb, c); }
+    catch (const v4::Error& e) { caught = e.st == v4::Status::internal_error && std::string(e.what()).find("NaN-row test") != std::string::npos; what = e.what(); }
+    CHECKF(caught, "threads %d: the deliberate unscored read was not caught ('%s')", th, what.c_str());
+    std::printf("  threads %d: caught: %s\n", th, what.c_str());
+  }
+}
+
 // I4-type check: logical counts equal the executed steps
 TEST(logical_counts_and_invariants) {
   Fixture F(100, 300, 22);

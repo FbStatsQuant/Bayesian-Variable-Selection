@@ -638,11 +638,23 @@ class IslandEngine {
                          pairs > 0 ? 1e9 * (k.t_products - ks_prev.t_products) / pairs : 0.0,
                          pairs > 0 ? 1e9 * (k.t_phaseA - ks_prev.t_phaseA) * NT / pairs : 0.0, k.t_phaseB - ks_prev.t_phaseB, top.t_compact - ks_prev.t_store_compact,
                          (unsigned long long)(top.n_merges - merges_prev), top.t_sort - sort_prev);
+            // [arch] (WP3_ARCH_REVIEW §6 / WP6): phases of the round, and the previous step's I1 check (in no other counter)
+            std::fprintf(stderr, "  [arch] step %d: orders %.2f build %.2f phaseA %.2f (products %.2f thread-s) walk %.2f phaseB %.2f compact_pass %.2f apply %.2f"
+                         " | prev-step I1 check %.2f s | flip evaluations %.4g = %.3f per step\n",
+                         step, k.t_orders - ks_prev.t_orders, k.t_build - ks_prev.t_build, k.t_phaseA - ks_prev.t_phaseA, k.t_products - ks_prev.t_products,
+                         k.t_walk - ks_prev.t_walk, k.t_phaseB - ks_prev.t_phaseB, k.t_compact_pass - ks_prev.t_compact_pass, k.t_apply - ks_prev.t_apply,
+                         k.t_check - ks_prev.t_check, (double)(k.flip_evals - ks_prev.flip_evals),
+                         steps > 0 ? (double)(k.flip_evals - ks_prev.flip_evals) / steps : 0.0);
             ks_prev = k; ks_prev.t_store_compact = top.t_compact; merges_prev = top.n_merges; sort_prev = top.t_sort;
           }
           prev_t = now_t;
         }
-        if (cfg.check_store && !(top.check_invariant())) throw v4::Error(v4::Status::internal_error, "store invariant I1 violated");
+        if (cfg.check_store) {   // timed (counter t_check: the I1 check is otherwise in no phase counter)
+          const auto tc0 = std::chrono::steady_clock::now();
+          const bool ok = top.check_invariant();
+          res.ks.t_check += std::chrono::duration<double>(std::chrono::steady_clock::now() - tc0).count();
+          if (!ok) throw v4::Error(v4::Status::internal_error, "store invariant I1 violated");
+        }
         if (over_budget(step)) { stop = true; break; }
         maybe_ckpt(step, stop);
       }
