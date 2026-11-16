@@ -35,6 +35,11 @@ Cut-off for riders: theory content freeze Wed 11-18 (CP3 Wed 18:00 CT, confirmed
 | PSMC-S0 | CP1 final (Part 1 only): D-7 SAFE TO DROP (condition: calibration feeds V + inherited models); OD-1 text correction; fixed-N and bounded calibration inside the theorems; overlap-rung notes to Engineering. Thread settled. |
 | W3-EDIT | merge-now part merged: citefix 66b67f7d (+ PR #10 86191e17), W3-EDIT-now-rb 246587c3; 15 manifest-hit edits held on theory/W3-EDIT for the post-freeze batch; triage → adjudication D31. Thread settled. |
 
+## W3-AUDIT (top priority, resume 11-16)
+- Running: audit Fable (#5 feasibility note), track C lead (Owls pilot), track A lemmas lead (GW, BLK, OPC, ENC, CAL-C, START-X, KER, OVL, TDP, P1/S.3; then X1/X3/X5), audit-calc checker.
+- Post-freeze tickets (D85, from Sat 11-21, after the check): T-D2 check X (1 d / kill 1.5 d) → T-D3 sub-Gaussian Thm 2 (2 d / kill 3 d) → T-D1 group-relative no-leakage (3 d / kill 4 d; may be replaced by #5).
+- X2, X4: relabelling (recorder, post-freeze). P6 method version: Engineering reconciliation pending. RERUN_SPEC: open (HQ).
+
 ## Post-freeze riders (queued)
 | ticket | contents | source |
 |---|---|---|
