@@ -1,6 +1,6 @@
 # WP3_DESIGN — the island: stores, addressed sampling, label-major round, restart
 
-**v0.2, 2026-11-16, WP3 builder (Opus 5.5). Status: PROVISIONAL.** v0.2 adds §1.7 (parallel compaction, waves, snapshot filter), implements §1.6 (admission) and §6 (compat), and records the manager's §5 decisions. Branch `exp/P1M-wp3-island`
+**v0.5, 2026-11-16, WP3 builder (Opus 5.5). Status: PROVISIONAL.** v0.5 adds §1.10 (review PR26); v0.2 added §1.7 (parallel compaction, waves, snapshot filter), implements §1.6 (admission) and §6 (compat), and records the manager's §5 decisions. Branch `exp/P1M-wp3-island`
 (stacked on WP1's PR #11). Inputs: ENGINEERING_SPEC §0-v2, §3, §6; INTERFACES v0.1.3 (v0.1.5 announced: RNG domain and
 event key); Sol EXP-CP1 review §F2, §F4, §F5 (T3, T6); manager directives of 11-15 (D-21 scope cut, G ≤ 256, mem budget).
 Code references: `include/v4/island/*.h`, `src/island/island_impl.h`, `tests/test_island*.cpp`. Every number below
@@ -111,7 +111,7 @@ increasing from 0 to 1, B ≥ 0.
   grow). MEASURED (Owls, 3 threads, p = 10⁴): buffered offers ÷ 3.6, compactions 87 → 27, identical output hash.
 - **Deferred parallel compaction.** Workers only append to the staging area during a pass. Compaction runs where all
   threads are free: after a wave of phase-B tiles (staging ≥ 0.375c), at the pass boundary (≥ c/4) and at every step
-  boundary; `__gnu_parallel::sort`, parallel kept-index matching, merge-path parallel merge truncated at c, prefix-sum
+  boundary; a chunked parallel sort with its scratch allocated before the region (`psort_noalloc`, §1.10), parallel kept-index matching, merge-path parallel merge truncated at c, prefix-sum
   pool offsets, CAS-built index. The result is unique (strict total order, distinct models), so it equals the serial
   compaction for every thread count and flush order (test `store_parallel_compaction_any_flush_order`; T3 compares the
   serial path, 1 thread, with the parallel path, 2–3 threads). A serial in-pass compaction remains only as a fallback at
@@ -125,7 +125,7 @@ increasing from 0 to 1, B ≥ 0.
 - **Plan** (`memory.h`, terms listed there): inputs (X, z, diag(G); the caller adds the setup/calib sections through
   `inputs_bytes`: **--mem-budget is the task's memory**, X is inside the plan; INTERFACES §7 note requested from WP1),
   tiled X, the store (old + new kept run, pool over-reservation, staging at pow2 × 1.5, sort refs + the parallel
-  mergesort's temporary copy, flags, alive list, two indexes, one stale snapshot generation), the leader stores,
+  sort's scratch copy, flags, alive list, two indexes, one stale snapshot generation), the leader stores,
   worker buffers for every store, RB incl. `rb_round` and compat, group buffers, support caches (k_q = min(K, 3k)),
   particles and terminal supports, checkpoint buffers. Admission uses the calibration-measured mean stored |S|
   (`k_store`) when given, else the π₀ estimate; the step-boundary re-check uses the store's actual pool (exact) and
@@ -143,6 +143,49 @@ increasing from 0 to 1, B ≥ 0.
 - **Fallback routes under compat** (m6): with H = (n+1)G_S + I and A = G_S + I both positive definite and
   Q ≥ y'y/(n+1) > 1e-8 y'y, the refactor, QR and non-negative-Q routes cannot be reached in exact arithmetic for
   finite data; near-collinear columns do not trigger them. The compat golden adds a cap variant (n = 12, K = 6) instead.
+
+### 1.9 v0.4 (lever batch 2748756): the 10⁶ peak, and L5
+- **Missing plan term at 10⁶ (P2 again)**: round 1 stores π₀-sized models before the particles shrink (stand-in π₀ at
+  10⁶: mean size 56), so the store's peak is reached with k ≈ 56–62, not the final 6. The plan's k is now
+  max(8, q90(π₀ size) + 1, k_store) — exact from the setup's size masses — and three transients are removed from the
+  code instead of being budgeted: score rows sized once at G·p (growing re-zero-filled and reallocated them), the
+  staging area reserved once at its hard limit, and phase-B waves bounded to 0.1 c offers so the in-pass serial
+  compaction (stale snapshots, pool over-reservation) cannot occur in label-major. MEASURED plan vs the lever batch
+  (setup inputs measured in-process, 2.24 GB beyond X): **G = 64: plan 37.7 GiB ≥ measured 23.7 GiB; G = 256: 43.8 ≥ 32.0
+  GiB** (measured at efc0dfd0, before these fixes). At 2·10⁴ / 10⁵ the bound holds in all eight configurations.
+- **L5, per-pass overheads.** Per-call costs (MEASURED, Owls, 1 thread, `v4_bench_island overheads p`), old → new, all
+  exact (same uniforms, same results; T3 hashes and both golden tests unchanged):
+  π₀ draw (every I step and initial draw) 59.2 → 4.0 ms at 10⁶ (8.99 → 0.42 ms at 10⁵): the draw checks 8 blocks at once
+  against an r-major table of P(k_b = 0 | r) with 8-lane Philox over the block slots; round order (Fisher–Yates) 41.8 →
+  21.0 ns per label at 10⁶ (8-lane Philox + prefetched swap targets); inverse 4.9 → 3.4 ns; score rows no longer
+  re-zero-filled (1.8 s per group at 10⁶, G = 256); apply in parallel.
+  ESTIMATE for the late 10⁶ round of job 2748756 (G = 256, 29.1 s): walk −3.3 s, build −2.2 s, orders −1.4 s,
+  apply −0.5 s → ≈ 21.7 s, i.e. **≈ 215 ns·CPU per pair (≈ 1.07× the plan), from 287**. To be measured on SPR.
+  Not built yet: dropping the stored round order (only the inverse is needed if phase A records the label of the
+  first change) halves the order arrays and allows G = 512 within 2 GB of orders (+4 GB of score rows).
+  Production note: the r-major table is (K + 1)·J·8 bytes (≈ 200 MB at 10⁶) built from WP2's tables; with WP2's
+  setup it belongs in the plan (or in setup.bin).
+
+### 1.10 v0.5 (review PR26 and PR24 r1/r2)
+- **k_store is required at p ≥ 10⁵** (`run_island`: invalid_input without `k_store`; the island CLI passes calib.bin's
+  measured mean stored |S|). Only tests and the bench may set `k_store_optional`. The plan's k stays
+  max(8, q90(π₀ size) + 1, k_store): round 1 stores π₀-sized models, so k_store alone (≈ 8 at 10⁶) cannot bound round 1
+  when π₀ is large (stand-in π₀ at 10⁶: q90 + 1 = 62). MEASURED (`V4_K_STORE=8 v4_bench_island plan 1000000 2500 96
+  64,256`, Owls, setup inputs 2.43 GB measured in-process): **G = 64: 37.86 GiB (40.7 GB) ≥ 25.4 GB measured; G = 256:
+  44.00 GiB (47.2 GB) ≥ 34.3 GB measured** (lever batch 2748756), so G = 256 is admitted under a 60 GiB budget. With a
+  real setup whose π₀ is small, the plan falls toward the k_store value.
+- **OOM in the parallel compaction** (r2): `__gnu_parallel::sort` allocated inside its own OpenMP region, where a
+  `std::bad_alloc` cannot be caught. `psort_noalloc` sorts T chunks with `std::sort` and merges pairwise with
+  `std::merge` into a scratch vector allocated before any region; both orders are total on content, so the result is
+  the same for every thread count (tested against `std::sort` at 1, 2, 3, 5, 8 threads). An allocation failure now
+  reaches `run()` and gives resource_limit (test `oom_in_parallel_compaction_is_resource_limit`).
+- **Products block by ISA** (B2): `products_block = 0` (auto) is 4 when the island translation unit has AVX-512 and 1
+  otherwise. MEASURED by the reviewer (Owls, `island 20000 300 … geo:4 1 1`): block 4 = −27 % at x86-64-v4 (44 → 32 ns
+  per pair), +17 % at x86-64-v2 (190 → 223 ns per pair); same bits in both.
+- **Bench and NOTS scripts**: `V4_K_STORE`; the bench exits non-zero when any run is refused or does not complete; the
+  scripts refuse without TMPDIR or outside the department folders (`tools/nots_guard.sh`), keep logs in
+  `<build>/logs`; socket mode waits for both islands, prints both logs, and requires exit 0, `status=0` and two
+  distinct non-empty hashes.
 
 ---
 
