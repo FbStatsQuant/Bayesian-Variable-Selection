@@ -6,10 +6,11 @@
 // [[Rcpp::plugins(openmp)]]
 #include <v4/calib.h>
 #include <v4/merge.h>
-// WP1 library sources used by the WP4 headers (compiled into this test TU; no R dependency)
-#include "v4/../../src/common/status.cpp"
-#include "v4/../../src/common/store.cpp"
-#include "v4/../../src/common/ledger.cpp"
+#include <v4/prep.h>
+#include <v4/provenance.h>
+#include <v4/stubs.h>
+#include <v4/wp4_io.h>
+// The engine library (libv4_bit.a, built with -fPIC by wp4_golden.R) is linked into this module.
 
 namespace wp4h {
 
@@ -387,5 +388,128 @@ List wp4_final_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP 
   out["top_store"] = wp4h::store_list(fo.led.top, D);
   out["leaders_gamma0"] = wp4h::store_list(fo.led.lead0, D); out["leaders_gamma1"] = wp4h::store_list(fo.led.lead1, D);
   out["logical"] = wp4h::counters(fo.led, ls0);
+  return out;
+}
+
+
+// T9 THROUGH FILES: the same final run, but every input of the merge goes through the engine's files: data.bin
+// (v4 Data over core's standardised X, y), setup.bin (core's blocks, tables, start mode, table top stores), calib.bin
+// (frozen grid, N, L, tier, inherited models with their scores, the calibration HPM + provenance), island_r.bin x R'
+// (core islands, one ledger each); then `smcbvs4 merge` (v4::merge::run, in process) and fit.bin read back.
+// [[Rcpp::export]]
+List wp4_files_merge(SEXP setup, NumericVector grid, List ro, double seed, SEXP inherited, std::string dir, int threads) {
+  HPtr h = get_holder(setup); const Data& D3 = *h->D; const Start& st = *h->st;
+  int N = as<int>(ro["N"]), L = as<int>(ro["L"]), Hm = as<int>(ro["measured_rounds"]), R = as<int>(ro["islands"]);
+  int tier = as<int>(ro["tier"]), ell = as<int>(ro["ell"]);
+  const int p = D3.p, n = D3.n;
+  // data.bin
+  auto own = std::make_shared<v4::DataOwned>();
+  own->X = D3.X; own->y = D3.y; own->orig = D3.orig;
+  own->col_max.assign(p, 1.0); own->col_mean.assign(p, 0.0); own->col_sd.assign(p, 1.0);
+  v4::Data D = v4::make_data(own, n, p);
+  v4::prep::Result pr; pr.n = n; pr.p_raw = p; pr.p = p; pr.kept = D3.orig; pr.own = own;
+  std::string dpath = dir + "/data.bin", spath = dir + "/setup.bin", cpath = dir + "/calib.bin";
+  std::string dh = v4::prep::write_data(dpath, D, pr, "B", v4::Json::object());
+  // setup.bin (core/cpp/v3_start.h tables; table top stores over every scored code)
+  v4::wp4io::SetupView S;
+  S.blk = st.blk; S.pos = st.pos; S.blk_ptr.push_back(0);
+  S.ttop.init(40ull * p + 1, v4::Order::HPM); S.tlead0.init(20ull * p, v4::Order::LEX); S.tlead1.init(20ull * p, v4::Order::LEX);
+  for (int b = 0; b < st.J; ++b) {
+    int m = (int)st.blocks[b].size();
+    for (int j : st.blocks[b]) S.blk_members.push_back(j);
+    S.blk_ptr.push_back((int64_t)S.blk_members.size());
+    S.code_ptr.push_back((int64_t)S.logr.size());
+    for (uint32_t c = 0; c < (1u << m); ++c) {
+      S.logr.push_back(st.logr[b][c]);
+      if (std::isnan(st.logm_tab[b][c])) continue;
+      v4::Model U; for (int i = 0; i < m; ++i) if (c & (1u << i)) U.push_back(st.blocks[b][i]);
+      double F = D3.logprior[U.size()] + st.logm_tab[b][c], lg0 = D3.logprior[U.size()] + st.logr[b][c];
+      S.ttop.offer(F, U, D.zob.hash(U)); S.tlead0.offer(lg0, U, D.zob.hash(U)); S.tlead1.offer(F, U, D.zob.hash(U));
+    }
+  }
+  S.ttop.compact(); S.tlead0.compact(); S.tlead1.compact();
+  bool tie_dp = !ro.containsElementNamed("ls0_tie_dp") || as<bool>(ro["ls0_tie_dp"]);
+  S.mode_S = start_mode(st, 1000000, tie_dp).S;
+  v4::Json sin = v4::Json::object(); sin["data.bin"] = dh;
+  std::string sh = v4::wp4io::write_setup_min(spath, S, sin);
+  // calib.bin
+  wp4h::CoreFactory fac{&D3, &st};
+  v4::LedgerConfig lc; lc.p = p; lc.islands = 4; lc.leaders = true; lc.fresh_counters = false;
+  v4::Ledger cl(lc);
+  std::vector<v4::merge::InheritedModel> im;
+  if (!Rf_isNull(inherited)) {
+    List inh(inherited);
+    if (inh.containsElementNamed("models")) {
+      auto Ms = models_from_R(D3, inh["models"]); auto ev = fac.make();
+      for (auto& M : Ms) { v4::merge::InheritedModel x; x.S = M; double dd; ev(M, x.logm, x.lg0, dd, x.F); im.push_back(x); }
+    }
+    if (inh.containsElementNamed("hpm") && !Rf_isNull(inh["hpm"])) {
+      List hp = inh["hpm"]; List pv = hp["provenance"];
+      EventCtx e; e.phase = phase_index(as<std::string>(pv["phase"])); e.tier = as<int>(pv["tier"]); e.island = as<int>(pv["island"]);
+      e.stage = as<int>(pv["stage"]); e.round = as<int>(pv["round"]); e.particle = as<int>(pv["particle"]);
+      e.position = as<int>(pv["position"]); e.phi = as<double>(pv["phi"]); e.iter = pv.containsElementNamed("iter") ? as<int>(pv["iter"]) : -1;
+      v4::EventCtx ce = wp4h::ev_from_v3(e, mech_index(as<std::string>(pv["mechanism"]))); ce.key.seg = v4::SG_CALIB;
+      v4::Model M = to_internal(D3, hp["model"]); double lm, lg0, dd, F; auto ev = fac.make(); ev(M, lm, lg0, dd, F);
+      cl.offer_hpm(M, F, lm, ce);
+    }
+  }
+  cl.compact();
+  v4::calib::CalibOut co; co.status = v4::calib::CalStatus::ok; co.tier_final = tier; co.has_frozen = true;
+  co.frozen.grid.assign(grid.begin(), grid.end()); co.frozen.grid_unrefined = co.frozen.grid; co.frozen.tier = tier;
+  v4::wp4io::CalibWrite cw; cw.mode = v4::fmt::M_COMPAT; cw.co = &co; cw.led = &cl; cw.inherited = im; cw.N = N; cw.L = L; cw.Hm = Hm;
+  cw.inputs["data.bin"] = dh; cw.inputs["setup.bin"] = sh;
+  std::string ch = v4::wp4io::write_calib(cpath, cw);
+  // islands (core engine; one ledger, one cache, one stream each) -> island_r.bin
+  v4::Json in = v4::Json::object(); in["data.bin"] = dh; in["setup.bin"] = sh; in["calib.bin"] = ch;
+  v4::Json clean = v4::binary_block(); clean["git_commit"] = "0123456789abcdef0123456789abcdef01234567";   // test builds are dirty
+  std::vector<double> g(grid.begin(), grid.end());
+  v4::Json il = v4::Json::array();
+  for (int r = 1; r <= R; ++r) {
+    v3::Ledger led(&D3, R);
+    ScoreCache cache; cache.init(D3.W, (size_t)(500.0 * p));
+    Engine E(D3, st, h->Nb, h->B); E.cache = &cache; E.led = &led;
+    RngSource rng; rng.g.seed_stream((uint64_t)seed, (uint64_t)(9 + r)); E.vs = &rng;
+    IslandResult res = E.run_island(r, N, g, L, Hm, tier, nullptr);
+    v4::merge::IslandIn I; I.status = res.partial ? v4::Status::resource_limit : v4::Status::completed;
+    I.r = r; I.N = N; I.T = (int)res.phi.size(); I.L = L; I.Hm = Hm; I.logZ = res.logZ; I.ess = res.ess; I.rb_acc = res.rb_acc;
+    I.pip = res.pip; I.rb_round = res.rb_round;
+    I.led = wp4h::ledger_from_v3(led, p, R, false, D.zob);
+    std::string ip = dir + "/island_" + std::to_string(r) + ".bin";
+    v4::wp4io::write_island(ip, v4::fmt::M_COMPAT, I, in, &clean, &g);   // grid: phi of hpm_ev (v0.1.8 layout)
+    il.push(ip);
+  }
+  // merge command
+  v4::Json a = v4::Json::object();
+  a["data"] = dpath; a["setup"] = spath; a["calib"] = cpath; a["out"] = dir + "/fit.bin"; a["mode"] = "compat";
+  a["threads"] = threads; a["chunk"] = 256; a["ell"] = ell; a["islands"] = il; a["Rp"] = R;
+  v4::Json rec = v4::merge::run(a);
+  // read fit.bin back
+  v4::fmt::Reader F(dir + "/fit.bin");
+  v4::Json meta = F.json("meta");
+  List out = List::create(_["status"] = meta.at("status").str(), _["record"] = rec.dump());
+  if (!meta.at("estimates_available").boolean()) return out;
+  auto models = [&](const std::string& pfx) { return models_to_list(D3, v4::wp4io::read_models(F, pfx, p, D3.K)); };
+  auto vecd = [&](const std::string& nm) { std::vector<double> v = F.vec<double>(nm); return NumericVector(v.begin(), v.end()); };
+  auto modl = [&](const std::string& nm) { std::vector<int32_t> v = F.vec<int32_t>(nm); return to_orig(D3, std::vector<int>(v.begin(), v.end())); };
+  v4::Store top; v4::wp4io::read_store(F, meta, "top", top, p, D3.K);
+  out["hpm"] = modl("hpm_S"); out["hpm_F"] = meta.at("hpm_F").num();
+  out["hpm_provenance"] = wp4h::ev_list(v4::wp4io::event_from_json(meta.at("hpm_ev")));
+  out["log_Z"] = meta.at("logZ").num(); out["log_Z_r"] = vecd("logZ_r");
+  { NumericVector pe = vecd("pip_eq"); CharacterVector nm(p); for (int j = 0; j < p; ++j) nm[j] = std::to_string(D3.orig[j]); pe.names() = nm; out["pip_primary"] = pe; }
+  { std::vector<double> pr2 = F.vec<double>("pip_r"); NumericMatrix P(p, R); for (int r = 0; r < R; ++r) for (int j = 0; j < p; ++j) P(j, r) = pr2[(size_t)r * p + j]; out["pip_r"] = P; }
+  out["mpm"] = modl("mpm"); out["near_ties"] = models("near"); out["near_tie_F"] = vecd("near_F");
+  out["top_store"] = wp4h::store_list(top, D3); out["start_mode"] = modl("mode_S");
+  out["hpm_before_local"] = List::create(_["model"] = modl("hpm_before_local_S"), _["F"] = meta.at("hpm_before_local_F").num());
+  out["ls_scanned"] = models("ls_scanned"); out["ls_scanned_F"] = vecd("ls_scanned_F"); out["ls_path"] = models("ls_path");
+  out["ls0_scanned"] = models("ls0_scanned"); out["ls0_scanned_F"] = vecd("ls0_scanned_F");
+  out["local_certified"] = meta.at("local_certified").boolean(); out["local_certified_by"] = meta.at("local_certified_by").str();
+  { std::vector<uint64_t> lg = F.vec<uint64_t>("logical"); NumericMatrix M(N_PHASE, N_MECH);
+    for (int x = 0; x < N_PHASE; ++x) for (int y = 0; y < N_MECH; ++y) M(x, y) = (double)lg[(size_t)x * N_MECH + y]; out["logical"] = M; }
+  const v4::Json& fl = meta.at("flags");
+  out["flags"] = List::create(_["E1"] = fl.at("E1").boolean(), _["E2"] = fl.at("E2").boolean(), _["E3"] = fl.at("E3").boolean(),
+                              _["low_empirical_ESS"] = fl.at("low_empirical_ESS").boolean(), _["local_limit"] = fl.at("local_limit").boolean(),
+                              _["near_tie_truncated"] = fl.at("near_tie_truncated").boolean(), _["checks_passed_final"] = fl.at("checks_passed_final").boolean(),
+                              _["ls0_improved"] = fl.at("ls0_improved").boolean(), _["ls0_hpm_changed"] = fl.at("ls0_hpm_changed").boolean());
+  out["fit_bin"] = rec.at("fit_bin").str();
   return out;
 }
