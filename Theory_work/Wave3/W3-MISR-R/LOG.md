@@ -16,3 +16,9 @@
   HOLDS.md (origin/main) re-read before CP1: 0 HOLD lines.
   L1 reviewer finished; settled (t3_thread_organize settle) at CP1 (no cancel/interrupt).
 - 2026-11-15 22:12 CST — CHECKPOINT_1.md written; run 1 ends (awaiting manager's CP1 answer).
+- 2026-11-15 22:16 CST — Run 2 start. Manager CP1 answer: GO (CorGb-plus extension approved; [LA-1] approved; LA-1 change check folded into the Sol line-check agent, both scopes named, reviewer confirms the changelog tag). Target clauses fixed: CorG-min, CorGb-plus, CorH-plus (incl. KL), CorH-U. Reader wording rules noted. Registry heads-up: stale accept records on W3-MISR parents (recorder task J) — note in CP3 if open.
+- 2026-11-15 22:22 CST — Lemmas written: lemmas/G1_min.md, G2_corr.md (copy of BASE G.2 with [R-1..5]), H1_plus.md, H2_uniform.md.
+  DEPS.tsv via deps_hand.py (all UNCHECKED). Statement diff v1.0→v1.2 saved for the change check.
+- 2026-11-15 22:22 CST — Agent started: Sol (codex, gpt-6.1-sol, reasoningEffort high), new agent, blind to LOG/earlier reviews —
+  role: K1 line check (4 lemmas) + statement-change check of changelog rows v1.1/v1.2 ([LA-1]); brief reviews/K1_brief.md
+  (saved before launch); reply → reviews/K1_linecheck_sol.md.
