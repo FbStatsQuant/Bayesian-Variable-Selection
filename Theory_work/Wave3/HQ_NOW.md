@@ -11,6 +11,11 @@
 - When: BNP sends a "quiet window" (expected 11-16 early afternoon CST). HQ pauses SMC departments' leads, restarts, verifies, then messages BNP back. BNP launches nothing until confirmed.
 - BNP already moved its temp to /home/fb31/bnp_tmp and removed 73 stale sandboxes (11-15).
 
+## RESUMED 11-16 16:00 CT (owner order)
+- Theory and Engineering resumed on Claude Personal; Writing stays idle on Claude Work.
+- **24 live SMC threads were switched from Claude Third to Claude Personal.** The 84 settled, finished threads were left as they are; they will not run again.
+- POLICIES §5/§7/§8 updated: Claude Personal is the SMC default, and Claude Third is retired for SMC.
+
 ## PAUSE (owner, 11-16 ~10:40 CT): resources low
 - Order: current agents finish their current task, then ALL operations cease. Resume on **Claude Personal after its weekly reset** (≈ 17:30 CT 11-16, per the owner's screenshot; Codex weekly reset ≈ 18:45 CT).
 - Sent: Theory Dept, Engineering Dept and the consultant. Departments write resume cards: Theory_work/Dept/RESUME_2026-11-16.md and Docs/Experiments/P1M/RESUME_2026-11-16.md.
