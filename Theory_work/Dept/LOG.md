@@ -18,3 +18,4 @@
 - 19:41 — PSMC digest received (research/PSMC_DIGEST.md); spot-checked v3_run.R:154,162 (equal-weight pooling confirmed). NEXT_CAMPAIGN.md draft v0 written (Phase A premise tickets, Phase B EVAR/POOL). Method-text vs code pooling discrepancy flagged to HQ.
 - 19:41 — HQ approved D10 (PSMC-S0 rev. 1). PSMC-S0 and W3-EDIT were already launched at 19:41 (no relaunch).
 - 19:43 — handover: W3-DIST, W3-READER, recorder now ours (D12). Read DIST CHECKPOINT_1, LOG tail, API_CARDS; READER LOG; recorder's last report. Messages sent to the three.
+- 19:45 — D13–D14: pooled-PIP fix routed (READER, W3-EDIT item 7 steer, Docs/Writing/QUEUE.md); D-7 → PSMC-S0 steer.

@@ -50,3 +50,15 @@
 - Recorder: task C continues (PC1 Sol); task D on hold. Two decisions go to HQ with a recommendation: (a) clear the
   tool-set headline flags (v4 §8) by consultant card until the strength gates run; (b) inputs below PROVED-CHECKED →
   "conditional on …" with @hyp (W3-11). No real run without HQ.
+
+## 2026-11-15 19:45 CT — HQ items: pooled-PIP fix, Engineering D-3/D-7/D-8, OD-4, self-sufficiency
+- **D13. Pooled-PIP faithfulness fix routed in-department:** W3-READER states the coded equal-weight PIP (told);
+  W3-EDIT item 7 adds a "what the code does" sentence after the quoted v3.1 text in 02_method.tex:440-451 (steered);
+  `Docs/Writing/QUEUE.md` created in the WRITING worktree (HQ-authorised) with the row for the Writing Department.
+- **D14. Engineering D-7 (final-run leader stores)** assigned to PSMC-S0 Part 1 (inside AUDIT_CAL; verdict SAFE TO DROP
+  / NOT SAFE at CP1). D-3 (`logical` cost column) and D-8 (PIP_𝒯, log Z_𝒯, law.bin) registry staging: recorder task
+  when Engineering sends the specifics; dry runs only, HQ approves real runs.
+- OD-4 confirmed (dept + HQ): equal-weight primary; T-MERGE's convex-pooling theorem is the target.
+- Owner's standing rule: departments self-sufficient; HQ only for gates, budget, merges, API, cross-department. EVAR
+  Fable decided in-department (reported to HQ).
+- Lesson: send to a *running* lead with mode steer (queue waits for the run to end).
