@@ -19,7 +19,7 @@ list the size of n at which a bound becomes informative, or unoptimised constant
 claim that is false, unproved, or stated more strongly than proved.
 
 ## Frozen content
-The sweep is frozen in `reviews/MANIFEST_SW1.txt`. Its first line is `MANIFEST @@DIGEST@@`. **Quote this line verbatim at
+The sweep is frozen in `reviews/MANIFEST_SW1.txt`. Its first line is `MANIFEST de9ccec7bb2a07d5cc36fa8a0ab13eb4e78ae697d30b4b3ddcd296fde7ac5957`. **Quote this line verbatim at
 the top of your review.** You may run `python3 -B Theory_work/Wave3/tools/manifest.py verify Theory_work/Wave3/W3-DIST
 Theory_work/Wave3/W3-DIST/reviews/MANIFEST_SW1.txt` (from the repo root; read-only).
 

@@ -357,3 +357,14 @@ checkpoint on WEAKER TC1–TC9, X exhausted, B2-core → Gaussian only, B0 → f
   launched. Running: D1 (final pass), D3. HOLDS read: none.
 - 00:12 — D1's completion notice arrived; verdicts identical to the report I acted on (file checked again: same first and
   last lines). D1 thread settled. Running: D3 (Sol). HOLDS read: none.
+- 01:28 — **D3 landed** (`reviews/D3_sol_diff.md`, Sol): **VERIFIED, no findings**. D1-01 … D1-04, D2-01 RESOLVED; **"EQUAL on TC8"
+  CONFIRMED**; the three split tags CONFIRMED; Corollary C's reported-model (HPM) conclusion VERIFIED line by line (under
+  EX-A and the identification of the coded posterior; strict majority excludes ties). DEPS: P6, TC/DIST-C, NEC → OK:
+  **every row under a claim is OK** (20 rows, each sha = checked_sha = current file hash, verified by script); rows not
+  under a claim labelled. Changelog check column completed (record only; STATEMENT v1.4.8 sha 1f977ab6e2b2e407).
+  REPORT regenerated; staged ingest: 20 claims, 0 problems, acceptance PASS; citation check 9 pins, 0 MISS; reader
+  blocks of STATEMENT §1R and TARGET §6 identical. `git pull --ff-only` (main); HOLDS read: none.
+  **Sweep manifest frozen**: `reviews/MANIFEST_SW1.txt`, MANIFEST de9ccec7bb2a07d5cc36fa8a0ab13eb4e78ae697d30b4b3ddcd296fde7ac5957
+  (222 files, 20 extra inputs; verify OK). Sweep SW1 launched: gpt-6-astra (codex, reasoningEffort high), new agent,
+  blind, `reviews/BRIEF_SW1_astra.md` (carries HQ's named point on Corollary C). From now nothing in the ticket folder
+  is edited except `reviews/`, `LOG.md`, `CHECKPOINT_*.md`. D3 thread settled. Running: SW1 (Astra).
