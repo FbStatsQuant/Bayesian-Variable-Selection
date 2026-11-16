@@ -529,3 +529,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
   - Desktop ~/.ssh/config block + task re-point to 03:00: 11:40 CT; HQ freeze 11:35–12:00.
   - Conditions: restricted forced-command key; existing lines byte-identical; diffs sent; ssh -G owls/nots identical, else roll back.
   - HQ TODO on confirmation: tell Theory Dept + Engineering about the Owls cron freeze.
+- 2026-11-16 (overnight) W3-SCR-R2: both reviewers accept all 21 SCR claims, with no proof problem. A1 (row 3.7) is sound with κ, b, M, σ fixed in n. Both quality gates failed only on the summaries in REPORT §2 (F1–F4).
+  - GO: replace those summaries with pointers to the STATEMENT lines; status-source lines stay byte-identical.
+  - R2 counts as the round HQ ordered (card 7); this fix is its one diff round (v4 §5.5). If it fails, it comes back to HQ.
+  - Row 3.7 keeps the interim (b1) label until the diff round passes. Then W3-READER states "κ, b, M, σ fixed in n" in row 3.7's reader version, through an H5 card with the CP3 package.
+  - SCR-R1 queued post-freeze.
