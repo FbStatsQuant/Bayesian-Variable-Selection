@@ -301,3 +301,4 @@
 - 07:50 — HQ GO task U real run (identical to dry; D80). Recorder queue: S4 real → U real → S4b → D80 re-verify → V dry. After U: START2-R thm row swap (READER).
 - 07:52 — s6:46 third Opus: FIX CONFIRMED → recorder S4b cleared (after S4 real; verbatim corrected sentence; D80; citecheck expect 6 pre-existing TOKEN-MISS). FINAL citecheck on main: 6 pre-existing line-drift misses (s1:20, s1:35, s3:16×2, s7:78, s8:6) → editorial batch.
 - 07:53 — D80 re-verify (recorder, read-only): S, S2, T, T re-anchors all OK (post-apply hashes = expected); READER swaps OK. → HQ.
+- 07:57 — S4 on main b3153634: 21 patches verbose, 23/23 target sha = expected; 17 narrowed → 2.1.0 (UNI-1 3.1.0); F-UNI ACTIVE 2.1.0; Thm-APP cleared; 9 SUSPECT + X6/Examples blocked (post-freeze item 1); RM2 R1r; 0 ERROR; 117 ACTIVE accept PASS; 15/15. CITECHECK.txt not committed (editorial). → HQ.
