@@ -15,6 +15,87 @@
 
 using namespace v4::setup;
 
+// Production start law at (design, p, n): partition (as count-only), tables without stores, start law. Reports the size
+// law of pi_0 (mean, quantiles) and the expected number of blocks a pi_0 draw touches, exactly:
+//   E #touched = sum_b (1 - P(k_b = 0)),  P(k_b = 0) = sum_k varpi(k) F_{-b}(k) / Zbar_0,
+//   F_{-b} = (prefix convolution of blocks < b) * (suffix convolution of blocks > b), in log space.
+// mc > 0: also that many pi_0 draws (addressed uniforms) as a Monte Carlo cross-check.
+static int startlaw_main(int argc, char** argv) {
+  v4::gen::Spec sp; sp.design = v4::gen::design_from_name(argv[2]); sp.p = std::atoi(argv[3]); sp.n = std::atoi(argv[4]);
+  int th = argc > 5 ? std::atoi(argv[5]) : 3; sp.seed = argc > 6 ? (uint32_t)std::atoi(argv[6]) : 1u;
+  int mc = argc > 7 ? std::atoi(argv[7]) : 0;
+  if (sp.design == v4::gen::Design::BLK) sp.rho = 0.5;
+  auto t0 = std::chrono::steady_clock::now();
+  auto lap = [&]() { double s = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count(); t0 = std::chrono::steady_clock::now(); return s; };
+  auto own = std::make_shared<v4::DataOwned>();
+  v4::gen::generate(sp, own->X, own->y);
+  std::vector<double> z(sp.n);
+  for (int j = 0; j < sp.p; ++j) { double* x = &own->X[(size_t)j * sp.n]; v4::prep::standardise(x, sp.n, z.data()); std::copy(z.begin(), z.end(), x); }
+  v4::prep::standardise(own->y.data(), sp.n, z.data()); std::copy(z.begin(), z.end(), own->y.begin());
+  v4::Data D = v4::make_data(own, sp.n, sp.p);
+  double t_gen = lap();
+  PartitionOptions po;
+  CountResult c = count_only(D, po, default_B(sp.n, sp.p), th);
+  double t_part = lap();
+  TableStats ts;
+  Tables T = build_tables(D, c.part, th, nullptr, &ts);
+  double t_tab = lap();
+  build_start(D, c.part, T);
+  double t_start = lap();
+  const int K = D.K, J = T.J;
+  // size law
+  std::vector<double> P(K + 1);
+  double mean = 0, cum = 0; int q50 = -1, q90 = -1, q99 = -1;
+  for (int k = 0; k <= K; ++k) { P[k] = std::exp(T.size_logmass[k]); mean += k * P[k]; }
+  for (int k = 0; k <= K; ++k) { cum += P[k]; if (q50 < 0 && cum >= 0.5) q50 = k; if (q90 < 0 && cum >= 0.9) q90 = k; if (q99 < 0 && cum >= 0.99) q99 = k; }
+  // suffix convolutions G[b][k] (blocks b..J-1), log space
+  std::vector<double> G((size_t)(J + 1) * (K + 1), v4::NEG_INF);
+  G[(size_t)J * (K + 1)] = 0.0;
+  std::vector<double> t;
+  for (int b = J - 1; b >= 0; --b) {
+    const double* pr = &T.logprof[T.logprof_ptr[b]]; int npr = (int)(T.logprof_ptr[b + 1] - T.logprof_ptr[b]);
+    for (int k = 0; k <= K; ++k) {
+      t.clear();
+      for (int j = 0; j < npr && j <= k; ++j) { double g = G[(size_t)(b + 1) * (K + 1) + k - j]; if (g != v4::NEG_INF) t.push_back(pr[j] + g); }
+      G[(size_t)b * (K + 1) + k] = t.empty() ? v4::NEG_INF : v4::log_sum_exp(t);
+    }
+  }
+  std::vector<double> p0(J);
+#pragma omp parallel for num_threads(th) schedule(dynamic, 64)
+  for (int b = 0; b < J; ++b) {
+    std::vector<double> tt, outer;
+    for (int k = 0; k <= K; ++k) {   // log F_{-b}(k) = LSE_i logF[b][i] + G[b+1][k-i]
+      tt.clear();
+      for (int i = 0; i <= k; ++i) { double a = T.logF_at(b, i), g = G[(size_t)(b + 1) * (K + 1) + k - i]; if (a != v4::NEG_INF && g != v4::NEG_INF) tt.push_back(a + g); }
+      if (!tt.empty()) outer.push_back(D.logprior[k] + v4::log_sum_exp(tt));
+    }
+    p0[b] = outer.empty() ? 0.0 : std::exp(v4::log_sum_exp(outer) - T.logZbar0);
+  }
+  double touched = 0; for (int b = 0; b < J; ++b) touched += 1.0 - p0[b];
+  double t_touch = lap();
+  v4::Json rec = v4::Json::object();
+  rec["design"] = v4::gen::design_name(sp.design); rec["n"] = sp.n; rec["p"] = sp.p; rec["K"] = K; rec["J"] = J; rec["B_blocks"] = c.part.B;
+  rec["C"] = T.code_ptr.back(); rec["logZbar0"] = T.logZbar0;
+  rec["E_size"] = mean; rec["q50"] = q50; rec["q90"] = q90; rec["q99"] = q99; rec["P_size0"] = P[0];
+  rec["E_blocks_touched"] = touched;
+  if (mc > 0) {   // Monte Carlo cross-check with pi_0 draws
+    Start S; S.D = &D; S.P = &c.part; S.T = &T; S.logZbar0 = T.logZbar0;
+    v4::AddressedSource as; v4::Model M; double ms = 0, mb = 0;
+    for (int i = 1; i <= mc; ++i) {
+      v4::Address ad; ad.seed = 9; ad.xph = v4::X_INIT; ad.particle = (uint32_t)i;
+      S.draw_pi0(as, ad, M);
+      ms += (double)M.size();
+      std::vector<int> bl; for (int32_t j : M) bl.push_back(c.part.blk[j]);
+      std::sort(bl.begin(), bl.end()); mb += (double)(std::unique(bl.begin(), bl.end()) - bl.begin());
+    }
+    rec["mc_draws"] = mc; rec["mc_E_size"] = ms / mc; rec["mc_E_blocks_touched"] = mb / mc;
+  }
+  v4::Json sec = v4::Json::object(); sec["generate"] = t_gen; sec["partition"] = t_part; sec["tables"] = t_tab; sec["start_law"] = t_start; sec["touched"] = t_touch;
+  rec["seconds"] = sec; rec["peak_rss_mb"] = peak_rss_mb(); rec["threads"] = th;
+  std::printf("%s\n", rec.dump(1).c_str());
+  return 0;
+}
+
 static int count_main(int argc, char** argv) {
   v4::gen::Spec sp; sp.design = v4::gen::design_from_name(argv[2]); sp.p = std::atoi(argv[3]); sp.n = std::atoi(argv[4]);
   int th = argc > 5 ? std::atoi(argv[5]) : 3; sp.seed = argc > 6 ? (uint32_t)std::atoi(argv[6]) : 1u;
@@ -47,6 +128,7 @@ int main(int argc, char** argv) {
   if (argc < 3) { std::fprintf(stderr, "usage: see header\n"); return 2; }
   std::string what = argv[1];
   if (what == "count") return count_main(argc, argv);
+  if (what == "startlaw") return startlaw_main(argc, argv);
   int p = std::atoi(argv[2]), n = argc > 3 ? std::atoi(argv[3]) : 200, th = argc > 4 ? std::atoi(argv[4]) : 3;
   int extra = argc > 5 ? std::atoi(argv[5]) : 0;
   char host[256] = {}; gethostname(host, sizeof host - 1);

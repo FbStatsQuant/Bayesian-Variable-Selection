@@ -121,7 +121,7 @@ Json MemAccount::to_json() const {
   Json h = Json::object(); for (int m = 0; m < (int)hist.size(); ++m) if (hist[m]) h[std::to_string(m)] = hist[m];
   j["block_histogram"] = h;
   j["C"] = C; j["C_feasible"] = C_feasible; j["codes_per_column"] = p ? (double)C / (double)p : 0.0;
-  j["mean_block"] = J ? (double)p / (double)J : 0.0; j["table_models"] = table_models;
+  j["mean_block"] = J ? (double)p / (double)J : 0.0; j["table_models"] = table_models; j["NR"] = NR; j["cond_vals"] = cond_vals;
   Json it = Json::array();
   for (auto& x : items) { Json e = Json::object(); e["name"] = x.name; e["stage"] = x.stage; e["bytes"] = (int64_t)x.bytes; e["estimate_bytes"] = (int64_t)x.est; e["exact"] = x.exact; e["in_setup_bin"] = x.stored; it.push(e); }
   j["items"] = it;
