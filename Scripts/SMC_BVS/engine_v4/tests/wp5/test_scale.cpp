@@ -181,8 +181,9 @@ TEST_SLOW(wp5_T7prime_scale) {
 
 // ---- Sol F9: numerical error of the predictive integrals below a PRE-DECLARED absolute tolerance -------------------------
 // Declared before the run (2026-11-16): doubling the Gauss–Hermite order (64 → 128) at fixed x rows changes d_H² and KL by
-// at most 1e-8 (quadrature error); doubling the x draws (4,000 → 8,000) changes them by at most 5 x-MC SE of the
-// 4,000-row estimate (the x error is Monte Carlo and is reported as h2_se_x / kl_se_x).
+// at most 1e-8 (quadrature error); an estimate on 8,000 x rows DISJOINT from the 4,000 rows of the first (rows
+// 4,000 … 11,999 vs 0 … 3,999) differs from it by at most 5 combined x-MC SE, sqrt(SE_4000² + SE_8000²) (follow-up note 2:
+// overlapping rows made v1 of this check lenient).
 TEST(wp5_predictive_numerical_error_doubling) {
   constexpr double QUAD_TOL = 1e-8, K_SE = 5.0;
   Truth T = gen_truth("AR", 500, 31);
@@ -199,7 +200,7 @@ TEST(wp5_predictive_numerical_error_doubling) {
   for (size_t i = 0; i < mp.size(); ++i) L.comps.push_back(component_from_post(D, mp[i], w[i] / ws));
   DistOpts o; o.n_draws = 200; o.n_x = 4000; o.n_test = 200; o.threads = 3; o.seed = 3;
   DistOpts oq = o; oq.n_gh = 128;
-  DistOpts ox = o; ox.n_x = 8000;
+  DistOpts ox = o; ox.n_x = 8000; ox.x_row0 = 4000;   // disjoint from rows 0 … 3,999
   Json a = dist_metrics(L, T, D.n, o, 2), q = dist_metrics(L, T, D.n, oq, 2), x = dist_metrics(L, T, D.n, ox, 2);
   const Json &pa = a.at("predictive"), &pq = q.at("predictive"), &px = x.at("predictive");
   const double dq_h = std::fabs(pa.at("h2").num() - pq.at("h2").num()), dq_k = std::fabs(pa.at("kl").num() - pq.at("kl").num());
@@ -208,7 +209,9 @@ TEST(wp5_predictive_numerical_error_doubling) {
               pa.at("h2").num(), dq_h, dq_k, dx_h, dx_k, pa.at("h2_se_x").num(), pa.at("kl_se_x").num());
   CHECK(pa.at("exact").boolean());
   CHECK_MSG(dq_h <= QUAD_TOL && dq_k <= QUAD_TOL, "GH quadrature error above the declared 1e-8");
-  CHECK_MSG(dx_h <= K_SE * pa.at("h2_se_x").num() && dx_k <= K_SE * pa.at("kl_se_x").num(), "x-draw doubling outside 5 x-MC SE");
+  const double se_h = std::hypot(pa.at("h2_se_x").num(), px.at("h2_se_x").num()), se_k = std::hypot(pa.at("kl_se_x").num(), px.at("kl_se_x").num());
+  std::printf("    disjoint rows: combined x-SE %.1e (KL %.1e)\n", se_h, se_k);
+  CHECK_MSG(dx_h <= K_SE * se_h && dx_k <= K_SE * se_k, "disjoint x-draw doubling outside 5 combined x-MC SE");
 }
 
 // ---- Sol F9 fixtures: empty support / zero signal --------------------------------------------------------------------

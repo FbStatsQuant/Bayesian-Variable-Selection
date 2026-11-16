@@ -1,6 +1,6 @@
 # INTERFACES — engine v4 contract between WP1–WP5
 
-**v0.1.6 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
+**v0.1.7 (binding; changes only by the WP1 owner with a changelog line).** 2026-11-15. Source: ENGINEERING_SPEC §0-v2,
 §1–§3, §6. Where this file is silent, the spec rules; where the spec is silent, `core/` (v3.1 / revision D) rules.
 Questions and change requests: to the WP1 owner through the manager. Line references `core/...:N` are to revision D.
 
@@ -156,8 +156,10 @@ After `compact()`: entries strictly sorted under `ord`, no duplicates, size ≤ 
 when it reaches max(cap/4, 4096) entries, so the peak is ≈ 2.5·cap entries (kept + staging + the new kept run with room).
 `cutoff()` is **monotone non-decreasing** (the worst of the top-c of a growing set never decreases) and is published
 atomically, so other threads may read it at any time. Caps: top = 40p + 1 (HPM order, value F); lead0 = 20p (LEX,
-value lg0); lead1 = 20p (LEX, value F); leader stores exist only in calibration and compat mode (D-7). A model's value
-is a deterministic function of S, so duplicates are equal entries.
+value lg0); lead1 = 20p (LEX, value F). Leader stores exist only inside calibration, where they feed V (D-7). **Final-run
+leader stores are not engine outputs in any mode, compat included** (D-7, confirmed safe by Theory PSMC-S0): final-run
+ledgers are built with `leaders = false`, and compat comparisons against v3 put v3's final `leaders` on the exclusion
+list. A model's value is a deterministic function of S, so duplicates are equal entries.
 
 ### 4.2 Ledger (one per island) and ThreadLedger (one per worker thread)
 ```cpp
@@ -293,6 +295,7 @@ Sections (names fixed; WPs may add sections, never rename):
   `island_best`, `logical`, `status`/timings in meta; optional `terminal_S_ptr/terminal_S`.
 - `fit.bin` + `fit.json` (WP4): merged `top_*`, `hpm_*` + provenance, `hpm_before_local_*`, local-search archive,
   `mode_S`, LS0, near ties, `logZ_r`, `pip_eq`, `pip_Z`, `pip_T`, `rb_*`, flags; `fit.json` scalars and hashes only.
+  No leader stores in `island_r.bin` or `fit.bin`, in any mode (§4.1; on the compat exclusion list).
 - `law.bin` (WP5): models (ptr/idx), weights, conjugate parameters, standardisation constants, dropped mass.
 - `island_r.ckpt.{a,b}` (WP3): kind 8; newest valid generation wins.
 
@@ -359,13 +362,15 @@ all scorer/engine code calls `v4::pm::*` (`include/v4/pmath.h`), never `std::` d
 
 ## 7. Statuses, errors, threads (`include/v4/status.h`, `threads.h`)
 ```cpp
-enum class Status : uint8_t { completed=0, resource_limit=1, numerical_failure=2, invalid_input=3, io_error=4, internal_error=5 };
+enum class Status : uint8_t { completed=0, resource_limit=1, numerical_failure=2, invalid_input=3, io_error=4, internal_error=5,
+                              schedule_limit=6 };   // exit 16; theory/compat calibration only (v3: tier-1 grid failure, no fallback)
 struct Error : std::runtime_error { Status st; };                // thrown inside the engine
 struct NumericalFailure : Error { };                            // = core/cpp/v3_util.h:26-28 semantics
-Status fit_status(span<Status>);   // first that applies: invalid_input, internal_error, numerical_failure, resource_limit, io_error, completed
+Status fit_status(span<Status>);   // first that applies: invalid_input, internal_error, numerical_failure, resource_limit, schedule_limit, io_error, completed
 ```
 - Commands catch everything at `main`, write `<out>.json` with `status`, `reason`, and exit with `0` (completed) or
-  `10 + status`. No estimate field is written unless status is `completed` (GUARD-W). Invariant violations (I1–I7) →
+  `10 + status`. `schedule_limit` (exit 16) is the theory/compat calibration outcome of `core/v3_calib.R:170`: tier-1 grid
+  construction failed and no fallback grid exists. It cannot arise in V-1M (D-26). No estimate field is written unless status is `completed` (GUARD-W). Invariant violations (I1–I7) →
   `internal_error`. Hash or format mismatch at start → `invalid_input`. Write/rename failure → `io_error`.
 - **Data outcomes of `prep`** (v3 returns them as fit outcomes with an empty HPM, `core/v3_preprocess.R:111-114`):
   `no_predictors` and `y_constant`. The task status is `completed`, the record has `prep_status` and `hpm: []`, no
@@ -418,3 +423,6 @@ point, so all WPs link from day one: `setup::run`, `island::run`, `calib::run`, 
 - v0.1.6 (2026-11-15, WP1; PR15 review) — §4.2: the inherited calibration HPM is offered with its calibration EventCtx
   (never an INHERITED key). `gen::generate_test_rows` (rows [a, b), same bits as the full test design). §6: the x87
   rows are measured equal on NOTS (job 2747875); all 8 guarded rows match there.
+- v0.1.7 (2026-11-15, WP1; D-26, D-7 / PSMC-S0) — §7: status `schedule_limit` (6, exit 16; theory/compat calibration
+  only; fit precedence after `resource_limit`). §4.1/§5.1: final-run leader stores are not outputs in any mode; compat
+  comparisons exclude them.
