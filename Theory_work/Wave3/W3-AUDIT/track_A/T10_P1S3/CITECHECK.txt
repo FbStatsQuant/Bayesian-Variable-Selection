@@ -150,6 +150,18 @@ OK            [PROOF.md] cpp/v3_core.cpp:704-704 sha=b366767719 | CPtr c(state);
 OK            [PROOF.md] cpp/v3_core.cpp:729-729 sha=44c5eb3d90 | CPtr c(state); const Data& D = *c->h->D;
 OK            [PROOF.md] v3_run.R:50-64 sha=1e6908175a | v3_stage_table <- function(islands, rho = NULL, grid_label = NA_character_) {
 OK            [PROOF.md] v3_fit.R:163-163 sha=3ad4a29dbc | fr$stage_table <- v3_bind_records(list(cal$stage_table, fr$stage_table))
+OK            [PROOF.md] cpp/v3_runtime.h:29-31 sha=4a19f20906 | inline RuntimeGuard* runtime_ptr(SEXP x) {
+OK            [PROOF.md] cpp/v3_core.cpp:411-411 sha=91e5ffe715 | E.cache = &cache; E.led = &led; E.guard = runtime_ptr(runtime);
+OK            [PROOF.md] cpp/v3_core.cpp:609-609 sha=bf5696a12c | c->guard = runtime_ptr(runtime); c->runtime_keep = runtime;
+OK            [PROOF.md] cpp/v3_core.cpp:771-771 sha=4ccafb04f1 | RuntimeGuard* g = runtime_ptr(runtime);
+OK            [PROOF.md] cpp/v3_core.cpp:778-778 sha=4ccafb04f1 | RuntimeGuard* g = runtime_ptr(runtime);
+OK            [PROOF.md] cpp/v3_core.cpp:610-610 sha=0d70e658ec | c->cache.init(D.W, (size_t)as<double>(ro["cache_capacity"]));
+OK            [PROOF.md] v3_calib.R:147-147 sha=10233b0ddf | ro <- list(cache_capacity = as.numeric(500 * setup$ctx$p))
+OK            [PROOF.md] v3_calib.R:6-6 sha=ede1a63d9f | .v3cpp$cpp_build_grid(as.numeric(logg0_V), as.numeric(d_V), as.numeric(pilot_temps), as.integer(T_e))
+OK            [PROOF.md] v3_calib.R:44-44 sha=68180ef120 | pil <- .v3cpp$cpp_cal_pilot(state, tier, cs$H, cs$T_e, cs$L, cs$Hm, cs$ell)
+OK            [PROOF.md] v3_calib.R:86-86 sha=37949abc08 | dg <- .v3cpp$cpp_cal_diag(state, tier, g$grid, cs$H, cs$L, cs$Hm, cs$ell, it)
+OK            [PROOF.md] v3_run.R:159-159 sha=28b2f84ebc | P <- do.call(cbind, lapply(isl, function(r) r$pip))
+OK            [PROOF.md] v3_run.R:164-168 sha=d87633a7a0 | out$terminal_table <- do.call(rbind, lapply(seq_len(R), function(r) {
 OK            [PROOF.md] cpp/v3_start.h:272-272 sha=7a6fb31f17 | if (tie_dp && cap < 2) throw std::invalid_argument("start_mode: the e4 tie-aware fallback requires cap >= 2 (C
 OK            [PROOF.md] cpp/v3_core.cpp:469-469 sha=35f7274942 | ModeResult m = start_mode(st, 1000000, o.ls0_tie_dp);
 OK            [PROOF.md] cpp/v3_start.h:261-261 sha=9334c5c245 | if (dp.kbest < 0 || !feasible()) throw std::runtime_error("start_mode tie DP: no tight path from (J, kbest) (i
@@ -163,5 +175,5 @@ OK            [PROOF.md] cpp/v3_core.cpp:636-636 sha=6516277c83 | std::vector<do
 OK            [PROOF.md] cpp/v3_calib.h:30-46 sha=1101193d76 | inline NextPhi pilot_next_phi(const std::vector<double>& d, double phi, double H, int Te) {
 OK            [PROOF.md] cpp/v3_engine.h:310-310 sha=93ce25565d | if (phi_prev == 1.0) break;
 
-164 citations: 164 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
+176 citations: 176 OK, 0 missing/out-of-range. Resolution: repo root, Scripts/SMC_BVS/core/, Theory_work/, item folder. Bare `:L` resolves to the last full path cited before it in the same file.
 Not machine-checked: unbackticked references and the semantic match of each excerpt.

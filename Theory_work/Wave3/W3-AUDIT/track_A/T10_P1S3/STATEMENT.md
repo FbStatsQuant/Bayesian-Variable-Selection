@@ -27,7 +27,7 @@ On valid declared inputs (seed an integer in [1, 2³¹ − 1], allocation a list
   - **X10** the LS0 guard stop (`cpp/v3_core.cpp:480`) — INVENTORY's spec row E5/G2, now coded; a `resource_limit` exit
     (class (b) as E1–E3, and stop-only by T1 GW).
 - **(S.3′)** D2 is unreachable at the pin; the invariants (i)–(vii) of S.3 hold at the pin (re-located lines in
-  PROOF.md); `get_holder`'s stop and the implicit Rcpp/R errors (X2-imp) are unreachable; X7, X8 are reachable only under
+  PROOF.md); `get_holder`'s stop and the class of implicit Rcpp/R errors on the call graph (X2-imp) are unreachable; X7, X8 are reachable only under
   IDEAL-W's unbounded reading of (n, p), are then excluded by A:IDEAL-W⁺ or 𝔇 (erratum), and cannot fire for inputs R can
   represent (PROOF §2); X9 is unreachable (cap = 10⁶ ≥ 2 at the only call; the root check passes by T9 TDP-e, under
   T4 ENC).
@@ -48,3 +48,4 @@ On valid declared inputs (seed an integer in [1, 2³¹ − 1], allocation a list
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (second-seat re-audit at the pin; adds X9, X10) | track A T10 | `AUDIT.md` §6 T10 | `CHECK.md` |
 | v2 | (S.3′) get_holder, X2-imp, X7/X8 for R inputs; (D1) binary64 | STRONGER (more sites covered) / EQUAL (citations) | LC2 #13–#19 | `reviews/LC2_reply_opus.md` | pending (gate) |
+| v2.1 | X2-imp stated as a class, more instances | STRONGER (scope of the audit made explicit) | LC4 S2, E3 | `reviews/LC4_reply_opus.md` | pending (gate) |

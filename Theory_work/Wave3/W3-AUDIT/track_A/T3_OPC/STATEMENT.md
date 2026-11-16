@@ -35,7 +35,8 @@ with `ls0 = TRUE` and the options `v3.ls0_ell`, `v3.ls0_tie_dp`, `v3.ls0_cap` un
 
 ## Lemma OPC
 Assume EX-A. For every valid input on the sampler branch, in the shipped configuration, for the actual fit and for P°
-alike, on {final-run status = "completed"} (so on 𝒪 and on 𝒪° restricted to the sampler branch):
+alike, on {final-run status = "completed"} (so on 𝒪 and on 𝒪° restricted to the sampler branch); the last sentence of
+(OPC-d) concerns the enumeration branch:
 - **(OPC-a) LS0 runs.** After the final local search, `cpp_final_run` computes S̃₀ and executes exactly one
   `local_search` from centre S̃₀, with the centre scored and emitted, and move cap ℓ_n + |S̃₀|.
 - **(OPC-b) It is the abstract search, run to its own end.** That call reads no uniform, is not interrupted, and
@@ -61,3 +62,4 @@ alike, on {final-run status = "completed"} (so on 𝒪 and on 𝒪° restricted 
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM (restates [OP] + OP-LS0 for the code of record) | track A T3 | `AUDIT.md` §6 T3 | `CHECK.md` |
 | v2 | (OPC-b) wording; (OPC-d) enumeration-branch line | EQUAL; STRONGER (exact branch added) | LC2 #2, #4 | `reviews/LC2_reply_opus.md` | pending (gate) |
+| v2.1 | preamble scope | EQUAL (editorial) | LC4 E1 | `reviews/LC4_reply_opus.md` | — |

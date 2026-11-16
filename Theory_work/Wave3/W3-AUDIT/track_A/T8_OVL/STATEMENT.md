@@ -12,8 +12,9 @@ lemma). **Lean target: yes** (an elementary limit argument). Blocks row 3.6, The
 - **P-START**: "1_𝒜·o₀ → 0 in probability, i.e. π₀(S₀) → 1 on 𝒜" (`Theory_work/Wave3/W3-SAMP/STATEMENT.md:76-77`),
   o₀ = δ₀/(1 − δ₀), δ₀ = 1 − π₀(S₀). Supplied by `W3-START2-R:IF-START` ("PROVED-CHECKED; council R2, …"), stated there "for every event 𝒜" under
   "(T1⁺⁺) with (AL) at Q = S₀" (or (T3⁺⁺)(b) with Q = S₀) (`Theory_work/Wave3/W3-START2-R/STATEMENT.md:241-244`).
-- **(A5)** in this file means the leakage hypothesis inside IF-START's hypotheses: the leakage set is Q = S₀ (no null
-  column leaks onto the truths). It is the reader version's "no leakage" condition of Theorem 10 (`AUDIT.md` §4 row
+- **(A5)** in this file means the leakage hypothesis inside IF-START's hypotheses: (AL) at Q = S₀ in fixed design, (L-R⁺⁺) with
+  Q = S₀ in Gaussian rows (the reader's (A5), bridge B5.1′); in fixed design (AL) bounds an average over the nulls, not
+  every null. It is the reader version's "no leakage" condition of Theorem 10 (`AUDIT.md` §4 row
   "(A5) no leakage"; correction 2 of §6: P-START is proved only under it).
 - Production budget: `W3-SAMP:D` (D-iii) production corollary, D_r ≥ max(2500, n, p)·(L + 6),
   L = max(4, ⌈log₂(n + 1)⌉) (`Theory_work/Wave3/W3-SAMP/STATEMENT.md:103`; proof
@@ -50,3 +51,4 @@ P(completed ∩ {Ŝ ≠ S₀}) ≤ P(S† ≠ S₀) + E[1_𝒜°·(1 − π₀(S
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM | track A T8 | `AUDIT.md` §6 T8 | `CHECK.md` |
 | v2 | (A5) defined; (OVL-c) hypotheses stated in full | EQUAL (exact wording; no claim changed) | LC3 T8 #1–#3 | `reviews/LC3_reply_opus.md` | pending (gate) |
+| v2.1 | (A5) gloss | EQUAL (editorial) | LC4 E2 | `reviews/LC4_reply_opus.md` | — |

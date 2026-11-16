@@ -33,7 +33,9 @@ edges; E := the sets built from a tight path (J, k̂) → (0, 0) and codes in `a
 - **(TDP-d) Cost.** The fallback performs O(p·(Σ_b (K + 1)(t_b + 1) + max_b 2^{|C_b|})) ⊆ O(p·Σ_b(2^{|C_b|} + (K + 1)²))
   elementary operations after `mode_dp` (which costs O(Σ_b 2^{|C_b|} + Σ_b (K + 1)(t_b + 1))), and uses
   O(Σ_b 2^{|C_b|} + J(K + 1)) storage: TDP-IMPL's bounds. The enumeration fast path that precedes it costs
-  O(min(|E|, cap)·(J(B + 2) + p log p)).
+  O(min(|E|, cap)·(J(B + 2) + p log p)); with the shipped cap 10⁶ this is within O(p·Σ_b 2^{|C_b|}) up to the explicit
+  factor 10⁶ (Σ_b 2^{|C_b|} ≥ p), with storage (`choice`, recursion depth J, `bestS`) within O(Σ_b 2^{|C_b|} + J(K + 1)); so
+  the whole `start_mode` call is inside TDP-IMPL's envelope with that explicit constant.
 - **How TDP-IMPL is discharged.** The coded routine is TDP-E (tight-edge reachability on the computed DP), not literally
   L7's reference TDP; TDP-IMPL is met as "returns S* under EX-A (TDP-c) within TDP-IMPL's operation and storage bounds
   (TDP-d)", which is what its users need ("e4 itself only fixes WHICH maximiser …; TDP-IMPL fixes HOW (its cost)").
@@ -47,3 +49,4 @@ edges; E := the sets built from a tight path (J, k̂) → (0, 0) and codes in `a
 | v1 | all | NEW-CLAIM (re-states `C-ENG:TDP_E` + TDP-IMPL's cost for the pin) | track A T9 | `AUDIT.md` §6 T9 | `CHECK.md` |
 | v1.1 | (TDP-e) | STRONGER (states what (TDP-b)'s proof already shows; used by T10) | LC2 #14 | `reviews/LC2_reply_opus.md` | pending (gate) |
 | v2 | (TDP-c) direct proof; enumeration cost; how TDP-IMPL is met | STRONGER (enumeration cost added) / EQUAL | LC3 T9 #2, #3 | `reviews/LC3_reply_opus.md` | pending (gate) |
+| v2.1 | fast path inside TDP-IMPL's envelope (factor 10⁶) | STRONGER (one sentence, arithmetic from (TDP-d)) | LC4 E4 | `reviews/LC4_reply_opus.md` | pending (gate) |

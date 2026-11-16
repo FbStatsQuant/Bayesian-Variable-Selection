@@ -76,13 +76,20 @@ row above is one of them or an error without a fit object. So (P1′) holds.
   ends at 1) or a fallback that passed `v3_check_grid` (`v3_calib.R:164`); class assertions `v3_run.R:224` hold for
   objects built by `v3_setup` / `v3_frozen`.
 - **`get_holder`** (`cpp/v3_core.cpp:18`): every call on the fit path passes `ctx` (a list with `ptr`,
-  `cpp/v3_core.cpp:102`) or `setup$ptr` / the calibration state (external pointers): unreachable.
-- **X2-imp (implicit errors).** Rcpp `as<>` and name lookups (`cpp/v3_core.cpp:396-404, 436-439, 494, 499-503`) read
+  `cpp/v3_core.cpp:102`) or `setup$ptr` (an external pointer): unreachable.
+- **X2-imp (implicit errors), as a class:** every implicit Rcpp conversion, `XPtr` construction, name lookup and base-R
+  shape error on the `v3_fit` call graph. Each converts or binds an object that the core itself created with the expected
+  type and fields, so none fires on valid internal state. Instances checked: Rcpp `as<>` and name lookups (`cpp/v3_core.cpp:396-404, 436-439, 494, 499-503`) read
   fields that `v3_run_settings` and `cpp_cal_export`/`event_to_list` always create with fixed types (`v3_run.R:90-102`;
   absent optional LS0 fields are guarded by `containsElementNamed`); `XPtr` constructions (`cpp/v3_core.cpp:624, 658,
   704, 729`) receive the pointers created by `cpp_cal_new`/`cpp_setup`; the R `data.frame`/`rbind` calls of
   `v3_stage_table`/`v3_bind_records` (`v3_run.R:50-64`; `v3_fit.R:163`) bind tables built by the same function with the
-  same columns. Unreachable on valid internal state (same standard as S.3's X2: code reading).
+  same columns; `runtime_ptr`'s `XPtr<RuntimeGuard>` (`cpp/v3_runtime.h:29-31`; reached at `cpp/v3_core.cpp:411, 609, 771,
+  778`) receives the pointer of `cpp_runtime_new`; `as<double>(ro["cache_capacity"])` (`cpp/v3_core.cpp:610`) reads the
+  field set at `v3_calib.R:147`; the argument coercions of `cpp_cal_pilot`, `cpp_cal_diag`, `cpp_build_grid`
+  (`v3_calib.R:6, 44, 86`) receive integers/doubles built in `v3_cal_settings` and the grid code; `do.call(cbind, …)` and
+  the terminal-table `data.frame` (`v3_run.R:159, 164-168`) bind four equal-length island vectors. Unreachable on valid
+  internal state (same standard as S.3's X2: code reading).
 - **X9 (new).** `cpp/v3_start.h:272` needs cap < 2; the only call passes 10⁶ (`cpp/v3_core.cpp:469`).
   `cpp/v3_start.h:261` needs k̂ < 0 or a failed root `feasible()` with IN = OUT = ∅: impossible by T9 (TDP-e) under T4
   (ENC).

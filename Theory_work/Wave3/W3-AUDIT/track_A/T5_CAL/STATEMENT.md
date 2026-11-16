@@ -1,4 +1,4 @@
-# T5 · Lemma CAL-C (the calibration record depends on the data and streams 0–9 only) — STATEMENT v2 (draft, not locked)
+# T5 · Lemma CAL-C (the calibration record depends on the data and streams 0–9 only) — STATEMENT v3 (draft, not locked)
 
 Track A item T5 (`AUDIT.md` §6; CHECKPOINT_1 annex order 5). Tier B (code reading; no key lemma). **Lean target: no**
 (code fact). Blocks rows 3.5, 3.6.
@@ -45,8 +45,10 @@ Assume EX-A. For every valid input (X, y, seed, allocation) of the shipped `v3_f
 ## Where the T1 flag bites (carried, per the manager 11-16)
 `W3-SAMP` conditions on 𝓒 "on 𝒜" and writes interface premises with 1_𝒜. By (CAL-b) the conditioning is valid for the
 potential pair (𝒜°, 𝓒°), not for the actual 𝒜 (which depends on the clock through G). Reading: W3-SAMP's conditional
-claims hold with (𝒜°, 𝓒°); **upper bounds** on P(𝒜° ∩ A°), P(𝒪° ∩ A°), for events A defined by statistical state, transfer to P(𝒜 ∩ A),
-P(𝒪 ∩ A) since 𝒜 ⊆ 𝒜° and 𝒪 ⊆ 𝒪° (T1 GW-iv) — lower bounds and statements conditional on 𝒜 do not, and W3-SAMP makes
+claims hold with (𝒜°, 𝓒°); **upper bounds** transfer as follows: P(𝒪 ∩ A) ≤ P(𝒪° ∩ A°) for every event A of the statistical state (T1 GW-iv,
+pathwise); P(𝒜 ∩ A°) ≤ P(𝒜° ∩ A°) for potential events A° (𝒜 ⊆ 𝒜°), and P(𝒜 ∩ A) = P(𝒜 ∩ A°) for events of the
+calibration-time state (σ(𝓒°), by (CAL-d)); actual final-run events transfer only on 𝒪 (on 𝒜 ∖ 𝒪 a final-run guard
+stop can make the actual record differ from the potential one) — lower bounds and statements conditional on 𝒜 do not, and W3-SAMP makes
 none ("No claim is conditional on 𝒜 or on completion, and P(𝒜) → 1 is neither assumed nor claimed",
 `Theory_work/Wave3/W3-SAMP/STATEMENT.md:35`); and its
 interface premises must hold with 1_𝒜° in place of 1_𝒜:
@@ -65,3 +67,4 @@ interface premises must hold with 1_𝒜° in place of 1_𝒜:
 |---|---|---|---|---|---|
 | v1 | all | NEW-CLAIM | track A T5 | `AUDIT.md` §6 T5 | `CHECK.md` |
 | v2 | (CAL-b) seed label; (CAL-c) inputs; (CAL-d) citation; flag paragraph: upper bounds only | EQUAL in substance (wording made exact) | LC2 #9–#12 | `reviews/LC2_reply_opus.md` | pending (gate) |
+| v3 | flag paragraph: the 𝒜-transfer restricted to potential and calibration-time events | WEAKER (a reading note, not a lemma clause; no downstream use affected: W3-SAMP uses potential quantities on 𝒜) | LC4 S1 | `reviews/LC4_reply_opus.md` | pending (gate) |

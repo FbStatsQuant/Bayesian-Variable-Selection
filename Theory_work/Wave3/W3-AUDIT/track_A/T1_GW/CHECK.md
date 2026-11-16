@@ -9,7 +9,7 @@ Code of record: `Scripts/SMC_BVS/core/` at 4676af6 (= HEAD for the core).
 | Tier B step (PROTOCOL_v4 §3, step 4 omitted) | who (NORMAL) | state | record |
 |---|---|---|---|
 | 1 statement lock | Sol, fresh | **pending (gate)** | — |
-| 2 better-theorem review | only if the statement is new — it is a code lemma with no CP1 target; lead proposes to skip, HQ to rule | **HQ ruling** | — |
+| 2 better-theorem review | — | **placeholder: HQ ruling pending (manager 11-16); not run** | — |
 | 3 line check | Sol (NORMAL); Codex held for the gate | Claude stand-in done: LC1 (Opus, blind) → LC1r → LC1r2 (Opus, new agents), all **VERIFIED WITH AMENDMENTS**, no C/F finding open | `../reviews/LC1_*`, `LC1r_*`, `LC1r2_*` (brief, reply verbatim, disposition) |
 | statement-change check (§4.2) for the changelog rows not EQUAL | Sol, new agent | **pending (gate)**; rows: v2 (GW-iv), (GW-v), (GW-i) termination STRONGER; v3 (GW-iv) WEAKER/STRONGER | STATEMENT changelog |
 | 5 sweep duties → council briefs | — | at council | — |
