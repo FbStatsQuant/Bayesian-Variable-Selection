@@ -106,9 +106,13 @@ static void bench_island(int p, int N, const std::vector<int>& thr, KernelKind k
   Neighbours nb = window_neighbours(D, 14, 8);
   std::printf("# data AR(0.6) n=%d p=%d (stand-in partition: blocks of 4; window neighbours, B=14): %.1f s wall\n", n, p, now() - t0);
   IslandConfig c; c.store_dup_filter = std::getenv("V4_NO_DUP_FILTER") == nullptr; c.verbose = std::getenv("V4_VERBOSE") != nullptr;
-  if (const char* e = std::getenv("V4_ISLAND_ID")) c.island = (uint32_t)std::atoi(e);
   if (const char* e = std::getenv("V4_PRODUCTS_BLOCK")) c.products_block = std::atoi(e);
-  if (const char* e = std::getenv("V4_MEM_BUDGET_GB")) c.mem_budget = (uint64_t)(std::atof(e) * 1073741824.0); c.store_parallel_compact = std::getenv("V4_SERIAL_COMPACT") == nullptr; c.allow_test_kernels = true; c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
+  c.store_parallel_compact = std::getenv("V4_SERIAL_COMPACT") == nullptr; c.allow_test_kernels = true;
+  c.seed = 2026; c.island = 1; c.N = N; c.L = L; c.Hm = Hm; c.B = 14; c.kernel = kk; c.G = G; c.tile = Bk; c.store_cap = cap;
+  // environment overrides AFTER the defaults (the island id was reset to 1 before: manager 11-16 note 1)
+  if (const char* e = std::getenv("V4_ISLAND_ID")) c.island = (uint32_t)std::atoi(e);
+  if (const char* e = std::getenv("V4_MEM_BUDGET_GB")) c.mem_budget = (uint64_t)(std::atof(e) * 1073741824.0);
+  std::printf("# island id %u (address key), seed %u\n", c.island, c.seed);
   if (gspec.rfind("geo:", 0) == 0) {
     int Tst = std::atoi(gspec.c_str() + 4);
     c.grid.push_back(0.0); for (int t = 1; t < Tst; ++t) c.grid.push_back(std::pow(10.0, -3.0 * (1.0 - (double)t / (Tst - 1))) * ((double)t / Tst));

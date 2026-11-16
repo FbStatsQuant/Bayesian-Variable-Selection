@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # nots_bench_island4.sh -- WP3 SPR batch for the 10^6 levers (manager 11-16): per-round counters ([round] lines),
 # socket-local islands, G = 256 with the --mem-budget plan, a near-stationary 10^6 island, products blocking A/B.
-# Run inside ONE allocation of a full SPR node half (96 CPUs = 2 sockets x 24 cores x 2 threads, as jobs 2748104/5).
+# Run inside ONE allocation. single*/g256: 96 CPUs. socket: a FULL node (--exclusive; CPUs on exactly 2 sockets, checked).
 # Usage: tools/nots_bench_island4.sh <build-dir> <mode> [p]
 #   mode single4    : one island, 96 threads, G = 64,  near-stationary (phi = 1, 2 burn-in + 2 measured), products block 4
 #   mode single1    : the same with the original products loop (block 1)                                  [A/B of the lever]
@@ -33,6 +33,11 @@ run_socket() {
     [[ "$cpu" =~ ^# ]] && continue
     for a in $allowed; do if [[ "$a" == "$cpu" ]]; then cpus[$sock]="${cpus[$sock]:-}${cpus[$sock]:+,}$cpu"; node[$sock]="$nd"; fi; done
   done < <(lscpu -p=CPU,CORE,SOCKET,NODE)
+  # exactly two socket groups, or refuse (a 96-CPU allocation may be one whole socket of an 8468: manager 11-16 note 2)
+  if [[ ${#cpus[@]} -ne 2 ]]; then
+    echo "socket mode needs CPUs on exactly 2 sockets; this allocation has ${#cpus[@]} socket group(s): ${!cpus[*]}. Use a full node (--exclusive)." >&2
+    exit 3
+  fi
   echo "== socket-local: p=$p G=64, one island per socket $(date +%T)"
   t0=$(date +%s.%N); pids=(); id=1
   for s in "${!cpus[@]}"; do
@@ -46,7 +51,11 @@ run_socket() {
   done
   for pid in "${pids[@]}"; do wait "$pid"; done
   t1=$(date +%s.%N)
-  for f in "$build".socket*.log; do echo "--- $f"; grep -E "^\s+\[round\]|wall .* s \||peak RSS|memory plan" "$f"; done
+  for f in "$build".socket*.log; do echo "--- $f"; grep -E "^# island id|^\s+\[round\]|wall .* s \||peak RSS|memory plan" "$f"; done
+  # the two islands have different ids, hence different address keys: their output hashes must differ
+  h1=$(grep -o "output hash [0-9a-f]*" "$build.socket1.log" | head -1); h2=$(grep -o "output hash [0-9a-f]*" "$build.socket2.log" | head -1)
+  if [[ -z "$h1" || "$h1" == "$h2" ]]; then echo "ERROR: socket islands have equal or missing output hashes ($h1 / $h2): island ids not applied" >&2; exit 4; fi
+  echo "== socket islands: $h1 / $h2 (distinct)"
   python3 -c "print('== node total (both islands): %.1f s wall' % ($t1 - $t0))"
 }
 case "$mode" in
