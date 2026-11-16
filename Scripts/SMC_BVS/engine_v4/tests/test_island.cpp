@@ -437,3 +437,116 @@ TEST(t6_kill_during_write_resubmit_and_refusal) {
   CHECK(refused);
   clean();
 }
+
+// Parallel compaction (pass/step boundaries) = serial compaction, for every thread count and every flush order:
+// offers cut into buffers that are flushed in permuted orders, several compaction cycles (deferred mode), value ties,
+// and models offered with two values (largest kept). Compared entry by entry with the serial store and, where every
+// model has one value, with WP1's reference v4::Store.
+TEST(store_parallel_compaction_any_flush_order) {
+  std::mt19937_64 g(41);
+  std::vector<uint64_t> key(500); uint64_t x = 3; for (auto& k : key) k = splitmix64(x);
+  struct Off { double v; Model S; };
+  std::vector<Off> offers;
+  std::map<Model, double> one;   // the single value per model (for the WP1 comparison)
+  for (int i = 0; i < 120000; ++i) {
+    Model S = random_support(g, 500, 1 + (int)(g() % 4));
+    if (!one.count(S)) one[S] = -std::floor((double)(g() % 20000) / 3.0);
+    offers.push_back({one[S], S});
+  }
+  for (bool two_values : {false, true}) {
+    std::vector<Off> of = offers;
+    if (two_values) for (size_t i = 0; i < of.size(); i += 13) of[i].v += 1e-12;   // class-A-like second value
+    for (uint64_t cap : {1000ull, 25000ull}) {
+      // serial reference
+      TopStore ref; ref.init(cap, Order::HPM); ref.buf_limit = 1 << 30; ref.stage_limit = 1 << 30; ref.dup_filter = false;
+      { StoreBuffer b; for (auto& o : of) ref.offer(b, o.v, o.S.data(), (uint32_t)o.S.size(), D_hash(key, o.S)); ref.flush(b); ref.compact(); }
+      bool all_ok = ref.check_invariant();
+      if (!two_values) {
+        v4::Store w(cap, Order::HPM); for (auto& o : of) w.offer(o.v, o.S, D_hash(key, o.S)); w.compact();
+        bool ok = w.size() == ref.size();
+        for (size_t i = 0; ok && i < w.size(); ++i) ok = same_bits(w.v[i], ref.value(i)) && Model(w.model(i).begin(), w.model(i).end()) == ref.model(i);
+        CHECKF(ok, "serial store vs WP1 Store, cap %llu", (unsigned long long)cap);
+      }
+      for (int threads : {1, 2, 3, 4}) for (int perm = 0; perm < 3; ++perm) {
+        TopStore st; st.init(cap, Order::HPM); st.defer = true; st.buf_limit = 1 << 30; st.stage_hard = 1 << 30; st.dup_filter = (perm != 1);
+        // cut into 40 buffers, flush them in a permuted order, compact (parallel) after every 7 flushes
+        std::vector<StoreBuffer> bufs(40);
+        for (size_t i = 0; i < of.size(); ++i) { auto& o = of[i]; bufs[i % 40].push(o.v, o.S.data(), (uint32_t)o.S.size(), D_hash(key, o.S)); }
+        std::vector<int> order(40); for (int i = 0; i < 40; ++i) order[i] = i;
+        std::mt19937_64 gp(100 + perm); std::shuffle(order.begin(), order.end(), gp);
+        int nflush = 0;
+        for (int b : order) { st.flush(bufs[b]); if (++nflush % 7 == 0) st.compact_parallel(threads); }
+        st.compact_parallel(threads);
+        bool ok = st.check_invariant() && st.size() == ref.size();
+        for (size_t i = 0; ok && i < ref.size(); ++i) ok = same_bits(st.value(i), ref.value(i)) && st.model(i) == ref.model(i);
+        // the index finds every kept model
+        for (size_t i = 0; ok && i < st.size(); ++i) ok = st.k->find(st.k->ref(i)) == (int64_t)i;
+        CHECKF(ok, "two_values %d cap %llu threads %d perm %d: size %zu vs %zu", (int)two_values, (unsigned long long)cap, threads, perm, st.size(), ref.size());
+        all_ok = all_ok && ok;
+      }
+      CHECK(all_ok);
+    }
+  }
+}
+
+// --mem-budget admission (manager Q3/Q4): deterministic refusal before any allocation with a named reason; G = 0
+// chooses the largest G <= 256 that fits, and the output does not depend on it.
+TEST(mem_budget_admission) {
+  Fixture F(100, 300, 26);
+  IslandConfig c = small_cfg(); c.kernel = KernelKind::LabelMajor; c.threads = 3;
+  const uint64_t h0 = run_island<Arith::ClassA>(F.D, F.st, F.nb, c).hash();
+  // the same estimate the island uses
+  double Ek = 0; for (size_t k = 0; k < F.st.size_logmass.size(); ++k) Ek += (double)k * std::exp(F.st.size_logmass[k]);
+  const double k_est = std::max(8.0, 2.0 * Ek + 2.0);
+  auto plan = [&](int G) { return island_memory(F.D.n, F.D.p, c.N, c.B, 40ULL * F.D.p + 1, c.threads, G, 128, true, true, k_est).total; };
+  // (1) refusal: budget below the G = 1 plan
+  IslandConfig a = c; a.G = 0; a.mem_budget = plan(1) - 1;
+  IslandRun r1 = run_island<Arith::ClassA>(F.D, F.st, F.nb, a);
+  CHECKF(r1.status == 3 && r1.reason.rfind("mem_budget:", 0) == 0 && r1.top_v.empty(), "refusal: status %d reason %s", r1.status, r1.reason.c_str());
+  IslandRun r1b = run_island<Arith::ClassA>(F.D, F.st, F.nb, a);
+  CHECK(r1b.reason == r1.reason);   // deterministic
+  // (2) G chosen by the budget: between plan(17) and plan(18) -> G = 17; same output as any G (T3)
+  a.mem_budget = (plan(17) + plan(18)) / 2;
+  IslandRun r2 = run_island<Arith::ClassA>(F.D, F.st, F.nb, a);
+  CHECKF(r2.status == 0 && r2.G_used == 17 && r2.hash() == h0, "auto G: status %d G %d", r2.status, r2.G_used);
+  // (3) a fixed G whose plan exceeds the budget is refused (no silent change of the configuration)
+  IslandConfig b = c; b.G = 48; b.mem_budget = plan(17);
+  CHECK(run_island<Arith::ClassA>(F.D, F.st, F.nb, b).status == 3);
+  // (4) the plan grows with G, threads and k, and the store term dominates at large p (sanity of the accounting)
+  CHECK(plan(64) > plan(1));
+  MemPlan big = island_memory(200, 1000000, 2500, 14, 40000001ULL, 48, 64, 128, true, true, 8.0);
+  uint64_t store = 0; for (auto& it : big.items) if (it.name == "store_peak") store = it.bytes;
+  std::printf("  1M plan (G 64, 48 threads, k 8): %s\n", mem_plan_text(big).c_str());
+  CHECK(store > big.total / 3);
+}
+
+// Compat (serial v3 stream): checkpoint/resume restores the xoshiro state, the double RB accumulator and the leader
+// stores (identical bytes); island_r.bin is mode compat with lead0_* / lead1_* sections; production configurations
+// that cannot be serial are refused.
+TEST(compat_restart_file_and_refusals) {
+  Fixture F(100, 300, 27);
+  IslandConfig c = small_cfg(); c.compat = true; c.kernel = KernelKind::ParticleMajor; c.threads = 1; c.island = 2;
+  IslandRun r0 = run_island<Arith::Bit>(F.D, F.st, F.nb, c);
+  CHECK(r0.status == 0 && r0.compat && r0.stream_count > 0 && !r0.lead0_v.empty() && !r0.lead1_v.empty());
+  const std::string base = tmpdir() + "/wp3_compat_ck";
+  for (int stop : {0, 3, 6}) {
+    std::remove((base + ".a").c_str()); std::remove((base + ".b").c_str());
+    IslandConfig a = c; a.ckpt_path = base; a.ckpt_every_s = 1e9; a.stop_after_step = stop;
+    CHECK(run_island<Arith::Bit>(F.D, F.st, F.nb, a).status == 1);
+    IslandConfig b = a; b.stop_after_step = -1;
+    IslandRun r = run_island<Arith::Bit>(F.D, F.st, F.nb, b);
+    CHECKF(r.status == 0 && r.resumed_from_step == stop && r.hash() == r0.hash() && r.stream_count == r0.stream_count, "compat resume after %d", stop);
+  }
+  std::remove((base + ".a").c_str()); std::remove((base + ".b").c_str());
+  std::string path = tmpdir() + "/wp3_compat_island.bin";
+  write_island_file(path, r0, Arith::Bit, v4::Json::object());
+  { v4::fmt::Reader rd(path); CHECK(rd.mode() == v4::fmt::M_COMPAT && rd.has("lead0_v") && rd.has("lead1_pool") && rd.json("meta").at("mode").str() == "compat"); }
+  std::remove(path.c_str());
+  for (int bad = 0; bad < 3; ++bad) {
+    IslandConfig x = c; if (bad == 0) x.threads = 2; if (bad == 1) { x.kernel = KernelKind::LabelMajor; x.allow_test_kernels = true; } if (bad == 2) x.island = 5;
+    bool refused = false; try { run_island<Arith::Bit>(F.D, F.st, F.nb, x); } catch (const std::exception&) { refused = true; }
+    CHECKF(refused, "compat refusal case %d", bad);
+  }
+  bool refusedA = false; try { run_island<Arith::ClassA>(F.D, F.st, F.nb, c); } catch (const std::exception&) { refusedA = true; }
+  CHECK(refusedA);
+}

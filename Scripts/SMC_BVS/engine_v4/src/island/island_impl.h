@@ -67,6 +67,7 @@ uint64_t IslandRun::hash() const {
   f.pod(hpm.has); f.vec(hpm.S); f.pod(hpm.F); f.pod(hpm.logm); f.pod(hpm.key.seg); f.pod(hpm.key.tier); f.pod(hpm.key.iter); f.pod(hpm.key.unit); f.pod(hpm.key.xph); f.pod(hpm.key.stage); f.pod(hpm.key.round); f.pod(hpm.key.particle); f.pod(hpm.key.position); f.pod(hpm.key.sub); f.pod(hpm.phase); f.pod(hpm.mech);
   f.vec(top_v); f.vec(top_hash); f.vec(top_len); f.vec(top_pool);
   for (auto& m : terminal) f.vec(m);
+  if (compat) { f.pod(stream_count); f.vec(lead0_v); f.vec(lead0_len); f.vec(lead0_pool); f.vec(lead1_v); f.vec(lead1_len); f.vec(lead1_pool); }
   return f.h;
 }
 
@@ -112,7 +113,12 @@ class IslandEngine {
   // tiled row-major copy of X for the label-major products: tile t holds columns [t*Bk, t*Bk + Bk) as n rows of Bk
   std::vector<avec<double>> scratch_P;              // per-thread product buffers, grown on demand, kept across passes
   avec<double> Xt; int Bk = 128, ntile = 0;
-  double logZ = 0;
+  // compat (manager Q2): every uniform is the next draw of the island's v3 stream, in core's serial call order
+  std::unique_ptr<v4::CompatSource> csrc;
+  TopStore lead0, lead1;
+  std::vector<double> rb_d;   // compat: core's cumulative double RB accumulator (core/cpp/v3_engine.h:128, :350-364)
+  inline double U(const Address& a) { return csrc ? csrc->u(a) : uniform_at(a); }
+  double logZ = 0; double k_est = 8;
   uint64_t ckpt_writes = 0;
   std::chrono::steady_clock::time_point last_ckpt;
 
@@ -123,7 +129,13 @@ class IslandEngine {
     top.init(cfg.store_cap ? cfg.store_cap : 40ULL * (uint64_t)p + 1, Order::HPM);
     for (int t = 0; t < NT; ++t) { tl.emplace_back(new ThreadLedger()); tl.back()->top = &top; scorers.emplace_back(new BitScorer(&D)); }
     master.top = &top;
+    if (cfg.compat) {
+      csrc.reset(new v4::CompatSource(cfg.seed, v4::compat_stream(R_FINAL, (uint8_t)cfg.tier, cfg.island)));
+      lead0.init(20ULL * (uint64_t)p, Order::LEX); lead1.init(20ULL * (uint64_t)p, Order::LEX);   // core/cpp/v3_ledger.h:78
+      for (auto& t : tl) { t->lead0 = &lead0; t->lead1 = &lead1; }
+    }
     top.dup_filter = cfg.store_dup_filter;
+    top.defer = cfg.store_parallel_compact && NT > 1;   // compaction at pass/step boundaries, all threads
     scratch_P.resize(NT);
     Bk = std::max(64, (cfg.tile + 63) / 64 * 64);
   }
@@ -151,14 +163,14 @@ class IslandEngine {
   }
   static inline double lgphi(const Particle& q, double phi) { return q.lg0 + phi * q.d; }
   void offer_particle(ThreadLedger& L, const Particle& q, int phase, int mech, const EventKey& k) {
-    L.scored(q.S.data(), (uint32_t)q.S.size(), q.h, q.F, q.logm, phase, mech, k);
+    L.scored(q.S.data(), (uint32_t)q.S.size(), q.h, q.F, q.logm, phase, mech, k, q.lg0);
   }
 
   // --- U, N_b, I steps at round position `pos` (core/cpp/v3_engine.h:146-192). Returns true if the state changed;
   //     the new state is written to `out`. ----------------------------------------------------------------------
   bool step_nongibbs(int lab, const Particle& Pc, int i, uint32_t pos, const RoundCtx& rc, ThreadLedger& L, BitScorer& sc, Particle& out) {
     const uint32_t i1 = (uint32_t)i + 1;
-    auto U = [&](uint32_t slot) { return uniform_at(addr(rc.xph, rc.ustage, i1, pos, slot)); };
+    auto U = [&](uint32_t slot) { return this->U(addr(rc.xph, rc.ustage, i1, pos, slot)); };
     int k = (int)Pc.S.size();
     if (lab == p) {   // U: uniform swap
       if (k == 0 || k == p) { L.ms.us_self++; return false; }
@@ -204,11 +216,11 @@ class IslandEngine {
   }
 
   // Round order (core/cpp/v3_engine.h:195-200): Fisher-Yates, uniform of step i at slot m-1-i.
-  void draw_order(const RoundCtx& rc, int i, uint32_t* ord) const {
+  void draw_order(const RoundCtx& rc, int i, uint32_t* ord) {
     for (int t = 0; t < m; ++t) ord[t] = (uint32_t)t;
     uint32_t slot = 0;
     for (int t = m - 1; t >= 1; --t) {
-      int jj = (int)std::floor(uniform_at(addr(rc.xph, rc.ustage, (uint32_t)i + 1, 0, slot_of(v4::SK_ORDER, slot++))) * (t + 1));
+      int jj = (int)std::floor(U(addr(rc.xph, rc.ustage, (uint32_t)i + 1, 0, slot_of(v4::SK_ORDER, slot++))) * (t + 1));
       std::swap(ord[t], ord[jj]);
     }
   }
@@ -233,10 +245,11 @@ class IslandEngine {
         if (has_other) {
           T = Pi.S; if (in) sorted_erase(T, lab); else sorted_insert(T, lab);
           double F = D.logprior[T.size()] + lm;
-          L.scored(T.data(), (uint32_t)T.size(), Pi.h ^ D.zob.key[lab], F, lm, rc.phase, ME_GIBBS_FLIP, key(rc, i1, pos, 1));
+          const double lg0T = csrc ? D.logprior[T.size()] + st.comp(T) : std::numeric_limits<double>::quiet_NaN();
+          L.scored(T.data(), (uint32_t)T.size(), Pi.h ^ D.zob.key[lab], F, lm, rc.phase, ME_GIBBS_FLIP, key(rc, i1, pos, 1), lg0T);
         }
-        if (rb) (*rb)[lab] += fix63(o);
-        double u = uniform_at(addr(rc.xph, rc.ustage, i1, pos, SLOT_ACCEPT));
+        if (rb) { if (csrc) rb_d[lab] += o; else (*rb)[lab] += fix63(o); }   // compat: core's double sum, serial order
+        double u = U(addr(rc.xph, rc.ustage, i1, pos, SLOT_ACCEPT));
         bool include = u < o;
         if (include != in) { fill(Pi, T, canonical(sc, T, lm)); L.ms.gibbs_change++; cache_ok = false; }
       } else {
@@ -435,13 +448,18 @@ class IslandEngine {
       lap(KS.t_walk);
 
       // ---- phase B: consumption of the Gibbs labels at positions (q, e] -------------------------------------
+      // In waves of tiles; between waves (all threads free) the staging area is compacted in parallel once it passes
+      // the trigger, so in-pass serial compactions are rare (content: a function of the offers only).
+      const int wave = top.defer ? std::max(64, 16 * NT) : ntile;
+      for (int w0 = 0; w0 < ntile; w0 += wave) {
+      const int w1 = std::min(ntile, w0 + wave);
       #pragma omp parallel num_threads(NT)
       {
         ThreadLedger& L = *tl[omp_get_thread_num()];
         Model T;
         std::vector<uint32_t> ncons_v(Bk), fpos_v(Bk); std::vector<int> first_v(Bk);
         #pragma omp for schedule(dynamic, 1)
-        for (int ti = 0; ti < ntile; ++ti) {
+        for (int ti = w0; ti < w1; ++ti) {
           const int j0 = ti * Bk, nbv = std::min(Bk, p - j0);
           for (int s = 0; s < nsup; ++s) {
             const SupportCache& c = gb.sup[s];
@@ -479,7 +497,14 @@ class IslandEngine {
           }
         }
       }
+      if (top.defer && w1 < ntile && top.staged() >= (top.stage_limit + top.stage_hard) / 2) { release_snapshots(); top.compact_parallel(NT); }
+      }   // waves
       lap(KS.t_phaseB);
+      if (top.defer && top.staged() >= top.stage_limit) {   // pass boundary: all threads free
+        release_snapshots();
+        top.compact_parallel(NT);
+      }
+      lap(KS.t_compact_pass);
 
       // ---- apply the state changes ---------------------------------------------------------------------------
       for (int gi : active) {
@@ -539,7 +564,7 @@ class IslandEngine {
     for (int b = 0; b < N; ++b) { double boundary = (double)b / (double)N; while (k < N - 1 && W[k] < boundary) ++k; guide[b] = k; }
     std::vector<int> a(N);
     for (int i = 0; i < N; ++i) {
-      double u = uniform_at(addr(X_RESAMPLE, t, (uint32_t)i + 1, 0, SLOT_RESAMPLE));
+      double u = U(addr(X_RESAMPLE, t, (uint32_t)i + 1, 0, SLOT_RESAMPLE));
       double ue = (u > 0) ? u : std::numeric_limits<double>::denorm_min();
       int bucket = std::min(N - 1, (int)std::floor(ue * (double)N));
       int kk = guide[bucket];
@@ -551,8 +576,22 @@ class IslandEngine {
   }
   // merge thread ledgers and flush store buffers (step boundary; order-free)
   void sync_ledgers() {
-    for (auto& t : tl) { top.flush(t->buf); master.merge_from(*t); t->reset_counters(); }
-    top.compact();   // one island store, compacted at every step boundary (content order-free)
+    for (auto& t : tl) { top.flush(t->buf); if (csrc) { lead0.flush(t->buf0); lead1.flush(t->buf1); } master.merge_from(*t); t->reset_counters(); }
+    if (csrc) { lead0.compact(); lead1.compact(); }
+    release_snapshots();
+    if (top.defer) top.compact_parallel(NT); else top.compact();   // one island store, compacted at every step boundary
+  }
+  // workers drop their kept-run snapshots before a boundary compaction: at most two kept runs are ever alive
+  void release_snapshots() { for (auto& t : tl) { t->buf.snap.reset(); t->buf.snap_gen = ~0ull; } }
+  // --mem-budget at a step boundary (deterministic: the kept run's content is a function of the offers)
+  bool over_budget(int step) {
+    if (!cfg.mem_budget) return false;
+    double kk = top.size() ? (double)top.k->pool.size() / (double)top.size() : k_est;
+    MemPlan mp = island_memory(D.n, p, cfg.N, cfg.B, top.cap, NT, cfg.G, Bk, cfg.kernel == KernelKind::LabelMajor, top.defer, std::max(kk, k_est));
+    if (mp.total <= cfg.mem_budget) return false;
+    res.status = 3; res.reason = "mem_budget: predicted peak " + std::to_string(mp.total >> 20) + " MiB > budget " + std::to_string(cfg.mem_budget >> 20) +
+                 " MiB after step " + std::to_string(step) + " [" + mem_plan_text(mp) + "]";
+    return true;
   }
   MoveStats take_moves() { MoveStats ms = master.ms; master.ms = MoveStats(); return ms; }
 
@@ -561,7 +600,7 @@ class IslandEngine {
   // a restart refuses a different binary block.
   uint64_t fingerprint() const {
     Fnv f; f.pod(cfg.seed); f.pod(cfg.island); f.pod(cfg.tier); f.pod(cfg.N); f.vec(cfg.grid); f.pod(cfg.L); f.pod(cfg.Hm); f.pod(cfg.B);
-    f.pod(top.cap); f.pod(D.n); f.pod(D.p); f.pod(D.yty); f.pod(st.logZbar0); f.pod(st.J); f.pod((int)A);
+    f.pod(top.cap); f.pod(D.n); f.pod(D.p); f.pod(D.yty); f.pod(st.logZbar0); f.pod(st.J); f.pod((int)A); f.pod(cfg.compat);
     const std::string bb = v4::binary_block_no_self_test().dump(); f.bytes(bb.data(), bb.size());
     return f.h;
   }
@@ -591,6 +630,10 @@ class IslandEngine {
     w.put(master.logical); w.put(master.island_best);
     w.put(master.hpm.has); w.putv(master.hpm.S); w.put(master.hpm.F); w.put(master.hpm.logm); w.put(master.hpm.key); w.put(master.hpm.phase); w.put(master.hpm.mech);
     w.putv(top.k->v); w.putv(top.k->hash); w.putv(top.k->off); w.putv(top.k->len); w.putv(top.k->pool);
+    if (csrc) {   // compat: the xoshiro state and position, the double RB accumulator and the leader stores
+      w.put(csrc->g.s); w.put(csrc->g.count); w.putv(rb_d);
+      for (TopStore* L : {&lead0, &lead1}) { w.putv(L->k->v); w.putv(L->k->hash); w.putv(L->k->off); w.putv(L->k->len); w.putv(L->k->pool); }
+    }
   }
   // Two generations <path>.a/.b, alternately: header placeholder, streamed payload, header (generation, length,
   // checksum) rewritten in place, fflush + fsync, rename from <file>.tmp.<pid>. A kill at any point leaves the other
@@ -661,6 +704,10 @@ class IslandEngine {
     r.get(master.logical); r.get(master.island_best);
     r.get(master.hpm.has); r.getv(master.hpm.S); r.get(master.hpm.F); r.get(master.hpm.logm); r.get(master.hpm.key); r.get(master.hpm.phase); r.get(master.hpm.mech);
     { auto nk = std::make_shared<Kept>(); r.getv(nk->v); r.getv(nk->hash); r.getv(nk->off); r.getv(nk->len); r.getv(nk->pool); top.k = nk; }
+    if (csrc) {
+      r.get(csrc->g.s); r.get(csrc->g.count); r.getv(rb_d);
+      for (TopStore* L : {&lead0, &lead1}) { auto nk = std::make_shared<Kept>(); r.getv(nk->v); r.getv(nk->hash); r.getv(nk->off); r.getv(nk->len); r.getv(nk->pool); L->k = nk; L->publish_loaded(); }
+    }
     std::fclose(f);
     if (r.bad) return -1;
     top.publish_loaded();
@@ -683,7 +730,7 @@ class IslandEngine {
     int T = cfg.adaptive ? (1 << 23) : (int)cfg.grid.size() - 1;
     std::vector<double> grid = cfg.adaptive ? std::vector<double>{0.0} : cfg.grid;
     res.r = (int)cfg.island; res.N = N; res.T = T; res.L = L; res.Hm = Hm; res.p = p;
-    rb_cur.assign(p, 0); rb_tot.assign(p, 0);
+    rb_cur.assign(p, 0); rb_tot.assign(p, 0); rb_d.assign(p, 0.0);
     if (cfg.kernel == KernelKind::ParticleMajor) rb_thread.assign(NT, std::vector<u128>(p, 0));
     if (cfg.kernel == KernelKind::LabelMajor) {   // tiled row-major X (zero-padded last tile)
       ntile = (p + Bk - 1) / Bk; Xt.assign((size_t)ntile * Bk * D.n, 0.0);
@@ -701,7 +748,7 @@ class IslandEngine {
         #pragma omp parallel for schedule(dynamic, 16) num_threads(NT)
         for (int i = 0; i < N; ++i) {
           int th = omp_get_thread_num(); Model S;
-          draw_pi0(st, [&](uint32_t slot) { return uniform_at(addr(X_INIT, 0, (uint32_t)i + 1, 0, slot)); }, S);
+          draw_pi0(st, [&](uint32_t slot) { return U(addr(X_INIT, 0, (uint32_t)i + 1, 0, slot)); }, S);
           fill(P[i], S, scorers[th]->score(S).logm);
           EventKey k; k.seg = SG_FINAL; k.tier = (uint8_t)cfg.tier; k.iter = -1; k.unit = cfg.island; k.xph = X_INIT; k.particle = (uint32_t)i + 1;
           offer_particle(*tl[th], P[i], PH_FINAL_INIT, ME_INIT, k);
@@ -748,8 +795,11 @@ class IslandEngine {
         } else {   // measured round h with RB
           int h = step - T - L;
           RoundCtx rc{X_MEASURED, (uint32_t)h, (uint32_t)T, (uint32_t)h, PH_MEASURED, 1.0, true};
+          std::vector<double> before; if (csrc) before = rb_d;
           round(rc);
-          std::vector<double> rr(p); for (int j = 0; j < p; ++j) { rr[j] = unfix63(rb_cur[j]); rb_tot[j] += rb_cur[j]; }
+          std::vector<double> rr(p);
+          if (csrc) { for (int j = 0; j < p; ++j) rr[j] = rb_d[j] - before[j]; }   // core/cpp/v3_engine.h:353-358
+          else for (int j = 0; j < p; ++j) { rr[j] = unfix63(rb_cur[j]); rb_tot[j] += rb_cur[j]; }
           res.rb_round.push_back(rr);
           sync_ledgers(); res.terminal_moves.push_back(take_moves()); res.terminal_distinct.push_back(distinct());
         }
@@ -763,24 +813,31 @@ class IslandEngine {
           prev_t = now_t;
         }
         if (!(top.check_invariant())) throw std::runtime_error("internal_error: store invariant I1 violated");
+        if (over_budget(step)) { stop = true; break; }
         maybe_ckpt(step, stop);
       }
     } catch (const NumericalFailure& e) {
       res.status = 2; res.reason = e.what();
     }
     res.T = T; res.grid = grid;
-    if (stop) { res.status = 1; res.reason = "interrupted after checkpoint (stop_after_step)"; }
+    if (stop && res.status == 0) { res.status = 1; res.reason = "interrupted after checkpoint (stop_after_step)"; }
     // outputs
     res.logZ = logZ;
     if (res.status == 0) {
       res.rb_acc.assign(p, 0.0); res.pip.assign(p, 0.0);
-      for (int j = 0; j < p; ++j) { res.rb_acc[j] = unfix63(rb_tot[j]); res.pip[j] = res.rb_acc[j] / ((double)N * Hm); }
+      for (int j = 0; j < p; ++j) { res.rb_acc[j] = csrc ? rb_d[j] : unfix63(rb_tot[j]); res.pip[j] = res.rb_acc[j] / ((double)N * Hm); }
     }
     std::memcpy(res.logical, master.logical, sizeof(res.logical));
     res.island_best = master.island_best; res.hpm = master.hpm;
     res.top_v = top.k->v; res.top_hash = top.k->hash; res.top_off = top.k->off; res.top_len = top.k->len; res.top_pool = top.k->pool;
     if (cfg.keep_terminal) for (auto& x : P) res.terminal.push_back(x.S);
+    if (csrc) {
+      res.compat = true; res.stream_count = csrc->g.count;
+      res.lead0_v = lead0.k->v; res.lead0_hash = lead0.k->hash; res.lead0_off = lead0.k->off; res.lead0_len = lead0.k->len; res.lead0_pool = lead0.k->pool;
+      res.lead1_v = lead1.k->v; res.lead1_hash = lead1.k->hash; res.lead1_off = lead1.k->off; res.lead1_len = lead1.k->len; res.lead1_pool = lead1.k->pool;
+    }
     res.ks.store_merges = top.n_merges; res.ks.store_buffered = top.n_buffered;
+    res.ks.store_serial_merges = top.n_serial_merges; res.ks.t_store_compact = top.t_compact;
     for (auto& t : tl) res.ks.store_dup_dropped += t->buf.n_dup_dropped;
     res.ks.t_total = std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
     return res;
@@ -792,10 +849,31 @@ IslandRun run_island(const Data& D, const Start& st, const Neighbours& nb, const
   if (!cfg.adaptive && (cfg.grid.size() < 2 || cfg.grid.front() != 0.0 || cfg.grid.back() != 1.0)) throw std::invalid_argument("run_island: grid must run from 0 to 1");
   for (size_t i = 1; i < cfg.grid.size(); ++i) if (!(cfg.grid[i] > cfg.grid[i - 1])) throw std::invalid_argument("run_island: grid not strictly increasing (I3)");
   if (cfg.adaptive && !cfg.ckpt_path.empty()) throw std::invalid_argument("run_island: the adaptive schedule has no checkpoints");
+  if (cfg.compat && (A != Arith::Bit || cfg.kernel != KernelKind::ParticleMajor || cfg.threads != 1 || cfg.adaptive))
+    throw std::invalid_argument("run_island: compat mode needs Arith::Bit, the particle-major kernel, 1 thread and a fixed grid (serial v3 streams)");
   if (A == Arith::Bit && cfg.kernel == KernelKind::LabelMajor && !cfg.allow_test_kernels)
     throw std::invalid_argument("run_island: the bit-form label-major kernel is test-only (D-21, manager Q1); theory mode runs particle-major");
-  if (cfg.G < 1 || cfg.G > 256) throw std::invalid_argument("run_island: G must be in 1..256 (manager decision Q3; INTERFACES memory)");
-  IslandEngine<A> E(D, st, nb, cfg);
+  if (cfg.G < 0 || cfg.G > 256) throw std::invalid_argument("run_island: G must be in 0..256 (0 = chosen by mem_budget; manager Q3)");
+  // admission (manager Q3/Q4): k estimated as max(8, 2 E_pi0|S| + 2); G = the largest value <= 256 that fits
+  double Ek = 0; for (size_t k = 0; k < st.size_logmass.size(); ++k) Ek += (double)k * std::exp(st.size_logmass[k]);
+  const double k_est = std::max(8.0, 2.0 * Ek + 2.0);
+  const uint64_t cap = cfg.store_cap ? cfg.store_cap : 40ULL * (uint64_t)D.p + 1;
+  const bool lm = cfg.kernel == KernelKind::LabelMajor, deferred = cfg.store_parallel_compact && cfg.threads > 1;
+  const int tile = std::max(64, (cfg.tile + 63) / 64 * 64);
+  IslandConfig c2 = cfg;
+  int G = cfg.G ? cfg.G : 256;
+  MemPlan mp = island_memory(D.n, D.p, cfg.N, cfg.B, cap, cfg.threads, G, tile, lm, deferred, k_est);
+  if (cfg.mem_budget && cfg.G == 0) {
+    while (G > 1 && mp.total > cfg.mem_budget) { --G; mp = island_memory(D.n, D.p, cfg.N, cfg.B, cap, cfg.threads, G, tile, lm, deferred, k_est); }
+  }
+  c2.G = G;
+  if (cfg.mem_budget && mp.total > cfg.mem_budget) {   // deterministic refusal before any allocation
+    IslandRun r; r.status = 3; r.r = (int)cfg.island; r.N = cfg.N; r.p = D.p; r.L = cfg.L; r.Hm = cfg.Hm; r.G_used = G; r.mem_plan = mem_plan_text(mp);
+    r.reason = "mem_budget: predicted peak " + std::to_string(mp.total >> 20) + " MiB > budget " + std::to_string(cfg.mem_budget >> 20) + " MiB [" + r.mem_plan + "]";
+    return r;
+  }
+  IslandEngine<A> E(D, st, nb, c2);
+  E.k_est = k_est; E.res.G_used = G; E.res.mem_plan = mem_plan_text(mp);
   return E.run();
 }
 

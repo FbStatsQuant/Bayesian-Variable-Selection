@@ -19,11 +19,12 @@ static MoveStats moves_from(const uint64_t* f) {
 static const char* status_str(int s) { return s == 0 ? "completed" : (s == 2 ? "numerical_failure" : "resource_limit"); }
 
 std::string write_island_file(const std::string& path, const IslandRun& r, Arith arith, const Json& inputs) {
-  fmt::Writer w(fmt::K_ISLAND, arith == Arith::ClassA ? fmt::M_V : fmt::M_LAW);
+  fmt::Writer w(fmt::K_ISLAND, r.compat ? fmt::M_COMPAT : (arith == Arith::ClassA ? fmt::M_V : fmt::M_LAW));
   const bool done = r.status == 0;
   uint64_t lz; std::memcpy(&lz, &r.logZ, 8);
   Json m = Json::object();
-  m["schema"] = "smcbvs4.island/1"; m["kind"] = "island"; m["mode"] = arith == Arith::ClassA ? "V" : "law";
+  m["schema"] = "smcbvs4.island/1"; m["kind"] = "island"; m["mode"] = r.compat ? "compat" : (arith == Arith::ClassA ? "V" : "law");
+  if (r.compat) m["stream_count"] = hex64(r.stream_count);
   m["r"] = r.r; m["N"] = r.N; m["T"] = r.T; m["L"] = r.L; m["Hm"] = r.Hm; m["p"] = r.p;
   m["status"] = status_str(r.status); m["reason"] = r.reason; m["inputs"] = inputs; m["binary"] = binary_block();
   m["init_hash"] = hex64(r.init_hash); m["output_hash"] = hex64(r.hash());
@@ -44,6 +45,10 @@ std::string write_island_file(const std::string& path, const IslandRun& r, Arith
   w.add("term_distinct", r.terminal_distinct);
   // ledger
   w.add("top_v", r.top_v); w.add("top_hash", r.top_hash); w.add("top_off", r.top_off); w.add("top_len", r.top_len); w.add("top_pool", r.top_pool);
+  if (r.compat) {   // leader stores (compat only, D-7): LEX order, values log gamma_0 (lead0) and F (lead1)
+    w.add("lead0_v", r.lead0_v); w.add("lead0_hash", r.lead0_hash); w.add("lead0_off", r.lead0_off); w.add("lead0_len", r.lead0_len); w.add("lead0_pool", r.lead0_pool);
+    w.add("lead1_v", r.lead1_v); w.add("lead1_hash", r.lead1_hash); w.add("lead1_off", r.lead1_off); w.add("lead1_len", r.lead1_len); w.add("lead1_pool", r.lead1_pool);
+  }
   w.add("hpm_S", r.hpm.S);
   double hv[2] = {r.hpm.F, r.hpm.logm}; w.add_copy("hpm_val", fmt::D_F64, hv, 16, 2, 0);
   const EventKey& k = r.hpm.key;

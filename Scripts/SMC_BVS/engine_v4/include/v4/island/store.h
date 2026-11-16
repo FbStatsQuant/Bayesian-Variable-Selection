@@ -15,7 +15,11 @@
 // the smallest key wins provenance (= core's "first score" rule, core/cpp/v3_ledger.h:84-88).
 #pragma once
 #include <atomic>
+#include <limits>
 #include <memory>
+#include <omp.h>
+#include <parallel/algorithm>
+#include <chrono>
 #include <mutex>
 #include <tuple>
 #include "v4/island/dep.h"
@@ -87,17 +91,20 @@ class TopStore {
   std::atomic<double> tau{NEG_INF};
   std::atomic<uint64_t> gen{0};
   std::mutex mu, snap_mu;
-  uint64_t n_merges = 0, n_buffered = 0, n_flushes = 0;
-  size_t buf_limit = 1 << 14, stage_limit = 1 << 16;
+  uint64_t n_merges = 0, n_buffered = 0, n_flushes = 0, n_serial_merges = 0;
+  size_t buf_limit = 1 << 14, stage_limit = 1 << 16, stage_hard = 1 << 17;
+  bool defer = false;          // true: flush() never compacts below stage_hard; the owner calls compact_parallel()
+  double t_compact = 0;        // wall seconds spent compacting (any path)
   bool dup_filter = true;
   StoreBuffer stage;                                     // island staging area (guarded by mu)
 
   void init(uint64_t c, Order o) {
     cap = c; ord = o; k = std::make_shared<Kept>(); tau.store(NEG_INF); gen.store(0);
     stage.clear();
-    n_merges = n_buffered = n_flushes = 0;
+    n_merges = n_buffered = n_flushes = n_serial_merges = 0; t_compact = 0;
     buf_limit = 65536;                                             // INTERFACES v0.1.2 §4.2 OfferBuffer default
     stage_limit = (size_t)std::max<uint64_t>(4096, c / 4);          // §4.1: staging compacted at max(cap/4, 4096)
+    stage_hard = (size_t)std::max<uint64_t>(8192, c / 2);           // deferred mode: in-pass serial fallback (peak ~2.5c)
   }
   size_t size() const { return k->size(); }
   double cutoff() const { return tau.load(std::memory_order_acquire); }   // INTERFACES §4.1: monotone, atomic
@@ -125,8 +132,9 @@ class TopStore {
     stage.pool.insert(stage.pool.end(), b.pool.begin(), b.pool.end());
     n_buffered += b.size(); ++n_flushes;
     b.clear();
-    if (stage.size() >= stage_limit) compact_locked();
+    if (stage.size() >= (defer ? stage_hard : stage_limit)) { ++n_serial_merges; compact_locked(); }
   }
+  size_t staged() { std::lock_guard<std::mutex> lk(mu); return stage.size(); }
   void merge_buffer(StoreBuffer& b) { flush(b); }
   void compact() { std::lock_guard<std::mutex> lk(mu); compact_locked(); }
 
@@ -138,6 +146,8 @@ class TopStore {
   void compact_locked() {
     if (stage.size() == 0) return;
     ++n_merges;
+    auto t0 = std::chrono::steady_clock::now();
+    struct Tm { std::chrono::steady_clock::time_point t0; double& acc; ~Tm() { acc += std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count(); } } tm{t0, t_compact};
     const Kept& K = *k;
     std::vector<StoreRef> r; r.reserve(stage.size());
     for (size_t i = 0; i < stage.size(); ++i) r.push_back({stage.v[i], stage.h[i], stage.pool.data() + stage.off[i], stage.len[i]});
@@ -174,6 +184,102 @@ class TopStore {
     { std::lock_guard<std::mutex> lk(snap_mu); k = nk; }
     gen.fetch_add(1, std::memory_order_acq_rel);
     tau.store(k->size() >= cap ? k->v.back() : NEG_INF);
+  }
+  // Parallel compaction (pass boundaries and step boundaries; all `threads` workers are free). Same content as
+  // compact_locked() -- a function of the set of offers -- for every thread count and flush order:
+  //   1. staged refs sorted by (hash, |S|, S, v desc) with __gnu_parallel::sort (the order is total on content, so the
+  //      sorted sequence is unique); 2. first entry per model kept (sequential scan); 3. each survivor matched against
+  //      the kept index in parallel (a kept copy >= drops it, a smaller kept copy is marked dead); 4. survivors sorted
+  //      under the store order (parallel); 5. merge-path parallel merge of the alive kept run and the survivors, both
+  //      strictly ordered with distinct models, truncated at cap; pool offsets by a prefix sum; parallel copy;
+  //   6. hash index built in parallel by CAS insertion (slot layout may differ, lookups do not).
+  void compact_parallel(int threads) {
+    std::lock_guard<std::mutex> lk(mu);
+    if (stage.size() == 0) return;
+    if (threads <= 1) { compact_locked(); return; }
+    ++n_merges;
+    auto t0 = std::chrono::steady_clock::now();
+    const Kept& K = *k;
+    const size_t s = stage.size();
+    std::vector<StoreRef> r(s);
+    #pragma omp parallel for num_threads(threads) schedule(static)
+    for (size_t i = 0; i < s; ++i) r[i] = StoreRef{stage.v[i], stage.h[i], stage.pool.data() + stage.off[i], stage.len[i]};
+    auto by_model = [](const StoreRef& a, const StoreRef& b) {
+      if (a.h != b.h) return a.h < b.h;
+      if (a.k != b.k) return a.k < b.k;
+      int c = std::memcmp(a.S, b.S, sizeof(int32_t) * a.k);
+      if (c != 0) return lex_less(a.S, a.k, b.S, b.k);
+      return a.v > b.v;
+    };
+    __gnu_parallel::sort(r.begin(), r.end(), by_model, __gnu_parallel::default_parallel_tag(threads));
+    size_t w = 0;
+    for (size_t i = 0; i < s; ++i) if (w == 0 || !same_model_ref(r[w - 1], r[i])) r[w++] = r[i];
+    r.resize(w);
+    std::vector<uint8_t> dead(K.size(), 0), drop(w, 0);
+    #pragma omp parallel for num_threads(threads) schedule(static)
+    for (size_t i = 0; i < w; ++i) {
+      int64_t at = K.find(r[i]);
+      if (at >= 0) { if (K.v[at] >= r[i].v) drop[i] = 1; else dead[at] = 1; }   // distinct staged models: distinct `at`
+    }
+    size_t w2 = 0; for (size_t i = 0; i < w; ++i) if (!drop[i]) r[w2++] = r[i];
+    r.resize(w2);
+    auto ordl = [this](const StoreRef& a, const StoreRef& b) { return ord_less(a, b); };
+    __gnu_parallel::sort(r.begin(), r.end(), ordl, __gnu_parallel::default_parallel_tag(threads));
+    std::vector<uint32_t> alive; alive.reserve(K.size());
+    for (size_t i = 0; i < K.size(); ++i) if (!dead[i]) alive.push_back((uint32_t)i);
+    const size_t na = alive.size(), nb = r.size(), keep = std::min<size_t>(cap, na + nb);
+    auto A = [&](size_t i) { return K.ref(alive[i]); };
+    // merge path: for output diagonal d, the number i of A-entries among the first d outputs
+    auto split = [&](size_t d) {
+      size_t lo = d > nb ? d - nb : 0, hi = std::min(d, na);
+      while (lo < hi) { size_t i = (lo + hi) / 2; if (ord_less(A(i), r[d - i - 1])) lo = i + 1; else hi = i; }
+      return lo;
+    };
+    const int T = threads;
+    std::vector<size_t> dpos(T + 1), ipos(T + 1);
+    for (int t = 0; t <= T; ++t) { dpos[t] = keep * (size_t)t / (size_t)T; ipos[t] = split(dpos[t]); }
+    auto nk = std::make_shared<Kept>();
+    nk->v.resize(keep); nk->hash.resize(keep); nk->off.resize(keep); nk->len.resize(keep);
+    std::vector<uint64_t> segpool(T + 1, 0);
+    #pragma omp parallel for num_threads(T) schedule(static, 1)
+    for (int t = 0; t < T; ++t) {   // pass 1: values, hashes, lengths of segment t
+      size_t i = ipos[t], j = dpos[t] - ipos[t]; uint64_t pl = 0;
+      for (size_t d = dpos[t]; d < dpos[t + 1]; ++d) {
+        bool fromA = i < na && (j >= nb || ord_less(A(i), r[j]));
+        StoreRef e = fromA ? A(i++) : r[j++];
+        nk->v[d] = e.v; nk->hash[d] = e.h; nk->len[d] = e.k; pl += e.k;
+      }
+      segpool[t + 1] = pl;
+    }
+    for (int u = 0; u < T; ++u) segpool[u + 1] += segpool[u];
+    nk->pool.resize(segpool[T]);
+    #pragma omp parallel for num_threads(T) schedule(static, 1)
+    for (int t = 0; t < T; ++t) {   // pass 2: pool offsets and copies of segment t
+      size_t i = ipos[t], j = dpos[t] - ipos[t]; uint64_t o = segpool[t];
+      for (size_t d = dpos[t]; d < dpos[t + 1]; ++d) {
+        bool fromA = i < na && (j >= nb || ord_less(A(i), r[j]));
+        StoreRef e = fromA ? A(i++) : r[j++];
+        nk->off[d] = o; std::memcpy(nk->pool.data() + o, e.S, sizeof(int32_t) * e.k); o += e.k;
+      }
+    }
+    // parallel index (CAS insertion)
+    uint64_t n = 16; while (n < 2 * keep + 2) n <<= 1;
+    nk->index.assign(n, 0); nk->imask = n - 1;
+    uint32_t* idx = nk->index.data(); const uint64_t mask = nk->imask;
+    #pragma omp parallel for num_threads(threads) schedule(static)
+    for (size_t i = 0; i < keep; ++i) {
+      uint64_t sl = nk->hash[i] & mask;
+      while (true) {
+        uint32_t expect = 0;
+        if (__atomic_compare_exchange_n(&idx[sl], &expect, (uint32_t)i + 1, false, __ATOMIC_RELAXED, __ATOMIC_RELAXED)) break;
+        sl = (sl + 1) & mask;
+      }
+    }
+    stage.clear();
+    { std::lock_guard<std::mutex> lk2(snap_mu); k = nk; }
+    gen.fetch_add(1, std::memory_order_acq_rel);
+    tau.store(k->size() >= cap ? k->v.back() : NEG_INF);
+    t_compact += std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
   }
   // after loading a kept run (checkpoint): index, tau, generation
   void publish_loaded() { k->rebuild_index(); gen.fetch_add(1); tau.store(k->size() >= cap ? k->v.back() : NEG_INF); }
@@ -214,13 +320,17 @@ struct ThreadLedger {
   StoreBuffer buf;
   TopStore* top = nullptr;
   // One logical score event that is offered (a scored model): counters, island_best, HPM, store.
-  inline void scored(const int32_t* S, uint32_t k, uint64_t h, double F, double logm, int phase, int mech, const EventKey& key) {
+  // compat mode (v3 serial streams): the two leader stores of core/cpp/v3_ledger.h:72-94 (lead0: log gamma_0, lead1: F)
+  TopStore* lead0 = nullptr; TopStore* lead1 = nullptr; StoreBuffer buf0, buf1;
+  inline void scored(const int32_t* S, uint32_t k, uint64_t h, double F, double logm, int phase, int mech, const EventKey& key,
+                     double lg0 = std::numeric_limits<double>::quiet_NaN()) {
     logical[phase][mech]++;
     if (F > island_best) island_best = F;
     if (F >= hpm.F && hpm_cand_better(F, S, k, key, hpm)) {
       hpm.has = true; hpm.S.assign(S, S + k); hpm.F = F; hpm.logm = logm; hpm.key = key; hpm.phase = phase; hpm.mech = mech;
     }
     top->offer(buf, F, S, k, h);
+    if (lead0) { lead0->offer(buf0, lg0, S, k, h); lead1->offer(buf1, F, S, k, h); }
   }
   void merge_from(const ThreadLedger& o) {
     for (int a = 0; a < N_PHASE; ++a) for (int b = 0; b < N_MECH; ++b) logical[a][b] += o.logical[a][b];

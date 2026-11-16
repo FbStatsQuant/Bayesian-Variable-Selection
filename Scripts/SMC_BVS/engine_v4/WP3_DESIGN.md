@@ -1,6 +1,6 @@
 # WP3_DESIGN — the island: stores, addressed sampling, label-major round, restart
 
-**v0.1, 2026-11-15, WP3 builder (Opus 5.5). Status: PROVISIONAL, for design review.** Branch `exp/P1M-wp3-island`
+**v0.2, 2026-11-16, WP3 builder (Opus 5.5). Status: PROVISIONAL.** v0.2 adds §1.7 (parallel compaction, waves, snapshot filter), implements §1.6 (admission) and §6 (compat), and records the manager's §5 decisions. Branch `exp/P1M-wp3-island`
 (stacked on WP1's PR #11). Inputs: ENGINEERING_SPEC §0-v2, §3, §6; INTERFACES v0.1.3 (v0.1.5 announced: RNG domain and
 event key); Sol EXP-CP1 review §F2, §F4, §F5 (T3, T6); manager directives of 11-15 (D-21 scope cut, G ≤ 256, mem budget).
 Code references: `include/v4/island/*.h`, `src/island/island_impl.h`, `tests/test_island*.cpp`. Every number below
@@ -80,7 +80,7 @@ tau, 10 % duplicates of kept models) 213 ns per offer — the duplicates dominat
 p = 10⁴ islands, 5 % of consumed flip events pass tau (MEASURED, 53.7 M of 1.05·10⁹). Lever (Q5): a worker-side
 duplicate filter against an immutable snapshot of the index.
 
-### 1.6 `--mem-budget` admission (to implement; manager item 3)
+### 1.6 `--mem-budget` admission (implemented v0.2: `include/v4/island/memory.h`, `IslandConfig::mem_budget`, G = 0 = auto)
 `island_memory(cfg, p, n, K)` sums, before any allocation: X tiles (n·p·8, a second tiled copy), store peak (§1.5 with
 k = the running mean support size, re-checked at every compaction with the real pool size), staging, index, worker
 buffers (T × buf_limit × (26 + 4k)), RB accumulators (16 B × p × 2: current round and total; particle-major: + T × 16 p),
@@ -90,6 +90,23 @@ group buffers (G × m × 4 B × 2 for orders + inverses; nsup × p × 16 B for t
 `"mem_budget: <component> <bytes> > budget"`, deterministic (a function of the configuration and of the run's own
 state at a step boundary). Config checks: **G ≤ 256** (manager item 2), tile multiple of 64, N ≥ 1, grid strictly
 increasing from 0 to 1, B ≥ 0.
+
+### 1.7 v0.2: duplicate filter, parallel compaction, waves (implemented)
+- **Exact snapshot filter.** The kept run is immutable once published (`Kept`: arrays + hash index); compaction builds
+  a new one and publishes it under a generation counter. A worker drops an offer whose model is in its snapshot with
+  a value ≥ the offer's: exact even with a stale snapshot (the snapshot holds only offered values; values per model only
+  grow). MEASURED (Owls, 3 threads, p = 10⁴): buffered offers ÷ 3.6, compactions 87 → 27, identical output hash.
+- **Deferred parallel compaction.** Workers only append to the staging area during a pass. Compaction runs where all
+  threads are free: after a wave of phase-B tiles (staging ≥ 0.375c), at the pass boundary (≥ c/4) and at every step
+  boundary; `__gnu_parallel::sort`, parallel kept-index matching, merge-path parallel merge truncated at c, prefix-sum
+  pool offsets, CAS-built index. The result is unique (strict total order, distinct models), so it equals the serial
+  compaction for every thread count and flush order (test `store_parallel_compaction_any_flush_order`; T3 compares the
+  serial path, 1 thread, with the parallel path, 2–3 threads). A serial in-pass compaction remains only as a fallback at
+  the hard limit c/2. Workers release their snapshots before every boundary compaction, so at most two kept runs live:
+  peak ≈ 2c + c/2 entries (§1.6 formula).
+- MEASURED (Owls, 3 threads, p = 10⁵, N = 500, transient 3 stages + 1 measured round): compaction 33.8 s serial →
+  21.9 s parallel at pass ends (9 serial fallbacks) → 21.8 s with waves (0 fallbacks); island 108.7 → 93.5–100 s
+  (machine load 59–224 during the runs). The gain grows with the thread count.
 
 ---
 
@@ -237,3 +254,23 @@ fsync and rename, repeated resubmission (resume twice), resume with a different 
    bit-form label-major 994 ns. Kernel per (support, label) at 10⁵: class A 147 ns (256 distinct supports, |A| = 1,273;
    products 90 + flip/odds 57) and 66 ns (64 copies of S₀); bit form 282 / 187 ns. Within the G0 bound (700 ns) but
    above the precise-plan value; levers: phase B (96 ns per step), M, products sharing, offers.
+
+---
+
+## 6. Compat island (v0.2; manager Q2: the ≤ 5k bit anchor against unmodified core)
+`IslandConfig::compat`: Arith::Bit, particle-major, 1 thread, fixed grid. Every uniform is the next draw of WP1's
+`CompatSource` on the island's v3 stream (seed, 9 + r) — the particle-major code requests uniforms in exactly core's
+serial order (proved address by address by the golden adapter). RB is core's double sum in serial order, `rb_round`
+the difference of cumulative sums (`core/cpp/v3_engine.h:350-364`); the two leader stores (lead0: log γ₀, lead1: F,
+LEX order, 20p) are kept; checkpoints add the xoshiro state + count, the double accumulator and the leader stores;
+island_r.bin is mode `compat` with `lead0_*`, `lead1_*`. Test `golden_compat_island_vs_core_serial_stream`: core's
+`Engine::run_island` with its own `RngSource` on stream 9 + r against the compat island — **every output in bits**
+(RB, rb_round, PIP included), both leader stores, HPM + provenance, counters, store, stream position.
+
+## 7. Manager decisions on §5 (2026-11-15)
+Q1 bit-form LM test-only (production refuses; `allow_test_kernels`). Q2 exact fixed-point RB in law mode, core's double
+sum in compat. Q2b accepted states canonicalised by a full Bit score. Q3 G chosen by the budget (largest ≤ 256).
+Q4 no capped pool; a step-boundary check of the content-determined kept pool ends the island with resource_limit.
+Q5 duplicate filter deferred then implemented after the SPR profile showed store compaction as the phase-B bottleneck.
+Q6 streamed checkpoints. Q7 sub = held 0 / flip 1. Q8 WP3 owns island_r.bin (terminal supports: N after the last
+measured round).
