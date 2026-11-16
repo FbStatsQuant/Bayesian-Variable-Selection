@@ -487,3 +487,12 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - (overnight) ~23:18 CT, account split: Engineering's WP2 and WP5 builders + their reviewers move to **Claude Work** (Opus,
   high); the critical path (WP3/WP4) and the managers stay on Claude Third. Reason: Claude Third's 5-hour window binds at
   the current concurrency, while Claude Work is ~82% of its week unused. For the owner's review in the morning pacing plan.
+- (overnight) ~23:40 CT, root finding (recorder H): SOP:TH09 (T03♯) has no council record and is the root of headline
+  rows 1.1/1.2/3.1. C-PACK:SL0 has 5 files changed since its C1 snapshot. TH05.0 is author-only. Decisions:
+  - new Tier B ticket **W3-T03ACC**: a council acceptance of T03♯ on its existing proof, target CP3 Thu 11-19;
+  - SL0 PC-style diff check before Friday;
+  - TH05.0 post-freeze unless it sits under an abstract row;
+  - a blind Fable API audit of T03♯ as an extra read;
+  - fallback: row 1.1 states its condition or moves to the body.
+
+  C (W2-APP) and the conditional re-status of 11 consumers approved.
