@@ -686,3 +686,8 @@ outward-facing; every decision tagged "(overnight)"; morning brief for the owner
 - 2026-11-16 ~18:15 CT. Track D: #5′ (store-restricted printed-output clause on every Thm 6 design, AR and BLK included; Tier B, 1–2 d, kill at 3 d) REPLACES #1.
   - Final order: #2 → #3 → #5′, post-freeze. No G1/G2 gate; printed fields on AR stay NO-GO.
   - After #5′: Engineering reports the store-derived summaries in the overlap/1M analysis (post-processing only).
+- 2026-11-16 ~18:30 CT. W3-AUDIT v1.1 done on day 0 (56dafbdd).
+  - Cores 1 and 2 hold on all our designs under assumptions the same as or comparable to Song–Liang's.
+  - Track C: visibility fails at the population level for pervasive factors with mixed-sign truths and for riboflavin-like designs (FRED-QD-like unclear). A typical real-data user may be outside core 3 while inside cores 1 and 2.
+  - HQ: an API blind second opinion on TRACK_B (≈ $30; Theory prepares the card).
+  - Writing's advisor-report section waits for the owner's release.
