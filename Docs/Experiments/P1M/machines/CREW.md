@@ -145,3 +145,8 @@ Machines (daily check <date> <time>):
 - **BNP watchdog (HQ, 11-16):** alert file `/home/fb31/.config/bnp-eng/guard/ALERT`, with `guard.log` beside it (one line
   per action). Installed ~10:13 CT 11-16. READ ONLY, never edit (an HQ-named exception to the folder scope). The daily
   report shows new lines since the last report. Last seen guard.log line count: 0 (before install).
+- **Update (HQ, 11-16):** the 10:05–10:30 CT crontab freeze today is CANCELLED. BNP postponed the guard install (new slot
+  TBA); the ALERT file does not exist yet, so the daily sweep reports "not installed" until it appears.
+- **VS Code ripgrep paths** (only if the sweep ever matches on rg): both
+  `~/.vscode-server/cli/servers/<build>/server/node_modules/@vscode/ripgrep-universal/bin/linux-x64/rg` (current builds)
+  and `.../@vscode/ripgrep/bin/rg` (older). Engineering's sweep does not match on rg today; read only either way.
