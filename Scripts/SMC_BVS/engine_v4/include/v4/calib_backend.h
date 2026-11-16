@@ -15,7 +15,8 @@
 // The runner contract (what an island must return) is the whole interface: swapping the runner changes no calib.bin
 // bits as long as the runner returns the same IslandOut.
 #pragma once
-#include <set>
+#include <algorithm>
+#include <initializer_list>
 #include <string>
 #include <vector>
 #include "v4/calib.h"
@@ -25,9 +26,14 @@
 
 namespace v4::calib {
 
+// Role of a calibration island. Maps to WP3's IslandConfig::role (WP3_DESIGN §1.11): Pilot -> IslandRole::Pilot,
+// Diag -> IslandRole::Diag (WP3 also has Final, which calibration never uses).
 enum class IslandRole : uint8_t { Pilot = 1, Diag = 2 };
 
 // One calibration island (INTERFACES §3 addresses: role, tier e, iter k, island r).
+// The runner is a STATEFUL object created once per calibration: it holds the data, setup, seed, mode, N-independent
+// settings and, in compat, the v3 streams 0 / 5 (pilot) and 1-4 / 6-9 (diagnostic islands), which continue across
+// rebuilds (core v3_core.cpp:593-596, R6). The spec carries only what changes per island.
 struct IslandSpec {
   IslandRole role = IslandRole::Pilot;
   int tier = 0, iter = 0, island = 0;       // pilot: iter 0, island 0; diag: iter k >= 1, island 1..4
@@ -35,10 +41,19 @@ struct IslandSpec {
   bool adaptive = false; int Te = 0;        // pilot: core's adaptive rule (calib_rules.h pilot_next_phi), floor 1/Te
   std::vector<double> grid;                 // diag: the candidate grid (0 = phi_0 < ... < phi_T = 1)
   int L = 0, Hm = 4;
+  // memory (INTERFACES §7 "whole task"): the bytes this calibration process already holds (calibration ledger, tables,
+  // data) and the budget left for the island (0 = no admission check). The island's admission counts both.
+  uint64_t resident_bytes = 0, mem_budget = 0;
 };
-// What an island returns. On resource_limit (partial = true): the schedule, forced count, stages and ledger so far; on
-// numerical_failure: status, message and (if available) the ledger so far, which the backend merges (core's shared
-// ledger keeps a stopped island's events; core v3_core.cpp:637-651, 673-681).
+// What an island returns.
+//  * completed: everything below.
+//  * resource_limit with partial = true: the island started and stopped (core v3_core.cpp:637-640, 673-681): schedule,
+//    forced, stages, logZ and the ledger so far.
+//  * resource_limit with partial = false: refused at admission, nothing ran (INTERFACES §7); no ledger needed.
+//  * numerical_failure: status, message and the ledger so far (WP3_DESIGN §1.11: the serial prefix of the events).
+//  * invalid_input / internal_error / io_error: status and message; the calibration ends with that status.
+// The ledger (also so far) must be the island's own: cfg.islands = 4, leaders on, caps 40p + 1 / 20p / 20p, no table,
+// inherited or local-search events; the backend refuses anything else (internal_error).
 struct IslandOut {
   Status status = Status::completed; std::string message; bool partial = false;
   double logZ = 0;
@@ -46,8 +61,9 @@ struct IslandOut {
   int forced = 0;                           // pilot: forced (floor) steps
   std::vector<StageRow> stages;             // bridge stages
   std::vector<double> pip;
-  Ledger led;                               // the island's own ledger: CALIB keys, leaders on, cfg.islands = 4
-  double position_start = 0, position_end = 0;   // compat stream positions (informational)
+  Ledger led;                               // the island's own ledger (see above)
+  uint64_t init_hash = 0;                   // hash of the initial draws (core IslandResult::init_hash)
+  uint64_t position_start = 0, position_end = 0;   // compat: stream positions (xoshiro draws consumed); law: 0
 };
 struct IslandRunner {
   virtual ~IslandRunner() = default;
@@ -55,7 +71,21 @@ struct IslandRunner {
 };
 
 // Stage record of one calibration island (calib.bin `stage_*` sections).
-struct StageRecord { int tier = 0, iter = 0, island = 0; bool partial = false; double logZ = 0; std::vector<StageRow> stages; };
+struct StageRecord {
+  int tier = 0, iter = 0, island = 0; bool partial = false; double logZ = 0; std::vector<StageRow> stages;
+  uint64_t init_hash = 0, position_start = 0, position_end = 0;
+};
+
+// V and the inherited export as flat views into the calibration stores (review PR37 m-6): sorted lexicographically and
+// de-duplicated without per-model heap copies. The views stay valid while the stores are not modified.
+inline std::vector<ModelView> sorted_unique_models(std::initializer_list<const Store*> stores, bool with_empty) {
+  std::vector<ModelView> v;
+  if (with_empty) v.push_back(ModelView());
+  for (const Store* s : stores) for (size_t i = 0; i < s->size(); ++i) v.push_back(s->model(i));
+  std::sort(v.begin(), v.end(), [](const ModelView& a, const ModelView& b) { return lex_less(a, b); });
+  v.erase(std::unique(v.begin(), v.end(), [](const ModelView& a, const ModelView& b) { return same_model(a, b); }), v.end());
+  return v;
+}
 
 template <class Factory>
 class LedgerBackend : public Backend {
@@ -65,21 +95,23 @@ class LedgerBackend : public Backend {
   LedgerBackend(IslandRunner& runner, Ledger& led, Factory& fac, const merge::TailSettings& ts, int threads)
       : run_(runner), led_(led), fac_(fac), ts_(ts), threads_(threads) {}
 
+  uint64_t resident_bytes = 0, mem_budget = 0;   // passed to every IslandSpec (calib_run.h's plan)
+  bool test_force_local_limit_pilot = false;    // TEST ONLY (golden): the pilot's search reports local_limit (as core's R wrapper)
+
   PilotOut pilot(const TierSettings& cs) override {
     IslandSpec sp; sp.role = IslandRole::Pilot; sp.tier = cs.tier; sp.iter = 0; sp.island = 0; sp.H = cs.H;
-    sp.adaptive = true; sp.Te = cs.Te; sp.L = cs.L; sp.Hm = cs.Hm;
+    sp.adaptive = true; sp.Te = cs.Te; sp.L = cs.L; sp.Hm = cs.Hm; sp.resident_bytes = resident_bytes; sp.mem_budget = mem_budget;
     PilotOut o;
     IslandOut io = run_.run(sp);
-    merge_partial(io);
-    if (io.status == Status::numerical_failure) { o.status = CalStatus::numerical_failure; o.message = io.message; return o; }
-    if (io.status != Status::completed && !io.partial) { o.status = CalStatus::numerical_failure; o.message = "pilot: " + io.message; return o; }
-    stages_.push_back({cs.tier, 0, 0, io.partial, io.logZ, io.stages});
+    CalStatus st = take(io, cs.tier, 0, 0);
+    if (st == CalStatus::numerical_failure) { o.status = st; o.message = io.message; return o; }
+    if (st == CalStatus::resource_limit && !io.partial) { o.status = st; o.message = io.message.empty() ? "resource_limit (admission)" : io.message; return o; }
     o.schedule.push_back(0.0); o.schedule.insert(o.schedule.end(), io.schedule.begin(), io.schedule.end());
     o.forced = io.forced; o.has_forced = true;
-    if (!merged_) led_.merge(io.led);
-    if (io.partial) { o.status = CalStatus::resource_limit; o.message = "resource_limit"; return o; }
+    if (st == CalStatus::resource_limit) { o.status = st; o.message = "resource_limit"; return o; }
     o.best_before_F = led_.hpmF;
     if (!search(cs, 0, o.local_limit, o.status, o.message)) return o;
+    if (test_force_local_limit_pilot) o.local_limit = true;
     o.best_after_F = led_.hpmF;
     return o;
   }
@@ -89,15 +121,13 @@ class LedgerBackend : public Backend {
     std::fill(led_.island_best.begin(), led_.island_best.end(), CAL_NEG_INF);   // core v3_core.cpp:662
     for (int r = 1; r <= 4; ++r) {
       IslandSpec sp; sp.role = IslandRole::Diag; sp.tier = cs.tier; sp.iter = iter; sp.island = r; sp.H = cs.H;
-      sp.grid = grid; sp.L = cs.L; sp.Hm = cs.Hm;
+      sp.grid = grid; sp.L = cs.L; sp.Hm = cs.Hm; sp.resident_bytes = resident_bytes; sp.mem_budget = mem_budget;
       IslandOut io = run_.run(sp);
-      merge_partial(io);
-      if (io.status == Status::numerical_failure) { o = DiagOut(); o.status = CalStatus::numerical_failure; o.message = io.message; return o; }
-      if (io.status != Status::completed && !io.partial) { o = DiagOut(); o.status = CalStatus::numerical_failure; o.message = "diag: " + io.message; return o; }
-      stages_.push_back({cs.tier, iter, r, io.partial, io.logZ, io.stages});
-      if (!merged_) led_.merge(io.led);
+      CalStatus st = take(io, cs.tier, iter, r);
+      if (st == CalStatus::numerical_failure) { o = DiagOut(); o.status = st; o.message = io.message; return o; }
+      if (st == CalStatus::resource_limit && !io.partial) { o.status = st; o.message = io.message.empty() ? "resource_limit (admission)" : io.message; return o; }
       o.logZ_r.push_back(io.logZ);
-      if (io.partial) { o.status = CalStatus::resource_limit; o.message = "resource_limit"; return o; }
+      if (st == CalStatus::resource_limit) { o.status = st; o.message = "resource_limit"; return o; }
     }
     o.island_best.assign(led_.island_best.begin() + 1, led_.island_best.begin() + 5);
     o.best_before_F = led_.hpmF;
@@ -108,12 +138,16 @@ class LedgerBackend : public Backend {
 
   VOut candidate_set() override {
     // core v3_core.cpp:705-716: {empty} u lead0 u lead1, lexicographic order of the sorted index vectors
-    std::set<Model> V; V.insert(Model());
     led_.compact();
-    for (const Store* s : {&led_.lead0, &led_.lead1})
-      for (size_t i = 0; i < s->size(); ++i) { ModelView v = s->model(i); V.insert(Model(v.begin(), v.end())); }
-    std::vector<Model> Vm(V.begin(), V.end());
-    return rescore_V(Vm, fac_, threads_);
+    std::vector<ModelView> V = sorted_unique_models({&led_.lead0, &led_.lead1}, true);
+    VOut out; out.lg0.assign(V.size(), 0); out.d.assign(V.size(), 0);
+    try {
+      for_chunks(V.size(), 256, threads_, [&](size_t, size_t b, size_t e) {
+        auto ev = fac_.make(); double lm, lg0, d, F; Model S;
+        for (size_t i = b; i < e; ++i) { S.assign(V[i].begin(), V[i].end()); ev(S, lm, lg0, d, F); out.lg0[i] = lg0; out.d[i] = d; }
+      });
+    } catch (const NumericalFailure& e) { VOut f; f.status = CalStatus::numerical_failure; f.message = e.what(); return f; }
+    return out;
   }
 
   const std::vector<StageRecord>& stages() const { return stages_; }
@@ -125,12 +159,35 @@ class LedgerBackend : public Backend {
   merge::TailSettings ts_;
   int threads_;
   std::vector<StageRecord> stages_;
-  bool merged_ = false;
-  // A stopped island's ledger-so-far is merged too (core's shared ledger keeps those events): always on a numerical
-  // failure, if the runner returns one (cfg.p set); a completed or resource-stopped island is merged by the caller.
-  void merge_partial(const IslandOut& io) {
-    merged_ = false;
-    if (io.status == Status::numerical_failure && io.led.cfg.p == led_.cfg.p && io.led.cfg.islands == led_.cfg.islands) { led_.merge(io.led); merged_ = true; }
+
+  // Review PR37 M-3 (WP3_DESIGN §1.11): an island ledger must be the island's own, configured like the calibration
+  // ledger: same p, 4 islands, leaders on, the same caps and orders, and no table, inherited or local-search events.
+  void check_island_ledger(const Ledger& l, int r) const {
+    auto fail = [&](const std::string& w) { throw Error(Status::internal_error, "calibration island " + std::to_string(r) + ": ledger " + w); };
+    if (l.cfg.p != led_.cfg.p || l.cfg.islands != led_.cfg.islands || !l.cfg.leaders) fail("config differs (p, islands = 4, leaders on)");
+    const Store* a[3] = {&l.top, &l.lead0, &l.lead1}; const Store* b[3] = {&led_.top, &led_.lead0, &led_.lead1};
+    for (int q = 0; q < 3; ++q) if (a[q]->cap != b[q]->cap || a[q]->ord != b[q]->ord) fail("store caps / orders differ");
+    for (int m = 0; m < N_MECH; ++m)
+      if (l.logical[PH_TABLE][m] || l.logical[PH_INHERITED][m] || l.logical[PH_LOCAL][m] || l.logical[PH_LS0][m]) fail("has table / inherited / local-search events");
+  }
+  // Review PR37 M-2: the island's status, mapped; its ledger (so far) merged whenever it ran. Statuses the calibration
+  // cannot continue from as a calibration outcome (invalid_input, internal_error, io_error) end the task with that status.
+  CalStatus take(IslandOut& io, int tier, int iter, int r) {
+    switch (io.status) {
+      case Status::completed: break;
+      case Status::resource_limit: break;
+      case Status::numerical_failure: break;
+      default: throw Error(io.status, "calibration island (tier " + std::to_string(tier) + ", iter " + std::to_string(iter) + ", island " +
+                                       std::to_string(r) + "): " + io.message);
+    }
+    const bool ran = io.status != Status::resource_limit || io.partial;
+    if (ran && io.led.cfg.p != 0) { check_island_ledger(io.led, r); led_.merge(io.led); }
+    else if (ran && io.status != Status::numerical_failure) check_island_ledger(io.led, r);   // a ran island must bring its ledger
+    if (ran && io.status != Status::numerical_failure)
+      stages_.push_back({tier, iter, r, io.partial, io.logZ, io.stages, io.init_hash, io.position_start, io.position_end});
+    if (io.status == Status::numerical_failure) return CalStatus::numerical_failure;
+    if (io.status == Status::resource_limit) return CalStatus::resource_limit;
+    return CalStatus::ok;
   }
 
   // one calibration local search from the current HPM (core v3_core.cpp:642 / 689: E.local_search(hpmS, ell, tier,

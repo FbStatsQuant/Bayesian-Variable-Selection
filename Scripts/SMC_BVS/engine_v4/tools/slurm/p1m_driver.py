@@ -54,10 +54,12 @@ DEFAULT_RES = {
             "merge": {"cpus": 16, "mem": "8G", "time": "00:30:00"},
             "eval": {"cpus": 8, "mem": "16G", "time": "00:45:00"}},
     "1e6": {"setup": {"cpus": 96, "mem": "48G", "time": "01:30:00"},
-            "calibrate": {"cpus": 64, "mem": "32G", "time": "02:00:00"},
+            # D-27 / PR37 re-check INFO-2: the 10⁶ calibration plan is ≈ 37–39 GB + one island (job 2749483: a leader-bearing
+            # island peaked at 48.6 GB) -> one socket, 96 CPUs + 64G. Re-sized again from T5.
+            "calibrate": {"cpus": 96, "mem": "64G", "time": "02:00:00"},
             # H-9 (job 2748756): one island per socket, 96 CPUs (48 cores x 2), G = 256, peak RSS 34.3 GB -> 40G.
             # TODO(T5): guarantee socket placement (two islands per exclusive node, or one socket per task) + numactl membind.
-            "islands": {"cpus": 96, "mem": "40G", "time": "02:00:00"},
+            "islands": {"cpus": 96, "mem": "48G", "time": "02:00:00"},   # D-27: real setup tables on top of the stand-in 34 GB peak
             "merge": {"cpus": 32, "mem": "16G", "time": "01:00:00"},
             "eval": {"cpus": 8, "mem": "16G", "time": "01:00:00"}},
 }
@@ -181,6 +183,8 @@ BIN=$SCR/{binary}
 export TMPDIR=$DEPT/scratch/tmp/${{SLURM_JOB_ID}}
 mkdir -p "$TMPDIR"; trap 'rm -rf "$TMPDIR"' EXIT
 export OMP_NUM_THREADS=${{SLURM_CPUS_PER_TASK}}
+# INTERFACES §7: --mem-budget = the whole task's memory. 90% of the Slurm allocation leaves room for the runtime (PR37 re-check INFO-2).
+MEMB=$(( ${{SLURM_MEM_PER_NODE:-0}} * 1048576 * 9 / 10 ))
 set +u; source "$SCR/env.sh"; set -u          # NOTS modules (GCC 14.3.0 runtime); see env.sh
 """
 
@@ -242,14 +246,14 @@ def stage_body(stage):
                 + run.format(cmd="setup", suffix="", extra=' --threads "$OMP_NUM_THREADS"', out="setup.bin"))
     if stage == "calibrate":
         return (fill.format(cmd="calibrate", suffix="") + "\n"
-                + run.format(cmd="calibrate", suffix="", extra=' --threads "$OMP_NUM_THREADS"', out="calib.bin"))
+                + run.format(cmd="calibrate", suffix="", extra=' --threads "$OMP_NUM_THREADS" --mem-budget "$MEMB"', out="calib.bin"))
     if stage == "islands":
         return ("R=${SLURM_ARRAY_TASK_ID}\n"
                 + fill.format(cmd="island", suffix="_$R") + " --set params.id=$R\n"
-                + run.format(cmd="island", suffix="_$R", extra=' --threads "$OMP_NUM_THREADS"', out="island_$R.bin"))
+                + run.format(cmd="island", suffix="_$R", extra=' --threads "$OMP_NUM_THREADS" --mem-budget "$MEMB"', out="island_$R.bin"))
     if stage == "merge":
         return (fill.format(cmd="merge", suffix="") + "\n"
-                + run.format(cmd="merge", suffix="", extra=' --threads "$OMP_NUM_THREADS"', out="fit.bin"))
+                + run.format(cmd="merge", suffix="", extra=' --threads "$OMP_NUM_THREADS" --mem-budget "$MEMB"', out="fit.bin"))
     if stage == "eval":
         return ('if [[ -e $RUN/OUTCOME ]]; then printf \'{"status":"completed","command":"eval","fit_status":"prep_%s","prep_status":"%s","hpm":[]}\\n\' '
                 '"$(cat "$RUN/OUTCOME")" "$(cat "$RUN/OUTCOME")" > "$RUN/eval.bin.json"; exit 0; fi\n'
