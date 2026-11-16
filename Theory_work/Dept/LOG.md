@@ -101,3 +101,4 @@
 - 21:45 — Opus diff check of C-MIS citefix: PC-VERDICT CITATION-ONLY (7 line-number re-points, byte-identical cited ranges; pre-existing one-line offset in two L1_reduction cites noted). Recorder may re-freeze START/MISR manifests with seat carriers. Reviewer settled.
 - 21:48 — heartbeat: START2-R CP1 → GO (D40); RM2-R lock done → SC1; MISR-R lock back; W3-EDIT Sol S1 back; PSMC-S0 FR1 > 2 h flagged.
 - 21:49 — HQ: START2-R GO confirmed; fallback order approved; PSMC-S0 FR1 left running; overnight level-1 rule: new non-critical reviews → Opus (READER, W3-EDIT told); critical (DIST, riders' CP3 paths, blind first reads, council OpenAI seats) stay on Codex. Re-freeze proceeds.
+- 21:55 — W3-EDIT CP1 final (a3d2f3d): manifest-impact check → split merge (D41).

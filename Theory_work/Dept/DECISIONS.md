@@ -276,3 +276,9 @@
   Helpers A (Opus, T8) and B (Sonnet, numerics) approved. Priority: headline clauses (T3⁺⁺)(b), IF-START⁺⁺, (T1⁺⁺) first;
   restatements drop to a post-freeze rider if Wed 18:00 is tight. H5 input to HQ. READER row thm5.
 - PSMC-S0 FR1 (Sol) > 2 h — flagged to HQ (low priority, off the critical path).
+
+## 2026-11-15 21:55 CT — W3-EDIT CP1 (final): manifest-impact check applied
+- **D41.** First use of the manifest-impact rule: W3-EDIT's in-place diff touches files listed in 4 accepted council
+  manifests (W2-APP MANIFEST_PC1 ← C run!; MISR R1/R2; PSHARP R1/R2; START2 R1). Merge now only the unlisted subset
+  (02_method.tex, W1-N3 LFP, W1-PXN CR + W1-PXN:CR.R-prime patch rehash) via branch theory/W3-EDIT-now; the rest
+  POST-FREEZE with the manifest re-freeze / EXT tool change. Lead asked to build the branch; recorder adds the rehash.
