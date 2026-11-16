@@ -4,10 +4,16 @@ Prepared 2026-11-16 06:25 CST by the Theory Dept implementation sub-agent (Claud
 erratum to the FINAL chapter before the freeze. The base is origin/main `8431b575`. FINAL and the shipped code are identical
 on origin/main and on `dept/theory`.
 
-- **Patch:** `patches/ERRATUM__FINAL__s6_delivery.tex.patch` (sha256 `5a72bc33…4692`). It applies with `patch -p1` to the
+**R1 (2026-11-16 06:33 CST), the one repair after `DIFF3_sol.md` (FAIL).** Sol found two unconditional consistency summaries
+in `s2_map.tex` that this note's inventory had missed, at `:18` and `:31`. Its exact one-line replacements are applied
+verbatim as items 7–8 below. The erratum paragraph's list of changed sentences now names them as well. Everything else in
+the patch is unchanged.
+
+- **Patch:** `patches/ERRATUM__FINAL__s6_delivery.tex.patch` (sha256 `785ce861…f08af`; before R1 it was `5a72bc33…4692`). It applies with `patch -p1` to the
   origin/main files, giving exactly the after-files below.
-- **Files touched:** `Theory_work/Wave1C/FINAL/sections/s6_delivery.tex` (sha256 `d2bd6624…1e5e` → `e1a4f623…c3ca`) and
-  `Theory_work/Wave1C/FINAL/sections/s8_scope.tex` (sha256 `d2d84ed3…8932` → `f16643fd…19d`).
+- **Files touched:** `Theory_work/Wave1C/FINAL/sections/s6_delivery.tex` (sha256 `d2bd6624…1e5e` → `2c677ae6…9b13`),
+  `Theory_work/Wave1C/FINAL/sections/s8_scope.tex` (sha256 `d2d84ed3…8932` → `f16643fd…19d`) and
+  `Theory_work/Wave1C/FINAL/sections/s2_map.tex` (sha256 `30b38289…be4d` → `aed22e81…84cf0`; added by R1).
 - **Sources:** A:IDEAL-W⁺ comes from `Theory_work/Dept/research/FUNI_NARROW/A_IDEALW_PLUS.md:10`, copied verbatim and only
   converted to LaTeX. 𝔇 and the (a)/(b) wording come from the batch, `patches/HQ_AUDIT-W1C__A2_propF_GROW.md.patch`. The
   reason is Sol TR1 §1–§2 (`Theory_work/Dept/research/FUNI_transfer/TR1_sol.md`). The code lines are on origin/main and at
@@ -16,8 +22,8 @@ on origin/main and on `dept/theory`.
 
 ## 1. What changes
 
-Five sentences change in place and one erratum paragraph is appended. The patch adds no line before an existing line:
-s6 goes from 63 to 67 lines, all new lines after the old last line `:63`, and s8 keeps its 19 lines.
+Seven sentences change in place and one erratum paragraph is appended. The patch adds no line before an existing line:
+s6 goes from 63 to 67 lines, all new lines after the old last line `:63`, s8 keeps its 19 lines, and s2 keeps its 32 lines.
 
 | # | location | change |
 |---|---|---|
@@ -26,7 +32,9 @@ s6 goes from 63 to 67 lines, all new lines after the old last line `:63`, and s8
 | 3 | `s6:54` (Prop F-GROW) | Delivery is split into (a)/(b), and the asymptotic P(Ŝ=S₀)→1 is put under (b) |
 | 4 | `s6:56` (F-GROW proof outline, steps (2) and (3)) | The step "Theorem D's walk leaves only null exits" is restricted to 𝔇 under IDEAL-W, or every n under A:IDEAL-W⁺; TR1 marks exactly this inference as failing. The use of P(𝒪)=1 is marked "every n; clause (b)". |
 | 5 | `s8:9` (scope item "Delivery for the shipped calibration") | "under IDEAL-W" becomes "with IDEAL-W on the bounded domain 𝔇 and with A:IDEAL-W⁺ for every n" |
-| 6 | `s6:64-67` (new, after `\end{remark}`) | A dated erratum paragraph that lists the changed sentences and contains the required sentence "IDEAL-W never covered the application-level rejection predicates; IDEAL-W⁺ is the explicit form". It cites the two code lines with checkable `\srcq` (citecheck OK), shows why neither predicate fires on 𝔇, says that 𝔇 is sufficient, not necessary, and bounded, and keeps the C-DLV form unchanged. It ends with the A:IDEAL-W⁺ definition verbatim. |
+| 6 | `s6:64-67` (new, after `\end{remark}`) | A dated erratum paragraph that lists the changed sentences and contains the required sentence "IDEAL-W never covered the application-level rejection predicates; IDEAL-W⁺ is the explicit form". It cites the two code lines with checkable `\srcq` (citecheck OK), shows why neither predicate fires on 𝔇, says that 𝔇 is sufficient, not necessary, and bounded, and keeps the C-DLV form unchanged. It ends with the A:IDEAL-W⁺ definition verbatim. After R1 it also says that the two unconditional consistency summaries of §2 are placed under (b). |
+| 7 | `s2:18` (map table row "Thm S, MAP"), R1 | "without the output qualifier (ideal machine, amended allocation)" becomes "(ideal machine with A:IDEAL-W$^{+}$, amended allocation; clause (b) of §\ref{sec:delivery})". No `\st{}` token changes. |
+| 8 | `s2:31` (closing summary), R1 | "(Props.~F and F-GROW: IDEAL-W, MACH, amended allocation; …)" becomes "(Props.~F and F-GROW, clause (b): A:IDEAL-W$^{+}$, MACH, amended allocation; …)" |
 
 **Left unchanged on purpose.** The following concern the *specified* method, which has neither validator. They are
 spec-level and not exposed, and the erratum says so in one clause:
@@ -99,9 +107,29 @@ After:
 Delivery is proved only for the fallback calibration of Proposition~\ref{prop:F}, under MACH, CONFIG and the amended allocation, with IDEAL-W on the bounded domain $\mathfrak D$ and with A:IDEAL-W$^{+}$ for every $n$ (erratum 2026-11-16, end of §\ref{sec:delivery}),
 ```
 
+### `s2_map.tex:18` (R1)
+Before:
+```latex
+without the output qualifier (ideal machine, amended allocation) $\PP(\Shat=S_0)\to1$
+```
+After:
+```latex
+without the output qualifier (ideal machine with A:IDEAL-W$^{+}$, amended allocation; clause (b) of §\ref{sec:delivery}) $\PP(\Shat=S_0)\to1$
+```
+
+### `s2_map.tex:31` (R1)
+Before:
+```latex
+(Props.~F and F-GROW: IDEAL-W, MACH, amended allocation;
+```
+After:
+```latex
+(Props.~F and F-GROW, clause (b): A:IDEAL-W$^{+}$, MACH, amended allocation;
+```
+
 ### `s6_delivery.tex:64-67` (new; blank line, erratum paragraph, blank line, definition)
 ```latex
-\paragraph{Erratum (2026-11-16; HQ D78).} The every-$n$ delivery sentences of this section (the summary at its head, Proposition~\ref{prop:F} in its corrected form, Proposition~\ref{prop:FG} and step~(2) of its proof outline) and the delivery item of §\ref{sec:scope} previously asserted $\PP(\text{no output})=0$ for every admissible $n$ under IDEAL-W; they now read (a)/(b) as above. IDEAL-W never covered the application-level rejection predicates; IDEAL-W$^{+}$ is the explicit form. The shipped LS0 base-cap validator $\texttt{le}>10^6$ \srcq{PROD/v3_run.R:96}{le > 1e6} and the LS0 cap-range guard $\ell_n+|\tilde S_0|>\texttt{INT\_MAX}$ \srcq{PROD/cpp/v3_core.cpp:474}{LS0 move cap out of range} (the same lines at \texttt{493579a}) lie outside Theorem~\ref{thm:D}'s exit walk and can end an SMC-branch fit without output independently of resources (Sol review TR1, Theory Dept, \texttt{Theory\_work/Dept/research/FUNI\_transfer/TR1\_sol.md}, branch \texttt{dept/theory}). On $\mathfrak D$ neither fires: $\ell_n\le\ell_{\rm raw}\le10^6$ ($p\le p_{\rm raw}$) and $\ell_n+|\tilde S_0|\le\ell_{\rm raw}+K\le\ell_{\rm raw}+\lfloor n/2\rfloor\le2^{31}-1$; the exact-enumeration branch reaches neither check. $\mathfrak D$ is sufficient, not necessary, and bounded, so clause (a) carries no asymptotic conclusion; every asymptotic delivery or consistency conclusion above is under (b). Theorem~\ref{thm:D}, Corollary~\ref{cor:Dprime} and the C-DLV form of Proposition~F (cap $\ell_n$) concern the specified method, which has neither validator; they are unchanged. Definition (verbatim; registered assumption A:IDEAL-W$^{+}$):
+\paragraph{Erratum (2026-11-16; HQ D78).} The every-$n$ delivery sentences of this section (the summary at its head, Proposition~\ref{prop:F} in its corrected form, Proposition~\ref{prop:FG} and step~(2) of its proof outline) and the delivery item of §\ref{sec:scope} previously asserted $\PP(\text{no output})=0$ for every admissible $n$ under IDEAL-W; they now read (a)/(b) as above, and the two unconditional consistency summaries of §\ref{sec:map} are placed under (b). IDEAL-W never covered the application-level rejection predicates; IDEAL-W$^{+}$ is the explicit form. The shipped LS0 base-cap validator $\texttt{le}>10^6$ \srcq{PROD/v3_run.R:96}{le > 1e6} and the LS0 cap-range guard $\ell_n+|\tilde S_0|>\texttt{INT\_MAX}$ \srcq{PROD/cpp/v3_core.cpp:474}{LS0 move cap out of range} (the same lines at \texttt{493579a}) lie outside Theorem~\ref{thm:D}'s exit walk and can end an SMC-branch fit without output independently of resources (Sol review TR1, Theory Dept, \texttt{Theory\_work/Dept/research/FUNI\_transfer/TR1\_sol.md}, branch \texttt{dept/theory}). On $\mathfrak D$ neither fires: $\ell_n\le\ell_{\rm raw}\le10^6$ ($p\le p_{\rm raw}$) and $\ell_n+|\tilde S_0|\le\ell_{\rm raw}+K\le\ell_{\rm raw}+\lfloor n/2\rfloor\le2^{31}-1$; the exact-enumeration branch reaches neither check. $\mathfrak D$ is sufficient, not necessary, and bounded, so clause (a) carries no asymptotic conclusion; every asymptotic delivery or consistency conclusion above is under (b). Theorem~\ref{thm:D}, Corollary~\ref{cor:Dprime} and the C-DLV form of Proposition~F (cap $\ell_n$) concern the specified method, which has neither validator; they are unchanged. Definition (verbatim; registered assumption A:IDEAL-W$^{+}$):
 
 \textbf{A:IDEAL-W$^{+}$ (IDEAL-W with the two LS0 cap ceilings lifted).} IDEAL-W, exactly as defined in C-DLV \texttt{STATEMENT.md:24-25}, and the two shipped rejection predicates $\texttt{le}>10^6$ (\texttt{Scripts/SMC\_BVS/core/v3\_run.R:96}, the LS0 base-cap validator; $\texttt{le}=\ell_n=\lceil\log_2(n+p+1)\rceil$ in the shipped configuration) and $\ell+|\tilde S_0|>\texttt{INT\_MAX}$ (\texttt{Scripts/SMC\_BVS/core/cpp/v3\_core.cpp:474}, the disjunct \texttt{cap\_ll > numeric\_limits<int>::max()} of the LS0 cap-range guard, \texttt{int} read as unbounded) are false. Nothing else is lifted: the other conditions of those two validators (numeric type, length, finiteness, integrality, \texttt{le < 0}, \texttt{o.ls0\_ell < 0}), every other validator, the $10^6$-maximiser start-mode enumeration cap with its tie-aware DP fallback, and every fallback and method cap are kept as coded. Like IDEAL-W and EX-A, A:IDEAL-W$^{+}$ is an idealisation of the machine and code; a larger allocation does not imply it.
 ```
@@ -116,6 +144,7 @@ Method: a grep of `consistency.tex` and `sections/*.tex` for "no output", "every
 | `consistency.tex:4-5` (title), agentnote `:15-22` | title "…delivery results…"; status of Prop F / F-GROW | No every-n claim. There is no abstract or intro; the agentnote quotes statuses only. Unchanged. |
 | `s1_setting.tex:32` | "The delivery results (§6) add the idealisation premises IDEAL-W, MACH, CONFIG…" | A premise list, not an every-n claim. It stays true, because (a) uses IDEAL-W, and the (b) premise is stated in §6. Unchanged; HQ may add "A:IDEAL-W⁺ beyond 𝔇" as an option. |
 | `s1_setting.tex:35` | "Delivery, P(𝒪)→1, is a fourth question (§6)" | Names the question only. Unchanged. |
+| `s2_map.tex:18`, `:31` | "without the output qualifier (ideal machine, amended allocation) P(Ŝ=S₀)→1 …"; "(Props. F and F-GROW: IDEAL-W, MACH, amended allocation)" | **Missed in the first inventory (DIFF3_sol); changed by R1 (#7, #8).** |
 | `s2_map.tex:24` | "Delivery under a declared polynomial allocation: Prop. F" | A pointer to Prop F, which is now restricted. Unchanged. |
 | `s5_hpm.tex:83`, `:95` | "no delivery claim"; table cell "delivery: Prop. FG" | A disclaimer and a pointer. Unchanged. |
 | `s6:4` | summary P(no output)=0 | **Changed (#1).** |
@@ -152,7 +181,8 @@ I read all of `Theory_work/INFRA/registry/` on origin/main, every column of `cla
 - No line is inserted or removed before any cited line. s6 grows only after its old last line `:63`, and s8 keeps its line
   count.
 - W1C-FINAL:Lemma-CAP (`s7_impl.tex:45-56`, premises `:36-43`, status_source `:64`) is in a file this patch does not touch.
-- No other row of `claims.tsv`, and no row of the other registry tables, cites s6 or s8.
+- No other row of `claims.tsv`, and no row of the other registry tables, cites s6 or s8. No registry file references
+  `s2_map.tex` at all, so R1 touches no span.
 
 **For HQ: C-DLV:Prop-F's `tex` pointer.** The registry row is the C-DLV form (cap ℓ_n, specified method), and its registered
 statement `C-DLV/lemmas/L4_delivery.md:79-84` is unchanged. Its `tex` pointer, however, spans FINAL's corrected-form
