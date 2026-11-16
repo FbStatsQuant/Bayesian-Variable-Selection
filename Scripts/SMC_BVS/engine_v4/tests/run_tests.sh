@@ -39,5 +39,8 @@ fi
 if command -v Rscript > /dev/null; then
   if TMPDIR="${TMPDIR:-$build}" "$here/tools/competitors/test_competitors.sh" "$build" > "$build/wp5_competitors.log" 2>&1; then
     echo "WP5 competitor harness: OK ($(grep 'packages missing' "$build/wp5_competitors.log" | sed 's/^ *//'))"; else echo "WP5 competitor harness: FAILED ($build/wp5_competitors.log)"; rc=1; fi
+  # install script guards + offline route on dummy packages (PR #19 MINOR-1..3; no network, nothing outside TMPDIR)
+  if TMPDIR="${TMPDIR:-$build}" nice -n 19 "$here/tools/competitors/test_install_script.sh" > "$build/wp5_install.log" 2>&1; then
+    echo "WP5 install script: OK ($(grep -c '^  ok ' "$build/wp5_install.log") checks; $(tail -1 "$build/wp5_install.log"))"; else echo "WP5 install script: FAILED ($build/wp5_install.log)"; rc=1; fi
 fi
 exit $rc
