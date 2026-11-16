@@ -345,3 +345,10 @@
 - **D51.** Form A if T03ACC passes, else B1 (B2 rejected). Thm 1′ in the body. Opus implication check PSHARP:B ⇒
   W3-POST:Prop-LB launched (research/IMPL_PSHARPB_PROPLB_opus.md) → recorder records the implies edge. Lemma-1a′ and
   SOP:TH128 acceptances post-freeze unless T03ACC finishes early and capacity is idle before Thu noon (my call).
+
+## 2026-11-15 23:44 CT — record damage from the H fallback (recorder-reported)
+- **D52.** Moving Cont-R's status source off W3-RM2/CHECKPOINT_4 broke A4 for all CP4-sourced RM2 rows (incl. RM2-R,
+  row 3.1 master; W3-RM2-R's parent) + stale accepts (POST2:A1, RM2-R, POST-R). Escalated to HQ, recommending the
+  recorder's repair now (new full CHECKPOINT_5 verbatim + Cont-R extended; correct-status; re-record). Task L: only an
+  evidence pointer (implies edge already exists). POST2:C Prop-LB condition drop deferred post-freeze into one POST2
+  checkpoint rewrite with L1a′/TH128. PROTOCOL §C rule added (never move a status source off a council checkpoint).

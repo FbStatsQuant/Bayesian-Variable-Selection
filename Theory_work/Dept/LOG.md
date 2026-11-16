@@ -140,3 +140,4 @@
 - 23:39 — HQ: blind Fable audit of T03♯ = 2 samples, both MINOR, 0 GAP/ERROR ('proved as stated'); relayed to T03ACC lead (slips as named points for its Sol line checks; not to blind seats; council stays the gate).
 - 23:40 — format fix on main 24b0b893; early CP3-blocking report: no rider/DIST blocked by registry (DIST PASS, MISR-R PASS, PSHARP-R/START2-R only own pre-council evidence, RM2-R no REPORT yet); asked RM2-R whether it consumes Cont-F/R. HQ told.
 - 23:41 — Opus implication check: IMPL-VERDICT IMPLIES (PSHARP:B ⇒ W3-POST:Prop-LB; δ ≥ 1/(1+√n) on Prop-LB's whole domain). Reviewer settled; recorder to record the implies edge (HQ-approved).
+- 23:44 — D52: RM2 CHECKPOINT_4 A4 breakage escalated with repair recommendation; PROTOCOL rule added.

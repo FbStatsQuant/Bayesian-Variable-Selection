@@ -35,6 +35,10 @@ row, the baseline applies to it. Every later change to this file goes to HQ befo
   DEPS/STATEMENT for that file. If an accepted manifest lists it, the edit needs an impact plan first (diff check +
   re-frozen manifest with seat carriers, or defer). If a running ticket consumes it, route CHAPTER-ONLY until that
   ticket's CP3 (B6).
+- **Never move one claim's status source off a council CHECKPOINT_<k>.md** (11-15 incident, f526e45b): LIFECYCLE §4.1
+  requires the checkpoint to carry every id both seats accepted, so removing one breaks A4 for every row it sources.
+  A status change for a council-sourced row goes into a NEW full checkpoint (verbatim copy of all status lines, the one
+  line changed), then correct-status all rows to it and re-record.
 - **Implication lemmas record their target in `implies`, never in `depends_on`** (HQ 11-15, Cont-F/R): a lemma that
   proves A ⇒ B lists B as the implication's target and is cited as the evidence of the `implies` edge; B is not an input.
 - Timestamps only from `date` (two leads mis-stamped on 11-15).
