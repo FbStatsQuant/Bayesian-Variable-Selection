@@ -89,3 +89,5 @@ the registry change. Newest entries at the bottom. Format:
 - reason: HQ GO real run (task Q, H5 card 10, 2026-11-16): free supersession (CorG-min implies Cor-G(a), STATEMENT §8 row 181, statement lock L1:59)
 - axes (Y vs X): assumptions=incomparable, conclusion=equal, rate=equal, scope=unknown
 - class free; key step check: —; dependents: 1 direct
+
+- 2026-11-16 correctness event (rollback history, W2-UNI): W2-UNI:F-UNI v1.1.0 ACTIVE -> SUSPECT (status and hash unchanged). Cause: every-n delivery cites Prop-F's cap-ℓ_n method; shipped cap ℓ_n+|S̃₀| not covered by the cited proof (W2-UNI lemmas/L5_delivery.md Step 2 via W2-FAC-A lemmas/L7_delivery.md:35-38 -> C-DLV:Prop-F, method cap ℓ_n, C-DLV lemmas/L4_delivery.md:7,53; W3-RM2-R STATEMENT.md:219). Sol transfer check (manager) decides: erratum + PATCH + clear, or NARROW (task S2). Consumers noted, no status change. HQ GO (task S1).
