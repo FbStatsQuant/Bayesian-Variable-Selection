@@ -136,3 +136,9 @@ Machines (daily check <date> <time>):
 `quota -s | grep -A1 export/nots/home | tail -1` → `6761M 10240M 10240M 90394`; `df -h /` (Owls) → `70G 61G 9.6G 87%`;
 `find /tmp -maxdepth 1 -user fb31 ! -name 'claude-*' -print0 | xargs -0 du -s` → 995 entries, 1,619,036 KB;
 `lsof +D /tmp/bvs-ci-sandboxes` → 2 python processes; `tail ~/home_guard.log` (NOTS) → last run 11-12, 8,333 → 6,704 MB.
+
+## HQ notices, 11-16
+- **Crontab / authorized_keys freeze on Owls:** no edits today 10:05–10:30 CT, and 11:05–11:30 CT on BNP's backup-install
+  day (date TBC). BNP is installing a watchdog that kills only runaway VS Code bundled-rg processes.
+- **Cleanliness sweep:** add BNP's watchdog alert file (path to follow from HQ) to the Owls sweep in the daily report;
+  report any hits to HQ.

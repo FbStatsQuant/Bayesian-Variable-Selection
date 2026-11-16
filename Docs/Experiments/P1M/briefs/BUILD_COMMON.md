@@ -72,3 +72,5 @@ builder or reviewer, the brief must:
   `.gitignore` inside a frozen folder: stray files there break the freeze (HQ precision, main 44238a06).
 The department-tmp rule above (`/home/fb31/SMC_Engineering_Department/tmp/...`) applies only to unsandboxed Claude agents.
 Manager: when a review or build runs over 2 h, check its pending requests (`task_status` / the thread's pending approvals).
+- "Codex level N" (POLICIES §14) is the **pacing level**, not reasoning effort. Codex reviewers always run at **effort
+  high** (HQ clarification, main 9a8f9c5f).
